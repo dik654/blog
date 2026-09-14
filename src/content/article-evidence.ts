@@ -7036,4 +7036,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "명목금리·실질금리·현재가치 등 본문 용어의 한국어 표준 표기를 맞추는 데 사용한 중앙은행 용어집. 계산식의 근거가 아니라 표기 기준으로만 참조",
     },
   ],
+  "banking/bank-balance-sheet-and-deposit-creation": [
+    {
+      kind: "공식 문서",
+      label: "Bank of England · Money creation in the modern economy (2014 Q1)",
+      href: "https://www.bankofengland.co.uk/quarterly-bulletin/2014/q1/money-creation-in-the-modern-economy",
+      note: "대출이 예금을 만든다는 회계 사실과 중개자·통화승수 설명에 대한 반박의 근거. 영국 제도 기준이며 통화 총량이 중앙은행 정책에 달려 있다는 결론까지 함께 읽어야 함",
+    },
+    {
+      kind: "공식 문서",
+      label: "예금보험공사 · 예금자보호제도 안내",
+      href: "https://www.kdic.or.kr/sp/dpstrprot/ProtSyst/selectScrn.do",
+      note: "한국에서 보장 주체와 보장 범위 구조의 근거. 보장 한도 금액은 제도 개편으로 바뀌므로 본문에는 구조만 싣고 금액은 인용하지 않음",
+    },
+  ],
 };

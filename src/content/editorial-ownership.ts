@@ -11638,6 +11638,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "bank-balance-sheet-and-deposit-creation": {
+    title: "은행은 대출로 예금을 만듭니다 글이 소유하는 범위",
+    owns: [
+      "은행 대차대조표의 자산·부채·자기자본 자리와 예금이 부채인 이유",
+      "대출 실행 시 양쪽이 동시에 늘어나는 분개와 상환 시 함께 줄어드는 대칭",
+      "중개자 설명이 장부의 어느 줄에서 어긋나는지에 대한 반증",
+      "통화승수 1/rr을 상한으로 읽어야 하고 절차로 읽으면 안 되는 이유",
+      "만기 변환이 만드는 조기 인출 유인과 자기실현적 뱅크런의 성립 조건",
+      "예금보험과 최종대부자가 각각 막는 실패의 구분",
+    ],
+    reuses: [
+      {
+        label: "예금이 은행의 채무라는 정의",
+        href: "/finance/money/money-as-a-claim#credit-money",
+      },
+      {
+        label: "통화지표의 집계 기준",
+        href: "/finance/money/money-as-a-claim#money-aggregates",
+      },
+      {
+        label: "미래 현금흐름을 오늘 값으로 되돌리는 계산",
+        href: "/finance/money/time-value-and-discounting#discounting",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "은행 제도 서술은 중앙은행·예금보험기관의 공개 자료에만 귀속하고, 보장 한도 금액처럼 제도 개편으로 바뀌는 수치는 구조만 싣고 금액을 사실로 인용하지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
