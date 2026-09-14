@@ -15,6 +15,10 @@ import money from "./money";
 import banking from "./banking";
 import markets from "./markets";
 import risk from "./risk";
+import polity from "./polity";
+import constitution from "./constitution";
+import elections from "./elections";
+import governance from "./governance";
 
 export const categories = [
   ai,
@@ -29,6 +33,10 @@ export const categories = [
   banking,
   markets,
   risk,
+  polity,
+  constitution,
+  elections,
+  governance,
 ];
 
 export interface DomainGroup {
