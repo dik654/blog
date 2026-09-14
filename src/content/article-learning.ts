@@ -74832,4 +74832,280 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "banking/central-bank-and-policy-transmission": {
+    entryNote:
+      "은행이 대출로 예금을 만든다는 것까지 확인하고 들어옵니다. 앞 글이 설명하지 않고 남긴 문장, 곧 통화 총량이 결국 중앙은행 정책에 달렸다는 말을 여기서 풉니다.",
+    coreIdea:
+      "중앙은행은 통화량을 정하는 것이 아니라 은행 간 초단기 금리 한 점을 목표에 못 박습니다. 선택지를 바닥과 천장 사이로 제한해 그 점을 고정하고, 앞으로의 경로에 대한 기대를 통해 만기별 금리와 실물까지 그 점에 매답니다.",
+    assumedKnowledge: [
+      {
+        id: "bank-balance-sheet",
+        role: "중앙은행 장부를 같은 형식으로 읽되 부채의 지위가 다르다는 점을 대조하는 데 씁니다.",
+      },
+      {
+        id: "deposit-creation",
+        role: "준비금이 늘어도 예금이 자동으로 늘지 않는다는 결론이 이 글의 핵심 경계가 됩니다.",
+      },
+      {
+        id: "money-multiplier-ceiling",
+        role: "수량이 아니라 가격을 조작 대상으로 삼는 이유를 설명하는 출발점입니다.",
+      },
+      {
+        id: "discount-factor",
+        role: "금리 변화가 자산가격으로 번지는 경로를 할인 계산으로 설명하는 데 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "central-bank-balance-sheet",
+        role: "중앙은행이 자기 부채를 만들 수 있는 이유를 장부에서 보입니다.",
+      },
+      {
+        id: "policy-rate",
+        role: "공표된 목표값과 실현된 시장금리를 구분하는 기준을 세웁니다.",
+      },
+      {
+        id: "rate-corridor",
+        role: "가격을 부르지 않고 선택지를 제한해 금리를 가두는 구조를 설명합니다.",
+      },
+      {
+        id: "open-market-operation",
+        role: "구간 안에서 목표에 붙이는 일상 수단을 절차로 보입니다.",
+      },
+      {
+        id: "expectations-hypothesis-of-rates",
+        role: "하루짜리 한 점이 만기별 금리를 끌고 가는 통로를 식으로 세웁니다.",
+      },
+      {
+        id: "monetary-transmission",
+        role: "경로별 전제와 시차를 갈라 정책 효과의 불확실성을 드러냅니다.",
+      },
+      {
+        id: "quantitative-easing",
+        role: "가격 수단이 막혔을 때 장부로 넘어가는 선택과 그 한계를 정합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "central-bank-balance-sheet",
+        sectionId: "cb-balance-sheet",
+        intuition:
+          "다른 모두가 결제에 쓰는 돈이 이 기관의 빚이라서, 자기 빚을 스스로 만들어 낼 수 있습니다.",
+        workedExample:
+          "중앙은행이 은행에서 국채를 사면 자산의 국채와 부채의 지급준비금이 같은 금액으로 늘어납니다.",
+        boundary:
+          "준비금은 가계·기업이 쓸 수 없는 계정이므로, 준비금이 늘었다고 시중에 돈이 풀렸다고 읽으면 안 됩니다.",
+      },
+      {
+        id: "policy-rate",
+        sectionId: "rate-setting",
+        intuition:
+          "정책금리는 명령이 아니라 이 부근에 두겠다고 공표한 목표입니다.",
+        workedExample:
+          "한국은행은 기준금리를 정한 뒤 7일물 환매조건부매매로 준비금을 조절해 초단기 금리를 그 부근에 둡니다.",
+        boundary:
+          "공표값과 실현값은 다를 수 있으므로, 발표된 숫자를 그대로 시장금리로 읽으면 안 됩니다.",
+      },
+      {
+        id: "rate-corridor",
+        sectionId: "rate-setting",
+        intuition:
+          "맡기면 반드시 받는 이자가 바닥이 되고 언제든 빌릴 수 있는 금리가 천장이 되어 가격이 그 사이에 갇힙니다.",
+        workedExample:
+          "하한 2.75%, 상한 3.25%면 은행은 2.75%보다 싸게 빌려주지도 3.25%보다 비싸게 빌리지도 않습니다.",
+        boundary:
+          "중앙은행 계정과 적격 담보에 접근할 수 없는 참가자가 많으면 바닥이 새어 시장금리가 하한 아래로 내려갈 수 있습니다.",
+      },
+      {
+        id: "open-market-operation",
+        sectionId: "operation-procedure",
+        intuition:
+          "오늘 준비금이 남으면 채권을 팔아 거둬들이고 모자라면 사서 넣어 줍니다.",
+        workedExample:
+          "한국은행은 통상 7일물 환매조건부매매를 쓰며, 기준금리를 매각 시 고정입찰금리이자 매입 시 최저입찰금리로 사용합니다.",
+        boundary:
+          "되사는 조건이 붙은 거래는 만기에 자동으로 원위치하므로, 항구적 매입과 효과의 지속 기간을 같게 보면 안 됩니다.",
+      },
+      {
+        id: "expectations-hypothesis-of-rates",
+        sectionId: "transmission",
+        intuition:
+          "긴 자금을 한 번 묶는 선택과 짧은 자금을 이어 굴리는 선택이 경쟁하므로 두 결과가 크게 벌어질 수 없습니다.",
+        workedExample:
+          "앞으로 3년간 단기금리가 2%, 3%, 4%로 예상되면 3년 금리는 평균 3%에 기간 프리미엄을 더한 값 부근이 됩니다.",
+        proofIdea:
+          "두 전략의 만기 수익이 크게 다르면 비싼 쪽을 팔고 싼 쪽을 사는 거래가 이익을 내므로, 그 거래가 사라질 때까지 두 값이 좁혀진다는 무차익 논증입니다.",
+        counterexample:
+          "규제나 시장 분할로 두 전략 사이의 거래가 막히면 차익이 지워지지 않아 기대 평균과 크게 어긋난 장기금리가 유지될 수 있습니다.",
+        boundary:
+          "기간 프리미엄은 관측값이 아니라 모형 추정값이므로, 장기금리 변동을 전부 기대 변화로 해석할 수 없습니다.",
+      },
+      {
+        id: "monetary-transmission",
+        sectionId: "transmission-lag",
+        intuition:
+          "같은 인상이 대출금리·자산가격·환율·기대라는 여러 문으로 동시에 나가지만 도착 시각은 제각각입니다.",
+        workedExample:
+          "환율은 발표 직후 움직이는 반면 은행 대출금리는 수개월에 걸쳐 반영되고 기대 인플레이션은 더 늦게 따라옵니다.",
+        boundary:
+          "고정금리 대출 비중이 높거나 예금금리를 더 낮출 수 없으면 은행 경로의 전가가 약해지므로, 경로별 전제를 확인하지 않은 일반화는 성립하지 않습니다.",
+      },
+      {
+        id: "quantitative-easing",
+        sectionId: "balance-sheet-policy",
+        intuition:
+          "가격을 더 내릴 수 없으면 장기 자산을 사들여 기대와 프리미엄 쪽을 눌러 내립니다.",
+        workedExample:
+          "장기 국채를 대량 매입하면 시장에 남는 만기 위험이 줄어 기간 프리미엄이 낮아집니다.",
+        boundary:
+          "준비금이 크게 늘어도 대출 수요가 없으면 예금은 늘지 않으므로, 매입 규모를 통화량 증가로 환산해 읽으면 안 됩니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 장부",
+        relation: "중앙은행의 부채가 왜 특별한지부터 확인합니다.",
+        concepts: ["central-bank-balance-sheet"],
+      },
+      {
+        label: "01 목표",
+        relation: "정하는 것은 수량이 아니라 공표된 가격입니다.",
+        concepts: ["policy-rate"],
+      },
+      {
+        label: "02 고정",
+        relation: "선택지를 제한해 그 가격을 실제로 실현시킵니다.",
+        concepts: ["rate-corridor", "open-market-operation"],
+      },
+      {
+        label: "03 확산",
+        relation: "기대를 통해 한 점이 만기별 금리를 끌고 갑니다.",
+        concepts: ["expectations-hypothesis-of-rates", "monetary-transmission"],
+      },
+      {
+        label: "04 한계",
+        relation: "가격 수단이 막히면 장부로 넘어가지만 수량으로 읽으면 안 됩니다.",
+        concepts: ["quantitative-easing"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "중앙은행 장부에서 지급준비금이 자산인지 부채인지 쓰고, 그것이 상업은행 장부와 어떻게 대응하는지 설명하세요.",
+        answerChecklist: ["중앙은행의 부채", "은행에게는 자산", "은행 간 최종 결제 수단", "가계·기업은 보유 불가"],
+        requiredConcepts: ["central-bank-balance-sheet"],
+        sectionId: "cb-balance-sheet",
+      },
+      {
+        level: "basic",
+        question:
+          "정책금리가 명령이 아니라 목표라는 말이 무슨 뜻인지, 공표값과 실현값을 구분해 설명하세요.",
+        answerChecklist: ["공표한 목표값", "실제 시장금리는 따로 형성", "개입으로 좁힘", "둘이 다를 수 있음"],
+        requiredConcepts: ["policy-rate"],
+        sectionId: "rate-setting",
+      },
+      {
+        level: "basic",
+        question:
+          "준비금 부리 금리가 시장금리의 바닥이 되는 이유를 은행의 선택으로 설명하세요.",
+        answerChecklist: ["맡기면 확실히 받는 이자", "그보다 싸게 빌려줄 이유 없음", "손해를 감수해야 깨짐", "하한 형성"],
+        requiredConcepts: ["rate-corridor"],
+        sectionId: "rate-setting",
+      },
+      {
+        level: "basic",
+        question:
+          "오늘 준비금이 남는다고 추정될 때 중앙은행이 취하는 조치와 그 이유를 쓰세요.",
+        answerChecklist: ["RP 매각", "준비금 흡수", "금리가 하한으로 눌리는 것을 방지", "만기에 자동 원위치"],
+        requiredConcepts: ["open-market-operation"],
+        sectionId: "operation-procedure",
+      },
+      {
+        level: "basic",
+        question:
+          "앞으로 3년간 단기금리가 각각 2%, 3%, 4%로 예상될 때 기대 가설이 말하는 3년 금리를 구하고, 실제와 달라질 수 있는 이유를 한 가지 쓰세요.",
+        answerChecklist: ["평균 3%", "기간 프리미엄 가산", "프리미엄은 추정값", "시장 분할·규제"],
+        requiredConcepts: ["expectations-hypothesis-of-rates"],
+        sectionId: "transmission",
+      },
+      {
+        level: "basic",
+        question:
+          "양적완화가 준비금을 늘리는 것 자체를 목적으로 하지 않는다면 무엇을 겨냥하는지 두 가지를 쓰세요.",
+        answerChecklist: ["기대 경로 인하", "기간 프리미엄 인하", "장기금리 인하", "준비금 증가는 부산물"],
+        requiredConcepts: ["quantitative-easing"],
+        sectionId: "balance-sheet-policy",
+      },
+      {
+        level: "advanced",
+        question:
+          "중앙은행이 준비금을 아주 많이 공급해 두면 매일의 수급 조절 없이도 금리가 목표 부근에 머무는 이유를 상하한 구조로 설명하세요.",
+        answerChecklist: [
+          "잉여 상태에서 금리가 하한에 붙음",
+          "하한을 목표로 삼으면 일치",
+          "바닥 방식",
+          "수급 조절 필요성 감소",
+        ],
+        requiredConcepts: ["rate-corridor", "open-market-operation"],
+        sectionId: "rate-setting",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 0.25%포인트 인상인데도 장기금리가 오히려 내릴 수 있는 상황을 기대 가설의 두 항으로 설명하세요.",
+        answerChecklist: [
+          "오늘의 인상보다 앞으로의 경로가 중요",
+          "마지막 인상이라는 신호",
+          "기대 평균 하락",
+          "기간 프리미엄 변화도 가능",
+        ],
+        requiredConcepts: ["expectations-hypothesis-of-rates", "monetary-transmission"],
+        sectionId: "transmission",
+      },
+      {
+        level: "advanced",
+        question:
+          "고정금리 대출 비중이 높은 경제에서 정책금리 인상의 은행 경로가 약해지는 이유와, 그럼에도 다른 경로가 작동하는 이유를 함께 설명하세요.",
+        answerChecklist: [
+          "이미 실행된 대출에 닿지 않음",
+          "신규 대출에만 반영",
+          "자산가격·환율 경로는 별도로 작동",
+          "경로별 전제가 다름",
+        ],
+        requiredConcepts: ["monetary-transmission"],
+        sectionId: "transmission-lag",
+      },
+      {
+        level: "advanced",
+        question:
+          "준비금이 크게 늘었는데도 예금과 대출이 그만큼 늘지 않은 상황이 양적완화의 실패를 뜻하지 않는 이유를 앞 글의 결론과 연결해 설명하세요.",
+        answerChecklist: [
+          "통화승수는 상한이지 절차가 아님",
+          "대출 수요가 있어야 예금이 늚",
+          "효과는 금리 경로로 나타남",
+          "수량으로 환산해 읽으면 안 됨",
+        ],
+        requiredConcepts: ["quantitative-easing", "money-multiplier-ceiling"],
+        sectionId: "balance-sheet-policy",
+      },
+    ],
+    papers: [
+      {
+        title: "한국은행 · 공개시장운영 (통화정책수단)",
+        href: "https://www.bok.or.kr/portal/main/contents.do?menuNo=200294",
+        problem:
+          "정책금리를 공표하는 것만으로는 실제 은행 간 금리가 그 값이 되지 않으므로, 매일 어떤 수단으로 조절하는지가 별도로 필요합니다.",
+        contribution:
+          "증권 매매를 통한 유동성 조절의 종류를 정리하고, 통상 7일물 환매조건부매매를 중심으로 운영하며 기준금리를 그 입찰금리로 사용한다는 운영 방식을 명시합니다.",
+        assumptions:
+          "한국의 현행 통화정책 운영체제와 금융시장 구조를 전제로 한 제도 설명입니다.",
+        evidenceScope:
+          "한국은행이 공개한 제도 설명 페이지로, 수단의 종류와 운영 방식의 범위에 한정됩니다.",
+        notClaim:
+          "특정 시점의 조절 규모나 금리 수준을 이 문서로 인용할 수 없으며, 파급경로의 크기나 시차에 대한 실증 근거도 아닙니다.",
+        sectionId: "operation-procedure",
+      },
+    ],
+  },
 };

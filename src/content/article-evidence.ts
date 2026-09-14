@@ -7050,4 +7050,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "한국에서 보장 주체와 보장 범위 구조의 근거. 보장 한도 금액은 제도 개편으로 바뀌므로 본문에는 구조만 싣고 금액은 인용하지 않음",
     },
   ],
+  "banking/central-bank-and-policy-transmission": [
+    {
+      kind: "공식 문서",
+      label: "한국은행 · 공개시장운영 (통화정책수단)",
+      href: "https://www.bok.or.kr/portal/main/contents.do?menuNo=200294",
+      note: "7일물 RP 중심 운영과 기준금리를 입찰금리로 쓰는 방식의 근거. 제도 설명이며 특정 시점의 조절 규모·금리 수준의 근거는 아님",
+    },
+    {
+      kind: "공식 문서",
+      label: "한국은행 · 통화정책 목표",
+      href: "https://www.bok.or.kr/portal/main/contents.do?menuNo=200288",
+      note: "한국은행법이 정한 최우선 목표가 물가안정이라는 본문 서술의 근거",
+    },
+    {
+      kind: "공식 문서",
+      label: "한국은행 · 한국은행 기준금리 추이",
+      href: "https://www.bok.or.kr/portal/singl/baseRate/progress.do?dataSeCd=01&menuNo=200656",
+      note: "기준금리가 금융통화위원회 본회의에서 결정된다는 절차의 근거. 특정 시점 금리 수치는 본문에 인용하지 않음",
+    },
+  ],
 };

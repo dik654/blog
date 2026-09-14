@@ -22917,6 +22917,76 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "지급 능력은 있으나 당장 현금이 부족한 은행에 중앙은행이 담보를 받고 자금을 공급해 급매를 막는 기능입니다. 지급 능력이 없는 은행을 살리는 장치가 아니며, 둘을 실시간으로 가려내기 어렵다는 점이 이 기능의 오래된 난점입니다.",
     canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#safety-net",
   },
+  "central-bank-balance-sheet": {
+    id: "central-bank-balance-sheet",
+    kind: "concept",
+    domain: "economics",
+    label: "Central bank balance sheet · 중앙은행 대차대조표",
+    aliases: ["본원통화", "monetary base"],
+    definition:
+      "자산에 국채·금융기관 대출을, 부채에 발행 화폐와 지급준비금을 두는 장부입니다. 이 부채가 은행 사이의 최종 결제 수단이라는 점이 상업은행 장부와 결정적으로 다르며, 그래서 중앙은행은 자기 부채를 직접 만들어 낼 수 있습니다.",
+    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#cb-balance-sheet",
+  },
+  "policy-rate": {
+    id: "policy-rate",
+    kind: "concept",
+    domain: "economics",
+    label: "Policy rate · 정책금리",
+    aliases: ["기준금리", "정책 목표금리"],
+    definition:
+      "중앙은행이 은행 간 초단기 금리를 이 부근에 두겠다고 공표하는 목표값입니다. 명령이 아니라 목표이므로 공표값과 실제 시장금리는 다를 수 있고, 그 차이를 좁히는 일이 일상 운영입니다.",
+    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#rate-setting",
+  },
+  "rate-corridor": {
+    id: "rate-corridor",
+    kind: "method",
+    domain: "economics",
+    label: "Rate corridor · 금리 상하한 구간",
+    aliases: ["코리도어", "지급준비금 부리", "대출창구", "바닥 방식"],
+    definition:
+      "준비금에 이자를 붙여 바닥을, 담보부 대출창구로 천장을 만들어 은행 간 금리를 좁은 구간에 가두는 방식입니다. 중앙은행이 가격을 직접 부르는 것이 아니라 선택지를 제한해 가격을 몰아넣는 구조이며, 접근이 제한된 참가자가 많으면 바닥이 샙니다.",
+    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#rate-setting",
+  },
+  "open-market-operation": {
+    id: "open-market-operation",
+    kind: "method",
+    domain: "economics",
+    label: "Open market operation · 공개시장운영",
+    aliases: ["RP 매매", "환매조건부매매", "공개시장조작"],
+    definition:
+      "중앙은행이 증권을 사고팔아 지급준비금의 양을 조절하는 수단입니다. 되사거나 되파는 조건이 붙은 환매조건부매매가 중심이며, 만기에 자동으로 원위치하므로 항구적 매입과 지속 기간이 다릅니다.",
+    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#operation-procedure",
+  },
+  "expectations-hypothesis-of-rates": {
+    id: "expectations-hypothesis-of-rates",
+    kind: "theorem",
+    domain: "economics",
+    label: "만기별 금리의 기대 가설",
+    aliases: ["기대가설", "기간 프리미엄", "term premium"],
+    definition:
+      "n기간 금리를 앞으로의 단기금리 기대 평균에 기간 프리미엄을 더한 값으로 보는 관계입니다. 긴 자금을 한 번 묶는 선택과 짧은 자금을 이어 굴리는 선택이 경쟁하기 때문에 성립하며, 프리미엄이 관측값이 아니라 추정값이라는 점이 해석의 한계를 만듭니다.",
+    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#transmission",
+  },
+  "monetary-transmission": {
+    id: "monetary-transmission",
+    kind: "concept",
+    domain: "economics",
+    label: "Monetary transmission · 통화정책 파급경로",
+    aliases: ["파급경로", "정책 시차"],
+    definition:
+      "정책금리 변화가 은행 대출금리·자산가격·환율·기대라는 서로 다른 경로로 퍼져 실물에 닿는 과정입니다. 경로마다 전제와 속도가 달라 효과가 한꺼번에 오지 않으며, 그 시차 때문에 정책은 도착 시점의 상태를 겨냥하는 예측 위에서 이루어집니다.",
+    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#transmission-lag",
+  },
+  "quantitative-easing": {
+    id: "quantitative-easing",
+    kind: "method",
+    domain: "economics",
+    label: "Quantitative easing · 양적완화",
+    aliases: ["QE", "대차대조표 정책"],
+    definition:
+      "정책금리를 더 내릴 수 없을 때 장기 자산을 대량 매입해 기대 경로와 기간 프리미엄을 눌러 내리는 수단입니다. 준비금을 늘리는 것 자체가 목적이 아니며, 준비금이 늘어도 대출 수요가 없으면 예금은 늘지 않습니다.",
+    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#balance-sheet-policy",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -41960,6 +42030,76 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "앞은 예금자의 선택을 바꾸고 뒤는 은행의 현금 부족을 메우므로, 막는 실패의 종류와 적용 대상이 다릅니다.",
+  },
+  {
+    from: "bank-balance-sheet",
+    to: "central-bank-balance-sheet",
+    relation: "contrasts",
+    reason:
+      "상업은행의 부채는 예금자에 대한 빚이지만 중앙은행의 부채는 은행 사이의 최종 결제 수단이라, 같은 장부 형식에서 지위가 갈립니다.",
+  },
+  {
+    from: "central-bank-balance-sheet",
+    to: "open-market-operation",
+    relation: "prerequisite",
+    reason:
+      "자산을 사면 부채인 준비금이 늘어난다는 장부 관계를 알아야 증권 매매가 왜 준비금 조절 수단인지 설명됩니다.",
+  },
+  {
+    from: "policy-rate",
+    to: "rate-corridor",
+    relation: "prerequisite",
+    reason:
+      "공표한 목표값이 있어야 그 목표를 감싸는 상하한을 어디에 둘지 정할 수 있습니다.",
+  },
+  {
+    from: "rate-corridor",
+    to: "policy-rate",
+    relation: "produces",
+    reason:
+      "선택지를 바닥과 천장 사이로 제한하면 은행 간 금리가 그 구간에 갇혀 공표한 목표가 실제 시장금리로 실현됩니다.",
+  },
+  {
+    from: "open-market-operation",
+    to: "policy-rate",
+    relation: "optimizes",
+    reason:
+      "구간 안에서 남거나 모자라는 준비금을 매일 흡수·공급해 실제 금리를 목표에 더 가깝게 붙입니다.",
+  },
+  {
+    from: "policy-rate",
+    to: "expectations-hypothesis-of-rates",
+    relation: "prerequisite",
+    reason:
+      "장기금리가 앞으로의 단기금리 기대 평균으로 설명되려면 그 단기금리가 무엇이고 누가 정하는지가 먼저 정해져야 합니다.",
+  },
+  {
+    from: "expectations-hypothesis-of-rates",
+    to: "monetary-transmission",
+    relation: "produces",
+    reason:
+      "하루짜리 한 점이 만기별 금리 전체를 움직이는 통로가 기대이므로, 이 관계가 파급경로의 첫 단계를 이룹니다.",
+  },
+  {
+    from: "monetary-transmission",
+    to: "discount-factor",
+    relation: "constrains",
+    reason:
+      "정책금리 변화가 할인율을 바꾸면 같은 미래 현금흐름의 현재가치가 달라져 자산가격 경로가 작동합니다.",
+  },
+  {
+    from: "quantitative-easing",
+    to: "expectations-hypothesis-of-rates",
+    relation: "optimizes",
+    reason:
+      "장기물 매입과 유지 약속은 기대 평균과 기간 프리미엄 두 항을 각각 눌러 장기금리를 낮추려는 개입입니다.",
+  },
+  {
+    from: "money-multiplier-ceiling",
+    to: "quantitative-easing",
+    relation: "constrains",
+    reason:
+      "준비금 증가가 예금 증가로 자동 전환되지 않는다는 앞 글의 결론이 양적완화 효과를 수량으로 읽지 못하게 막습니다.",
   },
 ];
 
