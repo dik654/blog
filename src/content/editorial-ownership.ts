@@ -12003,6 +12003,32 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "voting-paradoxes": {
+    title: "더 나은 규칙을 찾는 문제가 아닐 수도 있습니다 글이 소유하는 범위",
+    owns: [
+      "개인의 이행성이 집단으로 넘어가지 않는다는 사실과 그 최소 예",
+      "순환이 있을 때 의사일정이 결과를 정한다는 관계",
+      "순위 점수제가 어기는 조건과 결선투표가 어기는 조건",
+      "다섯 조건을 동시에 만족하는 규칙이 없다는 결과와 그 읽는 법",
+      "선호의 모양이 순환을 막아 준다는 관계와 중위가 이긴다는 증명",
+    ],
+    reuses: [
+      {
+        label: "정책 축과 이상점으로 선호를 다루는 방식",
+        href: "/politics/constitution/constitutionalism-and-separation#checks",
+      },
+      {
+        label: "규칙마다 버리는 것이 다르다는 결론",
+        href: "/politics/elections/electoral-systems#disproportionality",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "정리의 진술은 전문을 확인한 공개 항목에서만 옮기고, 열지 못한 원 논문에는 서지 사항과 귀속만 귀속시킨다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

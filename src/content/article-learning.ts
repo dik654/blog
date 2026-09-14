@@ -77831,4 +77831,318 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "elections/voting-paradoxes": {
+    entryNote:
+      "앞 글에서 규칙마다 버리는 것이 다르다는 것을 보았습니다. 그러면 덜 버리는 규칙을 찾으면 될 것 같은데, 그 탐색이 어디서 막히는지가 이 글입니다.",
+    coreIdea:
+      "개인의 선호가 전부 일관되어도 다수결로 만든 집단의 순서는 원을 그릴 수 있고, 그때는 순서를 쥔 자리가 결과를 정합니다. 규칙을 바꾸면 순환 대신 다른 조건이 깨지며, 이 교체가 끝나지 않는다는 것이 증명되어 있습니다. 그런데도 실제 정치가 굴러가는 것은 규칙이 좋아서가 아니라 들어오는 선호가 한 축 위의 한 봉우리 모양으로 정리되어 있기 때문입니다.",
+    assumedKnowledge: [
+      {
+        id: "disproportionality-index",
+        role: "규칙마다 버리는 것이 다르다는 앞 글의 결론이 이 글의 출발점입니다.",
+      },
+      {
+        id: "veto-player-winset",
+        role: "정책을 하나의 축에 놓고 이상점과 거리로 선호를 다루는 방식을 그대로 씁니다.",
+      },
+      {
+        id: "district-magnitude",
+        role: "집계 규칙을 고르는 문제와 집계 자체의 한계를 구분하는 데 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "condorcet-cycle",
+        role: "집계가 답을 내놓지 못하는 가장 작은 경우를 세웁니다.",
+      },
+      {
+        id: "agenda-control",
+        role: "순환이 있을 때 실제로 결과를 정하는 자리를 정의합니다.",
+      },
+      {
+        id: "independence-of-irrelevant-alternatives",
+        role: "규칙을 바꿨을 때 대신 깨지는 것 하나를 정의합니다.",
+      },
+      {
+        id: "monotonicity-failure",
+        role: "다른 규칙에서 깨지는 또 다른 것을 정의합니다.",
+      },
+      {
+        id: "arrow-impossibility",
+        role: "규칙 교체가 끝나지 않는 이유를 정리로 세웁니다.",
+      },
+      {
+        id: "single-peaked-preferences",
+        role: "불가능성을 피해 가는 조건을 선호의 모양에서 찾습니다.",
+      },
+      {
+        id: "median-voter-theorem",
+        role: "그 조건 아래 다수결이 하나의 답을 낸다는 것을 계산으로 보입니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "condorcet-cycle",
+        sectionId: "cycle",
+        intuition:
+          "각자의 순서는 앞뒤가 이어지는데 집단의 순서만 원을 그립니다.",
+        workedExample:
+          "세 사람이 가나다·나다가·다가나 순서를 가지면 가가 나를 2대 1로, 나가 다를 2대 1로, 다가 가를 2대 1로 이깁니다.",
+        proofIdea:
+          "각 쌍의 비교는 서로 다른 두 사람의 다수로 결정되므로, 세 비교에서 이기는 쪽을 정하는 다수의 구성원이 매번 달라집니다. 개인의 이행성은 한 사람 안에서만 보장되고, 쌍마다 다른 사람들이 결정하면 그 보장이 집단으로 넘어가지 않습니다.",
+        counterexample:
+          "세 사람의 선호를 하나의 축 위에 놓아 전부 봉우리가 하나가 되게 만들면 고리가 사라지고 한가운데 안이 모든 상대를 이깁니다.",
+        boundary:
+          "순환이 언제나 생긴다는 뜻이 아닙니다. 선호가 충분히 갈릴 때 생길 수 있다는 것이며, 콩도르세 승자가 있으면 고리는 존재하지 않습니다.",
+      },
+      {
+        id: "agenda-control",
+        sectionId: "agenda",
+        intuition:
+          "순환이 있으면 먼저 붙일 둘을 고르는 것이 곧 우승자를 고르는 것입니다.",
+        workedExample:
+          "같은 세 사람의 선호에서 어느 둘을 먼저 붙이느냐에 따라 세 안 모두가 우승자가 될 수 있고, 표는 한 장도 바뀌지 않습니다.",
+        boundary:
+          "콩도르세 승자가 있으면 이 힘은 사라집니다. 어떤 순서로 붙여도 같은 안이 이기기 때문입니다.",
+      },
+      {
+        id: "independence-of-irrelevant-alternatives",
+        sectionId: "other-rules",
+        intuition:
+          "가안과 나안 중 무엇이 나은지는 다안이 어디 있든 상관없어야 합니다.",
+        workedExample:
+          "세 명이 가·나·다, 두 명이 나·다·가 순서면 점수가 6대 7로 나안이 이깁니다. 뒤의 두 명이 다안만 맨 아래로 내리면 8대 7이 되어 가안이 이기는데, 아무도 가안과 나안의 우열을 바꾸지 않았습니다.",
+        boundary:
+          "이 조건을 지키면 대신 개인들이 얼마나 강하게 선호하는지를 전혀 반영할 수 없게 됩니다. 조건을 버리는 규칙에도 이유가 있습니다.",
+      },
+      {
+        id: "monotonicity-failure",
+        sectionId: "other-rules",
+        intuition:
+          "1위 표가 늘어 탈락자가 바뀌면 결승에서 만나는 상대가 바뀝니다.",
+        workedExample:
+          "100명이 40·31·29로 갈린 결선투표에서 가가 69대 31로 이기지만, 나를 1위로 두었던 네 명이 가로 옮기면 나 대신 다가 결승에 올라 가가 44대 56으로 집니다.",
+        boundary:
+          "중간 탈락이 있는 규칙의 성질이며, 한 번에 순위를 합산하는 규칙에서는 이 형태로 나타나지 않습니다.",
+      },
+      {
+        id: "arrow-impossibility",
+        sectionId: "arrow",
+        intuition:
+          "하나하나는 지나치지 않아 보이는 요구 다섯 개를 동시에 지킬 수 없습니다.",
+        workedExample:
+          "정의역의 무제한성, 결과가 다시 순서일 것, 전원일치 존중, 무관한 대안으로부터의 독립, 독재자 부재를 모두 만족하는 규칙은 선택지가 셋 이상일 때 존재하지 않습니다.",
+        proofIdea:
+          "어떤 두 안에 대해 나머지 전원이 반대해도 사회의 판단을 그대로 결정하는 사람들의 묶음을 결정적 집합이라고 부릅니다. 전원일치를 존중해야 하므로 유권자 전체는 결정적 집합입니다. 여기서 결정적 집합을 둘로 쪼개고 적당한 선호 조합을 넣어 보면, 두 조각 가운데 한쪽이 여전히 결정적임을 보일 수 있습니다. 이때 쓰이는 것이 무관한 대안으로부터의 독립과, 어떤 선호 조합이든 넣어 볼 수 있다는 정의역의 무제한성입니다. 쪼개기를 반복하면 결정적 집합의 크기가 계속 줄어 마지막에 한 명만 남고, 그 한 명의 결정력이 모든 안의 쌍으로 번집니다. 그 사람이 곧 독재자이므로 독재자 부재 조건과 충돌합니다.",
+        counterexample:
+          "선택지가 둘뿐이면 다섯 조건을 전부 만족하는 규칙이 있습니다. 단순 다수결이 그렇습니다. 정리가 '셋 이상'을 요구하는 것이 이 때문입니다. 정의역을 단일정점 선호로 제한하는 경우도 마찬가지여서, 중위를 고르는 규칙이 나머지 조건을 모두 만족합니다.",
+        boundary:
+          "민주적 결정이 무의미하다는 뜻이 아닙니다. 어떤 선호 조합이 들어와도 전부 지키라는 요구가 성립하지 않는다는 뜻이므로, 들어오는 조합이 제한되면 결론이 달라집니다.",
+      },
+      {
+        id: "single-peaked-preferences",
+        sectionId: "median-voter",
+        intuition:
+          "한 줄 위에서 자기 자리가 있고 멀어질수록 싫어지는 모양입니다.",
+        workedExample:
+          "세 사람의 선호가 모두 이 모양이면 앞 절의 고리가 사라지고 한가운데 안이 모든 상대를 이깁니다.",
+        boundary:
+          "가운데를 양끝보다 싫어하는 사람이 한 명만 있어도 전제가 깨집니다. 어중간한 타협이 양쪽 어느 쪽보다 나쁘다고 보는 경우는 실제로 흔합니다.",
+      },
+      {
+        id: "median-voter-theorem",
+        sectionId: "median-voter",
+        intuition:
+          "한가운데는 어느 쪽에서 도전을 받아도 자기 편에 언제나 절반 넘는 사람을 갖습니다.",
+        workedExample:
+          "이상점이 2·4·5·8·9이면 중위는 5이고, 4가 도전하면 5·8·9가 5를 택해 3대 2, 8이 도전하면 2·4·5가 5를 택해 역시 3대 2입니다.",
+        proofIdea:
+          "도전안 y가 중위 x*보다 왼쪽이면 이상점이 x* 이상인 사람은 모두 |x_i − x*| < |x_i − y|를 만족합니다. 그런 사람은 중위 자신을 포함해 (n+1)/2명 이상이므로 과반입니다. y가 오른쪽이면 이상점이 x* 이하인 사람들에 대해 같은 논증이 대칭으로 성립합니다. 따라서 x*는 어떤 y에도 지지 않고 콩도르세 승자가 됩니다.",
+        counterexample:
+          "정책 축이 둘 이상이면 각 축의 중위를 모은 점이 모든 도전을 이긴다는 보장이 사라지고 순환이 다시 나타납니다.",
+        boundary:
+          "정치가 언제나 한가운데로 수렴한다는 뜻이 아닙니다. 축이 하나이고 봉우리가 하나이며 모두가 참여한다는 세 전제가 모두 필요합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 무너짐",
+        relation: "가장 작은 예에서 집계가 답을 못 내는 것을 봅니다.",
+        concepts: ["condorcet-cycle"],
+      },
+      {
+        label: "01 누가 정하나",
+        relation: "답이 없을 때 실제로 결정하는 자리를 찾습니다.",
+        concepts: ["agenda-control"],
+      },
+      {
+        label: "02 교체",
+        relation: "규칙을 바꾸면 대신 무엇이 깨지는지 봅니다.",
+        concepts: [
+          "independence-of-irrelevant-alternatives",
+          "monotonicity-failure",
+        ],
+      },
+      {
+        label: "03 끝",
+        relation: "그 교체가 끝나지 않는다는 것이 증명되어 있습니다.",
+        concepts: ["arrow-impossibility"],
+      },
+      {
+        label: "04 그래도",
+        relation: "선호의 모양이 정리되어 있으면 답이 나옵니다.",
+        concepts: ["single-peaked-preferences", "median-voter-theorem"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "세 사람의 선호가 가나다·나다가·다가나일 때 세 번의 쌍별 다수결 결과를 구하고 무엇이 문제인지 쓰세요.",
+        answerChecklist: [
+          "가가 나를 2대 1",
+          "나가 다를 2대 1",
+          "다가 가를 2대 1",
+          "집단의 순서가 이행적이지 않음",
+        ],
+        requiredConcepts: ["condorcet-cycle"],
+        sectionId: "cycle",
+      },
+      {
+        level: "basic",
+        question:
+          "순환이 있을 때 의사일정을 정하는 자리가 왜 힘을 갖는지 설명하세요.",
+        answerChecklist: [
+          "둘씩 붙여 하나씩 떨어뜨림",
+          "먼저 붙일 쌍에 따라 우승자가 달라짐",
+          "표는 한 장도 바뀌지 않음",
+          "고리 위의 어떤 안도 우승자가 될 수 있음",
+        ],
+        requiredConcepts: ["agenda-control", "condorcet-cycle"],
+        sectionId: "agenda",
+      },
+      {
+        level: "basic",
+        question:
+          "순위 점수제가 무관한 대안으로부터의 독립을 어긴다는 것을 예로 보이세요.",
+        answerChecklist: [
+          "세 명 가나다 · 두 명 나다가면 6대 7",
+          "뒤 두 명이 다안만 맨 아래로",
+          "8대 7이 되어 승자가 바뀜",
+          "아무도 가와 나의 우열은 안 바꿈",
+        ],
+        requiredConcepts: ["independence-of-irrelevant-alternatives"],
+        sectionId: "other-rules",
+      },
+      {
+        level: "basic",
+        question:
+          "결선투표에서 지지가 늘었는데 지는 일이 생기는 구조적 이유를 쓰세요.",
+        answerChecklist: [
+          "중간 단계에서 후보를 떨어뜨림",
+          "1위 표가 늘면 탈락자가 바뀜",
+          "결승 상대가 바뀜",
+          "새 상대에게는 질 수 있음",
+        ],
+        requiredConcepts: ["monotonicity-failure"],
+        sectionId: "other-rules",
+      },
+      {
+        level: "basic",
+        question:
+          "애로우 정리가 요구하는 다섯 조건을 각각 한 줄로 쓰세요.",
+        answerChecklist: [
+          "어떤 선호 조합이 들어와도 답을 낼 것",
+          "결과가 다시 하나의 순서일 것",
+          "모두가 원하면 사회도 그럴 것",
+          "두 안의 우열은 그 둘에 대한 판단만으로 · 독재자가 없을 것",
+        ],
+        requiredConcepts: ["arrow-impossibility"],
+        sectionId: "arrow",
+      },
+      {
+        level: "basic",
+        question:
+          "이상점이 2·4·5·8·9일 때 중위가 8과 붙으면 결과가 어떻게 되는지 계산하세요.",
+        answerChecklist: [
+          "중위는 5",
+          "2·4·5는 5가 더 가까움",
+          "8·9는 8이 더 가까움",
+          "3대 2로 5가 이김",
+        ],
+        requiredConcepts: ["median-voter-theorem"],
+        sectionId: "median-voter",
+      },
+      {
+        level: "advanced",
+        question:
+          "중위 이상점이 어떤 도전안에도 지지 않는다는 것을 왼쪽과 오른쪽 두 경우로 나누어 증명하세요.",
+        answerChecklist: [
+          "y가 왼쪽이면 이상점이 중위 이상인 사람은 전부 중위가 더 가까움",
+          "그 집합에 중위 자신이 포함",
+          "(n+1)/2명 이상이라 과반",
+          "y가 오른쪽이면 대칭으로 성립",
+        ],
+        requiredConcepts: ["median-voter-theorem", "single-peaked-preferences"],
+        sectionId: "median-voter",
+      },
+      {
+        level: "advanced",
+        question:
+          "단일정점 선호가 애로우 정리의 결론을 피해 가는 경로를 다섯 조건 가운데 어느 것과 관련지어 설명하세요.",
+        answerChecklist: [
+          "정의역의 무제한성을 포기하는 것",
+          "들어올 수 있는 선호 조합을 제한",
+          "정리의 전제 하나가 빠짐",
+          "불가능성이 성립하지 않음",
+        ],
+        requiredConcepts: ["single-peaked-preferences", "arrow-impossibility"],
+        sectionId: "median-voter",
+      },
+      {
+        level: "advanced",
+        question:
+          "의사일정 통제와 거부권이 같은 점과 다른 점을 앞 글의 통과 가능 영역과 연결해 쓰세요.",
+        answerChecklist: [
+          "둘 다 표를 더 갖지 않고 결과를 바꿈",
+          "거부권은 통과를 막음",
+          "의사일정은 후보 집합을 정함",
+          "콩도르세 승자가 있으면 의사일정의 힘만 사라짐",
+        ],
+        requiredConcepts: ["agenda-control", "veto-player-winset"],
+        sectionId: "agenda",
+      },
+      {
+        level: "advanced",
+        question:
+          "애로우 정리를 '민주적 결정은 무의미하다'로 읽으면 안 되는 이유를 정리의 조건 구조로 설명하세요.",
+        answerChecklist: [
+          "어떤 선호 조합이 들어와도라는 요구가 전제",
+          "그 요구를 줄이면 성립하지 않음",
+          "실제 선호는 몇 개의 축으로 정리되어 있음",
+          "정리는 규칙의 한계를 말하지 결정의 가치를 말하지 않음",
+        ],
+        requiredConcepts: ["arrow-impossibility", "single-peaked-preferences"],
+        sectionId: "arrow",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Kenneth J. Arrow · A Difficulty in the Concept of Social Welfare (1950)",
+        href: "https://plato.stanford.edu/entries/arrows-theorem/",
+        problem:
+          "개인의 선호에서 사회의 선호를 끌어내는 일이 가능한지가 분명하지 않았고, 서로 다른 집계 방식들이 왜 각각 다른 곳에서 이상해지는지도 정리되어 있지 않았습니다.",
+        contribution:
+          "집계 규칙이 만족해야 할 조건을 몇 개로 추려 적고, 선택지가 셋 이상이면 그 조건들을 동시에 만족하는 규칙이 존재하지 않음을 증명했습니다. 개별 규칙의 결함을 하나씩 고치는 탐색이 끝나지 않는 이유를 이 결과가 설명합니다.",
+        assumptions:
+          "개인의 선호를 순서로만 다루고 강도나 사람 사이의 비교를 쓰지 않으며, 규칙이 모든 선호 조합에 대해 정의되어야 한다고 둡니다.",
+        evidenceScope:
+          "Journal of Political Economy 58권 4호 328~346쪽에 실린 논문이며 이듬해 단행본으로 확장되었습니다. 원 논문은 출판사 쪽이 자동 조회를 막아 열지 못했고, 정리의 진술과 다섯 조건의 정의는 Stanford Encyclopedia of Philosophy의 'Arrow's Theorem' 항목(2014년 초판, 2025년 12월 7일 개정)에서 확인했습니다. 링크도 그 항목을 가리킵니다.",
+        notClaim:
+          "민주적 결정이 무의미하다거나 어떤 제도가 다른 제도보다 낫다는 주장이 아닙니다. 정리는 정의역이 무제한이라는 요구까지 포함했을 때만 성립하므로, 들어오는 선호 조합이 제한되는 현실의 사안에는 그대로 적용되지 않습니다.",
+        sectionId: "arrow",
+      },
+    ],
+  },
 };

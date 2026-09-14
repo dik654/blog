@@ -7199,4 +7199,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "선거구와 비례대표에 관한 사항을 법률로 정한다는 위임 조항. 번역본은 참조용이며 법적 효력은 국문 원문에 있음",
     },
   ],
+  "elections/voting-paradoxes": [
+    {
+      kind: "보충 읽기",
+      label: "Stanford Encyclopedia of Philosophy · Arrow's Theorem",
+      href: "https://plato.stanford.edu/entries/arrows-theorem/",
+      note: "정리의 진술과 다섯 조건의 정의를 확인한 곳. 2014년 초판, 2025년 12월 7일 개정",
+    },
+  ],
 };

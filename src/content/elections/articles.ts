@@ -43,4 +43,40 @@ export const electionsArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/elections/electoral-systems"),
   },
+  {
+    slug: "voting-paradoxes",
+    title: "규칙을 아무리 잘 골라도 남는 문제가 있습니다",
+    subcategory: "elect-aggregation",
+    sections: [
+      {
+        id: "overview",
+        title: "더 나은 규칙을 찾는 문제가 아닐 수도 있습니다",
+      },
+      {
+        id: "cycle",
+        title: "부품 1. 개인은 멀쩡한데 집단만 순서를 잃습니다",
+      },
+      {
+        id: "agenda",
+        title: "부품 2. 순환이 있으면 순서를 쥔 사람이 결과를 정합니다",
+      },
+      {
+        id: "other-rules",
+        title: "부품 3. 규칙을 바꾸면 대신 다른 것이 깨집니다",
+      },
+      {
+        id: "arrow",
+        title: "부품 4. 교체가 끝나지 않는 이유가 증명되어 있습니다",
+      },
+      {
+        id: "median-voter",
+        title: "부품 5. 그런데도 대개 굴러가는 이유는 규칙이 아니라 선호의 모양입니다",
+      },
+      {
+        id: "boundary",
+        title: "불가능하다는 말은 무의미하다는 말이 아닙니다",
+      },
+    ],
+    component: () => import("@/pages/articles/elections/voting-paradoxes"),
+  },
 ];
