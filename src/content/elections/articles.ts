@@ -79,4 +79,43 @@ export const electionsArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/elections/voting-paradoxes"),
   },
+  {
+    slug: "parties-and-interest-groups",
+    title: "선택지를 줄이는 장치들이 무엇을 함께 잘라 냅니다",
+    subcategory: "elect-parties",
+    sections: [
+      {
+        id: "overview",
+        title: "선호가 한 줄로 정리되는 것은 저절로 되는 일이 아닙니다",
+      },
+      {
+        id: "why-parties",
+        title: "부품 1. 정당은 대표하기 전에 먼저 줄입니다",
+      },
+      {
+        id: "competition",
+        title: "부품 2. 가운데로 가지만 끝까지 가지는 않습니다",
+      },
+      {
+        id: "who-organizes",
+        title: "부품 3. 조직되는 이익과 조직되지 않는 이익이 갈립니다",
+      },
+      {
+        id: "rent-seeking",
+        title: "부품 4. 다투는 일 자체가 비용입니다",
+        subsections: [
+          {
+            id: "capture",
+            title: "규제하는 쪽이 규제받는 쪽에 기대게 되는 경로",
+          },
+        ],
+      },
+      {
+        id: "boundary",
+        title: "걸러 내는 장치를 없애면 더 잘 대표되지는 않습니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/elections/parties-and-interest-groups"),
+  },
 ];

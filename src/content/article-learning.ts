@@ -78145,4 +78145,320 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "elections/parties-and-interest-groups": {
+    entryNote:
+      "앞 글에서 순환을 막아 주는 것이 규칙이 아니라 선호의 모양이라는 데까지 갔습니다. 그러면 그 모양은 누가 만드는가가 이 글의 출발점입니다.",
+    coreIdea:
+      "정당과 이익집단은 대표하는 일을 하기 전에 먼저 선택지를 줄이는 일을 하며, 줄이는 것과 잘라 내는 것은 같은 동작입니다. 정당은 쟁점을 몇 개의 축으로 눌러 담아 앞 글의 순환 조건을 없애 주고, 이익집단 쪽에서는 1인당 이해관계가 큰 쪽만 조직되어 결정을 기울게 하며, 그 다툼에 쓰는 자원 자체가 특혜 가치에 가까워지는 별도의 손실이 됩니다.",
+    assumedKnowledge: [
+      {
+        id: "single-peaked-preferences",
+        role: "정당이 만들어 주는 것이 무엇인지 말하려면 이 조건이 먼저 있어야 합니다.",
+      },
+      {
+        id: "median-voter-theorem",
+        role: "정당 위치가 가운데로 밀려가는 힘을 이 계산에서 그대로 가져옵니다.",
+      },
+      {
+        id: "collective-action-scale",
+        role: "같은 총액이 누구에게 흩어지느냐로 결과가 갈리는 이유를 여기서 가져옵니다.",
+      },
+      {
+        id: "free-rider-problem",
+        role: "조직이 서지 못하는 경우를 판정하는 데 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "party-as-choice-reduction",
+        role: "정당을 대표 기구가 아니라 축소 장치로 세웁니다.",
+      },
+      {
+        id: "party-label-shortcut",
+        role: "그 축소가 유권자 쪽에서 어떤 형태로 나타나는지 정의합니다.",
+      },
+      {
+        id: "candidate-convergence",
+        role: "축이 정리된 뒤의 경쟁이 어디로 가고 어디서 멈추는지 정의합니다.",
+      },
+      {
+        id: "concentrated-benefits-diffuse-costs",
+        role: "축 위에 무엇이 올라가는지를 정하는 비대칭을 정의합니다.",
+      },
+      {
+        id: "organizational-bias",
+        role: "그 비대칭이 굳어 요구의 종류 자체를 치우치게 하는 결과를 정의합니다.",
+      },
+      {
+        id: "rent-seeking-dissipation",
+        role: "다툼 자체가 만드는 손실을 계산으로 보입니다.",
+      },
+      {
+        id: "regulatory-capture",
+        role: "비대칭이 오래 유지될 때 기관 쪽에서 생기는 상태를 정의합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "party-as-choice-reduction",
+        sectionId: "why-parties",
+        intuition:
+          "후보 하나하나를 조사하는 대신 몇 덩어리만 보면 되게 만듭니다.",
+        workedExample:
+          "후보 열두 명이 여러 쟁점에 제각각의 입장을 가지면 알아볼 것이 열둘 곱하기 쟁점 수이지만, 정당 셋으로 묶이면 셋이 됩니다.",
+        boundary:
+          "축에 올라타지 못한 쟁점은 선택지에 실리지 않습니다. 줄이는 일과 잘라 내는 일이 같은 동작이라는 것이 이 장치의 성격입니다.",
+      },
+      {
+        id: "party-label-shortcut",
+        sectionId: "why-parties",
+        intuition:
+          "이름 하나가 여러 쟁점의 입장을 한꺼번에 알려 줍니다.",
+        workedExample:
+          "처음 보는 후보라도 소속 정당을 알면 주요 쟁점에서 어느 쪽에 설지 짐작할 수 있습니다.",
+        boundary:
+          "표지가 실제 내용과 어긋나도 유권자가 알아채기 어렵습니다. 탐색 비용을 줄여 주는 장치는 속이기도 쉬운 장치입니다.",
+      },
+      {
+        id: "candidate-convergence",
+        sectionId: "competition",
+        intuition:
+          "상대보다 가운데에 가까이 서면 이기므로 둘 다 가운데로 밀려갑니다.",
+        workedExample:
+          "선거가 다가올수록 양쪽의 말이 비슷해지는 현상이 이 힘의 표면입니다.",
+        boundary:
+          "완전히 겹치지는 않습니다. 양극단의 기권, 본선 전에 후보를 고르는 단계, 축이 둘 이상인 사정이 각각 이 힘을 상쇄합니다.",
+      },
+      {
+        id: "concentrated-benefits-diffuse-costs",
+        sectionId: "who-organizes",
+        intuition:
+          "같은 총액이라도 몇 명이 나눠 갖느냐에 따라 한 명이 회수하는 몫이 완전히 달라집니다.",
+        workedExample:
+          "백 곳이 천억을 나눠 가지면 한 곳당 열 억이라 움직일 이유가 충분하지만, 오천만 명이 천억을 나눠 내면 한 사람당 이천 원이라 알아볼 이유조차 없습니다.",
+        boundary:
+          "소수가 언제나 이긴다는 뜻이 아닙니다. 흩어진 쪽이 이미 다른 이유로 조직되어 있거나 사안이 크게 공론화되면 비대칭이 뒤집히기도 합니다.",
+      },
+      {
+        id: "organizational-bias",
+        sectionId: "who-organizes",
+        intuition:
+          "이미 모여 있는 사람들은 새로 모을 비용을 치르지 않습니다.",
+        workedExample:
+          "업계 단체는 다른 목적으로 이미 존재하므로 의견을 모아 전달하는 데 추가 비용이 거의 들지 않지만, 같은 사안의 소비자 쪽에는 그런 조직이 없습니다.",
+        boundary:
+          "양쪽 다 조직되지 않아 결정이 아예 안건이 되지 않는 경우가 실제로는 가장 흔하며, 관찰되지 않으므로 통계에도 잡히지 않습니다.",
+      },
+      {
+        id: "rent-seeking-dissipation",
+        sectionId: "rent-seeking",
+        intuition:
+          "특혜가 누구에게 가느냐는 옮기는 문제지만, 가져가려고 쓴 돈은 사라지는 문제입니다.",
+        workedExample:
+          "가치 1000억짜리 특혜를 두 곳이 다투면 각자 250억을 써서 합계 500억, 네 곳이면 각자 187.5억에 합계 750억, 열 곳이면 각자 90억에 합계 900억이 됩니다.",
+        proofIdea:
+          "한 곳의 기대 이득을 (자기 지출 ÷ 전체 지출) × V − 자기 지출로 두고, 더 써도 이득이 늘지 않는 지점을 찾습니다. 모두가 같은 조건이라 그 지점에서 전체 지출이 n×x가 되고, 정리하면 x = V(n−1)/n²이 나옵니다. 여기에 n을 곱한 합계가 V(n−1)/n이며, n이 커질수록 V에 가까워지되 넘지 않습니다.",
+        counterexample:
+          "한 곳이 이미 크게 유리하면 나머지가 아예 참여하지 않아 지출 합계가 훨씬 작아집니다. 경쟁이 없는 독점적 접근은 소모를 줄이는 대신 특혜 자체를 고착시킵니다.",
+        boundary:
+          "확률이 지출에 정확히 비례하고 조건이 모두 같을 때의 상한에 가까운 값이므로, 실제 로비 지출이 특혜 가치의 90퍼센트라는 결론으로 읽으면 안 됩니다.",
+      },
+      {
+        id: "regulatory-capture",
+        sectionId: "capture",
+        intuition:
+          "판단에 필요한 정보를 그 판단을 받는 쪽에서만 얻게 되는 상태입니다.",
+        workedExample:
+          "흩어진 비용을 지는 쪽에는 자료를 만들어 보낼 조직이 없으므로 기관이 듣는 말의 대부분이 한쪽에서 옵니다.",
+        boundary:
+          "누가 누구에게 무엇을 준 사건이 아니므로 개별 부정을 적발해도 흐름이 남아 있으면 같은 결과가 다시 나옵니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 줄이기",
+        relation: "선호가 한 줄로 정리되는 것을 누가 하는지 찾습니다.",
+        concepts: ["party-as-choice-reduction", "party-label-shortcut"],
+      },
+      {
+        label: "01 경쟁",
+        relation: "정리된 축 위에서 위치를 고르는 힘과 그 한계입니다.",
+        concepts: ["candidate-convergence"],
+      },
+      {
+        label: "02 누가 올라타나",
+        relation: "축 위에 무엇이 올라가는지를 정하는 비대칭입니다.",
+        concepts: [
+          "concentrated-benefits-diffuse-costs",
+          "organizational-bias",
+        ],
+      },
+      {
+        label: "03 다툼의 값",
+        relation: "다투는 일 자체가 만들어 내는 손실입니다.",
+        concepts: ["rent-seeking-dissipation"],
+      },
+      {
+        label: "04 굳음",
+        relation: "비대칭이 오래 유지될 때 기관 쪽에서 생기는 상태입니다.",
+        concepts: ["regulatory-capture"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "정당을 선택지 축소 장치로 볼 때 무엇이 줄어드는지 세 가지로 쓰세요.",
+        answerChecklist: [
+          "유권자의 탐색 비용",
+          "입법부의 협상 비용",
+          "쟁점 공간의 차원",
+          "알아볼 것이 후보 수에서 정당 수로",
+        ],
+        requiredConcepts: ["party-as-choice-reduction"],
+        sectionId: "why-parties",
+      },
+      {
+        level: "basic",
+        question:
+          "정당 표지가 주는 편의와 그 취약함을 함께 쓰세요.",
+        answerChecklist: [
+          "이름 하나가 여러 쟁점의 입장을 알려 줌",
+          "후보를 개별 조사하지 않아도 됨",
+          "표지와 내용이 어긋나도 알기 어려움",
+          "비용을 줄여 주는 장치는 속이기도 쉬움",
+        ],
+        requiredConcepts: ["party-label-shortcut"],
+        sectionId: "why-parties",
+      },
+      {
+        level: "basic",
+        question:
+          "두 정당이 가운데로 밀려가는 이유와 완전히 겹치지 않는 이유를 각각 쓰세요.",
+        answerChecklist: [
+          "상대보다 가운데에 가까우면 이김",
+          "양극단의 기권",
+          "본선 전 후보 선출 단계",
+          "축이 둘 이상인 사정",
+        ],
+        requiredConcepts: ["candidate-convergence"],
+        sectionId: "competition",
+      },
+      {
+        level: "basic",
+        question:
+          "천억의 이익을 백 곳이 나눠 갖는 경우와 천억의 비용을 오천만 명이 나눠 내는 경우를 1인당 값으로 비교하세요.",
+        answerChecklist: [
+          "앞은 한 곳당 열 억",
+          "뒤는 한 사람당 이천 원",
+          "합계는 같음",
+          "한쪽만 움직일 이유가 있음",
+        ],
+        requiredConcepts: ["concentrated-benefits-diffuse-costs"],
+        sectionId: "who-organizes",
+      },
+      {
+        level: "basic",
+        question:
+          "이미 존재하는 조직이 있는지 여부가 왜 조직화 가능성을 크게 가르는지 쓰세요.",
+        answerChecklist: [
+          "새로 모을 비용이 들지 않음",
+          "업계 단체는 다른 목적으로 이미 존재",
+          "소비자 쪽에는 그런 조직이 없음",
+          "같은 이해관계라도 도달 여부가 갈림",
+        ],
+        requiredConcepts: ["organizational-bias"],
+        sectionId: "who-organizes",
+      },
+      {
+        level: "basic",
+        question:
+          "가치 1000억짜리 특혜를 네 곳이 다툴 때 한 곳의 지출과 합계를 구하세요.",
+        answerChecklist: [
+          "한 곳은 V(n−1)/n²",
+          "1000 × 3 ÷ 16 = 187.5억",
+          "합계는 V(n−1)/n",
+          "1000 × 3 ÷ 4 = 750억",
+        ],
+        requiredConcepts: ["rent-seeking-dissipation"],
+        sectionId: "rent-seeking",
+      },
+      {
+        level: "advanced",
+        question:
+          "경쟁자가 늘수록 각자가 쓰는 돈은 줄어드는데 합계는 늘어나는 이유를 두 식으로 설명하세요.",
+        answerChecklist: [
+          "각자는 V(n−1)/n²로 n²가 분모",
+          "합계는 V(n−1)/n로 n이 분모",
+          "앞은 n에 대해 감소, 뒤는 증가",
+          "개별 부담은 가벼워지고 사회 손실은 무거워짐",
+        ],
+        requiredConcepts: ["rent-seeking-dissipation"],
+        sectionId: "rent-seeking",
+      },
+      {
+        level: "advanced",
+        question:
+          "정당이 앞 글의 순환 문제를 어떻게 없애 주는지, 그리고 그 대가가 무엇인지 쓰세요.",
+        answerChecklist: [
+          "여러 쟁점을 몇 개의 축으로 눌러 담음",
+          "선호가 봉우리 하나 모양이 되기 쉬워짐",
+          "순환 조건이 사라짐",
+          "축에 못 올라탄 쟁점은 선택지에 없음",
+        ],
+        requiredConcepts: [
+          "party-as-choice-reduction",
+          "single-peaked-preferences",
+        ],
+        sectionId: "why-parties",
+      },
+      {
+        level: "advanced",
+        question:
+          "규제 포획을 개별 부정의 문제로 다루면 왜 해결되지 않는지 설명하세요.",
+        answerChecklist: [
+          "정보와 사람의 흐름이 한쪽으로만 나 있는 상태",
+          "반대편에는 자료를 만들 조직이 없음",
+          "개별 적발로 흐름은 바뀌지 않음",
+          "같은 결과가 다시 나옴",
+        ],
+        requiredConcepts: ["regulatory-capture", "organizational-bias"],
+        sectionId: "capture",
+      },
+      {
+        level: "advanced",
+        question:
+          "정당과 이익집단을 없애면 잘려 나가는 것이 없어지는지 판단하고 근거를 쓰세요.",
+        answerChecklist: [
+          "줄이는 장치가 사라지면 순환이 돌아옴",
+          "그때는 순서를 쥔 자리가 결정",
+          "비대칭을 만드는 것은 조직 형태가 아니라 1인당 이해관계",
+          "물어야 할 것은 다시 들어올 통로의 유무",
+        ],
+        requiredConcepts: [
+          "party-as-choice-reduction",
+          "concentrated-benefits-diffuse-costs",
+        ],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Gordon Tullock · The Welfare Costs of Tariffs, Monopolies, and Theft (1967)",
+        href: "https://doi.org/10.1111/j.1465-7295.1967.tb01923.x",
+        problem:
+          "관세와 독점의 후생 손실을 측정한 연구들이 한결같이 아주 작은 값을 내놓아, 경제학자들이 문제 삼는 관행이 실제로는 대수롭지 않다는 결론이 나오고 있었습니다.",
+        contribution:
+          "그 계산에서 빠진 항목을 지적했습니다. 보호관세나 독점은 저절로 생기지 않고 정치 활동에 자원을 써야 얻어지므로, 부를 옮기거나 옮기는 것을 막으려는 지출 자체가 사회적 손실이라는 것입니다. 도둑질과 자물쇠의 예로 이전만 일어나는 활동에도 큰 자원이 들어간다는 것을 보였습니다.",
+        assumptions:
+          "옮기는 데 쓰인 자원이 다른 생산에 쓰일 수 있었다고 보며, 이전 자체는 사회 전체의 부를 바꾸지 않는다고 둡니다.",
+        evidenceScope:
+          "Western Economic Journal 5권 3호 224~232쪽에 실린 논문이며, 대학 강의 자료로 공개된 사본에서 전문을 확인했습니다. 저자 자신이 '이 지출을 측정할 방법은 제시할 수 없다'고 명시했고, 실제 크기에 대한 추정치는 이 논문에 없습니다.",
+        notClaim:
+          "이 글의 지출 합계 식은 이 논문에 있는 것이 아니라 뒤에 표준이 된 경합 모형이며 본문에서 직접 전개했습니다. 또한 논문은 로비 지출이 얼마나 큰지를 측정하지 않았으므로, 특정 나라나 산업의 손실 규모를 이 글에 근거해 말할 수 없습니다.",
+        sectionId: "rent-seeking",
+      },
+    ],
+  },
 };

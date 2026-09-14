@@ -7207,4 +7207,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "정리의 진술과 다섯 조건의 정의를 확인한 곳. 2014년 초판, 2025년 12월 7일 개정",
     },
   ],
+  "elections/parties-and-interest-groups": [
+    {
+      kind: "보충 읽기",
+      label:
+        "Tullock, The Welfare Costs of Tariffs, Monopolies, and Theft (Western Economic Journal 5:3, 1967)",
+      href: "https://doi.org/10.1111/j.1465-7295.1967.tb01923.x",
+      note: "이전을 얻으려는 지출 자체가 사회적 손실이라는 논증의 출처. 저자 자신이 측정 방법은 제시하지 못한다고 적음",
+    },
+  ],
 };
