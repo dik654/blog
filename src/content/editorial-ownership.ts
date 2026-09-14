@@ -12062,6 +12062,38 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "bureaucracy-and-implementation": {
+    title: "표결이 끝난 자리에서 다시 긴 사슬이 시작됩니다 글이 소유하는 범위",
+    owns: [
+      "집행을 맡길 수밖에 없는 세 가지 이유와 위임에 붙는 조건",
+      "맡기는 순간 생기는 어긋남의 두 갈래",
+      "규칙과 재량의 맞바꿈과 경계를 정하는 절차",
+      "규칙이 비운 자리를 일선이 채운다는 관계",
+      "셀 수 있는 것에 건 보상이 셀 수 없는 것을 밀어낸다는 계산",
+      "통제 수단 네 가지와 각각이 치르는 값",
+      "결정문과 결과의 간극을 구조로 읽는 방법",
+    ],
+    reuses: [
+      {
+        label: "결정을 관철하는 실행 역량이 따로 있다는 관계",
+        href: "/politics/polity/state-and-legitimacy#state-capacity",
+      },
+      {
+        label: "확인하는 기관과 집행하는 기관을 가르는 원칙",
+        href: "/politics/constitution/constitutionalism-and-separation#separation",
+      },
+      {
+        label: "감시하는 눈이 조직된 쪽에 몰려 있다는 관찰",
+        href: "/politics/elections/parties-and-interest-groups#who-organizes",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "조문의 내용은 공개 번역본을 확인한 범위에서만 적고, 특정 기관의 운영 실태처럼 확인하지 않은 사실은 싣지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
