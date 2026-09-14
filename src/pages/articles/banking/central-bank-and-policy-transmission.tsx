@@ -24,10 +24,8 @@ export default function CentralBankAndPolicyTransmissionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            중앙은행이 하는 일은 이 한 문장으로 줄어듭니다. 은행끼리 하루짜리
-            돈을 주고받는 시장에서 금리 하나를 목표치에 못 박고, 그 점에 나머지
-            금리들이 매달리게 하는 것입니다. 돈을 얼마나 찍을지를 정하는 것이
-            아니라 가격 하나를 고정하는 일입니다.
+            중앙은행이 하는 일은 이 한 문장으로 줄어듭니다. 은행끼리 하루짜리 돈을 주고받는 시장에서 금리 하나를 목표치에 못 박고 그 점에 나머지 금리들이 매달리게 하는 것입니다. 돈을
+            얼마나 찍을지를 정하는 것이 아니라 가격 하나를 고정하는 일입니다.
           </p>
 
           <p className="leading-7">
@@ -76,10 +74,8 @@ export default function CentralBankAndPolicyTransmissionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            중앙은행도 장부를 씁니다. 자산에는 국채와 금융기관 대출이, 부채에는
-            현금과 지급준비금이 적힙니다. 앞 글에서 본 은행 장부와 다른 점은
-            이 부채가 다른 모두의 자산이라는 것입니다. 은행이 결제에 쓰는 돈이
-            중앙은행의 빚이기 때문입니다.
+            중앙은행도 장부를 씁니다. 자산에는 국채와 금융기관 대출이, 부채에는 현금과 지급준비금이 적힙니다. 앞 글에서 본 은행 장부와 달리 이 부채는 다른 모두의 자산입니다. 은행이
+            결제에 쓰는 돈이 중앙은행의 빚이기 때문입니다.
           </p>
 
           <p className="leading-7">
@@ -162,10 +158,8 @@ export default function CentralBankAndPolicyTransmissionArticle() {
           </p>
 
           <p className="leading-7">
-            두 수단은 함께 쓰입니다. 준비금에 이자를 주면 은행은 그보다 낮은
-            금리로 남에게 빌려줄 이유가 없으므로 시장금리에 바닥이 생기고,
-            중앙은행이 언제든 그보다 조금 높은 금리로 빌려주겠다고 하면 천장이
-            생깁니다. 그 사이에 목표를 두면 금리가 갇힙니다.
+            두 수단은 함께 쓰입니다. 준비금에 이자를 주면 은행은 그보다 낮은 금리로 남에게 빌려줄 이유가 없으므로 시장금리에 바닥이 생깁니다. 중앙은행이 언제든 그보다 조금 높은 금리로
+            빌려주겠다고 하면 천장이 생깁니다. 그 사이에 목표를 두면 금리가 갇힙니다.
           </p>
         </div>
 
@@ -376,9 +370,8 @@ export default function CentralBankAndPolicyTransmissionArticle() {
             </p>
 
             <p className="leading-7">
-              그래서 통화정책은 오늘의 물가를 보고 오늘 대응하는 일이 될 수
-              없습니다. 지금 올린 금리가 실물에 닿을 무렵의 상태를 겨냥해야
-              하고, 그 시차 때문에 정책은 늘 예측 위에서 이루어집니다.
+              그래서 통화정책은 오늘의 물가를 보고 오늘 대응하는 일이 될 수 없습니다. 지금 올린 금리가 실물에 닿을 무렵의 상태를 겨냥해야 하고 그 시차 때문에 정책은 늘 예측 위에서
+              이루어집니다.
             </p>
           </div>
 
@@ -399,10 +392,8 @@ export default function CentralBankAndPolicyTransmissionArticle() {
               금리가 올랐는데 자산가격이 오르는 일도 생깁니다.
             </p>
             <p className="leading-7">
-              기대 경로는 중앙은행의 말이 믿길 때만 작동합니다. 목표를 여러 번
-              어긴 뒤에는 같은 발표가 같은 효과를 내지 않습니다. 이 경로가 다른
-              경로와 다른 점은, 실제 행동 없이도 작동할 수 있는 동시에 신뢰를
-              잃으면 행동을 해도 작동하지 않는다는 것입니다.
+              기대 경로는 중앙은행의 말이 믿길 때만 작동합니다. 목표를 여러 번 어긴 뒤에는 같은 발표가 같은 효과를 내지 않습니다. 이 경로에만 있는 성질이 하나 있습니다. 실제 행동
+              없이도 작동할 수 있는 동시에, 신뢰를 잃으면 행동을 해도 작동하지 않습니다.
             </p>
           </ProgressiveDetail>
         </div>
@@ -414,10 +405,8 @@ export default function CentralBankAndPolicyTransmissionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            정책금리에는 실질적인 하한이 있습니다. 너무 낮추면 사람들이 예금
-            대신 현금을 들고 있으려 하기 때문입니다. 하한에 닿으면 가격을 더
-            내리는 수단이 막히고, 남는 선택지는 장부의 구성과 크기를 바꾸는
-            것입니다.
+            정책금리에는 실질적인 하한이 있습니다. 너무 낮추면 사람들이 예금 대신 현금을 들고 있으려 하기 때문입니다. 하한에 닿으면 가격을 더 내리는 수단이 막히고 남는 선택지는 장부의
+            구성과 크기를 바꾸는 것입니다.
           </p>
 
           <p className="leading-7">
@@ -428,10 +417,8 @@ export default function CentralBankAndPolicyTransmissionArticle() {
           </p>
 
           <p className="leading-7">
-            여기서 앞 글의 결론이 다시 필요합니다. 준비금이 늘어난다고 예금이
-            자동으로 늘지는 않습니다. 실제로 준비금이 크게 늘어난 기간에도 대출이
-            그만큼 늘지 않은 사례가 있고, 이것이 통화승수를 절차로 읽으면 안
-            된다는 앞 글의 주장과 같은 이야기입니다.
+            여기서 앞 글의 결론이 다시 필요합니다. 준비금이 늘어난다고 예금이 자동으로 늘지는 않습니다. 실제로 준비금이 크게 늘어난 기간에도 대출이 그만큼 늘지 않은 사례가 있고 이것이
+            통화승수를 절차로 읽으면 안 된다는 앞 글의 주장과 같은 이야기입니다.
           </p>
         </div>
 
@@ -475,17 +462,13 @@ export default function CentralBankAndPolicyTransmissionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            한국의 경우 금융통화위원회가 연 8회 본회의에서 기준금리를 정하고,
-            한국은행은 주로 7일물 환매조건부매매로 준비금을 조절해 초단기 금리를
-            그 부근에 둡니다. 물가안정이 한국은행법이 정한 최우선 목표라는 점도
-            이 운영의 출발점입니다.
+            한국에서는 금융통화위원회가 연 8회 본회의에서 기준금리를 정하고 한국은행은 주로 7일물 환매조건부매매로 준비금을 조절해 초단기 금리를 그 부근에 둡니다. 물가안정이 한국은행법이
+            정한 최우선 목표라는 점도 이 운영의 출발점입니다.
           </p>
 
           <p className="leading-7">
-            여기까지 오면 처음 그림의 위쪽 두 화살표가 채워집니다. 은행이 예금을
-            만들고, 중앙은행이 그 창조의 가격을 정합니다. 그런데 한 가지가
-            남았습니다. 앞 절에서 계속 등장한 &ldquo;은행끼리 주고받는다&rdquo;는
-            말이 실제로 무엇을 뜻하는가입니다.
+            여기까지 오면 처음 그림의 위쪽 두 화살표가 채워집니다. 은행이 예금을 만들고 중앙은행이 그 창조의 가격을 정합니다. 그런데 한 가지가 남았습니다. 앞 절에서 계속 등장한
+            &ldquo;은행끼리 주고받는다&rdquo;는 말이 실제로 무엇을 뜻하는가입니다.
           </p>
 
           <p className="leading-7">
