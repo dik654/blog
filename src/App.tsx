@@ -22,11 +22,11 @@ export default function App() {
             <Fragment key={domain.slug}>
               <Route
                 path={`/${domain.slug}/:category`}
-                element={<CategoryPage />}
+                element={<CategoryPage domain={domain.slug} />}
               />
               <Route
                 path={`/${domain.slug}/:category/:article`}
-                element={<ArticlePage />}
+                element={<ArticlePage domain={domain.slug} />}
               />
             </Fragment>
           ))}
