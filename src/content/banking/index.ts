@@ -17,7 +17,7 @@ const banking: Category = {
       slug: "banking-policy",
       name: "통화정책",
       description: "중앙은행 대차대조표·정책금리·공개시장조작과 파급 경로",
-      icon: "🎚️",
+      icon: "🎯",
     },
     {
       slug: "banking-settlement",
