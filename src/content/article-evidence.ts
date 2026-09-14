@@ -7070,4 +7070,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "기준금리가 금융통화위원회 본회의에서 결정된다는 절차의 근거. 특정 시점 금리 수치는 본문에 인용하지 않음",
     },
   ],
+  "banking/payment-clearing-settlement": [
+    {
+      kind: "공식 규격",
+      label: "CPMI·IOSCO · Principles for financial market infrastructures (BIS, 2012)",
+      href: "https://www.bis.org/cpmi/publ/d101.htm",
+      note: "층 구분과 미결제 익스포저 관리의 국제 기준선. 기준 문서이며 특정 국가 시스템의 설명이 아님",
+    },
+    {
+      kind: "공식 문서",
+      label: "한국은행 · 우리나라의 지급결제제도",
+      href: "https://www.bok.or.kr/portal/main/contents.do?menuNo=200347",
+      note: "거액·소액 시스템 구성과 한은금융망에서의 최종 해소 구조에 대한 근거. 특정 시점의 결제 규모는 인용하지 않음",
+    },
+  ],
 };

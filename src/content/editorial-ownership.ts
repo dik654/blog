@@ -11697,6 +11697,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "payment-clearing-settlement": {
+    title: "송금은 통장 숫자가 바뀐 뒤에도 아직 끝나지 않았을 수 있습니다 글이 소유하는 범위",
+    owns: [
+      "지급·청산·결제 세 층의 분리와 층마다 다른 완료의 의미",
+      "총액 결제와 차액 결제의 자금·위험 맞바꿈",
+      "상계 효율의 정의와 효율이 높을수록 익스포저가 커지는 관계",
+      "대기열 상쇄 조합을 동시에 처리하는 혼합 설계의 성립 조건",
+      "결제 최종성이 속도가 아니라 규칙과 법에서 나온다는 근거",
+      "통화가 다를 때 생기는 시차 결제 위험과 동시결제가 지우는 범위",
+    ],
+    reuses: [
+      {
+        label: "중앙은행 계정이 기관 간 결제 수단이 되는 구조",
+        href: "/finance/banking/central-bank-and-policy-transmission#cb-balance-sheet",
+      },
+      {
+        label: "은행 장부에서 예금 잔액이 움직이는 자리",
+        href: "/finance/banking/bank-balance-sheet-and-deposit-creation#balance-sheet",
+      },
+      {
+        label: "작업증명의 확률적 최종성",
+        href: "/cs/blockchain/consensus-mechanisms#pow",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "제도 서술은 국제 기준 문서와 한국은행 공개 자료에만 귀속하고, 특정 시점의 결제 규모·참가기관 수는 본문에 사실로 싣지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
