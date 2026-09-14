@@ -22847,6 +22847,76 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "금액이 늘어난 배율을 물가가 오른 배율로 나눠 구매력 기준의 증가율만 남긴 값입니다. 명목금리에서 물가상승률을 빼는 것은 둘이 모두 작을 때의 근사이며, 사전 예상 물가로 계산한 값과 사후 실현 물가로 계산한 값은 서로 다른 숫자입니다.",
     canonicalHref: "/finance/money/time-value-and-discounting#real-rate",
   },
+  "bank-balance-sheet": {
+    id: "bank-balance-sheet",
+    kind: "concept",
+    domain: "economics",
+    label: "Bank balance sheet · 은행 대차대조표",
+    aliases: ["은행 장부", "T계정"],
+    definition:
+      "은행이 받을 권리를 왼쪽 자산에, 갚을 의무를 오른쪽 부채에 적고 그 차액을 자기자본으로 두는 장부입니다. 예금은 자산이 아니라 부채이며, 은행이 위험을 견디는 힘은 자산의 크기가 아니라 자기자본의 두께가 정합니다.",
+    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#balance-sheet",
+  },
+  "deposit-creation": {
+    id: "deposit-creation",
+    kind: "method",
+    domain: "economics",
+    label: "Deposit creation · 예금 창조",
+    aliases: ["신용창조", "대출이 예금을 만든다"],
+    definition:
+      "은행이 대출을 실행하면서 자산의 대출채권과 부채의 예금을 같은 금액으로 동시에 기장하는 것입니다. 기존 예금은 줄지 않으므로 총예금이 늘어나며, 상환 시에는 양쪽이 함께 줄어 통화량이 대출 잔액을 따라 움직입니다.",
+    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#deposit-creation",
+  },
+  "money-multiplier-ceiling": {
+    id: "money-multiplier-ceiling",
+    kind: "metric",
+    domain: "economics",
+    label: "Money multiplier ceiling · 통화승수의 상한 해석",
+    aliases: ["통화승수", "money multiplier", "지급준비율"],
+    definition:
+      "지급준비율만이 유일한 제약일 때 예금이 늘 수 있는 산술적 최대 배수 1/rr입니다. 준비금이 대출을 낳는 절차가 아니라 상한을 나타내는 항등식이며, 준비금을 늘려도 대출 수요와 자본·유동성 제약이 없으면 이 배수는 실현되지 않습니다.",
+    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#money-multiplier",
+  },
+  "maturity-transformation": {
+    id: "maturity-transformation",
+    kind: "concept",
+    domain: "economics",
+    label: "Maturity transformation · 만기 변환",
+    aliases: ["만기 불일치", "maturity mismatch"],
+    definition:
+      "언제든 청구 가능한 짧은 부채로 수년짜리 긴 자산을 떠받치는 구조입니다. 예금자의 유동성과 차주의 장기 자금을 동시에 만족시키는 은행의 본업이지만, 예금자가 동시에 찾지 않는다는 전제 위에서만 성립합니다.",
+    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#maturity-transformation",
+  },
+  "self-fulfilling-bank-run": {
+    id: "self-fulfilling-bank-run",
+    kind: "concept",
+    domain: "economics",
+    label: "Self-fulfilling bank run · 자기실현적 인출",
+    aliases: ["뱅크런", "bank run", "조정 실패"],
+    definition:
+      "긴 자산의 급매 손실 때문에 나중에 찾는 예금자가 덜 받는다는 사실이 알려져 있을 때, 남들이 찾을 것이라는 예상만으로 인출이 몰리고 그 인출이 예상을 사실로 만드는 상황입니다. 원인이 자산 부실이 아니라 예금자 사이의 조정 실패라는 점에서 일반적인 파산과 구분됩니다.",
+    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#bank-run",
+  },
+  "deposit-insurance": {
+    id: "deposit-insurance",
+    kind: "method",
+    domain: "economics",
+    label: "Deposit insurance · 예금보험",
+    aliases: ["예금자보호", "보장 한도"],
+    definition:
+      "한도까지는 은행이 파산해도 돌려받는다고 미리 약속해 먼저 찾을 유인을 제거하는 장치입니다. 실제 지급이 아니라 약속의 존재로 조정 실패를 푸는 것이 목적이며, 한도 밖 예금과 다른 채권자에게는 효력이 없습니다.",
+    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#safety-net",
+  },
+  "lender-of-last-resort": {
+    id: "lender-of-last-resort",
+    kind: "method",
+    domain: "economics",
+    label: "Lender of last resort · 최종대부자",
+    aliases: ["최종대출자", "유동성 공급"],
+    definition:
+      "지급 능력은 있으나 당장 현금이 부족한 은행에 중앙은행이 담보를 받고 자금을 공급해 급매를 막는 기능입니다. 지급 능력이 없는 은행을 살리는 장치가 아니며, 둘을 실시간으로 가려내기 어렵다는 점이 이 기능의 오래된 난점입니다.",
+    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#safety-net",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -41827,6 +41897,69 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "prerequisite",
     reason:
       "거듭제곱으로 얽힌 식에서 지수를 다루려면 로그의 성질이 필요하며, 수렴 판정과 배율 비교에서도 같은 도구를 씁니다.",
+  },
+  {
+    from: "credit-money",
+    to: "bank-balance-sheet",
+    relation: "prerequisite",
+    reason:
+      "예금이 은행의 채무라는 정의를 먼저 받아들여야 예금이 장부의 오른쪽에 적히는 이유가 설명되고, 자산과 부채의 구분이 뒤집히지 않습니다.",
+  },
+  {
+    from: "bank-balance-sheet",
+    to: "deposit-creation",
+    relation: "prerequisite",
+    reason:
+      "자산과 부채가 어느 쪽에 적히는지를 알아야 대출 한 건이 양쪽을 동시에 늘린다는 사실이 읽힙니다.",
+  },
+  {
+    from: "deposit-creation",
+    to: "monetary-aggregate",
+    relation: "produces",
+    reason:
+      "통화지표의 대부분을 차지하는 예금이 이 기장에서 생기므로, 대출 잔액의 변화가 통화량 변화로 이어집니다.",
+  },
+  {
+    from: "money-multiplier-ceiling",
+    to: "deposit-creation",
+    relation: "constrains",
+    reason:
+      "지급준비율은 예금 창조의 산술적 상한을 정하지만 창조의 절차는 아니어서, 상한과 메커니즘을 구분해야 인과 방향을 뒤집지 않습니다.",
+  },
+  {
+    from: "deposit-creation",
+    to: "maturity-transformation",
+    relation: "produces",
+    reason:
+      "대출로 만들어진 긴 자산과 언제든 청구 가능한 예금이 같은 장부에 남으면서 만기 불일치가 구조적으로 생깁니다.",
+  },
+  {
+    from: "maturity-transformation",
+    to: "self-fulfilling-bank-run",
+    relation: "produces",
+    reason:
+      "긴 자산을 급하게 팔 때 생기는 손실이 인출 순서에 따라 배분되므로, 먼저 찾을 유인이 만들어집니다.",
+  },
+  {
+    from: "deposit-insurance",
+    to: "self-fulfilling-bank-run",
+    relation: "constrains",
+    reason:
+      "한도 안에서 순서와 무관하게 돌려받는다고 보장하면 먼저 찾을 유인이 사라져 조정 실패가 성립하지 않습니다.",
+  },
+  {
+    from: "lender-of-last-resort",
+    to: "self-fulfilling-bank-run",
+    relation: "constrains",
+    reason:
+      "담보를 받고 현금을 공급하면 자산을 급매하지 않아도 되므로 손실이 인출 순서에 따라 커지는 경로 자체가 끊깁니다.",
+  },
+  {
+    from: "deposit-insurance",
+    to: "lender-of-last-resort",
+    relation: "contrasts",
+    reason:
+      "앞은 예금자의 선택을 바꾸고 뒤는 은행의 현금 부족을 메우므로, 막는 실패의 종류와 적용 대상이 다릅니다.",
   },
 ];
 

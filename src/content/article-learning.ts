@@ -74559,4 +74559,277 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "banking/bank-balance-sheet-and-deposit-creation": {
+    entryNote:
+      "예금이 은행의 빚이라는 것까지만 알고 들어오면 됩니다. 회계를 배운 적이 없어도 되도록 자산과 부채의 자리부터 세우고, 대출 한 건의 분개를 한 줄씩 따라갑니다.",
+    coreIdea:
+      "은행은 맡아 둔 예금을 빌려주는 것이 아니라 대출을 실행하면서 자산과 부채를 같은 금액으로 동시에 늘립니다. 그래서 통화량은 대출 잔액을 따라 움직이고, 그 구조가 남기는 만기 불일치가 뱅크런과 안전장치의 이유가 됩니다.",
+    assumedKnowledge: [
+      {
+        id: "credit-money",
+        role: "예금이 은행의 채무라는 정의가 장부의 오른쪽을 읽는 출발점이 됩니다.",
+      },
+      {
+        id: "monetary-aggregate",
+        role: "대출로 생긴 예금이 통화지표의 어느 칸에 들어가는지 연결하는 데 씁니다.",
+      },
+      {
+        id: "discount-factor",
+        role: "긴 자산을 오늘 현금으로 바꿀 때 값이 깎이는 이유를 시점 환산으로 이해하는 데 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "bank-balance-sheet",
+        role: "이 글 전체를 읽는 도구로, 자산·부채·자기자본의 자리를 확정합니다.",
+      },
+      {
+        id: "deposit-creation",
+        role: "대출이 예금을 만든다는 회계 사실로 이 글의 중심 질문에 답합니다.",
+      },
+      {
+        id: "money-multiplier-ceiling",
+        role: "교과서의 배수 설명이 상한일 뿐 절차가 아니라는 경계를 세웁니다.",
+      },
+      {
+        id: "maturity-transformation",
+        role: "창조된 장부가 남기는 구조적 불일치를 드러냅니다.",
+      },
+      {
+        id: "self-fulfilling-bank-run",
+        role: "그 불일치가 부실 없이도 터지는 경로를 설명합니다.",
+      },
+      {
+        id: "deposit-insurance",
+        role: "예금자의 유인을 바꿔 조정 실패를 푸는 장치입니다.",
+      },
+      {
+        id: "lender-of-last-resort",
+        role: "은행의 현금 부족을 메워 급매 연쇄를 끊는 별도 장치입니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "bank-balance-sheet",
+        sectionId: "balance-sheet",
+        intuition:
+          "왼쪽은 은행이 받을 것, 오른쪽은 갚을 것이고 그 차이가 주주 몫입니다.",
+        workedExample:
+          "자산 100, 부채 92면 자기자본은 8이고 자산 가치가 8% 떨어지면 자본이 전부 사라집니다.",
+        boundary:
+          "자기자본은 금고에 쌓아 둔 현금이 아니라 장부상의 차액이므로, 자본을 쌓으라는 규제가 특정 자산을 보유하라는 뜻은 아닙니다.",
+      },
+      {
+        id: "deposit-creation",
+        sectionId: "deposit-creation",
+        intuition:
+          "대출을 실행하면 받을 권리와 갚을 의무가 같은 순간에 한 줄씩 적힙니다.",
+        workedExample:
+          "1억 원 대출이면 자산 대출채권 1억과 부채 예금 1억이 함께 늘고, 기존 예금은 한 푼도 줄지 않습니다.",
+        boundary:
+          "예금이 늘어도 자산과 부채가 같은 금액으로 커지므로 자기자본은 변하지 않으며, 대출 자체가 은행을 부유하게 만들지는 않습니다.",
+      },
+      {
+        id: "money-multiplier-ceiling",
+        sectionId: "money-multiplier",
+        intuition:
+          "예금이 생길 때마다 일부를 떼어 둬야 한다면 남는 몫이 줄어들며 반복되고, 그 합에 한계가 있습니다.",
+        workedExample:
+          "지급준비율이 0.1이면 배수의 상한은 1/0.1 = 10배입니다.",
+        boundary:
+          "준비금이 먼저 늘어야 대출이 생긴다는 절차로 읽으면 안 됩니다. 대출 수요와 자본·유동성 제약이 없으면 이 상한은 실현되지 않습니다.",
+      },
+      {
+        id: "maturity-transformation",
+        sectionId: "maturity-transformation",
+        intuition:
+          "오늘 찾을 수 있는 돈으로 몇 년 뒤 돌아오는 대출을 떠받치고 있습니다.",
+        workedExample:
+          "예금 92는 오늘 전부 청구 가능하지만 자산 100은 만기 수년짜리 대출입니다.",
+        boundary:
+          "이것은 결함이 아니라 은행의 본업이며, 예금자가 동시에 찾지 않는다는 전제 위에서만 성립합니다.",
+      },
+      {
+        id: "self-fulfilling-bank-run",
+        sectionId: "bank-run",
+        intuition:
+          "늦게 찾으면 덜 받는다는 사실을 모두가 알면, 남들이 찾을 것 같을 때 나도 먼저 찾는 것이 합리적이 됩니다.",
+        workedExample:
+          "자산 100을 30% 손실로 급매하면 70만 회수되어 예금 92를 전부 액면대로 돌려줄 수 없습니다.",
+        boundary:
+          "원인이 자산 부실이 아니라 조정 실패이므로, 건전한 은행에서도 일어날 수 있고 반대로 부실 은행의 파산과 같은 사건이 아닙니다.",
+      },
+      {
+        id: "deposit-insurance",
+        sectionId: "safety-net",
+        intuition:
+          "한도까지는 순서와 무관하게 돌려받는다고 미리 약속하면 줄을 설 이유가 없어집니다.",
+        workedExample:
+          "한도 안 예금자는 남들이 인출해도 서두르지 않으므로 인출이 애초에 몰리지 않습니다.",
+        boundary:
+          "한도 밖 예금과 은행의 다른 채권자에게는 효력이 없어, 대규모 법인 예금 비중이 높은 은행에서는 효과가 약합니다.",
+      },
+      {
+        id: "lender-of-last-resort",
+        sectionId: "safety-net",
+        intuition:
+          "자산은 멀쩡한데 오늘 쓸 현금만 없는 은행에 담보를 받고 빌려주는 일입니다.",
+        workedExample:
+          "우량 대출채권을 담보로 단기 자금을 받으면 자산을 팔지 않고도 인출에 응할 수 있습니다.",
+        boundary:
+          "지급 능력이 없는 은행을 살리는 장치가 아니며, 유동성 부족과 지급 불능을 실시간으로 구분하기 어렵다는 점이 남은 난점입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 도구",
+        relation: "장부의 네 칸을 먼저 확정합니다.",
+        concepts: ["bank-balance-sheet"],
+      },
+      {
+        label: "01 답",
+        relation: "대출 한 건의 분개가 중심 질문에 답합니다.",
+        concepts: ["bank-balance-sheet", "deposit-creation"],
+      },
+      {
+        label: "02 제약",
+        relation: "만들 수 있다는 것과 무한정 만든다는 것을 가릅니다.",
+        concepts: ["deposit-creation", "money-multiplier-ceiling"],
+      },
+      {
+        label: "03 잔여 구조",
+        relation: "창조가 끝난 장부에 만기 불일치가 남습니다.",
+        concepts: ["maturity-transformation"],
+      },
+      {
+        label: "04 파열",
+        relation: "불일치가 부실 없이도 터지는 경로를 봅니다.",
+        concepts: ["maturity-transformation", "self-fulfilling-bank-run"],
+      },
+      {
+        label: "05 장치",
+        relation: "유인을 바꾸는 쪽과 현금을 메우는 쪽을 나눠 답합니다.",
+        concepts: ["deposit-insurance", "lender-of-last-resort"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "은행 장부에서 예금과 대출이 각각 어느 쪽에 적히는지 쓰고, 그 이유를 앞 글의 정의로 설명하세요.",
+        answerChecklist: ["예금은 부채", "대출은 자산", "예금은 은행이 진 빚", "대출은 받을 권리"],
+        requiredConcepts: ["bank-balance-sheet"],
+        sectionId: "balance-sheet",
+      },
+      {
+        level: "basic",
+        question:
+          "은행이 1억 원을 대출할 때 장부에 적히는 두 줄을 쓰고, 자기자본이 왜 변하지 않는지 설명하세요.",
+        answerChecklist: ["자산 대출채권 +1억", "부채 예금 +1억", "같은 금액 동시 증가", "차액인 자본 불변"],
+        requiredConcepts: ["deposit-creation", "bank-balance-sheet"],
+        sectionId: "deposit-creation",
+      },
+      {
+        level: "basic",
+        question:
+          "지급준비율이 0.2일 때 통화승수의 상한을 구하고, 그 숫자를 절차로 읽으면 안 되는 이유를 한 문장으로 쓰세요.",
+        answerChecklist: ["1/0.2 = 5배", "산술적 상한", "준비금이 대출을 낳는 순서 아님", "수요·자본 제약 필요"],
+        requiredConcepts: ["money-multiplier-ceiling"],
+        sectionId: "money-multiplier",
+      },
+      {
+        level: "basic",
+        question:
+          "만기 변환이 무엇인지 정의하고, 그것이 결함이 아니라 본업인 이유를 쓰세요.",
+        answerChecklist: ["짧은 부채와 긴 자산", "예금자는 유동성", "차주는 장기 자금", "동시에 찾지 않는다는 전제"],
+        requiredConcepts: ["maturity-transformation"],
+        sectionId: "maturity-transformation",
+      },
+      {
+        level: "basic",
+        question:
+          "뱅크런이 일반적인 파산과 어떻게 다른지, 원인을 기준으로 구분해 설명하세요.",
+        answerChecklist: ["자산 부실이 아님", "조정 실패", "예상이 결과를 만듦", "건전한 은행에서도 가능"],
+        requiredConcepts: ["self-fulfilling-bank-run"],
+        sectionId: "bank-run",
+      },
+      {
+        level: "basic",
+        question:
+          "예금보험과 최종대부자가 각각 무엇을 막는지 한 문장씩으로 구분하세요.",
+        answerChecklist: ["예금보험은 먼저 찾을 유인 제거", "최종대부자는 현금 부족 보전", "담보 필요", "지급 불능 은행은 대상 아님"],
+        requiredConcepts: ["deposit-insurance", "lender-of-last-resort"],
+        sectionId: "safety-net",
+      },
+      {
+        level: "advanced",
+        question:
+          "은행이 중개자라는 설명이 맞다면 대출 실행 후 총예금이 어떻게 되어야 하는지 예측을 쓰고, 실제 분개와 어긋나는 지점을 짚으세요.",
+        answerChecklist: [
+          "중개자 예측: 총예금 불변",
+          "기존 예금 감소가 있어야 함",
+          "실제로는 기존 예금 불변",
+          "총예금과 통화량 증가",
+        ],
+        requiredConcepts: ["deposit-creation", "bank-balance-sheet"],
+        sectionId: "intermediary-myth",
+      },
+      {
+        level: "advanced",
+        question:
+          "중앙은행이 준비금을 크게 늘렸는데도 대출과 통화량이 늘지 않는 상황이 통화승수 식과 모순되지 않는 이유를 설명하세요.",
+        answerChecklist: [
+          "식은 상한만 말함",
+          "대출 수요 부족",
+          "자본·유동성 제약",
+          "인과 방향이 반대에 가까움",
+        ],
+        requiredConcepts: ["money-multiplier-ceiling", "deposit-creation"],
+        sectionId: "money-multiplier",
+      },
+      {
+        level: "advanced",
+        question:
+          "자산 100을 30% 손실로 급매해야 하고 예금이 92일 때, 인출 순서에 따라 누가 얼마를 받게 되는지 계산하고 그 결과가 왜 조기 인출 유인을 만드는지 설명하세요.",
+        answerChecklist: [
+          "회수액 70",
+          "70 < 92",
+          "늦은 순서일수록 덜 받음",
+          "먼저 찾는 것이 개별적으로 합리적",
+        ],
+        requiredConcepts: ["self-fulfilling-bank-run", "maturity-transformation"],
+        sectionId: "bank-run",
+      },
+      {
+        level: "advanced",
+        question:
+          "예금보험이 만드는 도덕적 해이가 무엇이며, 그래서 어떤 종류의 규제가 함께 필요해지는지 설명하세요.",
+        answerChecklist: [
+          "예금자가 건전성을 살피지 않음",
+          "조달 비용이 위험을 반영하지 않음",
+          "이익은 주주 손실은 보험",
+          "자본·유동성 규제와 위험연동 보험료",
+        ],
+        requiredConcepts: ["deposit-insurance", "bank-balance-sheet"],
+        sectionId: "safety-net",
+      },
+    ],
+    papers: [
+      {
+        title: "Money creation in the modern economy (Bank of England Quarterly Bulletin 2014 Q1)",
+        href: "https://www.bankofengland.co.uk/quarterly-bulletin/2014/q1/money-creation-in-the-modern-economy",
+        problem:
+          "교과서가 설명하는 은행상, 곧 예금을 중개하고 중앙은행 화폐를 배수로 부풀린다는 설명이 실제 회계와 맞지 않는다는 문제를 다룹니다.",
+        contribution:
+          "대출이 예금을 만든다는 회계 사실에서 출발해 중개자 설명과 통화승수 설명을 함께 반박하고, 통화 창조에 실제로 걸리는 제약을 정리했습니다.",
+        assumptions:
+          "영국의 은행·중앙은행 제도를 기준으로 하며, 개별 은행 수준이 아니라 은행 부문 전체의 대차대조표 관계로 서술합니다.",
+        evidenceScope:
+          "중앙은행이 2014년 3월에 직접 발간한 공보 자료로, 제도 서술과 회계 관계에 한정됩니다.",
+        notClaim:
+          "은행이 제약 없이 통화를 늘릴 수 있다는 뜻이 아닙니다. 같은 자료가 창조된 통화의 총량이 결국 중앙은행의 정책에 달려 있다고 함께 적고 있으므로, 앞부분만 떼어 인용하면 결론이 뒤집힙니다.",
+        sectionId: "intermediary-myth",
+      },
+    ],
+  },
 };
