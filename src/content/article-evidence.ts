@@ -7112,4 +7112,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "잔여청구권·자기자본수익률·주가수익비율 등 본문 용어의 한국어 표준 표기를 맞추는 데 사용. 계산식의 근거가 아니라 표기 기준",
     },
   ],
+  "risk/risk-diversification-and-pricing": [
+    {
+      kind: "핵심 논문",
+      label: "Markowitz · Portfolio Selection (Journal of Finance 7(1), 1952)",
+      href: "https://onlinelibrary.wiley.com/doi/10.1111/j.1540-6261.1952.tb01525.x",
+      note: "조합의 분산과 공분산 분해에 대한 근거. 요구 수익률 결정은 이 논문의 범위가 아님. 출판사가 자동 조회를 차단해 서지 사항만 발행처 목록으로 확인",
+    },
+    {
+      kind: "공식 문서",
+      label: "한국은행 · 경제금융용어 800선 (2026)",
+      href: "https://www.bok.or.kr/portal/bbs/B0000249/view.do?nttId=10096081&menuNo=200765",
+      note: "체계적 위험·베타·분산투자 등 본문 용어의 한국어 표준 표기를 맞추는 데 사용. 계산식의 근거가 아니라 표기 기준",
+    },
+  ],
 };

@@ -11792,6 +11792,38 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "risk-diversification-and-pricing": {
+    title: "나눠서 없앨 수 있는 위험에는 대가가 없습니다 글이 소유하는 범위",
+    owns: [
+      "분산·표준편차로 위험을 재는 방식과 상하방을 같게 세는 한계",
+      "두 자산 포트폴리오 분산식과 상관이 줄어드는 몫을 정한다는 관계",
+      "자산 수를 늘릴 때 1/N로 사라지는 항과 평균 공분산으로 남는 항의 분해",
+      "분산 가능 위험에 보상이 붙지 않는 이유와 체계적 위험에만 붙는 이유",
+      "베타의 정의와 그것이 추정값이라는 경계",
+      "무위험 수익률에 베타만큼의 프리미엄을 더하는 요구 수익률 관계와 그 전제",
+      "평가에 쓸 할인율을 귀속·기간·단위에 맞춰 고르는 절차",
+    ],
+    reuses: [
+      {
+        label: "할인율이 들어갈 자리",
+        href: "/finance/money/time-value-and-discounting#discounting",
+      },
+      {
+        label: "만기별 무위험 금리를 읽어 오는 곡선",
+        href: "/finance/markets/bond-pricing-and-yield-curve#yield-curve",
+      },
+      {
+        label: "요구 수익률이 분모로 들어가는 평가식",
+        href: "/finance/markets/equity-claims-and-valuation#ddm",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "이론 결과는 원 논문의 전제 범위 안에서만 인용하고, 수익률·상관·베타 수치는 계산을 보이기 위한 가정값임을 밝혀 특정 시장의 실측치로 읽히지 않게 한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -23187,6 +23187,76 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "가격을 이익 같은 기준량으로 나눠 비교 대상과 견주는 지표입니다. 가정을 없애는 것이 아니라 비교 대상이 제대로 평가되어 있다는 가정으로 바꾸는 것이며, 분자와 분모가 같은 청구권 범위를 가리켜야 비교가 성립합니다.",
     canonicalHref: "/finance/markets/equity-claims-and-valuation#multiples",
   },
+  "variance-as-risk-proxy": {
+    id: "variance-as-risk-proxy",
+    kind: "metric",
+    domain: "economics",
+    label: "분산을 위험의 대리 지표로 쓰는 선택",
+    aliases: ["변동성", "volatility"],
+    definition:
+      "수익률의 흩어짐을 재는 통계량인 분산·표준편차를 그대로 투자 위험의 척도로 삼는 선택입니다. 계산이 단순하고 조합할 때 더해진다는 장점이 있지만, 투자자가 실제로 두려워하는 하방과 반가운 상방을 같은 위험으로 센다는 한계를 처음부터 안고 갑니다.",
+    canonicalHref: "/finance/risk/risk-diversification-and-pricing#measuring-risk",
+  },
+  "covariance-correlation": {
+    id: "covariance-correlation",
+    kind: "metric",
+    domain: "economics",
+    label: "공분산과 상관계수",
+    aliases: ["상관", "correlation", "covariance"],
+    definition:
+      "두 자산이 평균에서 같은 방향으로 벗어나는 경향을 잰 값이며, 두 표준편차로 정규화해 −1에서 1 사이로 만든 것이 상관계수입니다. 분산투자로 줄일 수 있는 몫의 크기를 이 값이 정합니다.",
+    canonicalHref: "/finance/risk/risk-diversification-and-pricing#covariance",
+  },
+  "portfolio-variance": {
+    id: "portfolio-variance",
+    kind: "method",
+    domain: "economics",
+    label: "포트폴리오 분산",
+    aliases: ["분산투자", "diversification"],
+    definition:
+      "각 자산의 분산이 비중 제곱만큼 기여하고 쌍마다 공분산 항이 더해지는 합입니다. 자산 수를 균등하게 늘리면 개별 분산 항은 1/N로 사라지고 평균 공분산만 남으므로, 분산투자의 이익은 개수가 아니라 상관에서 나옵니다.",
+    canonicalHref: "/finance/risk/risk-diversification-and-pricing#many-assets",
+  },
+  "diversifiable-risk": {
+    id: "diversifiable-risk",
+    kind: "concept",
+    domain: "economics",
+    label: "분산 가능 위험 · 비체계적 위험",
+    aliases: ["고유 위험", "idiosyncratic risk"],
+    definition:
+      "그 자산에만 생기는 일에서 오는 변동으로, 서로 다른 자산을 담으면 방향이 엇갈려 상쇄됩니다. 없앨 수 있는 위험을 계속 지는 것은 선택이므로 시장이 대가를 지불하지 않습니다.",
+    canonicalHref: "/finance/risk/risk-diversification-and-pricing#systematic-risk",
+  },
+  "systematic-risk": {
+    id: "systematic-risk",
+    kind: "concept",
+    domain: "economics",
+    label: "체계적 위험",
+    aliases: ["시장 위험", "systematic risk", "분산 불가능 위험"],
+    definition:
+      "모든 자산에 함께 오는 변동으로, 자산 수를 아무리 늘려도 평균 공분산만큼 남습니다. 누구도 피할 수 없으므로 이 부분에만 보상이 붙고, 기대 수익률은 총 변동성이 아니라 이 몫에 비례합니다.",
+    canonicalHref: "/finance/risk/risk-diversification-and-pricing#systematic-risk",
+  },
+  "beta-coefficient": {
+    id: "beta-coefficient",
+    kind: "metric",
+    domain: "economics",
+    label: "Beta · 베타",
+    aliases: ["시장 민감도", "β"],
+    definition:
+      "자산 수익률과 시장 수익률의 공분산을 시장 분산으로 나눈 값으로, 시장이 움직일 때 이 자산이 함께 움직이는 정도입니다. 정의상 시장의 베타가 1이 되며, 관측값이 아니라 기간·지수·주기에 따라 달라지는 추정값입니다.",
+    canonicalHref: "/finance/risk/risk-diversification-and-pricing#capm",
+  },
+  "capm-required-return": {
+    id: "capm-required-return",
+    kind: "theorem",
+    domain: "economics",
+    label: "CAPM 요구 수익률",
+    aliases: ["자본자산가격결정모형", "CAPM", "증권시장선"],
+    definition:
+      "무위험 수익률에 베타만큼의 시장 위험 프리미엄을 더해 요구 수익률을 정하는 관계입니다. 개별 자산의 총 변동이 아니라 시장과 겹치는 부분만 값이 매겨진다는 점이 핵심이며, 균형에서 성립할 관계이지 실제 수익률의 예측이 아닙니다.",
+    canonicalHref: "/finance/risk/risk-diversification-and-pricing#capm",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -42496,6 +42566,90 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "prerequisite",
     reason:
       "각 시점의 배당을 오늘 값으로 되돌리는 계수가 등비급수의 항을 이룹니다.",
+  },
+  {
+    from: "variance",
+    to: "variance-as-risk-proxy",
+    relation: "prerequisite",
+    reason:
+      "흩어짐을 재는 통계량의 정의가 먼저 있어야, 그 값을 투자 위험의 척도로 삼는 것이 어떤 선택이고 무엇을 놓치는지를 물을 수 있습니다.",
+  },
+  {
+    from: "variance-as-risk-proxy",
+    to: "covariance-correlation",
+    relation: "prerequisite",
+    reason:
+      "한 자산이 자기 자신과 갖는 공분산이 곧 분산이므로, 분산을 먼저 정의해야 두 자산 사이의 공분산을 정규화할 수 있습니다.",
+  },
+  {
+    from: "covariance-correlation",
+    to: "portfolio-variance",
+    relation: "prerequisite",
+    reason:
+      "합친 것의 변동에서 각자의 몫 다음에 더해지는 항이 공분산이므로, 그 값이 있어야 포트폴리오 분산을 계산할 수 있습니다.",
+  },
+  {
+    from: "portfolio-variance",
+    to: "diversifiable-risk",
+    relation: "produces",
+    reason:
+      "자산 수를 늘릴 때 1/N로 줄어드는 항이 곧 분산 가능 위험이므로, 분해 자체가 이 개념을 만들어 냅니다.",
+  },
+  {
+    from: "portfolio-variance",
+    to: "systematic-risk",
+    relation: "produces",
+    reason:
+      "같은 분해에서 평균 공분산으로 수렴해 남는 항이 체계적 위험의 정의가 됩니다.",
+  },
+  {
+    from: "diversifiable-risk",
+    to: "systematic-risk",
+    relation: "contrasts",
+    reason:
+      "하나는 조합으로 없앨 수 있어 보상이 없고 다른 하나는 피할 수 없어 보상이 붙으므로, 가격이 매겨지는지 여부가 정반대입니다.",
+  },
+  {
+    from: "systematic-risk",
+    to: "beta-coefficient",
+    relation: "produces",
+    reason:
+      "피할 수 없는 위험에만 보상이 붙는다면 자산마다 그 위험을 얼마나 지고 있는지 재야 하고, 그 척도가 베타입니다.",
+  },
+  {
+    from: "beta-coefficient",
+    to: "capm-required-return",
+    relation: "prerequisite",
+    reason:
+      "위험 한 단위의 가격에 곱할 수량이 베타이므로, 베타가 정의되어야 요구 수익률 식이 완성됩니다.",
+  },
+  {
+    from: "capm-required-return",
+    to: "discount-factor",
+    relation: "produces",
+    reason:
+      "요구 수익률이 정해지면 앞선 글들이 비워 두었던 할인율 r의 값이 채워져 현재가치 계산이 닫힙니다.",
+  },
+  {
+    from: "capm-required-return",
+    to: "dividend-discount-model",
+    relation: "constrains",
+    reason:
+      "배당할인모형의 분모에 들어갈 요구 수익률을 이 관계가 정하므로, 평가액의 신뢰도가 이 추정의 신뢰도에 묶입니다.",
+  },
+  {
+    from: "yield-curve",
+    to: "capm-required-return",
+    relation: "constrains",
+    reason:
+      "무위험 수익률을 현금흐름 기간에 맞춰 곡선에서 읽어야 하므로, 만기 구조가 이 식의 바닥값을 정합니다.",
+  },
+  {
+    from: "variance-as-risk-proxy",
+    to: "financial-leverage",
+    relation: "evaluates",
+    reason:
+      "레버리지가 기대 수익률과 함께 키우는 변동폭을 재려면 분산·표준편차라는 척도가 필요합니다.",
   },
 ];
 

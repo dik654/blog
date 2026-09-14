@@ -75918,4 +75918,284 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "risk/risk-diversification-and-pricing": {
+    entryNote:
+      "앞의 글들이 할인율 r을 비워 둔 채로 왔다는 것을 알고 들어옵니다. 확률·통계를 따로 배우지 않았어도 되도록 흩어짐을 재는 법부터 세웁니다.",
+    coreIdea:
+      "위험은 자산을 나눠 담으면 사라지는 조각과 끝내 남는 조각으로 갈리고, 없앨 수 있는 것을 지는 것은 선택이므로 보상은 남는 조각에만 붙습니다. 그 남는 양을 베타로 재면 앞선 글들이 비워 둔 할인율이 채워집니다.",
+    assumedKnowledge: [
+      {
+        id: "discount-factor",
+        role: "이 글이 채우려는 값 r이 들어갈 자리를 제공합니다.",
+      },
+      {
+        id: "dividend-discount-model",
+        role: "요구 수익률이 실제로 쓰이는 평가식의 예로 씁니다.",
+      },
+      {
+        id: "yield-curve",
+        role: "무위험 수익률을 기간에 맞춰 읽어 오는 출처가 됩니다.",
+      },
+      {
+        id: "expectation",
+        role: "기대 수익률을 분포의 중심으로 읽는 데 씁니다.",
+      },
+      {
+        id: "variance",
+        role: "흩어짐을 재는 통계량 자체는 여기서 정의하지 않고 가져다 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "variance-as-risk-proxy",
+        role: "위험을 숫자로 만드는 첫 도구와 그 도구의 한계를 함께 세웁니다.",
+      },
+      {
+        id: "covariance-correlation",
+        role: "두 자산이 함께 움직이는 정도를 재서 줄어드는 몫을 설명합니다.",
+      },
+      {
+        id: "portfolio-variance",
+        role: "자산 수를 늘릴 때 무엇이 사라지고 무엇이 남는지를 분해합니다.",
+      },
+      {
+        id: "diversifiable-risk",
+        role: "사라지는 조각에 이름을 붙이고 보상이 없는 이유를 밝힙니다.",
+      },
+      {
+        id: "systematic-risk",
+        role: "남는 조각에 이름을 붙이고 보상이 붙는 이유를 밝힙니다.",
+      },
+      {
+        id: "beta-coefficient",
+        role: "남는 위험의 양을 자산별로 재는 척도를 정의합니다.",
+      },
+      {
+        id: "capm-required-return",
+        role: "그 양에 값을 매겨 할인율을 만들고 이 시리즈의 빈칸을 닫습니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "variance-as-risk-proxy",
+        sectionId: "measuring-risk",
+        intuition:
+          "평균에서 얼마나 흩어져 있는지를 제곱해 재면 위아래가 상쇄되지 않고 큰 이탈에 더 무게가 실립니다.",
+        workedExample:
+          "수익률이 10%, 0%, −10%면 평균은 0이고 분산은 약 0.0067, 표준편차는 약 8.2%포인트입니다.",
+        boundary:
+          "위로 벗어난 것과 아래로 벗어난 것을 같은 위험으로 세므로, 손실만 두려워하는 판단에는 그대로 맞지 않습니다.",
+      },
+      {
+        id: "covariance-correlation",
+        sectionId: "covariance",
+        intuition:
+          "두 자산이 같은 방향으로 움직이는 경향이 클수록 섞어도 서로 상쇄되는 몫이 작습니다.",
+        workedExample:
+          "표준편차가 각각 20%인 두 자산을 반씩 담으면 상관이 1일 때 20%, 0일 때 약 14.1%, −1일 때 0이 됩니다.",
+        boundary:
+          "과거 자료로 추정한 상관이 앞으로도 유지된다는 보장이 없으며, 시장이 급락할 때 함께 올라가는 경향이 관측됩니다.",
+      },
+      {
+        id: "portfolio-variance",
+        sectionId: "many-assets",
+        intuition:
+          "비중을 제곱해 곱하므로 개별 변동은 자산 수에 반비례해 줄지만, 쌍의 개수가 함께 늘어 공분산 몫은 남습니다.",
+        workedExample:
+          "평균 표준편차 30%, 평균 상관 0.3이면 20개만 담아도 약 17.4%가 되고 무한히 늘려도 16.4% 아래로 내려가지 않습니다.",
+        boundary:
+          "균등 비중과 안정적인 평균 공분산을 가정하므로, 성격이 비슷한 자산만 더하면 평균 공분산이 올라 바닥 자체가 높아집니다.",
+      },
+      {
+        id: "diversifiable-risk",
+        sectionId: "systematic-risk",
+        intuition:
+          "그 회사에만 생기는 일은 다른 회사들에도 각자 다르게 생기므로 여럿을 담으면 서로 지워집니다.",
+        workedExample:
+          "한 종목만 들고 있을 때의 표준편차 30%가 다섯 종목으로 나누면 약 20%까지 떨어집니다.",
+        boundary:
+          "없앨 수 있다는 것이 실제로 없앴다는 뜻은 아니며, 한 종목에 쏠려 있으면 그 위험을 그대로 지되 보상은 받지 못합니다.",
+      },
+      {
+        id: "systematic-risk",
+        sectionId: "systematic-risk",
+        intuition:
+          "모두에게 함께 오는 일은 어떤 조합으로도 피할 수 없으므로 그것을 지는 대가가 지불됩니다.",
+        workedExample:
+          "평균 상관 0.3인 시장에서는 아무리 분산해도 표준편차가 약 16.4%에서 멈춥니다.",
+        boundary:
+          "변동성이 큰 자산이 반드시 기대 수익률이 높은 것은 아닙니다. 총 변동성 가운데 시장과 겹치는 부분만 값이 매겨집니다.",
+      },
+      {
+        id: "beta-coefficient",
+        sectionId: "capm",
+        intuition:
+          "시장이 1%포인트 움직일 때 이 자산이 평균적으로 몇 %포인트 움직이는지를 숫자 하나로 요약합니다.",
+        workedExample:
+          "베타가 1.2면 시장이 10% 오를 때 평균적으로 12% 오르는 경향을 뜻합니다.",
+        boundary:
+          "추정 기간·지수·수익률 주기를 바꾸면 값이 달라지는 추정값이므로, 하나의 숫자로 보고하면 그 불확실성이 사라집니다.",
+      },
+      {
+        id: "capm-required-return",
+        sectionId: "capm",
+        intuition:
+          "위험을 전혀 지지 않을 때의 수익률 위에, 피할 수 없는 위험을 진 양만큼의 대가를 얹습니다.",
+        workedExample:
+          "무위험 수익률 3%, 시장 초과 수익률 5%, 베타 1.2면 요구 수익률은 3 + 1.2×5 = 9%입니다.",
+        proofIdea:
+          "모든 투자자가 평균과 분산만 보고 판단하면 위험 자산 보유 비중이 모두 같은 조합이 되고, 그 조합이 시장 전체와 일치합니다. 균형에서는 어떤 자산을 조금 더 담았을 때 늘어나는 위험 대비 늘어나는 기대 수익률이 모든 자산에서 같아야 하므로, 그 비율이 일정하다는 조건에서 이 관계가 나옵니다.",
+        counterexample:
+          "투자자가 서로 다른 정보를 보거나 무위험 금리로 자유롭게 빌릴 수 없으면 모두가 같은 위험 조합을 들 이유가 없어져 이 관계가 성립하지 않습니다.",
+        boundary:
+          "균형에서 성립할 관계이지 실제 수익률의 예측이 아니며, 실증적으로 잘 맞지 않는 구간이 보고되어 왔으므로 정답이 아니라 출발점으로 씁니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 척도",
+        relation: "흩어진 정도를 숫자로 만듭니다.",
+        concepts: ["variance-as-risk-proxy"],
+      },
+      {
+        label: "01 관계",
+        relation: "두 자산이 함께 움직이는 정도를 잽니다.",
+        concepts: ["covariance-correlation"],
+      },
+      {
+        label: "02 분해",
+        relation: "자산을 늘릴 때 무엇이 사라지고 무엇이 남는지 가릅니다.",
+        concepts: ["portfolio-variance", "diversifiable-risk", "systematic-risk"],
+      },
+      {
+        label: "03 수량",
+        relation: "남는 위험을 자산별로 얼마나 지는지 잽니다.",
+        concepts: ["beta-coefficient"],
+      },
+      {
+        label: "04 가격",
+        relation: "그 양에 값을 매겨 할인율을 만듭니다.",
+        concepts: ["capm-required-return"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "위험을 잴 때 평균에서 벗어난 정도를 그냥 더하지 않고 제곱하는 이유를 두 가지 쓰세요.",
+        answerChecklist: ["위아래가 상쇄되지 않게", "큰 이탈에 더 큰 무게", "제곱근으로 단위 복원", "표준편차"],
+        requiredConcepts: ["variance-as-risk-proxy"],
+        sectionId: "measuring-risk",
+      },
+      {
+        level: "basic",
+        question:
+          "표준편차가 각각 20%인 두 자산을 반씩 담았을 때 상관이 1, 0, −1인 경우의 포트폴리오 표준편차를 각각 구하세요.",
+        answerChecklist: ["상관 1이면 20%", "상관 0이면 약 14.1%", "상관 −1이면 0", "공분산 항이 결정"],
+        requiredConcepts: ["covariance-correlation", "portfolio-variance"],
+        sectionId: "covariance",
+      },
+      {
+        level: "basic",
+        question:
+          "자산 수를 늘릴 때 사라지는 항과 남는 항이 각각 무엇인지 쓰고, 남는 값이 무엇으로 수렴하는지 답하세요.",
+        answerChecklist: ["개별 분산 항은 1/N", "공분산 항은 (N−1)/N", "평균 공분산으로 수렴", "0이 되지 않음"],
+        requiredConcepts: ["portfolio-variance"],
+        sectionId: "many-assets",
+      },
+      {
+        level: "basic",
+        question:
+          "분산 가능한 위험에 보상이 붙지 않는 이유를 한 문장으로 설명하세요.",
+        answerChecklist: ["조합으로 없앨 수 있음", "지는 것은 선택", "필연이 아님", "시장이 대가를 줄 이유 없음"],
+        requiredConcepts: ["diversifiable-risk", "systematic-risk"],
+        sectionId: "systematic-risk",
+      },
+      {
+        level: "basic",
+        question:
+          "베타의 정의를 쓰고 시장 자신의 베타가 왜 1인지 설명하세요.",
+        answerChecklist: ["시장과의 공분산", "시장 분산으로 나눔", "자기 자신과의 공분산은 분산", "따라서 1"],
+        requiredConcepts: ["beta-coefficient"],
+        sectionId: "capm",
+      },
+      {
+        level: "basic",
+        question:
+          "무위험 수익률 2%, 시장 초과 수익률 6%, 베타 0.8일 때 요구 수익률을 구하세요.",
+        answerChecklist: ["2 + 0.8×6", "6.8%", "베타가 1보다 작아 시장보다 낮음", "총 변동성이 아니라 겹치는 부분"],
+        requiredConcepts: ["capm-required-return", "beta-coefficient"],
+        sectionId: "capm",
+      },
+      {
+        level: "advanced",
+        question:
+          "종목을 50개에서 100개로 늘려도 위험이 거의 줄지 않는 이유를 분해식으로 설명하고, 바닥을 낮추려면 무엇을 바꿔야 하는지 쓰세요.",
+        answerChecklist: [
+          "1/N 항이 이미 매우 작음",
+          "(N−1)/N이 이미 1에 근접",
+          "평균 공분산이 바닥",
+          "개수가 아니라 상관을 낮춰야 함",
+        ],
+        requiredConcepts: ["portfolio-variance", "systematic-risk"],
+        sectionId: "many-assets",
+      },
+      {
+        level: "advanced",
+        question:
+          "변동성이 아주 큰 자산인데도 기대 수익률이 낮을 수 있는 경우를 베타로 설명하세요.",
+        answerChecklist: [
+          "총 변동성에는 고유 위험이 포함",
+          "시장과 겹치는 부분만 가격이 매겨짐",
+          "베타가 낮으면 프리미엄도 낮음",
+          "변동성과 기대 수익률은 별개",
+        ],
+        requiredConcepts: ["beta-coefficient", "diversifiable-risk"],
+        sectionId: "capm",
+      },
+      {
+        level: "advanced",
+        question:
+          "평가에 쓸 할인율을 고를 때 현금흐름의 귀속과 기간, 명목·실질을 맞춰야 하는 이유를 각각 한 문장씩 설명하세요.",
+        answerChecklist: [
+          "주주 몫이면 자기자본 비용",
+          "기간은 수익률 곡선에서 맞춤",
+          "명목 현금흐름에 명목 할인율",
+          "어긋나면 평가액이 체계적으로 편향",
+        ],
+        requiredConcepts: ["capm-required-return", "yield-curve"],
+        sectionId: "applying-r",
+      },
+      {
+        level: "advanced",
+        question:
+          "위기에 자산 간 상관이 함께 올라가면 이 글의 계산 가운데 무엇이 무효가 되는지, 그리고 그것이 위험 관리에 어떤 문제를 일으키는지 설명하세요.",
+        answerChecklist: [
+          "평균 공분산이 커져 바닥이 올라감",
+          "같은 조합의 위험이 크게 증가",
+          "평상시 상관으로 계산한 한도가 틀림",
+          "필요한 순간에 분산 효과가 줄어듦",
+        ],
+        requiredConcepts: ["portfolio-variance", "covariance-correlation"],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title: "Harry Markowitz · Portfolio Selection (The Journal of Finance 7(1), 1952, 77–91)",
+        href: "https://onlinelibrary.wiley.com/doi/10.1111/j.1540-6261.1952.tb01525.x",
+        problem:
+          "자산을 하나씩 좋고 나쁨으로 고르면 조합 전체의 위험이 어떻게 되는지가 설명되지 않아, 분산투자가 왜 유리한지를 정량적으로 말할 수 없었습니다.",
+        contribution:
+          "조합의 기대 수익률과 분산을 함께 보는 틀을 세우고, 자산 간 공분산 때문에 조합의 위험이 개별 위험의 평균보다 작아질 수 있음을 정식화했습니다.",
+        assumptions:
+          "수익률 분포를 평균과 분산만으로 요약할 수 있고 투자자가 그 둘만 보고 판단한다고 전제합니다.",
+        evidenceScope:
+          "1952년 Journal of Finance에 실린 이론 논문으로, 조합을 고르는 틀의 범위에 있습니다. 출판사 사이트가 자동 조회를 차단해 서지 사항은 발행처 목록으로 확인했습니다.",
+        notClaim:
+          "균형에서 기대 수익률이 어떻게 정해지는지에 대한 결과는 이 논문이 아니라 이후의 별도 연구에서 나왔으므로, 요구 수익률 식을 이 출처로 인용할 수 없습니다.",
+        sectionId: "systematic-risk",
+      },
+    ],
+  },
 };
