@@ -77528,4 +77528,307 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "elections/electoral-systems": {
+    entryNote:
+      "앞 글에서 의석 분포가 협상력과 정부 형태의 성격을 정한다는 것까지 보고, 그 의석을 주어진 것으로 두었습니다. 여기서는 그 의석이 어디서 오는지를 봅니다.",
+    coreIdea:
+      "표를 의석으로 바꾸는 규칙은 표를 그대로 옮기는 통로가 아니라 무엇을 버릴지 정하는 장치이며, 그 성격을 거의 다 정하는 것은 한 선거구에서 몇 명을 뽑는가입니다. 다수제는 표를 버려 단독 과반을 사고, 비례는 표를 지키는 대신 나누어 떨어지지 않는 것을 나누는 문제를 떠안으며, 그 차이는 하나의 지수로 잴 수 있습니다.",
+    assumedKnowledge: [
+      {
+        id: "voting-power-index",
+        role: "의석이 협상력을 정한다는 것을 앞 글에서 보았기에 의석의 출처를 따질 이유가 생깁니다.",
+      },
+      {
+        id: "coalition-government",
+        role: "단독 과반이 있느냐 없느냐가 왜 중요한지를 여기서 다시 씁니다.",
+      },
+      {
+        id: "constitutional-entrenchment",
+        role: "선거 제도가 헌법이 아니라 법률에 맡겨져 있다는 사실의 무게를 재는 데 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "district-magnitude",
+        role: "제도의 성격을 거의 다 정하는 하나의 숫자를 세웁니다.",
+      },
+      {
+        id: "electoral-threshold",
+        role: "크기가 만든 결과를 한 번 더 걸러 내는 장치를 정의합니다.",
+      },
+      {
+        id: "wasted-votes-and-duverger",
+        role: "다수제가 표를 버려 다수를 만드는 두 경로를 정의합니다.",
+      },
+      {
+        id: "electoral-districting",
+        role: "득표를 바꾸지 않고 의석을 바꾸는 수단을 정의합니다.",
+      },
+      {
+        id: "highest-average-allocation",
+        role: "나누어 떨어지지 않는 것을 나누는 실제 절차를 정의합니다.",
+      },
+      {
+        id: "disproportionality-index",
+        role: "제도가 표를 얼마나 비트는지를 하나의 수로 재는 방법을 세웁니다.",
+      },
+      {
+        id: "mixed-electoral-system",
+        role: "두 논리를 한 선거에 넣었을 때 갈리는 두 방식을 구분합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "district-magnitude",
+        sectionId: "district-magnitude",
+        intuition:
+          "한 자리는 쪼갤 수 없고 열 자리는 쪼갤 수 있습니다. 비례성의 상한이 여기서 정해집니다.",
+        workedExample:
+          "한 명만 뽑으면 1등 아닌 표가 전부 버려지고, 열 명을 뽑으면 10퍼센트 남짓으로도 한 자리를 얻습니다.",
+        boundary:
+          "크기를 키우면 비례성은 올라가지만 유권자와 당선자 사이의 연결은 흐려집니다. 한쪽을 늘리면 다른 쪽이 줄어듭니다.",
+      },
+      {
+        id: "electoral-threshold",
+        sectionId: "district-magnitude",
+        intuition:
+          "너무 잘게 쪼개지는 것을 막으려고 배분 전에 한 번 거릅니다.",
+        workedExample:
+          "전국 득표 3퍼센트를 넘지 못한 정당을 빼면 그 표는 사라지지 않고 남은 정당들에게 나뉘어 갑니다.",
+        boundary:
+          "문턱 바로 아래의 표는 통째로 빠지므로, 정당 수를 줄이려던 장치가 불비례를 오히려 키울 수 있습니다.",
+      },
+      {
+        id: "wasted-votes-and-duverger",
+        sectionId: "plurality",
+        intuition:
+          "이길 수 없는 후보에게 던진 표가 아무 의석도 만들지 못한다는 것을 알면 표를 옮기게 됩니다.",
+        workedExample:
+          "계산 규칙이 표를 버리는 것이 첫째 효과이고, 그 사실을 안 유권자가 당선 가능한 쪽으로 옮기는 것이 둘째 효과입니다.",
+        boundary:
+          "경향이지 법칙이 아닙니다. 지지가 한 지역에 몰린 정당은 전국 득표가 작아도 그 지역에서 계속 1등을 하므로 사라지지 않습니다.",
+      },
+      {
+        id: "electoral-districting",
+        sectionId: "districting",
+        intuition:
+          "이기는 데 필요한 것은 1등이지 큰 표차가 아니므로, 크게 이기면 남는 표가 버려집니다.",
+        workedExample:
+          "같은 전국 득표 44·41·15퍼센트를 두고 경계만 바꾸면 아홉 석을 전부 가져가던 정당이 세 석만 가져갑니다.",
+        boundary:
+          "경계를 그리는 일 자체가 조작인 것은 아닙니다. 인구 변화에 따라 다시 그어야 하므로, 문제는 경계의 존재가 아니라 누가 어떤 기준으로 긋는가입니다.",
+      },
+      {
+        id: "highest-average-allocation",
+        sectionId: "proportional",
+        intuition:
+          "의석을 받을 때마다 다음 몫이 작아지게 만들어 순서대로 하나씩 나눕니다.",
+        workedExample:
+          "득표 396·369·135을 1·2·3…으로 나눈 몫을 한 줄로 세우면 396, 369, 198, 184.5, 135, 132, 123, 99, 92.25 순서가 되어 9석이 4·4·1로 갈립니다.",
+        boundary:
+          "나누는 수를 1·3·5…로 바꾸면 작은 정당이 더 일찍 들어옵니다. 어느 쪽이 옳은 것이 아니라 비례를 무엇으로 볼지에 대한 답이 다른 것입니다.",
+      },
+      {
+        id: "disproportionality-index",
+        sectionId: "disproportionality",
+        intuition:
+          "득표율과 의석률의 차이를 제곱해 더하면 남는 쪽과 모자라는 쪽이 상쇄되지 않습니다.",
+        workedExample:
+          "득표율 44·41·15에 의석률 100·0·0이면 제곱합이 5042이고 반으로 나눈 2521의 제곱근인 약 50.2가 됩니다. 같은 표가 4·4·1이 되면 약 3.7로 떨어집니다.",
+        proofIdea:
+          "합을 반으로 나누는 이유는 한 정당이 실제보다 많이 받으면 다른 정당들이 정확히 그만큼 적게 받기 때문입니다. 득표율의 합과 의석률의 합이 모두 100이므로 차이의 합은 언제나 0이고, 같은 왜곡이 더 받은 쪽과 덜 받은 쪽에서 한 번씩 제곱합에 들어갑니다. 이 인자가 없으면 값이 √2배 커질 뿐 제도 사이의 순서는 바뀌지 않습니다.",
+        counterexample:
+          "값이 작다고 더 나은 제도인 것은 아닙니다. 완전히 비례하는 의회는 사회의 분열을 그대로 옮겨 놓아 정부 구성이 어려워지고, 값이 큰 다수제는 그 대가로 단독 과반을 얻습니다.",
+        boundary:
+          "정당을 분석의 단위로 두므로 무소속이 많으면 값이 흔들리고, 지역구와 비례를 따로 뽑는 제도에서는 어느 표를 기준으로 삼을지부터 정해야 합니다.",
+      },
+      {
+        id: "mixed-electoral-system",
+        sectionId: "mixed",
+        intuition:
+          "지역과의 연결과 비례성을 둘 다 갖고 싶으면 의석을 갈라 각각 다른 규칙을 씁니다.",
+        workedExample:
+          "두 부분을 따로 계산해 더하면 지역구의 불비례가 그대로 남고, 정당 득표율로 전체를 먼저 정한 뒤 지역구에서 얻은 만큼을 빼면 전체가 비례에 가까워집니다.",
+        boundary:
+          "한국 헌법은 선거구와 비례대표에 관한 사항을 법률에 위임하므로, 이 선택은 과반으로 바꿀 수 있고 바꾸는 주체가 그 제도로 당선된 사람들입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 하나의 숫자",
+        relation: "제도의 성격을 거의 다 정하는 선택지를 먼저 고릅니다.",
+        concepts: ["district-magnitude", "electoral-threshold"],
+      },
+      {
+        label: "01 버리는 쪽",
+        relation: "표를 버려 다수를 만드는 경로와 그 부작용입니다.",
+        concepts: ["wasted-votes-and-duverger", "electoral-districting"],
+      },
+      {
+        label: "02 나누는 쪽",
+        relation: "버리지 않는 대신 나누어 떨어지지 않는 것을 나눕니다.",
+        concepts: ["highest-average-allocation"],
+      },
+      {
+        label: "03 재기",
+        relation: "두 쪽의 차이를 하나의 수로 옮깁니다.",
+        concepts: ["disproportionality-index"],
+      },
+      {
+        label: "04 섞기",
+        relation: "두 논리를 한 선거에 넣으면 갈래가 다시 생깁니다.",
+        concepts: ["mixed-electoral-system"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "선거구 크기가 왜 제도의 성격을 거의 다 정한다고 하는지 설명하세요.",
+        answerChecklist: [
+          "의석을 나눌 수 있는 최소 단위를 정함",
+          "한 명이면 1등 아닌 표가 전부 버려짐",
+          "크면 작은 비율로도 한 자리를 얻음",
+          "제도의 이름이 아니라 이 숫자가 비례성의 상한",
+        ],
+        requiredConcepts: ["district-magnitude"],
+        sectionId: "district-magnitude",
+      },
+      {
+        level: "basic",
+        question:
+          "다수제가 정당 수를 줄이는 두 경로를 구분해 쓰세요.",
+        answerChecklist: [
+          "계산 규칙이 1등 아닌 표를 버림",
+          "유권자가 그 사실을 알고 표를 옮김",
+          "앞은 규칙의 효과, 뒤는 유권자의 반응",
+          "둘이 함께 작동함",
+        ],
+        requiredConcepts: ["wasted-votes-and-duverger"],
+        sectionId: "plurality",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 전국 득표에서 선거구 경계만 바꿔도 의석이 달라지는 이유를 쓰세요.",
+        answerChecklist: [
+          "필요한 것은 1등이지 큰 표차가 아님",
+          "크게 이기면 남는 표가 버려짐",
+          "아슬아슬하게 이기면 적은 표로 같은 한 석",
+          "표가 몰린 쪽이 손해",
+        ],
+        requiredConcepts: ["electoral-districting"],
+        sectionId: "districting",
+      },
+      {
+        level: "basic",
+        question:
+          "득표가 396·369·135일 때 9석을 최고평균 방식으로 나누면 어떻게 되는지 절차와 함께 쓰세요.",
+        answerChecklist: [
+          "각 정당의 표를 1·2·3…으로 나눔",
+          "몫을 전부 섞어 큰 순서로 한 줄",
+          "앞에서부터 9개를 끊음",
+          "4·4·1",
+        ],
+        requiredConcepts: ["highest-average-allocation"],
+        sectionId: "proportional",
+      },
+      {
+        level: "basic",
+        question:
+          "불비례 지수에서 차이를 그냥 더하지 않고 제곱해서 더하는 이유를 쓰세요.",
+        answerChecklist: [
+          "남는 쪽과 모자라는 쪽이 상쇄됨",
+          "그냥 더하면 언제나 0",
+          "제곱하면 상쇄되지 않음",
+          "큰 어긋남이 더 무겁게 들어감",
+        ],
+        requiredConcepts: ["disproportionality-index"],
+        sectionId: "disproportionality",
+      },
+      {
+        level: "basic",
+        question:
+          "혼합형 선거제의 두 방식이 어떻게 다른지 쓰세요.",
+        answerChecklist: [
+          "따로 계산해 더하는 방식",
+          "정당 득표율로 전체를 먼저 정하는 방식",
+          "앞은 지역구 불비례가 남음",
+          "뒤는 전체가 비례에 가까워짐",
+        ],
+        requiredConcepts: ["mixed-electoral-system"],
+        sectionId: "mixed",
+      },
+      {
+        level: "advanced",
+        question:
+          "불비례 지수에서 제곱합을 반으로 나누는 이유를 득표율과 의석률의 합이라는 성질로 설명하세요.",
+        answerChecklist: [
+          "두 합이 모두 100",
+          "차이의 합은 언제나 0",
+          "한 왜곡이 더 받은 쪽과 덜 받은 쪽에서 두 번 세어짐",
+          "없으면 √2배가 될 뿐 순서는 안 바뀜",
+        ],
+        requiredConcepts: ["disproportionality-index"],
+        sectionId: "disproportionality",
+      },
+      {
+        level: "advanced",
+        question:
+          "봉쇄조항이 불비례를 줄이려다 오히려 키울 수 있는 경로를 쓰세요.",
+        answerChecklist: [
+          "문턱 아래 정당을 배분에서 제외",
+          "그 표가 통째로 의석이 되지 못함",
+          "남은 정당들에게 나뉘어 감",
+          "제외된 표가 클수록 지수가 올라감",
+        ],
+        requiredConcepts: ["electoral-threshold", "disproportionality-index"],
+        sectionId: "district-magnitude",
+      },
+      {
+        level: "advanced",
+        question:
+          "불비례 지수가 낮은 제도를 곧바로 더 나은 제도라고 말할 수 없는 이유를 앞 글의 정부 구성 문제와 함께 쓰세요.",
+        answerChecklist: [
+          "지수는 비례에서 벗어난 정도만 잼",
+          "벗어남의 대가로 얻은 단독 과반을 세지 않음",
+          "완전 비례는 분열을 그대로 옮김",
+          "정부 구성이 어려워짐",
+        ],
+        requiredConcepts: ["disproportionality-index", "coalition-government"],
+        sectionId: "disproportionality",
+      },
+      {
+        level: "advanced",
+        question:
+          "선거 제도가 헌정 질서 가운데 특이한 위치에 있다는 말의 뜻을 개정 문턱과 개정 주체로 설명하세요.",
+        answerChecklist: [
+          "헌법이 법률에 위임",
+          "헌법 개정과 달리 과반으로 개정 가능",
+          "고치는 쪽이 그 제도로 당선된 사람들",
+          "규칙을 만드는 쪽과 적용받는 쪽이 같음",
+        ],
+        requiredConcepts: ["mixed-electoral-system", "constitutional-entrenchment"],
+        sectionId: "mixed",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Michael Gallagher · Proportionality, disproportionality and electoral systems (1991)",
+        href: "https://doi.org/10.1016/0261-3794(91)90004-C",
+        problem:
+          "선거 제도를 비례적이라거나 덜 비례적이라고 말할 때 무엇을 기준으로 재는지가 정해져 있지 않아, 제도 사이의 비교가 인상에 머물렀습니다.",
+        contribution:
+          "득표율과 의석률의 차이를 제곱해 더한 뒤 반으로 나누고 제곱근을 취하는 최소제곱지수를 제시해, 서로 다른 선거의 불비례를 하나의 척도 위에 놓을 수 있게 했습니다.",
+        assumptions:
+          "정당을 분석의 단위로 두고, 비례에서 벗어난 정도만을 재며 그 벗어남이 정당한지는 판단하지 않습니다.",
+        evidenceScope:
+          "Electoral Studies 10권 1호 33~51쪽에 실린 논문이며, 저자 본인이 정리한 'Election indices' 문서(공개 사본으로 전문 확인)가 이 지수의 출처를 이 논문으로 밝히고 있습니다. 출판사 쪽이 자동 조회를 막아 원 논문 자체는 열지 못했고 서지 사항과 지수의 귀속만 확인했습니다.",
+        notClaim:
+          "값이 낮은 제도가 더 나은 제도라는 주장이 아닙니다. 이 지수는 비례에서 벗어난 정도만 재고, 그 대가로 얻는 단독 과반이나 대표와 지역의 연결은 세지 않으므로 제도 선택의 기준으로 단독으로 쓸 수 없습니다.",
+        sectionId: "disproportionality",
+      },
+    ],
+  },
 };

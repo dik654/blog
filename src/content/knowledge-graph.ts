@@ -23568,6 +23568,76 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "직선 대통령과 의회 신임에 매인 총리가 함께 행정부를 이루는 형태이며, 의회 과반이 대통령의 반대편일 때 서로 다른 위임을 받은 두 사람이 한 행정부에 앉는 상태가 동거정부입니다. 같은 조문이 의석 분포에 따라 강한 대통령제처럼도, 대통령이 외교만 맡는 의원내각제처럼도 굴러갑니다.",
     canonicalHref: "/politics/constitution/government-forms#semi-presidential",
   },
+  "district-magnitude": {
+    id: "district-magnitude",
+    kind: "concept",
+    domain: "political-science",
+    label: "선거구 크기",
+    aliases: ["district magnitude", "선거구 정수", "소선거구·대선거구"],
+    definition:
+      "한 선거구에서 뽑는 사람의 수이며, 의석을 나눌 수 있는 최소 단위를 정하므로 비례성의 상한을 여기서 정합니다. 제도의 이름이 아니라 이 숫자가 결과를 끌고 가서, 비례대표라 불러도 크기가 작으면 작은 정당이 들어가지 못하고 다수제라 불러도 크기가 크면 결과가 비례에 가까워집니다.",
+    canonicalHref: "/politics/elections/electoral-systems#district-magnitude",
+  },
+  "electoral-threshold": {
+    id: "electoral-threshold",
+    kind: "concept",
+    domain: "political-science",
+    label: "봉쇄조항",
+    aliases: ["의석 배분 문턱", "electoral threshold", "저지조항"],
+    definition:
+      "의석 배분에 참여하려면 넘어야 하는 최소 득표율이나 최소 지역구 의석 수입니다. 정당이 잘게 쪼개지는 것을 막지만, 문턱 바로 아래의 표는 통째로 배분에서 빠져 남은 정당들에게 나뉘어 가므로 불비례를 오히려 키울 수 있습니다.",
+    canonicalHref: "/politics/elections/electoral-systems#district-magnitude",
+  },
+  "wasted-votes-and-duverger": {
+    id: "wasted-votes-and-duverger",
+    kind: "concept",
+    domain: "political-science",
+    label: "사표와 다수제의 두 효과",
+    aliases: ["사표", "기계적 효과", "심리적 효과", "전략투표"],
+    definition:
+      "한 선거구에서 한 명만 뽑는 제도에서 1등이 아닌 표가 의석으로 바뀌지 못하는 것이 첫째 효과이고, 그 사실을 아는 유권자가 당선 가능한 쪽으로 표를 옮기는 것이 둘째 효과입니다. 두 효과가 함께 정당 수를 줄이는 경향을 만들지만, 지지가 한 지역에 몰린 정당은 전국 득표가 작아도 계속 살아남습니다.",
+    canonicalHref: "/politics/elections/electoral-systems#plurality",
+  },
+  "electoral-districting": {
+    id: "electoral-districting",
+    kind: "concept",
+    domain: "political-science",
+    label: "선거구 획정",
+    aliases: ["게리맨더링", "경계 긋기", "몰아넣기와 흩기"],
+    definition:
+      "선거구 경계를 어디에 긋는가이며, 다수제에서는 득표를 한 표도 바꾸지 않고 의석을 바꾸는 수단이 됩니다. 이기는 데 필요한 것이 1등이지 큰 표차가 아니므로 표가 몰려 있는 쪽이 손해를 보고, 그 성질을 의도적으로 쓰면 상대 지지자를 몇 곳에 몰아넣거나 여러 곳에 잘게 흩는 조작이 가능합니다.",
+    canonicalHref: "/politics/elections/electoral-systems#districting",
+  },
+  "highest-average-allocation": {
+    id: "highest-average-allocation",
+    kind: "method",
+    domain: "political-science",
+    label: "최고평균 의석 배분",
+    aliases: ["동트 방식", "생라그 방식", "제수 방식", "divisor method"],
+    definition:
+      "각 정당의 득표를 1, 2, 3 …으로 나눈 몫을 전부 섞어 한 줄로 세우고 앞에서부터 의석 수만큼 끊어 배분하는 방법입니다. 의석을 받은 정당은 나누는 수가 커져 다음 몫이 작아지므로, 큰 정당의 몫이 충분히 줄어드는 순간에만 작은 정당의 차례가 옵니다.",
+    canonicalHref: "/politics/elections/electoral-systems#proportional",
+  },
+  "disproportionality-index": {
+    id: "disproportionality-index",
+    kind: "metric",
+    domain: "political-science",
+    label: "불비례 지수",
+    aliases: ["최소제곱지수", "Gallagher 지수", "LSq"],
+    definition:
+      "각 정당의 득표율과 의석률 차이를 제곱해 더한 뒤 반으로 나누고 제곱근을 취한 값이며, 0이면 득표와 의석이 완전히 일치합니다. 제곱하므로 큰 어긋남 하나가 작은 어긋남 여럿보다 무겁게 들어가고, 반으로 나누는 것은 하나의 왜곡이 더 받은 쪽과 덜 받은 쪽에서 두 번 세어지기 때문입니다.",
+    canonicalHref: "/politics/elections/electoral-systems#disproportionality",
+  },
+  "mixed-electoral-system": {
+    id: "mixed-electoral-system",
+    kind: "concept",
+    domain: "political-science",
+    label: "혼합형 선거제",
+    aliases: ["병립형", "연동형", "지역구와 비례대표"],
+    definition:
+      "의석의 일부는 소선거구로, 나머지는 정당 득표에 따라 배분하는 제도입니다. 두 부분을 따로 계산해 더하면 지역구의 불비례가 그대로 남고, 정당 득표율로 전체를 먼저 정한 뒤 지역구에서 얻은 만큼을 빼서 채우면 전체가 비례에 가까워지므로, 같은 이름 아래 성격이 다른 두 제도가 있습니다.",
+    canonicalHref: "/politics/elections/electoral-systems#mixed",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -43304,6 +43374,83 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "조문이 같아도 실제 운용이 달라진다는 점이 여기서 다시 나타나며, 형태만으로 체제를 읽으면 안 되는 이유가 됩니다.",
+  },
+  {
+    from: "district-magnitude",
+    to: "wasted-votes-and-duverger",
+    relation: "produces",
+    reason:
+      "한 선거구에서 한 명만 뽑으면 그 의석을 나눌 수 없으므로 1등이 아닌 표가 전부 버려집니다.",
+  },
+  {
+    from: "district-magnitude",
+    to: "highest-average-allocation",
+    relation: "prerequisite",
+    reason:
+      "나눌 의석이 둘 이상일 때만 몫을 세워 배분하는 계산이 의미를 가지므로, 크기가 먼저 정해져야 합니다.",
+  },
+  {
+    from: "wasted-votes-and-duverger",
+    to: "electoral-districting",
+    relation: "produces",
+    reason:
+      "1등만 의석을 가져가므로 표가 어디에 몰려 있는지가 의석을 바꾸고, 그 성질이 경계 긋기를 수단으로 만듭니다.",
+  },
+  {
+    from: "wasted-votes-and-duverger",
+    to: "coalition-government",
+    relation: "constrains",
+    reason:
+      "표를 버려 단독 과반을 만들어 내는 제도에서는 연립을 협상할 일 자체가 줄어듭니다.",
+  },
+  {
+    from: "electoral-threshold",
+    to: "highest-average-allocation",
+    relation: "constrains",
+    reason:
+      "문턱을 넘지 못한 정당을 먼저 빼고 배분하므로, 같은 계산이라도 대상 집합이 달라집니다.",
+  },
+  {
+    from: "disproportionality-index",
+    to: "wasted-votes-and-duverger",
+    relation: "evaluates",
+    reason:
+      "버려진 표가 결과를 얼마나 비틀었는지를 하나의 수로 옮겨, 말로 하던 비교를 숫자로 바꿉니다.",
+  },
+  {
+    from: "disproportionality-index",
+    to: "highest-average-allocation",
+    relation: "evaluates",
+    reason:
+      "나누는 수를 무엇으로 두느냐에 따라 달라진 결과를 같은 척도 위에서 비교할 수 있게 합니다.",
+  },
+  {
+    from: "electoral-threshold",
+    to: "disproportionality-index",
+    relation: "constrains",
+    reason:
+      "문턱 바로 아래에서 떨어진 표가 통째로 배분에서 빠지므로, 정당 수를 줄이려던 장치가 지수를 올리기도 합니다.",
+  },
+  {
+    from: "district-magnitude",
+    to: "mixed-electoral-system",
+    relation: "extends",
+    reason:
+      "의석을 크기가 다른 두 묶음으로 갈라 각각 다른 규칙을 적용한 것이 혼합형입니다.",
+  },
+  {
+    from: "constitutional-entrenchment",
+    to: "mixed-electoral-system",
+    relation: "constrains",
+    reason:
+      "선거 제도를 헌법이 아니라 법률에 맡기면 개정 문턱이 낮아, 그 제도로 당선된 사람들이 과반으로 규칙을 고칠 수 있습니다.",
+  },
+  {
+    from: "voting-power-index",
+    to: "district-magnitude",
+    relation: "prerequisite",
+    reason:
+      "의석이 협상력을 정한다는 것을 본 뒤에야, 그 의석을 만들어 내는 규칙을 따로 볼 이유가 생깁니다.",
   },
 ];
 
