@@ -41,8 +41,8 @@ export default function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        논문과 문서를 읽는 것에 그치지 않고, 핵심 알고리즘을 직접 구현하고
-        인터랙티브하게 시각화하며 깊이 있게 이해한 과정을 기록합니다.
+        논문과 원전, 코드와 법령을 직접 열어 확인하고, 핵심이 되는 알고리즘과
+        계산을 손으로 따라가며 인터랙티브하게 시각화한 기록입니다.
       </motion.p>
 
       <motion.div
