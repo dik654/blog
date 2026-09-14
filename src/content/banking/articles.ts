@@ -47,4 +47,43 @@ export const bankingArticles: Article[] = [
     component: () =>
       import("@/pages/articles/banking/bank-balance-sheet-and-deposit-creation"),
   },
+  {
+    slug: "central-bank-and-policy-transmission",
+    title: "중앙은행은 돈을 찍는 곳이 아니라 하나의 가격을 고정하는 곳입니다",
+    subcategory: "banking-policy",
+    sections: [
+      {
+        id: "overview",
+        title: "한 점의 가격을 못 박아 두면 나머지 금리가 그 점에 매달립니다",
+      },
+      {
+        id: "cb-balance-sheet",
+        title: "부품 1. 중앙은행의 부채가 곧 은행들이 쓰는 결제 수단입니다",
+      },
+      {
+        id: "rate-setting",
+        title: "부품 2. 목표는 금리이고 수단은 준비금 시장의 수급과 이자입니다",
+        subsections: [
+          { id: "operation-procedure", title: "공표한 금리를 실제 시장금리로 만드는 하루" },
+        ],
+      },
+      {
+        id: "transmission",
+        title: "부품 3. 한 점이 곡선 전체를 끌고 가는 것은 기대 때문입니다",
+        subsections: [
+          { id: "transmission-lag", title: "같은 인상도 경로마다 도착 시각이 다릅니다" },
+        ],
+      },
+      {
+        id: "balance-sheet-policy",
+        title: "부품 4. 점을 더 내릴 수 없으면 장부의 크기로 넘어갑니다",
+      },
+      {
+        id: "boundary",
+        title: "가격은 정해졌고, 이제 그 가격으로 오간 돈이 실제로 옮겨져야 합니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/banking/central-bank-and-policy-transmission"),
+  },
 ];

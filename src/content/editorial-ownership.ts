@@ -11669,6 +11669,34 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "central-bank-and-policy-transmission": {
+    title: "중앙은행은 하나의 가격을 고정합니다 글이 소유하는 범위",
+    owns: [
+      "중앙은행 대차대조표의 네 칸과 그 부채가 결제 수단이 되는 지위",
+      "정책금리가 명령이 아니라 목표라는 구분과 공표값·실현값의 차이",
+      "준비금 부리와 대출창구로 만드는 상하한 구간의 성립 조건과 새는 조건",
+      "공개시장운영으로 목표에 붙이는 일상 운영 절차",
+      "만기별 금리를 기대 평균과 기간 프리미엄으로 분해하는 관계와 그 해석의 한계",
+      "파급경로의 종류와 경로별 전제·시차",
+      "양적완화가 겨냥하는 두 항과 수량으로 읽으면 안 되는 경계",
+    ],
+    reuses: [
+      {
+        label: "은행 장부와 예금 창조의 제약",
+        href: "/finance/banking/bank-balance-sheet-and-deposit-creation#limits",
+      },
+      {
+        label: "미래 현금흐름을 오늘 값으로 되돌리는 계산",
+        href: "/finance/money/time-value-and-discounting#discounting",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "운영 방식은 한국은행이 공개한 제도 설명에만 귀속하고, 특정 시점의 정책금리·조절 규모나 파급 크기의 추정치는 본문에 사실로 싣지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
