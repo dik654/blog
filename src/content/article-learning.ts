@@ -76725,4 +76725,243 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "polity/state-and-legitimacy": {
+    entryNote:
+      "앞 글에서 '강제가 필요하다'까지 왔다는 것만 알고 들어오면 됩니다. 여기서는 그 힘이 어디에 놓이고 무엇이 그것을 단순한 폭력과 가르는지를 봅니다.",
+    coreIdea:
+      "다툼이 끝나려면 최종 판정자가 있어야 하므로 강제력은 한 곳으로 몰립니다. 몰린 힘은 보호와 약탈 양쪽에 쓰일 수 있고, 통치가 실제로 굴러가는 것은 대부분이 스스로 따르기 때문이며, 그 순응이 어느 선 아래로 떨어지면 집행 자체가 무너집니다.",
+    assumedKnowledge: [
+      {
+        id: "coercion-as-provision",
+        role: "강제가 필요하다는 앞 글의 결론이 이 글의 출발점입니다.",
+      },
+      {
+        id: "public-good",
+        role: "지배자가 공급하게 되는 것이 무엇인지 가리키는 데 씁니다.",
+      },
+      {
+        id: "settlement-finality",
+        role: "'여기서 끝난다'는 규칙이 불확실성을 없애는 구조를 대조해 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "coercion-monopoly",
+        role: "힘이 한 곳에 몰리는 이유와 그 성립 조건을 세웁니다.",
+      },
+      {
+        id: "stationary-bandit-horizon",
+        role: "같은 힘이 보호와 약탈로 갈리는 조건을 시간지평으로 설명합니다.",
+      },
+      {
+        id: "political-legitimacy",
+        role: "순응이 어디서 오는지를 정의하고 평가와 사실 기술을 구분합니다.",
+      },
+      {
+        id: "compliance-enforcement-threshold",
+        role: "순응률이 통치 가능성을 정하는 임계 관계를 식으로 세웁니다.",
+      },
+      {
+        id: "state-capacity",
+        role: "받아들여지는 것과 실행할 수 있는 것을 갈라 놓습니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "coercion-monopoly",
+        sectionId: "why-monopoly",
+        intuition:
+          "다툼이 끝나려면 더 이상 올라갈 데가 없는 자리가 하나 있어야 합니다.",
+        workedExample:
+          "한 지역에 강제 집단이 셋이면 같은 주민이 세 번 걷히고 규칙이 충돌해도 어느 쪽을 따를지 정해지지 않습니다.",
+        boundary:
+          "완전한 독점은 드물고 정도의 문제이며, 선언된 범위와 실제로 작동하는 범위는 다를 수 있습니다.",
+      },
+      {
+        id: "stationary-bandit-horizon",
+        sectionId: "protection-or-predation",
+        intuition:
+          "내년에도 같은 곳에서 걷을 작정이면 올해 전부 빼앗는 것이 자기에게도 손해입니다.",
+        workedExample:
+          "머물기로 한 지배자가 도로를 놓고 도둑을 막아 주면 생산이 늘어 다음 해 징수액이 커집니다.",
+        boundary:
+          "통치자의 이익과 사회의 이익이 겹치는 구간이 있다는 것이지 둘이 일치한다는 뜻이 아니며, 시간지평이 짧아지면 같은 계산이 약탈로 되돌아갑니다.",
+      },
+      {
+        id: "political-legitimacy",
+        sectionId: "legitimacy",
+        intuition:
+          "대부분의 사람이 대부분의 경우 시키지 않아도 따르기 때문에 통치가 굴러갑니다.",
+        workedExample:
+          "늘 그래 왔다는 이유, 지도자 개인에 대한 믿음, 정해진 절차를 거쳤다는 이유가 각각 순응의 근거가 됩니다.",
+        boundary:
+          "'정당하다고 받아들여진다'는 사실 기술이므로, 나쁜 체제도 정당성을 가질 수 있고 좋은 제도도 정당성을 잃을 수 있습니다.",
+      },
+      {
+        id: "compliance-enforcement-threshold",
+        sectionId: "legitimacy",
+        intuition:
+          "따르지 않는 사람만 강제로 다뤄야 하므로, 불응이 늘면 필요한 자원이 그만큼 늘어납니다.",
+        workedExample:
+          "인구 1,000만, 1인당 강제 비용 1, 가용 자원 50만이면 유지되는 최소 순응률은 95%입니다.",
+        proofIdea:
+          "불응자 수는 (1−p)N이고 각각에 e가 들므로 소요는 (1−p)Ne입니다. 이것이 가용 자원 R̄ 이하여야 하므로 부등식을 p에 대해 풀면 p ≥ 1 − R̄/(Ne)가 나옵니다.",
+        counterexample:
+          "불응이 흩어지지 않고 한곳에 조직적으로 몰리면 1인당 비용 e가 함께 올라가므로, 같은 순응률에서도 부등식이 먼저 깨집니다.",
+        boundary:
+          "체제가 유지되는 조건만 말하며, 그 순응이 동의에서 왔는지 체념이나 공포에서 왔는지는 구분하지 않습니다.",
+      },
+      {
+        id: "state-capacity",
+        sectionId: "state-capacity",
+        intuition:
+          "세금을 걷으려면 누가 얼마를 버는지 알아야 하고, 법을 집행하려면 그 지역에 닿는 조직이 있어야 합니다.",
+        workedExample:
+          "법정 세액 대비 실제 징수액의 비율이 낮으면 재정이 없고, 재정이 없으면 집행 자원도 없습니다.",
+        boundary:
+          "수도에서는 작동하고 변방에서는 작동하지 않는 상태가 흔하므로, 전국 평균값은 지역 편차를 가립니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 배치",
+        relation: "다툼이 끝나려면 힘이 한 곳에 몰려야 합니다.",
+        concepts: ["coercion-monopoly"],
+      },
+      {
+        label: "01 두 얼굴",
+        relation: "몰린 힘은 보호와 약탈 양쪽에 쓰입니다.",
+        concepts: ["coercion-monopoly", "stationary-bandit-horizon"],
+      },
+      {
+        label: "02 순응",
+        relation: "통치는 강제가 아니라 자발적 순응 위에 섭니다.",
+        concepts: ["political-legitimacy", "compliance-enforcement-threshold"],
+      },
+      {
+        label: "03 실행",
+        relation: "받아들여져도 실행할 수단이 없으면 결정은 종이에 머뭅니다.",
+        concepts: ["state-capacity"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "한 영토에 강제할 수 있는 집단이 여럿일 때 생기는 문제를 두 가지 쓰세요.",
+        answerChecklist: ["중복 징수", "규칙 충돌", "최종 판정자 부재", "거래가 뒤집힐 불확실성"],
+        requiredConcepts: ["coercion-monopoly"],
+        sectionId: "why-monopoly",
+      },
+      {
+        level: "basic",
+        question:
+          "강제력 독점이 실제로 성립했는지 보는 세 조건을 쓰세요.",
+        answerChecklist: ["경쟁하는 강제력 부재", "최종 판정의 승복", "영토 범위의 명확성", "정도의 문제"],
+        requiredConcepts: ["coercion-monopoly"],
+        sectionId: "why-monopoly",
+      },
+      {
+        level: "basic",
+        question:
+          "계속 머물 작정인 지배자가 전부 빼앗지 않는 이유를 설명하세요.",
+        answerChecklist: ["다음에 가져갈 것이 없어짐", "생산을 늘리는 쪽이 이득", "시간지평", "선의 가정 불필요"],
+        requiredConcepts: ["stationary-bandit-horizon"],
+        sectionId: "protection-or-predation",
+      },
+      {
+        level: "basic",
+        question:
+          "정당성이 '정당함'과 다른 층위라는 말이 무슨 뜻인지 설명하세요.",
+        answerChecklist: ["받아들여진다는 사실 기술", "옳다는 평가가 아님", "나쁜 체제도 가질 수 있음", "좋은 제도도 잃을 수 있음"],
+        requiredConcepts: ["political-legitimacy"],
+        sectionId: "legitimacy",
+      },
+      {
+        level: "basic",
+        question:
+          "인구 200만, 1인당 강제 비용 1, 가용 집행 자원 4만일 때 유지 가능한 최소 순응률을 구하세요.",
+        answerChecklist: ["1 − 4/200", "98%", "불응 2%까지 감당", "부등식에 대입"],
+        requiredConcepts: ["compliance-enforcement-threshold"],
+        sectionId: "legitimacy",
+      },
+      {
+        level: "basic",
+        question:
+          "국가 능력의 세 갈래를 쓰고 셋이 왜 서로 맞물려 있는지 설명하세요.",
+        answerChecklist: ["정보·징세·집행", "정보 없으면 못 걷음", "못 걷으면 집행 자원 없음", "법전이 같아도 결과가 다름"],
+        requiredConcepts: ["state-capacity"],
+        sectionId: "state-capacity",
+      },
+      {
+        level: "advanced",
+        question:
+          "순응률이 임계점 아래로 내려갈 때 통치가 서서히가 아니라 급격히 무너지는 것처럼 보이는 이유를 설명하세요.",
+        answerChecklist: [
+          "필요 자원이 가용량을 넘음",
+          "집행하지 못한 위반이 쌓임",
+          "그것이 순응률을 더 낮춤",
+          "되먹임으로 임계 구조",
+        ],
+        requiredConcepts: ["compliance-enforcement-threshold", "state-capacity"],
+        sectionId: "legitimacy",
+      },
+      {
+        level: "advanced",
+        question:
+          "정주형 약탈자 논리가 국가의 정당성을 증명하지 않는 이유를, 그 논증이 무엇까지만 보이는지로 설명하세요.",
+        answerChecklist: [
+          "최소한의 질서와 일부 공공재까지만",
+          "얼마를 걷을지는 정해지지 않음",
+          "누구를 보호할지도 미정",
+          "이익이 겹치지만 일치하지 않음",
+        ],
+        requiredConcepts: ["stationary-bandit-horizon", "coercion-monopoly"],
+        sectionId: "protection-or-predation",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 법전을 가진 두 나라가 전혀 다르게 굴러갈 수 있는 이유를 국가 능력의 지역 편차로 설명하세요.",
+        answerChecklist: [
+          "조문과 실제 적용 범위가 다름",
+          "수도와 변방의 차이",
+          "평균값이 편차를 가림",
+          "제도 비교 시 조문만 보면 안 됨",
+        ],
+        requiredConcepts: ["state-capacity"],
+        sectionId: "state-capacity",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 글의 부등식이 폭정에서도 똑같이 성립한다는 사실이, 앞으로 어떤 장치를 필요로 하게 만드는지 설명하세요.",
+        answerChecklist: [
+          "유지 조건과 정당함은 별개",
+          "지배자의 계산에만 기대면 조건부",
+          "시간지평이 짧아지면 약탈로 기욺",
+          "미리 묶어 두는 제도가 필요",
+        ],
+        requiredConcepts: ["compliance-enforcement-threshold", "stationary-bandit-horizon"],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title: "Max Weber · Politics as a Vocation (1919년 강연, 1946년 영역본)",
+        href: "https://archive.org/details/weber_max_1864_1920_politics_as_a_vocation",
+        problem:
+          "국가를 목적이나 기능으로 정의하면 같은 일을 하는 다른 조직들과 구분되지 않아, 무엇이 국가인지 가릴 기준이 없었습니다.",
+        contribution:
+          "국가를 일정한 영토 안에서 정당한 물리적 강제력의 독점을 관철한 조직으로 규정해, 수단과 범위로 정의하는 기준을 제시했습니다.",
+        assumptions:
+          "영토적 경계를 확정할 수 있고 그 안에서 강제력의 독점 여부를 관찰할 수 있다고 전제합니다.",
+        evidenceScope:
+          "1919년 강연을 옮긴 영역본이며 Internet Archive에 전문이 공개되어 있습니다. 개념 규정의 범위에 한정됩니다.",
+        notClaim:
+          "국가가 왜 정당한지에 대한 논증이 아닙니다. 여기서의 정당성은 받아들여진다는 사실 기술이며 그 권위가 옳다는 평가와 다른 층위입니다.",
+        sectionId: "legitimacy",
+      },
+    ],
+  },
 };

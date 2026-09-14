@@ -23388,6 +23388,56 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "내지 않는 사람에게서도 걷으면 무임승차 계산 자체가 사라져 공공재가 공급됩니다. 다만 그 힘은 공공재 이외의 용도로도 쓸 수 있으므로, 문제가 '어떻게 만드는가'에서 '누가 그 힘을 쥐고 어떻게 제어하는가'로 옮겨 갑니다.",
     canonicalHref: "/politics/polity/collective-choice-problem#coercion",
   },
+  "coercion-monopoly": {
+    id: "coercion-monopoly",
+    kind: "concept",
+    domain: "political-science",
+    label: "강제력의 독점",
+    aliases: ["폭력의 독점", "주권", "sovereignty"],
+    definition:
+      "한 영토 안에서 강제할 수 있는 조직이 하나만 남고 그 조직의 판정이 최종이 되는 상태입니다. 좋은 배치여서가 아니라 다툼이 끝나려면 더 올라갈 데가 없는 자리가 있어야 하기 때문에 만들어지는 구조이며, 경쟁 부재·판정 승복·영토 범위 세 조건으로 성립 여부를 봅니다.",
+    canonicalHref: "/politics/polity/state-and-legitimacy#why-monopoly",
+  },
+  "stationary-bandit-horizon": {
+    id: "stationary-bandit-horizon",
+    kind: "concept",
+    domain: "political-science",
+    label: "시간지평과 약탈의 자제",
+    aliases: ["정주형 약탈자", "stationary bandit"],
+    definition:
+      "같은 곳에 계속 머물 작정인 지배자는 전부 빼앗으면 다음에 가져갈 것이 없어지므로 스스로 징수를 줄이고 생산을 늘려 주는 쪽을 택하게 된다는 논리입니다. 선의를 가정하지 않고도 최소한의 질서가 설명되지만, 시간지평이 짧아지면 같은 계산이 약탈 쪽으로 되돌아갑니다.",
+    canonicalHref: "/politics/polity/state-and-legitimacy#protection-or-predation",
+  },
+  "political-legitimacy": {
+    id: "political-legitimacy",
+    kind: "concept",
+    domain: "political-science",
+    label: "정당성",
+    aliases: ["legitimacy", "정통성"],
+    definition:
+      "사람들이 그 권위를 따르는 것이 마땅하다고 여겨 강제 없이도 순응하는 상태입니다. 전통·개인에 대한 믿음·정해진 절차 등 근거는 여러 가지이며, 어디까지나 '정당하다고 받아들여진다'는 사실 기술이지 그 권위가 옳다는 평가가 아닙니다.",
+    canonicalHref: "/politics/polity/state-and-legitimacy#legitimacy",
+  },
+  "compliance-enforcement-threshold": {
+    id: "compliance-enforcement-threshold",
+    kind: "theorem",
+    domain: "political-science",
+    label: "순응률과 집행 자원의 임계 관계",
+    aliases: ["통치 비용", "집행 한계"],
+    definition:
+      "필요한 집행 자원이 불응 비율에 비례해 늘어나므로, 가용 자원이 고정이면 유지 가능한 최소 순응률 1 − R̄/(Ne)이 존재한다는 관계입니다. 통치가 강제가 아니라 순응 위에 서 있고 강제는 나머지 소수를 다루는 장치임을 보여 줍니다.",
+    canonicalHref: "/politics/polity/state-and-legitimacy#legitimacy",
+  },
+  "state-capacity": {
+    id: "state-capacity",
+    kind: "concept",
+    domain: "political-science",
+    label: "국가 능력",
+    aliases: ["state capacity", "징세 역량", "집행 역량"],
+    definition:
+      "결정을 실제로 관철하는 실행 역량이며 정보·징세·집행 세 갈래로 나뉩니다. 세 갈래가 맞물려 있어 정보가 없으면 걷지 못하고 걷지 못하면 집행할 자원이 없으므로, 같은 법전을 가진 나라들이 전혀 다르게 굴러가는 이유가 됩니다.",
+    canonicalHref: "/politics/polity/state-and-legitimacy#state-capacity",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -42921,6 +42971,62 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "둘 다 결정한 쪽과 비용을 치르는 쪽이 어긋나는 구조이지만, 한쪽은 혜택이 새어 과소 공급되고 다른 쪽은 손실이 새어 과소 대비된다는 점에서 방향이 반대입니다.",
+  },
+  {
+    from: "coercion-as-provision",
+    to: "coercion-monopoly",
+    relation: "prerequisite",
+    reason:
+      "강제가 필요하다는 결론이 먼저 있어야 그 강제력을 어디에 두느냐는 질문이 성립합니다.",
+  },
+  {
+    from: "coercion-monopoly",
+    to: "stationary-bandit-horizon",
+    relation: "produces",
+    reason:
+      "힘이 한 곳에 몰리면 그 조직이 머물지 떠날지에 따라 징수 수준이 달라지므로, 독점이 시간지평 문제를 만들어 냅니다.",
+  },
+  {
+    from: "coercion-monopoly",
+    to: "political-legitimacy",
+    relation: "prerequisite",
+    reason:
+      "따를 대상이 하나로 정해져야 그 권위를 마땅하다고 여기는지 아닌지를 물을 수 있습니다.",
+  },
+  {
+    from: "political-legitimacy",
+    to: "compliance-enforcement-threshold",
+    relation: "produces",
+    reason:
+      "정당성이 자발적 순응률을 올리므로, 집행에 필요한 자원과 가용 자원의 부등식에 직접 들어갑니다.",
+  },
+  {
+    from: "state-capacity",
+    to: "compliance-enforcement-threshold",
+    relation: "constrains",
+    reason:
+      "동원 가능한 집행 자원의 크기를 국가 능력이 정하므로, 같은 순응률에서도 능력이 낮으면 부등식이 깨집니다.",
+  },
+  {
+    from: "state-capacity",
+    to: "coercion-monopoly",
+    relation: "evaluates",
+    reason:
+      "독점이 선언되었는지와 실제로 그 영토 전체에서 작동하는지는 다른 문제여서, 능력 지표로만 판정할 수 있습니다.",
+  },
+  {
+    from: "settlement-finality",
+    to: "coercion-monopoly",
+    relation: "contrasts",
+    reason:
+      "둘 다 '여기서 끝난다'는 규칙으로 되돌림을 막는 구조이지만, 한쪽은 결제 시스템의 규칙이고 다른 쪽은 분쟁의 최종 판정이라 적용 대상이 다릅니다.",
+  },
+  {
+    from: "stationary-bandit-horizon",
+    to: "public-good",
+    relation: "produces",
+    reason:
+      "머물 작정인 지배자가 생산을 늘리려 도로와 치안을 제공하면, 자기 이익에서 출발한 선택이 결과적으로 공공재 공급이 됩니다.",
   },
 ];
 

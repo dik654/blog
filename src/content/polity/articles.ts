@@ -36,4 +36,36 @@ export const polityArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/polity/collective-choice-problem"),
   },
+  {
+    slug: "state-and-legitimacy",
+    title: "강제력을 한 곳에 몰아주고 정당성으로 묶습니다",
+    subcategory: "polity-state",
+    sections: [
+      {
+        id: "overview",
+        title: "같은 힘이 보호도 하고 약탈도 하며, 그 차이를 정당성이 만듭니다",
+      },
+      {
+        id: "why-monopoly",
+        title: "부품 1. 강제력이 여럿이면 마지막에 누가 맞는지 정할 수 없습니다",
+      },
+      {
+        id: "protection-or-predation",
+        title: "부품 2. 몰린 힘은 지켜 주기도 하고 빼앗기도 합니다",
+      },
+      {
+        id: "legitimacy",
+        title: "부품 3. 순응이 흔할수록 통치에 드는 힘이 줄어듭니다",
+      },
+      {
+        id: "state-capacity",
+        title: "부품 4. 받아들여지는 것과 실제로 할 수 있는 것은 다릅니다",
+      },
+      {
+        id: "boundary",
+        title: "작동한다는 것이 옳다는 뜻은 아니며, 그 구분이 다음 글을 만듭니다",
+      },
+    ],
+    component: () => import("@/pages/articles/polity/state-and-legitimacy"),
+  },
 ];

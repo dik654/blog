@@ -11882,6 +11882,33 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "state-and-legitimacy": {
+    title: "강제력을 한 곳에 몰아주고 정당성으로 묶습니다 글이 소유하는 범위",
+    owns: [
+      "강제력이 흩어져 있을 때 생기는 문제와 최종 판정자가 필요한 이유",
+      "독점 성립을 보는 세 조건(경쟁 부재·판정 승복·영토 범위)",
+      "시간지평이 약탈과 보호를 가르는 논리와 그 논증이 증명하지 않는 것",
+      "정당성의 정의와 그것이 평가가 아니라 사실 기술이라는 구분",
+      "순응률과 집행 자원의 임계 관계 및 그 되먹임",
+      "국가 능력의 세 갈래와 지역 편차를 보는 절차",
+    ],
+    reuses: [
+      {
+        label: "강제가 필요해지는 이유",
+        href: "/politics/polity/collective-choice-problem#coercion",
+      },
+      {
+        label: "되돌림을 막는 최종성 규칙",
+        href: "/finance/banking/payment-clearing-settlement#finality",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "개념 규정은 공개 전문을 확인한 원전에만 귀속하고, 인구·비용·자원 수치는 계산을 보이기 위한 예시임을 밝힌다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
