@@ -23638,6 +23638,76 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "의석의 일부는 소선거구로, 나머지는 정당 득표에 따라 배분하는 제도입니다. 두 부분을 따로 계산해 더하면 지역구의 불비례가 그대로 남고, 정당 득표율로 전체를 먼저 정한 뒤 지역구에서 얻은 만큼을 빼서 채우면 전체가 비례에 가까워지므로, 같은 이름 아래 성격이 다른 두 제도가 있습니다.",
     canonicalHref: "/politics/elections/electoral-systems#mixed",
   },
+  "condorcet-cycle": {
+    id: "condorcet-cycle",
+    kind: "theorem",
+    domain: "political-science",
+    label: "다수결의 순환",
+    aliases: ["콩도르세 역설", "투표의 역설", "voting cycle"],
+    definition:
+      "개인의 선호가 모두 이행적인데도 쌍별 다수결로 만든 집단의 순서가 앞뒤로 이어지지 않고 원을 그리는 현상입니다. 계산 착오나 유권자의 비합리성이 아니라 다수결이라는 연산 자체가 이행성을 보존하지 않는다는 사실이며, 콩도르세 승자가 없으면 반드시 이런 고리가 존재합니다.",
+    canonicalHref: "/politics/elections/voting-paradoxes#cycle",
+  },
+  "agenda-control": {
+    id: "agenda-control",
+    kind: "concept",
+    domain: "political-science",
+    label: "의사일정 통제",
+    aliases: ["표결 순서", "상정권", "agenda setting"],
+    definition:
+      "무엇을 언제 어떤 단위로 표결에 부칠지를 정하는 권한이며, 순환이 있을 때 우승자를 사실상 고르는 힘이 됩니다. 표를 한 장도 더 갖지 않고 결과를 바꾼다는 점에서 거부권과 짝을 이루지만, 결과를 막는 대신 후보 집합을 정한다는 점에서 방향이 반대입니다.",
+    canonicalHref: "/politics/elections/voting-paradoxes#agenda",
+  },
+  "independence-of-irrelevant-alternatives": {
+    id: "independence-of-irrelevant-alternatives",
+    kind: "concept",
+    domain: "political-science",
+    label: "무관한 대안으로부터의 독립",
+    aliases: ["IIA", "제3안 독립성"],
+    definition:
+      "두 선택지에 대한 사회의 판단이 그 둘에 대한 개인들의 판단에만 의존해야 한다는 조건입니다. 순위에 점수를 매겨 합산하는 방식은 아무도 두 안의 우열을 바꾸지 않았는데 셋째 안의 위치만 달라져도 승자가 뒤집히므로 이 조건을 어깁니다.",
+    canonicalHref: "/politics/elections/voting-paradoxes#other-rules",
+  },
+  "monotonicity-failure": {
+    id: "monotonicity-failure",
+    kind: "concept",
+    domain: "political-science",
+    label: "단조성 위반",
+    aliases: ["지지가 늘어 지는 현상", "결선투표의 역설"],
+    definition:
+      "어떤 후보가 이긴 상황에서 그 후보에 대한 지지가 늘었을 뿐인데 그 후보가 지게 되는 현상입니다. 중간 단계에서 후보를 떨어뜨리는 규칙에서 생기며, 1위 표가 늘어 탈락자가 바뀌면 결승에서 만나는 상대가 바뀌기 때문입니다.",
+    canonicalHref: "/politics/elections/voting-paradoxes#other-rules",
+  },
+  "arrow-impossibility": {
+    id: "arrow-impossibility",
+    kind: "theorem",
+    domain: "political-science",
+    label: "애로우 불가능성 정리",
+    aliases: ["일반가능성정리", "Arrow's theorem"],
+    definition:
+      "선택지가 셋 이상일 때 정의역의 무제한성·결과가 다시 순서일 것·전원일치 존중·무관한 대안으로부터의 독립·독재자 부재를 동시에 만족하는 집계 규칙은 없다는 정리입니다. 민주적 결정이 무의미하다는 뜻이 아니라, 어떤 선호 조합이 들어와도 저 조건들을 전부 지키라는 요구가 지나치다는 뜻입니다.",
+    canonicalHref: "/politics/elections/voting-paradoxes#arrow",
+  },
+  "single-peaked-preferences": {
+    id: "single-peaked-preferences",
+    kind: "concept",
+    domain: "political-science",
+    label: "단일정점 선호",
+    aliases: ["봉우리 하나", "single-peaked"],
+    definition:
+      "선택지를 하나의 축 위에 늘어놓았을 때 각자가 자기 이상점에서 멀어질수록 단조롭게 싫어하는 선호의 모양입니다. 이 모양이 유지되면 다수결이 순환하지 않으므로, 순환을 막아 주는 것은 집계 규칙이 아니라 들어오는 선호의 구조입니다.",
+    canonicalHref: "/politics/elections/voting-paradoxes#median-voter",
+  },
+  "median-voter-theorem": {
+    id: "median-voter-theorem",
+    kind: "theorem",
+    domain: "political-science",
+    label: "중위 투표자 정리",
+    aliases: ["중위 유권자", "median voter theorem"],
+    definition:
+      "정책이 1차원이고 선호가 단일정점이면 이상점의 중위값이 어떤 다른 안과 붙어도 과반을 얻는다는 정리입니다. 왼쪽에서 도전하면 이상점이 중위 이상인 사람들이, 오른쪽에서 도전하면 이하인 사람들이 전부 중위를 택하고 그 집합에 중위 자신이 포함되기 때문입니다.",
+    canonicalHref: "/politics/elections/voting-paradoxes#median-voter",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -43451,6 +43521,90 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "prerequisite",
     reason:
       "의석이 협상력을 정한다는 것을 본 뒤에야, 그 의석을 만들어 내는 규칙을 따로 볼 이유가 생깁니다.",
+  },
+  {
+    from: "disproportionality-index",
+    to: "condorcet-cycle",
+    relation: "contrasts",
+    reason:
+      "앞 글은 규칙이 표를 얼마나 비트는지를 쟀고, 여기서는 규칙이 답을 내놓기는 하는지를 묻습니다.",
+  },
+  {
+    from: "condorcet-cycle",
+    to: "agenda-control",
+    relation: "produces",
+    reason:
+      "모두를 이기는 안이 없으면 어느 둘을 먼저 붙이느냐가 우승자를 정하게 됩니다.",
+  },
+  {
+    from: "agenda-control",
+    to: "veto-player-winset",
+    relation: "contrasts",
+    reason:
+      "둘 다 표를 더 갖지 않고 결과를 바꾸지만, 하나는 후보 집합을 정하고 다른 하나는 통과를 막습니다.",
+  },
+  {
+    from: "condorcet-cycle",
+    to: "independence-of-irrelevant-alternatives",
+    relation: "prerequisite",
+    reason:
+      "쌍별 다수결이 무너지는 것을 본 뒤에야 순위 점수제로 바꿔 보게 되고, 거기서 이 조건이 깨지는 것이 드러납니다.",
+  },
+  {
+    from: "condorcet-cycle",
+    to: "monotonicity-failure",
+    relation: "prerequisite",
+    reason:
+      "같은 이유로 결선투표로 바꿔 보게 되고, 중간 탈락이 있는 규칙에서 이 현상이 나옵니다.",
+  },
+  {
+    from: "independence-of-irrelevant-alternatives",
+    to: "arrow-impossibility",
+    relation: "prerequisite",
+    reason:
+      "정리를 이루는 다섯 조건 가운데 실제 규칙들이 가장 자주 어기는 조건이라, 이것을 먼저 보아야 정리의 무게가 읽힙니다.",
+  },
+  {
+    from: "monotonicity-failure",
+    to: "arrow-impossibility",
+    relation: "prerequisite",
+    reason:
+      "규칙을 바꿀 때마다 다른 것이 깨진다는 경험이 쌓여야 그것이 우연이 아니라는 결론이 필요해집니다.",
+  },
+  {
+    from: "single-peaked-preferences",
+    to: "arrow-impossibility",
+    relation: "constrains",
+    reason:
+      "정의역을 이 모양의 선호로 제한하면 정리의 전제 하나가 빠지므로 불가능성이 성립하지 않습니다.",
+  },
+  {
+    from: "single-peaked-preferences",
+    to: "median-voter-theorem",
+    relation: "prerequisite",
+    reason:
+      "가까울수록 낫다는 말이 성립해야 거리 비교가 곧 선호 비교가 되어 중위의 승리를 증명할 수 있습니다.",
+  },
+  {
+    from: "median-voter-theorem",
+    to: "condorcet-cycle",
+    relation: "constrains",
+    reason:
+      "중위가 모든 도전을 이긴다는 것은 콩도르세 승자가 존재한다는 뜻이므로 고리가 생길 수 없습니다.",
+  },
+  {
+    from: "veto-player-winset",
+    to: "median-voter-theorem",
+    relation: "prerequisite",
+    reason:
+      "정책을 하나의 축 위에 놓고 이상점과 거리로 선호를 다루는 방식을 앞 글에서 이미 세웠습니다.",
+  },
+  {
+    from: "median-voter-theorem",
+    to: "agenda-control",
+    relation: "constrains",
+    reason:
+      "콩도르세 승자가 있으면 어떤 순서로 붙여도 같은 안이 이기므로 순서를 쥔 힘이 사라집니다.",
   },
 ];
 
