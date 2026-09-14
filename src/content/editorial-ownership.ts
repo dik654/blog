@@ -12029,6 +12029,39 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "parties-and-interest-groups": {
+    title:
+      "선호가 한 줄로 정리되는 것은 저절로 되는 일이 아닙니다 글이 소유하는 범위",
+    owns: [
+      "정당을 선택지 축소 장치로 보는 규정과 그 축소가 줄이는 세 가지",
+      "축소가 앞 글의 순환 조건을 없애 준다는 관계와 그 대가",
+      "가운데로 미는 힘과 그것을 상쇄하는 세 가지 사정",
+      "같은 총액이 누구에게 흩어지느냐로 조직 여부가 갈리는 구조",
+      "어떤 이익이 정치에 도달하는지 판정하는 절차",
+      "다툼에 쓰는 자원이 특혜 가치에 가까워진다는 계산",
+      "정보와 사람의 흐름으로서의 규제 포획",
+    ],
+    reuses: [
+      {
+        label: "혜택을 인원으로 나눈 몫이 개인의 판정 기준이라는 관계",
+        href: "/politics/polity/collective-choice-problem#free-riding",
+      },
+      {
+        label: "선호의 모양이 순환을 막아 준다는 결론",
+        href: "/politics/elections/voting-paradoxes#median-voter",
+      },
+      {
+        label: "제도가 정당 수를 줄이는 두 효과",
+        href: "/politics/elections/electoral-systems#plurality",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "원 논문이 측정하지 않은 것은 원 논문에 귀속시키지 않고, 뒤에 표준이 된 모형은 이 글이 직접 전개한 것으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

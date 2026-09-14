@@ -23708,6 +23708,76 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "정책이 1차원이고 선호가 단일정점이면 이상점의 중위값이 어떤 다른 안과 붙어도 과반을 얻는다는 정리입니다. 왼쪽에서 도전하면 이상점이 중위 이상인 사람들이, 오른쪽에서 도전하면 이하인 사람들이 전부 중위를 택하고 그 집합에 중위 자신이 포함되기 때문입니다.",
     canonicalHref: "/politics/elections/voting-paradoxes#median-voter",
   },
+  "party-as-choice-reduction": {
+    id: "party-as-choice-reduction",
+    kind: "concept",
+    domain: "political-science",
+    label: "선택지 축소 장치로서의 정당",
+    aliases: ["정당의 기능", "쟁점 차원 축소"],
+    definition:
+      "여러 후보와 여러 쟁점을 몇 덩어리로 묶어 유권자의 탐색 비용과 입법부의 협상 비용을 한꺼번에 줄이는 장치입니다. 줄이는 과정에서 쟁점들이 몇 개의 축으로 눌려 담기므로 선호가 그 축 위에서 봉우리 하나 모양이 되기 쉬워지고, 축에 올라타지 못한 쟁점은 선택지에서 빠집니다.",
+    canonicalHref: "/politics/elections/parties-and-interest-groups#why-parties",
+  },
+  "party-label-shortcut": {
+    id: "party-label-shortcut",
+    kind: "concept",
+    domain: "political-science",
+    label: "정당 표지의 정보 기능",
+    aliases: ["정당 이름", "party label", "판단의 지름길"],
+    definition:
+      "정당 이름 하나가 여러 쟁점의 입장을 한꺼번에 알려 주어 후보를 개별로 조사하지 않고도 판단이 서게 하는 기능입니다. 비용을 줄여 주는 만큼 표지와 실제 내용이 어긋나도 유권자가 알아채기 어렵다는 취약함을 함께 갖습니다.",
+    canonicalHref: "/politics/elections/parties-and-interest-groups#why-parties",
+  },
+  "candidate-convergence": {
+    id: "candidate-convergence",
+    kind: "concept",
+    domain: "political-science",
+    label: "정당 위치의 수렴과 그 한계",
+    aliases: ["중앙 수렴", "공간 경쟁", "Downs 모형"],
+    definition:
+      "축이 하나로 정리되면 상대보다 가운데에 가까이 선 쪽이 이기므로 두 정당이 모두 가운데로 밀려가는 힘입니다. 양극단의 기권, 본선 전에 후보를 고르는 별도 단계, 축이 둘 이상이라는 사정이 각각 이 힘을 상쇄해 완전히 겹치지는 않게 만듭니다.",
+    canonicalHref: "/politics/elections/parties-and-interest-groups#competition",
+  },
+  "concentrated-benefits-diffuse-costs": {
+    id: "concentrated-benefits-diffuse-costs",
+    kind: "concept",
+    domain: "political-science",
+    label: "집중된 이익과 분산된 비용",
+    aliases: ["소수의 승리", "특혜의 비대칭"],
+    definition:
+      "같은 총액이라도 혜택이 소수에게 몰리고 비용이 다수에게 흩어지면 한쪽만 조직되어 결정을 기울게 만드는 구조입니다. 정치에 도달하는지를 정하는 것은 총액이 아니라 1인당 이해관계이며, 그래서 요구의 정당성과 도달 가능성이 거의 무관해집니다.",
+    canonicalHref: "/politics/elections/parties-and-interest-groups#who-organizes",
+  },
+  "organizational-bias": {
+    id: "organizational-bias",
+    kind: "concept",
+    domain: "political-science",
+    label: "조직화 편향",
+    aliases: ["대표되는 것과 되지 않는 것", "이익집단 편향"],
+    definition:
+      "다른 목적으로 이미 모여 있는 집단은 새로 모을 비용을 치르지 않으므로 같은 크기의 이해관계라도 훨씬 쉽게 정치에 도달한다는 치우침입니다. 산업 쪽과 소비자 쪽이 크게 갈리는 이유이며, 양쪽 다 조직되지 않아 안건이 되지도 않는 경우가 실제로는 가장 흔합니다.",
+    canonicalHref: "/politics/elections/parties-and-interest-groups#who-organizes",
+  },
+  "rent-seeking-dissipation": {
+    id: "rent-seeking-dissipation",
+    kind: "theorem",
+    domain: "political-science",
+    label: "지대 추구의 소모",
+    aliases: ["지대 소모", "로비 경쟁", "rent dissipation"],
+    definition:
+      "특혜를 얻으려는 지출 합계가 경쟁자가 늘수록 특혜 가치 전체에 가까워진다는 결과입니다. 승리 확률이 지출의 비중과 같다고 두면 각자가 쓰는 돈은 n이 커질수록 줄지만 합계는 (n−1)/n배로 늘어, 개별 부담이 가벼워지는 동안 사회의 손실이 무거워집니다.",
+    canonicalHref: "/politics/elections/parties-and-interest-groups#rent-seeking",
+  },
+  "regulatory-capture": {
+    id: "regulatory-capture",
+    kind: "concept",
+    domain: "political-science",
+    label: "규제 포획",
+    aliases: ["포획", "회전문", "regulatory capture"],
+    definition:
+      "규제 기관이 판단에 필요한 정보와 사람을 거의 전부 규제받는 쪽에서 얻게 되어 시야가 그쪽과 비슷해지는 상태입니다. 누가 누구에게 무엇을 준 사건이 아니라 흐름이 한쪽으로만 나 있는 구조이므로, 개별 부정을 적발해도 흐름이 남아 있으면 같은 결과가 다시 나옵니다.",
+    canonicalHref: "/politics/elections/parties-and-interest-groups#capture",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -43605,6 +43675,90 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "콩도르세 승자가 있으면 어떤 순서로 붙여도 같은 안이 이기므로 순서를 쥔 힘이 사라집니다.",
+  },
+  {
+    from: "single-peaked-preferences",
+    to: "party-as-choice-reduction",
+    relation: "prerequisite",
+    reason:
+      "선호가 한 축 위의 한 봉우리여야 다수결이 답을 낸다는 것을 본 뒤에야, 그 모양을 누가 만드는지가 질문이 됩니다.",
+  },
+  {
+    from: "party-as-choice-reduction",
+    to: "single-peaked-preferences",
+    relation: "produces",
+    reason:
+      "여러 쟁점을 몇 개의 축으로 눌러 담으면 선호가 그 축 위에서 봉우리 하나 모양이 되기 쉬워집니다.",
+  },
+  {
+    from: "party-as-choice-reduction",
+    to: "party-label-shortcut",
+    relation: "produces",
+    reason:
+      "후보들을 묶어 두면 정당 이름 하나가 여러 쟁점의 입장을 한꺼번에 알려 주는 표지가 됩니다.",
+  },
+  {
+    from: "party-as-choice-reduction",
+    to: "coalition-government",
+    relation: "optimizes",
+    reason:
+      "여러 사안에 걸친 장기 연합을 미리 묶어 두면 사안마다 과반을 새로 만드는 협상 비용을 치르지 않아도 됩니다.",
+  },
+  {
+    from: "median-voter-theorem",
+    to: "candidate-convergence",
+    relation: "produces",
+    reason:
+      "중위가 모든 도전을 이긴다는 계산을 정당의 위치 선택에 적용하면 둘 다 가운데로 밀려가는 힘이 나옵니다.",
+  },
+  {
+    from: "wasted-votes-and-duverger",
+    to: "candidate-convergence",
+    relation: "constrains",
+    reason:
+      "정당 수가 둘로 줄어드는 제도에서만 가운데를 두고 벌이는 일대일 경쟁이 성립합니다.",
+  },
+  {
+    from: "collective-action-scale",
+    to: "concentrated-benefits-diffuse-costs",
+    relation: "prerequisite",
+    reason:
+      "혜택을 인원으로 나눈 몫이 개인의 판정 기준이라는 관계가 있어야, 같은 총액이 누구에게 흩어지느냐로 결과가 갈리는 것이 설명됩니다.",
+  },
+  {
+    from: "concentrated-benefits-diffuse-costs",
+    to: "organizational-bias",
+    relation: "produces",
+    reason:
+      "한쪽만 조직될 수 있는 구조가 반복되면 정치에 도달하는 요구의 종류 자체가 치우칩니다.",
+  },
+  {
+    from: "free-rider-problem",
+    to: "organizational-bias",
+    relation: "constrains",
+    reason:
+      "기여하지 않은 사람을 혜택에서 뺄 수 없으면 조직 자체가 서지 않으므로, 별도의 이익을 따로 주는 조직만 살아남습니다.",
+  },
+  {
+    from: "concentrated-benefits-diffuse-costs",
+    to: "rent-seeking-dissipation",
+    relation: "produces",
+    reason:
+      "집중된 이익을 놓고 여러 쪽이 다투기 시작하면 그 다툼에 쓰는 자원 자체가 별도의 손실이 됩니다.",
+  },
+  {
+    from: "organizational-bias",
+    to: "regulatory-capture",
+    relation: "produces",
+    reason:
+      "정보와 사람이 한쪽에서만 오는 상태가 오래 유지되면 규제 기관의 시야가 그쪽과 비슷해집니다.",
+  },
+  {
+    from: "state-capacity",
+    to: "regulatory-capture",
+    relation: "constrains",
+    reason:
+      "기관이 스스로 정보를 모을 역량을 갖추면 규제받는 쪽에서 오는 자료에 덜 기대게 됩니다.",
   },
 ];
 
