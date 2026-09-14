@@ -74,8 +74,8 @@ export default function SelectionGate() {
 
         <p className="leading-7">
           가속기 자체를 고르는 축은{" "}
-          <Link to="/gpu/ai-accelerator-vendor-comparison">가속기 벤더 비교</Link>에서, 그 구성이 요구하는 전력과
-          냉각은 <Link to="/gpu/hw-power-cooling">전력과 냉각</Link>에서 이어집니다. 세 글을 함께 보면 노드 하나의
+          <Link to="/cs/gpu/ai-accelerator-vendor-comparison">가속기 벤더 비교</Link>에서, 그 구성이 요구하는 전력과
+          냉각은 <Link to="/cs/gpu/hw-power-cooling">전력과 냉각</Link>에서 이어집니다. 세 글을 함께 보면 노드 하나의
           설계가 닫힙니다.
         </p>
       </div>

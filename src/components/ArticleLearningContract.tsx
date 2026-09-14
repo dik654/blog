@@ -10,6 +10,7 @@ import {
   type KnowledgeEdge,
 } from "@/content/knowledge-graph";
 import ArticleLessonFlowViz from "@/components/viz/ArticleLessonFlowViz";
+import { routeKeyFromHref } from "@/lib/routes";
 
 const RELATION_LABEL: Record<KnowledgeEdge["relation"], string> = {
   prerequisite: "먼저 알아야 함",
@@ -102,14 +103,14 @@ function getFollowupEdges(contract: ArticleLearningContract) {
   );
   const currentRoute = contract.introducedHere
     .map((concept) => getKnowledgeConcept(concept.id).canonicalHref)
-    .map((href) => href.match(/^\/([^/#]+\/[^/#]+)/)?.[1])
+    .map((href) => routeKeyFromHref(href))
     .find(Boolean);
   const byArticle = new Map<string, KnowledgeEdge>();
 
   for (const edge of KNOWLEDGE_EDGES) {
     if (!introduced.has(edge.from) || declared.has(edge.to)) continue;
     const target = getKnowledgeConcept(edge.to);
-    const targetRoute = target.canonicalHref.match(/^\/([^/#]+\/[^/#]+)/)?.[1];
+    const targetRoute = routeKeyFromHref(target.canonicalHref);
     if (
       !targetRoute ||
       targetRoute === currentRoute ||

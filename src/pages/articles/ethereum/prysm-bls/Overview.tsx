@@ -31,7 +31,7 @@ export default function Overview({
             secret scalar→public point→signing root→signature point→pairing
             check→aggregation
           </strong>{" "}
-          순서로 설명합니다. <Link to="/blockchain/prysm-ssz">SSZ 글</Link>이
+          순서로 설명합니다. <Link to="/cs/blockchain/prysm-ssz">SSZ 글</Link>이
           object root를 소유하고, 여기서는 그 root를 validator authorization으로
           바꾸는 경계만 소유합니다.
         </p>

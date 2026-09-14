@@ -11,7 +11,7 @@ export default function ModernGpuWitnessArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Witness를 GPU kernel보다 먼저 dataflow로 읽기</p><h2 className="text-3xl font-bold tracking-tight">Witness generation은 R1CS 행을 푸는 일이 아니라 입력에서 모든 중간 signal을 계산하는 프로그램 실행이다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">증명 workload는 입력에서 witness를 만들고, field-native hash와 polynomial 연산을 거쳐 MSM·NTT·Poseidon 결과를 proof artifact에 넣습니다. 이 글은 그 첫 단계만 맡습니다. <a className="text-primary hover:underline" href="/crypto/r1cs">R1CS 정본</a>은 완성된 witness가 만족해야 할 관계를 설명하고, 여기서는 그 witness를 만드는 producer dependency와 GPU release gate를 설명합니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">증명 workload는 입력에서 witness를 만들고, field-native hash와 polynomial 연산을 거쳐 MSM·NTT·Poseidon 결과를 proof artifact에 넣습니다. 이 글은 그 첫 단계만 맡습니다. <a className="text-primary hover:underline" href="/cs/crypto/r1cs">R1CS 정본</a>은 완성된 witness가 만족해야 할 관계를 설명하고, 여기서는 그 witness를 만드는 producer dependency와 GPU release gate를 설명합니다.</p>
       <p>초심자가 가장 먼저 구분할 것은 <strong>constraint</strong>와 <strong>witness program</strong>입니다. Constraint는 “결과가 맞는가”를 검사하지만, witness program은 “중간값을 어떤 순서로 계산할까”를 정합니다. Circom 2.2.3은 C++·WebAssembly witness calculator를 생성합니다. 아래 GPU frontier는 그 현재 구현 사실이 아니라, dependency graph를 보존하며 accelerator로 내릴 때 필요한 설계 계약입니다.</p>
       <WitnessFrontierViz />
       <ContentBoundary article="gpu-witness-gen" />

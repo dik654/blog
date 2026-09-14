@@ -83,7 +83,7 @@ export default function LaneBudget() {
           이 판단이 배치 문제와 이어집니다. 서로 많이 통신하는 장치는 같은 스위치 아래 두어야 상위 링크를 거치지
           않고, 반대로 대역폭을 놓고 다투는 장치는 다른 경로로 분리해야 합니다. 경로에 따라 실제 달성 대역폭이
           달라지는 구조는{" "}
-          <Link to="/gpu/gpu-interconnects#pcie-topology-peer-path">PCIe 토폴로지</Link>에서 다룹니다.
+          <Link to="/cs/gpu/gpu-interconnects#pcie-topology-peer-path">PCIe 토폴로지</Link>에서 다룹니다.
         </p>
       </div>
 
@@ -104,7 +104,7 @@ export default function LaneBudget() {
           <p className="leading-7">
             세대도 확인합니다. 같은 16레인이라도 세대가 한 단계 다르면 대역폭이 두 배 차이 납니다. 세대별 전송률과
             인코딩을 반영한 계산은{" "}
-            <Link to="/gpu/gpu-interconnects#pcie-transaction-bandwidth-latency">PCIe 대역폭 공식</Link>을 씁니다.
+            <Link to="/cs/gpu/gpu-interconnects#pcie-transaction-bandwidth-latency">PCIe 대역폭 공식</Link>을 씁니다.
           </p>
         </ProgressiveDetail>
       </div>

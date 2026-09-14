@@ -26,7 +26,7 @@ export default function ToolContract() {
         <p className="leading-7">
           같은 이름의 파라미터가 한 동작에서 필수이고 다른 동작에서 금지라, 두 동작은 같은 도구에 들어갈 수
           없습니다. 확장 방향이 동작마다 반대라는 관계는{" "}
-          <Link to="/ai/masked-edit-verb-routing#mask-polarity">편집 동작과 모델 라우팅</Link>이 소유하고,
+          <Link to="/cs/ai/masked-edit-verb-routing#mask-polarity">편집 동작과 모델 라우팅</Link>이 소유하고,
           여기서는 지우기 쪽 기본값의 근거만 다룹니다.
         </p>
       </div>

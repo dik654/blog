@@ -36,8 +36,8 @@ export default function ExpertParallelismMoeSystemsArticle() {
           </p>
           <p>
             Router가 top-k를 어떻게 고르고 load-balance loss와 capacity factor가 무엇인지는{" "}
-            <Link to="/ai/mixture-of-experts#routing">MoE 글</Link>이, dispatch payload의 하한식은{" "}
-            <Link to="/ai/mixture-of-experts#system-cost">같은 글의 system cost 절</Link>이
+            <Link to="/cs/ai/mixture-of-experts#routing">MoE 글</Link>이, dispatch payload의 하한식은{" "}
+            <Link to="/cs/ai/mixture-of-experts#system-cost">같은 글의 system cost 절</Link>이
             설명합니다. 이 글은 그 payload가 실제 GPU와 link 위에서 시간으로 바뀌는 부분을
             맡습니다.
           </p>
@@ -76,7 +76,7 @@ export default function ExpertParallelismMoeSystemsArticle() {
             hidden 4,096에 FFN 폭 11,008, 행렬 3개, FP16이면 약 258 MiB이고 64개면 16 GiB인데,
             8 GPU에 나누면 GPU당 2 GiB입니다. Total과 active parameter를 memory와 compute
             장부로 나누는 계산은{" "}
-            <Link to="/ai/model-vram-budgeting#moe-serving-boundary">VRAM budgeting 글</Link>이
+            <Link to="/cs/ai/model-vram-budgeting#moe-serving-boundary">VRAM budgeting 글</Link>이
             맡습니다.
           </p>
         </div>
@@ -233,7 +233,7 @@ export default function ExpertParallelismMoeSystemsArticle() {
           </p>
           <p>
             Straggler를 막는 장치는 세 층입니다. 학습 시{" "}
-            <Link to="/ai/mixture-of-experts#load-balancing">load-balance loss나 bias 갱신</Link>이
+            <Link to="/cs/ai/mixture-of-experts#load-balancing">load-balance loss나 bias 갱신</Link>이
             router를 고르게 만들고, capacity factor가 expert당 받을 token 상한을 정해 넘치는
             token을 버리며, 배포 시 자주 뽑히는 expert를 여러 GPU에 복제합니다. Switch
             Transformer의 capacity는 batch token 수를 expert 수로 나눈 값에 factor를 곱한
@@ -386,9 +386,9 @@ export default function ExpertParallelismMoeSystemsArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             다음 읽기는 collective의 rank 계약과 NCCL 대역폭 측정을 다루는{" "}
-            <Link to="/gpu/gpu-collective-network#collective-rank-semantics">GPU collective 글</Link>과,
+            <Link to="/cs/gpu/gpu-collective-network#collective-rank-semantics">GPU collective 글</Link>과,
             NVLink와 node 밖 경로의 경계를 정하는{" "}
-            <Link to="/gpu/gpu-interconnects#nvlink-device-fabric-boundary">interconnect 글</Link>입니다.
+            <Link to="/cs/gpu/gpu-interconnects#nvlink-device-fabric-boundary">interconnect 글</Link>입니다.
           </p>
         </div>
       </section>

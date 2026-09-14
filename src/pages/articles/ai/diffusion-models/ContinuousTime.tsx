@@ -57,7 +57,7 @@ export default function ContinuousTime() {
           DDPM의 timestep을 아주 잘게 나누면 distribution의 변화는 연속시간
           stochastic differential equation(SDE)으로 표현할 수 있습니다. 여기서
           ODE·SDE·Euler·Heun이 낯설다면 먼저{" "}
-          <Link to="/ai/math-differential-equations-numerical-solvers">
+          <Link to="/cs/ai/math-differential-equations-numerical-solvers">
             미분방정식·수치적분 정본
           </Link>
           의 scalar decay와 Brownian increment 예제를 읽으면 됩니다. 이 절에서는

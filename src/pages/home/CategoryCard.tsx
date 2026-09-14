@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import type { Category } from "@/content";
 import { countArticlesInSubcategory } from "@/content/subcategory-navigation";
+import { categoryHref } from "@/lib/routes";
 
 interface Props {
   category: Category;
@@ -17,7 +18,7 @@ export default function CategoryCard({ category: cat, index }: Props) {
       viewport={{ once: true }}
     >
       <Link
-        to={`/${cat.slug}`}
+        to={categoryHref(cat.slug)}
         className="group block rounded-xl border p-6 transition-all hover:border-foreground/20 hover:shadow-md"
       >
         <div className="flex items-start justify-between mb-3">

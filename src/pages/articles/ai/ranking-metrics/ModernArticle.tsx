@@ -291,7 +291,7 @@ export default function RankingMetricsArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           Embedding retrieval의 multi-positive 예시는{" "}
-          <Link to="/ai/sentence-embeddings#evaluation">
+          <Link to="/cs/ai/sentence-embeddings#evaluation">
             sentence embeddings 평가
           </Link>
           에서 이어집니다.

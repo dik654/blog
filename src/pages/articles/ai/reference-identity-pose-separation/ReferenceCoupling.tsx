@@ -47,7 +47,7 @@ export default function ReferenceCoupling() {
 
         <p className="leading-7">
           정체성 유사도의 판정 임계값은{" "}
-          <Link to="/ai/generative-measurement-controls#threshold-choice">계측기 검증</Link>이 정한 값을
+          <Link to="/cs/ai/generative-measurement-controls#threshold-choice">계측기 검증</Link>이 정한 값을
           씁니다. 이 절은 그 값으로 잰 결과만 다뤘습니다.
         </p>
       </div>

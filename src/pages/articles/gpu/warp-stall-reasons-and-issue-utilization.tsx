@@ -49,7 +49,7 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
             Counter 도 한 번에 다 읽히지 않습니다. 하드웨어 counter 의 수가 한정돼 있어
             Nsight Compute 는 같은 kernel 을 여러 번 replay 하며 metric 을 나눠 모으고,
             그래서 profiler 아래의 elapsed 는 실제 실행과 다릅니다. 측정 경계를 고정하는
-            절차는 <Link to="/gpu/cuda-perf-analysis#measurement-protocol">CUDA 성능 분석</Link>
+            절차는 <Link to="/cs/gpu/cuda-perf-analysis#measurement-protocol">CUDA 성능 분석</Link>
             이 다룹니다.
           </p>
         </div>
@@ -118,7 +118,7 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
           <p>
             Scoreboard 자체는 하나입니다. Issue 된 load 의 결과 register 에 미완료 표시를
             남기고 결과가 오면 지우는 장부이며, 그 판정 방식은{" "}
-            <Link to="/gpu/sm-warp-scheduling-and-issue#issue-scoreboard">SM 내부 글</Link>
+            <Link to="/cs/gpu/sm-warp-scheduling-and-issue#issue-scoreboard">SM 내부 글</Link>
             이 소유합니다. 이 글은 그 장부가 어느 경로에서 얼마나 오래 표시를 남겼는지를
             읽습니다.
           </p>
@@ -126,7 +126,7 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
             처방이 갈립니다. Long scoreboard 가 높으면 어떤 load 가 기다림을 만드는지 찾아
             coalescing 으로 sector 수를 줄이거나 자주 쓰는 data 를 shared memory 로 옮깁니다.
             Short scoreboard 가 높으면 shared memory 의{" "}
-            <Link to="/gpu/cuda-shared-memory#bank-conflict">bank conflict</Link> 를 먼저
+            <Link to="/cs/gpu/cuda-shared-memory#bank-conflict">bank conflict</Link> 를 먼저
             의심하고 load 를 더 넓고 적게 만듭니다.
           </p>
           <p>
@@ -159,7 +159,7 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
             kernel 이고, 처방은 재사용을 늘려 HBM 을 지나는 byte 를 줄이는 것입니다. 20%
             아래인데 long scoreboard 가 높으면 outstanding 요청이 부족한 것이므로 warp 당
             독립 load 를 늘리는 MLP 처방이 맞습니다. 두 지표를 함께 읽는 예는{" "}
-            <Link to="/gpu/cuda-perf-analysis#counter-correlation">counter 상관</Link> 에
+            <Link to="/cs/gpu/cuda-perf-analysis#counter-correlation">counter 상관</Link> 에
             있습니다.
           </p>
         </ProgressiveDetail>
@@ -196,7 +196,7 @@ export default function WarpStallReasonsAndIssueUtilizationArticle() {
           </p>
           <p>
             Ready warp 수를 latency 로부터 계산하는 Little's law 셈은{" "}
-            <Link to="/gpu/sm-warp-scheduling-and-issue#latency-hiding">TLP·ILP·MLP</Link> 가
+            <Link to="/cs/gpu/sm-warp-scheduling-and-issue#latency-hiding">TLP·ILP·MLP</Link> 가
             소유하고, 이 글은 그 셈의 결과가 profiler 에 어떤 숫자로 나타나는지만 읽습니다.
           </p>
         </div>
@@ -286,7 +286,7 @@ U_{\mathrm{issue}} &= \underbrace{\frac{C_{\mathrm{issued}}}{C_{\mathrm{active}}
             변경은 한 번에 하나이며, 다시 잰 뒤에는 stall 비율과 issue active 와 elapsed 가
             같은 방향으로 움직였는지 함께 봅니다. Stall 비율이 줄었는데 elapsed 가 그대로면
             그 stall 은 병목이 아니었던 것이고, 이 판정 loop 의 전체 순서는{" "}
-            <Link to="/gpu/cuda-perf-analysis#profiling">병목 가설 loop</Link> 가 소유합니다.
+            <Link to="/cs/gpu/cuda-perf-analysis#profiling">병목 가설 loop</Link> 가 소유합니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -326,7 +326,7 @@ U_{\mathrm{issue}} &= \underbrace{\frac{C_{\mathrm{issued}}}{C_{\mathrm{active}}
           <p>
             표본 100개의 분포, eligible 0.8, block 66개 같은 숫자는 문서 수치가 아니라 이
             글이 셈을 보이려고 둔 가정값입니다. Subpartition 당 warp 상한 16개와 H100 의 SM
-            132개는 <Link to="/gpu/sm-warp-scheduling-and-issue#sm-structure">SM 내부 글</Link>
+            132개는 <Link to="/cs/gpu/sm-warp-scheduling-and-issue#sm-structure">SM 내부 글</Link>
             의 근거를 그대로 씁니다.
           </p>
           <p>
@@ -363,8 +363,8 @@ U_{\mathrm{issue}} &= \underbrace{\frac{C_{\mathrm{issued}}}{C_{\mathrm{active}}
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/gpu/cuda-register-pressure#residency">register 가 residency 를 줄이는 경로</Link>,
-          그리고 <Link to="/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound">roofline 의 compute·memory bound 판정</Link>.
+          다음 글: <Link to="/cs/gpu/cuda-register-pressure#residency">register 가 residency 를 줄이는 경로</Link>,
+          그리고 <Link to="/cs/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound">roofline 의 compute·memory bound 판정</Link>.
         </p>
       </section>
     </div>

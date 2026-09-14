@@ -28,7 +28,7 @@ export default function BestPractices() {
         </p>
         <p>
           Prompt의 request contract와 demonstration selection은
-          <Link to="/ai/prompt-engineering"> prompt-engineering 정본 글</Link>에서
+          <Link to="/cs/ai/prompt-engineering"> prompt-engineering 정본 글</Link>에서
           정합니다. 이 글에서는 그 contract를 XML로 표현하고 안전하게 소비하는 부분만
           맡습니다.
         </p>
@@ -117,7 +117,7 @@ export default function BestPractices() {
         </p>
         <p>
           생성 단계의 문법 보장을 더 깊게 비교하려면
-          <Link to="/ai/grammar-constrained-generation">
+          <Link to="/cs/ai/grammar-constrained-generation">
             {" "}grammar-constrained generation
           </Link>
           으로 이어가면 됩니다.

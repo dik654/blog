@@ -18,8 +18,8 @@ export default function Overview({ onCodeRef: _onCodeRef }: Props) {
         <p>
           고정 사례로 committee position 512개 중 342개 bit가 켜진 update를 보겠습니다. 이 글은 bit→public key 결속, signing root와
           BLS, 2/3 supermajority, current/next committee handoff, store 적용을 순서대로 추적합니다. BLS pairing의 수학 정본은{" "}
-          <Link to="/blockchain/prysm-bls">BLS</Link>, committee 선출과 duplicate position은{" "}
-          <Link to="/blockchain/prysm-sync-committee">sync committee</Link> 글을 재사용합니다.
+          <Link to="/cs/blockchain/prysm-bls">BLS</Link>, committee 선출과 duplicate position은{" "}
+          <Link to="/cs/blockchain/prysm-sync-committee">sync committee</Link> 글을 재사용합니다.
         </p>
       </div>
       <ContentBoundary article="helios-consensus" />

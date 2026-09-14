@@ -24,7 +24,7 @@ export default function ImageBackboneScalingArticle() {
             CNN의 local convolution은 가까운 pattern과 translation structure를
             반복 사용합니다. ViT는 patches를 tokens로 만들어 넓은 관계를
             attention으로 계산합니다. ViT 내부 shape는{" "}
-            <Link to="/ai/vision-transformer">Vision Transformer 정본</Link>
+            <Link to="/cs/ai/vision-transformer">Vision Transformer 정본</Link>
             에서, 여기서는 resolution이 두 family의 비용을 어떻게 바꾸는지
             비교합니다.
           </p>

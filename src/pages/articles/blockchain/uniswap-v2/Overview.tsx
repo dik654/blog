@@ -10,7 +10,7 @@ export default function Overview() {
       <h2 className="mb-5 text-2xl font-bold">V2 swap은 quote가 아니라 수수료 반영 뒤의 reserve 불변식으로 끝난다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">두 reserve x,y를 가진 Pair는 거래자가 token0을 넣으면 token1을 내보냅니다. 가격표를 저장하는 대신 거래 전 reserve와 거래 뒤 실제 balance를 비교해 0.3% 수수료를 반영한 곱이 줄지 않았는지 확인합니다. Router의 quote는 이 settlement를 미리 계산한 값일 뿐 실행 보장이 아닙니다.</p>
-        <p>이 글은 AMM 정의를 다른 글에 중복시키지 않고 V2 Pair의 invariant → LP share → Router bound → flash callback·TWAP → release 흐름을 소유합니다. V3의 범위 유동성은 <Link to="/blockchain/uniswap-v3">다음 글</Link>에서 이 invariant를 재사용해 확장합니다.</p>
+        <p>이 글은 AMM 정의를 다른 글에 중복시키지 않고 V2 Pair의 invariant → LP share → Router bound → flash callback·TWAP → release 흐름을 소유합니다. V3의 범위 유동성은 <Link to="/cs/blockchain/uniswap-v3">다음 글</Link>에서 이 invariant를 재사용해 확장합니다.</p>
       </div>
       <ContentBoundary article="uniswap-v2" />
       <ModernV2Viz mode="swap" />

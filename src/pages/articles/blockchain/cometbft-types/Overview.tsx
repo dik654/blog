@@ -14,9 +14,9 @@ export default function Overview() {
         </p>
         <p>
           이 글은 <strong>header commitment → canonical vote → voting-power commit → evidence</strong> 순서로
-          객체를 읽습니다. Consensus가 이 증거를 언제 만드는지는 <Link to="/blockchain/cometbft-consensus">합의 엔진</Link>,
-          application state가 AppHash가 되는 과정은 <Link to="/blockchain/cometbft-abci">ABCI++</Link>, quorum
-          intersection의 일반 증명은 <Link to="/blockchain/bft-theory">BFT 이론</Link>이 소유합니다.
+          객체를 읽습니다. Consensus가 이 증거를 언제 만드는지는 <Link to="/cs/blockchain/cometbft-consensus">합의 엔진</Link>,
+          application state가 AppHash가 되는 과정은 <Link to="/cs/blockchain/cometbft-abci">ABCI++</Link>, quorum
+          intersection의 일반 증명은 <Link to="/cs/blockchain/bft-theory">BFT 이론</Link>이 소유합니다.
         </p>
       </div>
       <ContentBoundary article="cometbft-types" />

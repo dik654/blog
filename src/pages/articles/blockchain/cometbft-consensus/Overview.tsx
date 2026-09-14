@@ -15,9 +15,9 @@ export default function Overview() {
         </p>
         <p>
           이 글은 network callback보다 한 단계 위에서 <strong>event queue → H/R/S transition → lock → timeout →
-          accountability</strong>를 추적합니다. Quorum intersection의 일반 이론은 <Link to="/blockchain/bft-theory">BFT</Link>,
-          Vote·Commit의 wire 검증은 <Link to="/blockchain/cometbft-types">CometBFT type</Link>, decided block 실행은
-          <Link to="/blockchain/cometbft-abci">ABCI++</Link>이 소유합니다.
+          accountability</strong>를 추적합니다. Quorum intersection의 일반 이론은 <Link to="/cs/blockchain/bft-theory">BFT</Link>,
+          Vote·Commit의 wire 검증은 <Link to="/cs/blockchain/cometbft-types">CometBFT type</Link>, decided block 실행은
+          <Link to="/cs/blockchain/cometbft-abci">ABCI++</Link>이 소유합니다.
         </p>
       </div>
       <ContentBoundary article="cometbft-consensus" />

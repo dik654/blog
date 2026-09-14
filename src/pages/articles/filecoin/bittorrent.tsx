@@ -128,8 +128,8 @@ export default function BitTorrentArticle() {
             운영 비교에서는 같은 torrent·peer set·transport에서 completion
             time, duplicate bytes, hash-failure bytes, timeout과 retry를 함께
             측정해야 한다. 피어를 찾는 Kademlia 자체가 필요하면{" "}
-            <Link to="/p2p/kademlia">Kademlia routing</Link>과{" "}
-            <Link to="/p2p/kad-lookup">반복 탐색</Link>을 이어 읽는다.
+            <Link to="/cs/p2p/kademlia">Kademlia routing</Link>과{" "}
+            <Link to="/cs/p2p/kad-lookup">반복 탐색</Link>을 이어 읽는다.
           </p>
           <p>
             Release gate는 같은 torrent·peer fixture에서 base와 candidate에 dial·handshake reject reason과 request

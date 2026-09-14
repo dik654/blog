@@ -22,7 +22,7 @@ export default function ImitationLearningAndPolicyGeneralizationArticle() {
             robot으로 넘어갈 때 무엇이 깨지는지를 봅니다.
           </p>
           <p>
-            <Link to="/ai/robot-action-representations">앞 글</Link>이 action을 어떤 형태로
+            <Link to="/cs/ai/robot-action-representations">앞 글</Link>이 action을 어떤 형태로
             표현할지를 다뤘다면, 이 글은 그 표현을 학습시키는 데이터와 그 학습 결과가 얼마나
             넓게 통하는지를 다룹니다.
           </p>
@@ -117,7 +117,7 @@ L(\theta)&=\underbrace{\mathbb{E}\,\ell(\hat a,a)}_{\text{모든 쌍에서 예�
             100만 개 이상의 trajectory를 표준화했습니다. 이 규모는 한 실험실이 혼자 모으던 양보다 훨씬 큽니다.
           </p>
           <p>
-            이 흐름은 <Link to="/ai/vla-embodiment-gap#embodiment-alignment">cross-embodiment
+            이 흐름은 <Link to="/cs/ai/vla-embodiment-gap#embodiment-alignment">cross-embodiment
             adaptation</Link>과 다른 축입니다. Cross-embodiment adaptation이 이렇게 모은 데이터로
             학습한 policy를 새 target robot에 맞추는 절차라면, embodied data scaling은 그 절차에
             넣을 원재료 자체가 얼마나 크고 다양해지고 있는지를 말합니다.
@@ -306,7 +306,7 @@ L(\theta)&=\underbrace{\mathbb{E}\,\ell(\hat a,a)}_{\text{모든 쌍에서 예�
           <p>
             다음 글에서는 이 generalization 축들이 navigation이라는 구체적 task에서 waypoint,
             trajectory memory, process·outcome reward로 어떻게 나타나는지를 봅니다.{" "}
-            <Link to="/ai/vision-language-navigation">Vision-Language Navigation</Link>에서
+            <Link to="/cs/ai/vision-language-navigation">Vision-Language Navigation</Link>에서
             이어집니다.
           </p>
         </div>

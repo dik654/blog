@@ -51,7 +51,7 @@ export default function DiversityGate() {
         <p className="leading-7">
           마지막 글은 이 시리즈에서 가장 오래 붙잡았던 실패를 다룹니다. 3차원 형태로 얼굴 골격을 직접
           제어하려던 세 라운드이고, 여기서 안 움직이던 너비 축이 그 글의 주제입니다. 임계값 선택의 방향성은{" "}
-          <Link to="/ai/generative-measurement-controls#threshold-choice">계측기 검증</Link>이 소유합니다.
+          <Link to="/cs/ai/generative-measurement-controls#threshold-choice">계측기 검증</Link>이 소유합니다.
         </p>
       </div>
     </section>

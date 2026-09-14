@@ -18,10 +18,10 @@ export default function Overview() {
         </p>
         <p>
           Group·generator·order와 DLP/CDH/DDH의 차이는
-          <Link to="/crypto/discrete-log"> 이산로그 정본</Link>, elliptic-curve
+          <Link to="/cs/crypto/discrete-log"> 이산로그 정본</Link>, elliptic-curve
           point와 subgroup validation은
-          <Link to="/crypto/elliptic-curves"> 타원곡선 정본</Link>, ephemeral
-          secret의 randomness는 <Link to="/crypto/csprng">CSPRNG 정본</Link>을
+          <Link to="/cs/crypto/elliptic-curves"> 타원곡선 정본</Link>, ephemeral
+          secret의 randomness는 <Link to="/cs/crypto/csprng">CSPRNG 정본</Link>을
           재사용합니다. 이 글은 DH output을 실제 session key로 바꾸기 위해 필요한
           public-key validation, transcript authentication, KDF, key confirmation,
           ephemeral lifecycle을 소유합니다.

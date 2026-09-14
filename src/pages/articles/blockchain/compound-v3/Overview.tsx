@@ -9,7 +9,7 @@ export default function Overview() {
       <h2 className="mb-5 text-2xl font-bold">Comet market은 base asset 한 개와 담보 목록을 서로 다른 회계로 다룬다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">Compound III의 한 Comet instance에서 base asset은 공급하면 이자를 받고 음수 balance가 되면 차입 이자를 냅니다. Collateral assets는 base 차입 한도와 liquidation 판정에 기여하지만 자체 lending interest를 얻지 않습니다. “Compound V3는 항상 USDC market”이 아니라 deployment마다 base·collateral·oracle·risk config가 다릅니다.</p>
-        <p><Link to="/blockchain/aave-v3#interest-rate">공통 utilization</Link>과 indexed balance 아이디어는 Aave 글의 정본을 재사용합니다. 이 글은 single-base signed principal, 독립 supply/borrow curve, borrow/liquidation factor 분리와 reserve-funded absorb를 소유합니다.</p>
+        <p><Link to="/cs/blockchain/aave-v3#interest-rate">공통 utilization</Link>과 indexed balance 아이디어는 Aave 글의 정본을 재사용합니다. 이 글은 single-base signed principal, 독립 supply/borrow curve, borrow/liquidation factor 분리와 reserve-funded absorb를 소유합니다.</p>
       </div>
       <ContentBoundary article="compound-v3" />
       <ModernCometViz mode="market" />

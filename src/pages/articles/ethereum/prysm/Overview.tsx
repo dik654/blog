@@ -101,9 +101,9 @@ export default function Overview() {
           snapshot으로 rollback합니다.
         </p>
         <p>
-          Protocol 원리는 <Link to="/blockchain/consensus-mechanisms">PoS 합의</Link>와
-          <Link to="/blockchain/bft-theory"> BFT safety·liveness</Link>, execution handoff는
-          <Link to="/blockchain/reth"> Reth execution-client 지도</Link>에서 가져옵니다. Prysm 내부는 아래
+          Protocol 원리는 <Link to="/cs/blockchain/consensus-mechanisms">PoS 합의</Link>와
+          <Link to="/cs/blockchain/bft-theory"> BFT safety·liveness</Link>, execution handoff는
+          <Link to="/cs/blockchain/reth"> Reth execution-client 지도</Link>에서 가져옵니다. Prysm 내부는 아래
           SSZ·BLS·P2P·state transition·fork choice·finality·validator·Engine API 글로 내려가면 됩니다.
         </p>
       </div>

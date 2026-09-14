@@ -26,9 +26,9 @@ export default function Overview() {
           owner와 실패가 어디로 돌아오는지를 확인합니다.
         </p>
         <p>
-          암호 채널 자체는 <Link to="/p2p/tls-fundamentals">TLS 1.3 정본</Link>,
-          내장형 secure transport는 <Link to="/p2p/quic-fundamentals">QUIC 정본</Link>,
-          받은 block의 byte integrity는 <Link to="/p2p/content-addressing">content
+          암호 채널 자체는 <Link to="/cs/p2p/tls-fundamentals">TLS 1.3 정본</Link>,
+          내장형 secure transport는 <Link to="/cs/p2p/quic-fundamentals">QUIC 정본</Link>,
+          받은 block의 byte integrity는 <Link to="/cs/p2p/content-addressing">content
           addressing 정본</Link>이 소유합니다. 여기서는 그 기능을 다시 정의하지 않고
           libp2p stack의 어느 경계에 꽂히는지만 다룹니다.
         </p>

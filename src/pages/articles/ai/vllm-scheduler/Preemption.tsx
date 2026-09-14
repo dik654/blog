@@ -142,7 +142,7 @@ C_{preempt} &\approx T_{model}\!\left(W_r^{recompute}\right)
           </li>
           <li>
             설정을 바꾼 뒤 raw throughput만 보지 말고 TTFT·ITL tail과
-            <Link to="/ai/vllm-serving#serving-goodput"> SLO goodput</Link>을 같은
+            <Link to="/cs/ai/vllm-serving#serving-goodput"> SLO goodput</Link>을 같은
             workload replay에서 다시 승인합니다.
           </li>
         </ol>
@@ -150,7 +150,7 @@ C_{preempt} &\approx T_{model}\!\left(W_r^{recompute}\right)
           KV capacity 자체는 model의 layer 수·KV head 수·head dimension·cache
           dtype과 runtime allocator가 결정합니다. 이론 byte 계산과 실제
           <code>GPU KV cache size</code>의 차이는
-          <Link to="/ai/hybrid-kv-cache-allocation#kv-cache"> hybrid KV allocation
+          <Link to="/cs/ai/hybrid-kv-cache-allocation#kv-cache"> hybrid KV allocation
           serving</Link>에서 이어집니다.
         </p>
       </div>

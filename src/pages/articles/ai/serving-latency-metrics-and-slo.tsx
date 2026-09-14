@@ -32,7 +32,7 @@ export default function ServingLatencyMetricsAndSloArticle() {
           </p>
           <p>
             지표가 어느 timestamp 에서 나오는지는{" "}
-            <Link to="/ai/vllm-serving#prefill-decode">vLLM 입문</Link>의 request lifecycle 을
+            <Link to="/cs/ai/vllm-serving#prefill-decode">vLLM 입문</Link>의 request lifecycle 을
             전제로 합니다. Benchmark 를 어떻게 돌려야 이 숫자가 재현되는지(warm·cold,
             saturation 곡선)는 다음 배치의 serving benchmark methodology 글이 맡습니다.
           </p>
@@ -66,7 +66,7 @@ export default function ServingLatencyMetricsAndSloArticle() {
             TTFT 안에는 gateway 와 queue 에서 기다린 시간, prefill 계산 시간이 함께 들어
             있습니다. 그래서 TTFT 가 나빠졌을 때 prompt 가 길어진 것인지 대기열이 길어진
             것인지는 TTFT 만으로 구분되지 않고, 그 분해는{" "}
-            <Link to="/ai/vllm-serving#prefill-decode">latency decomposition</Link> 계약이
+            <Link to="/cs/ai/vllm-serving#prefill-decode">latency decomposition</Link> 계약이
             맡습니다.
           </p>
         </div>
@@ -123,13 +123,13 @@ export default function ServingLatencyMetricsAndSloArticle() {
           <p>
             Batch 가 채워지는 것 자체가 두 번째 비용을 만듭니다. 도착률이 처리율에 가까워지면
             요청은 batch 자리를 기다리고, 그 대기가 TTFT 에 더해집니다.{" "}
-            <Link to="/ai/llm-serving-ops#paper-little-law">Little&apos;s law</Link> 대로
+            <Link to="/cs/ai/llm-serving-ops#paper-little-law">Little&apos;s law</Link> 대로
             대기열 길이는 도착률 × 체류 시간이므로, 처리율의 90 % 를 넘긴 구간에서는 throughput
             이 거의 늘지 않는데 TTFT 만 가파르게 오르는 구간이 나타납니다.
           </p>
           <p>
             그래서 throughput 은 항상 어떤 latency 조건 아래의 값인지 붙여 말합니다. 조건을
-            통과한 요청만 세는 <Link to="/ai/vllm-serving#serving-goodput">goodput</Link> 이
+            통과한 요청만 세는 <Link to="/cs/ai/vllm-serving#serving-goodput">goodput</Link> 이
             그 표기이며, 조건 없는 tokens/s 는 batch 를 무한히 키운 상한에 가깝습니다.
           </p>
         </div>
@@ -245,7 +245,7 @@ export default function ServingLatencyMetricsAndSloArticle() {
           <p>
             허용 위반율이 곧 error budget 입니다. 100 % 만족을 요구하면 어떤 배포도 할 수
             없으므로 1 % 의 window 는 나쁠 수 있다고 미리 인정하고, 그 budget 을 얼마나 빨리
-            쓰는지는 <Link to="/ai/llm-serving-ops#observability-aiops">burn rate</Link> 로
+            쓰는지는 <Link to="/cs/ai/llm-serving-ops#observability-aiops">burn rate</Link> 로
             봅니다. 외부에 약속한 SLO 보다 조금 엄격한 내부 SLO 를 두면 budget 이 바닥나기 전에
             손쓸 여유가 생깁니다.
           </p>
@@ -253,7 +253,7 @@ export default function ServingLatencyMetricsAndSloArticle() {
             SLO 는 앞 절의 trade-off 를 닫는 열쇠이기도 합니다. "P99 ITL ≤ 80 ms" 를 정하면
             step 시간이 80 ms 를 넘지 않는 최대 batch 가 정해지고, 그 batch 에서 나오는
             tokens/s 가 이 서버의 goodput 입니다.{" "}
-            <Link to="/ai/llm-serving-capacity#capacity-admission">Admission 상한</Link>도 memory
+            <Link to="/cs/ai/llm-serving-capacity#capacity-admission">Admission 상한</Link>도 memory
             가 아니라 이 SLO 에서 먼저 막힙니다.
           </p>
         </div>
@@ -354,7 +354,7 @@ export default function ServingLatencyMetricsAndSloArticle() {
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           이어지는 글: 이 지표를 재현 가능하게 측정하는 benchmark 방법론(warm·cold, request
           rate sweep 과 saturation 곡선)은 다음 배치에서 다룹니다. 지표가 나오는 scheduler 쪽
-          원인은 <Link to="/ai/vllm-scheduler">vLLM scheduler</Link> 를 참고하세요.
+          원인은 <Link to="/cs/ai/vllm-scheduler">vLLM scheduler</Link> 를 참고하세요.
         </p>
       </section>
     </div>

@@ -11,7 +11,7 @@ export default function ModernPolyOpsGpuArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Representation을 잃지 않는 polynomial kernel</p><h2 className="text-3xl font-bold tracking-tight">GPU polynomial 연산은 배열을 빠르게 처리하기 전에 그 배열이 coefficient인지 evaluation인지부터 증명해야 한다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">Polynomial의 coefficient/evaluation form, interpolation, vanishing polynomial과 NTT는 <a className="text-primary hover:underline" href="/crypto/polynomials">다항식 정본</a>과 <a className="text-primary hover:underline" href="/crypto/fft">NTT 정본</a>이 소유합니다. 여기서는 하나의 proof workload가 coefficient buffer에서 coset evaluation으로 이동하고, pointwise 계산 뒤 quotient/opening용 coefficient로 돌아오는 GPU 구현 경계만 설명합니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">Polynomial의 coefficient/evaluation form, interpolation, vanishing polynomial과 NTT는 <a className="text-primary hover:underline" href="/cs/crypto/polynomials">다항식 정본</a>과 <a className="text-primary hover:underline" href="/cs/crypto/fft">NTT 정본</a>이 소유합니다. 여기서는 하나의 proof workload가 coefficient buffer에서 coset evaluation으로 이동하고, pointwise 계산 뒤 quotient/opening용 coefficient로 돌아오는 GPU 구현 경계만 설명합니다.</p>
       <p>
             Buffer receipt에는 field와 representation form, domain/coset id를 둡니다. N과 order, Montgomery/canonical
             state, generation도 같은 자리에 함께 적습니다. 길이와 element type만 맞춰 배열을 받는 API로는 representation mismatch를 잡아낼

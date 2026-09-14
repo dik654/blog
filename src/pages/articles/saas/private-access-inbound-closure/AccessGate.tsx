@@ -40,8 +40,8 @@ export default function AccessGate() {
 
         <p className="leading-7">
           이 글로 SaaS 섹션의 세 축이 모두 채워졌습니다. 요청이 오리진에 닿기 전의{" "}
-          <Link to="/saas/edge-request-defense-pipeline">방어 계층</Link>, 고장 앞에서 트래픽을 옮기는{" "}
-          <Link to="/saas/anycast-delivery-continuity">무중단 전달</Link>, 그리고 안쪽 자원에 바깥에서 닿는
+          <Link to="/cs/saas/edge-request-defense-pipeline">방어 계층</Link>, 고장 앞에서 트래픽을 옮기는{" "}
+          <Link to="/cs/saas/anycast-delivery-continuity">무중단 전달</Link>, 그리고 안쪽 자원에 바깥에서 닿는
           이 글의 사설 접근입니다. 셋 다 같은 질문의 다른 면입니다. 무엇을 열어 두고 무엇을 닫아 둘 것인가입니다.
         </p>
       </div>

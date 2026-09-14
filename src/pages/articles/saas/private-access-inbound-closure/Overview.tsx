@@ -32,10 +32,10 @@ export default function Overview() {
 
         <p className="leading-7">
           연결 방향을 뒤집는 아이디어 자체는{" "}
-          <Link to="/saas/edge-request-defense-pipeline#origin-protection">엣지 요청 방어</Link>에서 오리진을
+          <Link to="/cs/saas/edge-request-defense-pipeline#origin-protection">엣지 요청 방어</Link>에서 오리진을
           숨기는 수단으로 한 번 나왔습니다. 이 글은 같은 아이디어가 사람과 내부 자원 사이에서 어떤 형태가 되는지를
           다룹니다. 인증과 인가의 구분 자체는{" "}
-          <Link to="/isms-aml/isms-auth-management#overview">계정·인증 관리</Link>가 소유합니다.
+          <Link to="/cs/isms-aml/isms-auth-management#overview">계정·인증 관리</Link>가 소유합니다.
         </p>
       </div>
 

@@ -21,17 +21,17 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <Link to="/ai/motif-3-architecture#gdla">MLA latent KV compression</Link> 은 token 마다
+            <Link to="/cs/ai/motif-3-architecture#gdla">MLA latent KV compression</Link> 은 token 마다
             key·value 를 저차원 latent 하나로 눌러 담아 KV cache 를 줄입니다. 이 글은 그 압축이
             구체적으로 어떤 두 행렬로 이뤄지는지, decode 에서 그 latent 를 다시 펼치지 않고
             바로 소비하려면 weight 를 어떻게 미리 접어 둬야 하는지, 그리고 그 접기가 위치
             정보(RoPE)를 왜 별도 경로로 빼내야만 성립하는지를 다룹니다.
           </p>
           <p>
-            <Link to="/ai/kv-cache-fundamentals#kv-shape">KV cache</Link> 는 decode 마다 과거
+            <Link to="/cs/ai/kv-cache-fundamentals#kv-shape">KV cache</Link> 는 decode 마다 과거
             token 의 key·value 를 다시 계산하지 않으려고 들고 있는 상태입니다. 표준 multi-head
             attention 은 head 마다 독립된 key·value 를 저장하므로 head 수와 head 차원에 비례해
-            cache 가 커집니다. <Link to="/ai/kv-cache-fundamentals#kv-shape-sharing">GQA</Link>
+            cache 가 커집니다. <Link to="/cs/ai/kv-cache-fundamentals#kv-shape-sharing">GQA</Link>
             는 head 를 묶어 이 크기를 줄이지만 공유된 head 만큼 표현력을 나눠 씁니다.
           </p>
           <p>
@@ -111,7 +111,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
             최적이라는 증명은 논문에 없습니다.
           </p>
           <p>
-            <Link to="/ai/math-matrices-svd#low-rank">Low-rank approximation</Link> 이
+            <Link to="/cs/ai/math-matrices-svd#low-rank">Low-rank approximation</Link> 이
             일반적으로 말하는 절충과 같습니다. Latent 차원이 실제 정보의 rank 보다 작으면
             reconstruction 오차가 생기고, 그 오차가 attention 품질로 새어 나갑니다.
           </p>
@@ -124,7 +124,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <Link to="/ai/yarn-rope-extension#rope-foundation">RoPE</Link> 는 query 와 key 를
+            <Link to="/cs/ai/yarn-rope-extension#rope-foundation">RoPE</Link> 는 query 와 key 를
             위치에 비례한 각도로 회전시켜 상대 위치만 dot product 에 남기는 방법입니다.
             그런데 이 회전을 k_t^C 에 바로 적용하면 뒤에서 볼 weight absorption 이 깨집니다.
             그래서 MLA 는 위치 정보를 압축 경로 밖의 작은 벡터로 따로 만듭니다.
@@ -267,7 +267,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
           <p className="text-lg leading-8">
             MLA 는 공짜가 아닙니다. Content 점수의 내적을 128차원에서 512차원으로 늘려
             head당 곱셈이 네 배 늘어난 대가로 캐시 바이트를 56.9배 줄입니다. Decode 가
-            <Link to="/ai/kv-cache-fundamentals#kv-shape">메모리 대역폭에 묶여 있다는 전제</Link>
+            <Link to="/cs/ai/kv-cache-fundamentals#kv-shape">메모리 대역폭에 묶여 있다는 전제</Link>
             아래에서만 이 교환이 이득입니다.
           </p>
           <p>
@@ -281,7 +281,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
           <p>
             셋째, d_c 를 더 줄이는 선택은 이 글의 범위가 아닙니다. Rank–compression
             tradeoff 가 어디까지 버티는지는 구현마다 다른 실험 질문이고, 이어지는
-            <Link to="/ai/qwen36-hybrid-architecture#deltanet-state"> Gated DeltaNet 계열의 recurrent state</Link>
+            <Link to="/cs/ai/qwen36-hybrid-architecture#deltanet-state"> Gated DeltaNet 계열의 recurrent state</Link>
             처럼 latent 크기를 완전히 고정 shape 으로 바꾸는 접근도 있습니다.
           </p>
         </div>
@@ -318,7 +318,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
             같은 크기"라는 문장이 그대로 재현됩니다.
           </p>
           <p>
-            이 비교는 원소 수 기준이며 실제 byte 는 <Link to="/ai/kv-cache-fundamentals#kv-shape-formula">dtype</Link>
+            이 비교는 원소 수 기준이며 실제 byte 는 <Link to="/cs/ai/kv-cache-fundamentals#kv-shape-formula">dtype</Link>
             에 곱해집니다. Query 쪽 압축(d_c'=1536)은 캐시되지 않으므로 이 비교에
             들어가지 않습니다.
           </p>

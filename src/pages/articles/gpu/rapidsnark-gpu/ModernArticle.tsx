@@ -17,7 +17,7 @@ export default function ModernRapidsnarkGpuArticle() {
             Intel/ARM assembly 구현이라고 적혀 있습니다. Source tree에는 CUDA kernel이나 GPU runtime path가 없습니다. 따라서 기존 글의
             “rapidsnark GPU prover가 NTT와 MSM을 실행한다”는 설명은 현재 구현 사실이 아닙니다.
           </p>
-      <p>이 글은 두 층을 분리합니다. 먼저 pinned CPU path가 <code>.zkey</code>와 <code>.wtns</code>를 어떻게 승인하고 thread pool·FFT·MSM으로 proof를 만드는지 설명합니다. 그 다음 <a className="text-primary hover:underline" href="/gpu/gpu-proof-pipeline">GPU proof pipeline 정본</a>을 재사용해, NTT/MSM backend를 붙이려면 어떤 representation·buffer·completion·fallback 계약이 필요한지 제안합니다.</p>
+      <p>이 글은 두 층을 분리합니다. 먼저 pinned CPU path가 <code>.zkey</code>와 <code>.wtns</code>를 어떻게 승인하고 thread pool·FFT·MSM으로 proof를 만드는지 설명합니다. 그 다음 <a className="text-primary hover:underline" href="/cs/gpu/gpu-proof-pipeline">GPU proof pipeline 정본</a>을 재사용해, NTT/MSM backend를 붙이려면 어떤 representation·buffer·completion·fallback 계약이 필요한지 제안합니다.</p>
       <RapidsnarkBoundaryViz />
       <ContentBoundary article="rapidsnark-gpu" />
       <div id="paper-rapidsnark-readme"><CitationBlock type="code" citeKey={1} source="iden3 rapidsnark README · commit 81eddf1" href={RAPID_README}><p><strong>문제:</strong> Circom/snarkjs circuits의 Groth16 proof를 native prover로 생성하고 standalone/server interfaces를 제공해야 합니다.</p><p><strong>핵심 기여:</strong> Pinned README는 C++와 Intel/ARM assembly 기반 build, zkey+witness CLI와 server mode를 문서화합니다.</p><p><strong>중요 가정:</strong> commit 81eddf1, supported alt_bn128 artifacts와 documented build targets를 사용합니다.</p><p><strong>근거 범위:</strong> 현재 upstream의 공개 interface와 CPU implementation positioning입니다.</p><p><strong>일반화 금지:</strong> CUDA/GPU backend, fixed speedup, production SLA 또는 모든 zkey curve 지원의 근거가 아닙니다.</p></CitationBlock></div>

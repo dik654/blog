@@ -18,7 +18,7 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         </p>
         <p>
           이 글은 <strong>checkpoint→vote link→2/3 threshold→justification→finalization→prune→weak-subjectivity
-          sync</strong> 순서로 설명합니다. 현재 head를 고르는 계산은 <Link to="/blockchain/prysm-forkchoice">fork-choice
+          sync</strong> 순서로 설명합니다. 현재 head를 고르는 계산은 <Link to="/cs/blockchain/prysm-forkchoice">fork-choice
           글</Link>이 소유하고, 여기서는 epoch-level evidence가 언제 되돌리기 어려운 경계가 되는지만 다룹니다.
         </p>
       </div>

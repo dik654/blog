@@ -74,7 +74,7 @@ export default function Boundary() {
           다음 글에서는 지금까지 본 백본들, 곧 라벨 없이 학습한 것과 텍스트에 맞춰 학습한 것, 그리고 분할용으로
           학습한 것 중 무엇을 언제 고를지를 하나의 기준으로 정리합니다. 이 글의 결론인 "같은 벡터 공간이라도
           무엇으로 끌어당겼는지가 다르다"가 그 기준의 출발점입니다.{" "}
-          <Link to="/ai/dinov3-self-supervised-backbone">자기지도 백본</Link>과 비교하면 차이가 분명해집니다.
+          <Link to="/cs/ai/dinov3-self-supervised-backbone">자기지도 백본</Link>과 비교하면 차이가 분명해집니다.
         </p>
       </div>
     </section>

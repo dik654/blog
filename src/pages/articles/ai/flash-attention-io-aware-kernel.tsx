@@ -32,7 +32,7 @@ export default function FlashAttentionIoAwareKernelArticle() {
             빠릅니다. 이 두 숫자는 FlashAttention 논문이 A100 을 기준으로 적은 값입니다.
           </p>
           <p>
-            Attention materialization 은 <Link to="/ai/attention-theory#multiplicative">scaled dot-product attention</Link>
+            Attention materialization 은 <Link to="/cs/ai/attention-theory#multiplicative">scaled dot-product attention</Link>
             의 중간 결과인 점수 행렬 S = QKᵀ/√d 와 softmax 결과 P 를 HBM 에 실제 크기로
             써 두는 일을 뜻합니다. PyTorch 의 기본 구현은 matmul, softmax, dropout, matmul 을
             서로 다른 kernel 로 부르므로 kernel 사이마다 이 행렬이 HBM 을 거칩니다.
@@ -81,13 +81,13 @@ export default function FlashAttentionIoAwareKernelArticle() {
           <p>
             SRAM residency 는 이 절감을 실제로 만드는 조건입니다. Tile 하나가 SRAM 에 올라온
             동안 matmul, mask, softmax, dropout, 두 번째 matmul 을 모두 끝내고 HBM 에는
-            최종 출력만 씁니다. 여러 kernel 을 하나로 합치는 <Link to="/gpu/cuda-kernel-fusion">kernel fusion</Link>
+            최종 출력만 씁니다. 여러 kernel 을 하나로 합치는 <Link to="/cs/gpu/cuda-kernel-fusion">kernel fusion</Link>
             이 attention 에서는 이런 모양으로 나타납니다.
           </p>
           <p>
             HBM traffic reduction 은 그 결과로 줄어든 왕복 byte 를 부르는 이름입니다. 같은
-            원리를 GEMM 에서 먼저 쓴 것이 <Link to="/gpu/cuda-matrix-multiply#tiled">shared-memory tile 재사용</Link>
-            이고, tile 을 어디에 올리는지는 <Link to="/gpu/cuda-shared-memory#overview">CUDA shared memory</Link>
+            원리를 GEMM 에서 먼저 쓴 것이 <Link to="/cs/gpu/cuda-matrix-multiply#tiled">shared-memory tile 재사용</Link>
+            이고, tile 을 어디에 올리는지는 <Link to="/cs/gpu/cuda-shared-memory#overview">CUDA shared memory</Link>
             글이 다룹니다.
           </p>
         </div>
@@ -109,13 +109,13 @@ export default function FlashAttentionIoAwareKernelArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <Link to="/ai/softmax#overview">Softmax</Link> 는 행의 최댓값을 빼고 지수를 취한
+            <Link to="/cs/ai/softmax#overview">Softmax</Link> 는 행의 최댓값을 빼고 지수를 취한
             뒤 합으로 나누므로 한 행을 끝까지 읽어야 답이 나옵니다. Online softmax 는 지금까지
             본 부분의 최댓값 m 과 지수합 ℓ 만 들고 있다가, 더 큰 값이 나타나면 이전 합에
             보정 계수를 곱해 기준점을 옮깁니다. 행을 조각내 읽어도 최종 답이 같습니다.
           </p>
           <p>
-            성립 이유는 <Link to="/ai/softmax#overview">softmax 의 max-shift invariance</Link>
+            성립 이유는 <Link to="/cs/ai/softmax#overview">softmax 의 max-shift invariance</Link>
             입니다. 기준점을 m_old 에서 m_new 로 바꾸면 모든 항에 {"e^{m_old − m_new}"} 가 똑같이
             곱해지므로, 이미 더해 둔 합에도 그 계수 하나만 곱하면 새 기준점의 합이 됩니다.
             Running maximum 이 m 이고 running normalizer 가 ℓ 입니다.
@@ -258,7 +258,7 @@ export default function FlashAttentionIoAwareKernelArticle() {
             짧아진다는 것이 논문의 주장이자 측정입니다.
           </p>
           <p>
-            같은 판단을 layer 단위로 하는 것이 <Link to="/ai/reverse-mode-autodiff#save-recompute">autodiff 의 save–recompute 경계</Link>
+            같은 판단을 layer 단위로 하는 것이 <Link to="/cs/ai/reverse-mode-autodiff#save-recompute">autodiff 의 save–recompute 경계</Link>
             입니다. Gradient checkpointing 은 activation 을 버리고 layer 를 다시 돌리지만,
             FlashAttention 은 kernel 안 tile 단위로 같은 선택을 하고 저장 대상을 통계량 벡터
             L 하나로 줄입니다.
@@ -310,8 +310,8 @@ export default function FlashAttentionIoAwareKernelArticle() {
           </p>
           <p>
             Decode 에서는 모양이 달라집니다. Query 가 한 행뿐이라 Q tiling 은 의미가 없고,
-            <Link to="/ai/kv-cache-fundamentals#kv-shape">KV cache</Link> 가 page 단위로 흩어져
-            있습니다. <Link to="/ai/vllm-paged-attention#memory-kernel-boundary">vLLM 의 PagedAttention</Link>
+            <Link to="/cs/ai/kv-cache-fundamentals#kv-shape">KV cache</Link> 가 page 단위로 흩어져
+            있습니다. <Link to="/cs/ai/vllm-paged-attention#memory-kernel-boundary">vLLM 의 PagedAttention</Link>
             은 같은 online softmax 를 block table 위에서 돌리며, 긴 context 에서는 K/V 축을
             나눠 병렬화하는 Flash-Decoding 이 필요해집니다.
           </p>

@@ -318,9 +318,9 @@ export default function QueryTransformationAndAdaptiveRetrievalArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           Chunk 를 어떻게 만들지는{" "}
-          <Link to="/ai/rag-ingestion-and-chunking#chunking">RAG ingestion 글</Link>이 정본이고,
+          <Link to="/cs/ai/rag-ingestion-and-chunking#chunking">RAG ingestion 글</Link>이 정본이고,
           검색 후보를 정렬·재정렬하는 계산은{" "}
-          <Link to="/ai/retrieval-ranking-funnel#retrieval">Retrieval ranking funnel 글</Link>이
+          <Link to="/cs/ai/retrieval-ranking-funnel#retrieval">Retrieval ranking funnel 글</Link>이
           정본입니다.
         </p>
       </section>

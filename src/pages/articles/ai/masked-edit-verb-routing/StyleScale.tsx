@@ -47,7 +47,7 @@ export default function StyleScale() {
           이미 바뀐 인물은 뒤에서 되돌릴 수 없으므로, 얼굴이 프레임에 있고 마스크가 크롭의 4분의 1을 넘으면
           연산을 시작하기 전에 거절하도록 했습니다. 모델을 부르기 전에 막는 편이 결과를 보여 주고 되돌리라고
           하는 것보다 낫습니다. 마스크 크기가 곧 정체성 위험이라는 관계는{" "}
-          <Link to="/ai/generative-measurement-controls#identity-metric">계측기 검증</Link>의 임계값으로
+          <Link to="/cs/ai/generative-measurement-controls#identity-metric">계측기 검증</Link>의 임계값으로
           판정했습니다.
         </p>
       </div>

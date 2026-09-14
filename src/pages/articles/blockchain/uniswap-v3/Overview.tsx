@@ -10,7 +10,7 @@ export default function Overview() {
       <h2 className="mb-5 text-2xl font-bold">V3는 V2 곡선을 버린 것이 아니라 position별 가격 구간으로 옮겼다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">LP는 전 가격 범위 대신 [pₐ,pᵦ]를 선택합니다. 현재 가격이 범위 안일 때만 그 position의 liquidity가 swap에 참여하고 fee를 얻습니다. 좁은 범위는 같은 token 양으로 더 큰 active liquidity를 만들지만 가격이 벗어나면 한쪽 token만 남고 fee accrual도 멈춥니다.</p>
-        <p><Link to="/blockchain/uniswap-v2#overview">V2 constant-product invariant</Link>와 input fee settlement를 재사용하고, 이 글은 concentrated range·tick/sqrt price·position fee growth·initialized tick crossing을 소유합니다.</p>
+        <p><Link to="/cs/blockchain/uniswap-v2#overview">V2 constant-product invariant</Link>와 input fee settlement를 재사용하고, 이 글은 concentrated range·tick/sqrt price·position fee growth·initialized tick crossing을 소유합니다.</p>
       </div>
       <ContentBoundary article="uniswap-v3" />
       <ModernV3Viz mode="range" />

@@ -48,7 +48,7 @@ export default function SszInternal({ title, onCodeRef: _onCodeRef }: Props) {
           Store를 수정하지 않습니다.
         </p>
         <p>
-          Packing·mix-in-length·multiproof의 일반 유도는 <Link to="/blockchain/prysm-ssz">SSZ 정본 글</Link>에서 이어서 볼 수 있습니다.
+          Packing·mix-in-length·multiproof의 일반 유도는 <Link to="/cs/blockchain/prysm-ssz">SSZ 정본 글</Link>에서 이어서 볼 수 있습니다.
           Helios release 검증에서는 같은 pinned update bytes를 base/candidate에 넣어 decode outcome·object root·branch result·pre/post Store를 먼저
           맞춘 뒤 latency와 allocation을 비교합니다.
         </p>

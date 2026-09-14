@@ -276,9 +276,9 @@ export default function ClassificationMetricsArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           Class prevalence와 sampling·focal loss는{" "}
-          <Link to="/ai/imbalanced-data">불균형 데이터 글</Link>, logit
+          <Link to="/cs/ai/imbalanced-data">불균형 데이터 글</Link>, logit
           calibration과 serving order는{" "}
-          <Link to="/ai/image-probability-decisions">
+          <Link to="/cs/ai/image-probability-decisions">
             이미지 probability decision 글
           </Link>
           에서 이어집니다.

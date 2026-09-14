@@ -62,7 +62,7 @@ export default function TrainValidationTestArticle() {
           <Case title="새 사람·site" detail="같은 entity 파생 row를 group 단위로 분리" />
           <Case title="미래" detail="Prediction 시점 이후 data가 train으로 새지 않게 time split" />
         </div>
-        <p>여러 fold로 procedure risk를 추정하고 group·time boundary를 설계하는 방법은 <a className="font-semibold text-primary underline" href="/ai/cross-validation">Cross-validation</a> 글로 이어집니다. 이 글은 그 전에 필요한 세 역할과 final test 경계만 소유합니다.</p>
+        <p>여러 fold로 procedure risk를 추정하고 group·time boundary를 설계하는 방법은 <a className="font-semibold text-primary underline" href="/cs/ai/cross-validation">Cross-validation</a> 글로 이어집니다. 이 글은 그 전에 필요한 세 역할과 final test 경계만 소유합니다.</p>
         <div id="paper-train-test"><CitationBlock source="The Elements of Statistical Learning · Model Assessment and Selection" citeKey={1} href={ESL}><Evidence problem="Training error와 generalization error, model selection과 assessment를 구분" contribution="Training·validation·test 역할과 bias–variance 관점을 정리" assumptions="명시된 statistical learning setting과 sampling·loss 조건" scope="교과서의 model assessment·selection 원리" notClaim="고정 비율 random split이 모든 group·time deployment에 맞는다는 뜻이 아님" /></CitationBlock></div>
         <div id="paper-cv-estimand"><CitationBlock source="Cross-Validation: What Does It Estimate and How Well Does It Do It?" citeKey={2} href={CV_PAPER}><Evidence problem="CV가 특정 fitted model과 learning procedure 중 무엇의 error를 추정하는지 구분" contribution="CV estimand와 uncertainty를 이론·simulation으로 분석" assumptions="논문의 OLS theorem과 CV construction 조건" scope="논문이 분석한 estimand·coverage 범위" notClaim="모든 learner에서 finite-sample equality나 독립 test 대체를 보장하지 않음" /></CitationBlock></div>
         <ContentBoundary article="train-validation-test" />

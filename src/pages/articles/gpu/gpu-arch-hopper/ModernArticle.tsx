@@ -11,7 +11,7 @@ export default function ModernHopperArticle(){return <article className="space-y
   <section id="overview" className="space-y-6">
     <header className="space-y-3"><p className="text-sm font-semibold text-primary">Hopper를 기능 목록이 아니라 실행 경로로</p><h2 className="text-3xl font-bold tracking-tight">Hopper는 더 많은 FLOPS만 제공한 세대가 아니라, data 이동과 협력 범위를 다시 나눴다</h2></header>
     <p className="text-lg leading-8 text-foreground/90">NVIDIA Hopper 계열은 기존 grid·block·warp 위에 optional <strong>thread block cluster</strong>를 추가하고, <strong>TMA(Tensor Memory Accelerator)</strong>로 다차원 tensor 이동을 계산 threads와 분리합니다. Tensor Cores와 Transformer Engine은 낮은 precision의 matrix 연산을 가속하지만 정확도와 scaling contract가 함께 필요합니다.</p>
-    <p>이 글은 일반적인 SM·warp·memory hierarchy를 <a className="text-primary hover:underline" href="/gpu/gpu-architecture">GPU architecture 정본</a>에서 재사용하고, Hopper에서 달라진 producer–consumer pipeline과 deployment gate만 소유합니다. H100의 peak 수치를 모든 Hopper SKU나 실제 kernel 성능으로 확대하지 않습니다.</p>
+    <p>이 글은 일반적인 SM·warp·memory hierarchy를 <a className="text-primary hover:underline" href="/cs/gpu/gpu-architecture">GPU architecture 정본</a>에서 재사용하고, Hopper에서 달라진 producer–consumer pipeline과 deployment gate만 소유합니다. H100의 peak 수치를 모든 Hopper SKU나 실제 kernel 성능으로 확대하지 않습니다.</p>
     <HopperPipelineViz />
     <ContentBoundary article="gpu-arch-hopper" />
   </section>
@@ -19,7 +19,7 @@ export default function ModernHopperArticle(){return <article className="space-y
   <section id="sm-structure" className="space-y-6">
     <header><p className="text-sm font-semibold text-primary">01 · SM에서 먼저 볼 것</p><h2 className="mt-2 text-2xl font-bold">계산 unit보다 어떤 warp가 무엇을 기다리는지 추적한다</h2></header>
     <p><strong>SM(Streaming Multiprocessor)</strong>은 block이 배치되고 warps가 instruction을 발행하는 실행 자원입니다. Thread 수, registers, shared memory와 blocks limit이 동시에 resident work를 제한합니다. Hopper에도 이 원리는 그대로이므로 Tensor Core가 많다는 사실만으로 kernel이 빨라지지 않으며, tiles가 제때 도착하지 않으면 compute unit은 기다립니다.</p>
-    <p>따라서 architecture 분석은 HBM/L2에서 shared memory로 데이터를 누가 옮기는지, arrival을 어떤 barrier로 알리는지, consumer warp가 얼마나 계산하는지, 다음 tile transfer와 겹치는지를 봅니다. Occupancy는 <a className="text-primary hover:underline" href="/gpu/gpu-architecture#gpu-latency-hiding-occupancy">latency hiding 정본</a>대로 resource bound와 stall 감소를 분리해 해석합니다.</p>
+    <p>따라서 architecture 분석은 HBM/L2에서 shared memory로 데이터를 누가 옮기는지, arrival을 어떤 barrier로 알리는지, consumer warp가 얼마나 계산하는지, 다음 tile transfer와 겹치는지를 봅니다. Occupancy는 <a className="text-primary hover:underline" href="/cs/gpu/gpu-architecture#gpu-latency-hiding-occupancy">latency hiding 정본</a>대로 resource bound와 stall 감소를 분리해 해석합니다.</p>
   </section>
 
   <section id="tma" className="space-y-6">

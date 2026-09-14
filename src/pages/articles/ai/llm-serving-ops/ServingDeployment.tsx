@@ -166,8 +166,8 @@ T_{\mathrm{start}}&\approx \underbrace{T_{\mathrm{delay}}}_{\text{initial delay 
         <p className="leading-8">
           Scale-down에는 stabilization window와 drain을 둬 짧은 traffic 감소에
           replica가 흔들리지 않게 합니다. Runtime의 memory·scheduling 한계는
-          <Link to="/ai/vllm-paged-attention"> PagedAttention·KV cache</Link>와
-          <Link to="/ai/llm-serving-capacity">
+          <Link to="/cs/ai/vllm-paged-attention"> PagedAttention·KV cache</Link>와
+          <Link to="/cs/ai/llm-serving-capacity">
             {" "}
             hybrid attention serving
           </Link>

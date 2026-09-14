@@ -27,7 +27,7 @@ export default function ImageVideoLoraArchitectureArticle() {
             잇는 cross-modal attention인지에 따라 update가 닿는 정보가 달라집니다.
           </p>
           <p>
-            따라서 이 글은 <Link to="/ai/lora-finetuning#lora">LoRA의 행렬식</Link>을
+            따라서 이 글은 <Link to="/cs/ai/lora-finetuning#lora">LoRA의 행렬식</Link>을
             다시 유도하지 않습니다. 대신 <strong>host inventory → target scope →
             clip 학습 → 독립 평가</strong> 순서로, image 설정을 video 설정에 복사할
             때 빠지는 경계를 설명합니다.
@@ -38,14 +38,14 @@ export default function ImageVideoLoraArchitectureArticle() {
           preview="LoRA는 변화량을 줄이고, latent diffusion은 생성 pipeline을 나누며, video token은 시간축을 추가합니다."
         >
           <p>
-            <a href="/ai/lora-finetuning#lora">LoRA</a>는 base weight 전체 대신
+            <a href="/cs/ai/lora-finetuning#lora">LoRA</a>는 base weight 전체 대신
             선택한 linear weight의 변화량을 두 작은 행렬로 표현합니다. 여기서는
             그 식보다 “선택한 linear weight가 무슨 일을 하는가”가 관심사입니다.
           </p>
           <p>
-            <a href="/ai/latent-diffusion-guidance#pipeline">Latent diffusion</a>은
+            <a href="/cs/ai/latent-diffusion-guidance#pipeline">Latent diffusion</a>은
             autoencoder, text conditioner, denoiser, sampler를 서로 다른 component로
-            둡니다. 마지막으로 <a href="/ai/video-transformers#tubelets">video
+            둡니다. 마지막으로 <a href="/cs/ai/video-transformers#tubelets">video
             token</a>은 한 장의 공간 patch가 아니라 여러 frame을 포함하므로 시간축
             일관성을 별도로 다뤄야 합니다.
           </p>
@@ -277,7 +277,7 @@ export default function ImageVideoLoraArchitectureArticle() {
           </p>
           <p>
             Reference와 target을 한 context로 넣어 별도 adapter architecture 없이
-            조건화를 배우는 방법은 다음 글인 <Link to="/ai/in-context-lora">IC-LoRA</Link>에서
+            조건화를 배우는 방법은 다음 글인 <Link to="/cs/ai/in-context-lora">IC-LoRA</Link>에서
             이어집니다. 그 글을 읽을 때도 먼저 이 글의 host·target 범위를 확인해야
             “in-context”라는 이름이 실제로 어느 weight를 바꾸는지 알 수 있습니다.
           </p>

@@ -68,8 +68,8 @@ export default function Capacity() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          <a href="/ai/kv-cache-fundamentals">KV shape</a>와{" "}
-          <a href="/ai/hybrid-kv-cache-allocation">layer별 보존 길이</a>를
+          <a href="/cs/ai/kv-cache-fundamentals">KV shape</a>와{" "}
+          <a href="/cs/ai/hybrid-kv-cache-allocation">layer별 보존 길이</a>를
           계산했다면, 이제 한 replica의 남은 memory를 실제 요청 수용량으로
           바꿉니다. 같은 <code>max_model_len=65,536</code>에서 Gemma 4는 KV 88,824 token과
           maximum concurrency 1.36×, Muse Glimmer는 352,736 token과 5.38×를
@@ -84,7 +84,7 @@ export default function Capacity() {
           <code>남은 KV 예산 ÷ 토큰당 KV byte</code>이기 때문입니다. Weight
           quantization은 토큰당 KV byte를 바꾸지 않더라도 weight를 올린 뒤 남는
           KV 예산을 바꿀 수 있고, Qwen의 request당 fixed recurrent state,
-          vision encoder·<a href="/ai/cuda-graph-capture">CUDA graph</a>·
+          vision encoder·<a href="/cs/ai/cuda-graph-capture">CUDA graph</a>·
           workspace·TP 구성도 모델마다 다릅니다.
           토큰당 비용을 검증하려면 startup log의 총 token 수뿐 아니라 실제로 KV
           pool과 recurrent-state group에 예약된 byte도 함께 기록해야 합니다.

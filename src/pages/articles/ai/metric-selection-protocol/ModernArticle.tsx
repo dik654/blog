@@ -277,9 +277,9 @@ export default function MetricSelectionProtocolArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           Data 역할의 바닥 개념은{" "}
-          <Link to="/ai/train-validation-test">train·validation·test</Link>,
+          <Link to="/cs/ai/train-validation-test">train·validation·test</Link>,
           search procedure는{" "}
-          <Link to="/ai/hyperparameter-tuning">hyperparameter tuning</Link>에서
+          <Link to="/cs/ai/hyperparameter-tuning">hyperparameter tuning</Link>에서
           이어집니다.
         </p>
       </section>

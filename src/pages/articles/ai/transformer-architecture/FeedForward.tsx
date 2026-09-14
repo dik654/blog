@@ -21,7 +21,7 @@ export default function FeedForward() {
           space로 보내 nonlinear transformation을 수행합니다. Residual은 입력과
           update를 더하므로 sublayer output shape가 d_model로 돌아와야 합니다.
           ReLU·GELU·SwiGLU의 함수와 gate 차이는
-          <Link to="/ai/activation-functions"> Activation 정본 글</Link>에서
+          <Link to="/cs/ai/activation-functions"> Activation 정본 글</Link>에서
           이어집니다.
         </p>
       </div>

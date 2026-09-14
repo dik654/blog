@@ -9,7 +9,7 @@ export function EngineTreeStateTrie() {
         <span className="font-semibold text-foreground">SparseStateTrie</span> —
         변경된 계정 노드만 선택적으로 업데이트하는{" "}
         <a
-          href="/blockchain/merkle-patricia-trie"
+          href="/cs/blockchain/merkle-patricia-trie"
           className="text-indigo-400 hover:underline"
         >
           Merkle Patricia Trie

@@ -76,7 +76,7 @@ export default function Folding() {
           <Math>{"g"}</Math>의 차수는 <Math>{"f"}</Math>의 절반이고, 도메인도{" "}
           <Math>{"D \\to D^2 = \\{x^2 : x \\in D\\}"}</Math>로 절반이 된다.
           <br />
-          <a href="/crypto/fft" className="text-indigo-400 hover:underline">
+          <a href="/cs/crypto/fft" className="text-indigo-400 hover:underline">
             NTT 도메인
           </a>
           의 coset 구조 덕분에 <Math>{"D^2"}</Math>도 깔끔한 곱셈 부분군이 된다

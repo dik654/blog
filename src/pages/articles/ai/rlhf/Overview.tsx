@@ -28,7 +28,7 @@ export default function Overview() {
           정리한 대표 경로는 demonstration으로 SFT를 한 뒤, response ranking으로
           reward model을 학습하고 PPO로 현재 policy를 갱신하는 세 단계다. 이후
           DPO·ORPO·KTO는 같은 문제를 offline classification 형태의 objective로
-          다시 구성했고, <Link to="/ai/constitutional-ai#constitutional-ai">Constitutional AI</Link>는
+          다시 구성했고, <Link to="/cs/ai/constitutional-ai#constitutional-ai">Constitutional AI</Link>는
           feedback을 만드는 기준을 자연어 principle과 AI critique로 드러냈다.
           이름은 비슷하지만 대체하는 층이 서로 다르므로, 이 글은 방법을
           연대순으로 나열하지 않고 data contract, score model, online sampling,

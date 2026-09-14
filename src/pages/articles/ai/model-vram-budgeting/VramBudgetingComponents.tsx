@@ -41,7 +41,7 @@ export default function VramBudgetingComponents() {
         </p>
         <p className="leading-8">
           Block 단위로 physical allocation을 조각내 fragmentation을 줄이는 방법은 이 dtype 절감과 다른 layer의 최적화이며, 그 allocator 설계는{" "}
-          <Link to="/ai/vllm-paged-attention#kv-cache-manager">vLLM Hybrid KV Cache Manager 글</Link>에서 다룹니다.
+          <Link to="/cs/ai/vllm-paged-attention#kv-cache-manager">vLLM Hybrid KV Cache Manager 글</Link>에서 다룹니다.
         </p>
       </div>
 

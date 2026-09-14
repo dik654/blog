@@ -103,9 +103,9 @@ export default function GradientsJacobiansArticle() {
         </div>
         <p>
           실제 computational graph에서 VJP를 역순으로 누적하는 과정은
-          <a className="ml-1 font-semibold text-primary underline" href="/ai/reverse-mode-autodiff">reverse-mode autodiff</a>가
+          <a className="ml-1 font-semibold text-primary underline" href="/cs/ai/reverse-mode-autodiff">reverse-mode autodiff</a>가
           소유하고, gradient를 parameter update로 바꾸는 선택은
-          <a className="ml-1 font-semibold text-primary underline" href="/ai/optimizers">optimizer</a> 글로 이어집니다.
+          <a className="ml-1 font-semibold text-primary underline" href="/cs/ai/optimizers">optimizer</a> 글로 이어집니다.
         </p>
         <div id="paper-multivariable-gradient"><CitationBlock source="MIT OpenCourseWare 18.02SC · Gradient and Directional Derivatives" citeKey={1} href={MIT_MULTIVARIABLE}><Evidence problem="다변수 함수의 coordinate별 rate를 방향과 기하로 연결하는 문제" contribution="Partial derivative·gradient·directional derivative·chain rule를 공개 강의와 문제로 설명" assumptions="명시된 multivariable differentiability와 Euclidean coordinate 조건" scope="18.02SC 해당 단원의 계산·기하" notClaim="Arbitrary norm·manifold·nonsmooth optimization의 보편적 결과가 아님" /></CitationBlock></div>
         <div id="paper-jacobian-calculus"><CitationBlock source="The Matrix Calculus You Need For Deep Learning" citeKey={2} href={MATRIX_CALCULUS}><Evidence problem="Vector input·output derivative의 shape와 chain rule convention 혼동" contribution="Gradient·Jacobian과 vectorized chain rule를 deep-learning example에 맞춰 정리" assumptions="논문이 선언한 numerator-layout convention과 differentiability" scope="Matrix calculus tutorial과 worked derivation" notClaim="모든 autodiff implementation의 memory·performance contract가 아님" /></CitationBlock></div>

@@ -81,7 +81,7 @@ export default function ToolCallingLifecycleAndCostsArticle() {
             등록된 tool 수가 많아지면 전체 schema 를 매 요청마다 context 에 넣는 대신, 이름·설명
             index 에서 후보를 먼저 좁히고 실제로 고른 tool 의 schema 만 그때그때 불러오는
             dynamic tool loading 을 씁니다.{" "}
-            <Link to="/ai/agent-code-mode#tool-discovery">Code Mode 글</Link>이 이 선택적 schema
+            <Link to="/cs/ai/agent-code-mode#tool-discovery">Code Mode 글</Link>이 이 선택적 schema
             loading 을 program 실행 맥락으로 확장한 사례를 다룹니다.
           </p>
         </div>
@@ -118,7 +118,7 @@ export default function ToolCallingLifecycleAndCostsArticle() {
           </p>
           <p>
             Invocation 자체가 성공해도 끝이 아닙니다.{" "}
-            <Link to="/ai/claw-permissions#policy">Tool permission model 글</Link>이 다루듯,
+            <Link to="/cs/ai/claw-permissions#policy">Tool permission model 글</Link>이 다루듯,
             생성된 인자가 아무리 schema 에 맞아도 permission policy 가 그 호출을 deny 하면
             실행은 일어나지 않습니다.
           </p>
@@ -214,7 +214,7 @@ export default function ToolCallingLifecycleAndCostsArticle() {
           <p>
             이 2,650 token 은 사용자 질문 내용과 무관하게 tool 을 등록하고 지금까지 실행한
             이력만으로 채워지는 몫입니다.{" "}
-            <Link to="/ai/context-window-optimization#budget">Context window 최적화 글</Link>이
+            <Link to="/cs/ai/context-window-optimization#budget">Context window 최적화 글</Link>이
             다루는 source 별 token 장부에서, tool 은 system·retrieval·history 와 나란히 자기 몫을
             차지하는 또 하나의 source 입니다.
           </p>
@@ -230,7 +230,7 @@ export default function ToolCallingLifecycleAndCostsArticle() {
             Tool 실패는 한 가지가 아닙니다. 인자가 schema 를 못 맞춘 경우, 호출은 됐지만 실행
             자체가 오류를 낸 경우, 응답이 오지 않는 timeout, 그리고 permission policy 가 막은
             경우는 원인이 다르고 다음 대응도 달라야 합니다.{" "}
-            <Link to="/ai/agent-loop-foundations#observation-contract">Agent loop 기초 글</Link>
+            <Link to="/cs/ai/agent-loop-foundations#observation-contract">Agent loop 기초 글</Link>
             이 이 구분을 empty·denied·timeout·partial 같은 typed observation 으로 만드는
             계약을 다룹니다.
           </p>
@@ -343,13 +343,13 @@ export default function ToolCallingLifecycleAndCostsArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           Model proposal 과 runtime 실행의 역할 분리, typed observation 계약은{" "}
-          <Link to="/ai/agent-loop-foundations#overview">Agent loop 기초 글</Link>이 정본이고,
+          <Link to="/cs/ai/agent-loop-foundations#overview">Agent loop 기초 글</Link>이 정본이고,
           여러 tool 왕복을 sandbox program 으로 접는 실행 패턴은{" "}
-          <Link to="/ai/agent-code-mode#overview">Code Mode 글</Link>이 정본입니다. Tool 등록이
+          <Link to="/cs/ai/agent-code-mode#overview">Code Mode 글</Link>이 정본입니다. Tool 등록이
           만드는 context 예산 전체 계산은{" "}
-          <Link to="/ai/context-window-optimization#budget">Context window 최적화 글</Link>이,
+          <Link to="/cs/ai/context-window-optimization#budget">Context window 최적화 글</Link>이,
           tool 호출 자체의 승인·거부 정책은{" "}
-          <Link to="/ai/claw-permissions#policy">Tool permission model 글</Link>이 정본입니다.
+          <Link to="/cs/ai/claw-permissions#policy">Tool permission model 글</Link>이 정본입니다.
         </p>
       </section>
     </div>

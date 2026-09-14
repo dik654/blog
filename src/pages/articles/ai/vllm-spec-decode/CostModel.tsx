@@ -346,7 +346,7 @@ S(1) &= \underbrace{\frac{1+\alpha}{1+c}}_{\text{K=1의 하한}} > 1 \iff \alpha
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           이 세 항을 실측 시간으로 바꿔 넣은 것이 다음 절의{" "}
-          <Link to="/ai/vllm-spec-decode#serving-break-even">서빙 손익분기식</Link>
+          <Link to="/cs/ai/vllm-spec-decode#serving-break-even">서빙 손익분기식</Link>
           입니다. Self-speculative·tree·suffix 계열은 같은 식에서 c와 α를 다른
           방식으로 바꾸는 변형이므로 별도 글에서 다룹니다.
         </p>

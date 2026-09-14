@@ -36,7 +36,7 @@ export default function CapacityMod() {
           그래서 이 개조가 푸는 문제와 못 푸는 문제가 갈린다. Weight 상주 여부(들어가느냐 안 들어가느냐)는 용량 문제라서 개조로
           풀린다. 반면 decode 단계에서 그 weight를 매 스텝 읽어 오는 속도는 대역폭 문제라서 개조 전후가 동일하다. VRAM
           budgeting에서 known floor를 넘겼을 때의 대응은{" "}
-          <a href="/ai/model-vram-budgeting#multi-gpu-vram-strategies">이미 다룬 글</a>을 그대로 재사용하면 된다 — 이 개조는
+          <a href="/cs/ai/model-vram-budgeting#multi-gpu-vram-strategies">이미 다룬 글</a>을 그대로 재사용하면 된다 — 이 개조는
           그 floor 자체를 한 장에서 더 높게 잡아 주는 선택지 하나가 늘어난 것뿐이다.
         </p>
 

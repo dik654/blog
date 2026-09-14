@@ -145,12 +145,12 @@ export default function ClaudeCodeArticle() {
             서로 다른 effect를 냅니다. 이름을 외우는 대신 read-only observation,
             workspace mutation, process·network effect, delegation으로 나눠
             permission과 rollback 요구를 정합니다. Context가 어디서 오는지는
-            <a href="/ai/claude-code-instructions-memory">
+            <a href="/cs/ai/claude-code-instructions-memory">
               {" "}
               instruction·memory 글
             </a>
             , effect를 허용하는 순서는
-            <a href="/ai/claude-code-permissions"> permission 글</a>에서
+            <a href="/cs/ai/claude-code-permissions"> permission 글</a>에서
             이어집니다.
           </p>
         </div>

@@ -28,7 +28,7 @@ export default function Overview() {
 
         <p className="leading-7">
           랙 단위의 전력 분배와 장애 상태 설계, 발열량 계산의 원리는{" "}
-          <Link to="/gpu/hw-power-cooling">전력과 냉각</Link>이 소유합니다. 이 글은 그 앞단, 곧 장비를 들이기
+          <Link to="/cs/gpu/hw-power-cooling">전력과 냉각</Link>이 소유합니다. 이 글은 그 앞단, 곧 장비를 들이기
           전에 건물과 랙 쪽에서 확인해야 하는 물리적 조건만 다룹니다.
         </p>
 

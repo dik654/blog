@@ -19,9 +19,9 @@ export default function Overview() {
         <p>
           이 글은 equal-weight fixed membership의 partial-synchrony BFT에서 message
           authentication, quorum certificate, lock, view change를 연결합니다. Process·timing·
-          failure와 safety/liveness는 <Link to="/blockchain/distributed-systems">분산 시스템 기초</Link>,
-          crash-only majority는 <Link to="/blockchain/smr-theory">SMR</Link>, 공개 membership의
-          resource weight는 <Link to="/blockchain/consensus-mechanisms">PoW·PoS</Link>에서 가져옵니다.
+          failure와 safety/liveness는 <Link to="/cs/blockchain/distributed-systems">분산 시스템 기초</Link>,
+          crash-only majority는 <Link to="/cs/blockchain/smr-theory">SMR</Link>, 공개 membership의
+          resource weight는 <Link to="/cs/blockchain/consensus-mechanisms">PoW·PoS</Link>에서 가져옵니다.
         </p>
       </div>
 

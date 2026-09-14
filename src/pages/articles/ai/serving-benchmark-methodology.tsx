@@ -32,7 +32,7 @@ export default function ServingBenchmarkMethodologyArticle() {
           </p>
           <p>
             지표 자체의 정의(TTFT·ITL·TPOT·percentile)는{" "}
-            <Link to="/ai/serving-latency-metrics-and-slo#metrics">앞 글</Link>을 전제로 하고,
+            <Link to="/cs/ai/serving-latency-metrics-and-slo#metrics">앞 글</Link>을 전제로 하고,
             여기서 얻은 GPU 당 capacity 를 비용과 headroom 으로 바꾸는 일은 다음 글인
             capacity planning 이 맡습니다.
           </p>
@@ -99,7 +99,7 @@ export default function ServingBenchmarkMethodologyArticle() {
           </p>
           <p>
             차이가 나는 이유는{" "}
-            <Link to="/ai/inference-runtime-anatomy#warmup">runtime warmup</Link> 이 하는 일에
+            <Link to="/cs/ai/inference-runtime-anatomy#warmup">runtime warmup</Link> 이 하는 일에
             있습니다. 첫 요청은 kernel JIT compile, CUDA graph capture, allocator 의 첫 확장,
             prefix cache 가 비어 있는 상태를 모두 겪습니다. 예를 들어 graph capture 를 lazy 로
             두면 첫 요청의 TTFT 가 6.8 s 이고 그 다음부터는 0.35 s 인 식입니다.
@@ -159,7 +159,7 @@ export default function ServingBenchmarkMethodologyArticle() {
           <p>
             Autoscaling cold 는 새 Pod 가 weight 를 내려받고 warmup 을 끝내 ready 가 되기까지의
             수 분이며, 이 시간은{" "}
-            <Link to="/ai/llm-serving-ops#k8s-gpu-fleet">ready-capacity 경로</Link>가 소유합니다.
+            <Link to="/cs/ai/llm-serving-ops#k8s-gpu-fleet">ready-capacity 경로</Link>가 소유합니다.
             Benchmark 보고서에는 어느 층의 cold 인지를 적어야 합니다.
           </p>
         </ProgressiveDetail>
@@ -196,7 +196,7 @@ export default function ServingBenchmarkMethodologyArticle() {
             이 곡선을 utilization–latency curve 라고 부릅니다. Throughput 을 ρ 로 놓고 latency
             를 그리면 hockey stick 모양이 되고, 꺾이는 무릎이 운영 가능한 utilization 의 상한을
             정합니다. Serving 에서는 그 무릎 앞의 어떤 점을 고를지가 SLO 로 정해지며, 그 점의
-            throughput 이 <Link to="/ai/vllm-serving#serving-goodput">goodput</Link> 입니다.
+            throughput 이 <Link to="/cs/ai/vllm-serving#serving-goodput">goodput</Link> 입니다.
           </p>
           <p>
             LLM serving 은 M/M/1 보다 복잡합니다. Batch 가 커지면 μ 자체가 오르고 service time 은 출력 길이에 비례해 지수 분포가 아닙니다. KV
@@ -361,9 +361,9 @@ export default function ServingBenchmarkMethodologyArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           다음 글: 여기서 찾은 SLO 아래 최대 offered load 를 GPU 당 capacity 로 두고 cost/token 과
-          headroom 을 계산하는 <Link to="/ai/inference-cost-and-capacity-planning">추론 비용과 capacity planning</Link>.
+          headroom 을 계산하는 <Link to="/cs/ai/inference-cost-and-capacity-planning">추론 비용과 capacity planning</Link>.
           Percentile 과 SLO 의 정의는{" "}
-          <Link to="/ai/serving-latency-metrics-and-slo#slo">앞 글</Link>을 참고하세요.
+          <Link to="/cs/ai/serving-latency-metrics-and-slo#slo">앞 글</Link>을 참고하세요.
         </p>
       </section>
     </div>

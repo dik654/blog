@@ -62,13 +62,13 @@ export default function PipelineContract() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           임베딩 서비스 일반의 운영 계약과 색인 생성 기록은{" "}
-          <Link to="/ai/embedding-serving-contract">임베딩 서빙 계약</Link>이 소유합니다. 이 절이 더하는 것은
+          <Link to="/cs/ai/embedding-serving-contract">임베딩 서빙 계약</Link>이 소유합니다. 이 절이 더하는 것은
           이미지에만 있는 두 항목, 곧 전처리 설정과 풀링 방식이 그 계약에 반드시 들어가야 한다는 점입니다.
         </p>
 
         <p className="leading-7">
           백본을 바꾸는 판단 자체는 품질과 비용을 함께 놓고 해야 합니다. 그 비교 기준은{" "}
-          <Link to="/ai/image-backbone-scaling#budget-comparison">백본 예산 비교</Link>에 있고, 여기서는 바꾸기로
+          <Link to="/cs/ai/image-backbone-scaling#budget-comparison">백본 예산 비교</Link>에 있고, 여기서는 바꾸기로
           했을 때 색인 쪽에서 무엇이 일어나는지만 다뤘습니다.
         </p>
       </div>

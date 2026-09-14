@@ -23,7 +23,7 @@ export default function MemoryHierarchy() {
             <em> local memory address space</em>로 내려가지만, 이름과 달리
             물리적인 별도 on-chip RAM이 아니라 device memory traffic을 만들 수
             있습니다. Shared memory의 coalescing·bank conflict·padding은{" "}
-            <Link to="/gpu/cuda-shared-memory">공유 메모리 정본 글</Link>에서
+            <Link to="/cs/gpu/cuda-shared-memory">공유 메모리 정본 글</Link>에서
             계산합니다.
           </p>
         </div>

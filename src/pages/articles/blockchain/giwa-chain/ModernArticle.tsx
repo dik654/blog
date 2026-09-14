@@ -247,7 +247,7 @@ export default function ModernGiwaChainArticle() {
             <h3 className="font-semibold">Stablecoin이 별도로 요구하는 것</h3>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Issuer liability, reserve composition·attestation, redemption, oracle, admin keys,
-              sanctions·consumer protection입니다. <a className="text-primary hover:underline" href="/blockchain/stablecoin-overview">Stablecoin 정본</a>에서
+              sanctions·consumer protection입니다. <a className="text-primary hover:underline" href="/cs/blockchain/stablecoin-overview">Stablecoin 정본</a>에서
               따로 다룹니다.
             </p>
           </article>

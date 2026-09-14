@@ -63,7 +63,7 @@ export default function RoiCrop() {
           </p>
           <p className="leading-7">
             그래서 "마스크를 좁게"는 규칙이 아니라 동작별 기본값의 한쪽 끝입니다. 동작마다 반대 방향인
-            이유는 <Link to="/ai/masked-edit-verb-routing#mask-polarity">편집 동작과 모델 라우팅</Link>이
+            이유는 <Link to="/cs/ai/masked-edit-verb-routing#mask-polarity">편집 동작과 모델 라우팅</Link>이
             소유합니다.
           </p>
         </ProgressiveDetail>

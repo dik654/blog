@@ -25,7 +25,7 @@ export default function ModernKaratsubaArticle() {
           library에서는 보통 machine word 묶음인 <strong>limb</strong>을 단위로
           나누며, polynomial이나 extension-field coefficient도 같은 bilinear
           재결합 아이디어를 쓸 수 있습니다. 다만 Fp²의 구체적인 non-residue와
-          reduction schedule은 <a className="text-primary hover:underline" href="/crypto/extension-fields#fp2">확장체 구현 글</a>이
+          reduction schedule은 <a className="text-primary hover:underline" href="/cs/crypto/extension-fields#fp2">확장체 구현 글</a>이
           정본입니다.
         </p>
         <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6">
@@ -137,7 +137,7 @@ export default function ModernKaratsubaArticle() {
           FFT 계열로 넘어갈 수 있습니다. 또한 Fp²→Fp⁶→Fp¹² tower에서 보이는
           “4→3”은 recursion depth가 아니라 서로 다른 coefficient algebra에 같은
           bilinear trick을 적용한 것입니다. 구체적인 3×6×3 비용 장부는
-          <a className="text-primary hover:underline" href="/crypto/extension-fields">확장체 구현</a>에서
+          <a className="text-primary hover:underline" href="/cs/crypto/extension-fields">확장체 구현</a>에서
           parameter와 함께 읽어야 합니다.
         </p>
       </section>

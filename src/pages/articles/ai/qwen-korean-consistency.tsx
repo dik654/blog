@@ -96,7 +96,7 @@ export default function QwenKoreanConsistencyArticle() {
             수식·token 분류·paired evaluation은 독립 글에서 다룹니다.
           </p>
           <p>
-            <Link to="/ai/smoothie-qwen-weight-editing">
+            <Link to="/cs/ai/smoothie-qwen-weight-editing">
               Smoothie-Qwen weight editing 글로 이동 →
             </Link>
           </p>
@@ -110,7 +110,7 @@ export default function QwenKoreanConsistencyArticle() {
             학습 결과에 영향을 줍니다. 화면의 문자 혼용을 줄이는 운영 가드와 같은 개입으로 취급하지 않습니다.
           </p>
           <p>
-            <Link to="/ai/qwen-korean-reasoning-posttraining">
+            <Link to="/cs/ai/qwen-korean-reasoning-posttraining">
               Qwen 한국어 reasoning post-training 글로 이동 →
             </Link>
           </p>

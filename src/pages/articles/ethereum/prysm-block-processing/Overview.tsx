@@ -47,7 +47,7 @@ S_{t+1}&=\underbrace{T_f(S_t,B_t)}_{\text{pre-state 계산}}\\
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>호출 순서는 포크가 정의하는 data dependency입니다</h3>
         <p>Phase 0의 <code>process_block</code>은 header, RANDAO, Eth1 data, operations를 처리했습니다. Fulu 계열 규격은 withdrawals와 execution payload를 앞쪽에 두고 sync aggregate까지 이어집니다. 새 fork가 handler를 추가·교체하면 이전 글의 고정 목록을 재사용하지 않고 활성 fork 함수와 reference test를 기준으로 읽습니다.</p>
-        <p>자세한 wire identity는 <Link to="/blockchain/prysm-ssz">SSZ</Link>, proposer·RANDAO signature는 <Link to="/blockchain/prysm-bls">BLS</Link>, mutable state와 root cache는 <Link to="/blockchain/prysm-beacon-state">BeaconState</Link>, execution 판단은 <Link to="/blockchain/prysm-engine-api">Engine API</Link>가 소유합니다.</p>
+        <p>자세한 wire identity는 <Link to="/cs/blockchain/prysm-ssz">SSZ</Link>, proposer·RANDAO signature는 <Link to="/cs/blockchain/prysm-bls">BLS</Link>, mutable state와 root cache는 <Link to="/cs/blockchain/prysm-beacon-state">BeaconState</Link>, execution 판단은 <Link to="/cs/blockchain/prysm-engine-api">Engine API</Link>가 소유합니다.</p>
       </div>
       <div id="paper-consensus-block-transition" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 규격 읽기 · block transition</p>

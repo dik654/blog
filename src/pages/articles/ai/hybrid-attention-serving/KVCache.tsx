@@ -44,7 +44,7 @@ export default function KVCache() {
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          <a href="/ai/kv-cache-fundamentals#kv-shape-formula">앞 글</a>의
+          <a href="/cs/ai/kv-cache-fundamentals#kv-shape-formula">앞 글</a>의
           토큰당 KV byte 식은 모든 layer가 요청의 전체 길이를 보관한다는
           dense-allocation 근사였습니다. Sliding-window layer는 가장 최근{" "}
           <em>W</em>개 token만 참조하므로, runtime이 더 이상 쓰지 않는 block을
@@ -158,7 +158,7 @@ r_l(T) &= T && [\mathrm{L_F}]
           확정할 사실이 아니라 runtime log의 hybrid-manager 경고, 생성된 KV
           cache spec, context 길이에 따른 allocated block 기울기로 확인해야
           합니다. Paged KV cache의 block 관리 자체는{" "}
-          <a href="/ai/vllm-paged-attention">PagedAttention·KV cache 글</a>에서
+          <a href="/cs/ai/vllm-paged-attention">PagedAttention·KV cache 글</a>에서
           이어서 설명합니다.
         </p>
         <CitationBlock

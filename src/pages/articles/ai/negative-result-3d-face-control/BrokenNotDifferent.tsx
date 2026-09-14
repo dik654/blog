@@ -48,7 +48,7 @@ export default function BrokenNotDifferent() {
 
         <p className="leading-7">
           탐지 실패와 낮은 유사도를 구분해 읽는 법은{" "}
-          <Link to="/ai/generative-measurement-controls#identity-metric">계측기 검증</Link>이 소유합니다.
+          <Link to="/cs/ai/generative-measurement-controls#identity-metric">계측기 검증</Link>이 소유합니다.
           이 절은 그 구분이 없었다면 사용 불가 구간을 최적점으로 골랐을 사례입니다.
         </p>
       </div>

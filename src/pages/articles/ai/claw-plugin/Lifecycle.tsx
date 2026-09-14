@@ -120,7 +120,7 @@ export default function Lifecycle() {
           어느 plugin의 timeout과 resource limit을 조정해야 할지 알 수 있습니다.
           고정된 “실패율 10%면 경고”보다 operation별 baseline과 사용자 영향에
           맞춘 alert가 낫습니다. 기록 방식과 cardinality 원칙은
-          <a href="/ai/claw-telemetry"> telemetry 글</a>에서 이어집니다.
+          <a href="/cs/ai/claw-telemetry"> telemetry 글</a>에서 이어집니다.
         </p>
       </div>
     </section>

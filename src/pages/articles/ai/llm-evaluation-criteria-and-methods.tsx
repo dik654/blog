@@ -26,7 +26,7 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
             비교할지(pointwise·pairwise·ranking)를 정해야 비로소 하나의 평가 방법이 완성됩니다.
           </p>
           <p>
-            <Link to="/ai/prompt-structured-output#structured-output">앞 글</Link> 은 output
+            <Link to="/cs/ai/prompt-structured-output#structured-output">앞 글</Link> 은 output
             이 parse→schema→domain 사다리를 통과하는지를 봤습니다. 이 글은 그 판정을 통과한
             output 이 얼마나 좋은지를 무엇으로 재고 무엇과 비교할지, 즉 사다리 다음에 오는
             질문을 다룹니다.
@@ -275,7 +275,7 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             다음 글은 이 reference-free·pairwise 자리에 LLM 자신을 판정자로 세우는{" "}
-            <Link to="/ai/llm-as-a-judge#overview">LLM-as-a-judge</Link> 를 다룹니다. Judge 가
+            <Link to="/cs/ai/llm-as-a-judge#overview">LLM-as-a-judge</Link> 를 다룹니다. Judge 가
             어떤 rubric 을 쓰고, 순서를 바꾸면 판정이 얼마나 뒤집히는지를 봅니다.
           </p>
         </div>

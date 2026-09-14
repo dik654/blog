@@ -40,7 +40,7 @@ export default function ResolutionGate() {
         <p className="leading-7">
           이어지는 글은 정체성 쪽입니다. 참조 이미지로 인물을 고정하면서 포즈는 따로 통제하는 방법과, 그 둘을
           한 장치에 맡겼을 때 무엇이 고장나는지를 다룹니다. 동작별 모델 선택은{" "}
-          <Link to="/ai/masked-edit-verb-routing">편집 동작과 모델 라우팅</Link>이 소유합니다.
+          <Link to="/cs/ai/masked-edit-verb-routing">편집 동작과 모델 라우팅</Link>이 소유합니다.
         </p>
       </div>
     </section>

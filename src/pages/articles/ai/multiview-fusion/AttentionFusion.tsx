@@ -13,7 +13,7 @@ export default function AttentionFusion() {
           embedding뿐 아니라 view ID와 2D position, camera pose, timestamp, availability를 token의 의미에 포함합니다.
         </p>
         <p>
-          Q·K·V와 scaled dot-product 계산 자체는 <Link to="/ai/attention-theory">attention
+          Q·K·V와 scaled dot-product 계산 자체는 <Link to="/cs/ai/attention-theory">attention
           정본</Link>의 계산을 그대로 사용합니다. 멀티뷰에서 새로 결정할 것은
           어떤 token끼리 볼 수 있는지, pose를 좌표 변환에 사용할지 단순 embedding으로
           넣을지, 그리고 view 수가 달라질 때 계산량을 어디에서 제한할지입니다.

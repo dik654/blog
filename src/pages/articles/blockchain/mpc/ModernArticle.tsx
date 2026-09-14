@@ -68,7 +68,7 @@ export default function ModernArticle() {
           나눕니다. 복원식, t-share privacy의 전제, 잘못된 share·refresh·VSS 경계는
           MPC 전체 정의와 다른 학습 단위이므로 별도 글로 이동했습니다.
         </p>
-        <Link className="font-medium text-primary hover:underline" to="/crypto/shamir-secret-sharing">
+        <Link className="font-medium text-primary hover:underline" to="/cs/crypto/shamir-secret-sharing">
           Shamir Secret Sharing 글로 이동 →
         </Link>
       </section>
@@ -81,7 +81,7 @@ export default function ModernArticle() {
           active MPC input proof나 ciphertext integrity로 확대하지 않는 경계는 별도
           글에서 유도합니다.
         </p>
-        <Link className="font-medium text-primary hover:underline" to="/crypto/paillier-cryptosystem">
+        <Link className="font-medium text-primary hover:underline" to="/cs/crypto/paillier-cryptosystem">
           Paillier Cryptosystem 글로 이동 →
         </Link>
       </section>

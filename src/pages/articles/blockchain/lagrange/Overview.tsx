@@ -14,11 +14,11 @@ export default function Overview() {
           않고도 각 표본점에서 자기 값만 선택하는 basis polynomial을 만들어 그 다항식을 직접 구성합니다.
         </p>
         <p>
-          나눗셈은 <Link to="/crypto/finite-field-theory">유한체 산술</Link>을
+          나눗셈은 <Link to="/cs/crypto/finite-field-theory">유한체 산술</Link>을
           사용합니다. 이 글은 selector basis·유일성·vanishing
           polynomial·barycentric evaluation을 소유하며, 규칙적인 단위근
           도메인에서의 빠른 변환은
-          <Link to="/crypto/fft"> NTT 글</Link>에서 이어집니다.
+          <Link to="/cs/crypto/fft"> NTT 글</Link>에서 이어집니다.
         </p>
       </div>
       <ContentBoundary article="lagrange" />

@@ -21,8 +21,8 @@ export default function Overview() {
           기대는 대신 source–target 차이와 반복 분산, memory·wall time과 target validation gain을 보고 단계마다 판단합니다.
         </p>
         <p>
-          Training loop·checkpoint는 <Link to="/ai/training-pipeline">학습 파이프라인 글</Link>,
-          learning-rate schedule 자체는 <Link to="/ai/lr-scheduling">scheduler 글</Link>의
+          Training loop·checkpoint는 <Link to="/cs/ai/training-pipeline">학습 파이프라인 글</Link>,
+          learning-rate schedule 자체는 <Link to="/cs/ai/lr-scheduling">scheduler 글</Link>의
           정본을 재사용합니다. 여기서는 pretrained state의 어느 부분을 바꾸는지와
           negative transfer를 어떻게 판별하는지에 집중합니다.
         </p>

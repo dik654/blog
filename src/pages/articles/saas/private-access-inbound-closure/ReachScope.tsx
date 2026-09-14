@@ -107,7 +107,7 @@ export default function ReachScope() {
 
         <p className="leading-7">
           피해 범위를 미리 제한하는 설계 일반론은{" "}
-          <Link to="/ai/agent-control-boundaries#blast-radius">피해 반경과 최소 권한</Link>이 소유합니다. 이
+          <Link to="/cs/ai/agent-control-boundaries#blast-radius">피해 반경과 최소 권한</Link>이 소유합니다. 이
           절은 그 원칙이 네트워크 접근에서 어떤 모양이 되는지만 다뤘습니다.
         </p>
       </div>

@@ -128,7 +128,7 @@ export default function Components() {
             <li>
               -{" "}
               <a
-                href="/blockchain/groth16"
+                href="/cs/blockchain/groth16"
                 className="text-indigo-400 hover:underline"
               >
                 Groth16
@@ -138,7 +138,7 @@ export default function Components() {
             <li>
               -{" "}
               <a
-                href="/blockchain/plonk"
+                href="/cs/blockchain/plonk"
                 className="text-indigo-400 hover:underline"
               >
                 PLONK

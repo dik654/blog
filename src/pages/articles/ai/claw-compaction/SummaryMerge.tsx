@@ -206,8 +206,8 @@ merged
           이 reconciliation의 핵심은 context rollback과 effect rollback을 분리하는
           것입니다. Compaction article은 operation ID와 receipt를 context에 남기는
           요구까지 설명하지만, 실제 idempotent executor 설계는
-          <a href="/ai/claw-tool-system"> tool system</a>, branch와 replay의 정본은
-          <a href="/ai/claw-session"> session runtime</a>에서 이어집니다.
+          <a href="/cs/ai/claw-tool-system"> tool system</a>, branch와 replay의 정본은
+          <a href="/cs/ai/claw-session"> session runtime</a>에서 이어집니다.
         </p>
       </div>
     </section>

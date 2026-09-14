@@ -48,7 +48,7 @@ export default function VectorSearchAndAnnIndexesArticle() {
           <p>
             Query embedding 은 이 model 을 검색어에 적용한 결과일 뿐 별도의 표현이
             아닙니다.{" "}
-            <Link to="/ai/sentence-embeddings#overview">문장 embedding 글</Link> 이 이
+            <Link to="/cs/ai/sentence-embeddings#overview">문장 embedding 글</Link> 이 이
             벡터를 만드는 pooling·relation objective 를 다룹니다. Query 와 document 를
             서로 다른 model 로 embedding 하면 좌표계 자체가 달라 거리 비교가 의미를
             잃습니다.
@@ -62,7 +62,7 @@ export default function VectorSearchAndAnnIndexesArticle() {
             검색 방식입니다. Term 이 정확히 겹치는지를 보는 검색과 달리 동의어·paraphrase
             도 가까운 벡터로 잡을 수 있는 대신, 결과가 그 벡터가 무엇을 가깝다고
             학습했는지에 갇힙니다. Term 단위 검색은{" "}
-            <Link to="/ai/lexical-retrieval-bm25-inverted-index">lexical retrieval 글</Link>{" "}
+            <Link to="/cs/ai/lexical-retrieval-bm25-inverted-index">lexical retrieval 글</Link>{" "}
             이 다룹니다.
           </p>
         </div>
@@ -124,7 +124,7 @@ export default function VectorSearchAndAnnIndexesArticle() {
             분할), PQ(compressed code), 또는 이 셋을 결합한 IVF-PQ처럼 여러 index 타입 중 하나를 고를 수 있습니다.
           </p>
           <p>
-            <Link to="/ai/bi-encoder-retrieval#offline-index">Bi-encoder retrieval 글</Link>{" "}
+            <Link to="/cs/ai/bi-encoder-retrieval#offline-index">Bi-encoder retrieval 글</Link>{" "}
             이 다룬 대로 document 벡터는 query 와 무관하게 미리 계산해 두므로, index 를
             고르는 일은 이 미리 계산된 벡터를 어떻게 저장·비교할지를 고르는 일과
             같습니다.
@@ -256,7 +256,7 @@ S_{pq} &= \underbrace{m}_{\text{subvector 개수}}\cdot\underbrace{\left\lceil\f
             similarity입니다. Squared Euclidean distance는 (1−0.6)²+(0−0.8)²=0.8이고 이는 2−2×0.6=0.8과 같습니다.
           </p>
           <p>
-            <Link to="/ai/triplet-metric-learning#geometry">
+            <Link to="/cs/ai/triplet-metric-learning#geometry">
               정규화된 embedding 의 cosine-거리 동치
             </Link>{" "}
             글이 이 관계(L2 norm 1일 때 squared distance = 2−2·cosine)를 일반적으로
@@ -290,7 +290,7 @@ S_{pq} &= \underbrace{m}_{\text{subvector 개수}}\cdot\underbrace{\left\lceil\f
           </p>
           <p>
             HNSW 처럼 graph 기반 ANN 은 이 글이 다루지 않습니다.{" "}
-            <Link to="/ai/retrieval-ranking-funnel#retrieval">
+            <Link to="/cs/ai/retrieval-ranking-funnel#retrieval">
               Retrieval-ranking funnel 글
             </Link>{" "}
             이 HNSW 를 다룹니다. 이 글의 수치 예(d=768, N=1,000,000, nlist=1,000,
@@ -323,8 +323,8 @@ S_{pq} &= \underbrace{m}_{\text{subvector 개수}}\cdot\underbrace{\left\lceil\f
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/ai/lexical-retrieval-bm25-inverted-index">Lexical retrieval: TF-IDF·BM25·inverted index</Link>,
-          그리고 <Link to="/ai/bi-encoder-retrieval#candidate">Candidate recall 상한</Link>.
+          다음 글: <Link to="/cs/ai/lexical-retrieval-bm25-inverted-index">Lexical retrieval: TF-IDF·BM25·inverted index</Link>,
+          그리고 <Link to="/cs/ai/bi-encoder-retrieval#candidate">Candidate recall 상한</Link>.
         </p>
       </section>
     </div>

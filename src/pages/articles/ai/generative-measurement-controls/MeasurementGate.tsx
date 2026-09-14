@@ -48,7 +48,7 @@ export default function MeasurementGate() {
         <p className="leading-7">
           이어지는 글들은 여기서 세운 계측기로 확산 편집을 잽니다. 편집 동사마다 다른 모델이 필요하다는 것과
           그 선택을 데이터로 만드는 방법은{" "}
-          <Link to="/ai/masked-edit-verb-routing">편집 동사와 모델 라우팅</Link>이 다룹니다.
+          <Link to="/cs/ai/masked-edit-verb-routing">편집 동사와 모델 라우팅</Link>이 다룹니다.
         </p>
       </div>
     </section>

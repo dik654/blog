@@ -58,8 +58,8 @@ export default function Applications() {
             불리하고 state를 오래 유지하면 entity 경계와 distribution shift를 관리해야 한다. “10만 건 이하면 LSTM” 같은 고정 기준을 세우는 대신
             series 수와 frequency, horizon, feature availability, serving state를 함께 본다.
           </p>
-        <p>DLinear 연구는 단순한 linear baseline이 여러 장기 예측 benchmark에서 당시 Transformer 계열을 앞설 수 있음을 보였고, PatchTST는 patching과 channel independence로 강한 결과를 제시했다. 어느 architecture가 영구히 우월하다는 뜻이 아니라 evaluation protocol과 inductive bias가 순위를 바꾼다는 증거다. Self-attention의 계산은 <Link to="/ai/attention-theory">Attention 이론 글</Link>에서 이어서 볼 수 있다.</p>
-        <p>결론적으로 LSTM의 채택 근거는 이름이나 parameter 수가 아니라, naive·seasonal naive·<Link to="/ai/arima">ARIMA</Link>·단순 learned baseline을 같은 origin과 latency·memory budget에서 일관되게 이기는지에 있다. 평균 점수가 좋아도 구조 변화 구간이나 중요한 horizon에서 실패한다면 운영 모델로는 부족하다.</p>
+        <p>DLinear 연구는 단순한 linear baseline이 여러 장기 예측 benchmark에서 당시 Transformer 계열을 앞설 수 있음을 보였고, PatchTST는 patching과 channel independence로 강한 결과를 제시했다. 어느 architecture가 영구히 우월하다는 뜻이 아니라 evaluation protocol과 inductive bias가 순위를 바꾼다는 증거다. Self-attention의 계산은 <Link to="/cs/ai/attention-theory">Attention 이론 글</Link>에서 이어서 볼 수 있다.</p>
+        <p>결론적으로 LSTM의 채택 근거는 이름이나 parameter 수가 아니라, naive·seasonal naive·<Link to="/cs/ai/arima">ARIMA</Link>·단순 learned baseline을 같은 origin과 latency·memory budget에서 일관되게 이기는지에 있다. 평균 점수가 좋아도 구조 변화 구간이나 중요한 horizon에서 실패한다면 운영 모델로는 부족하다.</p>
         <p>
             Release gate에서는 동일 origin별 error를 paired bootstrap이나 series별 분포로 비교한다. MASE·MAE·interval coverage뿐
             아니라 p95 latency·peak memory도 함께 남긴다. Candidate가 중요한 horizon·event slice에서 hard guardrail을 통과하면 제한된

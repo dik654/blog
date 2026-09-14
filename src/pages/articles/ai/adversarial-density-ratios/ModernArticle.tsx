@@ -120,7 +120,7 @@ export default function AdversarialDensityRatiosArticle() {
           </p>
           <p>
             Generator loss, detach, Lipschitz critic과 stabilization은{" "}
-            <a href="/ai/gan">GAN 기초</a>와 후속 글이 소유합니다. 이 글은
+            <a href="/cs/ai/gan">GAN 기초</a>와 후속 글이 소유합니다. 이 글은
             density-ratio 신호가 생기는 이유까지만 맡습니다.
           </p>
         </div>

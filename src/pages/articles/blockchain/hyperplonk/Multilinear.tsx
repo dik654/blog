@@ -22,7 +22,7 @@ export default function Multilinear() {
           계수가 <Math>{"d+1"}</Math>개이므로, <Math>{"n"}</Math>개 제약을
           인코딩하려면 차수 <Math>{"n"}</Math>짜리 다항식이 필요함. 이 고차
           다항식의 평가에{" "}
-          <a href="/crypto/fft" className="text-indigo-400 hover:underline">
+          <a href="/cs/crypto/fft" className="text-indigo-400 hover:underline">
             FFT/NTT
           </a>
           가 필수 — <Math>{"O(n \\log n)"}</Math>

@@ -45,7 +45,7 @@ export default function Activation() {
         </p>
         <p>
           각 함수의 수식 의도와 gradient, ReLU 이후 계보는
-          <Link to="/ai/activation-functions">활성화 함수 정본 글</Link>에 모아 두었다.
+          <Link to="/cs/ai/activation-functions">활성화 함수 정본 글</Link>에 모아 두었다.
           이 글에서는 MLP 안에서 비선형성이 담당하는 구조적 역할만 유지한다.
         </p>
       </div>

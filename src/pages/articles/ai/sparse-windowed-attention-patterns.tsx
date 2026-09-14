@@ -30,9 +30,9 @@ export default function SparseWindowedAttentionPatternsArticle() {
             정해 둡니다.
           </p>
           <p>
-            <Link to="/ai/attention-kernel-anatomy-and-backends#anatomy">Attention kernel 글</Link>
+            <Link to="/cs/ai/attention-kernel-anatomy-and-backends#anatomy">Attention kernel 글</Link>
             은 이 mask 안에서 실제로 남은 tile 을 GPU 가 어떻게 빨리 계산하는지를 다뤘고,{" "}
-            <Link to="/ai/yarn-rope-extension#rope-foundation">YaRN 글</Link>은 각 위치가 어떤
+            <Link to="/cs/ai/yarn-rope-extension#rope-foundation">YaRN 글</Link>은 각 위치가 어떤
             숫자로 표현되는지를 다뤘습니다. 이 글은 그 앞 단계, 즉 n×n mask 가운데 어느 칸을
             아예 비워 둘지를 다룹니다.
           </p>
@@ -304,7 +304,7 @@ export default function SparseWindowedAttentionPatternsArticle() {
           <p>
             이 글이 다룬 mask 가 정해진 뒤, 그 mask 안에 남은 tile 을 GPU 가 실제로 어떻게
             빨리 계산하는지는{" "}
-            <Link to="/ai/attention-kernel-anatomy-and-backends#anatomy">
+            <Link to="/cs/ai/attention-kernel-anatomy-and-backends#anatomy">
               attention kernel 글
             </Link>
             의 몫입니다. Window·sparse mask 는 causal mask 처럼 대각선을 잘라내는 것이 아니라

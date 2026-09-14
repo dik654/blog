@@ -16,7 +16,7 @@ export default function ModernBFTComparisonArticle() {
             tolerant state machine replication(BFT SMR) protocol입니다. 셋이 갈리는 지점은 data를 퍼뜨리는 위치, 안전한 vote
             evidence를 만드는 방식, leader 교체 뒤 밀린 작업을 회복하는 경로입니다. 논문에 적힌 TPS만 나란히 놓고는 셋 중 하나를 고를 수 없습니다.
           </p>
-        <p>이 글은 네 대의 equal-weight replica A·B·C·D 중 최대 한 대가 Byzantine인 작은 예에서 시작합니다. 세 대의 서명이 같은 height·view·phase·value에 모이면 quorum certificate(QC)가 되며, 서로 다른 두 3인 quorum은 적어도 두 replica를 공유합니다. 다만 교집합 산술만으로 safety가 완성되는 것은 아닙니다. 그 안의 honest replica가 protocol의 lock·vote rule에 따라 충돌하는 값에 다시 서명하지 않아야 합니다. 이 기초의 정본은 <a href="/blockchain/bft-theory#faulty-threshold" className="text-primary underline-offset-4 hover:underline">BFT 이론의 quorum과 lock</a>에 있고, 여기서는 세 protocol이 그 evidence를 어떻게 운반하는지 비교합니다.</p>
+        <p>이 글은 네 대의 equal-weight replica A·B·C·D 중 최대 한 대가 Byzantine인 작은 예에서 시작합니다. 세 대의 서명이 같은 height·view·phase·value에 모이면 quorum certificate(QC)가 되며, 서로 다른 두 3인 quorum은 적어도 두 replica를 공유합니다. 다만 교집합 산술만으로 safety가 완성되는 것은 아닙니다. 그 안의 honest replica가 protocol의 lock·vote rule에 따라 충돌하는 값에 다시 서명하지 않아야 합니다. 이 기초의 정본은 <a href="/cs/blockchain/bft-theory#faulty-threshold" className="text-primary underline-offset-4 hover:underline">BFT 이론의 quorum과 lock</a>에 있고, 여기서는 세 protocol이 그 evidence를 어떻게 운반하는지 비교합니다.</p>
         <BFTMechanismComparisonViz />
         <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> protocol 비교의 단위는 이름이 아니라 <em>membership·fault·timing model → data dissemination → order certificate → commit rule → leader-change recovery</em>입니다. 같은 단위를 고정한 뒤 latency·throughput·bytes·CPU를 측정해야 구조적 차이와 구현 차이를 분리할 수 있습니다.</aside>
       </section>

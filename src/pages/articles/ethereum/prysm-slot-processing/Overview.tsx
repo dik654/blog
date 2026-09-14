@@ -29,11 +29,11 @@ export default function Overview({
             state
           </strong>
           를 한 고정 사례로 추적합니다.{" "}
-          <Link to="/blockchain/prysm-beacon-state">
+          <Link to="/cs/blockchain/prysm-beacon-state">
             BeaconState value·Merkle cache
           </Link>
           와{" "}
-          <Link to="/blockchain/prysm-epoch-processing">epoch processing</Link>
+          <Link to="/cs/blockchain/prysm-epoch-processing">epoch processing</Link>
           은 기존 정본을 재사용합니다.
         </p>
       </div>

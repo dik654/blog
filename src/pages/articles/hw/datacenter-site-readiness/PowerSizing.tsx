@@ -97,7 +97,7 @@ export default function PowerSizing() {
           <p className="leading-7">
             기록할 것은 평균만이 아니라 분포입니다. 짧고 높은 피크가 반복되면 평균은 낮아도 차단기 특성에 따라
             트립이 일어날 수 있습니다. 랙 전원 분배 장치의 계측 기능과 경보 기준은{" "}
-            <Link to="/gpu/hw-power-cooling#rack">전력과 냉각</Link>에서 다룹니다.
+            <Link to="/cs/gpu/hw-power-cooling#rack">전력과 냉각</Link>에서 다룹니다.
           </p>
           <p className="leading-7">
             측정 없이 설계해야 한다면 명판 대비 보수적인 비율을 가정하고, 도입 후 실측으로 다시 조정하는 절차를

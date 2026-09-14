@@ -82,11 +82,11 @@ h_t&=\underbrace{o_t\odot\tanh(C_t)}_{\text{현재 cell을 필요한 만큼 공�
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>RNN 글과 역할을 나눈다</h3>
         <p>
-          Sequence unroll과 shared parameter는 <a href="/ai/rnn">RNN 정본 글</a>,
-          gradient·truncation은 <a href="/ai/bptt">BPTT 정본 글</a>에서 설명한다. 이 글은 그 위에서 LSTM
+          Sequence unroll과 shared parameter는 <a href="/cs/ai/rnn">RNN 정본 글</a>,
+          gradient·truncation은 <a href="/cs/ai/bptt">BPTT 정본 글</a>에서 설명한다. 이 글은 그 위에서 LSTM
           cell의 state transition, direct derivative와 architecture 선택만 다룬다.
           시계열 windowing과 data leakage 같은 적용 문제는
-          <a href="/ai/lstm-timeseries">LSTM 시계열 파이프라인 글</a>로 분리한다.
+          <a href="/cs/ai/lstm-timeseries">LSTM 시계열 파이프라인 글</a>로 분리한다.
         </p>
       </div>
     </section>

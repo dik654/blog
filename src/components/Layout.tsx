@@ -1,12 +1,9 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
-import { categories } from "@/content";
-import { cn } from "@/lib/utils";
+import { Link, Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import SearchDialog from "./SearchDialog";
+import DomainNav from "./DomainNav";
 
 export default function Layout() {
-  const location = useLocation();
-
   return (
     <div className="min-h-screen bg-background overscroll-none">
       <header className="fixed top-0 left-0 right-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -17,25 +14,7 @@ export default function Layout() {
           >
             Dylan's Study Notes
           </Link>
-          <nav className="hidden gap-1 md:flex">
-            {categories.map((cat) => {
-              const isActive = location.pathname.startsWith(`/${cat.slug}`);
-              return (
-                <Link
-                  key={cat.slug}
-                  to={`/${cat.slug}`}
-                  className={cn(
-                    "rounded-md px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent",
-                    isActive
-                      ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground",
-                  )}
-                >
-                  {cat.name}
-                </Link>
-              );
-            })}
-          </nav>
+          <DomainNav />
           <div className="ml-auto">
             <SearchDialog />
           </div>

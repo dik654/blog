@@ -16,7 +16,7 @@ export default function PermissionOverride() {
         </p>
         <p className="leading-7">
           mode·rule·context override의 전체 설계는
-          <a href="/ai/claw-permissions">권한 모델</a>이 소유합니다. 이 절은
+          <a href="/cs/ai/claw-permissions">권한 모델</a>이 소유합니다. 이 절은
           hook 결과를 기존 판정과 결합할 때 지켜야 할 monotonic restriction, 즉
           앞에서 제한한 권한을 뒤 단계가 다시 넓히지 못하는 성질만 다룹니다.
         </p>

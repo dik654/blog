@@ -276,7 +276,7 @@ export default function ModernCudaKernelFusionArticle() {
           Register·residency·spill 자체는
           <a
             className="ml-1 text-primary hover:underline"
-            href="/gpu/cuda-register-pressure"
+            href="/cs/gpu/cuda-register-pressure"
           >
             register pressure 수업
           </a>
@@ -470,7 +470,7 @@ export default function ModernCudaKernelFusionArticle() {
           Kernel을 오래 살려 launch 자체를 다른 공급 모델로 바꾸는 설계는
           <a
             className="ml-1 text-primary hover:underline"
-            href="/gpu/cuda-persistent-kernels"
+            href="/cs/gpu/cuda-persistent-kernels"
           >
             persistent kernel 수업
           </a>
@@ -486,7 +486,7 @@ export default function ModernCudaKernelFusionArticle() {
           Graph 자체의 capture·instantiate·replay 구조는{" "}
           <a
             className="text-primary hover:underline"
-            href="/ai/cuda-graph-capture"
+            href="/cs/ai/cuda-graph-capture"
           >
             CUDA graph 수업
           </a>

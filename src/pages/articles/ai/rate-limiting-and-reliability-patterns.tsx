@@ -28,7 +28,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
             반응합니다.
           </p>
           <p>
-            <Link to="/ai/llm-gateway-and-model-routing#fallback-model">
+            <Link to="/cs/ai/llm-gateway-and-model-routing#fallback-model">
               LLM gateway·model routing
             </Link>{" "}
             글은 이미 fallback model이 실행 실패에 반응해 다른 model로 넘어가는
@@ -255,7 +255,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
             요청보다 방금 도착한 요청을 먼저 거절하는 식입니다.
           </p>
           <p>
-            <Link to="/ai/vllm-serving#overview">vLLM 서빙</Link> 글이 다루는
+            <Link to="/cs/ai/vllm-serving#overview">vLLM 서빙</Link> 글이 다루는
             GPU 안의 admission control은 이미 받아들인 요청을 KV memory·동시
             sequence 수 기준으로 GPU 스케줄러 단계에서 admission합니다. 이
             글의 admission policy는 그보다 앞선 문 앞, 즉 요청이 스케줄러에

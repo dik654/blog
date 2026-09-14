@@ -34,11 +34,11 @@ export default function InferenceOptimizationLayersArticle() {
           </p>
           <p>
             기법 자체는 각자의 정본 글이 다룹니다. quantization 은{" "}
-            <Link to="/ai/quantized-model-deployment">quantized model deployment</Link>, kernel
-            fusion 은 <Link to="/gpu/cuda-kernel-fusion">CUDA kernel fusion</Link>, paged attention
-            은 <Link to="/ai/vllm-paged-attention">PagedAttention</Link>, continuous batching 은{" "}
-            <Link to="/ai/vllm-serving#engine-loop">vLLM 입문</Link>, prefill 분리는{" "}
-            <Link to="/ai/disaggregated-prefill-decode-serving">disaggregated serving</Link> 이
+            <Link to="/cs/ai/quantized-model-deployment">quantized model deployment</Link>, kernel
+            fusion 은 <Link to="/cs/gpu/cuda-kernel-fusion">CUDA kernel fusion</Link>, paged attention
+            은 <Link to="/cs/ai/vllm-paged-attention">PagedAttention</Link>, continuous batching 은{" "}
+            <Link to="/cs/ai/vllm-serving#engine-loop">vLLM 입문</Link>, prefill 분리는{" "}
+            <Link to="/cs/ai/disaggregated-prefill-decode-serving">disaggregated serving</Link> 이
             정본입니다.
           </p>
           <p>
@@ -60,7 +60,7 @@ export default function InferenceOptimizationLayersArticle() {
             model-level optimization 은 weight 와 계산 그래프 자체를 바꿔 읽어야 할 byte 와 해야 할
             FLOP 을 줄입니다. quantization, pruning, distillation, MLA 같은 architecture 변경이
             여기 속하고, 건드리는 병목은{" "}
-            <Link to="/ai/prefill-decode-phase-dynamics#arithmetic-intensity">decode 의 weight read</Link>{" "}
+            <Link to="/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity">decode 의 weight read</Link>{" "}
             와 prefill 의 compute 입니다. 출력이 달라질 수 있어 품질 검증이 따라붙습니다.
           </p>
           <p>
@@ -72,7 +72,7 @@ export default function InferenceOptimizationLayersArticle() {
             runtime-level optimization 은 kernel 사이와 요청 사이의 시간을 줄입니다. CUDA graph 로
             launch 를 지우고, continuous batching 으로 GPU 가 빈 자리를 채우고, paged KV 로 메모리를
             낭비 없이 쓰고, prefix caching 으로 같은 계산을 건너뜁니다. 건드리는 병목은{" "}
-            <Link to="/ai/launch-overhead-and-cpu-gpu-synchronization#submission-pipeline">CPU 제출</Link>{" "}
+            <Link to="/cs/ai/launch-overhead-and-cpu-gpu-synchronization#submission-pipeline">CPU 제출</Link>{" "}
             과 GPU 메모리 용량, 그리고 batch 의 크기입니다.
           </p>
           <p>
@@ -126,11 +126,11 @@ export default function InferenceOptimizationLayersArticle() {
           </p>
           <p>
             이 글의 Amdahl 은 일반형이고, low-bit kernel 로 대체되는 비율만 s 배가 된다는{" "}
-            <Link to="/ai/quantized-model-deployment#runtime-release">quantized-kernel Amdahl bound</Link>{" "}
+            <Link to="/cs/ai/quantized-model-deployment#runtime-release">quantized-kernel Amdahl bound</Link>{" "}
             와 fusion 절감을 baseline 비중으로 정규화하는{" "}
-            <Link to="/gpu/cuda-kernel-fusion#release-gate">fusion ROI boundary</Link> 는 이 식을 각
+            <Link to="/cs/gpu/cuda-kernel-fusion#release-gate">fusion ROI boundary</Link> 는 이 식을 각
             기법에 맞게 좁힌 것입니다. 측정 쪽의 achieved ledger 는{" "}
-            <Link to="/gpu/cuda-perf-analysis#throughput-ledger">CUDA 성능 분석</Link> 글이 다룹니다.
+            <Link to="/cs/gpu/cuda-perf-analysis#throughput-ledger">CUDA 성능 분석</Link> 글이 다룹니다.
           </p>
         </div>
         <ExplainedFormula
@@ -166,7 +166,7 @@ export default function InferenceOptimizationLayersArticle() {
           <p>
             hardware-aware optimization 은 이 상호작용을 hardware 쪽에서 읽는 태도입니다. 같은
             kernel 도 HBM 대역폭, SRAM 크기, tensor core 의 지원 정밀도에 따라 병목이 다르므로,{" "}
-            <Link to="/ai/sionic-glm-b300#paper-roofline">roofline</Link> 위에서 그 hardware 의
+            <Link to="/cs/ai/sionic-glm-b300#paper-roofline">roofline</Link> 위에서 그 hardware 의
             arithmetic intensity 경계를 먼저 보고 어느 층이 이득을 낼지 정합니다.
           </p>
           <p>
@@ -285,8 +285,8 @@ export default function InferenceOptimizationLayersArticle() {
           </p>
           <p>
             benchmark gate 는 변경마다 같은 조건에서 같은 지표를 재고 정해진 문턱을 넘으면 변경을
-            막는 절차입니다. 조건은 <Link to="/ai/serving-benchmark-methodology#protocol">warm 상태</Link>
-            의 고정 λ sweep 과 같은 입력 분포이고, 지표는 <Link to="/ai/serving-latency-metrics-and-slo#metrics">TTFT·TPOT 의 p50·p99</Link>
+            막는 절차입니다. 조건은 <Link to="/cs/ai/serving-benchmark-methodology#protocol">warm 상태</Link>
+            의 고정 λ sweep 과 같은 입력 분포이고, 지표는 <Link to="/cs/ai/serving-latency-metrics-and-slo#metrics">TTFT·TPOT 의 p50·p99</Link>
             와 SLO 안에서의 처리량, 그리고 model 층 변경이라면 품질 parity 입니다.
           </p>
           <p>
@@ -301,7 +301,7 @@ export default function InferenceOptimizationLayersArticle() {
           <p>
             regression 이 잡히면 첫 질문은 어느 층이 깨졌는가입니다. profile 을 다시 재 구간별 시간을
             변경 전과 비교하면 어느 구간이 늘었는지 보이고, 그 구간의 층이 원인입니다. CPU 구간이
-            늘었으면 <Link to="/ai/launch-overhead-and-cpu-gpu-synchronization#capture-failure">capture failure</Link>
+            늘었으면 <Link to="/cs/ai/launch-overhead-and-cpu-gpu-synchronization#capture-failure">capture failure</Link>
             부터, GEMM 구간이 늘었으면 kernel 선택부터 봅니다.
           </p>
         </div>
@@ -337,7 +337,7 @@ export default function InferenceOptimizationLayersArticle() {
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/ai/serving-benchmark-methodology">Serving benchmark methodology</Link>
+          다음 글: <Link to="/cs/ai/serving-benchmark-methodology">Serving benchmark methodology</Link>
         </p>
       </section>
     </div>

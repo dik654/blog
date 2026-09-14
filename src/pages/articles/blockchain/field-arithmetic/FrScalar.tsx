@@ -33,7 +33,7 @@ export default function FrScalar() {
           p±1과 carry chain, zero inverse, Fp/Fr 교차 decode 거부, 독립
           implementation parity를 확인합니다. 이 gate 뒤에만 throughput과
           side-channel 측정을 비교합니다. Curve point의 subgroup 검사는
-          <Link to="/crypto/elliptic-curves#g1-curve"> 타원곡선 정본</Link>의
+          <Link to="/cs/crypto/elliptic-curves#g1-curve"> 타원곡선 정본</Link>의
           별도 책임입니다.
         </p>
       </div>

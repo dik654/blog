@@ -81,7 +81,7 @@ export default function BlendRegression() {
 
         <p className="leading-7">
           참조로 정체성을 고정하는 방식 자체는{" "}
-          <Link to="/ai/reference-identity-pose-separation">정체성과 포즈 분리</Link>가 소유합니다. 이 절은
+          <Link to="/cs/ai/reference-identity-pose-separation">정체성과 포즈 분리</Link>가 소유합니다. 이 절은
           그 고정을 다이얼의 축으로 쓰는 부분만 다뤘습니다.
         </p>
       </div>

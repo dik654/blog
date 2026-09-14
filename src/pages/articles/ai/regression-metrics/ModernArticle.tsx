@@ -312,7 +312,7 @@ export default function RegressionMetricsArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           집계 단위와 오류 비용의 출발점은{" "}
-          <Link to="/ai/evaluation-metrics">평가 설계 글</Link>에서 연결합니다.
+          <Link to="/cs/ai/evaluation-metrics">평가 설계 글</Link>에서 연결합니다.
         </p>
       </section>
     </div>

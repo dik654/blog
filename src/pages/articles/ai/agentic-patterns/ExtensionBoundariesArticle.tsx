@@ -38,7 +38,7 @@ export default function ExtensionBoundariesArticle() {
             Skill은 name·description으로 먼저 발견하고 선택된 뒤에 본문과 필요한 reference만 읽는 progressive disclosure를 따릅니다. 모든
             skill을 항상 system context에 넣으면 관련 없는 지침 충돌과 token 비용이 커집니다.
           </p>
-          <p>Guardrail은 skill의 설명을 신뢰해 권한을 넓히지 않습니다. 실제 identity·resource·operation과 approval을 runtime policy로 다시 판정합니다. 작성 형식은 <Link to="/ai/skills-anatomy">Skills anatomy</Link>에서 이어집니다.</p>
+          <p>Guardrail은 skill의 설명을 신뢰해 권한을 넓히지 않습니다. 실제 identity·resource·operation과 approval을 runtime policy로 다시 판정합니다. 작성 형식은 <Link to="/cs/ai/skills-anatomy">Skills anatomy</Link>에서 이어집니다.</p>
         </div>
       </section>
 

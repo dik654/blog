@@ -157,10 +157,10 @@ export default function GenerativeTheoryArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Sequence likelihood는{" "}
-            <a href="/ai/autoregressive-generative-models">자기회귀 글</a>, 숨은
+            <a href="/cs/ai/autoregressive-generative-models">자기회귀 글</a>, 숨은
             원인과 ELBO는{" "}
-            <a href="/ai/latent-variable-generative-models">잠재변수 글</a>,
-            가역 density는 <a href="/ai/normalizing-flows">flow 글</a>, GAN 비교
+            <a href="/cs/ai/latent-variable-generative-models">잠재변수 글</a>,
+            가역 density는 <a href="/cs/ai/normalizing-flows">flow 글</a>, GAN 비교
             신호와 score는 각각 별도 글에서 시작합니다.
           </p>
         </div>

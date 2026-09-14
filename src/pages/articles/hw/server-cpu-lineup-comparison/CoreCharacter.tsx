@@ -67,7 +67,7 @@ export default function CoreCharacter() {
           <p className="leading-7">
             세 번째는 배치입니다. 프로세스가 가속기와 다른 소켓에 묶여 있으면 소켓 간 링크를 계속 지나갑니다.
             이 경우 사용률은 높은데 실제 진행이 느린 패턴으로 나타납니다. 여러 장을 묶어 쓰는 구성의 통신 배치
-            원리는 <Link to="/ai/parallelism-strategy-and-placement">병렬화 전략과 배치</Link>에서 다룹니다.
+            원리는 <Link to="/cs/ai/parallelism-strategy-and-placement">병렬화 전략과 배치</Link>에서 다룹니다.
           </p>
         </ProgressiveDetail>
       </div>

@@ -23,7 +23,7 @@ export default function MerkleStage({
           않습니다. 첫 divergence block, parent/computed/expected root와 storage
           generation을 남기고 execution을 그 이전 common point까지 unwind합니다.
           Trie node와 overlay 계산은{" "}
-          <Link to="/blockchain/reth-trie">Reth Trie</Link>가 canonical
+          <Link to="/cs/blockchain/reth-trie">Reth Trie</Link>가 canonical
           owner입니다.
         </p>
       </div>

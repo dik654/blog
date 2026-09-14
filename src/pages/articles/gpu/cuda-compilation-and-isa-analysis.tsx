@@ -56,7 +56,7 @@ export default function CudaCompilationAndIsaAnalysisArticle() {
           <p>
             이 구조를 알면 두 가지 질문이 저절로 생깁니다. PTX 와 SASS 는 어디까지 같고 어디서
             달라지는지, 그리고 fatbinary 안에 무엇을 넣어야 다른 세대의 GPU 에서도 도는지입니다.
-            Host 쪽 실행 경로는 <Link to="/gpu/cuda-basics#execution-path">CUDA 실행 기초</Link> 가 다룹니다.
+            Host 쪽 실행 경로는 <Link to="/cs/gpu/cuda-basics#execution-path">CUDA 실행 기초</Link> 가 다룹니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -256,7 +256,7 @@ $L__BB0_2:
             ptxas 는 그 최댓값을 물리 register 에 담되, <code>-maxrregcount</code> 나
             <code>__launch_bounds__</code> 가 준 상한을 넘으면 일부를 local memory 로 spill 합니다.
             Live range 와 spill 의 비용은
-            <Link to="/gpu/cuda-register-pressure#live-range">register pressure 글</Link> 이 다룹니다.
+            <Link to="/cs/gpu/cuda-register-pressure#live-range">register pressure 글</Link> 이 다룹니다.
           </p>
           <p>
             Instruction scheduling 은 dependency 를 지키는 범위 안에서 순서를 바꿉니다. GPU 는 in-order issue 라 한 warp 안에서는 앞
@@ -430,7 +430,7 @@ R(U) &\approx \underbrace{R_0}_{\text{unroll 전 register}} + \underbrace{(U-1)\
           <p>
             한계도 분명합니다. SASS instruction 의 의미는 문서에 이름과 한 줄 설명만 있고 latency
             와 issue 규칙은 공개되지 않습니다. 그래서 SASS 를 읽어 얻는 것은 "무엇이 나왔는가"이지
-            "몇 cycle 인가"가 아니며, 시간은 반드시 <Link to="/gpu/cuda-perf-analysis#profiling">profiler 와 timing 절차</Link> 로 재야 합니다.
+            "몇 cycle 인가"가 아니며, 시간은 반드시 <Link to="/cs/gpu/cuda-perf-analysis#profiling">profiler 와 timing 절차</Link> 로 재야 합니다.
             분석 대상 cubin 이 실제 GPU 에 올라가는 것과 같은 sm_XX 인지도 매번 확인해야 합니다.
           </p>
         </div>
@@ -513,8 +513,8 @@ R(U) &\approx \underbrace{R_0}_{\text{unroll 전 register}} + \underbrace{(U-1)\
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/gpu/cuda-register-pressure#residency">Register 수가 occupancy 를 깎는 경계</Link>,
-          그리고 <Link to="/gpu/cuda-perf-analysis#measurement-protocol">SASS 차이를 시간으로 확인하는 timing 절차</Link>.
+          다음 글: <Link to="/cs/gpu/cuda-register-pressure#residency">Register 수가 occupancy 를 깎는 경계</Link>,
+          그리고 <Link to="/cs/gpu/cuda-perf-analysis#measurement-protocol">SASS 차이를 시간으로 확인하는 timing 절차</Link>.
         </p>
       </section>
     </div>

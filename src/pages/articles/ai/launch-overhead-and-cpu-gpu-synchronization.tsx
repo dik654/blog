@@ -33,7 +33,7 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
             CPU 가 정합니다.
           </p>
           <p>
-            <Link to="/ai/cuda-graph-capture">CUDA graph</Link> 는 launch 300개를 하나로
+            <Link to="/cs/ai/cuda-graph-capture">CUDA graph</Link> 는 launch 300개를 하나로
             줄여 이 병목을 지우지만, scheduler 와 sampler 가 쓰는 CPU 시간과{" "}
             <code>.item()</code> 같은 동기화 지점은 그대로 남습니다. 이 글은 CPU 제출 속도와
             GPU 소비 속도의 관계를 timeline 으로 놓고, 어디서 starvation 이 생기고 무엇이 그것을
@@ -135,7 +135,7 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
           <p>
             겹치려면 step n 의 GPU 실행 중에 step n+1 의 scheduling 을 돌려야 하고, 그러려면
             step n 의 결과를 CPU 가 기다리지 않아야 합니다.{" "}
-            <Link to="/ai/inference-runtime-anatomy#process-anatomy">process 분리</Link> 와 비동기
+            <Link to="/cs/ai/inference-runtime-anatomy#process-anatomy">process 분리</Link> 와 비동기
             scheduling 이 그 장치이며, 다음 절의 동기화 지점이 그것을 막는 첫 번째 원인입니다.
           </p>
         </div>
@@ -209,7 +209,7 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
             <code>cudaMemcpy</code> 는 CPU 를 붙잡지만 pinned memory 와{" "}
             <code>non_blocking=True</code> 를 쓰면 copy 가 stream 에 들어가 다른 일과 겹칩니다.
             stream 사이의 순서와 event 규칙은{" "}
-            <Link to="/gpu/cuda-sync-streams#streams">CUDA 동기화 & 스트림</Link> 글이 다룹니다.
+            <Link to="/cs/gpu/cuda-sync-streams#streams">CUDA 동기화 & 스트림</Link> 글이 다룹니다.
           </p>
         </div>
         <TermBreakdown
@@ -273,9 +273,9 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
           <p>
             capture 뒤에는 replay 를 한 번 더 돌려 첫 launch 의 upload 를 끝냅니다. capture size
             가 60개면 size 마다 warmup 과 capture 와 첫 replay 가 붙어 기동이 수 초 늘어나고, 이
-            시간은 <Link to="/ai/inference-runtime-anatomy#warmup">runtime warmup</Link> 의 한
+            시간은 <Link to="/cs/ai/inference-runtime-anatomy#warmup">runtime warmup</Link> 의 한
             항목입니다. 어느 size 를 capture 할지는{" "}
-            <Link to="/ai/cuda-graph-capture#shape-padding">capture size padding</Link> 이 정합니다.
+            <Link to="/cs/ai/cuda-graph-capture#shape-padding">capture size padding</Link> 이 정합니다.
           </p>
         </div>
         <ProgressiveDetail
@@ -317,7 +317,7 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             graph capture failure 는{" "}
-            <Link to="/ai/cuda-graph-capture#graph-compatibility">graph-compatible execution</Link>{" "}
+            <Link to="/cs/ai/cuda-graph-capture#graph-compatibility">graph-compatible execution</Link>{" "}
             의 조건이 깨져 capture 가 오류로 끝나거나, 기록은 됐지만 replay 가 틀린 경로나 값을
             재생하거나, runtime 이 그 shape 를 graph 없이 eager 로 돌리는 세 가지 결과를 모두
             가리킵니다. 셋 중 가장 찾기 어려운 것은 마지막입니다.
@@ -382,7 +382,7 @@ export default function LaunchOverheadAndCpuGpuSynchronizationArticle() {
         </ProgressiveDetail>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           다음 글:{" "}
-          <Link to="/ai/inference-optimization-layers">
+          <Link to="/cs/ai/inference-optimization-layers">
             추론 최적화의 층: model·kernel·runtime·system 과 ROI
           </Link>
         </p>

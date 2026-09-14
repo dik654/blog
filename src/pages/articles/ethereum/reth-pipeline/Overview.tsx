@@ -26,8 +26,8 @@ export default function Overview({
             Headers→Bodies→Senders→Execution→Merkle→checkpoint/unwind
           </strong>
           를 추적합니다. EVM transition은{" "}
-          <Link to="/blockchain/reth-block-execution">block execution</Link>,
-          state root는 <Link to="/blockchain/reth-trie">Reth Trie</Link> 정본을
+          <Link to="/cs/blockchain/reth-block-execution">block execution</Link>,
+          state root는 <Link to="/cs/blockchain/reth-trie">Reth Trie</Link> 정본을
           재사용합니다.
         </p>
       </div>

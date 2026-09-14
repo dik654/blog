@@ -16,7 +16,7 @@ export default function ModernFilecoinGpuProofsArticle() {
   <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Sector input에서 independently verified proof artifact까지</p><h2 className="text-3xl font-bold tracking-tight">Filecoin proof GPU 가속은 커널 목록이 아니라 phase artifact와 cache identity가 이어지는 전체 job이다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">고정 workload는 sector data·ticket·prover identity에서 replica와 cache를 만들고, vanilla proof와 Groth16 proof artifact를 거쳐 verification receipt로 끝납니다. <a className="text-primary hover:underline" href="/gpu/gpu-proof-pipeline">일반 GPU proof DAG</a>, <a className="text-primary hover:underline" href="/gpu/msm-ntt">MSM·NTT</a>, field/hash 정본은 연결 글을 재사용합니다. 이 글은 rust-fil-proofs snapshot의 Filecoin phase boundary와 bellperson accelerator integration만 소유합니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">고정 workload는 sector data·ticket·prover identity에서 replica와 cache를 만들고, vanilla proof와 Groth16 proof artifact를 거쳐 verification receipt로 끝납니다. <a className="text-primary hover:underline" href="/cs/gpu/gpu-proof-pipeline">일반 GPU proof DAG</a>, <a className="text-primary hover:underline" href="/cs/gpu/msm-ntt">MSM·NTT</a>, field/hash 정본은 연결 글을 재사용합니다. 이 글은 rust-fil-proofs snapshot의 Filecoin phase boundary와 bellperson accelerator integration만 소유합니다.</p>
       <p>
             PC1·PC2·C1·C2라는 이름은 “GPU kernel 네 개”가 아닙니다. Disk-backed tree/cache, public commitments, vanilla
             proof, circuit inputs와 SNARK proof가 서로 다른 단계에서 만들어집니다. GPU는 내부 일부 연산을 가속할 수 있지만 잘못된 cache를 올바른

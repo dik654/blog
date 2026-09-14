@@ -40,7 +40,7 @@ export default function BackpropDerivation() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Cross-entropy의 정보이론·maximum likelihood·KL 관계는 이 글에서 다시
-          유도하지 않고 <Link to="/ai/cross-entropy">canonical Cross-entropy 글</Link>이
+          유도하지 않고 <Link to="/cs/ai/cross-entropy">canonical Cross-entropy 글</Link>이
           소유한다. 여기서는 그 scalar objective가 linear classifier에 보내는
           upstream gradient만 사용한다.
         </p>

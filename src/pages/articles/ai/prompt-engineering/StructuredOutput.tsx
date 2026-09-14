@@ -57,7 +57,7 @@ export default function StructuredOutput() {
           직접 지우는 decoding 강제입니다. 두 층은 함께 쓸 수 있지만 막는
           실패가 다릅니다. Prompt 설계는 model에게 모양을 알려줄 뿐이고, 실제
           token 강제의 원리는{" "}
-          <Link to="/ai/grammar-tokenizer-decoding#token-mask">
+          <Link to="/cs/ai/grammar-tokenizer-decoding#token-mask">
             grammar-tokenizer decoding
           </Link>
           에서 이어집니다.
@@ -241,7 +241,7 @@ L_{95}&=\underbrace{Q_{0.95}(\{T_i\})}_{\text{95\% 요청이 끝나는 시간 �
           Repair는 최대 횟수를 넘으면 typed <code>unknown</code>이나 사람 검토 queue로
           끝냅니다. 지원 schema subset과 decoder version도 receipt에 남깁니다. Token
           masking의 세부 원리는
-          <Link to="/ai/grammar-constrained-generation"> grammar-constrained generation</Link>
+          <Link to="/cs/ai/grammar-constrained-generation"> grammar-constrained generation</Link>
           글에서 이어서 확인할 수 있습니다.
         </p>
         <div id="paper-json-schema" className="not-prose mt-8 scroll-mt-24">

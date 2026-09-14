@@ -59,7 +59,7 @@ export default function Encoding() {
             Time2Vec은 scalar time을 linear coordinate와 학습 가능한 periodic coordinates로 바꿉니다. Event 사이의 Δt에 적용할 수
             있습니다. 다만 position과 available-time 경계까지 대신 정해 주지는 않습니다.
           </p>
-          <Link className="mt-3 inline-block text-sm font-medium text-primary hover:underline" to="/ai/time-features#paper-time2vec">
+          <Link className="mt-3 inline-block text-sm font-medium text-primary hover:underline" to="/cs/ai/time-features#paper-time2vec">
             시간 표현 정본 글의 수식·전제·근거 범위 보기
           </Link>
         </div>

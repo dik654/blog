@@ -27,9 +27,9 @@ export default function OptimizersArticle() {
           <p>
             이 글은 state가 없는 기준 update인 SGD와 여러 micro-batch를 한
             update로 묶는 경계까지만 설명합니다. 과거 방향을 기억하는 방법은{" "}
-            <a href="/ai/momentum-optimizer">Momentum</a>, coordinate별 scale은
-            <a href="/ai/adam-optimizer"> Adam</a>, direct shrinkage는{" "}
-            <a href="/ai/weight-decay">Weight decay</a>에서 이어집니다.
+            <a href="/cs/ai/momentum-optimizer">Momentum</a>, coordinate별 scale은
+            <a href="/cs/ai/adam-optimizer"> Adam</a>, direct shrinkage는{" "}
+            <a href="/cs/ai/weight-decay">Weight decay</a>에서 이어집니다.
           </p>
         </div>
         <TermBreakdown

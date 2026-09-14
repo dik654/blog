@@ -29,8 +29,8 @@ export default function Overview() {
 
         <p className="leading-7">
           NVIDIA 제품 계열 안에서의 비교는{" "}
-          <Link to="/gpu/hw-gpu-comparison">GPU 비교</Link>가, 링크 대역폭 공식 자체는{" "}
-          <Link to="/gpu/gpu-interconnects">GPU 인터커넥트</Link>가 이미 소유합니다. 이 글은 벤더가 갈라지는
+          <Link to="/cs/gpu/hw-gpu-comparison">GPU 비교</Link>가, 링크 대역폭 공식 자체는{" "}
+          <Link to="/cs/gpu/gpu-interconnects">GPU 인터커넥트</Link>가 이미 소유합니다. 이 글은 벤더가 갈라지는
           지점, 곧 서로 다른 회사가 같은 문제를 다르게 푼 방식만 다룹니다.
         </p>
 

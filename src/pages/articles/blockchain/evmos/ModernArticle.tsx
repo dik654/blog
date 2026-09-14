@@ -7,7 +7,7 @@ export default function ModernEvmosArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Evmos v20.0.0 pinned implementation</p><h2 className="text-3xl font-bold tracking-tight">Evmos는 Ethereum transaction semantics를 Cosmos SDK state transition으로 실행하고 CometBFT로 순서를 확정한다</h2></header>
       <p className="text-lg leading-8 text-foreground/90"><code>Alice→Bob 10</code>이라는 의도는 Cosmos <code>MsgSend</code>이나 Ethereum value transfer로 나타날 수 있지만 bytes, signer recovery, nonce, fee, gas, state owner는 다릅니다. Evmos v20은 Ethereum transaction을 Cosmos message envelope와 ante chain을 거쳐 EVM state transition으로 실행하고, EVM account·code·storage와 Cosmos module state를 하나의 application commit에 연결합니다.</p>
-      <p>이 글은 historical Evmos <code>v20.0.0</code>을 고정합니다. 현재 별도로 개발되는 <code>cosmos/evm</code>의 최신 동작을 혼합해 주장하지 않으며, Cosmos transaction branch의 기본은 <a className="text-primary hover:underline" href="/blockchain/cosmos-sdk#baseapp">Cosmos SDK 정본</a>을 재사용합니다.</p>
+      <p>이 글은 historical Evmos <code>v20.0.0</code>을 고정합니다. 현재 별도로 개발되는 <code>cosmos/evm</code>의 최신 동작을 혼합해 주장하지 않으며, Cosmos transaction branch의 기본은 <a className="text-primary hover:underline" href="/cs/blockchain/cosmos-sdk#baseapp">Cosmos SDK 정본</a>을 재사용합니다.</p>
       <EvmosTxViz />
     </section>
 

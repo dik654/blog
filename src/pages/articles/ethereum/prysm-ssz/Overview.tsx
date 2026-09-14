@@ -30,7 +30,7 @@ export default function Overview({
             typed value→fixed/dynamic byte layout→32-byte chunk→Merkle
             root→field proof
           </strong>{" "}
-          순서로 내려갑니다. <Link to="/blockchain/prysm">Prysm 개요</Link>가
+          순서로 내려갑니다. <Link to="/cs/blockchain/prysm">Prysm 개요</Link>가
           consensus object의 전체 lifecycle을 소유하고, 여기서는 그 lifecycle에
           입력되는 byte·root identity만 다룹니다.
         </p>

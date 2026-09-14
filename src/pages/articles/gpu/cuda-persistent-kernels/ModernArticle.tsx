@@ -48,7 +48,7 @@ export default function ModernCudaPersistentKernelArticle() {
           그중 둘째와 첫째를 다루고, 넷째는{" "}
           <Link
             className="text-primary hover:underline"
-            to="/gpu/megakernel-design-tradeoffs#task-loop"
+            to="/cs/gpu/megakernel-design-tradeoffs#task-loop"
           >
             megakernel 글
           </Link>
@@ -281,7 +281,7 @@ export default function ModernCudaPersistentKernelArticle() {
           누군가는 늦게 끝납니다. 그 loop 는{" "}
           <Link
             className="text-primary hover:underline"
-            to="/gpu/cutlass-collectives-and-tile-schedulers#tile-scheduler"
+            to="/cs/gpu/cutlass-collectives-and-tile-schedulers#tile-scheduler"
           >
             persistent tile scheduler
           </Link>{" "}
@@ -468,7 +468,7 @@ export default function ModernCudaPersistentKernelArticle() {
           Stage를 한 kernel 안에서 합치는 문제와 비교하려면
           <a
             className="ml-1 text-primary hover:underline"
-            href="/gpu/cuda-kernel-fusion"
+            href="/cs/gpu/cuda-kernel-fusion"
           >
             kernel fusion과 Megakernel
           </a>

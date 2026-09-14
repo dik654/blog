@@ -15,8 +15,8 @@ export default function Transformer() {
           뒤 event는 언제나 보이지 않아야 합니다.
         </p>
         <p>
-          Q·K·V와 scaled dot-product의 계산은 <Link to="/ai/attention-theory#self-attention">attention 정본 글</Link>에서,
-          residual·normalization·FFN을 포함한 block은 <Link to="/ai/transformer-architecture">Transformer 구조 글</Link>에서
+          Q·K·V와 scaled dot-product의 계산은 <Link to="/cs/ai/attention-theory#self-attention">attention 정본 글</Link>에서,
+          residual·normalization·FFN을 포함한 block은 <Link to="/cs/ai/transformer-architecture">Transformer 구조 글</Link>에서
           설명합니다. 여기서는 event prediction에 필요한 visibility contract만
           정의합니다.
         </p>
@@ -112,7 +112,7 @@ export default function Transformer() {
             맞는지는 논문이 자동으로 정해 주지 않으므로 이 글의 sample contract로
             별도 검증해야 합니다.
           </p>
-          <Link className="mt-3 inline-block text-sm font-medium text-primary hover:underline" to="/ai/transformer-architecture#paper-transformer">
+          <Link className="mt-3 inline-block text-sm font-medium text-primary hover:underline" to="/cs/ai/transformer-architecture#paper-transformer">
             Transformer 정본 글의 핵심 아이디어와 근거 범위 보기
           </Link>
         </div>

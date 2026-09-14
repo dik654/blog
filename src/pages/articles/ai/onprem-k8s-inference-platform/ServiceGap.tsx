@@ -86,7 +86,7 @@ export default function ServiceGap() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           어떤 규칙으로 저울질할지, 특히 캐시 적중과 부하 균형이 어떻게 맞서는지는{" "}
-          <Link to="/ai/disaggregated-prefill-decode-serving#routing">복제본 라우팅</Link>이 소유합니다. 이
+          <Link to="/cs/ai/disaggregated-prefill-decode-serving#routing">복제본 라우팅</Link>이 소유합니다. 이
           절은 그 규칙이 놓일 자리를 클러스터가 어떻게 마련하는지만 다뤘습니다.
         </p>
       </div>

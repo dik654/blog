@@ -141,7 +141,7 @@ export default function DerivativeChainRuleArticle() {
         />
         <p>
           입력 좌표가 여러 개일 때의 local rate는
-          <a className="ml-1 font-semibold text-primary underline" href="/ai/math-gradients-jacobians">gradient와 Jacobian</a> 글에서 이어집니다.
+          <a className="ml-1 font-semibold text-primary underline" href="/cs/ai/math-gradients-jacobians">gradient와 Jacobian</a> 글에서 이어집니다.
         </p>
         <div id="paper-differentiation"><CitationBlock source="MIT OpenCourseWare 18.01SC · Differentiation" citeKey={1} href={MIT_DIFFERENTIATION}><Evidence problem="평균 변화율에서 derivative와 chain rule까지 계산하는 문제" contribution="Difference quotient·limit·local linearization·chain rule를 lecture와 problem set으로 연결" assumptions="단변수 함수의 해당 미분 가능성 조건" scope="18.01SC differentiation 단원의 정의·예제·문제" notClaim="모든 nonsmooth optimization이나 neural-network convergence를 보장하지 않음" /></CitationBlock></div>
         <div id="paper-matrix-calculus"><CitationBlock source="The Matrix Calculus You Need For Deep Learning" citeKey={2} href={MATRIX_CALCULUS}><Evidence problem="Deep learning 독자가 scalar·vector chain rule 표기를 일관되게 읽기 어려운 문제" contribution="Derivative, chain rule, matrix calculus convention을 tutorial 형태로 정리" assumptions="명시된 numerator-layout convention과 differentiability" scope="Deep learning에 필요한 calculus 표기와 worked derivation" notClaim="새 theorem이나 특정 framework backward의 완전한 specification이 아님" /></CitationBlock></div>

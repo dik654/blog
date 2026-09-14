@@ -48,7 +48,7 @@ export default function RequestState() {
         <p className="leading-7">
           262,144 토큰을 가득 채운 요청 하나를 예로 들면 K/V 6 GiB, indexer 키 0.75 GiB, 선형 상태 108 MiB로
           약 6.9 GiB입니다.{" "}
-          <Link to="/ai/qwen36-long-context-deployment#memory-profile">Qwen3.6-27B</Link>가 같은 길이에서 토큰당
+          <Link to="/cs/ai/qwen36-long-context-deployment#memory-profile">Qwen3.6-27B</Link>가 같은 길이에서 토큰당
           64 KiB로 16 GiB를 쓰는 것과 비교하면 절반 아래입니다. 층 수가 줄고 KV head가 4개에서 2개로 줄어든
           결과입니다.
         </p>
@@ -61,7 +61,7 @@ export default function RequestState() {
 
         <p className="leading-7">
           크기 규칙이 다른 캐시를 한 장비에 함께 배치하는 일반 원리는{" "}
-          <Link to="/ai/hybrid-kv-cache-allocation">하이브리드 KV cache 배치</Link>에서 다룹니다. 그 글이
+          <Link to="/cs/ai/hybrid-kv-cache-allocation">하이브리드 KV cache 배치</Link>에서 다룹니다. 그 글이
           설명하는 두 그룹에 이 모델은 세 번째 그룹인 indexer 키 캐시를 더한 형태입니다.
         </p>
       </div>
@@ -97,7 +97,7 @@ export default function RequestState() {
 
         <p className="leading-7">
           이어서 읽을 글은{" "}
-          <Link to="/ai/qwen36-hybrid-runtime">하이브리드 런타임의 prefill과 decode</Link>입니다. 두 종류의
+          <Link to="/cs/ai/qwen36-hybrid-runtime">하이브리드 런타임의 prefill과 decode</Link>입니다. 두 종류의
           상태를 한 요청으로 묶어 관리하는 방식이 Flash-Next에서도 같은 골격으로 이어집니다.
         </p>
       </div>

@@ -17,7 +17,7 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         </p>
         <p>
           이 글은 한 후보를 <strong>ENR→dial→authenticated PeerId→multiplexed connection→Status→score·gate→close</strong>
-          순서로 추적합니다. TCP·Noise·Swarm의 일반 원리는 <Link to="/p2p/libp2p">libp2p 정본</Link>이 소유하고, 여기서는
+          순서로 추적합니다. TCP·Noise·Swarm의 일반 원리는 <Link to="/cs/p2p/libp2p">libp2p 정본</Link>이 소유하고, 여기서는
           Ethereum consensus metadata와 Prysm peer lifecycle만 다룹니다.
         </p>
       </div>

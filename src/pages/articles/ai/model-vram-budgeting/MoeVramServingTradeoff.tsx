@@ -63,7 +63,7 @@ export default function MoeVramServingTradeoff() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           이 비율 자체는{" "}
-          <Link to="/ai/moe-routing-and-load-balancing#sparsity">MoE sparsity ratio 글</Link>이 정의하고, 이 글은 그 비율이 decode read bytes로 어떻게 옮겨지는지만 더합니다. Capacity가 부족하면 앞 절의 2-way 구성·offloading도 함께 검토해야 합니다.
+          <Link to="/cs/ai/moe-routing-and-load-balancing#sparsity">MoE sparsity ratio 글</Link>이 정의하고, 이 글은 그 비율이 decode read bytes로 어떻게 옮겨지는지만 더합니다. Capacity가 부족하면 앞 절의 2-way 구성·offloading도 함께 검토해야 합니다.
         </p>
       </div>
     </section>

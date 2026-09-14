@@ -17,8 +17,8 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         </p>
         <p>
           이 글은 beacon block 한 개를 <strong>topic→bounded Snappy→SSZ object→stateless/stateful validation→decision→mesh
-          propagation·score</strong> 순서로 추적합니다. 일반 Gossipsub mesh·score는 <Link to="/p2p/libp2p">libp2p
-          글</Link>, SSZ canonical decode는 <Link to="/blockchain/prysm-ssz">SSZ 글</Link>을 재사용합니다.
+          propagation·score</strong> 순서로 추적합니다. 일반 Gossipsub mesh·score는 <Link to="/cs/p2p/libp2p">libp2p
+          글</Link>, SSZ canonical decode는 <Link to="/cs/blockchain/prysm-ssz">SSZ 글</Link>을 재사용합니다.
         </p>
       </div>
       <ContentBoundary article="prysm-gossipsub" />

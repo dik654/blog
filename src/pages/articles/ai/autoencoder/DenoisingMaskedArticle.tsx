@@ -55,8 +55,8 @@ export default function DenoisingMaskedArticle() {
       <div className="prose prose-neutral max-w-none dark:prose-invert"><ul>
         <li><strong>Denoising</strong><br />Input corruption을 바꾸고 clean target을 유지합니다.</li>
         <li><strong>Masked AE</strong><br />Structured missing region과 encoder compute 범위를 함께 바꿉니다.</li>
-        <li><strong><Link to="/ai/sparse-autoencoder">Sparse AE</Link></strong><br />Latent activation 수와 dictionary frontier를 제한합니다.</li>
-        <li><strong><Link to="/ai/vae">VAE</Link></strong><br />Deterministic code 대신 approximate posterior와 prior를 도입합니다.</li>
+        <li><strong><Link to="/cs/ai/sparse-autoencoder">Sparse AE</Link></strong><br />Latent activation 수와 dictionary frontier를 제한합니다.</li>
+        <li><strong><Link to="/cs/ai/vae">VAE</Link></strong><br />Deterministic code 대신 approximate posterior와 prior를 도입합니다.</li>
       </ul></div>
     </section>
   </div>;

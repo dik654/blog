@@ -31,7 +31,7 @@ export default function Overview({
             identity bundle→activation predicate→consumer parity→genesis
             derivation→release gate
           </strong>{" "}
-          순서로 진행합니다. <Link to="/blockchain/reth">Reth 구조</Link>의
+          순서로 진행합니다. <Link to="/cs/blockchain/reth">Reth 구조</Link>의
           block lifecycle을 재사용하며, 여기서는 그 lifecycle에 주입되는
           ruleset의 정합성을 소유합니다.
         </p>

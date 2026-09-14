@@ -20,7 +20,7 @@ export default function ContinualLearningFoundationsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <Link to="/ai/fine-tuning-tradeoffs-forgetting-and-merging">
+            <Link to="/cs/ai/fine-tuning-tradeoffs-forgetting-and-merging">
               이전 글
             </Link>
             은 fine-tuning 한 번의 목적과 forgetting을 다뤘습니다. 실제
@@ -94,7 +94,7 @@ export default function ContinualLearningFoundationsArticle() {
             능력(plasticity)을 높이면 이전 지식을 지키는 능력(stability)이 떨어지고 안정성을 높이면 새 정보 반영이 느려집니다.
           </p>
           <p>
-            <Link to="/ai/fine-tuning-tradeoffs-forgetting-and-merging#forgetting">
+            <Link to="/cs/ai/fine-tuning-tradeoffs-forgetting-and-merging#forgetting">
               앞 글의 catastrophic forgetting
             </Link>
             은 이 dilemma에서 stability가 무너진 한 사례입니다. Continual
@@ -305,7 +305,7 @@ export default function ContinualLearningFoundationsArticle() {
             예를 들어 가격이나 재고처럼 하루 단위로 바뀌는 정보를 다루는
             서비스에서 주 단위로만 재학습하면, 최대 6일치 변화가 반영되지
             않은 채 서빙됩니다. 반대로 매일 재학습하면 freshness는
-            좋아지지만 <Link to="/ai/continued-pretraining#forgetting-release">
+            좋아지지만 <Link to="/cs/ai/continued-pretraining#forgetting-release">
               이전 글의 adaptation gain–forgetting frontier
             </Link>
             처럼 매 cycle마다 gain과 forgetting을 다시 확인해야 하는

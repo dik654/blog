@@ -12,7 +12,7 @@ export default function ModernIcicleArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">MSM·NTT·Poseidon을 같은 runtime 경계로 호출하기</p><h2 className="text-3xl font-bold tracking-tight">ICICLE은 수학을 대체하는 마법 상자가 아니라 device·memory·primitive backend를 연결하는 accelerator runtime이다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">고정 proof workload에서 witness와 field/hash outputs가 만들어지면 <a className="text-primary hover:underline" href="/gpu/msm-gpu-impl">MSM</a>, <a className="text-primary hover:underline" href="/gpu/ntt-gpu-impl">NTT</a>, <a className="text-primary hover:underline" href="/gpu/poseidon-gpu">Poseidon</a> jobs가 이어집니다. 각 알고리즘의 수학은 연결 글이 소유하며, 여기서는 ICICLE v3.9.0 snapshot에서 호출이 backend로 dispatch되고 memory·stream·config가 보존되는 경계만 다룹니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">고정 proof workload에서 witness와 field/hash outputs가 만들어지면 <a className="text-primary hover:underline" href="/cs/gpu/msm-gpu-impl">MSM</a>, <a className="text-primary hover:underline" href="/cs/gpu/ntt-gpu-impl">NTT</a>, <a className="text-primary hover:underline" href="/cs/gpu/poseidon-gpu">Poseidon</a> jobs가 이어집니다. 각 알고리즘의 수학은 연결 글이 소유하며, 여기서는 ICICLE v3.9.0 snapshot에서 호출이 backend로 dispatch되고 memory·stream·config가 보존되는 경계만 다룹니다.</p>
       <p>공통 API가 있어도 curve/field, input representation, device pointer, stream 완료 시점은 자동으로 안전해지지 않습니다. 특히 unsupported backend를 조용히 CPU로 바꾸면 latency와 결과 provenance가 달라지므로 명시적 오류 또는 caller가 기록한 fallback으로 처리합니다.</p>
       <IcicleRuntimeViz />
       <ContentBoundary article="icicle-framework" />

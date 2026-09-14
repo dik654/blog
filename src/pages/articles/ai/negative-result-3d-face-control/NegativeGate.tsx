@@ -49,7 +49,7 @@ export default function NegativeGate() {
         <p className="leading-7">
           이 글로 실측 시리즈가 끝납니다. 계측기를 세우고, 편집 동작을 나누고, 지우기를 다른 도구로 옮기고,
           해상도 예산을 정하고, 정체성과 포즈를 분리하고, 다양성의 출처를 찾은 여섯 편이{" "}
-          <Link to="/ai/generative-measurement-controls">계측기 검증</Link>에서 시작합니다.
+          <Link to="/cs/ai/generative-measurement-controls">계측기 검증</Link>에서 시작합니다.
         </p>
       </div>
     </section>

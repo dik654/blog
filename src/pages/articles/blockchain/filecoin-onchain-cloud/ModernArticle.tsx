@@ -89,7 +89,7 @@ export default function ModernFilecoinOnchainCloud() {
           보관 증명이나 지급 성공으로 읽지 않습니다.{" "}
           <a
             className="text-primary hover:underline"
-            href="/blockchain/filecoin-pdp#overview"
+            href="/cs/blockchain/filecoin-pdp#overview"
           >
             PDP의 challenge·fault 정본
           </a>

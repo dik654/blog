@@ -173,12 +173,12 @@ export default function Overview() {
 
       <nav aria-label="Claw Code 세부 정본" className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {[
-          ["Agent framework", "/ai/agent-frameworks", "tool loop와 durable workflow의 일반 개념"],
-          ["Session", "/ai/claw-session", "turn commit, resume, compaction의 상태 경계"],
-          ["Provider API", "/ai/claw-api-client", "request와 SSE event를 runtime type으로 바꾸는 경계"],
-          ["Tool system", "/ai/claw-tool-system", "registry, schema, dispatch와 typed result"],
-          ["Permission", "/ai/claw-permissions", "policy decision과 executor enforcement"],
-          ["File operations", "/ai/claw-file-ops", "workspace 안에서 읽기·수정·검증하는 경계"],
+          ["Agent framework", "/cs/ai/agent-frameworks", "tool loop와 durable workflow의 일반 개념"],
+          ["Session", "/cs/ai/claw-session", "turn commit, resume, compaction의 상태 경계"],
+          ["Provider API", "/cs/ai/claw-api-client", "request와 SSE event를 runtime type으로 바꾸는 경계"],
+          ["Tool system", "/cs/ai/claw-tool-system", "registry, schema, dispatch와 typed result"],
+          ["Permission", "/cs/ai/claw-permissions", "policy decision과 executor enforcement"],
+          ["File operations", "/cs/ai/claw-file-ops", "workspace 안에서 읽기·수정·검증하는 경계"],
         ].map(([label, href, note]) => (
           <Link key={href} to={href} className="min-w-0 rounded-lg border border-border/70 bg-background p-4 transition-colors hover:border-primary/50">
             <span className="break-words text-sm font-semibold text-foreground">{label}</span>

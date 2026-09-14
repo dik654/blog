@@ -36,10 +36,10 @@ export default function EmbeddingModelFineTuningArticle() {
           <p>
             Pair가 무엇인지, NT-Xent가 어떻게 계산되는지, 문장 pooling과 bi-encoder의
             online·offline 구조가 무엇인지는{" "}
-            <Link to="/ai/contrastive-learning#pair-contract">Contrastive Learning</Link>,{" "}
-            <Link to="/ai/simclr-infonce#objective">SimCLR·NT-Xent</Link>,{" "}
-            <Link to="/ai/sentence-embeddings#relation">문장 임베딩</Link>,{" "}
-            <Link to="/ai/bi-encoder-retrieval#offline-index">Bi-encoder retrieval</Link> 글이
+            <Link to="/cs/ai/contrastive-learning#pair-contract">Contrastive Learning</Link>,{" "}
+            <Link to="/cs/ai/simclr-infonce#objective">SimCLR·NT-Xent</Link>,{" "}
+            <Link to="/cs/ai/sentence-embeddings#relation">문장 임베딩</Link>,{" "}
+            <Link to="/cs/ai/bi-encoder-retrieval#offline-index">Bi-encoder retrieval</Link> 글이
             이미 다룹니다. 이 글은 그 위에서 embedding을 실제로 fine-tuning할 때의 목적함수와
             설계 선택을 엽니다.
           </p>
@@ -197,7 +197,7 @@ L_i&=\underbrace{-\log p(i\mid i)}_{\text{확률이 낮을수록 큰 벌점}}
             E5는 문장 앞에 <code>query:</code> 또는 <code>passage:</code> 접두어를 붙여
             하나의 encoder로 검색의 query 쪽과 document 쪽을 다르게 인코딩합니다. 이
             접두어는{" "}
-            <Link to="/ai/embedding-serving-contract#serialization">
+            <Link to="/cs/ai/embedding-serving-contract#serialization">
               embedding serving contract
             </Link>{" "}
             가 정의하는 입력 문자열의 일부가 되어, 서빙 시점에도 학습 때와 똑같이
@@ -254,7 +254,7 @@ L_{\mathrm{MRL}}&=\underbrace{\sum_{m\in\mathcal{M}}c_m\,L_{\mathrm{InfoNCE}}(z_
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             차원을 앞에서부터 자르는 이 방식은{" "}
-            <Link to="/ai/embedding-serving-contract#truncation">
+            <Link to="/cs/ai/embedding-serving-contract#truncation">
               embedding serving contract가 다루는 token 단위 truncation
             </Link>{" "}
             과는 다른 축입니다. Token truncation은 입력 문장에서 어디까지 읽을지를
@@ -278,7 +278,7 @@ L_{\mathrm{MRL}}&=\underbrace{\sum_{m\in\mathcal{M}}c_m\,L_{\mathrm{InfoNCE}}(z_
             이 손실은 모델마다 다릅니다. Embedding 성분이 이미 몇 개 차원에 쏠려 있는
             (dimension collapse) 모델은 calibration 범위가 왜곡되어 quantization 손실이
             커집니다. Affine mapping 자체의 scale·zero-point 계산은{" "}
-            <Link to="/ai/quantization#affine-map">양자화 기초</Link> 글의 일반 quantizer와
+            <Link to="/cs/ai/quantization#affine-map">양자화 기초</Link> 글의 일반 quantizer와
             같습니다.
           </p>
         </div>
@@ -392,9 +392,9 @@ L_{\mathrm{MRL}}&=\underbrace{\sum_{m\in\mathcal{M}}c_m\,L_{\mathrm{InfoNCE}}(z_
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           다음 글:{" "}
-          <Link to="/ai/embedding-evaluation#metrics">Embedding evaluation의 Recall·NDCG</Link>
+          <Link to="/cs/ai/embedding-evaluation#metrics">Embedding evaluation의 Recall·NDCG</Link>
           , 그리고{" "}
-          <Link to="/ai/embedding-serving-contract#index-artifact">
+          <Link to="/cs/ai/embedding-serving-contract#index-artifact">
             embedding serving contract의 index generation
           </Link>
           .

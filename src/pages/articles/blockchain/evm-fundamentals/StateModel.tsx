@@ -17,7 +17,7 @@ export default function StateModel({
           <br />
           전체 상태는{" "}
           <a
-            href="/blockchain/merkle-patricia-trie"
+            href="/cs/blockchain/merkle-patricia-trie"
             className="text-indigo-400 hover:underline"
           >
             Modified Merkle Patricia Trie(MPT)

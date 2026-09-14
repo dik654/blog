@@ -18,10 +18,10 @@ export default function Overview() {
         </p>
         <p>
           평가 code와 minimum-distance 증명은
-          <Link to="/blockchain/erasure-coding#reed-solomon"> erasure coding 정본</Link>,
+          <Link to="/cs/blockchain/erasure-coding#reed-solomon"> erasure coding 정본</Link>,
           유한체와 polynomial root bound는
-          <Link to="/crypto/finite-field-theory"> 유한체 정본</Link>, k개 점에서의
-          복원식은 <Link to="/crypto/lagrange">Lagrange 정본</Link>을
+          <Link to="/cs/crypto/finite-field-theory"> 유한체 정본</Link>, k개 점에서의
+          복원식은 <Link to="/cs/crypto/lagrange">Lagrange 정본</Link>을
           재사용합니다. 이 글은 중복 정의 대신 profile → encode → typed decode
           → ZK proximity 사용 → release gate를 구현 흐름으로 연결합니다.
         </p>

@@ -22,7 +22,7 @@ export default function ImageTrainingStagesArticle() {
           </p>
           <p>
             먼저 supervised baseline을 고정합니다. Augmentation의 의미와 target
-            transform은 <Link to="/ai/data-augmentation">데이터 증강 정본</Link>
+            transform은 <Link to="/cs/ai/data-augmentation">데이터 증강 정본</Link>
             을 재사용합니다. 그다음 resolution stage와 pseudo-label stage를
             동시에 켜지 않고 한 축씩 추가합니다.
           </p>

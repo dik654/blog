@@ -76,7 +76,7 @@ export default function PrecomputeOffload() {
           gradient checkpointing이 줄이는 것은 세 번째 항뿐이라는 점도 기억할 만합니다. 가중치 상주량은 그대로
           이므로, 첫 번째 항이 이미 장치를 채우고 있다면 이 기법으로는 해결되지 않습니다. 어느 항이 문제인지
           먼저 가르는 것이 순서입니다. 이 기법의 시간·메모리 교환은{" "}
-          <Link to="/ai/training-memory-budget#checkpointing">학습 메모리 예산</Link>에서 다룹니다.
+          <Link to="/cs/ai/training-memory-budget#checkpointing">학습 메모리 예산</Link>에서 다룹니다.
         </p>
       </div>
     </section>

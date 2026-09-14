@@ -28,9 +28,9 @@ export default function Overview() {
         </p>
         <p className="leading-7">
           카드 자체의 세대별 스펙 비교는{" "}
-          <a href="/gpu/hw-gpu-comparison">GPU 비교 글</a>이, PCIe·NVLink의 raw bandwidth 공식은{" "}
-          <a href="/gpu/gpu-interconnects">GPU interconnect 글</a>이, MoE의 VRAM·decode bandwidth
-          tradeoff는 <a href="/ai/model-vram-budgeting">model VRAM budgeting 글</a>이 이미 소유한다.
+          <a href="/cs/gpu/hw-gpu-comparison">GPU 비교 글</a>이, PCIe·NVLink의 raw bandwidth 공식은{" "}
+          <a href="/cs/gpu/gpu-interconnects">GPU interconnect 글</a>이, MoE의 VRAM·decode bandwidth
+          tradeoff는 <a href="/cs/ai/model-vram-budgeting">model VRAM budgeting 글</a>이 이미 소유한다.
           이 글은 그 세 글을 잇는 "48GB 개조 4090으로 MoE를 서빙한다면" 이라는 구체적 질문 하나에 집중하고, 겹치는 정의는 다시 쓰지
           않고 링크로 재사용한다.
         </p>

@@ -16,7 +16,7 @@ export default function Overview() {
           composition, rank와 low-rank approximation이 하나의 흐름으로 연결됩니다.
         </p>
         <p>
-          이 글은 <Link to="/ai/math-vectors-inner-products">벡터·내적 정본</Link>의
+          이 글은 <Link to="/cs/ai/math-vectors-inner-products">벡터·내적 정본</Link>의
           좌표·dot product·projection을 사용합니다. 먼저 작은 2×2 계산으로 행 하나가
           output coordinate 하나를 만드는 과정을 확인하고, 그 계산을 곱셈·rank·SVD로
           확장합니다. 마지막에는 큰 word–context matrix를 k개의 공유 방향으로 줄일 때

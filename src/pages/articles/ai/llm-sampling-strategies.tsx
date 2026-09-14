@@ -31,9 +31,9 @@ export default function LlmSamplingStrategiesArticle() {
           </p>
           <p>
             이 결정은{" "}
-            <Link to="/ai/seq2seq#decoder">autoregressive decoding</Link> 의 한 step 마다
+            <Link to="/cs/ai/seq2seq#decoder">autoregressive decoding</Link> 의 한 step 마다
             반복되고, 자르는 대상인 확률 분포는{" "}
-            <Link to="/ai/softmax#overview">softmax normalization</Link> 이 이미 만들어 둔
+            <Link to="/cs/ai/softmax#overview">softmax normalization</Link> 이 이미 만들어 둔
             것입니다. 이 글은 그 분포를 어떻게 자르고 다시 쓰는지를 봅니다.
           </p>
         </div>
@@ -70,7 +70,7 @@ export default function LlmSamplingStrategiesArticle() {
             Temperature T 는 logit 을 T 로 나눠 softmax 에 넣는 변환으로, T&lt;1 이면 상위 token 에
             확률이 더 몰리고 T&gt;1 이면 token 사이 확률 차이가 줄어 분포가 평평해집니다. 이
             변환 자체는{" "}
-            <Link to="/ai/softmax#temperature">기존 글</Link> 이 정의했고, 이 글은 그 결과가
+            <Link to="/cs/ai/softmax#temperature">기존 글</Link> 이 정의했고, 이 글은 그 결과가
             top-k·top-p 의 입력으로 어떻게 들어가는지만 봅니다.
           </p>
           <p>

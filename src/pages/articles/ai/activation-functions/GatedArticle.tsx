@@ -105,7 +105,7 @@ export default function GatedActivationsArticle() {
     <section id="comparison" className="mb-16 scroll-mt-20 space-y-5">
       <header><p className="text-sm font-semibold text-primary">04 · 선택 경계</p><h2 className="mt-2 text-2xl font-bold">함수 이름보다 branch 구조·parameter·kernel budget을 함께 고정한다</h2></header>
       <p>GELU와 SiLU는 scalar curve 비교이고 SwiGLU는 FFN architecture 비교입니다. 같은 이름표 아래 섞지 말고 model dimension, intermediate width, parameter 수, training tokens, fused-kernel 여부와 end-to-end latency를 같은 artifact에 기록해야 합니다.</p>
-      <p>Hard threshold와 saturation의 기초는 <a href="/ai/activation-functions" className="text-primary hover:underline">활성화 함수 기초</a>에서, ReLU의 dead path와 negative slope는 <a href="/ai/rectifier-activations" className="text-primary hover:underline">rectifier 글</a>에서 연결됩니다.</p>
+      <p>Hard threshold와 saturation의 기초는 <a href="/cs/ai/activation-functions" className="text-primary hover:underline">활성화 함수 기초</a>에서, ReLU의 dead path와 negative slope는 <a href="/cs/ai/rectifier-activations" className="text-primary hover:underline">rectifier 글</a>에서 연결됩니다.</p>
     </section>
   </article>;
 }

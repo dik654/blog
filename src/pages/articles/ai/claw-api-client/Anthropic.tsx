@@ -25,7 +25,7 @@ export default function Anthropic() {
           credential을 API key로 가져올지 다른 provider-supported login에서
           가져올지는 auth subsystem의 책임입니다. client는 검증된 credential을
           정해진 header에 적용하고 token 값을 log나 error에 남기지 않습니다.
-          OAuth/PKCE 자체의 구현은 <a href="/ai/claw-config">설정과 인증 글</a>
+          OAuth/PKCE 자체의 구현은 <a href="/cs/ai/claw-config">설정과 인증 글</a>
           에서 분리해 다룹니다.
         </p>
 

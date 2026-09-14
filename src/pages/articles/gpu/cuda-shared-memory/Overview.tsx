@@ -41,7 +41,7 @@ export default function Overview() {
         </p>
         <p>
           Grid·block·warp·index가 낯설다면{" "}
-          <Link to="/gpu/cuda-thread-hierarchy">CUDA thread hierarchy</Link>의
+          <Link to="/cs/gpu/cuda-thread-hierarchy">CUDA thread hierarchy</Link>의
           1D 예제를 먼저 읽으면 됩니다. 이 글에서는 각 lane의 byte address가
           global segment와 shared bank로 어떻게 바뀌는지부터 계산합니다.
         </p>

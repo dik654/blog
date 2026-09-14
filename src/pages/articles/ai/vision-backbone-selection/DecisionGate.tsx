@@ -52,7 +52,7 @@ export default function DecisionGate() {
           <p className="leading-7">
             미세조정 결과로 표현 품질을 판단하는 것이 세 번째입니다. backbone까지 학습하면 그 결과는 표현이 아니라
             초기값의 유용성에 대한 주장이 됩니다. 두 주장은 다르며, 얼린 평가와 함께 보고해야 의미가 있습니다.
-            이 구분은 <Link to="/ai/dinov3-self-supervised-backbone#use-boundary">얼린 backbone 평가</Link>에서
+            이 구분은 <Link to="/cs/ai/dinov3-self-supervised-backbone#use-boundary">얼린 backbone 평가</Link>에서
             정리했습니다.
           </p>
         </ProgressiveDetail>

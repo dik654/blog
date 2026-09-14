@@ -86,7 +86,7 @@ export default function DistillationBottleneck() {
 
         <p className="leading-7">
           안내 계수가 무엇을 맞바꾸는지는{" "}
-          <Link to="/ai/latent-diffusion-guidance#guidance">잠재 확산과 안내</Link>가 소유합니다. 이 절은 그
+          <Link to="/cs/ai/latent-diffusion-guidance#guidance">잠재 확산과 안내</Link>가 소유합니다. 이 절은 그
           맞바꿈이 정체성 다양성에서 얼마나 큰지를 실측으로 다뤘습니다.
         </p>
       </div>

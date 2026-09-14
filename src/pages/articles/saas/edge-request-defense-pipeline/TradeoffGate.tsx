@@ -44,7 +44,7 @@ export default function TradeoffGate() {
         <p className="leading-7">
           다음 글에서는 같은 엣지 구조가 공격 방어가 아니라 무중단 전달에 어떻게 쓰이는지를 다룹니다. 주소를
           여러 지점에서 광고한다는 같은 성질이 장애 대응에서 어떤 의미가 되는지가 이어지는 질문입니다.{" "}
-          <Link to="/p2p/tls-fundamentals">TLS 기초</Link>를 함께 보면 연결 설정 단계의 신호를 더 정확히 읽을
+          <Link to="/cs/p2p/tls-fundamentals">TLS 기초</Link>를 함께 보면 연결 설정 단계의 신호를 더 정확히 읽을
           수 있습니다.
         </p>
       </div>

@@ -29,9 +29,9 @@ export default function Overview() {
           column을 vector token으로 바꿔 상호작용을 학습합니다. 그렇다고 어느 구조가 모든 표에서 기본 승자가 되지는 않습니다.
         </p>
         <p>
-          이 글은 <Link to="/ai/feature-engineering">예측 시점과 누출 없는 feature</Link>,{" "}
-          <Link to="/ai/gradient-boosting">GBDT의 계산과 비교 계약</Link>,{" "}
-          <Link to="/ai/attention-theory#self-attention">self-attention의 정본 설명</Link>을
+          이 글은 <Link to="/cs/ai/feature-engineering">예측 시점과 누출 없는 feature</Link>,{" "}
+          <Link to="/cs/ai/gradient-boosting">GBDT의 계산과 비교 계약</Link>,{" "}
+          <Link to="/cs/ai/attention-theory#self-attention">self-attention의 정본 설명</Link>을
           재사용합니다. 전처리와 attention을 다시 정의하지 않고, 이들이 tabular
           representation에서 맡는 역할과 선택 근거만 확장합니다.
         </p>

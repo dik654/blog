@@ -110,11 +110,11 @@ TPOT &= \underbrace{\frac{T_{E2E}-TTFT}{\max(N_{out}-1,1)}}_{\text{기준량당 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           이 글은 engine 전체의 입구입니다. GPU iteration을 어떻게 채우는지는
-          <Link to="/ai/vllm-scheduler">vLLM Scheduler</Link>, KV cache를
+          <Link to="/cs/ai/vllm-scheduler">vLLM Scheduler</Link>, KV cache를
           block으로 소유하는 방식은
-          <Link to="/ai/vllm-paged-attention"> PagedAttention</Link>, 한 target
+          <Link to="/cs/ai/vllm-paged-attention"> PagedAttention</Link>, 한 target
           실행에서 여러 token을 확정하는 방식은
-          <Link to="/ai/vllm-spec-decode"> Speculative Decoding</Link>에서
+          <Link to="/cs/ai/vllm-spec-decode"> Speculative Decoding</Link>에서
           이어집니다.
         </p>
       </div>

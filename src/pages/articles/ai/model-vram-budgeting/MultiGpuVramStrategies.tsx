@@ -15,7 +15,7 @@ export default function MultiGpuVramStrategies() {
         </h3>
         <p className="leading-8">
           BF16 51.75GiB는 48GiB 카드 한 장에 못 들어가지만, tensor parallel degree 2로 나누면 장당 weight 지분은 약 25.9GiB로 줄어 여유가 생깁니다. 이 분할 방법 자체는{" "}
-          <Link to="/ai/tensor-and-pipeline-parallel-inference#tensor-parallel">tensor parallel linear sharding 글</Link>에서 다룹니다.
+          <Link to="/cs/ai/tensor-and-pipeline-parallel-inference#tensor-parallel">tensor parallel linear sharding 글</Link>에서 다룹니다.
         </p>
         <p className="leading-8">
           다만 장당 지분이 여유롭다고 통신이 사라지지는 않습니다. Layer마다 attention 뒤와 MLP 뒤로 all-reduce가 두 번 더해집니다. 이 통신 비용은 TP

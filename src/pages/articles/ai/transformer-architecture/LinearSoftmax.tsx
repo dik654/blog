@@ -134,7 +134,7 @@ export default function LinearSoftmax() {
           흔하지만 필수는 아닙니다. Vocabulary가 커지면 LM head
           parameter·communication·softmax 비용도 커집니다. Cross-entropy와
           log-sum-exp 안정화는
-          <Link to="/ai/cross-entropy"> Cross-entropy 정본 글</Link>에서 자세히
+          <Link to="/cs/ai/cross-entropy"> Cross-entropy 정본 글</Link>에서 자세히
           다룹니다.
         </p>
       </div>

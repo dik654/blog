@@ -3,6 +3,7 @@ import type { Category } from "@/content";
 import { CATEGORY_READING_PATHS } from "@/content/category-reading-paths";
 import { findSubcategory } from "@/content/subcategory-navigation";
 import SubcategoryItem from "./SubcategoryItem";
+import { categoryHref } from "@/lib/routes";
 
 export default function TopDownCategoryNav({
   category,
@@ -81,7 +82,7 @@ export default function TopDownCategoryNav({
       </ol>
 
       <Link
-        to={`/${category.slug}`}
+        to={categoryHref(category.slug)}
         className="flex items-center justify-between border-t border-border/55 px-3 py-2.5 text-[10px] font-bold text-muted-foreground transition-colors hover:bg-background/70 hover:text-primary"
       >
         전체 학습 지도

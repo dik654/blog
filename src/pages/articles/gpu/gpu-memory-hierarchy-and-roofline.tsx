@@ -47,7 +47,7 @@ export default function GpuMemoryHierarchyAndRooflineArticle() {
             CUDA local memory 는 이름과 달리 가까운 곳이 아닙니다. Thread 하나만 보는 주소
             공간이지만 실제 저장소는 HBM 이고 L1·L2 에 cache 됩니다. Register 가 모자라
             spill 된 값과 동적 index 로 접근하는 thread 배열이 여기로 가며, 그 경로는{" "}
-            <Link to="/gpu/cuda-register-pressure#spill-path">register spill 경로</Link> 에 있습니다.
+            <Link to="/cs/gpu/cuda-register-pressure#spill-path">register spill 경로</Link> 에 있습니다.
           </p>
           <p>
             Constant memory 는 64 KB 짜리 읽기 전용 공간으로 SM 마다 constant cache 를 거칩니다. Warp 의 32 lane 이 같은 주소를 읽으면 한 번
@@ -55,7 +55,7 @@ export default function GpuMemoryHierarchyAndRooflineArticle() {
           </p>
           <p>
             이 다섯 계층의 scope 와 traffic 경로는{" "}
-            <Link to="/gpu/gpu-architecture#gpu-memory-traffic-hierarchy">GPU memory traffic hierarchy</Link> 가
+            <Link to="/cs/gpu/gpu-architecture#gpu-memory-traffic-hierarchy">GPU memory traffic hierarchy</Link> 가
             먼저 그렸습니다. 이 글은 그 위에 각 계층의 크기와 요청이 옮겨지는 단위를 얹습니다.
           </p>
         </div>
@@ -90,8 +90,8 @@ export default function GpuMemoryHierarchyAndRooflineArticle() {
           </p>
           <p>
             접근 pattern 을 바꿔 sector 수를 줄이는 설계가{" "}
-            <Link to="/gpu/cuda-shared-memory#coalescing">coalescing</Link> 이고, 어쩔 수 없이
-            흩어진 접근은 <Link to="/gpu/cuda-shared-memory#overview">shared memory</Link> 에
+            <Link to="/cs/gpu/cuda-shared-memory#coalescing">coalescing</Link> 이고, 어쩔 수 없이
+            흩어진 접근은 <Link to="/cs/gpu/cuda-shared-memory#overview">shared memory</Link> 에
             한 번 정렬해 올린 뒤 읽습니다. 이 글은 transaction 이 어떻게 세어지는지까지만
             다룹니다.
           </p>
@@ -117,7 +117,7 @@ export default function GpuMemoryHierarchyAndRooflineArticle() {
           <p>
             SM 에 warp 64개가 있어도 warp 마다 load 두 개 가까이를 결과가 오기 전에 더
             내야 한다는 뜻입니다. 이것이 앞 글의{" "}
-            <Link to="/gpu/sm-warp-scheduling-and-issue#latency-hiding">memory-level parallelism</Link> 이
+            <Link to="/cs/gpu/sm-warp-scheduling-and-issue#latency-hiding">memory-level parallelism</Link> 이
             bandwidth 와 만나는 지점이고, load 뒤에 바로 그 값을 쓰는 코드가 대역폭을
             못 채우는 이유입니다.
           </p>
@@ -189,11 +189,11 @@ B_{\mathrm{flight}} &= \underbrace{BW_{\mathrm{peak}} \cdot L_{\mathrm{mem}}}_{\
             Memory-bound 의 증거는 DRAM throughput 이 peak 에 가깝고 pipe utilization 은
             낮은 상태입니다. 처방은 정반대여서, compute-bound 는 pipe 를 바꾸거나 연산을
             줄이고 memory-bound 는 byte 를 줄입니다. Tile 로 재사용을 늘려 intensity 를
-            올리는 것이 <Link to="/gpu/cuda-matrix-multiply#tiled">shared-memory tiling</Link> 입니다.
+            올리는 것이 <Link to="/cs/gpu/cuda-matrix-multiply#tiled">shared-memory tiling</Link> 입니다.
           </p>
           <p>
             Roofline 의 peak 와 achieved 를 분리하는 규칙은{" "}
-            <Link to="/gpu/gpu-architecture#gpu-peak-achieved-boundary">peak/achieved boundary</Link> 가
+            <Link to="/cs/gpu/gpu-architecture#gpu-peak-achieved-boundary">peak/achieved boundary</Link> 가
             소유합니다. 이 글은 그 지붕 위에 bound 부류의 이름과 판정 증거를 얹습니다.
           </p>
         </div>
@@ -255,8 +255,8 @@ I_{\mathrm{ridge}} &= \underbrace{\frac{P_{\mathrm{peak}}}{BW_{\mathrm{peak}}}}_
           </p>
           <p>
             Launch-bound 의 처방은 kernel 수를 줄이는 것이고, 그 방법이{" "}
-            <Link to="/gpu/cuda-kernel-fusion">kernel fusion</Link> 과{" "}
-            <Link to="/ai/cuda-graph-capture#mechanics">CUDA graph</Link> 입니다. Profiler 의
+            <Link to="/cs/gpu/cuda-kernel-fusion">kernel fusion</Link> 과{" "}
+            <Link to="/cs/ai/cuda-graph-capture#mechanics">CUDA graph</Link> 입니다. Profiler 의
             timeline 에서 kernel 사이 빈틈이 kernel 자체보다 길면 이 부류입니다.
           </p>
           <p>
@@ -373,8 +373,8 @@ I_{\mathrm{ridge}} &= \underbrace{\frac{P_{\mathrm{peak}}}{BW_{\mathrm{peak}}}}_
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/gpu/cuda-perf-analysis#throughput-ledger">Achieved FLOP/s·bandwidth ledger</Link>,
-          그리고 <Link to="/gpu/cuda-matrix-multiply#tiled">Tile 로 intensity 를 올리는 GEMM</Link>.
+          다음 글: <Link to="/cs/gpu/cuda-perf-analysis#throughput-ledger">Achieved FLOP/s·bandwidth ledger</Link>,
+          그리고 <Link to="/cs/gpu/cuda-matrix-multiply#tiled">Tile 로 intensity 를 올리는 GEMM</Link>.
         </p>
       </section>
     </div>

@@ -46,7 +46,7 @@ export default function WindingBug() {
 
         <p className="leading-7">
           이 습관이 이 시리즈 전체에서 반복됩니다. 답을 아는 입력을 계측기에 통과시키는 절차는{" "}
-          <Link to="/ai/generative-measurement-controls#overview">계측기 검증</Link>이 소유하고, 여기서는
+          <Link to="/cs/ai/generative-measurement-controls#overview">계측기 검증</Link>이 소유하고, 여기서는
           그 절차가 렌더링 파이프라인에도 똑같이 적용된 사례입니다.
         </p>
       </div>

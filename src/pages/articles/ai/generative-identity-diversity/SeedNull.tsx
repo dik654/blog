@@ -52,7 +52,7 @@ export default function SeedNull() {
         <p className="leading-7">
           다만 나이는 잘 조종됩니다. 열여덟을 요구하면 스물넷으로, 일흔다섯을 요구하면 여든으로 읽히는데,
           평균 오차가 열 살가량이지만 부호가 항상 같은 계통 편향이라 보정할 수 있습니다. 임계값과 판정 기준은{" "}
-          <Link to="/ai/generative-measurement-controls#threshold-choice">계측기 검증</Link>이 소유합니다.
+          <Link to="/cs/ai/generative-measurement-controls#threshold-choice">계측기 검증</Link>이 소유합니다.
         </p>
       </div>
 

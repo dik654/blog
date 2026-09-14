@@ -216,7 +216,7 @@ export default function ExperimentTrackingArticle() {
           </p>
           <p>
             다음 수업에서는 이 provenance 위에 metric observation을 쌓는{" "}
-            <Link to="/ai/learning-curve-tracking">
+            <Link to="/cs/ai/learning-curve-tracking">
               learning-curve tracking
             </Link>
             을 다룹니다.

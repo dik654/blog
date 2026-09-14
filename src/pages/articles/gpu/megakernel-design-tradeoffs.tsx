@@ -46,7 +46,7 @@ export default function MegakernelDesignTradeoffsArticle() {
             Tail 은 launch 와 다른 비용입니다. Kernel 의 마지막 wave 에서 block 수가 SM 수의
             배수로 떨어지지 않으면 일부 SM 이 놀고, 다음 kernel 의 block 은 앞 kernel 이
             완전히 끝날 때까지 SM 에 올라오지 못합니다. 이 빈 시간은{" "}
-            <Link to="/gpu/cutlass-collectives-and-tile-schedulers#tile-scheduler">wave quantization</Link>
+            <Link to="/cs/gpu/cutlass-collectives-and-tile-schedulers#tile-scheduler">wave quantization</Link>
             과 같은 식으로 셉니다.
           </p>
           <p>
@@ -128,7 +128,7 @@ export default function MegakernelDesignTradeoffsArticle() {
             Kernel 경계는 공짜 동기화였습니다. 같은 stream 의 다음 kernel 은 앞 kernel 의
             모든 block 이 끝나고 그 쓰기가 보일 때 시작하므로, 프로그래머는 아무것도 쓰지
             않아도 operator 사이의 의존이 지켜졌습니다. 이것이 inter-kernel synchronization
-            이고 그 범위는 <Link to="/gpu/cuda-sync-streams#streams">stream ordering</Link> 이 정합니다.
+            이고 그 범위는 <Link to="/cs/gpu/cuda-sync-streams#streams">stream ordering</Link> 이 정합니다.
           </p>
           <p>
             경계를 지우면 그 의존을 kernel 안에서 직접 표현해야 합니다. Hazy Research 는 global memory 에 counter 배열을 두고 instruction 이
@@ -151,13 +151,13 @@ export default function MegakernelDesignTradeoffsArticle() {
             producer warpgroup 이 TMA 로 data 를 나르고 consumer warpgroup 둘이 GEMM 과
             softmax 를 번갈아 하도록 named barrier 로 순서를 강제합니다. 이 warp
             specialization 은{" "}
-            <Link to="/gpu/gpu-arch-hopper#tma">Hopper 의 producer–consumer pipeline</Link> 을
+            <Link to="/cs/gpu/gpu-arch-hopper#tma">Hopper 의 producer–consumer pipeline</Link> 을
             재사용합니다.
           </p>
           <p>
             Grid 전체를 한 지점에 세우는 grid.sync() 도 있습니다. Cooperative launch 로
             모든 block 이 동시에 resident 여야 하고, 이 조건이{" "}
-            <Link to="/gpu/cuda-persistent-kernels#worker-residency">persistent kernel 이 grid 를 SM 수에 맞추는 이유</Link>
+            <Link to="/cs/gpu/cuda-persistent-kernels#worker-residency">persistent kernel 이 grid 를 SM 수에 맞추는 이유</Link>
             입니다. 다만 operator 경계마다 grid.sync() 를 부르면 지운 kernel 경계를 다시
             만든 셈이라, megakernel 은 task 단위 counter 를 씁니다.
           </p>
@@ -208,7 +208,7 @@ export default function MegakernelDesignTradeoffsArticle() {
             결과가 뒤 operator 가 도는 동안 register 에 살아 있어 요구가 더해집니다. 96 과
             64 를 붙이면 160 이고, 128 짜리 셋째 stage 를 더 붙이면 288 로 thread 당 상한
             255 를 넘어 spill 이 납니다. 그 경로는{" "}
-            <Link to="/gpu/cuda-register-pressure#spill-path">register spill</Link> 글이 다룹니다.
+            <Link to="/cs/gpu/cuda-register-pressure#spill-path">register spill</Link> 글이 다룹니다.
           </p>
           <p>
             Shared memory 는 반대로 시간에 따라 나눠 쓸 수 있습니다. Hazy Research 는 H100 의 213 kB 를 16 KiB page 13개로, MPK 는 32
@@ -272,7 +272,7 @@ export default function MegakernelDesignTradeoffsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            <Link to="/ai/cuda-graph-capture#mechanics">CUDA graph</Link> 는 launch 열을 한 번
+            <Link to="/cs/ai/cuda-graph-capture#mechanics">CUDA graph</Link> 는 launch 열을 한 번
             capture 해 재생하므로 CPU 가 kernel 마다 API 를 부르는 비용이 사라집니다. 그러나
             graph 의 node 는 여전히 kernel 이라 kernel 경계, 경계마다의 tail, 경계를 넘는
             overlap 불가는 그대로입니다. Hazy Research 의 수치에서 graph 는 launch 를 2.1 µs
@@ -296,7 +296,7 @@ export default function MegakernelDesignTradeoffsArticle() {
           </p>
           <p>
             Fusion 글의{" "}
-            <Link to="/gpu/cuda-kernel-fusion#megakernel">megakernel resource trade-off</Link> 는
+            <Link to="/cs/gpu/cuda-kernel-fusion#megakernel">megakernel resource trade-off</Link> 는
             이 글의 비용 항을 launch 절감과 같은 장부에 놓고 채택 여부를 정하는 판단이고,
             이 글은 그 비용이 어디서 생기는지의 mechanism 을 소유합니다. Launch overhead 의
             CPU 쪽 증상은 launch overhead 와 CPU–GPU 동기화 글이 다룹니다.
@@ -310,7 +310,7 @@ export default function MegakernelDesignTradeoffsArticle() {
             CUTLASS 의 persistent GEMM 은 grid 를 SM 수에 맞추고 각 block 이 tile 을 여러 개
             돌지만 operator 는 GEMM 하나입니다. Register 상한도 shared memory 도 그 GEMM
             에 맞춰져 있어 이 글의 자원 공유 비용이 없습니다. 그 loop 의 queue·종료 계약은{" "}
-            <Link to="/gpu/cuda-persistent-kernels#queue-progress">persistent kernel 글</Link> 이 소유합니다.
+            <Link to="/cs/gpu/cuda-persistent-kernels#queue-progress">persistent kernel 글</Link> 이 소유합니다.
           </p>
           <p>
             MPK 와 Hazy Research 의 megakernel 은 둘 다 persistent 하게 worker 를 띄우고 그 위에 GEMM·attention·norm·통신 task
@@ -412,8 +412,8 @@ export default function MegakernelDesignTradeoffsArticle() {
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/gpu/cuda-persistent-kernels#queue-progress">persistent kernel 의 queue 와 종료</Link>,
-          그리고 <Link to="/gpu/cuda-kernel-fusion#release-gate">fusion 의 ROI 장부</Link>.
+          다음 글: <Link to="/cs/gpu/cuda-persistent-kernels#queue-progress">persistent kernel 의 queue 와 종료</Link>,
+          그리고 <Link to="/cs/gpu/cuda-kernel-fusion#release-gate">fusion 의 ROI 장부</Link>.
         </p>
       </section>
     </div>

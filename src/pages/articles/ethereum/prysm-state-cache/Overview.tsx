@@ -10,7 +10,7 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <h2 className="mb-6 text-2xl font-bold">State cache는 state를 빨리 찾는 장치이지, state의 정당성을 결정하는 장치가 아니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">Beacon node가 slot 105의 state를 요청받았는데 메모리에는 없다면, 단순히 “가장 가까운 값을 반환”할 수 없습니다. 같은 slot에도 fork A와 B가 있을 수 있고, 저장된 state가 slot 100이라면 빈 slot과 block transition을 정확한 순서로 다시 적용해야 하기 때문입니다. 이 글은 target root 하나를 <strong>identity 확인 → hot cache → stored anchor → ordered replay → output root 검증</strong> 순서로 추적합니다.</p>
-        <p><Link to="/blockchain/prysm-beacon-state">BeaconState 글</Link>이 state value·Copy-on-Write·SSZ root를 소유하고, <Link to="/blockchain/prysm-block-processing">block processing 글</Link>이 한 block transition을 소유합니다. 여기서는 그 정본을 재사용해 여러 조회 사이에서 state를 어떻게 찾고 복사하고 재구성하며 보존할지를 다룹니다.</p>
+        <p><Link to="/cs/blockchain/prysm-beacon-state">BeaconState 글</Link>이 state value·Copy-on-Write·SSZ root를 소유하고, <Link to="/cs/blockchain/prysm-block-processing">block processing 글</Link>이 한 block transition을 소유합니다. 여기서는 그 정본을 재사용해 여러 조회 사이에서 state를 어떻게 찾고 복사하고 재구성하며 보존할지를 다룹니다.</p>
       </div>
       <ContentBoundary article="prysm-state-cache" />
       <PrysmDataApiViz mode="state-cache" />

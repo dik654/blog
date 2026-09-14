@@ -126,7 +126,7 @@ export default function ComponentBudget() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           단일 모델에서 가중치·gradient·optimizer state가 파라미터당 몇 바이트인지의 표준 계산은{" "}
-          <Link to="/ai/training-memory-budget#memory-math">학습 메모리 예산</Link>에 있습니다. 이 절은 그 계산을
+          <Link to="/cs/ai/training-memory-budget#memory-math">학습 메모리 예산</Link>에 있습니다. 이 절은 그 계산을
           부품 수만큼 반복하고 학습 대상에만 두 번째 항을 붙인다는 점만 더했습니다.
         </p>
       </div>

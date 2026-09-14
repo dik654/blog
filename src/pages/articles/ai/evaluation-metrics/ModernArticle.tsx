@@ -230,13 +230,13 @@ export default function EvaluationMetricsArticle() {
           title="여기서 이어지는 네 개의 독립 수업"
           items={[
             {
-              term: <Link to="/ai/regression-metrics">Regression metrics</Link>,
+              term: <Link to="/cs/ai/regression-metrics">Regression metrics</Link>,
               description:
                 "숫자 residual에 선형·제곱 비용을 붙이고 point와 interval을 평가합니다.",
             },
             {
               term: (
-                <Link to="/ai/classification-metrics">
+                <Link to="/cs/ai/classification-metrics">
                   Classification metrics
                 </Link>
               ),
@@ -244,13 +244,13 @@ export default function EvaluationMetricsArticle() {
                 "Score ordering, probability 의미와 threshold action을 분리합니다.",
             },
             {
-              term: <Link to="/ai/ranking-metrics">Ranking metrics</Link>,
+              term: <Link to="/cs/ai/ranking-metrics">Ranking metrics</Link>,
               description:
                 "Query별 relevance·rank position·judgment coverage와 query population을 평가합니다.",
             },
             {
               term: (
-                <Link to="/ai/metric-selection-protocol">
+                <Link to="/cs/ai/metric-selection-protocol">
                   Selection protocol
                 </Link>
               ),

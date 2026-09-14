@@ -11,7 +11,7 @@ export default function DhtSecurityArticle() {
         <h2 className="mb-6 text-2xl font-bold">문제: 가까운 ID가 정직하다는 보장은 없다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            <Link to="/p2p/kademlia">Kademlia</Link>는 XOR 거리로 후보를 정렬하지만,
+            <Link to="/cs/p2p/kademlia">Kademlia</Link>는 XOR 거리로 후보를 정렬하지만,
             거리 함수는 identity의 비용·독립성·정직성을 검사하지 않는다. 공격자가
             많은 identity를 만들거나 피해자 주변의 연락처를 선점하면 lookup을
             공격자에게 몰아 검열·관찰·거짓 응답을 시도할 수 있다.

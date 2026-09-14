@@ -70,8 +70,8 @@ export default function BatchAndNegatives() {
           </p>
           <p className="leading-7">
             분산 학습에서 무엇을 언제 모아야 하는지의 일반 논의는{" "}
-            <Link to="/ai/tensor-and-pipeline-parallel-inference">병렬 추론</Link>과{" "}
-            <Link to="/gpu/gpu-collective-network">collective 통신</Link>에서 다룹니다. 여기서는 손실의 수학적
+            <Link to="/cs/ai/tensor-and-pipeline-parallel-inference">병렬 추론</Link>과{" "}
+            <Link to="/cs/gpu/gpu-collective-network">collective 통신</Link>에서 다룹니다. 여기서는 손실의 수학적
             형태가 통신 요구를 바꾼다는 점만 짚었습니다.
           </p>
         </ProgressiveDetail>

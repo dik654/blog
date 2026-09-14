@@ -26,8 +26,8 @@ export default function Overview() {
           수 없습니다.
         </p>
         <p>
-          이 글은 <Link to="/ai/feature-engineering#aggregation">point-in-time aggregation과 feature availability</Link>,{" "}
-          <Link to="/ai/math-complex-numbers-oscillations">radian·sin·cos의 수학</Link>을
+          이 글은 <Link to="/cs/ai/feature-engineering#aggregation">point-in-time aggregation과 feature availability</Link>,{" "}
+          <Link to="/cs/ai/math-complex-numbers-oscillations">radian·sin·cos의 수학</Link>을
           재사용합니다. 여기서는 lag와 window의 인덱스 의미, rolling-origin 평가,
           cyclic basis가 forecasting row에 연결되는 방법만 소유합니다.
         </p>

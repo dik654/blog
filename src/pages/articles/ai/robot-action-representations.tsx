@@ -22,7 +22,7 @@ export default function RobotActionRepresentationsArticle() {
             수치 예와 함께 비교합니다.
           </p>
           <p>
-            <Link to="/ai/vla-embodiment-gap#action-interface">앞 글</Link>이 robot이 소비할
+            <Link to="/cs/ai/vla-embodiment-gap#action-interface">앞 글</Link>이 robot이 소비할
             frame·unit·frequency를 고정하는 실행 계약(action-interface contract)을 다뤘다면, 이 글은
             그 계약을 실제로 채우는 표현 방법 자체를 다룹니다. 계약이 "무엇을 표준화해야 하는가"라면
             여기서는 "구체적으로 어떤 표현이 있는가"를 봅니다.
@@ -332,7 +332,7 @@ L^{\tau}(\theta)&=\underbrace{\mathbb{E}\left\|v_\theta(A_t^{\tau},o_t)-u\right\
           <p>
             다음 글에서는 이런 action head를 학습시키는 demonstration data 자체—behavior cloning,
             dataset scale, sim-to-real—를 봅니다.{" "}
-            <Link to="/ai/imitation-learning-and-policy-generalization">
+            <Link to="/cs/ai/imitation-learning-and-policy-generalization">
               Imitation learning과 policy generalization
             </Link>
             에서 이어집니다.

@@ -32,7 +32,7 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
             mixture·curriculum으로 학습 배치를 정합니다. 이렇게 다섯 단계입니다.
           </p>
           <p>
-            <Link to="/ai/llm-training-stages#pretraining">Pretraining objective</Link> 글은
+            <Link to="/cs/ai/llm-training-stages#pretraining">Pretraining objective</Link> 글은
             다음 token 확률을 낮추는 loss 자체를 다루고, 그 loss가 보는 데이터 분포가 어떻게
             만들어지는지는 이 글에 넘겨 둡니다. 이 글은 그 분포, 즉 corpus 자체를 만드는 공학에만
             집중합니다.
@@ -174,7 +174,7 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
           preview="Benchmark가 학습 데이터에 새어 들어간 것과, 연구자가 test 점수를 보고 설계를 고친 것은 둘 다 '오염'이라 불리지만 발생 위치가 다릅니다."
         >
           <p>
-            <Link to="/ai/train-validation-test#selection-feedback">Test-set reuse
+            <Link to="/cs/ai/train-validation-test#selection-feedback">Test-set reuse
             contamination</Link>은 연구자가 test 결과를 관찰한 뒤 model이나 threshold, prompt를
             바꿔 그 test가 독립적인 최종 평가 역할을 잃는 상황을 가리킵니다.
           </p>

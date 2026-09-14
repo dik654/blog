@@ -32,10 +32,10 @@ export default function Overview() {
 
         <p className="leading-7">
           여기서 쓰는 수치의 바닥값과 임계값은{" "}
-          <Link to="/ai/generative-measurement-controls">계측기 검증</Link>이 소유합니다. 특히 마스크 밖
+          <Link to="/cs/ai/generative-measurement-controls">계측기 검증</Link>이 소유합니다. 특히 마스크 밖
           변화량의 모델 간 비교는 그 글에서 무효화됐으므로 이 글에서는 선택 근거로 쓰지 않습니다. 확산 편집의
           구성 요소와 안내 계수 자체는{" "}
-          <Link to="/ai/latent-diffusion-guidance#pipeline">잠재 확산 파이프라인</Link>이 소유합니다.
+          <Link to="/cs/ai/latent-diffusion-guidance#pipeline">잠재 확산 파이프라인</Link>이 소유합니다.
         </p>
       </div>
 

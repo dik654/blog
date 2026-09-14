@@ -62,9 +62,9 @@ export default function FLP() {
           추가 가정에서 어떤 보장을 얻었는지 적는 것입니다.
         </p>
         <p>
-          이 글 다음에는 <Link to="/blockchain/smr-theory">SMR</Link>에서 safety
+          이 글 다음에는 <Link to="/cs/blockchain/smr-theory">SMR</Link>에서 safety
           rule과 leader-based progress를 실제 log에 연결하고,{" "}
-          <Link to="/blockchain/bft-theory">BFT</Link>에서 partial synchrony와
+          <Link to="/cs/blockchain/bft-theory">BFT</Link>에서 partial synchrony와
           quorum certificate를 더 엄밀하게 다룹니다.
         </p>
       </div>

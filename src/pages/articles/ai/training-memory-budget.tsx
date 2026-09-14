@@ -23,8 +23,8 @@ export default function TrainingMemoryBudgetArticle() {
             math</strong>입니다.
           </p>
           <p>
-            이 글은 <Link to="/ai/adam-optimizer#moments">Adam 정본</Link>의
-            momentum·variance state와 <Link to="/ai/reverse-mode-autodiff#save-recompute">
+            이 글은 <Link to="/cs/ai/adam-optimizer#moments">Adam 정본</Link>의
+            momentum·variance state와 <Link to="/cs/ai/reverse-mode-autodiff#save-recompute">
             reverse-mode autodiff 정본</Link>의 save–recompute 경계를 이어받아,
             그 네 항목이 실제로 몇 byte인지 계산하고, activation 항을
             <strong> activation checkpointing</strong>이 어떻게 줄이는지 봅니다.
@@ -133,9 +133,9 @@ export default function TrainingMemoryBudgetArticle() {
         </div>
         <div className="not-prose mt-7 grid gap-5 md:grid-cols-3">
           {[
-            ["QLoRA training-memory ledger", "Base low-bit payload·adapter·activation을 더 세분화한 byte 장부로 이 memory math를 확장합니다.", "/ai/lora-finetuning#qlora"],
-            ["Reverse-mode autodiff", "Save–recompute 경계라는 일반 개념이 이 글의 checkpoint 간격 선택으로 구체화됩니다.", "/ai/reverse-mode-autodiff#save-recompute"],
-            ["PyTorch 학습 파이프라인", "AMP autocast의 FP16·FP32 dtype 선택이 이 글의 16byte breakdown과 맞물립니다.", "/ai/training-pipeline#loop"],
+            ["QLoRA training-memory ledger", "Base low-bit payload·adapter·activation을 더 세분화한 byte 장부로 이 memory math를 확장합니다.", "/cs/ai/lora-finetuning#qlora"],
+            ["Reverse-mode autodiff", "Save–recompute 경계라는 일반 개념이 이 글의 checkpoint 간격 선택으로 구체화됩니다.", "/cs/ai/reverse-mode-autodiff#save-recompute"],
+            ["PyTorch 학습 파이프라인", "AMP autocast의 FP16·FP32 dtype 선택이 이 글의 16byte breakdown과 맞물립니다.", "/cs/ai/training-pipeline#loop"],
           ].map(([title, body, href]) => (
             <Link key={href} to={href} className="min-w-0 border-t border-border/80 pt-4 hover:border-primary/60">
               <h3 className="text-sm font-bold">{title}</h3>

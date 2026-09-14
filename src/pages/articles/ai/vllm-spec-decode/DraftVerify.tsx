@@ -152,7 +152,7 @@ m_{\mathrm{out}}(x)&=m_{\mathrm{accept}}(x)+m_{\mathrm{correct}}(x) \\
           target step과 비슷하다는 것이 Chen et al. 2023의 관찰입니다. 낮은
           batch에서는 linear layer가 weight read에 묶여 있어 한 token을 넣든
           다섯 token을 넣든 읽는 byte가 같기 때문입니다. 이 가정이 언제 깨지는지는
-          <Link to="/ai/vllm-spec-decode#not-always-faster">비용 모델 절</Link>에서
+          <Link to="/cs/ai/vllm-spec-decode#not-always-faster">비용 모델 절</Link>에서
           다룹니다.
         </p>
 

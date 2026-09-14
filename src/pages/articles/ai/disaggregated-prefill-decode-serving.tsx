@@ -36,9 +36,9 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
           </p>
           <p>
             두 phase가 왜 다른 자원에 막히는지는{" "}
-            <Link to="/ai/prefill-decode-phase-dynamics#arithmetic-intensity">phase dynamics 글</Link>이,
+            <Link to="/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity">phase dynamics 글</Link>이,
             한 replica 안에서 step마다 요청을 고르는 규칙은{" "}
-            <Link to="/ai/vllm-scheduler#running-waiting-order">scheduler 글</Link>이 설명합니다.
+            <Link to="/cs/ai/vllm-scheduler#running-waiting-order">scheduler 글</Link>이 설명합니다.
             이 글은 replica 바깥, 요청이 GPU에 닿기 전과 phase 사이의 이동만 다룹니다.
           </p>
         </div>
@@ -65,7 +65,7 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
           <p>
             이 성질을 쓰는 규칙이 request affinity입니다. 같은 session이나 같은 prefix를 가진
             요청을 같은 replica에 붙여 두면{" "}
-            <Link to="/ai/vllm-paged-attention#full-block-boundary">automatic prefix cache</Link>가
+            <Link to="/cs/ai/vllm-paged-attention#full-block-boundary">automatic prefix cache</Link>가
             hit합니다. 대신 인기 있는 prefix를 가진 replica에 요청이 쏠려 load 균형이
             깨집니다. Hit rate와 load 균형은 한쪽을 얻으면 다른 쪽을 잃는 관계입니다.
           </p>
@@ -82,7 +82,7 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
           <p>
             Routing의 앞 단계인 model 선택, 즉 context 길이나 tool 지원 같은 hard
             compatibility로 backend를 거르는 일은{" "}
-            <Link to="/ai/llm-serving-ops#litellm-gateway">serving ops 글의 capability-first routing</Link>이
+            <Link to="/cs/ai/llm-serving-ops#litellm-gateway">serving ops 글의 capability-first routing</Link>이
             맡습니다. 이 절의 replica routing은 그 필터를 통과한 같은 model의 replica
             사이에서만 고릅니다.
           </p>
@@ -139,7 +139,7 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
           <p>
             이렇게 나누면 얻는 것은 두 가지입니다. 첫째, decode worker의 step에는 prefill이
             끼어들지 않으므로{" "}
-            <Link to="/ai/prefill-decode-phase-dynamics#interference">phase 간섭</Link>이
+            <Link to="/cs/ai/prefill-decode-phase-dynamics#interference">phase 간섭</Link>이
             사라지고 token 간격의 tail이 안정됩니다. 둘째, 두 풀의 parallelism과 batch를
             따로 정할 수 있습니다. Prefill은 512 token 하나로도 A100을 채우므로 batch를
             키울 이유가 없고, decode는 batch를 키워야 bandwidth를 활용합니다.
@@ -190,7 +190,7 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
           <p>
             KV transfer는 prefill worker의 KV block을 decode worker의 KV pool로 복사하는
             일입니다. 옮길 byte는 요청 길이에 비례하므로{" "}
-            <Link to="/ai/kv-cache-fundamentals#kv-shape">token당 KV byte</Link>에 token
+            <Link to="/cs/ai/kv-cache-fundamentals#kv-shape">token당 KV byte</Link>에 token
             수를 곱하면 됩니다. 시간은 그 byte를 두 GPU 사이 link의 대역폭으로 나눈 값이고,
             link가 무엇인지가 전부를 정합니다.
           </p>
@@ -398,9 +398,9 @@ export default function DisaggregatedPrefillDecodeServingArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             다음 읽기는 한 replica 안에서 tensor·pipeline·data parallel을 어떻게 나누는지
-            다루는 <Link to="/ai/vllm-serving#parallel-layout">vLLM serving 글의 parallel layout</Link>과,
+            다루는 <Link to="/cs/ai/vllm-serving#parallel-layout">vLLM serving 글의 parallel layout</Link>과,
             요청률에서 replica 수와 admission을 정하는{" "}
-            <Link to="/ai/llm-serving-capacity#capacity-admission">serving capacity 글</Link>입니다.
+            <Link to="/cs/ai/llm-serving-capacity#capacity-admission">serving capacity 글</Link>입니다.
           </p>
         </div>
       </section>

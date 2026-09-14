@@ -25,7 +25,7 @@ export default function Overview() {
         </p>
         <p>
           이 글은{" "}
-          <Link to="/ai/math-functions-derivatives-gradients">미분</Link>을 이미
+          <Link to="/cs/ai/math-functions-derivatives-gradients">미분</Link>을 이미
           배운 독자가 ordinary differential equation(ODE)의 초기값 문제를
           세우고, Euler·Heun method로 근사하며, step size가 왜 안정성을 바꾸는지
           직접 계산할 수 있도록 구성했습니다. 마지막에는 randomness가 경로에

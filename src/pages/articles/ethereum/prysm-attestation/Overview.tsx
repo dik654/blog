@@ -23,9 +23,9 @@ export default function Overview({
         </p>
         <p className="leading-7">
           어테스테이션은 head 선택과 finality에 함께 쓰이지만 두 판단은 같지
-          않습니다. 가중치 계산은 <Link to="/blockchain/prysm-forkchoice">fork choice</Link>,
-          checkpoint 규칙은 <Link to="/blockchain/prysm-finality">finality</Link>,
-          double/surround vote 방지는 <Link to="/blockchain/prysm-validator-client#slashing-protection">validator slashing protection</Link> 정본으로 이어집니다.
+          않습니다. 가중치 계산은 <Link to="/cs/blockchain/prysm-forkchoice">fork choice</Link>,
+          checkpoint 규칙은 <Link to="/cs/blockchain/prysm-finality">finality</Link>,
+          double/surround vote 방지는 <Link to="/cs/blockchain/prysm-validator-client#slashing-protection">validator slashing protection</Link> 정본으로 이어집니다.
         </p>
 
         {/* ── Attestation 역할 ── */}

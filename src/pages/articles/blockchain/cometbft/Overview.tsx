@@ -91,9 +91,9 @@ export default function Overview() {
           p95는 그 뒤에 같은 workload에서 비교합니다. gate를 넘지 못하면 이전 binary·config·database snapshot으로 rollback합니다.
         </p>
         <p>
-          이론 전제가 필요하면 <Link to="/blockchain/distributed-systems">분산 시스템 기초</Link>,
-          <Link to="/blockchain/smr-theory"> SMR</Link>,
-          <Link to="/blockchain/bft-theory"> BFT quorum·lock</Link>을 먼저 읽습니다. 구현을 더 깊게 볼 때는
+          이론 전제가 필요하면 <Link to="/cs/blockchain/distributed-systems">분산 시스템 기초</Link>,
+          <Link to="/cs/blockchain/smr-theory"> SMR</Link>,
+          <Link to="/cs/blockchain/bft-theory"> BFT quorum·lock</Link>을 먼저 읽습니다. 구현을 더 깊게 볼 때는
           아래 지도의 type·consensus·ABCI·execution·state 글로 내려가면 됩니다.
         </p>
       </div>

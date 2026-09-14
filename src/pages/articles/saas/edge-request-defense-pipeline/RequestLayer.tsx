@@ -60,7 +60,7 @@ export default function RequestLayer() {
 
         <p className="leading-7">
           요청 수를 세는 알고리즘 자체와 분산 환경에서의 집계 전략은{" "}
-          <Link to="/ai/rate-limiting-and-reliability-patterns">레이트 리밋과 신뢰성 패턴</Link>이 소유합니다.
+          <Link to="/cs/ai/rate-limiting-and-reliability-patterns">레이트 리밋과 신뢰성 패턴</Link>이 소유합니다.
           이 절은 그 수단이 엣지 방어의 어느 층에 놓이고 무엇과 함께 쓰이는지를 다뤘습니다.
         </p>
       </div>

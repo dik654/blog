@@ -107,7 +107,7 @@ export default function NeuralApproach() {
           Word2Vec 정본에서 이어집니다.
         </p>
         <Link
-          to="/ai/word2vec"
+          to="/cs/ai/word2vec"
           className="mt-3 inline-flex text-sm font-semibold text-primary hover:underline"
         >
           Word2Vec 정본 글로 이동 →

@@ -70,7 +70,7 @@ export default function VerifyTrace({ title, onCodeRef: _onCodeRef }: Props & { 
         <h3>실패를 cheap-first로 분류합니다</h3>
         <p>
           Length·slot·period·branch처럼 싼 검사를 먼저 수행하고 expensive BLS는 마지막에 둡니다. Malformed input을 pairing queue까지 보내지
-          않으면 DoS 비용을 제한할 수 있습니다. 기존 BLS 글의 <Link to="/blockchain/prysm-bls#sign-verify">point validation과 domain</Link>을
+          않으면 DoS 비용을 제한할 수 있습니다. 기존 BLS 글의 <Link to="/cs/blockchain/prysm-bls#sign-verify">point validation과 domain</Link>을
           그대로 재사용하며 Helios용으로 같은 정의를 다시 만들지 않습니다.
         </p>
       </div>

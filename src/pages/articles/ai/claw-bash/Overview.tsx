@@ -379,10 +379,10 @@ export default function Overview() {
         className="not-prose my-8 grid min-w-0 gap-4 sm:grid-cols-2 lg:gap-6"
       >
         {[
-          ["Tool registry", "/ai/claw-tool-system", "Schema·registry·dispatch 정본"],
-          ["Permission", "/ai/claw-permissions", "Mode·rule·approval·enforcement 정본"],
-          ["File operation", "/ai/claw-file-ops", "Direct read·edit와 workspace mutation 정본"],
-          ["Sandbox security", "/ai/agent-sandbox-security", "OS·network·credential 격리 정본"],
+          ["Tool registry", "/cs/ai/claw-tool-system", "Schema·registry·dispatch 정본"],
+          ["Permission", "/cs/ai/claw-permissions", "Mode·rule·approval·enforcement 정본"],
+          ["File operation", "/cs/ai/claw-file-ops", "Direct read·edit와 workspace mutation 정본"],
+          ["Sandbox security", "/cs/ai/agent-sandbox-security", "OS·network·credential 격리 정본"],
         ].map(([label, href, note]) => (
           <Link
             key={href}

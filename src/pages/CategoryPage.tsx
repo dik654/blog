@@ -10,6 +10,7 @@ import {
 } from "@/content/subcategory-navigation";
 import ArticleCard from "./category/ArticleCard";
 import CategoryReadingMap from "./category/CategoryReadingMap";
+import { articleHref, categoryHref } from "@/lib/routes";
 
 export default function CategoryPage() {
   const { category } = useParams<{ category: string }>();
@@ -58,7 +59,7 @@ export default function CategoryPage() {
   const visibleArticles = activeSub.children ? directArticles : allArticles;
 
   if (allArticles.length === 1) {
-    return <Navigate to={`/${cat.slug}/${allArticles[0].slug}`} replace />;
+    return <Navigate to={articleHref(cat.slug, allArticles[0].slug)} replace />;
   }
 
   return (
@@ -69,7 +70,7 @@ export default function CategoryPage() {
         animate={{ opacity: 1, y: 0 }}
       >
         <Link
-          to={`/${cat.slug}`}
+          to={categoryHref(cat.slug)}
           className="text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
           ← {cat.name}

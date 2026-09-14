@@ -4525,7 +4525,7 @@ export const ARTICLE_LEARNING: Readonly<
           "1986년 논문의 family-tree와 text-to-speech 사례 및 backpropagation 계산 설명 범위",
         notClaim:
           "현대 deep network의 scale·normalization·generalization이나 모든 architecture의 학습 안정성을 보장하는 논문은 아님",
-        internalHref: "/ai/backprop-optimization#paper-backprop",
+        internalHref: "/cs/ai/backprop-optimization#paper-backprop",
       },
       {
         title: "Approximation by Superpositions of a Sigmoidal Function",
@@ -4540,7 +4540,7 @@ export const ARTICLE_LEARNING: Readonly<
           "Single-hidden-layer feed-forward network의 representability에 대한 수학적 결과",
         notClaim:
           "필요한 hidden unit 수, data 양, optimizer의 수렴이나 일반화 성능을 보장하는 정리는 아님",
-        internalHref: "/ai/perceptron#paper-universal-approximation",
+        internalHref: "/cs/ai/perceptron#paper-universal-approximation",
       },
       {
         title:
@@ -10071,7 +10071,7 @@ export const ARTICLE_LEARNING: Readonly<
           "WMT 2014 translation과 당시 constituency parsing 실험에서 보고한 품질·training cost",
         notClaim:
           "모든 event table에서 Transformer가 GBDT·RNN보다 우월하거나 특정 cutoff·pooling 정책이 자동으로 정해진다는 결론은 아님",
-        internalHref: "/ai/transformer-architecture#paper-transformer",
+        internalHref: "/cs/ai/transformer-architecture#paper-transformer",
       },
       {
         title: "Time2Vec: Learning a Vector Representation of Time",
@@ -10086,7 +10086,7 @@ export const ARTICLE_LEARNING: Readonly<
           "Event-time·disease progression·speech recognition 등 논문 실험 범위에서 기존 time representation과 비교",
         notClaim:
           "모든 irregular event log의 실제 주기나 calendar·availability 문제를 자동으로 해결한다는 결론은 아님",
-        internalHref: "/ai/time-features#paper-time2vec",
+        internalHref: "/cs/ai/time-features#paper-time2vec",
       },
     ],
   },
@@ -23678,8 +23678,8 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     papers: [
       { title: "Motif 3: Technical Report", href: "https://arxiv.org/abs/2608.09119", problem: "Architecture·pretraining·agentic post-training을 하나의 sparse model에 통합", contribution: "GDLA·mHC·PolyNorm과 SFT·specialist RL/SFT·MOPD pipeline 공개", assumptions: "Motif 3 v1 model·data·system·evaluation 조건", evidenceScope: "보고된 구성·training recipe·benchmark", notClaim: "Architecture보다 post-training이 더 중요하다는 보편 결론", sectionId: "paper-motif3-training" },
-      { title: "On-Policy Distillation of Language Models", href: "https://arxiv.org/abs/2306.13649", problem: "Fixed training prefix와 student inference state의 mismatch", contribution: "Student rollout에서 teacher divergence를 줄이는 GKD", assumptions: "논문의 model·task·sampling·divergence 조건", evidenceScope: "Language-model distillation 실험", notClaim: "모든 agent trajectory의 long-horizon credit을 해결한다는 주장", internalHref: "/ai/on-policy-distillation#paper-gkd" },
-      { title: "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning", href: "https://arxiv.org/abs/2501.12948", problem: "Verifiable reasoning outcome에서 policy를 강화", contribution: "RL-first·multi-stage reasoning post-training과 distilled models 보고", assumptions: "DeepSeek model·data·reward·evaluation 조건", evidenceScope: "기술 보고서의 RL/SFT pipeline과 benchmark", notClaim: "Scalar reward가 모든 domain의 credit assignment를 해결한다는 주장", internalHref: "/ai/open-r1#paper-deepseek-r1" },
+      { title: "On-Policy Distillation of Language Models", href: "https://arxiv.org/abs/2306.13649", problem: "Fixed training prefix와 student inference state의 mismatch", contribution: "Student rollout에서 teacher divergence를 줄이는 GKD", assumptions: "논문의 model·task·sampling·divergence 조건", evidenceScope: "Language-model distillation 실험", notClaim: "모든 agent trajectory의 long-horizon credit을 해결한다는 주장", internalHref: "/cs/ai/on-policy-distillation#paper-gkd" },
+      { title: "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning", href: "https://arxiv.org/abs/2501.12948", problem: "Verifiable reasoning outcome에서 policy를 강화", contribution: "RL-first·multi-stage reasoning post-training과 distilled models 보고", assumptions: "DeepSeek model·data·reward·evaluation 조건", evidenceScope: "기술 보고서의 RL/SFT pipeline과 benchmark", notClaim: "Scalar reward가 모든 domain의 credit assignment를 해결한다는 주장", internalHref: "/cs/ai/open-r1#paper-deepseek-r1" },
     ],
   },
   "ai/motif-3-architecture": {
@@ -27551,7 +27551,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample:
           "`read_file`의 canonical path가 workspace 안이면 read-only decision을 요청하고, `edit_file`은 write effect와 before hash를 함께 판정합니다. `bash`는 command와 working directory로 risk를 다시 분류합니다. Deny 또는 Prompt 상태에서는 file handle이나 process를 만들지 않습니다.",
         boundary:
-          "Plugin metadata의 `read-only`나 model의 설명은 최종 권한 증명이 아닙니다. Permission mode·rule precedence·override 수명은 `/ai/claw-permissions`가 소유하고, 이 글은 구체적 effect를 그 정책에 전달하고 결과를 executor 앞에서 강제하는 부분만 소유합니다.",
+          "Plugin metadata의 `read-only`나 model의 설명은 최종 권한 증명이 아닙니다. Permission mode·rule precedence·override 수명은 `/cs/ai/claw-permissions`가 소유하고, 이 글은 구체적 effect를 그 정책에 전달하고 결과를 executor 앞에서 강제하는 부분만 소유합니다.",
       },
       {
         id: "claw-tool-result-receipt-envelope",
@@ -27962,7 +27962,7 @@ export const ARTICLE_LEARNING: Readonly<
         contribution:
           "Pinned `PermissionEnforcer`와 `EnforcementResult` source가 policy decision·denial reason·rule matching의 project artifact를 제공하며 tools source의 argument-specific classification과 연결됨",
         assumptions:
-          "같은 commit의 config·policy·tools dispatch·path scope tests를 함께 읽고 permission mode의 제품 semantics는 `/ai/claw-permissions` 정본에서 검증한다는 전제",
+          "같은 commit의 config·policy·tools dispatch·path scope tests를 함께 읽고 permission mode의 제품 semantics는 `/cs/ai/claw-permissions` 정본에서 검증한다는 전제",
         evidenceScope:
           "Claw snapshot의 permission enforcer API와 dispatch가 소비하는 allowed/denied result 형태",
         notClaim:
@@ -28552,7 +28552,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample:
           "Pinned source의 수동 `/compact`는 compactable message가 recent 보존 개수보다 많고 근사 token이 설정값 이상일 때 실행됩니다. Runtime auto path는 누적 input token threshold를 넘으면 recent 4개를 남기고, CLI recovery는 context 계열 오류 문자열 뒤 4→2→1→0 schedule로 최대 네 번 다시 시도합니다.",
         boundary:
-          "Default 10,000·100,000 token, 70% headroom과 오류 문자열은 이 commit의 구현값이지 안전한 보편 공식이 아닙니다. System/tool schema·예상 output과 provider의 실제 tokenizer를 포함한 일반 budget 설계는 `/ai/context-engineering` 정본을 따릅니다.",
+          "Default 10,000·100,000 token, 70% headroom과 오류 문자열은 이 commit의 구현값이지 안전한 보편 공식이 아닙니다. System/tool schema·예상 output과 provider의 실제 tokenizer를 포함한 일반 budget 설계는 `/cs/ai/context-engineering` 정본을 따릅니다.",
       },
       {
         id: "claw-compaction-tail-tool-pair-boundary",
@@ -28602,7 +28602,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample:
           "Agent가 `auth.ts`를 수정한 뒤 session history를 compact하면 message 배열과 compaction metadata는 바뀌지만 file diff는 workspace에 남습니다. 사용자가 Bash를 거부한 사실도 summary에서 빠졌다고 허용으로 바뀌지 않으며, 반대로 summary에 ‘승인됨’이라고 적혀도 새 실행 권한이 생기지 않습니다.",
         boundary:
-          "Compaction rollback과 effect rollback은 다른 기능입니다. Crash 뒤 edit 완료 여부·중복 실행은 stable operation identity와 effect receipt로 reconciliation해야 하며 이 글은 `/ai/claw-session`과 `/ai/claw-tool-system`의 소유 범위를 재정의하지 않습니다.",
+          "Compaction rollback과 effect rollback은 다른 기능입니다. Crash 뒤 edit 완료 여부·중복 실행은 stable operation identity와 effect receipt로 reconciliation해야 하며 이 글은 `/cs/ai/claw-session`과 `/cs/ai/claw-tool-system`의 소유 범위를 재정의하지 않습니다.",
       },
       {
         id: "claw-compaction-login-state-contract",
@@ -36456,7 +36456,7 @@ export const ARTICLE_LEARNING: Readonly<
           "Classification output distribution의 soft-target distillation 원리와 저자 실험",
         notClaim:
           "Retrieval candidate-local KL·두 teacher scalar 결합·EUREKA 내부 ablation의 구체적 결과를 원 논문이 직접 검증한다는 뜻은 아님",
-        internalHref: "/ai/knowledge-distillation#paper-hinton-kd",
+        internalHref: "/cs/ai/knowledge-distillation#paper-hinton-kd",
       },
     ],
   },
@@ -36863,7 +36863,7 @@ export const ARTICLE_LEARNING: Readonly<
           "최대 13B 실험에서 code·generative task의 학습 효과와 저자 구현의 self-speculative inference speedup",
         notClaim:
           "GLM-5.2의 구체적 MTP architecture·B300에서 600 tok/s·모든 natural-language benchmark 향상을 이 논문이 증명한다는 뜻은 아님",
-        internalHref: "/ai/vllm-spec-decode#paper-mtp",
+        internalHref: "/cs/ai/vllm-spec-decode#paper-mtp",
       },
     ],
   },

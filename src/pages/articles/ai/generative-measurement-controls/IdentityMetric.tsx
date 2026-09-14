@@ -120,8 +120,8 @@ export default function IdentityMetric() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           오탐과 미탐을 비용으로 환산해 임계값을 고르는 일반론은{" "}
-          <Link to="/ai/cost-sensitive-thresholding#expected-cost">비용 민감 임계</Link>가, 오탐률과 재현율의
-          정의는 <Link to="/ai/imbalanced-classification-evaluation#confusion-matrix">불균형 분류 평가</Link>가
+          <Link to="/cs/ai/cost-sensitive-thresholding#expected-cost">비용 민감 임계</Link>가, 오탐률과 재현율의
+          정의는 <Link to="/cs/ai/imbalanced-classification-evaluation#confusion-matrix">불균형 분류 평가</Link>가
           소유합니다. 이 절은 그 틀을 얼굴 임베딩에 적용하면서 드러난 것만 다뤘습니다.
         </p>
       </div>

@@ -235,7 +235,7 @@ export default function SequenceDistillationArticle() {
           묶습니다. Student가 자기 실수 prefix에서 배워야 한다면 다음 단계는{" "}
           <a
             className="text-primary hover:underline"
-            href="/ai/on-policy-distillation"
+            href="/cs/ai/on-policy-distillation"
           >
             on-policy distillation
           </a>

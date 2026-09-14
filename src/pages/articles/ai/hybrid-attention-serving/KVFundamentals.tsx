@@ -215,7 +215,7 @@ K,V &\in \mathbb{R}^{T \times H_{KV} \times D_{head}}
         <p>
           Decode가 이런 비용에 민감한 이유는 그 자체가 memory bandwidth로
           정해지는{" "}
-          <Link to="/ai/prefill-decode-phase-dynamics#arithmetic-intensity">
+          <Link to="/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity">
             memory-bound 구간
           </Link>
           이기 때문입니다. KV 폭을 줄이려는 시도는 모두 이 성질을 배경으로
@@ -347,7 +347,7 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
         <p>
           Qwen의 나머지 48개 DeltaNet layer는 별도의 fixed recurrent state를
           사용하며, 이 계산은{" "}
-          <a href="/ai/qwen36-hybrid-architecture#state-bytes">
+          <a href="/cs/ai/qwen36-hybrid-architecture#state-bytes">
             Qwen3.6 hybrid architecture 글
           </a>
           에서 분리합니다.
@@ -461,7 +461,7 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
         <p>
           KV head를 줄이는 GQA는 두 절감이 같은 방향으로 움직입니다. 저장
           byte가 줄면 읽는 byte도 그만큼 줄고, 추가 연산이 없어 decode는{" "}
-          <Link to="/ai/prefill-decode-phase-dynamics#arithmetic-intensity">
+          <Link to="/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity">
             메모리 대역폭이 정하는 시간
           </Link>{" "}
           그대로 짧아집니다.
@@ -476,7 +476,7 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
         </p>
         <p>
           MLA의 latent 압축 자체는{" "}
-          <Link to="/ai/motif-3-architecture#gdla">Motif 3의 GDLA 글</Link>이
+          <Link to="/cs/ai/motif-3-architecture#gdla">Motif 3의 GDLA 글</Link>이
           다루는 low-rank KV 압축을 그대로 씁니다. 이 글은 그 압축이 GQA와
           다른 자리에서 capacity와 bandwidth를 나눈다는 것만 짚습니다.
         </p>

@@ -163,7 +163,7 @@ g_{\rm clip}&=\underbrace{g}_{\text{원래 방향}}\cdot\underbrace{s}_{\text{�
           <p className="text-sm font-bold text-foreground">다음 개념: gate가 시간 방향 gradient path를 바꾸는 방법</p>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">forget·input·output gate를 계산 graph와 derivative로 연결합니다.</p>
         </div>
-        <Link to="/ai/lstm" className="shrink-0 text-sm font-bold text-primary hover:underline">LSTM으로 이어서 보기 →</Link>
+        <Link to="/cs/ai/lstm" className="shrink-0 text-sm font-bold text-primary hover:underline">LSTM으로 이어서 보기 →</Link>
       </div>
     </section>
   );

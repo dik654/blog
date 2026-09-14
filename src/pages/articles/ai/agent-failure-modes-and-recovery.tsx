@@ -35,9 +35,9 @@ export default function AgentFailureModesAndRecoveryArticle() {
           </p>
           <p>
             Agent 실행 자체의 state·action·observation 반복은{" "}
-            <Link to="/ai/agent-loop-foundations#overview">agent loop 기초</Link> 글이,
+            <Link to="/cs/ai/agent-loop-foundations#overview">agent loop 기초</Link> 글이,
             deterministic checkpoint 로 언제 사람 승인을 끼워 넣을지의 경계는{" "}
-            <Link to="/ai/agent-control-boundaries#workflow-agent">agent control boundary</Link>{" "}
+            <Link to="/cs/ai/agent-control-boundaries#workflow-agent">agent control boundary</Link>{" "}
             글이 이미 다룹니다. 이 글은 그 실행 도중에 무엇이 실패로 세어지고, 실패마다 어떤 복구
             절차를 고르는지를 채웁니다.
           </p>
@@ -357,7 +357,7 @@ export default function AgentFailureModesAndRecoveryArticle() {
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           실패 원인을 layer(objective·context·schema·capability·verifier)별로 나눠 재현하고
           장치를 하나씩 바꿔 기여도를 재는 방법은{" "}
-          <Link to="/ai/harness-failure-ablation#failure-layer">harness failure ablation</Link>{" "}
+          <Link to="/cs/ai/harness-failure-ablation#failure-layer">harness failure ablation</Link>{" "}
           글이 다룹니다. 이 글의 taxonomy 는 실행 중 실시간으로 무엇을 감지하고 어떻게 복구할지를
           다루고, 그 글은 배포 뒤 재현된 실패를 사후에 분류하고 개선하는 절차를 다룹니다.
         </p>

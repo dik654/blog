@@ -259,7 +259,7 @@ export default function GrammarConstrainedGenerationArticle() {
             recursion을 PDA stack이 어떻게 따라가는지 괄호 하나씩 확인합니다.
           </p>
           <p>
-            <a href="/ai/cfg-pushdown-automata">
+            <a href="/cs/ai/cfg-pushdown-automata">
               CFG와 pushdown automata로 이동 →
             </a>
           </p>

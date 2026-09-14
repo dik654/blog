@@ -328,7 +328,7 @@ export default function MixtureOfExpertsArticle() {
           </p>
           <p className="leading-8">
             여기서 말하는 expert는 router가 골라야만 계산되는 <strong>routed expert</strong>입니다. 일부 MoE는 이와 별도로 router 선택과 무관하게 모든 token이 항상 통과하는 <strong>shared expert</strong>를 둡니다. Shared expert의 출력은 top-k 합이 아니라 그대로 더해지며, routed expert를 더 잘게 나누고 shared expert를 분리하는 설계는{" "}
-            <Link to="/ai/mixture-of-experts#evolution">뒤의 진화 절</Link>에서 다룹니다.
+            <Link to="/cs/ai/mixture-of-experts#evolution">뒤의 진화 절</Link>에서 다룹니다.
           </p>
         </div>
 
@@ -511,7 +511,7 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
           <p className="leading-8">
             Load balancing loss의 정확한 f_i·P_i 식, bias만으로 균형을 잡는 auxiliary-loss-free
             갱신 규칙, 두 장치가 늦었을 때 생기는 expert collapse의 되먹임과 sparsity ratio는{" "}
-            <Link to="/ai/moe-routing-and-load-balancing#loss">MoE routing 글</Link>이 이어서
+            <Link to="/cs/ai/moe-routing-and-load-balancing#loss">MoE routing 글</Link>이 이어서
             계산합니다.
           </p>
         </div>
@@ -613,7 +613,7 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
           </p>
           <p className="leading-8">
             실제로 몇 byte가 어느 GPU link를 건너는지는{" "}
-            <Link to="/ai/expert-parallelism-moe-systems#all-to-all">expert parallelism 글</Link>이
+            <Link to="/cs/ai/expert-parallelism-moe-systems#all-to-all">expert parallelism 글</Link>이
             계산합니다.
           </p>
         </div>
@@ -657,7 +657,7 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3>Kimi K3의 LatentMoE는 이 정본 위에서 읽는다</h3>
           <p className="leading-8">
-            Kimi K3는 routed/shared expert 구분에 더해 expert가 받는 표현을 작은 latent dimension으로 내렸다가 다시 올리는 LatentMoE를 사용합니다. 이는 MoE의 기본 정의가 아니라 K3가 width 방향의 비용을 다시 배분한 확장입니다. KDA·Attention Residuals와 함께 어떤 계산을 줄이고 무엇을 추가했는지는 <Link to="/ai/kimi-k3-architecture#stable-latent-moe">Kimi K3 아키텍처 글</Link>에서 이어서 다룹니다.
+            Kimi K3는 routed/shared expert 구분에 더해 expert가 받는 표현을 작은 latent dimension으로 내렸다가 다시 올리는 LatentMoE를 사용합니다. 이는 MoE의 기본 정의가 아니라 K3가 width 방향의 비용을 다시 배분한 확장입니다. KDA·Attention Residuals와 함께 어떤 계산을 줄이고 무엇을 추가했는지는 <Link to="/cs/ai/kimi-k3-architecture#stable-latent-moe">Kimi K3 아키텍처 글</Link>에서 이어서 다룹니다.
           </p>
           <h3>모델을 비교할 때 남겨야 할 최소 ledger</h3>
           <p className="leading-8">

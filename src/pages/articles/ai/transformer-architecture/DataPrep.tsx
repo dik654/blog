@@ -15,7 +15,7 @@ export default function DataPrep() {
           tokenizer가 만든 정수 ID입니다. Embedding layer는 각 ID에 대응하는
           row를 조회해 dense vector로 바꿉니다. 문자열 normalization·subword
           분할·special token ID는
-          <Link to="/ai/tokenizer"> Tokenizer 정본 글</Link>이 소유하며, 이 글은
+          <Link to="/cs/ai/tokenizer"> Tokenizer 정본 글</Link>이 소유하며, 이 글은
           그 결과가 model tensor가 되는 경계부터 다룹니다.
         </p>
       </div>

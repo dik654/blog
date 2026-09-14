@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { categories } from "@/content";
+import { articleHref } from "@/lib/routes";
 
 export default function ArticleList() {
   const allArticles = categories.flatMap((cat) =>
@@ -31,7 +32,7 @@ export default function ArticleList() {
             viewport={{ once: true }}
           >
             <Link
-              to={`/${article.categorySlug}/${article.slug}`}
+              to={articleHref(article.categorySlug, article.slug)}
               className="flex items-center gap-3 rounded-md px-3 py-2.5 transition-colors hover:bg-accent/50 group"
             >
               <span className="shrink-0 rounded bg-accent px-2 py-0.5 text-xs font-medium text-muted-foreground">

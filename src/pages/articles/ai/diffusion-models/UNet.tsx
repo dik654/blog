@@ -82,7 +82,7 @@ export default function UNet() {
           그러나 모든 diffusion model이 U-Net이나 cross-attention을 쓰는 것은
           아니며, DiT 계열은 patch token을 처리하는 Transformer backbone을
           사용합니다. Attention 계산 자체는{" "}
-          <Link to="/ai/attention-theory">Attention 이론 글</Link>에서 이어서 볼
+          <Link to="/cs/ai/attention-theory">Attention 이론 글</Link>에서 이어서 볼
           수 있습니다.
         </p>
       </div>

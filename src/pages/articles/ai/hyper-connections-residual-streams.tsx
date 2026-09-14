@@ -25,7 +25,7 @@ export default function HyperConnectionsResidualStreamsArticle() {
             병렬 residual stream 으로 늘려 각 층이 n개 stream 중 필요한 부분만 읽고 결과를 다시 나눠 쓰게 합니다.
           </p>
           <p>
-            <Link to="/ai/transformer-architecture#transformer-block">Pre-LN</Link> 은 층 안에서
+            <Link to="/cs/ai/transformer-architecture#transformer-block">Pre-LN</Link> 은 층 안에서
             normalization 을 어디에 두느냐로 이 신호 전달을 다듬은 결과입니다. Xiong 등은 Post-LN
             에서 마지막 층 근처 gradient 크기가 O(d√ln d)로 깊이와 무관하게 크게 남는 반면, Pre-LN
             은 O(d√(ln d/L))로 깊을수록 오히려 작아진다는 것을 증명했습니다.
@@ -218,7 +218,7 @@ export default function HyperConnectionsResidualStreamsArticle() {
           <p className="text-lg leading-8">
             Deep network signal propagation 은 forward 의 activation 크기와 backward 의
             gradient 크기가 층을 지나며 어떻게 변하는지를 함께 가리키는 말입니다. He 등은
-            <Link to="/ai/resnet#skip-connection">shortcut 을 순수 identity 로 유지</Link>할 때만
+            <Link to="/cs/ai/resnet#skip-connection">shortcut 을 순수 identity 로 유지</Link>할 때만
             1001-layer 규모에서도 신호가 깨끗이 전달된다는 것을 보였고, hyper-connection 의
             activation explosion 문제는 이 원칙이 여러 stream 으로 확장되며 다시 나타난 것입니다.
           </p>
@@ -244,10 +244,10 @@ export default function HyperConnectionsResidualStreamsArticle() {
             가 아니라 dynamic HC(DHC)를 쓰면 이 위에 입력 의존 행렬을 계산하는 비용이 더 붙습니다.
           </p>
           <p>
-            <Link to="/ai/motif-3-architecture#mhc">Motif 3 의 modified mHC</Link>는 이 mechanism
+            <Link to="/cs/ai/motif-3-architecture#mhc">Motif 3 의 modified mHC</Link>는 이 mechanism
             위에 post multiplier 를 학습 중 2 에서 1 로 낮추는 annealing 을 더한 것으로, 원 mHC
             가 제안한 것은 doubly-stochastic 제약까지입니다. Attention 내부의 signal·noise 분리를
-            다룬 <Link to="/ai/differential-attention">differential attention</Link>과 이 residual
+            다룬 <Link to="/cs/ai/differential-attention">differential attention</Link>과 이 residual
             stream 확장은 서로 다른 층위의 문제이며, GDLA·modified mHC 는 그 둘을 각각 가져와
             한 model 안에서 조합한 결과입니다.
           </p>

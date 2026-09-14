@@ -16,7 +16,7 @@ export default function VerifyFlow() {
 
         <h3 className="text-xl font-semibold mt-8 mb-4">
           <Link
-            to="/crypto/groth16"
+            to="/cs/crypto/groth16"
             className="text-indigo-400 hover:underline"
           >
             Groth16
@@ -77,7 +77,7 @@ export default function VerifyFlow() {
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-4">
-          <Link to="/crypto/plonk" className="text-indigo-400 hover:underline">
+          <Link to="/cs/crypto/plonk" className="text-indigo-400 hover:underline">
             PLONK
           </Link>{" "}
           검증
@@ -92,7 +92,7 @@ export default function VerifyFlow() {
 
         <h3 className="text-xl font-semibold mt-8 mb-4">
           <Link
-            to="/crypto/stark-theory"
+            to="/cs/crypto/stark-theory"
             className="text-indigo-400 hover:underline"
           >
             STARK

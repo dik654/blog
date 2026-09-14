@@ -30,10 +30,10 @@ export default function RagContextAssemblyAndEvaluationArticle() {
           </p>
           <p>
             Candidate를 만드는 sparse·dense·fusion·reranking 자체는{" "}
-            <Link to="/ai/retrieval-ranking-funnel#retrieval">retrieval ranking funnel</Link> 글이
+            <Link to="/cs/ai/retrieval-ranking-funnel#retrieval">retrieval ranking funnel</Link> 글이
             정본입니다. Source ingestion부터 citation policy·context token budget까지 전체
             lifecycle과 이를 stage별로 추적하는 layered evaluation은{" "}
-            <Link to="/ai/rag-pipeline#evaluation">RAG 파이프라인</Link> 글이 이미 다룹니다.
+            <Link to="/cs/ai/rag-pipeline#evaluation">RAG 파이프라인</Link> 글이 이미 다룹니다.
           </p>
           <p>
             이 글은 그 layered evaluation이 참조하는 지표 자체의 정의와, context를 조립하는 두
@@ -61,7 +61,7 @@ export default function RagContextAssemblyAndEvaluationArticle() {
           </p>
           <p>
             예산을 넘긴 나머지를 요약·추출로 줄이는 선택지도 있지만, 그 압축 자체는{" "}
-            <Link to="/ai/context-window-optimization#compression">
+            <Link to="/cs/ai/context-window-optimization#compression">
               context window optimization의 compression
             </Link>
             이 이미 다룹니다. 이 글은 압축 전에 무엇을 남길지 정하는 selection 단계만 다룹니다.
@@ -76,7 +76,7 @@ export default function RagContextAssemblyAndEvaluationArticle() {
           </p>
           <p>
             Ordering은{" "}
-            <Link to="/ai/context-window-optimization#position">lost-in-the-middle</Link> 위치
+            <Link to="/cs/ai/context-window-optimization#position">lost-in-the-middle</Link> 위치
             편향을 고려한 배치입니다. GPT-3.5-Turbo의 20-document 실험에서 정답이 1번째면 정확도
             75.8%, 10번째(가운데)면 53.8%로 떨어졌으므로, 가장 중요한 evidence를 맨 앞이나 맨
             끝에 두고 나머지를 채웁니다.
@@ -119,7 +119,7 @@ export default function RagContextAssemblyAndEvaluationArticle() {
           </p>
           <p>
             여기서 말하는 groundedness는{" "}
-            <Link to="/ai/prompt-reasoning#chain-of-thought">
+            <Link to="/cs/ai/prompt-reasoning#chain-of-thought">
               chain-of-thought faithfulness
             </Link>
             (reasoning 과정이 실제 계산을 반영하는지)와 다른 개념입니다. Groundedness는 최종
@@ -283,14 +283,14 @@ export default function RagContextAssemblyAndEvaluationArticle() {
           <p>
             Context relevance라는 이름의 지표도 있지만, 이 글에서는 noise·dilution 관점에서 이미
             다룬{" "}
-            <Link to="/ai/context-window-optimization#relevance">
+            <Link to="/cs/ai/context-window-optimization#relevance">
               context relevance degradation
             </Link>
             과 같은 대상을 가리키므로 그 글을 정본으로 둡니다.
           </p>
           <p>
             Citation accuracy(생성된 인용이 실제로 그 문장을 지지하는 비율)도{" "}
-            <Link to="/ai/rag-pipeline#evaluation">
+            <Link to="/cs/ai/rag-pipeline#evaluation">
               RAG 파이프라인의 citation support metric
             </Link>
             이 이미 정의합니다. 그 글의 예시로는 citation 5개 중 valid 4개면 precision 0.8입니다.
@@ -314,7 +314,7 @@ export default function RagContextAssemblyAndEvaluationArticle() {
           </p>
           <p>
             이 세 층을 순서대로 지나가는 진단 자체는{" "}
-            <Link to="/ai/rag-pipeline#overview">RAG 파이프라인의 stage-success trace</Link>가
+            <Link to="/cs/ai/rag-pipeline#overview">RAG 파이프라인의 stage-success trace</Link>가
             이미 정의합니다. 그 trace가 source=1, retrieve=1, context=0, support=0처럼 indicator
             0/1을 남기면, 이 taxonomy가 첫 실패 indicator를 세 failure 이름 중 하나로 번역합니다.
             실패를 특정 stage 담당자에게 배정하는 error attribution도 같은 trace의
@@ -374,7 +374,7 @@ export default function RagContextAssemblyAndEvaluationArticle() {
           </p>
           <p>
             더 좁은 범위에서 첫 단계 candidate 자체의 상한은{" "}
-            <Link to="/ai/retrieval-ranking-funnel#retrieval">
+            <Link to="/cs/ai/retrieval-ranking-funnel#retrieval">
               candidate-recall ceiling
             </Link>
             이 이미 다룹니다. Retriever upper bound는 funnel 전체가 만든 최종 answer 품질 기준의
@@ -393,7 +393,7 @@ export default function RagContextAssemblyAndEvaluationArticle() {
             같은 groundedness=0.8이라도 놓친 20%가 사소한 부연 설명인지, 존재하지 않는 통계 수치를 지어낸 것인지는 다른 문제입니다.
           </p>
           <p>
-            판정은 대개 <Link to="/ai/llm-as-a-judge#problem">LLM-as-a-judge</Link>로 하되,
+            판정은 대개 <Link to="/cs/ai/llm-as-a-judge#problem">LLM-as-a-judge</Link>로 하되,
             context와 외부 world knowledge 어디에서도 확인되지 않는 주장만 hallucination으로
             표시하고, context엔 없지만 널리 알려진 사실은 별도로 분류해 과도한 오탐을 줄입니다.
           </p>
@@ -430,14 +430,14 @@ export default function RagContextAssemblyAndEvaluationArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             이 파이프라인이 매 request마다 남기는 stage별 점수와 담당자 배정 자체는{" "}
-            <Link to="/ai/rag-pipeline#evaluation">RAG 파이프라인의 layered evaluation</Link>이
+            <Link to="/cs/ai/rag-pipeline#evaluation">RAG 파이프라인의 layered evaluation</Link>이
             정본입니다.
           </p>
           <p>
             사실을 entity·relation graph로 미리 구조화하는{" "}
-            <Link to="/ai/knowledge-graph-construction#problem">knowledge graph</Link> 자체는
+            <Link to="/cs/ai/knowledge-graph-construction#problem">knowledge graph</Link> 자체는
             별도 글이 정본이고, 그 그래프를 query 시점 검색에 쓰는 GraphRAG provenance 경계는{" "}
-            <Link to="/ai/retrieval-ranking-funnel#retrieval">
+            <Link to="/cs/ai/retrieval-ranking-funnel#retrieval">
               retrieval ranking funnel의 graph-structured retrieval boundary
             </Link>
             에서 다룹니다.

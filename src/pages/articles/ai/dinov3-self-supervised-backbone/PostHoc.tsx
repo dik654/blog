@@ -69,7 +69,7 @@ export default function PostHoc() {
         <p className="leading-7">
           증류 모델이 7B와 같은 표현을 준다는 뜻은 아닙니다. 학생은 teacher의 출력을 따라가도록 학습된 별도
           모델이고, 어느 과제에서 얼마나 따라잡는지는 과제마다 다릅니다. 크기와 품질의 교환은{" "}
-          <Link to="/ai/image-backbone-scaling#budget-comparison">백본 예산 비교</Link>의 기준으로 각자 재야 합니다.
+          <Link to="/cs/ai/image-backbone-scaling#budget-comparison">백본 예산 비교</Link>의 기준으로 각자 재야 합니다.
         </p>
       </div>
 
@@ -86,7 +86,7 @@ export default function PostHoc() {
           <p className="leading-7">
             결과적으로 텍스트 정렬 성능은 백본 자체의 성질이 아니라 그 사후 단계에 쓴 데이터와 목표에 달려 있습니다.
             같은 backbone이라도 정렬 단계가 다르면 검색 성능이 달라집니다. 공통 embedding 공간이 검색을 어떻게
-            정하는지는 <Link to="/ai/multimodal-retrieval-and-visual-grounding">멀티모달 검색</Link> 쪽 주제입니다.
+            정하는지는 <Link to="/cs/ai/multimodal-retrieval-and-visual-grounding">멀티모달 검색</Link> 쪽 주제입니다.
           </p>
         </ProgressiveDetail>
       </div>

@@ -71,7 +71,7 @@ export default function AnycastRouting() {
         <p className="leading-7">
           같은 애니캐스트 성질이 공격 방어에서는 다르게 쓰입니다. 트래픽이 한 지점에 몰리지 않게 만드는 용도로
           쓰이는 쪽은{" "}
-          <Link to="/saas/edge-request-defense-pipeline#packet-layer">엣지 요청 방어</Link>가 다룹니다.
+          <Link to="/cs/saas/edge-request-defense-pipeline#packet-layer">엣지 요청 방어</Link>가 다룹니다.
         </p>
       </div>
     </section>

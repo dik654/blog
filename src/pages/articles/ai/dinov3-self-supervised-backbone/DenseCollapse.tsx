@@ -52,7 +52,7 @@ export default function DenseCollapse() {
             보고된 붕괴는 DINOv3 기술 보고서의 자기보고 관찰이며 학습 규모와 일정이 명시된 조건에서의 결과입니다.
             모든 자기지도 학습이 같은 시점에 같은 방식으로 무너진다는 일반 법칙으로 읽으면 안 됩니다. 표현이 한
             점으로 모이는 다른 종류의 붕괴는{" "}
-            <Link to="/ai/contrastive-learning#pair-contract">대조학습</Link>에서 다루는 문제와 구분해야 합니다.
+            <Link to="/cs/ai/contrastive-learning#pair-contract">대조학습</Link>에서 다루는 문제와 구분해야 합니다.
           </p>
         </ProgressiveDetail>
       </div>

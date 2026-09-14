@@ -103,7 +103,7 @@ export default function RewardSystem({
           infrastructure 상태 때문에 reward distribution이 바뀔 수 있습니다.
           Verifier latency와 failure reason을 함께 기록해야 하는 이유입니다. 격리
           원리는{" "}
-          <a href="/ai/agent-sandbox-security">에이전트 sandbox 보안</a>에서
+          <a href="/cs/ai/agent-sandbox-security">에이전트 sandbox 보안</a>에서
           이어집니다.
         </p>
 

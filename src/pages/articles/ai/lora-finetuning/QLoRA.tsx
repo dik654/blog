@@ -23,7 +23,7 @@ export default function QLoRA() {
         </p>
         <p>
           NF4·block quantization·double quantization의 일반 원리는
-          <a href="/ai/quantization"> 양자화 정본</a>에서 이어집니다. QLoRA의
+          <a href="/cs/ai/quantization"> 양자화 정본</a>에서 이어집니다. QLoRA의
           quantized base는 frozen이므로 일반 QAT처럼 quantizer error를 gradient로
           직접 수정하지 않습니다. Adapter가 task loss 아래에서 그 오차의 일부를
           보완할 수 있을 뿐입니다.

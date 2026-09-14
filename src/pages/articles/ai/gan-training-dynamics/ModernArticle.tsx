@@ -187,7 +187,7 @@ export default function GanTrainingDynamicsArticle() {
           Critic signal 자체를 다른 거리로 바꾸는 접근은{" "}
           <a
             className="font-semibold text-primary underline"
-            href="/ai/gan-wasserstein-critics"
+            href="/cs/ai/gan-wasserstein-critics"
           >
             Wasserstein critic
           </a>

@@ -10,7 +10,7 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
       <h2 className="mb-6 text-2xl font-bold">Beacon API는 URL 목록이 아니라 transport와 consensus effect 사이의 계약이다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">Validator가 proposer duty를 받아 unsigned block을 요청하고 서명해 제출하는 동안, 같은 beacon node는 dashboard의 head 조회와 SSE event도 처리합니다. 이 호출들은 모두 HTTP 또는 gRPC를 통과하지만 권한·deadline·consistency·side effect가 같지 않습니다. 이 글은 한 duty를 <strong>wire decode → snapshot 해석 → service 실행 → local sign → publish → reconciliation</strong> 순서로 추적합니다.</p>
-        <p><Link to="/blockchain/prysm-validator-client">Validator client 글</Link>이 key와 slashing protection을, <Link to="/blockchain/prysm-block-proposal">block proposal 글</Link>이 block assembly를 소유합니다. 여기서는 REST/gRPC adapter, JSON/SSZ schema, state identifier, endpoint exposure와 timeout·stream gap 복구만 소유합니다.</p>
+        <p><Link to="/cs/blockchain/prysm-validator-client">Validator client 글</Link>이 key와 slashing protection을, <Link to="/cs/blockchain/prysm-block-proposal">block proposal 글</Link>이 block assembly를 소유합니다. 여기서는 REST/gRPC adapter, JSON/SSZ schema, state identifier, endpoint exposure와 timeout·stream gap 복구만 소유합니다.</p>
       </div>
       <ContentBoundary article="prysm-beacon-api" />
       <PrysmDataApiViz mode="beacon-api" />

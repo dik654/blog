@@ -111,9 +111,9 @@ export default function MathFunctionsCompositionArticle() {
         </div>
         <p>
           다음 글에서는 함수가 입력의 작은 변화에 얼마나 민감한지
-          <a className="ml-1 font-semibold text-primary underline" href="/ai/math-functions-derivatives-gradients">derivative</a>로
+          <a className="ml-1 font-semibold text-primary underline" href="/cs/ai/math-functions-derivatives-gradients">derivative</a>로
           측정하고, 이어서 여러 입력 좌표의 민감도를
-          <a className="ml-1 font-semibold text-primary underline" href="/ai/math-gradients-jacobians">gradient와 Jacobian</a>으로 묶습니다.
+          <a className="ml-1 font-semibold text-primary underline" href="/cs/ai/math-gradients-jacobians">gradient와 Jacobian</a>으로 묶습니다.
         </p>
         <div id="paper-function-composition"><CitationBlock source="OpenStax Precalculus 2e · Composition of Functions" citeKey={1} href={OPENSTAX}><Evidence problem="여러 함수의 input·output을 연결해 새 함수를 계산하는 문제" contribution="Composition 표기, 평가 순서와 domain 제약을 worked example로 설명" assumptions="교재가 선언한 real-valued function과 domain 조건" scope="Precalculus 수준의 function composition" notClaim="Neural network의 학습 가능성이나 모든 tensor shape를 보장하지 않음" /></CitationBlock></div>
         <div id="paper-network-composition"><CitationBlock source="Deep Learning Book · Deep Feedforward Networks" citeKey={2} href={DEEP_LEARNING_BOOK}><Evidence problem="여러 parameterized function을 연결해 prediction을 만드는 구조를 설명" contribution="Feedforward network를 함수 합성과 computational graph 관점으로 정리" assumptions="교재가 둔 model·objective·differentiability 조건" scope="Feedforward network의 구조적 설명" notClaim="깊은 모든 model의 optimization·generalization 우월성을 보장하지 않음" /></CitationBlock></div>

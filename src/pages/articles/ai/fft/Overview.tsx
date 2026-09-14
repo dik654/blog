@@ -21,7 +21,7 @@ export default function Overview() {
           O(N log N)까지 줄인다.
         </p>
         <p>
-          아래 식의 <code>i</code>, <code>e^{'{iθ}'}</code>, <code>2π</code>가 아직 낯설다면 먼저 <Link to="/ai/math-complex-numbers-oscillations">복소수·회전·Euler 공식 글</Link>을 읽으면 됩니다. 그 글에서 radian과 단위원부터 roots of unity까지 만든 뒤 이 글로 돌아오도록 연결해 두었습니다.
+          아래 식의 <code>i</code>, <code>e^{'{iθ}'}</code>, <code>2π</code>가 아직 낯설다면 먼저 <Link to="/cs/ai/math-complex-numbers-oscillations">복소수·회전·Euler 공식 글</Link>을 읽으면 됩니다. 그 글에서 radian과 단위원부터 roots of unity까지 만든 뒤 이 글로 돌아오도록 연결해 두었습니다.
         </p>
       </div>
 

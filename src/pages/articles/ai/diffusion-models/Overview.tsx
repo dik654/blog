@@ -26,10 +26,10 @@ export default function Overview() {
         </p>
         <p>
           VAE·GAN과 비교한 전체 좌표는{" "}
-          <Link to="/ai/generative-theory">생성 모델 지도</Link>가 소유합니다.
+          <Link to="/cs/ai/generative-theory">생성 모델 지도</Link>가 소유합니다.
           이 글에서는 먼저 DDPM의 discrete noising을 숫자로 계산하고, noise
           prediction이 score가 되는 이유를 확인합니다. 그다음에{" "}
-          <Link to="/ai/math-differential-equations-numerical-solvers">
+          <Link to="/cs/ai/math-differential-equations-numerical-solvers">
             ODE·SDE와 numerical solver 기초
           </Link>
           를 재사용해 reverse SDE·probability-flow ODE·flow matching으로

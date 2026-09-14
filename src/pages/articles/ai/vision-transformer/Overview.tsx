@@ -21,9 +21,9 @@ export default function Overview() {
           pretrained representation도 의미 있게 이어집니다.
         </p>
         <p>
-          Image tensor와 convolution은 <Link to="/ai/cnn">CNN 정본</Link>, Q·K·V와
-          self-attention은 <Link to="/ai/attention-theory">attention 정본</Link>,
-          encoder block은 <Link to="/ai/transformer-architecture">Transformer 정본</Link>을
+          Image tensor와 convolution은 <Link to="/cs/ai/cnn">CNN 정본</Link>, Q·K·V와
+          self-attention은 <Link to="/cs/ai/attention-theory">attention 정본</Link>,
+          encoder block은 <Link to="/cs/ai/transformer-architecture">Transformer 정본</Link>을
           재사용합니다. 이 글은 그 계산을 반복하지 않고 image→patch token 변환과
           DeiT·Swin·MAE가 바꾼 병목, checkpoint 호환성에 집중합니다.
         </p>

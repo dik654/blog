@@ -18,7 +18,7 @@ export default function ModernArticle() {
             먼저 <strong>pairwise preference</strong>부터 고정합니다. 같은 prompt에 답 A와 답 B를 보여 주고, evaluator가 더 낫다고 고른 답을 <strong>chosen</strong>, 다른 답을 <strong>rejected</strong>라고 부릅니다. 이 label은 chosen이 절대적으로 옳다는 증명보다 “이 비교에서는 A를 더 선호했다”는 관측입니다.
           </p>
           <p className="leading-8">
-            DPO는 이 pair를 별도 scalar reward model에 먼저 압축하지 않습니다. Trainable policy가 chosen과 rejected에 주는 확률을 고정된 <strong>reference policy</strong>와 각각 비교하고, chosen 쪽의 상대 상승분이 rejected보다 커지게 학습합니다. <Link to="/ai/rlhf">RLHF 글</Link>의 online rollout·reward model·PPO와 다른 지점은 여기에 있습니다.
+            DPO는 이 pair를 별도 scalar reward model에 먼저 압축하지 않습니다. Trainable policy가 chosen과 rejected에 주는 확률을 고정된 <strong>reference policy</strong>와 각각 비교하고, chosen 쪽의 상대 상승분이 rejected보다 커지게 학습합니다. <Link to="/cs/ai/rlhf">RLHF 글</Link>의 online rollout·reward model·PPO와 다른 지점은 여기에 있습니다.
           </p>
         </div>
         <AlignmentPipelineViz mode="dpo" />

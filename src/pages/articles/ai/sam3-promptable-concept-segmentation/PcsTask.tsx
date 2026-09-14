@@ -107,7 +107,7 @@ export default function PcsTask() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           평가 층을 나눠 보는 습관 자체는 이 과제만의 것이 아닙니다. 확률 예측과 임계값 결정을 분리해 보는
-          일반 원칙은 <Link to="/ai/classification-metrics">분류 지표</Link>에서 다루며, 여기서는 그 분리가
+          일반 원칙은 <Link to="/cs/ai/classification-metrics">분류 지표</Link>에서 다루며, 여기서는 그 분리가
           위치와 존재라는 두 축으로 나타난 형태입니다.
         </p>
       </div>

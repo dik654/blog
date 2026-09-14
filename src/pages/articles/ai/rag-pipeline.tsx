@@ -20,7 +20,7 @@ export default function RagPipelineArticle() {
             pre-retrieval ACL의 수식·비용·recall ceiling은 별도 글에서 비교합니다.
           </p>
           <p>
-            <Link to="/ai/retrieval-ranking-funnel">
+            <Link to="/cs/ai/retrieval-ranking-funnel">
               Retrieval ranking funnel 글로 이동 →
             </Link>
           </p>

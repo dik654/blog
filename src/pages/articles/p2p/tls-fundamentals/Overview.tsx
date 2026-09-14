@@ -24,10 +24,10 @@ export default function Overview() {
         </p>
         <p>
           여기서는 byte가 직렬화된다는 최소 전제에서 출발합니다. ECDHE의 군 연산
-          자체는 <Link to="/crypto/diffie-hellman">Diffie–Hellman 정본</Link>
+          자체는 <Link to="/cs/crypto/diffie-hellman">Diffie–Hellman 정본</Link>
           에서 더 깊게 다루고, 이 글은 그 shared secret이
           transcript·certificate·HKDF와 어떻게 결합되는지 소유합니다. 다음 글인{" "}
-          <Link to="/p2p/quic-fundamentals">QUIC</Link>은 이 TLS handshake를 UDP
+          <Link to="/cs/p2p/quic-fundamentals">QUIC</Link>은 이 TLS handshake를 UDP
           위 packet·loss recovery와 결합합니다.
         </p>
       </div>

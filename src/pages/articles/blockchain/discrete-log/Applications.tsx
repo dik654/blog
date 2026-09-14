@@ -11,7 +11,7 @@ export default function Applications() {
           pairing group처럼 DDH가 쉬워도 DLP는 어렵게 설계된 환경도 있습니다.
         </p>
         <p>
-          <Link to="/crypto/diffie-hellman">Diffie–Hellman</Link>은 CDH/DDH 계열 가정을, <Link to="/crypto/elgamal">ElGamal</Link>의 confidentiality는 보통 DDH와 message encoding 조건을, <Link to="/crypto/crypto-primitives#schnorr">Schnorr</Link>는 knowledge-of-secret와 signature reduction을 사용합니다. “DLP 기반”이라는 한 줄만으로 각 protocol의 exact security property를 대체할 수 없습니다.
+          <Link to="/cs/crypto/diffie-hellman">Diffie–Hellman</Link>은 CDH/DDH 계열 가정을, <Link to="/cs/crypto/elgamal">ElGamal</Link>의 confidentiality는 보통 DDH와 message encoding 조건을, <Link to="/cs/crypto/crypto-primitives#schnorr">Schnorr</Link>는 knowledge-of-secret와 signature reduction을 사용합니다. “DLP 기반”이라는 한 줄만으로 각 protocol의 exact security property를 대체할 수 없습니다.
         </p>
         <h3>Parameter 선택과 release gate</h3>
         <p>

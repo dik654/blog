@@ -35,9 +35,9 @@ export default function QueueBatching({
         </p>
         <p className="leading-8">
           한 step 안에서 token budget 이 running 과 waiting 에 어떻게 나뉘는지는{" "}
-          <Link to="/ai/continuous-batching-step-anatomy#token-budget">Scheduling step 해부</Link>
+          <Link to="/cs/ai/continuous-batching-step-anatomy#token-budget">Scheduling step 해부</Link>
           가, KV 여유를 보고 받을지 말지와 누구를 내보낼지는{" "}
-          <Link to="/ai/serving-memory-admission-and-preemption#watermark-admission">KV admission 과 preemption</Link>
+          <Link to="/cs/ai/serving-memory-admission-and-preemption#watermark-admission">KV admission 과 preemption</Link>
           이 정본입니다.
         </p>
 
@@ -64,7 +64,7 @@ export default function QueueBatching({
           slot 이 곧바로 채워집니다.
         </p>
         <p className="leading-8">
-          이 원리는 <Link to="/ai/vllm-serving#engine-loop">continuous batching</Link> 으로
+          이 원리는 <Link to="/cs/ai/vllm-serving#engine-loop">continuous batching</Link> 으로
           vLLM 에 들어왔습니다. Orca 는 GPT-3 175B 에서 같은 지연 조건으로
           FasterTransformer 대비 36.9× 처리량을 보고했고, 이는 저자 자기보고 수치입니다.
         </p>
@@ -187,7 +187,7 @@ export default function QueueBatching({
         <p className="leading-8">
           FastServe 가 문제 삼은 HOL 은 output token 단위였습니다. 긴 generation 이 짧은
           job 을 막으니 output token 경계에서 preempt 하자는 제안이었고, 그 설계 공간은{" "}
-          <Link to="/ai/vllm-scheduler#paper-fastserve">아래 preemption 절</Link> 에서
+          <Link to="/cs/ai/vllm-scheduler#paper-fastserve">아래 preemption 절</Link> 에서
           다룹니다.
         </p>
 

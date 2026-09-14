@@ -226,7 +226,7 @@ export default function HyperparameterTuningArticle() {
           <p>
             다음 수업에서는 이 고정된 계약 안에서 과거 trial history를 이용해
             다음 후보를 제안하는{" "}
-            <Link to="/ai/adaptive-hyperparameter-search">적응형 탐색</Link>을
+            <Link to="/cs/ai/adaptive-hyperparameter-search">적응형 탐색</Link>을
             다룹니다.
           </p>
         </div>

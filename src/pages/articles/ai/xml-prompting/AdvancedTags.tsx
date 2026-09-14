@@ -59,7 +59,7 @@ export default function AdvancedTags() {
         <p>
           예시는 label의 의미, 경계 사례, abstention과 output format을 보여 주는 장치입니다.
           어떤 사례를 고르고 순서를 어떻게 검증할지는
-          <Link to="/ai/prompt-engineering#few-shot"> few-shot 정본 글</Link>이
+          <Link to="/cs/ai/prompt-engineering#few-shot"> few-shot 정본 글</Link>이
           소유합니다.
         </p>
         <p>

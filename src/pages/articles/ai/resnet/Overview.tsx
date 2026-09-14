@@ -27,7 +27,7 @@ export default function Overview() {
           전체를 바로 학습하는 대신 입력에서 필요한 변화, 즉 residual을
           학습하도록 parameterization을 바꾸는 것입니다. CNN의
           convolution·receptive field는
-          <Link to="/ai/cnn"> CNN 정본 글</Link>에서 이어지고, 이 글은 residual
+          <Link to="/cs/ai/cnn"> CNN 정본 글</Link>에서 이어지고, 이 글은 residual
           parameterization과 tensor shape·gradient 경계를 소유합니다.
         </p>
       </div>

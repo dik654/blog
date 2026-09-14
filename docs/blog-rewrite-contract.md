@@ -235,6 +235,15 @@ mechanism Viz가 더 적합하다.
 
 ## 6. 중복과 확장성
 
+### 6.0 대분류·route key·공개 href
+
+- 카테고리 위에 대분류(domain) 한 층이 있다. `src/content/domains.ts`의 `DOMAIN_META`가 순서와 이름을, `CATEGORY_DOMAIN`이 카테고리→대분류 소속을 소유한다. 새 카테고리를 만들면 여기 등록이 먼저이며, 빠지면 주소 생성이 조용히 잘못되는 대신 즉시 에러로 멈춘다.
+- `ai/flash-attention`처럼 슬래시로 시작하지 않는 두 조각은 **route key**, 곧 데이터 식별자다. `ARTICLE_LEARNING`·`ARTICLE_EVIDENCE`·`EDITORIAL_BOUNDARIES`·`ARTICLE_TOPOLOGY_DECISIONS`의 키와 `check-article.sh`의 인자가 이 형태이며, 대분류를 붙이지 않는다.
+- `/cs/ai/flash-attention`처럼 슬래시로 시작하는 세 조각은 **공개 href**, 곧 브라우저 주소다. `canonicalHref`·`internalHref`·`reuses[].href`·본문 `<Link to=...>`가 전부 여기에 해당한다.
+- 둘 사이의 변환은 `src/lib/routes.ts`(앱)와 `scripts/lib/route-href.mjs`(감사 스크립트)에서만 한다. 문자열을 직접 이어 붙이지 않는다. href에서 route key를 되찾을 때는 앞이 아니라 뒤에서 두 조각을 읽으므로, 대분류 도입 이전의 두 조각 주소도 그대로 해석된다.
+- 대분류 도입 이전 주소는 `LegacyRouteRedirect`가 새 주소로 넘긴다. 정적 배포에서도 살아 있도록 `generate-static-routes.mjs`가 옛 경로의 `index.html`을 함께 생성한다. 이 안전망이 있다고 해서 새 글에 옛 형식 href를 쓰지는 않는다.
+
+
 - 현재 공개 article 수·slug·제목을 보존하는 것을 목표로 삼지 않는다. Knowledge graph의 학습 단위가 기존 route 경계를 넘으면 article을 새로 만들고, 한 글에 독립 수업이 여러 개면 분리하며, 같은 수업이 중복되면 병합한다. 잘못된 이름은 바꾸고 더 이상 독립 학습 가치가 없는 route는 redirect를 남긴 뒤 제거할 수 있다.
 - Article CRUD는 `create → canonical owner·catalog·learning/evidence 등록`, `split → concept owner·본문·문제·근거를 새 route로 이동`, `merge → 중복 정의를 한 정본으로 통합`, `rename → 제목·slug·내부 링크·이전 URL redirect 갱신`, `delete → 대체 정본·redirect·orphan 검사`까지 한 작업이다. 파일을 복사하거나 catalog 숫자만 늘리는 것은 create가 아니다.
 - Route topology는 전체 catalog를 주기적으로 다시 계산한다. 처음 소유하는 concept 수, 실제 import closure의 section·길이, 독립 stage와 제목의 병렬 주제를 `npm run audit:topology`로 검토하되, 휴리스틱 결과를 자동 분할 명령으로 사용하지 않고 본문의 학습 질문·선수 경계·canonical ownership으로 최종 판단한다.

@@ -40,7 +40,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
           </p>
           <p>
             GPU 수가 세 축의 곱 DP × TP × PP 라는 layout 규칙은{" "}
-            <Link to="/ai/vllm-serving#parallel-layout">vLLM 입문의 DP·TP·PP layout</Link> 절이
+            <Link to="/cs/ai/vllm-serving#parallel-layout">vLLM 입문의 DP·TP·PP layout</Link> 절이
             이미 다뤘습니다. 여기서는 그 각 축이 layer 안에서 정확히 무엇을 자르고 무엇을
             보내는지로 내려갑니다.
           </p>
@@ -125,7 +125,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             Communication collective 는 communicator 안의 모든 rank 가 같은 크기의 buffer 를 들고
             동시에 참여하는 통신 연산입니다. point-to-point send 와 달리 결과가 어느 rank 에 어떻게
             놓이는지가 연산 이름에 정해져 있습니다. rank 와 count 계약 자체는{" "}
-            <Link to="/gpu/gpu-collective-network#collective-rank-semantics">collective rank semantics</Link>{" "}
+            <Link to="/cs/gpu/gpu-collective-network#collective-rank-semantics">collective rank semantics</Link>{" "}
             글이 소유하고, 여기서는 parallel 추론이 쓰는 세 가지만 봅니다.
           </p>
           <p>
@@ -148,7 +148,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             같은 collective 라도 알고리즘에 따라 실제 옮기는 byte 가 다릅니다. ring 은 GPU 당
             2(p−1)/p × n 을 보내 대역폭 효율이 좋지만 p 단계를 거쳐 latency 가 p 에 비례하고, tree 는
             log p 단계라 작은 message 에 유리합니다. NCCL 이 어느 것을 골랐는지와 측정 대역폭의
-            정의는 <Link to="/gpu/gpu-collective-network#nccl-bandwidth-boundary">algbw · busbw</Link>{" "}
+            정의는 <Link to="/cs/gpu/gpu-collective-network#nccl-bandwidth-boundary">algbw · busbw</Link>{" "}
             글이 다룹니다.
           </p>
         </div>
@@ -269,7 +269,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             그래서 DP throughput scaling 은 거의 선형입니다. replica 하나가 초당 1000 token 을 내면
             replica 4 개는 4000 token 에 가깝고, 각 요청의 latency 는 replica 하나일 때와 같습니다.
             replica 하나가 감당하는 동시 요청 수를 셈하는 방법은{" "}
-            <Link to="/ai/llm-serving-capacity#capacity">serving capacity</Link> 글에 있습니다.
+            <Link to="/cs/ai/llm-serving-capacity#capacity">serving capacity</Link> 글에 있습니다.
           </p>
           <p>
             비용은 memory 입니다. replica 마다 weight 전체를 다시 올리므로 70B FP16 을 DP 2 로 두면 weight 만 280 GB 입니다. replica 마다
@@ -283,7 +283,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             예외는 MoE 입니다. expert 를 GPU 에 나눠 두면 attention 은 DP 로 돌리고 expert 층에서만
             all-to-all 을 보내는 배치가 흔한데, 이때는 DP rank 끼리 step 을 맞춰야 하므로 통신이 다시
             생깁니다. 그 비용은{" "}
-            <Link to="/ai/mixture-of-experts#system-cost">MoE 의 expert-parallel dispatch cost</Link>{" "}
+            <Link to="/cs/ai/mixture-of-experts#system-cost">MoE 의 expert-parallel dispatch cost</Link>{" "}
             글이 소유합니다.
           </p>
         </div>
@@ -313,7 +313,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             이것이 context-parallel attention 이며 Ring Attention 이 그 대표 구현입니다. 부분 결과를
             합칠 수 있는 이유는 softmax 의 running max 와 분모를 block 마다 갱신하는 online softmax
             덕분이고, 그 원리는{" "}
-            <Link to="/ai/flash-attention-io-aware-kernel#online-softmax">FlashAttention 의 online softmax</Link>{" "}
+            <Link to="/cs/ai/flash-attention-io-aware-kernel#online-softmax">FlashAttention 의 online softmax</Link>{" "}
             절이 소유합니다.
           </p>
           <p>
@@ -376,7 +376,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
           <p>
             이 비율이 TP degree 의 실질 상한을 정합니다. α 가 15 μs 인 inter-node link 로 TP 를
             넘기면 통신만 2.4 ms 가 되어 weight 절감분을 먹어 버립니다. TPOT 과 ITL 의 정의는{" "}
-            <Link to="/ai/serving-latency-metrics-and-slo#metrics">latency metric</Link> 글에, 어느
+            <Link to="/cs/ai/serving-latency-metrics-and-slo#metrics">latency metric</Link> 글에, 어느
             축을 어느 link 에 놓을지는 다음 글에 있습니다.
           </p>
         </div>
@@ -409,7 +409,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             다음 읽기는 이 byte 와 μs 를 실제 node 와 link 위에 올려 TP·PP·DP degree 를 고르는{" "}
-            <Link to="/ai/parallelism-strategy-and-placement">parallelism 전략과 placement</Link>{" "}
+            <Link to="/cs/ai/parallelism-strategy-and-placement">parallelism 전략과 placement</Link>{" "}
             글입니다.
           </p>
         </div>

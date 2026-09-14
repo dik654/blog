@@ -50,7 +50,7 @@ export default function UpscaleKnownAnswer() {
 
         <p className="leading-7">
           답을 아는 입력으로 도구를 검증하는 절차 자체는{" "}
-          <Link to="/ai/generative-measurement-controls#overview">계측기 검증</Link>이 소유합니다. 이 절은 그
+          <Link to="/cs/ai/generative-measurement-controls#overview">계측기 검증</Link>이 소유합니다. 이 절은 그
           절차를 확대 방법 선택에 적용한 사례입니다.
         </p>
       </div>

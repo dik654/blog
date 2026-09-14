@@ -67,7 +67,7 @@ export default function ProductTiers() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           서버와 데스크톱 플랫폼이 어떤 운영 요구를 다르게 다루는지는{" "}
-          <Link to="/gpu/hw-server-vs-desktop">서버와 데스크톱</Link>이 소유합니다. 이 절은 그 구분을 CPU
+          <Link to="/cs/gpu/hw-server-vs-desktop">서버와 데스크톱</Link>이 소유합니다. 이 절은 그 구분을 CPU
           제품군 선택에 적용해, 이름이 아니라 레인·채널·관리 기능으로 계열을 가리는 방법을 다뤘습니다.
         </p>
       </div>

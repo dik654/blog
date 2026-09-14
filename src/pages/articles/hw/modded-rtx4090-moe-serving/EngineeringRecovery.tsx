@@ -22,7 +22,7 @@ export default function EngineeringRecovery() {
           expert(항상 활성화되는 shared expert)가 있는 아키텍처라면 이건 특히 유효하다 — 공유 expert는 모든 토큰이
           거치므로, 이걸 각 GPU에 복제해 두면 최소한 공유 expert 경로의 dispatch·combine은 사라진다. 라우팅 대상 expert의
           배치 자체는{" "}
-          <a href="/ai/expert-parallelism-moe-systems">expert parallelism 글</a>이 다루는 영역이고, 이 글에서는
+          <a href="/cs/ai/expert-parallelism-moe-systems">expert parallelism 글</a>이 다루는 영역이고, 이 글에서는
           "PCIe만 있는 topology에서는 배치 최적화의 보상이 NVSwitch 환경보다 크다"는 지점만 강조한다. NVSwitch에서는 어떤
           pair든 같은 대역폭이라 배치를 잘못해도 손해가 균일하지만, PCIe 2-way 구성에서는 애초에 넘을 경계가 하나뿐이라
           최적 배치가 곧 "그 경계를 최대한 안 넘기는 것"으로 단순해진다.
@@ -39,7 +39,7 @@ export default function EngineeringRecovery() {
           다른 GPU의 결과를 기다리며 노는 시간)이 생긴다. PCIe 링크 하나짜리 구성에서는 "매 layer 통신"보다 "구간마다
           한 번 통신"이 절대적인 바이트 수가 적기 때문에, TP보다 PP를 기본값으로 놓는 편이 유리한 경우가 많다. TP·PP의
           기본 분할 방식은{" "}
-          <a href="/ai/tensor-and-pipeline-parallel-inference">tensor·pipeline parallel 글</a>이 정본이다.
+          <a href="/cs/ai/tensor-and-pipeline-parallel-inference">tensor·pipeline parallel 글</a>이 정본이다.
         </p>
 
         <h3 id="quantization-shrinks-payload" className="mt-6 mb-3 scroll-mt-24 text-xl font-semibold">
@@ -51,7 +51,7 @@ export default function EngineeringRecovery() {
           못 올린다면 분자(바이트 수)를 줄이는 게 유일하게 남는 레버다. 다만 quantization은 통신 문제를 풀려고 넣는 게
           아니라 정확도와 맞바꾸는 결정이라서, all-to-all 페이로드만 낮추는 부분 적용(communication-only quantization)과
           weight 전체를 낮추는 전면 적용을 구분해서 판단해야 한다. Quantization level별 VRAM 크기 자체는{" "}
-          <a href="/ai/model-vram-budgeting#quantization-vram-tradeoff">Q8·NVFP4 tradeoff 글</a>에서 다룬 계산을
+          <a href="/cs/ai/model-vram-budgeting#quantization-vram-tradeoff">Q8·NVFP4 tradeoff 글</a>에서 다룬 계산을
           그대로 쓴다 — 여기서는 그 바이트 수 감소가 통신 시간에도 같은 비율로 적용된다는 점만 더한다.
         </p>
 
@@ -64,7 +64,7 @@ export default function EngineeringRecovery() {
           Continuous batching으로 decode 요청을 최대한 많이 묶으면, 통신이 끝나길 기다리는 GPU idle 시간의 비중이
           줄어든다. 단, batch를 키우면 activation 메모리도 같이 늘어나므로 이 레버는 앞서 다룬 VRAM 여유(48GB 개조로
           벌어들인 용량)와 정확히 트레이드오프 관계에 있다. Prefill과 decode의 통신 패턴이 다르다는 점까지 고려하면{" "}
-          <a href="/ai/disaggregated-prefill-decode-serving">prefill·decode disaggregation 글</a>처럼 두 단계를
+          <a href="/cs/ai/disaggregated-prefill-decode-serving">prefill·decode disaggregation 글</a>처럼 두 단계를
           아예 분리해 각각 다른 batching·병렬화 전략을 쓰는 것도 선택지다.
         </p>
       </div>

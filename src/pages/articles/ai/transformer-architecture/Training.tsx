@@ -113,7 +113,7 @@ export default function Training() {
           BF16·FP16·FP8을 쓴다고 전체 memory가 정확히 절반이나 4분의 1이 되지
           않으며, loss scaling과 accumulation precision도 함께 봐야 합니다.
           Optimizer update 자체는
-          <Link to="/ai/optimizers"> Optimizer 정본 글</Link>에서 이어집니다.
+          <Link to="/cs/ai/optimizers"> Optimizer 정본 글</Link>에서 이어집니다.
         </p>
 
         <h3>Distributed strategy는 model 의미보다 tensor 소유권을 바꾼다</h3>

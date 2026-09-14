@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { getCategoryBySlug } from "@/content";
 import type { SeriesReadingPath } from "@/content/series-reading-paths";
+import { articleHref } from "@/lib/routes";
 
 export default function SeriesReadingMap({
   categorySlug,
@@ -48,7 +49,7 @@ export default function SeriesReadingMap({
                 return (
                   <Link
                     key={slug}
-                    to={`/${categorySlug}/${slug}`}
+                    to={articleHref(categorySlug, slug)}
                     className="min-w-0 rounded-xl border border-border/60 bg-background/75 px-3 py-2.5 transition-colors hover:border-primary/35 hover:bg-primary/[0.03]"
                   >
                     <span className="block text-xs font-semibold leading-5 text-foreground">

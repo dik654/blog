@@ -93,7 +93,7 @@ export default function Parsing() {
         </p>
         <p>
           Parser와 grammar state로 invalid token을 막는 원리는
-          <Link to="/ai/grammar-constrained-generation">
+          <Link to="/cs/ai/grammar-constrained-generation">
             {" "}grammar-constrained generation
           </Link>
           에서 CFG·token mask부터 확인할 수 있습니다. 다만 constrained decoding도 domain value와

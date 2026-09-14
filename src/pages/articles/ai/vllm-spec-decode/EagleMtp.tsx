@@ -100,7 +100,7 @@ export default function EagleMtp() {
           그 실행을 여러 token이 나눠 쓰게 하므로 함께 이득을 낼 수 있지만,
           numerical drift가 acceptance를 낮추면 두 효과가 서로 상쇄될 수도 있습니다.
           GLM-5.2와 B300에서 이 문제를 어떻게 측정하고 runtime 병목을 제거했는지는
-          <a href="/ai/sionic-glm-b300#mtp">GLM/B300 MTP 적용 사례</a>에서 구체적인
+          <a href="/cs/ai/sionic-glm-b300#mtp">GLM/B300 MTP 적용 사례</a>에서 구체적인
           수치와 함께 다룹니다.
         </p>
 

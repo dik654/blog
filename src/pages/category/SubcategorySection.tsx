@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import type { Article, Subcategory } from "@/content";
 import ArticleCard from "./ArticleCard";
+import { articleHref } from "@/lib/routes";
 
 interface Props {
   subcategory: Subcategory;
@@ -32,7 +33,7 @@ export default function SubcategorySection({
     <section className={depth === 0 ? "mb-4" : "mb-2 ml-4"}>
       {onlyArticle ? (
         <Link
-          to={`/${categorySlug}/${onlyArticle.slug}`}
+          to={articleHref(categorySlug, onlyArticle.slug)}
           className="flex w-full items-center justify-between rounded-lg border-b px-1 py-3 transition-colors hover:bg-accent/30"
         >
           <h2

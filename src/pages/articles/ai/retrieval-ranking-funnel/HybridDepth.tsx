@@ -68,7 +68,7 @@ export default function HybridDepth() {
           BM25든 HNSW든 이 hybrid union이든, reranker에 넘길 후보를 만드는
           앞단 역할을 first-stage retriever라고 부르고 그 산출물을 만드는
           과정을 candidate generation이라고 합니다. 이 이름은{" "}
-          <Link to="/ai/bi-encoder-retrieval#reranking">
+          <Link to="/cs/ai/bi-encoder-retrieval#reranking">
             retrieve-then-rerank 2-stage composition
           </Link>
           의 첫 stage를 가리키는 역할 이름일 뿐, sparse·dense·hybrid 가운데

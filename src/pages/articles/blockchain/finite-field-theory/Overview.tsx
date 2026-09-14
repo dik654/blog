@@ -16,8 +16,8 @@ export default function Overview() {
         <p>
           이 글은 소수체의 산술, 곱셈 역원과 원소의 order, 다항식 산술,
           Schwartz–Zippel bound, 확장체 구성을 차례로 설명합니다. 이후
-          <Link to="/crypto/lagrange"> Lagrange 보간</Link>은 여러 평가값에서
-          다항식을 복원하고, <Link to="/crypto/fft">NTT</Link>는 단위근 위의
+          <Link to="/cs/crypto/lagrange"> Lagrange 보간</Link>은 여러 평가값에서
+          다항식을 복원하고, <Link to="/cs/crypto/fft">NTT</Link>는 단위근 위의
           평가와 복원을 빠르게 수행합니다.
         </p>
       </div>

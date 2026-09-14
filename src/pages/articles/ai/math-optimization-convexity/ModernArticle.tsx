@@ -63,7 +63,7 @@ export default function OptimizationGeometryArticle() {
         assumptions={["0<μ≤L인 strongly convex·smooth objective입니다.", "이 ratio만으로 모든 optimizer의 wall-clock을 예측하지 않습니다."]}
         interpretation="κ가 1에 가까우면 방향별 굽음이 균일하고, κ가 크면 fixed scalar step의 진전이 느려질 수 있습니다."
       />
-      <p>이 구조를 실제 반복과 bound에 넣는 과정은 <a className="font-semibold text-primary underline" href="/ai/math-gradient-descent-convergence">gradient descent와 convergence</a> 글에서 이어집니다.</p>
+      <p>이 구조를 실제 반복과 bound에 넣는 과정은 <a className="font-semibold text-primary underline" href="/cs/ai/math-gradient-descent-convergence">gradient descent와 convergence</a> 글에서 이어집니다.</p>
       <div id="paper-convex-geometry"><CitationBlock source="Boyd & Vandenberghe · Convex Optimization" citeKey={1} href={BOYD}><Evidence problem="Convex set·function·optimality·algorithm 보장을 하나의 조건 체계로 읽는 문제" contribution="Chord inequality, smoothness·strong-convexity와 convergence 전제를 체계화" assumptions="각 theorem이 선언한 domain·differentiability·curvature 조건" scope="Convex analysis와 optimization theory" notClaim="Deep-network loss 전체가 convex하거나 strongly convex라는 주장이 아님" /></CitationBlock></div>
       <div id="paper-quadratic-geometry"><CitationBlock source="MIT 18.065 · Gradient Descent" citeKey={2} href={MIT}><Evidence problem="Quadratic의 서로 다른 curvature 방향이 descent path를 어떻게 바꾸는지 보는 문제" contribution="Contour와 gradient path를 통해 conditioning을 시각적으로 연결" assumptions="강의의 quadratic·linear algebra 조건" scope="Gradient descent의 quadratic geometry" notClaim="모든 nonconvex training의 실제 convergence rate를 보장하지 않음" /></CitationBlock></div>
       <ContentBoundary article="math-optimization-convexity" />

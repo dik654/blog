@@ -141,7 +141,7 @@ export default function ModernCudaRegisterPressureArticle() {
         <p>
           Compiler가 어떤 값을 어느 register에 놓는지, 즉 register allocation
           자체는{" "}
-          <Link to="/gpu/cuda-compilation-and-isa-analysis#ptxas-optimizations">
+          <Link to="/cs/gpu/cuda-compilation-and-isa-analysis#ptxas-optimizations">
             ptxas register allocation
           </Link>
           이 정본입니다. 이 글은 그 결과 숫자가 SM 예산과 만나 무엇을 만드는지만
@@ -437,7 +437,7 @@ export default function ModernCudaRegisterPressureArticle() {
           이 자원 경계가 실제 fusion 판단에 어떻게 들어가는지는
           <a
             className="ml-1 text-primary hover:underline"
-            href="/gpu/cuda-kernel-fusion"
+            href="/cs/gpu/cuda-kernel-fusion"
           >
             kernel fusion과 Megakernel
           </a>

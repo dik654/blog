@@ -56,7 +56,7 @@ export default function Encoding() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Erasure 복원에서 k개의 정확한 point-value pair를
-          <Link to="/crypto/lagrange#formula"> Lagrange 보간</Link>에 넘길 수
+          <Link to="/cs/crypto/lagrange#formula"> Lagrange 보간</Link>에 넘길 수
           있습니다. 알 수 없는 error가 섞이면 아무 k개를 고르는 방식은
           corruption을 그대로 통과시키므로 다음 section의 decoder가 필요합니다.
         </p>

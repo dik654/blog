@@ -95,9 +95,9 @@ export default function ConversationRuntime() {
           test를 실행합니다. 이 과정에서 model은 다음 action을 제안하지만, 실제
           permission 판정과 tool 실행, session 저장 순서는 host runtime이
           소유합니다. Provider adapter의 자세한 stream parsing은
-          <a href="/ai/claw-api-client"> API client 글</a>, tool schema와
+          <a href="/cs/ai/claw-api-client"> API client 글</a>, tool schema와
           dispatch는
-          <a href="/ai/claw-tool-system"> tool system 글</a>에서 이어집니다.
+          <a href="/cs/ai/claw-tool-system"> tool system 글</a>에서 이어집니다.
         </p>
         <p>
           아래 그림은 crash-safe runtime에 필요한 intent·effect·verification

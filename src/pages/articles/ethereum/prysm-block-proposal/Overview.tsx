@@ -26,9 +26,9 @@ export default function Overview({
         </p>
         <p className="leading-7">
           블록을 만드는 경로와 받은 블록을 검증하는 경로는 다릅니다. 이 글은
-          전자를 소유하며, 후자는 <Link to="/blockchain/prysm-block-processing">블록 처리</Link>,
-          head 선택은 <Link to="/blockchain/prysm-forkchoice">fork choice</Link>,
-          서명 domain은 <Link to="/blockchain/prysm-bls">BLS</Link> 정본을
+          전자를 소유하며, 후자는 <Link to="/cs/blockchain/prysm-block-processing">블록 처리</Link>,
+          head 선택은 <Link to="/cs/blockchain/prysm-forkchoice">fork choice</Link>,
+          서명 domain은 <Link to="/cs/blockchain/prysm-bls">BLS</Link> 정본을
           재사용합니다.
         </p>
 

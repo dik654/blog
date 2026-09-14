@@ -91,7 +91,7 @@ export default function Overview() {
         </p>
         <p>
           ReAct의 방법과 tool proposal 자체는
-          <Link to="/ai/agent-loop-foundations"> Agent loop 정본</Link>에서 다루고, 여기서는
+          <Link to="/cs/ai/agent-loop-foundations"> Agent loop 정본</Link>에서 다루고, 여기서는
           그 loop를 어떤 runtime이 지속시키고 복구하는지만 다룹니다.
         </p>
 
@@ -132,9 +132,9 @@ export default function Overview() {
         <p>
           반대로 framework는 tool의 권한을 저절로 최소화하거나 verifier를 만들어 주지
           않습니다. Capability, 검증과 recovery policy의 일반 원리는
-          <Link to="/ai/llm-harness"> harness 정본</Link>이 소유하며, 여러 agent의 parallel
+          <Link to="/cs/ai/llm-harness"> harness 정본</Link>이 소유하며, 여러 agent의 parallel
           update와 reducer 문제는
-          <Link to="/ai/multi-agent-implementation"> multi-agent 구현 정본</Link>에서 확장합니다.
+          <Link to="/cs/ai/multi-agent-implementation"> multi-agent 구현 정본</Link>에서 확장합니다.
         </p>
         <p>
           이 글은 그보다 좁게, 한 환불 workflow를 기준으로 실행 runtime의 선택 경계만

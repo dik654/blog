@@ -19,7 +19,7 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         <p>
           이 글은 Ethereum client를 처음 보는 독자를 위해 <strong>event 수신→latest message 갱신→branch weight
           계산→checkpoint로 branch 필터링→greedy head walk→reorg·prune</strong> 순서로 내려갑니다. SSZ decode와 BLS
-          검증은 선행 단계이며 여기서는 <Link to="/blockchain/prysm">Prysm 전체 lifecycle</Link>을 받은 뒤 head 판단만
+          검증은 선행 단계이며 여기서는 <Link to="/cs/blockchain/prysm">Prysm 전체 lifecycle</Link>을 받은 뒤 head 판단만
           소유합니다.
         </p>
       </div>

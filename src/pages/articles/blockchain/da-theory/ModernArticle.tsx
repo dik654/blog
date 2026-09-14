@@ -48,7 +48,7 @@ export default function ModernDAArticle() {
           있습니다. 이를 (n=8,k=4) code라고 부르며 code rate는 k/n=1/2, 원본 대비 extra overhead는 (n-k)/k=1입니다.
         </p>
         <p>
-          “절반을 잃어도 된다”는 말에는 조건이 붙습니다. 어디가 비었는지 아는 erasure이고, 각 symbol의 index와 code profile이 맞으며, 손상된 값을 proof나 checksum으로 거절할 수 있어야 합니다. 위치를 모르는 잘못된 값(error)은 위치를 찾고 값도 고쳐야 하므로 같은 parity budget을 두 배로 사용합니다. 더 자세한 다항식·distance 설명은 <a className="text-primary underline-offset-4 hover:underline" href="/blockchain/erasure-coding#reed-solomon">Erasure coding 글</a>이 canonical owner입니다.
+          “절반을 잃어도 된다”는 말에는 조건이 붙습니다. 어디가 비었는지 아는 erasure이고, 각 symbol의 index와 code profile이 맞으며, 손상된 값을 proof나 checksum으로 거절할 수 있어야 합니다. 위치를 모르는 잘못된 값(error)은 위치를 찾고 값도 고쳐야 하므로 같은 parity budget을 두 배로 사용합니다. 더 자세한 다항식·distance 설명은 <a className="text-primary underline-offset-4 hover:underline" href="/cs/blockchain/erasure-coding#reed-solomon">Erasure coding 글</a>이 canonical owner입니다.
         </p>
         <ErasureGridViz />
       </section>

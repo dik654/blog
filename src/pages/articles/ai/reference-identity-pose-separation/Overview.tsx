@@ -36,8 +36,8 @@ export default function Overview() {
 
         <p className="leading-7">
           정체성 판정 임계값과 탐지·인식의 구분은{" "}
-          <Link to="/ai/generative-measurement-controls">계측기 검증</Link>이, 확산 편집의 구성 요소는{" "}
-          <Link to="/ai/latent-diffusion-guidance#pipeline">잠재 확산 파이프라인</Link>이 소유합니다.
+          <Link to="/cs/ai/generative-measurement-controls">계측기 검증</Link>이, 확산 편집의 구성 요소는{" "}
+          <Link to="/cs/ai/latent-diffusion-guidance#pipeline">잠재 확산 파이프라인</Link>이 소유합니다.
         </p>
       </div>
 

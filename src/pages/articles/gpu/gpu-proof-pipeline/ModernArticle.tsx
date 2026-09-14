@@ -13,7 +13,7 @@ export default function ModernGpuProofPipelineArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Kernel을 proof dependency에 맞춰 잇기</p><h2 className="text-3xl font-bold tracking-tight">GPU proof pipeline은 NTT와 MSM의 합이 아니라, transcript와 buffer lifetime이 제한하는 실행 DAG다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">증명 생성에는 witness 계산, polynomial 변환, commitment, transcript challenge, quotient/opening과 proof 조립이 이어집니다. 일부 NTT와 MSM은 GPU에서 크게 병렬화되지만, 다음 round의 challenge가 나오기 전에는 후속 polynomial을 만들 수 없고 아직 소비되지 않은 buffer를 재사용할 수도 없습니다. 따라서 kernel을 많이 겹치는 것보다 <strong>허용된 dependency 안에서 데이터 이동과 계산을 겹치고 검증 가능한 receipt를 남기는 일</strong>이 먼저입니다.</p>
-      <p>Groth16의 QAP·proof equation은 <a className="text-primary hover:underline" href="/crypto/groth16">Groth16 정본</a>, PLONK의 gate·permutation·transcript는 <a className="text-primary hover:underline" href="/crypto/plonk">PLONK 정본</a>이 소유합니다. MSM·NTT의 계산 의미는 <a className="text-primary hover:underline" href="/gpu/msm-ntt">MSM/NTT workload 글</a>에서 재사용하고, 여기서는 proof round를 device jobs와 buffers로 내리는 orchestration만 다룹니다.</p>
+      <p>Groth16의 QAP·proof equation은 <a className="text-primary hover:underline" href="/cs/crypto/groth16">Groth16 정본</a>, PLONK의 gate·permutation·transcript는 <a className="text-primary hover:underline" href="/cs/crypto/plonk">PLONK 정본</a>이 소유합니다. MSM·NTT의 계산 의미는 <a className="text-primary hover:underline" href="/cs/gpu/msm-ntt">MSM/NTT workload 글</a>에서 재사용하고, 여기서는 proof round를 device jobs와 buffers로 내리는 orchestration만 다룹니다.</p>
       <ProofPipelineDagViz />
       <ContentBoundary article="gpu-proof-pipeline" />
     </section>

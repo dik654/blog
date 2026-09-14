@@ -561,7 +561,7 @@ s_t&=\underbrace{-\frac{d_t}{\sigma_t^2}}_{\substack{\text{방향을 뒤집고}\
           이제 score를 연속시간 dynamics로 옮기는 일은{" "}
           <a
             className="font-semibold text-primary underline"
-            href="/ai/diffusion-continuous-time"
+            href="/cs/ai/diffusion-continuous-time"
           >
             continuous-time diffusion
           </a>

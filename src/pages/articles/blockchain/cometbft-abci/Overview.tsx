@@ -15,8 +15,8 @@ export default function Overview() {
         </p>
         <p>
           이 글은 <strong>logical connection → Prepare/Process coherence → candidate state → FinalizeBlock → Commit/replay</strong>
-          순서로 읽습니다. 합의가 block을 결정하는 과정은 <Link to="/blockchain/cometbft-consensus">consensus 글</Link>,
-          AppHash가 header에 들어가는 wire 구조는 <Link to="/blockchain/cometbft-types">type 글</Link>이 소유합니다.
+          순서로 읽습니다. 합의가 block을 결정하는 과정은 <Link to="/cs/blockchain/cometbft-consensus">consensus 글</Link>,
+          AppHash가 header에 들어가는 wire 구조는 <Link to="/cs/blockchain/cometbft-types">type 글</Link>이 소유합니다.
         </p>
       </div>
       <ContentBoundary article="cometbft-abci" />

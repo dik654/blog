@@ -24,7 +24,7 @@ export default function QKVComputation({
           causal self-attention은 미래 key를 가립니다. Cross-attention에서는 Q가
           decoder에서 오지만 K·V는 encoder output에서 옵니다. Attention
           score·multi-head의 상세 유도는
-          <Link to="/ai/attention-theory"> Attention 이론 정본 글</Link>이
+          <Link to="/cs/ai/attention-theory"> Attention 이론 정본 글</Link>이
           소유합니다.
         </p>
       </div>

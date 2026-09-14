@@ -32,9 +32,9 @@ export default function Overview() {
 
         <p className="leading-7">
           정체성 판정에 쓰는 임계값과 계측기 검증은{" "}
-          <Link to="/ai/generative-measurement-controls">계측기 검증</Link>이, 잠재 공간의 압축 비율은{" "}
-          <Link to="/ai/latent-diffusion-guidance#compression">잠재 확산</Link>이, 편집 동작의 분류는{" "}
-          <Link to="/ai/masked-edit-verb-routing">편집 동작과 모델 라우팅</Link>이 소유합니다.
+          <Link to="/cs/ai/generative-measurement-controls">계측기 검증</Link>이, 잠재 공간의 압축 비율은{" "}
+          <Link to="/cs/ai/latent-diffusion-guidance#compression">잠재 확산</Link>이, 편집 동작의 분류는{" "}
+          <Link to="/cs/ai/masked-edit-verb-routing">편집 동작과 모델 라우팅</Link>이 소유합니다.
         </p>
       </div>
 

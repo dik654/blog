@@ -91,7 +91,7 @@ export default function SnapshotGate() {
         <p className="leading-7">
           이 글이 주장하지 않는 것도 분명합니다. 어느 제품이 더 빠른지 순위를 매기지 않았고, 연산 성능 수치를
           비교하지 않았습니다. 정밀도 정의와 측정 조건이 벤더마다 달라 같은 표에 놓으면 오해를 만들기 때문이며,
-          그 비교가 필요하면 <Link to="/ai/serving-benchmark-methodology">같은 조건에서 직접 재는 방법</Link>을
+          그 비교가 필요하면 <Link to="/cs/ai/serving-benchmark-methodology">같은 조건에서 직접 재는 방법</Link>을
           따라야 합니다.
         </p>
       </div>

@@ -12,7 +12,7 @@ export default function Overview() {
             Generation(RAG)은 질문에 필요한 외부 문서를 먼저 찾습니다. 선택한 근거를 모델 입력에 넣은 뒤 답변의 각 주장과 원문 위치를 다시 연결합니다.
           </p>
         <p>이 구조는 지식 저장소 자체가 아닙니다. 원문을 가져오지 못하거나, 가져온 문맥에서 정답 부분을 잘라냈거나, 모델이 근거와 다른 말을 하면 여전히 실패합니다. 그래서 ingestion·chunking·index·retrieval·context assembly·generation·citation을 하나의 trace로 관리해야 합니다.</p>
-        <p>문서가 적고 안정적이며 한 번에 읽을 수 있다면 long-context prompting이 더 단순할 수 있습니다. 반대로 사실을 바꾸는 것이 아니라 출력 형식이나 말투를 익히게 하려면 <a href="/ai/domain-finetuning">fine-tuning</a>이 맞습니다. RAG는 자주 갱신되는 문서, source-level ACL, citation과 삭제 반영이 중요한 경우에 특히 유용합니다.</p>
+        <p>문서가 적고 안정적이며 한 번에 읽을 수 있다면 long-context prompting이 더 단순할 수 있습니다. 반대로 사실을 바꾸는 것이 아니라 출력 형식이나 말투를 익히게 하려면 <a href="/cs/ai/domain-finetuning">fine-tuning</a>이 맞습니다. RAG는 자주 갱신되는 문서, source-level ACL, citation과 삭제 반영이 중요한 경우에 특히 유용합니다.</p>
       </div>
       <ContentBoundary article="rag-pipeline" />
       <ExplainedFormula

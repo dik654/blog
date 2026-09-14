@@ -107,7 +107,7 @@ export default function Discv4Article() {
             한 응답이 1280 byte를 넘을 수 있어 NEIGHBORS가 여러 datagram으로
             올 수 있으며, UDP에서는 loss와 순서 변경을 예상해야 한다. Lookup의
             shortlist 상태와 종료 receipt는{" "}
-            <Link to="/p2p/kad-lookup">Kademlia 반복 탐색</Link>이 정본으로
+            <Link to="/cs/p2p/kad-lookup">Kademlia 반복 탐색</Link>이 정본으로
             다룬다. Discv4는 후보를 찾는 protocol이지 transport 연결 성공을
             반환하는 API가 아니다.
           </p>
@@ -129,7 +129,7 @@ export default function Discv4Article() {
             갱신된 TCP/UDP endpoint를 얻으면 그제야 별도 transport dial을
             시도한다. Invalid signature는 reject, expired request는 no reply,
             timeout은 retry budget과 다른 candidate로 분류한다. Network view가
-            한 source에 갇히는 공격은 <Link to="/p2p/dht-security">DHT 보안</Link>
+            한 source에 갇히는 공격은 <Link to="/cs/p2p/dht-security">DHT 보안</Link>
             에서 다룬다.
           </p>
           <p>

@@ -12,7 +12,7 @@ export default function Overview() {
           영지식 시스템을 만든다고 해서 해시·Merkle tree·서명·군 연산을 한 종류의 “암호 기술”로 묶어도 되는 것은 아닙니다. Poseidon은 회로 안의 많은 field 값을 digest 하나로 압축하고, Merkle tree는 root에 고정된 항목 하나를 짧게 열며, Schnorr와 Ed25519는 비밀키 소유자가 특정 메시지를 승인했는지 확인합니다. 이 보장들을 섞어 읽으면 proof가 통과했는데도 잘못된 root나 다른 domain의 서명을 신뢰할 수 있습니다.
         </p>
         <p>
-          이 글은 각 도구를 <strong>입력 → 계산 → 출력 → 보장 → 실패 조건</strong>의 같은 틀로 비교합니다. Field의 inverse와 원소 order는 <Link to="/crypto/finite-field-theory">유한체 정본</Link>, 이산로그 공격 비용은 <Link to="/crypto/discrete-log">DLP 정본</Link>, 실제 점 연산과 subgroup은 <Link to="/crypto/elliptic-curves">타원곡선군 정본</Link>을 재사용합니다. 따라서 이 글의 목표는 수학 정의를 중복하는 것이 아니라, 여러 프리미티브를 조합할 때 보장 사이의 빈틈을 찾는 것입니다.
+          이 글은 각 도구를 <strong>입력 → 계산 → 출력 → 보장 → 실패 조건</strong>의 같은 틀로 비교합니다. Field의 inverse와 원소 order는 <Link to="/cs/crypto/finite-field-theory">유한체 정본</Link>, 이산로그 공격 비용은 <Link to="/cs/crypto/discrete-log">DLP 정본</Link>, 실제 점 연산과 subgroup은 <Link to="/cs/crypto/elliptic-curves">타원곡선군 정본</Link>을 재사용합니다. 따라서 이 글의 목표는 수학 정의를 중복하는 것이 아니라, 여러 프리미티브를 조합할 때 보장 사이의 빈틈을 찾는 것입니다.
         </p>
       </div>
       <ContentBoundary article="crypto-primitives" />

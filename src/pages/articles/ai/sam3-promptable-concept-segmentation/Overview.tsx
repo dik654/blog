@@ -41,9 +41,9 @@ export default function Overview() {
 
         <p className="leading-7">
           분류·검출·분할이 각각 어떤 출력 형태를 약속하는지는{" "}
-          <Link to="/ai/vision-task-spatial-contracts#output-shapes">비전 과제의 공간 계약</Link>이, 텍스트로
+          <Link to="/cs/ai/vision-task-spatial-contracts#output-shapes">비전 과제의 공간 계약</Link>이, 텍스트로
           영역을 지목하는 일반적인 grounding 개념은{" "}
-          <Link to="/ai/multimodal-retrieval-and-visual-grounding">멀티모달 검색과 grounding</Link>이 이미
+          <Link to="/cs/ai/multimodal-retrieval-and-visual-grounding">멀티모달 검색과 grounding</Link>이 이미
           설명합니다. 이 글은 그 위에서 개념 단위 분할에만 생기는 문제를 다룹니다.
         </p>
       </div>

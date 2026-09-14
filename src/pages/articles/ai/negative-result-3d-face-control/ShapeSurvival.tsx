@@ -78,7 +78,7 @@ export default function ShapeSurvival() {
           다음 지렛대로 원본 픽셀에서 출발시키는 방법을 시도했지만 이 모델에서는 레버가 아니라 절벽이었습니다.
           중간값에서는 변환 자체가 일어나지 않고 최대값에서만 사진이 되는데, 거기서는 형태가 사라집니다.
           모델 종류에 따라 이 파라미터의 성질이 다르다는 점은{" "}
-          <Link to="/ai/roi-resolution-identity-budget#denoise-window">해상도 예산</Link>이 소유합니다.
+          <Link to="/cs/ai/roi-resolution-identity-budget#denoise-window">해상도 예산</Link>이 소유합니다.
         </p>
       </div>
 

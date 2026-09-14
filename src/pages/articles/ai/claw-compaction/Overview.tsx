@@ -46,7 +46,7 @@ export default function Overview() {
           작은 <strong>context state</strong>로 바꾸는 runtime 변환입니다. Model의
           weight를 바꾸거나 장기 기억을 만드는 일이 아니며, 원 transcript를
           lossless archive로 대체하는 기능도 아닙니다. Context의 일반적인 선택·
-          memory·token budget은 <a href="/ai/context-engineering">context engineering</a>
+          memory·token budget은 <a href="/cs/ai/context-engineering">context engineering</a>
           이 소유하고, 이 글은 pinned Claw Code 구현이 실제로 어떤 history를
           줄이는지와 그 구현에 어떤 검증을 더해야 하는지를 다룹니다.
         </p>
@@ -129,8 +129,8 @@ export default function Overview() {
           workspace와 외부 시스템에 남습니다. 옛 context를 유지한다고 file이
           원래대로 돌아가지 않으며, summary에 “승인됨”이라고 적는다고 새 권한이
           생기지도 않습니다. Permission과 tool effect의 정본은 각각
-          <a href="/ai/claw-permissions"> permission runtime</a>과
-          <a href="/ai/claw-tool-system"> tool receipt</a>에 있어야 합니다.
+          <a href="/cs/ai/claw-permissions"> permission runtime</a>과
+          <a href="/cs/ai/claw-tool-system"> tool receipt</a>에 있어야 합니다.
         </p>
         <p>
           예를 들어 edit가 성공한 직후 ToolResult를 session에 저장하기 전에 process가 죽었다면, 다음 agent는 “결과 message가 없으니 edit를 다시

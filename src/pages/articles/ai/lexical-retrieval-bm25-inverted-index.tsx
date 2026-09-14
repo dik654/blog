@@ -204,7 +204,7 @@ export default function LexicalRetrievalBm25InvertedIndexArticle() {
             Semantic retrieval(embedding 벡터로 의미 유사도를 비교하는 검색)은 이
             vocabulary mismatch 를 학습된 embedding space 로 메웁니다. "자동차"와
             "차량"이 벡터로는 가까울 수 있기 때문입니다. 이 dense 쪽 정의와 계산은{" "}
-            <Link to="/ai/vector-search-and-ann-indexes#dense-retrieval-embedding-space">
+            <Link to="/cs/ai/vector-search-and-ann-indexes#dense-retrieval-embedding-space">
               vector search 글
             </Link>{" "}
             이 다룹니다.
@@ -213,7 +213,7 @@ export default function LexicalRetrievalBm25InvertedIndexArticle() {
             실무는 둘을 배타적으로 고르지 않습니다. BM25 로 빠르게 후보를 거르고
             semantic retrieval 로 의미 관계를 보완하는 hybrid 구성이 흔하고,
             candidate 를 합치는 rank fusion 은{" "}
-            <Link to="/ai/retrieval-ranking-funnel#retrieval">
+            <Link to="/cs/ai/retrieval-ranking-funnel#retrieval">
               retrieval-ranking funnel 글
             </Link>{" "}
             이 다룹니다.
@@ -265,8 +265,8 @@ export default function LexicalRetrievalBm25InvertedIndexArticle() {
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/ai/retrieval-ranking-funnel#retrieval">Retrieval-ranking funnel: BM25·dense·rank fusion</Link>,
-          그리고 <Link to="/ai/vector-search-and-ann-indexes">Vector search: exact NN 에서 IVF·PQ 까지</Link>.
+          다음 글: <Link to="/cs/ai/retrieval-ranking-funnel#retrieval">Retrieval-ranking funnel: BM25·dense·rank fusion</Link>,
+          그리고 <Link to="/cs/ai/vector-search-and-ann-indexes">Vector search: exact NN 에서 IVF·PQ 까지</Link>.
         </p>
       </section>
     </div>

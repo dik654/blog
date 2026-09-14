@@ -9,7 +9,7 @@ export default function Schnorr() {
       <h2 className="mb-6 text-2xl font-bold">Schnorr: 지식 증명 transcript를 메시지 서명으로 묶는다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Prime-order group의 generator G와 공개키 P=xG가 있을 때, 서명자는 secret scalar x를 공개하지 않고 자신이 x를 안다는 관계를 증명합니다. 원래 Sigma protocol은 verifier가 무작위 challenge를 보내는 세 단계 대화입니다. Fiat–Shamir transform은 이 challenge를 transcript hash로 바꾸며, message와 domain까지 hash에 포함해야 다른 문맥의 응답을 재사용할 수 없습니다. DLP의 정확한 공격 모델은 <Link to="/crypto/discrete-log">이산로그 글</Link>을 재사용합니다.
+          Prime-order group의 generator G와 공개키 P=xG가 있을 때, 서명자는 secret scalar x를 공개하지 않고 자신이 x를 안다는 관계를 증명합니다. 원래 Sigma protocol은 verifier가 무작위 challenge를 보내는 세 단계 대화입니다. Fiat–Shamir transform은 이 challenge를 transcript hash로 바꾸며, message와 domain까지 hash에 포함해야 다른 문맥의 응답을 재사용할 수 없습니다. DLP의 정확한 공격 모델은 <Link to="/cs/crypto/discrete-log">이산로그 글</Link>을 재사용합니다.
         </p>
       </div>
       <CryptoFoundationsViz mode="schnorr-transcript" />

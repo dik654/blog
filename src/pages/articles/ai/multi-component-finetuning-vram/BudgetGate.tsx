@@ -53,7 +53,7 @@ export default function BudgetGate() {
             사전계산의 이득은 영상에서 더 큽니다. 프레임마다 인코딩이 필요하므로 매 스텝 비용이 크고, 미리
             계산해 두면 그 비용과 상주 메모리가 함께 사라집니다. 대신 저장량은 프레임 수만큼 늘어납니다.
             영상 LoRA의 학습 대상 범위는{" "}
-            <Link to="/ai/image-video-lora-architecture#video-scope">이미지·영상 LoRA 구조</Link>에서 다룹니다.
+            <Link to="/cs/ai/image-video-lora-architecture#video-scope">이미지·영상 LoRA 구조</Link>에서 다룹니다.
           </p>
         </ProgressiveDetail>
       </div>

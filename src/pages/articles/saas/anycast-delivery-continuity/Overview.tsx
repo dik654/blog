@@ -32,7 +32,7 @@ export default function Overview() {
 
         <p className="leading-7">
           중복 구성과 장애 조치의 일반 개념은{" "}
-          <Link to="/ai/rate-limiting-and-reliability-patterns">레이트 리밋과 신뢰성 패턴</Link>이 소유합니다.
+          <Link to="/cs/ai/rate-limiting-and-reliability-patterns">레이트 리밋과 신뢰성 패턴</Link>이 소유합니다.
           이 글은 그 개념이 지리적으로 흩어진 엣지에서 어떤 모양이 되는지, 그리고 그때 새로 생기는 문제만
           다룹니다.
         </p>

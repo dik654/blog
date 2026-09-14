@@ -102,7 +102,7 @@ p_t&=\underbrace{\operatorname{softmax}(z_t)}_{\text{score를 합 1의 probabili
           실수가 이후 state와 입력 분포를 바꿉니다. 이를 exposure bias라고 부르며,
           teacher forcing을 사용했다는 사실과 inference 품질은 별도로 평가해야 합니다.
           이 train–inference 경계의 정본 설명과 문제는{" "}
-          <Link to="/ai/supervised-fine-tuning#teacher-forcing">teacher forcing·exposure bias 글</Link>에 모았습니다.
+          <Link to="/cs/ai/supervised-fine-tuning#teacher-forcing">teacher forcing·exposure bias 글</Link>에 모았습니다.
         </p>
         <h3>Perplexity는 tokenization까지 같을 때 비교한다</h3>
         <p>
@@ -112,7 +112,7 @@ p_t&=\underbrace{\operatorname{softmax}(z_t)}_{\text{score를 합 1의 probabili
           다르기 때문에 서로 다른 vocabulary와 tokenization의 PPL을 숫자만으로 비교하면
           공정하지 않습니다.
           평균 negative log-likelihood가 무엇을 측정하는지는{" "}
-          <Link to="/ai/cross-entropy#cross-entropy">cross-entropy 정본 글</Link>에서 probability·log부터 이어집니다.
+          <Link to="/cs/ai/cross-entropy#cross-entropy">cross-entropy 정본 글</Link>에서 probability·log부터 이어집니다.
         </p>
       </div>
 

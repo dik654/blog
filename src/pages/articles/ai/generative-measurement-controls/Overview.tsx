@@ -34,10 +34,10 @@ export default function Overview() {
 
         <p className="leading-7">
           이 글의 수치는 RTX 4090 48GB 한 대에서 직접 돌린 결과이며 산출물은 저장소에 남아 있습니다. 코사인
-          유사도 자체는 <Link to="/ai/distributional-semantics#dimensionality">분포 의미론</Link>이, 비용을
+          유사도 자체는 <Link to="/cs/ai/distributional-semantics#dimensionality">분포 의미론</Link>이, 비용을
           반영한 임계값 선택은{" "}
-          <Link to="/ai/cost-sensitive-thresholding#expected-cost">비용 민감 임계</Link>가, 오토인코더의
-          재구성 손실은 <Link to="/ai/vae#vae-loss">VAE</Link>가 소유합니다.
+          <Link to="/cs/ai/cost-sensitive-thresholding#expected-cost">비용 민감 임계</Link>가, 오토인코더의
+          재구성 손실은 <Link to="/cs/ai/vae#vae-loss">VAE</Link>가 소유합니다.
         </p>
       </div>
 

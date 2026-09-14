@@ -51,7 +51,7 @@ export default function Limitations() {
           경로도 함께 잃는다. State width만 늘린 실험과 source memory read를 추가한 실험을 같은 hardware·latency budget에 두고 length
           bucket별 quality와 memory를 함께 비교한다.
         </p>
-        <p>Additive·dot-product·self-attention의 계산과 heatmap 해석은 여기에서 중복하지 않고 <Link to="/ai/attention-theory">Attention 이론 정본 글</Link>로 이어갑니다.</p>
+        <p>Additive·dot-product·self-attention의 계산과 heatmap 해석은 여기에서 중복하지 않고 <Link to="/cs/ai/attention-theory">Attention 이론 정본 글</Link>로 이어갑니다.</p>
       </div>
 
       <div id="paper-bahdanau-bridge" className="not-prose my-8 border-l border-primary/50 pl-4 scroll-mt-24">

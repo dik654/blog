@@ -56,7 +56,7 @@ export default function MemoryChannels() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           채널 대역폭 계산과 전기적 부하, 오류 정정의 원리는{" "}
-          <Link to="/gpu/hw-memory">메모리</Link>가 소유합니다. 이 절이 더하는 것은 그 값이 가속기 서버에서
+          <Link to="/cs/gpu/hw-memory">메모리</Link>가 소유합니다. 이 절이 더하는 것은 그 값이 가속기 서버에서
           데이터 공급 경로의 상한이 된다는 점과, 제품군 선택이 채널 수를 통해 이 상한을 미리 정한다는 점입니다.
         </p>
 

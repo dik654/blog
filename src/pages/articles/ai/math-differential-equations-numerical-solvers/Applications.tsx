@@ -21,7 +21,7 @@ export default function Applications() {
       </div>
       <div className="not-prose mt-8 grid gap-5 md:grid-cols-2">
         <Link
-          to="/ai/diffusion-models#continuous-time"
+          to="/cs/ai/diffusion-models#continuous-time"
           className="border-t border-border pt-4"
         >
           <b className="text-sm">
@@ -33,7 +33,7 @@ export default function Applications() {
           </p>
         </Link>
         <Link
-          to="/ai/math-functions-derivatives-gradients#derivative"
+          to="/cs/ai/math-functions-derivatives-gradients#derivative"
           className="border-t border-border pt-4"
         >
           <b className="text-sm">Derivative와 local linearity 복습</b>

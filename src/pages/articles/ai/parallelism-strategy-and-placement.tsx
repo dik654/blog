@@ -39,7 +39,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
           </p>
           <p>
             각 축이 layer 마다 보내는 byte 와 μs 는{" "}
-            <Link to="/ai/tensor-and-pipeline-parallel-inference#decode-impact">앞 글의 통신 계산</Link>
+            <Link to="/cs/ai/tensor-and-pipeline-parallel-inference#decode-impact">앞 글의 통신 계산</Link>
             을 그대로 씁니다. 여기서는 그 숫자를 실제 node 와 link 위에 올립니다.
           </p>
         </div>
@@ -68,9 +68,9 @@ export default function ParallelismStrategyAndPlacementArticle() {
           </p>
           <p>
             NVLink 와 PCIe 의 device 경계, GPU 와 adapter 사이의 경로는{" "}
-            <Link to="/gpu/gpu-interconnects#nvlink-device-fabric-boundary">gpu-interconnects</Link>{" "}
+            <Link to="/cs/gpu/gpu-interconnects#nvlink-device-fabric-boundary">gpu-interconnects</Link>{" "}
             글이, InfiniBand 와 RoCE 의 선택은{" "}
-            <Link to="/gpu/gpu-collective-network#infiniband">gpu-collective-network</Link> 글이
+            <Link to="/cs/gpu/gpu-collective-network#infiniband">gpu-collective-network</Link> 글이
             소유합니다. 여기서는 두 계층의 대역폭과 latency 만 숫자로 씁니다.
           </p>
         </div>
@@ -164,7 +164,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
           <p>
             Strong scaling 이 100% 에 못 미치는 이유는 Amdahl 의 법칙입니다. 나눌 수 없는 부분이 남고,
             여기서는 layer 마다 붙는 all-reduce latency 가 그 부분입니다. 식과 20 배 상한의 예는{" "}
-            <Link to="/gpu/cuda-perf-analysis#amdahl">cuda-perf-analysis 의 Amdahl 절</Link> 이
+            <Link to="/cs/gpu/cuda-perf-analysis#amdahl">cuda-perf-analysis 의 Amdahl 절</Link> 이
             소유하며, 아래 식은 그 상한을 통신 비율로 다시 쓴 것입니다.
           </p>
           <p>
@@ -231,7 +231,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
             겹치려면 의존성이 없어야 합니다. TP 의 all-reduce 결과는 바로 다음 layer 의 입력이라 그
             layer 와는 겹칠 수 없고, GEMM 을 chunk 로 잘라 앞 chunk 의 all-reduce 를 뒤 chunk 의 GEMM 과
             겹치는 식으로 의존성을 쪼개야 합니다. stream 이 겹침을 허용하는 조건은{" "}
-            <Link to="/gpu/cuda-sync-streams#streams">CUDA stream ordering</Link> 글이 소유합니다.
+            <Link to="/cs/gpu/cuda-sync-streams#streams">CUDA stream ordering</Link> 글이 소유합니다.
           </p>
           <p>
             Decode 에서 overlap 의 한계는 α 입니다. 1 MB all-reduce 의 7 μs 중 5 μs 가 고정 latency 라 chunk 로 잘라도 각 chunk 에
@@ -323,9 +323,9 @@ export default function ParallelismStrategyAndPlacementArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             다음 읽기는 replica 하나의 KV pool 이 몇 개의 동시 요청을 감당하는지 셈하는{" "}
-            <Link to="/ai/llm-serving-capacity#capacity">serving capacity</Link> 글과, 그 KV pool 이
+            <Link to="/cs/ai/llm-serving-capacity#capacity">serving capacity</Link> 글과, 그 KV pool 이
             기동 때 어떻게 확정되는지 다루는{" "}
-            <Link to="/ai/inference-runtime-anatomy#memory-plan">inference runtime 해부</Link> 글입니다.
+            <Link to="/cs/ai/inference-runtime-anatomy#memory-plan">inference runtime 해부</Link> 글입니다.
           </p>
         </div>
       </section>

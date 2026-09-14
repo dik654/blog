@@ -13,7 +13,7 @@ export default function Overview() {
           공개키 암호에서 signer는 secret scalar x를 고르고 공개 group element Y=gˣ 또는 additive notation의 Y=[x]G를 공개합니다. x에서 Y로 가는 scalar multiplication은 double-and-add나 square-and-multiply로 빠르지만, Y만 보고 x를 되찾는 discrete logarithm problem(DLP)은 적절한 큰 subgroup에서 비싸다고 가정합니다. “유한체의 로그”라는 표현보다 <strong>고정 generator에 대한 group element의 지수 좌표를 찾는 문제</strong>라고 읽는 편이 정확합니다.
         </p>
         <p>
-          먼저 group·generator·order를 고정해야 문제의 범위가 정해집니다. g가 order q인 subgroup을 생성하면 x는 mod q에서만 유일하고, Y가 그 subgroup 밖에 있으면 해가 없습니다. Field arithmetic와 multiplicative order는 <Link to="/crypto/finite-field-theory#prime-field">유한체 정본</Link>, elliptic-curve point group의 구현은 <Link to="/crypto/elliptic-curves">타원곡선 정본</Link>에서 이어집니다.
+          먼저 group·generator·order를 고정해야 문제의 범위가 정해집니다. g가 order q인 subgroup을 생성하면 x는 mod q에서만 유일하고, Y가 그 subgroup 밖에 있으면 해가 없습니다. Field arithmetic와 multiplicative order는 <Link to="/cs/crypto/finite-field-theory#prime-field">유한체 정본</Link>, elliptic-curve point group의 구현은 <Link to="/cs/crypto/elliptic-curves">타원곡선 정본</Link>에서 이어집니다.
         </p>
       </div>
       <ContentBoundary article="discrete-log" />

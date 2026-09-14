@@ -53,7 +53,7 @@ export default function SmWarpSchedulingAndIssueArticle() {
             채워집니다. Warp 가 왜 ready 가 아닌지, 그 판정을 누가 하는지가 다음 절의
             scoreboard 이고, ready warp 를 충분히 확보하는 방법이 그다음 절의 latency
             hiding 입니다. Warp 32 lane 의 SIMT 실행 자체는{" "}
-            <Link to="/gpu/cuda-thread-hierarchy#overview">CUDA 스레드 계층</Link> 이 다룹니다.
+            <Link to="/cs/gpu/cuda-thread-hierarchy#overview">CUDA 스레드 계층</Link> 이 다룹니다.
           </p>
         </div>
         <SmWarpSchedulingAndIssueViz />
@@ -144,8 +144,8 @@ export default function SmWarpSchedulingAndIssueArticle() {
           <p>
             Ready warp 를 늘리는 한도는 register 와 shared memory 입니다. Thread 당
             register 가 늘면 resident warp 가 줄어 TLP 로 숨길 수 있는 latency 가 줄고,
-            그 계산은 <Link to="/gpu/gpu-architecture#gpu-latency-hiding-occupancy">occupancy resource bound</Link> 와{" "}
-            <Link to="/gpu/cuda-register-pressure#residency">register residency</Link> 가
+            그 계산은 <Link to="/cs/gpu/gpu-architecture#gpu-latency-hiding-occupancy">occupancy resource bound</Link> 와{" "}
+            <Link to="/cs/gpu/cuda-register-pressure#residency">register residency</Link> 가
             다룹니다.
           </p>
         </div>
@@ -207,7 +207,7 @@ W_{\mathrm{ready}} &\ge \underbrace{\left\lceil \frac{I_{\mathrm{flight}}}{\math
             같은 warp 의 lane 이 같은 방향으로 가도록 data 를 배치하면 divergence 는
             사라집니다. Lane 별 조건이 thread index 의 32 배수 경계와 맞으면 warp 단위로만
             갈라지므로 두 경로가 한 warp 안에 겹치지 않습니다. 이 배치는 memory coalescing 과
-            같은 원리이며 <Link to="/gpu/cuda-shared-memory#coalescing">Coalescing</Link> 에서
+            같은 원리이며 <Link to="/cs/gpu/cuda-shared-memory#coalescing">Coalescing</Link> 에서
             이어집니다.
           </p>
         </div>
@@ -305,8 +305,8 @@ W_{\mathrm{ready}} &\ge \underbrace{\left\lceil \frac{I_{\mathrm{flight}}}{\math
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/gpu/gpu-memory-hierarchy-and-roofline">GPU memory hierarchy 와 roofline</Link>,
-          그리고 <Link to="/gpu/cuda-register-pressure#residency">register 가 residency 를 줄이는 경로</Link>.
+          다음 글: <Link to="/cs/gpu/gpu-memory-hierarchy-and-roofline">GPU memory hierarchy 와 roofline</Link>,
+          그리고 <Link to="/cs/gpu/cuda-register-pressure#residency">register 가 residency 를 줄이는 경로</Link>.
         </p>
       </section>
     </div>

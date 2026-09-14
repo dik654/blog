@@ -27,7 +27,7 @@ export default function SkillSystem({
         재사용합니다. watcher·configuration·node 상태로 후보가 달라지면 다음
         turn에 snapshot을 새로 고치며, 선택된 skill의 상세 지침은 필요할 때
         읽습니다. 자세한
-        구조는 <Link to="/ai/skills-anatomy">Skills anatomy</Link>에서 이어집니다.
+        구조는 <Link to="/cs/ai/skills-anatomy">Skills anatomy</Link>에서 이어집니다.
       </p>
 
       <ol className="not-prose my-6 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-5">

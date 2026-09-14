@@ -9,7 +9,7 @@ export default function Overview() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          단일 <Link to="/ai/perceptron">퍼셉트론</Link>은 하나의 affine score로
+          단일 <Link to="/cs/ai/perceptron">퍼셉트론</Link>은 하나의 affine score로
           입력 공간을 나누기 때문에 XOR처럼 한 직선으로 분리되지 않는 패턴을 표현하지
           못한다. Multi-layer perceptron(MLP)은 affine transformation과 nonlinear
           activation을 여러 번 합성해 이 제약을 푼다. 앞쪽 layer는 관측 feature를
@@ -58,9 +58,9 @@ export default function Overview() {
         <p>
           이 글은 MLP forward contract와 출력 설계를 다룬다. Gradient를 효율적으로
           계산하는 reverse-mode autodiff와 parameter update는
-          <Link to="/ai/backprop-optimization">역전파·최적화 글</Link>이 소유하고,
+          <Link to="/cs/ai/backprop-optimization">역전파·최적화 글</Link>이 소유하고,
           activation별 derivative와 gated FFN은
-          <Link to="/ai/activation-functions">활성화 함수 글</Link>에서 확장한다.
+          <Link to="/cs/ai/activation-functions">활성화 함수 글</Link>에서 확장한다.
         </p>
       </div>
     </section>

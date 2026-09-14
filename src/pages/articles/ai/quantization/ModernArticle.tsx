@@ -20,12 +20,12 @@ export default function QuantizationArticle() {
           </p>
           <p>
             이 글은 숫자 하나의 이동만 다룹니다. 표본으로 scale을 고르는 과정은
-            <a href="/ai/ptq-calibration"> PTQ calibration</a>, 학습으로 오차에
+            <a href="/cs/ai/ptq-calibration"> PTQ calibration</a>, 학습으로 오차에
             적응하는 과정은
-            <a href="/ai/quantization-aware-training"> QAT</a>, GPTQ·AWQ는
-            <a href="/ai/weight-only-quantization"> weight-only quantization</a>
+            <a href="/cs/ai/quantization-aware-training"> QAT</a>, GPTQ·AWQ는
+            <a href="/cs/ai/weight-only-quantization"> weight-only quantization</a>
             , 실제 GPU 메모리와 속도는{" "}
-            <a href="/ai/quantized-model-deployment">배포 장부</a>에서
+            <a href="/cs/ai/quantized-model-deployment">배포 장부</a>에서
             이어집니다.
           </p>
         </div>

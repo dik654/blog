@@ -33,8 +33,8 @@ export default function Overview() {
 
         <p className="leading-7">
           동작을 나누는 분류와 마스크 확장의 방향은{" "}
-          <Link to="/ai/masked-edit-verb-routing">편집 동작과 모델 라우팅</Link>이, 계측기 대조군과 바닥값은{" "}
-          <Link to="/ai/generative-measurement-controls">계측기 검증</Link>이 소유합니다.
+          <Link to="/cs/ai/masked-edit-verb-routing">편집 동작과 모델 라우팅</Link>이, 계측기 대조군과 바닥값은{" "}
+          <Link to="/cs/ai/generative-measurement-controls">계측기 검증</Link>이 소유합니다.
         </p>
       </div>
 

@@ -15,12 +15,12 @@ export default function Overview() {
           모든 연산은 field 안에서 정확합니다.
         </p>
         <p>
-          이 글은 <Link to="/crypto/finite-field-theory">소수체의 곱셈군</Link>
-          과<Link to="/crypto/lagrange"> 다항식 보간</Link>을 선수 지식으로
+          이 글은 <Link to="/cs/crypto/finite-field-theory">소수체의 곱셈군</Link>
+          과<Link to="/cs/crypto/lagrange"> 다항식 보간</Link>을 선수 지식으로
           사용해, NTT matrix·primitive root·radix-2 butterfly·INTT·padding
           경계를 연결합니다. Signal frequency를 해석하는 complex DFT·sampling
           문제는
-          <Link to="/ai/fft"> AI FFT 정본</Link>이 소유합니다.
+          <Link to="/cs/ai/fft"> AI FFT 정본</Link>이 소유합니다.
         </p>
       </div>
       <ContentBoundary article="crypto-fft" />

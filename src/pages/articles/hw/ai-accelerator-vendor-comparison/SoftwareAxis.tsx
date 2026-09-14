@@ -38,7 +38,7 @@ export default function SoftwareAxis() {
         <p className="leading-7">
           벤치마크 수치를 옮겨 읽을 때도 이 축이 개입합니다. 벤더가 공개한 수치는 그 벤더의 최적 경로에서 나온
           값이고, 내 스택에서 그 경로가 켜지지 않으면 재현되지 않습니다. 서빙 성능을 어떤 조건에서 재야 하는지는{" "}
-          <Link to="/ai/serving-benchmark-methodology">서빙 벤치마크 방법론</Link>에서 다룹니다.
+          <Link to="/cs/ai/serving-benchmark-methodology">서빙 벤치마크 방법론</Link>에서 다룹니다.
         </p>
       </div>
 
@@ -58,7 +58,7 @@ export default function SoftwareAxis() {
           <p className="leading-7">
             마지막은 통신 라이브러리입니다. 여러 장을 묶는 구성이라면 collective 구현이 다른 라이브러리로
             바뀌므로 튜닝 값이 그대로 옮겨지지 않습니다. 이 계층의 일반 논의는{" "}
-            <Link to="/gpu/gpu-collective-network">collective 네트워크</Link>에 있습니다.
+            <Link to="/cs/gpu/gpu-collective-network">collective 네트워크</Link>에 있습니다.
           </p>
         </ProgressiveDetail>
       </div>

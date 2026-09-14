@@ -82,7 +82,7 @@ export default function ModelDisposition() {
 
         <p className="leading-7">
           마스크 밖 변화량을 모델 선택에 쓰지 않은 이유도 적어 둡니다. 그 열은{" "}
-          <Link to="/ai/generative-measurement-controls#roundtrip-floor">오토인코더 왕복 바닥값</Link>으로
+          <Link to="/cs/ai/generative-measurement-controls#roundtrip-floor">오토인코더 왕복 바닥값</Link>으로
           설명되어 모델의 성질이 아니었습니다. 이 표에서 선택 근거로 쓰는 것은 마스크 안 변화량과 그림 확인
           두 가지입니다.
         </p>

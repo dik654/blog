@@ -15,7 +15,7 @@ export default function Security() {
           “DLP가 어렵다”는 사실만으로 CDH가 어렵다는 역방향 결론은 나오지
           않습니다. DDH는 (gᵃ,gᵇ,gᵃᵇ) tuple과 random tuple의 구별 문제이며
           group에 따라 CDH는 어렵지만 DDH는 쉬운 gap이 있을 수 있습니다. Protocol
-          security claim은 <Link to="/crypto/discrete-log#applications">가정 정본</Link>의
+          security claim은 <Link to="/cs/crypto/discrete-log#applications">가정 정본</Link>의
           정확한 문제를 참조해야 합니다.
         </p>
       </div>

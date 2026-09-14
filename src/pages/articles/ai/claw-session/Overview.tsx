@@ -104,7 +104,7 @@ export default function Overview() {
           아닙니다. Context는 다음 model request에 넣을 입력이고, session은 그
           context를 다시 만들 때 참고하는 저장 record입니다. 어떤 정보를
           context에 선택하고 compaction하는지는{" "}
-          <a href="/ai/context-engineering">context engineering</a>이 소유하며,
+          <a href="/cs/ai/context-engineering">context engineering</a>이 소유하며,
           이 글은 저장된 대화와 실행이 어디까지 같은 작업인지 식별하는 경계를
           다룹니다.
         </p>

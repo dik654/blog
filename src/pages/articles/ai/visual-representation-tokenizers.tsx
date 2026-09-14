@@ -169,7 +169,7 @@ N_z&=\underbrace{\frac{H}{f}\frac{W}{f}}_{\substack{\text{두 공간축을 각�
             contact, camera motion과 controllability가 feature에 남아 있는지 별도로 검증해야 합니다.
           </p>
           <p>
-            다음 글인 <Link to="/ai/diffusion-transformer-architecture">Diffusion
+            다음 글인 <Link to="/cs/ai/diffusion-transformer-architecture">Diffusion
             Transformer 구조</Link>에서는 이 latent를 실제 token sequence로 바꾸고
             time·text 조건을 transformer block에 넣는 방법을 살펴봅니다. 이후 modern
             image stack을 통합한 뒤에야 video와 action-conditioned state transition으로

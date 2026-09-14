@@ -33,8 +33,8 @@ export default function Overview() {
 
         <p className="leading-7">
           정체성 판정 임계값과 탐지·인식의 구분은{" "}
-          <Link to="/ai/generative-measurement-controls">계측기 검증</Link>이, 텍스트 축의 반응 차이는{" "}
-          <Link to="/ai/generative-identity-diversity#seed-null">정체성 다양성</Link>이 소유합니다.
+          <Link to="/cs/ai/generative-measurement-controls">계측기 검증</Link>이, 텍스트 축의 반응 차이는{" "}
+          <Link to="/cs/ai/generative-identity-diversity#seed-null">정체성 다양성</Link>이 소유합니다.
         </p>
       </div>
 

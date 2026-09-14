@@ -61,7 +61,7 @@ export default function ScopeTaxonomy() {
         이 축은 teacher가 어떤 dataset으로 student 학습 데이터를 만드는지와도
         이어집니다. Teacher가 직접 만든 synthetic dataset으로 student를
         학습하는 문제는{" "}
-        <Link to="/ai/synthetic-data-and-data-flywheel#generation-sources">
+        <Link to="/cs/ai/synthetic-data-and-data-flywheel#generation-sources">
           synthetic data generation
         </Link>
         에서 다루며, 그 dataset이 어떤 task·capability를 겨냥해 만들어졌는지가

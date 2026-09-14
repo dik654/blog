@@ -24,7 +24,7 @@ export default function LlmGatewayAndModelRoutingArticle() {
             gateway는 이 형식을 하나의 interface로 통일하고 그 뒤에서 실제로 어떤 model을 쓸지는 router가 정책에 따라 고릅니다.
           </p>
           <p>
-            <Link to="/ai/llm-serving-ops#litellm-gateway">LLM 서빙 운영</Link> 글은
+            <Link to="/cs/ai/llm-serving-ops#litellm-gateway">LLM 서빙 운영</Link> 글은
             이미 gateway를 다뤘지만 그 글의 초점은 호환성 계약을 먼저 걸러낸 뒤
             deadline 안에서 retry·fallback을 안전하게 허용하는 운영 제어면입니다. 이
             글은 그보다 앞선 질문, 즉 gateway가 API를 어떻게 통일하고 router가 어떤
@@ -59,7 +59,7 @@ export default function LlmGatewayAndModelRoutingArticle() {
             뒤에서 수백 개 model을 자동으로 routing합니다. 두 경우 모두 애플리케이션 코드는 provider가 바뀌어도 그대로 유지됩니다.
           </p>
           <p>
-            <Link to="/ai/llm-serving-ops#litellm-gateway">LLM 서빙 운영</Link> 글의
+            <Link to="/cs/ai/llm-serving-ops#litellm-gateway">LLM 서빙 운영</Link> 글의
             gateway 절은 이 unified API 위에서 호환성 계약과 deadline 소유·retry
             budget을 다루는 운영 정책이며, 이 글이 다루는 API 통일 자체와는 층이
             다릅니다.
@@ -97,7 +97,7 @@ export default function LlmGatewayAndModelRoutingArticle() {
           </p>
           <p>
             이 다섯 기준은 서로 배타적이지 않고 실무에서는 여러 개를 겹쳐 씁니다.{" "}
-            <Link to="/ai/llm-serving-ops#litellm-gateway">LLM 서빙 운영</Link> 글의
+            <Link to="/cs/ai/llm-serving-ops#litellm-gateway">LLM 서빙 운영</Link> 글의
             capability-first model routing은 capability-aware routing으로 먼저
             후보를 걸러낸 뒤 나머지 기준으로 순위를 매기는 구체적인 조합 사례입니다.
           </p>
@@ -195,7 +195,7 @@ export default function LlmGatewayAndModelRoutingArticle() {
             다시 보냅니다.
           </p>
           <p>
-            <Link to="/ai/llm-serving-ops#litellm-gateway">LLM 서빙 운영</Link> 글의
+            <Link to="/cs/ai/llm-serving-ops#litellm-gateway">LLM 서빙 운영</Link> 글의
             deadline-owned retry budget은 이 fallback을 몇 번까지, 얼마나 남은
             시간 안에서 허용할지를 정하는 운영 규칙입니다. 이 글은 fallback이라는
             개념 자체를, 그 글은 그 개념을 안전하게 실행하는 예산 관리를 다룹니다.

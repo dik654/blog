@@ -120,7 +120,7 @@ export default function SiteBalancing() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           복제본 사이의 요청 분배 전략 일반론은{" "}
-          <Link to="/ai/llm-serving-ops">서빙 운영</Link> 쪽이 소유합니다. 이 절은 그 분배가 커널 앞단에서
+          <Link to="/cs/ai/llm-serving-ops">서빙 운영</Link> 쪽이 소유합니다. 이 절은 그 분배가 커널 앞단에서
           상태 없이 이뤄질 때 생기는 재해시 문제와 그 해법만 다뤘습니다.
         </p>
       </div>

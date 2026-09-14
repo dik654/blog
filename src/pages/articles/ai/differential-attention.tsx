@@ -21,7 +21,7 @@ export default function DifferentialAttentionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <Link to="/ai/attention-theory#multiplicative">Scaled dot-product attention</Link>은
+            <Link to="/cs/ai/attention-theory#multiplicative">Scaled dot-product attention</Link>은
             모든 key 에 softmax 로 확률을 나눠 주므로, 답과 무관한 위치도 0 이 아닌 점수를 받습니다.
             Differential attention 은 독립적으로 계산한 두 softmax map 의 차를 점수로 써서, 두
             map 에 공통으로 나타나는 성분을 상쇄하고 실제로 필요한 위치만 남깁니다.
@@ -67,7 +67,7 @@ export default function DifferentialAttentionArticle() {
             역할을 가리키는 이름입니다. Noise map 이 실제로 무관한 token 만 가리킨다는 보장은 없고 학습이 공통 성분으로 추정한 분포를 근사할 뿐입니다.
           </p>
           <p>
-            <Link to="/ai/attention-theory#self-attention">Multi-head attention</Link>의 각
+            <Link to="/cs/ai/attention-theory#self-attention">Multi-head attention</Link>의 각
             head 가 이제 두 배의 query·key projection(Q1, K1, Q2, K2)과 폭이 두 배인 value
             V ∈ R^{"{N×2d}"} 를 만듭니다. head 하나가 값 두 벌을 만드는 대신, 같은 예산에서 head
             수를 줄이는 이유는 다음 절에서 파라미터 산수로 확인합니다.
@@ -238,7 +238,7 @@ export default function DifferentialAttentionArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Differential attention 은 attention 이 무엇에 점수를 주는지를 바꾸는 selectivity
-            축입니다. <Link to="/ai/motif-3-architecture#gdla">MLA 의 latent KV 압축</Link>은
+            축입니다. <Link to="/cs/ai/motif-3-architecture#gdla">MLA 의 latent KV 압축</Link>은
             decode 에서 얼마나 많은 KV 를 저장·전송하는지를 바꾸는 memory 축입니다. 두 축은 서로
             다른 병목을 풀므로 하나가 다른 하나의 상위 호환은 아닙니다.
           </p>
@@ -254,7 +254,7 @@ export default function DifferentialAttentionArticle() {
           <p>
             연산 비용도 공짜가 아닙니다. Head 수는 절반이 되지만 head 마다 두 번의 QKᵀ·softmax·PV
             를 계산하므로 전체 FLOPs 는 표준 attention 과 비슷하게 맞춰질 뿐 줄지 않습니다. 또한
-            <Link to="/ai/flash-attention-io-aware-kernel#tiling">FlashAttention</Link> 커널
+            <Link to="/cs/ai/flash-attention-io-aware-kernel#tiling">FlashAttention</Link> 커널
             하나로 바로 감싸지지 않아, 저자들은 두 번의 FlashAttention 호출 결과를 조합하는 방식을
             부록에서 제시합니다.
           </p>
@@ -263,7 +263,7 @@ export default function DifferentialAttentionArticle() {
             설명은 두 신호를 빼서 공통 성분을 지운다는 직관을 여는 장치일 뿐입니다. Noise map 이
             실제 물리적 잡음의 원천이라거나 D 가 항상 더 해석 가능하다는 증명은 아닙니다. 다음 글은
             이 attention 출력이 지나가는 residual stream 자체를 여러 갈래로 늘리는
-            <Link to="/ai/hyper-connections-residual-streams">hyper-connection</Link>을 다룹니다.
+            <Link to="/cs/ai/hyper-connections-residual-streams">hyper-connection</Link>을 다룹니다.
           </p>
         </div>
       </section>

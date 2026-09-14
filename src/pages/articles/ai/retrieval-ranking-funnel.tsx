@@ -18,7 +18,7 @@ export default function RetrievalRankingFunnelArticle() {
           </p>
           <p>
             Ingestion·chunk·index revision, generation context와 claim citation까지의
-            전체 수명주기는 <a href="/ai/rag-pipeline">RAG 파이프라인 글</a>에서
+            전체 수명주기는 <a href="/cs/ai/rag-pipeline">RAG 파이프라인 글</a>에서
             이어집니다.
           </p>
         </div>

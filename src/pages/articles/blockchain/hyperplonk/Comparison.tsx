@@ -118,7 +118,7 @@ export default function Comparison() {
           두 세계의 장점을 결합하는 연구가 활발히 진행 중
           <br />
           <a
-            href="/blockchain/plonk"
+            href="/cs/blockchain/plonk"
             className="text-indigo-400 hover:underline"
           >
             PLONK 아티클

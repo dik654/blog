@@ -67,9 +67,9 @@ export default function CostAndSwitch() {
 
         <p className="leading-7">
           벡터와 함께 저장하는 지문과 재색인 트리거는{" "}
-          <Link to="/ai/image-embedding-pipeline#pipeline-contract">임베딩 파이프라인</Link>이 소유하고, 모델
+          <Link to="/cs/ai/image-embedding-pipeline#pipeline-contract">임베딩 파이프라인</Link>이 소유하고, 모델
           크기와 품질의 일반적인 교환은{" "}
-          <Link to="/ai/image-backbone-scaling#budget-comparison">백본 예산 비교</Link>에 있습니다.
+          <Link to="/cs/ai/image-backbone-scaling#budget-comparison">백본 예산 비교</Link>에 있습니다.
         </p>
       </div>
     </section>

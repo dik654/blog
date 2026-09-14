@@ -25,7 +25,7 @@ export default function PermissionGating() {
           결정을 내릴 수 있습니다.
         </p>
         <p>
-          Mode·rule 우선순위·override 수명은 <Link to="/ai/claw-permissions">Claw
+          Mode·rule 우선순위·override 수명은 <Link to="/cs/ai/claw-permissions">Claw
           permission 모델</Link>이 정본으로 소유합니다. 이 절은 그 결과를
           executor 직전에 어떻게 강제하고, deny·ask가 side effect로 새지 않게
           만드는지에 집중합니다.
@@ -122,9 +122,9 @@ export default function PermissionGating() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Shell grammar와 process cancellation은 <Link to="/ai/claw-bash">Bash 실행과
+          Shell grammar와 process cancellation은 <Link to="/cs/ai/claw-bash">Bash 실행과
           검증</Link>에서, symlink·container·credential·egress 경계는
-          <Link to="/ai/agent-sandbox-security"> agent sandbox security</Link>에서
+          <Link to="/cs/ai/agent-sandbox-security"> agent sandbox security</Link>에서
           이어서 다룹니다.
         </p>
       </div>

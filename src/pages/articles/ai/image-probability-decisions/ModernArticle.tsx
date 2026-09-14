@@ -205,9 +205,9 @@ export default function ImageProbabilityDecisionsArticle() {
         />
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           Threshold의 precision·recall·업무 비용은{" "}
-          <Link to="/ai/imbalanced-data">불균형 데이터 정본</Link>, model error
+          <Link to="/cs/ai/imbalanced-data">불균형 데이터 정본</Link>, model error
           diversity와 out-of-fold selection은{" "}
-          <Link to="/ai/ensemble-methods">ensemble 정본</Link>에서 이어집니다.
+          <Link to="/cs/ai/ensemble-methods">ensemble 정본</Link>에서 이어집니다.
         </p>
       </section>
 

@@ -21,7 +21,7 @@ export default function MathNumericalPrecisionStabilityArticle() {
             커집니다. Tensor의 shape가 어긋나는 문제도 같은 층위에서 조용히 틀린 결과를 만듭니다.
           </p>
           <p>
-            이 글은 <Link to="/ai/math-vectors-inner-products#dot-product">벡터·내적
+            이 글은 <Link to="/cs/ai/math-vectors-inner-products#dot-product">벡터·내적
             정본</Link>의 합산 연산을 이어받아, IEEE 754 부동소수점 표현이
             유효숫자를 어떻게 자르는지, 그 오차가 알고리즘에 따라 왜 다르게
             증폭되는지, tensor shape가 맞지 않을 때 broadcasting이 왜 예외 없이
@@ -167,9 +167,9 @@ export default function MathNumericalPrecisionStabilityArticle() {
         </div>
         <div className="not-prose mt-7 grid gap-5 md:grid-cols-3">
           {[
-            ["Quantization", "Floating-point의 자동 지수 조정과 달리 고정 scale integer grid가 만드는 반올림·clipping 오차로 대조합니다.", "/ai/quantization#error-shape"],
-            ["Automatic mixed-precision", "FP16·BF16의 정밀도·표현 범위 트레이드오프가 autocast의 연산별 dtype 선택 근거로 이어집니다.", "/ai/training-pipeline#loop"],
-            ["행렬·SVD", "행렬 곱의 m×n shape 계약이 임의 축 개수를 가진 tensor broadcasting 규칙으로 일반화됩니다.", "/ai/math-matrices-svd#matrix-map"],
+            ["Quantization", "Floating-point의 자동 지수 조정과 달리 고정 scale integer grid가 만드는 반올림·clipping 오차로 대조합니다.", "/cs/ai/quantization#error-shape"],
+            ["Automatic mixed-precision", "FP16·BF16의 정밀도·표현 범위 트레이드오프가 autocast의 연산별 dtype 선택 근거로 이어집니다.", "/cs/ai/training-pipeline#loop"],
+            ["행렬·SVD", "행렬 곱의 m×n shape 계약이 임의 축 개수를 가진 tensor broadcasting 규칙으로 일반화됩니다.", "/cs/ai/math-matrices-svd#matrix-map"],
           ].map(([title, body, href]) => (
             <Link key={href} to={href} className="min-w-0 border-t border-border/80 pt-4 hover:border-primary/60">
               <h3 className="text-sm font-bold">{title}</h3>

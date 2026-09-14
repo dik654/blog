@@ -12,7 +12,7 @@ export default function ErrorCorrection() {
           위치를 아는 누락(erasure)은 k개의 검증된 symbol이 남으면 보간합니다.
           위치를 모르는 잘못된 값(error)은 위치와 값을 함께 찾아야 하므로 parity
           budget 두 칸을 씁니다. (n,k)의 distance 식과 proof idea는
-          <Link to="/blockchain/erasure-coding#reed-solomon"> canonical 설명</Link>을
+          <Link to="/cs/blockchain/erasure-coding#reed-solomon"> canonical 설명</Link>을
           재사용합니다. 구현 결과는 최소한 <code>Recovered</code>,
           <code>InsufficientSymbols</code>, <code>TooManyErrors</code>,
           <code>ProfileMismatch</code>, <code>MalformedSymbol</code>을 구분해야 합니다.

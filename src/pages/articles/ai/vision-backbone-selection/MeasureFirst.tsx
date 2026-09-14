@@ -105,7 +105,7 @@ export default function MeasureFirst() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           변형 민감도와 정답 정의의 함정은{" "}
-          <Link to="/ai/image-embedding-pipeline#evaluation">임베딩 파이프라인</Link>에서 다룬 내용을 그대로
+          <Link to="/cs/ai/image-embedding-pipeline#evaluation">임베딩 파이프라인</Link>에서 다룬 내용을 그대로
           씁니다. 이 절이 더하는 것은 그 측정을 백본 선택의 입력으로 쓰는 방법입니다.
         </p>
       </div>

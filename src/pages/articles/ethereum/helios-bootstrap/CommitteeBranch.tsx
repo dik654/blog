@@ -12,7 +12,7 @@ export default function CommitteeBranch({ title, onCodeRef: _onCodeRef }: Props 
         <p>
           RPC가 임의의 public keys를 current committee라고 보내도 branch 검증이 없으면 이후 공격자 서명은 정상처럼 보입니다. SSZ의
           generalized index는 state tree에서 current committee leaf까지의 좌우 경로를 지정하고, sibling을 차례로 hash해 header의
-          state root와 같은지 확인합니다. Generalized index 자체의 정본은 <Link to="/blockchain/prysm-ssz">Prysm SSZ</Link>에서 다룹니다.
+          state root와 같은지 확인합니다. Generalized index 자체의 정본은 <Link to="/cs/blockchain/prysm-ssz">Prysm SSZ</Link>에서 다룹니다.
         </p>
       </div>
       <ExplainedFormula

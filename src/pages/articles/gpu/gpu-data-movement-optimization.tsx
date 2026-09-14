@@ -43,7 +43,7 @@ export default function GpuDataMovementOptimizationArticle() {
             그래서 최적화의 순서가 정해집니다. 먼저 가장 느린 global 층의 byte 를 줄이고, 다음으로
             shared memory 의 명령 수를 줄이며, 마지막으로 남은 global 이동을 계산 뒤에 숨깁니다.
             어느 층이 병목인지 판정하는 arithmetic intensity 와 ridge point 는{" "}
-            <Link to="/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound">roofline 글</Link> 이
+            <Link to="/cs/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound">roofline 글</Link> 이
             소유합니다.
           </p>
           <p>
@@ -84,13 +84,13 @@ export default function GpuDataMovementOptimizationArticle() {
             때 transaction 이 가장 적고, 계산이 원하는 순서는 그와 다를 때가 많습니다. Staging 은
             global 을 연속 순서로 읽고 shared memory 에서 계산 순서로 다시 읽어 둘을 분리합니다.
             연속 접근의 정의는{" "}
-            <Link to="/gpu/cuda-shared-memory#coalescing">coalescing</Link> 에 있습니다.
+            <Link to="/cs/gpu/cuda-shared-memory#coalescing">coalescing</Link> 에 있습니다.
           </p>
           <p>
             이동 자체는 register 를 거치지 않는 asynchronous copy 가 맡습니다. 8 KB tile 을{" "}
             <code>cp.async</code> 16 B 로 옮기면 128 thread 가 thread 당 4번 내고, Hopper 의 TMA 는
             32×128 box 를 명령 하나로 옮깁니다. 두 명령의 발행·완료 방식은{" "}
-            <Link to="/gpu/warp-specialization-and-async-pipelines#async-copy">앞 글의 asynchronous copy</Link> 가
+            <Link to="/cs/gpu/warp-specialization-and-async-pipelines#async-copy">앞 글의 asynchronous copy</Link> 가
             소유합니다.
           </p>
           <p>
@@ -126,13 +126,13 @@ export default function GpuDataMovementOptimizationArticle() {
             Hopper 의 <code>wgmma</code> 는 이 층을 건너뜁니다. A·B 를 shared memory descriptor 로
             직접 읽으므로 register 로 올리는 명령 자체가 없고, accumulator 만 register 에 남습니다.
             그 대신 shared memory 의 배치가 descriptor 의 swizzle 과 맞아야 하며, 그 규칙은{" "}
-            <Link to="/gpu/cutlass-gemm-hierarchy-and-cute-layouts#swizzle">swizzled layout</Link> 이
+            <Link to="/cs/gpu/cutlass-gemm-hierarchy-and-cute-layouts#swizzle">swizzled layout</Link> 이
             소유합니다.
           </p>
           <p>
             Bank conflict 는 이 층의 숨은 비용입니다. ldmatrix 가 읽는 8개 행이 같은 bank 에
             놓이면 명령 하나가 8 clock 에 걸쳐 실행되어 명령 수를 줄인 이득이 사라집니다. Bank
-            의 정의는 <Link to="/gpu/cuda-shared-memory#bank-conflict">shared memory bank conflict</Link> 에
+            의 정의는 <Link to="/cs/gpu/cuda-shared-memory#bank-conflict">shared memory bank conflict</Link> 에
             있습니다.
           </p>
         </div>
@@ -167,8 +167,8 @@ export default function GpuDataMovementOptimizationArticle() {
             한계는 register 와 fusion 범위입니다. 이어 붙일 연산이 이웃 원소를 필요로 하면
             register 만으로는 안 되고 shared memory 를 거쳐야 하며, reduction 이 끼면 block 경계
             에서 다시 global 을 써야 합니다. 어디까지 붙일지의 판정은{" "}
-            <Link to="/gpu/cuda-kernel-fusion#small-fusion">kernel fusion 의 IO 경계</Link> 와{" "}
-            <Link to="/gpu/cuda-kernel-fusion#release-gate">fusion ROI 경계</Link> 가 소유합니다.
+            <Link to="/cs/gpu/cuda-kernel-fusion#small-fusion">kernel fusion 의 IO 경계</Link> 와{" "}
+            <Link to="/cs/gpu/cuda-kernel-fusion#release-gate">fusion ROI 경계</Link> 가 소유합니다.
           </p>
         </div>
         <TermBreakdown
@@ -195,7 +195,7 @@ export default function GpuDataMovementOptimizationArticle() {
             내는 것입니다. Tile 하나의 계산 C 동안 load L 을 숨기려면 ⌈L/C⌉ 개 tile 앞서 요청해야
             하며, 그 요청을 register 에 받는 것이 Ampere 의 fragment double buffering, shared
             memory 에 받는 것이{" "}
-            <Link to="/gpu/warp-specialization-and-async-pipelines#stage-pipeline">multi-stage pipeline</Link> 입니다.
+            <Link to="/cs/gpu/warp-specialization-and-async-pipelines#stage-pipeline">multi-stage pipeline</Link> 입니다.
           </p>
           <p>
             Hardware prefetching 은 목적지 register 나 shared memory 없이 cache 에만 올려 두는
@@ -208,7 +208,7 @@ export default function GpuDataMovementOptimizationArticle() {
             program 이 내는 명시적 hint 이며, CPU 의 stride prefetcher 처럼 접근 패턴을 보고
             스스로 앞서 읽는 장치는 문서에 없습니다. GPU 는 그 대신 많은 warp 의 요청을 동시에
             띄워 지연을 숨기며, 그 원리는{" "}
-            <Link to="/gpu/sm-warp-scheduling-and-issue#latency-hiding">TLP·ILP·MLP</Link> 에 있습니다.
+            <Link to="/cs/gpu/sm-warp-scheduling-and-issue#latency-hiding">TLP·ILP·MLP</Link> 에 있습니다.
           </p>
           <p>
             Prefetch 거리가 너무 길면 가져온 데이터가 쓰이기 전에 cache 에서 밀려나고 너무 짧으면 지연이 그대로 드러납니다. L2 50 MB 를 SM 132개가 나눠 쓰므로
@@ -255,7 +255,7 @@ export default function GpuDataMovementOptimizationArticle() {
             Compute–communication overlap 이라는 이름은 같은 원리를 GPU 사이의 이동에 쓴 것입니다.
             NCCL 의 all-reduce 를 다음 layer 의 계산과 겹치는 것이 그 예이며, kernel 안의 tile
             load 를 계산과 겹치는 것과 식이 같습니다. Stream 수준에서 copy engine 과 kernel 을
-            겹치는 규칙은 <Link to="/gpu/cuda-sync-streams#streams">CUDA stream ordering</Link> 이
+            겹치는 규칙은 <Link to="/cs/gpu/cuda-sync-streams#streams">CUDA stream ordering</Link> 이
             소유합니다.
           </p>
           <p>
@@ -372,9 +372,9 @@ T_{\text{overlap}} &\approx \underbrace{\max\!\left(\frac{B}{\mathrm{BW}},\ \fra
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          앞 글: <Link to="/gpu/warp-specialization-and-async-pipelines">Warp specialization 과 asynchronous pipeline</Link>,
-          병목 판정은 <Link to="/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound">roofline</Link>,
-          fusion 범위는 <Link to="/gpu/cuda-kernel-fusion">kernel fusion</Link>.
+          앞 글: <Link to="/cs/gpu/warp-specialization-and-async-pipelines">Warp specialization 과 asynchronous pipeline</Link>,
+          병목 판정은 <Link to="/cs/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound">roofline</Link>,
+          fusion 범위는 <Link to="/cs/gpu/cuda-kernel-fusion">kernel fusion</Link>.
         </p>
       </section>
     </div>

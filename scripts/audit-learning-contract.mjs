@@ -5,6 +5,7 @@ import {
   collectArticleSourceClosure,
   loadPublicArticleCatalog,
 } from "./lib/public-article-catalog.mjs";
+import { splitArticleHref } from "./lib/route-href.mjs";
 
 const strict = process.argv.includes("--strict");
 const requireRegistration = process.argv.includes("--require-registration");
@@ -65,9 +66,7 @@ for (const [route, contract] of Object.entries(ARTICLE_LEARNING)) {
 function canonicalLocation(conceptId) {
   const concept = KNOWLEDGE_CONCEPTS[conceptId];
   if (!concept) return undefined;
-  const match = concept.canonicalHref.match(/^\/([^/#]+\/[^/#]+)(?:#(.+))?$/);
-  if (!match) return undefined;
-  return { route: match[1], sectionId: match[2] };
+  return splitArticleHref(concept.canonicalHref);
 }
 
 // Knowledge graph invariants are global.  A selected article audit must not
@@ -317,13 +316,13 @@ for (const route of routes) {
     } else if (paper.sectionId && !ids.has(paper.sectionId)) {
       findings.push([route, `논문 해설 anchor가 없습니다: ${paper.title} → #${paper.sectionId}`]);
     } else if (paper.internalHref) {
-      const match = paper.internalHref.match(/^\/([^/#]+\/[^/#]+)(?:#(.+))?$/);
-      if (!match || !articleRouteSet.has(match[1])) {
+      const location = splitArticleHref(paper.internalHref);
+      if (!location || !articleRouteSet.has(location.route)) {
         findings.push([route, `논문 canonical article이 없습니다: ${paper.title} → ${paper.internalHref}`]);
-      } else if (match[2]) {
-        const paperSource = routeFiles(match[1]).map((file) => fs.readFileSync(file, "utf8")).join("\n");
+      } else if (location.sectionId) {
+        const paperSource = routeFiles(location.route).map((file) => fs.readFileSync(file, "utf8")).join("\n");
         const paperIds = new Set([...paperSource.matchAll(/\bid=["']([^"']+)["']/g)].map((item) => item[1]));
-        if (!paperIds.has(match[2])) findings.push([route, `논문 canonical anchor가 없습니다: ${paper.title} → ${paper.internalHref}`]);
+        if (!paperIds.has(location.sectionId)) findings.push([route, `논문 canonical anchor가 없습니다: ${paper.title} → ${paper.internalHref}`]);
       }
     }
     for (const [field, value] of Object.entries({ problem: paper.problem, contribution: paper.contribution, assumptions: paper.assumptions, evidenceScope: paper.evidenceScope, notClaim: paper.notClaim })) {

@@ -84,7 +84,7 @@ export default function HandHint() {
         <p className="leading-7">
           그래도 "나머지 ±0.2"라는 요약은 틀렸으므로 고칩니다. 이 수정 자체가 이 시리즈의 방법론과 같은
           모양입니다 — 요약을 믿지 말고 원본 값을 다시 계산해 보는 것입니다. 차분 지표의 오염 내성은{" "}
-          <Link to="/ai/generative-measurement-controls#roundtrip-floor">계측기 검증</Link>이 소유합니다.
+          <Link to="/cs/ai/generative-measurement-controls#roundtrip-floor">계측기 검증</Link>이 소유합니다.
         </p>
       </div>
 

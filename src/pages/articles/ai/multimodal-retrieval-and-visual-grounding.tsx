@@ -23,7 +23,7 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
           <p className="text-lg leading-8">
             Multimodal retrieval은 image와 text를 같은 벡터 공간에 놓고 그 공간에서 가까운 것을 찾아
             "어떤 이미지·문서인지"에 답하고, visual grounding은 image 위의 특정 좌표나 영역을 짚어
-            "그 대상이 어디에 있는지"에 답합니다. 둘 다 <Link to="/ai/vision-language-model-architecture#architecture">
+            "그 대상이 어디에 있는지"에 답합니다. 둘 다 <Link to="/cs/ai/vision-language-model-architecture#architecture">
             VLM</Link>이 만드는 image·text 공동 표현 위에서 동작하지만 묻는 질문이 다릅니다.
           </p>
           <p>
@@ -78,7 +78,7 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
             Multimodal RAG는 이렇게 만든 cross-modal retrieval 결과를 LLM의 generation 입력에 넣는
             RAG의 확장입니다. 검색된 evidence가 text chunk가 아니라 image·표·스크린샷일 수 있다는
             점만 다르고, context budget·citation 같은 generation 단계 규칙은{" "}
-            <Link to="/ai/rag-pipeline#generation">RAG 파이프라인</Link> 글의 정본을 그대로
+            <Link to="/cs/ai/rag-pipeline#generation">RAG 파이프라인</Link> 글의 정본을 그대로
             따릅니다.
           </p>
         </div>
@@ -102,7 +102,7 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
           <p>
             Visual document retrieval은 PDF·슬라이드 같은 문서를 검색 대상으로 삼는 retrieval이고,
             그중 문서 페이지를 이미지(스크린샷)로 그대로 embedding해 찾는 방식을 screenshot
-            retrieval이라고 부릅니다. <Link to="/ai/document-parsing-and-table-extraction#layout-and-order">
+            retrieval이라고 부릅니다. <Link to="/cs/ai/document-parsing-and-table-extraction#layout-and-order">
             문서 구조 파싱</Link> 글의 layout parsing·OCR 경로와는 문서를 표현하는 방식 자체가
             다릅니다.
           </p>
@@ -246,11 +246,11 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           Image가 patch embedding으로 바뀌는 절차는{" "}
-          <Link to="/ai/vision-transformer#patch-embedding">Vision transformer</Link> 글을, VLM이
+          <Link to="/cs/ai/vision-transformer#patch-embedding">Vision transformer</Link> 글을, VLM이
           vision encoder·projector·LLM을 조립하는 방식은{" "}
-          <Link to="/ai/vision-language-model-architecture#architecture">VLM 구조</Link> 글을,
+          <Link to="/cs/ai/vision-language-model-architecture#architecture">VLM 구조</Link> 글을,
           text 검색 자체의 embedding space·ANN index는{" "}
-          <Link to="/ai/vector-search-and-ann-indexes#dense-retrieval-embedding-space">벡터 검색</Link>{" "}
+          <Link to="/cs/ai/vector-search-and-ann-indexes#dense-retrieval-embedding-space">벡터 검색</Link>{" "}
           글을 참고하세요.
         </p>
       </section>

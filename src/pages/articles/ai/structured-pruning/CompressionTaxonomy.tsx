@@ -17,7 +17,7 @@ export default function CompressionTaxonomy() {
           Parameter pruning은 이 세 lever 중 pruning 하나를 가리키는 이름이고,
           그 안에서 다시 무엇을 지우느냐로 갈립니다. 개별 weight를 자유롭게
           골라 지우는 쪽은{" "}
-          <Link to="/ai/unstructured-pruning#overview">unstructured pruning</Link>
+          <Link to="/cs/ai/unstructured-pruning#overview">unstructured pruning</Link>
           이 다루고, channel·head·layer·expert처럼 연결된 dimension을 통째로
           지우는 쪽이 structured pruning, 곧 이 글입니다.
         </p>
@@ -35,7 +35,7 @@ export default function CompressionTaxonomy() {
             term: "Quantization",
             description: "Weight·activation의 numeric precision을 낮춥니다.",
             example: (
-              <Link to="/ai/quantization#affine-map">
+              <Link to="/cs/ai/quantization#affine-map">
                 affine uniform quantizer로 실수를 integer code로 바꿉니다
               </Link>
             ),
@@ -45,7 +45,7 @@ export default function CompressionTaxonomy() {
             term: "Distillation",
             description: "더 작은 student가 teacher 출력을 다시 학습합니다.",
             example: (
-              <Link to="/ai/knowledge-distillation#overview">
+              <Link to="/cs/ai/knowledge-distillation#overview">
                 teacher logit·feature를 student가 흉내 냅니다
               </Link>
             ),

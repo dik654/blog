@@ -53,8 +53,8 @@ export default function ContinuousBatchingStepAnatomyArticle() {
           <p>
             Prefill 은 prompt 여러 token 을 한 번에 읽는 compute-bound 작업이고 decode 는
             token 하나를 위해 KV cache 전체를 읽는 memory-bound 작업입니다. 두 phase 의
-            compute·memory 특성은 <Link to="/ai/prefill-decode-phase-dynamics">Prefill·decode phase dynamics</Link> 가,
-            queue 정책과 fairness·preemption 은 <Link to="/ai/vllm-scheduler">vLLM Scheduler</Link> 가 다룹니다.
+            compute·memory 특성은 <Link to="/cs/ai/prefill-decode-phase-dynamics">Prefill·decode phase dynamics</Link> 가,
+            queue 정책과 fairness·preemption 은 <Link to="/cs/ai/vllm-scheduler">vLLM Scheduler</Link> 가 다룹니다.
           </p>
         </div>
         <ContinuousBatchingStepAnatomyViz />
@@ -159,7 +159,7 @@ n_w &= \underbrace{\min\!\left(P_w - c_w,\; B_{\mathrm{rem}}\right)}_{\text{남�
           <p>
             Waiting request 가 실패하면
             그 자리에서 admission 순회를 끊고 다음 step 을 기다립니다. 되찾은 request 를
-            다시 계산하는 비용은 <Link to="/ai/vllm-scheduler#preemption">KV pressure 와 recomputation</Link> 에 있습니다.
+            다시 계산하는 비용은 <Link to="/cs/ai/vllm-scheduler#preemption">KV pressure 와 recomputation</Link> 에 있습니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -199,7 +199,7 @@ n_w &= \underbrace{\min\!\left(P_w - c_w,\; B_{\mathrm{rem}}\right)}_{\text{남�
           </p>
           <p>
             Batch 크기가 고정이라는 가정을 둔 kernel 이나
-            <Link to="/ai/cuda-graph-capture#implementation">CUDA graph</Link> 는 이 흔들림을
+            <Link to="/cs/ai/cuda-graph-capture#implementation">CUDA graph</Link> 는 이 흔들림을
             따로 받아 내야 합니다.
           </p>
           <p>
@@ -303,8 +303,8 @@ n_w &= \underbrace{\min\!\left(P_w - c_w,\; B_{\mathrm{rem}}\right)}_{\text{남�
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/ai/vllm-scheduler#prefill-decode">Chunked prefill 과 decode latency</Link>,
-          그리고 <Link to="/ai/vllm-paged-attention#kv-cache-manager">Scheduler 와 KV allocation 계약</Link>.
+          다음 글: <Link to="/cs/ai/vllm-scheduler#prefill-decode">Chunked prefill 과 decode latency</Link>,
+          그리고 <Link to="/cs/ai/vllm-paged-attention#kv-cache-manager">Scheduler 와 KV allocation 계약</Link>.
         </p>
       </section>
     </div>

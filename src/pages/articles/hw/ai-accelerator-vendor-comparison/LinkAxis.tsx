@@ -73,7 +73,7 @@ export default function LinkAxis() {
         <p className="leading-7">
           통신량이 많은 축은 노드 안에 두는 것이 기본입니다. layer마다 전체 합을 구해야 하는 병렬화는 노드
           안에서, 구간 경계에서만 넘기는 병렬화는 노드 밖으로 두는 식입니다. 어느 축을 어디에 둘지의 일반
-          기준은 <Link to="/ai/parallelism-strategy-and-placement">병렬화 전략과 배치</Link>에서 다룹니다.
+          기준은 <Link to="/cs/ai/parallelism-strategy-and-placement">병렬화 전략과 배치</Link>에서 다룹니다.
         </p>
 
         <p className="leading-7">
@@ -99,7 +99,7 @@ export default function LinkAxis() {
           </p>
           <p className="leading-7">
             이 비대칭성과 완화 기법은{" "}
-            <Link to="/gpu/modded-rtx4090-moe-serving#why-interconnect-matters-more">MoE 통신 민감도</Link>에서
+            <Link to="/cs/gpu/modded-rtx4090-moe-serving#why-interconnect-matters-more">MoE 통신 민감도</Link>에서
             정리했습니다. 벤더 비교에서 이 절이 말하는 것은 그 민감도가 링크 구조에 따라 다르게 나타난다는
             점입니다.
           </p>

@@ -19,7 +19,7 @@ export default function Overview() {
         <ContentBoundary article="b300-switchless-network" />
         <p className="leading-7">
           이 글은 Ethernet mode의 RoCE v2를 사용한다. RDMA의 기본 데이터 경로와
-          InfiniBand 비교는 <a href="/gpu/hw-network">서버 네트워크 글</a>에서
+          InfiniBand 비교는 <a href="/cs/gpu/hw-network">서버 네트워크 글</a>에서
           소유하고, 여기서는 B300 port mapping·direct topology·NCCL GID 선택만
           다룬다.
         </p>

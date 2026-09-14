@@ -16,7 +16,7 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         </p>
         <p>
           이 글은 <strong>Address 0x…01과 nonce 15를 typed value→canonical RLP→exact decode→hash·DB key</strong>로 보내는 한
-          사례를 따라갑니다. Bit·byte의 기초는 <Link to="/ai/text-unicode-encoding#bits-bytes">bit·byte 정본</Link>을 재사용하지만,
+          사례를 따라갑니다. Bit·byte의 기초는 <Link to="/cs/ai/text-unicode-encoding#bits-bytes">bit·byte 정본</Link>을 재사용하지만,
           여기서도 byte는 8 bit이고 byte order가 정수 값 해석을 바꾼다는 직관부터 설명합니다.
         </p>
       </div>

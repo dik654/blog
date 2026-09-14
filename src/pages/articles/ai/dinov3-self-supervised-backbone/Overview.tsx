@@ -42,8 +42,8 @@ export default function Overview() {
 
         <p className="leading-7">
           패치 시퀀스와 attention 자체는{" "}
-          <Link to="/ai/vision-transformer#patch-embedding">Vision Transformer</Link>가, teacher와 student를 두는
-          일반적인 증류 구조는 <Link to="/ai/knowledge-distillation#overview">knowledge distillation</Link>이 이미
+          <Link to="/cs/ai/vision-transformer#patch-embedding">Vision Transformer</Link>가, teacher와 student를 두는
+          일반적인 증류 구조는 <Link to="/cs/ai/knowledge-distillation#overview">knowledge distillation</Link>이 이미
           설명합니다. 이 글은 그 위에서 라벨 없는 학습에만 생기는 문제를 다룹니다.
         </p>
       </div>

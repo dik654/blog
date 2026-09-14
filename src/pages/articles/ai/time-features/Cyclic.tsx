@@ -55,7 +55,7 @@ export default function Cyclic() {
           기본 sin·cos pair는 한 주기에 한 번 부드럽게 변하는 basis입니다. k=2,3,…의
           harmonic pair를 더하면 하루 안의 두 번의 peak나 날카로운 패턴을 더 쉽게
           표현할 수 있지만 feature 수와 overfitting 가능성도 늘어납니다. 이 생각은{" "}
-          <Link to="/ai/fft">Fourier basis</Link>와 연결되며, 알려진 seasonality와
+          <Link to="/cs/ai/fft">Fourier basis</Link>와 연결되며, 알려진 seasonality와
           충분한 history가 있을 때 낮은 frequency부터 추가합니다.
         </p>
         <p>

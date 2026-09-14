@@ -33,7 +33,7 @@ const STEPS = [
         역방향: abc1... → ? (어려움, O(2ⁿ) brute force)
         <br />
         패스워드 해싱,{" "}
-        <L href="/crypto/zk-theory#commitment-scheme">커밋먼트의 바인딩 성질</L>
+        <L href="/cs/crypto/zk-theory#commitment-scheme">커밋먼트의 바인딩 성질</L>
         에 필수
       </>
     ),
@@ -60,8 +60,8 @@ const STEPS = [
         <br />
         n=256이면 2¹²⁸ 연산 — 현재 기술로 불가능
         <br />
-        <L href="/crypto/hash-theory#merkle-tree">Merkle 트리</L>,{" "}
-        <L href="/crypto/snark-overview#verify-flow">SNARK 검증</L>에서 핵심
+        <L href="/cs/crypto/hash-theory#merkle-tree">Merkle 트리</L>,{" "}
+        <L href="/cs/crypto/snark-overview#verify-flow">SNARK 검증</L>에서 핵심
       </>
     ),
   },

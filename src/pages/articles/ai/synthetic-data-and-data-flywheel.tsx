@@ -35,9 +35,9 @@ export default function SyntheticDataAndDataFlywheelArticle() {
           </p>
           <p>
             Teacher output을 student에 어떤 loss로 전달하는지는{" "}
-            <Link to="/ai/knowledge-distillation#overview">지식 증류</Link> 글의 정본이고,
+            <Link to="/cs/ai/knowledge-distillation#overview">지식 증류</Link> 글의 정본이고,
             reasoning trace를 verifier·GRPO로 다시 학습하는 절차는{" "}
-            <Link to="/ai/open-r1#data-pipeline">Open-R1</Link> 글이 다룹니다. 이 글은 그 앞
+            <Link to="/cs/ai/open-r1#data-pipeline">Open-R1</Link> 글이 다룹니다. 이 글은 그 앞
             단계, 즉 학습에 쓸 후보 데이터 자체를 어떻게 만들고 거르고 다음 라운드로 되먹임하는지에만
             집중합니다.
           </p>
@@ -77,7 +77,7 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             그 가운데 70,000개를 뽑아 학습한 WizardLM-13B는 사람 평가에서 Alpaca·Vicuna보다
             높은 승률을 기록했습니다. 두 절차 모두 이 글이 정본으로 다루는 생성 단계이며,
             생성된 문자열을 어떤 loss로 student에 전달하는지는{" "}
-            <Link to="/ai/knowledge-distillation#soft-target">지식 증류</Link> 글의 범위입니다.
+            <Link to="/cs/ai/knowledge-distillation#soft-target">지식 증류</Link> 글의 범위입니다.
           </p>
         </div>
         <TermBreakdown
@@ -121,7 +121,7 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             20%만 남기는 식으로 기준을 조이면 남는 데이터 양은 줄어도 평균 품질은 올라갑니다.
           </p>
           <p>
-            <Link to="/ai/search-based-reasoning-and-test-time-compute#best-of-n">
+            <Link to="/cs/ai/search-based-reasoning-and-test-time-compute#best-of-n">
               추론 시점 best-of-N
             </Link>{" "}
             글은 verifier 점수가 가장 높은 후보 하나를 답으로 채택하는 병목, 즉 그 자리에서
@@ -181,7 +181,7 @@ export default function SyntheticDataAndDataFlywheelArticle() {
           <p>
             문제당 pass rate를 재려면 매 라운드 checkpoint로 다시 k개를 굴려야 하므로,
             difficulty estimation은 데이터 생성 자체보다 추론 비용이 더 듭니다.{" "}
-            <Link to="/ai/train-validation-test#overview">
+            <Link to="/cs/ai/train-validation-test#overview">
               평가용 held-out set
             </Link>
             으로 모델의 전체 성능을 재는 것과, curriculum sampling에 넣을 문제 pool의 난이도를
@@ -259,7 +259,7 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             rate가 0%에 가까워 verifier 신호 자체가 없고, difficulty filtering이 그 문제
             전부를 걸러내 curriculum에 남는 데이터가 사라집니다. 반대로 teacher 없이 모델
             혼자 도는 loop는 원래 가진 편향을 매 라운드 증폭시킬 수 있어,{" "}
-            <Link to="/ai/knowledge-distillation#release-gate">지식 증류</Link> 글의
+            <Link to="/cs/ai/knowledge-distillation#release-gate">지식 증류</Link> 글의
             student-only 검증과 같은 독립적인 정지 기준이 필요합니다.
           </p>
         </div>
@@ -364,9 +364,9 @@ export default function SyntheticDataAndDataFlywheelArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           생성된 reasoning trace를 verifier·GRPO로 학습하는 절차는{" "}
-          <Link to="/ai/open-r1#data-pipeline">Open-R1</Link> 글을, teacher output을 어떤
+          <Link to="/cs/ai/open-r1#data-pipeline">Open-R1</Link> 글을, teacher output을 어떤
           loss로 student에 전달하는지는{" "}
-          <Link to="/ai/knowledge-distillation#overview">지식 증류</Link> 글을 참고하세요.
+          <Link to="/cs/ai/knowledge-distillation#overview">지식 증류</Link> 글을 참고하세요.
         </p>
       </section>
     </div>

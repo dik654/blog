@@ -20,10 +20,10 @@ export default function Overview() {
         <p>
           따라서 먼저 quality·memory·latency·throughput의 통과 조건을 쓰고 dense
           baseline을 같은 환경에서 측정합니다. 그다음{" "}
-          <a href="/ai/quantization">양자화</a>,{" "}
-          <a href="/ai/pruning">프루닝</a>,{" "}
-          <a href="/ai/knowledge-distillation">지식 증류</a> 정본에서 필요한
-          lever만 가져옵니다. <a href="/ai/lora-finetuning">LoRA</a>는
+          <a href="/cs/ai/quantization">양자화</a>,{" "}
+          <a href="/cs/ai/pruning">프루닝</a>,{" "}
+          <a href="/cs/ai/knowledge-distillation">지식 증류</a> 정본에서 필요한
+          lever만 가져옵니다. <a href="/cs/ai/lora-finetuning">LoRA</a>는
           adaptation parameter와 training memory를 줄이는 방법이므로 merge 뒤
           inference graph가 같다면 그 자체를 serving compression으로 세지
           않습니다.

@@ -17,7 +17,7 @@ export default function RemoteAttestation() {
           <strong>답변</strong>: 암호학적 증명 — HW 서명 + 측정값 + 인증서 체인
           <br />→{" "}
           <a
-            href="/tee/tee-attestation"
+            href="/cs/tee/tee-attestation"
             className="text-indigo-400 hover:underline"
           >
             원격 증명 심층 분석 참조

@@ -74,7 +74,7 @@ export default function ModernArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>두 기억을 같은 request lifecycle로 움직입니다</h2>
           <p className="text-lg leading-8">
-            <Link to="/ai/qwen36-hybrid-architecture">앞 글</Link>에서
+            <Link to="/cs/ai/qwen36-hybrid-architecture">앞 글</Link>에서
             Qwen3.6-27B의 Attention은 token마다 K/V를 남기고 DeltaNet은 고정
             matrix를 갱신한다는 사실을 확인했습니다. Scheduler 입장에서는 이
             둘을 별개의 cache가 아니라{" "}
@@ -200,7 +200,7 @@ M_{runtime}&=\underbrace{M_W}_{\text{모든 request가 공유}}
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             M_work를 이루는 kernel temporary·allocator padding·activation과
-            달리 <Link to="/ai/cuda-graph-capture">CUDA graph</Link>가
+            달리 <Link to="/cs/ai/cuda-graph-capture">CUDA graph</Link>가
             차지하는 몫은 shape마다 capture된 graph 수에 좌우됩니다 — request
             길이 분포가 다양할수록 capture해야 할 shape도 늘어납니다.
           </p>
@@ -371,7 +371,7 @@ G_a&=\operatorname{commit}\!\left(
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             State lifecycle 다음에는{" "}
-            <Link to="/ai/qwen36-long-context-deployment">
+            <Link to="/cs/ai/qwen36-long-context-deployment">
               Qwen3.6 long-context deployment
             </Link>
             에서 native·extended context, multimodal position과 48 GiB profile을

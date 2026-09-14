@@ -20,7 +20,7 @@ export default function VisionLanguageModelArchitectureArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Vision-language model(VLM)은 image를 처리하는 <Link to="/ai/vision-transformer#patch-embedding">vision
+            Vision-language model(VLM)은 image를 처리하는 <Link to="/cs/ai/vision-transformer#patch-embedding">vision
             encoder</Link>와 text를 처리하는 LLM을 하나의 forward pass로 묶은 multimodal model입니다.
             둘 다 각자 사전학습된 채로 시작하기 때문에, 이 둘을 이어 붙이는 부품과 방식이 VLM 구조의
             핵심 질문이 됩니다.
@@ -50,7 +50,7 @@ export default function VisionLanguageModelArchitectureArticle() {
             text 두 modality만 다루는 쪽을 vision-language model(VLM)이라고 좁혀 부릅니다.
           </p>
           <p>
-            VLM은 대개 새 모델을 처음부터 학습하지 않습니다. <Link to="/ai/vision-transformer#patch-embedding">
+            VLM은 대개 새 모델을 처음부터 학습하지 않습니다. <Link to="/cs/ai/vision-transformer#patch-embedding">
             Vision transformer</Link> 글에서 다룬 patch embedding 절차로 image를 벡터 sequence로
             바꾸는 vision encoder(CLIP ViT-L/14 등)와, 이미 언어를 다루는 LLM(Vicuna 등)을 각각
             사전학습된 채로 가져와 하나의 파이프라인으로 묶습니다.
@@ -218,11 +218,11 @@ export default function VisionLanguageModelArchitectureArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           Vision encoder가 patch embedding을 만드는 절차 자체는{" "}
-          <Link to="/ai/vision-transformer#patch-embedding">Vision transformer</Link> 글을, visual
+          <Link to="/cs/ai/vision-transformer#patch-embedding">Vision transformer</Link> 글을, visual
           token이 reconstruction과 semantic 중 무엇을 보존하는지는{" "}
-          <Link to="/ai/visual-representation-tokenizers#objective">Visual representation tokenizer</Link>{" "}
+          <Link to="/cs/ai/visual-representation-tokenizers#objective">Visual representation tokenizer</Link>{" "}
           글을 참고하세요. VLM이 만든 semantic 표현이 물리적 행동으로 이어질 때 생기는 간극은{" "}
-          <Link to="/ai/vla-embodiment-gap#overview">VLA embodiment gap</Link> 글에서 다룹니다.
+          <Link to="/cs/ai/vla-embodiment-gap#overview">VLA embodiment gap</Link> 글에서 다룹니다.
         </p>
       </section>
     </div>

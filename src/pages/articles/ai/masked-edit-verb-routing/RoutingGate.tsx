@@ -50,7 +50,7 @@ export default function RoutingGate() {
           이 글이 주장하지 않는 것도 적어 둡니다. 순위는 한 장비·한 회차·하나의 프롬프트 문체에서 얻은
           것입니다. 모델마다 잘 맞는 프롬프트 방식이 다르다는 점을 통제하지 않았으므로, 표가 잰 것이 모델
           실력인지 제 문장이 누구에게 맞았는지는 이 측정만으로 가릴 수 없습니다. 지우기 칸이 비어 있는 문제는{" "}
-          <Link to="/ai/generative-measurement-controls">계측기 검증</Link>에서 다룬 판정 도구 문제와 얽혀
+          <Link to="/cs/ai/generative-measurement-controls">계측기 검증</Link>에서 다룬 판정 도구 문제와 얽혀
           있어 별도 글로 다룹니다.
         </p>
       </div>

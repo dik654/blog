@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
 const paths = [
-  ["분포 의미론", "Word×context matrix를 weighting하고 truncated SVD로 dense coordinates를 만듭니다.", "/ai/distributional-semantics#dimensionality"],
-  ["Word2Vec", "SGNS가 shifted-PMI matrix를 암묵적으로 factorize한다는 분석과 비교합니다.", "/ai/word2vec#training"],
-  ["신경망", "Batch matrix multiplication과 affine layer의 shape 계약으로 확장합니다.", "/ai/neural-network#forward"],
+  ["분포 의미론", "Word×context matrix를 weighting하고 truncated SVD로 dense coordinates를 만듭니다.", "/cs/ai/distributional-semantics#dimensionality"],
+  ["Word2Vec", "SGNS가 shifted-PMI matrix를 암묵적으로 factorize한다는 분석과 비교합니다.", "/cs/ai/word2vec#training"],
+  ["신경망", "Batch matrix multiplication과 affine layer의 shape 계약으로 확장합니다.", "/cs/ai/neural-network#forward"],
 ] as const;
 
 export default function Applications() {

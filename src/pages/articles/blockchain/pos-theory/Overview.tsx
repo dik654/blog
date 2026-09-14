@@ -18,9 +18,9 @@ export default function Overview() {
         <p>
           이 글은 Proof of Retrievability(PoR)의 추출 가능성, Filecoin 적용의 Proof of
           Replication(PoRep)과 Proof of Spacetime(PoSt)을 구분합니다. Hash·Merkle commitment는
-          <Link to="/crypto/hash-theory"> hash 정본</Link>, error-correcting recovery는
-          <Link to="/blockchain/erasure-coding"> erasure coding</Link>, succinct proof는
-          <Link to="/crypto/snark-theory"> SNARK</Link>에서 가져옵니다.
+          <Link to="/cs/crypto/hash-theory"> hash 정본</Link>, error-correcting recovery는
+          <Link to="/cs/blockchain/erasure-coding"> erasure coding</Link>, succinct proof는
+          <Link to="/cs/crypto/snark-theory"> SNARK</Link>에서 가져옵니다.
         </p>
       </div>
       <ContentBoundary article="pos-theory" />

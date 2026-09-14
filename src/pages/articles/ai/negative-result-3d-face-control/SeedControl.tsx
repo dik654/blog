@@ -49,7 +49,7 @@ export default function SeedControl() {
         <p className="leading-7">
           시드를 고정하는 습관이 재현성을 위해서는 옳지만 효과 검증에서는 함정이 될 수 있습니다. 교란을
           제거한 비교 설계는{" "}
-          <Link to="/ai/generative-measurement-controls#style-coverage">계측기 검증</Link>이 소유하고,
+          <Link to="/cs/ai/generative-measurement-controls#style-coverage">계측기 검증</Link>이 소유하고,
           여기서는 고정한 변수 자체가 결론을 만든 사례입니다.
         </p>
       </div>

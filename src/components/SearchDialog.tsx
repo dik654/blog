@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { categories } from "@/content";
 import type { Article, Category } from "@/content";
 import { Search } from "lucide-react";
+import { articleHref } from "@/lib/routes";
 
 interface SearchResult {
   category: Category;
@@ -117,7 +118,7 @@ export default function SearchDialog() {
 
   const goTo = (r: SearchResult) => {
     close();
-    navigate(`/${r.category.slug}/${r.article.slug}`);
+    navigate(articleHref(r.category.slug, r.article.slug));
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -181,7 +182,7 @@ export default function SearchDialog() {
               {results.map((r, i) => (
                 <Link
                   key={`${r.category.slug}/${r.article.slug}`}
-                  to={`/${r.category.slug}/${r.article.slug}`}
+                  to={articleHref(r.category.slug, r.article.slug)}
                   onClick={close}
                   className={`flex flex-col gap-0.5 rounded-md px-3 py-2 text-sm transition-colors ${
                     i === selectedIdx ? "bg-accent" : "hover:bg-accent/50"

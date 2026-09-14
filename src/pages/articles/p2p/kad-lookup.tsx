@@ -10,7 +10,7 @@ export default function KadLookupArticle() {
         <h2 className="mb-6 text-2xl font-bold">문제: 목적지를 아는 이웃이 없을 때</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            <Link to="/p2p/kademlia">Kademlia 기초</Link>에서 각 노드는 여러
+            <Link to="/cs/p2p/kademlia">Kademlia 기초</Link>에서 각 노드는 여러
             XOR 거리 구간의 연락처만 보관했다. 따라서 target을 직접 아는 peer가
             없어도 이상하지 않다. Lookup은 local table의 가까운 후보로 시작해
             응답에서 더 가까운 후보를 얻고, 아직 묻지 않은 후보에 반복 질의하는

@@ -8,7 +8,7 @@ export default function ModernBinaryFieldProvingArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Binary-field proving · workload/prover fit</p><h2 className="text-3xl font-bold tracking-tight">Hash를 ZK-friendly하게 바꾸는 대신, 기존 hash를 싸게 증명하는 prover를 설계할 수 있다</h2></header>
-      <p className="text-lg leading-8">출발점은 <Link to="/crypto/poseidon-hash#overview" className="text-primary underline">Poseidon</Link>입니다. SHA-256·BLAKE 계열의 XOR·AND·rotate는 큰 prime field arithmetic circuit에서 비싸므로, Poseidon은 field addition·multiplication 중심의 새 primitive를 택했습니다. 반대 방향은 SHA/BLAKE semantics를 유지하고 Boolean computation과 binary field에 가까운 proof representation을 택합니다.</p>
+      <p className="text-lg leading-8">출발점은 <Link to="/cs/crypto/poseidon-hash#overview" className="text-primary underline">Poseidon</Link>입니다. SHA-256·BLAKE 계열의 XOR·AND·rotate는 큰 prime field arithmetic circuit에서 비싸므로, Poseidon은 field addition·multiplication 중심의 새 primitive를 택했습니다. 반대 방향은 SHA/BLAKE semantics를 유지하고 Boolean computation과 binary field에 가까운 proof representation을 택합니다.</p>
       <ContentBoundary article="binary-field-proving" />
       <ProofDirectionViz />
     </section>

@@ -18,11 +18,11 @@ export default function PruningArticle() {
           </p>
           <p>
             이 글은 mask와 sparsity까지만 다룹니다. 불규칙한 weight 제거는{" "}
-            <a href="/ai/unstructured-pruning">unstructured pruning</a>, shape
-            축소는 <a href="/ai/structured-pruning">structured pruning</a>, LLM
-            one-shot 방법은 <a href="/ai/one-shot-llm-pruning">별도 글</a>,
+            <a href="/cs/ai/unstructured-pruning">unstructured pruning</a>, shape
+            축소는 <a href="/cs/ai/structured-pruning">structured pruning</a>, LLM
+            one-shot 방법은 <a href="/cs/ai/one-shot-llm-pruning">별도 글</a>,
             복구와 배포는{" "}
-            <a href="/ai/pruning-recovery-deployment">release 글</a>에서
+            <a href="/cs/ai/pruning-recovery-deployment">release 글</a>에서
             이어집니다.
           </p>
         </div>

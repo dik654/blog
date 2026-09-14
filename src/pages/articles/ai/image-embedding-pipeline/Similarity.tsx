@@ -71,7 +71,7 @@ export default function Similarity() {
 
         <p className="leading-7">
           벡터 사이의 각도와 내적이 무엇을 재는지 자체는{" "}
-          <Link to="/ai/math-vectors-inner-products">벡터와 내적</Link>이 다룹니다. 여기서 더한 것은 그 거리에
+          <Link to="/cs/ai/math-vectors-inner-products">벡터와 내적</Link>이 다룹니다. 여기서 더한 것은 그 거리에
           의미가 아닌 성분이 섞일 수 있고, 그 양을 실제로 재 볼 수 있다는 점입니다.
         </p>
       </div>

@@ -38,7 +38,7 @@ export default function ToolExecution() {
           deadline과 검증된 arguments를 넣습니다. host가 이미 tool schema를
           검증했더라도 plugin은 protocol 경계에서 자신의 domain validation을
           수행해야 합니다. 공통 tool call의 effect와 permission contract는
-          <a href="/ai/claw-tool-system"> tool system 글</a>에서 소유합니다.
+          <a href="/cs/ai/claw-tool-system"> tool system 글</a>에서 소유합니다.
         </p>
         <div className="not-prose my-6 overflow-x-auto rounded-2xl border border-border/70">
           <table className="w-full min-w-[680px] text-left text-sm">
@@ -115,7 +115,7 @@ export default function ToolExecution() {
           multiplex하며, concurrency 상한과 per-call cancellation을 지원해야
           합니다. 이 정도의 transport가 필요하면 stdio 기반 MCP와 역할이 겹칠 수
           있으므로
-          <a href="/ai/claw-mcp"> MCP lifecycle</a>을 재사용할지 먼저
+          <a href="/cs/ai/claw-mcp"> MCP lifecycle</a>을 재사용할지 먼저
           검토합니다.
         </p>
       </div>

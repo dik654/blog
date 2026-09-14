@@ -28,7 +28,7 @@ export default function DocumentParsingAndTableExtractionArticle() {
             linearization으로 LLM이 읽을 수 있는 형태까지 만드는 하나의 파이프라인을 다룹니다.
           </p>
           <p>
-            <Link to="/ai/rag-ingestion-and-chunking#parsing">RAG ingestion</Link> 글의 parsing
+            <Link to="/cs/ai/rag-ingestion-and-chunking#parsing">RAG ingestion</Link> 글의 parsing
             단계는 표 셀 복원과 스캔 문서 layout 분석의 세부를 이 글에 넘겨 두고, 그 결과로 나온
             텍스트를 고정 길이나 문장 경계로 나누는 chunking 자체만 다룹니다. 이 글은 그 세부, 즉
             구조가 있는 문서를 chunking 이전에 어떻게 구조화하는지에만 집중합니다.
@@ -230,7 +230,7 @@ export default function DocumentParsingAndTableExtractionArticle() {
           </p>
           <p>
             표가 아닌 일반 본문의 chunk size·overlap·semantic chunking은{" "}
-            <Link to="/ai/rag-ingestion-and-chunking#chunking">RAG ingestion</Link> 글의
+            <Link to="/cs/ai/rag-ingestion-and-chunking#chunking">RAG ingestion</Link> 글의
             정본이며, 이 글은 표·다단 레이아웃이 그 규칙 앞에서 예외로 다뤄져야 하는 이유만
             다룹니다.
           </p>
@@ -334,9 +334,9 @@ export default function DocumentParsingAndTableExtractionArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           표를 만든 뒤 검색 단위로 자르는 chunk size·overlap·contextual retrieval은{" "}
-          <Link to="/ai/rag-ingestion-and-chunking#chunking">RAG ingestion</Link> 글을, 그
+          <Link to="/cs/ai/rag-ingestion-and-chunking#chunking">RAG ingestion</Link> 글을, 그
           chunk가 retrieval·generation에서 어떻게 쓰이는지는{" "}
-          <Link to="/ai/rag-pipeline#chunking">RAG 파이프라인</Link> 글을 참고하세요.
+          <Link to="/cs/ai/rag-pipeline#chunking">RAG 파이프라인</Link> 글을 참고하세요.
         </p>
       </section>
     </div>

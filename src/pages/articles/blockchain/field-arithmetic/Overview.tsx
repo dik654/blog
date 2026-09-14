@@ -18,9 +18,9 @@ export default function Overview() {
         </p>
         <p>
           나눗셈 가능한 field의 정의와 inverse 증명은
-          <Link to="/crypto/finite-field-theory"> 유한체 이론 정본</Link>이
+          <Link to="/cs/crypto/finite-field-theory"> 유한체 이론 정본</Link>이
           소유합니다. 곡선 좌표 Fp와 scalar Fr의 수학적 역할은
-          <Link to="/crypto/elliptic-curves"> 타원곡선군 정본</Link>을
+          <Link to="/cs/crypto/elliptic-curves"> 타원곡선군 정본</Link>을
           재사용합니다. 이 글은 그 수학을 다시 정의하지 않고
           <strong> bytes → canonical residue → limbs → Montgomery domain → API → bytes</strong>
           로 이어지는 구현 불변식과 release gate를 설명합니다.
