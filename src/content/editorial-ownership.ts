@@ -11728,6 +11728,38 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "bond-pricing-and-yield-curve": {
+    title: "채권 가격과 수익률은 같은 정보의 두 표현입니다 글이 소유하는 범위",
+    owns: [
+      "액면·표면금리·만기로 적힌 현금흐름에서 가격을 계산하는 경로",
+      "가격과 수익률이 반대로 움직이는 이유가 식의 구조라는 설명",
+      "만기수익률의 정의와 내부수익률 문제와의 관계, 해가 하나인 조건",
+      "만기수익률의 재투자 가정과 실현 수익률이 달라지는 이유",
+      "듀레이션의 정의와 만기·표면금리·수익률이 듀레이션을 바꾸는 방향",
+      "수정 듀레이션과 볼록성 보정의 역할 구분",
+      "수익률 곡선의 모양과 그 해석의 한계",
+    ],
+    reuses: [
+      {
+        label: "흩어진 현금흐름을 한 시점에 모으는 계산",
+        href: "/finance/money/time-value-and-discounting#npv",
+      },
+      {
+        label: "순현재가치를 0으로 만드는 할인율을 되묻는 문제",
+        href: "/finance/money/time-value-and-discounting#irr",
+      },
+      {
+        label: "장기금리를 기대 평균과 기간 프리미엄으로 보는 관계",
+        href: "/finance/banking/central-bank-and-policy-transmission#transmission",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "금리·가격 수치는 계산을 보이기 위한 예시임을 밝히고, 특정 시점의 실제 국채 금리나 곡선 모양을 사실로 인용하지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

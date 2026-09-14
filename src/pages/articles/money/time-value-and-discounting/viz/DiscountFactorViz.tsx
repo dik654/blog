@@ -20,7 +20,7 @@ export default function DiscountFactorViz() {
         할인율 3%, 아래 곡선이 8%입니다.
       </p>
       <div className="themed-mafs mt-4 min-w-0 overflow-x-auto">
-        <Mafs height={220} viewBox={{ x: [0, 30], y: [0, 1], padding: 0 }}>
+        <Mafs height={220} preserveAspectRatio={false} viewBox={{ x: [-0.9, 30.9], y: [-0.13, 1.06], padding: 0 }}>
           <Coordinates.Cartesian
             xAxis={{ lines: 5, labels: (v) => String(v) }}
             yAxis={{ lines: 0.25, labels: (v) => v.toFixed(2) }}
@@ -32,7 +32,7 @@ export default function DiscountFactorViz() {
           <Text x={years + 0.8} y={low + 0.06} size={13} color={Theme.blue}>
             3% · 10년 → 0.74
           </Text>
-          <Text x={years + 0.8} y={high - 0.07} size={13} color={Theme.pink}>
+          <Text x={years + 0.8} y={high - 0.13} size={13} color={Theme.pink}>
             8% · 10년 → 0.46
           </Text>
         </Mafs>

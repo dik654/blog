@@ -7084,4 +7084,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "거액·소액 시스템 구성과 한은금융망에서의 최종 해소 구조에 대한 근거. 특정 시점의 결제 규모는 인용하지 않음",
     },
   ],
+  "markets/bond-pricing-and-yield-curve": [
+    {
+      kind: "핵심 연구",
+      label: "Macaulay · Some Theoretical Problems… (NBER, 1938)",
+      href: "https://www.nber.org/books-and-chapters/some-theoretical-problems-suggested-movements-interest-rates-bond-yields-and-stock-prices-united",
+      note: "듀레이션 개념의 원전. 수정 듀레이션·볼록성은 이후 확장이므로 이 출처로 함께 인용하지 않음",
+    },
+    {
+      kind: "공식 문서",
+      label: "한국은행 · 경제금융용어 800선 (2026)",
+      href: "https://www.bok.or.kr/portal/bbs/B0000249/view.do?nttId=10096081&menuNo=200765",
+      note: "만기수익률·수익률 곡선 등 본문 용어의 한국어 표준 표기를 맞추는 데 사용. 계산식의 근거가 아니라 표기 기준",
+    },
+  ],
 };

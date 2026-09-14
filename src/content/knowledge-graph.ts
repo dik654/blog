@@ -23047,6 +23047,76 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "두 통화의 이체가 모두 성립하거나 모두 성립하지 않도록 하나의 조건으로 묶는 방식입니다. 한쪽만 넘어간 상태를 만들지 않아 원금 손실 위험을 지우지만, 가격 변동이나 유동성 부족 위험까지 없애지는 않습니다.",
     canonicalHref: "/finance/banking/payment-clearing-settlement#cross-currency",
   },
+  "bond-cashflow-pricing": {
+    id: "bond-cashflow-pricing",
+    kind: "method",
+    domain: "economics",
+    label: "Bond pricing · 채권 현금흐름 할인",
+    aliases: ["채권 가격", "액면", "표면금리", "coupon"],
+    definition:
+      "액면과 표면금리로 정해진 이자와 만기 원금을 각 시점의 할인계수로 되돌려 더한 값이 채권 가격이라는 관계입니다. 할인율이 분모에 있으므로 가격과 금리가 반대로 움직이며, 이는 시장 심리가 아니라 식의 구조입니다.",
+    canonicalHref: "/finance/markets/bond-pricing-and-yield-curve#cashflow-to-price",
+  },
+  "yield-to-maturity": {
+    id: "yield-to-maturity",
+    kind: "metric",
+    domain: "economics",
+    label: "Yield to maturity · 만기수익률",
+    aliases: ["YTM", "채권 수익률"],
+    definition:
+      "관측된 시장 가격을 설명하는 단일 할인율이며, 순현재가치를 0으로 만드는 할인율을 되묻는 내부수익률 문제와 같은 형태입니다. 채권의 현금흐름은 부호가 한 번만 바뀌므로 해가 하나로 정해집니다.",
+    canonicalHref: "/finance/markets/bond-pricing-and-yield-curve#ytm",
+  },
+  "ytm-reinvestment-assumption": {
+    id: "ytm-reinvestment-assumption",
+    kind: "concept",
+    domain: "economics",
+    label: "만기수익률의 재투자 가정",
+    aliases: ["재투자 위험", "reinvestment risk"],
+    definition:
+      "모든 항에 같은 할인율을 쓴다는 것은 중간에 받는 이자를 같은 수익률로 다시 굴릴 수 있다고 두는 것과 같습니다. 금리가 움직이면 만기까지 보유해도 실현 수익률이 만기수익률과 달라지므로, 이 값은 예측이 아니라 비교용 척도입니다.",
+    canonicalHref: "/finance/markets/bond-pricing-and-yield-curve#ytm-assumption",
+  },
+  "macaulay-duration": {
+    id: "macaulay-duration",
+    kind: "metric",
+    domain: "economics",
+    label: "Macaulay duration · 듀레이션",
+    aliases: ["듀레이션", "현금흐름 무게중심"],
+    definition:
+      "각 현금흐름의 현재가치 비중을 가중치로 삼아 구한 시점의 평균이며 단위는 기간입니다. 만기가 길수록 커지고 표면금리가 높을수록 작아져, 같은 만기라도 실질적인 기간이 다를 수 있음을 드러냅니다.",
+    canonicalHref: "/finance/markets/bond-pricing-and-yield-curve#duration",
+  },
+  "modified-duration": {
+    id: "modified-duration",
+    kind: "metric",
+    domain: "economics",
+    label: "Modified duration · 수정 듀레이션",
+    aliases: ["금리 민감도", "가격 민감도"],
+    definition:
+      "듀레이션을 한 기간 할인 배율로 나눠 금리 1단위 변화당 가격 변화율로 바꾼 값입니다. 가격-수익률 곡선의 한 점에서의 접선 기울기에 해당하므로, 변화가 클수록 실제 가격과 어긋납니다.",
+    canonicalHref: "/finance/markets/bond-pricing-and-yield-curve#duration",
+  },
+  "bond-convexity": {
+    id: "bond-convexity",
+    kind: "metric",
+    domain: "economics",
+    label: "Convexity · 볼록성",
+    aliases: ["볼록성 보정", "2차 항"],
+    definition:
+      "가격-수익률 관계가 아래로 볼록하게 휘어 있는 정도를 나타내는 2차 항의 계수입니다. 제곱 항이라 방향과 무관하게 양수여서, 실제 손실은 직선 근사보다 작고 이익은 더 큽니다.",
+    canonicalHref: "/finance/markets/bond-pricing-and-yield-curve#duration",
+  },
+  "yield-curve": {
+    id: "yield-curve",
+    kind: "concept",
+    domain: "economics",
+    label: "Yield curve · 수익률 곡선",
+    aliases: ["기간구조", "term structure", "장단기 금리차"],
+    definition:
+      "같은 발행자의 채권을 만기별로 늘어놓았을 때 금리가 이루는 곡선입니다. 앞으로의 단기금리 기대 평균과 기간 프리미엄의 합이므로 정책 경로에 대한 예상을 담지만, 둘의 기여를 곡선만으로는 가를 수 없습니다.",
+    canonicalHref: "/finance/markets/bond-pricing-and-yield-curve#yield-curve",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -42216,6 +42286,83 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "한쪽은 되돌리는 비용이 커져 위험이 점점 작아지는 확률적 성질이고 다른 쪽은 법과 규칙이 시점을 선언하는 것이라, 같은 단어를 쓰지만 보장의 원천이 다릅니다.",
+  },
+  {
+    from: "net-present-value",
+    to: "bond-cashflow-pricing",
+    relation: "prerequisite",
+    reason:
+      "흩어진 현금흐름을 한 시점으로 모아 더하는 계산이 먼저 있어야, 채권의 이자와 원금을 그 식에 꽂아 넣을 수 있습니다.",
+  },
+  {
+    from: "discount-factor",
+    to: "bond-cashflow-pricing",
+    relation: "prerequisite",
+    reason:
+      "각 시점의 금액을 오늘 값으로 되돌리는 계수가 채권 가격의 모든 항을 이룹니다.",
+  },
+  {
+    from: "bond-cashflow-pricing",
+    to: "yield-to-maturity",
+    relation: "produces",
+    reason:
+      "같은 식에서 미지수를 가격이 아니라 할인율로 바꿔 풀면 만기수익률이 나옵니다.",
+  },
+  {
+    from: "internal-rate-of-return",
+    to: "yield-to-maturity",
+    relation: "extends",
+    reason:
+      "만기수익률은 현금흐름의 부호가 한 번만 바뀌는 경우의 내부수익률이라, 해가 여러 개 나오는 문제가 생기지 않습니다.",
+  },
+  {
+    from: "ytm-reinvestment-assumption",
+    to: "yield-to-maturity",
+    relation: "constrains",
+    reason:
+      "모든 항에 같은 할인율을 쓴다는 구조가 곧 재투자 가정이므로, 이 가정이 깨지면 만기 보유해도 실현 수익률이 달라집니다.",
+  },
+  {
+    from: "bond-cashflow-pricing",
+    to: "macaulay-duration",
+    relation: "produces",
+    reason:
+      "각 현금흐름이 가격에서 차지하는 비중을 가중치로 삼으려면 가격 식이 먼저 있어야 합니다.",
+  },
+  {
+    from: "macaulay-duration",
+    to: "modified-duration",
+    relation: "produces",
+    reason:
+      "시간 단위의 무게중심을 한 기간 할인 배율로 나누면 가격 변화율 단위의 민감도가 됩니다.",
+  },
+  {
+    from: "bond-convexity",
+    to: "modified-duration",
+    relation: "constrains",
+    reason:
+      "직선 근사가 실제 곡선과 벌어지는 폭을 2차 항이 설명하므로, 변화가 클 때 민감도만으로 판단하면 안 되는 범위를 정합니다.",
+  },
+  {
+    from: "expectations-hypothesis-of-rates",
+    to: "yield-curve",
+    relation: "produces",
+    reason:
+      "만기별 금리를 기대 평균과 프리미엄의 합으로 보는 관계가 곡선의 모양을 설명하는 근거가 됩니다.",
+  },
+  {
+    from: "yield-curve",
+    to: "discount-factor",
+    relation: "constrains",
+    reason:
+      "정확한 할인은 모든 시점에 같은 r을 쓰는 것이 아니라 곡선에서 만기별 금리를 읽어 오는 것이므로, 곡선이 할인계수의 값을 정합니다.",
+  },
+  {
+    from: "monetary-transmission",
+    to: "yield-curve",
+    relation: "constrains",
+    reason:
+      "정책금리 경로에 대한 기대가 곡선의 짧은 쪽부터 긴 쪽까지를 끌어당기므로, 파급경로가 곡선 모양의 변화 원인이 됩니다.",
   },
 ];
 

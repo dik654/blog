@@ -20,7 +20,7 @@ export default function BarterCostViz() {
         위 곡선이 직접 교환 n(n−1)/2, 아래 직선이 공통 매개를 쓸 때의 n−1입니다.
       </p>
       <div className="themed-mafs mt-4 min-w-0 overflow-x-auto">
-        <Mafs height={220} viewBox={{ x: [0, 20], y: [0, 190], padding: 0 }}>
+        <Mafs height={220} preserveAspectRatio={false} viewBox={{ x: [-0.6, 20.6], y: [-24, 196], padding: 0 }}>
           <Coordinates.Cartesian
             xAxis={{ lines: 5, labels: (v) => String(v) }}
             yAxis={{ lines: 50 }}
@@ -29,10 +29,10 @@ export default function BarterCostViz() {
           <Plot.OfX y={(n) => n - 1} color={Theme.blue} />
           <Point x={sample} y={barterAt10} color={Theme.pink} />
           <Point x={sample} y={moneyAt10} color={Theme.blue} />
-          <Text x={sample + 0.4} y={barterAt10 + 16} size={13} color={Theme.pink}>
+          <Text x={sample - 5.6} y={barterAt10 + 22} size={13} color={Theme.pink}>
             n=10 → 45개
           </Text>
-          <Text x={sample + 0.4} y={moneyAt10 + 16} size={13} color={Theme.blue}>
+          <Text x={sample + 1.6} y={moneyAt10 + 13} size={13} color={Theme.blue}>
             n=10 → 9개
           </Text>
         </Mafs>
