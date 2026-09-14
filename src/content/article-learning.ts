@@ -75372,4 +75372,273 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "markets/bond-pricing-and-yield-curve": {
+    entryNote:
+      "현재가치와 순현재가치 계산을 할 수 있으면 됩니다. 여기서는 그 식의 현금흐름 자리에 실제 청구권을 처음 꽂아 넣고, 마지막에 할인율이 어디서 오는지를 절반 닫습니다.",
+    coreIdea:
+      "채권 가격과 수익률은 같은 식을 어느 쪽에서 읽느냐의 차이이므로 반대로 움직입니다. 금리가 움직일 때 가격이 얼마나 흔들리는지는 현금흐름의 무게중심이 정하고, 만기마다 다른 금리가 이루는 곡선이 할인율의 출처가 됩니다.",
+    assumedKnowledge: [
+      {
+        id: "net-present-value",
+        role: "채권 가격을 흩어진 현금흐름의 현재가치 합으로 세우는 데 씁니다.",
+      },
+      {
+        id: "internal-rate-of-return",
+        role: "가격에서 수익률을 되묻는 문제가 같은 형태임을 확인하는 데 씁니다.",
+      },
+      {
+        id: "expectations-hypothesis-of-rates",
+        role: "곡선의 모양을 기대 평균과 프리미엄으로 읽는 배경이 됩니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "bond-cashflow-pricing",
+        role: "적혀 있는 현금흐름에서 가격이 계산되는 경로를 세웁니다.",
+      },
+      {
+        id: "yield-to-maturity",
+        role: "관측된 가격을 하나의 수익률로 되읽는 방법을 정의합니다.",
+      },
+      {
+        id: "ytm-reinvestment-assumption",
+        role: "그 수익률을 실현 수익률로 읽으면 안 되는 이유를 밝힙니다.",
+      },
+      {
+        id: "macaulay-duration",
+        role: "가격 민감도의 근원인 현금흐름 무게중심을 정의합니다.",
+      },
+      {
+        id: "modified-duration",
+        role: "무게중심을 실제 가격 변화율로 바꿔 위험의 척도로 만듭니다.",
+      },
+      {
+        id: "bond-convexity",
+        role: "직선 근사가 벗어나는 방향과 크기를 설명합니다.",
+      },
+      {
+        id: "yield-curve",
+        role: "만기별 금리 구조를 세워 할인율의 출처를 절반 닫습니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "bond-cashflow-pricing",
+        sectionId: "cashflow-to-price",
+        intuition:
+          "받을 금액과 날짜가 적혀 있으므로 각각을 오늘로 되돌려 더하기만 하면 값이 나옵니다.",
+        workedExample:
+          "액면 100만 원, 표면금리 3%, 만기 3년 채권은 할인율 3%에서 100만 원, 5%에서 약 94만 5,000원입니다.",
+        boundary:
+          "약속된 금액이 전부 들어온다는 가정 위에서만 성립하며, 발행자가 갚지 못할 가능성은 이 식에 들어 있지 않습니다.",
+      },
+      {
+        id: "yield-to-maturity",
+        sectionId: "ytm",
+        intuition:
+          "가격이 먼저 보이면 그 가격이 되려면 할인율이 얼마여야 하는지를 거꾸로 묻습니다.",
+        workedExample:
+          "액면 100만 원, 표면금리 3%, 만기 3년 채권이 94만 5,000원에 거래되면 만기수익률은 약 5%입니다.",
+        boundary:
+          "채권은 부호가 한 번만 바뀌어 해가 하나지만, 부호가 여러 번 바뀌는 현금흐름에서는 같은 방법이 여러 해를 낼 수 있습니다.",
+      },
+      {
+        id: "ytm-reinvestment-assumption",
+        sectionId: "ytm-assumption",
+        intuition:
+          "모든 항에 같은 할인율을 쓴다는 것은 받은 이자를 같은 금리로 다시 굴린다고 두는 것과 같습니다.",
+        workedExample:
+          "만기수익률 5%인 채권을 만기까지 들고 있어도 이자를 3%로만 굴리면 실현 수익률은 5%에 못 미칩니다.",
+        boundary:
+          "예측값이 아니라 서로 다른 만기·표면금리의 채권을 한 숫자로 줄 세우기 위한 비교 척도로만 써야 합니다.",
+      },
+      {
+        id: "macaulay-duration",
+        sectionId: "duration",
+        intuition:
+          "돈이 언제 들어오는지를 금액 비중으로 가중평균하면 이 채권의 실질적인 기간이 나옵니다.",
+        workedExample:
+          "이자를 전혀 주지 않는 채권은 모든 돈이 만기에 한 번 들어오므로 듀레이션이 만기와 같습니다.",
+        boundary:
+          "중도상환 권리가 붙으면 금리 변화에 따라 현금흐름 자체가 바뀌므로 고정 현금흐름 가정이 깨집니다.",
+      },
+      {
+        id: "modified-duration",
+        sectionId: "duration",
+        intuition:
+          "무게중심을 가격 변화율 단위로 바꾸면 금리 1%포인트당 몇 퍼센트 움직이는지가 바로 읽힙니다.",
+        workedExample:
+          "수정 듀레이션이 8이면 금리가 1%포인트 오를 때 가격이 약 8% 떨어집니다.",
+        boundary:
+          "한 점에서의 접선이므로 변화가 클수록 실제 가격과 벌어지며, 모든 만기가 같은 폭으로 움직인다는 가정도 필요합니다.",
+      },
+      {
+        id: "bond-convexity",
+        sectionId: "duration",
+        intuition:
+          "가격 곡선이 아래로 휘어 있어서 직선 근사보다 실제 가격이 늘 위에 있습니다.",
+        workedExample:
+          "금리가 4%포인트 오를 때 직선 근사는 실제보다 낮은 가격을 가리키며, 그 차이가 볼록성이 되돌려 준 몫입니다.",
+        boundary:
+          "2차 항까지만 쓴 근사이므로 변화가 아주 크면 남은 오차가 있고, 중도상환 권리가 붙은 채권에서는 볼록성이 음수가 되기도 합니다.",
+      },
+      {
+        id: "yield-curve",
+        sectionId: "yield-curve",
+        intuition:
+          "만기를 가로축에 놓고 금리를 이으면 시장이 앞으로를 어떻게 보는지가 한 줄로 나타납니다.",
+        workedExample:
+          "1년물이 2.6%, 10년물이 3.8%면 우상향 곡선이고, 1년물이 4.2%, 10년물이 3.3%면 뒤집힌 곡선입니다.",
+        boundary:
+          "곡선은 기대 평균과 기간 프리미엄의 합이므로, 뒤집힘이 기대 때문인지 프리미엄 때문인지는 곡선만으로 가를 수 없습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 적용",
+        relation: "할인 식에 실제 현금흐름을 꽂습니다.",
+        concepts: ["bond-cashflow-pricing"],
+      },
+      {
+        label: "01 역방향",
+        relation: "가격에서 수익률을 되묻고 그 한계를 확인합니다.",
+        concepts: ["yield-to-maturity", "ytm-reinvestment-assumption"],
+      },
+      {
+        label: "02 민감도",
+        relation: "무게중심이 가격이 흔들리는 폭을 정합니다.",
+        concepts: ["macaulay-duration", "modified-duration"],
+      },
+      {
+        label: "03 보정",
+        relation: "직선 근사가 벗어나는 방향을 2차 항이 설명합니다.",
+        concepts: ["modified-duration", "bond-convexity"],
+      },
+      {
+        label: "04 구조",
+        relation: "만기별 금리가 곡선을 이루어 할인율의 출처가 됩니다.",
+        concepts: ["yield-curve"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "액면 100만 원, 표면금리 3%, 만기 3년 채권의 현금흐름을 연도별로 쓰고, 할인율 3%에서의 가격을 구하세요.",
+        answerChecklist: ["1년 3만", "2년 3만", "3년 103만", "가격 100만 원"],
+        requiredConcepts: ["bond-cashflow-pricing"],
+        sectionId: "cashflow-to-price",
+      },
+      {
+        level: "basic",
+        question:
+          "금리가 오르면 채권 가격이 떨어지는 이유를 식의 구조로 설명하세요.",
+        answerChecklist: ["할인율이 분모", "할인계수가 작아짐", "모든 항이 줄어듦", "심리가 아니라 구조"],
+        requiredConcepts: ["bond-cashflow-pricing"],
+        sectionId: "cashflow-to-price",
+      },
+      {
+        level: "basic",
+        question:
+          "만기수익률의 정의를 쓰고, 그것이 2편의 어떤 개념과 같은 문제인지 밝히세요.",
+        answerChecklist: ["시장 가격을 설명하는 할인율", "내부수익률과 같은 형태", "수치 해법 필요", "부호가 한 번만 바뀜"],
+        requiredConcepts: ["yield-to-maturity"],
+        sectionId: "ytm",
+      },
+      {
+        level: "basic",
+        question:
+          "만기까지 보유해도 실현 수익률이 만기수익률과 달라질 수 있는 이유를 쓰세요.",
+        answerChecklist: ["재투자 가정", "받은 이자를 같은 금리로 굴려야 함", "금리가 움직임", "비교용 척도"],
+        requiredConcepts: ["ytm-reinvestment-assumption"],
+        sectionId: "ytm-assumption",
+      },
+      {
+        level: "basic",
+        question:
+          "만기가 같은 두 채권의 듀레이션이 다를 수 있는 이유를 표면금리로 설명하세요.",
+        answerChecklist: ["표면금리가 높으면 앞쪽 비중 증가", "무게중심 앞당겨짐", "듀레이션 짧아짐", "무이표채는 만기와 같음"],
+        requiredConcepts: ["macaulay-duration"],
+        sectionId: "duration-use",
+      },
+      {
+        level: "basic",
+        question:
+          "수정 듀레이션이 6인 채권의 금리가 0.5%포인트 오를 때 예상되는 가격 변화율을 구하고, 이 값이 근사인 이유를 쓰세요.",
+        answerChecklist: ["약 -3%", "접선 기울기", "곡선을 직선으로 근사", "변화가 클수록 오차"],
+        requiredConcepts: ["modified-duration"],
+        sectionId: "duration",
+      },
+      {
+        level: "advanced",
+        question:
+          "듀레이션이 왜 시점의 단순 평균이 아니라 현재가치 비중으로 가중한 평균이어야 하는지, 가격 식의 미분과 연결해 설명하세요.",
+        answerChecklist: [
+          "각 항의 금리 민감도가 t에 비례",
+          "항마다 크기가 다름",
+          "기여도로 정규화해야 함",
+          "가중치 합은 1",
+        ],
+        requiredConcepts: ["macaulay-duration", "modified-duration"],
+        sectionId: "duration",
+      },
+      {
+        level: "advanced",
+        question:
+          "볼록성 항이 제곱이라는 사실에서, 금리가 오를 때와 내릴 때 투자자에게 어떤 비대칭이 생기는지 설명하세요.",
+        answerChecklist: [
+          "제곱이라 항상 양수",
+          "오를 때 손실은 근사보다 작음",
+          "내릴 때 이익은 근사보다 큼",
+          "변화가 클수록 차이 확대",
+        ],
+        requiredConcepts: ["bond-convexity", "modified-duration"],
+        sectionId: "duration",
+      },
+      {
+        level: "advanced",
+        question:
+          "수익률 곡선이 뒤집혔다는 사실만으로 '시장이 금리 인하를 예상한다'고 단정할 수 없는 이유를 두 항으로 설명하세요.",
+        answerChecklist: [
+          "곡선은 기대 평균 더하기 프리미엄",
+          "프리미엄은 추정값",
+          "어느 항이 움직였는지 분리 불가",
+          "모형 가정에 따라 분해가 달라짐",
+        ],
+        requiredConcepts: ["yield-curve", "expectations-hypothesis-of-rates"],
+        sectionId: "curve-shapes",
+      },
+      {
+        level: "advanced",
+        question:
+          "모든 시점에 같은 할인율을 쓰는 것이 정확하지 않은 이유를 쓰고, 정확히 하려면 무엇이 필요한지 설명하세요.",
+        answerChecklist: [
+          "만기별 금리가 다름",
+          "곡선에서 시점별로 읽어야 함",
+          "관측 만기수익률은 여러 시점을 뭉갠 값",
+          "무이표채 금리를 만기별로 뽑아야 함",
+        ],
+        requiredConcepts: ["yield-curve", "bond-cashflow-pricing"],
+        sectionId: "curve-shapes",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Frederick R. Macaulay · Some Theoretical Problems Suggested by the Movements of Interest Rates, Bond Yields and Stock Prices in the United States since 1856 (NBER, 1938)",
+        href: "https://www.nber.org/books-and-chapters/some-theoretical-problems-suggested-movements-interest-rates-bond-yields-and-stock-prices-united",
+        problem:
+          "채권의 만기만으로는 금리 변화에 대한 가격 민감도를 설명할 수 없어, 서로 다른 표면금리의 채권을 같은 자로 비교할 방법이 없었습니다.",
+        contribution:
+          "현금흐름 시점을 현재가치 비중으로 가중평균한 값을 채권의 실질적 기간 척도로 제시해, 이후 금리 위험 관리의 기본 도구가 되었습니다.",
+        assumptions:
+          "현금흐름이 고정되어 있고 모든 만기의 금리가 함께 움직인다는 단순화를 전제로 합니다.",
+        evidenceScope:
+          "1938년 NBER에서 발간된 저작으로, 미국의 장기 금리·채권 수익률·주가 시계열을 다루는 이론적 문제 제기의 범위에 있습니다.",
+        notClaim:
+          "이 저작이 제시한 것은 가중평균 개념이며, 오늘 실무에서 쓰는 수정 듀레이션과 볼록성 보정은 이후에 덧붙은 것이므로 같은 출처로 인용하면 안 됩니다.",
+        sectionId: "yield-curve",
+      },
+    ],
+  },
 };
