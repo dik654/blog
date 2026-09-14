@@ -7126,4 +7126,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "체계적 위험·베타·분산투자 등 본문 용어의 한국어 표준 표기를 맞추는 데 사용. 계산식의 근거가 아니라 표기 기준",
     },
   ],
+  "risk/capital-requirements-and-systemic-risk": [
+    {
+      kind: "공식 규격",
+      label: "BCBS · Basel III (BIS)",
+      href: "https://www.bis.org/bcbs/basel3.htm",
+      note: "자본·레버리지·유동성·완충자본 요건의 구성에 대한 근거. 국제 최저 기준이며 특정 국가의 규제 수준이나 효과의 근거는 아님",
+    },
+    {
+      kind: "공식 문서",
+      label: "한국은행 · 경제금융용어 800선 (2026)",
+      href: "https://www.bok.or.kr/portal/bbs/B0000249/view.do?nttId=10096081&menuNo=200765",
+      note: "자기자본비율·위험가중자산·경기순응성 등 본문 용어의 한국어 표준 표기를 맞추는 데 사용. 규제 수치의 근거가 아니라 표기 기준",
+    },
+  ],
 };

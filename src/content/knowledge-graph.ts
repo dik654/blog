@@ -23257,6 +23257,76 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "무위험 수익률에 베타만큼의 시장 위험 프리미엄을 더해 요구 수익률을 정하는 관계입니다. 개별 자산의 총 변동이 아니라 시장과 겹치는 부분만 값이 매겨진다는 점이 핵심이며, 균형에서 성립할 관계이지 실제 수익률의 예측이 아닙니다.",
     canonicalHref: "/finance/risk/risk-diversification-and-pricing#capm",
   },
+  "bank-failure-externality": {
+    id: "bank-failure-externality",
+    kind: "concept",
+    domain: "economics",
+    label: "은행 실패의 외부효과",
+    aliases: ["전염", "contagion", "시스템 리스크"],
+    definition:
+      "한 은행의 손실이 미결제 익스포저·급매·예상이라는 세 경로로 다른 기관에 옮겨 가는 성질입니다. 결정은 그 은행이 하는데 비용의 일부를 다른 곳이 치르므로, 각자에게 맡기면 사회가 원하는 만큼 자본이 쌓이지 않습니다.",
+    canonicalHref: "/finance/risk/capital-requirements-and-systemic-risk#why-regulate",
+  },
+  "loss-absorbing-capital": {
+    id: "loss-absorbing-capital",
+    kind: "concept",
+    domain: "economics",
+    label: "손실흡수 자본",
+    aliases: ["규제 자본", "자본의 질", "완충자본"],
+    definition:
+      "자산 가치가 깎일 때 예금자보다 먼저 깎이기로 되어 있는 층입니다. 쌓아 둔 현금이 아니라 손실을 받는 순서이므로, 먼저 깎이도록 설계된 항목만 완충재로 인정됩니다.",
+    canonicalHref: "/finance/risk/capital-requirements-and-systemic-risk#loss-absorption",
+  },
+  "risk-weighted-assets": {
+    id: "risk-weighted-assets",
+    kind: "metric",
+    domain: "economics",
+    label: "Risk-weighted assets · 위험가중자산",
+    aliases: ["RWA", "위험 가중치"],
+    definition:
+      "자산마다 위험 가중치를 곱해 더한 값으로, 자본 요구를 규모가 아니라 위험에 비례하게 만드는 분모입니다. 가중치가 실제 위험보다 낮게 매겨지면 분모가 작아져 비율만 높아진다는 취약점을 함께 갖습니다.",
+    canonicalHref: "/finance/risk/capital-requirements-and-systemic-risk#rwa",
+  },
+  "capital-adequacy-ratio": {
+    id: "capital-adequacy-ratio",
+    kind: "metric",
+    domain: "economics",
+    label: "Capital adequacy ratio · 자기자본비율",
+    aliases: ["BIS 비율", "CAR"],
+    definition:
+      "손실흡수 자본을 위험가중자산으로 나눈 비율이며 규제의 주된 판정 기준입니다. 자산 대비가 아니라 위험 대비 비율이므로, 값이 높다는 것과 안전하다는 것은 가중치가 옳을 때만 같은 말입니다.",
+    canonicalHref: "/finance/risk/capital-requirements-and-systemic-risk#rwa",
+  },
+  "leverage-ratio-backstop": {
+    id: "leverage-ratio-backstop",
+    kind: "method",
+    domain: "economics",
+    label: "단순 레버리지 비율 바닥",
+    aliases: ["레버리지 비율", "leverage ratio"],
+    definition:
+      "위험 가중치를 전혀 쓰지 않고 자본을 총 익스포저로 나눈 비율을 최저 기준으로 함께 두는 장치입니다. 가중치를 낮은 쪽으로 옮겨 분모를 줄이는 우회를 막으려는 설계이며, 두 기준 가운데 더 까다로운 쪽이 실제 제약이 됩니다.",
+    canonicalHref: "/finance/risk/capital-requirements-and-systemic-risk#gaming-the-weights",
+  },
+  "liquidity-requirement": {
+    id: "liquidity-requirement",
+    kind: "method",
+    domain: "economics",
+    label: "유동성 규제",
+    aliases: ["유동성커버리지비율", "LCR", "순안정자금조달비율", "NSFR"],
+    definition:
+      "짧은 기간에 빠져나갈 자금을 추정해 그만큼 빨리 현금화되는 자산을 보유하게 하고 조달이 단기에 쏠리지 않게 하는 요건입니다. 손실을 견디는 자본 규제와 달리 오늘 지급할 수 있는지를 다루므로 막는 실패가 다릅니다.",
+    canonicalHref: "/finance/risk/capital-requirements-and-systemic-risk#two-axes",
+  },
+  "regulatory-procyclicality": {
+    id: "regulatory-procyclicality",
+    kind: "concept",
+    domain: "economics",
+    label: "규제의 경기순응성",
+    aliases: ["경기순응성", "procyclicality", "경기대응 완충자본"],
+    definition:
+      "경기가 나빠지면 자본이 줄고 위험 가중치가 올라 비율이 양쪽에서 나빠지므로, 대출을 줄이거나 자산을 팔아 경기를 더 악화시키는 되먹임입니다. 좋을 때 완충자본을 더 쌓게 했다가 나쁠 때 풀어 주는 장치가 이 되먹임에 대응합니다.",
+    canonicalHref: "/finance/risk/capital-requirements-and-systemic-risk#boundary",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -42650,6 +42720,90 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "evaluates",
     reason:
       "레버리지가 기대 수익률과 함께 키우는 변동폭을 재려면 분산·표준편차라는 척도가 필요합니다.",
+  },
+  {
+    from: "self-fulfilling-bank-run",
+    to: "bank-failure-externality",
+    relation: "produces",
+    reason:
+      "한 은행의 실패를 보고 비슷한 은행에서도 인출이 일어나는 경로가 곧 예상을 통한 전염이므로, 조정 실패가 외부효과의 한 통로가 됩니다.",
+  },
+  {
+    from: "netting-efficiency",
+    to: "bank-failure-externality",
+    relation: "constrains",
+    reason:
+      "정산 전까지 남아 있는 미결제 익스포저가 직접 전염 경로의 크기를 정하므로, 상계와 최종성 설계가 번짐의 범위를 좌우합니다.",
+  },
+  {
+    from: "deposit-insurance",
+    to: "bank-failure-externality",
+    relation: "constrains",
+    reason:
+      "보장이 인출 유인을 없애 전염을 막는 동시에 예금자의 감시 유인도 없애, 규제가 그 자리를 대신 메워야 하는 이유가 됩니다.",
+  },
+  {
+    from: "bank-failure-externality",
+    to: "loss-absorbing-capital",
+    relation: "produces",
+    reason:
+      "비용의 일부를 남이 치르는 구조에서는 자율에 맡길 수 없으므로, 먼저 깎일 층을 미리 두껍게 쌓게 하는 요구가 나옵니다.",
+  },
+  {
+    from: "residual-claim",
+    to: "loss-absorbing-capital",
+    relation: "prerequisite",
+    reason:
+      "손실이 청구권 순위의 역순으로 배분된다는 것을 알아야, 어떤 항목이 진짜 완충재로 인정되는지를 가릴 수 있습니다.",
+  },
+  {
+    from: "bank-balance-sheet",
+    to: "loss-absorbing-capital",
+    relation: "prerequisite",
+    reason:
+      "자기자본이 자산에서 부채를 뺀 차액이라는 장부 관계가 있어야 자본비율을 감당 가능한 손실률로 읽을 수 있습니다.",
+  },
+  {
+    from: "risk-weighted-assets",
+    to: "capital-adequacy-ratio",
+    relation: "prerequisite",
+    reason:
+      "분모가 위험으로 환산되어야 같은 비율을 요구해도 위험한 자산을 담은 은행이 더 많은 자본을 쌓게 됩니다.",
+  },
+  {
+    from: "leverage-ratio-backstop",
+    to: "risk-weighted-assets",
+    relation: "constrains",
+    reason:
+      "가중치를 낮은 쪽으로 옮겨 분모를 줄이는 우회가 가능하므로, 가중치를 쓰지 않는 바닥을 함께 두어 그 여지를 제한합니다.",
+  },
+  {
+    from: "liquidity-requirement",
+    to: "maturity-transformation",
+    relation: "constrains",
+    reason:
+      "자본이 두꺼워도 만기 불일치는 그대로 남으므로, 짧은 유출에 대비한 보유 요건이 그 구조의 취약점을 따로 제한합니다.",
+  },
+  {
+    from: "liquidity-requirement",
+    to: "loss-absorbing-capital",
+    relation: "contrasts",
+    reason:
+      "하나는 오늘 지급할 수 있는지를 다루고 다른 하나는 손실을 견딜 수 있는지를 다루므로, 막는 실패의 종류가 서로 다릅니다.",
+  },
+  {
+    from: "capital-adequacy-ratio",
+    to: "regulatory-procyclicality",
+    relation: "produces",
+    reason:
+      "분자와 분모가 경기에 같은 방향으로 반응하므로, 비율을 지키라는 요구 자체가 나쁠 때 더 강하게 조이는 되먹임을 만듭니다.",
+  },
+  {
+    from: "covariance-correlation",
+    to: "risk-weighted-assets",
+    relation: "constrains",
+    reason:
+      "가중치를 단순히 더하는 방식은 자산 간 상관을 명시적으로 다루지 않으므로, 위기에 상관이 올라가면 분모가 실제 위험을 과소평가합니다.",
   },
 ];
 

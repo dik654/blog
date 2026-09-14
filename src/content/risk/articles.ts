@@ -39,4 +39,43 @@ export const riskArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/risk/risk-diversification-and-pricing"),
   },
+  {
+    slug: "capital-requirements-and-systemic-risk",
+    title: "은행에만 미리 자본을 쌓으라고 하는 이유는 손실이 번지기 때문입니다",
+    subcategory: "risk-capital",
+    sections: [
+      {
+        id: "overview",
+        title: "한 칸이 무너지면 이어진 칸이 함께 흔들리는 구조였습니다",
+      },
+      {
+        id: "why-regulate",
+        title: "부품 1. 결정하는 쪽과 비용을 치르는 쪽이 다릅니다",
+      },
+      {
+        id: "loss-absorption",
+        title: "부품 2. 자본은 쌓아 둔 현금이 아니라 손실을 먼저 받는 순서입니다",
+      },
+      {
+        id: "rwa",
+        title: "부품 3. 그래서 분모를 자산이 아니라 위험으로 바꿉니다",
+        subsections: [
+          { id: "gaming-the-weights", title: "분모를 줄이는 것과 위험을 줄이는 것은 다릅니다" },
+        ],
+      },
+      {
+        id: "liquidity",
+        title: "부품 4. 자본이 충분해도 오늘 낼 현금이 없으면 무너집니다",
+        subsections: [
+          { id: "two-axes", title: "두 축이 막는 실패가 서로 다릅니다" },
+        ],
+      },
+      {
+        id: "boundary",
+        title: "이 규제는 스스로 새 문제를 만들고, 그 자리에서 그물이 닫힙니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/risk/capital-requirements-and-systemic-risk"),
+  },
 ];
