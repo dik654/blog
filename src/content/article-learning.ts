@@ -74023,4 +74023,281 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "money/money-as-a-claim": {
+    entryLevel: true,
+    entryNote:
+      "금융 용어를 하나도 모른다고 가정합니다. 물건끼리 바꾸는 상황에서 시작해 오늘의 돈이 누구의 빚인지까지만 갑니다. 이자와 현재가치 계산은 다음 글이 맡습니다.",
+    coreIdea:
+      "교환 매개에 필요한 것은 남들이 받아 준다는 믿음뿐이므로 매개는 물건이 아니라 발행자의 채무여도 됩니다. 그래서 오늘의 돈은 거의 전부 누군가의 빚이고, 얼마나 있는지는 어떤 채무까지 셀지 정한 뒤에야 숫자가 됩니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "medium-of-exchange",
+        role: "필요가 서로 맞물려야 한다는 제약을 두 번의 거래로 나눠 푸는 도구로 등장합니다.",
+      },
+      {
+        id: "unit-of-account",
+        role: "값을 적는 공통의 자로서, 외워야 할 교환 비율 개수를 제곱에서 직선으로 줄입니다.",
+      },
+      {
+        id: "store-of-value",
+        role: "구매력을 미래로 옮기는 별도 기능으로, 매개 기능과 갈라질 수 있음을 보입니다.",
+      },
+      {
+        id: "credit-money",
+        role: "매개가 물건에서 발행자의 채무로 옮겨 간 결과로, 이 글의 결론을 이룹니다.",
+      },
+      {
+        id: "legal-tender",
+        role: "수용의 근거가 믿음에서 법으로 일부 옮겨 가는 지점을 표시합니다.",
+      },
+      {
+        id: "monetary-aggregate",
+        role: "채무로 이루어진 돈의 총량을 세려면 정의가 먼저라는 점을 절차로 보여 줍니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "medium-of-exchange",
+        sectionId: "exchange-problem",
+        intuition:
+          "지금 나에게 쓸모가 없어도 남들이 잘 받아 주는 물건이면 일단 받아 두고, 필요한 것을 파는 사람에게 다시 건넵니다.",
+        workedExample:
+          "쌀을 소금으로 바꾸고 그 소금으로 신발을 사면, 한 번에 안 되던 거래가 두 번으로 나뉘어 성립합니다.",
+        boundary:
+          "널리 받아들여진다는 것과 값이 안정적이라는 것은 다른 성질이며, 매일 값이 흔들려도 매개 기능은 유지될 수 있습니다.",
+      },
+      {
+        id: "unit-of-account",
+        sectionId: "three-functions",
+        intuition:
+          "모든 값을 한 가지 자로 적기로 정하면, 물건마다 그 자와의 비율 하나만 알면 나머지는 나눗셈으로 나옵니다.",
+        workedExample:
+          "물건이 10가지일 때 직접 교환은 45개의 비율이 필요하지만 공통 단위를 쓰면 9개면 충분합니다.",
+        boundary:
+          "계산 단위는 실제로 그 대상이 오가지 않아도 유지되므로, 카드로 결제해도 값은 여전히 원으로 적힙니다.",
+      },
+      {
+        id: "store-of-value",
+        sectionId: "three-functions",
+        intuition:
+          "오늘 쓰지 않은 구매력을 나중으로 미뤄 두는 일이며, 얼마나 잘 미뤄지는지는 보관 비용과 값의 변동이 정합니다.",
+        workedExample:
+          "1년 뒤 낼 등록금을 예금에 두면 금액은 그대로지만 그사이 물가가 3% 오르면 살 수 있는 양은 그만큼 줄어듭니다.",
+        boundary:
+          "저장 기능이 좋다고 매개 기능이 좋은 것은 아니어서, 잘 팔리지 않는 그림은 저장에는 쓸 수 있어도 점심값으로는 건네기 어렵습니다.",
+      },
+      {
+        id: "credit-money",
+        sectionId: "credit-money",
+        intuition:
+          "신뢰할 만한 발행자가 갚겠다고 약속하면 그 약속 자체가 손에서 손으로 넘어가며 돈처럼 움직입니다.",
+        workedExample:
+          "통장의 100만 원은 창고의 현금이 아니라 은행이 예금자에게 진 빚이고, 지갑의 만 원권은 한국은행의 부채입니다.",
+        boundary:
+          "빚이라는 사실은 갚지 못할 가능성을 뜻하므로, 예금과 현금은 액수가 같아도 상대가 달라 위험이 같지 않습니다.",
+      },
+      {
+        id: "legal-tender",
+        sectionId: "credit-money",
+        intuition:
+          "빚을 갚겠다며 내밀었을 때 받는 쪽이 거절할 수 없도록 법이 힘을 실어 준 화폐입니다.",
+        workedExample:
+          "한국에서 한국은행권으로 채무를 변제하겠다고 제시하면 채권자는 그 자체를 이유로 수령을 거부하기 어렵습니다.",
+        boundary:
+          "모든 가게가 현금을 반드시 받아야 한다는 뜻도, 그 화폐의 구매력이 유지된다는 뜻도 아닙니다.",
+      },
+      {
+        id: "monetary-aggregate",
+        sectionId: "money-aggregates",
+        intuition:
+          "돈이 여러 사람의 빚이라면 총량은 저절로 세어지지 않고, 어떤 빚까지 셀지 정해야 숫자가 나옵니다.",
+        workedExample:
+          "현금과 즉시 인출 가능한 예금까지 세면 M1이 되고, 2년 미만 정기예적금을 더하면 M2가 됩니다.",
+        boundary:
+          "문턱 정의가 바뀌면 같은 이름의 지표라도 시계열이 끊기므로, 지표명 없이 통화량이 늘었다고만 말하면 비교가 성립하지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 문제",
+        relation: "필요가 맞물리지 않아 거래가 멈추는 자리에서 매개가 생깁니다.",
+        concepts: ["medium-of-exchange"],
+      },
+      {
+        label: "01 기능 분리",
+        relation: "하나처럼 보이던 일이 사실 세 가지임을 확인합니다.",
+        concepts: ["medium-of-exchange", "unit-of-account", "store-of-value"],
+      },
+      {
+        label: "02 오늘의 돈",
+        relation: "수용이 조건의 전부라면 매개는 발행자의 약속이어도 됩니다.",
+        concepts: ["credit-money", "legal-tender"],
+      },
+      {
+        label: "03 세는 법",
+        relation: "채무로 이루어진 돈의 총량은 정의를 먼저 정해야 숫자가 됩니다.",
+        concepts: ["credit-money", "monetary-aggregate"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "욕구의 이중 일치가 무엇인지 설명하고, 그 제약이 교환 매개로 어떻게 풀리는지 쓰세요.",
+        answerChecklist: [
+          "두 사람의 필요가 동시에 맞물려야 함",
+          "쓰려고가 아니라 넘기려고 받아 둠",
+          "한 번의 거래가 두 번으로 나뉨",
+          "남들이 받아 준다는 믿음이 조건",
+        ],
+        requiredConcepts: ["medium-of-exchange"],
+        sectionId: "exchange-problem",
+      },
+      {
+        level: "basic",
+        question:
+          "물건이 6가지일 때 직접 교환과 공통 매개 각각에서 필요한 비율 개수를 계산하고 차이를 설명하세요.",
+        answerChecklist: ["n(n-1)/2 = 15", "n-1 = 5", "제곱과 직선", "중복 제거를 위한 2로 나누기"],
+        requiredConcepts: ["unit-of-account"],
+        sectionId: "exchange-problem",
+      },
+      {
+        level: "basic",
+        question:
+          "교환 매개·계산 단위·가치 저장을 각각 무엇으로 판정하는지 하나씩 예를 들어 구분하세요.",
+        answerChecklist: [
+          "남들의 수용 여부",
+          "계약서·장부가 무엇으로 쓰였는지",
+          "구매력을 미래로 옮기는 품질",
+          "세 기능이 갈라질 수 있음",
+        ],
+        requiredConcepts: ["medium-of-exchange", "unit-of-account", "store-of-value"],
+        sectionId: "three-functions",
+      },
+      {
+        level: "basic",
+        question:
+          "통장의 예금이 왜 은행의 부채인지, 그리고 지갑의 현금은 누구의 부채인지 설명하세요.",
+        answerChecklist: ["예금은 은행이 예금자에게 진 빚", "현금은 중앙은행의 부채", "지급준비금도 중앙은행의 부채", "액수가 같아도 상대가 다름"],
+        requiredConcepts: ["credit-money"],
+        sectionId: "credit-money",
+      },
+      {
+        level: "basic",
+        question:
+          "법정통화가 보장하는 것과 보장하지 않는 것을 각각 한 가지씩 쓰세요.",
+        answerChecklist: ["채무 변제 수단으로 인정", "채권자가 거절하기 어려움", "모든 거래의 수취 강제 아님", "구매력 보장 아님"],
+        requiredConcepts: ["legal-tender"],
+        sectionId: "credit-money",
+      },
+      {
+        level: "basic",
+        question:
+          "M1과 M2를 가르는 기준이 무엇인지 설명하고, 한국은행이 두 지표를 함께 내는 이유를 쓰세요.",
+        answerChecklist: ["유동성 문턱", "즉시 인출 가능 여부", "2년 미만 정기예적금 포함", "문턱에 따라 다른 질문에 답함"],
+        requiredConcepts: ["monetary-aggregate"],
+        sectionId: "money-aggregates",
+      },
+      {
+        level: "advanced",
+        question:
+          "통화지표 집계에서 발행 기관끼리 주고받은 잔액을 제외하지 않으면 어떤 오류가 생기는지, 구체적인 상황을 들어 설명하세요.",
+        answerChecklist: [
+          "같은 잔액이 한쪽의 부채이자 다른 쪽의 자산",
+          "이중 계상",
+          "보유 주체를 비은행 민간으로 한정",
+          "발행자 확인이 먼저",
+        ],
+        requiredConcepts: ["monetary-aggregate", "credit-money"],
+        sectionId: "money-aggregates",
+      },
+      {
+        level: "advanced",
+        question:
+          "물가가 빠르게 오르는 나라에서 자국 통화가 교환 매개로는 계속 쓰이면서 계산 단위와 가치 저장은 다른 것에 넘어가는 이유를 세 기능의 성립 조건으로 설명하세요.",
+        answerChecklist: [
+          "매개는 수용만 있으면 성립",
+          "계산 단위는 값이 안정적이어야 유용",
+          "저장은 구매력 유지가 조건",
+          "세 기능이 독립적으로 판정됨",
+        ],
+        requiredConcepts: ["medium-of-exchange", "unit-of-account", "store-of-value"],
+        sectionId: "three-functions",
+      },
+      {
+        level: "advanced",
+        question:
+          "n(n−1)/2 식으로 화폐의 존재 이유를 전부 설명했다고 말하면 안 되는 이유를, 그 식이 세지 않는 비용과 이익을 들어 반박하세요.",
+        answerChecklist: [
+          "상대를 찾는 탐색 비용은 식에 없음",
+          "모든 쌍이 거래된다는 가정",
+          "가치 저장·신용 기능의 이익은 미포함",
+          "계산 단위 이익만 셈",
+        ],
+        requiredConcepts: ["unit-of-account", "store-of-value"],
+        sectionId: "exchange-problem",
+      },
+      {
+        level: "advanced",
+        question:
+          "중앙은행은 자국 통화 표시 채무로 부도를 내지 않는다고 하는데, 그렇다면 현금 보유자가 지는 위험은 무엇인지 예금 보유자의 위험과 구분해 설명하세요.",
+        answerChecklist: [
+          "상환 불능 위험과 구매력 하락 위험은 다름",
+          "예금은 발행 은행의 부실 위험",
+          "보장 한도 밖은 손실 분담",
+          "부도 없음이 위험 없음은 아님",
+        ],
+        requiredConcepts: ["credit-money", "store-of-value"],
+        sectionId: "credit-money",
+      },
+    ],
+    papers: [
+      {
+        title: "Money in the modern economy: an introduction (Bank of England Quarterly Bulletin 2014 Q1)",
+        href: "https://www.bankofengland.co.uk/quarterly-bulletin/2014/q1/money-in-the-modern-economy-an-introduction",
+        problem:
+          "현대 경제에서 돈이라 불리는 것이 실제로 무엇이며 현금·예금·지급준비금이 서로 어떤 관계인지가 일반 독자에게 정리되어 있지 않았습니다.",
+        contribution:
+          "돈을 모두가 남들도 받아 줄 것이라 믿기에 특별해진 차용증으로 정의하고, 현금·예금·지급준비금을 각각 어느 부문이 어느 부문에 진 채무인지로 갈라 설명했습니다.",
+        assumptions:
+          "영국의 통화·은행 제도를 기준으로 하며 부문 간 채무 관계를 단순화한 대차대조표로 서술합니다.",
+        evidenceScope:
+          "중앙은행이 직접 쓴 개론 자료로 2014년 3월 기준이며, 제도 서술은 저자 기관 자신의 설명이지 독립 평가가 아닙니다.",
+        notClaim:
+          "예금의 대부분이 은행 대출로 만들어진다는 구조적 주장의 근거는 이 개론이 아니라 같은 호의 별도 논문에 있으므로, 이 글의 인용으로 예금 창조 메커니즘까지 뒷받침했다고 볼 수 없습니다.",
+        sectionId: "credit-money",
+      },
+      {
+        title: "IMF Monetary and Financial Statistics Manual and Compilation Guide, Chapter 6 (2016)",
+        href: "https://www.imf.org/external/pubs/ft/mfsmcg/c6.pdf",
+        problem:
+          "나라마다 다른 금융상품을 놓고 무엇을 통화로 셀지 일관된 기준이 없으면 국가 간 비교도 시계열 비교도 성립하지 않습니다.",
+        contribution:
+          "통화 총량을 발행 부문과 보유 부문으로 먼저 가른 뒤 유동성 기준으로 묶어 정의하도록 규정해, 이중 계상을 제거하는 집계 절차를 표준화했습니다.",
+        assumptions:
+          "예금취급기관을 식별할 수 있고 각 금융상품의 만기·해지 조건으로 유동성을 서열화할 수 있다고 둡니다.",
+        evidenceScope:
+          "통계 작성자를 위한 국제 기준 문서로 2016년판이며, 적용 범위는 지표를 만드는 방법에 한정됩니다.",
+        notClaim:
+          "어떤 통화지표가 물가나 경기를 잘 설명하는지에 대한 실증 연구가 아니므로, 통화량과 물가의 관계를 이 문서로 뒷받침할 수 없습니다.",
+        sectionId: "money-aggregates",
+      },
+      {
+        title: "한국은행 · 최근 유동성 상황에 대한 이해 (2025)",
+        href: "https://www.bok.or.kr/portal/bbs/B0000347/view.do?nttId=10095141&menuNo=201106",
+        problem:
+          "한국의 통화지표가 M1·M2·Lf·L로 나뉘어 있지만 각 지표가 어디까지 포함하는지는 이름만으로 알기 어렵습니다.",
+        contribution:
+          "각 지표가 포함하는 발행 기관과 금융상품의 범위를 좁은 것부터 넓은 것까지 차례로 정리해 한국 기준의 구분선을 보여 줍니다.",
+        assumptions:
+          "국제통화기금의 통화금융통계 기준을 따르는 한국의 현행 편제 방식을 전제로 합니다.",
+        evidenceScope:
+          "한국은행이 2025년 12월에 공개한 설명 자료이며, 포함된 잔액 수치는 그 발표 시점 기준입니다.",
+        notClaim:
+          "특정 시점의 잔액이나 증가율을 현재 상태로 인용할 수 없으며, 이 글에서는 숫자가 아니라 지표 구분 기준만 사용했습니다.",
+        sectionId: "money-aggregates",
+      },
+    ],
+  },
 };

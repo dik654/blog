@@ -7002,4 +7002,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "강도 0.60·0.85·1.00에서 0.676·0.376·0.229. 강도 0.85에서 얼굴형 변경 0.376 대 시드만 변경 0.346·0.300. 강도 1.00 대조군은 네 장 중 세 장 얼굴 미검출",
     },
   ],
+  "money/money-as-a-claim": [
+    {
+      kind: "공식 문서",
+      label: "Bank of England · Money in the modern economy: an introduction (2014 Q1)",
+      href: "https://www.bankofengland.co.uk/quarterly-bulletin/2014/q1/money-in-the-modern-economy-an-introduction",
+      note: "돈을 발행자의 차용증으로 정의하고 현금·예금·지급준비금을 부문 간 채무로 가르는 본문 결론의 근거. 영국 제도 기준이며 예금 창조 메커니즘까지 뒷받침하지는 않음",
+    },
+    {
+      kind: "공식 규격",
+      label: "IMF · Monetary and Financial Statistics Manual and Compilation Guide, Ch.6 (2016)",
+      href: "https://www.imf.org/external/pubs/ft/mfsmcg/c6.pdf",
+      note: "발행 부문·보유 부문을 먼저 가르고 유동성 기준으로 묶는 집계 절차의 근거. 지표 작성 기준이며 통화량과 물가의 관계에 대한 주장은 아님",
+    },
+    {
+      kind: "공식 문서",
+      label: "한국은행 · 최근 유동성 상황에 대한 이해 (2025-12-16)",
+      href: "https://www.bok.or.kr/portal/bbs/B0000347/view.do?nttId=10095141&menuNo=201106",
+      note: "M1·M2·Lf·L의 포함 범위 구분에 대한 한국 기준 근거. 발표 시점의 잔액 수치는 본문에 인용하지 않음",
+    },
+  ],
 };

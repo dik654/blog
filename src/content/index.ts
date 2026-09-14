@@ -11,6 +11,10 @@ import gpu from "./gpu";
 import tee from "./tee";
 import ismsAml from "./isms-aml";
 import saas from "./saas";
+import money from "./money";
+import banking from "./banking";
+import markets from "./markets";
+import risk from "./risk";
 
 export const categories = [
   ai,
@@ -21,6 +25,10 @@ export const categories = [
   tee,
   ismsAml,
   saas,
+  money,
+  banking,
+  markets,
+  risk,
 ];
 
 export interface DomainGroup {

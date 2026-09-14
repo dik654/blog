@@ -23,6 +23,12 @@ export const DOMAIN_META: readonly DomainMeta[] = [
     description:
       "AI·블록체인·암호학·분산 시스템·하드웨어까지 컴퓨터 기술을 코드베이스 단위로 추적합니다.",
   },
+  {
+    slug: "finance",
+    name: "금융",
+    description:
+      "돈과 이자에서 시작해 은행·중앙은행·시장·규제까지 금융 체계를 기초부터 쌓습니다.",
+  },
 ];
 
 /**
@@ -38,7 +44,10 @@ export const CATEGORY_DOMAIN: Readonly<Record<string, DomainSlug>> = {
   tee: "cs",
   "isms-aml": "cs",
   saas: "cs",
-  finance: "finance",
+  money: "finance",
+  banking: "finance",
+  markets: "finance",
+  risk: "finance",
 };
 
 /**
