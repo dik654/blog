@@ -11909,6 +11909,33 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "constitutionalism-and-separation": {
+    title: "헌법은 종이인데도 힘을 묶습니다 글이 소유하는 범위",
+    owns: [
+      "집행력 없는 문서가 힘을 제약하는 조정 메커니즘과 그 성립 조건",
+      "권력분립의 목적이 겸직 방지라는 점",
+      "견제 장치가 남용과 정상적 변경을 함께 막는다는 구조",
+      "거부권자의 승인 구간과 교집합으로서의 통과 가능 영역",
+      "위헌심사의 반다수결 긴장과 그 정당화가 기대는 조건",
+      "개정 문턱의 두 방향 실패와 압력이 빠져나가는 통로",
+    ],
+    reuses: [
+      {
+        label: "통치가 순응 위에 선다는 관계",
+        href: "/politics/polity/state-and-legitimacy#legitimacy",
+      },
+      {
+        label: "조문과 실제 집행 범위가 다른 이유",
+        href: "/politics/polity/state-and-legitimacy#state-capacity",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "설계 원리는 공개 전문을 확인한 원전에만 귀속하고, 그 설계의 실제 효과에 대한 주장은 싣지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

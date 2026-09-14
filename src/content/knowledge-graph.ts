@@ -23438,6 +23438,66 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "결정을 실제로 관철하는 실행 역량이며 정보·징세·집행 세 갈래로 나뉩니다. 세 갈래가 맞물려 있어 정보가 없으면 걷지 못하고 걷지 못하면 집행할 자원이 없으므로, 같은 법전을 가진 나라들이 전혀 다르게 굴러가는 이유가 됩니다.",
     canonicalHref: "/politics/polity/state-and-legitimacy#state-capacity",
   },
+  "constitution-as-coordination": {
+    id: "constitution-as-coordination",
+    kind: "concept",
+    domain: "political-science",
+    label: "조정 장치로서의 헌법",
+    aliases: ["자기집행적 헌법", "self-enforcing constitution", "헌정주의"],
+    definition:
+      "허용과 위반의 경계를 미리 문서로 못 박아, 선을 넘는 순간 흩어져 있던 판단이 같은 시점에 하나로 모이게 만드는 장치입니다. 구속력은 종이 자체가 아니라 그 종이가 만드는 조정 효과에서 나오므로, 선이 모호하거나 위반이 알려지지 않으면 같은 조문도 구속하지 못합니다.",
+    canonicalHref: "/politics/constitution/constitutionalism-and-separation#why-paper-binds",
+  },
+  "separation-of-powers": {
+    id: "separation-of-powers",
+    kind: "concept",
+    domain: "political-science",
+    label: "권력분립",
+    aliases: ["삼권분립", "입법·행정·사법"],
+    definition:
+      "일반 규칙을 정하는 일, 개별 사안에 적용해 실행하는 일, 규칙에 맞는지 판정하는 일을 같은 사람이 겸하지 못하게 갈라 두는 원칙입니다. 조직도를 나누는 것이 목적이 아니라, 위반을 선언할 사람이 위반한 당사자가 되는 상황을 막는 데 목적이 있습니다.",
+    canonicalHref: "/politics/constitution/constitutionalism-and-separation#separation",
+  },
+  "checks-and-balances": {
+    id: "checks-and-balances",
+    kind: "concept",
+    domain: "political-science",
+    label: "견제와 균형",
+    aliases: ["거부권", "탄핵", "동의 요건"],
+    definition:
+      "갈라 둔 기관들이 서로의 결정에 끼어들 수단을 갖게 해 한쪽이 단독으로 관철하지 못하게 하는 장치입니다. 남용을 막는 것과 정상적인 변경을 막는 것이 같은 성질의 두 얼굴이라, 견제를 더할수록 바꿀 수 있는 범위가 함께 줄어듭니다.",
+    canonicalHref: "/politics/constitution/constitutionalism-and-separation#checks",
+  },
+  "veto-player-winset": {
+    id: "veto-player-winset",
+    kind: "theorem",
+    domain: "political-science",
+    label: "거부권자와 통과 가능 영역",
+    aliases: ["veto player", "winset", "교착"],
+    definition:
+      "각 거부권자가 현상유지보다 자기 이상점에 가까운 안에만 동의하므로, 통과 가능한 정책은 그 구간들의 교집합입니다. 거부권자를 더할수록 교집합이 좁아지기만 하며, 현상유지가 이상점들 사이에 놓이면 교집합이 비어 아무것도 바꿀 수 없게 됩니다.",
+    canonicalHref: "/politics/constitution/constitutionalism-and-separation#checks",
+  },
+  "judicial-review": {
+    id: "judicial-review",
+    kind: "concept",
+    domain: "political-science",
+    label: "위헌심사와 반다수결 난점",
+    aliases: ["위헌법률심판", "judicial review"],
+    definition:
+      "선출되지 않은 기관이 선출된 대표가 만든 법을 무효로 선언하는 권한이며, 그 근거를 더 앞선 시점의 더 큰 합의인 헌법에서 찾습니다. 이 정당화는 헌법의 선이 읽는 사람에 따라 크게 달라지지 않을 때만 성립하며, 해석의 폭이 넓어질수록 합의를 읽는 자리가 아니라 스스로 정하는 자리에 가까워집니다.",
+    canonicalHref: "/politics/constitution/constitutionalism-and-separation#judicial-review",
+  },
+  "constitutional-entrenchment": {
+    id: "constitutional-entrenchment",
+    kind: "method",
+    domain: "political-science",
+    label: "헌법의 경성화",
+    aliases: ["경성헌법", "개정 요건", "entrenchment"],
+    definition:
+      "헌법 개정에 일반 법률보다 높은 문턱을 두어 제약을 먼저 없애는 우회로를 막는 장치입니다. 문턱을 높이는 것은 거부권자를 늘리는 것과 같아 통과 가능 영역을 좁히므로, 너무 낮으면 제약이 사라지고 너무 높으면 고칠 수 없어 조문이 무시되기 시작합니다.",
+    canonicalHref: "/politics/constitution/constitutionalism-and-separation#entrenchment",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -43027,6 +43087,69 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "produces",
     reason:
       "머물 작정인 지배자가 생산을 늘리려 도로와 치안을 제공하면, 자기 이익에서 출발한 선택이 결과적으로 공공재 공급이 됩니다.",
+  },
+  {
+    from: "compliance-enforcement-threshold",
+    to: "constitution-as-coordination",
+    relation: "prerequisite",
+    reason:
+      "통치가 순응 위에 선다는 것을 알아야, 순응이 한꺼번에 무너질 가능성을 만드는 조정 장치가 왜 힘을 제약하는지 설명됩니다.",
+  },
+  {
+    from: "constitution-as-coordination",
+    to: "separation-of-powers",
+    relation: "prerequisite",
+    reason:
+      "위반을 선언할 사람이 당사자이면 신호 자체가 생기지 않으므로, 조정 효과가 작동하려면 역할을 겸하지 못하게 갈라 두어야 합니다.",
+  },
+  {
+    from: "separation-of-powers",
+    to: "checks-and-balances",
+    relation: "extends",
+    reason:
+      "기능만 갈라 두면 각자 자기 영역에서 마음대로 하게 되므로, 서로의 결정에 끼어들 수단을 더해야 실제 제약이 됩니다.",
+  },
+  {
+    from: "checks-and-balances",
+    to: "veto-player-winset",
+    relation: "produces",
+    reason:
+      "승인이 필요한 사람이 늘어난다는 사실을 정책 축 위에 옮기면 통과 가능 영역이 교집합으로 줄어드는 관계가 나옵니다.",
+  },
+  {
+    from: "judicial-review",
+    to: "checks-and-balances",
+    relation: "extends",
+    reason:
+      "위반 여부를 공적으로 선언하는 자리를 두어 조정 신호를 명확히 만들지만, 선출되지 않은 기관이라는 점에서 다른 견제 수단과 성격이 다릅니다.",
+  },
+  {
+    from: "judicial-review",
+    to: "constitution-as-coordination",
+    relation: "constrains",
+    reason:
+      "해석의 폭이 넓어지면 심사 기관이 선을 스스로 정하게 되어, 모두가 같은 판단을 공유한다는 조정 효과의 전제가 흐려집니다.",
+  },
+  {
+    from: "constitutional-entrenchment",
+    to: "veto-player-winset",
+    relation: "constrains",
+    reason:
+      "개정 문턱을 높이는 것은 거부권자를 늘리는 것과 같으므로, 같은 계산으로 통과 가능 영역이 좁아집니다.",
+  },
+  {
+    from: "constitutional-entrenchment",
+    to: "constitution-as-coordination",
+    relation: "optimizes",
+    reason:
+      "제약을 먼저 고치고 나서 행동하는 우회로를 막아, 문서에 그은 선이 실제로 선 역할을 하게 만듭니다.",
+  },
+  {
+    from: "state-capacity",
+    to: "constitution-as-coordination",
+    relation: "constrains",
+    reason:
+      "정보와 집행이 닿지 않는 지역에서는 위반이 알려지지도 판정되지도 않으므로, 같은 조문이라도 조정 효과가 생기지 않습니다.",
   },
 ];
 
