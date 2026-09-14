@@ -26,10 +26,15 @@ export default function SubcategoryCard({
         className="rounded-xl border bg-card hover:border-primary/40 hover:shadow-sm transition-colors h-full overflow-hidden"
       >
         <div className="bg-muted/20 flex items-center justify-center h-24 border-b border-border/50 p-3">
-          {Thumb && (
+          {Thumb ? (
             <div className="max-h-16 max-w-[80px]">
               <Thumb />
             </div>
+          ) : (
+            /* 전용 썸네일이 없는 소분류는 빈 회색 칸 대신 아이콘을 보여 준다. */
+            <span aria-hidden="true" className="text-3xl opacity-70">
+              {sub.icon ?? "•"}
+            </span>
           )}
         </div>
         <div className="p-4">
