@@ -11971,6 +11971,38 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "electoral-systems": {
+    title: "표는 그대로인데 의석만 바뀝니다 글이 소유하는 범위",
+    owns: [
+      "선거구 크기가 비례성의 상한을 정한다는 관계",
+      "봉쇄조항이 걸러 내는 것과 그 부작용",
+      "다수제가 표를 버려 다수를 만드는 두 경로",
+      "같은 득표에서 경계만 바꿔 의석이 달라지는 계산",
+      "몫을 세워 의석을 하나씩 나누는 절차와 나누는 수의 선택",
+      "득표율과 의석률의 어긋남을 하나의 수로 재는 방법과 그 한계",
+      "혼합형에서 두 부분을 잇는가 마는가의 차이",
+    ],
+    reuses: [
+      {
+        label: "의석이 협상력을 정한다는 계산",
+        href: "/politics/constitution/government-forms#power-index",
+      },
+      {
+        label: "단독 과반이 정부 구성을 바꾸는 관계",
+        href: "/politics/constitution/government-forms#parliamentary",
+      },
+      {
+        label: "개정 문턱이 높을 때와 낮을 때의 차이",
+        href: "/politics/constitution/constitutionalism-and-separation#entrenchment",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "조문의 내용은 공개 번역본을 확인한 범위에서만 적고, 특정 선거의 의석 수나 배분 결과처럼 확인하지 않은 수치는 싣지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

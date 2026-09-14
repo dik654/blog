@@ -7184,4 +7184,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "국무총리 임명 동의·해임건의·탄핵소추 조문. 번역본은 참조용이며 법적 효력은 국문 원문에 있음",
     },
   ],
+  "elections/electoral-systems": [
+    {
+      kind: "보충 읽기",
+      label:
+        "Gallagher, Proportionality, disproportionality and electoral systems (Electoral Studies 10:1, 1991)",
+      href: "https://doi.org/10.1016/0261-3794(91)90004-C",
+      note: "최소제곱지수의 출처. 저자 본인의 'Election indices' 문서로 귀속을 확인했고 원 논문 전문은 열지 못함",
+    },
+    {
+      kind: "공식 문서",
+      label: "대한민국헌법 제41조 (한국법제연구원 영문 번역본)",
+      href: "https://elaw.klri.re.kr/eng_service/lawView.do?hseq=1&lang=ENG",
+      note: "선거구와 비례대표에 관한 사항을 법률로 정한다는 위임 조항. 번역본은 참조용이며 법적 효력은 국문 원문에 있음",
+    },
+  ],
 };
