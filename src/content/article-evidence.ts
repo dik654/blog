@@ -7231,4 +7231,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "위임의 범위 조건과 행정조직 법정주의. 번역본은 참조용이며 법적 효력은 국문 원문에 있음",
     },
   ],
+  "governance/international-anarchy": [
+    {
+      kind: "보충 읽기",
+      label: "Jervis, Cooperation Under the Security Dilemma (World Politics 30:2, 1978)",
+      href: "https://www.jstor.org/stable/2009958",
+      note: "무정부·안보 딜레마 규정과 협력 조건 셋의 출처. 사례를 예시로 든 이론 논문이며 통제된 비교 연구는 아님",
+    },
+  ],
 };

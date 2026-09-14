@@ -78767,4 +78767,314 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "governance/international-anarchy": {
+    entryNote:
+      "앞 여덟 글은 맨 위에 최종 판정과 집행의 자리가 있다는 것을 전제로 쌓였습니다. 여기서는 그 자리를 지우고 무엇이 남는지를 봅니다.",
+    coreIdea:
+      "국가들 사이에는 다툼을 끝내 주는 자리와 약속을 집행해 주는 자리가 없어 1편의 문제가 강제라는 해법 없이 돌아옵니다. 스스로 지키는 수단이 서로를 덜 안전하게 만들지만, 같은 상대를 계속 만나면 한 번 어겨서 얻는 것과 관계를 이어서 얻는 것이 견주어져 협력이 스스로 서는 문턱이 생기며, 강제력 없는 기구가 하는 일은 그 문턱을 넘게 만드는 조건을 만드는 것입니다.",
+    assumedKnowledge: [
+      {
+        id: "coercion-monopoly",
+        role: "독점을 이루는 세 조건을 세워 두었기에 그것이 모두 깨진 상태를 정확히 규정할 수 있습니다.",
+      },
+      {
+        id: "coercion-as-provision",
+        role: "강제라는 해법이 언제 쓸 수 있는지를 확인하는 데 씁니다.",
+      },
+      {
+        id: "discount-factor",
+        role: "미래의 값을 오늘의 값으로 바꾸는 도구를 금융 쪽에서 그대로 가져옵니다.",
+      },
+      {
+        id: "veto-player-winset",
+        role: "국내 비준 제약이 협상 범위를 좁히는 계산에 그대로 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "international-anarchy",
+        role: "위가 비어 있다는 것의 정확한 뜻을 세웁니다.",
+      },
+      {
+        id: "self-help-security",
+        role: "그 상태에서 남는 것이 무엇인지 정의합니다.",
+      },
+      {
+        id: "security-dilemma",
+        role: "스스로 지키는 일이 만드는 역설을 정의합니다.",
+      },
+      {
+        id: "shadow-of-the-future",
+        role: "강제 없이 협력이 서는 조건을 계산으로 보입니다.",
+      },
+      {
+        id: "institutions-without-enforcement",
+        role: "강제력 없는 기구가 실제로 하는 일을 그 계산으로 설명합니다.",
+      },
+      {
+        id: "relative-gains",
+        role: "계산의 전제가 깨지는 첫째 경우를 다룹니다.",
+      },
+      {
+        id: "two-level-game",
+        role: "국가를 하나의 행위자로 둔 단순화가 깨지는 지점을 다룹니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "international-anarchy",
+        sectionId: "no-sovereign",
+        intuition:
+          "질서가 없는 것이 아니라 그 위가 없는 것입니다.",
+        workedExample:
+          "같은 조문을 두 나라가 정반대로 해석해도 어느 해석이 맞는지 정해 줄 상위 기관이 없고, 조약을 어겨도 대신 집행해 줄 곳이 없습니다.",
+        boundary:
+          "판정 자체가 없다는 뜻은 아닙니다. 판정은 나오지만 그것이 최종이 되는 근거가 당사국의 동의에 머뭅니다.",
+      },
+      {
+        id: "self-help-security",
+        sectionId: "no-sovereign",
+        intuition:
+          "최후에 기댈 곳이 자기 자신뿐이라는 사실이 평시의 선택까지 바꿉니다.",
+        workedExample:
+          "지금 아무도 공격할 뜻이 없어도 나중에 그럴 수 있다는 가능성만으로 대비에 자원을 쓰게 됩니다.",
+        boundary:
+          "언제나 싸운다는 뜻이 아닙니다. 대부분의 시기에 대부분의 관계는 협력적이며, 문제는 그 협력이 무엇에 기대고 있는가입니다.",
+      },
+      {
+        id: "security-dilemma",
+        sectionId: "security-dilemma",
+        intuition:
+          "자기를 지키는 수단과 남을 위협하는 수단이 같은 물건인 경우가 많습니다.",
+        workedExample:
+          "문에 자물쇠를 다는 것은 이웃의 안전을 줄이지 않지만, 방어를 위한 함대라도 상대의 해상 교통을 끊을 수 있는 함대입니다.",
+        boundary:
+          "의도에서 나오는 결과가 아니므로 선의만으로는 벗어나지 못합니다. 상대의 의도를 알 수 없고 알더라도 유지된다는 보장이 없습니다.",
+      },
+      {
+        id: "shadow-of-the-future",
+        sectionId: "shadow",
+        intuition:
+          "한 번 어겨서 얻는 것과 앞으로 잃을 것을 견주면 어기지 않는 쪽이 스스로에게 이익이 되는 구간이 있습니다.",
+        workedExample:
+          "어겨서 5, 함께 지켜 3, 함께 어겨 1이면 문턱은 0.5입니다. 다음에 또 만날 몫이 0.3이면 4.29 대 5.43으로 어기는 쪽이 낫고, 0.8이면 15 대 9로 지키는 쪽이 낫습니다.",
+        proofIdea:
+          "계속 지키면 매 기간 R을 받으므로 합이 R/(1−δ)입니다. 한 번 어기면 그 기간에 T를 받고 그다음부터 서로 어기는 상태가 이어지므로 T + δP/(1−δ)입니다. 앞이 뒤보다 크거나 같다는 부등식을 정리하면 R ≥ (1−δ)T + δP가 되고, δ에 대해 풀면 δ ≥ (T−R)/(T−P)가 나옵니다. 분자는 한 번 어겨 더 얻는 몫이고 분모는 어김으로써 잃게 되는 매 기간의 몫입니다.",
+        counterexample:
+          "관계가 끝나는 시점이 알려져 있으면 마지막 기간에는 미래가 없어 어기는 쪽이 낫고, 그것을 알면 그 앞 기간도 같은 이유로 무너져 협력이 처음부터 서지 않습니다. 문턱을 넘어도 그렇습니다.",
+        boundary:
+          "위반을 알아챌 수 있고 되갚을 수 있다는 것을 전제하므로, 둘 중 하나만 빠져도 문턱 자체가 의미를 잃습니다.",
+      },
+      {
+        id: "institutions-without-enforcement",
+        sectionId: "institutions",
+        intuition:
+          "기구는 약속을 집행하는 것이 아니라 약속이 스스로 서는 조건을 만듭니다.",
+        workedExample:
+          "보고와 검증이 위반을 보이게 하고, 정기 회의와 갱신 주기가 다음에 또 만난다는 사실을 확정하며, 사안을 묶으면 어겨서 잃는 값이 커집니다.",
+        boundary:
+          "조건을 만들 뿐이므로 문턱을 넘지 못하는 사안에서는 아무 일도 일어나지 않습니다. 기구가 있다는 사실만으로 합의가 지켜지지는 않습니다.",
+      },
+      {
+        id: "relative-gains",
+        sectionId: "limits",
+        intuition:
+          "이익이 얼마인지뿐 아니라 누가 더 얻는지가 판단에 들어옵니다.",
+        workedExample:
+          "둘 다 이익인 합의라도 한쪽이 더 많이 얻으면 그 차이가 나중에 힘의 차이가 되고, 자력구제 상태에서는 힘의 차이가 곧 안전의 차이입니다.",
+        boundary:
+          "언제나 작동하는 고려가 아닙니다. 상대의 힘이 커져도 자기 안전이 줄지 않는 관계에서는 거의 사라집니다.",
+      },
+      {
+        id: "two-level-game",
+        sectionId: "limits",
+        intuition:
+          "협상하는 사람은 자기 나라의 거부권자들 안에 있습니다.",
+        workedExample:
+          "국내에서 부결될 것이 분명하면 상대가 통과 가능한 쪽으로 옮겨 와야 하므로, 손이 묶여 있다는 사실이 협상력이 됩니다.",
+        boundary:
+          "반대 방향도 성립합니다. 무엇이든 통과시킬 수 있는 대표는 양보할 여지가 크다고 읽혀 더 많이 요구받습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 빈칸",
+        relation: "맨 위 자리를 지우면 무엇이 사라지는지 봅니다.",
+        concepts: ["international-anarchy", "self-help-security"],
+      },
+      {
+        label: "01 역설",
+        relation: "스스로 지키는 일이 서로를 덜 안전하게 만듭니다.",
+        concepts: ["security-dilemma"],
+      },
+      {
+        label: "02 문턱",
+        relation: "반복이 강제를 대신할 수 있는 조건입니다.",
+        concepts: ["shadow-of-the-future"],
+      },
+      {
+        label: "03 조건 만들기",
+        relation: "기구가 하는 일을 그 문턱으로 설명합니다.",
+        concepts: ["institutions-without-enforcement"],
+      },
+      {
+        label: "04 남는 것",
+        relation: "계산의 전제가 깨지는 두 경우입니다.",
+        concepts: ["relative-gains", "two-level-game"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "국제 정치를 무정부라고 부를 때 없다고 하는 것이 정확히 무엇인지 두 가지로 쓰세요.",
+        answerChecklist: [
+          "다툼을 끝내 주는 최종 판정",
+          "약속을 어겼을 때의 집행",
+          "질서가 없다는 뜻이 아님",
+          "남는 것은 각자의 판단과 각자의 힘",
+        ],
+        requiredConcepts: ["international-anarchy"],
+        sectionId: "no-sovereign",
+      },
+      {
+        level: "basic",
+        question:
+          "안보 딜레마가 왜 선의만으로 해소되지 않는지 설명하세요.",
+        answerChecklist: [
+          "지키는 수단이 위협하는 수단과 같음",
+          "상대의 의도를 정확히 알 수 없음",
+          "알더라도 유지된다는 보장이 없음",
+          "의도가 아니라 결과에서 나옴",
+        ],
+        requiredConcepts: ["security-dilemma"],
+        sectionId: "security-dilemma",
+      },
+      {
+        level: "basic",
+        question:
+          "어겨서 5, 함께 지켜 3, 함께 어겨 1일 때 협력이 서는 문턱을 구하세요.",
+        answerChecklist: [
+          "(T−R)÷(T−P)",
+          "(5−3)÷(5−1)",
+          "0.5",
+          "다음에 또 만날 몫이 이보다 커야 함",
+        ],
+        requiredConcepts: ["shadow-of-the-future"],
+        sectionId: "shadow",
+      },
+      {
+        level: "basic",
+        question:
+          "강제력이 없는 국제기구가 협력에 기여하는 경로를 세 가지 쓰세요.",
+        answerChecklist: [
+          "검증으로 위반을 보이게 함",
+          "정기 회의와 갱신으로 다음 만남을 확정",
+          "사안을 묶어 어겨서 잃는 값을 키움",
+          "집행이 아니라 조건을 만드는 일",
+        ],
+        requiredConcepts: ["institutions-without-enforcement"],
+        sectionId: "institutions",
+      },
+      {
+        level: "basic",
+        question:
+          "상대적 이득 고려가 무엇이고 언제 약해지는지 쓰세요.",
+        answerChecklist: [
+          "둘 다 이익이라도 누가 더 얻는지를 봄",
+          "차이가 나중에 힘의 차이가 됨",
+          "자력구제에서는 힘의 차이가 안전의 차이",
+          "상대의 힘이 커져도 안전이 안 줄면 사라짐",
+        ],
+        requiredConcepts: ["relative-gains", "self-help-security"],
+        sectionId: "limits",
+      },
+      {
+        level: "basic",
+        question:
+          "국내에서 비준이 어렵다는 사실이 협상에서 힘이 되는 이유를 쓰세요.",
+        answerChecklist: [
+          "받아들일 수 있는 범위를 국내 거부권자가 정함",
+          "부결될 것이 분명하면 상대가 옮겨 와야 함",
+          "손이 묶여 있다는 것을 보여 주는 이유",
+          "반대로 무엇이든 통과시키면 더 요구받음",
+        ],
+        requiredConcepts: ["two-level-game"],
+        sectionId: "limits",
+      },
+      {
+        level: "advanced",
+        question:
+          "협력이 유지되는 조건 δ ≥ (T−R)/(T−P)를 두 합의 비교에서 유도하세요.",
+        answerChecklist: [
+          "계속 지키면 R/(1−δ)",
+          "한 번 어기면 T + δP/(1−δ)",
+          "정리하면 R ≥ (1−δ)T + δP",
+          "δ에 대해 풀면 (T−R)/(T−P)",
+        ],
+        requiredConcepts: ["shadow-of-the-future", "discount-factor"],
+        sectionId: "shadow",
+      },
+      {
+        level: "advanced",
+        question:
+          "관계가 끝나는 시점이 정해져 있으면 문턱을 넘어도 협력이 서지 않는 이유를 설명하세요.",
+        answerChecklist: [
+          "마지막 기간에는 미래가 없음",
+          "그 기간에는 어기는 쪽이 유리",
+          "그것을 알면 앞 기간도 같은 이유로 무너짐",
+          "거슬러 올라가 처음부터 서지 않음",
+        ],
+        requiredConcepts: ["shadow-of-the-future"],
+        sectionId: "shadow",
+      },
+      {
+        level: "advanced",
+        question:
+          "합의가 지켜지지 않을 때 합의문 대신 무엇을 바꿔야 하는지 문턱 식의 각 항과 연결해 쓰세요.",
+        answerChecklist: [
+          "검증을 강화해 위반을 보이게",
+          "갱신 주기를 줄여 다음 만남의 몫을 키움",
+          "사안을 묶어 어겨서 잃는 값을 키움",
+          "함께 어겼을 때의 손해를 키워 분모를 키움",
+        ],
+        requiredConcepts: [
+          "institutions-without-enforcement",
+          "shadow-of-the-future",
+        ],
+        sectionId: "institutions",
+      },
+      {
+        level: "advanced",
+        question:
+          "첫 글의 해법인 강제가 왜 조건부 해법이었는지, 그 조건이 없을 때 남는 것과 함께 쓰세요.",
+        answerChecklist: [
+          "강제할 자리가 있을 때만 쓸 수 있음",
+          "그 자리가 없으면 1편의 문제가 그대로 돌아옴",
+          "남는 것은 반복·확인·평판",
+          "강제보다 약하고 조건이 많이 붙음",
+        ],
+        requiredConcepts: ["international-anarchy", "shadow-of-the-future"],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Robert Jervis · Cooperation Under the Security Dilemma (1978)",
+        href: "https://www.jstor.org/stable/2009958",
+        problem:
+          "무정부 상태가 전쟁을 가능하게 한다는 것은 오래 지적되었지만, 현상에 만족하는 국가들끼리도 서로 인정하는 공동 이익에 이르지 못하는 이유는 정리되어 있지 않았습니다.",
+        contribution:
+          "국제법을 만들고 집행할 기관이 없으므로 협력 정책이 상대의 선택에 따라 재앙이 될 수 있다는 구조를 사슴 사냥과 죄수의 딜레마로 정리하고, 국내 사회에는 없는 문제로 안보 딜레마를 규정했습니다. 협력 가능성을 높이는 조건으로 상호 협력의 이득을 키우는 것, 배신의 이득을 줄이고 상호 배신의 비용을 키우는 것, 상대가 협력하리라는 기대를 높이는 것 셋을 들었습니다.",
+        assumptions:
+          "국가를 하나의 행위자로 두고 선호를 순서로만 다루며, 방어 수단과 공격 수단이 구별되는 정도를 핵심 변수로 봅니다.",
+        evidenceScope:
+          "World Politics 30권 2호 167~214쪽에 실린 논문이며, 대학 서버에 공개된 사본에서 전문을 확인했습니다. 역사적 사례를 예시로 든 이론 논문이고 통제된 비교 연구가 아닙니다.",
+        notClaim:
+          "국제 협력이 불가능하다는 주장이 아니며 논문의 후반부가 오히려 협력을 쉽게 만드는 조건을 다룹니다. 또 이 글에 실린 문턱 식은 이 논문에 있는 것이 아니라 반복 게임의 표준 분석을 직접 전개한 것이며, 논문이 든 세 조건이 그 식의 비교정학과 대응한다는 점만 본문에서 지적했습니다.",
+        sectionId: "security-dilemma",
+      },
+    ],
+  },
 };

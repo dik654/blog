@@ -44,4 +44,40 @@ export const governanceArticles: Article[] = [
     component: () =>
       import("@/pages/articles/governance/bureaucracy-and-implementation"),
   },
+  {
+    slug: "international-anarchy",
+    title: "위가 없는 곳에서는 같은 문제가 다르게 풀립니다",
+    subcategory: "gov-international",
+    sections: [
+      {
+        id: "overview",
+        title: "여덟 글이 쌓은 구조에서 맨 위 칸을 지워 봅니다",
+      },
+      {
+        id: "no-sovereign",
+        title: "부품 1. 무정부는 혼란이 아니라 위가 없다는 뜻입니다",
+      },
+      {
+        id: "security-dilemma",
+        title: "부품 2. 스스로를 지키는 일이 서로를 덜 안전하게 만듭니다",
+      },
+      {
+        id: "shadow",
+        title: "부품 3. 강제할 곳이 없어도 약속이 서는 조건이 있습니다",
+      },
+      {
+        id: "institutions",
+        title: "부품 4. 강제하지 않는 기구가 무엇을 하는지가 여기서 설명됩니다",
+      },
+      {
+        id: "limits",
+        title: "부품 5. 그래도 남는 것이 있습니다",
+      },
+      {
+        id: "boundary",
+        title: "첫 글의 질문으로 돌아와서 무엇이 답해졌는지 봅니다",
+      },
+    ],
+    component: () => import("@/pages/articles/governance/international-anarchy"),
+  },
 ];
