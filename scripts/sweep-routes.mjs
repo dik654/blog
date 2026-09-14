@@ -13,6 +13,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright";
+import { CATEGORY_DOMAIN } from "../src/content/domains.ts";
 
 const args = process.argv.slice(2);
 function opt(name, fallback) {
@@ -28,11 +29,22 @@ if (args.includes("--registrations")) {
   const modules = fs.existsSync(dir) ? fs.readdirSync(dir).filter((name) => name.endsWith(".ts")) : [];
   for (const name of modules) {
     const text = fs.readFileSync(path.join(dir, name), "utf8");
-    const match = text.match(/"((?:ai|gpu|blockchain|crypto|p2p|tee)\/[a-z0-9-]+)"\s*:/);
+    const categories = Object.keys(CATEGORY_DOMAIN).join("|");
+    const match = text.match(new RegExp(`"((?:${categories})/[a-z0-9-]+)"\\s*:`));
     if (match) routes.push(match[1]);
   }
 }
 routes = [...new Set(routes)];
+
+/** route key(`ai/foo`)를 공개 주소(`/cs/ai/foo`)로 바꿉니다. */
+function publicPathOf(route) {
+  const domain = CATEGORY_DOMAIN[route.split("/", 1)[0]];
+  if (!domain) {
+    console.error(`대분류가 등록되지 않은 route 입니다: ${route}`);
+    process.exit(1);
+  }
+  return `${domain}/${route}`;
+}
 if (routes.length === 0) {
   console.error("검사할 route 가 없습니다.");
   process.exit(1);
@@ -143,7 +155,7 @@ for (const route of routes) {
     for (let attempt = 0; attempt < 3; attempt += 1) {
     result.issues = [];
     try {
-      const response = await page.goto(`${base}/${route}`, { waitUntil: "networkidle", timeout: 90_000 });
+      const response = await page.goto(`${base}/${publicPathOf(route)}`, { waitUntil: "networkidle", timeout: 90_000 });
       if (!response || response.status() >= 400) result.issues.push(`HTTP ${response?.status()}`);
       await page.waitForSelector("[data-article-body]", { timeout: 60_000 });
       await page.waitForTimeout(800);

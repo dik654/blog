@@ -24,7 +24,7 @@ export default function AdamOptimizerArticle() {
           <p>
             v는 centered variance가 아니고, diagonal preconditioner는 Hessian
             inverse가 아닙니다. Weight shrinkage는 이 경로와 분리한{" "}
-            <a href="/ai/weight-decay">AdamW 글</a>에서 이어집니다.
+            <a href="/cs/ai/weight-decay">AdamW 글</a>에서 이어집니다.
           </p>
         </div>
         <TermBreakdown

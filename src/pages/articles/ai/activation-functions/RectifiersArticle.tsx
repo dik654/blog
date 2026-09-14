@@ -124,7 +124,7 @@ export default function RectifierActivationsArticle() {
 
     <section id="comparison" className="mb-16 scroll-mt-20 space-y-5">
       <header><p className="text-sm font-semibold text-primary">05 · release gate</p><h2 className="mt-2 text-2xl font-bold">Activation 이름보다 pre-activation 분포·dead rate·end-to-end 비용을 비교한다</h2></header>
-      <p>같은 seed·initialization·optimizer에서 activation histogram, dead-unit rate, gradient norm과 validation metric을 함께 기록합니다. Smooth self-gate와 Transformer gated FFN은 <a href="/ai/gated-activations" className="text-primary hover:underline">다음 글</a>에서 parameter·kernel budget까지 분리합니다.</p>
+      <p>같은 seed·initialization·optimizer에서 activation histogram, dead-unit rate, gradient norm과 validation metric을 함께 기록합니다. Smooth self-gate와 Transformer gated FFN은 <a href="/cs/ai/gated-activations" className="text-primary hover:underline">다음 글</a>에서 parameter·kernel budget까지 분리합니다.</p>
     </section>
   </article>;
 }

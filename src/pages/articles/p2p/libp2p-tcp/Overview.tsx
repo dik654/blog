@@ -19,9 +19,9 @@ export default function Overview({ onCodeRef }: { onCodeRef?: (key: string, ref:
         </p>
         <p>
           그래서 TCP connect 성공을 libp2p connection 성공으로 기록하면 진단이
-          흐려집니다. 그 뒤 <Link to="/p2p/libp2p-noise">Noise secure-channel</Link>과
+          흐려집니다. 그 뒤 <Link to="/cs/p2p/libp2p-noise">Noise secure-channel</Link>과
           stream multiplexer 협상이 모두 끝나야 Swarm이 사용할
-          <code>(PeerId, StreamMuxer)</code>가 됩니다. <Link to="/p2p/quic-fundamentals">QUIC</Link>은
+          <code>(PeerId, StreamMuxer)</code>가 됩니다. <Link to="/cs/p2p/quic-fundamentals">QUIC</Link>은
           security와 multiplexing을 transport 안에 포함하므로 같은 output에 도달하는
           조립 경로가 다릅니다.
         </p>

@@ -7,7 +7,7 @@ export default function ModernCosmosSDKArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Cosmos SDK v0.55.0 구현 읽기</p><h2 className="text-3xl font-bold tracking-tight">Cosmos SDK는 ordered transaction bytes를 모듈 상태 전이와 committed version으로 바꾸는 application framework다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">CometBFT가 <code>Alice→Bob 10 stake</code>의 순서를 결정하더라도 balance를 이해하지는 않습니다. Cosmos SDK application의 BaseApp이 bytes를 transaction으로 decode하고, AnteHandler에서 fee·sequence·signature를 검증한 뒤 <code>MsgSend</code>를 bank MsgServer로 routing해 Alice와 Bob의 balance state를 바꾸어야 비로소 이 요청이 도메인 의미를 갖습니다.</p>
-      <p>ABCI method의 candidate/committed authority와 crash replay는 <a className="text-primary hover:underline" href="/blockchain/cometbft-abci">ABCI++ 정본</a>이 소유합니다. 이 글은 SDK v0.55.0의 execution mode, ante/message routing, keeper/store branch라는 application 경계에 집중합니다.</p>
+      <p>ABCI method의 candidate/committed authority와 crash replay는 <a className="text-primary hover:underline" href="/cs/blockchain/cometbft-abci">ABCI++ 정본</a>이 소유합니다. 이 글은 SDK v0.55.0의 execution mode, ante/message routing, keeper/store branch라는 application 경계에 집중합니다.</p>
       <CosmosTxViz />
     </section>
 

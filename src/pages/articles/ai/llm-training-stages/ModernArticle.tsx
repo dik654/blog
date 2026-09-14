@@ -7,10 +7,10 @@ import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import TrainingStageFlowViz from "./viz/TrainingStageFlowViz";
 
 const postTrainingSignals = [
-  ["SFT", "좋은 demonstration response", "Response token NLL", "/ai/supervised-fine-tuning"],
-  ["Preference", "Chosen·rejected 또는 binary feedback", "Pair·label objective", "/ai/rlhf"],
-  ["RLVR", "검증 가능한 결과", "Trajectory의 scalar outcome reward", "/ai/open-r1"],
-  ["OPD", "Student가 방문한 prefix", "Teacher의 token-level feedback", "/ai/on-policy-distillation"],
+  ["SFT", "좋은 demonstration response", "Response token NLL", "/cs/ai/supervised-fine-tuning"],
+  ["Preference", "Chosen·rejected 또는 binary feedback", "Pair·label objective", "/cs/ai/rlhf"],
+  ["RLVR", "검증 가능한 결과", "Trajectory의 scalar outcome reward", "/cs/ai/open-r1"],
+  ["OPD", "Student가 방문한 prefix", "Teacher의 token-level feedback", "/cs/ai/on-policy-distillation"],
 ] as const;
 
 export default function LlmTrainingStagesArticle() {
@@ -59,10 +59,10 @@ export default function LlmTrainingStagesArticle() {
             Mid-training은 위 next-token objective를 그대로 두고 corpus만 code·수학·특정 언어·long-context처럼 좁은 분포로 바꿔 이어 학습하는 단계입니다. 아직 labeled instruction-response 쌍을 쓰지 않는다는 점에서 뒤에 오는 SFT와 다릅니다.
           </p>
           <p>
-            예를 들어 pretraining 말기 mixture에서 10%였던 code 비중을 40%로 올려 수백억 token을 더 학습하면, 이후 SFT가 더 적은 demonstration만으로도 code 관련 목표 행동에 도달하기 쉬워집니다. Label 없는 target 분포에서 같은 self-supervised objective를 이어간다는 점에서, 이 단계는 <Link to="/ai/transfer-learning-practice#domain-shift">domain-adaptive continued pretraining</Link>과 같은 축 위에 있습니다.
+            예를 들어 pretraining 말기 mixture에서 10%였던 code 비중을 40%로 올려 수백억 token을 더 학습하면, 이후 SFT가 더 적은 demonstration만으로도 code 관련 목표 행동에 도달하기 쉬워집니다. Label 없는 target 분포에서 같은 self-supervised objective를 이어간다는 점에서, 이 단계는 <Link to="/cs/ai/transfer-learning-practice#domain-shift">domain-adaptive continued pretraining</Link>과 같은 축 위에 있습니다.
           </p>
           <p>
-            “Mid-training”이라는 이름은 조직마다 범위가 달라질 수 있으므로, 이름보다 data mixture·objective·checkpoint handoff를 명시해야 합니다. 자세한 corpus mixture와 forgetting 검사는 <Link to="/ai/continued-pretraining">continued pretraining 글</Link>이 소유합니다.
+            “Mid-training”이라는 이름은 조직마다 범위가 달라질 수 있으므로, 이름보다 data mixture·objective·checkpoint handoff를 명시해야 합니다. 자세한 corpus mixture와 forgetting 검사는 <Link to="/cs/ai/continued-pretraining">continued pretraining 글</Link>이 소유합니다.
           </p>
         </div>
       </section>
@@ -79,20 +79,20 @@ export default function LlmTrainingStagesArticle() {
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            SFT가 학습하는 각 sample, 즉 demonstration data는 prompt와 원하는 response를 role·template·provenance와 함께 기록한 것입니다. 이 data를 어떻게 만들고 검증하는지는 <Link to="/ai/supervised-fine-tuning#data-contract">SFT의 data contract 글</Link>이 다룹니다.
+            SFT가 학습하는 각 sample, 즉 demonstration data는 prompt와 원하는 response를 role·template·provenance와 함께 기록한 것입니다. 이 data를 어떻게 만들고 검증하는지는 <Link to="/cs/ai/supervised-fine-tuning#data-contract">SFT의 data contract 글</Link>이 다룹니다.
           </p>
           <p>
-            이 SFT가 특히 지시-형식을 따르는 능력 자체를 목표로 할 때를 흔히 instruction tuning이라고 부릅니다. Fine-tuning이 바꾸는 목표를 instruction·domain·task·style·behavior 다섯 축으로 나눈 <Link to="/ai/fine-tuning-tradeoffs-forgetting-and-merging#goal-taxonomy">fine-tuning 목표 분류 글</Link>에서 instruction 축이 이 이름에 대응합니다.
+            이 SFT가 특히 지시-형식을 따르는 능력 자체를 목표로 할 때를 흔히 instruction tuning이라고 부릅니다. Fine-tuning이 바꾸는 목표를 instruction·domain·task·style·behavior 다섯 축으로 나눈 <Link to="/cs/ai/fine-tuning-tradeoffs-forgetting-and-merging#goal-taxonomy">fine-tuning 목표 분류 글</Link>에서 instruction 축이 이 이름에 대응합니다.
           </p>
           <p>
-            Preference 항목의 chosen·rejected 쌍, 즉 preference data의 pair 구조와 상대 비교 label은 <Link to="/ai/dpo#pair-contract">DPO의 pair contract 글</Link>이 정의합니다.
+            Preference 항목의 chosen·rejected 쌍, 즉 preference data의 pair 구조와 상대 비교 label은 <Link to="/cs/ai/dpo#pair-contract">DPO의 pair contract 글</Link>이 정의합니다.
           </p>
         </div>
         <TermLesson
           name="Post-training terminology boundary"
           oneLine="LLM policy를 feedback으로 조정하는 연구 단계와, 학습이 끝난 artifact를 변환하는 배포 단계를 이름의 ‘post-training’만 보고 섞지 않는 규칙입니다."
           shape="LLM post-training: SFT·RL·OPD · PTQ: learned weight를 low-bit artifact로 변환 · LoRA: update parameterization"
-          example={<><Link className="text-primary hover:underline" to="/ai/ptq-calibration">PTQ</Link>의 post-training은 calibration 뒤 weight를 양자화한다는 뜻이고, <Link className="text-primary hover:underline" to="/ai/lora-finetuning">LoRA</Link>는 full weight 대신 low-rank branch를 학습하는 방법입니다.</>}
+          example={<><Link className="text-primary hover:underline" to="/cs/ai/ptq-calibration">PTQ</Link>의 post-training은 calibration 뒤 weight를 양자화한다는 뜻이고, <Link className="text-primary hover:underline" to="/cs/ai/lora-finetuning">LoRA</Link>는 full weight 대신 low-rank branch를 학습하는 방법입니다.</>}
           boundary="LoRA를 썼다고 objective가 SFT인지 RL인지 결정되지 않으며, PTQ를 했다고 model behavior를 새 feedback으로 학습한 것도 아닙니다."
         />
       </section>
@@ -117,7 +117,7 @@ export default function LlmTrainingStagesArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            좋은 “실험상자”는 단지 reward를 주는 장소가 아닙니다. 초기 state, 허용 action, observation, timeout, reset, verifier와 side-effect isolation을 재현할 수 있어야 합니다. 실행 loop 자체의 권한과 종료 상태는 <Link to="/ai/agent-loop-foundations">agent loop 글</Link>, artifact·trajectory·effect 평가는 <Link to="/ai/agent-verification">agent verification 글</Link>에서 이어집니다.
+            좋은 “실험상자”는 단지 reward를 주는 장소가 아닙니다. 초기 state, 허용 action, observation, timeout, reset, verifier와 side-effect isolation을 재현할 수 있어야 합니다. 실행 loop 자체의 권한과 종료 상태는 <Link to="/cs/ai/agent-loop-foundations">agent loop 글</Link>, artifact·trajectory·effect 평가는 <Link to="/cs/ai/agent-verification">agent verification 글</Link>에서 이어집니다.
           </p>
         </div>
       </section>
@@ -139,7 +139,7 @@ export default function LlmTrainingStagesArticle() {
             만들지는 않습니다. 현대 RL 역시 reward를 쓰지만 MDP·policy optimization·credit assignment라는 수학 체계가 따로 있습니다.
           </p>
           <p>
-            <Link to="/ai/motif-3-architecture">Motif 3</Link>처럼 최신 모델도 새 attention·residual·expert architecture와 SFT·RL·MOPD를 동시에 사용합니다. 이 사례는 관심의 중심이 하나에서 다른 하나로 완전히 이동했다기보다, architecture와 post-training·system co-design이 함께 커졌다는 쪽에 가깝습니다.
+            <Link to="/cs/ai/motif-3-architecture">Motif 3</Link>처럼 최신 모델도 새 attention·residual·expert architecture와 SFT·RL·MOPD를 동시에 사용합니다. 이 사례는 관심의 중심이 하나에서 다른 하나로 완전히 이동했다기보다, architecture와 post-training·system co-design이 함께 커졌다는 쪽에 가깝습니다.
           </p>
         </div>
         <div id="paper-motif3-training" className="scroll-mt-24">

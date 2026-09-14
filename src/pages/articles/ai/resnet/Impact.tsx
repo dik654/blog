@@ -68,8 +68,8 @@ export default function Impact() {
           normalization, latency와 activation memory를 확인합니다. Pretrained
           checkpoint를 쓸 때는 resize·crop·mean·std 전처리와 model variant를
           함께 가져와야 합니다. CNN 전체의 inductive bias와 modern architecture
-          선택은 <Link to="/ai/cnn">CNN 정본 글</Link>, transformer backbone과의
-          비교는 <Link to="/ai/vision-transformer">Vision Transformer</Link>에서
+          선택은 <Link to="/cs/ai/cnn">CNN 정본 글</Link>, transformer backbone과의
+          비교는 <Link to="/cs/ai/vision-transformer">Vision Transformer</Link>에서
           이어집니다.
         </p>
 

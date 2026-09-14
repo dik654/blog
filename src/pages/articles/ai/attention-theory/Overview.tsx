@@ -24,7 +24,7 @@ export default function Overview() {
           이 글은 Seq2Seq의 구현을 반복하지 않고, attention에 공통으로 남는
           <strong> score → weight → aggregate</strong> 구조와 score 함수의 변화를
           설명한다. Encoder–decoder의 기본 흐름이 낯설다면 먼저{" "}
-          <Link to="/ai/seq2seq">Seq2Seq 글</Link>을 읽는 편이 자연스럽다.
+          <Link to="/cs/ai/seq2seq">Seq2Seq 글</Link>을 읽는 편이 자연스럽다.
         </p>
       </div>
 

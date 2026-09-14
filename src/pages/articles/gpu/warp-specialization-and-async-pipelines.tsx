@@ -49,7 +49,7 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
             이 글은 producer 가 쓰는 두 가지 asynchronous copy, consumer 가 내는 warpgroup MMA,
             둘 사이의 stage ring 과 mbarrier 손잡이, 그리고 이 모든 것이 하나의 software
             pipelining 이라는 점을 차례로 봅니다. 앞 글{" "}
-            <Link to="/gpu/gpu-arch-hopper#tma">Hopper 의 TMA producer–consumer 개요</Link> 가
+            <Link to="/cs/gpu/gpu-arch-hopper#tma">Hopper 의 TMA producer–consumer 개요</Link> 가
             그림 한 장으로 말한 것을 명령 단위로 내려갑니다.
           </p>
         </div>
@@ -102,7 +102,7 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
           <p>
             Swizzle 은 descriptor 에 적은 것과 shared memory 를 읽는 쪽이 같아야 합니다. TMA 가
             128 B swizzle 로 놓은 tile 을 wgmma 의 matrix descriptor 도 같은 모드로 읽어야 하며, 이
-            XOR 규칙은 <Link to="/gpu/cutlass-gemm-hierarchy-and-cute-layouts#swizzle">swizzled layout</Link> 에
+            XOR 규칙은 <Link to="/cs/gpu/cutlass-gemm-hierarchy-and-cute-layouts#swizzle">swizzled layout</Link> 에
             있습니다.
           </p>
         </div>
@@ -149,7 +149,7 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
           <p>
             Fragment 규칙이 register 에서 사라진 것은 아닙니다. Accumulator 는 여전히 thread 마다
             정해진 자리에 흩어지며, 그 규칙은{" "}
-            <Link to="/gpu/cutlass-gemm-hierarchy-and-cute-layouts#tile-hierarchy">tensor core MMA 명령의 fragment</Link> 와
+            <Link to="/cs/gpu/cutlass-gemm-hierarchy-and-cute-layouts#tile-hierarchy">tensor core MMA 명령의 fragment</Link> 와
             같은 방식으로 PTX ISA 가 고정합니다.
           </p>
         </div>
@@ -179,7 +179,7 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
             Shared memory 가 상한입니다. H100 은 threadblock 당 227 KB 까지 허용하므로 32 KB
             stage 는 7개가 최대이며, epilogue 와 barrier 몫을 빼면 그보다 적습니다. 예산에서
             stage 수를 거꾸로 구하는 <code>StageCountAutoCarveout</code> 의 산수는{" "}
-            <Link to="/gpu/cutlass-collectives-and-tile-schedulers#pipeline-stages">pipeline stage 수와 shared memory 예산</Link> 에
+            <Link to="/cs/gpu/cutlass-collectives-and-tile-schedulers#pipeline-stages">pipeline stage 수와 shared memory 예산</Link> 에
             있습니다.
           </p>
           <p>
@@ -243,7 +243,7 @@ S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 �
             앞선 cp.async 가 모두 끝났을 때 barrier 에 도착하게 하므로, 128 thread 가 각자 낸 copy 를
             barrier 하나가 모읍니다. Block 전체를 세우는 <code>__syncthreads</code> 와 달리 mbarrier 는
             참여하는 warp 만 세우며, 그 범위의 정의는{" "}
-            <Link to="/gpu/cuda-sync-streams#overview">synchronization scope</Link> 에 있습니다.
+            <Link to="/cs/gpu/cuda-sync-streams#overview">synchronization scope</Link> 에 있습니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -297,7 +297,7 @@ S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 �
             한계도 같은 자리에 있습니다. Pipelining 은 서로 다른 자원의 일을 겹칠 뿐 한 자원의
             총량을 줄이지 않으므로, HBM 이 이미 포화인 kernel 에서는 stage 를 늘려도 max(L, C) 의
             L 이 그대로 남습니다. 그 다음 단계인 traffic 자체를 줄이는 방법은{" "}
-            <Link to="/gpu/gpu-data-movement-optimization">data movement 최적화</Link> 로 이어집니다.
+            <Link to="/cs/gpu/gpu-data-movement-optimization">data movement 최적화</Link> 로 이어집니다.
           </p>
         </div>
         <TermBreakdown
@@ -399,8 +399,8 @@ S &\ge \underbrace{\left\lceil \frac{L}{C} \right\rceil}_{\text{계산 한 번 �
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/gpu/gpu-data-movement-optimization">Data movement 최적화: global→shared→register 경로와 overlap</Link>,
-          그리고 stage 수를 예산에서 정하는 <Link to="/gpu/cutlass-collectives-and-tile-schedulers#pipeline-stages">CUTLASS pipeline stage</Link>.
+          다음 글: <Link to="/cs/gpu/gpu-data-movement-optimization">Data movement 최적화: global→shared→register 경로와 overlap</Link>,
+          그리고 stage 수를 예산에서 정하는 <Link to="/cs/gpu/cutlass-collectives-and-tile-schedulers#pipeline-stages">CUTLASS pipeline stage</Link>.
         </p>
       </section>
     </div>

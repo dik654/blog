@@ -32,7 +32,7 @@ export default function AdapterScope() {
           어댑터를 어디에 붙일지도 메모리에 영향을 줍니다. denoiser의 attention에만 붙이면 그 블록의 역전파
           경로만 살아 있으면 되지만, 여러 부품에 걸쳐 붙이면 그 부품들의 activation이 모두 필요해집니다. 어느
           모듈을 target으로 삼을지의 기준은{" "}
-          <Link to="/ai/image-video-lora-architecture#image-scope">이미지·영상 LoRA 구조</Link>에서 다룹니다.
+          <Link to="/cs/ai/image-video-lora-architecture#image-scope">이미지·영상 LoRA 구조</Link>에서 다룹니다.
         </p>
 
         <p className="leading-7">
@@ -56,7 +56,7 @@ export default function AdapterScope() {
           </p>
           <p className="leading-7">
             저장·계산·학습 정밀도를 각각 어떻게 두는지의 정리는{" "}
-            <Link to="/ai/lora-finetuning">LoRA 미세조정</Link>에 있고, 이 절은 그 선택이 부품이 여러 개인
+            <Link to="/cs/ai/lora-finetuning">LoRA 미세조정</Link>에 있고, 이 절은 그 선택이 부품이 여러 개인
             파이프라인에서 첫 번째 항에만 작용한다는 점을 더했습니다.
           </p>
         </ProgressiveDetail>

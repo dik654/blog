@@ -265,7 +265,7 @@ export default function ForkCompaction() {
           제거된 message 수와 summary를 저장하고 fork할 때 이를 복제합니다.
           그러나 summary는 원본 evidence, immutable base revision이나 artifact
           lineage를 대신할 수 없습니다. 요약 품질과 연속 compaction은
-          <a href="/ai/claw-compaction"> compaction 전용 글</a>에서 이어집니다.
+          <a href="/cs/ai/claw-compaction"> compaction 전용 글</a>에서 이어집니다.
         </p>
         <p>
           Branch를 정리할 때도 transcript만 지워서는 안 됩니다. 최종 결과가 candidate의 diff와 test receipt를 참조하고 있다면 retention 기간

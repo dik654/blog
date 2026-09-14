@@ -9,7 +9,7 @@ export default function Applications() {
             확률 q가 1이면 −log q는 0이고 q가 0에 가까워질수록 값은 제한 없이 커집니다. 따라서 실제로 일어난 사건에 낮은 확률을 준 모델일수록 큰 비용을 받습니다. 이 한
             사건의 비용이 surprisal이며, 실제 분포로 평균내면 cross-entropy가 됩니다.
           </p>
-        <p>다음 글인 <Link to="/ai/cross-entropy">Cross-entropy 정본</Link>에서는 이 log 변환을 확률분포·기댓값과 결합해 entropy, KL divergence, maximum likelihood와 softmax gradient까지 확장합니다.</p>
+        <p>다음 글인 <Link to="/cs/ai/cross-entropy">Cross-entropy 정본</Link>에서는 이 log 변환을 확률분포·기댓값과 결합해 entropy, KL divergence, maximum likelihood와 softmax gradient까지 확장합니다.</p>
       </div>
       <div id="paper-log-foundation" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">역사적 연결 · logarithm에서 information measure까지</p>

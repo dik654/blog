@@ -11,6 +11,7 @@ import {
   ARTICLE_INTENT_DESCRIPTIONS,
   inferArticleIntent,
 } from "@/content/article-guidance";
+import { articleHref } from "@/lib/routes";
 
 function isPaperEvidence(kind: string) {
   return kind.includes("논문") || kind.includes("연구");
@@ -125,7 +126,7 @@ export default function CategoryReadingMap({
               return (
                 <Link
                   key={article.slug}
-                  to={`/${category.slug}/${article.slug}`}
+                  to={articleHref(category.slug, article.slug)}
                   className="group rounded-xl border border-border/70 bg-background/80 p-3 transition-colors hover:border-primary/35 hover:bg-primary/[0.04]"
                 >
                   <div className="flex flex-wrap items-center gap-1.5">

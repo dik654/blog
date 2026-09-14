@@ -16,7 +16,7 @@ export default function LossFunction() {
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           이 글에서는 loss에서 gradient가 시작된다는 역할만 다루고 정보이론·MLE·KL 방향성은 중복하지 않습니다.
         </p>
-        <Link to="/ai/cross-entropy" className="mt-3 inline-flex text-sm font-semibold text-sky-700 hover:underline dark:text-sky-300">Cross-entropy 글 바로 보기 →</Link>
+        <Link to="/cs/ai/cross-entropy" className="mt-3 inline-flex text-sm font-semibold text-sky-700 hover:underline dark:text-sky-300">Cross-entropy 글 바로 보기 →</Link>
       </div>
     </section>
   );

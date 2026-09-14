@@ -1,6 +1,7 @@
 import type { Article, Category, Subcategory } from "./types";
 import { ARTICLE_LEARNING } from "./article-learning";
 import { CATEGORY_READING_PATHS } from "./category-reading-paths";
+import { articleHref, categoryHref } from "@/lib/routes";
 
 const conceptOwner = new Map<string, string>();
 
@@ -187,9 +188,9 @@ export function getSubcategoryHref(
 ): string {
   const articles = getArticlesInSubcategory(category, subcategory);
   if (articles.length === 1) {
-    return `/${category.slug}/${articles[0].slug}`;
+    return articleHref(category.slug, articles[0].slug);
   }
-  return `/${category.slug}?sub=${subcategory.slug}`;
+  return `${categoryHref(category.slug)}?sub=${subcategory.slug}`;
 }
 
 export function countArticlesInSubcategory(

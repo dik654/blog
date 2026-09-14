@@ -17,8 +17,8 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         </p>
         <p>
           이 글은 <strong>anchor→peer target→range request→out-of-order response→ordered validation→commit cursor→regular
-          gossip handoff</strong> 순서로 내려갑니다. Checkpoint trust는 <Link to="/blockchain/prysm-finality#weak-subjectivity">weak
-          subjectivity</Link>, block transition은 <Link to="/blockchain/prysm">Prysm 전체 lifecycle</Link>을 재사용합니다.
+          gossip handoff</strong> 순서로 내려갑니다. Checkpoint trust는 <Link to="/cs/blockchain/prysm-finality#weak-subjectivity">weak
+          subjectivity</Link>, block transition은 <Link to="/cs/blockchain/prysm">Prysm 전체 lifecycle</Link>을 재사용합니다.
         </p>
       </div>
       <ContentBoundary article="prysm-sync" />

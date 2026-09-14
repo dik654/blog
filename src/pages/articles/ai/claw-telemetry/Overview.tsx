@@ -135,7 +135,7 @@ export default function Overview() {
           아래에서는 trace topology와 집계 방식을 먼저 설명하고, 이어서 token
           usage와 비용을 재현 가능한 원장으로 관리하는 방법을 다룹니다. SSE
           framing과 provider별 stream event 해석은 중복하지 않고
-          <a href="/ai/claw-api-client"> API client 글</a>로 연결합니다.
+          <a href="/cs/ai/claw-api-client"> API client 글</a>로 연결합니다.
         </p>
       </div>
     </section>

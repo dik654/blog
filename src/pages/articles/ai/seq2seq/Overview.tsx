@@ -21,7 +21,7 @@ export default function Overview() {
         </p>
         <p>
           아래 식의 vertical bar와 product가 낯설다면 먼저
-          <Link to="/ai/math-probability-expectation-variance#conditional-probability"> 조건부확률과 확률의 연쇄법칙</Link>을
+          <Link to="/cs/ai/math-probability-expectation-variance#conditional-probability"> 조건부확률과 확률의 연쇄법칙</Link>을
           읽으면 됩니다. 전체 sequence 확률을 “앞에서 무엇을 봤는가”라는 작은 질문으로
           나누는 단계부터 숫자 예제로 설명합니다.
         </p>
@@ -61,8 +61,8 @@ export default function Overview() {
           <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://proceedings.neurips.cc/paper_files/paper/2014/hash/a14ac55a4f27472c5d894ec1c3c743d2-Abstract.html" target="_blank" rel="noreferrer">원 논문과 실험 조건 보기</a>
         </div>
         <p>
-          Recurrent state와 LSTM gate는 <Link to="/ai/rnn">RNN 글</Link>과
-          <Link to="/ai/lstm">LSTM 글</Link>이 소유한다. 여기서는 두 network 사이의
+          Recurrent state와 LSTM gate는 <Link to="/cs/ai/rnn">RNN 글</Link>과
+          <Link to="/cs/ai/lstm">LSTM 글</Link>이 소유한다. 여기서는 두 network 사이의
           interface와 조건부 generation에서 생기는 training·search 문제에 집중한다.
         </p>
       </div>

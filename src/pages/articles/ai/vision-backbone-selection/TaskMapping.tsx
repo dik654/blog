@@ -103,7 +103,7 @@ export default function TaskMapping() {
           <p className="leading-7">
             어느 쪽이든 두 벡터를 그냥 이어 붙이는 방식은 피하는 편이 낫습니다. 차원만 늘고 거리 계산에서 한쪽이
             지배하기 쉬우며, 각 부분의 스케일을 맞추는 일이 또 다른 조정 대상이 됩니다. 색인 설계 자체가
-            바뀌는 문제는 <Link to="/ai/vector-search-and-ann-indexes">벡터 검색과 ANN 색인</Link>에서 다룹니다.
+            바뀌는 문제는 <Link to="/cs/ai/vector-search-and-ann-indexes">벡터 검색과 ANN 색인</Link>에서 다룹니다.
           </p>
         </ProgressiveDetail>
       </div>

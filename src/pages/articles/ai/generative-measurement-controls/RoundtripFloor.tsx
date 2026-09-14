@@ -68,7 +68,7 @@ export default function RoundtripFloor() {
         <p className="leading-7">
           이 구분이 다음 절의 주제로 이어집니다. 차이를 재는 지표는 이런 오염에 면역이고 절대값을 재는 지표는
           취약합니다. 오토인코더의 압축과 복원이 왜 손실을 만드는지는{" "}
-          <Link to="/ai/vae#vae-loss">VAE</Link>가 소유하며, 이 절은 그 손실이 편집 벤치마크의 한 열을 어떻게
+          <Link to="/cs/ai/vae#vae-loss">VAE</Link>가 소유하며, 이 절은 그 손실이 편집 벤치마크의 한 열을 어떻게
           오염시키는지만 다뤘습니다.
         </p>
       </div>

@@ -221,7 +221,7 @@ o(j) &= \underbrace{j \bmod B}_{\text{오른쪽 항으로 결과 계산}}
         <p className="leading-8">
           Scheduler는 필요한 slot을 manager에 요청하고 실패하면 request를 줄이거나
           preempt합니다. 자세한 전이는
-          <Link to="/ai/vllm-scheduler#preemption"> scheduler 글</Link>이 소유합니다.
+          <Link to="/cs/ai/vllm-scheduler#preemption"> scheduler 글</Link>이 소유합니다.
         </p>
       </div>
     </section>

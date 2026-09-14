@@ -7,7 +7,7 @@ export default function ModernDydxArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">dYdX Chain protocol/v9.6.3 구현 읽기</p><h2 className="text-3xl font-bold tracking-tight">dYdX에서 order receipt, proposed match, committed settlement은 서로 다른 사실이다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">Cosmos SDK bank 예제의 <code>Alice→Bob 10</code>은 받는 사람과 수량이 고정된 transfer입니다. 반면 dYdX에서 Alice가 10 contract bid를 내도 Bob에게 바로 이체되지 않습니다. Bob의 ask와 price·time priority로 match되고, 두 subaccount의 margin·position·fee·risk check가 모두 통과한 fill만 consensus application state로 settlement됩니다.</p>
-      <p>CometBFT의 proposal/finalization authority와 Cosmos SDK branch/commit은 각각 <a className="text-primary hover:underline" href="/blockchain/cometbft-abci#prepare-process">ABCI++</a>와 <a className="text-primary hover:underline" href="/blockchain/cosmos-sdk#baseapp">Cosmos SDK 정본</a>을 재사용합니다. 이 글은 dYdX의 order class, MemClob, proposed operations, risk/settlement과 indexer projection 경계만 소유합니다.</p>
+      <p>CometBFT의 proposal/finalization authority와 Cosmos SDK branch/commit은 각각 <a className="text-primary hover:underline" href="/cs/blockchain/cometbft-abci#prepare-process">ABCI++</a>와 <a className="text-primary hover:underline" href="/cs/blockchain/cosmos-sdk#baseapp">Cosmos SDK 정본</a>을 재사용합니다. 이 글은 dYdX의 order class, MemClob, proposed operations, risk/settlement과 indexer projection 경계만 소유합니다.</p>
       <AuthorityViz />
     </section>
 

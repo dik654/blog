@@ -15,7 +15,7 @@ export default function SmoothieQwenWeightEditingArticle() {
           </p>
           <p>
             진단·prompt·runtime guard·배포 선택의 상위 흐름은
-            <a href="/ai/qwen-korean-consistency"> Qwen 한국어 일관성 글</a>이
+            <a href="/cs/ai/qwen-korean-consistency"> Qwen 한국어 일관성 글</a>이
             소유합니다. 여기서는 weight artifact와 정상 번역 회귀를 포함한
             변환 검증에만 집중합니다.
           </p>

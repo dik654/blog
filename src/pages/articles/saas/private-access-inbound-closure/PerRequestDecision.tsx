@@ -66,7 +66,7 @@ export default function PerRequestDecision() {
 
         <p className="leading-7">
           자격 증명의 발급·변경·폐기를 사람의 입·이동·퇴사 사건과 맞춰 관리하는 절차 자체는{" "}
-          <Link to="/isms-aml/isms-auth-management#account-lifecycle">계정·인증 관리</Link>가 소유합니다. 이
+          <Link to="/cs/isms-aml/isms-auth-management#account-lifecycle">계정·인증 관리</Link>가 소유합니다. 이
           절은 그 수명이 접근 구조의 성질을 어떻게 바꾸는지만 다뤘습니다.
         </p>
       </div>

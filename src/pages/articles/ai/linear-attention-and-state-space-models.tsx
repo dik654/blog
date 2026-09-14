@@ -29,7 +29,7 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
             이 두 계열과 attention을 한데 묶어 부르는 이름이 sequence mixer입니다. 현재 위치의
             representation에 다른 위치의 정보를 섞어 넣는 sublayer라는 자리는 같고, 그 자리를
             채우는 구현이 다를 뿐입니다.{" "}
-            <Link to="/ai/attention-theory">Attention의 Q, K, V</Link>가 낯설다면 거기서부터
+            <Link to="/cs/ai/attention-theory">Attention의 Q, K, V</Link>가 낯설다면 거기서부터
             시작할 수 있습니다.
           </p>
           <p>
@@ -296,8 +296,8 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
             정확한 비율과 어느 depth에 attention을 배치할지는 model마다 다르고, 이 글은 그
             배치를 최적화하는 방법이 아니라 왜 이런 배치가 성립하는지를 다룹니다. 실제
             checkpoint가 이 비율을 어떻게 골랐는지는{" "}
-            <Link to="/ai/qwen36-hybrid-architecture">Qwen3.6의 3:1 hybrid schedule</Link>과{" "}
-            <Link to="/ai/kimi-k3-sequence-mixer">Kimi K3의 sequence mixer</Link>에서
+            <Link to="/cs/ai/qwen36-hybrid-architecture">Qwen3.6의 3:1 hybrid schedule</Link>과{" "}
+            <Link to="/cs/ai/kimi-k3-sequence-mixer">Kimi K3의 sequence mixer</Link>에서
             이어집니다.
           </p>
         </div>

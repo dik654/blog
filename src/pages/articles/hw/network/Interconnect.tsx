@@ -96,7 +96,7 @@ export default function Interconnect() {
             access, collective topology와 buffer placement가 맞아야 하며, node
             밖 NIC로 나갈 때는 다시 GPU–HCA PCIe·GPUDirect 경계를 통과합니다.
             CUDA stream dependency는{" "}
-            <Link to="/gpu/cuda-sync-streams">동기화·스트림 글</Link>에서
+            <Link to="/cs/gpu/cuda-sync-streams">동기화·스트림 글</Link>에서
             확인합니다.
           </p>
         </div>

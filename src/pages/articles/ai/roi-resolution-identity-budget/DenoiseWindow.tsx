@@ -70,7 +70,7 @@ export default function DenoiseWindow() {
 
         <p className="leading-7">
           편집 동작을 어느 모델로 보낼지의 표는{" "}
-          <Link to="/ai/masked-edit-verb-routing#routing-gate">편집 동작과 모델 라우팅</Link>이 소유합니다.
+          <Link to="/cs/ai/masked-edit-verb-routing#routing-gate">편집 동작과 모델 라우팅</Link>이 소유합니다.
           이 절은 그 표에 들어가는 값 중 노이즈 비율의 유효 구간만 다뤘습니다.
         </p>
       </div>

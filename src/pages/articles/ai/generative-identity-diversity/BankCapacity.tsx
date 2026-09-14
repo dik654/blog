@@ -76,7 +76,7 @@ export default function BankCapacity() {
 
         <p className="leading-7">
           계측기의 스타일 적용 범위는{" "}
-          <Link to="/ai/generative-measurement-controls#style-coverage">계측기 검증</Link>이 소유합니다. 일러스트
+          <Link to="/cs/ai/generative-measurement-controls#style-coverage">계측기 검증</Link>이 소유합니다. 일러스트
           계열을 제외한 근거가 그 글의 측정입니다.
         </p>
       </div>

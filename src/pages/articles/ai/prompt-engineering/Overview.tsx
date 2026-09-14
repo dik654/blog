@@ -68,9 +68,9 @@ export default function Overview() {
           데는 능하지만 “요약해 줘” 같은 요청 형식 자체를 지시로 알아듣지 못할 수 있습니다.
         </p>
         <p>
-          이 능력은 <Link to="/ai/supervised-fine-tuning#overview">supervised
+          이 능력은 <Link to="/cs/ai/supervised-fine-tuning#overview">supervised
           fine-tuning</Link>이 instruction-response 쌍을 보여주고{" "}
-          <Link to="/ai/rlhf#overview">RLHF</Link>가 사람의 선호로 다듬으며
+          <Link to="/cs/ai/rlhf#overview">RLHF</Link>가 사람의 선호로 다듬으며
           학습됩니다. 같은 prompt라도 이 학습을 거친 model인지에 따라 결과가
           크게 달라지는 이유가 여기에 있습니다.
         </p>
@@ -111,9 +111,9 @@ export default function Overview() {
         </p>
         <p>
           이 계약을 이해한 뒤에는
-          <Link to="/ai/prompt-reasoning"> reasoning path와 verifier</Link>,
-          <Link to="/ai/prompt-few-shot"> few-shot demonstration</Link>,
-          <Link to="/ai/prompt-structured-output"> structured output validator</Link>를
+          <Link to="/cs/ai/prompt-reasoning"> reasoning path와 verifier</Link>,
+          <Link to="/cs/ai/prompt-few-shot"> few-shot demonstration</Link>,
+          <Link to="/cs/ai/prompt-structured-output"> structured output validator</Link>를
           각각 독립된 수업에서 한 층씩 쌓습니다.
         </p>
         <ContentBoundary article="prompt-engineering" />

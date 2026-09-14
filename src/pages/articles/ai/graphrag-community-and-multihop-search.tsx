@@ -21,7 +21,7 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <Link to="/ai/knowledge-graph-construction#pipeline">앞 글</Link>이 만든
+            <Link to="/cs/ai/knowledge-graph-construction#pipeline">앞 글</Link>이 만든
             property graph 는 node 하나에서 edge 를 한 번 건너는 질문에는 바로
             답합니다. 그런데 "이 그래프 전체에서 가장 중요한 주제가 무엇인가" 처럼
             그래프 전체를 봐야 하는 질문이나, entity 세 개를 건너야 하는 질문에는
@@ -53,7 +53,7 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
             Community summary 는 각 묶음이 무엇을 다루는지 LLM 이 미리 요약해 둔 결과입니다.
           </p>
           <p>
-            <Link to="/ai/knowledge-graph-construction#property-graph">앞 글</Link>
+            <Link to="/cs/ai/knowledge-graph-construction#property-graph">앞 글</Link>
             의 그래프에 앙리 베크렐과 그의 소속 기관 에콜 폴리테크닉을 더합니다.
             베크렐도 1903년 노벨 물리학상을 마리·피에르 퀴리와 함께 받았으므로,
             Nobel Prize in Physics node 하나가 두 인물 묶음을 잇는 다리 edge 가
@@ -212,7 +212,7 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
             진입점을 못 찾으면 traversal 도 시작하지 못하므로, hybrid retrieval
             의 첫 실패 지점은 대개 벡터 검색이 맞는 entity 를 후보에 못 넣는
             경우입니다. 이 결합의 provenance·hop 예산 관리는{" "}
-            <Link to="/ai/retrieval-ranking-funnel#retrieval">retrieval funnel 글</Link>
+            <Link to="/cs/ai/retrieval-ranking-funnel#retrieval">retrieval funnel 글</Link>
             의 graph-structured retrieval 경계가 정본입니다.
           </p>
         </div>
@@ -279,7 +279,7 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           이전 글:{" "}
-          <Link to="/ai/knowledge-graph-construction#overview">
+          <Link to="/cs/ai/knowledge-graph-construction#overview">
             Knowledge Graph 구축: property graph·schema·extraction·dedup
           </Link>
         </p>

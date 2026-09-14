@@ -102,7 +102,7 @@ export default function SpikingNeuralNetworksArticle() {
         </LessonHeader>
         <TermLesson name="Spiking BPTT unroll" oneLine="T개 membrane transition과 spike decision을 recurrent graph로 펼치고, surrogate local slope를 사용해 마지막 loss부터 이전 time step으로 gradient를 누적하는 학습입니다." shape="u₀ → u₁,s₁ → … → uT,sT → loss · backward T→1" example="Time 3의 spike loss가 time 2 membrane과 같은 shared W에 미친 기여가 time 1의 기여와 합쳐집니다." boundary="긴 T는 saved activation memory와 vanishing/exploding gradient를 늘리며 online local rule과 같지 않습니다." />
         <p className="text-base leading-8 text-muted-foreground">
-          BPTT의 Jacobian product·gradient clipping·truncation은 <Link className="text-primary hover:underline" to="/ai/bptt">BPTT 정본</Link>이 소유합니다. SNN이라고 backprop을 버렸다고 말할 수 없는 이유가 여기 있습니다. 실제 training memory는 weights뿐 아니라 T개 membrane·spike·surrogate backward state에 좌우됩니다.
+          BPTT의 Jacobian product·gradient clipping·truncation은 <Link className="text-primary hover:underline" to="/cs/ai/bptt">BPTT 정본</Link>이 소유합니다. SNN이라고 backprop을 버렸다고 말할 수 없는 이유가 여기 있습니다. 실제 training memory는 weights뿐 아니라 T개 membrane·spike·surrogate backward state에 좌우됩니다.
         </p>
       </section>
 

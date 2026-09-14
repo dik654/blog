@@ -35,12 +35,12 @@ export default function Overview({
           <code>attention sequence</code>로 이어붙이고, base model이 이미 갖고
           있는 <code>self-attention</code>이 그 안에서 대응 관계를 스스로
           찾게 합니다. 새로 학습하는 것은{" "}
-          <Link to="/ai/lora-finetuning">LoRA</Link>의 저랭크 <code>A·B</code>{" "}
+          <Link to="/cs/ai/lora-finetuning">LoRA</Link>의 저랭크 <code>A·B</code>{" "}
           행렬뿐이고, base model weight는 그대로 얼립니다.
         </p>
         <p>
           이 방식이 가능한 이유는{" "}
-          <Link to="/ai/attention-theory#self-attention">self-attention</Link>
+          <Link to="/cs/ai/attention-theory#self-attention">self-attention</Link>
           이 애초에 sequence 안의 모든 token 쌍을 서로 비교하도록 설계됐기
           때문입니다. Reference와 target을 한 sequence에 넣으면, attention이
           두 구간 사이의 correspondence를 별도 module 없이도 학습할 수 있다.
@@ -49,7 +49,7 @@ export default function Overview({
         </p>
         <p>
           여기서 “video attention·FFN에 LoRA를 붙인다”는 말을 실제 module
-          범위로 해석하려면 먼저 <Link to="/ai/image-video-lora-architecture">
+          범위로 해석하려면 먼저 <Link to="/cs/ai/image-video-lora-architecture">
           Image·Video LoRA architecture</Link>의 spatial·temporal·cross-modal
           구분이 필요합니다. 이 글은 그 target 범위를 전제로 reference와 target을
           한 context에 넣는 조건화 방식에만 집중합니다.

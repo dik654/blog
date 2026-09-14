@@ -205,8 +205,8 @@ export default function Init() {
           서버, 플러그인을 모두 신뢰한 것은 아닙니다. init은 발견한 capability를
           비활성 상태로 기록하고, 실제 첫 실행에서 사용자에게 출처와 효과를
           보여준 뒤 별도로 승인받아야 합니다. 설정의 병합 순서와 secret 저장은
-          <a href="/ai/claw-config">설정과 bootstrap 글</a>이, 실행 권한은
-          <a href="/ai/claw-permissions">권한 모델 글</a>이 각각 소유합니다.
+          <a href="/cs/ai/claw-config">설정과 bootstrap 글</a>이, 실행 권한은
+          <a href="/cs/ai/claw-permissions">권한 모델 글</a>이 각각 소유합니다.
         </p>
       </div>
     </section>

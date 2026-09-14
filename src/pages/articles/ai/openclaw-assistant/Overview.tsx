@@ -140,10 +140,10 @@ export default function Overview({
         className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2"
       >
         {[
-          ["Agent framework", "/ai/agent-frameworks", "tool loop와 stateful workflow의 일반 구조"],
-          ["Context engineering", "/ai/context-engineering", "대화 이력·compaction·memory의 선택 경계"],
-          ["Skills anatomy", "/ai/skills-anatomy", "SKILL.md와 progressive disclosure"],
-          ["Agent sandbox security", "/ai/agent-sandbox-security", "policy·sandbox·egress를 겹쳐 쓰는 이유"],
+          ["Agent framework", "/cs/ai/agent-frameworks", "tool loop와 stateful workflow의 일반 구조"],
+          ["Context engineering", "/cs/ai/context-engineering", "대화 이력·compaction·memory의 선택 경계"],
+          ["Skills anatomy", "/cs/ai/skills-anatomy", "SKILL.md와 progressive disclosure"],
+          ["Agent sandbox security", "/cs/ai/agent-sandbox-security", "policy·sandbox·egress를 겹쳐 쓰는 이유"],
         ].map(([label, href, description]) => (
           <Link
             key={href}

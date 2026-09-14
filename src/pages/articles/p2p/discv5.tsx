@@ -154,9 +154,9 @@ export default function Discv5Article() {
           </p>
           <p>
             Shortlist merge와 termination은{" "}
-            <Link to="/p2p/kad-lookup">Kademlia 반복 탐색</Link>을 재사용하고,
+            <Link to="/cs/p2p/kad-lookup">Kademlia 반복 탐색</Link>을 재사용하고,
             ENR structure의 canonical 설명은{" "}
-            <Link to="/p2p/discv4#enr">discv4의 ENR section</Link>을 잇는다.
+            <Link to="/cs/p2p/discv4#enr">discv4의 ENR section</Link>을 잇는다.
           </p>
         </div>
       </section>

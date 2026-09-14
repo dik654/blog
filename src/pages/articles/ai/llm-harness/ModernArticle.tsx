@@ -152,7 +152,7 @@ export default function LlmHarnessArticle() {
             “성공한 것 같다” 대신 exit status, created resource identity,
             checksum, verifier result와 retry classification을 돌려줘야 다음
             action과 종료를 구분할 수 있습니다. 이 loop를 실제 작업 단위로 묶는
-            방법은 <a href="/ai/agent-run-contract">run contract 글</a>에서
+            방법은 <a href="/cs/ai/agent-run-contract">run contract 글</a>에서
             이어집니다.
           </p>
           <p>

@@ -38,7 +38,7 @@ export default function ControlPlane() {
 
         <p className="leading-7">
           한도와 재시도, 그리고 넘치는 요청을 다루는 패턴 일반론은{" "}
-          <Link to="/ai/rate-limiting-and-reliability-patterns">레이트 리밋과 신뢰성 패턴</Link>이 소유합니다.
+          <Link to="/cs/ai/rate-limiting-and-reliability-patterns">레이트 리밋과 신뢰성 패턴</Link>이 소유합니다.
           이 절은 그 패턴을 누가 맡게 되는지의 배치 문제만 다뤘습니다.
         </p>
       </div>

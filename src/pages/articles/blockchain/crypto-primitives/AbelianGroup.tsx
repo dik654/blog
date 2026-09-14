@@ -17,7 +17,7 @@ export default function AbelianGroup() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>최소 계산 예</h3>
         <p>
-          F7에서 3의 곱셈 inverse는 5이므로 6/3=6·5≡2입니다. 반면 curve point P의 inverse는 field inverse가 아니라 덧셈 역원 −P이며 P+(−P)=O입니다. Scalar multiplication 3P는 point를 세 번 더한다는 뜻이지 coordinate x,y 각각에 정수 3을 곱한다는 뜻이 아닙니다. 이 구분과 합성수 modulus의 zero-divisor 반례는 <Link to="/crypto/finite-field-theory#overview">유한체의 연산 계약</Link>에서 더 깊게 유도합니다.
+          F7에서 3의 곱셈 inverse는 5이므로 6/3=6·5≡2입니다. 반면 curve point P의 inverse는 field inverse가 아니라 덧셈 역원 −P이며 P+(−P)=O입니다. Scalar multiplication 3P는 point를 세 번 더한다는 뜻이지 coordinate x,y 각각에 정수 3을 곱한다는 뜻이 아닙니다. 이 구분과 합성수 modulus의 zero-divisor 반례는 <Link to="/cs/crypto/finite-field-theory#overview">유한체의 연산 계약</Link>에서 더 깊게 유도합니다.
         </p>
         <h3>조합 체크리스트</h3>
         <p>

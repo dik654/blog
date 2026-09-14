@@ -12,13 +12,13 @@ export default function ModernCometBFTCryptoArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">CometBFT v0.40.0 구현 읽기</p><h2 className="text-3xl font-bold tracking-tight">Crypto layer는 transaction을 실행하지 않고 consensus evidence의 bytes와 key를 검증한다</h2></header>
       <p className="text-lg leading-8 text-foreground/90"><code>Alice→Bob 10</code> transaction이 block에 들어갔다고 해도 CometBFT의 Ed25519 코드가 Alice의 잔액과 account 서명을 검증하지는 않습니다. Application이 user transaction을 해석하고, CometBFT는 validator가 canonical vote bytes에 서명했는지와 block field의 hash commitment가 이어지는지를 검증합니다.</p>
-      <p>Hash는 바뀌 bytes를 발견하고 signature는 key owner의 승인을 확인하며 Merkle proof는 전체를 다 다운로드하지 않고도 ordered set 속 leaf를 검증하게 합니다. 일반 Ed25519·Merkle의 보안 정의는 <a className="text-primary hover:underline" href="/crypto/crypto-primitives#ed25519">암호 primitive 정본</a>이 소유하고, 이 글은 v0.40.0의 encoding·length·address 경계만 소유합니다.</p>
+      <p>Hash는 바뀌 bytes를 발견하고 signature는 key owner의 승인을 확인하며 Merkle proof는 전체를 다 다운로드하지 않고도 ordered set 속 leaf를 검증하게 합니다. 일반 Ed25519·Merkle의 보안 정의는 <a className="text-primary hover:underline" href="/cs/crypto/crypto-primitives#ed25519">암호 primitive 정본</a>이 소유하고, 이 글은 v0.40.0의 encoding·length·address 경계만 소유합니다.</p>
       <CryptoBoundaryViz />
     </section>
 
     <section id="ed25519" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Ed25519 contract</p><h2 className="mt-2 text-2xl font-bold">Signature는 의미가 아니라 정확한 message bytes에 귀속된다</h2></header>
-      <p>v0.40.0 implementation의 Ed25519 private key는 64 bytes, public key는 32 bytes, signature는 64 bytes이며 verifier는 public-key·signature length를 먼저 검사합니다. 그러나 signature가 유효해도 chain ID·height·round·vote type과 block ID가 canonical sign bytes에 바르게 포함되었는지는 별도입니다. 그 encoding과 replay domain은 <a className="text-primary hover:underline" href="/blockchain/cometbft-types#vote-commit">CometBFT types 정본</a>에서 다룹니다.</p>
+      <p>v0.40.0 implementation의 Ed25519 private key는 64 bytes, public key는 32 bytes, signature는 64 bytes이며 verifier는 public-key·signature length를 먼저 검사합니다. 그러나 signature가 유효해도 chain ID·height·round·vote type과 block ID가 canonical sign bytes에 바르게 포함되었는지는 별도입니다. 그 encoding과 replay domain은 <a className="text-primary hover:underline" href="/cs/blockchain/cometbft-types#vote-commit">CometBFT types 정본</a>에서 다룹니다.</p>
       <div className="not-prose flex flex-wrap gap-3">
         <CodeViewButton label="Sign()" onClick={() => sidebar.open("ed25519-sign", codeRefs["ed25519-sign"])} />
         <CodeViewButton label="VerifySignature()" onClick={() => sidebar.open("ed25519-verify", codeRefs["ed25519-verify"])} />

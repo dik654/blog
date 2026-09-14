@@ -31,7 +31,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             data drift, concept drift, performance drift라는 세 가지 변화 축을 가릅니다.
           </p>
           <p>
-            <Link to="/ai/llm-serving-ops#observability-aiops">LLM 서빙 운영</Link> 글은 이미
+            <Link to="/cs/ai/llm-serving-ops#observability-aiops">LLM 서빙 운영</Link> 글은 이미
             SLI·error budget·burn rate로 “언제 사람을 호출할지”를 다뤘습니다. 이 글은 그 SLI를
             채우는 원재료, 즉 request 하나가 남기는 trace span 구조와 token/latency 분해, 그리고
             SLI가 서서히 나빠지는 원인을 가리키는 drift 축을 다룹니다. 겹치는 것은 링크로
@@ -244,7 +244,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             token count(생성된 completion의 token 수)로 나뉩니다. 이 둘이 비용과 latency 예산을 정하는 가장 기본적인 단위입니다.
           </p>
           <p>
-            <Link to="/ai/vllm-serving#prefill-decode">vLLM 서빙</Link> 글은 이미 TTFT·ITL·
+            <Link to="/cs/ai/vllm-serving#prefill-decode">vLLM 서빙</Link> 글은 이미 TTFT·ITL·
             TPOT로 latency를 시간 축에서 나눴습니다. 이 글이 추가하는 것은 <em>누구의
             시계로 재는가</em>라는 축입니다.
           </p>
@@ -383,7 +383,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
           items={[
             { term: "Trace Sampling", description: "일부 요청만 전체 span을 export하고 나머지는 요약 지표만 남기는 비용·커버리지 절충입니다.", example: "평시 5% sampling, error 발생 시 100% 강제 export.", boundary: "Sampling rate가 낮으면 드문 실패를 통계적으로 놓칠 확률이 커집니다(위 식 참고)." },
             { term: "Error Classification", description: "실패 요청을 원인 범주로 나누는 절차입니다.", example: "timeout 62%, invalid output 21%, tool failure 17%.", boundary: "범주 정의가 성기면 서로 다른 원인이 같은 범주에 뒤섞입니다." },
-            { term: "Production Debugging", description: "error classification과 trace tree를 함께 써서 실제 사고의 원인 span을 찾는 활동입니다.", example: "timeout 급증 원인이 queue time 증가임을 trace로 확인.", boundary: <>이 글이 다루는 것은 원인을 찾는 관측 구조까지이며, 자동 rollback·scale 같은 대응은 <Link to="/ai/llm-serving-ops#observability-aiops">LLM 서빙 운영</Link> 글의 범위입니다.</> },
+            { term: "Production Debugging", description: "error classification과 trace tree를 함께 써서 실제 사고의 원인 span을 찾는 활동입니다.", example: "timeout 급증 원인이 queue time 증가임을 trace로 확인.", boundary: <>이 글이 다루는 것은 원인을 찾는 관측 구조까지이며, 자동 rollback·scale 같은 대응은 <Link to="/cs/ai/llm-serving-ops#observability-aiops">LLM 서빙 운영</Link> 글의 범위입니다.</> },
           ]}
         />
       </section>

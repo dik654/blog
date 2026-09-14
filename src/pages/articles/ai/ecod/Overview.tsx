@@ -17,7 +17,7 @@ export default function Overview() {
           따라서 첫 단계는 algorithm 선택이 아니라 detection contract다. 한 row가 거래인지
           사용자 세션인지, 어떤 기간과 집단을 reference population으로 볼지, 어떤 feature가
           score 계산 시점에 실제로 존재하는지 정해야 한다. 결측값·중복 열·category encoding과
-          시간 split은 <Link to="/ai/eda-workflow">EDA 정본 글</Link>에서 먼저 확인하고,
+          시간 split은 <Link to="/cs/ai/eda-workflow">EDA 정본 글</Link>에서 먼저 확인하고,
           ECOD는 그 표에서 “누구를 먼저 검토할지” 정하는 역할만 맡긴다.
         </p>
       </div>

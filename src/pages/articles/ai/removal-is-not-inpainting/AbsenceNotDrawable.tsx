@@ -85,7 +85,7 @@ export default function AbsenceNotDrawable() {
 
         <p className="leading-7">
           안내 계수와 조건부·무조건부 예측의 정의는{" "}
-          <Link to="/ai/latent-diffusion-guidance#guidance">잠재 확산과 안내</Link>가 소유합니다. 이 절은 그
+          <Link to="/cs/ai/latent-diffusion-guidance#guidance">잠재 확산과 안내</Link>가 소유합니다. 이 절은 그
           계수가 1일 때 네거티브가 무효가 된다는 실무적 결과만 다뤘습니다.
         </p>
       </div>

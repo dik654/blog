@@ -12,7 +12,7 @@ export default function ModernCometBFTExecutionArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">CometBFT v0.40.0 구현 읽기</p><h2 className="text-3xl font-bold tracking-tight">ApplyBlock은 결정된 block을 검증·실행·영속화하는 orchestration 경계다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">Consensus가 height 42의 block을 결정했다고 해서 <code>alice→bob 10</code>의 balance 변화가 이미 durable한 것은 아닙니다. <code>BlockExecutor.ApplyBlock</code>은 이전 CometBFT State에 대해 block을 검증하고, application에 FinalizeBlock을 호출해 결과를 계산하며, result를 저장한 뒤 application Commit과 mempool Update, 새 State 저장까지 연결합니다.</p>
-      <p>이 순서는 한 database transaction으로 묶이지 않습니다. 그래서 단계별 receipt와 replay rule이 구현의 일부입니다. ABCI method의 authority와 deterministic application 조건은 <a className="text-primary hover:underline" href="/blockchain/cometbft-abci#finalize-commit">ABCI++ 정본</a>, protocol object와 commit certificate는 <a className="text-primary hover:underline" href="/blockchain/cometbft-types#vote-commit">types 정본</a>에서 먼저 또는 필요할 때 이어 읽을 수 있습니다.</p>
+      <p>이 순서는 한 database transaction으로 묶이지 않습니다. 그래서 단계별 receipt와 replay rule이 구현의 일부입니다. ABCI method의 authority와 deterministic application 조건은 <a className="text-primary hover:underline" href="/cs/blockchain/cometbft-abci#finalize-commit">ABCI++ 정본</a>, protocol object와 commit certificate는 <a className="text-primary hover:underline" href="/cs/blockchain/cometbft-types#vote-commit">types 정본</a>에서 먼저 또는 필요할 때 이어 읽을 수 있습니다.</p>
       <ApplyBlockPipelineViz />
     </section>
 
@@ -37,7 +37,7 @@ export default function ModernCometBFTExecutionArticle() {
       <header><p className="text-sm font-semibold text-primary">02 · FinalizeBlock과 transition</p><h2 className="mt-2 text-2xl font-bold">같은 ordered input은 같은 result·validator update·AppHash를 내야 한다</h2></header>
       <p>Validation 뒤 BlockExecutor는 block hash, height·time, proposer, decided last commit, misbehavior와 ordered transaction bytes를 <code>RequestFinalizeBlock</code>으로 application에 보냅니다. 응답에는 transaction마다 하나의 result, validator updates, consensus parameter updates, events와 AppHash가 들어갑니다. v0.40.0 구현은 transaction 수와 result 수가 다르면 즉시 오류를 냅니다.</p>
       <p><code>updateState</code>는 이 response를 이용해 LastBlockHeight·ID·time, validator snapshots와 consensus parameters, LastResultsHash를 다음 State로 이동시킵니다. 다만 최종 AppHash field는 application Commit 뒤에 채워 저장합니다. Application은 같은 previous committed state와 같은 block/context에서 같은 response를 만들어야 하며 local clock, random map iteration, unpinned remote API가 result에 영향을 주면 replicas가 다음 header commitment에서 갈라질 수 있습니다.</p>
-      <p>이 deterministic transition 식과 candidate/committed state 경계는 <a className="text-primary hover:underline" href="/blockchain/cometbft-abci#finalize-commit">ABCI++ 글의 S<sub>h+1</sub>=F(S<sub>h</sub>,B<sub>h</sub>,C<sub>h</sub>) 정본</a>을 재사용합니다. ApplyBlock은 그 계산을 호출하고 결과 개수·update validity·저장 순서를 검사하는 orchestration owner입니다.</p>
+      <p>이 deterministic transition 식과 candidate/committed state 경계는 <a className="text-primary hover:underline" href="/cs/blockchain/cometbft-abci#finalize-commit">ABCI++ 글의 S<sub>h+1</sub>=F(S<sub>h</sub>,B<sub>h</sub>,C<sub>h</sub>) 정본</a>을 재사용합니다. ApplyBlock은 그 계산을 호출하고 결과 개수·update validity·저장 순서를 검사하는 orchestration owner입니다.</p>
       <div className="not-prose flex flex-wrap gap-3">
         <CodeViewButton label="BlockExecutor 구조체" onClick={() => sidebar.open("block-executor", codeRefs["block-executor"])} />
       </div>

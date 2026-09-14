@@ -276,7 +276,7 @@ d_{rope}
           </h2>
           <p className="leading-8">
             가중치 byte와 GB·GiB를 계산하는 일반 절차는{" "}
-            <Link to="/ai/model-vram-budgeting">모델 VRAM 계산</Link>이
+            <Link to="/cs/ai/model-vram-budgeting">모델 VRAM 계산</Link>이
             정본입니다. Qwen3.6 공식 BF16 payload는 51.75 GiB라 48 GiB 한 장에는
             KV 이전부터 들어가지 않습니다. 공식 mixed-FP8 payload는 약 28.75
             GiB입니다.
@@ -448,11 +448,11 @@ M_{free}
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             Cache commit 자체는{" "}
-            <Link to="/ai/qwen36-hybrid-runtime">
+            <Link to="/cs/ai/qwen36-hybrid-runtime">
               Qwen3.6 하이브리드 런타임
             </Link>
             에서, 일반적인 GPU admission과 기동 로그는{" "}
-            <Link to="/ai/model-vram-budgeting">모델 VRAM 계산</Link>에서 더
+            <Link to="/cs/ai/model-vram-budgeting">모델 VRAM 계산</Link>에서 더
             깊게 이어집니다.
           </p>
         </div>

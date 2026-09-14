@@ -11,7 +11,7 @@ export default function ModernGroth16ImplementationArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">한 circuit artifact에서 검증 가능한 proof receipt까지</p><h2 className="text-3xl font-bold tracking-tight">Groth16 구현의 핵심은 세 점을 계산하는 코드가 아니라 circuit·witness·key·domain이 같은 relation을 가리키게 하는 것이다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">Groth16 proof는 작지만 prover의 입력은 작지 않습니다. Circuit에서 나온 R1CS, witness layout, QAP evaluation domain, proving key queries와 public input order가 모두 같아야 합니다. <a className="text-primary hover:underline" href="/crypto/groth16">Groth16 수학 정본</a>이 R1CS→QAP와 pairing equation을 소유하므로, 이 글은 Rust artifact/profile, key admission, parallel execution과 release gate를 맡습니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">Groth16 proof는 작지만 prover의 입력은 작지 않습니다. Circuit에서 나온 R1CS, witness layout, QAP evaluation domain, proving key queries와 public input order가 모두 같아야 합니다. <a className="text-primary hover:underline" href="/cs/crypto/groth16">Groth16 수학 정본</a>이 R1CS→QAP와 pairing equation을 소유하므로, 이 글은 Rust artifact/profile, key admission, parallel execution과 release gate를 맡습니다.</p>
       <p>고정 workload는 같은 circuit digest의 witness를 읽고 quotient polynomial을 계산한 뒤 A·B·C proof를 serialize하고 independent verifier가 승인하는 흐름입니다. Setup key가 크기만 맞는다고 재사용하지 않으며, circuit revision이나 public input order가 바뀌면 다른 artifact입니다.</p>
       <Groth16ImplementationViz />
       <ContentBoundary article="impl-groth16" />

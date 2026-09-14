@@ -4,6 +4,7 @@ import type { Category } from "@/content";
 import SubcategoryItem from "./SubcategoryItem";
 import TopDownCategoryNav from "./TopDownCategoryNav";
 import { CATEGORY_READING_PATHS } from "@/content/category-reading-paths";
+import { categoryHref } from "@/lib/routes";
 
 interface Props {
   category: Category;
@@ -36,7 +37,7 @@ export default function CategoryItem({
         )}
       >
         <Link
-          to={`/${cat.slug}`}
+          to={categoryHref(cat.slug)}
           onClick={(e) => e.stopPropagation()}
           className="flex-1 text-left"
         >

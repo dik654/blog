@@ -37,7 +37,7 @@ export default function RLApproach() {
           고정 사례로 보면 SFT example은 “9,600÷3=3,200”이라는 한국어 연구용
           trace, 최종 정답 3,200원, 요청된 번역 “首尔”을 함께 보여 줍니다. RL은
           같은 질문에서 여러 후보를 생성하고, 이 계약을 더 잘 지킨 후보의
-          probability를 높입니다. 관련 기초는 <Link to="/ai/supervised-fine-tuning">SFT 정본</Link>, <Link to="/ai/rlhf">RLHF 정본</Link>, 구현 맥락은 <Link to="/ai/open-r1">Open-R1 정본</Link>에서 이어서 볼 수 있습니다.
+          probability를 높입니다. 관련 기초는 <Link to="/cs/ai/supervised-fine-tuning">SFT 정본</Link>, <Link to="/cs/ai/rlhf">RLHF 정본</Link>, 구현 맥락은 <Link to="/cs/ai/open-r1">Open-R1 정본</Link>에서 이어서 볼 수 있습니다.
         </p>
         <p>
           여기서 “reasoning”은 논문이 학습 데이터와 출력 형식으로 명시한 research trace입니다. 이 사례를 일반 제품이 숨겨진 chain-of-thought를 노출해야

@@ -11,7 +11,7 @@ export default function ModernPoseidonGpuArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Poseidon instance를 검증 가능한 GPU batch로 내리기</p><h2 className="text-3xl font-bold tracking-tight">GPU Poseidon의 출발점은 x⁵ kernel이 아니라 field·width·round constants가 봉인된 parameter artifact다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">고정 proof workload에서 witness의 field elements는 hash와 Merkle tree inputs가 되고, root는 이후 proof statement에 들어갑니다. <a className="text-primary hover:underline" href="/crypto/poseidon-hash">Poseidon 정본</a>이 sponge, HADES rounds, S-box와 MDS의 수학·security를 소유합니다. 이 글은 exact instance를 GPU state lanes와 batch/tree frontier로 내리고, reference parity를 통과한 artifact만 release하는 구현 경계를 맡습니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">고정 proof workload에서 witness의 field elements는 hash와 Merkle tree inputs가 되고, root는 이후 proof statement에 들어갑니다. <a className="text-primary hover:underline" href="/cs/crypto/poseidon-hash">Poseidon 정본</a>이 sponge, HADES rounds, S-box와 MDS의 수학·security를 소유합니다. 이 글은 exact instance를 GPU state lanes와 batch/tree frontier로 내리고, reference parity를 통과한 artifact만 release하는 구현 경계를 맡습니다.</p>
       <p>
             “Poseidon은 α=5, RF=8, RP=57”처럼 하나의 숫자 묶음을 보편값으로 외우면 안 됩니다. Prime field와 state width, security
             target에 따라 profile이 달라집니다. optimized constants와 sparse transforms도 같은 derivation revision에 속해야

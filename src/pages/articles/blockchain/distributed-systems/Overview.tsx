@@ -29,10 +29,10 @@ export default function Overview() {
         <p>
           이 글은 node·message·execution에서 출발해 timing과 failure model,
           safety와 liveness, FLP와 CAP의 정확한 적용 범위를 설명합니다. 명령을
-          같은 순서로 실행하는 방법은 <Link to="/blockchain/smr-theory">SMR</Link>,
+          같은 순서로 실행하는 방법은 <Link to="/cs/blockchain/smr-theory">SMR</Link>,
           Byzantine quorum의 정확한 bound는{" "}
-          <Link to="/blockchain/bft-theory">BFT 이론</Link>, 공개 네트워크의
-          참여 가중치는 <Link to="/blockchain/consensus-mechanisms">PoW·PoS</Link>
+          <Link to="/cs/blockchain/bft-theory">BFT 이론</Link>, 공개 네트워크의
+          참여 가중치는 <Link to="/cs/blockchain/consensus-mechanisms">PoW·PoS</Link>
           글에서 확장합니다.
         </p>
       </div>

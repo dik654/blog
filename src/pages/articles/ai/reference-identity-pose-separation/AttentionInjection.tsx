@@ -85,7 +85,7 @@ export default function AttentionInjection() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           어텐션 주입 자체의 구현과 참조 이미지를 문맥에 이어 붙이는 다른 접근은{" "}
-          <Link to="/ai/in-context-lora">In-Context LoRA</Link>가 다룹니다. 이 절은 그 주입을 언제 켜고 끄는지가
+          <Link to="/cs/ai/in-context-lora">In-Context LoRA</Link>가 다룹니다. 이 절은 그 주입을 언제 켜고 끄는지가
           방향에 미치는 영향만 다뤘습니다.
         </p>
       </div>

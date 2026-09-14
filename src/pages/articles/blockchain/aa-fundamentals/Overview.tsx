@@ -18,7 +18,7 @@ export default function Overview() {
           ERC-4337, EIP-7702, native AA라는 이름이 어디서 갈라지는지 자연스럽게 보입니다.
         </p>
         <p>
-          Transaction·nonce·receipt의 바닥은 <Link to="/blockchain/evm-fundamentals">EVM 기초</Link>에서 확장합니다. 이 글만 읽어도 흐름을 따라갈 수 있도록,
+          Transaction·nonce·receipt의 바닥은 <Link to="/cs/blockchain/evm-fundamentals">EVM 기초</Link>에서 확장합니다. 이 글만 읽어도 흐름을 따라갈 수 있도록,
           nonce는 같은 권한 요청의 replay를 막는 순서표이고 receipt는 chain에 포함된 실행 결과라는 직관을 먼저 사용합니다.
         </p>
       </div>

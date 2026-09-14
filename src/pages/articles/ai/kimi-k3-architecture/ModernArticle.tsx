@@ -22,9 +22,9 @@ export default function KimiK3ArchitectureArticle() {
         </LessonHeader>
         <div className="not-prose grid gap-3 md:grid-cols-3">
           {[
-            ["Sequence mixer", "과거 token 전체를 저장할까, 고정 state로 압축할까?", "/ai/kimi-k3-sequence-mixer"],
-            ["Depth routing", "현재 layer는 직전 layer만 받을까, 이전 block을 골라 읽을까?", "/ai/kimi-k3-depth-routing"],
-            ["Latent MoE", "전문가 계산을 full width로 할까, routed path만 줄일까?", "/ai/kimi-k3-latent-moe"],
+            ["Sequence mixer", "과거 token 전체를 저장할까, 고정 state로 압축할까?", "/cs/ai/kimi-k3-sequence-mixer"],
+            ["Depth routing", "현재 layer는 직전 layer만 받을까, 이전 block을 골라 읽을까?", "/cs/ai/kimi-k3-depth-routing"],
+            ["Latent MoE", "전문가 계산을 full width로 할까, routed path만 줄일까?", "/cs/ai/kimi-k3-latent-moe"],
           ].map(([name, question, href]) => (
             <a key={name} href={href} className="border border-border p-5 transition-colors hover:border-primary">
               <p className="font-black">{name}</p><p className="mt-2 text-sm leading-6 text-muted-foreground">{question}</p><p className="mt-4 text-xs font-black text-primary">독립 수업 열기 →</p>

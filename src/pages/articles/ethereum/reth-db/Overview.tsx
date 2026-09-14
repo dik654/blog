@@ -15,8 +15,8 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         </p>
         <p>
           이 글은 <strong>block 1,000의 header·receipt·state change를 typed key/value로 encode하고 transaction commit 뒤 immutable
-          history로 옮기는 과정</strong>을 따라갑니다. B+tree와 MVCC의 일반 원리는 <Link to="/blockchain/mdbx-internals">MDBX 정본</Link>,
-          Reth 전체 storage owner는 <Link to="/blockchain/reth">Reth architecture</Link>를 재사용합니다.
+          history로 옮기는 과정</strong>을 따라갑니다. B+tree와 MVCC의 일반 원리는 <Link to="/cs/blockchain/mdbx-internals">MDBX 정본</Link>,
+          Reth 전체 storage owner는 <Link to="/cs/blockchain/reth">Reth architecture</Link>를 재사용합니다.
         </p>
       </div>
       <ContentBoundary article="reth-db" />

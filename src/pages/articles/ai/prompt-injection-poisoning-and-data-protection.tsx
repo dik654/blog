@@ -113,7 +113,7 @@ export default function PromptInjectionPoisoningAndDataProtectionArticle() {
         />
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           이 마지막 검사는{" "}
-          <Link to="/ai/llm-guardrails-and-output-validation#validation-methods">
+          <Link to="/cs/ai/llm-guardrails-and-output-validation#validation-methods">
             action validation
           </Link>{" "}
           이 실행 직전 tool 호출을 확인하는 지점과 같습니다. Injection은 지시가 들어오는
@@ -192,12 +192,12 @@ export default function PromptInjectionPoisoningAndDataProtectionArticle() {
         />
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           이 범위 축소는{" "}
-          <Link to="/ai/agent-control-boundaries#blast-radius">
+          <Link to="/cs/ai/agent-control-boundaries#blast-radius">
             blast radius·least privilege
           </Link>{" "}
           가 이미 정의한 것과 같은 원리를, credential 발급이라는 구체적인 지점에 적용한
           것입니다. 성공한 injection이 만든 effect는{" "}
-          <Link to="/ai/agent-verification#trajectory-effect">
+          <Link to="/cs/ai/agent-verification#trajectory-effect">
             trajectory·effect evaluation
           </Link>{" "}
           이 secret 전송 여부로 사후에 다시 검사합니다.
@@ -242,7 +242,7 @@ export default function PromptInjectionPoisoningAndDataProtectionArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           PII detection이 정규식과 model 기반을 함께 쓰는 이유는{" "}
-          <Link to="/ai/llm-guardrails-and-output-validation#rule-vs-model">
+          <Link to="/cs/ai/llm-guardrails-and-output-validation#rule-vs-model">
             rule-based·model-based guardrail
           </Link>{" "}
           의 latency-정확도 트레이드오프와 같은 축입니다. 여기서는 그 축을 텍스트 위험

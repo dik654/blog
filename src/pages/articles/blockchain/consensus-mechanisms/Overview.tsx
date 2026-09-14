@@ -22,9 +22,9 @@ export default function Overview() {
         </p>
         <p>
           Process·timing·failure와 safety/liveness는{" "}
-          <Link to="/blockchain/distributed-systems">분산 시스템 기초</Link>, 고정 membership
-          의 log agreement는 <Link to="/blockchain/smr-theory">SMR</Link>, Byzantine quorum
-          proof는 <Link to="/blockchain/bft-theory">BFT 이론</Link>에서 가져옵니다. 이 글은
+          <Link to="/cs/blockchain/distributed-systems">분산 시스템 기초</Link>, 고정 membership
+          의 log agreement는 <Link to="/cs/blockchain/smr-theory">SMR</Link>, Byzantine quorum
+          proof는 <Link to="/cs/blockchain/bft-theory">BFT 이론</Link>에서 가져옵니다. 이 글은
           permissionless membership에서 PoW·PoS가 그 원리를 어떻게 조합하는지를 다룹니다.
         </p>
       </div>

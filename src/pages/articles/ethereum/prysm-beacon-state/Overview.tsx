@@ -31,9 +31,9 @@ export default function Overview({
             protocol schema→immutable state view→copy-on-write mutation→dirty
             path→state root→fork upgrade
           </strong>{" "}
-          순서로 내려갑니다. <Link to="/blockchain/prysm-ssz">SSZ 글</Link>이
+          순서로 내려갑니다. <Link to="/cs/blockchain/prysm-ssz">SSZ 글</Link>이
           root 계산 규칙을,
-          <Link to="/blockchain/prysm"> Prysm 개요</Link>가 head·finality와의
+          <Link to="/cs/blockchain/prysm"> Prysm 개요</Link>가 head·finality와의
           차이를 소유하므로 여기서는 state value와 cache identity를 연결합니다.
         </p>
       </div>

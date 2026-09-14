@@ -202,7 +202,7 @@ T_{\rm replay}&=\underbrace{N\tau_E+\tau_{L,\rm graph}}_{\text{exec은 그대로
           <p>
             다른 stream이 event로 capture 중인 stream을 기다리면 그 stream도 capture에 합류하고,
             EndCapture 전에는 원래 stream으로 다시 join해야 합니다. 이 규칙이{" "}
-            <Link to="/gpu/cuda-sync-streams#events">event dependency</Link>를 그대로 edge로
+            <Link to="/cs/gpu/cuda-sync-streams#events">event dependency</Link>를 그대로 edge로
             옮기는 장치이며, join하지 않은 stream이 남아 있으면 EndCapture가 실패합니다.
           </p>
           <p id="graph-update" className="scroll-mt-24">
@@ -285,7 +285,7 @@ T_{\rm replay}&=\underbrace{N\tau_E+\tau_{L,\rm graph}}_{\text{exec은 그대로
             처럼 요청 구성에 따라 경로가 갈리는 backend는 vLLM 문서가 graph와 호환되지 않는다고
             적으며, 그런 부분은 eager로 남기고 나머지만 묶는 piecewise capture가 답입니다. 조건이
             깨졌을 때 나타나는 capture failure의 증상과 복구는{" "}
-            <Link to="/ai/launch-overhead-and-cpu-gpu-synchronization#capture-failure">
+            <Link to="/cs/ai/launch-overhead-and-cpu-gpu-synchronization#capture-failure">
               다음 글
             </Link>
             이 다룹니다.
@@ -364,7 +364,7 @@ T_{\rm replay}&=\underbrace{N\tau_E+\tau_{L,\rm graph}}_{\text{exec은 그대로
           </p>
           <p>
             낭비 비율이 그대로 step 시간 증가로 이어지지는 않습니다. decode가{" "}
-            <Link to="/ai/prefill-decode-phase-dynamics#arithmetic-intensity">memory-bound</Link>
+            <Link to="/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity">memory-bound</Link>
             인 구간에서는 padded 행도 같은 weight read를 나눠 쓰고 KV read는 길이 0이라 거의
             공짜입니다. 그래서 행 기준 40%를 버려도 step 시간은 몇 % 늘어나는 데 그치는 경우가
             흔하지만, batch가 커져 compute-bound로 넘어가면 낭비가 시간으로 그대로 나타납니다.
@@ -374,7 +374,7 @@ T_{\rm replay}&=\underbrace{N\tau_E+\tau_{L,\rm graph}}_{\text{exec은 그대로
             낭비는 줄지만 기동 때 size마다 forward 한 번과 instantiate를 치러야 하고,{" "}
             <code>cudagraph_num_of_warmups</code>만큼 warmup run이 앞에 붙습니다. size 60개에
             size당 100 ms면 기동이 6 초 늘어나는 셈이며, 이 준비 시간은{" "}
-            <Link to="/ai/inference-runtime-anatomy#warmup">runtime warmup</Link>의 일부입니다.
+            <Link to="/cs/ai/inference-runtime-anatomy#warmup">runtime warmup</Link>의 일부입니다.
           </p>
         </div>
         <ExplainedFormula
@@ -443,7 +443,7 @@ T_{\rm replay}&=\underbrace{N\tau_E+\tau_{L,\rm graph}}_{\text{exec은 그대로
             graph가 launch 비용을 지운 뒤에도 CPU 쪽 병목은 남을 수 있습니다. scheduler와 sampler가
             step마다 쓰는 시간, <code>.item()</code> 하나가 pipeline을 비우는 순간, capture가
             실패해 eager로 떨어졌을 때의 증상은 다음 글{" "}
-            <Link to="/ai/launch-overhead-and-cpu-gpu-synchronization">
+            <Link to="/cs/ai/launch-overhead-and-cpu-gpu-synchronization">
               Launch overhead와 CPU–GPU 동기화
             </Link>
             가 이어서 다룹니다.

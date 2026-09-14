@@ -23,8 +23,8 @@ export default function Overview() {
           학습했다는 주장을 검증할 수 없습니다.
         </p>
         <p>
-          Forward·backpropagation과 optimizer의 수학은 <Link to="/ai/backprop-optimization">역전파 글</Link>과
-          <Link to="/ai/optimizers"> optimizer 글</Link>이 소유합니다. 이 글에서는
+          Forward·backpropagation과 optimizer의 수학은 <Link to="/cs/ai/backprop-optimization">역전파 글</Link>과
+          <Link to="/cs/ai/optimizers"> optimizer 글</Link>이 소유합니다. 이 글에서는
           그 계산을 둘러싼 data·phase·resume·observation contract에 집중합니다.
         </p>
       </div>

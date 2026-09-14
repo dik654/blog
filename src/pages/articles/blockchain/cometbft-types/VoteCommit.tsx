@@ -56,7 +56,7 @@ export default function VoteCommit({
           검증 결과를 따로 기록합니다.
         </p>
         <p>
-          왜 두 quorum이 honest validator에서 겹치는지는 <Link to="/blockchain/bft-theory#faulty-threshold">BFT의
+          왜 두 quorum이 honest validator에서 겹치는지는 <Link to="/cs/blockchain/bft-theory#faulty-threshold">BFT의
           3f+1·2f+1 정본</Link>에서 증명합니다. 여기서는 그 수학을 반복하지 않고, 실제 certificate 검증에 어떤
           coordinates·snapshot·signature가 필요한지를 소유합니다.
         </p>

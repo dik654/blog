@@ -32,9 +32,9 @@ export default function LlmGuardrailsAndOutputValidationArticle() {
           </p>
           <p>
             되돌리기 어려운 action 앞에 checkpoint를 두는 경계는{" "}
-            <Link to="/ai/agent-control-boundaries#blast-radius">agent control boundary</Link> 글이,
+            <Link to="/cs/ai/agent-control-boundaries#blast-radius">agent control boundary</Link> 글이,
             결과·경로·비용을 독립적으로 채점하는 검증층은{" "}
-            <Link to="/ai/agent-verification#layers">agent verification</Link> 글이 이미 다룹니다.
+            <Link to="/cs/ai/agent-verification#layers">agent verification</Link> 글이 이미 다룹니다.
             이 글은 그 검증층 중 실행 전에 입력·출력·tool 호출을 실시간으로 거르는 guardrail
             자체를 채웁니다.
           </p>
@@ -243,7 +243,7 @@ export default function LlmGuardrailsAndOutputValidationArticle() {
           </p>
           <p>
             이 approval gate 자체는 새 mechanism이 아니라{" "}
-            <Link to="/ai/agent-failure-modes-and-recovery#human-in-the-loop-escalation">
+            <Link to="/cs/ai/agent-failure-modes-and-recovery#human-in-the-loop-escalation">
               human-in-the-loop·escalation policy
             </Link>{" "}
             글이 이미 정의한 지점을 그대로 씁니다. 그 글은 retry로 해결되지 않는 agent 실행

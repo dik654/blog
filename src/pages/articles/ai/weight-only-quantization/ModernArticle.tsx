@@ -19,7 +19,7 @@ export default function WeightOnlyQuantizationArticle() {
             precision으로 유지하는 배포 방식입니다.
           </p>
           <p>
-            <a href="/ai/quantization">Quantizer 기초</a>에서 element error를
+            <a href="/cs/ai/quantization">Quantizer 기초</a>에서 element error를
             배웠다면, 여기서는 실제 calibration input을 통과한 layer output을
             보존하는 이유를 봅니다.
           </p>

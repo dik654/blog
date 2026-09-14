@@ -75,7 +75,7 @@ export default function Overview() {
         </p>
         <p className="leading-8">
           Preference alignment의 일반적인 feedback과 policy 경계는{" "}
-          <Link to="/ai/rlhf">RLHF 정본 글</Link>에서 먼저 볼 수 있고, 여기서는
+          <Link to="/cs/ai/rlhf">RLHF 정본 글</Link>에서 먼저 볼 수 있고, 여기서는
           자동으로 정답을 확인할 수 있는 RLVR(Reinforcement Learning with
           Verifiable Rewards)와 Open-R1의 재현 계약에 집중합니다.
         </p>

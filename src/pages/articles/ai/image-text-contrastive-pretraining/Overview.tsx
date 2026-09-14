@@ -35,9 +35,9 @@ export default function Overview() {
 
         <p className="leading-7">
           같은 이미지의 두 변형을 끌어당기는 일반적인 대조학습은{" "}
-          <Link to="/ai/contrastive-learning#pair-contract">대조학습</Link>이 소유합니다. 이 글은 짝의 한쪽이
+          <Link to="/cs/ai/contrastive-learning#pair-contract">대조학습</Link>이 소유합니다. 이 글은 짝의 한쪽이
           이미지가 아니라 문장일 때 달라지는 부분만 다루고, 만들어진 벡터를 검색에 쓰는 실무는{" "}
-          <Link to="/ai/image-embedding-pipeline">이미지 임베딩 파이프라인</Link>으로 이어집니다.
+          <Link to="/cs/ai/image-embedding-pipeline">이미지 임베딩 파이프라인</Link>으로 이어집니다.
         </p>
       </div>
 

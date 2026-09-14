@@ -52,7 +52,7 @@ export default function DelegationContractsArticle() {
         <h2 className="mb-5 text-2xl font-bold">Parallel fan-out은 독립성과 merge algebra가 있을 때만 안전합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>서로 다른 문서를 읽어 evidence record를 만드는 작업은 병렬화하기 쉽습니다. 같은 file section을 고치는 작업은 독립적이지 않습니다. 결과 순서가 달라도 같은 값이 되는 commutative merge, 같은 receipt를 두 번 적용해도 한 번과 같은 idempotency, 또는 conflict detector가 없다면 coordinator가 serial writer가 되어야 합니다.</p>
-          <p>Checkpoint·context isolation·merge 구현은 <Link to="/ai/multi-agent-implementation">Multi-agent 구현</Link> 글에서 이어집니다.</p>
+          <p>Checkpoint·context isolation·merge 구현은 <Link to="/cs/ai/multi-agent-implementation">Multi-agent 구현</Link> 글에서 이어집니다.</p>
         </div>
         <div id="paper-openai-agent-guide" className="not-prose mt-8 scroll-mt-24">
           <CitationBlock source="OpenAI — A practical guide to building agents" citeKey={4} href="https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/">Single-agent에서 시작해 manager·handoff orchestration, guardrail, human intervention과 exit 조건을 추가하는 실무 기준을 설명합니다. 특정 vendor 구성이나 multi-agent의 보편적 성능 우위를 입증하는 benchmark로 확대하지 않습니다.</CitationBlock>

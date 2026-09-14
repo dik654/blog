@@ -19,7 +19,7 @@ export default function PtqCalibrationArticle() {
             artifact를 만드는 절차입니다.
           </p>
           <p>
-            먼저 <a href="/ai/quantization">quantizer의 scale·clipping</a>을
+            먼저 <a href="/cs/ai/quantization">quantizer의 scale·clipping</a>을
             이해해야 합니다. 이 글은 scale을 어디에서 공유하고 어떤 표본으로
             검증하는지만 다룹니다.
           </p>
@@ -82,7 +82,7 @@ export default function PtqCalibrationArticle() {
           </p>
           <p>
             Weight만 4bit로 저장하고 activation은 그대로 두면{" "}
-            <Link to="/ai/weight-only-quantization#overview">
+            <Link to="/cs/ai/weight-only-quantization#overview">
               weight-only quantization
             </Link>
             이라 부르고, 둘 다 8bit로 낮추면 W8A8이라고 표기합니다. 이 글의

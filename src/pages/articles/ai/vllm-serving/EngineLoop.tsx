@@ -167,9 +167,9 @@ M_{KV}^{need} &\le \underbrace{M_{KV}^{free}}_{\text{오른쪽 항으로 결과 
         <p className="leading-8">
           논문의 throughput 수치는 당시 model·GPU·workload·vLLM 구현에서 나온
           결과이며 현재 배포의 보장값이 아닙니다. Block table과 reference count의
-          상세 실행은 <Link to="/ai/vllm-paged-attention">PagedAttention 글</Link>,
+          상세 실행은 <Link to="/cs/ai/vllm-paged-attention">PagedAttention 글</Link>,
           token budget과 preemption 순서는
-          <Link to="/ai/vllm-scheduler">Scheduler 글</Link>에서 중복 없이
+          <Link to="/cs/ai/vllm-scheduler">Scheduler 글</Link>에서 중복 없이
           이어집니다.
         </p>
       </div>

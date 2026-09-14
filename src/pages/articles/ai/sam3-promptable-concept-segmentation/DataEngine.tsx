@@ -45,7 +45,7 @@ export default function DataEngine() {
           남은 한계도 분명합니다. 보고된 강점은 일상적인 개념 어휘에서 나오고, 학습 분포 밖의 전문 용어에는
           약합니다. 도메인을 넓히는 방법이 있긴 하지만 추가 학습이 필요하다고 논문 스스로 적고 있습니다. 얼린
           모델을 그대로 다른 도메인에 옮길 때의 일반적인 주의는{" "}
-          <Link to="/ai/dinov3-self-supervised-backbone#use-boundary">얼린 backbone 평가</Link>에서 정리한 기준과
+          <Link to="/cs/ai/dinov3-self-supervised-backbone#use-boundary">얼린 backbone 평가</Link>에서 정리한 기준과
           같습니다.
         </p>
       </div>

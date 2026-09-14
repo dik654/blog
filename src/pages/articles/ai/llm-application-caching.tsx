@@ -31,7 +31,7 @@ export default function LlmApplicationCachingArticle() {
             종류가 무엇을 key로 삼고 무엇을 hit 판정 기준으로 삼는지 봅니다.
           </p>
           <p>
-            <Link to="/ai/vllm-paged-attention#prefix-caching">vLLM paged attention</Link>{" "}
+            <Link to="/cs/ai/vllm-paged-attention#prefix-caching">vLLM paged attention</Link>{" "}
             글은 이미 GPU 안에서 KV 값을 재사용하는 prefix caching을 다뤘습니다. 그 캐시는
             model runtime 내부의 attention 계산 결과를 저장합니다. 이 글이 다루는 application
             cache는 그보다 위층, 즉 애플리케이션 코드가 LLM 호출·검색·도구 실행 자체를
@@ -244,7 +244,7 @@ export default function LlmApplicationCachingArticle() {
             threshold·TTL·warming(다음 절) 설정을 바꿀 때마다 함께 움직이므로 캐시 설정을 조정한 뒤 반드시 다시 재보는 지표입니다.
           </p>
           <p>
-            <Link to="/ai/vllm-paged-attention#prefix-operations">
+            <Link to="/cs/ai/vllm-paged-attention#prefix-operations">
               vLLM paged attention
             </Link>{" "}
             글의 prefix cache hit rate는 이 식과 같은 형태를 GPU 안 KV block 재사용에

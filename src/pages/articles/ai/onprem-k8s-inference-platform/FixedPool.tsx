@@ -72,7 +72,7 @@ export default function FixedPool() {
 
         <p className="leading-7">
           부하에 대한 용량 산정과 대기열 이론 쪽 근거는{" "}
-          <Link to="/ai/inference-cost-and-capacity-planning">추론 비용과 용량 계획</Link>이 소유합니다. 이
+          <Link to="/cs/ai/inference-cost-and-capacity-planning">추론 비용과 용량 계획</Link>이 소유합니다. 이
           절은 총량이 고정일 때 그 산정이 무엇으로 바뀌는지만 다뤘습니다.
         </p>
       </div>

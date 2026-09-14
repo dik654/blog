@@ -74,7 +74,7 @@ export default function TokenBudget() {
         <p className="leading-7">
           이 관계를 뒤집으면 실무 규칙이 나옵니다. 리파인은 프레임 전체가 아니라 영역별로 걸어야 하고, 각
           영역은 그 안의 대상이 충분한 칸을 받을 만큼 크게 잘라 보내야 합니다. 잠재 공간의 압축 비율 자체는{" "}
-          <Link to="/ai/latent-diffusion-guidance#compression">잠재 확산</Link>이 소유합니다.
+          <Link to="/cs/ai/latent-diffusion-guidance#compression">잠재 확산</Link>이 소유합니다.
         </p>
       </div>
 

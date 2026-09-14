@@ -20,7 +20,7 @@ export default function Training({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           IC-LoRA는 새 objective를 만들지 않습니다. 학습 목적함수는{" "}
-          <Link to="/ai/diffusion-continuous-time#flow-matching">
+          <Link to="/cs/ai/diffusion-continuous-time#flow-matching">
             flow matching
           </Link>{" "}
           그대로이고, IC-LoRA가 바꾸는 것은 그 objective를 <em>어느 latent에</em>{" "}
@@ -94,7 +94,7 @@ export default function Training({
         <h3>Reference를 '과거'로 명시하는 negative position</h3>
         <p>
           Context를 이어붙이기만 하면{" "}
-          <Link to="/ai/yarn-rope-extension#rope-foundation">RoPE</Link>
+          <Link to="/cs/ai/yarn-rope-extension#rope-foundation">RoPE</Link>
           는 reference와 target을 같은 시간축 위의 서로 다른 위치로
           해석합니다. 이 위치 순서가 뒤섞이지 않도록, ID-LoRA는 reference
           block 전체를 target(<code>t=0</code>에서 시작)보다 확실히 이전

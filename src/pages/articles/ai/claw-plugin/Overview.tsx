@@ -27,10 +27,10 @@ export default function Overview() {
         <p>
           이 글은 plugin package의 발견, exact artifact에 대한 신뢰 결정,
           subprocess lifecycle과 update를 소유합니다. 등록된 tool의 공통 호출
-          계약은 <a href="/ai/claw-tool-system">tool system 글</a>이, hook의
-          제한 규칙은 <a href="/ai/claw-hooks">hook 글</a>이 소유합니다. MCP는
+          계약은 <a href="/cs/ai/claw-tool-system">tool system 글</a>이, hook의
+          제한 규칙은 <a href="/cs/ai/claw-hooks">hook 글</a>이 소유합니다. MCP는
           독립 프로토콜과 transport를 가진 외부 서버 연결이므로
-          <a href="/ai/claw-mcp"> MCP lifecycle 글</a>에서 별도로 다룹니다.
+          <a href="/cs/ai/claw-mcp"> MCP lifecycle 글</a>에서 별도로 다룹니다.
         </p>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">

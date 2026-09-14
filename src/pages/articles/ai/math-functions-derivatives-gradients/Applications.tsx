@@ -4,17 +4,17 @@ const links = [
   {
     title: "Activation function",
     detail: "Sigmoid·tanh·ReLU의 출력 범위와 derivative가 gradient flow를 어떻게 바꾸는지 읽습니다.",
-    href: "/ai/activation-functions#overview",
+    href: "/cs/ai/activation-functions#overview",
   },
   {
     title: "Backpropagation",
     detail: "계산 그래프의 local derivative를 뒤에서 앞으로 재사용하는 reverse-mode 계산으로 확장합니다.",
-    href: "/ai/reverse-mode-autodiff#reverse-mode",
+    href: "/cs/ai/reverse-mode-autodiff#reverse-mode",
   },
   {
     title: "Optimizer",
     detail: "Gradient를 실제 parameter update로 바꿀 때 learning rate와 state가 맡는 역할을 구분합니다.",
-    href: "/ai/optimizers#overview",
+    href: "/cs/ai/optimizers#overview",
   },
 ] as const;
 

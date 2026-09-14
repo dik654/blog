@@ -20,7 +20,7 @@ export default function RewardDesignForVerifiableRlArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <Link to="/ai/rl-foundations-for-llm-post-training#credit-assignment">
+            <Link to="/cs/ai/rl-foundations-for-llm-post-training#credit-assignment">
               앞 글
             </Link>
             은 policy gradient 가 return 을 어느 action 에 credit 으로 돌려줄지의
@@ -52,7 +52,7 @@ export default function RewardDesignForVerifiableRlArticle() {
           <p>
             RLVR 의 reward 는 사람이 채점하거나 학습한 reward model 이 아니라
             math parser·code sandbox·정답 checker 같은 verifier 가 직접
-            계산합니다. <Link to="/ai/open-r1#reward-system">Open-R1 의
+            계산합니다. <Link to="/cs/ai/open-r1#reward-system">Open-R1 의
             versioned verifier measurement</Link> 가 바로 이 verifier reward
             를 outcome 과 확인하지 못한 범위로 나눠 기록하는 계약이며, 이
             글은 그 verifier reward 를 reward 설계의 한 재료로 다룹니다.
@@ -268,7 +268,7 @@ export default function RewardDesignForVerifiableRlArticle() {
             여기까지가 reward 자체의 설계 축입니다. 이 reward 로 student
             policy 를 직접 update 하는 대신 teacher 의 token 단위 확률
             분포를 신호로 쓰는 방법은{" "}
-            <Link to="/ai/on-policy-distillation#teacher-feedback">
+            <Link to="/cs/ai/on-policy-distillation#teacher-feedback">
               on-policy distillation
             </Link>
             이 다룹니다.

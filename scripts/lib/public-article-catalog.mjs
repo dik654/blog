@@ -55,6 +55,7 @@ export async function loadPublicArticleCatalog({ root = process.cwd() } = {}) {
 
   try {
     const { categories } = await server.ssrLoadModule("/src/content/index.ts");
+    const { domainOf } = await server.ssrLoadModule("/src/content/domains.ts");
     const catalog = [];
     const routes = new Set();
 
@@ -76,6 +77,8 @@ export async function loadPublicArticleCatalog({ root = process.cwd() } = {}) {
 
         catalog.push({
           route,
+          // 공개 URL은 대분류가 앞에 붙습니다. route는 데이터 식별자로 남습니다.
+          publicPath: `${domainOf(category.slug)}/${route}`,
           title: article.title,
           subcategory: article.subcategory,
           sourceSpecifier,

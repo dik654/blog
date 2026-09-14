@@ -18,7 +18,7 @@ export default function VisionLanguageNavigationArticle() {
           <p className="text-lg leading-8">
             Vision-Language Navigation(VLN)은 언어 instruction("복도 끝까지 가서 왼쪽 방으로
             들어가")을 보고 실제 environment를 이동하는 embodied task입니다. 이 글은{" "}
-            <Link to="/ai/imitation-learning-and-policy-generalization">
+            <Link to="/cs/ai/imitation-learning-and-policy-generalization">
               앞 글
             </Link>의 policy generalization 축이 navigation에서 구체적으로 어떤 action space,
             memory, reward 구조로 나타나는지를 봅니다.
@@ -54,7 +54,7 @@ export default function VisionLanguageNavigationArticle() {
           </p>
           <p>
             선택한 waypoint를 실제 3D 목표로 바꾸는 절차는 새로 만들 필요가 없습니다.{" "}
-            <Link to="/ai/vla-embodiment-gap#pixel-to-3d">Pixel-to-3D waypoint interface</Link>가
+            <Link to="/cs/ai/vla-embodiment-gap#pixel-to-3d">Pixel-to-3D waypoint interface</Link>가
             image에서 고른 점을 depth·camera calibration으로 map frame의 3D 위치로 바꾸는 절차를
             이미 정의하고 있고, VLN의 waypoint prediction은 그 입력을 만드는 앞단입니다.
           </p>
@@ -120,7 +120,7 @@ export default function VisionLanguageNavigationArticle() {
           </p>
           <p>
             이 구조는{" "}
-            <Link to="/ai/vla-embodiment-gap#system-boundary">hierarchical VLA system
+            <Link to="/cs/ai/vla-embodiment-gap#system-boundary">hierarchical VLA system
             boundary</Link>의 한 구체적 사례입니다. 느린 semantic 판단과 빠른 geometry·control을
             나누는 원칙을, "언제 semantic 판단을 다시 호출할지"까지 조건화한 것이 selective
             reasoning입니다.
@@ -189,7 +189,7 @@ export default function VisionLanguageNavigationArticle() {
             "어디로 갈지"를 정하는 고수준 계획과 "어떻게 그곳에 갈지"를 정하는 저수준 제어를 하나의
             reward로 뭉치면, 목적지는 맞았지만 경로가 비효율적이었는지, 경로는 효율적이었지만
             목적지가 틀렸는지 구분할 수 없습니다. Two-level alignment는 이 둘을{" "}
-            <Link to="/ai/reward-design-for-verifiable-rl#outcome-vs-process">
+            <Link to="/cs/ai/reward-design-for-verifiable-rl#outcome-vs-process">
               outcome reward와 process reward
             </Link>
             로 나눠 각각 정렬합니다.

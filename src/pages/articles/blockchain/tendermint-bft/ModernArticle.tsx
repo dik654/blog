@@ -11,7 +11,7 @@ export default function ModernTendermintArticle() {
             Validator는 key 개수가 아니라 voting power로 투표하며 같은 round에서 특정 block에 전체 power의 2/3를 초과하는 precommit이 모이면
             그 block을 commit합니다.
           </p>
-      <p>Height는 결정할 block 위치이고 round는 그 height에서 proposer를 바꾸며 다시 시도하는 번호입니다. Step은 Propose, Prevote, Precommit, Commit처럼 현재 기다리는 evidence를 나타냅니다. Network가 느리거나 proposer가 offline이면 timeout으로 다음 step·round에 갈 수 있지만, timeout은 상대가 Byzantine이라는 증명도, 이전 lock을 지우는 권한도 아닙니다. 이 일반 원리의 정본은 <a className="text-primary underline-offset-4 hover:underline" href="/blockchain/bft-theory#safety-liveness">BFT lock·partial synchrony</a>에 있고 현재 CometBFT 구현의 event loop는 <a className="text-primary underline-offset-4 hover:underline" href="/blockchain/cometbft-consensus#overview">CometBFT consensus</a>에서 이어집니다.</p>
+      <p>Height는 결정할 block 위치이고 round는 그 height에서 proposer를 바꾸며 다시 시도하는 번호입니다. Step은 Propose, Prevote, Precommit, Commit처럼 현재 기다리는 evidence를 나타냅니다. Network가 느리거나 proposer가 offline이면 timeout으로 다음 step·round에 갈 수 있지만, timeout은 상대가 Byzantine이라는 증명도, 이전 lock을 지우는 권한도 아닙니다. 이 일반 원리의 정본은 <a className="text-primary underline-offset-4 hover:underline" href="/cs/blockchain/bft-theory#safety-liveness">BFT lock·partial synchrony</a>에 있고 현재 CometBFT 구현의 event loop는 <a className="text-primary underline-offset-4 hover:underline" href="/cs/blockchain/cometbft-consensus#overview">CometBFT consensus</a>에서 이어집니다.</p>
       <TendermintRoundViz />
       <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> prevote quorum은 “이 round에서 lock을 만들거나 바꿀 수 있는 근거”를 만들고, precommit quorum은 block을 결정합니다. Round가 올라가도 honest validator의 lock은 더 높은 round의 정당한 prevote evidence 없이는 바뀌지 않습니다.</aside>
     </section>

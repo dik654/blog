@@ -22,11 +22,11 @@ export default function Overview({ onCodeRef }: { onCodeRef?: (key: string, ref:
           어렵습니다.
         </p>
         <p>
-          <Link to="/p2p/tls-fundamentals">TLS 1.3</Link>도 authenticated secure channel을
+          <Link to="/cs/p2p/tls-fundamentals">TLS 1.3</Link>도 authenticated secure channel을
           만들지만 certificate·transcript·key schedule을 소유합니다. 이 글은 Noise
           Framework 전체가 아니라 libp2p가 고정한 XX/25519/ChaChaPoly/SHA256 조합과
           identity-binding payload를 소유합니다. 이 output이 stack에 들어가는 위치는
-          <Link to="/p2p/libp2p"> libp2p 연결 조립 글</Link>에서 이어집니다.
+          <Link to="/cs/p2p/libp2p"> libp2p 연결 조립 글</Link>에서 이어집니다.
         </p>
       </div>
       <ContentBoundary article="libp2p-noise" />

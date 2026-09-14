@@ -15,7 +15,7 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
             validator vote에는 관여하지 않습니다. Engine API는 이 두 판단을 합치지 않은 채 검증·chain pointer 갱신·다음 payload 생성을 순서대로
             조정합니다.
           </p>
-        <p>이 글은 JSON-RPC 메서드 이름을 외우는 대신 <strong>수신 payload 검증 → fork-choice 적용 → build handle 발급 → payload 회수</strong>를 block hash 하나로 추적합니다. 먼저 <Link to="/blockchain/prysm">Prysm 전체 지도</Link>의 consensus/execution owner 경계를 짧게 재사용하고, 이 글에서는 method version·status·latestValidHash·payloadId·JWT가 만드는 Engine 전용 계약만 정의합니다.</p>
+        <p>이 글은 JSON-RPC 메서드 이름을 외우는 대신 <strong>수신 payload 검증 → fork-choice 적용 → build handle 발급 → payload 회수</strong>를 block hash 하나로 추적합니다. 먼저 <Link to="/cs/blockchain/prysm">Prysm 전체 지도</Link>의 consensus/execution owner 경계를 짧게 재사용하고, 이 글에서는 method version·status·latestValidHash·payloadId·JWT가 만드는 Engine 전용 계약만 정의합니다.</p>
       </div>
       <ContentBoundary article="prysm-engine-api" />
       <ContextViz />

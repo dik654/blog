@@ -70,7 +70,7 @@ export default function Overview() {
         <p>
           FRI는{" "}
           <a
-            href="/crypto/reed-solomon"
+            href="/cs/crypto/reed-solomon"
             className="text-indigo-400 hover:underline"
           >
             Reed-Solomon 부호

@@ -11,7 +11,7 @@ export default function ModernProofsSnark() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">같은 크기 회로 8개를 Groth16 proof batch로 만들기</p><h2 className="text-3xl font-bold tracking-tight">Bellperson 구현에서 먼저 볼 것은 SNARK 공식이 아니라 assignment가 어느 prover path로 넘어가는가이다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">고정 workload는 같은 회로 8개에 서로 다른 witness를 넣어 proof 8개를 만드는 작업입니다. <a className="text-primary hover:underline" href="/crypto/groth16">Groth16 정본</a>은 QAP와 pairing 검증을 설명하고, <a className="text-primary hover:underline" href="/gpu/filecoin-gpu-proofs">GPU proof pipeline</a>은 FFT·MSM 가속의 공통 경계를 설명합니다. 이 글은 pinned bellperson 코드에서 assignment artifact, feature-selected dispatch, SupraSeal FFI receipt가 어떻게 이어지는지만 소유합니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">고정 workload는 같은 회로 8개에 서로 다른 witness를 넣어 proof 8개를 만드는 작업입니다. <a className="text-primary hover:underline" href="/cs/crypto/groth16">Groth16 정본</a>은 QAP와 pairing 검증을 설명하고, <a className="text-primary hover:underline" href="/cs/gpu/filecoin-gpu-proofs">GPU proof pipeline</a>은 FFT·MSM 가속의 공통 경계를 설명합니다. 이 글은 pinned bellperson 코드에서 assignment artifact, feature-selected dispatch, SupraSeal FFI receipt가 어떻게 이어지는지만 소유합니다.</p>
       <BellpersonSnarkViz /><ContentBoundary article="proofs-snark" />
     </section>
 

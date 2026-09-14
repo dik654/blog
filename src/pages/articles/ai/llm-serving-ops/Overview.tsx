@@ -21,8 +21,8 @@ export default function Overview() {
           계약은 “평균 100 tokens/s” 같은 한 숫자가 아니라, workload별
           TTFT·TPOT·완료율·비용과 허용할 context·tool·data region을 함께
           뜻합니다. 엔진 내부의 continuous batching과 KV cache 원리는{" "}
-          <Link to="/ai/vllm-serving">vLLM 서빙 구조</Link>, scheduler 세부
-          동작은 <Link to="/ai/vllm-scheduler">vLLM scheduler</Link>가
+          <Link to="/cs/ai/vllm-serving">vLLM 서빙 구조</Link>, scheduler 세부
+          동작은 <Link to="/cs/ai/vllm-scheduler">vLLM scheduler</Link>가
           소유하므로 이 글에서는 반복하지 않습니다.
         </p>
       </div>

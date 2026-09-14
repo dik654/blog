@@ -52,8 +52,8 @@ export default function InferenceRuntimeAnatomyArticle() {
           </p>
           <p>
             scheduler 가 한 step 에서 무엇을 고르는지는{" "}
-            <Link to="/ai/vllm-scheduler">vLLM Scheduler</Link> 글이, 요청 lifecycle 과 latency
-            분해는 <Link to="/ai/vllm-serving#serving-architecture">vLLM 입문</Link> 글이
+            <Link to="/cs/ai/vllm-scheduler">vLLM Scheduler</Link> 글이, 요청 lifecycle 과 latency
+            분해는 <Link to="/cs/ai/vllm-serving#serving-architecture">vLLM 입문</Link> 글이
             다룹니다. 여기서는 그 scheduler 가 돌기 전에 무엇이 준비돼야 하는지만 봅니다.
           </p>
         </div>
@@ -105,7 +105,7 @@ export default function InferenceRuntimeAnatomyArticle() {
           <p>
             Sharding 축은 layer 종류마다 다릅니다. attention 의 Q·K·V projection 은 head 단위로
             열을 나누고, 그 뒤의 output projection 은 행을 나눠 all-reduce 한 번으로 합칩니다.
-            어느 축으로 나누는지는 <Link to="/ai/vllm-serving#parallel-layout">DP·TP·PP layout</Link>{" "}
+            어느 축으로 나누는지는 <Link to="/cs/ai/vllm-serving#parallel-layout">DP·TP·PP layout</Link>{" "}
             규칙을 따르며, loader 는 그 규칙대로 checkpoint 를 잘라 넣습니다.
           </p>
         </div>
@@ -252,7 +252,7 @@ export default function InferenceRuntimeAnatomyArticle() {
             Profile run 이 재는 것은 이 config 에서 가능한 최대 batch 를 한 번 돌렸을 때의 non-KV
             peak 입니다. max_num_seqs 와 max_model_len 을 키우면 peak 가 커져 KV pool 이
             줄어듭니다. 그 trade-off 를 token 수와 동시 요청 수로 환산하는 일은{" "}
-            <Link to="/ai/llm-serving-capacity#capacity">serving capacity</Link> 글이 맡습니다.
+            <Link to="/cs/ai/llm-serving-capacity#capacity">serving capacity</Link> 글이 맡습니다.
           </p>
           <p>
             vLLM 은 이 절차가 끝나면 profile, KV cache 생성, warmup 에 걸린 시간을 한 줄로
@@ -282,7 +282,7 @@ export default function InferenceRuntimeAnatomyArticle() {
             dummy run 을 하고, enforce_eager 가 아니면 capture_model 로 graph 를 기록합니다.
             capture 는 batch shape 하나마다 forward 한 번이므로 size 목록의 길이가 곧 warmup
             시간입니다. graph 의 동작 원리는{" "}
-            <Link to="/ai/cuda-graph-capture#mechanics">CUDA graph</Link> 글이 소유합니다.
+            <Link to="/cs/ai/cuda-graph-capture#mechanics">CUDA graph</Link> 글이 소유합니다.
           </p>
           <p>
             Eager initialization 은 이 모든 준비를 ready 신호 전에 끝냅니다. lazy initialization 은 실제로 그 shape 나 kernel 이
@@ -358,9 +358,9 @@ export default function InferenceRuntimeAnatomyArticle() {
           </p>
           <p>
             다음 읽기는 확정된 KV pool 이 요청마다 어떻게 잘려 나가는지 다루는{" "}
-            <Link to="/ai/vllm-paged-attention">PagedAttention</Link> 글과, 그 pool 이 몇 개의
+            <Link to="/cs/ai/vllm-paged-attention">PagedAttention</Link> 글과, 그 pool 이 몇 개의
             동시 요청을 감당하는지 계산하는{" "}
-            <Link to="/ai/model-vram-budgeting#known-floor">VRAM budgeting</Link> 글입니다.
+            <Link to="/cs/ai/model-vram-budgeting#known-floor">VRAM budgeting</Link> 글입니다.
           </p>
         </div>
       </section>

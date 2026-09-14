@@ -76,7 +76,7 @@ export default function STARKUsage() {
         </h3>
         <p>
           <a
-            href="/crypto/reed-solomon"
+            href="/cs/crypto/reed-solomon"
             className="text-indigo-400 hover:underline"
           >
             Reed-Solomon 부호
@@ -88,7 +88,7 @@ export default function STARKUsage() {
           가깝다면 원래 다항식의 차수가 <Math>{"d"}</Math> 미만이라는 뜻이다.
           <br />
           평가 도메인은{" "}
-          <a href="/crypto/fft" className="text-indigo-400 hover:underline">
+          <a href="/cs/crypto/fft" className="text-indigo-400 hover:underline">
             FFT/NTT
           </a>
           와 동일한 곱셈 부분군(multiplicative subgroup)을 사용한다

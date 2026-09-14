@@ -70,7 +70,7 @@ export default function ThreeSignals() {
 
         <p className="leading-7">
           탐지 실패와 낮은 유사도를 구분해 읽는 법은{" "}
-          <Link to="/ai/generative-measurement-controls#identity-metric">계측기 검증</Link>이 소유합니다.
+          <Link to="/cs/ai/generative-measurement-controls#identity-metric">계측기 검증</Link>이 소유합니다.
           이 절은 그 구분을 후면 뷰 판정에 쓴 사례입니다.
         </p>
       </div>

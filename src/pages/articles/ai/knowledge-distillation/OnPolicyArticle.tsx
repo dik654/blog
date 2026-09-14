@@ -105,7 +105,7 @@ export default function OnPolicyDistillationArticle() {
           고정 데이터)만 그대로 모방하는 것은{" "}
           <Link
             className="text-primary hover:underline"
-            to="/ai/rl-foundations-for-llm-post-training#on-vs-off-policy"
+            to="/cs/ai/rl-foundations-for-llm-post-training#on-vs-off-policy"
           >
             on-policy·off-policy 학습
           </Link>
@@ -356,7 +356,7 @@ export default function OnPolicyDistillationArticle() {
           아닙니다. 같은 on-policy·multi-teacher 틀에서도 teacher interface는
           full distribution, top-k logits, chosen-token scalar처럼 달라질 수
           있습니다. Motif의 정확한 식과 7-teacher pipeline은{" "}
-          <Link className="text-primary hover:underline" to="/ai/motif-3-architecture#post-training">
+          <Link className="text-primary hover:underline" to="/cs/ai/motif-3-architecture#post-training">
             Motif 3 구조 글
           </Link>
           이 소유합니다.
@@ -391,7 +391,7 @@ export default function OnPolicyDistillationArticle() {
           같은 model 세대를 teacher로 반복하는 문제는{" "}
           <a
             className="text-primary hover:underline"
-            href="/ai/self-distillation"
+            href="/cs/ai/self-distillation"
           >
             self-distillation
           </a>

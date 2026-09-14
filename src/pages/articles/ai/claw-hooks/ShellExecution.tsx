@@ -112,7 +112,7 @@ export default function ShellExecution() {
           subprocess라는 이유만으로 격리되는 것은 아닙니다. non-root, read-only
           root filesystem, 제한된 writable path, seccomp·resource limit와 egress
           policy를 위협 모델에 맞게 적용합니다. 구체적인 shell validation과
-          sandbox의 한계는 <a href="/ai/claw-bash">Bash 실행과 검증</a>에서
+          sandbox의 한계는 <a href="/cs/ai/claw-bash">Bash 실행과 검증</a>에서
           이어서 확인할 수 있습니다.
         </p>
       </div>

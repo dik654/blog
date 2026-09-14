@@ -28,8 +28,8 @@ export default function Overview({
             snapshot→pruning fence→recovery
           </strong>{" "}
           순서로 진행합니다.{" "}
-          <Link to="/blockchain/prysm-beacon-state">BeaconState 값</Link>과{" "}
-          <Link to="/blockchain/prysm-finality">finality 규칙</Link>은
+          <Link to="/cs/blockchain/prysm-beacon-state">BeaconState 값</Link>과{" "}
+          <Link to="/cs/blockchain/prysm-finality">finality 규칙</Link>은
           재사용하고 DB schema·atomicity·retention만 소유합니다.
         </p>
       </div>

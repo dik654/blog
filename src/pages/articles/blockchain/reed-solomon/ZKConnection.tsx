@@ -45,7 +45,7 @@ export default function ZKConnection() {
           duplicate/wrong index, malformed symbol, mixed object, timeout, crash/restart를
           base와 candidate에 재생해 bytes와 typed outcome parity를 확인합니다.
           ZK 사용은 domain·degree·commitment·challenge transcript를 추가로 고정하고
-          <Link to="/crypto/fri"> FRI 정본</Link>의 proof vectors를 사용합니다.
+          <Link to="/cs/crypto/fri"> FRI 정본</Link>의 proof vectors를 사용합니다.
           그 뒤에 throughput, peak memory, repair bandwidth를 비교합니다.
         </p>
       </div>

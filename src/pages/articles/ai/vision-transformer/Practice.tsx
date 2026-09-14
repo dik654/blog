@@ -81,8 +81,8 @@ d&\le\varepsilon.
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Smoke test 뒤 head-only·partial·full fine-tuning은
-          <Link to="/ai/transfer-learning-practice">transfer learning 정본</Link>, warmup과
-          decay는 <Link to="/ai/lr-scheduling">schedule 정본</Link>을 따릅니다. Export
+          <Link to="/cs/ai/transfer-learning-practice">transfer learning 정본</Link>, warmup과
+          decay는 <Link to="/cs/ai/lr-scheduling">schedule 정본</Link>을 따릅니다. Export
           artifact에는 preprocessing code와 class map뿐 아니라 patch/grid shape,
           position-resize receipt, library version, reference logits와 tolerance도 넣습니다.
         </p>

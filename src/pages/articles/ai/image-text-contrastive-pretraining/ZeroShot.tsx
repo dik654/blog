@@ -51,7 +51,7 @@ export default function ZeroShot() {
 
         <p className="leading-7">
           만든 벡터를 검색에 쓸 때의 전처리·풀링·정규화 계약은{" "}
-          <Link to="/ai/image-embedding-pipeline#pipeline-contract">이미지 임베딩 파이프라인</Link>의 지문 규칙을
+          <Link to="/cs/ai/image-embedding-pipeline#pipeline-contract">이미지 임베딩 파이프라인</Link>의 지문 규칙을
           그대로 따릅니다. 텍스트 쪽 인코더와 토크나이저도 그 지문에 포함돼야 합니다.
         </p>
       </div>

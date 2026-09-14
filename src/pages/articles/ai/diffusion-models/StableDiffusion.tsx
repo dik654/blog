@@ -30,7 +30,7 @@ export default function StableDiffusion() {
           감소합니다. 하지만 channel 수, network width, attention, NFE가 함께
           달라지므로 실제 FLOPs와 latency가 정확히 64배 좋아진다는 뜻은
           아닙니다. Autoencoder의 probabilistic objective는{" "}
-          <Link to="/ai/vae">VAE 글</Link>
+          <Link to="/cs/ai/vae">VAE 글</Link>
           에서 이어진다.
         </p>
         <p>

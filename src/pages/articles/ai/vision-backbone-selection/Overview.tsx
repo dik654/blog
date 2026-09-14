@@ -29,13 +29,13 @@ export default function Overview() {
 
         <p className="leading-7">
           앞의 네 글이 이 선택의 재료입니다.{" "}
-          <Link to="/ai/dinov3-self-supervised-backbone">자기지도 백본</Link>은 라벨 없는 학습이 무엇을
+          <Link to="/cs/ai/dinov3-self-supervised-backbone">자기지도 백본</Link>은 라벨 없는 학습이 무엇을
           남기는지,{" "}
-          <Link to="/ai/image-text-contrastive-pretraining">이미지·텍스트 대조 학습</Link>은 캡션이 무엇을
+          <Link to="/cs/ai/image-text-contrastive-pretraining">이미지·텍스트 대조 학습</Link>은 캡션이 무엇을
           더해 주는지,{" "}
-          <Link to="/ai/sam3-promptable-concept-segmentation">개념 프롬프트 분할</Link>은 분할 감독이 무엇을
+          <Link to="/cs/ai/sam3-promptable-concept-segmentation">개념 프롬프트 분할</Link>은 분할 감독이 무엇을
           만드는지,{" "}
-          <Link to="/ai/image-embedding-pipeline">임베딩 파이프라인</Link>은 그 표현을 실제로 쓸 때의 계약을
+          <Link to="/cs/ai/image-embedding-pipeline">임베딩 파이프라인</Link>은 그 표현을 실제로 쓸 때의 계약을
           다뤘습니다.
         </p>
 

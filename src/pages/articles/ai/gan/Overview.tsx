@@ -21,7 +21,7 @@ export default function Overview() {
           forward pass로 수행할 수 있습니다.
         </p>
         <p>
-          <Link to="/ai/generative-theory">생성 모델 전체 지도</Link>는
+          <Link to="/cs/ai/generative-theory">생성 모델 전체 지도</Link>는
           GAN·VAE·flow·diffusion의 tractability 선택을 비교합니다. 이 글에서는
           GAN 고유의 density-ratio game, generator gradient, two-player
           dynamics와 평가 경계를 따라갑니다. 기본 GAN에는 encoder가 없으므로

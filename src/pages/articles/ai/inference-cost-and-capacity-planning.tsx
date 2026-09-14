@@ -31,7 +31,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
           </p>
           <p>
             GPU 당 처리량은 앞 글의{" "}
-            <Link to="/ai/serving-benchmark-methodology#reproducibility">λ sweep</Link> 으로 SLO
+            <Link to="/cs/ai/serving-benchmark-methodology#reproducibility">λ sweep</Link> 으로 SLO
             아래에서 잰 값을 그대로 씁니다. 이 글의 GPU 시간당 가격은 모두 &quot;예: $2/GPU-h
             가정&quot; 같은 가정값이며 실제 시세를 말하지 않습니다.
           </p>
@@ -71,7 +71,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
           <p>
             이 식의 tokens/s 는 어떤 조건의 값인지가 중요합니다. Batch 를 무한히 키운 상한
             tokens/s 로 계산한 cost/token 은 SLO 를 어기며 낸 값이고, 실제 비용은{" "}
-            <Link to="/ai/vllm-serving#serving-goodput">goodput</Link> 기준이어야 합니다. 입력
+            <Link to="/cs/ai/vllm-serving#serving-goodput">goodput</Link> 기준이어야 합니다. 입력
             token 도 prefill 로 GPU 시간을 쓰므로 tokens/s 는 입력·출력 분포가 붙은 값입니다.
           </p>
         </div>
@@ -250,7 +250,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             Autoscaling 은 replica 수를 측정치에 따라 자동으로 바꾸는 제어입니다. Kubernetes
             HPA 는 15 초마다 desired = ceil(current × metric/target) 을 계산하고, 비율이 1 에서
             10 % 안이면 움직이지 않으며, 줄일 때는 5 분 안정화 창을 둡니다. 그 mechanism 은{" "}
-            <Link to="/ai/llm-serving-ops#serving-deployment">HPA control loop</Link> 이 맡습니다.
+            <Link to="/cs/ai/llm-serving-ops#serving-deployment">HPA control loop</Link> 이 맡습니다.
           </p>
           <p>
             LLM 에서 정책의 핵심은 metric 과 지연입니다. metric 은 CPU 가 아니라 대기열 길이나 KV cache utilization 으로 둡니다. 새 replica 가
@@ -260,7 +260,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
           <p>
             마지막 항목은 GPU fragmentation 입니다. 여러 model 이나 job 이 GPU 를 쪼개 쓸 때
             남는 조각이 어느 요청에도 맞지 않아 버려지는 상태이며,{" "}
-            <Link to="/ai/vllm-paged-attention#fragmentation-kinds">KV cache fragmentation</Link>
+            <Link to="/cs/ai/vllm-paged-attention#fragmentation-kinds">KV cache fragmentation</Link>
             과는 다른 층입니다. MIG 로 80 GB GPU 를 3g.40gb 와 2g.20gb 로 나누면 남는 slice 는
             1g.10gb 두 개뿐이라 4g.40gb 요청은 합이 맞아도 들어가지 못합니다.
           </p>
@@ -300,7 +300,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
           <p>
             HPA 가 15 초마다 계산해도 GPU replica 는 scheduling, weight 다운로드, warmup 을
             지나야 traffic-ready 가 되며 그 경로는{" "}
-            <Link to="/ai/llm-serving-ops#k8s-gpu-fleet">ready-capacity path</Link> 가 다룹니다.
+            <Link to="/cs/ai/llm-serving-ops#k8s-gpu-fleet">ready-capacity path</Link> 가 다룹니다.
             준비 시간 d 가 5 분이고 트래픽이 5 분에 30 % 오를 수 있다면 headroom 은 최소 30 %
             여야 그 사이 SLO 를 지킵니다.
           </p>
@@ -373,9 +373,9 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           앞 글: GPU 당 처리량 r_gpu 를 SLO 아래에서 재는{" "}
-          <Link to="/ai/serving-benchmark-methodology#load">serving benchmark 방법론</Link>.
+          <Link to="/cs/ai/serving-benchmark-methodology#load">serving benchmark 방법론</Link>.
           Replica 가 traffic-ready 가 되는 경로와 HPA 의 상태는{" "}
-          <Link to="/ai/llm-serving-ops#k8s-gpu-fleet">LLM serving 운영</Link>을 참고하세요.
+          <Link to="/cs/ai/llm-serving-ops#k8s-gpu-fleet">LLM serving 운영</Link>을 참고하세요.
         </p>
       </section>
     </div>

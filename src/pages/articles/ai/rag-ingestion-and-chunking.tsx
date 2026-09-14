@@ -34,7 +34,7 @@ export default function RagIngestionAndChunkingArticle() {
             이 글은 그 pipeline 의 앞쪽 절반, 즉 문서를 읽어 들여 검색 가능한 단위로 자르는
             parsing·chunking·contextual retrieval 을 다룹니다. Chunking 뒤에 오는 embedding
             버전 계약과 검색 funnel 자체는{" "}
-            <Link to="/ai/rag-pipeline#embedding">RAG 파이프라인 글</Link>의 범위입니다.
+            <Link to="/cs/ai/rag-pipeline#embedding">RAG 파이프라인 글</Link>의 범위입니다.
           </p>
           <p>
             가정: 100 페이지 매뉴얼을 chunk 500 개로 잘라 knowledge base 에 넣었는데, 실제로
@@ -147,7 +147,7 @@ export default function RagIngestionAndChunkingArticle() {
           preview="아닙니다. Chunk 를 키우면 경계 손실은 줄지만 각 chunk 안에 무관한 문장이 섞여 검색이 그 chunk 를 놓칠 위험이 커집니다."
         >
           <p>
-            <Link to="/ai/rag-pipeline#chunking">RAG 파이프라인 글의 span coverage</Link> 는 정답
+            <Link to="/cs/ai/rag-pipeline#chunking">RAG 파이프라인 글의 span coverage</Link> 는 정답
             근거가 최종 context 에 얼마나 남았는지를 잽니다. Chunk size 를 키우면 경계에 걸린
             손실은 줄어도, 그 chunk 가 검색 단계에서 아예 후보로 뽑히지 못하면 span coverage 는
             오히려 떨어집니다. Chunk size·overlap 은 이 글의 범위이고, 그 결과를 재는 span coverage
@@ -306,9 +306,9 @@ export default function RagIngestionAndChunkingArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           Chunking 뒤에 오는 embedding 버전 계약과 검색 funnel 은{" "}
-          <Link to="/ai/rag-pipeline#embedding">RAG 파이프라인 글</Link>이 정본입니다. 검색 결과를
+          <Link to="/cs/ai/rag-pipeline#embedding">RAG 파이프라인 글</Link>이 정본입니다. 검색 결과를
           어떻게 재검색·재작성해 recall 을 더 올리는지는{" "}
-          <Link to="/ai/query-transformation-and-adaptive-retrieval#overview">
+          <Link to="/cs/ai/query-transformation-and-adaptive-retrieval#overview">
             Query 변환과 적응형 검색 글
           </Link>
           로 이어집니다.

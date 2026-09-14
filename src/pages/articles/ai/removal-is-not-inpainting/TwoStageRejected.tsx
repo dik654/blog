@@ -66,7 +66,7 @@ export default function TwoStageRejected() {
         <p className="leading-7">
           기각의 범위는 좁게 적습니다. 다시 그리기에 쓴 것이 증류된 빠른 모델이라, 여기서 기각된 것은 정확히는
           "싼 모델로 지우고 또 싼 모델로 다시 그리기"입니다. 마스크 밖 변화량을 바닥값으로 나눠 읽는 방법은{" "}
-          <Link to="/ai/generative-measurement-controls#roundtrip-floor">계측기 검증</Link>이 소유합니다.
+          <Link to="/cs/ai/generative-measurement-controls#roundtrip-floor">계측기 검증</Link>이 소유합니다.
         </p>
       </div>
 

@@ -50,7 +50,7 @@ export default function SeparationGate() {
         <p className="leading-7">
           이어지는 글은 다양성 쪽입니다. 참조가 정체성을 공급한다면 그 참조를 어디서 얻는지, 그리고 모델을
           설득해서 다양한 인물을 뽑을 수 있는지를 다룹니다. 해상도와 영역별 처리는{" "}
-          <Link to="/ai/roi-resolution-identity-budget">해상도 예산</Link>이 소유합니다.
+          <Link to="/cs/ai/roi-resolution-identity-budget">해상도 예산</Link>이 소유합니다.
         </p>
       </div>
     </section>

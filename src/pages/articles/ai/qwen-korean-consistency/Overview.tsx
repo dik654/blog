@@ -4,11 +4,11 @@ import { CitationBlock } from "@/components/ui/citation";
 import OverviewViz from "./viz/OverviewViz";
 
 const FOUNDATIONS = [
-  ["tokenizer", "/ai/tokenizer", "문자열을 token ID로 나누는 규칙"],
-  ["Transformer architecture", "/ai/transformer-architecture", "hidden state와 lm_head까지의 계산 경로"],
-  ["SFT", "/ai/supervised-fine-tuning", "정답 예시를 따라 하도록 weight를 갱신하는 학습"],
-  ["RLHF", "/ai/rlhf", "reward로 policy의 상대 선호를 바꾸는 큰 그림"],
-  ["Open-R1", "/ai/open-r1", "reasoning post-training을 재현하는 도구와 실험 계약"],
+  ["tokenizer", "/cs/ai/tokenizer", "문자열을 token ID로 나누는 규칙"],
+  ["Transformer architecture", "/cs/ai/transformer-architecture", "hidden state와 lm_head까지의 계산 경로"],
+  ["SFT", "/cs/ai/supervised-fine-tuning", "정답 예시를 따라 하도록 weight를 갱신하는 학습"],
+  ["RLHF", "/cs/ai/rlhf", "reward로 policy의 상대 선호를 바꾸는 큰 그림"],
+  ["Open-R1", "/cs/ai/open-r1", "reasoning post-training을 재현하는 도구와 실험 계약"],
 ] as const;
 
 const TEXT_UNITS = [

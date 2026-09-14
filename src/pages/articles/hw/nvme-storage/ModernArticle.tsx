@@ -9,7 +9,7 @@ export default function ModernArticle(){return <article className="space-y-14">
             “NVMe SSD”라는 이름만으로는 서버에 들어가는지 알 수 없습니다. 예제 24시간 작업은 8 TiB active data, 2 TiB scratch와 metadata
             random I/O를 함께 사용합니다. 먼저 protocol과 transport를 확인하고 controller에서 CPU root까지 lane budget을 그린 뒤 실제
             SKU의 power·airflow·hot-plug 조건을 검사합니다.
-          </p><p>PCIe lane의 bit/byte 환산과 goodput은 <a href="/gpu/gpu-interconnects#pcie-transaction-bandwidth-latency" className="text-primary hover:underline">PCIe 정본</a>을 재사용합니다. 여기서는 M.2, U.2/U.3, E1.S가 그 경로를 chassis 안에서 어떻게 구현하고 정비하게 하는지만 소유합니다.</p><NvmeBoundaryViz/><ContentBoundary article="hw-nvme-storage"/></section>
+          </p><p>PCIe lane의 bit/byte 환산과 goodput은 <a href="/cs/gpu/gpu-interconnects#pcie-transaction-bandwidth-latency" className="text-primary hover:underline">PCIe 정본</a>을 재사용합니다. 여기서는 M.2, U.2/U.3, E1.S가 그 경로를 chassis 안에서 어떻게 구현하고 정비하게 하는지만 소유합니다.</p><NvmeBoundaryViz/><ContentBoundary article="hw-nvme-storage"/></section>
 <section id="protocol-form-factor" className="space-y-6"><header><p className="text-sm font-semibold text-primary">01 · Protocol과 form factor</p><h2 className="mt-2 text-2xl font-bold">같은 NVMe command도 서로 다른 기구·connector에 실릴 수 있다</h2></header><p>
             NVMe Base Specification은 host software와 NVM subsystem 사이의 queue, command, completion과 controller
             semantics를 정의하며 PCIe·TCP·RDMA 같은 transport binding과 분리됩니다. M.2는 작은 내부 module에 유리하지만 교체·airflow 경로를

@@ -63,7 +63,7 @@ export default function ContextOverride() {
           있지만, 그 말이 host authority를 새로 만들지는 않습니다.
           <code>denied_tools</code>와 deny rule은 context override보다 먼저
           적용되고, Ask rule도 hook Allow로 건너뛰지 않습니다. Hook의 전체
-          lifecycle과 신뢰 경계는 <a href="/ai/claw-hooks">Claw hook 시스템</a>
+          lifecycle과 신뢰 경계는 <a href="/cs/ai/claw-hooks">Claw hook 시스템</a>
           을 참고하면 됩니다.
         </p>
       </div>

@@ -20,7 +20,16 @@ function assertSafeRoute(route) {
 const catalog = await loadPublicArticleCatalog({ root: repoRoot });
 const routes = new Set();
 
-for (const { route } of catalog) {
+for (const { route, publicPath } of catalog) {
+  assertSafeRoute(publicPath);
+  // 현재 공개 주소: /<대분류>/<카테고리>/<글>, /<대분류>/<카테고리>, /<대분류>
+  const segments = publicPath.split("/");
+  routes.add(publicPath);
+  routes.add(segments.slice(0, 2).join("/"));
+  routes.add(segments[0]);
+
+  // 대분류 도입 이전 주소도 실제 파일로 남겨 둔다. 정적 호스팅에서는 해당
+  // 경로에 index.html이 있어야 앱이 떠서 새 주소로 보낼 수 있다.
   assertSafeRoute(route);
   routes.add(route);
   routes.add(route.split("/", 1)[0]);

@@ -35,8 +35,8 @@ export default function Overview() {
 
         <p className="leading-7">
           벡터를 어떤 색인 구조에 넣고 어떻게 근사 탐색하는지는{" "}
-          <Link to="/ai/vector-search-and-ann-indexes">벡터 검색과 ANN 색인</Link>이, 임베딩 서비스의 운영
-          계약은 <Link to="/ai/embedding-serving-contract">임베딩 서빙 계약</Link>이 이미 소유합니다. 이 글은
+          <Link to="/cs/ai/vector-search-and-ann-indexes">벡터 검색과 ANN 색인</Link>이, 임베딩 서비스의 운영
+          계약은 <Link to="/cs/ai/embedding-serving-contract">임베딩 서빙 계약</Link>이 이미 소유합니다. 이 글은
           그 앞단, 곧 사진이 벡터가 되는 구간만 다룹니다.
         </p>
       </div>

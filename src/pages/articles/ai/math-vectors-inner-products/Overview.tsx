@@ -32,7 +32,7 @@ export default function Overview() {
           이 글은 matrix 전체와 linear transformation, basis change를 한꺼번에 다루지
           않습니다. 먼저 vector 하나의 길이와 두 vector 사이의 관계를 계산할 수 있게
           만드는 것이 목표입니다. 이후 신경망의 matrix multiplication은
-          <Link to="/ai/neural-network#forward">신경망의 tensor shape 설명</Link>에서
+          <Link to="/cs/ai/neural-network#forward">신경망의 tensor shape 설명</Link>에서
           확장합니다.
         </p>
       </div>

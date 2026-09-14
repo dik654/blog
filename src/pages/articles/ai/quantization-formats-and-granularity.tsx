@@ -18,7 +18,7 @@ export default function QuantizationFormatsAndGranularityArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <Link to="/ai/quantization#affine-map">Scale·zero-point로 code를 만드는 규약</Link>
+            <Link to="/cs/ai/quantization#affine-map">Scale·zero-point로 code를 만드는 규약</Link>
             은 하나지만, 그 위에 어떤 bit 수·숫자 형식을 쓰는지와 scale을 얼마나
             잘게 나눠 공유하는지는 서로 다른 두 축입니다. 이 글은 그 두 축만
             다룹니다.
@@ -28,7 +28,7 @@ export default function QuantizationFormatsAndGranularityArticle() {
           </p>
           <p>
             둘째 축은 zero-point 선택과{" "}
-            <Link to="/ai/ptq-calibration#scale-granularity">
+            <Link to="/cs/ai/ptq-calibration#scale-granularity">
               scale 공유 범위
             </Link>
             에 block quantization을 더해, scale을 얼마나 잘게 나누는지를
@@ -58,7 +58,7 @@ export default function QuantizationFormatsAndGranularityArticle() {
             커집니다.
           </p>
           <p>
-            <Link to="/ai/weight-only-quantization#artifact-boundary">
+            <Link to="/cs/ai/weight-only-quantization#artifact-boundary">
               GPTQ·AWQ 같은 weight 변환 method
             </Link>
             가 이름만 언급하던 INT4가 실제로 무슨 값을 표현하는지는 이 code
@@ -227,7 +227,7 @@ export default function QuantizationFormatsAndGranularityArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            <Link to="/ai/ptq-calibration#scale-granularity">
+            <Link to="/cs/ai/ptq-calibration#scale-granularity">
               Per-tensor·per-channel·group-wise
             </Link>
             는 scale 하나를 얼마나 넓게 공유하는지로 갈수록 좁아지는

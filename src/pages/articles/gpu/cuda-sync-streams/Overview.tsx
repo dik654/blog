@@ -30,8 +30,8 @@ export default function Overview() {
         </p>
         <p>
           Thread block과 shared memory가 낯설다면{" "}
-          <Link to="/gpu/cuda-thread-hierarchy">thread hierarchy</Link>와{" "}
-          <Link to="/gpu/cuda-shared-memory">shared memory</Link>를 먼저 읽어도
+          <Link to="/cs/gpu/cuda-thread-hierarchy">thread hierarchy</Link>와{" "}
+          <Link to="/cs/gpu/cuda-shared-memory">shared memory</Link>를 먼저 읽어도
           좋습니다. 이 글은 block barrier의 scope, stream ordering, event
           timing, multi-GPU context를 하나의 dependency graph로 연결합니다.
         </p>

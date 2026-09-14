@@ -30,8 +30,8 @@ export default function ModernImageModelStackArticle() {
             sample만 보고 한 component에 원인을 몰아주면 잘못된 LoRA target과 잘못된 평가로 이어집니다.
           </p>
           <p>
-            앞의 <Link to="/ai/visual-representation-tokenizers">visual representation
-            글</Link>은 어떤 정보를 latent에 남길지를 다뤘고, <Link to="/ai/diffusion-transformer-architecture">DiT
+            앞의 <Link to="/cs/ai/visual-representation-tokenizers">visual representation
+            글</Link>은 어떤 정보를 latent에 남길지를 다뤘고, <Link to="/cs/ai/diffusion-transformer-architecture">DiT
             글</Link>은 그 latent를 어떻게 복원하는지 다뤘습니다. 이 글은 두 층을 실제
             text-to-image system으로 조립합니다.
           </p>
@@ -191,7 +191,7 @@ z_0&=\underbrace{\operatorname{Solve}(z_1,v_\theta,c)}_{\text{noise에서 data l
           </p>
           <p>
             Diffusion이라는 생성 원리를 language token에 옮기는 별도 분기는 다음 글인
-            <Link to="/ai/diffusion-language-models">Diffusion LLM</Link>에서 다룹니다.
+            <Link to="/cs/ai/diffusion-language-models">Diffusion LLM</Link>에서 다룹니다.
             그 글은 image diffusion과 닮은 점을 보이되, discrete MASK state와 KV cache
             경계가 왜 다른지를 분리합니다.
           </p>

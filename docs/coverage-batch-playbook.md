@@ -72,7 +72,9 @@ src/content/registrations/<slug>.ts                 등록 module (아래 4절)
 - `CitationBlock` (`@/components/ui/citation`): `source, citeKey, href?, type?: "paper"|"code", children`
 - `ContentBoundary` (`@/components/articles/content-boundary`): `article=<slug>` — OWNERSHIP 에 같은 slug 가 있어야 한다.
 - Viz: `VizFrame` (`@/components/viz/VizFrame`: `eyebrow, title, description, note, children`), `useAnimatedScenes(length, intervalMs)` → `{active, playing, reducedMotion, setActive, setPlaying, onKeyDown}`, `AnimatedSceneControls {...scenes} labels={SCENES}`.
-- 다른 글 링크는 `<Link to="/ai/<slug>#<section>">` (react-router-dom).
+- 다른 글 링크는 `<Link to="/<대분류>/<카테고리>/<slug>#<section>">` (react-router-dom). 예: `/cs/ai/flash-attention#online-softmax`.
+
+**route key 와 공개 href 는 다른 문자열이다.** `ai/flash-attention` 처럼 슬래시로 시작하지 않는 두 조각은 데이터 식별자(`ARTICLE_LEARNING`·`ARTICLE_EVIDENCE`·`EDITORIAL_BOUNDARIES`·topology 판정의 키, `check-article.sh` 인자)이고, `/cs/ai/flash-attention` 처럼 슬래시로 시작하는 세 조각은 브라우저 주소다. `canonicalHref`·`internalHref`·`reuses[].href` 는 전부 **공개 href** 이므로 대분류를 붙인다. 카테고리가 속한 대분류는 `src/content/domains.ts` 의 `CATEGORY_DOMAIN` 에 있고, 코드에서 주소를 만들 때는 문자열을 직접 잇지 말고 `src/lib/routes.ts` 의 `articleHref`·`categoryHref`·`hrefForRoute` 를 쓴다. 새 카테고리를 만들면 `CATEGORY_DOMAIN` 등록이 먼저다 — 빠지면 주소 생성이 즉시 에러로 멈춘다.
 
 ## 4. Registration module — 정본 파일은 직접 고치지 않는다
 

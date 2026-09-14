@@ -34,7 +34,7 @@ export default function Overview({ onCodeRef }: Props) {
           />
         </div>
         <p>
-          일반적인 설정 provenance는 <Link to="/blockchain/reth-cli#overview">Reth CLI 글</Link>의 정본을 재사용합니다. 이 글은 Helios의
+          일반적인 설정 provenance는 <Link to="/cs/blockchain/reth-cli#overview">Reth CLI 글</Link>의 정본을 재사용합니다. 이 글은 Helios의
           network bundle, checkpoint source/age, endpoint role, FileDB snapshot에만 범위를 좁힙니다.
         </p>
       </div>

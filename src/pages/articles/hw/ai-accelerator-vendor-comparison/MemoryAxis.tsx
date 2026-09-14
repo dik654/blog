@@ -67,7 +67,7 @@ export default function MemoryAxis() {
         <p className="leading-7">
           용량과 대역폭이 독립이라는 사실 자체는 소비자 카드에서도 같습니다. 메모리 칩을 더 큰 밀도로 바꿔도
           버스 폭과 핀 속도가 그대로면 대역폭은 변하지 않습니다. 이 구분은{" "}
-          <Link to="/gpu/modded-rtx4090-moe-serving#bandwidth-unchanged">개조 RTX 4090 사례</Link>에서 공식으로
+          <Link to="/cs/gpu/modded-rtx4090-moe-serving#bandwidth-unchanged">개조 RTX 4090 사례</Link>에서 공식으로
           정리했고, 데이터센터 카드에서도 같은 축이 적용됩니다.
         </p>
 

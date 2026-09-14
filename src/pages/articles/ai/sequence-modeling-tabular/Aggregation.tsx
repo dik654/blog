@@ -13,7 +13,7 @@ export default function Aggregation() {
           필요한지도 판단할 수 있습니다.
         </p>
         <p>
-          Lag·rolling window의 시간 경계는 <Link to="/ai/time-features">시계열 feature 글</Link>에서
+          Lag·rolling window의 시간 경계는 <Link to="/cs/ai/time-features">시계열 feature 글</Link>에서
           다룹니다. 이 글에서는 바로 이웃한 event의 순서를 남기는 bigram count와
           transition probability를 살펴봅니다. 예를 들어 <code>A→B</code> 횟수는
           전체 A·B count만으로는 보이지 않는 짧은 순서를 보존합니다.

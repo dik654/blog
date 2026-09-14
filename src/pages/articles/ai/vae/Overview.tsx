@@ -28,7 +28,7 @@ export default function Overview() {
         <p>
           생성 모델 전체 지도에서 likelihood·latent variable·GAN·diffusion의
           관계를 먼저 보고 싶다면{" "}
-          <Link to="/ai/generative-theory">생성 모델 지도</Link>
+          <Link to="/cs/ai/generative-theory">생성 모델 지도</Link>
           에서 시작하면 됩니다. 이 글은 VAE가 posterior approximation과
           reparameterization으로 그 지도의 latent-variable 경로를 구현하는
           방법을 소유합니다.

@@ -71,7 +71,7 @@ export default function Applications() {
         </div>
         <p>
           순환 신경망으로 window와 hidden state를 학습하는 경로는
-          <Link to="/ai/lstm-timeseries"> LSTM 시계열 글</Link>에서 이어진다.
+          <Link to="/cs/ai/lstm-timeseries"> LSTM 시계열 글</Link>에서 이어진다.
           그 글에서도 ARIMA를 지우지 않고, 복잡한 model이 rolling-origin error와
           operational cost에서 실제 추가 가치를 주는지 확인할 기준선으로 남긴다.
         </p>

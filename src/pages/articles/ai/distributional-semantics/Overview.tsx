@@ -90,8 +90,8 @@ export default function Overview() {
         </p>
         <p>
           Text가 vocabulary item과 ID로 바뀌는 단계가 낯설다면 먼저
-          <Link to="/ai/tokenizer"> tokenizer 정본</Link>을, vector의 dot product와
-          norm이 낯설다면 <Link to="/ai/math-vectors-inner-products">벡터 정본</Link>을
+          <Link to="/cs/ai/tokenizer"> tokenizer 정본</Link>을, vector의 dot product와
+          norm이 낯설다면 <Link to="/cs/ai/math-vectors-inner-products">벡터 정본</Link>을
           확인할 수 있습니다. 이 글에서는 그 위에서 “어떤 context를 관측했는가”를
           중심 질문으로 삼습니다.
         </p>

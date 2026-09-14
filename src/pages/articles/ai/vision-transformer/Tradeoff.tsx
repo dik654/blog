@@ -48,7 +48,7 @@ L_{95}(B)&\le L_{\max},\qquad M(B)\le M_{\max}.
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Resolution·backbone·augmentation을 함께 비교하는 실행 순서는
-          <Link to="/ai/image-classification-pipeline">이미지 분류 파이프라인 글</Link>을
+          <Link to="/cs/ai/image-classification-pipeline">이미지 분류 파이프라인 글</Link>을
           따릅니다. ViT에서는 patch size와 position grid, stochastic depth,
           attention implementation과 quantization support를 추가 열로 둡니다. FLOPs는
           후보를 줄이는 proxy일 뿐이며 target compiler와 batch에서 측정한 latency를

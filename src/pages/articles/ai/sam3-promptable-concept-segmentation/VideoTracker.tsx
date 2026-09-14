@@ -49,7 +49,7 @@ export default function VideoTracker() {
           </p>
           <p className="leading-7">
             영상에서 어떤 구간을 어떻게 뽑아 다루는지는{" "}
-            <Link to="/ai/video-clip-sampling">비디오 클립 샘플링</Link>이 다루는 별도 주제이며, 여기서는
+            <Link to="/cs/ai/video-clip-sampling">비디오 클립 샘플링</Link>이 다루는 별도 주제이며, 여기서는
             프레임 단위 연결만 설명합니다.
           </p>
         </ProgressiveDetail>

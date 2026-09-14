@@ -35,9 +35,9 @@ export default function Overview() {
 
         <p className="leading-7">
           단일 모델을 학습할 때의 가중치·gradient·optimizer state 회계는{" "}
-          <Link to="/ai/training-memory-budget#memory-math">학습 메모리 예산</Link>이, 어댑터가 무엇을 학습
+          <Link to="/cs/ai/training-memory-budget#memory-math">학습 메모리 예산</Link>이, 어댑터가 무엇을 학습
           대상으로 삼는지는{" "}
-          <Link to="/ai/lora-finetuning">LoRA 미세조정</Link>이 소유합니다. 이 글은 그 둘을 부품이 여러 개인
+          <Link to="/cs/ai/lora-finetuning">LoRA 미세조정</Link>이 소유합니다. 이 글은 그 둘을 부품이 여러 개인
           파이프라인에 적용할 때 새로 생기는 항목만 다룹니다.
         </p>
       </div>

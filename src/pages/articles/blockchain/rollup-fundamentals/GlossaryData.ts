@@ -15,7 +15,7 @@ export const ROLLUP_TERMS: GlossaryTerm[] = [
     en: "Rollup",
     desc: "트랜잭션 실행은 오프체인(L2), 데이터와 상태 루트는 온체인(L1)에 게시하는 확장 솔루션. L1의 보안을 상속받으면서 처리량을 수백~수천 배 향상시킨다. Optimistic(사기 증명)과 ZK(유효성 증명) 두 가지 방식이 있다.",
     why: "이더리움 확장 로드맵의 핵심. L1 처리량(~15 TPS) 한계를 L2에서 해결한다.",
-    articleLink: "/blockchain/da-theory",
+    articleLink: "/cs/blockchain/da-theory",
     articleTitle: "데이터 가용성 이론: 롤업 데이터가 L1에 어떻게 게시되는지",
   },
   {
@@ -45,7 +45,7 @@ export const ROLLUP_TERMS: GlossaryTerm[] = [
     en: "Validity Proof",
     desc: "ZK Rollup에서 사용. 상태 전이가 올바름을 SNARK/STARK 증명으로 수학적으로 검증한다. 증명이 L1 검증 컨트랙트에서 통과하면 즉시 확정된다. 챌린지 기간이 불필요하므로 최종성(finality)이 빠르다.",
     why: "수학적 보장으로 챌린지 기간 없이 L1 확정. 단, 증명 생성에 높은 연산 비용이 든다.",
-    articleLink: "/blockchain/snark-overview",
+    articleLink: "/cs/blockchain/snark-overview",
     articleTitle: "SNARK 개론: Setup·Prove·Verify",
   },
   {
@@ -61,7 +61,7 @@ export const ROLLUP_TERMS: GlossaryTerm[] = [
     en: "State Root",
     desc: "L2 전체 상태(계정·잔고·컨트랙트·스토리지)의 Merkle 해시. 32바이트 해시 하나로 전체 상태를 대표한다. L1에 주기적으로 게시되며, 검증자가 이를 통해 L2 상태의 정확성을 확인한다.",
     why: "32바이트 해시 하나로 수백만 계정의 상태를 검증 가능하게 만드는 핵심 자료구조.",
-    articleLink: "/blockchain/merkle-patricia-trie",
+    articleLink: "/cs/blockchain/merkle-patricia-trie",
     articleTitle: "Modified Merkle-Patricia Trie (MPT)",
   },
   {

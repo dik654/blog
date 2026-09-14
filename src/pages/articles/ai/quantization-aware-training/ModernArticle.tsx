@@ -19,7 +19,7 @@ export default function QuantizationAwareTrainingArticle() {
           </p>
           <p>
             PTQ가 quality gate를 통과하지 못하고 data·compute를 쓸 수 있을 때
-            후보가 됩니다. <a href="/ai/ptq-calibration">PTQ calibration</a>과
+            후보가 됩니다. <a href="/cs/ai/ptq-calibration">PTQ calibration</a>과
             달리 optimizer trajectory가 새로 생깁니다.
           </p>
         </div>

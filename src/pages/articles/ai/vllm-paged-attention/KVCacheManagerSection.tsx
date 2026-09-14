@@ -107,7 +107,7 @@ export default function KVCacheManagerSection({
           queue order를 보고 victim을 고른 뒤 block을 반환하고 다시 allocation을
           시도합니다. 이 책임을 섞으면 memory bug와 fairness bug를 같은 계층에서
           추적하게 됩니다. Current V1의 state reset은
-          <Link to="/ai/vllm-scheduler#preemption"> preemption 글</Link>에서 설명합니다.
+          <Link to="/cs/ai/vllm-scheduler#preemption"> preemption 글</Link>에서 설명합니다.
         </p>
 
         <h3 id="hybrid-cache-groups" className="scroll-mt-20">
@@ -124,7 +124,7 @@ export default function KVCacheManagerSection({
         <p className="leading-8">
           Layer 수·KV head·head dimension·local window가 token당 byte와 유효 token
           capacity에 어떻게 들어가는지는
-          <Link to="/ai/hybrid-kv-cache-allocation"> Hybrid KV Cache와 block 회수</Link>가
+          <Link to="/cs/ai/hybrid-kv-cache-allocation"> Hybrid KV Cache와 block 회수</Link>가
           정본입니다. <code>GPU KV cache size</code>와 maximum concurrency log가
           이론 계산과 맞는지도 그 글의 consistency 식으로 검증합니다.
         </p>

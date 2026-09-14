@@ -41,8 +41,8 @@ export default function MoeRoutingAndLoadBalancingArticle() {
           <p>
             Router가 logit을 만들고 top-k를 고르는 계산, capacity factor와 overflow policy의
             정의는{" "}
-            <Link to="/ai/mixture-of-experts#routing">MoE 글의 routing 절</Link>과{" "}
-            <Link to="/ai/mixture-of-experts#load-balancing">load-balancing 절</Link>이
+            <Link to="/cs/ai/mixture-of-experts#routing">MoE 글의 routing 절</Link>과{" "}
+            <Link to="/cs/ai/mixture-of-experts#load-balancing">load-balancing 절</Link>이
             다룹니다. 이 글은 그 위에서 균형을 유지하는 두 장치와 실패했을 때의 동역학만
             봅니다.
           </p>
@@ -206,7 +206,7 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
             Sparsity ratio는 active parameter를 total parameter로 나눈 값입니다. 이 숫자가
             작을수록 checkpoint는 크지만 token 하나가 지나는 경로는 좁다는 뜻입니다. 두
             parameter의 정의와 memory·FLOPs로 나누면 안 되는 이유는{" "}
-            <Link to="/ai/mixture-of-experts#system-cost">MoE 글의 system cost 절</Link>이
+            <Link to="/cs/ai/mixture-of-experts#system-cost">MoE 글의 system cost 절</Link>이
             맡고, 이 절은 그 비율 하나만 봅니다.
           </p>
           <p>
@@ -300,9 +300,9 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             다음 읽기는 배정된 token이 실제 GPU 사이를 오가는 비용을 계산하는{" "}
-            <Link to="/ai/expert-parallelism-moe-systems#all-to-all">expert parallelism 글</Link>과,
+            <Link to="/cs/ai/expert-parallelism-moe-systems#all-to-all">expert parallelism 글</Link>과,
             total·active parameter를 memory·compute 장부로 나누는{" "}
-            <Link to="/ai/model-vram-budgeting#moe-serving-boundary">VRAM budgeting 글</Link>입니다.
+            <Link to="/cs/ai/model-vram-budgeting#moe-serving-boundary">VRAM budgeting 글</Link>입니다.
           </p>
         </div>
       </section>

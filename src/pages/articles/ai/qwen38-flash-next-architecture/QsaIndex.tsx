@@ -182,7 +182,7 @@ export default function QsaIndex({ onCodeRef }: { onCodeRef: (key: string, ref: 
         압축 블록 점수로 읽을 구간을 고르고 그 선택을 사전학습부터 함께 학습한다는 설계를 제시한 논문입니다.
         저자 자기보고 실험은 해당 모델과 64K 길이 조건에 한정되며, Qwen의 QSA 구현이나 3:1 배치의 우수성을
         보증하지는 않습니다. 관련 배경은{" "}
-        <Link to="/ai/sparse-windowed-attention-patterns">희소 attention 패턴 계열</Link>에서 다룹니다.
+        <Link to="/cs/ai/sparse-windowed-attention-patterns">희소 attention 패턴 계열</Link>에서 다룹니다.
       </CitationBlock>
     </section>
   );

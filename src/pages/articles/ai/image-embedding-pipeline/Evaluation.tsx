@@ -49,7 +49,7 @@ export default function Evaluation() {
           </p>
           <p className="leading-7">
             임베딩 품질을 재는 지표 자체의 선택과 다중 정답 처리 방식은{" "}
-            <Link to="/ai/embedding-evaluation">임베딩 평가</Link>가 소유합니다. 이 절은 그 지표를 이미지에
+            <Link to="/cs/ai/embedding-evaluation">임베딩 평가</Link>가 소유합니다. 이 절은 그 지표를 이미지에
             적용할 때 정답 정의와 분할에서 생기는 함정만 다뤘습니다.
           </p>
         </ProgressiveDetail>

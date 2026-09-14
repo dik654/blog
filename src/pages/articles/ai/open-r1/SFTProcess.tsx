@@ -27,9 +27,9 @@ export default function SFTProcess() {
         </p>
         <p className="leading-8">
           일반 SFT의 response-only loss·teacher forcing·packing 경계는
-          <a href="/ai/supervised-fine-tuning"> SFT 정본 글</a>이 소유하고,
+          <a href="/cs/ai/supervised-fine-tuning"> SFT 정본 글</a>이 소유하고,
           teacher가 생성한 문자열을 student tokenizer로 다시 encode하는 일반
-          원리는 <a href="/ai/knowledge-distillation">지식 증류 글</a>에서
+          원리는 <a href="/cs/ai/knowledge-distillation">지식 증류 글</a>에서
           다룹니다. 이 절은 그 두 원리를 Open-R1 reasoning trace에 적용할 때
           chat template·EOS·길이 budget이 어떻게 재현 조건이 되는지에
           집중합니다.

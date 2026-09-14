@@ -157,7 +157,7 @@ export default function Variants() {
         </p>
         <p>
           Forward·reverse process와 sampling step, latent diffusion의 계산은{" "}
-          <Link to="/ai/diffusion-models">Diffusion Models 정본 글</Link>에서
+          <Link to="/cs/ai/diffusion-models">Diffusion Models 정본 글</Link>에서
           이어진다.
         </p>
       </div>

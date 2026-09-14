@@ -1,4 +1,4 @@
-import { categories } from "@/content";
+import { domains } from "@/content";
 import Hero from "./home/Hero";
 import CategoryCard from "./home/CategoryCard";
 import TechStack from "./home/TechStack";
@@ -9,16 +9,21 @@ export default function Home() {
     <div className="max-w-4xl">
       <Hero />
 
-      <section className="mb-14">
-        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4 pb-2 border-b">
-          학습 분야
-        </h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {categories.map((cat, i) => (
-            <CategoryCard key={cat.slug} category={cat} index={i} />
-          ))}
-        </div>
-      </section>
+      {domains.map((domain) => (
+        <section key={domain.slug} className="mb-14">
+          <h2 className="mb-1 border-b pb-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            {domain.name}
+          </h2>
+          <p className="mb-4 text-sm leading-6 text-muted-foreground">
+            {domain.description}
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {domain.categories.map((cat, i) => (
+              <CategoryCard key={cat.slug} category={cat} index={i} />
+            ))}
+          </div>
+        </section>
+      ))}
 
       <TechStack />
 

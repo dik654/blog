@@ -113,7 +113,7 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             num_stages = 3 이면 K 루프의 A tile(128 × 32)과 B tile(32 × 128)을 3단계 분량,
             fp16 기준 3 × 8192 × 2 byte = 48 KB 를 shared memory 에 미리 올려 둡니다. 단계를 늘릴수록
             load 지연이 가려지지만 shared memory 가 그만큼 늘어 SM 에 함께 놓일 수 있는
-            instance 수가 줄어듭니다. 이 자원 계산은 <Link to="/gpu/cuda-shared-memory#overview">shared memory</Link> 글의
+            instance 수가 줄어듭니다. 이 자원 계산은 <Link to="/cs/gpu/cuda-shared-memory#overview">shared memory</Link> 글의
             규칙을 그대로 따릅니다.
           </p>
           <p>
@@ -255,7 +255,7 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             Automatic vectorization 은 이 흐름의 결과물입니다. Layout 이 한 thread 에 연속 원소
             여러 개를 배정하고 pointer 정렬과 16 배수 specialization 이 보장되면, LLVM 으로 낮출
             때 그 원소들의 load 가 128-bit 명령 하나로 합쳐집니다. Warp 안의 thread 들이 연속
-            주소를 받으므로 <Link to="/gpu/cuda-shared-memory#coalescing">coalescing</Link> 도 함께
+            주소를 받으므로 <Link to="/cs/gpu/cuda-shared-memory#coalescing">coalescing</Link> 도 함께
             얻습니다.
           </p>
           <p>
@@ -305,7 +305,7 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
           </p>
           <p>
             제어 범위는 반대 방향입니다. CUDA 에서는 warp specialization 으로 load warp 와 MMA warp
-            를 손으로 나누고 <Link to="/gpu/gpu-arch-hopper#tma">TMA</Link> descriptor 와 mbarrier
+            를 손으로 나누고 <Link to="/cs/gpu/gpu-arch-hopper#tma">TMA</Link> descriptor 와 mbarrier
             를 직접 발행할 수 있습니다.
           </p>
           <p>
@@ -329,7 +329,7 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
           </p>
           <p>
             CUDA·CUTLASS·CuTe·Triton 네 층이 각각 무엇을 소유하는지의 지도는
-            <Link to="/gpu/cuda-kernel-fusion#kernel-stack">kernel 선택 층</Link> 글이, 후보를 target
+            <Link to="/cs/gpu/cuda-kernel-fusion#kernel-stack">kernel 선택 층</Link> 글이, 후보를 target
             matrix 에서 채택하는 절차는 그 글의 release gate 절이 다룹니다.
           </p>
         </div>
@@ -408,8 +408,8 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/gpu/cuda-kernel-fusion#kernel-stack">CUTLASS·CuTe·Triton 선택 층</Link>,
-          그리고 <Link to="/gpu/cuda-matrix-multiply#tiled">CUDA tiled GEMM 의 손으로 짠 tile 재사용</Link>.
+          다음 글: <Link to="/cs/gpu/cuda-kernel-fusion#kernel-stack">CUTLASS·CuTe·Triton 선택 층</Link>,
+          그리고 <Link to="/cs/gpu/cuda-matrix-multiply#tiled">CUDA tiled GEMM 의 손으로 짠 tile 재사용</Link>.
         </p>
       </section>
     </div>

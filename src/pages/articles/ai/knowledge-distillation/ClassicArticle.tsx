@@ -395,7 +395,7 @@ export default function ClassicDistillationArticle() {
           경우는{" "}
           <a
             className="text-primary hover:underline"
-            href="/ai/sequence-distillation"
+            href="/cs/ai/sequence-distillation"
           >
             sequence distillation
           </a>

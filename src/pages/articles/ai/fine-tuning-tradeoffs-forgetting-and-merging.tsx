@@ -25,7 +25,7 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
             다릅니다.
           </p>
           <p>
-            <Link to="/ai/lora-finetuning">LoRA·QLoRA 글</Link>이 다룬
+            <Link to="/cs/ai/lora-finetuning">LoRA·QLoRA 글</Link>이 다룬
             adapter 메커니즘은 이 다섯 목적 어디에도 그대로 쓸 수 있는
             update 방식입니다. 이 글은 메커니즘이 아니라{" "}
             <strong>무엇을 바꾸려는 fine-tuning인지</strong>를 먼저
@@ -183,7 +183,7 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
             못하게 막는 방법입니다. 이동 자체를 제한하므로 data replay와
             함께 쓸 수 있고, 어떤 parameter를 얼마나 억제할지 정하는
             구체적인 계산은{" "}
-            <Link to="/ai/continual-learning-foundations#stability-plasticity">
+            <Link to="/cs/ai/continual-learning-foundations#stability-plasticity">
               continual learning 글
             </Link>
             의 stability–plasticity dilemma에서 Fisher information
@@ -329,7 +329,7 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
           <p>
             LoRA adapter를 base weight에 합치는 것과 model merging은
             이름은 비슷하지만 다른 연산입니다.{" "}
-            <Link to="/ai/lora-finetuning#practice">LoRA merge</Link>는
+            <Link to="/cs/ai/lora-finetuning#practice">LoRA merge</Link>는
             하나의 adapter 분기를 같은 값을 유지한 채 행렬 곱의
             분배법칙으로 base에 흡수하는 동치 변환이고, model merging은
             여러 개의 서로 다른 fine-tuned 모델을 평균이나 벡터 합으로
@@ -381,7 +381,7 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
           다음 글: fine-tuning 하나가 아니라 모델이 배포된 뒤 계속
           업데이트되는 상황의 stability–plasticity, replay buffer,
           parameter isolation, update cadence는{" "}
-          <Link to="/ai/continual-learning-foundations">
+          <Link to="/cs/ai/continual-learning-foundations">
             continual learning 글
           </Link>
           에서 이어집니다.

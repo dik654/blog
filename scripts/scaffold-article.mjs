@@ -15,6 +15,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { CATEGORY_DOMAIN } from "../src/content/domains.ts";
 
 const args = process.argv.slice(2);
 function opt(name, fallback) {
@@ -37,6 +38,13 @@ const pascal = slug
   .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
   .join("");
 const route = `${category}/${slug}`;
+const domain = CATEGORY_DOMAIN[category];
+if (!domain) {
+  console.error(`대분류가 등록되지 않은 카테고리입니다: ${category} (src/content/domains.ts)`);
+  process.exit(1);
+}
+/** 공개 href 는 대분류가 앞에 붙습니다. route key 는 데이터 식별자로 남습니다. */
+const publicPath = `${domain}/${route}`;
 const articleDir = path.join("src", "pages", "articles", category, slug);
 const articleFile = path.join("src", "pages", "articles", category, `${slug}.tsx`);
 const vizFile = path.join(articleDir, "viz", `${pascal}Viz.tsx`);
@@ -234,7 +242,7 @@ export const CONCEPTS: Record<string, KnowledgeConcept> = {
     label: "TODO label",
     aliases: ["TODO 세션 목록 원문 표기"],
     definition: "TODO 한 문장 정의. 용어를 모르는 독자 기준, 무엇을 무엇으로 바꾸는지.",
-    canonicalHref: "/${route}#mechanism",
+    canonicalHref: "/${publicPath}#mechanism",
   },
 };
 
@@ -298,7 +306,7 @@ export const OWNERSHIP: Record<string, EditorialBoundary> = {
   "${slug}": {
     title: "${title} 글이 소유하는 범위",
     owns: ["TODO 이 글이 정본으로 설명하는 것"],
-    reuses: [{ label: "TODO 재사용하는 정본", href: "/${category}/TODO" }],
+    reuses: [{ label: "TODO 재사용하는 정본", href: "/${domain}/${category}/TODO" }],
     evidence: [{ kind: "primary-source", rule: "TODO 어떤 주장을 어디까지만 하는지" }],
   },
 };

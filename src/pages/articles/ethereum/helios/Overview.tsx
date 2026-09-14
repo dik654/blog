@@ -54,8 +54,8 @@ export default function Overview({ title }: { title: string }) {
           Execution client는 block body를 실행해 state transition과 state root를 재계산합니다. Helios는 sync committee가 서명한
           consensus header와 그 아래의 Merkle proof를 사용하므로 block 전체를 다시 실행하지 않습니다. 따라서 “같은 신뢰”라고 뭉뚱그리기보다
           <strong> recent checkpoint와 light-client protocol을 믿고, 선택한 state query가 committed root에 속하는지 검증한다</strong>고
-          표현하는 편이 정확합니다. BLS와 sync committee 자체의 정본은 <Link to="/blockchain/prysm-bls">BLS 검증</Link>과{" "}
-          <Link to="/blockchain/prysm-sync-committee">sync committee</Link> 글에서 더 깊게 다룹니다.
+          표현하는 편이 정확합니다. BLS와 sync committee 자체의 정본은 <Link to="/cs/blockchain/prysm-bls">BLS 검증</Link>과{" "}
+          <Link to="/cs/blockchain/prysm-sync-committee">sync committee</Link> 글에서 더 깊게 다룹니다.
         </p>
         <h3>고정 사례의 실제 경로</h3>
         <ol>

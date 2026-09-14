@@ -215,7 +215,7 @@ export default function CfgPushdownAutomataArticle() {
             <strong>incremental syntax tree</strong>를 갱신합니다.
           </p>
           <p>
-            <a href="/ai/incremental-parsing-tree-sitter">
+            <a href="/cs/ai/incremental-parsing-tree-sitter">
               Tree-sitter incremental parsing으로 이동 →
             </a>
           </p>

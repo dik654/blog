@@ -21,7 +21,7 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <Link to="/ai/linear-attention-and-state-space-models#recurrent-state">Linear attention 의 φ(K)ᵀV 누적</Link>
+            <Link to="/cs/ai/linear-attention-and-state-space-models#recurrent-state">Linear attention 의 φ(K)ᵀV 누적</Link>
             은 key·value 쌍을 고정 크기 행렬 하나에 눌러 담는 기억입니다. 이 글은 그 눌러
             담기를 delta rule 로 고쳐 겹쳐 쓴 값을 지우고 다시 쓰는 방법과, 이 수정 때문에
             생긴 순차 의존성을 chunk 단위 병렬 scan 으로 되돌리는 방법을 다룹니다.
@@ -79,7 +79,7 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
           <p>
             두 key 가 직교하면(k₁·k₂=0) 이 섞임이 사라집니다. 실제로는 head 차원보다
             훨씬 많은 token 을 같은 행렬에 눌러 담으므로 완전한 직교를 기대할 수 없고,
-            <Link to="/ai/linear-attention-and-state-space-models#tradeoff">이 겹쳐 쓰기가 왜 고정 크기 상태의 근본 한계인지</Link>
+            <Link to="/cs/ai/linear-attention-and-state-space-models#tradeoff">이 겹쳐 쓰기가 왜 고정 크기 상태의 근본 한계인지</Link>
             는 그 글이 다룹니다. 이 글은 겹쳐 쓰기 자체를 고치는 쓰기 규칙에 집중합니다.
           </p>
         </div>
@@ -312,13 +312,13 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
             여전히 일부 새어 듭니다. 완전한 직교 기저를 강제하지 않는 한 이 누출은 남습니다.
           </p>
           <p>
-            <Link to="/ai/qwen36-hybrid-architecture#delta-update">Qwen3.6 의 Gated DeltaNet</Link>
+            <Link to="/cs/ai/qwen36-hybrid-architecture#delta-update">Qwen3.6 의 Gated DeltaNet</Link>
             은 이 글의 gated delta rule 을 48 개 head·128×128 상태로 구체화한 실제
             production 사례입니다. Head 수·상태 크기·layer 배치 같은 구현 세부는 이 글이
             아니라 그 글이 정본으로 다룹니다.
           </p>
           <p>
-            <Link to="/ai/multi-head-latent-attention-mechanics">MLA</Link> 는 같은
+            <Link to="/cs/ai/multi-head-latent-attention-mechanics">MLA</Link> 는 같은
             "고정 크기로 압축"이라는 동기를 attention 쪽에서 latent 압축으로 풀었고,
             이 글은 attention 을 아예 recurrent state 로 바꾸는 다른 계열입니다. 두 계열을
             결합하는 설계는 이 글의 범위 밖입니다.

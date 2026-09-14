@@ -70,7 +70,7 @@ T_i&\in\mathbb R^{(k+1)\times d}.
         <p>
           Token 수는 feature 수에 비례하고 dense attention score 수는 대략
           feature 수의 제곱으로 늘어납니다. 자세한 Q·K·V 계산은{" "}
-          <Link to="/ai/attention-theory#self-attention">attention 글</Link>이
+          <Link to="/cs/ai/attention-theory#self-attention">attention 글</Link>이
           소유합니다. 여기서 중요한 점은 attention이 한 row 안의 interaction을
           학습한다는 것이지, weight 하나가 곧 causal feature importance라는 뜻은
           아니라는 점입니다.

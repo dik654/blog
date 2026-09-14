@@ -83,7 +83,7 @@ export default function CoolingType() {
         <p className="leading-7">
           기류가 어긋날 때 나타나는 증상은 뚜렷합니다. 랙 상단 장비의 흡기 온도가 하단보다 눈에 띄게 높거나,
           부하를 올릴 때 특정 장비만 성능이 떨어집니다. 랙 단위의 기류 설계와 경보 기준은{" "}
-          <Link to="/gpu/hw-power-cooling#cooling">전력과 냉각</Link>에서 다룹니다.
+          <Link to="/cs/gpu/hw-power-cooling#cooling">전력과 냉각</Link>에서 다룹니다.
         </p>
       </div>
     </section>

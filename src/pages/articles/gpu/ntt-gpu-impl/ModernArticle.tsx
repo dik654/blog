@@ -11,7 +11,7 @@ export default function ModernNttGpuArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Finite-field transform를 launch plan으로 내리기</p><h2 className="text-3xl font-bold tracking-tight">GPU NTT의 핵심은 butterfly 수가 아니라 stage 사이의 order·twiddle·buffer 계약이다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">Number theoretic transform(NTT)의 field, root of unity, forward/inverse 수식은 <a className="text-primary hover:underline" href="/crypto/fft#dft">NTT 정본</a>에서 먼저 설명합니다. 여기서는 같은 transform을 pinned sppark의 Cooley–Tukey(CT)·Gentleman–Sande(GS) kernels, bit-reversal, coset power pass로 실행하는 구현 경계만 소유합니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">Number theoretic transform(NTT)의 field, root of unity, forward/inverse 수식은 <a className="text-primary hover:underline" href="/cs/crypto/fft#dft">NTT 정본</a>에서 먼저 설명합니다. 여기서는 같은 transform을 pinned sppark의 Cooley–Tukey(CT)·Gentleman–Sande(GS) kernels, bit-reversal, coset power pass로 실행하는 구현 경계만 소유합니다.</p>
       <p>
             고정 예제는 N=8 coefficient buffer를 evaluation form으로 바꾼 뒤 inverse로 복원하는 workload입니다. 호출 receipt에는
             field와 N, root/domain id, direction을 적습니다. coset, input/output order, normalization, backend SHA도

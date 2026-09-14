@@ -23,7 +23,7 @@ export default function MathHighDimensionalGeometryArticle() {
             이 글의 질문입니다.
           </p>
           <p>
-            <Link to="/ai/math-vectors-inner-products#norm">벡터·norm 정본</Link>의
+            <Link to="/cs/ai/math-vectors-inner-products#norm">벡터·norm 정본</Link>의
             Euclidean norm을 사용해 먼저 거리 개념을 확장하고, 차원이 늘 때
             거리가 왜 무너지는지 확인합니다. 그다음 Johnson–Lindenstrauss
             lemma가 그 거리를 훨씬 낮은 차원에서도 거의 그대로 보존한다는 사실을
@@ -173,7 +173,7 @@ export default function MathHighDimensionalGeometryArticle() {
             하는 구조입니다.
           </p>
           <p>
-            <Link to="/ai/math-matrices-svd#low-rank">SVD의 low-rank
+            <Link to="/cs/ai/math-matrices-svd#low-rank">SVD의 low-rank
             approximation</Link>이 만드는 rank-k 근사가 바로 이런 <strong>low-rank
             representation</strong>의 한 예입니다. 28×28=784차원 MNIST pixel을
             32차원 bottleneck으로 압축하는 autoencoder도 같은 원리로 동작합니다.
@@ -231,9 +231,9 @@ export default function MathHighDimensionalGeometryArticle() {
         </div>
         <div className="not-prose mt-7 grid gap-5 md:grid-cols-3">
           {[
-            ["Autoencoder", "Bottleneck representation의 폭을 정하고 identity mapping 실패를 판정하는 절차로 확장합니다.", "/ai/autoencoder#bottleneck"],
-            ["분포 의미론", "Word–context 행렬의 low-rank factorization이 만드는 latent representation 사례로 연결합니다.", "/ai/distributional-semantics#dimensionality"],
-            ["Vector search·ANN index", "고차원 embedding의 nearest-neighbor 검색이 거리 집중과 어떻게 타협하는지로 확장합니다.", "/ai/vector-search-and-ann-indexes#dense-retrieval-embedding-space"],
+            ["Autoencoder", "Bottleneck representation의 폭을 정하고 identity mapping 실패를 판정하는 절차로 확장합니다.", "/cs/ai/autoencoder#bottleneck"],
+            ["분포 의미론", "Word–context 행렬의 low-rank factorization이 만드는 latent representation 사례로 연결합니다.", "/cs/ai/distributional-semantics#dimensionality"],
+            ["Vector search·ANN index", "고차원 embedding의 nearest-neighbor 검색이 거리 집중과 어떻게 타협하는지로 확장합니다.", "/cs/ai/vector-search-and-ann-indexes#dense-retrieval-embedding-space"],
           ].map(([title, body, href]) => (
             <Link key={href} to={href} className="min-w-0 border-t border-border/80 pt-4 hover:border-primary/60">
               <h3 className="text-sm font-bold">{title}</h3>

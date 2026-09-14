@@ -29,8 +29,8 @@ export default function Overview({
             bundle→root postconditions
           </strong>
           를 추적합니다. Trie commitment는{" "}
-          <Link to="/blockchain/reth-trie">Reth Trie</Link>, chain activation은{" "}
-          <Link to="/blockchain/reth-chainspec">ChainSpec</Link> 정본을
+          <Link to="/cs/blockchain/reth-trie">Reth Trie</Link>, chain activation은{" "}
+          <Link to="/cs/blockchain/reth-chainspec">ChainSpec</Link> 정본을
           재사용합니다.
         </p>
       </div>

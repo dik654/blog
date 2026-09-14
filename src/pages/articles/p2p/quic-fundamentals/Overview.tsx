@@ -22,7 +22,7 @@ export default function Overview() {
           요약되지 않습니다. Handshake와 transport state를 함께 설계하고 kernel 배포 주기에서 분리할 수 있다는 점이 핵심입니다.
         </p>
         <p>
-          이 글은 <Link to="/p2p/tls-fundamentals">TLS 1.3 정본</Link>의
+          이 글은 <Link to="/cs/p2p/tls-fundamentals">TLS 1.3 정본</Link>의
           handshake·AEAD·key schedule을 재사용합니다. QUIC에서 새로 볼 대상은
           TLS bytes가 CRYPTO frame과 packet-number space로 운반되는 방식,
           stream별 recovery, connection ID와 path validation입니다. HTTP/3이나

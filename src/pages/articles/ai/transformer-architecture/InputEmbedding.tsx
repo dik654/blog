@@ -80,7 +80,7 @@ export default function InputEmbedding() {
           품질이 유지된다고 결론 내리지 않습니다. 학습 길이, position scaling,
           attention layer 구성과 lost in the middle 평가를 함께 봐야 합니다.
           RoPE의 relative phase와 YaRN 확장 수식은{" "}
-          <Link to="/ai/yarn-rope-extension">RoPE·YaRN 정본 글</Link>
+          <Link to="/cs/ai/yarn-rope-extension">RoPE·YaRN 정본 글</Link>
           에서 이어집니다.
         </p>
       </div>

@@ -123,9 +123,9 @@ export default function DeepLearningOverviewArticle() {
           <BoundaryCard title="Generalization" question="처음 보는 data에도 유지되는가?" answer="Split·distribution·regularization의 문제" />
         </div>
         <p>
-          다음에는 <a className="font-semibold text-primary underline" href="/ai/supervised-learning-loop">지도학습 한 바퀴</a>에서
+          다음에는 <a className="font-semibold text-primary underline" href="/cs/ai/supervised-learning-loop">지도학습 한 바퀴</a>에서
           input과 target이 실제 parameter update로 이어지는 순서를 봅니다. 평가 data의 역할은
-          <a className="ml-1 font-semibold text-primary underline" href="/ai/train-validation-test">Train·validation·test</a>에서 별도로 다룹니다.
+          <a className="ml-1 font-semibold text-primary underline" href="/cs/ai/train-validation-test">Train·validation·test</a>에서 별도로 다룹니다.
         </p>
         <div id="paper-deep-learning">
           <CitationBlock source="Deep Learning · LeCun, Bengio, Hinton (2015)" citeKey={1} href={DEEP_LEARNING_REVIEW}>

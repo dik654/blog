@@ -171,9 +171,9 @@ n_r^{need} &= \max\!\left(0,\;n_r^{target}-n_r^{computed}\right) \\
           두 함수가 아니라 하나의 상태 전이 루프로 이해해야 합니다.
         </p>
         <p className="leading-8">
-          전체 engine 경계와 timestamp는 <Link to="/ai/vllm-serving#v1-boundary">vLLM
+          전체 engine 경계와 timestamp는 <Link to="/cs/ai/vllm-serving#v1-boundary">vLLM
           serving architecture</Link>, speculative acceptance가 state commit에 미치는
-          영향은 <Link to="/ai/vllm-spec-decode#draft-verify">Speculative Decoding</Link>에서
+          영향은 <Link to="/cs/ai/vllm-spec-decode#draft-verify">Speculative Decoding</Link>에서
           이어집니다.
         </p>
       </div>

@@ -28,7 +28,7 @@ export default function PrefillDecodePhaseDynamicsArticle() {
             부딪힙니다.
           </p>
           <p>
-            이 차이는 <Link to="/ai/vllm-serving#prefill-decode">prefill 과 decode 를 나누는 이유</Link>를
+            이 차이는 <Link to="/cs/ai/vllm-serving#prefill-decode">prefill 과 decode 를 나누는 이유</Link>를
             hardware 쪽에서 다시 설명합니다. 문제는 continuous batching 이 두 phase 를 한
             step 에 섞는다는 점입니다. Compute 를 다 쓰는 prefill 이 들어오면 memory 만 기다리던
             decode 가 그 시간만큼 늦어지고, 사용자는 token 이 끊기는 것으로 느낍니다.
@@ -37,8 +37,8 @@ export default function PrefillDecodePhaseDynamicsArticle() {
             이 글은 arithmetic intensity 로 두 phase 의 위치를 계산하고, 섞인 batch 의 step
             시간이 어떻게 결정되는지, 그리고 decode 지연 상한에서 거꾸로 prefill chunk 크기를
             정하는 절차를 다룹니다. Step 조립 규칙 자체는{" "}
-            <Link to="/ai/continuous-batching-step-anatomy">scheduling step 해부</Link>가, TTFT 와
-            TPOT 지표의 정의는 <Link to="/ai/serving-latency-metrics-and-slo">latency 지표 글</Link>이
+            <Link to="/cs/ai/continuous-batching-step-anatomy">scheduling step 해부</Link>가, TTFT 와
+            TPOT 지표의 정의는 <Link to="/cs/ai/serving-latency-metrics-and-slo">latency 지표 글</Link>이
             맡습니다.
           </p>
         </div>
@@ -55,7 +55,7 @@ export default function PrefillDecodePhaseDynamicsArticle() {
             Arithmetic intensity 는 한 kernel 이 memory 에서 읽고 쓴 byte 당 수행한 FLOP 수입니다.
             GPU 의 peak FLOP/s 를 memory bandwidth 로 나눈 값이 ridge point 이고, intensity 가
             그보다 낮으면 bandwidth 가, 높으면 연산기가 시간을 정합니다. 이것이{" "}
-            <Link to="/gpu/cuda-perf-analysis#throughput-ledger">roofline model</Link>의 전부입니다.
+            <Link to="/cs/gpu/cuda-perf-analysis#throughput-ledger">roofline model</Link>의 전부입니다.
           </p>
           <p>
             수치를 넣어 보겠습니다. H100 급 GPU 를 dense FP16 989 TFLOP/s, HBM 3.35 TB/s 로
@@ -233,7 +233,7 @@ export default function PrefillDecodePhaseDynamicsArticle() {
           <p>
             Memory 도 같이 봐야 합니다. MHA 7B 는 token 당 0.5 MB 이므로 64K context 한 request 가
             32 GB 의 KV 를 차지하고, GQA 8 group 이면 4 GB 로 줄어듭니다. 이 예산은{" "}
-            <Link to="/ai/model-vram-budgeting#kv-state">VRAM budgeting 글</Link>이 다루며, 여기서는
+            <Link to="/cs/ai/model-vram-budgeting#kv-state">VRAM budgeting 글</Link>이 다루며, 여기서는
             긴 context 가 prefill 의 연산과 decode 의 bandwidth 를 동시에 키운다는 점만 기억하면
             됩니다.
           </p>
@@ -359,7 +359,7 @@ export default function PrefillDecodePhaseDynamicsArticle() {
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/ai/serving-latency-metrics-and-slo">TTFT·TPOT·ITL 과 SLO</Link>
+          다음 글: <Link to="/cs/ai/serving-latency-metrics-and-slo">TTFT·TPOT·ITL 과 SLO</Link>
         </p>
       </section>
     </div>

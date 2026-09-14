@@ -8,19 +8,19 @@ const next = [
   {
     title: "Encoder-only를 이어서 보고 싶다면",
     body: "MLM으로 양방향 representation을 학습한 BERT로 간다.",
-    href: "/ai/bert",
+    href: "/cs/ai/bert",
     label: "BERT 읽기",
   },
   {
     title: "Attention 계산을 더 깊게 보고 싶다면",
     body: "Additive, scaled dot-product와 multi-head의 수식으로 간다.",
-    href: "/ai/attention-theory",
+    href: "/cs/ai/attention-theory",
     label: "Attention 이론 읽기",
   },
   {
     title: "긴 context의 위치 확장을 보고 싶다면",
     body: "RoPE scaling과 YaRN이 해결하는 경계로 간다.",
-    href: "/ai/yarn-rope-extension",
+    href: "/cs/ai/yarn-rope-extension",
     label: "RoPE 확장 읽기",
   },
 ];

@@ -16,7 +16,7 @@ export default function MoeCommunicationSensitivity() {
           데 드는 FLOPs가 훨씬 적다 — 이게 MoE가 매력적인 이유다. 그런데 어떤 expert가 선택될지는 라우터가 토큰별로 그때
           결정하므로, 전체 expert 중 어느 것이든 선택될 수 있다는 전제 아래 모든 expert의 weight가 항상 메모리에 상주해
           있어야 한다. 연산은 sparse인데 메모리 footprint는 dense 모델과 똑같이 전체 파라미터 크기다. 이 tradeoff 자체는{" "}
-          <a href="/ai/model-vram-budgeting#moe-vram-serving-tradeoff">
+          <a href="/cs/ai/model-vram-budgeting#moe-vram-serving-tradeoff">
             model VRAM budgeting 글의 dense·MoE decode bandwidth 비교
           </a>
           에서 이미 다뤘다. 이 글에서 추가하는 건 그 다음 단계, 즉 expert를 여러 GPU에 나눠 놓았을 때 벌어지는 일이다.
@@ -32,7 +32,7 @@ export default function MoeCommunicationSensitivity() {
           all이 MoE layer마다 한 번씩, 즉 모델 전체로는 MoE layer 개수만큼 반복된다.
         </p>
         <p className="leading-7">
-          <a href="/ai/model-vram-budgeting#multi-gpu-vram-strategies">
+          <a href="/cs/ai/model-vram-budgeting#multi-gpu-vram-strategies">
             Tensor parallel의 통신 패턴
           </a>
           과 비교하면 차이가 분명해진다. TP는 attention 뒤와 MLP 뒤로 layer마다 all-reduce가 두 번 들어가는데, all-reduce는
@@ -40,7 +40,7 @@ export default function MoeCommunicationSensitivity() {
           라우팅 결과에 따라 매 스텝 달라지는 비대칭 통신이다. 통신량 자체도 라우팅이 얼마나 균등한지에 좌우된다. 라우팅이
           한쪽 expert로 쏠리면(load imbalance) 그 expert가 있는 GPU로 트래픽이 몰려 개별 링크의 실제 사용률이 특정 pair에서만
           치솟는다. 이 불균형은{" "}
-          <a href="/ai/moe-routing-and-load-balancing">MoE 라우팅·load balancing 글</a>이 라우터 쪽 대응을 다룬다.
+          <a href="/cs/ai/moe-routing-and-load-balancing">MoE 라우팅·load balancing 글</a>이 라우터 쪽 대응을 다룬다.
         </p>
 
         <h3 id="why-interconnect-matters-more" className="mt-6 mb-3 scroll-mt-24 text-xl font-semibold">

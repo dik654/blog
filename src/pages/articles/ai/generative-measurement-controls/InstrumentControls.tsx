@@ -77,7 +77,7 @@ export default function InstrumentControls() {
           그리고 숫자가 후보를 좁히더라도 마지막 판정은 그림이 합니다. 픽셀 변화량은 얼마나 변했는지는 재도
           무엇으로 변했는지는 못 잽니다 — 피부를 다듬은 것과 선을 그린 것이 같은 값으로 나옵니다. 벤치마크
           재현성과 기준선 설계 일반론은{" "}
-          <Link to="/ai/serving-benchmark-methodology#reproducibility">서빙 벤치마크 방법론</Link>이
+          <Link to="/cs/ai/serving-benchmark-methodology#reproducibility">서빙 벤치마크 방법론</Link>이
           소유하고, 이 절은 생성 결과 판정에서 계측기 자체를 검증하는 부분만 다뤘습니다.
         </p>
       </div>

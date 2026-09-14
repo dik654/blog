@@ -89,7 +89,7 @@ export default function FloorLoad() {
         <p className="leading-7">
           숫자는 구성마다 다릅니다. 여기 쓴 값은 계산 방법을 보여 주기 위한 예시이고, 실제로는 랙 제조사가
           제공하는 무게와 장비별 실측 무게를 합해 구해야 합니다. 랙에 무엇을 넣을지의 기구 점검 항목은{" "}
-          <Link to="/gpu/hw-power-cooling#rack">전력과 냉각</Link>의 체크리스트와 함께 봅니다.
+          <Link to="/cs/gpu/hw-power-cooling#rack">전력과 냉각</Link>의 체크리스트와 함께 봅니다.
         </p>
       </div>
     </section>

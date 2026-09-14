@@ -14,7 +14,7 @@ export default function Overview() {
         </p>
         <p>
           이 글은 함수, 극한, 미분, chain rule, 편미분과 gradient를 한 경로로 연결합니다.
-          여러 좌표를 다루는 부분에서는 <Link to="/ai/math-vectors-inner-products#vectors">vector와
+          여러 좌표를 다루는 부분에서는 <Link to="/cs/ai/math-vectors-inner-products#vectors">vector와
           dot product</Link>를 사용하지만, 미분을 이미 안다고 가정하지는 않습니다.
         </p>
       </div>

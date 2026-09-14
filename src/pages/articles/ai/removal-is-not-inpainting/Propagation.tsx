@@ -95,7 +95,7 @@ export default function Propagation() {
           이 절벽이 계측기 문제와 얽혀 있었다는 점도 기록합니다. 세기를 255로 올려 프레임을 파괴한 결과를 보조
           계측기 둘이 전부 성공으로 채점했습니다. 이미지를 망가뜨리면 그 물건도 함께 사라지므로 "없어졌는가"만
           묻는 판정기는 이것을 구분하지 못합니다. 잡아낸 것은 마스크 밖 변화량 하나뿐이었습니다. 그 실패의
-          전모는 <Link to="/ai/generative-measurement-controls#instrument-controls">계측기 검증</Link>이
+          전모는 <Link to="/cs/ai/generative-measurement-controls#instrument-controls">계측기 검증</Link>이
           소유합니다.
         </p>
       </div>

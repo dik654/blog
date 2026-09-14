@@ -10,7 +10,7 @@ export default function ModernArticle() {
     <article className="space-y-16">
       <section id="overview" className="scroll-mt-20 space-y-7">
         <header className="space-y-3"><p className="text-sm font-semibold text-primary">호출 성공이 아니라 effect의 끝을 봅니다</p><h2 className="text-3xl font-bold tracking-tight">Production MCP server는 model proposal을 검증된 domain effect와 영수증으로 바꿉니다</h2></header>
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8"><Link to="/ai/mcp-primitives">Tool schema</Link>와 <Link to="/ai/mcp-transports">transport</Link>가 준비돼도 production 운영은 끝나지 않습니다. Model의 tool call은 실행 후보이고, description은 설명 data이며, timeout은 미실행 증명이 아닙니다.</p><p className="leading-8">이 글은 authorization gate 하나에서 시작해 실제 side effect와 receipt를 붙입니다. 마지막에 retry·extension·deprecation을 배포 lifecycle로 조합합니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8"><Link to="/cs/ai/mcp-primitives">Tool schema</Link>와 <Link to="/cs/ai/mcp-transports">transport</Link>가 준비돼도 production 운영은 끝나지 않습니다. Model의 tool call은 실행 후보이고, description은 설명 data이며, timeout은 미실행 증명이 아닙니다.</p><p className="leading-8">이 글은 authorization gate 하나에서 시작해 실제 side effect와 receipt를 붙입니다. 마지막에 retry·extension·deprecation을 배포 lifecycle로 조합합니다.</p></div>
         <McpLearningFlowViz mode="operations" />
         <ContentBoundary article="mcp-server-operations" />
       </section>

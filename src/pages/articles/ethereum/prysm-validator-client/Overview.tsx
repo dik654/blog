@@ -19,7 +19,7 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         <p>
           이 글은 <strong>duty 조회→slot deadline→signing context→keymanager trust boundary→slashing-protection
           transaction→submission receipt→failover</strong> 순서로 내려갑니다. Beacon state·head·finality 계산은
-          <Link to="/blockchain/prysm"> Prysm 개요</Link>와 세부 글이 소유하며, validator client는 그 결과를 검증 가능한
+          <Link to="/cs/blockchain/prysm"> Prysm 개요</Link>와 세부 글이 소유하며, validator client는 그 결과를 검증 가능한
           signing request로 바꾸는 경계만 소유합니다.
         </p>
       </div>

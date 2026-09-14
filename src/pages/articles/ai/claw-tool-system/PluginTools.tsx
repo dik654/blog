@@ -210,9 +210,9 @@ export default function PluginTools() {
           paired test는 선택한 call contract의 회귀를 찾을 뿐 project의 실서비스 적합성을 보장하지 않습니다.
         </p>
         <p>
-          Plugin 설치·활성화와 local artifact trust는 <Link to="/ai/claw-plugin">Plugin
+          Plugin 설치·활성화와 local artifact trust는 <Link to="/cs/ai/claw-plugin">Plugin
           시스템</Link>에서, MCP transport·authorization·reconnect는
-          <Link to="/ai/claw-mcp"> MCP lifecycle</Link>에서 이어서 확인할 수
+          <Link to="/cs/ai/claw-mcp"> MCP lifecycle</Link>에서 이어서 확인할 수
           있습니다.
         </p>
       </div>

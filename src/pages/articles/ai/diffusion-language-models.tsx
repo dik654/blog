@@ -226,7 +226,7 @@ export default function DiffusionLanguageModelsArticle() {
             합니다. 이때 trajectory success뿐 아니라 latency와 실패 복구도 함께 봅니다.
           </p>
           <p>
-            다시 큰 지도에 놓으면 <Link to="/ai/modern-image-model-stack">image stack</Link>은
+            다시 큰 지도에 놓으면 <Link to="/cs/ai/modern-image-model-stack">image stack</Link>은
             spatial sample 생성, Diffusion LLM은 discrete sequence refinement, world model은
             action-conditioned temporal transition을 맡습니다. 세 축은 결합될 수 있지만
             이름이 비슷하다는 이유로 하나의 단선적 진화로 묶이지 않습니다.

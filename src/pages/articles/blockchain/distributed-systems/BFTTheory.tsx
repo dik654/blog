@@ -31,7 +31,7 @@ export default function BFTTheory() {
         <p>
           이 글에서는 failure model의 차이만 소유합니다. Quorum 교집합에 정직한
           voter가 남는 이유와 PBFT·Tendermint·HotStuff의 certificate rule은{" "}
-          <Link to="/blockchain/bft-theory">BFT 정본</Link>에서 다룹니다.
+          <Link to="/cs/blockchain/bft-theory">BFT 정본</Link>에서 다룹니다.
         </p>
 
         <h3>Failure injection도 공격 능력에 맞춰야 합니다</h3>

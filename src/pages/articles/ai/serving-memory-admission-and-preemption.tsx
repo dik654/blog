@@ -29,9 +29,9 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
           </p>
           <p>
             이 글은 그 두 결정만 다룹니다. Block을 어떻게 나누고 fragmentation을 어떻게
-            줄이는지는 <Link to="/ai/vllm-paged-attention#block-pool">PagedAttention 글</Link>이,
+            줄이는지는 <Link to="/cs/ai/vllm-paged-attention#block-pool">PagedAttention 글</Link>이,
             RUNNING·WAITING 순서와 token budget은{" "}
-            <Link to="/ai/vllm-scheduler#running-waiting-order">scheduler 글</Link>이 설명합니다.
+            <Link to="/cs/ai/vllm-scheduler#running-waiting-order">scheduler 글</Link>이 설명합니다.
           </p>
           <p>
             읽는 순서는 요청 하나의 memory footprint를 세는 식에서 출발해 watermark를 둔
@@ -107,7 +107,7 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
             요청을 받아들이는 판정은 세 관문을 차례로 지납니다. 동시 sequence 수 상한인
             max_num_seqs, 한 step의 token 예산인 max_num_batched_tokens, 그리고 KV
             memory입니다. 앞의 둘은{" "}
-            <Link to="/ai/vllm-scheduler#scheduler-knobs">scheduler 글</Link>이 다뤘고, 이
+            <Link to="/cs/ai/vllm-scheduler#scheduler-knobs">scheduler 글</Link>이 다뤘고, 이
             세 관문을 합친 것이 request admission control입니다. 이 글은 세 번째 관문인
             memory admission control을 봅니다.
           </p>
@@ -201,7 +201,7 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
             현재 vLLM V1 문서는 기본 preemption mode를 RECOMPUTE로 두며 V1 구조에서
             recompute의 overhead가 더 낮다고 설명합니다. Prefix cache가 있으면 재개 시
             prompt 부분을 hit해 recompute 비용이 더 줄어드는데, 그 계산은{" "}
-            <Link to="/ai/vllm-scheduler#preemption">scheduler 글의 recomputation cost 식</Link>이
+            <Link to="/cs/ai/vllm-scheduler#preemption">scheduler 글의 recomputation cost 식</Link>이
             맡습니다.
           </p>
         </div>
@@ -275,7 +275,7 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
           </p>
           <p>
             Layer 종류별 block을 한 pool에 놓는 방법은{" "}
-            <Link to="/ai/vllm-paged-attention#hybrid-cache-groups">PagedAttention 글의 cache group 절</Link>이
+            <Link to="/cs/ai/vllm-paged-attention#hybrid-cache-groups">PagedAttention 글의 cache group 절</Link>이
             설명합니다. 이 글은 그 환산이 끝났다고 보고 admission 부등식만 다룹니다.
           </p>
           <p>
@@ -372,9 +372,9 @@ export default function ServingMemoryAdmissionAndPreemptionArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             다음 읽기는 이 판정을 replica 수와 배포 용량으로 올리는{" "}
-            <Link to="/ai/llm-serving-capacity#capacity-admission">serving capacity 글</Link>과,
+            <Link to="/cs/ai/llm-serving-capacity#capacity-admission">serving capacity 글</Link>과,
             weight·KV·workspace를 한 장부로 계산하는{" "}
-            <Link to="/ai/model-vram-budgeting#runtime-state">VRAM budgeting 글</Link>입니다.
+            <Link to="/cs/ai/model-vram-budgeting#runtime-state">VRAM budgeting 글</Link>입니다.
           </p>
         </div>
       </section>

@@ -12,7 +12,7 @@ export default function ModernCudaMatrixMultiplyArticle() {
     <article className="space-y-14">
       <section id="overview" className="space-y-6">
         <header className="space-y-3"><p className="text-sm font-semibold text-primary">행렬 곱을 memory traffic 문제로 읽기</p><h2 className="text-3xl font-bold tracking-tight">모든 thread가 정답 하나를 계산해도, 같은 값을 계속 다시 읽으면 GPU는 기다린다</h2></header>
-        <p className="text-lg leading-8 text-foreground/90">행렬 곱셈 <code>C=A×B</code>에서 output 원소 하나는 A의 한 row와 B의 한 column을 곱해 더한 값입니다. 수학적 정의는 <a className="text-primary hover:underline" href="/ai/math-matrices-svd#multiplication">행렬 곱 정본</a>이 소유하며, 여기서는 그 계산을 CUDA thread에 배치했을 때 왜 나이브 kernel이 global memory traffic에 막히고 shared-memory tiling이 언제 이를 줄이는지 추적합니다.</p>
+        <p className="text-lg leading-8 text-foreground/90">행렬 곱셈 <code>C=A×B</code>에서 output 원소 하나는 A의 한 row와 B의 한 column을 곱해 더한 값입니다. 수학적 정의는 <a className="text-primary hover:underline" href="/cs/ai/math-matrices-svd#multiplication">행렬 곱 정본</a>이 소유하며, 여기서는 그 계산을 CUDA thread에 배치했을 때 왜 나이브 kernel이 global memory traffic에 막히고 shared-memory tiling이 언제 이를 줄이는지 추적합니다.</p>
         <p>핵심은 “shared memory가 빠르다”가 아니라 <strong>한 번 가져온 A·B 값을 block 안의 여러 output이 재사용한다</strong>는 데 있습니다. 그 대가로 tile load, block barrier, edge predication, register·shared-memory 사용량이 생기므로 correctness와 measured throughput을 함께 확인해야 합니다.</p>
         <GemmDataflowViz />
         <ContentBoundary article="cuda-matrix-multiply" />
@@ -20,7 +20,7 @@ export default function ModernCudaMatrixMultiplyArticle() {
 
       <section id="naive" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">01 · Output mapping</p><h2 className="mt-2 text-2xl font-bold">2차원 thread 하나가 C의 원소 하나를 맡는다</h2></header>
-        <p>M×K 행렬 A와 K×N 행렬 B를 곱하면 C는 M×N입니다. 2차원 global index로 <code>row</code>와 <code>col</code>을 만들고, 유효한 thread만 K축을 순회합니다. Grid·block·index의 정의와 ceiling launch는 <a className="text-primary hover:underline" href="/gpu/cuda-thread-hierarchy#indexing-2d">CUDA thread hierarchy</a>에서 재사용합니다.</p>
+        <p>M×K 행렬 A와 K×N 행렬 B를 곱하면 C는 M×N입니다. 2차원 global index로 <code>row</code>와 <code>col</code>을 만들고, 유효한 thread만 K축을 순회합니다. Grid·block·index의 정의와 ceiling launch는 <a className="text-primary hover:underline" href="/cs/gpu/cuda-thread-hierarchy#indexing-2d">CUDA thread hierarchy</a>에서 재사용합니다.</p>
         <ExplainedFormula question="한 output C[row,col]을 어떤 값들로 계산하고 전체 계산량은 얼마일까?" idea={<>A의 row에서 K개, B의 column에서 K개를 같은 k로 짝지어 곱하고 누산합니다. 곱과 덧셈을 각각 한 FLOP로 세는 관례라면 대략 2MNK FLOPs입니다.</>} formula={String.raw`C_{ij}=\sum_{k=0}^{K-1}A_{ik}B_{kj},\qquad F\approx2MNK`}
         annotatedFormula={String.raw`C_{ij}=\underbrace{\sum_{k=0}^{K-1}A_{ik}B_{kj},\qquad F\approx2MNK}_{\text{Output 원소 계산}}`}
         operations={[
@@ -43,7 +43,7 @@ export default function ModernCudaMatrixMultiplyArticle() {
 
       <section id="tiled" className="space-y-6">
         <header><p className="text-sm font-semibold text-primary">02 · Shared-memory tiling</p><h2 className="mt-2 text-2xl font-bold">K축을 tile로 나누고 load·barrier·reuse·barrier를 반복한다</h2></header>
-        <p><strong>Tiling</strong>은 큰 행렬을 block이 다룰 작은 조각으로 나누는 방법입니다. Threads가 A tile과 B tile을 coalesced하게 shared memory로 옮긴 뒤 <code>__syncthreads()</code>로 load 완료를 맞추고, tile 내부의 값을 여러 output 계산에 재사용합니다. 다음 tile을 덮어쓰기 전에도 barrier가 필요합니다. Shared memory의 scope·bank와 barrier 의미는 각각 <a className="text-primary hover:underline" href="/gpu/cuda-shared-memory">shared-memory 정본</a>, <a className="text-primary hover:underline" href="/gpu/cuda-sync-streams#overview">동기화 정본</a>을 따릅니다.</p>
+        <p><strong>Tiling</strong>은 큰 행렬을 block이 다룰 작은 조각으로 나누는 방법입니다. Threads가 A tile과 B tile을 coalesced하게 shared memory로 옮긴 뒤 <code>__syncthreads()</code>로 load 완료를 맞추고, tile 내부의 값을 여러 output 계산에 재사용합니다. 다음 tile을 덮어쓰기 전에도 barrier가 필요합니다. Shared memory의 scope·bank와 barrier 의미는 각각 <a className="text-primary hover:underline" href="/cs/gpu/cuda-shared-memory">shared-memory 정본</a>, <a className="text-primary hover:underline" href="/cs/gpu/cuda-sync-streams#overview">동기화 정본</a>을 따릅니다.</p>
         <TileReuseViz />
         <ExplainedFormula question="T×T tile에서 global load 한 번이 얼마나 재사용되는지 어떻게 근사할까?" idea={<>한 K tile마다 A와 B에서 각각 T² values를 load하고 T² output threads가 T번 MAC합니다. 따라서 tile이 커질수록 global byte당 계산이 늘지만 resource 비용도 함께 늘어납니다.</>} formula={String.raw`I_{tile}\approx\frac{2T^3\ \mathrm{FLOP}}{2T^2s\ \mathrm{byte}}=\frac{T}{s}\ \mathrm{FLOP/byte}`}
         annotatedFormula={String.raw`I_{tile}\approx\frac{2T^3\ \mathrm{FLOP}}{2T^2s\ \mathrm{byte}}=\underbrace{\frac{T}{s}\ \mathrm{FLOP/byte}}_{\text{기준량당 비율}}`}

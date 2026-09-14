@@ -60,7 +60,7 @@ export default function Fp12() {
           그렇지 않은 최소 k가 12입니다. 이것이 pairing target을 Fp¹²의
           order-r subgroup에서 찾게 하는 이유입니다. 그러나 임의 Fp¹² 원소가
           자동으로 GT 원소인 것은 아닙니다. Miller loop output을
-          <Link to="/crypto/pairing#final-exp"> final exponentiation</Link>으로
+          <Link to="/cs/crypto/pairing#final-exp"> final exponentiation</Link>으로
           투영하고 zero·subgroup·encoding 경계를 따로 검사합니다.
         </p>
       </div>

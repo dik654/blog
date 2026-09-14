@@ -83,8 +83,8 @@ export default function SlashCommands() {
           여기 적은 이름은 이 구현의 예시입니다. 제품마다 명령 집합은 달라도
           되지만, 관찰·세션 수명주기·런타임 제어처럼 효과를 나누는 기준은 유지할
           수 있습니다. <code>/compact</code>의 실제 문맥 축약 방식은
-          <a href="/ai/claw-compaction"> compaction 글</a>에서, 권한 모드의
-          의미는 <a href="/ai/claw-permissions">권한 모델 글</a>에서 각각 자세히
+          <a href="/cs/ai/claw-compaction"> compaction 글</a>에서, 권한 모드의
+          의미는 <a href="/cs/ai/claw-permissions">권한 모델 글</a>에서 각각 자세히
           다룹니다.
         </p>
 
@@ -142,7 +142,7 @@ export default function SlashCommands() {
           임의 코드가 신뢰되는 위험도 생깁니다. 따라서 manifest에 명령 이름,
           입력 schema, 필요한 권한을 선언하고 사용자가 신뢰한 프로젝트에서만
           활성화해야 합니다. 프로세스 격리와 버전 관리까지 필요해지면 이 기능은
-          사실상 <a href="/ai/claw-plugin">플러그인 시스템</a>이므로 그쪽이
+          사실상 <a href="/cs/ai/claw-plugin">플러그인 시스템</a>이므로 그쪽이
           소유하는 편이 중복을 줄입니다.
         </p>
       </div>

@@ -36,8 +36,8 @@ export default function Overview() {
 
         <p className="leading-7">
           정체성 판정 임계값과 계측기의 스타일 적용 범위는{" "}
-          <Link to="/ai/generative-measurement-controls">계측기 검증</Link>이, 참조로 정체성을 주입하는
-          방식은 <Link to="/ai/reference-identity-pose-separation#attention-injection">정체성과 포즈 분리</Link>가
+          <Link to="/cs/ai/generative-measurement-controls">계측기 검증</Link>이, 참조로 정체성을 주입하는
+          방식은 <Link to="/cs/ai/reference-identity-pose-separation#attention-injection">정체성과 포즈 분리</Link>가
           소유합니다.
         </p>
       </div>

@@ -60,7 +60,7 @@ export default function OriginProtection() {
           <p className="leading-7">
             브라우저에 실제로 전달되는 코드가 무엇인지의 무결성 문제는 또 다른 층입니다. 앞단이 중간에서
             내용을 다룰 수 있다는 점과 그 검증 방법은{" "}
-            <Link to="/blockchain/webcat-frontend-integrity">프런트엔드 무결성</Link>에서 다룹니다.
+            <Link to="/cs/blockchain/webcat-frontend-integrity">프런트엔드 무결성</Link>에서 다룹니다.
           </p>
         </ProgressiveDetail>
       </div>

@@ -117,7 +117,7 @@ export default function SelfAttention({
         <p>
           이 글은 attention 연산 자체를 맡는다. Residual connection,
           normalization, feed-forward network와 함께 완전한 block을 만드는
-          과정은 <Link to="/ai/transformer-architecture">Transformer 구조 글</Link>
+          과정은 <Link to="/cs/ai/transformer-architecture">Transformer 구조 글</Link>
           에서 이어진다.
         </p>
       </div>

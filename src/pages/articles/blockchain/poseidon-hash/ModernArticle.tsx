@@ -36,12 +36,12 @@ export default function ModernPoseidonArticle() {
     </section>
     <section id="sponge-boundary" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Sponge와 byte 경계</p><h2 className="mt-2 text-2xl font-bold">Field elements가 아닌 bytes를 바로 넣었다고 말할 수 없다</h2></header>
-      <p>Width 3, rate 2, capacity 1 profile은 두 field elements씩 흡수합니다. Arbitrary bytes는 chunk width·endianness·length delimiter·canonical residue check로 먼저 elements가 되어야 합니다. 이 serialization을 바꾸면 permutation이 같아도 hash protocol은 달라집니다. 일반 sponge 원리는 <a href="/crypto/hash-theory#constructions" className="text-primary underline">hash 정본</a>을 재사용합니다.</p>
+      <p>Width 3, rate 2, capacity 1 profile은 두 field elements씩 흡수합니다. Arbitrary bytes는 chunk width·endianness·length delimiter·canonical residue check로 먼저 elements가 되어야 합니다. 이 serialization을 바꾸면 permutation이 같아도 hash protocol은 달라집니다. 일반 sponge 원리는 <a href="/cs/crypto/hash-theory#constructions" className="text-primary underline">hash 정본</a>을 재사용합니다.</p>
     </section>
     <section id="security-direction" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">04 · Security margin과 방향 전환</p><h2 className="mt-2 text-2xl font-bold">Reduced-round 공격의 진전과 full-round break를 구분하고, hash를 바꿀지 prover를 바꿀지 다시 비교한다</h2></header>
       <p><strong>Security margin</strong>은 정확한 parameter profile의 전체 rounds와 알려진 공격 범위 사이의 여유를 평가하는 말입니다. 새 algebraic attack이 더 많은 reduced rounds를 다루면 여유가 줄 수 있지만, 곧바로 deployed full-round instance가 깨졌다는 뜻은 아닙니다. Field·width·S-box·linear layer·attack model을 함께 적어야 합니다.</p>
-      <p>Poseidon의 선택 논리는 명확했습니다. SHA/BLAKE의 bit logic이 prime-field circuit에서 비싸므로 hash workload를 field-native하게 바꿉니다. 반대 방향은 기존 hash의 긴 cryptanalysis 역사와 생태계를 유지하고, <a className="text-primary underline" href="/crypto/binary-field-proving#overview">binary-field proving</a>처럼 proof layer를 Boolean workload에 맞춥니다.</p>
+      <p>Poseidon의 선택 논리는 명확했습니다. SHA/BLAKE의 bit logic이 prime-field circuit에서 비싸므로 hash workload를 field-native하게 바꿉니다. 반대 방향은 기존 hash의 긴 cryptanalysis 역사와 생태계를 유지하고, <a className="text-primary underline" href="/cs/crypto/binary-field-proving#overview">binary-field proving</a>처럼 proof layer를 Boolean workload에 맞춥니다.</p>
       <PoseidonSecurityShiftViz />
       <p>
             어느 쪽도 이름만으로 승리하지 않습니다. 비교는 같은 statement 안에서 합니다. Exact primitive profile과 known attacks, circuit

@@ -29,7 +29,7 @@ export default function Overview({
             key hashing→nibble path→dirty prefix→overlay root→header 비교
           </strong>
           를 추적합니다. DB snapshot과 provider의 일관된 read view는{" "}
-          <Link to="/blockchain/reth-provider">Reth Provider</Link>가 소유하며,
+          <Link to="/cs/blockchain/reth-provider">Reth Provider</Link>가 소유하며,
           이 글은 Merkle Patricia trie와 state-root 계산만 다룹니다.
         </p>
       </div>

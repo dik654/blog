@@ -177,7 +177,7 @@ export default function ModernArticle() {
             합칩니다. Autoregressive decode는 과거 K/V를 매번 다시 만들지 않도록
             cache에 보존하므로 context 길이와 함께 memory가 자랍니다. Q·K·V
             자체가 낯설다면{" "}
-            <Link to="/ai/attention-theory">Attention 기초</Link>의 score와
+            <Link to="/cs/ai/attention-theory">Attention 기초</Link>의 score와
             value 합부터 읽을 수 있습니다.
           </p>
         </div>
@@ -509,7 +509,7 @@ M_\Delta
               Context가 262K로 늘어도 DeltaNet 쪽은 그대로인 채 attention
               KV만 16 GiB까지 자랍니다. 서로 다른 크기 규칙을 가진 cache
               여러 종류를 같은 device 메모리 안에 함께 배치하는 일반 원리는{" "}
-              <Link to="/ai/hybrid-kv-cache-allocation">
+              <Link to="/cs/ai/hybrid-kv-cache-allocation">
                 hybrid KV-cache allocation
               </Link>
               이 다룹니다.
@@ -550,13 +550,13 @@ M_\Delta
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             이제 두 기억의 shape를 알았으므로{" "}
-            <Link to="/ai/qwen36-hybrid-runtime">
+            <Link to="/cs/ai/qwen36-hybrid-runtime">
               Qwen3.6 하이브리드 런타임
             </Link>
             에서 prefill·decode가 이를 어떻게 commit하고, native·extended
             context와 MTP rollback을 어떻게 검증하는지 이어서 볼 수 있습니다.
             가중치와 GPU capacity를 계산하는 일반 절차는{" "}
-            <Link to="/ai/model-vram-budgeting">모델 VRAM 계산</Link>이
+            <Link to="/cs/ai/model-vram-budgeting">모델 VRAM 계산</Link>이
             소유합니다.
           </p>
         </div>

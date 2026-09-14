@@ -84,7 +84,7 @@ export default function SubAgentSandbox({
         sandbox 여부와 mount를 해석합니다. <strong>elevated</strong>는 exec를
         sandbox 밖 host에서 실행하는 예외 경로지만 tool allow/deny를 우회하지
         않습니다. 이 구조와 network·secret·RBAC까지의 확장은
-        <Link to="/ai/agent-sandbox-security"> agent sandbox security</Link>에서
+        <Link to="/cs/ai/agent-sandbox-security"> agent sandbox security</Link>에서
         다룹니다.
       </p>
 

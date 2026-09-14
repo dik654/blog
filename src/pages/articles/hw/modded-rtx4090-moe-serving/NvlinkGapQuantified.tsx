@@ -53,7 +53,7 @@ export default function NvlinkGapQuantified() {
           4090의 상한은 PCIe Gen4 x16의 raw rate
         </h3>
         <p className="leading-7">
-          <a href="/gpu/gpu-interconnects#pcie-transaction-bandwidth-latency">PCIe raw bandwidth 공식</a>{" "}
+          <a href="/cs/gpu/gpu-interconnects#pcie-transaction-bandwidth-latency">PCIe raw bandwidth 공식</a>{" "}
           <code>R_GT/s × L × 128/130 ÷ 8</code>에 4090의 PCIe Gen4 x16(16GT/s, 16 lane)을 넣으면 16 × 16 ×
           128/130 ÷ 8 ≈ 31.5GB/s 편도가 나온다. 두 방향을 동시에 쓰는 duplex 합으로도 약 63GB/s다. 이 숫자는 protocol
           overhead를 뺀 raw 상한이라 실제 collective 통신에서 관측되는 goodput은 이보다 더 낮다.
@@ -82,7 +82,7 @@ export default function NvlinkGapQuantified() {
           두 GPU 쌍이 항상 같은 대역폭으로 통신하는 full mesh라서, 몇 번 GPU와 몇 번 GPU를 붙이느냐에 따라 성능이 갈리지
           않는다. 반면 PCIe만 있는 구성은 GPU가 같은 root complex 아래 있는지, PCIe switch를 몇 단 거치는지에 따라 실제
           achievable bandwidth가 달라진다 — 이 topology 의존성은{" "}
-          <a href="/gpu/gpu-interconnects#pcie-topology-peer-path">PCIe topology 글</a>에서 다룬 내용 그대로다.
+          <a href="/cs/gpu/gpu-interconnects#pcie-topology-peer-path">PCIe topology 글</a>에서 다룬 내용 그대로다.
         </p>
 
         <div className="overflow-x-auto not-prose my-6">

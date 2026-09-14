@@ -36,7 +36,7 @@ export default function PrefixCachingRadixAttentionArticle() {
           </p>
           <p>
             Block 단위 prefix sharing 과 token·request hit rate 의 정의는{" "}
-            <Link to="/ai/vllm-paged-attention#prefix-sharing">PagedAttention 글</Link> 이
+            <Link to="/cs/ai/vllm-paged-attention#prefix-sharing">PagedAttention 글</Link> 이
             이미 다뤘습니다. 이 글은 그 위에서 매칭 자료구조, eviction 순서, cache-aware
             scheduling, 그리고 hit 이 확정된 뒤 kernel 로 넘어가는 attention metadata 를
             엽니다.
@@ -178,7 +178,7 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
             Group 이 하나뿐인 model 은 <code>UnitaryKVCacheCoordinator</code> 가, prefix
             caching 을 끈 배포는 <code>KVCacheCoordinatorNoPrefixCache</code> 가 같은
             interface 를 맡습니다. Group 을 나누고 allocation 을 함께 조율하는 쪽은{" "}
-            <Link to="/ai/vllm-paged-attention#hybrid-cache-groups">hybrid cache group</Link>{" "}
+            <Link to="/cs/ai/vllm-paged-attention#hybrid-cache-groups">hybrid cache group</Link>{" "}
             절이 정본입니다.
           </p>
         </div>
@@ -264,7 +264,7 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
             SGLang 은 <code>--schedule-policy</code> 로 <code>lpm</code>(longest prefix
             match)·<code>fcfs</code>·<code>dfs-weight</code> 등을 고르게 하고, priority 정책과
             queue 상한 같은 fairness 장치는{" "}
-            <Link to="/ai/vllm-scheduler#queue-batching">vLLM scheduler 글</Link> 이 다룹니다.
+            <Link to="/cs/ai/vllm-scheduler#queue-batching">vLLM scheduler 글</Link> 이 다룹니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -362,7 +362,7 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
             읽어야 합니다. Kernel 은 요청의 block table 행에서 위치를 B 로 나눈 몫 번째
             항목을 읽어 physical block 을 얻고, 그 block 의 K·V page 를 가져옵니다. 이
             조회가 block table lookup 이며 logical 주소를 physical 로 바꾸는{" "}
-            <Link to="/ai/vllm-paged-attention#logical-physical-address">address translation</Link>{" "}
+            <Link to="/cs/ai/vllm-paged-attention#logical-physical-address">address translation</Link>{" "}
             의 실행 시점 모습입니다.
           </p>
           <p>
@@ -458,8 +458,8 @@ n_r^{hit} &= \underbrace{m_r}_{\text{token 단위 match 길이}}, \qquad n_r^{hi
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/ai/vllm-scheduler#queue-batching">Queue 정책과 fairness</Link>,
-          그리고 <Link to="/ai/serving-memory-admission-and-preemption#watermark-admission">KV admission 과 preemption</Link>.
+          다음 글: <Link to="/cs/ai/vllm-scheduler#queue-batching">Queue 정책과 fairness</Link>,
+          그리고 <Link to="/cs/ai/serving-memory-admission-and-preemption#watermark-admission">KV admission 과 preemption</Link>.
         </p>
       </section>
     </div>

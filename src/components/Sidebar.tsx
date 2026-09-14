@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { categories } from "@/content";
+import { domains } from "@/content";
 import CategoryItem from "./sidebar/CategoryItem";
 
 export default function Sidebar() {
@@ -53,16 +53,23 @@ export default function Sidebar() {
           <span aria-hidden="true">↗</span>
         </Link>
 
-        {categories.map((cat) => (
-          <CategoryItem
-            key={cat.slug}
-            category={cat}
-            isActive={activeCategory === cat.slug}
-            isExpanded={expanded[cat.slug] ?? activeCategory === cat.slug}
-            activeArticle={activeArticle}
-            expanded={expanded}
-            onToggle={toggle}
-          />
+        {domains.map((domain) => (
+          <section key={domain.slug} className="mb-1">
+            <h2 className="px-3 pb-1 pt-3 text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground/70">
+              {domain.name}
+            </h2>
+            {domain.categories.map((cat) => (
+              <CategoryItem
+                key={cat.slug}
+                category={cat}
+                isActive={activeCategory === cat.slug}
+                isExpanded={expanded[cat.slug] ?? activeCategory === cat.slug}
+                activeArticle={activeArticle}
+                expanded={expanded}
+                onToggle={toggle}
+              />
+            ))}
+          </section>
         ))}
       </nav>
     </div>

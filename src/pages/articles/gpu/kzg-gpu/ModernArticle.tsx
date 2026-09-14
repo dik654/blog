@@ -11,7 +11,7 @@ export default function ModernKzgGpuArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">KZG equation을 검증 가능한 GPU jobs로 내리기</p><h2 className="text-3xl font-bold tracking-tight">KZG GPU 가속은 commitment 수식을 바꾸는 일이 아니라 polynomial·SRS·MSM artifact의 identity를 보존하는 일이다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">Polynomial commitment interface와 KZG quotient·pairing equation은 <a className="text-primary hover:underline" href="/crypto/polycommit#kzg">KZG 정본</a>이 소유합니다. 이 글은 coefficient/evaluation buffer가 <a className="text-primary hover:underline" href="/gpu/poly-ops-gpu">GPU polynomial 연산</a>과 <a className="text-primary hover:underline" href="/gpu/msm-gpu-impl">GPU MSM</a>을 거쳐 commitment/proof가 되고, 독립 verifier receipt로 닫히는 구현 경계만 다룹니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">Polynomial commitment interface와 KZG quotient·pairing equation은 <a className="text-primary hover:underline" href="/cs/crypto/polycommit#kzg">KZG 정본</a>이 소유합니다. 이 글은 coefficient/evaluation buffer가 <a className="text-primary hover:underline" href="/cs/gpu/poly-ops-gpu">GPU polynomial 연산</a>과 <a className="text-primary hover:underline" href="/cs/gpu/msm-gpu-impl">GPU MSM</a>을 거쳐 commitment/proof가 되고, 독립 verifier receipt로 닫히는 구현 경계만 다룹니다.</p>
       <p>공통 workload는 degree 7 polynomial, 정확히 8개 SRS G1 points, evaluation claim (z,y), quotient polynomial과 proof입니다. GPU 결과가 빨라도 SRS prefix·curve·form·generation이 다르면 폐기합니다.</p>
       <ModernKzgGpuViz />
       <ContentBoundary article="kzg-gpu" />

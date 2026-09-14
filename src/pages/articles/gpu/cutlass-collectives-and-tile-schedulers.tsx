@@ -30,7 +30,7 @@ export default function CutlassCollectivesAndTileSchedulersArticle() {
             tile 을 어느 threadblock 이 언제 맡는지는 collective 밖의 scheduler 가 정합니다.
           </p>
           <p>
-            <Link to="/gpu/cutlass-gemm-hierarchy-and-cute-layouts#mainloop-epilogue">앞 글의 mainloop</Link> 이
+            <Link to="/cs/gpu/cutlass-gemm-hierarchy-and-cute-layouts#mainloop-epilogue">앞 글의 mainloop</Link> 이
             한 k-iteration 의 copy → ldmatrix → mma 순서였다면, <code>CollectiveMma</code> 는
             그 반복 전체를 template 인자로 고정한 class 입니다. Tile 모양, cluster 모양, stage 수,
             A·B 의 shared memory layout atom 과 copy atom, TiledMMA 가 인자이고 accumulator 의 type
@@ -49,7 +49,7 @@ export default function CutlassCollectivesAndTileSchedulersArticle() {
             Warp specialization 은 threadblock 의 warp 를 역할로 나눕니다. Producer warp 하나가 TMA
             descriptor 로 다음 stage 의 A·B 조각을 발행하고, consumer warp group 이 도착한 stage 를
             wgmma 로 소비합니다. 둘 사이는 stage 마다 하나씩 있는 barrier 의 phase 로 이어지며,
-            그 hardware 구조는 <Link to="/gpu/gpu-arch-hopper#tma">Hopper TMA pipeline</Link> 에 있습니다.
+            그 hardware 구조는 <Link to="/cs/gpu/gpu-arch-hopper#tma">Hopper TMA pipeline</Link> 에 있습니다.
           </p>
           <p>
             <code>CollectiveEpilogue</code> 는 mainloop 이 넘긴 accumulator 를 받아 C 를 읽고 D 를
@@ -83,7 +83,7 @@ export default function CutlassCollectivesAndTileSchedulersArticle() {
             Pipeline depth, 곧 stage 수는 shared memory 에 동시에 들어 있는 A·B tile 의 벌 수입니다.
             Stage 가 1이면 copy 가 끝나야 계산이 시작되고, stage 가 S 이면 producer 가 S−1 벌을
             앞서 발행해 둘 수 있어 global 읽기 지연이 계산 뒤로 숨습니다. 이 지연 숨김의 원리는{" "}
-            <Link to="/gpu/gpu-architecture#gpu-latency-hiding-occupancy">latency hiding 과 occupancy</Link> 에 있습니다.
+            <Link to="/cs/gpu/gpu-architecture#gpu-latency-hiding-occupancy">latency hiding 과 occupancy</Link> 에 있습니다.
           </p>
           <p>
             비용은 shared memory 입니다. 128×128×64 bf16 tile 은 A 가 128×64×2 B = 16 KB, B 도
@@ -150,7 +150,7 @@ S &= \Bigl\lfloor \frac{\underbrace{C_{smem} - C_{carve}}_{\text{epilogue 등을
           </p>
           <p>
             Long-lived worker 의 일반 계약은{" "}
-            <Link to="/gpu/cuda-persistent-kernels#overview">persistent kernel</Link> 이 다룹니다.
+            <Link to="/cs/gpu/cuda-persistent-kernels#overview">persistent kernel</Link> 이 다룹니다.
           </p>
           <p>
             Persistent 가 필요한 이유는 launch 비용이 아니라 겹침입니다. 한 threadblock 이 다음 tile 의 mainloop 을 시작하는 동안 앞 tile 의
@@ -219,7 +219,7 @@ S &= \Bigl\lfloor \frac{\underbrace{C_{smem} - C_{carve}}_{\text{epilogue 등을
           </p>
           <p>
             Split-K 와의 차이는 나누는 단위입니다.{" "}
-            <Link to="/ai/sionic-glm-b300#kernel">Split-K</Link> 는 모든 tile 의 K 를 같은 수로 잘라
+            <Link to="/cs/ai/sionic-glm-b300#kernel">Split-K</Link> 는 모든 tile 의 K 를 같은 수로 잘라
             threadblock 수를 늘리므로 tile 수가 적을 때의 처방이고, 잘린 조각 수만큼 reduction 이
             늘어납니다. Stream-K 는 threadblock 수를 SM 수로 고정하고 경계에 걸친 tile 만 자르므로
             reduction 이 잘린 tile 수에 비례합니다.
@@ -268,7 +268,7 @@ I_{cta} &= \underbrace{\lceil I/g \rceil}_{\text{threadblock 당 몫}},\qquad \e
             지정하는 것입니다. Kernel 에 <code>__cluster_dims__</code> 를 붙이거나{" "}
             <code>cudaLaunchKernelEx</code> 의 cluster dimension attribute 로 지정하며, 이식 가능한
             상한은 8 이고 H100 은 옵션으로 16 까지 허용합니다. Cluster 의 hardware 정의는{" "}
-            <Link to="/gpu/gpu-arch-hopper#cluster">Hopper cluster 와 DSM</Link> 에 있습니다.
+            <Link to="/cs/gpu/gpu-arch-hopper#cluster">Hopper cluster 와 DSM</Link> 에 있습니다.
           </p>
           <p>
             CUTLASS 가 cluster 를 쓰는 첫 이유는 TMA multicast 입니다. ClusterShape 2×1 이면 M 방향으로 이웃한 두 threadblock 에 같은
@@ -338,7 +338,7 @@ I_{cta} &= \underbrace{\lceil I/g \rceil}_{\text{threadblock 당 몫}},\qquad \e
             이 실측은 그 GPU, 그 compiler, 그 shape 에 묶인 값이며 다른 shape 로 옮기면 다시 재야 합니다.
           </p>
           <p>
-            Triton 의 <Link to="/gpu/triton-kernel-programming-and-compiler#launch-and-autotune">autotune</Link> 이
+            Triton 의 <Link to="/cs/gpu/triton-kernel-programming-and-compiler#launch-and-autotune">autotune</Link> 이
             runtime 에 key 마다 config 를 벤치마크해 기억하는 것과 대비됩니다. CUTLASS 는 탐색을
             빌드·프로파일 단계로 밀어 runtime 에는 고정된 kernel 하나만 남기므로, shape 가 다양한
             서비스는 shape 구간마다 kernel 을 고르는 dispatch 표를 사용자가 따로 유지해야 합니다.
@@ -419,8 +419,8 @@ I_{cta} &= \underbrace{\lceil I/g \rceil}_{\text{threadblock 당 몫}},\qquad \e
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          앞 글: <Link to="/gpu/cutlass-gemm-hierarchy-and-cute-layouts">CUTLASS GEMM 계층과 CuTe layout</Link>,
-          그리고 이 층을 언제 고를지는 <Link to="/gpu/cuda-kernel-fusion#kernel-stack">CUTLASS·CuTe·Triton 선택 층</Link>.
+          앞 글: <Link to="/cs/gpu/cutlass-gemm-hierarchy-and-cute-layouts">CUTLASS GEMM 계층과 CuTe layout</Link>,
+          그리고 이 층을 언제 고를지는 <Link to="/cs/gpu/cuda-kernel-fusion#kernel-stack">CUTLASS·CuTe·Triton 선택 층</Link>.
         </p>
       </section>
     </div>

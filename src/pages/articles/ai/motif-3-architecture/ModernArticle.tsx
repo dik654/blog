@@ -36,7 +36,7 @@ export default function Motif3ArchitectureArticle() {
           </dl>
         </div>
         <p className="text-sm leading-7 text-muted-foreground">
-          Router·Top-k·shared expert의 일반 원리는 <Link className="text-primary hover:underline" to="/ai/mixture-of-experts">MoE 글</Link>, MTP objective와 self-speculative serving의 경계는 <Link className="text-primary hover:underline" to="/ai/vllm-spec-decode">MTP 글</Link>이 소유합니다.
+          Router·Top-k·shared expert의 일반 원리는 <Link className="text-primary hover:underline" to="/cs/ai/mixture-of-experts">MoE 글</Link>, MTP objective와 self-speculative serving의 경계는 <Link className="text-primary hover:underline" to="/cs/ai/vllm-spec-decode">MTP 글</Link>이 소유합니다.
         </p>
       </section>
 
@@ -82,8 +82,8 @@ export default function Motif3ArchitectureArticle() {
         />
         <p className="text-sm leading-7 text-muted-foreground">
           MLA와 GDA는 서로 다른 병목에서 출발합니다. MLA는 decode 가 옮기는 KV cache 크기를 줄이는
-          <Link className="text-primary hover:underline" to="/ai/differential-attention#boundary"> memory 축</Link>이고,
-          <Link className="text-primary hover:underline" to="/ai/differential-attention"> differential attention</Link>의
+          <Link className="text-primary hover:underline" to="/cs/ai/differential-attention#boundary"> memory 축</Link>이고,
+          <Link className="text-primary hover:underline" to="/cs/ai/differential-attention"> differential attention</Link>의
           signal·noise 차분(원 mechanism은 대칭 head, GDA는 그 head 비율을 비대칭으로 바꾼 변형)은
           attention 이 무엇에 점수를 주는지를 바꾸는 selectivity 축입니다.
         </p>
@@ -120,7 +120,7 @@ export default function Motif3ArchitectureArticle() {
         <p className="text-sm leading-7 text-muted-foreground">
           H_res를 doubly-stochastic 행렬로 제한하는 원리 자체와 이 제약이 없을 때 층을 쌓을수록
           신호가 폭발하는 이유는
-          <Link className="text-primary hover:underline" to="/ai/hyper-connections-residual-streams"> hyper-connection·mHC 글</Link>이
+          <Link className="text-primary hover:underline" to="/cs/ai/hyper-connections-residual-streams"> hyper-connection·mHC 글</Link>이
           정본으로 다룹니다. 이 절은 그 위에 얹은 post multiplier 2→1 annealing만 Motif 3 고유의
           변형으로 소유합니다.
         </p>
@@ -176,7 +176,7 @@ export default function Motif3ArchitectureArticle() {
           interpretation="RL의 terminal reward와 달리 teacher가 sampled token마다 방향을 줍니다. 다만 vocabulary 전체 KL보다 훨씬 적은 teacher 정보만 사용하며 long-horizon credit assignment를 자동 해결하지 않습니다."
         />
         <p className="text-sm leading-7 text-muted-foreground">
-          OPD의 일반 state-distribution mismatch와 full-vocabulary objective는 <Link className="text-primary hover:underline" to="/ai/on-policy-distillation">On-Policy Distillation 글</Link>, RL teacher의 GRPO·verifier 조건은 <Link className="text-primary hover:underline" to="/ai/open-r1">Open-R1 글</Link>에서 이어집니다.
+          OPD의 일반 state-distribution mismatch와 full-vocabulary objective는 <Link className="text-primary hover:underline" to="/cs/ai/on-policy-distillation">On-Policy Distillation 글</Link>, RL teacher의 GRPO·verifier 조건은 <Link className="text-primary hover:underline" to="/cs/ai/open-r1">Open-R1 글</Link>에서 이어집니다.
         </p>
       </section>
 

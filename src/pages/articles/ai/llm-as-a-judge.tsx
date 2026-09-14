@@ -26,7 +26,7 @@ export default function LlmAsAJudgeArticle() {
             들여옵니다.
           </p>
           <p>
-            <Link to="/ai/llm-evaluation-criteria-and-methods#pointwise-pairwise-ranking">
+            <Link to="/cs/ai/llm-evaluation-criteria-and-methods#pointwise-pairwise-ranking">
               앞 글
             </Link>{" "}
             의 pairwise·pointwise 비교는 판정자가 누구인지 정하지 않았습니다. 이 글은 그 판정자
@@ -220,8 +220,8 @@ export default function LlmAsAJudgeArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            이 두 글은 <Link to="/ai/llm-evaluation-criteria-and-methods#problem">criteria·metric</Link> 을
-            정하고, 그것을 <Link to="/ai/llm-evaluation-criteria-and-methods#pointwise-pairwise-ranking">
+            이 두 글은 <Link to="/cs/ai/llm-evaluation-criteria-and-methods#problem">criteria·metric</Link> 을
+            정하고, 그것을 <Link to="/cs/ai/llm-evaluation-criteria-and-methods#pointwise-pairwise-ranking">
             pointwise·pairwise·ranking
             </Link> 으로 비교하며, reference 가 없을 때 그 비교를 judge model 에게 맡기고
             calibration 으로 검증하는 순서를 다뤘습니다. 이 세 조각이 갖춰져야 "평가했다"는

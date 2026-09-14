@@ -18,8 +18,8 @@ export default function Overview() {
         <p>
           이 글에서 fusion은 세 경계로 나눕니다. 좌표가 맞는 raw input을 channel로
           합치는 early fusion, view별 feature를 만든 뒤 집계하는 late fusion, 그리고
-          spatial token 사이의 관계를 학습하는 attention fusion입니다. <Link to="/ai/cnn">CNN의
-          image tensor와 encoder</Link>, <Link to="/ai/attention-theory">Q·K·V와
+          spatial token 사이의 관계를 학습하는 attention fusion입니다. <Link to="/cs/ai/cnn">CNN의
+          image tensor와 encoder</Link>, <Link to="/cs/ai/attention-theory">Q·K·V와
           self-attention</Link>은 각 정본을 재사용하고, 여기서는 view sample 계약과
           결합 위치가 만드는 가정에 집중합니다.
         </p>

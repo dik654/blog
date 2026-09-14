@@ -12,7 +12,7 @@ export default function ModernCometBFTMempoolArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">CometBFT v0.40.0 구현 읽기</p><h2 className="text-3xl font-bold tracking-tight">Mempool은 미확정 transaction의 local 대기실이지 공유 원장이 아니다</h2></header>
       <p className="text-lg leading-8 text-foreground/90"><code>alice→bob 10</code>이라는 같은 bytes도 node A의 mempool에는 있고 node B에는 없을 수 있습니다. 도착 순서, local capacity, cache, application CheckTx 결과가 node마다 다르기 때문입니다. 합의가 최종 block order를 정하기 전까지 mempool의 목록과 순서는 protocol-wide truth가 아닙니다.</p>
-      <p>v0.40.0 <code>CListMempool</code>의 핵심은 admission과 commit을 분리하는 데 있습니다. 빠른 local gate와 ABCI CheckTx를 통과하면 proposal 후보가 되지만, proposer가 선택하고 consensus가 결정하고 application이 FinalizeBlock·Commit을 마쳐야 ledger state가 바뀝니다. 전체 흐름은 <a className="text-primary hover:underline" href="/blockchain/cometbft#overview">CometBFT overview 정본</a>, ABCI method authority는 <a className="text-primary hover:underline" href="/blockchain/cometbft-abci#overview">ABCI++ 정본</a>에서 이어집니다.</p>
+      <p>v0.40.0 <code>CListMempool</code>의 핵심은 admission과 commit을 분리하는 데 있습니다. 빠른 local gate와 ABCI CheckTx를 통과하면 proposal 후보가 되지만, proposer가 선택하고 consensus가 결정하고 application이 FinalizeBlock·Commit을 마쳐야 ledger state가 바뀝니다. 전체 흐름은 <a className="text-primary hover:underline" href="/cs/blockchain/cometbft#overview">CometBFT overview 정본</a>, ABCI method authority는 <a className="text-primary hover:underline" href="/cs/blockchain/cometbft-abci#overview">ABCI++ 정본</a>에서 이어집니다.</p>
       <AdmissionLifecycleViz />
     </section>
 

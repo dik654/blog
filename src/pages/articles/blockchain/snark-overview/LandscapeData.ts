@@ -12,7 +12,7 @@ export interface ProofSystem {
 export const coreSystems: ProofSystem[] = [
   {
     name: "Groth16",
-    href: "/crypto/groth16",
+    href: "/cs/crypto/groth16",
     property: "최소 증명 크기, 최고 검증 속도",
     proofSize: "128 B",
     verify: "O(1)",
@@ -21,7 +21,7 @@ export const coreSystems: ProofSystem[] = [
   },
   {
     name: "PLONK",
-    href: "/crypto/plonk",
+    href: "/cs/crypto/plonk",
     property: "Universal setup, 커스텀 게이트",
     proofSize: "~400 B",
     verify: "O(1)",
@@ -30,7 +30,7 @@ export const coreSystems: ProofSystem[] = [
   },
   {
     name: "FFLONK",
-    href: "/crypto/plonk#fflonk",
+    href: "/cs/crypto/plonk#fflonk",
     property: "PLONK 변형, 단일 다항식 opening",
     proofSize: "~256 B",
     verify: "O(1)",
@@ -39,7 +39,7 @@ export const coreSystems: ProofSystem[] = [
   },
   {
     name: "HyperPLONK",
-    href: "/crypto/hyperplonk",
+    href: "/cs/crypto/hyperplonk",
     property: "다중선형 확장, FFT 불필요",
     proofSize: "~수 KB",
     verify: "O(1)",
@@ -48,7 +48,7 @@ export const coreSystems: ProofSystem[] = [
   },
   {
     name: "Halo2",
-    href: "/crypto/halo2",
+    href: "/cs/crypto/halo2",
     property: "IPA 기반 재귀, trusted setup 불필요",
     proofSize: "~수 KB",
     verify: "O(n)",
@@ -57,7 +57,7 @@ export const coreSystems: ProofSystem[] = [
   },
   {
     name: "STARK",
-    href: "/crypto/stark-theory",
+    href: "/cs/crypto/stark-theory",
     property: "양자 안전, trusted setup 불필요",
     proofSize: "50-200 KB",
     verify: "O(log\u00B2 n)",
@@ -66,7 +66,7 @@ export const coreSystems: ProofSystem[] = [
   },
   {
     name: "Bulletproofs",
-    href: "/crypto/bulletproofs",
+    href: "/cs/crypto/bulletproofs",
     property: "Range proof 특화, 작은 증명",
     proofSize: "~600 B",
     verify: "O(n)",
@@ -75,7 +75,7 @@ export const coreSystems: ProofSystem[] = [
   },
   {
     name: "Nova / SuperNova",
-    href: "/crypto/nova",
+    href: "/cs/crypto/nova",
     property: "Folding scheme, IVC",
     proofSize: "~수 KB",
     verify: "O(1)",
@@ -88,7 +88,7 @@ export const coreSystems: ProofSystem[] = [
 export const implProjects: ProofSystem[] = [
   {
     name: "Plonky2 / Plonky3",
-    href: "/crypto/plonky3",
+    href: "/cs/crypto/plonky3",
     property: "STARK + PLONK 결합, 재귀 증명",
     proofSize: "~수십 KB",
     verify: "O(log n)",
@@ -97,7 +97,7 @@ export const implProjects: ProofSystem[] = [
   },
   {
     name: "RISC Zero",
-    href: "/crypto/risc0",
+    href: "/cs/crypto/risc0",
     property: "STARK 기반 zkVM",
     proofSize: "~수십 KB",
     verify: "O(log n)",
@@ -106,7 +106,7 @@ export const implProjects: ProofSystem[] = [
   },
   {
     name: "SP1",
-    href: "/crypto/sp1",
+    href: "/cs/crypto/sp1",
     property: "STARK 기반 zkVM (Succinct)",
     proofSize: "~수십 KB",
     verify: "O(log n)",
@@ -115,7 +115,7 @@ export const implProjects: ProofSystem[] = [
   },
   {
     name: "Jolt",
-    href: "/crypto/jolt",
+    href: "/cs/crypto/jolt",
     property: "Lookup 기반 zkVM (a16z)",
     proofSize: "~수십 KB",
     verify: "O(log n)",

@@ -33,8 +33,8 @@ export default function Overview() {
 
         <p className="leading-7">
           TLS 핸드셰이크가 무엇을 주고받는지는{" "}
-          <Link to="/p2p/tls-fundamentals#handshake">TLS 1.3 기초</Link>가, 요청 수를 제한하는 알고리즘 자체는{" "}
-          <Link to="/ai/rate-limiting-and-reliability-patterns">레이트 리밋과 신뢰성 패턴</Link>이 소유합니다.
+          <Link to="/cs/p2p/tls-fundamentals#handshake">TLS 1.3 기초</Link>가, 요청 수를 제한하는 알고리즘 자체는{" "}
+          <Link to="/cs/ai/rate-limiting-and-reliability-patterns">레이트 리밋과 신뢰성 패턴</Link>이 소유합니다.
           이 글은 그 요소들이 엣지 방어에서 어떤 층에 놓이는지를 다룹니다.
         </p>
       </div>

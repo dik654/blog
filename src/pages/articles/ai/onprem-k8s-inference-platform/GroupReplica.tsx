@@ -116,7 +116,7 @@ export default function GroupReplica() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           대기열 길이와 지연의 관계, 그리고 준비 상태의 파드가 실제 용량이 되기까지의 과정은{" "}
-          <Link to="/ai/llm-serving-ops#k8s-gpu-fleet">서빙 운영</Link>이 소유합니다. 이 절은 갱신 방식이
+          <Link to="/cs/ai/llm-serving-ops#k8s-gpu-fleet">서빙 운영</Link>이 소유합니다. 이 절은 갱신 방식이
           용량에 주는 제약만 다뤘습니다.
         </p>
       </div>

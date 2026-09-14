@@ -46,7 +46,7 @@ export default function ContinuityGate() {
         <p className="leading-7">
           다음 글에서는 방향을 뒤집습니다. 지금까지는 바깥에서 들어오는 요청을 받는 이야기였다면, 다음은 안쪽
           자원에 바깥에서 닿는 이야기입니다. 앞 글에서 잠깐 나온{" "}
-          <Link to="/saas/edge-request-defense-pipeline#origin-protection">역방향 터널</Link>이 사설 접근
+          <Link to="/cs/saas/edge-request-defense-pipeline#origin-protection">역방향 터널</Link>이 사설 접근
           전반에서 어떤 형태가 되는지를 다룹니다.
         </p>
       </div>

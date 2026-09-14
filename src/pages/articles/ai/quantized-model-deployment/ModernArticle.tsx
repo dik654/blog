@@ -22,9 +22,9 @@ export default function QuantizedModelDeploymentArticle() {
           </p>
           <p>
             정확한 checkpoint 계산은{" "}
-            <a href="/ai/model-vram-budgeting">모델 VRAM 계산</a>, hybrid
+            <a href="/cs/ai/model-vram-budgeting">모델 VRAM 계산</a>, hybrid
             KV·recurrent state는{" "}
-            <a href="/ai/qwen36-hybrid-runtime">Qwen 하이브리드 런타임</a>에서
+            <a href="/cs/ai/qwen36-hybrid-runtime">Qwen 하이브리드 런타임</a>에서
             더 깊게 다룹니다. 이 글은 quantized artifact를 release하는 공통
             절차를 세웁니다.
           </p>
@@ -58,7 +58,7 @@ export default function QuantizedModelDeploymentArticle() {
               description: (
                 <>
                   Activation·workspace·allocator reserve·
-                  <Link to="/ai/cuda-graph-capture">CUDA graph</Link>입니다.
+                  <Link to="/cs/ai/cuda-graph-capture">CUDA graph</Link>입니다.
                 </>
               ),
               example: "Engine startup 뒤 peak를 실제로 측정합니다.",

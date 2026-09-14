@@ -12,6 +12,7 @@ import { EDITORIAL_BOUNDARIES } from "@/content/editorial-ownership";
 import { ARTICLE_LEARNING } from "@/content/article-learning";
 import { getKnowledgeConcept } from "@/content/knowledge-graph";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
+import { hrefForRoute } from "@/lib/routes";
 
 function findSubcategory(
   subcategories: readonly Subcategory[],
@@ -68,7 +69,7 @@ export default function ArticleOnboarding({
       reason:
         "공통 원리는 이 글에서 다시 정의하지 않고 해당 글의 설명을 사용합니다.",
     })) ?? []),
-  ]).filter((link) => link.href !== `/${routeKey}`);
+  ]).filter((link) => link.href !== hrefForRoute(routeKey));
   const learningScope = learning?.introducedHere.slice(0, 5).map((concept) => ({
     label: getKnowledgeConcept(concept.id).label,
     role: concept.role,
@@ -131,7 +132,7 @@ export default function ArticleOnboarding({
 
       {effectiveBeginnerStart &&
         !learning?.entryLevel &&
-        effectiveBeginnerStart.href !== `/${routeKey}` && (
+        effectiveBeginnerStart.href !== hrefForRoute(routeKey) && (
           <Link
             to={effectiveBeginnerStart.href}
             className="block rounded-xl border border-primary/20 bg-primary/5 px-3.5 py-3 transition-colors hover:bg-primary/10"

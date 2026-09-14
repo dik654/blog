@@ -18,11 +18,11 @@ export default function Overview() {
         </p>
         <p>
           비가약 다항식의 quotient가 field가 되는 이유는
-          <Link to="/crypto/finite-field-theory#extension-field"> 확장체 이론 정본</Link>,
+          <Link to="/cs/crypto/finite-field-theory#extension-field"> 확장체 이론 정본</Link>,
           BN254 G2 twist와 subgroup은
-          <Link to="/crypto/elliptic-curves#g1-g2-bn254"> 타원곡선 정본</Link>,
+          <Link to="/cs/crypto/elliptic-curves#g1-g2-bn254"> 타원곡선 정본</Link>,
           Miller loop와 final exponentiation은
-          <Link to="/crypto/pairing"> pairing 글</Link>이 소유합니다. 이 글은
+          <Link to="/cs/crypto/pairing"> pairing 글</Link>이 소유합니다. 이 글은
           concrete tower의 data layout·곱셈 schedule·Frobenius table·검증 순서를
           구현 관점에서만 다룹니다.
         </p>

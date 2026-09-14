@@ -38,7 +38,7 @@ export default function Convergence() {
         </p>
         <p>
           Vector의 길이와 dot product가 아직 낯설다면
-          <Link to="/ai/math-vectors-inner-products">
+          <Link to="/cs/ai/math-vectors-inner-products">
             벡터·내적·norm 기초 글
           </Link>
           에서 (3,4)의 길이부터 계산하고 돌아오면 됩니다. 이 글에서도 필요한

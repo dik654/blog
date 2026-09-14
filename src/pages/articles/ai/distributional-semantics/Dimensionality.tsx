@@ -21,7 +21,7 @@ export default function Dimensionality() {
         </p>
         <p>
           Matrix·rank·SVD 자체의 계산과 Eckart–Young 정리의 전제가 낯설다면
-          <Link to="/ai/math-matrices-svd"> 행렬·SVD 정본</Link>에서 2×2 예부터 먼저
+          <Link to="/cs/ai/math-matrices-svd"> 행렬·SVD 정본</Link>에서 2×2 예부터 먼저
           확인할 수 있습니다. 여기서는 이미 정의된 factorization을 word–context
           measurement에 적용할 때 생기는 의미와 평가 경계에 집중합니다.
         </p>

@@ -34,7 +34,7 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
             Threadblock tile 은 global memory 에서 shared memory 로 한 번 올린 A·B 조각을 여러
             warp 가 다시 읽게 하고, warp tile 은 shared memory 에서 register 로 올린 조각을
             여러 MMA 명령이 다시 쓰게 합니다. 이 재사용 예산의 산수는{" "}
-            <Link to="/gpu/cuda-matrix-multiply#tiled">CUDA GEMM shared-tile 재사용</Link> 에 있습니다.
+            <Link to="/cs/gpu/cuda-matrix-multiply#tiled">CUDA GEMM shared-tile 재사용</Link> 에 있습니다.
           </p>
           <p>
             숫자를 넣어 봅니다. Threadblock tile 이 128×128×32 이고 warp 4개(128 thread)가
@@ -46,7 +46,7 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
             Warp tile 64×64 의 fp32 accumulator 는 4096개이고 32 thread 가 나눠 들면 thread 당
             128개 register 입니다. 여기에 A·B fragment 와 주소 계산이 더해지므로 64×64 는
             register 예산이 허락하는 warp tile 의 윗선에 가깝습니다. 이보다 키우면{" "}
-            <Link to="/gpu/cuda-register-pressure#spill-path">spill</Link> 이 나고, 줄이면
+            <Link to="/cs/gpu/cuda-register-pressure#spill-path">spill</Link> 이 나고, 줄이면
             shared memory 읽기가 MMA 당 늘어납니다.
           </p>
           <p>
@@ -97,7 +97,7 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
             이 순서를 그대로 두면 global 읽기가 끝날 때까지 MMA 가 놉니다. 그래서 CUTLASS 는
             shared memory 를 여러 stage 로 잡고 다음 k-iteration 의 copy 를 미리 발행합니다.
             Stage 수가 shared memory 를 얼마나 먹고 어디까지 겹칠 수 있는지는{" "}
-            <Link to="/gpu/cutlass-collectives-and-tile-schedulers#pipeline-stages">다음 글의 pipeline stage</Link> 가 다룹니다.
+            <Link to="/cs/gpu/cutlass-collectives-and-tile-schedulers#pipeline-stages">다음 글의 pipeline stage</Link> 가 다룹니다.
           </p>
           <p>
             Epilogue 가 별도 구간인 이유는 accumulator 가 fragment 모양으로 흩어져 있기
@@ -289,7 +289,7 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
           <p>
             문제를 숫자로 봅니다. K-major fp16 tile 의 한 행이 64 halves, 곧 128 B 라고 합시다.
             Shared memory 는 4 B bank 32개가 128 B 마다 돌아오므로 모든 행의 시작이 bank 0 입니다.
-            Bank 의 정의는 <Link to="/gpu/cuda-shared-memory#bank-conflict">shared memory bank conflict</Link> 에 있습니다.
+            Bank 의 정의는 <Link to="/cs/gpu/cuda-shared-memory#bank-conflict">shared memory bank conflict</Link> 에 있습니다.
           </p>
           <p>
             <code>ldmatrix</code> 는 8개 행에서 16 B 씩 읽는데, 8행이 모두 같은 4개 bank 를
@@ -406,8 +406,8 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/gpu/cutlass-collectives-and-tile-schedulers">CUTLASS collective, tile scheduler, Stream-K, cluster</Link>,
-          그리고 이 층을 언제 고를지는 <Link to="/gpu/cuda-kernel-fusion#kernel-stack">CUTLASS·CuTe·Triton 선택 층</Link>.
+          다음 글: <Link to="/cs/gpu/cutlass-collectives-and-tile-schedulers">CUTLASS collective, tile scheduler, Stream-K, cluster</Link>,
+          그리고 이 층을 언제 고를지는 <Link to="/cs/gpu/cuda-kernel-fusion#kernel-stack">CUTLASS·CuTe·Triton 선택 층</Link>.
         </p>
       </section>
     </div>

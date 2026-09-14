@@ -194,12 +194,12 @@ export default function Overview() {
 
       <nav aria-label="도구 시스템 정본 경계" className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {[
-          ["전체 harness", "/ai/claw-overview", "tool result를 session과 최종 response로 연결하는 owner"],
-          ["Permission", "/ai/claw-permissions", "mode·rule·override와 approval의 정본"],
-          ["Bash", "/ai/claw-bash", "command parsing·process·cancellation의 세부 경계"],
-          ["Plugin", "/ai/claw-plugin", "발견·설치·활성화·health lifecycle"],
-          ["MCP", "/ai/claw-mcp", "initialize·tools/list·tools/call·transport lifecycle"],
-          ["Sandbox security", "/ai/agent-sandbox-security", "OS·credential·filesystem·egress enforcement"],
+          ["전체 harness", "/cs/ai/claw-overview", "tool result를 session과 최종 response로 연결하는 owner"],
+          ["Permission", "/cs/ai/claw-permissions", "mode·rule·override와 approval의 정본"],
+          ["Bash", "/cs/ai/claw-bash", "command parsing·process·cancellation의 세부 경계"],
+          ["Plugin", "/cs/ai/claw-plugin", "발견·설치·활성화·health lifecycle"],
+          ["MCP", "/cs/ai/claw-mcp", "initialize·tools/list·tools/call·transport lifecycle"],
+          ["Sandbox security", "/cs/ai/agent-sandbox-security", "OS·credential·filesystem·egress enforcement"],
         ].map(([label, href, note]) => (
           <Link key={href} to={href} className="min-w-0 rounded-lg border border-border/70 bg-background p-4 hover:border-primary/50">
             <span className="break-words text-sm font-semibold text-foreground">{label}</span>

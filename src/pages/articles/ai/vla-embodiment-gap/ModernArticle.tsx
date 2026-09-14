@@ -114,7 +114,7 @@ export default function ModernArticle() {
             Diffusion Policy와 π0는 각각 diffusion과 flow matching으로 continuous trajectory distribution을
             다룹니다. 이 순서는 세대 교체가 아닙니다. Multimodal action을 표현하는 능력, iterative sampling
             cost, control frequency, demonstration 수가 함께 맞아야 합니다. Flow matching의 일반 objective는
-            <Link to="/ai/diffusion-continuous-time#flow-matching">별도 정본 글</Link>에서 재사용합니다.
+            <Link to="/cs/ai/diffusion-continuous-time#flow-matching">별도 정본 글</Link>에서 재사용합니다.
           </p>
           <p className="leading-8">
             언어 지시를 robot 행동으로 옮기려면 서로 다른 세 grounding을 구분해야 합니다. Language grounding은

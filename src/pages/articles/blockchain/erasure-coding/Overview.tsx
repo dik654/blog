@@ -31,8 +31,8 @@ export default function Overview() {
         <p>
           유한체가 처음이라면 “정해진 개수 안에서 덧셈·곱셈·나눗셈이 다시 그
           집합 안에 머무는 계산 규칙”으로 먼저 읽으면 충분합니다. 자세한 계산은
-          <Link to="/crypto/finite-field-theory"> 유한체 기초</Link>와{" "}
-          <Link to="/crypto/lagrange">Lagrange 보간</Link>에서 확장합니다.
+          <Link to="/cs/crypto/finite-field-theory"> 유한체 기초</Link>와{" "}
+          <Link to="/cs/crypto/lagrange">Lagrange 보간</Link>에서 확장합니다.
         </p>
       </div>
       <ContentBoundary article="erasure-coding" />

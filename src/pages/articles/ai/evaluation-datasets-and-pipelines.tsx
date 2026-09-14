@@ -139,7 +139,7 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
           </p>
           <p>
             Prompt 버전만 바꾸는 좁은 범위에서는 이미 실패 trace 를 고정해 두고 한 축씩 바꾸는{" "}
-            <Link to="/ai/prompt-engineering#anti-patterns">regression loop</Link>를 쓰는데, 여기서
+            <Link to="/cs/ai/prompt-engineering#anti-patterns">regression loop</Link>를 쓰는데, 여기서
             다루는 regression test 는 그 규칙을 golden set 전체의 slice 로 넓힌 것입니다.
           </p>
         </div>
@@ -358,9 +358,9 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           평가 지표 자체의 정의(정확도·judge score·rubric 채점)는 앞선{" "}
-          <Link to="/ai/prompt-structured-output#output-measurement">structured output 측정</Link>을
+          <Link to="/cs/ai/prompt-structured-output#output-measurement">structured output 측정</Link>을
           참고하고, 실험 하나를 설계하고 판정하는 통계 규칙은{" "}
-          <Link to="/ai/paired-experiment-design#overview">paired experiment design</Link>을
+          <Link to="/cs/ai/paired-experiment-design#overview">paired experiment design</Link>을
           그대로 씁니다.
         </p>
       </section>

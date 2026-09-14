@@ -12,7 +12,7 @@ export default function INTT() {
           Roots-of-unity의 geometric sum은 서로 다른 두 column의 inner product를
           0으로 만들고 같은 column에서는 n을 만듭니다. 따라서 inverse matrix는
           ω를 ω⁻¹로 바꾸고 전체를 n⁻¹로 scale한 형태입니다. 이는
-          <Link to="/crypto/lagrange"> Lagrange 보간</Link>을 단위근 도메인에
+          <Link to="/cs/crypto/lagrange"> Lagrange 보간</Link>을 단위근 도메인에
           특화한 빠른 계산입니다.
         </p>
       </div>

@@ -12,7 +12,7 @@ export default function ModernMsmNttArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">ZK workload를 GPU 작업으로 번역하기</p><h2 className="text-3xl font-bold tracking-tight">MSM과 NTT는 모두 크지만, 나눌 수 있는 방향과 기다려야 하는 지점이 다르다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">증명기가 느릴 때 “MSM과 NTT를 GPU로 보낸다”는 말만으로는 구현을 정할 수 없습니다. <strong>MSM</strong>(multi-scalar multiplication, 여러 곡선점의 scalar multiple을 더하는 연산)은 bucket 충돌과 reduction이 있고, <strong>NTT</strong>(number theoretic transform, 유한체 위의 FFT)는 한 stage 안 butterfly는 독립이지만 다음 stage가 이전 결과를 기다립니다. 이 글은 고정된 proof workload에서 두 dependency를 식별하고 routing·resident memory·측정 경계를 정하는 법을 다룹니다.</p>
-      <p>타원곡선 group law와 scalar multiplication은 <a className="text-primary hover:underline" href="/crypto/elliptic-curves#g1-curve">타원곡선 정본</a>, roots of unity와 butterfly 유도는 <a className="text-primary hover:underline" href="/crypto/fft#butterfly">NTT 정본</a>이 소유합니다. 여기서는 그 수학을 반복하지 않고, 같은 입력을 CPU reference와 GPU candidate에 넣어 어느 단계가 병렬화되고 어디서 barrier가 필요한지 연결합니다.</p>
+      <p>타원곡선 group law와 scalar multiplication은 <a className="text-primary hover:underline" href="/cs/crypto/elliptic-curves#g1-curve">타원곡선 정본</a>, roots of unity와 butterfly 유도는 <a className="text-primary hover:underline" href="/cs/crypto/fft#butterfly">NTT 정본</a>이 소유합니다. 여기서는 그 수학을 반복하지 않고, 같은 입력을 CPU reference와 GPU candidate에 넣어 어느 단계가 병렬화되고 어디서 barrier가 필요한지 연결합니다.</p>
       <MsmNttWorkloadViz />
       <ContentBoundary article="msm-ntt" />
     </section>
@@ -53,7 +53,7 @@ export default function ModernMsmNttArticle() {
         {symbol:"k",name:"Twiddle exponent",description:"Stage와 pair index가 정하는 exponent입니다."},
         {symbol:"u',v'",name:"Butterfly outputs",description:"다음 stage가 읽는 두 field elements입니다."},
       ]} assumptions={["Field가 요구한 N-th root를 가지며 addition·subtraction·multiplication은 modulus 안에서 정확합니다.","Index permutation과 twiddle table이 선택한 decimation convention과 일치합니다."]} interpretation="한 stage의 disjoint pairs는 병렬 실행할 수 있지만 같은 buffer의 다음 stage가 먼저 읽으면 race가 생깁니다. 이 식만으로 optimal radix나 memory layout이 결정되지는 않습니다." />
-      <p>구체적인 bucket kernel과 butterfly layout은 각각 <a className="text-primary hover:underline" href="/gpu/msm-gpu-impl">MSM GPU 구현</a>, <a className="text-primary hover:underline" href="/gpu/ntt-gpu-impl">NTT GPU 구현</a>에서 이어집니다. 이 글의 역할은 두 구현을 한 proof workload 안에서 같은 비교축에 놓는 것입니다.</p>
+      <p>구체적인 bucket kernel과 butterfly layout은 각각 <a className="text-primary hover:underline" href="/cs/gpu/msm-gpu-impl">MSM GPU 구현</a>, <a className="text-primary hover:underline" href="/cs/gpu/ntt-gpu-impl">NTT GPU 구현</a>에서 이어집니다. 이 글의 역할은 두 구현을 한 proof workload 안에서 같은 비교축에 놓는 것입니다.</p>
       <div id="paper-icicle-msm-ntt"><CitationBlock type="code" citeKey={1} source="ICICLE v3.9.0 source tree · commit 6b451e6" href={ICICLE}><p><strong>문제:</strong> 여러 curve·field에서 MSM과 NTT를 device backend로 제공해야 합니다.</p><p><strong>핵심 기여:</strong> Version-pinned implementation이 backend abstraction, field/curve specialization과 MSM·NTT API를 함께 보여 줍니다.</p><p><strong>중요 가정:</strong> v3.9.0 commit, 지원 curve·device·configuration과 호출자의 memory ownership을 고정합니다.</p><p><strong>근거 범위:</strong> 링크한 revision의 source structure와 API에 한정합니다.</p><p><strong>일반화 금지:</strong> 모든 GPU·size에서 특정 backend가 빠르거나 production correctness가 자동 보장된다는 뜻은 아닙니다.</p></CitationBlock></div>
     </section>
 

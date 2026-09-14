@@ -24,7 +24,7 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
         </p>
 
         <p className="leading-7">
-          <Link to="/ai/qwen36-hybrid-architecture#overview">Qwen3.6-27B</Link>도 같은 3:1 리듬을 씁니다.
+          <Link to="/cs/ai/qwen36-hybrid-architecture#overview">Qwen3.6-27B</Link>도 같은 3:1 리듬을 씁니다.
           다만 그 모델의 네 번째 층은 문맥 전체를 보는 gated attention이었습니다. Flash-Next는 그 자리에
           indexer가 붙은 희소 attention을 넣어, 한 질의가 실제로 읽는 위치를 2천여 개로 묶어 둡니다.
         </p>

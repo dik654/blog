@@ -39,7 +39,7 @@ export default function RemoveGate() {
         <p className="leading-7">
           이어지는 글은 해상도 쪽입니다. 같은 편집이 얼굴 크기에 따라 성공하고 실패하는 이유와, 리파인을
           프레임 전체가 아니라 영역별로 걸어야 하는 근거를 다룹니다. 동작 분류와 모델 선택은{" "}
-          <Link to="/ai/masked-edit-verb-routing">편집 동작과 모델 라우팅</Link>이 소유합니다.
+          <Link to="/cs/ai/masked-edit-verb-routing">편집 동작과 모델 라우팅</Link>이 소유합니다.
         </p>
       </div>
     </section>

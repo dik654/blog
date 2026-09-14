@@ -12,7 +12,7 @@ export default function ModernEcGpuGenArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Field type에서 실행 artifact까지</p><h2 className="text-3xl font-bold tracking-tight">ec-gpu-gen은 곡선 공식을 발명하는 도구가 아니라, 검증된 parameter를 backend source에 특수화하는 build pipeline이다</h2></header>
       <p className="text-lg leading-8 text-foreground/90"><strong>ec-gpu-gen</strong>은 Rust field/curve type을 받아 CUDA 또는 OpenCL용 finite-field·elliptic-curve kernel을 생성합니다. 같은 add·multiply·FFT·multiexponentiation template라도 modulus, limb count, Montgomery constants와 curve type이 달라지므로, 사람이 복사한 상수를 여러 kernel에 흩뿌리는 대신 한 typed source에서 artifact를 만듭니다.</p>
-      <p>Field arithmetic의 정확성 자체는 <a className="text-primary hover:underline" href="/crypto/field-arithmetic">field 정본</a>, GPU point mapping은 <a className="text-primary hover:underline" href="/gpu/ec-gpu-ops">EC GPU ops</a>가 소유합니다. 이 글은 parameter specialization, generated artifact provenance, CUDA/OpenCL parity와 codegen release gate에 집중합니다.</p>
+      <p>Field arithmetic의 정확성 자체는 <a className="text-primary hover:underline" href="/cs/crypto/field-arithmetic">field 정본</a>, GPU point mapping은 <a className="text-primary hover:underline" href="/cs/gpu/ec-gpu-ops">EC GPU ops</a>가 소유합니다. 이 글은 parameter specialization, generated artifact provenance, CUDA/OpenCL parity와 codegen release gate에 집중합니다.</p>
       <EcGpuGenArtifactViz />
       <ContentBoundary article="ec-gpu-gen" />
     </section>

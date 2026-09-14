@@ -21,7 +21,7 @@ export default function ExecutionStage({
         <p>
           이 stage는 execution output을 소유하지만 state-root 알고리즘을 다시
           정의하지 않습니다. 자세한 pre/post transition은{" "}
-          <Link to="/blockchain/reth-block-execution">
+          <Link to="/cs/blockchain/reth-block-execution">
             Reth block execution
           </Link>
           을 사용하며 MerkleStage가 같은 bundle로 header state root를

@@ -63,12 +63,12 @@ export default function Optimization() {
         </div>
         <p>
           Coalescing과 bank conflict의 transaction 계산은{" "}
-          <Link to="/gpu/cuda-shared-memory">공유 메모리 글</Link>, stream과
+          <Link to="/cs/gpu/cuda-shared-memory">공유 메모리 글</Link>, stream과
           event의 overlap 조건은{" "}
-          <Link to="/gpu/cuda-sync-streams">동기화·스트림 글</Link>을
+          <Link to="/cs/gpu/cuda-sync-streams">동기화·스트림 글</Link>을
           재사용합니다. PCIe·NVLink·network가 느리면 kernel만 고쳐서는
           end-to-end 시간이 줄지 않으므로{" "}
-          <Link to="/gpu/hw-network">interconnect 글</Link>에서 장치 밖 경로까지
+          <Link to="/cs/gpu/hw-network">interconnect 글</Link>에서 장치 밖 경로까지
           확장합니다.
         </p>
         <div id="paper-roofline-model" className="scroll-mt-24">

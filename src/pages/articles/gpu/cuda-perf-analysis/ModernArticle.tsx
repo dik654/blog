@@ -371,7 +371,7 @@ export default function ModernCudaPerfAnalysisArticle() {
             순서는{" "}
             <a
               className="text-primary hover:underline"
-              href="/gpu/warp-stall-reasons-and-issue-utilization#reading-procedure"
+              href="/cs/gpu/warp-stall-reasons-and-issue-utilization#reading-procedure"
             >
               warp stall reason 글
             </a>
@@ -585,21 +585,21 @@ T_{\mathrm{DRAM}} &= \underbrace{\frac{Q_{\mathrm{DRAM}}}{t\,B_{\mathrm{peak}}}}
           Register·spill을 더 깊게 읽으려면{" "}
           <a
             className="text-primary hover:underline"
-            href="/gpu/cuda-register-pressure"
+            href="/cs/gpu/cuda-register-pressure"
           >
             register pressure
           </a>
           , stage를 합치는 판단은{" "}
           <a
             className="text-primary hover:underline"
-            href="/gpu/cuda-kernel-fusion"
+            href="/cs/gpu/cuda-kernel-fusion"
           >
             kernel fusion과 Megakernel
           </a>
           , long-lived worker는{" "}
           <a
             className="text-primary hover:underline"
-            href="/gpu/cuda-persistent-kernels"
+            href="/cs/gpu/cuda-persistent-kernels"
           >
             persistent kernel
           </a>

@@ -49,8 +49,8 @@ export default function PlatformGate() {
 
         <p className="leading-7">
           이어지는 읽기로는 복제본을 고르는 규칙 자체를 다루는{" "}
-          <Link to="/ai/disaggregated-prefill-decode-serving#routing">분리 서빙의 복제본 라우팅</Link>과, 파드가
-          실제 용량이 되기까지를 다루는 <Link to="/ai/llm-serving-ops#k8s-gpu-fleet">서빙 운영</Link>이
+          <Link to="/cs/ai/disaggregated-prefill-decode-serving#routing">분리 서빙의 복제본 라우팅</Link>과, 파드가
+          실제 용량이 되기까지를 다루는 <Link to="/cs/ai/llm-serving-ops#k8s-gpu-fleet">서빙 운영</Link>이
           맞닿아 있습니다.
         </p>
       </div>

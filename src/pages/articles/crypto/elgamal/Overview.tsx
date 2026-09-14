@@ -6,7 +6,7 @@ export default function Overview() {
         <p>
           ElGamal(1985)은{" "}
           <a
-            href="/crypto/diffie-hellman"
+            href="/cs/crypto/diffie-hellman"
             className="text-indigo-400 hover:underline"
           >
             Diffie-Hellman 키 교환
@@ -19,7 +19,7 @@ export default function Overview() {
         <p>
           안전성은{" "}
           <a
-            href="/crypto/discrete-log"
+            href="/cs/crypto/discrete-log"
             className="text-indigo-400 hover:underline"
           >
             이산로그 문제(DLP)

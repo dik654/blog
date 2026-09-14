@@ -73,9 +73,9 @@ export default function Overview() {
           아니며, 모델이 그럴듯한 이유를 제시했다고 권한이 생기는 것도 아닙니다.
           따라서 model proposal과 host enforcement를 먼저 분리해야 합니다.
           Tool의 schema·dispatch는{" "}
-          <a href="/ai/claw-tool-system">도구 시스템</a>, 실제 Bash semantics는{" "}
-          <a href="/ai/claw-bash">Bash 경계</a>, OS 격리는
-          <a href="/ai/agent-sandbox-security">에이전트 sandbox 보안</a>에서
+          <a href="/cs/ai/claw-tool-system">도구 시스템</a>, 실제 Bash semantics는{" "}
+          <a href="/cs/ai/claw-bash">Bash 경계</a>, OS 격리는
+          <a href="/cs/ai/agent-sandbox-security">에이전트 sandbox 보안</a>에서
           이어서 다룹니다.
         </p>
         <p>

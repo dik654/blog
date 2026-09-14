@@ -47,7 +47,7 @@ export default function TwoObjectives({ onCodeRef }: { onCodeRef: (key: string, 
 
         <p className="leading-7">
           여기서 쓰는 자기증류는 언어모델이 자기 생성물을 다시 학습 데이터로 쓰는{" "}
-          <Link to="/ai/self-distillation#generation-contract">자기증류</Link>와 이름만 같습니다. 저쪽은 생성한
+          <Link to="/cs/ai/self-distillation#generation-contract">자기증류</Link>와 이름만 같습니다. 저쪽은 생성한
           텍스트를 데이터로 승격하는 절차의 문제이고, 여기서는 같은 배치 안에서 teacher의 출력 분포를 목표로 쓰는
           손실 항입니다.
         </p>
@@ -72,7 +72,7 @@ export default function TwoObjectives({ onCodeRef }: { onCodeRef: (key: string, 
 
         <p className="leading-7">
           목표가 픽셀이 아니라는 점이 중요합니다.{" "}
-          <Link to="/ai/vision-transformer#architecture">마스킹 사전학습</Link>의 한 갈래는 가린 자리의 픽셀을
+          <Link to="/cs/ai/vision-transformer#architecture">마스킹 사전학습</Link>의 한 갈래는 가린 자리의 픽셀을
           복원하게 합니다. 그 경우 모델은 질감과 색을 되살리는 데 용량을 씁니다. 여기서는 teacher가 낸 분포를
           맞추므로 복원해야 할 대상이 이미 의미 쪽으로 한 번 접힌 표현입니다.
         </p>

@@ -26,7 +26,7 @@ export default function SpeculativeDecodingVariantsArticle() {
             곧 변형의 이름입니다.
           </p>
           <p>
-            <Link to="/ai/vllm-spec-decode#overview">앞 글</Link> 은 작은 draft model 이 K 개
+            <Link to="/cs/ai/vllm-spec-decode#overview">앞 글</Link> 은 작은 draft model 이 K 개
             token 을 제안하고 target 이 한 번의 forward 로 검증하는 기본 cycle 과, 수락률 α 와
             draft 비용 c 로 speedup 을 닫는 식을 다뤘습니다. 이 글은 그 식의 c 와 α 를 각
             변형이 어떻게 바꾸는지를 봅니다.
@@ -111,7 +111,7 @@ export default function SpeculativeDecodingVariantsArticle() {
           <p>
             식에 넣어 보면 K=1, α=0.85, c=0.016 에서 speedup 은 (1+0.85)/(1+0.016) = 1.82 배로
             보고치와 맞습니다. 앞 글의{" "}
-            <Link to="/ai/vllm-spec-decode#speedup-model">speedup 식</Link> 이 그대로 적용되며,
+            <Link to="/cs/ai/vllm-spec-decode#speedup-model">speedup 식</Link> 이 그대로 적용되며,
             MTP 가 바꾼 것은 c 를 0.1~0.3 에서 0.02 로 내린 것뿐입니다.
           </p>
           <p>
@@ -185,7 +185,7 @@ export default function SpeculativeDecodingVariantsArticle() {
             Tree 를 만드는 방식이 변형마다 다릅니다. Medusa 는 head k 가 위치 t+k+1 을 독립으로
             예측하므로 각 head 의 top-s_k 를 Cartesian 곱으로 이어 붙이고, SpecInfer 는 작은
             draft model 을 여러 번 돌리거나 여러 draft model 의 tree 를 합치며,{" "}
-            <Link to="/ai/vllm-spec-decode#paper-eagle">EAGLE</Link> 은 feature 단계에서 사슬을
+            <Link to="/cs/ai/vllm-spec-decode#paper-eagle">EAGLE</Link> 은 feature 단계에서 사슬을
             이으며 가지를 칩니다.
           </p>
           <p>
@@ -251,7 +251,7 @@ export default function SpeculativeDecodingVariantsArticle() {
             Stochastic 검증은 경로 선택을 rejection sampling 으로 합니다. Node 마다 target 확률과
             draft 확률의 비로 수락을 정하고, 거부되면 그 node 의 residual 분포에서 뽑아 다른
             형제로 넘어가거나 멈춥니다. Target 분포가 보존되는 조건은 앞 글의{" "}
-            <Link to="/ai/vllm-spec-decode#draft-verify">rejection sampling</Link> 과 같습니다.
+            <Link to="/cs/ai/vllm-spec-decode#draft-verify">rejection sampling</Link> 과 같습니다.
           </p>
         </div>
         <AlgorithmBlock
@@ -345,7 +345,7 @@ export default function SpeculativeDecodingVariantsArticle() {
             변형은 겹쳐 쓸 수 있습니다. MTP head 위에 tree 를 얹거나 suffix tree 가 miss 일 때
             EAGLE 로 넘어가는 구성이 그렇고, 이때 c 는 두 draft 비용의 합이 되므로 식을 다시
             세워야 합니다. 앞 글의{" "}
-            <Link to="/ai/vllm-spec-decode#dynamic-policy">dynamic speculation policy</Link> 가
+            <Link to="/cs/ai/vllm-spec-decode#dynamic-policy">dynamic speculation policy</Link> 가
             그 전환을 runtime 에 하는 자리입니다.
           </p>
         </ProgressiveDetail>

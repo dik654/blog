@@ -27,8 +27,8 @@ export default function Overview({
             candidate→transport→RLPx→capability/status→data path→failure cleanup
           </strong>{" "}
           순서로 진행합니다.
-          <Link to="/blockchain/reth">Reth 구조</Link>의 block lifecycle과
-          <Link to="/blockchain/reth-chainspec"> ChainSpec</Link>의 fork
+          <Link to="/cs/blockchain/reth">Reth 구조</Link>의 block lifecycle과
+          <Link to="/cs/blockchain/reth-chainspec"> ChainSpec</Link>의 fork
           compatibility를 재사용하고, 여기서는 peer lifecycle과 bounded message
           flow를 소유합니다.
         </p>

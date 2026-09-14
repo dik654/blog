@@ -180,9 +180,9 @@ export default function IsmsOverview() {
           </p>
           <h3>다음 글에서 무엇을 확장할까?</h3>
           <p>
-            <a href="/isms-aml/isms-practical-guide">실전 가이드</a>에서는 요구사항을
-            control-evidence chain으로 만드는 방법을, <a href="/isms-aml/isms-access-control">접근통제</a>와
-            <a href="/isms-aml/isms-auth-management">인증·계정관리</a>에서는 identity에서 DB
+            <a href="/cs/isms-aml/isms-practical-guide">실전 가이드</a>에서는 요구사항을
+            control-evidence chain으로 만드는 방법을, <a href="/cs/isms-aml/isms-access-control">접근통제</a>와
+            <a href="/cs/isms-aml/isms-auth-management">인증·계정관리</a>에서는 identity에서 DB
             query까지의 실행 경로를 자세히 다룹니다. 이 글의 위험등록부와 범위 정의가 뒤
             글의 입력입니다.
           </p>

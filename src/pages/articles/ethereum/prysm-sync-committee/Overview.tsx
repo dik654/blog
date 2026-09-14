@@ -25,9 +25,9 @@ export default function Overview({
         </p>
         <p className="leading-7">
           Sync committee 서명은 full-node 검증의 축약판이지 finality 그 자체가
-          아닙니다. BLS 집계는 <Link to="/blockchain/prysm-bls">BLS</Link>,
-          Merkle branch는 <Link to="/blockchain/prysm-ssz">SSZ</Link>,
-          finalized checkpoint의 의미는 <Link to="/blockchain/prysm-finality">finality</Link> 정본을 재사용합니다.
+          아닙니다. BLS 집계는 <Link to="/cs/blockchain/prysm-bls">BLS</Link>,
+          Merkle branch는 <Link to="/cs/blockchain/prysm-ssz">SSZ</Link>,
+          finalized checkpoint의 의미는 <Link to="/cs/blockchain/prysm-finality">finality</Link> 정본을 재사용합니다.
         </p>
 
         {/* ── Sync Committee 배경 ── */}

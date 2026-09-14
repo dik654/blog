@@ -58,7 +58,7 @@ export default function Rendering() {
           번집니다. API adapter가 text, tool lifecycle, permission, usage,
           error를 공통 이벤트로 바꾸고, reducer가 그 이벤트를 현재 화면 상태에
           적용하도록 나누는 편이 낫습니다. provider별 스트림을 정규화하는 책임은
-          <a href="/ai/claw-api-client">API client 글</a>에서 다룹니다.
+          <a href="/cs/ai/claw-api-client">API client 글</a>에서 다룹니다.
         </p>
         <div className="not-prose my-6 overflow-x-auto rounded-lg border border-border/70">
           <table className="w-full min-w-[640px] text-left text-sm">

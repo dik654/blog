@@ -10,7 +10,7 @@ export default function ModernArticle() {
     <article className="space-y-16">
       <section id="overview" className="scroll-mt-20 space-y-7">
         <header className="space-y-3"><p className="text-sm font-semibold text-primary">Message와 운반 경로를 분리합니다</p><h2 className="text-3xl font-bold tracking-tight">MCP transport는 같은 protocol message를 local process 또는 remote service까지 옮기는 방법입니다</h2></header>
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8"><Link to="/ai/mcp-protocol">MCP core</Link>에서 만든 JSON-RPC request가 실제 byte로 이동하려면 transport가 필요합니다. <strong>stdio</strong>와 <strong>Streamable HTTP</strong>는 같은 primitive 의미를 운반하지만, process 수명·identity·관측·실패 경계는 다릅니다.</p><p className="leading-8">
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8"><Link to="/cs/ai/mcp-protocol">MCP core</Link>에서 만든 JSON-RPC request가 실제 byte로 이동하려면 transport가 필요합니다. <strong>stdio</strong>와 <strong>Streamable HTTP</strong>는 같은 primitive 의미를 운반하지만, process 수명·identity·관측·실패 경계는 다릅니다.</p><p className="leading-8">
             먼저 local pipe 하나를 보고 다음에 remote endpoint를 봅니다. 마지막에 response stream·cancel·subscription을 수명 기준으로
             조합합니다.
           </p></div>

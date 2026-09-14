@@ -26,7 +26,7 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
             축으로 병렬화하는지, 어떤 세대의 kernel 을 고르는지가 이 글의 내용입니다.
           </p>
           <p>
-            앞 글 <Link to="/ai/flash-attention-io-aware-kernel#tiling">FlashAttention</Link> 은
+            앞 글 <Link to="/cs/ai/flash-attention-io-aware-kernel#tiling">FlashAttention</Link> 은
             N×N 행렬을 HBM 에 쓰지 않는 원리를 다뤘습니다. 이 글은 그 kernel 을 열어 단계별
             비용을 재고, causal mask 로 tile 절반을 버리는 계산, prefill 과 decode 가 서로 다른
             kernel 을 요구하는 이유, FlashAttention-2 와 3 가 각각 무엇을 고쳤는지를 봅니다.
@@ -159,14 +159,14 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
           <p>
             H100 의 ridge point 는 989 TFLOP/s ÷ 3.35 TB/s ≈ 295 FLOP/B 이므로 prefill attention 은
             그보다 일곱 배 위에 있어 tensor core 가 시간을 정합니다.{" "}
-            <Link to="/ai/prefill-decode-phase-dynamics#arithmetic-intensity">Prefill 이 compute-bound 인 이유</Link>
+            <Link to="/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity">Prefill 이 compute-bound 인 이유</Link>
             가 attention 안에서도 그대로 성립합니다.
           </p>
           <p>
             Decode 는 query 가 한 행뿐입니다. Context 4096 에서 head 당 K 와 V 를 읽는 byte 는
             2×4096×128×2 B = 2 MiB 이고 FLOP 은 4×4096×128 = 2.1 MFLOP 이라 1 FLOP/B 입니다.
             Ridge point 의 300 분의 1 이라 tensor core 는 거의 놀고 HBM 대역폭이 시간을 정합니다.
-            이것이 <Link to="/ai/prefill-decode-phase-dynamics#arithmetic-intensity">decode 의 memory-bound 성질</Link>
+            이것이 <Link to="/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity">decode 의 memory-bound 성질</Link>
             입니다.
           </p>
           <p>
@@ -375,7 +375,7 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
           </p>
           <p>
             다음 글은 이 kernel 위에서 decode step 을 줄이는 다른 축인{" "}
-            <Link to="/ai/speculative-decoding-variants">speculative decoding 변형</Link> 을
+            <Link to="/cs/ai/speculative-decoding-variants">speculative decoding 변형</Link> 을
             다룹니다. Kernel 이 byte 당 시간을 줄인다면, speculation 은 step 당 확정 token 수를
             늘립니다.
           </p>

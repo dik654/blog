@@ -22,9 +22,9 @@ export default function Overview() {
         </p>
         <p>
           Entity·origin·horizon·available-time 정의는{" "}
-          <Link to="/ai/time-features">시계열 feature 글</Link>이 소유합니다.
-          Attention의 Q·K·V 계산은 <Link to="/ai/attention-theory">attention 글</Link>,
-          Transformer block은 <Link to="/ai/transformer-architecture">architecture 글</Link>을
+          <Link to="/cs/ai/time-features">시계열 feature 글</Link>이 소유합니다.
+          Attention의 Q·K·V 계산은 <Link to="/cs/ai/attention-theory">attention 글</Link>,
+          Transformer block은 <Link to="/cs/ai/transformer-architecture">architecture 글</Link>을
           재사용하며, 여기서는 event sequence input과 prediction mask만 확장합니다.
         </p>
       </div>

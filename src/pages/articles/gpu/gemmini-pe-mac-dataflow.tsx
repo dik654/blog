@@ -202,7 +202,7 @@ export default function GemminiPeMacDataflowArticle() {
             앞서 구한 I_PE = 2K/w 는 PE 하나의 국소적인 재사용일 뿐입니다. 칩 전체가 DDR·HBM 에서 실제로 읽는 바이트
             수는 Scratchpad(온칩 SRAM)가 weight 를 얼마나 오래 들고 있는지에 따라 또 달라집니다. 그 병목을 읽는
             방법은{" "}
-            <Link to="/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound">
+            <Link to="/cs/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound">
               GPU roofline 과 ridge point
             </Link>{" "}
             글에서 다룬 것과 같은 계산입니다.

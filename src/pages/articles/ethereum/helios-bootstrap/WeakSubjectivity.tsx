@@ -9,7 +9,7 @@ export default function WeakSubjectivity({ title }: { title: string }) {
         <p>
           Proof-of-stake에서 아주 오래 offline이었던 client는 이미 빠져나간 validator가 만든 장거리 history를 protocol message만으로
           구분하기 어렵습니다. Weak subjectivity는 최근 finalized checkpoint를 사회적·운영적으로 받아 이 장거리 모호성을 끊는 신뢰
-          경계입니다. 자세한 정본은 <Link to="/blockchain/prysm-finality#weak-subjectivity">weak-subjectivity checkpoint</Link>가 소유합니다.
+          경계입니다. 자세한 정본은 <Link to="/cs/blockchain/prysm-finality#weak-subjectivity">weak-subjectivity checkpoint</Link>가 소유합니다.
         </p>
       </div>
       <ExplainedFormula

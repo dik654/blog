@@ -11,7 +11,7 @@ export default function ModernEcGpuOpsArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">큰 정수와 곡선점을 CUDA에 배치하기</p><h2 className="text-3xl font-bold tracking-tight">타원곡선 GPU kernel의 첫 문제는 공식이 아니라 representation과 dependency다</h2></header>
       <p className="text-lg leading-8 text-foreground/90">ZK prover의 MSM은 많은 곡선점 덧셈을 요구하지만 GPU lane이 254-bit나 381-bit field element를 한 instruction으로 곱해 주지는 않습니다. 값을 여러 <strong>limb</strong>(machine word 단위 조각)로 나누고 wide product·carry·modular reduction을 정확한 순서로 수행한 뒤, 그 field 연산으로 Jacobian point add/double을 구성해야 합니다.</p>
-      <p>소수체·Montgomery reduction·canonical encoding은 <a className="text-primary hover:underline" href="/crypto/field-arithmetic#montgomery">field arithmetic 정본</a>, 곡선 group law와 Jacobian equivalence는 <a className="text-primary hover:underline" href="/crypto/elliptic-curves#g1-curve">elliptic-curve 정본</a>을 재사용합니다. 이 글은 그것을 CUDA thread/lane에 배치하면서 생기는 carry dependency, point batch mapping과 release gate만 소유합니다.</p>
+      <p>소수체·Montgomery reduction·canonical encoding은 <a className="text-primary hover:underline" href="/cs/crypto/field-arithmetic#montgomery">field arithmetic 정본</a>, 곡선 group law와 Jacobian equivalence는 <a className="text-primary hover:underline" href="/cs/crypto/elliptic-curves#g1-curve">elliptic-curve 정본</a>을 재사용합니다. 이 글은 그것을 CUDA thread/lane에 배치하면서 생기는 carry dependency, point batch mapping과 release gate만 소유합니다.</p>
       <EcGpuOpsMappingViz />
       <ContentBoundary article="ec-gpu-ops" />
     </section>

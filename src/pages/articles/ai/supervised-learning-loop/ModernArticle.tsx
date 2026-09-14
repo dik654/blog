@@ -70,7 +70,7 @@ export default function SupervisedLearningLoopArticle() {
             없는 것은 parameter 갱신이지 runtime state가 아닙니다. 생성 model은 KV cache를 만들 수 있고 batch·latency·memory 제약도
             남습니다.
           </p>
-        <p>다음 단계에서 학습용 data와 선택·보고용 data를 섞지 않는 <a className="font-semibold text-primary underline" href="/ai/train-validation-test">Train·validation·test 경계</a>를 봅니다.</p>
+        <p>다음 단계에서 학습용 data와 선택·보고용 data를 섞지 않는 <a className="font-semibold text-primary underline" href="/cs/ai/train-validation-test">Train·validation·test 경계</a>를 봅니다.</p>
         <div id="paper-supervised-learning"><CitationBlock source="Deep Learning Book · Machine Learning Basics" citeKey={1} href={DLB}><Evidence problem="Supervised learning의 input·target·model·empirical objective 역할 구분" contribution="Learning algorithm과 generalization을 공통 표기로 정리" assumptions="명시된 data-generating process와 loss·model family" scope="교과서의 supervised learning 기본 정의" notClaim="특정 architecture나 optimizer의 우월성 보장이 아님" /></CitationBlock></div>
         <div id="paper-autodiff-survey"><CitationBlock source="Automatic Differentiation in Machine Learning: a Survey" citeKey={2} href={AUTODIFF}><Evidence problem="Derivative 계산과 optimization update를 구분" contribution="Forward·reverse accumulation과 computational graph 비용을 정리" assumptions="Primitive derivative와 추적 가능한 program" scope="Autodiff 계산 원리와 implementation taxonomy" notClaim="Optimizer 수렴이나 generalization을 보장하지 않음" /></CitationBlock></div>
         <ContentBoundary article="supervised-learning-loop" />

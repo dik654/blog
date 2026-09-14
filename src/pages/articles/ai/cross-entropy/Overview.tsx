@@ -19,7 +19,7 @@ export default function Overview({ title }: { title?: string }) {
           사건은 왜 더 많은 정보를 주는가”라는 질문이다.
         </p>
         <p>
-          Logarithm이 낯설다면 <Link to="/ai/math-exponents-logarithms">지수·로그 정본</Link>에서
+          Logarithm이 낯설다면 <Link to="/cs/ai/math-exponents-logarithms">지수·로그 정본</Link>에서
           반복 곱셈, inverse function, 곱을 합으로 바꾸는 항등식을 먼저 확인할 수 있습니다.
           이 글에서는 그 계산을 probability에 적용하는 지점부터 이어 갑니다.
         </p>

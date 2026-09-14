@@ -192,7 +192,7 @@ export default function ImbalancedDataArticle() {
           다음 수업은 training data의 노출을 바꾸는{" "}
           <Link
             className="text-primary underline-offset-4 hover:underline"
-            to="/ai/imbalance-resampling"
+            to="/cs/ai/imbalance-resampling"
           >
             resampling
           </Link>

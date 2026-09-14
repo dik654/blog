@@ -11,7 +11,7 @@ export default function Overview() {
           Zhenfei Zhang가 2022년에 제안한 증명 시스템
           <br />
           <a
-            href="/blockchain/plonk"
+            href="/cs/blockchain/plonk"
             className="text-indigo-400 hover:underline"
           >
             PLONK
@@ -28,7 +28,7 @@ export default function Overview() {
           제약을 인코딩함
           <br />
           witness 다항식의 계수를 구하려면{" "}
-          <a href="/crypto/fft" className="text-indigo-400 hover:underline">
+          <a href="/cs/crypto/fft" className="text-indigo-400 hover:underline">
             FFT
           </a>
           가 필수 — 시간 복잡도{" "}

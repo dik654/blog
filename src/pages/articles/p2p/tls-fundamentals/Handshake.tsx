@@ -15,7 +15,7 @@ export default function Handshake() {
           shared secret을 계산할 수 있지만, 이것만으로 상대가 진짜 서버인지 알
           수는 없습니다. 중간자가 자신의 key share 두 개로 각각 연결할 수 있기
           때문입니다.{" "}
-          <Link to="/crypto/diffie-hellman#security">
+          <Link to="/cs/crypto/diffie-hellman#security">
             인증 없는 DH의 중간자 경계
           </Link>
           가 TLS에서 certificate와 CertificateVerify가 필요한 이유입니다.

@@ -75,7 +75,7 @@ export default function ModernArticle() {
       <section id="next-map" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>이제 protocol 위에 무엇을 싣는지 순서대로 확장합니다</h2>
-          <p className="leading-8"><Link to="/ai/mcp-primitives">MCP primitives</Link>에서는 Tool·Resource·Prompt를 하나씩 정의합니다. <Link to="/ai/mcp-transports">MCP transports</Link>에서는 그 message가 local pipe와 remote HTTP를 지나는 모습을 봅니다. <Link to="/ai/mcp-server-operations">MCP server 운영</Link>에서는 authorization·retry·receipt를 조합합니다.</p>
+          <p className="leading-8"><Link to="/cs/ai/mcp-primitives">MCP primitives</Link>에서는 Tool·Resource·Prompt를 하나씩 정의합니다. <Link to="/cs/ai/mcp-transports">MCP transports</Link>에서는 그 message가 local pipe와 remote HTTP를 지나는 모습을 봅니다. <Link to="/cs/ai/mcp-server-operations">MCP server 운영</Link>에서는 authorization·retry·receipt를 조합합니다.</p>
         </div>
         <div id="paper-mcp-2026-spec" className="scroll-mt-20"><CitationBlock source="Model Context Protocol · 2026-07-28 specification" citeKey={1} href="https://modelcontextprotocol.io/specification/2026-07-28">
           <p><strong>문제:</strong> AI host와 외부 기능이 구현체에 종속되지 않는 message contract로 상호 운용해야 합니다.</p><p><strong>핵심 기여:</strong> Stateless request core와 host·client·server architecture를 규정합니다.</p><p><strong>전제:</strong> Client와 server가 2026-07-28 revision을 명시적으로 지원합니다.</p><p><strong>근거 범위:</strong> Protocol 역할·message 의미와 normative requirement에 한정합니다.</p><p><strong>비주장:</strong> 특정 server의 안전성·정확성·성능을 인증하지 않습니다.</p>

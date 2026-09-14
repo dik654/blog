@@ -41,7 +41,7 @@ export default function GradientUpdate() {
           이 글은 backward와 optimizer의 경계까지만 다루고 bias correction·moment estimate·optimizer memory는 다음 글에서 같은
           parameter budget으로 비교합니다.
         </p>
-        <Link to="/ai/optimizers" className="mt-3 inline-flex text-sm font-semibold text-primary hover:underline">Optimizer 글 바로 보기 →</Link>
+        <Link to="/cs/ai/optimizers" className="mt-3 inline-flex text-sm font-semibold text-primary hover:underline">Optimizer 글 바로 보기 →</Link>
       </div>
     </section>
   );

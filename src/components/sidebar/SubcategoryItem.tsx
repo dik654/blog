@@ -6,6 +6,7 @@ import {
   articleBelongsToSubcategory,
   getSubcategoryHref,
 } from "@/content/subcategory-navigation";
+import { articleHref } from "@/lib/routes";
 
 interface Props {
   categorySlug: string;
@@ -56,7 +57,7 @@ export default function SubcategoryItem({
     return (
       <div className="mb-0.5">
         <Link
-          to={`/${categorySlug}/${onlyArticle.slug}`}
+          to={articleHref(categorySlug, onlyArticle.slug)}
           aria-current={activeArticle === onlyArticle.slug ? "page" : undefined}
           className={cn(
             "group flex w-full min-w-0 items-center gap-2 rounded-lg text-xs font-medium transition-colors",
@@ -166,7 +167,7 @@ export default function SubcategoryItem({
                 return (
                   <Link
                     key={article.slug}
-                    to={`/${categorySlug}/${article.slug}`}
+                    to={articleHref(categorySlug, article.slug)}
                     aria-current={active ? "page" : undefined}
                     className={cn(
                       "group/article flex min-w-0 items-start gap-2 rounded-lg px-2 py-1.5 transition-colors",

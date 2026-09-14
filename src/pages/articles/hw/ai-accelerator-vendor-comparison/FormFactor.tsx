@@ -74,7 +74,7 @@ export default function FormFactor() {
 
         <p className="leading-7">
           랙 단위 전력과 냉각 설계는{" "}
-          <Link to="/gpu/hw-power-cooling">전력과 냉각</Link>이 소유합니다. 이 절이 더하는 것은 그 설계 요구가
+          <Link to="/cs/gpu/hw-power-cooling">전력과 냉각</Link>이 소유합니다. 이 절이 더하는 것은 그 설계 요구가
           가속기 폼팩터 선택에서 이미 결정된다는 점입니다.
         </p>
       </div>

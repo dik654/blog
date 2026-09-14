@@ -15,7 +15,7 @@ export default function QwenKoreanReasoningPosttrainingArticle() {
           </p>
           <p>
             현상 taxonomy와 가장 작은 개입을 고르는 의사결정은
-            <a href="/ai/qwen-korean-consistency"> Qwen 한국어 일관성 글</a>에서
+            <a href="/cs/ai/qwen-korean-consistency"> Qwen 한국어 일관성 글</a>에서
             먼저 확인합니다.
           </p>
         </div>

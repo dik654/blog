@@ -78,7 +78,7 @@ export default function ObjectiveAxes() {
         <p className="leading-7">
           정렬 계열 안에서도 손실 방식에 따라 배치 조건이 다릅니다. 자원이 적어 큰 배치를 못 잡는다면 정규화를
           없앤 손실로 학습된 쪽이 유리하다고 보고돼 있고, 그 차이는{" "}
-          <Link to="/ai/image-text-contrastive-pretraining#batch-and-negatives">배치와 음성 쌍</Link>에서 다뤘습니다.
+          <Link to="/cs/ai/image-text-contrastive-pretraining#batch-and-negatives">배치와 음성 쌍</Link>에서 다뤘습니다.
         </p>
       </div>
     </section>

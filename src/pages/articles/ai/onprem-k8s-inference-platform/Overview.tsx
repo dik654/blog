@@ -33,11 +33,11 @@ export default function Overview() {
 
         <p className="leading-7">
           복제본을 고르는 규칙 자체는{" "}
-          <Link to="/ai/disaggregated-prefill-decode-serving#routing">분리 서빙의 복제본 라우팅</Link>이,
+          <Link to="/cs/ai/disaggregated-prefill-decode-serving#routing">분리 서빙의 복제본 라우팅</Link>이,
           외부 제공자를 묶는 게이트웨이의 일은{" "}
-          <Link to="/ai/llm-gateway-and-model-routing">LLM 게이트웨이와 모델 라우팅</Link>이, 파드가 실제
+          <Link to="/cs/ai/llm-gateway-and-model-routing">LLM 게이트웨이와 모델 라우팅</Link>이, 파드가 실제
           용량이 되기까지의 준비 과정은{" "}
-          <Link to="/ai/llm-serving-ops#k8s-gpu-fleet">서빙 운영</Link>이 소유합니다.
+          <Link to="/cs/ai/llm-serving-ops#k8s-gpu-fleet">서빙 운영</Link>이 소유합니다.
         </p>
       </div>
 

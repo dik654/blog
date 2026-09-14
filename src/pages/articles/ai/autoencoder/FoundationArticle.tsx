@@ -113,10 +113,10 @@ export default function FoundationArticle() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>Capacity가 크고 제약이 약하면 model이 training input을 거의 그대로 복사하는 <strong>identity degeneracy</strong>에 가까워질 수 있습니다. 그래서 training reconstruction, held-out reconstruction, latent linear probe·retrieval·clustering을 다른 줄에 기록합니다.</p>
         <ul>
-          <li><strong>다음 정리</strong><br /><Link to="/ai/linear-autoencoder-pca">Linear autoencoder가 PCA와 같아지는 조건</Link></li>
-          <li><strong>다음 학습 목표</strong><br /><Link to="/ai/denoising-masked-autoencoders">Corruption과 masking으로 clean target 복원하기</Link></li>
-          <li><strong>다음 운영 문제</strong><br /><Link to="/ai/reconstruction-anomaly-detection">Reconstruction score를 anomaly decision으로 calibration하기</Link></li>
-          <li><strong>별도 sparse 경로</strong><br /><Link to="/ai/sparse-autoencoder">Overcomplete dictionary와 sparsity frontier</Link></li>
+          <li><strong>다음 정리</strong><br /><Link to="/cs/ai/linear-autoencoder-pca">Linear autoencoder가 PCA와 같아지는 조건</Link></li>
+          <li><strong>다음 학습 목표</strong><br /><Link to="/cs/ai/denoising-masked-autoencoders">Corruption과 masking으로 clean target 복원하기</Link></li>
+          <li><strong>다음 운영 문제</strong><br /><Link to="/cs/ai/reconstruction-anomaly-detection">Reconstruction score를 anomaly decision으로 calibration하기</Link></li>
+          <li><strong>별도 sparse 경로</strong><br /><Link to="/cs/ai/sparse-autoencoder">Overcomplete dictionary와 sparsity frontier</Link></li>
         </ul>
       </div>
       <div id="paper-deep-autoencoder" className="not-prose mt-8 scroll-mt-24"><CitationBlock source="Hinton & Salakhutdinov — Reducing the Dimensionality of Data with Neural Networks" citeKey={1} type="paper" href="https://doi.org/10.1126/science.1127647">작은 central layer를 둔 deep autoencoder의 nonlinear dimensionality-reduction 실험입니다. 논문의 pretraining·dataset·architecture 조건을 넘어 모든 autoencoder의 semantic latent를 보장한다고 일반화하지 않습니다.</CitationBlock></div>

@@ -254,7 +254,7 @@ export default function GanFoundationsArticle() {
           이제부터는 objective 하나가 아니라 update 순서를 봐야 합니다.{" "}
           <a
             className="font-semibold text-primary underline"
-            href="/ai/gan-training-dynamics"
+            href="/cs/ai/gan-training-dynamics"
           >
             GAN training dynamics
           </a>

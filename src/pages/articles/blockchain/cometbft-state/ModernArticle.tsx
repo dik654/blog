@@ -12,14 +12,14 @@ export default function ModernCometBFTStateArticle() {
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">CometBFT v0.40.0 구현 읽기</p><h2 className="text-3xl font-bold tracking-tight">‘state’ 하나가 아니라 다음 block을 검증할 여러 durable receipt가 있다</h2></header>
       <p className="text-lg leading-8 text-foreground/90"><code>alice→bob 10</code>이 height 42의 block에 결정됐다고 하겠습니다. Node는 block bytes와 commit을 BlockStore에, 다음 height의 validator·parameter·AppHash를 State store에, FinalizeBlock result를 ABCI response store에 남깁니다. Application은 별도 database에 실제 balance 변화와 committed height를 저장합니다. 이름은 모두 상태처럼 들리지만 서로를 대신하지 않습니다.</p>
-      <p>Crash recovery는 이 receipt들이 같은 height에 있다고 가정하지 않고 각각을 읽는 데서 시작합니다. BlockStore가 h까지 있고 CometBFT State는 h−1이며 application은 h일 수 있습니다. <a className="text-primary hover:underline" href="/blockchain/cometbft-abci#finalize-commit">ABCI crash-replay 정본</a>은 application boundary를, 이 글은 State·BlockStore와 state sync를 중심으로 읽습니다.</p>
+      <p>Crash recovery는 이 receipt들이 같은 height에 있다고 가정하지 않고 각각을 읽는 데서 시작합니다. BlockStore가 h까지 있고 CometBFT State는 h−1이며 application은 h일 수 있습니다. <a className="text-primary hover:underline" href="/cs/blockchain/cometbft-abci#finalize-commit">ABCI crash-replay 정본</a>은 application boundary를, 이 글은 State·BlockStore와 state sync를 중심으로 읽습니다.</p>
       <DurableStoresViz />
     </section>
 
     <section id="state-struct" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · State 구조체</p><h2 className="mt-2 text-2xl font-bold">현재 결과와 다음 height의 검증 입력을 한 snapshot에 연결한다</h2></header>
       <p><code>State</code>는 chain ID, initial height, 마지막 block height·ID·time, current·next·last validator set, consensus parameters, AppHash와 LastResultsHash를 보존합니다. <code>LastValidators</code>는 새 block의 LastCommit을 검증하는 historical snapshot이고, <code>Validators</code>와 <code>NextValidators</code>는 update 지연을 반영합니다. 최신 validator 목록 하나만 저장하면 과거 commit과 evidence를 어느 voting power로 검증해야 하는지 잃습니다.</p>
-      <p><code>AppHash</code>는 application이 직전 execution에서 반환한 commitment입니다. Header h는 이미 알고 있던 이전 application result를 담고, block h를 실행해 나온 새 AppHash는 다음 header로 이어집니다. 이 높이 관계는 <a className="text-primary hover:underline" href="/blockchain/cometbft-types#block-header">header commitment 정본</a>에서 수식과 함께 설명합니다.</p>
+      <p><code>AppHash</code>는 application이 직전 execution에서 반환한 commitment입니다. Header h는 이미 알고 있던 이전 application result를 담고, block h를 실행해 나온 새 AppHash는 다음 header로 이어집니다. 이 높이 관계는 <a className="text-primary hover:underline" href="/cs/blockchain/cometbft-types#block-header">header commitment 정본</a>에서 수식과 함께 설명합니다.</p>
       <ExplainedFormula question="Restart 때 세 durable height가 얼마나 어긋났는지 어떤 값으로 먼저 표현할 수 있는가?" idea={<>BlockStore의 최고 height에서 State와 application의 committed height를 각각 빼면 어느 receipt를 replay해야 하는지 범위를 좁힐 수 있습니다. 음수는 자동 보정하지 않고 impossible state로 따로 처리합니다.</>} formula={String.raw`g_s=H_b-H_s,\qquad g_a=H_b-H_a`}
       annotatedFormula={String.raw`g_s=\underbrace{H_b-H_s,\qquad g_a=H_b-H_a}_{\text{block store height 계산}}`}
       operations={[

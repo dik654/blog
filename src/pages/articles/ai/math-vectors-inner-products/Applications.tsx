@@ -5,17 +5,17 @@ const links = [
   {
     title: "퍼셉트론의 score와 margin",
     detail: "w·x를 weight 방향의 signed 성분으로 읽고, unit norm 조건에서 경계까지의 거리로 연결합니다.",
-    href: "/ai/perceptron#convergence",
+    href: "/cs/ai/perceptron#convergence",
   },
   {
     title: "신경망의 dense layer",
     detail: "Output unit 하나는 input vector와 weight column의 dot product에 bias를 더해 만듭니다.",
-    href: "/ai/neural-network#forward",
+    href: "/cs/ai/neural-network#forward",
   },
   {
     title: "Attention score",
     detail: "Query와 key의 dot product를 쓰되 dimension에 따른 scale 증가를 √d로 보정합니다.",
-    href: "/ai/attention-theory#self-attention",
+    href: "/cs/ai/attention-theory#self-attention",
   },
 ] as const;
 

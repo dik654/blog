@@ -35,7 +35,7 @@ export default function LRStrategy() {
           Warmup은 새 head·optimizer state·큰 effective batch가 만나는 초기 update의
           충격을 완화하는 후보입니다. Peak 뒤 linear·cosine decay를 쓰더라도 scheduler는
           micro-batch가 아니라 optimizer update clock과 맞춰야 합니다. Schedule 수식과
-          warm restart의 가정은 <Link to="/ai/lr-scheduling">learning-rate scheduling 글</Link>에서
+          warm restart의 가정은 <Link to="/cs/ai/lr-scheduling">learning-rate scheduling 글</Link>에서
           이어서 설명합니다.
         </p>
         <div id="paper-ulmfit-transfer" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">

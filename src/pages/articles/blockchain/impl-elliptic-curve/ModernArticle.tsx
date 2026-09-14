@@ -10,7 +10,7 @@ export default function ModernCurveImplementationArticle() {
   return <article className="space-y-14">
     <section id="overview" className="space-y-6">
       <header className="space-y-3"><p className="text-sm font-semibold text-primary">Bytes를 G1/G2와 pairing receipt로 안전하게 승격하기</p><h2 className="text-3xl font-bold tracking-tight">타원곡선 구현은 점 공식을 옮기는 일보다 curve profile과 admission 순서를 지키는 일이 먼저다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">증명 파일에서 읽은 좌표 두 개를 곧바로 G1으로 다루면 안 됩니다. Encoding을 canonical하게 해석하고 curve equation과 subgroup을 확인한 뒤에야 typed point가 됩니다. <a className="text-primary hover:underline" href="/crypto/elliptic-curves">곡선군·Jacobian·pairing 정본</a>이 수학을 소유하며, 이 글은 BN254를 예로 Rust artifact, 좌표 연산 profile과 release gate를 설명합니다.</p>
+      <p className="text-lg leading-8 text-foreground/90">증명 파일에서 읽은 좌표 두 개를 곧바로 G1으로 다루면 안 됩니다. Encoding을 canonical하게 해석하고 curve equation과 subgroup을 확인한 뒤에야 typed point가 됩니다. <a className="text-primary hover:underline" href="/cs/crypto/elliptic-curves">곡선군·Jacobian·pairing 정본</a>이 수학을 소유하며, 이 글은 BN254를 예로 Rust artifact, 좌표 연산 profile과 release gate를 설명합니다.</p>
       <p>
             고정 workload는 compressed point를 읽어 G1 scalar multiplication과 G2 pairing product를 수행하고 검증 receipt를
             만드는 흐름입니다. G1과 G2는 서로 바꿀 수 없고 infinity·twist·subgroup·encoding rules도 같은 profile revision에 묶습니다.

@@ -32,9 +32,9 @@ export default function Overview() {
         <p>
           이 글은 C/C++ 배열의 0-based index와 row-major 저장만 바닥부터 다시
           설명합니다. Shared memory transaction은{" "}
-          <Link to="/gpu/cuda-shared-memory">공유 메모리 글</Link>, block
+          <Link to="/cs/gpu/cuda-shared-memory">공유 메모리 글</Link>, block
           barrier와 stream ordering은{" "}
-          <Link to="/gpu/cuda-sync-streams">동기화·스트림 글</Link>에서
+          <Link to="/cs/gpu/cuda-sync-streams">동기화·스트림 글</Link>에서
           이어집니다.
         </p>
       </div>

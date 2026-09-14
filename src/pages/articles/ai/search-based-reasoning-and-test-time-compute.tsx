@@ -27,15 +27,15 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
           </p>
           <p>
             세 방법은 같은 재료를 씁니다.{" "}
-            <Link to="/ai/llm-sampling-strategies#test-time-compute">Test-time compute</Link> 로
+            <Link to="/cs/ai/llm-sampling-strategies#test-time-compute">Test-time compute</Link> 로
             산 여분의 연산, 후보를 평가할 verifier 나 self-evaluation, 그리고 그 평가를 바탕으로
             후보를 고르거나 좁히는 규칙입니다.
           </p>
           <p>
             여기서 말하는 verifier 는{" "}
-            <Link to="/ai/open-r1#reward-system">math parser·code test·sandbox 같은 versioned
+            <Link to="/cs/ai/open-r1#reward-system">math parser·code test·sandbox 같은 versioned
             verifier measurement</Link> 이거나,{" "}
-            <Link to="/ai/agent-verification#layers">결정적 검사부터 judge 까지 쌓은 layered
+            <Link to="/cs/ai/agent-verification#layers">결정적 검사부터 judge 까지 쌓은 layered
             verification</Link> 의 한 층일 수 있습니다. 신호가 있느냐 없느냐가 이 글에서 세
             방법의 성패를 가르는 가장 큰 변수입니다.
           </p>
@@ -106,7 +106,7 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
           </p>
           <p>
             다수결 투표는 verifier 없이 가장 많이 나온 답을 고르는{" "}
-            <Link to="/ai/prompt-reasoning#chain-of-thought">self-consistency</Link> 방식입니다.
+            <Link to="/cs/ai/prompt-reasoning#chain-of-thought">self-consistency</Link> 방식입니다.
             Verifier 가 있는 best-of-N 이 그 다수결보다도 나은 선택을 할 수 있다는 것이 이
             수치의 의미입니다.
           </p>
@@ -245,10 +245,10 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
           </p>
           <p>
             이 차이가 self-correction 의 경계입니다.{" "}
-            <Link to="/ai/agent-verification#layers">결정적 검사나 환경 관측 같은 외부
+            <Link to="/cs/ai/agent-verification#layers">결정적 검사나 환경 관측 같은 외부
             verifier</Link> 가 있으면 self-correction 은 그 신호를 따라 안정적으로 개선되지만,
             model 자신의 판단만으로는{" "}
-            <Link to="/ai/prompt-reasoning#chain-of-thought">reasoning 과 정답 사이의 책임
+            <Link to="/cs/ai/prompt-reasoning#chain-of-thought">reasoning 과 정답 사이의 책임
             경계</Link> 를 스스로 넘어설 수 없습니다.
           </p>
         </div>
@@ -308,7 +308,7 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
             을 씁니다.
           </p>
           <p>
-            <Link to="/ai/llm-sampling-strategies#test-time-compute">Test-time compute 축 자체의
+            <Link to="/cs/ai/llm-sampling-strategies#test-time-compute">Test-time compute 축 자체의
             정의</Link>는 앞 글이 다뤘습니다. 이 글은 그 축 위에서 실제로 검증하고 탐색하는 세
             방법과, 각 방법이 verifier 품질에 얼마나 갇히는지를 닫습니다.
           </p>

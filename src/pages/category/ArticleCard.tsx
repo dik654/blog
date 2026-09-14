@@ -7,6 +7,7 @@ import {
   inferArticleIntent,
 } from "@/content/article-guidance";
 import { ARTICLE_EVIDENCE } from "@/content/article-evidence";
+import { articleHref } from "@/lib/routes";
 
 interface Props {
   article: Article;
@@ -29,7 +30,7 @@ export default function ArticleCard({ article, categorySlug, index }: Props) {
       viewport={{ once: true }}
     >
       <Link
-        to={`/${categorySlug}/${article.slug}`}
+        to={articleHref(categorySlug, article.slug)}
         className="group flex items-center gap-4 rounded-lg border px-4 py-3 transition-all hover:border-foreground/20 hover:bg-accent/30"
       >
         {Thumb && (

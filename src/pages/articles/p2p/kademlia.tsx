@@ -19,7 +19,7 @@ export default function KademliaArticle() {
             비교하고, 거리 구간마다 제한된 연락처를 k-bucket에 보관한다.
             버킷은 살아 있는 오래된 연락처를 우선하되 실패하면 교체 후보를
             승격한다. 실제 조회의 shortlist·병렬 질의·종료 규칙은 다음 글인{" "}
-            <Link to="/p2p/kad-lookup">Kademlia 반복 탐색</Link>이 정본으로
+            <Link to="/cs/p2p/kad-lookup">Kademlia 반복 탐색</Link>이 정본으로
             소유한다.
           </p>
         </div>
@@ -141,7 +141,7 @@ export default function KademliaArticle() {
             prefix 수, lookup 수렴률, timeout 분포, replacement 승격률을 함께
             본다. 특정 /24에 쏠리거나 가까운 거리의 응답이 반복 실패하면
             bootstrap source와 diversity policy를 점검한다. 완전한 공격 방어와
-            위협 모델은 <Link to="/p2p/dht-security">DHT 보안</Link>에서 다룬다.
+            위협 모델은 <Link to="/cs/p2p/dht-security">DHT 보안</Link>에서 다룬다.
           </p>
           <h3>다음 읽기</h3>
           <p>

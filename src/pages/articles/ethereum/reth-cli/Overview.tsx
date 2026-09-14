@@ -35,7 +35,7 @@ export default function Overview({
             입력 provenance→config 검증→typestate assembly→component
             lifecycle→release gate
           </strong>{" "}
-          순서로 진행합니다. <Link to="/blockchain/reth">Reth 구조</Link>가
+          순서로 진행합니다. <Link to="/cs/blockchain/reth">Reth 구조</Link>가
           execution client 전체의 block lifecycle을 소유하므로, 여기서는 그
           정의를 복제하지 않고 “그 lifecycle을 안전하게 시작하는 방법”에
           집중합니다.

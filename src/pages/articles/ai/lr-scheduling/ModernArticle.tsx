@@ -21,10 +21,10 @@ export default function LrSchedulingArticle() {
             이 글은 곡선 종류보다 먼저 update clock·total budget·call
             event·resume state를 정의합니다. 고정된 clock 위에서 LR를 낮추는
             법은
-            <a href="/ai/lr-decay-policies"> decay policy</a>, cosine은
-            <a href="/ai/cosine-restart-scheduling"> cosine/restart</a>, 한 번
-            올렸다 내리는 정책은 <a href="/ai/one-cycle-scheduling">OneCycle</a>
-            , 시작 구간은 <a href="/ai/warmup-scheduling">warmup</a>에서
+            <a href="/cs/ai/lr-decay-policies"> decay policy</a>, cosine은
+            <a href="/cs/ai/cosine-restart-scheduling"> cosine/restart</a>, 한 번
+            올렸다 내리는 정책은 <a href="/cs/ai/one-cycle-scheduling">OneCycle</a>
+            , 시작 구간은 <a href="/cs/ai/warmup-scheduling">warmup</a>에서
             이어집니다.
           </p>
         </div>

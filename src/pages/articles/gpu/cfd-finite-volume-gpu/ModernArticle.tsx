@@ -265,11 +265,11 @@ export default function ModernCfdFiniteVolumeGpuArticle() {
           Flux와 residual을 fuse하면 face state의 HBM round trip을 줄일 수 있지만
           reconstruction temporary·register·shared-memory lifetime이 늘어날 수
           있습니다. 따라서
-          <a className="mx-1 text-primary hover:underline" href="/gpu/cuda-kernel-fusion">
+          <a className="mx-1 text-primary hover:underline" href="/cs/gpu/cuda-kernel-fusion">
             fusion boundary
           </a>
           와
-          <a className="mx-1 text-primary hover:underline" href="/gpu/cuda-register-pressure">
+          <a className="mx-1 text-primary hover:underline" href="/cs/gpu/cuda-register-pressure">
             register pressure
           </a>
           를 재사용합니다. Multi-GPU에서는 halo exchange와 interior cells 계산을

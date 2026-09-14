@@ -7,10 +7,10 @@ export default function UpgradeChain() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           Raw <code>TcpStream</code>에서 먼저 security protocol ID를 합의하고
-          <Link to="/p2p/libp2p-noise"> Noise</Link> handshake를 수행합니다. 성공하면
+          <Link to="/cs/p2p/libp2p-noise"> Noise</Link> handshake를 수행합니다. 성공하면
           remote PeerId와 authenticated encrypted I/O가 나오고, 그 위에서 Yamux 같은
           공통 stream multiplexer를 선택합니다. 마지막 output만
-          <Link to="/p2p/libp2p"> Swarm</Link>의 connection pool로 이동합니다.
+          <Link to="/cs/p2p/libp2p"> Swarm</Link>의 connection pool로 이동합니다.
         </p>
         <p>
           Security와 muxer 협상은 직렬 dependency이므로 각 단계에 별도 timeout과 error

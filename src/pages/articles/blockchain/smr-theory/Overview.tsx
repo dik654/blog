@@ -22,8 +22,8 @@ export default function Overview() {
         <p>
           이 글은 SMR, total-order delivery, replicated log의 commit/apply,
           Paxos·Raft safety를 소유합니다. Timing·failure model은{" "}
-          <Link to="/blockchain/distributed-systems">분산 시스템 기초</Link>,
-          Byzantine quorum은 <Link to="/blockchain/bft-theory">BFT 이론</Link>에서
+          <Link to="/cs/blockchain/distributed-systems">분산 시스템 기초</Link>,
+          Byzantine quorum은 <Link to="/cs/blockchain/bft-theory">BFT 이론</Link>에서
           가져옵니다.
         </p>
       </div>

@@ -187,7 +187,7 @@ C_{\mathrm{attn}}&\propto\underbrace{N^2}_{\text{모든 token pair}}\underbrace{
             차이를 가리킵니다.
           </p>
           <p>
-            다음 글인 <Link to="/ai/modern-image-model-stack">현대 이미지 모델
+            다음 글인 <Link to="/cs/ai/modern-image-model-stack">현대 이미지 모델
             전체 스택</Link>에서는 autoencoder·text/VLM encoder·DiT·prompt expander와
             post-training을 하나의 시스템으로 조립합니다.
           </p>

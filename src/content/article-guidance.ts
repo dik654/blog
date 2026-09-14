@@ -1,4 +1,5 @@
 import type { Article, Category } from "./types";
+import { articleHref } from "@/lib/routes";
 
 export type ArticleIntent =
   | "개념 지도"
@@ -53,37 +54,37 @@ const ARTICLE_INTENT_OVERRIDES: Partial<Record<string, ArticleIntent>> = {
 const CATEGORY_STARTS: Record<string, GuidanceLink> = {
   ai: {
     label: "딥러닝 전체 지도",
-    href: "/ai/deep-learning-overview",
+    href: "/cs/ai/deep-learning-overview",
     reason: "모델·학습·추론이라는 공통 좌표를 먼저 잡습니다.",
   },
   blockchain: {
     label: "분산 시스템 이론",
-    href: "/blockchain/distributed-systems",
+    href: "/cs/blockchain/distributed-systems",
     reason: "노드·상태·합의가 왜 분리되는지 먼저 잡습니다.",
   },
   crypto: {
     label: "유한체 이론",
-    href: "/crypto/finite-field-theory",
+    href: "/cs/crypto/finite-field-theory",
     reason: "ZK와 곡선 연산이 사용하는 산술 세계부터 잡습니다.",
   },
   p2p: {
     label: "TLS 1.3 기초",
-    href: "/p2p/tls-fundamentals",
+    href: "/cs/p2p/tls-fundamentals",
     reason: "연결·신원·암호화가 어느 층에서 일어나는지 구분합니다.",
   },
   gpu: {
     label: "GPU 아키텍처 기초",
-    href: "/gpu/gpu-architecture",
+    href: "/cs/gpu/gpu-architecture",
     reason: "SM·warp·메모리 계층을 먼저 알면 최적화가 덜 추상적입니다.",
   },
   tee: {
     label: "하드웨어 보안 기초",
-    href: "/tee/hw-security",
+    href: "/cs/tee/hw-security",
     reason: "위협 모델·TCB·원격 증명의 공통 경계를 먼저 잡습니다.",
   },
   "isms-aml": {
     label: "ISMS-P 인증 프로세스",
-    href: "/isms-aml/isms-overview",
+    href: "/cs/isms-aml/isms-overview",
     reason: "통제 항목을 자산·위험·증적이라는 전체 흐름에 놓습니다.",
   },
 };
@@ -91,173 +92,173 @@ const CATEGORY_STARTS: Record<string, GuidanceLink> = {
 const SUBCATEGORY_STARTS: Record<string, GuidanceLink> = {
   "ai-foundations": {
     label: "딥러닝 전체 지도",
-    href: "/ai/deep-learning-overview",
+    href: "/cs/ai/deep-learning-overview",
     reason: "퍼셉트론에서 학습·평가까지 공통 좌표를 먼저 잡습니다.",
   },
   "ai-nlp": {
     label: "분포 의미론",
-    href: "/ai/distributional-semantics",
+    href: "/cs/ai/distributional-semantics",
     reason: "텍스트를 벡터로 표현하는 출발점부터 잡습니다.",
   },
   "ai-vision": {
     label: "CNN 기초",
-    href: "/ai/cnn",
+    href: "/cs/ai/cnn",
     reason: "이미지의 공간 구조를 모델이 어떻게 읽는지 먼저 봅니다.",
   },
   "ai-timeseries": {
     label: "ARIMA 기초",
-    href: "/ai/arima",
+    href: "/cs/ai/arima",
     reason: "추세·차분·자기상관이라는 시계열 기준선을 먼저 잡습니다.",
   },
   "ai-generative": {
     label: "생성 모델 전체 지도",
-    href: "/ai/generative-theory",
+    href: "/cs/ai/generative-theory",
     reason: "VAE·GAN·diffusion이 분포를 배우는 방식부터 비교합니다.",
   },
   "ai-agents": {
     label: "Agent loop 기초",
-    href: "/ai/agent-loop-foundations",
+    href: "/cs/ai/agent-loop-foundations",
     reason: "도구 호출·루프·검증이라는 공통 실행 모델을 먼저 봅니다.",
   },
   "ai-llm-serving": {
     label: "vLLM 서빙 구조",
-    href: "/ai/vllm-serving",
+    href: "/cs/ai/vllm-serving",
     reason: "요청·KV cache·scheduler가 만나는 전체 경로를 먼저 봅니다.",
   },
   "ai-llm-theory": {
     label: "Transformer 아키텍처",
-    href: "/ai/transformer-architecture",
+    href: "/cs/ai/transformer-architecture",
     reason: "attention·residual·MLP라는 기준 블록을 먼저 잡습니다.",
   },
   "ai-llm-applied": {
     label: "Open-R1 재현 흐름",
-    href: "/ai/open-r1",
+    href: "/cs/ai/open-r1",
     reason: "Reasoning data·SFT·GRPO·평가의 전체 경로를 먼저 봅니다.",
   },
   "ai-agents-ops": {
     label: "LLM 하네스",
-    href: "/ai/llm-harness",
+    href: "/cs/ai/llm-harness",
     reason: "모델 밖의 컨텍스트·도구·검증 루프를 먼저 구분합니다.",
   },
   "ai-agents-claw-core": {
     label: "Claw Code 전체 아키텍처",
-    href: "/ai/claw-overview",
+    href: "/cs/ai/claw-overview",
     reason: "세션·도구·런타임의 요청 흐름을 먼저 잡습니다.",
   },
   "ai-agents-claw-security": {
     label: "Claw Code 권한 모델",
-    href: "/ai/claw-permissions",
+    href: "/cs/ai/claw-permissions",
     reason: "모델의 tool call과 실제 실행 권한을 먼저 구분합니다.",
   },
   "ai-agents-claw-lifecycle": {
     label: "Worker 부트와 신뢰 판정",
-    href: "/ai/claw-worker-boot",
+    href: "/cs/ai/claw-worker-boot",
     reason: "외부 프로세스가 작업 가능 상태가 되는 순서를 먼저 봅니다.",
   },
   "ai-agents-claw-infra": {
     label: "MCP 라이프사이클",
-    href: "/ai/claw-mcp",
+    href: "/cs/ai/claw-mcp",
     reason: "외부 서버가 내부 tool registry에 연결되는 경로를 먼저 봅니다.",
   },
   "ai-agents-claw-ops": {
     label: "Policy engine과 작업 Lane",
-    href: "/ai/claw-policy-engine",
+    href: "/cs/ai/claw-policy-engine",
     reason: "상태·규칙·품질 게이트의 관계를 먼저 잡습니다.",
   },
   "ai-from-scratch": {
     label: "자동 미분 엔진 구현",
-    href: "/ai/dezero-autodiff",
+    href: "/cs/ai/dezero-autodiff",
     reason: "계산 그래프와 gradient가 이후 레이어 구현의 기반입니다.",
   },
   "ai-practical-data": {
     label: "EDA 워크플로우",
-    href: "/ai/eda-workflow",
+    href: "/cs/ai/eda-workflow",
     reason: "행의 의미·데이터 품질·split 경계를 먼저 확인합니다.",
   },
   "ai-practical-tabular": {
     label: "Gradient Boosting",
-    href: "/ai/gradient-boosting",
+    href: "/cs/ai/gradient-boosting",
     reason: "테이블 모델링의 강한 baseline을 먼저 잡습니다.",
   },
   "ai-practical-pipeline": {
     label: "PyTorch 학습 파이프라인",
-    href: "/ai/training-pipeline",
+    href: "/cs/ai/training-pipeline",
     reason: "데이터·학습 루프·checkpoint·관측의 전체 뼈대를 먼저 봅니다.",
   },
   "ai-practical-cv": {
     label: "이미지 분류 파이프라인",
-    href: "/ai/image-classification-pipeline",
+    href: "/cs/ai/image-classification-pipeline",
     reason: "데이터 경계부터 학습·후처리까지 기준 파이프라인을 먼저 봅니다.",
   },
   "ai-practical-embedding": {
     label: "문장 임베딩",
-    href: "/ai/sentence-embeddings",
+    href: "/cs/ai/sentence-embeddings",
     reason: "pooling·contrastive 학습·retrieval 평가의 기준을 먼저 잡습니다.",
   },
   "ai-practical-compression": {
     label: "모델 압축 파이프라인",
-    href: "/ai/compression-pipeline",
+    href: "/cs/ai/compression-pipeline",
     reason: "양자화·pruning·distillation의 역할과 측정 경계를 먼저 봅니다.",
   },
   "ai-practical-llm": {
     label: "LoRA Fine-tuning",
-    href: "/ai/lora-finetuning",
+    href: "/cs/ai/lora-finetuning",
     reason: "전체 fine-tuning과 PEFT의 메모리·배포 차이를 먼저 봅니다.",
   },
   "ai-practical-strategy": {
     label: "실험 추적",
-    href: "/ai/experiment-tracking",
+    href: "/cs/ai/experiment-tracking",
     reason:
       "재현 가능한 비교 단위를 먼저 만든 뒤 탐색과 ensemble로 확장합니다.",
   },
   "bft-consensus": {
     label: "비잔틴 장애 모델",
-    href: "/blockchain/bft-theory",
+    href: "/cs/blockchain/bft-theory",
     reason: "안전성·활성·f<n/3이 각 프로토콜 비교의 기준입니다.",
   },
   "eth-reth": {
     label: "Reth 아키텍처 개요",
-    href: "/blockchain/reth",
+    href: "/cs/blockchain/reth",
     reason: "pipeline·provider·DB·EVM의 경계를 먼저 잡습니다.",
   },
   "eth-prysm": {
     label: "Ethereum 노드 아키텍처",
-    href: "/blockchain/node-architecture",
+    href: "/cs/blockchain/node-architecture",
     reason: "CL·EL과 Engine API의 역할을 먼저 구분합니다.",
   },
   "cosmos-core": {
     label: "CometBFT 아키텍처",
-    href: "/blockchain/cometbft",
+    href: "/cs/blockchain/cometbft",
     reason: "합의·ABCI·mempool·state의 큰 경계를 먼저 봅니다.",
   },
   "fil-proofs": {
     label: "Filecoin 저장 증명 개요",
-    href: "/blockchain/filecoin-proofs",
+    href: "/cs/blockchain/filecoin-proofs",
     reason: "PoRep·PoSt·SNARK가 언제 필요한지 먼저 연결합니다.",
   },
   "fil-lotus": {
     label: "Lotus 아키텍처",
-    href: "/blockchain/filecoin-lotus",
+    href: "/cs/blockchain/filecoin-lotus",
     reason: "chain·miner·market·state의 소유권을 먼저 봅니다.",
   },
   "zkp-math": {
     label: "유한체 이론",
-    href: "/crypto/finite-field-theory",
+    href: "/cs/crypto/finite-field-theory",
     reason: "정수 계산과 체 연산의 차이를 먼저 구분합니다.",
   },
   "zk-acceleration": {
     label: "MSM & NTT 이론",
-    href: "/gpu/msm-ntt",
+    href: "/cs/gpu/msm-ntt",
     reason: "커널보다 먼저 병렬화할 수학 연산의 형태를 봅니다.",
   },
   "p2p-discovery": {
     label: "Kademlia DHT",
-    href: "/p2p/kademlia",
+    href: "/cs/p2p/kademlia",
     reason: "XOR 거리·k-bucket·반복 탐색의 기준을 먼저 잡습니다.",
   },
   "p2p-libp2p": {
     label: "rust-libp2p Swarm",
-    href: "/p2p/libp2p",
+    href: "/cs/p2p/libp2p",
     reason: "transport·upgrade·muxer·behaviour의 조립 순서를 먼저 봅니다.",
   },
 };
@@ -286,7 +287,7 @@ export function getBeginnerStart(
   const candidate =
     SUBCATEGORY_STARTS[article.subcategory] ?? CATEGORY_STARTS[category.slug];
   if (!candidate) return undefined;
-  return candidate.href === `/${category.slug}/${article.slug}`
+  return candidate.href === articleHref(category.slug, article.slug)
     ? undefined
     : candidate;
 }
@@ -295,25 +296,25 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/llm-harness": [
     {
       label: "Agent의 state·action·observation loop",
-      href: "/ai/agent-loop-foundations",
+      href: "/cs/ai/agent-loop-foundations",
       reason:
         "이 글은 전체 실행 계약을 소유하고, proposal·runtime·typed observation·exit의 세부 transition은 loop 정본에서 이어집니다.",
     },
     {
       label: "Context 선택·memory·compaction",
-      href: "/ai/context-engineering",
+      href: "/cs/ai/context-engineering",
       reason:
         "Context discovery 원칙만 여기서 사용하고, retrieval·memory·compaction의 세부 방법은 context engineering 글이 소유합니다.",
     },
     {
       label: "Skill의 포맷과 progressive disclosure",
-      href: "/ai/skills-anatomy",
+      href: "/cs/ai/skills-anatomy",
       reason:
         "Skill은 하네스가 불러오는 context·script 자산이며, 디렉터리 구조와 authoring 규칙은 Skills 정본에서 봅니다.",
     },
     {
       label: "Sandbox와 egress 보안",
-      href: "/ai/agent-sandbox-security",
+      href: "/cs/ai/agent-sandbox-security",
       reason:
         "Capability admission보다 아래의 process·network·kernel isolation은 sandbox 보안 글이 소유합니다.",
     },
@@ -321,7 +322,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/agent-loop-foundations": [
     {
       label: "LLM 하네스의 목표·권한·복구",
-      href: "/ai/llm-harness",
+      href: "/cs/ai/llm-harness",
       reason:
         "이 글은 최소 state transition을 소유하고, 전체 실행 계약·평가 개선 loop는 하네스 정본에서 이어집니다.",
     },
@@ -329,19 +330,19 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/agent-plan-replanning": [
     {
       label: "Agent loop의 typed observation과 exit",
-      href: "/ai/agent-loop-foundations",
+      href: "/cs/ai/agent-loop-foundations",
       reason: "Plan transition은 실제 observation과 terminal state를 입력으로 사용합니다.",
     },
     {
       label: "Durable framework state",
-      href: "/ai/agent-frameworks",
+      href: "/cs/ai/agent-frameworks",
       reason: "Plan checkpoint를 process restart와 human wait까지 지속하는 runtime 구현은 framework 글이 소유합니다.",
     },
   ],
   "ai/agent-delegation-contracts": [
     {
       label: "Multi-agent runtime 구현",
-      href: "/ai/multi-agent-implementation",
+      href: "/cs/ai/multi-agent-implementation",
       reason:
         "Delegation·ownership 원리를 실제 context 격리·checkpoint·merge로 내리는 구현은 별도 글이 소유합니다.",
     },
@@ -349,37 +350,37 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/agent-extension-boundaries": [
     {
       label: "Skill의 포맷과 progressive disclosure",
-      href: "/ai/skills-anatomy",
+      href: "/cs/ai/skills-anatomy",
       reason: "Skill의 runtime authority 경계만 여기서 보고 directory·metadata·resource authoring은 Skills 정본에서 이어집니다.",
     },
     {
       label: "하네스의 layered verification",
-      href: "/ai/agent-verification#overview",
+      href: "/cs/ai/agent-verification#overview",
       reason: "Verifier의 위치를 전체 artifact·trajectory·effect evaluation stack에 연결합니다.",
     },
   ],
   "ai/distributional-semantics": [
     {
       label: "행렬·SVD 선수 개념",
-      href: "/ai/math-matrices-svd",
+      href: "/cs/ai/math-matrices-svd",
       reason:
         "이 글은 SVD 정의를 다시 소유하지 않고, weighted word–context matrix에 적용하는 선택과 평가 경계만 다룹니다.",
     },
     {
       label: "Word2Vec 학습 objective",
-      href: "/ai/word2vec",
+      href: "/cs/ai/word2vec",
       reason:
         "이 글은 count·prediction 방법의 이론적 연결을 소유하고, CBOW·Skip-gram·negative sampling의 실제 update는 Word2Vec 글에서 이어집니다.",
     },
     {
       label: "Tokenizer와 vocabulary 계약",
-      href: "/ai/tokenizer",
+      href: "/cs/ai/tokenizer",
       reason:
         "Corpus 문자열이 token ID와 vocabulary가 되는 과정은 tokenizer 정본이 소유합니다.",
     },
     {
       label: "Contextual encoder의 visibility",
-      href: "/ai/bert",
+      href: "/cs/ai/bert",
       reason:
         "문장마다 달라지는 contextual representation과 MLM 학습 계약은 BERT 글에서 이어집니다.",
     },
@@ -387,19 +388,19 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/resnet": [
     {
       label: "CNN의 convolution과 receptive field",
-      href: "/ai/cnn",
+      href: "/cs/ai/cnn",
       reason:
         "이 글은 convolution을 다시 정의하지 않고 residual parameterization과 block 경계에 집중합니다.",
     },
     {
       label: "Activation과 gradient",
-      href: "/ai/activation-functions",
+      href: "/cs/ai/activation-functions",
       reason:
         "ReLU·pre-activation과 activation Jacobian의 공통 원리는 activation 정본에서 이어집니다.",
     },
     {
       label: "Chain rule과 역전파",
-      href: "/ai/backprop-optimization",
+      href: "/cs/ai/backprop-optimization",
       reason:
         "Jacobian-vector product와 gradient 누적의 기본기는 역전파 정본에서 먼저 볼 수 있습니다.",
     },
@@ -407,31 +408,31 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/cnn": [
     {
       label: "Activation function",
-      href: "/ai/activation-functions",
+      href: "/cs/ai/activation-functions",
       reason:
         "Convolution 뒤의 ReLU·GELU와 gated block은 activation 정본에서 봅니다.",
     },
     {
       label: "ResNet",
-      href: "/ai/resnet",
+      href: "/cs/ai/resnet",
       reason:
         "Identity shortcut과 residual gradient path의 수식은 ResNet 글이 소유합니다.",
     },
     {
       label: "Vision Transformer",
-      href: "/ai/vision-transformer",
+      href: "/cs/ai/vision-transformer",
       reason: "Patch embedding과 image attention은 ViT 글에서 이어집니다.",
     },
   ],
   "ai/bert": [
     {
       label: "Tokenizer와 model ID 계약",
-      href: "/ai/tokenizer",
+      href: "/cs/ai/tokenizer",
       reason: "WordPiece·special token·ID 호환성은 tokenizer 글이 소유합니다.",
     },
     {
       label: "Transformer block과 self-attention",
-      href: "/ai/transformer-architecture",
+      href: "/cs/ai/transformer-architecture",
       reason:
         "이 글은 Q·K·V 계산을 반복하지 않고 BERT의 visibility·objective·transfer recipe에 집중합니다.",
     },
@@ -439,7 +440,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/rlhf": [
     {
       label: "Open-R1의 online reasoning 학습",
-      href: "/ai/open-r1",
+      href: "/cs/ai/open-r1",
       reason:
         "이 글은 preference alignment의 목적함수와 feedback 계약을 소유하고, reasoning reward·GRPO의 재현 파이프라인은 Open-R1 글에서 이어갑니다.",
     },
@@ -447,13 +448,13 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/open-r1": [
     {
       label: "RLHF와 feedback 계약",
-      href: "/ai/rlhf",
+      href: "/cs/ai/rlhf",
       reason:
         "이 글은 preference alignment 전체를 반복하지 않고 verifiable reward·GRPO·reasoning recipe 재현에 집중합니다.",
     },
     {
       label: "지식 증류의 일반 원리",
-      href: "/ai/knowledge-distillation",
+      href: "/cs/ai/knowledge-distillation",
       reason:
         "Teacher–student distillation의 temperature·loss 일반론은 정본 글에서 보고, 여기서는 reasoning trace SFT의 data boundary를 봅니다.",
     },
@@ -461,7 +462,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/claw-mcp": [
     {
       label: "MCP 프로토콜 기초",
-      href: "/ai/mcp-protocol",
+      href: "/cs/ai/mcp-protocol",
       reason:
         "이 글은 tools·resources·prompts를 다시 정의하지 않고 Claw Code의 연결 생명주기에 집중합니다.",
     },
@@ -469,7 +470,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/claw-subagent-orchestration": [
     {
       label: "Agent delegation과 state owner",
-      href: "/ai/agent-delegation-contracts",
+      href: "/cs/ai/agent-delegation-contracts",
       reason:
         "여기서는 위임 원리를 반복하지 않고 Claw sub-agent의 작업 계약·격리·합류를 설명합니다.",
     },
@@ -477,7 +478,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/tabular-deep-learning": [
     {
       label: "Gradient Boosting baseline",
-      href: "/ai/gradient-boosting",
+      href: "/cs/ai/gradient-boosting",
       reason:
         "테이블 딥러닝의 가치는 같은 split과 예산의 GBM 기준선 위에서 비교해야 합니다.",
     },
@@ -485,7 +486,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/ecod": [
     {
       label: "EDA와 split 경계",
-      href: "/ai/eda-workflow",
+      href: "/cs/ai/eda-workflow",
       reason:
         "결측값·중복 feature·시간 누출과 reference population은 EDA 단계에서 먼저 고정합니다.",
     },
@@ -493,13 +494,13 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/gan": [
     {
       label: "생성 모델 전체 지도",
-      href: "/ai/generative-theory",
+      href: "/cs/ai/generative-theory",
       reason:
         "Explicit likelihood·latent variable·flow·diffusion과 비교한 GAN의 위치는 정본 지도에서 먼저 봅니다.",
     },
     {
       label: "Diffusion model",
-      href: "/ai/diffusion-models",
+      href: "/cs/ai/diffusion-models",
       reason:
         "Iterative denoising의 objective와 sampling path는 diffusion 정본 글에서 이어집니다.",
     },
@@ -507,13 +508,13 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/llm-serving-ops": [
     {
       label: "vLLM 서빙 구조",
-      href: "/ai/vllm-serving",
+      href: "/cs/ai/vllm-serving",
       reason:
         "이 글은 engine 내부 batching·scheduler·KV cache를 반복하지 않고, 그 결과를 gateway·fleet·SLO 제어로 연결합니다.",
     },
     {
       label: "LLM serving capacity",
-      href: "/ai/llm-serving-capacity",
+      href: "/cs/ai/llm-serving-capacity",
       reason:
         "KV pool·runtime log·실제 request trace에서 admission 상한을 정하는 계산은 이 글에서 이어집니다.",
     },
@@ -521,7 +522,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/deepfake-detection": [
     {
       label: "이미지 분류 기준 파이프라인",
-      href: "/ai/image-classification-pipeline",
+      href: "/cs/ai/image-classification-pipeline",
       reason:
         "이 글은 분류 학습을 반복하지 않고 생성기·코덱·영상 출처의 distribution shift에 집중합니다.",
     },
@@ -529,17 +530,17 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/compression-pipeline": [
     {
       label: "양자화",
-      href: "/ai/quantization",
+      href: "/cs/ai/quantization",
       reason: "정밀도와 calibration의 세부 원리는 양자화 글에서 봅니다.",
     },
     {
       label: "Pruning",
-      href: "/ai/pruning",
+      href: "/cs/ai/pruning",
       reason: "가중치 sparsity와 구조 제거의 차이는 pruning 글에서 봅니다.",
     },
     {
       label: "Knowledge Distillation",
-      href: "/ai/knowledge-distillation",
+      href: "/cs/ai/knowledge-distillation",
       reason:
         "teacher signal과 temperature의 원리는 distillation 글에서 봅니다.",
     },
@@ -547,7 +548,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/sionic-eureka": [
     {
       label: "문장 임베딩과 retrieval 평가",
-      href: "/ai/sentence-embeddings",
+      href: "/cs/ai/sentence-embeddings",
       reason:
         "EUREKA 글은 임베딩 기초를 반복하지 않고 데이터 구성·hard negative·distillation 실험에 집중합니다.",
     },
@@ -555,7 +556,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/lstm-timeseries": [
     {
       label: "LSTM gate와 cell state의 기본 원리",
-      href: "/ai/lstm",
+      href: "/cs/ai/lstm",
       reason:
         "이 글은 LSTM 수식을 다시 정의하기보다 시계열 window·학습·평가 파이프라인에 집중합니다.",
     },
@@ -563,7 +564,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "ai/sparse-autoencoder": [
     {
       label: "Autoencoder의 encoder·decoder와 reconstruction",
-      href: "/ai/autoencoder",
+      href: "/cs/ai/autoencoder",
       reason:
         "이 글은 일반 autoencoder를 반복하지 않고 LLM activation에 대한 overcomplete sparse dictionary와 해석 검증을 다룹니다.",
     },
@@ -571,7 +572,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "crypto/fft": [
     {
       label: "FFT의 복소수·주파수 직관",
-      href: "/ai/fft",
+      href: "/cs/ai/fft",
       reason:
         "이 글은 그 설명을 반복하지 않고 유한체 NTT와 ZK 사용에 집중합니다.",
     },
@@ -579,7 +580,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "gpu/ntt-gpu-impl": [
     {
       label: "FFT / NTT 수학",
-      href: "/crypto/fft",
+      href: "/cs/crypto/fft",
       reason:
         "여기서는 butterfly를 다시 정의하지 않고 GPU 배치와 메모리 전략을 소유합니다.",
     },
@@ -587,14 +588,14 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "gpu/msm-gpu-impl": [
     {
       label: "MSM & NTT 이론",
-      href: "/gpu/msm-ntt",
+      href: "/cs/gpu/msm-ntt",
       reason: "이 글은 Pippenger 설명보다 bucket kernel 구현에 집중합니다.",
     },
   ],
   "blockchain/filecoin-f3": [
     {
       label: "GossiPBFT 프로토콜",
-      href: "/blockchain/gossipbft",
+      href: "/cs/blockchain/gossipbft",
       reason:
         "F3 글은 프로토콜 정의를 반복하지 않고 Lotus 통합과 finality 전환을 설명합니다.",
     },
@@ -602,7 +603,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "blockchain/cometbft-consensus": [
     {
       label: "Tendermint BFT 원리",
-      href: "/blockchain/tendermint-bft",
+      href: "/cs/blockchain/tendermint-bft",
       reason:
         "이 글은 합의 원리보다 CometBFT 상태 머신과 코드 경로를 소유합니다.",
     },
@@ -610,7 +611,7 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
   "blockchain/bft-comparison": [
     {
       label: "전체 합의 선택 지도",
-      href: "/blockchain/consensus-comparison",
+      href: "/cs/blockchain/consensus-comparison",
       reason:
         "이 글은 전체 합의를 다시 비교하지 않고 리더 기반 BFT의 진화만 좁게 봅니다.",
     },

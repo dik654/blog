@@ -26,7 +26,7 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
             시점의 선택으로 돌려줄지(credit assignment)가 이 변환의 핵심 질문입니다.
           </p>
           <p>
-            <Link to="/ai/rlhf#ppo">RLHF 의 PPO 절</Link> 은 policy 가 직접 만든
+            <Link to="/cs/ai/rlhf#ppo">RLHF 의 PPO 절</Link> 은 policy 가 직접 만든
             response 를 reward·KL 로 평가해 clipped update 를 한다고 설명했지만,
             그 update 가 정확히 무엇을 미분하고 무엇을 몇 시점 전 action 에
             돌려주는지는 다루지 않았습니다. 이 글은 그 안쪽, RL 이론의 최소
@@ -61,7 +61,7 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
           </p>
           <p>
             LLM post-training 에서 trajectory 는 흔히 한 response 의 token
-            나열이고, action 은 각 token 선택, reward 는 <Link to="/ai/reward-design-for-verifiable-rl#rlvr">
+            나열이고, action 은 각 token 선택, reward 는 <Link to="/cs/ai/reward-design-for-verifiable-rl#rlvr">
             verifier 나 reward model
           </Link> 이 매기는 점수입니다. Return 은 그 reward 를 token 단위
             action 하나하나로 되돌리는 첫 단계일 뿐, 아직 어떻게
@@ -97,7 +97,7 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
             있습니다. 그 데이터를 만든 policy 와 지금 policy 의 차이가 커질수록 update 방향이 왜곡됩니다.
           </p>
           <p>
-            <Link to="/ai/open-r1#grpo-process">GRPO 의 group sampling</Link>
+            <Link to="/cs/ai/open-r1#grpo-process">GRPO 의 group sampling</Link>
             은 같은 prompt 에서 현재 policy 로 여러 completion 을 한 번에
             뽑아 그 그룹 안에서 상대 advantage 를 계산하는 방법으로, 이
             completion 들이 매 update 마다 현재 policy 로 새로 뽑힌다는
@@ -216,7 +216,7 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
             더 직접적인 완화는 reward 자체를 마지막 한 번이 아니라 중간
             단계마다 주는 것입니다. Reward 를 sparse 하게 줄지 dense 하게
             줄지, 그리고 그 reward 가 무엇을 검증하는지는{" "}
-            <Link to="/ai/reward-design-for-verifiable-rl#sparse-vs-dense">
+            <Link to="/cs/ai/reward-design-for-verifiable-rl#sparse-vs-dense">
               다음 글
             </Link>
             의 주제입니다.
@@ -239,7 +239,7 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
           <p>
             다음 글은 이 credit assignment 문제 위에 놓이는 질문, 즉 reward
             자체를 무엇으로 어떻게 설계할지를 다룹니다.{" "}
-            <Link to="/ai/reward-design-for-verifiable-rl#overview">
+            <Link to="/cs/ai/reward-design-for-verifiable-rl#overview">
               Reward 설계: verifiable reward·sparse/dense/process·reward
               hacking·shaping
             </Link>

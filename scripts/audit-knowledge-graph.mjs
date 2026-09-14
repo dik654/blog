@@ -3,6 +3,7 @@ import {
   KNOWLEDGE_CONCEPTS,
   KNOWLEDGE_EDGES,
 } from "../src/content/knowledge-graph.ts";
+import { routeKeyFromHref } from "./lib/route-href.mjs";
 
 const strict = process.argv.includes("--strict");
 const findings = [];
@@ -15,7 +16,7 @@ const degree = new Map(
 );
 
 function canonicalRoute(concept) {
-  return concept.canonicalHref.match(/^\/([^/#]+\/[^/#]+)(?:#.+)?$/)?.[1];
+  return routeKeyFromHref(concept.canonicalHref);
 }
 
 for (const [route, contract] of Object.entries(ARTICLE_LEARNING)) {

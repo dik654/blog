@@ -101,8 +101,8 @@ export default function Overview() {
           config·chain spec과 호환 storage snapshot으로 rollback하고 migration receipt를 보존합니다.
         </p>
         <p>
-          Ethereum protocol의 consensus 경계는 <Link to="/blockchain/ethereum-architecture">Ethereum 구조</Link>,
-          state transition 기초는 <Link to="/blockchain/evm">EVM</Link>에서 가져옵니다. Reth 내부를 더 깊게 볼 때는
+          Ethereum protocol의 consensus 경계는 <Link to="/cs/blockchain/ethereum-architecture">Ethereum 구조</Link>,
+          state transition 기초는 <Link to="/cs/blockchain/evm">EVM</Link>에서 가져옵니다. Reth 내부를 더 깊게 볼 때는
           아래 지도의 CLI·network·pipeline·execution·provider·RPC·ExEx 글로 내려가면 됩니다.
         </p>
       </div>

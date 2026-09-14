@@ -84,7 +84,7 @@ export default function Pooling({ onCodeRef }: { onCodeRef: (key: string, ref: C
           <p className="leading-7">
             질의 비용도 같이 오릅니다. 후보를 넉넉히 뽑아도 같은 사진의 패치가 자리를 차지하므로, 사진 단위로
             묶어 상위를 다시 고르는 단계가 필요합니다. 이 구조는{" "}
-            <Link to="/ai/retrieval-ranking-funnel">검색 랭킹 퍼널</Link>에서 다루는 후보 생성과 재순위의
+            <Link to="/cs/ai/retrieval-ranking-funnel">검색 랭킹 퍼널</Link>에서 다루는 후보 생성과 재순위의
             분리와 같은 모양입니다.
           </p>
           <p className="leading-7">

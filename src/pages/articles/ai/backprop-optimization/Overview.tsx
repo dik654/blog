@@ -29,7 +29,7 @@ export default function Overview() {
         <p>
           Backpropagation은 gradient를 계산하지만 parameter를 직접 바꾸지 않습니다.
           계산된 gradient를 실제로 소비해 parameter를 옮기는 쪽은
-          <Link to="/ai/math-gradient-descent-convergence#overview"> gradient-based
+          <Link to="/cs/ai/math-gradient-descent-convergence#overview"> gradient-based
           optimization</Link>이고, 그 방향을 momentum이나 Adam state와 결합해
           update를 만드는 세부는 optimizer의 책임입니다.
         </p>
@@ -39,15 +39,15 @@ export default function Overview() {
         </p>
         <p>
           Derivative와 chain rule이 낯설다면 먼저
-          <Link to="/ai/math-functions-derivatives-gradients"> local rate 글</Link>에서
+          <Link to="/cs/ai/math-functions-derivatives-gradients"> local rate 글</Link>에서
           곱의 이유를 확인하고, vector shape는
-          <Link to="/ai/math-gradients-jacobians"> gradient·Jacobian 글</Link>에서
+          <Link to="/cs/ai/math-gradients-jacobians"> gradient·Jacobian 글</Link>에서
           숫자로 계산하는 편이 빠릅니다.
         </p>
         <p>
           Computational graph·tape·VJP의 실행 원리는
-          <Link to="/ai/reverse-mode-autodiff"> reverse-mode autodiff 글</Link>,
-          categorical normalization은 <Link to="/ai/softmax">softmax 글</Link>에서
+          <Link to="/cs/ai/reverse-mode-autodiff"> reverse-mode autodiff 글</Link>,
+          categorical normalization은 <Link to="/cs/ai/softmax">softmax 글</Link>에서
           하나씩 익힌 뒤 이 글에서 조합할 수 있습니다.
         </p>
       </div>

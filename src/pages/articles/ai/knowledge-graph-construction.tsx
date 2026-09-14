@@ -313,7 +313,7 @@ export default function KnowledgeGraphConstructionArticle() {
               건너면 "마리 퀴리와 같은 상을 받은 사람이 나중에 어느 자리를 물려받았나"
               같은, 원문 어느 한 문장에도 없던 질문에 답할 수 있습니다. 이렇게 여러
               node 를 건너 답을 찾는 절차와 그 절차가 vector 검색만으로는 왜 놓치는지는{" "}
-              <Link to="/ai/graphrag-community-and-multihop-search#multihop">다음 글</Link>
+              <Link to="/cs/ai/graphrag-community-and-multihop-search#multihop">다음 글</Link>
               이 정본입니다.
             </p>
           </div>
@@ -382,7 +382,7 @@ export default function KnowledgeGraphConstructionArticle() {
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
           다음 글:{" "}
-          <Link to="/ai/graphrag-community-and-multihop-search#overview">
+          <Link to="/cs/ai/graphrag-community-and-multihop-search#overview">
             GraphRAG: community summary·local/global search·multi-hop
           </Link>
         </p>

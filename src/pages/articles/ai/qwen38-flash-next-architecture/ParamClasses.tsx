@@ -134,8 +134,8 @@ export default function ParamClasses() {
 
         <p className="leading-7">
           expert를 어떻게 나눠 얹을지, 라우팅 쏠림을 어떻게 다룰지는 이 모델만의 문제가 아닙니다. 일반 원리는{" "}
-          <Link to="/ai/expert-parallelism-moe-systems">expert 병렬 시스템</Link>과{" "}
-          <Link to="/ai/moe-routing-and-load-balancing">MoE 라우팅과 부하 분산</Link>에서 다루고, 여기서는
+          <Link to="/cs/ai/expert-parallelism-moe-systems">expert 병렬 시스템</Link>과{" "}
+          <Link to="/cs/ai/moe-routing-and-load-balancing">MoE 라우팅과 부하 분산</Link>에서 다루고, 여기서는
           Flash-Next의 숫자가 그 논의의 어느 자리에 들어가는지만 고정했습니다.
         </p>
       </div>

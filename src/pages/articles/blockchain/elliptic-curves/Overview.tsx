@@ -12,7 +12,7 @@ export default function Overview() {
           실수 평면의 부드러운 곡선 그림은 덧셈 법칙을 떠올리는 직관일 뿐입니다. 구현은 prime field Fp의 좌표 (x,y) 가운데 curve equation을 만족하는 점과 point at infinity O를 모아 유한한 아벨군을 만듭니다. Secret scalar k로 [k]P를 계산하는 것은 빠르지만 P,[k]P에서 k를 찾는 elliptic-curve DLP가 비싸다는 비대칭을 서명·키 교환·commitment에 사용합니다.
         </p>
         <p>
-          이 글은 point addition, scalar multiplication, prime-order subgroup validation, affine/Jacobian 표현과 BN254 G1·G2의 타입 경계를 구현 관점에서 연결합니다. Mod p 산술과 inverse는 <Link to="/crypto/finite-field-theory">유한체 정본</Link>, square-root attack의 의미는 <Link to="/crypto/discrete-log">DLP 정본</Link>을 재사용합니다. Pairing의 Miller loop·final exponentiation은 후속 <Link to="/crypto/pairing">pairing 글</Link>에서 확장합니다.
+          이 글은 point addition, scalar multiplication, prime-order subgroup validation, affine/Jacobian 표현과 BN254 G1·G2의 타입 경계를 구현 관점에서 연결합니다. Mod p 산술과 inverse는 <Link to="/cs/crypto/finite-field-theory">유한체 정본</Link>, square-root attack의 의미는 <Link to="/cs/crypto/discrete-log">DLP 정본</Link>을 재사용합니다. Pairing의 Miller loop·final exponentiation은 후속 <Link to="/cs/crypto/pairing">pairing 글</Link>에서 확장합니다.
         </p>
       </div>
       <ContentBoundary article="elliptic-curves" />

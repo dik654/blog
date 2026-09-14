@@ -53,7 +53,7 @@ export default function Usage() {
           좌표에서 많은 query를 처리한다면 barycentric weight를
           precompute합니다. 도메인이 2의 거듭제곱 크기의 roots of unity이고 전체
           평가값과 coefficient를 반복해서 오간다면{" "}
-          <Link to="/crypto/fft">NTT·INTT</Link>가 O(n log n) 구조를 제공합니다.
+          <Link to="/cs/crypto/fft">NTT·INTT</Link>가 O(n log n) 구조를 제공합니다.
           NTT는 별개의 보간 정의가 아니라 특수한 평가 도메인에서 같은 linear
           map을 빠르게 계산하는 방법입니다.
         </p>

@@ -57,7 +57,7 @@ export default function Overview() {
         <p>
           태그 이름부터 고르면 내용은 복잡한데 목적은 모호한 prompt가 되기
           쉽습니다. 먼저 objective, evidence, constraints, output과 완료 조건을
-          정하는 <Link to="/ai/prompt-engineering#overview">request contract</Link>를 작성합니다.
+          정하는 <Link to="/cs/ai/prompt-engineering#overview">request contract</Link>를 작성합니다.
         </p>
         <p>
           서로 섞이면 안 되는 부분에만 태그를 배치합니다. 고객 이메일에서 주문번호와 요청을 뽑는 예라면 instruction과 untrusted input, output

@@ -61,7 +61,7 @@ export default function Applications() {
         </p>
         <p>
           Latent에서 denoising을 수행하는 전체 경로는
-          <Link to="/ai/diffusion-models"> Diffusion Models 글</Link>에서 이어서
+          <Link to="/cs/ai/diffusion-models"> Diffusion Models 글</Link>에서 이어서
           다룹니다.
         </p>
       </div>

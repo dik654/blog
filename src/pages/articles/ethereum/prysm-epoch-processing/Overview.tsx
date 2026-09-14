@@ -24,7 +24,7 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         <p><code>process_slots</code>는 현재 state slot을 한 칸씩 진행하며 <code>(state.slot + 1) % SLOTS_PER_EPOCH == 0</code>인 지점에서 <code>process_epoch</code>를 실행합니다. Slot 63 state가 다음 slot 64로 가는 경우 64/32=2이므로 epoch 1의 누적 evidence를 정산한 뒤 state slot을 64로 올립니다.</p>
         <h3>순서는 포크별 executable spec이 소유합니다</h3>
         <p>Altair는 inactivity score·participation flag·sync committee를 추가했고, Electra는 pending deposits와 consolidations를, Fulu는 proposer lookahead를 epoch pipeline에 넣었습니다. 따라서 “항상 7단계” 같은 고정 설명보다 사용한 consensus-spec release·fork의 <code>process_epoch</code> 호출 순서를 provenance로 남깁니다.</p>
-        <p>Checkpoint와 head의 차이는 <Link to="/blockchain/prysm">Prysm 전체 지도</Link>, BeaconState schema는 <Link to="/blockchain/prysm-beacon-state">상태 정본</Link>, validator의 서명 권한은 <Link to="/blockchain/prysm-validator-client">validator client</Link>에서 확장합니다.</p>
+        <p>Checkpoint와 head의 차이는 <Link to="/cs/blockchain/prysm">Prysm 전체 지도</Link>, BeaconState schema는 <Link to="/cs/blockchain/prysm-beacon-state">상태 정본</Link>, validator의 서명 권한은 <Link to="/cs/blockchain/prysm-validator-client">validator client</Link>에서 확장합니다.</p>
       </div>
       <div id="paper-consensus-epoch-transition" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">공식 규격 읽기 · epoch transition</p><p className="mt-2 text-sm font-semibold">Ethereum Consensus Specifications v1.6.1 · Altair, Electra, Fulu</p><p className="mt-2 text-sm leading-6 text-muted-foreground">
             누적 participation과 validator queue를 모든 client가 같은 ordered state transition으로 정산하는 일이 문제의 핵심입니다. 규격이

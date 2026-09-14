@@ -150,7 +150,7 @@ c_{n,k}&=\underbrace{\mathbf 1[V(q_n,o_{n,k})=1]}_{\text{sample별 판정 계산
         <p className="leading-8">
           Deployment artifact에서 같은 golden set과 parser를 다시 실행하고 TTFT,
           TPOT와 cost를 측정합니다. Tensor parallel과 scheduler 같은 운영 최적화는
-          <a href="/ai/llm-serving-ops">LLM 서빙 운영</a>에서 이어집니다.
+          <a href="/cs/ai/llm-serving-ops">LLM 서빙 운영</a>에서 이어집니다.
         </p>
       </div>
 

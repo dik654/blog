@@ -89,7 +89,7 @@ export default function ClientSignals() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           암호화 연결의 첫 메시지에 무엇이 담기는지는{" "}
-          <Link to="/p2p/tls-fundamentals#handshake">TLS 1.3 기초</Link>에서 다룹니다. 이 절은 그 메시지가
+          <Link to="/cs/p2p/tls-fundamentals#handshake">TLS 1.3 기초</Link>에서 다룹니다. 이 절은 그 메시지가
           보안 용도 외에 클라이언트 식별에도 쓰인다는 점과, 그로부터 나오는 판단 구조를 정리했습니다.
         </p>
       </div>

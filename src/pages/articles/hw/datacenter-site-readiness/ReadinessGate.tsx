@@ -48,9 +48,9 @@ export default function ReadinessGate() {
 
         <p className="leading-7">
           가속기 선택 자체는{" "}
-          <Link to="/gpu/ai-accelerator-vendor-comparison">가속기 벤더 비교</Link>, CPU와 레인 예산은{" "}
-          <Link to="/gpu/server-cpu-lineup-comparison">서버 CPU 제품군</Link>, 랙 단위 전력 분배와 발열 계산은{" "}
-          <Link to="/gpu/hw-power-cooling">전력과 냉각</Link>에서 이어집니다. 네 글을 함께 보면 노드 한 대를
+          <Link to="/cs/gpu/ai-accelerator-vendor-comparison">가속기 벤더 비교</Link>, CPU와 레인 예산은{" "}
+          <Link to="/cs/gpu/server-cpu-lineup-comparison">서버 CPU 제품군</Link>, 랙 단위 전력 분배와 발열 계산은{" "}
+          <Link to="/cs/gpu/hw-power-cooling">전력과 냉각</Link>에서 이어집니다. 네 글을 함께 보면 노드 한 대를
           들이는 결정이 닫힙니다.
         </p>
       </div>

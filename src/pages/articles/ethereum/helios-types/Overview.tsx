@@ -35,8 +35,8 @@ export default function Overview({ onCodeRef }: Props) {
           />
         </div>
         <p>
-          SSZ의 공통 원리는 <Link to="/blockchain/prysm-ssz">SSZ 정본</Link>, sync committee의 선발·서명 역할은
-          <Link to="/blockchain/prysm-sync-committee"> Sync Committee 정본</Link>을 재사용합니다. 이 글은 그 규칙이 Helios의
+          SSZ의 공통 원리는 <Link to="/cs/blockchain/prysm-ssz">SSZ 정본</Link>, sync committee의 선발·서명 역할은
+          <Link to="/cs/blockchain/prysm-sync-committee"> Sync Committee 정본</Link>을 재사용합니다. 이 글은 그 규칙이 Helios의
           <strong> fork별 Rust type과 update→store transition</strong>에 어떻게 배치되는지만 소유합니다.
         </p>
       </div>

@@ -16,8 +16,8 @@ export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: s
         </p>
         <p>
           이 글은 <strong>address A의 block 1,000 balance 조회가 view를 pin하고 overlay→latest DB→history를 읽어 provenance와 함께
-          반환하는 과정</strong>을 따라갑니다. 상위의 consistent-view 정의는 <Link to="/blockchain/reth#overview">Reth architecture</Link>,
-          physical storage transaction은 <Link to="/blockchain/reth-db">Reth DB</Link>가 소유합니다.
+          반환하는 과정</strong>을 따라갑니다. 상위의 consistent-view 정의는 <Link to="/cs/blockchain/reth#overview">Reth architecture</Link>,
+          physical storage transaction은 <Link to="/cs/blockchain/reth-db">Reth DB</Link>가 소유합니다.
         </p>
       </div>
       <ContentBoundary article="reth-provider" />

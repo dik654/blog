@@ -34,8 +34,8 @@ export default function Overview() {
         </p>
 
         <p className="leading-7">
-          메모리 채널과 ECC의 원리 자체는 <Link to="/gpu/hw-memory">메모리</Link>가, PCIe 대역폭 공식과
-          토폴로지는 <Link to="/gpu/gpu-interconnects">GPU 인터커넥트</Link>가 소유합니다. 이 글은 그 값들을
+          메모리 채널과 ECC의 원리 자체는 <Link to="/cs/gpu/hw-memory">메모리</Link>가, PCIe 대역폭 공식과
+          토폴로지는 <Link to="/cs/gpu/gpu-interconnects">GPU 인터커넥트</Link>가 소유합니다. 이 글은 그 값들을
           가속기 서버의 CPU 선택 문제에 적용하는 부분만 다룹니다.
         </p>
       </div>

@@ -38,7 +38,7 @@ export default function UseBoundary() {
         <p className="leading-7">
           얼린 표현을 그대로 검색이나 군집에 쓰는 경우에는 평가 축이 또 달라집니다. 표현의 품질을 무엇으로 재고
           어떤 지표가 실제 사용과 맞는지는{" "}
-          <Link to="/ai/embedding-evaluation">임베딩 평가</Link>에서 다루는 문제이며, 이 글의 결론을 그대로 옮겨
+          <Link to="/cs/ai/embedding-evaluation">임베딩 평가</Link>에서 다루는 문제이며, 이 글의 결론을 그대로 옮겨
           쓰기 전에 그 기준으로 다시 재야 합니다.
         </p>
       </div>

@@ -88,7 +88,7 @@ export default function ModernSparseMultiplicationArticle() {
           따로 있습니다. 숫자 0·1·4는 보편적인 pairing 표준이 아니라 그 source의
           coefficient layout을 가리킵니다. 다른 twist, 다른 tower, 다른 serialization
           order에 이름만 복사하면 계산은 type-check를 통과해도 잘못된 field 원소가
-          됩니다. 따라서 <a className="text-primary hover:underline" href="/crypto/extension-fields#overview">tower layout</a>과
+          됩니다. 따라서 <a className="text-primary hover:underline" href="/cs/crypto/extension-fields#overview">tower layout</a>과
           non-residue를 먼저 고정하고 basis unit vector로 확인해야 합니다.
         </p>
         <div id="paper-arkworks-sparse-source">

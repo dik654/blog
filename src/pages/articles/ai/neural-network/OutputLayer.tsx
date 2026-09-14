@@ -46,7 +46,7 @@ export default function OutputLayer() {
         </p>
         <p>
           Likelihood에서 MSE·BCE·categorical cross-entropy가 나오는 과정과 stable
-          implementation은 <Link to="/ai/cross-entropy">cross-entropy 정본 글</Link>에서
+          implementation은 <Link to="/cs/ai/cross-entropy">cross-entropy 정본 글</Link>에서
           확인할 수 있다. PyTorch의 <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html" target="_blank" rel="noreferrer">공식 CrossEntropyLoss 문서</a>도
           입력이 확률이 아니라 unnormalized logits임을 명시한다.
         </p>

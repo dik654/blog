@@ -24,7 +24,7 @@ export default function Overview() {
           thread state를 chip에 resident로 두고 기다리는 warp 대신 다른 warp를
           실행해 throughput을 높이는 processor로 읽는 것입니다.
           Grid·block·thread 좌표와 index 계산은{" "}
-          <Link to="/gpu/cuda-thread-hierarchy">CUDA thread hierarchy 글</Link>
+          <Link to="/cs/gpu/cuda-thread-hierarchy">CUDA thread hierarchy 글</Link>
           이 정본이고, 여기서는 그 작업표가 실제 hardware와 memory traffic으로
           어떻게 내려가는지만 설명합니다.
         </p>

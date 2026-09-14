@@ -36,7 +36,7 @@ export default function RoundState({
         <p>
           더 높은 round proposer는 자신이 아는 valid/POL round를 proposal에 포함합니다. Locked validator는 단순히 round가
           커졌다는 이유로 lock을 지우지 않고, 더 높은 round의 sufficient prevote evidence가 기존 lock과 호환될 때만
-          transition합니다. 이 규칙이 왜 conflicting quorum을 막는지는 <Link to="/blockchain/bft-theory#safety-liveness">BFT lock·view-change</Link>에서
+          transition합니다. 이 규칙이 왜 conflicting quorum을 막는지는 <Link to="/cs/blockchain/bft-theory#safety-liveness">BFT lock·view-change</Link>에서
           일반화해 설명합니다.
         </p>
         <div className="not-prose my-4 flex flex-wrap gap-3">

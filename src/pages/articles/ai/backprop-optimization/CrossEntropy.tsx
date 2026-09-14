@@ -34,7 +34,7 @@ export default function CrossEntropy() {
       <CrossEntropyViz />
       <div className="not-prose mt-6 rounded-2xl border border-sky-200 bg-sky-50/60 p-5 dark:border-sky-900 dark:bg-sky-950/20">
         <p className="text-sm font-semibold">정보이론·KL·MLE 유도는 Cross-entropy 기준 글에서 확인할 수 있습니다</p>
-        <Link to="/ai/cross-entropy" className="mt-3 inline-flex text-sm font-semibold text-sky-700 hover:underline dark:text-sky-300">정의와 유도 바로 보기 →</Link>
+        <Link to="/cs/ai/cross-entropy" className="mt-3 inline-flex text-sm font-semibold text-sky-700 hover:underline dark:text-sky-300">정의와 유도 바로 보기 →</Link>
       </div>
     </section>
   );
