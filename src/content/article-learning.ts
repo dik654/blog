@@ -77222,4 +77222,310 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "constitution/government-forms": {
+    entryNote:
+      "앞 글에서 권력을 묶는 부품 넷과, 거부권자가 늘수록 통과 가능 영역이 좁아진다는 계산까지 보고 들어옵니다. 여기서는 그 부품들을 조립하는 두 방식을 봅니다.",
+    coreIdea:
+      "정부 형태를 가르는 것은 부품의 개수가 아니라 행정부의 생존이 의회 신임에 달렸는가 하나이며, 임기의 경직성·교착의 출구·연립의 필요가 전부 거기서 따라 나옵니다. 연립 안에서는 의석이 아니라 그 정당이 빠지면 무너지는 연합의 수가 협상력을 정하고, 두 체계를 섞으면 이중 정통성이 행정부 내부로 들어옵니다.",
+    assumedKnowledge: [
+      {
+        id: "separation-of-powers",
+        role: "조립할 부품이 무엇인지를 앞 글에서 이미 정해 두었습니다.",
+      },
+      {
+        id: "veto-player-winset",
+        role: "거부권자가 늘면 통과 가능 영역이 좁아진다는 계산을 정부 형태 비교에 그대로 씁니다.",
+      },
+      {
+        id: "political-legitimacy",
+        role: "이중 정통성이 무엇을 둘로 쪼개는지 말하려면 정당성이 먼저 있어야 합니다.",
+      },
+      {
+        id: "state-capacity",
+        role: "조문이 같아도 운용이 달라진다는 경계를 마지막 절에서 다시 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "executive-survival-dependence",
+        role: "체계를 가르는 첫째 축을 세웁니다.",
+      },
+      {
+        id: "dual-legitimacy",
+        role: "생존이 분리된 쪽이 치르는 첫째 대가를 정의합니다.",
+      },
+      {
+        id: "fixed-term-rigidity",
+        role: "같은 쪽이 치르는 둘째 대가를 정의합니다.",
+      },
+      {
+        id: "confidence-and-dissolution",
+        role: "생존이 매인 쪽이 갖는 교착의 출구를 정의합니다.",
+      },
+      {
+        id: "coalition-government",
+        role: "그 출구가 만들어 내는 정부 구성 문제를 정의합니다.",
+      },
+      {
+        id: "voting-power-index",
+        role: "의석과 협상력이 갈라지는 관계를 계산으로 보입니다.",
+      },
+      {
+        id: "semi-presidential-cohabitation",
+        role: "두 체계를 섞었을 때 생기는 새 문제를 다룹니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "executive-survival-dependence",
+        sectionId: "two-axes",
+        intuition:
+          "의회 과반이 등을 돌렸을 때 행정부가 자리를 잃는지 하나만 물으면 나머지가 거의 다 정해집니다.",
+        workedExample:
+          "생존이 분리되면 선호가 갈린 상태로 둘 다 자리에 남아 교착이 유지되고, 매여 있으면 행정부가 교체되어 거부권자 하나가 사라집니다.",
+        boundary:
+          "완전한 이분법은 아닙니다. 대통령제에도 탄핵이 있고 의원내각제에도 해산까지 버티는 소수정부가 있어 실제로는 정도의 문제입니다.",
+      },
+      {
+        id: "dual-legitimacy",
+        sectionId: "presidential",
+        intuition:
+          "대통령도 국민이 뽑았고 의회도 국민이 뽑았으니, 둘이 갈리면 가릴 기준이 없습니다.",
+        workedExample:
+          "대통령의 정당이 의회 소수인 상황에서 두 기관이 정반대 정책을 주장하면, 헌법은 각자의 권한 범위만 정해 줄 뿐 누구의 주장이 더 정당한지는 말하지 않습니다.",
+        boundary:
+          "대통령의 정당이 의회 과반을 잡고 있으면 이 문제는 임기 내내 드러나지 않습니다. 제도가 만드는 것은 위험이지 사건이 아닙니다.",
+      },
+      {
+        id: "fixed-term-rigidity",
+        sectionId: "presidential",
+        intuition:
+          "언제까지 누가 맡는지 미리 정해 두면 예측은 쉬워지고 대응은 어려워집니다.",
+        workedExample:
+          "임기 중간에 심각한 실패가 드러나도 남은 기간을 그 조합으로 버티는 것 말고 방법이 없습니다.",
+        boundary:
+          "경직성은 그 자체로 결함이 아니라 예측 가능성과 같은 성질의 뒷면입니다. 어느 쪽이 더 필요한지는 상황이 정합니다.",
+      },
+      {
+        id: "confidence-and-dissolution",
+        sectionId: "parliamentary",
+        intuition:
+          "실패한 정부를 임기 때문에 붙잡아 두지 않겠다는 선택입니다.",
+        workedExample:
+          "신임이 사라지면 내각이 교체되고, 상황이 크게 바뀌면 해산과 총선으로 위임 자체를 새로 받습니다.",
+        boundary:
+          "교체 빈도가 높다는 사실만으로는 체제가 흔들린다고 말할 수 없습니다. 다른 조합이 다시 서는 것과 아무 조합도 서지 못하는 것은 다른 상태입니다.",
+      },
+      {
+        id: "coalition-government",
+        sectionId: "parliamentary",
+        intuition:
+          "정부를 세우려고 손을 잡으면 정부 안에 막을 수 있는 사람이 새로 생깁니다.",
+        workedExample:
+          "빠져도 과반이 유지되는 정당을 끼우면 나눌 몫만 늘어나므로, 불필요한 참가자가 없는 조합이 우선 후보가 됩니다.",
+        boundary:
+          "숫자상 가능한 조합이 정치적으로도 가능한 것은 아닙니다. 서로에 대한 거부 선언이 후보를 먼저 지웁니다.",
+      },
+      {
+        id: "voting-power-index",
+        sectionId: "power-index",
+        intuition:
+          "물어야 할 것은 몇 석을 가졌는가가 아니라 그 정당이 빠지면 무너지는 과반 조합이 몇 개인가입니다.",
+        workedExample:
+          "300석 의회에서 과반이 151석이고 의석이 140·140·20이면 두 당짜리 연합 셋에서 모두가 결정적이고 세 당 전부인 연합에서는 아무도 결정적이지 않아, 협상력이 3분의 1씩으로 같아집니다.",
+        proofIdea:
+          "연합 S에서 i가 결정적이라는 것은 v(S)=1이고 v(S∖{i})=0이라는 뜻입니다. 이런 연합의 수를 모든 정당에 대해 세어 합으로 나누면 합이 1인 비율이 됩니다. 의석수는 이 셈에 정족수를 넘는지 판정할 때만 들어오므로, 같은 의석이라도 정족수와의 관계가 달라지면 값이 크게 바뀝니다.",
+        counterexample:
+          "같은 의회에서 20석만 옮겨 160·120·20이 되면 첫째 당이 단독 과반이 되어 협상력이 1·0·0이 되고, 120석을 가진 정당의 값이 0이 됩니다. 작은 정당이 언제나 세다는 결론은 나오지 않습니다.",
+        boundary:
+          "모든 연합이 똑같이 성사될 수 있다고 둔 계산이라, 정책 거리가 먼 조합이 먼저 탈락하는 현실을 반영하지 않습니다.",
+      },
+      {
+        id: "semi-presidential-cohabitation",
+        sectionId: "semi-presidential",
+        intuition:
+          "두 체계에서 하나씩 가져오면 행정부 안에 위임이 둘 들어옵니다.",
+        workedExample:
+          "대통령의 정당이 의회 과반이면 대통령이 사실상 둘 다 지휘하지만, 과반이 반대편이면 총리도 반대편에서 나와 한 행정부에 두 위임이 앉습니다.",
+        boundary:
+          "이 형태의 성격은 헌법이 아니라 그때그때의 의석 분포가 정합니다. 같은 조문이 시기에 따라 전혀 다르게 굴러갑니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 갈림길",
+        relation: "체계를 가르는 축 하나를 먼저 세웁니다.",
+        concepts: ["executive-survival-dependence"],
+      },
+      {
+        label: "01 분리 쪽",
+        relation: "생존을 분리했을 때 치르는 대가를 봅니다.",
+        concepts: ["dual-legitimacy", "fixed-term-rigidity"],
+      },
+      {
+        label: "02 매인 쪽",
+        relation: "생존을 매었을 때 얻는 출구와 그 비용을 봅니다.",
+        concepts: ["confidence-and-dissolution", "coalition-government"],
+      },
+      {
+        label: "03 협상력",
+        relation: "연립 안에서 의석과 힘이 갈라지는 계산입니다.",
+        concepts: ["voting-power-index"],
+      },
+      {
+        label: "04 섞기",
+        relation: "둘을 섞으면 새 문제가 생깁니다.",
+        concepts: ["semi-presidential-cohabitation"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "정부 형태를 가르는 두 축이 각각 무엇을 묻는지 쓰세요.",
+        answerChecklist: [
+          "의회 신임 없이 임기를 채우는가",
+          "행정부 수반을 누가 뽑는가",
+          "생존의 분리와 기원의 분리",
+          "두 축을 곱하면 네 칸",
+        ],
+        requiredConcepts: ["executive-survival-dependence"],
+        sectionId: "two-axes",
+      },
+      {
+        level: "basic",
+        question:
+          "생존이 분리된 체계에서 행정부와 의회의 선호가 갈리면 왜 교착이 유지되는지 설명하세요.",
+        answerChecklist: [
+          "둘 다 독립된 거부권자",
+          "통과 가능 영역이 좁아지거나 빔",
+          "비어도 둘 다 자리에 남음",
+          "매여 있으면 하나가 교체되어 사라짐",
+        ],
+        requiredConcepts: ["executive-survival-dependence", "veto-player-winset"],
+        sectionId: "two-axes",
+      },
+      {
+        level: "basic",
+        question:
+          "이중 정통성이 무엇이고 왜 체계 안에서 판정되지 않는지 쓰세요.",
+        answerChecklist: [
+          "대통령과 의회 모두 국민이 뽑음",
+          "둘 다 국민의 위임을 주장",
+          "헌법은 권한의 경계만 정함",
+          "누구의 주장이 더 정당한지는 말하지 않음",
+        ],
+        requiredConcepts: ["dual-legitimacy"],
+        sectionId: "presidential",
+      },
+      {
+        level: "basic",
+        question:
+          "대통령제에서 교착의 출구가 왜 헌법적 위기의 모양을 띠게 되는지 설명하세요.",
+        answerChecklist: [
+          "내각 교체와 해산이 없음",
+          "남는 것은 다음 선거와 탄핵",
+          "탄핵은 위법을 전제로 한 절차",
+          "일상적 조정 자리에 비상 수단만 있음",
+        ],
+        requiredConcepts: ["fixed-term-rigidity", "confidence-and-dissolution"],
+        sectionId: "deadlock-exit",
+      },
+      {
+        level: "basic",
+        question:
+          "연립을 만들 때 빠져도 과반이 유지되는 정당을 끼우는 것이 왜 불리한지 쓰세요.",
+        answerChecklist: [
+          "나눌 몫만 늘어남",
+          "그 정당은 결정적이지 않음",
+          "불필요한 참가자가 없는 조합이 우선",
+          "다만 이탈표 대비로 여유를 두기도 함",
+        ],
+        requiredConcepts: ["coalition-government"],
+        sectionId: "parliamentary",
+      },
+      {
+        level: "basic",
+        question:
+          "300석 의회에서 과반이 151석이고 의석이 140·140·20일 때 세 정당의 협상력 비율을 구하세요.",
+        answerChecklist: [
+          "과반을 넘는 연합은 네 개",
+          "두 당짜리 셋에서는 양쪽 모두 결정적",
+          "세 당 전부인 연합에서는 아무도 결정적이지 않음",
+          "결정적 횟수 2·2·2이므로 3분의 1씩",
+        ],
+        requiredConcepts: ["voting-power-index"],
+        sectionId: "power-index",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 300석 의회에서 의석이 160·120·20으로 바뀌면 협상력이 어떻게 되는지 계산하고, 그 결과가 무엇을 반증하는지 쓰세요.",
+        answerChecklist: [
+          "첫째 당이 단독 과반이라 모든 승리 연합에 필수",
+          "둘째·셋째는 결정적인 연합이 없음",
+          "비율은 1·0·0",
+          "작은 정당이 언제나 세다는 결론을 반증",
+        ],
+        requiredConcepts: ["voting-power-index", "coalition-government"],
+        sectionId: "power-index",
+      },
+      {
+        level: "advanced",
+        question:
+          "협상력 지수와 앞 글의 통과 가능 영역이 같은 질문을 어떻게 다르게 묻는지 비교하세요.",
+        answerChecklist: [
+          "둘 다 누가 막을 수 있는가를 잼",
+          "하나는 정책 축 위의 위치",
+          "다른 하나는 정당 조합의 구조",
+          "답이 숫자의 크기가 아니라 구조에서 나옴",
+        ],
+        requiredConcepts: ["voting-power-index", "veto-player-winset"],
+        sectionId: "power-index",
+      },
+      {
+        level: "advanced",
+        question:
+          "준대통령제에서 같은 헌법이 시기마다 전혀 다르게 굴러가는 이유를 의석 분포로 설명하세요.",
+        answerChecklist: [
+          "대통령 정당이 과반이면 대통령이 둘 다 지휘",
+          "반대편이면 총리도 반대편에서 나옴",
+          "이중 정통성이 행정부 내부로 들어옴",
+          "성격을 정하는 것은 조문이 아니라 분포",
+        ],
+        requiredConcepts: ["semi-presidential-cohabitation", "dual-legitimacy"],
+        sectionId: "semi-presidential",
+      },
+      {
+        level: "advanced",
+        question:
+          "정부 교체 횟수만으로 체제를 평가하면 어떤 두 상황을 구별하지 못하는지 쓰세요.",
+        answerChecklist: [
+          "같은 사람들이 다른 조합으로 다시 서는 경우",
+          "어떤 조합도 과반을 못 만드는 경우",
+          "앞은 설계된 유연성",
+          "뒤는 통과 가능 영역이 비어 있는 상태",
+        ],
+        requiredConcepts: ["confidence-and-dissolution", "coalition-government"],
+        sectionId: "parliamentary",
+      },
+    ],
+    papers: [
+      {
+        title: "Juan J. Linz · The Perils of Presidentialism (1990)",
+        href: "https://www.journalofdemocracy.org/articles/the-perils-of-presidentialism/",
+        problem:
+          "민주화 이후 헌법을 새로 쓰는 나라들이 대통령제와 의원내각제를 고르면서, 선택의 근거를 주로 개별 사례의 인상에 두고 있었습니다.",
+        contribution:
+          "두 체계를 제도 수준에서 비교해, 대통령제의 위험이 지도자의 자질이 아니라 이중 정당성·고정 임기의 경직성·승자독식이라는 구조에서 나온다고 정리했습니다.",
+        assumptions:
+          "정당이 응집적이고 규율이 있을수록 이중 정당성의 충돌이 뚜렷해진다고 보며, 비교의 단위를 체제 유형으로 둡니다.",
+        evidenceScope:
+          "Journal of Democracy 1권 1호 51~69쪽에 실린 논문이며, 리스본대 ISEG 공개 사본으로 전문을 확인했습니다. 라틴아메리카·남유럽 사례에 대한 비교 논증이지 통제된 실증 연구가 아닙니다.",
+        notClaim:
+          "대통령제를 택하면 민주주의가 무너진다는 주장이 아니며, 저자 자신도 결론을 '대체로'와 '균열이 깊고 정당이 많은 나라에 특히'라는 조건 안에 둡니다. 제도 유형과 체제 붕괴의 인과를 분리해 보이지 못한다는 반박이 발표 직후부터 이어진 논쟁적 문헌입니다.",
+        sectionId: "presidential",
+      },
+    ],
+  },
 };
