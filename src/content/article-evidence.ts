@@ -7140,4 +7140,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "자기자본비율·위험가중자산·경기순응성 등 본문 용어의 한국어 표준 표기를 맞추는 데 사용. 규제 수치의 근거가 아니라 표기 기준",
     },
   ],
+  "polity/collective-choice-problem": [
+    {
+      kind: "공식 문서",
+      label: "Indiana University Ostrom Workshop · Ostrom Design Principles",
+      href: "https://ostromworkshop.indiana.edu/courses-teaching/teaching-tools/ostrom-design/index.html",
+      note: "자치 관리가 성립하는 조건 목록의 근거. 관찰된 공통점이지 성공의 충분조건이 아니며, 원 저작(Governing the Commons, 1990)은 서지만 확인",
+    },
+  ],
 };

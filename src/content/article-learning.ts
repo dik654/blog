@@ -76479,4 +76479,250 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "polity/collective-choice-problem": {
+    entryLevel: true,
+    entryNote:
+      "정치학 용어를 하나도 모른다고 가정합니다. 점심 메뉴를 고르는 일과 세율을 정하는 일의 차이에서 시작해, 왜 강제가 들어올 수밖에 없는지까지만 갑니다.",
+    coreIdea:
+      "대가를 내지 않은 사람을 빼놓을 수 없는 일에서는 각자 합리적으로 판단할수록 아무도 기여하지 않게 되고, 그 유인은 집단이 커질수록 강해집니다. 작은 규모에서는 자치로 풀리지만 규모가 커지면 강제만 남으며, 그 순간 문제는 '누가 그 힘을 쥐는가'로 옮겨 갑니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "collective-decision",
+        role: "정치가 다루는 문제의 범위를 사적 선택과 갈라 정의합니다.",
+      },
+      {
+        id: "public-good",
+        role: "그 범위를 배제 가능성과 경합성이라는 두 기준으로 확정합니다.",
+      },
+      {
+        id: "free-rider-problem",
+        role: "그 성질에서 곧바로 따라 나오는 유인 구조를 드러냅니다.",
+      },
+      {
+        id: "collective-action-scale",
+        role: "그 유인이 집단 크기에 따라 어떻게 강해지는지를 계산으로 보입니다.",
+      },
+      {
+        id: "commons-self-governance",
+        role: "강제 없이 풀리는 경우와 그 조건을 절차로 정리합니다.",
+      },
+      {
+        id: "coercion-as-provision",
+        role: "조건이 깨질 때 남는 선택지와 그것이 옮겨 놓는 문제를 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "collective-decision",
+        sectionId: "overview",
+        intuition:
+          "점심 메뉴는 각자 달라도 되지만 통행 방향은 한 사회에 하나여야 합니다.",
+        workedExample:
+          "세율을 20%로 정하면 반대한 사람도 20%를 냅니다. 각자 다른 세율을 고를 수 없습니다.",
+        boundary:
+          "하나로 정해야 한다는 것이 어느 답이 옳은지를 말해 주지는 않습니다. 절차의 필요를 설명할 뿐 답을 고르는 기준은 따로 필요합니다.",
+      },
+      {
+        id: "public-good",
+        sectionId: "two-kinds-of-choice",
+        intuition:
+          "돈을 안 낸 사람만 골라 못 쓰게 막을 수 있는지, 한 사람이 쓰면 남은 몫이 주는지 두 가지를 묻습니다.",
+        workedExample:
+          "영화표는 막을 수 있고 경합적이라 사적재이고, 국방은 막을 수 없고 비경합적이라 공공재입니다.",
+        boundary:
+          "완벽한 공공재는 드물고 대부분 정도의 문제이며, 요금소처럼 기술이 배제 가능성을 바꾸면 같은 것이 다른 칸으로 옮겨 갑니다.",
+      },
+      {
+        id: "free-rider-problem",
+        sectionId: "free-riding",
+        intuition:
+          "내가 내지 않아도 남들이 내면 나도 혜택을 받으니 내지 않는 편이 낫습니다.",
+        workedExample:
+          "모두가 가로등을 원해도 각자에게는 이웃이 내기를 기다리는 쪽이 유리해 아무도 내지 않습니다.",
+        boundary:
+          "누군가의 못된 심성이 아니라 유인 구조의 결과이므로, 도덕을 호소하는 것만으로는 구조가 바뀌지 않습니다.",
+      },
+      {
+        id: "collective-action-scale",
+        sectionId: "free-riding",
+        intuition:
+          "내가 만든 혜택을 여럿이 나눠 가지므로 사람이 많을수록 내게 돌아오는 몫이 작아집니다.",
+        workedExample:
+          "혜택 100, 비용 10일 때 다섯 명이면 내 몫 20으로 이득이지만 백 명이면 1이라 손해가 됩니다.",
+        proofIdea:
+          "기여로 생기는 혜택 b가 n명에게 균등하게 나뉜다면 개인이 회수하는 값은 b/n이고 비용은 c 그대로이므로, 개인의 기여 조건은 b/n > c입니다. n을 키우면 좌변만 줄어들어 부등식이 뒤집히는 n이 반드시 존재합니다.",
+        counterexample:
+          "혜택이 균등하지 않아 한 사람이 b의 대부분을 가져가는 경우에는 그 사람 혼자서도 c를 부담할 이유가 있어, n이 아무리 커도 공급이 일어납니다.",
+        boundary:
+          "이 관계는 혜택이 균등하게 나뉘고 기여가 드러나지 않으며 한 번만 만난다는 전제 위에 있습니다. 세 전제가 깨지면 같은 n에서도 결론이 달라집니다.",
+      },
+      {
+        id: "commons-self-governance",
+        sectionId: "self-governance",
+        intuition:
+          "서로를 알아보고 내년에도 마주쳐야 하는 사이라면 규칙을 만들고 지키는 것이 가능해집니다.",
+        workedExample:
+          "같은 수로를 대대로 쓰는 마을에서는 누가 물을 더 가져갔는지 보이고, 다음 해에도 같은 사람들과 나눠 써야 합니다.",
+        boundary:
+          "관찰된 공통 조건이지 성공의 충분조건이 아니며, 이용자들이 서로를 알아볼 수 있는 규모를 벗어나면 조건 자체가 성립하지 않습니다.",
+      },
+      {
+        id: "coercion-as-provision",
+        sectionId: "coercion",
+        intuition:
+          "내지 않으면 불이익이 오게 만들면 각자 합리적으로 판단해도 내는 쪽을 고르게 됩니다.",
+        workedExample:
+          "세금은 기여 여부를 개인 선택에 맡기지 않으므로 b/n과 c를 비교하는 계산 자체가 사라집니다.",
+        boundary:
+          "그 힘은 공공재 공급 이외의 용도로도 쓸 수 있으므로, 문제를 없애는 것이 아니라 '누가 쥐고 어떻게 제어하는가'로 옮깁니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 범위",
+        relation: "정치가 다루는 결정이 어떤 종류인지 가릅니다.",
+        concepts: ["collective-decision", "public-good"],
+      },
+      {
+        label: "01 문제",
+        relation: "그 성질에서 기여하지 않을 유인이 따라 나옵니다.",
+        concepts: ["free-rider-problem"],
+      },
+      {
+        label: "02 크기",
+        relation: "집단이 커질수록 개인과 사회의 판정이 갈라집니다.",
+        concepts: ["collective-action-scale"],
+      },
+      {
+        label: "03 예외",
+        relation: "전제가 깨지는 조건에서는 강제 없이도 유지됩니다.",
+        concepts: ["commons-self-governance"],
+      },
+      {
+        label: "04 남는 길",
+        relation: "조건이 깨지면 강제가 남고, 문제가 한 층 위로 옮겨 갑니다.",
+        concepts: ["coercion-as-provision"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "각자 고르면 되는 결정과 하나로 정해야 하는 결정을 각각 예로 들고, 둘을 가르는 기준을 쓰세요.",
+        answerChecklist: ["점심 메뉴 대 통행 방향", "대가 안 낸 사람 배제 가능 여부", "반대한 사람에게도 적용", "한 사회에 하나"],
+        requiredConcepts: ["collective-decision"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "배제 가능성과 경합성 두 기준으로 사적재·공공재·공유자원·클럽재를 구분하고 각각 예를 드세요.",
+        answerChecklist: ["영화표는 사적재", "국방은 공공재", "어장은 공유자원", "유료 방송은 클럽재"],
+        requiredConcepts: ["public-good"],
+        sectionId: "two-kinds-of-choice",
+      },
+      {
+        level: "basic",
+        question:
+          "무임승차가 도덕의 문제가 아니라는 말이 무슨 뜻인지 설명하세요.",
+        answerChecklist: ["유인 구조의 결과", "모두가 원해도 발생", "내지 않는 쪽이 개인에게 유리", "도덕 호소로는 구조가 안 바뀜"],
+        requiredConcepts: ["free-rider-problem"],
+        sectionId: "free-riding",
+      },
+      {
+        level: "basic",
+        question:
+          "혜택 60, 비용 5일 때 구성원이 4명인 경우와 20명인 경우의 개인 기여 판정을 각각 구하세요.",
+        answerChecklist: ["4명이면 몫 15 > 5", "20명이면 몫 3 < 5", "b/n과 c 비교", "사회 기준은 둘 다 이득"],
+        requiredConcepts: ["collective-action-scale"],
+        sectionId: "free-riding",
+      },
+      {
+        level: "basic",
+        question:
+          "자치로 공유자원이 유지되려면 반드시 먼저 있어야 하는 조건 하나를 쓰고 그 이유를 설명하세요.",
+        answerChecklist: ["경계 확정", "이용자 집합이 정해져야 함", "위반자를 가릴 수 있어야 함", "없으면 다른 조건도 무의미"],
+        requiredConcepts: ["commons-self-governance"],
+        sectionId: "self-governance",
+      },
+      {
+        level: "basic",
+        question:
+          "강제 징수가 무임승차 문제를 어떻게 없애는지, 그리고 대신 무엇을 새로 만드는지 쓰세요.",
+        answerChecklist: ["안 내면 불이익", "개인 계산 자체가 사라짐", "그 힘은 다른 용도로도 사용 가능", "누가 쥐는가라는 새 문제"],
+        requiredConcepts: ["coercion-as-provision"],
+        sectionId: "coercion",
+      },
+      {
+        level: "advanced",
+        question:
+          "개인 기준 판정과 사회 기준 판정이 갈라지는 지점을 식으로 유도하고, 갈라지기 시작하는 집단 크기를 b와 c로 표현하세요.",
+        answerChecklist: [
+          "사회 기준은 b > c",
+          "개인 기준은 b/n > c",
+          "n > b/c에서 뒤집힘",
+          "좌변만 n에 의존",
+        ],
+        requiredConcepts: ["collective-action-scale", "free-rider-problem"],
+        sectionId: "free-riding",
+      },
+      {
+        level: "advanced",
+        question:
+          "공유자원이 반드시 고갈된다는 결론이 성립하지 않는 사례가 있다는 사실이, 앞의 계산이 틀렸다는 뜻이 아닌 이유를 설명하세요.",
+        answerChecklist: [
+          "식의 전제가 깨진 것",
+          "기여가 드러남",
+          "반복해서 마주침",
+          "질문이 가능성에서 조건으로 이동",
+        ],
+        requiredConcepts: ["commons-self-governance", "collective-action-scale"],
+        sectionId: "self-governance",
+      },
+      {
+        level: "advanced",
+        question:
+          "자치 조건들이 규모가 커지면 왜 대부분 깨지는지, 국방을 예로 항목별로 짚으세요.",
+        answerChecklist: [
+          "기여 여부를 서로 알 수 없음",
+          "규칙 결정에 전원 참여 불가",
+          "감시가 불가능",
+          "세 전제가 되살아남",
+        ],
+        requiredConcepts: ["commons-self-governance", "collective-decision"],
+        sectionId: "scale-limit",
+      },
+      {
+        level: "advanced",
+        question:
+          "'시장이 공공재를 과소 공급한다'에서 '그러므로 정부가 공급하면 된다'로 바로 넘어가면 무엇을 빠뜨리는지 설명하세요.",
+        answerChecklist: [
+          "정부도 사람이 운영",
+          "운영자에게도 각자의 유인",
+          "힘의 제어 장치가 별도로 필요",
+          "과소 공급 증명이 대안의 우월성 증명은 아님",
+        ],
+        requiredConcepts: ["coercion-as-provision", "free-rider-problem"],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title: "Indiana University Ostrom Workshop · Ostrom Design Principles",
+        href: "https://ostromworkshop.indiana.edu/courses-teaching/teaching-tools/ostrom-design/index.html",
+        problem:
+          "공유자원은 각자 더 쓰려는 유인 때문에 반드시 고갈된다는 예측이, 수백 년 유지된 실제 관리 사례들과 맞지 않았습니다.",
+        contribution:
+          "오래 유지된 자치 관리 제도들에서 반복해 관찰되는 조건들을 설계 원칙으로 정리해, 자치의 가능 여부가 아니라 성립 조건을 묻도록 질문을 바꿨습니다.",
+        assumptions:
+          "이용자들이 서로를 식별하고 반복해 상호작용할 수 있는 규모를 전제하며, 자원과 이용자 집합의 경계를 정할 수 있다고 둡니다.",
+        evidenceScope:
+          "Elinor Ostrom의 1990년 저작에서 제시된 원칙을 인디애나대학교 Ostrom Workshop이 교육 자료로 정리한 페이지이며, 원칙의 목록과 성격에 한정됩니다. 원 저작은 출판사가 자동 조회를 막아 서지 사항만 확인했습니다.",
+        notClaim:
+          "이 조건들을 갖추면 반드시 성공한다는 충분조건이 아닙니다. 사례에서 관찰된 공통점이며, 실패한 사례가 왜 실패했는지까지 이 목록으로 설명되지는 않습니다.",
+        sectionId: "self-governance",
+      },
+    ],
+  },
 };

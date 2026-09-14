@@ -20,7 +20,8 @@ export interface KnowledgeConcept {
     | "computer-science"
     | "machine-learning"
     | "distributed-systems"
-    | "economics";
+    | "economics"
+    | "political-science";
   label: string;
   /** 검색·원문 대조용 별칭입니다. 별칭 자체를 별도 concept node로 만들지 않습니다. */
   aliases?: readonly string[];
@@ -23327,6 +23328,66 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "경기가 나빠지면 자본이 줄고 위험 가중치가 올라 비율이 양쪽에서 나빠지므로, 대출을 줄이거나 자산을 팔아 경기를 더 악화시키는 되먹임입니다. 좋을 때 완충자본을 더 쌓게 했다가 나쁠 때 풀어 주는 장치가 이 되먹임에 대응합니다.",
     canonicalHref: "/finance/risk/capital-requirements-and-systemic-risk#boundary",
   },
+  "collective-decision": {
+    id: "collective-decision",
+    kind: "concept",
+    domain: "political-science",
+    label: "집합적 결정",
+    aliases: ["집합적 선택", "collective choice"],
+    definition:
+      "한 사회에 하나만 존재할 수 있고 정해지면 반대한 사람에게도 적용되는 결정입니다. 각자 다른 답을 고를 수 있는 사적 선택과 달리 답이 하나로 수렴해야 하므로, 그 답을 정하는 절차와 강제할 힘이 별도로 필요해집니다.",
+    canonicalHref: "/politics/polity/collective-choice-problem#overview",
+  },
+  "public-good": {
+    id: "public-good",
+    kind: "concept",
+    domain: "economics",
+    label: "Public good · 공공재",
+    aliases: ["비배제성", "비경합성", "공유자원", "클럽재"],
+    definition:
+      "대가를 내지 않은 사람을 빼놓을 수 없고(비배제성) 한 사람이 더 누려도 남의 몫이 줄지 않는(비경합성) 재화입니다. 두 기준을 교차하면 사적재·공공재·공유자원·클럽재의 네 칸이 나오며, 배제 가능성은 기술에 따라 바뀌므로 고정된 분류가 아닙니다.",
+    canonicalHref: "/politics/polity/collective-choice-problem#two-kinds-of-choice",
+  },
+  "free-rider-problem": {
+    id: "free-rider-problem",
+    kind: "concept",
+    domain: "economics",
+    label: "Free rider problem · 무임승차",
+    aliases: ["무임승차 문제"],
+    definition:
+      "빼놓을 수 없는 재화에서는 기여하지 않아도 혜택을 받으므로 내지 않는 쪽이 개인에게 늘 유리해지는 구조입니다. 도덕의 문제가 아니라 유인 구조의 문제이며, 모두가 원하는 것이 아무도 내지 않아 만들어지지 않는 결과를 낳습니다.",
+    canonicalHref: "/politics/polity/collective-choice-problem#free-riding",
+  },
+  "collective-action-scale": {
+    id: "collective-action-scale",
+    kind: "theorem",
+    domain: "political-science",
+    label: "집단 크기와 기여 유인",
+    aliases: ["집합행동의 논리", "Olson"],
+    definition:
+      "기여가 만든 혜택을 구성원 수로 나눈 몫이 개인이 실제로 회수하는 값이므로, 집단이 커질수록 기여 유인이 약해진다는 관계입니다. 사회 전체 기준의 판정(b > c)과 개인 기준의 판정(b/n > c)이 갈라지는 지점을 집단 크기가 정합니다.",
+    canonicalHref: "/politics/polity/collective-choice-problem#free-riding",
+  },
+  "commons-self-governance": {
+    id: "commons-self-governance",
+    kind: "method",
+    domain: "political-science",
+    label: "공유자원의 자치 관리",
+    aliases: ["Ostrom 설계 원칙", "자치 규칙"],
+    definition:
+      "경계 확정·현지 조건에 맞는 규칙·이용자의 규칙 결정 참여·감시·단계적 제재·저렴한 분쟁 해결·조직할 권리 인정·중층 구조가 갖춰지면 외부 강제 없이도 공유자원이 오래 유지된다는 관찰입니다. 사례에서 반복된 공통점이지 성공의 충분조건은 아니며, 서로를 알아보고 계속 마주칠 수 있는 규모를 전제합니다.",
+    canonicalHref: "/politics/polity/collective-choice-problem#self-governance",
+  },
+  "coercion-as-provision": {
+    id: "coercion-as-provision",
+    kind: "concept",
+    domain: "political-science",
+    label: "강제를 통한 공급과 그 대가",
+    aliases: ["강제 징수", "과세의 근거"],
+    definition:
+      "내지 않는 사람에게서도 걷으면 무임승차 계산 자체가 사라져 공공재가 공급됩니다. 다만 그 힘은 공공재 이외의 용도로도 쓸 수 있으므로, 문제가 '어떻게 만드는가'에서 '누가 그 힘을 쥐고 어떻게 제어하는가'로 옮겨 갑니다.",
+    canonicalHref: "/politics/polity/collective-choice-problem#coercion",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -42804,6 +42865,62 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "가중치를 단순히 더하는 방식은 자산 간 상관을 명시적으로 다루지 않으므로, 위기에 상관이 올라가면 분모가 실제 위험을 과소평가합니다.",
+  },
+  {
+    from: "collective-decision",
+    to: "public-good",
+    relation: "prerequisite",
+    reason:
+      "하나로 정해야 하는 결정이 왜 생기는지 알려면 대가를 안 낸 사람을 빼놓을 수 없는 재화의 성질부터 정의해야 합니다.",
+  },
+  {
+    from: "public-good",
+    to: "free-rider-problem",
+    relation: "produces",
+    reason:
+      "빼놓을 수 없다는 성질에서 곧바로 내지 않는 쪽이 유리하다는 계산이 나오므로, 정의 자체가 문제를 만들어 냅니다.",
+  },
+  {
+    from: "free-rider-problem",
+    to: "collective-action-scale",
+    relation: "extends",
+    reason:
+      "무임승차 유인이 집단 크기에 따라 얼마나 강해지는지를 수치로 표현한 것이 기여 조건 b/n > c입니다.",
+  },
+  {
+    from: "commons-self-governance",
+    to: "free-rider-problem",
+    relation: "constrains",
+    reason:
+      "기여 여부가 보이고 계속 마주치는 조건에서는 무임승차 계산의 전제가 깨져 자발적 유지가 성립합니다.",
+  },
+  {
+    from: "collective-action-scale",
+    to: "commons-self-governance",
+    relation: "constrains",
+    reason:
+      "자치 조건들이 모두 서로를 알아볼 수 있는 규모를 요구하므로, 집단이 커지면 그 조건 자체가 무너집니다.",
+  },
+  {
+    from: "collective-action-scale",
+    to: "coercion-as-provision",
+    relation: "produces",
+    reason:
+      "규모가 커져 자발적 공급과 자치가 모두 어려워지면 내지 않는 사람에게서도 걷는 선택지만 남습니다.",
+  },
+  {
+    from: "coercion-as-provision",
+    to: "collective-decision",
+    relation: "constrains",
+    reason:
+      "강제할 힘을 어디에 두고 누가 쓰는지가 다시 하나로 정해야 하는 결정이 되므로, 해법이 같은 종류의 문제를 한 층 위에서 되부릅니다.",
+  },
+  {
+    from: "public-good",
+    to: "bank-failure-externality",
+    relation: "contrasts",
+    reason:
+      "둘 다 결정한 쪽과 비용을 치르는 쪽이 어긋나는 구조이지만, 한쪽은 혜택이 새어 과소 공급되고 다른 쪽은 손실이 새어 과소 대비된다는 점에서 방향이 반대입니다.",
   },
 ];
 

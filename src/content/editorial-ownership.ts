@@ -11864,6 +11864,24 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "collective-choice-problem": {
+    title: "각자 고르면 되는 일과 하나로 정해야 하는 일 글이 소유하는 범위",
+    owns: [
+      "사적 선택과 집합적 결정을 가르는 기준",
+      "배제 가능성과 경합성으로 만드는 네 칸 분류와 그 경계가 고정되지 않는다는 점",
+      "무임승차가 도덕이 아니라 유인 구조의 결과라는 논증",
+      "기여 조건 b/n > c와 집단 크기가 개인·사회 판정을 갈라 놓는 지점",
+      "자치가 성립하는 조건 목록과 그것이 규모에 묶여 있다는 한계",
+      "강제가 문제를 푸는 동시에 '누가 쥐는가'로 옮겨 놓는다는 구조",
+    ],
+    reuses: [],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "제도 관찰은 공개된 연구기관 자료에만 귀속하고, 원 저작을 열어 확인하지 못한 경우 그 사실을 인용에 함께 적는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
