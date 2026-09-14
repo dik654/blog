@@ -24,11 +24,8 @@ export default function BankBalanceSheetAndDepositCreationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            은행을 설명하는 방식은 크게 둘입니다. 하나는 예금자에게 맡아 둔 돈을
-            필요한 사람에게 옮겨 주는 중개자라는 그림이고, 다른 하나는 대출을
-            실행하는 순간 예금을 새로 적어 넣는 발행자라는 그림입니다. 어느
-            쪽으로 보느냐에 따라 통화량, 뱅크런, 자본규제, 중앙은행 정책의 설명이
-            전부 달라집니다.
+            은행을 설명하는 방식은 크게 둘입니다. 하나는 예금자에게 맡아 둔 돈을 필요한 사람에게 옮겨 주는 중개자라는 그림이고 다른 하나는 대출을 실행하는 순간 예금을 새로 적어 넣는
+            발행자라는 그림입니다. 어느 쪽으로 보느냐에 따라 통화량, 뱅크런, 자본규제, 중앙은행 정책의 설명이 전부 달라집니다.
           </p>
 
           <p className="leading-7">
@@ -76,10 +73,8 @@ export default function BankBalanceSheetAndDepositCreationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            은행 대차대조표는 두 열로 되어 있습니다. 왼쪽 자산에는 은행이 받을
-            권리가, 오른쪽 부채에는 은행이 갚을 의무가 적힙니다. 둘의 차이가
-            자기자본이고, 이것이 주주 몫이자 손실을 먼저 받아 내는 완충
-            장치입니다.
+            은행 대차대조표는 두 열로 되어 있습니다. 왼쪽 자산에는 은행이 받을 권리가, 오른쪽 부채에는 은행이 갚을 의무가 적힙니다. 둘의 차이가 자기자본이고 이것이 주주 몫이자 손실을
+            먼저 받아 내는 완충 장치입니다.
           </p>
 
           <p className="leading-7">
@@ -153,10 +148,8 @@ export default function BankBalanceSheetAndDepositCreationArticle() {
           </p>
 
           <p className="leading-7">
-            이것이 첫 절의 질문에 대한 답입니다. 은행은 예금을 빌려주는 것이
-            아니라 대출을 실행하면서 예금을 만듭니다. 그래서 앞 글에서 본
-            통화지표의 대부분은 중앙은행이 찍어 낸 것이 아니라 상업은행의 대출
-            장부에서 나옵니다.
+            이것이 첫 절 질문의 답입니다. 은행은 예금을 빌려주는 것이 아니라 대출을 실행하면서 예금을 만듭니다. 그래서 앞 글에서 본 통화지표의 대부분은 중앙은행이 찍어 낸 것이 아니라
+            상업은행의 대출 장부에서 나옵니다.
           </p>
 
           <p className="leading-7">
@@ -204,17 +197,13 @@ export default function BankBalanceSheetAndDepositCreationArticle() {
           </h3>
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
-              중개자 그림이 맞다면 대출 실행 시 누군가의 예금이 줄고 차주의 예금이
-              늘어야 합니다. 총 예금은 그대로여야 하고 통화량도 변하지 않아야
-              합니다. 그런데 실제 분개에서는 기존 예금이 한 푼도 줄지 않고 새 예금이
-              늘어납니다.
+              중개자 그림이 맞다면 대출을 실행할 때 누군가의 예금이 줄고 차주의 예금이 늘어야 합니다. 총 예금은 그대로여야 하고 통화량도 변하지 않아야 합니다. 그런데 실제 분개에서는
+              기존 예금이 한 푼도 줄지 않고 새 예금이 늘어납니다.
             </p>
 
             <p className="leading-7">
-              이 차이는 해석의 문제가 아니라 회계 사실입니다. 영국 중앙은행은
-              2014년 공보에서 이 점을 명시적으로 정리하면서, 은행이 단순 중개자로
-              예금을 빌려주지도 않고 중앙은행 화폐를 기계적으로 부풀리지도 않는다고
-              썼습니다.
+              이 차이는 해석의 문제가 아니라 회계 사실입니다. 영국 중앙은행은 2014년 공보에서 이 점을 명시적으로 정리하면서 은행이 단순 중개자로 예금을 빌려주지도 않고 중앙은행
+              화폐를 기계적으로 부풀리지도 않는다고 썼습니다.
             </p>
           </div>
 
@@ -247,17 +236,13 @@ export default function BankBalanceSheetAndDepositCreationArticle() {
           </p>
 
           <p className="leading-7">
-            가장 먼저 걸리는 것은 수익성입니다. 대출 금리가 자금 조달 비용과
-            예상 손실을 넘지 못하면 대출은 손해입니다. 갚을 가능성이 낮은 상대에게
-            높은 금리를 매기는 것도 한계가 있어서, 금리를 올릴수록 갚을 수 있는
-            사람이 먼저 떠나고 위험한 사람만 남습니다.
+            가장 먼저 걸리는 것은 수익성입니다. 대출 금리가 자금 조달 비용과 예상 손실을 넘지 못하면 대출은 손해입니다. 갚을 가능성이 낮은 상대에게 높은 금리를 매기는 것도 한계가
+            있어서 금리를 올릴수록 갚을 수 있는 사람이 먼저 떠나고 위험한 사람만 남습니다.
           </p>
 
           <p className="leading-7">
-            두 번째는 유출입니다. 앞 절 분개의 네 번째 줄에서 봤듯, 만든 예금이
-            타행으로 나가면 지급준비금이 그만큼 빠집니다. 대출을 늘릴수록 다른
-            은행에 갚아야 할 결제 수요가 커지고, 그것을 조달하는 비용이
-            대출 확대의 실질적 제동입니다.
+            두 번째는 유출입니다. 앞 절 분개의 네 번째 줄에서 봤듯, 만든 예금이 타행으로 나가면 지급준비금이 그만큼 빠집니다. 대출을 늘릴수록 다른 은행에 갚아야 할 결제 수요가
+            커지고 그것을 조달하는 비용이 대출 확대의 실질적 제동입니다.
           </p>
         </div>
 
@@ -267,11 +252,8 @@ export default function BankBalanceSheetAndDepositCreationArticle() {
           </h3>
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
-              많은 교과서는 이 제약을 지급준비율 하나로 요약해, 중앙은행이
-              본원통화를 주면 은행이 그것을 정해진 배수로 부풀린다고 설명합니다.
-              식 자체는 틀리지 않았지만 읽는 방향이 거꾸로입니다. 이 식은 준비금이
-              대출을 낳는 절차가 아니라, 다른 제약이 전혀 없을 때의 산술적 상한을
-              말할 뿐입니다.
+              많은 교과서는 이 제약을 지급준비율 하나로 요약해 중앙은행이 본원통화를 주면 은행이 그것을 정해진 배수로 부풀린다고 설명합니다. 식 자체는 틀리지 않았지만 읽는 방향이
+              거꾸로입니다. 이 식은 준비금이 대출을 낳는 절차가 아니라, 다른 제약이 전혀 없을 때의 산술적 상한을 말할 뿐입니다.
             </p>
           </div>
 
@@ -357,16 +339,13 @@ export default function BankBalanceSheetAndDepositCreationArticle() {
           </p>
 
           <p className="leading-7">
-            이것은 결함이 아니라 은행이 하는 일 자체입니다. 예금자는 언제든 꺼낼 수
-            있는 편의를 얻고 차주는 긴 자금을 얻으며, 은행은 그 차이에서 이자
-            마진을 얻습니다. 사회적으로도 짧은 저축을 긴 투자로 잇는 기능이
-            없으면 주택도 공장도 지어지기 어렵습니다.
+            이것은 결함이 아니라 은행이 하는 일 자체입니다. 예금자는 언제든 꺼낼 수 있는 편의를 얻고 차주는 긴 자금을 얻으며 은행은 그 차이에서 이자 마진을 얻습니다. 사회적으로도
+            짧은 저축을 긴 투자로 잇는 기능이 없으면 주택도 공장도 지어지기 어렵습니다.
           </p>
 
           <p className="leading-7">
-            문제는 이 구조가 전제를 하나 깔고 있다는 데 있습니다. 예금자 전부가
-            동시에 찾지는 않는다는 전제입니다. 평소에는 잘 맞지만, 전제가 깨지는
-            순간 은행은 자산이 멀쩡해도 지급하지 못합니다.
+            문제는 이 구조가 전제를 하나 깔고 있다는 데 있습니다. 예금자 전부가 동시에 찾지는 않는다는 전제입니다. 평소에는 잘 맞지만 전제가 깨지는 순간 은행은 자산이 멀쩡해도
+            지급하지 못합니다.
           </p>
         </div>
       </section>
@@ -377,10 +356,8 @@ export default function BankBalanceSheetAndDepositCreationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            긴 자산은 급하게 팔면 제값을 못 받습니다. 그래서 인출이 몰리면 은행은
-            자산을 헐값에 처분해야 하고, 나중에 찾는 사람일수록 덜 받게 됩니다.
-            이 사실을 모두가 알고 있다는 점이 핵심입니다. 남들이 찾을 것 같으면
-            나도 먼저 찾는 것이 합리적이 됩니다.
+            긴 자산은 급하게 팔면 제값을 못 받습니다. 그래서 인출이 몰리면 은행은 자산을 헐값에 처분해야 하고 나중에 찾는 사람일수록 덜 받게 됩니다. 이 사실을 모두가 안다는 게
+            핵심입니다. 남들이 찾을 것 같으면 나도 먼저 찾는 것이 합리적이 됩니다.
           </p>
 
           <p className="leading-7">
@@ -392,10 +369,8 @@ export default function BankBalanceSheetAndDepositCreationArticle() {
           </p>
 
           <p className="leading-7">
-            해법도 원인에서 나옵니다. 문제가 &ldquo;남들이 먼저 찾을 것&rdquo;
-            이라는 예상이라면, 그 예상을 무너뜨리면 됩니다. 예금보험은 먼저 찾을
-            이유를 없애고, 중앙은행의 최종대부자 기능은 자산이 멀쩡한 은행이
-            일시적 현금 부족으로 쓰러지지 않게 합니다.
+            해법도 원인에서 나옵니다. 문제가 &ldquo;남들이 먼저 찾을 것&rdquo; 이라는 예상이라면, 그 예상을 무너뜨리면 됩니다. 예금보험은 먼저 찾을 이유를 없애고 중앙은행의
+            최종대부자 기능은 자산이 멀쩡한 은행이 일시적 현금 부족으로 쓰러지지 않게 합니다.
           </p>
         </div>
 
@@ -407,10 +382,8 @@ export default function BankBalanceSheetAndDepositCreationArticle() {
           </h3>
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             <p className="leading-7">
-              예금보험과 최종대부자는 함께 언급되지만 막는 대상이 다릅니다. 앞은
-              예금자의 선택을 바꾸고, 뒤는 은행의 현금 부족을 메웁니다. 둘을
-              뭉뚱그리면 &ldquo;중앙은행이 부실 은행을 살린다&rdquo;는 오해가
-              생깁니다.
+              예금보험과 최종대부자는 함께 언급되지만 막는 대상이 다릅니다. 앞은 예금자의 선택을 바꾸고 뒤는 은행의 현금 부족을 메웁니다. 둘을 뭉뚱그리면 &ldquo;중앙은행이 부실
+              은행을 살린다&rdquo;는 오해가 생깁니다.
             </p>
           </div>
 
@@ -470,10 +443,8 @@ export default function BankBalanceSheetAndDepositCreationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            은행이 대출로 예금을 만든다는 것, 그리고 그 창조에 수익성·유출·자본·
-            규제라는 값이 붙는다는 것까지 왔습니다. 그런데 앞 절의 통화승수
-            논의에서 남겨 둔 문장이 하나 있습니다. 창조된 통화의 총량이 결국
-            중앙은행의 정책에 달려 있다는 것입니다.
+            은행이 대출로 예금을 만든다는 것, 그리고 그 창조에 수익성·유출·자본·규제라는 값이 붙는다는 것까지 왔습니다. 그런데 앞 절의 통화승수 논의에서 남겨 둔 문장이 하나
+            있습니다. 창조된 통화의 총량이 결국 중앙은행의 정책에 달려 있다는 것입니다.
           </p>
 
           <p className="leading-7">
