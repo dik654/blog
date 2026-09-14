@@ -76964,4 +76964,262 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "constitution/constitutionalism-and-separation": {
+    entryNote:
+      "앞 글에서 통치가 순응 위에 선다는 것과, 그 조건이 폭정에서도 성립한다는 것까지 보고 들어옵니다. 여기서는 종이가 실제 힘을 묶는 경로부터 세웁니다.",
+    coreIdea:
+      "헌법의 구속력은 문서 자체가 아니라, 위반의 경계를 미리 못 박아 흩어진 판단을 한 시점에 모으는 조정 효과에서 나옵니다. 그 위에 권력을 나누고 서로 막게 하고 바꾸기 어렵게 굳히는 장치가 얹히며, 세 장치 모두 남용을 막는 만큼 정상적인 변경도 함께 막습니다.",
+    assumedKnowledge: [
+      {
+        id: "compliance-enforcement-threshold",
+        role: "순응이 한꺼번에 무너지면 통치가 무너진다는 관계가 이 글의 출발점입니다.",
+      },
+      {
+        id: "coercion-monopoly",
+        role: "묶으려는 대상인 강제력이 어디에 있는지를 가리킵니다.",
+      },
+      {
+        id: "state-capacity",
+        role: "조문이 같아도 실제 제약이 달라지는 이유를 설명하는 데 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "constitution-as-coordination",
+        role: "집행력 없는 문서가 힘을 제약하는 경로를 세웁니다.",
+      },
+      {
+        id: "separation-of-powers",
+        role: "조정 신호가 생길 수 있도록 역할을 가르는 장치를 정의합니다.",
+      },
+      {
+        id: "checks-and-balances",
+        role: "갈라 둔 기관들이 서로 막을 수단을 갖게 하는 장치를 정의합니다.",
+      },
+      {
+        id: "veto-player-winset",
+        role: "견제가 늘수록 바꿀 수 있는 것이 줄어드는 관계를 계산으로 보입니다.",
+      },
+      {
+        id: "judicial-review",
+        role: "선을 공적으로 선언하는 자리와 그것이 안고 있는 긴장을 다룹니다.",
+      },
+      {
+        id: "constitutional-entrenchment",
+        role: "제약을 먼저 없애는 우회로를 막는 장치와 그 대가를 정합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "constitution-as-coordination",
+        sectionId: "why-paper-binds",
+        intuition:
+          "선을 미리 그어 두면 그 선을 넘는 순간 모두가 같은 시점에 같은 판단을 하게 됩니다.",
+        workedExample:
+          "임기 연장은 누가 봐도 위반이라 판단이 갈리지 않지만, '공공복리를 위한 제한'은 읽는 사람마다 달라 신호가 모이지 않습니다.",
+        boundary:
+          "조정이 가능해질 뿐 저항이 보장되는 것은 아니며, 위반이 알려지지 않으면 뚜렷한 조항도 작동하지 않습니다.",
+      },
+      {
+        id: "separation-of-powers",
+        sectionId: "separation",
+        intuition:
+          "규칙을 만든 사람이 그 규칙 위반을 스스로 판정하면 위반이라는 말이 나올 수 없습니다.",
+        workedExample:
+          "입법·행정·사법을 갈라 두면 권력을 남용하려는 쪽이 여러 기관을 동시에 장악해야 하므로 비용이 오르고 과정이 눈에 띕니다.",
+        boundary:
+          "기능을 나누는 것만으로는 각자 자기 영역에서 마음대로 하는 것을 막지 못하므로 다음 장치가 필요합니다.",
+      },
+      {
+        id: "checks-and-balances",
+        sectionId: "checks",
+        intuition:
+          "한쪽이 무언가를 하려면 다른 쪽의 승인이 필요하게 만듭니다.",
+        workedExample:
+          "거부권·동의 요건·탄핵·위헌심사가 각각 다른 단계에서 단독 관철을 막습니다.",
+        boundary:
+          "남용을 막는 것과 정상적인 변경을 막는 것이 같은 성질이므로, 견제를 늘리면 교착도 함께 늘어납니다.",
+      },
+      {
+        id: "veto-player-winset",
+        sectionId: "checks",
+        intuition:
+          "각자 현상유지보다 나은 안에만 동의하므로, 모두가 동의하는 곳은 구간들이 겹치는 자리뿐입니다.",
+        workedExample:
+          "이상점이 5와 7이고 현상유지가 6이면 한쪽은 4~6을, 다른 쪽은 6~8을 원해 겹치는 곳이 없습니다.",
+        proofIdea:
+          "거부권자 i는 |x − x_i| < |q − x_i|인 x만 찬성하므로 승인 집합은 q와 반사점 2x_i − q 사이의 구간입니다. 통과하려면 모든 i가 찬성해야 하므로 전체 집합은 이 구간들의 교집합이고, 교집합은 원소를 더할수록 좁아지기만 합니다.",
+        counterexample:
+          "현상유지가 모든 이상점의 바깥에 있으면 모든 승인 구간이 같은 방향으로 열려 있어, 거부권자가 아무리 많아도 교집합이 비지 않습니다.",
+        boundary:
+          "정책을 하나의 축으로 줄인 결과이며, 다른 사안과 묶어 주고받는 거래가 가능하면 여기서 막히는 안도 통과될 수 있습니다.",
+      },
+      {
+        id: "judicial-review",
+        sectionId: "judicial-review",
+        intuition:
+          "선출되지 않은 소수가 다수의 대표가 만든 법을 무효로 만드는 것이 왜 허용되는지를 묻습니다.",
+        workedExample:
+          "지금의 다수가 정한 것을 뒤집는 근거를 더 앞선 시점의 더 큰 합의인 헌법에서 찾는 것이 흔한 답입니다.",
+        boundary:
+          "이 정당화는 헌법의 선이 읽는 사람에 따라 크게 달라지지 않을 때만 성립하므로, 해석의 폭이 넓어질수록 약해집니다.",
+      },
+      {
+        id: "constitutional-entrenchment",
+        sectionId: "entrenchment",
+        intuition:
+          "바꾸기 쉬우면 힘을 쥔 쪽이 제약을 먼저 없애고 나서 원하는 것을 하면 됩니다.",
+        workedExample:
+          "특별다수·여러 기관의 동의·국민투표·기간을 둔 재의결이 각각 문턱을 높이는 방식입니다.",
+        boundary:
+          "문턱이 너무 높으면 고쳐야 할 것도 못 고쳐 실제 운용이 조문과 따로 놀기 시작하고, 그러면 다른 조문의 구속력도 함께 약해집니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 수수께끼",
+        relation: "집행력 없는 문서가 어떻게 힘을 묶는지부터 답합니다.",
+        concepts: ["constitution-as-coordination"],
+      },
+      {
+        label: "01 나누기",
+        relation: "역할을 겸하지 못하게 해 신호가 생길 수 있게 합니다.",
+        concepts: ["separation-of-powers"],
+      },
+      {
+        label: "02 막기",
+        relation: "서로의 결정에 끼어들 수단을 줍니다.",
+        concepts: ["checks-and-balances", "judicial-review"],
+      },
+      {
+        label: "03 대가",
+        relation: "막을수록 바꿀 수 있는 것도 줄어듭니다.",
+        concepts: ["veto-player-winset"],
+      },
+      {
+        label: "04 굳히기",
+        relation: "우회로를 막는 대신 경직성을 얻습니다.",
+        concepts: ["constitutional-entrenchment"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "헌법이 집행력 없이도 힘을 제약하는 경로를 조정이라는 말로 설명하세요.",
+        answerChecklist: ["위반 경계를 미리 못 박음", "같은 시점에 같은 판단", "흩어진 저항이 조직될 위험", "문서 자체가 아니라 조정 효과"],
+        requiredConcepts: ["constitution-as-coordination"],
+        sectionId: "why-paper-binds",
+      },
+      {
+        level: "basic",
+        question:
+          "조항이 모호하면 구속력이 약해지는 이유를 쓰세요.",
+        answerChecklist: ["읽는 사람마다 다르게 해석", "판단이 모이지 않음", "같은 시점에 신호가 안 켜짐", "넘어도 조용함"],
+        requiredConcepts: ["constitution-as-coordination"],
+        sectionId: "why-paper-binds",
+      },
+      {
+        level: "basic",
+        question:
+          "권력분립이 조직도를 나누는 것과 다른 목적을 갖는다는 말이 무슨 뜻인지 설명하세요.",
+        answerChecklist: ["같은 사람이 두 역할 겸하지 못하게", "자기 규칙으로 자기를 심판하는 상황 방지", "위반 선언자가 당사자가 되면 안 됨", "입법·행정·사법"],
+        requiredConcepts: ["separation-of-powers"],
+        sectionId: "separation",
+      },
+      {
+        level: "basic",
+        question:
+          "거부권자의 이상점이 4, 현상유지가 6일 때 그 사람의 승인 구간을 구하세요.",
+        answerChecklist: ["반사점 2×4−6 = 2", "구간 2~6", "현상유지보다 이상점에 가까운 곳", "경계는 포함하지 않음"],
+        requiredConcepts: ["veto-player-winset"],
+        sectionId: "checks",
+      },
+      {
+        level: "basic",
+        question:
+          "위헌심사가 안고 있는 긴장이 무엇이고 흔히 어떻게 정당화되는지 쓰세요.",
+        answerChecklist: ["선출되지 않은 기관", "다수의 대표가 만든 법을 무효화", "더 앞선 시점의 더 큰 합의", "합의를 대신 읽는 자리"],
+        requiredConcepts: ["judicial-review"],
+        sectionId: "judicial-review",
+      },
+      {
+        level: "basic",
+        question:
+          "헌법 개정 문턱이 너무 낮을 때와 너무 높을 때 각각 어떤 문제가 생기는지 쓰세요.",
+        answerChecklist: ["낮으면 제약을 먼저 고치고 행동", "일반 법률과 다를 바 없어짐", "높으면 현실과 어긋나도 못 고침", "조문 무시가 관행이 됨"],
+        requiredConcepts: ["constitutional-entrenchment"],
+        sectionId: "entrenchment",
+      },
+      {
+        level: "advanced",
+        question:
+          "거부권자가 셋일 때 통과 가능 영역이 반드시 둘일 때보다 넓지 않은 이유를 교집합의 성질로 설명하세요.",
+        answerChecklist: [
+          "한 명이라도 반대하면 부결",
+          "합집합이 아니라 교집합",
+          "원소를 더하면 좁아지기만 함",
+          "넓어지는 경우는 없음",
+        ],
+        requiredConcepts: ["veto-player-winset", "checks-and-balances"],
+        sectionId: "checks",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 거부권자들인데도 어떤 사안에서는 교착이고 다른 사안에서는 합의가 되는 이유를 현상유지의 위치로 설명하세요.",
+        answerChecklist: [
+          "현상유지가 이상점들 사이면 방향이 엇갈림",
+          "교집합이 빔",
+          "바깥에 있으면 같은 방향으로 열림",
+          "교착 원인은 고집이 아니라 위치",
+        ],
+        requiredConcepts: ["veto-player-winset"],
+        sectionId: "checks",
+      },
+      {
+        level: "advanced",
+        question:
+          "위헌심사 기관의 해석 폭이 넓어질수록 헌법의 조정 효과가 약해지는 경로를 설명하세요.",
+        answerChecklist: [
+          "선을 스스로 정하는 자리에 가까워짐",
+          "무엇이 위반인지 예측 불가",
+          "판단이 한 점에 모이지 않음",
+          "정당화 논리의 전제도 무너짐",
+        ],
+        requiredConcepts: ["judicial-review", "constitution-as-coordination"],
+        sectionId: "judicial-review",
+      },
+      {
+        level: "advanced",
+        question:
+          "개정 문턱이 높아 교착이 생겼을 때 압력이 빠져나갈 수 있는 통로를 두 가지 이상 들고, 그것이 왜 문제인지 쓰세요.",
+        answerChecklist: [
+          "해석 변경",
+          "조문 무시나 사안 묶기",
+          "정족수 자체의 변경",
+          "조문과 실제 운용이 따로 놀기 시작",
+        ],
+        requiredConcepts: ["constitutional-entrenchment", "constitution-as-coordination"],
+        sectionId: "entrenchment",
+      },
+    ],
+    papers: [
+      {
+        title: "Publius · The Federalist No. 51 (1788)",
+        href: "https://avalon.law.yale.edu/18th_century/fed51.asp",
+        problem:
+          "권력 집중을 막는 근거를 통치자의 덕성에서 찾으면, 덕성이 없는 사람이 자리에 앉는 순간 아무 보호도 남지 않습니다.",
+        contribution:
+          "각 부서를 맡은 사람에게 다른 부서의 침범에 저항할 헌법적 수단과 개인적 동기를 함께 주어, 야심이 야심을 막게 하는 구조적 안전장치를 제시했습니다.",
+        assumptions:
+          "각 기관을 맡은 사람이 자기 자리의 권한을 지키려는 동기를 갖는다고 전제하며, 기관 사이의 이해가 실제로 갈린다고 둡니다.",
+        evidenceScope:
+          "1788년 2월에 발표된 정치 문헌이며 Yale Avalon Project에 전문이 공개되어 있습니다. 설계 원리의 제시에 한정됩니다.",
+        notClaim:
+          "특정 헌법안을 옹호하기 위해 쓰인 글이므로, 여기 제시된 설계가 실제로 권력 집중을 얼마나 막았는지에 대한 실증 근거로 쓸 수 없습니다. 기관들의 이해가 갈리지 않고 한 세력이 여러 기관을 함께 장악하면 이 논리의 전제부터 깨집니다.",
+        sectionId: "separation",
+      },
+    ],
+  },
 };

@@ -7162,4 +7162,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "앞 글에서 다룬 자치 조건이 규모 때문에 깨진다는 서술을 잇는 참조. 이 글의 주장 자체의 근거는 아님",
     },
   ],
+  "constitution/constitutionalism-and-separation": [
+    {
+      kind: "보충 읽기",
+      label: "The Federalist No. 51 (Yale Avalon Project 공개 전문)",
+      href: "https://avalon.law.yale.edu/18th_century/fed51.asp",
+      note: "권력분립의 근거를 덕성이 아니라 제도적 이해에서 찾는 논증의 출처. 정치 문헌이며 효과에 대한 실증 근거는 아님",
+    },
+  ],
 };
