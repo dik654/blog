@@ -11594,6 +11594,23 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "money-as-a-claim": {
+    title: "돈은 물건이 아니라 남이 갚아야 할 약속입니다 글이 소유하는 범위",
+    owns: [
+      "교환 매개·계산 단위·가치 저장 세 기능의 정의와 셋이 서로 갈라질 수 있다는 경계",
+      "교환 비율 개수가 직접 교환에서 n(n−1)/2, 공통 매개에서 n−1이 되는 계산과 그 식이 세지 않는 비용",
+      "돈이 발행자의 채무라는 정의와 현금·예금·지급준비금의 발행 주체 구분",
+      "법정통화가 보장하는 범위와 보장하지 않는 범위의 구분",
+      "통화지표를 발행 주체·보유 주체·유동성 문턱으로 정하는 집계 절차",
+    ],
+    reuses: [],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "제도 서술은 중앙은행·국제기구가 공개한 기준 문서에만 귀속하고, 특정 시점의 잔액·증가율 수치는 본문에 사실로 싣지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

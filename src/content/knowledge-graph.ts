@@ -19,7 +19,8 @@ export interface KnowledgeConcept {
     | "earth-science"
     | "computer-science"
     | "machine-learning"
-    | "distributed-systems";
+    | "distributed-systems"
+    | "economics";
   label: string;
   /** 검색·원문 대조용 별칭입니다. 별칭 자체를 별도 concept node로 만들지 않습니다. */
   aliases?: readonly string[];
@@ -22726,6 +22727,66 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "실패한 경로를 합격 기준·측정 방법·무너진 지점과 함께 남겨 두면 같은 발상이 다시 떠올랐을 때 탐색을 반복하지 않고, 다른 회차의 관찰과 맞물려 더 큰 결론을 만든다는 관점입니다. 기록 없이 지운 실패는 같은 비용으로 다시 치러집니다.",
     canonicalHref: "/cs/ai/negative-result-3d-face-control#negative-gate",
   },
+  "medium-of-exchange": {
+    id: "medium-of-exchange",
+    kind: "concept",
+    domain: "economics",
+    label: "Medium of exchange · 교환 매개",
+    aliases: ["교환의 매개", "교환수단"],
+    definition:
+      "자기가 쓰려고가 아니라 다음 거래에 넘기려고 받아 두는 대상입니다. 상대의 필요와 내 필요가 동시에 맞아야 거래가 되는 제약을 두 번의 거래로 나눠 풀며, 성립 조건은 물건 자체의 쓸모가 아니라 남들이 다시 받아 준다는 믿음입니다.",
+    canonicalHref: "/finance/money/money-as-a-claim#exchange-problem",
+  },
+  "unit-of-account": {
+    id: "unit-of-account",
+    kind: "concept",
+    domain: "economics",
+    label: "Unit of account · 계산 단위",
+    aliases: ["회계 단위", "가치 척도"],
+    definition:
+      "다른 모든 것의 값을 적는 공통의 자입니다. 물건 n가지의 교환 비율을 쌍마다 외우는 대신 공통 단위와의 비율 n−1개로 줄이며, 계약서·장부·세금 고지서가 무엇으로 쓰였는지가 판정 근거입니다.",
+    canonicalHref: "/finance/money/money-as-a-claim#three-functions",
+  },
+  "store-of-value": {
+    id: "store-of-value",
+    kind: "concept",
+    domain: "economics",
+    label: "Store of value · 가치 저장",
+    aliases: ["가치의 저장", "구매력 이전"],
+    definition:
+      "오늘의 구매력을 미래로 옮기는 성질입니다. 보관 비용, 값의 변동, 필요할 때 팔 수 있는지로 품질이 갈리며 돈만의 성질이 아니라 주식·부동산·금도 같은 일을 합니다.",
+    canonicalHref: "/finance/money/money-as-a-claim#three-functions",
+  },
+  "credit-money": {
+    id: "credit-money",
+    kind: "concept",
+    domain: "economics",
+    label: "Credit money · 신용화폐",
+    aliases: ["신용통화", "IOU로서의 화폐"],
+    definition:
+      "발행자의 채무가 그대로 교환 매개로 돌아다니는 형태의 돈입니다. 예금은 은행의 부채, 현금과 지급준비금은 중앙은행의 부채이며, 같은 액수라도 갚아야 할 주체가 다르면 떠안는 위험이 달라집니다.",
+    canonicalHref: "/finance/money/money-as-a-claim#credit-money",
+  },
+  "legal-tender": {
+    id: "legal-tender",
+    kind: "concept",
+    domain: "economics",
+    label: "Legal tender · 법정통화",
+    aliases: ["법화", "강제 통용력"],
+    definition:
+      "채무를 갚겠다고 내밀었을 때 채권자가 거절할 수 없도록 법이 통용력을 부여한 화폐입니다. 채무 변제 수단으로 인정된다는 뜻일 뿐, 모든 거래에서 반드시 수취해야 한다는 뜻도 구매력이 보장된다는 뜻도 아닙니다.",
+    canonicalHref: "/finance/money/money-as-a-claim#credit-money",
+  },
+  "monetary-aggregate": {
+    id: "monetary-aggregate",
+    kind: "metric",
+    domain: "economics",
+    label: "Monetary aggregate · 통화지표",
+    aliases: ["통화량", "M1", "M2"],
+    definition:
+      "어떤 채무까지 돈으로 셀지 발행 주체·보유 주체·유동성 문턱으로 정해 합산한 숫자입니다. 문턱을 낮추면 M1처럼 좁아지고 높이면 M2·Lf·L로 넓어지므로, 지표 이름을 밝히지 않은 통화량 서술은 절반만 말한 것입니다.",
+    canonicalHref: "/finance/money/money-as-a-claim#money-aggregates",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -41594,6 +41655,55 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "measure-instead-of-repeating-a-guess",
     relation: "contrasts",
     reason: "가설을 재는 것과 결론을 반증하는 것이 같은 회차의 서로 다른 단계입니다.",
+  },
+  {
+    from: "medium-of-exchange",
+    to: "unit-of-account",
+    relation: "contrasts",
+    reason:
+      "넘겨받는 데 쓰이는 일과 값을 적는 자로 쓰이는 일은 서로 다른 기능이며, 고인플레이션 국가처럼 둘이 서로 다른 대상에 맡겨지는 경우가 실제로 있습니다.",
+  },
+  {
+    from: "medium-of-exchange",
+    to: "store-of-value",
+    relation: "contrasts",
+    reason:
+      "잘 팔리지 않는 자산은 가치를 오래 저장해도 매개로는 쓰기 어렵고, 값이 흔들리는 통화는 매개로 쓰이면서도 저장에는 나쁩니다. 두 기능은 독립적으로 판정해야 합니다.",
+  },
+  {
+    from: "medium-of-exchange",
+    to: "credit-money",
+    relation: "prerequisite",
+    reason:
+      "매개에 필요한 것이 남들의 수용뿐이라는 점을 먼저 알아야, 매개가 물건이 아니라 발행자의 약속이어도 된다는 결론으로 넘어갈 수 있습니다.",
+  },
+  {
+    from: "store-of-value",
+    to: "credit-money",
+    relation: "constrains",
+    reason:
+      "신용화폐의 저장 기능은 발행자가 약속을 지킬 수 있는 범위까지만 유지되므로, 발행자의 상환 능력이 저장 품질의 상한을 정합니다.",
+  },
+  {
+    from: "legal-tender",
+    to: "medium-of-exchange",
+    relation: "constrains",
+    reason:
+      "법이 강제 통용력을 부여하면 채무 변제 국면에서 수용 여부가 개인의 선택에서 벗어나므로, 매개가 성립하는 조건의 일부가 믿음에서 법으로 옮겨 갑니다.",
+  },
+  {
+    from: "credit-money",
+    to: "monetary-aggregate",
+    relation: "prerequisite",
+    reason:
+      "돈이 누군가의 채무라는 사실을 알아야 발행 주체와 보유 주체를 갈라 중복을 지우는 집계 절차가 왜 필요한지 설명됩니다.",
+  },
+  {
+    from: "unit-of-account",
+    to: "monetary-aggregate",
+    relation: "prerequisite",
+    reason:
+      "서로 다른 금융상품의 잔액을 더하려면 같은 계산 단위로 적혀 있어야 하므로, 계산 단위 기능이 집계의 전제가 됩니다.",
   },
 ];
 
