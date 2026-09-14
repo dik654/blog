@@ -1,4 +1,4 @@
-import { useParams, useLocation } from "react-router-dom";
+import { Navigate, useParams, useLocation } from "react-router-dom";
 import { Suspense, createElement, lazy, useEffect, useRef } from "react";
 import { categories, getArticle } from "@/content";
 import ArticleLayout from "@/components/ArticleLayout";
@@ -11,6 +11,8 @@ import { ARTICLE_EVIDENCE } from "@/content/article-evidence";
 import { ARTICLE_LEARNING } from "@/content/article-learning";
 import { getArticleConceptFlow } from "@/content/article-guidance";
 import { useDenseTermFlow } from "@/components/articles/dense-term-flow";
+import { domainOf } from "@/content/domains";
+import { articleHref } from "@/lib/routes";
 
 const articleComponents = new Map(
   categories.flatMap((category) =>
@@ -21,13 +23,17 @@ const articleComponents = new Map(
   ),
 );
 
-export default function ArticlePage() {
+export default function ArticlePage({ domain }: { domain: string }) {
   const { category, article: articleSlug } = useParams<{
     category: string;
     article: string;
   }>();
 
   const result = getArticle(category ?? "", articleSlug ?? "");
+  // 대분류가 틀린 주소(/finance/polity/...)도 라우트에는 걸리므로, 같은 글이
+  // 여러 주소에서 열리지 않도록 정본 주소로 보낸다.
+  const canonicalDomain = result ? domainOf(result.category.slug) : undefined;
+  const isWrongDomain = Boolean(canonicalDomain && canonicalDomain !== domain);
   const { hash } = useLocation();
   const articleBodyRef = useRef<HTMLDivElement>(null);
   useDenseTermFlow(articleBodyRef, `${category ?? ""}/${articleSlug ?? ""}`);
@@ -52,6 +58,15 @@ export default function ArticlePage() {
   const ArticleComponent = articleComponents.get(
     `${category ?? ""}/${articleSlug ?? ""}`,
   );
+
+  if (isWrongDomain && result) {
+    return (
+      <Navigate
+        to={`${articleHref(result.category.slug, result.article.slug)}${hash}`}
+        replace
+      />
+    );
+  }
 
   if (!result || !ArticleComponent) {
     return <p className="text-muted-foreground">글을 찾을 수 없습니다.</p>;

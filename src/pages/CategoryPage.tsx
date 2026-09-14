@@ -11,8 +11,9 @@ import {
 import ArticleCard from "./category/ArticleCard";
 import CategoryReadingMap from "./category/CategoryReadingMap";
 import { articleHref, categoryHref } from "@/lib/routes";
+import { domainOf } from "@/content/domains";
 
-export default function CategoryPage() {
+export default function CategoryPage({ domain }: { domain: string }) {
   const { category } = useParams<{ category: string }>();
   const [searchParams] = useSearchParams();
   const subSlug = searchParams.get("sub");
@@ -21,6 +22,10 @@ export default function CategoryPage() {
     return (
       <p className="text-muted-foreground">카테고리를 찾을 수 없습니다.</p>
     );
+  // 대분류가 틀린 주소도 라우트에는 걸리므로 정본 주소로 보낸다.
+  if (domainOf(cat.slug) !== domain) {
+    return <Navigate to={categoryHref(cat.slug)} replace />;
+  }
 
   const activeSub = subSlug
     ? findSubcategory(cat.subcategories, subSlug)
