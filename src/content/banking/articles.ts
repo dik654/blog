@@ -86,4 +86,39 @@ export const bankingArticles: Article[] = [
     component: () =>
       import("@/pages/articles/banking/central-bank-and-policy-transmission"),
   },
+  {
+    slug: "payment-clearing-settlement",
+    title: "송금은 통장 숫자가 바뀐 뒤에도 아직 끝나지 않았을 수 있습니다",
+    subcategory: "banking-settlement",
+    sections: [
+      {
+        id: "overview",
+        title: "한 번의 송금이 서로 다른 세 층에서 따로 처리됩니다",
+      },
+      {
+        id: "three-layers",
+        title: "부품 1. 지시를 전달하는 일과 돈을 넘기는 일은 다른 일입니다",
+      },
+      {
+        id: "rtgs-vs-dns",
+        title: "부품 2. 모아서 정산할수록 자금은 덜 들고 위험은 더 쌓입니다",
+        subsections: [
+          { id: "hybrid-design", title: "그래서 실제 시스템은 두 극단 사이에 자리를 잡습니다" },
+        ],
+      },
+      {
+        id: "finality",
+        title: "부품 3. 되돌릴 수 없다는 판정은 기술이 아니라 규칙이 만듭니다",
+      },
+      {
+        id: "cross-currency",
+        title: "부품 4. 통화가 다르면 결제가 둘로 갈라지고 그 틈이 위험이 됩니다",
+      },
+      {
+        id: "boundary",
+        title: "한국에서는 작은 지급들이 결국 한 곳에서 해소됩니다",
+      },
+    ],
+    component: () => import("@/pages/articles/banking/payment-clearing-settlement"),
+  },
 ];

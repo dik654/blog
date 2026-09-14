@@ -22987,6 +22987,66 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "정책금리를 더 내릴 수 없을 때 장기 자산을 대량 매입해 기대 경로와 기간 프리미엄을 눌러 내리는 수단입니다. 준비금을 늘리는 것 자체가 목적이 아니며, 준비금이 늘어도 대출 수요가 없으면 예금은 늘지 않습니다.",
     canonicalHref: "/finance/banking/central-bank-and-policy-transmission#balance-sheet-policy",
   },
+  "payment-clearing-settlement-layers": {
+    id: "payment-clearing-settlement-layers",
+    kind: "concept",
+    domain: "economics",
+    label: "지급·청산·결제의 층 분리",
+    aliases: ["지급결제", "clearing and settlement"],
+    definition:
+      "송금 한 건을 지시 전달(지급), 기관 간 주고받을 금액 확정(청산), 실제 자금 이동(결제)의 세 층으로 나눠 처리하는 구조입니다. 고객 통장에 반영된 시점과 기관 사이 자금이 옮겨진 시점이 다르므로, 완료의 의미가 층마다 갈립니다.",
+    canonicalHref: "/finance/banking/payment-clearing-settlement#three-layers",
+  },
+  "gross-versus-net-settlement": {
+    id: "gross-versus-net-settlement",
+    kind: "concept",
+    domain: "economics",
+    label: "총액 결제와 차액 결제",
+    aliases: ["RTGS", "실시간총액결제", "이연차액결제", "DNS"],
+    definition:
+      "건마다 즉시 전액을 넘기는 방식과 하루치를 모아 차액만 정해진 시각에 넘기는 방식의 선택입니다. 앞은 필요한 자금이 크고 미결제 위험이 거의 없으며, 뒤는 자금이 적게 드는 대신 정산 시각까지 익스포저가 쌓입니다.",
+    canonicalHref: "/finance/banking/payment-clearing-settlement#rtgs-vs-dns",
+  },
+  "netting-efficiency": {
+    id: "netting-efficiency",
+    kind: "metric",
+    domain: "economics",
+    label: "Netting efficiency · 상계 효율",
+    aliases: ["다자간 상계", "netting ratio"],
+    definition:
+      "총 지급액 가운데 서로 지워져 실제 자금 이동이 필요 없어진 비율입니다. 참가자 간 흐름이 균형 잡힐수록 1에 가까워지며, 효율이 높을수록 자금 부담은 줄지만 정산 전까지 남는 미결제 익스포저는 커집니다.",
+    canonicalHref: "/finance/banking/payment-clearing-settlement#rtgs-vs-dns",
+  },
+  "settlement-finality": {
+    id: "settlement-finality",
+    kind: "concept",
+    domain: "economics",
+    label: "Settlement finality · 결제 최종성",
+    aliases: ["최종성", "결제완결성"],
+    definition:
+      "시스템의 규칙과 법이 정한 시점 이후로는 이루어진 이체를 취소하거나 되돌릴 수 없다고 보장하는 성질입니다. 처리 속도가 아니라 도산 절차의 소급 취소로부터 보호하는 법적 선 긋기가 그 근거입니다.",
+    canonicalHref: "/finance/banking/payment-clearing-settlement#finality",
+  },
+  "cross-currency-settlement-risk": {
+    id: "cross-currency-settlement-risk",
+    kind: "concept",
+    domain: "economics",
+    label: "시차 결제 위험",
+    aliases: ["Herstatt risk", "외환결제위험"],
+    definition:
+      "서로 다른 통화의 결제가 각 통화의 시스템에서 따로 이루어지는 사이에 상대가 파산하면 이미 넘긴 원금 전액을 잃는 위험입니다. 가격 변동이 아니라 원금 전액이 걸린 신용 위험이며, 영업시간대가 어긋날수록 노출 시간이 길어집니다.",
+    canonicalHref: "/finance/banking/payment-clearing-settlement#cross-currency",
+  },
+  "payment-versus-payment": {
+    id: "payment-versus-payment",
+    kind: "method",
+    domain: "economics",
+    label: "Payment versus payment · 동시결제",
+    aliases: ["PvP", "동시이행 결제"],
+    definition:
+      "두 통화의 이체가 모두 성립하거나 모두 성립하지 않도록 하나의 조건으로 묶는 방식입니다. 한쪽만 넘어간 상태를 만들지 않아 원금 손실 위험을 지우지만, 가격 변동이나 유동성 부족 위험까지 없애지는 않습니다.",
+    canonicalHref: "/finance/banking/payment-clearing-settlement#cross-currency",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -42100,6 +42160,62 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "준비금 증가가 예금 증가로 자동 전환되지 않는다는 앞 글의 결론이 양적완화 효과를 수량으로 읽지 못하게 막습니다.",
+  },
+  {
+    from: "central-bank-balance-sheet",
+    to: "payment-clearing-settlement-layers",
+    relation: "prerequisite",
+    reason:
+      "기관 사이의 최종 결제가 중앙은행 계정 잔액의 이동으로 이루어지므로, 그 장부를 알아야 결제 층이 어디서 끝나는지 설명됩니다.",
+  },
+  {
+    from: "payment-clearing-settlement-layers",
+    to: "gross-versus-net-settlement",
+    relation: "prerequisite",
+    reason:
+      "청산과 결제를 분리해 두었기 때문에 언제 얼마를 넘길지를 따로 고를 수 있고, 그 선택이 두 방식으로 갈립니다.",
+  },
+  {
+    from: "netting-efficiency",
+    to: "gross-versus-net-settlement",
+    relation: "evaluates",
+    reason:
+      "차액 결제가 총액 결제 대비 자금을 얼마나 아끼는지를 이 비율로 재므로, 두 방식의 맞바꿈을 수치로 판정하는 기준이 됩니다.",
+  },
+  {
+    from: "gross-versus-net-settlement",
+    to: "settlement-finality",
+    relation: "constrains",
+    reason:
+      "차액 결제에서는 정산 시각 전까지 되돌릴 여지가 남으므로, 최종성이 생기는 시점 자체가 선택한 방식에 따라 달라집니다.",
+  },
+  {
+    from: "settlement-finality",
+    to: "self-fulfilling-bank-run",
+    relation: "contrasts",
+    reason:
+      "최종성은 규칙으로 되돌림을 막아 불확실성을 없애는 장치이고 뱅크런은 규칙이 없을 때 예상이 결과를 만드는 실패라, 같은 조정 문제의 반대편입니다.",
+  },
+  {
+    from: "cross-currency-settlement-risk",
+    to: "settlement-finality",
+    relation: "constrains",
+    reason:
+      "각 통화의 최종성이 서로 다른 시각에 생기기 때문에 그 사이에 원금이 노출되며, 한 시스템 안의 최종성만으로는 이 틈이 닫히지 않습니다.",
+  },
+  {
+    from: "payment-versus-payment",
+    to: "cross-currency-settlement-risk",
+    relation: "constrains",
+    reason:
+      "두 이체를 하나의 조건으로 묶으면 한쪽만 넘어간 상태가 생기지 않아 원금 전액이 걸리는 노출 자체가 사라집니다.",
+  },
+  {
+    from: "pow-chainwork-probabilistic-finality",
+    to: "settlement-finality",
+    relation: "contrasts",
+    reason:
+      "한쪽은 되돌리는 비용이 커져 위험이 점점 작아지는 확률적 성질이고 다른 쪽은 법과 규칙이 시점을 선언하는 것이라, 같은 단어를 쓰지만 보장의 원천이 다릅니다.",
   },
 ];
 

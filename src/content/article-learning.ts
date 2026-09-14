@@ -75108,4 +75108,268 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "banking/payment-clearing-settlement": {
+    entryNote:
+      "은행이 중앙은행에 지급준비금 계정을 갖고 있다는 것까지 알고 들어옵니다. 앞 글들이 설명 없이 써 온 '은행끼리 주고받는다'는 말을 여기서 풉니다.",
+    coreIdea:
+      "송금은 지시·청산·결제라는 세 층에서 따로 처리되며, 고객 통장이 바뀐 시점과 되돌릴 수 없게 된 시점은 다릅니다. 모아서 정산할수록 필요한 자금은 줄지만 정산 전까지의 미결제 익스포저는 커지고, 최종성은 속도가 아니라 규칙과 법이 만들어 줍니다.",
+    assumedKnowledge: [
+      {
+        id: "central-bank-balance-sheet",
+        role: "기관 간 최종 결제가 일어나는 장부로 쓰입니다.",
+      },
+      {
+        id: "bank-balance-sheet",
+        role: "지급 지시가 고객 예금 잔액을 바꾸는 자리를 확인하는 데 씁니다.",
+      },
+      {
+        id: "self-fulfilling-bank-run",
+        role: "미결제 익스포저가 한 참가자의 실패로 번지는 경로를 이해하는 배경이 됩니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "payment-clearing-settlement-layers",
+        role: "완료의 의미가 층마다 다르다는 이 글의 출발점을 세웁니다.",
+      },
+      {
+        id: "gross-versus-net-settlement",
+        role: "자금과 위험을 맞바꾸는 결제 시점의 선택을 정의합니다.",
+      },
+      {
+        id: "netting-efficiency",
+        role: "그 맞바꿈의 크기를 재는 지표를 제공합니다.",
+      },
+      {
+        id: "settlement-finality",
+        role: "되돌릴 수 없다는 판정이 어디서 오는지로 중심 질문에 답합니다.",
+      },
+      {
+        id: "cross-currency-settlement-risk",
+        role: "통화가 둘이면 최종성이 둘로 갈라진다는 별도 문제를 드러냅니다.",
+      },
+      {
+        id: "payment-versus-payment",
+        role: "그 틈을 조건으로 묶어 지우는 해법과 그 한계를 정합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "payment-clearing-settlement-layers",
+        sectionId: "three-layers",
+        intuition:
+          "지시를 전달하는 일, 주고받을 금액을 정하는 일, 실제로 돈을 넘기는 일이 각각 다른 시점에 끝납니다.",
+        workedExample:
+          "송금 앱에서 통장 숫자가 바뀐 뒤에도 두 은행 사이 자금은 정해진 정산 시각에야 움직입니다.",
+        boundary:
+          "고객 통장 반영은 지시가 처리됐다는 뜻이지 은행 사이 자금이 옮겨졌다는 뜻이 아니므로, 둘을 같은 완료로 읽으면 안 됩니다.",
+      },
+      {
+        id: "gross-versus-net-settlement",
+        sectionId: "rtgs-vs-dns",
+        intuition:
+          "건마다 바로 넘기면 안전하지만 돈이 많이 들고, 모아서 차액만 넘기면 돈은 적게 드는 대신 그사이 위험이 쌓입니다.",
+        workedExample:
+          "거액은 건별 즉시 결제로, 소액은 모아서 차액 결제로 나누는 것이 일반적인 선택입니다.",
+        boundary:
+          "두 방식은 우열이 아니라 자금과 위험의 맞바꿈이므로, 한쪽이 항상 낫다고 말할 수 없습니다.",
+      },
+      {
+        id: "netting-efficiency",
+        sectionId: "rtgs-vs-dns",
+        intuition:
+          "서로 주고받을 것을 먼저 지우면 실제로 옮겨야 할 금액이 총액보다 훨씬 작아집니다.",
+        workedExample:
+          "세 기관 사이 지급 여섯 건의 총액이 260이어도 순포지션의 절댓값 합의 절반이 10이면 실제 이동은 10입니다.",
+        boundary:
+          "효율이 높다고 안전한 것이 아닙니다. 지워진 금액만큼 정산 전까지 미결제 익스포저로 남아 있습니다.",
+      },
+      {
+        id: "settlement-finality",
+        sectionId: "finality",
+        intuition:
+          "언제부터 취소할 수 없는지를 규칙이 미리 선언해 주기 때문에 끝났다고 말할 수 있습니다.",
+        workedExample:
+          "중앙은행 계정 잔액이 옮겨지고 규칙이 정한 시점을 지나면 참가자가 파산해도 그 이체는 되돌릴 수 없습니다.",
+        boundary:
+          "시스템이 빨라서 생기는 성질이 아니며, 도산 절차의 소급 취소로부터 보호하는 법적 근거가 없으면 속도와 무관하게 최종성이 없습니다.",
+      },
+      {
+        id: "cross-currency-settlement-risk",
+        sectionId: "cross-currency",
+        intuition:
+          "한쪽 통화를 먼저 넘기고 다른 쪽을 받기 전에 상대가 무너지면 보낸 돈 전부를 잃습니다.",
+        workedExample:
+          "원화를 넘긴 뒤 달러를 받기 전에 상대가 폐쇄되면 손실은 환율 변동분이 아니라 넘긴 원금 전액입니다.",
+        boundary:
+          "영업시간대가 겹치는 정도에 따라 노출 시간이 달라지므로, 같은 거래라도 통화 조합에 따라 위험 크기가 다릅니다.",
+      },
+      {
+        id: "payment-versus-payment",
+        sectionId: "cross-currency",
+        intuition:
+          "두 이체가 함께 일어나거나 함께 일어나지 않게 묶으면 한쪽만 넘어간 상태가 아예 생기지 않습니다.",
+        workedExample:
+          "두 통화를 함께 처리하는 기관이 양쪽 자금을 확인한 뒤 동시에 넘겨 줍니다.",
+        boundary:
+          "원금 손실 위험만 지우며 가격 변동이나 유동성 부족 위험은 남고, 참여하지 않는 통화쌍과 참가자에게는 효력이 없습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 구조",
+        relation: "완료의 의미를 층으로 나눕니다.",
+        concepts: ["payment-clearing-settlement-layers"],
+      },
+      {
+        label: "01 선택",
+        relation: "언제 얼마를 넘길지가 자금과 위험을 맞바꿉니다.",
+        concepts: ["gross-versus-net-settlement", "netting-efficiency"],
+      },
+      {
+        label: "02 판정",
+        relation: "되돌릴 수 없다는 선을 규칙이 긋습니다.",
+        concepts: ["settlement-finality"],
+      },
+      {
+        label: "03 통화 둘",
+        relation: "최종성이 둘로 갈라지면 그 틈이 위험이 됩니다.",
+        concepts: ["cross-currency-settlement-risk", "payment-versus-payment"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "지급·청산·결제가 각각 무엇을 끝내는지 한 문장씩 쓰고, 고객이 완료로 보는 시점이 어느 층인지 밝히세요.",
+        answerChecklist: ["지급은 지시 전달", "청산은 금액 확정", "결제는 자금 이동", "고객 완료는 지급 층"],
+        requiredConcepts: ["payment-clearing-settlement-layers"],
+        sectionId: "three-layers",
+      },
+      {
+        level: "basic",
+        question:
+          "총액 결제와 차액 결제가 각각 무엇을 아끼고 무엇을 떠안는지 비교하세요.",
+        answerChecklist: ["총액은 자금 많이 필요", "총액은 위험 거의 없음", "차액은 자금 절약", "차액은 미결제 익스포저"],
+        requiredConcepts: ["gross-versus-net-settlement"],
+        sectionId: "rtgs-vs-dns",
+      },
+      {
+        level: "basic",
+        question:
+          "A가 B에게 100, B가 A에게 90을 보낼 것이 있을 때 실제 이동 금액과 상계 효율을 구하세요.",
+        answerChecklist: ["실제 이동 10", "총액 190", "효율 약 95%", "순포지션으로 계산"],
+        requiredConcepts: ["netting-efficiency"],
+        sectionId: "rtgs-vs-dns",
+      },
+      {
+        level: "basic",
+        question:
+          "결제 최종성이 처리 속도의 문제가 아니라는 말을 파산 상황을 들어 설명하세요.",
+        answerChecklist: ["도산 절차의 소급 취소", "법적 보호 필요", "규칙이 시점을 선언", "빠름과 무관"],
+        requiredConcepts: ["settlement-finality"],
+        sectionId: "finality",
+      },
+      {
+        level: "basic",
+        question:
+          "서로 다른 통화를 주고받을 때 생기는 위험이 왜 가격 변동 위험과 다른지 손실 규모로 설명하세요.",
+        answerChecklist: ["원금 전액 손실", "신용 위험", "시차 동안 노출", "가격 변동분이 아님"],
+        requiredConcepts: ["cross-currency-settlement-risk"],
+        sectionId: "cross-currency",
+      },
+      {
+        level: "basic",
+        question:
+          "동시결제가 무엇을 보장하고 무엇은 보장하지 않는지 각각 쓰세요.",
+        answerChecklist: ["둘 다 성립하거나 둘 다 아님", "원금 손실 제거", "가격 변동 위험은 남음", "미참여 통화쌍에는 무효"],
+        requiredConcepts: ["payment-versus-payment"],
+        sectionId: "cross-currency",
+      },
+      {
+        level: "advanced",
+        question:
+          "상계 효율이 높은 시스템일수록 참가자 하나의 실패가 더 크게 번질 수 있는 이유를 익스포저의 정의로 설명하세요.",
+        answerChecklist: [
+          "지워진 금액은 미결제로 남음",
+          "정산 시각까지 노출",
+          "효율이 높을수록 노출액이 큼",
+          "자금 절약과 위험이 같은 원인",
+        ],
+        requiredConcepts: ["netting-efficiency", "gross-versus-net-settlement"],
+        sectionId: "rtgs-vs-dns",
+      },
+      {
+        level: "advanced",
+        question:
+          "건별 즉시 결제를 유지하면서도 필요한 자금을 줄이는 설계를 하나 들고, 그 설계가 성립하려면 어떤 조건이 필요한지 쓰세요.",
+        answerChecklist: [
+          "대기열에서 상쇄 조합 탐색",
+          "부분집합을 동시에 처리",
+          "모든 참가자 잔액이 음수가 되지 않아야 함",
+          "일부만 처리하면 안 됨",
+        ],
+        requiredConcepts: ["gross-versus-net-settlement", "netting-efficiency"],
+        sectionId: "hybrid-design",
+      },
+      {
+        level: "advanced",
+        question:
+          "지급결제 시스템의 최종성과 작업증명 블록체인의 최종성이 어떻게 다른지 보장의 원천을 기준으로 구분하고, 공통으로 필요한 것이 무엇인지 쓰세요.",
+        answerChecklist: [
+          "한쪽은 법과 규칙",
+          "다른 쪽은 되돌릴 비용",
+          "확률적이라 0이 되지 않음",
+          "언제부터 완료로 볼지 사전 합의 필요",
+        ],
+        requiredConcepts: ["settlement-finality"],
+        sectionId: "finality",
+      },
+      {
+        level: "advanced",
+        question:
+          "소액지급시스템에서 생긴 금융기관 간 채권·채무가 거액결제시스템에서 해소되는 구조가, 이 글의 층 구분과 어떻게 대응하는지 설명하세요.",
+        answerChecklist: [
+          "소액시스템은 지급·청산 층",
+          "거액시스템이 결제 층",
+          "중앙은행 계정에서 최종 해소",
+          "완료 시점이 층마다 다름",
+        ],
+        requiredConcepts: ["payment-clearing-settlement-layers", "settlement-finality"],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title: "CPMI · IOSCO · Principles for financial market infrastructures (2012)",
+        href: "https://www.bis.org/cpmi/publ/d101.htm",
+        problem:
+          "지급·청산·결제 시스템과 중앙청산소가 무너지면 참가자 전체로 번지는데, 그 위험 관리 수준이 나라와 시스템마다 달랐습니다.",
+        contribution:
+          "시스템적으로 중요한 지급결제 시스템·증권결제시스템·중앙청산소·거래정보저장소에 공통으로 적용되는 위험 관리 기준을 제시하고 기존 세 개의 기준을 통합했습니다.",
+        assumptions:
+          "시스템적으로 중요한 금융시장 인프라를 대상으로 하며, 각국이 자국 법제 안에서 이 기준을 적용한다고 전제합니다.",
+        evidenceScope:
+          "BIS 산하 CPMI와 IOSCO가 2012년 4월에 공동 발간한 국제 기준 문서로, 요건의 범위에 한정됩니다.",
+        notClaim:
+          "특정 국가 시스템의 운영 방식을 설명하는 자료가 아니므로, 한국의 구체적인 결제 구조나 최종성 시점을 이 문서로 인용할 수 없습니다.",
+        sectionId: "finality",
+      },
+      {
+        title: "한국은행 · 우리나라의 지급결제제도",
+        href: "https://www.bok.or.kr/portal/main/contents.do?menuNo=200347",
+        problem:
+          "개인과 기업의 자금 이체가 최종적으로 어디서 어떻게 정리되는지는 이용자에게 드러나지 않습니다.",
+        contribution:
+          "거액결제시스템과 소액지급시스템의 구성을 정리하고, 소액지급시스템에서 생긴 금융기관 간 채권·채무가 한은금융망을 통해 최종 해소된다는 구조를 명시합니다.",
+        assumptions:
+          "한국의 현행 지급결제 제도와 참가기관 구성을 전제로 한 설명입니다.",
+        evidenceScope:
+          "한국은행이 공개한 제도 설명 페이지로, 시스템 구성과 해소 경로의 범위에 한정됩니다.",
+        notClaim:
+          "특정 시점의 결제 규모나 참가기관 수를 이 문서로 인용할 수 없으며, 국제 비교의 근거도 아닙니다.",
+        sectionId: "boundary",
+      },
+    ],
+  },
 };
