@@ -11760,6 +11760,38 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "equity-claims-and-valuation": {
+    title: "주주는 남는 것을 전부 갖습니다 글이 소유하는 범위",
+    owns: [
+      "채권자·우선주·보통주의 청구권 순위와 각 계약의 상하방 구조",
+      "유한책임이 만드는 비대칭 손익과 그로부터 나오는 위험 선호",
+      "자산 수익률과 차입 금리의 차이를 부채 비율이 증폭하는 관계",
+      "마찰이 없는 조건에서 자본구조가 기업 가치를 바꾸지 않는 이유와 그 경계",
+      "만기 없는 배당 흐름을 등비급수로 닫는 평가식과 수렴 조건",
+      "영구 성장률 가정의 민감도와 경제 장기 성장률 제약",
+      "평가 배수가 옮겨 놓는 가정과 분자·분모의 청구권 범위 정합",
+    ],
+    reuses: [
+      {
+        label: "적혀 있는 현금흐름을 할인해 가격을 얻는 계산",
+        href: "/finance/markets/bond-pricing-and-yield-curve#cashflow-to-price",
+      },
+      {
+        label: "등비급수로 닫히는 현재가치 합",
+        href: "/finance/money/time-value-and-discounting#annuity",
+      },
+      {
+        label: "자산·부채·자기자본의 자리",
+        href: "/finance/banking/bank-balance-sheet-and-deposit-creation#balance-sheet",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "이론 결과는 원 논문의 전제 범위 안에서만 인용하고, 수익률·배수 수치는 계산을 보이기 위한 예시임을 밝혀 특정 기업·시점의 실제 값으로 읽히지 않게 한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

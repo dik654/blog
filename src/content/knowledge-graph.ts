@@ -23117,6 +23117,76 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "같은 발행자의 채권을 만기별로 늘어놓았을 때 금리가 이루는 곡선입니다. 앞으로의 단기금리 기대 평균과 기간 프리미엄의 합이므로 정책 경로에 대한 예상을 담지만, 둘의 기여를 곡선만으로는 가를 수 없습니다.",
     canonicalHref: "/finance/markets/bond-pricing-and-yield-curve#yield-curve",
   },
+  "residual-claim": {
+    id: "residual-claim",
+    kind: "concept",
+    domain: "economics",
+    label: "Residual claim · 잔여청구권",
+    aliases: ["보통주", "청구권 순위", "seniority"],
+    definition:
+      "앞선 순위의 청구권이 모두 받은 뒤 남는 것을 갖는 권리입니다. 금액과 시점이 적혀 있지 않아 상방에 한도가 없는 대신, 남지 않으면 아무것도 받지 못합니다.",
+    canonicalHref: "/finance/markets/equity-claims-and-valuation#residual-claim",
+  },
+  "limited-liability-payoff": {
+    id: "limited-liability-payoff",
+    kind: "concept",
+    domain: "economics",
+    label: "유한책임의 비대칭 손익",
+    aliases: ["유한책임", "limited liability"],
+    definition:
+      "회사 가치가 부채에 못 미쳐도 주주 손실이 투자 원금에서 멈추는 성질입니다. 아래가 막히고 위가 열린 꺾인 모양이 되며, 그래서 어려워진 회사의 주주일수록 위험한 선택을 선호하게 됩니다.",
+    canonicalHref: "/finance/markets/equity-claims-and-valuation#residual-claim",
+  },
+  "financial-leverage": {
+    id: "financial-leverage",
+    kind: "concept",
+    domain: "economics",
+    label: "Financial leverage · 재무레버리지",
+    aliases: ["레버리지", "ROE", "자기자본수익률"],
+    definition:
+      "자산 수익률과 차입 금리의 차이를 부채 대 자기자본 비율만큼 증폭해 주주 수익률에 얹는 구조입니다. 수익률을 만들어 내는 것이 아니라 이미 있는 차이를 확대하므로 기대값과 변동폭이 함께 커집니다.",
+    canonicalHref: "/finance/markets/equity-claims-and-valuation#leverage",
+  },
+  "capital-structure-irrelevance": {
+    id: "capital-structure-irrelevance",
+    kind: "theorem",
+    domain: "economics",
+    label: "자본구조 무관 명제",
+    aliases: ["MM 명제", "Modigliani-Miller", "Proposition I"],
+    definition:
+      "세금·파산 비용·정보 비대칭이 없는 조건에서는 기업의 시장가치가 자본구조와 무관하다는 결과입니다. 투자자가 스스로 차입·대출할 수 있어 회사가 대신 해 주는 조달 구조에 웃돈을 낼 이유가 없다는 논리에서 나옵니다.",
+    canonicalHref: "/finance/markets/equity-claims-and-valuation#structure-neutrality",
+  },
+  "dividend-discount-model": {
+    id: "dividend-discount-model",
+    kind: "method",
+    domain: "economics",
+    label: "Dividend discount model · 배당할인모형",
+    aliases: ["고든 성장모형", "Gordon growth model"],
+    definition:
+      "만기가 없는 배당 흐름을 일정 성장률로 가정해 등비급수로 닫은 평가식 D1/(r−g)입니다. 무한합이 수렴하려면 요구 수익률이 성장률보다 커야 하며, 그 조건이 곧 이 식의 사용 범위입니다.",
+    canonicalHref: "/finance/markets/equity-claims-and-valuation#ddm",
+  },
+  "terminal-growth-sensitivity": {
+    id: "terminal-growth-sensitivity",
+    kind: "concept",
+    domain: "economics",
+    label: "영구 성장률 가정의 민감도",
+    aliases: ["g 민감도", "terminal value"],
+    definition:
+      "평가식의 분모가 요구 수익률에서 성장률을 뺀 작은 수여서, 성장률을 조금만 올려도 평가액이 급격히 커지는 성질입니다. 영구 성장률이 경제 전체의 장기 성장률을 넘을 수 없다는 제약을 걸지 않으면 원하는 값을 만들어 낼 수 있습니다.",
+    canonicalHref: "/finance/markets/equity-claims-and-valuation#ddm",
+  },
+  "valuation-multiple": {
+    id: "valuation-multiple",
+    kind: "metric",
+    domain: "economics",
+    label: "Valuation multiple · 평가 배수",
+    aliases: ["PER", "주가수익비율", "EV/EBITDA"],
+    definition:
+      "가격을 이익 같은 기준량으로 나눠 비교 대상과 견주는 지표입니다. 가정을 없애는 것이 아니라 비교 대상이 제대로 평가되어 있다는 가정으로 바꾸는 것이며, 분자와 분모가 같은 청구권 범위를 가리켜야 비교가 성립합니다.",
+    canonicalHref: "/finance/markets/equity-claims-and-valuation#multiples",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -42363,6 +42433,69 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "정책금리 경로에 대한 기대가 곡선의 짧은 쪽부터 긴 쪽까지를 끌어당기므로, 파급경로가 곡선 모양의 변화 원인이 됩니다.",
+  },
+  {
+    from: "bond-cashflow-pricing",
+    to: "residual-claim",
+    relation: "contrasts",
+    reason:
+      "채권은 금액과 시점이 적혀 있고 상방이 막혀 있는 반면 잔여청구권은 적힌 것이 없고 상방이 열려 있어, 같은 회사에 걸린 두 계약의 성격이 정반대입니다.",
+  },
+  {
+    from: "residual-claim",
+    to: "limited-liability-payoff",
+    relation: "produces",
+    reason:
+      "마지막 순위라는 위치에 손실 하한이 결합되면서 아래가 막히고 위가 열린 비대칭 손익 구조가 만들어집니다.",
+  },
+  {
+    from: "limited-liability-payoff",
+    to: "financial-leverage",
+    relation: "constrains",
+    reason:
+      "손실이 0에서 멈추므로 부채를 늘릴수록 주주 몫은 아래가 막힌 채 진폭만 커지는 모양에 가까워집니다.",
+  },
+  {
+    from: "capital-structure-irrelevance",
+    to: "financial-leverage",
+    relation: "constrains",
+    reason:
+      "레버리지가 기대 수익률과 함께 위험도 올리므로, 마찰이 없는 조건에서는 두 효과가 상쇄되어 기업 가치가 바뀌지 않는다는 경계를 정합니다.",
+  },
+  {
+    from: "net-present-value",
+    to: "dividend-discount-model",
+    relation: "prerequisite",
+    reason:
+      "현금흐름을 한 시점으로 모아 더하는 계산이 있어야 만기 없는 배당 흐름의 합을 세울 수 있습니다.",
+  },
+  {
+    from: "dividend-discount-model",
+    to: "terminal-growth-sensitivity",
+    relation: "produces",
+    reason:
+      "분모가 요구 수익률에서 성장률을 뺀 작은 수라는 식의 구조 자체가 극단적인 민감도를 만듭니다.",
+  },
+  {
+    from: "valuation-multiple",
+    to: "dividend-discount-model",
+    relation: "contrasts",
+    reason:
+      "한쪽은 가정을 명시적으로 적고 다른 쪽은 비교 대상의 가격에 그 가정을 맡기므로, 가정을 없애는 것이 아니라 옮기는 차이입니다.",
+  },
+  {
+    from: "residual-claim",
+    to: "dividend-discount-model",
+    relation: "prerequisite",
+    reason:
+      "주주가 받을 현금이 무엇인지 정해져야 할인할 대상이 생기므로, 잔여청구권의 정의가 평가식의 분자를 규정합니다.",
+  },
+  {
+    from: "discount-factor",
+    to: "dividend-discount-model",
+    relation: "prerequisite",
+    reason:
+      "각 시점의 배당을 오늘 값으로 되돌리는 계수가 등비급수의 항을 이룹니다.",
   },
 ];
 

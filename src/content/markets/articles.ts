@@ -42,4 +42,45 @@ export const marketsArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/markets/bond-pricing-and-yield-curve"),
   },
+  {
+    slug: "equity-claims-and-valuation",
+    title: "주주는 아무것도 약속받지 못한 대신 남는 것을 전부 갖습니다",
+    subcategory: "markets-equity",
+    sections: [
+      {
+        id: "overview",
+        title: "같은 회사에 걸린 청구권들이 순위대로 줄을 서 있습니다",
+      },
+      {
+        id: "residual-claim",
+        title: "부품 1. 마지막 순위이면서 아래가 막혀 있다는 것이 핵심입니다",
+      },
+      {
+        id: "leverage",
+        title: "부품 2. 같은 사업이라도 빚을 섞으면 주주 몫의 진폭이 커집니다",
+        subsections: [
+          {
+            id: "structure-neutrality",
+            title: "그렇다면 빚을 늘리는 것만으로 회사가 더 가치 있어질까요",
+          },
+        ],
+      },
+      {
+        id: "ddm",
+        title: "부품 3. 적혀 있지 않은 현금흐름은 모양을 가정해야 합니다",
+      },
+      {
+        id: "multiples",
+        title: "부품 4. 실무는 가정을 줄이는 대신 비교 대상을 빌려 씁니다",
+        subsections: [
+          { id: "multiple-traps", title: "배수를 비교할 때 자주 어긋나는 지점" },
+        ],
+      },
+      {
+        id: "boundary",
+        title: "분자를 다뤘으니 남은 것은 분모입니다",
+      },
+    ],
+    component: () => import("@/pages/articles/markets/equity-claims-and-valuation"),
+  },
 ];

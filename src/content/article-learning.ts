@@ -75641,4 +75641,281 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "markets/equity-claims-and-valuation": {
+    entryNote:
+      "채권처럼 현금흐름이 적혀 있는 청구권을 할인해 본 뒤에 읽습니다. 여기서는 적혀 있지 않은 쪽을 다루며, 위험에 얼마를 요구해야 하는지는 다음 글로 넘깁니다.",
+    coreIdea:
+      "주식은 앞 순위가 다 받고 남는 것을 갖는 잔여청구권이며, 유한책임 때문에 아래가 막히고 위가 열린 비대칭 구조를 가집니다. 같은 할인 식을 쓰지만 분자를 가정해야 하고 분모도 함께 커지므로, 평가액은 언제나 가정과 함께 읽어야 합니다.",
+    assumedKnowledge: [
+      {
+        id: "bond-cashflow-pricing",
+        role: "현금흐름이 적혀 있는 경우와 대조해 주식의 성격을 드러내는 데 씁니다.",
+      },
+      {
+        id: "net-present-value",
+        role: "만기 없는 배당 흐름을 한 시점으로 모으는 계산의 바탕이 됩니다.",
+      },
+      {
+        id: "discount-factor",
+        role: "등비급수의 각 항을 이루는 할인계수로 씁니다.",
+      },
+      {
+        id: "bank-balance-sheet",
+        role: "자산과 부채, 자기자본의 자리를 이미 알고 있다고 두고 레버리지를 설명합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "residual-claim",
+        role: "주식이 무엇에 대한 권리인지를 순위로 정의합니다.",
+      },
+      {
+        id: "limited-liability-payoff",
+        role: "손실 하한이 만드는 비대칭과 그 행동적 결과를 설명합니다.",
+      },
+      {
+        id: "financial-leverage",
+        role: "자본구조가 주주 수익률의 기대값과 진폭을 함께 바꾸는 구조를 세웁니다.",
+      },
+      {
+        id: "capital-structure-irrelevance",
+        role: "레버리지만으로 가치가 커지지 않는 조건을 정해 경계를 긋습니다.",
+      },
+      {
+        id: "dividend-discount-model",
+        role: "적혀 있지 않은 현금흐름을 가정으로 닫는 표준 평가식을 세웁니다.",
+      },
+      {
+        id: "terminal-growth-sensitivity",
+        role: "그 식이 가정 하나에 얼마나 크게 흔들리는지를 드러냅니다.",
+      },
+      {
+        id: "valuation-multiple",
+        role: "실무의 우회로와 그것이 옮겨 놓는 가정을 설명합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "residual-claim",
+        sectionId: "residual-claim",
+        intuition:
+          "앞 순위가 먼저 받고 남는 것을 갖는 자리이며, 남지 않으면 못 받습니다.",
+        workedExample:
+          "회사 가치가 100이고 선순위 청구액이 60이면 주주 몫은 40이고, 가치가 75로 줄면 주주 몫은 15가 됩니다.",
+        boundary:
+          "약속된 금액이 없다는 것은 상방에 한도가 없다는 뜻이자 하방에 보장이 없다는 뜻이므로, 한쪽만 떼어 읽으면 안 됩니다.",
+      },
+      {
+        id: "limited-liability-payoff",
+        sectionId: "residual-claim",
+        intuition:
+          "회사가 아무리 큰 빚을 남기고 무너져도 주주는 넣은 돈을 잃는 데서 멈춥니다.",
+        workedExample:
+          "회사 가치가 40이고 부채가 60이면 주주 몫은 음수가 아니라 0입니다.",
+        boundary:
+          "손실이 0에서 멈춘다는 성질이 곧 위험한 선택을 선호하게 만드는 유인이 되므로, 보호 장치이면서 동시에 갈등의 원인입니다.",
+      },
+      {
+        id: "financial-leverage",
+        sectionId: "leverage",
+        intuition:
+          "번 것에서 이자를 먼저 떼고 남는 것이 주주 몫이므로, 빌린 비중이 클수록 남은 차이가 크게 얹힙니다.",
+        workedExample:
+          "자산 수익률 8%, 차입 금리 5%, 부채와 자기자본이 같으면 자기자본 수익률은 11%이고, 자산 수익률이 3%로 떨어지면 1%가 됩니다.",
+        boundary:
+          "차입 금리가 부채 비중과 무관하게 고정이라고 두었으므로, 빚이 늘어 조달 금리가 오르는 효과는 이 식에 없습니다.",
+      },
+      {
+        id: "capital-structure-irrelevance",
+        sectionId: "structure-neutrality",
+        intuition:
+          "투자자가 스스로 돈을 빌릴 수 있다면 회사가 대신 빌려 주는 것에 웃돈을 낼 이유가 없습니다.",
+        workedExample:
+          "부채를 늘려 기대 수익률이 오르면 위험도 함께 올라 주주의 요구 수익률이 같은 폭으로 올라 상쇄됩니다.",
+        proofIdea:
+          "자본구조가 다른 두 회사의 가치가 다르면, 비싼 쪽을 팔고 싼 쪽을 사면서 개인 차입으로 같은 손익 구조를 복제해 차익을 얻을 수 있습니다. 그 거래가 사라질 때까지 두 가치가 같아집니다.",
+        counterexample:
+          "이자비용이 세금에서 공제되거나 파산에 비용이 든다면 복제가 정확하지 않아 자본구조가 실제로 가치를 바꿉니다.",
+        boundary:
+          "이 명제는 자본구조가 중요하지 않다는 뜻이 아니라, 현실에서 중요하다면 그 이유가 배제된 마찰 가운데 무엇인지 물으라는 안내입니다.",
+      },
+      {
+        id: "dividend-discount-model",
+        sectionId: "ddm",
+        intuition:
+          "회사에 만기가 없으니 배당을 영원히 더해야 하고, 일정 비율로 늘어난다고 두면 그 합이 짧은 식으로 닫힙니다.",
+        workedExample:
+          "1년 뒤 배당 1,000원, 요구 수익률 8%, 성장률 3%면 주당 가치는 1,000 ÷ 0.05 = 20,000원입니다.",
+        boundary:
+          "요구 수익률이 성장률보다 커야 합이 수렴하므로, 두 값이 뒤집히면 식 자체가 성립하지 않습니다.",
+      },
+      {
+        id: "terminal-growth-sensitivity",
+        sectionId: "ddm",
+        intuition:
+          "분모가 작은 수라서 그 수를 조금만 줄여도 결과가 크게 커집니다.",
+        workedExample:
+          "같은 조건에서 성장률만 3%에서 4%로 올리면 20,000원이 25,000원이 되어 25% 오르고, 6%로 올리면 2.5배가 됩니다.",
+        boundary:
+          "영구 성장률이 경제 전체의 장기 성장률을 넘으면 그 회사가 언젠가 경제보다 커진다는 뜻이라 성립하지 않습니다.",
+      },
+      {
+        id: "valuation-multiple",
+        sectionId: "multiples",
+        intuition:
+          "비슷한 회사가 이익의 몇 배에 거래되는지를 보고 그 배수를 가져다 씁니다.",
+        workedExample:
+          "이익의 30배에 거래되는 회사라면, 그 가격이 성립하려면 성장률과 요구 수익률이 어떤 조합이어야 하는지 역산할 수 있습니다.",
+        boundary:
+          "분자가 주주 몫인데 분모가 이자 차감 전 이익이면 빚이 많은 회사가 자동으로 싸 보이므로, 두 항의 청구권 범위를 맞추지 않은 비교는 무효입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 위치",
+        relation: "주식이 어느 순위의 어떤 권리인지 정합니다.",
+        concepts: ["residual-claim", "limited-liability-payoff"],
+      },
+      {
+        label: "01 증폭",
+        relation: "자본구조가 주주 몫의 진폭을 바꿉니다.",
+        concepts: ["financial-leverage"],
+      },
+      {
+        label: "02 경계",
+        relation: "레버리지만으로는 가치가 생기지 않는 조건을 확인합니다.",
+        concepts: ["financial-leverage", "capital-structure-irrelevance"],
+      },
+      {
+        label: "03 평가",
+        relation: "적혀 있지 않은 현금흐름을 가정으로 닫습니다.",
+        concepts: ["dividend-discount-model", "terminal-growth-sensitivity"],
+      },
+      {
+        label: "04 우회로",
+        relation: "배수는 가정을 없애지 않고 옮깁니다.",
+        concepts: ["valuation-multiple"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "회사 가치가 100, 선순위 청구액이 60일 때와 가치가 75로 줄었을 때 주주 몫을 각각 구하고 변화율을 비교하세요.",
+        answerChecklist: ["40과 15", "회사는 25% 감소", "주주 몫은 62.5% 감소", "마지막 순위라서 증폭"],
+        requiredConcepts: ["residual-claim"],
+        sectionId: "residual-claim",
+      },
+      {
+        level: "basic",
+        question:
+          "유한책임이 주주의 손익 그래프를 어떤 모양으로 만드는지 설명하고, 그 모양이 만드는 행동 유인을 한 가지 쓰세요.",
+        answerChecklist: ["아래가 0에서 막힘", "위는 한도 없음", "꺾인 선", "어려울수록 위험 선호"],
+        requiredConcepts: ["limited-liability-payoff"],
+        sectionId: "residual-claim",
+      },
+      {
+        level: "basic",
+        question:
+          "자산 수익률 10%, 차입 금리 6%, 부채와 자기자본이 1대1일 때 자기자본 수익률을 구하세요.",
+        answerChecklist: ["10 + 1×(10−6)", "14%", "차이가 증폭됨", "부채 비율이 배수"],
+        requiredConcepts: ["financial-leverage"],
+        sectionId: "leverage",
+      },
+      {
+        level: "basic",
+        question:
+          "1년 뒤 배당 2,000원, 요구 수익률 10%, 성장률 4%일 때 주당 가치를 구하고 식의 수렴 조건을 쓰세요.",
+        answerChecklist: ["2000 ÷ 0.06", "약 33,333원", "r > g", "수렴하지 않으면 식 무효"],
+        requiredConcepts: ["dividend-discount-model"],
+        sectionId: "ddm",
+      },
+      {
+        level: "basic",
+        question:
+          "배당할인모형에서 성장률을 1%포인트 올렸을 때 평가액이 크게 오르는 이유를 식의 구조로 설명하세요.",
+        answerChecklist: ["분모가 r−g", "작은 수", "분모가 줄면 결과 급증", "가정과 함께 읽어야 함"],
+        requiredConcepts: ["terminal-growth-sensitivity"],
+        sectionId: "ddm",
+      },
+      {
+        level: "basic",
+        question:
+          "평가 배수가 가정을 없애 주지 않는다는 말이 무슨 뜻인지 설명하세요.",
+        answerChecklist: ["비교 대상이 제대로 평가됐다는 가정", "시장이 비싸면 배수도 비쌈", "가정을 옮길 뿐", "역산 도구로 유용"],
+        requiredConcepts: ["valuation-multiple"],
+        sectionId: "multiples",
+      },
+      {
+        level: "advanced",
+        question:
+          "자본구조 무관 명제가 성립하는 논리를 복제 논증으로 설명하고, 현실에서 자본구조가 가치를 바꾼다면 어떤 조건이 깨진 것인지 쓰세요.",
+        answerChecklist: [
+          "투자자가 개인 차입으로 복제 가능",
+          "차익거래가 두 가치를 같게 만듦",
+          "세금·파산 비용·정보 비대칭",
+          "무관하다는 뜻이 아님",
+        ],
+        requiredConcepts: ["capital-structure-irrelevance", "financial-leverage"],
+        sectionId: "structure-neutrality",
+      },
+      {
+        level: "advanced",
+        question:
+          "ROE가 높은 회사가 반드시 좋은 회사는 아닌 이유를, 레버리지 식에서 드러나지 않는 것이 무엇인지와 함께 설명하세요.",
+        answerChecklist: [
+          "레버리지로 만든 ROE일 수 있음",
+          "기대값과 함께 변동폭도 커짐",
+          "위험은 식에 숫자로 없음",
+          "같은 ROE도 질이 다름",
+        ],
+        requiredConcepts: ["financial-leverage", "limited-liability-payoff"],
+        sectionId: "leverage",
+      },
+      {
+        level: "advanced",
+        question:
+          "영구 성장률이 경제 전체의 장기 성장률을 넘을 수 없는 이유를 설명하고, 그 제약을 빠뜨린 평가가 왜 위험한지 쓰세요.",
+        answerChecklist: [
+          "영원히 더 빨리 자라면 경제보다 커짐",
+          "지속 불가능한 가정",
+          "분모가 작아 값이 폭발",
+          "원하는 답을 만들 수 있음",
+        ],
+        requiredConcepts: ["terminal-growth-sensitivity", "dividend-discount-model"],
+        sectionId: "ddm",
+      },
+      {
+        level: "advanced",
+        question:
+          "자본구조가 다른 두 회사를 주가수익비율로 비교할 때 생기는 왜곡과, 그것을 피하려면 분자·분모를 어떻게 맞춰야 하는지 설명하세요.",
+        answerChecklist: [
+          "주가는 주주 몫만 반영",
+          "이자 차감 전 이익과 짝이 안 맞음",
+          "빚 많은 회사가 싸 보임",
+          "기업가치와 영업 성과로 짝을 맞춤",
+        ],
+        requiredConcepts: ["valuation-multiple", "financial-leverage"],
+        sectionId: "multiple-traps",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Modigliani · Miller · The Cost of Capital, Corporation Finance and the Theory of Investment (American Economic Review 48(3), 1958)",
+        href: "https://www.aeaweb.org/aer/top20/48.3.261-297.pdf",
+        problem:
+          "부채를 섞으면 주주 수익률이 올라가므로 자본구조를 바꾸는 것만으로 기업 가치를 키울 수 있는지가 정리되어 있지 않았습니다.",
+        contribution:
+          "증권을 사는 쪽이 스스로 차입·대출할 수 있어 어떤 자본구조의 회사에서든 같은 손익을 복제할 수 있으므로, 기업의 시장가치가 자본구조와 무관하다는 명제를 제시했습니다.",
+        assumptions:
+          "세금과 파산 비용이 없고 정보가 대칭이며 개인과 기업이 같은 조건으로 차입할 수 있는 시장을 전제합니다.",
+        evidenceScope:
+          "1958년 American Economic Review에 실린 이론 논문으로, 전제가 성립하는 범위 안의 결과입니다.",
+        notClaim:
+          "현실의 자본구조 선택을 정당화하거나 부정하는 근거가 아닙니다. 오히려 배제된 마찰 가운데 무엇이 실제로 작동하는지를 묻는 출발점으로 읽어야 합니다.",
+        sectionId: "structure-neutrality",
+      },
+    ],
+  },
 };

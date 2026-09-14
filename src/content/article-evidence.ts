@@ -7098,4 +7098,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "만기수익률·수익률 곡선 등 본문 용어의 한국어 표준 표기를 맞추는 데 사용. 계산식의 근거가 아니라 표기 기준",
     },
   ],
+  "markets/equity-claims-and-valuation": [
+    {
+      kind: "핵심 논문",
+      label: "Modigliani·Miller · The Cost of Capital… (AER 48(3), 1958)",
+      href: "https://www.aeaweb.org/aer/top20/48.3.261-297.pdf",
+      note: "자본구조와 기업 가치의 무관 명제에 대한 근거. 세금·파산 비용·정보 비대칭이 없는 조건에서의 결과이며 현실 자본구조 선택의 정당화 근거가 아님",
+    },
+    {
+      kind: "공식 문서",
+      label: "한국은행 · 경제금융용어 800선 (2026)",
+      href: "https://www.bok.or.kr/portal/bbs/B0000249/view.do?nttId=10096081&menuNo=200765",
+      note: "잔여청구권·자기자본수익률·주가수익비율 등 본문 용어의 한국어 표준 표기를 맞추는 데 사용. 계산식의 근거가 아니라 표기 기준",
+    },
+  ],
 };
