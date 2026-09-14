@@ -78461,4 +78461,310 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "governance/bureaucracy-and-implementation": {
+    entryNote:
+      "앞 일곱 글은 전부 여럿의 뜻이 어떻게 하나의 결정이 되는가였습니다. 여기서는 그 결정이 실제 행동이 되기까지 남은 사슬을 봅니다.",
+    coreIdea:
+      "집행하려면 맡겨야 하고 맡기는 순간 아는 것이 갈리므로, 결정문과 실제 결과 사이의 간극은 누구의 잘못이 없어도 남습니다. 규칙으로 묶으면 재량이 죽고 재량을 주면 통제가 죽으며, 셀 수 있는 것에 보상을 걸수록 셀 수 없는 것이 밀려나므로, 통제 수단을 고르는 일은 무엇을 값으로 치를지 고르는 일입니다.",
+    assumedKnowledge: [
+      {
+        id: "state-capacity",
+        role: "결정을 실제로 관철하는 역량이 따로 있다는 것을 여기서 가져옵니다.",
+      },
+      {
+        id: "separation-of-powers",
+        role: "확인하는 기관과 집행하는 기관이 갈라져 있어야 통제가 성립한다는 데 씁니다.",
+      },
+      {
+        id: "organizational-bias",
+        role: "투명성이라는 수단이 왜 고르게 작동하지 않는지를 설명하는 데 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "delegation-necessity",
+        role: "맡기는 것이 선택이 아니라는 조건을 세웁니다.",
+      },
+      {
+        id: "principal-agent-in-government",
+        role: "맡기는 순간 생기는 어긋남을 두 갈래로 정의합니다.",
+      },
+      {
+        id: "rules-versus-discretion",
+        role: "그 어긋남에 대한 첫 대응과 그 대가를 정의합니다.",
+      },
+      {
+        id: "street-level-discretion",
+        role: "규칙이 비운 자리를 누가 채우는지 정의합니다.",
+      },
+      {
+        id: "multitask-incentive-distortion",
+        role: "지표로 관리할 때 생기는 쏠림을 계산으로 보입니다.",
+      },
+      {
+        id: "ex-ante-and-ex-post-control",
+        role: "맡긴 쪽이 쓸 수 있는 수단과 각각의 값을 정리합니다.",
+      },
+      {
+        id: "bureaucratic-drift",
+        role: "이 모든 것이 쌓여 남는 간극을 이름 붙입니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "delegation-necessity",
+        sectionId: "why-delegate",
+        intuition:
+          "법은 일반적인 문장이고 현실은 개별 사안이라 그 사이를 잇는 일이 따로 남습니다.",
+        workedExample:
+          "사안의 양, 필요한 전문성, 현실이 바뀌는 속도 셋 다 결정하는 자리에 앉은 수백 명이 감당할 수 있는 것이 아닙니다.",
+        boundary:
+          "위임이 불가피하다는 것이 아무 조건 없이 맡겨도 된다는 뜻은 아닙니다. 한국 헌법은 범위를 구체적으로 정해 위임하도록 조건을 겁니다.",
+      },
+      {
+        id: "principal-agent-in-government",
+        sectionId: "agency",
+        intuition:
+          "맡긴다는 것은 자기가 하지 않는다는 뜻이고, 하지 않으면 보이지 않습니다.",
+        workedExample:
+          "필요한 예산 규모는 그 일을 하는 조직에서 들어야 하고, 사고가 줄지 않은 것이 소홀함 때문인지 그해 사정 때문인지는 결과만 보아서는 가릴 수 없습니다.",
+        boundary:
+          "나쁜 사람 때문에 생기는 문제가 아니므로 사람을 바꾸어도 남습니다. 완전히 정직한 조직에서도 같은 어긋남이 있습니다.",
+      },
+      {
+        id: "rules-versus-discretion",
+        sectionId: "rules-or-discretion",
+        intuition:
+          "미리 적어 두면 통제가 되지만 적어 두지 못한 사정에는 대응할 수 없습니다.",
+        workedExample:
+          "규칙에 없는 사정이 있어도 담당자는 규칙대로 처리하고, 결과가 명백히 나빠도 규칙을 지킨 것이 잘못일 수 없으므로 아무도 책임지지 않습니다.",
+        boundary:
+          "어느 한쪽을 고르는 문제가 아닙니다. 사안이 정형적인지, 결과에 운이 얼마나 섞였는지, 잘못의 손해가 한쪽으로 쏠리는지에 따라 경계가 달라집니다.",
+      },
+      {
+        id: "street-level-discretion",
+        sectionId: "street-level",
+        intuition:
+          "자원이 사안 수보다 적으면 무엇을 먼저 볼지 누군가 정해야 하는데, 그 순서는 규칙에 없습니다.",
+        workedExample:
+          "창구의 담당자가 만든 처리 요령이 쌓여, 실제 정책은 법률이 아니라 그 요령의 총합에 가까워집니다.",
+        boundary:
+          "이 요령은 규칙 위반이 아니라 규칙이 비운 자리를 메우는 것이므로, 법문만 고쳐서는 집행이 바뀌지 않습니다.",
+      },
+      {
+        id: "multitask-incentive-distortion",
+        sectionId: "measurement",
+        intuition:
+          "셀 수 있는 일과 셀 수 없는 일이 같은 시간을 두고 다투면, 한쪽에만 걸린 보상이 다른 쪽을 끌어내립니다.",
+        workedExample:
+          "다투는 정도를 0.5, 직업의식을 10으로 두면 성과급 계수 5에서 노력이 0과 10, 10에서 6.67과 6.67, 15에서 13.33과 3.33, 20에서 20과 0이 됩니다.",
+        proofIdea:
+          "담당자는 셀 수 있는 일에서 β, 셀 수 없는 일에서 μ를 얻고, 두 일이 서로 부담을 키우는 정도를 γ로 둡니다. 각 일에서 한 단위 더 했을 때 얻는 것과 드는 것이 같아지는 두 조건을 β = e₁ + γe₂, μ = e₂ + γe₁로 적고 함께 풀면 e₁ = (β − γμ)/(1 − γ²), e₂ = (μ − γβ)/(1 − γ²)가 나옵니다. 두 번째 식을 β로 미분하면 −γ/(1 − γ²)이며 γ가 0보다 크면 언제나 음수입니다.",
+        counterexample:
+          "두 일이 시간을 두고 다투지 않으면(γ = 0) 성과급을 아무리 올려도 셀 수 없는 일의 노력이 줄지 않습니다. 셀 수 없는 쪽의 가치가 작은 경우에도 같은 계산에서 성과급이 순이익을 냅니다.",
+        boundary:
+          "성과급이 언제나 해롭다는 결론이 아닙니다. 계산이 가리키는 것은 셀 수 없는 쪽이 중요할수록 보상을 약하게 두거나 두 일을 다른 사람에게 나누라는 것입니다.",
+      },
+      {
+        id: "ex-ante-and-ex-post-control",
+        sectionId: "control",
+        intuition:
+          "미리 조건을 걸거나, 뒤에 확인하거나, 여럿에게 시켜 견주거나, 밖에서 보이게 합니다.",
+        workedExample:
+          "감사와 국정조사는 개별 사안을 실제로 들여다보므로 정확하지만 비용이 커서 드물게만 할 수 있고, 그래서 문제가 소리를 내야 작동합니다.",
+        boundary:
+          "네 수단 모두 값을 치릅니다. 규칙의 경직성, 낮은 빈도, 중복과 기관 간 다툼, 감시하는 눈의 편중이 각각의 값입니다.",
+      },
+      {
+        id: "bureaucratic-drift",
+        sectionId: "boundary",
+        intuition:
+          "각 단계에서 조금씩 달라진 것이 쌓여 결정문과 다른 결과가 됩니다.",
+        workedExample:
+          "위임에서 한 번, 재량에서 한 번, 지표에서 한 번 달라진 것이 합쳐집니다.",
+        boundary:
+          "태도 문제로 읽으면 고칠 수 있는 지점을 찾지 못합니다. 물어야 할 것은 누가 게을렀는가가 아니라 어느 단계의 조건이 그 결과를 만들었는가입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 맡김",
+        relation: "집행하려면 맡길 수밖에 없다는 조건입니다.",
+        concepts: ["delegation-necessity"],
+      },
+      {
+        label: "01 갈림",
+        relation: "맡기는 순간 아는 것이 갈립니다.",
+        concepts: ["principal-agent-in-government"],
+      },
+      {
+        label: "02 묶기",
+        relation: "묶으면 통제를 얻고 대응을 잃습니다.",
+        concepts: ["rules-versus-discretion", "street-level-discretion"],
+      },
+      {
+        label: "03 재기",
+        relation: "재는 것이 하는 것을 정합니다.",
+        concepts: ["multitask-incentive-distortion"],
+      },
+      {
+        label: "04 남는 것",
+        relation: "수단들이 값을 치르고 나서도 간극이 남습니다.",
+        concepts: ["ex-ante-and-ex-post-control", "bureaucratic-drift"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "의회가 모든 것을 직접 정할 수 없는 이유를 세 가지로 쓰세요.",
+        answerChecklist: [
+          "개별 사안의 양",
+          "필요한 전문성",
+          "현실이 바뀌는 속도",
+          "의지가 아니라 조건의 문제",
+        ],
+        requiredConcepts: ["delegation-necessity"],
+        sectionId: "why-delegate",
+      },
+      {
+        level: "basic",
+        question:
+          "맡기는 순간 생기는 어긋남의 두 갈래를 구분해 쓰세요.",
+        answerChecklist: [
+          "맡은 쪽만 아는 정보를 검증할 수 없음",
+          "실제로 무엇을 했는지 보이지 않음",
+          "결과에 운이 섞여 역산이 안 됨",
+          "정직해도 남는 구조적 문제",
+        ],
+        requiredConcepts: ["principal-agent-in-government"],
+        sectionId: "agency",
+      },
+      {
+        level: "basic",
+        question:
+          "규칙으로 묶었을 때 얻는 것과 잃는 것을 각각 쓰세요.",
+        answerChecklist: [
+          "누가 맡아도 같은 답이라 예측 가능",
+          "이의를 제기할 근거가 생김",
+          "규칙에 없는 사정에 대응 못 함",
+          "결과가 나빠도 규칙을 지킨 것은 잘못이 아님",
+        ],
+        requiredConcepts: ["rules-versus-discretion"],
+        sectionId: "rules-or-discretion",
+      },
+      {
+        level: "basic",
+        question:
+          "일선의 처리 요령이 규칙 위반이 아니라고 하는 이유를 쓰세요.",
+        answerChecklist: [
+          "규칙이 모든 순서를 정해 주지 않음",
+          "자원이 사안 수보다 적음",
+          "누군가는 순서를 정해야 함",
+          "그 자리에 있는 사람이 정함",
+        ],
+        requiredConcepts: ["street-level-discretion"],
+        sectionId: "street-level",
+      },
+      {
+        level: "basic",
+        question:
+          "다투는 정도 0.5, 직업의식 10일 때 성과급 계수 15에서 두 노력을 구하세요.",
+        answerChecklist: [
+          "e₁ = (15 − 5) ÷ 0.75",
+          "e₁ = 13.33",
+          "e₂ = (10 − 7.5) ÷ 0.75",
+          "e₂ = 3.33",
+        ],
+        requiredConcepts: ["multitask-incentive-distortion"],
+        sectionId: "measurement",
+      },
+      {
+        level: "basic",
+        question:
+          "맡긴 쪽이 쓸 수 있는 통제 수단 네 가지와 각각의 대가를 쓰세요.",
+        answerChecklist: [
+          "미리 조건 걸기 · 규칙의 경직성",
+          "뒤에 확인하기 · 비용이 커서 드묾",
+          "여럿에게 시켜 견주기 · 중복과 다툼",
+          "밖에서 보이게 하기 · 감시하는 눈의 편중",
+        ],
+        requiredConcepts: ["ex-ante-and-ex-post-control"],
+        sectionId: "control",
+      },
+      {
+        level: "advanced",
+        question:
+          "성과급 계수를 올릴 때 셀 수 없는 일의 노력이 줄어든다는 것을 두 유인 조건에서 유도하세요.",
+        answerChecklist: [
+          "β = e₁ + γe₂, μ = e₂ + γe₁",
+          "e₂ = (μ − γβ)/(1 − γ²)",
+          "β로 미분하면 −γ/(1 − γ²)",
+          "γ > 0이면 언제나 음수",
+        ],
+        requiredConcepts: ["multitask-incentive-distortion"],
+        sectionId: "measurement",
+      },
+      {
+        level: "advanced",
+        question:
+          "지표가 좋아지는 동안 전체 가치가 떨어질 수 있는 조건을 계산으로 설명하세요.",
+        answerChecklist: [
+          "셀 수 없는 쪽의 단위당 가치가 더 큼",
+          "성과급을 올리면 e₁은 늘고 e₂는 줌",
+          "가치 합이 줄어드는 구간이 생김",
+          "관리 화면의 숫자는 예외 없이 좋아짐",
+        ],
+        requiredConcepts: ["multitask-incentive-distortion", "bureaucratic-drift"],
+        sectionId: "measurement",
+      },
+      {
+        level: "advanced",
+        question:
+          "지표를 없애는 것이 해법이 아닌 이유와, 계산이 실제로 가리키는 두 가지 처방을 쓰세요.",
+        answerChecklist: [
+          "없애면 한 일이 다시 보이지 않음",
+          "절차 준수만 남고 결과는 모름",
+          "셀 수 없는 쪽이 중요할수록 보상을 약하게",
+          "두 일을 다른 사람에게 나누기",
+        ],
+        requiredConcepts: [
+          "multitask-incentive-distortion",
+          "ex-ante-and-ex-post-control",
+        ],
+        sectionId: "measurement",
+      },
+      {
+        level: "advanced",
+        question:
+          "집행이 잘 안 될 때 태도 대신 무엇을 물어야 하는지, 고칠 수 있는 지점을 세 곳 들어 쓰세요.",
+        answerChecklist: [
+          "어느 단계의 조건이 그 결과를 만들었는가",
+          "지표가 잘못 걸려 있는지",
+          "규칙이 현실과 어긋난 채 유지되는지",
+          "마지막 창구의 자원이 사안 수보다 적은지",
+        ],
+        requiredConcepts: ["bureaucratic-drift", "street-level-discretion"],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Bengt Holmström · Paul Milgrom · Multitask Principal–Agent Analyses (1991)",
+        href: "https://www.jstor.org/stable/764957",
+        problem:
+          "한 사람이 한 가지 일만 한다고 두는 기존 유인 모형으로는 고용 계약이 왜 그렇게 자주 고정급을 쓰는지, 조직 안의 유인이 왜 시장보다 훨씬 약한지가 설명되지 않았습니다.",
+        contribution:
+          "한 사람이 여러 일을 맡거나 한 일에 여러 측면이 있는 경우로 모형을 확장해, 한 과업의 보상을 올리면 다른 과업에서 주의가 옮겨 간다는 것을 보였습니다. 그 결과 어떤 활동에 유인을 거는 것의 바람직함이 다른 활동의 측정 난이도에 따라 낮아지고, 측정된 성과와 무관한 고정급이 최적일 수 있다는 결론이 나옵니다.",
+        assumptions:
+          "담당자의 비용이 여러 일에 들인 총 노력에만 의존한다고 두어, 한 일의 보상 증가가 반드시 다른 일에서 주의를 빼 오게 만듭니다. 보수 계약이 선형이라고 둡니다.",
+        evidenceScope:
+          "Journal of Law, Economics, and Organization 7권 특별호 24~52쪽에 실린 이론 논문이며, 대학 서버에 공개된 사본에서 전문을 확인했습니다. 형식 모형과 그 함의에 한정되고 실제 조직의 성과 자료로 검증한 연구가 아닙니다.",
+        notClaim:
+          "성과급이 언제나 해롭다는 주장이 아니며, 결론은 다른 활동의 측정이 어렵고 그 활동이 같은 시간을 두고 경쟁할 때로 한정됩니다. 또 이 글에 실린 식은 논문의 모형을 그대로 옮긴 것이 아니라 같은 결론을 짧게 보이려고 단순화해 전개한 것입니다.",
+        sectionId: "measurement",
+      },
+    ],
+  },
 };

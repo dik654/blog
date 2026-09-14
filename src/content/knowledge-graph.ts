@@ -23778,6 +23778,79 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "규제 기관이 판단에 필요한 정보와 사람을 거의 전부 규제받는 쪽에서 얻게 되어 시야가 그쪽과 비슷해지는 상태입니다. 누가 누구에게 무엇을 준 사건이 아니라 흐름이 한쪽으로만 나 있는 구조이므로, 개별 부정을 적발해도 흐름이 남아 있으면 같은 결과가 다시 나옵니다.",
     canonicalHref: "/politics/elections/parties-and-interest-groups#capture",
   },
+  "delegation-necessity": {
+    id: "delegation-necessity",
+    kind: "concept",
+    domain: "political-science",
+    label: "위임의 불가피성",
+    aliases: ["위임입법", "집행 위임"],
+    definition:
+      "법률은 일반적인 문장이고 현실은 개별 사안이라, 사안의 양과 필요한 전문성과 변화의 속도 때문에 결정한 쪽이 직접 집행할 수 없다는 조건입니다. 그래서 문제는 맡길지 말지가 아니라 어떤 조건을 붙여 맡길지가 되며, 한국 헌법도 위임을 허용하되 범위를 구체적으로 정하도록 조건을 겁니다.",
+    canonicalHref: "/politics/governance/bureaucracy-and-implementation#why-delegate",
+  },
+  "principal-agent-in-government": {
+    id: "principal-agent-in-government",
+    kind: "concept",
+    domain: "political-science",
+    label: "통치에서의 주인·대리인 어긋남",
+    aliases: ["정보 비대칭", "숨은 정보", "숨은 행동"],
+    definition:
+      "맡긴 쪽은 무엇을 원하는지 알고 맡은 쪽은 현장에서 무슨 일이 일어나는지 아는 상태이며, 가진 정보가 보이지 않는 갈래와 한 일이 보이지 않는 갈래로 나타납니다. 맡긴다는 것이 곧 자기가 하지 않는다는 뜻이므로 완전히 정직한 조직에서도 남습니다.",
+    canonicalHref: "/politics/governance/bureaucracy-and-implementation#agency",
+  },
+  "rules-versus-discretion": {
+    id: "rules-versus-discretion",
+    kind: "concept",
+    domain: "political-science",
+    label: "규칙과 재량의 맞바꿈",
+    aliases: ["절차 통제", "행정 재량"],
+    definition:
+      "미리 적어 둘수록 예측 가능성과 통제를 얻지만 규칙에 없는 사정에 대응할 여지를 잃고, 재량을 줄수록 대응은 가능해지지만 통제와 예측 가능성을 잃는 관계입니다. 어느 쪽을 고르는 문제가 아니라 사안의 정형성·결과 관찰 가능성·손해의 쏠림에 따라 경계를 정하는 문제입니다.",
+    canonicalHref:
+      "/politics/governance/bureaucracy-and-implementation#rules-or-discretion",
+  },
+  "street-level-discretion": {
+    id: "street-level-discretion",
+    kind: "concept",
+    domain: "political-science",
+    label: "일선의 재량",
+    aliases: ["창구 재량", "현장 관행", "street-level bureaucracy"],
+    definition:
+      "규칙이 모든 순서를 정해 주지 않고 자원이 사안 수보다 늘 모자라므로, 마지막 창구의 담당자가 만든 처리 요령이 실제 정책이 되는 현상입니다. 규칙 위반이 아니라 규칙이 비운 자리를 메우는 것이므로, 집행을 바꾸려면 법문이 아니라 이 자리의 조건을 바꿔야 합니다.",
+    canonicalHref:
+      "/politics/governance/bureaucracy-and-implementation#street-level",
+  },
+  "multitask-incentive-distortion": {
+    id: "multitask-incentive-distortion",
+    kind: "theorem",
+    domain: "political-science",
+    label: "측정 가능한 과업으로의 노력 쏠림",
+    aliases: ["다중과업 왜곡", "지표 관리", "multitask distortion"],
+    definition:
+      "한 사람이 맡은 일에 셀 수 있는 부분과 셀 수 없는 부분이 섞여 있고 둘이 같은 시간을 두고 다툴 때, 셀 수 있는 쪽에 건 보상을 올릴수록 셀 수 없는 쪽의 노력이 줄어든다는 결과입니다. 어느 지점에서는 정확히 0이 되며, 셀 수 없는 쪽이 더 중요하면 지표가 좋아지는 동안 전체 가치가 떨어집니다.",
+    canonicalHref:
+      "/politics/governance/bureaucracy-and-implementation#measurement",
+  },
+  "ex-ante-and-ex-post-control": {
+    id: "ex-ante-and-ex-post-control",
+    kind: "method",
+    domain: "political-science",
+    label: "사전 통제와 사후 통제",
+    aliases: ["감사", "국정조사", "조직 설계", "복수 기관"],
+    definition:
+      "맡긴 쪽이 쓰는 네 가지 수단으로, 미리 조건을 거는 것·벌어진 뒤 확인하는 것·여럿에게 시켜 견주는 것·밖에서 보이게 하는 것입니다. 각각 규칙의 경직성, 높은 비용과 낮은 빈도, 중복과 기관 간 다툼, 감시하는 눈의 편중을 값으로 치릅니다.",
+    canonicalHref: "/politics/governance/bureaucracy-and-implementation#control",
+  },
+  "bureaucratic-drift": {
+    id: "bureaucratic-drift",
+    kind: "concept",
+    domain: "political-science",
+    label: "집행의 표류",
+    aliases: ["결정과 결과의 간극", "implementation gap"],
+    definition:
+      "결정문에 적힌 것과 실제로 일어난 것 사이에 남는 차이이며, 위임·재량·측정의 각 단계에서 조금씩 생긴 것이 쌓인 결과입니다. 누구의 태만이나 부패가 없어도 같은 차이가 남으므로, 태도 문제로 읽으면 실제로 고칠 수 있는 지점을 찾지 못합니다.",
+    canonicalHref: "/politics/governance/bureaucracy-and-implementation#boundary",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -43759,6 +43832,90 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "기관이 스스로 정보를 모을 역량을 갖추면 규제받는 쪽에서 오는 자료에 덜 기대게 됩니다.",
+  },
+  {
+    from: "state-capacity",
+    to: "delegation-necessity",
+    relation: "prerequisite",
+    reason:
+      "결정을 실제로 관철할 실행 역량이 따로 있다는 것을 본 뒤에야, 그 역량을 누구에게 맡기는지가 문제가 됩니다.",
+  },
+  {
+    from: "delegation-necessity",
+    to: "principal-agent-in-government",
+    relation: "produces",
+    reason:
+      "맡긴다는 것이 곧 자기가 하지 않는다는 뜻이므로, 맡기는 순간 아는 것이 갈립니다.",
+  },
+  {
+    from: "principal-agent-in-government",
+    to: "rules-versus-discretion",
+    relation: "produces",
+    reason:
+      "보이지 않는 것을 통제하려는 첫 시도가 미리 적어 두는 것이고, 거기서 맞바꿈이 나옵니다.",
+  },
+  {
+    from: "rules-versus-discretion",
+    to: "street-level-discretion",
+    relation: "produces",
+    reason:
+      "규칙이 모든 순서를 정해 주지 못하므로 마지막 창구에서 누군가는 그 빈자리를 채워야 합니다.",
+  },
+  {
+    from: "principal-agent-in-government",
+    to: "multitask-incentive-distortion",
+    relation: "produces",
+    reason:
+      "한 일이 보이지 않아 지표를 만들면, 셀 수 있는 것과 중요한 것이 다를 때 쏠림이 생깁니다.",
+  },
+  {
+    from: "multitask-incentive-distortion",
+    to: "ex-ante-and-ex-post-control",
+    relation: "constrains",
+    reason:
+      "결과로 평가하는 통제가 언제 해로운지를 정해 주므로, 어떤 수단을 쓸지의 선택을 좁힙니다.",
+  },
+  {
+    from: "rules-versus-discretion",
+    to: "ex-ante-and-ex-post-control",
+    relation: "extends",
+    reason:
+      "미리 거는 조건과 뒤에 확인하는 절차를 짝으로 놓으면 통제 수단의 목록이 완성됩니다.",
+  },
+  {
+    from: "street-level-discretion",
+    to: "bureaucratic-drift",
+    relation: "produces",
+    reason:
+      "창구마다 만들어진 요령이 쌓여 결정문과 다른 결과를 만듭니다.",
+  },
+  {
+    from: "multitask-incentive-distortion",
+    to: "bureaucratic-drift",
+    relation: "produces",
+    reason:
+      "지표에 쏠린 노력이 결정이 의도한 것과 다른 결과를 남깁니다.",
+  },
+  {
+    from: "organizational-bias",
+    to: "ex-ante-and-ex-post-control",
+    relation: "constrains",
+    reason:
+      "공개해도 감시하는 눈이 조직된 쪽에 훨씬 많으므로, 투명성이라는 수단이 고르게 작동하지 않습니다.",
+  },
+  {
+    from: "separation-of-powers",
+    to: "ex-ante-and-ex-post-control",
+    relation: "prerequisite",
+    reason:
+      "감사와 국정조사가 통제 수단이 되려면 확인하는 기관이 집행하는 기관과 갈라져 있어야 합니다.",
+  },
+  {
+    from: "delegation-necessity",
+    to: "regulatory-capture",
+    relation: "constrains",
+    reason:
+      "전문성 때문에 맡길 수밖에 없다는 조건이 정보를 규제받는 쪽에서 얻게 만드는 출발점이 됩니다.",
   },
 ];
 

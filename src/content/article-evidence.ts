@@ -7216,4 +7216,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "이전을 얻으려는 지출 자체가 사회적 손실이라는 논증의 출처. 저자 자신이 측정 방법은 제시하지 못한다고 적음",
     },
   ],
+  "governance/bureaucracy-and-implementation": [
+    {
+      kind: "보충 읽기",
+      label:
+        "Holmström · Milgrom, Multitask Principal–Agent Analyses (JLEO 7 Sp, 1991)",
+      href: "https://www.jstor.org/stable/764957",
+      note: "한 과업의 보상이 다른 과업에서 주의를 빼 온다는 결과의 출처. 이론 논문이며 실증 검증은 아님",
+    },
+    {
+      kind: "공식 문서",
+      label: "대한민국헌법 제75조·제96조 (한국법제연구원 영문 번역본)",
+      href: "https://elaw.klri.re.kr/eng_service/lawView.do?hseq=1&lang=ENG",
+      note: "위임의 범위 조건과 행정조직 법정주의. 번역본은 참조용이며 법적 효력은 국문 원문에 있음",
+    },
+  ],
 };
