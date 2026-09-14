@@ -7148,4 +7148,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "자치 관리가 성립하는 조건 목록의 근거. 관찰된 공통점이지 성공의 충분조건이 아니며, 원 저작(Governing the Commons, 1990)은 서지만 확인",
     },
   ],
+  "polity/state-and-legitimacy": [
+    {
+      kind: "보충 읽기",
+      label: "Max Weber · Politics as a Vocation (Internet Archive 공개본)",
+      href: "https://archive.org/details/weber_max_1864_1920_politics_as_a_vocation",
+      note: "영토 내 정당한 강제력 독점이라는 국가 정의의 근거. 개념 규정이며 정당화 논증이 아님",
+    },
+    {
+      kind: "공식 문서",
+      label: "Indiana University Ostrom Workshop · Ostrom Design Principles",
+      href: "https://ostromworkshop.indiana.edu/courses-teaching/teaching-tools/ostrom-design/index.html",
+      note: "앞 글에서 다룬 자치 조건이 규모 때문에 깨진다는 서술을 잇는 참조. 이 글의 주장 자체의 근거는 아님",
+    },
+  ],
 };
