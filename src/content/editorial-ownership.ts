@@ -11611,6 +11611,33 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "time-value-and-discounting": {
+    title: "지금의 1만 원과 1년 뒤의 1만 원은 다른 값입니다 글이 소유하는 범위",
+    owns: [
+      "시점이 다른 금액을 한 시점으로 환산해야 비교·합산이 성립한다는 원칙",
+      "복리의 거듭제곱 형태와 이자 지급 주기가 실효 수익률을 바꾸는 경계",
+      "할인계수의 정의와 할인율이 선택값이라는 점, 그리고 위험을 이중으로 반영하면 안 되는 이유",
+      "순현재가치의 판정 기준과 등비수열로 정리되는 연금 형태의 유도",
+      "내부수익률의 수치 해법과 복수해·규모 차이에서 무너지는 조건",
+      "명목금리와 실질금리의 나눗셈 관계, 뺄셈 근사의 유효 범위, 사전·사후 구분",
+    ],
+    reuses: [
+      {
+        label: "돈이 구매력을 미래로 옮기는 기능",
+        href: "/finance/money/money-as-a-claim#three-functions",
+      },
+      {
+        label: "거듭제곱과 로그의 기본 성질",
+        href: "/cs/ai/math-exponents-logarithms#exponents",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "금리·물가 수치는 계산을 보이기 위한 예시임을 본문에 밝히고, 특정 시점의 실제 시장금리를 사실로 인용하지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
