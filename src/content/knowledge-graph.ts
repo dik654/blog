@@ -23851,6 +23851,76 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "결정문에 적힌 것과 실제로 일어난 것 사이에 남는 차이이며, 위임·재량·측정의 각 단계에서 조금씩 생긴 것이 쌓인 결과입니다. 누구의 태만이나 부패가 없어도 같은 차이가 남으므로, 태도 문제로 읽으면 실제로 고칠 수 있는 지점을 찾지 못합니다.",
     canonicalHref: "/politics/governance/bureaucracy-and-implementation#boundary",
   },
+  "international-anarchy": {
+    id: "international-anarchy",
+    kind: "concept",
+    domain: "political-science",
+    label: "국제 무정부",
+    aliases: ["국제적 주권자의 부재", "anarchy"],
+    definition:
+      "국가들 위에 최종 판정과 집행의 자리가 없는 상태이며, 질서가 없다는 뜻이 아니라 그 위가 비어 있다는 뜻입니다. 강제력의 독점을 이루는 세 조건이 모두 성립하지 않아, 다툼을 끝내 주는 자리와 약속을 대신 집행해 주는 자리가 사라집니다.",
+    canonicalHref: "/politics/governance/international-anarchy#no-sovereign",
+  },
+  "self-help-security": {
+    id: "self-help-security",
+    kind: "concept",
+    domain: "political-science",
+    label: "자력구제",
+    aliases: ["self-help", "스스로 지킴"],
+    definition:
+      "최후에 기댈 곳이 자기 자신뿐인 상태이며, 언제나 싸운다는 뜻이 아니라 그 사실이 평시의 선택까지 바꾼다는 뜻입니다. 지금 아무도 공격할 뜻이 없어도 나중에 그럴 수 있다는 가능성만으로 대비에 자원을 쓰게 됩니다.",
+    canonicalHref: "/politics/governance/international-anarchy#no-sovereign",
+  },
+  "security-dilemma": {
+    id: "security-dilemma",
+    kind: "concept",
+    domain: "political-science",
+    label: "안보 딜레마",
+    aliases: ["security dilemma", "군비 경쟁의 구조"],
+    definition:
+      "자기 안전을 높이려고 쓰는 수단의 상당수가 다른 나라의 안전을 떨어뜨려, 서로 나쁜 뜻이 없어도 양쪽이 자원을 더 쓰고 둘 다 덜 안전해지는 구조입니다. 상대의 의도를 정확히 알 수 없고 알더라도 그 의도가 유지된다는 보장이 없으므로 선의만으로는 벗어나지 못합니다.",
+    canonicalHref: "/politics/governance/international-anarchy#security-dilemma",
+  },
+  "shadow-of-the-future": {
+    id: "shadow-of-the-future",
+    kind: "theorem",
+    domain: "political-science",
+    label: "미래의 그림자와 협력의 문턱",
+    aliases: ["반복 게임", "할인인자 조건", "shadow of the future"],
+    definition:
+      "같은 상대를 계속 만날 때 한 번 어겨서 얻는 것과 관계를 이어서 얻는 것을 견주면, 다음에 또 만날 몫이 (T−R)/(T−P)를 넘어야 협력이 스스로 선다는 결과입니다. 강제하는 자리 없이도 약속이 설 수 있지만, 관계가 짧거나 어겨서 얻는 것이 크면 같은 약속이라도 무너집니다.",
+    canonicalHref: "/politics/governance/international-anarchy#shadow",
+  },
+  "institutions-without-enforcement": {
+    id: "institutions-without-enforcement",
+    kind: "method",
+    domain: "political-science",
+    label: "강제력 없는 국제 제도",
+    aliases: ["국제기구", "검증 절차", "사안 연계"],
+    definition:
+      "약속을 집행하는 대신 약속이 스스로 서는 조건을 만드는 장치입니다. 보고와 검증이 위반을 보이게 하고, 정기 회의와 갱신 주기가 다음에 또 만난다는 사실을 확정하며, 여러 사안을 묶으면 어겨서 잃는 값이 커집니다. 조건만 만들 뿐이므로 문턱을 넘지 못하는 사안에서는 아무 일도 일어나지 않습니다.",
+    canonicalHref: "/politics/governance/international-anarchy#institutions",
+  },
+  "relative-gains": {
+    id: "relative-gains",
+    kind: "concept",
+    domain: "political-science",
+    label: "상대적 이득",
+    aliases: ["누가 더 얻는가", "relative gains"],
+    definition:
+      "둘 다 이익을 보는 합의라도 한쪽이 더 많이 얻으면 그 차이가 나중에 힘의 차이가 되고, 자력구제 상태에서는 힘의 차이가 곧 안전의 차이가 된다는 고려입니다. 이 고려가 강할수록 서로에게 이익인 거래도 거부될 수 있고, 상대의 힘이 커져도 자기 안전이 줄지 않는 관계에서는 거의 사라집니다.",
+    canonicalHref: "/politics/governance/international-anarchy#limits",
+  },
+  "two-level-game": {
+    id: "two-level-game",
+    kind: "concept",
+    domain: "political-science",
+    label: "국내와 국제가 겹치는 협상",
+    aliases: ["양면 게임", "비준 제약", "two-level game"],
+    definition:
+      "국제 합의가 국내에서 비준되어야 하므로 그 나라가 받아들일 수 있는 안의 범위를 국내 거부권자들이 정한다는 구조입니다. 범위가 좁다는 사실 자체가 협상력이 되고 무엇이든 통과시킬 수 있는 대표는 더 많이 요구받으므로, 국내 제도는 국제 협상의 배경이 아니라 그 안의 변수입니다.",
+    canonicalHref: "/politics/governance/international-anarchy#limits",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -43916,6 +43986,90 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "전문성 때문에 맡길 수밖에 없다는 조건이 정보를 규제받는 쪽에서 얻게 만드는 출발점이 됩니다.",
+  },
+  {
+    from: "coercion-monopoly",
+    to: "international-anarchy",
+    relation: "contrasts",
+    reason:
+      "독점을 이루는 세 조건을 세워 두었기 때문에, 그 조건이 모두 깨진 상태를 정확히 규정할 수 있습니다.",
+  },
+  {
+    from: "international-anarchy",
+    to: "self-help-security",
+    relation: "produces",
+    reason:
+      "다툼을 끝내 주는 자리와 약속을 집행해 주는 자리가 없으면 남는 것은 각자의 판단과 각자의 힘뿐입니다.",
+  },
+  {
+    from: "self-help-security",
+    to: "security-dilemma",
+    relation: "produces",
+    reason:
+      "스스로 지켜야 하는데 지키는 수단의 상당수가 남을 위협하는 수단과 같아서, 서로의 대비가 서로를 덜 안전하게 만듭니다.",
+  },
+  {
+    from: "coercion-as-provision",
+    to: "international-anarchy",
+    relation: "constrains",
+    reason:
+      "강제를 통한 공급이라는 해법은 강제할 자리가 있을 때만 쓸 수 있으므로, 그 자리가 없으면 1편의 문제가 그대로 돌아옵니다.",
+  },
+  {
+    from: "security-dilemma",
+    to: "shadow-of-the-future",
+    relation: "prerequisite",
+    reason:
+      "서로 원하는 결과조차 어렵다는 것을 본 뒤에야, 그런데도 협력이 서는 경우의 조건을 따질 이유가 생깁니다.",
+  },
+  {
+    from: "discount-factor",
+    to: "shadow-of-the-future",
+    relation: "prerequisite",
+    reason:
+      "미래의 값을 오늘의 값으로 바꾸는 도구가 있어야 계속 지킬 때의 합과 한 번 어길 때의 합을 견줄 수 있습니다.",
+  },
+  {
+    from: "shadow-of-the-future",
+    to: "institutions-without-enforcement",
+    relation: "produces",
+    reason:
+      "문턱이 성립하려면 위반을 알아채고 다음에 또 만나야 하므로, 그 둘을 만드는 일이 기구의 실제 기능이 됩니다.",
+  },
+  {
+    from: "institutions-without-enforcement",
+    to: "shadow-of-the-future",
+    relation: "optimizes",
+    reason:
+      "사안을 묶고 검증을 강화하고 갱신 주기를 줄이면 어겨서 잃는 값이 커져 문턱 자체가 내려갑니다.",
+  },
+  {
+    from: "relative-gains",
+    to: "shadow-of-the-future",
+    relation: "constrains",
+    reason:
+      "각자가 자기 몫만 본다는 전제가 깨지면, 문턱을 넘는 합의도 상대가 더 얻는다는 이유로 거부될 수 있습니다.",
+  },
+  {
+    from: "self-help-security",
+    to: "relative-gains",
+    relation: "produces",
+    reason:
+      "최후에 기댈 곳이 자기 자신뿐이면 힘의 차이가 곧 안전의 차이가 되므로, 얼마를 얻는지뿐 아니라 누가 더 얻는지가 판단에 들어옵니다.",
+  },
+  {
+    from: "veto-player-winset",
+    to: "two-level-game",
+    relation: "prerequisite",
+    reason:
+      "국내 거부권자가 통과 가능한 영역을 좁힌다는 계산이 그대로 협상 테이블 위의 제약이 됩니다.",
+  },
+  {
+    from: "two-level-game",
+    to: "shadow-of-the-future",
+    relation: "constrains",
+    reason:
+      "정권이 바뀌면 상대가 달라지므로 다음에 또 만날 몫이 줄고, 그만큼 문턱을 넘기 어려워집니다.",
   },
 ];
 

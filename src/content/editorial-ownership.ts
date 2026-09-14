@@ -12094,6 +12094,42 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "international-anarchy": {
+    title: "여덟 글이 쌓은 구조에서 맨 위 칸을 지워 봅니다 글이 소유하는 범위",
+    owns: [
+      "무정부를 위가 비어 있는 상태로 규정하고 사라지는 것을 특정하는 일",
+      "자력구제가 평시의 선택까지 바꾼다는 관계",
+      "지키는 수단과 위협하는 수단이 같다는 데서 나오는 역설",
+      "강제 없이 협력이 서는 문턱과 그 유도",
+      "강제력 없는 기구가 문턱의 조건을 만든다는 설명",
+      "상대적 이득과 국내 비준 제약이 계산의 전제를 깨는 방식",
+      "정치 시리즈 아홉 글이 각각 무엇을 사고 무엇으로 값을 치렀는지의 정리",
+    ],
+    reuses: [
+      {
+        label: "강제력 독점을 이루는 세 조건",
+        href: "/politics/polity/state-and-legitimacy#why-monopoly",
+      },
+      {
+        label: "강제를 통한 공급과 그 대가",
+        href: "/politics/polity/collective-choice-problem#coercion",
+      },
+      {
+        label: "미래의 값을 오늘의 값으로 바꾸는 도구",
+        href: "/finance/money/time-value-and-discounting#discounting",
+      },
+      {
+        label: "거부권자가 통과 가능 영역을 좁힌다는 계산",
+        href: "/politics/constitution/constitutionalism-and-separation#checks",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "논문이 실제로 말한 것과 뒤에 표준이 된 분석을 구분해 적고, 특정 조약이나 분쟁의 사실관계는 확인하지 않은 채 싣지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
