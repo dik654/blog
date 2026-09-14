@@ -11824,6 +11824,46 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "capital-requirements-and-systemic-risk": {
+    title: "은행에만 미리 자본을 쌓게 하는 이유 글이 소유하는 범위",
+    owns: [
+      "은행 실패가 밖으로 번지는 세 경로와 그것이 외부효과인 이유",
+      "자본이 현금이 아니라 손실을 먼저 받는 순서라는 정의와 감당 가능한 손실률 계산",
+      "위험가중자산으로 분모를 바꾸는 이유와 그 설계가 만드는 우회 유인",
+      "자기자본비율의 해석과 값이 높아도 안전하지 않을 수 있는 조건",
+      "가중치를 쓰지 않는 단순 비율을 바닥으로 함께 두는 이유",
+      "자본 규제와 유동성 규제가 막는 실패의 구분",
+      "규제의 경기순응성과 완충자본 대응",
+    ],
+    reuses: [
+      {
+        label: "자산·부채·자기자본의 장부 관계",
+        href: "/finance/banking/bank-balance-sheet-and-deposit-creation#balance-sheet",
+      },
+      {
+        label: "정산 전까지 남는 미결제 익스포저",
+        href: "/finance/banking/payment-clearing-settlement#rtgs-vs-dns",
+      },
+      {
+        label: "손실이 청구권 순위의 역순으로 배분되는 규칙",
+        href: "/finance/markets/equity-claims-and-valuation#residual-claim",
+      },
+      {
+        label: "위기에 상관이 함께 올라가는 성질",
+        href: "/finance/risk/risk-diversification-and-pricing#boundary",
+      },
+      {
+        label: "금융기관의 정보보호·자금세탁방지 통제 체계",
+        href: "/cs/isms-aml/isms-overview",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "규제 요건의 구성은 국제 기준 문서에만 귀속하고, 최저 비율 수치와 적용 시기는 나라마다 다르므로 특정 숫자를 사실로 싣지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
