@@ -26,9 +26,7 @@ export default function PublicGoodsAndCommonsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            앞 글에서는 매연을 마신 사람이 누구인지 알 수 있었습니다. 그래서 그
-            사람에게 권리를 주고 협상시킬 수도 있었고, 피해액을 재어 값에 얹을
-            수도 있었습니다.
+            앞 글에서는 매연을 마신 사람이 누구인지 알 수 있었습니다. 그래서 그 사람에게 권리를 주고 협상시킬 수도 있었고 피해액을 재어 값에 얹을 수도 있었습니다.
           </p>
 
           <p className="leading-7">
@@ -38,8 +36,7 @@ export default function PublicGoodsAndCommonsArticle() {
           </p>
 
           <p className="leading-7">
-            이때는 앞 글의 구도가 통째로 어그러집니다. 피해를 입는 제삼자가 한
-            명이 아니라 전부이고, 그 전부와 따로따로 협상할 수도 없습니다.
+            이때는 앞 글의 구도가 통째로 어그러집니다. 피해를 입는 제삼자가 한 명이 아니라 전부이고 그 전부와 따로따로 협상할 수도 없습니다.
           </p>
         </div>
 
@@ -58,17 +55,12 @@ export default function PublicGoodsAndCommonsArticle() {
           </p>
 
           <p className="leading-7">
-            순서는 이렇습니다. 먼저 한 사람이 더 누려도 줄지 않는 것에서 값을
-            어떻게 더해야 하는지를 보고, 그 값을 물어보면 왜 참말이 나오지
-            않는지를 봅니다. 그다음 줄어드는 것에서는 어긋남이 반대 방향으로
-            생긴다는 것을 보고, 마지막으로 빼놓을 수 있게 되면 무엇이 풀리고
-            무엇이 안 풀리는지를 봅니다.
+            순서는 이렇습니다. 먼저 한 사람이 더 누려도 줄지 않는 것에서 값을 어떻게 더해야 하는지를 보고, 그 값을 물어보면 왜 참말이 나오지 않는지를 봅니다. 그다음 줄어드는
+            것에서는 어긋남이 반대 방향으로 생긴다는 것을 보고 마지막으로 빼놓을 수 있게 되면 무엇이 풀리고 무엇이 안 풀리는지를 봅니다.
           </p>
 
           <p className="leading-7">
-            빼놓을 수 있느냐와 줄어드느냐로 네 칸을 가르는 일 자체는 정치 쪽
-            글이 먼저 했습니다. 여기서는 그 분류를 가져다 쓰고, 각 칸에서
-            수량이 얼마나 어긋나는지만 셉니다.
+            빼놓을 수 있느냐와 줄어드느냐로 네 칸을 가르는 일 자체는 정치 쪽 글이 먼저 했습니다. 여기서는 그 분류를 가져다 쓰고 각 칸에서 수량이 얼마나 어긋나는지만 셉니다.
           </p>
         </div>
       </section>
@@ -79,9 +71,7 @@ export default function PublicGoodsAndCommonsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            앞 네 글에서 사려는 줄을 만들 때는 사람들을 옆으로 세웠습니다. 값이
-            7이면 7까지 낼 수 있는 사람이 몇 명인지 세었고, 그 수가 팔리는
-            개수였습니다.
+            앞 네 글에서 사려는 줄을 만들 때는 사람들을 옆으로 세웠습니다. 값이 7이면 7까지 낼 수 있는 사람이 몇 명인지 세었고 그 수가 팔리는 개수였습니다.
           </p>
 
           <p className="leading-7">
@@ -325,13 +315,11 @@ export default function PublicGoodsAndCommonsArticle() {
           </p>
 
           <p className="leading-7">
-            호수가 그렇습니다. 누가 배를 띄우는지 막을 수 없는데, 배가 많아지면
-            한 척이 건지는 양은 줄어듭니다.
+            호수가 그렇습니다. 누가 배를 띄우는지 막을 수 없는데 배가 많아지면 한 척이 건지는 양은 줄어듭니다.
           </p>
 
           <p className="leading-7">
-            숫자로 두겠습니다. 배가 B척이면 한 척이 건지는 값이 12에서 B를 뺀
-            만큼이고, 배 한 척을 띄우는 데 4가 듭니다.
+            숫자로 두겠습니다. 배가 B척이면 한 척이 건지는 값이 12에서 B를 뺀 만큼이고 배 한 척을 띄우는 데 4가 듭니다.
           </p>
 
           <p className="leading-7">
@@ -455,8 +443,7 @@ export default function PublicGoodsAndCommonsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            여기까지의 문제가 전부 빼놓을 수 없다는 데서 나왔으니, 빼놓을 수
-            있게 만들면 풀리겠다고 생각하게 됩니다. 절반은 맞습니다.
+            여기까지의 문제가 전부 빼놓을 수 없다는 데서 나왔으니 빼놓을 수 있게 만들면 풀리겠다고 생각하게 됩니다. 절반은 맞습니다.
           </p>
 
           <p className="leading-7">
@@ -466,8 +453,7 @@ export default function PublicGoodsAndCommonsArticle() {
           </p>
 
           <p className="leading-7">
-            줄어드는 쪽에서는 빼놓을 수 있게 되는 것이 통합니다. 값이 들어오기를
-            막는 일을 하고, 그 값이 바로 남의 몫이 준 만큼입니다.
+            줄어드는 쪽에서는 빼놓을 수 있게 되는 것이 통합니다. 값이 들어오기를 막는 일을 하고 그 값이 바로 남의 몫이 준 만큼입니다.
           </p>
 
           <p className="leading-7">
@@ -488,9 +474,8 @@ export default function PublicGoodsAndCommonsArticle() {
           </p>
 
           <p className="leading-7">
-            사람마다 다르게 받으면 됩니다. 가에게 11, 나에게 7, 다에게 4를
-            받으면 22가 걷힙니다. 그런데 그 숫자를 알려면 물어봐야 하고, 물어보면
-            앞 절의 문제가 그대로 돌아옵니다.
+            사람마다 다르게 받으면 됩니다. 가에게 11, 나에게 7, 다에게 4를 받으면 22가 걷힙니다. 그런데 그 숫자를 알려면 물어봐야 하고 물어보면 앞 절의 문제가 그대로
+            돌아옵니다.
           </p>
 
           <p className="leading-7">
@@ -610,9 +595,7 @@ export default function PublicGoodsAndCommonsArticle() {
           </p>
 
           <p className="leading-7">
-            다음 글은 남은 한 칸입니다. 지금까지는 각자가 자기 값을 알고 있다고
-            두었는데, 한쪽만 알고 다른 쪽은 모르는 경우가 있습니다. 그때 시장에
-            무엇이 남는지를 봅니다.
+            다음 글은 남은 한 칸입니다. 지금까지는 각자가 자기 값을 알고 있다고 두었는데 한쪽만 알고 다른 쪽은 모르는 경우가 있습니다. 그때 시장에 무엇이 남는지를 봅니다.
           </p>
         </div>
       </section>

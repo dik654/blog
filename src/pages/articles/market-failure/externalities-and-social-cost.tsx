@@ -30,8 +30,7 @@ export default function ExternalitiesAndSocialCostArticle() {
           </p>
 
           <p className="leading-7">
-            이제 그 전제를 풀어 보겠습니다. 만들 때마다 매연이 나오고, 그것을
-            옆 사람이 마십니다. 만든 사람의 장부에는 그 값이 적히지 않습니다.
+            이제 그 전제를 풀어 보겠습니다. 만들 때마다 매연이 나오고 그것을 옆 사람이 마십니다. 만든 사람의 장부에는 그 값이 적히지 않습니다.
           </p>
 
           <p className="leading-7">
@@ -61,9 +60,7 @@ export default function ExternalitiesAndSocialCostArticle() {
           </p>
 
           <p className="leading-7">
-            상대를 특정할 수 없는 경우는 다루지 않습니다. 매연을 마신 사람이
-            누구인지 알 수 없으면 아래의 두 번째 길이 아예 열리지 않고, 그
-            경우는 다음 글의 주제입니다.
+            상대를 특정할 수 없는 경우는 다루지 않습니다. 매연을 마신 사람이 누구인지 알 수 없으면 아래의 두 번째 길이 아예 열리지 않고 그 경우는 다음 글의 주제입니다.
           </p>
         </div>
       </section>
@@ -97,9 +94,7 @@ export default function ExternalitiesAndSocialCostArticle() {
           </p>
 
           <p className="leading-7">
-            그러니 물어야 할 것은 누구를 벌할지가 아니라 어느 쪽 손해가 더
-            큰지입니다. 그것을 재려면 두 숫자를 같은 자에 올려야 하고, 이 글의
-            나머지가 그 일입니다.
+            그러니 물어야 할 것은 누구를 벌할지가 아니라 어느 쪽 손해가 더 큰지입니다. 그것을 재려면 두 숫자를 같은 자에 올려야 하고 이 글의 나머지가 그 일입니다.
           </p>
         </div>
 
@@ -299,8 +294,7 @@ export default function ExternalitiesAndSocialCostArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            다른 길이 있습니다. 얼마인지를 맞히려 하지 말고, 넷째를 만들
-            권리가 누구에게 있는지만 정해 주고 둘이 알아서 하게 두는 것입니다.
+            다른 길이 있습니다. 얼마인지를 맞히려 하지 말고 넷째를 만들 권리가 누구에게 있는지만 정해 주고 둘이 알아서 하게 두는 것입니다.
           </p>
 
           <p className="leading-7">
@@ -411,9 +405,7 @@ export default function ExternalitiesAndSocialCostArticle() {
             </p>
 
             <p className="leading-7">
-              그 글의 기준이 이 절의 결론과 같습니다. 협상 비용이 옮겨서 느는
-              값보다 작으면 동의를 요구하는 편이 낫고, 협상 비용이 더 크면 값을
-              매겨 옮기는 길이 대안이 됩니다.
+              그 글의 기준이 이 절의 결론과 같습니다. 협상 비용이 옮겨서 느는 값보다 작으면 동의를 요구하는 편이 낫고 협상 비용이 더 크면 값을 매겨 옮기는 길이 대안이 됩니다.
             </p>
 
             <p className="leading-7">
@@ -426,9 +418,7 @@ export default function ExternalitiesAndSocialCostArticle() {
             </p>
 
             <p className="leading-7">
-              두 시리즈가 같은 자리에서 만나는 것이 우연은 아닙니다. 위 인용문이
-              법학 학술지에 실린 글이고, 문제를 어느 쪽 손해가 더 큰지로 다시
-              세운 것이 그 글의 출발점이었습니다.
+              두 시리즈가 같은 자리에서 만나는 것이 우연은 아닙니다. 위 인용문이 법학 학술지에 실린 글이고 문제를 어느 쪽 손해가 더 큰지로 다시 세운 것이 그 글의 출발점이었습니다.
             </p>
           </div>
         </ProgressiveDetail>
@@ -446,9 +436,7 @@ export default function ExternalitiesAndSocialCostArticle() {
           </p>
 
           <p className="leading-7">
-            두 길 모두 조건이 붙습니다. 앞의 길은 빠진 몫이 얼마인지 알아야
-            하고, 뒤의 길은 상대를 특정할 수 있고 협상에 드는 값이 이득보다
-            작아야 합니다.
+            두 길 모두 조건이 붙습니다. 앞의 길은 빠진 몫이 얼마인지 알아야 하고 뒤의 길은 상대를 특정할 수 있고 협상에 드는 값이 이득보다 작아야 합니다.
           </p>
 
           <p className="leading-7">

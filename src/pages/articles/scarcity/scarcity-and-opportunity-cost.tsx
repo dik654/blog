@@ -63,8 +63,7 @@ export default function ScarcityAndOpportunityCostArticle() {
           </p>
 
           <p className="leading-7">
-            혼자 고를 때만 다룹니다. 여럿이 서로의 사정을 모르는 채 고르는
-            일은 이 글의 계산으로는 닫히지 않고, 다음 글부터의 몫입니다.
+            혼자 고를 때만 다룹니다. 여럿이 서로의 사정을 모르는 채 고르는 일은 이 글의 계산으로는 닫히지 않고 다음 글부터의 몫입니다.
           </p>
         </div>
       </section>
@@ -212,10 +211,8 @@ export default function ScarcityAndOpportunityCostArticle() {
             </p>
 
             <p className="leading-7">
-              실제 생산가능곡선은 직선이 아니라 바깥으로 휩니다. 사람도 장비도
-              잘 맞는 일이 따로 있어서, 빵을 많이 만들던 곳에서 케이크로
-              옮길수록 포기해야 하는 빵이 점점 늘어납니다. 그래서 어느 한쪽으로
-              완전히 몰아가는 것이 대개 손해입니다.
+              실제 생산가능곡선은 직선이 아니라 바깥으로 휩니다. 사람도 장비도 잘 맞는 일이 따로 있어서 빵을 많이 만들던 곳에서 케이크로 옮길수록 포기해야 하는 빵이 점점 늘어납니다.
+              그래서 어느 한쪽으로 완전히 몰아가는 것이 대개 손해입니다.
             </p>
           </div>
         </ProgressiveDetail>
@@ -245,9 +242,8 @@ export default function ScarcityAndOpportunityCostArticle() {
           </p>
 
           <p className="leading-7">
-            이 방식이 통하는 이유는 대개 한 단위 더 얻는 것이 점점 줄고 한 단위
-            더 드는 것이 점점 늘기 때문입니다. 두 값이 반대로 움직이므로 어딘가
-            한 번 교차하고, 그 자리가 멈출 곳입니다.
+            이 방식이 통하는 이유는 대개 한 단위 더 얻는 것이 점점 줄고 한 단위 더 드는 것이 점점 늘기 때문입니다. 두 값이 반대로 움직이므로 어딘가 한 번 교차하고 그 자리가 멈출
+            곳입니다.
           </p>
         </div>
 
@@ -354,9 +350,8 @@ export default function ScarcityAndOpportunityCostArticle() {
           </p>
 
           <p className="leading-7">
-            이유는 부품 2로 돌아가면 바로 나옵니다. 값은 포기한 것으로 재는데,
-            이미 나가서 돌려받을 수 없는 돈은 어느 쪽을 골라도 똑같이 사라져
-            있습니다. 양쪽에 같은 값이 있으면 그 값은 둘을 가르지 못합니다.
+            이유는 부품 2로 돌아가면 바로 나옵니다. 값은 포기한 것으로 재는데 이미 나가서 돌려받을 수 없는 돈은 어느 쪽을 골라도 똑같이 사라져 있습니다. 양쪽에 같은 값이 있으면 그
+            값은 둘을 가르지 못합니다.
           </p>
 
           <p className="leading-7">
@@ -366,9 +361,7 @@ export default function ScarcityAndOpportunityCostArticle() {
           </p>
 
           <p className="leading-7">
-            굽는 쪽이 15만큼 낫습니다. 전체로 보면 −30 + 15라 여전히 손해지만,
-            굽지 않으면 −30이므로 손해가 더 큽니다. 30은 두 줄 모두에 적혀 있어
-            비교에서 지워집니다.
+            굽는 쪽이 15만큼 낫습니다. 전체로 보면 −30 + 15라 여전히 손해지만 굽지 않으면 −30이므로 손해가 더 큽니다. 30은 두 줄 모두에 적혀 있어 비교에서 지워집니다.
           </p>
 
           <p className="leading-7">
