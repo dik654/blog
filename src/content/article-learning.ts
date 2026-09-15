@@ -84653,4 +84653,293 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "market-failure/public-goods-and-commons": {
+    entryNote:
+      "앞 글은 피해를 입는 쪽을 특정할 수 있었습니다. 여기서는 그 쪽이 전부이거나 누구인지 알 수 없습니다.",
+    coreIdea:
+      "한 사람이 더 누려도 남의 몫이 줄지 않으면 한 개의 값이 모두의 값을 합친 것이라 판정에 합이 들어가고, 각자에게 맡기면 아무도 만들지 않습니다. 그 합을 쓰려면 각자의 값을 물어야 하는데 걷는 방식에 따라 줄여 말하거나 부풀려 말할 이유가 생깁니다. 줄어들기까지 하면 어긋남이 반대로 뒤집혀 남는 것이 0이 될 때까지 들어오고, 빼놓을 수 있게 되어도 한 값으로는 총가치가 비용을 넘어도 못 채웁니다.",
+    assumedKnowledge: [
+      {
+        id: "public-good",
+        role: "빼놓을 수 있느냐와 줄어드느냐로 네 칸을 가르는 분류를 그대로 가져옵니다.",
+      },
+      {
+        id: "free-rider-problem",
+        role: "낼지 말지의 유인 구조를 전제로 두고 그 위에 얼마나 원한다고 말할지를 얹습니다.",
+      },
+      {
+        id: "private-vs-social-cost",
+        role: "장부에 적히지 않는 몫이 수량을 어긋나게 한다는 앞 글의 구조를 다시 씁니다.",
+      },
+      {
+        id: "marginal-decision-rule",
+        role: "한 개씩 늘리며 견주는 절차를 그대로 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "vertical-summation-rule",
+        role: "같이 누리는 것의 맞는 수량을 정하는 판정을 세웁니다.",
+      },
+      {
+        id: "preference-revelation-problem",
+        role: "그 판정에 넣을 숫자를 얻을 수 없다는 것을 보입니다.",
+      },
+      {
+        id: "rent-dissipation",
+        role: "줄어드는 쪽에서 어긋남이 반대로 뒤집히는 크기를 셉니다.",
+      },
+      {
+        id: "uniform-price-underfunding",
+        role: "빼놓을 수 있게 되어도 한 값으로는 못 채운다는 것을 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "vertical-summation-rule",
+        sectionId: "vertical-sum",
+        intuition:
+          "빵 하나는 한 사람이 먹지만 가로등 하나는 셋이 같이 봅니다.",
+        workedExample:
+          "가가 6, 5, 4, 3이고 나가 4, 3, 2, 1, 다가 2, 2, 1, 1이면 세로 합이 12, 10, 7, 5입니다. 한 개에 9가 들면 두 개가 맞습니다.",
+        proofIdea:
+          "q번째 한 개를 만들면 n명이 각각 v_i(q)를 얻고 아무도 남의 몫을 빼앗지 않으므로 그 한 개가 만들어 내는 값은 합입니다. 드는 값은 여전히 c(q) 하나뿐이므로, 합이 c(q)를 넘는 동안 한 개를 더하면 전체가 그만큼 늘어나고 넘지 못하는 순간부터 줄어듭니다. 그래서 합이 마지막으로 c(q)를 넘는 자리가 봉우리입니다.",
+        counterexample:
+          "각자에게 맡기면 첫 개의 값이 6, 4, 2라 아무도 9를 내지 않아 하나도 만들어지지 않습니다. 합이 12로 드는 값을 넘는데도 그렇습니다.",
+        boundary:
+          "합이 크면 무조건 만들라는 뜻이 아닙니다. 셋째와 넷째는 셋의 값을 다 합쳐도 드는 값에 못 미칩니다.",
+      },
+      {
+        id: "preference-revelation-problem",
+        sectionId: "revelation",
+        intuition:
+          "그 답이 무엇에 쓰이는지를 대답하는 사람도 압니다.",
+        workedExample:
+          "신고한 만큼 걷으면 참값 5, 3, 2로 참말할 때 남는 것이 0인데, 가가 4로 줄이면 합이 여전히 9라 세워지고 1이 남습니다.",
+        counterexample:
+          "똑같이 나눠 걷으면 방향이 뒤집힙니다. 참값 4, 2, 1은 합이 7이라 세우면 안 되는데 가가 6으로 부풀리면 합이 9가 되어 세워지고 전체가 2를 깎아먹습니다.",
+        boundary:
+          "부담을 신고에 약하게 엮으면 두 방향이 약해질 뿐 사라지지 않습니다. 참말이 가장 이득이 되게 만드는 방식이 있는지는 이 글의 범위 밖입니다.",
+      },
+      {
+        id: "rent-dissipation",
+        sectionId: "congestion",
+        intuition:
+          "들어오는 사람은 자기 몫을 보고 남의 몫이 준 것은 보지 않습니다.",
+        workedExample:
+          "한 척이 12에서 척수를 뺀 만큼 건지고 배 한 척에 4가 들면, 전체가 남기는 것이 7, 12, 15, 16, 15, 12, 7, 0이라 네 척이 맞는데 여덟 척까지 들어옵니다.",
+        proofIdea:
+          "들어오는 배가 보는 것은 전체를 척수로 나눈 자기 몫이고 전체가 더 남기는 것은 그 몫에서 먼저 있던 배들이 잃은 만큼을 뺀 것입니다. 잃은 만큼이 양수인 한 앞의 것이 늘 크므로 앞의 것이 0이 되는 자리가 뒤의 것이 0이 되는 자리보다 뒤에 옵니다. 그 사이의 배들은 각자에게는 남고 전체로는 밑집니다.",
+        counterexample:
+          "다섯째 배는 7을 건지고 4를 써서 3이 남지만 먼저 있던 네 척이 1씩 줄어 4를 잃으므로 합치면 −1입니다.",
+        boundary:
+          "물고기가 사라진 것이 아닙니다. 여덟 척일 때 잡은 값은 네 척일 때와 같고, 사라진 것은 잡는 데 쓴 배 값이 불어난 몫입니다.",
+      },
+      {
+        id: "uniform-price-underfunding",
+        sectionId: "excluding",
+        intuition:
+          "값을 올리면 내는 사람이 줄고 값을 내리면 한 명당 받는 것이 줍니다.",
+        workedExample:
+          "총가치가 11, 7, 4이고 드는 값이 18일 때 요금 4는 12, 7은 14, 11은 11만 걷혀 어느 값으로도 못 채웁니다. 합치면 22가 있는데도 그렇습니다.",
+        proofIdea:
+          "한 값 f로 걷히는 것은 f 이상으로 치는 사람의 수에 f를 곱한 것입니다. 사람 수는 f가 오를 때 줄기만 하므로 이 곱의 최댓값은 각자의 값 가운데 하나를 f로 골랐을 때 나오고, 후보가 사람 수만큼뿐이라 전부 따져 볼 수 있습니다. 그 최댓값이 비용에 못 미치면 어느 값으로도 못 채웁니다.",
+        counterexample:
+          "사람마다 11, 7, 4를 그대로 받으면 22가 걷혀 채워집니다. 다만 그 숫자를 알아야 합니다.",
+        boundary:
+          "드는 값이 14여서 요금 7로 채워지는 경우에도 다는 빠집니다. 한 사람을 더 들이는 데 0이 드는데 값이 그 사람을 내보냅니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 더하는 방향",
+        relation: "같이 누리는 것의 맞는 수량을 세웁니다.",
+        concepts: ["vertical-summation-rule"],
+      },
+      {
+        label: "01 숫자를 어디서 얻나",
+        relation: "판정에 넣을 값을 물어서는 얻을 수 없음을 봅니다.",
+        concepts: ["preference-revelation-problem"],
+      },
+      {
+        label: "02 줄어들면 반대로",
+        relation: "어긋남이 뒤집히는 경우를 셉니다.",
+        concepts: ["rent-dissipation"],
+      },
+      {
+        label: "03 빼놓을 수 있게 되면",
+        relation: "배제가 무엇을 풀고 무엇을 남기는지 봅니다.",
+        concepts: ["uniform-price-underfunding"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "빵과 가로등에서 사려는 줄을 세우는 방향이 왜 다른지 쓰세요.",
+        answerChecklist: [
+          "빵은 한 개를 한 사람만 먹음",
+          "가로등은 한 개를 셋이 같이 봄",
+          "빵은 옆으로 세워 사람 수를 셈",
+          "가로등은 세로로 더해 한 개의 값을 만듦",
+        ],
+        requiredConcepts: ["vertical-summation-rule"],
+        sectionId: "vertical-sum",
+      },
+      {
+        level: "basic",
+        question:
+          "가 6, 5, 4, 3과 나 4, 3, 2, 1과 다 2, 2, 1, 1에서 한 개에 9가 들 때 맞는 개수를 구하세요.",
+        answerChecklist: [
+          "세로 합이 12, 10, 7, 5",
+          "차이가 +3, +1, −2, −4",
+          "둘째까지가 봉우리",
+          "두 개",
+        ],
+        requiredConcepts: ["vertical-summation-rule"],
+        sectionId: "vertical-sum",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 예에서 각자에게 맡기면 몇 개가 만들어지는지 쓰고 그 이유를 쓰세요.",
+        answerChecklist: [
+          "첫 개의 값이 6, 4, 2",
+          "셋 다 9보다 작음",
+          "혼자 세울 사람이 없음",
+          "한 개도 만들어지지 않음",
+        ],
+        requiredConcepts: ["vertical-summation-rule"],
+        sectionId: "vertical-sum",
+      },
+      {
+        level: "basic",
+        question:
+          "신고한 만큼 걷을 때 왜 줄여 말하게 되는지 숫자로 보이세요.",
+        answerChecklist: [
+          "참값 5, 3, 2는 합이 10이라 세워짐",
+          "참말하면 낸 만큼 받아 남는 것이 0",
+          "가가 4로 줄이면 합이 9라 여전히 세워짐",
+          "4만 내고 5를 얻어 1이 남음",
+        ],
+        requiredConcepts: ["preference-revelation-problem"],
+        sectionId: "revelation",
+      },
+      {
+        level: "basic",
+        question:
+          "똑같이 나눠 걷을 때 방향이 뒤집히는 이유를 숫자로 보이세요.",
+        answerChecklist: [
+          "참값 4, 2, 1은 합이 7이라 세우면 안 됨",
+          "셋이 3씩 내면 가는 3을 내고 4를 얻음",
+          "가가 6으로 부풀리면 합이 9가 되어 세워짐",
+          "가 +1, 나 −1, 다 −2로 합이 −2",
+        ],
+        requiredConcepts: ["preference-revelation-problem"],
+        sectionId: "revelation",
+      },
+      {
+        level: "basic",
+        question:
+          "한 척이 12에서 척수를 뺀 만큼 건지고 배 한 척에 4가 들 때 맞는 척수와 실제로 들어오는 척수를 구하세요.",
+        answerChecklist: [
+          "전체가 남기는 것이 7, 12, 15, 16, 15, 12, 7, 0",
+          "네 척에서 16으로 가장 큼",
+          "한 척이 4 이상 건지는 한 들어옴",
+          "여덟 척까지 들어와 남는 것이 0",
+        ],
+        requiredConcepts: ["rent-dissipation"],
+        sectionId: "congestion",
+      },
+      {
+        level: "advanced",
+        question:
+          "같이 누리는 것에서 합이 드는 값을 넘는 동안 한 개씩 더하는 것이 맞는 이유를 설명하세요.",
+        answerChecklist: [
+          "한 개가 만들어 내는 값이 n명의 합",
+          "아무도 남의 몫을 빼앗지 않음",
+          "드는 값은 여전히 하나",
+          "합이 마지막으로 드는 값을 넘는 자리가 봉우리",
+        ],
+        requiredConcepts: ["vertical-summation-rule"],
+        sectionId: "vertical-sum",
+      },
+      {
+        level: "advanced",
+        question:
+          "들어오기가 맞는 자리를 지나 계속되는 이유를 두 기준의 차이로 설명하세요.",
+        answerChecklist: [
+          "들어오는 배가 보는 것은 전체를 척수로 나눈 자기 몫",
+          "전체가 더 남기는 것에는 먼저 있던 배들의 손실이 빠져 있음",
+          "그래서 앞의 것이 늘 큼",
+          "앞의 것이 0이 되는 자리가 더 뒤에 옴",
+        ],
+        requiredConcepts: ["rent-dissipation", "private-vs-social-cost"],
+        sectionId: "congestion",
+      },
+      {
+        level: "advanced",
+        question:
+          "총가치가 비용을 넘는데도 한 값으로는 못 채울 수 있는 이유를 설명하고, 채울 수 있는 조건을 쓰세요.",
+        answerChecklist: [
+          "한 값 f로 걷히는 것은 f 이상 치는 사람 수에 f를 곱한 것",
+          "사람 수가 f에 따라 줄기만 함",
+          "후보가 각자의 값뿐이라 전부 따질 수 있음",
+          "사람마다 다르게 받으면 채워지지만 각자의 값을 알아야 함",
+        ],
+        requiredConcepts: [
+          "uniform-price-underfunding",
+          "preference-revelation-problem",
+        ],
+        sectionId: "excluding",
+      },
+      {
+        level: "advanced",
+        question:
+          "빼놓을 수 있게 되는 것이 호수에서는 통하고 가로등에서는 다른 문제를 남기는 이유를 쓰세요.",
+        answerChecklist: [
+          "호수는 남의 몫이 실제로 줄어 값이 그만큼을 막음",
+          "입어료 4를 받으면 네 척에서 멈추고 16이 걷힘",
+          "가로등은 한 사람을 더 들이는 데 0이 듦",
+          "그런데 요금이 그 사람을 내보냄",
+        ],
+        requiredConcepts: ["uniform-price-underfunding", "rent-dissipation"],
+        sectionId: "excluding",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Paul A. Samuelson, “The Pure Theory of Public Expenditure” (The Review of Economics and Statistics 36:4, 1954)",
+        href: "https://www.jstor.org/stable/1925895",
+        problem:
+          "같이 누리는 재화를 얼마나 만드는 것이 맞는지에 대한 판정이 없었고, 있던 논의는 세금을 어떻게 걷을지에 쏠려 있었습니다.",
+        contribution:
+          "한 사람의 소비가 다른 사람의 소비에서 아무것도 빼지 않는 재화를 정의하고, 그 재화의 최적 조건을 각자의 한계대체율을 모두 더한 것이 한계변환율과 같아지는 형태로 세웁니다. 더하는 방향을 옆이 아니라 세로라고 명시했고, 이어서 어떤 분권적 가격 체계로도 이 수준을 정할 수 없다고 절 제목으로 못박은 뒤 그 이유를 각자가 거짓 신호를 보낼 이유가 있다는 데서 찾습니다.",
+        assumptions:
+          "각자의 선호가 일관된 순서를 이루고 값을 더할 수 있으며 생산 가능 집합이 매끄럽다고 둡니다. 어느 배분이 좋은지는 별도의 사회후생함수가 정한다고 하고 그 함수를 도출하는 일은 경제학의 과제가 아니라고 적습니다.",
+        evidenceScope:
+          "1954년 11월호 387~389쪽 원문 세 쪽을 내려받아 collective consumption goods 정의, 세로 합 문장, §3의 제목과 거짓 신호 대목, 그리고 답은 존재하는데 찾는 것이 문제라는 문장까지 직접 대조했습니다.",
+        notClaim:
+          "논문이 이름 붙인 거짓말의 방향은 줄여 말하는 쪽 하나입니다. 이 글의 두 번째 방식에서 나오는 부풀리는 방향은 논문의 문장이 아니라 부담을 신고에서 떼어 놓았을 때 같은 계산을 다시 해서 얻은 것입니다. 또 이 글의 부등식은 논문의 미분 형태 조건을 개수를 하나씩 늘리는 이산 형태로 옮긴 것이고, 숫자 예시는 논문의 것이 아닙니다.",
+        sectionId: "vertical-sum",
+      },
+      {
+        title:
+          "Garrett Hardin, “The Tragedy of the Commons” (Science 162:3859, 1968)",
+        href: "https://doi.org/10.1126/science.162.3859.1243",
+        problem:
+          "아무도 들어오기를 막을 수 없는 자원에서 각자가 합리적으로 판단하는데도 전체가 나빠지는 구조를 셈으로 보여야 했습니다.",
+        contribution:
+          "목초지에 한 마리를 더 들일 때의 득실을 둘로 쪼갭니다. 파는 값은 들인 사람이 전부 가져가므로 이득이 거의 +1이고, 풀이 줄어드는 손해는 모두가 나눠 지므로 그 사람에게는 −1의 일부뿐입니다. 그래서 한 마리를 더 들이는 것이 각자에게 언제나 맞고, 모두가 같은 결론에 이릅니다.",
+        assumptions:
+          "들어오기를 막을 방법이 없고 이용자들이 규칙을 만들지 않는다고 둡니다.",
+        evidenceScope:
+          "인용한 두 문장과 서지는 저자 재단이 공개한 전재본으로 확인했고 학술지 원문은 열지 못했습니다. 이 글이 가져다 쓰는 것은 득실을 쪼개는 셈까지입니다.",
+        notClaim:
+          "같은 논문은 이 셈에서 곧바로 강제 없이는 파멸이 불가피하다는 결론으로 넘어가지만, 실제로 규칙을 세워 오래 유지한 공유자원 사례가 여럿 보고되어 있습니다. 그 조건은 정치 쪽 글이 다루며 이 글의 주장이 아닙니다.",
+        sectionId: "congestion",
+      },
+    ],
+  },
 };

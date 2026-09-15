@@ -24993,6 +24993,50 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/economics/market-failure/externalities-and-social-cost#bargaining",
   },
+  "vertical-summation-rule": {
+    id: "vertical-summation-rule",
+    kind: "theorem",
+    domain: "economics",
+    label: "같이 누리는 것은 값을 세로로 더한다",
+    aliases: ["Samuelson 조건", "수직 합"],
+    definition:
+      "한 개를 한 사람만 쓰는 것이면 그 한 개가 남는지를 한 사람의 값으로 판정하지만, 한 개를 여럿이 동시에 누리는 것이면 그 한 개가 만들어 내는 값이 모두의 값을 합친 것이므로 판정에도 합이 들어갑니다. 각자의 값은 전부 드는 값보다 작은데 합은 넘는 구간이 있고, 그 구간이 아무도 혼자서는 만들지 않지만 만드는 것이 맞는 구간입니다.",
+    canonicalHref:
+      "/economics/market-failure/public-goods-and-commons#vertical-sum",
+  },
+  "preference-revelation-problem": {
+    id: "preference-revelation-problem",
+    kind: "concept",
+    domain: "economics",
+    label: "물어보면 참말이 나오지 않는다",
+    aliases: ["선호 현시", "거짓 신호"],
+    definition:
+      "합을 쓰려면 각자의 값을 알아야 하는데 그 숫자는 물어보는 수밖에 없고, 물어보는 순간 답이 무엇에 쓰이는지를 대답하는 쪽도 압니다. 기우는 방향은 걷는 방식이 정해서 신고가 부담을 늘리면 줄여 말하고 늘리지 않으면 부풀려 말하며, 부담을 신고에 어떻게 엮든 둘 중 한쪽이 남습니다.",
+    canonicalHref:
+      "/economics/market-failure/public-goods-and-commons#revelation",
+  },
+  "rent-dissipation": {
+    id: "rent-dissipation",
+    kind: "theorem",
+    domain: "economics",
+    label: "막을 수 없으면 남는 것이 0이 될 때까지 들어온다",
+    aliases: ["지대 소멸", "공유자원 과다 이용"],
+    definition:
+      "들어오는 쪽이 보는 것은 자기 몫이고 전체가 더 남기는 것에는 먼저 있던 쪽의 몫이 준 만큼이 이미 빠져 있으므로, 앞의 것이 언제나 크고 들어오기는 앞의 것이 0이 될 때까지 계속됩니다. 그 자리는 전체가 가장 많이 남기는 자리를 한참 지난 곳이고, 사라진 것은 잡은 값이 아니라 잡는 데 쓴 값이 불어난 몫입니다.",
+    canonicalHref:
+      "/economics/market-failure/public-goods-and-commons#congestion",
+  },
+  "uniform-price-underfunding": {
+    id: "uniform-price-underfunding",
+    kind: "theorem",
+    domain: "economics",
+    label: "한 값으로는 총가치가 비용을 넘어도 못 채운다",
+    aliases: ["단일 가격의 한계", "차별 가격의 조건"],
+    definition:
+      "한 값으로 받으면 그 값보다 낮게 치는 사람이 빠지므로 값을 올리면 내는 사람이 줄고 값을 내리면 한 명당 받는 것이 줄어, 모두의 값을 합치면 비용을 넘는데도 어느 값으로도 못 채우는 경우가 생깁니다. 사람마다 다르게 받으면 채울 수 있지만 그러려면 각자의 값을 알아야 하고, 그 숫자는 물어서 얻을 수 없습니다.",
+    canonicalHref:
+      "/economics/market-failure/public-goods-and-commons#excluding",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -46423,6 +46467,90 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "미리 협상할 상대를 특정할 수 없는 사고에서는 협상 경로가 닫혀 한 단계 비교로 주의 수준을 정하게 됩니다.",
+  },
+  {
+    from: "public-good",
+    to: "vertical-summation-rule",
+    relation: "produces",
+    reason:
+      "한 사람이 더 누려도 남의 몫이 줄지 않는다는 성질이 값을 더하는 방향을 옆에서 세로로 바꿉니다.",
+  },
+  {
+    from: "marginal-decision-rule",
+    to: "vertical-summation-rule",
+    relation: "prerequisite",
+    reason:
+      "한 개씩 늘리며 더 얻는 것과 더 드는 것을 견주는 절차를 그대로 쓰되 더 얻는 쪽만 합으로 바꿉니다.",
+  },
+  {
+    from: "vertical-summation-rule",
+    to: "preference-revelation-problem",
+    relation: "constrains",
+    reason:
+      "합을 쓰려면 각자의 값을 숫자로 알아야 하는데 그 숫자를 얻는 경로가 물어보는 것뿐입니다.",
+  },
+  {
+    from: "free-rider-problem",
+    to: "preference-revelation-problem",
+    relation: "contrasts",
+    reason:
+      "앞의 것은 낼지 말지의 유인이고 이것은 얼마나 원한다고 말할지의 유인이라, 기여를 강제해도 이쪽은 남습니다.",
+  },
+  {
+    from: "collection-before-calculation",
+    to: "preference-revelation-problem",
+    relation: "produces",
+    reason:
+      "계산에 필요한 값이 흩어져 있고 말로만 모을 수 있다는 조건이 거짓 신고의 자리를 만듭니다.",
+  },
+  {
+    from: "private-vs-social-cost",
+    to: "rent-dissipation",
+    relation: "produces",
+    reason:
+      "들어오는 배가 남들의 몫을 줄인 만큼이 자기 장부에 없다는 것이 같은 구조의 반복입니다.",
+  },
+  {
+    from: "externality-quantity-distortion",
+    to: "rent-dissipation",
+    relation: "prerequisite",
+    reason:
+      "두 판정 기준이 갈라져 수량이 어긋난다는 계산을 피해자가 여럿인 경우로 옮긴 것입니다.",
+  },
+  {
+    from: "pricing-in-the-missing-cost",
+    to: "rent-dissipation",
+    relation: "optimizes",
+    reason:
+      "입어료를 남의 몫이 준 만큼으로 매기면 들어오기가 맞는 자리에서 멈춥니다.",
+  },
+  {
+    from: "commons-self-governance",
+    to: "rent-dissipation",
+    relation: "constrains",
+    reason:
+      "규칙을 세워 오래 유지한 사례가 여럿이므로 이 결과가 빼놓을 수 없는 자원의 필연은 아닙니다.",
+  },
+  {
+    from: "uniform-price-underfunding",
+    to: "preference-revelation-problem",
+    relation: "constrains",
+    reason:
+      "사람마다 다르게 받는 길이 열리려면 각자의 값을 알아야 하는데 그것이 바로 얻을 수 없는 숫자입니다.",
+  },
+  {
+    from: "total-surplus-price-invariance",
+    to: "uniform-price-underfunding",
+    relation: "contrasts",
+    reason:
+      "한 값이 몫만 정하고 총량을 건드리지 않던 것은 값을 낸 사람만 쓰는 재화에서의 이야기입니다.",
+  },
+  {
+    from: "vertical-summation-rule",
+    to: "uniform-price-underfunding",
+    relation: "prerequisite",
+    reason:
+      "합이 비용을 넘는다는 판정과 한 값으로 그 합을 걷을 수 있느냐가 다른 문제임을 보이는 순서입니다.",
   },
 ];
 

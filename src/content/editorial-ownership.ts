@@ -12744,6 +12744,45 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "public-goods-and-commons": {
+    title:
+      "빼놓을 수 없으면 아무도 내지 않고, 줄어드는 것이면 너무 빨리 씁니다 글이 소유하는 범위",
+    owns: [
+      "같이 누리는 것에서 값을 세로로 더해 맞는 수량을 정하는 판정",
+      "그 판정에 넣을 값을 물어볼 때 걷는 방식이 거짓말의 방향을 정한다는 것",
+      "빼놓을 수 없고 줄어들기까지 할 때 남는 것이 0이 될 때까지 들어온다는 계산",
+      "한 값으로는 총가치가 비용을 넘어도 못 채운다는 것과 그 조건",
+      "네 칸 각각에서 수량이 어느 방향으로 어긋나는지의 대조",
+    ],
+    reuses: [
+      {
+        label: "배제성·경합성으로 네 칸을 가르는 분류",
+        href: "/politics/polity/collective-choice-problem#two-kinds-of-choice",
+      },
+      {
+        label: "무임승차의 유인 구조와 집단 크기",
+        href: "/politics/polity/collective-choice-problem#free-riding",
+      },
+      {
+        label: "규칙을 세워 유지한 사례의 조건",
+        href: "/politics/polity/collective-choice-problem#self-governance",
+      },
+      {
+        label: "장부에 적히지 않는 몫이 수량을 어긋나게 하는 구조",
+        href: "/economics/market-failure/externalities-and-social-cost#overproduction",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Samuelson 에 귀속하는 것은 정의·세로 합·분권 불가능성·줄여 말하는 방향까지이고, 부풀리는 방향과 이산 형태 부등식과 숫자 예시는 이 글의 계산으로 표시한다",
+      },
+      {
+        kind: "primary-source",
+        rule: "Hardin 에 귀속하는 것은 득실을 쪼개는 셈까지이고, 그 논문이 이어 가는 불가피성 결론은 가져오지 않으며 반례가 보고되어 있음을 함께 적는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

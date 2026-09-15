@@ -34,4 +34,37 @@ export const marketFailureArticles: Article[] = [
     component: () =>
       import("@/pages/articles/market-failure/externalities-and-social-cost"),
   },
+  {
+    slug: "public-goods-and-commons",
+    title: "빼놓을 수 없으면 아무도 내지 않고, 줄어드는 것이면 너무 빨리 씁니다",
+    subcategory: "mf-commons",
+    sections: [
+      {
+        id: "overview",
+        title: "앞 글의 두 길이 모두 닫히는 경우가 있습니다",
+      },
+      {
+        id: "vertical-sum",
+        title: "부품 1. 한 사람이 더 누려도 줄지 않으면 값을 세로로 더합니다",
+      },
+      {
+        id: "revelation",
+        title: "부품 2. 얼마나 원하는지 물어보면 참말할 이유가 없습니다",
+      },
+      {
+        id: "congestion",
+        title: "부품 3. 줄어드는 것이면 반대쪽으로 어긋납니다",
+      },
+      {
+        id: "excluding",
+        title: "부품 4. 빼놓을 수 있게 되어도 한 값으로는 비용을 못 채웁니다",
+      },
+      {
+        id: "boundary",
+        title: "얼마가 맞는지를 아는 것과 그것을 정하는 것은 다른 일입니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/market-failure/public-goods-and-commons"),
+  },
 ];
