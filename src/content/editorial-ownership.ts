@@ -12783,6 +12783,48 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "information-asymmetry": {
+    title: "한쪽만 아는 것이 있으면 값이 평균을 말합니다 글이 소유하는 범위",
+    owns: [
+      "구별할 수 없을 때 값이 나온 것들의 평균에 붙는다는 구조",
+      "그 값이 좋은 쪽을 밀어내는 과정과 멈추는 자리의 계산",
+      "얼마나 무너지는지가 배수와 바닥 값에 달려 있다는 것",
+      "값비싼 표시가 갈라내는 조건과 그 값만큼 전체가 줄어든다는 것",
+      "계약 뒤에 행동이 바뀌는 문제와 본인에게 남겨야 하는 몫의 문턱",
+    ],
+    reuses: [
+      {
+        label: "값 하나가 사정을 옳게 전달하기 위한 조건",
+        href: "/economics/prices/prices-as-information#sufficient",
+      },
+      {
+        label: "말로 물어서는 얻을 수 없는 숫자",
+        href: "/economics/market-failure/public-goods-and-commons#revelation",
+      },
+      {
+        label: "값이 드는 형식으로 약속을 걸러 내는 법 쪽 요건",
+        href: "/law/private-law/contract-and-enforceable-promise#which-promises",
+      },
+      {
+        label: "주의 수준을 한 단계 비교로 정하는 판정",
+        href: "/law/private-law/tort-and-accident-cost#how-much-care",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Akerlof 에 귀속하는 것은 구조와 §IV 열거까지이고, 여섯 대 예시와 절반이 남는다는 결과는 이 글의 계산으로 표시하며 논문의 연속형 예와 다른 이유를 함께 적는다",
+      },
+      {
+        kind: "primary-source",
+        rule: "Spence 에 귀속하는 것은 비용 조건과 논문 자신의 수치까지이고, 잘하는 쪽이 이득을 보는 이 글의 수치는 일반 결론이 아님을 본문과 notClaim 양쪽에 적는다",
+      },
+      {
+        kind: "primary-source",
+        rule: "Arrow 는 발췌본으로 대조했음을 밝히고, 자기부담 문턱의 유도는 이 글의 계산으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -84942,4 +84942,307 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "market-failure/information-asymmetry": {
+    entryNote:
+      "앞의 모든 글은 양쪽이 같은 물건을 보고 있다고 두었습니다. 여기서는 한쪽만 봅니다.",
+    coreIdea:
+      "물건의 상태를 한쪽만 알면 값은 어느 한 물건의 값이 아니라 그 값에 나오는 것들의 평균에 붙고, 평균보다 나은 것은 언제나 물러나므로 사라지는 쪽이 좋은 쪽이 됩니다. 되돌리려면 못하는 쪽이 따라 하기 어려운 값비싼 표시가 필요한데 그 값만큼 전체가 줄고 잘하는 쪽까지 손해를 보는 경우도 있습니다. 계약 뒤에 행동이 바뀌는 문제는 종류가 달라서, 손해의 일부를 본인 장부에 남기는 것으로만 되돌아옵니다.",
+    assumedKnowledge: [
+      {
+        id: "price-as-sufficient-signal",
+        role: "값 하나가 사정을 옳게 전달하기 위한 조건을 가져와 그것이 깨지는 자리를 짚습니다.",
+      },
+      {
+        id: "preference-revelation-problem",
+        role: "말로 물어서는 얻을 수 없는 숫자가 있다는 앞 글의 결과를 물건의 상태로 옮깁니다.",
+      },
+      {
+        id: "private-vs-social-cost",
+        role: "손해가 자기 장부에서 빠지면 결정이 어긋난다는 구조를 계약 뒤의 행동에 다시 씁니다.",
+      },
+      {
+        id: "transaction-cost",
+        role: "상대가 어떤지를 재는 데 드는 값으로 표시의 값을 다룹니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "pooled-price-on-hidden-quality",
+        role: "구별할 수 없을 때 값이 무엇에 붙는지를 세웁니다.",
+      },
+      {
+        id: "adverse-selection-unravelling",
+        role: "그 값이 어느 쪽을 밀어내는지와 그 크기를 셉니다.",
+      },
+      {
+        id: "costly-signal-separation",
+        role: "갈라내는 장치가 서는 조건과 그 대가를 정합니다.",
+      },
+      {
+        id: "hidden-action-and-retained-share",
+        role: "계약 뒤에 행동이 바뀌는 다른 종류의 문제와 그 문턱을 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "pooled-price-on-hidden-quality",
+        sectionId: "pooling",
+        intuition:
+          "좋은 차 주인도 말은 할 수 있는데 나쁜 차 주인도 똑같은 말을 할 수 있습니다.",
+        workedExample:
+          "판 쪽의 값이 2, 4, 6, 8, 10, 12이고 산 쪽이 1.5배로 쳐도, 산 쪽은 어느 대인지 모르므로 값 하나만 부를 수 있습니다.",
+        boundary:
+          "정보가 한쪽에 몰려 있다는 사실 자체가 문제인 것은 아닙니다. 산 쪽이 2배로 치면 구별하지 못해도 여섯 대가 다 거래됩니다.",
+      },
+      {
+        id: "adverse-selection-unravelling",
+        sectionId: "unravelling",
+        intuition:
+          "값을 올리면 좋은 차도 나오지만 나쁜 차는 그대로 남아 있습니다.",
+        workedExample:
+          "값 6이면 세 대가 나와 평균이 6이라 맞는데, 값 8이면 네 대가 나와 평균이 7.5라 값에 못 미칩니다. 그래서 세 대만 거래되고 15가 사라집니다.",
+        proofIdea:
+          "부른 값 P는 자기 물건을 P 아래로 치는 쪽만 불러내므로 산 쪽이 마주하는 것은 그 범위의 평균입니다. 범위가 아래에서 고정된 채 위로 넓어지면 평균은 범위의 가운데를 따라 올라 P의 절반 속도로 움직이는 반면 P는 그 자신이므로, 배수 k를 곱해도 어느 지점에서 k×평균이 P 아래로 내려갑니다. 그 직전이 값이 멈추는 자리입니다.",
+        counterexample:
+          "가장 나쁜 물건의 값이 0까지 내려가 있으면 어떤 값에서도 평균이 값의 절반 근처라 1.5배로도 못 미쳐 아무것도 거래되지 않습니다.",
+        boundary:
+          "사라지는 것이 나쁜 물건이 아니라 좋은 물건입니다. 수량이 어긋나는 앞 두 글의 실패와 종류가 다릅니다.",
+      },
+      {
+        id: "costly-signal-separation",
+        sectionId: "signaling",
+        intuition:
+          "나쁜 쪽이 따라 하기 어려운 것이라야 표시가 무슨 일이든 합니다.",
+        workedExample:
+          "해내는 양이 12와 6이고 표시 한 단위가 잘하는 쪽에 1, 못하는 쪽에 4일 때 두 단위를 요구하면 각각 10과 6이 되어 갈라집니다.",
+        proofIdea:
+          "요구 단위 s에서 못하는 쪽이 따라오지 않으려면 표시를 갖춰 받는 값에서 그쪽 비용을 뺀 것이 안 갖추고 받는 값보다 작아야 하고, 잘하는 쪽이 갖추려면 같은 부등식이 반대로 서야 합니다. 두 비용이 다르면 두 부등식을 동시에 만족하는 s의 구간이 생기고, 같으면 두 부등식이 같아져 구간이 비어 버립니다.",
+        counterexample:
+          "두 유형의 표시 비용이 같으면 못하는 쪽도 12에서 2를 빼 10을 얻어 따라오므로 아무것도 갈라지지 않습니다.",
+        boundary:
+          "갈라져도 합은 표시에 들어간 값만큼 줄고, 비용 비가 완만하면 잘하는 쪽까지 섞여 있을 때보다 손해입니다.",
+      },
+      {
+        id: "hidden-action-and-retained-share",
+        sectionId: "hidden-action",
+        intuition:
+          "손해가 자기 장부에서 빠지면 주의할 이유도 같이 빠집니다.",
+        workedExample:
+          "손해 100, 확률 0.3과 0.1, 주의 비용 10일 때 전액 보험이면 본인이 보는 것이 10뿐이라 주의를 안 하고 사회적 비용이 20에서 30으로 오릅니다.",
+        proofIdea:
+          "본인이 지는 몫이 d일 때 주의하면 낮은 확률로 d를 지고 주의 비용을 치르며 안 하면 높은 확률로 d를 집니다. 두 값을 견주면 주의가 나은 조건이 확률 차이에 d를 곱한 것이 주의 비용 이상이라는 부등식이 되고, 이를 d에 대해 풀면 주의 비용을 확률 차이로 나눈 문턱이 나옵니다.",
+        counterexample:
+          "주의가 확률을 거의 낮추지 못하면 문턱이 손해 전액을 넘어, 어떤 자기부담으로도 주의를 되돌릴 수 없습니다.",
+        boundary:
+          "문턱이 50이라는 것은 손해의 절반 이상을 본인이 진다는 뜻이고, 보험이 하려던 일을 그만큼 포기한다는 뜻입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 값이 무엇에 붙나",
+        relation: "구별할 수 없을 때 값의 자리를 정합니다.",
+        concepts: ["pooled-price-on-hidden-quality"],
+      },
+      {
+        label: "01 누가 밀려나나",
+        relation: "그 값이 밀어내는 쪽과 사라지는 크기를 셉니다.",
+        concepts: ["adverse-selection-unravelling"],
+      },
+      {
+        label: "02 갈라내려면",
+        relation: "표시가 서는 조건과 그 대가를 봅니다.",
+        concepts: ["costly-signal-separation"],
+      },
+      {
+        label: "03 계약 뒤에는",
+        relation: "행동이 바뀌는 다른 종류의 문제를 봅니다.",
+        concepts: ["hidden-action-and-retained-share"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "좋은 물건을 가진 쪽이 좋다고 말하는 것으로는 왜 아무것도 갈라지지 않는지 쓰세요.",
+        answerChecklist: [
+          "나쁜 쪽도 똑같은 말을 할 수 있음",
+          "말에 값이 들지 않음",
+          "그래서 말이 유형을 나누지 못함",
+          "값이 드는 표시라야 갈라짐",
+        ],
+        requiredConcepts: ["pooled-price-on-hidden-quality"],
+        sectionId: "pooling",
+      },
+      {
+        level: "basic",
+        question:
+          "판 쪽 값이 2, 4, 6, 8, 10, 12이고 산 쪽이 1.5배로 칠 때 값 8에서 무슨 일이 일어나는지 계산하세요.",
+        answerChecklist: [
+          "네 대가 나옴",
+          "그 네 대의 값어치가 3, 6, 9, 12",
+          "평균이 7.5",
+          "8보다 작아 산 쪽이 안 냄",
+        ],
+        requiredConcepts: ["adverse-selection-unravelling"],
+        sectionId: "unravelling",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 예에서 값이 멈추는 자리와 사라지는 이득을 구하세요.",
+        answerChecklist: [
+          "값 6에서 멈춤",
+          "세 대가 거래됨",
+          "안 나온 세 대의 차이가 4, 5, 6",
+          "사라지는 이득 15",
+        ],
+        requiredConcepts: ["adverse-selection-unravelling"],
+        sectionId: "unravelling",
+      },
+      {
+        level: "basic",
+        question:
+          "해내는 양이 12와 6이고 표시 비용이 1과 4일 때 두 단위를 요구하면 어떻게 되는지 계산하세요.",
+        answerChecklist: [
+          "잘하는 쪽은 12 − 2 = 10",
+          "안 갖추면 6이라 갖추는 편이 나음",
+          "못하는 쪽은 12 − 8 = 4",
+          "안 갖추고 6을 받는 편이 나아 따라오지 않음",
+        ],
+        requiredConcepts: ["costly-signal-separation"],
+        sectionId: "signaling",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 예에서 갈라진 뒤의 합과 섞여 있을 때의 합을 견주고 그 차이가 무엇인지 쓰세요.",
+        answerChecklist: [
+          "갈라지면 10 + 6 = 16",
+          "섞이면 9 + 9 = 18",
+          "2가 줄어듦",
+          "그 2가 표시에 들어간 값",
+        ],
+        requiredConcepts: ["costly-signal-separation"],
+        sectionId: "signaling",
+      },
+      {
+        level: "basic",
+        question:
+          "손해 100, 확률 0.3과 0.1, 주의 비용 10일 때 보험이 없을 때와 전액 보험일 때를 각각 계산하세요.",
+        answerChecklist: [
+          "보험 없으면 주의 20, 안 함 30이라 주의함",
+          "전액 보험이면 본인이 보는 것이 주의 비용 10뿐",
+          "주의를 안 하게 됨",
+          "사회적 비용이 20에서 30으로 오름",
+        ],
+        requiredConcepts: ["hidden-action-and-retained-share"],
+        sectionId: "hidden-action",
+      },
+      {
+        level: "advanced",
+        question:
+          "값을 올려도 평균이 값을 따라오지 못하는 이유를 설명하세요.",
+        answerChecklist: [
+          "부른 값이 나오는 범위의 위 끝을 정함",
+          "범위가 아래에서 고정된 채 넓어짐",
+          "평균은 범위의 가운데를 따라가 값의 절반 속도로 움직임",
+          "배수를 곱해도 어느 지점에서 값 아래로 내려감",
+        ],
+        requiredConcepts: ["adverse-selection-unravelling"],
+        sectionId: "unravelling",
+      },
+      {
+        level: "advanced",
+        question:
+          "표시 비용이 유형마다 달라야 하는 이유를 부등식으로 설명하세요.",
+        answerChecklist: [
+          "못하는 쪽이 안 따라올 조건과 잘하는 쪽이 갖출 조건을 각각 세움",
+          "두 부등식이 요구 단위에 대한 구간을 만듦",
+          "두 비용이 같으면 두 부등식이 같아짐",
+          "그러면 구간이 비어 갈라지지 않음",
+        ],
+        requiredConcepts: ["costly-signal-separation"],
+        sectionId: "signaling",
+      },
+      {
+        level: "advanced",
+        question:
+          "자기부담의 문턱을 유도하고, 그 값이 크다는 것이 무엇을 뜻하는지 쓰세요.",
+        answerChecklist: [
+          "주의하면 낮은 확률로 d를 지고 주의 비용을 치름",
+          "안 하면 높은 확률로 d를 짐",
+          "확률 차이에 d를 곱한 것이 주의 비용 이상이어야 함",
+          "d가 주의 비용을 확률 차이로 나눈 값 이상이고, 그만큼 위험을 덜어 주지 못함",
+        ],
+        requiredConcepts: ["hidden-action-and-retained-share"],
+        sectionId: "hidden-action",
+      },
+      {
+        level: "advanced",
+        question:
+          "계약 전에 숨어 있는 것과 계약 뒤에 바뀌는 것이 왜 다른 장치를 필요로 하는지 쓰세요.",
+        answerChecklist: [
+          "앞은 이미 정해진 상태를 드러내는 문제",
+          "그래서 따라 하기 어려운 표시가 필요",
+          "뒤는 앞으로의 선택을 바꾸는 문제",
+          "그래서 손해의 일부를 본인 장부에 남겨야 함",
+        ],
+        requiredConcepts: [
+          "adverse-selection-unravelling",
+          "hidden-action-and-retained-share",
+        ],
+        sectionId: "hidden-action",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "George A. Akerlof, “The Market for ‘Lemons’: Quality Uncertainty and the Market Mechanism” (The Quarterly Journal of Economics 84:3, 1970)",
+        href: "https://doi.org/10.2307/1879431",
+        problem:
+          "파는 쪽만 물건의 상태를 알 때 시장이 어떻게 되는지에 대한 분석이 없었고, 새 차와 갓 나온 중고차의 값 차이 같은 현상이 취향의 문제로만 설명되고 있었습니다.",
+        contribution:
+          "구별할 수 없으면 좋은 것과 나쁜 것이 같은 값에 팔릴 수밖에 없고, 그래서 좋은 것의 주인이 제 값도 평균값도 받지 못한 채 묶인다는 것을 보입니다. 나쁜 것이 좋은 것을 몰아내는 모양이 악화가 양화를 몰아내는 현상과 닮았지만 그쪽은 양쪽이 다 구별할 수 있다는 점에서 다르다고 스스로 단서를 답니다. 마지막 절에서는 이 문제를 상쇄하려고 생겨난 장치들을 보증·상표·상호·자격으로 열거합니다.",
+        assumptions:
+          "파는 쪽이 자기 물건을 정확히 알고 사는 쪽은 분포만 안다고 두며, 예시에서는 효용이 선형이고 물건의 상태가 고르게 퍼져 있다고 둡니다.",
+        evidenceScope:
+          "1970년 8월호 488~500쪽 원문 열세 쪽을 내려받아 정보 비대칭 대목, 좋은 물건 주인이 묶인다는 문장, 악화·양화 비유의 단서, 그리고 §IV의 장치 열거를 직접 대조했습니다.",
+        notClaim:
+          "이 글의 숫자 예시는 논문의 것이 아니라 여섯 대로 줄여 다시 계산한 것입니다. 산 쪽이 1.5배로 친다는 설정만 논문의 효용함수와 같은 비율을 썼습니다. 또 논문의 연속형 예에서는 아무것도 거래되지 않지만 이 글에서는 절반이 남는데, 그 차이는 가장 나쁜 물건의 값이 0까지 내려가 있느냐에서 옵니다.",
+        sectionId: "pooling",
+      },
+      {
+        title:
+          "Michael Spence, “Job Market Signaling” (The Quarterly Journal of Economics 87:3, 1973)",
+        href: "https://doi.org/10.2307/1882010",
+        problem:
+          "구별할 수 없는 쪽이 밀려난다면 스스로 드러낼 방법이 있어야 하는데, 어떤 표시가 그 일을 할 수 있고 어떤 표시가 못 하는지의 기준이 없었습니다.",
+        contribution:
+          "바꿀 수 없는 지표와 값을 치러 갖추는 표시를 가르고, 표시가 유형을 나누려면 그것을 얻는 값이 능력과 반대로 움직여야 한다는 조건을 소절 제목으로 따로 세웁니다. 조건이 깨지면 모두가 똑같이 갖추어 아무것도 나뉘지 않습니다. 그리고 자신의 수치에서는 갈라진 뒤에 잘하는 쪽까지 섞여 있을 때보다 못해진다는 것을 계산해 보입니다.",
+        assumptions:
+          "표시가 해내는 양을 전혀 바꾸지 않는다고 두고, 고용하는 쪽의 믿음이 결과로 확인되는 상태를 균형으로 둡니다.",
+        evidenceScope:
+          "1973년 8월호 355~374쪽 원문을 내려받아 A Critical Assumption 소절, 능력 1과 2에 비용 y와 y/2를 둔 수치 예, 갈라지는 범위가 1과 2 사이라는 조건, 그리고 아무도 표시가 없는 쪽을 선호한다는 결론을 직접 대조했습니다.",
+        notClaim:
+          "이 글의 수치에서는 잘하는 쪽이 이득을 보는데 그것은 비용 비를 1대 4로 더 가파르게 둔 결과이지 일반적인 결론이 아닙니다. 논문 자신의 수치에서는 모두가 손해입니다. 갈라서 이득인지는 잘하는 쪽의 비용을 못하는 쪽의 비용으로 나눈 값과 못하는 쪽의 비율을 견줘야 정해집니다.",
+        sectionId: "signaling",
+      },
+      {
+        title:
+          "Kenneth J. Arrow, “Uncertainty and the Welfare Economics of Medical Care” (The American Economic Review 53:5, 1963)",
+        href: "https://www.jstor.org/stable/1812044",
+        problem:
+          "보험이 왜 어디까지만 제공되는지, 왜 자기부담 같은 장치가 붙는지를 설명할 틀이 필요했습니다.",
+        contribution:
+          "보험이 성립하려면 보험을 든 사건이 본인의 통제 밖에 있어야 하는데 현실에서는 그 분리가 완전할 수 없다고 적고, 불이 나는 확률이 부주의에 영향을 받는다는 예를 듭니다. 대응책으로 자기부담 조항이 도입되어 있다는 것을 같은 문단에서 짚습니다. 또 위험별로 보험료를 나누지 않으면 좋은 위험이 빠져나가 남는 쪽이 나빠진다는 것도 같은 논문에서 적습니다.",
+        assumptions:
+          "의료를 예로 들며 보험사가 주의 여부를 관찰할 수 없다고 둡니다.",
+        evidenceScope:
+          "세계보건기구가 2004년에 공개한 전재본으로 §V.C.1의 통제 밖 조건과 자기부담 대목, 그리고 좋은 위험이 빠져나간다는 대목을 직접 대조했습니다. 그 판본은 중간중간 줄임표로 생략된 발췌본이라 인용한 문단 바깥의 맥락까지는 확인하지 못했습니다.",
+        notClaim:
+          "이 글의 숫자 예시는 논문의 것이 아닙니다. 논문은 자기부담이 쓰인다는 사실을 짚을 뿐 문턱을 식으로 내지 않으며, 그 유도는 이 글의 계산입니다.",
+        sectionId: "hidden-action",
+      },
+    ],
+  },
 };

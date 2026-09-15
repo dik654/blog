@@ -67,4 +67,37 @@ export const marketFailureArticles: Article[] = [
     component: () =>
       import("@/pages/articles/market-failure/public-goods-and-commons"),
   },
+  {
+    slug: "information-asymmetry",
+    title: "한쪽만 아는 것이 있으면 값이 평균을 말합니다",
+    subcategory: "mf-information",
+    sections: [
+      {
+        id: "overview",
+        title: "지금까지는 양쪽이 같은 것을 보고 있었습니다",
+      },
+      {
+        id: "pooling",
+        title: "부품 1. 구별할 수 없으면 좋은 것과 나쁜 것이 같은 값에 팔립니다",
+      },
+      {
+        id: "unravelling",
+        title: "부품 2. 그 값으로는 좋은 것부터 나오지 않습니다",
+      },
+      {
+        id: "signaling",
+        title: "부품 3. 아는 쪽이 값비싼 표시를 보내면 갈라집니다",
+      },
+      {
+        id: "hidden-action",
+        title: "부품 4. 계약을 맺은 뒤에 행동이 바뀝니다",
+      },
+      {
+        id: "boundary",
+        title: "가려내는 장치의 값을 세지 않으면 절반만 본 것입니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/market-failure/information-asymmetry"),
+  },
 ];
