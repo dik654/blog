@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import Home from "@/pages/Home";
 import CategoryPage from "@/pages/CategoryPage";
 import ArticlePage from "@/pages/ArticlePage";
+import DomainPage from "@/pages/DomainPage";
 import LegacyRouteRedirect from "@/pages/LegacyRouteRedirect";
 import { DOMAIN_META } from "@/content/domains";
 
@@ -20,6 +21,10 @@ export default function App() {
           <Route path="/" element={<Home />} />
           {DOMAIN_META.map((domain) => (
             <Fragment key={domain.slug}>
+              <Route
+                path={`/${domain.slug}`}
+                element={<DomainPage domain={domain.slug} />}
+              />
               <Route
                 path={`/${domain.slug}/:category`}
                 element={<CategoryPage domain={domain.slug} />}

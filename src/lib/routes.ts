@@ -11,6 +11,10 @@ import { domainOf } from "@/content/domains";
  * 합니다.
  */
 
+export function domainHref(domainSlug: string): string {
+  return `/${domainSlug}`;
+}
+
 export function categoryHref(categorySlug: string): string {
   return `/${domainOf(categorySlug)}/${categorySlug}`;
 }
