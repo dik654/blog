@@ -84368,4 +84368,289 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "market-failure/externalities-and-social-cost": {
+    entryNote:
+      "앞 글이 전제로 둔 한 가지를 여기서 풉니다. 한 사람의 결정이 남의 숫자를 바꾸지 않는다는 전제입니다.",
+    coreIdea:
+      "만드는 쪽 장부에 적히지 않고 제삼자가 지는 몫이 있으면 그 값이 두 줄 어디에도 없어 값이 사정을 잘못 말하고, 그 몫이 비용이면 늘 더 만들어집니다. 되돌리는 길은 둘인데 빠진 몫을 값에 얹으려면 그 크기를 알아야 하고, 권리만 정해 주고 협상시키려면 상대를 특정할 수 있고 협상 비용이 이득보다 작아야 합니다. 협상이 막히면 처음 권리 배치가 그대로 결과가 되므로 어디에 두느냐가 중요해집니다.",
+    assumedKnowledge: [
+      {
+        id: "price-as-sufficient-signal",
+        role: "값이 옳게 말하려면 무엇이 필요했는지를 가져와 그 조건이 깨지는 지점을 짚습니다.",
+      },
+      {
+        id: "total-surplus-price-invariance",
+        role: "쌍별 차이로 봉우리를 찾는 방법을 그대로 씁니다.",
+      },
+      {
+        id: "transaction-cost",
+        role: "협상 경로가 열리는 조건으로 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "private-vs-social-cost",
+        role: "두 비용이 갈라지는 자리를 정의합니다.",
+      },
+      {
+        id: "externality-quantity-distortion",
+        role: "그 차이가 수량과 총량을 얼마나 어긋나게 하는지 세웁니다.",
+      },
+      {
+        id: "pricing-in-the-missing-cost",
+        role: "값에 얹어 되돌리는 길과 그 한계를 정합니다.",
+      },
+      {
+        id: "rights-assignment-and-bargaining",
+        role: "권리를 정해 협상시키는 길을 세웁니다.",
+      },
+      {
+        id: "rights-placement-when-bargaining-fails",
+        role: "협상이 막힐 때 무엇이 결과를 정하는지 정합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "private-vs-social-cost",
+        sectionId: "two-costs",
+        intuition:
+          "제삼자는 이 시장에 참여하지 않아 그의 몫이 어느 줄에도 없습니다.",
+        workedExample:
+          "장부에 적히는 값이 4, 5, 6, 7, 8, 9인데 만들 때마다 2가 옆 사람에게 가면 실제로 드는 값은 6, 7, 8, 9, 10, 11입니다.",
+        boundary:
+          "막는 쪽도 손해를 입힙니다. 물어야 할 것은 누구를 벌할지가 아니라 어느 쪽 손해가 더 큰지입니다.",
+      },
+      {
+        id: "externality-quantity-distortion",
+        sectionId: "overproduction",
+        intuition:
+          "장부가 실제보다 싸면 그만큼 더 만들어집니다.",
+        workedExample:
+          "장부만 보면 쌍별 차이가 6, 4, 2, 0, −2, −4라 넷까지인데 2를 더하면 4, 2, 0, −2, −4, −6이라 셋까지입니다. 시장은 넷을 만들어 2만큼 깎아먹습니다.",
+        proofIdea:
+          "시장은 v_Q ≥ c_Q인 마지막 Q에서 멈추고 옳은 자리는 v_Q ≥ c_Q + e인 마지막 Q입니다. e가 양수면 뒤 조건이 더 까다로우므로 두 번째 자리가 앞에 옵니다. 두 자리 사이의 각 단위는 v_i ≥ c_i지만 v_i < c_i + e이므로 실제 차이가 음수이고, 그 절댓값의 합이 깎아먹은 양입니다.",
+        counterexample:
+          "빠진 몫이 이득이면, 그러니까 e가 음수면 방향이 뒤집혀 덜 만들어집니다.",
+        boundary:
+          "전부를 막는 것이 답은 아닙니다. 첫 세 개는 제삼자의 몫까지 세어도 남으므로 문제는 몇 개째부터가 밑지느냐입니다.",
+      },
+      {
+        id: "pricing-in-the-missing-cost",
+        sectionId: "pricing-in",
+        intuition:
+          "빠진 항이 문제라면 그 항을 넣어 주면 됩니다.",
+        workedExample:
+          "한 개당 2를 물리면 장부가 6, 7, 8, 9, 10, 11이 되어 값이 8로 움직이고 세 개가 만들어집니다.",
+        counterexample:
+          "4를 물리면 두 개만 남는데 셋째는 다 세어도 밑지지 않던 단위였습니다. 크기가 빗나가면 반대쪽으로 어긋납니다.",
+        boundary:
+          "2라는 숫자를 알아야 합니다. 피해 정보는 모으기 어렵고 크게 부를수록 유리하므로 앞 글의 수집과 검증 문제가 그대로 돌아옵니다.",
+      },
+      {
+        id: "rights-assignment-and-bargaining",
+        sectionId: "bargaining",
+        intuition:
+          "얼마인지를 맞히지 말고 누구 것인지만 정해 주고 맡깁니다.",
+        workedExample:
+          "넷째로 만드는 쪽이 얻는 것이 0이고 옆 사람이 잃는 것이 2이면, 권리가 어느 쪽에 있든 넷째는 만들어지지 않고 셋에서 멈춥니다.",
+        proofIdea:
+          "한 단위를 만들지 여부는 양쪽이 그 단위에서 얻고 잃는 값의 크기로 정해집니다. 권리가 만드는 쪽에 있으면 피해 쪽이 자기 손실보다 적은 금액으로 막을 수 있을 때 막고, 권리가 피해 쪽에 있으면 만드는 쪽이 상대의 손실보다 큰 이득이 있을 때만 삽니다. 두 조건 모두 이득이 손실보다 큰지를 묻는 같은 부등식이므로 결과가 같습니다. 달라지는 것은 돈이 어느 방향으로 흐르느냐뿐입니다.",
+        counterexample:
+          "협상에 3이 드는데 막아서 생기는 이득이 2뿐이면 아무도 협상하지 않아 이 결과가 성립하지 않습니다.",
+        boundary:
+          "상대를 특정할 수 있고 서로의 숫자를 알아야 합니다. 둘 중 하나만 깨져도 협상 경로가 닫힙니다.",
+      },
+      {
+        id: "rights-placement-when-bargaining-fails",
+        sectionId: "bargaining",
+        intuition:
+          "고칠 수 없으면 처음 놓은 자리가 그대로 남습니다.",
+        workedExample:
+          "협상 비용이 이득보다 크면 권리가 만드는 쪽에 있을 때 넷째가 그대로 만들어지고 피해 쪽에 있으면 협상 없이도 막힙니다.",
+        boundary:
+          "그래서 협상이 열렸다면 갔을 쪽을 미리 판단해야 하는데, 그 판단 자체가 앞 절에서 어렵다고 한 정보를 필요로 합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 무엇이 빠졌나",
+        relation: "장부에 적히는 값과 실제로 드는 값을 가릅니다.",
+        concepts: ["private-vs-social-cost"],
+      },
+      {
+        label: "01 얼마나 어긋나나",
+        relation: "수량의 어긋남과 깎아먹은 양을 셉니다.",
+        concepts: ["externality-quantity-distortion"],
+      },
+      {
+        label: "02 값에 얹기",
+        relation: "빠진 몫을 장부에 넣는 길과 그 한계를 봅니다.",
+        concepts: ["pricing-in-the-missing-cost"],
+      },
+      {
+        label: "03 권리로 맡기기",
+        relation: "협상에 맡기는 길과 그것이 막힐 때를 봅니다.",
+        concepts: [
+          "rights-assignment-and-bargaining",
+          "rights-placement-when-bargaining-fails",
+        ],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "제삼자가 지는 몫이 왜 값에 반영되지 않는지 쓰고, 이 문제를 누가 나쁜 사람이냐로 보면 안 되는 이유를 쓰세요.",
+        answerChecklist: [
+          "제삼자는 이 시장에 참여하지 않음",
+          "사려는 줄에도 팔려는 줄에도 없음",
+          "막는 쪽도 막힌 쪽에 손해를 입힘",
+          "어느 쪽 손해가 더 큰지가 물음",
+        ],
+        requiredConcepts: ["private-vs-social-cost"],
+        sectionId: "two-costs",
+      },
+      {
+        level: "basic",
+        question:
+          "장부 값이 4, 5, 6, 7, 8, 9이고 빠진 몫이 2일 때 실제 쌍별 차이와 옳은 수량을 구하세요.",
+        answerChecklist: [
+          "실제로 드는 값은 6, 7, 8, 9, 10, 11",
+          "차이는 4, 2, 0, −2, −4, −6",
+          "셋째까지가 봉우리",
+          "시장은 넷을 만듦",
+        ],
+        requiredConcepts: ["externality-quantity-distortion"],
+        sectionId: "overproduction",
+      },
+      {
+        level: "basic",
+        question:
+          "넷째 한 개가 깎아먹는 양을 구하고 그 손해를 누가 지는지 쓰세요.",
+        answerChecklist: [
+          "그 쌍의 실제 차이가 −2",
+          "2만큼 깎아먹음",
+          "만든 쪽은 7에 팔아 7이 들어 본전",
+          "잃은 것은 거래에 끼지 않은 사람",
+        ],
+        requiredConcepts: ["externality-quantity-distortion"],
+        sectionId: "overproduction",
+      },
+      {
+        level: "basic",
+        question:
+          "한 개당 2를 물리면 무슨 일이 일어나는지 계산하고, 이 길의 한계를 쓰세요.",
+        answerChecklist: [
+          "장부가 6, 7, 8, 9, 10, 11이 됨",
+          "값이 8로 움직이고 셋이 만들어짐",
+          "옳은 수량과 일치",
+          "2라는 숫자를 알아야 하고 부풀려 답할 이유가 있음",
+        ],
+        requiredConcepts: ["pricing-in-the-missing-cost"],
+        sectionId: "pricing-in",
+      },
+      {
+        level: "basic",
+        question:
+          "권리를 만드는 쪽에 줄 때와 피해 쪽에 줄 때 넷째가 어떻게 되는지 각각 쓰세요.",
+        answerChecklist: [
+          "만드는 쪽이면 피해 쪽이 0에서 2 사이를 주고 막음",
+          "피해 쪽이면 만드는 쪽이 2 이상을 줘야 하는데 얻는 것이 0",
+          "두 경우 모두 만들어지지 않음",
+          "돈의 방향만 반대",
+        ],
+        requiredConcepts: ["rights-assignment-and-bargaining"],
+        sectionId: "bargaining",
+      },
+      {
+        level: "basic",
+        question:
+          "협상에 3이 들면 결과가 어떻게 달라지는지 권리 위치별로 쓰세요.",
+        answerChecklist: [
+          "막아서 생기는 이득이 2뿐",
+          "3을 치르고 협상할 이유가 없음",
+          "권리가 만드는 쪽이면 넷째가 만들어짐",
+          "피해 쪽이면 협상 없이도 막힘",
+        ],
+        requiredConcepts: ["rights-placement-when-bargaining-fails"],
+        sectionId: "bargaining",
+      },
+      {
+        level: "advanced",
+        question:
+          "빠진 몫이 있을 때 수량이 어긋나는 방향이 정해지는 이유를 식으로 설명하세요.",
+        answerChecklist: [
+          "시장은 v ≥ c인 마지막 자리",
+          "옳은 자리는 v ≥ c + e인 마지막 자리",
+          "e가 양수면 뒤 조건이 더 까다로움",
+          "그래서 늘 더 만들어지고 음수면 반대",
+        ],
+        requiredConcepts: ["externality-quantity-distortion"],
+        sectionId: "overproduction",
+      },
+      {
+        level: "advanced",
+        question:
+          "권리를 누구에게 주든 수량이 같아짐을 부등식으로 유도하세요.",
+        answerChecklist: [
+          "만드는 쪽 권리면 피해 쪽이 자기 손실보다 적게 내고 막음",
+          "피해 쪽 권리면 만드는 쪽이 상대 손실보다 큰 이득이 있을 때만 삼",
+          "두 조건이 같은 부등식",
+          "달라지는 것은 돈의 방향뿐",
+        ],
+        requiredConcepts: ["rights-assignment-and-bargaining"],
+        sectionId: "bargaining",
+      },
+      {
+        level: "advanced",
+        question:
+          "값에 얹는 길과 협상에 맡기는 길이 각각 어떤 정보를 필요로 하는지 견주세요.",
+        answerChecklist: [
+          "얹는 길은 빠진 몫의 크기를 알아야 함",
+          "협상 길은 그 크기를 몰라도 됨",
+          "대신 상대를 특정할 수 있어야 함",
+          "협상 비용이 이득보다 작아야 함",
+        ],
+        requiredConcepts: [
+          "pricing-in-the-missing-cost",
+          "rights-assignment-and-bargaining",
+        ],
+        sectionId: "bargaining",
+      },
+      {
+        level: "advanced",
+        question:
+          "협상이 막힐 때 권리를 어디에 두어야 하는지와, 그 판단이 왜 어려운지 쓰세요.",
+        answerChecklist: [
+          "협상이 열렸다면 갔을 쪽",
+          "처음 배치가 그대로 결과가 되기 때문",
+          "그 판단에 어느 쪽 손해가 큰지의 정보가 필요",
+          "그 정보가 앞 절에서 모으기 어렵다고 한 것",
+        ],
+        requiredConcepts: [
+          "rights-placement-when-bargaining-fails",
+          "pricing-in-the-missing-cost",
+        ],
+        sectionId: "bargaining",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "R. H. Coase, “The Problem of Social Cost” (The Journal of Law and Economics, Volume III, 1960)",
+        href: "https://www.law.uchicago.edu/sites/default/files/file/coase-problem.pdf",
+        problem:
+          "해를 끼치는 쪽을 어떻게 막을지로 문제를 세우면 막아서 생기는 손해가 보이지 않고, 어느 쪽 손해가 더 큰지를 물을 수 없게 됩니다.",
+        contribution:
+          "문제를 상호적인 것으로 다시 세웠습니다. B에게 가는 해를 막으면 A에게 해가 가므로 물어야 할 것은 누구를 벌할지가 아니라 더 큰 손해를 피하는 길입니다. 그리고 시장 거래에 값이 들지 않으면 권리의 초기 배치와 무관하게 생산 가치가 커지는 방향으로 권리가 재배치된다고 적은 뒤, 그 전제를 스스로 비현실적이라 부르고 거래에 드는 값을 열거해 그 값이 크면 초기 배치가 효율에 영향을 준다고 결론합니다.",
+        assumptions:
+          "당사자를 특정할 수 있고 권리가 시장에서 거래될 수 있다고 둡니다.",
+        evidenceScope:
+          "1960년 10월 제3권 원문 PDF를 내려받아 상호성 대목, 값이 들지 않을 때의 문장, 거래에 드는 것들의 열거, 그리고 초기 배치가 효율에 영향을 준다는 §VI의 결론을 직접 대조했습니다.",
+        notClaim:
+          "흔히 이 글의 결론으로 소개되는 것은 거래에 값이 들지 않을 때의 이야기인데, 정작 이 글이 힘주어 말하는 것은 그 전제가 깨졌을 때 권리를 어디에 두느냐가 결과를 바꾼다는 뒤쪽입니다. 또 이 글의 숫자 예시는 논문의 것이 아니라 이 시리즈가 앞 글부터 이어 온 시장에 빠진 몫을 더해 계산한 것입니다.",
+        sectionId: "bargaining",
+      },
+    ],
+  },
 };

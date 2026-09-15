@@ -12713,6 +12713,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "externalities-and-social-cost": {
+    title:
+      "값이 옳게 말하려면 드는 것이 전부 장부에 적혀야 합니다 글이 소유하는 범위",
+    owns: [
+      "장부에 적히는 값과 실제로 드는 값이 갈라지는 구조와 문제의 상호성",
+      "빠진 몫이 수량을 어긋나게 하는 방향과 깎아먹은 양의 계산",
+      "빠진 몫을 값에 얹는 길과 크기가 빗나갈 때의 두 방향",
+      "권리를 누구에게 주든 수량이 같다는 유도와 그 전제",
+      "협상이 막힐 때 초기 배치가 결과가 된다는 것",
+    ],
+    reuses: [
+      {
+        label: "값이 옳게 말하기 위한 조건",
+        href: "/economics/prices/prices-as-information#sufficient",
+      },
+      {
+        label: "쌍별 차이로 봉우리를 찾는 방법",
+        href: "/economics/prices/surplus-and-efficiency#total-surplus",
+      },
+      {
+        label: "협상 비용으로 보호 방식을 고르는 법 쪽 판단",
+        href: "/law/private-law/property-and-entitlement#two-protections",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "논문에 귀속하는 것은 상호성·거래비용 논지·§VI 결론까지이고, 숫자 예시는 이 시리즈가 이어 온 시장에서 계산한 것으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
