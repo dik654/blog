@@ -12332,6 +12332,33 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "procedure-and-proof": {
+    title: "벌하기로 정해도 벌하기 전에 해야 할 일이 남습니다 글이 소유하는 범위",
+    owns: [
+      "두 오판이 남기는 것의 차이",
+      "문턱이 두 대가의 비만으로 정해진다는 계산",
+      "형사와 민사의 기준 차이가 무게의 차이에서 나온다는 설명",
+      "문턱이 증명 책임의 배치를 정한다는 관계",
+      "얻은 방법 때문에 쓰지 못하는 증거와 그것이 정확성 문제이기도 한 이유",
+      "증거들이 서로 독립인지를 세는 문제",
+    ],
+    reuses: [
+      {
+        label: "막는 힘이 확률과 형량의 곱이라는 계산",
+        href: "/law/criminal-law/crime-and-punishment-purpose#deterrence",
+      },
+      {
+        label: "형량이 커지면 유죄 인정이 신중해진다는 관찰",
+        href: "/law/criminal-law/crime-and-punishment-purpose#why-severity-fails",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "조문이 정하는 기본값과 배제의 범위만 조문에 귀속하고, 그 기본값의 위치를 설명하는 계산은 이 글이 전개한 것으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -24336,6 +24336,56 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "무엇이 범죄이고 얼마를 치르는지가 행위 이전에 문언으로 적혀 있어야 억제 계산이 성립하고, 조심할 방법도 생깁니다. 두 근거 가운데 뒤쪽은 억제가 전혀 작동하지 않는 경우에도 남으므로, 이 요구는 형벌의 목적을 무엇으로 잡든 유지됩니다.",
     canonicalHref: "/law/criminal-law/crime-and-punishment-purpose#legality",
   },
+  "asymmetric-error-costs": {
+    id: "asymmetric-error-costs",
+    kind: "concept",
+    domain: "law",
+    label: "두 오판의 비대칭",
+    aliases: ["무고한 유죄", "놓아주는 것", "오판의 무게"],
+    definition:
+      "하지 않은 사람을 벌하는 것은 조심해서 피할 수 없었던 불이익을 새로 만들고 되돌릴 수 없으며 다른 사람들의 믿음까지 흔드는 반면, 한 사람을 놓아주는 것은 손해를 남기고 억제를 약하게 하되 없던 불이익을 만들지는 않습니다. 두 잘못의 무게가 다르다는 것이 문턱을 한쪽으로 옮기는 근거입니다.",
+    canonicalHref: "/law/criminal-law/procedure-and-proof#two-errors",
+  },
+  "conviction-threshold": {
+    id: "conviction-threshold",
+    kind: "theorem",
+    domain: "law",
+    label: "유죄 문턱과 오판 비용의 비",
+    aliases: ["합리적 의심", "증거의 우월", "증명의 정도"],
+    definition:
+      "유죄로 할 때와 무죄로 할 때의 기대 대가를 견주면 두 대가의 절대 크기는 사라지고 비만 남아, 문턱이 비를 (1 + 비)로 나눈 값이 됩니다. 비가 1이면 50퍼센트, 열 배면 90.9퍼센트, 백 배면 99.0퍼센트이며, 비를 아무리 올려도 문턱이 100퍼센트가 되지는 않습니다.",
+    canonicalHref: "/law/criminal-law/procedure-and-proof#threshold",
+  },
+  "burden-of-proof": {
+    id: "burden-of-proof",
+    kind: "concept",
+    domain: "law",
+    label: "문턱이 정하는 증명 책임",
+    aliases: ["무죄 추정", "입증 책임의 배치"],
+    definition:
+      "문턱을 넘지 못한 상태의 기본값이 무죄이므로 증거가 부족할 때 벌하려는 쪽이 집니다. 하지 않았음을 보일 부담이 없어지고 팽팽한 상태가 무죄로 처리되며, 문턱이 높을수록 실제 유죄 확률이 내려가 같은 형량의 막는 힘이 줄어듭니다.",
+    canonicalHref: "/law/criminal-law/procedure-and-proof#burden",
+  },
+  "evidence-exclusion": {
+    id: "evidence-exclusion",
+    kind: "concept",
+    domain: "law",
+    label: "얻은 방법 때문에 쓰지 못하는 증거",
+    aliases: ["위법수집증거", "강요된 자백"],
+    definition:
+      "강요로 얻은 진술은 하지 않은 사람에게서도 같은 모양으로 나오므로 두 경우를 갈라 주지 못해 확률을 올려 주지 않습니다. 그래서 상당 부분은 정확성 자체를 위한 정리이며, 내용은 믿을 만하지만 절차를 어겨 얻은 증거를 버릴 때에만 실제로 값을 치르고 그 값은 앞으로 그렇게 얻을 유인을 없애는 데 씁니다.",
+    canonicalHref: "/law/criminal-law/procedure-and-proof#how-evidence",
+  },
+  "evidence-independence": {
+    id: "evidence-independence",
+    kind: "concept",
+    domain: "law",
+    label: "증거가 서로 독립인가",
+    aliases: ["한 뿌리에서 나온 증거", "자백의 보강"],
+    definition:
+      "같은 뿌리에서 나온 증거를 여럿으로 세면 확률이 실제보다 훨씬 높게 계산됩니다. 한 사람의 진술을 여러 경로로 받은 것은 하나이며, 자백이 유일한 증거일 때 그것만으로 문턱을 넘었다고 보지 않는 것도 한 뿌리에 전체를 거는 위험 때문입니다.",
+    canonicalHref: "/law/criminal-law/procedure-and-proof#how-evidence",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -44996,6 +45046,76 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "잡을 수 있는 자원이 한정되어 있다는 사실이 확률을 올리는 쪽의 상한을 정하고, 그래서 형량으로 메우려는 유혹이 생깁니다.",
+  },
+  {
+    from: "deterrence-product",
+    to: "asymmetric-error-costs",
+    relation: "prerequisite",
+    reason:
+      "막는 힘의 확률 안에 붙잡히는 것과 유죄로 인정되는 것이 함께 들어 있다는 점이 이 문제를 불러옵니다.",
+  },
+  {
+    from: "asymmetric-error-costs",
+    to: "conviction-threshold",
+    relation: "produces",
+    reason:
+      "두 잘못의 무게가 다르면 문턱을 어디에 두어야 하는지가 계산 가능한 문제가 됩니다.",
+  },
+  {
+    from: "conviction-threshold",
+    to: "burden-of-proof",
+    relation: "produces",
+    reason:
+      "문턱을 넘지 못한 상태의 기본값이 정해지면 증거가 부족할 때 누가 지는지도 함께 정해집니다.",
+  },
+  {
+    from: "burden-of-proof",
+    to: "deterrence-product",
+    relation: "constrains",
+    reason:
+      "문턱이 높을수록 실제 유죄 확률이 내려가 같은 형량의 곱이 작아집니다.",
+  },
+  {
+    from: "conviction-threshold",
+    to: "evidence-exclusion",
+    relation: "constrains",
+    reason:
+      "확률을 올려 주지 않는 증거를 계산에 넣으면 문턱이 실제로는 지켜지지 않게 됩니다.",
+  },
+  {
+    from: "evidence-exclusion",
+    to: "evidence-independence",
+    relation: "extends",
+    reason:
+      "얻은 방법과 별개로 한 뿌리에 전체를 거는 위험이 남아 있어 따로 봐야 합니다.",
+  },
+  {
+    from: "evidence-independence",
+    to: "conviction-threshold",
+    relation: "constrains",
+    reason:
+      "독립이 아닌 증거를 여럿으로 세면 확률이 실제보다 높게 나와 문턱을 넘은 것처럼 보입니다.",
+  },
+  {
+    from: "severity-substitution-limits",
+    to: "conviction-threshold",
+    relation: "prerequisite",
+    reason:
+      "형량이 커질수록 판단하는 쪽이 유죄 인정에 신중해진다는 관찰이 이 문턱의 움직임으로 설명됩니다.",
+  },
+  {
+    from: "hindsight-in-care-judgment",
+    to: "conviction-threshold",
+    relation: "contrasts",
+    reason:
+      "둘 다 사후에 확률을 재는 데서 오는 어려움을 다루지만, 하나는 주의 판정을 다른 하나는 사실 인정을 대상으로 합니다",
+  },
+  {
+    from: "legality-in-criminal-law",
+    to: "burden-of-proof",
+    relation: "extends",
+    reason:
+      "무엇이 금지되어 있었는지를 미리 적어 두는 것과 그것을 누가 증명해야 하는지를 정하는 것이 같은 보호의 두 층입니다.",
   },
 ];
 

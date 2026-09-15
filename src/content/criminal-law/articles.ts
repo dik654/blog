@@ -40,4 +40,37 @@ export const criminalLawArticles: Article[] = [
     component: () =>
       import("@/pages/articles/criminal-law/crime-and-punishment-purpose"),
   },
+  {
+    slug: "procedure-and-proof",
+    title: "얼마나 확실해야 벌할 수 있습니까",
+    subcategory: "crim-procedure",
+    sections: [
+      {
+        id: "overview",
+        title: "벌하기로 정해도 벌하기 전에 해야 할 일이 남습니다",
+      },
+      {
+        id: "two-errors",
+        title: "부품 1. 두 잘못은 같은 종류가 아닙니다",
+      },
+      {
+        id: "threshold",
+        title: "부품 2. 문턱의 위치는 두 무게의 비가 정합니다",
+      },
+      {
+        id: "burden",
+        title: "부품 3. 문턱을 정하면 누가 넘어야 하는지도 정해집니다",
+      },
+      {
+        id: "how-evidence",
+        title: "부품 4. 얼마나 확실한가와 어떻게 알아냈는가는 다른 질문입니다",
+      },
+      {
+        id: "boundary",
+        title: "이 모든 것은 재판이 열렸을 때의 이야기입니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/criminal-law/procedure-and-proof"),
+  },
 ];
