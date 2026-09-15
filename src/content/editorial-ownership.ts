@@ -12244,6 +12244,36 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "property-and-entitlement": {
+    title: "어떤 권리는 약속하지 않은 사람에게도 미칩니다 글이 소유하는 범위",
+    owns: [
+      "도달 범위가 넓어지는 대가로서의 공시와 종류 제한",
+      "소유가 권능의 묶음이며 조각을 떼어 줄 수 있다는 구조",
+      "사게 하는 방식과 값을 매겨 옮기는 방식의 차이",
+      "협상 비용과 평가 오차로 두 방식을 고르는 조건",
+      "동의 없는 이전의 판정 절차와 그 제도가 평소 협상에 미치는 효과",
+    ],
+    reuses: [
+      {
+        label: "약속에서 나온 힘이 두 사람만 묶는다는 것",
+        href: "/law/private-law/contract-and-enforceable-promise#boundary",
+      },
+      {
+        label: "미리 알 수 있어야 한다는 형식 조건",
+        href: "/law/legal-system/what-makes-law-law#form-conditions",
+      },
+      {
+        label: "인원이 늘수록 기여 유인이 약해지는 계산",
+        href: "/politics/polity/collective-choice-problem#free-riding",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "논문이 실제로 규정한 두 방식의 정의만 논문에 귀속하고, 조건식은 이 글이 직접 전개한 것으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -34,4 +34,37 @@ export const privateLawArticles: Article[] = [
     component: () =>
       import("@/pages/articles/private-law/contract-and-enforceable-promise"),
   },
+  {
+    slug: "property-and-entitlement",
+    title: "소유는 무엇을 주고 무엇을 요구합니까",
+    subcategory: "priv-property",
+    sections: [
+      {
+        id: "overview",
+        title: "어떤 권리는 약속하지 않은 사람에게도 미칩니다",
+      },
+      {
+        id: "publicity",
+        title: "부품 1. 모두에게 지키라고 하려면 모두가 알 수 있어야 합니다",
+      },
+      {
+        id: "bundle",
+        title: "부품 2. 소유는 하나가 아니라 여러 권능의 묶음입니다",
+      },
+      {
+        id: "two-protections",
+        title: "부품 3. 지키는 방식이 둘이고, 고르는 기준이 있습니다",
+      },
+      {
+        id: "forced-transfer",
+        title: "부품 4. 동의 없이 옮기는 제도들이 같은 자리에 놓입니다",
+      },
+      {
+        id: "boundary",
+        title: "누구의 것인지를 정해도 사고는 남습니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/private-law/property-and-entitlement"),
+  },
 ];

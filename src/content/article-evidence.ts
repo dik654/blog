@@ -7278,4 +7278,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "계약을 지킬 의무가 배상의 예측을 뜻한다는 규정의 출처. 관점의 제안이며 제도 조사는 아님",
     },
   ],
+  "private-law/property-and-entitlement": [
+    {
+      kind: "보충 읽기",
+      label:
+        "Calabresi · Melamed, Property Rules, Liability Rules, and Inalienability (Harv. L. Rev. 85:6, 1972)",
+      href: "https://www.jstor.org/stable/1340059",
+      note: "두 가지 보호 방식의 정의와 구분의 출처. 분석 틀의 제시이며 판례 조사는 아님",
+    },
+  ],
 };

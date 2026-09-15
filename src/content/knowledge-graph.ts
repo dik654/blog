@@ -24160,6 +24160,58 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "한쪽만 아는 사정이 있을 때 그쪽에 불리하게 기본값을 두어 먼저 알리고 따로 적게 만드는 설계입니다. 대부분이 원할 내용으로 두는 원칙과 목적이 다르며, 알리지 않으면 그 위험을 아는 쪽이 지게 하는 것이 요지입니다.",
     canonicalHref: "/law/private-law/contract-and-enforceable-promise#incomplete",
   },
+  "erga-omnes-and-publicity": {
+    id: "erga-omnes-and-publicity",
+    kind: "concept",
+    domain: "law",
+    label: "누구에게나 미치는 힘과 공시",
+    aliases: ["대세효", "점유와 등기", "물권의 공시"],
+    definition:
+      "약속하지 않은 사람에게까지 의무를 지우려면 그 사람이 조금만 살펴보면 알 수 있는 상태여야 하므로, 누가 쥐고 있는지 또는 장부에 누구로 적혀 있는지로 밖에 드러나야 합니다. 도달 범위가 넓어지는 대가로 드러내는 비용과 거래 전 조사 부담이 함께 붙습니다.",
+    canonicalHref: "/law/private-law/property-and-entitlement#publicity",
+  },
+  "numerus-clausus": {
+    id: "numerus-clausus",
+    kind: "concept",
+    domain: "law",
+    label: "권리 종류의 제한",
+    aliases: ["물권법정주의", "목록 제한"],
+    definition:
+      "누구에게나 주장할 수 있는 권리는 당사자가 새 종류를 만들 수 없고 미리 정해진 목록 안에서만 만들 수 있습니다. 종류가 열려 있으면 제삼자가 일일이 확인할 수 없어 알 수 있게 한다는 조건이 무너지기 때문이며, 목록이 좁으면 새로운 거래 방식이 막히므로 주기적으로 넓히는 입법이 필요해집니다.",
+    canonicalHref: "/law/private-law/property-and-entitlement#publicity",
+  },
+  "bundle-of-entitlements": {
+    id: "bundle-of-entitlements",
+    kind: "concept",
+    domain: "law",
+    label: "권능의 묶음으로서의 소유",
+    aliases: ["사용·수익·처분·배제", "권능의 분리"],
+    definition:
+      "소유는 하나의 덩어리가 아니라 쓰는 권능, 나오는 것을 가져가는 권능, 남을 배제하는 권능, 넘기거나 없앨 권능의 묶음이며 조각을 떼어 줄 수 있습니다. 세를 주는 것과 담보로 잡히는 것이 각각 다른 조각을 옮기는 일이고, 떼어 준 것을 빼고 남은 전부가 자기에게 돌아온다는 점이 소유의 강함입니다.",
+    canonicalHref: "/law/private-law/property-and-entitlement#bundle",
+  },
+  "property-rule-vs-liability-rule": {
+    id: "property-rule-vs-liability-rule",
+    kind: "theorem",
+    domain: "law",
+    label: "사게 할 것인가 값을 매겨 옮길 것인가",
+    aliases: ["재산규칙과 책임규칙", "보호 방식의 선택"],
+    definition:
+      "협상 비용이 옮겨서 느는 값보다 작으면 당사자들이 사고팔 수 있으므로 동의를 요구하는 편이 낫고, 협상 비용이 더 크면 이득이 있는데도 옮겨 가지 못하므로 값을 매겨 옮기는 길이 대안이 됩니다. 다만 그 대안은 값을 잘못 잴 손해가 이득보다 작을 때만 성립합니다.",
+    canonicalHref:
+      "/law/private-law/property-and-entitlement#two-protections",
+  },
+  "forced-transfer-threshold": {
+    id: "forced-transfer-threshold",
+    kind: "method",
+    domain: "law",
+    label: "동의 없는 이전의 판정",
+    aliases: ["공용수용", "긴급피난", "버티기 구조"],
+    definition:
+      "한 사람이 버티면 전체가 멈추는 구조이거나 미리 동의를 받을 시간이 없어 협상이 구조적으로 막히는 구간에서, 값을 잴 수 있는 정도를 확인한 뒤 동의를 면제하고 값을 물어 주게 하는 판정입니다. 동의를 면제한 것이지 값을 면제한 것이 아니며, 그 길이 열려 있다는 사실 자체가 평소 협상의 상한을 누릅니다.",
+    canonicalHref:
+      "/law/private-law/property-and-entitlement#forced-transfer",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -44596,6 +44648,76 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "optimizes",
     reason:
       "판단이 쌓여 기본값이 무엇인지 예측 가능해지면 당사자가 따로 적어야 할 범위가 줄어듭니다.",
+  },
+  {
+    from: "enforceable-promise-filters",
+    to: "erga-omnes-and-publicity",
+    relation: "contrasts",
+    reason:
+      "약속에서 나온 힘이 두 사람만 묶는다는 것을 본 뒤에야, 그 범위를 넘는 힘이 무엇을 대가로 그렇게 되는지를 물을 수 있습니다.",
+  },
+  {
+    from: "formal-legality-conditions",
+    to: "erga-omnes-and-publicity",
+    relation: "prerequisite",
+    reason:
+      "모르는 사람에게까지 지키라고 하려면 미리 알 수 있어야 한다는 조건이 여기서 특정한 형태로 나타납니다.",
+  },
+  {
+    from: "erga-omnes-and-publicity",
+    to: "numerus-clausus",
+    relation: "produces",
+    reason:
+      "종류가 열려 있으면 제삼자가 일일이 확인할 수 없어, 알 수 있게 한다는 조건이 권리 종류의 제한을 함께 요구합니다.",
+  },
+  {
+    from: "erga-omnes-and-publicity",
+    to: "bundle-of-entitlements",
+    relation: "prerequisite",
+    reason:
+      "밖으로 드러나는 단위가 정해져야 그 안의 권능을 떼어 옮기는 일도 밖에서 읽힐 수 있습니다.",
+  },
+  {
+    from: "bundle-of-entitlements",
+    to: "property-rule-vs-liability-rule",
+    relation: "prerequisite",
+    reason:
+      "무엇을 지킬지가 권능 단위로 정해져야 그것을 어떻게 지킬지를 따로 고를 수 있습니다.",
+  },
+  {
+    from: "property-rule-vs-liability-rule",
+    to: "forced-transfer-threshold",
+    relation: "produces",
+    reason:
+      "협상이 막히는 구간에서 값을 매겨 옮기는 길이 대안이 된다는 결론이 실제 판정 절차로 이어집니다.",
+  },
+  {
+    from: "collective-action-scale",
+    to: "forced-transfer-threshold",
+    relation: "prerequisite",
+    reason:
+      "인원이 늘수록 한 사람의 버티기가 전체를 멈추는 구조가 왜 생기는지를 앞 시리즈의 계산이 설명합니다.",
+  },
+  {
+    from: "coercion-as-provision",
+    to: "forced-transfer-threshold",
+    relation: "extends",
+    reason:
+      "동의 없이 걷는 것이 공공재를 공급하는 길이었듯, 동의 없이 옮기는 것도 협상이 막힌 구간을 여는 같은 형태의 장치입니다.",
+  },
+  {
+    from: "expectation-damages-incentive",
+    to: "property-rule-vs-liability-rule",
+    relation: "contrasts",
+    reason:
+      "둘 다 바깥에서 매긴 값이 당사자의 선택을 어떻게 바꾸는지를 다루지만, 하나는 약속을 어기는 결정에 다른 하나는 권리를 옮기는 결정에 걸립니다.",
+  },
+  {
+    from: "numerus-clausus",
+    to: "default-rules",
+    relation: "contrasts",
+    reason:
+      "계약은 기본값을 바꿔 내용을 자유롭게 짤 수 있지만, 누구에게나 주장할 권리는 목록 자체를 벗어날 수 없습니다.",
   },
 ];
 
