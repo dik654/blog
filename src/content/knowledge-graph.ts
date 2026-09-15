@@ -24489,6 +24489,59 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "이미 치렀고 어느 쪽을 골라도 똑같이 돌아오지 않는 값이며, 양쪽 계산에 같은 크기로 들어 있으므로 비교를 바꾸지 못해 판정에서 뺍니다. 일부라도 회수할 수 있으면 그만큼은 매몰이 아니고, 그 지출이 앞으로의 성공 확률에 대해 알려 주는 정보는 지우지 않습니다.",
     canonicalHref: "/economics/scarcity/scarcity-and-opportunity-cost#sunk",
   },
+  "absolute-vs-comparative-advantage": {
+    id: "absolute-vs-comparative-advantage",
+    kind: "concept",
+    domain: "economics",
+    label: "절대우위와 비교우위",
+    aliases: ["절대우위", "비교우위", "comparative advantage"],
+    definition:
+      "절대우위는 같은 시간에 더 많이 만드는 쪽이고 비교우위는 그것을 만들려고 포기하는 것이 더 적은 쪽입니다. 앞쪽은 상대와 견주고 뒤쪽은 자기 안의 다른 선택지와 견주므로, 한 사람이 두 재화 모두에서 절대우위일 수는 있어도 두 재화 모두에서 비교우위일 수는 없습니다.",
+    canonicalHref: "/economics/scarcity/gains-from-trade#two-advantages",
+  },
+  "terms-of-trade-range": {
+    id: "terms-of-trade-range",
+    kind: "theorem",
+    domain: "economics",
+    label: "교환이 성립하는 비율 구간",
+    aliases: ["교역조건", "terms of trade", "성립 구간"],
+    definition:
+      "각자가 직접 만들 때 치르는 값이 그 사람이 받아들일 수 있는 한계이므로, 교환 비율은 두 기회비용 사이에 있어야 둘 다 이득입니다. 구간의 폭이 곧 두 기회비용의 차이이고, 두 값이 같으면 폭이 0이 되어 교환할 이유가 사라집니다.",
+    canonicalHref: "/economics/scarcity/gains-from-trade#trade-range",
+  },
+  "gains-from-specialization": {
+    id: "gains-from-specialization",
+    kind: "theorem",
+    domain: "economics",
+    label: "특화가 만드는 이득의 크기",
+    aliases: ["교환의 이득", "총이득", "비율은 몫만 정한다"],
+    definition:
+      "두 사람의 이득을 더하면 교환 비율이 상쇄되어 사라지고 기회비용의 차이에 거래량을 곱한 값만 남습니다. 그래서 비율은 이득의 크기를 정하지 않고 나누는 몫만 정하며, 이득 자체는 주고받는 행위가 아니라 각자가 싸게 만드는 쪽으로 배치를 바꾼 데서 나옵니다.",
+    canonicalHref:
+      "/economics/scarcity/gains-from-trade#where-gain-comes-from",
+  },
+  "consumption-beyond-own-frontier": {
+    id: "consumption-beyond-own-frontier",
+    kind: "concept",
+    domain: "economics",
+    label: "혼자서는 닿지 않는 조합",
+    aliases: ["소비가능곡선", "경계선 바깥의 소비"],
+    definition:
+      "교환이 가능하면 각자가 자기 생산가능곡선 바깥의 조합을 소비하게 됩니다. 만들 수 있는 능력이 늘어난 것이 아니라 싸게 만드는 쪽에 몰아 만든 뒤 바꾸는 다른 경로가 생긴 것이며, 그래서 이득의 정체는 생산량이 아니라 배치입니다.",
+    canonicalHref:
+      "/economics/scarcity/gains-from-trade#where-gain-comes-from",
+  },
+  "transaction-cost": {
+    id: "transaction-cost",
+    kind: "concept",
+    domain: "economics",
+    label: "Transaction cost · 거래비용",
+    aliases: ["거래비용", "탐색 비용", "계약 강제 비용"],
+    definition:
+      "상대를 찾고 물건이 약속대로인지 재고 약속을 강제할 방법을 마련하는 데 드는 값까지 묶은 것입니다. 이 값은 교환의 성립 구간을 양쪽에서 갉아먹고, 기회비용의 차이보다 커지면 비교우위가 갈려 있어도 교환 자체가 일어나지 않습니다.",
+    canonicalHref:
+      "/economics/scarcity/gains-from-trade#transaction-cost",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -45345,6 +45398,69 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "produces",
     reason:
       "지금 받은 돈을 굴릴 수 있다는 것은 나중에 받는 쪽이 그 굴림을 포기한다는 뜻이므로, 시점 차이의 값이 기회비용으로 설명됩니다.",
+  },
+  {
+    from: "opportunity-cost",
+    to: "absolute-vs-comparative-advantage",
+    relation: "prerequisite",
+    reason:
+      "비교우위는 만든 양이 아니라 포기한 것으로 재는 값의 비교이므로 기회비용이 먼저 정의되어야 합니다.",
+  },
+  {
+    from: "absolute-vs-comparative-advantage",
+    to: "terms-of-trade-range",
+    relation: "produces",
+    reason:
+      "각자가 직접 만들 때의 값이 다르면 그 두 값 사이가 곧 둘 다 받아들이는 구간이 됩니다.",
+  },
+  {
+    from: "terms-of-trade-range",
+    to: "gains-from-specialization",
+    relation: "produces",
+    reason:
+      "구간 안의 두 이득을 더하면 비율이 상쇄되어 기회비용의 차이에 거래량을 곱한 값만 남습니다.",
+  },
+  {
+    from: "gains-from-specialization",
+    to: "consumption-beyond-own-frontier",
+    relation: "produces",
+    reason:
+      "배치를 바꿔 얻은 이득이 각자에게 돌아가면 혼자서는 닿지 않던 조합을 소비하게 됩니다.",
+  },
+  {
+    from: "production-possibility-frontier",
+    to: "consumption-beyond-own-frontier",
+    relation: "contrasts",
+    reason:
+      "만들 수 있는 경계는 그대로인데 소비할 수 있는 조합이 그 바깥으로 나가므로 두 경계를 갈라 봐야 합니다.",
+  },
+  {
+    from: "transaction-cost",
+    to: "terms-of-trade-range",
+    relation: "constrains",
+    reason:
+      "옮기고 재고 지키는 값이 상한을 끌어내려 구간을 좁히고, 기회비용의 차이를 넘으면 구간을 없앱니다.",
+  },
+  {
+    from: "marginal-decision-rule",
+    to: "gains-from-specialization",
+    relation: "constrains",
+    reason:
+      "기회비용이 수량에 따라 오르면 자기 값이 상대의 값과 만나는 지점에서 특화가 멈추므로 완전한 특화가 답이 아니게 됩니다.",
+  },
+  {
+    from: "transaction-cost",
+    to: "property-rule-vs-liability-rule",
+    relation: "prerequisite",
+    reason:
+      "협상 비용과 옮겨서 느는 값을 견주어 보호 방식을 고르는 판단은 이 비용이 먼저 정의되어야 성립합니다.",
+  },
+  {
+    from: "transaction-cost",
+    to: "enforceable-promise-filters",
+    relation: "produces",
+    reason:
+      "약속을 강제할 방법이 없으면 지키는 값이 커져 구간이 닫히므로, 구속력 있는 약속은 이 비용을 낮추는 장치로 읽힙니다.",
   },
 ];
 

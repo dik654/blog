@@ -12419,6 +12419,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "gains-from-trade": {
+    title:
+      "둘 다 더 잘하는 사람이 있어도 혼자 다 하는 것은 손해입니다 글이 소유하는 범위",
+    owns: [
+      "절대우위와 비교우위의 구분과 두 재화 모두에서 비교우위일 수 없다는 사실",
+      "교환이 성립하는 비율 구간과 그 폭이 기회비용의 차이라는 것",
+      "총이득이 비율과 무관하다는 유도와 비율이 몫만 정한다는 결론",
+      "혼자서는 닿지 않는 조합에 닿는다는 이득의 모습",
+      "거래비용이 구간을 좁히고 없애는 방식",
+    ],
+    reuses: [
+      {
+        label: "값을 포기한 최선으로 재는 규칙",
+        href: "/economics/scarcity/scarcity-and-opportunity-cost#opportunity-cost",
+      },
+      {
+        label: "약속을 구속력 있게 만드는 장치",
+        href: "/law/private-law/contract-and-enforceable-promise",
+      },
+      {
+        label: "강제할 힘이 없는 영역에서의 협력",
+        href: "/politics/governance/international-anarchy",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "리카도에게 귀속하는 것은 노동 투입량으로 한 논증까지이고, 기회비용 표현과 구간·총이득 유도는 이 글이 정리한 것으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

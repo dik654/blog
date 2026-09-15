@@ -81867,4 +81867,287 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "scarcity/gains-from-trade": {
+    entryNote:
+      "앞 글의 기회비용만 알면 됩니다. 사람마다 그 값이 다르다는 사실 하나에서 시작합니다.",
+    coreIdea:
+      "기회비용이 사람마다 다르면 각자가 싸게 만드는 쪽이 하나씩 갈리고, 두 값 사이에 양쪽 모두 이득인 교환 비율의 구간이 열립니다. 그 구간 안에서 두 사람의 이득을 더한 값은 비율과 무관하게 기회비용의 차이에 거래량을 곱한 것으로 고정되므로, 비율은 이득의 크기가 아니라 나누는 몫만 정합니다.",
+    assumedKnowledge: [
+      {
+        id: "opportunity-cost",
+        role: "만든 양이 아니라 포기한 것으로 값을 재는 규칙을 그대로 가져옵니다.",
+      },
+      {
+        id: "production-possibility-frontier",
+        role: "만들 수 있는 조합의 경계를 세워 두고 소비가 그 바깥으로 나가는 것을 보입니다.",
+      },
+      {
+        id: "marginal-decision-rule",
+        role: "기회비용이 수량에 따라 오를 때 특화가 어디서 멈추는지에 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "absolute-vs-comparative-advantage",
+        role: "더 많이 만드는 것과 더 싸게 만드는 것을 가릅니다.",
+      },
+      {
+        id: "terms-of-trade-range",
+        role: "둘 다 이득인 비율의 구간을 정의합니다.",
+      },
+      {
+        id: "gains-from-specialization",
+        role: "이득의 크기가 무엇으로 정해지는지 보입니다.",
+      },
+      {
+        id: "consumption-beyond-own-frontier",
+        role: "그 이득이 각자에게 어떤 모습으로 돌아오는지 보입니다.",
+      },
+      {
+        id: "transaction-cost",
+        role: "구간을 갉아먹는 값을 정의합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "absolute-vs-comparative-advantage",
+        sectionId: "two-advantages",
+        intuition:
+          "더 많이 만드는 쪽과 더 싸게 만드는 쪽은 같지 않습니다.",
+        workedExample:
+          "가온은 하루에 빵 8판이나 케이크 4개, 나루는 빵 3판이나 케이크 3개를 만듭니다. 케이크 한 개의 값이 가온은 빵 2판, 나루는 빵 1판이라 케이크는 나루가 쌉니다.",
+        proofIdea:
+          "한 사람의 두 기회비용은 서로의 역수입니다. 케이크 값이 빵 c판이면 빵 값은 케이크 1/c개입니다. 두 사람의 케이크 값이 c₁ < c₂이면 빵 값은 1/c₁ > 1/c₂가 되므로, 케이크가 싼 쪽은 반드시 빵이 비쌉니다. 그래서 두 재화 모두에서 비교우위를 가질 수 없습니다.",
+        counterexample:
+          "두 사람의 기회비용이 같으면 어느 쪽에도 비교우위가 생기지 않습니다. 절대우위 차이가 아무리 커도 마찬가지입니다.",
+        boundary:
+          "재화가 둘보다 많아지면 순위는 정해져도 어디서 끊을지는 교환 비율이 함께 정해져야 나옵니다.",
+      },
+      {
+        id: "terms-of-trade-range",
+        sectionId: "trade-range",
+        intuition:
+          "파는 쪽은 자기 값보다 많이 받아야 하고 사는 쪽은 자기 값보다 적게 줘야 합니다.",
+        workedExample:
+          "나루의 값이 빵 1판, 가온의 값이 빵 2판이면 케이크 한 개에 빵 1판에서 2판 사이여야 둘 다 받아들입니다. 0.8판이면 나루가, 2.4판이면 가온이 거부합니다.",
+        proofIdea:
+          "넘기는 쪽은 케이크 한 개를 주고 빵 x판을 받는데, 그 케이크를 만드는 대신 빵을 만들었다면 c_저판을 가질 수 있었습니다. 그러니 x > c_저여야 넘길 이유가 생깁니다. 받는 쪽은 빵 x판을 주고 케이크 한 개를 얻는데, 직접 만들었다면 c_고판이 들었을 것이므로 x < c_고여야 받을 이유가 생깁니다. 두 조건을 함께 쓰면 c_저 < x < c_고이고, 이런 x가 존재할 조건은 c_저 < c_고입니다. 그 조건이 곧 비교우위가 갈렸다는 말이며, 구간의 폭은 c_고 − c_저입니다.",
+        counterexample:
+          "두 사람의 케이크 기회비용이 둘 다 빵 1.5판이면 c_저 = c_고라 구간의 폭이 0이 되어 어떤 비율을 잡아도 한쪽은 이득이 0이거나 손해입니다. 한쪽이 상대보다 열 배 많이 만들어도 마찬가지이므로, 구간을 여는 것은 생산량 차이가 아니라 기회비용 차이입니다.",
+        boundary:
+          "구간 안 어디로 정해지는지는 이 계산이 답하지 않습니다. 서로의 값을 모르면 그 다툼 자체가 비용이 됩니다.",
+      },
+      {
+        id: "gains-from-specialization",
+        sectionId: "where-gain-comes-from",
+        intuition:
+          "물건을 주고받는 행위가 아니라 무엇을 만들지가 바뀐 것이 이득을 만듭니다.",
+        workedExample:
+          "케이크 두 개를 주고받을 때 비율이 1.5판이면 가온 1판·나루 1판, 0.8판이면 가온 2.4판·나루 −0.4판인데 합은 언제나 2판입니다.",
+        proofIdea:
+          "가온의 이득은 Q(c_고 − x), 나루의 이득은 Q(x − c_저)입니다. 더하면 Qx가 서로 지워져 Q(c_고 − c_저)만 남습니다. x가 식에서 사라지므로 총이득은 비율과 무관합니다.",
+        counterexample:
+          "두 기회비용이 같으면 c_고 − c_저가 0이라 총이득도 0입니다. 비율을 아무리 잘 잡아도 나눌 것이 없습니다.",
+        boundary:
+          "기회비용이 수량에 따라 오르면 완전한 특화 전에 멈추게 되어 이 값이 상한이 됩니다.",
+      },
+      {
+        id: "consumption-beyond-own-frontier",
+        sectionId: "where-gain-comes-from",
+        intuition:
+          "혼자서는 만들 수 없던 조합을 갖게 됩니다.",
+        workedExample:
+          "가온이 케이크 2개를 직접 만들면 빵 4판이 남지만, 빵 8판을 만들어 3판을 넘기면 빵 5판과 케이크 2개가 됩니다.",
+        boundary:
+          "만들 수 있는 경계가 밀린 것이 아닙니다. 경계는 그대로이고 그 바깥으로 가는 다른 경로가 생긴 것입니다.",
+      },
+      {
+        id: "transaction-cost",
+        sectionId: "transaction-cost",
+        intuition:
+          "옮기는 값만이 아니라 찾고 재고 강제하는 값까지 들어갑니다.",
+        workedExample:
+          "케이크 한 개당 빵 0.5판이 들면 가온의 상한이 2판에서 1.5판으로 내려와 구간이 절반이 되고 총이득도 2판에서 1판이 됩니다.",
+        counterexample:
+          "이 값이 기회비용의 차이인 1판을 넘으면 비교우위가 갈려 있어도 구간이 사라져 교환이 일어나지 않습니다.",
+        boundary:
+          "이 글은 이 비용을 하나의 숫자로만 다룹니다. 무엇으로 이루어져 있고 어떻게 낮추는지는 다루지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 무엇이 갈리는가",
+        relation: "더 많이 만드는 것과 더 싸게 만드는 것을 가릅니다.",
+        concepts: ["absolute-vs-comparative-advantage"],
+      },
+      {
+        label: "01 어떤 비율인가",
+        relation: "둘 다 이득인 비율의 구간을 찾습니다.",
+        concepts: ["terms-of-trade-range"],
+      },
+      {
+        label: "02 이득은 어디서 오는가",
+        relation: "이득의 크기와 그것이 돌아오는 모습을 봅니다.",
+        concepts: [
+          "gains-from-specialization",
+          "consumption-beyond-own-frontier",
+        ],
+      },
+      {
+        label: "03 무엇이 갉아먹는가",
+        relation: "구간을 좁히거나 없애는 값을 셉니다.",
+        concepts: ["transaction-cost"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "가온이 하루에 빵 8판이나 케이크 4개, 나루가 빵 3판이나 케이크 3개를 만들 때 네 개의 기회비용을 모두 계산하세요.",
+        answerChecklist: [
+          "가온의 케이크 값은 빵 2판",
+          "가온의 빵 값은 케이크 0.5개",
+          "나루의 케이크 값은 빵 1판",
+          "나루의 빵 값은 케이크 1개",
+        ],
+        requiredConcepts: ["absolute-vs-comparative-advantage"],
+        sectionId: "two-advantages",
+      },
+      {
+        level: "basic",
+        question:
+          "위 숫자에서 누가 무엇에 절대우위이고 누가 무엇에 비교우위인지 쓰세요.",
+        answerChecklist: [
+          "가온이 빵과 케이크 모두에 절대우위",
+          "빵은 가온이 비교우위",
+          "케이크는 나루가 비교우위",
+          "절대우위로는 배정이 정해지지 않음",
+        ],
+        requiredConcepts: ["absolute-vs-comparative-advantage"],
+        sectionId: "two-advantages",
+      },
+      {
+        level: "basic",
+        question:
+          "케이크 한 개를 빵 몇 판에 바꿔야 둘 다 받아들이는지 구간을 구하고, 0.8판과 2.4판에서 각각 누가 거부하는지 쓰세요.",
+        answerChecklist: [
+          "구간은 빵 1판에서 2판 사이",
+          "0.8판이면 나루가 거부",
+          "2.4판이면 가온이 거부",
+          "각자 직접 만들 때의 값이 한계",
+        ],
+        requiredConcepts: ["terms-of-trade-range"],
+        sectionId: "trade-range",
+      },
+      {
+        level: "basic",
+        question:
+          "케이크 두 개를 비율 1.5판에 주고받을 때 두 사람의 이득과 그 합을 계산하세요.",
+        answerChecklist: [
+          "가온은 2 × (2 − 1.5) = 1판",
+          "나루는 2 × (1.5 − 1) = 1판",
+          "합은 2판",
+          "합은 2 × (2 − 1)과 같음",
+        ],
+        requiredConcepts: ["gains-from-specialization"],
+        sectionId: "where-gain-comes-from",
+      },
+      {
+        level: "basic",
+        question:
+          "가온이 특화해서 빵 8판을 만들고 3판을 넘겼을 때의 조합을, 직접 케이크 2개를 만들었을 때와 비교하세요.",
+        answerChecklist: [
+          "직접 만들면 빵 4판과 케이크 2개",
+          "교환하면 빵 5판과 케이크 2개",
+          "빵이 한 판 늘어남",
+          "혼자서는 닿지 않는 조합",
+        ],
+        requiredConcepts: ["consumption-beyond-own-frontier"],
+        sectionId: "where-gain-comes-from",
+      },
+      {
+        level: "basic",
+        question:
+          "케이크 한 개당 빵 0.5판의 거래비용이 붙을 때 구간과 총이득이 어떻게 바뀌는지 계산하세요.",
+        answerChecklist: [
+          "가온의 상한이 1.5판으로 내려감",
+          "구간은 1판에서 1.5판",
+          "총이득은 2 × (2 − 1 − 0.5) = 1판",
+          "구간과 이득이 모두 절반",
+        ],
+        requiredConcepts: ["transaction-cost"],
+        sectionId: "transaction-cost",
+      },
+      {
+        level: "advanced",
+        question:
+          "한 사람이 두 재화 모두에서 비교우위를 가질 수 없음을 기회비용의 관계로 증명하세요.",
+        answerChecklist: [
+          "한 사람의 두 기회비용은 서로의 역수",
+          "케이크 값이 c이면 빵 값은 1/c",
+          "c가 작으면 1/c가 큼",
+          "그래서 한쪽이 싸면 다른 쪽이 비쌈",
+        ],
+        requiredConcepts: ["absolute-vs-comparative-advantage"],
+        sectionId: "two-advantages",
+      },
+      {
+        level: "advanced",
+        question:
+          "총이득이 교환 비율과 무관함을 식으로 유도하고, 그 사실이 협상에 대해 무엇을 말해 주는지 쓰세요.",
+        answerChecklist: [
+          "가온의 이득은 Q(c_고 − x)",
+          "나루의 이득은 Q(x − c_저)",
+          "더하면 x가 상쇄되어 Q(c_고 − c_저)",
+          "비율은 나누는 몫만 정함",
+        ],
+        requiredConcepts: ["gains-from-specialization", "terms-of-trade-range"],
+        sectionId: "where-gain-comes-from",
+      },
+      {
+        level: "advanced",
+        question:
+          "기회비용이 수량에 따라 오르면 왜 완전한 특화가 답이 아닌지, 앞 글의 판정을 써서 설명하세요.",
+        answerChecklist: [
+          "한쪽으로 몰수록 그쪽 기회비용이 오름",
+          "어느 지점에서 상대의 값과 만남",
+          "그 지점이 한 단위 판정이 뒤집히는 곳",
+          "이득의 방향은 같고 크기만 작아짐",
+        ],
+        requiredConcepts: ["gains-from-specialization"],
+        sectionId: "where-gain-comes-from",
+      },
+      {
+        level: "advanced",
+        question:
+          "교환을 늘리는 방법이 왜 두 가지뿐인지 구간의 식으로 설명하고, 각각의 예를 드세요.",
+        answerChecklist: [
+          "구간의 폭은 기회비용의 차이에서 거래비용을 뺀 값",
+          "차이를 키우거나 거래비용을 줄이는 두 길",
+          "앞쪽의 예는 서로 다른 기술이나 조건",
+          "뒤쪽의 예는 운송·계량·계약 강제 장치",
+        ],
+        requiredConcepts: ["transaction-cost", "terms-of-trade-range"],
+        sectionId: "transaction-cost",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "David Ricardo, On the Principles of Political Economy, and Taxation (1817)",
+        href: "https://www.gutenberg.org/ebooks/33310",
+        problem:
+          "한 나라가 모든 것을 더 적은 노동으로 만들 수 있으면 교역할 이유가 없어 보인다는 문제가 남아 있었습니다.",
+        contribution:
+          "잉글랜드가 옷감에 100명·포도주에 120명, 포르투갈이 포도주에 80명·옷감에 90명이 드는 예를 들어, 포르투갈이 둘 다 적게 드는데도 교환이 일어나고 이득이라는 것을 보였습니다. 이유는 포르투갈이 포도주에 자본을 쓰는 편이 옷감을 직접 만드는 것보다 더 많은 옷감을 가져다주기 때문입니다.",
+        assumptions:
+          "노동이 가치의 기준이고 자본이 나라 사이를 쉽게 옮겨 다니지 않는다고 둡니다. 뒤쪽 전제를 본문에서 직접 밝히며, 그래서 한 나라 안에서는 같은 교환이 일어나지 않는다고 적습니다.",
+        evidenceScope:
+          "1817년 John Murray 초판이며 Project Gutenberg 전자화본으로 해당 장 본문을 직접 대조했습니다. 초판에서 이 장은 6장이고 흔히 인용되는 7장 번호는 1821년 3판의 것입니다.",
+        notClaim:
+          "이 글의 기회비용 표현은 리카도의 것이 아닙니다. 리카도는 노동 투입량으로 논증했고, 기회비용으로 다시 적는 방식은 뒤에 자리 잡은 것입니다. 또 이 예가 교역이 언제나 모두를 이롭게 한다는 뜻도 아닙니다. 이득은 나라 단위의 합계이고 그 안에서 누가 얻고 누가 잃는지는 이 논증이 말해 주지 않습니다.",
+        sectionId: "two-advantages",
+      },
+    ],
+  },
 };
