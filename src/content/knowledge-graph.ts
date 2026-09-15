@@ -24212,6 +24212,66 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/law/private-law/property-and-entitlement#forced-transfer",
   },
+  "loss-lies-where-it-falls": {
+    id: "loss-lies-where-it-falls",
+    kind: "concept",
+    domain: "law",
+    label: "손해는 난 자리에 남는다",
+    aliases: ["기본값으로서의 무책임", "옮길 이유"],
+    definition:
+      "법이 아무것도 하지 않으면 손해는 그것을 입은 사람에게 그대로 남으므로, 옮기려면 옮길 이유를 대야 합니다. 딱하다는 것만으로는 누구에게 옮길지가 정해지지 않고, 옮겨 받는 쪽이 그 사고를 막을 수 없었다면 옮겨서 얻는 것도 없습니다.",
+    canonicalHref: "/law/private-law/tort-and-accident-cost#where-loss-sits",
+  },
+  "optimal-care-level": {
+    id: "optimal-care-level",
+    kind: "theorem",
+    domain: "law",
+    label: "멈출 자리로서의 주의 수준",
+    aliases: ["한계 예방 비교", "B < PL", "Hand 공식"],
+    definition:
+      "조치를 한 단계 올릴 때 드는 비용이 그 조치가 줄이는 기대 손해보다 작으면 해야 하고 크면 하지 않는 편이 낫습니다. 이 비교를 모든 단계에 적용하면 예방 비용과 남은 기대 손해의 합이 가장 작아지는 지점에 닿으며, 판정의 단위는 사람이 아니라 조치 하나입니다.",
+    canonicalHref: "/law/private-law/tort-and-accident-cost#how-much-care",
+  },
+  "negligence-vs-strict-liability": {
+    id: "negligence-vs-strict-liability",
+    kind: "concept",
+    domain: "law",
+    label: "기준을 두는 책임과 결과만 보는 책임",
+    aliases: ["과실 책임", "무과실 책임"],
+    definition:
+      "정해진 만큼 조심했으면 면하게 하는 규칙과 결과만으로 물게 하는 규칙입니다. 앞쪽은 기준을 맞추려는 유인을 만들고 뒤쪽은 손해 전부를 자기 것으로 보게 만들며, 어느 쪽이 나은지는 누가 조심할 수 있는 사고인가에 달려 있습니다.",
+    canonicalHref: "/law/private-law/tort-and-accident-cost#which-rule",
+  },
+  "bilateral-care": {
+    id: "bilateral-care",
+    kind: "concept",
+    domain: "law",
+    label: "양쪽이 다 조심할 수 있는 사고",
+    aliases: ["쌍방 주의", "유인의 배분"],
+    definition:
+      "손해를 지게 될 쪽만 예방 계산을 하므로, 한쪽에 전부 지우는 규칙은 다른 쪽의 주의를 없앱니다. 기준을 두고 그 기준을 맞춘 사고의 손해를 당한 쪽에 남기면 양쪽이 모두 움직이지만, 이 결과는 기준이 옳게 잡혔을 때만 성립합니다.",
+    canonicalHref: "/law/private-law/tort-and-accident-cost#which-rule",
+  },
+  "scope-of-liability": {
+    id: "scope-of-liability",
+    kind: "concept",
+    domain: "law",
+    label: "책임의 범위를 끊는 기준",
+    aliases: ["상당인과관계", "예견 가능성", "보호 목적"],
+    definition:
+      "사고에서 이어진 손해의 사슬을 어딘가에서 끊어야 하며, 기준은 빠뜨린 조치가 막으려던 종류의 위험인지와 그 손해가 예견할 수 있는 범위였는지입니다. 예견할 수 없던 것까지 물리면 예방 계산에 넣을 수 없었던 것을 부담하게 되어 조심하는 것과 무는 것의 연결이 끊어집니다.",
+    canonicalHref: "/law/private-law/tort-and-accident-cost#scope",
+  },
+  "hindsight-in-care-judgment": {
+    id: "hindsight-in-care-judgment",
+    kind: "concept",
+    domain: "law",
+    label: "사후에 재는 데서 오는 치우침",
+    aliases: ["사후 판단 편향", "그때 알 수 있었던 정보"],
+    definition:
+      "주의 판정에 들어가는 확률을 사고가 난 뒤에 재게 되므로, 그때는 아주 낮았던 확률이 지금 보면 충분히 높아 보입니다. 하지 않아도 됐을 조치를 했어야 한다고 판정하는 쪽으로 구조적으로 기울며, 그때 알 수 있었던 정보로 한정하는 절차가 이 치우침을 줄이는 장치입니다.",
+    canonicalHref: "/law/private-law/tort-and-accident-cost#scope",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -44718,6 +44778,76 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "계약은 기본값을 바꿔 내용을 자유롭게 짤 수 있지만, 누구에게나 주장할 권리는 목록 자체를 벗어날 수 없습니다.",
+  },
+  {
+    from: "property-rule-vs-liability-rule",
+    to: "loss-lies-where-it-falls",
+    relation: "contrasts",
+    reason:
+      "옮기려는 뜻이 있을 때의 보호 방식과 달리, 사고에서는 미리 협상할 상대를 특정할 수 없어 다른 출발점이 필요합니다.",
+  },
+  {
+    from: "loss-lies-where-it-falls",
+    to: "optimal-care-level",
+    relation: "produces",
+    reason:
+      "옮길 이유가 사고를 더 싸게 막을 수 있었다는 데 있다면, 얼마나 조심하는 것이 맞는지부터 재야 합니다.",
+  },
+  {
+    from: "optimal-care-level",
+    to: "negligence-vs-strict-liability",
+    relation: "produces",
+    reason:
+      "멈출 자리를 계산할 수 있으면 그 자리를 기준으로 삼는 규칙과 기준 없이 결과만 보는 규칙을 갈라 볼 수 있습니다.",
+  },
+  {
+    from: "negligence-vs-strict-liability",
+    to: "bilateral-care",
+    relation: "constrains",
+    reason:
+      "한쪽에 전부 지우는 규칙은 다른 쪽의 주의를 없애므로, 양쪽이 다 조심할 수 있는 사고에서는 둘 다 부족합니다.",
+  },
+  {
+    from: "optimal-care-level",
+    to: "scope-of-liability",
+    relation: "prerequisite",
+    reason:
+      "빠뜨린 조치가 무엇을 막으려던 것인지가 정해져야 그 조치와 이어진 손해의 경계를 그을 수 있습니다.",
+  },
+  {
+    from: "scope-of-liability",
+    to: "optimal-care-level",
+    relation: "constrains",
+    reason:
+      "예견할 수 없던 손해까지 물리면 예방 계산에 넣을 수 없었던 것을 부담하게 되어 이 계산의 유인 효과가 사라집니다.",
+  },
+  {
+    from: "hindsight-in-care-judgment",
+    to: "optimal-care-level",
+    relation: "constrains",
+    reason:
+      "확률을 사고가 난 뒤에 재게 되므로 같은 식이 실제보다 높은 주의를 요구하는 쪽으로 기웁니다",
+  },
+  {
+    from: "expectation-damages-incentive",
+    to: "optimal-care-level",
+    relation: "contrasts",
+    reason:
+      "둘 다 물어야 할 값의 크기가 사전 행동을 정하는 구조이지만, 하나는 어길지의 결정에 다른 하나는 얼마나 조심할지의 결정에 걸립니다.",
+  },
+  {
+    from: "multitask-incentive-distortion",
+    to: "scope-of-liability",
+    relation: "contrasts",
+    reason:
+      "잴 수 있는 것만 세면 못 재는 것이 밀려나듯, 금액으로 바꾸기 쉬운 손해만 남으면 전체가 실제보다 작아집니다.",
+  },
+  {
+    from: "bilateral-care",
+    to: "law-as-expectation-infrastructure",
+    relation: "extends",
+    reason:
+      "책임 규칙이 양쪽의 행동을 미리 정해 주면 서로가 상대의 주의 수준을 예상하고 행동할 수 있게 됩니다.",
   },
 ];
 

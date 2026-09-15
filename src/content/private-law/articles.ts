@@ -67,4 +67,37 @@ export const privateLawArticles: Article[] = [
     component: () =>
       import("@/pages/articles/private-law/property-and-entitlement"),
   },
+  {
+    slug: "tort-and-accident-cost",
+    title: "사고의 비용을 누가 집니까",
+    subcategory: "priv-tort",
+    sections: [
+      {
+        id: "overview",
+        title: "아무도 가져가려 하지 않았는데 손해가 생깁니다",
+      },
+      {
+        id: "where-loss-sits",
+        title: "부품 1. 그냥 두면 손해는 난 자리에 남습니다",
+      },
+      {
+        id: "how-much-care",
+        title: "부품 2. 얼마나 조심하는 것이 맞는지가 계산됩니다",
+      },
+      {
+        id: "which-rule",
+        title: "부품 3. 규칙에 따라 누구의 주의가 움직이는지가 달라집니다",
+      },
+      {
+        id: "scope",
+        title: "부품 4. 어디까지를 그 사고의 손해로 볼지가 남습니다",
+      },
+      {
+        id: "boundary",
+        title: "값을 주고받는 것으로 정리되지 않는 영역이 있습니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/private-law/tort-and-accident-cost"),
+  },
 ];

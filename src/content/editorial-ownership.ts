@@ -12274,6 +12274,33 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "tort-and-accident-cost": {
+    title: "아무도 가져가려 하지 않았는데 손해가 생깁니다 글이 소유하는 범위",
+    owns: [
+      "손해의 기본 위치와 옮길 이유의 요건",
+      "한 단계 비교로 정해지는 주의 수준과 총비용 최소화와의 관계",
+      "기준을 두는 책임과 결과만 보는 책임이 각각 움직이는 쪽",
+      "양쪽이 조심할 수 있는 사고에서 기준이 하는 일",
+      "이어진 손해를 끊는 두 기준",
+      "주의 판정이 사후에 이루어져 생기는 치우침",
+    ],
+    reuses: [
+      {
+        label: "옮기려는 뜻이 있을 때의 두 보호 방식",
+        href: "/law/private-law/property-and-entitlement#two-protections",
+      },
+      {
+        label: "물어야 할 값이 사전 행동을 정한다는 구조",
+        href: "/law/private-law/contract-and-enforceable-promise#damages",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "판시에 실제로 적힌 비교만 판결에 귀속하고, 총비용 최소화 형태는 이 글이 전개한 것으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
