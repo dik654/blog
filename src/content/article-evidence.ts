@@ -7239,4 +7239,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "무정부·안보 딜레마 규정과 협력 조건 셋의 출처. 사례를 예시로 든 이론 논문이며 통제된 비교 연구는 아님",
     },
   ],
+  "legal-system/what-makes-law-law": [
+    {
+      kind: "보충 읽기",
+      label: "Stanford Encyclopedia of Philosophy · Legal Positivism",
+      href: "https://plato.stanford.edu/entries/legal-positivism/",
+      note: "승인의 규칙이 관행으로만 존재한다는 구조의 출처. 한 입장의 정리이며 반대 입장도 같은 항목에 있음",
+    },
+  ],
 };

@@ -79077,4 +79077,291 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "legal-system/what-makes-law-law": {
+    entryNote:
+      "앞 시리즈가 한 사회의 결정을 누가 어떻게 내리는지까지 다뤘습니다. 여기서는 그렇게 정해진 문장이 개별 사건의 판단이 되기까지 남은 구간을 엽니다.",
+    coreIdea:
+      "어떤 문장이 법인 것은 그것을 만들 권한을 준 상위 규범이 있기 때문이고, 그 사슬은 규범이 아니라 공직자들의 관행이라는 사실에서 멈춥니다. 다만 효력이 있다고 해서 사람을 이끌 수 있는 것은 아니어서, 일반성부터 집행 일치까지 여덟 가지 형식 조건이 더 필요하며 그 조건들은 도덕이 아니라 예측 가능성이라는 기능에서 요구됩니다.",
+    assumedKnowledge: [
+      {
+        id: "coercion-monopoly",
+        role: "힘이 한 곳에 몰려 있다는 사실에서 출발해 그 힘이 어떤 형태로 나오는지를 묻습니다.",
+      },
+      {
+        id: "constitution-as-coordination",
+        role: "선이 뚜렷하고 미리 알려져야 판단이 모인다는 구조를 형식 조건의 근거로 씁니다.",
+      },
+      {
+        id: "delegation-necessity",
+        role: "법률이 뼈대만 정하고 나머지를 맡긴다는 구조가 사슬의 중간 칸을 만듭니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "law-vs-command",
+        role: "힘으로 하는 요구와 법이 갈라지는 지점을 세웁니다.",
+      },
+      {
+        id: "chain-of-validity",
+        role: "효력이 어디서 오는지를 재귀 구조로 적고 종결이 필요한 이유를 보입니다.",
+      },
+      {
+        id: "rule-of-recognition",
+        role: "그 종결 자리를 채우는 것이 규범이 아니라 사실임을 정의합니다.",
+      },
+      {
+        id: "formal-legality-conditions",
+        role: "효력을 얻은 규범이 작동하기 위한 점검 목록을 세웁니다.",
+      },
+      {
+        id: "congruence-of-text-and-enforcement",
+        role: "그 목록 가운데 문서가 아니라 집행을 봐야 판정되는 항목을 따로 다룹니다.",
+      },
+      {
+        id: "law-as-expectation-infrastructure",
+        role: "형식 조건이 요구되는 이유를 도덕이 아니라 기능에서 찾습니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "law-vs-command",
+        sectionId: "command-vs-law",
+        intuition:
+          "차이를 만드는 것은 힘의 크기가 아니라 힘이 규칙을 통해서만 나온다는 구조입니다.",
+        workedExample:
+          "고지서는 나를 지목해 만들어지지 않았고, 내가 행동하기 전에 이미 있었으며, 부과하는 기관도 정해진 요건과 절차에 묶입니다.",
+        boundary:
+          "형식이 일반적이어도 조건을 좁혀 사실상 한 사람에게만 걸리게 만들 수 있으므로, 적용 대상의 실제 크기를 함께 봐야 합니다.",
+      },
+      {
+        id: "chain-of-validity",
+        sectionId: "validity-chain",
+        intuition:
+          "왜 따라야 하느냐는 질문의 답은 언제나 다른 문장을 가리키고, 그 문장에 같은 질문을 또 할 수 있습니다.",
+        workedExample:
+          "과태료 처분은 시행령이, 시행령은 법률이, 법률은 헌법이 권한을 주었기 때문에 효력을 갖습니다.",
+        proofIdea:
+          "valid(N)을 '효력 있는 상위 규범 M이 N을 만들 권한을 주었다'로 정의하면 정의 안에 valid가 다시 나타납니다. 이런 재귀적 정의는 종결 조건이 있어야 값이 정해지는데, 종결 조건의 자리에 또 하나의 규범을 놓으면 그 규범에 대해 같은 정의가 다시 적용되어 문제가 한 칸 미뤄질 뿐입니다. 사슬의 길이가 유한하다면 어느 지점에서는 규범이 아닌 것으로 정의를 닫아야 합니다.",
+        counterexample:
+          "권한 수여 관계가 순환하면 종결 조건 없이도 정의가 닫힌 것처럼 보이지만, 그때는 순환 안의 어떤 규범도 바깥에서 근거를 얻지 못해 전체가 함께 서거나 함께 무너집니다.",
+        boundary:
+          "이 식은 효력이 어디서 오는지만 말하고 그 규범의 내용이 정당한지는 다루지 않습니다.",
+      },
+      {
+        id: "rule-of-recognition",
+        sectionId: "validity-chain",
+        intuition:
+          "사슬을 멈추는 것은 더 높은 규범이 아니라 하나의 사실입니다.",
+        workedExample:
+          "법원과 공직자들이 실제로 어떤 문서를 기준으로 삼아 판단하고 있다는 것이 그 사실이며, 그 문서가 바뀌면 위에 걸려 있던 효력이 한꺼번에 다시 계산됩니다.",
+        boundary:
+          "바닥이 사실이라는 점은 결함이 아니라 재귀적 정의의 구조가 요구하는 것입니다. 그래서 법이 힘과 같다는 결론이 따라 나오지는 않습니다.",
+      },
+      {
+        id: "formal-legality-conditions",
+        sectionId: "form-conditions",
+        intuition:
+          "절차를 다 밟아 만들어도 아무도 맞춰 행동할 수 없는 규범이 있습니다.",
+        workedExample:
+          "공포하지 않거나, 읽어도 뜻이 정해지지 않거나, 이미 한 행동에 뒤늦게 적용하거나, 서로 어긋나는 요구를 하면 사람이 행동을 맞출 방법이 없습니다.",
+        boundary:
+          "여덟 항목은 서로 독립이 아닙니다. 명확성을 끝까지 밀면 사안마다 조문을 고쳐야 해 안정성이 흔들립니다.",
+      },
+      {
+        id: "congruence-of-text-and-enforcement",
+        sectionId: "form-conditions",
+        intuition:
+          "조문을 읽고 맞춘 행동이 빗나가면 사람들은 조문 대신 집행을 읽습니다.",
+        workedExample:
+          "이 항목이 깨지면 앞의 일곱을 다 갖춰도 소용이 없고, 공포된 규범이 아니라 관행이 진짜 규칙이 됩니다.",
+        boundary:
+          "일선의 처리 요령은 규칙 위반이 아니라 규칙이 비운 자리를 메우는 것이므로, 어긋남을 곧바로 위법으로 읽으면 원인을 놓칩니다.",
+      },
+      {
+        id: "law-as-expectation-infrastructure",
+        sectionId: "why-form-matters",
+        intuition:
+          "내가 이렇게 하면 저쪽이 저렇게 한다는 것을 미리 알 수 있어야 계약도 투자도 가능합니다.",
+        workedExample:
+          "앞 시리즈에서 헌법이 힘을 묶은 것은 무엇이 위반인지를 모두가 같은 시점에 같은 판단으로 읽을 수 있었기 때문이며, 그 조건이 공포와 명확성입니다.",
+        boundary:
+          "형식 조건을 다 갖춘 부당한 규범이 가능하므로, 이 설명만으로 내용의 정당성 문제가 해결되지는 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 갈림",
+        relation: "힘으로 하는 요구와 법이 어디서 갈리는지 봅니다.",
+        concepts: ["law-vs-command"],
+      },
+      {
+        label: "01 사슬",
+        relation: "효력이 어디서 오고 어디서 멈추는지 따라갑니다.",
+        concepts: ["chain-of-validity", "rule-of-recognition"],
+      },
+      {
+        label: "02 작동",
+        relation: "효력이 있어도 작동하려면 형식이 필요합니다.",
+        concepts: [
+          "formal-legality-conditions",
+          "congruence-of-text-and-enforcement",
+        ],
+      },
+      {
+        label: "03 이유",
+        relation: "그 형식이 요구되는 이유는 도덕이 아니라 기능입니다.",
+        concepts: ["law-as-expectation-infrastructure"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "총을 든 요구와 과태료 고지서가 갈라지는 지점을 세 가지로 쓰세요.",
+        answerChecklist: [
+          "지목이 아니라 일반 규칙에 걸림",
+          "행동 전에 이미 있었고 알 수 있었음",
+          "요구하는 쪽도 그 규칙에 묶임",
+          "힘의 크기가 아니라 힘이 나오는 형태가 다름",
+        ],
+        requiredConcepts: ["law-vs-command"],
+        sectionId: "command-vs-law",
+      },
+      {
+        level: "basic",
+        question:
+          "과태료 처분의 효력 근거를 위로 거슬러 올라가며 한 칸씩 쓰세요.",
+        answerChecklist: [
+          "시행령이 권한을 줌",
+          "법률이 범위를 정해 위임",
+          "헌법이 정한 절차를 밟음",
+          "헌법 위에는 상위 규범이 없음",
+        ],
+        requiredConcepts: ["chain-of-validity"],
+        sectionId: "validity-chain",
+      },
+      {
+        level: "basic",
+        question:
+          "사슬의 종결 자리에 또 하나의 규범을 놓으면 왜 답이 되지 않는지 쓰세요.",
+        answerChecklist: [
+          "그 규범에 같은 질문을 다시 할 수 있음",
+          "문제가 한 칸 미뤄질 뿐",
+          "재귀가 끝나지 않음",
+          "종결 조건은 규범이 아니어야 함",
+        ],
+        requiredConcepts: ["chain-of-validity", "rule-of-recognition"],
+        sectionId: "validity-chain",
+      },
+      {
+        level: "basic",
+        question:
+          "형식 조건 여덟 가지를 쓰고, 그것이 좋은 법의 요건이 아니라고 하는 이유를 적으세요.",
+        answerChecklist: [
+          "일반성·공포·명확성·소급 금지",
+          "무모순·이행 가능·안정성·집행 일치",
+          "규범이 행동을 이끄는 장치로 작동하기 위한 요건",
+          "빠지면 사전 안내가 아니라 사후 처벌 근거가 됨",
+        ],
+        requiredConcepts: ["formal-legality-conditions"],
+        sectionId: "form-conditions",
+      },
+      {
+        level: "basic",
+        question:
+          "조문과 집행이 어긋나면 무슨 일이 생기는지 쓰세요.",
+        answerChecklist: [
+          "조문을 읽고 맞춘 행동이 빗나감",
+          "사람들이 집행 관행을 읽게 됨",
+          "관행이 진짜 규칙이 됨",
+          "나머지 일곱 조건이 무의미해짐",
+        ],
+        requiredConcepts: ["congruence-of-text-and-enforcement"],
+        sectionId: "form-conditions",
+      },
+      {
+        level: "basic",
+        question:
+          "형식 조건이 요구되는 이유를 예측 가능성이라는 말로 설명하세요.",
+        answerChecklist: [
+          "법이 하려는 일은 서로의 행동을 미리 알게 하는 것",
+          "계약·투자·분쟁 회피가 그 위에 섬",
+          "조건이 깨지면 예측이 불가능",
+          "그러면 사후 처벌 근거로 성격이 바뀜",
+        ],
+        requiredConcepts: ["law-as-expectation-infrastructure"],
+        sectionId: "why-form-matters",
+      },
+      {
+        level: "advanced",
+        question:
+          "효력의 정의가 재귀 구조라는 것을 적고, 그 구조가 종결 조건을 요구하는 이유를 설명하세요.",
+        answerChecklist: [
+          "valid(N) 정의 안에 valid가 다시 나타남",
+          "재귀적 정의는 종결 조건이 있어야 값이 정해짐",
+          "종결 자리에 규범을 놓으면 정의가 다시 적용됨",
+          "사슬이 유한하므로 규범이 아닌 것으로 닫아야 함",
+        ],
+        requiredConcepts: ["chain-of-validity"],
+        sectionId: "validity-chain",
+      },
+      {
+        level: "advanced",
+        question:
+          "바닥이 관행이라는 점이 체제 전환을 어떻게 설명하는지 쓰세요.",
+        answerChecklist: [
+          "바닥은 규범이 아니라 관찰 대상",
+          "공직자들이 기준으로 삼는 문서가 바뀔 수 있음",
+          "바뀌면 위에 걸린 효력이 한꺼번에 재계산",
+          "제헌과 혁명이 사슬 안의 사건이 아님",
+        ],
+        requiredConcepts: ["rule-of-recognition", "chain-of-validity"],
+        sectionId: "validity-chain",
+      },
+      {
+        level: "advanced",
+        question:
+          "형식 조건 여덟 가지가 서로 독립이 아니라는 것을 예로 보이세요.",
+        answerChecklist: [
+          "명확성을 끝까지 밀면 사안마다 조문을 고쳐야 함",
+          "그러면 안정성이 흔들림",
+          "한쪽을 강하게 요구하면 다른 쪽이 어려워짐",
+          "목록은 동시에 최대화할 수 있는 것이 아님",
+        ],
+        requiredConcepts: ["formal-legality-conditions"],
+        sectionId: "form-conditions",
+      },
+      {
+        level: "advanced",
+        question:
+          "앞 시리즈의 일선 재량이 집행 일치 조건과 어떻게 만나는지 설명하세요.",
+        answerChecklist: [
+          "규칙이 모든 순서를 정해 주지 않음",
+          "창구의 요령이 쌓여 실제 정책이 됨",
+          "그만큼 조문과 집행이 갈라짐",
+          "위법이 아니라 규칙이 비운 자리를 메운 것",
+        ],
+        requiredConcepts: ["congruence-of-text-and-enforcement"],
+        sectionId: "form-conditions",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Stanford Encyclopedia of Philosophy · Legal Positivism (Leslie Green · Thomas Adams)",
+        href: "https://plato.stanford.edu/entries/legal-positivism/",
+        problem:
+          "무엇이 어떤 규범을 법으로 만드는지를 물을 때, 그 답이 규범의 내용에 대한 평가를 포함해야 하는지가 오래 다투어졌습니다.",
+        contribution:
+          "효력의 근거를 사회적 사실에서 찾는 입장을 정리하고, 최상위 기준인 승인의 규칙이 공직자들의 관행으로만 존재한다는 구조를 설명합니다. 그래서 효력의 최종 기준은 법규범도 전제된 규범도 아니라 실제로 실행되고 있기 때문에만 존재하는 사회적 규칙이 됩니다.",
+        assumptions:
+          "법체계에 최상위 기준이 하나로 특정된다고 보며, 효력 판단과 내용에 대한 평가를 분리할 수 있다고 둡니다.",
+        evidenceScope:
+          "2003년 초판, 2025년 10월 10일 개정된 백과사전 항목이며 공개 전문을 확인했습니다. 한 입장의 정리이며 반대 입장도 같은 항목 안에 소개되어 있습니다.",
+        notClaim:
+          "형식과 절차만 갖추면 어떤 내용이든 따라야 한다는 주장이 아닙니다. 효력의 근거를 사실에서 찾는 것과, 효력 있는 규범을 따라야 하는지를 판단하는 것은 다른 물음이며 이 항목도 둘을 구분합니다.",
+        sectionId: "validity-chain",
+      },
+    ],
+  },
 };

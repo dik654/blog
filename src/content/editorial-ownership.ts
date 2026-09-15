@@ -12130,6 +12130,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "what-makes-law-law": {
+    title: "무엇이 이 문장을 법으로 만듭니까 글이 소유하는 범위",
+    owns: [
+      "힘으로 하는 요구와 법이 갈라지는 세 지점",
+      "효력이 상위 규범에서 온다는 재귀 구조와 종결이 필요한 이유",
+      "종결 자리를 채우는 것이 규범이 아니라 관행이라는 사실",
+      "규범이 작동하기 위한 형식 조건 여덟 가지와 그 점검 절차",
+      "조문과 집행이 어긋날 때 무엇이 진짜 규칙이 되는지",
+      "형식 조건이 도덕이 아니라 예측 가능성에서 요구된다는 설명",
+    ],
+    reuses: [
+      {
+        label: "강제력이 한 곳으로 몰리는 구조",
+        href: "/politics/polity/state-and-legitimacy#why-monopoly",
+      },
+      {
+        label: "선이 뚜렷해야 판단이 한 점에 모인다는 관계",
+        href: "/politics/constitution/constitutionalism-and-separation#why-paper-binds",
+      },
+      {
+        label: "규칙이 비운 자리를 일선이 채운다는 관찰",
+        href: "/politics/governance/bureaucracy-and-implementation#street-level",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "효력에 관한 입장은 공개 전문을 확인한 항목에서만 옮기고, 그 항목이 한 입장의 정리라는 사실을 함께 적는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

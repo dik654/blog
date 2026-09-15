@@ -21,7 +21,8 @@ export interface KnowledgeConcept {
     | "machine-learning"
     | "distributed-systems"
     | "economics"
-    | "political-science";
+    | "political-science"
+    | "law";
   label: string;
   /** 검색·원문 대조용 별칭입니다. 별칭 자체를 별도 concept node로 만들지 않습니다. */
   aliases?: readonly string[];
@@ -23921,6 +23922,66 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "국제 합의가 국내에서 비준되어야 하므로 그 나라가 받아들일 수 있는 안의 범위를 국내 거부권자들이 정한다는 구조입니다. 범위가 좁다는 사실 자체가 협상력이 되고 무엇이든 통과시킬 수 있는 대표는 더 많이 요구받으므로, 국내 제도는 국제 협상의 배경이 아니라 그 안의 변수입니다.",
     canonicalHref: "/politics/governance/international-anarchy#limits",
   },
+  "law-vs-command": {
+    id: "law-vs-command",
+    kind: "concept",
+    domain: "law",
+    label: "규칙을 통해 나오는 힘",
+    aliases: ["법과 협박의 구분", "일반성"],
+    definition:
+      "같은 조건에 있는 모두에게 미리 적용되는 규칙이 먼저 있고 개별 사건이 거기 걸리며, 요구하는 쪽도 그 규칙에 묶이는 구조입니다. 힘의 크기가 아니라 힘이 규칙을 통해서만 나온다는 점이 협박과 법을 가르고, 그래서 미리 피할 기회와 잘못을 다툴 근거가 생깁니다.",
+    canonicalHref: "/law/legal-system/what-makes-law-law#command-vs-law",
+  },
+  "chain-of-validity": {
+    id: "chain-of-validity",
+    kind: "theorem",
+    domain: "law",
+    label: "효력의 사슬과 그 종결",
+    aliases: ["효력 근거", "위임의 연쇄", "chain of validity"],
+    definition:
+      "한 규범의 효력은 그것을 만들 권한을 준 다른 규범에서 오므로 정의가 자기 자신을 다시 부르는 재귀 구조가 되고, 그런 정의는 종결 조건이 있어야만 값이 정해집니다. 종결 조건의 자리에 또 하나의 규범을 놓으면 같은 질문이 한 칸 미뤄질 뿐이므로, 그 자리에는 규범이 아닌 것이 들어가야 합니다.",
+    canonicalHref: "/law/legal-system/what-makes-law-law#validity-chain",
+  },
+  "rule-of-recognition": {
+    id: "rule-of-recognition",
+    kind: "concept",
+    domain: "law",
+    label: "승인의 규칙",
+    aliases: ["최상위 기준", "관행으로서의 바닥", "rule of recognition"],
+    definition:
+      "무엇이 그 체계의 법인지를 가리는 데 실제로 쓰이는 최상위 기준이며, 법원과 공직자들이 그것을 써서 판단하고 있다는 사실로만 존재합니다. 규범이 아니라 사실이므로 옳고 그름을 따질 대상이 아니라 바뀌었는지를 관찰할 대상이고, 그래서 기준이 바뀌면 그 위에 걸려 있던 효력이 한꺼번에 다시 계산됩니다.",
+    canonicalHref: "/law/legal-system/what-makes-law-law#validity-chain",
+  },
+  "formal-legality-conditions": {
+    id: "formal-legality-conditions",
+    kind: "method",
+    domain: "law",
+    label: "형식 조건 여덟 가지",
+    aliases: ["합법성의 조건", "공포", "명확성", "소급 금지"],
+    definition:
+      "일반성·공포·명확성·소급 금지·무모순·이행 가능·안정성·집행 일치를 갖춰야 규범이 사람의 행동을 이끄는 장치로 작동한다는 점검 목록입니다. 좋은 법의 요건이 아니라 작동의 요건이며, 하나라도 빠지면 그 규범은 사전 안내가 아니라 사후에 벌할 근거로만 남습니다.",
+    canonicalHref: "/law/legal-system/what-makes-law-law#form-conditions",
+  },
+  "congruence-of-text-and-enforcement": {
+    id: "congruence-of-text-and-enforcement",
+    kind: "concept",
+    domain: "law",
+    label: "조문과 집행의 일치",
+    aliases: ["집행 일치", "관행이 규칙이 되는 현상"],
+    definition:
+      "적혀 있는 대로 실제로 집행되어야 한다는 조건이며, 이것이 깨지면 나머지 일곱 조건을 다 갖춰도 소용이 없습니다. 조문을 읽고 맞춘 행동이 빗나가면 사람들은 조문 대신 집행 관행을 읽게 되고, 그 순간 공포된 규범이 아니라 관행이 진짜 규칙이 됩니다.",
+    canonicalHref: "/law/legal-system/what-makes-law-law#form-conditions",
+  },
+  "law-as-expectation-infrastructure": {
+    id: "law-as-expectation-infrastructure",
+    kind: "concept",
+    domain: "law",
+    label: "예측을 떠받치는 장치로서의 법",
+    aliases: ["예측 가능성", "행동 조정"],
+    definition:
+      "법이 하려는 일은 사람들이 서로의 행동을 미리 알 수 있게 만드는 것이며, 형식 조건들은 전부 그 예측을 가능하게 하는 데 필요한 항목입니다. 그래서 형식은 내용과 무관한 껍데기가 아니라, 무너지면 법이 사람을 이끄는 장치에서 사후에 벌할 근거로 성격이 바뀌는 지점입니다.",
+    canonicalHref: "/law/legal-system/what-makes-law-law#why-form-matters",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -44070,6 +44131,83 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "정권이 바뀌면 상대가 달라지므로 다음에 또 만날 몫이 줄고, 그만큼 문턱을 넘기 어려워집니다.",
+  },
+  {
+    from: "coercion-monopoly",
+    to: "law-vs-command",
+    relation: "contrasts",
+    reason:
+      "강제력이 한 곳에 몰려 있다는 사실만으로는 법과 협박이 갈리지 않으므로, 그 힘이 어떤 형태로 나오는지를 따로 물어야 합니다.",
+  },
+  {
+    from: "law-vs-command",
+    to: "chain-of-validity",
+    relation: "produces",
+    reason:
+      "힘이 규칙을 통해서만 나온다면 그 규칙 자체의 근거를 물을 수 있게 되고, 그 물음이 사슬을 만듭니다.",
+  },
+  {
+    from: "chain-of-validity",
+    to: "rule-of-recognition",
+    relation: "produces",
+    reason:
+      "재귀적 정의는 종결 조건을 요구하는데 그 자리에 규범을 놓으면 질문이 미뤄질 뿐이므로, 사실이 들어가야 합니다.",
+  },
+  {
+    from: "delegation-necessity",
+    to: "chain-of-validity",
+    relation: "prerequisite",
+    reason:
+      "법률이 뼈대만 정하고 나머지를 맡긴다는 구조가 사슬의 중간 칸을 실제로 만들어 냅니다.",
+  },
+  {
+    from: "rule-of-recognition",
+    to: "constitutional-entrenchment",
+    relation: "constrains",
+    reason:
+      "개정 요건도 그 요건을 기준으로 삼는 관행 위에서만 의미를 가지므로, 관행이 바뀌면 문턱 자체가 새로 계산됩니다.",
+  },
+  {
+    from: "formal-legality-conditions",
+    to: "law-as-expectation-infrastructure",
+    relation: "produces",
+    reason:
+      "여덟 항목은 전부 사람들이 서로의 행동을 미리 알 수 있게 하는 데 필요한 조건입니다.",
+  },
+  {
+    from: "constitution-as-coordination",
+    to: "law-as-expectation-infrastructure",
+    relation: "prerequisite",
+    reason:
+      "선이 뚜렷하고 미리 알려져 있어야 판단이 한 점에 모인다는 구조를 앞 시리즈에서 세워 두었습니다.",
+  },
+  {
+    from: "formal-legality-conditions",
+    to: "congruence-of-text-and-enforcement",
+    relation: "extends",
+    reason:
+      "여덟 항목 가운데 이것만은 문서가 아니라 실제 집행을 봐야 판정되므로 따로 떼어 봅니다.",
+  },
+  {
+    from: "street-level-discretion",
+    to: "congruence-of-text-and-enforcement",
+    relation: "constrains",
+    reason:
+      "마지막 창구의 처리 요령이 쌓여 실제 정책이 되면 조문과 집행이 갈라지고, 이 조건이 그 지점에서 깨집니다.",
+  },
+  {
+    from: "state-capacity",
+    to: "formal-legality-conditions",
+    relation: "constrains",
+    reason:
+      "공포하고 일관되게 집행할 역량이 없으면 조문을 아무리 잘 써도 이 조건들을 충족할 수 없습니다.",
+  },
+  {
+    from: "law-as-expectation-infrastructure",
+    to: "compliance-enforcement-threshold",
+    relation: "optimizes",
+    reason:
+      "행동을 미리 맞출 수 있게 만들면 강제로 다뤄야 할 위반이 줄어 같은 자원으로 더 넓은 순응을 유지합니다.",
   },
 ];
 
