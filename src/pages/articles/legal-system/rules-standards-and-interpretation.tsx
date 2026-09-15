@@ -24,15 +24,12 @@ export default function RulesStandardsAndInterpretationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            앞 글은 어떤 문장이 법인지까지 갔습니다. 효력은 권한을 준 상위
-            규범에서 오고, 그 규범이 사람을 이끌려면 공포되고 명확해야 한다는
-            것까지였습니다.
+            앞 글은 어떤 문장이 법인지까지 갔습니다. 효력은 권한을 준 상위 규범에서 오고 그 규범이 사람을 이끌려면 공포되고 명확해야 한다는 것까지였습니다.
           </p>
 
           <p className="leading-7">
-            그런데 명확성 조건을 두고 회색 지대가 있느냐가 아니라 얼마나 넓으냐를
-            봐야 한다고 적었습니다. 모든 조문에 회색이 있다는 뜻이고, 그러면 그
-            회색을 누가 언제 메우는지가 남은 질문이 됩니다.
+            그런데 명확성 조건을 두고 회색 지대가 있느냐가 아니라 얼마나 넓으냐를 봐야 한다고 적었습니다. 모든 조문에 회색이 있다는 뜻이고 그러면 그 회색을 누가 언제 메우는지가 남은
+            질문이 됩니다.
           </p>
 
           <p className="leading-7">
@@ -85,10 +82,8 @@ export default function RulesStandardsAndInterpretationArticle() {
           </p>
 
           <p className="leading-7">
-            앞쪽은 만들 때 정해 둡니다. 그래서 운전자는 계기판만 보면 자기가
-            위반인지 알 수 있고, 판단하는 쪽은 속도만 재면 됩니다. 뒤쪽은 사건이
-            온 뒤에 정합니다. 그래서 운전자는 미리 알 수 없고, 판단하는 쪽이
-            그날의 도로 상태와 시야를 놓고 정해야 합니다.
+            앞쪽은 만들 때 정해 둡니다. 그래서 운전자는 계기판만 보면 자기가 위반인지 알 수 있고 판단하는 쪽은 속도만 재면 됩니다. 뒤쪽은 사건이 온 뒤에 정합니다. 그래서 운전자는
+            미리 알 수 없고 판단하는 쪽이 그날의 도로 상태와 시야를 놓고 정해야 합니다.
           </p>
 
           <p className="leading-7">
@@ -150,8 +145,7 @@ export default function RulesStandardsAndInterpretationArticle() {
           </p>
 
           <p className="leading-7">
-            그러면 사안이 많아질수록 한 번 치르는 비용이 사건당으로는 얇아지고,
-            사건마다 붙는 비용은 그대로입니다. 어느 지점에서 두 총액이 뒤집힙니다.
+            그러면 사안이 많아질수록 한 번 치르는 비용이 사건당으로는 얇아지고 사건마다 붙는 비용은 그대로입니다. 어느 지점에서 두 총액이 뒤집힙니다.
           </p>
 
           <p className="leading-7">
@@ -248,10 +242,8 @@ export default function RulesStandardsAndInterpretationArticle() {
           </p>
 
           <p className="leading-7">
-            그런데 그 구간은 조문 전체가 아닙니다. 공원에 차량을 들이지 말라는
-            조문에서 승용차가 걸린다는 데는 다툼이 없고, 유모차를 밀고 들어가는
-            사람이 걸리지 않는다는 데도 다툼이 없습니다. 양쪽 끝에는 뜻이 정해진
-            구간이 있습니다.
+            그런데 그 구간은 조문 전체가 아닙니다. 공원에 차량을 들이지 말라는 조문에서 승용차가 걸린다는 데는 다툼이 없고 유모차를 밀고 들어가는 사람이 걸리지 않는다는 데도 다툼이
+            없습니다. 양쪽 끝에는 뜻이 정해진 구간이 있습니다.
           </p>
 
           <p className="leading-7">
@@ -382,15 +374,12 @@ export default function RulesStandardsAndInterpretationArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            이 글은 조문을 사안에 대는 일까지 다뤘습니다. 미리 적어 둘지 그때
-            정할지를 사안 수와 어긋남의 손해로 계산했고, 어느 쪽을 택해도 남는
-            회색을 무슨 순서로 메우는지 봤습니다.
+            이 글은 조문을 사안에 대는 일까지 다뤘습니다. 미리 적어 둘지 그때 정할지를 사안 수와 어긋남의 손해로 계산했고 어느 쪽을 택해도 남는 회색을 무슨 순서로 메우는지 봤습니다.
           </p>
 
           <p className="leading-7">
-            그런데 한 사건에서 회색을 메운 판단은 그 사건과 함께 사라지지
-            않습니다. 다음에 비슷한 사건이 오면 앞의 판단이 근거로 제시되고, 그것이
-            반복되면 조문에 적혀 있지 않은 내용이 사실상 규칙처럼 굳습니다.
+            그런데 한 사건에서 회색을 메운 판단은 그 사건과 함께 사라지지 않습니다. 다음에 비슷한 사건이 오면 앞의 판단이 근거로 제시되고 그것이 반복되면 조문에 적혀 있지 않은 내용이
+            사실상 규칙처럼 굳습니다.
           </p>
 
           <p className="leading-7">
