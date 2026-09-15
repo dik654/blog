@@ -7449,4 +7449,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "낼 수 있는 금액 10·9·8·7·6·5와 드는 값 4·5·6·7·8·9를 그대로 이어받아 충격 전후를 계산함",
     },
   ],
+  "market-failure/externalities-and-social-cost": [
+    {
+      kind: "핵심 논문",
+      label:
+        "R. H. Coase, “The Problem of Social Cost”, The Journal of Law and Economics, Volume III, October 1960",
+      href: "https://www.law.uchicago.edu/sites/default/files/file/coase-problem.pdf",
+      note: "문제의 상호성, 거래비용이 0일 때의 결과, 거래에 드는 것들의 열거, 초기 배치가 효율에 영향을 준다는 §VI 결론. 원문 PDF를 내려받아 직접 대조함",
+    },
+    {
+      kind: "보충 읽기",
+      label: "앞 세 글과 같은 시장의 숫자",
+      href: "/economics/prices/prices-as-information#sufficient",
+      note: "낼 수 있는 금액 10·9·8·7·6·5와 장부에 적히는 값 4·5·6·7·8·9를 그대로 이어받아 빠진 몫 2를 더해 계산함",
+    },
+  ],
 };

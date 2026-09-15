@@ -24938,6 +24938,61 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/economics/prices/prices-as-information#central-calculation",
   },
+  "private-vs-social-cost": {
+    id: "private-vs-social-cost",
+    kind: "concept",
+    domain: "economics",
+    label: "장부에 적히는 값과 실제로 드는 값",
+    aliases: ["외부효과", "사적 비용과 사회적 비용"],
+    definition:
+      "만드는 쪽의 장부에 적히지 않고 제삼자가 지는 몫이 있으면 사려는 줄에도 팔려는 줄에도 그 값이 들어가지 않아 값이 사정을 잘못 말합니다. 이것은 누가 나쁜 사람이냐의 문제가 아니라 양쪽 손해 가운데 어느 쪽이 더 큰지의 문제이며, 막는 쪽도 막힌 쪽에 손해를 입힙니다.",
+    canonicalHref:
+      "/economics/market-failure/externalities-and-social-cost#two-costs",
+  },
+  "externality-quantity-distortion": {
+    id: "externality-quantity-distortion",
+    kind: "theorem",
+    domain: "economics",
+    label: "빠진 몫이 수량을 어긋나게 하는 크기",
+    aliases: ["과잉 생산", "외부효과의 사중손실"],
+    definition:
+      "시장은 장부에 적힌 값으로 멈출 자리를 정하고 옳은 자리는 빠진 몫까지 더해 잰 것이므로, 그 몫이 비용이면 늘 더 만들어지고 이득이면 덜 만들어집니다. 깎아먹은 양은 두 자리 사이 단위들에서 실제로 든 값이 낼 수 있던 금액을 넘은 만큼의 합이며, 그 구간에서도 만든 쪽은 손해를 보지 않습니다.",
+    canonicalHref:
+      "/economics/market-failure/externalities-and-social-cost#overproduction",
+  },
+  "pricing-in-the-missing-cost": {
+    id: "pricing-in-the-missing-cost",
+    kind: "method",
+    domain: "economics",
+    label: "빠진 몫을 값에 얹기",
+    aliases: ["피구세", "교정 부담금"],
+    definition:
+      "빠진 몫만큼을 한 단위마다 물리면 장부가 실제와 같아져 시장이 옳은 자리에서 멈추고, 이때 아무도 제삼자의 사정을 알 필요가 없습니다. 다만 그 몫의 크기를 알아야 하는데 그 정보는 모으기 어렵고 부풀려 답할 이유가 있어, 크기가 빗나가면 덜 만들어지거나 여전히 더 만들어집니다.",
+    canonicalHref:
+      "/economics/market-failure/externalities-and-social-cost#pricing-in",
+  },
+  "rights-assignment-and-bargaining": {
+    id: "rights-assignment-and-bargaining",
+    kind: "theorem",
+    domain: "economics",
+    label: "권리를 누구에게 주든 수량은 같다",
+    aliases: ["코스 정리", "협상으로 되돌리기"],
+    definition:
+      "협상에 값이 들지 않으면 권리를 만드는 쪽에 주든 피해 쪽에 주든 만들어지는 양이 같고 돈의 방향만 반대가 됩니다. 얼마인지를 맞힐 필요 없이 양쪽이 자기 숫자를 들고 협상하면 되기 때문인데, 이 결과는 상대를 특정할 수 있고 협상 비용이 이득보다 작을 때만 성립합니다.",
+    canonicalHref:
+      "/economics/market-failure/externalities-and-social-cost#bargaining",
+  },
+  "rights-placement-when-bargaining-fails": {
+    id: "rights-placement-when-bargaining-fails",
+    kind: "concept",
+    domain: "economics",
+    label: "협상이 막힐 때 권리를 어디에 둘 것인가",
+    aliases: ["초기 배치가 결과가 된다", "거래비용과 권리"],
+    definition:
+      "협상에 드는 값이 막아서 생기는 이득보다 크면 아무도 협상하지 않으므로 처음 정해 준 권리 배치가 그대로 결과가 됩니다. 그래서 협상이 열렸다면 갔을 쪽에 처음부터 권리를 두는 편이 낫고, 이 판단은 값을 매기는 문제가 아니라 법이 다루는 문제로 넘어갑니다.",
+    canonicalHref:
+      "/economics/market-failure/externalities-and-social-cost#bargaining",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -46298,6 +46353,76 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "produces",
     reason:
       "낼 수 있는 금액이 그 사람이 지금 무엇을 포기할 수 있는지로 정해지므로, 그 값은 본인의 사정과 함께 계속 움직입니다.",
+  },
+  {
+    from: "price-as-sufficient-signal",
+    to: "private-vs-social-cost",
+    relation: "constrains",
+    reason:
+      "각자의 비교가 전체 최적과 맞물리려면 관련된 사람이 모두 두 줄 안에 있어야 하는데, 제삼자는 밖에 있습니다.",
+  },
+  {
+    from: "private-vs-social-cost",
+    to: "externality-quantity-distortion",
+    relation: "produces",
+    reason:
+      "두 비용이 갈라지면 시장이 멈추는 자리와 옳은 자리가 달라지고 그 사이가 과잉이 됩니다.",
+  },
+  {
+    from: "total-surplus-price-invariance",
+    to: "externality-quantity-distortion",
+    relation: "prerequisite",
+    reason:
+      "쌍별 차이를 더해 봉우리를 찾는 방법을 그대로 쓰되 드는 값에 빠진 몫을 더해 다시 잽니다.",
+  },
+  {
+    from: "pricing-in-the-missing-cost",
+    to: "externality-quantity-distortion",
+    relation: "optimizes",
+    reason:
+      "빠진 몫만큼을 장부에 얹으면 시장이 멈추는 자리가 옳은 자리로 옮겨 갑니다.",
+  },
+  {
+    from: "collection-before-calculation",
+    to: "pricing-in-the-missing-cost",
+    relation: "constrains",
+    reason:
+      "얹을 크기를 알려면 피해 정보를 모아야 하는데 그 정보가 바로 모으기 어렵고 부풀려 답할 이유가 있는 종류입니다.",
+  },
+  {
+    from: "rights-assignment-and-bargaining",
+    to: "externality-quantity-distortion",
+    relation: "optimizes",
+    reason:
+      "권리만 정해 주고 맡겨도 협상이 열리면 옳은 수량에 이릅니다.",
+  },
+  {
+    from: "transaction-cost",
+    to: "rights-assignment-and-bargaining",
+    relation: "constrains",
+    reason:
+      "상대를 찾고 재고 강제하는 값이 막아서 생기는 이득보다 크면 협상이 열리지 않아 이 결과가 성립하지 않습니다.",
+  },
+  {
+    from: "rights-assignment-and-bargaining",
+    to: "rights-placement-when-bargaining-fails",
+    relation: "contrasts",
+    reason:
+      "협상이 열릴 때는 권리 위치가 수량을 바꾸지 않지만 막히면 그 위치가 그대로 결과가 됩니다.",
+  },
+  {
+    from: "rights-placement-when-bargaining-fails",
+    to: "property-rule-vs-liability-rule",
+    relation: "produces",
+    reason:
+      "협상 비용에 따라 동의를 요구할지 값을 매겨 옮길지를 고르는 법 쪽 판단이 이 결론의 구체형입니다.",
+  },
+  {
+    from: "rights-assignment-and-bargaining",
+    to: "optimal-care-level",
+    relation: "contrasts",
+    reason:
+      "미리 협상할 상대를 특정할 수 없는 사고에서는 협상 경로가 닫혀 한 단계 비교로 주의 수준을 정하게 됩니다.",
   },
 ];
 
