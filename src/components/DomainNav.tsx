@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { domains } from "@/content";
-import { categoryHref } from "@/lib/routes";
+import { categoryHref, domainHref } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
 /**
@@ -33,9 +33,11 @@ export default function DomainNav() {
   return (
     <nav ref={navRef} className="hidden gap-1 md:flex">
       {domains.map((domain) => {
-        const isActive = domain.categories.some((category) =>
-          location.pathname.startsWith(categoryHref(category.slug)),
-        );
+        const isActive =
+          location.pathname === domainHref(domain.slug) ||
+          domain.categories.some((category) =>
+            location.pathname.startsWith(categoryHref(category.slug)),
+          );
 
         if (domain.categories.length === 1) {
           const only = domain.categories[0];
@@ -80,6 +82,13 @@ export default function DomainNav() {
                 <p className="px-2.5 py-1.5 text-[11px] leading-5 text-muted-foreground">
                   {domain.description}
                 </p>
+                <Link
+                  to={domainHref(domain.slug)}
+                  onClick={() => setOpenDomain(null)}
+                  className="mb-1 block rounded-lg px-2.5 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-accent"
+                >
+                  {domain.name} 전체 · 읽는 순서 →
+                </Link>
                 {domain.categories.map((category) => {
                   const href = categoryHref(category.slug);
                   return (
