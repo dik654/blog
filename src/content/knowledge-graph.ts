@@ -24098,6 +24098,68 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "뒤집은 판단을 지금 다투는 사건에 적용하지 않으면 바꾸게 만든 사람이 혜택을 받지 못해 아무도 변경을 다투지 않게 되고, 적용하면 행동 당시의 잣대가 아닌 것으로 재게 됩니다. 해소되는 문제가 아니라 어느 쪽 비용을 질지 고르는 문제이며, 형벌에서는 불리한 방향의 변경을 지난 행위에 대는 것이 막혀 고를 여지가 좁습니다.",
     canonicalHref: "/law/legal-system/precedent-and-legal-change#retroactivity",
   },
+  "enforceable-promise-filters": {
+    id: "enforceable-promise-filters",
+    kind: "concept",
+    domain: "law",
+    label: "법의 힘이 붙는 약속의 요건",
+    aliases: ["계약의 성립", "합의·묶일 뜻·확정성·적법성"],
+    definition:
+      "서로 같은 것을 말했는지, 법에 기대겠다는 뜻이 있었는지, 무엇을 언제 얼마에 할지가 정해졌는지, 금지된 것을 하기로 하지 않았는지를 차례로 거른 약속에만 법의 힘이 붙습니다. 전부에 힘을 붙이지 않는 이유는 약속의 값을 올리면 약속 자체가 줄어들기 때문입니다.",
+    canonicalHref:
+      "/law/private-law/contract-and-enforceable-promise#which-promises",
+  },
+  "specific-performance-vs-damages": {
+    id: "specific-performance-vs-damages",
+    kind: "concept",
+    domain: "law",
+    label: "시키는 것과 물리는 것",
+    aliases: ["이행 강제", "손해배상", "구제 수단의 선택"],
+    definition:
+      "약속을 어겼을 때 약속대로 하게 만들 것인지 하지 않은 대신 돈을 물릴 것인지의 선택입니다. 하게 만들려면 계속 감독해야 하고 사람에게 특정한 노동을 강제하는 문제가 붙으므로 돈이 기본이 되고, 돈으로 메울 수 없는 대상에 한해 이행을 시키는 쪽이 예외로 남습니다.",
+    canonicalHref:
+      "/law/private-law/contract-and-enforceable-promise#remedy-choice",
+  },
+  "expectation-damages-incentive": {
+    id: "expectation-damages-incentive",
+    kind: "theorem",
+    domain: "law",
+    label: "배상액이 만드는 파기 유인",
+    aliases: ["이행이익 배상", "효율적 계약파기"],
+    definition:
+      "어기는 쪽은 이행 비용과 배상액을 견주고 사회는 이행 비용과 상대가 얻을 이익을 견주므로, 배상액을 상대 이익과 같게 두면 두 판정이 언제나 일치합니다. 배상이 작으면 안 해도 될 파기가 일어나고 크면 해야 할 파기가 막히며, 어긋나는 구간의 폭은 정확히 배상액과 상대 이익의 차이입니다.",
+    canonicalHref: "/law/private-law/contract-and-enforceable-promise#damages",
+  },
+  "incomplete-contract": {
+    id: "incomplete-contract",
+    kind: "concept",
+    domain: "law",
+    label: "다 적을 수 없는 계약",
+    aliases: ["불완전계약", "계약의 빈칸"],
+    definition:
+      "일어날 수 있는 일을 전부 떠올릴 수 없고 떠올려도 전부 적으면 협상이 끝나지 않으므로, 계약에는 반드시 빈칸이 남습니다. 당사자에게는 사안이 한 건뿐이라 미리 적어 두는 비용을 회수할 수 없다는 점이 앞 글의 계산으로 그대로 설명됩니다.",
+    canonicalHref: "/law/private-law/contract-and-enforceable-promise#incomplete",
+  },
+  "default-rules": {
+    id: "default-rules",
+    kind: "method",
+    domain: "law",
+    label: "빈칸을 메우는 기본값",
+    aliases: ["임의규정", "대체 가능한 초기값"],
+    definition:
+      "법이 빈칸에 들어갈 내용을 미리 정해 두되 당사자가 다르게 적으면 그쪽을 따르는 장치입니다. 대부분의 당사자가 그 상황에서 합의했을 법한 내용으로 두면 예외적인 사람만 따로 적으면 되므로 전체가 치르는 비용이 가장 작아집니다.",
+    canonicalHref: "/law/private-law/contract-and-enforceable-promise#incomplete",
+  },
+  "information-forcing-default": {
+    id: "information-forcing-default",
+    kind: "concept",
+    domain: "law",
+    label: "말하게 만드는 기본값",
+    aliases: ["정보 유도형 임의규정"],
+    definition:
+      "한쪽만 아는 사정이 있을 때 그쪽에 불리하게 기본값을 두어 먼저 알리고 따로 적게 만드는 설계입니다. 대부분이 원할 내용으로 두는 원칙과 목적이 다르며, 알리지 않으면 그 위험을 아는 쪽이 지게 하는 것이 요지입니다.",
+    canonicalHref: "/law/private-law/contract-and-enforceable-promise#incomplete",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -44464,6 +44526,76 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "조문에 요구했던 예측 가능성을 판단의 층에서 다시 요구하는 것이 선례 구속의 한 축입니다.",
+  },
+  {
+    from: "shadow-of-the-future",
+    to: "enforceable-promise-filters",
+    relation: "contrasts",
+    reason:
+      "강제할 자리가 없을 때는 반복과 평판이 약속을 세웠지만, 있을 때는 어떤 약속에 그 힘을 붙일지가 대신 문제가 됩니다.",
+  },
+  {
+    from: "law-as-expectation-infrastructure",
+    to: "enforceable-promise-filters",
+    relation: "prerequisite",
+    reason:
+      "서로의 행동을 미리 알 수 있게 만드는 것이 법의 일이라면, 어떤 약속이 그 예측의 대상이 되는지부터 정해야 합니다.",
+  },
+  {
+    from: "enforceable-promise-filters",
+    to: "specific-performance-vs-damages",
+    relation: "produces",
+    reason:
+      "힘을 붙여 주기로 한 다음에야 그 힘을 어떤 형태로 쓸지가 선택으로 떠오릅니다.",
+  },
+  {
+    from: "specific-performance-vs-damages",
+    to: "expectation-damages-incentive",
+    relation: "produces",
+    reason:
+      "돈으로 물리기로 정하고 나면 얼마를 물릴지가 남고, 그 숫자가 사전 행동을 정합니다.",
+  },
+  {
+    from: "expectation-damages-incentive",
+    to: "incomplete-contract",
+    relation: "constrains",
+    reason:
+      "사정이 바뀌었을 때의 처리를 계약서에 적어 두면 이 계산이 필요 없지만, 적을 수 없다는 점이 배상 규칙을 필요하게 만듭니다.",
+  },
+  {
+    from: "rule-standard-cost-tradeoff",
+    to: "incomplete-contract",
+    relation: "prerequisite",
+    reason:
+      "미리 적어 두는 비용과 그때 가서 정하는 비용을 견주는 계산이 계약 당사자에게 그대로 적용됩니다.",
+  },
+  {
+    from: "incomplete-contract",
+    to: "default-rules",
+    relation: "produces",
+    reason:
+      "빈칸이 반드시 남는다면 그 빈칸에 무엇이 들어갈지를 미리 정해 두는 장치가 필요해집니다.",
+  },
+  {
+    from: "default-rules",
+    to: "information-forcing-default",
+    relation: "extends",
+    reason:
+      "대부분이 원할 내용으로 두는 원칙에서 벗어나 일부러 불편하게 두는 설계가 따로 있습니다.",
+  },
+  {
+    from: "principal-agent-in-government",
+    to: "information-forcing-default",
+    relation: "contrasts",
+    reason:
+      "한쪽만 아는 정보를 다루는 문제는 같지만, 하나는 감시와 유인으로 하나는 초기값의 설계로 접근합니다.",
+  },
+  {
+    from: "reasons-for-precedent",
+    to: "default-rules",
+    relation: "optimizes",
+    reason:
+      "판단이 쌓여 기본값이 무엇인지 예측 가능해지면 당사자가 따로 적어야 할 범위가 줄어듭니다.",
   },
 ];
 

@@ -7270,4 +7270,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "구속하는 이유와 곁들인 말의 구분, 그리고 따르는 네 이유의 출처. 개념 정리이며 실무 조사는 아님",
     },
   ],
+  "private-law/contract-and-enforceable-promise": [
+    {
+      kind: "보충 읽기",
+      label: "Holmes, The Path of the Law (Harvard Law Review 10, 1897)",
+      href: "https://en.wikisource.org/wiki/The_Path_of_the_Law",
+      note: "계약을 지킬 의무가 배상의 예측을 뜻한다는 규정의 출처. 관점의 제안이며 제도 조사는 아님",
+    },
+  ],
 };
