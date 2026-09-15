@@ -82996,4 +82996,289 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/own-vs-rent-inference-capacity": {
+    entryNote:
+      "앞 글의 안전 가동률을 알고 있다고 두고 시작합니다. 여기서는 그 값이 토큰 단가에 어떻게 얹히는지까지 갑니다.",
+    coreIdea:
+      "소유와 임대의 손익을 견주기 전에 같은 자를 세워야 합니다. 임대에는 유휴가 청구되는 것과 아닌 것이 섞여 있어 한쪽만 가동률로 나누면 결론이 뒤집히고, 분모에는 만든 양이 아니라 한 대가 빠져도 지킬 수 있는 양이 들어가야 하며, 자체 원가와 외부 가격은 같은 요청 집합에서 지연 목표를 만족한 요청당 총비용으로만 견줄 수 있습니다.",
+    assumedKnowledge: [
+      {
+        id: "fleet-size-failure-tradeoff",
+        role: "분모에서 빼야 할 예비 용량의 크기를 가져옵니다.",
+      },
+      {
+        id: "opportunity-cost",
+        role: "쉬는 가속기의 값을 무엇으로 재는지의 근거로 씁니다.",
+      },
+      {
+        id: "sunk-cost",
+        role: "이미 나간 상각과 아직 팔 수 있는 시간을 가릅니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "reserved-vs-elastic-rental",
+        role: "임대를 유휴 청구 여부로 둘로 가릅니다.",
+      },
+      {
+        id: "utilization-breakeven",
+        role: "두 방식이 만나는 지점을 식으로 세웁니다.",
+      },
+      {
+        id: "sellable-capacity-denominator",
+        role: "분모에 들어갈 양을 정의합니다.",
+      },
+      {
+        id: "throughput-cost-vs-api-price",
+        role: "자체 원가와 외부 가격을 직접 견줄 수 없는 이유를 정의합니다.",
+      },
+      {
+        id: "utilization-dominates-unit-cost",
+        role: "결론을 실제로 움직이는 변수를 가려냅니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "reserved-vs-elastic-rental",
+        sectionId: "two-rentals",
+        intuition:
+          "월 단위로 잡아 두면 쉬는 시간도 돈을 냅니다.",
+        workedExample:
+          "60퍼센트 가동에서 소유가 시간당 4.24달러일 때, 월 단위 임대는 정가 4.60달러가 아니라 7.67달러입니다.",
+        counterexample:
+          "정가 4.60달러를 그대로 놓고 견주면 차이가 8퍼센트로 보이지만, 같은 자로 나누면 81퍼센트입니다.",
+        boundary:
+          "필요할 때만 빌리는 쪽에도 기동 시간과 최소 청구가 붙습니다. 웜 상태를 유지하려고 켜 두면 그만큼은 다시 유휴가 청구되는 방식이 됩니다.",
+      },
+      {
+        id: "utilization-breakeven",
+        sectionId: "two-rentals",
+        intuition:
+          "고정비는 쓴 시간으로 나누고 종량제는 나누지 않습니다.",
+        workedExample:
+          "월 14,650달러를 4.60 곱하기 720 곱하기 8로 나누면 55.3퍼센트가 나오고, 그 위면 사는 쪽이 쌉니다.",
+        proofIdea:
+          "고정비 방식의 단가는 C/(H·G·u)이고 종량제는 상수 p입니다. 둘을 같다고 두면 u* = C/(p·H·G)가 유일한 해입니다. 반면 두 고정비 방식은 C₁/(H·G·u)와 C₂/(H·G·u)라 u를 어떻게 잡아도 비가 C₁/C₂로 일정하므로 교차점이 존재하지 않습니다.",
+        counterexample:
+          "월 단위 임대와 소유 사이에서 손익분기를 찾았다면 계산이 틀렸습니다. 두 곡선은 평행하게 벌어질 뿐 만나지 않습니다.",
+        boundary:
+          "이 값은 계약마다 다릅니다. 기동 시간과 최소 청구를 넣으면 내려가고 예약 할인을 받으면 올라갑니다.",
+      },
+      {
+        id: "sellable-capacity-denominator",
+        sectionId: "denominator",
+        intuition:
+          "만들 수 있는 양과 팔 수 있는 양이 다릅니다.",
+        workedExample:
+          "노드 한 대가 월 31.1B 토큰을 만들 때 예비를 빼지 않으면 100만 토큰당 0.471달러지만, 두 대를 두고 하나를 예비로 남기면 0.942달러입니다.",
+        proofIdea:
+          "비용은 노드 수 N에 비례하고 파는 양은 N−1에 비례하므로 단위 원가는 기준값에 N/(N−1)을 곱한 값이 됩니다. 이 인자는 N이 커질수록 1로 수렴하지만 결코 1이 되지 않습니다.",
+        boundary:
+          "노드마다 같은 모델이 떠 있어 빠진 몫이 고르게 나뉜다고 둔 계산입니다. 특정 모델이 한 노드에만 있으면 그 모델의 분모는 따로 계산해야 합니다.",
+      },
+      {
+        id: "throughput-cost-vs-api-price",
+        sectionId: "unit-mismatch",
+        intuition:
+          "자체 원가는 출력 토큰 하나를 만드는 데 든 값이고 외부 가격표는 요청 하나에 청구되는 값이라 애초에 다른 것을 셉니다. 게다가 얼마나 빨리 내놓을지를 정하지 않으면 같은 하드웨어가 여러 개의 단가를 냅니다.",
+        workedExample:
+          "자체 원가의 분모는 출력 토큰인데 외부 가격표는 입력·출력·캐시 단가가 각각 달라, 같은 값이라도 요청 구성에 따라 실제 지출이 달라집니다.",
+        counterexample:
+          "같은 가속기에서 사용자당 초당 50토큰을 목표로 하면 100만 토큰에 0.56달러, 125토큰을 목표로 하면 약 4달러라는 분석이 있습니다. 속도 2.5배에 비용 7배라 지연 목표 없이는 단가를 말할 수 없습니다.",
+        boundary:
+          "하루 몇 토큰 이상이면 직접 돌리는 게 싸다는 식의 임계값은 두 단위를 고정했을 때만 성립합니다. 고정하지 않으면 몇 배로 움직입니다.",
+      },
+      {
+        id: "utilization-dominates-unit-cost",
+        sectionId: "what-moves-it",
+        intuition:
+          "전기요금은 한 자릿수 퍼센트이고 가동률은 분모에 그대로 들어갑니다.",
+        workedExample:
+          "전력이 5~15퍼센트, 상각이 60~75퍼센트이므로 전기요금이 지역에 따라 두 배 달라도 전체로는 작지만, 가동률이 60에서 40퍼센트로 내려가면 단가가 1.5배가 됩니다.",
+        boundary:
+          "가동률이라는 말이 결제 시간 대비 실행 시간인지, 커널 점유율인지, 이론 최대 연산 대비인지에 따라 전혀 다른 숫자가 나옵니다. 어느 정의인지 밝히지 않은 가동률은 비교에 쓸 수 없습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 자를 가른다",
+        relation: "임대를 유휴 청구 여부로 둘로 나눕니다.",
+        concepts: ["reserved-vs-elastic-rental"],
+      },
+      {
+        label: "01 만나는 지점",
+        relation: "어느 쌍 사이에 손익분기가 있는지 식으로 정합니다.",
+        concepts: ["utilization-breakeven"],
+      },
+      {
+        label: "02 분모를 고친다",
+        relation: "팔 수 없는 용량을 분모에서 뺍니다.",
+        concepts: ["sellable-capacity-denominator"],
+      },
+      {
+        label: "03 무엇이 움직이는가",
+        relation: "외부 가격과의 비교 조건과 민감한 변수를 가려냅니다.",
+        concepts: [
+          "throughput-cost-vs-api-price",
+          "utilization-dominates-unit-cost",
+        ],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "임대 두 종류를 가르는 축이 무엇이고, 어느 쪽이 소유와 같은 식을 쓰는지 쓰세요.",
+        answerChecklist: [
+          "축은 유휴 시간이 청구되는가",
+          "월 단위로 잡아 둔 임대는 청구됨",
+          "그래서 소유와 같은 식을 씀",
+          "필요할 때만 빌리는 쪽만 단가가 일정",
+        ],
+        requiredConcepts: ["reserved-vs-elastic-rental"],
+        sectionId: "two-rentals",
+      },
+      {
+        level: "basic",
+        question:
+          "월 고정비 14,650달러, 720시간, 가속기 8장일 때 가동률 100·60·40퍼센트의 시간당 단가를 계산하세요.",
+        answerChecklist: [
+          "100퍼센트는 2.54달러",
+          "60퍼센트는 4.24달러",
+          "40퍼센트는 6.36달러",
+          "가동률에 반비례",
+        ],
+        requiredConcepts: ["utilization-breakeven"],
+        sectionId: "two-rentals",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 조건에서 종량제 단가가 시간당 4.60달러일 때 손익분기 가동률을 구하세요.",
+        answerChecklist: [
+          "14,650 나누기 (4.60 곱하기 720 곱하기 8)",
+          "약 55.3퍼센트",
+          "위면 사는 쪽이 쌈",
+          "아래면 빌리는 쪽이 쌈",
+        ],
+        requiredConcepts: ["utilization-breakeven"],
+        sectionId: "two-rentals",
+      },
+      {
+        level: "basic",
+        question:
+          "노드 한 대가 월 31.1B 토큰을 만들고 월 비용이 14,650달러일 때, 예비를 두지 않은 단가와 두 대를 두고 하나를 예비로 남긴 단가를 계산하세요.",
+        answerChecklist: [
+          "예비 없이 0.471달러",
+          "두 대면 비용은 두 배",
+          "파는 양은 그대로",
+          "0.942달러로 정확히 두 배",
+        ],
+        requiredConcepts: ["sellable-capacity-denominator"],
+        sectionId: "denominator",
+      },
+      {
+        level: "basic",
+        question:
+          "자체 토큰 원가와 외부 API 가격을 직접 견줄 수 없는 이유 두 가지를 쓰세요.",
+        answerChecklist: [
+          "자체 원가의 분모는 대개 출력 토큰",
+          "API는 입력·출력·캐시 단가가 각각 다름",
+          "지연 목표에 따라 같은 하드웨어가 다른 단가를 냄",
+          "같은 요청 집합의 요청당 총비용으로 비교",
+        ],
+        requiredConcepts: ["throughput-cost-vs-api-price"],
+        sectionId: "unit-mismatch",
+      },
+      {
+        level: "basic",
+        question:
+          "토큰당 원가에서 전력과 상각의 비중을 쓰고, 그것이 의사결정 순서에 대해 뜻하는 바를 쓰세요.",
+        answerChecklist: [
+          "전력은 5~15퍼센트",
+          "상각은 60~75퍼센트",
+          "전기요금 차이는 한 자릿수 퍼센트로 흡수",
+          "더 싼 전기보다 가동률을 올리는 쪽이 큼",
+        ],
+        requiredConcepts: ["utilization-dominates-unit-cost"],
+        sectionId: "what-moves-it",
+      },
+      {
+        level: "advanced",
+        question:
+          "두 고정비 방식 사이에는 손익분기가 존재하지 않음을 식으로 증명하세요.",
+        answerChecklist: [
+          "두 단가는 C₁/(H·G·u)와 C₂/(H·G·u)",
+          "비가 C₁/C₂로 u와 무관",
+          "u를 어떻게 잡아도 대소가 바뀌지 않음",
+          "따라서 교차점이 없음",
+        ],
+        requiredConcepts: ["utilization-breakeven", "reserved-vs-elastic-rental"],
+        sectionId: "two-rentals",
+      },
+      {
+        level: "advanced",
+        question:
+          "예비 용량을 분모에서 뺀 단가가 기준값에 N/(N−1)을 곱한 값임을 유도하고, N이 커질 때의 극한을 쓰세요.",
+        answerChecklist: [
+          "비용은 N에 비례",
+          "파는 양은 N−1에 비례",
+          "따라서 인자는 N/(N−1)",
+          "N이 커지면 1로 수렴하되 도달하지 않음",
+        ],
+        requiredConcepts: ["sellable-capacity-denominator"],
+        sectionId: "denominator",
+      },
+      {
+        level: "advanced",
+        question:
+          "쉬는 가속기를 매몰비용으로 보면 무엇을 놓치는지, 앞 시리즈의 규칙과 어떻게 다른지 쓰세요.",
+        answerChecklist: [
+          "이미 나간 상각은 되돌릴 수 없음",
+          "그러나 쉬는 시간은 아직 팔 수 있음",
+          "지우면 야간 할인·배치 작업 같은 선택지를 놓침",
+          "매몰비용이 아니라 팔지 못한 재고",
+        ],
+        requiredConcepts: [
+          "utilization-dominates-unit-cost",
+          "sellable-capacity-denominator",
+        ],
+        sectionId: "what-moves-it",
+      },
+      {
+        level: "advanced",
+        question:
+          "작게 시작하는 쪽이 토큰 단가에서 두 번 불리한 이유를 쓰고, 두 불리함이 어떻게 결합되는지 설명하세요.",
+        answerChecklist: [
+          "가동률을 채우기 어려움",
+          "예비 용량의 비중이 큼",
+          "앞은 분모의 u를 낮추고 뒤는 N/(N−1)을 키움",
+          "두 인자가 곱해짐",
+        ],
+        requiredConcepts: [
+          "sellable-capacity-denominator",
+          "utilization-breakeven",
+        ],
+        sectionId: "denominator",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Modal — Beyond GPU utilization: a guide to measuring what matters",
+        href: "https://modal.com/blog/gpu-utilization-guide",
+        problem:
+          "가동률이라는 한 단어가 서로 다른 세 가지 값을 가리키는 채로 쓰여, 같은 구성에 대해 전혀 다른 숫자가 같은 이름으로 보고되고 있었습니다.",
+        contribution:
+          "셋을 각각 결제한 가속기 시간 대비 애플리케이션 코드가 돈 시간, 결제한 시간 대비 커널이 돈 시간, 그리고 결제한 연산 대역 대비 실제로 낸 모델 연산으로 정의해 갈랐습니다. 위 계층이 높다고 아래가 높은 것은 아니며 메모리 병목이나 통신 오버헤드가 그 사이를 벌린다고 적습니다.",
+        assumptions:
+          "결제 단위가 시간인 과금 모델을 전제로 합니다.",
+        evidenceScope:
+          "글을 직접 열어 세 정의의 문구와 이것들이 서로 다른 것이라는 서술을 확인했습니다. 이 글이 쓰는 것은 정의의 구분까지입니다.",
+        notClaim:
+          "이 글의 손익분기 식에 들어가는 가동률이 어느 정의인지는 이 문서가 정해 주지 않습니다. 이 글은 첫째 정의를 쓴다고 본문에 밝혔으며, 인용한 문서가 제시하는 개선 방법과 자사 제품에 대한 주장은 다루지 않습니다.",
+        sectionId: "what-moves-it",
+      },
+    ],
+  },
 };

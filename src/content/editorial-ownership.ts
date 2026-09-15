@@ -12550,6 +12550,40 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "own-vs-rent-inference-capacity": {
+    title: "같은 표를 다른 자로 읽으면 결론이 뒤집힙니다 글이 소유하는 범위",
+    owns: [
+      "임대를 유휴 청구 여부로 가르는 구분과 그것이 비교를 바꾸는 방식",
+      "고정비와 종량제가 만나는 가동률의 유도, 그리고 두 고정비 사이에는 교차점이 없다는 증명",
+      "분모에서 예비 용량을 빼는 절차와 N/(N−1) 인자",
+      "출력 처리량 원가와 혼합 가격의 단위 불일치, 지연 목표를 고정해야 하는 이유",
+      "전력과 상각의 비중이 만드는 민감도 순서, 유휴를 재고로 보는 관점",
+    ],
+    reuses: [
+      {
+        label: "한 대가 빠져도 지킬 수 있는 부하",
+        href: "/cs/ai/inference-failure-absorption#fleet-size",
+      },
+      {
+        label: "값을 포기한 최선으로 재는 규칙",
+        href: "/economics/scarcity/scarcity-and-opportunity-cost#opportunity-cost",
+      },
+      {
+        label: "이미 사라진 값을 판정에서 빼는 규칙",
+        href: "/economics/scarcity/scarcity-and-opportunity-cost#sunk",
+      },
+    ],
+    evidence: [
+      {
+        kind: "project-claim",
+        rule: "시세와 월 비용은 특정 시점의 공개 자료를 쓴 예시임을 본문과 VizFrame note 양쪽에 적고, 가져갈 것은 값이 아니라 자를 맞추는 방법임을 명시한다",
+      },
+      {
+        kind: "primary-source",
+        rule: "가동률 정의의 구분만 인용 문서에 귀속하고, 손익분기 식과 예비 용량 인자는 이 글의 유도로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

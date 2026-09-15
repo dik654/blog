@@ -404,6 +404,39 @@ export const llmBaseArticles: Article[] = [
     component: () =>
       import("@/pages/articles/ai/inference-failure-absorption"),
   },
+  {
+    slug: "own-vs-rent-inference-capacity",
+    title: "무엇이 싼지 묻기 전에 분모를 맞춰야 합니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      {
+        id: "overview",
+        title: "같은 표를 다른 자로 읽으면 결론이 뒤집힙니다",
+      },
+      {
+        id: "two-rentals",
+        title: "부품 1. 임대 두 종류 가운데 하나만 가동률에 나뉩니다",
+      },
+      {
+        id: "denominator",
+        title: "부품 2. 분모에서 팔 수 없는 용량을 먼저 빼야 합니다",
+      },
+      {
+        id: "unit-mismatch",
+        title: "부품 3. 토큰당 원가와 API 가격은 같은 자가 아닙니다",
+      },
+      {
+        id: "what-moves-it",
+        title: "부품 4. 결론을 움직이는 것은 전기요금이 아닙니다",
+      },
+      {
+        id: "boundary",
+        title: "자를 맞추는 것까지가 이 글이고, 결정은 로그를 봐야 합니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/own-vs-rent-inference-capacity"),
+  },
 ];
 
 export const llmArticles: Article[] = [
