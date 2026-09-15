@@ -24697,6 +24697,56 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "중앙이 죽어도 계속 돈다는 원칙은 모든 상태에 적용되지 않습니다. 배치와 라우팅 가중치는 낡은 값으로 버텨도 되지만 잔액과 한도는 낡은 값으로 받으면 손해가 쌓이므로 닫는 쪽으로 기울여야 하며, 요청 경로에 글로벌 원장을 넣는 대신 리전마다 미리 배정해 두면 단절 중에도 합계가 잔액을 넘지 않습니다.",
     canonicalHref: "/cs/ai/inference-failure-absorption#state-authority",
   },
+  "reserved-vs-elastic-rental": {
+    id: "reserved-vs-elastic-rental",
+    kind: "concept",
+    domain: "economics",
+    label: "유휴가 청구되는 임대와 아닌 임대",
+    aliases: ["상시 임대", "탄력 임대", "예약 임대"],
+    definition:
+      "월 단위로 잡아 두는 임대는 쉬는 시간도 청구되므로 소유와 같은 가동률 페널티를 받고, 필요할 때만 확보하는 임대는 받지 않습니다. 둘을 하나로 묶어 정가로만 견주면 소유만 가동률로 나눈 비교가 되어 결론이 뒤집힙니다.",
+    canonicalHref: "/cs/ai/own-vs-rent-inference-capacity#two-rentals",
+  },
+  "utilization-breakeven": {
+    id: "utilization-breakeven",
+    kind: "theorem",
+    domain: "economics",
+    label: "고정비와 종량제가 만나는 가동률",
+    aliases: ["손익분기 가동률", "build vs buy 임계"],
+    definition:
+      "고정비 방식의 단가는 고정비를 실제로 쓴 시간으로 나눈 값이라 가동률에 반비례하고, 종량제는 분자와 분모가 함께 줄어 일정합니다. 두 방식은 고정비를 그 종량제로 한 달 내내 빌렸을 때의 금액으로 나눈 가동률에서 만나며, 두 고정비 방식 사이에는 분자만 다른 같은 곡선이라 교차점이 없습니다.",
+    canonicalHref: "/cs/ai/own-vs-rent-inference-capacity#two-rentals",
+  },
+  "sellable-capacity-denominator": {
+    id: "sellable-capacity-denominator",
+    kind: "method",
+    domain: "economics",
+    label: "분모는 만든 양이 아니라 팔 수 있는 양",
+    aliases: ["예비 용량과 단가", "N+1 페널티"],
+    definition:
+      "한 대가 빠져도 약속을 지키려면 그만큼을 비워 두어야 하는데, 그 몫은 비용에는 들어가고 파는 양에는 들어가지 않습니다. 그래서 단위 원가가 예비를 빼지 않은 값에 N/(N−1)을 곱한 만큼 올라가고, 작은 플릿일수록 이 페널티가 크게 붙습니다.",
+    canonicalHref: "/cs/ai/own-vs-rent-inference-capacity#denominator",
+  },
+  "throughput-cost-vs-api-price": {
+    id: "throughput-cost-vs-api-price",
+    kind: "concept",
+    domain: "economics",
+    label: "출력 처리량 원가와 혼합 가격의 단위 불일치",
+    aliases: ["요청당 총비용", "토큰 단가 비교의 함정"],
+    definition:
+      "자체 원가의 분모는 대개 출력 토큰이고 외부 가격표는 입력·출력·캐시 단가가 각각 달라 요청 구성에 따라 값이 달라집니다. 게다가 배치를 키우면 가속기당 처리량은 오르고 사용자당 속도는 떨어지므로 지연 목표를 고정하지 않으면 같은 하드웨어가 전혀 다른 단가를 내며, 그래서 비교는 같은 요청 집합에서 목표를 만족한 요청당 총비용으로만 성립합니다.",
+    canonicalHref: "/cs/ai/own-vs-rent-inference-capacity#unit-mismatch",
+  },
+  "utilization-dominates-unit-cost": {
+    id: "utilization-dominates-unit-cost",
+    kind: "concept",
+    domain: "economics",
+    label: "단가를 움직이는 것은 전기요금이 아니라 가동률",
+    aliases: ["상각 비중", "유휴는 재고"],
+    definition:
+      "토큰당 원가에서 전력은 5~15퍼센트이고 하드웨어 상각이 60~75퍼센트여서, 지역별 전기요금 차이는 한 자릿수 퍼센트로 흡수됩니다. 반면 가동률은 단가 식의 분모에 그대로 들어가 60퍼센트가 40퍼센트로 떨어지면 단가가 1.5배가 되므로, 쉬는 가속기는 지워도 되는 매몰비용이 아니라 팔지 못한 재고로 다뤄야 합니다.",
+    canonicalHref: "/cs/ai/own-vs-rent-inference-capacity#what-moves-it",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -45777,6 +45827,62 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "캐시는 잃어도 다시 계산하면 되는 상태라 권위 저장소가 필요 없고, 옮기는 값이 다시 계산하는 값보다 큽니다.",
+  },
+  {
+    from: "reserved-vs-elastic-rental",
+    to: "utilization-breakeven",
+    relation: "prerequisite",
+    reason:
+      "유휴가 청구되는지를 먼저 갈라야 어느 쌍 사이에 교차점이 있는지 말할 수 있습니다.",
+  },
+  {
+    from: "utilization-breakeven",
+    to: "sellable-capacity-denominator",
+    relation: "constrains",
+    reason:
+      "손익분기를 낼 때 분모에 팔 수 없는 용량이 들어 있으면 그 지점 자체가 잘못 잡힙니다.",
+  },
+  {
+    from: "fleet-size-failure-tradeoff",
+    to: "sellable-capacity-denominator",
+    relation: "produces",
+    reason:
+      "한 대가 빠져도 지킬 수 있는 부하가 안전 가동률로 정해지므로, 그 값이 그대로 단위 원가의 분모가 됩니다.",
+  },
+  {
+    from: "throughput-cost-vs-api-price",
+    to: "utilization-breakeven",
+    relation: "constrains",
+    reason:
+      "자체 원가와 외부 가격의 단위가 다르면 손익분기를 냈어도 사고 말고의 판단에 바로 쓸 수 없습니다.",
+  },
+  {
+    from: "utilization-dominates-unit-cost",
+    to: "utilization-breakeven",
+    relation: "evaluates",
+    reason:
+      "상각이 비용의 대부분이라 가동률이 분모에서 하는 일이 다른 어떤 항목보다 크다는 것이 이 식의 민감도를 설명합니다.",
+  },
+  {
+    from: "sunk-cost",
+    to: "utilization-dominates-unit-cost",
+    relation: "contrasts",
+    reason:
+      "이미 나간 상각은 되돌릴 수 없지만 쉬는 시간은 아직 팔 수 있는 재고여서, 지우는 규칙을 그대로 적용하면 야간 할인 같은 선택지를 놓칩니다.",
+  },
+  {
+    from: "opportunity-cost",
+    to: "utilization-dominates-unit-cost",
+    relation: "prerequisite",
+    reason:
+      "쉬는 가속기의 값을 그 시간에 팔 수 있었던 것으로 재야 재고라는 표현이 성립합니다.",
+  },
+  {
+    from: "marginal-decision-rule",
+    to: "utilization-breakeven",
+    relation: "contrasts",
+    reason:
+      "한 단위 더의 판정은 이미 확보한 용량 안에서의 결정이고, 손익분기 가동률은 그 용량을 얼마나 확보할지의 결정이라 시간 축이 다릅니다.",
   },
 ];
 

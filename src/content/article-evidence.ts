@@ -7382,4 +7382,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "계층별 시간 상수·상태별 권위 저장소·포화 처리의 출처. 상세 보고서 초판은 포화를 준비 상태로 표현하라고 적었고 교차 검증에서 뒤집혀 정오표에 실렸으며, 이 글은 정정된 쪽을 따름. 공개 문서가 아니라 링크를 걸지 않음",
     },
   ],
+  "ai/own-vs-rent-inference-capacity": [
+    {
+      kind: "공식 문서",
+      label: "Modal — Beyond GPU utilization: a guide to measuring what matters",
+      href: "https://modal.com/blog/gpu-utilization-guide",
+      note: "가동률 세 정의의 구분. 글을 직접 열어 문구를 확인함",
+    },
+    {
+      kind: "보충 읽기",
+      label:
+        "사내 리서치 정리본 — 글로벌 LLM 추론 플랫폼 (2026-09-15, v4) 및 상세 보고서 05",
+      note: "월 비용·시세·전력 비중 수치의 출처이며 이 글이 모든 산술을 재검산함. 상세 보고서 초판은 소유 60퍼센트와 임대 정가를 직접 견주고 보편 임계값을 제시했으나 교차 검증에서 정정됐고, 이 글은 정정된 쪽을 따름. 공개 문서가 아니라 링크를 걸지 않음",
+    },
+  ],
 };
