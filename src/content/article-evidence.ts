@@ -7434,4 +7434,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "낼 수 있는 금액 10·9·8·7·6·5와 드는 값 4·5·6·7·8·9를 그대로 이어받아 채점함. 이 글의 모든 수치는 그 두 줄에서 계산한 것이며 외부 자료가 아님",
     },
   ],
+  "prices/prices-as-information": [
+    {
+      kind: "핵심 논문",
+      label:
+        "F. A. Hayek, “The Use of Knowledge in Society”, American Economic Review XXXV(4), 1945, pp. 519–530",
+      href: "https://www.econlib.org/library/Essays/hykKnw.html",
+      note: "지식이 흩어져 있다는 진단과 값 체계를 정보 전달 장치로 보는 기능. 온라인 전문을 직접 열어 세 대목과 서지를 확인함",
+    },
+    {
+      kind: "보충 읽기",
+      label: "앞 두 글과 같은 시장의 숫자",
+      href: "/economics/prices/surplus-and-efficiency#total-surplus",
+      note: "낼 수 있는 금액 10·9·8·7·6·5와 드는 값 4·5·6·7·8·9를 그대로 이어받아 충격 전후를 계산함",
+    },
+  ],
 };

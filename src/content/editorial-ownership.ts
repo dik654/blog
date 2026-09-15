@@ -12683,6 +12683,36 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "prices-as-information": {
+    title: "아무도 전체를 모르는데 답은 맞게 나옵니다 글이 소유하는 범위",
+    owns: [
+      "배분에 필요한 자료가 한곳에 없다는 진단과 그것이 계산 문제가 아니라는 구분",
+      "각자의 비교를 더하면 총량 최대 수량이 된다는 유도와 그것이 깨지는 조건",
+      "값이 동시에 하는 세 역할과 셋이 묶여 있어 생기는 결과",
+      "중앙 경로에서 수집과 검증이 계산보다 먼저 걸린다는 것",
+      "계산이 빨라져도 줄지 않는 단계가 무엇인지",
+    ],
+    reuses: [
+      {
+        label: "값이 멈추는 자리",
+        href: "/economics/prices/supply-demand-and-equilibrium#adjustment",
+      },
+      {
+        label: "총량이 가장 큰 수량",
+        href: "/economics/prices/surplus-and-efficiency#total-surplus",
+      },
+      {
+        label: "값이 공정을 재지 않는다는 한계",
+        href: "/economics/prices/surplus-and-efficiency#not-fairness",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "논문에 귀속하는 것은 진단과 기능까지이고, 각자의 비교가 전체 최적과 맞물린다는 식은 앞 두 글을 이어 붙인 이 글의 것으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
