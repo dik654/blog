@@ -7320,4 +7320,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "법의 역할을 법정 바깥 협상에서 찾는 관점의 출처. 서지와 초록만 확인했고 본문은 열지 못함",
     },
   ],
+  "scarcity/scarcity-and-opportunity-cost": [
+    {
+      kind: "공식 문서",
+      label:
+        "Lionel Robbins, An Essay on the Nature and Significance of Economic Science (Macmillan, 1932), ch. I, pp. 13–15",
+      href: "https://archive.org/details/1932RobbinsEssayOnTheNatureAndSignificanceOfEconomicScienceOCRe",
+      note: "고를 일이 생기는 두 조건과 희소성 정의의 출처. 초판 스캔 본문으로 직접 대조함",
+    },
+  ],
 };
