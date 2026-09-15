@@ -12653,6 +12653,36 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "surplus-and-efficiency": {
+    title: "거래가 끝나면 양쪽 모두 무언가를 남깁니다 글이 소유하는 범위",
+    owns: [
+      "양쪽이 남기는 여유의 정의와 마지막 거래자의 여유가 0이라는 사실",
+      "쌍으로 묶으면 값이 상쇄된다는 유도와 총량이 값과 무관하다는 결론",
+      "총량이 최대가 되는 수량이 균형 수량과 같은 이유",
+      "값을 묶었을 때의 이전과 소멸, 그리고 배분 방식이 그 크기를 바꾼다는 것",
+      "이 채점표가 공정을 재지 못하는 두 이유와 효율이라는 말의 좁은 뜻",
+    ],
+    reuses: [
+      {
+        label: "값이 멈추는 자리",
+        href: "/economics/prices/supply-demand-and-equilibrium#adjustment",
+      },
+      {
+        label: "비율이 이득의 크기가 아니라 몫만 정한다는 유도",
+        href: "/economics/scarcity/gains-from-trade#where-gain-comes-from",
+      },
+      {
+        label: "차이가 뒤집히기 직전이 봉우리라는 판정",
+        href: "/economics/scarcity/scarcity-and-opportunity-cost#margin",
+      },
+    ],
+    evidence: [
+      {
+        kind: "standard",
+        rule: "모든 수치는 앞 글의 두 줄에서 직접 계산한 값이고 외부 자료를 인용하지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

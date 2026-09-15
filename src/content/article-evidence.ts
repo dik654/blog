@@ -7426,4 +7426,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "라운드별 지적 수는 기록 파일의 항목 헤딩을 직접 세어 25·17·8이고 그중 철회 2건을 빼면 약 49건으로 정리본의 집계와 맞음. 다만 정리본이 2라운드 구성을 한 곳에서는 11+5, 다른 곳에서는 6+5로 적어 자체 불일치가 있어 본문에는 반올림한 값만 씀. 공개 문서가 아니라 링크를 걸지 않음",
     },
   ],
+  "prices/surplus-and-efficiency": [
+    {
+      kind: "보충 읽기",
+      label: "앞 글과 같은 시장의 숫자",
+      href: "/economics/prices/supply-demand-and-equilibrium#adjustment",
+      note: "낼 수 있는 금액 10·9·8·7·6·5와 드는 값 4·5·6·7·8·9를 그대로 이어받아 채점함. 이 글의 모든 수치는 그 두 줄에서 계산한 것이며 외부 자료가 아님",
+    },
+  ],
 };

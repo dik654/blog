@@ -34,4 +34,36 @@ export const pricesArticles: Article[] = [
     component: () =>
       import("@/pages/articles/prices/supply-demand-and-equilibrium"),
   },
+  {
+    slug: "surplus-and-efficiency",
+    title: "거래가 만든 값은 누구에게 갑니까",
+    subcategory: "price-welfare",
+    sections: [
+      {
+        id: "overview",
+        title: "거래가 끝나면 양쪽 모두 무언가를 남깁니다",
+      },
+      {
+        id: "two-surpluses",
+        title: "부품 1. 양쪽 모두 값보다 나은 자리에서 거래합니다",
+      },
+      {
+        id: "total-surplus",
+        title: "부품 2. 쌍으로 묶으면 값이 지워지고 차이만 남습니다",
+      },
+      {
+        id: "price-cap",
+        title: "부품 3. 값을 묶으면 옮겨지는 것과 사라지는 것이 함께 생깁니다",
+      },
+      {
+        id: "not-fairness",
+        title: "부품 4. 이 자는 공정을 재지 않습니다",
+      },
+      {
+        id: "boundary",
+        title: "채점까지가 이 글이고, 왜 그 값이 정해지는지는 다음 글입니다",
+      },
+    ],
+    component: () => import("@/pages/articles/prices/surplus-and-efficiency"),
+  },
 ];
