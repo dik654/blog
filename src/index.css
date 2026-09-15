@@ -51,6 +51,34 @@ figure[data-viz="modern"]:has([data-viz-controls])
   flex-direction: column;
 }
 
+/*
+ * 그림 칸은 flex 축소 대상이 아니다.
+ *
+ * 장면 그림은 가로로 넓어서 `overflow-x: auto` 를 두는데, CSS 규칙상 한 축이
+ * visible 이 아니면 반대 축도 visible 일 수 없어 브라우저가 `overflow-y` 를
+ * auto 로 올린다. 그 상태에서 flex 가 이 칸을 줄이면 그림이 **세로로 잘린다**.
+ * 좁은 화면에서는 남는 높이가 없어 30px 까지, 어떤 글에서는 0px 까지 줄어
+ * 그림이 통째로 사라졌다.
+ *
+ * 그래서 그림 칸의 축소를 막고, 넘치는 몫은 canvas 의 세로 스크롤로 넘긴다.
+ */
+figure[data-viz="modern"]:has([data-viz-controls]) [data-viz-canvas] div:has(> svg) {
+  flex-shrink: 0;
+}
+
+/*
+ * 넘칠 때는 가운데가 아니라 위에서 시작한다.
+ *
+ * `justify-content: center` 는 내용이 넘치면 위쪽으로도 밀어내는데 그 부분은
+ * 스크롤로 닿을 수 없다. `safe` 는 자리가 있을 때만 가운데로 두고 넘치면
+ * 시작 쪽 정렬로 되돌린다.
+ */
+figure[data-viz="modern"]:has([data-viz-controls])
+  [data-viz-canvas]
+  .justify-center {
+  justify-content: safe center;
+}
+
 figure[data-viz="lesson-flow-v4"] {
   display: flex;
   height: min(52rem, calc(100dvh - 5rem));
