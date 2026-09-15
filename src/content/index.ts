@@ -19,6 +19,10 @@ import polity from "./polity";
 import constitution from "./constitution";
 import elections from "./elections";
 import governance from "./governance";
+import legalSystem from "./legal-system";
+import privateLaw from "./private-law";
+import criminalLaw from "./criminal-law";
+import disputeResolution from "./dispute-resolution";
 
 export const categories = [
   ai,
@@ -37,6 +41,10 @@ export const categories = [
   constitution,
   elections,
   governance,
+  legalSystem,
+  privateLaw,
+  criminalLaw,
+  disputeResolution,
 ];
 
 export interface DomainGroup {

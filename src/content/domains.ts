@@ -7,7 +7,7 @@
  * `src/lib/routes.ts`가 여기만 의존하게 해 순환 import를 막기 위해서입니다.
  */
 
-export type DomainSlug = "cs" | "finance" | "politics";
+export type DomainSlug = "cs" | "finance" | "politics" | "law";
 
 export interface DomainMeta {
   slug: DomainSlug;
@@ -35,6 +35,12 @@ export const DOMAIN_META: readonly DomainMeta[] = [
     description:
       "한 사회에 하나만 존재할 수 있는 결정을 누가 어떻게 내리는지, 국가에서 선거와 국제질서까지 따라갑니다.",
   },
+  {
+    slug: "law",
+    name: "법",
+    description:
+      "정해진 규범이 개별 사안의 판단이 되기까지 무엇이 필요한지를 효력·해석·계약·재산·불법행위·형벌·증명·분쟁 해결 순으로 쌓습니다.",
+  },
 ];
 
 /**
@@ -58,6 +64,10 @@ export const CATEGORY_DOMAIN: Readonly<Record<string, DomainSlug>> = {
   constitution: "politics",
   elections: "politics",
   governance: "politics",
+  "legal-system": "law",
+  "private-law": "law",
+  "criminal-law": "law",
+  "dispute-resolution": "law",
 };
 
 /**
