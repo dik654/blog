@@ -24847,6 +24847,56 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "라운드마다 잡히는 수가 일정 비율로 준다고 두면 남은 합을 등비급수로 어림할 수 있고, 잡히는 수가 줄었다는 사실이 끝났다는 신호가 아니라 줄어드는 속도를 알게 된 것임을 보여 줍니다. 다만 라운드마다 질문이 바뀌면 세는 대상이 달라져 이 계산 자체가 단위 불일치가 되므로 값이 아니라 방향만 씁니다.",
     canonicalHref: "/cs/ai/cross-review-error-classes#repeated-fix",
   },
+  "consumer-and-producer-surplus": {
+    id: "consumer-and-producer-surplus",
+    kind: "concept",
+    domain: "economics",
+    label: "양쪽이 남기는 여유",
+    aliases: ["소비자잉여", "생산자잉여"],
+    definition:
+      "거래가 일어나려면 사는 쪽이 값보다 더 낼 수 있어야 하고 파는 쪽이 값보다 덜 들여야 하므로 양쪽에 여유가 남습니다. 사는 쪽의 여유는 낼 수 있었던 금액에서 낸 값을 뺀 것이고 파는 쪽은 받은 값에서 드는 값을 뺀 것이며, 마지막으로 거래한 쪽은 양쪽 모두 0이라 그 자리가 곧 균형입니다.",
+    canonicalHref: "/economics/prices/surplus-and-efficiency#two-surpluses",
+  },
+  "total-surplus-price-invariance": {
+    id: "total-surplus-price-invariance",
+    kind: "theorem",
+    domain: "economics",
+    label: "총량은 값과 무관하고 값은 몫만 정한다",
+    aliases: ["총잉여", "쌍별 차이의 합"],
+    definition:
+      "산 사람과 판 사람을 쌍으로 묶으면 실제 거래 값이 한 번 빼지고 한 번 더해져 상쇄되므로, 남는 것은 낼 수 있었던 금액과 드는 값의 차이뿐입니다. 그래서 거래가 만든 총량은 값이 얼마든 같고 값은 그것을 나누는 몫만 정하며, 차이가 양수인 쌍까지가 총량이 가장 큰 수량입니다.",
+    canonicalHref: "/economics/prices/surplus-and-efficiency#total-surplus",
+  },
+  "deadweight-loss": {
+    id: "deadweight-loss",
+    kind: "concept",
+    domain: "economics",
+    label: "어디로도 가지 않고 사라지는 값",
+    aliases: ["사중손실", "만들어지지 않은 거래"],
+    definition:
+      "값을 묶거나 세금을 붙이면 한쪽에서 나간 몫이 다른 쪽으로 다 가지 않습니다. 차이만큼은 일어났을 거래가 일어나지 않아 생기지 못한 값이며, 이전과 달리 누구의 손에도 남지 않습니다.",
+    canonicalHref: "/economics/prices/surplus-and-efficiency#price-cap",
+  },
+  "rationing-rule-matters": {
+    id: "rationing-rule-matters",
+    kind: "concept",
+    domain: "economics",
+    label: "값을 묶으면 누가 받을지를 따로 정해야 한다",
+    aliases: ["배분 방식", "줄 서는 비용"],
+    definition:
+      "값이 묶이면 값으로 줄을 세울 수 없으므로 누가 받을지를 다른 방식으로 정하게 되고, 그 방식이 사라지는 값의 크기를 바꿉니다. 낼 수 있던 금액이 큰 쪽이 받지 않으면 사는 쪽의 여유가 더 작아지며, 줄 서는 시간처럼 아무에게도 가지 않는 비용이 그 자리를 메웁니다.",
+    canonicalHref: "/economics/prices/surplus-and-efficiency#price-cap",
+  },
+  "efficiency-is-not-fairness": {
+    id: "efficiency-is-not-fairness",
+    kind: "concept",
+    domain: "economics",
+    label: "효율은 공정을 재지 않는다",
+    aliases: ["잉여 합산의 전제", "효율의 좁은 뜻"],
+    definition:
+      "총량에는 누가 가져갔는지가 들어 있지 않아 같은 점수가 전혀 다른 분배에서 나오고, 잉여를 더하려면 같은 금액이 누구에게나 같은 무게라는 전제가 필요합니다. 효율적이라는 판정은 아직 만들어지지 않은 이득이 남아 있지 않다는 뜻일 뿐이므로 결론이 아니라 시작점입니다.",
+    canonicalHref: "/economics/prices/surplus-and-efficiency#not-fairness",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -46095,6 +46145,62 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "사건을 규칙으로 옮기는 기록이 수정 자체가 만드는 결함까지 포함해야 다음 회차에 같은 자리를 다시 밟지 않습니다.",
+  },
+  {
+    from: "market-equilibrium",
+    to: "consumer-and-producer-surplus",
+    relation: "prerequisite",
+    reason:
+      "값이 어디서 멈추는지가 정해져야 그 값을 기준으로 양쪽의 여유를 잴 수 있습니다.",
+  },
+  {
+    from: "consumer-and-producer-surplus",
+    to: "total-surplus-price-invariance",
+    relation: "produces",
+    reason:
+      "두 여유를 쌍으로 묶어 더하면 값이 상쇄되어 차이만 남는 형태가 나옵니다.",
+  },
+  {
+    from: "gains-from-specialization",
+    to: "total-surplus-price-invariance",
+    relation: "extends",
+    reason:
+      "둘 사이에서 비율이 이득의 크기가 아니라 몫만 정했던 것을 여럿 사이로 그대로 넓힌 것입니다.",
+  },
+  {
+    from: "marginal-decision-rule",
+    to: "total-surplus-price-invariance",
+    relation: "produces",
+    reason:
+      "차이가 뒤집히기 직전까지 더하면 합이 최대가 된다는 논증이 한 단위 판정과 같습니다.",
+  },
+  {
+    from: "total-surplus-price-invariance",
+    to: "deadweight-loss",
+    relation: "prerequisite",
+    reason:
+      "총량을 잴 자가 있어야 개입 뒤에 줄어든 몫을 사라진 값으로 셀 수 있습니다.",
+  },
+  {
+    from: "rationing-rule-matters",
+    to: "deadweight-loss",
+    relation: "constrains",
+    reason:
+      "누가 받을지를 정하는 방식에 따라 사라지는 값의 크기가 달라지므로 사중손실은 하나의 숫자가 아니라 범위입니다.",
+  },
+  {
+    from: "efficiency-is-not-fairness",
+    to: "total-surplus-price-invariance",
+    relation: "constrains",
+    reason:
+      "총량에는 분배가 들어 있지 않고 합산 자체가 같은 금액의 무게를 같다고 두므로, 이 자로 좋고 나쁨을 판정할 수 없습니다.",
+  },
+  {
+    from: "efficiency-is-not-fairness",
+    to: "collective-decision",
+    relation: "contrasts",
+    reason:
+      "총량을 얼마나 포기하고 분배를 바꿀지는 이 자가 답하지 못하고 한 사회에 하나만 존재할 수 있는 결정의 영역으로 넘어갑니다.",
   },
 ];
 

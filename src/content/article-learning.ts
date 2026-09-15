@@ -83845,4 +83845,266 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "prices/surplus-and-efficiency": {
+    entryNote:
+      "앞 글의 같은 시장을 그대로 씁니다. 값이 7에 멈추고 넷이 거래된 그 결과를 채점합니다.",
+    coreIdea:
+      "거래된 건마다 양쪽에 여유가 남고, 산 사람과 판 사람을 쌍으로 묶으면 실제 값이 상쇄되어 낼 수 있었던 금액과 드는 값의 차이만 남습니다. 그래서 총량은 값과 무관하고 값은 몫만 정하며 차이가 양수인 쌍까지가 가장 큽니다. 값을 묶으면 한쪽에서 나간 몫이 다른 쪽으로 다 가지 않고 일부가 사라지는데, 이 자에는 누가 가져갔는지가 들어 있지 않아 공정을 재지는 못합니다.",
+    assumedKnowledge: [
+      {
+        id: "market-equilibrium",
+        role: "채점할 결과가 어디서 정해졌는지를 가져옵니다.",
+      },
+      {
+        id: "gains-from-specialization",
+        role: "비율이 몫만 정한다는 구조를 여럿 사이로 넓히는 출발점으로 씁니다.",
+      },
+      {
+        id: "marginal-decision-rule",
+        role: "차이가 뒤집히기 직전이 봉우리라는 논증을 그대로 가져옵니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "consumer-and-producer-surplus",
+        role: "양쪽이 남기는 여유를 정의합니다.",
+      },
+      {
+        id: "total-surplus-price-invariance",
+        role: "총량이 값과 무관하다는 것과 그것이 최대가 되는 수량을 세웁니다.",
+      },
+      {
+        id: "deadweight-loss",
+        role: "개입 뒤 어디로도 가지 않는 몫을 정의합니다.",
+      },
+      {
+        id: "rationing-rule-matters",
+        role: "누가 받을지의 방식이 그 크기를 바꾼다는 것을 정의합니다.",
+      },
+      {
+        id: "efficiency-is-not-fairness",
+        role: "이 채점표가 재지 못하는 것을 정합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "consumer-and-producer-surplus",
+        sectionId: "two-surpluses",
+        intuition:
+          "거래가 일어났다는 것은 양쪽 모두 값보다 나은 자리에 있었다는 뜻입니다.",
+        workedExample:
+          "값 7에서 낼 수 있던 금액이 10, 9, 8, 7이던 넷의 여유가 3, 2, 1, 0이라 합이 6이고, 드는 값이 4, 5, 6, 7이던 넷도 같은 6입니다.",
+        counterexample:
+          "두 합이 같은 것은 우연입니다. 앞 글에서 두 줄을 대칭으로 잡아 둔 결과일 뿐이고 줄의 모양이 다르면 달라집니다.",
+        boundary:
+          "낼 수 있는 금액은 본인도 정확히 알지 못하고 물어봐도 사실대로 말할 이유가 없어, 관찰된 선택에서 되짚어 재는 값입니다.",
+      },
+      {
+        id: "total-surplus-price-invariance",
+        sectionId: "total-surplus",
+        intuition:
+          "쌍으로 묶으면 값이 한 번 빼지고 한 번 더해져 사라집니다.",
+        workedExample:
+          "쌍별 차이가 6, 4, 2, 0, −2, −4이고 누적이 6, 10, 12, 12, 10, 6이라 네 쌍까지가 가장 큰 12입니다.",
+        proofIdea:
+          "한 쌍의 두 여유를 더하면 (v − P) + (P − c)이고 P가 상쇄되어 v − c만 남습니다. 그래서 총량은 값과 무관합니다. v가 내림차순이고 c가 오름차순이면 차이 v − c도 감소하므로 부호가 한 번만 바뀌고, 양수인 항까지 더한 지점이 합의 유일한 최댓값이 됩니다. 그 지점은 균형 가격이 두 줄을 자르는 수량과 같습니다.",
+        counterexample:
+          "짝을 다르게 지으면 같은 수량에서도 합이 작아집니다. 낼 수 있는 금액이 작은 쪽과 드는 값이 큰 쪽을 먼저 짝지으면 차이가 음수인 쌍이 앞으로 옵니다.",
+        boundary:
+          "사람마다의 금액을 같은 자로 더할 수 있다고 둡니다. 이 전제가 이 계산 전체를 떠받치고 있습니다.",
+      },
+      {
+        id: "deadweight-loss",
+        sectionId: "price-cap",
+        intuition:
+          "한쪽에서 나간 것이 다른 쪽으로 다 가지 않습니다.",
+        workedExample:
+          "상한을 5로 두면 판 쪽이 6에서 1로 5만큼 줄고 산 쪽은 6에서 9로 3만큼 늘어, 차이인 2가 사라집니다.",
+        boundary:
+          "사라진 값은 만들어지지 않은 거래의 차이입니다. 값을 묶는 대신 세금을 붙이면 줄어든 몫의 일부가 세수로 남아 사라지는 부분이 더 작아집니다.",
+      },
+      {
+        id: "rationing-rule-matters",
+        sectionId: "price-cap",
+        intuition:
+          "값으로 줄을 세울 수 없으면 다른 방식으로 세우게 됩니다.",
+        workedExample:
+          "낼 수 있던 금액이 큰 둘이 산다고 두면 사라지는 값이 2인데, 먼저 온 순서로 나뉘면 산 쪽의 여유가 평균 기준 5로 내려가 사라지는 값이 6이 됩니다.",
+        boundary:
+          "줄 서는 시간처럼 아무에게도 가지 않는 비용은 이 계산에 따로 더해야 합니다. 여기서는 배분 방식이 바뀌는 효과만 셌습니다.",
+      },
+      {
+        id: "efficiency-is-not-fairness",
+        sectionId: "not-fairness",
+        intuition:
+          "같은 점수가 전혀 다른 분배에서 나옵니다.",
+        workedExample:
+          "총량 12는 산 쪽이 다 가져가도 12이고 판 쪽이 다 가져가도 12입니다.",
+        counterexample:
+          "그래서 값을 묶는 결정이 이 자로는 늘 손해로 보입니다. 그 결정의 목적이 대개 총량이 아니라 분배에 있다는 점이 판정에 들어오지 않습니다.",
+        boundary:
+          "효율적이라는 말은 아직 만들어지지 않은 이득이 없다는 뜻일 뿐이라, 한 사람이 전부 가져간 상태도 이 뜻에서는 효율적일 수 있습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 무엇이 남는가",
+        relation: "거래된 건마다 양쪽에 남는 여유를 셉니다.",
+        concepts: ["consumer-and-producer-surplus"],
+      },
+      {
+        label: "01 합은 무엇인가",
+        relation: "쌍으로 묶어 값을 지우고 최대가 되는 수량을 찾습니다.",
+        concepts: ["total-surplus-price-invariance"],
+      },
+      {
+        label: "02 묶으면 어떻게 되는가",
+        relation: "옮겨지는 몫과 사라지는 몫을 가릅니다.",
+        concepts: ["deadweight-loss", "rationing-rule-matters"],
+      },
+      {
+        label: "03 무엇을 못 재는가",
+        relation: "이 채점표의 한계를 정합니다.",
+        concepts: ["efficiency-is-not-fairness"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "값이 7이고 낼 수 있던 금액이 10, 9, 8, 7, 6, 5일 때 산 쪽이 남기는 것을 계산하세요.",
+        answerChecklist: [
+          "7 이상인 넷만 삼",
+          "여유가 3, 2, 1, 0",
+          "합은 6",
+          "마지막에 산 쪽은 남는 것이 0",
+        ],
+        requiredConcepts: ["consumer-and-producer-surplus"],
+        sectionId: "two-surpluses",
+      },
+      {
+        level: "basic",
+        question:
+          "산 사람과 판 사람을 쌍으로 묶으면 실제 거래 값이 왜 사라지는지 식으로 쓰세요.",
+        answerChecklist: [
+          "사는 쪽의 여유는 v − P",
+          "파는 쪽의 여유는 P − c",
+          "더하면 P가 상쇄",
+          "남는 것은 v − c",
+        ],
+        requiredConcepts: ["total-surplus-price-invariance"],
+        sectionId: "total-surplus",
+      },
+      {
+        level: "basic",
+        question:
+          "낼 수 있던 금액이 10, 9, 8, 7, 6, 5이고 드는 값이 4, 5, 6, 7, 8, 9일 때 쌍별 차이와 누적을 구하고 최대 수량을 쓰세요.",
+        answerChecklist: [
+          "차이는 6, 4, 2, 0, −2, −4",
+          "누적은 6, 10, 12, 12, 10, 6",
+          "최대는 12",
+          "네 쌍까지",
+        ],
+        requiredConcepts: ["total-surplus-price-invariance"],
+        sectionId: "total-surplus",
+      },
+      {
+        level: "basic",
+        question:
+          "상한을 5로 두면 거래량이 얼마가 되고 양쪽 여유가 어떻게 바뀌는지 계산하세요.",
+        answerChecklist: [
+          "팔려는 쪽이 둘로 줄어 거래는 둘",
+          "판 쪽은 6에서 1",
+          "산 쪽은 6에서 9",
+          "합은 12에서 10",
+        ],
+        requiredConcepts: ["deadweight-loss"],
+        sectionId: "price-cap",
+      },
+      {
+        level: "basic",
+        question:
+          "위에서 사라진 2가 무엇인지 구체적으로 짚으세요.",
+        answerChecklist: [
+          "일어나지 않은 거래의 값",
+          "셋째 쌍은 8과 6",
+          "차이가 2였음",
+          "값이 묶여 만들어지지 않음",
+        ],
+        requiredConcepts: ["deadweight-loss"],
+        sectionId: "price-cap",
+      },
+      {
+        level: "basic",
+        question:
+          "총량이라는 자가 재지 못하는 두 가지를 쓰세요.",
+        answerChecklist: [
+          "누가 가져갔는지가 들어 있지 않음",
+          "같은 점수가 다른 분배에서 나옴",
+          "같은 금액이 누구에게나 같은 무게라는 전제",
+          "낼 수 있는 능력이 섞여 들어감",
+        ],
+        requiredConcepts: ["efficiency-is-not-fairness"],
+        sectionId: "not-fairness",
+      },
+      {
+        level: "advanced",
+        question:
+          "총량이 최대가 되는 수량과 앞 글의 균형 수량이 같은 이유를 설명하세요.",
+        answerChecklist: [
+          "값이 두 줄을 같은 지점에서 자름",
+          "그 지점에서 마지막 쌍의 v와 c가 모두 값과 같음",
+          "차이가 0이 되는 자리가 같음",
+          "그래서 두 수량이 일치",
+        ],
+        requiredConcepts: [
+          "total-surplus-price-invariance",
+          "market-equilibrium",
+        ],
+        sectionId: "total-surplus",
+      },
+      {
+        level: "advanced",
+        question:
+          "누가 받을지를 낼 수 있던 금액 순이 아니라 먼저 온 순서로 정하면 사라지는 값이 어떻게 달라지는지 계산하세요.",
+        answerChecklist: [
+          "여섯 명 평균 낼 수 있는 금액은 7.5",
+          "둘이 받으면 산 쪽 여유는 5",
+          "합은 6",
+          "사라지는 값이 2에서 6으로",
+        ],
+        requiredConcepts: ["rationing-rule-matters"],
+        sectionId: "price-cap",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 채점표로만 재면 값을 묶는 결정이 왜 늘 손해로 보이는지, 그것이 왜 판정을 기울이는지 쓰세요.",
+        answerChecklist: [
+          "개입은 총량을 줄임",
+          "이 자는 총량만 잼",
+          "그 결정의 목적은 대개 분배",
+          "목적이 다른 것을 한 자로만 재면 기울어짐",
+        ],
+        requiredConcepts: ["efficiency-is-not-fairness", "deadweight-loss"],
+        sectionId: "not-fairness",
+      },
+      {
+        level: "advanced",
+        question:
+          "2편에서 교환 비율이 이득의 크기를 정하지 않았던 것과 이 글에서 값이 총량을 정하지 않는 것이 같은 구조임을 설명하세요.",
+        answerChecklist: [
+          "2편은 두 사람의 이득을 더하면 비율이 상쇄",
+          "이 글은 두 여유를 더하면 값이 상쇄",
+          "둘 다 남는 것은 기회비용의 차이",
+          "정하는 것은 크기가 아니라 몫",
+        ],
+        requiredConcepts: [
+          "total-surplus-price-invariance",
+          "consumer-and-producer-surplus",
+        ],
+        sectionId: "total-surplus",
+      },
+    ],
+  },
 };
