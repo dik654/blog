@@ -66,4 +66,36 @@ export const pricesArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/prices/surplus-and-efficiency"),
   },
+  {
+    slug: "prices-as-information",
+    title: "가격은 아무도 갖지 않은 지식을 옮깁니다",
+    subcategory: "price-information",
+    sections: [
+      {
+        id: "overview",
+        title: "아무도 전체를 모르는데 답은 맞게 나옵니다",
+      },
+      {
+        id: "dispersed",
+        title: "부품 1. 알아야 할 것이 한곳에 모여 있지 않습니다",
+      },
+      {
+        id: "sufficient",
+        title: "부품 2. 값 하나가 그 전부를 대신합니다",
+      },
+      {
+        id: "three-roles",
+        title: "부품 3. 아는 것만으로는 부족하고 따를 이유가 있어야 합니다",
+      },
+      {
+        id: "central-calculation",
+        title: "부품 4. 중앙에서 계산하려면 자료를 먼저 모아야 합니다",
+      },
+      {
+        id: "boundary",
+        title: "값이 나르지 못하는 것이 다음 글입니다",
+      },
+    ],
+    component: () => import("@/pages/articles/prices/prices-as-information"),
+  },
 ];

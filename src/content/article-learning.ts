@@ -84107,4 +84107,265 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "prices/prices-as-information": {
+    entryNote:
+      "앞 두 글의 같은 시장을 그대로 씁니다. 두 줄이 어디서 왔는지를 이번에 묻습니다.",
+    coreIdea:
+      "배분에 필요한 사정은 각자에게만 있고 계속 바뀌어 한곳에 모이지 않습니다. 각자는 자기 숫자와 시장 값을 견주는 비교 하나만 하면 되는데, 값이 균형값이면 그 비교를 통과한 수가 곧 총량이 가장 큰 수량이 되어 아무도 전체를 계산하지 않고도 답이 맞습니다. 같은 숫자가 알려 주는 일과 따르게 하는 일과 나누는 일을 함께 하므로, 중앙에서 같은 답에 이르려면 계산보다 수집과 검증이 먼저 걸립니다.",
+    assumedKnowledge: [
+      {
+        id: "market-equilibrium",
+        role: "값이 어디서 멈추는지를 가져와 비교의 기준으로 씁니다.",
+      },
+      {
+        id: "total-surplus-price-invariance",
+        role: "총량이 가장 큰 수량이 어디인지를 가져와 도착점으로 씁니다.",
+      },
+      {
+        id: "opportunity-cost",
+        role: "각자의 숫자가 왜 계속 움직이는지의 근거로 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "dispersed-knowledge",
+        role: "자료가 한곳에 없다는 문제를 세웁니다.",
+      },
+      {
+        id: "price-as-sufficient-signal",
+        role: "값 하나가 그것을 대신한다는 정리를 세웁니다.",
+      },
+      {
+        id: "price-three-roles",
+        role: "그 숫자가 동시에 하는 세 가지 일을 가릅니다.",
+      },
+      {
+        id: "collection-before-calculation",
+        role: "중앙 경로에서 실제로 걸리는 단계를 가려냅니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "dispersed-knowledge",
+        sectionId: "dispersed",
+        intuition:
+          "계산에 넣을 숫자가 자료로 존재하지 않고 각자의 머릿속에만 있습니다.",
+        workedExample:
+          "낼 수 있는 최대 금액은 지금 무엇을 포기할 수 있는지로 정해지고, 드는 값에는 오늘 재고와 이번 주 설비 여유가 들어갑니다.",
+        boundary:
+          "관찰된 거래에서 되짚어 잴 수는 있습니다. 다만 되짚는 동안 원본이 바뀌므로 언제나 조금 낡은 값입니다.",
+      },
+      {
+        id: "price-as-sufficient-signal",
+        sectionId: "sufficient",
+        intuition:
+          "자기 숫자와 값을 견주는 비교 하나면 되고 남의 사정은 몰라도 됩니다.",
+        workedExample:
+          "드는 값이 모두 2씩 올라 값이 7에서 8이 되면 8을 못 내는 셋이 물러나는데, 새 쌍별 차이 4·2·0·−2·−4·−6의 봉우리도 셋입니다.",
+        proofIdea:
+          "각자의 행동은 v_i ≥ P인지, c_j ≤ P인지의 판정입니다. 값이 균형값이면 두 판정을 통과한 수가 같고 그 수가 거래량입니다. 한편 v가 내림차순이고 c가 오름차순이면 v_i ≥ P인 i의 집합과 c_i ≤ P인 i의 집합이 모두 앞쪽 구간이고, 두 구간의 크기가 같으므로 그 지점에서 v와 c가 모두 P를 지납니다. 따라서 그 수량까지는 v ≥ P ≥ c라 쌍별 차이가 음수가 아니고 그 다음부터는 음수이므로, 거래량이 곧 총량 최대 수량입니다.",
+        counterexample:
+          "사는 쪽이 내는 값과 파는 쪽이 받는 값이 세금 때문에 갈라지면 판정 기준이 둘이 되어 이 일치가 깨집니다.",
+        boundary:
+          "값이 아직 움직이는 중이면 각자의 판정이 옳아도 합이 최적과 어긋납니다. 이 정리는 멈춘 값에 대한 것입니다.",
+      },
+      {
+        id: "price-three-roles",
+        sectionId: "three-roles",
+        intuition:
+          "알려 주는 것만으로는 따를 이유가 생기지 않습니다.",
+        workedExample:
+          "재료가 귀해졌다고 알려 주기만 하면 내가 아껴서 생기는 이득이 남에게 가므로 알고도 안 아낍니다. 값이 오르면 아끼지 않는 쪽이 더 냅니다.",
+        boundary:
+          "세 역할이 한 숫자에 묶여 있어 하나를 건드리면 셋이 함께 움직입니다. 나누는 방식만 바꾸려고 값을 묶으면 알려 주는 일과 따르게 하는 일까지 꺼집니다.",
+      },
+      {
+        id: "collection-before-calculation",
+        sectionId: "central-calculation",
+        intuition:
+          "계산은 대개 가장 쉬운 단계이고 그 앞이 어렵습니다.",
+        workedExample:
+          "열두 개를 모으려면 각자에게 물어야 하는데, 배분이 답에 달려 있으면 사는 쪽은 낮게 파는 쪽은 높게 부릅니다.",
+        counterexample:
+          "시장은 묻지 않고 행동을 봅니다. 낮게 부르면 못 사고 높게 부르면 못 팔아서 거짓이 자기 손해가 됩니다.",
+        boundary:
+          "계산이 빨라져도 이 단계는 줄지 않습니다. 사실인지 확인하는 문제는 계산량이 아니라 유인의 문제입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 자료가 어디 있나",
+        relation: "알아야 할 것이 한곳에 없다는 문제를 세웁니다.",
+        concepts: ["dispersed-knowledge"],
+      },
+      {
+        label: "01 값이 무엇을 하나",
+        relation: "각자의 비교가 전체 최적과 맞물리는 것을 봅니다.",
+        concepts: ["price-as-sufficient-signal"],
+      },
+      {
+        label: "02 왜 따르게 되나",
+        relation: "한 숫자가 동시에 하는 세 가지 일을 가릅니다.",
+        concepts: ["price-three-roles"],
+      },
+      {
+        label: "03 중앙은 무엇이 다른가",
+        relation: "수집과 검증이 먼저 걸린다는 것을 봅니다.",
+        concepts: ["collection-before-calculation"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "중앙 배분의 어려움이 계산이 아니라 다른 데 있다는 것을 근거와 함께 쓰세요.",
+        answerChecklist: [
+          "계산에 넣을 자료가 한곳에 없음",
+          "각자가 자기 상황에서만 아는 것",
+          "통계로 올라올 때쯤이면 바뀌어 있음",
+          "본인도 숫자로 적어 두지 않음",
+        ],
+        requiredConcepts: ["dispersed-knowledge"],
+        sectionId: "dispersed",
+      },
+      {
+        level: "basic",
+        question:
+          "각자가 옳게 행동하는 데 필요한 정보가 몇 개이고 무엇인지 쓰세요.",
+        answerChecklist: [
+          "둘",
+          "자기 숫자 하나",
+          "시장 값 하나",
+          "남의 숫자는 필요 없음",
+        ],
+        requiredConcepts: ["price-as-sufficient-signal"],
+        sectionId: "sufficient",
+      },
+      {
+        level: "basic",
+        question:
+          "드는 값이 모두 2씩 오르면 값과 거래량이 어떻게 되고, 사는 쪽은 무엇을 알게 되는지 쓰세요.",
+        answerChecklist: [
+          "값이 7에서 8로",
+          "거래량이 넷에서 셋으로",
+          "사는 쪽이 받는 것은 값이 8이라는 것뿐",
+          "왜 올랐는지는 모름",
+        ],
+        requiredConcepts: ["price-as-sufficient-signal"],
+        sectionId: "sufficient",
+      },
+      {
+        level: "basic",
+        question:
+          "값이 하는 세 가지 일을 쓰고, 알려 주기만으로는 왜 부족한지 쓰세요.",
+        answerChecklist: [
+          "알려 주기",
+          "따르게 하기",
+          "누가 가져갈지 정하기",
+          "아껴서 생기는 이득이 남에게 가면 알고도 안 아낌",
+        ],
+        requiredConcepts: ["price-three-roles"],
+        sectionId: "three-roles",
+      },
+      {
+        level: "basic",
+        question:
+          "중앙에서 숫자를 물어 모을 때 사실대로 답할 이유가 없는 까닭과, 시장에서는 왜 다른지 쓰세요.",
+        answerChecklist: [
+          "배분이 답에 달려 있음",
+          "사는 쪽은 낮게 파는 쪽은 높게 부름",
+          "시장은 말이 아니라 행동으로 답하게 함",
+          "낮게 부르면 못 사고 높게 부르면 못 팖",
+        ],
+        requiredConcepts: ["collection-before-calculation"],
+        sectionId: "central-calculation",
+      },
+      {
+        level: "basic",
+        question:
+          "값을 묶으면 세 역할 가운데 무엇이 함께 꺼지는지, 그 결과가 무엇인지 쓰세요.",
+        answerChecklist: [
+          "나누는 역할을 바꾸려고 건드림",
+          "알려 주는 일도 꺼짐",
+          "따르게 하는 일도 꺼짐",
+          "만들 사람이 줄고 누가 받을지를 따로 정해야 함",
+        ],
+        requiredConcepts: ["price-three-roles"],
+        sectionId: "three-roles",
+      },
+      {
+        level: "advanced",
+        question:
+          "각자의 비교를 통과한 수가 총량 최대 수량과 같아짐을 유도하세요.",
+        answerChecklist: [
+          "각자는 v ≥ P인지, c ≤ P인지를 판정",
+          "균형값이면 두 판정 통과 수가 같음",
+          "그 수량까지는 v ≥ P ≥ c라 차이가 음수 아님",
+          "그다음부터는 음수라 그 지점이 봉우리",
+        ],
+        requiredConcepts: [
+          "price-as-sufficient-signal",
+          "total-surplus-price-invariance",
+        ],
+        sectionId: "sufficient",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 일치가 깨지는 조건을 셋 들고 각각이 식의 어느 부분을 깨는지 쓰세요.",
+        answerChecklist: [
+          "값이 아직 움직이는 중이면 균형 전제가 깨짐",
+          "세금이 끼면 판정 기준이 둘이 됨",
+          "내 결정이 남의 숫자를 바꾸면 쌍별 차이가 달라짐",
+          "셋 다 각자의 비교는 옳은데 합이 어긋남",
+        ],
+        requiredConcepts: ["price-as-sufficient-signal"],
+        sectionId: "sufficient",
+      },
+      {
+        level: "advanced",
+        question:
+          "계산 능력이 늘어도 중앙 경로의 부담이 크게 줄지 않는 이유를 단계별로 쓰세요.",
+        answerChecklist: [
+          "모으기·검증·풀기 세 단계",
+          "빨라지는 것은 마지막 하나",
+          "검증은 유인의 문제라 계산량으로 안 풀림",
+          "모으는 사이 원본이 바뀜",
+        ],
+        requiredConcepts: ["collection-before-calculation"],
+        sectionId: "central-calculation",
+      },
+      {
+        level: "advanced",
+        question:
+          "값이 정보를 잘 나른다는 것과 그 결과가 좋다는 것이 왜 다른 말인지, 앞 글과 이어 쓰세요.",
+        answerChecklist: [
+          "총량에는 누가 가져갔는지가 없음",
+          "낼 수 있는 금액에 낼 수 있는 능력이 섞임",
+          "나누는 역할이 그 금액을 따름",
+          "정보 전달이 잘돼도 분배 판단은 따로 필요",
+        ],
+        requiredConcepts: ["price-three-roles", "price-as-sufficient-signal"],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "F. A. Hayek, “The Use of Knowledge in Society” (American Economic Review, 1945)",
+        href: "https://www.econlib.org/library/Essays/hykKnw.html",
+        problem:
+          "배분 문제를 자료가 주어진 최적화로 세우면 실제 문제가 사라집니다. 필요한 자료가 누구에게도 주어져 있지 않기 때문입니다.",
+        contribution:
+          "필요한 지식이 집중되거나 통합된 형태로 존재하지 않고 개인들이 나눠 가진 불완전하고 때로 서로 어긋나는 조각으로만 있다고 진단하고, 값 체계를 그 정보를 전달하는 장치로 볼 것을 제안했습니다. 주석이 귀해진 경우를 들어 쓰는 쪽은 어디서 더 급한 필요가 생겼는지 알 필요 없이 아껴야 한다는 것만 알면 된다고 적습니다.",
+        assumptions:
+          "값이 바뀌는 것을 각자가 관찰할 수 있고 그 신호에 반응할 이유가 있다고 둡니다.",
+        evidenceScope:
+          "American Economic Review XXXV권 4호 519~530면이며, 온라인 전문을 직접 열어 지식이 흩어져 있다는 문장, 주석 예시, 값 체계를 정보 전달 장치로 보자는 문장과 기계 비유까지 확인했습니다.",
+        notClaim:
+          "이 글이 인용하는 것은 진단과 기능까지입니다. 같은 글이 이어 가는 계획 경제 논쟁과 정책적 결론은 다루지 않으며, 값이 정보를 잘 나른다는 것이 그 결과가 좋다는 뜻도 아닙니다. 각자의 비교가 전체 최적과 맞물린다는 이 글의 식은 이 논문에 있는 것이 아니라 앞 두 글의 결과를 이어 붙인 것입니다.",
+        sectionId: "dispersed",
+      },
+    ],
+  },
 };

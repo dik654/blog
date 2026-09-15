@@ -24897,6 +24897,47 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "총량에는 누가 가져갔는지가 들어 있지 않아 같은 점수가 전혀 다른 분배에서 나오고, 잉여를 더하려면 같은 금액이 누구에게나 같은 무게라는 전제가 필요합니다. 효율적이라는 판정은 아직 만들어지지 않은 이득이 남아 있지 않다는 뜻일 뿐이므로 결론이 아니라 시작점입니다.",
     canonicalHref: "/economics/prices/surplus-and-efficiency#not-fairness",
   },
+  "dispersed-knowledge": {
+    id: "dispersed-knowledge",
+    kind: "concept",
+    domain: "economics",
+    label: "흩어져 있는 지식",
+    aliases: ["분산된 지식", "시간과 장소의 특수 사정"],
+    definition:
+      "계산에 넣어야 할 사정은 통계로 올라오는 자료가 아니라 각자가 자기 상황에서만 아는 것들이며, 어디에도 모여 있지 않고 계속 바뀝니다. 그래서 중앙 배분의 어려움은 계산이 복잡하다는 데 있지 않고 계산에 넣을 자료가 애초에 한곳에 없다는 데 있습니다.",
+    canonicalHref: "/economics/prices/prices-as-information#dispersed",
+  },
+  "price-as-sufficient-signal": {
+    id: "price-as-sufficient-signal",
+    kind: "theorem",
+    domain: "economics",
+    label: "각자의 비교를 더하면 전체 최적이 된다",
+    aliases: ["값 하나가 사정을 요약한다", "왜 올랐는지 몰라도 된다"],
+    definition:
+      "각자가 자기 숫자를 시장 값과 견주는 비교 하나만 하면 되고, 값이 균형값일 때 그 비교를 통과한 수가 양쪽에서 같으며 그 수량이 곧 총량이 가장 큰 수량입니다. 그래서 사정이 바뀌어도 값이 움직였다는 사실 하나가 바뀐 내용 전부를 대신하고, 왜 바뀌었는지는 몰라도 물러나야 할 쪽이 정확히 물러납니다.",
+    canonicalHref: "/economics/prices/prices-as-information#sufficient",
+  },
+  "price-three-roles": {
+    id: "price-three-roles",
+    kind: "concept",
+    domain: "economics",
+    label: "한 숫자가 하는 세 가지 일",
+    aliases: ["정보·유인·배분", "값의 세 역할"],
+    definition:
+      "값은 사정이 바뀌었다는 것을 이유 없이 전달하고, 그 신호를 무시하면 자기 손해가 되게 만들며, 누가 가져갈지까지 정합니다. 알려 주는 것만으로는 따를 이유가 생기지 않으므로 앞의 둘이 한 숫자에 묶여 있다는 점이 핵심이고, 셋이 묶여 있어 값을 건드리는 개입은 언제나 세 가지를 함께 건드립니다.",
+    canonicalHref: "/economics/prices/prices-as-information#three-roles",
+  },
+  "collection-before-calculation": {
+    id: "collection-before-calculation",
+    kind: "concept",
+    domain: "economics",
+    label: "계산보다 수집과 검증이 먼저 걸린다",
+    aliases: ["계산 문제", "사실대로 답할 이유"],
+    definition:
+      "중앙에서 같은 배분에 이르려면 숫자를 모으고 그 답이 사실인지 확인한 뒤에야 풀 수 있는데, 배분이 답에 달려 있으면 유리하게 답할 이유가 생기고 모으는 사이 원본이 바뀝니다. 시장은 묻는 대신 행동을 보므로 거짓이 자기 손해가 되고 수집 단계가 아예 없으며, 그래서 비교해야 할 것은 계산의 정확도가 아니라 낡은 자료로 정확히 푸는 쪽과 최신 정보로 거칠게 반응하는 쪽입니다.",
+    canonicalHref:
+      "/economics/prices/prices-as-information#central-calculation",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -46201,6 +46242,62 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "총량을 얼마나 포기하고 분배를 바꿀지는 이 자가 답하지 못하고 한 사회에 하나만 존재할 수 있는 결정의 영역으로 넘어갑니다.",
+  },
+  {
+    from: "dispersed-knowledge",
+    to: "price-as-sufficient-signal",
+    relation: "prerequisite",
+    reason:
+      "알아야 할 것이 흩어져 있다는 문제가 있어야 값 하나가 그것을 대신한다는 결론에 뜻이 생깁니다.",
+  },
+  {
+    from: "market-equilibrium",
+    to: "price-as-sufficient-signal",
+    relation: "prerequisite",
+    reason:
+      "값이 균형값이어야 양쪽 비교를 통과한 수가 같아지고 그 수량이 총량 최대와 맞물립니다.",
+  },
+  {
+    from: "total-surplus-price-invariance",
+    to: "price-as-sufficient-signal",
+    relation: "prerequisite",
+    reason:
+      "쌍별 차이가 양수인 구간의 끝이 총량 최대 수량이라는 앞 글의 결과가 이 정리의 도착점입니다.",
+  },
+  {
+    from: "price-as-sufficient-signal",
+    to: "price-three-roles",
+    relation: "constrains",
+    reason:
+      "알려 주는 것만으로는 따를 이유가 생기지 않으므로 신호 기능만으로 이 정리를 설명할 수 없습니다.",
+  },
+  {
+    from: "price-three-roles",
+    to: "rationing-rule-matters",
+    relation: "produces",
+    reason:
+      "값을 묶으면 나누는 역할이 꺼지므로 누가 받을지를 다른 방식으로 정해야 합니다.",
+  },
+  {
+    from: "dispersed-knowledge",
+    to: "collection-before-calculation",
+    relation: "produces",
+    reason:
+      "자료가 각자에게만 있으면 계산 전에 모으는 단계가 생기고 그 단계가 병목이 됩니다.",
+  },
+  {
+    from: "collection-before-calculation",
+    to: "transaction-cost",
+    relation: "extends",
+    reason:
+      "상대를 찾고 약속을 강제하는 값에 더해, 사정을 알아내고 사실인지 확인하는 값도 같은 항목에 들어갑니다.",
+  },
+  {
+    from: "opportunity-cost",
+    to: "dispersed-knowledge",
+    relation: "produces",
+    reason:
+      "낼 수 있는 금액이 그 사람이 지금 무엇을 포기할 수 있는지로 정해지므로, 그 값은 본인의 사정과 함께 계속 움직입니다.",
   },
 ];
 
