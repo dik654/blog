@@ -7396,4 +7396,26 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "월 비용·시세·전력 비중 수치의 출처이며 이 글이 모든 산술을 재검산함. 상세 보고서 초판은 소유 60퍼센트와 임대 정가를 직접 견주고 보편 임계값을 제시했으나 교차 검증에서 정정됐고, 이 글은 정정된 쪽을 따름. 공개 문서가 아니라 링크를 걸지 않음",
     },
   ],
+  "ai/inference-stack-standard-levels": [
+    {
+      kind: "공식 문서",
+      label:
+        "Gateway API Inference Extension — InferencePool (kubernetes-sigs)",
+      href: "https://gateway-api-inference-extension.sigs.k8s.io/api-types/inferencepool/",
+      note: "아래층이 표준이라는 근거와 GA since v1.0.0 표시. 문서를 직접 열어 확인함",
+    },
+    {
+      kind: "핵심 연구",
+      label:
+        "Red Hat Developer — Intelligent inference scheduling with llm-d (2026-06-11)",
+      href: "https://developers.redhat.com/articles/2026/06/11/intelligent-inference-scheduling-llm-d-red-hat-ai",
+      note: "16×H100·복제본 8개·60rps에서 첫 토큰 35초→120밀리초, 처리량 +151%, 요청 지연 −35%. 글을 직접 열어 확인함",
+    },
+    {
+      kind: "보충 읽기",
+      label:
+        "사내 리서치 정리본 — 글로벌 LLM 추론 플랫폼 (2026-09-15, v4) 및 상세 보고서 01",
+      note: "세 수준 구분과 버전 조합 규칙의 출처. 상세 보고서 초판은 GA 시점과 엔진 종속 여부를 잘못 적었고 교차 검증에서 정정됐으며, 벤치마크 수치는 원문과 맞지 않아 이 글이 원문 쪽을 씀. 공개 문서가 아니라 링크를 걸지 않음",
+    },
+  ],
 };

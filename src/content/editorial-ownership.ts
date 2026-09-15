@@ -12584,6 +12584,41 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "inference-stack-standard-levels": {
+    title:
+      "표준을 쓴다고 해서 옮길 수 있는 것은 아닙니다 글이 소유하는 범위",
+    owns: [
+      "표준이라는 말에 섞인 세 수준의 구분과 각각의 판정",
+      "옮겨지는 층과 옮겨지지 않는 층, 그리고 어댑터의 범위",
+      "스택 선택과 엔진 선택의 분리, 구성표에 있다는 것과 검증됐다는 것의 차이",
+      "라우팅 정책이 적중률을 정한다는 식과 흩뿌리기·모으기의 적중률 유도",
+      "검증의 단위가 조합이라는 규칙과 승격 절차",
+    ],
+    reuses: [
+      {
+        label: "파드를 고르는 층이 첫 토큰의 어느 항을 건드리는가",
+        href: "/cs/ai/region-agnostic-inference-routing#six-choices",
+      },
+      {
+        label: "적중률이 prefill 절감량에 비례하는 지표라는 정의",
+        href: "/cs/ai/vllm-paged-attention#prefix-operations",
+      },
+      {
+        label: "고른 파드가 죽었을 때의 흡수",
+        href: "/cs/ai/inference-failure-absorption",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "문서와 글에 적힌 정의·지표·측정치만 그쪽에 귀속하고, 세 수준 구분과 적중률 유도는 이 글의 것으로 표시한다",
+      },
+      {
+        kind: "project-claim",
+        rule: "정리본과 원문이 어긋난 항목은 원문 쪽을 쓰고 어긋났다는 사실을 evidenceScope에 남긴다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -24747,6 +24747,56 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "토큰당 원가에서 전력은 5~15퍼센트이고 하드웨어 상각이 60~75퍼센트여서, 지역별 전기요금 차이는 한 자릿수 퍼센트로 흡수됩니다. 반면 가동률은 단가 식의 분모에 그대로 들어가 60퍼센트가 40퍼센트로 떨어지면 단가가 1.5배가 되므로, 쉬는 가속기는 지워도 되는 매몰비용이 아니라 팔지 못한 재고로 다뤄야 합니다.",
     canonicalHref: "/cs/ai/own-vs-rent-inference-capacity#what-moves-it",
   },
+  "standard-claim-three-levels": {
+    id: "standard-claim-three-levels",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "표준이라는 말의 세 수준",
+    aliases: ["이식성의 세 질문", "프리미티브·구현체·매니페스트"],
+    definition:
+      "스택이 표준을 따른다는 말에는 자원의 모양, 요청마다 도는 구현체, 무엇을 얼마나 띄울지 선언하는 운영 자원이라는 세 수준이 섞여 있습니다. 오픈소스가 지원하는가와 관리형 상품이 지원하는가는 맞지만 같은 선언으로 운영되는가는 아니므로, 이식성을 물을 때는 세 질문을 따로 해야 합니다.",
+    canonicalHref: "/cs/ai/inference-stack-standard-levels#three-levels",
+  },
+  "portable-primitive-vs-control-api": {
+    id: "portable-primitive-vs-control-api",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "옮겨지는 프리미티브와 옮겨지지 않는 제어 API",
+    aliases: ["공급자별 어댑터", "적합성 시험의 범위"],
+    definition:
+      "파드 집합을 선언하는 자원과 그 집합에서 파드를 고르는 구현체는 스펙과 적합성 시험이 있어 공급자를 바꿔도 옮겨지지만, 무엇을 얼마나 띄울지 선언하는 제어 자원과 인증·용량 확보는 공급자마다 이름과 모양이 다릅니다. 그래서 이식성은 전부 옮기는 것이 아니라 옮겨지지 않는 층만 어댑터로 떼어 두는 방식으로 확보합니다.",
+    canonicalHref: "/cs/ai/inference-stack-standard-levels#three-levels",
+  },
+  "engine-choice-vs-stack-choice": {
+    id: "engine-choice-vs-stack-choice",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "스택 선택과 엔진 선택의 분리",
+    aliases: ["구성표에 있다는 것과 검증됐다는 것"],
+    definition:
+      "스택은 어느 파드로 보낼지를 정하고 엔진은 그 안에서 토큰을 만들므로 두 선택이 분리되어 있으며, 한 스택이 여러 엔진의 검증 버전을 구성표에 올릴 수 있습니다. 다만 목록에 있다는 것과 쓰려는 기능이 그 엔진 경로에서 같은 성숙도로 검증됐다는 것은 다른 말이라, 두 판단을 한 번에 묶으면 선택지를 스스로 좁히거나 반대로 과신하게 됩니다.",
+    canonicalHref: "/cs/ai/inference-stack-standard-levels#engine-vs-stack",
+  },
+  "routing-policy-sets-hit-rate": {
+    id: "routing-policy-sets-hit-rate",
+    kind: "theorem",
+    domain: "distributed-systems",
+    label: "적중률을 정하는 것은 캐시가 아니라 라우팅",
+    aliases: ["흩뿌리기와 모으기", "1/N 적중률"],
+    definition:
+      "다시 계산해야 하는 양은 적중하지 않은 비율에 비례하는데, 그 적중률은 캐시의 성질이 아니라 어디로 보내는지가 정합니다. 돌아가며 보내면 같은 앞부분을 쓰는 요청이 복제본 수만큼 흩어져 적중률이 그 역수 수준으로 떨어지고 규모를 키울수록 더 나빠지며, 캐시 위치를 보고 모으면 그룹의 첫 요청을 뺀 나머지가 적중합니다.",
+    canonicalHref: "/cs/ai/inference-stack-standard-levels#hit-rate",
+  },
+  "verified-version-combination": {
+    id: "verified-version-combination",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "검증된 단위는 개별 버전이 아니라 조합",
+    aliases: ["구성표 핀", "버전 승격 절차"],
+    definition:
+      "빠른 릴리스 주기에서 스택은 개별 버전이 아니라 엔진·게이트웨이·메시의 검증된 버전을 함께 적은 구성표를 냅니다. 구성 요소 하나만 최신으로 올리면 각각이 안정 버전이어도 그 조합은 검증된 적이 없으며, 드라이버 하한을 올리는 변경이 섞이면 스택 갱신이 노드 전체를 건드리는 일이 됩니다.",
+    canonicalHref: "/cs/ai/inference-stack-standard-levels#version-pinning",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -45883,6 +45933,62 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "한 단위 더의 판정은 이미 확보한 용량 안에서의 결정이고, 손익분기 가동률은 그 용량을 얼마나 확보할지의 결정이라 시간 축이 다릅니다.",
+  },
+  {
+    from: "standard-claim-three-levels",
+    to: "portable-primitive-vs-control-api",
+    relation: "produces",
+    reason:
+      "세 수준을 가르면 어느 층이 옮겨지고 어느 층을 어댑터로 떼어야 하는지가 그대로 따라 나옵니다.",
+  },
+  {
+    from: "portable-primitive-vs-control-api",
+    to: "engine-choice-vs-stack-choice",
+    relation: "prerequisite",
+    reason:
+      "스택이 맡는 층의 경계가 정해져야 엔진이 맡는 부분과 나눠 고를 수 있습니다.",
+  },
+  {
+    from: "routing-policy-sets-hit-rate",
+    to: "standard-claim-three-levels",
+    relation: "evaluates",
+    reason:
+      "파드를 고르는 층이 다시 계산할 양을 자릿수로 바꾸기 때문에 그 층이 따로 떼어져 표준이 된 이유가 설명됩니다.",
+  },
+  {
+    from: "prefix-cache-hit-rate",
+    to: "routing-policy-sets-hit-rate",
+    relation: "prerequisite",
+    reason:
+      "적중률이 prefill 절감량에 비례하는 지표로 정의되어 있어야 라우팅 정책이 일감을 바꾼다는 말이 성립합니다.",
+  },
+  {
+    from: "routing-policy-sets-hit-rate",
+    to: "ttft-routing-vs-engine-split",
+    relation: "optimizes",
+    reason:
+      "적중률이 오르면 prefill 항이 줄고 그로 인해 큐 항까지 포화에서 빠져나와 첫 토큰의 뒤 덩어리가 작아집니다.",
+  },
+  {
+    from: "verified-version-combination",
+    to: "portable-primitive-vs-control-api",
+    relation: "constrains",
+    reason:
+      "표준을 따른다는 것이 버전 자유를 뜻하지 않으므로, 이식성을 확보해도 구성표가 적은 조합 밖으로 나갈 수는 없습니다.",
+  },
+  {
+    from: "engine-choice-vs-stack-choice",
+    to: "verified-version-combination",
+    relation: "produces",
+    reason:
+      "엔진 경로마다 검증 상태가 다르므로 확인의 단위가 개별 컴포넌트가 아니라 릴리스가 명시한 조합이 됩니다.",
+  },
+  {
+    from: "standard-claim-three-levels",
+    to: "request-path-control-path-split",
+    relation: "contrasts",
+    reason:
+      "둘 다 층을 가르지만 하나는 이식성의 축으로, 다른 하나는 지연과 장애 의존성의 축으로 가릅니다.",
   },
 ];
 

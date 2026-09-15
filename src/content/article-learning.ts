@@ -83281,4 +83281,303 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/inference-stack-standard-levels": {
+    entryNote:
+      "앞 글의 여섯 단계 가운데 다섯째, 한 클러스터 안에서 파드를 고르는 층만 확대해 봅니다.",
+    coreIdea:
+      "스택이 표준을 따른다는 말에는 자원의 모양·요청 경로 구현체·운영 매니페스트라는 세 수준이 섞여 있고, 앞의 둘만 공급자를 바꿔도 옮겨집니다. 그래서 이식성은 옮겨지지 않는 층만 어댑터로 떼어 두는 방식으로 확보하며, 스택과 엔진은 다른 결정이고 검증된 단위는 개별 버전이 아니라 릴리스가 명시한 조합입니다.",
+    assumedKnowledge: [
+      {
+        id: "ttft-routing-vs-engine-split",
+        role: "파드를 고르는 층이 첫 토큰의 어느 항을 건드리는지 가져옵니다.",
+      },
+      {
+        id: "prefix-cache-hit-rate",
+        role: "적중률이 prefill 절감량에 비례하는 지표라는 정의를 가져옵니다.",
+      },
+      {
+        id: "request-path-control-path-split",
+        role: "층을 가르는 다른 축과 대비해 이 글의 축을 세웁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "standard-claim-three-levels",
+        role: "표준이라는 말에 섞인 세 수준을 가릅니다.",
+      },
+      {
+        id: "portable-primitive-vs-control-api",
+        role: "어느 층이 옮겨지고 어느 층을 어댑터로 떼는지 정합니다.",
+      },
+      {
+        id: "engine-choice-vs-stack-choice",
+        role: "스택 선택과 엔진 선택을 분리합니다.",
+      },
+      {
+        id: "routing-policy-sets-hit-rate",
+        role: "이 층이 실제로 바꾸는 양을 식으로 세웁니다.",
+      },
+      {
+        id: "verified-version-combination",
+        role: "버전을 핀하는 단위를 정합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "standard-claim-three-levels",
+        sectionId: "three-levels",
+        intuition:
+          "표준이냐고 한 번 묻는 대신 세 번 물어야 답이 맞습니다.",
+        workedExample:
+          "오픈소스가 지원하는가와 관리형 상품이 지원하는가는 맞지만, 같은 선언으로 운영되는가는 아닙니다.",
+        boundary:
+          "층의 이름은 이 글이 붙인 것입니다. 중요한 것은 이름이 아니라 세 질문의 답이 서로 다르다는 사실입니다.",
+      },
+      {
+        id: "portable-primitive-vs-control-api",
+        sectionId: "three-levels",
+        intuition:
+          "옮겨지지 않는 층만 따로 떼어 두면 나머지는 그대로 갑니다.",
+        workedExample:
+          "파드 집합을 선언하는 자원과 파드를 고르는 구현체는 적합성 시험이 있어 옮겨지고, 무엇을 얼마나 띄울지 선언하는 자원은 공급자마다 다릅니다.",
+        counterexample:
+          "세 층을 하나로 보고 같은 매니페스트로 운영할 수 있다고 읽으면, 옮길 때 위층 전체를 예상 밖에 다시 짜게 됩니다.",
+        boundary:
+          "적합성 시험이 있는 것은 아래층까지입니다. 그 시험이 가운데층의 구현 선택까지 보장하지는 않습니다.",
+      },
+      {
+        id: "engine-choice-vs-stack-choice",
+        sectionId: "engine-vs-stack",
+        intuition:
+          "어디로 보낼지를 정하는 일과 토큰을 만드는 일은 다른 컴포넌트가 합니다.",
+        workedExample:
+          "한 스택의 릴리스 구성표에 엔진 셋의 검증된 버전이 나란히 적혀 있습니다. 스택을 골랐다고 엔진이 따라 정해지지 않습니다.",
+        counterexample:
+          "반대로 목록에 있다는 것만으로 쓰려는 기능이 그 엔진 경로에서 검증됐다고 읽으면, 초판이 틀린 방향과 반대로 같은 크기의 실수를 하게 됩니다.",
+        boundary:
+          "분리 배치나 캐시 전송 같은 기능은 경로마다 성숙도가 다를 수 있어 릴리스 노트의 상태 표기를 따로 봐야 합니다.",
+      },
+      {
+        id: "routing-policy-sets-hit-rate",
+        sectionId: "hit-rate",
+        intuition:
+          "같은 앞부분을 쓰는 요청을 흩뿌리면 캐시를 못 쓰고 모으면 씁니다.",
+        workedExample:
+          "복제본 여덟에 그룹 다섯이면 돌아가며 보낼 때 적중률이 12.5퍼센트 수준이고 모아 보내면 80퍼센트가 되어 다시 계산할 양이 87.5퍼센트에서 20퍼센트로 떨어집니다.",
+        proofIdea:
+          "다시 계산할 양은 도착률과 앞부분 길이의 곱에 적중하지 않은 비율을 곱한 값입니다. 돌아가며 보내는 정책에서는 같은 그룹의 요청이 복제본에 고르게 흩어지므로 앞 요청이 남긴 캐시를 만날 확률이 1/N 수준이고, 캐시 위치를 보고 모으면 그룹 g개 가운데 첫 요청만 계산하므로 적중률이 (g−1)/g가 됩니다. 두 값의 차이가 그대로 일감의 비가 됩니다.",
+        counterexample:
+          "공유 앞부분이 짧거나 그룹이 작으면 (g−1)/g가 1에서 멀어져 이득 자체가 작습니다. 앞부분만 보고 고르는 정책이 공유가 많은 환경에서도 성공률 55퍼센트에 그쳤다는 보고가 있어 부하까지 함께 봐야 합니다.",
+        boundary:
+          "이 식은 일감까지만 말합니다. 공개 실험에서 첫 토큰이 292배 줄어든 것은 일감의 비가 아니라 줄어든 일감이 큐를 포화에서 빼낸 결과입니다.",
+      },
+      {
+        id: "verified-version-combination",
+        sectionId: "version-pinning",
+        intuition:
+          "각각이 안정 버전이어도 그 조합은 아무도 돌려 보지 않았을 수 있습니다.",
+        workedExample:
+          "스택 릴리스가 엔진·게이트웨이·메시의 검증된 버전을 함께 적으므로, 그 조합을 그대로 핀하고 상위 버전은 따로 검증한 뒤 승격합니다.",
+        boundary:
+          "어떤 릴리스는 드라이버 하한을 올립니다. 그러면 스택 하나를 올리는 일이 노드 전체를 건드리는 일이 됩니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 무엇이 표준인가",
+        relation: "한 단어에 섞인 세 수준을 가릅니다.",
+        concepts: [
+          "standard-claim-three-levels",
+          "portable-primitive-vs-control-api",
+        ],
+      },
+      {
+        label: "01 무엇을 따로 고르나",
+        relation: "스택과 엔진을 분리합니다.",
+        concepts: ["engine-choice-vs-stack-choice"],
+      },
+      {
+        label: "02 무엇이 달라지나",
+        relation: "이 층이 바꾸는 양을 식으로 봅니다.",
+        concepts: ["routing-policy-sets-hit-rate"],
+      },
+      {
+        label: "03 무엇을 핀하나",
+        relation: "검증의 단위를 정합니다.",
+        concepts: ["verified-version-combination"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "표준이냐는 질문을 세 개로 나누어 쓰고, 각각의 답을 쓰세요.",
+        answerChecklist: [
+          "오픈소스가 지원하는가 — 맞음",
+          "관리형 상품이 지원하는가 — 맞음",
+          "같은 선언으로 운영되는가 — 아님",
+          "그래서 이식성은 층마다 다름",
+        ],
+        requiredConcepts: ["standard-claim-three-levels"],
+        sectionId: "three-levels",
+      },
+      {
+        level: "basic",
+        question:
+          "옮겨지는 층과 옮겨지지 않는 층을 각각 쓰고, 옮겨지지 않는 층을 어떻게 다루는지 쓰세요.",
+        answerChecklist: [
+          "파드 집합을 선언하는 자원은 옮겨짐",
+          "파드를 고르는 구현체도 옮겨짐",
+          "제어 자원·인증·용량 확보는 옮겨지지 않음",
+          "그 층만 공급자별 어댑터로 떼어 둠",
+        ],
+        requiredConcepts: ["portable-primitive-vs-control-api"],
+        sectionId: "three-levels",
+      },
+      {
+        level: "basic",
+        question:
+          "스택 선택과 엔진 선택이 다른 결정인 이유를 쓰고, 목록에 있다는 것만으로 부족한 이유를 쓰세요.",
+        answerChecklist: [
+          "스택은 어디로 보낼지를 정함",
+          "엔진은 그 안에서 토큰을 만듦",
+          "한 스택이 여러 엔진을 구성표에 올릴 수 있음",
+          "경로마다 기능의 검증 상태가 다를 수 있음",
+        ],
+        requiredConcepts: ["engine-choice-vs-stack-choice"],
+        sectionId: "engine-vs-stack",
+      },
+      {
+        level: "basic",
+        question:
+          "복제본이 여덟이고 같은 앞부분을 쓰는 요청이 다섯 개일 때 두 정책의 적중률과 다시 계산할 양을 계산하세요.",
+        answerChecklist: [
+          "돌아가며 보내면 약 12.5퍼센트",
+          "다시 계산할 양은 87.5퍼센트",
+          "모아 보내면 다섯 중 넷이 적중",
+          "다시 계산할 양이 20퍼센트로 내려감",
+        ],
+        requiredConcepts: ["routing-policy-sets-hit-rate"],
+        sectionId: "hit-rate",
+      },
+      {
+        level: "basic",
+        question:
+          "버전을 핀하는 단위가 무엇인지 쓰고, 구성 요소 하나만 올리면 안 되는 이유를 쓰세요.",
+        answerChecklist: [
+          "단위는 릴리스가 명시한 조합",
+          "각각이 안정 버전이어도 그 조합은 검증된 적이 없음",
+          "상위 버전은 따로 검증 후 승격",
+          "드라이버 하한을 올리는 변경이 섞일 수 있음",
+        ],
+        requiredConcepts: ["verified-version-combination"],
+        sectionId: "version-pinning",
+      },
+      {
+        level: "basic",
+        question:
+          "이 글의 내용이 왜 한 클러스터 안의 이야기인지, 그 바깥에서는 무엇을 직접 만들어야 하는지 쓰세요.",
+        answerChecklist: [
+          "파드 집합을 선언하는 자원은 단일 클러스터 범위",
+          "클러스터 간 내보내기·들여오기 공개 표준이 없음",
+          "리전 게이트웨이가 다른 클러스터의 풀을 가리키는 연결",
+          "그 부분은 자체 통합으로 남음",
+        ],
+        requiredConcepts: ["portable-primitive-vs-control-api"],
+        sectionId: "boundary",
+      },
+      {
+        level: "advanced",
+        question:
+          "돌아가며 보내는 정책에서 복제본을 늘리면 적중률이 어떻게 되는지 유도하고, 그 함의를 쓰세요.",
+        answerChecklist: [
+          "같은 그룹이 N개에 고르게 흩어짐",
+          "앞 요청의 캐시를 만날 확률이 1/N 수준",
+          "N이 커질수록 적중률이 떨어짐",
+          "규모를 키우는 것이 이 정책 아래에선 적중률을 깎음",
+        ],
+        requiredConcepts: ["routing-policy-sets-hit-rate"],
+        sectionId: "hit-rate",
+      },
+      {
+        level: "advanced",
+        question:
+          "일감이 약 4.4분의 1이 되었는데 첫 토큰이 약 292배 줄어든 것이 모순이 아닌 이유를 설명하세요.",
+        answerChecklist: [
+          "식은 일감까지만 말함",
+          "대기는 일감에 비선형으로 반응",
+          "줄어든 일감이 큐를 포화에서 빼냄",
+          "포화 근처에서 대기가 급격히 변함",
+        ],
+        requiredConcepts: [
+          "routing-policy-sets-hit-rate",
+          "ttft-routing-vs-engine-split",
+        ],
+        sectionId: "hit-rate",
+      },
+      {
+        level: "advanced",
+        question:
+          "초판이 특정 엔진 종속이라고 적었다가 정정된 사례에서, 정정을 어떻게 받아들여야 하는지 쓰세요.",
+        answerChecklist: [
+          "구성표에 엔진 셋의 검증 버전이 있음",
+          "그래서 종속이라는 서술은 틀림",
+          "그러나 경로별 성숙도는 확인되지 않음",
+          "정정은 주장을 뒤집는 것이지 확신을 그대로 옮기는 것이 아님",
+        ],
+        requiredConcepts: ["engine-choice-vs-stack-choice"],
+        sectionId: "engine-vs-stack",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 글의 층 구분과 앞 글의 요청 경로·결정 경로 구분이 어떻게 다른 축인지 쓰세요.",
+        answerChecklist: [
+          "둘 다 층을 가름",
+          "이 글은 이식성의 축",
+          "앞 글은 지연과 장애 의존성의 축",
+          "같은 컴포넌트가 두 축에서 다른 자리에 놓임",
+        ],
+        requiredConcepts: [
+          "standard-claim-three-levels",
+          "portable-primitive-vs-control-api",
+        ],
+        sectionId: "three-levels",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Gateway API Inference Extension — InferencePool (Kubernetes SIG Network)",
+        href: "https://gateway-api-inference-extension.sigs.k8s.io/api-types/inferencepool/",
+        problem:
+          "추론 파드를 일반 서비스로 묶으면 모델 서버의 상태를 표현할 자리가 없어 각 공급자가 각자 라우터를 만들었고, 그래서 같은 개념이 서로 다른 자원으로 흩어져 있었습니다.",
+        contribution:
+          "같은 연산 구성·가속기·기반 모델·모델 서버를 공유하는 파드 집합을 하나의 API 객체로 정의하고, 그 집합에서 파드를 고르는 컴포넌트가 보는 지표를 KV 캐시 사용률·대기 요청 큐 길이·활성 LoRA 어댑터로 명시했습니다.",
+        assumptions:
+          "풀 안의 파드가 동질적이고 단일 클러스터 안에 있다고 둡니다.",
+        evidenceScope:
+          "문서를 직접 열어 자원의 정의 문장, 고르는 컴포넌트가 보는 지표 목록, GA since v1.0.0 표시를 확인했습니다. 이 글이 참고한 사내 정리본 초판은 GA 시점을 2026년 4월 릴리스로 적고 있어 문서와 맞지 않았고, 교차 검증에서 정정된 쪽을 따랐습니다.",
+        notClaim:
+          "관리형 상품들이 같은 매니페스트로 운영된다는 뜻이 아닙니다. 위층의 제어 자원이 공급자마다 다르다는 이 글의 판단은 이 문서에서 나온 것이 아니며, 클러스터를 가로지르는 표준이 없다는 것도 이 문서의 범위 밖입니다.",
+        sectionId: "three-levels",
+      },
+      {
+        title:
+          "Red Hat Developer — Intelligent inference scheduling with llm-d (2026-06-11)",
+        href: "https://developers.redhat.com/articles/2026/06/11/intelligent-inference-scheduling-llm-d-red-hat-ai",
+        problem:
+          "같은 앞부분을 쓰는 요청이 여러 복제본에 흩어지면 앞 요청이 만든 캐시를 뒤 요청이 쓰지 못해 같은 계산이 반복됩니다.",
+        contribution:
+          "동일 하드웨어에서 표준 서비스 라우팅과 캐시 인지 스케줄링을 견주었습니다. H100 16장에 vLLM 복제본 8개, Qwen3-32B, 공유 앞부분이 있는 합성 워크로드 초당 60요청에서 첫 토큰이 35초에서 120밀리초로, 처리량이 151퍼센트 증가, 요청 지연이 35퍼센트 감소했습니다.",
+        assumptions:
+          "공유 앞부분이 긴 합성 워크로드이며 그룹 150개에 그룹당 프롬프트 5개입니다.",
+        evidenceScope:
+          "글을 직접 열어 구성과 세 수치를 확인했습니다. 이 글이 참고한 사내 정리본은 같은 실험을 첫 토큰 최대 57배 단축과 처리량 2배로 적고 있으나 위 값으로는 각각 약 292배와 2.51배라 맞지 않아, 확인한 쪽을 썼습니다.",
+        notClaim:
+          "이 배수를 다른 워크로드에 옮길 수 없습니다. 공유 앞부분이 짧거나 그룹이 작으면 적중률 자체가 오르지 않으며, 첫 토큰의 감소 폭이 일감의 감소 폭보다 훨씬 큰 것은 포화 근처의 비선형 때문이지 이 정책이 그만큼의 계산을 없앴기 때문이 아닙니다.",
+        sectionId: "hit-rate",
+      },
+    ],
+  },
 };

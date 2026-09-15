@@ -437,6 +437,39 @@ export const llmBaseArticles: Article[] = [
     component: () =>
       import("@/pages/articles/ai/own-vs-rent-inference-capacity"),
   },
+  {
+    slug: "inference-stack-standard-levels",
+    title: "표준이라는 말에 세 수준이 섞여 있습니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      {
+        id: "overview",
+        title: "표준을 쓴다고 해서 옮길 수 있는 것은 아닙니다",
+      },
+      {
+        id: "three-levels",
+        title: "부품 1. 세 수준을 가르지 않으면 이식성을 말할 수 없습니다",
+      },
+      {
+        id: "engine-vs-stack",
+        title: "부품 2. 스택을 고르는 것과 엔진을 고르는 것은 다른 결정입니다",
+      },
+      {
+        id: "hit-rate",
+        title: "부품 3. 이 층이 실제로 바꾸는 것은 다시 계산할 양입니다",
+      },
+      {
+        id: "version-pinning",
+        title: "부품 4. 검증된 단위는 개별 버전이 아니라 조합입니다",
+      },
+      {
+        id: "boundary",
+        title: "한 클러스터 안까지가 표준이고, 그 바깥은 아직 아닙니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/inference-stack-standard-levels"),
+  },
 ];
 
 export const llmArticles: Article[] = [
