@@ -7347,4 +7347,25 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "균형의 정의와 안정 조건, 가위의 두 날 비유의 출처. 3판 스캔 본문으로 직접 대조함",
     },
   ],
+  "ai/region-agnostic-inference-routing": [
+    {
+      kind: "공식 문서",
+      label:
+        "Gateway API Inference Extension — InferencePool (kubernetes-sigs)",
+      href: "https://gateway-api-inference-extension.sigs.k8s.io/api-types/inferencepool/",
+      note: "풀의 정의와 EPP가 보는 지표(KV 사용률·큐 길이·활성 LoRA), GA since v1.0.0 표시. 문서를 직접 열어 확인함",
+    },
+    {
+      kind: "공식 문서",
+      label: "OpenRouter Docs — Provider Routing (Load Balancing)",
+      href: "https://openrouter.ai/docs/features/provider-routing",
+      note: "기본 순서(30초 내 무장애 → 가격 역제곱 가중 → fallback)와 allow_fallbacks 기본값. 문서를 직접 열어 확인함",
+    },
+    {
+      kind: "보충 읽기",
+      label:
+        "사내 리서치 정리본 — 글로벌 LLM 추론 플랫폼 (2026-09-15, v4)",
+      note: "여섯 단계 구분·시간 배분·장애 흡수 사다리의 출처. 6축 딥리서치를 외부 모델과 3라운드 교차 검증해 49건을 반영한 정리본이며, 공개되지 않은 내부 문서라 링크를 걸지 않음",
+    },
+  ],
 };

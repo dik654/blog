@@ -24597,6 +24597,56 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/economics/prices/supply-demand-and-equilibrium#shift-vs-move",
   },
+  "request-path-control-path-split": {
+    id: "request-path-control-path-split",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "요청 경로와 결정 경로의 분리",
+    aliases: ["데이터 평면 · 컨트롤 평면 분리", "control plane out of the request path"],
+    definition:
+      "요청마다 실행되는 일과 주기적으로 실행되어 설정을 밀어 넣는 일을 다른 경로에 두는 원칙입니다. 요청 경로에 있는 것은 전부 지연이자 장애 의존성이므로, 분 단위로 갱신해도 되는 배치·가중치 계산은 밖으로 빼고 컨트롤러가 죽어도 마지막 설정으로 요청이 계속 흐르게 합니다.",
+    canonicalHref: "/cs/ai/region-agnostic-inference-routing#two-paths",
+  },
+  "snapshot-endpoint-pair-selection": {
+    id: "snapshot-endpoint-pair-selection",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "스냅샷과 endpoint의 공동 선택",
+    aliases: ["모델 슬러그 해석", "(스냅샷, endpoint) 쌍"],
+    definition:
+      "사용자가 보낸 모델 슬러그는 이름이 아니라 계약이므로 가중치 digest·양자화·엔진 버전 튜플인 스냅샷으로 풀어야 하고, 이때 모델만 따로 고르면 안 됩니다. 품질을 통과한 스냅샷이라도 테넌트가 허용하는 리전에 떠 있지 않을 수 있어 평가 단위는 스냅샷과 endpoint의 쌍입니다.",
+    canonicalHref: "/cs/ai/region-agnostic-inference-routing#six-choices",
+  },
+  "ttft-routing-vs-engine-split": {
+    id: "ttft-routing-vs-engine-split",
+    kind: "theorem",
+    domain: "distributed-systems",
+    label: "첫 토큰 시간의 두 덩어리",
+    aliases: ["TTFT 분해", "고르는 시간과 만드는 시간"],
+    definition:
+      "첫 토큰까지의 시간은 후보를 자르는 다섯 단계의 합과 엔진 안의 큐 대기·prefill로 나뉩니다. 앞 덩어리는 부하와 거의 무관하게 밀리초 단위에 머무는 반면 뒤 덩어리는 0에서 수 초까지 움직이므로, 라우팅이 기여하는 방법은 자기 시간을 줄이는 것이 아니라 뒤 덩어리가 작은 파드를 고르는 것입니다.",
+    canonicalHref: "/cs/ai/region-agnostic-inference-routing#six-choices",
+  },
+  "routing-constraint-before-cost": {
+    id: "routing-constraint-before-cost",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "제약에서 시작해 원가로 끝나는 순서",
+    aliases: ["라우팅 우선순위", "원가 되먹임"],
+    definition:
+      "후보를 자르는 순서는 강제 제약, 지금 감당 가능한지, 얼마나 기다리는지, 원가입니다. 평균 원가를 앞으로 올리면 트래픽이 몰린 풀이 싸 보여 더 몰리는 되먹임이 생기고, 이미 확보한 용량에 요청을 하나 더 보낼 때 늘어나는 비용은 전력·물·회선뿐이라 확보된 용량끼리는 원가가 결정을 바꾸지 못합니다.",
+    canonicalHref: "/cs/ai/region-agnostic-inference-routing#order-matters",
+  },
+  "streaming-commit-point": {
+    id: "streaming-commit-point",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "스트리밍의 되돌릴 수 없는 지점",
+    aliases: ["첫 출력 청크", "재시도 경계", "commit point"],
+    definition:
+      "첫 의미 있는 출력 청크가 나가는 순간 200이 커밋되어 상태 코드로 실패를 알릴 수 없게 되고 백엔드도 바꿀 수 없습니다. 그 앞에서는 프록시가 응답 시작 전 실패를, 스트림을 소유한 게이트웨이가 헤더·heartbeat까지의 실패를 각각 흡수하며, 이 선보다 먼저 나가는 응답 헤더에는 실제 서빙 위치를 적을 수 없습니다.",
+    canonicalHref: "/cs/ai/region-agnostic-inference-routing#commit-point",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -45579,6 +45629,55 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "둘 다 양쪽이 받아들일 수 있는 구간에서 하나의 숫자가 나오는 구조이지만, 한쪽은 많은 사람의 어긋남이 밀어 정하고 다른 쪽은 두 당사자의 협상이 정합니다.",
+  },
+  {
+    from: "request-path-control-path-split",
+    to: "snapshot-endpoint-pair-selection",
+    relation: "constrains",
+    reason:
+      "슬러그를 푸는 일이 요청 경로 안에 있으므로 별도 서비스로 떼지 않고 게이트웨이 안의 논리 모듈로 두어야 왕복과 장애 의존성이 늘지 않습니다.",
+  },
+  {
+    from: "snapshot-endpoint-pair-selection",
+    to: "routing-constraint-before-cost",
+    relation: "prerequisite",
+    reason:
+      "평가 단위가 쌍이어야 상주 제약과 기능 필터를 같은 단계에서 함께 적용할 수 있습니다.",
+  },
+  {
+    from: "ttft-routing-vs-engine-split",
+    to: "routing-constraint-before-cost",
+    relation: "evaluates",
+    reason:
+      "큐 대기가 라우팅 계층 전체보다 두 자릿수 크게 움직이므로 대기시간을 원가보다 앞에 두는 순서가 수치로 뒷받침됩니다.",
+  },
+  {
+    from: "scheduler-request-progress-gap",
+    to: "ttft-routing-vs-engine-split",
+    relation: "prerequisite",
+    reason:
+      "엔진 큐에서 기다리는 시간이 무엇으로 정해지는지를 알아야 TTFT의 뒤 덩어리를 해석할 수 있습니다.",
+  },
+  {
+    from: "prefix-cache-matching",
+    to: "ttft-routing-vs-engine-split",
+    relation: "optimizes",
+    reason:
+      "앞부분이 캐시에 있는 파드로 보내면 prefill 항이 줄어들어 뒤 덩어리가 작아집니다.",
+  },
+  {
+    from: "streaming-commit-point",
+    to: "request-path-control-path-split",
+    relation: "constrains",
+    reason:
+      "첫 청크가 나간 뒤에는 어느 계층도 요청을 구할 수 없으므로, 요청 경로에 둘 수 있는 의존성의 수가 이 선 앞에서 결정됩니다.",
+  },
+  {
+    from: "kv-pressure-preemption",
+    to: "ttft-routing-vs-engine-split",
+    relation: "constrains",
+    reason:
+      "KV 공간이 모자라 요청이 배치에 끼지 못하면 큐 대기 항이 늘어나 라우팅이 고른 파드의 값이 예측과 달라집니다.",
   },
 ];
 

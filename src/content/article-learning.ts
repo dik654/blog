@@ -82422,4 +82422,299 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/region-agnostic-inference-routing": {
+    entryNote:
+      "한 클러스터 안에서 파드와 GPU를 다루는 이야기는 앞 글이 맡습니다. 여기서는 리전이 여럿일 때만 생기는 문제를 봅니다.",
+    coreIdea:
+      "사용자가 리전과 모델 버전을 고르지 않게 하면 그 선택이 요청 경로 안으로 들어옵니다. 여섯 단계가 각각 다른 것을 정하되 앞의 다섯은 후보를 자르는 일이라 밀리초에 머물고 시간은 엔진에서 쓰이며, 자르는 순서는 강제 제약에서 시작해 원가로 끝나야 하고, 첫 의미 있는 출력 청크가 나가면 어느 계층도 그 요청을 되돌리지 못합니다.",
+    assumedKnowledge: [
+      {
+        id: "scheduler-request-progress-gap",
+        role: "엔진 큐에서 기다리는 시간이 무엇으로 정해지는지를 가져옵니다.",
+      },
+      {
+        id: "prefix-cache-matching",
+        role: "파드를 고를 때 보는 캐시 적중이 무엇인지를 가져옵니다.",
+      },
+      {
+        id: "kv-pressure-preemption",
+        role: "KV 여유가 수용량 신호가 되는 이유를 가져옵니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "request-path-control-path-split",
+        role: "무엇을 요청 경로에서 빼야 하는지를 정합니다.",
+      },
+      {
+        id: "snapshot-endpoint-pair-selection",
+        role: "모델 슬러그를 무엇으로 푸는지와 평가 단위를 정의합니다.",
+      },
+      {
+        id: "ttft-routing-vs-engine-split",
+        role: "첫 토큰 시간을 두 덩어리로 나누고 각각의 크기를 견줍니다.",
+      },
+      {
+        id: "routing-constraint-before-cost",
+        role: "후보를 자르는 순서와 그 근거를 정합니다.",
+      },
+      {
+        id: "streaming-commit-point",
+        role: "어디까지 되돌릴 수 있는지의 선을 정의합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "request-path-control-path-split",
+        sectionId: "two-paths",
+        intuition:
+          "밀리초 안에 끝나야 하는 일과 15분에 한 번 해도 되는 일을 같은 경로에 두지 않습니다.",
+        workedExample:
+          "어느 리전에 무엇을 몇 개 띄울지는 컨트롤러가 주기적으로 계산해 설정으로 밀어 넣고, 컨트롤러가 죽어도 마지막 설정으로 요청은 계속 흐릅니다.",
+        boundary:
+          "이 분리는 배치와 라우팅 가중치에만 적용됩니다. 잔액과 한도는 마지막 스냅샷으로 버티게 두면 돈이 새므로 상태마다 권위 저장소와 장애 정책을 따로 정해야 합니다.",
+      },
+      {
+        id: "snapshot-endpoint-pair-selection",
+        sectionId: "six-choices",
+        intuition:
+          "모델 슬러그는 이름이 아니라 계약이라 실제 스냅샷으로 풀어야 합니다.",
+        workedExample:
+          "도구 호출을 쓰는 요청이면 그것을 지원하지 않는 스냅샷이 후보에서 빠지고, 한국 상주 테넌트면 서울에 떠 있지 않은 스냅샷도 함께 빠집니다.",
+        counterexample:
+          "품질 기준을 통과한 스냅샷을 먼저 확정하고 리전을 나중에 고르면, 그 스냅샷이 허용 리전에 없을 때 앞의 결정을 되물러야 합니다. 그래서 평가 단위가 쌍입니다.",
+        boundary:
+          "같은 이름인데 provider마다 품질이 다른 문제는 이 튜플을 숨겨서 생깁니다. 숨기더라도 실행 기록에는 남겨야 디버깅과 증적이 됩니다.",
+      },
+      {
+        id: "ttft-routing-vs-engine-split",
+        sectionId: "six-choices",
+        intuition:
+          "여섯 번 고르지만 시간은 마지막 한 번에서 씁니다.",
+        workedExample:
+          "다섯 단계가 3·6·3·2·2밀리초면 합이 16밀리초이고, 큐 40밀리초와 prefill 180밀리초를 더한 236밀리초 중 6.8퍼센트입니다.",
+        proofIdea:
+          "앞 덩어리의 각 항은 후보 집합을 자르는 계산이라 크기가 후보 수에만 의존하고 부하에 거의 반응하지 않습니다. 뒤 덩어리의 큐 대기는 도착률이 처리율에 가까워질수록 발산하는 항이라 부하에 대해 비선형으로 커집니다. 그래서 두 덩어리의 비는 부하가 오를수록 뒤쪽으로 기울고, 라우팅 계층을 줄여 얻는 이득의 상한은 앞 덩어리의 크기로 고정됩니다.",
+        counterexample:
+          "단계 하나를 별도 서비스로 떼어 네트워크 왕복이 생기면 앞 덩어리가 늘어납니다. 이 경우에는 라우팅을 줄이는 것이 실제로 효과가 있지만, 애초에 떼지 않는 것이 더 큰 이득입니다.",
+        boundary:
+          "다섯 단계의 값은 측정 범위를 정하기 전의 가정입니다. 네트워크·게이트웨이·원장 예약·큐·전처리·계산을 따로 재야 검증됩니다.",
+      },
+      {
+        id: "routing-constraint-before-cost",
+        sectionId: "order-matters",
+        intuition:
+          "싼 곳을 먼저 보면 몰린 곳이 싸 보여서 더 몰립니다.",
+        workedExample:
+          "최근 처리한 토큰 수로 나눈 평균 원가를 쓰면 트래픽이 많은 풀의 분모가 커져 단가가 낮게 나오고, 그래서 더 보내게 되어 순환이 닫힙니다.",
+        counterexample:
+          "외부 provider를 고를 때는 가격을 둘째로 올려도 됩니다. 그쪽은 요청 하나가 곧 청구액이라 평균이 아니라 한계비용이기 때문입니다.",
+        boundary:
+          "비싼 곳에 몰리지 않게 하는 방법은 요청마다 원가를 저울질하는 것이 아니라 배치 단계에서 비싼 곳의 레플리카 범위를 작게 잡는 것입니다.",
+      },
+      {
+        id: "streaming-commit-point",
+        sectionId: "commit-point",
+        intuition:
+          "이미 나간 글자는 되돌릴 수 없습니다.",
+        workedExample:
+          "연결 실패와 응답 시작 전 500은 프록시가 다시 보내고, 헤더와 heartbeat까지는 게이트웨이가 백엔드를 바꿀 수 있으며, 첫 출력 청크 뒤에는 스트림 안의 error 이벤트로만 알립니다.",
+        boundary:
+          "어떤 이벤트를 의미 있는 출력으로 볼지는 서비스마다 명시해야 합니다. role이나 도구 호출 식별자처럼 전환을 금지하는 이벤트를 정해 두지 않으면 경계가 구현마다 달라집니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 어디에 두는가",
+        relation: "요청 경로에 둘 것과 뺄 것을 가릅니다.",
+        concepts: ["request-path-control-path-split"],
+      },
+      {
+        label: "01 무엇을 고르는가",
+        relation: "슬러그를 풀고 평가 단위를 정한 뒤 시간 배분을 봅니다.",
+        concepts: [
+          "snapshot-endpoint-pair-selection",
+          "ttft-routing-vs-engine-split",
+        ],
+      },
+      {
+        label: "02 어떤 순서로",
+        relation: "후보를 자르는 순서와 그 근거를 세웁니다.",
+        concepts: ["routing-constraint-before-cost"],
+      },
+      {
+        label: "03 어디까지 되돌리나",
+        relation: "재시도가 가능한 구간의 끝을 정합니다.",
+        concepts: ["streaming-commit-point"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "요청 경로와 결정 경로를 가르는 기준이 무엇인지, 결정 경로가 멈추면 무엇이 멈추는지 쓰세요.",
+        answerChecklist: [
+          "기준은 얼마나 자주 갱신되어야 하는가",
+          "요청 경로는 요청마다 실행되고 밀리초 예산",
+          "결정 경로가 멈추면 배치 갱신만 멈춤",
+          "요청은 마지막 설정으로 계속 흐름",
+        ],
+        requiredConcepts: ["request-path-control-path-split"],
+        sectionId: "two-paths",
+      },
+      {
+        level: "basic",
+        question:
+          "모델 선택의 평가 단위가 스냅샷 하나가 아니라 쌍이어야 하는 이유를 쓰세요.",
+        answerChecklist: [
+          "스냅샷은 가중치·양자화·엔진 버전 튜플",
+          "품질을 통과해도 허용 리전에 없을 수 있음",
+          "먼저 확정하면 앞 결정을 되물러야 함",
+          "그래서 기능 필터와 상주 제약을 함께 적용",
+        ],
+        requiredConcepts: ["snapshot-endpoint-pair-selection"],
+        sectionId: "six-choices",
+      },
+      {
+        level: "basic",
+        question:
+          "다섯 단계가 3·6·3·2·2밀리초, 큐 40밀리초, prefill 180밀리초일 때 TTFT와 라우팅 비중을 계산하세요.",
+        answerChecklist: [
+          "라우팅 합은 16밀리초",
+          "엔진은 220밀리초",
+          "TTFT는 236밀리초",
+          "라우팅 비중은 약 6.8퍼센트",
+        ],
+        requiredConcepts: ["ttft-routing-vs-engine-split"],
+        sectionId: "six-choices",
+      },
+      {
+        level: "basic",
+        question:
+          "후보를 자르는 네 기준을 순서대로 쓰고, 첫 단계에서 후보가 없으면 어떻게 하는지 쓰세요.",
+        answerChecklist: [
+          "강제 제약",
+          "지금 감당 가능한지",
+          "얼마나 기다리는지",
+          "원가는 마지막이며, 후보가 없으면 넘기지 않고 명시적으로 실패",
+        ],
+        requiredConcepts: ["routing-constraint-before-cost"],
+        sectionId: "order-matters",
+      },
+      {
+        level: "basic",
+        question:
+          "스트리밍에서 백엔드를 바꿀 수 있는 구간과 없는 구간을 가르는 기준과, 그 뒤에는 어떻게 알리는지 쓰세요.",
+        answerChecklist: [
+          "기준은 첫 의미 있는 출력 청크",
+          "그 앞은 프록시와 게이트웨이가 각각 흡수",
+          "그 뒤는 200이 이미 커밋됨",
+          "스트림 안의 error 이벤트로 알림",
+        ],
+        requiredConcepts: ["streaming-commit-point"],
+        sectionId: "commit-point",
+      },
+      {
+        level: "basic",
+        question:
+          "실제 서빙한 리전과 스냅샷을 응답 헤더에 적으면 안 되는 이유를 쓰세요.",
+        answerChecklist: [
+          "헤더는 첫 출력 청크보다 먼저 나감",
+          "그 뒤에 백엔드가 바뀔 수 있음",
+          "헤더에 적은 위치가 틀릴 수 있음",
+          "스트림 끝의 메타데이터와 실행 기록으로 제공",
+        ],
+        requiredConcepts: ["streaming-commit-point"],
+        sectionId: "commit-point",
+      },
+      {
+        level: "advanced",
+        question:
+          "라우팅 계층을 아무리 다듬어도 얻을 수 있는 이득에 상한이 있는 이유를 두 덩어리의 성질로 설명하세요.",
+        answerChecklist: [
+          "앞 덩어리는 후보 수에만 의존하고 부하에 둔감",
+          "뒤 덩어리의 큐 대기는 부하에 비선형",
+          "부하가 오를수록 비가 뒤쪽으로 기움",
+          "이득의 상한은 앞 덩어리 크기로 고정",
+        ],
+        requiredConcepts: ["ttft-routing-vs-engine-split"],
+        sectionId: "six-choices",
+      },
+      {
+        level: "advanced",
+        question:
+          "평균 원가를 라우팅에 넣으면 생기는 되먹임을 단계별로 쓰고, 어떤 경우에 원가를 앞으로 올려도 되는지 설명하세요.",
+        answerChecklist: [
+          "몰린 풀의 분모가 커져 단가가 낮게 나옴",
+          "싸 보여서 더 보냄",
+          "순환이 닫힘",
+          "외부 provider는 요청 하나가 곧 청구액이라 예외",
+        ],
+        requiredConcepts: ["routing-constraint-before-cost"],
+        sectionId: "order-matters",
+      },
+      {
+        level: "advanced",
+        question:
+          "이미 확보한 용량끼리는 원가 차이가 라우팅을 좌우하지 못하는 이유를 비용 항목으로 설명하세요.",
+        answerChecklist: [
+          "요청 하나가 늘리는 것은 전력·물·회선뿐",
+          "장비 값과 상면은 이미 확정된 상수",
+          "모든 대안에 공통이라 비교를 바꾸지 못함",
+          "원가가 결정을 바꾸는 자리는 용량이 찼을 때",
+        ],
+        requiredConcepts: ["routing-constraint-before-cost"],
+        sectionId: "order-matters",
+      },
+      {
+        level: "advanced",
+        question:
+          "컨트롤 플레인이 죽어도 요청이 흐른다는 원칙이 어느 상태에는 적용되지 않는지, 그 이유와 함께 쓰세요.",
+        answerChecklist: [
+          "배치와 라우팅 가중치는 마지막 스냅샷으로 버팀",
+          "잔액과 한도는 그렇게 두면 돈이 샘",
+          "상태마다 권위 저장소가 필요",
+          "저장소가 죽었을 때의 정책도 상태마다 다름",
+        ],
+        requiredConcepts: [
+          "request-path-control-path-split",
+          "streaming-commit-point",
+        ],
+        sectionId: "commit-point",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Gateway API Inference Extension — InferencePool (Kubernetes SIG Network)",
+        href: "https://gateway-api-inference-extension.sigs.k8s.io/api-types/inferencepool/",
+        problem:
+          "같은 모델을 띄운 파드들을 일반 서비스로 묶으면 모델 서버의 상태를 표현할 자리가 없어, 라운드로빈이 큐가 긴 파드와 캐시가 맞는 파드를 구분하지 못했습니다.",
+        contribution:
+          "같은 연산 구성·가속기·기반 모델·모델 서버를 공유하는 파드 집합을 InferencePool이라는 API 객체로 선언하고, 요청 경로에서 도는 Endpoint Picker가 파드가 내보내는 지표를 보고 고르게 했습니다. 문서가 드는 지표는 KV 캐시 사용률, 대기 중인 요청의 큐 길이, 활성 LoRA 어댑터입니다.",
+        assumptions:
+          "풀 안의 파드가 동질적이라고 둡니다. 서로 다른 스냅샷이 한 풀에 섞이면 이 추상이 성립하지 않습니다.",
+        evidenceScope:
+          "공식 문서 페이지를 직접 열어 InferencePool의 정의 문장, EPP가 보는 지표 목록, GA since v1.0.0 표시를 확인했습니다. 이 글이 쓰는 것은 그 세 가지까지입니다.",
+        notClaim:
+          "관리형 상품들이 같은 매니페스트로 운영된다는 뜻이 아닙니다. InferencePool과 EPP는 공통 프리미티브이지만 제어 API·인증·용량 확보는 공급자마다 다릅니다. 이 글의 여섯 단계 구분과 시간 배분은 이 문서에 있는 것이 아니라 사내 리서치 정리본에서 가져온 것입니다.",
+        sectionId: "six-choices",
+      },
+      {
+        title: "OpenRouter Docs — Provider Routing (Load Balancing)",
+        href: "https://openrouter.ai/docs/features/provider-routing",
+        problem:
+          "같은 모델을 여러 provider가 서빙할 때 어느 쪽으로 보낼지, 그리고 그쪽이 죽었을 때 어떻게 할지를 사용자가 매번 정해야 했습니다.",
+        contribution:
+          "기본 순서를 공개했습니다. 최근 30초 안에 의미 있는 장애가 없던 provider를 먼저 두고, 그중 저비용 후보를 가격의 역제곱으로 가중해 고르며, 나머지를 fallback으로 둡니다. fallback 허용이 기본값입니다.",
+        assumptions:
+          "후보가 모두 외부 provider이고 가격이 곧 그 요청이 늘리는 비용이라고 둡니다.",
+        evidenceScope:
+          "공식 문서 페이지를 직접 열어 기본 순서 세 항목과 allow_fallbacks 기본값을 확인했습니다.",
+        notClaim:
+          "같은 가중치를 자기 용량에 적용해도 된다는 뜻이 아닙니다. 이미 확보한 용량에서는 요청 하나가 늘리는 비용이 거의 0이라 평균 원가를 쓰게 되고, 그러면 본문에서 말한 되먹임이 생깁니다. 이 문서는 외부 후보를 고르는 정책을 말할 뿐 자체 플릿의 배치나 원가 모델을 다루지 않습니다.",
+        sectionId: "order-matters",
+      },
+    ],
+  },
 };
