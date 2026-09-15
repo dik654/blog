@@ -79364,4 +79364,291 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "legal-system/rules-standards-and-interpretation": {
+    entryNote:
+      "앞 글이 명확성 조건을 두고 회색이 있느냐가 아니라 얼마나 넓으냐를 봐야 한다고 적었습니다. 여기서는 그 회색을 누가 언제 메우는지를 봅니다.",
+    coreIdea:
+      "같은 내용을 담은 두 조문이 갈리는 것은 내용이 아니라 내용을 정하는 시점이며, 어느 쪽이 싼지는 사안 수와 어긋남의 손해로 계산됩니다. 어느 쪽을 택해도 뜻이 정해지지 않는 구간이 남아 네 가지 도구로 순서대로 메우고, 조문 자체가 없는 경우에는 빠뜨린 것인지부터 가른 뒤 처벌을 넓히는 방향만은 막습니다.",
+    assumedKnowledge: [
+      {
+        id: "formal-legality-conditions",
+        role: "명확성과 소급 금지 조건을 이 글의 출발점이자 유추 금지의 근거로 씁니다.",
+      },
+      {
+        id: "congruence-of-text-and-enforcement",
+        role: "해석이 조문에서 멀어질 때 무엇이 위태로워지는지를 재는 데 씁니다.",
+      },
+      {
+        id: "rules-versus-discretion",
+        role: "집행 조직의 재량 문제와 조문 형태의 문제를 구분하는 데 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "rules-versus-standards-timing",
+        role: "두 방식을 가르는 것이 시점 하나임을 세웁니다.",
+      },
+      {
+        id: "rule-standard-cost-tradeoff",
+        role: "어느 쪽이 싼지를 사안 수로 계산합니다.",
+      },
+      {
+        id: "core-and-penumbra",
+        role: "어느 쪽을 택해도 남는 구간을 정의합니다.",
+      },
+      {
+        id: "interpretive-canons",
+        role: "그 구간을 메우는 도구와 순서를 정의합니다.",
+      },
+      {
+        id: "statutory-gap-and-analogy",
+        role: "조문 자체가 없는 경우를 따로 다룹니다.",
+      },
+      {
+        id: "analogy-ban-in-criminal-law",
+        role: "같은 도구가 한 방향에서만 막히는 이유를 다룹니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "rules-versus-standards-timing",
+        sectionId: "two-timings",
+        intuition:
+          "시속 100킬로미터를 넘지 말라는 조문과 과도한 속도로 달리지 말라는 조문은 얼마가 과도한지를 언제 정하느냐만 다릅니다.",
+        workedExample:
+          "앞쪽은 운전자가 계기판만 보면 알고 판단하는 쪽은 속도만 재면 되지만, 뒤쪽은 운전자가 미리 알 수 없고 그날의 도로 상태를 놓고 정해야 합니다.",
+        boundary:
+          "미리 알 수 있다는 것은 선 바로 아래까지 마음 놓고 갈 수 있다는 뜻이기도 하므로, 선이 실제 위험과 어긋나는 구간에서는 그 안심이 위험해집니다.",
+      },
+      {
+        id: "rule-standard-cost-tradeoff",
+        sectionId: "cost-comparison",
+        intuition:
+          "한 번 치르는 비용은 사안이 많아질수록 얇아지고, 사건마다 붙는 비용은 그대로입니다.",
+        workedExample:
+          "제정 비용 1000, 사건당 판단 비용 12, 어긋남 손해 2이면 문턱은 100건이고, 20건이면 1040 대 240으로 기준이, 500건이면 2000 대 6000으로 규칙이 싸집니다.",
+        proofIdea:
+          "미리 적어 두는 쪽의 총비용은 c_R + n·m이고 그때 판단하는 쪽은 n·c_S입니다. 앞이 뒤보다 작다는 부등식을 n에 대해 풀면 n > c_R/(c_S − m)이 나옵니다. 분모는 사건 하나를 미리 정해 둔 선으로 처리해서 절약되는 몫이므로, 절약분이 작을수록 같은 제정 비용을 회수하는 데 더 많은 사안이 필요합니다.",
+        counterexample:
+          "어긋남의 손해 m이 판단 비용 c_S에 가까워지면 분모가 0에 가까워져 문턱이 무한히 커집니다. 그 영역에서는 사안이 아무리 많아도 미리 적어 두면 손해입니다.",
+        boundary:
+          "어긋남의 손해를 사건당 평균으로 잡으므로, 드물지만 아주 큰 손해가 섞여 있으면 평균이 실제 위험을 가립니다.",
+      },
+      {
+        id: "core-and-penumbra",
+        sectionId: "interpretation",
+        intuition:
+          "양쪽 끝에는 조문만 읽어도 답이 정해지는 구간이 있습니다.",
+        workedExample:
+          "공원에 차량을 들이지 말라는 조문에서 승용차는 확실히 걸리고 유모차는 확실히 걸리지 않으며, 자전거와 응급차와 기념 전차가 사이에 남습니다.",
+        boundary:
+          "다투어져 기록에 남는 사건은 회색에 들어온 것들뿐이라, 법을 사건 기록으로만 배우면 회색이 실제보다 넓어 보입니다.",
+      },
+      {
+        id: "interpretive-canons",
+        sectionId: "interpretation",
+        intuition:
+          "문언에서 시작해 체계와 목적을 보고 그래도 남으면 만들 때의 기록을 봅니다.",
+        workedExample:
+          "공원 조문이 막으려던 것이 소음과 사고라면 기념물로 세워 둘 전차는 목적 단계에서 걸러집니다.",
+        boundary:
+          "목적은 하나로 정해져 있지 않을 때가 많고 기록은 그때 한 사람의 발언일 수도 있어, 뒤쪽 도구일수록 무게가 고르지 않습니다.",
+      },
+      {
+        id: "statutory-gap-and-analogy",
+        sectionId: "gaps-and-analogy",
+        intuition:
+          "적용할 조문이 없을 때 먼저 물어야 할 것은 빠뜨린 것인지 일부러 두지 않은 것인지입니다.",
+        workedExample:
+          "빠뜨린 것이라면 그 조문이 겨냥한 성질에서 같은 사안에 비슷한 조문을 끌어다 쓰는 것이 오히려 그 조문의 뜻에 맞습니다.",
+        boundary:
+          "일부러 규율하지 않기로 한 영역을 빈칸으로 보고 메우면, 만드는 쪽이 정한 범위를 판단하는 쪽이 넓히는 일이 됩니다.",
+      },
+      {
+        id: "analogy-ban-in-criminal-law",
+        sectionId: "gaps-and-analogy",
+        intuition:
+          "행위 시점에 처벌 대상이 아니었다면 조심할 방법이 애초에 없었습니다.",
+        workedExample:
+          "사인 사이의 분쟁에서는 유추로 결과가 예상과 달라질 수 있어도 새로운 종류의 불이익이 생기지는 않지만, 형벌에서는 없던 처벌이 생깁니다.",
+        boundary:
+          "경계는 여전히 다투어집니다. 조문의 뜻을 넓게 읽는 것과 없는 조문을 끌어다 쓰는 것이 언제나 뚜렷이 갈리지는 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 시점",
+        relation: "두 방식을 가르는 것이 시점 하나임을 봅니다.",
+        concepts: ["rules-versus-standards-timing"],
+      },
+      {
+        label: "01 계산",
+        relation: "어느 쪽이 싼지를 사안 수로 정합니다.",
+        concepts: ["rule-standard-cost-tradeoff"],
+      },
+      {
+        label: "02 남는 것",
+        relation: "어느 쪽을 택해도 회색이 남고 그것을 메울 도구가 필요합니다.",
+        concepts: ["core-and-penumbra", "interpretive-canons"],
+      },
+      {
+        label: "03 빈칸",
+        relation: "조문 자체가 없을 때와 그때 막히는 한 방향입니다.",
+        concepts: ["statutory-gap-and-analogy", "analogy-ban-in-criminal-law"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "규칙과 기준을 가르는 것이 내용이 아니라 시점이라는 말을 예로 설명하세요.",
+        answerChecklist: [
+          "시속 100 초과 금지와 과도한 속도 금지",
+          "막으려는 것은 같음",
+          "얼마가 과도한지를 언제 정하느냐가 다름",
+          "행동 전인가 후인가",
+        ],
+        requiredConcepts: ["rules-versus-standards-timing"],
+        sectionId: "two-timings",
+      },
+      {
+        level: "basic",
+        question:
+          "제정 비용 1000, 사건당 판단 비용 12, 어긋남 손해 2일 때 문턱 사안 수를 구하세요.",
+        answerChecklist: [
+          "c_R ÷ (c_S − m)",
+          "1000 ÷ (12 − 2)",
+          "100건",
+          "그보다 많으면 미리 적어 두는 쪽이 쌈",
+        ],
+        requiredConcepts: ["rule-standard-cost-tradeoff"],
+        sectionId: "cost-comparison",
+      },
+      {
+        level: "basic",
+        question:
+          "숫자로 적어 두어도 해석이 남는 이유를 쓰세요.",
+        answerChecklist: [
+          "속도는 숫자로 적을 수 있음",
+          "차량이 무엇인지는 말로 적어야 함",
+          "말로 적으면 정해지지 않는 구간이 생김",
+          "양쪽 끝에는 정해진 구간이 있음",
+        ],
+        requiredConcepts: ["core-and-penumbra"],
+        sectionId: "interpretation",
+      },
+      {
+        level: "basic",
+        question:
+          "해석의 네 도구를 순서대로 쓰고 그 순서에 이유가 있는 까닭을 적으세요.",
+        answerChecklist: [
+          "문언 · 체계 · 목적 · 입법 기록",
+          "뒤로 갈수록 채워 넣는 몫이 커짐",
+          "근거가 조문에서 멀어짐",
+          "무게가 고르지 않음",
+        ],
+        requiredConcepts: ["interpretive-canons"],
+        sectionId: "interpretation",
+      },
+      {
+        level: "basic",
+        question:
+          "적용할 조문이 없을 때 가장 먼저 물어야 할 것과 그 이유를 쓰세요.",
+        answerChecklist: [
+          "빠뜨린 것인지 일부러 두지 않은 것인지",
+          "일부러 둔 빈칸을 메우면",
+          "만드는 쪽이 정한 범위를 판단하는 쪽이 넓히는 것",
+          "두 경우를 가르는 것이 이 단계의 실질",
+        ],
+        requiredConcepts: ["statutory-gap-and-analogy"],
+        sectionId: "gaps-and-analogy",
+      },
+      {
+        level: "basic",
+        question:
+          "처벌을 넓히는 방향의 유추가 막혀 있는 이유를 쓰세요.",
+        answerChecklist: [
+          "행위 시점에 처벌 대상이 아니었음",
+          "조심할 방법이 애초에 없었음",
+          "소급 금지와 같은 뿌리",
+          "해석 기술이 아니라 처벌의 조건 문제",
+        ],
+        requiredConcepts: ["analogy-ban-in-criminal-law"],
+        sectionId: "gaps-and-analogy",
+      },
+      {
+        level: "advanced",
+        question:
+          "문턱 식 n > c_R/(c_S − m)을 두 총비용의 비교에서 유도하고, 분모의 뜻을 설명하세요.",
+        answerChecklist: [
+          "c_R + n·m < n·c_S",
+          "n(c_S − m) > c_R",
+          "n > c_R ÷ (c_S − m)",
+          "분모는 사건 하나를 선으로 처리해 절약되는 몫",
+        ],
+        requiredConcepts: ["rule-standard-cost-tradeoff"],
+        sectionId: "cost-comparison",
+      },
+      {
+        level: "advanced",
+        question:
+          "사안이 500건이나 되는데도 미리 적어 두면 손해인 경우가 있는 이유를 계산으로 보이세요.",
+        answerChecklist: [
+          "어긋남 손해가 커지면 분모가 작아짐",
+          "m이 8이면 문턱이 250건",
+          "200건 영역은 1400 대 2400에서 2600 대 2400으로 뒤집힘",
+          "m이 c_S에 가까워지면 문턱이 무한히 커짐",
+        ],
+        requiredConcepts: ["rule-standard-cost-tradeoff"],
+        sectionId: "cost-comparison",
+      },
+      {
+        level: "advanced",
+        question:
+          "법을 판결 기록으로만 배우면 회색 지대가 실제보다 넓어 보이는 이유를 설명하세요.",
+        answerChecklist: [
+          "대부분의 사안은 문언 단계에서 끝남",
+          "끝난 사안은 다투어지지 않음",
+          "기록에 남는 것은 회색에 들어온 것뿐",
+          "표본이 한쪽으로 치우침",
+        ],
+        requiredConcepts: ["core-and-penumbra", "interpretive-canons"],
+        sectionId: "interpretation",
+      },
+      {
+        level: "advanced",
+        question:
+          "해석이 뒤쪽 도구에 많이 기댈수록 앞 글의 어떤 조건이 위태로워지는지 설명하세요.",
+        answerChecklist: [
+          "판단 근거가 조문에서 멀어짐",
+          "조문을 읽고 맞춘 행동이 빗나갈 수 있음",
+          "조문과 집행의 일치가 흔들림",
+          "사람들이 조문 대신 판단 관행을 읽게 됨",
+        ],
+        requiredConcepts: [
+          "interpretive-canons",
+          "congruence-of-text-and-enforcement",
+        ],
+        sectionId: "interpretation",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Louis Kaplow · Rules Versus Standards: An Economic Analysis (1992)",
+        href: "https://doi.org/10.2307/1372840",
+        problem:
+          "규칙과 기준의 차이가 여러 성질을 뭉뚱그려 논의되어, 어느 쪽이 나은지를 따질 공통의 축이 없었습니다.",
+        contribution:
+          "차이를 하나로 좁혔습니다. 법에 내용을 부여하는 작업이 개인이 행동하기 전에 이루어지는가 후에 이루어지는가입니다. 그 위에서 규칙은 만드는 데 비용이 더 들고 기준은 개인이 해석하고 판단하는 쪽이 적용하는 데 비용이 더 든다는 비대칭을 세워, 두 방식의 우열을 비용 문제로 다룰 수 있게 했습니다.",
+        assumptions:
+          "두 방식이 같은 목표를 담을 수 있다고 보고, 비교의 축을 비용과 행동 유도 효과에 둡니다.",
+        evidenceScope:
+          "Duke Law Journal 42권 3호 557~629쪽에 실린 이론 논문이며, 하버드 공개 저장소 사본에서 전문을 확인했습니다. 형식 모형과 그 함의에 한정되고 실제 입법 자료로 검증한 연구가 아닙니다.",
+        notClaim:
+          "이 글에 실린 문턱 식은 논문의 모형이 아니라 위 두 문장을 가장 짧은 형태로 옮겨 직접 전개한 것입니다. 또 논문은 어느 쪽이 일반적으로 낫다고 말하지 않으며, 어떤 조건에서 어느 쪽이 나은지를 다룹니다.",
+        sectionId: "cost-comparison",
+      },
+    ],
+  },
 };

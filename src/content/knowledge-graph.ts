@@ -23982,6 +23982,71 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "법이 하려는 일은 사람들이 서로의 행동을 미리 알 수 있게 만드는 것이며, 형식 조건들은 전부 그 예측을 가능하게 하는 데 필요한 항목입니다. 그래서 형식은 내용과 무관한 껍데기가 아니라, 무너지면 법이 사람을 이끄는 장치에서 사후에 벌할 근거로 성격이 바뀌는 지점입니다.",
     canonicalHref: "/law/legal-system/what-makes-law-law#why-form-matters",
   },
+  "rules-versus-standards-timing": {
+    id: "rules-versus-standards-timing",
+    kind: "concept",
+    domain: "law",
+    label: "규칙과 기준을 가르는 시점",
+    aliases: ["사전과 사후", "ex ante · ex post"],
+    definition:
+      "같은 목표를 담은 두 조문이 갈리는 지점은 내용이 아니라 법에 내용을 부여하는 작업이 개인의 행동 전에 이루어지는가 후에 이루어지는가입니다. 이 시점 하나에서 누가 비용을 치르는지, 언제 자기 위치를 알 수 있는지, 어긋남이 어디에 남는지가 전부 따라 나옵니다.",
+    canonicalHref: "/law/legal-system/rules-standards-and-interpretation#two-timings",
+  },
+  "rule-standard-cost-tradeoff": {
+    id: "rule-standard-cost-tradeoff",
+    kind: "theorem",
+    domain: "law",
+    label: "규칙과 기준의 비용 갈림길",
+    aliases: ["제정 비용과 적용 비용", "사안 수 문턱"],
+    definition:
+      "미리 정해 두는 비용은 한 번이고 사건마다 판단하는 비용은 건수만큼 붙으므로, 사안 수가 c_R/(c_S − m)을 넘으면 미리 적어 두는 쪽이 싸집니다. 어긋남의 기대 손해가 판단 비용에 가까워지면 분모가 작아져 문턱이 크게 밀리고, 그 영역에서는 사안이 아무리 많아도 미리 적어 두면 손해입니다.",
+    canonicalHref:
+      "/law/legal-system/rules-standards-and-interpretation#cost-comparison",
+  },
+  "core-and-penumbra": {
+    id: "core-and-penumbra",
+    kind: "concept",
+    domain: "law",
+    label: "확실한 구간과 회색 지대",
+    aliases: ["핵심과 주변", "penumbra", "명확성의 실제 내용"],
+    definition:
+      "같은 조문 안에 뜻이 정해진 두 구간과 그 사이의 정해지지 않은 구간이 함께 있습니다. 해석이 필요한지가 아니라 어디서부터 필요한지가 문제이며, 회색 구간의 넓이가 앞 글의 명확성 조건이 실제로 가리키는 것입니다.",
+    canonicalHref:
+      "/law/legal-system/rules-standards-and-interpretation#interpretation",
+  },
+  "interpretive-canons": {
+    id: "interpretive-canons",
+    kind: "method",
+    domain: "law",
+    label: "해석의 네 도구와 그 순서",
+    aliases: ["문언·체계·목적·입법 기록"],
+    definition:
+      "쓰인 말의 통상적 뜻에서 시작해 같은 법의 다른 조문과 맞춰 보고, 그 조문이 막으려던 것을 놓고 보고, 그래도 남으면 만들 때의 기록을 봅니다. 순서에 이유가 있는 것은 뒤로 갈수록 판단하는 쪽이 채워 넣는 몫이 커지고 근거가 조문에서 멀어지기 때문입니다.",
+    canonicalHref:
+      "/law/legal-system/rules-standards-and-interpretation#interpretation",
+  },
+  "statutory-gap-and-analogy": {
+    id: "statutory-gap-and-analogy",
+    kind: "concept",
+    domain: "law",
+    label: "흠결과 유추",
+    aliases: ["법의 빈칸", "비슷한 조문 끌어오기"],
+    definition:
+      "적용할 조문 자체가 없을 때 빠뜨린 것인지 일부러 두지 않은 것인지를 먼저 가르고, 빠뜨린 것이면 그 조문이 겨냥한 성질에서 같은 사안에 비슷한 조문을 끌어다 씁니다. 일부러 두지 않은 영역을 빈칸으로 보고 메우면 만드는 쪽이 정한 범위를 판단하는 쪽이 넓히는 일이 됩니다.",
+    canonicalHref:
+      "/law/legal-system/rules-standards-and-interpretation#gaps-and-analogy",
+  },
+  "analogy-ban-in-criminal-law": {
+    id: "analogy-ban-in-criminal-law",
+    kind: "concept",
+    domain: "law",
+    label: "처벌을 넓히는 유추의 금지",
+    aliases: ["죄형법정주의", "유추해석 금지"],
+    definition:
+      "행위 시점에 처벌 대상이 아니었던 행동을 나중에 비슷하다는 이유로 처벌하면 그 사람은 조심할 방법이 애초에 없었으므로, 유추는 처벌을 넓히는 방향으로 쓸 수 없습니다. 해석 기술의 문제가 아니라 처벌의 조건에 관한 것이며 소급 금지와 같은 뿌리입니다.",
+    canonicalHref:
+      "/law/legal-system/rules-standards-and-interpretation#gaps-and-analogy",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -44208,6 +44273,76 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "optimizes",
     reason:
       "행동을 미리 맞출 수 있게 만들면 강제로 다뤄야 할 위반이 줄어 같은 자원으로 더 넓은 순응을 유지합니다.",
+  },
+  {
+    from: "formal-legality-conditions",
+    to: "rules-versus-standards-timing",
+    relation: "prerequisite",
+    reason:
+      "명확성 조건이 회색 지대의 넓이를 묻는다는 것을 본 뒤에야, 그 회색을 언제 좁힐지가 선택으로 떠오릅니다.",
+  },
+  {
+    from: "rules-versus-standards-timing",
+    to: "rule-standard-cost-tradeoff",
+    relation: "produces",
+    reason:
+      "시점이 다르면 비용을 치르는 주체와 횟수가 달라지므로, 두 방식의 총비용을 사안 수로 적어 비교할 수 있게 됩니다.",
+  },
+  {
+    from: "rules-versus-standards-timing",
+    to: "core-and-penumbra",
+    relation: "constrains",
+    reason:
+      "숫자로 적어 두어도 대상과 범위는 다시 말로 적어야 하므로, 어느 쪽을 택해도 정해지지 않는 구간이 남습니다.",
+  },
+  {
+    from: "core-and-penumbra",
+    to: "interpretive-canons",
+    relation: "produces",
+    reason:
+      "정해지지 않은 구간이 있다는 것이 그것을 메우는 도구와 순서를 필요하게 만듭니다.",
+  },
+  {
+    from: "core-and-penumbra",
+    to: "statutory-gap-and-analogy",
+    relation: "extends",
+    reason:
+      "회색 지대보다 한 걸음 더 나가 적용할 조문 자체가 없는 경우를 따로 다뤄야 합니다.",
+  },
+  {
+    from: "statutory-gap-and-analogy",
+    to: "analogy-ban-in-criminal-law",
+    relation: "constrains",
+    reason:
+      "같은 도구가 처벌을 넓히는 방향으로 쓰이면 행위 시점에 조심할 방법이 없었던 사람을 벌하게 되므로 그 방향만 막힙니다.",
+  },
+  {
+    from: "formal-legality-conditions",
+    to: "analogy-ban-in-criminal-law",
+    relation: "prerequisite",
+    reason:
+      "소급 금지가 막으려던 것과 같은 일이 해석의 형태로 일어나는 것이라 같은 뿌리에서 나옵니다.",
+  },
+  {
+    from: "rules-versus-discretion",
+    to: "rules-versus-standards-timing",
+    relation: "contrasts",
+    reason:
+      "앞 시리즈는 집행하는 조직에 얼마나 재량을 줄지를 물었고, 여기서는 조문 자체의 내용을 언제 정할지를 묻습니다.",
+  },
+  {
+    from: "rule-standard-cost-tradeoff",
+    to: "multitask-incentive-distortion",
+    relation: "contrasts",
+    reason:
+      "둘 다 미리 정해 둔 것과 재는 것이 실제와 어긋날 때 생기는 손해를 다루지만, 하나는 조문의 형태를 다른 하나는 보상의 설계를 대상으로 합니다.",
+  },
+  {
+    from: "interpretive-canons",
+    to: "congruence-of-text-and-enforcement",
+    relation: "constrains",
+    reason:
+      "뒤쪽 도구에 기대는 비중이 커질수록 판단이 조문에서 멀어져, 조문을 읽고 맞춘 행동이 빗나갈 여지가 늘어납니다.",
   },
 ];
 
