@@ -371,6 +371,39 @@ export const llmBaseArticles: Article[] = [
     component: () =>
       import("@/pages/articles/ai/region-agnostic-inference-routing"),
   },
+  {
+    slug: "inference-failure-absorption",
+    title: "같은 장애라도 요청이 어디까지 갔느냐에 따라 결과가 갈립니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      {
+        id: "overview",
+        title: "장애는 예외가 아니라 빈도가 정해진 입력입니다",
+      },
+      {
+        id: "time-constants",
+        title: "부품 1. 계층마다 흡수에 걸리는 시간이 자릿수로 다릅니다",
+      },
+      {
+        id: "fleet-size",
+        title: "부품 2. 대수를 늘리면 장애는 잦아지고 감당은 쉬워집니다",
+      },
+      {
+        id: "saturation",
+        title: "부품 3. 포화를 장애처럼 다루면 남은 것까지 무너집니다",
+      },
+      {
+        id: "state-authority",
+        title: "부품 4. 상태마다 버틸 수 있는 방식이 다릅니다",
+      },
+      {
+        id: "boundary",
+        title: "흡수까지가 이 글이고, 줄이는 일은 다른 글입니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/inference-failure-absorption"),
+  },
 ];
 
 export const llmArticles: Article[] = [

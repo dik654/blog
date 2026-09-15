@@ -12516,6 +12516,40 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "inference-failure-absorption": {
+    title: "장애는 예외가 아니라 빈도가 정해진 입력입니다 글이 소유하는 범위",
+    owns: [
+      "계층별 흡수 시간 상수와 어느 장애를 어느 층에 맡길지의 기준",
+      "요청 상태라는 둘째 축과 출력 중 요청을 구할 수 없다는 결론",
+      "대수가 장애 간격과 안전 가동률에 반대로 작용한다는 유도",
+      "포화를 준비 상태로 표현하면 연쇄가 시작되는 경로와 대안 절차",
+      "상태별 권위 저장소와 단절 시 기울일 방향, 두 사이트 합의의 한계",
+    ],
+    reuses: [
+      {
+        label: "첫 출력 청크가 긋는 되돌릴 수 없는 선",
+        href: "/cs/ai/region-agnostic-inference-routing#commit-point",
+      },
+      {
+        label: "요청 경로와 결정 경로의 분리",
+        href: "/cs/ai/region-agnostic-inference-routing#two-paths",
+      },
+      {
+        label: "KV가 모자라 요청이 밀리는 상태",
+        href: "/cs/ai/vllm-scheduler",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "논문에 귀속하는 것은 466·419·약 78퍼센트·CPU 두 건까지이고, 역산한 대당 무고장 시간은 이 글의 계산으로 표시한다",
+      },
+      {
+        kind: "project-claim",
+        rule: "정리본과 원문이 어긋난 항목은 싣지 않고, 어긋났다는 사실을 evidenceScope에 남긴다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
