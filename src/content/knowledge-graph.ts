@@ -24047,6 +24047,57 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/law/legal-system/rules-standards-and-interpretation#gaps-and-analogy",
   },
+  "ratio-and-dicta": {
+    id: "ratio-and-dicta",
+    kind: "concept",
+    domain: "law",
+    label: "구속하는 이유와 곁들인 말",
+    aliases: ["판결 이유", "방론", "ratio decidendi", "obiter dicta"],
+    definition:
+      "앞 사건에서 다음 사건으로 끌려오는 것은 결론이 아니라 결론을 떠받친 이유이며, 설명을 위해 곁들인 말은 끌려오지 않습니다. 가려내는 방법은 빼 보는 것이고, 빼면 같은 결론이 나오지 않는 판단이 이유입니다. 그 이유는 그 사건의 사실과 묶여 있어 덮는 범위가 미리 정해져 있지 않습니다.",
+    canonicalHref: "/law/legal-system/precedent-and-legal-change#what-binds",
+  },
+  "reasons-for-precedent": {
+    id: "reasons-for-precedent",
+    kind: "concept",
+    domain: "law",
+    label: "앞선 판단을 따르는 네 이유",
+    aliases: ["선례 구속", "stare decisis"],
+    definition:
+      "같은 사안을 같이 다뤄야 한다는 것, 매번 새로 정하면 미리 알 수 없다는 것, 이미 그 판단에 맞춰 해 둔 것이 있다는 것, 그리고 사건마다 다시 정하는 비용이 줄어든다는 것입니다. 넷이 서로 다른 것을 지키므로 상황에 따라 어느 하나가 강해지고 다른 하나가 약해집니다.",
+    canonicalHref: "/law/legal-system/precedent-and-legal-change#why-follow",
+  },
+  "distinguishing": {
+    id: "distinguishing",
+    kind: "method",
+    domain: "law",
+    label: "사실의 차이로 범위를 좁히기",
+    aliases: ["구별", "선례의 사정거리"],
+    definition:
+      "앞 사건에 없던 사정이 이 사건에 있고 그 사정이 앞 판단의 이유가 겨냥한 성질과 관련이 있으면, 앞 판단을 부정하지 않으면서 그 범위를 좁혀 적용하지 않는 방법입니다. 뒤집지 않고도 방향을 바꾸는 통로이지만, 반복되면 규칙이 예외의 목록으로 변해 예측이 다시 어려워집니다.",
+    canonicalHref: "/law/legal-system/precedent-and-legal-change#distinguishing",
+  },
+  "overruling-threshold": {
+    id: "overruling-threshold",
+    kind: "theorem",
+    domain: "law",
+    label: "선례를 뒤집는 문턱",
+    aliases: ["판례 변경", "신뢰 이익과 개선의 비교"],
+    definition:
+      "바꿔서 얻는 개선은 앞으로 사건마다 쌓이고 뒤집는 값은 지금 한 번에 치르므로, 앞으로 쌓일 개선의 현재 값이 신뢰 이익과 안정성 훼손의 합을 넘을 때 뒤집는 편이 낫습니다. 같은 규칙과 같은 개선 폭이라도 남은 기간이 길수록, 그리고 그 규칙에 맞춰 해 둔 것이 적을수록 변경이 쉬워집니다.",
+    canonicalHref:
+      "/law/legal-system/precedent-and-legal-change#when-to-overrule",
+  },
+  "precedent-retroactivity": {
+    id: "precedent-retroactivity",
+    kind: "concept",
+    domain: "law",
+    label: "변경된 판단의 적용 시점",
+    aliases: ["판례 변경의 소급효"],
+    definition:
+      "뒤집은 판단을 지금 다투는 사건에 적용하지 않으면 바꾸게 만든 사람이 혜택을 받지 못해 아무도 변경을 다투지 않게 되고, 적용하면 행동 당시의 잣대가 아닌 것으로 재게 됩니다. 해소되는 문제가 아니라 어느 쪽 비용을 질지 고르는 문제이며, 형벌에서는 불리한 방향의 변경을 지난 행위에 대는 것이 막혀 고를 여지가 좁습니다.",
+    canonicalHref: "/law/legal-system/precedent-and-legal-change#retroactivity",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -44343,6 +44394,76 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "뒤쪽 도구에 기대는 비중이 커질수록 판단이 조문에서 멀어져, 조문을 읽고 맞춘 행동이 빗나갈 여지가 늘어납니다.",
+  },
+  {
+    from: "core-and-penumbra",
+    to: "ratio-and-dicta",
+    relation: "prerequisite",
+    reason:
+      "회색을 메운 판단이 있어야 그 판단에서 무엇이 다음 사건으로 끌려오는지를 물을 수 있습니다.",
+  },
+  {
+    from: "ratio-and-dicta",
+    to: "reasons-for-precedent",
+    relation: "prerequisite",
+    reason:
+      "무엇이 끌려오는지를 정해야 그것을 왜 따라야 하는지를 따질 수 있습니다.",
+  },
+  {
+    from: "reasons-for-precedent",
+    to: "distinguishing",
+    relation: "produces",
+    reason:
+      "따를 이유가 넷이고 상황마다 무게가 다르므로, 따르지도 뒤집지도 않는 중간 통로가 필요해집니다.",
+  },
+  {
+    from: "ratio-and-dicta",
+    to: "distinguishing",
+    relation: "prerequisite",
+    reason:
+      "이유가 그 사건의 사실과 묶여 있고 덮는 범위가 정해져 있지 않다는 점이 좁히기를 가능하게 합니다.",
+  },
+  {
+    from: "reasons-for-precedent",
+    to: "overruling-threshold",
+    relation: "produces",
+    reason:
+      "따를 이유 가운데 이미 해 둔 것과 법을 개선한다는 것이 정면으로 맞서므로, 둘을 견주는 계산이 나옵니다.",
+  },
+  {
+    from: "discount-factor",
+    to: "overruling-threshold",
+    relation: "prerequisite",
+    reason:
+      "앞으로 쌓일 개선과 지금 한 번에 치르는 값을 견주려면 미래의 값을 오늘의 값으로 바꾸는 도구가 있어야 합니다.",
+  },
+  {
+    from: "overruling-threshold",
+    to: "precedent-retroactivity",
+    relation: "produces",
+    reason:
+      "뒤집기로 정하고 나면 그 판단을 언제부터 적용할지가 곧바로 다음 문제가 됩니다.",
+  },
+  {
+    from: "analogy-ban-in-criminal-law",
+    to: "precedent-retroactivity",
+    relation: "constrains",
+    reason:
+      "불리한 방향의 변경을 지난 행위에 대는 것이 막혀 있어, 형벌에서는 적용 시점을 고를 여지가 좁습니다.",
+  },
+  {
+    from: "distinguishing",
+    to: "rule-standard-cost-tradeoff",
+    relation: "constrains",
+    reason:
+      "좁히기가 쌓이면 규칙이 예외의 목록이 되어, 앞 글에서 셈한 사건당 판단 비용이 다시 올라갑니다.",
+  },
+  {
+    from: "reasons-for-precedent",
+    to: "law-as-expectation-infrastructure",
+    relation: "extends",
+    reason:
+      "조문에 요구했던 예측 가능성을 판단의 층에서 다시 요구하는 것이 선례 구속의 한 축입니다.",
   },
 ];
 

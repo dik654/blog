@@ -79651,4 +79651,278 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "legal-system/precedent-and-legal-change": {
+    entryNote:
+      "앞 글이 회색을 메우는 도구까지 다뤘습니다. 여기서는 메운 판단이 다음 사건에 갖는 힘과, 그것을 언제 거두는지를 봅니다.",
+    coreIdea:
+      "다음 사건으로 끌려오는 것은 결론이 아니라 결론을 떠받친 이유이며, 그것을 따르는 이유는 넷이고 서로 다른 것을 지킵니다. 따르지도 뒤집지도 않는 중간 통로가 사실의 차이를 짚어 범위를 좁히는 것이고, 뒤집을지는 앞으로 쌓일 개선의 현재 값과 이미 쌓인 신뢰 이익을 견줘 정합니다.",
+    assumedKnowledge: [
+      {
+        id: "core-and-penumbra",
+        role: "메워야 할 회색이 있었다는 것이 이 글의 출발점입니다.",
+      },
+      {
+        id: "rule-standard-cost-tradeoff",
+        role: "사건당 판단 비용이 선례로 줄어든다는 것을 이 계산에서 가져옵니다.",
+      },
+      {
+        id: "discount-factor",
+        role: "앞으로 쌓일 것과 지금 치르는 것을 견주는 데 씁니다.",
+      },
+      {
+        id: "analogy-ban-in-criminal-law",
+        role: "형벌에서 적용 시점을 고를 여지가 좁은 이유를 여기서 가져옵니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "ratio-and-dicta",
+        role: "앞 판단에서 무엇이 끌려오는지를 가릅니다.",
+      },
+      {
+        id: "reasons-for-precedent",
+        role: "그것을 따르는 이유를 넷으로 갈라 각각이 무엇을 지키는지 봅니다.",
+      },
+      {
+        id: "distinguishing",
+        role: "따르지도 뒤집지도 않는 통로를 정의합니다.",
+      },
+      {
+        id: "overruling-threshold",
+        role: "뒤집을 때가 언제인지를 계산으로 보입니다.",
+      },
+      {
+        id: "precedent-retroactivity",
+        role: "뒤집은 판단을 언제부터 적용할지의 문제를 다룹니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "ratio-and-dicta",
+        sectionId: "what-binds",
+        intuition:
+          "앞 사건에서 누가 이겼다는 사실 자체는 다음 사건에 아무 힘이 없습니다.",
+        workedExample:
+          "그 판단을 빼면 같은 결론이 나오지 않는다면 그것이 이유이고, 빼도 결론이 그대로라면 곁들인 말입니다.",
+        boundary:
+          "실제 판결문에서 이 구분이 언제나 뚜렷하지는 않고, 구분 자체가 다음 사건의 다툼거리가 되기도 합니다.",
+      },
+      {
+        id: "reasons-for-precedent",
+        sectionId: "why-follow",
+        intuition:
+          "이유가 하나가 아니라 넷이고, 각각 다른 것을 지킵니다.",
+        workedExample:
+          "사실이 같은데 결과가 다르면 결과를 만든 것이 사실이 아니라 재판부가 되고, 매번 새로 정하면 아무도 미리 알 수 없으며, 이미 그 판단에 맞춰 계약과 등기를 해 둔 것이 흔들리고, 사건마다 다시 정하는 비용이 큽니다.",
+        boundary:
+          "예측 가능성은 그 판단이 옳은지와 무관하게 커집니다. 잘못된 판단도 반복되면 예측 가능해집니다.",
+      },
+      {
+        id: "distinguishing",
+        sectionId: "distinguishing",
+        intuition:
+          "앞 판단의 이유가 닿지 않는 사실의 차이를 짚으면 부정하지 않고도 비켜 갈 수 있습니다.",
+        workedExample:
+          "앞 사건에 없던 사정이 이 사건에 있고 그것이 이유가 겨냥한 성질과 관련 있으면 범위를 좁혀 적용하지 않습니다.",
+        boundary:
+          "관련 없는 차이로 갈라 세우면 사실상 뒤집으면서 뒤집지 않은 것처럼 보이게 되고, 좁히기가 쌓이면 규칙이 예외의 목록이 됩니다.",
+      },
+      {
+        id: "overruling-threshold",
+        sectionId: "when-to-overrule",
+        intuition:
+          "개선은 앞으로 계속 쌓이고 뒤집는 값은 지금 한 번에 치릅니다.",
+        workedExample:
+          "사건당 개선 3, 신뢰 이익 40, 안정성 훼손 20이면 또 올 몫이 0.9일 때 27 대 60으로 두는 편이 낫고, 0.97이면 97 대 60으로 뒤집는 편이 낫습니다.",
+        proofIdea:
+          "다음 기간부터 매 기간 Δ만큼 나아지는 흐름을 오늘의 값으로 바꾸면 Σ δ^t Δ = δΔ/(1−δ)입니다. 뒤집는 값은 지금 한 번에 발생하므로 할인하지 않고 R + S 그대로 놓습니다. 좌변이 우변보다 클 때 뒤집는 편이 낫고, δ가 1에 가까워질수록 좌변의 배수가 급격히 커지므로 남은 기간이 길수록 변경이 유리해집니다.",
+        counterexample:
+          "Δ가 0이면 좌변이 0이 되어 어떤 δ에서도 뒤집지 않습니다. 틀리지 않은 판단을 바꿀 이유가 없다는 것이 식에서 그대로 나옵니다.",
+        boundary:
+          "세 값 모두 사건 밖에서 관측되지 않는 어림이므로, 이 식이 주는 것은 수치가 아니라 무엇을 견줘야 하는지에 대한 목록입니다.",
+      },
+      {
+        id: "precedent-retroactivity",
+        sectionId: "retroactivity",
+        intuition:
+          "바꾸게 만든 사람에게 적용하지 않으면 아무도 바꾸려 다투지 않게 됩니다.",
+        workedExample:
+          "적용하면 그 사람은 행동 당시의 판단에 맞춰 행동했는데 나중에 바뀐 잣대로 재게 되어, 소급 적용이 왜 문제인지와 같은 구조가 됩니다.",
+        boundary:
+          "해소되는 문제가 아니라 어느 쪽 비용을 질지 고르는 문제입니다. 다만 형벌에서는 불리한 방향에 한해 고를 여지가 막혀 있습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 무엇이",
+        relation: "앞 판단에서 무엇이 끌려오는지 가릅니다.",
+        concepts: ["ratio-and-dicta"],
+      },
+      {
+        label: "01 왜",
+        relation: "그것을 따르는 이유를 넷으로 갈라 봅니다.",
+        concepts: ["reasons-for-precedent"],
+      },
+      {
+        label: "02 비켜 가기",
+        relation: "따르지도 뒤집지도 않는 통로입니다.",
+        concepts: ["distinguishing"],
+      },
+      {
+        label: "03 거두기",
+        relation: "뒤집을 때와 그 뒤에 남는 문제입니다.",
+        concepts: ["overruling-threshold", "precedent-retroactivity"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "앞 판결문에서 다음 사건을 구속하는 부분을 가려내는 방법을 쓰세요.",
+        answerChecklist: [
+          "결론이 아니라 결론을 떠받친 이유",
+          "빼 보는 것이 방법",
+          "빼면 결론이 달라지면 이유",
+          "빼도 그대로면 곁들인 말",
+        ],
+        requiredConcepts: ["ratio-and-dicta"],
+        sectionId: "what-binds",
+      },
+      {
+        level: "basic",
+        question:
+          "앞선 판단을 따르는 네 가지 이유를 쓰세요.",
+        answerChecklist: [
+          "같은 사안을 같이 다룸",
+          "미리 알 수 있게 함",
+          "이미 그 판단에 맞춰 해 둔 것",
+          "사건마다 다시 정하는 비용이 줄어듦",
+        ],
+        requiredConcepts: ["reasons-for-precedent"],
+        sectionId: "why-follow",
+      },
+      {
+        level: "basic",
+        question:
+          "범위를 좁혀 적용하지 않는 것이 뒤집는 것과 어떻게 다른지 쓰세요.",
+        answerChecklist: [
+          "앞 판단을 부정하지 않음",
+          "사실의 차이를 짚어 범위만 좁힘",
+          "좁힌 범위가 앞 사건의 결론은 여전히 떠받쳐야 함",
+          "떠받치지 못하면 그것은 뒤집기",
+        ],
+        requiredConcepts: ["distinguishing"],
+        sectionId: "distinguishing",
+      },
+      {
+        level: "basic",
+        question:
+          "사건당 개선 3, 신뢰 이익 40, 안정성 훼손 20, 또 올 몫 0.9일 때 뒤집어야 하는지 계산하세요.",
+        answerChecklist: [
+          "0.9 ÷ 0.1 × 3 = 27",
+          "40 + 20 = 60",
+          "27 < 60",
+          "그대로 두는 쪽이 나음",
+        ],
+        requiredConcepts: ["overruling-threshold"],
+        sectionId: "when-to-overrule",
+      },
+      {
+        level: "basic",
+        question:
+          "뒤집은 판단을 지금 다투는 사건에 적용하지 않으면 무슨 문제가 생기는지 쓰세요.",
+        answerChecklist: [
+          "바꾸게 만든 사람이 혜택을 못 받음",
+          "다투는 유인이 사라짐",
+          "아무도 변경을 시도하지 않게 됨",
+          "적용하면 반대편 문제가 생김",
+        ],
+        requiredConcepts: ["precedent-retroactivity"],
+        sectionId: "retroactivity",
+      },
+      {
+        level: "basic",
+        question:
+          "좁히기가 반복되면 무엇이 나빠지는지 쓰세요.",
+        answerChecklist: [
+          "규칙이 예외의 목록으로 변함",
+          "예측이 다시 어려워짐",
+          "따르는 것처럼 보이면서 따르지 않는 상태",
+          "무엇이 현재의 규칙인지 읽기 어려움",
+        ],
+        requiredConcepts: ["distinguishing"],
+        sectionId: "distinguishing",
+      },
+      {
+        level: "advanced",
+        question:
+          "뒤집는 조건 δΔ/(1−δ) > R + S를 유도하고, 좌변만 할인하는 이유를 설명하세요.",
+        answerChecklist: [
+          "다음 기간부터 매 기간 Δ가 쌓임",
+          "Σ δ^t Δ = δΔ/(1−δ)",
+          "R과 S는 지금 한 번에 발생",
+          "그래서 할인하지 않음",
+        ],
+        requiredConcepts: ["overruling-threshold", "discount-factor"],
+        sectionId: "when-to-overrule",
+      },
+      {
+        level: "advanced",
+        question:
+          "재산과 계약에서 판례 변경이 드물고 절차 영역에서 상대적으로 잦은 이유를 식의 항으로 설명하세요.",
+        answerChecklist: [
+          "신뢰 이익 R이 영역마다 다름",
+          "계약과 등기는 그 판단에 맞춰 해 둔 것이 많음",
+          "R이 작으면 우변이 내려감",
+          "같은 δ에서도 판정이 뒤집힘",
+        ],
+        requiredConcepts: ["overruling-threshold", "reasons-for-precedent"],
+        sectionId: "when-to-overrule",
+      },
+      {
+        level: "advanced",
+        question:
+          "선례가 쌓이면 앞 글의 규칙과 기준 계산이 어떻게 달라지는지 설명하세요.",
+        answerChecklist: [
+          "기준으로 둔 영역이 규칙에 가까워짐",
+          "사건당 판단 비용이 줄어듦",
+          "대신 어긋남의 손해가 남음",
+          "좁히기로 줄이면 예외 목록이 길어짐",
+        ],
+        requiredConcepts: ["distinguishing", "rule-standard-cost-tradeoff"],
+        sectionId: "boundary",
+      },
+      {
+        level: "advanced",
+        question:
+          "앞선 판단을 따를 네 이유 가운데 둘이 서로 맞선다는 것을 보이고, 그 대립이 어느 절의 계산이 되는지 쓰세요.",
+        answerChecklist: [
+          "이미 해 둔 것을 지키는 이유",
+          "법을 개선한다는 이유",
+          "둘이 정면으로 맞섬",
+          "뒤집는 문턱의 좌변과 우변이 됨",
+        ],
+        requiredConcepts: ["reasons-for-precedent", "overruling-threshold"],
+        sectionId: "why-follow",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Stanford Encyclopedia of Philosophy · Precedent and Analogy in Legal Reasoning (Grant Lamond)",
+        href: "https://plato.stanford.edu/entries/legal-reas-prec/",
+        problem:
+          "앞선 판단이 다음 사건을 구속한다고 할 때, 판결문의 어느 부분이 어떤 방식으로 구속하는지가 분명하지 않았습니다.",
+        contribution:
+          "구속하는 부분을 그 사건이 근거가 되는 법명제로 규정하고 판결에서 표현된 다른 진술과 갈라 놓았습니다. 뒤의 법원이 구속력 있는 선례를 따르거나 구별하거나 둘 중 하나를 해야 하는 의무를 진다고 정리하고, 따르는 이유로 같은 사안의 같은 처리·예측 가능성·형성된 기대·법의 개선 넷을 듭니다.",
+        assumptions:
+          "선례를 규칙처럼 다루는 체계를 기준으로 논의하며, 구속의 방식이 체계마다 다를 수 있다는 점은 별도로 다룹니다.",
+        evidenceScope:
+          "2006년 6월 20일에 처음 공개된 백과사전 항목이며 공개 전문을 확인했습니다. 개념의 정리이며 특정 나라의 실무를 조사한 연구가 아닙니다.",
+        notClaim:
+          "이 글 4절의 뒤집는 문턱 식은 이 항목에 있는 것이 아닙니다. 항목이 든 네 이유 가운데 이미 형성된 기대와 법의 개선 둘을 견주어 이 글에서 직접 전개한 것이며, 세 값 모두 관측되지 않는 어림이므로 실제 변경을 예측하는 도구가 아닙니다.",
+        sectionId: "what-binds",
+      },
+    ],
+  },
 };

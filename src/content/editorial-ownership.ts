@@ -12188,6 +12188,36 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "precedent-and-legal-change": {
+    title: "한 사건에서 메운 회색은 그 사건에서 끝나지 않습니다 글이 소유하는 범위",
+    owns: [
+      "다음 사건으로 끌려오는 것이 결론이 아니라 이유라는 구분과 가려내는 방법",
+      "앞선 판단을 따르는 네 이유와 각각이 지키는 것",
+      "사실의 차이로 범위를 좁히는 통로와 그 대가",
+      "뒤집는 문턱과 그 유도",
+      "뒤집은 판단을 언제부터 적용할지의 딜레마",
+    ],
+    reuses: [
+      {
+        label: "조문 안의 회색 지대",
+        href: "/law/legal-system/rules-standards-and-interpretation#interpretation",
+      },
+      {
+        label: "사건당 판단 비용과 어긋남의 손해",
+        href: "/law/legal-system/rules-standards-and-interpretation#cost-comparison",
+      },
+      {
+        label: "미래의 값을 오늘의 값으로 바꾸는 도구",
+        href: "/finance/money/time-value-and-discounting#discounting",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "항목이 실제로 정리한 구분과 이유만 항목에 귀속하고, 그 이유들을 견준 계산은 이 글이 직접 전개한 것으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

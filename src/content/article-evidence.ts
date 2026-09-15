@@ -7261,4 +7261,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "처벌의 근거가 법률에 있어야 한다는 것과 그 법률이 행위 시점에 있어야 한다는 것. 번역본은 참조용",
     },
   ],
+  "legal-system/precedent-and-legal-change": [
+    {
+      kind: "보충 읽기",
+      label:
+        "Stanford Encyclopedia of Philosophy · Precedent and Analogy in Legal Reasoning",
+      href: "https://plato.stanford.edu/entries/legal-reas-prec/",
+      note: "구속하는 이유와 곁들인 말의 구분, 그리고 따르는 네 이유의 출처. 개념 정리이며 실무 조사는 아님",
+    },
+  ],
 };
