@@ -7464,4 +7464,26 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "낼 수 있는 금액 10·9·8·7·6·5와 장부에 적히는 값 4·5·6·7·8·9를 그대로 이어받아 빠진 몫 2를 더해 계산함",
     },
   ],
+  "market-failure/public-goods-and-commons": [
+    {
+      kind: "핵심 논문",
+      label:
+        "Paul A. Samuelson, “The Pure Theory of Public Expenditure”, The Review of Economics and Statistics, Vol. 36, No. 4, November 1954, pp. 387–389",
+      href: "https://www.jstor.org/stable/1925895",
+      note: "같이 누리는 재화의 정의, 세로 합, 어떤 분권적 가격 체계로도 정할 수 없다는 §3, 거짓 신호 대목. 원문 세 쪽을 내려받아 직접 대조함",
+    },
+    {
+      kind: "핵심 논문",
+      label:
+        "Garrett Hardin, “The Tragedy of the Commons”, Science, Vol. 162, No. 3859, 13 December 1968, pp. 1243–1248",
+      href: "https://doi.org/10.1126/science.162.3859.1243",
+      note: "한 마리를 더 들일 때 이득은 혼자 갖고 손해는 나눠 진다는 셈. 인용 두 문장과 서지는 저자 재단 전재본으로 확인했고 학술지 원문은 열지 못함",
+    },
+    {
+      kind: "보충 읽기",
+      label: "네 칸 분류와 자치 관리 조건은 정치 쪽 글이 정본",
+      href: "/politics/polity/collective-choice-problem#two-kinds-of-choice",
+      note: "배제성·경합성의 정의와 무임승차의 유인 구조, Ostrom 설계 원칙은 그쪽에 있고 이 글은 각 칸의 수량만 셈",
+    },
+  ],
 };
