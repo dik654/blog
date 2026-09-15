@@ -24,7 +24,7 @@ export interface DomainReadingPath {
  * 그 한 층 위, **카테고리 사이의 순서**만 다룹니다.
  *
  * 둘을 나눈 이유는 단위가 다르기 때문입니다. AI처럼 소분류가 열 개가 넘는
- * 카테고리는 카테고리 안에서 길을 안내해야 하지만, 금융·정치·법은 카테고리마다
+ * 카테고리는 카테고리 안에서 길을 안내해야 하지만, 경제·금융·정치·법은 카테고리마다
  * 글이 두세 편뿐이고 진짜 커리큘럼은 네 카테고리를 가로지르는 아홉 편의 사슬입니다.
  * 그 사슬은 카테고리 단위 지도로는 표현되지 않습니다.
  */
@@ -66,6 +66,43 @@ export const DOMAIN_READING_PATHS: Readonly<
       },
     ],
     showFullSequence: false,
+  },
+
+  economics: {
+    title: "경제를 아홉 편으로 쌓아 올리는 순서",
+    description:
+      "아무도 전체를 정하지 않는데 누가 무엇을 갖고 무엇을 하는지가 정해집니다. 그 일이 어떻게 일어나는지를 세우고, 그다음 그것이 어디서 어긋나는지를 셉니다.",
+    stages: [
+      {
+        eyebrow: "01 · 왜 골라야 하는가",
+        title: "모자람과 선택",
+        description:
+          "고른 것의 값이 아니라 포기한 것의 값으로 재기 시작하면, 혼자 다 하는 것이 왜 손해인지까지 따라옵니다.",
+        categories: ["scarcity"],
+      },
+      {
+        eyebrow: "02 · 무엇이 정하는가",
+        title: "가격이 하는 일",
+        description:
+          "아무도 정하지 않은 숫자가 정해지고, 그 숫자가 결과를 채점하고, 아무도 갖지 않은 지식을 실어 나릅니다.",
+        categories: ["prices"],
+      },
+      {
+        eyebrow: "03 · 어디서 어긋나는가",
+        title: "가격이 놓치는 것",
+        description:
+          "값이 장부에 안 적히거나, 값을 받을 수 없거나, 한쪽만 아는 것이 있으면 같은 장치가 반대로 작동합니다.",
+        categories: ["market-failure"],
+      },
+      {
+        eyebrow: "04 · 합이 아닌 것",
+        title: "전체와 부분",
+        description:
+          "여기까지는 전부 한 시장 이야기입니다. 모두가 동시에 같은 판단을 하면 그 판단이 뒤집힙니다.",
+        categories: ["macro"],
+      },
+    ],
+    showFullSequence: true,
   },
 
   finance: {

@@ -24437,6 +24437,58 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "같은 유형을 계속 상대하는 쪽은 이 사건 하나가 아니라 앞으로의 협상 기준점을 보고 계산하므로, 이 사건만 보면 합의가 나은데도 다투거나 질 것 같은 사건은 판결이 남지 않게 서둘러 합의합니다. 그래서 판결로 남는 사건이 한 번 더 걸러집니다.",
     canonicalHref: "/law/dispute-resolution/settlement-and-access#access",
   },
+  "scarcity-with-alternative-uses": {
+    id: "scarcity-with-alternative-uses",
+    kind: "concept",
+    domain: "economics",
+    label: "고르는 일이 생기는 두 조건",
+    aliases: ["희소성", "대체 용도", "자유재"],
+    definition:
+      "모자라다는 것만으로는 고르는 일이 생기지 않고, 그 수단을 다른 데에도 쓸 수 있어야 비로소 한쪽을 택하는 행동이 다른 쪽을 버리는 행동이 됩니다. 넉넉한 것은 아낄 이유가 없고 쓸 데가 하나뿐인 것은 아껴도 돌아오는 것이 없으므로, 두 조건이 함께 있을 때만 셈이 성립합니다.",
+    canonicalHref: "/economics/scarcity/scarcity-and-opportunity-cost#why-choose",
+  },
+  "opportunity-cost": {
+    id: "opportunity-cost",
+    kind: "concept",
+    domain: "economics",
+    label: "Opportunity cost · 기회비용",
+    aliases: ["기회비용", "포기한 최선"],
+    definition:
+      "어떤 선택의 값을 치른 돈이 아니라 그 선택 때문에 하지 못한 것 가운데 가장 좋은 하나로 재는 방식입니다. 포기한 것이 여럿이어도 동시에 할 수 있었던 것은 하나뿐이므로 값도 하나이며, 같은 자원이라도 사람마다 최선이 다르면 값이 달라집니다.",
+    canonicalHref:
+      "/economics/scarcity/scarcity-and-opportunity-cost#opportunity-cost",
+  },
+  "production-possibility-frontier": {
+    id: "production-possibility-frontier",
+    kind: "concept",
+    domain: "economics",
+    label: "생산가능곡선",
+    aliases: ["PPF", "생산가능경계", "기회비용 체증"],
+    definition:
+      "가진 자원을 남김없이 썼을 때 만들 수 있는 조합들을 이은 경계선이며, 안쪽은 자원을 놀린 것이고 바깥쪽은 닿지 않습니다. 이 선에서 읽는 것은 위치가 아니라 기울기로, 한쪽을 하나 더 얻으려면 다른 쪽을 얼마나 포기해야 하는지가 곧 기회비용입니다.",
+    canonicalHref:
+      "/economics/scarcity/scarcity-and-opportunity-cost#opportunity-cost",
+  },
+  "marginal-decision-rule": {
+    id: "marginal-decision-rule",
+    kind: "theorem",
+    domain: "economics",
+    label: "한 단위 더의 판정",
+    aliases: ["한계 원리", "MB = MC", "한계편익 한계비용"],
+    definition:
+      "얼마나 할지는 총액을 견주어서는 정해지지 않고, q번째 하나가 더 벌어 주는 것과 그 하나에 더 드는 것만 견주어 정합니다. 벌어 주는 것이 줄고 드는 것이 느는 동안에는 이 판정을 통과하는 마지막 단위에서 멈추는 것이 전체 순이득이 가장 큰 지점과 같아집니다.",
+    canonicalHref: "/economics/scarcity/scarcity-and-opportunity-cost#margin",
+  },
+  "sunk-cost": {
+    id: "sunk-cost",
+    kind: "concept",
+    domain: "economics",
+    label: "Sunk cost · 매몰비용",
+    aliases: ["매몰비용", "이미 나간 값"],
+    definition:
+      "이미 치렀고 어느 쪽을 골라도 똑같이 돌아오지 않는 값이며, 양쪽 계산에 같은 크기로 들어 있으므로 비교를 바꾸지 못해 판정에서 뺍니다. 일부라도 회수할 수 있으면 그만큼은 매몰이 아니고, 그 지출이 앞으로의 성공 확률에 대해 알려 주는 정보는 지우지 않습니다.",
+    canonicalHref: "/economics/scarcity/scarcity-and-opportunity-cost#sunk",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -45237,6 +45289,62 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "prerequisite",
     reason:
       "같은 상대를 계속 만난다는 사실이 이 사건 하나가 아니라 앞으로를 보고 계산하게 만드는 구조입니다.",
+  },
+  {
+    from: "scarcity-with-alternative-uses",
+    to: "opportunity-cost",
+    relation: "produces",
+    reason:
+      "한쪽을 고르는 것이 곧 다른 쪽을 버리는 것이면, 버린 쪽이 그 선택의 값이 됩니다.",
+  },
+  {
+    from: "opportunity-cost",
+    to: "production-possibility-frontier",
+    relation: "produces",
+    reason:
+      "포기한 최선을 두 재화에 대해 그리면 경계선이 되고, 그 기울기가 곧 기회비용입니다.",
+  },
+  {
+    from: "opportunity-cost",
+    to: "marginal-decision-rule",
+    relation: "prerequisite",
+    reason:
+      "한 단위 더 하는 데 드는 값은 그 단위를 다른 데 쓰지 못하는 값이므로, 기회비용으로 재야 판정이 성립합니다.",
+  },
+  {
+    from: "opportunity-cost",
+    to: "sunk-cost",
+    relation: "produces",
+    reason:
+      "값을 포기한 것으로 재면, 어느 쪽을 골라도 똑같이 사라진 값은 포기한 것이 없어 비교에서 빠집니다.",
+  },
+  {
+    from: "sunk-cost",
+    to: "marginal-decision-rule",
+    relation: "constrains",
+    reason:
+      "이미 나간 값을 MB나 MC에 넣으면 같은 값이 양쪽에 더해져 멈출 자리가 엉뚱한 곳으로 옮겨 갑니다.",
+  },
+  {
+    from: "marginal-decision-rule",
+    to: "optimal-care-level",
+    relation: "produces",
+    reason:
+      "한 단계 올릴 때의 비용과 줄어드는 기대 손해를 견주는 주의 수준 계산은 이 판정을 예방 조치에 그대로 적용한 것입니다.",
+  },
+  {
+    from: "marginal-decision-rule",
+    to: "marginal-deterrence",
+    relation: "produces",
+    reason:
+      "억제를 하느냐 마느냐가 아니라 어디까지 하느냐로 묻는 형량의 층은 같은 판정을 죄의 무게에 적용한 결과입니다.",
+  },
+  {
+    from: "opportunity-cost",
+    to: "time-value-of-money",
+    relation: "produces",
+    reason:
+      "지금 받은 돈을 굴릴 수 있다는 것은 나중에 받는 쪽이 그 굴림을 포기한다는 뜻이므로, 시점 차이의 값이 기회비용으로 설명됩니다.",
   },
 ];
 

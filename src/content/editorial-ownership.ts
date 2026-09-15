@@ -12392,6 +12392,33 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "scarcity-and-opportunity-cost": {
+    title:
+      "무엇을 할지 정하는 일은 무엇을 안 할지 정하는 일과 같습니다 글이 소유하는 범위",
+    owns: [
+      "고르는 일이 생기는 두 조건과 자유재의 위치",
+      "선택의 값을 포기한 최선으로 재는 방식과 더하면 안 되는 이유",
+      "생산가능곡선의 기울기가 곧 기회비용이라는 대응",
+      "한 단위 판정과 그것이 전체 최댓값에 닿는 조건",
+      "매몰비용을 판정에서 빼는 규칙과 그 예외 둘",
+    ],
+    reuses: [
+      {
+        label: "같은 한 단위 판정이 주의 수준에 쓰인 자리",
+        href: "/law/private-law/tort-and-accident-cost#how-much-care",
+      },
+      {
+        label: "같은 판정이 형량의 층에 쓰인 자리",
+        href: "/law/criminal-law/crime-and-punishment-purpose",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "로빈스에게 귀속하는 것은 두 조건과 정의 문장까지이고, 기회비용·한계 판정·매몰비용의 전개는 이 글이 정리한 표준 교과 내용으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

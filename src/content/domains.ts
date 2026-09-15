@@ -7,7 +7,7 @@
  * `src/lib/routes.ts`가 여기만 의존하게 해 순환 import를 막기 위해서입니다.
  */
 
-export type DomainSlug = "cs" | "finance" | "politics" | "law";
+export type DomainSlug = "cs" | "economics" | "finance" | "politics" | "law";
 
 export interface DomainMeta {
   slug: DomainSlug;
@@ -22,6 +22,12 @@ export const DOMAIN_META: readonly DomainMeta[] = [
     name: "CS",
     description:
       "AI·블록체인·암호학·분산 시스템·하드웨어까지 컴퓨터 기술을 코드베이스 단위로 추적합니다.",
+  },
+  {
+    slug: "economics",
+    name: "경제",
+    description:
+      "아무도 전체를 정하지 않는데 누가 무엇을 갖고 무엇을 하는지가 어떻게 정해지는지, 그리고 그 방식이 어디서 어긋나는지를 따라갑니다.",
   },
   {
     slug: "finance",
@@ -56,6 +62,10 @@ export const CATEGORY_DOMAIN: Readonly<Record<string, DomainSlug>> = {
   tee: "cs",
   "isms-aml": "cs",
   saas: "cs",
+  scarcity: "economics",
+  prices: "economics",
+  "market-failure": "economics",
+  macro: "economics",
   money: "finance",
   banking: "finance",
   markets: "finance",

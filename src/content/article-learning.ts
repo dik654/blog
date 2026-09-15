@@ -81605,4 +81605,266 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "scarcity/scarcity-and-opportunity-cost": {
+    entryLevel: true,
+    entryNote:
+      "경제학 용어를 하나도 모른다고 가정합니다. 하루를 어떻게 쓸지 정해 본 경험만 있으면 끝까지 읽을 수 있습니다.",
+    coreIdea:
+      "고르는 일은 모자라면서 동시에 쓸 데가 여럿일 때만 생기고, 그때 선택의 값은 치른 돈이 아니라 포기한 것 가운데 가장 좋은 하나입니다. 얼마나 할지는 총액이 아니라 한 단위 더 했을 때 들어오는 것과 나가는 것을 견주어 정하며, 이미 나가서 어느 쪽을 골라도 똑같이 사라진 값은 그 비교에서 뺍니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "scarcity-with-alternative-uses",
+        role: "고르는 일이 생기는 두 조건을 세웁니다.",
+      },
+      {
+        id: "opportunity-cost",
+        role: "선택의 값을 무엇으로 재는지 정합니다.",
+      },
+      {
+        id: "production-possibility-frontier",
+        role: "기회비용을 두 재화의 경계선과 기울기로 옮깁니다.",
+      },
+      {
+        id: "marginal-decision-rule",
+        role: "얼마나 할지를 정하는 판정을 세웁니다.",
+      },
+      {
+        id: "sunk-cost",
+        role: "그 판정에서 무엇을 빼야 하는지 정합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "scarcity-with-alternative-uses",
+        sectionId: "why-choose",
+        intuition:
+          "모자란 것만으로는 부족하고, 다른 데에도 쓸 수 있어야 고를 일이 생깁니다.",
+        workedExample:
+          "공기는 넉넉해서 고를 일이 없고, 어제 지나간 시간은 모자라지만 이제 쓸 데가 없어 역시 고를 일이 없습니다.",
+        boundary:
+          "무엇이 넉넉한지는 시대와 기술에 따라 바뀝니다. 깨끗한 물과 조용한 시간은 한때 자유재였습니다.",
+      },
+      {
+        id: "opportunity-cost",
+        sectionId: "opportunity-cost",
+        intuition:
+          "값은 지갑에서 나간 돈이 아니라 그 때문에 하지 못한 것입니다.",
+        workedExample:
+          "석 달을 시험 준비에 썼고 교재값이 30만 원, 같은 기간에 일했다면 600만 원을 벌었다면 값은 630만 원입니다.",
+        counterexample:
+          "포기한 것이 일할 기회 600만 원과 여행 200만 원 둘이어도 값은 800만 원이 아니라 600만 원입니다. 동시에 할 수 있었던 것은 하나뿐이기 때문입니다.",
+        boundary:
+          "포기한 것들을 같은 자로 잴 수 있다고 가정합니다. 그 자는 사람마다 다르고 본인도 정확히 알지 못합니다.",
+      },
+      {
+        id: "production-possibility-frontier",
+        sectionId: "opportunity-cost",
+        intuition:
+          "가진 것을 다 쓴 조합들을 이으면 선이 되고, 그 선의 기울기가 값입니다.",
+        workedExample:
+          "8시간에 빵 한 판이 1시간, 케이크 하나가 2시간이면 케이크 한 개의 기회비용은 빵 두 판이고, 조합은 빵 8·케이크 0에서 빵 0·케이크 4까지입니다.",
+        boundary:
+          "실제 경계선은 직선이 아니라 바깥으로 휩니다. 사람과 장비마다 맞는 일이 달라 한쪽으로 옮길수록 포기해야 하는 양이 늘어납니다.",
+      },
+      {
+        id: "marginal-decision-rule",
+        sectionId: "margin",
+        intuition:
+          "할지 말지가 아니라 한 개 더 할지를 물으면 멈출 자리가 나옵니다.",
+        workedExample:
+          "빵 한 판이 더 벌어 주는 것이 48에서 5씩 줄고 더 드는 것이 12에서 3씩 늘면, 네 판째는 28 대 24라 하고 다섯 판째는 23 대 27이라 하지 않으므로 네 판에서 멈춥니다.",
+        proofIdea:
+          "q까지 했을 때의 전체 순이득은 1번째부터 q번째까지의 한 단위 순이득을 더한 값입니다. 각 항이 양수인 동안 이 합은 커지고 음수가 되는 순간부터 작아집니다. MB가 줄고 MC가 늘면 항의 부호가 한 번만 바뀌므로, 부호가 바뀌기 직전까지 더한 지점이 합의 최댓값이 됩니다. 그래서 한 단위 판정만으로 전체 최댓값에 닿습니다.",
+        counterexample:
+          "규모가 커질수록 단가가 내려가면 처음 몇 단위가 밑지고 그 뒤부터 남습니다. 항의 부호가 음수에서 양수로 바뀌므로 처음 뒤집힌 자리에서 멈추면 가장 좋은 답을 지나칩니다.",
+        boundary:
+          "묶어서만 팔리거나 설비를 통째로 늘려야 하면 한 단위로 쪼개는 것 자체가 되지 않습니다.",
+      },
+      {
+        id: "sunk-cost",
+        sectionId: "sunk",
+        intuition:
+          "이미 사라진 돈은 어느 쪽을 골라도 똑같이 사라져 있어 둘을 가르지 못합니다.",
+        workedExample:
+          "재료비 30을 이미 치렀고 지금 구우면 5가 더 들어 20을 받는다면, 굽는 쪽이 15만큼 낫습니다. 전체로는 −15지만 굽지 않으면 −30입니다.",
+        counterexample:
+          "그만두면 10을 돌려받을 수 있다면 그 10은 매몰이 아니라 계속하는 쪽의 비용으로 들어갑니다.",
+        boundary:
+          "지워야 하는 것은 값이지 그 값이 남긴 정보가 아닙니다. 세 번 다 결과가 나빴다면 지출은 지우되 앞으로의 확률은 다시 잡아야 합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 왜 고르는가",
+        relation: "고르는 일이 생기는 두 조건을 세웁니다.",
+        concepts: ["scarcity-with-alternative-uses"],
+      },
+      {
+        label: "01 무엇으로 재는가",
+        relation: "선택의 값을 포기한 최선으로 재고 그것을 경계선으로 옮깁니다.",
+        concepts: ["opportunity-cost", "production-possibility-frontier"],
+      },
+      {
+        label: "02 얼마나 하는가",
+        relation: "총액이 아니라 한 단위로 물어 멈출 자리를 찾습니다.",
+        concepts: ["marginal-decision-rule"],
+      },
+      {
+        label: "03 무엇을 빼는가",
+        relation: "판정에 들어가면 안 되는 값을 가려냅니다.",
+        concepts: ["sunk-cost"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "고르는 일이 생기려면 어떤 조건 두 가지가 함께 있어야 하는지, 각각이 빠지면 왜 안 되는지 쓰세요.",
+        answerChecklist: [
+          "수단이 모자랄 것",
+          "그 수단을 다른 데에도 쓸 수 있을 것",
+          "넉넉하면 둘 다 하면 되므로 고를 일이 없음",
+          "쓸 데가 하나뿐이면 아껴도 돌아오는 것이 없음",
+        ],
+        requiredConcepts: ["scarcity-with-alternative-uses"],
+        sectionId: "why-choose",
+      },
+      {
+        level: "basic",
+        question:
+          "토요일 오후에 할 수 있는 일이 공부 70, 친구 만나기 50, 알바 45이고 하나만 할 수 있습니다. 공부를 골랐을 때의 기회비용과 순이득을 계산하세요.",
+        answerChecklist: [
+          "포기한 것 중 최선은 50",
+          "기회비용은 50",
+          "순이득은 70 − 50 = 20",
+          "50과 45를 더한 95가 아님",
+        ],
+        requiredConcepts: ["opportunity-cost"],
+        sectionId: "opportunity-cost",
+      },
+      {
+        level: "basic",
+        question:
+          "8시간에 빵 한 판이 1시간, 케이크 하나가 2시간 걸릴 때 케이크 한 개의 기회비용과 경계선의 양 끝을 쓰세요.",
+        answerChecklist: [
+          "케이크 한 개의 기회비용은 빵 두 판",
+          "한쪽 끝은 빵 8판과 케이크 0개",
+          "다른 끝은 빵 0판과 케이크 4개",
+          "선 안쪽은 시간을 남긴 것",
+        ],
+        requiredConcepts: ["production-possibility-frontier"],
+        sectionId: "opportunity-cost",
+      },
+      {
+        level: "basic",
+        question:
+          "한 판이 더 벌어 주는 것이 48에서 5씩 줄고 더 드는 것이 12에서 3씩 늘 때 몇 판에서 멈춰야 하는지 계산하세요.",
+        answerChecklist: [
+          "네 판째는 28 대 24라 남음",
+          "다섯 판째는 23 대 27이라 밑짐",
+          "답은 네 판",
+          "누적 순이득도 네 판에서 가장 큼",
+        ],
+        requiredConcepts: ["marginal-decision-rule"],
+        sectionId: "margin",
+      },
+      {
+        level: "basic",
+        question:
+          "재료비 30을 이미 치렀고 돌려받을 수 없습니다. 지금 구우면 5가 더 들고 20을 받습니다. 어느 쪽이 나은지와 30을 어떻게 다루는지 쓰세요.",
+        answerChecklist: [
+          "굽는 쪽이 15만큼 나음",
+          "30은 양쪽에 똑같이 들어 있음",
+          "그래서 비교에서 뺌",
+          "전체로는 손해지만 굽지 않는 쪽이 더 큰 손해",
+        ],
+        requiredConcepts: ["sunk-cost"],
+        sectionId: "sunk",
+      },
+      {
+        level: "basic",
+        question:
+          "치른 돈으로만 값을 재면 어떤 종류의 결정을 비교할 수 없게 되는지 예를 들어 쓰세요.",
+        answerChecklist: [
+          "돈이 들지 않는 선택이 전부 공짜가 됨",
+          "시간을 쓰는 결정을 비교할 수 없음",
+          "석 달을 쓰는 일에 교재값만 적히게 됨",
+          "포기한 최선을 넣어야 비교가 됨",
+        ],
+        requiredConcepts: ["opportunity-cost"],
+        sectionId: "opportunity-cost",
+      },
+      {
+        level: "advanced",
+        question:
+          "한 단위 판정만으로 전체 순이득의 최댓값에 닿는 이유를 유도하세요.",
+        answerChecklist: [
+          "전체 순이득은 한 단위 순이득의 합",
+          "각 항이 양수인 동안 합이 커짐",
+          "MB가 줄고 MC가 늘면 부호가 한 번만 바뀜",
+          "부호가 바뀌기 직전이 최댓값",
+        ],
+        requiredConcepts: ["marginal-decision-rule"],
+        sectionId: "margin",
+      },
+      {
+        level: "advanced",
+        question:
+          "규모가 커질수록 단가가 내려가는 경우에 한 단위 판정을 그대로 쓰면 왜 답을 놓치는지 설명하세요.",
+        answerChecklist: [
+          "처음 몇 단위가 밑짐",
+          "그 뒤부터 남음",
+          "부호가 음수에서 양수로 바뀜",
+          "처음 뒤집힌 곳에서 멈추면 최댓값을 지나침",
+        ],
+        requiredConcepts: ["marginal-decision-rule"],
+        sectionId: "margin",
+      },
+      {
+        level: "advanced",
+        question:
+          "매몰비용을 지우는 규칙이 적용되지 않는 두 경우를 들고, 각각이 왜 예외인지 기회비용으로 설명하세요.",
+        answerChecklist: [
+          "일부를 회수할 수 있는 경우",
+          "회수 가능한 만큼은 계속하는 쪽의 기회비용",
+          "그 지출이 앞으로의 확률을 알려 주는 경우",
+          "지우는 것은 값이지 정보가 아님",
+        ],
+        requiredConcepts: ["sunk-cost", "opportunity-cost"],
+        sectionId: "sunk",
+      },
+      {
+        level: "advanced",
+        question:
+          "기회비용이 사람마다 다르다는 사실이 왜 혼자 고르는 계산의 한계가 되는지 쓰세요.",
+        answerChecklist: [
+          "값은 그 사람이 포기한 최선으로 정해짐",
+          "남이 무엇을 포기하는지는 알 수 없음",
+          "그래서 서로의 값을 비교할 방법이 없음",
+          "여럿이 고르는 문제는 다른 장치가 필요함",
+        ],
+        requiredConcepts: ["opportunity-cost", "scarcity-with-alternative-uses"],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Lionel Robbins, An Essay on the Nature and Significance of Economic Science (1932)",
+        href: "https://archive.org/details/1932RobbinsEssayOnTheNatureAndSignificanceOfEconomicScienceOCRe",
+        problem:
+          "경제학이 무엇을 다루는 학문인지가 물질적 후생이라는 주제 목록으로 정의되고 있어, 같은 행동이 어떤 때는 대상이고 어떤 때는 아닌 경계가 흐렸습니다.",
+        contribution:
+          "대상을 주제가 아니라 상황의 형태로 다시 정의했습니다. 목적이 여럿인 것만으로도, 수단이 모자란 것만으로도 부족하며, 수단이 모자라면서 동시에 다른 용도로 쓰일 수 있을 때에만 행동이 선택의 형태를 띤다고 적고, 여기서 경제학을 목적과 대체 용도를 가진 희소한 수단 사이의 관계로 정의합니다.",
+        assumptions:
+          "목적이 이미 주어져 있다고 두고 그 목적들 사이의 우열이나 형성 과정은 다루지 않습니다.",
+        evidenceScope:
+          "1932년 Macmillan 초판 1장 13~15면입니다. Internet Archive의 스캔 본문을 내려받아 해당 문장들을 직접 대조했습니다. 이 글이 쓰는 것은 두 조건과 정의 문장, 그리고 공기를 자유재로 드는 예까지입니다.",
+        notClaim:
+          "이 정의가 경제학의 유일한 정의라는 뜻이 아닙니다. 발표 당시에도 널리 받아들여지지 않았고, 물질적 후생에 초점을 두는 정의와 오래 경쟁했습니다. 또 같은 책이 이어 가는 가치판단과 효용 비교에 관한 주장은 이 글에서 다루지 않으며, 이 글의 기회비용·한계 판정·매몰비용 전개는 로빈스의 것이 아니라 표준 교과 내용을 이 글이 정리한 것입니다.",
+        sectionId: "why-choose",
+      },
+    ],
+  },
 };
