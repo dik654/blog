@@ -7287,4 +7287,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "두 가지 보호 방식의 정의와 구분의 출처. 분석 틀의 제시이며 판례 조사는 아님",
     },
   ],
+  "private-law/tort-and-accident-cost": [
+    {
+      kind: "공식 문서",
+      label: "United States v. Carroll Towing Co., 159 F.2d 169 (2d Cir. 1947)",
+      href: "https://www.courtlistener.com/opinion/1565896/united-states-v-carroll-towing-co/",
+      note: "주의 의무를 확률·손해·부담 세 변수로 적은 판시의 출처. 서지는 확인했고 문장 표현은 참고 문헌으로 대조함",
+    },
+  ],
 };

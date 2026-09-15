@@ -80485,4 +80485,288 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "private-law/tort-and-accident-cost": {
+    entryNote:
+      "앞 두 글은 옮기려는 뜻이 있을 때를 다뤘습니다. 여기서는 아무도 옮길 뜻이 없었는데 손해가 생기는 경우를 봅니다.",
+    coreIdea:
+      "손해는 그냥 두면 난 자리에 남으므로 옮기려면 이유가 있어야 하고, 그 이유는 대개 옮겨 받는 쪽이 사고를 더 싸게 막을 수 있었다는 것입니다. 얼마나 조심하는 것이 맞는지는 한 단계 올릴 때의 비용과 줄어드는 기대 손해를 견주면 정해지며, 그 계산은 손해를 지게 될 쪽만 하므로 규칙의 선택이 곧 누가 조심할지의 선택이 됩니다.",
+    assumedKnowledge: [
+      {
+        id: "property-rule-vs-liability-rule",
+        role: "옮기려는 뜻이 있을 때의 보호 방식과 대비해 사고의 출발점을 세웁니다.",
+      },
+      {
+        id: "expectation-damages-incentive",
+        role: "물어야 할 값의 크기가 사전 행동을 정한다는 구조를 그대로 가져옵니다.",
+      },
+      {
+        id: "erga-omnes-and-publicity",
+        role: "경계가 그어져 있다는 것을 전제로 그 경계를 뜻 없이 넘는 경우를 다룹니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "loss-lies-where-it-falls",
+        role: "손해의 기본 위치와 옮길 이유의 요건을 세웁니다.",
+      },
+      {
+        id: "optimal-care-level",
+        role: "얼마나 조심하는 것이 맞는지를 계산으로 정합니다.",
+      },
+      {
+        id: "negligence-vs-strict-liability",
+        role: "두 종류의 책임 규칙을 정의합니다.",
+      },
+      {
+        id: "bilateral-care",
+        role: "양쪽이 다 조심할 수 있을 때 무엇이 필요한지 정의합니다.",
+      },
+      {
+        id: "scope-of-liability",
+        role: "이어진 손해를 어디서 끊는지의 기준을 정의합니다.",
+      },
+      {
+        id: "hindsight-in-care-judgment",
+        role: "이 판정이 구조적으로 기우는 방향을 다룹니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "loss-lies-where-it-falls",
+        sectionId: "where-loss-sits",
+        intuition:
+          "법이 아무것도 하지 않으면 손해는 입은 사람에게 남습니다.",
+        workedExample:
+          "옮기는 이유는 대개 옮겨 받는 쪽이 더 싸게 막을 수 있었다는 것이거나 그쪽이 위험을 더 잘 나눠 질 수 있다는 것입니다.",
+        boundary:
+          "딱하다는 것만으로는 누구에게 옮길지가 정해지지 않고, 막을 수 없었던 쪽에 옮기면 사고가 줄지도 않습니다.",
+      },
+      {
+        id: "optimal-care-level",
+        sectionId: "how-much-care",
+        intuition:
+          "조심하는 데도 돈이 들기 때문에 무조건 더 조심하는 것이 답일 수 없습니다.",
+        workedExample:
+          "손해 1,000에 확률 10퍼센트일 때 20을 써서 6퍼센트로 낮추면 40을 줄이므로 하고, 30을 더 써서 3.5퍼센트로 낮추면 25만 줄이므로 하지 않습니다.",
+        proofIdea:
+          "주의 수준 x에서의 총비용을 B(x) + P(x)L로 두면, 한 단계 올릴 때 총비용의 변화는 ΔB − ΔP·L입니다. 이 값이 음수이면 올리는 편이 낫고 양수이면 올리지 않는 편이 낫습니다. 음수라는 조건이 곧 ΔB < ΔP·L이고, 이것을 모든 단계에 적용해 더 이상 음수가 아닌 지점에서 멈추면 총비용이 가장 작은 지점에 닿습니다.",
+        counterexample:
+          "확률이 아주 낮아도 손해가 매우 크면 P·L이 커져 비싼 조치가 정당화됩니다. 확률만 보고 판단하면 이 경우를 놓칩니다.",
+        boundary:
+          "세 값 모두 사고가 난 뒤에 되짚어 재게 되고, 사람이 다치는 경우에는 잃는 값을 돈으로 재는 것 자체가 다투어집니다.",
+      },
+      {
+        id: "negligence-vs-strict-liability",
+        sectionId: "which-rule",
+        intuition:
+          "기준을 맞추면 면하게 할 것인지, 결과만으로 물게 할 것인지의 선택입니다.",
+        workedExample:
+          "결과만으로 물게 하면 일으킨 쪽이 손해 전부를 자기 것으로 보고 최적으로 조심하지만, 당한 쪽은 어차피 다 받으므로 조심할 이유가 사라집니다.",
+        boundary:
+          "일으킨 쪽만 조심할 수 있거나 위험을 나눠 지는 것이 더 중요한 영역에서는 결과만 보는 쪽이 낫습니다.",
+      },
+      {
+        id: "bilateral-care",
+        sectionId: "which-rule",
+        intuition:
+          "조심해서 줄어드는 것이 자기 몫일 때만 조심할 이유가 생깁니다.",
+        workedExample:
+          "기준을 두면 일으킨 쪽은 기준을 맞추려 하고, 기준을 맞춘 사고의 손해는 당한 쪽에 남으므로 당한 쪽도 조심합니다.",
+        boundary:
+          "기준이 최적보다 낮으면 일으킨 쪽은 그 낮은 기준에서 멈춥니다. 규칙의 이름이 아니라 기준의 위치가 결과를 정합니다.",
+      },
+      {
+        id: "scope-of-liability",
+        sectionId: "scope",
+        intuition:
+          "사고에서 이어진 사슬은 끊지 않으면 끝없이 이어집니다.",
+        workedExample:
+          "미끄러짐을 막으려던 조치를 빠뜨렸는데 그 때문에 늦게 출발해 다른 사고를 당했다면, 같은 사슬이어도 그 조치가 겨냥한 위험이 아닙니다.",
+        boundary:
+          "예견할 수 없던 것까지 물리면 예방 계산에 넣을 수 없었던 것을 부담하게 되어, 책임이 유인 장치가 아니라 복권이 됩니다.",
+      },
+      {
+        id: "hindsight-in-care-judgment",
+        sectionId: "scope",
+        intuition:
+          "이미 일어난 일을 놓고 보면 그 일이 일어날 법했다고 느껴집니다.",
+        workedExample:
+          "그때는 아주 낮았던 확률이 사고 뒤에 보면 충분히 높아 보여, 하지 않아도 됐을 조치를 했어야 한다고 판정하게 됩니다.",
+        boundary:
+          "완전히 없앨 수는 없고 줄이는 장치만 있습니다. 그때 알 수 있었던 정보로 한정하고 그 분야의 당시 기준을 기준선으로 삼는 것이 그 장치입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 출발점",
+        relation: "손해의 기본 위치와 옮길 이유를 세웁니다.",
+        concepts: ["loss-lies-where-it-falls"],
+      },
+      {
+        label: "01 얼마나",
+        relation: "조심하는 것이 어디까지 맞는지 계산합니다.",
+        concepts: ["optimal-care-level"],
+      },
+      {
+        label: "02 누가",
+        relation: "규칙이 누구의 계산을 움직이는지 봅니다.",
+        concepts: ["negligence-vs-strict-liability", "bilateral-care"],
+      },
+      {
+        label: "03 어디까지",
+        relation: "이어진 손해를 끊는 기준과 판정의 치우침입니다.",
+        concepts: ["scope-of-liability", "hindsight-in-care-judgment"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "손해를 옮기려면 어떤 이유가 필요한지, 딱함만으로는 왜 부족한지 쓰세요.",
+        answerChecklist: [
+          "더 싸게 막을 수 있었다는 것",
+          "위험을 더 잘 나눠 질 수 있다는 것",
+          "딱함만으로는 누구에게 옮길지 안 정해짐",
+          "막을 수 없었던 쪽에 옮기면 사고가 안 줄어듦",
+        ],
+        requiredConcepts: ["loss-lies-where-it-falls"],
+        sectionId: "where-loss-sits",
+      },
+      {
+        level: "basic",
+        question:
+          "손해 1,000, 확률 10퍼센트에서 20을 써서 6퍼센트로 낮출 수 있다면 그 조치를 해야 하는지 계산하세요.",
+        answerChecklist: [
+          "줄어드는 확률 4퍼센트",
+          "줄어드는 기대 손해 40",
+          "비용 20 < 40",
+          "해야 함",
+        ],
+        requiredConcepts: ["optimal-care-level"],
+        sectionId: "how-much-care",
+      },
+      {
+        level: "basic",
+        question:
+          "결과만으로 물게 하는 규칙이 무엇을 얻고 무엇을 잃는지 쓰세요.",
+        answerChecklist: [
+          "일으킨 쪽이 손해 전부를 자기 것으로 봄",
+          "그쪽은 최적으로 조심함",
+          "당한 쪽은 어차피 다 받음",
+          "당한 쪽의 주의가 사라짐",
+        ],
+        requiredConcepts: ["negligence-vs-strict-liability"],
+        sectionId: "which-rule",
+      },
+      {
+        level: "basic",
+        question:
+          "기준을 두는 규칙에서 양쪽이 모두 조심하게 되는 경로를 쓰세요.",
+        answerChecklist: [
+          "일으킨 쪽은 기준을 맞춰 면하려 함",
+          "기준을 맞춘 사고의 손해는 당한 쪽에 남음",
+          "그래서 당한 쪽도 조심함",
+          "기준이 옳게 잡혔을 때만 성립",
+        ],
+        requiredConcepts: ["bilateral-care"],
+        sectionId: "which-rule",
+      },
+      {
+        level: "basic",
+        question:
+          "이어진 손해를 끊는 두 기준을 쓰세요.",
+        answerChecklist: [
+          "빠뜨린 조치가 막으려던 종류의 위험인지",
+          "예견할 수 있는 범위였는지",
+          "둘 다 예방 계산과 이어져 있음",
+          "끊지 않으면 사슬이 끝없이 이어짐",
+        ],
+        requiredConcepts: ["scope-of-liability"],
+        sectionId: "scope",
+      },
+      {
+        level: "basic",
+        question:
+          "주의 판정이 사후에 이루어져 생기는 치우침의 방향과 줄이는 방법을 쓰세요.",
+        answerChecklist: [
+          "낮았던 확률이 높아 보임",
+          "과한 주의를 요구하는 쪽으로 기움",
+          "그때 알 수 있었던 정보로 한정",
+          "당시의 분야 기준을 기준선으로",
+        ],
+        requiredConcepts: ["hindsight-in-care-judgment"],
+        sectionId: "scope",
+      },
+      {
+        level: "advanced",
+        question:
+          "한 단계 비교 B < P·L과 총비용 최소화가 같은 것임을 유도하세요.",
+        answerChecklist: [
+          "총비용은 B(x) + P(x)L",
+          "한 단계 올릴 때 변화는 ΔB − ΔP·L",
+          "음수이면 올리는 편이 나음",
+          "더 이상 음수가 아닌 지점이 최소",
+        ],
+        requiredConcepts: ["optimal-care-level"],
+        sectionId: "how-much-care",
+      },
+      {
+        level: "advanced",
+        question:
+          "확률이 아주 낮은데도 비싼 예방이 정당화되는 경우를 식으로 설명하세요.",
+        answerChecklist: [
+          "기대 손해는 P와 L의 곱",
+          "L이 매우 크면 P가 작아도 곱이 큼",
+          "확률만 보면 이 경우를 놓침",
+          "드물지만 큰 사고의 예방이 여기 들어감",
+        ],
+        requiredConcepts: ["optimal-care-level"],
+        sectionId: "how-much-care",
+      },
+      {
+        level: "advanced",
+        question:
+          "예견할 수 없던 손해까지 물리면 왜 책임이 유인 장치이기를 그치는지 설명하세요.",
+        answerChecklist: [
+          "예방 계산에 넣을 수 없었던 것을 부담",
+          "조심해도 그 부분은 줄지 않음",
+          "조심하는 것과 무는 것의 연결이 끊어짐",
+          "그때부터 복권에 가까워짐",
+        ],
+        requiredConcepts: ["scope-of-liability", "optimal-care-level"],
+        sectionId: "scope",
+      },
+      {
+        level: "advanced",
+        question:
+          "손해를 금액으로 바꾸기 어려운 항목을 따로 표시해야 하는 이유를 앞 시리즈의 측정 문제와 연결해 쓰세요.",
+        answerChecklist: [
+          "재기 쉬운 항목만 남음",
+          "전체가 실제보다 작아짐",
+          "잴 수 있는 것만 세면 못 재는 것이 밀려남",
+          "지표 왜곡과 같은 구조",
+        ],
+        requiredConcepts: ["scope-of-liability"],
+        sectionId: "scope",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "United States v. Carroll Towing Co., 159 F.2d 169 (2d Cir. 1947)",
+        href: "https://www.courtlistener.com/opinion/1565896/united-states-v-carroll-towing-co/",
+        problem:
+          "주의 의무를 다했는지를 판단할 때 상황마다 달라지는 사정을 어떤 공통의 축으로 볼지가 정리되어 있지 않았습니다.",
+        contribution:
+          "주의 의무를 세 변수의 함수로 적었습니다. 사고가 일어날 확률, 일어났을 때 생기는 손해의 크기, 그리고 적절한 예방 조치의 부담입니다. 앞의 둘을 곱한 값보다 부담이 작으면 그 조치를 하지 않은 것이 과실이라는 비교를 대수 형태로 제시했습니다.",
+        assumptions:
+          "확률과 손해와 부담을 같은 단위로 견줄 수 있다고 보며, 판단의 단위를 개별 예방 조치에 둡니다.",
+        evidenceScope:
+          "제2연방항소법원 1947년 1월 9일 판결이며, 사건의 존재와 서지는 CourtListener에서 확인했습니다. 판시 문장의 표현은 해당 부분을 그대로 옮겨 싣고 있는 참고 문헌으로 대조했고, 판결문 열람 페이지가 본문을 내주지 않아 원문 대조까지는 하지 못했습니다.",
+        notClaim:
+          "이 비교가 모든 과실 판단을 대체한다는 뜻이 아닙니다. 세 값이 사후에 재어지고 사람이 다치는 경우 손해를 돈으로 재는 것 자체가 다투어지므로, 실제 판단에서 이 식은 고려의 틀이지 계산기가 아닙니다. 또 이 글에 실린 총비용 최소화 형태는 판결에 있는 것이 아니라 같은 비교를 모든 주의 수준에 적용해 전개한 것입니다.",
+        sectionId: "how-much-care",
+      },
+    ],
+  },
 };
