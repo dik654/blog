@@ -7329,4 +7329,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "고를 일이 생기는 두 조건과 희소성 정의의 출처. 초판 스캔 본문으로 직접 대조함",
     },
   ],
+  "scarcity/gains-from-trade": [
+    {
+      kind: "공식 문서",
+      label:
+        "David Ricardo, On the Principles of Political Economy, and Taxation (John Murray, 1817), ch. VI",
+      href: "https://www.gutenberg.org/ebooks/33310",
+      note: "둘 다 절대우위인 쪽이 있어도 교환이 이득이라는 논증의 출처. 초판 본문으로 직접 대조함",
+    },
+  ],
 };
