@@ -199,6 +199,15 @@ export default function RegionAgnosticInferenceRoutingArticle() {
           다릅니다.
         </CitationBlock>
 
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p className="leading-7">
+            다만 이 여섯 단계를 정착된 구조로 읽으면 안 됩니다. 표준이 있는 것은
+            다섯째 단계, 그러니까 한 클러스터 안에서 파드를 고르는 부분까지입니다.
+            리전 게이트웨이가 다른 클러스터의 풀을 가리키는 연결에는 아직
+            공개 표준이 없어서 직접 만들어야 합니다.
+          </p>
+        </div>
+
         <ExplainedFormula
           question="여섯 번 고르는 데 쓰는 시간은 첫 토큰까지의 얼마입니까?"
           idea="첫 토큰까지의 시간을 고르는 시간과 만드는 시간으로 나눕니다. 앞의 다섯 단계는 후보를 자르는 일이라 각각 밀리초 단위로 끝나고, 마지막 단계에서 엔진 큐에 기다렸다가 prefill을 계산합니다. 두 덩어리의 크기가 두 자릿수 차이라, 라우팅을 더 정교하게 만드는 것보다 큐 대기를 줄이는 쪽이 첫 토큰을 훨씬 많이 당깁니다."
@@ -295,6 +304,14 @@ export default function RegionAgnosticInferenceRoutingArticle() {
             원가가 실제로 결정을 바꾸는 자리는 따로 있습니다. 확보한 용량이 다
             차서 탄력 임대를 더 돌리거나 외부 API로 넘겨야 하는 경계입니다.
             거기서는 요청 하나가 청구액을 실제로 늘립니다.
+          </p>
+
+          <p className="leading-7">
+            이 절은 이 글에서 가장 약한 부분이기도 합니다. 비용 항목을 어느
+            결정에 넣을지 가른 것에서 라우팅 순서까지 끌어냈는데, 분류가
+            맞더라도 순서가 그것만으로 따라 나오지는 않습니다. 실제로 이 논증은
+            원 조사를 외부 모델에 검증시켰을 때 가장 크게 지적받은 지점이고,
+            순서 자체는 측정으로 확인해야 합니다.
           </p>
         </div>
 
