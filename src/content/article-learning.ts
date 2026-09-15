@@ -80212,4 +80212,277 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "private-law/property-and-entitlement": {
+    entryNote:
+      "앞 글에서 본 힘은 약속한 두 사람 사이에만 미쳤습니다. 여기서는 그 범위를 넘어 누구에게나 미치는 권리를 봅니다.",
+    coreIdea:
+      "누구에게나 미치는 힘은 모두가 알 수 있어야 한다는 조건과 종류가 제한된다는 대가를 치르고 얻어집니다. 소유는 하나가 아니라 권능의 묶음이라 조각을 떼어 줄 수 있고, 그 권능을 지키는 방식은 사게 하는 쪽과 값을 매겨 옮기는 쪽 둘인데 협상 비용이 이득보다 큰 구간에서만 뒤쪽이 대안이 됩니다.",
+    assumedKnowledge: [
+      {
+        id: "enforceable-promise-filters",
+        role: "두 사람만 묶는 힘과 대비해 이 글의 질문을 세웁니다.",
+      },
+      {
+        id: "formal-legality-conditions",
+        role: "미리 알 수 있어야 한다는 조건을 공시의 근거로 씁니다.",
+      },
+      {
+        id: "collective-action-scale",
+        role: "인원이 늘수록 버티기가 전체를 멈추는 구조를 설명하는 데 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "erga-omnes-and-publicity",
+        role: "도달 범위가 넓어지는 대가를 세웁니다.",
+      },
+      {
+        id: "numerus-clausus",
+        role: "같은 조건에서 따라 나오는 두 번째 제한을 정의합니다.",
+      },
+      {
+        id: "bundle-of-entitlements",
+        role: "소유가 여러 권능의 묶음이라는 것을 정의합니다.",
+      },
+      {
+        id: "property-rule-vs-liability-rule",
+        role: "권능을 지키는 두 방식과 고르는 기준을 계산으로 보입니다.",
+      },
+      {
+        id: "forced-transfer-threshold",
+        role: "동의 없이 옮기는 제도들을 하나의 판정 절차로 모읍니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "erga-omnes-and-publicity",
+        sectionId: "publicity",
+        intuition:
+          "나와 아무 관계도 없는 사람에게 의무를 지우려면 그 사람이 알 수 있어야 합니다.",
+        workedExample:
+          "움직이는 물건은 누가 쥐고 있는지로, 땅과 건물은 장부에 적어 두는 것으로 드러냅니다.",
+        boundary:
+          "드러나는 방식이 완전하지는 않아, 장부와 실제가 어긋나는 경우를 다루는 별도의 규칙 덩어리가 필요합니다.",
+      },
+      {
+        id: "numerus-clausus",
+        sectionId: "publicity",
+        intuition:
+          "종류가 무한하면 확인하는 쪽이 감당할 수 없습니다.",
+        workedExample:
+          "계약은 내용을 자유롭게 짤 수 있지만, 누구에게나 주장할 권리는 목록에 있는 형태로만 만들 수 있습니다.",
+        boundary:
+          "목록이 좁으면 새로운 거래 방식이 막히므로 목록을 넓히는 입법이 주기적으로 필요합니다.",
+      },
+      {
+        id: "bundle-of-entitlements",
+        sectionId: "bundle",
+        intuition:
+          "세를 준 집이 누구의 것인지 묻는 질문은 소유를 덩어리로 볼 때만 어렵습니다.",
+        workedExample:
+          "세를 주는 것은 쓰는 권능을 기간을 정해 넘기는 것이고, 담보로 잡히는 것은 갚지 않을 때 팔아 값을 받을 권능을 넘기는 것입니다.",
+        boundary:
+          "조각을 떼어 줄 수 있다는 것이 아무 형태로나 쪼갤 수 있다는 뜻은 아닙니다. 종류 제한이 여기서도 걸립니다.",
+      },
+      {
+        id: "property-rule-vs-liability-rule",
+        sectionId: "two-protections",
+        intuition:
+          "사게 하면 값을 주인이 정하고, 값을 매겨 옮기면 바깥이 정합니다.",
+        workedExample:
+          "이웃 한 명에게서 사는 경우 이득 60에 협상 비용 10이면 거래가 성사되지만, 200필지를 모아야 하면 이득 4,000에 협상 비용 5,000이라 막힙니다.",
+        proofIdea:
+          "사게 하는 방식에서 이득이 실현되려면 협상이 성사되어야 하므로 T < G가 필요합니다. T > G이면 이득 G가 통째로 실현되지 못합니다. 값을 매겨 옮기는 방식은 이득을 실현하는 대신 평가 오차 E를 안고 가므로, 순이득이 G − E입니다. 이것이 막힌 채로 두는 것보다 나으려면 G − E > 0, 곧 E < G여야 합니다.",
+        counterexample:
+          "같은 이득 4,000이라도 값을 재기 어려워 오차가 4,600까지 커지면 옮기는 쪽이 오히려 손해이므로 동의를 받게 하는 편으로 되돌아갑니다.",
+        boundary:
+          "세 값 모두 사건 밖에서 관측되지 않는 어림이며, 값을 매겨 옮기는 길이 열려 있다는 사실 자체가 협상 태도를 바꾼다는 점은 이 비교에 들어 있지 않습니다.",
+      },
+      {
+        id: "forced-transfer-threshold",
+        sectionId: "forced-transfer",
+        intuition:
+          "협상이 구조적으로 막히는 구간을 다루는 장치들이 한 줄에 놓입니다.",
+        workedExample:
+          "도로를 놓으려고 많은 필지를 모으는 경우와 급박한 위험을 피하려 남의 부두에 배를 묶는 경우가 각각 인원과 시간 때문에 협상이 성립하지 않습니다.",
+        boundary:
+          "동의를 면제한 것이지 값을 면제한 것이 아닙니다. 이 구분이 흐려지면 협상이 막혔다는 이유만으로 그냥 가져가는 일이 생깁니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 대가",
+        relation: "도달 범위가 넓어지는 대신 무엇을 치르는지 봅니다.",
+        concepts: ["erga-omnes-and-publicity", "numerus-clausus"],
+      },
+      {
+        label: "01 묶음",
+        relation: "소유가 하나가 아니라 여러 권능임을 봅니다.",
+        concepts: ["bundle-of-entitlements"],
+      },
+      {
+        label: "02 지키는 법",
+        relation: "두 방식과 고르는 기준입니다.",
+        concepts: ["property-rule-vs-liability-rule"],
+      },
+      {
+        label: "03 예외의 자리",
+        relation: "동의 없이 옮기는 제도들을 한 줄에 놓습니다.",
+        concepts: ["forced-transfer-threshold"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "약속에서 나온 힘과 소유에서 나온 힘의 도달 범위가 어떻게 다른지 쓰세요.",
+        answerChecklist: [
+          "약속은 약속한 두 사람만",
+          "제삼자가 가져가면 닿지 않음",
+          "소유는 가져간 사람이 누구든 통함",
+          "약속하지 않은 사람에게까지 미침",
+        ],
+        requiredConcepts: ["erga-omnes-and-publicity"],
+        sectionId: "publicity",
+      },
+      {
+        level: "basic",
+        question:
+          "누구에게나 미치는 권리가 치르는 대가를 세 가지로 쓰세요.",
+        answerChecklist: [
+          "밖으로 드러나야 함",
+          "종류가 미리 정해진 목록으로 제한됨",
+          "거래하는 쪽이 미리 확인해야 함",
+          "확인하지 않은 위험은 그쪽이 짐",
+        ],
+        requiredConcepts: ["erga-omnes-and-publicity", "numerus-clausus"],
+        sectionId: "publicity",
+      },
+      {
+        level: "basic",
+        question:
+          "세를 준 집이 누구의 것인지를 권능의 묶음으로 설명하세요.",
+        answerChecklist: [
+          "쓰는 권능을 기간을 정해 넘김",
+          "나머지 권능은 그대로 있음",
+          "기간이 끝나면 되돌아옴",
+          "떼어 준 것을 빼고 남은 전부가 소유자에게",
+        ],
+        requiredConcepts: ["bundle-of-entitlements"],
+        sectionId: "bundle",
+      },
+      {
+        level: "basic",
+        question:
+          "이득 60, 협상 비용 10일 때 어떤 보호 방식이 나은지 판정하고 이유를 쓰세요.",
+        answerChecklist: [
+          "10 < 60이므로 협상이 성사",
+          "당사자가 값을 정할 수 있음",
+          "바깥에서 값을 잴 필요가 없음",
+          "동의 없이는 못 가져가게 둠",
+        ],
+        requiredConcepts: ["property-rule-vs-liability-rule"],
+        sectionId: "two-protections",
+      },
+      {
+        level: "basic",
+        question:
+          "협상 비용이 뛰는 이유가 인원수 자체가 아니라 무엇 때문인지 쓰세요.",
+        answerChecklist: [
+          "한 사람이 버티면 전체가 멈춤",
+          "그 사람이 자기 몫이 아니라 사업 전체 값을 요구",
+          "구조가 문제이지 인원수 자체가 아님",
+          "시간이 없어도 같은 효과",
+        ],
+        requiredConcepts: ["forced-transfer-threshold"],
+        sectionId: "forced-transfer",
+      },
+      {
+        level: "basic",
+        question:
+          "동의 없이 옮기는 제도에서 반드시 따라붙어야 하는 것과 그 이유를 쓰세요.",
+        answerChecklist: [
+          "값을 물어 주는 절차",
+          "동의를 면제한 것이지 값을 면제한 것이 아님",
+          "구분이 흐려지면 그냥 가져가게 됨",
+          "절차로도 함께 다룸",
+        ],
+        requiredConcepts: ["forced-transfer-threshold"],
+        sectionId: "forced-transfer",
+      },
+      {
+        level: "advanced",
+        question:
+          "두 보호 방식을 고르는 조건 T < G와 E < G를 순이득 비교로 유도하세요.",
+        answerChecklist: [
+          "사게 하면 T < G여야 이득이 실현됨",
+          "T > G이면 G가 통째로 실현되지 못함",
+          "값을 매기면 순이득이 G − E",
+          "막힌 채로 두는 것보다 나으려면 E < G",
+        ],
+        requiredConcepts: ["property-rule-vs-liability-rule"],
+        sectionId: "two-protections",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 이득에서도 값을 매겨 옮기는 길이 손해가 되는 경우를 수치로 보이세요.",
+        answerChecklist: [
+          "이득 4,000, 협상 비용 5,000",
+          "오차 800이면 옮기는 쪽이 나음",
+          "오차 4,600이면 G − E가 음수",
+          "동의를 받게 하는 편으로 되돌아감",
+        ],
+        requiredConcepts: ["property-rule-vs-liability-rule"],
+        sectionId: "two-protections",
+      },
+      {
+        level: "advanced",
+        question:
+          "물어 주는 값이 구조적으로 실제 손실보다 작게 나오는 이유와 그 함의를 쓰세요.",
+        answerChecklist: [
+          "시장에서 거래되는 가격을 기준으로 삼음",
+          "그 사람에게만 있는 가치는 안 들어옴",
+          "오차 항이 한쪽으로 치우침",
+          "치우침이 클수록 문턱을 높게 잡아야 함",
+        ],
+        requiredConcepts: [
+          "forced-transfer-threshold",
+          "property-rule-vs-liability-rule",
+        ],
+        sectionId: "forced-transfer",
+      },
+      {
+        level: "advanced",
+        question:
+          "값을 매겨 옮기는 길이 열려 있다는 사실이 실제 발동되지 않는 사건에도 영향을 주는 이유를 쓰세요.",
+        answerChecklist: [
+          "보유자가 요구할 수 있는 상한이 그 값으로 눌림",
+          "협상 태도가 바뀜",
+          "제도의 효과가 발동 건수보다 넓게 미침",
+          "앞 절 비교에는 들어 있지 않은 효과",
+        ],
+        requiredConcepts: ["forced-transfer-threshold"],
+        sectionId: "forced-transfer",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Guido Calabresi · A. Douglas Melamed · Property Rules, Liability Rules, and Inalienability (1972)",
+        href: "https://www.jstor.org/stable/1340059",
+        problem:
+          "재산과 불법행위가 따로 논의되어, 권리를 누구에게 줄 것인가와 그 권리를 어떻게 지킬 것인가가 뒤섞여 다뤄졌습니다.",
+        contribution:
+          "두 결정을 갈라 놓고 보호 방식을 세 가지로 정리했습니다. 떼어 가려면 보유자에게서 사야 하고 값은 파는 쪽이 동의해야 정해지는 방식, 객관적으로 정해진 값을 치르면 떼어 갈 수 있는 방식, 그리고 거래 자체가 허용되지 않는 방식입니다. 같은 대상이 상대에 따라 다른 방식으로 보호될 수 있다는 점도 함께 보였습니다.",
+        assumptions:
+          "권리의 최초 배분이 이미 정해져 있다고 두고 그 뒤의 보호 방식만 다루며, 비교의 축을 집행 비용과 거래 비용에 둡니다.",
+        evidenceScope:
+          "Harvard Law Review 85권 6호 1089~1128쪽에 실린 이론 논문이며, 대학 강의 자료로 공개된 사본에서 전문을 확인했습니다. 분석 틀의 제시이며 실제 판례를 조사한 연구가 아닙니다.",
+        notClaim:
+          "협상이 막히면 언제든 값을 매겨 옮겨도 된다는 주장이 아닙니다. 이 글에 실린 조건식은 논문의 모형이 아니라 두 방식의 차이를 짧게 비교하려고 직접 전개한 것이며, 값을 재기 어려운 자원에서는 같은 조건이 반대 결론을 냅니다.",
+        sectionId: "two-protections",
+      },
+    ],
+  },
 };
