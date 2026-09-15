@@ -24797,6 +24797,56 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "빠른 릴리스 주기에서 스택은 개별 버전이 아니라 엔진·게이트웨이·메시의 검증된 버전을 함께 적은 구성표를 냅니다. 구성 요소 하나만 최신으로 올리면 각각이 안정 버전이어도 그 조합은 검증된 적이 없으며, 드라이버 하한을 올리는 변경이 섞이면 스택 갱신이 노드 전체를 건드리는 일이 됩니다.",
     canonicalHref: "/cs/ai/inference-stack-standard-levels#version-pinning",
   },
+  "comparison-unit-mismatch": {
+    id: "comparison-unit-mismatch",
+    kind: "concept",
+    domain: "computer-science",
+    label: "다른 자로 잰 두 값을 나란히 놓기",
+    aliases: ["단위 불일치", "분모가 다른 비교", "이중 계상"],
+    definition:
+      "양쪽 계산이 각각 맞아도 분모나 세는 대상이 다르면 견줄 수 없습니다. 값이 나오고 단위 기호가 붙어 있어 그럴듯해 보이는 것이 이 오류의 특징이며, 잡으려면 값이 아니라 무엇을 무엇으로 나눈 값인지를 양쪽 모두 말로 풀어 같은 모양인지 봐야 합니다.",
+    canonicalHref: "/cs/ai/cross-review-error-classes#unit-mismatch",
+  },
+  "guarantee-vs-usually": {
+    id: "guarantee-vs-usually",
+    kind: "concept",
+    domain: "computer-science",
+    label: "대개 그런 것을 보장으로 적기",
+    aliases: ["보장 범위 과장", "기능 이름과 보장의 혼동"],
+    definition:
+      "어떤 장치가 대개 그렇게 동작한다는 사실을 조건 없는 문장으로 옮기는 오류이며, 남이 만든 장치를 쓸 때 더 자주 나옵니다. 문서에 적힌 기능 이름을 그 기능의 보장 범위로 읽기 때문이고, 문장을 부정형으로 뒤집어 깨지는 조건을 하나도 댈 수 없으면 아직 그 조건을 모르는 쪽일 가능성이 큽니다.",
+    canonicalHref: "/cs/ai/cross-review-error-classes#guarantee",
+  },
+  "observation-promoted-to-rule": {
+    id: "observation-promoted-to-rule",
+    kind: "concept",
+    domain: "computer-science",
+    label: "한 사례를 조건 없이 규칙으로 올리기",
+    aliases: ["보편 임계값", "도출되지 않은 순서"],
+    definition:
+      "한 조건에서 나온 숫자나 순서를 조건 없이 적는 오류이며, 고쳐도 한 겹씩만 벗겨져 가장 오래 살아남습니다. 관찰 자체는 쓸모가 있으므로 버리는 대신 어떤 조건에서 나온 것인지 함께 적거나, 규칙 대신 그 규칙을 만들어 낸 계산을 실어 읽는 쪽이 자기 숫자를 넣어 볼 수 있게 합니다.",
+    canonicalHref: "/cs/ai/cross-review-error-classes#overgeneralization",
+  },
+  "fix-introduces-new-defect": {
+    id: "fix-introduces-new-defect",
+    kind: "concept",
+    domain: "computer-science",
+    label: "고치는 과정에서 생기는 오류",
+    aliases: ["개정판 신규 결함", "수정이 지운 사실"],
+    definition:
+      "지적을 반영해 새로 쓴 문장, 다시 짠 표에서 빠진 사실, 한쪽만 고쳐 생긴 자기 모순처럼 수정 자체가 만드는 결함입니다. 고친 원고는 새 원고이고 새 원고는 검증되지 않은 원고이므로, 검증을 한 번 돌리고 끝내면 이 종류가 그대로 남습니다.",
+    canonicalHref: "/cs/ai/cross-review-error-classes#repeated-fix",
+  },
+  "review-round-decay-estimate": {
+    id: "review-round-decay-estimate",
+    kind: "method",
+    domain: "computer-science",
+    label: "라운드 감쇠로 남은 양을 어림하기",
+    aliases: ["등비급수 잔여 추정", "검증을 몇 번 돌릴 것인가"],
+    definition:
+      "라운드마다 잡히는 수가 일정 비율로 준다고 두면 남은 합을 등비급수로 어림할 수 있고, 잡히는 수가 줄었다는 사실이 끝났다는 신호가 아니라 줄어드는 속도를 알게 된 것임을 보여 줍니다. 다만 라운드마다 질문이 바뀌면 세는 대상이 달라져 이 계산 자체가 단위 불일치가 되므로 값이 아니라 방향만 씁니다.",
+    canonicalHref: "/cs/ai/cross-review-error-classes#repeated-fix",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -45989,6 +46039,62 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "둘 다 층을 가르지만 하나는 이식성의 축으로, 다른 하나는 지연과 장애 의존성의 축으로 가릅니다.",
+  },
+  {
+    from: "comparison-unit-mismatch",
+    to: "observation-promoted-to-rule",
+    relation: "produces",
+    reason:
+      "다른 자로 잰 비교에서 나온 임계값이 조건 없이 적히면 두 오류가 한 문장에 겹칩니다.",
+  },
+  {
+    from: "guarantee-vs-usually",
+    to: "fix-introduces-new-defect",
+    relation: "contrasts",
+    reason:
+      "앞은 처음 쓸 때 생기고 뒤는 고칠 때 생기므로, 같은 검증을 한 번만 돌리면 뒤쪽을 구조적으로 놓칩니다.",
+  },
+  {
+    from: "fix-introduces-new-defect",
+    to: "review-round-decay-estimate",
+    relation: "prerequisite",
+    reason:
+      "수정이 새 결함을 만들기 때문에 라운드가 여러 번 필요해지고, 그래야 감쇠를 잴 수 있는 수열이 생깁니다.",
+  },
+  {
+    from: "review-round-decay-estimate",
+    to: "comparison-unit-mismatch",
+    relation: "constrains",
+    reason:
+      "라운드마다 질문이 바뀌면 세는 대상이 달라져 이 추정 자체가 단위 불일치가 되므로 값으로 쓸 수 없습니다.",
+  },
+  {
+    from: "comparison-unit-mismatch",
+    to: "throughput-cost-vs-api-price",
+    relation: "produces",
+    reason:
+      "출력 처리량 원가와 혼합 가격을 직접 견준 사례가 이 유형의 구체형입니다.",
+  },
+  {
+    from: "guarantee-vs-usually",
+    to: "saturation-is-not-failure",
+    relation: "produces",
+    reason:
+      "준비 상태 신호로 수용량을 표현하면 된다고 읽은 것이 기능 이름을 보장 범위로 읽은 사례입니다.",
+  },
+  {
+    from: "observation-promoted-to-rule",
+    to: "utilization-breakeven",
+    relation: "constrains",
+    reason:
+      "손익분기 가동률을 계약과 무관한 상수로 적으면 이 유형이 되므로, 값 대신 그 값을 내는 식을 실어야 합니다.",
+  },
+  {
+    from: "reusable-lesson-contract",
+    to: "fix-introduces-new-defect",
+    relation: "extends",
+    reason:
+      "사건을 규칙으로 옮기는 기록이 수정 자체가 만드는 결함까지 포함해야 다음 회차에 같은 자리를 다시 밟지 않습니다.",
   },
 ];
 

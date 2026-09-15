@@ -12619,6 +12619,40 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "cross-review-error-classes": {
+    title: "틀린 자리가 한 종류에 몰려 있었습니다 글이 소유하는 범위",
+    owns: [
+      "비교의 단위가 어긋나는 유형과 그것을 확인하는 세 질문",
+      "보장이 아닌 것을 보장으로 적는 유형과 부정형 뒤집기 절차",
+      "한 사례를 조건 없이 규칙으로 올리는 유형과 한 겹씩 벗겨지는 구조",
+      "수정 자체가 만드는 결함의 세 모양",
+      "라운드 감쇠로 남은 양을 어림하는 식과 그 식이 스스로 저지르는 한계",
+    ],
+    reuses: [
+      {
+        label: "분모를 맞추는 일의 실제 사례",
+        href: "/cs/ai/own-vs-rent-inference-capacity#two-rentals",
+      },
+      {
+        label: "보장으로 잘못 읽었던 자리",
+        href: "/cs/ai/inference-failure-absorption#saturation",
+      },
+      {
+        label: "조건 없이 올린 규칙을 조건부로 내린 자리",
+        href: "/cs/ai/inference-stack-standard-levels#three-levels",
+      },
+    ],
+    evidence: [
+      {
+        kind: "project-claim",
+        rule: "모델 이름을 적지 않고 모델 비교로 읽히지 않게 쓴다. 역할을 바꾼 대조를 하지 않았고 표본이 하나라는 점을 본문에 명시한다",
+      },
+      {
+        kind: "project-measurement",
+        rule: "라운드별 건수는 기록 파일의 항목을 직접 세어 쓰고, 원 집계와 어긋나면 어긋났다는 사실을 evidenceScope에 남긴다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
