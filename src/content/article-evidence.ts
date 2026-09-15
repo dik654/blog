@@ -7515,4 +7515,25 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "값 하나가 사정을 옳게 전달하기 위한 조건 가운데 양쪽이 같은 물건을 본다는 전제를 이 글이 풂",
     },
   ],
+  "macro/aggregation-and-composition": [
+    {
+      kind: "핵심 논문",
+      label:
+        "John Maynard Keynes, The General Theory of Employment, Interest and Money (1936) · 프랑스어판 서문, 제7장, 제10장",
+      href: "https://gutenberg.net.au/ebooks03/0300071h/printall.html",
+      note: "부분의 결론을 전체로 옮기는 오류, 절약이 스스로를 무너뜨린다는 문장, 승수 정의와 누출, 80퍼센트에 크기 5라는 예시. 호주 구텐베르크 전문으로 직접 대조함",
+    },
+    {
+      kind: "보충 읽기",
+      label: "총량이 같아도 누구에게 갔는지가 다르다는 앞 글의 지적",
+      href: "/economics/prices/surplus-and-efficiency#not-fairness",
+      note: "이 글의 마지막 절이 그 지적을 총량을 읽는 쪽의 한계로 옮겨 씀",
+    },
+    {
+      kind: "보충 읽기",
+      label: "여럿의 뜻을 하나로 모으는 절차 쪽의 문제",
+      href: "/politics/elections/voting-paradoxes",
+      note: "여기서는 더하는 일이 잘 정의되어 있고 더한 뒤가 문제인데 그쪽은 더하는 방법 자체가 여럿임",
+    },
+  ],
 };

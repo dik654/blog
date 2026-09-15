@@ -12825,6 +12825,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "aggregation-and-composition": {
+    title:
+      "한 사람에게 맞는 답이 모두에게 맞지는 않습니다 글이 소유하는 범위",
+    owns: [
+      "전체의 지출과 소득이 같은 것이라는 관계와 그것이 한 사람에게는 성립하지 않는다는 구분",
+      "다 같이 아낄 때 소득이 줄고 남는 금액이 움직이지 않는다는 유도",
+      "한 번의 지출이 멈추는 자리와 그 분모를 이루는 새는 자리들",
+      "총액과 평균이 같아도 나뉜 모양이 다시 쓰는 몫을 바꾼다는 것",
+      "총액 하나로 답할 수 있는 물음과 없는 물음의 구분",
+    ],
+    reuses: [
+      {
+        label: "한 단계씩 견주는 판정",
+        href: "/economics/scarcity/scarcity-and-opportunity-cost#margin",
+      },
+      {
+        label: "총량이 같아도 누구에게 갔는지가 다르다는 지적",
+        href: "/economics/prices/surplus-and-efficiency#not-fairness",
+      },
+      {
+        label: "더하기 전에 숫자를 얻지 못하는 문제",
+        href: "/economics/market-failure/public-goods-and-commons#revelation",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Keynes 에 귀속하는 것은 부분과 전체의 구분, 절약이 스스로를 무너뜨린다는 결론, 승수 정의와 누출까지이고, 숫자와 계수는 이 글의 계산으로 표시하되 제10장 예시와 겹치는 대목은 그 사실과 차이를 함께 적는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -25078,6 +25078,48 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/economics/market-failure/information-asymmetry#hidden-action",
   },
+  "spending-is-income-identity": {
+    id: "spending-is-income-identity",
+    kind: "concept",
+    domain: "economics",
+    label: "내가 쓴 것이 남이 받은 것이다",
+    aliases: ["지출과 소득의 항등", "순환"],
+    definition:
+      "누군가가 받는 모든 돈은 누군가가 쓴 돈이므로 전체의 지출과 전체의 소득은 같은 것을 양쪽에서 부른 이름입니다. 그래서 한 해에 쓰이지 않고 남은 것은 새로 만드는 데 쓰인 것과 반드시 같아지는데, 한 사람에게는 자기가 남기는 것과 자기가 새로 만드는 것 사이에 아무 관계도 없습니다.",
+    canonicalHref:
+      "/economics/macro/aggregation-and-composition#spending-is-income",
+  },
+  "paradox-of-thrift": {
+    id: "paradox-of-thrift",
+    kind: "theorem",
+    domain: "economics",
+    label: "다 같이 아끼면 아껴지지 않는다",
+    aliases: ["절약의 역설", "구성의 오류"],
+    definition:
+      "덜 쓰기로 하면 그만큼이 남의 소득에서 빠지고 그 사람도 덜 쓰므로 소득 자체가 줄어듭니다. 남는 금액은 소득에서 다시 쓰이는 것을 뺀 나머지인데 두 줄어듦이 상쇄되어 새로 만드는 데 쓰이는 것과 같은 자리에 그대로 머물고, 달라지는 것은 그 자리에 닿는 소득의 크기뿐입니다.",
+    canonicalHref: "/economics/macro/aggregation-and-composition#thrift",
+  },
+  "spending-multiplier": {
+    id: "spending-multiplier",
+    kind: "theorem",
+    domain: "economics",
+    label: "한 번의 지출이 멈추는 자리",
+    aliases: ["승수", "누출"],
+    definition:
+      "한 번의 지출이 다음 바퀴에 다시 쓰이는 몫만큼 이어지므로 합이 처음 금액을 다시 쓰이지 않고 빠지는 몫으로 나눈 값에서 멈춥니다. 그 분모는 남기는 몫과 밖에서 만든 물건을 사는 몫과 걷히는 몫의 합이라, 새는 자리가 어디에 얼마나 있는지를 모르면 이 크기를 낼 수 없습니다.",
+    canonicalHref: "/economics/macro/aggregation-and-composition#multiplier",
+  },
+  "aggregate-hides-distribution": {
+    id: "aggregate-hides-distribution",
+    kind: "concept",
+    domain: "economics",
+    label: "합친 숫자는 그 숫자를 정한 것을 지운다",
+    aliases: ["총량의 한계", "평균과 분포"],
+    definition:
+      "총액과 평균이 같아도 나뉜 모양이 다르면 가운데 사람이 절반일 수 있고, 구간마다 다시 쓰는 몫이 다르므로 같은 총액에서 다른 지출이 나옵니다. 그래서 합친 숫자가 얼마가 될지를 정하는 것이 합치면서 지워진 쪽이 되고, 총액 하나로는 답할 수 없는 물음이 생깁니다.",
+    canonicalHref:
+      "/economics/macro/aggregation-and-composition#aggregates-hide",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -46662,6 +46704,69 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "예금자가 은행의 자산이 어떤지 모르면 같은 구조가 돌아 좋은 은행부터 자금을 잃습니다.",
+  },
+  {
+    from: "marginal-decision-rule",
+    to: "spending-is-income-identity",
+    relation: "constrains",
+    reason:
+      "한 사람의 결정이 자기 소득을 바꾸지 않는다는 전제 위에서만 한 단계 비교가 그대로 통하는데, 전부를 합치면 그 전제가 깨집니다.",
+  },
+  {
+    from: "spending-is-income-identity",
+    to: "spending-multiplier",
+    relation: "produces",
+    reason:
+      "내가 쓴 것이 남의 소득이 되고 그 사람이 다시 쓰므로 한 번의 지출이 여러 바퀴를 돕니다.",
+  },
+  {
+    from: "spending-multiplier",
+    to: "paradox-of-thrift",
+    relation: "produces",
+    reason:
+      "덜 쓰기로 한 금액이 같은 바퀴를 돌아 소득 자체를 그 몫으로 나눈 만큼 끌어내립니다.",
+  },
+  {
+    from: "spending-is-income-identity",
+    to: "paradox-of-thrift",
+    relation: "prerequisite",
+    reason:
+      "남는 것이 새로 만드는 것과 같아야 한다는 관계가 저축 총액이 움직이지 못하는 이유입니다.",
+  },
+  {
+    from: "paradox-of-thrift",
+    to: "bank-failure-externality",
+    relation: "contrasts",
+    reason:
+      "한 곳에 옳은 자산 매각이 모두가 동시에 하면 값을 떨어뜨리는 급매가 되는 것도 같은 모양입니다.",
+  },
+  {
+    from: "efficiency-is-not-fairness",
+    to: "aggregate-hides-distribution",
+    relation: "produces",
+    reason:
+      "총량이 같아도 누구에게 갔는지가 다르다는 지적을 총량을 읽는 쪽의 한계로 옮긴 것입니다.",
+  },
+  {
+    from: "aggregate-hides-distribution",
+    to: "spending-multiplier",
+    relation: "constrains",
+    reason:
+      "구간마다 다시 쓰는 몫이 다르면 같은 총액에서 다른 분모가 나와 크기가 달라집니다.",
+  },
+  {
+    from: "preference-revelation-problem",
+    to: "aggregate-hides-distribution",
+    relation: "contrasts",
+    reason:
+      "앞은 더하기 전에 숫자를 얻지 못하는 문제이고 이것은 정확히 얻어도 더하는 순간 잃는 것이 있다는 문제입니다.",
+  },
+  {
+    from: "aggregate-hides-distribution",
+    to: "collective-decision",
+    relation: "contrasts",
+    reason:
+      "여기서는 더하는 일이 잘 정의되어 있고 더한 뒤가 문제인데, 뜻을 모으는 쪽에서는 더하는 방법 자체가 여럿입니다.",
   },
 ];
 

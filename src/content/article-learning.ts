@@ -85245,4 +85245,267 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "macro/aggregation-and-composition": {
+    entryNote:
+      "앞 여덟 편은 한 사람의 소득이 그 사람의 결정에 따라 움직이지 않는다고 두었습니다. 여기서 그 전제를 풉니다.",
+    coreIdea:
+      "전체를 합치면 내가 쓴 것이 남이 받은 것이라는 관계가 살아나서 한 사람의 결정이 자기 소득까지 되돌아옵니다. 그래서 각자에게 옳은 판단인 절약을 모두가 동시에 하면 소득만 줄고 남는 금액은 새로 만드는 데 쓰이는 것과 같은 자리에 머뭅니다. 한 번의 지출이 멈추는 자리는 다시 쓰이지 않고 빠지는 몫이 정하고, 그 몫은 총액 하나로는 보이지 않는 분포에 달려 있습니다.",
+    assumedKnowledge: [
+      {
+        id: "marginal-decision-rule",
+        role: "한 단계씩 견주는 판정이 서 있던 전제를 드러내고 그 전제가 깨지는 자리를 짚습니다.",
+      },
+      {
+        id: "efficiency-is-not-fairness",
+        role: "총량이 같아도 누구에게 갔는지가 다르다는 지적을 총량을 읽는 쪽으로 옮깁니다.",
+      },
+      {
+        id: "preference-revelation-problem",
+        role: "숫자를 모으는 단계의 문제와 더하는 단계의 문제를 가릅니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "spending-is-income-identity",
+        role: "전체를 합칠 때만 살아나는 관계를 세웁니다.",
+      },
+      {
+        id: "paradox-of-thrift",
+        role: "그 관계 때문에 각자의 옳은 판단이 뒤집히는 것을 셉니다.",
+      },
+      {
+        id: "spending-multiplier",
+        role: "한 번의 지출이 멈추는 자리와 그것을 정하는 것을 세웁니다.",
+      },
+      {
+        id: "aggregate-hides-distribution",
+        role: "합친 숫자가 무엇을 지우고 그것이 왜 되돌아오는지를 정합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "spending-is-income-identity",
+        sectionId: "spending-is-income",
+        intuition:
+          "내가 쓰지 않은 만큼은 누군가가 받지 못한 만큼입니다.",
+        workedExample:
+          "한 해 도는 소득이 250이고 220이 다시 쓰이면 남는 것이 30이며, 그 30이 새로 만드는 데 쓰이는 30과 같습니다.",
+        boundary:
+          "한 사람에게는 전혀 성립하지 않습니다. 내가 얼마를 남기느냐와 내가 얼마를 새로 만드느냐 사이에는 아무 관계도 없습니다.",
+      },
+      {
+        id: "paradox-of-thrift",
+        sectionId: "thrift",
+        intuition:
+          "각자 아끼면 남지만 다 같이 아끼면 소득이 줄어듭니다.",
+        workedExample:
+          "소득과 무관하게 쓰는 몫을 20에서 10으로 줄이면 소득이 250에서 200으로 내려가는데 남는 것은 30 그대로입니다.",
+        proofIdea:
+          "소득은 다시 쓰이는 것과 새로 만드는 것의 합과 같으므로 Y = cY + a + I이고, 풀면 Y가 a와 I의 합을 1에서 c를 뺀 것으로 나눈 값이 됩니다. 남는 것은 Y에서 다시 쓰이는 것을 뺀 (1−c)Y − a인데 여기에 위의 Y를 넣으면 a가 상쇄되어 I만 남습니다. 그래서 얼마나 아끼기로 하든 남는 금액이 움직이지 않습니다.",
+        counterexample:
+          "새로 만드는 데 쓰이는 것이 고정되어 있지 않고 아낀 만큼 늘어난다면 I가 커져 남는 금액도 같이 커집니다.",
+        boundary:
+          "비율로는 12퍼센트에서 15퍼센트로 올랐습니다. 더 아끼기는 했는데 더 남지는 않았다는 뜻입니다.",
+      },
+      {
+        id: "spending-multiplier",
+        sectionId: "multiplier",
+        intuition:
+          "한 바퀴마다 같은 비율로 작아지므로 합이 유한한 자리에서 멈춥니다.",
+        workedExample:
+          "10을 새로 쓰면 다음 바퀴가 8, 그다음이 6.4, 5.12로 이어져 10을 0.2로 나눈 50에서 멈춥니다.",
+        proofIdea:
+          "첫 바퀴가 A이고 다음 바퀴마다 c배가 되므로 합은 첫 항이 A이고 비가 c인 등비급수입니다. c가 1보다 작으면 그 합이 A를 1에서 c를 뺀 값으로 나눈 것으로 수렴하고, 그 분모가 한 바퀴마다 다시 쓰이지 않고 빠지는 몫입니다.",
+        counterexample:
+          "쓰는 것의 20퍼센트가 밖에서 만든 물건이면 안에서 도는 몫이 0.64가 되어 크기가 5배에서 2.8배로 내려갑니다.",
+        boundary:
+          "이 크기는 불어나는 속도가 아니라 멈추는 자리입니다. 여섯 바퀴에 이미 36.9까지 가고 나머지는 천천히 채워집니다.",
+      },
+      {
+        id: "aggregate-hides-distribution",
+        sectionId: "aggregates-hide",
+        intuition:
+          "평균이 같아도 가운데 사람이 절반일 수 있습니다.",
+        workedExample:
+          "20씩 다섯과 60·20·10·5·5는 총액도 평균도 같은데 가운데가 20과 10이고, 10까지 다 쓰고 그 위로 절반만 쓰면 다시 쓰이는 것이 75와 70으로 갈립니다.",
+        boundary:
+          "공평의 문제로만 읽으면 안 됩니다. 나뉜 모양이 도는 비율을 바꾸므로 총액이 얼마가 될지 자체가 거기에 달려 있습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 합쳐야 보이는 관계",
+        relation: "전체에서만 살아나는 되먹임을 세웁니다.",
+        concepts: ["spending-is-income-identity"],
+      },
+      {
+        label: "01 뒤집히는 판단",
+        relation: "각자에게 옳은 것이 모두에게 옳지 않은 경우를 셉니다.",
+        concepts: ["paradox-of-thrift"],
+      },
+      {
+        label: "02 멈추는 자리",
+        relation: "한 번의 지출이 어디까지 가는지를 정합니다.",
+        concepts: ["spending-multiplier"],
+      },
+      {
+        label: "03 지워진 쪽",
+        relation: "합친 숫자가 무엇을 못 보는지를 봅니다.",
+        concepts: ["aggregate-hides-distribution"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "전체로는 남는 것과 새로 만드는 데 쓰이는 것이 같은데 한 사람에게는 그렇지 않은 이유를 쓰세요.",
+        answerChecklist: [
+          "받는 모든 돈은 누군가가 쓴 돈",
+          "쓰이지 않고 남은 것이 갈 곳은 새로 만드는 것뿐",
+          "한 사람의 남김과 그 사람의 만듦은 서로 무관",
+          "전체에 참인 것과 한 사람에 참인 것이 다름",
+        ],
+        requiredConcepts: ["spending-is-income-identity"],
+        sectionId: "spending-is-income",
+      },
+      {
+        level: "basic",
+        question:
+          "다시 쓰는 몫이 0.8일 때 모두가 10씩 덜 쓰면 소득이 얼마나 줄어드는지 바퀴별로 구하세요.",
+        answerChecklist: [
+          "첫 바퀴 10",
+          "다음이 8, 6.4, 5.12",
+          "한 바퀴마다 0.8배",
+          "다 더하면 10을 0.2로 나눈 50",
+        ],
+        requiredConcepts: ["paradox-of-thrift", "spending-multiplier"],
+        sectionId: "thrift",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 예에서 남는 금액과 남기는 비율이 각각 어떻게 되는지 구하세요.",
+        answerChecklist: [
+          "소득이 250에서 200으로 줄어듦",
+          "남는 금액은 30에서 30으로 그대로",
+          "비율은 12퍼센트에서 15퍼센트로 오름",
+          "더 아꼈는데 더 남지는 않음",
+        ],
+        requiredConcepts: ["paradox-of-thrift"],
+        sectionId: "thrift",
+      },
+      {
+        level: "basic",
+        question:
+          "다시 쓰는 몫이 0.5, 0.8, 0.9일 때 불어나는 크기를 각각 구하고 그 규칙을 쓰세요.",
+        answerChecklist: [
+          "2배, 5배, 10배",
+          "안 도는 몫의 역수",
+          "1에 가까울수록 가파르게 커짐",
+          "분모는 다시 쓰이지 않고 빠지는 몫",
+        ],
+        requiredConcepts: ["spending-multiplier"],
+        sectionId: "multiplier",
+      },
+      {
+        level: "basic",
+        question:
+          "쓰는 것의 20퍼센트가 밖에서 만든 물건일 때 크기가 어떻게 달라지는지 계산하세요.",
+        answerChecklist: [
+          "안에서 도는 몫이 0.8 곱하기 0.8인 0.64",
+          "크기가 1에서 0.64를 뺀 값의 역수",
+          "5배에서 2.8배로 내려감",
+          "같은 10이 50 대신 28쯤이 됨",
+        ],
+        requiredConcepts: ["spending-multiplier"],
+        sectionId: "multiplier",
+      },
+      {
+        level: "basic",
+        question:
+          "20씩 다섯과 60·20·10·5·5를 견줘 총액·평균·가운데 사람을 각각 쓰세요.",
+        answerChecklist: [
+          "총액 둘 다 100",
+          "평균 둘 다 20",
+          "가운데가 20과 10",
+          "합친 숫자만으로는 어느 쪽인지 알 수 없음",
+        ],
+        requiredConcepts: ["aggregate-hides-distribution"],
+        sectionId: "aggregates-hide",
+      },
+      {
+        level: "advanced",
+        question:
+          "남는 금액이 얼마나 아끼기로 하든 움직이지 않는다는 것을 식으로 유도하세요.",
+        answerChecklist: [
+          "Y = cY + a + I에서 Y를 구함",
+          "Y가 a와 I의 합을 1−c로 나눈 값",
+          "남는 것은 (1−c)Y − a",
+          "대입하면 a가 상쇄되어 I만 남음",
+        ],
+        requiredConcepts: ["paradox-of-thrift", "spending-is-income-identity"],
+        sectionId: "thrift",
+      },
+      {
+        level: "advanced",
+        question:
+          "한 번의 지출이 유한한 자리에서 멈추는 이유를 설명하세요.",
+        answerChecklist: [
+          "첫 항이 처음 금액이고 비가 다시 쓰는 몫인 등비급수",
+          "그 몫이 1보다 작음",
+          "합이 처음 금액을 1에서 그 몫을 뺀 값으로 나눈 것으로 수렴",
+          "분모가 한 바퀴마다 빠지는 몫",
+        ],
+        requiredConcepts: ["spending-multiplier"],
+        sectionId: "multiplier",
+      },
+      {
+        level: "advanced",
+        question:
+          "10까지 다 쓰고 그 위로 절반만 쓴다고 할 때 두 분포의 총지출을 구하고 그것이 무엇을 바꾸는지 쓰세요.",
+        answerChecklist: [
+          "고른 쪽은 각자 15씩 75",
+          "치우친 쪽은 35·15·10·5·5로 70",
+          "같은 총액에서 다른 지출",
+          "도는 비율이 달라져 불어나는 크기도 달라짐",
+        ],
+        requiredConcepts: [
+          "aggregate-hides-distribution",
+          "spending-multiplier",
+        ],
+        sectionId: "aggregates-hide",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 글의 계산이 값과 이자율을 세워 둔 것이라는 점이 결론을 어느 방향으로 바꿀 수 있는지 양쪽 다 쓰세요.",
+        answerChecklist: [
+          "값이 내려가면 같은 돈으로 더 살 수 있어 일부가 되돌아옴",
+          "이자율이 내려가면 새로 만드는 것이 늘어 고정 전제가 풀림",
+          "반대로 소득이 줄면 새로 만들 이유도 줄어 더 나빠질 수 있음",
+          "어느 쪽이 센지는 이 글이 답하지 않음",
+        ],
+        requiredConcepts: ["paradox-of-thrift"],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "John Maynard Keynes, The General Theory of Employment, Interest and Money (Macmillan, 1936)",
+        href: "https://gutenberg.net.au/ebooks03/0300071h/printall.html",
+        problem:
+          "한 시장이나 한 사람에 대해 옳게 얻은 결론을 경제 전체로 그대로 옮기면서 생긴 오류들이 있었고, 특히 남기는 것과 새로 만드는 것의 관계가 개인과 전체에서 다르다는 점이 정리되어 있지 않았습니다.",
+        contribution:
+          "전체에서는 남는 것과 새로 만드는 것이 반드시 같아야 하는데 한 사람에게는 둘 사이에 아무 관계도 없다는 것을 갈라 놓고, 그 차이가 생기는 이유를 한 사람의 소비가 다른 사람의 소득이 된다는 데서 찾습니다. 그 위에서 소비를 줄여 더 남기려는 시도가 소득을 움직여 스스로를 무너뜨린다는 결론을 냅니다. 그리고 한 번의 투자가 몇 배가 되는지를 다시 쓰는 몫으로 정의해 이름을 붙이고, 밖과의 거래처럼 새는 자리가 그 크기를 깎는다는 것도 같은 장에서 짚습니다.",
+        assumptions:
+          "다시 쓰는 몫이 대체로 안정적이고 새로 만드는 데 쓰이는 것이 소득과 별개로 정해진다고 둡니다. 값과 임금이 아래로 잘 움직이지 않는다는 전제도 함께 깔려 있습니다.",
+        evidenceScope:
+          "호주 구텐베르크가 공개한 전문으로 프랑스어판 서문의 부분과 전체 대목, 제7장의 절약이 스스로를 무너뜨린다는 문장, 제10장의 승수 정의와 누출 대목, 그리고 다시 쓰는 몫 80퍼센트에 크기 5라는 예시를 직접 대조했습니다.",
+        notClaim:
+          "이 글의 숫자와 계수는 책의 것이 아니라 같은 관계를 풀어 계산한 것입니다. 다만 제10장의 예시가 다시 쓰는 몫 80퍼센트에 크기 5로 이 글과 겹치는데, 책이 밖과의 거래를 넣어 2나 3까지 내려간다고 할 때는 실업 급여라는 두 번째 새는 자리를 함께 넣은 것이고 이 글의 2.8은 밖과의 거래 하나만 넣어 다시 계산한 값입니다. 또 이 글은 돈과 이자율과 물가를 다루지 않으므로 책의 결론 가운데 그쪽에 걸린 것은 가져오지 않았습니다.",
+        sectionId: "spending-is-income",
+      },
+    ],
+  },
 };
