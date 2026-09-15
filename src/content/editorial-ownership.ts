@@ -12359,6 +12359,39 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "settlement-and-access": {
+    title:
+      "지금까지 본 규칙들은 대부분의 사건에 적용되지 않습니다 글이 소유하는 범위",
+    owns: [
+      "합의 구간의 폭이 소송비용의 합이라는 계산",
+      "구간이 사라지는 조건과 그때 재판으로 간다는 결론",
+      "재판까지 오는 사건의 치우침과 그것이 만드는 세 가지 착시",
+      "규칙이 적용되지 않는 사건에서 작동하는 경로",
+      "같은 비용이 합의를 돕고 청구를 막는 두 방향",
+      "여러 건을 상대하는 쪽이 표본을 한 번 더 거른다는 관찰",
+      "법 시리즈 아홉 글과 네 대분류 전체의 되짚기",
+    ],
+    reuses: [
+      {
+        label: "재판이 열렸을 때의 판정 문턱",
+        href: "/law/criminal-law/procedure-and-proof#threshold",
+      },
+      {
+        label: "조문만 읽어도 답이 정해지는 구간",
+        href: "/law/legal-system/rules-standards-and-interpretation#interpretation",
+      },
+      {
+        label: "두 구간의 겹침이 비면 아무 일도 일어나지 않는 구조",
+        href: "/politics/constitution/constitutionalism-and-separation#checks",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "논문에서 확인한 것이 서지와 초록까지라는 사실을 적고, 식과 수치는 이 글이 전개한 것으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

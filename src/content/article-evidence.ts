@@ -7311,4 +7311,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "무죄 추정과 자백의 증거 능력 제한. 번역본은 참조용이며 법적 효력은 국문 원문에 있음",
     },
   ],
+  "dispute-resolution/settlement-and-access": [
+    {
+      kind: "보충 읽기",
+      label:
+        "Mnookin · Kornhauser, Bargaining in the Shadow of the Law (Yale L.J. 88:950, 1979)",
+      href: "https://gretchen.law.nyu.edu/fac-articles/713/",
+      note: "법의 역할을 법정 바깥 협상에서 찾는 관점의 출처. 서지와 초록만 확인했고 본문은 열지 못함",
+    },
+  ],
 };

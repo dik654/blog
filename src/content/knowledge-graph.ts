@@ -24386,6 +24386,57 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "같은 뿌리에서 나온 증거를 여럿으로 세면 확률이 실제보다 훨씬 높게 계산됩니다. 한 사람의 진술을 여러 경로로 받은 것은 하나이며, 자백이 유일한 증거일 때 그것만으로 문턱을 넘었다고 보지 않는 것도 한 뿌리에 전체를 거는 위험 때문입니다.",
     canonicalHref: "/law/criminal-law/procedure-and-proof#how-evidence",
   },
+  "settlement-range": {
+    id: "settlement-range",
+    kind: "theorem",
+    domain: "law",
+    label: "합의 구간",
+    aliases: ["합의 가능 금액", "소송비용이 만드는 폭"],
+    definition:
+      "청구하는 쪽은 기대 판결액에서 자기 소송비용을 뺀 값 이상이면 받아들이고 받는 쪽은 기대 판결액에 자기 소송비용을 더한 값 이하면 내놓으므로, 그 사이가 합의 가능한 금액입니다. 양쪽의 기대가 같다면 폭이 정확히 두 소송비용의 합이고, 기대의 차이가 그 합을 넘으면 구간이 사라져 재판으로 갑니다.",
+    canonicalHref:
+      "/law/dispute-resolution/settlement-and-access#settlement-range",
+  },
+  "litigation-selection-effect": {
+    id: "litigation-selection-effect",
+    kind: "concept",
+    domain: "law",
+    label: "재판까지 오는 사건의 치우침",
+    aliases: ["선택 효과", "판결 기록의 표본 편향"],
+    definition:
+      "한쪽이 분명히 유리한 사건은 양쪽이 그것을 알아 합의로 끝나므로, 판결로 남는 것은 예측하기 어려운 사건들입니다. 그래서 판결의 승패 비율이 실제 분쟁의 비율과 다르고, 판결 기록으로 법을 읽으면 회색 지대가 실제보다 넓어 보입니다.",
+    canonicalHref: "/law/dispute-resolution/settlement-and-access#selection",
+  },
+  "shadow-of-judgment": {
+    id: "shadow-of-judgment",
+    kind: "concept",
+    domain: "law",
+    label: "판결이 협상에 드리우는 그림자",
+    aliases: ["법의 그림자", "협상의 기준점"],
+    definition:
+      "합의 구간의 위치를 정하는 것은 재판했을 때의 기대값이고 그 기대값을 정하는 것은 규칙이므로, 규칙이 바뀌면 재판을 하지 않아도 합의 금액이 움직입니다. 판결이 드물게 나온다는 사실과 판결이 하는 일이 적다는 것은 전혀 다른 말입니다.",
+    canonicalHref: "/law/dispute-resolution/settlement-and-access#shadow",
+  },
+  "access-and-cost": {
+    id: "access-and-cost",
+    kind: "concept",
+    domain: "law",
+    label: "비용이 만드는 두 방향",
+    aliases: ["접근권", "제기되지 않는 청구"],
+    definition:
+      "소송비용은 이미 시작된 분쟁에서는 합의 구간을 넓혀 합의를 돕지만, 기대 판결액이 비용에 미치지 못하는 작은 청구를 아예 제기되지 않게 만듭니다. 그 영역에서는 규칙의 그림자가 닿지 않아 규칙 자체가 무력해집니다.",
+    canonicalHref: "/law/dispute-resolution/settlement-and-access#access",
+  },
+  "repeat-player": {
+    id: "repeat-player",
+    kind: "concept",
+    domain: "law",
+    label: "여러 건을 상대하는 쪽",
+    aliases: ["반복 당사자", "기준점을 보고 움직이는 쪽"],
+    definition:
+      "같은 유형을 계속 상대하는 쪽은 이 사건 하나가 아니라 앞으로의 협상 기준점을 보고 계산하므로, 이 사건만 보면 합의가 나은데도 다투거나 질 것 같은 사건은 판결이 남지 않게 서둘러 합의합니다. 그래서 판결로 남는 사건이 한 번 더 걸러집니다.",
+    canonicalHref: "/law/dispute-resolution/settlement-and-access#access",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -45116,6 +45167,76 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "무엇이 금지되어 있었는지를 미리 적어 두는 것과 그것을 누가 증명해야 하는지를 정하는 것이 같은 보호의 두 층입니다.",
+  },
+  {
+    from: "conviction-threshold",
+    to: "settlement-range",
+    relation: "contrasts",
+    reason:
+      "앞 글은 재판이 열렸을 때의 판정을 다뤘고, 여기서는 그 재판이 열릴지 말지가 무엇으로 정해지는지를 봅니다.",
+  },
+  {
+    from: "settlement-range",
+    to: "litigation-selection-effect",
+    relation: "produces",
+    reason:
+      "구간이 사라지는 조건을 뒤집으면 재판까지 오는 사건이 어떤 성격인지가 바로 나옵니다.",
+  },
+  {
+    from: "settlement-range",
+    to: "shadow-of-judgment",
+    relation: "produces",
+    reason:
+      "구간의 위치를 정하는 것이 재판했을 때의 기대값이므로, 규칙이 바뀌면 재판 없이도 합의 금액이 움직입니다.",
+  },
+  {
+    from: "settlement-range",
+    to: "access-and-cost",
+    relation: "constrains",
+    reason:
+      "같은 소송비용이 구간을 넓히는 동시에 기대 판결액이 작은 청구를 아예 제기되지 않게 만듭니다.",
+  },
+  {
+    from: "access-and-cost",
+    to: "shadow-of-judgment",
+    relation: "constrains",
+    reason:
+      "소송이 오지 않는 영역에서는 협상의 기준점 자체가 만들어지지 않아 그림자가 닿지 않습니다.",
+  },
+  {
+    from: "repeat-player",
+    to: "litigation-selection-effect",
+    relation: "extends",
+    reason:
+      "앞으로의 기준을 보고 다투거나 서둘러 합의하는 쪽이 있으면 판결로 남는 사건이 한 번 더 걸러집니다.",
+  },
+  {
+    from: "veto-player-winset",
+    to: "settlement-range",
+    relation: "contrasts",
+    reason:
+      "둘 다 두 구간이 겹치는 곳에서만 일이 일어나고 겹침이 비면 아무것도 바뀌지 않는다는 같은 모양입니다.",
+  },
+  {
+    from: "reasons-for-precedent",
+    to: "shadow-of-judgment",
+    relation: "extends",
+    reason:
+      "앞선 판단이 다음 사건의 근거가 된다는 것이 법정 안뿐 아니라 협상 테이블에서도 성립합니다.",
+  },
+  {
+    from: "core-and-penumbra",
+    to: "litigation-selection-effect",
+    relation: "prerequisite",
+    reason:
+      "조문만 읽어도 답이 정해지는 구간이 있다는 것이, 그런 사건이 다투어지지 않고 기록에도 남지 않는 이유가 됩니다.",
+  },
+  {
+    from: "shadow-of-the-future",
+    to: "repeat-player",
+    relation: "prerequisite",
+    reason:
+      "같은 상대를 계속 만난다는 사실이 이 사건 하나가 아니라 앞으로를 보고 계산하게 만드는 구조입니다.",
   },
 ];
 

@@ -81331,4 +81331,278 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "dispute-resolution/settlement-and-access": {
+    entryNote:
+      "앞 여덟 글은 판단의 규칙이었습니다. 그런데 그 규칙이 실제로 적용되려면 판결까지 가야 하고, 대부분의 분쟁은 거기까지 가지 않습니다.",
+    coreIdea:
+      "합의가 되는 이유는 서로 양보해서가 아니라 재판을 피해 아끼는 돈이 있기 때문이며, 그 돈만큼이 합의 가능한 금액의 폭입니다. 양쪽의 낙관 차이가 그 폭을 넘으면 재판으로 가므로 판결로 남는 사건은 예측하기 어려운 것들뿐입니다. 그런데 구간의 위치를 정하는 것이 재판했을 때의 기대값이므로, 규칙은 적용되지 않는 사건에서도 협상의 기준점을 옮겨 작동합니다.",
+    assumedKnowledge: [
+      {
+        id: "conviction-threshold",
+        role: "재판이 열렸을 때의 판정을 앞 글에서 이미 다뤘다는 것을 전제로 합니다.",
+      },
+      {
+        id: "core-and-penumbra",
+        role: "조문만 읽어도 답이 정해지는 사건이 있다는 것을 표본 치우침의 근거로 씁니다.",
+      },
+      {
+        id: "reasons-for-precedent",
+        role: "앞선 판단이 다음 사건의 근거가 된다는 관계를 협상 테이블까지 넓힙니다.",
+      },
+      {
+        id: "veto-player-winset",
+        role: "두 구간의 겹침이 비면 아무 일도 일어나지 않는다는 같은 모양을 대비로 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "settlement-range",
+        role: "합의 가능한 금액의 폭을 계산으로 정합니다.",
+      },
+      {
+        id: "litigation-selection-effect",
+        role: "재판까지 오는 사건의 성격과 그것이 만드는 착시를 정의합니다.",
+      },
+      {
+        id: "shadow-of-judgment",
+        role: "적용되지 않는 규칙이 작동하는 경로를 정의합니다.",
+      },
+      {
+        id: "access-and-cost",
+        role: "같은 비용이 반대 방향으로 작용하는 지점을 정의합니다.",
+      },
+      {
+        id: "repeat-player",
+        role: "표본을 한 번 더 거르는 당사자 유형을 다룹니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "settlement-range",
+        sectionId: "settlement-range",
+        intuition:
+          "합의가 되는 이유는 양보해서가 아니라 재판을 피해 아끼는 돈이 있기 때문입니다.",
+        workedExample:
+          "판결 금액 1,000에 소송비용 각 80이고 둘 다 50퍼센트로 보면 구간이 420에서 580까지 160만큼 열립니다.",
+        proofIdea:
+          "청구하는 쪽은 재판하면 p·J − C를 기대하므로 그보다 많이 받으면 합의하고, 받는 쪽은 p·J + C를 잃을 것으로 보므로 그보다 적게 내면 합의합니다. 두 선 사이가 구간이고, 양쪽의 p가 같으면 폭이 (pJ + C_수) − (pJ − C_청) = C_청 + C_수로 소송비용의 합만 남습니다. p가 갈리면 폭이 (C_청 + C_수) − (p_청 − p_수)J가 되어, 낙관의 차이가 아끼는 돈을 넘는 순간 음수가 되며 구간이 사라집니다.",
+        counterexample:
+          "같은 낙관 차이 200이라도 소송비용이 각 150이면 합이 300이라 구간이 다시 열립니다. 재판이 비쌀수록 서로 양보할 폭이 넓어집니다.",
+        boundary:
+          "위험을 대하는 태도와 시간의 값, 합의 자체에 드는 비용을 넣지 않은 계산입니다.",
+      },
+      {
+        id: "litigation-selection-effect",
+        sectionId: "selection",
+        intuition:
+          "한쪽이 분명히 유리한 사건은 양쪽이 그것을 알기 때문에 합의로 끝납니다.",
+        workedExample:
+          "그래서 판결로 남는 것은 예측하기 어려운 사건들뿐이고, 판결의 승률이 어느 쪽으로도 크게 기울지 않는 쪽으로 끌려갑니다.",
+        boundary:
+          "치우침의 방향은 알 수 있어도 크기는 알기 어렵습니다. 합의된 사건의 내용은 대개 기록으로 남지 않습니다.",
+      },
+      {
+        id: "shadow-of-judgment",
+        sectionId: "shadow",
+        intuition:
+          "협상은 재판했을 때의 결과를 기준점으로 삼아 이루어집니다.",
+        workedExample:
+          "규칙이 바뀌어 기대가 50퍼센트에서 70퍼센트로 옮겨 가면 합의 금액도 500에서 700으로 옮겨 가는데, 그 사이 재판은 한 건도 더 열리지 않습니다.",
+        boundary:
+          "그림자가 닿으려면 기준점이 만들어져야 합니다. 판결이 아예 나오지 않는 영역에서는 기대값을 어림할 근거가 없어 협상이 다른 힘으로 정해집니다.",
+      },
+      {
+        id: "access-and-cost",
+        sectionId: "access",
+        intuition:
+          "기대 판결액이 소송비용에 미치지 못하면 이길 것이 분명해도 시작하지 않습니다.",
+        workedExample:
+          "작은 청구가 제기되지 않는다는 것을 상대가 알면 그만큼 지킬 이유가 줄어듭니다.",
+        boundary:
+          "그래서 비용을 무조건 낮추는 것이 답은 아닙니다. 비용은 이미 시작된 분쟁에서 합의 구간을 만드는 재료이기도 합니다.",
+      },
+      {
+        id: "repeat-player",
+        sectionId: "access",
+        intuition:
+          "한 번 겪고 마는 쪽과 계속 상대하는 쪽의 계산이 다릅니다.",
+        workedExample:
+          "이 사건만 보면 합의가 나은데도 기준점을 지키려 다투거나, 질 것 같은 사건은 판결이 남지 않게 서둘러 합의합니다.",
+        boundary:
+          "이 차이가 언제나 한쪽에 유리한 것은 아닙니다. 다투는 비용을 계속 치러야 하므로 상대가 그 비용을 견딜 수 있으면 효과가 줄어듭니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 폭",
+        relation: "합의할 수 있는 금액의 범위를 계산합니다.",
+        concepts: ["settlement-range"],
+      },
+      {
+        label: "01 걸러짐",
+        relation: "재판까지 오는 사건의 성격과 그 착시를 봅니다.",
+        concepts: ["litigation-selection-effect"],
+      },
+      {
+        label: "02 그림자",
+        relation: "적용되지 않는 규칙이 작동하는 경로입니다.",
+        concepts: ["shadow-of-judgment"],
+      },
+      {
+        label: "03 닿지 않는 곳",
+        relation: "비용이 그림자를 끊는 지점과 당사자 유형입니다.",
+        concepts: ["access-and-cost", "repeat-player"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "판결 금액 1,000, 소송비용 각 80, 양쪽 기대 50퍼센트일 때 합의 구간을 구하세요.",
+        answerChecklist: [
+          "청구 최저 500 − 80 = 420",
+          "수용 최고 500 + 80 = 580",
+          "구간 420~580",
+          "폭 160은 두 소송비용의 합",
+        ],
+        requiredConcepts: ["settlement-range"],
+        sectionId: "settlement-range",
+      },
+      {
+        level: "basic",
+        question:
+          "합의가 되는 이유가 양보가 아니라고 하는 까닭을 쓰세요.",
+        answerChecklist: [
+          "재판을 피해 아끼는 돈이 있음",
+          "그 돈만큼이 합의 가능한 폭",
+          "양쪽 기대가 같으면 폭이 소송비용의 합",
+          "양보의 크기와 무관하게 구간이 생김",
+        ],
+        requiredConcepts: ["settlement-range"],
+        sectionId: "settlement-range",
+      },
+      {
+        level: "basic",
+        question:
+          "재판까지 오는 사건이 어떤 성격인지와 그것이 만드는 착시를 쓰세요.",
+        answerChecklist: [
+          "예측하기 어려운 사건들만 올라옴",
+          "분명한 사건은 합의로 끝남",
+          "판결의 승률이 실제 비율과 다름",
+          "회색 지대가 실제보다 넓어 보임",
+        ],
+        requiredConcepts: ["litigation-selection-effect"],
+        sectionId: "selection",
+      },
+      {
+        level: "basic",
+        question:
+          "규칙이 직접 적용되는 사건이 드문데도 규칙이 작동한다는 말의 뜻을 쓰세요.",
+        answerChecklist: [
+          "구간의 위치를 정하는 것은 기대 판결액",
+          "그 기대값을 정하는 것은 규칙",
+          "규칙이 바뀌면 재판 없이 합의 금액이 움직임",
+          "드문 판결이 모든 협상의 기준점을 옮김",
+        ],
+        requiredConcepts: ["shadow-of-judgment"],
+        sectionId: "shadow",
+      },
+      {
+        level: "basic",
+        question:
+          "소송비용이 두 방향으로 작용한다는 것을 쓰세요.",
+        answerChecklist: [
+          "시작된 분쟁에서는 구간을 넓혀 합의를 도움",
+          "작은 청구는 아예 제기되지 않게 만듦",
+          "상대가 그 사실을 알면 지킬 이유가 줄어듦",
+          "그 영역에서는 그림자가 닿지 않음",
+        ],
+        requiredConcepts: ["access-and-cost"],
+        sectionId: "access",
+      },
+      {
+        level: "basic",
+        question:
+          "여러 건을 상대하는 쪽이 이 사건만 보고 계산하지 않는 이유를 쓰세요.",
+        answerChecklist: [
+          "여기서 지면 다음 협상의 기준점이 옮겨 감",
+          "합의가 나은데도 다투기도 함",
+          "질 것 같으면 판결이 남지 않게 서둘러 합의",
+          "판결로 남는 사건이 한 번 더 걸러짐",
+        ],
+        requiredConcepts: ["repeat-player"],
+        sectionId: "access",
+      },
+      {
+        level: "advanced",
+        question:
+          "합의 구간이 존재할 조건 (p_청 − p_수)J < C_청 + C_수를 유도하세요.",
+        answerChecklist: [
+          "청구 최저는 p_청J − C_청",
+          "수용 최고는 p_수J + C_수",
+          "최저 < 최고여야 구간이 열림",
+          "정리하면 낙관 차이 < 소송비용의 합",
+        ],
+        requiredConcepts: ["settlement-range"],
+        sectionId: "settlement-range",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 낙관 차이에서도 합의가 되기도 하고 안 되기도 하는 이유를 수치로 보이세요.",
+        answerChecklist: [
+          "차이 200, 소송비용 각 80이면 합 160",
+          "160 < 200이므로 구간이 사라짐",
+          "소송비용 각 150이면 합 300",
+          "300 > 200이므로 구간이 다시 열림",
+        ],
+        requiredConcepts: ["settlement-range"],
+        sectionId: "settlement-range",
+      },
+      {
+        level: "advanced",
+        question:
+          "판결 기록으로 법을 배울 때 조심해야 할 이유를 두 가지 치우침으로 설명하세요.",
+        answerChecklist: [
+          "예측하기 어려운 사건만 올라옴",
+          "회색 지대가 넓어 보임",
+          "여러 건을 상대하는 쪽이 한 번 더 거름",
+          "합의된 사건은 기록에 남지 않음",
+        ],
+        requiredConcepts: ["litigation-selection-effect", "repeat-player"],
+        sectionId: "selection",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 글의 합의 구간과 앞 시리즈의 통과 가능 영역이 같은 모양이라는 것을 설명하세요.",
+        answerChecklist: [
+          "둘 다 두 구간이 겹치는 곳에서만 일이 일어남",
+          "겹침이 비면 아무것도 바뀌지 않음",
+          "한쪽은 현상유지 고착, 다른 쪽은 재판",
+          "막는 원인은 고집이 아니라 구간의 위치",
+        ],
+        requiredConcepts: ["settlement-range", "veto-player-winset"],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Robert H. Mnookin · Lewis A. Kornhauser · Bargaining in the Shadow of the Law: The Case of Divorce (1979)",
+        href: "https://gretchen.law.nyu.edu/fac-articles/713/",
+        problem:
+          "법의 역할을 판결에서만 찾으면, 판결까지 가지 않는 대다수 사건에서 법이 무엇을 하고 있는지가 설명되지 않습니다.",
+        contribution:
+          "법의 역할을 법정 바깥의 협상에 미치는 영향에서 찾자고 제안했습니다. 재판했을 때 각자가 얻을 것이 협상의 출발점이 되므로, 규칙은 적용되지 않는 사건에서도 합의의 내용을 정하게 됩니다.",
+        assumptions:
+          "당사자들이 재판했을 때의 결과를 어느 정도 어림할 수 있다고 보며, 협상이 그 어림을 기준점으로 삼는다고 둡니다.",
+        evidenceScope:
+          "Yale Law Journal 88권 950쪽(1979)에 실린 논문이며, 뉴욕대 교수 저작 저장소에서 서지 사항과 초록을 확인했습니다. 본문은 해당 저장소가 자동 조회를 막아 열지 못했습니다.",
+        notClaim:
+          "이 글에 실린 합의 구간 식과 수치는 이 논문의 것이 아니라 그 구조를 짧게 보이려고 직접 전개한 것입니다. 또 협상이 언제나 재판 결과를 기준으로 이루어진다는 주장이 아니며, 기준점을 만들 판결이 없는 영역에서는 다른 힘이 결과를 정합니다.",
+        sectionId: "shadow",
+      },
+    ],
+  },
 };
