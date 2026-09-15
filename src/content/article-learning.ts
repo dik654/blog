@@ -83580,4 +83580,269 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/cross-review-error-classes": {
+    entryNote:
+      "이 시리즈의 앞 네 글이 어떤 정정을 반영했는지 알고 있으면 예시가 익숙하지만, 몰라도 읽을 수 있습니다.",
+    coreIdea:
+      "조사 결과물 하나를 외부 모델에 세 라운드 검증시켰을 때 잡힌 것은 지식 부족이 아니라 비교의 모양이었습니다. 두 값을 다른 자로 재어 나란히 놓는 것, 대개 그런 것을 보장으로 적는 것, 한 사례를 조건 없이 규칙으로 올리는 것이 반복됐고, 유형을 알고 고쳐도 수정 자체가 새 결함을 만들어 한 번의 검증으로 끝나지 않았습니다.",
+    assumedKnowledge: [
+      {
+        id: "throughput-cost-vs-api-price",
+        role: "단위 불일치의 구체형 하나를 예로 가져옵니다.",
+      },
+      {
+        id: "saturation-is-not-failure",
+        role: "보장으로 잘못 읽은 사례 하나를 예로 가져옵니다.",
+      },
+      {
+        id: "utilization-breakeven",
+        role: "임계값 대신 식을 싣는다는 대안의 실물로 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "comparison-unit-mismatch",
+        role: "가장 많이 나온 유형을 정의합니다.",
+      },
+      {
+        id: "guarantee-vs-usually",
+        role: "두 번째 유형을 정의합니다.",
+      },
+      {
+        id: "observation-promoted-to-rule",
+        role: "가장 오래 사는 유형을 정의합니다.",
+      },
+      {
+        id: "fix-introduces-new-defect",
+        role: "수정 자체가 만드는 결함을 정의합니다.",
+      },
+      {
+        id: "review-round-decay-estimate",
+        role: "라운드를 몇 번 돌릴지 어림하는 방법과 그 한계를 정합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "comparison-unit-mismatch",
+        sectionId: "unit-mismatch",
+        intuition:
+          "양쪽 계산이 맞아도 같은 자로 잰 것이 아니면 견줄 수 없습니다.",
+        workedExample:
+          "한쪽만 가동률로 나누고 다른 쪽은 정가를 두어 차이가 8퍼센트로 보였는데, 같은 자로 나누면 81퍼센트였습니다.",
+        counterexample:
+          "단위 기호가 같아도 분모가 다를 수 있습니다. 둘 다 시간당 금액이지만 한쪽에만 가동률이 들어 있었습니다.",
+        boundary:
+          "세는 대상이 다른 경우는 자를 맞추는 것으로 끝나지 않습니다. 출력 토큰과 혼합 가격처럼 애초에 다른 것을 세면 비교를 다른 단위로 다시 정의해야 합니다.",
+      },
+      {
+        id: "guarantee-vs-usually",
+        sectionId: "guarantee",
+        intuition:
+          "문서에 적힌 기능 이름을 그 기능의 보장 범위로 읽습니다.",
+        workedExample:
+          "배경 병합에 기대는 중복 제거로 과금이 정확해진다고 적거나, 두 지역에 저장소를 나누면 이중화된다고 적는 식입니다.",
+        boundary:
+          "문장을 부정형으로 뒤집어 깨지는 조건을 하나도 못 대면 보장이거나 아직 그 조건을 모르는 것인데, 대개 뒤쪽입니다.",
+      },
+      {
+        id: "observation-promoted-to-rule",
+        sectionId: "overgeneralization",
+        intuition:
+          "대개 그렇게 나온다는 관찰을 조건 없이 적습니다.",
+        workedExample:
+          "어떤 가동률 아래면 임대가 늘 싸다는 임계값, 하루 몇 토큰 미만이면 외부가 싸다는 임계값, 자체에서 탄력 임대 그다음 외부라는 순서가 모두 여기에 해당합니다.",
+        counterexample:
+          "관찰을 버릴 필요는 없습니다. 조건을 함께 적거나 규칙 대신 그 규칙을 만든 계산을 실으면 읽는 쪽이 자기 숫자를 넣어 볼 수 있습니다.",
+        boundary:
+          "이 유형은 한 번에 지워지지 않습니다. 표를 맞추면 그 위의 임계값이 남고 임계값을 지우면 그 아래 순서가 남습니다.",
+      },
+      {
+        id: "fix-introduces-new-defect",
+        sectionId: "repeated-fix",
+        intuition:
+          "고친 원고는 새 원고이고 새 원고는 검증되지 않은 원고입니다.",
+        workedExample:
+          "앞 지적을 반영해 새로 쓴 문장에서 사실과 다른 서술이 들어갔고, 표를 세 열로 다시 짜면서 출력 중 요청이 끊긴다는 사실이 표에서 빠졌습니다.",
+        boundary:
+          "유형을 알고 있어도 막지 못합니다. 이 글을 쓰는 동안에도 먼저 낸 글에서 빠진 한계 두 가지를 뒤에 덧붙였습니다.",
+      },
+      {
+        id: "review-round-decay-estimate",
+        sectionId: "repeated-fix",
+        intuition:
+          "잡히는 수가 줄었다는 것은 끝났다는 뜻이 아니라 줄어드는 속도를 알게 됐다는 뜻입니다.",
+        workedExample:
+          "25건, 16건, 8건이면 감쇠비가 약 0.57이고 남은 합의 어림이 약 10건이라, 마지막 라운드 한 번 분량보다 많습니다.",
+        proofIdea:
+          "라운드마다 같은 비율 r로 준다고 두면 k번째 이후의 기대 지적 수는 n·r, n·r², …의 등비수열입니다. 공비가 1보다 작으면 합이 n·r/(1−r)로 수렴합니다. 두 번 줄어든 비가 n₃/n₁이므로 한 라운드당 비는 그 제곱근이고, 이 값을 넣으면 남은 합이 나옵니다.",
+        counterexample:
+          "세 번째 라운드는 새로 생긴 오류만 찾게 한 것이라 앞의 둘과 세는 대상이 다릅니다. 그대로 넣으면 이 글이 첫 유형으로 든 단위 불일치를 그대로 저지릅니다.",
+        boundary:
+          "표본이 세 점이고 검증하는 쪽의 능력이 라운드마다 같다는 전제도 확인되지 않았습니다. 값이 아니라 방향만 씁니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 가장 많은 것",
+        relation: "비교의 자가 어긋난 자리를 봅니다.",
+        concepts: ["comparison-unit-mismatch"],
+      },
+      {
+        label: "01 가장 조용한 것",
+        relation: "보장이 아닌 것을 보장으로 적은 자리를 봅니다.",
+        concepts: ["guarantee-vs-usually"],
+      },
+      {
+        label: "02 가장 오래 사는 것",
+        relation: "조건이 지워진 관찰을 봅니다.",
+        concepts: ["observation-promoted-to-rule"],
+      },
+      {
+        label: "03 고칠 때 생기는 것",
+        relation: "수정이 만드는 결함과 몇 번 돌릴지의 어림입니다.",
+        concepts: [
+          "fix-introduces-new-defect",
+          "review-round-decay-estimate",
+        ],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "두 값이 같은 자로 잰 것인지 확인하는 세 질문을 쓰세요.",
+        answerChecklist: [
+          "분모가 같은가",
+          "세는 대상이 같은가",
+          "같은 것을 두 번 세지 않는가",
+          "단위 기호가 같다고 분모가 같은 것은 아님",
+        ],
+        requiredConcepts: ["comparison-unit-mismatch"],
+        sectionId: "unit-mismatch",
+      },
+      {
+        level: "basic",
+        question:
+          "어떤 문장이 보장인지 대개 그런 것인지 가르는 방법을 쓰세요.",
+        answerChecklist: [
+          "문장을 부정형으로 뒤집음",
+          "깨지는 조건을 적어 봄",
+          "하나도 못 대면 아직 모르는 쪽",
+          "기능 이름이 아니라 보장 범위를 적은 문장을 찾음",
+        ],
+        requiredConcepts: ["guarantee-vs-usually"],
+        sectionId: "guarantee",
+      },
+      {
+        level: "basic",
+        question:
+          "관찰을 버리지 않으면서 규칙으로 올리지 않는 두 가지 방법을 쓰세요.",
+        answerChecklist: [
+          "어떤 조건에서 나온 관찰인지 함께 적음",
+          "규칙 대신 그 규칙을 만든 계산을 실음",
+          "뒤쪽이 더 나음",
+          "읽는 쪽이 자기 숫자를 넣어 볼 수 있기 때문",
+        ],
+        requiredConcepts: ["observation-promoted-to-rule"],
+        sectionId: "overgeneralization",
+      },
+      {
+        level: "basic",
+        question:
+          "고치는 과정에서 생긴 결함의 세 가지 모양을 쓰세요.",
+        answerChecklist: [
+          "새로 쓴 문장에서 들어간 것",
+          "표를 다시 짜면서 빠진 것",
+          "한쪽만 고쳐 생긴 자기 모순",
+          "고친 원고는 검증되지 않은 새 원고",
+        ],
+        requiredConcepts: ["fix-introduces-new-defect"],
+        sectionId: "repeated-fix",
+      },
+      {
+        level: "basic",
+        question:
+          "라운드별 지적이 25건, 16건, 8건일 때 감쇠비와 남은 합의 어림을 계산하세요.",
+        answerChecklist: [
+          "감쇠비는 8을 25로 나눈 값의 제곱근",
+          "약 0.57",
+          "남은 합은 8 곱하기 0.57 나누기 0.43",
+          "약 10건",
+        ],
+        requiredConcepts: ["review-round-decay-estimate"],
+        sectionId: "repeated-fix",
+      },
+      {
+        level: "basic",
+        question:
+          "이 기록에서 어느 쪽 모델이 더 낫다는 결론을 끌어낼 수 없는 이유를 쓰세요.",
+        answerChecklist: [
+          "한쪽이 쓰고 다른 쪽이 읽는 역할 고정",
+          "역할을 바꾼 대조를 하지 않음",
+          "검증한 쪽도 세 건을 철회함",
+          "표본이 결과물 하나",
+        ],
+        requiredConcepts: ["review-round-decay-estimate"],
+        sectionId: "boundary",
+      },
+      {
+        level: "advanced",
+        question:
+          "라운드 감쇠로 남은 합을 구하는 식을 등비급수로 유도하세요.",
+        answerChecklist: [
+          "이후 기대값이 n·r, n·r², … 등비수열",
+          "공비가 1보다 작으면 합이 수렴",
+          "합은 n·r/(1−r)",
+          "두 번 줄어든 비의 제곱근이 한 라운드당 비",
+        ],
+        requiredConcepts: ["review-round-decay-estimate"],
+        sectionId: "repeated-fix",
+      },
+      {
+        level: "advanced",
+        question:
+          "위 추정이 이 글 자신이 지적한 유형을 저지르는 지점을 짚고, 그래도 무엇이 남는지 쓰세요.",
+        answerChecklist: [
+          "세 번째 라운드는 새로 생긴 것만 찾게 함",
+          "앞의 둘과 세는 대상이 다름",
+          "그대로 넣으면 단위 불일치",
+          "값은 못 쓰고 방향만 남음",
+        ],
+        requiredConcepts: [
+          "review-round-decay-estimate",
+          "comparison-unit-mismatch",
+        ],
+        sectionId: "repeated-fix",
+      },
+      {
+        level: "advanced",
+        question:
+          "임계값 하나가 세 라운드에 걸쳐 어떻게 한 겹씩 벗겨졌는지 순서대로 쓰세요.",
+        answerChecklist: [
+          "초판은 한쪽만 가동률로 나눈 비교",
+          "표를 맞추자 임계값이 남음",
+          "임계값을 지우자 순서가 남음",
+          "순서를 조건부 운영 정책으로 내림",
+        ],
+        requiredConcepts: [
+          "observation-promoted-to-rule",
+          "comparison-unit-mismatch",
+        ],
+        sectionId: "overgeneralization",
+      },
+      {
+        level: "advanced",
+        question:
+          "검증을 한 번만 돌리면 세 유형 가운데 어느 것을 구조적으로 놓치는지, 왜 그런지 쓰세요.",
+        answerChecklist: [
+          "고칠 때 생기는 결함을 놓침",
+          "그 결함은 수정 이후에만 존재",
+          "한 번 돌린 검증은 수정 전 원고를 본 것",
+          "고친 원고는 검증되지 않은 상태로 남음",
+        ],
+        requiredConcepts: ["fix-introduces-new-defect"],
+        sectionId: "repeated-fix",
+      },
+    ],
+  },
 };

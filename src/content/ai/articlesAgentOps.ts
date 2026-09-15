@@ -49,4 +49,36 @@ export const agentOpsArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/ai/engineering-lessons-ledger"),
   },
+  {
+    slug: "cross-review-error-classes",
+    title: "검증이 잡아낸 것은 지식이 아니라 비교의 모양이었습니다",
+    subcategory: "ai-agents-ops",
+    sections: [
+      {
+        id: "overview",
+        title: "틀린 자리가 한 종류에 몰려 있었습니다",
+      },
+      {
+        id: "unit-mismatch",
+        title: "유형 1. 두 숫자를 다른 자로 재고 나란히 놓습니다",
+      },
+      {
+        id: "guarantee",
+        title: "유형 2. 보장이 아닌 것을 보장으로 적습니다",
+      },
+      {
+        id: "overgeneralization",
+        title: "유형 3. 한 사례를 보편 규칙으로 올립니다",
+      },
+      {
+        id: "repeated-fix",
+        title: "유형을 다 알아도 고치는 과정에서 새로 생깁니다",
+      },
+      {
+        id: "boundary",
+        title: "이것은 모델 비교가 아니고 표본도 하나입니다",
+      },
+    ],
+    component: () => import("@/pages/articles/ai/cross-review-error-classes"),
+  },
 ];
