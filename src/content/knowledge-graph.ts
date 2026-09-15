@@ -24542,6 +24542,61 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/economics/scarcity/gains-from-trade#transaction-cost",
   },
+  "willingness-to-pay": {
+    id: "willingness-to-pay",
+    kind: "concept",
+    domain: "economics",
+    label: "지불용의와 사려는 줄",
+    aliases: ["지불용의", "수요곡선", "willingness to pay"],
+    definition:
+      "사려는 사람이 낼 수 있는 최대 금액이며, 그 돈을 다른 데 썼을 때 얻을 것이 기준이므로 취향이 아니라 기회비용으로 정해집니다. 사람들을 이 금액의 내림차순으로 세운 것이 사려는 줄이고, 값을 올릴수록 줄이 짧아지는 이유는 그 값을 못 내는 사람이 빠지기 때문입니다.",
+    canonicalHref:
+      "/economics/prices/supply-demand-and-equilibrium#demand-side",
+  },
+  "supply-as-marginal-cost": {
+    id: "supply-as-marginal-cost",
+    kind: "concept",
+    domain: "economics",
+    label: "한 개 더의 값과 팔려는 줄",
+    aliases: ["한계비용", "공급곡선", "marginal cost"],
+    definition:
+      "파는 쪽의 기준은 평균이 아니라 한 개를 더 만드는 데 드는 값이며, 그 값보다 많이 받으면 만들고 적게 받으면 만들지 않습니다. 이 값의 오름차순이 팔려는 줄이고, 그 정체 역시 그 시간과 재료를 다른 데 썼다면 얻었을 것이라는 기회비용입니다.",
+    canonicalHref:
+      "/economics/prices/supply-demand-and-equilibrium#supply-side",
+  },
+  "market-equilibrium": {
+    id: "market-equilibrium",
+    kind: "theorem",
+    domain: "economics",
+    label: "어긋남이 0이 되는 값",
+    aliases: ["시장 균형", "균형가격", "market clearing"],
+    definition:
+      "사려는 양과 팔려는 양이 같아져 값을 움직일 이유를 가진 사람이 아무도 남지 않는 값입니다. 정해졌다는 말의 내용은 누가 그 숫자를 골랐다는 것이 아니라 어긋남이 사라져 더 밀 힘이 없다는 것뿐입니다.",
+    canonicalHref:
+      "/economics/prices/supply-demand-and-equilibrium#adjustment",
+  },
+  "excess-demand-adjustment": {
+    id: "excess-demand-adjustment",
+    kind: "method",
+    domain: "economics",
+    label: "남는 쪽이 값을 미는 힘",
+    aliases: ["초과수요", "초과공급", "가격 조정"],
+    definition:
+      "사려는 양에서 팔려는 양을 뺀 값이 값을 미는 방향과 크기를 정합니다. 못 산 사람이 남으면 더 부를 수 있어 값이 오르고 못 판 사람이 남으면 깎을 수 있어 내리며, 값이 움직이면 어긋남이 줄어들기 때문에 이 힘은 스스로를 없애는 방향으로 작동합니다.",
+    canonicalHref:
+      "/economics/prices/supply-demand-and-equilibrium#adjustment",
+  },
+  "shift-vs-movement-along": {
+    id: "shift-vs-movement-along",
+    kind: "concept",
+    domain: "economics",
+    label: "줄이 옮겨 간 것과 줄 위에서 움직인 것",
+    aliases: ["수요의 변화와 수요량의 변화", "곡선 이동", "비교정학"],
+    definition:
+      "값만 바뀌면 같은 줄 위에서 사람 몇이 들고 날 뿐이고 사정이 바뀌면 줄 자체가 옮겨 갑니다. 둘을 섞으면 값이 올라 양이 줄었다는 말과 사려는 마음이 커져 값이 올랐다는 말이 순환 논증이 되므로, 값과 양이 함께 어느 방향으로 움직였는지로 어느 줄이 옮겨 갔는지를 읽어야 합니다.",
+    canonicalHref:
+      "/economics/prices/supply-demand-and-equilibrium#shift-vs-move",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -45461,6 +45516,69 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "produces",
     reason:
       "약속을 강제할 방법이 없으면 지키는 값이 커져 구간이 닫히므로, 구속력 있는 약속은 이 비용을 낮추는 장치로 읽힙니다.",
+  },
+  {
+    from: "opportunity-cost",
+    to: "willingness-to-pay",
+    relation: "prerequisite",
+    reason:
+      "낼 수 있는 최대 금액의 기준은 그 돈을 다른 데 썼을 때 얻을 것이므로 기회비용이 먼저 정의되어야 합니다.",
+  },
+  {
+    from: "marginal-decision-rule",
+    to: "supply-as-marginal-cost",
+    relation: "produces",
+    reason:
+      "전체가 남는지가 아니라 이 한 개가 남는지를 묻는 판정을 파는 쪽에 적용한 것이 팔려는 줄입니다.",
+  },
+  {
+    from: "willingness-to-pay",
+    to: "market-equilibrium",
+    relation: "prerequisite",
+    reason:
+      "값에서 사려는 양을 셀 수 있어야 어긋남을 계산할 수 있습니다.",
+  },
+  {
+    from: "supply-as-marginal-cost",
+    to: "market-equilibrium",
+    relation: "prerequisite",
+    reason:
+      "값에서 팔려는 양을 셀 수 있어야 어긋남을 계산할 수 있습니다.",
+  },
+  {
+    from: "excess-demand-adjustment",
+    to: "market-equilibrium",
+    relation: "produces",
+    reason:
+      "남는 쪽이 값을 미는 힘이 스스로를 없애는 방향으로 작동하므로 어긋남이 0인 자리로 값이 모입니다.",
+  },
+  {
+    from: "market-equilibrium",
+    to: "shift-vs-movement-along",
+    relation: "prerequisite",
+    reason:
+      "값이 어디서 멈추는지가 정해져야 그 자리가 옮겨 간 것과 그 자리로 되돌아가는 것을 가를 수 있습니다.",
+  },
+  {
+    from: "terms-of-trade-range",
+    to: "market-equilibrium",
+    relation: "extends",
+    reason:
+      "두 사람의 기회비용 사이 어디로 정해지는지를 답하지 못한 자리를, 사람이 많아졌을 때 두 줄의 모양이 메웁니다.",
+  },
+  {
+    from: "transaction-cost",
+    to: "excess-demand-adjustment",
+    relation: "constrains",
+    reason:
+      "상대를 찾고 값을 다시 부르는 데 값이 들면 어긋남이 있어도 곧바로 값이 움직이지 않아 하나의 값 대신 분포가 남습니다.",
+  },
+  {
+    from: "market-equilibrium",
+    to: "settlement-range",
+    relation: "contrasts",
+    reason:
+      "둘 다 양쪽이 받아들일 수 있는 구간에서 하나의 숫자가 나오는 구조이지만, 한쪽은 많은 사람의 어긋남이 밀어 정하고 다른 쪽은 두 당사자의 협상이 정합니다.",
   },
 ];
 

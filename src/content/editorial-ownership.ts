@@ -12450,6 +12450,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "supply-demand-and-equilibrium": {
+    title:
+      "아무에게도 물어보지 않고 숫자 하나가 정해집니다 글이 소유하는 범위",
+    owns: [
+      "사려는 줄이 지불용의의 내림차순이고 그 정체가 기회비용이라는 것",
+      "팔려는 줄이 한 개 더 드는 값의 오름차순이라는 것",
+      "어긋남이 값을 미는 힘이고 그 힘이 스스로를 없앤다는 조정 구조",
+      "균형이 유일하고 안정적일 조건과 그것이 깨지는 경우",
+      "줄이 옮겨 간 것과 줄 위에서 움직인 것의 구분, 그리고 값과 양을 함께 읽는 법",
+    ],
+    reuses: [
+      {
+        label: "값을 포기한 최선으로 재는 규칙",
+        href: "/economics/scarcity/scarcity-and-opportunity-cost#opportunity-cost",
+      },
+      {
+        label: "한 단위 더로 묻는 판정",
+        href: "/economics/scarcity/scarcity-and-opportunity-cost#margin",
+      },
+      {
+        label: "둘 사이의 교환 비율 구간",
+        href: "/economics/scarcity/gains-from-trade#trade-range",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "마셜에게 귀속하는 것은 균형 정의·안정 조건·가위 비유까지이고, 값이 어긋남에 반응한다는 조정 서술은 이 글의 것으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
