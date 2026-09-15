@@ -31,8 +31,7 @@ export default function UseBoundary() {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
           쓰기 전에 확인할 조건은 세 가지입니다. 대상 이미지가 학습 데이터 분포와 얼마나 떨어져 있는지, 필요한
-          것이 이미지 한 장의 요약인지 자리별 정보인지, 그리고 배포 환경이 감당할 수 있는 크기가 어디까지인지
-          입니다. 앞의 둘은 평가로, 마지막은 예산으로 정합니다.
+          것이 이미지 한 장의 요약인지 자리별 정보인지, 그리고 배포 환경이 감당할 수 있는 크기가 어디까지인지입니다. 앞의 둘은 평가로, 마지막은 예산으로 정합니다.
         </p>
 
         <p className="leading-7">
@@ -54,8 +53,7 @@ export default function UseBoundary() {
         </p>
 
         <p className="leading-7">
-          전제는 명확합니다. 보고된 결과는 해당 데이터와 학습 일정, 그리고 얼린 backbone 평가 조건 안에서의 자기보고
-          입니다. 손실 가중치와 갱신 주기는 공개된 설정값이지 다른 규모에서의 최적값이라는 근거가 아닙니다.
+          전제는 명확합니다. 보고된 결과는 해당 데이터와 학습 일정, 그리고 얼린 backbone 평가 조건 안에서의 자기보고입니다. 손실 가중치와 갱신 주기는 공개된 설정값이지 다른 규모에서의 최적값이라는 근거가 아닙니다.
         </p>
 
         <p className="leading-7">

@@ -165,8 +165,7 @@ export default function GpuDataMovementOptimizationArticle() {
           </p>
           <p>
             한계는 register 와 fusion 범위입니다. 이어 붙일 연산이 이웃 원소를 필요로 하면
-            register 만으로는 안 되고 shared memory 를 거쳐야 하며, reduction 이 끼면 block 경계
-            에서 다시 global 을 써야 합니다. 어디까지 붙일지의 판정은{" "}
+            register 만으로는 안 되고 shared memory 를 거쳐야 하며, reduction 이 끼면 block 경계에서 다시 global 을 써야 합니다. 어디까지 붙일지의 판정은{" "}
             <Link to="/cs/gpu/cuda-kernel-fusion#small-fusion">kernel fusion 의 IO 경계</Link> 와{" "}
             <Link to="/cs/gpu/cuda-kernel-fusion#release-gate">fusion ROI 경계</Link> 가 소유합니다.
           </p>

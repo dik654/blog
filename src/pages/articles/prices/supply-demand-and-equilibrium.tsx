@@ -59,8 +59,7 @@ export default function SupplyDemandAndEquilibriumArticle() {
           </p>
 
           <p className="leading-7">
-            정해진 값이 좋은 것인지는 다루지 않습니다. 이 글은 어떻게 정해지는지
-            까지만 봅니다.
+            정해진 값이 좋은 것인지는 다루지 않습니다. 이 글은 어떻게 정해지는지까지만 봅니다.
           </p>
         </div>
       </section>
