@@ -93,8 +93,7 @@ export default function OwnVsRentInferenceCapacityArticle() {
           </p>
 
           <p className="leading-7">
-            그런데 월 단위로 잡아 둔 임대를 같은 60퍼센트로 나누면 7.67달러
-            입니다. <strong>차이가 8퍼센트가 아니라 81퍼센트입니다.</strong>{" "}
+            그런데 월 단위로 잡아 둔 임대를 같은 60퍼센트로 나누면 7.67달러입니다. <strong>차이가 8퍼센트가 아니라 81퍼센트입니다.</strong>{" "}
             앞의 비교는 소유만 가동률로 나누고 임대는 정가를 그대로 둔 것이라
             성립하지 않습니다.
           </p>
@@ -216,8 +215,7 @@ export default function OwnVsRentInferenceCapacityArticle() {
 
           <p className="leading-7">
             숫자로 보겠습니다. 노드 한 대를 60퍼센트로 돌리면 한 달에 31.1B
-            토큰이 나오고, 월 비용을 그대로 나누면 100만 토큰당 0.471달러
-            입니다.
+            토큰이 나오고, 월 비용을 그대로 나누면 100만 토큰당 0.471달러입니다.
           </p>
 
           <p className="leading-7">

@@ -62,8 +62,7 @@ export default function PrefixCachingRadixAttentionArticle() {
             edge 는 공유 node(2,500)와 두 leaf(100, 100)로 갈라집니다.
           </p>
           <p>
-            R3 이 같은 2,500 token 을 공유하면 leaf 가 하나 더 붙을 뿐 공유 node 는 그대로
-            입니다. 세 요청의 prompt 합은 7,800 token 이고 그중 5,000 token 이 cache 에서
+            R3 이 같은 2,500 token 을 공유하면 leaf 가 하나 더 붙을 뿐 공유 node 는 그대로입니다. 세 요청의 prompt 합은 7,800 token 이고 그중 5,000 token 이 cache 에서
             왔으니 hit rate 는 64.1% 입니다. R1 은 tree 가 비어 있어 통째로 miss 인 cold
             start 였습니다.
           </p>

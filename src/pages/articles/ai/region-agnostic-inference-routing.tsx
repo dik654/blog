@@ -278,8 +278,7 @@ export default function RegionAgnosticInferenceRoutingArticle() {
 
           <p className="leading-7">
             먼저 강제 제약입니다. 한국 밖으로 나갈 수 없는 테넌트면 서울
-            클러스터만 후보입니다. 후보가 없으면 다른 리전으로 넘기지 않고 명시적
-            으로 실패시킵니다. 넘기는 순간 그 계약이 깨집니다.
+            클러스터만 후보입니다. 후보가 없으면 다른 리전으로 넘기지 않고 명시적으로 실패시킵니다. 넘기는 순간 그 계약이 깨집니다.
           </p>
 
           <p className="leading-7">
@@ -372,8 +371,7 @@ export default function RegionAgnosticInferenceRoutingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            고르기를 잘해도 고른 곳이 죽습니다. 그러면 다시 보내야 하는데, 언제
-            까지 다시 보낼 수 있는지가 스트리밍에서는 평범하지 않습니다.
+            고르기를 잘해도 고른 곳이 죽습니다. 그러면 다시 보내야 하는데, 언제까지 다시 보낼 수 있는지가 스트리밍에서는 평범하지 않습니다.
           </p>
 
           <p className="leading-7">

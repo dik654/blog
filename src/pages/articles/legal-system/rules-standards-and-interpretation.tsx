@@ -150,8 +150,7 @@ export default function RulesStandardsAndInterpretationArticle() {
 
           <p className="leading-7">
             이 계산이 설명해 주는 것이 하나 있습니다. 왜 교통 규칙은 숫자로 적혀
-            있고 이혼할 때 재산을 어떻게 나눌지는 기여도라는 말로만 적혀 있는지
-            입니다. 앞은 해마다 수백만 건이고 뒤는 사건마다 사정이 전혀 다릅니다.
+            있고 이혼할 때 재산을 어떻게 나눌지는 기여도라는 말로만 적혀 있는지입니다. 앞은 해마다 수백만 건이고 뒤는 사건마다 사정이 전혀 다릅니다.
           </p>
         </div>
 
