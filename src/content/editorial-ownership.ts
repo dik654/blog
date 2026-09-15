@@ -12481,6 +12481,41 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "region-agnostic-inference-routing": {
+    title:
+      "사용자가 고르지 않은 것은 사라진 것이 아니라 옮겨 간 것입니다 글이 소유하는 범위",
+    owns: [
+      "요청 경로와 결정 경로를 가르는 기준과 무엇이 어느 쪽인지",
+      "슬러그를 스냅샷으로 푸는 일과 평가 단위가 쌍이어야 하는 이유",
+      "첫 토큰 시간을 고르는 시간과 만드는 시간으로 나눈 분해",
+      "후보를 자르는 순서와 원가를 마지막에 두는 근거",
+      "첫 출력 청크가 긋는 재시도 경계와 그것이 헤더에 미치는 제약",
+    ],
+    reuses: [
+      {
+        label: "한 클러스터 안의 추론 플랫폼 구성",
+        href: "/cs/ai/onprem-k8s-inference-platform",
+      },
+      {
+        label: "엔진 큐에서 기다리는 시간이 정해지는 방식",
+        href: "/cs/ai/vllm-scheduler",
+      },
+      {
+        label: "앞부분 캐시 적중이 prefill을 줄이는 구조",
+        href: "/cs/ai/prefix-caching-radix-attention",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "공식 문서에 적힌 정의·지표 목록·기본 순서만 그 문서에 귀속하고, 여섯 단계 구분과 시간 배분은 사내 리서치에서 온 것으로 표시한다",
+      },
+      {
+        kind: "project-claim",
+        rule: "라우팅 계층 지연 값은 측정 범위를 정하기 전의 가정임을 본문과 assumptions 양쪽에 적는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

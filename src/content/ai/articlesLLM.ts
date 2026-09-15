@@ -338,6 +338,39 @@ export const llmBaseArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/ai/onprem-k8s-inference-platform"),
   },
+  {
+    slug: "region-agnostic-inference-routing",
+    title: "리전과 모델 버전을 숨기려면 여섯 번 고르게 됩니다",
+    subcategory: "ai-llm-serving",
+    sections: [
+      {
+        id: "overview",
+        title: "사용자가 고르지 않은 것은 사라진 것이 아니라 옮겨 간 것입니다",
+      },
+      {
+        id: "two-paths",
+        title: "부품 1. 요청이 지나가는 길과 결정을 내리는 길을 가릅니다",
+      },
+      {
+        id: "six-choices",
+        title: "부품 2. 여섯 단계가 각각 다른 것을 정합니다",
+      },
+      {
+        id: "order-matters",
+        title: "부품 3. 무엇을 먼저 보느냐가 결과를 바꿉니다",
+      },
+      {
+        id: "commit-point",
+        title: "부품 4. 첫 출력 청크가 되돌릴 수 없는 선을 긋습니다",
+      },
+      {
+        id: "boundary",
+        title: "고르는 일까지가 이 글이고, 무엇을 띄울지는 다른 글입니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/ai/region-agnostic-inference-routing"),
+  },
 ];
 
 export const llmArticles: Article[] = [
