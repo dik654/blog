@@ -82717,4 +82717,283 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "ai/inference-failure-absorption": {
+    entryNote:
+      "앞 글의 여섯 단계와 첫 출력 청크 경계를 알고 있다고 두고 시작합니다. 여기서는 그 길 위의 무언가가 죽었을 때를 봅니다.",
+    coreIdea:
+      "장애는 빈도가 정해진 입력이므로 질문은 없애는 법이 아니라 영향이 어디서 멈추느냐입니다. 흡수는 계층마다 자릿수로 다른 시간에 일어나고, 같은 장애도 요청이 어디까지 갔느냐로 갈리며 출력 중인 요청은 어느 계층도 구하지 못합니다. 대수는 장애를 잦게 만들면서 동시에 가볍게 만들고, 포화를 장애로 신고하면 가장 빠른 층이 스스로 용량을 줄여 연쇄가 시작됩니다.",
+    assumedKnowledge: [
+      {
+        id: "streaming-commit-point",
+        role: "출력 중 요청을 구할 수 없는 이유를 그대로 가져옵니다.",
+      },
+      {
+        id: "request-path-control-path-split",
+        role: "컨트롤 플레인 장애가 왜 요청에 영향이 없는지의 근거로 씁니다.",
+      },
+      {
+        id: "kv-pressure-preemption",
+        role: "포화가 무엇인지를 정의해 두고 그것을 장애와 구분합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "failure-absorption-ladder",
+        role: "계층별 흡수 시간 상수를 정의합니다.",
+      },
+      {
+        id: "request-state-failure-axis",
+        role: "장애 영향의 둘째 축을 정의합니다.",
+      },
+      {
+        id: "fleet-size-failure-tradeoff",
+        role: "대수가 장애에 미치는 두 방향을 수식으로 세웁니다.",
+      },
+      {
+        id: "saturation-is-not-failure",
+        role: "포화를 다루는 올바른 신호와 절차를 정합니다.",
+      },
+      {
+        id: "state-authority-and-failure-mode",
+        role: "상태마다 단절 시 기울일 방향을 정합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "failure-absorption-ladder",
+        sectionId: "time-constants",
+        intuition:
+          "흡수한다는 말에는 알아차리고 대신할 곳을 고르는 시간이 들어 있습니다.",
+        workedExample:
+          "파드 재선택은 밀리초, 게이트웨이 fallback은 초, 엣지의 리전 우회는 초에서 분, 중앙의 재스케줄은 분 단위입니다.",
+        boundary:
+          "느린 것이 늘 나쁘지는 않습니다. DNS로 넘기는 우회는 느린 대신 새 연결만 옮기므로 진행 중인 스트림을 끊지 않습니다.",
+      },
+      {
+        id: "request-state-failure-axis",
+        sectionId: "overview",
+        intuition:
+          "같은 고장이라도 그때 그 요청이 어디까지 갔느냐가 결과를 정합니다.",
+        workedExample:
+          "GPU 한 장이 죽으면 신규 요청은 영향이 없고 출력 전 요청은 다시 보내지지만, 출력 중이던 요청의 생성 상태는 복원되지 않습니다.",
+        boundary:
+          "장애 설계로 줄일 수 있는 것은 출력 중 상태에 있는 요청의 수뿐입니다. 계획된 종료는 새 요청을 먼저 막아 이 상태를 만들지 않을 수 있지만 계획되지 않은 종료는 남습니다.",
+      },
+      {
+        id: "fleet-size-failure-tradeoff",
+        sectionId: "fleet-size",
+        intuition:
+          "대수를 늘리면 장애는 자주 오는데 한 번의 무게는 가벼워집니다.",
+        workedExample:
+          "각 대를 60퍼센트로 돌리다 한 대를 잃으면 두 대일 때 120퍼센트, 여덟 대일 때 68.6퍼센트, 예순네 대일 때 61퍼센트입니다.",
+        proofIdea:
+          "고장이 독립이면 대수 N인 플릿에서 어느 하나가 죽기까지의 평균 시간은 한 대의 평균 무고장 시간을 N으로 나눈 값이므로 N에 반비례합니다. 한편 한 대를 잃은 뒤 남는 용량은 (N−1)/N이고 이 값은 N이 커질수록 1에 단조 수렴합니다. 두 식에 같은 N이 들어가되 방향이 반대이므로, 규모가 커질수록 잦아지는 쪽의 손해보다 가벼워지는 쪽의 이득이 커집니다.",
+        counterexample:
+          "스위치나 전원처럼 여러 대를 한꺼번에 묶는 공통 장애점이 있으면 독립 가정이 깨져 장애가 이보다 드물게, 대신 한 번에 크게 옵니다. 그때는 대수를 늘려도 안전 가동률이 따라 오르지 않습니다.",
+        boundary:
+          "빠진 대의 몫이 남은 대에 고르게 나뉜다고 둡니다. 특정 모델이 특정 노드에만 떠 있으면 그 모델의 부하는 나뉘지 않습니다.",
+      },
+      {
+        id: "saturation-is-not-failure",
+        sectionId: "saturation",
+        intuition:
+          "바쁜 파드를 빼면 그 몫이 남은 파드로 가서 차례로 같은 일이 벌어집니다.",
+        workedExample:
+          "살아 있는가와 준비됐는가는 파드를 넣고 빼는 신호이고, 더 받을 수 있는가는 요청 단위로 낮은 등급부터 거절해 다룹니다.",
+        counterexample:
+          "이미 있는 준비 상태 신호에 사용률을 반영하는 방식은 그럴듯해 보이지만, 부하가 실제로 몰리면 하나씩 빠지다 전부 빠집니다.",
+        boundary:
+          "거절 장치를 켜는 것으로 끝나지 않습니다. 기본으로 꺼져 있을 수 있고 대기 큐가 메모리에만 있어 재시작하면 사라지므로 큐 한도·수명·장애 시 동작을 명시해야 합니다.",
+      },
+      {
+        id: "state-authority-and-failure-mode",
+        sectionId: "state-authority",
+        intuition:
+          "낡은 값으로 버텨도 되는 상태와 그러면 손해가 쌓이는 상태가 있습니다.",
+        workedExample:
+          "배치와 가중치는 마지막 스냅샷으로 계속 돌고, 잔액은 리전마다 미리 배정해 그 안에서만 차감하며 소진되면 차단합니다.",
+        counterexample:
+          "잔액을 글로벌 원장에 매 요청 동기로 물으면 리전 간 쓰기 지연이 모든 요청에 붙습니다. 사전 배정은 그 지연을 없애는 대신 다른 리전의 배정액을 당장 쓰지 못하게 합니다.",
+        boundary:
+          "합의 저장소를 두 사이트에 나누면 과반이 몰린 쪽의 상실은 견디지 못합니다. 세 번째 사이트를 두거나 독립된 중앙 둘에 승격·복구 규칙을 따로 써야 합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 두 축",
+        relation: "무엇이 죽었나와 요청이 어디까지 갔나를 함께 놓습니다.",
+        concepts: ["request-state-failure-axis"],
+      },
+      {
+        label: "01 얼마 만에",
+        relation: "계층마다 흡수에 걸리는 시간을 가릅니다.",
+        concepts: ["failure-absorption-ladder"],
+      },
+      {
+        label: "02 몇 대로",
+        relation: "대수가 잦음과 감당을 반대로 움직이는 것을 봅니다.",
+        concepts: ["fleet-size-failure-tradeoff"],
+      },
+      {
+        label: "03 무엇을 장애로 볼까",
+        relation: "포화와 장애를 가르고 상태별 기울기를 정합니다.",
+        concepts: [
+          "saturation-is-not-failure",
+          "state-authority-and-failure-mode",
+        ],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "장애 영향의 두 축이 무엇인지 쓰고, 어느 계층도 구하지 못하는 경우를 쓰세요.",
+        answerChecklist: [
+          "무엇이 죽었나",
+          "요청이 어디까지 갔나",
+          "출력 중인 요청은 구하지 못함",
+          "이미 나간 글자를 되돌릴 수 없기 때문",
+        ],
+        requiredConcepts: ["request-state-failure-axis"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "네 계층의 흡수 시간 상수를 빠른 순서로 쓰고, 각각 무엇을 대신하는지 쓰세요.",
+        answerChecklist: [
+          "파드 재선택은 밀리초",
+          "게이트웨이 fallback은 초",
+          "엣지의 리전 우회는 초~분",
+          "재스케줄과 프로비저닝은 분~시간",
+        ],
+        requiredConcepts: ["failure-absorption-ladder"],
+        sectionId: "time-constants",
+      },
+      {
+        level: "basic",
+        question:
+          "각 대를 60퍼센트로 돌리다 한 대를 잃었을 때 남은 대가 받는 부하를 2대·8대·64대에 대해 계산하세요.",
+        answerChecklist: [
+          "2대는 120퍼센트",
+          "8대는 68.6퍼센트",
+          "64대는 61퍼센트",
+          "대수가 클수록 1에 가까워짐",
+        ],
+        requiredConcepts: ["fleet-size-failure-tradeoff"],
+        sectionId: "fleet-size",
+      },
+      {
+        level: "basic",
+        question:
+          "팔 수 있는 용량을 전체 처리량으로 잡으면 안 되는 이유와 대신 무엇으로 잡아야 하는지 쓰세요.",
+        answerChecklist: [
+          "한 대가 빠지면 남은 대가 넘침",
+          "한 대가 빠진 상태에서 지킬 수 있는 부하로 잡음",
+          "두 대짜리에서는 절반",
+          "그 이상은 외부로 넘기는 계약으로 받음",
+        ],
+        requiredConcepts: ["fleet-size-failure-tradeoff"],
+        sectionId: "fleet-size",
+      },
+      {
+        level: "basic",
+        question:
+          "포화한 파드를 풀에서 빼면 무슨 일이 일어나는지 단계별로 쓰고, 대신 무엇을 해야 하는지 쓰세요.",
+        answerChecklist: [
+          "빠진 파드의 몫이 남은 파드로 감",
+          "남은 파드도 차례로 같은 임계를 넘음",
+          "하나씩 빠지다 전부 빠짐",
+          "파드는 두고 요청 단위로 낮은 등급부터 거절",
+        ],
+        requiredConcepts: ["saturation-is-not-failure"],
+        sectionId: "saturation",
+      },
+      {
+        level: "basic",
+        question:
+          "배치 가중치와 잔액이 단절 시 반대 방향으로 기울어야 하는 이유를 쓰세요.",
+        answerChecklist: [
+          "낡은 배치로도 요청은 처리됨",
+          "낡은 잔액으로 받으면 손해가 쌓임",
+          "앞은 여는 쪽",
+          "뒤는 닫는 쪽",
+        ],
+        requiredConcepts: ["state-authority-and-failure-mode"],
+        sectionId: "state-authority",
+      },
+      {
+        level: "advanced",
+        question:
+          "대수가 커질수록 잦은 장애가 오히려 견딜 만해지는 이유를 두 식으로 유도하세요.",
+        answerChecklist: [
+          "장애 간격은 MTBF를 N으로 나눈 값이라 N에 반비례",
+          "안전 가동률은 (N−1)/N이라 1에 단조 수렴",
+          "같은 N이 두 식에 반대 방향으로 들어감",
+          "규모가 커질수록 가벼워지는 쪽이 이김",
+        ],
+        requiredConcepts: ["fleet-size-failure-tradeoff"],
+        sectionId: "fleet-size",
+      },
+      {
+        level: "advanced",
+        question:
+          "공통 장애점이 있으면 위 유도의 무엇이 깨지는지, 그 결과 장애의 모양이 어떻게 달라지는지 쓰세요.",
+        answerChecklist: [
+          "고장이 독립이라는 전제가 깨짐",
+          "묶인 대들이 함께 빠짐",
+          "장애는 더 드물게 오지만 한 번에 크게 옴",
+          "대수를 늘려도 안전 가동률이 따라 오르지 않음",
+        ],
+        requiredConcepts: ["fleet-size-failure-tradeoff"],
+        sectionId: "fleet-size",
+      },
+      {
+        level: "advanced",
+        question:
+          "합의 저장소를 두 사이트에 나누면 왜 양쪽 상실을 모두 견딜 수 없는지 설명하고 해결책 둘을 쓰세요.",
+        answerChecklist: [
+          "과반이 살아 있어야 쓰기가 됨",
+          "두 사이트면 과반이 한쪽에 몰림",
+          "세 번째 사이트를 둠",
+          "독립된 중앙 둘에 승격·복구 규칙을 따로 씀",
+        ],
+        requiredConcepts: ["state-authority-and-failure-mode"],
+        sectionId: "state-authority",
+      },
+      {
+        level: "advanced",
+        question:
+          "계획된 종료가 출력 중 요청을 만들지 않는 절차를 쓰고, 그래도 남는 것이 무엇인지 쓰세요.",
+        answerChecklist: [
+          "새 요청 수용을 먼저 막음",
+          "진행 중인 것이 끝나기를 기다림",
+          "그 뒤에 내림",
+          "계획되지 않은 종료는 그대로 남음",
+        ],
+        requiredConcepts: [
+          "request-state-failure-axis",
+          "failure-absorption-ladder",
+        ],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title: "The Llama 3 Herd of Models (arXiv:2407.21783)",
+        href: "https://arxiv.org/abs/2407.21783",
+        problem:
+          "대규모 가속기 클러스터에서 고장이 얼마나 자주 나고 무엇이 원인인지에 대한 공개된 실측 기록이 드물었습니다.",
+        contribution:
+          "54일간의 사전학습 구간에서 중단이 466건 있었고 그중 419건이 예기치 않은 것이었다는 집계를 공개했습니다. 원인에 대해서는 예기치 않은 중단의 약 78퍼센트가 가속기나 호스트 부품의 확인된 하드웨어 문제였다고 적고, CPU 관련은 두 건이었습니다.",
+        assumptions:
+          "학습 작업 기준의 집계입니다. 중단이 곧 작업 손실인 환경이라 복제본이 있는 추론과는 같은 고장률이 같은 피해를 뜻하지 않습니다.",
+        evidenceScope:
+          "arXiv 초록 페이지에서 제목을, HTML 본문의 신뢰성 절에서 466·419·약 78퍼센트·CPU 두 건을 직접 확인했습니다. 이 글이 쓰는 것은 그 집계와 기간, 그리고 거기서 역산한 대당 무고장 시간까지입니다.",
+        notClaim:
+          "가속기 종류별 세부 비율은 싣지 않았습니다. 이 글이 참고한 사내 정리본은 가속기 관련 58.7퍼센트와 항목별 내역을 적고 있으나 원문이 제시하는 수치와 맞지 않아 대조에 실패했습니다. 또 역산한 대당 무고장 시간은 이 논문의 주장이 아니라 위 집계에서 이 글이 계산한 값이며, 다른 세대의 가속기에 그대로 쓸 수 없습니다.",
+        sectionId: "fleet-size",
+      },
+    ],
+  },
 };

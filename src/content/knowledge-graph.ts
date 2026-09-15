@@ -24647,6 +24647,56 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "첫 의미 있는 출력 청크가 나가는 순간 200이 커밋되어 상태 코드로 실패를 알릴 수 없게 되고 백엔드도 바꿀 수 없습니다. 그 앞에서는 프록시가 응답 시작 전 실패를, 스트림을 소유한 게이트웨이가 헤더·heartbeat까지의 실패를 각각 흡수하며, 이 선보다 먼저 나가는 응답 헤더에는 실제 서빙 위치를 적을 수 없습니다.",
     canonicalHref: "/cs/ai/region-agnostic-inference-routing#commit-point",
   },
+  "failure-absorption-ladder": {
+    id: "failure-absorption-ladder",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "계층별 장애 흡수 시간 상수",
+    aliases: ["장애 사다리", "흡수 계층", "failure absorption"],
+    definition:
+      "장애를 흡수하는 데 걸리는 시간이 계층마다 자릿수로 다릅니다. 클러스터 안의 파드 재선택은 밀리초, 게이트웨이 fallback은 초, 엣지의 리전 우회는 초에서 분, 중앙의 재스케줄과 프로비저닝은 분에서 시간입니다. 어떤 장애를 어느 층에 맡길지는 그 층의 시간 상수가 그 장애가 만드는 손해보다 짧은지로 정합니다.",
+    canonicalHref: "/cs/ai/inference-failure-absorption#time-constants",
+  },
+  "request-state-failure-axis": {
+    id: "request-state-failure-axis",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "요청 상태라는 둘째 축",
+    aliases: ["신규·출력 전·출력 중", "장애 영향의 두 축"],
+    definition:
+      "같은 장애라도 그때 그 요청이 신규인지, 출력 전인지, 이미 출력 중인지에 따라 결과가 갈립니다. 신규는 아직 어디에도 매이지 않았고 출력 전은 응답이 커밋되지 않아 다시 보낼 수 있지만, 출력 중인 요청은 어느 계층도 구하지 못합니다. 장애 설계로 줄일 수 있는 것은 그 상태에 있는 요청의 수뿐입니다.",
+    canonicalHref: "/cs/ai/inference-failure-absorption#overview",
+  },
+  "fleet-size-failure-tradeoff": {
+    id: "fleet-size-failure-tradeoff",
+    kind: "theorem",
+    domain: "distributed-systems",
+    label: "대수가 장애에 미치는 두 방향",
+    aliases: ["N-1 안전 가동률", "장애 간격과 대수", "2노드 함정"],
+    definition:
+      "고장이 독립이면 플릿의 장애 간격은 대수에 반비례해 짧아지지만, 한 대를 잃었을 때 감당할 수 있는 안전 가동률은 (N−1)/N으로 1에 가까워집니다. 같은 변수가 잦음과 감당을 반대로 움직이므로 규모가 커질수록 잦은 장애가 오히려 가벼워지고, 팔 수 있는 용량은 전체 처리량이 아니라 한 대가 빠진 상태에서 지킬 수 있는 부하입니다.",
+    canonicalHref: "/cs/ai/inference-failure-absorption#fleet-size",
+  },
+  "saturation-is-not-failure": {
+    id: "saturation-is-not-failure",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "포화를 장애로 신고하지 않기",
+    aliases: ["readiness로 수용량 표현 금지", "연쇄 붕괴", "요청 단위 셰딩"],
+    definition:
+      "살아 있는가, 서빙할 준비가 됐는가, 지금 더 받을 수 있는가는 서로 다른 신호이며 셋째를 앞의 둘로 표현하면 안 됩니다. 포화한 파드를 풀에서 빼면 그 몫이 남은 파드로 가서 차례로 같은 임계를 넘기므로, 수용량은 파드를 빼는 대신 요청 단위로 낮은 등급부터 거절해 다룹니다.",
+    canonicalHref: "/cs/ai/inference-failure-absorption#saturation",
+  },
+  "state-authority-and-failure-mode": {
+    id: "state-authority-and-failure-mode",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "상태별 권위 저장소와 단절 시 기울기",
+    aliases: ["fail-open과 fail-closed", "리전별 사전 배정"],
+    definition:
+      "중앙이 죽어도 계속 돈다는 원칙은 모든 상태에 적용되지 않습니다. 배치와 라우팅 가중치는 낡은 값으로 버텨도 되지만 잔액과 한도는 낡은 값으로 받으면 손해가 쌓이므로 닫는 쪽으로 기울여야 하며, 요청 경로에 글로벌 원장을 넣는 대신 리전마다 미리 배정해 두면 단절 중에도 합계가 잔액을 넘지 않습니다.",
+    canonicalHref: "/cs/ai/inference-failure-absorption#state-authority",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -45678,6 +45728,55 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "constrains",
     reason:
       "KV 공간이 모자라 요청이 배치에 끼지 못하면 큐 대기 항이 늘어나 라우팅이 고른 파드의 값이 예측과 달라집니다.",
+  },
+  {
+    from: "failure-absorption-ladder",
+    to: "request-state-failure-axis",
+    relation: "constrains",
+    reason:
+      "층이 아무리 빨라도 이미 출력이 나간 요청은 되돌리지 못하므로 흡수 시간만으로 영향을 설명할 수 없습니다.",
+  },
+  {
+    from: "streaming-commit-point",
+    to: "request-state-failure-axis",
+    relation: "produces",
+    reason:
+      "첫 출력 청크가 긋는 선이 그대로 요청 상태를 가르는 경계가 됩니다.",
+  },
+  {
+    from: "fleet-size-failure-tradeoff",
+    to: "failure-absorption-ladder",
+    relation: "evaluates",
+    reason:
+      "대수가 작으면 파드 재선택 층이 흡수할 수 있는 장애조차 남은 대를 넘치게 만들어 흡수가 실패합니다.",
+  },
+  {
+    from: "saturation-is-not-failure",
+    to: "failure-absorption-ladder",
+    relation: "constrains",
+    reason:
+      "포화를 준비 상태로 신고하면 가장 빠른 층이 스스로 용량을 줄여 연쇄가 시작되므로 흡수 구조 자체가 무너집니다.",
+  },
+  {
+    from: "kv-pressure-preemption",
+    to: "saturation-is-not-failure",
+    relation: "prerequisite",
+    reason:
+      "KV가 모자라 요청이 배치에 끼지 못하는 상태가 무엇인지 알아야 그것을 장애와 구분할 수 있습니다.",
+  },
+  {
+    from: "request-path-control-path-split",
+    to: "state-authority-and-failure-mode",
+    relation: "constrains",
+    reason:
+      "요청 경로에서 결정 경로를 빼 두어도 잔액과 한도는 같은 방식으로 버틸 수 없어 상태마다 정책을 따로 정해야 합니다.",
+  },
+  {
+    from: "prefix-cache-matching",
+    to: "state-authority-and-failure-mode",
+    relation: "contrasts",
+    reason:
+      "캐시는 잃어도 다시 계산하면 되는 상태라 권위 저장소가 필요 없고, 옮기는 값이 다시 계산하는 값보다 큽니다.",
   },
 ];
 
