@@ -7247,4 +7247,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "승인의 규칙이 관행으로만 존재한다는 구조의 출처. 한 입장의 정리이며 반대 입장도 같은 항목에 있음",
     },
   ],
+  "legal-system/rules-standards-and-interpretation": [
+    {
+      kind: "보충 읽기",
+      label: "Kaplow, Rules Versus Standards: An Economic Analysis (Duke L.J. 42:3, 1992)",
+      href: "https://doi.org/10.2307/1372840",
+      note: "규칙과 기준의 차이를 시점 하나로 좁힌 정의와 비용 비대칭의 출처. 이론 논문이며 실증 검증은 아님",
+    },
+    {
+      kind: "공식 문서",
+      label: "대한민국헌법 제12조·제13조 (한국법제연구원 영문 번역본)",
+      href: "https://elaw.klri.re.kr/eng_service/lawView.do?hseq=1&lang=ENG",
+      note: "처벌의 근거가 법률에 있어야 한다는 것과 그 법률이 행위 시점에 있어야 한다는 것. 번역본은 참조용",
+    },
+  ],
 };

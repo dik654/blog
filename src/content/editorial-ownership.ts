@@ -12161,6 +12161,33 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "rules-standards-and-interpretation": {
+    title: "같은 내용을 언제 정하느냐가 제도를 가릅니다 글이 소유하는 범위",
+    owns: [
+      "규칙과 기준을 가르는 것이 시점 하나라는 규정",
+      "시점 차이에서 따라 나오는 세 가지 결과",
+      "두 방식의 총비용 비교와 뒤집히는 사안 수",
+      "조문 안의 확실한 구간과 회색 지대의 구분",
+      "해석의 네 도구와 그 순서에 이유가 있는 까닭",
+      "흠결과 유추, 그리고 처벌을 넓히는 방향만 막히는 이유",
+    ],
+    reuses: [
+      {
+        label: "명확성과 소급 금지를 포함한 형식 조건",
+        href: "/law/legal-system/what-makes-law-law#form-conditions",
+      },
+      {
+        label: "집행 조직에 재량을 얼마나 줄지의 문제",
+        href: "/politics/governance/bureaucracy-and-implementation#rules-or-discretion",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "논문이 실제로 말한 정의와 비대칭만 논문에 귀속하고, 문턱 식은 이 글이 직접 전개한 것으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
