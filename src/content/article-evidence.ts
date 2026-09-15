@@ -7303,4 +7303,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "확률과 형량이 바꿔 쓸 수 있는 값이 아니라는 결과의 출처. 이론 논문이며 정책 효과 측정은 아님",
     },
   ],
+  "criminal-law/procedure-and-proof": [
+    {
+      kind: "공식 문서",
+      label: "대한민국헌법 제27조·제12조 (한국법제연구원 영문 번역본)",
+      href: "https://elaw.klri.re.kr/eng_service/lawView.do?hseq=1&lang=ENG",
+      note: "무죄 추정과 자백의 증거 능력 제한. 번역본은 참조용이며 법적 효력은 국문 원문에 있음",
+    },
+  ],
 };

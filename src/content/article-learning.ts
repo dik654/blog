@@ -81062,4 +81062,273 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "criminal-law/procedure-and-proof": {
+    entryNote:
+      "앞 글의 막는 힘에서 확률 안에 붙잡히는 것과 유죄로 인정되는 것이 함께 들어 있었습니다. 여기서는 그 사이의 문턱을 봅니다.",
+    coreIdea:
+      "틀리는 방식이 둘이고 두 잘못의 무게가 다르므로 문턱이 반반이 아닌 곳에 놓입니다. 문턱은 두 대가의 비만으로 정해지고, 그 문턱이 증명 책임의 배치까지 정합니다. 다만 확률이 문턱을 넘는지만 보아서는 모자라며, 증거를 어떻게 얻었는지와 증거들이 서로 독립인지가 계산 이전에 걸립니다.",
+    assumedKnowledge: [
+      {
+        id: "deterrence-product",
+        role: "막는 힘의 확률 안에 무엇이 들어 있는지를 여기서 가져옵니다.",
+      },
+      {
+        id: "severity-substitution-limits",
+        role: "형량이 커질 때 유죄 인정이 신중해진다는 관찰을 문턱으로 설명합니다.",
+      },
+      {
+        id: "legality-in-criminal-law",
+        role: "미리 적어 두는 보호와 증명을 요구하는 보호를 같은 층으로 놓습니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "asymmetric-error-costs",
+        role: "두 잘못이 같은 종류가 아니라는 것을 세웁니다.",
+      },
+      {
+        id: "conviction-threshold",
+        role: "문턱의 위치를 계산으로 정합니다.",
+      },
+      {
+        id: "burden-of-proof",
+        role: "문턱에서 따라 나오는 증명 책임의 배치를 정의합니다.",
+      },
+      {
+        id: "evidence-exclusion",
+        role: "얻은 방법이 따로 걸리는 이유를 정의합니다.",
+      },
+      {
+        id: "evidence-independence",
+        role: "증거를 세는 방식에서 생기는 오류를 정의합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "asymmetric-error-costs",
+        sectionId: "two-errors",
+        intuition:
+          "둘 다 틀린 판정이지만 남기는 것이 다릅니다.",
+        workedExample:
+          "무고한 유죄는 없던 불이익을 새로 만들고 되돌릴 수 없지만, 놓아주는 것은 손해를 남기고 억제를 약하게 할 뿐 없던 불이익을 만들지는 않습니다.",
+        boundary:
+          "놓아주는 것이 가볍다는 뜻이 아닙니다. 성격이 다르다는 뜻이며, 그 차이가 문턱을 옮기는 근거가 됩니다.",
+      },
+      {
+        id: "conviction-threshold",
+        sectionId: "threshold",
+        intuition:
+          "유죄로 할 때와 무죄로 할 때 각각 어떤 위험을 지는지를 견줍니다.",
+        workedExample:
+          "두 잘못의 무게가 같으면 문턱이 50퍼센트, 무고한 유죄를 열 배 무겁게 보면 90.9퍼센트, 백 배면 99.0퍼센트가 됩니다.",
+        proofIdea:
+          "유죄로 하면 하지 않았을 확률 (1 − π)만큼 무고한 유죄의 대가를 치를 위험을 지고, 무죄로 하면 했을 확률 π만큼 놓아주는 대가를 치를 위험을 집니다. 앞이 뒤보다 작을 때 유죄로 하는 것이 나으므로 (1 − π)·C_오유죄 < π·C_놓침입니다. 양변을 C_놓침으로 나누고 r = C_오유죄 / C_놓침로 두면 (1 − π)r < π가 되고, π에 대해 풀면 π > r/(1 + r)입니다. 두 대가의 절대 크기는 나누는 과정에서 사라지고 비만 남습니다.",
+        counterexample:
+          "r을 아무리 크게 잡아도 r/(1 + r)은 1보다 작습니다. 확실해야 한다는 요구가 완전한 확실을 뜻한다면 어떤 비에서도 그 문턱은 나오지 않습니다.",
+        boundary:
+          "두 대가의 비를 정하는 일은 계산에서 나오지 않고, 증거를 본 뒤의 확률도 하나의 수로 떨어지지 않습니다.",
+      },
+      {
+        id: "burden-of-proof",
+        sectionId: "burden",
+        intuition:
+          "문턱을 넘지 못한 상태가 무죄라면 증거가 부족할 때 지는 쪽이 정해집니다.",
+        workedExample:
+          "하지 않았음을 보일 부담이 없어지고, 증거가 팽팽하면 넘지 못한 것이므로 무죄가 됩니다.",
+        boundary:
+          "기본값이 무죄라는 것이 그 사람이 하지 않았다는 판정은 아닙니다. 문턱을 넘지 못했다는 판정입니다.",
+      },
+      {
+        id: "evidence-exclusion",
+        sectionId: "how-evidence",
+        intuition:
+          "확실성을 높여 주지 않는 증거를 버리는 것은 정확성을 잃는 일이 아닙니다.",
+        workedExample:
+          "강요로 얻은 진술은 하지 않은 사람에게서도 같은 모양으로 나오므로 두 경우를 갈라 주지 못합니다.",
+        boundary:
+          "내용은 믿을 만한데 절차를 어겨 얻은 증거를 버릴 때에는 실제로 값을 치릅니다. 그 값을 치르는 이유가 앞으로의 유인을 없애는 데 있다는 것을 분명히 해야 어디까지 배제할지 따질 수 있습니다.",
+      },
+      {
+        id: "evidence-independence",
+        sectionId: "how-evidence",
+        intuition:
+          "같은 뿌리에서 나온 것을 여럿으로 세면 확률이 부풀려집니다.",
+        workedExample:
+          "한 사람의 진술을 여러 경로로 받은 것은 하나이며, 자백이 유일한 증거일 때 그것만으로 문턱을 넘었다고 보지 않습니다.",
+        boundary:
+          "완전한 독립을 요구하면 쓸 수 있는 증거가 거의 없어집니다. 문제는 독립인지 아닌지가 아니라 얼마나 겹치는지입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 두 잘못",
+        relation: "틀리는 방식이 둘이고 무게가 다릅니다.",
+        concepts: ["asymmetric-error-costs"],
+      },
+      {
+        label: "01 문턱",
+        relation: "무게의 비가 문턱의 위치를 정합니다.",
+        concepts: ["conviction-threshold"],
+      },
+      {
+        label: "02 누가 넘나",
+        relation: "문턱이 증명 책임의 배치를 정합니다.",
+        concepts: ["burden-of-proof"],
+      },
+      {
+        label: "03 무엇으로",
+        relation: "계산에 넣기 전에 증거 자체를 먼저 봅니다.",
+        concepts: ["evidence-exclusion", "evidence-independence"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "무고한 유죄와 놓아주는 것이 남기는 것을 각각 쓰세요.",
+        answerChecklist: [
+          "앞은 없던 불이익을 새로 만듦",
+          "조심해서 피할 수 없었고 되돌릴 수 없음",
+          "뒤는 손해가 남고 억제가 약해짐",
+          "없던 불이익이 새로 생기지는 않음",
+        ],
+        requiredConcepts: ["asymmetric-error-costs"],
+        sectionId: "two-errors",
+      },
+      {
+        level: "basic",
+        question:
+          "무고한 유죄를 열 배 무겁게 볼 때의 유죄 문턱을 구하세요.",
+        answerChecklist: [
+          "문턱은 비 ÷ (1 + 비)",
+          "10 ÷ 11",
+          "약 90.9퍼센트",
+          "그보다 그럴듯해야 벌할 수 있음",
+        ],
+        requiredConcepts: ["conviction-threshold"],
+        sectionId: "threshold",
+      },
+      {
+        level: "basic",
+        question:
+          "형사와 민사의 증명 기준이 다른 이유를 쓰세요.",
+        answerChecklist: [
+          "한쪽이 느슨해서가 아님",
+          "두 잘못의 무게가 다름",
+          "무게가 같으면 문턱은 반반",
+          "한쪽이 무거우면 그만큼 옮겨 감",
+        ],
+        requiredConcepts: ["conviction-threshold", "asymmetric-error-costs"],
+        sectionId: "threshold",
+      },
+      {
+        level: "basic",
+        question:
+          "문턱이 높을 때 따라오는 것을 세 가지 쓰세요.",
+        answerChecklist: [
+          "기본값이 무죄",
+          "하지 않았음을 보일 부담이 없음",
+          "팽팽하면 무죄",
+          "막는 힘이 줄어듦",
+        ],
+        requiredConcepts: ["burden-of-proof"],
+        sectionId: "burden",
+      },
+      {
+        level: "basic",
+        question:
+          "강요로 얻은 진술을 쓰지 않는 것이 왜 정확성을 위한 선택이기도 한지 쓰세요.",
+        answerChecklist: [
+          "하지 않은 사람에게서도 같은 모양으로 나옴",
+          "두 경우를 갈라 주지 못함",
+          "그래서 확률을 올려 주지 않음",
+          "버려도 잃는 것이 없음",
+        ],
+        requiredConcepts: ["evidence-exclusion"],
+        sectionId: "how-evidence",
+      },
+      {
+        level: "basic",
+        question:
+          "자백이 유일한 증거일 때 그것만으로 문턱을 넘었다고 보지 않는 이유를 쓰세요.",
+        answerChecklist: [
+          "자백은 여러 이유로 나올 수 있음",
+          "한 뿌리에 전체를 거는 것",
+          "독립인 증거가 아님",
+          "얻은 방법과 별개로 걸림",
+        ],
+        requiredConcepts: ["evidence-independence"],
+        sectionId: "how-evidence",
+      },
+      {
+        level: "advanced",
+        question:
+          "문턱 식 π > r/(1 + r)을 두 기대 대가의 비교에서 유도하세요.",
+        answerChecklist: [
+          "(1 − π)·C_오유죄 < π·C_놓침",
+          "양변을 C_놓침으로 나눔",
+          "(1 − π)r < π",
+          "π > r ÷ (1 + r)",
+        ],
+        requiredConcepts: ["conviction-threshold"],
+        sectionId: "threshold",
+      },
+      {
+        level: "advanced",
+        question:
+          "두 오판 대가의 절대 크기가 문턱에 영향을 주지 않는 이유를 설명하세요.",
+        answerChecklist: [
+          "양변을 한쪽 대가로 나눔",
+          "절대 크기가 사라짐",
+          "비만 남음",
+          "문턱을 정하는 데 필요한 것은 비 하나",
+        ],
+        requiredConcepts: ["conviction-threshold"],
+        sectionId: "threshold",
+      },
+      {
+        level: "advanced",
+        question:
+          "문턱을 높이는 것이 공짜가 아니라는 말을 앞 글의 계산으로 설명하세요.",
+        answerChecklist: [
+          "문턱이 높을수록 실제 유죄 확률이 내려감",
+          "막는 힘은 확률과 형량의 곱",
+          "같은 형량에서 곱이 작아짐",
+          "값을 알고 치르는 것이 중요",
+        ],
+        requiredConcepts: ["burden-of-proof", "deterrence-product"],
+        sectionId: "burden",
+      },
+      {
+        level: "advanced",
+        question:
+          "증거를 먼저 거르고 나서 확률을 계산해야 하는 이유를 쓰세요.",
+        answerChecklist: [
+          "확률을 먼저 계산하면 이미 본 것이 됨",
+          "보지 않은 것처럼 판단하기 어려움",
+          "순서가 판정의 실질을 바꿈",
+          "그래서 절차의 순서가 규칙으로 정해짐",
+        ],
+        requiredConcepts: ["evidence-exclusion", "conviction-threshold"],
+        sectionId: "how-evidence",
+      },
+    ],
+    papers: [
+      {
+        title: "대한민국헌법 제27조 제4항 · 제12조 제7항",
+        href: "https://elaw.klri.re.kr/eng_service/lawView.do?hseq=1&lang=ENG",
+        problem:
+          "문턱을 넘지 못한 상태를 어떻게 처리할지와, 확률을 올려 주는 것처럼 보이는 증거를 어디까지 쓸지가 정해져 있지 않으면 같은 증거로 다른 결론이 나옵니다.",
+        contribution:
+          "문턱을 넘지 못한 상태의 기본값을 무죄로 정하고, 자의로 진술된 것이 아니라고 인정되는 자백과 정식재판에서 유일한 증거인 자백을 유죄의 증거로 삼지 못하게 하며 그 자백만으로 처벌하지 못하게 합니다.",
+        assumptions:
+          "판정하는 자리와 수사하는 자리가 갈라져 있고, 증거의 취득 경위를 사후에 확인할 수 있다고 둡니다.",
+        evidenceScope:
+          "한국법제연구원이 제공하는 영문 번역본에서 두 조문을 확인했습니다. 번역본은 참조용이며 법적 효력은 국문 원문에 있다고 이 사이트가 명시합니다.",
+        notClaim:
+          "이 글의 문턱 식이 조문에서 나온 것은 아닙니다. 조문은 기본값과 배제의 범위를 정할 뿐이고, 그 기본값이 왜 그 자리에 놓이는지를 계산으로 설명한 부분은 이 글에서 전개한 것입니다.",
+        sectionId: "threshold",
+      },
+    ],
+  },
 };
