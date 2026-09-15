@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ProgressiveDetail from "@/components/articles/progressive-detail";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
@@ -24,14 +23,12 @@ export default function PrecedentAndLegalChangeArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            앞 글은 조문을 사안에 대는 일까지 다뤘습니다. 회색 지대가 남고, 그
-            회색을 문언·체계·목적·기록 순서로 메운다는 것이었습니다.
+            앞 글은 조문을 사안에 대는 일까지 다뤘습니다. 회색 지대가 남고 그 회색을 문언·체계·목적·기록 순서로 메운다는 것이었습니다.
           </p>
 
           <p className="leading-7">
-            그런데 메운 뒤에 무슨 일이 일어나는지는 다루지 않았습니다. 다음에
-            비슷한 사건이 오면 앞의 판단이 근거로 제시되고, 그것이 반복되면
-            조문에 적혀 있지 않은 선이 사실상 규칙처럼 굳습니다.
+            그런데 메운 뒤에 무슨 일이 일어나는지는 다루지 않았습니다. 다음에 비슷한 사건이 오면 앞의 판단이 근거로 제시되고 그것이 반복되면 조문에 적혀 있지 않은 선이 사실상 규칙처럼
+            굳습니다.
           </p>
 
           <p className="leading-7">
@@ -89,16 +86,12 @@ export default function PrecedentAndLegalChangeArticle() {
           </p>
 
           <p className="leading-7">
-            가려내는 방법은 빼 보는 것입니다. 그 판단을 빼면 같은 결론이 나오지
-            않는다면 그것은 이유이고, 빼도 결론이 그대로라면 곁들인 말입니다.
-            다만 실제 판결문에서 이 구분이 언제나 뚜렷하지는 않고, 그 자체가
-            다음 사건의 다툼거리가 되기도 합니다.
+            가려내는 방법은 빼 보는 것입니다. 그 판단을 빼면 같은 결론이 나오지 않는다면 그것은 이유이고 빼도 결론이 그대로라면 곁들인 말입니다. 다만 실제 판결문에서 이 구분이 언제나
+            뚜렷하지는 않고 그 자체가 다음 사건의 다툼거리가 되기도 합니다.
           </p>
 
           <p className="leading-7">
-            한 가지 더 있습니다. 이유는 그 사건의 사실과 묶여 있습니다. 어느
-            범위의 사실까지를 그 이유가 덮는지가 정해져 있지 않고, 그 범위를
-            좁히는 것이 3절에서 볼 통로가 됩니다.
+            한 가지 더 있습니다. 이유는 그 사건의 사실과 묶여 있습니다. 어느 범위의 사실까지를 그 이유가 덮는지가 정해져 있지 않고 그 범위를 좁히는 것이 3절에서 볼 통로가 됩니다.
           </p>
         </div>
 
@@ -273,21 +266,16 @@ export default function PrecedentAndLegalChangeArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            앞 판단이 틀렸다는 것만으로는 뒤집을 이유가 되지 않습니다. 틀린 채로
-            두는 데도 얻는 것이 있고, 바로잡는 데도 치르는 것이 있기 때문입니다.
-            그래서 비교가 필요합니다.
+            앞 판단이 틀렸다는 것만으로는 뒤집을 이유가 되지 않습니다. 틀린 채로 두는 데도 얻는 것이 있고 바로잡는 데도 치르는 것이 있기 때문입니다. 그래서 비교가 필요합니다.
           </p>
 
           <p className="leading-7">
-            얻는 쪽부터 보면, 더 나은 규칙으로 바꾸면 앞으로 오는 사건마다 조금씩
-            나아집니다. 이 개선은 한 번이 아니라 계속 쌓이고, 그래서 그 규칙이
-            앞으로 얼마나 오래 쓰일지가 크기를 정합니다.
+            얻는 쪽부터 보면, 더 나은 규칙으로 바꾸면 앞으로 오는 사건마다 조금씩 나아집니다. 이 개선은 한 번이 아니라 계속 쌓이고 그래서 그 규칙이 앞으로 얼마나 오래 쓰일지가
+            크기를 정합니다.
           </p>
 
           <p className="leading-7">
-            치르는 쪽은 둘입니다. 이미 그 판단에 맞춰 해 둔 것들이 흔들리고,
-            뒤집는 행위 자체가 앞으로의 안정성을 낮춥니다. 이 둘은 지금 한 번에
-            발생합니다.
+            치르는 쪽은 둘입니다. 이미 그 판단에 맞춰 해 둔 것들이 흔들리고 뒤집는 행위 자체가 앞으로의 안정성을 낮춥니다. 이 둘은 지금 한 번에 발생합니다.
           </p>
 
           <p className="leading-7">
@@ -397,15 +385,12 @@ export default function PrecedentAndLegalChangeArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            이 글에서 본 과정에는 방향이 있습니다. 회색으로 시작한 영역이 판단이
-            쌓이면서 점점 좁아지고, 어느 시점부터는 조문에 적힌 것과 거의 같은
-            정도로 예측할 수 있게 됩니다.
+            이 글에서 본 과정에는 방향이 있습니다. 회색으로 시작한 영역이 판단이 쌓이면서 점점 좁아지고 어느 시점부터는 조문에 적힌 것과 거의 같은 정도로 예측할 수 있게 됩니다.
           </p>
 
           <p className="leading-7">
-            그러면 앞 글의 맞바꿈이 그대로 돌아옵니다. 예측이 쉬워진 만큼 어긋남의
-            손해가 남고, 좁히기로 그것을 줄이려 하면 예외의 목록이 길어집니다.
-            기준을 골랐다고 해서 기준의 성질이 계속 유지되지는 않습니다.
+            그러면 앞 글의 맞바꿈이 그대로 돌아옵니다. 예측이 쉬워진 만큼 어긋남의 손해가 남고 좁히기로 그것을 줄이려 하면 예외의 목록이 길어집니다. 기준을 골랐다고 해서 기준의 성질이
+            계속 유지되지는 않습니다.
           </p>
 
           <p className="leading-7">
