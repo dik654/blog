@@ -35,8 +35,7 @@ export default function PricesAsInformationArticle() {
           </p>
 
           <p className="leading-7">
-            그런데도 값이 맞게 정해지고, 거래되어야 할 것만 거래됩니다. 아래
-            그림이 그 일에 실제로 필요한 정보가 얼마인지를 셉니다.
+            그런데도 값이 맞게 정해지고 거래되어야 할 것만 거래됩니다. 아래 그림이 그 일에 실제로 필요한 정보가 얼마인지를 셉니다.
           </p>
         </div>
 
@@ -60,8 +59,7 @@ export default function PricesAsInformationArticle() {
           </p>
 
           <p className="leading-7">
-            값이 나르지 못하는 것도 있습니다. 그것은 다음 글부터의 몫이고, 이
-            글은 값이 나르는 것까지만 봅니다.
+            값이 나르지 못하는 것도 있습니다. 그것은 다음 글부터의 몫이고 이 글은 값이 나르는 것까지만 봅니다.
           </p>
         </div>
       </section>
@@ -77,9 +75,7 @@ export default function PricesAsInformationArticle() {
           </p>
 
           <p className="leading-7">
-            낼 수 있는 최대 금액은 그 사람이 지금 무엇을 포기할 수 있는지에
-            달려 있습니다. 1편의 표현으로는 기회비용이고, 그것은 그 사람의 사정이
-            바뀔 때마다 움직입니다.
+            낼 수 있는 최대 금액은 그 사람이 지금 무엇을 포기할 수 있는지에 달려 있습니다. 1편의 표현으로는 기회비용이고 그것은 그 사람의 사정이 바뀔 때마다 움직입니다.
           </p>
 
           <p className="leading-7">
@@ -89,8 +85,7 @@ export default function PricesAsInformationArticle() {
           </p>
 
           <p className="leading-7">
-            이런 것들은 통계로 올라오지 않습니다. 올라올 때쯤이면 이미 바뀌어
-            있고, 무엇보다 그 사람 자신도 숫자로 적어 두지 않았습니다.
+            이런 것들은 통계로 올라오지 않습니다. 올라올 때쯤이면 이미 바뀌어 있고 무엇보다 그 사람 자신도 숫자로 적어 두지 않았습니다.
           </p>
 
           <p className="leading-7">
@@ -139,9 +134,7 @@ export default function PricesAsInformationArticle() {
           </p>
 
           <p className="leading-7">
-            그런데 각자가 그 비교만 했는데 전체가 맞아떨어집니다. 값이 7일 때 사는
-            쪽에서 넷이 남고 파는 쪽에서도 넷이 남으며, 그 넷이 앞 글에서 총량이
-            가장 컸던 수량입니다.
+            그런데 각자가 그 비교만 했는데 전체가 맞아떨어집니다. 값이 7일 때 사는 쪽에서 넷이 남고 파는 쪽에서도 넷이 남으며 그 넷이 앞 글에서 총량이 가장 컸던 수량입니다.
           </p>
 
           <p className="leading-7">
@@ -254,9 +247,7 @@ export default function PricesAsInformationArticle() {
           </p>
 
           <p className="leading-7">
-            앞 글에서 값을 묶었을 때가 그 예입니다. 나누는 방식을 바꾸려고 값을
-            건드렸는데 정보와 유인이 함께 꺼졌습니다. 그래서 만들 사람이 줄고,
-            누가 받을지를 따로 정해야 했습니다.
+            앞 글에서 값을 묶었을 때가 그 예입니다. 나누는 방식을 바꾸려고 값을 건드렸는데 정보와 유인이 함께 꺼졌습니다. 그래서 만들 사람이 줄고 누가 받을지를 따로 정해야 했습니다.
           </p>
         </div>
 
@@ -306,8 +297,7 @@ export default function PricesAsInformationArticle() {
           </p>
 
           <p className="leading-7">
-            어려운 것은 그 앞입니다. 열두 개를 모아야 하는데, 각자에게 물어야
-            하고, 물어도 사실대로 답할 이유가 없습니다.
+            어려운 것은 그 앞입니다. 열두 개를 모아야 하는데, 각자에게 물어야 하고 물어도 사실대로 답할 이유가 없습니다.
           </p>
 
           <p className="leading-7">
@@ -317,15 +307,11 @@ export default function PricesAsInformationArticle() {
           </p>
 
           <p className="leading-7">
-            시장에서는 이 문제가 다르게 풀립니다. 낮게 부르면 못 사고 높게 부르면
-            못 팝니다. 말이 아니라 행동으로 답하게 되어 있어서, 거짓으로 답하면
-            자기가 손해를 봅니다.
+            시장에서는 이 문제가 다르게 풀립니다. 낮게 부르면 못 사고 높게 부르면 못 팝니다. 말이 아니라 행동으로 답하게 되어 있어서 거짓으로 답하면 자기가 손해를 봅니다.
           </p>
 
           <p className="leading-7">
-            그리고 자료는 계속 바뀝니다. 모으는 데 걸린 시간만큼 낡은 자료로
-            계산하게 되고, 그 사이에 바뀐 사정은 다음 주기까지 반영되지
-            않습니다.
+            그리고 자료는 계속 바뀝니다. 모으는 데 걸린 시간만큼 낡은 자료로 계산하게 되고 그 사이에 바뀐 사정은 다음 주기까지 반영되지 않습니다.
           </p>
 
           <p className="leading-7">
@@ -390,9 +376,8 @@ export default function PricesAsInformationArticle() {
             </p>
 
             <p className="leading-7">
-              그래서 실제로 늘어난 것은 중앙 계획이 아니라 값을 더 자주 바꾸는
-              방식입니다. 관찰된 행동으로 값을 자주 갱신하는 쪽은 두 경로의
-              장점을 섞은 것이고, 이 글의 대비를 대체하지는 않습니다.
+              그래서 실제로 늘어난 것은 중앙 계획이 아니라 값을 더 자주 바꾸는 방식입니다. 관찰된 행동으로 값을 자주 갱신하는 쪽은 두 경로의 장점을 섞은 것이고 이 글의 대비를
+              대체하지는 않습니다.
             </p>
           </div>
         </ProgressiveDetail>
