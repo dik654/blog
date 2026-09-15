@@ -12301,6 +12301,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "crime-and-punishment-purpose": {
+    title: "값을 주고받는 방식이 무너지는 자리가 있습니다 글이 소유하는 범위",
+    owns: [
+      "사인 간 조정이 무너지는 세 지점과 국가가 나서는 이유",
+      "벌하는 네 이유와 각각이 형량에 대해 말하는 것",
+      "막는 힘이 확률과 형량의 곱이라는 계산",
+      "같은 곱을 만드는 조합들이 서로 같지 않은 이유",
+      "형량에 층이 있어야 하는 이유",
+      "형벌에서 형식 요구가 가장 엄격해지는 두 근거",
+    ],
+    reuses: [
+      {
+        label: "손해를 옮기는 장치가 전제하는 것",
+        href: "/law/private-law/tort-and-accident-cost#where-loss-sits",
+      },
+      {
+        label: "동의를 요구하는 보호와 값을 매기는 보호",
+        href: "/law/private-law/property-and-entitlement#two-protections",
+      },
+      {
+        label: "처벌을 넓히는 유추의 금지",
+        href: "/law/legal-system/rules-standards-and-interpretation#gaps-and-analogy",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "논문이 실제로 보인 조건부 결과만 논문에 귀속하고, 수치 예시는 이 글이 만든 것으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

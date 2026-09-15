@@ -80769,4 +80769,297 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "criminal-law/crime-and-punishment-purpose": {
+    entryNote:
+      "앞 세 글은 값을 주고받아 정리하는 장치였습니다. 여기서는 그 방식이 무너지는 영역과, 대신 놓이는 장치를 봅니다.",
+    coreIdea:
+      "사인끼리 값을 주고받는 방식은 상대를 특정할 수 없거나 물릴 재산이 없거나 값으로 정리해서는 안 되는 종류일 때 무너지고, 그 자리에 국가가 벌하는 장치가 놓입니다. 벌하는 이유는 넷이고 각각 형량에 대해 다른 것을 말하는데, 그 가운데 억제만 계산할 수 있어 막는 힘이 잡힐 확률과 형량의 곱이 됩니다. 다만 같은 곱을 만드는 조합들이 서로 같지 않아 형량으로 확률을 메우는 방식은 계산보다 덜 듣습니다.",
+    assumedKnowledge: [
+      {
+        id: "loss-lies-where-it-falls",
+        role: "손해를 옮기는 장치가 무엇을 전제하는지를 여기서 가져옵니다.",
+      },
+      {
+        id: "property-rule-vs-liability-rule",
+        role: "값만 치르면 뚫리는 보호가 왜 문제인지를 설명하는 데 씁니다.",
+      },
+      {
+        id: "formal-legality-conditions",
+        role: "미리 알 수 있어야 한다는 조건을 형벌에서 다시 씁니다.",
+      },
+      {
+        id: "analogy-ban-in-criminal-law",
+        role: "그 조건의 구체적 적용을 이미 보아 둔 것으로 삼습니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "why-public-enforcement",
+        role: "국가가 나서는 이유를 세 지점으로 정리합니다.",
+      },
+      {
+        id: "punishment-purposes",
+        role: "벌하는 이유를 넷으로 갈라 각각이 형량에 대해 말하는 것을 봅니다.",
+      },
+      {
+        id: "deterrence-product",
+        role: "그 가운데 계산할 수 있는 하나를 식으로 폅니다.",
+      },
+      {
+        id: "severity-substitution-limits",
+        role: "형량으로 확률을 메우는 방식이 왜 덜 듣는지 정리합니다.",
+      },
+      {
+        id: "marginal-deterrence",
+        role: "형량에 층이 있어야 하는 이유를 정의합니다.",
+      },
+      {
+        id: "legality-in-criminal-law",
+        role: "이 계산이 성립하기 위한 형식 요구를 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "why-public-enforcement",
+        sectionId: "overview",
+        intuition:
+          "값을 주고받아 정리하려면 상대가 있어야 하고 그 상대에게 줄 것이 있어야 합니다.",
+        workedExample:
+          "물릴 재산이 없으면 판결을 받아도 받을 것이 없고, 누가 했는지 모르면 시작조차 되지 않으며, 값만 치르면 된다면 동의를 요구하던 보호가 무의미해집니다.",
+        boundary:
+          "사인끼리 정리되는 영역에서는 벌할 이유가 약합니다. 벌하는 것은 비용만 들고 아무것도 만들어 내지 않습니다.",
+      },
+      {
+        id: "punishment-purposes",
+        sectionId: "four-reasons",
+        intuition:
+          "왜 벌하느냐에 대한 답이 다르면 얼마나 벌해야 하는지도 달라집니다.",
+        workedExample:
+          "값하는 만큼 갚는다는 답은 형량을 죄의 무게에 묶고, 덜 일어나게 한다는 답은 효과에 묶어 막기 어려운 죄에 더 무거운 형을 정당화합니다.",
+        boundary:
+          "넷은 자주 같은 결론을 내므로 평소에는 구분이 드러나지 않습니다. 갈리는 지점에서만 어느 답을 쓰고 있는지가 보입니다.",
+      },
+      {
+        id: "deterrence-product",
+        sectionId: "deterrence",
+        intuition:
+          "잡히지 않을 수도 있으므로 형량에 잡힐 확률을 곱해야 합니다.",
+        workedExample:
+          "얻는 것이 8일 때 확률 30퍼센트에 형량 30이면 기대 제재가 9라 막히지만, 확률이 5퍼센트로 떨어지면 같은 형량으로 1.5밖에 되지 않아 막히지 않습니다.",
+        proofIdea:
+          "그 일을 할 때의 기대값은 얻는 것 G에서 기대 제재 p·S를 뺀 것입니다. 이 값이 음수이면 하지 않는 쪽이 낫고, 그 조건이 p·S > G입니다. 이 부등식에서 p와 S는 곱으로만 나타나므로 같은 곱을 만드는 조합은 전부 같은 판정을 냅니다. 그래서 같은 억제력을 만드는 조합이 무수히 많다는 결론이 식에서 바로 따라 나옵니다.",
+        counterexample:
+          "확률이 5퍼센트일 때 형량을 200으로 올리면 기대 제재가 10이 되어 다시 막힙니다. 낮은 검거율을 형량으로 메우는 것이 계산상으로는 성립합니다.",
+        boundary:
+          "그 사람이 확률과 형량을 알고 계산한다고 두는 단순화이며, 충동이나 잘못된 확률 인식은 들어 있지 않습니다.",
+      },
+      {
+        id: "severity-substitution-limits",
+        sectionId: "why-severity-fails",
+        intuition:
+          "법정형은 법전에 적혀 있지만 검거율은 적혀 있지 않습니다.",
+        workedExample:
+          "확률을 실제보다 낮게 알면 곱의 한쪽이 작게 계산되고, 형량이 커지면 판단하는 쪽이 유죄 인정에 신중해져 확률이 함께 내려갑니다.",
+        boundary:
+          "형량을 올리는 것이 아무 효과가 없다는 뜻은 아닙니다. 계산이 말하는 것보다 덜 듣는다는 뜻이며, 그만큼 확률을 올리는 쪽을 먼저 따져야 한다는 결론이 나옵니다.",
+      },
+      {
+        id: "marginal-deterrence",
+        sectionId: "marginal-deterrence",
+        intuition:
+          "이미 가벼운 쪽을 저지르기로 한 사람에게 거기서 멈출 이유가 남아 있어야 합니다.",
+        workedExample:
+          "훔치는 것과 훔치다가 해치는 것에 같은 형이 매겨져 있으면 목격자를 남기지 않을 이유만 생기고 그러지 않을 이유는 사라집니다.",
+        boundary:
+          "층을 두려면 가장 무거운 죄의 형이 상한을 이루므로, 모든 형을 함께 올리면 층이 다시 눌립니다.",
+      },
+      {
+        id: "legality-in-criminal-law",
+        sectionId: "legality",
+        intuition:
+          "무엇을 하면 무엇을 치르는지 모르면 계산할 수도 조심할 수도 없습니다.",
+        workedExample:
+          "행위 이전에 문언으로 적혀 있어야 하고, 그 문언을 넓혀 처벌 범위를 늘리는 것도 막힙니다.",
+        boundary:
+          "억제만으로 정당화하면 절반입니다. 조심할 방법이 있어야 한다는 근거는 억제가 전혀 작동하지 않는 경우에도 남습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 왜 국가가",
+        relation: "사인 간 조정이 무너지는 지점을 찾습니다.",
+        concepts: ["why-public-enforcement"],
+      },
+      {
+        label: "01 무엇을 위해",
+        relation: "벌하는 이유를 넷으로 갈라 봅니다.",
+        concepts: ["punishment-purposes"],
+      },
+      {
+        label: "02 얼마나",
+        relation: "계산할 수 있는 하나를 식으로 폅니다.",
+        concepts: ["deterrence-product"],
+      },
+      {
+        label: "03 한계",
+        relation: "형량으로 메우는 방식이 왜 덜 듣는지 봅니다.",
+        concepts: ["severity-substitution-limits", "marginal-deterrence"],
+      },
+      {
+        label: "04 전제",
+        relation: "이 계산이 성립하려면 미리 적혀 있어야 합니다.",
+        concepts: ["legality-in-criminal-law"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "사인끼리 값을 주고받는 방식이 무너지는 세 지점을 쓰세요.",
+        answerChecklist: [
+          "누가 했는지 모를 때",
+          "물릴 재산이 없을 때",
+          "값으로 정리해서는 안 되는 종류일 때",
+          "셋 중 하나만 빠져도 사슬이 끊어짐",
+        ],
+        requiredConcepts: ["why-public-enforcement"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "벌하는 네 이유를 쓰고 각각이 형량을 무엇에 묶는지 적으세요.",
+        answerChecklist: [
+          "값하는 만큼 · 죄의 무게",
+          "덜 일어나게 · 효과",
+          "떼어 놓기 · 기간",
+          "바꾸기 · 처우의 내용",
+        ],
+        requiredConcepts: ["punishment-purposes"],
+        sectionId: "four-reasons",
+      },
+      {
+        level: "basic",
+        question:
+          "얻는 것이 8, 확률이 5퍼센트, 형량이 30일 때 억제되는지 계산하세요.",
+        answerChecklist: [
+          "기대 제재는 0.05 × 30",
+          "1.5",
+          "1.5 < 8",
+          "막히지 않음",
+        ],
+        requiredConcepts: ["deterrence-product"],
+        sectionId: "deterrence",
+      },
+      {
+        level: "basic",
+        question:
+          "형량만 올리는 방식이 계산보다 덜 듣는 이유를 세 가지 쓰세요.",
+        answerChecklist: [
+          "확률을 실제보다 낮게 앎",
+          "위험을 대하는 태도에 따라 확률 쪽이 더 강함",
+          "형량이 커지면 유죄 인정이 신중해짐",
+          "그래서 확률이 함께 내려감",
+        ],
+        requiredConcepts: ["severity-substitution-limits"],
+        sectionId: "why-severity-fails",
+      },
+      {
+        level: "basic",
+        question:
+          "모든 죄에 같은 최고형을 매기면 무엇이 무너지는지 예로 설명하세요.",
+        answerChecklist: [
+          "가벼운 죄와 무거운 죄에 같은 형",
+          "이미 저지르기로 한 사람에게",
+          "더 무거운 쪽으로 가지 않을 이유가 사라짐",
+          "형량에 층이 있어야 함",
+        ],
+        requiredConcepts: ["marginal-deterrence"],
+        sectionId: "marginal-deterrence",
+      },
+      {
+        level: "basic",
+        question:
+          "형벌에서 미리 적혀 있어야 한다는 요구의 두 근거를 쓰세요.",
+        answerChecklist: [
+          "계산이 가능해야 억제가 생김",
+          "조심할 방법이 있어야 함",
+          "뒤쪽은 억제가 작동하지 않아도 남음",
+          "그래서 목적을 무엇으로 잡든 유지됨",
+        ],
+        requiredConcepts: ["legality-in-criminal-law"],
+        sectionId: "legality",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 억제력을 만드는 확률과 형량의 조합이 무수히 많다는 것을 식에서 유도하고, 그럼에도 서로 같지 않은 이유를 쓰세요.",
+        answerChecklist: [
+          "조건이 p·S > G로 곱으로만 나타남",
+          "같은 곱이면 같은 판정",
+          "확률을 올리려면 사람과 장비가 듦",
+          "형량을 올리려면 가두는 비용과 오판의 대가가 큼",
+        ],
+        requiredConcepts: ["deterrence-product", "severity-substitution-limits"],
+        sectionId: "deterrence",
+      },
+      {
+        level: "advanced",
+        question:
+          "형량을 올렸는데 곱이 오히려 줄어들 수 있는 경로를 설명하세요.",
+        answerChecklist: [
+          "형량이 커지면 오판의 대가가 커짐",
+          "판단하는 쪽이 유죄 인정에 신중해짐",
+          "실제 유죄 확률이 내려감",
+          "곱이 그대로이거나 줄어듦",
+        ],
+        requiredConcepts: ["severity-substitution-limits", "deterrence-product"],
+        sectionId: "why-severity-fails",
+      },
+      {
+        level: "advanced",
+        question:
+          "형량의 층이 필요하다는 결론이 서로 다른 두 이유에서 함께 나온다는 것을 설명하세요.",
+        answerChecklist: [
+          "값하는 만큼 갚는다는 답이 형량을 죄의 무게에 묶음",
+          "억제도 어디까지 하느냐에 걸림",
+          "층이 없으면 더 무거운 쪽을 막지 못함",
+          "두 답이 같은 결론에 이름",
+        ],
+        requiredConcepts: ["marginal-deterrence", "punishment-purposes"],
+        sectionId: "marginal-deterrence",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 글의 계산과 앞 글의 주의 수준 계산이 같은 점과 다른 점을 쓰세요.",
+        answerChecklist: [
+          "둘 다 확률과 크기를 곱해 판단",
+          "하나는 얼마나 조심할지",
+          "다른 하나는 아예 할지 말지",
+          "전자는 조치 단위, 후자는 행위 단위",
+        ],
+        requiredConcepts: ["deterrence-product"],
+        sectionId: "deterrence",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Gary S. Becker · Crime and Punishment: An Economic Approach (1968)",
+        href: "https://www.nber.org/system/files/chapters/c3625/c3625.pdf",
+        problem:
+          "범죄와 형벌이 도덕과 교정의 언어로만 다뤄져, 얼마나 잡고 얼마나 벌할지를 함께 정하는 문제로 보는 틀이 없었습니다.",
+        contribution:
+          "범행을 선택으로 놓고 유죄 확률과 형량이 각각 건수를 줄이는 방향으로 작용한다는 것을 보인 뒤, 둘이 바꿔 쓸 수 있는 값이 아님을 밝혔습니다. 확률을 올리고 형량을 같은 비율로 내려 기대 소득을 그대로 두어도 기대 효용은 달라지며, 위험을 선호하면 확률 쪽이 위험을 회피하면 형량 쪽이 더 크게 작용합니다.",
+        assumptions:
+          "행위자가 확률과 형량을 알고 기대 효용을 계산한다고 두며, 집행에 드는 자원을 함께 최소화할 대상으로 봅니다.",
+        evidenceScope:
+          "Journal of Political Economy 76권 2호(1968)에 실렸고 NBER 단행본(1974) 1~54쪽에 재수록된 이론 논문이며, NBER 공개 사본에서 전문을 확인했습니다. 형식 모형이며 실제 형사 정책의 효과를 측정한 연구가 아닙니다.",
+        notClaim:
+          "형량을 올리면 범죄가 준다거나 줄지 않는다는 실증 주장이 아닙니다. 논문은 확률과 형량의 효과가 위험을 대하는 태도에 따라 갈린다는 조건부 결과를 제시하며, 본문에 쓴 수치는 설명을 위해 이 글에서 만든 예입니다.",
+        sectionId: "deterrence",
+      },
+    ],
+  },
 };

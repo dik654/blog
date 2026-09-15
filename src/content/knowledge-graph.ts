@@ -24272,6 +24272,70 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "주의 판정에 들어가는 확률을 사고가 난 뒤에 재게 되므로, 그때는 아주 낮았던 확률이 지금 보면 충분히 높아 보입니다. 하지 않아도 됐을 조치를 했어야 한다고 판정하는 쪽으로 구조적으로 기울며, 그때 알 수 있었던 정보로 한정하는 절차가 이 치우침을 줄이는 장치입니다.",
     canonicalHref: "/law/private-law/tort-and-accident-cost#scope",
   },
+  "why-public-enforcement": {
+    id: "why-public-enforcement",
+    kind: "concept",
+    domain: "law",
+    label: "사인 간 조정이 무너지는 세 지점",
+    aliases: ["공적 집행의 이유", "형사와 민사의 갈림"],
+    definition:
+      "값을 주고받아 정리하려면 누가 했는지 알아야 하고 물릴 재산이 있어야 하며 값으로 정리되는 종류여야 합니다. 셋 중 하나만 빠져도 사슬이 끊어지고, 특히 값만 치르면 해도 되는 것으로 두면 동의를 요구하던 보호가 값으로 뚫려 무의미해집니다.",
+    canonicalHref:
+      "/law/criminal-law/crime-and-punishment-purpose#overview",
+  },
+  "punishment-purposes": {
+    id: "punishment-purposes",
+    kind: "concept",
+    domain: "law",
+    label: "벌하는 네 이유",
+    aliases: ["응보", "억제", "무해화", "교화"],
+    definition:
+      "한 일에 값하는 만큼 갚는다는 것, 앞으로 덜 일어나게 한다는 것, 당분간 하지 못하게 떼어 놓는다는 것, 그 사람을 바꾼다는 것입니다. 첫째는 형량을 죄의 무게에, 둘째는 효과에, 셋째는 기간에, 넷째는 처우의 내용에 묶으므로 갈리는 지점에서 어느 답을 쓰고 있는지가 드러납니다.",
+    canonicalHref:
+      "/law/criminal-law/crime-and-punishment-purpose#four-reasons",
+  },
+  "deterrence-product": {
+    id: "deterrence-product",
+    kind: "theorem",
+    domain: "law",
+    label: "막는 힘은 확률과 형량의 곱",
+    aliases: ["기대 제재", "억제의 계산"],
+    definition:
+      "그 일로 얻는 것과 잡혔을 때 잃을 것을 견준다고 두면, 막는 힘은 잡힐 확률에 형량을 곱한 값이고 그것이 얻는 것보다 클 때 하지 않는 쪽이 낫습니다. 같은 곱을 만드는 조합이 무수히 많지만 드는 비용과 실제 효과가 달라 서로 바꿔 쓸 수 있는 값이 아닙니다.",
+    canonicalHref: "/law/criminal-law/crime-and-punishment-purpose#deterrence",
+  },
+  "severity-substitution-limits": {
+    id: "severity-substitution-limits",
+    kind: "concept",
+    domain: "law",
+    label: "형량으로 확률을 메울 수 없는 이유",
+    aliases: ["엄벌주의의 한계", "확률 인식", "오판의 대가"],
+    definition:
+      "확률을 실제보다 낮게 아는 경향, 위험을 대하는 태도에 따라 확률 쪽이 더 강하게 작용한다는 점, 형량이 커질수록 판단하는 쪽이 유죄 인정에 신중해져 확률이 함께 내려간다는 점이 겹칩니다. 그래서 형량만 올리는 방식은 계산상 성립해도 실제로는 계산보다 덜 듣습니다.",
+    canonicalHref:
+      "/law/criminal-law/crime-and-punishment-purpose#why-severity-fails",
+  },
+  "marginal-deterrence": {
+    id: "marginal-deterrence",
+    kind: "concept",
+    domain: "law",
+    label: "형량의 층",
+    aliases: ["한계 억제", "더 무거운 쪽으로 가지 않을 이유"],
+    definition:
+      "가벼운 죄와 무거운 죄에 같은 형을 매기면 이미 가벼운 쪽을 저지르기로 한 사람에게 더 무거운 쪽으로 가지 않을 이유가 사라집니다. 억제는 하느냐 마느냐만이 아니라 어디까지 하느냐에도 걸리므로 형량에는 죄의 무게를 따르는 층이 있어야 합니다.",
+    canonicalHref:
+      "/law/criminal-law/crime-and-punishment-purpose#marginal-deterrence",
+  },
+  "legality-in-criminal-law": {
+    id: "legality-in-criminal-law",
+    kind: "concept",
+    domain: "law",
+    label: "형벌에서 가장 엄격해지는 형식 요구",
+    aliases: ["죄형법정주의의 근거", "미리 적혀 있을 것"],
+    definition:
+      "무엇이 범죄이고 얼마를 치르는지가 행위 이전에 문언으로 적혀 있어야 억제 계산이 성립하고, 조심할 방법도 생깁니다. 두 근거 가운데 뒤쪽은 억제가 전혀 작동하지 않는 경우에도 남으므로, 이 요구는 형벌의 목적을 무엇으로 잡든 유지됩니다.",
+    canonicalHref: "/law/criminal-law/crime-and-punishment-purpose#legality",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -44848,6 +44912,90 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "책임 규칙이 양쪽의 행동을 미리 정해 주면 서로가 상대의 주의 수준을 예상하고 행동할 수 있게 됩니다.",
+  },
+  {
+    from: "loss-lies-where-it-falls",
+    to: "why-public-enforcement",
+    relation: "constrains",
+    reason:
+      "손해를 옮기는 장치가 작동하려면 상대를 특정하고 물릴 재산이 있어야 하는데, 그 조건이 빠지는 영역이 따로 있습니다.",
+  },
+  {
+    from: "property-rule-vs-liability-rule",
+    to: "why-public-enforcement",
+    relation: "prerequisite",
+    reason:
+      "값만 치르면 해도 되는 것으로 두면 동의를 요구하던 보호가 값으로 뚫린다는 점이 벌할 이유의 한 갈래가 됩니다.",
+  },
+  {
+    from: "why-public-enforcement",
+    to: "punishment-purposes",
+    relation: "produces",
+    reason:
+      "국가가 나서기로 했다면 무엇을 위해 벌하는지가 곧바로 다음 질문이 됩니다.",
+  },
+  {
+    from: "punishment-purposes",
+    to: "deterrence-product",
+    relation: "produces",
+    reason:
+      "네 이유 가운데 앞으로 덜 일어나게 한다는 것만 사람의 선택에 대한 가정을 깔고 있어 계산으로 옮길 수 있습니다.",
+  },
+  {
+    from: "deterrence-product",
+    to: "severity-substitution-limits",
+    relation: "constrains",
+    reason:
+      "같은 곱을 만드는 조합이 서로 같지 않다는 점이 형량으로 확률을 메우는 방식의 한계를 만듭니다.",
+  },
+  {
+    from: "deterrence-product",
+    to: "marginal-deterrence",
+    relation: "extends",
+    reason:
+      "하느냐 마느냐의 계산을 어디까지 하느냐로 확장하면 형량에 층이 있어야 한다는 결론이 나옵니다.",
+  },
+  {
+    from: "punishment-purposes",
+    to: "marginal-deterrence",
+    relation: "optimizes",
+    reason:
+      "형량을 죄의 무게에 묶는 첫째 답이 억제를 위해서도 필요해지는 드문 지점입니다.",
+  },
+  {
+    from: "formal-legality-conditions",
+    to: "legality-in-criminal-law",
+    relation: "prerequisite",
+    reason:
+      "미리 알 수 있어야 한다는 일반 조건이 형벌에서 가장 엄격한 형태로 나타납니다.",
+  },
+  {
+    from: "analogy-ban-in-criminal-law",
+    to: "legality-in-criminal-law",
+    relation: "extends",
+    reason:
+      "문언을 넓혀 처벌 범위를 늘리는 것을 막는 규칙이 이 요구의 구체적인 적용입니다.",
+  },
+  {
+    from: "deterrence-product",
+    to: "legality-in-criminal-law",
+    relation: "prerequisite",
+    reason:
+      "무엇을 하면 무엇을 치르는지 미리 알 수 없으면 곱을 계산할 수 없고 억제도 생기지 않습니다.",
+  },
+  {
+    from: "optimal-care-level",
+    to: "deterrence-product",
+    relation: "contrasts",
+    reason:
+      "둘 다 확률과 크기를 곱해 판단하지만, 하나는 얼마나 조심할지를 다른 하나는 아예 할지 말지를 정합니다.",
+  },
+  {
+    from: "compliance-enforcement-threshold",
+    to: "severity-substitution-limits",
+    relation: "constrains",
+    reason:
+      "잡을 수 있는 자원이 한정되어 있다는 사실이 확률을 올리는 쪽의 상한을 정하고, 그래서 형량으로 메우려는 유혹이 생깁니다.",
   },
 ];
 

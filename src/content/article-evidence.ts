@@ -7295,4 +7295,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "주의 의무를 확률·손해·부담 세 변수로 적은 판시의 출처. 서지는 확인했고 문장 표현은 참고 문헌으로 대조함",
     },
   ],
+  "criminal-law/crime-and-punishment-purpose": [
+    {
+      kind: "보충 읽기",
+      label: "Becker, Crime and Punishment: An Economic Approach (JPE 76:2, 1968)",
+      href: "https://www.nber.org/system/files/chapters/c3625/c3625.pdf",
+      note: "확률과 형량이 바꿔 쓸 수 있는 값이 아니라는 결과의 출처. 이론 논문이며 정책 효과 측정은 아님",
+    },
+  ],
 };
