@@ -7338,4 +7338,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "둘 다 절대우위인 쪽이 있어도 교환이 이득이라는 논증의 출처. 초판 본문으로 직접 대조함",
     },
   ],
+  "prices/supply-demand-and-equilibrium": [
+    {
+      kind: "공식 문서",
+      label:
+        "Alfred Marshall, Principles of Economics, Vol. I, 3rd ed. (Macmillan, 1895), bk. V ch. III, pp. 424·427",
+      href: "https://archive.org/details/principlesofecon01marsrich",
+      note: "균형의 정의와 안정 조건, 가위의 두 날 비유의 출처. 3판 스캔 본문으로 직접 대조함",
+    },
+  ],
 };

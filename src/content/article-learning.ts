@@ -82150,4 +82150,276 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "prices/supply-demand-and-equilibrium": {
+    entryNote:
+      "앞 두 글의 기회비용과 한 단위 판정만 있으면 됩니다. 여기서는 사람이 둘에서 여럿으로 늘어납니다.",
+    coreIdea:
+      "사려는 줄은 지불용의의 내림차순이고 팔려는 줄은 한 개 더 드는 값의 오름차순이며, 두 줄의 정체는 모두 기회비용입니다. 값에서 두 줄의 길이 차이가 값을 미는 힘이 되고 값이 움직이면 그 차이가 줄어들기 때문에, 아무도 서로의 사정을 몰라도 어긋남이 0인 한 값으로 모입니다.",
+    assumedKnowledge: [
+      {
+        id: "opportunity-cost",
+        role: "두 줄의 높이가 무엇으로 정해지는지의 근거로 씁니다.",
+      },
+      {
+        id: "marginal-decision-rule",
+        role: "파는 쪽이 평균이 아니라 한 개 더로 판단하는 근거로 씁니다.",
+      },
+      {
+        id: "terms-of-trade-range",
+        role: "둘 사이의 구간이 여럿 사이에서 어떻게 한 점으로 좁혀지는지 잇습니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "willingness-to-pay",
+        role: "사려는 줄의 정체를 정의합니다.",
+      },
+      {
+        id: "supply-as-marginal-cost",
+        role: "팔려는 줄의 정체를 정의합니다.",
+      },
+      {
+        id: "market-equilibrium",
+        role: "값이 멈추는 자리를 정의합니다.",
+      },
+      {
+        id: "excess-demand-adjustment",
+        role: "그 자리로 값을 미는 힘을 정의합니다.",
+      },
+      {
+        id: "shift-vs-movement-along",
+        role: "값이 바뀐 것과 사정이 바뀐 것을 가릅니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "willingness-to-pay",
+        sectionId: "demand-side",
+        intuition:
+          "사람마다 그것에 낼 수 있는 최대 금액이 있고 그 기준은 다른 데 쓸 곳입니다.",
+        workedExample:
+          "여섯 명의 최대 금액이 10, 9, 8, 7, 6, 5이면 값이 7일 때 네 명이 남고 8일 때 세 명이 남습니다.",
+        boundary:
+          "이 금액을 본인도 정확히 알지 못하고 물어봐도 사실대로 말할 이유가 없습니다. 줄의 모양은 관찰된 선택에서 되짚어 재는 것입니다.",
+      },
+      {
+        id: "supply-as-marginal-cost",
+        sectionId: "supply-side",
+        intuition:
+          "한 개를 더 만드는 데 드는 값보다 많이 받으면 만듭니다.",
+        workedExample:
+          "여섯의 드는 값이 4, 5, 6, 7, 8, 9이면 값이 7일 때 네 개가 나오고 6일 때 세 개가 나옵니다.",
+        boundary:
+          "이미 지은 공장처럼 되돌릴 수 없는 값은 이 판단에 들어가지 않습니다. 그래서 파는 쪽의 줄은 평균 비용이 아니라 한계 비용으로 그려집니다.",
+      },
+      {
+        id: "market-equilibrium",
+        sectionId: "adjustment",
+        intuition:
+          "정해졌다는 것은 더 움직일 이유를 가진 사람이 없다는 뜻입니다.",
+        workedExample:
+          "위 두 줄에서 값이 7이면 사려는 쪽과 팔려는 쪽이 각각 넷으로 같아져 값이 멈춥니다.",
+        proofIdea:
+          "Q_d(P)가 줄고 Q_s(P)가 느는 함수이면 그 차이 Q_d(P) − Q_s(P)는 P에 대해 단조 감소합니다. 단조 감소 함수는 0을 많아야 한 번만 지나므로 어긋남이 0인 값이 여럿일 수 없습니다. 그리고 그 값보다 낮으면 차이가 양수, 높으면 음수이므로 조정이 언제나 그 값을 향합니다.",
+        counterexample:
+          "값이 오를수록 팔려는 양이 도리어 줄어드는 구간이 있으면 차이가 단조가 아니게 되어 교차가 여럿이 되고, 어떤 교차에서는 조정이 균형에서 멀어지는 쪽으로 작동합니다.",
+        boundary:
+          "값을 규제로 묶어 두면 어긋남이 있어도 값이 움직이지 못해 남은 쪽이 그대로 남습니다.",
+      },
+      {
+        id: "excess-demand-adjustment",
+        sectionId: "adjustment",
+        intuition:
+          "못 산 사람은 더 부를 수 있고 못 판 사람은 깎을 수 있습니다.",
+        workedExample:
+          "값이 5면 어긋남이 4라 값이 오르고, 6이면 2로 줄고, 7이면 0이 됩니다. 9에서 시작하면 어긋남이 −4라 내려와 역시 7에 닿습니다.",
+        boundary:
+          "움직이는 속도는 시장마다 다르고 이 식은 방향만 말해 줍니다. 얼마나 걸리는지는 상대를 찾고 값을 다시 부르는 데 드는 값이 정합니다.",
+      },
+      {
+        id: "shift-vs-movement-along",
+        sectionId: "shift-vs-move",
+        intuition:
+          "값이 바뀐 것과 사정이 바뀐 것은 다른 사건입니다.",
+        workedExample:
+          "모두가 2씩 더 낼 뜻이 생기면 값 8에 다섯 개가 되고, 만드는 값이 2씩 싸지면 값 6에 다섯 개가 됩니다. 양은 같은데 값이 반대입니다.",
+        counterexample:
+          "사정을 그대로 두고 값만 8로 부르면 팔려는 쪽 다섯에 사려는 쪽 셋이라 둘이 남아 값이 되돌아옵니다. 같은 8이지만 하나는 유지되고 하나는 유지되지 않습니다.",
+        boundary:
+          "두 줄이 동시에 움직이면 값과 양의 조합만으로 어느 쪽이 얼마나 움직였는지 갈라내지 못합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 사려는 쪽",
+        relation: "사려는 줄이 무엇으로 이루어졌는지 봅니다.",
+        concepts: ["willingness-to-pay"],
+      },
+      {
+        label: "01 팔려는 쪽",
+        relation: "팔려는 줄이 무엇으로 이루어졌는지 봅니다.",
+        concepts: ["supply-as-marginal-cost"],
+      },
+      {
+        label: "02 왜 멈추는가",
+        relation: "어긋남이 값을 밀어 한 자리로 모입니다.",
+        concepts: ["excess-demand-adjustment", "market-equilibrium"],
+      },
+      {
+        label: "03 무엇이 움직였는가",
+        relation: "값이 바뀐 것과 사정이 바뀐 것을 가릅니다.",
+        concepts: ["shift-vs-movement-along"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "사려는 줄의 높이가 왜 취향이 아니라 기회비용으로 정해지는지 쓰세요.",
+        answerChecklist: [
+          "낼 수 있는 최대 금액이 기준",
+          "그 기준은 그 돈을 다른 데 썼을 때 얻을 것",
+          "사람마다 대안이 달라 금액이 다름",
+          "그래서 줄의 모양은 포기할 수 있는 것이 정함",
+        ],
+        requiredConcepts: ["willingness-to-pay"],
+        sectionId: "demand-side",
+      },
+      {
+        level: "basic",
+        question:
+          "파는 쪽의 기준이 평균이 아니라 한계인 이유를 1편의 판정으로 설명하세요.",
+        answerChecklist: [
+          "전체가 남는지가 아니라 이 한 개가 남는지를 물음",
+          "한 개 더 드는 값과 받는 값을 견줌",
+          "이미 나간 값은 들어가지 않음",
+          "그래서 줄은 한계비용의 오름차순",
+        ],
+        requiredConcepts: ["supply-as-marginal-cost"],
+        sectionId: "supply-side",
+      },
+      {
+        level: "basic",
+        question:
+          "최대 금액이 10, 9, 8, 7, 6, 5이고 드는 값이 4, 5, 6, 7, 8, 9일 때 값이 6과 8에서 각각 어긋남을 계산하세요.",
+        answerChecklist: [
+          "값 6에서 사려는 쪽 5, 팔려는 쪽 3",
+          "값 6의 어긋남은 +2",
+          "값 8에서 사려는 쪽 3, 팔려는 쪽 5",
+          "값 8의 어긋남은 −2",
+        ],
+        requiredConcepts: ["excess-demand-adjustment"],
+        sectionId: "adjustment",
+      },
+      {
+        level: "basic",
+        question:
+          "위 숫자에서 값이 멈추는 자리와 그때 거래되는 수량을 구하고, 멈춘다는 말의 뜻을 쓰세요.",
+        answerChecklist: [
+          "값은 7",
+          "수량은 4",
+          "양쪽이 같아 어긋남이 0",
+          "값을 움직일 이유를 가진 사람이 없음",
+        ],
+        requiredConcepts: ["market-equilibrium"],
+        sectionId: "adjustment",
+      },
+      {
+        level: "basic",
+        question:
+          "모두가 2씩 더 낼 뜻이 생겼을 때와 만드는 값이 2씩 싸졌을 때의 새 값과 수량을 각각 구하세요.",
+        answerChecklist: [
+          "더 낼 뜻이 생기면 값 8에 다섯 개",
+          "만드는 값이 싸지면 값 6에 다섯 개",
+          "수량은 둘 다 다섯",
+          "값은 반대 방향",
+        ],
+        requiredConcepts: ["shift-vs-movement-along"],
+        sectionId: "shift-vs-move",
+      },
+      {
+        level: "basic",
+        question:
+          "사정을 그대로 두고 값만 8로 부르면 무슨 일이 일어나는지 쓰세요.",
+        answerChecklist: [
+          "사려는 쪽 3, 팔려는 쪽 5",
+          "둘이 못 팜",
+          "못 판 쪽이 깎아 값이 내려옴",
+          "그 값은 유지되지 않음",
+        ],
+        requiredConcepts: ["shift-vs-movement-along", "excess-demand-adjustment"],
+        sectionId: "shift-vs-move",
+      },
+      {
+        level: "advanced",
+        question:
+          "어긋남이 0인 값이 많아야 하나이고 조정이 언제나 그리로 향함을 증명하세요.",
+        answerChecklist: [
+          "Q_d는 줄고 Q_s는 늚",
+          "차이는 P에 대해 단조 감소",
+          "단조 감소 함수는 0을 한 번만 지남",
+          "낮으면 양수, 높으면 음수라 언제나 그리로 향함",
+        ],
+        requiredConcepts: ["market-equilibrium", "excess-demand-adjustment"],
+        sectionId: "adjustment",
+      },
+      {
+        level: "advanced",
+        question:
+          "값이 오를수록 팔려는 양이 줄어드는 구간이 있으면 무엇이 깨지는지 설명하세요.",
+        answerChecklist: [
+          "차이가 단조가 아니게 됨",
+          "교차가 여럿이 될 수 있음",
+          "어떤 교차에서는 조정이 멀어지는 쪽으로 감",
+          "그 균형은 불안정",
+        ],
+        requiredConcepts: ["market-equilibrium"],
+        sectionId: "adjustment",
+      },
+      {
+        level: "advanced",
+        question:
+          "거래량만 보고는 무엇이 움직였는지 알 수 없는 이유를 위 두 경우로 설명하세요.",
+        answerChecklist: [
+          "사려는 줄이 올라가도 양이 늘어남",
+          "팔려는 줄이 내려가도 양이 늘어남",
+          "두 경우 모두 다섯 개",
+          "값의 방향이 반대라 값과 양을 함께 봐야 함",
+        ],
+        requiredConcepts: ["shift-vs-movement-along"],
+        sectionId: "shift-vs-move",
+      },
+      {
+        level: "advanced",
+        question:
+          "두 사람 사이의 교환 비율 구간이 여럿 사이에서 왜 한 점으로 좁혀지는지 앞 글과 이어 쓰세요.",
+        answerChecklist: [
+          "둘일 때는 구간 안 어디든 가능",
+          "여럿이면 더 낼 뜻이 있는 사람이 남아 값을 밈",
+          "더 싸게 만들 사람이 남으면 값을 깎음",
+          "양쪽이 모두 소진되는 한 값만 남음",
+        ],
+        requiredConcepts: ["market-equilibrium", "excess-demand-adjustment"],
+        sectionId: "boundary",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Alfred Marshall, Principles of Economics, Vol. I, 3rd ed. (1895), bk. V",
+        href: "https://archive.org/details/principlesofecon01marsrich",
+        problem:
+          "값을 정하는 것이 쓸모인지 생산비인지를 두고 오래 다투었고, 한쪽을 고르면 다른 쪽이 설명하는 현상을 놓쳤습니다.",
+        contribution:
+          "두 쪽이 함께 정한다는 것을 가위의 두 날에 빗대어 정리하고, 사는 쪽이 낼 값과 파는 쪽이 받아야 할 값이 같아지는 수량에서 늘어나려는 경향도 줄어들려는 경향도 없다고 적어 균형을 정의했습니다. 그 균형이 안정적이라는 조건도 함께 적었습니다. 균형보다 적은 수량에서는 사는 쪽이 낼 값이 더 크고 많은 수량에서는 반대라는 것입니다.",
+        assumptions:
+          "다른 사정이 그대로라는 조건 아래에서 한 시장만 떼어 봅니다. 본문에서 이 방법을 쓰는 이유와 한계를 직접 밝힙니다.",
+        evidenceScope:
+          "1895년 Macmillan 3판 제1권이며 Internet Archive의 스캔 본문으로 424면의 균형 정의와 안정 조건, 427면의 가위 문장을 직접 대조했습니다. 널리 인용되는 under blade 표현은 뒤의 판본에서 바뀐 것이고 3판은 lower blade입니다.",
+        notClaim:
+          "이 글이 쓴 조정 이야기와 마셜의 것이 같지 않습니다. 이 글은 값이 어긋남에 반응해 움직인다고 썼고 마셜은 수량이 두 값의 차이에 반응해 움직인다고 적었습니다. 두 줄이 이 글처럼 단조이면 같은 점으로 가지만 만드는 데 시간이 걸리는 시장에서는 경로가 다릅니다. 또 균형이 좋은 결과라는 주장은 이 인용에도 이 글에도 없습니다.",
+        sectionId: "supply-side",
+      },
+    ],
+  },
 };
