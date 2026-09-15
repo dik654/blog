@@ -12218,6 +12218,32 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "contract-and-enforceable-promise": {
+    title: "강제할 곳이 있을 때 약속은 어떻게 달라집니까 글이 소유하는 범위",
+    owns: [
+      "법의 힘이 붙는 약속을 거르는 네 요건과 전부에 붙이지 않는 이유",
+      "시키는 것과 물리는 것의 선택과 돈이 기본이 되는 근거",
+      "배상액이 사후 정산이 아니라 사전 유인이라는 관계와 그 계산",
+      "계약에 빈칸이 반드시 남는 이유",
+      "기본값의 설계 기준과 그 반대 방향의 설계",
+    ],
+    reuses: [
+      {
+        label: "강제할 자리가 없을 때 약속이 서는 조건",
+        href: "/politics/governance/international-anarchy#shadow",
+      },
+      {
+        label: "미리 적어 두는 비용과 그때 정하는 비용의 비교",
+        href: "/law/legal-system/rules-standards-and-interpretation#cost-comparison",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "원전이 제안한 관점만 원전에 귀속하고, 어느 나라 제도가 실제로 어떻게 되어 있는지는 확인한 범위 밖에서 주장하지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

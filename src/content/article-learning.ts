@@ -79925,4 +79925,291 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "private-law/contract-and-enforceable-promise": {
+    entryNote:
+      "정치 시리즈의 마지막 글에서 강제할 자리가 없을 때 약속이 서는 조건을 봤습니다. 여기서는 그 자리가 있을 때 무엇이 달라지는지를 봅니다.",
+    coreIdea:
+      "법은 모든 약속이 아니라 네 가지 체를 통과한 약속에만 힘을 붙이고, 그 힘은 대체로 시키는 것이 아니라 돈을 물리는 형태를 띱니다. 그 돈의 크기는 사후 정산이 아니라 사전 유인이어서 상대가 얻을 이익과 같게 두어야 파기 판정이 옳게 내려지며, 계약에 반드시 남는 빈칸은 대부분의 당사자가 합의했을 내용을 기본값으로 두어 메웁니다.",
+    assumedKnowledge: [
+      {
+        id: "shadow-of-the-future",
+        role: "강제할 자리가 없을 때의 조건과 대비해 이 글의 출발점을 세웁니다.",
+      },
+      {
+        id: "law-as-expectation-infrastructure",
+        role: "법이 하려는 일이 예측을 떠받치는 것이라는 규정을 그대로 씁니다.",
+      },
+      {
+        id: "rule-standard-cost-tradeoff",
+        role: "미리 적어 두는 비용과 그때 정하는 비용의 비교를 계약 당사자에게 적용합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "enforceable-promise-filters",
+        role: "어떤 약속에 법의 힘이 붙는지를 정합니다.",
+      },
+      {
+        id: "specific-performance-vs-damages",
+        role: "붙은 힘을 어떤 형태로 쓸지의 선택을 정의합니다.",
+      },
+      {
+        id: "expectation-damages-incentive",
+        role: "배상액이 사전 행동을 정한다는 관계를 계산으로 보입니다.",
+      },
+      {
+        id: "incomplete-contract",
+        role: "계약에 빈칸이 반드시 남는 이유를 정의합니다.",
+      },
+      {
+        id: "default-rules",
+        role: "그 빈칸을 메우는 장치와 그 설계 기준을 정의합니다.",
+      },
+      {
+        id: "information-forcing-default",
+        role: "기본값을 일부러 불편하게 두는 반대 방향의 설계를 다룹니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "enforceable-promise-filters",
+        sectionId: "which-promises",
+        intuition:
+          "모든 약속에 법의 힘을 붙이면 사람들이 가벼운 말조차 하지 못하게 됩니다.",
+        workedExample:
+          "서로 다른 물건을 떠올렸다면 합의에서, 저녁을 사겠다는 말은 묶일 뜻에서, 값을 정하지 않았다면 확정성에서, 금지된 것을 하기로 했다면 적법성에서 걸립니다.",
+        boundary:
+          "묶일 뜻을 판정할 때 쓰는 대가와 형식은 뜻 자체가 아니라 뜻을 밖에서 읽는 단서이므로, 정황이 분명하면 결론이 달라질 수 있습니다.",
+      },
+      {
+        id: "specific-performance-vs-damages",
+        sectionId: "remedy-choice",
+        intuition:
+          "약속했으면 지키게 하는 것이 자연스러워 보이지만 제도는 대체로 돈을 기본으로 둡니다.",
+        workedExample:
+          "몇 달에 걸쳐 어떤 품질로 일하게 하는 것은 법원이 감독할 수 없고, 사람에게 특정한 노동을 강제하는 것은 다른 문제를 부릅니다.",
+        boundary:
+          "돈으로 메울 수 없는 대상, 곧 세상에 하나뿐인 물건이나 대체할 곳이 없는 권리에서는 이행을 시키는 쪽이 남습니다.",
+      },
+      {
+        id: "expectation-damages-incentive",
+        sectionId: "damages",
+        intuition:
+          "어기는 쪽이 보는 것은 자기 비용과 배상액뿐이고, 상대가 얻을 이익은 거기 들어오지 않습니다.",
+        workedExample:
+          "상대 이익이 100일 때 배상을 100으로 맞추면 이행 비용 130에서 파기가, 80에서 이행이 선택되어 사회의 판정과 같아집니다.",
+        proofIdea:
+          "어기는 쪽은 C > D일 때 파기하고, 사회가 보기에 파기가 나은 것은 C > V일 때입니다. 두 조건은 왼쪽이 같고 오른쪽만 다르므로 D = V로 두면 동치가 됩니다. D < V이면 D와 V 사이의 C에서 파기를 고르는데 사회적으로는 이행이 나아 V − C만큼 사라지고, D > V이면 V와 D 사이의 C에서 이행을 고르는데 C − V만큼 사라집니다. 어긋나는 구간의 폭은 |D − V|입니다.",
+        counterexample:
+          "배상을 60으로 낮추면 이행 비용 80에서 파기를 고르는데 사회적으로는 이행이 나아 20이 사라지고, 150으로 올리면 이행 비용 130에서 이행을 고르는데 30이 사라집니다.",
+        boundary:
+          "상대가 얻을 이익을 온전히 물어 준다는 것을 전제하는데, 실제로는 그 값을 증명하기 어려워 덜 물어 주는 경우가 흔하고 그때는 과잉 파기가 그대로 일어납니다.",
+      },
+      {
+        id: "incomplete-contract",
+        sectionId: "incomplete",
+        intuition:
+          "일어날 수 있는 일을 전부 떠올릴 수 없고, 떠올려도 전부 적으면 협상이 끝나지 않습니다.",
+        workedExample:
+          "앞 글의 계산에서 당사자에게는 사안이 한 건뿐이라 미리 적어 두는 비용을 회수할 사안 수가 없습니다.",
+        boundary:
+          "빈칸이 남는다는 것이 아무것도 적지 않아도 된다는 뜻은 아닙니다. 적을 수 있었는데 침묵한 것과 적을 수 없었던 것은 다르게 다뤄집니다.",
+      },
+      {
+        id: "default-rules",
+        sectionId: "incomplete",
+        intuition:
+          "법이 미리 채워 두되 당사자가 다르게 적으면 그쪽을 따릅니다.",
+        workedExample:
+          "대부분의 당사자가 합의했을 내용으로 두면 예외적인 사람만 따로 적으면 되므로 전체가 치르는 비용이 가장 작아집니다.",
+        boundary:
+          "기본값은 대부분을 기준으로 만들어지므로 예외적인 거래에는 어긋납니다. 어긋남이 반복되면 그것이 기본값을 고칠 근거가 됩니다.",
+      },
+      {
+        id: "information-forcing-default",
+        sectionId: "incomplete",
+        intuition:
+          "정보를 가진 쪽에 불리하게 두면 그쪽이 먼저 말을 꺼내게 됩니다.",
+        workedExample:
+          "손해가 특별히 클 사정을 아는 쪽이 있을 때 기본값을 통상 손해까지만 물어 주는 것으로 두면, 그 사정을 미리 알리고 값을 조정하게 됩니다.",
+        boundary:
+          "대부분이 원할 내용으로 두는 원칙과 목적이 반대이므로, 어느 설계를 쓸지는 그 영역에 정보 비대칭이 실제로 있는지에 달려 있습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 거르기",
+        relation: "어떤 약속에 힘이 붙는지 정합니다.",
+        concepts: ["enforceable-promise-filters"],
+      },
+      {
+        label: "01 형태",
+        relation: "붙은 힘을 어떤 형태로 쓸지 고릅니다.",
+        concepts: ["specific-performance-vs-damages"],
+      },
+      {
+        label: "02 크기",
+        relation: "그 크기가 사전 행동을 정합니다.",
+        concepts: ["expectation-damages-incentive"],
+      },
+      {
+        label: "03 빈칸",
+        relation: "다 적을 수 없는 것을 무엇으로 메우는지 봅니다.",
+        concepts: [
+          "incomplete-contract",
+          "default-rules",
+          "information-forcing-default",
+        ],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "모든 약속에 법의 힘을 붙이지 않는 이유를 쓰세요.",
+        answerChecklist: [
+          "가벼운 말에도 법원이 움직여야 함",
+          "약속의 값이 올라감",
+          "약속 자체가 줄어듦",
+          "그래서 체를 둠",
+        ],
+        requiredConcepts: ["enforceable-promise-filters"],
+        sectionId: "which-promises",
+      },
+      {
+        level: "basic",
+        question:
+          "약속을 거르는 네 가지 체를 쓰고 각각 무엇을 막는지 적으세요.",
+        answerChecklist: [
+          "합의 · 서로 다른 것을 말한 경우",
+          "묶일 뜻 · 법에 기댈 뜻이 없던 말",
+          "확정성 · 어겼는지 판정할 수 없는 경우",
+          "적법성 · 금지된 것을 하기로 한 약속",
+        ],
+        requiredConcepts: ["enforceable-promise-filters"],
+        sectionId: "which-promises",
+      },
+      {
+        level: "basic",
+        question:
+          "약속대로 하게 만드는 것이 기본 구제가 아닌 이유를 쓰세요.",
+        answerChecklist: [
+          "계속 감독해야 함",
+          "품질을 법원이 재기 어려움",
+          "특정한 노동의 강제가 다른 문제를 부름",
+          "돈으로 메울 수 없을 때만 예외",
+        ],
+        requiredConcepts: ["specific-performance-vs-damages"],
+        sectionId: "remedy-choice",
+      },
+      {
+        level: "basic",
+        question:
+          "상대 이익이 100이고 배상이 60일 때 이행 비용 80인 사례에서 무슨 일이 생기는지 쓰세요.",
+        answerChecklist: [
+          "파기하면 60, 이행하면 80",
+          "어기는 쪽은 파기를 고름",
+          "사회적으로는 이행이 나음",
+          "20이 사라짐",
+        ],
+        requiredConcepts: ["expectation-damages-incentive"],
+        sectionId: "damages",
+      },
+      {
+        level: "basic",
+        question:
+          "계약에 빈칸이 반드시 남는 이유를 앞 글의 계산으로 설명하세요.",
+        answerChecklist: [
+          "일어날 일을 전부 떠올릴 수 없음",
+          "전부 적으면 협상이 끝나지 않음",
+          "당사자에게는 사안이 한 건뿐",
+          "미리 적는 비용을 회수할 사안 수가 없음",
+        ],
+        requiredConcepts: ["incomplete-contract", "rule-standard-cost-tradeoff"],
+        sectionId: "incomplete",
+      },
+      {
+        level: "basic",
+        question:
+          "빈칸을 메우는 기본값을 무엇으로 두어야 전체 비용이 작아지는지 쓰세요.",
+        answerChecklist: [
+          "대부분의 당사자가 합의했을 내용",
+          "예외적인 사람만 따로 적으면 됨",
+          "명령이 아니라 대체 가능한 초기값",
+          "다르게 적었다면 그쪽이 우선",
+        ],
+        requiredConcepts: ["default-rules"],
+        sectionId: "incomplete",
+      },
+      {
+        level: "advanced",
+        question:
+          "배상액을 상대 이익과 같게 두면 두 판정이 일치한다는 것을 두 부등식으로 보이세요.",
+        answerChecklist: [
+          "어기는 쪽은 C > D",
+          "사회는 C > V",
+          "왼쪽이 같고 오른쪽만 다름",
+          "D = V이면 동치",
+        ],
+        requiredConcepts: ["expectation-damages-incentive"],
+        sectionId: "damages",
+      },
+      {
+        level: "advanced",
+        question:
+          "배상이 상대 이익보다 클 때와 작을 때 각각 어떤 어긋남이 생기는지 구간과 함께 쓰세요.",
+        answerChecklist: [
+          "작으면 D와 V 사이 C에서 과잉 파기",
+          "그 구간의 손실은 V − C",
+          "크면 V와 D 사이 C에서 과소 파기",
+          "어긋난 구간의 폭은 |D − V|",
+        ],
+        requiredConcepts: ["expectation-damages-incentive"],
+        sectionId: "damages",
+      },
+      {
+        level: "advanced",
+        question:
+          "실제 제도에서 과잉 파기가 흔히 일어난다면 그 원인이 어디에 있는지 모형의 전제로 설명하세요.",
+        answerChecklist: [
+          "상대 이익을 증명하기 어려움",
+          "배상이 실제 이익보다 작게 정해짐",
+          "소송 비용과 회수 위험이 더 깎음",
+          "D < V 상태가 되어 과잉 파기",
+        ],
+        requiredConcepts: ["expectation-damages-incentive"],
+        sectionId: "damages",
+      },
+      {
+        level: "advanced",
+        question:
+          "기본값을 일부러 불편하게 두는 설계가 어떤 상황에서 쓰이고 무엇을 끌어내는지 쓰세요.",
+        answerChecklist: [
+          "한쪽만 아는 사정이 있을 때",
+          "아는 쪽에 불리하게 초기값을 둠",
+          "먼저 알리고 따로 적게 만듦",
+          "알리지 않으면 위험을 아는 쪽이 짐",
+        ],
+        requiredConcepts: ["information-forcing-default", "default-rules"],
+        sectionId: "incomplete",
+      },
+    ],
+    papers: [
+      {
+        title: "Oliver Wendell Holmes Jr. · The Path of the Law (1897)",
+        href: "https://en.wikisource.org/wiki/The_Path_of_the_Law",
+        problem:
+          "법을 도덕의 연장으로 설명하면 법이 실제로 무엇을 하는지가 흐려지고, 법을 공부하는 사람이 무엇을 알아야 하는지도 분명하지 않았습니다.",
+        contribution:
+          "법을 결과의 예측으로 보자고 제안하고, 그 관점을 계약에 적용해 계약을 지킬 의무가 지키지 않으면 배상해야 한다는 예측을 뜻한다고 정리했습니다. 도덕적 언어를 걷어 내면 제도가 실제로 무엇을 정하고 있는지가 드러난다는 것이 요지입니다.",
+        assumptions:
+          "법을 아는 목적을 결과의 예측에 두며, 도덕적 평가와 법적 판정을 분리할 수 있다고 봅니다.",
+        evidenceScope:
+          "1897년 1월 보스턴대 법학대학원 헌정식 강연을 Harvard Law Review 10권 457~478쪽에 실은 글이며, 공개 전문을 확인했습니다. 관점의 제안이며 어느 나라 제도에 대한 조사가 아닙니다.",
+        notClaim:
+          "약속을 어기는 것이 배상만 하면 괜찮다는 주장으로 읽을 수 없습니다. 이 글은 법이 무엇을 강제하는지를 기술한 것이고, 실제 제도에서 이행을 시키는 경우가 어디까지인지는 나라마다 다릅니다.",
+        sectionId: "remedy-choice",
+      },
+    ],
+  },
 };
