@@ -25037,6 +25037,47 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/economics/market-failure/public-goods-and-commons#excluding",
   },
+  "pooled-price-on-hidden-quality": {
+    id: "pooled-price-on-hidden-quality",
+    kind: "concept",
+    domain: "economics",
+    label: "구별할 수 없으면 값이 평균에 붙는다",
+    aliases: ["숨은 특성", "평균에 붙는 값"],
+    definition:
+      "한쪽만 물건의 상태를 알면 사는 쪽은 물건마다 다른 값을 매길 수 없어 하나의 값만 부를 수 있고, 그 값은 어느 한 물건의 값이 아니라 그 값에 나오는 물건들의 평균이 됩니다. 좋다고 말하는 것으로는 아무것도 갈라지지 않는데, 나쁜 쪽도 똑같은 말을 할 수 있기 때문입니다.",
+    canonicalHref: "/economics/market-failure/information-asymmetry#pooling",
+  },
+  "adverse-selection-unravelling": {
+    id: "adverse-selection-unravelling",
+    kind: "theorem",
+    domain: "economics",
+    label: "평균에 붙은 값이 좋은 쪽을 밀어낸다",
+    aliases: ["역선택", "레몬 시장"],
+    definition:
+      "부른 값이 나오는 물건의 범위를 정하고 나온 것들의 평균이 다시 그 값을 낼지를 정하는데, 값이 오르면 나오는 범위가 넓어져도 평균은 그 범위의 가운데를 따라가므로 값보다 느리게 오릅니다. 그래서 값이 일찍 멈추고 그보다 값진 물건은 나오지 않으며, 사라지는 것은 나쁜 쪽이 아니라 좋은 쪽입니다.",
+    canonicalHref: "/economics/market-failure/information-asymmetry#unravelling",
+  },
+  "costly-signal-separation": {
+    id: "costly-signal-separation",
+    kind: "theorem",
+    domain: "economics",
+    label: "얻는 값이 유형마다 달라야 표시가 갈라낸다",
+    aliases: ["신호", "값비싼 표시"],
+    definition:
+      "표시를 얻는 값이 유형과 무관하면 누구나 같은 방식으로 갖추므로 아무것도 갈라지지 않고, 못하는 쪽에게 더 비싸야만 그쪽이 따라오지 않아 둘이 나뉩니다. 표시가 해내는 양을 바꾸지 않는 한 전체는 표시에 들어간 값만큼 줄어들고, 잘하는 쪽까지 손해를 보는 경우도 있습니다.",
+    canonicalHref: "/economics/market-failure/information-asymmetry#signaling",
+  },
+  "hidden-action-and-retained-share": {
+    id: "hidden-action-and-retained-share",
+    kind: "theorem",
+    domain: "economics",
+    label: "손해를 넘기면 주의도 같이 넘어간다",
+    aliases: ["도덕적 해이", "자기부담", "공동보험"],
+    definition:
+      "주의할지는 주의가 아끼는 기대 손해와 주의에 드는 값을 견줘 정해지는데, 손해를 남이 물어 주면 아끼는 몫도 그만큼 줄어 계산이 뒤집힙니다. 되돌리려면 주의 비용을 확률 차이로 나눈 만큼을 본인 장부에 남겨야 하고, 그것은 위험을 덜어 주는 일을 그만큼 포기한다는 뜻입니다.",
+    canonicalHref:
+      "/economics/market-failure/information-asymmetry#hidden-action",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -46551,6 +46592,76 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "prerequisite",
     reason:
       "합이 비용을 넘는다는 판정과 한 값으로 그 합을 걷을 수 있느냐가 다른 문제임을 보이는 순서입니다.",
+  },
+  {
+    from: "price-as-sufficient-signal",
+    to: "pooled-price-on-hidden-quality",
+    relation: "constrains",
+    reason:
+      "값 하나가 사정을 옳게 전달하려면 양쪽이 같은 물건을 보고 있어야 하는데 그 전제가 여기서 깨집니다.",
+  },
+  {
+    from: "preference-revelation-problem",
+    to: "pooled-price-on-hidden-quality",
+    relation: "contrasts",
+    reason:
+      "앞은 내가 얼마나 원하는지를 숨기는 문제이고 이것은 내 물건이 어떤지를 숨기는 문제라, 말로 물어서는 둘 다 얻을 수 없습니다.",
+  },
+  {
+    from: "pooled-price-on-hidden-quality",
+    to: "adverse-selection-unravelling",
+    relation: "produces",
+    reason:
+      "값이 평균에 붙으면 평균보다 나은 쪽이 언제나 손해를 보고 물러납니다.",
+  },
+  {
+    from: "adverse-selection-unravelling",
+    to: "costly-signal-separation",
+    relation: "produces",
+    reason:
+      "밀려나는 쪽에게 자기를 드러낼 이유가 생기고, 말로는 안 되므로 값이 드는 표시를 찾게 됩니다.",
+  },
+  {
+    from: "transaction-cost",
+    to: "costly-signal-separation",
+    relation: "constrains",
+    reason:
+      "상대가 어떤지를 재는 데 드는 값이 바로 이 표시의 값이며, 그것이 되찾는 몫보다 크면 장치를 세울 이유가 없습니다.",
+  },
+  {
+    from: "costly-signal-separation",
+    to: "enforceable-promise-filters",
+    relation: "produces",
+    reason:
+      "지킬 뜻이 없는 쪽에게 더 부담스러운 형식을 요구해 걸러 내는 법 쪽 요건이 같은 구조의 구체형입니다.",
+  },
+  {
+    from: "private-vs-social-cost",
+    to: "hidden-action-and-retained-share",
+    relation: "produces",
+    reason:
+      "손해가 자기 장부에서 빠져나가면 결정이 어긋난다는 구조를 계약 뒤의 행동으로 옮긴 것입니다.",
+  },
+  {
+    from: "hidden-action-and-retained-share",
+    to: "optimal-care-level",
+    relation: "contrasts",
+    reason:
+      "같은 비교를 법은 사고가 난 뒤에 누가 무는지로 하고 이 절은 사고 전에 얼마를 남길지로 합니다.",
+  },
+  {
+    from: "adverse-selection-unravelling",
+    to: "hidden-action-and-retained-share",
+    relation: "contrasts",
+    reason:
+      "앞은 계약 전부터 숨어 있는 특성이고 뒤는 계약 뒤에 바뀌는 행동이라, 고치는 장치가 갈라집니다.",
+  },
+  {
+    from: "adverse-selection-unravelling",
+    to: "maturity-transformation",
+    relation: "constrains",
+    reason:
+      "예금자가 은행의 자산이 어떤지 모르면 같은 구조가 돌아 좋은 은행부터 자금을 잃습니다.",
   },
 ];
 

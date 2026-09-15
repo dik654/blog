@@ -7486,4 +7486,33 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "배제성·경합성의 정의와 무임승차의 유인 구조, Ostrom 설계 원칙은 그쪽에 있고 이 글은 각 칸의 수량만 셈",
     },
   ],
+  "market-failure/information-asymmetry": [
+    {
+      kind: "핵심 논문",
+      label:
+        "George A. Akerlof, “The Market for ‘Lemons’”, The Quarterly Journal of Economics, Vol. 84, No. 3, August 1970, pp. 488–500",
+      href: "https://doi.org/10.2307/1879431",
+      note: "정보 비대칭 정의, 좋은 물건 주인이 묶인다는 대목, 악화·양화 비유의 단서, §IV 상쇄 장치 열거. 원문 열세 쪽을 내려받아 직접 대조함",
+    },
+    {
+      kind: "핵심 논문",
+      label:
+        "Michael Spence, “Job Market Signaling”, The Quarterly Journal of Economics, Vol. 87, No. 3, August 1973, pp. 355–374",
+      href: "https://doi.org/10.2307/1882010",
+      note: "A Critical Assumption 소절과 논문 자신의 수치에서 모두가 손해가 된다는 계산. 원문을 내려받아 직접 대조함",
+    },
+    {
+      kind: "핵심 논문",
+      label:
+        "Kenneth J. Arrow, “Uncertainty and the Welfare Economics of Medical Care”, The American Economic Review, Vol. LIII, No. 5, December 1963",
+      href: "https://www.jstor.org/stable/1812044",
+      note: "§V.C.1의 통제 밖 조건·자기부담 대목과 좋은 위험이 빠져나간다는 대목. 세계보건기구 2004년 전재본으로 대조했고 그 판본은 줄임표가 있는 발췌본임",
+    },
+    {
+      kind: "보충 읽기",
+      label: "앞 세 글과 같은 자리에서 이어지는 계산",
+      href: "/economics/prices/prices-as-information#sufficient",
+      note: "값 하나가 사정을 옳게 전달하기 위한 조건 가운데 양쪽이 같은 물건을 본다는 전제를 이 글이 풂",
+    },
+  ],
 };
