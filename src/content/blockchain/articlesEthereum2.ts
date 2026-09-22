@@ -28,6 +28,20 @@ export const ethereum2Articles: Article[] = [
     ],
     component: () => import("@/pages/articles/blockchain/da-theory"),
   },
+  {
+    slug: "robinhood-chain-blob-demand",
+    title: "로빈후드 체인과 블롭 수요: 타겟·BPO·sparse blobpool",
+    subcategory: "eth-scaling",
+    sections: [
+      { id: "overview", title: "평균·타겟·피크를 나눠 읽기" },
+      { id: "target-vs-average", title: "타겟 초과는 압력, 기록이 아니다" },
+      { id: "growth-rate", title: "다섯 달 두 배의 월간 성장률" },
+      { id: "robinhood-chain-concentration", title: "단일 rollup 집중 수요" },
+      { id: "bpo-sparse-blobpool", title: "BPO 파라미터 조정과 sparse blobpool" },
+      { id: "reading-checklist", title: "재검증 체크리스트" },
+    ],
+    component: () => import("@/pages/articles/blockchain/robinhood-chain-blob-demand"),
+  },
 
   /* ── Privacy (심층 코드 추적) ── */
   {
