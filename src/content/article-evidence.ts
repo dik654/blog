@@ -4398,6 +4398,17 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Evmos v20.0.0 — x/evm", href: "https://github.com/evmos/evmos/tree/v20.0.0/x/evm", note: "EVM keeper·StateDB journal·state transition의 pinned implementation; current cosmos/evm으로 일반화하지 않음" },
     { kind: "공식 코드", label: "Evmos v20.0.0 — ERC-20 IBC middleware", href: "https://github.com/evmos/evmos/blob/v20.0.0/x/erc20/ibc_middleware.go", note: "Receive·acknowledgement·timeout callback과 token representation 경계" },
   ],
+  "blockchain/hyperliquid": [
+    { kind: "공식 문서", label: "Hyperliquid Docs — Trading", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/trading", note: "주문 유형·체결·취소의 공개 사용자 interface. Matching engine source나 전역 도착 공정성의 증거는 아님" },
+    { kind: "공식 문서", label: "Hyperliquid Docs — Margining", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/trading/margining", note: "Cross·isolated margin과 청산 경계. 실제 판정에는 기준 시점의 asset별 table·oracle 설정이 필요" },
+    { kind: "공식 문서", label: "Hyperliquid Docs — HyperBFT", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/hyperbft", note: "합의와 validator 역할의 공식 설명. 비공개 구현 전체의 독립 재현 근거는 아님" },
+    { kind: "공식 문서", label: "Hyperliquid Docs — HyperEVM", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm", note: "HyperCore precompile·CoreWriter 상호운용 경계와 EVM execution surface" },
+  ],
+  "blockchain/robinhood-chain-blob-demand": [
+    { kind: "프로젝트 실측", label: "Dune — hildobby/blobs 대시보드", href: "https://dune.com/hildobby/blobs", note: "블록당 blob 개수·타겟 초과 빈도·이동평균의 시계열. 이 글이 인용한 수치는 2026-09-12 스냅샷이며 rollup별 기여도는 대시보드가 직접 분리해 확인해 주지 않음" },
+    { kind: "공식 규격", label: "EIP-4844 — Shard Blob Transactions", href: "https://eips.ethereum.org/EIPS/eip-4844", note: "Blob target·max와 excess 기반 fee feedback의 기본 정의. 계산 세부는 eip4844-blob-fee 글이 정본" },
+    { kind: "공식 규격", label: "EIP-7892 — Blob Parameter Only Hardforks", href: "https://eips.ethereum.org/EIPS/eip-7892", note: "Target·max 파라미터를 전체 하드포크 없이 별도 일정으로 조정하는 메커니즘. 특정 시점의 정확한 값을 고정하지 않음" },
+  ],
   "blockchain/dydx": [
     { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.6.3 — OrderId", href: "https://github.com/dydxprotocol/v4-chain/blob/protocol/v9.6.3/protocol/x/clob/types/order_id.go", note: "Short-term·stateful·conditional/TWAP flags, state key와 deterministic sort contract" },
     { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.6.3 — CLOB", href: "https://github.com/dydxprotocol/v4-chain/tree/protocol/v9.6.3/protocol/x/clob", note: "MemClob·proposed operations·match/risk processing의 pinned implementation" },

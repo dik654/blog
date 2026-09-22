@@ -8166,6 +8166,27 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "Cosmos SDK transaction/cache", href: "/cs/blockchain/cosmos-sdk" }, { label: "CometBFT consensus/application", href: "/cs/blockchain/cometbft" }],
     evidence: [{ kind: "primary-source", rule: "Evmos 구현 사실은 historical v20.0.0 tag에 귀속하며 current cosmos/evm으로 확대하지 않는다." }, { kind: "project-measurement", rule: "Signer·fee·fork·revert·receipt/state·supply·ack/timeout parity를 같은 config에서 재생한다." }, { kind: "project-claim", rule: "Ante/EVM return/send receipt를 call success·commit·remote finality로 확대하지 않는다." }],
   },
+  "hyperliquid": {
+    title: "Hyperliquid order·risk·consensus·EVM 경계 글이 소유하는 범위",
+    owns: ["서명 action에서 HyperCore order·fill·margin 상태로 이어지는 권위 경계", "HyperBFT 합의와 HyperEVM·CoreWriter·bridge receipt 분리"],
+    reuses: [{ label: "dYdX proposer·settlement 비교", href: "/cs/blockchain/dydx#matching-engine" }],
+    evidence: [
+      { kind: "primary-source", rule: "주문·margin·HyperBFT·HyperEVM 동작은 기준일의 Hyperliquid 공식 문서에 귀속한다." },
+      { kind: "project-claim", rule: "API 접수·EVM receipt·bridge UI 상태를 fill·Core state·destination finality로 확대하지 않는다." },
+      { kind: "project-claim", rule: "공개되지 않은 matching·validator 내부 source와 성능 수치를 추정하지 않는다." },
+    ],
+  },
+  "robinhood-chain-blob-demand": {
+    title: "로빈후드 체인·블롭 수요 글이 소유하는 범위",
+    owns: ["평균·타겟·개별 피크를 구분해 읽는 blob 수요 해석", "단일 rollup 집중도와 BPO·sparse blobpool 공급 대응의 연결"],
+    reuses: [{ label: "EIP-4844 excess feedback 계산", href: "/cs/blockchain/eip4844-blob-fee#overview" }, { label: "DA·blob 기초 개념", href: "/cs/blockchain/da-theory#eip-4844" }],
+    evidence: [
+      { kind: "primary-source", rule: "블록당 blob·이동평균 수치는 2026-09-12 Dune 대시보드 스냅샷에 귀속하며 이후 갱신값으로 확대하지 않는다." },
+      { kind: "primary-source", rule: "BPO·target·max 메커니즘은 EIP-4844·EIP-7892 정의를 따르고 특정 시점의 값을 고정 상수로 서술하지 않는다." },
+      { kind: "project-claim", rule: "로빈후드 체인의 rollup별 기여 비율은 원 소식이 전한 맥락 인용이며 이 글이 독자적으로 재계산한 값이 아니다." },
+      { kind: "project-claim", rule: "다섯 달 성장률의 월평균 환산을 향후 성장 예측으로 확대하지 않는다." },
+    ],
+  },
   "dydx": {
     title: "dYdX protocol/v9.6.3 CLOB·settlement 글이 소유하는 범위",
     owns: ["Short-term/stateful order persistence와 proposer match validation", "Risk settlement와 rebuildable indexer projection 경계"],

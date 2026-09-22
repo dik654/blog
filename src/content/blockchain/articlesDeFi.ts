@@ -16,6 +16,20 @@ export const defiArticles: Article[] = [
     component: () => import("@/pages/articles/blockchain/dydx"),
   },
   {
+    slug: "hyperliquid",
+    title: "Hyperliquid: order·margin·consensus·bridge 경계",
+    subcategory: "defi-dex",
+    sections: [
+      { id: "overview", title: "하나의 화면, 여러 권위 경계" },
+      { id: "order-lifecycle", title: "서명한 주문에서 체결까지" },
+      { id: "margin-liquidation", title: "마진·펀딩·청산" },
+      { id: "consensus", title: "HyperBFT와 HyperCore 상태" },
+      { id: "hyperevm-bridge", title: "HyperEVM·CoreWriter·브리지" },
+      { id: "risk-checklist", title: "검증과 운영 판단" },
+    ],
+    component: () => import("@/pages/articles/blockchain/hyperliquid"),
+  },
+  {
     slug: "uniswap-v2",
     title: "Uniswap V2: invariant·LP share·flash settlement",
     subcategory: "defi-dex",
