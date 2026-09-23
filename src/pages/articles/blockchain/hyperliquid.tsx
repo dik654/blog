@@ -133,7 +133,7 @@ export default function HyperliquidArticle() {
       </section>
 
       <section id="hyperevm-bridge" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">04 · 경계 연결</p><h2 className="mt-2 text-2xl font-bold">HyperEVM은 같은 합의를 쓰지만 HyperCore 주문장을 평범한 EVM storage처럼 직접 수정하지 않는다</h2></header>
+        <header><p className="text-sm font-semibold text-primary">04 · 경계 연결</p><h2 className="mt-2 text-2xl font-bold">HyperEVM과 HyperCore의 상태 경계를 구분한다</h2></header>
         <p>
           HyperEVM은 EVM 스마트 컨트랙트를 실행합니다. HyperCore와 같은 L1 합의에 묶여 있어도 두 실행 환경의 상태와 호출 방식은 구분됩니다.
           컨트랙트는 precompile을 통해 Core의 공개 상태를 읽고, CoreWriter system contract에 action을 제출해 Core 쪽 상태 전이를 요청합니다.
@@ -142,8 +142,11 @@ export default function HyperliquidArticle() {
         <HyperCoreEvmViz />
         <p>
           외부 체인에서 들어오는 자산은 또 다른 경계입니다. 브리지 예치 transaction, Hyperliquid validator의 예치 인식, Core 잔액 반영은 서로 다른
-          단계입니다. 출금도 Core debit, validator authorization, 목적 체인의 최종 수령을 각각 대조해야 합니다. 따라서 브리지 UI의 “완료” 한 줄보다
-          source transaction hash, 목적지, 수량, validator 처리 상태와 destination receipt를 함께 보관하는 편이 안전합니다.
+          단계입니다. 출금도 Core debit, validator authorization, 목적 체인의 최종 수령을 각각 대조해야 합니다.
+        </p>
+        <p>
+          따라서 브리지 UI의 “완료” 한 줄보다 source transaction hash, 목적지, 수량, validator 처리 상태와 destination receipt를 함께 보관하는 편이
+          안전합니다.
         </p>
         <div id="paper-hyperliquid-hyperevm">
           <CitationBlock source="Hyperliquid Docs · HyperEVM" citeKey={4} href="https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm">
@@ -163,9 +166,11 @@ export default function HyperliquidArticle() {
           일부 체결 뒤 취소, cross·isolated 전환, oracle 급변, funding 반영 직전과 직후, API 장애 중 주문 상태를 failure fixture로 남깁니다.
         </p>
         <p>
-          컨트랙트 앱은 EVM receipt와 Core state receipt를 따로 저장하고, 브리지 앱은 source와 destination receipt를 묶어야 합니다. 자산별 설정과
-          validator·bridge 운영 규칙은 바뀔 수 있으므로 수수료·margin tier·withdrawal 조건을 코드에 고정하지 말고 기준 block과 설정 snapshot을
-          기록합니다. 이 과정을 통과해야 “빠른 주문 화면”을 “복구 가능한 금융 시스템”으로 사용할 수 있습니다.
+          컨트랙트 앱은 EVM receipt와 Core state receipt를 따로 저장하고, 브리지 앱은 source와 destination receipt를 묶어야 합니다.
+        </p>
+        <p>
+          자산별 설정과 validator·bridge 운영 규칙은 바뀔 수 있습니다. 수수료·margin tier·withdrawal 조건을 코드에 고정하지 말고 기준 block과 설정
+          snapshot을 기록해야 합니다. 이 과정을 통과해야 “빠른 주문 화면”을 “복구 가능한 금융 시스템”으로 사용할 수 있습니다.
         </p>
         <h3 className="text-xl font-semibold">이 글만으로 풀어야 하는 10문제</h3>
         <p>
