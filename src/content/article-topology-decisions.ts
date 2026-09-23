@@ -160,9 +160,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/qwen38-flash-next-architecture": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-09-11",
+    reviewedAt: "2026-09-24",
     rationale:
-      "closure 1,716줄 중 808줄이 6개 Viz이고 본문은 6 section·concept 7개로 keep 범위다. 선택·배선·조회·회계·요청 상태는 같은 공개 config 하나를 읽는 연속된 질문이라 나누면 각 글이 config 설명을 중복하게 된다.",
+      "closure 1,715줄 중 808줄이 6개 Viz이고 본문은 6 section·concept 7개로 keep 범위다. 선택·배선·조회·회계·요청 상태는 같은 공개 config 하나를 읽는 연속된 질문이라 나누면 각 글이 config 설명을 중복하게 된다. 2026-09-24 재검토에서 줄 수 변화는 JSX 단어 중간 줄바꿈 정리 1줄뿐임을 확인했다.",
     sharedGate:
       "Qwen3.8-Flash-Next 공개 config revision과 transformers qwen4_exp f62dc9bf2c90 스냅샷 하나만 근거로 삼는다. 서빙 런타임 구현과 실측이 필요한 주제는 이 글에 넣지 않고 별도 글로 분리한다.",
   },
@@ -178,9 +178,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/dinov3-self-supervised-backbone": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-09-11",
+    reviewedAt: "2026-09-24",
     rationale:
-      "closure 1,497줄 중 절반 이상이 6개 Viz이고 본문은 6 section·concept 7개로 keep 범위다. 두 학습 목표·붕괴·Gram anchoring은 '라벨 없이 학습할 때 무엇이 무너지는가'라는 한 질문의 연속 단계라 나누면 각 글이 손실 구성을 다시 세워야 한다.",
+      "closure 1,495줄 중 절반 이상이 6개 Viz이고 본문은 6 section·concept 7개로 keep 범위다. 두 학습 목표·붕괴·Gram anchoring은 '라벨 없이 학습할 때 무엇이 무너지는가'라는 한 질문의 연속 단계라 나누면 각 글이 손실 구성을 다시 세워야 한다. 2026-09-24 재검토에서 줄 수 변화는 JSX 단어 중간 줄바꿈 정리 2줄뿐임을 확인했다.",
     sharedGate:
       "DINOv3 기술 보고서와 facebookresearch/dinov3 커밋 11c58638 스냅샷만 근거로 삼는다. 다른 자기지도 방법과의 벤치마크 비교나 재현 실측은 이 글에 넣지 않는다.",
   },
@@ -381,7 +381,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/open-r1": "478fefd6da1c4f57",
   "ai/openclaw-assistant": "edc4529ce21a5f35",
   "ai/qwen-korean-consistency": "44f39867283e1e94",
-  "ai/dinov3-self-supervised-backbone": "1d4f7adb50ed720a",
+  "ai/dinov3-self-supervised-backbone": "23b836bbc712c191",
   "ai/image-embedding-pipeline": "183b7fb7e57921f8",
   "gpu/datacenter-site-readiness": "07b871983667a242",
   "gpu/server-cpu-lineup-comparison": "f8273f0dacbcd008",
@@ -390,7 +390,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/vision-backbone-selection": "cdd9671993dee419",
   "ai/image-text-contrastive-pretraining": "f5b36610fc8dff17",
   "ai/sam3-promptable-concept-segmentation": "fc7656e7ef8d7e3c",
-  "ai/qwen38-flash-next-architecture": "fe506f8b67ff5ddf",
+  "ai/qwen38-flash-next-architecture": "990512955da9123f",
   "gpu/modded-rtx4090-moe-serving": "73c84dae6a67f21c",
   "ai/rag-pipeline": "65d41c4a2ba06aed",
   "ai/smoothie-qwen-weight-editing": "68499b22e204f442",
