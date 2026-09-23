@@ -4406,8 +4406,11 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "blockchain/robinhood-chain-blob-demand": [
     { kind: "프로젝트 실측", label: "Dune — hildobby/blobs 대시보드", href: "https://dune.com/hildobby/blobs", note: "블록당 blob 개수·타겟 초과 빈도·이동평균의 시계열. 이 글이 인용한 수치는 2026-09-12 스냅샷이며 rollup별 기여도는 대시보드가 직접 분리해 확인해 주지 않음" },
+    { kind: "공식 문서", label: "Robinhood Chain Documentation — About", href: "https://docs.robinhood.com/chain/", note: "Robinhood Chain이 Arbitrum 기반 Ethereum L2이며 tokenized asset 인프라를 목표로 한다는 프로젝트 설명" },
+    { kind: "공식 코드", label: "go-ethereum — MainnetChainConfig", href: "https://github.com/ethereum/go-ethereum/blob/master/params/config.go", note: "2026-09-12 시점 활성 BPO2의 target 14·max 21과 메인넷 활성화 시각을 대조하는 client configuration" },
     { kind: "공식 규격", label: "EIP-4844 — Shard Blob Transactions", href: "https://eips.ethereum.org/EIPS/eip-4844", note: "Blob target·max와 excess 기반 fee feedback의 기본 정의. 계산 세부는 eip4844-blob-fee 글이 정본" },
     { kind: "공식 규격", label: "EIP-7892 — Blob Parameter Only Hardforks", href: "https://eips.ethereum.org/EIPS/eip-7892", note: "Target·max 파라미터를 전체 하드포크 없이 별도 일정으로 조정하는 메커니즘. 특정 시점의 정확한 값을 고정하지 않음" },
+    { kind: "공식 규격", label: "EIP-8070 — eth/72 Sparse Blobpool", href: "https://eips.ethereum.org/EIPS/eip-8070", note: "Custody-aligned cell sampling과 full provider를 결합하는 Review 상태 제안. Glamsterdam 최종 포함이나 배포 완료의 증거는 아님" },
   ],
   "blockchain/dydx": [
     { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.6.3 — OrderId", href: "https://github.com/dydxprotocol/v4-chain/blob/protocol/v9.6.3/protocol/x/clob/types/order_id.go", note: "Short-term·stateful·conditional/TWAP flags, state key와 deterministic sort contract" },
