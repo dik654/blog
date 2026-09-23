@@ -3,7 +3,7 @@ const scale = (value: number) => Math.min(1, value / AXIS_MAX) * 560;
 
 const bars = [
   { label: "3일 평균", value: 6.4, tone: "fill-sky-500/15 stroke-sky-600", note: "누적 사용량 지표 — 지속 여부를 판단하는 기준선" },
-  { label: "타겟", value: 15, tone: "fill-transparent stroke-foreground/70", note: "이 위로 쌓이면 excess가 늘고, 아래면 줄어드는 기준값" },
+  { label: "타겟", value: 14, tone: "fill-transparent stroke-foreground/70", note: "BPO2 기준 — 이 위로 쌓이면 excess가 늘고, 아래면 줄어드는 기준값" },
   { label: "간헐적 피크 블록", value: 17, tone: "fill-amber-500/15 stroke-amber-600", note: "가끔 관측된 개별 블록 — 지속 평균이 아님" },
 ];
 
@@ -25,7 +25,7 @@ export function BlobDemandGapViz() {
               </g>
             );
           })}
-          <line x1={60 + scale(15)} y1="20" x2={60 + scale(15)} y2="160" className="stroke-foreground/50" strokeDasharray="4 4" />
+          <line x1={60 + scale(14)} y1="20" x2={60 + scale(14)} y2="160" className="stroke-foreground/50" strokeDasharray="4 4" />
           <text x="620" y="176" textAnchor="end" className="fill-muted-foreground text-[11px]">단위: 블록당 블롭 개수</text>
         </svg>
       </div>
