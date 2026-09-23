@@ -19,10 +19,12 @@ export default function RobinhoodChainBlobDemandArticle() {
         </header>
         <p className="text-lg leading-8 text-foreground/90">
           &ldquo;이더리움 블롭 사용량이 사상 최대치를 경신했다&rdquo;는 문장 하나에는 서로 다른 세 숫자가 섞여 있습니다. 개별 블록이 잠깐 넘긴 피크,
-          여러 날에 걸친 3일 이동평균, 그리고 프로토콜이 정해 둔 타겟입니다. 제공된 2026-09-12 자료는 최근 로빈후드 체인(Robinhood Chain)의 활동과
-          함께 타겟을 넘기는 블록이 종종 보이고 3일 평균도 6.4개까지 올라왔다고 전합니다. 당시 활성 BPO2의 공식 메인넷 설정은 블록당 타겟 14개·최대
-          21개입니다. 이 글은 관측값과 출처의 attribution을 분리하고, BPO(Blob Parameter Only) 포크와 sparse blobpool 후보가 왜 같은 용량 문제의
-          서로 다른 절반인지 따라갑니다.
+          여러 날에 걸친 3일 이동평균, 그리고 프로토콜이 정해 둔 타겟입니다.
+        </p>
+        <p className="text-lg leading-8 text-foreground/90">
+          제공된 2026-09-12 자료는 최근 로빈후드 체인(Robinhood Chain)의 활동과 함께 타겟을 넘기는 블록이 종종 보이고 3일 평균도 6.4개까지
+          올라왔다고 전합니다. 당시 활성 BPO2의 공식 메인넷 설정은 블록당 타겟 14개·최대 21개입니다. 이 글은 관측값과 출처의 attribution을 분리하고,
+          BPO(Blob Parameter Only) 포크와 sparse blobpool 후보가 왜 같은 용량 문제의 서로 다른 절반인지 따라갑니다.
         </p>
         <p>
           먼저 짚을 것은 두 가지입니다. 첫째, 평균(6.4)은 당시 타겟(14)의 절반에도 못 미칩니다. 둘째, 제공된 자료는 로빈후드 체인 활동량이
@@ -37,7 +39,9 @@ export default function RobinhoodChainBlobDemandArticle() {
         <p>
           EIP-4844의 blob fee는 execution gas와 분리된 자체 수요 장부를 씁니다. 블록이 타겟보다 많은 blob을 담으면 그 초과분이
           <code>excess</code> 상태에 더해지고, 다음 블록의 최소 가격을 끌어올립니다. 타겟보다 적게 담으면 excess가 줄어 가격이 내려갑니다.
-          그래서 개별 블록이 타겟을 넘겼다는 사실 하나만으로는 &ldquo;공급이 부족하다&rdquo;고 말할 수 없습니다 — 그 블록이 만든 압력이 이후
+        </p>
+        <p>
+          따라서 개별 블록이 타겟을 넘겼다는 사실 하나만으로는 &ldquo;공급이 부족하다&rdquo;고 말할 수 없습니다. 그 블록이 만든 압력이 이후
           블록들에서 상쇄되는지가 관건입니다. 3일 평균이 타겟에 근접하거나 넘어서야 비로소 지속적인 초과 수요로 읽을 수 있습니다.
         </p>
         <TermBreakdown title="블롭 뉴스에서 자주 섞이는 세 숫자" items={[
@@ -92,9 +96,12 @@ export default function RobinhoodChainBlobDemandArticle() {
         <header><p className="text-sm font-semibold text-primary">03 · 수요의 출처</p><h2 className="mt-2 text-2xl font-bold">체인 하나의 활동이 프로토콜 전체 지표를 흔들 수 있다</h2></header>
         <p>
           로빈후드 체인은 로빈후드가 토큰화 자산 거래를 위해 만든 rollup으로, 자체 트랜잭션 데이터를 이더리움 blob으로 posting합니다. 여러
-          rollup이 blob을 나눠 쓰는 구조에서 특정 rollup 하나의 활동이 전체 blob 수요 지표를 눈에 띄게 움직였다는 것은, 현재 이 시장이
-          아직 소수의 대형 소비자에 집중됐을 가능성을 따로 검증해야 한다는 뜻입니다. 넓은 기반의 L2 수요 증가와, 특정 애플리케이션 하나의 트래픽 급증은
-          같은 &ldquo;blob 수요 증가&rdquo;라는 제목 아래서도 서로 다른 지속성을 가집니다.
+          rollup이 blob을 나눠 쓰는 구조에서는 특정 체인의 활동이 전체 지표를 얼마나 움직였는지 따로 검증해야 합니다. 현재 시장이 소수의 대형 소비자에
+          집중돼 있을 가능성도 있기 때문입니다.
+        </p>
+        <p>
+          넓은 기반의 L2 수요 증가와 특정 애플리케이션 하나의 트래픽 급증은 같은 &ldquo;blob 수요 증가&rdquo;라는 제목 아래서도 서로 다른 지속성을
+          가집니다.
         </p>
         <p>
           제공된 원 소식은 로빈후드의 활동량이 최근 줄어드는 추세라고 밝히고 있습니다. 다만 Dune의 체인 전체 집계만으로는 그 attribution을 독립
@@ -123,7 +130,9 @@ export default function RobinhoodChainBlobDemandArticle() {
         </p>
         <p>
           다만 target을 올리는 결정 자체가 공짜는 아닙니다. 블록에 포함되기 전까지 대기 중인 blob 트랜잭션은 blobpool(mempool의 blob
-          버전)에 전체 blob 데이터를 들고 있어야 합니다. Target이 올라가 평균 대기량이 늘면 노드가 들고 있어야 하는 데이터도 늘어납니다.
+          버전)에 전체 blob 데이터를 들고 있어야 합니다. Target이 올라가 평균 대기량이 늘면 노드가 보관할 데이터도 늘어납니다.
+        </p>
+        <p>
           EIP-8070 sparse blobpool은 글램스터담(Glamsterdam) 후보로 검토되는 Review 단계 제안입니다. 전체 blob을 항상 받는 대신 custody에
           맞춰 cell을 sampling해 대역폭 부담을 줄이고 더 높은 target을 감당할 여지를 만들지만, 최종 포함이나 배포 완료로 읽어서는 안 됩니다.
         </p>
