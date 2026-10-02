@@ -11,6 +11,7 @@
  * 목록 파일은 한 줄에 `<카테고리>/<글 slug>` 하나씩 적는다.
  */
 import { chromium } from "playwright";
+import { CATEGORY_DOMAIN } from "../src/content/domains.ts";
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { join, extname } from "node:path";
@@ -20,11 +21,7 @@ const server=createServer(async(req,res)=>{let p=decodeURIComponent(req.url.spli
 try{if((await stat(f)).isDirectory())f=join(f,"index.html");}catch{f=join(ROOT,p,"index.html");try{await stat(f);}catch{f=join(ROOT,"404.html");}}
 try{const b=await readFile(f);res.writeHead(200,{"content-type":T[extname(f)]??"application/octet-stream"});res.end(b);}catch{res.writeHead(404);res.end("nf");}});
 await new Promise(r=>server.listen(4604,r));
-const DOM={ai:"cs",gpu:"cs",blockchain:"cs",crypto:"cs",p2p:"cs",tee:"cs","isms-aml":"cs",saas:"cs",hw:"cs",
- scarcity:"economics",prices:"economics","market-failure":"economics",macro:"economics",
- money:"finance",banking:"finance",markets:"finance",risk:"finance",
- polity:"politics",constitution:"politics",elections:"politics",governance:"politics",
- "legal-system":"law","private-law":"law","criminal-law":"law","dispute-resolution":"law"};
+const DOM=CATEGORY_DOMAIN;
 const listArg=process.argv[2];
 const routes=listArg
   ? (await readFile(listArg,"utf8")).trim().split("\n").filter(Boolean)
@@ -34,7 +31,9 @@ let bad=0, checked=0;
 for (const [label,w,h] of [["mobile",390,844],["desktop",1440,900]]) {
   for (const r of routes) {
     const cat=r.split("/")[0];
-    const url=`http://localhost:4604/blog/${DOM[cat]??"cs"}/${r}`;
+    const domain=DOM[cat];
+    if(!domain) throw new Error(`대분류가 등록되지 않은 카테고리입니다: ${cat} (src/content/domains.ts)`);
+    const url=`http://localhost:4604/blog/${domain}/${r}`;
     const page=await b.newPage({viewport:{width:w,height:h}});
     const errs=[];
     page.on("pageerror",e=>errs.push(String(e)));

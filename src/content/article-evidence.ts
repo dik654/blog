@@ -7550,4 +7550,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "여기서는 더하는 일이 잘 정의되어 있고 더한 뒤가 문제인데 그쪽은 더하는 방법 자체가 여럿임",
     },
   ],
+  "firms/why-firms-exist": [
+    {
+      kind: "핵심 논문",
+      label:
+        "R. H. Coase, “The Nature of the Firm”, Economica, New Series, Vol. 4, No. 16 (Nov. 1937), pp. 386–405",
+      href: "https://www.jstor.org/stable/2626876",
+      note: "값 기구를 쓰는 데 값이 든다는 출발점, 약속이 하나로 대체된다는 정리, 안팎의 한계값이 같아지는 경계 조건의 출처. JSTOR 스캔본 OCR 본문을 직접 읽어 인용을 대조했고 쪽 번호가 복원되지 않아 문장별 쪽수는 적지 않았음",
+    },
+  ],
 };

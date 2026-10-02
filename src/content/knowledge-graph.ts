@@ -25156,6 +25156,46 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/economics/macro/aggregation-and-composition#aggregates-hide",
   },
+  "cost-of-using-the-market": {
+    id: "cost-of-using-the-market",
+    kind: "concept",
+    domain: "economics",
+    label: "값으로 조정하는 일 자체에 드는 값",
+    aliases: ["값 기구를 쓰는 값", "조정 방식의 값"],
+    definition:
+      "값이 조정한다는 설명은 그 값을 알아내고 조건을 따지고 약속을 묶는 일이 공짜라는 전제 위에 서 있습니다. 실제로는 관련된 값이 얼마인지 알아내는 데만도 값이 들고, 이 몫 때문에 조정 방식 자체를 고르는 문제가 생깁니다. 물건을 만드는 데 드는 값이 아니라 같은 물건을 어떤 방식으로 조정하느냐에만 걸리는 값이라는 점에서 다른 비용과 갈립니다.",
+    canonicalHref: "/economics/firms/why-firms-exist#cost-of-market",
+  },
+  "contracts-collapsed-into-one": {
+    id: "contracts-collapsed-into-one",
+    kind: "concept",
+    domain: "economics",
+    label: "여러 약속이 하나로 바뀌고 내용이 비워진다",
+    aliases: ["계약의 대체", "비워 둔 계약", "지시 범위 계약"],
+    definition:
+      "짝마다 맺던 약속을 가운데 하나와만 맺는 것으로 바꾸면 약속의 수가 짝의 수에서 사람의 수로 줄어듭니다. 남은 약속은 무엇을 할지를 적지 않고 지시를 받는 범위만 적는데, 기간이 길수록 할 일을 미리 적어 둘 수 없기 때문입니다. 비워 둔 자리를 나중에 채우는 것이 지시이고, 지시가 값을 대신하는 범위가 조직입니다.",
+    canonicalHref: "/economics/firms/why-firms-exist#one-contract",
+  },
+  "firm-boundary-at-equal-margin": {
+    id: "firm-boundary-at-equal-margin",
+    kind: "theorem",
+    domain: "economics",
+    label: "경계는 안팎의 한계값이 같아지는 자리다",
+    aliases: ["조직의 경계", "내부화 한계"],
+    definition:
+      "조직은 안에서 거래 하나를 더 다루는 값이 같은 거래를 시장에서 하는 값이나 다른 조직이 다루는 값과 같아질 때까지 커집니다. 어느 한쪽이 싸다는 것이 아니라 둘이 만나는 자리라는 점이 핵심이어서, 경계는 누가 정하는 것이 아니라 두 값이 정합니다. 안쪽 값이 내려가도 바깥쪽 값이 올라가도 경계는 같은 방향으로 밀리므로, 조직이 커졌다는 사실만으로는 어느 쪽이 움직였는지 알 수 없습니다.",
+    canonicalHref: "/economics/firms/why-firms-exist#boundary",
+  },
+  "diminishing-returns-to-organising": {
+    id: "diminishing-returns-to-organising",
+    kind: "concept",
+    domain: "economics",
+    label: "조직하는 일에도 수확이 체감한다",
+    aliases: ["관리의 수확 체감", "조직하는 값의 상승"],
+    definition:
+      "안으로 들이는 거래가 늘수록 무엇을 어디에 둘지 정하는 일이 어려워지고 틀리는 몫이 커져, 하나를 더 다루는 값이 올라갑니다. 이것이 없으면 조직은 멈출 이유가 없어 세상 전체가 하나가 되므로, 경계가 존재한다는 사실 자체가 이 체감의 증거입니다. 흩어진 거리, 다루는 거래 종류의 다름, 값이 자주 바뀌는 정도가 이 상승을 가파르게 만듭니다.",
+    canonicalHref: "/economics/firms/why-firms-exist#what-moves",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -46812,6 +46852,55 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "여기서는 더하는 일이 잘 정의되어 있고 더한 뒤가 문제인데, 뜻을 모으는 쪽에서는 더하는 방법 자체가 여럿입니다.",
+  },
+  {
+    from: "transaction-cost",
+    to: "cost-of-using-the-market",
+    relation: "prerequisite",
+    reason:
+      "상대를 찾고 재고 강제하는 데 드는 값이라는 정의를 먼저 세워야, 같은 몫이 교환을 막는 대신 조정 방식을 바꾸는 쪽으로 쓰이는 것을 읽을 수 있습니다.",
+  },
+  {
+    from: "cost-of-using-the-market",
+    to: "contracts-collapsed-into-one",
+    relation: "produces",
+    reason:
+      "값을 쓰는 데 드는 몫이 짝마다 약속을 맺는 데서 나오므로, 그 수를 줄이는 방식이 조직의 형태로 나타납니다.",
+  },
+  {
+    from: "contracts-collapsed-into-one",
+    to: "firm-boundary-at-equal-margin",
+    relation: "constrains",
+    reason:
+      "약속을 하나로 바꿔 아끼는 몫이 안쪽 값의 크기를 정하므로, 그 몫이 바깥쪽 값과 만나는 자리가 경계가 됩니다.",
+  },
+  {
+    from: "diminishing-returns-to-organising",
+    to: "firm-boundary-at-equal-margin",
+    relation: "constrains",
+    reason:
+      "안쪽 값이 거래 수와 함께 오르지 않으면 두 값이 만나는 자리가 생기지 않아 조직이 멈출 이유가 없습니다.",
+  },
+  {
+    from: "price-as-sufficient-signal",
+    to: "cost-of-using-the-market",
+    relation: "contrasts",
+    reason:
+      "값 하나면 조정에 충분하다는 설명과 그 값을 알아내는 일 자체가 비싸다는 설명이 같은 자리를 반대 방향에서 봅니다.",
+  },
+  {
+    from: "marginal-decision-rule",
+    to: "firm-boundary-at-equal-margin",
+    relation: "prerequisite",
+    reason:
+      "하나 더 할 때의 값과 그 하나가 주는 것을 견주어 멈출 자리를 찾는 셈을 그대로 조정 방식의 선택에 적용한 것입니다.",
+  },
+  {
+    from: "firm-boundary-at-equal-margin",
+    to: "dispersed-knowledge",
+    relation: "contrasts",
+    reason:
+      "흩어진 지식을 값이 옮긴다는 설명과, 그 옮기는 일이 비싸서 경계 안에서는 지시가 대신한다는 설명이 같은 조정 문제를 두 방식으로 답합니다.",
   },
 ];
 
