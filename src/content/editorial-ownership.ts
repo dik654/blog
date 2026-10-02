@@ -12906,6 +12906,40 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "scale-and-cost-structure": {
+    title: "싸지는 것은 공장이 커져서가 아닙니다 글이 소유하는 범위",
+    owns: [
+      "하나당 값이 내려가는 힘의 출처가 크기가 아니라 돌아가는 방법이라는 구분",
+      "돌아가는 방법이 열리는 최소 수량의 식과 단계마다 그 수량이 커지는 구조",
+      "시장의 크기가 생산으로 함께 정해진다는 되먹임",
+      "수확 체증이 산업의 분화로 실현된다는 모양",
+      "싸진다는 사실에서 하나만 남는다는 결론이 따라 나오지 않는다는 경계",
+    ],
+    reuses: [
+      {
+        label: "조직이 어디까지 안으로 들이는지의 경계 조건",
+        href: "/economics/firms/why-firms-exist#boundary",
+      },
+      {
+        label: "조직하는 일의 수확 체감과 회사 크기의 한계",
+        href: "/economics/firms/why-firms-exist#what-moves",
+      },
+      {
+        label: "누가 무엇을 맡을지를 가르는 기회비용의 차이",
+        href: "/economics/scarcity/gains-from-trade#two-advantages",
+      },
+      {
+        label: "부분에서 참인 것이 전체에서 어긋나는 자리",
+        href: "/economics/macro/aggregation-and-composition",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Young 1928에 말로 적힌 것과 이 글이 식으로 적은 것을 가르고, 인용 문장은 쪽 이미지로 대조한 범위에서만 쪽수를 붙인다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
