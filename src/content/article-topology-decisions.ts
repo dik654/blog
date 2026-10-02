@@ -364,6 +364,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "같은 여섯 단계 예시에서 안쪽 값과 바깥쪽 값을 같은 단위로 세고, 두 값이 만나는 단계 수와 합계가 본문·Viz·연습문제에서 일치하는지로 판정한다.",
   },
+  "firms/scale-and-cost-structure": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "돌아가는 방법·최소 수량·시장 크기의 되먹임·산업의 분화·따라 나오지 않는 결론까지가 왜 싸지는가라는 하나의 질문을 푸는 한 묶음이다. 특히 마지막 부품은 앞 네 부품이 세운 것을 근거로만 설 수 있어 떼어 낼 수 없다.",
+    sharedGate:
+      "같은 숫자 예시에서 먼저 들이는 몫과 단위당 값을 같은 단위로 세고, 최소 수량과 갈아타는 자리가 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
 };
 
 /**
@@ -444,5 +453,6 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "saas/anycast-delivery-continuity": "aff159589f1c6bbb",
   "saas/private-access-inbound-closure": "4ce0f54f2ee45937",
   "ai/onprem-k8s-inference-platform": "acd23d8e4dc14592",
-  "firms/why-firms-exist": "04c04e62fba5bcdd",
+  "firms/why-firms-exist": "3b1079e4fa979d9f",
+  "firms/scale-and-cost-structure": "e1f1355815729170",
 };

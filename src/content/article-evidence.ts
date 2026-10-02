@@ -7559,4 +7559,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "값 기구를 쓰는 데 값이 든다는 출발점, 약속이 하나로 대체된다는 정리, 안팎의 한계값이 같아지는 경계 조건의 출처. JSTOR 스캔본 OCR 본문을 직접 읽어 인용을 대조했고 쪽 번호가 복원되지 않아 문장별 쪽수는 적지 않았음",
     },
   ],
+  "firms/scale-and-cost-structure": [
+    {
+      kind: "핵심 논문",
+      label:
+        "Allyn A. Young, “Increasing Returns and Economic Progress”, The Economic Journal, Vol. 38, No. 152 (Dec. 1928), pp. 527–542",
+      href: "https://www.jstor.org/stable/2224835",
+      note: "돌아가는 생산 방법이 수확 체증의 본체라는 출발점(530쪽), 분업이 분업에 달려 있다는 정리와 큰 시장의 정의(533쪽), 회사 크기의 한계와 산업의 분화(539쪽), 수확 체증에서 독점으로 가는 추론이 흔한 오류라는 경고(527쪽)의 출처. 스캔본을 전면 OCR해 읽고 인용 문장은 쪽 이미지로 대조했음",
+    },
+  ],
 };

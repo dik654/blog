@@ -85858,4 +85858,289 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "firms/scale-and-cost-structure": {
+    entryNote:
+      "앞 글에서 조직은 값을 받아들이는 쪽이었습니다. 여기서는 그 조직이 값을 어떻게 만드는지를 보되, 아직 값을 고르는 힘은 다루지 않습니다.",
+    coreIdea:
+      "하나당 값이 내려가는 것은 많이 만들어서가 아니라 먼저 들이는 몫이 있는 돌아가는 방법으로 갈아탔기 때문이고, 갈아탈 수 있는 조건은 그 몫을 나눠 질 수량입니다. 그 수량은 밖에서 주어진 것이 아니라 생산이 함께 키우며, 커진 결과는 한 곳이 비대해지는 모양보다 중간 단계가 갈라져 별도 산업이 되는 모양으로 나타납니다.",
+    assumedKnowledge: [
+      {
+        id: "firm-boundary-at-equal-margin",
+        role: "조직이 어디까지 안으로 들이는지를 세운 자리에서, 그 안의 만드는 방법을 묻습니다.",
+      },
+      {
+        id: "diminishing-returns-to-organising",
+        role: "회사 하나가 경제적으로 커질 수 있는 크기에 한계가 있다는 전제를 그대로 가져옵니다.",
+      },
+      {
+        id: "marginal-decision-rule",
+        role: "한 걸음 더 갈 때의 값과 그 걸음이 주는 것을 견주는 셈을 방법 선택에 씁니다.",
+      },
+      {
+        id: "absolute-vs-comparative-advantage",
+        role: "누가 무엇을 맡을지를 가르는 1단계의 분업 설명을 비교 대상으로 둡니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "roundabout-production-economies",
+        role: "싸지는 힘의 출처를 크기가 아니라 방법에 둡니다.",
+      },
+      {
+        id: "minimum-market-for-a-detour",
+        role: "그 방법이 실제로 쓰이기 위한 수량 조건을 식으로 적습니다.",
+      },
+      {
+        id: "market-extent-is-produced",
+        role: "그 수량이 밖에서 주어진 것이 아님을 보입니다.",
+      },
+      {
+        id: "industrial-differentiation",
+        role: "커진 결과가 실제로 나타나는 모양을 정의합니다.",
+      },
+      {
+        id: "increasing-returns-not-monopoly",
+        role: "싸진다는 사실에서 따라 나오지 않는 것을 명시해 다음 글의 범위를 가릅니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "roundabout-production-economies",
+        sectionId: "roundabout",
+        intuition:
+          "손에 잡히는 것으로 못을 박으면 만 번째 못도 첫 번째와 같은 품이 듭니다. 망치를 먼저 만들면 당장은 못이 하나도 안 박히지만 그 뒤로 품이 줄어듭니다.",
+        workedExample:
+          "곧장 가면 하나당 10입니다. 망치를 만드는 데 60이 들고 그 뒤로 하나당 4라면, 백 개를 만들 때 1000 대신 460이 듭니다.",
+        boundary:
+          "같은 방법으로 수량만 늘리는 것과 섞으면 안 됩니다. 방법이 그대로이면 수량이 아무리 늘어도 하나당 값은 내려가지 않습니다.",
+      },
+      {
+        id: "minimum-market-for-a-detour",
+        sectionId: "minimum-market",
+        intuition:
+          "먼저 든 몫은 만드는 개수로 나뉩니다. 개수가 적으면 그 몫이 하나하나에 무겁게 얹혀 오히려 비쌉니다.",
+        workedExample:
+          "먼저 60이 들고 하나당 값이 10에서 4로 내려가면, 60을 6으로 나눈 열 개가 두 방법의 값이 같아지는 수량입니다. 못이 열 개를 넘어야 망치를 만드는 쪽이 싸집니다.",
+        proofIdea:
+          "곧장 갈 때 N개를 만드는 값은 c곧장·N이고 돌아갈 때는 F + c돌아·N입니다. 둘의 차이는 F − (c곧장 − c돌아)·N이고, N에 대해 단조로 줄어듭니다. 차이가 0이 되는 N이 F를 단위당 줄어드는 값으로 나눈 수이고, 그보다 큰 N에서는 차이가 음수가 되어 돌아가는 쪽이 쌉니다.",
+        counterexample:
+          "단위당 값이 줄지 않는 돌아감, 즉 분모가 0이거나 음수이면 최소 수량이 정의되지 않고 그 방법은 어떤 수량에서도 싸지지 않습니다. 먼저 들이는 몫이 있다는 것만으로는 수확 체증이 생기지 않습니다.",
+        boundary:
+          "만들 개수를 미리 안다고 둔 계산입니다. 실제로는 내다본 수량으로 고르고, 그 수량이 오면 맞고 오지 않으면 먼저 들인 몫만 남습니다.",
+      },
+      {
+        id: "market-extent-is-produced",
+        sectionId: "market-is-produced",
+        intuition:
+          "큰 시장은 사람이 많은 곳이 아니라 사들일 힘이 큰 곳이고, 사들일 힘은 만들어 낼 힘에서 나옵니다.",
+        workedExample:
+          "한쪽에서 돌아가는 방법이 열려 생산이 늘면 그 생산이 다른 쪽의 수량을 키우고, 커진 수량이 다른 쪽의 다음 돌아감을 엽니다. 인구가 그대로여도 이 고리만으로 수량이 커질 수 있습니다.",
+        boundary:
+          "고리가 닫혀 있다는 것이 끝없이 돈다는 뜻은 아닙니다. 수요가 더 늘지 않는 곳과 더 돌아가도 값이 내려가지 않는 곳에서 멈춥니다.",
+      },
+      {
+        id: "industrial-differentiation",
+        sectionId: "differentiation",
+        intuition:
+          "인쇄소 하나가 종이도 잉크도 활자도 스스로 만들던 때에는 어느 조각도 수량이 나오지 않았습니다. 떼어 내 따로 만들면 여러 인쇄소에 팝니다.",
+        workedExample:
+          "활자를 따로 만드는 곳은 인쇄소 하나가 쓰던 양이 아니라 여러 곳이 쓰는 양을 봅니다. 한 인쇄소 안에서는 끝내 넘지 못했을 최소 수량을 그 조각은 넘습니다.",
+        boundary:
+          "쪼개지는 쪽만 일어난다는 뜻은 아닙니다. 합쳐지는 일도 조건에 따라 일어나며, 이 글이 말하는 것은 어느 쪽이 수확 체증의 전형적인 모양인가입니다.",
+      },
+      {
+        id: "increasing-returns-not-monopoly",
+        sectionId: "not-monopoly",
+        intuition:
+          "가장 많이 만드는 곳이 가장 싸니 결국 하나만 남는다는 추론은 자연스러워 보이지만, 돌아감의 이득이 어디서 실현되는지를 보면 그대로 이어지지 않습니다.",
+        workedExample:
+          "이득의 상당 부분은 쪼개져 나간 조각들의 몫으로 실현되고, 그 조각들은 서로 다른 일을 맡고 있습니다. 하나가 전부를 가져가는 그림이 되지 않습니다.",
+        boundary:
+          "하나로 남는 경우가 없다는 뜻이 아닙니다. 어떤 조각에서 최소 수량이 시장 전체보다 크면 하나가 다 만드는 쪽이 싸지며, 그것은 싸진다는 사실이 아니라 두 수를 견준 결과입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 힘의 출처",
+        relation: "싸지는 힘을 크기에서 방법으로 옮깁니다.",
+        concepts: ["roundabout-production-economies"],
+      },
+      {
+        label: "01 열리는 조건",
+        relation: "그 방법이 쓰이려면 수량이 받쳐 줘야 합니다.",
+        concepts: ["minimum-market-for-a-detour"],
+      },
+      {
+        label: "02 수량의 출처",
+        relation: "그 수량도 밖에서 주어진 것이 아닙니다.",
+        concepts: ["market-extent-is-produced"],
+      },
+      {
+        label: "03 나타나는 모양",
+        relation: "커진 결과는 갈라짐으로 나타나고, 거기서 따라 나오지 않는 것이 있습니다.",
+        concepts: ["industrial-differentiation", "increasing-returns-not-monopoly"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "같은 방법으로 수량만 늘리면 하나당 값이 어떻게 되는지, 그리고 값이 실제로 내려간 자리에서는 무엇이 바뀐 것인지 쓰세요.",
+        answerChecklist: [
+          "방법이 그대로이면 하나당 값은 그대로",
+          "만 번째 못도 첫 번째와 같은 품",
+          "내려간 자리에서는 방법이 바뀐 것",
+          "크기의 효과가 아니라 방법의 효과",
+        ],
+        requiredConcepts: ["roundabout-production-economies"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "돌아가는 길과 곧장 가는 길을 가르는 것이 무엇인지, 돌아가는 길이 치르는 대가가 무엇인지 쓰세요.",
+        answerChecklist: [
+          "먼저 들이는 몫이 있느냐가 가름",
+          "당장 물건이 되지 않는 일을 먼저 함",
+          "그 뒤로 하나당 품이 줄어듦",
+          "개수가 적으면 그 몫이 나뉘지 않아 오히려 비쌈",
+        ],
+        requiredConcepts: ["roundabout-production-economies"],
+        sectionId: "roundabout",
+      },
+      {
+        level: "basic",
+        question:
+          "먼저 60이 들고 하나당 값이 10에서 4로 내려갈 때 그 방법이 열리는 최소 수량을 구하세요.",
+        answerChecklist: [
+          "하나당 줄어드는 값은 6",
+          "60을 6으로 나눔",
+          "최소 수량은 열 개",
+          "열 개를 넘어야 돌아가는 쪽이 쌈",
+        ],
+        requiredConcepts: ["minimum-market-for-a-detour"],
+        sectionId: "minimum-market",
+      },
+      {
+        level: "basic",
+        question:
+          "한 번 더 돌아가는 방법이 열리는 수량이 왜 앞 단계보다 큰지 쓰세요.",
+        answerChecklist: [
+          "먼저 들이는 몫이 더 큼",
+          "최소 수량은 그 몫에 비례",
+          "그래서 단계마다 필요한 시장이 커짐",
+          "설비를 만드는 설비가 그 예",
+        ],
+        requiredConcepts: ["minimum-market-for-a-detour"],
+        sectionId: "minimum-market",
+      },
+      {
+        level: "basic",
+        question:
+          "큰 시장이 무엇인지와, 시장의 크기가 밖에서 주어진 것이 아닌 이유를 쓰세요.",
+        answerChecklist: [
+          "사람 수나 면적이 아님",
+          "사들일 힘",
+          "사들일 힘은 만들어 낼 힘에 달림",
+          "그래서 생산의 양이 시장의 크기를 정함",
+        ],
+        requiredConcepts: ["market-extent-is-produced"],
+        sectionId: "market-is-produced",
+      },
+      {
+        level: "basic",
+        question:
+          "중간 단계를 떼어 내 따로 만드는 곳을 세우면 왜 더 돌아가는 방법이 열리는지 쓰세요.",
+        answerChecklist: [
+          "한 곳이 쓰는 수량은 그곳이 파는 양에 묶임",
+          "떼어 낸 곳은 여러 곳에 팖",
+          "보는 수량이 커짐",
+          "한 곳 안에서는 못 넘던 최소 수량을 넘음",
+        ],
+        requiredConcepts: ["industrial-differentiation"],
+        sectionId: "differentiation",
+      },
+      {
+        level: "advanced",
+        question:
+          "두 방법의 총값을 적어 최소 수량의 식을 유도하고, 그 식이 정의되지 않는 경우가 무엇을 뜻하는지 쓰세요.",
+        answerChecklist: [
+          "곧장은 c곧장·N, 돌아가면 F + c돌아·N",
+          "차이는 F − (c곧장 − c돌아)·N",
+          "차이가 0이 되는 N이 F를 단위당 줄어드는 값으로 나눈 수",
+          "분모가 0이거나 음수이면 어떤 수량에서도 싸지지 않음",
+        ],
+        requiredConcepts: ["minimum-market-for-a-detour"],
+        sectionId: "minimum-market",
+      },
+      {
+        level: "advanced",
+        question:
+          "분업이 시장의 크기에 달려 있으면서 시장의 크기도 분업에 달려 있다는 말이 왜 단순한 동어반복이 아닌지 설명하세요.",
+        answerChecklist: [
+          "한쪽에서 열린 돌아감이 생산을 늘림",
+          "늘어난 생산이 다른 쪽의 수량을 키움",
+          "커진 수량이 다른 쪽의 다음 돌아감을 엶",
+          "변화가 변화의 조건을 만들어 누적됨",
+        ],
+        requiredConcepts: [
+          "market-extent-is-produced",
+          "minimum-market-for-a-detour",
+        ],
+        sectionId: "market-is-produced",
+      },
+      {
+        level: "advanced",
+        question:
+          "많이 만들수록 싸지므로 결국 하나만 남는다는 추론이 어디서 끊기는지, 그리고 하나만 남는 경우를 말하려면 무엇이 더 필요한지 쓰세요.",
+        answerChecklist: [
+          "이득이 쪼개져 나간 산업의 몫으로도 실현됨",
+          "조각들이 서로 다른 일을 맡아 하나가 전부를 가져가지 않음",
+          "하나로 남으려면 최소 수량이 시장 전체보다 커야 함",
+          "싸진다는 사실과 두 수를 견준 결과는 다른 주장",
+        ],
+        requiredConcepts: [
+          "increasing-returns-not-monopoly",
+          "industrial-differentiation",
+          "minimum-market-for-a-detour",
+        ],
+        sectionId: "not-monopoly",
+      },
+      {
+        level: "advanced",
+        question:
+          "큰 회사가 더 싸게 판다는 관찰 하나에 섞여 있는 서로 다른 원인들을 가르고, 왜 관찰된 값만으로는 가를 수 없는지 쓰세요.",
+        answerChecklist: [
+          "수량이 받쳐 줘 더 돌아가는 방법을 씀",
+          "사 오는 중간재의 산업이 커져서 쌈",
+          "안에서 다루는 값이 밖에서 사 오는 값보다 싸짐",
+          "값을 깎게 할 힘은 만드는 값의 문제가 아님",
+        ],
+        requiredConcepts: [
+          "roundabout-production-economies",
+          "industrial-differentiation",
+          "firm-boundary-at-equal-margin",
+        ],
+        sectionId: "not-monopoly",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Allyn A. Young, “Increasing Returns and Economic Progress” (1928)",
+        href: "https://www.jstor.org/stable/2224835",
+        problem:
+          "수확 체증을 개별 회사나 개별 산업의 크기 변화로 설명하면 어디서 그 이득이 생기는지가 잡히지 않고, 싸진다는 사실에서 독점으로 간다는 결론이 쉽게 따라붙었습니다.",
+        contribution:
+          "수확 체증의 본체를 회사의 크기가 아니라 돌아가는 생산 방법에 두고, 그 방법이 시장의 크기에 묶여 있음을 Adam Smith의 명제로 되돌렸습니다. 그 위에 시장의 크기도 생산이 정한다는 되먹임을 세워 분업이 분업에 달려 있다는 정리로 적었고, 수확 체증이 실현되는 전형적인 모양이 한 곳의 비대화가 아니라 산업의 분화라고 보였습니다. 수확 체증에서 독점으로 가는 추론을 흔한 오류로 명시한 것도 같은 글입니다.",
+        assumptions:
+          "대부분의 산업에서 회사 하나가 경제적으로 커질 수 있는 크기에 느슨하나마 한계가 있다고 두고, 서로의 생산물이 서로의 시장이 되는 관계가 전반적으로 성립한다고 봅니다.",
+        evidenceScope:
+          "스캔본을 내려받아 전면 OCR한 뒤 전체를 읽었고, 본문에 인용한 네 문장은 해당 쪽 이미지를 직접 열어 글자 단위로 대조했습니다. 쪽 번호는 각 면의 머리글에 찍힌 것을 읽은 것이어서 문장 단위로 특정했습니다.",
+        notClaim:
+          "최소 수량을 식으로 적은 것은 이 글이지 논문이 아닙니다. 논문에는 망치와 자동차의 예가 말로 적혀 있을 뿐 수식이 없고, 본문의 숫자 예시도 관계를 보이기 위해 만든 것입니다. 또 수확 체증이 독점을 부르지 않는다는 것은 필연적 경향이 아니라는 뜻이지 독점이 생기지 않는다는 뜻이 아닙니다.",
+        sectionId: "minimum-market",
+      },
+    ],
+  },
 };

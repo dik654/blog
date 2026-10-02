@@ -25196,6 +25196,56 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "안으로 들이는 거래가 늘수록 무엇을 어디에 둘지 정하는 일이 어려워지고 틀리는 몫이 커져, 하나를 더 다루는 값이 올라갑니다. 이것이 없으면 조직은 멈출 이유가 없어 세상 전체가 하나가 되므로, 경계가 존재한다는 사실 자체가 이 체감의 증거입니다. 흩어진 거리, 다루는 거래 종류의 다름, 값이 자주 바뀌는 정도가 이 상승을 가파르게 만듭니다.",
     canonicalHref: "/economics/firms/why-firms-exist#what-moves",
   },
+  "roundabout-production-economies": {
+    id: "roundabout-production-economies",
+    kind: "concept",
+    domain: "economics",
+    label: "싸지는 힘은 돌아가는 방법에서 온다",
+    aliases: ["우회 생산", "돌아가는 방법", "간접적 생산 방법"],
+    definition:
+      "당장 물건이 되지 않는 일을 먼저 하고 그 뒤로 하나당 품을 줄이는 생산 방식입니다. 같은 방법으로 수량만 늘리면 하나당 값은 그대로이므로, 값이 내려간 자리에서는 크기가 아니라 방법이 바뀐 것입니다. 먼저 들이는 몫과 그 뒤 낮아진 단위당 값이라는 두 수로 적히며, 분업이 공정을 단순한 단계로 쪼개 기계로 넘기는 일이 이 돌아감의 대표적인 모습입니다.",
+    canonicalHref: "/economics/firms/scale-and-cost-structure#roundabout",
+  },
+  "minimum-market-for-a-detour": {
+    id: "minimum-market-for-a-detour",
+    kind: "theorem",
+    domain: "economics",
+    label: "돌아가는 방법이 열리는 최소 수량",
+    aliases: ["최소 수량", "분업은 시장의 크기가 제한한다", "N*"],
+    definition:
+      "먼저 들이는 몫을 두 방법의 단위당 값 차이로 나눈 수량입니다. 시장이 이보다 작으면 그 방법은 기술로 가능해도 쓰이지 않고, 넘어서야 비로소 쓰입니다. 한 단계 더 돌아갈수록 먼저 들이는 몫이 커지므로 그 단계가 열리는 수량도 함께 커지며, 그래서 같은 기술을 가진 곳에서도 시장 크기에 따라 실제로 쓰이는 방법이 갈립니다.",
+    canonicalHref: "/economics/firms/scale-and-cost-structure#minimum-market",
+  },
+  "market-extent-is-produced": {
+    id: "market-extent-is-produced",
+    kind: "concept",
+    domain: "economics",
+    label: "시장의 크기도 생산이 정한다",
+    aliases: ["시장 크기의 내생성", "사들일 힘", "분업이 분업을 부른다"],
+    definition:
+      "큰 시장은 사람 수나 면적이 아니라 사들일 힘이고, 사들일 힘은 만들어 낼 힘에 달려 있습니다. 분업이 시장의 크기에 달려 있는 동시에 시장의 크기가 분업에 달려 있으므로 고리가 닫히고, 한쪽에서 열린 돌아감이 다른 쪽의 수량을 키워 다음 돌아감을 엽니다. 인구가 늘지 않아도 이 고리만으로 수량이 커질 수 있다는 점에서 바깥에서 주어진 조건과 구분됩니다.",
+    canonicalHref: "/economics/firms/scale-and-cost-structure#market-is-produced",
+  },
+  "industrial-differentiation": {
+    id: "industrial-differentiation",
+    kind: "concept",
+    domain: "economics",
+    label: "수확 체증은 한 곳이 커지기보다 조각이 갈라지며 실현된다",
+    aliases: ["산업의 분화", "중간 단계의 독립", "회사 크기의 한계"],
+    definition:
+      "한 곳이 쓰는 수량은 그곳이 파는 양에 묶여 있지만, 중간 단계를 떼어 내 따로 만드는 곳을 세우면 그곳은 같은 것을 쓰는 여러 곳에 팔아 더 큰 수량을 봅니다. 한 곳 안에서는 끝내 열리지 않았을 돌아감이 쪼개고 나면 열리므로, 수확 체증의 전형적인 모양은 비대해짐이 아니라 갈라짐입니다. 회사 하나가 경제적으로 커질 수 있는 크기에 느슨하나마 한계가 있다는 전제가 이 구조를 떠받칩니다.",
+    canonicalHref: "/economics/firms/scale-and-cost-structure#differentiation",
+  },
+  "increasing-returns-not-monopoly": {
+    id: "increasing-returns-not-monopoly",
+    kind: "concept",
+    domain: "economics",
+    label: "싸진다는 사실에서 하나만 남는다는 결론이 따라 나오지 않는다",
+    aliases: ["수확 체증과 독점의 분리", "흔한 오류"],
+    definition:
+      "많이 만들수록 싸진다는 것과 결국 하나만 남는다는 것은 다른 주장입니다. 돌아감의 이득이 상당 부분 쪼개져 나간 별도 산업의 몫으로 실현되므로 하나가 전부를 가져가는 그림이 되지 않습니다. 파는 쪽이 하나로 남는 경우는 따로 조건이 필요하고, 그 조건은 어떤 조각에서 돌아가는 방법이 열리는 최소 수량이 시장 전체보다 큰 경우입니다.",
+    canonicalHref: "/economics/firms/scale-and-cost-structure#not-monopoly",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -46901,6 +46951,62 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "흩어진 지식을 값이 옮긴다는 설명과, 그 옮기는 일이 비싸서 경계 안에서는 지시가 대신한다는 설명이 같은 조정 문제를 두 방식으로 답합니다.",
+  },
+  {
+    from: "firm-boundary-at-equal-margin",
+    to: "roundabout-production-economies",
+    relation: "prerequisite",
+    reason:
+      "조직이 어디까지 안으로 들이는지를 먼저 세워야, 그 안에서 만드는 방법이 바뀌면 값이 어떻게 달라지는지를 따로 물을 수 있습니다.",
+  },
+  {
+    from: "roundabout-production-economies",
+    to: "minimum-market-for-a-detour",
+    relation: "produces",
+    reason:
+      "먼저 들이는 몫이 수량으로 나뉘므로, 그 몫을 나눠 질 최소 수량이 곧바로 따라 나옵니다.",
+  },
+  {
+    from: "minimum-market-for-a-detour",
+    to: "market-extent-is-produced",
+    relation: "constrains",
+    reason:
+      "수량이 방법을 정한다면 그 수량이 어디서 오는지를 묻게 되고, 밖에서 주어진 것이 아니라는 답이 이 조건의 범위를 바꿉니다.",
+  },
+  {
+    from: "minimum-market-for-a-detour",
+    to: "industrial-differentiation",
+    relation: "produces",
+    reason:
+      "한 곳이 보는 수량으로는 넘지 못하는 최소 수량을 여러 곳에 파는 조각은 넘을 수 있어, 떼어 내는 편이 싸집니다.",
+  },
+  {
+    from: "industrial-differentiation",
+    to: "increasing-returns-not-monopoly",
+    relation: "constrains",
+    reason:
+      "돌아감의 이득이 쪼개져 나간 산업의 몫으로 실현되면 하나가 전부를 가져가는 그림이 되지 않습니다.",
+  },
+  {
+    from: "minimum-market-for-a-detour",
+    to: "increasing-returns-not-monopoly",
+    relation: "constrains",
+    reason:
+      "하나만 남는 경우를 말하려면 최소 수량과 시장 크기를 견주는 별도의 조건이 필요하다는 것을 같은 식이 보입니다.",
+  },
+  {
+    from: "diminishing-returns-to-organising",
+    to: "industrial-differentiation",
+    relation: "produces",
+    reason:
+      "안으로 들일수록 값이 오른다는 것이 회사 하나가 경제적으로 커질 수 있는 크기의 한계가 되어, 남은 이득이 별도 산업의 몫으로 넘어갑니다.",
+  },
+  {
+    from: "absolute-vs-comparative-advantage",
+    to: "industrial-differentiation",
+    relation: "contrasts",
+    reason:
+      "누가 무엇을 맡을지를 기회비용의 차이로 가르는 설명과, 맡을 조각 자체가 수량 때문에 새로 생겨난다는 설명이 같은 분업을 두 방향에서 봅니다.",
   },
 ];
 

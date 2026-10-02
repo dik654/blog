@@ -33,4 +33,41 @@ export const firmsArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/firms/why-firms-exist"),
   },
+  {
+    slug: "scale-and-cost-structure",
+    title: "싸지는 것은 공장이 커져서가 아닙니다",
+    subcategory: "firm-pricing",
+    sections: [
+      {
+        id: "overview",
+        title: "많이 만들면 싸진다는 말에는 설명이 빠져 있습니다",
+      },
+      {
+        id: "roundabout",
+        title: "부품 1. 싸지는 힘은 곧장 가지 않고 돌아가는 데서 옵니다",
+      },
+      {
+        id: "minimum-market",
+        title: "부품 2. 돌아가려면 먼저 그만큼의 시장이 있어야 합니다",
+      },
+      {
+        id: "market-is-produced",
+        title: "부품 3. 그 시장의 크기도 생산이 정합니다",
+      },
+      {
+        id: "differentiation",
+        title: "부품 4. 커지는 것은 공장이 아니라 산업이 쪼개지는 것입니다",
+      },
+      {
+        id: "not-monopoly",
+        title: "부품 5. 싸진다는 것에서 하나만 남는다는 것이 따라 나오지 않습니다",
+      },
+      {
+        id: "handoff",
+        title: "파는 쪽이 하나인 이유는 따로 세워야 합니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/firms/scale-and-cost-structure"),
+  },
 ];
