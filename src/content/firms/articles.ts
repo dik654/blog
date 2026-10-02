@@ -70,4 +70,41 @@ export const firmsArticles: Article[] = [
     component: () =>
       import("@/pages/articles/firms/scale-and-cost-structure"),
   },
+  {
+    slug: "market-power-and-markup",
+    title: "혼자 팔면 값을 고르게 됩니다",
+    subcategory: "firm-pricing",
+    sections: [
+      {
+        id: "overview",
+        title: "1단계에서는 아무도 값을 고르지 않았습니다",
+      },
+      {
+        id: "facing-demand",
+        title: "부품 1. 혼자 팔면 점 하나가 아니라 선 전체를 마주합니다",
+      },
+      {
+        id: "marginal-revenue",
+        title: "부품 2. 하나 더 팔 때 늘어나는 돈은 그 값보다 낮습니다",
+      },
+      {
+        id: "stopping-point",
+        title: "부품 3. 멈추는 자리는 늘어나는 돈과 늘어나는 값이 같아지는 곳입니다",
+      },
+      {
+        id: "markup-size",
+        title: "부품 4. 틈의 크기는 수요가 얼마나 민감한가로 정해집니다",
+      },
+      {
+        id: "what-is-lost",
+        title: "부품 5. 틈은 옮겨 가는 몫만이 아니라 사라지는 몫을 만듭니다",
+      },
+      {
+        id: "handoff",
+        title: "값을 고르는 힘까지 왔고, 남은 것은 사람입니다",
+      },
+    ],
+    component: () =>
+      import("@/pages/articles/firms/market-power-and-markup"),
+  },
 ];

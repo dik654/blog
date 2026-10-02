@@ -7568,4 +7568,20 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "돌아가는 생산 방법이 수확 체증의 본체라는 출발점(530쪽), 분업이 분업에 달려 있다는 정리와 큰 시장의 정의(533쪽), 회사 크기의 한계와 산업의 분화(539쪽), 수확 체증에서 독점으로 가는 추론이 흔한 오류라는 경고(527쪽)의 출처. 스캔본을 전면 OCR해 읽고 인용 문장은 쪽 이미지로 대조했음",
     },
   ],
+  "firms/market-power-and-markup": [
+    {
+      kind: "핵심 논문",
+      label:
+        "A. Cournot, 『Researches into the Mathematical Principles of the Theory of Wealth』 (1838), N. T. Bacon 영역 1897, 제5장 Of Monopoly, 56–61쪽",
+      href: "https://archive.org/details/researchesintom00fishgoog",
+      note: "값을 고르는 쪽의 조건 식 (1)(56쪽), 만드는 값을 넣은 식 (2)(57쪽), 값이 한계비용보다 반드시 높다는 §29(59쪽)의 출처. Internet Archive 스캔을 받아 제5장을 읽고 식과 인용 문장은 쪽 이미지로 대조했음",
+    },
+    {
+      kind: "보충 읽기",
+      label:
+        "A. P. Lerner, “The Concept of Monopoly and the Measurement of Monopoly Power”, The Review of Economic Studies, Vol. 1, No. 3 (1934), pp. 157–175",
+      href: "https://academic.oup.com/restud/article-abstract/1/3/157/1518702",
+      note: "값과 한계비용의 틈을 지표로 쓴 출처로 알려진 글. 접근할 수 있는 전문을 찾지 못해 읽지 못했고, 그래서 이 글의 어떤 주장도 여기에 기대지 않는다. 본문의 틈 식은 Cournot 57쪽 식 (2)에서 직접 옮겨 적은 것",
+    },
+  ],
 };

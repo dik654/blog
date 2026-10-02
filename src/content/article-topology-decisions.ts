@@ -373,6 +373,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "같은 숫자 예시에서 먼저 들이는 몫과 단위당 값을 같은 단위로 세고, 최소 수량과 갈아타는 자리가 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
   },
+  "firms/market-power-and-markup": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "마주하는 것·늘어나는 돈·멈추는 조건·틈의 크기·사라지는 몫까지가 혼자 팔면 값이 어디에 멈추는가라는 하나의 질문을 푸는 한 묶음이다. 틈의 크기를 떼면 Cournot의 조건이 왜 중요한지가 남지 않는다.",
+    sharedGate:
+      "같은 수요와 한계비용에서 멈추는 수량·읽히는 값·틈의 비율·사라지는 삼각형이 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
 };
 
 /**
@@ -455,4 +464,5 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/onprem-k8s-inference-platform": "acd23d8e4dc14592",
   "firms/why-firms-exist": "3b1079e4fa979d9f",
   "firms/scale-and-cost-structure": "e1f1355815729170",
+  "firms/market-power-and-markup": "5b410043b58ff7f5",
 };

@@ -12940,6 +12940,40 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "market-power-and-markup": {
+    title: "혼자 팔면 값을 고르게 됩니다 글이 소유하는 범위",
+    owns: [
+      "값을 받아들이는 쪽과 고르는 쪽이 마주하는 것의 차이",
+      "하나 더 팔 때 깎이는 몫과 그래서 늘어나는 돈이 값보다 낮다는 구조",
+      "멈추는 자리의 조건과 값이 한계비용 위에 남는 이유",
+      "틈의 크기가 수요 민감도로 정해진다는 식과 그 유도",
+      "옮겨 간 몫과 아예 일어나지 않은 몫의 구분",
+    ],
+    reuses: [
+      {
+        label: "파는 쪽이 하나로 남는 조건",
+        href: "/economics/firms/scale-and-cost-structure#not-monopoly",
+      },
+      {
+        label: "사는 쪽과 파는 쪽의 두 몫과 사라지는 삼각형",
+        href: "/economics/prices/surplus-and-efficiency#two-surpluses",
+      },
+      {
+        label: "효율을 재는 일과 무엇을 할지 정하는 일의 구분",
+        href: "/economics/prices/surplus-and-efficiency#not-fairness",
+      },
+      {
+        label: "값 하나가 흩어진 지식을 옮긴다는 설명",
+        href: "/economics/prices/prices-as-information#sufficient",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Cournot 영역본에 식으로 적혀 있는 것과 이 글이 그 식에서 옮겨 적은 것을 가르고, 읽지 못한 문헌은 보충 읽기로만 두어 어떤 주장도 거기에 기대지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
