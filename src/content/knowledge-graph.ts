@@ -25246,6 +25246,56 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "많이 만들수록 싸진다는 것과 결국 하나만 남는다는 것은 다른 주장입니다. 돌아감의 이득이 상당 부분 쪼개져 나간 별도 산업의 몫으로 실현되므로 하나가 전부를 가져가는 그림이 되지 않습니다. 파는 쪽이 하나로 남는 경우는 따로 조건이 필요하고, 그 조건은 어떤 조각에서 돌아가는 방법이 열리는 최소 수량이 시장 전체보다 큰 경우입니다.",
     canonicalHref: "/economics/firms/scale-and-cost-structure#not-monopoly",
   },
+  "price-setter-faces-whole-demand": {
+    id: "price-setter-faces-whole-demand",
+    kind: "concept",
+    domain: "economics",
+    label: "혼자 팔면 값 하나가 아니라 수요 선 전체를 마주한다",
+    aliases: ["값을 고르는 쪽", "값 수용자와 값 설정자"],
+    definition:
+      "여럿이 팔 때 파는 쪽 하나가 보는 것은 값 하나이고 자기가 얼마를 내놓든 그 값은 움직이지 않습니다. 혼자 팔면 값마다 팔리는 양이 다른 선 전체를 마주하므로 값을 고를 수 있게 되는데, 고를 수 있는 것은 값 하나뿐이고 수량은 따라옵니다. 값과 수량을 따로 고를 수 없다는 제약이 이후의 모든 계산을 만듭니다.",
+    canonicalHref: "/economics/firms/market-power-and-markup#facing-demand",
+  },
+  "marginal-revenue-below-price": {
+    id: "marginal-revenue-below-price",
+    kind: "concept",
+    domain: "economics",
+    label: "하나 더 팔 때 늘어나는 돈은 그 값보다 낮다",
+    aliases: ["한계수입", "깎이는 몫"],
+    definition:
+      "하나 더 팔려면 값을 내려야 하고 그 내린 값은 이미 팔던 것에도 적용되므로, 새로 받는 값에서 이미 팔던 수량만큼 깎이는 몫을 빼야 실제로 늘어난 돈이 됩니다. 여럿이 팔 때는 값이 움직이지 않아 이 둘째 몫이 없고 늘어나는 돈이 값과 같습니다. 이미 팔던 수량이 많을수록 깎이는 몫이 커지므로 늘어나는 돈은 값보다 빠르게 내려갑니다.",
+    canonicalHref: "/economics/firms/market-power-and-markup#marginal-revenue",
+  },
+  "monopoly-stopping-condition": {
+    id: "monopoly-stopping-condition",
+    kind: "theorem",
+    domain: "economics",
+    label: "멈추는 자리는 늘어나는 돈이 한계비용과 같아지는 수량이다",
+    aliases: ["Cournot의 조건", "독점의 멈추는 자리"],
+    definition:
+      "혼자 파는 쪽은 하나 더 팔아 늘어나는 돈이 하나 더 만드는 데 드는 값보다 크면 더 팔고 작아지면 멈춥니다. 값은 그 수량에서 수요 선을 올려다봐 읽으므로, 멈추는 자리를 정하는 것과 받는 값을 읽는 것이 서로 다른 선에서 일어납니다. 늘어나는 돈이 이미 값보다 낮으므로 멈춘 자리의 값은 한계비용보다 반드시 높습니다.",
+    canonicalHref: "/economics/firms/market-power-and-markup#stopping-point",
+  },
+  "markup-set-by-elasticity": {
+    id: "markup-set-by-elasticity",
+    kind: "theorem",
+    domain: "economics",
+    label: "틈의 크기는 수요의 민감도가 정한다",
+    aliases: ["마크업", "값과 한계비용의 틈"],
+    definition:
+      "멈추는 조건을 값으로 나누어 정리하면 값에서 틈이 차지하는 몫이 수요 민감도의 역수 하나로 적힙니다. 파는 쪽이 얼마나 크거나 얼마나 싸게 만드는가가 아니라 사는 쪽이 값에 얼마나 민감한가가 틈을 정하므로, 대신할 것이 많을수록 틈이 좁아집니다. 민감도가 무한대로 가면 틈이 0이 되어 아무도 값을 고르지 않을 때의 값으로 돌아옵니다.",
+    canonicalHref: "/economics/firms/market-power-and-markup#markup-size",
+  },
+  "monopoly-output-restriction": {
+    id: "monopoly-output-restriction",
+    kind: "concept",
+    domain: "economics",
+    label: "사라지는 몫을 만드는 것은 높은 값이 아니라 줄어든 수량이다",
+    aliases: ["옮겨 간 몫과 사라진 몫", "수량 제한"],
+    definition:
+      "값이 올라 사는 쪽에서 파는 쪽으로 넘어간 몫은 누가 갖느냐의 문제일 뿐 세상에서 없어진 것이 아닙니다. 같은 때 수량이 줄어 만들었더라면 드는 값보다 더 쳐주었을 거래가 아예 일어나지 않는데, 이 몫은 누구에게도 가지 않습니다. 값에 상한을 씌웠을 때 생기던 것과 같은 삼각형이 이번에는 아무도 상한을 씌우지 않았는데 생깁니다.",
+    canonicalHref: "/economics/firms/market-power-and-markup#what-is-lost",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47007,6 +47057,69 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "누가 무엇을 맡을지를 기회비용의 차이로 가르는 설명과, 맡을 조각 자체가 수량 때문에 새로 생겨난다는 설명이 같은 분업을 두 방향에서 봅니다.",
+  },
+  {
+    from: "minimum-market-for-a-detour",
+    to: "price-setter-faces-whole-demand",
+    relation: "prerequisite",
+    reason:
+      "그 방법이 열리는 최소 수량이 시장보다 클 때 파는 쪽이 하나로 남는다는 조건이 먼저 서야, 값을 고르는 쪽이 생기는 경우를 말할 수 있습니다.",
+  },
+  {
+    from: "price-setter-faces-whole-demand",
+    to: "marginal-revenue-below-price",
+    relation: "produces",
+    reason:
+      "값을 고르면 수량이 따라온다는 제약에서, 하나 더 팔려면 이미 팔던 것의 값도 내려야 한다는 결과가 바로 나옵니다.",
+  },
+  {
+    from: "marginal-revenue-below-price",
+    to: "monopoly-stopping-condition",
+    relation: "produces",
+    reason:
+      "멈추는 자리를 정할 때 보는 것이 값이 아니라 깎이는 몫을 뺀 나머지라는 점이 조건의 모양을 정합니다.",
+  },
+  {
+    from: "marginal-decision-rule",
+    to: "monopoly-stopping-condition",
+    relation: "prerequisite",
+    reason:
+      "하나 더 할 때 얻는 것과 드는 것을 견주어 멈출 자리를 찾는 셈을 그대로 쓰되, 얻는 쪽의 내용만 바꾼 것입니다.",
+  },
+  {
+    from: "monopoly-stopping-condition",
+    to: "markup-set-by-elasticity",
+    relation: "produces",
+    reason:
+      "같은 조건을 값으로 나누어 정리하면 틈의 비율이 수요 민감도 하나로 적힙니다.",
+  },
+  {
+    from: "monopoly-stopping-condition",
+    to: "monopoly-output-restriction",
+    relation: "produces",
+    reason:
+      "멈추는 수량이 아무도 값을 고르지 않을 때보다 작아지므로, 일어나지 않는 거래가 생깁니다.",
+  },
+  {
+    from: "deadweight-loss",
+    to: "monopoly-output-restriction",
+    relation: "extends",
+    reason:
+      "값에 상한을 씌웠을 때 생기던 삼각형이 아무도 상한을 씌우지 않았는데 같은 모양으로 생깁니다.",
+  },
+  {
+    from: "price-as-sufficient-signal",
+    to: "markup-set-by-elasticity",
+    relation: "constrains",
+    reason:
+      "값 하나에 흩어진 지식만이 아니라 사는 쪽이 얼마나 빠져나갈 수 있는지도 함께 적히므로, 값을 읽는 것만으로 둘을 가를 수 없습니다.",
+  },
+  {
+    from: "markup-set-by-elasticity",
+    to: "efficiency-is-not-fairness",
+    relation: "contrasts",
+    reason:
+      "틈의 크기를 재는 일과 그 틈을 어떻게 할지 정하는 일이 다른 단계라는 구분이 여기서도 그대로 성립합니다.",
   },
 ];
 

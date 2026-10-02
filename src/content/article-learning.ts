@@ -86143,4 +86143,294 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "firms/market-power-and-markup": {
+    entryNote:
+      "앞 두 편은 조직을 값을 받아들이는 쪽으로 두었습니다. 여기서 그 전제를 떼되, 하나만 남는 이유는 앞 글의 조건 하나만 빌려 옵니다.",
+    coreIdea:
+      "혼자 파는 쪽은 값 하나가 아니라 수요 선 전체를 마주하므로 값을 고르게 되는데, 하나 더 팔려면 이미 팔던 것의 값도 내려야 해서 늘어나는 돈이 값보다 낮습니다. 그래서 멈추는 자리는 늘어나는 돈이 한계비용과 같아지는 수량이고 값은 그 위에서 읽히며, 벌어진 틈의 크기는 파는 쪽의 크기나 비용이 아니라 수요의 민감도가 정합니다. 그 틈과 함께 옮겨 간 몫이 아니라 아예 일어나지 않은 거래가 생깁니다.",
+    assumedKnowledge: [
+      {
+        id: "minimum-market-for-a-detour",
+        role: "파는 쪽이 하나로 남는 조건을 앞 글에서 그대로 가져옵니다.",
+      },
+      {
+        id: "marginal-decision-rule",
+        role: "하나 더 할 때의 비교로 멈출 자리를 찾는 셈을 다시 씁니다.",
+      },
+      {
+        id: "consumer-and-producer-surplus",
+        role: "옮겨 간 몫과 사라진 몫을 가르는 데 필요한 두 몫의 정의를 가져옵니다.",
+      },
+      {
+        id: "deadweight-loss",
+        role: "값에 상한을 씌웠을 때 보았던 삼각형을 같은 모양으로 다시 봅니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "price-setter-faces-whole-demand",
+        role: "값을 받아들이는 것과 고르는 것의 차이를 정의합니다.",
+      },
+      {
+        id: "marginal-revenue-below-price",
+        role: "하나 더 팔 때 실제로 늘어나는 돈을 셉니다.",
+      },
+      {
+        id: "monopoly-stopping-condition",
+        role: "멈추는 자리의 조건을 적고 값이 한계비용 위에 남는 이유를 세웁니다.",
+      },
+      {
+        id: "markup-set-by-elasticity",
+        role: "틈의 크기를 정하는 것이 무엇인지 식으로 적습니다.",
+      },
+      {
+        id: "monopoly-output-restriction",
+        role: "옮겨 간 몫과 사라진 몫을 가릅니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "price-setter-faces-whole-demand",
+        sectionId: "facing-demand",
+        intuition:
+          "여럿이 팔면 값 하나가 보이고 자기가 얼마를 내놓든 꿈쩍하지 않습니다. 혼자 팔면 값마다 팔리는 양이 다른 선 전체가 보입니다.",
+        workedExample:
+          "값 10을 부르면 3개가 팔리고 9로 내리면 4개가 팔립니다. 10에 4개를 파는 선택지는 없습니다.",
+        boundary:
+          "값을 고를 수 있다는 것이 아무 값이나 받을 수 있다는 뜻은 아닙니다. 부르는 것은 자유여도 팔리는 양은 자유가 아닙니다.",
+      },
+      {
+        id: "marginal-revenue-below-price",
+        sectionId: "marginal-revenue",
+        intuition:
+          "하나 더 팔려고 값을 내리면 새 손님에게만 내려 주는 것이 아니라 원래 사던 사람에게도 내려 주게 됩니다.",
+        workedExample:
+          "10에서 9로 내려 하나를 더 팔면 새로 9를 받지만 원래 10에 사던 3명에게서 1씩 3이 깎입니다. 늘어난 돈은 9가 아니라 6입니다.",
+        boundary:
+          "손님마다 다른 값을 받을 수 있으면 깎이는 몫이 생기지 않습니다. 이 글의 셈은 모두에게 같은 값을 받는 경우의 것입니다.",
+      },
+      {
+        id: "monopoly-stopping-condition",
+        sectionId: "stopping-point",
+        intuition:
+          "규칙은 앞의 글들과 같습니다. 하나 더 할 때 얻는 쪽이 크면 더 하고 작아지면 멈춥니다. 얻는 쪽의 내용만 바뀌었습니다.",
+        workedExample:
+          "수요가 값 = 13 − 수량이고 한계비용이 7이면, 늘어나는 돈은 13 − 2×수량이므로 수량 3에서 7과 같아집니다. 값은 거기서 수요 선을 올려다봐 10으로 읽습니다.",
+        proofIdea:
+          "받는 돈은 값에 수량을 곱한 것이고, 수량을 하나 늘릴 때 이 곱이 늘어나는 폭은 그때의 값에서 이미 팔던 수량만큼 깎이는 몫을 뺀 것입니다. 이 폭이 하나 더 만드는 값보다 크면 늘리고 작으면 줄이므로, 더 이상 크지 않은 첫 자리에서 멈춥니다. 그 자리에서는 늘어나는 돈이 한계비용과 같은데 늘어나는 돈이 값보다 낮으므로 값은 한계비용보다 위에 있습니다.",
+        counterexample:
+          "여럿이 파는 경우에는 깎이는 몫이 0이라 늘어나는 돈이 값과 같아지고, 멈추는 조건이 값 = 한계비용이 됩니다. 같은 규칙에서 1단계의 결과가 특수한 경우로 나옵니다.",
+        boundary:
+          "멈추는 자리를 정하는 선과 값을 읽는 선이 다릅니다. 이 둘을 섞어 값 = 한계비용으로 읽으면 틈 자체가 사라집니다.",
+      },
+      {
+        id: "markup-set-by-elasticity",
+        sectionId: "markup-size",
+        intuition:
+          "사는 쪽이 쉽게 빠져나갈 수 있으면 값을 올리기 어렵고, 빠져나갈 데가 없으면 많이 올릴 수 있습니다.",
+        workedExample:
+          "1단계의 균형점을 똑같이 지나는 두 수요에서 혼자 팔게 하면, 민감한 쪽은 값 10에서 멈춰 틈이 30%이고 둔한 쪽은 13에서 멈춰 46%입니다. 크기도 비용도 같은데 값이 다릅니다.",
+        proofIdea:
+          "멈추는 조건을 수량으로 나누면 값에서 한계비용을 뺀 것에 수량 대비 값 변화의 비를 곱한 꼴이 됩니다. 이 비가 민감도의 역수이므로, 양변을 값으로 나누면 왼쪽이 값에서 틈이 차지하는 몫이 되고 오른쪽이 민감도의 역수가 됩니다.",
+        counterexample:
+          "민감도가 무한대로 가면 역수가 0이 되어 틈이 사라집니다. 조금만 올려도 다 떠나는 경우가 여럿이 파는 경우와 같아진다는 뜻입니다.",
+        boundary:
+          "민감도는 멈춘 그 자리에서 잰 값이지 수요 선 전체에 하나로 붙는 수가 아닙니다. 또 한계비용을 알고 있다고 둔 셈인데, 여러 물건을 함께 만드는 곳에서는 그 값을 가르는 것 자체가 다투어집니다.",
+      },
+      {
+        id: "monopoly-output-restriction",
+        sectionId: "what-is-lost",
+        intuition:
+          "값이 올라 사는 쪽에서 파는 쪽으로 넘어간 몫은 자리를 옮겼을 뿐입니다. 그런데 거래 자체가 일어나지 않은 몫은 어디에도 가지 않았습니다.",
+        workedExample:
+          "수량이 6에서 3으로 줄면, 7에 만들 수 있는데 8을 쳐주겠다던 사람과의 거래가 사라집니다. 그 삼각형이 4.5입니다.",
+        boundary:
+          "사라지는 몫이 생긴다는 것과 쪼개는 편이 낫다는 것은 다른 주장입니다. 하나만 남은 이유가 최소 수량이었다면 쪼갤 때 만드는 값 자체가 올라갑니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 마주하는 것",
+        relation: "값을 받아들이는 쪽에서 고르는 쪽으로 바뀝니다.",
+        concepts: ["price-setter-faces-whole-demand"],
+      },
+      {
+        label: "01 실제로 늘어나는 돈",
+        relation: "깎이는 몫 때문에 값보다 낮습니다.",
+        concepts: ["marginal-revenue-below-price"],
+      },
+      {
+        label: "02 멈추는 자리와 틈",
+        relation: "그 낮은 선으로 멈추고 값은 그 위에서 읽힙니다.",
+        concepts: ["monopoly-stopping-condition", "markup-set-by-elasticity"],
+      },
+      {
+        label: "03 남는 것과 사라지는 것",
+        relation: "옮겨 간 몫과 아예 일어나지 않은 몫을 가릅니다.",
+        concepts: ["monopoly-output-restriction"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "여럿이 팔 때와 혼자 팔 때 파는 쪽이 마주하는 것이 어떻게 다른지, 혼자 팔 때 고를 수 있는 것은 무엇인지 쓰세요.",
+        answerChecklist: [
+          "여럿이 팔면 값 하나를 마주함",
+          "자기가 얼마를 내놓든 값이 움직이지 않음",
+          "혼자 팔면 수요 선 전체를 마주함",
+          "고를 수 있는 것은 값 하나뿐이고 수량은 따라옴",
+        ],
+        requiredConcepts: ["price-setter-faces-whole-demand"],
+        sectionId: "facing-demand",
+      },
+      {
+        level: "basic",
+        question:
+          "값을 10에서 9로 내려 하나를 더 팔 때 실제로 늘어나는 돈을 계산하고, 그 셈에 들어가는 두 몫을 쓰세요.",
+        answerChecklist: [
+          "새 손님에게서 9를 더 받음",
+          "원래 10에 사던 3명에게서 1씩 3이 깎임",
+          "늘어난 돈은 9에서 3을 뺀 6",
+          "두 몫은 더 받는 몫과 깎이는 몫",
+        ],
+        requiredConcepts: ["marginal-revenue-below-price"],
+        sectionId: "marginal-revenue",
+      },
+      {
+        level: "basic",
+        question:
+          "하나 더 팔 때 늘어나는 돈이 그 값보다 낮은 이유와, 여럿이 팔 때는 왜 그렇지 않은지 쓰세요.",
+        answerChecklist: [
+          "내린 값이 이미 팔던 것에도 적용됨",
+          "그 깎이는 몫이 빠짐",
+          "여럿이 팔면 값이 움직이지 않음",
+          "깎일 것이 없어 늘어나는 돈이 값과 같음",
+        ],
+        requiredConcepts: [
+          "marginal-revenue-below-price",
+          "price-setter-faces-whole-demand",
+        ],
+        sectionId: "marginal-revenue",
+      },
+      {
+        level: "basic",
+        question:
+          "수요가 값 = 13 − 수량이고 한계비용이 7일 때 멈추는 수량과 값을 구하세요.",
+        answerChecklist: [
+          "늘어나는 돈은 13 − 2×수량",
+          "7과 같아지는 수량은 3",
+          "값은 수요 선에서 읽어 10",
+          "멈추는 선과 값을 읽는 선이 다름",
+        ],
+        requiredConcepts: ["monopoly-stopping-condition"],
+        sectionId: "stopping-point",
+      },
+      {
+        level: "basic",
+        question:
+          "값과 한계비용의 틈이 무엇으로 정해지는지, 그리고 흔히 떠올리는 답과 어떻게 다른지 쓰세요.",
+        answerChecklist: [
+          "수요의 민감도가 정함",
+          "민감도의 역수가 틈의 비율",
+          "크기나 비용이 정하는 것이 아님",
+          "대신할 것이 많을수록 틈이 좁아짐",
+        ],
+        requiredConcepts: ["markup-set-by-elasticity"],
+        sectionId: "markup-size",
+      },
+      {
+        level: "basic",
+        question:
+          "값이 오를 때 생기는 두 가지를 가르고, 둘 중 어느 쪽이 누구에게도 가지 않는 몫인지 쓰세요.",
+        answerChecklist: [
+          "사는 쪽에서 파는 쪽으로 옮겨 간 몫",
+          "수량이 줄어 일어나지 않은 거래",
+          "옮겨 간 몫은 없어진 것이 아님",
+          "일어나지 않은 거래의 몫이 누구에게도 가지 않음",
+        ],
+        requiredConcepts: ["monopoly-output-restriction"],
+        sectionId: "what-is-lost",
+      },
+      {
+        level: "advanced",
+        question:
+          "받는 돈이 값과 수량의 곱이라는 데서 출발해 멈추는 조건을 유도하고, 멈춘 자리의 값이 한계비용보다 높은 이유를 쓰세요.",
+        answerChecklist: [
+          "수량을 하나 늘릴 때 곱이 늘어나는 폭은 값에서 깎이는 몫을 뺀 것",
+          "그 폭이 하나 더 만드는 값보다 크면 늘림",
+          "더 이상 크지 않은 첫 자리에서 멈춤",
+          "늘어나는 돈이 값보다 낮으므로 값은 한계비용 위",
+        ],
+        requiredConcepts: [
+          "monopoly-stopping-condition",
+          "marginal-revenue-below-price",
+        ],
+        sectionId: "stopping-point",
+      },
+      {
+        level: "advanced",
+        question:
+          "멈추는 조건을 값으로 나누어 틈의 비율이 민감도의 역수가 됨을 보이고, 민감도가 무한대일 때 무엇이 되는지 쓰세요.",
+        answerChecklist: [
+          "조건을 수량으로 나누면 값에서 한계비용을 뺀 것에 비가 곱해진 꼴",
+          "그 비가 민감도의 역수",
+          "양변을 값으로 나누면 왼쪽이 틈의 비율",
+          "민감도가 무한대면 틈이 0이 되어 1단계의 값으로 돌아옴",
+        ],
+        requiredConcepts: [
+          "markup-set-by-elasticity",
+          "monopoly-stopping-condition",
+        ],
+        sectionId: "markup-size",
+      },
+      {
+        level: "advanced",
+        question:
+          "1단계의 균형점을 똑같이 지나는 두 수요에서 혼자 팔게 했을 때 값이 다르게 나오는 이유를 설명하고, 이 비교가 무엇을 가려내기 위한 것인지 쓰세요.",
+        answerChecklist: [
+          "아무도 고르지 않을 때의 자리는 둘 다 수량 6·값 7로 같음",
+          "민감한 쪽은 10, 둔한 쪽은 13에서 멈춤",
+          "틈은 30%와 46%",
+          "크기와 비용을 같게 두어 민감도만 남긴 비교",
+        ],
+        requiredConcepts: ["markup-set-by-elasticity"],
+        sectionId: "markup-size",
+      },
+      {
+        level: "advanced",
+        question:
+          "사라지는 몫이 생긴다는 사실에서 쪼개는 편이 낫다는 결론이 곧바로 나오지 않는 이유를, 앞 글의 조건과 함께 쓰세요.",
+        answerChecklist: [
+          "하나만 남은 이유가 최소 수량이 시장보다 컸기 때문일 수 있음",
+          "쪼개면 둘 다 그 방법을 못 씀",
+          "만드는 값 자체가 올라가 다른 몫이 커짐",
+          "어느 쪽이 큰지는 숫자를 재야 앎",
+        ],
+        requiredConcepts: [
+          "monopoly-output-restriction",
+          "minimum-market-for-a-detour",
+        ],
+        sectionId: "what-is-lost",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "A. Cournot, 『Researches into the Mathematical Principles of the Theory of Wealth』 (1838), N. T. Bacon 영역 1897, 제5장",
+        href: "https://archive.org/details/researchesintom00fishgoog",
+        problem:
+          "파는 쪽이 하나뿐일 때 값이 어디에 멈추는지가 말로만 다루어졌고, 값을 올리면 덜 팔린다는 관찰에서 실제로 어느 값을 고르는지로 넘어가는 단계가 비어 있었습니다.",
+        contribution:
+          "값에 따라 팔리는 양을 함수로 두고, 파는 쪽이 그 함수와 값의 곱을 가장 크게 만드는 값을 고른다는 조건을 식 (1)로 적었습니다. 이어서 만드는 데 드는 값을 넣은 조건을 식 (2)로 적고, 거기서 이렇게 정해진 값이 하나 더 만드는 데 드는 값보다 반드시 높다는 것을 끌어냈습니다. 그 이유를 늘어나는 비용이 늘어나는 수입을 넘어서는 순간 멈춘다는 말로 적어, 멈추는 기준이 값이 아니라 늘어나는 돈이라는 점을 분명히 했습니다.",
+        assumptions:
+          "모두에게 같은 값을 받는다고 두고, 값에 따라 팔리는 양이 하나의 함수로 적힌다고 봅니다. 만드는 데 드는 값도 수량만의 함수로 둡니다.",
+        evidenceScope:
+          "Internet Archive의 1897년 Bacon 영역본 스캔을 받아 제5장을 읽었고, 식 (1)·식 (2)와 인용 문장은 해당 쪽 이미지를 직접 열어 대조했습니다. 1838년 프랑스어 원본이 아니라 영역본을 읽은 것이고, 쪽수는 영역본 기준입니다.",
+        notClaim:
+          "틈의 크기가 수요 민감도의 역수라는 형태는 이 논저에 그 꼴로 적혀 있지 않습니다. 식 (2)에서 이 글이 직접 옮겨 적은 것이고, 그 비율에 이름을 붙여 지표로 쓴 것은 20세기의 일입니다. 또 Cournot은 사라지는 몫을 이 장에서 세지 않으므로, 이 글의 부품 5는 1단계의 잉여 셈을 가져다 쓴 것이지 그의 결론이 아닙니다.",
+        sectionId: "stopping-point",
+      },
+    ],
+  },
 };
