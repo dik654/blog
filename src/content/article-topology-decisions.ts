@@ -355,6 +355,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "실패한 것은 이 세 방법이며 수치는 한 장비·네 얼굴 표본의 실측임을 밝힌다.",
   },
+  "firms/why-firms-exist": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "시장을 쓰는 값에서 출발해 약속의 대체·경계 조건·경계를 옮기는 조건까지가 조직은 왜 생기고 왜 멈추는가라는 하나의 질문을 푸는 한 묶음이다. 쪼개면 경계 조건이 자기 근거를 잃는다.",
+    sharedGate:
+      "같은 여섯 단계 예시에서 안쪽 값과 바깥쪽 값을 같은 단위로 세고, 두 값이 만나는 단계 수와 합계가 본문·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
 };
 
 /**
@@ -435,4 +444,5 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "saas/anycast-delivery-continuity": "aff159589f1c6bbb",
   "saas/private-access-inbound-closure": "4ce0f54f2ee45937",
   "ai/onprem-k8s-inference-platform": "acd23d8e4dc14592",
+  "firms/why-firms-exist": "04c04e62fba5bcdd",
 };

@@ -85593,4 +85593,269 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "firms/why-firms-exist": {
+    entryNote:
+      "1단계 아홉 편에서는 값이 조정을 맡았습니다. 여기서는 그 값을 알아내는 일이 공짜라는 전제를 빼고, 조직이 왜 생기고 왜 멈추는지를 봅니다.",
+    coreIdea:
+      "값으로 조정하려면 상대를 찾고 관련된 값을 알아내고 약속을 묶어야 하므로 조정 방식 자체에 값이 듭니다. 조직은 짝마다 맺던 약속을 가운데 하나와 맺는 것으로 바꿔 그 몫을 줄이지만, 안으로 들일수록 무엇을 어디에 둘지 틀리는 몫이 커지므로 경계는 안에서 하나 더 다루는 값이 밖에서 사 오는 값과 같아지는 자리에서 멈춥니다.",
+    assumedKnowledge: [
+      {
+        id: "transaction-cost",
+        role: "상대를 찾고 재고 강제하는 데 드는 값이라는 정의를 그대로 가져와, 이번에는 그 몫이 조정 방식을 바꾸는 쪽에 쓰이는 것을 봅니다.",
+      },
+      {
+        id: "price-as-sufficient-signal",
+        role: "값 하나면 조정에 충분하다는 설명을 출발점으로 두고 그 전제의 값을 셉니다.",
+      },
+      {
+        id: "marginal-decision-rule",
+        role: "하나 더 할 때의 값으로 멈출 자리를 찾는 셈을 경계 조건에 그대로 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "cost-of-using-the-market",
+        role: "값으로 조정하는 일 자체에 드는 값을 정의하고 다른 비용과 가릅니다.",
+      },
+      {
+        id: "contracts-collapsed-into-one",
+        role: "조직이 약속의 수를 줄이는 방식과 그 대신 비워 두는 자리를 정의합니다.",
+      },
+      {
+        id: "diminishing-returns-to-organising",
+        role: "안쪽 값이 거래 수와 함께 오르는 이유를 정의합니다.",
+      },
+      {
+        id: "firm-boundary-at-equal-margin",
+        role: "조직이 멈추는 자리를 두 값이 만나는 조건으로 적습니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "cost-of-using-the-market",
+        sectionId: "cost-of-market",
+        intuition:
+          "값을 보고 정하면 된다고 할 때, 그 값이 얼마인지 알아내는 데 든 수고는 아무도 세지 않았습니다. 상대를 찾고 조건을 따지고 약속을 지키게 할 방법을 마련하는 일이 전부 여기 들어갑니다.",
+        workedExample:
+          "생산이 여섯 단계를 거치고 단계마다 밖에서 사 오는 데 4가 든다고 하면, 조정 방식에만 24가 듭니다. 물건을 만드는 값과 별개로 나가는 몫입니다.",
+        boundary:
+          "생산 자체에 드는 값과 섞으면 안 됩니다. 여기서 세는 것은 같은 물건을 어떤 방식으로 조정하느냐에만 걸리는 값이고, 이 몫이 0이면 조직을 세울 이유도 사라집니다.",
+      },
+      {
+        id: "contracts-collapsed-into-one",
+        sectionId: "one-contract",
+        intuition:
+          "여섯이 서로 맞추려면 짝마다 약속이 필요해 열다섯이 되는데, 가운데를 하나 두면 여섯이면 됩니다. 줄어든 아홉이 조직을 세울 이유입니다.",
+        workedExample:
+          "고용 계약에는 내일 무엇을 할지가 적혀 있지 않습니다. 적힌 것은 지시를 받는 범위이고, 할 일은 그날 지시로 정해집니다.",
+        boundary:
+          "약속의 수가 줄어든 만큼 적히지 않은 자리가 생깁니다. 그 자리를 채우는 판단이 틀릴 수 있다는 것이 안쪽 값이 오르는 이유이므로, 이 절약은 공짜가 아닙니다.",
+      },
+      {
+        id: "diminishing-returns-to-organising",
+        sectionId: "what-moves",
+        intuition:
+          "한 사람이 챙길 수 있는 일에는 한계가 있습니다. 맡은 것이 늘수록 어디에 무엇을 둘지 틀리기 쉬워지고, 그 틀림이 값입니다.",
+        workedExample:
+          "흩어진 곳의 서로 다른 일을 함께 맡으면 같은 수의 거래라도 조직하는 값이 더 가파르게 오릅니다. 떨어진 것을 가까이 모으는 발명은 그 값을 낮춥니다.",
+        boundary:
+          "체감이 없다면 경계도 없습니다. 세상이 하나의 조직이 아니라는 사실이 이 체감이 실재한다는 증거이지, 체감의 크기를 재어 본 것은 아닙니다.",
+      },
+      {
+        id: "firm-boundary-at-equal-margin",
+        sectionId: "boundary",
+        intuition:
+          "안으로 들일수록 값이 오르고 밖의 값은 그대로이면, 두 선이 만나는 곳이 있습니다. 조직은 거기서 멈춥니다.",
+        workedExample:
+          "안쪽 값이 1·2·3·4·5·6이고 밖이 4이면 네 단계까지 안으로 들입니다. 합계가 24에서 18로 줄고, 다섯째를 더 들이면 5를 쓰는데 밖에서는 4면 되므로 손해입니다.",
+        proofIdea:
+          "n단계를 안으로 들였을 때의 총값을 안쪽 값의 합과 남은 단계의 바깥쪽 값의 합으로 적으면, 한 단계를 더 들일 때 총값의 변화는 그 단계의 안쪽 값에서 바깥쪽 값을 뺀 것입니다. 이 값이 음수인 동안은 들이는 편이 싸고 양수가 되면 들이지 않는 편이 싸므로, 더 이상 음수가 아닌 첫 단계 앞에서 멈추면 총값이 가장 작은 자리에 닿습니다. 멈춘 자리에서는 안쪽 값과 바깥쪽 값의 차이가 0에 가장 가까우므로 두 값이 같아지는 자리라는 말과 같은 것이 됩니다.",
+        counterexample:
+          "안쪽 값이 거래 수와 무관하게 늘 밖보다 싸면 차이가 계속 음수여서 멈추는 단계가 생기지 않고, 조직은 모든 거래를 삼킵니다. 경계가 실제로 존재한다는 것은 이 경우가 아니라는 뜻입니다.",
+        boundary:
+          "비교 대상이 시장만은 아닙니다. 같은 일을 더 싸게 다루는 다른 조직이 있으면 그쪽이 기준이 되고, 식의 오른쪽 항이 바뀝니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 전제를 빼기",
+        relation: "값으로 조정하는 일 자체의 값을 셉니다.",
+        concepts: ["cost-of-using-the-market"],
+      },
+      {
+        label: "01 조직이 줄이는 것",
+        relation: "약속의 수가 줄고 내용이 비워집니다.",
+        concepts: ["contracts-collapsed-into-one"],
+      },
+      {
+        label: "02 멈추는 자리",
+        relation: "안쪽 값이 오르므로 두 값이 만나는 자리가 생깁니다.",
+        concepts: [
+          "diminishing-returns-to-organising",
+          "firm-boundary-at-equal-margin",
+        ],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "1단계 아홉 편에서 조정을 맡았던 것은 무엇이고, 이 글이 그 설명에서 빼는 전제는 무엇인지 쓰세요.",
+        answerChecklist: [
+          "조정을 맡은 것은 값",
+          "빠지는 전제는 그 값을 알아내는 일이 공짜라는 것",
+          "약속을 묶는 일도 공짜가 아님",
+          "그래서 조정 방식 자체를 고르는 문제가 생김",
+        ],
+        requiredConcepts: ["cost-of-using-the-market"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "시장에서 거래 하나를 할 때 드는 값으로 이 글이 든 것 네 가지를 쓰세요.",
+        answerChecklist: [
+          "상대를 찾는 일",
+          "관련된 값이 얼마인지 알아내는 일",
+          "물건이 약속대로인지 따지는 일",
+          "약속을 지키게 할 방법을 마련하는 일",
+        ],
+        requiredConcepts: ["cost-of-using-the-market"],
+        sectionId: "cost-of-market",
+      },
+      {
+        level: "basic",
+        question:
+          "여섯 사람이 짝마다 약속을 맺으면 몇 개이고 가운데를 하나 두면 몇 개인지, 그 차이가 무엇을 뜻하는지 쓰세요.",
+        answerChecklist: [
+          "짝마다 맺으면 열다섯 개",
+          "가운데를 두면 여섯 개",
+          "줄어든 아홉이 조직을 세울 이유",
+          "사람이 늘면 짝이 더 빠르게 늘어 차이가 커짐",
+        ],
+        requiredConcepts: ["contracts-collapsed-into-one"],
+        sectionId: "one-contract",
+      },
+      {
+        level: "basic",
+        question:
+          "조직 안에서 맺는 약속에 무엇을 할지가 적히지 않는 이유와, 적히지 않은 자리를 무엇이 채우는지 쓰세요.",
+        answerChecklist: [
+          "기간이 길수록 할 일을 미리 적어 둘 수 없음",
+          "적히는 것은 지시를 받는 범위",
+          "비워 둔 자리는 나중에 지시가 채움",
+          "지시가 값을 대신하는 범위가 조직",
+        ],
+        requiredConcepts: ["contracts-collapsed-into-one"],
+        sectionId: "one-contract",
+      },
+      {
+        level: "basic",
+        question:
+          "안쪽 값이 1·2·3·4·5·6이고 밖에서 사 오는 값이 4일 때 몇 단계까지 안으로 들이는지, 합계가 얼마나 줄어드는지 계산하세요.",
+        answerChecklist: [
+          "네 단계까지 안으로",
+          "다섯째는 안에서 5인데 밖은 4이므로 들이지 않음",
+          "전부 밖에 두면 24",
+          "네 단계를 들이면 18이고 6이 줄어듦",
+        ],
+        requiredConcepts: ["firm-boundary-at-equal-margin"],
+        sectionId: "boundary",
+      },
+      {
+        level: "basic",
+        question:
+          "조직이 커지는 것을 보고 그 조직이 잘한다고 읽으면 안 되는 이유를 쓰세요.",
+        answerChecklist: [
+          "경계는 두 값의 차이로 정해짐",
+          "안쪽 값이 내려가도 밀림",
+          "바깥쪽 값이 올라가도 같은 방향으로 밀림",
+          "상대를 찾기 어렵거나 약속을 강제하기 힘든 곳에서는 안이 좋아지지 않아도 커짐",
+        ],
+        requiredConcepts: [
+          "firm-boundary-at-equal-margin",
+          "cost-of-using-the-market",
+        ],
+        sectionId: "what-moves",
+      },
+      {
+        level: "advanced",
+        question:
+          "한 단계를 더 들일 때의 값 비교에서 출발해 경계가 총값이 가장 작은 자리임을 유도하세요.",
+        answerChecklist: [
+          "총값은 안쪽 값의 합과 남은 단계의 바깥쪽 값의 합",
+          "한 단계 더 들일 때의 변화는 그 단계의 안쪽 값에서 바깥쪽 값을 뺀 것",
+          "음수인 동안은 들이는 편이 쌈",
+          "더 이상 음수가 아닌 첫 단계 앞이 총값 최소",
+        ],
+        requiredConcepts: ["firm-boundary-at-equal-margin"],
+        sectionId: "boundary",
+      },
+      {
+        level: "advanced",
+        question:
+          "조직하는 일에 수확 체감이 없다면 경계가 어떻게 되는지, 그리고 세상이 하나의 조직이 아니라는 사실에서 무엇까지 읽을 수 있는지 쓰세요.",
+        answerChecklist: [
+          "안쪽 값이 오르지 않으면 두 값이 만나지 않음",
+          "조직은 멈출 이유가 없어 계속 커짐",
+          "실제로 멈추므로 체감이 실재함",
+          "존재는 읽히지만 크기를 잰 것은 아님",
+        ],
+        requiredConcepts: [
+          "diminishing-returns-to-organising",
+          "firm-boundary-at-equal-margin",
+        ],
+        sectionId: "boundary",
+      },
+      {
+        level: "advanced",
+        question:
+          "통신과 운송이 싸지면 조직이 커진다는 말을 이 글의 경계 조건으로 검토하세요.",
+        answerChecklist: [
+          "가까이 모으는 발명은 안쪽 값을 내림",
+          "같은 발명이 상대를 찾고 조건을 맞추는 바깥쪽 값도 내림",
+          "경계는 두 값의 차이로 정해짐",
+          "어느 쪽이 더 내려갔는지에 따라 방향이 갈려 미리 말할 수 없음",
+        ],
+        requiredConcepts: [
+          "firm-boundary-at-equal-margin",
+          "diminishing-returns-to-organising",
+        ],
+        sectionId: "what-moves",
+      },
+      {
+        level: "advanced",
+        question:
+          "큰 조직이 사업부 사이에 내부 이전가격을 두는 일을 이 글의 경계 조건으로 설명하세요.",
+        answerChecklist: [
+          "같은 식이 조직 안에서도 성립",
+          "안에서 지시로 조정하는 값이 충분히 오른 자리가 생김",
+          "거기서는 값으로 조정하는 쪽이 쌈",
+          "경계는 조직과 시장 사이에만 그어지지 않고 조직 안에도 다시 그어짐",
+        ],
+        requiredConcepts: [
+          "firm-boundary-at-equal-margin",
+          "contracts-collapsed-into-one",
+        ],
+        sectionId: "what-moves",
+      },
+    ],
+    papers: [
+      {
+        title: "R. H. Coase, “The Nature of the Firm” (1937)",
+        href: "https://www.jstor.org/stable/2626876",
+        problem:
+          "값이 생산을 조정한다는 설명과 달리 현실의 생산 대부분은 조직 안에서 지시로 조정되는데, 왜 조직이 생기는지와 왜 조직이 세상 전체로 커지지 않는지가 같은 틀에서 설명되지 않았습니다.",
+        contribution:
+          "조직이 생기는 이유를 값 기구를 쓰는 데 값이 든다는 데 두고, 그 값 중 가장 뚜렷한 것으로 관련된 값이 얼마인지 알아내는 일을 들었습니다. 짝마다 맺던 약속이 하나로 대체되고 남은 약속은 지시의 범위만 적는다고 정리한 뒤, 조직이 안에서 거래 하나를 더 다루는 값이 같은 거래를 시장에서 하는 값이나 다른 조직이 다루는 값과 같아질 때까지 커진다는 경계 조건을 적었습니다.",
+        assumptions:
+          "조정 방식에 드는 값을 생산 자체에 드는 값과 따로 셀 수 있다고 보며, 안에서 거래를 더 다룰 때의 값이 거래 수와 함께 오른다고 둡니다.",
+        evidenceScope:
+          "JSTOR 스캔본을 내려받아 OCR 본문을 직접 읽고 인용 문장을 대조했습니다. 서지는 Economica, New Series, Vol. 4, No. 16(1937년 11월), 386–405쪽이고, OCR에 원문 쪽 번호가 남아 있지 않아 문장 단위 쪽수는 특정하지 않았습니다.",
+        notClaim:
+          "조정 방식에 드는 값을 실제로 재는 방법을 준 것은 아닙니다. 경계 조건은 어디서 멈추는지의 형식을 적은 것이고, 안쪽 값과 바깥쪽 값을 숫자로 견주는 절차는 이 논문에 없습니다. 이 글에 실린 여섯 단계 숫자 예시도 논문에 있는 것이 아니라 같은 비교를 보이기 위해 만든 것입니다.",
+        sectionId: "boundary",
+      },
+    ],
+  },
 };

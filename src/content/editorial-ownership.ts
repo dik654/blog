@@ -12877,6 +12877,35 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "why-firms-exist": {
+    title: "시장을 쓰는 데에도 값이 듭니다 글이 소유하는 범위",
+    owns: [
+      "값으로 조정하는 일 자체에 드는 값과 생산에 드는 값의 구분",
+      "짝마다 맺던 약속이 하나로 바뀌고 내용이 비워진다는 계약의 성격",
+      "조직의 경계가 안팎의 한계값이 같아지는 자리라는 조건과 그 유도",
+      "조직하는 일의 수확 체감과 경계를 옮기는 조건",
+    ],
+    reuses: [
+      {
+        label: "거래비용의 정의와 교환을 막는 쪽의 효과",
+        href: "/economics/scarcity/gains-from-trade#transaction-cost",
+      },
+      {
+        label: "값 하나가 흩어진 지식을 옮긴다는 설명",
+        href: "/economics/prices/prices-as-information#sufficient",
+      },
+      {
+        label: "하나 더 할 때의 값으로 멈출 자리를 찾는 셈",
+        href: "/economics/scarcity/scarcity-and-opportunity-cost#margin",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "경계 조건과 조직이 더 커지는 조건은 Coase 1937 원문을 직접 읽어 인용하고, 논문에 없는 숫자 예시는 이 글이 만든 것으로 표시한다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
