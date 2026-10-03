@@ -605,14 +605,14 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     rationale:
       "지움·번호·공백의 범위·돌아온 조각이 '사람이 만든 공백에서 무엇을 읽을 수 있는가'라는 한 질문의 네 부품이다. 번호를 떼면 복원 판단이 이름표에 실린다는 사실이 사라지고, 돌아온 조각을 떼면 공백이 메워질 때의 자격 문제가 남지 않는다.",
     sharedGate:
-      "Johns 판의 같은 기술(다섯 단 지움·다시 다듬음·열일곱째 단의 첫 글자·35개 조항 추정·아시리아 사본의 세 조항)이 본문·Viz·연습문제에서 일치하고, 65 + 35 = 100이 어긋나지 않는지로 판정한다.",
+      "Johns 판의 같은 기술(다섯 단 지움·다시 다듬음·열일곱째 단의 첫 글자·35개 조항 추정·아시리아 사본의 세 조항)이 본문·Viz·연습문제에서 일치하고, 65와 100의 차이는 35지만 사이의 빈 번호는 34개임을 구분하는지로 판정한다.",
   },
   "inference-from-sources/naming-the-past": {
     action: "keep" as const,
     status: "reviewed" as const,
     reviewedAt: "2026-10-03",
     rationale:
-      "쌓인 이름·이름의 함의·붙은 구조·번역어가 '읽는 쪽이 무엇을 들여오는가'라는 한 질문의 네 부품이다. 함의를 떼면 이름의 차이가 호칭 문제로만 보이고, 구조와 번역어를 떼면 들여오는 일이 표제에서 끝나는 것처럼 읽힌다.",
+      "여러 이름·이름에서 떠오른 기대·붙은 구조·번역어가 '읽는 쪽이 무엇을 들여오는가'라는 한 질문의 네 부품이다. 기대를 떼면 이름의 차이가 호칭 문제로만 보이고, 구조와 번역어를 떼면 들여오는 일이 표제에서 끝나는 것처럼 읽힌다.",
     sharedGate:
       "Johns 판의 같은 대목(본문 끝의 '올바름의 판결들', 머리말의 열두 장과 Ninu ilu sirum, 아시리아의 이름, 표제와 1~282조 번호)이 본문·Viz·연습문제에서 일치하는지로 판정한다.",
   },
@@ -732,7 +732,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "record-numbers/how-the-army-was-counted": "8c2640e7b3d4794a",
   "record-numbers/what-the-total-cannot-tell": "2fc6127542caf224",
   "record-numbers/numbers-that-command": "c4dc3a1b3c7ce7c4",
-  "inference-from-sources/ruins-mislead": "d29bd5208325e4cb",
-  "inference-from-sources/the-gap-was-made": "5cd1ffa387bca7df",
-  "inference-from-sources/naming-the-past": "2718dc89f3ed6cee",
+  "inference-from-sources/ruins-mislead": "966e91a6f3aa67e3",
+  "inference-from-sources/the-gap-was-made": "76fc2623b3242f90",
+  "inference-from-sources/naming-the-past": "1039c32e09d63fd4",
 };

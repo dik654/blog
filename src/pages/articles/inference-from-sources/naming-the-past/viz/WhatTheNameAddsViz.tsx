@@ -12,10 +12,10 @@ const MUTED = "#94a3b8";
 const INK = "#334155";
 
 const IMPLIES = [
-  { t: "빠짐없이 덮는다", ok: false, why: "지워진 다섯 단이 있고 분량도 추정입니다" },
-  { t: "체계를 갖추고 있다", ok: false, why: "장 구분은 이천 년 뒤 학교가, 번호는 근대가 붙였습니다" },
-  { t: "누군가 새로 정했다", ok: true, why: "왕이 확정했다고 글 자체가 적습니다" },
-  { t: "그대로 집행되었다", ok: false, why: "집행을 보여 주는 것은 이 돌에 없습니다" },
+  { t: "모든 규정을 담았나", ok: false, why: "돌만으로 완전성은 확인할 수 없습니다" },
+  { t: "장·조 번호가 원래였나", ok: false, why: "학교와 근대 편집이 붙였습니다" },
+  { t: "왕이 확정했나", ok: true, why: "글 자체가 그렇게 적습니다" },
+  { t: "적힌 대로 집행됐나", ok: false, why: "이 돌은 집행 빈도를 기록하지 않습니다" },
 ] as const;
 
 export default function WhatTheNameAddsViz() {
@@ -23,24 +23,24 @@ export default function WhatTheNameAddsViz() {
   const s = scenes.active;
 
   const NOTES = [
-    `두 이름이 가리키는 것은 같은 돌이지만 머릿속에 그려지는 것은 다릅니다. 판결들은 이미 내려진 판단을 모아 둔 것이고, 법전은 앞으로 적용될 규칙을 짜임새 있게 묶어 둔 것입니다.`,
-    `법전이라는 말에는 몇 가지가 딸려 옵니다. 다룰 영역을 빠짐없이 덮고, 체계를 갖추고 있으며, 누군가 새로 정했고, 정해진 대로 집행된다는 것입니다. 이 가운데 어느 것도 이름을 쓴다고 해서 저절로 참이 되지는 않습니다.`,
-    `네 가지를 사료에 대어 보면 하나만 남습니다. 왕이 확정했다는 것은 글 자체가 적어 둔 것이지만, 빠짐없음은 지워진 다섯 단 때문에 확인할 수 없고, 체계는 뒷사람이 붙인 것이며, 집행은 이 돌이 보여 주지 않습니다.`,
-    `그렇다고 이름을 버릴 필요는 없습니다. 널리 쓰이는 이름을 혼자 바꾸면 가리키는 대상이 흐려집니다. 할 일은 이름을 쓰되 그 이름이 어디서 왔는지를 적고, 이름이 딸고 오는 함의를 결론에 쓸 때마다 사료에서 따로 확인하는 것입니다.`,
+    `두 이름이 가리키는 것은 같은 돌이지만 읽는 관점이 달라집니다. 판결들이라는 이름은 구체적 상황의 판단을, 법전이라는 이름은 일반 규칙을 떠올리게 합니다. 실제 편찬 과정은 이름만으로 알 수 없습니다.`,
+    `법전이라는 표제와 조항 번호를 함께 보는 독자가 떠올릴 수 있는 네 기대를 질문으로 바꿉니다. 완전성, 장·조 번호의 출처, 왕의 확정, 실제 집행입니다. 이는 단어의 필수 뜻이 아니라 사료로 점검할 질문입니다.`,
+    `네 질문에서 왕이 확정했다는 것은 글 자체가 적습니다. 다룰 영역을 빠짐없이 담았는지는 돌만으로 알 수 없고, 지금 보이는 장·조 번호는 뒷사람이 붙였으며, 실제 집행 빈도도 이 돌에는 없습니다.`,
+    `널리 쓰이는 이름을 버릴 필요는 없습니다. 이름을 쓰되 어디서 왔는지 적고, 떠오르는 성질을 결론에 쓸 때마다 사료에서 확인하면 됩니다.`,
   ] as const;
 
   return (
     <VizFrame
       eyebrow="이름이 더하는 것"
-      title="법전이라는 이름은 네 가지를 딸고 오고 그 가운데 하나만 사료가 받칩니다"
-      description="빠짐없음·체계·새로 정함·집행이라는 함의를 하나씩 대어 보면, 왕이 확정했다는 것만 글 자체에 적혀 있습니다."
-      note="왕이 확정했다는 서술은 본문 끝 문장, 장 구분과 번호의 내력은 머리말과 65조 뒤 주의 것입니다. 네 함의로 나눈 것은 이 글이 정리한 것입니다."
+      title="법전이라는 이름에서 떠올릴 네 기대를 사료에 대어 봅니다"
+      description="완전성·장과 번호의 출처·왕의 확정·집행 여부를 따로 묻습니다. 돌은 왕의 확정을 직접 적지만 나머지 질문에 같은 수준으로 답하지 않습니다."
+      note="왕이 확정했다는 서술은 본문 끝 문장, 장 구분과 번호의 내력은 머리말과 65조 뒤 주의 것입니다. 네 질문은 이 글이 정리한 것이며 법전의 필수 정의가 아닙니다."
     >
       <div
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="법전이라는 이름이 딸고 오는 함의를 사료에 대어 보는 그림"
+        aria-label="법전이라는 이름에서 떠올릴 네 기대를 사료에 대어 보는 그림"
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(30rem,calc(100dvh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
@@ -64,10 +64,10 @@ export default function WhatTheNameAddsViz() {
                     올바름의 판결들
                   </text>
                   <text x={127} y={74} fontSize={7.5} fill={INK} textAnchor="middle">
-                    이미 내려진 판단을 모아 둔 것
+                    구체적 상황의 판단을 떠올림
                   </text>
                   <text x={127} y={90} fontSize={7.5} fill={INK} textAnchor="middle">
-                    사례가 앞서고 규칙이 뒤따름
+                    실제 편찬 과정은 이름만으로 모름
                   </text>
                   <text x={127} y={106} fontSize={7} fill={MUTED} textAnchor="middle">
                     글이 자기를 부르는 이름
@@ -78,10 +78,10 @@ export default function WhatTheNameAddsViz() {
                     법전
                   </text>
                   <text x={353} y={74} fontSize={7.5} fill={INK} textAnchor="middle">
-                    앞으로 적용될 규칙의 묶음
+                    일반 규칙을 먼저 떠올림
                   </text>
                   <text x={353} y={90} fontSize={7.5} fill={INK} textAnchor="middle">
-                    규칙이 앞서고 사례가 뒤따름
+                    실제 집행 여부는 이름만으로 모름
                   </text>
                   <text x={353} y={106} fontSize={7} fill={MUTED} textAnchor="middle">
                     우리가 쓰는 이름
@@ -92,7 +92,7 @@ export default function WhatTheNameAddsViz() {
               {s >= 1 && (
                 <g>
                   <text x={20} y={26} fontSize={8} fontWeight={700} fill={CODE}>
-                    법전이라는 이름이 딸고 오는 것
+                    이름과 번호를 보고 떠올릴 네 기대
                   </text>
                   {IMPLIES.map((im, i) => {
                     const y = 34 + i * 34;
@@ -107,7 +107,7 @@ export default function WhatTheNameAddsViz() {
                         {judged && (
                           <g>
                             <text x={196} y={y + 13} fontSize={8} fontWeight={700} fill={col}>
-                              {im.ok ? "사료가 받침" : "받치지 않음"}
+                              {im.ok ? "직접 적힘" : "돌만으로 확인 불가"}
                             </text>
                             <text x={196} y={y + 25} fontSize={7.5} fill={INK}>
                               {im.why}
@@ -128,17 +128,17 @@ export default function WhatTheNameAddsViz() {
 
               <text x={20} y={186} fontSize={8} fontWeight={700} fill={INK}>
                 {s === 0
-                  ? "같은 돌을 가리키는데 그려지는 모습이 다릅니다"
+                  ? "같은 돌을 가리키지만 읽는 관점은 달라집니다"
                   : s === 1
-                    ? "이름을 쓴다고 이 넷이 참이 되지는 않습니다"
+                    ? "네 기대는 단어의 필수 뜻이 아닙니다"
                     : s === 2
-                      ? "넷 가운데 하나만 글 자체에 적혀 있습니다"
-                      : "이름을 쓰되 출처를 적고 함의는 따로 확인합니다"}
+                      ? "왕의 확정만 글 자체에 적혀 있습니다"
+                      : "이름을 쓰되 출처를 적고 기대는 따로 확인합니다"}
               </text>
               <text x={20} y={196} fontSize={7.5} fill={MUTED}>
                 {s === 3
                   ? "널리 쓰이는 이름을 혼자 바꾸면 가리키는 대상이 흐려집니다"
-                  : "함의를 결론에 쓸 때마다 사료에서 확인해야 합니다"}
+                  : "기대하는 성질을 결론에 쓸 때마다 사료에서 확인해야 합니다"}
               </text>
             </svg>
           </div>

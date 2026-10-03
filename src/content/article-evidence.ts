@@ -7959,6 +7959,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://www.gutenberg.org/ebooks/17150",
       note: "돌기둥의 상태와 지워진 다섯 단, 35개 조항이라는 분량 추정과 100조부터의 재시작, 사라진 부분의 주제 목록, 아시리아 사본에서 온 세 조항의 처리, 번역하지 않은 700행과 그 이유의 출처. Project Gutenberg 전사본(eBook 17150)으로 읽음",
     },
+    {
+      kind: "비교 사료",
+      label: "루브르 박물관, The Code of Hammurabi · 현재 소장기관 설명",
+      href: "https://www.louvre.fr/en/the-code-of-hammurabi",
+      note: "돌을 수사로 옮긴 경위에 관한 현재 소장기관 설명. 1903년 영역본이 지운 자리에 이름이 없다고 적은 사실과 구분함",
+    },
   ],
   "inference-from-sources/naming-the-past": [
     {
@@ -7974,6 +7980,12 @@ export const ARTICLE_EVIDENCE: Readonly<
         "Thucydides, 『History of the Peloponnesian War』, Richard Crawley 영역, 1권 22절",
       href: "https://www.gutenberg.org/ebooks/7142",
       note: "저자가 방법을 적어 두면 독자가 신뢰 범위를 추측하지 않아도 된다는 기준을, 읽는 쪽에도 적용하기 위해 다시 가져온 자리",
+    },
+    {
+      kind: "비교 사료",
+      label: "루브르 박물관, The Code of Hammurabi · 현재 소장기관 설명",
+      href: "https://www.louvre.fr/en/the-code-of-hammurabi",
+      note: "돌의 제작 시기를 약 기원전 1750년으로 설명하고 현대적 의미의 법전과 구분함. 1903년 머리말의 시간 간격은 학교 판본의 연대를 대조하지 않아 채택하지 않음",
     },
   ],
 };

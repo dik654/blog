@@ -26864,7 +26864,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "지워진 공백은 소실된 공백과 다르다",
     aliases: ["의도된 삭제", "긁어낸 자리"],
     definition:
-      "글을 없애고 면을 다시 다듬은 자리는 깨지거나 닳아 흐려진 자리와 구별됩니다. 작업의 목적이 면을 얻는 데 있었음을 그 상태가 알려 주고, 거기서 공백의 종류가 정해집니다. 지운 자가 새 글을 남기지 않으면 지웠다는 사실만 남고 누가 지웠는지는 남지 않습니다.",
+      "글을 없애고 면을 다시 다듬은 자리는 깨지거나 닳아 흐려진 자리와 구별됩니다. 작업의 목적이 면을 얻는 데 있었음을 그 상태가 알려 주고, 거기서 공백의 종류가 정해집니다. 지운 자가 새 글을 남기지 않았다면 지운 자리 자체에서는 그 사람의 이름을 읽을 수 없습니다.",
     canonicalHref:
       "/history/inference-from-sources/the-gap-was-made#how-it-vanished",
   },
@@ -26904,20 +26904,20 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     id: "names-accumulate-on-a-source",
     kind: "concept",
     domain: "history",
-    label: "한 사료에 시대마다 다른 이름이 쌓인다",
+    label: "한 사료가 전해지는 맥락마다 다른 이름으로 불린다",
     aliases: ["사료의 여러 이름", "자기 이름과 붙은 이름"],
     definition:
-      "오래 전해진 기록에는 글 자체가 자기를 부르는 이름과, 전해지는 동안 읽는 쪽이 붙인 이름들이 함께 있습니다. 지금 가장 널리 쓰이는 이름이 가장 늦게 붙은 것일 수 있으므로, 어느 이름을 쓰는지가 그 대상을 어떻게 보고 있는지를 이미 정합니다.",
+      "오래 전해진 기록에는 글 자체가 자기를 부르는 이름과, 읽는 쪽이 다른 맥락에서 붙인 이름들이 함께 있습니다. 지금 널리 쓰이는 이름도 그 여러 이름 가운데 하나이므로, 각 이름이 어디서 왔는지 먼저 구분해야 합니다. 이 글에서 네 이름을 놓은 순서는 연대순이 아니라 설명 순서입니다.",
     canonicalHref: "/history/inference-from-sources/naming-the-past#four-names",
   },
   "a-name-carries-claims": {
     id: "a-name-carries-claims",
     kind: "theorem",
     domain: "history",
-    label: "이름은 사료가 말하지 않은 주장을 딸고 온다",
+    label: "이름에서 떠오른 기대는 사료로 따로 확인한다",
     aliases: ["이름의 함의", "범주의 수입"],
     definition:
-      "오늘의 범주로 과거의 대상을 부르면 그 범주가 전제하는 성질들이 함께 들어옵니다. 성질 하나하나는 그 사회에 대한 주장이고 이름을 쓴다고 참이 되지 않으므로, 결론에 쓰려는 성질마다 그것이 사료의 어느 문장에서 나왔는지를 찾아야 합니다. 찾지 못하면 그 성질은 이름에서 온 것입니다.",
+      "오늘의 범주로 과거의 대상을 부르면 독자가 그 범주에서 기대하는 성질을 떠올릴 수 있습니다. 그 성질들은 단어의 필수 뜻이 아니라 점검할 질문입니다. 결론에 쓰려는 성질마다 사료의 어느 문장이 받치는지 확인해야 하며, 이름만으로 사실이라고 단정할 수 없습니다.",
     canonicalHref:
       "/history/inference-from-sources/naming-the-past#what-the-name-adds",
   },
@@ -26928,7 +26928,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "뒤에 붙은 구조는 자료처럼 보인다",
     aliases: ["장과 번호", "편집된 꼴"],
     definition:
-      "장 구분이나 조항 번호처럼 읽기 좋게 더해진 구조는 말이 아니라 체계의 꼴을 하고 있어 사료의 일부처럼 보입니다. 1번부터 끝 번호까지 매겨져 있으면 전체가 그만큼으로 이루어진 하나의 덩어리라는 인상이 따라오고, 그 인상은 이름이 딸고 온 함의와 맞물려 서로를 떠받칩니다.",
+      "장 구분이나 조항 번호처럼 읽기 좋게 더해진 구조는 말이 아니라 체계의 꼴을 하고 있어 사료의 일부처럼 보입니다. 1번부터 끝 번호까지 매겨져 있으면 전체가 그만큼으로 이루어진 하나의 덩어리라는 인상이 따라옵니다. 그 인상이 완전성을 기대하게 할 수 있지만 돌 자체의 증거는 아닙니다.",
     canonicalHref:
       "/history/inference-from-sources/naming-the-past#imposed-structure",
   },
@@ -50109,7 +50109,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "a-name-carries-claims",
     relation: "evaluates",
     reason:
-      "법전의 숫자를 다룰 때 썼던 구분이 그 대상을 법전이라 부른 데서 오는 함의와 다시 만납니다.",
+      "법전의 숫자를 다룰 때 썼던 구분이 그 대상을 법전이라 부를 때 독자가 떠올릴 기대와 다시 만납니다.",
   },
 ];
 

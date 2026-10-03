@@ -26,14 +26,14 @@ export default function AverageShipViz() {
     <VizFrame
       eyebrow="평균 잡기"
       title="적히지 않았다는 사실을 단서로 삼아 적힌 두 수를 경계로 읽습니다"
-      description="시인이 두 척의 인원만 적은 것을 최대와 최소의 표시로 보고 평균을 잡아, 건너간 사람의 수가 대단치 않았다는 결론을 끌어냅니다."
+      description="시인이 두 부류의 배에 탄 인원만 적은 것을 최대와 최소의 표시로 보고 평균을 잡아, 건너간 사람의 수가 대단치 않았다는 결론을 끌어냅니다."
       note="1,200척·120명·50명과 '대단치 않다'는 결론은 투키디데스 1권 10절의 것입니다. 85명과 102,000이라는 곱은 이 글이 계산한 것이고 책에 적혀 있지 않습니다."
     >
       <div
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="두 척의 인원을 최대와 최소로 보고 평균을 잡는 추론을 보이는 그림"
+        aria-label="두 부류의 배에 탄 인원을 최대와 최소로 보고 평균을 잡는 추론을 보이는 그림"
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(30rem,calc(100dvh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
