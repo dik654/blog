@@ -418,6 +418,24 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Fisher 개정판 2장의 같은 숫자 묶음(가진 돈 500만·손 바뀜 20·빵 2억×0.1·석탄 1,000만×5·옷감 3,000만×1)에서 양변 1억 달러와 세 가지 변형의 값이 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
   },
+  "macro/who-counts-as-unemployed": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "세 조건·분모의 성질·네 지표·눈금 이동·읽는 법까지가 실업률이라는 숫자가 어떻게 만들어지는가라는 하나의 질문을 푸는 한 묶음이다. 분모의 성질을 떼면 왜 지표가 넷인지가 남지 않고, 지표를 떼면 분모의 성질이 경고로만 끝난다.",
+    sharedGate:
+      "같은 100명 보기(일하는 사람 60·실업자 9·시간 모자람 7·잠재 8)에서 LU1~LU4의 분자·분모·백분율과 세 조건에서 걸러지는 인원이 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
+  "macro/what-ricardo-assumed": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "안과 밖의 구분·전제·반사실·전제의 근거까지가 이 논증이 무엇 위에 서 있는가라는 하나의 질문을 푸는 한 묶음이다. 반사실을 떼면 전제의 위치가 드러나지 않고, 전제를 떼면 안과 밖의 구분이 설명되지 않는다.",
+    sharedGate:
+      "Ricardo 7장의 같은 네 숫자(영국 100·120, 포르투갈 90·80)에서 두 나라 안의 맞바꿈 비율과 자본이 움직일 때의 절대 비교가 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
 };
 
 /**
@@ -505,4 +523,6 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "labor/measuring-the-spread": "9c6d52345e9d0a9c",
   "macro/why-per-head-stalls": "288664818602d036",
   "macro/what-the-price-level-hides": "18fde37b5c739139",
+  "macro/who-counts-as-unemployed": "0e99dde8bd38dd55",
+  "macro/what-ricardo-assumed": "6566e07f66c31f32",
 };

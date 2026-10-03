@@ -87574,4 +87574,538 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "macro/who-counts-as-unemployed": {
+    entryNote:
+      "앞 두 편은 더한 숫자를 무엇으로 나눌지를 다뤘습니다. 여기서는 그보다 앞 단계인, 세기 전에 누구를 셀지 정하는 자리를 봅니다.",
+    coreIdea:
+      "실업자는 기준 주에 일하지 않았고 최근에 일을 찾았으며 당장 일할 수 있는 사람으로 정의되므로, 셋 중 하나만 통과하지 못해도 숫자에서 빠집니다. 분모가 일하는 사람과 실업자의 합이라 빠진 사람은 분자와 분모에서 동시에 사라지고, 그래서 찾기를 그만둔 사람이 늘면 실업률이 오히려 내려갑니다. 기준 문서가 넓이가 다른 지표를 넷 두고 둘 이상을 보라고 한 것이 이 성질에 대한 답입니다.",
+    assumedKnowledge: [
+      {
+        id: "deflating-before-comparing",
+        role: "숫자를 만들 때 중립적인 기본값이 없다는 경험을 사람을 세는 쪽으로 옮깁니다.",
+      },
+      {
+        id: "crossing-curves-incomparability",
+        role: "한 숫자로 줄일 때 잃는 것이 있다는 구조를 지표가 여럿인 이유와 잇습니다.",
+      },
+      {
+        id: "value-of-marginal-product",
+        role: "가게가 사람을 쓸지 정하는 셈과 통계가 사람을 분류하는 규칙이 다른 자리임을 가릅니다.",
+      },
+      {
+        id: "neither-model-fits",
+        role: "한 숫자가 답을 주지 못할 때 무엇을 더 봐야 하는지 정하는 규율을 가져옵니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "definition-before-counting",
+        role: "측정 이전에 정의가 있다는 자리를 세웁니다.",
+      },
+      {
+        id: "three-unemployment-conditions",
+        role: "그 정의의 내용을 조항 그대로 적습니다.",
+      },
+      {
+        id: "labour-force-denominator",
+        role: "분모의 성질과 거기서 나오는 뒤집힌 움직임을 보입니다.",
+      },
+      {
+        id: "underutilization-measures",
+        role: "넓이가 다른 네 지표와 분모를 함께 넓혀야 한다는 규칙을 정의합니다.",
+      },
+      {
+        id: "comparability-versus-coverage",
+        role: "좁은 정의와 넓은 정의의 맞바꿈을 정리합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "definition-before-counting",
+        sectionId: "three-conditions",
+        intuition:
+          "실업자가 몇 명인지는 세어 보면 나오는 것 같지만, 세기 전에 누구를 셀지가 먼저 정해져 있습니다.",
+        workedExample:
+          "일했다고 보는 선이 한 시간, 찾았다고 보는 기간이 넉 주, 당장 가능의 창이 기준 주입니다. 셋 다 숫자로 적혀 있습니다.",
+        boundary:
+          "정의가 있다는 것이 숫자가 임의라는 뜻은 아닙니다. 같은 정의로 재면 변화는 의미가 있습니다.",
+      },
+      {
+        id: "three-unemployment-conditions",
+        sectionId: "three-conditions",
+        intuition:
+          "일하지 않았고, 찾았고, 당장 할 수 있어야 합니다. 셋을 다 통과해야 실업자입니다.",
+        workedExample:
+          "반년 찾다 지난달 그만둔 사람은 첫째와 셋째는 통과하지만 둘째에서 걸려 실업자가 아닙니다. 주말에 세 시간 일한 사람은 첫째에서 걸립니다.",
+        boundary:
+          "일하고 싶다는 마음은 조건이 아닙니다. 찾는 활동이 있었는지로 판정합니다.",
+      },
+      {
+        id: "labour-force-denominator",
+        sectionId: "denominator",
+        intuition:
+          "분모가 전체 인구가 아니라 일하는 사람과 실업자의 합이라, 조건에서 빠진 사람은 아예 셈에서 사라집니다.",
+        workedExample:
+          "실업자 9명·일하는 사람 60명이면 13.0%입니다. 한 사람이 찾기를 그만두면 8 ÷ 68이 되어 11.8%로 내려갑니다. 일자리를 얻은 사람은 없습니다.",
+        proofIdea:
+          "분자를 U, 분모를 E+U로 두면 한 사람이 조건에서 빠질 때 분자와 분모가 모두 1씩 줄어 (U−1)/(E+U−1)이 됩니다. E가 0보다 크면 이 값은 U/(E+U)보다 작습니다. 분자에서 빠진 비중이 분모에서 빠진 비중보다 크기 때문이며, E가 클수록 이 내려감이 커집니다.",
+        counterexample:
+          "같은 사람이 일자리를 얻어 일하는 쪽으로 옮기면 분자만 1 줄고 분모는 그대로여서 역시 내려갑니다. 두 경우가 같은 방향으로 이 숫자를 움직이므로 숫자만으로는 구분되지 않습니다.",
+        boundary:
+          "숫자가 거짓인 것이 아니라 그 숫자가 재도록 정의된 것이 그것입니다. 읽는 쪽이 둘을 가를 다른 지표를 함께 봐야 합니다.",
+      },
+      {
+        id: "underutilization-measures",
+        sectionId: "four-measures",
+        intuition:
+          "좁은 숫자 하나로는 일손이 어떻게 남는지를 담지 못하므로 넓이가 다른 숫자를 여럿 둡니다.",
+        workedExample:
+          "실업자만 세면 13.0%, 시간이 모자란 사람을 더하면 23.2%, 찾기를 그만둔 사람까지 더하면 분모도 넓어져 다른 값이 나옵니다.",
+        boundary:
+          "분자를 넓히면 분모도 함께 넓혀야 합니다. 분자만 넓히고 분모를 두면 다른 지표가 아니라 잘못 계산한 값입니다.",
+      },
+      {
+        id: "comparability-versus-coverage",
+        sectionId: "moving-the-line",
+        intuition:
+          "조건을 좁히면 응답에 덜 좌우되어 견주기 쉬워지고, 넓히면 실제로 일손이 남는 사람을 덜 놓칩니다.",
+        workedExample:
+          "찾는 기간을 넉 주에서 석 달로 늘리면 두 달 전에 찾고 쉰 사람이 들어와 실업자가 늘고, 나라 사이 비교는 어려워집니다.",
+        boundary:
+          "둘 중 하나가 옳은 것이 아닙니다. 어느 쪽을 보고 있는지 알고 보는 것이 이 구분의 쓸모입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 세기 전에",
+        relation: "정의가 먼저 있습니다.",
+        concepts: ["definition-before-counting", "three-unemployment-conditions"],
+      },
+      {
+        label: "01 분모의 성질",
+        relation: "빠진 사람은 양쪽에서 사라집니다.",
+        concepts: ["labour-force-denominator"],
+      },
+      {
+        label: "02 지표를 여럿 두기",
+        relation: "넓이가 다른 숫자를 함께 봅니다.",
+        concepts: ["underutilization-measures"],
+      },
+      {
+        label: "03 무엇을 맞바꾸는가",
+        relation: "좁게 정의하는 것과 넓게 정의하는 것의 값을 적습니다.",
+        concepts: ["comparability-versus-coverage"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "실업자로 세어지기 위해 통과해야 하는 세 조건을 쓰고, 셋 중 하나만 통과하지 못하면 어떻게 되는지 쓰세요.",
+        answerChecklist: [
+          "기준 주에 한 시간도 일하지 않았을 것",
+          "최근 넉 주 안에 일을 찾는 활동을 했을 것",
+          "자리가 생기면 당장 일할 수 있을 것",
+          "하나만 통과하지 못해도 실업자가 아님",
+        ],
+        requiredConcepts: ["three-unemployment-conditions"],
+        sectionId: "three-conditions",
+      },
+      {
+        level: "basic",
+        question:
+          "주말에만 세 시간 일하면서 평일 내내 다른 자리를 찾는 사람이 어느 쪽으로 세어지는지와 그 이유를 쓰세요.",
+        answerChecklist: [
+          "일하는 사람으로 세어짐",
+          "일했다고 보는 선이 한 시간",
+          "첫째 조건에서 걸림",
+          "찾고 있다는 사실은 반영되지 않음",
+        ],
+        requiredConcepts: ["three-unemployment-conditions"],
+        sectionId: "three-conditions",
+      },
+      {
+        level: "basic",
+        question:
+          "실업률의 분모에 들어가는 사람이 누구인지 쓰고, 전체 인구가 아닌 이유를 쓰세요.",
+        answerChecklist: [
+          "일하는 사람과 실업자의 합",
+          "노동력이라고 부름",
+          "일할 나이 전체가 아님",
+          "조건에서 빠진 사람은 분모에도 없음",
+        ],
+        requiredConcepts: ["labour-force-denominator"],
+        sectionId: "denominator",
+      },
+      {
+        level: "basic",
+        question:
+          "일자리를 구하다 지쳐 찾기를 그만둔 사람이 늘면 실업률이 어느 쪽으로 움직이는지와 그 이유를 쓰세요.",
+        answerChecklist: [
+          "내려감",
+          "분자와 분모에서 동시에 빠짐",
+          "분자에서 빠진 비중이 더 큼",
+          "일자리를 얻은 사람이 없는데도 내려감",
+        ],
+        requiredConcepts: ["labour-force-denominator"],
+        sectionId: "denominator",
+      },
+      {
+        level: "basic",
+        question:
+          "기준 문서가 쓰이지 않는 일손을 재는 지표를 넷 두고 둘 이상을 보라고 한 이유를 쓰세요.",
+        answerChecklist: [
+          "좁은 지표는 사정이 나빠질 때도 내려갈 수 있음",
+          "나라와 경기 국면에 따라 남는 모습이 다름",
+          "분자에 누구를 더하느냐로 넓이가 갈림",
+          "하나만 보면 어느 경우인지 가릴 수 없음",
+        ],
+        requiredConcepts: ["underutilization-measures"],
+        sectionId: "four-measures",
+      },
+      {
+        level: "basic",
+        question:
+          "찾기를 그만둔 사람을 분자에 더할 때 분모를 어떻게 해야 하는지와, 그렇게 하지 않으면 무엇이 되는지 쓰세요.",
+        answerChecklist: [
+          "분모도 함께 넓혀야 함",
+          "넓어진 분모를 확장 노동력이라 부름",
+          "분자만 넓히면 더 큰 값이 나옴",
+          "다른 지표가 아니라 잘못 계산한 값",
+        ],
+        requiredConcepts: ["underutilization-measures"],
+        sectionId: "four-measures",
+      },
+      {
+        level: "advanced",
+        question:
+          "한 사람이 조건에서 빠질 때 실업률이 내려감을 분자와 분모의 변화로 유도하고, 그 내려감이 언제 커지는지 쓰세요.",
+        answerChecklist: [
+          "분자 U와 분모 E+U가 모두 1씩 줄어듦",
+          "(U−1)/(E+U−1)이 U/(E+U)보다 작음",
+          "분자에서 빠진 비중이 더 크기 때문",
+          "E가 클수록 내려감이 커짐",
+        ],
+        requiredConcepts: ["labour-force-denominator"],
+        sectionId: "denominator",
+      },
+      {
+        level: "advanced",
+        question:
+          "실업률이 내려간 두 가지 경우를 가르고, 숫자 하나만으로는 왜 가릴 수 없는지 쓰세요.",
+        answerChecklist: [
+          "일자리를 얻어 분자만 줄어든 경우",
+          "찾기를 그만둬 분자와 분모가 함께 줄어든 경우",
+          "둘 다 실업률을 내림",
+          "넓은 지표를 함께 봐야 갈림",
+        ],
+        requiredConcepts: ["labour-force-denominator", "underutilization-measures"],
+        sectionId: "how-to-read",
+      },
+      {
+        level: "advanced",
+        question:
+          "찾는 기간을 넉 주에서 석 달로 늘렸을 때 분자와 분모가 어떻게 움직이고 나라 사이 비교에 무슨 일이 생기는지 쓰세요.",
+        answerChecklist: [
+          "두 달 전에 찾고 쉰 사람이 들어옴",
+          "분자와 분모가 함께 늘어남",
+          "실업률이 올라감",
+          "같은 이름의 숫자가 다른 방식으로 만들어져 비교가 어려워짐",
+        ],
+        requiredConcepts: ["comparability-versus-coverage", "definition-before-counting"],
+        sectionId: "moving-the-line",
+      },
+      {
+        level: "advanced",
+        question:
+          "좁은 정의와 넓은 정의가 각각 무엇을 얻고 무엇을 잃는지 쓰고, 기준 문서가 그 사이에서 택한 방법을 쓰세요.",
+        answerChecklist: [
+          "좁은 정의는 응답에 덜 좌우되어 견주기 쉬움",
+          "대신 일손이 남는 사람을 놓침",
+          "넓은 정의는 덜 놓치지만 눈금에 민감해 견주기 어려움",
+          "둘 다 두고 둘 이상을 함께 보라고 함",
+        ],
+        requiredConcepts: ["comparability-versus-coverage", "underutilization-measures"],
+        sectionId: "moving-the-line",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "ICLS, 「Resolution concerning statistics of work, employment and labour underutilization」 (19차 2013 · 21차 2023 개정)",
+        href: "https://www.ilo.org/sites/default/files/wcmsp5/groups/public/@dgreports/@stat/documents/normativeinstrument/wcms_230304.pdf",
+        problem:
+          "나라마다 다르게 세던 일과 일자리 통계를 견줄 수 있게 하려면 누구를 무엇으로 세는지를 조항으로 고정해야 했고, 동시에 노동시장의 모습이 나라마다 다르다는 사정도 담아야 했습니다.",
+        contribution:
+          "실업을 세 조건의 결합으로 정의하고 각 조건의 눈금을 숫자로 적었습니다. 그 위에 잠재 노동력과 시간 관련 불완전취업을 따로 정의해, 넓이가 다른 네 지표를 식으로 제시하고 그중 둘 이상을 함께 쓰라고 못 박았습니다. 분자를 넓힐 때 쓸 분모도 확장 노동력으로 따로 정의해 두어, 넓은 지표를 계산할 때 분모를 그대로 두는 오류를 막았습니다.",
+        assumptions:
+          "세 조건의 판정이 설문 응답으로 이루어진다고 보고, 찾는 활동과 당장 가능이라는 관찰 가능한 행동으로 일하려는 상태를 대신 잽니다. 눈금에는 나라 사정에 따른 재량의 범위를 두었습니다.",
+        evidenceScope:
+          "ILO 공개 PDF(27쪽)를 내려받아 읽었고, 47항의 정의와 (b)(d)의 단서, 51·55항의 잠재 노동력과 확장 노동력, 73항 (c)의 네 지표 식이 근거입니다. 47항은 쪽 이미지를 직접 열어 대조했습니다. 이 문서는 통계 기준이지 노동시장을 설명하는 이론이 아닙니다.",
+        notClaim:
+          "이 문서는 실업률이 얼마인지, 어떤 정책이 옳은지를 말하지 않습니다. 본문의 100명 보기와 거기서 나온 13.0%·23.2% 같은 수치는 전부 이 글이 설명을 위해 만든 것이고 어떤 나라의 통계도 아닙니다. 조건의 눈금을 옮길 때 숫자가 어디로 가는지를 적은 절차도 이 글이 조항에서 추론한 것이지 문서에 그 꼴로 있지 않습니다. 한국어 조건 서술도 이 글이 옮긴 것이고 공식 번역이 아닙니다.",
+        sectionId: "three-conditions",
+      },
+    ],
+  },
+  "macro/what-ricardo-assumed": {
+    entryNote:
+      "1단계가 교역의 이득이 왜 생기는지를 소유합니다. 이 글은 그 메커니즘을 다시 설명하지 않고, 그 논증이 서 있는 전제와 전제가 풀렸을 때의 결론만 읽습니다.",
+    coreIdea:
+      "한쪽 100명분을 다른 쪽 80명분과 바꾸는 교환이 나라 사이에서는 지속되는데 같은 나라 안에서는 지속되지 않으며, 저자는 그 차이를 자본이 국경을 넘기 어렵다는 것으로 설명합니다. 그 전제가 풀리면 두 물건이 절대적으로 더 싼 한 곳에서 만들어지고 이윤율 차이가 사라진다는 것까지 저자 자신이 적어 두었으므로, 이 장의 결론은 조건부 명제입니다. 그리고 그 조건을 떠받친 것은 기술이 아니라 사람의 마음과 제도였습니다.",
+    assumedKnowledge: [
+      {
+        id: "absolute-vs-comparative-advantage",
+        role: "왜 그런 교환이 양쪽에 이득인지는 1단계가 소유하므로 결과만 가져다 씁니다.",
+      },
+      {
+        id: "terms-of-trade-range",
+        role: "양쪽 모두 이득인 교환 비율의 구간을 전제로 두고 그 구간이 어디서 유지되는지를 묻습니다.",
+      },
+      {
+        id: "transaction-cost",
+        role: "자본이 국경을 넘기 어렵다는 말을 오늘의 용어로 옮기는 데 씁니다.",
+      },
+      {
+        id: "broken-assumption-diagnosis",
+        role: "가정을 짚는 방법을 빗나간 예측이 아니라 아직 서 있는 결론에 적용합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "exchange-ratio-only-across-borders",
+        role: "안과 밖이 갈린다는 사실을 정의합니다.",
+      },
+      {
+        id: "capital-immobility-premise",
+        role: "그 차이를 만드는 전제를 적습니다.",
+      },
+      {
+        id: "counterfactual-under-mobility",
+        role: "전제가 풀렸을 때 저자가 적은 결론을 세웁니다.",
+      },
+      {
+        id: "premise-grounded-in-sentiment",
+        role: "그 전제가 무엇에 기대고 있었는지를 가릅니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "exchange-ratio-only-across-borders",
+        sectionId: "inside-vs-outside",
+        intuition:
+          "영국이 100명분을 주고 포르투갈 80명분을 받는 일은 계속되는데, 요크셔 100명분을 런던 80명분과 바꾸는 일은 계속되지 않습니다.",
+        workedExample:
+          "안에서는 런던 쪽이 더 남으면 요크셔 자본이 런던으로 옮겨 가 차이를 지웁니다. 차이가 지워지면 그런 비율도 남지 않습니다.",
+        boundary:
+          "교환이 한 번도 일어나지 않는다는 뜻이 아니라 그 비율이 지속되지 않는다는 뜻입니다.",
+      },
+      {
+        id: "capital-immobility-premise",
+        sectionId: "the-assumption",
+        intuition:
+          "같은 나라 안에서는 자본이 더 남는 곳으로 활발히 옮겨 가고, 나라를 넘어가기는 어렵습니다.",
+        workedExample:
+          "포르투갈이 옷감을 90명이면 만드는데도 영국 자본이 그리로 가지 않습니다. 그래서 두 나라의 수익 차이가 남은 채로 지속됩니다.",
+        boundary:
+          "비판자가 뒤에 찾아낸 약점이 아니라 저자가 같은 장에 적어 둔 조건입니다. 이 글은 그 자리를 다시 읽을 뿐입니다.",
+      },
+      {
+        id: "counterfactual-under-mobility",
+        sectionId: "if-it-moves",
+        intuition:
+          "자본이 넘어갈 수 있으면 두 물건을 다 더 싸게 만드는 곳으로 모입니다.",
+        workedExample:
+          "포르투갈은 옷감 90명, 포도주 80명으로 둘 다 적습니다. 자본이 자유로우면 둘 다 거기서 만들어지고 영국의 옷감 자본과 노동이 옮겨 갑니다.",
+        proofIdea:
+          "자본이 머무를 때 각 나라가 고르는 기준은 자기 안의 맞바꿈 비율입니다. 영국은 100/120, 포르투갈은 90/80으로 두 비율이 다르므로 서로 다른 쪽을 맡습니다. 자본이 움직일 수 있으면 비교 대상이 같은 나라 안의 두 물건이 아니라 두 나라의 같은 물건이 되어 90과 100, 80과 120을 직접 견주게 되고, 둘 다 작은 쪽이 둘 다 가져갑니다.",
+        counterexample:
+          "한 나라가 한쪽만 싸고 다른 쪽은 비싸면 자본이 자유로워도 생산이 한 곳으로 모이지 않습니다. 모이는 결론은 한쪽이 둘 다 절대적으로 쌀 때의 것입니다.",
+        boundary:
+          "이 반사실은 저자가 적은 것이고, 오늘날 자본이 실제로 얼마나 움직이는지는 이 글이 다루지 않습니다.",
+      },
+      {
+        id: "premise-grounded-in-sentiment",
+        sectionId: "what-he-leaned-on",
+        intuition:
+          "전제가 기술에 기대고 있으면 기술이 바뀔 때, 마음에 기대고 있으면 마음이 바뀔 때 결론이 흔들립니다.",
+        workedExample:
+          "저자가 든 근거는 손이 닿지 않는 곳에 재산을 두는 불안과 고향을 떠나기 싫은 마음이었고, 그 마음이 약해지는 것을 보고 싶지 않다고 덧붙입니다.",
+        boundary:
+          "근거의 종류를 가르는 것과 전제가 지금 성립하는지 판정하는 것은 다릅니다. 이 글은 앞쪽만 합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 안과 밖",
+        relation: "같은 비율이 한쪽에서만 지속됩니다.",
+        concepts: ["exchange-ratio-only-across-borders"],
+      },
+      {
+        label: "01 전제",
+        relation: "그 차이를 만드는 조건이 적혀 있습니다.",
+        concepts: ["capital-immobility-premise"],
+      },
+      {
+        label: "02 전제가 풀리면",
+        relation: "저자 자신이 다른 결론을 적어 두었습니다.",
+        concepts: ["counterfactual-under-mobility"],
+      },
+      {
+        label: "03 무엇에 기댔는가",
+        relation: "전제를 떠받친 근거의 종류를 가릅니다.",
+        concepts: ["premise-grounded-in-sentiment"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "이 장의 네 숫자를 적고, 어느 나라가 어느 물건에서 유리한지 쓰세요.",
+        answerChecklist: [
+          "영국 옷감 100명·포도주 120명",
+          "포르투갈 옷감 90명·포도주 80명",
+          "포르투갈이 둘 다 적게 듦",
+          "그런데도 교역이 일어남",
+        ],
+        requiredConcepts: ["exchange-ratio-only-across-borders"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "요크셔 100명분을 런던 80명분과 바꾸는 일이 계속되지 않는 이유를 쓰세요.",
+        answerChecklist: [
+          "안에서는 자본이 더 남는 쪽으로 옮겨 감",
+          "그 움직임이 수익 차이를 지움",
+          "차이가 지워지면 그 비율도 남지 않음",
+          "나라 사이에서는 지워지지 않아 지속됨",
+        ],
+        requiredConcepts: ["exchange-ratio-only-across-borders"],
+        sectionId: "inside-vs-outside",
+      },
+      {
+        level: "basic",
+        question:
+          "저자가 안과 밖의 차이를 설명하기 위해 든 조건을 쓰고, 그것이 어디에 적혀 있는지 쓰세요.",
+        answerChecklist: [
+          "자본이 나라 사이를 옮겨 가기는 어려움",
+          "같은 나라의 지방 사이는 활발함",
+          "같은 장에 저자가 직접 적음",
+          "비판자가 뒤에 찾아낸 약점이 아님",
+        ],
+        requiredConcepts: ["capital-immobility-premise"],
+        sectionId: "the-assumption",
+      },
+      {
+        level: "basic",
+        question:
+          "자본이 자유롭게 움직인다면 옷감과 포도주가 어디서 만들어지는지와, 그 결론을 누가 적었는지 쓰세요.",
+        answerChecklist: [
+          "둘 다 포르투갈에서 만들어짐",
+          "영국의 옷감 자본과 노동이 옮겨 감",
+          "저자가 같은 장에서 직접 적음",
+          "영국 자본가와 두 나라 소비자에게 이롭다고 적음",
+        ],
+        requiredConcepts: ["counterfactual-under-mobility"],
+        sectionId: "if-it-moves",
+      },
+      {
+        level: "basic",
+        question:
+          "자본이 자유롭게 흐를 때 이윤율과 물건 값의 차이가 어떻게 되는지 쓰세요.",
+        answerChecklist: [
+          "이윤율에 차이가 없어짐",
+          "값에 남는 차이는 옮기는 데 더 드는 품뿐",
+          "두 나라의 구분이 사라짐",
+          "요크셔와 런던의 관계와 같아짐",
+        ],
+        requiredConcepts: ["counterfactual-under-mobility"],
+        sectionId: "if-it-moves",
+      },
+      {
+        level: "basic",
+        question:
+          "저자가 자본이 국경을 넘지 않는 이유로 든 두 가지를 쓰고, 그 뒤에 덧붙인 말을 쓰세요.",
+        answerChecklist: [
+          "손이 닿지 않는 곳에 재산을 두는 불안",
+          "고향과 익힌 습관을 떠나기 꺼리는 마음",
+          "기술이나 비용표가 아님",
+          "그 마음이 약해지는 것을 보고 싶지 않다고 덧붙임",
+        ],
+        requiredConcepts: ["premise-grounded-in-sentiment"],
+        sectionId: "what-he-leaned-on",
+      },
+      {
+        level: "advanced",
+        question:
+          "자본이 머무를 때와 움직일 때 고르는 기준이 어떻게 달라지는지 네 숫자로 유도하세요.",
+        answerChecklist: [
+          "머무를 때는 나라 안의 맞바꿈 비율을 봄",
+          "영국 100/120과 포르투갈 90/80이 다름",
+          "움직일 때는 두 나라의 같은 물건을 직접 견줌",
+          "90 대 100과 80 대 120이라 둘 다 작은 쪽이 가져감",
+        ],
+        requiredConcepts: ["counterfactual-under-mobility"],
+        sectionId: "if-it-moves",
+      },
+      {
+        level: "advanced",
+        question:
+          "자본이 자유로워도 생산이 한 곳으로 모이지 않는 경우를 들고, 모인다는 결론이 어떤 조건의 것인지 쓰세요.",
+        answerChecklist: [
+          "한 나라가 한쪽만 싸고 다른 쪽은 비싼 경우",
+          "그때는 자본이 자유로워도 나뉨",
+          "모인다는 결론은 한쪽이 둘 다 절대적으로 쌀 때의 것",
+          "이 장의 숫자가 마침 그 경우",
+        ],
+        requiredConcepts: ["counterfactual-under-mobility"],
+        sectionId: "if-it-moves",
+      },
+      {
+        level: "advanced",
+        question:
+          "자본이 국경을 넘기 어렵다는 전제를 거래에 드는 값으로 바꿔 적고, 그 값이 작아지면 어떻게 되는지 쓰세요.",
+        answerChecklist: [
+          "상대를 찾고 조건을 따지고 약속을 강제하는 값",
+          "국경을 넘으면 그 값이 커짐",
+          "값이 충분히 크면 자본이 움직이지 않음",
+          "값이 작아지면 반사실 쪽으로 이동함",
+        ],
+        requiredConcepts: ["capital-immobility-premise", "transaction-cost"],
+        sectionId: "the-assumption",
+      },
+      {
+        level: "advanced",
+        question:
+          "전제를 떠받친 근거가 기술이 아니라 마음과 제도라는 사실이 결론을 어떻게 읽게 만드는지 쓰세요.",
+        answerChecklist: [
+          "결론의 수명이 그 조건에 묶임",
+          "마음과 제도는 바뀔 수 있음",
+          "조건부 명제로 다시 적어야 함",
+          "조건을 떼고 결론만 인용하면 안 됨",
+        ],
+        requiredConcepts: ["premise-grounded-in-sentiment", "broken-assumption-diagnosis"],
+        sectionId: "what-he-leaned-on",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "David Ricardo, 『On the Principles of Political Economy, and Taxation』 (1817) 초판, 7장",
+        href: "https://www.gutenberg.org/ebooks/33310",
+        problem:
+          "한 나라가 모든 물건을 더 적은 품으로 만들 수 있을 때에도 교역이 양쪽에 이득인지, 그리고 같은 논리가 왜 한 나라 안에서는 다르게 작동하는지를 함께 설명해야 했습니다.",
+        contribution:
+          "네 숫자로 교역의 이득을 보인 뒤, 같은 교환이 한 나라 안에서는 성립할 수 없다고 적고 그 차이를 자본이 나라 사이를 옮겨 가기 어렵다는 것으로 설명했습니다. 이어서 그 조건이 성립하지 않는 경우를 직접 따져, 자본이 자유롭게 흐르면 두 물건이 한 곳에서 만들어지고 이윤율 차이가 사라진다는 결론까지 적었습니다. 결론과 조건을 같은 장에 나란히 둔 것이 이 장의 형식입니다.",
+        assumptions:
+          "자본이 국경을 넘기 어렵다는 것이 가장 큰 전제이며, 그 근거로 재산을 멀리 두는 불안과 고향을 떠나기 꺼리는 마음을 듭니다. 값을 노동으로 재는 설정도 전제이고, 두 나라의 한 몫이 같은 양을 뜻한다고 둡니다.",
+        evidenceScope:
+          "Project Gutenberg의 1817년 초판 전사본(eBook 33310)으로 7장 전체를 읽었습니다. 이 글의 다른 원자료와 달리 facsimile이 아니라 전사본이므로 쪽 이미지로 대조하지 못했고, 그래서 쪽수를 적지 않고 장 번호까지만 적습니다.",
+        notClaim:
+          "이 글은 오늘날 자본이 얼마나 움직이는지, 그래서 어떤 결론이 성립하는지를 판정하지 않습니다. 그 판정에는 이 글이 읽지 않은 자료가 필요합니다. 또 본문의 비율 표기와 '결론이 아니라 전제를 읽는 절차'는 이 글이 정리한 것이고 원문에 그 꼴로 있지 않습니다. 교역의 이득이 왜 생기는지의 메커니즘은 1단계의 글이 소유하므로 여기서 다시 세우지 않았습니다.",
+        sectionId: "the-assumption",
+      },
+    ],
+  },
 };

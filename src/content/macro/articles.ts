@@ -107,4 +107,72 @@ export const macroArticles: Article[] = [
     component: () =>
       import("@/pages/articles/macro/what-the-price-level-hides"),
   },
+  {
+    slug: "who-counts-as-unemployed",
+    title: "실업자는 세 조건을 통과한 사람으로 정의됩니다",
+    subcategory: "macro-numbers",
+    sections: [
+      {
+        id: "overview",
+        title: "일자리를 구하다 지쳐 그만둔 사람은 실업자가 아닙니다",
+      },
+      {
+        id: "three-conditions",
+        title: "부품 1. 세 조건이 각각 다른 사람을 거릅니다",
+      },
+      {
+        id: "denominator",
+        title: "부품 2. 분모는 전체 인구가 아니라 일하거나 찾는 사람입니다",
+      },
+      {
+        id: "four-measures",
+        title: "부품 3. 같은 사람들에서 네 가지 숫자가 나옵니다",
+      },
+      {
+        id: "moving-the-line",
+        title: "부품 4. 조건 하나만 바꿔도 같은 나라의 숫자가 달라집니다",
+      },
+      {
+        id: "how-to-read",
+        title: "부품 5. 숫자 하나가 아니라 숫자와 정의를 함께 읽습니다",
+      },
+      {
+        id: "handoff",
+        title: "마지막은 나라 밖과의 거래입니다",
+      },
+    ],
+    component: () => import("@/pages/articles/macro/who-counts-as-unemployed"),
+  },
+  {
+    slug: "what-ricardo-assumed",
+    title: "리카도의 논증은 자본이 국경을 넘지 않는다는 전제 위에 있습니다",
+    subcategory: "macro-numbers",
+    sections: [
+      {
+        id: "overview",
+        title: "포르투갈이 둘 다 더 잘 만드는데도 교역이 일어납니다",
+      },
+      {
+        id: "inside-vs-outside",
+        title: "부품 1. 같은 교환이 한 나라 안에서는 일어나지 않습니다",
+      },
+      {
+        id: "the-assumption",
+        title: "부품 2. 차이를 만드는 것은 자본이 국경을 넘기 어렵다는 것입니다",
+      },
+      {
+        id: "if-it-moves",
+        title: "부품 3. 전제가 풀리면 저자 자신이 다른 결론을 적습니다",
+      },
+      {
+        id: "what-he-leaned-on",
+        title: "부품 4. 전제를 떠받친 것은 사람의 마음과 제도였습니다",
+      },
+      {
+        id: "handoff",
+        title: "2단계를 여기서 닫습니다",
+      },
+    ],
+    component: () => import("@/pages/articles/macro/what-ricardo-assumed"),
+  },
 ];

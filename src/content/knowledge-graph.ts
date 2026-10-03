@@ -25521,6 +25521,96 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "서로 다른 해의 총량을 그대로 견주면 물량이 늘어난 몫과 값이 오른 몫이 섞여 있으므로, 먼저 오른쪽 항을 값과 물량으로 갈라 값이 변한 몫을 걷어내야 합니다. 사람 수로 나누는 일보다 앞에 오는 나눗셈이며, 값 수준 하나를 만들 때 무엇을 얼마의 비중으로 평균할지 정해야 한다는 선택이 그대로 따라붙습니다.",
     canonicalHref: "/economics/macro/what-the-price-level-hides#what-to-ask",
   },
+  "definition-before-counting": {
+    id: "definition-before-counting",
+    kind: "concept",
+    domain: "economics",
+    label: "세기 전에 누구를 셀지 정하는 자리가 있다",
+    aliases: ["측정 이전의 정의", "통계 기준"],
+    definition:
+      "실업률 같은 숫자는 관찰로 모아지는 것이 아니라 먼저 정의된 조건을 통과한 사람만 세어 만들어집니다. 그 조건은 국제 통계 기준 문서에 조항으로 적혀 있고 각 조건에는 시간·기간·창의 눈금이 숫자로 붙어 있어, 눈금을 옮기면 같은 조사 자료에서 다른 값이 나옵니다. 그래서 숫자가 틀렸는지를 묻기 전에 어떤 정의로 만들어졌는지를 물어야 합니다.",
+    canonicalHref: "/economics/macro/who-counts-as-unemployed#three-conditions",
+  },
+  "three-unemployment-conditions": {
+    id: "three-unemployment-conditions",
+    kind: "concept",
+    domain: "economics",
+    label: "일하지 않음·찾음·당장 가능의 세 조건",
+    aliases: ["실업의 정의", "ICLS 47항"],
+    definition:
+      "실업자는 기준 주에 한 시간도 일하지 않았고, 최근 넉 주 안에 실제로 일을 찾는 활동을 했으며, 자리가 생기면 당장 일할 수 있는 사람으로 정의됩니다. 일했다고 보는 선이 한 시간이라 아주 짧게 일한 사람도 일하는 쪽으로 가고, 찾는 활동을 요구하므로 일하고 싶다는 마음만으로는 들어오지 않습니다. 세 조건은 함께 걸리므로 하나만 통과하지 못해도 실업자가 아닙니다.",
+    canonicalHref: "/economics/macro/who-counts-as-unemployed#three-conditions",
+  },
+  "labour-force-denominator": {
+    id: "labour-force-denominator",
+    kind: "theorem",
+    domain: "economics",
+    label: "조건에서 빠지면 분자와 분모에서 동시에 사라진다",
+    aliases: ["노동력 분모", "실망실업의 역설"],
+    definition:
+      "실업률의 분모는 전체 인구나 일할 나이의 사람 전체가 아니라 일하는 사람과 실업자를 더한 노동력입니다. 어느 조건에서든 빠진 사람은 분자에서도 분모에서도 함께 빠지므로, 일자리를 구하다 지쳐 찾기를 그만두면 실업률이 올라가는 것이 아니라 내려갑니다. 나빠진 사정이 좋아 보이는 숫자로 나타나는 이 성질이 이 지표를 혼자 읽으면 안 되는 이유입니다.",
+    canonicalHref: "/economics/macro/who-counts-as-unemployed#denominator",
+  },
+  "underutilization-measures": {
+    id: "underutilization-measures",
+    kind: "concept",
+    domain: "economics",
+    label: "같은 사람들에서 넓이가 다른 네 지표가 나온다",
+    aliases: ["LU1~LU4", "쓰이지 않는 일손"],
+    definition:
+      "기준 문서는 쓰이지 않는 일손을 재는 지표를 넷으로 정의하고 그중 둘 이상을 함께 쓰라고 적습니다. 가장 좁은 것은 실업자만 세고, 넓은 것은 시간이 모자란 사람과 찾기를 그만둔 사람까지 더합니다. 분자를 넓힐 때 분모도 함께 넓혀야 하며, 분자만 넓히고 분모를 두면 다른 지표가 아니라 잘못 계산한 값이 됩니다.",
+    canonicalHref: "/economics/macro/who-counts-as-unemployed#four-measures",
+  },
+  "comparability-versus-coverage": {
+    id: "comparability-versus-coverage",
+    kind: "concept",
+    domain: "economics",
+    label: "좁게 정의하면 견주기 쉽고 넓게 정의하면 덜 놓친다",
+    aliases: ["비교 가능성과 포괄성의 맞바꿈"],
+    definition:
+      "찾는 활동과 당장 가능을 요구하는 좁은 정의는 응답에 좌우되는 부분을 줄여 나라와 해를 견주기 쉽게 만들지만 실제로 일손이 남는 사람을 놓칩니다. 넓은 정의는 반대로 덜 놓치는 대신 눈금 선택에 더 민감해져 견주기 어려워집니다. 둘 중 하나를 고르는 문제가 아니라 어느 쪽을 보고 있는지 알고 보는 문제이며, 기준 문서가 둘을 함께 두고 둘 이상을 보라고 한 이유가 여기 있습니다.",
+    canonicalHref: "/economics/macro/who-counts-as-unemployed#moving-the-line",
+  },
+  "exchange-ratio-only-across-borders": {
+    id: "exchange-ratio-only-across-borders",
+    kind: "concept",
+    domain: "economics",
+    label: "같은 교환 비율이 나라 안에서는 남지 않는다",
+    aliases: ["안과 밖의 구분"],
+    definition:
+      "한 쪽 100명이 한 해 일한 몫을 다른 쪽 80명이 한 해 일한 몫과 바꾸는 일은 나라와 나라 사이에서는 지속되지만 같은 나라의 두 사람 사이에서는 지속되지 않습니다. 안에서는 더 벌리는 쪽으로 자본이 옮겨 가 수익 차이가 지워지고, 차이가 지워지면 그런 비율도 남지 않기 때문입니다. 같은 비율이 한쪽에서만 성립한다는 사실 자체가 무엇이 둘을 가르는지를 묻게 만듭니다.",
+    canonicalHref: "/economics/macro/what-ricardo-assumed#inside-vs-outside",
+  },
+  "capital-immobility-premise": {
+    id: "capital-immobility-premise",
+    kind: "concept",
+    domain: "economics",
+    label: "자본이 국경을 넘기 어렵다는 전제",
+    aliases: ["자본 비이동성", "리카도의 전제"],
+    definition:
+      "자본이 더 이익이 되는 곳을 찾아 나라 사이를 옮겨 가기는 어렵고 같은 나라의 지방 사이를 옮겨 가기는 활발하다는 것이, 교역의 비율이 나라 사이에서만 지속되는 이유로 제시된 전제입니다. 비판자가 뒤에 찾아낸 약점이 아니라 저자가 같은 장에 직접 적어 둔 조건이며, 국경을 넘을 때 상대를 찾고 조건을 따지고 약속을 강제하는 데 드는 값이 커진다는 말로 바꿔 읽을 수 있습니다.",
+    canonicalHref: "/economics/macro/what-ricardo-assumed#the-assumption",
+  },
+  "counterfactual-under-mobility": {
+    id: "counterfactual-under-mobility",
+    kind: "theorem",
+    domain: "economics",
+    label: "자본이 자유롭게 흐르면 두 나라의 구분이 사라진다",
+    aliases: ["이동성 아래의 반사실"],
+    definition:
+      "자본이 가장 이익이 되는 곳으로 자유롭게 흐를 수 있으면 두 물건이 모두 절대적으로 더 싼 한 곳에서 만들어지고, 이윤율에 차이가 없어지며, 물건 값에 남는 차이는 시장까지 옮기는 데 더 드는 품뿐입니다. 고르는 기준이 나라 안의 맞바꿈 비율에서 나라 사이의 절대 비교로 바뀌기 때문이며, 이 반사실은 저자 자신이 같은 장에서 따져 적은 것입니다.",
+    canonicalHref: "/economics/macro/what-ricardo-assumed#if-it-moves",
+  },
+  "premise-grounded-in-sentiment": {
+    id: "premise-grounded-in-sentiment",
+    kind: "concept",
+    domain: "economics",
+    label: "전제를 떠받친 것이 측정되는 것인지 바뀔 수 있는 것인지",
+    aliases: ["전제의 근거 종류", "조건의 수명"],
+    definition:
+      "자본이 국경을 넘지 않는 이유로 제시된 것은 기술이나 비용표가 아니라, 손이 닿지 않는 곳에 재산을 두는 불안과 태어난 곳을 떠나기를 꺼리는 마음이었습니다. 전제를 떠받치는 근거가 측정되는 것인지 마음과 제도처럼 바뀔 수 있는 것인지를 가르면 결론의 수명이 무엇에 묶여 있는지가 드러나며, 저자가 그 마음이 약해지는 것을 보고 싶지 않다고 덧붙인 대목은 이 전제가 관찰이 아니라 바라는 상태로 제시되었음을 보입니다.",
+    canonicalHref: "/economics/macro/what-ricardo-assumed#what-he-leaned-on",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47583,6 +47673,111 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "돈의 양이 늘어나는 경로를 다루는 설명과, 같은 돈이 얼마나 자주 쓰이는지를 다루는 설명이 서로 다른 자리를 봅니다.",
+  },
+  {
+    from: "definition-before-counting",
+    to: "three-unemployment-conditions",
+    relation: "produces",
+    reason:
+      "세기 전에 정하는 자리가 있다면 실제로 무엇이 정해져 있는지를 조항에서 읽게 됩니다.",
+  },
+  {
+    from: "three-unemployment-conditions",
+    to: "labour-force-denominator",
+    relation: "produces",
+    reason:
+      "조건을 통과한 사람만 분자에 들어가고 그 분자가 분모에도 들어가므로, 조건에서 빠지면 양쪽에서 동시에 사라집니다.",
+  },
+  {
+    from: "labour-force-denominator",
+    to: "underutilization-measures",
+    relation: "constrains",
+    reason:
+      "좁은 지표가 사정이 나빠질 때 내려갈 수 있으므로 넓이가 다른 지표를 함께 두어야 합니다.",
+  },
+  {
+    from: "definition-before-counting",
+    to: "comparability-versus-coverage",
+    relation: "produces",
+    reason:
+      "눈금을 어디에 두느냐가 선택이라면 그 선택이 무엇을 얻고 무엇을 잃는지가 바로 따라옵니다.",
+  },
+  {
+    from: "deflating-before-comparing",
+    to: "definition-before-counting",
+    relation: "extends",
+    reason:
+      "값 수준을 만들 때 비중을 정해야 했던 것처럼, 사람을 셀 때도 중립적인 기본값이 없습니다.",
+  },
+  {
+    from: "underutilization-measures",
+    to: "crossing-curves-incomparability",
+    relation: "contrasts",
+    reason:
+      "여럿을 한 숫자로 줄일 때 생기는 문제를, 숫자를 여러 개 두어 푸는 쪽이 어떤 것인지 보입니다.",
+  },
+  {
+    from: "value-of-marginal-product",
+    to: "three-unemployment-conditions",
+    relation: "contrasts",
+    reason:
+      "가게가 사람을 쓸지 정하는 셈과, 그 사람이 통계에서 어느 칸에 들어가는지를 정하는 규칙이 서로 다른 자리입니다.",
+  },
+  {
+    from: "neither-model-fits",
+    to: "comparability-versus-coverage",
+    relation: "extends",
+    reason:
+      "한 숫자가 답을 주지 못할 때 무엇을 더 재야 하는지를 정하는 규율이 같은 모양으로 반복됩니다.",
+  },
+  {
+    from: "absolute-vs-comparative-advantage",
+    to: "exchange-ratio-only-across-borders",
+    relation: "prerequisite",
+    reason:
+      "왜 그런 교환이 양쪽에 이득인지를 먼저 세워야, 같은 교환이 안에서는 지속되지 않는다는 사실이 질문이 됩니다.",
+  },
+  {
+    from: "exchange-ratio-only-across-borders",
+    to: "capital-immobility-premise",
+    relation: "produces",
+    reason:
+      "안과 밖이 갈린다는 관찰에서 무엇이 둘을 가르는지를 묻게 되고, 저자가 그 자리에 적어 둔 답이 전제입니다.",
+  },
+  {
+    from: "capital-immobility-premise",
+    to: "counterfactual-under-mobility",
+    relation: "constrains",
+    reason:
+      "전제가 성립하지 않는 경우를 저자가 직접 따져 적었으므로, 전제의 위치가 그 반사실로 드러납니다.",
+  },
+  {
+    from: "counterfactual-under-mobility",
+    to: "premise-grounded-in-sentiment",
+    relation: "produces",
+    reason:
+      "결론이 전제에 묶여 있음을 보고 나면 그 전제가 무엇에 기대고 있는지를 묻게 됩니다.",
+  },
+  {
+    from: "transaction-cost",
+    to: "capital-immobility-premise",
+    relation: "produces",
+    reason:
+      "상대를 찾고 재고 강제하는 데 드는 값이 국경을 넘을 때 커진다는 것이 자본이 움직이지 않는 이유를 오늘의 말로 적은 것입니다.",
+  },
+  {
+    from: "broken-assumption-diagnosis",
+    to: "premise-grounded-in-sentiment",
+    relation: "extends",
+    reason:
+      "빗나간 예측에서 가정을 짚던 방법을, 아직 빗나가지 않은 결론의 전제를 미리 짚는 쪽으로 넓힌 것입니다.",
+  },
+  {
+    from: "terms-of-trade-range",
+    to: "exchange-ratio-only-across-borders",
+    relation: "prerequisite",
+    reason:
+      "양쪽 모두 이득인 교환 비율의 구간이 먼저 정의되어야 그 구간이 어디서 유지되는지를 물을 수 있습니다.",
   },
 ];
 

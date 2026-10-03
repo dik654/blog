@@ -13104,6 +13104,70 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "who-counts-as-unemployed": {
+    title: "실업자를 세는 규칙을 다루는 글이 소유하는 범위",
+    owns: [
+      "세기 전에 누구를 셀지 정하는 자리가 있다는 구분",
+      "일하지 않음·찾음·당장 가능의 세 조건과 각 눈금",
+      "분모가 노동력이라 조건에서 빠진 사람이 양쪽에서 사라진다는 성질",
+      "넓이가 다른 네 지표와 분자를 넓힐 때 분모도 넓혀야 한다는 규칙",
+      "좁은 정의와 넓은 정의가 맞바꾸는 것",
+    ],
+    reuses: [
+      {
+        label: "값 수준을 만들 때 비중을 정해야 한다는 선택",
+        href: "/economics/macro/what-the-price-level-hides#what-to-ask",
+      },
+      {
+        label: "한 숫자로 줄일 때 잃는 것",
+        href: "/economics/labor/measuring-the-spread#what-one-number-loses",
+      },
+      {
+        label: "가게가 한 사람을 더 쓸지 정하는 셈",
+        href: "/economics/labor/wage-floor-natural-experiment#two-counts",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "조항에 적힌 정의와 식만 기준 문서에 귀속하고, 100명 보기·백분율·눈금을 옮겼을 때의 절차는 이 글이 만들거나 추론한 것으로 표시한다. 한국어 서술이 공식 번역이 아님을 밝힌다",
+      },
+    ],
+  },
+  "what-ricardo-assumed": {
+    title: "리카도가 전제한 것을 읽는 글이 소유하는 범위",
+    owns: [
+      "같은 교환 비율이 나라 안에서는 지속되지 않는다는 구분",
+      "자본이 국경을 넘기 어렵다는 전제가 그 차이를 만든다는 설명",
+      "전제가 풀렸을 때 저자가 적어 둔 반사실과 이윤율 결론",
+      "전제를 떠받친 근거가 기술이 아니라 마음과 제도였다는 점",
+      "결론이 아니라 전제를 읽는 절차",
+    ],
+    reuses: [
+      {
+        label: "교역의 이득이 왜 생기는지의 메커니즘",
+        href: "/economics/scarcity/gains-from-trade#two-advantages",
+      },
+      {
+        label: "양쪽 모두 이득인 교환 비율의 구간",
+        href: "/economics/scarcity/gains-from-trade#trade-range",
+      },
+      {
+        label: "값으로 조정하는 일 자체에 드는 값",
+        href: "/economics/firms/why-firms-exist#cost-of-market",
+      },
+      {
+        label: "빗나간 예측에서 가정을 짚는 방법",
+        href: "/economics/macro/why-per-head-stalls#what-broke",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "7장에 적힌 숫자·문장·반사실만 저자에게 귀속하고, 비율 표기와 전제를 읽는 절차는 이 글이 정리한 것으로 표시한다. 전사본으로 읽었으므로 쪽수를 쓰지 않고 장 번호까지만 적는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
