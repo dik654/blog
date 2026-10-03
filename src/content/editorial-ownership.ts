@@ -13011,6 +13011,30 @@ export const EDITORIAL_BOUNDARIES = {
   "storage-elements-and-transients": { title: "전하와 자기장을 담으면 변화에 시간이 걸립니다 글이 소유하는 범위", owns: ["축전기 전압·인덕터 전류가 이어지는 상태인 까닭", "가상 5 V·1 kΩ RC와 RL의 1 ms 지수 응답", "1τ의 63.2%와 3τ의 약 95% 수치", "저항을 두 배로 바꿀 때 RC·RL 시간 변화와 단일 저장 모델 경계"], reuses: [{ label: "정상 상태 저항과 열", href: "/electronics/circuits/resistance-and-power-dissipation#heat" }], evidence: [{ kind: "primary-source", rule: "MIT 공식 강의 자료의 RC·RL 식과 본문의 가상 5 V 수치를 구분한다." }, { kind: "project-claim", rule: "1 µF·1 H는 같은 시간 상수를 만들기 위해 고른 교육용 가정이다." }] },
   "steady-state-and-impedance": { title: "반복 신호에서는 크기와 늦는 각도를 함께 셉니다 글이 소유하는 범위", owns: ["정현파 정상 상태와 시작 과도의 구분", "최대 진폭·각주파수·위상 지연의 시간 해석", "R/C/L의 복소 임피던스와 RC 전압 분배", "가상 1 kΩ·1 µF의 5 V 입력에서 출력 3.54 V·−45° 계산"], reuses: [{ label: "1 ms RC 충전 시간과 저장 상태", href: "/electronics/circuits/storage-elements-and-transients#rc" }], evidence: [{ kind: "primary-source", rule: "MIT 공식 강의안의 임피던스 식과 본문의 가상 수치를 구분한다." }, { kind: "project-claim", rule: "5 V는 최대 진폭이며 RMS 또는 실측치가 아니다." }] },
   "frequency-shaping-and-bode": {title:"느린 신호와 빠른 신호를 나누는 주파수 지도 글이 소유하는 범위",owns:["같은 1 kΩ·1 µF RC의 차단 주파수와 3.54 V 경계","전압 진폭비의 dB 환산과 로그 주파수 보드 선도","고주파 −20 dB/dec 근사와 정확한 −17.03 dB 차이","별도 고역 통과 연결·부하 한계"],reuses:[{label:"RC 복소 분배와 5 V 최대 진폭",href:"/electronics/circuits/steady-state-and-impedance#divider"}],evidence:[{kind:"primary-source",rule:"MIT 원본 RC·필터 도식과 본문의 가상 수치를 분리한다."},{kind:"project-claim",rule:"−20 dB/dec는 고주파 근사이며 경계부터 정확한 변화량으로 쓰지 않는다."}]},
+  "feedback-gain-and-stability": {
+    "title": "되먹임의 이득과 위상 여유 글이 소유하는 범위",
+    "owns": [
+      "1 V·A=100·β=0.1/0.5의 오차와 폐루프 이득",
+      "가상 10·100 rad/s 두 극 증폭기의 루프 교차 계산",
+      "59.3°·27.9° 위상 여유와 실제 부하 한계"
+    ],
+    "reuses": [
+      {
+        "label": "보드 선도의 dB와 주파수 눈금",
+        "href": "/electronics/circuits/frequency-shaping-and-bode#plot"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "TI 공식 자료의 식과 본문의 가상 두 극 수치를 구분한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "위상 여유만으로 특정 실제 제품의 발진 여부를 단정하지 않는다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

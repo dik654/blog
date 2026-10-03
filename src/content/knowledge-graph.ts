@@ -25450,6 +25450,72 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "bode-log-slope": { id: "bode-log-slope", domain: "physics", label: "로그 주파수 한 decade의 높은 쪽 기울기는 −20 dB에 가까워진다", aliases: ["Bode plot", "보드 선도", "decade"], definition: "가로축에 주파수 열 배를 한 칸으로 두고 진폭 dB와 위상을 표시합니다. 1차 RC 저역 통과의 고주파 근사 기울기는 −20 dB/dec입니다. fc→10fc의 정확한 변화는 약 −17.03 dB, 10fc→100fc는 약 −19.96 dB여서 근사와 실제 곡선을 구분합니다.", canonicalHref: "/electronics/circuits/frequency-shaping-and-bode#plot" },
   "rc-output-topology": { id: "rc-output-topology", domain: "physics", label: "같은 R·C도 연결과 출력 위치가 통과 방향을 바꾼다", aliases: ["RC high-pass", "고역 통과"], definition: "입력에서 C를 먼저 지나 R을 접지에 잇고 R 양단을 읽으면 H=jωRC/(1+jωRC)인 고역 통과입니다. 0.1fc·fc·10fc의 진폭 비는 약 0.0995·0.707·0.995입니다. 축전기 출력 저역 통과와 다른 연결·측정점입니다.", canonicalHref: "/electronics/circuits/frequency-shaping-and-bode#other-output" },
   "filter-load-boundary": { id: "filter-load-boundary", domain: "physics", label: "무부하 한 주파수 필터식은 부하와 과도 파형을 보장하지 않는다", aliases: ["filter loading", "필터 적용 경계"], definition: "본문의 RC 식은 이상 소자·무부하·정현파 정상 상태입니다. 부하가 붙으면 분배가 바뀌고, 실제 기생 성분과 펄스의 여러 주파수·초기 상태는 한 점의 보드 선도로 전체를 설명할 수 없습니다.", canonicalHref: "/electronics/circuits/frequency-shaping-and-bode#limits" },
+  "negative-feedback-algebra": {
+    "id": "negative-feedback-algebra",
+    "domain": "physics",
+    "label": "출력의 일부를 빼서 남은 오차를 증폭한다",
+    "aliases": [
+      "negative feedback",
+      "음의 되먹임"
+    ],
+    "definition": "e=r−βy, y=Ae인 가상 증폭기에 A=100·β=0.1·r=1 V를 넣으면 y≈9.09 V, e≈0.091 V가 서로 맞습니다. 빼기 연결도 지연에 따라 전체 반응이 달라집니다.",
+    "canonicalHref": "/electronics/circuits/feedback-gain-and-stability#loop"
+  },
+  "closed-loop-gain": {
+    "id": "closed-loop-gain",
+    "domain": "physics",
+    "label": "루프 이득이 클수록 실제 배율이 1/β에 가까워진다",
+    "aliases": [
+      "closed-loop gain",
+      "폐루프 이득"
+    ],
+    "definition": "선형 음의 되먹임에서 y/r=A/(1+Aβ)입니다. A=100·β=0.1은 9.09배로 목표 10배와 약 9.1% 다르고, β=0.5는 1.96배로 목표 2배와 약 2% 다릅니다.",
+    "canonicalHref": "/electronics/circuits/feedback-gain-and-stability#loop"
+  },
+  "amplifier-poles-delay": {
+    "id": "amplifier-poles-delay",
+    "domain": "physics",
+    "label": "증폭기의 속도 경계가 두 번의 크기 감소와 위상 지연을 만든다",
+    "aliases": [
+      "amplifier poles",
+      "두 극 지연"
+    ],
+    "definition": "가상 증폭기 A(s)=100/[(1+s/10)(1+s/100)]은 10·100 rad/s의 두 경계를 가집니다. s=jω에서 각 극의 위상 −atan(ω/ωp)이 더해집니다. 특정 제품의 측정 모델이 아닙니다.",
+    "canonicalHref": "/electronics/circuits/feedback-gain-and-stability#delay"
+  },
+  "unity-loop-crossover": {
+    "id": "unity-loop-crossover",
+    "domain": "physics",
+    "label": "루프 크기가 1인 교차점이 위상 검사의 기준이다",
+    "aliases": [
+      "unity loop crossover",
+      "교차 각주파수"
+    ],
+    "definition": "L(jω)=A(jω)β의 크기가 1, 즉 0 dB인 각주파수입니다. 가상 두 극 증폭기는 β=0.1일 때 약 78.2 rad/s, β=0.5일 때 약 212.6 rad/s에서 교차합니다.",
+    "canonicalHref": "/electronics/circuits/feedback-gain-and-stability#margin"
+  },
+  "feedback-phase-margin": {
+    "id": "feedback-phase-margin",
+    "domain": "physics",
+    "label": "교차점에서 −180°까지 남은 위상 각도가 여유이다",
+    "aliases": [
+      "phase margin",
+      "위상 여유"
+    ],
+    "definition": "가상 2극 선형 루프의 위상 여유는 PM=180°+∠L(jωx)입니다. β=0.1은 ∠L≈−120.7°·PM≈59.3°, β=0.5는 ∠L≈−152.1°·PM≈27.9°입니다. 둘 다 이 모델에서는 안정하지만 후자는 흔들림이 큽니다.",
+    "canonicalHref": "/electronics/circuits/feedback-gain-and-stability#margin"
+  },
+  "feedback-real-load-boundary": {
+    "id": "feedback-real-load-boundary",
+    "domain": "physics",
+    "label": "실제 부하와 포화는 가상 루프의 안정 판단을 바꾼다",
+    "aliases": [
+      "feedback load stability",
+      "되먹임 적용 경계"
+    ],
+    "definition": "β=0.1의 59.3°와 β=0.5의 27.9°는 무부하 가상 두 극 모델 수치입니다. 축전성 부하나 공급 제한·추가 지연은 교차점과 계단 응답을 바꿉니다. 실제 제품은 데이터시트 조건 및 연결 상태에서 검증해야 합니다.",
+    "canonicalHref": "/electronics/circuits/feedback-gain-and-stability#limits"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47357,6 +47423,48 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "voltage-ratio-decibel", to: "bode-log-slope", relation: "produces", reason: "열 배 간격의 dB 변화량을 읽습니다." },
   { from: "passive-element-impedance", to: "rc-output-topology", relation: "prerequisite", reason: "출력 위치를 바꿀 때 C와 R의 몫을 다시 계산합니다." },
   { from: "rc-output-topology", to: "filter-load-boundary", relation: "constrains", reason: "어디서 읽고 무엇을 연결하는지가 측정 결과를 바꿉니다." },
+  {
+    "from": "voltage-ratio-decibel",
+    "to": "unity-loop-crossover",
+    "relation": "prerequisite",
+    "reason": "앞 글의 0 dB 눈금에서 루프 크기 1을 읽습니다."
+  },
+  {
+    "from": "negative-feedback-algebra",
+    "to": "closed-loop-gain",
+    "relation": "produces",
+    "reason": "오차를 빼고 증폭한 연립식에서 폐루프 이득을 얻습니다."
+  },
+  {
+    "from": "closed-loop-gain",
+    "to": "unity-loop-crossover",
+    "relation": "constrains",
+    "reason": "Aβ를 주파수별로 늘려 교차점을 찾습니다."
+  },
+  {
+    "from": "amplifier-poles-delay",
+    "to": "unity-loop-crossover",
+    "relation": "constrains",
+    "reason": "두 극이 루프 크기와 교차 속도를 정합니다."
+  },
+  {
+    "from": "unity-loop-crossover",
+    "to": "feedback-phase-margin",
+    "relation": "produces",
+    "reason": "루프 이득이 크기 1인 교차점에서 위상 지연을 읽어 −180°까지 남은 각도를 셉니다."
+  },
+  {
+    "from": "amplifier-poles-delay",
+    "to": "feedback-phase-margin",
+    "relation": "produces",
+    "reason": "두 지연 각도의 합이 −180°까지 남은 여유를 정합니다."
+  },
+  {
+    "from": "feedback-phase-margin",
+    "to": "feedback-real-load-boundary",
+    "relation": "constrains",
+    "reason": "계산한 여유는 모델 부하 조건 안에서만 적용합니다."
+  },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

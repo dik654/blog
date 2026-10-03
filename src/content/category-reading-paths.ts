@@ -27,7 +27,7 @@ export const CATEGORY_READING_PATHS: Readonly<
       { eyebrow: "01 · 보존", title: "전압·전류·저항", description: "갈림길과 고리를 따라 전하와 에너지의 보존을 수치로 확인합니다.", subcategories: ["circuit-foundations"] },
       { eyebrow: "02 · 시간", title: "저장된 상태와 변화", description: "전하와 자기장에 에너지가 쌓일 때 전압·전류가 따라오는 속도를 봅니다.", subcategories: ["circuit-dynamics"] },
     ],
-    featuredArticles: ["lumped-circuit-and-conservation", "resistance-and-power-dissipation", "storage-elements-and-transients", "steady-state-and-impedance", "frequency-shaping-and-bode"],
+    featuredArticles: ["lumped-circuit-and-conservation", "resistance-and-power-dissipation", "storage-elements-and-transients", "steady-state-and-impedance", "frequency-shaping-and-bode", "feedback-gain-and-stability"],
   },
   semiconductors: {
     title: "재료에서 칩까지 읽기",
