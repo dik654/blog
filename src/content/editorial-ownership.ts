@@ -13335,6 +13335,104 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "ruins-mislead": {
+    title: "남는 과정의 치우침을 읽는 글이 소유하는 범위",
+    owns: [
+      "남는 과정이 종류를 가려서 남긴다는 것",
+      "같은 걸름이 대상에 따라 반대 부호의 오차를 만든다는 유도",
+      "겉모습과 힘을 따로 따지는 규칙이 두 방향을 모두 막는다는 것",
+      "적히지 않았다는 사실을 단서로 쓰는 방법",
+      "자료가 버틸 수 있는 꼴로만 결론을 적는다는 것",
+    ],
+    reuses: [
+      {
+        label: "사료가 사건이 아니라 사건에 대한 기록이라는 구분",
+        href: "/history/testimony/speeches-were-reconstructed#overview",
+      },
+      {
+        label: "방향 있는 어긋남이 모으기로 지워지지 않는다는 것",
+        href: "/history/testimony/speeches-were-reconstructed#why-they-diverge",
+      },
+      {
+        label: "표기된 자릿수가 실제 해상도를 넘어선다는 문제",
+        href: "/history/record-numbers/what-the-total-cannot-tell#last-digits",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "1권 10절의 사고실험·규칙·수치만 저자에게 귀속하고, 보정 절차의 네 단계 정리와 85명·102,000의 계산은 이 글이 더한 것으로 표시한다. 전사본으로 읽었으므로 쪽수를 쓰지 않고 권·절 번호까지만 적는다",
+      },
+    ],
+  },
+  "the-gap-was-made": {
+    title: "지워진 공백을 읽는 글이 소유하는 범위",
+    owns: [
+      "지워진 공백과 소실된 공백의 구분",
+      "사료를 가리키는 번호가 복원 판단을 담을 수 있다는 것",
+      "공백의 모양은 알 수 있고 내용은 알 수 없다는 선",
+      "같은 내용이라도 전해진 경로에 따라 무게가 다르다는 것",
+      "판본이 또 한 번 걸러진 자리를 이유와 함께 밝혀 두는 일의 값",
+    ],
+    reuses: [
+      {
+        label: "남는 과정이 종류를 가려서 남긴다는 것",
+        href: "/history/inference-from-sources/ruins-mislead#what-remains",
+      },
+      {
+        label: "자료가 버틸 수 있는 꼴로만 결론을 적는다는 것",
+        href: "/history/inference-from-sources/ruins-mislead#using-the-rule",
+      },
+      {
+        label: "각 서술에 출처 꼬리표를 붙이는 방식",
+        href: "/history/testimony/told-but-not-believed#tags",
+      },
+      {
+        label: "같은 법전의 조항들이 무엇을 어느 칸에 두었는지",
+        href: "/history/record-numbers/numbers-that-command#rungs",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "돌의 상태·지워진 단·분량 추정·주제 목록·세 조항의 출처는 이 판의 머리말과 편집자 주에 귀속하고, 세 겹의 걸름이라는 정리는 이 글이 더한 것으로 표시한다. 전사본으로 읽었으므로 쪽수를 쓰지 않고 조항 번호와 주의 위치만 적는다",
+      },
+    ],
+  },
+  "naming-the-past": {
+    title: "우리가 붙인 이름을 읽는 글이 소유하는 범위",
+    owns: [
+      "한 사료에 시대마다 이름이 쌓인다는 것",
+      "이름이 사료가 말하지 않은 주장을 딸고 온다는 유도",
+      "장 구분과 조항 번호처럼 뒤에 붙은 구조가 자료처럼 보인다는 것",
+      "번역어의 선택이 본문 안에 녹아 남는다는 것",
+      "시리즈 전체가 세운 세 물음의 묶음",
+    ],
+    reuses: [
+      {
+        label: "남는 과정이 종류를 가려서 남긴다는 것",
+        href: "/history/inference-from-sources/ruins-mislead#what-remains",
+      },
+      {
+        label: "조항 번호가 복원 판단을 담는다는 것",
+        href: "/history/inference-from-sources/the-gap-was-made#the-numbering",
+      },
+      {
+        label: "같은 법전의 숫자가 센 수가 아니라 정한 수라는 것",
+        href: "/history/record-numbers/numbers-that-command#overview",
+      },
+      {
+        label: "저자가 자기 방법을 적어 둔 진술을 읽는 법",
+        href: "/history/testimony/speeches-were-reconstructed#speeches",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "표제·본문 끝 문장·머리말의 전승 서술만 이 판에 귀속하고, 네 이름의 정리와 함의를 넷으로 나눈 것은 이 글이 더한 것으로 표시한다. 전사본으로 읽었으므로 쪽수를 쓰지 않고 해당 대목의 위치만 적으며, 번역어가 영역자의 선택임을 본문에 밝힌다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
