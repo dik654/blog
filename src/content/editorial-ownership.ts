@@ -13063,6 +13063,31 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "lithography-and-resolution": {
+    "title": "노광 해상도와 층 정렬 글이 소유하는 범위",
+    "owns": [
+      "감광막·레티클·현상·식각의 무늬 전달 순서",
+      "가상 λ193 nm·NA0.8·k1 0.4/0.3의 CD 96.5/72.4 nm",
+      "가상 200 nm 선·120 nm 창의 30/50 nm 오버레이와 최소 여유 10/−10 nm",
+      "계측 표적·식각 뒤 검증과 식의 적용 경계"
+    ],
+    "reuses": [
+      {
+        "label": "산화막 창과 접촉의 명목 거리",
+        "href": "/electronics/semiconductors/wafer-and-planar-process#protect"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "ASML 공식 설명과 교육용 광학·겹침 수치를 분리한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "CD와 오버레이의 가상 수치를 장비 사양 또는 양품률로 제시하지 않는다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

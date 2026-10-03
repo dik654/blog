@@ -411,6 +411,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "선택 확산과 접합 보호라는 하나의 평면 공정 질문을 웨이퍼→막 창→확산→접촉 순서로 풉니다. 노광 해상도·정렬과 도핑 열 예산은 다음 글이 소유합니다.",
     "sharedGate": "가상 창100 µm·옆 확산 각2 µm·접촉 창80 µm에서 p형 폭104 µm·한쪽 명목 거리12 µm가 본문·Viz·문제에 일치하고 특허 실측과 구분되는지 확인합니다."
   },
+  "semiconductors/lithography-and-resolution": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "한 층에 무늬를 얼마나 작게 찍는지와 여러 층을 어디에 맞춰 찍는지를 같은 접촉 창 사례로 구분합니다. 확산 온도·시간은 다음 글이 소유합니다.",
+    "sharedGate": "가상 λ193 nm·NA0.8·k1 .4/.3에서 CD96.5/72.4 nm, 선200 nm·창120 nm·이동0/30/50 nm에서 최소 여유40/10/−10 nm가 본문·Viz·문제에 일치하는지 확인합니다."
+  },
 };
 
 /**
@@ -418,6 +425,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "semiconductors/lithography-and-resolution": "45e896d39b860a36",
   "semiconductors/wafer-and-planar-process": "20fd73be7dfc606d",
   "circuits/feedback-gain-and-stability": "15f097e2dabbb613",
   "circuits/frequency-shaping-and-bode": "38c916fc1b32d16f",

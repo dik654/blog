@@ -7666,4 +7666,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "산화막 마스크와 접합 보호를 원본 특허로 확인했다. 본문 치수는 가정이다."
     }
   ],
+  "semiconductors/lithography-and-resolution": [
+    {
+      "kind": "공식 문서",
+      "label": "ASML, ‘How microchips are made’, 공정 단계",
+      "href": "https://www.asml.com/en/technology/all-about-microchips/how-microchips-are-made",
+      "note": "감광막·노광·현상·식각의 순서를 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ASML, ‘The Rayleigh criterion for resolution’, CD 식",
+      "href": "https://www.asml.com/en/technology/lithography-principles/rayleigh-criterion",
+      "note": "CD=k1λ/NA와 인자의 뜻을 확인했다. 값은 가정이다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ASML, ‘Measuring accuracy’, 오버레이·초점",
+      "href": "https://www.asml.com/en/technology/lithography-principles/measuring-accuracy",
+      "note": "층 정렬과 계측 표적·식각 뒤 측정을 확인했다."
+    }
+  ],
 };
