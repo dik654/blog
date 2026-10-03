@@ -7924,4 +7924,22 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "민족별 수를 적을 수 없다는 진술, 육군 170만, 1만 명을 빽빽하게 세우고 배꼽 높이의 담을 쌓아 채움을 되풀이한 절차의 출처. 영역자 주석이 170 myriads를 1,700,000으로 풀어 둠. Project Gutenberg 전사본(eBook 2456)으로 읽음. 쪽수 대신 권·절 번호만 적음",
     },
   ],
+  "record-numbers/what-the-total-cannot-tell": [
+    {
+      kind: "핵심 사료",
+      label:
+        "Herodotus, 『The History of Herodotus』, G. C. Macaulay 영역, 7권 184~187절과 영역자 주석",
+      href: "https://www.gutenberg.org/ebooks/2456",
+      note: "총계 5,283,220과 그것을 만든 재료, 각 재료에 붙은 가정 표시, 셀 수 없다고 적은 것들, 하루치 식량 계산의 출처. 영역자 주석이 각 소계를 아라비아 숫자로 풀고 1 메딤노스 = 48 코이닉스를 밝히며 110,340이라는 값이 틀렸다고 지적함. Project Gutenberg 전사본(eBook 2456)으로 읽음",
+    },
+  ],
+  "record-numbers/numbers-that-command": [
+    {
+      kind: "핵심 사료",
+      label:
+        "함무라비 법전, C. H. W. Johns 영역, 『The Oldest Code of Laws in the World』 (T. & T. Clark, 1903) · 196~204·209~225·268~277조",
+      href: "https://www.gutenberg.org/ebooks/17150",
+      note: "세 칸의 사다리와 답의 네 꼴, 10·5·2와 5·3·2 금액, 종 값의 절반과 소 값의 4분의 1, 채찍 60대, 품삯과 임차료의 출처. 1마나 = 60세켈 환산은 같은 판 색인의 주. Project Gutenberg 전사본(eBook 17150)으로 읽었고 쪽수 대신 조항 번호만 적음",
+    },
+  ],
 };

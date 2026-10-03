@@ -571,6 +571,24 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "7권 60절의 같은 절차(1만 명·원·배꼽 높이 담·채움 되풀이)와 170만이 본문·Viz·연습문제에서 일치하고, 1만 × 170 = 1,700,000의 환산이 어긋나지 않는지로 판정한다.",
   },
+  "record-numbers/what-the-total-cannot-tell": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "재료·종류 표시·끝자리·검산이 '계산이 적힌 총계를 어디까지 쓸 수 있는가'라는 한 질문의 네 부품이다. 재료를 떼면 끝자리의 출처를 되짚을 수 없고, 검산을 떼면 계산을 적어 두는 일의 값이 드러나지 않는다.",
+    sharedGate:
+      "7권 184~187절의 같은 재료와 소계(241,400 · 36,210 · 240,000 · 517,610 · 2,317,610 · 2,641,610 · 5,283,220)가 본문·Viz·연습문제에서 일치하고, 5,283,220 ÷ 48 = 110,067 나머지 4가 어긋나지 않는지로 판정한다.",
+  },
+  "record-numbers/numbers-that-command": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "답의 꼴·같은 사다리·네 종류·물가 읽기가 '명령하는 숫자에서 무엇을 읽을 수 있는가'라는 한 질문의 네 부품이다. 사다리를 떼면 두 조항의 신분별 금액 기준을 비교할 수 없고, 물가 읽기를 떼면 측정 숫자와 섞어 쓰는 오독이 남는다.",
+    sharedGate:
+      "196~199·209~217·221~223조의 같은 금액(1마나·값의 절반·10·5·2·5·3·2)과 202조의 채찍 60대, 273조의 하루 품삯이 본문·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
 };
 
 /**
@@ -685,4 +703,6 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "testimony/told-but-not-believed": "383412e348dd7bee",
   "testimony/the-writer-was-there": "4db0036e09cdc5cc",
   "record-numbers/how-the-army-was-counted": "8c2640e7b3d4794a",
+  "record-numbers/what-the-total-cannot-tell": "4a56414aa5294477",
+  "record-numbers/numbers-that-command": "c4dc3a1b3c7ce7c4",
 };
