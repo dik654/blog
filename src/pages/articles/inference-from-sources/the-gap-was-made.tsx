@@ -26,7 +26,8 @@ export default function TheGapWasMadeArticle() {
           <p className="text-lg leading-8">
             앞 글에서 숫자를 읽느라 들여다본 법전을 이번에는 처음부터 넘겨
             봅니다. 이상한 자리가 하나 나옵니다. 조항이 65까지 가다가 바로
-            100으로 건너뜁니다. 그 사이 34개의 번호에는 본문이 없습니다. <strong>비어 있는 것이 아니라 아예 없습니다.</strong>
+            100으로 건너뜁니다. 66~99라는 34개의 번호와 그에 딸린 본문은
+            이 판에서 통째로 빠져 있습니다.
           </p>
 
           <p className="leading-7">
@@ -77,8 +78,8 @@ export default function TheGapWasMadeArticle() {
             머리말에 그 자리의 상태가 나옵니다. 앞면에 다섯 단이 더 있었는데
             그것들이 지워지고 <strong>돌이 다시 매끄럽게 다듬어졌다</strong>고
             적혀 있습니다. 깨지거나 닳아서 글자가 흐려진 것과는 다릅니다. 글을
-            없애고 그 면을 쓸 수 있게 만든 작업이고 목적은 면을 얻는 데
-            있었다는 뜻입니다.
+            없애고 그 면을 다시 쓸 수 있게 만든 흔적입니다. 왜 지웠는지는
+            이 표면만으로 알 수 없습니다.
           </p>
 
           <p className="leading-7">
@@ -129,7 +130,7 @@ export default function TheGapWasMadeArticle() {
           </p>
 
           <p className="leading-7">
-            문제는 <strong>그 35를 아무도 세지 않았다는 점</strong>입니다.
+            문제는 <strong>그 35가 직접 센 수가 아니라 추정이라는 점</strong>입니다.
             지워진 단에서 조항을 셀 수는 없습니다. 이 판의 주는 셰일이 어떤
             절차로 35를 얻었는지도 설명하지 않습니다. 35가 꼭 사라진 조항
             수라고 단정할 수는 없습니다. 100이라는 번호도 돌에 새겨진 글자가
