@@ -397,6 +397,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "circuits/storage-elements-and-transients": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "저항 회로에 저장 요소 하나를 넣을 때 이어지는 상태와 지수 시간 상수를 RC·RL 쌍으로 설명합니다. 정상 상태 저항은 앞 글, 반복 입력은 다음 글이 소유합니다.", sharedGate: "5 V·1 kΩ에서 1 µF의 RC와 1 H의 RL이 모두 1 ms, 1τ에 3.16 V와 3.16 mA, 최종 저장 에너지가 각각 12.5 µJ라는 가정이 본문·식·Viz·문제에 일치하는지 확인합니다." },
   "circuits/steady-state-and-impedance": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "한 RC 회로의 반복 입력에서 진폭·위상 읽기, 복소 임피던스, 분압, 정상 상태 경계까지를 한 질문으로 설명합니다. 스위치 과도는 앞 글, 폭넓은 주파수 그림은 다음 글이 소유합니다.", sharedGate: "1 kΩ·1 µF·5 V 최대 진폭에서 ω=1000 rad/s이면 −j1000 Ω, H=0.707∠−45°, 출력 3.54 V가 본문·식·Viz·문제에 일치하는지 확인합니다." },
   "circuits/frequency-shaping-and-bode": {action:"keep" as const,status:"reviewed" as const,reviewedAt:"2026-10-03",rationale:"한 RC의 주파수 범위를 다루며 경계·dB·기울기를 연결합니다. 복소 임피던스 한 점은 앞 글, 피드백의 안정성은 다음 글이 다룹니다.",sharedGate:"1 kΩ·1 µF·5 V 최대 진폭: fc≈159.15 Hz, 0.1/1/10fc의 출력 4.98/3.54/0.50 V, fc→10fc 변화 −17.03 dB를 본문·Viz·문제에서 맞춥니다."},
+  "circuits/feedback-gain-and-stability": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "1 V를 넣은 증폭기의 오차에서 폐루프 이득, 두 극 지연, 루프 교차·위상 여유와 부하 경계까지 한 되먹임 질문으로 풉니다. 필터 자체의 진폭 지도는 앞 글에 남깁니다.",
+    "sharedGate": "A0=100·극10/100 rad/s·β=0.1/0.5에서 폐루프 9.09/1.96, 교차 78.2/212.6 rad/s, 여유 59.3°/27.9°가 본문·Viz·문제에 일치하는지 확인합니다."
+  },
 };
 
 /**
@@ -404,6 +411,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "circuits/feedback-gain-and-stability": "15f097e2dabbb613",
   "circuits/frequency-shaping-and-bode": "38c916fc1b32d16f",
   "circuits/steady-state-and-impedance": "f2cf3866dd83a148",
   "circuits/storage-elements-and-transients": "cc761424ab916184",

@@ -7650,4 +7650,12 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공개 강의", label: "MIT OCW 6.002 Lecture 17, ‘The Impedance Model’, 4–7쪽", href: "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/66adf4d4611a57b949efa1b00a842a46_6002_l17.pdf", note: "정현파 정상 상태의 복소 진폭·R/C/L 임피던스·RC 분압을 원본 PDF에서 확인했다. 본문 수치는 가정이다." },
   ],
   "circuits/frequency-shaping-and-bode": [{kind:"공개 강의",label:"MIT OCW 6.002 Lecture 18, ‘Filters’, 2–3·7쪽",href:"https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/d4e136975654a01f7fc2c9b49196d376_6002_l18.pdf",note:"저역·고역 통과 회로 연결을 원본 PDF에서 확인했다. 본문 수치는 가정이다."},{kind:"공개 강의",label:"MIT OCW 6.002 Lecture 17, ‘The Impedance Model’, 4쪽",href:"https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/66adf4d4611a57b949efa1b00a842a46_6002_l17.pdf",note:"RC 전달 함수와 진폭·위상 식을 확인했다."}],
+  "circuits/feedback-gain-and-stability": [
+    {
+      "kind": "공식 문서",
+      "label": "TI/Burr-Brown Graeme 1991, ‘Feedback Plots Define Op Amp AC Performance’, 1–2쪽",
+      "href": "https://www.ti.com/lit/an/sboa015/sboa015.pdf",
+      "note": "폐루프 이득과 루프 교차·위상 여유를 원본에서 확인했다. 본문 증폭기는 가정이다."
+    }
+  ],
 };

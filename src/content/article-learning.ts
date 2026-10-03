@@ -86969,4 +86969,315 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     papers:[{title:"MIT OpenCourseWare 6.002, Lecture 18, ‘Filters’ (Fall 2000 자료)",href:"https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/d4e136975654a01f7fc2c9b49196d376_6002_l18.pdf",problem:"저역·고역 통과의 연결과 주파수별 크기를 설명합니다.",contribution:"2–3쪽 RC 저역 통과의 전압 분배와 7쪽 저역·고역 연결 도식입니다.",assumptions:"선형 집중 소자와 한 주파수 정현파 정상 상태입니다.",evidenceScope:"MIT 원본 PDF 2–3·7쪽을 직접 확인했습니다. 본문 1 kΩ·1 µF와 dB 숫자는 가정 계산입니다.",notClaim:"강의안이 본문의 가상 5 V 회로를 측정했다는 뜻은 아닙니다.",sectionId:"other-output"},{title:"MIT OpenCourseWare 6.002, Lecture 17, ‘The Impedance Model’ (Fall 2000 자료)",href:"https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/66adf4d4611a57b949efa1b00a842a46_6002_l17.pdf",problem:"RC 분배를 여러 주파수에서 진폭·위상으로 계산합니다.",contribution:"4쪽의 1/(1+jωRC) 복소 전달 함수와 크기·위상 관계입니다.",assumptions:"이상 선형 RC의 정현파 정상 상태입니다.",evidenceScope:"공식 PDF 4쪽 식을 확인하고 가상 부품값을 대입했습니다.",notClaim:"−17.03 dB는 원본에 제시된 실험 결과가 아닙니다.",sectionId:"plot"}],
   },
+  "circuits/feedback-gain-and-stability": {
+    "coreIdea": "가상 두 극 증폭기의 직류 이득 100과 β=0.1/0.5를 같은 사례로 놓아 폐루프 이득 9.09/1.96, 루프 교차 78.2/212.6 rad/s, 위상 여유 59.3°/27.9°를 계산하고 실제 부하 경계를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "voltage-ratio-decibel",
+        "role": "루프 크기 1을 0 dB로 읽습니다."
+      },
+      {
+        "id": "bode-log-slope",
+        "role": "주파수별 이득·위상을 한 축에서 비교합니다."
+      },
+      {
+        "id": "rc-output-topology",
+        "role": "연결과 측정 경로가 결과를 바꾼다는 점을 가져옵니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "negative-feedback-algebra",
+        "role": "출력의 일부를 빼서 남은 오차를 증폭한다를 이 사례에서 계산합니다."
+      },
+      {
+        "id": "closed-loop-gain",
+        "role": "루프 이득이 클수록 실제 배율이 1/β에 가까워진다를 이 사례에서 계산합니다."
+      },
+      {
+        "id": "amplifier-poles-delay",
+        "role": "증폭기의 속도 경계가 두 번의 크기 감소와 위상 지연을 만든다를 이 사례에서 계산합니다."
+      },
+      {
+        "id": "unity-loop-crossover",
+        "role": "루프 크기가 1인 교차점이 위상 검사의 기준이다를 이 사례에서 계산합니다."
+      },
+      {
+        "id": "feedback-phase-margin",
+        "role": "교차점에서 −180°까지 남은 위상 각도가 여유이다를 이 사례에서 계산합니다."
+      },
+      {
+        "id": "feedback-real-load-boundary",
+        "role": "실제 부하와 포화는 가상 루프의 안정 판단을 바꾼다를 이 사례에서 계산합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "negative-feedback-algebra",
+        "sectionId": "loop",
+        "intuition": "1 V에서 출력 9.09 V의 10%를 빼면 오차 약 0.091 V만 남습니다.",
+        "workedExample": "입력 1 V와 되돌림 약 0.909 V의 차이 약 0.091 V가 100배 되어 출력 9.09 V입니다.",
+        "boundary": "1 V×100을 바로 출력이라고 쓰면 되돌아온 전압을 빠뜨립니다.",
+        "scientificGrounding": {
+          "observable": "입력·되돌림·오차·출력 전압의 동시 측정",
+          "unitsAndDimensions": "입력·출력·되돌림·오차의 단위는 모두 V이고, β와 A는 무차원 비입니다.",
+          "modelAssumptions": "이상 선형 증폭기, 공급 범위 내 출력, 직류입니다.",
+          "measurementExample": "r=1 V에서 y≈9.09 V, βy≈0.909 V를 확인합니다.",
+          "invalidConditions": "출력 포화나 연결 부호 반전이 있으면 선형 빼기 식이 맞지 않습니다.",
+          "referenceFrame": "입력 r=1 V, 출력 y, 접지 0 V와 입력 위상 0°를 기준으로 비교합니다."
+        }
+      },
+      {
+        "id": "closed-loop-gain",
+        "sectionId": "loop",
+        "intuition": "100배 증폭기를 10% 되돌리면 9.09배 회로가 됩니다.",
+        "workedExample": "β=0.1에서 100/11=9.09, β=0.5에서 100/51≈1.96입니다.",
+        "boundary": "1/β는 Aβ가 매우 클 때의 근사이며 Aβ=10에서는 정확한 값이 아닙니다.",
+        "scientificGrounding": {
+          "observable": "직류 입력을 1 V로 고정했을 때 β별 출력 전압과 그 입력 대비 비",
+          "unitsAndDimensions": "폐루프 이득·루프 이득은 무차원, 전압 V입니다.",
+          "modelAssumptions": "A=100, 주파수와 무관한 β, 선형 직류를 둡니다.",
+          "measurementExample": "1 V 입력에서 9.09 V와 1.96 V를 각각 비교합니다.",
+          "invalidConditions": "공급 전압 부족·유한 입력/출력 임피던스가 크면 단순 이득식에서 벗어납니다.",
+          "referenceFrame": "입력 r=1 V, 출력 y, 접지 0 V와 입력 위상 0°를 기준으로 비교합니다."
+        }
+      },
+      {
+        "id": "amplifier-poles-delay",
+        "sectionId": "delay",
+        "intuition": "빨리 흔들면 출력이 늦고 작아져 돌아오는 신호의 시점이 달라집니다.",
+        "workedExample": "ω=78.2 rad/s에서는 두 지연의 합이 약 −120.7°입니다.",
+        "boundary": "두 극만으로 실제 증폭기와 부하의 모든 지연을 대표하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "주파수별 열린 증폭기 진폭과 입력 대비 위상",
+          "unitsAndDimensions": "ω·극 위치는 rad/s, A는 무차원, 위상은 도입니다.",
+          "modelAssumptions": "선형 시간 불변 2극 증폭기, 다른 극·영점은 없습니다.",
+          "measurementExample": "10·100 rad/s 부근을 가로질러 진폭과 위상 변화를 측정합니다.",
+          "invalidConditions": "부하 지연·기생 성분·비선형 포화가 있으면 모델의 극이 달라집니다.",
+          "referenceFrame": "입력 r=1 V, 출력 y, 접지 0 V와 입력 위상 0°를 기준으로 비교합니다."
+        }
+      },
+      {
+        "id": "unity-loop-crossover",
+        "sectionId": "margin",
+        "intuition": "더 많이 되돌리면 루프 크기 1인 지점이 높은 속도로 이동합니다.",
+        "workedExample": "β=0.1의 78.2 rad/s와 β=0.5의 212.6 rad/s를 |L|=1에 넣어 확인합니다.",
+        "boundary": "교차가 여러 개이거나 열린 루프가 불안정하면 한 교차점의 숫자로 결론내리지 않습니다.",
+        "scientificGrounding": {
+          "observable": "주파수별 루프 크기가 0 dB와 만나는 위치",
+          "unitsAndDimensions": "각주파수 rad/s, 루프 크기 무차원 또는 dB입니다.",
+          "modelAssumptions": "β는 상수이고 한 번의 교차를 갖는 가상 2극 선형 루프입니다.",
+          "measurementExample": "루프를 적절히 분리해 βA의 크기 1 위치를 비교합니다.",
+          "invalidConditions": "부하·추가 극·복수 교차점이 생기면 위치와 해석이 바뀝니다.",
+          "referenceFrame": "입력 r=1 V, 출력 y, 접지 0 V와 입력 위상 0°를 기준으로 비교합니다."
+        }
+      },
+      {
+        "id": "feedback-phase-margin",
+        "sectionId": "margin",
+        "intuition": "한 바퀴 돌아온 신호가 빼기를 돕는 방향에서 얼마나 멀어졌는지 셉니다.",
+        "workedExample": "β=0.1에서 180−120.7≈59.3°, β=0.5에서 180−152.1≈27.9°입니다.",
+        "boundary": "위상 여유가 작다고 특정 실제 증폭기가 반드시 발진한다고 단정하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "0 dB 교차점에서의 루프 위상과 계단 응답 흔들림",
+          "unitsAndDimensions": "위상 여유는 도, 루프 이득은 무차원입니다.",
+          "modelAssumptions": "한 교차점·선형 안정한 열린 루프·상수 β입니다.",
+          "measurementExample": "교차점 위상을 재고 −180°까지 남은 각도를 계산합니다.",
+          "invalidConditions": "미모델 지연·복수 교차점·비선형 포화는 단순 여유 해석을 제한합니다.",
+          "referenceFrame": "입력 r=1 V, 출력 y, 접지 0 V와 입력 위상 0°를 기준으로 비교합니다."
+        }
+      },
+      {
+        "id": "feedback-real-load-boundary",
+        "sectionId": "limits",
+        "intuition": "뒤에 연결한 회로가 새 지연을 만들면 되돌아오는 신호가 더 늦습니다.",
+        "workedExample": "동일 증폭기에 출력 축전성 부하를 추가하면 원래 78.2 rad/s 교차와 59.3° 여유를 재확인해야 합니다.",
+        "boundary": "위상 여유 숫자만으로 모든 부하·대신호 조건을 보증할 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "부하 전후의 루프 이득·위상과 계단 입력 뒤 출력 파형",
+          "unitsAndDimensions": "부하 Ω·F, 시간 s, 위상 도, 전압 V입니다.",
+          "modelAssumptions": "본문의 2극 모델에는 부하·포화·배선 기생 성분이 없습니다.",
+          "measurementExample": "데이터시트 허용 부하와 실제 연결의 루프/계단 응답을 비교합니다.",
+          "invalidConditions": "여러 교차점·포화·큰 기생 성분에서는 단순 2극 선형 예측이 부족합니다.",
+          "referenceFrame": "입력 r=1 V, 출력 y, 접지 0 V와 입력 위상 0°를 기준으로 비교합니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 되돌림과 목표",
+        "relation": "1 V 입력의 오차를 추적해 실제 폐루프 배율을 얻습니다.",
+        "concepts": [
+          "negative-feedback-algebra",
+          "closed-loop-gain"
+        ]
+      },
+      {
+        "label": "02 시간과 교차",
+        "relation": "두 속도 경계를 넣고 루프 크기 1의 위치를 찾습니다.",
+        "concepts": [
+          "amplifier-poles-delay",
+          "unity-loop-crossover"
+        ]
+      },
+      {
+        "label": "03 여유와 실제 회로",
+        "relation": "교차 위상에서 남은 각도를 계산하고 부하 한계를 확인합니다.",
+        "concepts": [
+          "feedback-phase-margin",
+          "feedback-real-load-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "A=100·β=0.1의 직류 루프 이득은?",
+        "answerChecklist": [
+          "10",
+          "Aβ"
+        ],
+        "requiredConcepts": [
+          "closed-loop-gain"
+        ],
+        "sectionId": "loop"
+      },
+      {
+        "level": "basic",
+        "question": "β=0.1·입력 1 V의 실제 출력과 이상 목표는?",
+        "answerChecklist": [
+          "실제 약 9.09 V",
+          "이상 목표 10 V",
+          "유한 루프 이득"
+        ],
+        "requiredConcepts": [
+          "negative-feedback-algebra",
+          "closed-loop-gain"
+        ],
+        "sectionId": "loop"
+      },
+      {
+        "level": "basic",
+        "question": "β=0.5로 바꾸면 실제 직류 이득은?",
+        "answerChecklist": [
+          "100/51",
+          "약 1.96배",
+          "이상 목표 2배"
+        ],
+        "requiredConcepts": [
+          "closed-loop-gain"
+        ],
+        "sectionId": "loop"
+      },
+      {
+        "level": "basic",
+        "question": "β=0.1의 교차 속도와 루프 위상은?",
+        "answerChecklist": [
+          "약 78.2 rad/s",
+          "약 −120.7°",
+          "|Aβ|=1"
+        ],
+        "requiredConcepts": [
+          "unity-loop-crossover"
+        ],
+        "sectionId": "margin"
+      },
+      {
+        "level": "basic",
+        "question": "β=0.5의 교차 속도와 위상 여유는?",
+        "answerChecklist": [
+          "약 212.6 rad/s",
+          "약 27.9°",
+          "위상 약 −152.1°"
+        ],
+        "requiredConcepts": [
+          "unity-loop-crossover",
+          "feedback-phase-margin"
+        ],
+        "sectionId": "margin"
+      },
+      {
+        "level": "basic",
+        "question": "교차점에서 위상이 −180°라면 1+L의 의미는?",
+        "answerChecklist": [
+          "L≈−1",
+          "분모 1+L≈0",
+          "이상 선형 모델에서 발진 경계"
+        ],
+        "requiredConcepts": [
+          "feedback-phase-margin"
+        ],
+        "sectionId": "margin"
+      },
+      {
+        "level": "advanced",
+        "question": "e=r−βy와 y=Ae로 폐루프 이득식을 직접 유도하세요.",
+        "answerChecklist": [
+          "y=A(r−βy)",
+          "y(1+Aβ)=Ar",
+          "y/r=A/(1+Aβ)"
+        ],
+        "requiredConcepts": [
+          "negative-feedback-algebra"
+        ],
+        "sectionId": "loop"
+      },
+      {
+        "level": "advanced",
+        "question": "같은 두 극 증폭기에서 β를 0.1에서 0.5로 늘리면 직류 이득과 여유가 왜 모두 작아집니까?",
+        "answerChecklist": [
+          "직류 9.09→1.96배",
+          "교차 78.2→212.6 rad/s",
+          "두 번째 극 지연 증가",
+          "여유 59.3→27.9°"
+        ],
+        "requiredConcepts": [
+          "closed-loop-gain",
+          "feedback-phase-margin"
+        ],
+        "sectionId": "margin"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 극을 없앤 A(s)=100/(1+s/10)·β=0.1의 교차와 여유를 비교하세요.",
+        "answerChecklist": [
+          "교차 약 99.5 rad/s",
+          "위상 약 −84.3°",
+          "여유 약 95.7°",
+          "두 극 모델과 구분"
+        ],
+        "requiredConcepts": [
+          "amplifier-poles-delay",
+          "feedback-phase-margin"
+        ],
+        "sectionId": "margin"
+      },
+      {
+        "level": "advanced",
+        "question": "이 가상 루프의 위상 여유만으로 실제 제품 안정성을 선언할 수 없는 이유는?",
+        "answerChecklist": [
+          "축전성 부하와 기생 지연",
+          "여러 교차점",
+          "출력 포화·대신호",
+          "데이터시트·계단 응답 확인"
+        ],
+        "requiredConcepts": [
+          "feedback-real-load-boundary"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Texas Instruments / Burr-Brown, Jerald G. Graeme, ‘Feedback Plots Define Op Amp AC Performance’ (1991 발행)",
+        "href": "https://www.ti.com/lit/an/sboa015/sboa015.pdf",
+        "problem": "되먹임 증폭기의 폐루프 배율·대역과 안정성을 열린 이득 및 되먹임망의 교차로 읽습니다.",
+        "contribution": "1쪽의 A/(1+Aβ)·루프 이득과 2쪽의 위상 여유·추가 극 설명입니다.",
+        "assumptions": "선형 증폭기와 정의된 되먹임망, 열린 이득·위상 응답을 둡니다.",
+        "evidenceScope": "TI 공식 원본 1–2쪽의 식·설명을 직접 확인했습니다. 100배·10/100 rad/s·두 β와 위상 여유는 본문 가상 계산입니다.",
+        "notClaim": "공식 자료가 본문의 두 극 수치로 특정 제품을 측정했다는 뜻이 아닙니다.",
+        "sectionId": "margin"
+      }
+    ]
+  },
 };

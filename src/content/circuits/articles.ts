@@ -74,4 +74,17 @@ export const circuitsArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/circuits/frequency-shaping-and-bode"),
   },
+  {
+    slug: "feedback-gain-and-stability",
+    title: "되먹임은 이득을 고치면서 흔들림도 바꿉니다",
+    subcategory: "circuit-dynamics",
+    sections: [
+      { id: "overview", title: "출력을 조금 돌려보내면 왜 목표에 더 가까워질까요?" },
+      { id: "loop", title: "되돌린 0.909 V를 빼고 남은 차이가 새 출력을 만듭니다" },
+      { id: "delay", title: "두 번 늦는 증폭기를 같은 계산에 넣습니다" },
+      { id: "margin", title: "한 바퀴 크기가 1인 곳에서 남은 각도를 셉니다" },
+      { id: "limits", title: "계산한 여유는 연결한 부하까지 확인해야 쓸 수 있습니다" },
+    ],
+    component: () => import("@/pages/articles/circuits/feedback-gain-and-stability"),
+  },
 ];
