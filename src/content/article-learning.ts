@@ -89150,4 +89150,546 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "record-numbers/what-the-total-cannot-tell": {
+    entryNote:
+      "앞 글이 한 수의 해상도를 소유합니다. 이 글은 그 수가 재료로 들어간 총계를 열어, 여러 수를 더했을 때 무엇이 남는지만 봅니다.",
+    coreIdea:
+      "헤로도토스는 528만 3220이라는 총계를 적기 전에 그 수를 만든 계산을 전부 적습니다. 배 1,207척에 한 척당 200명, 배마다 전사 30명, 오십노선에 여든 남짓, 몰이꾼 2만, 유럽 육군 30만, 그리고 종자를 전투원과 같다고 둔 가정이 차례로 더해지고 마지막 가정이 총계의 절반을 만듭니다. 끝 네 자리 3220은 1,207 × 30에서 나온 610이 두 배가 된 것이므로 정밀함의 표시가 아니며, 저자가 그 총계로 한 하루치 식량 계산은 48로 나눠 보면 맞지 않습니다.",
+    assumedKnowledge: [
+      {
+        id: "counting-by-unit-enclosure",
+        role: "총계의 한 재료인 보병 170만이 어떻게 나왔는지는 앞 글이 소유합니다.",
+      },
+      {
+        id: "resolution-of-a-number",
+        role: "한 수의 해상도를 묻는 방법을 여러 수의 합으로 넓히는 데 씁니다.",
+      },
+      {
+        id: "unit-error-multiplies",
+        role: "큰 수에 곱해진 비율이 결과에 어떻게 전달되는지에 씁니다.",
+      },
+      {
+        id: "attribution-tag",
+        role: "꼬리표라는 장치를 숫자에 적용하는 데 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "total-built-from-mixed-sources",
+        role: "총계가 성격이 다른 수들의 합이라는 것을 세웁니다.",
+      },
+      {
+        id: "number-kind-tag",
+        role: "숫자에 종류를 적어 두는 방식을 정의합니다.",
+      },
+      {
+        id: "precision-of-a-sum",
+        role: "합계의 끝자리가 왜 정밀해 보이는지를 세웁니다.",
+      },
+      {
+        id: "recorded-derivation-enables-audit",
+        role: "계산을 적어 두는 일의 값을 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "total-built-from-mixed-sources",
+        sectionId: "ingredients",
+        intuition:
+          "총계 하나가 아니라 여섯 개의 비율과 어림이 쌓여 있습니다.",
+        workedExample:
+          "1,207 × 200 = 241,400, 1,207 × 30 = 36,210, 3,000 × 여든 남짓 = 240,000을 더해 해군이 517,610이 되고, 보병 1,700,000과 기병 80,000과 몰이꾼 20,000을 더해 아시아가 2,317,610, 유럽의 24,000과 300,000을 더해 전투원이 2,641,610, 종자를 같다고 두어 두 배로 5,283,220이 됩니다.",
+        boundary:
+          "재료 하나하나가 맞는지는 이 글이 판정하지 않습니다. 어떤 종류의 수가 들어갔는지까지만 읽습니다.",
+      },
+      {
+        id: "number-kind-tag",
+        sectionId: "tags",
+        intuition:
+          "수 옆에 '이렇게 치면', '여든 남짓', '어림을 내놓아야 한다'가 적혀 있습니다.",
+        workedExample:
+          "배의 수는 그냥 적히고, 한 척당 200명은 그렇게 치면 그렇게 된다는 꼴로 적히며, 종자의 수는 가정하겠다고 밝힌 뒤 적힙니다.",
+        boundary:
+          "꼬리표가 그 수가 맞는지를 알려 주지는 않습니다. 어떤 근거로 받아야 할지를 알려 줄 뿐입니다.",
+      },
+      {
+        id: "precision-of-a-sum",
+        sectionId: "last-digits",
+        intuition:
+          "재료의 끝자리를 보면 천 단위 아래에 값이 있는 것은 하나뿐입니다.",
+        workedExample:
+          "1,207 × 30 = 36,210의 610이 전투원 합계 2,641,610의 끝에 남고, 두 배가 되어 총계의 3220이 됩니다.",
+        proofIdea:
+          "합의 어떤 자리에 0이 아닌 값이 생기려면 적어도 한 재료가 그 자리에 0이 아닌 값을 가져야 합니다. 나머지 재료가 모두 천 단위 아래 0이면 합의 천 단위 아래는 그 한 재료의 값과 같아지고, 마지막에 2를 곱해도 그 자리의 출처는 바뀌지 않습니다. 그러므로 끝자리의 신뢰도는 전체 계산이 아니라 그 한 재료의 신뢰도입니다.",
+        counterexample:
+          "재료 여럿이 천 단위 아래에 값을 가지면 끝자리는 여러 출처가 섞인 자리가 되고, 어느 하나로 되짚을 수 없습니다. 이 사료에서 되짚기가 되는 것은 재료 대부분이 만·천 단위로 어림되어 있기 때문입니다.",
+        boundary:
+          "끝자리가 정밀하지 않다는 것은 총계가 틀렸다는 뜻이 아니라 그 자리를 비교에 쓸 수 없다는 뜻입니다.",
+      },
+      {
+        id: "recorded-derivation-enables-audit",
+        sectionId: "the-check",
+        intuition:
+          "수와 함께 그 수를 끌어낸 규칙이 적혀 있으면 다시 해 볼 수 있습니다.",
+        workedExample:
+          "한 사람에게 하루 한 코이닉스면 하루 110,340 메딤노이가 든다고 적혀 있는데, 1 메딤노스가 48 코이닉스이므로 5,283,220을 48로 나누면 110,067 메딤노이와 4 코이닉스입니다.",
+        boundary:
+          "어긋남을 찾았다는 것이 어느 쪽이 옳은지를 정해 주지는 않습니다. 총계가 틀렸을 수도, 나눗셈이 잘못 전해졌을 수도 있습니다. 영역자는 몫에 적을 수를 잘못 옮긴 것으로 봅니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 재료",
+        relation: "총계가 여러 수의 합입니다.",
+        concepts: ["total-built-from-mixed-sources"],
+      },
+      {
+        label: "01 종류 표시",
+        relation: "재료마다 어떤 수인지 적혀 있습니다.",
+        concepts: ["number-kind-tag"],
+      },
+      {
+        label: "02 끝자리",
+        relation: "정밀해 보이는 자리의 출처가 하나입니다.",
+        concepts: ["precision-of-a-sum"],
+      },
+      {
+        label: "03 검산",
+        relation: "계산이 적혀 있어 어긋남이 드러납니다.",
+        concepts: ["recorded-derivation-enables-audit"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "아시아 해군 517,610이 어떤 세 수를 더해 나오는지 각각의 근거와 함께 쓰세요.",
+        answerChecklist: [
+          "배 1,207척에 한 척당 200명으로 쳐서 241,400",
+          "배마다 전사 30명으로 36,210",
+          "오십노선 3,000척에 여든 남짓으로 240,000",
+          "세 수의 합이 517,610",
+        ],
+        requiredConcepts: ["total-built-from-mixed-sources"],
+        sectionId: "ingredients",
+      },
+      {
+        level: "basic",
+        question: "총계의 절반이 어디서 왔는지 쓰세요.",
+        answerChecklist: [
+          "전투원 합계가 2,641,610",
+          "종자와 수송선 인원을 전투원과 같다고 가정",
+          "더도 덜도 아니고 같다고 밝힘",
+          "두 배가 되어 5,283,220",
+        ],
+        requiredConcepts: ["total-built-from-mixed-sources", "number-kind-tag"],
+        sectionId: "ingredients",
+      },
+      {
+        level: "basic",
+        question:
+          "이 계산에 들어간 세 종류의 수를 들고 각각의 예를 쓰세요.",
+        answerChecklist: [
+          "그대로 적힌 수 — 배 1,207척",
+          "비율을 곱해 만든 수 — 1,207 × 200",
+          "어림하거나 가정한 수 — 유럽 육군 30만, 종자",
+          "더해지면 같은 꼴의 한 숫자가 됨",
+        ],
+        requiredConcepts: ["number-kind-tag"],
+        sectionId: "tags",
+      },
+      {
+        level: "basic",
+        question: "끝 네 자리 3220이 어떻게 생겼는지 쓰세요.",
+        answerChecklist: [
+          "천 단위 아래에 값이 있는 재료는 36,210 하나",
+          "1,207 × 30에서 나옴",
+          "610이 전투원 합계 끝에 남음",
+          "두 배가 되어 3220",
+        ],
+        requiredConcepts: ["precision-of-a-sum"],
+        sectionId: "last-digits",
+      },
+      {
+        level: "basic",
+        question:
+          "총계를 적은 다음 절에서 저자가 셀 수 없다고 적은 것을 쓰세요.",
+        answerChecklist: [
+          "빵을 구운 여자들",
+          "첩과 환관",
+          "짐 나르는 짐승과 인도 개",
+          "아무도 정확한 수를 댈 수 없다고 적음",
+        ],
+        requiredConcepts: ["recorded-derivation-enables-audit"],
+        sectionId: "the-check",
+      },
+      {
+        level: "basic",
+        question:
+          "저자가 총계로 한 하루치 식량 계산과, 그것을 다시 해 본 결과를 쓰세요.",
+        answerChecklist: [
+          "한 사람에게 하루 한 코이닉스로 110,340 메딤노이라고 적음",
+          "1 메딤노스는 48 코이닉스",
+          "5,283,220 ÷ 48 = 110,067 메딤노이와 4 코이닉스",
+          "적힌 값과 맞지 않음",
+        ],
+        requiredConcepts: ["recorded-derivation-enables-audit"],
+        sectionId: "the-check",
+      },
+      {
+        level: "advanced",
+        question:
+          "합계의 끝자리 신뢰도가 전체 계산이 아니라 한 재료의 신뢰도라는 것을 유도하세요.",
+        answerChecklist: [
+          "합의 어떤 자리에 값이 생기려면 재료 중 하나가 그 자리에 값을 가져야 함",
+          "나머지가 천 단위 아래 0이면 합의 그 자리는 한 재료의 값과 같음",
+          "2를 곱해도 출처는 바뀌지 않음",
+          "따라서 끝자리의 신뢰도는 그 재료의 신뢰도",
+        ],
+        requiredConcepts: ["precision-of-a-sum"],
+        sectionId: "last-digits",
+      },
+      {
+        level: "advanced",
+        question:
+          "끝자리를 한 재료로 되짚을 수 없는 경우를 들고, 이 사료에서 되짚기가 되는 이유를 쓰세요.",
+        answerChecklist: [
+          "재료 여럿이 천 단위 아래에 값을 가지면 섞인 자리가 됨",
+          "그러면 어느 하나로 되짚을 수 없음",
+          "이 사료는 재료 대부분이 만·천 단위로 어림됨",
+          "그래서 끝자리의 출처가 하나로 모임",
+        ],
+        requiredConcepts: ["precision-of-a-sum", "total-built-from-mixed-sources"],
+        sectionId: "last-digits",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 총계를 반올림해 인용하는 것으로 충분하지 않은 이유를 쓰고, 쓸 수 있는 두 방식을 적으세요.",
+        answerChecklist: [
+          "반올림해도 가정 하나가 절반을 만든 수라는 사실은 전해지지 않음",
+          "그 가정을 떼면 2,641,610으로 줄어듦",
+          "전투원 합계와 총계를 따로 적고 차이의 근거를 밝히는 방식",
+          "총계를 인용하지 않고 자릿수만 말하는 방식",
+        ],
+        requiredConcepts: ["precision-of-a-sum", "number-kind-tag"],
+        sectionId: "last-digits",
+      },
+      {
+        level: "advanced",
+        question:
+          "틀린 계산이 남아 있는 기록이 아무 계산도 남기지 않은 기록보다 쓸모가 큰 이유를 쓰세요.",
+        answerChecklist: [
+          "결과만 적힌 수는 확인할 길이 없음",
+          "수와 규칙이 함께 있으면 다시 해 볼 수 있음",
+          "틀릴 위험을 늘리는 대신 틀림을 드러냄",
+          "2,400년 뒤에도 나눗셈 한 번으로 어긋남이 나옴",
+        ],
+        requiredConcepts: ["recorded-derivation-enables-audit"],
+        sectionId: "the-check",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Herodotus, 『The History of Herodotus』, 7권 184~187절 · G. C. Macaulay 영역",
+        href: "https://www.gutenberg.org/ebooks/2456",
+        problem:
+          "여러 민족에서 온 군대와 함대, 그리고 그들을 따라온 사람들의 수를 하나의 총계로 적어야 했지만 각 부분의 수를 직접 센 기록은 없었습니다.",
+        contribution:
+          "총계를 적기 전에 그것을 만든 계산을 전부 적었습니다. 배의 수에 한 척당 인원을 곱하고, 어림한 값에는 어림이라고 적고, 종자의 수는 전투원과 같다고 가정하겠다고 밝혔습니다. 총계 뒤에는 셀 수 없는 것들을 따로 적어 경계를 긋고, 그 총계로 하루치 식량을 계산해 보였습니다.",
+        assumptions:
+          "한 척에 200명, 오십노선에 여든 남짓, 몰이꾼 2만, 유럽 육군 30만, 종자를 전투원과 같게 둔 것이 모두 저자가 정한 값입니다. 배의 수 1,207척과 기병 8만의 출처는 적혀 있지 않습니다.",
+        evidenceScope:
+          "Project Gutenberg의 Macaulay 영역본 전사본(eBook 2456)으로 7권 184~187절과 그에 붙은 영역자 주석을 읽었습니다. 본문의 아라비아 숫자는 영역자가 주석에 풀어 둔 값을 따랐고, 1 메딤노스가 48 코이닉스라는 환산과 식량 계산이 틀렸다는 지적도 같은 주석의 것입니다. facsimile이 아니므로 쪽수를 적지 않고 권·절 번호까지만 적습니다.",
+        notClaim:
+          "이 군대의 실제 규모를 판정하지 않습니다. 적힌 계산에서 어느 자리가 어디서 왔는지를 읽는 것까지만 합니다. 48로 나눠 본 검산은 이 글이 한 것이고, 재료를 세 종류로 가른 정리도 이 글이 더한 것입니다. 한국어 서술은 이 글이 옮긴 것이며 공인된 번역이 아닙니다.",
+        sectionId: "ingredients",
+      },
+    ],
+  },
+  "record-numbers/numbers-that-command": {
+    entryNote:
+      "앞 두 글이 측정된 숫자의 해상도와 합산을 소유합니다. 이 글은 그 도구가 걸리지 않는 숫자를 따로 다루고, 측정 쪽 논의를 다시 세우지 않습니다.",
+    coreIdea:
+      "함무라비 법전의 숫자는 센 결과가 아니라 정해 둔 값입니다. 눈을 잃게 한 경우 상대가 신사면 같은 해를 돌려주고 가난한 사람이면 은 1마나, 종이면 그 값의 절반이어서 한 사다리 안에서 답의 종류가 바뀌고, 아이를 잃게 한 배상과 의사의 사례금에는 10·5·2라는 같은 사다리가 그대로 쓰여 금액이 사안의 크기가 아니라 상대의 자리를 담는다는 것이 드러납니다. 명령하는 답은 되갚기·고정액·값의 비율·횟수 네 꼴이고 각각 다른 것을 전제하며, 법이 정한 품삯에서 실제로 치러진 값을 꺼낼 수는 없습니다.",
+    assumedKnowledge: [
+      {
+        id: "provenance-of-a-recorded-number",
+        role: "숫자의 출처를 묻는 틀을 가져다 셋째 종류를 더합니다.",
+      },
+      {
+        id: "resolution-of-a-number",
+        role: "해상도를 물을 수 있는 수와 없는 수를 가르는 기준으로 씁니다.",
+      },
+      {
+        id: "recorded-derivation-enables-audit",
+        role: "검산이 가능한 수와 불가능한 수의 대비에 씁니다.",
+      },
+      {
+        id: "disclosed-partiality",
+        role: "기록을 남긴 쪽이 누구인지를 묻는 데 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "prescriptive-versus-measured-number",
+        role: "재려고 적은 수와 시키려고 적은 수를 가릅니다.",
+      },
+      {
+        id: "answer-kind-changes-by-rung",
+        role: "한 사안 안에서 답의 꼴이 바뀐다는 것을 세웁니다.",
+      },
+      {
+        id: "amount-encodes-standing",
+        role: "정해진 금액이 무엇을 담는지를 세웁니다.",
+      },
+      {
+        id: "form-of-a-prescribed-amount",
+        role: "답의 네 꼴과 각각의 전제를 세웁니다.",
+      },
+      {
+        id: "prescribed-price-is-not-observed-price",
+        role: "명령 숫자로 물가를 읽을 때의 한계를 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "prescriptive-versus-measured-number",
+        sectionId: "overview",
+        intuition:
+          "수의사의 사례금 6분의 1세켈은 누가 세어서 나온 수가 아닙니다.",
+        workedExample:
+          "앞 두 글의 170만과 528만 3220에는 절차와 계산이 적혀 있었습니다. 법전의 숫자에는 그런 것이 있을 수 없고, 그만큼 하라는 명령만 있습니다.",
+        boundary:
+          "명령 숫자가 쓸모없다는 뜻이 아니라 다른 물음을 걸어야 한다는 뜻입니다.",
+      },
+      {
+        id: "answer-kind-changes-by-rung",
+        sectionId: "rungs",
+        intuition:
+          "세 칸의 금액이 다른 것이 아니라 세 칸의 답이 서로 다른 종류입니다.",
+        workedExample:
+          "눈을 잃게 한 경우 신사면 그의 눈을 잃게 하고, 가난한 사람이면 은 1마나를 물며, 종이면 그 값의 절반을 뭅니다. 이를 부러뜨린 경우와 여자를 죽게 한 경우도 같은 모양입니다.",
+        boundary:
+          "되갚을 수 있을 때 숫자가 들어가지 않는다는 읽기는 이 글이 조항들을 늘어놓고 짚은 것이고 법전이 적어 둔 규칙이 아닙니다.",
+      },
+      {
+        id: "amount-encodes-standing",
+        sectionId: "same-ladder",
+        intuition:
+          "물어 주는 돈과 받는 돈에 같은 10·5·2가 쓰였습니다.",
+        workedExample:
+          "아이를 잃게 한 배상이 10·5·2세켈이고, 큰 상처나 눈을 고친 의사의 사례금도 10·5·2세켈입니다.",
+        proofIdea:
+          "한 숫자 묶음이 서로 반대 성격의 두 사안에 그대로 쓰였다면, 그 묶음은 두 사안에 공통으로 걸린 축에서 나온 것입니다. 두 사안이 공유하는 축은 사안의 경중이 아니라 상대가 어느 칸의 사람인가뿐이므로, 금액이 담는 것은 신분입니다.",
+        counterexample:
+          "부러진 뼈를 고친 사례금은 5·3·2세켈이어서 10·5·2와 간격이 다릅니다. 그러므로 신분이 금액을 정하는 유일한 요소는 아니고, 사안이 정하는 것은 칸의 간격, 신분이 정하는 것은 칸의 순서입니다.",
+        boundary:
+          "금액이 같다고 두 사안이 같은 무게로 평가되었다고 읽을 수는 없습니다. 같은 것은 숫자이지 근거가 아닙니다.",
+      },
+      {
+        id: "form-of-a-prescribed-amount",
+        sectionId: "four-kinds",
+        intuition:
+          "돈이 아닌 답도 숫자를 가질 수 있습니다. 채찍 60대가 그렇습니다.",
+        workedExample:
+          "숫자 없는 되갚기, 은 1마나 같은 고정액, 종 값의 절반이나 소 값의 4분의 1 같은 비율, 집회에서 맞는 채찍 60대가 같은 법전 안에 있습니다.",
+        boundary:
+          "법전이 종의 눈을 값으로 환산했다는 것은 그 법의 처리이지 그 사회 사람들이 모두 그렇게 여겼다는 증거가 아닙니다.",
+      },
+      {
+        id: "prescribed-price-is-not-observed-price",
+        sectionId: "reading-prices",
+        intuition:
+          "값을 정해 두었다는 것은 다른 값이 오갔을 수 있다는 쪽을 가리킵니다.",
+        workedExample:
+          "품꾼의 하루 삯이 해의 전반에는 은 6세, 후반에는 5세로 적혀 있고, 타작용 소는 하루 곡식 20카, 나귀는 10카입니다.",
+        proofIdea:
+          "정해 두는 규칙은 지키지 않는 경우가 있을 때에만 쓸모가 있습니다. 모두가 이미 그 값으로 거래하고 있다면 조항이 필요 없고, 아무도 지킬 수 없는 값이면 조항이 쓰이지 않습니다. 그러므로 적힌 값에서 끌어낼 수 있는 것은 실제 값이 아니라 그 값이 사정에서 아주 동떨어지지는 않았다는 범위뿐입니다.",
+        counterexample:
+          "소 20카와 나귀 10카처럼 한 조항 묶음 안에 나란히 정해진 항목들의 비는 같은 판단에서 나왔으므로 절대 금액보다 쓸 만합니다. 그러므로 못 읽는 것은 수치 전부가 아니라 절대 수준입니다.",
+        boundary:
+          "이 조항들이 실제 재판에서 그대로 적용되었는지는 이 사료만으로 알 수 없습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 두 종류의 숫자",
+        relation: "재려고 적은 수와 시키려고 적은 수가 갈립니다.",
+        concepts: ["prescriptive-versus-measured-number"],
+      },
+      {
+        label: "01 답의 꼴",
+        relation: "사다리 안에서 종류가 바뀝니다.",
+        concepts: ["answer-kind-changes-by-rung"],
+      },
+      {
+        label: "02 금액이 담는 것",
+        relation: "같은 사다리가 다른 일에 쓰입니다.",
+        concepts: ["amount-encodes-standing"],
+      },
+      {
+        label: "03 전제와 한계",
+        relation: "꼴마다 전제가 다르고 물가는 읽히지 않습니다.",
+        concepts: [
+          "form-of-a-prescribed-amount",
+          "prescribed-price-is-not-observed-price",
+        ],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "눈을 잃게 한 경우의 세 칸을 상대와 답과 함께 쓰세요.",
+        answerChecklist: [
+          "신사 — 그의 눈을 잃게 함",
+          "가난한 사람 — 은 1마나",
+          "신사의 종 — 그 값의 절반",
+          "세 답의 종류가 서로 다름",
+        ],
+        requiredConcepts: ["answer-kind-changes-by-rung"],
+        sectionId: "rungs",
+      },
+      {
+        level: "basic",
+        question:
+          "10·5·2세켈이 쓰인 두 조항 묶음을 쓰고 두 일의 성격을 비교하세요.",
+        answerChecklist: [
+          "때려서 아이를 잃게 한 배상",
+          "큰 상처나 눈을 고친 의사의 사례금",
+          "한쪽은 물어 주는 돈이고 다른 쪽은 받는 돈",
+          "성격이 반대인데 금액이 같음",
+        ],
+        requiredConcepts: ["amount-encodes-standing"],
+        sectionId: "same-ladder",
+      },
+      {
+        level: "basic",
+        question:
+          "명령하는 답의 네 꼴을 각각 예와 함께 쓰세요.",
+        answerChecklist: [
+          "숫자 없는 되갚기 — 그의 눈을 잃게 함",
+          "고정된 금액 — 은 1마나",
+          "값의 비율 — 그 값의 절반, 값의 4분의 1",
+          "횟수 — 집회에서 쇠가죽 채찍 60대",
+        ],
+        requiredConcepts: ["form-of-a-prescribed-amount"],
+        sectionId: "four-kinds",
+      },
+      {
+        level: "basic",
+        question:
+          "법전에 적힌 품삯과 임차료를 두 개씩 쓰세요.",
+        answerChecklist: [
+          "품꾼 하루 은 6세(해의 전반)",
+          "품꾼 하루 은 5세(후반)",
+          "타작용 소 하루 곡식 20카",
+          "나귀 하루 곡식 10카",
+        ],
+        requiredConcepts: ["prescribed-price-is-not-observed-price"],
+        sectionId: "reading-prices",
+      },
+      {
+        level: "basic",
+        question:
+          "앞 두 글의 숫자에 걸던 물음 가운데 이 글의 숫자에 걸 수 없는 것을 쓰고 이유를 쓰세요.",
+        answerChecklist: [
+          "해상도를 물을 수 없음",
+          "검산을 할 수 없음",
+          "센 절차가 없기 때문",
+          "대신 어느 칸에 무엇을 두었는지를 물음",
+        ],
+        requiredConcepts: ["prescriptive-versus-measured-number"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question:
+          "부러진 뼈를 고친 사례금의 사다리를 쓰고, 그것이 보여 주는 바를 쓰세요.",
+        answerChecklist: [
+          "5세켈 · 3세켈 · 2세켈",
+          "10·5·2와 간격이 다름",
+          "세 칸이 고정된 비로 묶여 있지 않음",
+          "순서는 규칙이고 간격은 조항마다 정해짐",
+        ],
+        requiredConcepts: ["amount-encodes-standing"],
+        sectionId: "same-ladder",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 금액 사다리가 성격이 반대인 두 사안에 쓰였다는 사실에서 금액이 담는 것을 유도하세요.",
+        answerChecklist: [
+          "한 숫자 묶음이 두 사안에 그대로 쓰임",
+          "그 묶음은 두 사안에 공통된 축에서 나옴",
+          "공통된 축은 사안의 경중이 아님",
+          "상대가 어느 칸의 사람인가뿐",
+        ],
+        requiredConcepts: ["amount-encodes-standing"],
+        sectionId: "same-ladder",
+      },
+      {
+        level: "advanced",
+        question:
+          "네 꼴이 각각 무엇을 전제하는지 쓰고, 비율이 쓰인 자리에서 읽을 수 있는 것을 쓰세요.",
+        answerChecklist: [
+          "되갚기는 가해자 쪽에 같은 것이 있어야 함",
+          "고정액은 은의 값이 안정적이어야 함",
+          "비율은 그 대상에 거래되는 값이 있어야 함",
+          "어디에 비율을 썼는지가 값으로 재는 것의 경계를 그림",
+        ],
+        requiredConcepts: ["form-of-a-prescribed-amount"],
+        sectionId: "four-kinds",
+      },
+      {
+        level: "advanced",
+        question:
+          "법이 정한 값에서 실제 값을 꺼낼 수 없는 이유를 유도하고, 그래도 끌어낼 수 있는 범위를 쓰세요.",
+        answerChecklist: [
+          "정하는 규칙은 지키지 않는 경우가 있어야 쓸모가 있음",
+          "모두 그 값으로 거래하면 조항이 필요 없음",
+          "아무도 지킬 수 없으면 조항이 쓰이지 않음",
+          "사정에서 아주 동떨어지지는 않았다는 범위만 남음",
+        ],
+        requiredConcepts: ["prescribed-price-is-not-observed-price"],
+        sectionId: "reading-prices",
+      },
+      {
+        level: "advanced",
+        question:
+          "절대 금액보다 비가 더 쓸 만한 이유를 쓰고, 그래서 못 읽는 것이 무엇인지 다시 적으세요.",
+        answerChecklist: [
+          "한 조항 묶음 안의 항목들은 같은 판단에서 나옴",
+          "소 20카와 나귀 10카 같은 비가 그 예",
+          "못 읽는 것은 수치 전부가 아님",
+          "못 읽는 것은 절대 수준",
+        ],
+        requiredConcepts: [
+          "prescribed-price-is-not-observed-price",
+          "prescriptive-versus-measured-number",
+        ],
+        sectionId: "reading-prices",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "함무라비 법전 196~204·209~225·268~277조 · C. H. W. Johns 영역, 『The Oldest Code of Laws in the World』 (T. & T. Clark, 1903)",
+        href: "https://www.gutenberg.org/ebooks/17150",
+        problem:
+          "같은 행위라도 누가 누구에게 했는지에 따라 처리를 달리해야 했고, 되갚을 수 없는 경우와 값으로 환산할 수 있는 경우가 섞여 있었습니다.",
+        contribution:
+          "사안마다 상대의 신분에 따라 세 칸으로 나누고, 칸마다 되갚기·고정액·값의 비율 가운데 하나를 골라 적었습니다. 금액이 들어간 자리에서는 같은 10·5·2 사다리를 성격이 반대인 두 사안에 그대로 썼고, 돈이 아닌 답에는 채찍 횟수를 적었습니다. 품삯과 임차료도 하루 단위로 정해 두었습니다.",
+        assumptions:
+          "고정된 금액이 뜻을 가지려면 은의 값이 안정적이어야 하고, 비율이 쓰이려면 그 대상에 거래되는 값이 있어야 합니다. 이 조항들이 실제 재판에서 그대로 적용되었는지는 법전 자체에 적혀 있지 않습니다.",
+        evidenceScope:
+          "Project Gutenberg의 Johns 영역본 전사본(eBook 17150)으로 해당 조항들과 색인의 환산 주(1마나 = 60세켈)를 읽었습니다. facsimile이 아니라 전사본이므로 쪽 이미지로 대조하지 못했고, 그래서 쪽수를 적지 않고 조항 번호까지만 적습니다. 아카드어 원문은 읽지 않았으며 gentleman·poor man은 영역자가 고른 번역어입니다.",
+        notClaim:
+          "이 사회의 실제 관행이나 물가를 판정하지 않습니다. 법전이 무엇을 어느 칸에 두었는지까지만 읽습니다. 네 꼴의 분류와 '되갚을 수 없을 때 숫자가 들어온다'는 읽기, 금액이 신분을 담는다는 유도는 이 글이 더한 것이고 법전에 그 꼴로 없습니다. 한국어 서술도 이 글이 옮긴 것이며 공인된 번역이 아닙니다.",
+        sectionId: "rungs",
+      },
+    ],
+  },
 };

@@ -25799,6 +25799,100 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/history/record-numbers/how-the-army-was-counted#where-it-slips",
   },
+  "total-built-from-mixed-sources": {
+    id: "total-built-from-mixed-sources",
+    kind: "concept",
+    domain: "history",
+    label: "총계는 성격이 다른 수들을 더해 만든 것이다",
+    aliases: ["합산된 총계", "총계의 재료"],
+    definition:
+      "큰 총계는 보통 한 번에 센 결과가 아니라 그대로 적힌 수, 비율을 곱해 만든 수, 어림하거나 가정한 수를 차례로 더해 만들어집니다. 더해진 뒤에는 세 종류가 같은 꼴의 한 숫자가 되므로, 어느 재료가 어디서 왔는지는 계산이 함께 적혀 있을 때만 알 수 있습니다.",
+    canonicalHref:
+      "/history/record-numbers/what-the-total-cannot-tell#ingredients",
+  },
+  "number-kind-tag": {
+    id: "number-kind-tag",
+    kind: "method",
+    domain: "history",
+    label: "숫자에 종류를 적어 두는 표시",
+    aliases: ["숫자의 꼬리표", "가정 표시"],
+    definition:
+      "이렇게 치면 이렇게 된다, 여든 남짓이다, 어림을 내놓아야 한다처럼 그 수가 어떤 종류인지를 수 옆에 적는 방식입니다. 서술에서 누구의 보고인지를 밝히던 꼬리표가 숫자에 적용된 꼴이고, 받는 쪽이 결과의 근거를 재료마다 다르게 잡게 해 줍니다.",
+    canonicalHref: "/history/record-numbers/what-the-total-cannot-tell#tags",
+  },
+  "precision-of-a-sum": {
+    id: "precision-of-a-sum",
+    kind: "theorem",
+    domain: "history",
+    label: "합계의 끝자리는 가장 거친 재료보다 정밀해 보인다",
+    aliases: ["합산의 겉보기 정밀도", "끝자리의 출처"],
+    definition:
+      "여러 수를 더하면 결과의 믿을 수 있는 자리는 가장 거친 재료에 맞춰지지만 표기는 그렇게 되지 않습니다. 작은 비율을 큰 수에 곱해 만든 재료 하나가 끝자리를 남기면 합계 전체가 그 자리까지 숫자를 갖게 되고, 읽는 쪽이 그것을 정밀함으로 읽으면 다른 재료의 어림과 가정이 결과에서 지워집니다.",
+    canonicalHref:
+      "/history/record-numbers/what-the-total-cannot-tell#last-digits",
+  },
+  "recorded-derivation-enables-audit": {
+    id: "recorded-derivation-enables-audit",
+    kind: "concept",
+    domain: "history",
+    label: "계산을 적어 두면 뒷사람이 틀림을 찾을 수 있다",
+    aliases: ["검산 가능성", "유도를 남기기"],
+    definition:
+      "결과만 적힌 수는 확인할 길이 없지만, 수와 그 수를 끌어낸 규칙이 함께 적혀 있으면 뒷사람이 같은 계산을 다시 해 어긋남을 찾을 수 있습니다. 계산을 적는 일은 틀릴 위험을 늘리는 대신 틀림을 드러낼 수 있게 만드는 교환이며, 그래서 틀린 계산이 남아 있는 기록은 아무 계산도 남기지 않은 기록보다 쓸모가 큽니다.",
+    canonicalHref:
+      "/history/record-numbers/what-the-total-cannot-tell#the-check",
+  },
+  "prescriptive-versus-measured-number": {
+    id: "prescriptive-versus-measured-number",
+    kind: "concept",
+    domain: "history",
+    label: "시키려고 적은 숫자와 재려고 적은 숫자",
+    aliases: ["명령 숫자", "규범 숫자와 관찰 숫자"],
+    definition:
+      "사료의 숫자에는 무엇이 얼마나 있었는지를 재서 적은 것과 무엇을 얼마로 하라고 정해서 적은 것이 섞여 있습니다. 앞쪽에는 세는 절차와 해상도와 검산을 물을 수 있지만 뒤쪽에는 물을 것이 없고, 대신 무엇을 어느 칸에 두었는지와 어떤 꼴의 답을 골랐는지를 묻게 됩니다.",
+    canonicalHref: "/history/record-numbers/numbers-that-command#overview",
+  },
+  "answer-kind-changes-by-rung": {
+    id: "answer-kind-changes-by-rung",
+    kind: "concept",
+    domain: "history",
+    label: "같은 사안에서 상대에 따라 답의 꼴이 바뀐다",
+    aliases: ["사다리 안의 종류 변화", "되갚기와 금액"],
+    definition:
+      "한 사안을 신분별로 나눠 적을 때 금액만 달라지는 것이 아니라 답의 종류가 달라집니다. 되갚을 수 있는 자리에는 같은 해를 돌려주는 답이 들어가고, 되갚을 자리가 없을 때 금액이나 값의 비율이 들어옵니다. 그래서 숫자가 들어간 자리 자체가 그 사회가 무엇을 되갚을 수 있다고 보았는지를 드러냅니다.",
+    canonicalHref: "/history/record-numbers/numbers-that-command#rungs",
+  },
+  "amount-encodes-standing": {
+    id: "amount-encodes-standing",
+    kind: "theorem",
+    domain: "history",
+    label: "정해진 금액은 사안의 크기가 아니라 상대의 자리를 담는다",
+    aliases: ["금액이 담는 것", "같은 사다리의 재사용"],
+    definition:
+      "서로 성격이 반대인 사안에 같은 금액 사다리가 쓰이면 그 금액은 사안의 경중을 재는 값일 수 없고, 두 사안에 공통된 축인 상대의 신분을 담는 값입니다. 다만 칸의 순서만 규칙이고 칸 사이의 간격은 사안마다 따로 정해지므로, 금액의 비를 고정된 환산율로 읽을 수는 없습니다.",
+    canonicalHref: "/history/record-numbers/numbers-that-command#same-ladder",
+  },
+  "form-of-a-prescribed-amount": {
+    id: "form-of-a-prescribed-amount",
+    kind: "concept",
+    domain: "history",
+    label: "정해 둔 답의 꼴이 전제를 드러낸다",
+    aliases: ["명령 숫자의 네 꼴", "고정액과 비율과 횟수"],
+    definition:
+      "명령하는 답은 숫자가 없는 되갚기, 고정된 금액, 대상 값에 대한 비율, 횟수의 네 꼴로 나타나며 각각 성립 조건이 다릅니다. 되갚기는 가해자 쪽에 같은 것이 있어야 하고, 고정액은 화폐 재료의 값이 안정적이어야 하며, 비율은 그 대상에 거래되는 값이 있어야 하고, 횟수는 집행할 자리를 전제합니다. 어느 꼴을 어디에 썼는지가 무엇을 값으로 쟀는지의 경계를 그립니다.",
+    canonicalHref: "/history/record-numbers/numbers-that-command#four-kinds",
+  },
+  "prescribed-price-is-not-observed-price": {
+    id: "prescribed-price-is-not-observed-price",
+    kind: "theorem",
+    domain: "history",
+    label: "정해진 값에서 치러진 값을 꺼낼 수 없다",
+    aliases: ["법정 가격의 한계", "명령 숫자로 물가 읽기"],
+    definition:
+      "법이 정한 품삯이나 임차료는 그 값에 거래가 이루어졌다는 관찰이 아니라 그렇게 하라는 명령입니다. 정할 필요가 있었다는 사실은 오히려 다른 값이 오갔을 가능성을 가리키므로, 거기서 읽을 수 있는 것은 그 값이 당시 사정에서 아주 동떨어지지는 않았으리라는 것과, 한 조항 안에 나란히 정해진 항목들 사이의 비 정도입니다.",
+    canonicalHref:
+      "/history/record-numbers/numbers-that-command#reading-prices",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -48141,6 +48235,111 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "해상도는 수가 말할 수 있는 자리의 문제이고 단위 오차는 수가 가리키는 값의 문제여서, 하나를 알아도 다른 하나는 남습니다.",
+  },
+  {
+    from: "counting-by-unit-enclosure",
+    to: "total-built-from-mixed-sources",
+    relation: "prerequisite",
+    reason:
+      "절차에서 나온 보병 수가 이 총계의 한 재료로 그대로 들어오므로, 그 수의 성격을 먼저 알아야 합니다.",
+  },
+  {
+    from: "attribution-tag",
+    to: "number-kind-tag",
+    relation: "extends",
+    reason:
+      "서술에 붙던 출처 꼬리표를 숫자에 붙이는 쪽으로 넓힌 것입니다.",
+  },
+  {
+    from: "total-built-from-mixed-sources",
+    to: "number-kind-tag",
+    relation: "produces",
+    reason:
+      "성격이 다른 수가 섞이면 어느 것이 어떤 종류인지를 표시할 필요가 생깁니다.",
+  },
+  {
+    from: "total-built-from-mixed-sources",
+    to: "precision-of-a-sum",
+    relation: "produces",
+    reason:
+      "서로 다른 거칠기의 재료를 더한 결과에서 표기와 실제 해상도가 갈립니다.",
+  },
+  {
+    from: "resolution-of-a-number",
+    to: "precision-of-a-sum",
+    relation: "extends",
+    reason:
+      "한 수의 해상도를 묻던 물음을 여러 수를 더한 결과로 넓힙니다.",
+  },
+  {
+    from: "unit-error-multiplies",
+    to: "precision-of-a-sum",
+    relation: "constrains",
+    reason:
+      "큰 수에 곱해진 비율 하나가 끝자리를 만든다는 사실이 단위 오차가 곱해지는 구조에서 나옵니다.",
+  },
+  {
+    from: "precision-of-a-sum",
+    to: "recorded-derivation-enables-audit",
+    relation: "produces",
+    reason:
+      "끝자리의 출처를 되짚을 수 있는 것도 계산이 적혀 있기 때문입니다.",
+  },
+  {
+    from: "authorial-method-statement",
+    to: "recorded-derivation-enables-audit",
+    relation: "extends",
+    reason:
+      "방법을 적어 두는 관행이 숫자에서는 계산을 적어 두는 일로 나타납니다.",
+  },
+  {
+    from: "provenance-of-a-recorded-number",
+    to: "prescriptive-versus-measured-number",
+    relation: "extends",
+    reason:
+      "숫자의 출처를 묻던 물음을 전해 들음과 절차 밖의 셋째 종류로 넓힙니다.",
+  },
+  {
+    from: "resolution-of-a-number",
+    to: "prescriptive-versus-measured-number",
+    relation: "contrasts",
+    reason:
+      "해상도를 물을 수 있는 수와 물을 수 없는 수를 가르는 데서 이 구분이 필요해집니다.",
+  },
+  {
+    from: "prescriptive-versus-measured-number",
+    to: "answer-kind-changes-by-rung",
+    relation: "produces",
+    reason:
+      "센 결과가 아니라 정한 결과라면 왜 그렇게 정했는지를 묻게 되고, 답의 꼴이 먼저 눈에 들어옵니다.",
+  },
+  {
+    from: "answer-kind-changes-by-rung",
+    to: "amount-encodes-standing",
+    relation: "produces",
+    reason:
+      "금액이 들어간 칸들만 따로 보면 그 금액이 무엇을 담고 있는지를 물을 수 있습니다.",
+  },
+  {
+    from: "amount-encodes-standing",
+    to: "form-of-a-prescribed-amount",
+    relation: "extends",
+    reason:
+      "금액이 담는 것을 본 뒤 금액 아닌 답의 꼴들까지 함께 놓고 봅니다.",
+  },
+  {
+    from: "form-of-a-prescribed-amount",
+    to: "prescribed-price-is-not-observed-price",
+    relation: "constrains",
+    reason:
+      "답의 꼴이 전제를 드러낼 뿐 관찰을 전하지 않는다는 것이 물가 읽기의 한계를 정합니다.",
+  },
+  {
+    from: "disclosed-partiality",
+    to: "form-of-a-prescribed-amount",
+    relation: "evaluates",
+    reason:
+      "정한 쪽이 누구인지를 묻는 일이 명령하는 기록에서도 그대로 걸립니다.",
   },
 ];
 

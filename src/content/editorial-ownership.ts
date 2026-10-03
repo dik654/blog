@@ -13271,6 +13271,70 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "what-the-total-cannot-tell": {
+    title: "계산이 적힌 총계를 읽는 글이 소유하는 범위",
+    owns: [
+      "총계가 성격이 다른 수들의 합이라는 것",
+      "숫자에 종류를 적어 두는 표시의 역할",
+      "합계의 끝자리가 한 재료에서 온다는 것과 그 유도",
+      "계산을 적어 두면 뒷사람이 틀림을 찾을 수 있다는 것",
+      "총계를 인용할 때 쓸 수 있는 두 방식",
+    ],
+    reuses: [
+      {
+        label: "단위 공간을 만들어 채움 횟수를 세는 절차와 그 수의 해상도",
+        href: "/history/record-numbers/how-the-army-was-counted#what-was-counted",
+      },
+      {
+        label: "눈금이 치우치면 오차가 개수만큼 곱해진다는 것",
+        href: "/history/record-numbers/how-the-army-was-counted#where-it-slips",
+      },
+      {
+        label: "각 서술에 출처 꼬리표를 붙이는 방식",
+        href: "/history/testimony/told-but-not-believed#tags",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "7권 184~187절의 수치와 가정 표시는 사료에, 소계의 아라비아 숫자와 48 코이닉스 환산은 영역자 주석에 귀속한다. 48로 나눈 검산과 재료의 세 분류는 이 글이 더한 것으로 표시하고, 전사본으로 읽었으므로 권·절 번호까지만 적는다",
+      },
+    ],
+  },
+  "numbers-that-command": {
+    title: "명령하는 숫자를 읽는 글이 소유하는 범위",
+    owns: [
+      "재려고 적은 숫자와 시키려고 적은 숫자의 구분",
+      "한 사안 안에서 상대에 따라 답의 꼴이 바뀐다는 것",
+      "같은 금액 사다리의 재사용에서 금액이 신분을 담는다는 유도",
+      "명령하는 답의 네 꼴과 각각의 전제",
+      "정해진 값에서 치러진 값을 꺼낼 수 없다는 것과 그래도 남는 범위",
+    ],
+    reuses: [
+      {
+        label: "적힌 숫자의 출처를 묻는 틀",
+        href: "/history/record-numbers/how-the-army-was-counted#two-numbers",
+      },
+      {
+        label: "눈금으로 센 수의 해상도",
+        href: "/history/record-numbers/how-the-army-was-counted#what-was-counted",
+      },
+      {
+        label: "계산을 적어 두면 뒷사람이 검산할 수 있다는 것",
+        href: "/history/record-numbers/what-the-total-cannot-tell#the-check",
+      },
+      {
+        label: "기록을 남긴 쪽의 자리를 묻는 법",
+        href: "/history/testimony/the-writer-was-there#own-position",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "해당 조항의 문구와 금액만 법전에 귀속하고, 네 꼴의 분류·되갚기 읽기·금액이 신분을 담는다는 유도는 이 글이 더한 것으로 표시한다. 전사본으로 읽었으므로 쪽수를 쓰지 않고 조항 번호까지만 적으며, gentleman·poor man이 영역자의 번역어임을 본문에 밝힌다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
