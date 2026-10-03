@@ -7636,4 +7636,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공개 강의", label: "MIT OCW 6.720J Lecture 25, ‘Long MOSFET’ (2007), 10·13쪽", href: "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/8ad0e553fbdaed10f6102b04451e547e_lecture25.pdf", note: "국소 반전 전하와 선형 영역 전류 적분을 공식 PDF로 확인했다. k와 전압 수치는 본문의 가정이다." },
     { kind: "공개 강의", label: "MIT OCW 6.720J Lecture 26, ‘Long MOSFET’ (2007), 5·7·8쪽", href: "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/59850a07f95e9f50d32185eb46503460_lecture26.pdf", note: "핀치오프와 포화 경계·제곱식을 공식 PDF에서 직접 확인했다. 실제 소자의 완전히 평평한 출력 곡선을 주장하지 않는다." },
   ],
+  "devices/switching-energy-and-leakage": [
+    { kind: "공개 강의", label: "MIT OCW 6.012 Lecture 14, ‘CMOS’ (2005), 22–24쪽", href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/6bec6dd1b07b02a1a84098b78f068cc3_lec14.pdf", note: "공급 CV², 저장·방전의 각 ½CV², 완전 주기당 CV²와 평균 전력식을 확인했다. 본문 숫자와 누설은 가정이다." },
+  ],
 };
