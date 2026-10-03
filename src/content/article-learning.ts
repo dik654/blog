@@ -86433,6 +86433,3982 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "circuits/lumped-circuit-and-conservation": {
+    entryLevel: true,
+    entryNote:
+      "12볼트 전원(가정)이 한 저항을 지나 두 갈래로 나뉘는 작은 회로에서 시작합니다. 전하와 에너지의 이동을 어떻게 수로 세는지부터 설명합니다.",
+    coreIdea:
+      "회로를 점·선·부품으로 줄일 수 있을 때 한 점에서 전하가 사라지지 않는 조건과 한 바퀴에서 전압 변화가 맞는 조건을 함께 쓰면 모든 갈래의 전압과 전류를 계산할 수 있습니다. 이 두 조건이 성립하는 근사와 깨지는 경우도 함께 확인합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "electric-current", role: "갈림길의 숫자가 전하의 이동 속도임을 설명합니다." },
+      { id: "electric-potential-difference", role: "두 점 사이의 에너지 차이로 각 갈래가 받는 전압을 설명합니다." },
+      { id: "ohmic-resistance", role: "한 부품의 전압을 알 때 흐름을 구하는 선형 모델을 설명합니다." },
+      { id: "lumped-circuit-abstraction", role: "공간에 퍼진 현상을 점과 선으로 줄이는 조건을 설명합니다." },
+      { id: "kirchhoff-current-law", role: "갈림길의 전하 보존을 식으로 셉니다." },
+      { id: "kirchhoff-voltage-law", role: "한 바퀴의 에너지 차이를 식으로 셉니다." },
+      { id: "electrical-power-balance", role: "전원과 부품의 전력을 맞추어 계산을 검산합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "electric-current", sectionId: "small-circuit",
+        intuition: "한 점을 지나간 전하의 양을 시간으로 나눈 값입니다. 많이 쌓인 전하와 빨리 지나가는 전하는 서로 다릅니다.",
+        workedExample: "0.006쿨롬이 1초에 한 단면을 지나면 0.006암페어, 곧 6밀리암페어입니다(가정).",
+        boundary: "부품에 전하가 쌓이는 과도 상태라면 서로 다른 두 단면의 순간 전류가 같다고 미리 둘 수 없습니다.",
+        scientificGrounding: { observable: "한 도선 단면을 지나는 전하량과 걸린 시간", unitsAndDimensions: "전류의 단위 암페어 A는 쿨롬 C를 초 s로 나눈 C/s입니다.", modelAssumptions: "회로가 놓인 실험실 기준계에서 관습적 양전하 방향을 전류의 양의 방향으로 택합니다.", measurementExample: "1초 동안 0.006 C가 지나면 6 mA입니다(가정).", invalidConditions: "전하 축적을 무시할 수 없는 부품의 양끝 전류를 무조건 같다고 할 수 없습니다.", referenceFrame: "회로와 계측기가 정지한 실험실 기준계" },
+      },
+      {
+        id: "electric-potential-difference", sectionId: "small-circuit",
+        intuition: "전압은 한 점의 물건이 아니라 두 점 사이에서 전하 한 단위가 주고받는 에너지 차이입니다.",
+        workedExample: "두 갈래가 같은 위·아래 점에 닿아 있으면 둘 다 6 V를 마주하고, 각 갈래의 1 C는 6 J를 주고받습니다(가정).",
+        boundary: "기준점을 정하지 않고 '이 점이 6 V'라고 하면 무엇과 비교했는지가 빠집니다.",
+        scientificGrounding: { observable: "두 점에 전압계의 두 탐침을 각각 대고 읽은 전위차", unitsAndDimensions: "전압의 단위 볼트 V는 줄 J을 쿨롬 C로 나눈 J/C입니다.", modelAssumptions: "부품 바깥의 시간에 따라 변하는 자기 선속을 회로 모델에서 무시하거나 별도 요소로 나타냅니다.", measurementExample: "전압계가 위·아래 점 사이 6 V를 보이면 1 C당 6 J 차이입니다(가정).", invalidConditions: "변하는 자기 선속을 둘러싼 경로에서는 경로와 무관한 한 전위차만으로 모든 구간을 나타낼 수 없습니다.", referenceFrame: "회로에 고정한 기준점과 실험실 기준계" },
+      },
+      {
+        id: "ohmic-resistance", sectionId: "small-circuit",
+        intuition: "전압을 두 배로 바꿨을 때 전류도 두 배로 바뀌는 부품의 비례값을 저항이라 둡니다.",
+        workedExample: "2 kΩ에 6 V를 걸면 3 mA, 같은 온도에서 3 V를 걸면 1.5 mA입니다(가정).",
+        boundary: "발열로 온도가 바뀌거나 다이오드처럼 전압·전류 관계가 휘면 일정한 R 하나로 설명할 수 없습니다.",
+        scientificGrounding: { observable: "부품 양끝 전압과 통과 전류를 짝지은 측정", unitsAndDimensions: "저항의 단위 옴 Ω은 볼트 V를 암페어 A로 나눈 V/A입니다.", modelAssumptions: "온도와 동작 범위를 고정하고 선형 저항으로 근사합니다.", measurementExample: "6 V / 0.003 A = 2000 Ω입니다(가정).", invalidConditions: "비선형 소자, 온도 변화, 고주파 기생 성분이 지배적일 때 일정 저항값 가정은 실패합니다.", referenceFrame: "회로와 계측기가 정지한 실험실 기준계" },
+      },
+      {
+        id: "lumped-circuit-abstraction", sectionId: "limits",
+        intuition: "전구 안의 모든 전기장을 그리지 않고 양끝 전압과 통과 전류라는 두 숫자로 줄입니다.",
+        workedExample: "12 V 전원, 1 kΩ 한 개, 2 kΩ 두 개를 점과 선으로 연결하고 각 부품의 양끝만 셉니다(가정).",
+        boundary: "긴 전송선의 전파 시간이나 회로를 관통하는 변하는 자기 선속을 무시할 수 없으면 공간 전체를 이 작은 그림으로 접을 수 없습니다.",
+        scientificGrounding: { observable: "도선 위치별 전압·전류의 시간차와 회로를 통과하는 자기 선속", unitsAndDimensions: "길이 m, 전파 지연 s, 자기 선속 Wb, 전압 V, 전류 A", modelAssumptions: "부품 밖 전파·유도 효과와 부품 안의 미모델 전하 축적이 관심 시간척도에 비해 작습니다.", measurementExample: "두 갈래 입구와 출구의 전압·전류를 각각 재어 부품 하나의 V–I 관계로 재현되는지 확인합니다(가정).", invalidConditions: "전송선·안테나·변압기처럼 분포와 유도를 모델에 넣어야 하는 경우입니다.", referenceFrame: "회로가 놓인 실험실 기준계; 노드 전위는 선택한 기준점에 상대적입니다." },
+      },
+      {
+        id: "kirchhoff-current-law", sectionId: "junction",
+        intuition: "한 갈림길에 전하가 계속 쌓이지 않으면 들어온 속도와 나간 속도가 맞습니다.",
+        workedExample: "6 mA가 들어와 3 mA씩 두 길로 나가므로 6−3−3=0 mA입니다(가정).",
+        proofIdea: "경계를 둘러싼 전하량의 시간 변화는 들어온 전류에서 나간 전류를 뺀 값입니다. 축적이 0이면 부호를 붙인 전류의 합도 0입니다. Kirchhoff 1845는 정상 상태 금속판의 닫힌 곡선에서 이 생각을 적분으로 씁니다.",
+        counterexample: "한 축전기에 1 mA가 들어가 전하가 쌓이는 순간, 그 축전기로 들어가는 갈래를 빼놓고 나머지 전류만 0이라고 할 수 없습니다.",
+        boundary: "전류의 방향을 먼저 정하고, 축적을 맡는 요소를 회로 안에 빠짐없이 포함해야 합니다.",
+        scientificGrounding: { observable: "갈림길의 각 도선에 단 전류계 값과 해당 영역의 축적 전하", unitsAndDimensions: "각 갈래의 mA는 전하 mC를 시간 s로 나눈 값이며 모두 같은 차원입니다.", modelAssumptions: "관심 노드에 따로 모델링하지 않은 전하 축적이 없습니다.", measurementExample: "입구 6 mA, 출구 3 mA·3 mA를 동시에 재면 부호합 0 mA입니다(가정).", invalidConditions: "누락된 축전기 전류나 미모델 전하 축적이 있으면 측정한 일부 갈래의 합은 0이 아닙니다.", referenceFrame: "회로에 고정한 실험실 기준계와 선택한 갈림길 경계" },
+      },
+      {
+        id: "kirchhoff-voltage-law", sectionId: "loop",
+        intuition: "같은 출발점으로 돌아왔는데 전하 하나당 에너지 차이가 남아 있을 수는 없습니다.",
+        workedExample: "전원에서 +12 V, 첫 저항에서 −6 V, 어느 쪽 갈래에서든 −6 V를 세면 합계 0 V입니다(가정).",
+        proofIdea: "전기장의 선적분은 회로를 관통하는 자기 선속의 시간 변화와 연결됩니다. 부품 밖 유도 항이 0인 집중 회로에서는 각 구간의 전위차를 한 바퀴 더하면 망원합처럼 0입니다.",
+        counterexample: "변하는 자기 선속을 감싼 고리에서 유도 기전력을 회로에 포함하지 않으면 단순한 전압강하만 더해 0이 되지 않습니다.",
+        boundary: "전압의 측정 방향을 통일하고 부품 밖 변하는 자기 선속이 무시 가능한지 확인합니다.",
+        scientificGrounding: { observable: "전원과 각 부품 양끝의 전압계 값 및 회로를 관통하는 자기 선속 변화", unitsAndDimensions: "전압 V = J/C, 자기 선속 변화율 Wb/s = V", modelAssumptions: "부품 바깥의 자기 선속 변화는 0이거나 별도 회로 요소의 유도 전압에 담겨 있습니다.", measurementExample: "+12 V−6 V−6 V=0 V를 같은 방향으로 잽니다(가정).", invalidConditions: "강한 외부 유도·고주파 분포 회로에서 이를 모델 밖으로 버리면 합이 0이 아닙니다.", referenceFrame: "회로가 정지한 실험실 기준계에서 정한 고리 방향" },
+      },
+      {
+        id: "electrical-power-balance", sectionId: "power",
+        intuition: "전하 한 단위가 주고받는 에너지에 초당 지나가는 전하량을 곱하면 매초 이동하는 에너지가 됩니다.",
+        workedExample: "전원 12 V×6 mA=72 mW, 세 저항은 6 V×6 mA=36 mW와 6 V×3 mA=18 mW씩 써 총 72 mW입니다(가정).",
+        boundary: "전력과 누적 에너지를 혼동하지 않으며, 축전기·코일이 있으면 저장 에너지의 시간 변화도 합에 넣습니다.",
+        scientificGrounding: { observable: "같은 시점에 전압계와 전류계로 각각 잰 부품별 전압과 전류의 곱", unitsAndDimensions: "와트 W = 볼트 V×암페어 A = 줄 J/초 s", modelAssumptions: "전원·부품을 빠짐없이 포함하고 같은 시점과 부호 규칙으로 측정합니다.", measurementExample: "72 mW 공급과 36+18+18 mW 소비가 맞습니다(가정).", invalidConditions: "저장 소자를 빼거나 서로 다른 시간의 전압·전류를 곱하면 즉시 전력 검산이 어긋납니다.", referenceFrame: "회로와 계측기가 정지한 실험실 기준계에서 선택한 전압과 전류 방향" },
+      },
+    ],
+    conceptStages: [
+      { label: "00 흐름과 차이", relation: "전하가 얼마나 빨리 움직이고 두 점 사이에서 무엇을 주고받는지부터 봅니다.", concepts: ["electric-current", "electric-potential-difference", "ohmic-resistance"] },
+      { label: "01 회로로 줄이기", relation: "공간에 퍼진 현상을 점과 부품으로 나타낼 조건을 확인합니다.", concepts: ["lumped-circuit-abstraction"] },
+      { label: "02 두 보존식", relation: "갈림길의 전하와 한 바퀴의 전압을 따로 셉니다.", concepts: ["kirchhoff-current-law", "kirchhoff-voltage-law"] },
+      { label: "03 에너지 검산", relation: "전원과 부품의 전력이 서로 맞는지 확인합니다.", concepts: ["electrical-power-balance"] },
+    ],
+    exercises: [
+      { level: "basic", question: "1초에 0.006 C가 한 단면을 지나면 전류는 몇 A와 몇 mA입니까?", answerChecklist: ["0.006 A", "6 mA", "전류는 전하량/시간"], requiredConcepts: ["electric-current"], sectionId: "small-circuit" },
+      { level: "basic", question: "같은 위·아래 두 점에 연결된 두 갈래는 각각 몇 V를 마주하며, 왜 그렇습니까?", answerChecklist: ["각각 6 V", "전압은 두 점 사이의 차이", "두 갈래가 같은 두 점에 닿음"], requiredConcepts: ["electric-potential-difference"], sectionId: "small-circuit" },
+      { level: "basic", question: "2 kΩ에 6 V를 걸었을 때 전류를 단위와 함께 계산하세요.", answerChecklist: ["I=V/R", "6/2000 A", "3 mA", "선형 저항 가정"], requiredConcepts: ["ohmic-resistance"], sectionId: "small-circuit" },
+      { level: "basic", question: "갈림길에 6 mA가 들어와 두 길 중 하나로 3 mA가 나가면 다른 길로는 얼마가 나가야 하며 왜 그렇습니까?", answerChecklist: ["3 mA", "6−3−3=0", "갈림길에 전하가 쌓이지 않음"], requiredConcepts: ["kirchhoff-current-law"], sectionId: "junction" },
+      { level: "basic", question: "전원 12 V와 두 저항의 전압강하 6 V·6 V를 같은 방향으로 한 바퀴 셀 때 합은 얼마입니까?", answerChecklist: ["+12−6−6=0 V", "출발점으로 돌아옴", "외부 유도 무시"], requiredConcepts: ["kirchhoff-voltage-law"], sectionId: "loop" },
+      { level: "basic", question: "전원의 72 mW가 세 저항에 어떻게 나뉘며 와트는 무엇을 뜻합니까?", answerChecklist: ["36+18+18=72 mW", "P=VI", "1 W=1 J/s"], requiredConcepts: ["electrical-power-balance"], sectionId: "power" },
+      { level: "advanced", question: "갈림길 전압을 V로 두고 (12−V)/1000=V/2000+V/2000을 풀어 전압과 세 전류를 구하세요.", answerChecklist: ["V=6 V", "들어오는 6 mA", "나가는 3 mA와 3 mA", "6=3+3"], requiredConcepts: ["ohmic-resistance", "kirchhoff-current-law"], sectionId: "solve" },
+      { level: "advanced", question: "한 2 kΩ 갈래를 1 kΩ로 바꾸면 갈림길 전압과 세 전류는 얼마가 됩니까?", answerChecklist: ["갈림길 4.8 V", "직렬 7.2 mA", "2 kΩ 갈래 2.4 mA", "1 kΩ 갈래 4.8 mA", "7.2=2.4+4.8"], requiredConcepts: ["ohmic-resistance", "kirchhoff-current-law"], sectionId: "solve" },
+      { level: "advanced", question: "축전기로 전하가 쌓이는 순간에 갈림길 전류의 합을 0으로 쓰려면 무엇을 포함해야 합니까?", answerChecklist: ["축전기로 향하는 전류 포함", "dQ/dt가 0이 아닐 수 있음", "미모델 축적을 0으로 두는 조건 구분"], requiredConcepts: ["lumped-circuit-abstraction", "kirchhoff-current-law"], sectionId: "limits" },
+      { level: "advanced", question: "회로 고리를 관통하는 자기 선속이 시간에 따라 달라질 때 단순한 전압 합 0을 쓰기 전에 무엇을 확인해야 합니까?", answerChecklist: ["Faraday 유도 전압", "모델 밖 변하는 자기 선속의 유무", "유도 항을 별도 부품 또는 식에 포함"], requiredConcepts: ["lumped-circuit-abstraction", "kirchhoff-voltage-law"], sectionId: "limits" },
+    ],
+    papers: [
+      { title: "G. Kirchhoff, ‘Ueber den Durchgang eines elektrischen Stromes durch eine Ebene, insbesondere durch eine kreisförmige’, Annalen der Physik und Chemie 64 (1845), 497–514", href: "https://zenodo.org/records/2422851", problem: "금속판에 전류가 들어오고 나갈 때 판 안의 흐름과 전위가 어느 모양으로 놓이는지 구해야 했습니다.", contribution: "정상 상태에서 닫힌 곡선 안에 전하가 따로 공급되지 않으면 그 경계로 드나든 흐름의 합이 0이라는 조건을 499쪽에서 적분식으로 두고 원형 판의 전위를 계산해 실험과 견주었습니다.", assumptions: "정상 상태의 전류, 균일한 금속판의 전도 성질, 지정된 출입 지점과 경계 조건을 둡니다.", evidenceScope: "Zenodo의 원문 19면 스캔을 내려받아 OCR로 읽고 499쪽의 문장과 식을 쪽 이미지에서 다시 확인했습니다. 현대의 점·선 회로 예시 숫자는 이 논문의 실험값이 아닙니다.", notClaim: "이 논문이 이 글의 12 V 저항망을 계산했다는 뜻이 아닙니다. 논문은 연속 금속판의 정상 전류를 다루고, 여기서는 그 보존 조건을 집중 회로의 갈림길에 옮겨 적용합니다.", sectionId: "junction" },
+    ],
+  },
+  "semiconductors/bands-and-doping": {
+    coreIdea: "같은 실리콘이라도 움직일 수 있는 전자와 정공의 수는 에너지띠·온도·도핑에 따라 달라집니다. 300 K에서 순수 실리콘의 양쪽 농도를 기준으로, 도너나 억셉터를 넣었을 때 다수·소수 농도를 계산하고 그 근사의 경계를 확인합니다.",
+    assumedKnowledge: [
+      { id: "electric-current", role: "움직이는 전하가 도선 단면을 지나갈 때의 전류를 이미 알고 있다고 둡니다." },
+    ],
+    introducedHere: [
+      { id: "semiconductor-energy-bands", role: "움직일 수 있는 에너지 상태와 간격을 구분합니다." },
+      { id: "intrinsic-electron-hole-pairs", role: "순수 실리콘에서 전자와 정공이 짝으로 생기는 이유를 설명합니다." },
+      { id: "donor-acceptor-doping", role: "넣는 원자에 따라 많은 쪽 전하가 바뀌는 기작을 설명합니다." },
+      { id: "semiconductor-charge-neutrality", role: "움직이는 전하와 고정 이온의 장부를 맞춥니다." },
+      { id: "carrier-mass-action-equilibrium", role: "열평형에서 전자·정공 농도의 곱으로 적은 쪽을 계산합니다." },
+      { id: "majority-minority-carriers", role: "1 cm³의 다수·소수 캐리어 수를 읽습니다." },
+      { id: "carrier-mobility-conductivity", role: "전하 수만으로 전류 크기를 단정할 수 없는 이유를 설명합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "semiconductor-energy-bands", sectionId: "states",
+        intuition: "전자가 갈 수 있는 에너지 자리가 빽빽한 구간과 갈 수 없는 간격을 구분합니다. 낮은 구간이 가득 차 있으면 같은 구간 안에서 작은 전기장에 응답할 빈자리가 없습니다.",
+        workedExample: "300 K 실리콘의 띠틈을 약 1.1 eV라고 두고, 열로 위쪽 상태에 올라간 전자 하나와 아래에 남은 빈자리 하나를 셉니다.",
+        boundary: "띠 그림은 결정의 가능한 상태를 요약한 모델이고 원자 하나의 고정 궤도 그림이나 전압에 대한 직접 눈금이 아닙니다.",
+        scientificGrounding: { observable: "광흡수 시작 에너지와 전기 전도도의 온도 의존성을 함께 재어 에너지 간격을 추정합니다.", unitsAndDimensions: "에너지 간격은 전자볼트 eV로 적으며 1 eV는 전하 1 e가 전압 1 V에서 얻는 에너지입니다.", modelAssumptions: "주기적인 결정 구조의 에너지 상태를 띠로 근사하고 결함·표면 상태를 따로 구분합니다.", measurementExample: "실리콘 300 K의 대표 띠틈 약 1.1 eV를 교육용 기준으로 사용합니다.", invalidConditions: "비정질·강한 결함·매우 작은 구조에서는 벌크 단결정 띠 그림만으로 측정이 설명되지 않습니다.", referenceFrame: "결정과 계측기가 정지한 실험실 기준계에서 에너지 기준점을 정합니다." },
+      },
+      {
+        id: "intrinsic-electron-hole-pairs", sectionId: "intrinsic",
+        intuition: "전자가 이동 가능한 상태로 올라가면 결합에 남은 빈자리도 움직이는 양전하처럼 셀 수 있습니다.",
+        workedExample: "실리콘 300 K에서 순수 상태의 전자와 정공을 각각 약 10^10 cm^-3로 둡니다.",
+        boundary: "온도가 달라지면 이 수가 크게 달라지고, 빈자리는 실제 양전하 입자가 새로 생겼다는 뜻이 아닙니다.",
+        scientificGrounding: { observable: "평형 상태에서 측정한 전자와 정공의 부피당 농도 및 온도", unitsAndDimensions: "농도 n과 p의 단위는 세제곱센티미터당 개수 cm^-3입니다.", modelAssumptions: "빛이나 주입 전류가 없는 열평형, 300 K 벌크 실리콘을 기본 사례로 둡니다.", measurementExample: "1 cm³에 움직이는 전자와 정공이 각각 대략 10^10개 있다는 6.012 강의 수치를 사용합니다.", invalidConditions: "빛 조사·외부 주입·온도 변화가 있으면 같은 n_i 숫자를 그대로 쓸 수 없습니다.", referenceFrame: "실리콘 조각과 계측기가 정지한 실험실 기준계의 1 cm³ 부피" },
+      },
+      {
+        id: "donor-acceptor-doping", sectionId: "dopants",
+        intuition: "실리콘 자리에 전자를 하나 더 내놓기 쉬운 원자를 넣거나 빈자리를 만들기 쉬운 원자를 넣습니다.",
+        workedExample: "1 cm³에 도너 10^16개를 넣고 거의 전부 이온화하면 움직이는 전자가 약 10^16개가 됩니다(가정).",
+        boundary: "상온의 얕은 도핑 원자라는 근사입니다. 낮은 온도·깊은 불순물·보상 도핑에서는 넣은 수와 풀린 수가 다릅니다.",
+        scientificGrounding: { observable: "불순물의 부피당 수와 홀 측정 등으로 추정한 움직이는 전하 농도", unitsAndDimensions: "도너와 억셉터 농도 N_D,N_A는 cm^-3이며 이동 전하 농도와 같은 차원입니다.", modelAssumptions: "300 K 얕은 도핑 원자의 거의 완전한 이온화와 균일한 벌크 영역을 가정합니다.", measurementExample: "도너 10^16 cm^-3의 한쪽 도핑 사례에서 전자 농도 약 10^16 cm^-3로 계산합니다(가정).", invalidConditions: "매우 낮은 온도·강한 보상·고농도 축퇴에서는 N_D와 n을 곧바로 같게 둘 수 없습니다.", referenceFrame: "도핑된 실리콘 조각에 고정한 실험실 기준계의 부피 요소" },
+      },
+      {
+        id: "semiconductor-charge-neutrality", sectionId: "dopants",
+        intuition: "도너가 내놓은 음전하 전자 옆에는 움직이지 않는 양전하 도너 이온이 남습니다.",
+        workedExample: "1 cm³의 전자 10^16개와 고정 도너 이온 약 10^16개가 부호를 달리해 맞습니다(가정).",
+        boundary: "접합의 공핍 영역처럼 전하가 공간적으로 분리된 곳을 국소 중성이라고 둘 수 없습니다.",
+        scientificGrounding: { observable: "도핑 원자 수와 이동 전하 농도, 국소 전기장의 공간 분포", unitsAndDimensions: "수 밀도는 cm^-3이고 전하 밀도는 C/cm³로 바꾸어 더합니다.", modelAssumptions: "접합에서 멀리 떨어진 균일한 벌크 영역의 거의 중성 상태를 셉니다.", measurementExample: "이온화 도너 +10^16 e/cm³와 전자 −10^16 e/cm³가 맞습니다(가정).", invalidConditions: "공핍층·표면·빠른 과도 상태의 공간 전하는 이 근사에서 빠져 있습니다.", referenceFrame: "실리콘 조각에 고정한 실험실 기준계의 동일한 부피 요소" },
+      },
+      {
+        id: "carrier-mass-action-equilibrium", sectionId: "count",
+        intuition: "전자와 빈자리가 짝으로 생기고 다시 만나 사라지는 평형에서는 한쪽이 늘면 다른 쪽이 줄어들어 곱이 일정합니다.",
+        workedExample: "n_i=10^10 cm^-3, n=10^16 cm^-3이면 p=n_i²/n=10^4 cm^-3입니다(가정한 도핑량).",
+        proofIdea: "같은 온도의 열평형에서는 짝 생성 속도와 재결합 속도가 맞습니다. 생성 기준을 n_i²로 쓰고 재결합이 n·p에 비례하는 단순 모델에서 n·p=n_i²가 나옵니다.",
+        counterexample: "빛을 비추어 전자와 정공을 동시에 추가하면 둘의 곱이 평형값보다 커질 수 있습니다.",
+        boundary: "같은 재료·온도의 열평형과 비축퇴 근사에서 씁니다. 강한 주입·고농도·온도 변화에는 다른 모델이 필요합니다.",
+        scientificGrounding: { observable: "같은 온도에서 잰 전자·정공 농도의 곱과 빛 조사 전후 변화", unitsAndDimensions: "n·p와 n_i²의 단위는 모두 cm^-6이므로 농도 제곱끼리 비교합니다.", modelAssumptions: "빛·주입 전류가 없는 열평형, 비축퇴 통계, 같은 재료와 온도를 가정합니다.", measurementExample: "10^16 cm^-3×10^4 cm^-3=10^20 cm^-6로 순수 상태의 (10^10 cm^-3)²과 같습니다.", invalidConditions: "광여기·강한 전압 주입·고농도 축퇴에서는 평형 곱을 그대로 적용하지 않습니다.", referenceFrame: "시료와 계측기가 정지한 실험실 기준계에서 같은 부피·온도" },
+      },
+      {
+        id: "majority-minority-carriers", sectionId: "count",
+        intuition: "도핑한 실리콘에서는 전자와 정공 중 많은 쪽을 먼저 정하고 적은 쪽도 수로 남겨 둡니다.",
+        workedExample: "도너 10^16 cm^-3이면 전자 약 10^16, 정공 약 10^4 cm^-3입니다(가정).",
+        boundary: "소수라는 이름이 없다는 뜻은 아닙니다. 접합에서 소수 캐리어 이동이 핵심이 됩니다.",
+        scientificGrounding: { observable: "전자·정공 농도를 따로 추정한 Hall 측정과 접합 응답", unitsAndDimensions: "다수와 소수 모두 부피당 수 cm^-3으로 세어 비율을 비교합니다.", modelAssumptions: "300 K 열평형의 균일한 벌크 영역과 이온화 도핑 근사를 사용합니다.", measurementExample: "1 cm³에 10^16 전자와 10^4 정공을 놓으면 전자가 10^12배 많습니다(가정).", invalidConditions: "접합 공핍층이나 빛 조사로 평형이 깨지면 벌크의 다수·소수 수를 그대로 쓸 수 없습니다.", referenceFrame: "시료와 계측기가 정지한 실험실 기준계의 동일한 1 cm³" },
+      },
+      {
+        id: "carrier-mobility-conductivity", sectionId: "boundaries",
+        intuition: "움직일 수 있는 수가 같아도 전기장에 반응해 움직이는 속도가 다르면 전류는 다릅니다.",
+        workedExample: "두 시료의 전자 농도가 같고 한쪽 이동도가 절반이면 정공 기여가 작을 때 전도도도 대략 절반입니다(가정).",
+        boundary: "도핑으로 전하 수가 늘어날 때 불순물 산란으로 이동도도 바뀔 수 있어 농도비를 전도도비로 옮기지 않습니다.",
+        scientificGrounding: { observable: "같은 온도와 전기장에서 잰 전류 밀도, 전하 농도, 전기장 세기", unitsAndDimensions: "전도도 σ는 S/m, 이동도 μ는 m²/(V·s), qnμ의 단위도 S/m입니다.", modelAssumptions: "낮은 전기장에서 선형 이동도와 균일한 재료를 가정합니다.", measurementExample: "n을 고정한 두 시료의 μ가 1 대 0.5면 전자 전도도도 1 대 0.5입니다(가정).", invalidConditions: "고전계 속도 포화·온도 변화·강한 산란에서는 일정 μ의 선형식을 그대로 쓰지 않습니다.", referenceFrame: "시료와 계측기가 정지한 실험실 기준계에서 전기장 방향을 고정합니다." },
+      },
+    ],
+    conceptStages: [
+      { label: "00 가능한 자리", relation: "실리콘 안의 전자 상태와 이동 가능한 전하를 구분합니다.", concepts: ["semiconductor-energy-bands", "intrinsic-electron-hole-pairs"] },
+      { label: "01 원자를 섞기", relation: "도너·억셉터와 고정 이온 전하를 함께 셉니다.", concepts: ["donor-acceptor-doping", "semiconductor-charge-neutrality"] },
+      { label: "02 양쪽 농도", relation: "많은 쪽과 적은 쪽의 농도를 같은 수치에서 구합니다.", concepts: ["carrier-mass-action-equilibrium", "majority-minority-carriers"] },
+      { label: "03 측정 경계", relation: "농도와 전도도의 차이를 이동도로 확인합니다.", concepts: ["carrier-mobility-conductivity"] },
+    ],
+    exercises: [
+      { level: "basic", question: "꽉 찬 낮은 에너지띠에서 작은 전기장만으로 전류가 잘 나지 않는 이유를 설명하세요.", answerChecklist: ["옮길 빈 상태", "위쪽 띠", "에너지 간격", "0 K와 유한 온도 구분"], requiredConcepts: ["semiconductor-energy-bands"], sectionId: "states" },
+      { level: "basic", question: "300 K 순수 실리콘에서 n_i=10^10 cm^-3를 쓰면 전자와 정공은 각각 몇 개입니까?", answerChecklist: ["n=p=10^10 cm^-3", "짝 생성", "1 cm³ 기준"], requiredConcepts: ["intrinsic-electron-hole-pairs"], sectionId: "intrinsic" },
+      { level: "basic", question: "도너 10^16 cm^-3가 충분히 이온화할 때 n과 p의 근사값을 단위와 함께 구하세요.", answerChecklist: ["n≈10^16 cm^-3", "p≈10^4 cm^-3", "n_i²/n", "300 K 열평형"], requiredConcepts: ["donor-acceptor-doping", "carrier-mass-action-equilibrium"], sectionId: "count" },
+      { level: "basic", question: "억셉터 10^16 cm^-3면 전자와 정공 가운데 어느 쪽이 다수입니까?", answerChecklist: ["정공 다수", "p≈10^16", "n≈10^4", "cm^-3"], requiredConcepts: ["donor-acceptor-doping", "majority-minority-carriers"], sectionId: "count" },
+      { level: "basic", question: "도너가 전자를 풀어 놓아도 균일한 벌크 실리콘이 거의 중성인 이유는 무엇입니까?", answerChecklist: ["움직이는 전자 음전하", "고정 도너 이온 양전하", "같은 부피에서 합산"], requiredConcepts: ["semiconductor-charge-neutrality"], sectionId: "dopants" },
+      { level: "basic", question: "전자 수가 백만 배면 전도도도 정확히 백만 배라고 할 수 없는 이유를 설명하세요.", answerChecklist: ["이동도", "불순물 산란", "정공 기여", "온도/전기장 조건"], requiredConcepts: ["carrier-mobility-conductivity"], sectionId: "boundaries" },
+      { level: "advanced", question: "도너 10^16과 억셉터 2×10^15 cm^-3가 모두 이온화하면 순도너 농도와 n,p는 얼마입니까?", answerChecklist: ["순도너 8×10^15", "n≈8×10^15", "p≈1.25×10^4 cm^-3", "보상 도핑"], requiredConcepts: ["donor-acceptor-doping", "semiconductor-charge-neutrality", "carrier-mass-action-equilibrium"], sectionId: "count" },
+      { level: "advanced", question: "다른 온도에서 n_i가 10^13 cm^-3가 되었다면 도너 10^16 cm^-3 사례의 p는 얼마이며 어떤 가정을 다시 확인합니까?", answerChecklist: ["p≈10^10", "n_i²/n", "도너 이온화", "열평형", "온도에 따른 이동도"], requiredConcepts: ["intrinsic-electron-hole-pairs", "carrier-mass-action-equilibrium"], sectionId: "boundaries" },
+      { level: "advanced", question: "전자 농도가 같은 두 시료에서 한쪽 이동도가 절반이면 전도도를 어떻게 비교합니까?", answerChecklist: ["σ=q(nμn+pμp)", "정공 기여가 작을 때 절반", "같은 온도·전기장", "p와 μp 확인"], requiredConcepts: ["carrier-mobility-conductivity"], sectionId: "boundaries" },
+      { level: "advanced", question: "빛을 비춘 접합에서 n·p=n_i²를 그대로 쓰기 전에 확인할 측정과 조건을 제안하세요.", answerChecklist: ["빛 조사 전후 n,p", "열평형 여부", "재결합/생성", "온도", "접합과 균일 벌크 구분"], requiredConcepts: ["carrier-mass-action-equilibrium", "majority-minority-carriers"], sectionId: "boundaries" },
+    ],
+    papers: [
+      { title: "A. H. Wilson, ‘The Theory of Electronic Semi-Conductors,’ Proceedings of the Royal Society A 133 (1931), 458–491", href: "https://ethw-images.s3.us-east-va.perf.cloud.ovh.us/ieee/b/b4/P3_Proc._R._Soc._Lond._A-1931-Wilson-458-91.pdf", problem: "고전적인 자유 전자 그림으로는 도체와 절연체·반도체의 차이를 설명하기 어려웠습니다.", contribution: "주기적인 결정의 허용 에너지띠와 그 사이의 금지 구간을 써서 낮은 띠가 가득 찬 상태의 전도 경계를 설명합니다.", assumptions: "완전한 결정의 주기적 퍼텐셜과 에너지띠 근사에서 시작합니다.", evidenceScope: "원문 460쪽의 허용·금지 에너지띠와 완전히 찬 낮은 띠의 논의를 스캔 이미지에서 직접 확인했습니다.", notClaim: "1931년 논문이 이 글의 현대 실리콘 300 K 수치나 도핑 10^16 cm^-3 사례를 측정했다는 뜻이 아닙니다.", sectionId: "states" },
+      { title: "W. Shockley, ‘The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors,’ Bell System Technical Journal 28 (1949), 435–489", href: "https://vtda.org/pubs/BSTJ/vol28-1949/articles/bstj28-3-435.pdf", problem: "한 결정에서 p형과 n형 영역을 이어 놓았을 때 정류와 전위를 설명해야 했습니다.", contribution: "도너와 억셉터 농도에 따라 n형·p형을 구분하고 접합을 설명하는 출발점을 제시합니다.", assumptions: "당시의 게르마늄 접합과 반도체 내 확산 모델을 중심으로 합니다.", evidenceScope: "원문 435쪽 서론의 도너 N_d·억셉터 N_a와 접합 정의를 스캔 이미지에서 확인했습니다.", notClaim: "이 글의 1 cm³ 실리콘 숫자와 np 계산은 Shockley의 1949년 실험 결과가 아닙니다.", sectionId: "dopants" },
+    ],
+  },
+  "devices/pn-junction-and-rectification": {
+    coreIdea: "서로 다르게 도핑한 실리콘을 붙이면 캐리어 확산 뒤에 고정 이온의 전기장이 생겨 평형을 이룹니다. 외부 전압은 이 장벽을 바꾸며, 이상 조건에서 전류는 전압에 지수적으로 반응합니다. 같은 가상 접합에서 0.5·0.6·−0.5 V를 계산하고 실제 소자의 경계를 확인합니다.",
+    assumedKnowledge: [
+      { id: "donor-acceptor-doping", role: "p형·n형 영역에 어느 전하가 많은지 가져옵니다." },
+      { id: "majority-minority-carriers", role: "경계를 넘어간 전하를 반대편의 소수 캐리어로 셉니다." },
+      { id: "electric-potential-difference", role: "두 단자 전압의 기준과 부호를 정합니다." },
+    ],
+    introducedHere: [
+      { id: "pn-carrier-diffusion", role: "농도 차이에서 첫 이동이 시작되는 이유를 설명합니다." },
+      { id: "depletion-space-charge", role: "경계에 남은 고정 이온을 위치별로 셉니다." },
+      { id: "built-in-junction-field", role: "확산에 맞서는 전기장과 열평형을 설명합니다." },
+      { id: "junction-bias-response", role: "외부 전압의 두 방향이 장벽을 바꾸는 방식을 구분합니다." },
+      { id: "ideal-diode-law", role: "같은 가상 접합의 세 전압에서 전류를 계산합니다." },
+      { id: "junction-model-boundary", role: "이상식의 계산과 제품 정격을 구분합니다." },
+    ],
+    conceptExplanations: [
+      { id: "pn-carrier-diffusion", sectionId: "diffusion", intuition: "많은 쪽의 전자와 정공이 각각 상대 영역으로 퍼집니다.", workedExample: "각 영역을 10^16 cm^-3로 도핑했다고 가정하고 전자는 n→p, 정공은 p→n으로 표시합니다.", boundary: "전기장이 생긴 뒤에는 농도 차이 하나로 전체 흐름을 결정할 수 없습니다.", scientificGrounding: { observable: "접합 양쪽의 전자·정공 농도와 단자 전류", unitsAndDimensions: "농도는 cm^-3, 전류는 A이며 농도 차이만으로 전류 수치를 계산하지 않습니다.", modelAssumptions: "300 K, 균일한 p·n형 벌크를 맞댄 일차원 접합을 생각합니다.", measurementExample: "양쪽 10^16 cm^-3 도핑은 전자·정공 방향을 정하는 가정 사례입니다.", invalidConditions: "평형 이후의 역방향 이동과 고전계는 확산 하나로 설명되지 않습니다.", referenceFrame: "접합면에 수직인 x축을 왼쪽 p형에서 오른쪽 n형으로 둔 실험실 기준계" } },
+      { id: "depletion-space-charge", sectionId: "depletion", intuition: "움직이는 전하가 경계를 떠나면 그 자리에 붙박이 반대 전하가 드러납니다.", workedExample: "p형 경계에 음전하 억셉터 이온, n형 경계에 양전하 도너 이온을 표시합니다.", boundary: "공핍 근사는 영역에 움직이는 캐리어가 정확히 0이라는 뜻이 아니며, 벌크 전체에 적용하지 않습니다.", scientificGrounding: { observable: "전기장·전위의 위치별 분포와 도핑 농도", unitsAndDimensions: "공간 전하 밀도는 C/m³, 공핍 폭은 m입니다.", modelAssumptions: "일차원 급변 접합과 공핍 영역 내 낮은 이동 전하 농도를 근사합니다.", measurementExample: "10^16 cm^-3 도핑한 가상 접합의 경계에 부호가 반대인 고정 이온을 그립니다.", invalidConditions: "공핍 영역 안의 캐리어·결함이 큰 경우 단순한 균일 고정 전하 모델이 틀립니다.", referenceFrame: "x축 양의 방향을 p형→n형으로 둔 실험실 기준계" } },
+      { id: "built-in-junction-field", sectionId: "depletion", intuition: "드러난 고정 이온의 전기장은 더 건너가려는 확산에 맞섭니다.", workedExample: "전기장 방향을 n형(+)에서 p형(−)으로 그리고 0 V에서 순전류 0을 확인합니다.", boundary: "내장 전위만으로 닫힌 열평형 회로에서 외부 전력을 꺼낼 수 없습니다.", scientificGrounding: { observable: "접합 전위·전기장 프로파일과 0 V 단자 전류", unitsAndDimensions: "전위차는 V, 전기장은 V/m, 전류는 A입니다.", modelAssumptions: "외부 에너지 공급이 없는 열평형과 일정 온도를 가정합니다.", measurementExample: "가상 접합의 단자 전압 0 V에서 계산 전류는 0 A입니다.", invalidConditions: "광조사·외부 주입처럼 비평형인 경우 확산과 drift가 맞지 않습니다.", referenceFrame: "접합에 고정한 실험실 기준계, x축 p형→n형" } },
+      { id: "junction-bias-response", sectionId: "bias", intuition: "바깥 전압이 내부 장벽을 낮추거나 높여 건너가는 전하 수를 바꿉니다.", workedExample: "p형 단자를 +0.5 V로 두면 순방향, −0.5 V로 두면 역방향으로 비교합니다.", boundary: "역방향 흐름이 정확히 0이라는 뜻은 아니고, 큰 역전압은 항복을 부를 수 있습니다.", scientificGrounding: { observable: "p형과 n형 단자의 전압, 단자 전류와 접합 폭", unitsAndDimensions: "전압 V, 전류 A, 폭 m를 구분합니다.", modelAssumptions: "두 단자의 전압 부호를 p형−n형으로 정하고 일정한 300 K를 둡니다.", measurementExample: "가정한 ±0.5 V에서 이상식의 전류는 +0.251 mA와 약 −1 pA입니다.", invalidConditions: "빠른 과도 상태와 항복·강한 누설에서는 정적 바이어스 그림만으로 부족합니다.", referenceFrame: "접합에 고정한 실험실 기준계와 p형−n형 전압 부호" } },
+      { id: "ideal-diode-law", sectionId: "calculation", intuition: "열전압으로 나눈 전압이 지수의 입력이므로 작은 전압 차이가 큰 전류비가 됩니다.", workedExample: "300 K, Is=1 pA, VT=25.85 mV에서 0.5 V≈0.251 mA, 0.6 V≈12.03 mA입니다(가정).", boundary: "Is는 도핑 농도만으로 정해지지 않고 이 식은 직렬 저항·재결합·항복을 빼고 계산합니다.", scientificGrounding: { observable: "온도를 고정한 단자 전압·전류의 I–V 곡선", unitsAndDimensions: "V/VT는 무차원이고 Is와 I는 모두 A입니다.", modelAssumptions: "300 K, 이상 계수 1, 낮은 수준 주입, 일정한 Is=1 pA를 가정합니다.", measurementExample: "가정한 0.5 V와 0.6 V의 이상 전류비는 약 47.9입니다.", invalidConditions: "고전류 직렬 저항, 재결합 지배, 큰 역전압 항복에는 그대로 맞지 않습니다.", referenceFrame: "접합 단자에 고정한 실험실 기준계에서 p형−n형 전압을 양수로 둡니다." } },
+      { id: "junction-model-boundary", sectionId: "limits", intuition: "켜짐의 전압은 고정된 숫자가 아니라 회로에서 요구하는 전류와 소자 조건으로 정해집니다.", workedExample: "0.5 V에도 0.251 mA가 흐르는 가상 접합은 0.6 V 절대 문턱이라는 말의 반례입니다.", boundary: "정격과 온도 조건은 실제 소자의 데이터시트를 따로 읽어야 합니다.", scientificGrounding: { observable: "온도별 I–V 곡선과 역방향 항복 전압", unitsAndDimensions: "전류 A, 전압 V, 온도 K를 함께 기록합니다.", modelAssumptions: "이상식의 300 K 기준 사례와 실제 소자의 측정 곡선을 비교합니다.", measurementExample: "이상식이 −0.5 V에서 약 −1 pA를 주지만 실제 제품의 누설은 다른 값일 수 있습니다.", invalidConditions: "실제 데이터시트의 소자 종류·면적·온도가 다르면 가상 수치를 옮기지 않습니다.", referenceFrame: "소자와 계측기에 고정한 실험실 기준계, 순방향 전압 부호를 명시합니다." } },
+    ],
+    conceptStages: [
+      { label: "01 첫 이동", relation: "농도 차이에서 양쪽 전하가 경계를 건넙니다.", concepts: ["pn-carrier-diffusion"] },
+      { label: "02 되돌림", relation: "고정 이온과 그 전기장이 평형 장벽을 만듭니다.", concepts: ["depletion-space-charge", "built-in-junction-field"] },
+      { label: "03 외부 전압", relation: "전압의 부호가 장벽과 단자 전류를 바꿉니다.", concepts: ["junction-bias-response", "ideal-diode-law"] },
+      { label: "04 실제 경계", relation: "이상식이 빠뜨린 조건을 확인합니다.", concepts: ["junction-model-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "p형과 n형을 붙인 직후 전자와 정공은 각각 어느 쪽으로 퍼집니까?", answerChecklist: ["전자 n→p", "정공 p→n", "농도 차이에 따른 확산", "도핑 이온은 움직이지 않음"], requiredConcepts: ["pn-carrier-diffusion"], sectionId: "diffusion" },
+      { level: "basic", question: "접합 경계 양쪽에 남는 고정 이온의 부호를 그려 보세요.", answerChecklist: ["p형에 음전하 억셉터", "n형에 양전하 도너", "경계의 이동 캐리어 감소"], requiredConcepts: ["depletion-space-charge"], sectionId: "depletion" },
+      { level: "basic", question: "0 V 열평형에서도 접합 내부 전기장이 있을 수 있는데 단자 전류는 왜 0입니까?", answerChecklist: ["확산", "전기장에 의한 역방향 이동", "두 흐름 상쇄", "순전류 0"], requiredConcepts: ["built-in-junction-field"], sectionId: "depletion" },
+      { level: "basic", question: "p형 단자를 n형보다 높게·낮게 두면 각각 장벽이 어떻게 됩니까?", answerChecklist: ["p형 높음 순방향", "장벽 낮아짐", "p형 낮음 역방향", "장벽 높아짐"], requiredConcepts: ["junction-bias-response"], sectionId: "bias" },
+      { level: "basic", question: "300 K, Is=1 pA에서 0.5 V와 0.6 V의 이상 전류를 계산하세요.", answerChecklist: ["VT=25.85 mV", "0.251 mA", "12.03 mA", "약 47.9배", "가정값"], requiredConcepts: ["ideal-diode-law"], sectionId: "calculation" },
+      { level: "basic", question: "같은 사례에서 −0.5 V와 0 V의 이상 전류는 얼마입니까?", answerChecklist: ["약 −1 pA", "0 A", "작은 역전압", "항복 제외"], requiredConcepts: ["ideal-diode-law"], sectionId: "calculation" },
+      { level: "advanced", question: "내장 전위만으로 열평형 상태의 외부 저항에서 전력을 꺼낼 수 없는 이유는 무엇입니까?", answerChecklist: ["내부 전기장 존재", "확산과 전기장 흐름 상쇄", "접촉부 포함 닫힌 회로", "순전류 0"], requiredConcepts: ["built-in-junction-field"], sectionId: "depletion" },
+      { level: "advanced", question: "0.5→0.6 V 변화의 전류비를 지수 입력 차이로 구하고 근사 조건을 쓰세요.", answerChecklist: ["0.1/0.02585≈3.87", "exp(3.87)≈47.9", "순방향에서 −1 항 무시", "온도와 Is 고정"], requiredConcepts: ["ideal-diode-law"], sectionId: "calculation" },
+      { level: "advanced", question: "0.6 V가 모든 실리콘 접합의 고정 문턱이라고 할 수 없는 반례와 원인을 쓰세요.", answerChecklist: ["0.5 V에서 0.251 mA", "Is와 온도", "요구 전류 기준", "직렬 저항 또는 재결합"], requiredConcepts: ["ideal-diode-law", "junction-model-boundary"], sectionId: "limits" },
+      { level: "advanced", question: "역전압을 계속 올려도 −Is 근사가 유지되는지 판단하고 확인할 자료를 쓰세요.", answerChecklist: ["항복 가능", "누설과 온도", "최대 역전압 정격", "제품 데이터시트 조건"], requiredConcepts: ["junction-model-boundary"], sectionId: "limits" },
+    ],
+    papers: [
+      { title: "W. Shockley, ‘The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors,’ Bell System Technical Journal 28 (1949), 435–489", href: "https://vtda.org/pubs/BSTJ/vol28-1949/articles/bstj28-3-435.pdf", problem: "p형과 n형을 이은 접합의 직류 정류 전류를 캐리어별로 설명해야 했습니다.", contribution: "461쪽 식 (4.18)–(4.22)에서 정공·전자 전류의 전압 의존성을 따로 적고 합한 지수형 직류 식을 제시합니다.", assumptions: "당시의 확산 모델과 저수준 주입·정상 상태 조건을 사용합니다.", evidenceScope: "원문 스캔 461쪽을 직접 확인했습니다. 현대 실리콘의 300 K 사례와 Is=1 pA는 이 글의 가정입니다.", notClaim: "이 식이 모든 실제 소자의 0.6 V 전류를 보장하거나 역방향 항복까지 설명한다는 뜻이 아닙니다.", sectionId: "calculation" },
+    ],
+  },
+  "devices/mos-capacitor-and-inversion": {
+    coreIdea: "절연층을 사이에 둔 전극의 전기장으로 p형 실리콘 표면을 정공 축적→공핍→전자 반전으로 바꿀 수 있습니다. 가정한 10 nm·100 µm² 구조의 용량과 문턱 이후 전자 수를 계산하되, 실제 문턱과 누설·충전 비용을 별도로 확인합니다.",
+    assumedKnowledge: [
+      { id: "electric-potential-difference", role: "전극과 실리콘 사이의 전압 부호를 정합니다." },
+      { id: "donor-acceptor-doping", role: "p형 실리콘의 정공과 고정 억셉터 이온을 구분합니다." },
+      { id: "depletion-space-charge", role: "접합에서 보았던 이동 전하 감소와 고정 이온을 표면에 다시 씁니다." },
+      { id: "pn-carrier-diffusion", role: "직접 맞닿은 접합과 절연층 너머 전기장의 역할을 비교합니다." },
+    ],
+    introducedHere: [
+      { id: "insulated-gate-stack", role: "전극·절연층·실리콘의 기능을 나눕니다." },
+      { id: "mos-surface-regimes", role: "세 전압 방향에서 표면 전하의 변화를 따라갑니다." },
+      { id: "flat-band-offset", role: "0 V를 전기장 0이라고 가정할 수 없는 이유를 설명합니다." },
+      { id: "mos-inversion-threshold", role: "표면 반전의 기준을 두고 가정값과 실제값을 구분합니다." },
+      { id: "oxide-capacitance-density", role: "두께와 면적에서 절연층 용량을 계산합니다." },
+      { id: "mos-inversion-charge", role: "문턱 이후의 전하량을 전자 수로 바꿉니다." },
+      { id: "gate-oxide-tradeoff", role: "얇은 절연층의 이득과 비용을 함께 셉니다." },
+    ],
+    conceptExplanations: [
+      { id: "insulated-gate-stack", sectionId: "stack", intuition: "닿지 않는 전극도 얇은 절연층 너머로 전기장을 걸 수 있습니다.", workedExample: "가정한 10 nm 산화막 위의 전극 전압을 바꿔 100 µm² 표면을 조절합니다.", boundary: "정상 상태의 직류가 작다는 말이 스위칭 입력 전류와 산화막 누설까지 0이라는 뜻은 아닙니다.", scientificGrounding: { observable: "전극·실리콘 사이의 전압, 정지·과도 입력 전류", unitsAndDimensions: "전압 V, 전류 A, 절연층 두께 m를 구분합니다.", modelAssumptions: "균일한 산화막과 이상적인 금속 전극·p형 실리콘을 가정합니다.", measurementExample: "10 nm·100 µm² 구조의 용량을 뒤에서 약 0.345 pF로 계산합니다.", invalidConditions: "산화막 결함·터널링·높은 전계에서는 직류 누설이 무시되지 않습니다.", referenceFrame: "실리콘 표면에 수직인 축을 고정한 실험실 기준계" } },
+      { id: "mos-surface-regimes", sectionId: "states", intuition: "전극을 낮추면 정공이 모이고, 높이면 정공이 빠진 뒤 전자가 모입니다.", workedExample: "가정한 전압 −1.0 V는 축적, +0.2 V는 공핍, +1.0 V는 반전의 교육용 상태로 둡니다.", boundary: "실제 상태 경계는 평탄띠·문턱 전압과 온도에 따라 달라집니다.", scientificGrounding: { observable: "전압에 따른 표면 전하와 축전기 C–V 곡선", unitsAndDimensions: "전극 전압 V, 면적당 전하 C/m²입니다.", modelAssumptions: "p형 벌크, 가정한 평탄띠 0 V와 문턱 0.5 V를 둡니다.", measurementExample: "세 전압 상태를 Viz에서 정공→고정 이온→전자 순으로 확인합니다.", invalidConditions: "계면 결함·빠른 주파수·다른 기판 도핑에서는 경계와 응답이 바뀝니다.", referenceFrame: "표면에 수직인 x축을 절연층에서 벌크로 둔 실험실 기준계" } },
+      { id: "flat-band-offset", sectionId: "threshold", intuition: "전극 재료와 실리콘의 에너지 기준이 달라 0 V에서도 표면이 기울 수 있습니다.", workedExample: "계산을 단순하게 하려고 평탄띠 전압을 0 V로 둡니다(가정).", boundary: "이 가정을 실제 제품의 속성으로 옮기면 문턱과 표면 전하를 잘못 계산합니다.", scientificGrounding: { observable: "MOS C–V 곡선에서 평탄띠 위치와 계면 전하", unitsAndDimensions: "평탄띠 전압은 V, 계면 전하는 C/m²입니다.", modelAssumptions: "전극·실리콘 일함수 차이와 계면 고정 전하를 예제에서는 0으로 묶습니다.", measurementExample: "가정한 0 V를 평탄띠로 놓아 −1 V·+0.2 V를 양쪽 상태로 비교합니다.", invalidConditions: "다른 금속·산화막·계면 상태에서는 평탄띠가 0 V가 아닙니다.", referenceFrame: "같은 전극과 기판에 연결한 실험실 전압계의 기준계" } },
+      { id: "mos-inversion-threshold", sectionId: "threshold", intuition: "공핍을 지나 표면 전자가 충분히 많아지는 전압을 경계로 둡니다.", workedExample: "Vth=0.5 V를 가정하면 1.0 V에서 문턱을 0.5 V 넘습니다.", boundary: "문턱은 단순한 산화막 두께만으로 결정되지 않고 기판 전압·도핑도 필요합니다.", scientificGrounding: { observable: "표면 전하 분포와 게이트 전압, MOSFET의 전류 시작 구간", unitsAndDimensions: "문턱 전압 V, 전하 농도 cm^-3와 표면 밀도 cm^-2를 구분합니다.", modelAssumptions: "p형 실리콘의 강한 반전 기준과 정적 평형을 사용합니다.", measurementExample: "가정한 0.5 V 문턱에서 1.0 V를 강한 반전 사례로 둡니다.", invalidConditions: "약한 반전에서도 전자는 존재하므로 문턱이 수학적 불연속점은 아닙니다.", referenceFrame: "전극 전위에서 기판 전위를 뺀 부호를 쓰는 실험실 기준계" } },
+      { id: "oxide-capacitance-density", sectionId: "numbers", intuition: "같은 면적에서 절연층이 얇을수록 같은 전압에 더 많은 전하가 모입니다.", workedExample: "εr=3.9, t=10 nm이면 Cox/A≈3.453 mF/m²이고 A=100 µm²면 Cox≈0.345 pF입니다(가정 치수).", boundary: "평행판 용량은 가장자리장과 실제 계면 전하를 생략한 절연층 용량입니다.", scientificGrounding: { observable: "두 단자 전압 변화에 따른 저장 전하 변화와 면적·두께", unitsAndDimensions: "유전율 F/m, 면적 m², 두께 m이므로 εA/t는 F입니다.", modelAssumptions: "균일한 평행판 산화막, 상대 유전율 3.9를 둡니다.", measurementExample: "3.9×8.854×10^-12 F/m×100×10^-12 m²/10^-8 m≈3.453×10^-13 F입니다.", invalidConditions: "극소 면적의 가장자리장·산화막 불균일·주파수 의존성에서는 이 값만으로 C–V 곡선을 예측하지 않습니다.", referenceFrame: "전극 면적과 두께를 실험실 길이 좌표로 측정합니다." } },
+      { id: "mos-inversion-charge", sectionId: "numbers", intuition: "문턱 이후 여분 전압이 절연층 용량에 비례한 표면 전자를 더 모읍니다.", workedExample: "0.345 pF×0.5 V≈0.173 pC, 전자 약 1.08×10^6개입니다(가정).", boundary: "문턱 전까지의 공핍 전하를 포함한 총 전하가 아니라 강한 반전의 추가 전하입니다.", scientificGrounding: { observable: "문턱 이후 전압에 따른 표면 전하와 채널 전도 변화", unitsAndDimensions: "F×V=C이고 C를 기본 전하량 C/개로 나누면 개수입니다.", modelAssumptions: "정적 강한 반전과 Qinv≈−Cox(VG−Vth) 시트 모델을 사용합니다.", measurementExample: "1.7266×10^-13 C를 1.602×10^-19 C/개로 나누면 약 1.078×10^6개입니다.", invalidConditions: "약한 반전·빠른 과도·높은 전계·양자 효과에는 단순 시트식이 맞지 않습니다.", referenceFrame: "실리콘 표면에 고정한 실험실 기준계와 전극−기판 전압 부호" } },
+      { id: "gate-oxide-tradeoff", sectionId: "limits", intuition: "더 얇은 절연층은 전하 조절을 쉽게 하지만 저장 전하와 누설 문제를 함께 키웁니다.", workedExample: "10→5 nm이면 다른 조건 고정에서 용량 0.345→0.691 pF로 두 배입니다(가정).", boundary: "실제 문턱과 누설도 두께에 따라 달라져 전하가 정확히 두 배라는 제품 예측은 아닙니다.", scientificGrounding: { observable: "두께별 C–V, I–V와 절연 파괴 전압", unitsAndDimensions: "두께 nm, 용량 pF, 누설 A와 전계 V/m를 구분합니다.", modelAssumptions: "평행판 근사에서 유전율과 면적을 고정한 두께 비교입니다.", measurementExample: "같은 100 µm²에서 5 nm의 이상 용량은 0.691 pF입니다.", invalidConditions: "터널링·결함·고전계 항복이 나타나면 이상 절연층 근사가 깨집니다.", referenceFrame: "같은 면적·온도·전압을 기준으로 두 소자를 비교하는 실험실 기준계" } },
+    ],
+    conceptStages: [
+      { label: "01 닿지 않는 전극", relation: "절연층을 두고 전기장만 표면에 닿게 합니다.", concepts: ["insulated-gate-stack"] },
+      { label: "02 표면의 세 상태", relation: "전극 전압 방향에서 축적·공핍·반전을 따라갑니다.", concepts: ["mos-surface-regimes"] },
+      { label: "03 전압 기준", relation: "평탄띠와 문턱을 구분하고 가정값을 고정합니다.", concepts: ["flat-band-offset", "mos-inversion-threshold"] },
+      { label: "04 전하 계산", relation: "두께에서 용량을 구해 문턱 이후 전하를 셉니다.", concepts: ["oxide-capacitance-density", "mos-inversion-charge"] },
+      { label: "05 실제 경계", relation: "얇은 산화막이 늘리는 누설과 충전량을 확인합니다.", concepts: ["gate-oxide-tradeoff"] },
+    ],
+    exercises: [
+      { level: "basic", question: "절연층이 있는데 전극 전압으로 실리콘 표면을 바꿀 수 있는 이유는 무엇입니까?", answerChecklist: ["직류 차단", "전기장 전달", "전하 재배치", "전압 변화 중 충전 전류"], requiredConcepts: ["insulated-gate-stack"], sectionId: "stack" },
+      { level: "basic", question: "p형 실리콘 위 전극을 충분히 낮추면 표면에는 무엇이 모입니까?", answerChecklist: ["정공", "축적", "p형의 다수 캐리어"], requiredConcepts: ["mos-surface-regimes"], sectionId: "states" },
+      { level: "basic", question: "전극을 조금 높여 정공을 밀어내면 무엇이 남고 이 상태를 무엇이라 부릅니까?", answerChecklist: ["고정된 음전하 억셉터 이온", "공핍", "이동 정공 감소"], requiredConcepts: ["mos-surface-regimes"], sectionId: "states" },
+      { level: "basic", question: "전극을 더 높인 뒤 표면에 전자가 많아진 상태와 문턱의 역할을 설명하세요.", answerChecklist: ["표면 반전", "전자는 원래 소수 캐리어", "가정한 문턱 0.5 V", "벌크 전체는 p형"], requiredConcepts: ["mos-surface-regimes", "mos-inversion-threshold"], sectionId: "threshold" },
+      { level: "basic", question: "10 nm, 100 µm², εr=3.9에서 절연층 용량은 얼마입니까?", answerChecklist: ["εA/t", "3.453 mF/m²", "0.345 pF", "단위 F"], requiredConcepts: ["oxide-capacitance-density"], sectionId: "numbers" },
+      { level: "basic", question: "가정한 문턱 0.5 V와 전극 1.0 V에서 추가 전자 수는 얼마입니까?", answerChecklist: ["여분 전압 0.5 V", "0.173 pC", "약 1.08×10^6개", "음수 전자 전하"], requiredConcepts: ["mos-inversion-charge"], sectionId: "numbers" },
+      { level: "advanced", question: "산화막을 10 nm에서 5 nm로 줄일 때 이상 용량은 얼마이며 실제 소자에 그대로 옮길 수 없는 이유는 무엇입니까?", answerChecklist: ["약 0.691 pF", "용량 두 배", "문턱 변화", "누설 또는 항복"], requiredConcepts: ["oxide-capacitance-density", "gate-oxide-tradeoff"], sectionId: "limits" },
+      { level: "advanced", question: "전극 전압 0 V라도 표면 전기장 0이라고 단정할 수 없는 원인을 두 가지 쓰세요.", answerChecklist: ["일함수 차이", "산화막 또는 계면 전하", "평탄띠 전압", "이 글의 0 V는 가정"], requiredConcepts: ["flat-band-offset"], sectionId: "threshold" },
+      { level: "advanced", question: "절연층이 직류를 막는데도 전극을 계속 뒤집을 때 입력 전력이 필요한 이유를 설명하세요.", answerChecklist: ["전압 변화", "전극 양쪽 전하 충전", "스위칭 전류", "정적 누설과 구분"], requiredConcepts: ["insulated-gate-stack", "mos-inversion-charge"], sectionId: "limits" },
+      { level: "advanced", question: "앞 글의 p–n 접합과 이번 MOS 표면에서 전하가 바뀌는 경로를 비교하세요.", answerChecklist: ["접합 농도 차이 확산", "고정 이온 장벽", "MOS 절연층 전기장", "표면 반전", "전극과 실리콘 직류 차단"], requiredConcepts: ["pn-carrier-diffusion", "mos-surface-regimes"], sectionId: "handoff" },
+    ],
+    papers: [
+      { title: "D. Kahng, US Patent 3,102,230, ‘Electric Field Controlled Semiconductor Device’ (filed 1960, granted 1963)", href: "https://patents.google.com/patent/US3102230A/en", problem: "절연막으로 덮인 실리콘 표면을 전극 전압으로 제어해 회로 특성을 바꾸는 방법을 구현해야 했습니다.", contribution: "명세서 1–2쪽과 도 1A에서 산화막 위 전극과 별도 전압원이 산화막을 가로지르는 전기장을 만든다는 실제 장치 구조를 기술합니다.", assumptions: "특허의 실제 실시예는 여러 p–n 접합, 부하와 전압원을 포함한 회로입니다.", evidenceScope: "Google Patents의 원문 명세서와 도면을 대조했습니다. 예시의 약 1000 Å 산화막과 본문의 가정 10 nm를 구분합니다.", notClaim: "특허가 이 글의 두 단자 10 nm·100 µm² MOS 축전기나 108만 전자 계산을 실측했다는 뜻이 아닙니다.", sectionId: "stack" },
+      { title: "MIT OpenCourseWare 6.012, Lecture 9, ‘MOS Capacitors I’ (2009)", href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2009/42c863e2e1e9744ce6b797646a30e463_MIT6_012F09_lec09.pdf", problem: "전극 전압으로 바뀌는 p형 실리콘 표면 상태와 면적당 전하를 계산해야 합니다.", contribution: "23쪽의 반전 전하식과 30쪽의 축적·공핍·반전, 면적당 산화막 용량 및 문턱식의 정리를 제공합니다.", assumptions: "정적 열평형과 공핍 근사, 강한 반전의 면적당 전하 모델입니다.", evidenceScope: "공개 강의안 23·30쪽의 식과 상태 구분을 확인했습니다. 본문 치수·문턱은 별도 가정입니다.", notClaim: "문턱 0.5 V가 모든 MOS 소자에 적용되거나 산화막 두께 하나에서 나온 값이라는 뜻이 아닙니다.", sectionId: "numbers" },
+    ],
+  },
+  "devices/mosfet-regions-and-transfer": {
+    coreIdea: "절연된 게이트가 만든 표면 전자 층을 두 단자에 연결하면, 게이트 여분 전압과 드레인 전압이 전류를 함께 정합니다. 같은 가상 긴 채널 소자에서 차단, 선형, 포화 전류를 계산하고 실제 누설·길이 변조의 경계를 분리합니다.",
+    assumedKnowledge: [
+      { id: "insulated-gate-stack", role: "게이트가 직류 접촉 없이 표면 전하를 조절하는 구조를 가져옵니다." },
+      { id: "mos-inversion-charge", role: "문턱 이후 표면에 쌓인 전자가 채널의 재료가 됩니다." },
+      { id: "mos-inversion-threshold", role: "게이트에서 빼야 할 문턱 전압을 정합니다." },
+      { id: "electric-current", role: "전자 이동과 관습 전류의 방향을 구분합니다." },
+    ],
+    introducedHere: [
+      { id: "mosfet-four-terminals", role: "게이트·소스·드레인·바디의 서로 다른 일을 나눕니다." },
+      { id: "gate-controlled-channel", role: "표면 전자가 양끝을 잇고 국소 전압으로 달라짐을 설명합니다." },
+      { id: "mosfet-cutoff-regime", role: "문턱 아래 이상 근사와 실제 누설을 구분합니다." },
+      { id: "mosfet-linear-regime", role: "채널이 끝까지 남은 구간의 전류를 계산합니다." },
+      { id: "mosfet-pinch-off-saturation", role: "채널 끝이 잘록해지는 기준과 포화 전류를 계산합니다." },
+      { id: "mosfet-model-boundary", role: "긴 채널 제곱식과 실제 소자의 경계를 확인합니다." },
+    ],
+    conceptExplanations: [
+      { id: "mosfet-four-terminals", sectionId: "terminals", intuition: "한 전극은 길의 전하를 조절하고 다른 두 단자는 전자를 주고받습니다.", workedExample: "p형 바디를 소스 0 V에 묶고 게이트 1.5 V, 드레인 0.2 V의 가상 nMOS를 놓습니다.", boundary: "전자는 소스→드레인, 양의 관습 전류는 드레인→소스입니다. 실제 네 단자의 전압을 섞으면 안 됩니다.", scientificGrounding: { observable: "게이트·소스·드레인·바디 전위와 각 단자 전류", unitsAndDimensions: "전압 V와 전류 A, 전자 전하량 C를 구분합니다.", modelAssumptions: "n형 소스·드레인과 p형 바디, 바디를 소스에 묶은 긴 채널을 둡니다.", measurementExample: "게이트 1.5 V·드레인 0.2 V에서 이상 전류 0.18 mA의 방향을 드레인→소스로 표시합니다.", invalidConditions: "바디와 소스를 다른 전위에 놓으면 문턱이 달라져 같은 숫자를 쓸 수 없습니다.", referenceFrame: "소스→드레인을 양의 위치 방향, 소스 전위를 0 V로 둔 실험실 기준계" } },
+      { id: "gate-controlled-channel", sectionId: "channel", intuition: "게이트가 표면에 모은 전자가 두 n형 단자를 잇는 길이 됩니다.", workedExample: "VGS=1.5 V와 Vth=0.5 V라 여분 전압은 1.0 V입니다(가정).", boundary: "드레인 쪽으로 전위가 높아지면 표면 전자 수가 줄어 채널의 국소 전하가 일정하지 않습니다.", scientificGrounding: { observable: "게이트 전압에 따른 표면 전하와 드레인 전류", unitsAndDimensions: "여분 전압 V, 면적당 전하 C/m², 전류 A입니다.", modelAssumptions: "강한 반전과 바디=소스, 국소 전하의 점진 채널 근사를 둡니다.", measurementExample: "드레인 0.2 V에서도 끝의 국소 여분 전압은 0.8 V입니다.", invalidConditions: "문턱 아래와 짧은 채널의 큰 횡방향 전기장에서는 단순 국소 시트 모델이 부족합니다.", referenceFrame: "채널의 소스에서 드레인으로 y=0→L을 두는 실험실 기준계" } },
+      { id: "mosfet-cutoff-regime", sectionId: "states", intuition: "게이트가 문턱 아래면 강한 전자 층이 두 단자를 이어 주지 못합니다.", workedExample: "가정한 문턱 0.5 V보다 낮은 0.4 V 게이트는 이상 차단 전류 0 mA입니다.", boundary: "실제 소자의 약한 반전 전류와 접합 누설을 0이라고 주장하지 않습니다.", scientificGrounding: { observable: "문턱 아래 게이트 전압에 따른 드레인 누설 전류", unitsAndDimensions: "게이트 전압 V, 드레인 전류 A입니다.", modelAssumptions: "강한 반전의 이상 스위치 근사만 남기고 약한 반전을 뺍니다.", measurementExample: "0.4 V 게이트를 이상 모델의 0 mA로 표기하고 실제 누설은 별도 측정 대상으로 남깁니다.", invalidConditions: "저전력 설계의 대기 전력 예측에는 약한 반전·온도 의존성을 생략할 수 없습니다.", referenceFrame: "소스 0 V를 전압 기준으로 둔 실험실 기준계" } },
+      { id: "mosfet-linear-regime", sectionId: "current", intuition: "채널이 끝까지 남으면 양끝 전압이 전자를 밀어 전류를 만듭니다.", workedExample: "Vov=1.0 V, VDS=0.2 V, k=1 mA/V²이면 k(0.2−0.02)=0.18 mA입니다.", boundary: "VDS가 Vov에 닿으면 드레인 끝의 강한 반전이 사라져 같은 국소 근사를 그대로 연장할 수 없습니다.", scientificGrounding: { observable: "VGS를 고정하고 VDS를 바꿔 측정한 드레인 I–V 곡선", unitsAndDimensions: "k는 A/V², 괄호는 V²이므로 ID는 A입니다.", modelAssumptions: "긴 채널, 점진 채널·시트 전하 근사, 일정 이동도와 바디=소스입니다.", measurementExample: "가정한 0.2 V의 0.18 mA를 이상식에 넣어 계산합니다.", invalidConditions: "높은 횡방향 전계·짧은 채널·문턱 아래에서는 식이 맞지 않습니다.", referenceFrame: "소스→드레인 y축, V(0)=0이고 V(L)=VDS인 실험실 기준계" } },
+      { id: "mosfet-pinch-off-saturation", sectionId: "current", intuition: "드레인 쪽 전자 층이 줄어든 뒤 추가 전압이 주로 그 부분에 걸립니다.", workedExample: "VDS=Vov=1.0 V에서 ID=0.5 mA이고 1.5 V에서도 긴 채널 이상값 0.5 mA입니다.", boundary: "핀치오프가 모든 전류를 막는 뜻은 아니며 실제 포화 전류도 완전히 평평하지 않습니다.", scientificGrounding: { observable: "VDS≥Vov에서 드레인 전류의 기울기", unitsAndDimensions: "포화 전류 A, 경계 전압 V, k의 단위 A/V²입니다.", modelAssumptions: "긴 채널의 첫 차수 포화 근사와 문턱·이동도 고정을 사용합니다.", measurementExample: "가상 k=1 mA/V²와 Vov=1 V이면 kVov²/2=0.5 mA입니다.", invalidConditions: "채널 길이 변조·속도 포화가 큰 실제 소자는 다른 곡선을 보입니다.", referenceFrame: "소스에서 드레인으로 향하는 y축과 소스 0 V의 실험실 기준계" } },
+      { id: "mosfet-model-boundary", sectionId: "limits", intuition: "이상식의 0과 평평한 0.5 mA는 실제 소자를 비교하는 기준선입니다.", workedExample: "가상 소자는 VDS 1.0과 1.5 V에서 모두 0.5 mA지만 실제 측정에서는 조금 기울 수 있습니다.", boundary: "채널 길이·온도·바디 전압과 공정이 다른 제품의 정격을 이 가상 수치로 대신하지 않습니다.", scientificGrounding: { observable: "문턱 아래 누설과 포화 영역 출력 컨덕턴스, 온도별 I–V", unitsAndDimensions: "누설 A, 출력 기울기 A/V, 온도 K를 함께 기록합니다.", modelAssumptions: "이상 긴 채널 곡선과 실측 곡선을 같은 전압 조건에서 비교합니다.", measurementExample: "이상 모형의 0.4 V 게이트 0 mA와 VDS≥1 V 0.5 mA를 실제 곡선의 기준으로 둡니다.", invalidConditions: "실제 데이터시트의 공정·온도·바디 바이어스가 다르면 같은 문턱과 k를 쓰지 않습니다.", referenceFrame: "소스 0 V·같은 전류 부호를 고정한 실험실 계측 기준계" } },
+    ],
+    conceptStages: [
+      { label: "01 네 단자", relation: "전극의 제어와 양끝의 흐름을 분리합니다.", concepts: ["mosfet-four-terminals"] },
+      { label: "02 전자 길", relation: "게이트가 만든 전하를 양끝에 잇습니다.", concepts: ["gate-controlled-channel"] },
+      { label: "03 세 영역", relation: "차단과 선형, 핀치오프 뒤 포화를 구분합니다.", concepts: ["mosfet-cutoff-regime", "mosfet-linear-regime", "mosfet-pinch-off-saturation"] },
+      { label: "04 소자 경계", relation: "이상식의 0과 평평한 전류를 실제 곡선과 구분합니다.", concepts: ["mosfet-model-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "nMOS의 게이트·소스·드레인·바디는 각각 무엇을 하며 전자와 관습 전류의 방향은 어떻게 다릅니까?", answerChecklist: ["게이트 표면 조절", "소스 전자 공급", "드레인 전자 받음", "바디 p형", "전자 S→D·관습 전류 D→S"], requiredConcepts: ["mosfet-four-terminals"], sectionId: "terminals" },
+      { level: "basic", question: "VGS=1.5 V, Vth=0.5 V에서 여분 전압과 드레인 끝 전하의 변화를 설명하세요.", answerChecklist: ["여분 전압 1.0 V", "표면 전자 채널", "드레인 쪽 전위 증가", "국소 전자 감소"], requiredConcepts: ["gate-controlled-channel"], sectionId: "channel" },
+      { level: "basic", question: "게이트 0.4 V의 이상 전류와 실제 전류의 차이를 말하세요.", answerChecklist: ["가정 문턱 0.5 V 아래", "이상 0 mA", "실제 약한 반전 누설", "온도와 소자 조건"], requiredConcepts: ["mosfet-cutoff-regime"], sectionId: "states" },
+      { level: "basic", question: "VDS=0.2 V가 선형 영역인 이유와 전류를 계산하세요.", answerChecklist: ["0.2<1.0 V", "드레인 끝 채널 남음", "k(VovVDS−VDS²/2)", "0.18 mA"], requiredConcepts: ["mosfet-linear-regime"], sectionId: "current" },
+      { level: "basic", question: "VDS=1.0 V와 1.5 V의 이상 드레인 전류는 각각 얼마입니까?", answerChecklist: ["포화 경계 1.0 V", "핀치오프", "둘 다 0.5 mA", "긴 채널 이상 근사"], requiredConcepts: ["mosfet-pinch-off-saturation"], sectionId: "current" },
+      { level: "basic", question: "MOSFET의 포화가 디지털 스위치의 ‘완전히 켜짐’과 같은 말이 아닌 이유는 무엇입니까?", answerChecklist: ["포화는 VDS 증가에 대한 전류 둔화", "핀치오프 뒤에도 전류 흐름", "스위치의 낮은 저항 판단과 구분"], requiredConcepts: ["mosfet-pinch-off-saturation"], sectionId: "states" },
+      { level: "advanced", question: "채널 위치별 표면 전하가 왜 다른지 적고 선형 전류식의 두 항이 나오는 적분을 설명하세요.", answerChecklist: ["Qi(y)≈−C′ox(Vov−V(y))", "V(0)=0, V(L)=VDS", "국소 전하×전기장", "VovVDS−VDS²/2"], requiredConcepts: ["gate-controlled-channel", "mosfet-linear-regime"], sectionId: "current" },
+      { level: "advanced", question: "VDS=Vov=1.0 V를 선형식과 포화식에 각각 넣어 경계에서 맞는지 검산하세요.", answerChecklist: ["선형식 k(1−1/2)", "포화식 k/2", "모두 0.5 mA", "경계 연속"], requiredConcepts: ["mosfet-linear-regime", "mosfet-pinch-off-saturation"], sectionId: "current" },
+      { level: "advanced", question: "게이트를 2.0 V로 올리면 가정한 같은 k·문턱에서 포화 경계와 전류는 어떻게 달라집니까?", answerChecklist: ["여분 전압 1.5 V", "포화 시작 VDS=1.5 V", "ID,sat=1.125 mA", "k·문턱 고정 가정"], requiredConcepts: ["gate-controlled-channel", "mosfet-pinch-off-saturation"], sectionId: "current" },
+      { level: "advanced", question: "짧은 실제 소자가 이상 제곱식과 평평한 포화에서 벗어나는 이유를 제안하세요.", answerChecklist: ["채널 길이 변조", "속도 포화", "문턱 아래 누설", "바디 바이어스 또는 온도", "실측 I–V 확인"], requiredConcepts: ["mosfet-model-boundary"], sectionId: "limits" },
+    ],
+    papers: [
+      { title: "MIT OpenCourseWare 6.720J, Lecture 25, ‘Long MOSFET’ (2007)", href: "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/8ad0e553fbdaed10f6102b04451e547e_lecture25.pdf", problem: "게이트가 만든 표면 전하가 위치별로 다른데 어떻게 양단자 전류를 구할지 설명해야 합니다.", contribution: "10쪽은 국소 전하 Qi(y)≈−Cox[VGS−V(y)−VT], 13쪽은 이를 채널 방향으로 적분한 선형 영역 전류식을 제시합니다.", assumptions: "긴 채널, 점진 채널·시트 전하 근사, 낮은 전계의 일정 이동도를 씁니다.", evidenceScope: "공식 강의안의 원본 PDF 10·13쪽을 열어 식과 조건을 확인했습니다. 본문 수치는 별도 가정입니다.", notClaim: "이 강의안이 k=1 mA/V² 소자를 측정했다거나 짧은 채널에도 선형식을 그대로 적용한다는 뜻이 아닙니다.", sectionId: "current" },
+      { title: "MIT OpenCourseWare 6.720J, Lecture 26, ‘Long MOSFET’ (2007)", href: "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/59850a07f95e9f50d32185eb46503460_lecture26.pdf", problem: "드레인 전압이 높아져 채널 끝의 반전 전하가 줄 때 전류를 어떻게 이어야 하는지 설명해야 합니다.", contribution: "5쪽의 핀치오프 그림, 7쪽의 VDS,sat=VGS−VT와 포화식, 8쪽의 제곱 의존성을 제시합니다.", assumptions: "긴 채널 이상 모형과 첫 차수 포화 근사입니다.", evidenceScope: "공식 PDF 5·7·8쪽 이미지를 대조했습니다. 0.5 mA는 본문 가정에서 계산했습니다.", notClaim: "실제 MOSFET의 포화 전류가 드레인 전압과 무관하게 완전히 평평하거나 문턱 아래 전류가 정확히 0이라는 뜻이 아닙니다.", sectionId: "current" },
+    ],
+  },
+  "devices/switching-energy-and-leakage": {
+    coreIdea: "같은 가상 CMOS 출력의 10 pF·3.3 V 충전과 방전에서 완전 주기당 108.9 pJ를 추적하고, 활동률 10%의 동적 전력 10.89 µW와 가정한 1 µA 누설의 대기 전력 3.3 µW를 분리합니다.",
+    assumedKnowledge: [
+      { id: "mosfet-four-terminals", role: "게이트가 소스·드레인 사이 흐름을 제어합니다." },
+      { id: "mosfet-cutoff-regime", role: "꺼진 이상 소자와 실제 누설을 구분합니다." },
+      { id: "electric-current", role: "전류를 초당 전하로 읽어 공급 에너지를 셉니다." },
+    ],
+    introducedHere: [
+      { id: "cmos-complementary-inverter", role: "두 소자가 번갈아 부하를 충전·방전하는 구조를 밝힙니다." },
+      { id: "cmos-load-capacitance", role: "출력이 충전할 전하와 저장 에너지를 계산합니다." },
+      { id: "cmos-cycle-energy", role: "공급·저장·소자 발열을 한 완전 주기로 맞춥니다." },
+      { id: "cmos-activity-dynamic-power", role: "활동률의 분모와 초당 전환 횟수를 분명히 합니다." },
+      { id: "cmos-leakage-power", role: "움직이지 않을 때 실제 대기 전력을 더합니다." },
+      { id: "cmos-voltage-power-tradeoff", role: "전압 변화가 전력 외 다른 수치도 바꿈을 구분합니다." },
+    ],
+    conceptExplanations: [
+      { id: "cmos-complementary-inverter", sectionId: "two-paths", intuition: "위쪽 길은 출력을 채우고 아래쪽 길은 비웁니다.", workedExample: "입력이 0이면 3.3 V 출력, 입력이 3.3 V이면 0 V 출력인 가상 회로입니다.", boundary: "전환 중 두 소자가 잠시 함께 켜지는 현상은 이상 안정 상태 설명에 포함되지 않습니다.", scientificGrounding: { observable: "각 입력 상태에서 출력 노드의 전위와 공급선·접지선으로 흐르는 전류", unitsAndDimensions: "전위 차이는 V, 각 소자를 지나는 전하의 시간당 흐름은 A로 기록합니다.", modelAssumptions: "상보형 pMOS·nMOS와 0/3.3 V 이상 논리 상태를 둡니다.", measurementExample: "입력 0과 3.3 V에서 출력 3.3과 0 V를 번갈아 기록합니다.", invalidConditions: "전환 중 단락 전류, 유한한 출력 저항, 누설을 0으로 둘 수 없습니다.", referenceFrame: "접지 0 V를 공통 전위 기준으로 둔 정지 회로" } },
+      { id: "cmos-load-capacitance", sectionId: "two-paths", intuition: "출력선과 다음 입력은 충전해야 할 전하를 담습니다.", workedExample: "10 pF×3.3 V=33 pC이고 저장 에너지는 54.45 pJ입니다.", boundary: "10 pF는 이 글의 가정값이며 앞 글의 개별 전극 용량 0.345 pF와 다릅니다.", scientificGrounding: { observable: "출력 전압 변화에 필요한 총 전하와 등가 용량", unitsAndDimensions: "C=Q/V의 단위 F, 전하 C, 에너지 J입니다.", modelAssumptions: "10 pF를 전압에 무관한 집중 용량으로 둡니다.", measurementExample: "0→3.3 V 충전에서 33 pC와 54.45 pJ를 계산합니다.", invalidConditions: "전압 의존 용량·큰 배선 분포 지연이 있으면 한 고정 용량으로 충분하지 않습니다.", referenceFrame: "공급선 3.3 V와 접지 0 V를 고정하고 출력 노드 전압은 접지를 기준으로 셉니다." } },
+      { id: "cmos-cycle-energy", sectionId: "energy-ledger", intuition: "공급원이 낸 에너지 절반은 잠시 저장되고 나머지와 함께 결국 열이 됩니다.", workedExample: "10 pF·3.3 V에서 0→1→0의 공급 에너지는 108.9 pJ입니다.", boundary: "단락 전류와 내부 노드 손실을 뺀 이상적인 한 출력의 계산입니다.", scientificGrounding: { observable: "충전 중 공급선 전류의 시간 적분과 부하 전압", unitsAndDimensions: "전압 V와 전하 C의 곱은 J이고, pF에 전압 제곱을 곱하면 pJ가 됩니다.", modelAssumptions: "일정한 3.3 V 공급원과 완전 충전·방전, 이상 스위치 경로를 둡니다.", measurementExample: "공급 108.9 pJ, 충전 열 54.45 pJ, 방전 열 54.45 pJ로 장부를 맞춥니다.", invalidConditions: "불완전한 전압 스윙이나 내부 노드·단락 손실이 있으면 CV²만으로 전체 전력을 알 수 없습니다.", referenceFrame: "접지 0 V와 공급 3.3 V의 정지 회로" } },
+      { id: "cmos-activity-dynamic-power", sectionId: "activity", intuition: "한 번의 비용에 실제로 일어난 횟수를 곱합니다.", workedExample: "1 MHz 중 완전 출력 주기 10%라면 초당 10만 번×108.9 pJ=10.89 µW입니다.", boundary: "활동률을 토글 총수/클록으로 정의한 값과 섞으면 두 배 오류가 납니다.", scientificGrounding: { observable: "시간당 0→1→0 완전 출력 주기 수와 평균 공급 전력", unitsAndDimensions: "초당 주기 수 1/s에 한 주기의 J를 곱하면 평균 J/s, 즉 W가 됩니다.", modelAssumptions: "각 주기는 0과 VDD 사이 완전 전환이며 평균 α=0.1입니다.", measurementExample: "초당 100,000 완전 주기를 출력 기록에서 세면 10.89 µW입니다.", invalidConditions: "글리치나 부분 전압 스윙, 다른 α 정의를 그대로 식에 넣을 수 없습니다.", referenceFrame: "1초 관측 창을 쓰는 정지 회로 시간 기준" } },
+      { id: "cmos-leakage-power", sectionId: "activity", intuition: "출력이 가만히 있어도 실제 전하가 공급선에서 조금 흘러갑니다.", workedExample: "가정한 1 µA×3.3 V=3.3 µW이며 활동률 10%일 때 합은 14.19 µW입니다.", boundary: "누설은 소자·온도·전압·입력 상태에 의존하므로 1 µA가 일반 정격은 아닙니다.", scientificGrounding: { observable: "출력과 입력을 고정한 뒤 공급선에 직렬로 단 전류계가 가리키는 대기 전류", unitsAndDimensions: "전압 V에 초당 전하 흐름 A를 곱하면 초당 에너지 J/s인 W입니다.", modelAssumptions: "대기 공급 전류가 상태와 시간에 무관한 1 µA인 가상 사례입니다.", measurementExample: "출력을 멈추고 공급선에서 1 µA를 재면 3.3 µW로 계산합니다.", invalidConditions: "실제 온도·공정·전압을 바꾸면 가정한 1 µA를 재사용할 수 없습니다.", referenceFrame: "공급 3.3 V·접지 0 V의 정지 회로" } },
+      { id: "cmos-voltage-power-tradeoff", sectionId: "limits", intuition: "전압 제곱으로 전환 비용이 줄어도 전류와 속도도 달라집니다.", workedExample: "C·f·α 고정 가정에서 3.3→1.8 V는 10.89→3.24 µW입니다.", boundary: "1.8 V의 누설과 지연을 기존 3.3 V 값으로 계산할 수 없습니다.", scientificGrounding: { observable: "공급 전압별 동적 전력·대기 전류·전파 지연", unitsAndDimensions: "V, W, A, s를 별도로 기록합니다.", modelAssumptions: "동적 항 비교에서만 용량·주기·활동률을 수학적으로 고정합니다.", measurementExample: "0.1×1 MHz×10 pF×(1.8 V)²=3.24 µW를 구합니다.", invalidConditions: "낮은 전압에서 타이밍이나 잡음 여유가 부족하면 같은 동작을 보장할 수 없습니다.", referenceFrame: "두 전압 실험 모두 접지 0 V를 기준으로 두고 1초 동안 출력을 관측합니다." } },
+    ],
+    conceptStages: [
+      { label: "01 두 길", relation: "출력을 채우고 비우는 소자와 부하를 봅니다.", concepts: ["cmos-complementary-inverter", "cmos-load-capacitance"] },
+      { label: "02 에너지 장부", relation: "한 완전 주기에서 공급과 저장·발열을 맞춥니다.", concepts: ["cmos-cycle-energy"] },
+      { label: "03 평균 전력", relation: "실제 전환 빈도와 대기 전류를 나눕니다.", concepts: ["cmos-activity-dynamic-power", "cmos-leakage-power"] },
+      { label: "04 선택 경계", relation: "전압 변화가 속도와 누설에도 미치는 영향을 확인합니다.", concepts: ["cmos-voltage-power-tradeoff"] },
+    ],
+    exercises: [
+      { level: "basic", question: "입력이 0 V와 3.3 V일 때 어느 소자가 켜지고 출력은 얼마입니까?", answerChecklist: ["0 V 입력: pMOS 켜짐·nMOS 꺼짐·출력 3.3 V", "3.3 V 입력: pMOS 꺼짐·nMOS 켜짐·출력 0 V"], requiredConcepts: ["cmos-complementary-inverter"], sectionId: "two-paths" },
+      { level: "basic", question: "10 pF를 3.3 V로 충전하면 공급 전하와 저장 에너지는?", answerChecklist: ["33 pC", "54.45 pJ", "C×V와 ½CV² 구분"], requiredConcepts: ["cmos-load-capacitance"], sectionId: "two-paths" },
+      { level: "basic", question: "충전할 때 공급원이 낸 에너지와 위쪽 소자의 열은?", answerChecklist: ["108.9 pJ 공급", "54.45 pJ 위쪽 소자 발열", "54.45 pJ 저장"], requiredConcepts: ["cmos-cycle-energy"], sectionId: "energy-ledger" },
+      { level: "basic", question: "완전 출력 0→1→0 주기의 공급 에너지와 두 소자의 발열 합은?", answerChecklist: ["108.9 pJ 공급", "위쪽 54.45 pJ", "아래쪽 54.45 pJ", "합 108.9 pJ"], requiredConcepts: ["cmos-cycle-energy"], sectionId: "energy-ledger" },
+      { level: "basic", question: "1 MHz 기준의 10% 완전 출력 주기라면 동적 전력은?", answerChecklist: ["초당 10만 주기", "주기당 108.9 pJ", "10.89 µW"], requiredConcepts: ["cmos-activity-dynamic-power"], sectionId: "activity" },
+      { level: "basic", question: "1 µA 대기 전류를 가정할 때 대기 전력과 평균 합은?", answerChecklist: ["3.3 µW 대기", "10.89 µW 동적", "14.19 µW 합", "가정값"], requiredConcepts: ["cmos-leakage-power"], sectionId: "activity" },
+      { level: "advanced", question: "이 글의 활동률 정의에서 스위칭 식에 2를 더 곱하지 않는 이유를 설명하세요.", answerChecklist: ["활동률은 완전 출력 주기 비율", "CV²가 충전·방전 한 쌍", "토글 총수 정의와 구분"], requiredConcepts: ["cmos-activity-dynamic-power", "cmos-cycle-energy"], sectionId: "activity" },
+      { level: "advanced", question: "C만 5 pF로 줄이고 다른 가정을 고정하면 동적 전력은? 실제 회로의 추가 영향은?", answerChecklist: ["5.445 µW", "용량 변화와 지연·다음 입력·배선 조건 확인"], requiredConcepts: ["cmos-load-capacitance", "cmos-activity-dynamic-power"], sectionId: "limits" },
+      { level: "advanced", question: "VDD를 1.8 V로 바꿔 C·f·α를 고정하면 동적 전력은? 새 총 전력을 왜 곧바로 모릅니까?", answerChecklist: ["3.24 µW", "누설과 지연 변화", "새 조건 측정"], requiredConcepts: ["cmos-voltage-power-tradeoff", "cmos-leakage-power"], sectionId: "limits" },
+      { level: "advanced", question: "활동률 0에서도 전력이 남는 이유와 이 단순식에 빠진 손실을 두 가지 설명하세요.", answerChecklist: ["가정한 대기 누설 3.3 µW", "전환 중 단락 전류", "내부 노드 또는 글리치", "온도·공정 의존"], requiredConcepts: ["cmos-leakage-power", "cmos-voltage-power-tradeoff"], sectionId: "limits" },
+    ],
+    papers: [
+      { title: "MIT OpenCourseWare 6.012, Lecture 14, ‘Digital Circuits (III): CMOS’ (2005)", href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/6bec6dd1b07b02a1a84098b78f068cc3_lec14.pdf", problem: "충전·방전 에너지의 행방과 초당 전환 횟수가 평균 전력으로 이어지는 과정을 분명히 해야 합니다.", contribution: "원본 22쪽은 공급 CV²와 저장 ½CV², 23쪽은 방전 손실, 24쪽은 완전 주기 에너지 CV²와 평균 fCV²를 제시합니다.", assumptions: "이상적인 CMOS 전환과 부하 용량의 완전 충전·방전을 전제합니다. 강의안의 이상 정적 전력 0은 실제 누설 0을 뜻하지 않습니다.", evidenceScope: "공식 PDF 22–24쪽의 식과 에너지 장부를 직접 확인했습니다. 10 pF·3.3 V·1 MHz·1 µA는 글의 가정입니다.", notClaim: "강의안이 1 µA를 측정했거나 모든 CMOS 회로의 전력 손실을 CV²만으로 설명한다는 뜻이 아닙니다.", sectionId: "energy-ledger" },
+    ],
+  },
+  "circuits/resistance-and-power-dissipation": {
+    coreIdea: "앞 글의 12 V·1 kΩ·2 kΩ·2 kΩ 가상 망에서 오른쪽만 1 kΩ으로 바꾸고 병렬·직렬 등가에서 개별 전류·열로 되돌아갑니다. 계산된 51.84 mW를 실제 저항 데이터시트 정격과 조건부로 비교합니다.",
+    assumedKnowledge: [
+      { id: "ohmic-resistance", role: "각 저항의 전압과 전류를 연결합니다." },
+      { id: "kirchhoff-current-law", role: "갈림길의 두 전류를 합칩니다." },
+      { id: "kirchhoff-voltage-law", role: "전원과 저항의 전압 강하를 맞춥니다." },
+      { id: "electrical-power-balance", role: "세 부품과 전원의 전력을 검산합니다." },
+    ],
+    introducedHere: [
+      { id: "series-resistance-equivalent", role: "같은 전류의 전압 강하를 합쳐 직렬 등가를 구합니다." },
+      { id: "parallel-resistance-equivalent", role: "같은 전압의 전류를 합쳐 병렬 등가를 구합니다." },
+      { id: "resistor-joule-heating", role: "등가망을 다시 펼쳐 각 부품의 열을 계산합니다." },
+      { id: "resistor-power-rating", role: "계산된 전력을 실제 부품의 정격 표와 대조합니다." },
+      { id: "resistor-tolerance-thermal-boundary", role: "공칭값·온도·실장 조건의 한계를 확인합니다." },
+    ],
+    conceptExplanations: [
+      { id: "series-resistance-equivalent", sectionId: "one-path", intuition: "한 길의 두 저항이 같은 전류를 나눠 지나면 전압 강하가 더해집니다.", workedExample: "12 V에 1 kΩ 두 개를 잇는 가상 회로는 등가 2 kΩ, 전류 6 mA입니다.", boundary: "등가 2 kΩ은 전원 단자의 동작만 대신하고 각 부품의 온도를 나타내지 않습니다.", scientificGrounding: { observable: "같은 줄에 있는 두 저항의 전류와 각 저항 양끝의 전압 강하", unitsAndDimensions: "저항 Ω=V/A, 전류 A, 두 전압 강하는 V 단위로 더합니다.", modelAssumptions: "도선 저항과 부품의 온도 변화가 작고 직류 정상 상태라고 둡니다.", measurementExample: "1 kΩ 두 개에 6 mA가 공통으로 흐르면 6 V씩 떨어집니다.", invalidConditions: "중간에 다른 갈래가 있거나 시간에 따라 전하가 쌓이면 두 부품 전류가 같지 않을 수 있습니다.", referenceFrame: "접지 0 V에서 전원 12 V로 올라가 저항을 차례로 지나는 폐회로 방향" } },
+      { id: "parallel-resistance-equivalent", sectionId: "two-paths", intuition: "같은 두 점에 닿은 갈래는 전압이 같고 전류가 더해집니다.", workedExample: "2 kΩ과 1 kΩ의 등가는 2/3 kΩ이며 갈림길 4.8 V에서 2.4·4.8 mA가 흐릅니다.", boundary: "공통 첫 저항이 있으므로 한 갈래를 바꾸면 갈림길 전압도 달라집니다.", scientificGrounding: { observable: "두 갈래의 양끝 전압과 각각 흐르는 전류 및 합류 전류", unitsAndDimensions: "전압 V, 갈래 전류 A, 병렬 등가 저항 Ω입니다.", modelAssumptions: "갈림길 두 점이 이상 도선으로 연결되고 직류 정상 상태입니다.", measurementExample: "4.8 V에서 2 kΩ에 2.4 mA, 1 kΩ에 4.8 mA가 흐름을 기록합니다.", invalidConditions: "도선 낙차나 분포 효과가 크면 두 갈래에 정확히 같은 전압이 걸리지 않습니다.", referenceFrame: "갈림길을 접지보다 높은 전위로 두고 각 전류를 갈림길에서 접지로 양수로 셉니다." } },
+      { id: "resistor-joule-heating", sectionId: "heat", intuition: "각 부품의 전압과 전류 곱만큼 전기에너지가 매초 열로 바뀝니다.", workedExample: "바꾼 망의 첫 저항 51.84, 왼쪽 11.52, 오른쪽 23.04 mW 합은 86.4 mW입니다.", boundary: "전원 전류를 두 갈래에 그대로 대입하거나 등가저항 하나의 전력을 각 부품의 정격으로 쓰면 틀립니다.", scientificGrounding: { observable: "각 저항의 양끝 전압·통과 전류와 전원 공급 전력", unitsAndDimensions: "V×A=W이고, (mA)²×kΩ=mW입니다.", modelAssumptions: "같은 동작 범위에서 R이 일정하고 평균 직류 상태를 둡니다.", measurementExample: "(7.2 mA)²×1 kΩ=51.84 mW와 12 V×7.2 mA=86.4 mW를 비교합니다.", invalidConditions: "큰 온도 상승으로 R이 달라지거나 펄스가 있으면 순간값과 평균을 구분해야 합니다.", referenceFrame: "각 저항의 전류와 전압 강하를 전원에서 접지로 향하는 양의 방향으로 셉니다." } },
+      { id: "resistor-power-rating", sectionId: "rating", intuition: "저항값이 전류를 정하고 허용 전력은 열을 견딜 수 있는지 답합니다.", workedExample: "1 kΩ의 51.84 mW는 D11/CRCW0603 표준 P70 0.10 W 아래이나 12 V 직결 144 mW는 위입니다.", boundary: "0.10 W는 특정 데이터시트의 표준 모드·70 °C 조건이며 모든 실장·온도에 무조건 적용되지 않습니다.", scientificGrounding: { observable: "부품에 걸린 전압·전류·표면 온도와 장착 기판 주변 온도", unitsAndDimensions: "소비 전력과 정격은 W, 온도는 °C로 비교합니다.", modelAssumptions: "Vishay 2026년 4월 개정 D11/CRCW0603 표준 동작을 예로 듭니다.", measurementExample: "12²/1 kΩ=144 mW와 표준 P70 100 mW를 같은 단위로 비교합니다.", invalidConditions: "기판 열저항·허용 표면 온도·동작 온도를 확인하지 않고 안전성을 단정할 수 없습니다.", referenceFrame: "같은 부품 양단의 전압을 재고 기판 근처 주변 온도를 기준으로 열 조건을 봅니다." } },
+      { id: "resistor-tolerance-thermal-boundary", sectionId: "limits", intuition: "공칭 저항과 실제 저항이 달라지면 회로 전류와 열도 함께 달라집니다.", workedExample: "1 kΩ 제품의 ±1%와 ±5% 선택지, 온도계수를 데이터시트에서 따로 확인합니다.", boundary: "허용차와 전력 정격을 같은 숫자로 보지 않고 최악 조합·기판 조건을 다시 계산합니다.", scientificGrounding: { observable: "개별 저항의 실제 저항값·주변 온도·소비 전력과 전류", unitsAndDimensions: "저항 Ω, 허용차 %, 온도계수 ppm/K, 전력 W를 구분합니다.", modelAssumptions: "공칭 회로의 12 V와 부품별 저항값을 출발점으로 둡니다.", measurementExample: "부품의 공칭 1 kΩ과 실제 저항을 비교한 뒤 새 전류·전력을 측정합니다.", invalidConditions: "주변 온도나 부품 온도 조건이 달라지면 공칭 계산만으로 허용 여부를 판단할 수 없습니다.", referenceFrame: "같은 전원 12 V·접지 0 V에서 실장된 기판의 주변 온도를 기록합니다." } },
+    ],
+    conceptStages: [
+      { label: "01 전원에서 본 값", relation: "직렬·병렬로 회로를 줄여 전체 전류를 구합니다.", concepts: ["series-resistance-equivalent", "parallel-resistance-equivalent"] },
+      { label: "02 부품으로 되돌아감", relation: "갈림길의 전압과 각 전류로 열을 셉니다.", concepts: ["resistor-joule-heating"] },
+      { label: "03 실물 정격", relation: "계산 전력을 부품표의 조건부 정격에 대조합니다.", concepts: ["resistor-power-rating", "resistor-tolerance-thermal-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "12 V 회로의 두 2 kΩ 병렬 갈래의 등가저항은?", answerChecklist: ["두 갈래에 같은 6 V", "각각 3 mA", "합 6 mA", "등가 1 kΩ"], requiredConcepts: ["parallel-resistance-equivalent"], sectionId: "two-paths" },
+      { level: "basic", question: "첫 1 kΩ과 원래 병렬 등가의 직렬 합 및 전원 전류는?", answerChecklist: ["1+1=2 kΩ", "12 V/2 kΩ=6 mA"], requiredConcepts: ["series-resistance-equivalent"], sectionId: "one-path" },
+      { level: "basic", question: "원래 세 저항의 전력과 전원 공급 전력을 맞추세요.", answerChecklist: ["36 mW", "18 mW 두 개", "합 72 mW", "12 V×6 mA"], requiredConcepts: ["resistor-joule-heating"], sectionId: "heat" },
+      { level: "basic", question: "오른쪽을 1 kΩ으로 바꿀 때 병렬과 전체 등가저항은?", answerChecklist: ["병렬 2/3 kΩ", "전체 5/3 kΩ", "첫 1 kΩ 더함"], requiredConcepts: ["parallel-resistance-equivalent", "series-resistance-equivalent"], sectionId: "two-paths" },
+      { level: "basic", question: "바꾼 회로의 갈림길 전압과 두 갈래 전류는?", answerChecklist: ["전체 7.2 mA", "첫 강하 7.2 V", "갈림길 4.8 V", "왼쪽 2.4·오른쪽 4.8 mA"], requiredConcepts: ["parallel-resistance-equivalent"], sectionId: "two-paths" },
+      { level: "basic", question: "같은 1 kΩ 부품을 12 V에 직접 놓으면 0.10 W 표준 정격과 비교해 어떻습니까?", answerChecklist: ["144 mW", "표준 100 mW 초과", "기판·온도 조건은 별도"], requiredConcepts: ["resistor-power-rating"], sectionId: "rating" },
+      { level: "advanced", question: "값을 바꾼 회로의 세 저항 전력과 공급 전력을 계산해 검산하세요.", answerChecklist: ["51.84 mW", "11.52 mW", "23.04 mW", "합 86.4 mW", "12 V×7.2 mA"], requiredConcepts: ["resistor-joule-heating"], sectionId: "heat" },
+      { level: "advanced", question: "오른쪽 저항을 낮추었는데 왼쪽 전류가 3→2.4 mA로 줄어드는 경로를 설명하세요.", answerChecklist: ["병렬 등가 감소", "전체 전류 증가", "첫 저항 낙차 증가", "갈림길 6→4.8 V"], requiredConcepts: ["parallel-resistance-equivalent", "series-resistance-equivalent"], sectionId: "two-paths" },
+      { level: "advanced", question: "1 kΩ에 표준 정격 0.10 W를 이상적으로 적용할 때 양단 전압 한계는?", answerChecklist: ["sqrt(PR)", "10 V", "실제 온도와 실장 조건은 별도"], requiredConcepts: ["resistor-power-rating"], sectionId: "rating" },
+      { level: "advanced", question: "±1% 저항 허용차와 70 °C 기준 전력 정격은 서로 어떤 판단을 맡습니까?", answerChecklist: ["공칭 저항값 오차", "허용 발열", "최악 조합 회로 재계산", "기판·주변 온도 확인"], requiredConcepts: ["resistor-tolerance-thermal-boundary", "resistor-power-rating"], sectionId: "limits" },
+    ],
+    papers: [
+      { title: "Vishay, D/CRCW e3 Standard Thick Film Chip Resistors, document 20035, revision 14-Apr-2026", href: "https://www.vishay.com/docs/20035/dcrcwe3.pdf", problem: "가상 회로의 부품별 계산 전력을 실제 저항의 정격·열 조건과 어떻게 대조할지 보여 줍니다.", contribution: "1쪽은 D11/CRCW0603 e3의 저항 범위와 기판 열저항·표면 온도 조건, 2쪽은 표준 P70 0.10 W와 확장 0.125 W를 구분합니다.", assumptions: "데이터시트의 표준 동작 모드와 70 °C 기준을 예시로 삼습니다. 본문 12 V 망은 제품 시험 결과가 아닙니다.", evidenceScope: "공식 PDF 1–2쪽의 표를 직접 확인했습니다. 51.84 mW와 144 mW는 가상 회로에서 계산했습니다.", notClaim: "0.10 W 아래라는 사실만으로 모든 주변 온도와 기판에서 안전하다고 결론내리지 않습니다.", sectionId: "rating" },
+    ],
+  },
+  "circuits/storage-elements-and-transients": {
+    coreIdea: "같은 가상 5 V·1 kΩ에 1 µF 축전기 또는 1 H 인덕터 하나를 더해 RC·RL 시간 상수 1 ms를 비교합니다. 축전기는 전압, 인덕터는 전류를 이어 가고 지수 응답의 1τ는 최종값의 63.2%임을 수치로 확인합니다.",
+    assumedKnowledge: [
+      { id: "series-resistance-equivalent", role: "전원에서 저장 부품으로 가는 길의 직렬 저항을 둡니다." },
+      { id: "ohmic-resistance", role: "남은 전압 차이가 저항 전류를 정합니다." },
+      { id: "kirchhoff-voltage-law", role: "전원 5 V를 저항·저장 부품의 전압으로 나눕니다." },
+      { id: "electrical-power-balance", role: "열과 저장 에너지를 구분합니다." },
+    ],
+    introducedHere: [
+      { id: "capacitor-voltage-state", role: "전하와 전압·전류·저장 에너지의 관계를 설명합니다." },
+      { id: "rc-step-time-constant", role: "남은 전압 차이가 RC 시간으로 줄어듦을 계산합니다." },
+      { id: "inductor-current-state", role: "자기장 에너지와 이어지는 전류를 설명합니다." },
+      { id: "rl-step-time-constant", role: "남은 전류 차이가 L/R 시간으로 줄어듦을 계산합니다." },
+      { id: "single-storage-boundary", role: "시간 상수가 회로 전체 경로의 값이며 모델 경계를 가짐을 확인합니다." },
+    ],
+    conceptExplanations: [
+      { id: "capacitor-voltage-state", sectionId: "capacitor", intuition: "두 판에 모인 전하가 현재 전압을 남겨 다음 순간의 시작점을 정합니다.", workedExample: "처음 0 V인 1 µF를 5 V까지 채우면 5 µC와 12.5 µJ가 남습니다.", boundary: "유한 전류에서 즉시 5 V가 될 수 없고 실제 누설 때문에 전압이 영원히 남지도 않습니다.", scientificGrounding: { observable: "축전기 양단 전압과 충전 전류의 시간 기록, 축적된 전하", unitsAndDimensions: "전하 C, 전압 V, 정전용량 F=C/V, 에너지 J입니다.", modelAssumptions: "일정한 1 µF 용량과 처음 0 V, 누설 없는 이상 두 판을 둡니다.", measurementExample: "5 V 도착 때 5 µC와 ½×1 µF×25 V²=12.5 µJ를 구합니다.", invalidConditions: "누설·비선형 용량·큰 직렬 저항·유전체 파괴는 이상식을 벗어납니다.", referenceFrame: "접지 0 V에 대한 축전기 윗판 전압을 양수로, 전류는 윗판으로 들어오는 방향을 양수로 둡니다." } },
+      { id: "rc-step-time-constant", sectionId: "rc", intuition: "5 V까지 남은 차이가 작아질수록 흐르는 전류도 줄어듭니다.", workedExample: "1 kΩ×1 µF=1 ms이고 이때 전압은 3.16 V, 전류는 1.84 mA입니다.", boundary: "1τ는 충전 완료가 아니라 남은 오차가 약 36.8%가 된 때입니다.", scientificGrounding: { observable: "스위치를 닫은 뒤 축전기 전압과 직렬 저항 전류의 시간 곡선", unitsAndDimensions: "RΩ×CF=s, 전압 V, 전류 A로 시간 상수를 검산합니다.", modelAssumptions: "5 V 이상 계단과 일정한 1 kΩ·1 µF, 처음 0 V를 둡니다.", measurementExample: "1 ms에서 5(1−e^-1)=3.16 V와 (5−3.16)V/1 kΩ=1.84 mA입니다.", invalidConditions: "입력 상승 시간이 길거나 용량·저항이 비선형이면 단일 지수식과 달라집니다.", referenceFrame: "스위치를 닫은 순간 t=0, 접지 0 V를 전압 기준으로 둡니다." } },
+      { id: "inductor-current-state", sectionId: "inductor", intuition: "감은 선의 자기장에 에너지가 있어 전류가 직전 값에서 이어집니다.", workedExample: "가상 1 H에 5 mA가 흐르면 ½×1 H×(5 mA)²=12.5 µJ입니다.", boundary: "유한 전압에서 전류는 즉시 점프하지 않지만 권선 저항과 코어 포화가 실제 한계입니다.", scientificGrounding: { observable: "인덕터 전류의 시간 변화와 양단 전압 및 자기장 에너지", unitsAndDimensions: "L의 단위 H=V·s/A이고 ½LI²의 단위는 J입니다.", modelAssumptions: "일정한 1 H와 처음 0 mA인 이상 인덕터를 둡니다.", measurementExample: "최종 5 mA에서 12.5 µJ와 정상 상태 인덕터 전압 0 V를 구합니다.", invalidConditions: "코어 포화·권선 저항·기생 용량·절연 파괴를 이상 모형에 넣지 않았습니다.", referenceFrame: "전원에서 저항과 인덕터를 지나 접지로 흐르는 전류를 양수로 둡니다." } },
+      { id: "rl-step-time-constant", sectionId: "inductor", intuition: "전류가 커질수록 저항이 더 많은 전압을 가져가 변화 전압은 줄어듭니다.", workedExample: "1 H/1 kΩ=1 ms이고 전류는 0에서 1 ms 뒤 약 3.16 mA로 갑니다.", boundary: "1 H는 교육용 가정이며 실제 코일의 권선 저항·포화와 절연 조건을 반영하지 않습니다.", scientificGrounding: { observable: "스위치 뒤 직렬 전류와 인덕터·저항 양끝 전압의 시간 곡선", unitsAndDimensions: "H/Ω=s, 전류 A, 전압 V로 5=Ri+L di/dt를 맞춥니다.", modelAssumptions: "이상 5 V 계단·1 kΩ·1 H와 초기 0 mA를 둡니다.", measurementExample: "1 ms에서 5 mA×(1−e^-1)=3.16 mA이고 인덕터 전압은 1.84 V입니다.", invalidConditions: "저항과 인덕턴스가 전류·온도에 의존하거나 코어가 포화되면 지수식이 부족합니다.", referenceFrame: "스위치를 닫은 시각 t=0, 전원→저항→인덕터→접지 방향으로 전류를 셉니다." } },
+      { id: "single-storage-boundary", sectionId: "boundary", intuition: "저장된 상태가 변하는 시간은 저장 부품과 이를 채우는 경로가 함께 정합니다.", workedExample: "R을 2 kΩ으로 늘리면 RC는 2 ms, L/R은 0.5 ms이며 RL 최종 전류는 2.5 mA입니다.", boundary: "저장 요소가 둘이거나 실제 기생 성분이 크면 단일 시간 상수 하나로 설명할 수 없습니다.", scientificGrounding: { observable: "저항 변경 전후의 축전기 전압·인덕터 전류 시간 곡선", unitsAndDimensions: "RC와 L/R은 모두 초 s이고 RC 전압은 V, RL 전류는 A입니다.", modelAssumptions: "서로 다른 단일 저장 부품 회로에서 R만 두 배로 바꿉니다.", measurementExample: "RC 1→2 ms, RL 1→0.5 ms와 최종 5→2.5 mA를 비교합니다.", invalidConditions: "RLC 2상태 회로·분포 배선·소자 비선형에서는 이 단순 비교를 확장하지 않습니다.", referenceFrame: "두 가상 회로 모두 접지 0 V와 스위치 t=0을 기준으로 각자 측정합니다." } },
+    ],
+    conceptStages: [
+      { label: "01 전압 상태", relation: "전하가 남긴 전압과 RC 충전 속도를 연결합니다.", concepts: ["capacitor-voltage-state", "rc-step-time-constant"] },
+      { label: "02 전류 상태", relation: "자기장이 남긴 전류와 RL 상승 속도를 연결합니다.", concepts: ["inductor-current-state", "rl-step-time-constant"] },
+      { label: "03 회로 경계", relation: "저항이 시간에 미치는 반대 효과와 실제 모델 한계를 확인합니다.", concepts: ["single-storage-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "가정한 5 V·1 kΩ·1 µF RC 회로의 시간 상수는?", answerChecklist: ["RC", "1 ms", "RΩ×CF=s"], requiredConcepts: ["rc-step-time-constant"], sectionId: "rc" },
+      { level: "basic", question: "축전기 전압은 스위치 직후·1τ·3τ·오래 뒤 각각 얼마입니까?", answerChecklist: ["0 V", "3.16 V", "4.75 V", "5 V에 점근"], requiredConcepts: ["capacitor-voltage-state", "rc-step-time-constant"], sectionId: "rc" },
+      { level: "basic", question: "RC의 초기 전류와 1τ 뒤 전류는?", answerChecklist: ["5 mA", "1.84 mA", "남은 저항 전압으로 계산"], requiredConcepts: ["rc-step-time-constant"], sectionId: "rc" },
+      { level: "basic", question: "축전기가 이어 가는 상태와 5 V에 저장한 최종 에너지는?", answerChecklist: ["전압", "½CV²", "12.5 µJ"], requiredConcepts: ["capacitor-voltage-state"], sectionId: "capacitor" },
+      { level: "basic", question: "5 V·1 kΩ·1 H RL 회로의 시간 상수와 최종 전류는?", answerChecklist: ["L/R=1 ms", "5 V/1 kΩ=5 mA"], requiredConcepts: ["rl-step-time-constant"], sectionId: "inductor" },
+      { level: "basic", question: "RL의 스위치 직후·1τ·오래 뒤 전류는?", answerChecklist: ["0 mA", "3.16 mA", "5 mA에 점근"], requiredConcepts: ["rl-step-time-constant", "inductor-current-state"], sectionId: "inductor" },
+      { level: "advanced", question: "축전기 전압이 즉시 5 V로 뛴다는 주장에 i=C dv/dt로 답하세요.", answerChecklist: ["유한 전압 변화의 순간 도약", "무한한 순간 전류 필요", "유한 1 kΩ 경로와 충돌"], requiredConcepts: ["capacitor-voltage-state"], sectionId: "capacitor" },
+      { level: "advanced", question: "RC에서 1τ·3τ의 남은 오차와 1% 이내 도착 시간을 계산하세요.", answerChecklist: ["e^-1=36.8%", "e^-3≈5%", "ln100≈4.605τ"], requiredConcepts: ["rc-step-time-constant"], sectionId: "rc" },
+      { level: "advanced", question: "인덕터 전류가 즉시 5 mA로 뛸 수 없는 이유와 최종 에너지는?", answerChecklist: ["v=L di/dt", "유한 전압에서 순간 유한 전류 점프 불가", "12.5 µJ"], requiredConcepts: ["inductor-current-state"], sectionId: "inductor" },
+      { level: "advanced", question: "두 회로의 R을 2 kΩ으로 키우면 각 시간 상수와 RL 최종 전류는?", answerChecklist: ["RC 2 ms", "RL 0.5 ms", "RL 최종 2.5 mA", "두 회로는 별개"], requiredConcepts: ["single-storage-boundary", "rc-step-time-constant", "rl-step-time-constant"], sectionId: "boundary" },
+    ],
+    papers: [
+      { title: "MIT OpenCourseWare 6.002, Lecture 12, ‘Capacitors and First-Order Systems’ (Fall 2000 자료)", href: "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/84f4b553fc6a1ddd7007465041c4e213_6002_l12.pdf", problem: "저장 전하와 유한한 충전 전류가 왜 축전기 전압을 시간에 따라 바꾸는지 설명합니다.", contribution: "4–5쪽의 q=Cv·i=C dv/dt·에너지와 10–11쪽의 RC 해·초기 조건·시간 상수를 제시합니다.", assumptions: "이상 선형 축전기, 일정 R, 계단 입력과 주어진 초기 전압입니다.", evidenceScope: "MIT 공식 PDF 해당 쪽의 식과 그림을 대조했습니다. 본문의 5 V·1 kΩ·1 µF는 별도 가정입니다.", notClaim: "강의안이 본문의 1 ms·3.16 V 회로를 실험하거나 모든 실제 축전기의 누설을 0이라고 주장한 것은 아닙니다.", sectionId: "rc" },
+      { title: "MIT OpenCourseWare 8.02, Chapter 11, ‘Inductance’ (Spring 2007)", href: "https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2007/f5c35823a7faac0d893754ab42804e7e_chap11inductance.pdf", problem: "코일의 전류가 이전 상태에서 이어지며 얼마나 빨리 최종값에 닿는지 설명합니다.", contribution: "10쪽 식 (11.3.4)의 ½LI², 17–18쪽 식 (11.4.5)–(11.4.8)의 RL 상승식과 τ=L/R, 19쪽의 저항 열·자기장 저장을 구분합니다.", assumptions: "이상 인덕턴스와 저항, 계단 전원, 처음 전류 0입니다.", evidenceScope: "MIT 공식 PDF 10·17–19쪽의 식과 조건을 대조했습니다. 1 H·5 V·1 kΩ은 별도 가정입니다.", notClaim: "1 H 코일이 이 회로에서 실제로 1 ms를 측정했다거나 권선 저항·코어 포화가 없다는 뜻이 아닙니다.", sectionId: "inductor" },
+    ],
+  },
+  "circuits/steady-state-and-impedance": {
+    coreIdea: "앞 글의 1 kΩ·1 µF 회로를 5 V 최대 진폭의 정현파로 흔들고 ω=1000 rad/s에서 축전기 임피던스 −j1000 Ω과 출력 3.54 V·−45°를 얻습니다. 복소수는 크기와 지연을 함께 계산하는 도구이며 시작 과도는 별도로 둡니다.",
+    assumedKnowledge: [
+      { id: "rc-step-time-constant", role: "처음 상태의 영향이 줄어드는 1 ms를 가져옵니다." },
+      { id: "capacitor-voltage-state", role: "축전기의 i=C dv/dt를 임피던스로 바꿉니다." },
+      { id: "inductor-current-state", role: "인덕터의 v=L di/dt와 위상 방향을 비교합니다." },
+      { id: "series-resistance-equivalent", role: "직렬 두 소자에 같은 전류가 흐르는 전압 분배를 가져옵니다." },
+    ],
+    introducedHere: [
+      { id: "sinusoidal-steady-state", role: "처음 과도와 오래 남는 반복 응답을 분리합니다." },
+      { id: "sinusoidal-amplitude-phase", role: "최대 진폭과 위상 지연을 시간으로 환산합니다." },
+      { id: "phasor-complex-amplitude", role: "복소수로 미분을 jω 곱셈으로 바꿉니다." },
+      { id: "passive-element-impedance", role: "R·C·L의 복소 전압·전류 비를 구분합니다." },
+      { id: "rc-impedance-divider", role: "같은 RC의 출력 크기와 각도를 계산합니다." },
+      { id: "impedance-model-boundary", role: "한 주파수 정상 상태 식이 적용되지 않는 조건을 밝힙니다." },
+    ],
+    conceptExplanations: [
+      { id: "sinusoidal-steady-state", sectionId: "wave", intuition: "처음 저장된 전하의 영향이 가라앉으면 입력과 같은 박자의 흔들림이 남습니다.", workedExample: "1 kΩ·1 µF의 초기 영향은 1 ms 시간 상수로 줄고 159 Hz 반복 응답을 남깁니다.", boundary: "스위치를 막 켠 순간에는 초기 조건이 더해져 정상 진폭만으로 전체 출력을 알 수 없습니다.", scientificGrounding: { observable: "입력과 축전기 출력 전압의 시간 파형과 시작 뒤 진폭 변화", unitsAndDimensions: "전압 V, 시간 s, 진폭 V, 반복 빈도 Hz=1/s입니다.", modelAssumptions: "선형 1 kΩ·1 µF와 한 주파수 정현파 입력을 둡니다.", measurementExample: "처음 켠 뒤 여러 1 ms가 지나 출력 최대 진폭이 일정해지는지 봅니다.", invalidConditions: "비선형 소자나 계속 바뀌는 입력에서는 한 정현파 지속 응답만 남지 않습니다.", referenceFrame: "스위치를 켠 순간 t=0과 접지 0 V를 각각 시간·전압 기준으로 둡니다." } },
+      { id: "sinusoidal-amplitude-phase", sectionId: "wave", intuition: "같은 박자로 흔들려도 높이와 봉우리가 도착하는 시각이 다를 수 있습니다.", workedExample: "5 V 최대 입력에서 출력은 3.54 V 최대, −45°이며 159 Hz 한 주기의 약 0.785 ms 뒤입니다.", boundary: "최대 진폭을 RMS나 순간 전압으로 읽으면 전력·전압 비교가 달라집니다.", scientificGrounding: { observable: "입력·출력 파형의 봉우리 높이와 같은 봉우리의 시간 차이", unitsAndDimensions: "최대 진폭 V, 각도 도 또는 rad, 주기 s입니다.", modelAssumptions: "두 파형의 주파수가 같고 정현파 정상 상태입니다.", measurementExample: "약 6.28 ms 주기에서 45/360 주기는 약 0.785 ms입니다.", invalidConditions: "다른 주파수가 섞이거나 과도 중이면 봉우리 하나의 시차로 모든 성분을 나타낼 수 없습니다.", referenceFrame: "입력 cos(ωt)의 봉우리를 위상 0°, 같은 시각을 출력 위상의 기준으로 둡니다." } },
+      { id: "phasor-complex-amplitude", sectionId: "complex", intuition: "크기와 각도를 한 화살표로 묶으면 미분을 회전과 배율의 곱으로 셉니다.", workedExample: "ω=1000 rad/s에서 미분은 j1000을 곱해 90° 앞선 방향이 됩니다.", boundary: "전압이나 전류가 실제로 허수라는 뜻이 아니며 마지막에는 실수 파형을 읽습니다.", scientificGrounding: { observable: "같은 주파수의 입력·출력 진폭과 봉우리 시간 차이", unitsAndDimensions: "j는 무차원이고 ω의 단위 rad/s, 미분 결과는 원 물리량/s입니다.", modelAssumptions: "한 주파수 정현파와 선형 시간 불변 회로를 둡니다.", measurementExample: "코사인 전압을 미분할 때 진폭에 1000/s가 곱해지고 위상이 90° 이동합니다.", invalidConditions: "비선형 왜곡이나 켠 직후의 자연응답에는 단일 복소 진폭만으로 부족합니다.", referenceFrame: "입력 cos(ωt)를 0° 실수축으로 둔 복소 평면과 접지 0 V를 기준으로 씁니다." } },
+      { id: "passive-element-impedance", sectionId: "complex", intuition: "같은 전압·전류 비의 크기라도 저장 방식에 따라 각도 방향이 달라집니다.", workedExample: "ω=1000 rad/s에서 1 µF는 −j1000 Ω, 1 H는 +j1000 Ω입니다.", boundary: "R·C·L이 일정한 정현파 정상 상태에서의 비이며 직류 시작 순간의 등가 부품값은 아닙니다.", scientificGrounding: { observable: "부품 양단의 전압·전류 최대 진폭과 둘 사이의 위상 차이", unitsAndDimensions: "복소 전압/전류 비 Z의 단위는 Ω=V/A입니다.", modelAssumptions: "이상 선형 1 kΩ·1 µF·1 H를 개별 부품으로 비교합니다.", measurementExample: "1/(j×1000 rad/s×1 µF)=−j1000 Ω, j×1000×1 H=+j1000 Ω입니다.", invalidConditions: "주파수 의존 손실·기생 성분·코어 포화가 크면 단순 jωL·1/(jωC)와 다릅니다.", referenceFrame: "부품 전류가 양극 단자로 들어오는 수동 부호 규약과 입력 0° 위상 기준" } },
+      { id: "rc-impedance-divider", sectionId: "divider", intuition: "같은 전류가 흐르는 두 소자의 전압 몫을 복소수로 나눕니다.", workedExample: "1 kΩ과 −j1000 Ω의 직렬 합 길이는 1414 Ω이고 5 V 입력의 출력은 3.54 V·−45°입니다.", boundary: "출력 위치를 축전기에서 저항으로 옮기면 다른 크기·위상 식이 나옵니다.", scientificGrounding: { observable: "입력과 축전기 양단 출력의 최대 진폭 비와 위상 지연", unitsAndDimensions: "H=출력 V/입력 V는 무차원, Z는 Ω, 각도는 도입니다.", modelAssumptions: "같은 직렬 전류와 이상 RC, 정현파 정상 상태를 둡니다.", measurementExample: "ωRC=1에서 1/(1+j)의 길이 0.707, 각도 −45°를 확인합니다.", invalidConditions: "부하가 출력에 연결되어 전류가 갈라지면 무부하 분압식을 그대로 쓸 수 없습니다.", referenceFrame: "접지 0 V에 대한 축전기 윗단 전압을 출력, 입력 cos(ωt)를 위상 0°로 둡니다." } },
+      { id: "impedance-model-boundary", sectionId: "limits", intuition: "속도를 바꾸면 저장 부품이 따라오는 크기와 늦는 각도가 함께 달라집니다.", workedExample: "ω=100/1000/10000 rad/s에서 출력 최대 진폭은 약 4.98/3.54/0.50 V입니다.", boundary: "시작 상태와 펄스의 여러 주파수, 비선형·기생 소자는 한 ω의 임피던스만으로 설명할 수 없습니다.", scientificGrounding: { observable: "주파수별 입력·출력 진폭 비와 위상 및 과도 응답", unitsAndDimensions: "ω rad/s, 진폭 V, 위상 도, 비 H는 무차원입니다.", modelAssumptions: "1 kΩ·1 µF·5 V 최대 입력의 단일 정현파 정상 상태를 각각 비교합니다.", measurementExample: "ωRC=0.1/1/10에서 비 0.995/0.707/0.0995를 측정값과 비교합니다.", invalidConditions: "스위치 계단과 포화 코일·전압 의존 축전기에서는 선형 한 주파수 모델이 부족합니다.", referenceFrame: "각 측정에서 입력 cos(ωt)를 0°로 새로 고정하고 같은 접지를 씁니다." } },
+    ],
+    conceptStages: [
+      { label: "01 지속 파형", relation: "시작 영향과 반복 응답을 분리하고 크기·지연을 측정합니다.", concepts: ["sinusoidal-steady-state", "sinusoidal-amplitude-phase"] },
+      { label: "02 복소 계산", relation: "미분과 R·C·L의 전압·전류 비를 복소수로 묶습니다.", concepts: ["phasor-complex-amplitude", "passive-element-impedance"] },
+      { label: "03 출력과 경계", relation: "같은 RC의 분압을 계산하고 적용 조건을 확인합니다.", concepts: ["rc-impedance-divider", "impedance-model-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "가상 RC 1 kΩ·1 µF와 ω=1000 rad/s에서 ωRC는?", answerChecklist: ["1000×1000×10^-6", "1", "무차원"], requiredConcepts: ["rc-impedance-divider"], sectionId: "divider" },
+      { level: "basic", question: "이 조건의 축전기 임피던스와 저항 임피던스는?", answerChecklist: ["−j1000 Ω", "1000 Ω", "위상 방향 구분"], requiredConcepts: ["passive-element-impedance"], sectionId: "complex" },
+      { level: "basic", question: "전체 직렬 임피던스 크기와 5 V 최대 입력의 전류 최대 진폭은?", answerChecklist: ["1000−j1000 Ω", "약 1414 Ω", "약 3.54 mA"], requiredConcepts: ["rc-impedance-divider"], sectionId: "divider" },
+      { level: "basic", question: "축전기 출력 최대 진폭과 입력 대비 위상은?", answerChecklist: ["약 3.54 V", "−45°", "5 V는 최대 진폭"], requiredConcepts: ["rc-impedance-divider", "sinusoidal-amplitude-phase"], sectionId: "divider" },
+      { level: "basic", question: "같은 ω에서 1 H 인덕터의 임피던스는?", answerChecklist: ["+j1000 Ω", "크기 1000 Ω", "축전기와 각도 반대"], requiredConcepts: ["passive-element-impedance"], sectionId: "complex" },
+      { level: "basic", question: "159 Hz의 주기와 −45° 출력 지연 시간은?", answerChecklist: ["약 6.28 ms", "1/8주기", "약 0.785 ms"], requiredConcepts: ["sinusoidal-amplitude-phase"], sectionId: "wave" },
+      { level: "advanced", question: "ω=100/1000/10000 rad/s에서 출력 크기 비와 위상을 비교하세요.", answerChecklist: ["0.995·−5.7°", "0.707·−45°", "0.0995·−84.3°"], requiredConcepts: ["impedance-model-boundary"], sectionId: "limits" },
+      { level: "advanced", question: "ZC/(R+ZC)가 왜 1/(1+jωRC)가 되는지 식을 변형하세요.", answerChecklist: ["ZC=1/(jωC)", "직렬 전압 분배", "분자·분모에 jωC 곱함", "1/(1+jωRC)"], requiredConcepts: ["rc-impedance-divider", "passive-element-impedance"], sectionId: "divider" },
+      { level: "advanced", question: "스위치를 막 켠 출력에 정상식의 3.54 V만 적용할 수 없는 이유는?", answerChecklist: ["초기조건", "RC 시간에 줄어드는 자연응답", "정상 응답과 합침"], requiredConcepts: ["sinusoidal-steady-state", "impedance-model-boundary"], sectionId: "wave" },
+      { level: "advanced", question: "ω→0과 ω→∞에서 이상 RC 축전기 출력과 전류는 어떻게 됩니까?", answerChecklist: ["저주파 출력≈입력·전류≈0", "고주파 출력≈0·전류≈입력/R", "이상 모델 경계"], requiredConcepts: ["passive-element-impedance", "impedance-model-boundary"], sectionId: "limits" },
+    ],
+    papers: [
+      { title: "MIT OpenCourseWare 6.002, Lecture 17, ‘The Impedance Model’ (Fall 2000 자료)", href: "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/66adf4d4611a57b949efa1b00a842a46_6002_l17.pdf", problem: "RC의 한 주파수 반복 응답을 매번 미분 방정식 대신 진폭·위상으로 계산하려고 합니다.", contribution: "4쪽은 1/(1+jωRC)와 크기·위상을, 5–7쪽은 R·C·L 임피던스와 복소 전압 분배를 제시합니다.", assumptions: "한 주파수의 정현파 정상 상태, 선형·집중 소자와 충분히 감쇠한 초기 과도입니다.", evidenceScope: "MIT 공식 강의안 4–7쪽의 식과 도식을 직접 확인했습니다. 5 V·1 kΩ·1 µF와 3.54 V는 본문 가정 계산입니다.", notClaim: "강의안이 이 수치 회로를 실험했거나 시작 직후의 전체 응답이 정상 진폭과 같다는 뜻이 아닙니다.", sectionId: "divider" },
+    ],
+  },
+  "circuits/frequency-shaping-and-bode": {
+    coreIdea: "앞 글의 무부하 1 kΩ·1 µF RC를 여러 주파수로 훑어 159.15 Hz 경계, 3.54 V·−3.01 dB·−45°, 높은 쪽의 근사 −20 dB/dec를 한 사례로 읽습니다. 저항 출력의 고역 통과와 부하 경계를 구분합니다.",
+    assumedKnowledge: [{id:"rc-impedance-divider",role:"1/(1+jωRC)의 복소 분배를 가져옵니다."},{id:"rc-step-time-constant",role:"RC=1 ms 저장 시간을 가져옵니다."},{id:"sinusoidal-amplitude-phase",role:"입력 대비 최대 진폭과 위상을 구별합니다."}],
+    introducedHere: [
+      {id:"rc-corner-frequency",role:"저장 시간에서 경계 반복 속도를 구합니다."},
+      {id:"rc-lowpass-spectrum",role:"여러 주파수의 축전기 출력 크기를 봅니다."},
+      {id:"voltage-ratio-decibel",role:"진폭 비를 로그 dB 눈금으로 옮깁니다."},
+      {id:"bode-log-slope",role:"로그 가로축에서 정확한 변화와 근사 기울기를 구분합니다."},
+      {id:"rc-output-topology",role:"저항 양단의 고역 통과를 별도 연결로 비교합니다."},
+      {id:"filter-load-boundary",role:"부하·과도·기생 성분의 적용 경계를 정합니다."},
+    ],
+    conceptExplanations: [
+      {id:"rc-corner-frequency",sectionId:"corner",intuition:"1 ms 동안 채워지는 부품은 초당 약 159번 흔들릴 때 눈에 띄게 덜 따라옵니다.",workedExample:"1 kΩ×1 µF=1 ms, ωc=1000 rad/s, fc≈159.15 Hz이고 5 V 최대 입력은 약 3.54 V가 됩니다.",boundary:"차단이라는 이름만 보고 출력 0 V라고 해석하지 않습니다.",scientificGrounding:{observable:"입력과 축전기 출력의 정현파 최대 진폭·위상",unitsAndDimensions:"RC는 s, ωc는 rad/s, fc는 Hz, 진폭은 V입니다.",modelAssumptions:"이상 1 kΩ·1 µF, 무부하 정현파 정상 상태입니다.",measurementExample:"약 159 Hz에서 5 V 대비 약 3.54 V 최대 진폭과 −45°를 비교합니다.",invalidConditions:"부하나 기생 저항이 붙으면 경계가 달라집니다.",referenceFrame:"동일한 입력 cos(ωt)의 최대 진폭 5 V와 위상 0°, 접지 0 V를 기준으로 합니다."}},
+      {id:"rc-lowpass-spectrum",sectionId:"plot",intuition:"빠르게 방향이 바뀌면 축전기가 다 채워지기 전에 입력이 돌아섭니다.",workedExample:"0.1fc·fc·10fc에서 5 V 최대 입력의 출력은 약 4.98·3.54·0.50 V입니다.",boundary:"세 값은 동시에 섞인 임의 펄스의 순간 전압이 아닙니다.",scientificGrounding:{observable:"주파수를 열 배씩 바꿀 때 입력·축전기 출력 파형의 최대 진폭과 그 비",unitsAndDimensions:"진폭 V, 비는 무차원, 주파수 Hz입니다.",modelAssumptions:"동일한 가상 이상 RC의 단일 정현파를 주파수별로 따로 겁니다.",measurementExample:"15.9·159·1592 Hz 부근의 진폭을 각각 읽습니다.",invalidConditions:"비선형 회로나 시작 과도에는 한 주파수 식만으로 부족합니다.",referenceFrame:"동일한 입력 cos(ωt)의 최대 진폭 5 V와 위상 0°, 접지 0 V를 기준으로 합니다."}},
+      {id:"voltage-ratio-decibel",sectionId:"db",intuition:"10분의 1과 100분의 1을 같은 눈금 간격으로 보기 위해 로그를 씁니다.",workedExample:"0.707배는 −3.01 dB, 0.1배는 −20 dB입니다.",boundary:"전력비 10log와 전압 진폭비 20log를 기준 없이 섞지 않습니다.",scientificGrounding:{observable:"동일한 주파수의 입력·출력 최대 진폭",unitsAndDimensions:"진폭 비는 무차원이며 dB도 로그 비의 무차원 표기입니다.",modelAssumptions:"양쪽 전압을 같은 진폭 정의로 잽니다.",measurementExample:"5 V 대비 3.54 V의 비 약 0.707을 −3.01 dB로 옮깁니다.",invalidConditions:"다른 기준 진폭이나 임피던스 전력비를 그대로 대입하면 비교가 틀립니다.",referenceFrame:"동일한 입력 cos(ωt)의 최대 진폭 5 V와 위상 0°, 접지 0 V를 기준으로 합니다."}},
+      {id:"bode-log-slope",sectionId:"plot",intuition:"주파수가 열 배인 두 점을 같은 폭으로 놓으면 빠른 쪽의 감소 경사가 보입니다.",workedExample:"fc→10fc는 약 −17.03 dB, 10fc→100fc는 약 −19.96 dB입니다.",boundary:"−20 dB/dec는 경계에서의 정확한 차이가 아니라 높은 쪽 근사입니다.",scientificGrounding:{observable:"주파수별 전압비 dB와 입력 대비 위상",unitsAndDimensions:"가로축 f/fc는 무차원 로그 비, 세로축 dB와 도입니다.",modelAssumptions:"1차 무부하 이상 RC의 정현파 정상 상태입니다.",measurementExample:"159·1592·15915 Hz에서 −3.01·−20.043·약 −40.000 dB를 찍습니다.",invalidConditions:"여러 극이나 기생 성분이 있으면 같은 기울기가 지속되지 않습니다.",referenceFrame:"동일한 입력 cos(ωt)의 최대 진폭 5 V와 위상 0°, 접지 0 V를 기준으로 합니다."}},
+      {id:"rc-output-topology",sectionId:"other-output",intuition:"천천히 바뀌면 축전기가 막는 쪽에서 읽는 저항 전압은 작습니다.",workedExample:"C 먼저·R 접지 연결의 저항 출력은 0.1fc·fc·10fc에서 약 0.0995·0.707·0.995배입니다.",boundary:"원래 축전기 출력과 같은 회로의 같은 측정점인 것처럼 섞지 않습니다.",scientificGrounding:{observable:"축전기를 먼저 이은 별도 회로에서 주파수별 저항 양단 파형의 최대 진폭과 입력 대비 비",unitsAndDimensions:"R은 Ω, C는 F, 출력은 V, H는 무차원입니다.",modelAssumptions:"C 직렬·R 접지의 별도 무부하 이상 RC입니다.",measurementExample:"약 159 Hz에서 두 연결 모두 0.707배지만 양끝 주파수의 방향을 비교합니다.",invalidConditions:"출력 부하나 신호원 내부 저항이 크면 이 식이 달라집니다.",referenceFrame:"동일한 입력 cos(ωt)의 최대 진폭 5 V와 위상 0°, 접지 0 V를 기준으로 합니다."}},
+      {id:"filter-load-boundary",sectionId:"limits",intuition:"뒤 회로가 전류를 가져가면 앞에서 계산한 축전기 몫도 바뀝니다.",workedExample:"5 V 입력의 약 3.54 V는 무부하 경계에서만 보장되는 계산값입니다.",boundary:"한 주파수의 보드 점을 펄스 시작 시각의 완전한 파형으로 쓰지 않습니다.",scientificGrounding:{observable:"부하 연결 전후의 진폭·위상과 시간 파형",unitsAndDimensions:"전압 V, 부하 Ω, 시간 s, 주파수 Hz입니다.",modelAssumptions:"본문의 수치는 부하 없는 이상 회로입니다.",measurementExample:"부하를 연결한 뒤 159 Hz 진폭이 3.54 V에서 달라지는지 측정합니다.",invalidConditions:"큰 기생 성분, 포화, 여러 주파수 혼합, 초기 과도가 있으면 단순 응답이 달라집니다.",referenceFrame:"동일한 입력 cos(ωt)의 최대 진폭 5 V와 위상 0°, 접지 0 V를 기준으로 합니다."}},
+    ],
+    conceptStages:[{label:"01 저장 시간과 경계",relation:"1 ms가 약 159 Hz에서 출력 0.707배가 되는 이유를 봅니다.",concepts:["rc-corner-frequency","rc-lowpass-spectrum"]},{label:"02 로그 지도",relation:"전압 비를 dB로 바꾸고 한 decade의 정확한 감소와 근사를 비교합니다.",concepts:["voltage-ratio-decibel","bode-log-slope"]},{label:"03 측정점과 적용 범위",relation:"고역 통과의 별도 연결과 실제 부하의 효과를 구분합니다.",concepts:["rc-output-topology","filter-load-boundary"]}],
+    exercises:[
+      {level:"basic",question:"1 kΩ·1 µF의 RC와 경계 각주파수는?",answerChecklist:["1 ms","1000 rad/s","ωc=1/RC"],requiredConcepts:["rc-corner-frequency"],sectionId:"corner"},
+      {level:"basic",question:"경계 각주파수 1000 rad/s를 Hz로 바꾸면?",answerChecklist:["2π로 나눔","약 159.15 Hz"],requiredConcepts:["rc-corner-frequency"],sectionId:"corner"},
+      {level:"basic",question:"경계의 축전기 출력 진폭 비·dB·위상은?",answerChecklist:["0.707","−3.01 dB","−45°"],requiredConcepts:["rc-lowpass-spectrum","voltage-ratio-decibel"],sectionId:"corner"},
+      {level:"basic",question:"0.1fc에서 5 V 최대 입력의 출력·dB·위상은?",answerChecklist:["약 4.98 V","약 −0.043 dB","약 −5.7°"],requiredConcepts:["rc-lowpass-spectrum"],sectionId:"plot"},
+      {level:"basic",question:"10fc에서 5 V 최대 입력의 출력·dB·위상은?",answerChecklist:["약 0.50 V","약 −20.043 dB","약 −84.3°"],requiredConcepts:["rc-lowpass-spectrum","bode-log-slope"],sectionId:"plot"},
+      {level:"basic",question:"전압 최대 진폭이 0.1배이면 몇 dB입니까?",answerChecklist:["20log10(0.1)","−20 dB","전압 진폭 비"],requiredConcepts:["voltage-ratio-decibel"],sectionId:"db"},
+      {level:"advanced",question:"fc에서 10fc까지 진폭비 dB 변화가 정확히 −20 dB입니까?",answerChecklist:["−3.01→−20.043 dB","차이 약 −17.03 dB","−20 dB/dec는 고주파 근사"],requiredConcepts:["bode-log-slope"],sectionId:"plot"},
+      {level:"advanced",question:"10fc에서 100fc까지 dB 변화를 계산하고 근사 기울기와 비교하세요.",answerChecklist:["−20.043→약 −40.000 dB","차이 약 −19.96 dB","−20 dB/dec에 접근"],requiredConcepts:["bode-log-slope"],sectionId:"plot"},
+      {level:"advanced",question:"C를 먼저 지나 R을 접지에 이은 고역 통과에서 0.1fc·fc·10fc의 저항 출력 비는?",answerChecklist:["0.0995","0.707","0.995","별도 연결·출력점"],requiredConcepts:["rc-output-topology"],sectionId:"other-output"},
+      {level:"advanced",question:"왜 ‘차단’ 주파수에서 출력이 0이라고 말할 수 없습니까? 부하가 붙으면 어떤 조건을 다시 봐야 합니까?",answerChecklist:["경계 출력 0.707배","5 V 최대 입력이면 약 3.54 V","부하 전류가 분배를 바꿈"],requiredConcepts:["rc-corner-frequency","filter-load-boundary"],sectionId:"limits"},
+    ],
+    papers:[{title:"MIT OpenCourseWare 6.002, Lecture 18, ‘Filters’ (Fall 2000 자료)",href:"https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/d4e136975654a01f7fc2c9b49196d376_6002_l18.pdf",problem:"저역·고역 통과의 연결과 주파수별 크기를 설명합니다.",contribution:"2–3쪽 RC 저역 통과의 전압 분배와 7쪽 저역·고역 연결 도식입니다.",assumptions:"선형 집중 소자와 한 주파수 정현파 정상 상태입니다.",evidenceScope:"MIT 원본 PDF 2–3·7쪽을 직접 확인했습니다. 본문 1 kΩ·1 µF와 dB 숫자는 가정 계산입니다.",notClaim:"강의안이 본문의 가상 5 V 회로를 측정했다는 뜻은 아닙니다.",sectionId:"other-output"},{title:"MIT OpenCourseWare 6.002, Lecture 17, ‘The Impedance Model’ (Fall 2000 자료)",href:"https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/66adf4d4611a57b949efa1b00a842a46_6002_l17.pdf",problem:"RC 분배를 여러 주파수에서 진폭·위상으로 계산합니다.",contribution:"4쪽의 1/(1+jωRC) 복소 전달 함수와 크기·위상 관계입니다.",assumptions:"이상 선형 RC의 정현파 정상 상태입니다.",evidenceScope:"공식 PDF 4쪽 식을 확인하고 가상 부품값을 대입했습니다.",notClaim:"−17.03 dB는 원본에 제시된 실험 결과가 아닙니다.",sectionId:"plot"}],
+  },
+  "circuits/feedback-gain-and-stability": {
+    "coreIdea": "가상 두 극 증폭기의 직류 이득 100과 β=0.1/0.5를 같은 사례로 놓아 폐루프 이득 9.09/1.96, 루프 교차 78.2/212.6 rad/s, 위상 여유 59.3°/27.9°를 계산하고 실제 부하 경계를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "voltage-ratio-decibel",
+        "role": "루프 크기 1을 0 dB로 읽습니다."
+      },
+      {
+        "id": "bode-log-slope",
+        "role": "주파수별 이득·위상을 한 축에서 비교합니다."
+      },
+      {
+        "id": "rc-output-topology",
+        "role": "연결과 측정 경로가 결과를 바꾼다는 점을 가져옵니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "negative-feedback-algebra",
+        "role": "출력의 일부를 빼서 남은 오차를 증폭한다를 이 사례에서 계산합니다."
+      },
+      {
+        "id": "closed-loop-gain",
+        "role": "루프 이득이 클수록 실제 배율이 1/β에 가까워진다를 이 사례에서 계산합니다."
+      },
+      {
+        "id": "amplifier-poles-delay",
+        "role": "증폭기의 속도 경계가 두 번의 크기 감소와 위상 지연을 만든다를 이 사례에서 계산합니다."
+      },
+      {
+        "id": "unity-loop-crossover",
+        "role": "루프 크기가 1인 교차점이 위상 검사의 기준이다를 이 사례에서 계산합니다."
+      },
+      {
+        "id": "feedback-phase-margin",
+        "role": "교차점에서 −180°까지 남은 위상 각도가 여유이다를 이 사례에서 계산합니다."
+      },
+      {
+        "id": "feedback-real-load-boundary",
+        "role": "실제 부하와 포화는 가상 루프의 안정 판단을 바꾼다를 이 사례에서 계산합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "negative-feedback-algebra",
+        "sectionId": "loop",
+        "intuition": "1 V에서 출력 9.09 V의 10%를 빼면 오차 약 0.091 V만 남습니다.",
+        "workedExample": "입력 1 V와 되돌림 약 0.909 V의 차이 약 0.091 V가 100배 되어 출력 9.09 V입니다.",
+        "boundary": "1 V×100을 바로 출력이라고 쓰면 되돌아온 전압을 빠뜨립니다.",
+        "scientificGrounding": {
+          "observable": "입력·되돌림·오차·출력 전압의 동시 측정",
+          "unitsAndDimensions": "입력·출력·되돌림·오차의 단위는 모두 V이고, β와 A는 무차원 비입니다.",
+          "modelAssumptions": "이상 선형 증폭기, 공급 범위 내 출력, 직류입니다.",
+          "measurementExample": "r=1 V에서 y≈9.09 V, βy≈0.909 V를 확인합니다.",
+          "invalidConditions": "출력 포화나 연결 부호 반전이 있으면 선형 빼기 식이 맞지 않습니다.",
+          "referenceFrame": "입력 r=1 V, 출력 y, 접지 0 V와 입력 위상 0°를 기준으로 비교합니다."
+        }
+      },
+      {
+        "id": "closed-loop-gain",
+        "sectionId": "loop",
+        "intuition": "100배 증폭기를 10% 되돌리면 9.09배 회로가 됩니다.",
+        "workedExample": "β=0.1에서 100/11=9.09, β=0.5에서 100/51≈1.96입니다.",
+        "boundary": "1/β는 Aβ가 매우 클 때의 근사이며 Aβ=10에서는 정확한 값이 아닙니다.",
+        "scientificGrounding": {
+          "observable": "직류 입력을 1 V로 고정했을 때 β별 출력 전압과 그 입력 대비 비",
+          "unitsAndDimensions": "폐루프 이득·루프 이득은 무차원, 전압 V입니다.",
+          "modelAssumptions": "A=100, 주파수와 무관한 β, 선형 직류를 둡니다.",
+          "measurementExample": "1 V 입력에서 9.09 V와 1.96 V를 각각 비교합니다.",
+          "invalidConditions": "공급 전압 부족·유한 입력/출력 임피던스가 크면 단순 이득식에서 벗어납니다.",
+          "referenceFrame": "입력 r=1 V, 출력 y, 접지 0 V와 입력 위상 0°를 기준으로 비교합니다."
+        }
+      },
+      {
+        "id": "amplifier-poles-delay",
+        "sectionId": "delay",
+        "intuition": "빨리 흔들면 출력이 늦고 작아져 돌아오는 신호의 시점이 달라집니다.",
+        "workedExample": "ω=78.2 rad/s에서는 두 지연의 합이 약 −120.7°입니다.",
+        "boundary": "두 극만으로 실제 증폭기와 부하의 모든 지연을 대표하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "주파수별 열린 증폭기 진폭과 입력 대비 위상",
+          "unitsAndDimensions": "ω·극 위치는 rad/s, A는 무차원, 위상은 도입니다.",
+          "modelAssumptions": "선형 시간 불변 2극 증폭기, 다른 극·영점은 없습니다.",
+          "measurementExample": "10·100 rad/s 부근을 가로질러 진폭과 위상 변화를 측정합니다.",
+          "invalidConditions": "부하 지연·기생 성분·비선형 포화가 있으면 모델의 극이 달라집니다.",
+          "referenceFrame": "입력 r=1 V, 출력 y, 접지 0 V와 입력 위상 0°를 기준으로 비교합니다."
+        }
+      },
+      {
+        "id": "unity-loop-crossover",
+        "sectionId": "margin",
+        "intuition": "더 많이 되돌리면 루프 크기 1인 지점이 높은 속도로 이동합니다.",
+        "workedExample": "β=0.1의 78.2 rad/s와 β=0.5의 212.6 rad/s를 |L|=1에 넣어 확인합니다.",
+        "boundary": "교차가 여러 개이거나 열린 루프가 불안정하면 한 교차점의 숫자로 결론내리지 않습니다.",
+        "scientificGrounding": {
+          "observable": "주파수별 루프 크기가 0 dB와 만나는 위치",
+          "unitsAndDimensions": "각주파수 rad/s, 루프 크기 무차원 또는 dB입니다.",
+          "modelAssumptions": "β는 상수이고 한 번의 교차를 갖는 가상 2극 선형 루프입니다.",
+          "measurementExample": "루프를 적절히 분리해 βA의 크기 1 위치를 비교합니다.",
+          "invalidConditions": "부하·추가 극·복수 교차점이 생기면 위치와 해석이 바뀝니다.",
+          "referenceFrame": "입력 r=1 V, 출력 y, 접지 0 V와 입력 위상 0°를 기준으로 비교합니다."
+        }
+      },
+      {
+        "id": "feedback-phase-margin",
+        "sectionId": "margin",
+        "intuition": "한 바퀴 돌아온 신호가 빼기를 돕는 방향에서 얼마나 멀어졌는지 셉니다.",
+        "workedExample": "β=0.1에서 180−120.7≈59.3°, β=0.5에서 180−152.1≈27.9°입니다.",
+        "boundary": "위상 여유가 작다고 특정 실제 증폭기가 반드시 발진한다고 단정하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "0 dB 교차점에서의 루프 위상과 계단 응답 흔들림",
+          "unitsAndDimensions": "위상 여유는 도, 루프 이득은 무차원입니다.",
+          "modelAssumptions": "한 교차점·선형 안정한 열린 루프·상수 β입니다.",
+          "measurementExample": "교차점 위상을 재고 −180°까지 남은 각도를 계산합니다.",
+          "invalidConditions": "미모델 지연·복수 교차점·비선형 포화는 단순 여유 해석을 제한합니다.",
+          "referenceFrame": "입력 r=1 V, 출력 y, 접지 0 V와 입력 위상 0°를 기준으로 비교합니다."
+        }
+      },
+      {
+        "id": "feedback-real-load-boundary",
+        "sectionId": "limits",
+        "intuition": "뒤에 연결한 회로가 새 지연을 만들면 되돌아오는 신호가 더 늦습니다.",
+        "workedExample": "동일 증폭기에 출력 축전성 부하를 추가하면 원래 78.2 rad/s 교차와 59.3° 여유를 재확인해야 합니다.",
+        "boundary": "위상 여유 숫자만으로 모든 부하·대신호 조건을 보증할 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "부하 전후의 루프 이득·위상과 계단 입력 뒤 출력 파형",
+          "unitsAndDimensions": "부하 Ω·F, 시간 s, 위상 도, 전압 V입니다.",
+          "modelAssumptions": "본문의 2극 모델에는 부하·포화·배선 기생 성분이 없습니다.",
+          "measurementExample": "데이터시트 허용 부하와 실제 연결의 루프/계단 응답을 비교합니다.",
+          "invalidConditions": "여러 교차점·포화·큰 기생 성분에서는 단순 2극 선형 예측이 부족합니다.",
+          "referenceFrame": "입력 r=1 V, 출력 y, 접지 0 V와 입력 위상 0°를 기준으로 비교합니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 되돌림과 목표",
+        "relation": "1 V 입력의 오차를 추적해 실제 폐루프 배율을 얻습니다.",
+        "concepts": [
+          "negative-feedback-algebra",
+          "closed-loop-gain"
+        ]
+      },
+      {
+        "label": "02 시간과 교차",
+        "relation": "두 속도 경계를 넣고 루프 크기 1의 위치를 찾습니다.",
+        "concepts": [
+          "amplifier-poles-delay",
+          "unity-loop-crossover"
+        ]
+      },
+      {
+        "label": "03 여유와 실제 회로",
+        "relation": "교차 위상에서 남은 각도를 계산하고 부하 한계를 확인합니다.",
+        "concepts": [
+          "feedback-phase-margin",
+          "feedback-real-load-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "A=100·β=0.1의 직류 루프 이득은?",
+        "answerChecklist": [
+          "10",
+          "Aβ"
+        ],
+        "requiredConcepts": [
+          "closed-loop-gain"
+        ],
+        "sectionId": "loop"
+      },
+      {
+        "level": "basic",
+        "question": "β=0.1·입력 1 V의 실제 출력과 이상 목표는?",
+        "answerChecklist": [
+          "실제 약 9.09 V",
+          "이상 목표 10 V",
+          "유한 루프 이득"
+        ],
+        "requiredConcepts": [
+          "negative-feedback-algebra",
+          "closed-loop-gain"
+        ],
+        "sectionId": "loop"
+      },
+      {
+        "level": "basic",
+        "question": "β=0.5로 바꾸면 실제 직류 이득은?",
+        "answerChecklist": [
+          "100/51",
+          "약 1.96배",
+          "이상 목표 2배"
+        ],
+        "requiredConcepts": [
+          "closed-loop-gain"
+        ],
+        "sectionId": "loop"
+      },
+      {
+        "level": "basic",
+        "question": "β=0.1의 교차 속도와 루프 위상은?",
+        "answerChecklist": [
+          "약 78.2 rad/s",
+          "약 −120.7°",
+          "|Aβ|=1"
+        ],
+        "requiredConcepts": [
+          "unity-loop-crossover"
+        ],
+        "sectionId": "margin"
+      },
+      {
+        "level": "basic",
+        "question": "β=0.5의 교차 속도와 위상 여유는?",
+        "answerChecklist": [
+          "약 212.6 rad/s",
+          "약 27.9°",
+          "위상 약 −152.1°"
+        ],
+        "requiredConcepts": [
+          "unity-loop-crossover",
+          "feedback-phase-margin"
+        ],
+        "sectionId": "margin"
+      },
+      {
+        "level": "basic",
+        "question": "교차점에서 위상이 −180°라면 1+L의 의미는?",
+        "answerChecklist": [
+          "L≈−1",
+          "분모 1+L≈0",
+          "이상 선형 모델에서 발진 경계"
+        ],
+        "requiredConcepts": [
+          "feedback-phase-margin"
+        ],
+        "sectionId": "margin"
+      },
+      {
+        "level": "advanced",
+        "question": "e=r−βy와 y=Ae로 폐루프 이득식을 직접 유도하세요.",
+        "answerChecklist": [
+          "y=A(r−βy)",
+          "y(1+Aβ)=Ar",
+          "y/r=A/(1+Aβ)"
+        ],
+        "requiredConcepts": [
+          "negative-feedback-algebra"
+        ],
+        "sectionId": "loop"
+      },
+      {
+        "level": "advanced",
+        "question": "같은 두 극 증폭기에서 β를 0.1에서 0.5로 늘리면 직류 이득과 여유가 왜 모두 작아집니까?",
+        "answerChecklist": [
+          "직류 9.09→1.96배",
+          "교차 78.2→212.6 rad/s",
+          "두 번째 극 지연 증가",
+          "여유 59.3→27.9°"
+        ],
+        "requiredConcepts": [
+          "closed-loop-gain",
+          "feedback-phase-margin"
+        ],
+        "sectionId": "margin"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 극을 없앤 A(s)=100/(1+s/10)·β=0.1의 교차와 여유를 비교하세요.",
+        "answerChecklist": [
+          "교차 약 99.5 rad/s",
+          "위상 약 −84.3°",
+          "여유 약 95.7°",
+          "두 극 모델과 구분"
+        ],
+        "requiredConcepts": [
+          "amplifier-poles-delay",
+          "feedback-phase-margin"
+        ],
+        "sectionId": "margin"
+      },
+      {
+        "level": "advanced",
+        "question": "이 가상 루프의 위상 여유만으로 실제 제품 안정성을 선언할 수 없는 이유는?",
+        "answerChecklist": [
+          "축전성 부하와 기생 지연",
+          "여러 교차점",
+          "출력 포화·대신호",
+          "데이터시트·계단 응답 확인"
+        ],
+        "requiredConcepts": [
+          "feedback-real-load-boundary"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Texas Instruments / Burr-Brown, Jerald G. Graeme, ‘Feedback Plots Define Op Amp AC Performance’ (1991 발행)",
+        "href": "https://www.ti.com/lit/an/sboa015/sboa015.pdf",
+        "problem": "되먹임 증폭기의 폐루프 배율·대역과 안정성을 열린 이득 및 되먹임망의 교차로 읽습니다.",
+        "contribution": "1쪽의 A/(1+Aβ)·루프 이득과 2쪽의 위상 여유·추가 극 설명입니다.",
+        "assumptions": "선형 증폭기와 정의된 되먹임망, 열린 이득·위상 응답을 둡니다.",
+        "evidenceScope": "TI 공식 원본 1–2쪽의 식·설명을 직접 확인했습니다. 100배·10/100 rad/s·두 β와 위상 여유는 본문 가상 계산입니다.",
+        "notClaim": "공식 자료가 본문의 두 극 수치로 특정 제품을 측정했다는 뜻이 아닙니다.",
+        "sectionId": "margin"
+      }
+    ]
+  },
+  "semiconductors/wafer-and-planar-process": {
+    "coreIdea": "Hoerni의 1959년 출원 평면 공정 특허를 따라 웨이퍼의 산화막 창→선택 확산→접합 보호→접촉 창을 추적합니다. 100 µm 창·양쪽 2 µm 옆 확산·80 µm 접촉은 가상 예여서 104 µm p형 폭과 한쪽 12 µm 명목 거리를 계산합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "donor-acceptor-doping",
+        "role": "불순물에 따라 p형·n형 영역을 만들 수 있다는 전제를 가져옵니다."
+      },
+      {
+        "id": "depletion-space-charge",
+        "role": "서로 다른 도핑 영역 사이의 p-n 접합을 가져옵니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "wafer-batch-substrate",
+        "role": "웨이퍼와 소자 경계를 구분합니다."
+      },
+      {
+        "id": "oxide-diffusion-mask",
+        "role": "산화막 덮음과 열린 입구를 설명합니다."
+      },
+      {
+        "id": "lateral-diffusion-geometry",
+        "role": "100+2+2 µm의 가상 기하를 계산합니다."
+      },
+      {
+        "id": "planar-junction-passivation",
+        "role": "접합 위 막을 남기는 이유를 설명합니다."
+      },
+      {
+        "id": "contact-window-clearance",
+        "role": "가운데 정렬의 12 µm를 검산합니다."
+      },
+      {
+        "id": "planar-process-scope",
+        "role": "1차 자료의 대상 소자와 현대 적용 경계를 정합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "wafer-batch-substrate",
+        "sectionId": "wafer",
+        "intuition": "한 판에 여러 위치의 창을 반복해서 낸 뒤 개별 소자로 나눕니다.",
+        "workedExample": "원 특허 도 1의 다이오드 배열과 가상 단면의 p-n 경계는 서로 다른 구분입니다.",
+        "boundary": "현대 모든 웨이퍼가 같은 크기·분할 방식이라고 일반화하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "웨이퍼 표면의 반복 창 위치와 이후 분리된 소자 위치의 대응",
+          "unitsAndDimensions": "웨이퍼·창·소자 길이는 m 또는 µm, 개수는 무차원입니다.",
+          "modelAssumptions": "원 특허의 실리콘 웨이퍼와 가상 n형 바탕을 구분합니다.",
+          "measurementExample": "한 웨이퍼에서 같은 무늬가 반복되는 위치를 관찰합니다.",
+          "invalidConditions": "절단 중 결함·공정별 다이 크기는 단순 반복 설명에서 제외됩니다.",
+          "referenceFrame": "실리콘 윗면을 단면의 위쪽, 좌우 중심을 가상 산화막 창의 가운데로 둡니다."
+        }
+      },
+      {
+        "id": "oxide-diffusion-mask",
+        "sectionId": "mask",
+        "intuition": "덮은 곳은 입구가 아니고 가운데 열린 100 µm 창만 출발점입니다.",
+        "workedExample": "폭 100 µm 창 아래 p형 영역을 만드는 가상 예입니다.",
+        "boundary": "막이 모든 도펀트와 모든 조건을 완벽히 막는다고 일반화하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "확산 전 산화막의 열린 폭과 확산 뒤 바뀐 실리콘 표면 영역",
+          "unitsAndDimensions": "창 폭 m 또는 µm, 도핑 농도 cm^-3입니다.",
+          "modelAssumptions": "산화막 마스크와 n형 실리콘, 창으로 들어가는 p형 불순물을 둡니다.",
+          "measurementExample": "산화막 패턴과 확산 뒤 p형 영역의 위치를 비교합니다.",
+          "invalidConditions": "산화막 결함이나 막을 잘 통과하는 종이면 보호·차단이 달라집니다.",
+          "referenceFrame": "실리콘 윗면을 단면의 위쪽, 좌우 중심을 가상 산화막 창의 가운데로 둡니다."
+        }
+      },
+      {
+        "id": "lateral-diffusion-geometry",
+        "sectionId": "mask",
+        "intuition": "창보다 p형 영역이 약간 넓어질 수 있습니다.",
+        "workedExample": "100 µm+2 µm+2 µm=104 µm입니다.",
+        "boundary": "실제 확산 모양은 온도·시간·농도에 따라 달라집니다.",
+        "scientificGrounding": {
+          "observable": "산화막 창 끝과 p형 표면 영역 끝의 좌우 거리",
+          "unitsAndDimensions": "모든 폭·거리 단위는 µm이며 더할 때 같은 길이 단위입니다.",
+          "modelAssumptions": "좌우 대칭·각 2 µm의 단순 표면 옆 확산을 둡니다.",
+          "measurementExample": "창 폭과 확산 뒤 표면 접합 끝의 위치를 단면에서 비교합니다.",
+          "invalidConditions": "비대칭 확산·농도 구배·복잡한 접합 형태는 단순 2L 식에 맞지 않습니다.",
+          "referenceFrame": "실리콘 윗면을 단면의 위쪽, 좌우 중심을 가상 산화막 창의 가운데로 둡니다."
+        }
+      },
+      {
+        "id": "planar-junction-passivation",
+        "sectionId": "protect",
+        "intuition": "전극은 닿아야 하지만 p-n 경계는 그대로 드러내지 않습니다.",
+        "workedExample": "가상 p형 104 µm 영역에서 접촉 80 µm만 열어 경계 쪽 막을 남깁니다.",
+        "boundary": "산화막이 모든 오염과 모든 누설을 영구히 막는다는 뜻은 아닙니다.",
+        "scientificGrounding": {
+          "observable": "접합 표면 끝의 산화막 덮임과 접촉 창 위치",
+          "unitsAndDimensions": "접합·창 위치 길이는 µm, 누설 전류는 A입니다.",
+          "modelAssumptions": "산화막이 접합 끝을 덮고 선택한 창에서만 접촉합니다.",
+          "measurementExample": "현미경 단면으로 접합 끝이 막 아래에 남았는지 확인합니다.",
+          "invalidConditions": "핀홀·오염·전계 손상·막 결함이 있으면 보호 효과가 줄어듭니다.",
+          "referenceFrame": "실리콘 윗면을 단면의 위쪽, 좌우 중심을 가상 산화막 창의 가운데로 둡니다."
+        }
+      },
+      {
+        "id": "contact-window-clearance",
+        "sectionId": "protect",
+        "intuition": "두 끝의 남는 폭을 반으로 나눠 전극이 접합을 밟지 않게 계획합니다.",
+        "workedExample": "(104−80)/2=12 µm를 가상 단면에서 셉니다.",
+        "boundary": "정렬 오차가 생기면 한쪽 실제 거리는 12 µm보다 작아집니다.",
+        "scientificGrounding": {
+          "observable": "전극 창 가장자리와 표면 p-n 경계 사이의 최소 거리",
+          "unitsAndDimensions": "Wm·Wp·Wc·M 모두 길이 µm입니다.",
+          "modelAssumptions": "전극 80 µm가 가상 p형 104 µm 중앙에 정렬됩니다.",
+          "measurementExample": "왼쪽과 오른쪽 거리 모두 12 µm인지 단면에서 잽니다.",
+          "invalidConditions": "마스크 오정렬·확산 편차·금속 번짐은 명목 거리를 줄입니다.",
+          "referenceFrame": "실리콘 윗면을 단면의 위쪽, 좌우 중심을 가상 산화막 창의 가운데로 둡니다."
+        }
+      },
+      {
+        "id": "planar-process-scope",
+        "sectionId": "limits",
+        "intuition": "덮고 필요한 곳만 여는 순서는 이어져도 재료·소자 단계는 달라질 수 있습니다.",
+        "workedExample": "원 특허 도 2–4의 다이오드 접촉과 도 10의 트랜지스터 접촉을 나누어 읽습니다.",
+        "boundary": "특허가 오늘의 모든 CMOS 공정 변수와 수율을 검증했다는 뜻은 아닙니다.",
+        "scientificGrounding": {
+          "observable": "특허 단면의 층·접촉 구조와 비교하는 현대 소자 구조",
+          "unitsAndDimensions": "층 두께·창 위치는 길이, 확산 농도는 cm^-3입니다.",
+          "modelAssumptions": "원 특허는 주로 확산 양극성 소자이며 본문 수치는 가상입니다.",
+          "measurementExample": "도 2–4와 도 10의 접촉 위치를 표시하고 다른 소자임을 확인합니다.",
+          "invalidConditions": "MOS 게이트·현대 미세 패턴 공정을 동일 공정으로 치환하면 설명이 틀립니다.",
+          "referenceFrame": "실리콘 윗면을 단면의 위쪽, 좌우 중심을 가상 산화막 창의 가운데로 둡니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 웨이퍼와 창",
+        "relation": "한 장에서 여러 소자를 가공하고 선택한 곳만 엽니다.",
+        "concepts": [
+          "wafer-batch-substrate",
+          "oxide-diffusion-mask"
+        ]
+      },
+      {
+        "label": "02 확산과 보호",
+        "relation": "가상 옆 확산 폭을 계산하고 접합 위 막을 남깁니다.",
+        "concepts": [
+          "lateral-diffusion-geometry",
+          "planar-junction-passivation"
+        ]
+      },
+      {
+        "label": "03 접촉과 원전 범위",
+        "relation": "전극 창 거리를 계산하고 특허 대상 소자를 구분합니다.",
+        "concepts": [
+          "contact-window-clearance",
+          "planar-process-scope"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "불순물을 들이기 전 산화막 창은 무엇을 노출합니까?",
+        "answerChecklist": [
+          "선택한 실리콘 표면",
+          "덮인 곳은 마스크",
+          "가상 창 100 µm"
+        ],
+        "requiredConcepts": [
+          "oxide-diffusion-mask"
+        ],
+        "sectionId": "mask"
+      },
+      {
+        "level": "basic",
+        "question": "100 µm 창에서 양쪽으로 2 µm씩 퍼지면 p형 표면 폭은?",
+        "answerChecklist": [
+          "100+2+2",
+          "104 µm",
+          "교육용 가정"
+        ],
+        "requiredConcepts": [
+          "lateral-diffusion-geometry"
+        ],
+        "sectionId": "mask"
+      },
+      {
+        "level": "basic",
+        "question": "104 µm p형 영역에 중앙 80 µm 접촉 창을 두면 한쪽 명목 거리는?",
+        "answerChecklist": [
+          "(104−80)/2",
+          "12 µm",
+          "중앙 정렬"
+        ],
+        "requiredConcepts": [
+          "contact-window-clearance"
+        ],
+        "sectionId": "protect"
+      },
+      {
+        "level": "basic",
+        "question": "왜 p-n 접합 위의 산화막을 남깁니까?",
+        "answerChecklist": [
+          "표면 오염 경감",
+          "접촉 단락 위험 경감",
+          "전극 자리만 선택 개방"
+        ],
+        "requiredConcepts": [
+          "planar-junction-passivation"
+        ],
+        "sectionId": "protect"
+      },
+      {
+        "level": "basic",
+        "question": "특허 다이오드와 도 10 트랜지스터의 n형 접촉 위치를 구분하세요.",
+        "answerChecklist": [
+          "다이오드는 밑면 n형 접촉 예",
+          "트랜지스터 도 10은 윗면 여러 접촉",
+          "서로 다른 구조"
+        ],
+        "requiredConcepts": [
+          "planar-process-scope"
+        ],
+        "sectionId": "protect"
+      },
+      {
+        "level": "basic",
+        "question": "가상 공정 단계를 순서대로 놓으세요.",
+        "answerChecklist": [
+          "웨이퍼·산화막",
+          "선택 창",
+          "p형 확산",
+          "접촉 창·전극"
+        ],
+        "requiredConcepts": [
+          "oxide-diffusion-mask",
+          "planar-junction-passivation"
+        ],
+        "sectionId": "protect"
+      },
+      {
+        "level": "advanced",
+        "question": "옆 확산이 한쪽 5 µm라면 p형 폭과 80 µm 접촉 창의 명목 거리는?",
+        "answerChecklist": [
+          "110 µm",
+          "(110−80)/2=15 µm",
+          "확산값 가정"
+        ],
+        "requiredConcepts": [
+          "lateral-diffusion-geometry",
+          "contact-window-clearance"
+        ],
+        "sectionId": "mask"
+      },
+      {
+        "level": "advanced",
+        "question": "접촉 창을 100 µm로 늘리면 가상 104 µm p형 폭의 명목 거리는?",
+        "answerChecklist": [
+          "2 µm씩",
+          "정렬 편차에 취약",
+          "합격 보증 아님"
+        ],
+        "requiredConcepts": [
+          "contact-window-clearance"
+        ],
+        "sectionId": "protect"
+      },
+      {
+        "level": "advanced",
+        "question": "확산 뒤 산화막을 모두 벗기면 특허가 지키려던 무엇을 잃습니까?",
+        "answerChecklist": [
+          "표면 접합 덮임",
+          "오염·접촉 단락 완화",
+          "절대 신뢰도 수치는 주장하지 않음"
+        ],
+        "requiredConcepts": [
+          "planar-junction-passivation"
+        ],
+        "sectionId": "protect"
+      },
+      {
+        "level": "advanced",
+        "question": "왜 Hoerni의 이중 확산 소자 특허만으로 현대 CMOS 공정 전체를 설명할 수 없습니까?",
+        "answerChecklist": [
+          "특허 대상은 다이오드·양극성 트랜지스터",
+          "MOS 게이트와 현대 다층 공정은 별도",
+          "산화막 마스크 원리만 범위 내 재사용"
+        ],
+        "requiredConcepts": [
+          "planar-process-scope"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Jean A. Hoerni, US Patent 3,025,589, ‘Method of Manufacturing Semiconductor Devices’ (1959 출원, 1962 등록)",
+        "href": "https://patentimages.storage.googleapis.com/cc/fb/db/690d609db55af5/US3025589.pdf",
+        "problem": "작은 확산 소자의 접합을 오염·접촉 단락에서 지키고 접촉 가능한 영역을 남깁니다.",
+        "contribution": "원본 2–4쪽의 산화막 마스크·창·다이오드 및 이중 확산 트랜지스터 단면과 접합 보호 설명입니다.",
+        "assumptions": "주로 실리콘 확산 다이오드·양극성 트랜지스터의 제조 방법입니다.",
+        "evidenceScope": "특허 원본 PDF 2–4쪽과 도 1–10을 직접 확인했습니다. 100·2·80 µm는 글의 가상 기하입니다.",
+        "notClaim": "특허가 104 µm p형 폭·12 µm 거리 또는 오늘날 CMOS 전체 공정을 실측·보증했다는 뜻이 아닙니다.",
+        "sectionId": "protect"
+      }
+    ]
+  },
+  "semiconductors/lithography-and-resolution": {
+    "coreIdea": "ASML 공식 광학식과 노광·계측 순서를 따라 가상 193 nm·NA0.8·k1=0.4의 CD 96.5 nm를 계산하고, 별도의 200 nm 선·120 nm 창에서 30/50 nm 중심 이동의 최소 여유 10/−10 nm를 비교합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "oxide-diffusion-mask",
+        "role": "앞 글에서 산화막의 선택 창을 만들었음을 가져옵니다."
+      },
+      {
+        "id": "contact-window-clearance",
+        "role": "중앙 정렬의 명목 거리를 가져와 오버레이 이동을 뺍니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "lithography-pattern-transfer",
+        "role": "감광막과 아래 막의 역할을 구분합니다."
+      },
+      {
+        "id": "rayleigh-critical-dimension",
+        "role": "193 nm 가상 광학 조건의 96.5 nm를 계산합니다."
+      },
+      {
+        "id": "lithography-process-factor",
+        "role": "k1 변화와 CD의 비례 관계를 읽습니다."
+      },
+      {
+        "id": "overlay-clearance-geometry",
+        "role": "200·120 nm 두 층과 30/50 nm 오차를 계산합니다."
+      },
+      {
+        "id": "lithography-overlay-metrology",
+        "role": "계산 뒤 실제 인쇄 무늬를 재는 이유를 설명합니다."
+      },
+      {
+        "id": "lithography-model-boundary",
+        "role": "두 계산과 실제 제조 검증의 차이를 정리합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "lithography-pattern-transfer",
+        "sectionId": "transfer",
+        "intuition": "빛은 우선 반응막에 무늬를 만들고 그 창을 아래 층으로 옮깁니다.",
+        "workedExample": "가상 120 nm 접촉 창도 감광막 무늬가 아래 층에 전달되어야 합니다.",
+        "boundary": "감광막의 양성·음성 종류에 따라 비춘 자리와 남는 자리는 달라집니다.",
+        "scientificGrounding": {
+          "observable": "레티클 무늬·현상 뒤 감광막 창·식각 뒤 아래 층 창의 위치 비교",
+          "unitsAndDimensions": "무늬 폭·위치는 nm, 노광 파장은 nm입니다.",
+          "modelAssumptions": "감광막·레티클·투영 광학·현상·식각의 일반 순서를 둡니다.",
+          "measurementExample": "노광 뒤 감광막과 식각 뒤 아래 층을 각각 관찰합니다.",
+          "invalidConditions": "감광막 종류·식각 편차를 지정하지 않으면 어느 노광 부분이 남는지 단정할 수 없습니다.",
+          "referenceFrame": "이전 층 선의 중심을 x=0, 새 접촉 창의 중심 이동을 Δx로 놓고 위에서 내려다봅니다."
+        }
+      },
+      {
+        "id": "rayleigh-critical-dimension",
+        "sectionId": "resolution",
+        "intuition": "빛이 짧고 더 넓은 각으로 모일수록 작은 무늬를 구분하기 쉽습니다.",
+        "workedExample": "0.4×193/0.8=96.5 nm입니다.",
+        "boundary": "CD 식만으로 실제 식각 뒤의 모든 폭이나 제품 노드를 정할 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "같은 조건에서 감광막에 인쇄된 최소 반복 무늬 폭",
+          "unitsAndDimensions": "CD·파장 단위는 nm, k1·NA는 무차원입니다.",
+          "modelAssumptions": "λ=193 nm·NA=0.8·k1=0.4의 가상 조합입니다.",
+          "measurementExample": "계산 96.5 nm와 인쇄 무늬의 실측 폭을 분리해 비교합니다.",
+          "invalidConditions": "초점·감광막·식각·마스크 편차가 크면 단순 식의 실제 구현이 달라집니다.",
+          "referenceFrame": "이전 층 선의 중심을 x=0, 새 접촉 창의 중심 이동을 Δx로 놓고 위에서 내려다봅니다."
+        }
+      },
+      {
+        "id": "lithography-process-factor",
+        "sectionId": "resolution",
+        "intuition": "광학만 같아도 공정 최적화에 따라 찍을 수 있는 기준이 달라집니다.",
+        "workedExample": "0.3×193/0.8≈72.4 nm로 줄어듭니다.",
+        "boundary": "k1만 임의로 설정하면 실제 장비가 같은 결과를 낸다고 말할 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "동일 파장·NA에서 공정 조건에 따른 인쇄 가능 선폭 비교",
+          "unitsAndDimensions": "k1은 무차원이고 결과 CD는 nm입니다.",
+          "modelAssumptions": "다른 요인은 같고 k1만 다른 두 교육용 경우입니다.",
+          "measurementExample": "같은 광학 조건의 가상 96.5 nm와 72.4 nm를 비교합니다.",
+          "invalidConditions": "광학·레지스트·계산 보정의 상호작용을 모르면 실제 k1 달성을 보장할 수 없습니다.",
+          "referenceFrame": "이전 층 선의 중심을 x=0, 새 접촉 창의 중심 이동을 Δx로 놓고 위에서 내려다봅니다."
+        }
+      },
+      {
+        "id": "overlay-clearance-geometry",
+        "sectionId": "overlay",
+        "intuition": "작은 창이라도 잘못된 곳에 놓이면 이전 선과 충분히 겹치지 않습니다.",
+        "workedExample": "(200−120)/2−30=10 nm, 50 nm 이동이면 −10 nm입니다.",
+        "boundary": "직사각형·같은 선폭·1차원 이동의 기하이며 전기 접촉 품질의 보증은 아닙니다.",
+        "scientificGrounding": {
+          "observable": "이전 선과 새 창의 중심 차이 및 양쪽 가장자리 거리",
+          "unitsAndDimensions": "선·창 폭, 중심 차이, 여유는 모두 nm입니다.",
+          "modelAssumptions": "200 nm 선·120 nm 창의 직사각형 무늬와 수평 이동만 둡니다.",
+          "measurementExample": "같은 위치의 두 층 무늬에서 최소 가장자리 거리를 잽니다.",
+          "invalidConditions": "회전·왜곡·식각 편차·상하 높이 차이가 있으면 단순 1차원 식으로 부족합니다.",
+          "referenceFrame": "이전 층 선의 중심을 x=0, 새 접촉 창의 중심 이동을 Δx로 놓고 위에서 내려다봅니다."
+        }
+      },
+      {
+        "id": "lithography-overlay-metrology",
+        "sectionId": "limits",
+        "intuition": "설계한 중심과 인쇄된 중심이 다를 수 있으므로 측정 후 보정합니다.",
+        "workedExample": "가상 10 nm 여유가 식각 뒤에도 남는지 계측으로 확인해야 합니다.",
+        "boundary": "계측 표적의 값만으로 실제 소자와 전기 접촉 품질을 보증하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "계측 표적의 층 간 위치 차이·초점과 식각 뒤 실제 구조 위치",
+          "unitsAndDimensions": "위치·초점 오차는 길이 nm, 수율은 비율입니다.",
+          "modelAssumptions": "공식 ASML 계측 설명과 별개의 가상 연결 도식입니다.",
+          "measurementExample": "층 간 정렬 표적을 재고 식각 뒤 선·창 위치를 다시 확인합니다.",
+          "invalidConditions": "표적만 맞고 실제 소자 패턴이 변형되면 연결 품질은 보장되지 않습니다.",
+          "referenceFrame": "이전 층 선의 중심을 x=0, 새 접촉 창의 중심 이동을 Δx로 놓고 위에서 내려다봅니다."
+        }
+      },
+      {
+        "id": "lithography-model-boundary",
+        "sectionId": "limits",
+        "intuition": "작은 무늬와 맞는 위치가 모두 필요하지만 그것만으로 전기 연결이 증명되지 않습니다.",
+        "workedExample": "가상 120 nm 창이 200 nm 선에 10 nm 여유로 놓여도 식각 뒤 접촉을 따로 확인합니다.",
+        "boundary": "광학식과 평면 기하만으로 식각 뒤 전기적 양품을 판단할 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "감광막·식각 뒤 실제 선폭과 전기 연결 여부",
+          "unitsAndDimensions": "길이는 nm, 저항은 Ω, 양품률은 무차원 비입니다.",
+          "modelAssumptions": "교육용 직사각형 기하와 공식 광학 기준을 나누어 둡니다.",
+          "measurementExample": "식각 뒤 단면·접촉 저항을 측정해 가상 여유와 비교합니다.",
+          "invalidConditions": "막 두께·식각 손상·오염·정렬 분포는 두 간단한 식 밖에 있습니다.",
+          "referenceFrame": "이전 층 선의 중심을 x=0, 새 접촉 창의 중심 이동을 Δx로 놓고 위에서 내려다봅니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 무늬 전달",
+        "relation": "레티클·감광막·식각의 순서를 따라 아래 층의 창을 만듭니다.",
+        "concepts": [
+          "lithography-pattern-transfer"
+        ]
+      },
+      {
+        "label": "02 크기",
+        "relation": "파장·NA·k1의 가상 조합에서 최소 무늬 기준을 계산합니다.",
+        "concepts": [
+          "rayleigh-critical-dimension",
+          "lithography-process-factor"
+        ]
+      },
+      {
+        "label": "03 위치와 검증",
+        "relation": "두 층의 최소 겹침 여유와 실제 계측·전기 경계를 확인합니다.",
+        "concepts": [
+          "overlay-clearance-geometry",
+          "lithography-overlay-metrology",
+          "lithography-model-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "레티클 무늬를 산화막 창으로 옮기는 순서는?",
+        "answerChecklist": [
+          "감광막 도포",
+          "투영 노광",
+          "베이크·현상",
+          "아래 층 식각"
+        ],
+        "requiredConcepts": [
+          "lithography-pattern-transfer"
+        ],
+        "sectionId": "transfer"
+      },
+      {
+        "level": "basic",
+        "question": "가상 λ=193 nm·NA=0.8·k1=0.4에서 CD는?",
+        "answerChecklist": [
+          "0.4×193/0.8",
+          "96.5 nm",
+          "장비 사양이 아닌 가정"
+        ],
+        "requiredConcepts": [
+          "rayleigh-critical-dimension"
+        ],
+        "sectionId": "resolution"
+      },
+      {
+        "level": "basic",
+        "question": "CD 식에서 NA만 두 배면 같은 조건의 계산 CD는?",
+        "answerChecklist": [
+          "절반",
+          "다른 조건 일정",
+          "실제 초점·공정 고려 필요"
+        ],
+        "requiredConcepts": [
+          "rayleigh-critical-dimension"
+        ],
+        "sectionId": "resolution"
+      },
+      {
+        "level": "basic",
+        "question": "나머지 조건을 유지하고 k1만 0.3이면 가상 CD는 얼마입니까?",
+        "answerChecklist": [
+          "0.3×193/0.8",
+          "약 72.4 nm",
+          "k1은 공정 관련 계수"
+        ],
+        "requiredConcepts": [
+          "lithography-process-factor"
+        ],
+        "sectionId": "resolution"
+      },
+      {
+        "level": "basic",
+        "question": "200 nm 선에 120 nm 창을 중앙 정렬하면 한쪽 여유는?",
+        "answerChecklist": [
+          "(200−120)/2",
+          "40 nm"
+        ],
+        "requiredConcepts": [
+          "overlay-clearance-geometry"
+        ],
+        "sectionId": "overlay"
+      },
+      {
+        "level": "basic",
+        "question": "같은 창을 30 nm 옮기면 가까운 쪽과 먼 쪽 여유는?",
+        "answerChecklist": [
+          "가까운 쪽 10 nm",
+          "먼 쪽 70 nm",
+          "오버레이와 CD 구분"
+        ],
+        "requiredConcepts": [
+          "overlay-clearance-geometry"
+        ],
+        "sectionId": "overlay"
+      },
+      {
+        "level": "advanced",
+        "question": "50 nm 옮기면 최소 여유는? CD가 96.5 nm여도 왜 문제가 됩니까?",
+        "answerChecklist": [
+          "40−50=−10 nm",
+          "창이 이전 선 밖으로 10 nm",
+          "CD는 층 정렬을 나타내지 않음"
+        ],
+        "requiredConcepts": [
+          "overlay-clearance-geometry",
+          "rayleigh-critical-dimension"
+        ],
+        "sectionId": "overlay"
+      },
+      {
+        "level": "advanced",
+        "question": "CD를 줄이는 λ·NA·k1의 변화 방향을 식 안에서 설명하고 실제 결과에 필요한 추가 조건을 말하세요.",
+        "answerChecklist": [
+          "λ 감소",
+          "NA 증가",
+          "k1 감소",
+          "초점·감광막·식각 확인"
+        ],
+        "requiredConcepts": [
+          "rayleigh-critical-dimension",
+          "lithography-process-factor"
+        ],
+        "sectionId": "resolution"
+      },
+      {
+        "level": "advanced",
+        "question": "왜 계측 표적의 오버레이뿐 아니라 식각 뒤 구조도 볼 필요가 있습니까?",
+        "answerChecklist": [
+          "표적과 실제 구조 차이",
+          "식각·감광막 변형",
+          "전기 연결 확인"
+        ],
+        "requiredConcepts": [
+          "lithography-overlay-metrology",
+          "lithography-model-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "193 nm·NA0.8·k1=0.4의 96.5 nm를 실제 장비 사양·공정 노드로 인용해도 됩니까?",
+        "answerChecklist": [
+          "안 됨",
+          "가상 조합",
+          "CD 식의 한 계산",
+          "제품·공정 측정값 아님"
+        ],
+        "requiredConcepts": [
+          "lithography-model-boundary"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "ASML, ‘How microchips are made’, lithography process",
+        "href": "https://www.asml.com/en/technology/all-about-microchips/how-microchips-are-made",
+        "problem": "레티클 무늬가 감광막과 아래 층에 전달되는 공정 순서를 설명합니다.",
+        "contribution": "감광막 도포·노광·베이크/현상·식각·계측의 장비 제조사 설명입니다.",
+        "assumptions": "일반적인 반도체 제조 순서이며 특정 양성·음성 감광막은 고정하지 않습니다.",
+        "evidenceScope": "ASML 공식 웹페이지 각 절을 직접 확인했습니다. 본문 선·창 폭은 가상입니다.",
+        "notClaim": "ASML이 가상 200·120 nm 예를 측정했다는 뜻은 아닙니다.",
+        "sectionId": "transfer"
+      },
+      {
+        "title": "ASML, ‘The Rayleigh criterion for resolution’",
+        "href": "https://www.asml.com/en/technology/lithography-principles/rayleigh-criterion",
+        "problem": "노광의 최소 무늬 크기를 파장·개구·공정 계수로 비교합니다.",
+        "contribution": "CD=k1λ/NA와 각 인자의 뜻을 설명합니다.",
+        "assumptions": "광학·공정 해상도 기준식으로 완성 칩의 모든 치수·수율을 뜻하지 않습니다.",
+        "evidenceScope": "ASML 공식 식을 확인하고 가상 193 nm·0.8·0.4를 대입했습니다.",
+        "notClaim": "96.5 nm가 특정 ASML 장비의 사양이나 공정 노드라는 뜻은 아닙니다.",
+        "sectionId": "resolution"
+      },
+      {
+        "title": "ASML, ‘Measuring accuracy’, overlay and focus metrology",
+        "href": "https://www.asml.com/en/technology/lithography-principles/measuring-accuracy",
+        "problem": "찍힌 층의 위치와 초점을 계측해 제조 조건을 보정합니다.",
+        "contribution": "오버레이를 두 층의 정렬 정확도로 정의하고 계측 표적·식각 뒤 측정을 설명합니다.",
+        "assumptions": "가상 직사각형 겹침 기하의 정확도 수치와 ASML 장비 성능을 분리합니다.",
+        "evidenceScope": "ASML 공식 계측 페이지의 YieldStar·metrology target·after-etch 절을 확인했습니다.",
+        "notClaim": "30·50 nm가 해당 장비의 오버레이 성능이라는 뜻은 아닙니다.",
+        "sectionId": "overlay"
+      }
+    ]
+  },
+  "semiconductors/doping-and-thermal-budget": {
+    "coreIdea": "고정 도즈·일정 D의 가상 두 열 단계에서 D1t1=3.6×10^-11 cm², D2t2=7.2×10^-11 cm²를 더해 폭 척도 120→208 nm를 계산합니다. a는 접합 깊이가 아니며 실제 온도·농도·결함 조건은 별도입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "donor-acceptor-doping",
+        "role": "앞에서 p형·n형 불순물의 역할을 배웠습니다."
+      },
+      {
+        "id": "lateral-diffusion-geometry",
+        "role": "앞의 옆 확산 가정과 이번 깊이 방향 계산을 구분합니다."
+      },
+      {
+        "id": "lithography-pattern-transfer",
+        "role": "정한 창 안에 도펀트를 넣은 뒤의 가열을 시작점으로 둡니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "fixed-dose-diffusion",
+        "role": "고정 도즈와 계속 공급을 구분합니다."
+      },
+      {
+        "id": "fick-gaussian-profile",
+        "role": "깊이별 농도 비와 폭 척도를 연결합니다."
+      },
+      {
+        "id": "diffusion-width-scale",
+        "role": "첫 단계 120 nm와 단위 환산을 계산합니다."
+      },
+      {
+        "id": "cumulative-thermal-budget",
+        "role": "두 열 단계의 208 nm를 계산합니다."
+      },
+      {
+        "id": "junction-depth-threshold",
+        "role": "208 nm와 접합 깊이를 분리합니다."
+      },
+      {
+        "id": "dopant-diffusion-limit",
+        "role": "단순 B 계산이 적용되지 않는 공정을 밝힙니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "fixed-dose-diffusion",
+        "sectionId": "profile",
+        "intuition": "같은 양을 더 깊은 공간에 펼치면 표면 꼭대기는 낮아집니다.",
+        "workedExample": "첫 폭 척도 120 nm에서 최종 208 nm로 넓어지면 표면 농도는 약 120/208≈0.58배입니다.",
+        "boundary": "표면에서 새 도펀트가 계속 들어오는 경우 Q 일정 전제를 쓸 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "가열 전후 깊이별 도펀트 농도 곡선 아래의 면적",
+          "unitsAndDimensions": "도즈 Q는 cm^-2, 농도 C는 cm^-3, 깊이 z는 cm입니다.",
+          "modelAssumptions": "공급이 끝난 뒤의 고정 도즈·1차원 이상 확산을 둡니다.",
+          "measurementExample": "가열 전후 프로파일을 적분해 면적 Q가 같은지 비교합니다.",
+          "invalidConditions": "도펀트 손실·추가 주입·표면 공급이 있으면 Q가 일정하지 않습니다.",
+          "referenceFrame": "웨이퍼 표면 z=0에서 안쪽으로 깊이 z를 양수로 두고 두 열 단계의 시간을 누적합니다."
+        }
+      },
+      {
+        "id": "fick-gaussian-profile",
+        "sectionId": "profile",
+        "intuition": "꼭대기부터 깊이로 갈수록 농도가 완만하게 줄어듭니다.",
+        "workedExample": "가상 첫 a=120 nm에서 z=120 nm는 표면의 약 36.8%, z=240 nm는 약 1.8%입니다.",
+        "boundary": "처음 도즈 분포가 넓거나 고농도로 D가 변하면 단순 가우스가 아닙니다.",
+        "scientificGrounding": {
+          "observable": "깊이 z에 따른 불순물 농도 C(z)의 연속 곡선",
+          "unitsAndDimensions": "깊이와 a는 cm 또는 nm, C는 cm^-3, D는 cm²/s입니다.",
+          "modelAssumptions": "고정 도즈, 일정 D, 초기 폭을 무시하는 1차원 가우스 근사입니다.",
+          "measurementExample": "표면과 120·240 nm의 농도 비를 프로파일 계측과 비교합니다.",
+          "invalidConditions": "고정 표면 농도·전기장·고농도 의존 D·결함이 있으면 단순 해가 달라집니다.",
+          "referenceFrame": "웨이퍼 표면 z=0에서 안쪽으로 깊이 z를 양수로 두고 두 열 단계의 시간을 누적합니다."
+        }
+      },
+      {
+        "id": "diffusion-width-scale",
+        "sectionId": "first",
+        "intuition": "잘 퍼지는 재료일수록 또는 오래 가열할수록 넓어지지만 시간에 선형으로 늘지는 않습니다.",
+        "workedExample": "1시간·10^-14 cm²/s에서 폭 척도 120 nm입니다.",
+        "boundary": "온도만 알고 D를 모르면 같은 시간의 퍼짐을 계산할 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "가열 시간 변화에 따른 농도 프로파일의 폭",
+          "unitsAndDimensions": "D는 cm²/s, t는 s, Dt는 cm², a는 cm 또는 nm입니다.",
+          "modelAssumptions": "D1이 일정하고 처음 분포 폭을 무시합니다.",
+          "measurementExample": "1시간 뒤 표면·깊이별 농도에서 a에 해당하는 위치를 찾습니다.",
+          "invalidConditions": "D가 시간·농도·온도에 따라 변하면 단일 2√Dt를 그대로 쓰지 않습니다.",
+          "referenceFrame": "웨이퍼 표면 z=0에서 안쪽으로 깊이 z를 양수로 두고 두 열 단계의 시간을 누적합니다."
+        }
+      },
+      {
+        "id": "cumulative-thermal-budget",
+        "sectionId": "budget",
+        "intuition": "짧아도 더 잘 퍼지는 조건이면 전체 확산에 더 크게 영향을 줍니다.",
+        "workedExample": "D2=4×10^-14 cm²/s·t2=1800 s는 7.2×10^-11 cm²를 보태 최종 a≈208 nm입니다.",
+        "boundary": "높은 온도와 시간만으로 D를 모르면 B를 계산할 수 없으며 비정상 확산에는 합산이 실패할 수 있습니다.",
+        "scientificGrounding": {
+          "observable": "각 공정 뒤 깊이별 도펀트 분포와 계산된 Dt 합",
+          "unitsAndDimensions": "B=ΣDt의 단위는 cm², a는 nm, 시간은 s입니다.",
+          "modelAssumptions": "연속 단계마다 일정 D인 이상 고정 도즈 가우스 확산입니다.",
+          "measurementExample": "첫 단계와 두 단계 뒤의 a 120·208 nm를 프로파일에서 비교합니다.",
+          "invalidConditions": "이온 주입 결함·고농도·산화·전기장은 단순 누적 B를 바꿉니다.",
+          "referenceFrame": "웨이퍼 표면 z=0에서 안쪽으로 깊이 z를 양수로 두고 두 열 단계의 시간을 누적합니다."
+        }
+      },
+      {
+        "id": "junction-depth-threshold",
+        "sectionId": "limits",
+        "intuition": "분포의 폭과 다른 색 배경이 만나는 지점은 같은 숫자가 아닙니다.",
+        "workedExample": "a≈208 nm여도 ND를 주지 않았으므로 zj를 계산하지 않습니다.",
+        "boundary": "폭 척도 a를 접합 깊이와 같은 값으로 놓지 않습니다.",
+        "scientificGrounding": {
+          "observable": "p형 도펀트 농도 프로파일과 n형 배경 농도의 교차 깊이",
+          "unitsAndDimensions": "농도는 cm^-3, 깊이 zj와 a는 nm입니다.",
+          "modelAssumptions": "n형 균일 배경과 계산 가능한 p형 농도 프로파일을 둡니다.",
+          "measurementExample": "깊이별 p형·n형 농도를 그려 같아지는 곳을 찾습니다.",
+          "invalidConditions": "활성화·보상·복합 프로파일이 있으면 단순 한 교차점 해석이 달라집니다.",
+          "referenceFrame": "웨이퍼 표면 z=0에서 안쪽으로 깊이 z를 양수로 두고 두 열 단계의 시간을 누적합니다."
+        }
+      },
+      {
+        "id": "dopant-diffusion-limit",
+        "sectionId": "limits",
+        "intuition": "같은 가열 시간도 재료 상태가 바뀌면 움직임이 달라집니다.",
+        "workedExample": "가상 208 nm를 접합 깊이·실제 제조 결과로 쓰지 않고 프로파일을 재측정합니다.",
+        "boundary": "일정 D 가우스 모형의 수치를 모든 도펀트·열 공정에 적용하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "온도·농도·결함 상태에 따른 실제 확산계수와 최종 프로파일",
+          "unitsAndDimensions": "D는 cm²/s, 온도 K, 농도 cm^-3, 깊이 nm입니다.",
+          "modelAssumptions": "본문의 D는 단계마다 일정하나 실제 D는 상태에 따라 변할 수 있습니다.",
+          "measurementExample": "온도·농도를 바꾼 프로파일을 측정해 일정 D 예측과 비교합니다.",
+          "invalidConditions": "고농도 전기장·이온 주입 후 일시적 확산·산화 효과가 크면 가우스 근사가 부족합니다.",
+          "referenceFrame": "웨이퍼 표면 z=0에서 안쪽으로 깊이 z를 양수로 두고 두 열 단계의 시간을 누적합니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 총량과 깊이",
+        "relation": "공급을 멈춘 도즈가 가우스 농도 곡선으로 넓어지는 모습을 봅니다.",
+        "concepts": [
+          "fixed-dose-diffusion",
+          "fick-gaussian-profile"
+        ]
+      },
+      {
+        "label": "02 열 두 단계",
+        "relation": "첫 폭 척도와 누적 D×t를 같은 단위로 계산합니다.",
+        "concepts": [
+          "diffusion-width-scale",
+          "cumulative-thermal-budget"
+        ]
+      },
+      {
+        "label": "03 접합과 경계",
+        "relation": "폭과 접합 깊이를 분리하고 실제 확산계수의 변화를 확인합니다.",
+        "concepts": [
+          "junction-depth-threshold",
+          "dopant-diffusion-limit"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "확산계수 D와 D×t의 단위를 각각 쓰세요.",
+        "answerChecklist": [
+          "D는 cm²/s",
+          "Dt는 cm²",
+          "a는 길이"
+        ],
+        "requiredConcepts": [
+          "diffusion-width-scale"
+        ],
+        "sectionId": "first"
+      },
+      {
+        "level": "basic",
+        "question": "D1=10^-14 cm²/s로 3600 s 가열할 때 D1t1은?",
+        "answerChecklist": [
+          "3.6×10^-11 cm²",
+          "단위 일치"
+        ],
+        "requiredConcepts": [
+          "diffusion-width-scale"
+        ],
+        "sectionId": "first"
+      },
+      {
+        "level": "basic",
+        "question": "첫 단계의 가우스 폭 척도 a1을 nm로 계산하세요.",
+        "answerChecklist": [
+          "2√(3.6×10^-11) cm",
+          "1.2×10^-5 cm",
+          "120 nm"
+        ],
+        "requiredConcepts": [
+          "diffusion-width-scale"
+        ],
+        "sectionId": "first"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 30분의 D2t2와 누적 B는 각각 얼마입니까?",
+        "answerChecklist": [
+          "7.2×10^-11 cm²",
+          "1.08×10^-10 cm²",
+          "두 단계 합"
+        ],
+        "requiredConcepts": [
+          "cumulative-thermal-budget"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "basic",
+        "question": "두 열 단계가 끝난 가상 폭 척도 a는 얼마입니까?",
+        "answerChecklist": [
+          "2√B",
+          "약 208 nm",
+          "접합 깊이 아님"
+        ],
+        "requiredConcepts": [
+          "cumulative-thermal-budget"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "basic",
+        "question": "왜 a≈208 nm만으로 p-n 접합 깊이를 알 수 없습니까?",
+        "answerChecklist": [
+          "p형 농도 분포",
+          "n형 배경 농도",
+          "같아지는 깊이가 접합"
+        ],
+        "requiredConcepts": [
+          "junction-depth-threshold"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 단계의 시간을 같은 D에서 네 배로 하면 a1은 어떻게 됩니까?",
+        "answerChecklist": [
+          "Dt 네 배",
+          "√4=2배",
+          "120→240 nm"
+        ],
+        "requiredConcepts": [
+          "diffusion-width-scale"
+        ],
+        "sectionId": "first"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 시간이 절반인데도 D×t가 첫 단계의 두 배인 이유는?",
+        "answerChecklist": [
+          "D2가 D1 네 배",
+          "t2는 t1 절반",
+          "곱은 두 배"
+        ],
+        "requiredConcepts": [
+          "cumulative-thermal-budget"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "advanced",
+        "question": "외부 도펀트를 계속 공급하면 고정 도즈 가우스 해를 그대로 쓸 수 있습니까?",
+        "answerChecklist": [
+          "안 됨",
+          "총 Q가 변함",
+          "고정 표면 농도는 다른 경계 조건·erfc 해"
+        ],
+        "requiredConcepts": [
+          "fixed-dose-diffusion",
+          "fick-gaussian-profile"
+        ],
+        "sectionId": "profile"
+      },
+      {
+        "level": "advanced",
+        "question": "두 가열 온도만 주어지고 D 값이 없다면 왜 208 nm를 예측할 수 없습니까?",
+        "answerChecklist": [
+          "D는 온도·종류·농도에 따라 다름",
+          "B=ΣDt 필요",
+          "결함·산화 등 실제 프로파일 측정"
+        ],
+        "requiredConcepts": [
+          "dopant-diffusion-limit",
+          "cumulative-thermal-budget"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT OpenCourseWare 6.152J, Lecture 4, ‘Diffusion’ (2005)",
+        "href": "https://ocw.mit.edu/courses/6-152j-micro-nano-processing-technology-fall-2005/dbad8f442ecf1244e2a257de2671d0e2_lecture4.pdf",
+        "problem": "고정 도즈와 고정 표면 농도 확산의 깊이별 프로파일과 접합 위치를 설명합니다.",
+        "contribution": "원본 6–7·14–15쪽의 가우스/erfc 해, a=2√Dt, 배경 농도와 만나는 접합 깊이입니다.",
+        "assumptions": "일정 확산계수와 각 해의 초기·경계 조건을 구분합니다.",
+        "evidenceScope": "MIT 공식 원본 PDF의 해당 쪽을 확인했습니다. D1·D2·시간과 120/208 nm는 본문의 가정 계산입니다.",
+        "notClaim": "a가 실제 접합 깊이이거나 강의안이 본문의 두 열 단계를 실험했다는 뜻은 아닙니다.",
+        "sectionId": "profile"
+      },
+      {
+        "title": "MIT OpenCourseWare 6.774, Lecture 9 transcript, ‘Dopant Diffusion’ (2004)",
+        "href": "https://ocw.mit.edu/courses/6-774-physics-of-microfabrication-front-end-processing-fall-2004/149Phbk_yJVmBm_KPM035Wd40as-4iVuA_transcript.pdf",
+        "problem": "여러 가열 단계에서 최종 도핑 프로파일의 누적 변화를 추정합니다.",
+        "contribution": "원본 2–3쪽에서 일정 D의 가우스 가정 아래 각 단계 D×t를 더해 열 예산으로 볼 수 있다고 설명합니다.",
+        "assumptions": "고정 도즈와 충분히 좁은 초기 분포·일정 D의 단계별 근사입니다.",
+        "evidenceScope": "MIT 공식 강의 전사 PDF 2–3쪽을 확인했습니다. 두 D 값은 가상입니다.",
+        "notClaim": "모든 고농도·주입 후 결함·산화 공정에서 Dt 합산이 그대로 성립한다는 뜻은 아닙니다.",
+        "sectionId": "budget"
+      }
+    ]
+  },
+  "semiconductors/interconnect-and-rc-delay": {
+    "coreIdea": "가상 π 배선에서 출력 저항×전체 용량 60 ps와 배선 저항×뒤쪽 용량 14 ps를 합해 74 ps를 구하고, 길이 두 배의 158 ps 및 재료별 R·C 변경을 비교합니다. Elmore 값은 정확한 50% 지연이 아닙니다.",
+    "assumedKnowledge": [
+      {
+        "id": "ohmic-resistance",
+        "role": "앞 회로 글의 저항과 전압·전류 관계를 씁니다."
+      },
+      {
+        "id": "capacitor-voltage-state",
+        "role": "충전할 전하를 용량으로 표현합니다."
+      },
+      {
+        "id": "rc-step-time-constant",
+        "role": "RC 곱이 시간 단위가 된다는 직관을 재사용합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "interconnect-distributed-rc",
+        "role": "배선을 RC 부품으로 읽습니다."
+      },
+      {
+        "id": "wire-pi-equivalent",
+        "role": "충전 경로를 나눕니다."
+      },
+      {
+        "id": "elmore-first-moment",
+        "role": "기준 74 ps를 계산합니다."
+      },
+      {
+        "id": "wire-length-quadratic-term",
+        "role": "항별 길이 의존성을 분리합니다."
+      },
+      {
+        "id": "interconnect-material-tradeoff",
+        "role": "금속·절연막의 작용을 분리합니다."
+      },
+      {
+        "id": "interconnect-timing-boundary",
+        "role": "가상 74 ps의 적용 한계를 밝힙니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "interconnect-distributed-rc",
+        "sectionId": "wire",
+        "intuition": "같은 단면·재료·주변 구조에서 배선 저항 Rw와 용량 Cw는 길이 L에 거의 비례합니다.",
+        "workedExample": "기준 200 Ω·100 fF가 길이 두 배면 400 Ω·200 fF입니다.",
+        "boundary": "층·선폭·간격이 달라지면 단순 길이 비례가 달라집니다.",
+        "scientificGrounding": {
+          "observable": "같은 단면의 배선 길이를 바꿀 때 측정되는 저항과 용량의 변화",
+          "unitsAndDimensions": "R은 Ω, C는 fF, L은 길이 단위입니다.",
+          "modelAssumptions": "같은 선폭·두께·재료·주변 구조를 둡니다.",
+          "measurementExample": "길이별 테스트 배선의 R과 C를 추출합니다.",
+          "invalidConditions": "재료·단면·주변 유전체가 변하면 비례식이 달라집니다.",
+          "referenceFrame": "가상 출력 저항에서 수신 입력까지 배선을 따라 전압이 전파하는 시간을 비교합니다."
+        }
+      },
+      {
+        "id": "wire-pi-equivalent",
+        "sectionId": "wire",
+        "intuition": "분포 RC 배선을 간단히 계산하기 위해 총 배선 용량 Cw를 선 앞과 뒤에 Cw/2씩 두고 Rw를 사이에 둡니다.",
+        "workedExample": "100 fF를 앞 50 fF·뒤 50 fF로 두고 뒤쪽에 입력 20 fF를 보탭니다.",
+        "boundary": "π 모형은 실제 연속 배선의 모든 극점을 정확히 재현하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "배선 양끝에서 시간에 따라 측정되는 전압 응답과 추출된 저항·용량",
+          "unitsAndDimensions": "Cw와 CL은 fF, Rw는 Ω입니다.",
+          "modelAssumptions": "한 가닥의 선형 수동 RC 배선입니다.",
+          "measurementExample": "분포 회로와 π 회로의 시간 응답을 비교합니다.",
+          "invalidConditions": "긴 전송선의 유도성·결합이 강하면 RC π 근사로 부족합니다.",
+          "referenceFrame": "가상 출력 저항에서 수신 입력까지 배선을 따라 전압이 전파하는 시간을 비교합니다."
+        }
+      },
+      {
+        "id": "elmore-first-moment",
+        "sectionId": "delay",
+        "intuition": "π 배선에서 tE=Rd(Cw+CL)+Rw(Cw/2+CL)입니다.",
+        "workedExample": "출력 항 500×120 fF=60 ps, 배선 항 200×70 fF=14 ps입니다.",
+        "boundary": "구동기 비선형·문턱·결합이 있으면 실제 50% 지연은 달라집니다.",
+        "scientificGrounding": {
+          "observable": "입력 계단 신호 뒤 수신단에서 측정되는 출력 전압의 시간 응답과 지연",
+          "unitsAndDimensions": "Ω×fF=fs, 1000 fs=1 ps입니다.",
+          "modelAssumptions": "수동 선형 RC, π 모형, 계단 입력 근사입니다.",
+          "measurementExample": "추출 RC 회로의 Elmore 첫 모멘트와 파형 50% 시각을 따로 계산합니다.",
+          "invalidConditions": "유도성·비선형 구동·인접 선 결합에서 정확한 50% 지연으로 쓰지 않습니다.",
+          "referenceFrame": "가상 출력 저항에서 수신 입력까지 배선을 따라 전압이 전파하는 시간을 비교합니다."
+        }
+      },
+      {
+        "id": "wire-length-quadratic-term",
+        "sectionId": "length",
+        "intuition": "같은 단면의 길이를 두 배로 하면 Rw·Cw가 각각 두 배라 RwCw/2는 10→40 ps입니다.",
+        "workedExample": "400 Ω·200 fF에서 출력 110 ps와 배선 48 ps, 합 158 ps입니다.",
+        "boundary": "전체 지연을 무조건 네 배라고 하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "길이 변화에 따른 추출 저항·용량과 도착 시간",
+          "unitsAndDimensions": "길이는 µm, 지연은 ps, R은 Ω, C는 fF입니다.",
+          "modelAssumptions": "같은 단면·층·재료, 고정 Rd·CL을 둡니다.",
+          "measurementExample": "길이 L와 2L 배선의 RC 추출값으로 항별 지연을 비교합니다.",
+          "invalidConditions": "버퍼 삽입·폭 변화·결합이 있으면 한 선의 제곱 길이 항만으로 설명되지 않습니다.",
+          "referenceFrame": "가상 출력 저항에서 수신 입력까지 배선을 따라 전압이 전파하는 시간을 비교합니다."
+        }
+      },
+      {
+        "id": "interconnect-material-tradeoff",
+        "sectionId": "materials",
+        "intuition": "기준 Rw=200 Ω,Cw=100 fF에서 저항만 140 Ω이면 69.",
+        "workedExample": "저항만 140 Ω이면 60+9.8=69.8 ps, 용량만 50 fF이면 35+9=44 ps입니다.",
+        "boundary": "Intel의 공정 비교 수치를 본문 가정치로 대체하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "동일 피치 완성 배선의 시트 저항·용량·RC 지연",
+          "unitsAndDimensions": "R은 Ω, C는 fF, 지연은 ps, 피치는 nm 또는 µm입니다.",
+          "modelAssumptions": "가상 비교에서 Rd와 CL·기하를 고정합니다.",
+          "measurementExample": "재료·유전체별 완성 배선의 R·C를 동일 기하에서 측정합니다.",
+          "invalidConditions": "폭·장벽층·간격까지 바뀌면 재료 하나의 효과로 분리하기 어렵습니다.",
+          "referenceFrame": "가상 출력 저항에서 수신 입력까지 배선을 따라 전압이 전파하는 시간을 비교합니다."
+        }
+      },
+      {
+        "id": "interconnect-timing-boundary",
+        "sectionId": "limits",
+        "intuition": "Elmore 첫 모멘트는 수동 RC의 빠른 비교 척도입니다.",
+        "workedExample": "가상 tE=74 ps를 소자의 실측 50% 전파 지연으로 보고하지 않습니다.",
+        "boundary": "π RC의 첫 모멘트와 파형 기준 도착 시간을 구분합니다.",
+        "scientificGrounding": {
+          "observable": "추출 배선의 시간 파형, 50% 임계 교차와 인접 선 스위칭",
+          "unitsAndDimensions": "시간은 ps, 전압은 V, R·C는 Ω·fF입니다.",
+          "modelAssumptions": "고정 입력 파형과 비교 가능한 추출 네트워크가 필요합니다.",
+          "measurementExample": "추출 RC 시뮬레이션의 첫 모멘트와 50% 교차를 나란히 검사합니다.",
+          "invalidConditions": "비선형 구동·결합·전송선 효과가 크면 단순 첫 모멘트는 정확한 도착 시각이 아닙니다.",
+          "referenceFrame": "가상 출력 저항에서 수신 입력까지 배선을 따라 전압이 전파하는 시간을 비교합니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 배선을 회로로",
+        "relation": "배선의 분포 저항·용량을 π 모형으로 줄입니다.",
+        "concepts": [
+          "interconnect-distributed-rc",
+          "wire-pi-equivalent"
+        ]
+      },
+      {
+        "label": "02 74에서 158 ps",
+        "relation": "충전 경로를 더하고 길이 변화에 따른 항을 분리합니다.",
+        "concepts": [
+          "elmore-first-moment",
+          "wire-length-quadratic-term"
+        ]
+      },
+      {
+        "label": "03 재료와 실제 타이밍",
+        "relation": "R·C 변경 효과와 첫 모멘트 근사의 경계를 구분합니다.",
+        "concepts": [
+          "interconnect-material-tradeoff",
+          "interconnect-timing-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "배선이 없다면 500 Ω 출력과 20 fF 입력의 RC 곱은? ",
+        "answerChecklist": [
+          "10 ps",
+          "Ω×fF=fs"
+        ],
+        "requiredConcepts": [
+          "elmore-first-moment"
+        ],
+        "sectionId": "delay"
+      },
+      {
+        "level": "basic",
+        "question": "기준 π 배선에서 출력 저항 항은 몇 ps입니까?",
+        "answerChecklist": [
+          "Cw+CL=120 fF",
+          "500 Ω×120 fF=60 ps"
+        ],
+        "requiredConcepts": [
+          "wire-pi-equivalent",
+          "elmore-first-moment"
+        ],
+        "sectionId": "delay"
+      },
+      {
+        "level": "basic",
+        "question": "기준 π 배선에서 배선 저항 항과 전체 Elmore 값은?",
+        "answerChecklist": [
+          "Cw/2+CL=70 fF",
+          "14 ps",
+          "합 74 ps"
+        ],
+        "requiredConcepts": [
+          "elmore-first-moment"
+        ],
+        "sectionId": "delay"
+      },
+      {
+        "level": "basic",
+        "question": "길이 두 배에서 Rw·Cw를 각각 얼마로 놓습니까?",
+        "answerChecklist": [
+          "400 Ω",
+          "200 fF",
+          "같은 단면·재료 가정"
+        ],
+        "requiredConcepts": [
+          "interconnect-distributed-rc"
+        ],
+        "sectionId": "length"
+      },
+      {
+        "level": "basic",
+        "question": "같은 단면에서 배선 길이를 두 배로 할 때 Elmore 지연 합은 얼마입니까?",
+        "answerChecklist": [
+          "출력 항 110 ps",
+          "배선 항 48 ps",
+          "합 158 ps"
+        ],
+        "requiredConcepts": [
+          "wire-length-quadratic-term"
+        ],
+        "sectionId": "length"
+      },
+      {
+        "level": "basic",
+        "question": "기준에서 배선 저항만 140 Ω이면 값은?",
+        "answerChecklist": [
+          "출력 항 60 ps 유지",
+          "배선 항 9.8 ps",
+          "69.8 ps"
+        ],
+        "requiredConcepts": [
+          "interconnect-material-tradeoff"
+        ],
+        "sectionId": "materials"
+      },
+      {
+        "level": "advanced",
+        "question": "길이 두 배에서 배선 자체 항 RwCw/2와 전체 지연의 증가 배율은?",
+        "answerChecklist": [
+          "10→40 ps 네 배",
+          "74→158 ps 약 2.14배",
+          "다른 항 포함"
+        ],
+        "requiredConcepts": [
+          "wire-length-quadratic-term"
+        ],
+        "sectionId": "length"
+      },
+      {
+        "level": "advanced",
+        "question": "배선 용량만 50 fF일 때와 저항도 140 Ω일 때 각각 계산하세요.",
+        "answerChecklist": [
+          "용량만 44 ps",
+          "둘 다 41.3 ps",
+          "출력 항도 감소"
+        ],
+        "requiredConcepts": [
+          "interconnect-material-tradeoff"
+        ],
+        "sectionId": "materials"
+      },
+      {
+        "level": "advanced",
+        "question": "74 ps를 실측 50% 지연으로 보고할 수 있습니까?",
+        "answerChecklist": [
+          "아니요",
+          "Elmore 첫 모멘트",
+          "비선형 구동·문턱·결합 등"
+        ],
+        "requiredConcepts": [
+          "interconnect-timing-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "Intel의 동일 피치 RC 개선 보고를 가상 30% 저항·50% 용량 감소로 바꿔도 됩니까?",
+        "answerChecklist": [
+          "안 됨",
+          "원문 특정 공정 비교",
+          "본문 수치는 독립 가정",
+          "실제 R·C·기하 추출 필요"
+        ],
+        "requiredConcepts": [
+          "interconnect-material-tradeoff",
+          "interconnect-timing-boundary"
+        ],
+        "sectionId": "materials"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT OpenCourseWare 6.884, Lecture 4, ‘Wires’ (2005)",
+        "href": "https://ocw.mit.edu/courses/6-884-complex-digital-systems-spring-2005/fd75994e0ea84378705dd12ee8c16326_l04_wires.pdf",
+        "problem": "분포 배선 RC가 디지털 신호를 늦추는 방식을 간단한 회로로 추정합니다.",
+        "contribution": "원본 11–13쪽의 π 모형과 Elmore 첫 모멘트 식, 길이 제곱 항을 설명합니다.",
+        "assumptions": "선형 수동 RC와 단순 배선 형상을 전제로 합니다.",
+        "evidenceScope": "MIT 공식 원본 PDF 해당 쪽을 확인했습니다. 500 Ω·20 fF·200 Ω·100 fF는 본문 가정입니다.",
+        "notClaim": "74 ps가 MIT의 실측값이나 정확한 50% 지연이라는 뜻은 아닙니다.",
+        "sectionId": "wire"
+      },
+      {
+        "title": "Intel Technology Journal Vol. 6 No. 2, interconnect technology (2002)",
+        "href": "https://www.intel.com/content/dam/www/public/us/en/documents/research/2002-vol06-iss-2-intel-technology-journal.pdf",
+        "problem": "구리와 낮은 유전율 공정으로 당시 배선의 저항·RC 지연을 줄입니다.",
+        "contribution": "원본 10–11쪽에서 특정 피치 비교의 시트 저항 및 RC 개선을 보고합니다.",
+        "assumptions": "당시 제시한 공정·피치·측정 구조의 비교입니다.",
+        "evidenceScope": "인텔 공식 원문 PDF의 해당 쪽을 확인했습니다. 본문 140 Ω·50 fF는 독립 가정입니다.",
+        "notClaim": "본문의 가상 감소율이나 41.3 ps가 인텔의 측정치라는 뜻은 아닙니다.",
+        "sectionId": "materials"
+      }
+    ]
+  },
+  "semiconductors/yield-defect-and-packaging": {
+    "coreIdea": "가상 임계 면적 1 cm²와 결함 밀도 0.1개/cm²에서 포아송 0개 확률 90.48%를 계산하고, 면적 네 배의 67.03%와 조건부 조립·시험 98% 뒤의 출하 기대 886.7/1000개를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "interconnect-distributed-rc",
+        "role": "앞 글의 배선 단선·쇼트가 다이 기능을 바꿀 수 있음을 이용합니다."
+      },
+      {
+        "id": "lithography-pattern-transfer",
+        "role": "패턴이 정해져 결함 민감 위치를 만들었다는 점을 이어받습니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "defect-critical-area",
+        "role": "다이 크기와 결함 기회를 분리합니다."
+      },
+      {
+        "id": "mean-defect-count",
+        "role": "확률식의 입력 λ를 계산합니다."
+      },
+      {
+        "id": "poisson-zero-defect-yield",
+        "role": "90.48%의 분모와 뜻을 설명합니다."
+      },
+      {
+        "id": "yield-area-density-sensitivity",
+        "role": "면적과 밀도 변화의 효과를 비교합니다."
+      },
+      {
+        "id": "conditional-package-survival",
+        "role": "공정 단계를 이어서 셉니다."
+      },
+      {
+        "id": "yield-model-boundary",
+        "role": "모형과 실제 수율의 경계를 밝힙니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "defect-critical-area",
+        "sectionId": "area",
+        "intuition": "선이 끊어지거나 붙는 위치만 결함 민감 면적에 기여합니다.",
+        "workedExample": "가상 Ac=1 cm²를 실제 다이의 실측 물리 면적으로 단정하지 않습니다.",
+        "boundary": "결함 크기를 바꾸면 같은 배치도 임계 면적이 달라집니다.",
+        "scientificGrounding": {
+          "observable": "다이 배치에서 결함이 기능 고장을 내는 위치의 면적",
+          "unitsAndDimensions": "Ac는 cm², 물리적 다이 면적도 cm²이지만 값은 같지 않을 수 있습니다.",
+          "modelAssumptions": "결함 크기와 고장 종류를 고정해 임계 면적을 정의합니다.",
+          "measurementExample": "특정 결함 크기를 가정해 배치에서 쇼트·오픈 민감 위치를 추출합니다.",
+          "invalidConditions": "결함 크기·배치·중복 회로가 바뀌면 임계 면적도 변합니다.",
+          "referenceFrame": "웨이퍼 위 후보 다이 한 개의 임계 위치와 이후 패키징·시험 단계를 차례로 셉니다."
+        }
+      },
+      {
+        "id": "mean-defect-count",
+        "sectionId": "poisson",
+        "intuition": "많은 후보 다이를 평균하면 다이당 0.1개가 되는 분포입니다.",
+        "workedExample": "D0=.1개/cm², Ac=1cm²에서 λ=.1개입니다.",
+        "boundary": "λ를 한 다이의 확정 결함 수로 읽지 않습니다.",
+        "scientificGrounding": {
+          "observable": "여러 다이의 임계 위치에서 세어지는 치명적 결함 개수의 평균",
+          "unitsAndDimensions": "D0는 개/cm², Ac는 cm², λ는 무차원 평균 개수입니다.",
+          "modelAssumptions": "평균 밀도가 공간에 걸쳐 일정한 점 결함 모형입니다.",
+          "measurementExample": "동일 조건의 여러 다이에서 치명적 결함 수를 기록해 평균을 비교합니다.",
+          "invalidConditions": "공간별 밀도 변화·결함 뭉침이 크면 단일 D0가 부족합니다.",
+          "referenceFrame": "웨이퍼 위 후보 다이 한 개의 임계 위치와 이후 패키징·시험 단계를 차례로 셉니다."
+        }
+      },
+      {
+        "id": "poisson-zero-defect-yield",
+        "sectionId": "poisson",
+        "intuition": "가끔 결함이 생기지만 대부분의 다이에는 0개일 수 있습니다.",
+        "workedExample": "1000 가상 후보의 결함 모형상 양품 기댓값은 약 904.8개입니다.",
+        "boundary": "실제 검사 양품 수가 904.8개라는 뜻이 아닙니다.",
+        "scientificGrounding": {
+          "observable": "임계 면적의 치명적 결함 수가 0인 다이의 비율",
+          "unitsAndDimensions": "Y0는 무차원 확률, λ는 평균 개수입니다.",
+          "modelAssumptions": "결함은 독립·균일한 점이고 임계 결함 하나가 기능 고장을 냅니다.",
+          "measurementExample": "다이별 결함 지도와 기능 검사로 0개 빈도와 예측 확률을 비교합니다.",
+          "invalidConditions": "뭉친 결함·복구 회로·파라미터 사양 실패가 크면 단순 Y0가 전체 수율이 아닙니다.",
+          "referenceFrame": "웨이퍼 위 후보 다이 한 개의 임계 위치와 이후 패키징·시험 단계를 차례로 셉니다."
+        }
+      },
+      {
+        "id": "yield-area-density-sensitivity",
+        "sectionId": "sensitivity",
+        "intuition": "위험 위치가 넓거나 결함이 많으면 아무 결함도 없기 어렵습니다.",
+        "workedExample": "가상 면적 네 배는 한 다이의 0개 확률을 67.03%로 낮춥니다.",
+        "boundary": "다이 한 장의 확률을 같은 웨이퍼의 후보 개수 변화와 혼동하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "임계 면적·결함 밀도에 따른 결함 없는 다이 비율",
+          "unitsAndDimensions": "Ac는 cm², D0는 개/cm², Y0는 %입니다.",
+          "modelAssumptions": "서로 비교할 때 같은 점 결함 모형과 고장 정의를 둡니다.",
+          "measurementExample": "면적·밀도별 후보 다이의 0개 비율을 비교합니다.",
+          "invalidConditions": "물리적 다이 크기·가장자리 손실까지 바뀌면 웨이퍼당 후보 수가 달라집니다.",
+          "referenceFrame": "웨이퍼 위 후보 다이 한 개의 임계 위치와 이후 패키징·시험 단계를 차례로 셉니다."
+        }
+      },
+      {
+        "id": "conditional-package-survival",
+        "sectionId": "package",
+        "intuition": "첫 단계에서 남은 것 중 다음 단계가 통과시키는 몫을 적용합니다.",
+        "workedExample": "1000×.904837×.98≈886.7개가 가상 출하 기대 개수입니다.",
+        "boundary": "포아송 결함식에 패키징 .98을 결함 밀도처럼 대입하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "각 단계 입고·통과 다이 수와 최종 출하 개수",
+          "unitsAndDimensions": "통과율은 무차원 %, 후보·출하 수는 개입니다.",
+          "modelAssumptions": ".98을 앞 단계 생존 다이에 대한 조건부 통과 확률로 둡니다.",
+          "measurementExample": "웨이퍼 검사·조립 투입·최종 시험의 분모와 통과 수를 기록합니다.",
+          "invalidConditions": "분모가 다른 수율을 바로 곱하거나 중복 탈락을 세면 결과가 틀립니다.",
+          "referenceFrame": "웨이퍼 위 후보 다이 한 개의 임계 위치와 이후 패키징·시험 단계를 차례로 셉니다."
+        }
+      },
+      {
+        "id": "yield-model-boundary",
+        "sectionId": "limits",
+        "intuition": "결함 지도에서 뭉침을 보거나 시험에서 속도 탈락을 찾습니다.",
+        "workedExample": "가상 90.48%를 실제 팹 전체의 양품률로 보고하지 않습니다.",
+        "boundary": "포아송 결과를 조립·시험을 포함한 전체 공장 수율로 쓰지 않습니다.",
+        "scientificGrounding": {
+          "observable": "결함 지도, 기능 시험, 속도·전력 사양 및 패키지 시험 결과",
+          "unitsAndDimensions": "결함 밀도는 개/cm², 전기 사양은 V·A·s 등 각 물리 단위입니다.",
+          "modelAssumptions": "포아송 예시는 독립 점 결함의 한 손실 단계만 잡습니다.",
+          "measurementExample": "공간 지도·프로브 검사·최종 시험의 불량 원인 분포를 대조합니다.",
+          "invalidConditions": "결함 뭉침·파라미터 손실·패키지 고장이 지배하면 단일 결함 모형이 부족합니다.",
+          "referenceFrame": "웨이퍼 위 후보 다이 한 개의 임계 위치와 이후 패키징·시험 단계를 차례로 셉니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 결함이 해로운 자리",
+        "relation": "임계 면적과 평균 결함 수를 따로 정합니다.",
+        "concepts": [
+          "defect-critical-area",
+          "mean-defect-count"
+        ]
+      },
+      {
+        "label": "02 다이 통과 확률",
+        "relation": "0개 확률과 면적·밀도 변화 효과를 구합니다.",
+        "concepts": [
+          "poisson-zero-defect-yield",
+          "yield-area-density-sensitivity"
+        ]
+      },
+      {
+        "label": "03 조립 후 출하",
+        "relation": "조건부 시험 통과율과 포아송 모형의 경계를 구분합니다.",
+        "concepts": [
+          "conditional-package-survival",
+          "yield-model-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "임계 면적 Ac와 다이의 물리적 바깥 면적이 꼭 같습니까?",
+        "answerChecklist": [
+          "아니요",
+          "결함이 고장을 내는 위치의 효과적 면적"
+        ],
+        "requiredConcepts": [
+          "defect-critical-area"
+        ],
+        "sectionId": "area"
+      },
+      {
+        "level": "basic",
+        "question": "Ac=1 cm², D0=0.1개/cm²에서 평균 λ는 얼마입니까?",
+        "answerChecklist": [
+          "λ=D0Ac",
+          "0.1개",
+          "개별 다이의 확정 결함 수 아님"
+        ],
+        "requiredConcepts": [
+          "mean-defect-count"
+        ],
+        "sectionId": "poisson"
+      },
+      {
+        "level": "basic",
+        "question": "평균 λ=0.1에서 결함이 0개일 확률은 얼마입니까?",
+        "answerChecklist": [
+          "e^-0.1",
+          "약 90.48%"
+        ],
+        "requiredConcepts": [
+          "poisson-zero-defect-yield"
+        ],
+        "sectionId": "poisson"
+      },
+      {
+        "level": "basic",
+        "question": "같은 밀도에서 임계 면적을 4 cm²로 두면 0개 확률은?",
+        "answerChecklist": [
+          "λ=.4",
+          "e^-.4≈67.03%"
+        ],
+        "requiredConcepts": [
+          "yield-area-density-sensitivity"
+        ],
+        "sectionId": "sensitivity"
+      },
+      {
+        "level": "basic",
+        "question": "조건이 같은 가상 후보 1000개의 결함 모형상 양품 기댓값은?",
+        "answerChecklist": [
+          "1000×.9048",
+          "약 904.8개",
+          "한 번의 실제 정수 개수 아님"
+        ],
+        "requiredConcepts": [
+          "poisson-zero-defect-yield"
+        ],
+        "sectionId": "poisson"
+      },
+      {
+        "level": "basic",
+        "question": "앞 단계 통과 다이에 대한 다음 단계 98%를 적용한 출하 기댓값은?",
+        "answerChecklist": [
+          "1000×.9048×.98",
+          "약 886.7개",
+          "98%는 가정"
+        ],
+        "requiredConcepts": [
+          "conditional-package-survival"
+        ],
+        "sectionId": "package"
+      },
+      {
+        "level": "advanced",
+        "question": "임계 면적은 1 cm²이고 밀도만 0.2개/cm²면 확률은?",
+        "answerChecklist": [
+          "λ=.2",
+          "e^-.2≈81.87%",
+          "기준보다 낮음"
+        ],
+        "requiredConcepts": [
+          "yield-area-density-sensitivity"
+        ],
+        "sectionId": "sensitivity"
+      },
+      {
+        "level": "advanced",
+        "question": "임계 면적 1·4 cm² 사례를 같은 웨이퍼에 후보 1000개씩 놓인다고 할 수 있습니까?",
+        "answerChecklist": [
+          "할 수 없음",
+          "실제 다이 물리 크기 정보 없음",
+          "웨이퍼당 후보 개수·가장자리 손실 별도"
+        ],
+        "requiredConcepts": [
+          "defect-critical-area",
+          "yield-area-density-sensitivity"
+        ],
+        "sectionId": "sensitivity"
+      },
+      {
+        "level": "advanced",
+        "question": "결함이 뭉치고 속도 사양 실패도 있다면 단순 포아송값을 전체 수율로 써도 됩니까?",
+        "answerChecklist": [
+          "안 됨",
+          "독립 점 결함 가정 위반",
+          "파라미터 수율·기능 시험 별도"
+        ],
+        "requiredConcepts": [
+          "yield-model-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "90.48%와 98%를 곱할 때 두 수율의 분모는 어떻게 이어져야 합니까?",
+        "answerChecklist": [
+          "앞은 초기 후보",
+          "뒤는 앞 단계 통과분",
+          "조건부 통과율의 곱",
+          "패키징 실측 98% 주장 아님"
+        ],
+        "requiredConcepts": [
+          "conditional-package-survival"
+        ],
+        "sectionId": "package"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT OpenCourseWare 2.830J/6.780J, Lecture 10, Yield Modeling (2008)",
+        "href": "https://ocw.mit.edu/courses/2-830j-control-of-manufacturing-processes-sma-6303-spring-2008/4aff1e21de13870355ef44dbe71f45c6_lecture10.pdf",
+        "problem": "결함과 사양 등 여러 제조 수율 손실을 분류하고 다이의 결함 확률을 추정합니다.",
+        "contribution": "원본 6–7·14·17·30쪽의 기능·파라미터 수율, 임계 면적, 독립 점 결함의 포아송 모형과 가정입니다.",
+        "assumptions": "점 결함·공간 독립성·치명적 결함 하나의 기능 실패를 둡니다.",
+        "evidenceScope": "MIT 공식 원본 PDF 해당 쪽을 확인했습니다. 면적·밀도·98%는 본문의 가상 조건입니다.",
+        "notClaim": "90.48%가 MIT 강의의 실측 공장 수율이거나 모든 탈락 원인을 포함한다는 뜻이 아닙니다.",
+        "sectionId": "area"
+      },
+      {
+        "title": "Intel Tech 101, How Silicon Die Become Chip Packages (2025)",
+        "href": "https://www.intel.com/content/www/us/en/newsroom/tech101/manufacturing/how-silicon-die-become-chip-packages.html",
+        "problem": "제조된 다이를 패키지로 조립하고 출하 전 시험합니다.",
+        "contribution": "다이 부착, 패키지의 보호·연결·열 기능과 열·전기·기능 시험 순서를 설명합니다.",
+        "assumptions": "특정 제품의 수율 수치를 제공하지 않는 공정 개요입니다.",
+        "evidenceScope": "인텔 공식 페이지의 조립·시험 단계 설명을 확인했습니다. 조건부 98%는 본문 가정입니다.",
+        "notClaim": "인텔의 실제 조립·시험 통과율이 98%라는 뜻이 아닙니다.",
+        "sectionId": "package"
+      }
+    ]
+  },
+  "embedded/mcu-memory-map-and-registers": {
+    "coreIdea": "RP2040 SIO 기준 주소 0xD0000000에 오프셋을 더한 OUT_SET 0xD0000014 등과 GPIO5 마스크 0x20을 구분하고, 기능 선택·출력 허용·래치·물리 핀을 한 순서로 추적합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "conditional-package-survival",
+        "role": "제조·시험을 통과한 칩을 펌웨어가 사용한다는 출발점을 둡니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "mcu-memory-mapped-io",
+        "role": "RAM 변수와 장치 주소를 구분합니다."
+      },
+      {
+        "id": "sio-base-register-offset",
+        "role": "세 레지스터 주소를 계산합니다."
+      },
+      {
+        "id": "gpio-bit-mask-five",
+        "role": "주소와 값의 역할을 분리합니다."
+      },
+      {
+        "id": "gpio-function-and-direction",
+        "role": "핀 기능 선택과 방향을 분리합니다."
+      },
+      {
+        "id": "gpio-atomic-set-clear",
+        "role": "GPIO5만 바꾸는 이유를 밝힙니다."
+      },
+      {
+        "id": "gpio-latch-versus-pin-read",
+        "role": "쓰기 성공과 외부 동작을 분리합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "mcu-memory-mapped-io",
+        "sectionId": "overview",
+        "intuition": "CPU는 버스를 따라 주소를 보내고 해당 장치가 반응합니다.",
+        "workedExample": "GPIO5 출력 SET 주소에 0x20을 쓰면 핀 5 출력 래치가 1이 됩니다.",
+        "boundary": "다른 MCU의 주소를 그대로 쓸 수 없습니다."
+      },
+      {
+        "id": "sio-base-register-offset",
+        "sectionId": "map",
+        "intuition": "동네 시작 주소와 집 번호를 더하는 셈입니다.",
+        "workedExample": "0xD0000000+0x014=0xD0000014입니다.",
+        "boundary": "표의 오프셋과 칩 종류를 먼저 확인해야 합니다."
+      },
+      {
+        "id": "gpio-bit-mask-five",
+        "sectionId": "mask",
+        "intuition": "여러 핀 중 다섯 번째 비트 하나만 표시합니다.",
+        "workedExample": "OUT_SET·OUT_CLR·OE_SET 각 주소에 0x20을 씁니다.",
+        "boundary": "0x20은 주소가 아니라 쓰는 값입니다."
+      },
+      {
+        "id": "gpio-function-and-direction",
+        "sectionId": "mux",
+        "intuition": "선을 하드웨어에 연결하는 스위치와 출력 문이 모두 열려야 합니다.",
+        "workedExample": "래치를 낮게 준비하고 SIO를 선택한 뒤 OE_SET에 0x20을 써 출력 허용을 켭니다.",
+        "boundary": "전체 CTRL 레지스터를 임의 값으로 덮기보다 SDK 설정 함수를 사용합니다."
+      },
+      {
+        "id": "gpio-atomic-set-clear",
+        "sectionId": "mask",
+        "intuition": "나머지 비트에는 0을 써 그대로 둡니다.",
+        "workedExample": "0x20을 OUT_SET에 쓰면 GPIO5만 1, OUT_CLR에 쓰면 GPIO5만 0입니다.",
+        "boundary": "여러 코어가 동일 핀의 소유권을 다투면 상위 동기화가 여전히 필요합니다."
+      },
+      {
+        "id": "gpio-latch-versus-pin-read",
+        "sectionId": "readback",
+        "intuition": "원하는 값과 실제 관찰한 값을 따로 확인합니다.",
+        "workedExample": "GPIO_OUT=1인데 OE가 0이면 핀은 출력으로 구동되지 않습니다.",
+        "boundary": "보드의 전압·전류·연결 상태는 별도 측정이 필요합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 주소 찾기",
+        "relation": "메모리 맵과 오프셋으로 레지스터를 찾습니다.",
+        "concepts": [
+          "mcu-memory-mapped-io",
+          "sio-base-register-offset"
+        ]
+      },
+      {
+        "label": "02 한 비트 쓰기",
+        "relation": "GPIO5 마스크를 계산하고 SET·CLR의 동작을 비교합니다.",
+        "concepts": [
+          "gpio-bit-mask-five",
+          "gpio-atomic-set-clear"
+        ]
+      },
+      {
+        "label": "03 바깥 핀 보기",
+        "relation": "핀 기능·방향·래치·실제 전압을 분리합니다.",
+        "concepts": [
+          "gpio-function-and-direction",
+          "gpio-latch-versus-pin-read"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "GPIO5 한 자리만 선택하는 비트 마스크를 16진수로 쓰세요.",
+        "answerChecklist": [
+          "1<<5",
+          "32",
+          "0x20"
+        ],
+        "requiredConcepts": [
+          "gpio-bit-mask-five"
+        ],
+        "sectionId": "mask"
+      },
+      {
+        "level": "basic",
+        "question": "SIO 기준 주소 0xD0000000에 OUT_SET 오프셋 0x014를 더하면?",
+        "answerChecklist": [
+          "0xD0000014",
+          "출력 설정 주소"
+        ],
+        "requiredConcepts": [
+          "sio-base-register-offset"
+        ],
+        "sectionId": "map"
+      },
+      {
+        "level": "basic",
+        "question": "SIO 기준 주소와 OUT_CLR 오프셋 0x018로 주소를 계산하세요.",
+        "answerChecklist": [
+          "0xD0000018",
+          "출력 해제 주소"
+        ],
+        "requiredConcepts": [
+          "sio-base-register-offset"
+        ],
+        "sectionId": "map"
+      },
+      {
+        "level": "basic",
+        "question": "GPIO_OE_SET의 오프셋 0x024를 반영한 주소는 무엇입니까?",
+        "answerChecklist": [
+          "0xD0000024",
+          "출력 허용"
+        ],
+        "requiredConcepts": [
+          "sio-base-register-offset",
+          "gpio-function-and-direction"
+        ],
+        "sectionId": "mux"
+      },
+      {
+        "level": "basic",
+        "question": "IO_BANK0 기준 0x40014000과 GPIO5_CTRL 오프셋 0x02C를 더하면?",
+        "answerChecklist": [
+          "0x4001402C",
+          "핀 기능 선택"
+        ],
+        "requiredConcepts": [
+          "gpio-function-and-direction"
+        ],
+        "sectionId": "mux"
+      },
+      {
+        "level": "basic",
+        "question": "GPIO_OUT 읽기와 GPIO_IN 읽기가 알려 주는 상태는 어떻게 다릅니까?",
+        "answerChecklist": [
+          "OUT은 출력 래치",
+          "IN은 핀 입력 샘플"
+        ],
+        "requiredConcepts": [
+          "gpio-latch-versus-pin-read"
+        ],
+        "sectionId": "readback"
+      },
+      {
+        "level": "advanced",
+        "question": "GPIO 전체 값을 읽고 고쳐 쓰는 대신 OUT_SET·CLR을 쓰는 이유는?",
+        "answerChecklist": [
+          "대상 비트만 원자적 변경",
+          "다른 핀 비트 유지",
+          "경쟁 줄임"
+        ],
+        "requiredConcepts": [
+          "gpio-atomic-set-clear"
+        ],
+        "sectionId": "readback"
+      },
+      {
+        "level": "advanced",
+        "question": "시작 시 불필요한 높은 펄스를 피하려면 GPIO5를 어떤 순서로 준비합니까?",
+        "answerChecklist": [
+          "낮은 래치 미리 설정",
+          "SIO 기능 선택",
+          "출력 허용",
+          "필요할 때 SET"
+        ],
+        "requiredConcepts": [
+          "gpio-function-and-direction",
+          "gpio-atomic-set-clear"
+        ],
+        "sectionId": "mask"
+      },
+      {
+        "level": "advanced",
+        "question": "OUT_SET에 0x20을 썼는데 GPIO5가 구동되지 않을 수 있는 조건 두 가지는?",
+        "answerChecklist": [
+          "핀 기능이 SIO 아님",
+          "출력 허용 0",
+          "패드·외부 회로 가능"
+        ],
+        "requiredConcepts": [
+          "gpio-function-and-direction",
+          "gpio-latch-versus-pin-read"
+        ],
+        "sectionId": "mux"
+      },
+      {
+        "level": "advanced",
+        "question": "출력 래치가 1이어도 LED가 켜졌다고 단정하지 못하는 이유는?",
+        "answerChecklist": [
+          "물리 핀 전압 별도",
+          "LED 연결·극성·전류 제한 다름",
+          "SDK·보드 문서와 측정 필요"
+        ],
+        "requiredConcepts": [
+          "gpio-latch-versus-pin-read"
+        ],
+        "sectionId": "readback"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Raspberry Pi, RP2040 Datasheet, address map and SIO registers",
+        "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+        "problem": "CPU 주소 공간에서 GPIO 출력·방향·기능을 제어합니다.",
+        "contribution": "원본 26·43·46·245쪽의 SIO·IO_BANK0 주소, 출력 설정·해제·방향 및 GPIO5 기능 선택 위치입니다.",
+        "assumptions": "RP2040 칩과 그 GPIO0–29 비트 대응에 한정됩니다.",
+        "evidenceScope": "라즈베리 파이 공식 데이터시트의 해당 표를 확인했습니다. 외부 LED 연결은 가정입니다.",
+        "notClaim": "다른 MCU에서 같은 주소를 쓰거나 래치 1이 LED 점등을 보장한다는 뜻은 아닙니다.",
+        "sectionId": "map"
+      },
+      {
+        "title": "Raspberry Pi Pico SDK Hardware GPIO API",
+        "href": "https://www.raspberrypi.com/documentation/pico-sdk/hardware.html",
+        "problem": "핀 기능과 방향을 펌웨어에서 안전하게 설정합니다.",
+        "contribution": "gpio_set_function과 gpio_set_dir 등의 공식 API 사용 경로를 제시합니다.",
+        "assumptions": "프로젝트가 대상 칩에 맞게 SDK를 구성합니다.",
+        "evidenceScope": "라즈베리 파이 공식 SDK 문서의 하드웨어 GPIO API를 확인했습니다.",
+        "notClaim": "본문의 개별 주소 쓰기 예가 모든 핀·보드 초기화를 대신한다는 뜻은 아닙니다.",
+        "sectionId": "mux"
+      }
+    ]
+  },
+  "embedded/interrupts-and-latency-budget": {
+    "coreIdea": "가상 GPIO2 상승 에지 뒤 검출 5·대기 40·NVIC 진입 8·ISR 20·작업 깨우기 40·I²C 300·계산 80 µs를 합해 493 µs, 1 ms 마감 여유 507 µs를 계산하고 대기 600 µs에서 53 µs 초과를 확인합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "gpio-latch-versus-pin-read",
+        "role": "앞 글에서 실제 핀 입력과 출력 래치의 차이를 확인했습니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "gpio-edge-event-latch",
+        "role": "핀 사건과 주변 장치 상태를 연결합니다."
+      },
+      {
+        "id": "nvic-pending-and-priority",
+        "role": "사건 뒤 기다림을 설명합니다."
+      },
+      {
+        "id": "short-isr-handoff",
+        "role": "ISR과 작업의 책임을 분리합니다."
+      },
+      {
+        "id": "interrupt-path-budget",
+        "role": "한 사건의 끝까지 시간을 셉니다."
+      },
+      {
+        "id": "deadline-slack-and-overrun",
+        "role": "병목이 바뀌었을 때 실패를 계산합니다."
+      },
+      {
+        "id": "interrupt-measurement-boundary",
+        "role": "가정한 예산을 실측으로 검증할 범위를 정합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "gpio-edge-event-latch",
+        "sectionId": "route",
+        "intuition": "스위치가 눌린 사실을 먼저 장치가 기억합니다.",
+        "workedExample": "GPIO2 상승 에지가 왔을 때 에지 종류를 확인하고 해당 상태를 소거합니다.",
+        "boundary": "상태 비트는 여러 에지의 정확한 횟수 카운터가 아닙니다."
+      },
+      {
+        "id": "nvic-pending-and-priority",
+        "sectionId": "route",
+        "intuition": "벨이 울려도 CPU가 당장 문을 열 수 없으면 요청이 기다립니다.",
+        "workedExample": "예제에서 40 µs 기다리고 8 µs 진입하는 값은 모두 가정입니다.",
+        "boundary": "pending이 여러 GPIO 에지의 개수를 알려 주지는 않습니다."
+      },
+      {
+        "id": "short-isr-handoff",
+        "sectionId": "handler",
+        "intuition": "급한 알림만 접수하고 오래 걸리는 처리는 일감으로 넘깁니다.",
+        "workedExample": "예제는 ISR 20 µs, 작업 깨우기 40 µs, I²C 읽기 300 µs입니다.",
+        "boundary": "ISR에서 블로킹 통신을 하면 다른 인터럽트의 대기 시간을 늘릴 수 있습니다."
+      },
+      {
+        "id": "interrupt-path-budget",
+        "sectionId": "budget",
+        "intuition": "중간 단계가 빨라도 나머지 작업이 늦으면 결과도 늦습니다.",
+        "workedExample": "1000 µs 마감에서 예제의 여유는 507 µs입니다.",
+        "boundary": "겹치는 시간 구간을 중복 합산하거나 가상값을 실측으로 읽지 않습니다."
+      },
+      {
+        "id": "deadline-slack-and-overrun",
+        "sectionId": "stress",
+        "intuition": "같은 처리 코드를 써도 앞에서 기다린 시간이 여유를 먹습니다.",
+        "workedExample": "대기 600 µs 사례의 여유는 −53 µs입니다.",
+        "boundary": "우선순위 설정만으로 모든 지연을 없앨 수 없습니다."
+      },
+      {
+        "id": "interrupt-measurement-boundary",
+        "sectionId": "stress",
+        "intuition": "멈춘 구간의 앞뒤 시각을 재서 어디서 늦는지 찾습니다.",
+        "workedExample": "가상 493 µs를 RP2040 보장 지연으로 제시하지 않습니다.",
+        "boundary": "센서 실제 거래 시간과 버스 충돌을 측정하지 않으면 보장을 할 수 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 핀 사건 접수",
+        "relation": "GPIO 이벤트 상태와 NVIC pending을 구분합니다.",
+        "concepts": [
+          "gpio-edge-event-latch",
+          "nvic-pending-and-priority"
+        ]
+      },
+      {
+        "label": "02 짧은 ISR과 일감",
+        "relation": "원인 소거와 작업 전달 뒤 전체 시간을 셉니다.",
+        "concepts": [
+          "short-isr-handoff",
+          "interrupt-path-budget"
+        ]
+      },
+      {
+        "label": "03 마감과 측정",
+        "relation": "대기 변화의 마감 실패와 실측 필요성을 봅니다.",
+        "concepts": [
+          "deadline-slack-and-overrun",
+          "interrupt-measurement-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "GPIO2 핀을 계속 읽는 폴링과 에지 인터럽트의 사건 접수는 어떻게 다릅니까?",
+        "answerChecklist": [
+          "폴링은 반복 읽기",
+          "에지는 하드웨어 플래그·NVIC 요청"
+        ],
+        "requiredConcepts": [
+          "gpio-edge-event-latch"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "검출 5, 대기 40, 진입 8, ISR 20 µs라면 ISR이 끝나는 시각은?",
+        "answerChecklist": [
+          "5+40+8+20",
+          "73 µs"
+        ],
+        "requiredConcepts": [
+          "interrupt-path-budget"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "basic",
+        "question": "앞 결과 73 µs와 작업 깨우기 40 µs를 더한 읽기 시작 시각은?",
+        "answerChecklist": [
+          "113 µs",
+          "ISR 뒤 작업 문맥"
+        ],
+        "requiredConcepts": [
+          "short-isr-handoff",
+          "interrupt-path-budget"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "basic",
+        "question": "가상 일곱 지연 구간을 모두 더하면 완료 시각은 얼마입니까?",
+        "answerChecklist": [
+          "5+40+8+20+40+300+80",
+          "493 µs"
+        ],
+        "requiredConcepts": [
+          "interrupt-path-budget"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "basic",
+        "question": "1 ms 마감과 완료 493 µs 사이에 남는 시간은 얼마입니까?",
+        "answerChecklist": [
+          "1000−493",
+          "507 µs"
+        ],
+        "requiredConcepts": [
+          "deadline-slack-and-overrun"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "basic",
+        "question": "대기만 40→600 µs로 바뀌면 완료 시각과 초과 시간은?",
+        "answerChecklist": [
+          "1053 µs",
+          "53 µs 초과"
+        ],
+        "requiredConcepts": [
+          "deadline-slack-and-overrun"
+        ],
+        "sectionId": "stress"
+      },
+      {
+        "level": "advanced",
+        "question": "GPIO 이벤트 플래그와 NVIC pending을 같은 상태로 보면 안 되는 이유는?",
+        "answerChecklist": [
+          "주변 장치 원인 별도",
+          "NVIC 요청 별도",
+          "원인 미소거 시 재진입 가능"
+        ],
+        "requiredConcepts": [
+          "gpio-edge-event-latch",
+          "nvic-pending-and-priority"
+        ],
+        "sectionId": "route"
+      },
+      {
+        "level": "advanced",
+        "question": "가상 300 µs I²C 거래를 ISR 밖으로 넘기는 이유를 설명하세요.",
+        "answerChecklist": [
+          "ISR 20 µs로 짧게",
+          "다른 사건 대기 감소",
+          "큐·작업으로 전달"
+        ],
+        "requiredConcepts": [
+          "short-isr-handoff"
+        ],
+        "sectionId": "handler"
+      },
+      {
+        "level": "advanced",
+        "question": "pending 비트가 1일 때 그동안 GPIO2 에지가 몇 번 왔는지 알 수 있습니까?",
+        "answerChecklist": [
+          "알 수 없음",
+          "비트는 카운터 아님",
+          "별도 카운터·타임스탬프 필요"
+        ],
+        "requiredConcepts": [
+          "gpio-edge-event-latch",
+          "interrupt-measurement-boundary"
+        ],
+        "sectionId": "route"
+      },
+      {
+        "level": "advanced",
+        "question": "이 가상 493 µs를 실제 최악 지연으로 검증하려면 어떤 시각과 부하를 재야 합니까?",
+        "answerChecklist": [
+          "사건·ISR 진입/종료·작업 시작/끝",
+          "다른 인터럽트·마스킹",
+          "I²C 실제 거래 시간"
+        ],
+        "requiredConcepts": [
+          "interrupt-measurement-boundary"
+        ],
+        "sectionId": "stress"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Raspberry Pi, RP2040 Datasheet, GPIO and interrupt chapters",
+        "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+        "problem": "GPIO 에지를 각 코어의 인터럽트 경로에 전달합니다.",
+        "contribution": "원본 60·79–80·239·243–244쪽의 IO_IRQ_BANK0, 코어별 허용, 에지 래치·소거와 SDK 콜백 예입니다.",
+        "assumptions": "RP2040 GPIO 구조이고 GPIO2 센서 연결은 가정입니다.",
+        "evidenceScope": "라즈베리 파이 공식 데이터시트 해당 표와 설명을 확인했습니다. 본문 시간은 실측이 아닙니다.",
+        "notClaim": "5·8·20 µs 등의 값이 RP2040의 규격 또는 보장값이라는 뜻은 아닙니다.",
+        "sectionId": "route"
+      },
+      {
+        "title": "Arm, Cortex-M0+ Devices Generic User Guide",
+        "href": "https://documentation-service.arm.com/static/5f04aadfdbdee951c1cdc957",
+        "problem": "인터럽트 요청의 pending·허용·우선순위와 처리 함수 진입을 설명합니다.",
+        "contribution": "원본 87–90쪽의 NVIC pending, priority, 주변 장치 요청 유지 시 재진입 조건입니다.",
+        "assumptions": "Arm Cortex-M0+ 공통 동작이며 칩별 배선·지연은 별도입니다.",
+        "evidenceScope": "Arm 공식 사용자 안내서의 해당 쪽을 확인했습니다.",
+        "notClaim": "본문 가상 마감이나 ISR 실행 시간을 Arm이 보증한다는 뜻은 아닙니다.",
+        "sectionId": "handler"
+      }
+    ]
+  },
+  "embedded/timers-and-sampling": {
+    "coreIdea": "RP2040 1 µs 타이머에서 10000칸마다 GPIO26/ADC0를 읽는 가상 주기를 잡아 100 Hz 샘플·50 Hz 절반 경계를 구하고, 70 Hz 코사인이 30 Hz와 같은 이산 값을 남기는 원인 및 알람·변환 시각의 차이를 설명합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "interrupt-path-budget",
+        "role": "앞 글의 ISR 대기가 알람 응답에도 영향을 줍니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "rp2040-microsecond-timer",
+        "role": "주기 목표 시각을 만듭니다."
+      },
+      {
+        "id": "absolute-periodic-deadline",
+        "role": "드리프트를 피하는 일정 규칙을 설명합니다."
+      },
+      {
+        "id": "adc-conversion-start-boundary",
+        "role": "알람과 변환을 분리합니다."
+      },
+      {
+        "id": "sample-rate-nyquist-boundary",
+        "role": "저장된 시각의 주파수 한계를 구합니다."
+      },
+      {
+        "id": "sampled-cosine-alias",
+        "role": "같은 샘플의 다른 원인을 보여 줍니다."
+      },
+      {
+        "id": "analog-antialias-and-jitter",
+        "role": "샘플링 설계의 물리 경계를 밝힙니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "rp2040-microsecond-timer",
+        "sectionId": "timer",
+        "intuition": "눈금은 CPU가 언제 대응했는지와 다릅니다.",
+        "workedExample": "목표 0,10000,20000 µs를 별도 절대 시각으로 둡니다.",
+        "boundary": "타이머 1 µs 분해능을 샘플 지터 상한으로 해석하지 않습니다."
+      },
+      {
+        "id": "absolute-periodic-deadline",
+        "sectionId": "timer",
+        "intuition": "기차 시각표는 늦게 도착했다고 모든 뒤 출발을 늦추지 않습니다.",
+        "workedExample": "10.4 ms의 늦은 ISR 뒤에도 다음 목표를 20 ms로 둡니다.",
+        "boundary": "여러 주기를 놓쳤을 때 건너뛰기·복구 정책이 필요합니다."
+      },
+      {
+        "id": "adc-conversion-start-boundary",
+        "sectionId": "adc",
+        "intuition": "알람은 읽으라는 신호이고 ADC가 입력을 잡는 동작은 그 뒤입니다.",
+        "workedExample": "알람 10 ms, ISR 10.4 ms라면 샘플 시각은 10 ms라고 적으면 안 됩니다.",
+        "boundary": "2 µs를 전체 센서 처리 지연으로 해석하지 않습니다."
+      },
+      {
+        "id": "sample-rate-nyquist-boundary",
+        "sectionId": "rate",
+        "intuition": "100개의 눈금은 1초의 빠른 왕복을 무한히 구분하지 못합니다.",
+        "workedExample": "30 Hz는 50 Hz 아래, 70 Hz는 위입니다.",
+        "boundary": "ADC 변환 최고 속도를 소프트웨어의 실제 저장 빈도로 혼동하지 않습니다."
+      },
+      {
+        "id": "sampled-cosine-alias",
+        "sectionId": "alias",
+        "intuition": "두 원래 파형이 정해진 시각마다 같은 높이에 닿습니다.",
+        "workedExample": "n=0…5의 30·70 Hz 코사인 샘플을 Viz에서 번갈아 비교합니다.",
+        "boundary": "입력 위상·샘플 시각·다른 성분 조건이 바뀌면 이 단순 예와 달라집니다."
+      },
+      {
+        "id": "analog-antialias-and-jitter",
+        "sectionId": "limits",
+        "intuition": "섞여 기록된 두 원인을 나중에 계산만으로 나누기 어렵습니다.",
+        "workedExample": "30 Hz 신호가 목표라면 50 Hz 위 성분을 ADC 전에 충분히 줄입니다.",
+        "boundary": "필터의 전이 대역·클록 오차·ISR 지터까지 실제 제품에서 검증해야 합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 시각 만들기",
+        "relation": "타이머 절대 목표와 실제 ADC 변환 시각을 분리합니다.",
+        "concepts": [
+          "rp2040-microsecond-timer",
+          "absolute-periodic-deadline",
+          "adc-conversion-start-boundary"
+        ]
+      },
+      {
+        "label": "02 값의 빈도",
+        "relation": "10 ms를 100 Hz와 50 Hz 경계로 바꿉니다.",
+        "concepts": [
+          "sample-rate-nyquist-boundary"
+        ]
+      },
+      {
+        "label": "03 겹침과 예방",
+        "relation": "70 Hz의 30 Hz 앨리어스와 아날로그 필터·지터를 연결합니다.",
+        "concepts": [
+          "sampled-cosine-alias",
+          "analog-antialias-and-jitter"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "샘플 간격 10 ms를 초당 샘플 빈도로 바꾸면 얼마입니까?",
+        "answerChecklist": [
+          "0.01 s",
+          "100 Hz"
+        ],
+        "requiredConcepts": [
+          "sample-rate-nyquist-boundary"
+        ],
+        "sectionId": "rate"
+      },
+      {
+        "level": "basic",
+        "question": "100 Hz로 일정하게 읽을 때 절반 경계는 몇 Hz입니까?",
+        "answerChecklist": [
+          "100/2",
+          "50 Hz"
+        ],
+        "requiredConcepts": [
+          "sample-rate-nyquist-boundary"
+        ],
+        "sectionId": "rate"
+      },
+      {
+        "level": "basic",
+        "question": "입력 성분 30 Hz는 가상 50 Hz 절반 경계의 어느 쪽입니까?",
+        "answerChecklist": [
+          "50 Hz 아래",
+          "이상 대역제한 조건에서 구분 가능"
+        ],
+        "requiredConcepts": [
+          "sample-rate-nyquist-boundary"
+        ],
+        "sectionId": "rate"
+      },
+      {
+        "level": "basic",
+        "question": "70 Hz 코사인을 100 Hz로 샘플하면 겹쳐 보이는 빈도는?",
+        "answerChecklist": [
+          "|100−70|",
+          "30 Hz"
+        ],
+        "requiredConcepts": [
+          "sampled-cosine-alias"
+        ],
+        "sectionId": "alias"
+      },
+      {
+        "level": "basic",
+        "question": "RP2040 타이머 1 µs 눈금에서 10 ms는 몇 계수입니까?",
+        "answerChecklist": [
+          "10000 µs",
+          "10000 계수"
+        ],
+        "requiredConcepts": [
+          "rp2040-microsecond-timer"
+        ],
+        "sectionId": "timer"
+      },
+      {
+        "level": "basic",
+        "question": "10 ms 목표를 10.4 ms에 처리했다면 다음 절대 목표는 언제입니까?",
+        "answerChecklist": [
+          "20 ms",
+          "20.4 ms 아님"
+        ],
+        "requiredConcepts": [
+          "absolute-periodic-deadline"
+        ],
+        "sectionId": "timer"
+      },
+      {
+        "level": "advanced",
+        "question": "정수 n에서 70 Hz와 30 Hz 코사인의 샘플이 같은 이유를 식으로 보이세요.",
+        "answerChecklist": [
+          "70=100−30",
+          "cos(2πn−θ)=cosθ",
+          "같은 이산 값"
+        ],
+        "requiredConcepts": [
+          "sampled-cosine-alias"
+        ],
+        "sectionId": "alias"
+      },
+      {
+        "level": "advanced",
+        "question": "타이머 알람과 ADC 값이 실제로 잡힌 시각이 다른 까닭은 무엇입니까?",
+        "answerChecklist": [
+          "인터럽트 대기",
+          "변환 시작·ADC 준비",
+          "타임스탬프 필요"
+        ],
+        "requiredConcepts": [
+          "adc-conversion-start-boundary"
+        ],
+        "sectionId": "adc"
+      },
+      {
+        "level": "advanced",
+        "question": "샘플링 후 디지털 필터만으로 30 Hz와 70 Hz를 분리할 수 있습니까?",
+        "answerChecklist": [
+          "불가능",
+          "이미 같은 샘플",
+          "ADC 앞 아날로그 필터"
+        ],
+        "requiredConcepts": [
+          "analog-antialias-and-jitter"
+        ],
+        "sectionId": "alias"
+      },
+      {
+        "level": "advanced",
+        "question": "ADC 공식 2 µs 변환 시간이 샘플 응답 전체의 보증값이 아닌 까닭은?",
+        "answerChecklist": [
+          "48 MHz ADC 클록 조건",
+          "알람·ISR·입력·결과 읽기 별도",
+          "실제 시각 지터 측정"
+        ],
+        "requiredConcepts": [
+          "adc-conversion-start-boundary",
+          "analog-antialias-and-jitter"
+        ],
+        "sectionId": "adc"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Raspberry Pi, RP2040 Datasheet, Timer and SAR ADC",
+        "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+        "problem": "주기 시각을 만들고 아날로그 입력을 디지털 값으로 바꿉니다.",
+        "contribution": "원본 535–537쪽의 1 µs 타이머·네 알람과 559–560쪽의 GPIO26/ADC0·48 MHz에서 96주기 변환입니다.",
+        "assumptions": "2 µs는 해당 ADC 클록의 변환 자체 조건입니다.",
+        "evidenceScope": "라즈베리 파이 공식 데이터시트 해당 쪽을 확인했습니다. 10 ms와 30/70 Hz는 가정입니다.",
+        "notClaim": "타이머 알람에서 샘플까지의 전체 지연이 2 µs로 보장된다는 뜻은 아닙니다.",
+        "sectionId": "timer"
+      },
+      {
+        "title": "MIT OpenCourseWare RES.6-007, Lecture 16, Sampling (2011)",
+        "href": "https://ocw.mit.edu/courses/res-6-007-signals-and-systems-spring-2011/8708ec068ebdea2c4ee2f38fad39fb83_MITRES_6_007S11_lec16.pdf",
+        "problem": "일정 간격 샘플로 연속 신호를 복원할 조건을 설명합니다.",
+        "contribution": "원본 1–2쪽의 샘플 빈도 절반 경계와 그 위 입력의 앨리어싱 설명입니다.",
+        "assumptions": "이상적인 대역 제한 신호와 등간격 샘플·재구성 조건입니다.",
+        "evidenceScope": "MIT 공식 원본 PDF를 확인했습니다. 100 Hz·70 Hz 예시는 본문 계산입니다.",
+        "notClaim": "실제 RP2040 센서에서 70 Hz가 측정됐다는 뜻은 아닙니다.",
+        "sectionId": "alias"
+      }
+    ]
+  },
+  "embedded/serial-buses-and-tradeoffs": {
+    "coreIdea": "가상 네 바이트에서 I²C 레지스터 읽기 63클록=400kHz에 157.5 µs, SPI 명령+데이터 40클록=1MHz에 40 µs, UART 8N1 순수 페이로드 40비트=115200에 347.2 µs를 계산하고 서로 다른 거래와 제외한 대기를 명시합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "sample-rate-nyquist-boundary",
+        "role": "앞 글의 주기적 샘플이 외부 센서 읽기를 요청한다고 둡니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "i2c-address-ack-transaction",
+        "role": "가상 네 바이트 레지스터 읽기 형식을 정합니다."
+      },
+      {
+        "id": "i2c-nine-clock-accounting",
+        "role": "주소·응답 오버헤드를 셉니다."
+      },
+      {
+        "id": "i2c-clock-stretch-boundary",
+        "role": "1 ms 마감에 숫자를 대입할 한계를 밝힙니다."
+      },
+      {
+        "id": "spi-command-data-clocks",
+        "role": "SPI 선로 시간과 배선 조건을 비교합니다."
+      },
+      {
+        "id": "uart-eight-n-one-frame",
+        "role": "데이터 바이트와 선로 프레임을 구분합니다."
+      },
+      {
+        "id": "serial-bus-comparison-boundary",
+        "role": "비교의 분모를 맞춥니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "i2c-address-ack-transaction",
+        "sectionId": "i2c",
+        "intuition": "주소로 장치를 고르고 매 바이트마다 계속할지 확인합니다.",
+        "workedExample": "주소+W, 위치, 주소+R, 네 데이터의 총 일곱 바이트 묶음을 셉니다.",
+        "boundary": "실제 센서의 주소·레지스터 자동 증가는 장치 데이터시트가 정합니다."
+      },
+      {
+        "id": "i2c-nine-clock-accounting",
+        "sectionId": "count",
+        "intuition": "페이로드만 세면 실제 선로의 다른 칸을 빠뜨립니다.",
+        "workedExample": "400 kHz에서 63/400000=157.5 µs, 100 kHz에서 630 µs입니다.",
+        "boundary": "START/STOP·클록 스트레칭·상승 시간·소프트웨어 대기는 제외했습니다."
+      },
+      {
+        "id": "i2c-clock-stretch-boundary",
+        "sectionId": "count",
+        "intuition": "선로 클록을 세어도 기다리는 시간을 셌다고 볼 수 없습니다.",
+        "workedExample": "157.5 µs에 클록 스트레칭 200 µs가 있으면 최소 357.5 µs 이상입니다.",
+        "boundary": "이 200 µs도 가정이며 대상 센서의 최대치를 따로 확인해야 합니다."
+      },
+      {
+        "id": "spi-command-data-clocks",
+        "sectionId": "spi",
+        "intuition": "선택한 한 장치에 클록을 보내고 동시에 송수신합니다.",
+        "workedExample": "RP2040 SPI1의 한 핀 조합 GPIO8–11을 가정합니다.",
+        "boundary": "센서가 SPI를 지원하고 명령 형식이 같아야 거래가 성립합니다."
+      },
+      {
+        "id": "uart-eight-n-one-frame",
+        "sectionId": "uart",
+        "intuition": "공유 클록 없이 약속한 속도로 한 글자씩 시작·끝을 표시합니다.",
+        "workedExample": "RP2040 UART0 TX/RX를 GPIO0/1에 두는 예입니다.",
+        "boundary": "주소·요청·오류 검사는 별도 상위 프로토콜이 필요합니다."
+      },
+      {
+        "id": "serial-bus-comparison-boundary",
+        "sectionId": "choice",
+        "intuition": "같은 네 데이터라도 요청과 응답이 다른 일을 합니다.",
+        "workedExample": "UART 네 바이트에는 I²C 레지스터 주소 요청이 들어 있지 않습니다.",
+        "boundary": "세 값을 곧바로 실제 센서 읽기의 빠르기 순서로 쓰지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 I²C 읽기",
+        "relation": "주소·위치·ACK를 포함해 63클록을 셉니다.",
+        "concepts": [
+          "i2c-address-ack-transaction",
+          "i2c-nine-clock-accounting",
+          "i2c-clock-stretch-boundary"
+        ]
+      },
+      {
+        "label": "02 다른 선로",
+        "relation": "SPI 40클록과 UART 40프레임 비트를 계산합니다.",
+        "concepts": [
+          "spi-command-data-clocks",
+          "uart-eight-n-one-frame"
+        ]
+      },
+      {
+        "label": "03 선택 경계",
+        "relation": "서로 다른 거래를 실제 요구와 함께 비교합니다.",
+        "concepts": [
+          "serial-bus-comparison-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "I²C 한 바이트의 8비트 뒤에 왜 아홉 번째 클록이 필요합니까?",
+        "answerChecklist": [
+          "ACK/NACK",
+          "수신자가 응답"
+        ],
+        "requiredConcepts": [
+          "i2c-address-ack-transaction"
+        ],
+        "sectionId": "i2c"
+      },
+      {
+        "level": "basic",
+        "question": "주소·위치 세 묶음과 데이터 네 묶음은 모두 몇 클록입니까?",
+        "answerChecklist": [
+          "7묶음",
+          "각 9클록",
+          "63클록"
+        ],
+        "requiredConcepts": [
+          "i2c-nine-clock-accounting"
+        ],
+        "sectionId": "count"
+      },
+      {
+        "level": "basic",
+        "question": "가상 63클록을 400 kHz로 보낼 때 순수 클록 시간은?",
+        "answerChecklist": [
+          "63/400000초",
+          "157.5 µs"
+        ],
+        "requiredConcepts": [
+          "i2c-nine-clock-accounting"
+        ],
+        "sectionId": "count"
+      },
+      {
+        "level": "basic",
+        "question": "같은 가상 I²C 거래를 100 kHz로 낮추면 클록 시간은?",
+        "answerChecklist": [
+          "63/100000초",
+          "630 µs"
+        ],
+        "requiredConcepts": [
+          "i2c-nine-clock-accounting"
+        ],
+        "sectionId": "count"
+      },
+      {
+        "level": "basic",
+        "question": "SPI 명령 1바이트와 데이터 4바이트를 1 MHz로 보내면?",
+        "answerChecklist": [
+          "5×8=40클록",
+          "40 µs",
+          "CS 지연 제외"
+        ],
+        "requiredConcepts": [
+          "spi-command-data-clocks"
+        ],
+        "sectionId": "spi"
+      },
+      {
+        "level": "basic",
+        "question": "UART 8N1 네 바이트를 115200 bit/s로 보내는 선로 시간은?",
+        "answerChecklist": [
+          "4×10=40비트",
+          "약 347.2 µs"
+        ],
+        "requiredConcepts": [
+          "uart-eight-n-one-frame"
+        ],
+        "sectionId": "uart"
+      },
+      {
+        "level": "advanced",
+        "question": "I²C의 계산값 157.5 µs보다 실제 완료가 길 수 있는 이유를 셋 쓰세요.",
+        "answerChecklist": [
+          "START/STOP",
+          "클록 스트레칭",
+          "버스 점유·상승·소프트웨어 대기"
+        ],
+        "requiredConcepts": [
+          "i2c-clock-stretch-boundary"
+        ],
+        "sectionId": "count"
+      },
+      {
+        "level": "advanced",
+        "question": "I²C·SPI·UART의 세 수치를 같은 센서 요청의 실제 완료 시간 순위로 쓸 수 있습니까?",
+        "answerChecklist": [
+          "안 됨",
+          "UART 요청 형식 빠짐",
+          "SPI 명령·CS 다름",
+          "장치 지원·대기"
+        ],
+        "requiredConcepts": [
+          "serial-bus-comparison-boundary"
+        ],
+        "sectionId": "choice"
+      },
+      {
+        "level": "advanced",
+        "question": "SPI와 I²C에서 장치 선택과 통신 선의 역할이 어떻게 다릅니까?",
+        "answerChecklist": [
+          "SPI CS와 클록·송수신",
+          "I²C 공유 SDA/SCL과 주소",
+          "클록 모드·풀업"
+        ],
+        "requiredConcepts": [
+          "i2c-address-ack-transaction",
+          "spi-command-data-clocks"
+        ],
+        "sectionId": "spi"
+      },
+      {
+        "level": "advanced",
+        "question": "1 ms 센서 마감에서 I²C 157.5 µs만 보고 성공을 보장할 수 있습니까?",
+        "answerChecklist": [
+          "보장 불가",
+          "ISR·작업 대기",
+          "버스 점유·스트레칭",
+          "전체 경로 계측"
+        ],
+        "requiredConcepts": [
+          "i2c-clock-stretch-boundary",
+          "serial-bus-comparison-boundary"
+        ],
+        "sectionId": "choice"
+      }
+    ],
+    "papers": [
+      {
+        "title": "NXP, UM10204 I²C-bus specification and user manual Rev. 7.0 (2021)",
+        "href": "https://www.nxp.com/docs/en/user-guide/UM10204.pdf",
+        "problem": "주소를 가진 여러 장치가 두 선을 공유하며 데이터와 응답을 교환합니다.",
+        "contribution": "원본 1·9–10·15쪽의 모드별 클록, 매 바이트 아홉 번째 ACK 클록, 반복 START와 클록 스트레칭입니다.",
+        "assumptions": "가상 센서가 7비트 주소·한 바이트 위치·4바이트 연속 읽기를 지원합니다.",
+        "evidenceScope": "NXP 공식 규격 PDF의 해당 쪽을 확인했습니다. 63클록 거래와 400 kHz는 본문 가정입니다.",
+        "notClaim": "157.5 µs가 센서 전체 응답의 규격상 보장값이라는 뜻은 아닙니다.",
+        "sectionId": "i2c"
+      },
+      {
+        "title": "Raspberry Pi Pico SDK Hardware APIs, I2C/SPI/UART/GPIO",
+        "href": "https://www.raspberrypi.com/documentation/pico-sdk/hardware.html",
+        "problem": "RP2040의 직렬 컨트롤러와 가능한 핀 기능을 구성합니다.",
+        "contribution": "I²C·SPI·UART API와 GPIO 기능 선택 표 및 UART 보율 설정 예를 제공합니다.",
+        "assumptions": "각 가상 주변 장치가 선택한 모드와 속도를 지원합니다.",
+        "evidenceScope": "라즈베리 파이 공식 SDK 문서의 해당 API 설명을 확인했습니다. 거래 바이트 수는 본문 가정입니다.",
+        "notClaim": "SPI·UART 가상 거래가 I²C 센서 읽기와 기능상 완전히 같다는 뜻은 아닙니다.",
+        "sectionId": "uart"
+      }
+    ]
+  },
+  "embedded/scheduling-and-real-time": {
+    "coreIdea": "가상 한 코어의 제어 P5/C1, 센서 P10/C2/D4, 로그 P50/C3에서 평균 CPU 점유율 46%를 구하고, 자원 대기 없을 때 센서 3ms 완료·1ms 여유와 로그 뮤텍스 2ms 잔여 때 5ms 완료·1ms 초과를 비교합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "serial-bus-comparison-boundary",
+        "role": "외부 센서 거래의 실제 완료 시간은 선로 클록 하한보다 길 수 있습니다."
+      },
+      {
+        "id": "absolute-periodic-deadline",
+        "role": "앞 타이머 글의 절대 주기 목표를 재사용합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "period-execution-deadline-triple",
+        "role": "각 작업의 세 시각 조건을 정의합니다."
+      },
+      {
+        "id": "fixed-priority-ready-selection",
+        "role": "기본 시간표를 추적합니다."
+      },
+      {
+        "id": "periodic-absolute-wake",
+        "role": "타이머 글의 절대 목표를 작업 수준에 연결합니다."
+      },
+      {
+        "id": "periodic-cpu-utilization",
+        "role": "총량 46%를 계산합니다."
+      },
+      {
+        "id": "mutex-blocking-priority-inheritance",
+        "role": "낮은 우선순위의 자원 보유를 계산합니다."
+      },
+      {
+        "id": "response-time-validation",
+        "role": "가상 시간표의 검증 범위를 밝힙니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "period-execution-deadline-triple",
+        "sectionId": "tasks",
+        "intuition": "자주 오는 일과 오래 걸리는 일과 늦으면 안 되는 시각을 따로 적습니다.",
+        "workedExample": "센서가 t=0에 준비되면 t=4ms까지 끝나야 합니다.",
+        "boundary": "앞 글의 GPIO2 사건 1ms 마감과 이 센서 작업 4ms 마감을 혼동하지 않습니다."
+      },
+      {
+        "id": "fixed-priority-ready-selection",
+        "sectionId": "timeline",
+        "intuition": "높은 일이 다시 생기면 낮은 일이 잠시 멈춥니다.",
+        "workedExample": "센서 완료 3ms는 상대 마감4ms보다 1ms 빠릅니다.",
+        "boundary": "자원 대기·RTOS 오버헤드를 넣으면 같은 시간표를 그대로 쓸 수 없습니다."
+      },
+      {
+        "id": "periodic-absolute-wake",
+        "sectionId": "tasks",
+        "intuition": "늦게 끝났다고 다음 주기의 원래 시각이 바뀌지 않습니다.",
+        "workedExample": "센서 목표 0,10,20ms를 실행 시간 변화에도 기준으로 둡니다.",
+        "boundary": "RTOS tick 분해능과 놓친 주기에 대한 정책은 따로 정합니다."
+      },
+      {
+        "id": "periodic-cpu-utilization",
+        "sectionId": "utilization",
+        "intuition": "50ms 중 23ms의 일감이 있다고 한 번의 4ms 여유를 알 수는 없습니다.",
+        "workedExample": "센서의 기본 완료 3ms와 뮤텍스 대기 뒤 5ms는 평균 U가 같아도 달라집니다.",
+        "boundary": "U<1만으로 모든 상대 마감 충족을 보장하지 않습니다."
+      },
+      {
+        "id": "mutex-blocking-priority-inheritance",
+        "sectionId": "blocking",
+        "intuition": "센서가 먼저 달리고 싶어도 잠긴 자원은 로그가 풀어야 합니다.",
+        "workedExample": "뮤텍스 보유 2ms 뒤 센서 완료5ms, 마감 초과1ms입니다.",
+        "boundary": "ISR은 기다리는 뮤텍스를 가져서는 안 됩니다."
+      },
+      {
+        "id": "response-time-validation",
+        "sectionId": "limits",
+        "intuition": "평균 그래프보다 늦게 끝난 한 번의 경로를 조사합니다.",
+        "workedExample": "가상 U=46%와 3/5ms 완료를 RP2040 실측 수치로 보고하지 않습니다.",
+        "boundary": "최악 실행·버스 대기·임계 구간 상한 없이는 마감 보장을 주장할 수 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 세 작업",
+        "relation": "주기·CPU 시간·마감과 절대 준비 시각을 정합니다.",
+        "concepts": [
+          "period-execution-deadline-triple",
+          "periodic-absolute-wake"
+        ]
+      },
+      {
+        "label": "02 기본 시간표와 총량",
+        "relation": "고정 우선순위 순서와 46% 점유율을 계산합니다.",
+        "concepts": [
+          "fixed-priority-ready-selection",
+          "periodic-cpu-utilization"
+        ]
+      },
+      {
+        "label": "03 뮤텍스와 실측",
+        "relation": "공유 자원에 막힌 센서의 마감 초과와 측정 범위를 봅니다.",
+        "concepts": [
+          "mutex-blocking-priority-inheritance",
+          "response-time-validation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "제어 작업의 C=1ms, P=5ms인 CPU 점유율은 얼마입니까?",
+        "answerChecklist": [
+          "1/5",
+          "20%"
+        ],
+        "requiredConcepts": [
+          "periodic-cpu-utilization"
+        ],
+        "sectionId": "utilization"
+      },
+      {
+        "level": "basic",
+        "question": "센서 작업의 C=2ms, P=10ms인 CPU 점유율은 얼마입니까?",
+        "answerChecklist": [
+          "2/10",
+          "20%"
+        ],
+        "requiredConcepts": [
+          "periodic-cpu-utilization"
+        ],
+        "sectionId": "utilization"
+      },
+      {
+        "level": "basic",
+        "question": "로그 작업의 C=3ms, P=50ms인 CPU 점유율은 얼마입니까?",
+        "answerChecklist": [
+          "3/50",
+          "6%"
+        ],
+        "requiredConcepts": [
+          "periodic-cpu-utilization"
+        ],
+        "sectionId": "utilization"
+      },
+      {
+        "level": "basic",
+        "question": "세 주기 작업의 평균 CPU 점유율 합은 얼마입니까?",
+        "answerChecklist": [
+          "20+20+6",
+          "46%",
+          "50ms 중 23ms"
+        ],
+        "requiredConcepts": [
+          "periodic-cpu-utilization"
+        ],
+        "sectionId": "utilization"
+      },
+      {
+        "level": "basic",
+        "question": "모두 0ms에 준비되고 공유 자원 대기가 없다면 센서는 언제 끝납니까?",
+        "answerChecklist": [
+          "제어0–1",
+          "센서1–3",
+          "3ms 완료·마감 여유1ms"
+        ],
+        "requiredConcepts": [
+          "fixed-priority-ready-selection"
+        ],
+        "sectionId": "timeline"
+      },
+      {
+        "level": "basic",
+        "question": "기본 일정에서 로그는 5ms 제어 선점 뒤 언제 최종 완료됩니까?",
+        "answerChecklist": [
+          "로그3–5에서 2ms",
+          "제어5–6",
+          "로그6–7 완료"
+        ],
+        "requiredConcepts": [
+          "fixed-priority-ready-selection"
+        ],
+        "sectionId": "timeline"
+      },
+      {
+        "level": "advanced",
+        "question": "이전 로그가 뮤텍스를 2ms 더 잡고 있으면 센서 완료와 마감 초과는?",
+        "answerChecklist": [
+          "제어0–1",
+          "로그1–3",
+          "센서3–5",
+          "마감4ms 초과1ms"
+        ],
+        "requiredConcepts": [
+          "mutex-blocking-priority-inheritance"
+        ],
+        "sectionId": "blocking"
+      },
+      {
+        "level": "advanced",
+        "question": "CPU 점유율 46%만으로 센서의 4ms 마감을 보장할 수 없는 까닭은?",
+        "answerChecklist": [
+          "총량과 개별 창 다름",
+          "높은 우선순위·뮤텍스 대기",
+          "버스·IRQ 시간"
+        ],
+        "requiredConcepts": [
+          "periodic-cpu-utilization",
+          "response-time-validation"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "우선순위 상속이 로그의 남은 2ms 임계 구간을 없앨 수 있습니까?",
+        "answerChecklist": [
+          "아니요",
+          "중간 우선순위 간섭만 줄임",
+          "임계 구간 상한 줄이기"
+        ],
+        "requiredConcepts": [
+          "mutex-blocking-priority-inheritance"
+        ],
+        "sectionId": "blocking"
+      },
+      {
+        "level": "advanced",
+        "question": "주기 작업의 실제 마감 검증에서 어떤 시각과 추가 구간을 기록합니까?",
+        "answerChecklist": [
+          "준비·시작·완료",
+          "버스 대기·IRQ·tick",
+          "절대 주기·놓친 release 정책"
+        ],
+        "requiredConcepts": [
+          "periodic-absolute-wake",
+          "response-time-validation"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "FreeRTOS, RTOS Fundamentals and Task Priorities",
+        "href": "https://www.freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals",
+        "problem": "작업이 여럿일 때 정해진 시각 안에 결과를 내도록 CPU 실행 순서를 정합니다.",
+        "contribution": "공식 가이드는 준비된 최고 우선순위 작업의 실행과 실시간 마감의 의미를 설명합니다.",
+        "assumptions": "선점 가능한 FreeRTOS 설정의 한 코어 사례로 적용합니다.",
+        "evidenceScope": "FreeRTOS 공식 설명을 확인했습니다. 세 가상 작업과 46%는 본문 수치입니다.",
+        "notClaim": "이 예제가 실제 FreeRTOS/RP2040의 타이밍 벤치마크라는 뜻은 아닙니다.",
+        "sectionId": "tasks"
+      },
+      {
+        "title": "FreeRTOS Reference Manual v10, vTaskDelayUntil()",
+        "href": "https://www.freertos.org/media/2018/FreeRTOS_Reference_Manual_V10.0.0.pdf",
+        "problem": "주기 작업의 목표 시각을 처리 시간에 따라 밀리지 않게 유지합니다.",
+        "contribution": "절대 시각까지 블록하는 vTaskDelayUntil과 상대 vTaskDelay의 차이를 설명합니다.",
+        "assumptions": "tick 분해능과 일정 기간에 맞춘 구성을 전제로 합니다.",
+        "evidenceScope": "FreeRTOS 공식 참조 매뉴얼의 해당 API 설명을 확인했습니다.",
+        "notClaim": "가상 5·10·50ms가 어떤 tick 설정에서도 정확히 실행된다는 뜻은 아닙니다.",
+        "sectionId": "tasks"
+      },
+      {
+        "title": "FreeRTOS, FreeRTOS mutexes",
+        "href": "https://freertos.org/Real-time-embedded-RTOS-mutexes.html",
+        "problem": "공유 자원 보호와 우선순위 역전의 영향을 줄입니다.",
+        "contribution": "뮤텍스의 기본 우선순위 상속과 ISR에서 뮤텍스를 기다리지 않는 이유를 설명합니다.",
+        "assumptions": "본문의 남은 2ms 임계 구간은 독립적인 가정입니다.",
+        "evidenceScope": "FreeRTOS 공식 뮤텍스 문서의 상속·ISR 경계를 확인했습니다.",
+        "notClaim": "상속이 임계 구간 자체의 실행 시간을 없애거나 모든 마감을 보장한다는 뜻은 아닙니다.",
+        "sectionId": "blocking"
+      }
+    ]
+  },
+  "embedded/firmware-update-and-recovery": {
+    "coreIdea": "가상 4 MiB 플래시에 256+1536+1536+768 KiB를 배치하고 v1을 보존한 채 v2를 완전히 받아 서명 검증한 뒤 TEST swap합니다. 자가 검사 후 image OK면 v2를 유지하고 미확정 재부팅이면 v1로 복귀합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "response-time-validation",
+        "role": "앞 글에서 검증한 v1의 작업 마감과 센서 기능을 업데이트 이후에도 확인합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "dual-slot-flash-layout",
+        "role": "v1을 보존할 저장 공간을 계산합니다."
+      },
+      {
+        "id": "firmware-image-integrity-signature",
+        "role": "불완전하거나 위조된 후보를 차단합니다."
+      },
+      {
+        "id": "test-swap-candidate",
+        "role": "검증 이후의 시험 상태를 설명합니다."
+      },
+      {
+        "id": "image-confirmation-revert",
+        "role": "부팅 성공과 제품 정상 동작을 구분합니다."
+      },
+      {
+        "id": "power-fail-swap-resume",
+        "role": "전원 차단 지점별 경로를 구분합니다."
+      },
+      {
+        "id": "rp2040-recovery-boundary",
+        "role": "칩 고유 기능과 제품 구현을 분리합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "dual-slot-flash-layout",
+        "sectionId": "layout",
+        "intuition": "새 앱을 받는 동안 지금 쓰는 앱을 덮어쓰지 않습니다.",
+        "workedExample": "4096-256-1536-1536=768 KiB가 남습니다.",
+        "boundary": "RP2040 내장 ROM에 앱 이중 슬롯 기능이 있다는 뜻은 아닙니다."
+      },
+      {
+        "id": "firmware-image-integrity-signature",
+        "sectionId": "verify",
+        "intuition": "받은 파일과 믿을 수 있는 제작자의 파일인지 따로 묻습니다.",
+        "workedExample": "다운로드 중 전원이 끊기거나 서명이 틀리면 v1을 계속 실행합니다.",
+        "boundary": "신뢰 키 저장·회수와 다운그레이드 정책은 제품이 설계해야 합니다."
+      },
+      {
+        "id": "test-swap-candidate",
+        "sectionId": "trial",
+        "intuition": "새 앱을 한 번 써 보되 돌아갈 수 있게 옛 앱을 보관합니다.",
+        "workedExample": "v2를 시험 실행하는 동안 보조 슬롯에는 복귀용 v1이 있습니다.",
+        "boundary": "덮어쓰기나 직접 XIP 등 모든 MCUboot 모드에 같은 복귀 동작을 적용하지 않습니다."
+      },
+      {
+        "id": "image-confirmation-revert",
+        "sectionId": "trial",
+        "intuition": "CPU가 시작한 것만으로 센서가 정상이라는 뜻은 아닙니다.",
+        "workedExample": "센서 읽기 실패 뒤 리셋되고 image OK가 없으면 v1로 돌아갑니다.",
+        "boundary": "검사의 범위와 확정 시점은 제품별로 정해야 합니다."
+      },
+      {
+        "id": "power-fail-swap-resume",
+        "sectionId": "power",
+        "intuition": "같은 전원 차단도 파일 받는 중과 슬롯을 바꾸는 중에는 결과가 다릅니다.",
+        "workedExample": "시험 v2의 확정 전 재시작은 REVERT, 확정 후 재시작은 v2 유지입니다.",
+        "boundary": "손상된 부트 코드나 외부 플래시 하드웨어 고장은 별도 복구가 필요합니다."
+      },
+      {
+        "id": "rp2040-recovery-boundary",
+        "sectionId": "limits",
+        "intuition": "현장 USB 재기록 통로가 있다고 자동으로 v1을 고르는 것은 아닙니다.",
+        "workedExample": "가상 4 MiB 배치와 복귀 정책은 실제 RP2040 보드의 기본 제공 수치가 아닙니다.",
+        "boundary": "플래시 쓰기 중 XIP 제약, 지우기 단위, 키 관리와 전원 차단 시험이 필요합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 배치·후보",
+        "relation": "두 슬롯과 복구 공간을 예약하고 후보의 완성·서명을 검증합니다.",
+        "concepts": [
+          "dual-slot-flash-layout",
+          "firmware-image-integrity-signature"
+        ]
+      },
+      {
+        "label": "02 시험·확정",
+        "relation": "TEST swap으로 v2를 써 보고 자가 검사 뒤에만 image OK를 기록합니다.",
+        "concepts": [
+          "test-swap-candidate",
+          "image-confirmation-revert"
+        ]
+      },
+      {
+        "label": "03 차단·복구 경계",
+        "relation": "전원 차단 지점을 나누고 RP2040 BOOTSEL과 앱 복귀를 구별합니다.",
+        "concepts": [
+          "power-fail-swap-resume",
+          "rp2040-recovery-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "가상 플래시 네 구획의 크기를 더하면 얼마입니까?",
+        "answerChecklist": [
+          "256+1536+1536+768",
+          "4096 KiB=4 MiB"
+        ],
+        "requiredConcepts": [
+          "dual-slot-flash-layout"
+        ],
+        "sectionId": "layout"
+      },
+      {
+        "level": "basic",
+        "question": "부트·복구256 KiB와 앱 슬롯 두 개 각1536 KiB를 빼면 얼마가 남습니까?",
+        "answerChecklist": [
+          "4096-256-3072",
+          "768 KiB"
+        ],
+        "requiredConcepts": [
+          "dual-slot-flash-layout"
+        ],
+        "sectionId": "layout"
+      },
+      {
+        "level": "basic",
+        "question": "v2 다운로드 도중 전원이 끊기면 어떤 앱을 실행합니까?",
+        "answerChecklist": [
+          "불완전한 후보를 시험 표시하지 않음",
+          "v1 유지"
+        ],
+        "requiredConcepts": [
+          "firmware-image-integrity-signature"
+        ],
+        "sectionId": "verify"
+      },
+      {
+        "level": "basic",
+        "question": "v2 이미지 서명 검증이 실패하면 어떤 상태를 선택합니까?",
+        "answerChecklist": [
+          "후보 거부",
+          "v1 유지"
+        ],
+        "requiredConcepts": [
+          "firmware-image-integrity-signature"
+        ],
+        "sectionId": "verify"
+      },
+      {
+        "level": "basic",
+        "question": "v2 시험 부팅 후 image OK를 기록하지 않고 재시작하면?",
+        "answerChecklist": [
+          "TEST swap의 다음 부팅 REVERT",
+          "v1 복귀"
+        ],
+        "requiredConcepts": [
+          "image-confirmation-revert"
+        ],
+        "sectionId": "trial"
+      },
+      {
+        "level": "basic",
+        "question": "v2 자가 검사 후 image OK를 기록하면 다음 부팅은?",
+        "answerChecklist": [
+          "v2 확정",
+          "v2 유지"
+        ],
+        "requiredConcepts": [
+          "image-confirmation-revert"
+        ],
+        "sectionId": "trial"
+      },
+      {
+        "level": "advanced",
+        "question": "swap 도중 전원 차단에서 기록된 상태 재개가 단순 덮어쓰기와 다른 점은?",
+        "answerChecklist": [
+          "교체 진행 상태 보존",
+          "기존 이미지 복귀 경로",
+          "지원되는 swap 모드 한정"
+        ],
+        "requiredConcepts": [
+          "power-fail-swap-resume",
+          "test-swap-candidate"
+        ],
+        "sectionId": "power"
+      },
+      {
+        "level": "advanced",
+        "question": "해시 검사와 서명 검증의 판단은 어떻게 다릅니까?",
+        "answerChecklist": [
+          "해시 손상 확인",
+          "신뢰 공개키 서명으로 출처 확인",
+          "키 신뢰 경로 필요"
+        ],
+        "requiredConcepts": [
+          "firmware-image-integrity-signature"
+        ],
+        "sectionId": "verify"
+      },
+      {
+        "level": "advanced",
+        "question": "RP2040 USB BOOTSEL 복구와 앱 자동 되돌리기가 다른 이유는?",
+        "answerChecklist": [
+          "BOOTSEL은 ROM의 재기록 진입",
+          "A/B 시험·확정은 제품 부트로더 추가",
+          "현장 개입 가능"
+        ],
+        "requiredConcepts": [
+          "rp2040-recovery-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "전원 차단 시험 지점 네 곳과 보안 정책 하나를 고르세요.",
+        "answerChecklist": [
+          "다운로드",
+          "swap",
+          "시험 v2",
+          "확정 뒤",
+          "다운그레이드·서명 키 정책"
+        ],
+        "requiredConcepts": [
+          "power-fail-swap-resume",
+          "rp2040-recovery-boundary"
+        ],
+        "sectionId": "power"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MCUboot, Bootloader design",
+        "href": "https://docs.mcuboot.com/design.html",
+        "problem": "교체 중 전원 차단과 시험 이미지 실패에도 이전 이미지를 보존해야 합니다.",
+        "contribution": "지원되는 swap의 TEST·REVERT·PERM, image OK와 중단된 swap 재개, 서명·무결성 검사를 설명합니다.",
+        "assumptions": "본문은 MCUboot 시험 swap에 해당하는 가상 RP2040 제품 부트로더를 가정합니다.",
+        "evidenceScope": "MCUboot 공식 설계 문서의 swap·trailer·image validation 설명을 확인했습니다.",
+        "notClaim": "모든 MCUboot 업데이트 모드나 RP2040 ROM에 자동 되돌리기가 있다는 뜻은 아닙니다.",
+        "sectionId": "trial"
+      },
+      {
+        "title": "Raspberry Pi, RP2040 Datasheet, XIP flash and Bootrom",
+        "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+        "problem": "RP2040의 외부 플래시 실행과 기본 복구 진입 경로를 확인합니다.",
+        "contribution": "외부 QSPI 플래시 XIP와 bootrom의 다음 단계 부팅, USB BOOTSEL 경로를 설명합니다.",
+        "assumptions": "4 MiB 용량, 두 앱 슬롯과 크기는 가상 제품 배치입니다.",
+        "evidenceScope": "공식 데이터시트 원본 123·129–132·145쪽을 확인했습니다.",
+        "notClaim": "RP2040 부트 ROM이 MCUboot A/B rollback을 제공한다는 뜻은 아닙니다.",
+        "sectionId": "layout"
+      }
+    ]
+  },
   "labor/wage-floor-natural-experiment": {
     entryNote:
       "앞 세 편은 조직과 물건의 값을 다뤘습니다. 여기서는 같은 셈을 사람이 파는 시간에 적용하고, 그 예측이 실제 측정과 어떻게 만나는지까지 봅니다.",

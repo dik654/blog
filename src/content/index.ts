@@ -32,6 +32,10 @@ import disputeResolution from "./dispute-resolution";
 import testimony from "./testimony";
 import recordNumbers from "./record-numbers";
 import inferenceFromSources from "./inference-from-sources";
+import circuits from "./circuits";
+import semiconductors from "./semiconductors";
+import devices from "./devices";
+import embedded from "./embedded";
 
 export const categories = [
   ai,
@@ -63,6 +67,10 @@ export const categories = [
   testimony,
   recordNumbers,
   inferenceFromSources,
+  circuits,
+  semiconductors,
+  devices,
+  embedded,
 ];
 
 export interface DomainGroup {

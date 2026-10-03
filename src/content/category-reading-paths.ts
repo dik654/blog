@@ -20,6 +20,42 @@ export interface CategoryReadingPath {
 export const CATEGORY_READING_PATHS: Readonly<
   Partial<Record<string, CategoryReadingPath>>
 > = {
+  circuits: {
+    title: "한 회로를 계산하는 순서",
+    description: "갈림길의 전류부터 시간에 따라 바뀌는 신호까지, 매 글에서 같은 물리량을 더 깊게 읽습니다.",
+    stages: [
+      { eyebrow: "01 · 보존", title: "전압·전류·저항", description: "갈림길과 고리를 따라 전하와 에너지의 보존을 수치로 확인합니다.", subcategories: ["circuit-foundations"] },
+      { eyebrow: "02 · 시간", title: "저장된 상태와 변화", description: "전하와 자기장에 에너지가 쌓일 때 전압·전류가 따라오는 속도를 봅니다.", subcategories: ["circuit-dynamics"] },
+    ],
+    featuredArticles: ["lumped-circuit-and-conservation", "resistance-and-power-dissipation", "storage-elements-and-transients", "steady-state-and-impedance", "frequency-shaping-and-bode", "feedback-gain-and-stability"],
+  },
+  semiconductors: {
+    title: "재료에서 칩까지 읽기",
+    description: "재료 안에서 움직일 수 있는 전하를 먼저 세고, 제조 과정과 집적의 제약으로 넘어갑니다.",
+    stages: [
+      { eyebrow: "01 · 재료", title: "전자와 빈자리", description: "에너지 상태와 불순물에 따라 전자와 정공의 수가 달라지는 이유입니다.", subcategories: ["semiconductor-physics"] },
+      { eyebrow: "02 · 제조", title: "막을 열고 층을 잇기", description: "웨이퍼 위에서 영역을 고르고 연결한 뒤 수율을 확인합니다.", subcategories: ["semiconductor-fabrication"] },
+    ],
+    featuredArticles: ["bands-and-doping", "wafer-and-planar-process", "lithography-and-resolution", "doping-and-thermal-budget", "interconnect-and-rc-delay", "yield-defect-and-packaging"],
+  },
+  devices: {
+    title: "전압으로 흐름을 바꾸기",
+    description: "반도체 안의 전자·정공을 세었다면, 두 영역을 붙여 한 방향의 전류가 달라지는 이유를 따라갑니다.",
+    stages: [
+      { eyebrow: "01 · 접합", title: "전하가 만드는 장벽", description: "두 영역을 붙인 뒤 스스로 생기는 전기장과 외부 전압의 효과를 구분합니다.", subcategories: ["junction-devices"] },
+      { eyebrow: "02 · 표면", title: "절연층 너머의 전기장", description: "전극을 직접 닿게 하지 않고 표면의 전하를 모으거나 밀어내는 방법입니다.", subcategories: ["field-effect-devices"] },
+    ],
+    featuredArticles: ["pn-junction-and-rectification", "mos-capacitor-and-inversion", "mosfet-regions-and-transfer", "switching-energy-and-leakage"],
+  },
+  embedded: {
+    title: "칩에서 동작하는 프로그램 읽기",
+    description: "RP2040의 핀 한 개를 제어하는 일에서 시작해 사건 대응과 주기 작업, 통신, 복구까지 연결합니다.",
+    stages: [
+      { eyebrow: "01 · 장치", title: "주소와 신호", description: "레지스터·인터럽트·타이머·버스가 실제 핀과 어떻게 이어지는지 봅니다.", subcategories: ["embedded-hardware"] },
+      { eyebrow: "02 · 운영", title: "마감과 복구", description: "여러 작업이 시간을 나눠 쓰고 업데이트 실패 뒤 돌아오는 방법을 봅니다.", subcategories: ["embedded-software"] },
+    ],
+    featuredArticles: ["mcu-memory-map-and-registers", "interrupts-and-latency-budget", "timers-and-sampling", "serial-buses-and-tradeoffs", "scheduling-and-real-time", "firmware-update-and-recovery"],
+  },
   ai: {
     title: "AI를 위에서 아래로 읽는 네 단계",
     description:

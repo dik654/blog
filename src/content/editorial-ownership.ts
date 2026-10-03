@@ -12974,6 +12974,365 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "lumped-circuit-and-conservation": {
+    title: "회로를 선과 점으로 줄여도 되는 이유 글이 소유하는 범위",
+    owns: [
+      "전하량·전압·전류·저항의 단위와 측정 방향",
+      "한 갈림길의 전하 보존과 한 고리의 전압 합을 같은 12 V 예제로 계산하는 방법",
+      "전력 검산과 집중 회로 근사의 적용 경계",
+    ],
+    reuses: [],
+    evidence: [
+      { kind: "primary-source", rule: "Kirchhoff 1845의 정상 상태 금속판과 이 글의 가정한 저항망을 구분한다." },
+      { kind: "project-claim", rule: "수치 예제는 실측이나 원 논문의 데이터로 표현하지 않고 이상 부품의 가정으로 밝힌다." },
+    ],
+  },
+  "bands-and-doping": {
+    title: "실리콘에 소량을 섞으면 흐름이 달라지는 이유 글이 소유하는 범위",
+    owns: [
+      "허용 에너지띠와 띠틈이 움직이는 전하를 가르는 기준",
+      "300 K 순수 실리콘의 전자·정공 기준 농도와 도너·억셉터 가정의 농도 계산",
+      "움직이는 전하와 고정 이온의 중성 장부",
+      "농도 계산과 이동도·전도도 주장의 경계",
+    ],
+    reuses: [
+      { label: "전류가 전하의 이동 속도인 이유", href: "/electronics/circuits/lumped-circuit-and-conservation#small-circuit" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Wilson 1931의 에너지띠 논의와 Shockley 1949의 도너·억셉터 정의를 원문 쪽수에 한정한다." },
+      { kind: "project-claim", rule: "300 K n_i와 실리콘 띠틈은 MIT 자료에 귀속하고, 10^16 도핑은 가정임을 밝힌다." },
+    ],
+  },
+  "pn-junction-and-rectification": { title: "두 실리콘 조각을 붙이면 한쪽 방향으로 잘 흐르는 이유 글이 소유하는 범위", owns: ["p·n 경계의 확산, 고정 이온과 내장 전기장", "외부 전압이 장벽을 바꾸는 순·역방향 동작", "가상 300 K 접합의 이상 전류 계산과 실제 소자 적용 경계"], reuses: [{ label: "도핑과 다수·소수 캐리어의 정본", href: "/electronics/semiconductors/bands-and-doping#count" }, { label: "두 점 사이 전압의 정본", href: "/electronics/circuits/lumped-circuit-and-conservation#small-circuit" }], evidence: [{ kind: "primary-source", rule: "Shockley 1949 원문 461쪽 식과 현대식 표기·교육용 가정 숫자를 구분한다." }, { kind: "project-claim", rule: "Is=1 pA와 전류 결과를 실제 제품의 실측·정격으로 취급하지 않는다." }] },
+  "mos-capacitor-and-inversion": { title: "전극을 닿지 않게 놓아도 실리콘 표면이 바뀝니다 글이 소유하는 범위", owns: ["절연 전극의 전기장과 p형 실리콘 표면의 축적·공핍·반전", "평탄띠와 문턱을 별개 전압 기준으로 구분", "산화막 용량과 강한 반전 전하의 가정 수치 계산", "절연층 두께·누설·충전량의 설계 경계"], reuses: [{ label: "p–n 접합의 확산과 장벽", href: "/electronics/devices/pn-junction-and-rectification#diffusion" }, { label: "p형 도핑과 다수·소수 캐리어", href: "/electronics/semiconductors/bands-and-doping#count" }], evidence: [{ kind: "primary-source", rule: "Kahng 특허가 실제로 기술한 산화막 전극 구조와 이 글의 가상 축전기를 구분한다." }, { kind: "project-claim", rule: "10 nm·100 µm²·문턱 0.5 V와 전자 108만 개는 가정과 계산이며 제품 수치가 아니다." }] },
+  "mosfet-regions-and-transfer": { title: "문 하나로 두 단자 사이의 전류를 조절합니다 글이 소유하는 범위", owns: ["게이트·소스·드레인·바디와 표면 채널의 역할", "이상 긴 채널의 차단·선형·핀치오프 뒤 포화 경계", "가상 k=1 mA/V² 소자의 0.18·0.5 mA 계산", "실제 누설·길이 변조·속도 포화의 경계"], reuses: [{ label: "절연 전극과 표면 반전 전하", href: "/electronics/devices/mos-capacitor-and-inversion#numbers" }, { label: "전압·전류의 부호와 단위", href: "/electronics/circuits/lumped-circuit-and-conservation#small-circuit" }], evidence: [{ kind: "primary-source", rule: "MIT 공식 강의안의 긴 채널 이상 모형과 본문의 가상 소자 숫자를 구분한다." }, { kind: "project-claim", rule: "k=1 mA/V²·문턱 0.5 V는 실측·제품 정격이 아니라 가정이다." }] },
+  "switching-energy-and-leakage": { title: "한 번 뒤집는 에너지와 멈춰 있어도 새는 전류 글이 소유하는 범위", owns: ["상보형 CMOS 출력의 두 충전·방전 경로", "부하 10 pF와 3.3 V의 완전 주기 에너지 108.9 pJ", "활동률 정의와 동적 전력 10.89 µW", "가정한 대기 누설 3.3 µW와 전압 변화의 판단 경계"], reuses: [{ label: "MOSFET 차단·실제 누설의 차이", href: "/electronics/devices/mosfet-regions-and-transfer#limits" }, { label: "회로의 전력 보존", href: "/electronics/circuits/lumped-circuit-and-conservation#power" }], evidence: [{ kind: "primary-source", rule: "MIT 공식 강의안의 이상 전환 장부와 실제 누설 가정을 구분한다." }, { kind: "project-claim", rule: "10 pF·3.3 V·1 MHz·1 µA는 제품 실측이 아닌 가상 숫자다." }] },
+  "resistance-and-power-dissipation": { title: "저항을 합친 뒤 각 부품의 열을 다시 세는 이유 글이 소유하는 범위", owns: ["12 V 가상 저항망의 직렬·병렬 등가", "오른쪽 1 kΩ 변경 시 전체·갈래 전류와 86.4 mW 전력 검산", "개별 저항의 I²R 발열과 Vishay 0603 표준 전력 정격 비교", "허용차·기판 열 조건의 판단 경계"], reuses: [{ label: "12 V 회로와 키르히호프 보존·전력 합", href: "/electronics/circuits/lumped-circuit-and-conservation#power" }], evidence: [{ kind: "primary-source", rule: "Vishay 공식 데이터시트의 제품 조건과 가상 회로 계산을 구분한다." }, { kind: "project-claim", rule: "12 V·1/2 kΩ 망과 대체 저항은 가정이며 제품 실험이 아니다." }] },
+  "storage-elements-and-transients": { title: "전하와 자기장을 담으면 변화에 시간이 걸립니다 글이 소유하는 범위", owns: ["축전기 전압·인덕터 전류가 이어지는 상태인 까닭", "가상 5 V·1 kΩ RC와 RL의 1 ms 지수 응답", "1τ의 63.2%와 3τ의 약 95% 수치", "저항을 두 배로 바꿀 때 RC·RL 시간 변화와 단일 저장 모델 경계"], reuses: [{ label: "정상 상태 저항과 열", href: "/electronics/circuits/resistance-and-power-dissipation#heat" }], evidence: [{ kind: "primary-source", rule: "MIT 공식 강의 자료의 RC·RL 식과 본문의 가상 5 V 수치를 구분한다." }, { kind: "project-claim", rule: "1 µF·1 H는 같은 시간 상수를 만들기 위해 고른 교육용 가정이다." }] },
+  "steady-state-and-impedance": { title: "반복 신호에서는 크기와 늦는 각도를 함께 셉니다 글이 소유하는 범위", owns: ["정현파 정상 상태와 시작 과도의 구분", "최대 진폭·각주파수·위상 지연의 시간 해석", "R/C/L의 복소 임피던스와 RC 전압 분배", "가상 1 kΩ·1 µF의 5 V 입력에서 출력 3.54 V·−45° 계산"], reuses: [{ label: "1 ms RC 충전 시간과 저장 상태", href: "/electronics/circuits/storage-elements-and-transients#rc" }], evidence: [{ kind: "primary-source", rule: "MIT 공식 강의안의 임피던스 식과 본문의 가상 수치를 구분한다." }, { kind: "project-claim", rule: "5 V는 최대 진폭이며 RMS 또는 실측치가 아니다." }] },
+  "frequency-shaping-and-bode": {title:"느린 신호와 빠른 신호를 나누는 주파수 지도 글이 소유하는 범위",owns:["같은 1 kΩ·1 µF RC의 차단 주파수와 3.54 V 경계","전압 진폭비의 dB 환산과 로그 주파수 보드 선도","고주파 −20 dB/dec 근사와 정확한 −17.03 dB 차이","별도 고역 통과 연결·부하 한계"],reuses:[{label:"RC 복소 분배와 5 V 최대 진폭",href:"/electronics/circuits/steady-state-and-impedance#divider"}],evidence:[{kind:"primary-source",rule:"MIT 원본 RC·필터 도식과 본문의 가상 수치를 분리한다."},{kind:"project-claim",rule:"−20 dB/dec는 고주파 근사이며 경계부터 정확한 변화량으로 쓰지 않는다."}]},
+  "feedback-gain-and-stability": {
+    "title": "되먹임의 이득과 위상 여유 글이 소유하는 범위",
+    "owns": [
+      "1 V·A=100·β=0.1/0.5의 오차와 폐루프 이득",
+      "가상 10·100 rad/s 두 극 증폭기의 루프 교차 계산",
+      "59.3°·27.9° 위상 여유와 실제 부하 한계"
+    ],
+    "reuses": [
+      {
+        "label": "보드 선도의 dB와 주파수 눈금",
+        "href": "/electronics/circuits/frequency-shaping-and-bode#plot"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "TI 공식 자료의 식과 본문의 가상 두 극 수치를 구분한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "위상 여유만으로 특정 실제 제품의 발진 여부를 단정하지 않는다."
+      }
+    ]
+  },
+  "wafer-and-planar-process": {
+    "title": "웨이퍼와 평면 공정의 산화막·확산·접촉 글이 소유하는 범위",
+    "owns": [
+      "Hoerni 특허의 웨이퍼·산화막 선택 확산·접합 표면 보호 순서",
+      "가상 100·2·80 µm의 p형 폭 104 µm와 한쪽 명목 거리 12 µm",
+      "원 특허의 다이오드와 트랜지스터 접촉 구조 및 현대 공정과의 경계"
+    ],
+    "reuses": [
+      {
+        "label": "p형·n형 불순물의 역할",
+        "href": "/electronics/semiconductors/bands-and-doping#dopants"
+      },
+      {
+        "label": "p-n 접합의 의미",
+        "href": "/electronics/devices/pn-junction-and-rectification#junction"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Hoerni 원 특허의 도면·문장과 교육용 단면 치수를 분리한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "12 µm는 중앙 정렬·대칭 확산의 명목 기하이며 제조 허용값으로 쓰지 않는다."
+      }
+    ]
+  },
+  "lithography-and-resolution": {
+    "title": "노광 해상도와 층 정렬 글이 소유하는 범위",
+    "owns": [
+      "감광막·레티클·현상·식각의 무늬 전달 순서",
+      "가상 λ193 nm·NA0.8·k1 0.4/0.3의 CD 96.5/72.4 nm",
+      "가상 200 nm 선·120 nm 창의 30/50 nm 오버레이와 최소 여유 10/−10 nm",
+      "계측 표적·식각 뒤 검증과 식의 적용 경계"
+    ],
+    "reuses": [
+      {
+        "label": "산화막 창과 접촉의 명목 거리",
+        "href": "/electronics/semiconductors/wafer-and-planar-process#protect"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "ASML 공식 설명과 교육용 광학·겹침 수치를 분리한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "CD와 오버레이의 가상 수치를 장비 사양 또는 양품률로 제시하지 않는다."
+      }
+    ]
+  },
+  "doping-and-thermal-budget": {
+    "title": "도핑 확산의 열 예산 글이 소유하는 범위",
+    "owns": [
+      "고정 도즈 가우스 분포와 폭 척도 a의 뜻",
+      "가상 D1·t1과 D2·t2의 누적 B 및 120→208 nm 계산",
+      "폭 척도와 접합 깊이의 구분",
+      "고정 표면 농도·고농도·결함·산화의 적용 경계"
+    ],
+    "reuses": [
+      {
+        "label": "선택 산화막 창과 옆 확산의 직관",
+        "href": "/electronics/semiconductors/wafer-and-planar-process#mask"
+      },
+      {
+        "label": "노광으로 정한 창 위치",
+        "href": "/electronics/semiconductors/lithography-and-resolution#transfer"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "MIT 강의의 해와 가정 D 수치를 구분한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "a=208 nm를 접합 깊이 또는 실제 제조 측정치로 쓰지 않는다."
+      }
+    ]
+  },
+  "interconnect-and-rc-delay": {
+    "title": "배선 지연 글이 소유하는 범위",
+    "owns": [
+      "π RC 배선의 출력 저항 항과 배선 저항 항",
+      "가상 74·158 ps 및 길이 제곱 항의 구분",
+      "가상 금속·유전체 변화의 효과",
+      "Elmore 첫 모멘트와 실제 50% 타이밍의 경계"
+    ],
+    "reuses": [
+      {
+        "label": "축전기 충전의 RC 시간",
+        "href": "/electronics/circuits/storage-elements-and-transients#rc"
+      },
+      {
+        "label": "앞의 도핑·열 공정",
+        "href": "/electronics/semiconductors/doping-and-thermal-budget#limits"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "MIT 배선 모델과 인텔 공정 비교의 원문 범위를 명시한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "가상 R·C 감소율을 인텔 실측치로 말하지 않는다."
+      }
+    ]
+  },
+  "yield-defect-and-packaging": {
+    "title": "수율과 패키징 글이 소유하는 범위",
+    "owns": [
+      "결함 민감 임계 면적과 점 결함 평균",
+      "가상 포아송 0개 확률 90.48%와 면적 4배의 67.03%",
+      "조건부 조립·시험 98% 뒤의 가상 886.7개",
+      "뭉친 결함·파라미터 불량 등 적용 경계"
+    ],
+    "reuses": [
+      {
+        "label": "배선의 저항·용량과 연결",
+        "href": "/electronics/semiconductors/interconnect-and-rc-delay#wire"
+      },
+      {
+        "label": "노광으로 정해진 패턴",
+        "href": "/electronics/semiconductors/lithography-and-resolution#transfer"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "MIT 결함 모형과 Intel 조립·시험 단계의 출처 범위를 분리한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "D0·Ac·98%를 실측 수율로 쓰지 않는다."
+      }
+    ]
+  },
+  "mcu-memory-map-and-registers": {
+    "title": "MCU 메모리 맵 글이 소유하는 범위",
+    "owns": [
+      "RP2040 GPIO5 주소·마스크 계산",
+      "기능 선택·출력 허용·출력 래치의 순서",
+      "GPIO_OUT 읽기와 실제 핀 입력의 차이",
+      "SET·CLR의 대상 비트 원자 변경"
+    ],
+    "reuses": [
+      {
+        "label": "출하된 칩을 사용하는 출발점",
+        "href": "/electronics/semiconductors/yield-defect-and-packaging#package"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "RP2040 공식 표의 주소와 SDK의 함수 역할을 일치시킨다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "외부 LED 연결·점등을 보드 실측으로 주장하지 않는다."
+      }
+    ]
+  },
+  "interrupts-and-latency-budget": {
+    "title": "인터럽트 지연 예산 글이 소유하는 범위",
+    "owns": [
+      "GPIO2 에지·주변 장치 상태·NVIC pending 경로",
+      "짧은 ISR과 I²C 작업 전달",
+      "가상 일곱 구간 493 µs·마감 여유 507 µs",
+      "대기 600 µs의 마감 초과와 실측 경계"
+    ],
+    "reuses": [
+      {
+        "label": "앞 글의 핀 입력과 출력 래치 차이",
+        "href": "/electronics/embedded/mcu-memory-map-and-registers#readback"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "RP2040 GPIO와 Arm NVIC의 역할을 나눠 인용한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "마이크로초 예제 값을 하드웨어의 보장 지연으로 쓰지 않는다."
+      }
+    ]
+  },
+  "timers-and-sampling": {
+    "title": "타이머와 샘플링 글이 소유하는 범위",
+    "owns": [
+      "RP2040 1 µs 타이머의 10 ms 절대 일정",
+      "알람 시각과 ADC 실제 변환 시각의 차이",
+      "100 Hz 샘플·50 Hz 경계와 30/70 Hz 동일 코사인 샘플",
+      "ADC 앞 필터·시각 지터의 적용 경계"
+    ],
+    "reuses": [
+      {
+        "label": "앞 글의 인터럽트 지연 예산",
+        "href": "/electronics/embedded/interrupts-and-latency-budget#budget"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "RP2040 하드웨어 조건과 MIT 이상 샘플링 조건을 구분한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "10 ms·30/70 Hz와 400 µs 지연을 실측값으로 쓰지 않는다."
+      }
+    ]
+  },
+  "serial-buses-and-tradeoffs": {
+    "title": "직렬 버스 거래 글이 소유하는 범위",
+    "owns": [
+      "가상 I²C 레지스터 읽기 63클록과 선로 시간",
+      "가상 SPI 명령+데이터 40클록과 CS 경계",
+      "UART 8N1 네 바이트 40비트",
+      "세 거래의 요청·대기 차이와 선택 경계"
+    ],
+    "reuses": [
+      {
+        "label": "앞 글의 주기 샘플",
+        "href": "/electronics/embedded/timers-and-sampling#rate"
+      },
+      {
+        "label": "인터럽트 뒤 센서 읽기 예산",
+        "href": "/electronics/embedded/interrupts-and-latency-budget#budget"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "NXP 버스 규격과 RP2040 SDK 지원을 구분한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "세 가상 선로 시간을 실측 센서 완료 시간으로 쓰지 않는다."
+      }
+    ]
+  },
+  "scheduling-and-real-time": {
+    "title": "실시간 작업 일정 글이 소유하는 범위",
+    "owns": [
+      "세 가상 작업의 주기·실행·마감과 고정 우선순위 시간표",
+      "평균 점유율 46%와 센서 마감1ms 여유",
+      "로그 뮤텍스 2ms 잔여에 따른 센서 1ms 마감 초과",
+      "실제 버스·IRQ·tick 측정의 검증 경계"
+    ],
+    "reuses": [
+      {
+        "label": "앞 글의 직렬 버스 시간 경계",
+        "href": "/electronics/embedded/serial-buses-and-tradeoffs#choice"
+      },
+      {
+        "label": "타이머 절대 목표",
+        "href": "/electronics/embedded/timers-and-sampling#timer"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "FreeRTOS 공식 일정·뮤텍스 설명과 가상 실행 시간을 구분한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "46%를 실제 CPU 측정치나 마감 보증으로 제시하지 않는다."
+      }
+    ]
+  },
+  "firmware-update-and-recovery": {
+    "title": "펌웨어 업데이트와 복구 글이 소유하는 범위",
+    "owns": [
+      "가상 4 MiB 두 이미지 슬롯의 용량 계산",
+      "후보 v2 완성·해시·서명 검증",
+      "시험 swap·자가 검사·확정·되돌리기",
+      "전원 차단 지점과 RP2040 BOOTSEL 경계"
+    ],
+    "reuses": [
+      {
+        "label": "앞 글의 작업 마감과 기능 검증",
+        "href": "/electronics/embedded/scheduling-and-real-time#limits"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "MCUboot swap의 지원 동작과 RP2040 bootrom의 기본 기능을 구별한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "4 MiB 배치·키·자가 검사를 실제 보드의 기성 기능으로 제시하지 않는다."
+      }
+    ]
+  },
   "wage-floor-natural-experiment": {
     title: "임금을 올리면 일자리가 준다는 예측을 재 본 글이 소유하는 범위",
     owns: [
