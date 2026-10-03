@@ -393,6 +393,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "devices/mos-capacitor-and-inversion": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "절연 전극 구조에서 표면 상태, 전압 기준, 반전 전하 계산, 산화막 경계까지가 하나의 MOS 축전기 질문을 풉니다. 양단자 전류를 조절하는 MOSFET은 다음 글로 분리합니다.", sharedGate: "10 nm·100 µm²·평탄띠 0 V·문턱 0.5 V·전극 1.0 V의 가정에서 0.345 pF·0.173 pC·전자 약 108만 개가 본문·식·Viz·연습문제에서 일치하는지 확인합니다." },
   "devices/mosfet-regions-and-transfer": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "한 긴 채널 소자의 네 단자와 채널에서 세 전류 영역·실제 모델 경계까지를 같은 전압 가정으로 추적합니다. 축전기의 표면 전하 정의는 앞 글, 스위칭 에너지는 다음 글이 소유합니다.", sharedGate: "Vth=0.5 V·k=1 mA/V²·VGS=1.5 V의 가정에서 VDS=0.2/1.0/1.5 V의 0.18/0.5/0.5 mA가 본문·식·Viz·연습문제에 일치하는지 확인합니다." },
   "devices/switching-energy-and-leakage": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "가상 CMOS 출력 하나에서 충전·방전 장부, 활동률, 누설, 전압 변경의 경계까지 같은 10 pF·3.3 V 사례로 따라갑니다. MOSFET 영역은 앞 글, 제조는 다음 글이 소유합니다.", sharedGate: "0→1→0 한 쌍당 108.9 pJ, 10%·1 MHz의 10.89 µW, 누설 3.3 µW와 합 14.19 µW가 본문·식·Viz·연습문제에 일치하는지 확인합니다." },
+  "circuits/resistance-and-power-dissipation": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "같은 12 V 망의 등가 계산에서 각 부품 발열과 실제 부품표 정격을 이어 답합니다. 보존 법칙은 앞 글, 시간 변화는 다음 글이 소유합니다.", sharedGate: "오른쪽 2→1 kΩ 변경 전후의 6→7.2 mA, 갈림길 6→4.8 V, 첫 부품 36→51.84 mW, 공급 72→86.4 mW가 본문·식·Viz·문제에 일치하는지 확인합니다." },
 };
 
 /**
@@ -400,6 +401,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "circuits/resistance-and-power-dissipation": "c6f5fea1f52dda34",
   "devices/switching-energy-and-leakage": "ceb9d7570a210e44",
   "devices/mosfet-regions-and-transfer": "1879d22ab7ea8d40",
   "devices/mos-capacitor-and-inversion": "8cc6ce4600003dae",
@@ -480,5 +482,5 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "firms/why-firms-exist": "3b1079e4fa979d9f",
   "firms/scale-and-cost-structure": "e1f1355815729170",
   "firms/market-power-and-markup": "5b410043b58ff7f5",
-  "circuits/lumped-circuit-and-conservation": "39d24f87803f1cd1",
+  "circuits/lumped-circuit-and-conservation": "ae617ac8e7582b07",
 };

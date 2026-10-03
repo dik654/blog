@@ -195,7 +195,7 @@ export default function ExplainedFormula({
         <div data-formula-operations className="mt-4 border-t border-border/60 pt-4">
           <p className="text-xs font-bold text-primary">이 식 안에서 연산이 하는 일</p>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
-            바로 위 식의 항을 underbrace로 다시 잡아, 각 연산을 왜 하는지 읽습니다.
+            식을 계산 순서대로 펼치고, 각 단계가 무엇을 뜻하는지 확인합니다.
           </p>
           <div className="mt-3 grid min-w-0 gap-2 lg:grid-cols-2">
             {operationAnnotations.map((operation, index) => (
