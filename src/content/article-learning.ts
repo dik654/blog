@@ -89692,4 +89692,796 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "inference-from-sources/ruins-mislead": {
+    entryNote:
+      "앞 두 분류가 손에 들어온 기록을 읽는 법을 소유합니다. 이 글은 그 읽기를 다시 세우지 않고, 손에 들어오기까지의 과정이 만드는 치우침만 다룹니다.",
+    coreIdea:
+      "투키디데스는 라케다이몬이 폐허가 되면 뒷사람이 그 명성을 힘의 증거로 받기를 꺼릴 것이고 아테네가 같은 일을 겪으면 힘을 실제의 두 배로 볼 것이라고 적습니다. 남는 것이 돌로 크게 지은 쪽에 치우치기 때문이고, 그래서 그가 세운 규칙은 한 방향 보정이 아니라 겉모습과 힘을 따로 따지는 것입니다. 이어서 같은 규칙으로 시인이 남긴 수를 내려 잡되, 평균을 잡고도 곱한 값을 적지 않고 대단치 않다는 말로 결론을 냅니다.",
+    assumedKnowledge: [
+      {
+        id: "source-is-a-record-not-the-past",
+        role: "적힌 것이 기록이라는 구분을 전제로 둡니다.",
+      },
+      {
+        id: "scatter-versus-shift-in-testimony",
+        role: "방향 있는 어긋남이 상쇄되지 않는다는 결과를 가져다 씁니다.",
+      },
+      {
+        id: "precision-of-a-sum",
+        role: "표기된 자릿수와 실제 해상도가 어긋난다는 문제를 전제로 둡니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "survival-is-selective",
+        role: "남는 과정이 종류를 가린다는 것을 세웁니다.",
+      },
+      {
+        id: "bias-direction-differs-by-case",
+        role: "같은 걸름이 대상마다 반대 방향의 오해를 만든다는 것을 세웁니다.",
+      },
+      {
+        id: "appearance-apart-from-power",
+        role: "저자가 세운 규칙을 정의합니다.",
+      },
+      {
+        id: "absence-as-evidence",
+        role: "적히지 않은 것을 단서로 쓰는 방법을 세웁니다.",
+      },
+      {
+        id: "conclusion-sized-to-the-evidence",
+        role: "결론의 꼴을 자료에 맞추는 일을 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "survival-is-selective",
+        sectionId: "what-remains",
+        intuition:
+          "돌로 지은 것은 기초가 남고 흙과 사람과 동맹은 남지 않습니다.",
+        workedExample:
+          "저자가 남는다고 적은 것은 신전과 공공 건물의 기초입니다. 라케다이몬이 땅의 5분의 2를 차지하고 전체를 이끌었다는 사실은 폐허에서 나오지 않습니다.",
+        boundary:
+          "남지 않는 것의 목록은 사회마다 다릅니다. 이 사고실험은 돌 건축이 힘의 표시이던 경우의 것입니다.",
+      },
+      {
+        id: "bias-direction-differs-by-case",
+        sectionId: "two-cities",
+        intuition:
+          "같은 재난인데 한쪽은 작게 보이고 다른 쪽은 두 배로 보입니다.",
+        workedExample:
+          "라케다이몬은 마을들이 모여 있어 남는 것이 적고, 아테네는 눈에 보이는 것이 커서 겉모습에서 미루면 힘이 부풀려집니다.",
+        proofIdea:
+          "추정자는 남은 것에서 힘을 읽습니다. 남은 것의 양이 힘에 비례하지 않고 건축 방식에 비례한다면, 같은 힘을 가진 두 도시라도 건축 방식이 다를 때 읽히는 힘이 달라집니다. 건축 방식이 힘보다 큰 쪽은 과대평가되고 작은 쪽은 과소평가되므로 오차의 부호가 대상에 따라 갈립니다.",
+        counterexample:
+          "건축 방식이 힘에 거의 비례하는 사회에서는 같은 걸름이 방향 없는 오차만 남깁니다. 방향이 생기는 것은 둘 사이의 관계가 대상마다 다를 때입니다.",
+        boundary:
+          "두 배라는 수는 저자가 쓴 표현이고 측정된 비가 아닙니다.",
+      },
+      {
+        id: "appearance-apart-from-power",
+        sectionId: "the-rule",
+        intuition:
+          "작아 보인다고 깎지 말고 커 보인다고 그대로 받지도 말라는 것입니다.",
+        workedExample:
+          "저자는 의심할 권리가 없다고 적고, 힘을 따지는 일을 빼놓은 채 성읍을 살펴보는 것으로 만족해서도 안 된다고 적습니다.",
+        boundary:
+          "규칙은 어느 쪽으로 얼마만큼 보정할지를 정해 주지 않습니다. 그것은 대상마다 따로 따져야 합니다.",
+      },
+      {
+        id: "absence-as-evidence",
+        sectionId: "using-the-rule",
+        intuition:
+          "다른 배의 인원이 적혀 있지 않다는 사실 자체가 단서가 됩니다.",
+        workedExample:
+          "시인은 배 1,200척 가운데 보이오티아 배 120명과 필록테테스 배 50명만 적었습니다. 저자는 다른 배를 적지 않은 것으로 보아 그 둘이 가장 많은 쪽과 가장 적은 쪽이라고 읽습니다.",
+        boundary:
+          "이 읽기는 추측이며 다른 설명을 완전히 막지는 못합니다. 저자도 근거를 들 뿐 단정하지 않습니다.",
+      },
+      {
+        id: "conclusion-sized-to-the-evidence",
+        sectionId: "using-the-rule",
+        intuition:
+          "평균을 잡아 놓고도 곱한 수를 적지 않습니다.",
+        workedExample:
+          "가장 큰 배와 가장 작은 배의 평균을 잡으면 한 척에 85명이지만, 저자는 1,200을 곱한 값을 적지 않고 건너간 사람의 수가 대단치 않게 보인다고만 적습니다.",
+        boundary:
+          "85명과 102,000이라는 곱은 이 글이 계산한 것이고 책에 적혀 있지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 걸러진 자료",
+        relation: "남는 과정이 종류를 가립니다.",
+        concepts: ["survival-is-selective"],
+      },
+      {
+        label: "01 방향",
+        relation: "대상에 따라 오해의 부호가 갈립니다.",
+        concepts: ["bias-direction-differs-by-case"],
+      },
+      {
+        label: "02 규칙",
+        relation: "겉모습과 힘을 따로 따집니다.",
+        concepts: ["appearance-apart-from-power"],
+      },
+      {
+        label: "03 쓰기",
+        relation: "공백을 단서로 쓰고 결론을 자료에 맞춥니다.",
+        concepts: ["absence-as-evidence", "conclusion-sized-to-the-evidence"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "저자가 든 두 도시의 폐허에서 뒷사람이 어떻게 틀린다고 적혀 있는지 쓰세요.",
+        answerChecklist: [
+          "라케다이몬 — 명성을 힘의 참된 표현으로 받기를 꺼림",
+          "아테네 — 힘을 실제의 두 배로 봄",
+          "같은 재난을 가정함",
+          "오해의 방향이 반대",
+        ],
+        requiredConcepts: ["bias-direction-differs-by-case"],
+        sectionId: "two-cities",
+      },
+      {
+        level: "basic",
+        question:
+          "저자가 폐허에 남는다고 적은 것과, 남지 않는 것의 예를 쓰세요.",
+        answerChecklist: [
+          "남는 것 — 신전과 공공 건물의 기초",
+          "남지 않는 것 — 흩어진 마을, 사람의 수",
+          "남지 않는 것 — 바깥의 동맹",
+          "라케다이몬이 땅의 5분의 2를 차지했다는 사실은 폐허에서 나오지 않음",
+        ],
+        requiredConcepts: ["survival-is-selective"],
+        sectionId: "what-remains",
+      },
+      {
+        level: "basic",
+        question: "저자가 이 사고실험에서 끌어낸 규칙을 쓰세요.",
+        answerChecklist: [
+          "의심할 권리가 없다",
+          "성읍을 살펴보는 것으로 만족하지 말 것",
+          "힘을 따지는 일을 빼놓지 말 것",
+          "두 방향을 모두 막음",
+        ],
+        requiredConcepts: ["appearance-apart-from-power"],
+        sectionId: "the-rule",
+      },
+      {
+        level: "basic",
+        question:
+          "시인이 남긴 세 수를 쓰고, 저자가 그 가운데 두 수를 어떻게 읽었는지 쓰세요.",
+        answerChecklist: [
+          "배 1,200척",
+          "보이오티아 배 한 척에 120명",
+          "필록테테스 배 50명",
+          "다른 배를 적지 않은 것으로 보아 최대와 최소로 읽음",
+        ],
+        requiredConcepts: ["absence-as-evidence"],
+        sectionId: "using-the-rule",
+      },
+      {
+        level: "basic",
+        question:
+          "저자가 평균을 잡은 뒤 적은 결론의 꼴을 쓰고, 적지 않은 것을 쓰세요.",
+        answerChecklist: [
+          "평균을 잡으면 건너간 사람의 수가 대단치 않게 보인다고 적음",
+          "1,200을 곱한 값은 적지 않음",
+          "결론을 수가 아니라 말로 적음",
+          "85명과 102,000은 이 글의 계산",
+        ],
+        requiredConcepts: ["conclusion-sized-to-the-evidence"],
+        sectionId: "using-the-rule",
+      },
+      {
+        level: "basic",
+        question:
+          "이 사고실험이 쓸모 있는 까닭을 자료의 조건으로 쓰세요.",
+        answerChecklist: [
+          "두 도시가 모두 저자의 당대에 있음",
+          "겉모습과 힘을 둘 다 알고 있음",
+          "답을 아는 문제를 만든 셈",
+          "거기서 나올 오답을 미리 계산함",
+        ],
+        requiredConcepts: ["bias-direction-differs-by-case"],
+        sectionId: "two-cities",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 걸름이 대상에 따라 반대 부호의 오차를 만드는 이유를 유도하세요.",
+        answerChecklist: [
+          "추정자는 남은 것에서 힘을 읽음",
+          "남은 것의 양이 힘이 아니라 건축 방식에 비례",
+          "건축 방식이 힘보다 큰 쪽은 과대평가",
+          "작은 쪽은 과소평가되어 부호가 갈림",
+        ],
+        requiredConcepts: ["bias-direction-differs-by-case", "survival-is-selective"],
+        sectionId: "what-remains",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 걸름이 방향 없는 오차만 남기는 경우를 들고, 방향이 생기는 조건을 쓰세요.",
+        answerChecklist: [
+          "건축 방식이 힘에 거의 비례하는 사회",
+          "그때는 부호가 갈리지 않음",
+          "방향은 둘 사이의 관계가 대상마다 다를 때 생김",
+          "그래서 보정 전에 관계부터 따져야 함",
+        ],
+        requiredConcepts: ["bias-direction-differs-by-case"],
+        sectionId: "two-cities",
+      },
+      {
+        level: "advanced",
+        question:
+          "폐허에서는 올려 보고 시인의 수에서는 내려 잡은 것이 모순이 아닌 이유를 쓰세요.",
+        answerChecklist: [
+          "규칙은 크게 보라는 것도 작게 보라는 것도 아님",
+          "자료가 어느 쪽으로 기울어 있는지를 먼저 보라는 것",
+          "폐허는 흩어져 사는 쪽을 깎음",
+          "시인의 수는 부풀리는 쪽으로 기움",
+        ],
+        requiredConcepts: ["appearance-apart-from-power", "bias-direction-differs-by-case"],
+        sectionId: "using-the-rule",
+      },
+      {
+        level: "advanced",
+        question:
+          "저자가 이 추론에 붙여 둔 조건 세 가지를 쓰고, 조건이 적혀 있는 것이 왜 중요한지 쓰세요.",
+        answerChecklist: [
+          "시인의 증언을 받아들일 수 있다면이라는 단서",
+          "시인이 스스로 허락한 과장을 감안해야 한다는 것",
+          "두 수가 최대와 최소라는 읽기가 추측이라는 것",
+          "조건을 숨겼다면 결론만 남았을 것",
+        ],
+        requiredConcepts: ["absence-as-evidence", "conclusion-sized-to-the-evidence"],
+        sectionId: "using-the-rule",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Thucydides, 『History of the Peloponnesian War』, 1권 10절 · Richard Crawley 영역",
+        href: "https://www.gutenberg.org/ebooks/7142",
+        problem:
+          "오래된 원정의 규모를 따지려는데 당시의 도시들이 지금 보기에 작고, 남은 자료는 시인의 전승뿐이었습니다. 보이는 것을 그대로 믿어도 틀리고 물리쳐도 틀리는 자리였습니다.",
+        contribution:
+          "두 도시가 폐허가 되는 경우를 가정해 남는 것이 치우쳐 남는다는 것을 보이고, 그래서 겉모습과 힘을 따로 따져야 한다는 규칙을 세웠습니다. 이어서 같은 규칙을 시인의 수에 적용해, 적히지 않은 배들을 단서로 삼아 두 수를 최대와 최소로 읽고 평균을 잡되 곱한 값은 적지 않았습니다.",
+        assumptions:
+          "시인의 증언을 자료로 받아들일 수 있어야 하고, 시인이 스스로 허락한 과장을 감안해야 하며, 두 수가 최대와 최소라는 읽기는 저자의 추측입니다. 세 조건이 모두 본문에 적혀 있습니다.",
+        evidenceScope:
+          "Project Gutenberg의 Crawley 영역본 전사본(eBook 7142)으로 1권 10절 전체를 읽었습니다. facsimile이 아니라 전사본이므로 쪽 이미지로 대조하지 못했고, 그래서 쪽수를 적지 않고 권·절 번호까지만 적습니다. 그리스어 원문은 읽지 않았습니다.",
+        notClaim:
+          "트로이아 원정의 실제 규모나 두 도시의 실제 국력을 판정하지 않습니다. 저자가 어떤 절차로 보정했는지까지만 읽습니다. 보정 절차를 네 단계로 정리한 것과 85명·102,000이라는 계산은 이 글이 더한 것이고 원문에 없습니다. 한국어 서술도 이 글이 옮긴 것이며 공인된 번역이 아닙니다.",
+        sectionId: "the-rule",
+      },
+    ],
+  },
+  "inference-from-sources/the-gap-was-made": {
+    entryNote:
+      "앞 글이 재료와 세월이 만드는 걸름을 소유합니다. 이 글은 그 논의를 다시 세우지 않고 사람이 만든 공백만 다룹니다.",
+    coreIdea:
+      "함무라비 법전의 조항 번호는 65에서 100으로 건너뜁니다. 돌기둥 앞면의 다섯 단이 긁혀 나가고 면이 다시 다듬어졌기 때문이고, 그 자리에 아무것도 새겨지지 않아 지웠다는 사실만 남았습니다. 100이라는 번호는 사라진 분량을 35개 조항으로 본 추정에서 왔으므로 번호 자체가 복원 판단을 담고 있으며, 공백에 대해 말할 수 있는 것은 주제의 목록과 분량의 추정까지입니다. 일부는 뒷날의 사본을 통해 돌아왔지만 편집자는 그것을 번호 없이 본문 끝에 따로 실어 자격이 다르다는 표시를 남겼습니다.",
+    assumedKnowledge: [
+      {
+        id: "survival-is-selective",
+        role: "남는 과정이 걸러진다는 전제를 가져다 사람이 만든 삭제로 넓힙니다.",
+      },
+      {
+        id: "conclusion-sized-to-the-evidence",
+        role: "공백에서 나온 주장들을 가르는 기준으로 씁니다.",
+      },
+      {
+        id: "attribution-tag",
+        role: "경로에 꼬리표를 붙이는 방식의 바탕으로 씁니다.",
+      },
+      {
+        id: "prescriptive-versus-measured-number",
+        role: "같은 사료를 다른 물음으로 읽는 자리라는 점을 전제로 둡니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "deliberate-erasure",
+        role: "지워진 공백과 소실된 공백을 가릅니다.",
+      },
+      {
+        id: "editorial-numbering-carries-an-estimate",
+        role: "번호가 복원 판단을 담는다는 것을 세웁니다.",
+      },
+      {
+        id: "shape-of-a-gap-versus-its-content",
+        role: "공백에서 말할 수 있는 범위를 정합니다.",
+      },
+      {
+        id: "transmission-path-changes-weight",
+        role: "돌아온 조각의 자격을 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "deliberate-erasure",
+        sectionId: "how-it-vanished",
+        intuition:
+          "글자가 흐려진 것이 아니라 글이 없어지고 면이 매끄러워졌습니다.",
+        workedExample:
+          "머리말은 앞면에 다섯 단이 더 있었는데 지워지고 돌이 다시 다듬어졌다고 적고, 자기 이름과 칭호를 새기려 한 정복자의 작업으로 보인다고 덧붙입니다. 실제로는 아무것도 새겨지지 않아 누가 돌을 가져갔는지의 단서가 없습니다.",
+        boundary:
+          "누가 지웠는지는 이 사료에서 나오지 않습니다. 의도된 삭제라는 종류까지만 정해집니다.",
+      },
+      {
+        id: "editorial-numbering-carries-an-estimate",
+        sectionId: "the-numbering",
+        intuition:
+          "65 다음이 100인 것은 그 사이에 정확히 34개가 있었기 때문이 아닙니다.",
+        workedExample:
+          "편집자는 셰일이 사라진 부분을 35개 조항으로 추정했고 그를 따라 100조부터 다시 시작한다고 적습니다.",
+        proofIdea:
+          "지워진 단에서는 조항을 셀 수 없으므로 그 수는 남은 단의 글자 밀도와 조항의 평균 길이에서 미루어 잡은 값입니다. 뒤따르는 번호는 그 값에 더해 만들어지므로, 추정값이 달라지면 같은 조항의 번호가 달라집니다. 따라서 번호는 사료가 아니라 복원 판단에서 옵니다.",
+        counterexample:
+          "번호가 돌에 함께 새겨져 있었다면 분량 추정과 무관하게 번호가 정해집니다. 이 사료에서 번호가 추정을 담는 것은 돌에 번호가 없기 때문입니다.",
+        boundary:
+          "번호가 추정이라는 것이 그 조항의 내용까지 추정이라는 뜻은 아닙니다. 흔들리는 것은 이름표입니다.",
+      },
+      {
+        id: "shape-of-a-gap-versus-its-content",
+        sectionId: "what-was-lost",
+        intuition:
+          "끊긴 자리의 앞과 뒤가 공백의 모양을 그려 줍니다.",
+        workedExample:
+          "편집자는 사라진 부분에 정원사의 권리와 의무에 관한 나머지 규정, 세든 집에 관한 규정 전체, 상인과 대리인의 관계가 들어 있었다고 적습니다.",
+        proofIdea:
+          "공백의 모양은 그 바깥에 남은 것에서 나옵니다. 끊기기 직전의 조항이 정원사를 다루고 있었고 다시 이어지는 조항이 상인의 대리인을 다루고 있으면, 사이에 그 두 주제의 마무리와 시작이 있었다고 볼 수 있습니다. 분량도 같은 방식으로, 지워진 면의 크기와 남은 단의 글자 밀도에서 미루어 잡습니다. 그런데 조항의 내용은 그 조항 안에만 적혀 있었고 바깥에 흔적을 남기지 않으므로, 바깥에서 읽어 낼 경로가 없습니다. 그래서 주제와 분량은 나오고 내용은 나오지 않습니다.",
+        counterexample:
+          "뒤의 조항이 앞의 조항을 가리키며 그 내용을 되풀이하는 법전이라면 사라진 조항의 내용 일부가 바깥에 남습니다. 돌아온 세 조항처럼 다른 사본이 있는 경우도 같습니다. 그러므로 내용을 알 수 없는 것은 공백 일반의 성질이 아니라, 그 내용이 바깥에 복제되지 않은 공백의 성질입니다.",
+        boundary:
+          "세든 집에 관한 규정이 있었다는 것과 그것이 어느 쪽에 유리했는지는 수준이 다른 주장입니다. 뒤쪽은 이 사료가 받치지 않습니다.",
+      },
+      {
+        id: "transmission-path-changes-weight",
+        sectionId: "copies",
+        intuition:
+          "돌에서 읽은 것과 베낀 것에서 읽은 것은 단계가 하나 다릅니다.",
+        workedExample:
+          "기원전 7세기 아시리아 왕을 위한 사본에서 알려진 세 조항을, 편집자는 번호를 붙이지 않고 본문 끝에 따로 실으며 어디서 왔는지를 적습니다.",
+        boundary:
+          "자격이 다르다는 것이 믿을 수 없다는 뜻은 아닙니다. 내용은 나란히 읽되 근거의 무게를 다르게 잡으라는 뜻입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 지워진 자리",
+        relation: "공백의 종류가 정해집니다.",
+        concepts: ["deliberate-erasure"],
+      },
+      {
+        label: "01 번호",
+        relation: "이름표가 복원 판단을 담습니다.",
+        concepts: ["editorial-numbering-carries-an-estimate"],
+      },
+      {
+        label: "02 모양과 내용",
+        relation: "공백에서 말할 수 있는 범위가 갈립니다.",
+        concepts: ["shape-of-a-gap-versus-its-content"],
+      },
+      {
+        label: "03 돌아온 조각",
+        relation: "경로에 따라 무게가 달라집니다.",
+        concepts: ["transmission-path-changes-weight"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "조항 번호가 65에서 100으로 건너뛰는 까닭과, 그 자리의 돌 상태를 쓰세요.",
+        answerChecklist: [
+          "앞면의 다섯 단이 지워짐",
+          "돌이 다시 매끄럽게 다듬어짐",
+          "열일곱째 단의 첫 글자들만 보임",
+          "깨지거나 닳은 것이 아님",
+        ],
+        requiredConcepts: ["deliberate-erasure"],
+        sectionId: "how-it-vanished",
+      },
+      {
+        level: "basic",
+        question:
+          "지운 자가 그 자리에 무엇을 하려 했고 결과가 어떻게 되었는지 쓰세요.",
+        answerChecklist: [
+          "자기 이름과 칭호를 새기려 한 것으로 보인다고 적힘",
+          "실제로는 아무것도 새기지 않음",
+          "누가 돌을 가져갔는지 단서가 없음",
+          "지웠다는 사실만 남음",
+        ],
+        requiredConcepts: ["deliberate-erasure"],
+        sectionId: "how-it-vanished",
+      },
+      {
+        level: "basic",
+        question: "100이라는 번호가 어디서 왔는지 쓰세요.",
+        answerChecklist: [
+          "셰일이 사라진 부분을 35개 조항으로 추정",
+          "편집자가 그 추정을 따름",
+          "65 + 35 = 100",
+          "돌에 새겨진 번호가 아님",
+        ],
+        requiredConcepts: ["editorial-numbering-carries-an-estimate"],
+        sectionId: "the-numbering",
+      },
+      {
+        level: "basic",
+        question:
+          "사라진 부분에 들어 있었다고 편집자가 적은 주제 셋을 쓰세요.",
+        answerChecklist: [
+          "정원사의 권리와 의무에 관한 나머지 규정",
+          "세든 집에 관한 규정 전체",
+          "상인과 대리인의 관계",
+          "앞뒤 조항에서 짐작한 것",
+        ],
+        requiredConcepts: ["shape-of-a-gap-versus-its-content"],
+        sectionId: "what-was-lost",
+      },
+      {
+        level: "basic",
+        question:
+          "본문 끝에 따로 실린 세 조항의 출처와 편집자의 처리 방식을 쓰세요.",
+        answerChecklist: [
+          "기원전 7세기 아시리아 왕을 위해 만든 사본",
+          "지워진 다섯 단 자리에 들어간다고 봄",
+          "번호를 붙이지 않고 본문 끝에 따로 실음",
+          "완전함을 위해 싣는다고 밝힘",
+        ],
+        requiredConcepts: ["transmission-path-changes-weight"],
+        sectionId: "copies",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 공백에서 나오는 주장 가운데 받쳐지는 것과 받쳐지지 않는 것을 각각 쓰세요.",
+        answerChecklist: [
+          "받쳐짐 — 다섯 단이 지워졌다는 것",
+          "받쳐짐 — 그 자리에 어떤 주제가 있었다는 것",
+          "받쳐지지 않음 — 그 조항들이 무엇을 정했는지",
+          "받쳐지지 않음 — 누구에게 유리했는지",
+        ],
+        requiredConcepts: ["shape-of-a-gap-versus-its-content"],
+        sectionId: "what-was-lost",
+      },
+      {
+        level: "advanced",
+        question:
+          "조항 번호가 복원 판단에서 온다는 것을 유도하고, 인용할 때 무엇을 함께 적어야 하는지 쓰세요.",
+        answerChecklist: [
+          "지워진 단에서는 조항을 셀 수 없음",
+          "글자 밀도와 평균 길이에서 미루어 잡은 값",
+          "추정이 달라지면 같은 조항의 번호가 달라짐",
+          "어느 판을 따랐는지를 함께 적어야 함",
+        ],
+        requiredConcepts: ["editorial-numbering-carries-an-estimate"],
+        sectionId: "the-numbering",
+      },
+      {
+        level: "advanced",
+        question:
+          "번호가 추정을 담지 않는 경우를 들고, 이 사료에서 담게 된 조건을 쓰세요.",
+        answerChecklist: [
+          "번호가 돌에 함께 새겨져 있었다면 담지 않음",
+          "그때는 분량 추정과 무관하게 번호가 정해짐",
+          "이 사료는 돌에 번호가 없음",
+          "그래서 번호가 복원 과정에서 붙음",
+        ],
+        requiredConcepts: ["editorial-numbering-carries-an-estimate"],
+        sectionId: "the-numbering",
+      },
+      {
+        level: "advanced",
+        question:
+          "돌아온 세 조항의 근거 무게를 다르게 잡아야 하는 이유를 전해진 단계로 설명하세요.",
+        answerChecklist: [
+          "다른 조항은 돌에 새겨진 글자를 읽은 것으로 한 단계",
+          "세 조항은 베낀 것을 읽은 것으로 한 단계가 더 있음",
+          "베끼며 바뀌었는지는 원본과 대어 보아야 알 수 있음",
+          "하필 그 부분의 원본이 지워진 자리",
+        ],
+        requiredConcepts: ["transmission-path-changes-weight"],
+        sectionId: "copies",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 번역본이 또 한 번 걸러진 자리를 들고, 그 사실이 적혀 있는 것이 왜 중요한지 쓰세요.",
+        answerChecklist: [
+          "왕의 칭호와 축복과 저주 700행쯤을 번역하지 않음",
+          "많은 주석 없이는 뜻이 통하지 않는다는 이유",
+          "법전을 이해시키려는 책의 목적과 거리가 멀다는 이유",
+          "이유가 적혀 있어 독자가 무엇에서 걸러진 것인지 알 수 있음",
+        ],
+        requiredConcepts: ["transmission-path-changes-weight", "shape-of-a-gap-versus-its-content"],
+        sectionId: "copies",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "함무라비 법전 65조 뒤 편집자 주와 머리말 · C. H. W. Johns 영역, 『The Oldest Code of Laws in the World』 (T. & T. Clark, 1903)",
+        href: "https://www.gutenberg.org/ebooks/17150",
+        problem:
+          "돌기둥의 앞면 다섯 단이 지워져 조항 일부가 사라졌는데, 남은 조항에 번호를 붙여 읽을 수 있게 하려면 사라진 분량을 어떻게든 정해야 했습니다.",
+        contribution:
+          "지워진 자리의 상태와 그 작업의 성격을 적고, 사라진 부분의 주제를 앞뒤에서 짚었습니다. 사라진 분량을 35개 조항으로 본 추정을 따라 100조부터 번호를 다시 시작한다고 밝혔고, 뒷날의 사본에서 알려진 세 조항은 번호 없이 본문 끝에 따로 실으며 출처를 적었습니다. 번역하지 않은 700행에 대해서도 이유를 밝혀 두었습니다.",
+        assumptions:
+          "35개 조항이라는 분량은 추정이고, 사라진 부분의 주제는 앞뒤 조항에서 미루어 잡은 것입니다. 돌아온 세 조항이 이 법전에 속하고 지워진 자리에 들어간다는 것도 편집자의 판단입니다.",
+        evidenceScope:
+          "Project Gutenberg의 Johns 영역본 전사본(eBook 17150)으로 머리말, 65조 뒤의 편집자 주, 본문 끝의 세 조항과 그 안내문을 읽었습니다. facsimile이 아니라 전사본이므로 쪽 이미지로 대조하지 못했고, 그래서 쪽수 대신 조항 번호와 주의 위치만 적습니다. 돌기둥 자체를 본 것이 아니라 이 판이 적은 상태 기술을 읽었습니다.",
+        notClaim:
+          "누가 돌을 지웠는지, 사라진 조항이 무엇을 정했는지는 판정하지 않습니다. 세 겹의 걸름이라는 정리는 이 글이 더한 것이고 편집자가 그 꼴로 적지 않았습니다. 한국어 서술도 이 글이 옮긴 것이며 공인된 번역이 아닙니다.",
+        sectionId: "the-numbering",
+      },
+    ],
+  },
+  "inference-from-sources/naming-the-past": {
+    entryNote:
+      "앞 두 글이 자료 쪽에서 들어오는 걸름을 소유합니다. 이 글은 그 논의를 다시 세우지 않고 읽는 쪽이 가져오는 것만 다룹니다.",
+    coreIdea:
+      "우리가 함무라비 법전이라 부르는 돌은 끝에서 자기를 올바름의 판결들이라고 부릅니다. 그 사이에 바빌로니아 학교가 첫 단어를 따서 붙인 이름과 아시리아에서 붙은 이름이 있어 한 대상에 네 이름이 쌓였습니다. 법전이라는 이름은 빠짐없음·체계·새로 정함·집행이라는 네 가지를 딸고 오는데 사료가 받치는 것은 하나뿐이고, 열두 장의 구분과 1~282조의 번호, 그리고 번역어의 선택도 모두 뒤에 더해진 것입니다.",
+    assumedKnowledge: [
+      {
+        id: "survival-is-selective",
+        role: "자료 쪽에서 들어오는 걸름과 대비하는 기준으로 씁니다.",
+      },
+      {
+        id: "editorial-numbering-carries-an-estimate",
+        role: "조항 번호가 복원 판단에서 왔다는 결과를 가져다 씁니다.",
+      },
+      {
+        id: "prescriptive-versus-measured-number",
+        role: "같은 법전을 숫자로 읽었던 자리를 이름의 물음과 잇습니다.",
+      },
+      {
+        id: "authorial-method-statement",
+        role: "방법을 적어 두라는 기준을 읽는 쪽에 적용합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "names-accumulate-on-a-source",
+        role: "한 대상에 이름이 쌓인다는 것을 세웁니다.",
+      },
+      {
+        id: "a-name-carries-claims",
+        role: "이름이 딸고 오는 주장들을 가립니다.",
+      },
+      {
+        id: "imposed-structure-looks-like-data",
+        role: "뒤에 붙은 구조가 자료처럼 보인다는 것을 세웁니다.",
+      },
+      {
+        id: "translation-is-a-choice-in-the-text",
+        role: "번역어가 본문에 녹아 남는다는 것을 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "names-accumulate-on-a-source",
+        sectionId: "four-names",
+        intuition:
+          "우리가 쓰는 이름이 그 대상이 자기에게 붙인 이름과 다릅니다.",
+        workedExample:
+          "글 자체는 올바름의 판결들이라 하고, 바빌로니아 학교는 첫 단어를 따서 Ninu ilu sirum이라 했으며, 아시리아에서는 함무라비 대왕이 세운 올바름의 판결들로 읽혔고, 1903년 번역본의 표제는 세계에서 가장 오래된 법전입니다.",
+        boundary:
+          "네 이름을 한 줄에 늘어놓은 것은 이 글의 정리이고, 각 이름의 출처는 번역본의 표제와 본문 끝 문장과 머리말입니다.",
+      },
+      {
+        id: "a-name-carries-claims",
+        sectionId: "what-the-name-adds",
+        intuition:
+          "법전이라고 부르면 짜임새 있는 규칙 묶음이 머릿속에 그려집니다.",
+        workedExample:
+          "빠짐없이 덮는다, 체계를 갖추고 있다, 누군가 새로 정했다, 정해진 대로 집행된다는 네 가지가 함께 들어옵니다.",
+        proofIdea:
+          "이름은 그 범주에 드는 것들이 공유한다고 여겨지는 성질의 묶음을 가리킵니다. 그러므로 어떤 대상을 그 이름으로 부르면 그 묶음 전체를 그 대상에 대해 주장한 셈이 됩니다. 각 성질은 그 사회에 대한 별개의 사실 주장이므로, 사료의 어느 문장이 그것을 받치는지를 따로 확인하지 않는 한 참이 되지 않습니다.",
+        counterexample:
+          "그 범주의 성질을 모두 확인한 뒤에 같은 이름을 쓰면 아무것도 더해지지 않습니다. 문제는 이름을 쓰는 일 자체가 아니라 확인을 건너뛰고 쓰는 일입니다.",
+        boundary:
+          "네 가지로 나눈 것은 이 글의 정리이고, 사료가 받치는 것으로 든 '왕이 확정했다'는 것만 본문 끝 문장에서 왔습니다.",
+      },
+      {
+        id: "imposed-structure-looks-like-data",
+        sectionId: "imposed-structure",
+        intuition:
+          "번호는 말이 아니라 체계의 꼴이라 사료처럼 보입니다.",
+        workedExample:
+          "열두 장의 구분은 이천 년 뒤 학교가 공부하기 좋게 한 일이고, 1조부터 282조까지의 번호는 근대 판이 붙인 것입니다. 앞 글의 100조가 그 증거입니다.",
+        boundary:
+          "뒤에 붙은 구조가 쓸모없다는 뜻이 아닙니다. 번호가 없으면 조항을 가리키며 이야기할 수 없습니다.",
+      },
+      {
+        id: "translation-is-a-choice-in-the-text",
+        sectionId: "translated-words",
+        intuition:
+          "신사라는 말은 돌에서 바로 온 것이 아닙니다.",
+        workedExample:
+          "영역자가 gentleman·poor man·servant를 골랐고 이 글이 다시 한국어로 옮겼으므로, 세 신분을 두 번 옮겨진 말로 이야기한 셈입니다.",
+        boundary:
+          "번역을 거치지 않을 수는 없습니다. 할 수 있는 일은 어느 판을 거쳤는지를 적어 두어 어긋났을 때 갈린 자리를 찾을 수 있게 하는 것입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 쌓인 이름",
+        relation: "한 대상에 네 이름이 있습니다.",
+        concepts: ["names-accumulate-on-a-source"],
+      },
+      {
+        label: "01 이름의 함의",
+        relation: "이름이 주장을 딸고 옵니다.",
+        concepts: ["a-name-carries-claims"],
+      },
+      {
+        label: "02 붙은 구조",
+        relation: "장과 번호도 뒤에 붙었습니다.",
+        concepts: ["imposed-structure-looks-like-data"],
+      },
+      {
+        label: "03 번역어",
+        relation: "본문 안의 낱말이 가장 조용합니다.",
+        concepts: ["translation-is-a-choice-in-the-text"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "조항들이 끝나는 자리에서 글이 자기를 어떻게 부르는지 쓰세요.",
+        answerChecklist: [
+          "올바름의 판결들",
+          "강한 왕 함무라비가 확정했다고 적힘",
+          "이 땅이 확실한 인도와 은혜로운 다스림을 얻게 했다고 적힘",
+          "법전이라는 말이 아님",
+        ],
+        requiredConcepts: ["names-accumulate-on-a-source"],
+        sectionId: "four-names",
+      },
+      {
+        level: "basic",
+        question:
+          "바빌로니아 학교에서 붙은 이름과 그 이름이 정해진 방식을 쓰세요.",
+        answerChecklist: [
+          "Ninu ilu sirum",
+          "첫머리 단어를 딴 것",
+          "셈 지방의 관습",
+          "이천 년도 더 지난 뒤 교재가 되면서 붙음",
+        ],
+        requiredConcepts: ["names-accumulate-on-a-source"],
+        sectionId: "four-names",
+      },
+      {
+        level: "basic",
+        question:
+          "법전이라는 이름이 딸고 오는 네 가지를 쓰세요.",
+        answerChecklist: [
+          "다룰 영역을 빠짐없이 덮는다",
+          "체계를 갖추고 있다",
+          "누군가 새로 정했다",
+          "정해진 대로 집행된다",
+        ],
+        requiredConcepts: ["a-name-carries-claims"],
+        sectionId: "what-the-name-adds",
+      },
+      {
+        level: "basic",
+        question:
+          "그 네 가지 가운데 사료가 받치는 것을 쓰고, 나머지가 받쳐지지 않는 이유를 각각 쓰세요.",
+        answerChecklist: [
+          "받침 — 왕이 확정했다는 것, 본문 끝 문장",
+          "빠짐없음 — 지워진 다섯 단 때문에 확인 불가",
+          "체계 — 장 구분과 번호는 뒷사람이 붙임",
+          "집행 — 이 돌이 보여 주지 않음",
+        ],
+        requiredConcepts: ["a-name-carries-claims"],
+        sectionId: "what-the-name-adds",
+      },
+      {
+        level: "basic",
+        question:
+          "돌에 있던 것과 뒤에 붙은 것을 각각 둘씩 쓰세요.",
+        answerChecklist: [
+          "돌에 있던 것 — 조항의 문장들",
+          "돌에 있던 것 — 자기를 부르는 이름",
+          "뒤에 붙은 것 — 열두 장의 구분",
+          "뒤에 붙은 것 — 1~282조의 번호와 표제",
+        ],
+        requiredConcepts: ["imposed-structure-looks-like-data"],
+        sectionId: "imposed-structure",
+      },
+      {
+        level: "basic",
+        question:
+          "이 시리즈에서 쓴 신사·가난한 사람·종이라는 말이 어디서 왔는지 쓰세요.",
+        answerChecklist: [
+          "영역자가 gentleman·poor man·servant를 고름",
+          "이 글이 다시 한국어로 옮김",
+          "두 번 옮겨진 말",
+          "돌에서 바로 온 말이 아님",
+        ],
+        requiredConcepts: ["translation-is-a-choice-in-the-text"],
+        sectionId: "translated-words",
+      },
+      {
+        level: "advanced",
+        question:
+          "이름을 쓰는 것이 왜 주장을 하는 일이 되는지 유도하세요.",
+        answerChecklist: [
+          "이름은 그 범주가 공유한다고 여겨지는 성질의 묶음을 가리킴",
+          "그 이름으로 부르면 묶음 전체를 그 대상에 대해 주장한 셈",
+          "각 성질은 별개의 사실 주장",
+          "사료에서 따로 확인하지 않으면 참이 되지 않음",
+        ],
+        requiredConcepts: ["a-name-carries-claims"],
+        sectionId: "what-the-name-adds",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 이름을 써도 아무것도 더해지지 않는 경우를 들고, 문제가 되는 지점을 다시 적으세요.",
+        answerChecklist: [
+          "그 범주의 성질을 모두 확인한 뒤에 쓰는 경우",
+          "그때는 이름이 요약 노릇만 함",
+          "문제는 이름을 쓰는 일 자체가 아님",
+          "확인을 건너뛰고 쓰는 일이 문제",
+        ],
+        requiredConcepts: ["a-name-carries-claims", "names-accumulate-on-a-source"],
+        sectionId: "what-the-name-adds",
+      },
+      {
+        level: "advanced",
+        question:
+          "뒤에 붙은 구조가 이름보다 알아채기 어려운 까닭을 쓰고, 그 구조가 어떤 함의와 맞물리는지 쓰세요.",
+        answerChecklist: [
+          "이름은 말이라 다른 말로 바꿔 볼 수 있음",
+          "번호는 체계의 꼴이라 자료처럼 보임",
+          "1조부터 282조까지 매겨져 있으면 하나의 덩어리라는 인상이 따라옴",
+          "그 인상이 빠짐없음이라는 함의와 맞물림",
+        ],
+        requiredConcepts: ["imposed-structure-looks-like-data", "a-name-carries-claims"],
+        sectionId: "imposed-structure",
+      },
+      {
+        level: "advanced",
+        question:
+          "번역을 피할 수 없을 때 할 수 있는 일을 쓰고, 그것이 이 시리즈의 첫 글 기준과 어떻게 이어지는지 쓰세요.",
+        answerChecklist: [
+          "어느 판을 거쳤는지를 적어 둠",
+          "다른 번역을 읽은 사람과 어긋났을 때 갈린 자리를 찾을 수 있음",
+          "저자가 방법을 적어 두면 독자가 신뢰 범위를 추측하지 않아도 됨",
+          "같은 요구가 읽는 쪽에도 걸림",
+        ],
+        requiredConcepts: ["translation-is-a-choice-in-the-text", "authorial-method-statement"],
+        sectionId: "translated-words",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "C. H. W. Johns 영역, 『The Oldest Code of Laws in the World』 (T. & T. Clark, 1903) · 표제, 본문 끝 문장, 머리말의 전승 서술",
+        href: "https://www.gutenberg.org/ebooks/17150",
+        problem:
+          "삼천 년 넘게 전해지며 여러 사회에서 다른 이름으로 읽힌 글을, 오늘의 독자가 쓰는 범주로 소개해야 했습니다.",
+        contribution:
+          "조항들의 번역과 함께, 글 자체가 자기를 부르는 문장을 본문 끝에 옮겨 두고 머리말에 전승의 내력을 적었습니다. 바빌로니아 학교에서 열두 장쯤으로 나뉘고 첫 단어로 불린 일과 아시리아에서 다른 이름으로 읽힌 일이 거기 적혀 있습니다. 표제와 조항 번호는 이 판이 붙인 것입니다.",
+        assumptions:
+          "아시리아에서의 이름은 머리말이 보이는 바라는 꼴로 적었으므로 확정이 아닙니다. 조항 번호는 사라진 분량의 추정을 포함하고, gentleman·poor man·servant는 영역자가 고른 말입니다.",
+        evidenceScope:
+          "Project Gutenberg의 Johns 영역본 전사본(eBook 17150)으로 표제, 머리말, 본문 끝 문장을 읽었습니다. facsimile이 아니라 전사본이므로 쪽 이미지로 대조하지 못했고, 그래서 쪽수 대신 해당 대목의 위치만 적습니다. 아카드어 원문은 읽지 않았습니다.",
+        notClaim:
+          "이 글이 어떤 이름으로 불려야 옳은지를 판정하지 않습니다. 이름이 무엇을 딸고 오는지와 그 가운데 무엇이 사료에서 확인되는지까지만 읽습니다. 네 이름을 한 줄에 늘어놓은 정리와 함의를 넷으로 나눈 것은 이 글이 더한 것입니다. 한국어 서술도 이 글이 옮긴 것이며 공인된 번역이 아닙니다.",
+        sectionId: "four-names",
+      },
+    ],
+  },
 };

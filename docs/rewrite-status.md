@@ -2007,3 +2007,33 @@
 **사료 접근 조사**: 조선왕조실록(sillok.history.go.kr)은 `/id/{기사ID}` 직접 주소에서 국역·원문·출전(태백산사고본 책/권/장)까지 깨끗이 열린다. 다만 검색·일자목록 엔드포인트는 서버가 깨진 인코딩으로 응답해 기사 ID를 얻는 경로가 막혀 있다(Playwright로 렌더해도 ID가 DOM에 없음). 그래서 역사 1편은 Gutenberg로 전문을 확보한 Thucydides 1.22(Crawley 역)로 시작한다.
 
 **검증**: 감사 10종 통과, `tsc -b`·`GITHUB_PAGES=true npm run build` 통과(정적 route 1,497개), clipping 4건 0문제, desktop 1440·mobile 390에서 두 글과 경제 대분류 페이지 전부 narrow 0·katexErr 0·가로 스크롤 0·수식 순서 통과. fingerprint 4개 최신.
+
+### 2026-10-03 (4) · 역사 아홉 편 완결
+
+**범위**: `testimony` 3편, `record-numbers` 3편, `inference-from-sources` 3편. 한 세션에서 설계·집필·등록·검수·커밋까지 끝냈다. 전자 4분야는 `electronics-series` 브랜치(별도 worktree)가 맡으므로 손대지 않았다.
+
+| # | route | 1차 자료 | 묻는 것 |
+|---|---|---|---|
+| 1 | testimony/speeches-were-reconstructed | Thucydides 1.22 (Crawley) | 한 책 안의 두 칸과 증언이 갈리는 두 원인 |
+| 2 | testimony/told-but-not-believed | Herodotus 7.148–152 (Macaulay) | 꼬리표, 전할 의무와 믿을 의무, 규칙의 범위 |
+| 3 | testimony/the-writer-was-there | Josephus 『유대 전쟁사』 서문 1·4·8·12 (Whiston) | 당사자가 치우침을 공개하는 네 장치 |
+| 4 | record-numbers/how-the-army-was-counted | Herodotus 7.60 | 눈금으로 센 수의 해상도와 단위 오차 |
+| 5 | record-numbers/what-the-total-cannot-tell | Herodotus 7.184–187 | 합산된 총계의 끝자리와 저자의 검산 |
+| 6 | record-numbers/numbers-that-command | 함무라비 법전 196~204·209~225·268~277 (Johns 1903) | 명령하는 숫자의 네 꼴과 그 전제 |
+| 7 | inference-from-sources/ruins-mislead | Thucydides 1.10 | 남는 과정의 치우침과 방향 있는 보정 |
+| 8 | inference-from-sources/the-gap-was-made | Johns 판 머리말·65조 뒤 주·말미 세 조항 | 지워진 공백, 번호에 실린 추정, 돌아온 조각 |
+| 9 | inference-from-sources/naming-the-past | Johns 판 표제·본문 끝 문장·머리말 | 우리가 붙인 이름·구조·번역어가 들여오는 것 |
+
+**사료 치환**: 조선왕조실록은 앞 회차에서 조사한 대로 기사 ID를 얻는 경로가 막혀 있어 쓰지 못했다. 사용자가 "접근 어려운 편은 확인 가능한 다른 원문 사료로 대체해도 된다"고 승인했으므로, Project Gutenberg로 전문을 확보한 네 사료(Thucydides·Herodotus·Josephus·함무라비 법전)로 아홉 편을 구성했다. **넷 다 전사본이고 facsimile이 아니다** — 그래서 아홉 편 모두 쪽수를 쓰지 않고 권·절 또는 조항 번호까지만 적었고, 그 사실을 인용 블록과 `evidenceScope`에 밝혔다. 그리스어·아카드어 원문을 읽지 않았다는 것도 함께 적었다.
+
+**원전과 해석의 분리**: 글마다 "저자가 적은 것"과 "이 글이 더한 것"을 절·note·`notClaim` 세 곳에서 갈랐다. 이 글이 더한 것은 1편의 흩어짐/쏠림 그림, 3편의 증인 이해 방향과 네 장치 정리, 4편의 어긋날 자리 3분류와 오차 증폭 유도, 5편의 48 나눗셈 검산과 재료 3분류, 6편의 네 꼴 분류와 "되갚을 수 없을 때 숫자가 들어온다"는 읽기, 7편의 보정 4단계와 85명·102,000 곱셈, 8편의 세 겹 걸름, 9편의 네 이름 정리와 함의 4분해다.
+
+**원자료가 글을 바꾼 자리**: 5편은 저자의 하루치 식량 계산(110,340 메딤노이)이 48로 나눠 보면 110,067과 나머지 4여서 맞지 않는다는 것을 영역자 주석이 지적해 두었고, 그 덕분에 "계산을 적어 두면 틀림을 찾을 수 있다"가 글의 결론이 됐다. 6편은 §196~199에서 한 사다리 안의 답이 되갚기·고정액·값의 비율로 바뀌는 것을 보고 구조를 다시 짰다. 9편은 머리말의 전승 서술(바빌로니아 학교의 Ninu ilu sirum, 아시리아의 이름)이 있어 "네 이름"이 성립했다.
+
+**9편이 한 묶음인 이유**: 세 분류가 각각 적은 사람·적힌 숫자·남은 것을 물고, 마지막 글이 셋을 "그 주장을 떠받치는 문장이 어느 사료의 어느 자리에서 왔는가"로 닫는다. 같은 사료(함무라비 법전)를 숫자·전승·이름 세 각도로 읽는 것이 시리즈의 구조를 드러낸다.
+
+**Viz 결함 2건은 스크린샷으로만 잡혔다.** `WhereItCanSlipViz`의 점 격자가 원 반지름 밖으로 나가 있었고(감사·빌드 전부 통과), `ErasedColumnsViz`의 캡션이 viewBox 오른쪽 경계에 닿아 있었다. 둘 다 좌표를 가운데 정렬로 바꿔 고쳤다.
+
+**knowledge graph·evidence 타입 확장**: `KnowledgeConcept.domain`에 `history`를, `ArticleEvidenceKind`에 `핵심 사료`·`비교 사료`를 더하고 `article-evidence-rail`의 색 맵도 함께 채웠다.
+
+**검증**: 감사 10종 통과(CI와 동일 플래그), `tsc -b`·`GITHUB_PAGES=true npm run build` 통과(정적 route 1,522개), clipping 18건 0문제, desktop 1440·mobile 390에서 아홉 글과 역사 대분류·세 카테고리 페이지 전부 narrow 0·가로 스크롤 0·page error 0, 장면 캡처 전수 육안 확인. fingerprint 9개 최신.

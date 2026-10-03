@@ -490,6 +490,33 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "196~199·209~217·221~223조의 같은 금액(1마나·값의 절반·10·5·2·5·3·2)과 202조의 채찍 60대, 273조의 하루 품삯이 본문·Viz·연습문제에서 일치하는지로 판정한다.",
   },
+  "inference-from-sources/ruins-mislead": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "치우친 걸름·방향·규칙·적용이 '남은 것에서 지난 일을 어떻게 추정하는가'라는 한 질문의 네 부품이다. 방향을 떼면 규칙이 한쪽만 막는 것으로 읽히고, 적용을 떼면 같은 규칙이 수를 내려 잡는 데에도 쓰인다는 사실이 사라진다.",
+    sharedGate:
+      "1권 10절의 같은 사고실험(기초만 남음·두 배)과 같은 수치(1,200척·120명·50명)가 본문·Viz·연습문제에서 일치하고, (120+50)÷2 = 85가 어긋나지 않는지로 판정한다.",
+  },
+  "inference-from-sources/the-gap-was-made": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "지움·번호·공백의 범위·돌아온 조각이 '사람이 만든 공백에서 무엇을 읽을 수 있는가'라는 한 질문의 네 부품이다. 번호를 떼면 복원 판단이 이름표에 실린다는 사실이 사라지고, 돌아온 조각을 떼면 공백이 메워질 때의 자격 문제가 남지 않는다.",
+    sharedGate:
+      "Johns 판의 같은 기술(다섯 단 지움·다시 다듬음·열일곱째 단의 첫 글자·35개 조항 추정·아시리아 사본의 세 조항)이 본문·Viz·연습문제에서 일치하고, 65 + 35 = 100이 어긋나지 않는지로 판정한다.",
+  },
+  "inference-from-sources/naming-the-past": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "쌓인 이름·이름의 함의·붙은 구조·번역어가 '읽는 쪽이 무엇을 들여오는가'라는 한 질문의 네 부품이다. 함의를 떼면 이름의 차이가 호칭 문제로만 보이고, 구조와 번역어를 떼면 들여오는 일이 표제에서 끝나는 것처럼 읽힌다.",
+    sharedGate:
+      "Johns 판의 같은 대목(본문 끝의 '올바름의 판결들', 머리말의 열두 장과 Ninu ilu sirum, 아시리아의 이름, 표제와 1~282조 번호)이 본문·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
 };
 
 /**
@@ -583,6 +610,9 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "testimony/told-but-not-believed": "383412e348dd7bee",
   "testimony/the-writer-was-there": "4db0036e09cdc5cc",
   "record-numbers/how-the-army-was-counted": "8c2640e7b3d4794a",
-  "record-numbers/what-the-total-cannot-tell": "4a56414aa5294477",
-  "record-numbers/numbers-that-command": "17862e1abdebdb28",
+  "record-numbers/what-the-total-cannot-tell": "2fc6127542caf224",
+  "record-numbers/numbers-that-command": "78a0bdad1afb000d",
+  "inference-from-sources/ruins-mislead": "d29bd5208325e4cb",
+  "inference-from-sources/the-gap-was-made": "5cd1ffa387bca7df",
+  "inference-from-sources/naming-the-past": "2718dc89f3ed6cee",
 };

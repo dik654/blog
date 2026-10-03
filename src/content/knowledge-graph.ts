@@ -25893,6 +25893,144 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/history/record-numbers/numbers-that-command#reading-prices",
   },
+  "survival-is-selective": {
+    id: "survival-is-selective",
+    kind: "concept",
+    domain: "history",
+    label: "남는 과정이 종류를 가려서 남긴다",
+    aliases: ["남은 것의 치우침", "생존 편향"],
+    definition:
+      "같은 재난을 겪어도 재료와 만듦새에 따라 남는 것이 달라집니다. 돌로 크게 지은 것은 기초가 남고 흩어진 마을이나 사람의 수나 바깥의 동맹은 남지 않으므로, 손에 들어온 자료는 그 시대의 표본이 아니라 걸러진 결과입니다. 그래서 자료를 아무리 정확하게 읽어도 걸러진 방향만큼은 틀립니다.",
+    canonicalHref: "/history/inference-from-sources/ruins-mislead#what-remains",
+  },
+  "bias-direction-differs-by-case": {
+    id: "bias-direction-differs-by-case",
+    kind: "theorem",
+    domain: "history",
+    label: "같은 걸름이 대상에 따라 반대 방향의 오해를 만든다",
+    aliases: ["치우침의 방향", "과대와 과소"],
+    definition:
+      "남는 것이 힘의 표시와 닮아 있는 대상은 과대평가되고 닮지 않은 대상은 과소평가됩니다. 그래서 한 방향으로만 보정하는 규칙은 반대쪽 대상에서 더 크게 틀리며, 보정하려면 먼저 그 자료가 어느 쪽으로 기울어 있는지를 정해야 합니다.",
+    canonicalHref: "/history/inference-from-sources/ruins-mislead#two-cities",
+  },
+  "appearance-apart-from-power": {
+    id: "appearance-apart-from-power",
+    kind: "method",
+    domain: "history",
+    label: "겉모습을 보되 힘은 따로 따진다",
+    aliases: ["겉모습과 힘의 분리", "폐허 읽기 규칙"],
+    definition:
+      "작아 보인다고 전해지는 규모를 물리치지 않고 커 보인다고 그대로 받지도 않으며, 눈에 보이는 것과 그 대상의 힘을 따로 따지는 읽기입니다. 양쪽을 모두 막을 수 있는 것은 오차의 원인을 추정자의 부주의가 아니라 자료의 치우침으로 잡았기 때문입니다.",
+    canonicalHref: "/history/inference-from-sources/ruins-mislead#the-rule",
+  },
+  "absence-as-evidence": {
+    id: "absence-as-evidence",
+    kind: "method",
+    domain: "history",
+    label: "적히지 않았다는 사실을 단서로 쓴다",
+    aliases: ["공백의 단서", "적지 않은 것 읽기"],
+    definition:
+      "어떤 항목만 적히고 나머지가 적히지 않았을 때, 공백을 자료의 부족으로만 두지 않고 적힌 항목이 왜 골라졌는지의 단서로 읽는 방법입니다. 목록의 다른 배에 인원이 없다는 사실에서 적힌 두 수를 최대와 최소로 읽어 내는 것이 그 예이며, 이런 읽기는 추측이므로 다른 설명을 완전히 막지는 못합니다.",
+    canonicalHref:
+      "/history/inference-from-sources/ruins-mislead#using-the-rule",
+  },
+  "conclusion-sized-to-the-evidence": {
+    id: "conclusion-sized-to-the-evidence",
+    kind: "concept",
+    domain: "history",
+    label: "자료가 버틸 수 있는 꼴로만 결론을 적는다",
+    aliases: ["결론의 꼴 맞추기", "한 점과 방향"],
+    definition:
+      "자료가 한 점의 값을 받치지 못하면 한 점을 적지 않고 방향이나 범위로 적는 것입니다. 평균을 잡아 놓고도 곱한 수를 적지 않고 대단치 않다고만 쓰는 것이 그 꼴이며, 결론의 정밀도를 자료의 정밀도에 맞추는 일이 추론의 마지막 단계가 됩니다.",
+    canonicalHref:
+      "/history/inference-from-sources/ruins-mislead#using-the-rule",
+  },
+  "deliberate-erasure": {
+    id: "deliberate-erasure",
+    kind: "concept",
+    domain: "history",
+    label: "지워진 공백은 소실된 공백과 다르다",
+    aliases: ["의도된 삭제", "긁어낸 자리"],
+    definition:
+      "글을 없애고 면을 다시 다듬은 자리는 깨지거나 닳아 흐려진 자리와 구별됩니다. 작업의 목적이 면을 얻는 데 있었음을 그 상태가 알려 주고, 거기서 공백의 종류가 정해집니다. 지운 자가 새 글을 남기지 않으면 지웠다는 사실만 남고 누가 지웠는지는 남지 않습니다.",
+    canonicalHref:
+      "/history/inference-from-sources/the-gap-was-made#how-it-vanished",
+  },
+  "editorial-numbering-carries-an-estimate": {
+    id: "editorial-numbering-carries-an-estimate",
+    kind: "concept",
+    domain: "history",
+    label: "사료를 가리키는 번호가 복원 판단에서 올 수 있다",
+    aliases: ["조항 번호의 출처", "추정이 실린 이름표"],
+    definition:
+      "사라진 분량을 몇 개로 보느냐에 따라 뒤따르는 조항의 번호가 달라집니다. 그러면 번호는 사료에 새겨진 것이 아니라 복원 과정에서 붙은 이름표이고, 그것을 인용하면 다른 사람의 추정도 함께 인용됩니다. 그래서 어느 판을 따랐는지를 함께 적어야 합니다.",
+    canonicalHref:
+      "/history/inference-from-sources/the-gap-was-made#the-numbering",
+  },
+  "shape-of-a-gap-versus-its-content": {
+    id: "shape-of-a-gap-versus-its-content",
+    kind: "theorem",
+    domain: "history",
+    label: "공백의 모양은 알 수 있고 내용은 알 수 없다",
+    aliases: ["공백의 주제와 내용", "끊긴 자리의 앞뒤"],
+    definition:
+      "끊긴 자리의 앞과 뒤가 남아 있으면 그 사이에 어떤 주제가 있었는지와 분량이 얼마쯤인지는 추정할 수 있습니다. 그러나 그 안의 조항이 무엇을 정했는지는 앞뒤에서 나오지 않으므로, 같은 공백에서 나오는 주장들 사이에 받쳐지는 것과 받쳐지지 않는 것의 선이 그어집니다.",
+    canonicalHref:
+      "/history/inference-from-sources/the-gap-was-made#what-was-lost",
+  },
+  "transmission-path-changes-weight": {
+    id: "transmission-path-changes-weight",
+    kind: "concept",
+    domain: "history",
+    label: "같은 내용이라도 전해진 경로에 따라 무게가 다르다",
+    aliases: ["사본을 통한 회수", "경로에 붙는 꼬리표"],
+    definition:
+      "원본에서 직접 읽은 것과 뒷날의 사본에서 읽은 것은 전해지는 단계가 다릅니다. 사본은 베끼는 동안 달라질 수 있고 그 달라짐을 확인할 원본이 바로 그 부분에서 사라졌다면 대조할 길이 없으므로, 내용은 나란히 읽되 근거의 무게는 다르게 잡고 그 차이를 표시로 남깁니다.",
+    canonicalHref: "/history/inference-from-sources/the-gap-was-made#copies",
+  },
+  "names-accumulate-on-a-source": {
+    id: "names-accumulate-on-a-source",
+    kind: "concept",
+    domain: "history",
+    label: "한 사료에 시대마다 다른 이름이 쌓인다",
+    aliases: ["사료의 여러 이름", "자기 이름과 붙은 이름"],
+    definition:
+      "오래 전해진 기록에는 글 자체가 자기를 부르는 이름과, 전해지는 동안 읽는 쪽이 붙인 이름들이 함께 있습니다. 지금 가장 널리 쓰이는 이름이 가장 늦게 붙은 것일 수 있으므로, 어느 이름을 쓰는지가 그 대상을 어떻게 보고 있는지를 이미 정합니다.",
+    canonicalHref: "/history/inference-from-sources/naming-the-past#four-names",
+  },
+  "a-name-carries-claims": {
+    id: "a-name-carries-claims",
+    kind: "theorem",
+    domain: "history",
+    label: "이름은 사료가 말하지 않은 주장을 딸고 온다",
+    aliases: ["이름의 함의", "범주의 수입"],
+    definition:
+      "오늘의 범주로 과거의 대상을 부르면 그 범주가 전제하는 성질들이 함께 들어옵니다. 성질 하나하나는 그 사회에 대한 주장이고 이름을 쓴다고 참이 되지 않으므로, 결론에 쓰려는 성질마다 그것이 사료의 어느 문장에서 나왔는지를 찾아야 합니다. 찾지 못하면 그 성질은 이름에서 온 것입니다.",
+    canonicalHref:
+      "/history/inference-from-sources/naming-the-past#what-the-name-adds",
+  },
+  "imposed-structure-looks-like-data": {
+    id: "imposed-structure-looks-like-data",
+    kind: "concept",
+    domain: "history",
+    label: "뒤에 붙은 구조는 자료처럼 보인다",
+    aliases: ["장과 번호", "편집된 꼴"],
+    definition:
+      "장 구분이나 조항 번호처럼 읽기 좋게 더해진 구조는 말이 아니라 체계의 꼴을 하고 있어 사료의 일부처럼 보입니다. 1번부터 끝 번호까지 매겨져 있으면 전체가 그만큼으로 이루어진 하나의 덩어리라는 인상이 따라오고, 그 인상은 이름이 딸고 온 함의와 맞물려 서로를 떠받칩니다.",
+    canonicalHref:
+      "/history/inference-from-sources/naming-the-past#imposed-structure",
+  },
+  "translation-is-a-choice-in-the-text": {
+    id: "translation-is-a-choice-in-the-text",
+    kind: "concept",
+    domain: "history",
+    label: "번역어의 선택은 본문 안에 녹아 남는다",
+    aliases: ["번역어의 몫", "거쳐 온 판 적기"],
+    definition:
+      "원문을 읽지 못하는 쪽이 사료를 보려면 번역자의 낱말 선택을 통과해야 하고, 통과한 뒤에는 그 선택이 본문의 말과 구별되지 않습니다. 표제와 달리 본문 안의 낱말은 사료의 말처럼 읽히므로 알아채기가 더 어렵고, 할 수 있는 일은 번역을 피하는 것이 아니라 어느 판을 거쳤는지를 적어 두는 것입니다.",
+    canonicalHref:
+      "/history/inference-from-sources/naming-the-past#translated-words",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -48340,6 +48478,146 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "evaluates",
     reason:
       "정한 쪽이 누구인지를 묻는 일이 명령하는 기록에서도 그대로 걸립니다.",
+  },
+  {
+    from: "source-is-a-record-not-the-past",
+    to: "survival-is-selective",
+    relation: "prerequisite",
+    reason:
+      "적힌 것이 기록이라는 구분 위에, 그 기록이 남는 과정도 따로 보아야 한다는 층이 올라갑니다.",
+  },
+  {
+    from: "survival-is-selective",
+    to: "bias-direction-differs-by-case",
+    relation: "produces",
+    reason:
+      "걸러진다는 사실만으로는 보정할 수 없고 어느 쪽으로 걸러지는지가 필요해집니다.",
+  },
+  {
+    from: "bias-direction-differs-by-case",
+    to: "appearance-apart-from-power",
+    relation: "produces",
+    reason:
+      "방향이 대상마다 다르므로 한쪽만 막는 규칙 대신 둘을 분리해 따지는 규칙이 나옵니다.",
+  },
+  {
+    from: "appearance-apart-from-power",
+    to: "absence-as-evidence",
+    relation: "extends",
+    reason:
+      "남은 것만으로 모자랄 때 남지 않은 것까지 단서로 끌어오는 쪽으로 넓어집니다.",
+  },
+  {
+    from: "absence-as-evidence",
+    to: "conclusion-sized-to-the-evidence",
+    relation: "constrains",
+    reason:
+      "공백에서 끌어낸 단서는 추측이므로 결론의 꼴을 그만큼 느슨하게 잡게 합니다.",
+  },
+  {
+    from: "scatter-versus-shift-in-testimony",
+    to: "bias-direction-differs-by-case",
+    relation: "extends",
+    reason:
+      "증언의 쏠림에서 보던 방향 있는 어긋남을 자료가 남는 과정으로 옮긴 것입니다.",
+  },
+  {
+    from: "precision-of-a-sum",
+    to: "conclusion-sized-to-the-evidence",
+    relation: "produces",
+    reason:
+      "표기된 자릿수가 실제 해상도를 넘어선다는 문제의 해법이 결론의 꼴을 자료에 맞추는 일입니다.",
+  },
+  {
+    from: "survival-is-selective",
+    to: "deliberate-erasure",
+    relation: "extends",
+    reason:
+      "재료와 세월이 만드는 걸름에 사람이 만드는 삭제를 더합니다.",
+  },
+  {
+    from: "deliberate-erasure",
+    to: "editorial-numbering-carries-an-estimate",
+    relation: "produces",
+    reason:
+      "사라진 분량을 메우지 않고는 뒤의 조항에 번호를 붙일 수 없으므로 추정이 번호에 들어옵니다.",
+  },
+  {
+    from: "deliberate-erasure",
+    to: "shape-of-a-gap-versus-its-content",
+    relation: "constrains",
+    reason:
+      "삭제된 자리의 앞뒤가 남아 있다는 조건이 공백에서 말할 수 있는 범위를 정합니다.",
+  },
+  {
+    from: "conclusion-sized-to-the-evidence",
+    to: "shape-of-a-gap-versus-its-content",
+    relation: "evaluates",
+    reason:
+      "자료가 받치는 만큼만 적는다는 기준으로 공백에서 나온 주장들을 가릅니다.",
+  },
+  {
+    from: "shape-of-a-gap-versus-its-content",
+    to: "transmission-path-changes-weight",
+    relation: "produces",
+    reason:
+      "공백의 일부가 다른 경로로 돌아왔을 때 그 조각을 어떻게 다룰지가 바로 다음 물음이 됩니다.",
+  },
+  {
+    from: "attribution-tag",
+    to: "transmission-path-changes-weight",
+    relation: "extends",
+    reason:
+      "내용에 붙이던 출처 꼬리표를 전해진 경로에 붙이는 쪽으로 넓힌 것입니다.",
+  },
+  {
+    from: "survival-is-selective",
+    to: "names-accumulate-on-a-source",
+    relation: "contrasts",
+    reason:
+      "앞의 걸름은 자료 쪽에서 들어오고 이름은 읽는 쪽에서 들어오므로, 두 경로를 갈라 두어야 합니다.",
+  },
+  {
+    from: "names-accumulate-on-a-source",
+    to: "a-name-carries-claims",
+    relation: "produces",
+    reason:
+      "이름이 여럿이라는 것을 보고 나면 지금 쓰는 이름이 무엇을 더하는지를 묻게 됩니다.",
+  },
+  {
+    from: "a-name-carries-claims",
+    to: "imposed-structure-looks-like-data",
+    relation: "extends",
+    reason:
+      "이름이 더해지는 일을 보고 나면 구조가 더해지는 일도 같은 자리에 놓입니다.",
+  },
+  {
+    from: "imposed-structure-looks-like-data",
+    to: "translation-is-a-choice-in-the-text",
+    relation: "extends",
+    reason:
+      "구조보다 더 조용히 들어오는 것이 본문 안의 낱말입니다.",
+  },
+  {
+    from: "editorial-numbering-carries-an-estimate",
+    to: "imposed-structure-looks-like-data",
+    relation: "prerequisite",
+    reason:
+      "조항 번호가 복원 판단에서 왔다는 앞 글의 결과가 번호 체계 전체를 뒤에 붙은 것으로 보게 합니다.",
+  },
+  {
+    from: "authorial-method-statement",
+    to: "translation-is-a-choice-in-the-text",
+    relation: "evaluates",
+    reason:
+      "방법을 적어 두라는 첫 글의 기준이 읽는 쪽에도 그대로 걸려, 어느 판을 거쳤는지를 적게 합니다.",
+  },
+  {
+    from: "prescriptive-versus-measured-number",
+    to: "a-name-carries-claims",
+    relation: "evaluates",
+    reason:
+      "법전의 숫자를 다룰 때 썼던 구분이 그 대상을 법전이라 부른 데서 오는 함의와 다시 만납니다.",
   },
 ];
 
