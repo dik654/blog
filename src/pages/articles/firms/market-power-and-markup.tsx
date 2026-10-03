@@ -67,7 +67,7 @@ export default function MarketPowerAndMarkupArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 이 글의 질문은 잡힙니다 — 아무도 고르지 않던 값이
+              여기까지만 읽어도 이 글의 질문은 잡힙니다 — 아무도 고르지 않던 값이
               누군가 고르는 값이 되면 그 값은 어디에 멈추는가입니다.
             </em>
           </p>
@@ -143,7 +143,7 @@ export default function MarketPowerAndMarkupArticle() {
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             <em>
-              여기까지 읽으면 무엇이 달라졌는지는 잡힙니다. 그 차이가 셈에
+              이 절에서 무엇이 달라졌는지는 잡혔습니다. 그 차이가 셈에
               구체적으로 얼마를 더하고 빼는지가 다음 부품입니다.
             </em>
           </p>
@@ -177,7 +177,7 @@ export default function MarketPowerAndMarkupArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 멈출 때 무엇을 보는지 알게 됩니다. 그 선으로 실제로
+              이제 멈출 때 무엇을 보는지 알게 됩니다. 그 선으로 실제로
               멈춰 보는 것이 다음 부품입니다.
             </em>
           </p>
@@ -255,7 +255,7 @@ export default function MarketPowerAndMarkupArticle() {
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             <em>
-              여기까지 읽으면 틈이 생긴다는 것까지는 셀 수 있습니다. 그 틈이
+              여기서 끊어도 틈이 생긴다는 것까지는 셀 수 있습니다. 그 틈이
               얼마나 벌어지는지는 아직 세지 않았습니다.
             </em>
           </p>
@@ -351,7 +351,7 @@ export default function MarketPowerAndMarkupArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 틈의 크기를 무엇이 정하는지 알게 됩니다. 남은 것은
+              이 절까지 오면 틈의 크기를 무엇이 정하는지 알게 됩니다. 남은 것은
               그 틈이 세상에서 무엇을 만드는가입니다.
             </em>
           </p>
@@ -390,7 +390,7 @@ export default function MarketPowerAndMarkupArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 이 글의 답이 끝납니다. 값은 늘어나는 돈이
+              여기서 이 글의 답이 끝납니다. 값은 늘어나는 돈이
               한계비용과 만나는 수량에서 멈추고, 그 위에 민감도만큼 떠 있으며, 그
               틈과 함께 일어나지 않은 거래가 남습니다.
             </em>

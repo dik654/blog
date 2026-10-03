@@ -69,9 +69,9 @@ export const DOMAIN_READING_PATHS: Readonly<
   },
 
   economics: {
-    title: "경제를 아홉 편으로 쌓아 올리는 순서",
+    title: "경제를 두 단계로 쌓아 올리는 순서",
     description:
-      "아무도 전체를 정하지 않는데 누가 무엇을 갖고 무엇을 하는지가 정해집니다. 그 일이 어떻게 일어나는지를 세우고, 그다음 그것이 어디서 어긋나는지를 셉니다.",
+      "아무도 전체를 정하지 않는데 누가 무엇을 갖고 무엇을 하는지가 정해집니다. 1단계는 그 일이 값으로 어떻게 일어나고 어디서 어긋나는지를 세우고, 2단계는 값이 아니라 지시로 조정되는 자리와 값을 고르는 힘이 생기는 자리를 셉니다.",
     stages: [
       {
         eyebrow: "01 · 왜 골라야 하는가",
@@ -100,6 +100,20 @@ export const DOMAIN_READING_PATHS: Readonly<
         description:
           "여기까지는 전부 한 시장 이야기입니다. 모두가 동시에 같은 판단을 하면 그 판단이 뒤집힙니다.",
         categories: ["macro"],
+      },
+      {
+        eyebrow: "05 · 값이 아니라 지시가 정하는 자리",
+        title: "조직과 값을 정하는 힘",
+        description:
+          "생산의 대부분은 값이 아니라 지시로 조정됩니다. 그 범위가 어디서 멈추고, 그 안에서 값이 왜 내려가며, 파는 쪽이 하나면 값이 어디에 멈추는지를 셉니다.",
+        categories: ["firms"],
+      },
+      {
+        eyebrow: "06 · 사람이 파는 시간",
+        title: "일하는 사람의 몫",
+        description:
+          "같은 셈을 사람이 파는 시간에 적용하면 어디까지 맞는지, 그리고 그 예측을 실제로 재면 무엇이 나오는지를 봅니다.",
+        categories: ["labor"],
       },
     ],
     showFullSequence: true,

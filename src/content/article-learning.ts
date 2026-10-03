@@ -86728,4 +86728,299 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "labor/measuring-the-spread": {
+    entryNote:
+      "앞 글까지는 임금 하나가 어디서 멈추는지를 셌습니다. 여기서는 그렇게 정해진 몫들을 모아 놓고 전체가 얼마나 벌어져 있는지를 재는 방법을 다룹니다.",
+    coreIdea:
+      "구간별 사람 수만 세면 위 구간의 사람이 줄면서 그들의 몫이 커지는 경우를 가릴 수 없으므로, 가난한 쪽부터 사람과 몫을 함께 쌓아 곡선으로 그려야 합니다. 어떤 분배에서도 시작점과 끝점이 같으므로 차이는 휜 정도에만 남고, 그 휜 넓이를 삼각형 넓이로 나누면 크기와 무관한 한 숫자가 됩니다. 다만 두 곡선이 엇갈리면 그 숫자의 순서와 아래쪽 사람에게 나은 순서가 어긋나므로, 숫자를 쓰기 전에 곡선이 엇갈리는지 먼저 봐야 합니다.",
+    assumedKnowledge: [
+      {
+        id: "monopsony-wage-gap",
+        role: "임금이 한계생산가치 아래로 내려가는 구조를 가져와, 그 폭이 사람마다 다른 경우로 잇습니다.",
+      },
+      {
+        id: "value-of-marginal-product",
+        role: "벌어짐의 한 갈래인 더 만들어 파는 몫의 차이를 그대로 씁니다.",
+      },
+      {
+        id: "neither-model-fits",
+        role: "측정 결과를 넘겨 읽지 않는 규율을 요약 숫자에도 적용합니다.",
+      },
+      {
+        id: "efficiency-is-not-fairness",
+        role: "재는 일과 판단하는 일을 가르는 구분을 다시 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "class-table-ambiguity",
+        role: "지금 흔히 쓰는 방식이 왜 답을 주지 못하는지 정의합니다.",
+      },
+      {
+        id: "cumulative-share-curve",
+        role: "대신 무엇을 그리는지를 정의합니다.",
+      },
+      {
+        id: "bow-bending-rule",
+        role: "그 그림을 읽는 규칙과 그것이 성립하는 이유를 세웁니다.",
+      },
+      {
+        id: "area-ratio-summary",
+        role: "곡선을 한 숫자로 줄이는 나눗셈을 적습니다.",
+      },
+      {
+        id: "crossing-curves-incomparability",
+        role: "그 숫자가 틀리는 경우를 정의합니다.",
+      },
+      {
+        id: "two-sources-of-wage-spread",
+        role: "벌어짐의 출처를 앞 글의 틈과 잇습니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "class-table-ambiguity",
+        sectionId: "why-tables-fail",
+        intuition:
+          "위 구간에 속한 사람이 줄었다는 것만으로는 그 사람들이 전보다 적게 가지게 됐는지 알 수 없습니다.",
+        workedExample:
+          "1877년과 1886년 사이 5,000파운드 초과 구간의 사람은 2.3% 줄었습니다. 그런데 그 줄어든 사람들이 전체 소득에서 차지하는 몫은 표에 없습니다.",
+        boundary:
+          "표가 쓸모없다는 뜻은 아닙니다. 아래 계층의 절대적인 증감을 보는 데에는 쓰이며, 못 하는 것은 쏠림의 방향 판정입니다.",
+      },
+      {
+        id: "cumulative-share-curve",
+        sectionId: "cumulate-and-draw",
+        intuition:
+          "가난한 쪽부터 사람을 줄 세우고, 거기까지의 사람이 전체의 몇 퍼센트를 가졌는지를 함께 쌓아 찍습니다.",
+        workedExample:
+          "프로이센 1892년에는 아래 70.1%가 전체 소득의 41.2%를 가졌고, 1901년에는 아래 60.5%가 31.7%를 가졌습니다.",
+        boundary:
+          "구간이 굵은 자료에서는 점 사이를 직선으로 이으므로 실제보다 덜 휜 곡선이 나옵니다. 구간을 가늘게 할수록 참값에 가까워집니다.",
+      },
+      {
+        id: "bow-bending-rule",
+        sectionId: "cumulate-and-draw",
+        intuition:
+          "아무도 가지지 않은 데서 시작해 전부 더하면 100%가 되는 것은 어떤 분배에서나 같습니다. 그래서 양 끝은 고정됩니다.",
+        workedExample:
+          "똑같이 나누면 아래 1%가 1%, 아래 2%가 2%를 가져 대각선이 됩니다. 평균 재산이 얼마든 인구가 몇이든 같은 직선입니다.",
+        boundary:
+          "휜 정도가 크다는 것과 어느 구간이 휘었다는 것은 다른 말입니다. 이 규칙만으로는 전자만 읽힙니다.",
+      },
+      {
+        id: "area-ratio-summary",
+        sectionId: "one-number",
+        intuition:
+          "대각선과 곡선 사이가 벌어진 만큼이 쏠린 정도인데, 그 넓이는 그림을 키우면 같이 커지므로 삼각형 전체로 나눠 줍니다.",
+        workedExample:
+          "프로이센의 표로 계산하면 1892년 0.357, 1901년 0.394입니다. 같은 방향으로 커졌고, 곡선이 아래로 내려간 것과 맞습니다.",
+        proofIdea:
+          "가로와 세로를 0에서 1까지의 비율로 두면 대각선 아래 삼각형의 넓이는 늘 1/2입니다. 곡선 아래 넓이를 B라 하면 대각선과 곡선 사이는 1/2 − B이므로, 그 둘을 나눈 값은 1 − 2B가 됩니다. 분모가 자료와 무관하게 고정되므로 곡선 아래를 적분하는 것만으로 값이 정해집니다.",
+        counterexample:
+          "빚이 있어 몫이 음수인 사람이 있으면 곡선이 가로축 아래로 내려가 B가 음수가 될 수 있고, 그러면 이 값이 1을 넘습니다. 0과 1 사이라는 성질은 몫이 음수가 아니라는 전제 위에서만 성립합니다.",
+        boundary:
+          "이 나눗셈은 Lorenz의 1905년 글에 없습니다. 그는 곡선과 읽는 규칙까지만 적었고, 넓이를 한 숫자로 바꾸는 것은 이 글이 그 곡선에서 이어 적은 것입니다.",
+      },
+      {
+        id: "crossing-curves-incomparability",
+        sectionId: "what-one-number-loses",
+        intuition:
+          "두 곡선이 가운데에서 만나 위아래가 바뀌면, 아래쪽 사람에게 나은 쪽과 전체 넓이가 작은 쪽이 다를 수 있습니다.",
+        workedExample:
+          "열 사람에게 100달러를 나눈 두 경우에서 아래 절반까지는 둘째가 더 가졌지만 넓이 비는 첫째 0.120, 둘째 0.144로 둘째가 더 쏠렸다고 나옵니다.",
+        proofIdea:
+          "넓이 비는 곡선과 대각선의 차이를 전 구간에 걸쳐 더한 값입니다. 더하는 과정에서 앞 구간의 작은 차이와 뒤 구간의 큰 차이가 상쇄되므로, 서로 다른 모양이 같은 합을 가질 수 있고 합의 순서가 구간별 순서와 어긋날 수 있습니다. 한쪽 곡선이 전 구간에서 다른 쪽 아래에 있으면 모든 구간의 차이가 같은 부호라 상쇄가 일어나지 않고, 그때만 두 순서가 일치합니다.",
+        counterexample:
+          "프로이센의 두 해는 곡선이 엇갈리지 않아 넓이 비의 순서와 곡선의 순서가 일치합니다. 엇갈림이 없으면 이 한계도 나타나지 않습니다.",
+        boundary:
+          "숫자를 쓰지 말라는 뜻이 아니라, 쓰기 전에 곡선이 엇갈리는지 보는 것이 순서라는 뜻입니다.",
+      },
+      {
+        id: "two-sources-of-wage-spread",
+        sectionId: "where-the-spread-comes-from",
+        intuition:
+          "같은 일을 하고 같은 몫을 만들어도, 옮겨 갈 자리가 적은 사람은 덜 받습니다.",
+        workedExample:
+          "자격이 여러 곳에서 통하는 사람은 옮길 데가 많아 틈이 좁고, 한 공장에서만 쓰이는 기술을 가진 사람은 옮길 데가 적어 틈이 넓습니다.",
+        boundary:
+          "곡선은 두 갈래를 합한 결과만 보여 줍니다. 어느 쪽이 얼마인지 가르는 일은 이 글의 범위를 넘습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 지금 방식의 한계",
+        relation: "사람만 세면 방향이 결정되지 않습니다.",
+        concepts: ["class-table-ambiguity"],
+      },
+      {
+        label: "01 대신 그리는 것",
+        relation: "사람과 몫을 함께 쌓아 곡선으로 그립니다.",
+        concepts: ["cumulative-share-curve", "bow-bending-rule"],
+      },
+      {
+        label: "02 한 숫자로 줄이기",
+        relation: "휜 넓이를 삼각형으로 나누고, 그 숫자가 틀리는 자리를 봅니다.",
+        concepts: ["area-ratio-summary", "crossing-curves-incomparability"],
+      },
+      {
+        label: "03 벌어짐의 출처",
+        relation: "앞 글의 틈이 사람마다 다른 자리와 잇습니다.",
+        concepts: ["two-sources-of-wage-spread"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "구간별 사람 수만 적힌 표로 쏠림의 방향을 판정할 수 없는 이유를, 위 구간의 사람이 줄어든 경우로 설명하세요.",
+        answerChecklist: [
+          "사람 수만 적혀 있고 몫은 없음",
+          "사람은 줄고 그들의 몫은 커질 수 있음",
+          "두 가지가 동시에 성립 가능",
+          "그래서 방향이 원리적으로 결정되지 않음",
+        ],
+        requiredConcepts: ["class-table-ambiguity"],
+        sectionId: "why-tables-fail",
+      },
+      {
+        level: "basic",
+        question:
+          "가난한 쪽부터 쌓아 그리는 곡선에서 두 축에 각각 무엇을 두는지 쓰고, 점 하나가 무엇을 말하는지 쓰세요.",
+        answerChecklist: [
+          "한 축에 가난한 쪽부터 쌓은 사람의 비율",
+          "다른 축에 그들이 가진 몫의 비율",
+          "점 하나는 아래 몇 %가 전체의 몇 %를 가졌는지",
+          "마지막 점은 반드시 100과 100",
+        ],
+        requiredConcepts: ["cumulative-share-curve"],
+        sectionId: "cumulate-and-draw",
+      },
+      {
+        level: "basic",
+        question:
+          "똑같이 나눈 분배를 이 방법으로 그리면 어떤 모양이 되는지, 그리고 그 모양이 인구와 평균 재산에 영향받지 않는 이유를 쓰세요.",
+        answerChecklist: [
+          "대각선 직선",
+          "아래 1%가 1%, 아래 2%가 2%를 가짐",
+          "비율로만 그리므로 크기가 지워짐",
+          "그래서 서로 다른 나라와 시점을 견줄 수 있음",
+        ],
+        requiredConcepts: ["cumulative-share-curve", "bow-bending-rule"],
+        sectionId: "cumulate-and-draw",
+      },
+      {
+        level: "basic",
+        question:
+          "두 분배의 곡선이 시작점과 끝점을 공유하는 이유와, 그래서 차이가 어디에만 남는지 쓰세요.",
+        answerChecklist: [
+          "아무도 가지지 않은 데서 시작",
+          "전부 더하면 100%",
+          "두 끝이 어떤 분배에서나 고정",
+          "차이는 가운데가 휜 정도에만 남음",
+        ],
+        requiredConcepts: ["bow-bending-rule"],
+        sectionId: "cumulate-and-draw",
+      },
+      {
+        level: "basic",
+        question:
+          "휜 넓이를 그대로 쓰지 않고 삼각형 넓이로 나누는 이유와, 그 결과 값의 두 끝이 무엇을 뜻하는지 쓰세요.",
+        answerChecklist: [
+          "넓이는 그림을 키우면 같이 커짐",
+          "분모와 분자가 같은 비율로 커져 상쇄",
+          "똑같이 나누면 0",
+          "한 사람이 다 가지는 쪽으로 갈수록 1에 가까움",
+        ],
+        requiredConcepts: ["area-ratio-summary"],
+        sectionId: "one-number",
+      },
+      {
+        level: "basic",
+        question:
+          "입구의 두 경우를 가난한 쪽부터 쌓은 값으로 적고, 두 곡선이 만나는 지점을 찾으세요.",
+        answerChecklist: [
+          "첫째 6·13·21·30·40·52·64·76·88·100",
+          "둘째 8·16·24·32·40·48·56·70·84·100",
+          "다섯 번째에서 둘 다 40",
+          "그 앞뒤로 큰 쪽이 바뀜",
+        ],
+        requiredConcepts: ["crossing-curves-incomparability"],
+        sectionId: "what-one-number-loses",
+      },
+      {
+        level: "advanced",
+        question:
+          "삼각형 넓이가 1/2로 고정된다는 점에서 출발해 넓이 비를 곡선 아래 적분만으로 적고, 그 유도가 쓰는 전제를 쓰세요.",
+        answerChecklist: [
+          "비율 좌표에서 삼각형 넓이는 1/2",
+          "대각선과 곡선 사이는 1/2 − B",
+          "나누면 1 − 2B",
+          "몫이 음수가 아니어야 0과 1 사이가 보장됨",
+        ],
+        requiredConcepts: ["area-ratio-summary"],
+        sectionId: "one-number",
+      },
+      {
+        level: "advanced",
+        question:
+          "넓이 비의 순서와 구간별 순서가 어긋날 수 있는 이유를 상쇄로 설명하고, 어긋나지 않는 조건을 쓰세요.",
+        answerChecklist: [
+          "넓이 비는 구간별 차이를 전 구간에 걸쳐 더한 값",
+          "앞 구간의 차이와 뒤 구간의 차이가 상쇄됨",
+          "한쪽이 전 구간에서 아래에 있으면 차이의 부호가 같음",
+          "그때만 두 순서가 일치",
+        ],
+        requiredConcepts: [
+          "crossing-curves-incomparability",
+          "area-ratio-summary",
+        ],
+        sectionId: "what-one-number-loses",
+      },
+      {
+        level: "advanced",
+        question:
+          "입구의 두 경우에서 넓이 비는 둘째가 더 크게 나오는데 아래 절반에게는 둘째가 낫습니다. 이 둘이 모순이 아닌 이유를 쓰세요.",
+        answerChecklist: [
+          "넓이 비는 평균적으로 얼마나 떨어졌는지만 말함",
+          "어느 구간에서 떨어졌는지는 담기지 않음",
+          "아래 절반은 둘째가 더 가짐",
+          "위 절반은 첫째가 더 가져 합에서 뒤집힘",
+        ],
+        requiredConcepts: ["crossing-curves-incomparability"],
+        sectionId: "what-one-number-loses",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 몫을 만들어 내는 두 사람이 다른 임금을 받는 경우를 앞 글의 틈으로 설명하고, 곡선이 이 차이를 가를 수 없는 이유를 쓰세요.",
+        answerChecklist: [
+          "틈의 크기는 옮겨 갈 자리가 얼마나 있는지로 정해짐",
+          "옮길 자리의 수가 사람마다 다름",
+          "같은 한계생산가치에도 다른 임금이 나옴",
+          "곡선은 두 갈래를 합한 결과만 보임",
+        ],
+        requiredConcepts: ["two-sources-of-wage-spread", "monopsony-wage-gap"],
+        sectionId: "where-the-spread-comes-from",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "M. O. Lorenz, “Methods of Measuring the Concentration of Wealth” (1905)",
+        href: "https://archive.org/details/jstor-2276207",
+        problem:
+          "한 나라가 전보다 쏠렸는지 퍼졌는지를 말하려면 서로 다른 시점과 나라를 같은 자 위에 올려야 하는데, 당시 쓰이던 계급별 표와 중위값 차이는 인구와 총액이 바뀌면 함께 흔들려 쏠림만 떼어 내지 못했습니다.",
+        contribution:
+          "가난한 쪽부터 쌓은 사람의 비율과 그들이 가진 몫의 비율을 두 축에 두고 그리는 방법을 제안했습니다. 똑같이 나눈 경우가 대각선이 되고 어떤 분배에서도 양 끝이 같으므로, 인구와 총액이 지워지고 차이가 휜 정도에만 남습니다. 활이 휠수록 쏠린 것이라는 읽기 규칙을 함께 주고, 프로이센 1892년과 1901년 자료로 적용해 보였습니다.",
+        assumptions:
+          "사람을 가난한 쪽부터 줄 세울 수 있고 몫이 음수가 아니라고 둡니다. 계급별 표에서 그릴 때는 구간 안이 고르다고 가정합니다.",
+        evidenceScope:
+          "JSTOR Early Journal Content 공개본을 내려받아 전문을 읽었고, 210쪽의 영국 소득세 표, 214쪽의 프로이센 표, 218쪽의 열 사람 반례와 인용 문장은 해당 쪽 이미지를 직접 열어 대조했습니다. 자료는 1870~1901년의 영국·프로이센·스위스 통계이며 저자 스스로 자료의 신뢰도는 논하지 않는다고 밝혔습니다.",
+        notClaim:
+          "넓이를 삼각형으로 나눠 한 숫자로 바꾸는 계산은 이 글에 없습니다. 곡선과 읽는 규칙까지가 저자의 것이고, 본문의 식과 프로이센 0.357·0.394, 반례의 0.120·0.144는 전부 이 글이 그의 곡선과 표에서 계산한 값입니다. 또 저자는 곡선이 엇갈리는 경우를 한계가 아니라 그림이 여전히 무슨 일이 있었는지 말해 주는 근거로 적었습니다.",
+        sectionId: "cumulate-and-draw",
+      },
+    ],
+  },
 };

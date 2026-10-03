@@ -65,7 +65,7 @@ export default function ScaleAndCostStructureArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 이 글이 고치려는 오해는 잡힙니다 — 하나당 값이
+              여기까지만 읽어도 이 글이 고치려는 오해는 잡힙니다 — 하나당 값이
               내려간 것을 공장이 커진 결과로 읽는 습관입니다.
             </em>
           </p>
@@ -137,7 +137,7 @@ export default function ScaleAndCostStructureArticle() {
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             <em>
-              여기까지 읽으면 싸지는 힘이 어디서 오는지는 잡힙니다. 그 힘을 언제
+              이 절에서 싸지는 힘이 어디서 오는지는 잡혔습니다. 그 힘을 언제
               쓸 수 있는지가 바로 다음 질문입니다.
             </em>
           </p>
@@ -258,7 +258,7 @@ export default function ScaleAndCostStructureArticle() {
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             <em>
-              여기까지 읽으면 어떤 방법이 쓰일지 계산할 수 있습니다. 남은 것은 그
+              이제 어떤 방법이 쓰일지 계산할 수 있습니다. 남은 것은 그
               수량이 어디서 오는가입니다.
             </em>
           </p>
@@ -315,7 +315,7 @@ export default function ScaleAndCostStructureArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 고리가 닫힙니다. 그 고리가 실제 세상에서 어떤
+              여기서 고리가 닫힙니다. 그 고리가 실제 세상에서 어떤
               모양으로 나타나는지가 다음 부품입니다.
             </em>
           </p>
@@ -357,7 +357,7 @@ export default function ScaleAndCostStructureArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 수확 체증이 실제로 어떤 모양인지 보입니다. 그
+              이 절까지 오면 수확 체증이 실제로 어떤 모양인지 보입니다. 그
               모양에서 무엇이 따라 나오지 않는지가 마지막 부품입니다.
             </em>
           </p>
@@ -463,7 +463,7 @@ export default function ScaleAndCostStructureArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 이 글의 질문에 답이 나왔습니다. 싸지는 힘은 크기가
+              여기서 이 글의 질문에 답이 나왔습니다. 싸지는 힘은 크기가
               아니라 방법에서 오고, 방법은 수량이 열며, 수량은 생산이 함께
               키웁니다.
             </em>

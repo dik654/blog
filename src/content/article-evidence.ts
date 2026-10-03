@@ -7593,4 +7593,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "겨루는 예측을 못 박은 772쪽 첫 문단, 고용 변화를 담은 780쪽 표 3, 한 끼 값을 담은 788쪽 표 7, 두 설명 모두로 설명하기 어렵다는 792쪽 맺음 문장의 출처. 저자 공개본 PDF를 읽고 표와 인용 문장은 쪽 이미지로 대조했음",
     },
   ],
+  "labor/measuring-the-spread": [
+    {
+      kind: "핵심 논문",
+      label:
+        "M. O. Lorenz, “Methods of Measuring the Concentration of Wealth”, Publications of the American Statistical Association, Vol. 9, No. 70 (June 1905), pp. 209–219",
+      href: "https://archive.org/details/jstor-2276207",
+      note: "계급별 표로는 판정할 수 없다는 210쪽, 그리는 방법과 활의 규칙을 적은 217쪽, 프로이센 자료의 214쪽 표, 곡선이 엇갈리는 반례의 218쪽이 출처. JSTOR Early Journal Content 공개본을 읽고 표와 인용 문장은 쪽 이미지로 대조했음",
+    },
+  ],
 };

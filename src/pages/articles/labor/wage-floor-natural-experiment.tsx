@@ -63,7 +63,7 @@ export default function WageFloorNaturalExperimentArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 이 글이 무엇을 겨루는지는 잡힙니다 — 한쪽만 바닥을
+              여기까지만 읽어도 이 글이 무엇을 겨루는지는 잡힙니다 — 한쪽만 바닥을
               올린 자리에서 일자리가 어느 쪽으로 움직였는가입니다.
             </em>
           </p>
@@ -104,7 +104,7 @@ export default function WageFloorNaturalExperimentArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 멈추는 자리가 두 줄이 만나는 곳 근처라는 것까지는
+              이 절에서 멈추는 자리가 두 줄이 만나는 곳 근처라는 것까지는
               보입니다. 정확히 어디인지가 다음 두 부품에서 갈립니다.
             </em>
           </p>
@@ -167,7 +167,7 @@ export default function WageFloorNaturalExperimentArticle() {
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             <em>
-              여기까지 읽으면 교과서가 말하는 임금의 자리를 셀 수 있습니다. 바닥을
+              이제 교과서가 말하는 임금의 자리를 셀 수 있습니다. 바닥을
               8달러보다 높게 걸면 그 자리가 어떻게 밀리는지도 같은 표에서 바로
               읽힙니다.
             </em>
@@ -278,7 +278,7 @@ export default function WageFloorNaturalExperimentArticle() {
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
             <em>
-              여기까지 읽으면 두 셈을 모두 셀 수 있습니다. 이제 같은 바닥을
+              여기서 끊어도 두 셈은 모두 셀 수 있습니다. 같은 바닥을
               양쪽에 걸어 보면 예측이 어디서 갈리는지가 나옵니다.
             </em>
           </p>
@@ -339,7 +339,7 @@ export default function WageFloorNaturalExperimentArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 세어 볼 준비가 끝났습니다. 남은 것은 실제로 한쪽만
+              이 절까지 오면 세어 볼 준비가 끝났습니다. 남은 것은 실제로 한쪽만
               바닥을 올린 자리를 찾아 숫자를 보는 일입니다.
             </em>
           </p>
@@ -438,7 +438,7 @@ export default function WageFloorNaturalExperimentArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 이 글의 질문에 답이 나왔습니다. 임금이 다른 값들과
+              여기서 이 글의 질문에 답이 나왔습니다. 임금이 다른 값들과
               같은 방식으로만 정해지지는 않으며, 어느 방식인지는 재 봐야 알고,
               재 본 자리에서는 두 설명 다 부족했습니다.
             </em>

@@ -38,4 +38,40 @@ export const laborArticles: Article[] = [
     component: () =>
       import("@/pages/articles/labor/wage-floor-natural-experiment"),
   },
+  {
+    slug: "measuring-the-spread",
+    title: "벌어진 정도는 표가 아니라 곡선으로 잽니다",
+    subcategory: "distribution",
+    sections: [
+      {
+        id: "overview",
+        title: "같은 100달러를 열 사람이 나눠 가진 두 경우가 있습니다",
+      },
+      {
+        id: "why-tables-fail",
+        title: "부품 1. 계급별 표로는 벌어졌는지 좁아졌는지 알 수 없습니다",
+      },
+      {
+        id: "cumulate-and-draw",
+        title: "부품 2. 가난한 쪽부터 쌓아서 그리면 보입니다",
+      },
+      {
+        id: "one-number",
+        title: "부품 3. 휜 정도를 한 숫자로 줄입니다",
+      },
+      {
+        id: "what-one-number-loses",
+        title: "부품 4. 그 한 숫자가 못 보는 것이 입구의 두 경우입니다",
+      },
+      {
+        id: "where-the-spread-comes-from",
+        title: "부품 5. 벌어지는 자리는 앞 글의 틈이 사람마다 다른 자리입니다",
+      },
+      {
+        id: "handoff",
+        title: "다섯 편으로 조직과 사람까지 왔습니다",
+      },
+    ],
+    component: () => import("@/pages/articles/labor/measuring-the-spread"),
+  },
 ];
