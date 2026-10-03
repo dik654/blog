@@ -12974,6 +12974,19 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "lumped-circuit-and-conservation": {
+    title: "회로를 선과 점으로 줄여도 되는 이유 글이 소유하는 범위",
+    owns: [
+      "전하량·전압·전류·저항의 단위와 측정 방향",
+      "한 갈림길의 전하 보존과 한 고리의 전압 합을 같은 12 V 예제로 계산하는 방법",
+      "전력 검산과 집중 회로 근사의 적용 경계",
+    ],
+    reuses: [],
+    evidence: [
+      { kind: "primary-source", rule: "Kirchhoff 1845의 정상 상태 금속판과 이 글의 가정한 저항망을 구분한다." },
+      { kind: "project-claim", rule: "수치 예제는 실측이나 원 논문의 데이터로 표현하지 않고 이상 부품의 가정으로 밝힌다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

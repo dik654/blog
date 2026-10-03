@@ -7584,4 +7584,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "값과 한계비용의 틈을 지표로 쓴 출처로 알려진 글. 접근할 수 있는 전문을 찾지 못해 읽지 못했고, 그래서 이 글의 어떤 주장도 여기에 기대지 않는다. 본문의 틈 식은 Cournot 57쪽 식 (2)에서 직접 옮겨 적은 것",
     },
   ],
+  "circuits/lumped-circuit-and-conservation": [
+    {
+      kind: "핵심 논문",
+      label: "G. Kirchhoff, ‘Ueber den Durchgang eines elektrischen Stromes durch eine Ebene, insbesondere durch eine kreisförmige’ (1845), 497–514쪽",
+      href: "https://zenodo.org/records/2422851",
+      note: "원문 스캔의 499쪽에서 정상 상태 금속판의 닫힌 경계로 드나드는 흐름의 합이 0이라는 문장과 적분식을 확인했다. 이 글의 12 V 저항망은 원문 실험이 아니라 교육용 가정이다.",
+    },
+    {
+      kind: "공개 강의",
+      label: "MIT OpenCourseWare 6.002 Circuits and Electronics, Lecture 1 (2007)",
+      href: "https://live.ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/f6ad70417c73f585b7ca065153d25d25_6002_l1.pdf",
+      note: "집중 회로 근사의 전하 축적·변하는 자기 선속 조건, 전하 보존과 패러데이 법칙에서 회로식을 얻는 설명의 출처. 논문 증거와 교육용 모델을 구분한다.",
+    },
+  ],
 };
