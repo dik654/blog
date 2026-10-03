@@ -3,6 +3,17 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+## 2026-10-03 · 세계의 사업·자산·제도 흐름 (본문·검증 완료, 설명 순서 세부 검수 중)
+
+- 범위: [29편의 질문과 경계](world-systems-series-outline.md), [점포 영상 조사 기록](retail-youtube-research.md). 기존 전자·소자·반도체·임베디드 40편과 이어지는 경제·금융·생활 기반 글이다.
+- [x] 29편의 공개 route와 category·domain 읽기 경로를 등록했다. 숫자 가정, 행위자별 돈·권리·위험 그림, 기초 6·심화 4문제, 공식 근거, concept owner·edge를 연결했다.
+- [x] 입지·공사·임대차·영업양도·폐업·원상복구를 연결하고 현장 영상 세 편을 전사와 공식 원문에 대조했다.
+- [x] 한국 외 관할권의 차이를 각 글에 기록했고 국가 비교 글에서 7개 장부를 공통 질문으로 삼았다. 38개 재사용 링크를 점검해 잘못된 두 route를 수정했다.
+- [x] graph 3,765 concepts·6,040 relations·780 registered articles, learning 780/780, article·topology·reading-order·terms·prose·formula·Viz 감사, TypeScript·ESLint·production build 통과. 정적 public route 1,641개.
+- [x] 29편 각각에 실제 1차 자료의 짧은 구절, 첫 숫자 사례에 대한 적용, 절 사이의 멈춤 문장 3개와 답변 절을 가리키는 예측 질문 2개를 넣었다. 점포 4편과 파생상품·국가 비교 표본을 읽으며 출처 문구의 적용 범위와 숫자 연결을 재확인했다.
+- [x] Playwright Chromium으로 새 글 29편을 390×844와 1440×1000에서 총 58회 열어 overflow·KaTeX·console·Viz 오류 0건 확인. 결과: `output/playwright/sweep/2026-10-03T14-48-33/summary.json`. 공사·옵션 글의 양쪽 화면도 스크린샷으로 확인했다.
+- [ ] `blog-rewrite-contract.md` 1.3의 S·B·0~7 층위가 각 HTML 절에서 독립되고 순서대로 올라가는지 29편 전부 수동 검수한다. 현재 네 개의 본문 절에 일부 층위가 함께 있어 이 항목의 충족을 주장하지 않는다.
+
 ## 공통 기반
 
 - [x] 작성 정본: `docs/blog-rewrite-contract.md`

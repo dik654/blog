@@ -78,4 +78,11 @@ export const riskArticles: Article[] = [
     component: () =>
       import("@/pages/articles/risk/capital-requirements-and-systemic-risk"),
   },
+  {
+    slug: "margin-collateral-and-leverage",
+    title: "담보와 증거금은 최종 손익보다 먼저 현금을 요구한다",
+    subcategory: "risk-collateral",
+    sections: [{"id": "overview", "title": "자산이 10% 내리면 자기 돈은 절반이 줄 수 있습니다"}, {"id": "mechanism", "title": "시가 평가와 유지 기준이 매도 시점을 앞당깁니다"}, {"id": "comparison", "title": "담보 규칙은 손실을 없애지 않고 분배를 바꿉니다"}, {"id": "limits", "title": "명목상 헤지에도 현금 위기는 남습니다"}],
+    component: () => import("@/pages/articles/risk/margin-collateral-and-leverage"),
+  },
 ];
