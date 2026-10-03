@@ -7,6 +7,8 @@ import { OFFICIAL_SOURCES } from "./official-sources";
 
 export type ArticleEvidenceKind =
   | "핵심 논문"
+  | "핵심 사료"
+  | "비교 사료"
   | "선행·비교 논문"
   | "리뷰 논문"
   | "핵심 연구"
@@ -7870,6 +7872,56 @@ export const ARTICLE_EVIDENCE: Readonly<
         "David Ricardo, 『On the Principles of Political Economy, and Taxation』, London: John Murray, 1817 초판, 7장 「On Foreign Trade」",
       href: "https://www.gutenberg.org/ebooks/33310",
       note: "네 숫자(100·120·80·90), 같은 나라 안에서는 그 교환이 성립하지 않는다는 문장, 안과 밖을 가르는 자본 이동의 난이도, 자본이 자유로울 때의 반사실과 이윤율 결론, 전제를 떠받친 불안과 마음에 대한 서술의 출처. Project Gutenberg 1817년 초판 전사본으로 7장 전체를 읽었음. facsimile이 아니어서 쪽 이미지 대조는 하지 못했고 쪽수 대신 장 번호만 적음",
+    },
+  ],
+  "testimony/speeches-were-reconstructed": [
+    {
+      kind: "핵심 사료",
+      label:
+        "Thucydides, 『History of the Peloponnesian War』, Richard Crawley 영역, 1권 22절",
+      href: "https://www.gutenberg.org/ebooks/7142",
+      note: "연설을 저자가 판단해 다시 썼다는 진술, 사건 쪽의 세 단계 절차, 목격자가 갈리는 두 이유의 출처. Project Gutenberg 전사본(eBook 7142)으로 1권을 읽고 22절을 대조했음. facsimile이 아니어서 쪽 이미지 대조는 하지 못했고 쪽수 대신 권·절 번호만 적음",
+    },
+  ],
+  "testimony/told-but-not-believed": [
+    {
+      kind: "핵심 사료",
+      label:
+        "Herodotus, 『The History of Herodotus』, G. C. Macaulay 영역, 7권 148~152절",
+      href: "https://www.gutenberg.org/ebooks/2456",
+      note: "아르고스에 대한 세 설명, 각 설명에 붙은 출처 표시, 전할 의무와 믿을 의무를 가른 문장과 그 범위 선언의 출처. Project Gutenberg 전사본(eBook 2456)으로 7권 148~153절을 읽음. facsimile이 아니어서 쪽 이미지 대조는 하지 못했고 쪽수 대신 권·절 번호만 적음",
+    },
+    {
+      kind: "비교 사료",
+      label:
+        "Thucydides, 『History of the Peloponnesian War』, Richard Crawley 영역, 1권 22절",
+      href: "https://www.gutenberg.org/ebooks/7142",
+      note: "같은 시대의 다른 저자가 방법을 밝힌 방식과 비교하는 데 썼음. 두 칸의 만듦새를 밝히는 것과 믿음의 범위를 밝히는 것이 어떻게 다른지의 대조 근거",
+    },
+  ],
+  "testimony/the-writer-was-there": [
+    {
+      kind: "핵심 사료",
+      label:
+        "Flavius Josephus, 『The Wars of the Jews』, William Whiston 영역, 서문 1·4·8·12절",
+      href: "https://www.gutenberg.org/ebooks/2850",
+      note: "두 묶음의 실패와 그 동기, 저자의 자기 소개, 사실과 애도를 나눠 읽으라는 요청, 티투스를 증인으로 댄 대목, 겪어 아는 사람을 독자로 둔 대목의 출처. Project Gutenberg 전사본(eBook 2850)으로 서문 1~12절을 읽음. facsimile이 아니어서 쪽 이미지 대조는 하지 못했고 쪽수 대신 절 번호만 적음",
+    },
+    {
+      kind: "비교 사료",
+      label:
+        "Herodotus, 『The History of Herodotus』, G. C. Macaulay 영역, 7권 152절",
+      href: "https://www.gutenberg.org/ebooks/2456",
+      note: "각 보고에 꼬리표를 붙이는 방식과 저자 자신에게 꼬리표를 붙이는 방식을 대조하는 데 썼음",
+    },
+  ],
+  "record-numbers/how-the-army-was-counted": [
+    {
+      kind: "핵심 사료",
+      label:
+        "Herodotus, 『The History of Herodotus』, G. C. Macaulay 영역, 7권 60절",
+      href: "https://www.gutenberg.org/ebooks/2456",
+      note: "민족별 수를 적을 수 없다는 진술, 육군 170만, 1만 명을 빽빽하게 세우고 배꼽 높이의 담을 쌓아 채움을 되풀이한 절차의 출처. 영역자 주석이 170 myriads를 1,700,000으로 풀어 둠. Project Gutenberg 전사본(eBook 2456)으로 읽음. 쪽수 대신 권·절 번호만 적음",
     },
   ],
 };
