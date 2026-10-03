@@ -7728,4 +7728,94 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "패키징 역할과 조립·시험의 단계별 순서를 확인했다."
     }
   ],
+  "embedded/mcu-memory-map-and-registers": [
+    {
+      "kind": "공식 문서",
+      "label": "Raspberry Pi RP2040 Datasheet, 원본 26·43·46·245쪽",
+      "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+      "note": "SIO 기준 주소, 세 오프셋, GPIO5_CTRL 위치, 래치와 입력 차이를 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Raspberry Pi Pico SDK Hardware APIs",
+      "href": "https://www.raspberrypi.com/documentation/pico-sdk/hardware.html",
+      "note": "핀 기능·출력 방향 설정 API를 확인했다."
+    }
+  ],
+  "embedded/interrupts-and-latency-budget": [
+    {
+      "kind": "공식 문서",
+      "label": "Raspberry Pi RP2040 Datasheet, 원본 60·79–80·239·243–244쪽",
+      "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+      "note": "GPIO 에지 상태·소거, 코어별 허용, IO_IRQ_BANK0 경로를 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Arm Cortex-M0+ Devices Generic User Guide, 원본 87–90쪽",
+      "href": "https://documentation-service.arm.com/static/5f04aadfdbdee951c1cdc957",
+      "note": "NVIC pending·priority와 재진입 조건을 확인했다."
+    }
+  ],
+  "embedded/timers-and-sampling": [
+    {
+      "kind": "공식 문서",
+      "label": "Raspberry Pi RP2040 Datasheet, 원본 535–537·559–560쪽",
+      "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+      "note": "타이머 1 µs 계수·네 알람과 GPIO26/ADC0 변환 조건을 확인했다."
+    },
+    {
+      "kind": "공개 강의",
+      "label": "MIT OCW RES.6-007 Lecture 16 Sampling, 원본 1–2쪽",
+      "href": "https://ocw.mit.edu/courses/res-6-007-signals-and-systems-spring-2011/8708ec068ebdea2c4ee2f38fad39fb83_MITRES_6_007S11_lec16.pdf",
+      "note": "이상 샘플링의 절반 경계와 앨리어싱을 확인했다."
+    }
+  ],
+  "embedded/serial-buses-and-tradeoffs": [
+    {
+      "kind": "공식 문서",
+      "label": "NXP UM10204 Rev. 7.0, 원본 1·9–10·15쪽",
+      "href": "https://www.nxp.com/docs/en/user-guide/UM10204.pdf",
+      "note": "I²C 두 선, 모드별 속도, ACK·반복 START·스트레칭을 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Raspberry Pi Pico SDK Hardware APIs, I2C/SPI/UART/GPIO",
+      "href": "https://www.raspberrypi.com/documentation/pico-sdk/hardware.html",
+      "note": "세 컨트롤러와 RP2040 GPIO 기능표를 확인했다."
+    }
+  ],
+  "embedded/scheduling-and-real-time": [
+    {
+      "kind": "공식 문서",
+      "label": "FreeRTOS RTOS Fundamentals·Task Priorities",
+      "href": "https://www.freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals",
+      "note": "준비된 최고 우선순위 작업과 마감 목적을 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "FreeRTOS Reference Manual v10, vTaskDelayUntil",
+      "href": "https://www.freertos.org/media/2018/FreeRTOS_Reference_Manual_V10.0.0.pdf",
+      "note": "절대 주기 대기 API와 상대 지연의 차이를 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "FreeRTOS FreeRTOS mutexes",
+      "href": "https://freertos.org/Real-time-embedded-RTOS-mutexes.html",
+      "note": "뮤텍스 우선순위 상속과 ISR 사용 제한을 확인했다."
+    }
+  ],
+  "embedded/firmware-update-and-recovery": [
+    {
+      "kind": "공식 문서",
+      "label": "MCUboot Bootloader design",
+      "href": "https://docs.mcuboot.com/design.html",
+      "note": "시험 swap의 이미지 상태·검증·중단 재개 범위를 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Raspberry Pi RP2040 Datasheet, 원본 123·129–132·145쪽",
+      "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+      "note": "외부 플래시 XIP와 BOOTSEL 복구 경로를 확인했다."
+    }
+  ],
 };

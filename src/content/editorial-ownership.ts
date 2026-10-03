@@ -13175,6 +13175,164 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "mcu-memory-map-and-registers": {
+    "title": "MCU 메모리 맵 글이 소유하는 범위",
+    "owns": [
+      "RP2040 GPIO5 주소·마스크 계산",
+      "기능 선택·출력 허용·출력 래치의 순서",
+      "GPIO_OUT 읽기와 실제 핀 입력의 차이",
+      "SET·CLR의 대상 비트 원자 변경"
+    ],
+    "reuses": [
+      {
+        "label": "출하된 칩을 사용하는 출발점",
+        "href": "/electronics/semiconductors/yield-defect-and-packaging#package"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "RP2040 공식 표의 주소와 SDK의 함수 역할을 일치시킨다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "외부 LED 연결·점등을 보드 실측으로 주장하지 않는다."
+      }
+    ]
+  },
+  "interrupts-and-latency-budget": {
+    "title": "인터럽트 지연 예산 글이 소유하는 범위",
+    "owns": [
+      "GPIO2 에지·주변 장치 상태·NVIC pending 경로",
+      "짧은 ISR과 I²C 작업 전달",
+      "가상 일곱 구간 493 µs·마감 여유 507 µs",
+      "대기 600 µs의 마감 초과와 실측 경계"
+    ],
+    "reuses": [
+      {
+        "label": "앞 글의 핀 입력과 출력 래치 차이",
+        "href": "/electronics/embedded/mcu-memory-map-and-registers#readback"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "RP2040 GPIO와 Arm NVIC의 역할을 나눠 인용한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "마이크로초 예제 값을 하드웨어의 보장 지연으로 쓰지 않는다."
+      }
+    ]
+  },
+  "timers-and-sampling": {
+    "title": "타이머와 샘플링 글이 소유하는 범위",
+    "owns": [
+      "RP2040 1 µs 타이머의 10 ms 절대 일정",
+      "알람 시각과 ADC 실제 변환 시각의 차이",
+      "100 Hz 샘플·50 Hz 경계와 30/70 Hz 동일 코사인 샘플",
+      "ADC 앞 필터·시각 지터의 적용 경계"
+    ],
+    "reuses": [
+      {
+        "label": "앞 글의 인터럽트 지연 예산",
+        "href": "/electronics/embedded/interrupts-and-latency-budget#budget"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "RP2040 하드웨어 조건과 MIT 이상 샘플링 조건을 구분한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "10 ms·30/70 Hz와 400 µs 지연을 실측값으로 쓰지 않는다."
+      }
+    ]
+  },
+  "serial-buses-and-tradeoffs": {
+    "title": "직렬 버스 거래 글이 소유하는 범위",
+    "owns": [
+      "가상 I²C 레지스터 읽기 63클록과 선로 시간",
+      "가상 SPI 명령+데이터 40클록과 CS 경계",
+      "UART 8N1 네 바이트 40비트",
+      "세 거래의 요청·대기 차이와 선택 경계"
+    ],
+    "reuses": [
+      {
+        "label": "앞 글의 주기 샘플",
+        "href": "/electronics/embedded/timers-and-sampling#rate"
+      },
+      {
+        "label": "인터럽트 뒤 센서 읽기 예산",
+        "href": "/electronics/embedded/interrupts-and-latency-budget#budget"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "NXP 버스 규격과 RP2040 SDK 지원을 구분한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "세 가상 선로 시간을 실측 센서 완료 시간으로 쓰지 않는다."
+      }
+    ]
+  },
+  "scheduling-and-real-time": {
+    "title": "실시간 작업 일정 글이 소유하는 범위",
+    "owns": [
+      "세 가상 작업의 주기·실행·마감과 고정 우선순위 시간표",
+      "평균 점유율 46%와 센서 마감1ms 여유",
+      "로그 뮤텍스 2ms 잔여에 따른 센서 1ms 마감 초과",
+      "실제 버스·IRQ·tick 측정의 검증 경계"
+    ],
+    "reuses": [
+      {
+        "label": "앞 글의 직렬 버스 시간 경계",
+        "href": "/electronics/embedded/serial-buses-and-tradeoffs#choice"
+      },
+      {
+        "label": "타이머 절대 목표",
+        "href": "/electronics/embedded/timers-and-sampling#timer"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "FreeRTOS 공식 일정·뮤텍스 설명과 가상 실행 시간을 구분한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "46%를 실제 CPU 측정치나 마감 보증으로 제시하지 않는다."
+      }
+    ]
+  },
+  "firmware-update-and-recovery": {
+    "title": "펌웨어 업데이트와 복구 글이 소유하는 범위",
+    "owns": [
+      "가상 4 MiB 두 이미지 슬롯의 용량 계산",
+      "후보 v2 완성·해시·서명 검증",
+      "시험 swap·자가 검사·확정·되돌리기",
+      "전원 차단 지점과 RP2040 BOOTSEL 경계"
+    ],
+    "reuses": [
+      {
+        "label": "앞 글의 작업 마감과 기능 검증",
+        "href": "/electronics/embedded/scheduling-and-real-time#limits"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "MCUboot swap의 지원 동작과 RP2040 bootrom의 기본 기능을 구별한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "4 MiB 배치·키·자가 검사를 실제 보드의 기성 기능으로 제시하지 않는다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

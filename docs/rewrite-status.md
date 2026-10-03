@@ -1968,3 +1968,15 @@
 - `electronics/semiconductors/doping-and-thermal-budget`을 추가했다. MIT 6.152J 강의 원본 6–7·14–15쪽의 고정 도즈 가우스 확산과 6.774 강의 전사 2–3쪽의 단계별 D×t 합산을 확인했다. 가정한 1시간의 D₁=10⁻¹⁴ cm²/s와 다음 30분의 D₂=4×10⁻¹⁴ cm²/s에서 누적 폭 척도 120→약 208 nm를 계산하되 접합 깊이와 구분했다. 기초 6·심화 4문제, 6개 물리 개념의 scientificGrounding, `check-article.sh --full`, build가 통과했고 1440px·390px Chromium에서 두 열 단계·수식·가로 넘침 0·런타임 오류 0을 확인했다.
 - `electronics/semiconductors/interconnect-and-rc-delay`를 추가했다. MIT 6.884 공식 강의 11–13쪽의 π 배선·Elmore 식과 Intel Technology Journal 2002년 10–11쪽의 구리·낮은 유전율 공정 비교를 확인했다. 가상 출력 500 Ω·입력 20 fF·배선 200 Ω/100 fF에서 첫 모멘트 60+14=74 ps, 길이 두 배에서 110+48=158 ps를 계산하고 정확한 50% 지연과 구분했다. 기초 6·심화 4문제, 6개 물리 개념의 scientificGrounding, `check-article.sh --full`, build가 통과했고 1440px·390px Chromium에서 네 조건 전환·수식·가로 넘침 0·런타임 오류 0을 확인했다. 모바일 수식을 계산 단계로 나눠 다시 검사했다.
 - `electronics/semiconductors/yield-defect-and-packaging`을 추가했다. MIT 2.830J 공식 강의의 임계 면적·포아송 결함 모형과 Intel의 조립·시험 공식 설명을 확인했다. 가상 임계 면적 1 cm²·결함 밀도 0.1개/cm²에서 결함 0개 확률 90.48%, 면적 4배에서 67.03%, 별도 가상 조건부 조립·시험 통과율 98% 뒤 1000개 후보의 출하 기댓값 약 886.7개를 계산했다. 기초 6·심화 4문제, 6개 물리 개념의 scientificGrounding, `check-article.sh --full`, build가 통과했고 1440px·390px Chromium에서 세 조건 전환·수식·가로 넘침 0·런타임 오류 0을 확인했다.
+
+### 2026-10-03 · 전자 분야 22편 종결
+
+- `circuits` 6편, `devices` 4편, `semiconductors` 6편(재료 기초 1편·평면 제조 5편), `embedded` 6편을 연결했다. 처음 개요의 `carriers-and-doping`은 소자 뒤가 아니라 소자 앞의 `bands-and-doping`으로 옮겨 반도체 카테고리에 두었다. 총 편수 22편은 같다.
+- `embedded/mcu-memory-map-and-registers`: RP2040 GPIO5의 마스크 0x20, SIO 출력 설정·해제 주소와 핀 기능 선택을 같은 사건으로 추적했다.
+- `embedded/interrupts-and-latency-budget`: GPIO2 준비 신호의 가상 1 ms 마감에서 단계별 493 µs 사용·507 µs 여유와 추가 대기 시 마감 초과를 비교했다.
+- `embedded/timers-and-sampling`: 10 ms 간격의 100 Hz 표본에서 70 Hz와 30 Hz 코사인이 같은 표본이 되는 사례를 타이머·ADC 변환 시각과 함께 설명했다.
+- `embedded/serial-buses-and-tradeoffs`: 가상 네 바이트에 대해 I²C 63클록/400 kHz=157.5 µs, SPI 40클록/1 MHz=40 µs, UART 8N1 40비트/115200 bit/s≈347.2 µs를 계산했다. 이들은 형식이 서로 다른 거래의 선로 하한이며 실제 센서 완료 시간 순위가 아님을 밝혔다.
+- `embedded/scheduling-and-real-time`: 한 코어의 제어·센서·로그 작업 점유율 합 46%와 센서의 기본 3 ms 완료·4 ms 마감, 로그 뮤텍스가 남은 경우 5 ms 완료·1 ms 초과를 같은 사례로 대조했다.
+- `embedded/firmware-update-and-recovery`: 가상 RP2040 제품의 4 MiB 외부 플래시를 256+1536+1536+768 KiB로 나눠 v1 보존→v2 서명 검증→MCUboot 방식 시험 swap→자가 검사 후 확정 또는 복귀를 따라갔다. RP2040 내장 BOOTSEL 복구와 제품 부트로더의 자동 앱 되돌리기를 분리했다.
+- 여섯 임베디드 글은 각각 기초 6·심화 4문제, 개념 그래프, 1차 공식 문서, 편집 소유권, 경로 topology와 손으로 조작하는 Viz를 등록했다. 전체 전자 시리즈는 실제 소스·데이터시트·강의 원본에서 확인한 범위와 교육용 가정 수치를 구분했다.
+- 임베디드 개별 `check-article.sh --full`의 learning·graph·Viz·문장·읽기 순서·수식·topology 검사를 통과시켰고, 전체 TypeScript 및 정적 빌드가 통과했다. 데스크톱 1440px·모바일 390px에서 여섯 편의 상태 전환·오류·가로 넘침을 확인했으며, 펌웨어 수식 카드에서 발견한 8px 잘림을 수정했다.

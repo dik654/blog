@@ -47,6 +47,15 @@ export const CATEGORY_READING_PATHS: Readonly<
     ],
     featuredArticles: ["pn-junction-and-rectification", "mos-capacitor-and-inversion", "mosfet-regions-and-transfer", "switching-energy-and-leakage"],
   },
+  embedded: {
+    title: "칩에서 동작하는 프로그램 읽기",
+    description: "RP2040의 핀 한 개를 제어하는 일에서 시작해 사건 대응과 주기 작업, 통신, 복구까지 연결합니다.",
+    stages: [
+      { eyebrow: "01 · 장치", title: "주소와 신호", description: "레지스터·인터럽트·타이머·버스가 실제 핀과 어떻게 이어지는지 봅니다.", subcategories: ["embedded-hardware"] },
+      { eyebrow: "02 · 운영", title: "마감과 복구", description: "여러 작업이 시간을 나눠 쓰고 업데이트 실패 뒤 돌아오는 방법을 봅니다.", subcategories: ["embedded-software"] },
+    ],
+    featuredArticles: ["mcu-memory-map-and-registers", "interrupts-and-latency-budget", "timers-and-sampling", "serial-buses-and-tradeoffs", "scheduling-and-real-time", "firmware-update-and-recovery"],
+  },
   ai: {
     title: "AI를 위에서 아래로 읽는 네 단계",
     description:
