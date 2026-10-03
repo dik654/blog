@@ -13088,6 +13088,35 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "doping-and-thermal-budget": {
+    "title": "도핑 확산의 열 예산 글이 소유하는 범위",
+    "owns": [
+      "고정 도즈 가우스 분포와 폭 척도 a의 뜻",
+      "가상 D1·t1과 D2·t2의 누적 B 및 120→208 nm 계산",
+      "폭 척도와 접합 깊이의 구분",
+      "고정 표면 농도·고농도·결함·산화의 적용 경계"
+    ],
+    "reuses": [
+      {
+        "label": "선택 산화막 창과 옆 확산의 직관",
+        "href": "/electronics/semiconductors/wafer-and-planar-process#mask"
+      },
+      {
+        "label": "노광으로 정한 창 위치",
+        "href": "/electronics/semiconductors/lithography-and-resolution#transfer"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "MIT 강의의 해와 가정 D 수치를 구분한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "a=208 nm를 접합 깊이 또는 실제 제조 측정치로 쓰지 않는다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

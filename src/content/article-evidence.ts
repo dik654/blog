@@ -7686,4 +7686,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "층 정렬과 계측 표적·식각 뒤 측정을 확인했다."
     }
   ],
+  "semiconductors/doping-and-thermal-budget": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT OCW 6.152J Lecture 4, Diffusion, 6–7·14–15쪽",
+      "href": "https://ocw.mit.edu/courses/6-152j-micro-nano-processing-technology-fall-2005/dbad8f442ecf1244e2a257de2671d0e2_lecture4.pdf",
+      "note": "가우스·erfc 경계 조건, a=2√Dt, 접합 깊이를 확인했다."
+    },
+    {
+      "kind": "공개 강의",
+      "label": "MIT OCW 6.774 Lecture 9 transcript, 2–3쪽",
+      "href": "https://ocw.mit.edu/courses/6-774-physics-of-microfabrication-front-end-processing-fall-2004/149Phbk_yJVmBm_KPM035Wd40as-4iVuA_transcript.pdf",
+      "note": "단계별 Dt 합산과 열 예산의 가정·예외를 확인했다."
+    }
+  ],
 };

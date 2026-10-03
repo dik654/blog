@@ -87910,4 +87910,320 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "semiconductors/doping-and-thermal-budget": {
+    "coreIdea": "고정 도즈·일정 D의 가상 두 열 단계에서 D1t1=3.6×10^-11 cm², D2t2=7.2×10^-11 cm²를 더해 폭 척도 120→208 nm를 계산합니다. a는 접합 깊이가 아니며 실제 온도·농도·결함 조건은 별도입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "donor-acceptor-doping",
+        "role": "앞에서 p형·n형 불순물의 역할을 배웠습니다."
+      },
+      {
+        "id": "lateral-diffusion-geometry",
+        "role": "앞의 옆 확산 가정과 이번 깊이 방향 계산을 구분합니다."
+      },
+      {
+        "id": "lithography-pattern-transfer",
+        "role": "정한 창 안에 도펀트를 넣은 뒤의 가열을 시작점으로 둡니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "fixed-dose-diffusion",
+        "role": "고정 도즈와 계속 공급을 구분합니다."
+      },
+      {
+        "id": "fick-gaussian-profile",
+        "role": "깊이별 농도 비와 폭 척도를 연결합니다."
+      },
+      {
+        "id": "diffusion-width-scale",
+        "role": "첫 단계 120 nm와 단위 환산을 계산합니다."
+      },
+      {
+        "id": "cumulative-thermal-budget",
+        "role": "두 열 단계의 208 nm를 계산합니다."
+      },
+      {
+        "id": "junction-depth-threshold",
+        "role": "208 nm와 접합 깊이를 분리합니다."
+      },
+      {
+        "id": "dopant-diffusion-limit",
+        "role": "단순 B 계산이 적용되지 않는 공정을 밝힙니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "fixed-dose-diffusion",
+        "sectionId": "profile",
+        "intuition": "같은 양을 더 깊은 공간에 펼치면 표면 꼭대기는 낮아집니다.",
+        "workedExample": "첫 폭 척도 120 nm에서 최종 208 nm로 넓어지면 표면 농도는 약 120/208≈0.58배입니다.",
+        "boundary": "표면에서 새 도펀트가 계속 들어오는 경우 Q 일정 전제를 쓸 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "가열 전후 깊이별 도펀트 농도 곡선 아래의 면적",
+          "unitsAndDimensions": "도즈 Q는 cm^-2, 농도 C는 cm^-3, 깊이 z는 cm입니다.",
+          "modelAssumptions": "공급이 끝난 뒤의 고정 도즈·1차원 이상 확산을 둡니다.",
+          "measurementExample": "가열 전후 프로파일을 적분해 면적 Q가 같은지 비교합니다.",
+          "invalidConditions": "도펀트 손실·추가 주입·표면 공급이 있으면 Q가 일정하지 않습니다.",
+          "referenceFrame": "웨이퍼 표면 z=0에서 안쪽으로 깊이 z를 양수로 두고 두 열 단계의 시간을 누적합니다."
+        }
+      },
+      {
+        "id": "fick-gaussian-profile",
+        "sectionId": "profile",
+        "intuition": "꼭대기부터 깊이로 갈수록 농도가 완만하게 줄어듭니다.",
+        "workedExample": "가상 첫 a=120 nm에서 z=120 nm는 표면의 약 36.8%, z=240 nm는 약 1.8%입니다.",
+        "boundary": "처음 도즈 분포가 넓거나 고농도로 D가 변하면 단순 가우스가 아닙니다.",
+        "scientificGrounding": {
+          "observable": "깊이 z에 따른 불순물 농도 C(z)의 연속 곡선",
+          "unitsAndDimensions": "깊이와 a는 cm 또는 nm, C는 cm^-3, D는 cm²/s입니다.",
+          "modelAssumptions": "고정 도즈, 일정 D, 초기 폭을 무시하는 1차원 가우스 근사입니다.",
+          "measurementExample": "표면과 120·240 nm의 농도 비를 프로파일 계측과 비교합니다.",
+          "invalidConditions": "고정 표면 농도·전기장·고농도 의존 D·결함이 있으면 단순 해가 달라집니다.",
+          "referenceFrame": "웨이퍼 표면 z=0에서 안쪽으로 깊이 z를 양수로 두고 두 열 단계의 시간을 누적합니다."
+        }
+      },
+      {
+        "id": "diffusion-width-scale",
+        "sectionId": "first",
+        "intuition": "잘 퍼지는 재료일수록 또는 오래 가열할수록 넓어지지만 시간에 선형으로 늘지는 않습니다.",
+        "workedExample": "1시간·10^-14 cm²/s에서 폭 척도 120 nm입니다.",
+        "boundary": "온도만 알고 D를 모르면 같은 시간의 퍼짐을 계산할 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "가열 시간 변화에 따른 농도 프로파일의 폭",
+          "unitsAndDimensions": "D는 cm²/s, t는 s, Dt는 cm², a는 cm 또는 nm입니다.",
+          "modelAssumptions": "D1이 일정하고 처음 분포 폭을 무시합니다.",
+          "measurementExample": "1시간 뒤 표면·깊이별 농도에서 a에 해당하는 위치를 찾습니다.",
+          "invalidConditions": "D가 시간·농도·온도에 따라 변하면 단일 2√Dt를 그대로 쓰지 않습니다.",
+          "referenceFrame": "웨이퍼 표면 z=0에서 안쪽으로 깊이 z를 양수로 두고 두 열 단계의 시간을 누적합니다."
+        }
+      },
+      {
+        "id": "cumulative-thermal-budget",
+        "sectionId": "budget",
+        "intuition": "짧아도 더 잘 퍼지는 조건이면 전체 확산에 더 크게 영향을 줍니다.",
+        "workedExample": "D2=4×10^-14 cm²/s·t2=1800 s는 7.2×10^-11 cm²를 보태 최종 a≈208 nm입니다.",
+        "boundary": "높은 온도와 시간만으로 D를 모르면 B를 계산할 수 없으며 비정상 확산에는 합산이 실패할 수 있습니다.",
+        "scientificGrounding": {
+          "observable": "각 공정 뒤 깊이별 도펀트 분포와 계산된 Dt 합",
+          "unitsAndDimensions": "B=ΣDt의 단위는 cm², a는 nm, 시간은 s입니다.",
+          "modelAssumptions": "연속 단계마다 일정 D인 이상 고정 도즈 가우스 확산입니다.",
+          "measurementExample": "첫 단계와 두 단계 뒤의 a 120·208 nm를 프로파일에서 비교합니다.",
+          "invalidConditions": "이온 주입 결함·고농도·산화·전기장은 단순 누적 B를 바꿉니다.",
+          "referenceFrame": "웨이퍼 표면 z=0에서 안쪽으로 깊이 z를 양수로 두고 두 열 단계의 시간을 누적합니다."
+        }
+      },
+      {
+        "id": "junction-depth-threshold",
+        "sectionId": "limits",
+        "intuition": "분포의 폭과 다른 색 배경이 만나는 지점은 같은 숫자가 아닙니다.",
+        "workedExample": "a≈208 nm여도 ND를 주지 않았으므로 zj를 계산하지 않습니다.",
+        "boundary": "폭 척도 a를 접합 깊이와 같은 값으로 놓지 않습니다.",
+        "scientificGrounding": {
+          "observable": "p형 도펀트 농도 프로파일과 n형 배경 농도의 교차 깊이",
+          "unitsAndDimensions": "농도는 cm^-3, 깊이 zj와 a는 nm입니다.",
+          "modelAssumptions": "n형 균일 배경과 계산 가능한 p형 농도 프로파일을 둡니다.",
+          "measurementExample": "깊이별 p형·n형 농도를 그려 같아지는 곳을 찾습니다.",
+          "invalidConditions": "활성화·보상·복합 프로파일이 있으면 단순 한 교차점 해석이 달라집니다.",
+          "referenceFrame": "웨이퍼 표면 z=0에서 안쪽으로 깊이 z를 양수로 두고 두 열 단계의 시간을 누적합니다."
+        }
+      },
+      {
+        "id": "dopant-diffusion-limit",
+        "sectionId": "limits",
+        "intuition": "같은 가열 시간도 재료 상태가 바뀌면 움직임이 달라집니다.",
+        "workedExample": "가상 208 nm를 접합 깊이·실제 제조 결과로 쓰지 않고 프로파일을 재측정합니다.",
+        "boundary": "일정 D 가우스 모형의 수치를 모든 도펀트·열 공정에 적용하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "온도·농도·결함 상태에 따른 실제 확산계수와 최종 프로파일",
+          "unitsAndDimensions": "D는 cm²/s, 온도 K, 농도 cm^-3, 깊이 nm입니다.",
+          "modelAssumptions": "본문의 D는 단계마다 일정하나 실제 D는 상태에 따라 변할 수 있습니다.",
+          "measurementExample": "온도·농도를 바꾼 프로파일을 측정해 일정 D 예측과 비교합니다.",
+          "invalidConditions": "고농도 전기장·이온 주입 후 일시적 확산·산화 효과가 크면 가우스 근사가 부족합니다.",
+          "referenceFrame": "웨이퍼 표면 z=0에서 안쪽으로 깊이 z를 양수로 두고 두 열 단계의 시간을 누적합니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 총량과 깊이",
+        "relation": "공급을 멈춘 도즈가 가우스 농도 곡선으로 넓어지는 모습을 봅니다.",
+        "concepts": [
+          "fixed-dose-diffusion",
+          "fick-gaussian-profile"
+        ]
+      },
+      {
+        "label": "02 열 두 단계",
+        "relation": "첫 폭 척도와 누적 D×t를 같은 단위로 계산합니다.",
+        "concepts": [
+          "diffusion-width-scale",
+          "cumulative-thermal-budget"
+        ]
+      },
+      {
+        "label": "03 접합과 경계",
+        "relation": "폭과 접합 깊이를 분리하고 실제 확산계수의 변화를 확인합니다.",
+        "concepts": [
+          "junction-depth-threshold",
+          "dopant-diffusion-limit"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "확산계수 D와 D×t의 단위를 각각 쓰세요.",
+        "answerChecklist": [
+          "D는 cm²/s",
+          "Dt는 cm²",
+          "a는 길이"
+        ],
+        "requiredConcepts": [
+          "diffusion-width-scale"
+        ],
+        "sectionId": "first"
+      },
+      {
+        "level": "basic",
+        "question": "D1=10^-14 cm²/s로 3600 s 가열할 때 D1t1은?",
+        "answerChecklist": [
+          "3.6×10^-11 cm²",
+          "단위 일치"
+        ],
+        "requiredConcepts": [
+          "diffusion-width-scale"
+        ],
+        "sectionId": "first"
+      },
+      {
+        "level": "basic",
+        "question": "첫 단계의 가우스 폭 척도 a1을 nm로 계산하세요.",
+        "answerChecklist": [
+          "2√(3.6×10^-11) cm",
+          "1.2×10^-5 cm",
+          "120 nm"
+        ],
+        "requiredConcepts": [
+          "diffusion-width-scale"
+        ],
+        "sectionId": "first"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 30분의 D2t2와 누적 B는 각각 얼마입니까?",
+        "answerChecklist": [
+          "7.2×10^-11 cm²",
+          "1.08×10^-10 cm²",
+          "두 단계 합"
+        ],
+        "requiredConcepts": [
+          "cumulative-thermal-budget"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "basic",
+        "question": "두 열 단계가 끝난 가상 폭 척도 a는 얼마입니까?",
+        "answerChecklist": [
+          "2√B",
+          "약 208 nm",
+          "접합 깊이 아님"
+        ],
+        "requiredConcepts": [
+          "cumulative-thermal-budget"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "basic",
+        "question": "왜 a≈208 nm만으로 p-n 접합 깊이를 알 수 없습니까?",
+        "answerChecklist": [
+          "p형 농도 분포",
+          "n형 배경 농도",
+          "같아지는 깊이가 접합"
+        ],
+        "requiredConcepts": [
+          "junction-depth-threshold"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 단계의 시간을 같은 D에서 네 배로 하면 a1은 어떻게 됩니까?",
+        "answerChecklist": [
+          "Dt 네 배",
+          "√4=2배",
+          "120→240 nm"
+        ],
+        "requiredConcepts": [
+          "diffusion-width-scale"
+        ],
+        "sectionId": "first"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 시간이 절반인데도 D×t가 첫 단계의 두 배인 이유는?",
+        "answerChecklist": [
+          "D2가 D1 네 배",
+          "t2는 t1 절반",
+          "곱은 두 배"
+        ],
+        "requiredConcepts": [
+          "cumulative-thermal-budget"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "advanced",
+        "question": "외부 도펀트를 계속 공급하면 고정 도즈 가우스 해를 그대로 쓸 수 있습니까?",
+        "answerChecklist": [
+          "안 됨",
+          "총 Q가 변함",
+          "고정 표면 농도는 다른 경계 조건·erfc 해"
+        ],
+        "requiredConcepts": [
+          "fixed-dose-diffusion",
+          "fick-gaussian-profile"
+        ],
+        "sectionId": "profile"
+      },
+      {
+        "level": "advanced",
+        "question": "두 가열 온도만 주어지고 D 값이 없다면 왜 208 nm를 예측할 수 없습니까?",
+        "answerChecklist": [
+          "D는 온도·종류·농도에 따라 다름",
+          "B=ΣDt 필요",
+          "결함·산화 등 실제 프로파일 측정"
+        ],
+        "requiredConcepts": [
+          "dopant-diffusion-limit",
+          "cumulative-thermal-budget"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT OpenCourseWare 6.152J, Lecture 4, ‘Diffusion’ (2005)",
+        "href": "https://ocw.mit.edu/courses/6-152j-micro-nano-processing-technology-fall-2005/dbad8f442ecf1244e2a257de2671d0e2_lecture4.pdf",
+        "problem": "고정 도즈와 고정 표면 농도 확산의 깊이별 프로파일과 접합 위치를 설명합니다.",
+        "contribution": "원본 6–7·14–15쪽의 가우스/erfc 해, a=2√Dt, 배경 농도와 만나는 접합 깊이입니다.",
+        "assumptions": "일정 확산계수와 각 해의 초기·경계 조건을 구분합니다.",
+        "evidenceScope": "MIT 공식 원본 PDF의 해당 쪽을 확인했습니다. D1·D2·시간과 120/208 nm는 본문의 가정 계산입니다.",
+        "notClaim": "a가 실제 접합 깊이이거나 강의안이 본문의 두 열 단계를 실험했다는 뜻은 아닙니다.",
+        "sectionId": "profile"
+      },
+      {
+        "title": "MIT OpenCourseWare 6.774, Lecture 9 transcript, ‘Dopant Diffusion’ (2004)",
+        "href": "https://ocw.mit.edu/courses/6-774-physics-of-microfabrication-front-end-processing-fall-2004/149Phbk_yJVmBm_KPM035Wd40as-4iVuA_transcript.pdf",
+        "problem": "여러 가열 단계에서 최종 도핑 프로파일의 누적 변화를 추정합니다.",
+        "contribution": "원본 2–3쪽에서 일정 D의 가우스 가정 아래 각 단계 D×t를 더해 열 예산으로 볼 수 있다고 설명합니다.",
+        "assumptions": "고정 도즈와 충분히 좁은 초기 분포·일정 D의 단계별 근사입니다.",
+        "evidenceScope": "MIT 공식 강의 전사 PDF 2–3쪽을 확인했습니다. 두 D 값은 가상입니다.",
+        "notClaim": "모든 고농도·주입 후 결함·산화 공정에서 Dt 합산이 그대로 성립한다는 뜻은 아닙니다.",
+        "sectionId": "budget"
+      }
+    ]
+  },
 };

@@ -25650,6 +25650,72 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "CD 식의 가상 96.5 nm와 오버레이 기하의 최소 10 nm는 서로 다른 근사입니다. 감광막·초점·식각·전기 접촉을 함께 보지 않으면 실제 연결의 성공 여부와 수율을 알 수 없습니다.",
     "canonicalHref": "/electronics/semiconductors/lithography-and-resolution#limits"
   },
+  "fixed-dose-diffusion": {
+    "id": "fixed-dose-diffusion",
+    "domain": "physics",
+    "label": "도펀트 공급을 멈추면 총 도즈를 일정하게 놓을 수 있다",
+    "aliases": [
+      "fixed dose",
+      "도즈 Q"
+    ],
+    "definition": "고정 도즈의 이상 확산에서는 이미 넣은 불순물의 단위 면적당 총량 Q를 일정하게 둡니다. 분포가 깊게 퍼질수록 표면 농도는 낮아집니다. 공급이 계속되는 고정 표면 농도 사례와 경계 조건이 다릅니다.",
+    "canonicalHref": "/electronics/semiconductors/doping-and-thermal-budget#profile"
+  },
+  "fick-gaussian-profile": {
+    "id": "fick-gaussian-profile",
+    "domain": "physics",
+    "label": "일정 D의 고정 도즈 확산은 가우스 모양으로 넓어진다",
+    "aliases": [
+      "Fick diffusion",
+      "Gaussian profile"
+    ],
+    "definition": "일정 확산계수 D에서 고정 도즈의 이상적인 1차원 농도는 C(z)/C(0)=exp[−(z/a)²] 형태이며 a=2√(Dt)입니다. z=a에서 표면의 약 36.8%, z=2a에서 약 1.8%입니다.",
+    "canonicalHref": "/electronics/semiconductors/doping-and-thermal-budget#profile"
+  },
+  "diffusion-width-scale": {
+    "id": "diffusion-width-scale",
+    "domain": "physics",
+    "label": "D×시간의 제곱근이 확산 폭의 길이 척도를 만든다",
+    "aliases": [
+      "diffusion length",
+      "확산 폭 척도"
+    ],
+    "definition": "가상 D1=10^-14 cm²/s를 3600 s 적용하면 D1t1=3.6×10^-11 cm²이고 a1=2√(D1t1)=1.2×10^-5 cm=120 nm입니다. a는 농도곡선의 척도이며 접합 깊이가 아닙니다.",
+    "canonicalHref": "/electronics/semiconductors/doping-and-thermal-budget#first"
+  },
+  "cumulative-thermal-budget": {
+    "id": "cumulative-thermal-budget",
+    "domain": "physics",
+    "label": "여러 단계의 D×t를 더하면 이 이상 모형의 누적 열 예산이다",
+    "aliases": [
+      "thermal budget",
+      "열 예산"
+    ],
+    "definition": "가상 D1t1=3.6×10^-11 cm²와 D2t2=7.2×10^-11 cm²를 더하면 B=1.08×10^-10 cm²입니다. 고정 도즈·일정 D의 순차 가우스 확산에서 a=2√B≈208 nm입니다. 두 번째 30분의 D가 네 배이므로 첫 1시간보다 두 배 기여합니다.",
+    "canonicalHref": "/electronics/semiconductors/doping-and-thermal-budget#budget"
+  },
+  "junction-depth-threshold": {
+    "id": "junction-depth-threshold",
+    "domain": "physics",
+    "label": "접합 깊이는 폭 척도가 아니라 배경 농도와 만나는 자리이다",
+    "aliases": [
+      "junction depth",
+      "접합 깊이"
+    ],
+    "definition": "p형 도펀트를 n형 배경에 넣으면 p형 농도 C(z)가 n형 배경 ND와 같아지는 깊이가 금속학적 접합입니다. 가상 a=120·208 nm만으로는 ND와 표면 농도를 몰라 접합 깊이를 알 수 없습니다.",
+    "canonicalHref": "/electronics/semiconductors/doping-and-thermal-budget#limits"
+  },
+  "dopant-diffusion-limit": {
+    "id": "dopant-diffusion-limit",
+    "domain": "physics",
+    "label": "농도·결함·산화·온도 변화는 단순 확산계수를 바꾼다",
+    "aliases": [
+      "concentration-dependent diffusion",
+      "확산 모형 경계"
+    ],
+    "definition": "MIT 공식 강의는 일정 D의 가우스 해가 낮은 농도와 제한된 초기조건에서 맞고, 산화·결함·고농도에서는 확산이 달라진다고 설명합니다. 본문의 D1·D2는 특정 불순물이나 온도 자료가 아닙니다.",
+    "canonicalHref": "/electronics/semiconductors/doping-and-thermal-budget#limits"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47688,6 +47754,54 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "lithography-model-boundary",
     "relation": "constrains",
     "reason": "실제 측정·전기 검사가 남은 연결 품질을 판단합니다."
+  },
+  {
+    "from": "donor-acceptor-doping",
+    "to": "fixed-dose-diffusion",
+    "relation": "prerequisite",
+    "reason": "앞 글에서 넣은 도너·억셉터의 총량을 가열 뒤에도 추적합니다."
+  },
+  {
+    "from": "lateral-diffusion-geometry",
+    "to": "fick-gaussian-profile",
+    "relation": "prerequisite",
+    "reason": "앞 글의 옆 퍼짐 가정에서 이번에는 깊이별 농도 모양을 따로 풉니다."
+  },
+  {
+    "from": "fixed-dose-diffusion",
+    "to": "fick-gaussian-profile",
+    "relation": "constrains",
+    "reason": "공급을 멈춘 경계 조건에서 가우스 농도 분포를 둡니다."
+  },
+  {
+    "from": "fick-gaussian-profile",
+    "to": "diffusion-width-scale",
+    "relation": "produces",
+    "reason": "가우스 지수의 깊이 척도가 a=2√Dt입니다."
+  },
+  {
+    "from": "diffusion-width-scale",
+    "to": "cumulative-thermal-budget",
+    "relation": "produces",
+    "reason": "연속 단계의 Dt를 합산해 최종 폭 척도를 계산합니다."
+  },
+  {
+    "from": "fick-gaussian-profile",
+    "to": "junction-depth-threshold",
+    "relation": "constrains",
+    "reason": "농도 곡선과 배경 농도의 교차로 접합 깊이를 정합니다."
+  },
+  {
+    "from": "cumulative-thermal-budget",
+    "to": "dopant-diffusion-limit",
+    "relation": "constrains",
+    "reason": "Dt 합산이 성립하는 일정 D 조건을 확인합니다."
+  },
+  {
+    "from": "junction-depth-threshold",
+    "to": "dopant-diffusion-limit",
+    "relation": "constrains",
+    "reason": "가상 폭만으로 전기적 접합·누설을 판정하지 않습니다."
   },
 ];
 

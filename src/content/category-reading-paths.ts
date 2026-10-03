@@ -36,7 +36,7 @@ export const CATEGORY_READING_PATHS: Readonly<
       { eyebrow: "01 · 재료", title: "전자와 빈자리", description: "에너지 상태와 불순물에 따라 전자와 정공의 수가 달라지는 이유입니다.", subcategories: ["semiconductor-physics"] },
       { eyebrow: "02 · 제조", title: "막을 열고 층을 잇기", description: "웨이퍼 위에서 영역을 고르고 연결한 뒤 수율을 확인합니다.", subcategories: ["semiconductor-fabrication"] },
     ],
-    featuredArticles: ["bands-and-doping", "wafer-and-planar-process", "lithography-and-resolution"],
+    featuredArticles: ["bands-and-doping", "wafer-and-planar-process", "lithography-and-resolution", "doping-and-thermal-budget"],
   },
   devices: {
     title: "전압으로 흐름을 바꾸기",

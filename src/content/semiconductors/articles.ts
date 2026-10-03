@@ -42,4 +42,17 @@ export const semiconductorArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/semiconductors/lithography-and-resolution"),
   },
+  {
+    slug: "doping-and-thermal-budget",
+    title: "열을 준 시간만으로 도핑 경계를 정할 수 없는 이유",
+    subcategory: "semiconductor-fabrication",
+    sections: [
+      { id: "overview", title: "창을 정확히 열어도 가열 뒤에는 경계가 움직입니다" },
+      { id: "profile", title: "농도는 갑자기 끊기지 않고 깊이에 따라 줄어듭니다" },
+      { id: "first", title: "첫 1시간의 퍼짐 폭은 120 nm입니다" },
+      { id: "budget", title: "다음 30분이 앞의 1시간보다 더 크게 퍼뜨립니다" },
+      { id: "limits", title: "퍼짐 폭 하나로 접합과 전기적 결과를 끝내지 않습니다" },
+    ],
+    component: () => import("@/pages/articles/semiconductors/doping-and-thermal-budget"),
+  },
 ];
