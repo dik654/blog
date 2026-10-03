@@ -425,6 +425,20 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "한 번 넣은 불순물이 두 열 단계에서 얼마나 퍼지는지 농도 모양→폭→누적 Dt→접합 한계로 풉니다. 창의 광학 해상도는 앞 글, 완성 배선 지연은 다음 글이 소유합니다.",
     "sharedGate": "가상 D1=10^-14 cm²/s·3600s, D2=4×10^-14 cm²/s·1800s에서 B=1.08×10^-10 cm²·a1=120nm·a2≈208nm·표면 비≈0.58이 본문·Viz·문제에 일치하는지 확인합니다."
   },
+  "semiconductors/interconnect-and-rc-delay": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "한 가상 배선을 π 회로→74 ps→길이 두 배 158 ps→금속·절연막 변경→실제 타이밍 경계 순서로 추적합니다. 제조 결함과 패키징 수율은 다음 글의 범위입니다.",
+    "sharedGate": "500 Ω·20 fF·200 Ω·100 fF에서 60+14=74 ps, 길이 두 배 110+48=158 ps, 저항만 69.8 ps, 용량만 44 ps, 둘 다 41.3 ps가 본문·Viz·문제에서 일치하는지 확인합니다."
+  },
+  "semiconductors/yield-defect-and-packaging": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "결함이 해로운 위치→포아송 0개 확률→면적·밀도 민감도→패키징 조건부 생존으로 한 후보 다이를 추적합니다. 다음 임베디드 글은 완성 칩을 사용하는 단계입니다.",
+    "sharedGate": "D0=.1개/cm²·Ac=1cm²에서 e^-.1≈90.48%, Ac=4에서 e^-.4≈67.03%, D0=.2에서 e^-.2≈81.87%, 1000×.904837×.98≈886.7개가 본문·Viz·문제에서 일치하는지 확인합니다."
+  },
 };
 
 /**
@@ -432,6 +446,8 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "semiconductors/yield-defect-and-packaging": "163db4ca3af9975d",
+  "semiconductors/interconnect-and-rc-delay": "9fe870634104880b",
   "semiconductors/doping-and-thermal-budget": "77caf87831e26635",
   "semiconductors/lithography-and-resolution": "45e896d39b860a36",
   "semiconductors/wafer-and-planar-process": "20fd73be7dfc606d",
