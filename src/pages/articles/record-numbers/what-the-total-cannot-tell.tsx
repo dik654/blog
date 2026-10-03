@@ -189,13 +189,14 @@ export default function WhatTheTotalCannotTellArticle() {
 
       <section id="last-digits" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          부품 3. 끝 네 자리를 만든 재료는 하나뿐입니다
+          부품 3. 끝자리는 여러 재료와 자리올림이 함께 만듭니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
-            재료를 늘어놓고 끝자리만 보면 금방 드러납니다. 170만, 8만, 24만, 2만,
-            24만 4000, 30만은 모두 천 단위 아래가 0입니다. 천 단위 아래에 값이
-            있는 재료는 배마다 전사 30명을 곱해 얻은 3만 6210 하나뿐입니다.
+            재료를 늘어놓고 천 단위 아래를 보면 두 수가 남습니다. 1,207척에
+            200명씩 잡은 24만 1400의 끝 400과, 같은 배에 30명씩 더한 3만
+            6210의 끝 210입니다. 둘을 더한 끝 610이 전투원 합계 264만 1610에
+            남습니다. 다른 재료들은 모두 천의 배수입니다.
           </p>
         </div>
 
@@ -203,11 +204,12 @@ export default function WhatTheTotalCannotTellArticle() {
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
-            그래서 전투원 합계 264만 1610의 끝 610은 1,207 × 30에서 나온 것이고,
-            총계의 3220은 그 610이 두 배가 된 것입니다. 끝 네 자리가 정밀해 보이는
-            이유는 세밀하게 세었기 때문이 아니라{" "}
-            <strong>어느 한 재료가 큰 수에 작은 비율을 곱해 끝자리를 남겼기
-            때문</strong>입니다.
+            끝 네 자리를 따지면 유럽 배의 2만 4000도 들어갑니다. 24만 1400의
+            끝 1400, 3만 6210의 끝 6210, 2만 4000의 끝 4000을 더하면
+            1만 1610입니다. 여기에 나머지 재료의 끝 네 자리 0을 더하고 두 배로
+            만든 뒤 끝 네 자리만 남기면 3220입니다. <strong>이 자리는 각 재료의
+            합과 자리올림에서 나온 표기이지, 사람을 한 명씩 센 정밀도는
+            아닙니다.</strong>
           </p>
 
           <p className="leading-7">

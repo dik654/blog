@@ -53,7 +53,7 @@ export const recordNumbersArticles: Article[] = [
       },
       {
         id: "last-digits",
-        title: "부품 3. 끝 네 자리를 만든 재료는 하나뿐입니다",
+        title: "부품 3. 끝자리는 여러 재료와 자리올림이 함께 만듭니다",
       },
       {
         id: "the-check",

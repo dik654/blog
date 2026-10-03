@@ -26739,7 +26739,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "합계의 끝자리는 가장 거친 재료보다 정밀해 보인다",
     aliases: ["합산의 겉보기 정밀도", "끝자리의 출처"],
     definition:
-      "여러 수를 더하면 결과의 믿을 수 있는 자리는 가장 거친 재료에 맞춰지지만 표기는 그렇게 되지 않습니다. 작은 비율을 큰 수에 곱해 만든 재료 하나가 끝자리를 남기면 합계 전체가 그 자리까지 숫자를 갖게 되고, 읽는 쪽이 그것을 정밀함으로 읽으면 다른 재료의 어림과 가정이 결과에서 지워집니다.",
+      "여러 수를 더하면 결과의 믿을 수 있는 자리는 가장 거친 재료에 맞춰져야 하지만 표기는 그렇게 되지 않습니다. 이 총계의 끝자리는 1,207척에 곱한 두 비율과 유럽 배의 수를 더하고 두 배로 만드는 과정에서 생겼습니다. 출처를 따질 수 있는 끝자리를 전체 총계의 측정 정밀도로 읽으면 다른 재료의 어림과 가정이 가려집니다.",
     canonicalHref:
       "/history/record-numbers/what-the-total-cannot-tell#last-digits",
   },
@@ -49768,7 +49768,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "precision-of-a-sum",
     relation: "constrains",
     reason:
-      "큰 수에 곱해진 비율 하나가 끝자리를 만든다는 사실이 단위 오차가 곱해지는 구조에서 나옵니다.",
+      "배의 수에 곱한 두 비율이 끝자리에 기여하므로, 비율을 정할 때의 오차도 척수만큼 곱해집니다.",
   },
   {
     from: "precision-of-a-sum",
