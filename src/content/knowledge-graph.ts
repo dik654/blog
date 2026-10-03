@@ -25428,6 +25428,11 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "cmos-activity-dynamic-power": { id: "cmos-activity-dynamic-power", domain: "physics", label: "완전 출력 주기의 빈도가 동적 전력을 정한다", aliases: ["CMOS activity factor", "dynamic power"], definition: "활동률 α를 기준 주기당 완전 0→1→0 출력 주기의 비율로 정의하면 동적 전력은 αfCLVDD²입니다. 가정한 α=0.1, f=1 MHz, C=10 pF, V=3.3 V라면 초당 10만 주기와 10.89 µW입니다. α를 양방향 토글 총수로 정의하면 같은 식에 그대로 넣지 않습니다.", canonicalHref: "/electronics/devices/switching-energy-and-leakage#activity" },
   "cmos-leakage-power": { id: "cmos-leakage-power", domain: "physics", label: "출력이 멈춰도 실제 소자에는 대기 전류가 남는다", aliases: ["CMOS leakage power", "대기 전력"], definition: "이상적인 상보형 안정 상태의 정적 전류는 0이지만 실제 소자에서는 문턱 아래와 접합·절연층 누설이 남습니다. 이 글의 1 µA는 가상 공급 전류이며 3.3 V에서 3.3 µW입니다. 전환 손실과 합친 14.19 µW는 단락 전류·내부 노드를 뺀 가상값입니다.", canonicalHref: "/electronics/devices/switching-energy-and-leakage#activity" },
   "cmos-voltage-power-tradeoff": { id: "cmos-voltage-power-tradeoff", domain: "physics", label: "전압을 낮추면 동적 전력과 함께 지연·누설도 바뀐다", aliases: ["CMOS voltage power tradeoff"], definition: "C·f·α를 수학적으로 고정하고 3.3 V를 1.8 V로 낮추면 동적 전력은 10.89에서 3.24 µW로 줄어듭니다. 실제로는 구동 전류·전환 지연·잡음 여유·누설이 달라지므로 이 계산만으로 새 총 전력이나 성능을 정하지 못합니다.", canonicalHref: "/electronics/devices/switching-energy-and-leakage#limits" },
+  "series-resistance-equivalent": { id: "series-resistance-equivalent", domain: "physics", label: "같은 전류가 잇따라 지나는 저항은 더해진다", aliases: ["series equivalent resistance", "직렬 등가저항"], definition: "두 저항에 같은 전류 I가 흐르면 각 전압 강하 IR1과 IR2를 합쳐 I(R1+R2)입니다. 전원에서 본 등가저항은 R1+R2입니다. 1 kΩ 둘이면 2 kΩ이며 12 V에서 6 mA가 흐릅니다. 등가값은 내부 각 부품의 열을 표시하지 않습니다.", canonicalHref: "/electronics/circuits/resistance-and-power-dissipation#one-path" },
+  "parallel-resistance-equivalent": { id: "parallel-resistance-equivalent", domain: "physics", label: "같은 전압을 받는 저항의 전류가 더해진다", aliases: ["parallel equivalent resistance", "병렬 등가저항"], definition: "두 갈래에 같은 전압 V가 걸리면 총전류는 V/R2+V/R3이므로 1/Req=1/R2+1/R3입니다. 2 kΩ 두 개의 등가는 1 kΩ이고, 2 kΩ과 1 kΩ의 등가는 2/3 kΩ입니다. 공통 첫 저항이 있으면 병렬값 변화로 갈림길 전압도 바뀝니다.", canonicalHref: "/electronics/circuits/resistance-and-power-dissipation#two-paths" },
+  "resistor-joule-heating": { id: "resistor-joule-heating", domain: "physics", label: "각 저항의 전류와 전압이 그 부품의 열을 정한다", aliases: ["Joule heating", "저항 발열"], definition: "저항의 직류 정상 상태에서 소비 전력은 P=VI=I²R=V²/R입니다. 12 V 가상 망에서 오른쪽을 1 kΩ으로 바꾸면 첫 1 kΩ은 (7.2 mA)²×1 kΩ=51.84 mW, 두 갈래는 11.52와 23.04 mW입니다. 합은 전원 86.4 mW와 같습니다. 부품별 I를 써야 합니다.", canonicalHref: "/electronics/circuits/resistance-and-power-dissipation#heat" },
+  "resistor-power-rating": { id: "resistor-power-rating", domain: "physics", label: "저항값과 허용 발열 전력은 서로 다른 사양이다", aliases: ["resistor rated dissipation", "저항 전력 정격"], definition: "Vishay D11/CRCW0603 e3 데이터시트 2026년 4월 개정의 표준 P70은 0.10 W이며 확장 동작은 0.125 W입니다. 가상 1 kΩ 첫 부품의 51.84 mW는 표준 정격 아래지만, 12 V 직결의 144 mW는 두 정격을 넘습니다. 실제 허용 발열은 기판의 열저항과 주변 온도에도 달립니다.", canonicalHref: "/electronics/circuits/resistance-and-power-dissipation#rating" },
+  "resistor-tolerance-thermal-boundary": { id: "resistor-tolerance-thermal-boundary", domain: "physics", label: "허용차와 열 조건을 넣으면 공칭 회로의 숫자가 달라진다", aliases: ["resistor tolerance and thermal", "저항 허용차"], definition: "1 kΩ은 공칭값이며 ±1%와 ±5% 같은 허용차 선택지가 있습니다. 실제 값이 달라지면 직렬·병렬 합, 전류, 소비 전력이 함께 변합니다. 전력 정격도 부품 온도와 기판 열저항을 확인해야 하므로 공칭 전류·정격 숫자 하나로 모든 장착 조건의 안전성을 보장하지 않습니다.", canonicalHref: "/electronics/circuits/resistance-and-power-dissipation#limits" },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47303,6 +47308,15 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "cmos-complementary-inverter", to: "cmos-leakage-power", relation: "constrains", reason: "이상적으로 끊긴 직류 길과 실제 대기 전류를 구분합니다." },
   { from: "cmos-activity-dynamic-power", to: "cmos-voltage-power-tradeoff", relation: "constrains", reason: "전압의 제곱 의존성과 실제 지연·누설 변화를 함께 판단합니다." },
   { from: "cmos-leakage-power", to: "cmos-voltage-power-tradeoff", relation: "constrains", reason: "전압을 낮춘 뒤 총 전력을 계산하려면 누설도 새 조건에서 확인해야 합니다." },
+  { from: "ohmic-resistance", to: "series-resistance-equivalent", relation: "prerequisite", reason: "같은 전류의 각 전압 강하 IR을 합칩니다." },
+  { from: "kirchhoff-voltage-law", to: "series-resistance-equivalent", relation: "prerequisite", reason: "직렬 부품의 강하 합이 전원 전압과 맞아야 합니다." },
+  { from: "ohmic-resistance", to: "parallel-resistance-equivalent", relation: "prerequisite", reason: "같은 갈림길 전압에서 각 전류 V/R을 구합니다." },
+  { from: "kirchhoff-current-law", to: "parallel-resistance-equivalent", relation: "prerequisite", reason: "두 갈래 전류의 합이 전원에서 들어오는 전류입니다." },
+  { from: "series-resistance-equivalent", to: "resistor-joule-heating", relation: "produces", reason: "전체 전류를 구한 뒤 첫 부품의 발열을 계산합니다." },
+  { from: "parallel-resistance-equivalent", to: "resistor-joule-heating", relation: "produces", reason: "갈림길 전압과 갈래별 전류를 다시 펼쳐 발열을 계산합니다." },
+  { from: "electrical-power-balance", to: "resistor-joule-heating", relation: "prerequisite", reason: "세 저항의 열 합을 전원의 공급 전력과 검산합니다." },
+  { from: "resistor-joule-heating", to: "resistor-power-rating", relation: "produces", reason: "계산한 부품별 전력을 실제 허용 전력과 비교합니다." },
+  { from: "resistor-power-rating", to: "resistor-tolerance-thermal-boundary", relation: "constrains", reason: "정격은 주변 온도와 기판 열저항 조건을 함께 확인해야 합니다." },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

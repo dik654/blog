@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CircuitWalkViz from "./lumped-circuit-and-conservation/viz/CircuitWalkViz";
@@ -277,12 +278,14 @@ export default function LumpedCircuitAndConservationArticle() {
       </section>
 
       <section id="handoff" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">이제 회로가 움직이는 시간을 묻습니다</h2>
+        <h2 className="mb-6 text-2xl font-bold">이제 각 부품이 내는 열을 묻습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             한 갈래의 저항을 바꾸면 다른 갈래의 전류도 바뀝니다. 이 글은 바뀐
-            뒤의 안정된 숫자만 구했습니다. 다음에는 전하를 저장하는 축전기를
-            넣고, 바뀌는 동안의 전압과 전류를 시간에 따라 따라갈 차례입니다.
+            뒤의 안정된 숫자와 전력의 합을 구했습니다. 다음 글에서는
+            <Link to="/electronics/circuits/resistance-and-power-dissipation#rating">각 부품의 열과 실제 저항의 전력 정격</Link>을
+            비교합니다. 그다음에 축전기를 넣어 바뀌는 동안의 전압과 전류를
+            시간에 따라 따라갈 차례입니다.
           </p>
           <ol className="space-y-2 leading-7">
             <li>6 mA가 갈림길로 들어와 한쪽으로 3 mA가 나갈 때 나머지 쪽은 몇 mA일까요? (답: 갈림길 절)</li>

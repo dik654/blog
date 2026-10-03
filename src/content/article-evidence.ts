@@ -7639,4 +7639,7 @@ export const ARTICLE_EVIDENCE: Readonly<
   "devices/switching-energy-and-leakage": [
     { kind: "공개 강의", label: "MIT OCW 6.012 Lecture 14, ‘CMOS’ (2005), 22–24쪽", href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/6bec6dd1b07b02a1a84098b78f068cc3_lec14.pdf", note: "공급 CV², 저장·방전의 각 ½CV², 완전 주기당 CV²와 평균 전력식을 확인했다. 본문 숫자와 누설은 가정이다." },
   ],
+  "circuits/resistance-and-power-dissipation": [
+    { kind: "공식 문서", label: "Vishay D/CRCW e3, document 20035 (14-Apr-2026), 1–2쪽", href: "https://www.vishay.com/docs/20035/dcrcwe3.pdf", note: "D11/CRCW0603의 저항 범위, 표준 0.10 W와 확장 0.125 W, 열 조건을 공식 PDF에서 확인했다. 회로 숫자는 가정이다." },
+  ],
 };

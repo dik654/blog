@@ -26,7 +26,7 @@ export const CATEGORY_READING_PATHS: Readonly<
     stages: [
       { eyebrow: "01 · 보존", title: "전압·전류·저항", description: "갈림길과 고리를 따라 전하와 에너지의 보존을 수치로 확인합니다.", subcategories: ["circuit-foundations"] },
     ],
-    featuredArticles: ["lumped-circuit-and-conservation"],
+    featuredArticles: ["lumped-circuit-and-conservation", "resistance-and-power-dissipation"],
   },
   semiconductors: {
     title: "재료에서 칩까지 읽기",

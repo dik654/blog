@@ -86803,4 +86803,47 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "MIT OpenCourseWare 6.012, Lecture 14, ‘Digital Circuits (III): CMOS’ (2005)", href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/6bec6dd1b07b02a1a84098b78f068cc3_lec14.pdf", problem: "충전·방전 에너지의 행방과 초당 전환 횟수가 평균 전력으로 이어지는 과정을 분명히 해야 합니다.", contribution: "원본 22쪽은 공급 CV²와 저장 ½CV², 23쪽은 방전 손실, 24쪽은 완전 주기 에너지 CV²와 평균 fCV²를 제시합니다.", assumptions: "이상적인 CMOS 전환과 부하 용량의 완전 충전·방전을 전제합니다. 강의안의 이상 정적 전력 0은 실제 누설 0을 뜻하지 않습니다.", evidenceScope: "공식 PDF 22–24쪽의 식과 에너지 장부를 직접 확인했습니다. 10 pF·3.3 V·1 MHz·1 µA는 글의 가정입니다.", notClaim: "강의안이 1 µA를 측정했거나 모든 CMOS 회로의 전력 손실을 CV²만으로 설명한다는 뜻이 아닙니다.", sectionId: "energy-ledger" },
     ],
   },
+  "circuits/resistance-and-power-dissipation": {
+    coreIdea: "앞 글의 12 V·1 kΩ·2 kΩ·2 kΩ 가상 망에서 오른쪽만 1 kΩ으로 바꾸고 병렬·직렬 등가에서 개별 전류·열로 되돌아갑니다. 계산된 51.84 mW를 실제 저항 데이터시트 정격과 조건부로 비교합니다.",
+    assumedKnowledge: [
+      { id: "ohmic-resistance", role: "각 저항의 전압과 전류를 연결합니다." },
+      { id: "kirchhoff-current-law", role: "갈림길의 두 전류를 합칩니다." },
+      { id: "kirchhoff-voltage-law", role: "전원과 저항의 전압 강하를 맞춥니다." },
+      { id: "electrical-power-balance", role: "세 부품과 전원의 전력을 검산합니다." },
+    ],
+    introducedHere: [
+      { id: "series-resistance-equivalent", role: "같은 전류의 전압 강하를 합쳐 직렬 등가를 구합니다." },
+      { id: "parallel-resistance-equivalent", role: "같은 전압의 전류를 합쳐 병렬 등가를 구합니다." },
+      { id: "resistor-joule-heating", role: "등가망을 다시 펼쳐 각 부품의 열을 계산합니다." },
+      { id: "resistor-power-rating", role: "계산된 전력을 실제 부품의 정격 표와 대조합니다." },
+      { id: "resistor-tolerance-thermal-boundary", role: "공칭값·온도·실장 조건의 한계를 확인합니다." },
+    ],
+    conceptExplanations: [
+      { id: "series-resistance-equivalent", sectionId: "one-path", intuition: "한 길의 두 저항이 같은 전류를 나눠 지나면 전압 강하가 더해집니다.", workedExample: "12 V에 1 kΩ 두 개를 잇는 가상 회로는 등가 2 kΩ, 전류 6 mA입니다.", boundary: "등가 2 kΩ은 전원 단자의 동작만 대신하고 각 부품의 온도를 나타내지 않습니다.", scientificGrounding: { observable: "같은 줄에 있는 두 저항의 전류와 각 저항 양끝의 전압 강하", unitsAndDimensions: "저항 Ω=V/A, 전류 A, 두 전압 강하는 V 단위로 더합니다.", modelAssumptions: "도선 저항과 부품의 온도 변화가 작고 직류 정상 상태라고 둡니다.", measurementExample: "1 kΩ 두 개에 6 mA가 공통으로 흐르면 6 V씩 떨어집니다.", invalidConditions: "중간에 다른 갈래가 있거나 시간에 따라 전하가 쌓이면 두 부품 전류가 같지 않을 수 있습니다.", referenceFrame: "접지 0 V에서 전원 12 V로 올라가 저항을 차례로 지나는 폐회로 방향" } },
+      { id: "parallel-resistance-equivalent", sectionId: "two-paths", intuition: "같은 두 점에 닿은 갈래는 전압이 같고 전류가 더해집니다.", workedExample: "2 kΩ과 1 kΩ의 등가는 2/3 kΩ이며 갈림길 4.8 V에서 2.4·4.8 mA가 흐릅니다.", boundary: "공통 첫 저항이 있으므로 한 갈래를 바꾸면 갈림길 전압도 달라집니다.", scientificGrounding: { observable: "두 갈래의 양끝 전압과 각각 흐르는 전류 및 합류 전류", unitsAndDimensions: "전압 V, 갈래 전류 A, 병렬 등가 저항 Ω입니다.", modelAssumptions: "갈림길 두 점이 이상 도선으로 연결되고 직류 정상 상태입니다.", measurementExample: "4.8 V에서 2 kΩ에 2.4 mA, 1 kΩ에 4.8 mA가 흐름을 기록합니다.", invalidConditions: "도선 낙차나 분포 효과가 크면 두 갈래에 정확히 같은 전압이 걸리지 않습니다.", referenceFrame: "갈림길을 접지보다 높은 전위로 두고 각 전류를 갈림길에서 접지로 양수로 셉니다." } },
+      { id: "resistor-joule-heating", sectionId: "heat", intuition: "각 부품의 전압과 전류 곱만큼 전기에너지가 매초 열로 바뀝니다.", workedExample: "바꾼 망의 첫 저항 51.84, 왼쪽 11.52, 오른쪽 23.04 mW 합은 86.4 mW입니다.", boundary: "전원 전류를 두 갈래에 그대로 대입하거나 등가저항 하나의 전력을 각 부품의 정격으로 쓰면 틀립니다.", scientificGrounding: { observable: "각 저항의 양끝 전압·통과 전류와 전원 공급 전력", unitsAndDimensions: "V×A=W이고, (mA)²×kΩ=mW입니다.", modelAssumptions: "같은 동작 범위에서 R이 일정하고 평균 직류 상태를 둡니다.", measurementExample: "(7.2 mA)²×1 kΩ=51.84 mW와 12 V×7.2 mA=86.4 mW를 비교합니다.", invalidConditions: "큰 온도 상승으로 R이 달라지거나 펄스가 있으면 순간값과 평균을 구분해야 합니다.", referenceFrame: "각 저항의 전류와 전압 강하를 전원에서 접지로 향하는 양의 방향으로 셉니다." } },
+      { id: "resistor-power-rating", sectionId: "rating", intuition: "저항값이 전류를 정하고 허용 전력은 열을 견딜 수 있는지 답합니다.", workedExample: "1 kΩ의 51.84 mW는 D11/CRCW0603 표준 P70 0.10 W 아래이나 12 V 직결 144 mW는 위입니다.", boundary: "0.10 W는 특정 데이터시트의 표준 모드·70 °C 조건이며 모든 실장·온도에 무조건 적용되지 않습니다.", scientificGrounding: { observable: "부품에 걸린 전압·전류·표면 온도와 장착 기판 주변 온도", unitsAndDimensions: "소비 전력과 정격은 W, 온도는 °C로 비교합니다.", modelAssumptions: "Vishay 2026년 4월 개정 D11/CRCW0603 표준 동작을 예로 듭니다.", measurementExample: "12²/1 kΩ=144 mW와 표준 P70 100 mW를 같은 단위로 비교합니다.", invalidConditions: "기판 열저항·허용 표면 온도·동작 온도를 확인하지 않고 안전성을 단정할 수 없습니다.", referenceFrame: "같은 부품 양단의 전압을 재고 기판 근처 주변 온도를 기준으로 열 조건을 봅니다." } },
+      { id: "resistor-tolerance-thermal-boundary", sectionId: "limits", intuition: "공칭 저항과 실제 저항이 달라지면 회로 전류와 열도 함께 달라집니다.", workedExample: "1 kΩ 제품의 ±1%와 ±5% 선택지, 온도계수를 데이터시트에서 따로 확인합니다.", boundary: "허용차와 전력 정격을 같은 숫자로 보지 않고 최악 조합·기판 조건을 다시 계산합니다.", scientificGrounding: { observable: "개별 저항의 실제 저항값·주변 온도·소비 전력과 전류", unitsAndDimensions: "저항 Ω, 허용차 %, 온도계수 ppm/K, 전력 W를 구분합니다.", modelAssumptions: "공칭 회로의 12 V와 부품별 저항값을 출발점으로 둡니다.", measurementExample: "부품의 공칭 1 kΩ과 실제 저항을 비교한 뒤 새 전류·전력을 측정합니다.", invalidConditions: "주변 온도나 부품 온도 조건이 달라지면 공칭 계산만으로 허용 여부를 판단할 수 없습니다.", referenceFrame: "같은 전원 12 V·접지 0 V에서 실장된 기판의 주변 온도를 기록합니다." } },
+    ],
+    conceptStages: [
+      { label: "01 전원에서 본 값", relation: "직렬·병렬로 회로를 줄여 전체 전류를 구합니다.", concepts: ["series-resistance-equivalent", "parallel-resistance-equivalent"] },
+      { label: "02 부품으로 되돌아감", relation: "갈림길의 전압과 각 전류로 열을 셉니다.", concepts: ["resistor-joule-heating"] },
+      { label: "03 실물 정격", relation: "계산 전력을 부품표의 조건부 정격에 대조합니다.", concepts: ["resistor-power-rating", "resistor-tolerance-thermal-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "12 V 회로의 두 2 kΩ 병렬 갈래의 등가저항은?", answerChecklist: ["두 갈래에 같은 6 V", "각각 3 mA", "합 6 mA", "등가 1 kΩ"], requiredConcepts: ["parallel-resistance-equivalent"], sectionId: "two-paths" },
+      { level: "basic", question: "첫 1 kΩ과 원래 병렬 등가의 직렬 합 및 전원 전류는?", answerChecklist: ["1+1=2 kΩ", "12 V/2 kΩ=6 mA"], requiredConcepts: ["series-resistance-equivalent"], sectionId: "one-path" },
+      { level: "basic", question: "원래 세 저항의 전력과 전원 공급 전력을 맞추세요.", answerChecklist: ["36 mW", "18 mW 두 개", "합 72 mW", "12 V×6 mA"], requiredConcepts: ["resistor-joule-heating"], sectionId: "heat" },
+      { level: "basic", question: "오른쪽을 1 kΩ으로 바꿀 때 병렬과 전체 등가저항은?", answerChecklist: ["병렬 2/3 kΩ", "전체 5/3 kΩ", "첫 1 kΩ 더함"], requiredConcepts: ["parallel-resistance-equivalent", "series-resistance-equivalent"], sectionId: "two-paths" },
+      { level: "basic", question: "바꾼 회로의 갈림길 전압과 두 갈래 전류는?", answerChecklist: ["전체 7.2 mA", "첫 강하 7.2 V", "갈림길 4.8 V", "왼쪽 2.4·오른쪽 4.8 mA"], requiredConcepts: ["parallel-resistance-equivalent"], sectionId: "two-paths" },
+      { level: "basic", question: "같은 1 kΩ 부품을 12 V에 직접 놓으면 0.10 W 표준 정격과 비교해 어떻습니까?", answerChecklist: ["144 mW", "표준 100 mW 초과", "기판·온도 조건은 별도"], requiredConcepts: ["resistor-power-rating"], sectionId: "rating" },
+      { level: "advanced", question: "값을 바꾼 회로의 세 저항 전력과 공급 전력을 계산해 검산하세요.", answerChecklist: ["51.84 mW", "11.52 mW", "23.04 mW", "합 86.4 mW", "12 V×7.2 mA"], requiredConcepts: ["resistor-joule-heating"], sectionId: "heat" },
+      { level: "advanced", question: "오른쪽 저항을 낮추었는데 왼쪽 전류가 3→2.4 mA로 줄어드는 경로를 설명하세요.", answerChecklist: ["병렬 등가 감소", "전체 전류 증가", "첫 저항 낙차 증가", "갈림길 6→4.8 V"], requiredConcepts: ["parallel-resistance-equivalent", "series-resistance-equivalent"], sectionId: "two-paths" },
+      { level: "advanced", question: "1 kΩ에 표준 정격 0.10 W를 이상적으로 적용할 때 양단 전압 한계는?", answerChecklist: ["sqrt(PR)", "10 V", "실제 온도와 실장 조건은 별도"], requiredConcepts: ["resistor-power-rating"], sectionId: "rating" },
+      { level: "advanced", question: "±1% 저항 허용차와 70 °C 기준 전력 정격은 서로 어떤 판단을 맡습니까?", answerChecklist: ["공칭 저항값 오차", "허용 발열", "최악 조합 회로 재계산", "기판·주변 온도 확인"], requiredConcepts: ["resistor-tolerance-thermal-boundary", "resistor-power-rating"], sectionId: "limits" },
+    ],
+    papers: [
+      { title: "Vishay, D/CRCW e3 Standard Thick Film Chip Resistors, document 20035, revision 14-Apr-2026", href: "https://www.vishay.com/docs/20035/dcrcwe3.pdf", problem: "가상 회로의 부품별 계산 전력을 실제 저항의 정격·열 조건과 어떻게 대조할지 보여 줍니다.", contribution: "1쪽은 D11/CRCW0603 e3의 저항 범위와 기판 열저항·표면 온도 조건, 2쪽은 표준 P70 0.10 W와 확장 0.125 W를 구분합니다.", assumptions: "데이터시트의 표준 동작 모드와 70 °C 기준을 예시로 삼습니다. 본문 12 V 망은 제품 시험 결과가 아닙니다.", evidenceScope: "공식 PDF 1–2쪽의 표를 직접 확인했습니다. 51.84 mW와 144 mW는 가상 회로에서 계산했습니다.", notClaim: "0.10 W 아래라는 사실만으로 모든 주변 온도와 기판에서 안전하다고 결론내리지 않습니다.", sectionId: "rating" },
+    ],
+  },
 };
