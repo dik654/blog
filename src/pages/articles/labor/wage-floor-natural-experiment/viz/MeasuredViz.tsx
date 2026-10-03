@@ -35,7 +35,6 @@ const MARK = "#6366f1";
 
 const BASE = 106;
 const UNIT = 13;
-const yOf = (v: number) => BASE - v * UNIT;
 
 export default function MeasuredViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5200);

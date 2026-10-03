@@ -20,14 +20,12 @@ const CASES = [
 
 const M0 = 5_000_000;
 const V0 = 20;
-const Q0 = 240_000_000;
 
 const MONEY_C = "#6366f1";
 const TURN_C = "#0ea5e9";
 const QTY_C = "#14b8a6";
 const PRICE_C = "#ef4444";
 const MUTED = "#94a3b8";
-const INK = "#334155";
 
 export default function FourKnobsViz() {
   const scenes = useAnimatedScenes(SCENES.length, 5200);
