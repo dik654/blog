@@ -13003,6 +13003,8 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "300 K n_i와 실리콘 띠틈은 MIT 자료에 귀속하고, 10^16 도핑은 가정임을 밝힌다." },
     ],
   },
+  "pn-junction-and-rectification": { title: "두 실리콘 조각을 붙이면 한쪽 방향으로 잘 흐르는 이유 글이 소유하는 범위", owns: ["p·n 경계의 확산, 고정 이온과 내장 전기장", "외부 전압이 장벽을 바꾸는 순·역방향 동작", "가상 300 K 접합의 이상 전류 계산과 실제 소자 적용 경계"], reuses: [{ label: "도핑과 다수·소수 캐리어의 정본", href: "/electronics/semiconductors/bands-and-doping#count" }, { label: "두 점 사이 전압의 정본", href: "/electronics/circuits/lumped-circuit-and-conservation#small-circuit" }], evidence: [{ kind: "primary-source", rule: "Shockley 1949 원문 461쪽 식과 현대식 표기·교육용 가정 숫자를 구분한다." }, { kind: "project-claim", rule: "Is=1 pA와 전류 결과를 실제 제품의 실측·정격으로 취급하지 않는다." }] },
+  "mos-capacitor-and-inversion": { title: "전극을 닿지 않게 놓아도 실리콘 표면이 바뀝니다 글이 소유하는 범위", owns: ["절연 전극의 전기장과 p형 실리콘 표면의 축적·공핍·반전", "평탄띠와 문턱을 별개 전압 기준으로 구분", "산화막 용량과 강한 반전 전하의 가정 수치 계산", "절연층 두께·누설·충전량의 설계 경계"], reuses: [{ label: "p–n 접합의 확산과 장벽", href: "/electronics/devices/pn-junction-and-rectification#diffusion" }, { label: "p형 도핑과 다수·소수 캐리어", href: "/electronics/semiconductors/bands-and-doping#count" }], evidence: [{ kind: "primary-source", rule: "Kahng 특허가 실제로 기술한 산화막 전극 구조와 이 글의 가상 축전기를 구분한다." }, { kind: "project-claim", rule: "10 nm·100 µm²·문턱 0.5 V와 전자 108만 개는 가정과 계산이며 제품 수치가 아니다." }] },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

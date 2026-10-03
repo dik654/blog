@@ -87,6 +87,7 @@ export const CATEGORY_DOMAIN: Readonly<Record<string, DomainSlug>> = {
   "dispute-resolution": "law",
   circuits: "electronics",
   semiconductors: "electronics",
+  devices: "electronics",
 };
 
 /**

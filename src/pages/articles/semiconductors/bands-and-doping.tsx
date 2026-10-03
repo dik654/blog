@@ -42,7 +42,7 @@ export default function BandsAndDopingArticle() {
             밖에서 보이는 것이 움직이는 전하의 수라는 것만 봅니다. 다음 절에서
             왜 처음부터 모든 전자가 똑같이 움직일 수 없는지부터 펼치겠습니다.
           </p>
-          <p className="leading-7"><em>여기까지 읽으면 같은 실리콘에 섞은 원자가 이동 가능한 전하 수를 크게 바꾼다는 문제를 잡을 수 있습니다.</em></p>
+          <p className="leading-7"><em>같은 실리콘에서 원자를 조금 바꿨을 뿐인데 움직이는 전하의 수가 백만 배 달라졌습니다. 이제 그 까닭을 보겠습니다.</em></p>
         </div>
       </section>
 
@@ -72,7 +72,7 @@ export default function BandsAndDopingArticle() {
             가능한 상태의 구조입니다. 이 글의 300 K 실리콘 전하 수는 그
             논문에서 가져온 측정값이 아닙니다.
           </p>
-          <p className="leading-7"><em>여기까지 읽으면 원자를 조금 섞기 전에도 왜 ‘모든 전자’가 곧바로 전류를 만드는 것은 아닌지 설명할 수 있습니다.</em></p>
+          <p className="leading-7"><em>가능한 에너지 자리와 빈자리를 나누면, 모든 전자가 곧바로 전류를 만드는 것은 아니라는 점이 드러납니다.</em></p>
         </div>
         <CitationBlock
           source="A. H. Wilson, ‘The Theory of Electronic Semi-Conductors,’ Proceedings of the Royal Society A 133 (1931), 458–491, 460쪽"
@@ -111,7 +111,7 @@ export default function BandsAndDopingArticle() {
             바꾸면 짝 생성도 달라지므로 10¹⁰이라는 숫자는 항상 고정된
             실리콘의 상수가 아닙니다.
           </p>
-          <p className="leading-7"><em>여기까지 읽으면 기준 조각 A에서 전자와 정공을 각각 10¹⁰개로 세는 이유를 알 수 있습니다.</em></p>
+          <p className="leading-7"><em>기준 조각 A에서는 전자와 정공이 짝으로 생기므로 각각 약 10¹⁰개로 셉니다.</em></p>
         </div>
         <CitationBlock
           source="MIT OpenCourseWare 6.012, Lecture 2, Semiconductor Physics (2005), 강의안 4·6·9·11쪽"
@@ -150,7 +150,7 @@ export default function BandsAndDopingArticle() {
             다른 쪽으로 바뀌면 접합이 된다고 시작합니다. 이 글의 10¹⁶개
             설정은 그 논문의 측정 수치가 아닙니다.
           </p>
-          <p className="leading-7"><em>여기까지 읽으면 움직이는 전자를 늘린 원자 자리에 고정된 반대 부호의 전하가 남는다는 것을 알 수 있습니다.</em></p>
+          <p className="leading-7"><em>도너가 전자를 내놓아도 그 자리에 양전하 이온이 남아 벌크의 전하 장부가 맞습니다.</em></p>
         </div>
         <CitationBlock
           source="W. Shockley, ‘The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors,’ Bell System Technical Journal 28 (1949), 435–489, 435쪽"
@@ -203,7 +203,7 @@ export default function BandsAndDopingArticle() {
             8×10¹⁵ cm⁻³, 정공은 10²⁰을 그 수로 나눈 약 1.25×10⁴ cm⁻³입니다.
             원자가 실제로 얼마나 이온화했는지도 확인해야 합니다.
           </p>
-          <p className="leading-7"><em>여기까지 읽으면 조각 B의 10¹⁶과 10⁴가 같은 온도의 평형식에서 함께 나오는 숫자임을 검산할 수 있습니다.</em></p>
+          <p className="leading-7"><em>조각 B의 10¹⁶과 10⁴는 따로 외운 수가 아닙니다. 두 수의 곱이 같은 온도의 평형값 10²⁰이 됩니다.</em></p>
         </div>
         <CarrierCountViz />
       </section>
@@ -246,7 +246,7 @@ export default function BandsAndDopingArticle() {
             전도도를 따로 잽니다. 농도가 예상과 다르면 이온화와 보상 도핑을,
             농도는 맞는데 전도도가 다르면 이동도와 산란을 먼저 봅니다.
           </p>
-          <p className="leading-7"><em>여기까지 읽으면 전하 수의 계산이 맞아도 전류를 예측하려면 이동도와 온도를 더 확인해야 한다는 경계를 알 수 있습니다.</em></p>
+          <p className="leading-7"><em>농도 계산을 마쳤어도 전류를 알려면 전하가 얼마나 잘 움직이는지와 온도를 더 확인해야 합니다.</em></p>
         </div>
       </section>
 

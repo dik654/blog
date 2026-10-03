@@ -33,7 +33,7 @@ export default function LumpedCircuitAndConservationArticle() {
             갈래의 저항에서 모두 쓰여야 합니다. 두 조건을 함께 쓰면 갈림길의
             전압이 하나로 정해집니다.
           </p>
-          <p className="leading-7"><em>여기까지 읽으면 한 갈림길과 한 바퀴의 숫자를 함께 맞춰야 한다는 큰 그림만 잡아도 됩니다.</em></p>
+          <p className="leading-7"><em>이제 이 회로에서는 갈림길의 전하 장부와 한 바퀴의 에너지 장부를 함께 맞춰야 한다는 점이 보입니다.</em></p>
         </div>
       </section>
 
@@ -84,7 +84,7 @@ export default function LumpedCircuitAndConservationArticle() {
           가정부터 시작해, 전하 보존과 패러데이 법칙에서 두 회로 조건이 나오는
           범위를 설명합니다. 이 글의 12 V 수치는 강의안의 실험값이 아닙니다.
         </CitationBlock>
-        <p className="mt-5 text-sm leading-6 text-muted-foreground">여기까지 읽으면 6 V가 같은 두 갈래에 걸려도 그 전류는 각 부품의 저항값으로 따로 정해진다는 것을 알 수 있습니다.</p>
+        <p className="mt-5 text-sm leading-6 text-muted-foreground">두 갈래에는 같은 6 V가 걸리지만 전류는 각 저항값으로 따로 정해집니다.</p>
       </section>
 
       <section id="junction" className="scroll-mt-20">
@@ -124,7 +124,7 @@ export default function LumpedCircuitAndConservationArticle() {
             연속적인 흐름을 여기서는 갈림길의 세 도선으로 줄여 같은 보존
             조건을 씁니다.
           </p>
-          <p className="leading-7"><em>여기까지 읽으면 갈림길로 들어온 6 mA가 두 출구의 3 mA와 3 mA로 나뉜 이유를 설명할 수 있습니다.</em></p>
+          <p className="leading-7"><em>갈림길을 떠날 때는 6 mA가 3 mA씩 나뉩니다. 이제 한 바퀴의 전압도 맞춰 보겠습니다.</em></p>
         </div>
         <CitationBlock
           source="G. Kirchhoff, ‘Ueber den Durchgang eines elektrischen Stromes durch eine Ebene, insbesondere durch eine kreisförmige,’ Annalen der Physik und Chemie 64 (1845), 497–514, 특히 499쪽"
@@ -170,7 +170,7 @@ export default function LumpedCircuitAndConservationArticle() {
           assumptions={["고리 방향과 각 전압의 측정 방향을 고정합니다.", "회로 모델 밖의 시간에 따른 자기 선속 변화가 무시 가능합니다."]}
           interpretation="한 바퀴의 합이 0이면 같은 기준점에 일관된 전압을 붙일 수 있습니다."
         />
-        <p className="mt-5 text-sm leading-6 text-muted-foreground">여기까지 읽으면 12 V를 얻고 6 V씩 두 번 잃어 출발점으로 돌아온다는 것을 알 수 있습니다.</p>
+        <p className="mt-5 text-sm leading-6 text-muted-foreground">한 바퀴를 돌면 얻은 12 V와 두 번 잃은 6 V가 서로 지워집니다.</p>
       </section>
 
       <section id="solve" className="scroll-mt-20">
@@ -213,7 +213,7 @@ export default function LumpedCircuitAndConservationArticle() {
             왼쪽 전류까지 줄어들었을까요?</strong> 갈림길 전압을 구한 뒤 왼쪽
             2 kΩ에 다시 적용하면 답이 나옵니다.
           </p>
-          <p className="leading-7"><em>여기까지 읽으면 한 갈래의 값을 바꾸면 갈림길 전압이 달라져 다른 갈래의 전류도 바뀐다는 것을 계산할 수 있습니다.</em></p>
+          <p className="leading-7"><em>한 갈래의 저항을 바꾸자 갈림길 전압도 움직였고, 다른 갈래의 전류까지 바뀌었습니다.</em></p>
         </div>
       </section>
 
@@ -246,7 +246,7 @@ export default function LumpedCircuitAndConservationArticle() {
           assumptions={["전원과 세 저항을 빠짐없이 셉니다.", "저장 소자가 없는 정상 상태입니다."]}
           interpretation="전원의 72 mW와 세 저항의 72 mW가 일치합니다."
         />
-        <p className="mt-5 text-sm leading-6 text-muted-foreground">여기까지 읽으면 전력의 공급과 소비를 맞춰 앞의 전류·전압 계산을 검산할 수 있습니다.</p>
+        <p className="mt-5 text-sm leading-6 text-muted-foreground">전원에서 나온 전력과 저항에서 쓴 전력이 맞으므로 앞의 전압·전류 계산도 한 번 더 확인됐습니다.</p>
       </section>
 
       <section id="limits" className="scroll-mt-20">
@@ -272,7 +272,7 @@ export default function LumpedCircuitAndConservationArticle() {
             버렸는지부터 확인합니다. MIT 6.002 강의안도 집중 회로 모델의 조건으로 부품 안의
             전하 축적과 회로 밖의 시간에 따른 자기 선속 변화를 명시합니다.
           </p>
-          <p className="leading-7"><em>여기까지 읽으면 점과 선으로 접은 그림을 언제 다시 펼쳐야 하는지 판단할 수 있습니다.</em></p>
+          <p className="leading-7"><em>빠른 변화나 긴 배선처럼 공간 효과가 커지면 이 점과 선의 회로 그림을 다시 펼쳐야 합니다.</em></p>
         </div>
       </section>
 
