@@ -60,4 +60,18 @@ export const circuitsArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/circuits/steady-state-and-impedance"),
   },
+  {
+    slug: "frequency-shaping-and-bode",
+    title: "느린 신호와 빠른 신호를 나누는 주파수 지도",
+    subcategory: "circuit-dynamics",
+    sections: [
+      { id: "overview", title: "느린 신호는 남기고 빠른 신호는 줄일 수 있을까요?" },
+      { id: "corner", title: "1 ms 저장 시간에서 경계 속도가 나옵니다" },
+      { id: "db", title: "비율을 dB로 바꾸면 큰 범위를 함께 볼 수 있습니다" },
+      { id: "plot", title: "한 칸에 열 배씩 놓으면 기울기가 드러납니다" },
+      { id: "other-output", title: "출력 위치를 바꾸면 통과하는 쪽도 바뀝니다" },
+      { id: "limits", title: "실제 필터의 경계는 연결된 회로가 다시 정합니다" },
+    ],
+    component: () => import("@/pages/articles/circuits/frequency-shaping-and-bode"),
+  },
 ];

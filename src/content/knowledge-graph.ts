@@ -25444,6 +25444,12 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "passive-element-impedance": { id: "passive-element-impedance", domain: "physics", label: "저항·축전기·인덕터는 서로 다른 복소 전압·전류 비를 가진다", aliases: ["impedance", "임피던스"], definition: "정현파 정상 상태의 복소 전압/전류를 임피던스 Z라고 하며 ZR=R, ZC=1/(jωC), ZL=jωL입니다. ω=1000 rad/s·C=1 µF면 ZC=−j1000 Ω이고 L=1 H면 ZL=+j1000 Ω입니다. 같은 1000 Ω 크기라도 위상 방향이 반대입니다.", canonicalHref: "/electronics/circuits/steady-state-and-impedance#complex" },
   "rc-impedance-divider": { id: "rc-impedance-divider", domain: "physics", label: "축전기 출력은 복소 임피던스의 전압 분배로 구한다", aliases: ["RC impedance divider", "RC 복소 분압"], definition: "1 kΩ 직렬 저항과 1 µF 축전기의 출력이 축전기 양단이면 H(jω)=ZC/(R+ZC)=1/(1+jωRC)입니다. ω=1000 rad/s에서 ωRC=1, |H|=1/√2≈0.707, 위상 −45°입니다. 5 V 최대 입력의 출력 최대 진폭은 약 3.54 V입니다.", canonicalHref: "/electronics/circuits/steady-state-and-impedance#divider" },
   "impedance-model-boundary": { id: "impedance-model-boundary", domain: "physics", label: "한 주파수 임피던스는 시작 과도와 비선형 응답을 대신하지 않는다", aliases: ["impedance model limits", "임피던스 적용 경계"], definition: "같은 RC에서 ω=100/1000/10000 rad/s의 출력 최대 진폭은 약 4.98/3.54/0.50 V이고 위상은 약 −5.7/−45/−84.3°입니다. 이는 선형·집중 소자의 단일 정현파 정상 상태입니다. 막 켠 스위치의 초기 조건이나 포화·전압 의존 소자는 별도로 계산합니다.", canonicalHref: "/electronics/circuits/steady-state-and-impedance#limits" },
+  "rc-corner-frequency": { id: "rc-corner-frequency", domain: "physics", label: "RC 저장 시간의 역수가 필터 경계 속도를 정한다", aliases: ["RC corner frequency", "차단 주파수"], definition: "무부하 이상 1 kΩ·1 µF 저역 통과 회로는 RC=1 ms이고 ωc=1/RC=1000 rad/s, fc≈159.15 Hz입니다. 이때 출력은 0이 아닌 입력 최대 진폭의 1/√2이고 위상은 −45°입니다.", canonicalHref: "/electronics/circuits/frequency-shaping-and-bode#corner" },
+  "rc-lowpass-spectrum": { id: "rc-lowpass-spectrum", domain: "physics", label: "축전기 출력은 빠른 정현파일수록 작아진다", aliases: ["RC low-pass", "저역 통과"], definition: "축전기 양단을 출력으로 읽는 가상 RC의 크기 비는 1/√(1+(ωRC)²)입니다. 0.1fc·fc·10fc에서 각각 약 0.995·0.707·0.0995로, 5 V 최대 입력의 약 4.98·3.54·0.50 V입니다. 단일 정현파 정상 상태에서 비교합니다.", canonicalHref: "/electronics/circuits/frequency-shaping-and-bode#plot" },
+  "voltage-ratio-decibel": { id: "voltage-ratio-decibel", domain: "physics", label: "전압 진폭 비를 20 log10으로 dB에 옮긴다", aliases: ["voltage gain dB", "전압 데시벨"], definition: "같은 주파수·같은 진폭 기준의 출력/입력 전압 크기 비 A에 대해 20log10(A) dB입니다. A=1이면 0 dB, 1/√2이면 약 −3.01 dB, 0.1이면 −20 dB입니다. 음수는 진폭 감소를 뜻하며 음수 전압은 아닙니다.", canonicalHref: "/electronics/circuits/frequency-shaping-and-bode#db" },
+  "bode-log-slope": { id: "bode-log-slope", domain: "physics", label: "로그 주파수 한 decade의 높은 쪽 기울기는 −20 dB에 가까워진다", aliases: ["Bode plot", "보드 선도", "decade"], definition: "가로축에 주파수 열 배를 한 칸으로 두고 진폭 dB와 위상을 표시합니다. 1차 RC 저역 통과의 고주파 근사 기울기는 −20 dB/dec입니다. fc→10fc의 정확한 변화는 약 −17.03 dB, 10fc→100fc는 약 −19.96 dB여서 근사와 실제 곡선을 구분합니다.", canonicalHref: "/electronics/circuits/frequency-shaping-and-bode#plot" },
+  "rc-output-topology": { id: "rc-output-topology", domain: "physics", label: "같은 R·C도 연결과 출력 위치가 통과 방향을 바꾼다", aliases: ["RC high-pass", "고역 통과"], definition: "입력에서 C를 먼저 지나 R을 접지에 잇고 R 양단을 읽으면 H=jωRC/(1+jωRC)인 고역 통과입니다. 0.1fc·fc·10fc의 진폭 비는 약 0.0995·0.707·0.995입니다. 축전기 출력 저역 통과와 다른 연결·측정점입니다.", canonicalHref: "/electronics/circuits/frequency-shaping-and-bode#other-output" },
+  "filter-load-boundary": { id: "filter-load-boundary", domain: "physics", label: "무부하 한 주파수 필터식은 부하와 과도 파형을 보장하지 않는다", aliases: ["filter loading", "필터 적용 경계"], definition: "본문의 RC 식은 이상 소자·무부하·정현파 정상 상태입니다. 부하가 붙으면 분배가 바뀌고, 실제 기생 성분과 펄스의 여러 주파수·초기 상태는 한 점의 보드 선도로 전체를 설명할 수 없습니다.", canonicalHref: "/electronics/circuits/frequency-shaping-and-bode#limits" },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47344,6 +47350,13 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "phasor-complex-amplitude", to: "passive-element-impedance", relation: "produces", reason: "전압/전류의 복소 비에 각도 차이를 담습니다." },
   { from: "passive-element-impedance", to: "rc-impedance-divider", relation: "produces", reason: "직렬 두 소자의 복소 전압 분배로 출력을 구합니다." },
   { from: "rc-impedance-divider", to: "impedance-model-boundary", relation: "constrains", reason: "반복 속도에 따른 출력 수치와 정상 상태 조건을 함께 확인합니다." },
+  { from: "rc-step-time-constant", to: "rc-corner-frequency", relation: "produces", reason: "1 ms 저장 시간의 역수가 경계 각주파수입니다." },
+  { from: "rc-impedance-divider", to: "rc-lowpass-spectrum", relation: "produces", reason: "복소 분압의 크기를 여러 주파수에서 계산합니다." },
+  { from: "rc-corner-frequency", to: "rc-lowpass-spectrum", relation: "constrains", reason: "ωRC=1인 곳을 가로축 비교 기준으로 둡니다." },
+  { from: "rc-lowpass-spectrum", to: "voltage-ratio-decibel", relation: "produces", reason: "주파수별 진폭 비를 dB로 바꿉니다." },
+  { from: "voltage-ratio-decibel", to: "bode-log-slope", relation: "produces", reason: "열 배 간격의 dB 변화량을 읽습니다." },
+  { from: "passive-element-impedance", to: "rc-output-topology", relation: "prerequisite", reason: "출력 위치를 바꿀 때 C와 R의 몫을 다시 계산합니다." },
+  { from: "rc-output-topology", to: "filter-load-boundary", relation: "constrains", reason: "어디서 읽고 무엇을 연결하는지가 측정 결과를 바꿉니다." },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {
