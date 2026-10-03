@@ -7584,6 +7584,240 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "값과 한계비용의 틈을 지표로 쓴 출처로 알려진 글. 접근할 수 있는 전문을 찾지 못해 읽지 못했고, 그래서 이 글의 어떤 주장도 여기에 기대지 않는다. 본문의 틈 식은 Cournot 57쪽 식 (2)에서 직접 옮겨 적은 것",
     },
   ],
+  "circuits/lumped-circuit-and-conservation": [
+    {
+      kind: "핵심 논문",
+      label: "G. Kirchhoff, ‘Ueber den Durchgang eines elektrischen Stromes durch eine Ebene, insbesondere durch eine kreisförmige’ (1845), 497–514쪽",
+      href: "https://zenodo.org/records/2422851",
+      note: "원문 스캔의 499쪽에서 정상 상태 금속판의 닫힌 경계로 드나드는 흐름의 합이 0이라는 문장과 적분식을 확인했다. 이 글의 12 V 저항망은 원문 실험이 아니라 교육용 가정이다.",
+    },
+    {
+      kind: "공개 강의",
+      label: "MIT OpenCourseWare 6.002 Circuits and Electronics, Lecture 1 (2007)",
+      href: "https://live.ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/f6ad70417c73f585b7ca065153d25d25_6002_l1.pdf",
+      note: "집중 회로 근사의 전하 축적·변하는 자기 선속 조건, 전하 보존과 패러데이 법칙에서 회로식을 얻는 설명의 출처. 논문 증거와 교육용 모델을 구분한다.",
+    },
+  ],
+  "semiconductors/bands-and-doping": [
+    {
+      kind: "핵심 논문",
+      label: "A. H. Wilson, ‘The Theory of Electronic Semi-Conductors,’ Proceedings of the Royal Society A 133 (1931), 458–491",
+      href: "https://ethw-images.s3.us-east-va.perf.cloud.ovh.us/ieee/b/b4/P3_Proc._R._Soc._Lond._A-1931-Wilson-458-91.pdf",
+      note: "원문 스캔 460쪽에서 허용·금지 에너지띠와 꽉 찬 아래 띠에서 작은 전기장만으로 전류가 나지 않는 논의를 직접 확인했다. 현대 실리콘 농도 수치의 출처는 아니다.",
+    },
+    {
+      kind: "핵심 논문",
+      label: "W. Shockley, ‘The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors,’ Bell System Technical Journal 28 (1949), 435–489",
+      href: "https://vtda.org/pubs/BSTJ/vol28-1949/articles/bstj28-3-435.pdf",
+      note: "435쪽 서론의 도너·억셉터 농도와 n형·p형 접합 출발점을 원문 스캔에서 확인했다. 본문의 10^16 cm^-3 설정은 이 글의 가정이다.",
+    },
+    {
+      kind: "공개 강의",
+      label: "MIT OpenCourseWare 6.012 Lecture 2, Semiconductor Physics (2005)",
+      href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/e1a94598c1fd641fc15636a9ad14de1a_lec2.pdf",
+      note: "실리콘 원자 밀도, 전자·정공 짝 생성, 열평형 곱, 300 K 고유 농도 10^10 cm^-3, 도너·억셉터 계산의 교육용 기준을 확인했다.",
+    },
+    {
+      kind: "공개 강의",
+      label: "MIT OpenCourseWare 6.012 Tutorial 1 (Spring 2009)",
+      href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-spring-2009/70b3d239e4037abf0856a71f4ef22616_MIT6_012S09_tutor01.pdf",
+      note: "300 K의 n_i=10^10 cm^-3와 실리콘 띠틈 1.1 eV를 명시한 예제의 출처. 본문의 10^16 도핑 수치는 별도 가정이다.",
+    },
+  ],
+  "devices/pn-junction-and-rectification": [
+    { kind: "핵심 논문", label: "W. Shockley, ‘The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors,’ BSTJ 28 (1949), 461쪽 식 (4.18)–(4.22)", href: "https://vtda.org/pubs/BSTJ/vol28-1949/articles/bstj28-3-435.pdf", note: "원문 스캔 461쪽에서 캐리어별 전류식과 합친 식을 확인했다. 1 pA·300 K·0.5/0.6 V는 이 글의 이상 접합 가정이다." },
+    { kind: "공개 강의", label: "MIT OCW 6.720J Lecture 14, p-n Junction Diode I–V Characteristics (2007)", href: "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/369ddf4748729cfe5fe48c7528fd1d42_lecture14.pdf", note: "현대 표기의 이상 접합 전류식과 순·역방향 장벽 설명을 대조했다." },
+  ],
+  "devices/mos-capacitor-and-inversion": [
+    { kind: "공식 문서", label: "D. Kahng, US Patent 3,102,230, ‘Electric Field Controlled Semiconductor Device’ (1960 출원·1963 등록)", href: "https://patents.google.com/patent/US3102230A/en", note: "명세서 1–2쪽과 도 1A의 산화막 위 전극·전압원 구조를 확인했다. 특허의 다접합 회로와 본문의 두 단자 축전기는 구분한다." },
+    { kind: "공개 강의", label: "MIT OCW 6.012 Lecture 9, ‘MOS Capacitors I’ (2009), 23·30쪽", href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2009/42c863e2e1e9744ce6b797646a30e463_MIT6_012F09_lec09.pdf", note: "면적당 산화막 용량 εox/tox와 반전 전하식, 축적·공핍·반전 상태를 확인했다. 10 nm·100 µm²·문턱 0.5 V는 본문 가정이다." },
+  ],
+  "devices/mosfet-regions-and-transfer": [
+    { kind: "공개 강의", label: "MIT OCW 6.720J Lecture 25, ‘Long MOSFET’ (2007), 10·13쪽", href: "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/8ad0e553fbdaed10f6102b04451e547e_lecture25.pdf", note: "국소 반전 전하와 선형 영역 전류 적분을 공식 PDF로 확인했다. k와 전압 수치는 본문의 가정이다." },
+    { kind: "공개 강의", label: "MIT OCW 6.720J Lecture 26, ‘Long MOSFET’ (2007), 5·7·8쪽", href: "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/59850a07f95e9f50d32185eb46503460_lecture26.pdf", note: "핀치오프와 포화 경계·제곱식을 공식 PDF에서 직접 확인했다. 실제 소자의 완전히 평평한 출력 곡선을 주장하지 않는다." },
+  ],
+  "devices/switching-energy-and-leakage": [
+    { kind: "공개 강의", label: "MIT OCW 6.012 Lecture 14, ‘CMOS’ (2005), 22–24쪽", href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/6bec6dd1b07b02a1a84098b78f068cc3_lec14.pdf", note: "공급 CV², 저장·방전의 각 ½CV², 완전 주기당 CV²와 평균 전력식을 확인했다. 본문 숫자와 누설은 가정이다." },
+  ],
+  "circuits/resistance-and-power-dissipation": [
+    { kind: "공식 문서", label: "Vishay D/CRCW e3, document 20035 (14-Apr-2026), 1–2쪽", href: "https://www.vishay.com/docs/20035/dcrcwe3.pdf", note: "D11/CRCW0603의 저항 범위, 표준 0.10 W와 확장 0.125 W, 열 조건을 공식 PDF에서 확인했다. 회로 숫자는 가정이다." },
+  ],
+  "circuits/storage-elements-and-transients": [
+    { kind: "공개 강의", label: "MIT OCW 6.002 Lecture 12, ‘Capacitors and First-Order Systems’, 4–5·10–11쪽", href: "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/84f4b553fc6a1ddd7007465041c4e213_6002_l12.pdf", note: "축전기 q=Cv, i=C dv/dt와 RC 지수 응답·초기 조건을 공식 강의안에서 확인했다. 수치는 글의 가정이다." },
+    { kind: "공개 강의", label: "MIT OCW 8.02 Chapter 11, ‘Inductance’ (2007), 10·17–19쪽", href: "https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2007/f5c35823a7faac0d893754ab42804e7e_chap11inductance.pdf", note: "½LI², RL 상승식과 L/R 시간 상수·자기장 에너지 장부를 공식 PDF에서 확인했다. 1 H는 가정이다." },
+  ],
+  "circuits/steady-state-and-impedance": [
+    { kind: "공개 강의", label: "MIT OCW 6.002 Lecture 17, ‘The Impedance Model’, 4–7쪽", href: "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/66adf4d4611a57b949efa1b00a842a46_6002_l17.pdf", note: "정현파 정상 상태의 복소 진폭·R/C/L 임피던스·RC 분압을 원본 PDF에서 확인했다. 본문 수치는 가정이다." },
+  ],
+  "circuits/frequency-shaping-and-bode": [{kind:"공개 강의",label:"MIT OCW 6.002 Lecture 18, ‘Filters’, 2–3·7쪽",href:"https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/d4e136975654a01f7fc2c9b49196d376_6002_l18.pdf",note:"저역·고역 통과 회로 연결을 원본 PDF에서 확인했다. 본문 수치는 가정이다."},{kind:"공개 강의",label:"MIT OCW 6.002 Lecture 17, ‘The Impedance Model’, 4쪽",href:"https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/66adf4d4611a57b949efa1b00a842a46_6002_l17.pdf",note:"RC 전달 함수와 진폭·위상 식을 확인했다."}],
+  "circuits/feedback-gain-and-stability": [
+    {
+      "kind": "공식 문서",
+      "label": "TI/Burr-Brown Graeme 1991, ‘Feedback Plots Define Op Amp AC Performance’, 1–2쪽",
+      "href": "https://www.ti.com/lit/an/sboa015/sboa015.pdf",
+      "note": "폐루프 이득과 루프 교차·위상 여유를 원본에서 확인했다. 본문 증폭기는 가정이다."
+    }
+  ],
+  "semiconductors/wafer-and-planar-process": [
+    {
+      "kind": "공식 문서",
+      "label": "Hoerni 미국 특허 US3025589, 원본 2–4쪽·도 1–10",
+      "href": "https://patentimages.storage.googleapis.com/cc/fb/db/690d609db55af5/US3025589.pdf",
+      "note": "산화막 마스크와 접합 보호를 원본 특허로 확인했다. 본문 치수는 가정이다."
+    }
+  ],
+  "semiconductors/lithography-and-resolution": [
+    {
+      "kind": "공식 문서",
+      "label": "ASML, ‘How microchips are made’, 공정 단계",
+      "href": "https://www.asml.com/en/technology/all-about-microchips/how-microchips-are-made",
+      "note": "감광막·노광·현상·식각의 순서를 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ASML, ‘The Rayleigh criterion for resolution’, CD 식",
+      "href": "https://www.asml.com/en/technology/lithography-principles/rayleigh-criterion",
+      "note": "CD=k1λ/NA와 인자의 뜻을 확인했다. 값은 가정이다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ASML, ‘Measuring accuracy’, 오버레이·초점",
+      "href": "https://www.asml.com/en/technology/lithography-principles/measuring-accuracy",
+      "note": "층 정렬과 계측 표적·식각 뒤 측정을 확인했다."
+    }
+  ],
+  "semiconductors/doping-and-thermal-budget": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT OCW 6.152J Lecture 4, Diffusion, 6–7·14–15쪽",
+      "href": "https://ocw.mit.edu/courses/6-152j-micro-nano-processing-technology-fall-2005/dbad8f442ecf1244e2a257de2671d0e2_lecture4.pdf",
+      "note": "가우스·erfc 경계 조건, a=2√Dt, 접합 깊이를 확인했다."
+    },
+    {
+      "kind": "공개 강의",
+      "label": "MIT OCW 6.774 Lecture 9 transcript, 2–3쪽",
+      "href": "https://ocw.mit.edu/courses/6-774-physics-of-microfabrication-front-end-processing-fall-2004/149Phbk_yJVmBm_KPM035Wd40as-4iVuA_transcript.pdf",
+      "note": "단계별 Dt 합산과 열 예산의 가정·예외를 확인했다."
+    }
+  ],
+  "semiconductors/interconnect-and-rc-delay": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT OCW 6.884 L04 Wires, 원본 11–13쪽",
+      "href": "https://ocw.mit.edu/courses/6-884-complex-digital-systems-spring-2005/fd75994e0ea84378705dd12ee8c16326_l04_wires.pdf",
+      "note": "분포 RC, π 배선, Elmore 첫 모멘트 식과 길이 의존성을 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Intel Technology Journal 2002 Vol. 6 No. 2, 원본 10–11쪽",
+      "href": "https://www.intel.com/content/dam/www/public/us/en/documents/research/2002-vol06-iss-2-intel-technology-journal.pdf",
+      "note": "동일 피치 공정 비교의 구리·낮은 유전율 배선 개선을 확인했다."
+    }
+  ],
+  "semiconductors/yield-defect-and-packaging": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT OCW 2.830J Lecture 10 Yield Modeling, 원본 6–7·14·17·30쪽",
+      "href": "https://ocw.mit.edu/courses/2-830j-control-of-manufacturing-processes-sma-6303-spring-2008/4aff1e21de13870355ef44dbe71f45c6_lecture10.pdf",
+      "note": "기능·파라미터 수율, 임계 면적, 포아송 가정을 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Intel Tech 101 How Silicon Die Become Chip Packages, 2025-02-19",
+      "href": "https://www.intel.com/content/www/us/en/newsroom/tech101/manufacturing/how-silicon-die-become-chip-packages.html",
+      "note": "패키징 역할과 조립·시험의 단계별 순서를 확인했다."
+    }
+  ],
+  "embedded/mcu-memory-map-and-registers": [
+    {
+      "kind": "공식 문서",
+      "label": "Raspberry Pi RP2040 Datasheet, 원본 26·43·46·245쪽",
+      "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+      "note": "SIO 기준 주소, 세 오프셋, GPIO5_CTRL 위치, 래치와 입력 차이를 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Raspberry Pi Pico SDK Hardware APIs",
+      "href": "https://www.raspberrypi.com/documentation/pico-sdk/hardware.html",
+      "note": "핀 기능·출력 방향 설정 API를 확인했다."
+    }
+  ],
+  "embedded/interrupts-and-latency-budget": [
+    {
+      "kind": "공식 문서",
+      "label": "Raspberry Pi RP2040 Datasheet, 원본 60·79–80·239·243–244쪽",
+      "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+      "note": "GPIO 에지 상태·소거, 코어별 허용, IO_IRQ_BANK0 경로를 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Arm Cortex-M0+ Devices Generic User Guide, 원본 87–90쪽",
+      "href": "https://documentation-service.arm.com/static/5f04aadfdbdee951c1cdc957",
+      "note": "NVIC pending·priority와 재진입 조건을 확인했다."
+    }
+  ],
+  "embedded/timers-and-sampling": [
+    {
+      "kind": "공식 문서",
+      "label": "Raspberry Pi RP2040 Datasheet, 원본 535–537·559–560쪽",
+      "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+      "note": "타이머 1 µs 계수·네 알람과 GPIO26/ADC0 변환 조건을 확인했다."
+    },
+    {
+      "kind": "공개 강의",
+      "label": "MIT OCW RES.6-007 Lecture 16 Sampling, 원본 1–2쪽",
+      "href": "https://ocw.mit.edu/courses/res-6-007-signals-and-systems-spring-2011/8708ec068ebdea2c4ee2f38fad39fb83_MITRES_6_007S11_lec16.pdf",
+      "note": "이상 샘플링의 절반 경계와 앨리어싱을 확인했다."
+    }
+  ],
+  "embedded/serial-buses-and-tradeoffs": [
+    {
+      "kind": "공식 문서",
+      "label": "NXP UM10204 Rev. 7.0, 원본 1·9–10·15쪽",
+      "href": "https://www.nxp.com/docs/en/user-guide/UM10204.pdf",
+      "note": "I²C 두 선, 모드별 속도, ACK·반복 START·스트레칭을 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Raspberry Pi Pico SDK Hardware APIs, I2C/SPI/UART/GPIO",
+      "href": "https://www.raspberrypi.com/documentation/pico-sdk/hardware.html",
+      "note": "세 컨트롤러와 RP2040 GPIO 기능표를 확인했다."
+    }
+  ],
+  "embedded/scheduling-and-real-time": [
+    {
+      "kind": "공식 문서",
+      "label": "FreeRTOS RTOS Fundamentals·Task Priorities",
+      "href": "https://www.freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals",
+      "note": "준비된 최고 우선순위 작업과 마감 목적을 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "FreeRTOS Reference Manual v10, vTaskDelayUntil",
+      "href": "https://www.freertos.org/media/2018/FreeRTOS_Reference_Manual_V10.0.0.pdf",
+      "note": "절대 주기 대기 API와 상대 지연의 차이를 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "FreeRTOS FreeRTOS mutexes",
+      "href": "https://freertos.org/Real-time-embedded-RTOS-mutexes.html",
+      "note": "뮤텍스 우선순위 상속과 ISR 사용 제한을 확인했다."
+    }
+  ],
+  "embedded/firmware-update-and-recovery": [
+    {
+      "kind": "공식 문서",
+      "label": "MCUboot Bootloader design",
+      "href": "https://docs.mcuboot.com/design.html",
+      "note": "시험 swap의 이미지 상태·검증·중단 재개 범위를 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Raspberry Pi RP2040 Datasheet, 원본 123·129–132·145쪽",
+      "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+      "note": "외부 플래시 XIP와 BOOTSEL 복구 경로를 확인했다."
+    }
+  ],
   "labor/wage-floor-natural-experiment": [
     {
       kind: "핵심 논문",

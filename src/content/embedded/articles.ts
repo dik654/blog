@@ -1,0 +1,86 @@
+import type { Article } from "../types";
+
+export const embeddedArticles: Article[] = [
+  {
+    slug: "mcu-memory-map-and-registers",
+    title: "주소 한 칸이 GPIO 출력을 바꾸는 방법",
+    subcategory: "embedded-hardware",
+    sections: [
+      { id: "overview", title: "주소에 값을 쓰면 칩 바깥의 한 핀이 바뀝니다" },
+      { id: "map", title: "주소는 기준 주소와 레지스터 오프셋을 더해 찾습니다" },
+      { id: "mask", title: "GPIO5만 고르는 값은 0x20입니다" },
+      { id: "mux", title: "핀의 기능 선택과 출력 허용은 별도의 문입니다" },
+      { id: "readback", title: "출력 래치를 읽는 것과 핀 전압을 읽는 것은 다릅니다" },
+    ],
+    component: () => import("@/pages/articles/embedded/mcu-memory-map-and-registers"),
+  },
+  {
+    slug: "interrupts-and-latency-budget",
+    title: "인터럽트가 와도 마감 시각을 놓치는 이유",
+    subcategory: "embedded-hardware",
+    sections: [
+      { id: "overview", title: "센서가 준비됐다는 신호를 놓치지 않으려면" },
+      { id: "route", title: "GPIO 에지에서 처리 함수까지는 두 곳의 상태를 지납니다" },
+      { id: "handler", title: "처리 함수에서는 신호를 접수하고 오래 걸리는 읽기는 밖으로 넘깁니다" },
+      { id: "budget", title: "마감 1 ms에서 예제의 여유는 507 µs입니다" },
+      { id: "stress", title: "대기가 길어지면 처리 코드는 같아도 마감을 놓칩니다" },
+    ],
+    component: () => import("@/pages/articles/embedded/interrupts-and-latency-budget"),
+  },
+  {
+    slug: "timers-and-sampling",
+    title: "10 ms마다 읽은 값이 원래 신호와 다를 수 있는 이유",
+    subcategory: "embedded-hardware",
+    sections: [
+      { id: "overview", title: "10 ms마다 읽으면 빠른 변화가 느리게 보일 수 있습니다" },
+      { id: "timer", title: "RP2040 타이머의 1 µs 눈금에서 10 ms는 10000칸입니다" },
+      { id: "adc", title: "알람이 울린 뒤에도 ADC가 값을 잡는 시간이 필요합니다" },
+      { id: "rate", title: "10 ms 간격은 초당 100개, 절반 경계는 50 Hz입니다" },
+      { id: "alias", title: "70 Hz 코사인은 100 Hz 눈금에서 30 Hz와 같은 값을 남깁니다" },
+      { id: "limits", title: "주기, 변환 시각, 입력 대역을 함께 확인합니다" },
+    ],
+    component: () => import("@/pages/articles/embedded/timers-and-sampling"),
+  },
+  {
+    slug: "serial-buses-and-tradeoffs",
+    title: "센서 네 바이트를 읽는 세 버스의 실제 비용",
+    subcategory: "embedded-hardware",
+    sections: [
+      { id: "overview", title: "같은 네 바이트라도 선 위에 놓이는 비트 수가 다릅니다" },
+      { id: "i2c", title: "I²C는 두 선을 공유하고 주소·응답을 매 거래에 넣습니다" },
+      { id: "count", title: "I²C 400 kHz에서 일곱 묶음은 최소 157.5 µs입니다" },
+      { id: "spi", title: "SPI는 선택 선과 클록 모드를 맞추고 더 적은 클록을 씁니다" },
+      { id: "uart", title: "UART 8N1은 네 바이트를 보내도 40비트가 흐릅니다" },
+      { id: "choice", title: "가장 짧은 클록 시간만으로 버스를 고르지 않습니다" },
+    ],
+    component: () => import("@/pages/articles/embedded/serial-buses-and-tradeoffs"),
+  },
+  {
+    slug: "scheduling-and-real-time",
+    title: "CPU가 한가해도 작업 마감을 놓치는 이유",
+    subcategory: "embedded-software",
+    sections: [
+      { id: "overview", title: "CPU가 절반 이상 비어도 센서의 마감은 깨질 수 있습니다" },
+      { id: "tasks", title: "세 작업의 주기와 마감은 서로 다릅니다" },
+      { id: "timeline", title: "모두 0 ms에 준비되면 센서는 3 ms에 끝납니다" },
+      { id: "utilization", title: "46%는 평균 CPU 몫이지 마감 보증이 아닙니다" },
+      { id: "blocking", title: "낮은 우선순위 작업이 자원을 쥐면 센서가 기다립니다" },
+      { id: "limits", title: "실제 보장은 최악 실행·대기와 시각 기록으로 확인합니다" },
+    ],
+    component: () => import("@/pages/articles/embedded/scheduling-and-real-time"),
+  },
+  {
+    slug: "firmware-update-and-recovery",
+    title: "새 펌웨어가 실패해도 이전 버전으로 돌아오는 방법",
+    subcategory: "embedded-software",
+    sections: [
+      { id: "overview", title: "새 펌웨어가 시작되지 않아도 옛 버전으로 돌아오려면" },
+      { id: "layout", title: "4 MiB 안에 두 이미지와 복구 공간을 함께 잡습니다" },
+      { id: "verify", title: "v2를 다 받은 뒤 무결성과 출처를 확인합니다" },
+      { id: "trial", title: "v2는 한 번 시험하고 실제 기능을 본 뒤 확정합니다" },
+      { id: "power", title: "전원이 끊기는 위치마다 돌아오는 경로가 다릅니다" },
+      { id: "limits", title: "이 설계는 제품의 플래시·부팅·보안 조건에 맞춰야 합니다" },
+    ],
+    component: () => import("@/pages/articles/embedded/firmware-update-and-recovery"),
+  },
+];

@@ -13,6 +13,7 @@ export type DomainSlug =
   | "finance"
   | "politics"
   | "law"
+  | "electronics"
   | "history";
 
 export interface DomainMeta {
@@ -54,6 +55,11 @@ export const DOMAIN_META: readonly DomainMeta[] = [
       "정해진 규범이 개별 사안의 판단이 되기까지 무엇이 필요한지를 효력·해석·계약·재산·불법행위·형벌·증명·분쟁 해결 순으로 쌓습니다.",
   },
   {
+    slug: "electronics",
+    name: "전자",
+    description: "회로의 보존 법칙에서 전자소자·반도체 제조·임베디드 제어까지 실제 수치와 자료로 따라갑니다.",
+  },
+  {
     slug: "history",
     name: "역사",
     description:
@@ -92,6 +98,10 @@ export const CATEGORY_DOMAIN: Readonly<Record<string, DomainSlug>> = {
   "private-law": "law",
   "criminal-law": "law",
   "dispute-resolution": "law",
+  circuits: "electronics",
+  semiconductors: "electronics",
+  devices: "electronics",
+  embedded: "electronics",
   testimony: "history",
   "record-numbers": "history",
   "inference-from-sources": "history",

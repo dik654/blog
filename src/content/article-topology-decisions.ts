@@ -20,6 +20,13 @@ const KEEP = (rationale: string): ArticleTopologyDecision => ({
 });
 
 export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopologyDecision>> = {
+  "circuits/lumped-circuit-and-conservation": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-10-03",
+    rationale: "전압·전류의 뜻에서 갈림길·고리·풀이·전력 검산·근사 경계까지 같은 12 V 저항망 하나를 따라가므로 독립 글로 자르면 예제의 연결이 끊깁니다.",
+    sharedGate: "12 V·1 kΩ·2 kΩ·2 kΩ 예제와 한 갈래를 1 kΩ으로 바꾼 예제에서 KCL·KVL·전력 합이 모두 일치해야 합니다.",
+  },
   "ai/claw-bash": KEEP("Parse→classify→authorize→execute→release가 한 Bash effect의 단일 실행 계약을 이룹니다."),
   "ai/claw-cli": KEEP("입력 dispatch→slash parse→stream reducer→초기화가 하나의 CLI control-plane 경로입니다."),
   "ai/claw-compaction": KEEP("Trigger→projection→budget→state 보존→fidelity 검증이 하나의 compaction 수명주기입니다."),
@@ -382,6 +389,98 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "같은 수요와 한계비용에서 멈추는 수량·읽히는 값·틈의 비율·사라지는 삼각형이 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
   },
+  "devices/pn-junction-and-rectification": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "붙인 직후 확산부터 내장 전기장, 외부 바이어스, 이상 전류와 모델 한계까지가 한 접합의 작동 질문을 이룹니다. 도핑의 정본 정의는 앞 글에 남기고 다음 게이트 소자는 분리합니다.", sharedGate: "300 K, Is=1 pA, VT=25.85 mV라는 같은 가정에서 −0.5·0·+0.5·+0.6 V의 본문·식·Viz·문제 수치가 일치하는지 확인합니다." },
+  "devices/mos-capacitor-and-inversion": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "절연 전극 구조에서 표면 상태, 전압 기준, 반전 전하 계산, 산화막 경계까지가 하나의 MOS 축전기 질문을 풉니다. 양단자 전류를 조절하는 MOSFET은 다음 글로 분리합니다.", sharedGate: "10 nm·100 µm²·평탄띠 0 V·문턱 0.5 V·전극 1.0 V의 가정에서 0.345 pF·0.173 pC·전자 약 108만 개가 본문·식·Viz·연습문제에서 일치하는지 확인합니다." },
+  "devices/mosfet-regions-and-transfer": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "한 긴 채널 소자의 네 단자와 채널에서 세 전류 영역·실제 모델 경계까지를 같은 전압 가정으로 추적합니다. 축전기의 표면 전하 정의는 앞 글, 스위칭 에너지는 다음 글이 소유합니다.", sharedGate: "Vth=0.5 V·k=1 mA/V²·VGS=1.5 V의 가정에서 VDS=0.2/1.0/1.5 V의 0.18/0.5/0.5 mA가 본문·식·Viz·연습문제에 일치하는지 확인합니다." },
+  "devices/switching-energy-and-leakage": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "가상 CMOS 출력 하나에서 충전·방전 장부, 활동률, 누설, 전압 변경의 경계까지 같은 10 pF·3.3 V 사례로 따라갑니다. MOSFET 영역은 앞 글, 제조는 다음 글이 소유합니다.", sharedGate: "0→1→0 한 쌍당 108.9 pJ, 10%·1 MHz의 10.89 µW, 누설 3.3 µW와 합 14.19 µW가 본문·식·Viz·연습문제에 일치하는지 확인합니다." },
+  "circuits/resistance-and-power-dissipation": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "같은 12 V 망의 등가 계산에서 각 부품 발열과 실제 부품표 정격을 이어 답합니다. 보존 법칙은 앞 글, 시간 변화는 다음 글이 소유합니다.", sharedGate: "오른쪽 2→1 kΩ 변경 전후의 6→7.2 mA, 갈림길 6→4.8 V, 첫 부품 36→51.84 mW, 공급 72→86.4 mW가 본문·식·Viz·문제에 일치하는지 확인합니다." },
+  "circuits/storage-elements-and-transients": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "저항 회로에 저장 요소 하나를 넣을 때 이어지는 상태와 지수 시간 상수를 RC·RL 쌍으로 설명합니다. 정상 상태 저항은 앞 글, 반복 입력은 다음 글이 소유합니다.", sharedGate: "5 V·1 kΩ에서 1 µF의 RC와 1 H의 RL이 모두 1 ms, 1τ에 3.16 V와 3.16 mA, 최종 저장 에너지가 각각 12.5 µJ라는 가정이 본문·식·Viz·문제에 일치하는지 확인합니다." },
+  "circuits/steady-state-and-impedance": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "한 RC 회로의 반복 입력에서 진폭·위상 읽기, 복소 임피던스, 분압, 정상 상태 경계까지를 한 질문으로 설명합니다. 스위치 과도는 앞 글, 폭넓은 주파수 그림은 다음 글이 소유합니다.", sharedGate: "1 kΩ·1 µF·5 V 최대 진폭에서 ω=1000 rad/s이면 −j1000 Ω, H=0.707∠−45°, 출력 3.54 V가 본문·식·Viz·문제에 일치하는지 확인합니다." },
+  "circuits/frequency-shaping-and-bode": {action:"keep" as const,status:"reviewed" as const,reviewedAt:"2026-10-03",rationale:"한 RC의 주파수 범위를 다루며 경계·dB·기울기를 연결합니다. 복소 임피던스 한 점은 앞 글, 피드백의 안정성은 다음 글이 다룹니다.",sharedGate:"1 kΩ·1 µF·5 V 최대 진폭: fc≈159.15 Hz, 0.1/1/10fc의 출력 4.98/3.54/0.50 V, fc→10fc 변화 −17.03 dB를 본문·Viz·문제에서 맞춥니다."},
+  "circuits/feedback-gain-and-stability": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "1 V를 넣은 증폭기의 오차에서 폐루프 이득, 두 극 지연, 루프 교차·위상 여유와 부하 경계까지 한 되먹임 질문으로 풉니다. 필터 자체의 진폭 지도는 앞 글에 남깁니다.",
+    "sharedGate": "A0=100·극10/100 rad/s·β=0.1/0.5에서 폐루프 9.09/1.96, 교차 78.2/212.6 rad/s, 여유 59.3°/27.9°가 본문·Viz·문제에 일치하는지 확인합니다."
+  },
+  "semiconductors/wafer-and-planar-process": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "선택 확산과 접합 보호라는 하나의 평면 공정 질문을 웨이퍼→막 창→확산→접촉 순서로 풉니다. 노광 해상도·정렬과 도핑 열 예산은 다음 글이 소유합니다.",
+    "sharedGate": "가상 창100 µm·옆 확산 각2 µm·접촉 창80 µm에서 p형 폭104 µm·한쪽 명목 거리12 µm가 본문·Viz·문제에 일치하고 특허 실측과 구분되는지 확인합니다."
+  },
+  "semiconductors/lithography-and-resolution": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "한 층에 무늬를 얼마나 작게 찍는지와 여러 층을 어디에 맞춰 찍는지를 같은 접촉 창 사례로 구분합니다. 확산 온도·시간은 다음 글이 소유합니다.",
+    "sharedGate": "가상 λ193 nm·NA0.8·k1 .4/.3에서 CD96.5/72.4 nm, 선200 nm·창120 nm·이동0/30/50 nm에서 최소 여유40/10/−10 nm가 본문·Viz·문제에 일치하는지 확인합니다."
+  },
+  "semiconductors/doping-and-thermal-budget": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "한 번 넣은 불순물이 두 열 단계에서 얼마나 퍼지는지 농도 모양→폭→누적 Dt→접합 한계로 풉니다. 창의 광학 해상도는 앞 글, 완성 배선 지연은 다음 글이 소유합니다.",
+    "sharedGate": "가상 D1=10^-14 cm²/s·3600s, D2=4×10^-14 cm²/s·1800s에서 B=1.08×10^-10 cm²·a1=120nm·a2≈208nm·표면 비≈0.58이 본문·Viz·문제에 일치하는지 확인합니다."
+  },
+  "semiconductors/interconnect-and-rc-delay": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "한 가상 배선을 π 회로→74 ps→길이 두 배 158 ps→금속·절연막 변경→실제 타이밍 경계 순서로 추적합니다. 제조 결함과 패키징 수율은 다음 글의 범위입니다.",
+    "sharedGate": "500 Ω·20 fF·200 Ω·100 fF에서 60+14=74 ps, 길이 두 배 110+48=158 ps, 저항만 69.8 ps, 용량만 44 ps, 둘 다 41.3 ps가 본문·Viz·문제에서 일치하는지 확인합니다."
+  },
+  "semiconductors/yield-defect-and-packaging": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "결함이 해로운 위치→포아송 0개 확률→면적·밀도 민감도→패키징 조건부 생존으로 한 후보 다이를 추적합니다. 다음 임베디드 글은 완성 칩을 사용하는 단계입니다.",
+    "sharedGate": "D0=.1개/cm²·Ac=1cm²에서 e^-.1≈90.48%, Ac=4에서 e^-.4≈67.03%, D0=.2에서 e^-.2≈81.87%, 1000×.904837×.98≈886.7개가 본문·Viz·문제에서 일치하는지 확인합니다."
+  },
+  "embedded/mcu-memory-map-and-registers": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "GPIO5 하나를 통해 주소→오프셋→비트 마스크→핀 기능·방향→물리 핀 확인 순서로 추적합니다. 인터럽트 시점과 타이머는 후속 글에 남깁니다.",
+    "sharedGate": "SIO 0xD0000000+0x014/0x018/0x024=0xD0000014/18/24, GPIO5 1<<5=0x20, IO_BANK0+0x02C=0x4001402C가 본문·Viz·문제에서 일치하는지 확인합니다."
+  },
+  "embedded/interrupts-and-latency-budget": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "GPIO2 사건→주변 장치와 NVIC→짧은 ISR→작업→1 ms 마감까지 한 경로를 추적합니다. 10 ms 주기 샘플링은 다음 글에서 따로 다룹니다.",
+    "sharedGate": "검출5+대기40+진입8+ISR20=73 µs, 작업40+I²C300+계산80을 더한 전체493 µs, 여유507 µs, 대기600이면1053 µs·53 µs 초과가 본문·Viz·문제에서 일치해야 합니다."
+  },
+  "embedded/timers-and-sampling": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "10 ms 타이머 목표→실제 ADC 시각→100 Hz 저장→70 Hz가 30 Hz로 겹침→ADC 전 필터 순서로 한 신호를 추적합니다. I²C 버스 거래는 다음 글에서 다룹니다.",
+    "sharedGate": "10ms=10000 timer ticks, fs=100Hz, half=50Hz, |100−70|=30Hz, 처리10.4ms 뒤 다음 절대 목표20ms가 본문·Viz·문제에서 일치하는지 확인합니다."
+  },
+  "embedded/serial-buses-and-tradeoffs": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "외부 센서 네 바이트라는 사례에서 I²C 주소·ACK→63클록→SPI·UART 대안→실제 완료 시간 경계로 흐릅니다. 여러 작업의 우선순위 배분은 다음 글에서 다룹니다.",
+    "sharedGate": "I²C 7×9=63클록·400kHz 157.5µs·100kHz 630µs, SPI 5×8/1MHz=40µs, UART 4×10/115200≈347.2µs가 본문·Viz·문제에서 일치해야 합니다."
+  },
+  "embedded/scheduling-and-real-time": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "주기·실행·마감→기본 고정 우선순위 시간표→46% 평균→뮤텍스 대기로 센서가 늦는 한 사례를 추적합니다. 펌웨어 갱신 실패의 복구는 다음 글이 소유합니다.",
+    "sharedGate": "제어1/5=20%, 센서2/10=20%, 로그3/50=6%, U46%; 기본 센서0–3ms 완료·마감4ms 여유1ms, 로그 뮤텍스2ms 뒤 센서5ms 완료·초과1ms가 본문·Viz·문제에서 일치해야 합니다."
+  },
+  "embedded/firmware-update-and-recovery": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "v1 작동 중인 보드에서 플래시 배치→v2 검증→시험 swap→확정 또는 복귀→전원 차단 지점별 결과를 추적합니다. 칩 내장 BOOTSEL과 사용자 부트로더 책임을 구분합니다.",
+    "sharedGate": "4096=256+1536+1536+768 KiB, 미완성·서명 실패 후보는 v1 유지, TEST 미확정 재부팅은 v1 복귀, image OK 뒤는 v2 유지가 본문·Viz·문제에서 일치해야 합니다."
+  },
   "labor/wage-floor-natural-experiment": {
     action: "keep" as const,
     status: "reviewed" as const,
@@ -443,6 +542,32 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "macro/what-ricardo-assumed": "6566e07f66c31f32",
+  "macro/who-counts-as-unemployed": "0e99dde8bd38dd55",
+  "macro/what-the-price-level-hides": "18fde37b5c739139",
+  "macro/why-per-head-stalls": "288664818602d036",
+  "labor/measuring-the-spread": "9c6d52345e9d0a9c",
+  "labor/wage-floor-natural-experiment": "f4cee633e36a9767",
+  "embedded/firmware-update-and-recovery": "11af404968f4feda",
+  "embedded/scheduling-and-real-time": "854c44f36c3d7c77",
+  "embedded/serial-buses-and-tradeoffs": "1b52a6c0969c064e",
+  "embedded/timers-and-sampling": "d65d89abe395b450",
+  "embedded/interrupts-and-latency-budget": "c4b9955ab55f378b",
+  "embedded/mcu-memory-map-and-registers": "21fe616f12dd3bdb",
+  "semiconductors/yield-defect-and-packaging": "163db4ca3af9975d",
+  "semiconductors/interconnect-and-rc-delay": "9fe870634104880b",
+  "semiconductors/doping-and-thermal-budget": "77caf87831e26635",
+  "semiconductors/lithography-and-resolution": "45e896d39b860a36",
+  "semiconductors/wafer-and-planar-process": "20fd73be7dfc606d",
+  "circuits/feedback-gain-and-stability": "15f097e2dabbb613",
+  "circuits/frequency-shaping-and-bode": "38c916fc1b32d16f",
+  "circuits/steady-state-and-impedance": "f2cf3866dd83a148",
+  "circuits/storage-elements-and-transients": "cc761424ab916184",
+  "circuits/resistance-and-power-dissipation": "c6f5fea1f52dda34",
+  "devices/switching-energy-and-leakage": "ceb9d7570a210e44",
+  "devices/mosfet-regions-and-transfer": "1879d22ab7ea8d40",
+  "devices/mos-capacitor-and-inversion": "8cc6ce4600003dae",
+  "devices/pn-junction-and-rectification": "4d8acd6a58093d10",
   "ai/negative-result-3d-face-control": "6b146f6ac0e0984c",
   "ai/generative-identity-diversity": "261a9b984c0aa841",
   "ai/reference-identity-pose-separation": "7b3b4e75c366dbf4",
@@ -519,10 +644,5 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "firms/why-firms-exist": "63891a70391f81d0",
   "firms/scale-and-cost-structure": "81801244a44eeece",
   "firms/market-power-and-markup": "bd7e2fcb297b90d2",
-  "labor/wage-floor-natural-experiment": "f4cee633e36a9767",
-  "labor/measuring-the-spread": "9c6d52345e9d0a9c",
-  "macro/why-per-head-stalls": "288664818602d036",
-  "macro/what-the-price-level-hides": "18fde37b5c739139",
-  "macro/who-counts-as-unemployed": "0e99dde8bd38dd55",
-  "macro/what-ricardo-assumed": "6566e07f66c31f32",
+  "circuits/lumped-circuit-and-conservation": "ae617ac8e7582b07",
 };
