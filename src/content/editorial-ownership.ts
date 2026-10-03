@@ -13168,6 +13168,109 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "speeches-were-reconstructed": {
+    title: "연설이 재구성이라는 진술을 읽는 글이 소유하는 범위",
+    owns: [
+      "사료가 사건이 아니라 사건에 대한 기록이라는 구분",
+      "한 사료 안에 만들어진 방법이 다른 두 칸이 있다는 것",
+      "저자의 방법 진술이 신뢰의 범위를 어떻게 바꾸는지",
+      "사건 서술에 쓰인 교차 확인의 세 단계",
+      "증언 어긋남의 두 원인이 모으기에 다르게 반응한다는 것",
+    ],
+    reuses: [],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "1권 22절에 적힌 진술만 저자에게 귀속하고, '두 칸'·'흩어짐과 쏠림'은 이 글이 정리한 그림으로 표시한다. 전사본으로 읽었으므로 쪽수를 쓰지 않고 권·절 번호까지만 적으며, 번역을 거친 문장을 읽었다는 사실을 본문에 남긴다",
+      },
+    ],
+  },
+  "told-but-not-believed": {
+    title: "믿지 않으면서 적은 문장을 읽는 글이 소유하는 범위",
+    owns: [
+      "서로를 부정하는 설명을 지우지 않고 함께 남기는 선택",
+      "출처 꼬리표가 한 문단 안에서 주장의 경계를 유지한다는 것",
+      "전할 의무와 믿을 의무를 가르면 기록에 남는 것이 늘어난다는 것",
+      "방법의 범위를 선언하는 일이 그 방법의 쓸모를 정한다는 것",
+      "판정하는 일과 전해진 것을 적는 일이 다른 작업이라는 구분",
+    ],
+    reuses: [
+      {
+        label: "한 사료 안에 만들어진 방법이 다른 두 칸이 있다는 것",
+        href: "/history/testimony/speeches-were-reconstructed#two-kinds",
+      },
+      {
+        label: "저자가 자기 방법을 적어 둔 진술을 읽는 법",
+        href: "/history/testimony/speeches-were-reconstructed#speeches",
+      },
+      {
+        label: "증언이 갈리는 두 원인과 모으기의 한계",
+        href: "/history/testimony/speeches-were-reconstructed#why-they-diverge",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "7권 148~152절에 적힌 세 설명과 두 의무의 문장만 저자에게 귀속하고, '꼬리표'·'두 의무'는 이 글이 정리한 표현으로 표시한다. 전사본으로 읽었으므로 쪽수를 쓰지 않고 권·절 번호까지만 적는다",
+      },
+    ],
+  },
+  "the-writer-was-there": {
+    title: "당사자가 쓴 기록을 읽는 글이 소유하는 범위",
+    owns: [
+      "자리에 없던 사람과 있던 사람의 실패가 원인이 다르다는 구분",
+      "저자가 자기 치우침의 자리를 먼저 적는 방식",
+      "나누는 일을 독자에게 맡기고 섞였다는 사실만 공개하는 방식",
+      "증인의 값이 신분이 아니라 이해의 방향으로 정해진다는 것",
+      "겪어 아는 독자를 두는 것이 글 바깥의 제약이 된다는 것",
+    ],
+    reuses: [
+      {
+        label: "저자가 두 칸을 나눠 만든 경우",
+        href: "/history/testimony/speeches-were-reconstructed#two-kinds",
+      },
+      {
+        label: "편드는 마음에서 온 어긋남이 모으기로 지워지지 않는다는 것",
+        href: "/history/testimony/speeches-were-reconstructed#why-they-diverge",
+      },
+      {
+        label: "각 보고에 출처 꼬리표를 붙이는 방식",
+        href: "/history/testimony/told-but-not-believed#tags",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "서문 1·4·8·12절에 적힌 진술만 저자에게 귀속하고, 증인의 이해 방향을 따지는 읽기와 '네 장치' 정리는 이 글이 더한 것으로 표시한다. 전사본으로 읽었으므로 쪽수를 쓰지 않고 절 번호까지만 적으며, 영역자가 대괄호로 보충한 부분을 본문에 밝힌다",
+      },
+    ],
+  },
+  "how-the-army-was-counted": {
+    title: "세는 절차가 적힌 숫자를 읽는 글이 소유하는 범위",
+    owns: [
+      "전문에서 온 수와 절차에서 온 수의 구분",
+      "단위 공간을 만들어 채움 횟수를 세는 방법의 단계",
+      "눈금보다 작은 자리에 정보가 없다는 것과 끝자리 0의 뜻",
+      "눈금이 치우치면 오차가 개수만큼 곱해진다는 것",
+      "절차를 아는 일과 결과를 신뢰하는 일의 분리",
+    ],
+    reuses: [
+      {
+        label: "저자가 자기 방법을 적어 둔 진술을 읽는 법",
+        href: "/history/testimony/speeches-were-reconstructed#speeches",
+      },
+      {
+        label: "각 서술에 출처 꼬리표를 붙이는 방식",
+        href: "/history/testimony/told-but-not-believed#tags",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "7권 60절에 적힌 절차와 수치만 사료에 귀속하고, 어긋날 자리의 분류와 오차 증폭의 유도는 이 글이 더한 것으로 표시한다. 전사본으로 읽었으므로 쪽수를 쓰지 않고 권·절 번호까지만 적는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
