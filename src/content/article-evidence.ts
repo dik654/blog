@@ -7620,4 +7620,22 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "설탕 거래와 교환방정식의 정의(16쪽), 빵·석탄·옷감 1억 달러와 500만×20(17~18쪽), 세 가지 변형(19~20쪽), 돈의 양은 세 요인 중 하나일 뿐이라는 경고(21쪽)의 출처. Internet Archive 공개본 2장을 읽고 21쪽 문장은 쪽 이미지로 대조했음. 1911년 초판이 아니라 개정판 사본",
     },
   ],
+  "macro/who-counts-as-unemployed": [
+    {
+      kind: "공식 규격",
+      label:
+        "ICLS, 「Resolution concerning statistics of work, employment and labour underutilization」, 19차 결의(2013) · 21차 회의(2023) 개정, 47·51·55·73항",
+      href: "https://www.ilo.org/sites/default/files/wcmsp5/groups/public/@dgreports/@stat/documents/normativeinstrument/wcms_230304.pdf",
+      note: "실업의 세 조건(47항), 잠재 노동력의 정의(51항), 확장 노동력(55항), LU1~LU4의 식과 둘 이상을 쓰라는 요구(73항 c)의 출처. ILO 공개 PDF를 읽고 47항은 쪽 이미지로 대조했음. 본문의 100명 보기와 백분율은 이 글이 만든 설명용 수치",
+    },
+  ],
+  "macro/what-ricardo-assumed": [
+    {
+      kind: "핵심 논문",
+      label:
+        "David Ricardo, 『On the Principles of Political Economy, and Taxation』, London: John Murray, 1817 초판, 7장 「On Foreign Trade」",
+      href: "https://www.gutenberg.org/ebooks/33310",
+      note: "네 숫자(100·120·80·90), 같은 나라 안에서는 그 교환이 성립하지 않는다는 문장, 안과 밖을 가르는 자본 이동의 난이도, 자본이 자유로울 때의 반사실과 이윤율 결론, 전제를 떠받친 불안과 마음에 대한 서술의 출처. Project Gutenberg 1817년 초판 전사본으로 7장 전체를 읽었음. facsimile이 아니어서 쪽 이미지 대조는 하지 못했고 쪽수 대신 장 번호만 적음",
+    },
+  ],
 };

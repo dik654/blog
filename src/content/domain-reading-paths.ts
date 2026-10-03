@@ -229,4 +229,34 @@ export const DOMAIN_READING_PATHS: Readonly<
     ],
     showFullSequence: true,
   },
+
+  history: {
+    title: "역사를 사료에서부터 읽는 아홉 편",
+    description:
+      "지난 일은 직접 볼 수 없고 남은 기록을 통해서만 닿습니다. 누가 왜 적었는지에서 시작해, 적힌 숫자가 무엇을 센 것인지를 따지고, 남은 것에서 어디까지 말할 수 있는지로 닫습니다.",
+    stages: [
+      {
+        eyebrow: "01 · 기록은 누가 만들었는가",
+        title: "누가 왜 적었는가",
+        description:
+          "사료는 지난 일이 아니라 지난 일에 대한 누군가의 기록입니다. 적은 사람이 그 자리에서 무엇을 할 수 있었는지가 적힌 것의 모양을 정합니다.",
+        categories: ["testimony"],
+      },
+      {
+        eyebrow: "02 · 숫자는 어디서 왔는가",
+        title: "사료에 적힌 숫자",
+        description:
+          "옛 기록의 숫자는 세어 본 결과가 아닐 때가 많습니다. 셀 수단이 있었는지부터 묻고, 없었다면 그 자리에 무엇이 들어갔는지를 봅니다.",
+        categories: ["record-numbers"],
+      },
+      {
+        eyebrow: "03 · 어디까지 말할 수 있는가",
+        title: "사료에서 주장으로",
+        description:
+          "남은 기록에서 주장으로 건너갈 때 무엇이 보태지는지, 그 보탬이 어디까지 허용되는지를 정합니다.",
+        categories: ["inference-from-sources"],
+      },
+    ],
+    showFullSequence: true,
+  },
 };

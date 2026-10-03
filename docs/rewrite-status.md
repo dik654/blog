@@ -1991,3 +1991,19 @@
 **검증**: 감사 10종 통과(CI와 동일 플래그), `tsc -b`·`GITHUB_PAGES=true npm run build` 통과(정적 route 1,489개), clipping 10건 0문제, desktop 1440·mobile 390에서 다섯 글과 경제 대분류 페이지 전부 narrow 0·katexErr 0·가로 스크롤 0·수식 순서 통과·page/console error 0. fingerprint 5개 최신.
 
 **전자 4분야 설계안**: `docs/electronics-series-outline.md`. knowledge graph에 MOSFET·반도체·다이오드·임베디드·인터럽트·RTOS·리소그래피 등이 **0건**이라 신설 분야끼리의 중복은 없고, 기존 글과 닿는 경계가 다섯 군데(메모리/전력·열/배선/하드웨어 신뢰/연산 배열)임을 조사해 소유권을 나눴다. 대분류 `electronics` 아래 `circuits` 6편·`devices` 5편·`fabrication` 5편·`embedded` 6편, 모두 22편의 읽기 순서와 1차 자료 후보를 적었다. 집필 레인이 확인할 것 — 1차 자료 열람 가능 여부는 검증하지 않았다.
+
+### 2026-10-03 (3) · 거시 3~4편으로 경제 2단계 아홉 편 종결, 역사 대분류 신설
+
+**거시 3편 `macro/who-counts-as-unemployed`** — 1차 자료는 ICLS 19차 결의(2013, 2023년 21차 회의에서 개정). contract 1.3.1이 "공식 규격"을 실물로 허용하므로 조항 번호와 원문을 그대로 실었다. 47항의 세 조건, 51·55항의 잠재·확장 노동력, 73항 (c)의 LU1~LU4 식이 근거이고 47항은 쪽 이미지로 대조했다. 본문의 100명 보기와 13.0%·23.2%는 전부 설명용이며 어떤 나라의 통계도 아니라고 본문·note·`notClaim` 세 곳에 적었다.
+
+**거시 4편 `macro/what-ricardo-assumed`** — Stolper-Samuelson을 구하지 못해 Ricardo(1817) 7장으로 바꿨다. 1단계가 비교우위의 메커니즘을 소유하므로 이 글은 그것을 다시 설명하지 않고 **그 논증이 서 있는 전제**만 읽는다. 저자가 같은 장에서 (1) 같은 교환이 한 나라 안에서는 성립하지 않는다고 적고 (2) 그 차이를 자본 이동의 난이도로 설명하고 (3) 자본이 자유로우면 둘 다 포르투갈에서 만들어진다는 반사실까지 적어 두었으므로, 글 전체가 원문 안에서 닫힌다. **이 사본은 Project Gutenberg 전사본이라 facsimile이 아니다** — 그래서 쪽수를 쓰지 않고 장 번호까지만 적었고, 그 사실을 인용 블록과 `evidenceScope`에 밝혔다.
+
+**경제 2단계 아홉 편 종결**: 조직의 경계 → 싸지는 구조 → 값을 고르는 힘 → 임금 → 벌어짐 → 한 사람 몫 → 값 수준 → 실업 → 개방. 아홉 편 모두 결론이 아니라 조건을 함께 실었고, 네 편에서 원자료가 애초 계획을 고쳤다(Young의 독점 경고, Card·Krueger의 열린 결론, Fisher가 초판이 아닌 개정판, Ricardo의 전제).
+
+**1차 자료 치환 기록**: Solow 1956·Phillips 1958·Stolper-Samuelson 1941·Lerner 1934는 열람 가능한 전문을 끝내 찾지 못했다(JSTOR·Wiley·OUP 전부 403). 읽지 않은 글로 쓰지 않는다는 원칙에 따라 같은 질문을 다루면서 실제로 열 수 있는 자료로 바꿨고, 치환 사실과 각 사본의 성격(초판/개정판/전사본)을 글마다 적었다.
+
+**역사 대분류 신설(글은 아직 없음)**: `DomainSlug`에 `history`를 더하고 `DOMAIN_META`·`CATEGORY_DOMAIN`·`domain-reading-paths.ts`에 등록했다. 카테고리 세 개는 `testimony`(누가 왜 적었는가)·`record-numbers`(사료에 적힌 숫자)·`inference-from-sources`(사료에서 주장으로)이며 전부 대분류 slug와 다르다. 시리즈의 축은 "지난 일"이 아니라 **"어떻게 아는가"**이고, 그래야 1차 자료가 장식이 아니라 글의 내용이 된다.
+
+**사료 접근 조사**: 조선왕조실록(sillok.history.go.kr)은 `/id/{기사ID}` 직접 주소에서 국역·원문·출전(태백산사고본 책/권/장)까지 깨끗이 열린다. 다만 검색·일자목록 엔드포인트는 서버가 깨진 인코딩으로 응답해 기사 ID를 얻는 경로가 막혀 있다(Playwright로 렌더해도 ID가 DOM에 없음). 그래서 역사 1편은 Gutenberg로 전문을 확보한 Thucydides 1.22(Crawley 역)로 시작한다.
+
+**검증**: 감사 10종 통과, `tsc -b`·`GITHUB_PAGES=true npm run build` 통과(정적 route 1,497개), clipping 4건 0문제, desktop 1440·mobile 390에서 두 글과 경제 대분류 페이지 전부 narrow 0·katexErr 0·가로 스크롤 0·수식 순서 통과. fingerprint 4개 최신.
