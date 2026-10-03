@@ -16,4 +16,17 @@ export const semiconductorArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/semiconductors/bands-and-doping"),
   },
+  {
+    slug: "wafer-and-planar-process",
+    title: "웨이퍼의 필요한 곳만 열어 접합을 만드는 법",
+    subcategory: "semiconductor-fabrication",
+    sections: [
+      { id: "overview", title: "전기가 흐를 자리를 웨이퍼 위에서 어떻게 골라낼까요?" },
+      { id: "wafer", title: "웨이퍼는 여러 소자를 한 번에 가공하는 바탕입니다" },
+      { id: "mask", title: "산화막에 낸 창이 불순물의 입구를 정합니다" },
+      { id: "protect", title: "접합 위의 막을 남기고 전극 자리만 다시 엽니다" },
+      { id: "limits", title: "이 첫 평면 공정은 오늘의 칩 제조 전체가 아닙니다" },
+    ],
+    component: () => import("@/pages/articles/semiconductors/wafer-and-planar-process"),
+  },
 ];

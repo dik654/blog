@@ -7658,4 +7658,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "폐루프 이득과 루프 교차·위상 여유를 원본에서 확인했다. 본문 증폭기는 가정이다."
     }
   ],
+  "semiconductors/wafer-and-planar-process": [
+    {
+      "kind": "공식 문서",
+      "label": "Hoerni 미국 특허 US3025589, 원본 2–4쪽·도 1–10",
+      "href": "https://patentimages.storage.googleapis.com/cc/fb/db/690d609db55af5/US3025589.pdf",
+      "note": "산화막 마스크와 접합 보호를 원본 특허로 확인했다. 본문 치수는 가정이다."
+    }
+  ],
 };
