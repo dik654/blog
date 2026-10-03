@@ -25848,6 +25848,366 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "점 결함이 독립이고 임계 위치의 하나가 반드시 기능을 잃게 한다는 조건이 깨지면 e^-D0Ac로 전체 수율을 설명할 수 없습니다. 결함 크기·공간 뭉침·회로 중복·전기적 사양도 봐야 합니다.",
     "canonicalHref": "/electronics/semiconductors/yield-defect-and-packaging#limits"
   },
+  "mcu-memory-mapped-io": {
+    "id": "mcu-memory-mapped-io",
+    "domain": "computer-science",
+    "label": "장치 레지스터는 CPU의 주소 공간에 놓인다",
+    "aliases": [
+      "mcu memory mapped io"
+    ],
+    "definition": "RP2040은 SIO를 0xD0000000 주소에 배치하고 CPU의 메모리 쓰기를 장치 동작으로 해석합니다. 같은 값도 주소에 따라 출력 설정 또는 해제가 됩니다.",
+    "canonicalHref": "/electronics/embedded/mcu-memory-map-and-registers#overview"
+  },
+  "sio-base-register-offset": {
+    "id": "sio-base-register-offset",
+    "domain": "computer-science",
+    "label": "기준 주소와 오프셋을 더해 특정 레지스터를 찾는다",
+    "aliases": [
+      "sio base register offset"
+    ],
+    "definition": "RP2040 SIO_BASE=0xD0000000, OUT_SET 오프셋 0x014, OUT_CLR 0x018, OE_SET 0x024입니다. 완전한 주소는 각각 0xD0000014, 0xD0000018, 0xD0000024입니다.",
+    "canonicalHref": "/electronics/embedded/mcu-memory-map-and-registers#map"
+  },
+  "gpio-bit-mask-five": {
+    "id": "gpio-bit-mask-five",
+    "domain": "computer-science",
+    "label": "GPIO5를 고르는 비트 마스크는 1<<5, 곧 0x20이다",
+    "aliases": [
+      "gpio bit mask five"
+    ],
+    "definition": "SIO GPIO 데이터의 비트 n은 GPIO n에 대응합니다. 1<<5=32=0x20은 GPIO5 비트만 세웁니다.",
+    "canonicalHref": "/electronics/embedded/mcu-memory-map-and-registers#mask"
+  },
+  "gpio-function-and-direction": {
+    "id": "gpio-function-and-direction",
+    "domain": "computer-science",
+    "label": "출력 데이터와 핀 기능 및 출력 허용은 따로 설정한다",
+    "aliases": [
+      "gpio function and direction"
+    ],
+    "definition": "RP2040 IO_BANK0 GPIO5_CTRL은 0x4001402C이며 핀 기능 선택을 담습니다. SIO 기능과 GPIO_OE_SET의 방향 허용이 맞아야 SIO 출력 래치가 핀을 구동합니다.",
+    "canonicalHref": "/electronics/embedded/mcu-memory-map-and-registers#mux"
+  },
+  "gpio-atomic-set-clear": {
+    "id": "gpio-atomic-set-clear",
+    "domain": "computer-science",
+    "label": "SET·CLR 별도 주소는 대상 비트만 원자적으로 바꾼다",
+    "aliases": [
+      "gpio atomic set clear"
+    ],
+    "definition": "OUT_SET에 1을 쓴 비트만 세우고 OUT_CLR에 1을 쓴 비트만 내립니다. 같은 출력 레지스터를 읽고 고쳐 쓰는 충돌을 피하는 데 도움이 됩니다.",
+    "canonicalHref": "/electronics/embedded/mcu-memory-map-and-registers#mask"
+  },
+  "gpio-latch-versus-pin-read": {
+    "id": "gpio-latch-versus-pin-read",
+    "domain": "computer-science",
+    "label": "출력 래치 값과 실제 핀의 샘플 전압은 다르다",
+    "aliases": [
+      "gpio latch versus pin read"
+    ],
+    "definition": "GPIO_OUT을 읽으면 마지막 출력 래치가 나오고 GPIO_IN은 실제 핀 입력을 읽습니다. 기능 선택·방향·패드·외부 회로 때문에 래치 1이 물리 전압을 보장하지 않습니다.",
+    "canonicalHref": "/electronics/embedded/mcu-memory-map-and-registers#readback"
+  },
+  "gpio-edge-event-latch": {
+    "id": "gpio-edge-event-latch",
+    "domain": "computer-science",
+    "label": "RP2040 GPIO 상승 에지는 주변 장치 상태에 기록된다",
+    "aliases": [
+      "gpio edge event latch"
+    ],
+    "definition": "RP2040 GPIO2의 가상 상승 에지는 IO_BANK0의 이벤트 상태에 저장되고 해당 코어의 허용 설정을 거쳐 IO_IRQ_BANK0 요청으로 전달됩니다. 에지 플래그는 원인을 확인한 뒤 지웁니다.",
+    "canonicalHref": "/electronics/embedded/interrupts-and-latency-budget#route"
+  },
+  "nvic-pending-and-priority": {
+    "id": "nvic-pending-and-priority",
+    "domain": "computer-science",
+    "label": "NVIC pending 요청은 우선순위와 허용 상태 뒤에 처리된다",
+    "aliases": [
+      "nvic pending and priority"
+    ],
+    "definition": "Arm Cortex-M0+ NVIC는 인터럽트 요청을 pending 상태로 보관하고 허용·우선순위·마스킹 조건이 맞으면 ISR에 진입합니다. 주변 장치 플래그와 NVIC pending은 서로 다른 상태입니다.",
+    "canonicalHref": "/electronics/embedded/interrupts-and-latency-budget#route"
+  },
+  "short-isr-handoff": {
+    "id": "short-isr-handoff",
+    "domain": "computer-science",
+    "label": "짧은 ISR은 원인을 지우고 긴 I²C 읽기를 작업으로 넘긴다",
+    "aliases": [
+      "short isr handoff"
+    ],
+    "definition": "GPIO 인터럽트 ISR은 해당 원인을 확인·소거하고 큐 또는 표시를 남긴 뒤 반환합니다. 가상 20 µs ISR 뒤 300 µs I²C 거래는 일반 작업이 수행합니다.",
+    "canonicalHref": "/electronics/embedded/interrupts-and-latency-budget#handler"
+  },
+  "interrupt-path-budget": {
+    "id": "interrupt-path-budget",
+    "domain": "computer-science",
+    "label": "사건부터 처리 완료까지의 구간을 합산해야 한다",
+    "aliases": [
+      "interrupt path budget"
+    ],
+    "definition": "가상 경로는 검출5+대기40+진입8+ISR20+작업 깨우기40+I²C300+계산80=493 µs입니다. ISR 완료는 73 µs, 센서 읽기 시작은 113 µs입니다.",
+    "canonicalHref": "/electronics/embedded/interrupts-and-latency-budget#budget"
+  },
+  "deadline-slack-and-overrun": {
+    "id": "deadline-slack-and-overrun",
+    "domain": "computer-science",
+    "label": "가상 대기가 600 µs가 되면 1 ms 마감을 53 µs 넘긴다",
+    "aliases": [
+      "deadline slack and overrun"
+    ],
+    "definition": "인터럽트 대기만 40→600 µs로 늘면 전체 지연은 493−40+600=1053 µs입니다. 마감 1000 µs를 53 µs 넘깁니다.",
+    "canonicalHref": "/electronics/embedded/interrupts-and-latency-budget#stress"
+  },
+  "interrupt-measurement-boundary": {
+    "id": "interrupt-measurement-boundary",
+    "domain": "computer-science",
+    "label": "최악 지연은 사건·ISR·작업의 시각을 실제로 기록해 확인한다",
+    "aliases": [
+      "interrupt measurement boundary"
+    ],
+    "definition": "타임스탬프 또는 테스트 핀으로 사건, ISR 진입·종료, 작업 시작·끝을 측정하고 높은 부하·다른 인터럽트와 겹친 상황을 봅니다. 플래그 하나는 손실 에지의 개수를 보여 주지 않습니다.",
+    "canonicalHref": "/electronics/embedded/interrupts-and-latency-budget#stress"
+  },
+  "rp2040-microsecond-timer": {
+    "id": "rp2040-microsecond-timer",
+    "domain": "computer-science",
+    "label": "RP2040 시스템 타이머는 1 µs 기준의 알람을 만든다",
+    "aliases": [
+      "rp2040 microsecond timer"
+    ],
+    "definition": "RP2040은 1 µs마다 증가하는 64비트 카운터와 네 비교 알람을 제공합니다. 가상 10 ms는 10000계수입니다.",
+    "canonicalHref": "/electronics/embedded/timers-and-sampling#timer"
+  },
+  "absolute-periodic-deadline": {
+    "id": "absolute-periodic-deadline",
+    "domain": "computer-science",
+    "label": "주기 알람은 이전 목표에 주기를 더해 재설정한다",
+    "aliases": [
+      "absolute periodic deadline"
+    ],
+    "definition": "10000 µs 목표를 10400 µs에 처리해도 다음 목표는 20000 µs입니다. 현재 시각에 주기를 더하면 20400 µs가 되어 늦은 만큼 위상이 밀립니다.",
+    "canonicalHref": "/electronics/embedded/timers-and-sampling#timer"
+  },
+  "adc-conversion-start-boundary": {
+    "id": "adc-conversion-start-boundary",
+    "domain": "computer-science",
+    "label": "타이머 알람과 ADC 실제 샘플 시각은 다르다",
+    "aliases": [
+      "adc conversion start boundary"
+    ],
+    "definition": "RP2040 GPIO26/ADC0는 ADC 클록 48 MHz에서 변환 96주기 약 2 µs가 걸립니다. 알람 처리 대기·입력 회로·결과 읽기 시간은 별도입니다.",
+    "canonicalHref": "/electronics/embedded/timers-and-sampling#adc"
+  },
+  "sample-rate-nyquist-boundary": {
+    "id": "sample-rate-nyquist-boundary",
+    "domain": "computer-science",
+    "label": "10 ms 간격은 100 Hz 샘플과 50 Hz 절반 경계를 만든다",
+    "aliases": [
+      "sample rate nyquist boundary"
+    ],
+    "definition": "실제 저장 값 간격 Ts=.01 s이면 fs=1/Ts=100 Hz입니다. 이상적인 대역제한 복원에서 최고 성분은 fs/2=50 Hz보다 낮아야 합니다.",
+    "canonicalHref": "/electronics/embedded/timers-and-sampling#rate"
+  },
+  "sampled-cosine-alias": {
+    "id": "sampled-cosine-alias",
+    "domain": "computer-science",
+    "label": "100 Hz 샘플에서는 70 Hz 코사인과 30 Hz가 같다",
+    "aliases": [
+      "sampled cosine alias"
+    ],
+    "definition": "정수 n에서 cos(2π·70n/100)=cos(2πn−2π·30n/100)=cos(2π·30n/100)입니다. 70 Hz는 30 Hz로 접혀 보입니다.",
+    "canonicalHref": "/electronics/embedded/timers-and-sampling#alias"
+  },
+  "analog-antialias-and-jitter": {
+    "id": "analog-antialias-and-jitter",
+    "domain": "computer-science",
+    "label": "앨리어싱 예방은 ADC 앞 대역 제한과 실제 시각 계측이 필요하다",
+    "aliases": [
+      "analog antialias and jitter"
+    ],
+    "definition": "70 Hz가 100 Hz 샘플에서 30 Hz로 겹친 뒤에는 디지털 필터만으로 원래 원인을 알 수 없습니다. ADC 앞 아날로그 필터와 실제 변환 시각의 지터 측정이 필요합니다.",
+    "canonicalHref": "/electronics/embedded/timers-and-sampling#limits"
+  },
+  "i2c-address-ack-transaction": {
+    "id": "i2c-address-ack-transaction",
+    "domain": "computer-science",
+    "label": "I²C는 공유 SDA·SCL에서 주소와 매 바이트 응답을 사용한다",
+    "aliases": [
+      "i2c address ack transaction"
+    ],
+    "definition": "I²C의 두 선은 여러 장치가 공유하며 7비트 주소와 방향 비트 뒤 데이터를 보냅니다. 매 8비트 뒤에 아홉 번째 ACK/NACK 클록이 있습니다. 반복 START로 쓰기에서 읽기로 전환할 수 있습니다.",
+    "canonicalHref": "/electronics/embedded/serial-buses-and-tradeoffs#i2c"
+  },
+  "i2c-nine-clock-accounting": {
+    "id": "i2c-nine-clock-accounting",
+    "domain": "computer-science",
+    "label": "일곱 바이트 묶음의 I²C 클록은 63개다",
+    "aliases": [
+      "i2c nine clock accounting"
+    ],
+    "definition": "가상 7비트 주소 레지스터 읽기는 주소+W, 위치, 주소+R 세 묶음과 데이터 네 묶음입니다. 각 8비트와 응답 1비트로 (3+4)×9=63클록입니다.",
+    "canonicalHref": "/electronics/embedded/serial-buses-and-tradeoffs#count"
+  },
+  "i2c-clock-stretch-boundary": {
+    "id": "i2c-clock-stretch-boundary",
+    "domain": "computer-science",
+    "label": "I²C 비트 클록 시간은 완료 시간의 하한이다",
+    "aliases": [
+      "i2c clock stretch boundary"
+    ],
+    "definition": "NXP 규격의 I²C 타깃은 SCL을 낮게 잡아 거래를 지연시킬 수 있습니다. START·반복 START·STOP, 버스 점유와 소프트웨어 대기도 있어서 157.5 µs가 보장 완료 시각은 아닙니다.",
+    "canonicalHref": "/electronics/embedded/serial-buses-and-tradeoffs#count"
+  },
+  "spi-command-data-clocks": {
+    "id": "spi-command-data-clocks",
+    "domain": "computer-science",
+    "label": "SPI는 장치 선택과 별도 클록 모드를 맞춘다",
+    "aliases": [
+      "spi command data clocks"
+    ],
+    "definition": "SPI에서 가상 1바이트 명령과 4바이트 데이터는 5×8=40클록이고 1 MHz에서는 40 µs입니다. 선택 선·클록 위상·극성·더미 송신 및 장치별 준비 시간이 별도입니다.",
+    "canonicalHref": "/electronics/embedded/serial-buses-and-tradeoffs#spi"
+  },
+  "uart-eight-n-one-frame": {
+    "id": "uart-eight-n-one-frame",
+    "domain": "computer-science",
+    "label": "UART 8N1은 데이터 한 바이트에 열 비트를 보낸다",
+    "aliases": [
+      "uart eight n one frame"
+    ],
+    "definition": "UART의 8N1 한 프레임은 시작 1, 데이터 8, 정지 1비트입니다. 네 바이트는 40비트이고 115200 bit/s면 약 347.2 µs입니다.",
+    "canonicalHref": "/electronics/embedded/serial-buses-and-tradeoffs#uart"
+  },
+  "serial-bus-comparison-boundary": {
+    "id": "serial-bus-comparison-boundary",
+    "domain": "computer-science",
+    "label": "서로 다른 거래의 선로 시간은 제품 성능 순위가 아니다",
+    "aliases": [
+      "serial bus comparison boundary"
+    ],
+    "definition": "가상 I²C 157.5 µs, SPI 40 µs, UART 순수 페이로드 347.2 µs는 형식이 다른 거래의 클록·비트 하한입니다. 실제 장치 지원·배선·대기·오류·마감 요구가 선택을 바꿉니다.",
+    "canonicalHref": "/electronics/embedded/serial-buses-and-tradeoffs#choice"
+  },
+  "period-execution-deadline-triple": {
+    "id": "period-execution-deadline-triple",
+    "domain": "computer-science",
+    "label": "주기·실행 시간·상대 마감은 서로 다른 수치다",
+    "aliases": [
+      "period execution deadline triple"
+    ],
+    "definition": "가상 제어는 P=5,C=1,D=5ms, 센서는 P=10,C=2,D=4ms, 로그는 P=50,C=3,D=50ms입니다. 마감은 작업이 준비된 순간부터 셉니다.",
+    "canonicalHref": "/electronics/embedded/scheduling-and-real-time#tasks"
+  },
+  "fixed-priority-ready-selection": {
+    "id": "fixed-priority-ready-selection",
+    "domain": "computer-science",
+    "label": "한 코어에서는 준비된 작업 중 높은 우선순위를 실행한다",
+    "aliases": [
+      "fixed priority ready selection"
+    ],
+    "definition": "선점형 고정 우선순위에서 제어>센서>로그로 둡니다. 셋이 0ms에 준비되면 제어0–1, 센서1–3, 로그3–5, 제어5–6, 로그6–7ms입니다.",
+    "canonicalHref": "/electronics/embedded/scheduling-and-real-time#timeline"
+  },
+  "periodic-absolute-wake": {
+    "id": "periodic-absolute-wake",
+    "domain": "computer-science",
+    "label": "절대 주기 대기는 이전 목표를 기준으로 다음 실행을 잡는다",
+    "aliases": [
+      "periodic absolute wake"
+    ],
+    "definition": "FreeRTOS의 vTaskDelayUntil은 앞 목표를 기준으로 주기적인 준비 시각을 유지하는 데 사용됩니다. 처리 종료 시각에서 상대 지연을 시작하면 위상이 누적해서 밀릴 수 있습니다.",
+    "canonicalHref": "/electronics/embedded/scheduling-and-real-time#tasks"
+  },
+  "periodic-cpu-utilization": {
+    "id": "periodic-cpu-utilization",
+    "domain": "computer-science",
+    "label": "평균 CPU 점유율은 작업별 C/P의 합이다",
+    "aliases": [
+      "periodic cpu utilization"
+    ],
+    "definition": "가상 제어1/5=.20, 센서2/10=.20, 로그3/50=.06이므로 U=.46입니다. 공통 50ms에 CPU 일은 10+10+3=23ms입니다.",
+    "canonicalHref": "/electronics/embedded/scheduling-and-real-time#utilization"
+  },
+  "mutex-blocking-priority-inheritance": {
+    "id": "mutex-blocking-priority-inheritance",
+    "domain": "computer-science",
+    "label": "낮은 우선순위가 잡은 뮤텍스 때문에 센서가 막힐 수 있다",
+    "aliases": [
+      "mutex blocking priority inheritance"
+    ],
+    "definition": "앞 주기 로그가 공유 뮤텍스의 2ms 임계 구간을 남긴 채 t=0을 맞으면 제어0–1, 로그1–3, 센서3–5ms입니다. 센서 마감4ms를 1ms 넘습니다. FreeRTOS 우선순위 상속은 중간 작업 간섭을 줄이나 남은 임계 시간은 없애지 않습니다.",
+    "canonicalHref": "/electronics/embedded/scheduling-and-real-time#blocking"
+  },
+  "response-time-validation": {
+    "id": "response-time-validation",
+    "domain": "computer-science",
+    "label": "최악 응답은 버스·IRQ·tick·잠금까지 계측해야 한다",
+    "aliases": [
+      "response time validation"
+    ],
+    "definition": "실제 센서의 완료에는 CPU 실행뿐 아니라 I²C 점유·클록 스트레칭·큐·IRQ 대기·RTOS tick·문맥 전환이 더해집니다. 준비·시작·완료 타임스탬프와 가장 나쁜 겹침을 측정합니다.",
+    "canonicalHref": "/electronics/embedded/scheduling-and-real-time#limits"
+  },
+  "dual-slot-flash-layout": {
+    "id": "dual-slot-flash-layout",
+    "domain": "computer-science",
+    "label": "현재 앱과 후보 앱은 별도 슬롯에 둔다",
+    "aliases": [
+      "dual slot flash layout"
+    ],
+    "definition": "가상 외부 플래시 4096 KiB를 부트·복구256, 주 앱1536, 보조 앱1536, 설정·보조768 KiB로 나눕니다. 헤더·트레일러·정렬 때문에 실제 앱 최대 길이는 슬롯보다 작습니다.",
+    "canonicalHref": "/electronics/embedded/firmware-update-and-recovery#layout"
+  },
+  "firmware-image-integrity-signature": {
+    "id": "firmware-image-integrity-signature",
+    "domain": "computer-science",
+    "label": "후보 이미지의 완성과 출처를 검증한다",
+    "aliases": [
+      "firmware image integrity signature"
+    ],
+    "definition": "후보 v2를 모두 기록하고 길이·해시·신뢰된 공개키의 서명 검증을 통과한 뒤에만 시험 업데이트 상태를 설정합니다. 해시는 손상을 검사하지만 출처를 증명하지 못합니다.",
+    "canonicalHref": "/electronics/embedded/firmware-update-and-recovery#verify"
+  },
+  "test-swap-candidate": {
+    "id": "test-swap-candidate",
+    "domain": "computer-science",
+    "label": "시험 swap은 v2를 실행하면서 v1 복귀 경로를 남긴다",
+    "aliases": [
+      "test swap candidate"
+    ],
+    "definition": "MCUboot의 지원되는 swap 모드에서 후보를 TEST로 표시하면 다음 부팅에 v2가 주 슬롯으로 교체되고 v1은 복귀할 수 있도록 남습니다.",
+    "canonicalHref": "/electronics/embedded/firmware-update-and-recovery#trial"
+  },
+  "image-confirmation-revert": {
+    "id": "image-confirmation-revert",
+    "domain": "computer-science",
+    "label": "제품 자가 검사 후 이미지 OK를 확정한다",
+    "aliases": [
+      "image confirmation revert"
+    ],
+    "definition": "MCUboot 시험 swap에서 v2가 건강 검사 뒤 image OK를 기록하면 확정되어 다음 부팅에도 v2가 남습니다. 확정하지 않은 시험 이미지는 다음 재부팅에서 REVERT됩니다.",
+    "canonicalHref": "/electronics/embedded/firmware-update-and-recovery#trial"
+  },
+  "power-fail-swap-resume": {
+    "id": "power-fail-swap-resume",
+    "domain": "computer-science",
+    "label": "지원되는 swap은 중단 위치를 기록해 재개한다",
+    "aliases": [
+      "power fail swap resume"
+    ],
+    "definition": "다운로드 중단은 v1 유지, 지원되는 MCUboot swap 도중 전원 차단은 기록된 교체 상태에서 재개, 시험 v2가 확정 전 꺼지면 다음 부팅에 v1로 복귀합니다.",
+    "canonicalHref": "/electronics/embedded/firmware-update-and-recovery#power"
+  },
+  "rp2040-recovery-boundary": {
+    "id": "rp2040-recovery-boundary",
+    "domain": "computer-science",
+    "label": "RP2040 BOOTSEL과 앱 자동 복귀는 다르다",
+    "aliases": [
+      "rp2040 recovery boundary"
+    ],
+    "definition": "RP2040 부트 ROM은 외부 플래시의 다음 단계를 시작하고 USB BOOTSEL 복구 경로를 제공합니다. 앱 이중 슬롯, 시험 swap, 서명키 신뢰 경로는 이 글의 가상 제품 부트로더가 추가한 설계입니다.",
+    "canonicalHref": "/electronics/embedded/firmware-update-and-recovery#limits"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -48024,6 +48384,234 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "yield-model-boundary",
     "relation": "constrains",
     "reason": "실제 시험 단계·분모가 같지 않으면 단순 곱을 검토합니다."
+  },
+  {
+    "from": "conditional-package-survival",
+    "to": "mcu-memory-mapped-io",
+    "relation": "prerequisite",
+    "reason": "제조·시험을 거친 칩을 펌웨어가 제어합니다."
+  },
+  {
+    "from": "mcu-memory-mapped-io",
+    "to": "sio-base-register-offset",
+    "relation": "produces",
+    "reason": "장치 블록에서 개별 레지스터 주소를 계산합니다."
+  },
+  {
+    "from": "sio-base-register-offset",
+    "to": "gpio-bit-mask-five",
+    "relation": "produces",
+    "reason": "선택한 주소에 쓸 한 핀의 값을 계산합니다."
+  },
+  {
+    "from": "gpio-bit-mask-five",
+    "to": "gpio-function-and-direction",
+    "relation": "constrains",
+    "reason": "출력 값이 핀에 닿으려면 기능과 방향이 맞아야 합니다."
+  },
+  {
+    "from": "gpio-bit-mask-five",
+    "to": "gpio-atomic-set-clear",
+    "relation": "produces",
+    "reason": "같은 마스크로 설정·해제 주소를 이용합니다."
+  },
+  {
+    "from": "gpio-function-and-direction",
+    "to": "gpio-latch-versus-pin-read",
+    "relation": "constrains",
+    "reason": "래치와 실제 핀 입력을 별도로 확인합니다."
+  },
+  {
+    "from": "gpio-latch-versus-pin-read",
+    "to": "gpio-edge-event-latch",
+    "relation": "prerequisite",
+    "reason": "핀 입력 상태의 변화를 사건으로 받아들입니다."
+  },
+  {
+    "from": "gpio-edge-event-latch",
+    "to": "nvic-pending-and-priority",
+    "relation": "produces",
+    "reason": "주변 장치 에지가 NVIC 요청으로 전달됩니다."
+  },
+  {
+    "from": "nvic-pending-and-priority",
+    "to": "short-isr-handoff",
+    "relation": "produces",
+    "reason": "대기 뒤 ISR이 원인을 접수합니다."
+  },
+  {
+    "from": "short-isr-handoff",
+    "to": "interrupt-path-budget",
+    "relation": "produces",
+    "reason": "ISR 뒤 작업의 시간까지 더합니다."
+  },
+  {
+    "from": "interrupt-path-budget",
+    "to": "deadline-slack-and-overrun",
+    "relation": "produces",
+    "reason": "마감에서 전체 경로를 빼 여유를 판단합니다."
+  },
+  {
+    "from": "deadline-slack-and-overrun",
+    "to": "interrupt-measurement-boundary",
+    "relation": "constrains",
+    "reason": "마감 초과를 판단한 가상 최악 구간을 실제 사건·ISR·작업 시각으로 나눠 측정합니다."
+  },
+  {
+    "from": "interrupt-path-budget",
+    "to": "rp2040-microsecond-timer",
+    "relation": "prerequisite",
+    "reason": "앞 글의 인터럽트 지연이 알람 응답에도 영향을 줍니다."
+  },
+  {
+    "from": "rp2040-microsecond-timer",
+    "to": "absolute-periodic-deadline",
+    "relation": "produces",
+    "reason": "타이머 눈금 위에 반복 목표를 둡니다."
+  },
+  {
+    "from": "absolute-periodic-deadline",
+    "to": "adc-conversion-start-boundary",
+    "relation": "constrains",
+    "reason": "목표 시각과 실제 변환 시작을 구분합니다."
+  },
+  {
+    "from": "adc-conversion-start-boundary",
+    "to": "sample-rate-nyquist-boundary",
+    "relation": "produces",
+    "reason": "실제로 기록된 변환 시각 간격을 빈도로 읽습니다."
+  },
+  {
+    "from": "sample-rate-nyquist-boundary",
+    "to": "sampled-cosine-alias",
+    "relation": "produces",
+    "reason": "절반 경계 위 70 Hz의 30 Hz 겹침을 계산합니다."
+  },
+  {
+    "from": "sampled-cosine-alias",
+    "to": "analog-antialias-and-jitter",
+    "relation": "constrains",
+    "reason": "ADC 전 필터와 변환 시각 검증이 필요합니다."
+  },
+  {
+    "from": "sample-rate-nyquist-boundary",
+    "to": "i2c-address-ack-transaction",
+    "relation": "prerequisite",
+    "reason": "앞 글의 주기 샘플을 외부 센서 거래에 적용합니다."
+  },
+  {
+    "from": "i2c-address-ack-transaction",
+    "to": "i2c-nine-clock-accounting",
+    "relation": "produces",
+    "reason": "주소·위치·데이터와 ACK를 클록으로 셉니다."
+  },
+  {
+    "from": "i2c-nine-clock-accounting",
+    "to": "i2c-clock-stretch-boundary",
+    "relation": "constrains",
+    "reason": "순수 클록 계산에 빠진 대기와 버스 시각을 찾습니다."
+  },
+  {
+    "from": "i2c-nine-clock-accounting",
+    "to": "spi-command-data-clocks",
+    "relation": "contrasts",
+    "reason": "주소·응답 클록과 별도 CS·명령 클록을 비교합니다."
+  },
+  {
+    "from": "spi-command-data-clocks",
+    "to": "uart-eight-n-one-frame",
+    "relation": "contrasts",
+    "reason": "동기 클록 거래와 비동기 프레임을 비교합니다."
+  },
+  {
+    "from": "uart-eight-n-one-frame",
+    "to": "serial-bus-comparison-boundary",
+    "relation": "constrains",
+    "reason": "UART 네 페이로드 바이트는 센서 레지스터 읽기 전체가 아닙니다."
+  },
+  {
+    "from": "i2c-clock-stretch-boundary",
+    "to": "serial-bus-comparison-boundary",
+    "relation": "constrains",
+    "reason": "실제 완료 시간에는 빠진 구간이 있습니다."
+  },
+  {
+    "from": "serial-bus-comparison-boundary",
+    "to": "period-execution-deadline-triple",
+    "relation": "prerequisite",
+    "reason": "앞 글의 버스 완료 시간까지 작업 마감에 반영해야 합니다."
+  },
+  {
+    "from": "period-execution-deadline-triple",
+    "to": "fixed-priority-ready-selection",
+    "relation": "produces",
+    "reason": "세 작업의 우선순위와 준비 시각으로 순서를 정합니다."
+  },
+  {
+    "from": "absolute-periodic-deadline",
+    "to": "periodic-absolute-wake",
+    "relation": "prerequisite",
+    "reason": "앞 타이머 글의 절대 목표를 작업 준비 시각에 적용합니다."
+  },
+  {
+    "from": "period-execution-deadline-triple",
+    "to": "periodic-cpu-utilization",
+    "relation": "produces",
+    "reason": "서로 다른 주기 P와 실행 시간 C를 각각 C/P로 환산해 한 코어의 평균 점유율을 계산합니다."
+  },
+  {
+    "from": "fixed-priority-ready-selection",
+    "to": "mutex-blocking-priority-inheritance",
+    "relation": "constrains",
+    "reason": "자원 보유 시 기본 시간표가 달라집니다."
+  },
+  {
+    "from": "periodic-cpu-utilization",
+    "to": "response-time-validation",
+    "relation": "constrains",
+    "reason": "46% 총량만으로 4ms 마감을 보장하지 않습니다."
+  },
+  {
+    "from": "mutex-blocking-priority-inheritance",
+    "to": "response-time-validation",
+    "relation": "constrains",
+    "reason": "공유 자원 보유와 실제 완료 시각을 함께 측정해야 합니다."
+  },
+  {
+    "from": "response-time-validation",
+    "to": "dual-slot-flash-layout",
+    "relation": "prerequisite",
+    "reason": "제때 동작하던 기존 v1을 유지하면서 새 v2를 준비하도록 저장 공간을 나눕니다."
+  },
+  {
+    "from": "dual-slot-flash-layout",
+    "to": "firmware-image-integrity-signature",
+    "relation": "produces",
+    "reason": "보조 슬롯에 후보를 완전히 쓴 다음 손상과 서명 출처를 검증합니다."
+  },
+  {
+    "from": "firmware-image-integrity-signature",
+    "to": "test-swap-candidate",
+    "relation": "prerequisite",
+    "reason": "검증된 후보에 한해서 시험 교체를 요청해 불완전한 이미지를 실행하지 않습니다."
+  },
+  {
+    "from": "test-swap-candidate",
+    "to": "image-confirmation-revert",
+    "relation": "produces",
+    "reason": "시험 v2의 센서·설정 검사가 끝나야 이미지 OK를 기록하고 영구 사용을 결정합니다."
+  },
+  {
+    "from": "test-swap-candidate",
+    "to": "power-fail-swap-resume",
+    "relation": "constrains",
+    "reason": "교체 도중 전원이 끊겼을 때 기록된 상태로 재개할 수 있어야 복귀 경로가 유효합니다."
+  },
+  {
+    "from": "image-confirmation-revert",
+    "to": "rp2040-recovery-boundary",
+    "relation": "constrains",
+    "reason": "시험 이미지의 자동 복귀는 사용자 부트로더가 구성한 swap 동작이며 칩 내장 BOOTSEL과 구별합니다."
   },
 ];
 

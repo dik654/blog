@@ -439,6 +439,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "결함이 해로운 위치→포아송 0개 확률→면적·밀도 민감도→패키징 조건부 생존으로 한 후보 다이를 추적합니다. 다음 임베디드 글은 완성 칩을 사용하는 단계입니다.",
     "sharedGate": "D0=.1개/cm²·Ac=1cm²에서 e^-.1≈90.48%, Ac=4에서 e^-.4≈67.03%, D0=.2에서 e^-.2≈81.87%, 1000×.904837×.98≈886.7개가 본문·Viz·문제에서 일치하는지 확인합니다."
   },
+  "embedded/mcu-memory-map-and-registers": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "GPIO5 하나를 통해 주소→오프셋→비트 마스크→핀 기능·방향→물리 핀 확인 순서로 추적합니다. 인터럽트 시점과 타이머는 후속 글에 남깁니다.",
+    "sharedGate": "SIO 0xD0000000+0x014/0x018/0x024=0xD0000014/18/24, GPIO5 1<<5=0x20, IO_BANK0+0x02C=0x4001402C가 본문·Viz·문제에서 일치하는지 확인합니다."
+  },
+  "embedded/interrupts-and-latency-budget": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "GPIO2 사건→주변 장치와 NVIC→짧은 ISR→작업→1 ms 마감까지 한 경로를 추적합니다. 10 ms 주기 샘플링은 다음 글에서 따로 다룹니다.",
+    "sharedGate": "검출5+대기40+진입8+ISR20=73 µs, 작업40+I²C300+계산80을 더한 전체493 µs, 여유507 µs, 대기600이면1053 µs·53 µs 초과가 본문·Viz·문제에서 일치해야 합니다."
+  },
+  "embedded/timers-and-sampling": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "10 ms 타이머 목표→실제 ADC 시각→100 Hz 저장→70 Hz가 30 Hz로 겹침→ADC 전 필터 순서로 한 신호를 추적합니다. I²C 버스 거래는 다음 글에서 다룹니다.",
+    "sharedGate": "10ms=10000 timer ticks, fs=100Hz, half=50Hz, |100−70|=30Hz, 처리10.4ms 뒤 다음 절대 목표20ms가 본문·Viz·문제에서 일치하는지 확인합니다."
+  },
+  "embedded/serial-buses-and-tradeoffs": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "외부 센서 네 바이트라는 사례에서 I²C 주소·ACK→63클록→SPI·UART 대안→실제 완료 시간 경계로 흐릅니다. 여러 작업의 우선순위 배분은 다음 글에서 다룹니다.",
+    "sharedGate": "I²C 7×9=63클록·400kHz 157.5µs·100kHz 630µs, SPI 5×8/1MHz=40µs, UART 4×10/115200≈347.2µs가 본문·Viz·문제에서 일치해야 합니다."
+  },
+  "embedded/scheduling-and-real-time": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "주기·실행·마감→기본 고정 우선순위 시간표→46% 평균→뮤텍스 대기로 센서가 늦는 한 사례를 추적합니다. 펌웨어 갱신 실패의 복구는 다음 글이 소유합니다.",
+    "sharedGate": "제어1/5=20%, 센서2/10=20%, 로그3/50=6%, U46%; 기본 센서0–3ms 완료·마감4ms 여유1ms, 로그 뮤텍스2ms 뒤 센서5ms 완료·초과1ms가 본문·Viz·문제에서 일치해야 합니다."
+  },
+  "embedded/firmware-update-and-recovery": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-03",
+    "rationale": "v1 작동 중인 보드에서 플래시 배치→v2 검증→시험 swap→확정 또는 복귀→전원 차단 지점별 결과를 추적합니다. 칩 내장 BOOTSEL과 사용자 부트로더 책임을 구분합니다.",
+    "sharedGate": "4096=256+1536+1536+768 KiB, 미완성·서명 실패 후보는 v1 유지, TEST 미확정 재부팅은 v1 복귀, image OK 뒤는 v2 유지가 본문·Viz·문제에서 일치해야 합니다."
+  },
 };
 
 /**
@@ -446,6 +488,12 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "embedded/firmware-update-and-recovery": "11af404968f4feda",
+  "embedded/scheduling-and-real-time": "854c44f36c3d7c77",
+  "embedded/serial-buses-and-tradeoffs": "1b52a6c0969c064e",
+  "embedded/timers-and-sampling": "d65d89abe395b450",
+  "embedded/interrupts-and-latency-budget": "c4b9955ab55f378b",
+  "embedded/mcu-memory-map-and-registers": "21fe616f12dd3bdb",
   "semiconductors/yield-defect-and-packaging": "163db4ca3af9975d",
   "semiconductors/interconnect-and-rc-delay": "9fe870634104880b",
   "semiconductors/doping-and-thermal-budget": "77caf87831e26635",

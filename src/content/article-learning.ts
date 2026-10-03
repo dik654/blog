@@ -88852,4 +88852,1561 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "embedded/mcu-memory-map-and-registers": {
+    "coreIdea": "RP2040 SIO 기준 주소 0xD0000000에 오프셋을 더한 OUT_SET 0xD0000014 등과 GPIO5 마스크 0x20을 구분하고, 기능 선택·출력 허용·래치·물리 핀을 한 순서로 추적합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "conditional-package-survival",
+        "role": "제조·시험을 통과한 칩을 펌웨어가 사용한다는 출발점을 둡니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "mcu-memory-mapped-io",
+        "role": "RAM 변수와 장치 주소를 구분합니다."
+      },
+      {
+        "id": "sio-base-register-offset",
+        "role": "세 레지스터 주소를 계산합니다."
+      },
+      {
+        "id": "gpio-bit-mask-five",
+        "role": "주소와 값의 역할을 분리합니다."
+      },
+      {
+        "id": "gpio-function-and-direction",
+        "role": "핀 기능 선택과 방향을 분리합니다."
+      },
+      {
+        "id": "gpio-atomic-set-clear",
+        "role": "GPIO5만 바꾸는 이유를 밝힙니다."
+      },
+      {
+        "id": "gpio-latch-versus-pin-read",
+        "role": "쓰기 성공과 외부 동작을 분리합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "mcu-memory-mapped-io",
+        "sectionId": "overview",
+        "intuition": "CPU는 버스를 따라 주소를 보내고 해당 장치가 반응합니다.",
+        "workedExample": "GPIO5 출력 SET 주소에 0x20을 쓰면 핀 5 출력 래치가 1이 됩니다.",
+        "boundary": "다른 MCU의 주소를 그대로 쓸 수 없습니다."
+      },
+      {
+        "id": "sio-base-register-offset",
+        "sectionId": "map",
+        "intuition": "동네 시작 주소와 집 번호를 더하는 셈입니다.",
+        "workedExample": "0xD0000000+0x014=0xD0000014입니다.",
+        "boundary": "표의 오프셋과 칩 종류를 먼저 확인해야 합니다."
+      },
+      {
+        "id": "gpio-bit-mask-five",
+        "sectionId": "mask",
+        "intuition": "여러 핀 중 다섯 번째 비트 하나만 표시합니다.",
+        "workedExample": "OUT_SET·OUT_CLR·OE_SET 각 주소에 0x20을 씁니다.",
+        "boundary": "0x20은 주소가 아니라 쓰는 값입니다."
+      },
+      {
+        "id": "gpio-function-and-direction",
+        "sectionId": "mux",
+        "intuition": "선을 하드웨어에 연결하는 스위치와 출력 문이 모두 열려야 합니다.",
+        "workedExample": "래치를 낮게 준비하고 SIO를 선택한 뒤 OE_SET에 0x20을 써 출력 허용을 켭니다.",
+        "boundary": "전체 CTRL 레지스터를 임의 값으로 덮기보다 SDK 설정 함수를 사용합니다."
+      },
+      {
+        "id": "gpio-atomic-set-clear",
+        "sectionId": "mask",
+        "intuition": "나머지 비트에는 0을 써 그대로 둡니다.",
+        "workedExample": "0x20을 OUT_SET에 쓰면 GPIO5만 1, OUT_CLR에 쓰면 GPIO5만 0입니다.",
+        "boundary": "여러 코어가 동일 핀의 소유권을 다투면 상위 동기화가 여전히 필요합니다."
+      },
+      {
+        "id": "gpio-latch-versus-pin-read",
+        "sectionId": "readback",
+        "intuition": "원하는 값과 실제 관찰한 값을 따로 확인합니다.",
+        "workedExample": "GPIO_OUT=1인데 OE가 0이면 핀은 출력으로 구동되지 않습니다.",
+        "boundary": "보드의 전압·전류·연결 상태는 별도 측정이 필요합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 주소 찾기",
+        "relation": "메모리 맵과 오프셋으로 레지스터를 찾습니다.",
+        "concepts": [
+          "mcu-memory-mapped-io",
+          "sio-base-register-offset"
+        ]
+      },
+      {
+        "label": "02 한 비트 쓰기",
+        "relation": "GPIO5 마스크를 계산하고 SET·CLR의 동작을 비교합니다.",
+        "concepts": [
+          "gpio-bit-mask-five",
+          "gpio-atomic-set-clear"
+        ]
+      },
+      {
+        "label": "03 바깥 핀 보기",
+        "relation": "핀 기능·방향·래치·실제 전압을 분리합니다.",
+        "concepts": [
+          "gpio-function-and-direction",
+          "gpio-latch-versus-pin-read"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "GPIO5 한 자리만 선택하는 비트 마스크를 16진수로 쓰세요.",
+        "answerChecklist": [
+          "1<<5",
+          "32",
+          "0x20"
+        ],
+        "requiredConcepts": [
+          "gpio-bit-mask-five"
+        ],
+        "sectionId": "mask"
+      },
+      {
+        "level": "basic",
+        "question": "SIO 기준 주소 0xD0000000에 OUT_SET 오프셋 0x014를 더하면?",
+        "answerChecklist": [
+          "0xD0000014",
+          "출력 설정 주소"
+        ],
+        "requiredConcepts": [
+          "sio-base-register-offset"
+        ],
+        "sectionId": "map"
+      },
+      {
+        "level": "basic",
+        "question": "SIO 기준 주소와 OUT_CLR 오프셋 0x018로 주소를 계산하세요.",
+        "answerChecklist": [
+          "0xD0000018",
+          "출력 해제 주소"
+        ],
+        "requiredConcepts": [
+          "sio-base-register-offset"
+        ],
+        "sectionId": "map"
+      },
+      {
+        "level": "basic",
+        "question": "GPIO_OE_SET의 오프셋 0x024를 반영한 주소는 무엇입니까?",
+        "answerChecklist": [
+          "0xD0000024",
+          "출력 허용"
+        ],
+        "requiredConcepts": [
+          "sio-base-register-offset",
+          "gpio-function-and-direction"
+        ],
+        "sectionId": "mux"
+      },
+      {
+        "level": "basic",
+        "question": "IO_BANK0 기준 0x40014000과 GPIO5_CTRL 오프셋 0x02C를 더하면?",
+        "answerChecklist": [
+          "0x4001402C",
+          "핀 기능 선택"
+        ],
+        "requiredConcepts": [
+          "gpio-function-and-direction"
+        ],
+        "sectionId": "mux"
+      },
+      {
+        "level": "basic",
+        "question": "GPIO_OUT 읽기와 GPIO_IN 읽기가 알려 주는 상태는 어떻게 다릅니까?",
+        "answerChecklist": [
+          "OUT은 출력 래치",
+          "IN은 핀 입력 샘플"
+        ],
+        "requiredConcepts": [
+          "gpio-latch-versus-pin-read"
+        ],
+        "sectionId": "readback"
+      },
+      {
+        "level": "advanced",
+        "question": "GPIO 전체 값을 읽고 고쳐 쓰는 대신 OUT_SET·CLR을 쓰는 이유는?",
+        "answerChecklist": [
+          "대상 비트만 원자적 변경",
+          "다른 핀 비트 유지",
+          "경쟁 줄임"
+        ],
+        "requiredConcepts": [
+          "gpio-atomic-set-clear"
+        ],
+        "sectionId": "readback"
+      },
+      {
+        "level": "advanced",
+        "question": "시작 시 불필요한 높은 펄스를 피하려면 GPIO5를 어떤 순서로 준비합니까?",
+        "answerChecklist": [
+          "낮은 래치 미리 설정",
+          "SIO 기능 선택",
+          "출력 허용",
+          "필요할 때 SET"
+        ],
+        "requiredConcepts": [
+          "gpio-function-and-direction",
+          "gpio-atomic-set-clear"
+        ],
+        "sectionId": "mask"
+      },
+      {
+        "level": "advanced",
+        "question": "OUT_SET에 0x20을 썼는데 GPIO5가 구동되지 않을 수 있는 조건 두 가지는?",
+        "answerChecklist": [
+          "핀 기능이 SIO 아님",
+          "출력 허용 0",
+          "패드·외부 회로 가능"
+        ],
+        "requiredConcepts": [
+          "gpio-function-and-direction",
+          "gpio-latch-versus-pin-read"
+        ],
+        "sectionId": "mux"
+      },
+      {
+        "level": "advanced",
+        "question": "출력 래치가 1이어도 LED가 켜졌다고 단정하지 못하는 이유는?",
+        "answerChecklist": [
+          "물리 핀 전압 별도",
+          "LED 연결·극성·전류 제한 다름",
+          "SDK·보드 문서와 측정 필요"
+        ],
+        "requiredConcepts": [
+          "gpio-latch-versus-pin-read"
+        ],
+        "sectionId": "readback"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Raspberry Pi, RP2040 Datasheet, address map and SIO registers",
+        "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+        "problem": "CPU 주소 공간에서 GPIO 출력·방향·기능을 제어합니다.",
+        "contribution": "원본 26·43·46·245쪽의 SIO·IO_BANK0 주소, 출력 설정·해제·방향 및 GPIO5 기능 선택 위치입니다.",
+        "assumptions": "RP2040 칩과 그 GPIO0–29 비트 대응에 한정됩니다.",
+        "evidenceScope": "라즈베리 파이 공식 데이터시트의 해당 표를 확인했습니다. 외부 LED 연결은 가정입니다.",
+        "notClaim": "다른 MCU에서 같은 주소를 쓰거나 래치 1이 LED 점등을 보장한다는 뜻은 아닙니다.",
+        "sectionId": "map"
+      },
+      {
+        "title": "Raspberry Pi Pico SDK Hardware GPIO API",
+        "href": "https://www.raspberrypi.com/documentation/pico-sdk/hardware.html",
+        "problem": "핀 기능과 방향을 펌웨어에서 안전하게 설정합니다.",
+        "contribution": "gpio_set_function과 gpio_set_dir 등의 공식 API 사용 경로를 제시합니다.",
+        "assumptions": "프로젝트가 대상 칩에 맞게 SDK를 구성합니다.",
+        "evidenceScope": "라즈베리 파이 공식 SDK 문서의 하드웨어 GPIO API를 확인했습니다.",
+        "notClaim": "본문의 개별 주소 쓰기 예가 모든 핀·보드 초기화를 대신한다는 뜻은 아닙니다.",
+        "sectionId": "mux"
+      }
+    ]
+  },
+  "embedded/interrupts-and-latency-budget": {
+    "coreIdea": "가상 GPIO2 상승 에지 뒤 검출 5·대기 40·NVIC 진입 8·ISR 20·작업 깨우기 40·I²C 300·계산 80 µs를 합해 493 µs, 1 ms 마감 여유 507 µs를 계산하고 대기 600 µs에서 53 µs 초과를 확인합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "gpio-latch-versus-pin-read",
+        "role": "앞 글에서 실제 핀 입력과 출력 래치의 차이를 확인했습니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "gpio-edge-event-latch",
+        "role": "핀 사건과 주변 장치 상태를 연결합니다."
+      },
+      {
+        "id": "nvic-pending-and-priority",
+        "role": "사건 뒤 기다림을 설명합니다."
+      },
+      {
+        "id": "short-isr-handoff",
+        "role": "ISR과 작업의 책임을 분리합니다."
+      },
+      {
+        "id": "interrupt-path-budget",
+        "role": "한 사건의 끝까지 시간을 셉니다."
+      },
+      {
+        "id": "deadline-slack-and-overrun",
+        "role": "병목이 바뀌었을 때 실패를 계산합니다."
+      },
+      {
+        "id": "interrupt-measurement-boundary",
+        "role": "가정한 예산을 실측으로 검증할 범위를 정합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "gpio-edge-event-latch",
+        "sectionId": "route",
+        "intuition": "스위치가 눌린 사실을 먼저 장치가 기억합니다.",
+        "workedExample": "GPIO2 상승 에지가 왔을 때 에지 종류를 확인하고 해당 상태를 소거합니다.",
+        "boundary": "상태 비트는 여러 에지의 정확한 횟수 카운터가 아닙니다."
+      },
+      {
+        "id": "nvic-pending-and-priority",
+        "sectionId": "route",
+        "intuition": "벨이 울려도 CPU가 당장 문을 열 수 없으면 요청이 기다립니다.",
+        "workedExample": "예제에서 40 µs 기다리고 8 µs 진입하는 값은 모두 가정입니다.",
+        "boundary": "pending이 여러 GPIO 에지의 개수를 알려 주지는 않습니다."
+      },
+      {
+        "id": "short-isr-handoff",
+        "sectionId": "handler",
+        "intuition": "급한 알림만 접수하고 오래 걸리는 처리는 일감으로 넘깁니다.",
+        "workedExample": "예제는 ISR 20 µs, 작업 깨우기 40 µs, I²C 읽기 300 µs입니다.",
+        "boundary": "ISR에서 블로킹 통신을 하면 다른 인터럽트의 대기 시간을 늘릴 수 있습니다."
+      },
+      {
+        "id": "interrupt-path-budget",
+        "sectionId": "budget",
+        "intuition": "중간 단계가 빨라도 나머지 작업이 늦으면 결과도 늦습니다.",
+        "workedExample": "1000 µs 마감에서 예제의 여유는 507 µs입니다.",
+        "boundary": "겹치는 시간 구간을 중복 합산하거나 가상값을 실측으로 읽지 않습니다."
+      },
+      {
+        "id": "deadline-slack-and-overrun",
+        "sectionId": "stress",
+        "intuition": "같은 처리 코드를 써도 앞에서 기다린 시간이 여유를 먹습니다.",
+        "workedExample": "대기 600 µs 사례의 여유는 −53 µs입니다.",
+        "boundary": "우선순위 설정만으로 모든 지연을 없앨 수 없습니다."
+      },
+      {
+        "id": "interrupt-measurement-boundary",
+        "sectionId": "stress",
+        "intuition": "멈춘 구간의 앞뒤 시각을 재서 어디서 늦는지 찾습니다.",
+        "workedExample": "가상 493 µs를 RP2040 보장 지연으로 제시하지 않습니다.",
+        "boundary": "센서 실제 거래 시간과 버스 충돌을 측정하지 않으면 보장을 할 수 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 핀 사건 접수",
+        "relation": "GPIO 이벤트 상태와 NVIC pending을 구분합니다.",
+        "concepts": [
+          "gpio-edge-event-latch",
+          "nvic-pending-and-priority"
+        ]
+      },
+      {
+        "label": "02 짧은 ISR과 일감",
+        "relation": "원인 소거와 작업 전달 뒤 전체 시간을 셉니다.",
+        "concepts": [
+          "short-isr-handoff",
+          "interrupt-path-budget"
+        ]
+      },
+      {
+        "label": "03 마감과 측정",
+        "relation": "대기 변화의 마감 실패와 실측 필요성을 봅니다.",
+        "concepts": [
+          "deadline-slack-and-overrun",
+          "interrupt-measurement-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "GPIO2 핀을 계속 읽는 폴링과 에지 인터럽트의 사건 접수는 어떻게 다릅니까?",
+        "answerChecklist": [
+          "폴링은 반복 읽기",
+          "에지는 하드웨어 플래그·NVIC 요청"
+        ],
+        "requiredConcepts": [
+          "gpio-edge-event-latch"
+        ],
+        "sectionId": "overview"
+      },
+      {
+        "level": "basic",
+        "question": "검출 5, 대기 40, 진입 8, ISR 20 µs라면 ISR이 끝나는 시각은?",
+        "answerChecklist": [
+          "5+40+8+20",
+          "73 µs"
+        ],
+        "requiredConcepts": [
+          "interrupt-path-budget"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "basic",
+        "question": "앞 결과 73 µs와 작업 깨우기 40 µs를 더한 읽기 시작 시각은?",
+        "answerChecklist": [
+          "113 µs",
+          "ISR 뒤 작업 문맥"
+        ],
+        "requiredConcepts": [
+          "short-isr-handoff",
+          "interrupt-path-budget"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "basic",
+        "question": "가상 일곱 지연 구간을 모두 더하면 완료 시각은 얼마입니까?",
+        "answerChecklist": [
+          "5+40+8+20+40+300+80",
+          "493 µs"
+        ],
+        "requiredConcepts": [
+          "interrupt-path-budget"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "basic",
+        "question": "1 ms 마감과 완료 493 µs 사이에 남는 시간은 얼마입니까?",
+        "answerChecklist": [
+          "1000−493",
+          "507 µs"
+        ],
+        "requiredConcepts": [
+          "deadline-slack-and-overrun"
+        ],
+        "sectionId": "budget"
+      },
+      {
+        "level": "basic",
+        "question": "대기만 40→600 µs로 바뀌면 완료 시각과 초과 시간은?",
+        "answerChecklist": [
+          "1053 µs",
+          "53 µs 초과"
+        ],
+        "requiredConcepts": [
+          "deadline-slack-and-overrun"
+        ],
+        "sectionId": "stress"
+      },
+      {
+        "level": "advanced",
+        "question": "GPIO 이벤트 플래그와 NVIC pending을 같은 상태로 보면 안 되는 이유는?",
+        "answerChecklist": [
+          "주변 장치 원인 별도",
+          "NVIC 요청 별도",
+          "원인 미소거 시 재진입 가능"
+        ],
+        "requiredConcepts": [
+          "gpio-edge-event-latch",
+          "nvic-pending-and-priority"
+        ],
+        "sectionId": "route"
+      },
+      {
+        "level": "advanced",
+        "question": "가상 300 µs I²C 거래를 ISR 밖으로 넘기는 이유를 설명하세요.",
+        "answerChecklist": [
+          "ISR 20 µs로 짧게",
+          "다른 사건 대기 감소",
+          "큐·작업으로 전달"
+        ],
+        "requiredConcepts": [
+          "short-isr-handoff"
+        ],
+        "sectionId": "handler"
+      },
+      {
+        "level": "advanced",
+        "question": "pending 비트가 1일 때 그동안 GPIO2 에지가 몇 번 왔는지 알 수 있습니까?",
+        "answerChecklist": [
+          "알 수 없음",
+          "비트는 카운터 아님",
+          "별도 카운터·타임스탬프 필요"
+        ],
+        "requiredConcepts": [
+          "gpio-edge-event-latch",
+          "interrupt-measurement-boundary"
+        ],
+        "sectionId": "route"
+      },
+      {
+        "level": "advanced",
+        "question": "이 가상 493 µs를 실제 최악 지연으로 검증하려면 어떤 시각과 부하를 재야 합니까?",
+        "answerChecklist": [
+          "사건·ISR 진입/종료·작업 시작/끝",
+          "다른 인터럽트·마스킹",
+          "I²C 실제 거래 시간"
+        ],
+        "requiredConcepts": [
+          "interrupt-measurement-boundary"
+        ],
+        "sectionId": "stress"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Raspberry Pi, RP2040 Datasheet, GPIO and interrupt chapters",
+        "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+        "problem": "GPIO 에지를 각 코어의 인터럽트 경로에 전달합니다.",
+        "contribution": "원본 60·79–80·239·243–244쪽의 IO_IRQ_BANK0, 코어별 허용, 에지 래치·소거와 SDK 콜백 예입니다.",
+        "assumptions": "RP2040 GPIO 구조이고 GPIO2 센서 연결은 가정입니다.",
+        "evidenceScope": "라즈베리 파이 공식 데이터시트 해당 표와 설명을 확인했습니다. 본문 시간은 실측이 아닙니다.",
+        "notClaim": "5·8·20 µs 등의 값이 RP2040의 규격 또는 보장값이라는 뜻은 아닙니다.",
+        "sectionId": "route"
+      },
+      {
+        "title": "Arm, Cortex-M0+ Devices Generic User Guide",
+        "href": "https://documentation-service.arm.com/static/5f04aadfdbdee951c1cdc957",
+        "problem": "인터럽트 요청의 pending·허용·우선순위와 처리 함수 진입을 설명합니다.",
+        "contribution": "원본 87–90쪽의 NVIC pending, priority, 주변 장치 요청 유지 시 재진입 조건입니다.",
+        "assumptions": "Arm Cortex-M0+ 공통 동작이며 칩별 배선·지연은 별도입니다.",
+        "evidenceScope": "Arm 공식 사용자 안내서의 해당 쪽을 확인했습니다.",
+        "notClaim": "본문 가상 마감이나 ISR 실행 시간을 Arm이 보증한다는 뜻은 아닙니다.",
+        "sectionId": "handler"
+      }
+    ]
+  },
+  "embedded/timers-and-sampling": {
+    "coreIdea": "RP2040 1 µs 타이머에서 10000칸마다 GPIO26/ADC0를 읽는 가상 주기를 잡아 100 Hz 샘플·50 Hz 절반 경계를 구하고, 70 Hz 코사인이 30 Hz와 같은 이산 값을 남기는 원인 및 알람·변환 시각의 차이를 설명합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "interrupt-path-budget",
+        "role": "앞 글의 ISR 대기가 알람 응답에도 영향을 줍니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "rp2040-microsecond-timer",
+        "role": "주기 목표 시각을 만듭니다."
+      },
+      {
+        "id": "absolute-periodic-deadline",
+        "role": "드리프트를 피하는 일정 규칙을 설명합니다."
+      },
+      {
+        "id": "adc-conversion-start-boundary",
+        "role": "알람과 변환을 분리합니다."
+      },
+      {
+        "id": "sample-rate-nyquist-boundary",
+        "role": "저장된 시각의 주파수 한계를 구합니다."
+      },
+      {
+        "id": "sampled-cosine-alias",
+        "role": "같은 샘플의 다른 원인을 보여 줍니다."
+      },
+      {
+        "id": "analog-antialias-and-jitter",
+        "role": "샘플링 설계의 물리 경계를 밝힙니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "rp2040-microsecond-timer",
+        "sectionId": "timer",
+        "intuition": "눈금은 CPU가 언제 대응했는지와 다릅니다.",
+        "workedExample": "목표 0,10000,20000 µs를 별도 절대 시각으로 둡니다.",
+        "boundary": "타이머 1 µs 분해능을 샘플 지터 상한으로 해석하지 않습니다."
+      },
+      {
+        "id": "absolute-periodic-deadline",
+        "sectionId": "timer",
+        "intuition": "기차 시각표는 늦게 도착했다고 모든 뒤 출발을 늦추지 않습니다.",
+        "workedExample": "10.4 ms의 늦은 ISR 뒤에도 다음 목표를 20 ms로 둡니다.",
+        "boundary": "여러 주기를 놓쳤을 때 건너뛰기·복구 정책이 필요합니다."
+      },
+      {
+        "id": "adc-conversion-start-boundary",
+        "sectionId": "adc",
+        "intuition": "알람은 읽으라는 신호이고 ADC가 입력을 잡는 동작은 그 뒤입니다.",
+        "workedExample": "알람 10 ms, ISR 10.4 ms라면 샘플 시각은 10 ms라고 적으면 안 됩니다.",
+        "boundary": "2 µs를 전체 센서 처리 지연으로 해석하지 않습니다."
+      },
+      {
+        "id": "sample-rate-nyquist-boundary",
+        "sectionId": "rate",
+        "intuition": "100개의 눈금은 1초의 빠른 왕복을 무한히 구분하지 못합니다.",
+        "workedExample": "30 Hz는 50 Hz 아래, 70 Hz는 위입니다.",
+        "boundary": "ADC 변환 최고 속도를 소프트웨어의 실제 저장 빈도로 혼동하지 않습니다."
+      },
+      {
+        "id": "sampled-cosine-alias",
+        "sectionId": "alias",
+        "intuition": "두 원래 파형이 정해진 시각마다 같은 높이에 닿습니다.",
+        "workedExample": "n=0…5의 30·70 Hz 코사인 샘플을 Viz에서 번갈아 비교합니다.",
+        "boundary": "입력 위상·샘플 시각·다른 성분 조건이 바뀌면 이 단순 예와 달라집니다."
+      },
+      {
+        "id": "analog-antialias-and-jitter",
+        "sectionId": "limits",
+        "intuition": "섞여 기록된 두 원인을 나중에 계산만으로 나누기 어렵습니다.",
+        "workedExample": "30 Hz 신호가 목표라면 50 Hz 위 성분을 ADC 전에 충분히 줄입니다.",
+        "boundary": "필터의 전이 대역·클록 오차·ISR 지터까지 실제 제품에서 검증해야 합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 시각 만들기",
+        "relation": "타이머 절대 목표와 실제 ADC 변환 시각을 분리합니다.",
+        "concepts": [
+          "rp2040-microsecond-timer",
+          "absolute-periodic-deadline",
+          "adc-conversion-start-boundary"
+        ]
+      },
+      {
+        "label": "02 값의 빈도",
+        "relation": "10 ms를 100 Hz와 50 Hz 경계로 바꿉니다.",
+        "concepts": [
+          "sample-rate-nyquist-boundary"
+        ]
+      },
+      {
+        "label": "03 겹침과 예방",
+        "relation": "70 Hz의 30 Hz 앨리어스와 아날로그 필터·지터를 연결합니다.",
+        "concepts": [
+          "sampled-cosine-alias",
+          "analog-antialias-and-jitter"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "샘플 간격 10 ms를 초당 샘플 빈도로 바꾸면 얼마입니까?",
+        "answerChecklist": [
+          "0.01 s",
+          "100 Hz"
+        ],
+        "requiredConcepts": [
+          "sample-rate-nyquist-boundary"
+        ],
+        "sectionId": "rate"
+      },
+      {
+        "level": "basic",
+        "question": "100 Hz로 일정하게 읽을 때 절반 경계는 몇 Hz입니까?",
+        "answerChecklist": [
+          "100/2",
+          "50 Hz"
+        ],
+        "requiredConcepts": [
+          "sample-rate-nyquist-boundary"
+        ],
+        "sectionId": "rate"
+      },
+      {
+        "level": "basic",
+        "question": "입력 성분 30 Hz는 가상 50 Hz 절반 경계의 어느 쪽입니까?",
+        "answerChecklist": [
+          "50 Hz 아래",
+          "이상 대역제한 조건에서 구분 가능"
+        ],
+        "requiredConcepts": [
+          "sample-rate-nyquist-boundary"
+        ],
+        "sectionId": "rate"
+      },
+      {
+        "level": "basic",
+        "question": "70 Hz 코사인을 100 Hz로 샘플하면 겹쳐 보이는 빈도는?",
+        "answerChecklist": [
+          "|100−70|",
+          "30 Hz"
+        ],
+        "requiredConcepts": [
+          "sampled-cosine-alias"
+        ],
+        "sectionId": "alias"
+      },
+      {
+        "level": "basic",
+        "question": "RP2040 타이머 1 µs 눈금에서 10 ms는 몇 계수입니까?",
+        "answerChecklist": [
+          "10000 µs",
+          "10000 계수"
+        ],
+        "requiredConcepts": [
+          "rp2040-microsecond-timer"
+        ],
+        "sectionId": "timer"
+      },
+      {
+        "level": "basic",
+        "question": "10 ms 목표를 10.4 ms에 처리했다면 다음 절대 목표는 언제입니까?",
+        "answerChecklist": [
+          "20 ms",
+          "20.4 ms 아님"
+        ],
+        "requiredConcepts": [
+          "absolute-periodic-deadline"
+        ],
+        "sectionId": "timer"
+      },
+      {
+        "level": "advanced",
+        "question": "정수 n에서 70 Hz와 30 Hz 코사인의 샘플이 같은 이유를 식으로 보이세요.",
+        "answerChecklist": [
+          "70=100−30",
+          "cos(2πn−θ)=cosθ",
+          "같은 이산 값"
+        ],
+        "requiredConcepts": [
+          "sampled-cosine-alias"
+        ],
+        "sectionId": "alias"
+      },
+      {
+        "level": "advanced",
+        "question": "타이머 알람과 ADC 값이 실제로 잡힌 시각이 다른 까닭은 무엇입니까?",
+        "answerChecklist": [
+          "인터럽트 대기",
+          "변환 시작·ADC 준비",
+          "타임스탬프 필요"
+        ],
+        "requiredConcepts": [
+          "adc-conversion-start-boundary"
+        ],
+        "sectionId": "adc"
+      },
+      {
+        "level": "advanced",
+        "question": "샘플링 후 디지털 필터만으로 30 Hz와 70 Hz를 분리할 수 있습니까?",
+        "answerChecklist": [
+          "불가능",
+          "이미 같은 샘플",
+          "ADC 앞 아날로그 필터"
+        ],
+        "requiredConcepts": [
+          "analog-antialias-and-jitter"
+        ],
+        "sectionId": "alias"
+      },
+      {
+        "level": "advanced",
+        "question": "ADC 공식 2 µs 변환 시간이 샘플 응답 전체의 보증값이 아닌 까닭은?",
+        "answerChecklist": [
+          "48 MHz ADC 클록 조건",
+          "알람·ISR·입력·결과 읽기 별도",
+          "실제 시각 지터 측정"
+        ],
+        "requiredConcepts": [
+          "adc-conversion-start-boundary",
+          "analog-antialias-and-jitter"
+        ],
+        "sectionId": "adc"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Raspberry Pi, RP2040 Datasheet, Timer and SAR ADC",
+        "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+        "problem": "주기 시각을 만들고 아날로그 입력을 디지털 값으로 바꿉니다.",
+        "contribution": "원본 535–537쪽의 1 µs 타이머·네 알람과 559–560쪽의 GPIO26/ADC0·48 MHz에서 96주기 변환입니다.",
+        "assumptions": "2 µs는 해당 ADC 클록의 변환 자체 조건입니다.",
+        "evidenceScope": "라즈베리 파이 공식 데이터시트 해당 쪽을 확인했습니다. 10 ms와 30/70 Hz는 가정입니다.",
+        "notClaim": "타이머 알람에서 샘플까지의 전체 지연이 2 µs로 보장된다는 뜻은 아닙니다.",
+        "sectionId": "timer"
+      },
+      {
+        "title": "MIT OpenCourseWare RES.6-007, Lecture 16, Sampling (2011)",
+        "href": "https://ocw.mit.edu/courses/res-6-007-signals-and-systems-spring-2011/8708ec068ebdea2c4ee2f38fad39fb83_MITRES_6_007S11_lec16.pdf",
+        "problem": "일정 간격 샘플로 연속 신호를 복원할 조건을 설명합니다.",
+        "contribution": "원본 1–2쪽의 샘플 빈도 절반 경계와 그 위 입력의 앨리어싱 설명입니다.",
+        "assumptions": "이상적인 대역 제한 신호와 등간격 샘플·재구성 조건입니다.",
+        "evidenceScope": "MIT 공식 원본 PDF를 확인했습니다. 100 Hz·70 Hz 예시는 본문 계산입니다.",
+        "notClaim": "실제 RP2040 센서에서 70 Hz가 측정됐다는 뜻은 아닙니다.",
+        "sectionId": "alias"
+      }
+    ]
+  },
+  "embedded/serial-buses-and-tradeoffs": {
+    "coreIdea": "가상 네 바이트에서 I²C 레지스터 읽기 63클록=400kHz에 157.5 µs, SPI 명령+데이터 40클록=1MHz에 40 µs, UART 8N1 순수 페이로드 40비트=115200에 347.2 µs를 계산하고 서로 다른 거래와 제외한 대기를 명시합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "sample-rate-nyquist-boundary",
+        "role": "앞 글의 주기적 샘플이 외부 센서 읽기를 요청한다고 둡니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "i2c-address-ack-transaction",
+        "role": "가상 네 바이트 레지스터 읽기 형식을 정합니다."
+      },
+      {
+        "id": "i2c-nine-clock-accounting",
+        "role": "주소·응답 오버헤드를 셉니다."
+      },
+      {
+        "id": "i2c-clock-stretch-boundary",
+        "role": "1 ms 마감에 숫자를 대입할 한계를 밝힙니다."
+      },
+      {
+        "id": "spi-command-data-clocks",
+        "role": "SPI 선로 시간과 배선 조건을 비교합니다."
+      },
+      {
+        "id": "uart-eight-n-one-frame",
+        "role": "데이터 바이트와 선로 프레임을 구분합니다."
+      },
+      {
+        "id": "serial-bus-comparison-boundary",
+        "role": "비교의 분모를 맞춥니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "i2c-address-ack-transaction",
+        "sectionId": "i2c",
+        "intuition": "주소로 장치를 고르고 매 바이트마다 계속할지 확인합니다.",
+        "workedExample": "주소+W, 위치, 주소+R, 네 데이터의 총 일곱 바이트 묶음을 셉니다.",
+        "boundary": "실제 센서의 주소·레지스터 자동 증가는 장치 데이터시트가 정합니다."
+      },
+      {
+        "id": "i2c-nine-clock-accounting",
+        "sectionId": "count",
+        "intuition": "페이로드만 세면 실제 선로의 다른 칸을 빠뜨립니다.",
+        "workedExample": "400 kHz에서 63/400000=157.5 µs, 100 kHz에서 630 µs입니다.",
+        "boundary": "START/STOP·클록 스트레칭·상승 시간·소프트웨어 대기는 제외했습니다."
+      },
+      {
+        "id": "i2c-clock-stretch-boundary",
+        "sectionId": "count",
+        "intuition": "선로 클록을 세어도 기다리는 시간을 셌다고 볼 수 없습니다.",
+        "workedExample": "157.5 µs에 클록 스트레칭 200 µs가 있으면 최소 357.5 µs 이상입니다.",
+        "boundary": "이 200 µs도 가정이며 대상 센서의 최대치를 따로 확인해야 합니다."
+      },
+      {
+        "id": "spi-command-data-clocks",
+        "sectionId": "spi",
+        "intuition": "선택한 한 장치에 클록을 보내고 동시에 송수신합니다.",
+        "workedExample": "RP2040 SPI1의 한 핀 조합 GPIO8–11을 가정합니다.",
+        "boundary": "센서가 SPI를 지원하고 명령 형식이 같아야 거래가 성립합니다."
+      },
+      {
+        "id": "uart-eight-n-one-frame",
+        "sectionId": "uart",
+        "intuition": "공유 클록 없이 약속한 속도로 한 글자씩 시작·끝을 표시합니다.",
+        "workedExample": "RP2040 UART0 TX/RX를 GPIO0/1에 두는 예입니다.",
+        "boundary": "주소·요청·오류 검사는 별도 상위 프로토콜이 필요합니다."
+      },
+      {
+        "id": "serial-bus-comparison-boundary",
+        "sectionId": "choice",
+        "intuition": "같은 네 데이터라도 요청과 응답이 다른 일을 합니다.",
+        "workedExample": "UART 네 바이트에는 I²C 레지스터 주소 요청이 들어 있지 않습니다.",
+        "boundary": "세 값을 곧바로 실제 센서 읽기의 빠르기 순서로 쓰지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 I²C 읽기",
+        "relation": "주소·위치·ACK를 포함해 63클록을 셉니다.",
+        "concepts": [
+          "i2c-address-ack-transaction",
+          "i2c-nine-clock-accounting",
+          "i2c-clock-stretch-boundary"
+        ]
+      },
+      {
+        "label": "02 다른 선로",
+        "relation": "SPI 40클록과 UART 40프레임 비트를 계산합니다.",
+        "concepts": [
+          "spi-command-data-clocks",
+          "uart-eight-n-one-frame"
+        ]
+      },
+      {
+        "label": "03 선택 경계",
+        "relation": "서로 다른 거래를 실제 요구와 함께 비교합니다.",
+        "concepts": [
+          "serial-bus-comparison-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "I²C 한 바이트의 8비트 뒤에 왜 아홉 번째 클록이 필요합니까?",
+        "answerChecklist": [
+          "ACK/NACK",
+          "수신자가 응답"
+        ],
+        "requiredConcepts": [
+          "i2c-address-ack-transaction"
+        ],
+        "sectionId": "i2c"
+      },
+      {
+        "level": "basic",
+        "question": "주소·위치 세 묶음과 데이터 네 묶음은 모두 몇 클록입니까?",
+        "answerChecklist": [
+          "7묶음",
+          "각 9클록",
+          "63클록"
+        ],
+        "requiredConcepts": [
+          "i2c-nine-clock-accounting"
+        ],
+        "sectionId": "count"
+      },
+      {
+        "level": "basic",
+        "question": "가상 63클록을 400 kHz로 보낼 때 순수 클록 시간은?",
+        "answerChecklist": [
+          "63/400000초",
+          "157.5 µs"
+        ],
+        "requiredConcepts": [
+          "i2c-nine-clock-accounting"
+        ],
+        "sectionId": "count"
+      },
+      {
+        "level": "basic",
+        "question": "같은 가상 I²C 거래를 100 kHz로 낮추면 클록 시간은?",
+        "answerChecklist": [
+          "63/100000초",
+          "630 µs"
+        ],
+        "requiredConcepts": [
+          "i2c-nine-clock-accounting"
+        ],
+        "sectionId": "count"
+      },
+      {
+        "level": "basic",
+        "question": "SPI 명령 1바이트와 데이터 4바이트를 1 MHz로 보내면?",
+        "answerChecklist": [
+          "5×8=40클록",
+          "40 µs",
+          "CS 지연 제외"
+        ],
+        "requiredConcepts": [
+          "spi-command-data-clocks"
+        ],
+        "sectionId": "spi"
+      },
+      {
+        "level": "basic",
+        "question": "UART 8N1 네 바이트를 115200 bit/s로 보내는 선로 시간은?",
+        "answerChecklist": [
+          "4×10=40비트",
+          "약 347.2 µs"
+        ],
+        "requiredConcepts": [
+          "uart-eight-n-one-frame"
+        ],
+        "sectionId": "uart"
+      },
+      {
+        "level": "advanced",
+        "question": "I²C의 계산값 157.5 µs보다 실제 완료가 길 수 있는 이유를 셋 쓰세요.",
+        "answerChecklist": [
+          "START/STOP",
+          "클록 스트레칭",
+          "버스 점유·상승·소프트웨어 대기"
+        ],
+        "requiredConcepts": [
+          "i2c-clock-stretch-boundary"
+        ],
+        "sectionId": "count"
+      },
+      {
+        "level": "advanced",
+        "question": "I²C·SPI·UART의 세 수치를 같은 센서 요청의 실제 완료 시간 순위로 쓸 수 있습니까?",
+        "answerChecklist": [
+          "안 됨",
+          "UART 요청 형식 빠짐",
+          "SPI 명령·CS 다름",
+          "장치 지원·대기"
+        ],
+        "requiredConcepts": [
+          "serial-bus-comparison-boundary"
+        ],
+        "sectionId": "choice"
+      },
+      {
+        "level": "advanced",
+        "question": "SPI와 I²C에서 장치 선택과 통신 선의 역할이 어떻게 다릅니까?",
+        "answerChecklist": [
+          "SPI CS와 클록·송수신",
+          "I²C 공유 SDA/SCL과 주소",
+          "클록 모드·풀업"
+        ],
+        "requiredConcepts": [
+          "i2c-address-ack-transaction",
+          "spi-command-data-clocks"
+        ],
+        "sectionId": "spi"
+      },
+      {
+        "level": "advanced",
+        "question": "1 ms 센서 마감에서 I²C 157.5 µs만 보고 성공을 보장할 수 있습니까?",
+        "answerChecklist": [
+          "보장 불가",
+          "ISR·작업 대기",
+          "버스 점유·스트레칭",
+          "전체 경로 계측"
+        ],
+        "requiredConcepts": [
+          "i2c-clock-stretch-boundary",
+          "serial-bus-comparison-boundary"
+        ],
+        "sectionId": "choice"
+      }
+    ],
+    "papers": [
+      {
+        "title": "NXP, UM10204 I²C-bus specification and user manual Rev. 7.0 (2021)",
+        "href": "https://www.nxp.com/docs/en/user-guide/UM10204.pdf",
+        "problem": "주소를 가진 여러 장치가 두 선을 공유하며 데이터와 응답을 교환합니다.",
+        "contribution": "원본 1·9–10·15쪽의 모드별 클록, 매 바이트 아홉 번째 ACK 클록, 반복 START와 클록 스트레칭입니다.",
+        "assumptions": "가상 센서가 7비트 주소·한 바이트 위치·4바이트 연속 읽기를 지원합니다.",
+        "evidenceScope": "NXP 공식 규격 PDF의 해당 쪽을 확인했습니다. 63클록 거래와 400 kHz는 본문 가정입니다.",
+        "notClaim": "157.5 µs가 센서 전체 응답의 규격상 보장값이라는 뜻은 아닙니다.",
+        "sectionId": "i2c"
+      },
+      {
+        "title": "Raspberry Pi Pico SDK Hardware APIs, I2C/SPI/UART/GPIO",
+        "href": "https://www.raspberrypi.com/documentation/pico-sdk/hardware.html",
+        "problem": "RP2040의 직렬 컨트롤러와 가능한 핀 기능을 구성합니다.",
+        "contribution": "I²C·SPI·UART API와 GPIO 기능 선택 표 및 UART 보율 설정 예를 제공합니다.",
+        "assumptions": "각 가상 주변 장치가 선택한 모드와 속도를 지원합니다.",
+        "evidenceScope": "라즈베리 파이 공식 SDK 문서의 해당 API 설명을 확인했습니다. 거래 바이트 수는 본문 가정입니다.",
+        "notClaim": "SPI·UART 가상 거래가 I²C 센서 읽기와 기능상 완전히 같다는 뜻은 아닙니다.",
+        "sectionId": "uart"
+      }
+    ]
+  },
+  "embedded/scheduling-and-real-time": {
+    "coreIdea": "가상 한 코어의 제어 P5/C1, 센서 P10/C2/D4, 로그 P50/C3에서 평균 CPU 점유율 46%를 구하고, 자원 대기 없을 때 센서 3ms 완료·1ms 여유와 로그 뮤텍스 2ms 잔여 때 5ms 완료·1ms 초과를 비교합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "serial-bus-comparison-boundary",
+        "role": "외부 센서 거래의 실제 완료 시간은 선로 클록 하한보다 길 수 있습니다."
+      },
+      {
+        "id": "absolute-periodic-deadline",
+        "role": "앞 타이머 글의 절대 주기 목표를 재사용합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "period-execution-deadline-triple",
+        "role": "각 작업의 세 시각 조건을 정의합니다."
+      },
+      {
+        "id": "fixed-priority-ready-selection",
+        "role": "기본 시간표를 추적합니다."
+      },
+      {
+        "id": "periodic-absolute-wake",
+        "role": "타이머 글의 절대 목표를 작업 수준에 연결합니다."
+      },
+      {
+        "id": "periodic-cpu-utilization",
+        "role": "총량 46%를 계산합니다."
+      },
+      {
+        "id": "mutex-blocking-priority-inheritance",
+        "role": "낮은 우선순위의 자원 보유를 계산합니다."
+      },
+      {
+        "id": "response-time-validation",
+        "role": "가상 시간표의 검증 범위를 밝힙니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "period-execution-deadline-triple",
+        "sectionId": "tasks",
+        "intuition": "자주 오는 일과 오래 걸리는 일과 늦으면 안 되는 시각을 따로 적습니다.",
+        "workedExample": "센서가 t=0에 준비되면 t=4ms까지 끝나야 합니다.",
+        "boundary": "앞 글의 GPIO2 사건 1ms 마감과 이 센서 작업 4ms 마감을 혼동하지 않습니다."
+      },
+      {
+        "id": "fixed-priority-ready-selection",
+        "sectionId": "timeline",
+        "intuition": "높은 일이 다시 생기면 낮은 일이 잠시 멈춥니다.",
+        "workedExample": "센서 완료 3ms는 상대 마감4ms보다 1ms 빠릅니다.",
+        "boundary": "자원 대기·RTOS 오버헤드를 넣으면 같은 시간표를 그대로 쓸 수 없습니다."
+      },
+      {
+        "id": "periodic-absolute-wake",
+        "sectionId": "tasks",
+        "intuition": "늦게 끝났다고 다음 주기의 원래 시각이 바뀌지 않습니다.",
+        "workedExample": "센서 목표 0,10,20ms를 실행 시간 변화에도 기준으로 둡니다.",
+        "boundary": "RTOS tick 분해능과 놓친 주기에 대한 정책은 따로 정합니다."
+      },
+      {
+        "id": "periodic-cpu-utilization",
+        "sectionId": "utilization",
+        "intuition": "50ms 중 23ms의 일감이 있다고 한 번의 4ms 여유를 알 수는 없습니다.",
+        "workedExample": "센서의 기본 완료 3ms와 뮤텍스 대기 뒤 5ms는 평균 U가 같아도 달라집니다.",
+        "boundary": "U<1만으로 모든 상대 마감 충족을 보장하지 않습니다."
+      },
+      {
+        "id": "mutex-blocking-priority-inheritance",
+        "sectionId": "blocking",
+        "intuition": "센서가 먼저 달리고 싶어도 잠긴 자원은 로그가 풀어야 합니다.",
+        "workedExample": "뮤텍스 보유 2ms 뒤 센서 완료5ms, 마감 초과1ms입니다.",
+        "boundary": "ISR은 기다리는 뮤텍스를 가져서는 안 됩니다."
+      },
+      {
+        "id": "response-time-validation",
+        "sectionId": "limits",
+        "intuition": "평균 그래프보다 늦게 끝난 한 번의 경로를 조사합니다.",
+        "workedExample": "가상 U=46%와 3/5ms 완료를 RP2040 실측 수치로 보고하지 않습니다.",
+        "boundary": "최악 실행·버스 대기·임계 구간 상한 없이는 마감 보장을 주장할 수 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 세 작업",
+        "relation": "주기·CPU 시간·마감과 절대 준비 시각을 정합니다.",
+        "concepts": [
+          "period-execution-deadline-triple",
+          "periodic-absolute-wake"
+        ]
+      },
+      {
+        "label": "02 기본 시간표와 총량",
+        "relation": "고정 우선순위 순서와 46% 점유율을 계산합니다.",
+        "concepts": [
+          "fixed-priority-ready-selection",
+          "periodic-cpu-utilization"
+        ]
+      },
+      {
+        "label": "03 뮤텍스와 실측",
+        "relation": "공유 자원에 막힌 센서의 마감 초과와 측정 범위를 봅니다.",
+        "concepts": [
+          "mutex-blocking-priority-inheritance",
+          "response-time-validation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "제어 작업의 C=1ms, P=5ms인 CPU 점유율은 얼마입니까?",
+        "answerChecklist": [
+          "1/5",
+          "20%"
+        ],
+        "requiredConcepts": [
+          "periodic-cpu-utilization"
+        ],
+        "sectionId": "utilization"
+      },
+      {
+        "level": "basic",
+        "question": "센서 작업의 C=2ms, P=10ms인 CPU 점유율은 얼마입니까?",
+        "answerChecklist": [
+          "2/10",
+          "20%"
+        ],
+        "requiredConcepts": [
+          "periodic-cpu-utilization"
+        ],
+        "sectionId": "utilization"
+      },
+      {
+        "level": "basic",
+        "question": "로그 작업의 C=3ms, P=50ms인 CPU 점유율은 얼마입니까?",
+        "answerChecklist": [
+          "3/50",
+          "6%"
+        ],
+        "requiredConcepts": [
+          "periodic-cpu-utilization"
+        ],
+        "sectionId": "utilization"
+      },
+      {
+        "level": "basic",
+        "question": "세 주기 작업의 평균 CPU 점유율 합은 얼마입니까?",
+        "answerChecklist": [
+          "20+20+6",
+          "46%",
+          "50ms 중 23ms"
+        ],
+        "requiredConcepts": [
+          "periodic-cpu-utilization"
+        ],
+        "sectionId": "utilization"
+      },
+      {
+        "level": "basic",
+        "question": "모두 0ms에 준비되고 공유 자원 대기가 없다면 센서는 언제 끝납니까?",
+        "answerChecklist": [
+          "제어0–1",
+          "센서1–3",
+          "3ms 완료·마감 여유1ms"
+        ],
+        "requiredConcepts": [
+          "fixed-priority-ready-selection"
+        ],
+        "sectionId": "timeline"
+      },
+      {
+        "level": "basic",
+        "question": "기본 일정에서 로그는 5ms 제어 선점 뒤 언제 최종 완료됩니까?",
+        "answerChecklist": [
+          "로그3–5에서 2ms",
+          "제어5–6",
+          "로그6–7 완료"
+        ],
+        "requiredConcepts": [
+          "fixed-priority-ready-selection"
+        ],
+        "sectionId": "timeline"
+      },
+      {
+        "level": "advanced",
+        "question": "이전 로그가 뮤텍스를 2ms 더 잡고 있으면 센서 완료와 마감 초과는?",
+        "answerChecklist": [
+          "제어0–1",
+          "로그1–3",
+          "센서3–5",
+          "마감4ms 초과1ms"
+        ],
+        "requiredConcepts": [
+          "mutex-blocking-priority-inheritance"
+        ],
+        "sectionId": "blocking"
+      },
+      {
+        "level": "advanced",
+        "question": "CPU 점유율 46%만으로 센서의 4ms 마감을 보장할 수 없는 까닭은?",
+        "answerChecklist": [
+          "총량과 개별 창 다름",
+          "높은 우선순위·뮤텍스 대기",
+          "버스·IRQ 시간"
+        ],
+        "requiredConcepts": [
+          "periodic-cpu-utilization",
+          "response-time-validation"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "우선순위 상속이 로그의 남은 2ms 임계 구간을 없앨 수 있습니까?",
+        "answerChecklist": [
+          "아니요",
+          "중간 우선순위 간섭만 줄임",
+          "임계 구간 상한 줄이기"
+        ],
+        "requiredConcepts": [
+          "mutex-blocking-priority-inheritance"
+        ],
+        "sectionId": "blocking"
+      },
+      {
+        "level": "advanced",
+        "question": "주기 작업의 실제 마감 검증에서 어떤 시각과 추가 구간을 기록합니까?",
+        "answerChecklist": [
+          "준비·시작·완료",
+          "버스 대기·IRQ·tick",
+          "절대 주기·놓친 release 정책"
+        ],
+        "requiredConcepts": [
+          "periodic-absolute-wake",
+          "response-time-validation"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "FreeRTOS, RTOS Fundamentals and Task Priorities",
+        "href": "https://www.freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals",
+        "problem": "작업이 여럿일 때 정해진 시각 안에 결과를 내도록 CPU 실행 순서를 정합니다.",
+        "contribution": "공식 가이드는 준비된 최고 우선순위 작업의 실행과 실시간 마감의 의미를 설명합니다.",
+        "assumptions": "선점 가능한 FreeRTOS 설정의 한 코어 사례로 적용합니다.",
+        "evidenceScope": "FreeRTOS 공식 설명을 확인했습니다. 세 가상 작업과 46%는 본문 수치입니다.",
+        "notClaim": "이 예제가 실제 FreeRTOS/RP2040의 타이밍 벤치마크라는 뜻은 아닙니다.",
+        "sectionId": "tasks"
+      },
+      {
+        "title": "FreeRTOS Reference Manual v10, vTaskDelayUntil()",
+        "href": "https://www.freertos.org/media/2018/FreeRTOS_Reference_Manual_V10.0.0.pdf",
+        "problem": "주기 작업의 목표 시각을 처리 시간에 따라 밀리지 않게 유지합니다.",
+        "contribution": "절대 시각까지 블록하는 vTaskDelayUntil과 상대 vTaskDelay의 차이를 설명합니다.",
+        "assumptions": "tick 분해능과 일정 기간에 맞춘 구성을 전제로 합니다.",
+        "evidenceScope": "FreeRTOS 공식 참조 매뉴얼의 해당 API 설명을 확인했습니다.",
+        "notClaim": "가상 5·10·50ms가 어떤 tick 설정에서도 정확히 실행된다는 뜻은 아닙니다.",
+        "sectionId": "tasks"
+      },
+      {
+        "title": "FreeRTOS, FreeRTOS mutexes",
+        "href": "https://freertos.org/Real-time-embedded-RTOS-mutexes.html",
+        "problem": "공유 자원 보호와 우선순위 역전의 영향을 줄입니다.",
+        "contribution": "뮤텍스의 기본 우선순위 상속과 ISR에서 뮤텍스를 기다리지 않는 이유를 설명합니다.",
+        "assumptions": "본문의 남은 2ms 임계 구간은 독립적인 가정입니다.",
+        "evidenceScope": "FreeRTOS 공식 뮤텍스 문서의 상속·ISR 경계를 확인했습니다.",
+        "notClaim": "상속이 임계 구간 자체의 실행 시간을 없애거나 모든 마감을 보장한다는 뜻은 아닙니다.",
+        "sectionId": "blocking"
+      }
+    ]
+  },
+  "embedded/firmware-update-and-recovery": {
+    "coreIdea": "가상 4 MiB 플래시에 256+1536+1536+768 KiB를 배치하고 v1을 보존한 채 v2를 완전히 받아 서명 검증한 뒤 TEST swap합니다. 자가 검사 후 image OK면 v2를 유지하고 미확정 재부팅이면 v1로 복귀합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "response-time-validation",
+        "role": "앞 글에서 검증한 v1의 작업 마감과 센서 기능을 업데이트 이후에도 확인합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "dual-slot-flash-layout",
+        "role": "v1을 보존할 저장 공간을 계산합니다."
+      },
+      {
+        "id": "firmware-image-integrity-signature",
+        "role": "불완전하거나 위조된 후보를 차단합니다."
+      },
+      {
+        "id": "test-swap-candidate",
+        "role": "검증 이후의 시험 상태를 설명합니다."
+      },
+      {
+        "id": "image-confirmation-revert",
+        "role": "부팅 성공과 제품 정상 동작을 구분합니다."
+      },
+      {
+        "id": "power-fail-swap-resume",
+        "role": "전원 차단 지점별 경로를 구분합니다."
+      },
+      {
+        "id": "rp2040-recovery-boundary",
+        "role": "칩 고유 기능과 제품 구현을 분리합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "dual-slot-flash-layout",
+        "sectionId": "layout",
+        "intuition": "새 앱을 받는 동안 지금 쓰는 앱을 덮어쓰지 않습니다.",
+        "workedExample": "4096-256-1536-1536=768 KiB가 남습니다.",
+        "boundary": "RP2040 내장 ROM에 앱 이중 슬롯 기능이 있다는 뜻은 아닙니다."
+      },
+      {
+        "id": "firmware-image-integrity-signature",
+        "sectionId": "verify",
+        "intuition": "받은 파일과 믿을 수 있는 제작자의 파일인지 따로 묻습니다.",
+        "workedExample": "다운로드 중 전원이 끊기거나 서명이 틀리면 v1을 계속 실행합니다.",
+        "boundary": "신뢰 키 저장·회수와 다운그레이드 정책은 제품이 설계해야 합니다."
+      },
+      {
+        "id": "test-swap-candidate",
+        "sectionId": "trial",
+        "intuition": "새 앱을 한 번 써 보되 돌아갈 수 있게 옛 앱을 보관합니다.",
+        "workedExample": "v2를 시험 실행하는 동안 보조 슬롯에는 복귀용 v1이 있습니다.",
+        "boundary": "덮어쓰기나 직접 XIP 등 모든 MCUboot 모드에 같은 복귀 동작을 적용하지 않습니다."
+      },
+      {
+        "id": "image-confirmation-revert",
+        "sectionId": "trial",
+        "intuition": "CPU가 시작한 것만으로 센서가 정상이라는 뜻은 아닙니다.",
+        "workedExample": "센서 읽기 실패 뒤 리셋되고 image OK가 없으면 v1로 돌아갑니다.",
+        "boundary": "검사의 범위와 확정 시점은 제품별로 정해야 합니다."
+      },
+      {
+        "id": "power-fail-swap-resume",
+        "sectionId": "power",
+        "intuition": "같은 전원 차단도 파일 받는 중과 슬롯을 바꾸는 중에는 결과가 다릅니다.",
+        "workedExample": "시험 v2의 확정 전 재시작은 REVERT, 확정 후 재시작은 v2 유지입니다.",
+        "boundary": "손상된 부트 코드나 외부 플래시 하드웨어 고장은 별도 복구가 필요합니다."
+      },
+      {
+        "id": "rp2040-recovery-boundary",
+        "sectionId": "limits",
+        "intuition": "현장 USB 재기록 통로가 있다고 자동으로 v1을 고르는 것은 아닙니다.",
+        "workedExample": "가상 4 MiB 배치와 복귀 정책은 실제 RP2040 보드의 기본 제공 수치가 아닙니다.",
+        "boundary": "플래시 쓰기 중 XIP 제약, 지우기 단위, 키 관리와 전원 차단 시험이 필요합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 배치·후보",
+        "relation": "두 슬롯과 복구 공간을 예약하고 후보의 완성·서명을 검증합니다.",
+        "concepts": [
+          "dual-slot-flash-layout",
+          "firmware-image-integrity-signature"
+        ]
+      },
+      {
+        "label": "02 시험·확정",
+        "relation": "TEST swap으로 v2를 써 보고 자가 검사 뒤에만 image OK를 기록합니다.",
+        "concepts": [
+          "test-swap-candidate",
+          "image-confirmation-revert"
+        ]
+      },
+      {
+        "label": "03 차단·복구 경계",
+        "relation": "전원 차단 지점을 나누고 RP2040 BOOTSEL과 앱 복귀를 구별합니다.",
+        "concepts": [
+          "power-fail-swap-resume",
+          "rp2040-recovery-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "가상 플래시 네 구획의 크기를 더하면 얼마입니까?",
+        "answerChecklist": [
+          "256+1536+1536+768",
+          "4096 KiB=4 MiB"
+        ],
+        "requiredConcepts": [
+          "dual-slot-flash-layout"
+        ],
+        "sectionId": "layout"
+      },
+      {
+        "level": "basic",
+        "question": "부트·복구256 KiB와 앱 슬롯 두 개 각1536 KiB를 빼면 얼마가 남습니까?",
+        "answerChecklist": [
+          "4096-256-3072",
+          "768 KiB"
+        ],
+        "requiredConcepts": [
+          "dual-slot-flash-layout"
+        ],
+        "sectionId": "layout"
+      },
+      {
+        "level": "basic",
+        "question": "v2 다운로드 도중 전원이 끊기면 어떤 앱을 실행합니까?",
+        "answerChecklist": [
+          "불완전한 후보를 시험 표시하지 않음",
+          "v1 유지"
+        ],
+        "requiredConcepts": [
+          "firmware-image-integrity-signature"
+        ],
+        "sectionId": "verify"
+      },
+      {
+        "level": "basic",
+        "question": "v2 이미지 서명 검증이 실패하면 어떤 상태를 선택합니까?",
+        "answerChecklist": [
+          "후보 거부",
+          "v1 유지"
+        ],
+        "requiredConcepts": [
+          "firmware-image-integrity-signature"
+        ],
+        "sectionId": "verify"
+      },
+      {
+        "level": "basic",
+        "question": "v2 시험 부팅 후 image OK를 기록하지 않고 재시작하면?",
+        "answerChecklist": [
+          "TEST swap의 다음 부팅 REVERT",
+          "v1 복귀"
+        ],
+        "requiredConcepts": [
+          "image-confirmation-revert"
+        ],
+        "sectionId": "trial"
+      },
+      {
+        "level": "basic",
+        "question": "v2 자가 검사 후 image OK를 기록하면 다음 부팅은?",
+        "answerChecklist": [
+          "v2 확정",
+          "v2 유지"
+        ],
+        "requiredConcepts": [
+          "image-confirmation-revert"
+        ],
+        "sectionId": "trial"
+      },
+      {
+        "level": "advanced",
+        "question": "swap 도중 전원 차단에서 기록된 상태 재개가 단순 덮어쓰기와 다른 점은?",
+        "answerChecklist": [
+          "교체 진행 상태 보존",
+          "기존 이미지 복귀 경로",
+          "지원되는 swap 모드 한정"
+        ],
+        "requiredConcepts": [
+          "power-fail-swap-resume",
+          "test-swap-candidate"
+        ],
+        "sectionId": "power"
+      },
+      {
+        "level": "advanced",
+        "question": "해시 검사와 서명 검증의 판단은 어떻게 다릅니까?",
+        "answerChecklist": [
+          "해시 손상 확인",
+          "신뢰 공개키 서명으로 출처 확인",
+          "키 신뢰 경로 필요"
+        ],
+        "requiredConcepts": [
+          "firmware-image-integrity-signature"
+        ],
+        "sectionId": "verify"
+      },
+      {
+        "level": "advanced",
+        "question": "RP2040 USB BOOTSEL 복구와 앱 자동 되돌리기가 다른 이유는?",
+        "answerChecklist": [
+          "BOOTSEL은 ROM의 재기록 진입",
+          "A/B 시험·확정은 제품 부트로더 추가",
+          "현장 개입 가능"
+        ],
+        "requiredConcepts": [
+          "rp2040-recovery-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "전원 차단 시험 지점 네 곳과 보안 정책 하나를 고르세요.",
+        "answerChecklist": [
+          "다운로드",
+          "swap",
+          "시험 v2",
+          "확정 뒤",
+          "다운그레이드·서명 키 정책"
+        ],
+        "requiredConcepts": [
+          "power-fail-swap-resume",
+          "rp2040-recovery-boundary"
+        ],
+        "sectionId": "power"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MCUboot, Bootloader design",
+        "href": "https://docs.mcuboot.com/design.html",
+        "problem": "교체 중 전원 차단과 시험 이미지 실패에도 이전 이미지를 보존해야 합니다.",
+        "contribution": "지원되는 swap의 TEST·REVERT·PERM, image OK와 중단된 swap 재개, 서명·무결성 검사를 설명합니다.",
+        "assumptions": "본문은 MCUboot 시험 swap에 해당하는 가상 RP2040 제품 부트로더를 가정합니다.",
+        "evidenceScope": "MCUboot 공식 설계 문서의 swap·trailer·image validation 설명을 확인했습니다.",
+        "notClaim": "모든 MCUboot 업데이트 모드나 RP2040 ROM에 자동 되돌리기가 있다는 뜻은 아닙니다.",
+        "sectionId": "trial"
+      },
+      {
+        "title": "Raspberry Pi, RP2040 Datasheet, XIP flash and Bootrom",
+        "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+        "problem": "RP2040의 외부 플래시 실행과 기본 복구 진입 경로를 확인합니다.",
+        "contribution": "외부 QSPI 플래시 XIP와 bootrom의 다음 단계 부팅, USB BOOTSEL 경로를 설명합니다.",
+        "assumptions": "4 MiB 용량, 두 앱 슬롯과 크기는 가상 제품 배치입니다.",
+        "evidenceScope": "공식 데이터시트 원본 123·129–132·145쪽을 확인했습니다.",
+        "notClaim": "RP2040 부트 ROM이 MCUboot A/B rollback을 제공한다는 뜻은 아닙니다.",
+        "sectionId": "layout"
+      }
+    ]
+  },
 };

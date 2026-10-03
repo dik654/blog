@@ -31,6 +31,7 @@ import disputeResolution from "./dispute-resolution";
 import circuits from "./circuits";
 import semiconductors from "./semiconductors";
 import devices from "./devices";
+import embedded from "./embedded";
 
 export const categories = [
   ai,
@@ -61,6 +62,7 @@ export const categories = [
   circuits,
   semiconductors,
   devices,
+  embedded,
 ];
 
 export interface DomainGroup {
