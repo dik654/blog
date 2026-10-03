@@ -28,3 +28,4 @@ dist-ssr
 *.sw?
 files/go-ethereum
 src/content/registrations/
+.tmp-shots/
