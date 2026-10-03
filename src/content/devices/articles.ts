@@ -46,4 +46,18 @@ export const deviceArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/devices/mosfet-regions-and-transfer"),
   },
+  {
+    slug: "switching-energy-and-leakage",
+    title: "한 번 뒤집는 에너지와 멈춰 있어도 새는 전류",
+    subcategory: "field-effect-devices",
+    sections: [
+      { id: "overview", title: "가만히 있을 때와 뒤집을 때를 따로 셉니다" },
+      { id: "two-paths", title: "위쪽 길이 채우고 아래쪽 길이 비웁니다" },
+      { id: "energy-ledger", title: "33 pC가 움직인 동안 108.9 pJ를 냅니다" },
+      { id: "activity", title: "매 기준 주기마다 바뀌지는 않습니다" },
+      { id: "limits", title: "전압을 낮출 때는 속도와 누설도 바뀝니다" },
+      { id: "handoff", title: "소자의 전력에서 실리콘의 제작으로 갑니다" },
+    ],
+    component: () => import("@/pages/articles/devices/switching-energy-and-leakage"),
+  },
 ];
