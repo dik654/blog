@@ -7646,4 +7646,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공개 강의", label: "MIT OCW 6.002 Lecture 12, ‘Capacitors and First-Order Systems’, 4–5·10–11쪽", href: "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/84f4b553fc6a1ddd7007465041c4e213_6002_l12.pdf", note: "축전기 q=Cv, i=C dv/dt와 RC 지수 응답·초기 조건을 공식 강의안에서 확인했다. 수치는 글의 가정이다." },
     { kind: "공개 강의", label: "MIT OCW 8.02 Chapter 11, ‘Inductance’ (2007), 10·17–19쪽", href: "https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2007/f5c35823a7faac0d893754ab42804e7e_chap11inductance.pdf", note: "½LI², RL 상승식과 L/R 시간 상수·자기장 에너지 장부를 공식 PDF에서 확인했다. 1 H는 가정이다." },
   ],
+  "circuits/steady-state-and-impedance": [
+    { kind: "공개 강의", label: "MIT OCW 6.002 Lecture 17, ‘The Impedance Model’, 4–7쪽", href: "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/66adf4d4611a57b949efa1b00a842a46_6002_l17.pdf", note: "정현파 정상 상태의 복소 진폭·R/C/L 임피던스·RC 분압을 원본 PDF에서 확인했다. 본문 수치는 가정이다." },
+  ],
 };

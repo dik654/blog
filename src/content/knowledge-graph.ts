@@ -25438,6 +25438,12 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "inductor-current-state": { id: "inductor-current-state", domain: "physics", label: "인덕터 전류는 자기장 에너지가 정하는 이어지는 상태다", aliases: ["inductor state", "인덕터 전류 상태"], definition: "이상 인덕터에서 v=L di/dt이고 저장 에너지는 ½Li²입니다. 1 H에 5 mA가 흐르면 12.5 µJ를 저장합니다. 유한한 전압으로 전류를 단 한순간에 유한 폭으로 바꿀 수 없습니다. 권선 저항·코어 포화·기생 용량은 다른 조건입니다.", canonicalHref: "/electronics/circuits/storage-elements-and-transients#inductor" },
   "rl-step-time-constant": { id: "rl-step-time-constant", domain: "physics", label: "RL 회로의 남은 전류 차이는 L/R 시간으로 지수 감소한다", aliases: ["RL transient", "RL time constant"], definition: "5 V 계단과 1 kΩ·1 H의 가상 직렬 회로는 5=Ri+L di/dt이고 τ=L/R=1 ms입니다. 처음 0에서 시작한 전류는 1 ms 뒤 3.16 mA, 오래 지나 5 mA입니다. 축전기와 같은 63.2%라도 이어지는 상태는 전압이 아니라 전류입니다.", canonicalHref: "/electronics/circuits/storage-elements-and-transients#inductor" },
   "single-storage-boundary": { id: "single-storage-boundary", domain: "physics", label: "시간 상수는 저장 부품과 에너지가 오가는 경로의 조합이다", aliases: ["first-order circuit boundary", "시간 상수 경계"], definition: "같은 5 V·1 kΩ에서 1 µF와 1 H를 각각 넣으면 RC와 L/R이 우연히 모두 1 ms입니다. R을 2 kΩ으로 키우면 RC는 2 ms, L/R은 0.5 ms이며 RL 최종 전류도 2.5 mA로 바뀝니다. 저장 부품 둘이나 비선형·기생 성분이 있으면 지수 하나가 부족합니다.", canonicalHref: "/electronics/circuits/storage-elements-and-transients#boundary" },
+  "sinusoidal-steady-state": { id: "sinusoidal-steady-state", domain: "physics", label: "시작 뒤 남은 영향이 줄면 입력과 같은 빈도의 응답이 남는다", aliases: ["sinusoidal steady state", "정현파 정상 상태"], definition: "선형 RC에 5 V 최대 진폭의 반복 입력을 걸면 출력은 시작 상태의 감쇠 성분과 입력 빈도로 지속되는 성분이 합쳐집니다. 약 1 ms RC 시간 상수로 시작 영향이 줄어든 뒤 진폭·위상을 정현파 정상 상태에서 읽습니다. 켠 직후의 전체 파형을 정상 진폭 하나로 대신할 수 없습니다.", canonicalHref: "/electronics/circuits/steady-state-and-impedance#wave" },
+  "sinusoidal-amplitude-phase": { id: "sinusoidal-amplitude-phase", domain: "physics", label: "반복 신호는 진폭과 입력에 대한 위상으로 비교한다", aliases: ["sinusoidal amplitude and phase", "정현파 진폭 위상"], definition: "입력이 5 cos(ωt) V이고 ω=1000 rad/s라면 f≈159 Hz, 주기≈6.28 ms입니다. 출력 최대 진폭이 3.54 V이고 위상이 −45°면 입력보다 주기의 1/8인 약 0.785 ms 늦습니다. 최대 진폭과 RMS·순간 전압을 구분합니다.", canonicalHref: "/electronics/circuits/steady-state-and-impedance#wave" },
+  "phasor-complex-amplitude": { id: "phasor-complex-amplitude", domain: "physics", label: "복소 진폭은 미분을 jω 곱셈으로 바꾼다", aliases: ["phasor", "complex amplitude"], definition: "정현파의 크기와 각도를 복소수 한 값으로 묶으면 시간 미분은 jω를 곱하는 일로 바뀝니다. j²=−1이고 j 곱셈은 +90° 위상 회전입니다. 실제 회로 전압이 허수가 되는 뜻은 아니며 실수 파형을 꺼내 읽습니다. 선형 단일 주파수 정상 상태의 계산입니다.", canonicalHref: "/electronics/circuits/steady-state-and-impedance#complex" },
+  "passive-element-impedance": { id: "passive-element-impedance", domain: "physics", label: "저항·축전기·인덕터는 서로 다른 복소 전압·전류 비를 가진다", aliases: ["impedance", "임피던스"], definition: "정현파 정상 상태의 복소 전압/전류를 임피던스 Z라고 하며 ZR=R, ZC=1/(jωC), ZL=jωL입니다. ω=1000 rad/s·C=1 µF면 ZC=−j1000 Ω이고 L=1 H면 ZL=+j1000 Ω입니다. 같은 1000 Ω 크기라도 위상 방향이 반대입니다.", canonicalHref: "/electronics/circuits/steady-state-and-impedance#complex" },
+  "rc-impedance-divider": { id: "rc-impedance-divider", domain: "physics", label: "축전기 출력은 복소 임피던스의 전압 분배로 구한다", aliases: ["RC impedance divider", "RC 복소 분압"], definition: "1 kΩ 직렬 저항과 1 µF 축전기의 출력이 축전기 양단이면 H(jω)=ZC/(R+ZC)=1/(1+jωRC)입니다. ω=1000 rad/s에서 ωRC=1, |H|=1/√2≈0.707, 위상 −45°입니다. 5 V 최대 입력의 출력 최대 진폭은 약 3.54 V입니다.", canonicalHref: "/electronics/circuits/steady-state-and-impedance#divider" },
+  "impedance-model-boundary": { id: "impedance-model-boundary", domain: "physics", label: "한 주파수 임피던스는 시작 과도와 비선형 응답을 대신하지 않는다", aliases: ["impedance model limits", "임피던스 적용 경계"], definition: "같은 RC에서 ω=100/1000/10000 rad/s의 출력 최대 진폭은 약 4.98/3.54/0.50 V이고 위상은 약 −5.7/−45/−84.3°입니다. 이는 선형·집중 소자의 단일 정현파 정상 상태입니다. 막 켠 스위치의 초기 조건이나 포화·전압 의존 소자는 별도로 계산합니다.", canonicalHref: "/electronics/circuits/steady-state-and-impedance#limits" },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47330,6 +47336,14 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "inductor-current-state", to: "rl-step-time-constant", relation: "produces", reason: "전류 변화에 필요한 전압 L di/dt를 저항 강하와 연결합니다." },
   { from: "rc-step-time-constant", to: "single-storage-boundary", relation: "constrains", reason: "RC를 바꿔 시간이 어떻게 변하는지 확인합니다." },
   { from: "rl-step-time-constant", to: "single-storage-boundary", relation: "constrains", reason: "L/R을 바꿔 RC와 반대 방향의 변화를 확인합니다." },
+  { from: "rc-step-time-constant", to: "sinusoidal-steady-state", relation: "prerequisite", reason: "시작 전압의 영향이 RC 시간에 따라 줄어든 뒤 지속 응답을 읽습니다." },
+  { from: "sinusoidal-steady-state", to: "sinusoidal-amplitude-phase", relation: "produces", reason: "입력과 같은 빈도로 남은 출력의 크기와 지연을 측정합니다." },
+  { from: "sinusoidal-amplitude-phase", to: "phasor-complex-amplitude", relation: "produces", reason: "두 값을 복소수 한 쌍으로 묶어 미분을 곱셈으로 바꿉니다." },
+  { from: "capacitor-voltage-state", to: "passive-element-impedance", relation: "prerequisite", reason: "i=C dv/dt에서 축전기 임피던스를 얻습니다." },
+  { from: "inductor-current-state", to: "passive-element-impedance", relation: "prerequisite", reason: "v=L di/dt에서 인덕터 임피던스를 얻습니다." },
+  { from: "phasor-complex-amplitude", to: "passive-element-impedance", relation: "produces", reason: "전압/전류의 복소 비에 각도 차이를 담습니다." },
+  { from: "passive-element-impedance", to: "rc-impedance-divider", relation: "produces", reason: "직렬 두 소자의 복소 전압 분배로 출력을 구합니다." },
+  { from: "rc-impedance-divider", to: "impedance-model-boundary", relation: "constrains", reason: "반복 속도에 따른 출력 수치와 정상 상태 조건을 함께 확인합니다." },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {
