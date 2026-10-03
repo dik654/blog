@@ -1,0 +1,459 @@
+{
+  "contentCommit": "cbd83f6f25a579694e88341da38696e58e6e5fb1",
+  "pagesRun": "https://github.com/dik654/blog/actions/runs/37152378400",
+  "pagesConclusion": "success",
+  "base": "https://dik654.github.io/blog",
+  "verifiedAt": "2026-10-03T20:46:55.438Z",
+  "routes": 31,
+  "screens": 62,
+  "failures": 0,
+  "assets": {
+    "url": "https://dik654.github.io/blog/",
+    "status": 200,
+    "assets": [
+      "/blog/assets/index-kq0EXPgP.js",
+      "/blog/assets/vendor-react-C68GdDIF.js",
+      "/blog/assets/vendor-charts-B2hl6Nwi.js",
+      "/blog/assets/vendor-framer-9nNs9h_Q.js",
+      "/blog/assets/index-iW7DARdb.css"
+    ],
+    "matchLocalAssets": true,
+    "htmlSha256": "15dd8fdc39e14cedde8bff4eaf544e852fb94ea53f81fff5aa80ec7876caf996"
+  },
+  "results": [
+    {
+      "route": "ai/flash-attention-io-aware-kernel",
+      "publicPath": "cs/ai/flash-attention-io-aware-kernel",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "ai/world-model-latent-planning",
+      "publicPath": "cs/ai/world-model-latent-planning",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "ai/world-model-latent-planning",
+      "publicPath": "cs/ai/world-model-latent-planning",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "ai/fast-weight-memory-and-chunkwise-recurrence",
+      "publicPath": "cs/ai/fast-weight-memory-and-chunkwise-recurrence",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "ai/fast-weight-memory-and-chunkwise-recurrence",
+      "publicPath": "cs/ai/fast-weight-memory-and-chunkwise-recurrence",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "ai/flash-attention-io-aware-kernel",
+      "publicPath": "cs/ai/flash-attention-io-aware-kernel",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "banking/repo-and-collateral-funding",
+      "publicPath": "finance/banking/repo-and-collateral-funding",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "banking/repo-and-collateral-funding",
+      "publicPath": "finance/banking/repo-and-collateral-funding",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/glamsterdam-block-execution",
+      "publicPath": "cs/blockchain/glamsterdam-block-execution",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/ethereum-future-roadmap",
+      "publicPath": "cs/blockchain/ethereum-future-roadmap",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/ethereum-future-roadmap",
+      "publicPath": "cs/blockchain/ethereum-future-roadmap",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/glamsterdam-block-execution",
+      "publicPath": "cs/blockchain/glamsterdam-block-execution",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/hyperliquid",
+      "publicPath": "cs/blockchain/hyperliquid",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/hyperliquid",
+      "publicPath": "cs/blockchain/hyperliquid",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/pq-account",
+      "publicPath": "cs/blockchain/pq-account",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/robinhood-chain-settlement",
+      "publicPath": "cs/blockchain/robinhood-chain-settlement",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/pq-account",
+      "publicPath": "cs/blockchain/pq-account",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/robinhood-chain-settlement",
+      "publicPath": "cs/blockchain/robinhood-chain-settlement",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "business/shop-daily-operations",
+      "publicPath": "economics/business/shop-daily-operations",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "business/shop-daily-operations",
+      "publicPath": "economics/business/shop-daily-operations",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "business/shop-fitout-and-opening",
+      "publicPath": "economics/business/shop-fitout-and-opening",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "business/shop-fitout-and-opening",
+      "publicPath": "economics/business/shop-fitout-and-opening",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/jolt",
+      "publicPath": "cs/crypto/jolt",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/jolt",
+      "publicPath": "cs/crypto/jolt",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/ml-kem-and-noisy-equations",
+      "publicPath": "cs/crypto/ml-kem-and-noisy-equations",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/ml-kem-and-noisy-equations",
+      "publicPath": "cs/crypto/ml-kem-and-noisy-equations",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/post-quantum-signatures",
+      "publicPath": "cs/crypto/post-quantum-signatures",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/post-quantum-signatures",
+      "publicPath": "cs/crypto/post-quantum-signatures",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/prover-memory-and-verifier-cost",
+      "publicPath": "cs/crypto/prover-memory-and-verifier-cost",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/prover-memory-and-verifier-cost",
+      "publicPath": "cs/crypto/prover-memory-and-verifier-cost",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/quantum-computing-and-cryptographic-risk",
+      "publicPath": "cs/crypto/quantum-computing-and-cryptographic-risk",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/quantum-computing-and-cryptographic-risk",
+      "publicPath": "cs/crypto/quantum-computing-and-cryptographic-risk",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/quantum-key-distribution",
+      "publicPath": "cs/crypto/quantum-key-distribution",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/quantum-key-distribution",
+      "publicPath": "cs/crypto/quantum-key-distribution",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "gpu/amd-gpu-execution-and-hip",
+      "publicPath": "cs/gpu/amd-gpu-execution-and-hip",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "gpu/amd-gpu-execution-and-hip",
+      "publicPath": "cs/gpu/amd-gpu-execution-and-hip",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "gpu/hbm-stack-and-memory-requests",
+      "publicPath": "cs/gpu/hbm-stack-and-memory-requests",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "gpu/hbm-stack-and-memory-requests",
+      "publicPath": "cs/gpu/hbm-stack-and-memory-requests",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "infrastructure/materials-waste-and-circularity",
+      "publicPath": "economics/infrastructure/materials-waste-and-circularity",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "infrastructure/materials-waste-and-circularity",
+      "publicPath": "economics/infrastructure/materials-waste-and-circularity",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "institutions/culture-norms-and-coordination",
+      "publicPath": "economics/institutions/culture-norms-and-coordination",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "institutions/culture-norms-and-coordination",
+      "publicPath": "economics/institutions/culture-norms-and-coordination",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "institutions/evidence-measurement-and-causality",
+      "publicPath": "economics/institutions/evidence-measurement-and-causality",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "institutions/evidence-measurement-and-causality",
+      "publicPath": "economics/institutions/evidence-measurement-and-causality",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "institutions/how-to-read-a-country",
+      "publicPath": "economics/institutions/how-to-read-a-country",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "institutions/how-to-read-a-country",
+      "publicPath": "economics/institutions/how-to-read-a-country",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "institutions/population-migration-and-care",
+      "publicPath": "economics/institutions/population-migration-and-care",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "institutions/population-migration-and-care",
+      "publicPath": "economics/institutions/population-migration-and-care",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "markets/financial-products-and-claims",
+      "publicPath": "finance/markets/financial-products-and-claims",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "markets/financial-products-and-claims",
+      "publicPath": "finance/markets/financial-products-and-claims",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "markets/covered-calls-and-income-funds",
+      "publicPath": "finance/markets/covered-calls-and-income-funds",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "markets/covered-calls-and-income-funds",
+      "publicPath": "finance/markets/covered-calls-and-income-funds",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "markets/funds-etfs-and-etns",
+      "publicPath": "finance/markets/funds-etfs-and-etns",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "markets/funds-etfs-and-etns",
+      "publicPath": "finance/markets/funds-etfs-and-etns",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "markets/securitization-and-tranches",
+      "publicPath": "finance/markets/securitization-and-tranches",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "markets/securitization-and-tranches",
+      "publicPath": "finance/markets/securitization-and-tranches",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "property/shop-closure-and-restoration",
+      "publicPath": "economics/property/shop-closure-and-restoration",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "property/shop-closure-and-restoration",
+      "publicPath": "economics/property/shop-closure-and-restoration",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "markets/options-and-asymmetric-payoffs",
+      "publicPath": "finance/markets/options-and-asymmetric-payoffs",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "markets/options-and-asymmetric-payoffs",
+      "publicPath": "finance/markets/options-and-asymmetric-payoffs",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "risk/margin-collateral-and-leverage",
+      "publicPath": "finance/risk/margin-collateral-and-leverage",
+      "width": 1440,
+      "passed": true,
+      "issues": []
+    },
+    {
+      "route": "risk/margin-collateral-and-leverage",
+      "publicPath": "finance/risk/margin-collateral-and-leverage",
+      "width": 390,
+      "passed": true,
+      "issues": []
+    }
+  ]
+}

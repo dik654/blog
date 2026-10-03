@@ -32,3 +32,7 @@
 리터럴이 아닌 런타임 계산 경로와 번들러 전용 동적 glob은 이 정적 source closure의 대상이 아니다. 현재 공개 catalog entry와 실제 소스의 매핑은 Vite가 로드한 catalog로 검증한다.
 
 - 최종 본문 반영 뒤 전역 article/Viz 감사를 재실행해 material 0, Viz ERROR 0/REVIEW 4,025를 재확인했다. `/tmp/article-contract-dod-final.json`, `/tmp/viz-dod-final.log`.
+
+## 최종 통합 확인
+
+변경 본문의 topology를 검토한 뒤 strict 감사를 통과했다. 공유 도식의 폭·좌표·버튼 이름만 바뀐 기존 글 7편은 본문이 유지됨을 확인하고 해당 prose 지문만 재검토했다. 전체 baseline을 새로 생성하지 않았다. 배포와 전수 화면 결과는 [통합 검증 보고서](../world-systems-validation-2026-10-04.md)에 기록했다.
