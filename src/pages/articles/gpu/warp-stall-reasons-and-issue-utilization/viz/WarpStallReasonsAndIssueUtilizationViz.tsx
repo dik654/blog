@@ -16,6 +16,8 @@ const SCENES = [
   "clock 6 · W3 선택",
 ] as const;
 
+const CONTROL_LABELS = ["W0 선택", "W1 선택", "선택 가능 없음", "W0 복귀", "W2 복귀", "W3 선택"] as const;
+
 type State = "sel" | "elig" | "long" | "short" | "bar";
 
 const WARPS = ["W0", "W1", "W2", "W3"] as const;
@@ -164,7 +166,7 @@ export default function WarpStallReasonsAndIssueUtilizationViz() {
             {NOTES[scenes.active]}
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} labels={CONTROL_LABELS} />
       </div>
     </VizFrame>
   );

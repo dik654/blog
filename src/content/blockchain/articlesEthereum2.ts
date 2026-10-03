@@ -1,6 +1,102 @@
 import type { Article } from "../types";
 
 export const ethereum2Articles: Article[] = [
+  {
+    slug: "glamsterdam-block-execution",
+    title: "Glamsterdam: ePBS와 블록 접근 목록의 실행 경로",
+    subcategory: "eth-scaling",
+    sections: [
+      {
+        "id": "overview",
+        "title": "같은 블록을 더 잘 전달하고 실행하려면 무엇을 바꿔야 하는가"
+      },
+      {
+        "id": "black-box",
+        "title": "내용을 만드는 사람, 고르는 사람, 검사하는 사람"
+      },
+      {
+        "id": "case",
+        "title": "100에서10을 빼고5를 더하면 마지막 값은95다"
+      },
+      {
+        "id": "picture",
+        "title": "최종95만이 아니라 첫 거래 뒤90도 전달한다"
+      },
+      {
+        "id": "need",
+        "title": "다음 거래가 읽을 위치를 모르면 준비를 뒤늦게 시작한다"
+      },
+      {
+        "id": "names",
+        "title": "BAL은 실행 자료이고 ePBS는 제작·제안의 규칙이다"
+      },
+      {
+        "id": "mechanism",
+        "title": "서명한 약속, 실제 내용, 접근 목록을 차례로 검사한다"
+      },
+      {
+        "id": "source",
+        "title": "개발 명세는 bid와 payload를 서로 다른 구조로 둔다"
+      },
+      {
+        "id": "comparison",
+        "title": "접근 목록을 받더라도 실제 실행과 맞는지 확인한다"
+      },
+      {
+        "id": "limits",
+        "title": "병렬 실행 가능성과 실제 처리량 개선은 같지 않다"
+      }
+    ],
+    component: () => import("@/pages/articles/blockchain/glamsterdam-block-execution"),
+  },
+  {
+    slug: "robinhood-chain-settlement",
+    title: "Robinhood Chain: 전송 확정·브리지 인출·Stock Token 권리",
+    subcategory: "eth-scaling",
+    sections: [
+      {
+        "id": "overview",
+        "title": "체인에서 보낸 자산이 언제 도착했고 무엇을 소유하게 됐는가"
+      },
+      {
+        "id": "black-box",
+        "title": "전송을 승인한 뒤 누가 기록하고 지급하는가"
+      },
+      {
+        "id": "case",
+        "title": "100개에서10개를 보내고 받은 사람이5개를 인출한다"
+      },
+      {
+        "id": "picture",
+        "title": "B의10개가 한 번만 이동하도록 기록한다"
+      },
+      {
+        "id": "need",
+        "title": "빠른 영수증과 L1 인출 대기에는 서로 다른 이유가 있다"
+      },
+      {
+        "id": "names",
+        "title": "Soft confirmation·L1 finality·withdrawal을 구별한다"
+      },
+      {
+        "id": "mechanism",
+        "title": "A의 전송에서 B의 L1 수령까지 따라간다"
+      },
+      {
+        "id": "source",
+        "title": "SDK의 CONFIRMED는 이미 지급했다는 뜻이 아니다"
+      },
+      {
+        "id": "comparison",
+        "title": "Stock Token10개를 받았어도 기초 주식의 주주가 되는 것은 아니다"
+      },
+      {
+        "id": "limits",
+        "title": "빠른 bridge와 공개 체인은 서로 다른 추가 조건을 갖는다"
+      }
+    ],
+    component: () => import("@/pages/articles/blockchain/robinhood-chain-settlement"),
+  },
   /* ── Scaling & L2 ── */
   {
     slug: "rollup-fundamentals",
@@ -30,15 +126,49 @@ export const ethereum2Articles: Article[] = [
   },
   {
     slug: "robinhood-chain-blob-demand",
-    title: "로빈후드 체인과 블롭 수요: 타겟·BPO·sparse blobpool",
+    title: "Robinhood Chain과 블롭 수요: 평균·기여·BPO 회계",
     subcategory: "eth-scaling",
     sections: [
-      { id: "overview", title: "평균·타겟·피크를 나눠 읽기" },
-      { id: "target-vs-average", title: "타겟 초과는 압력, 기록이 아니다" },
-      { id: "growth-rate", title: "다섯 달 두 배의 월간 성장률" },
-      { id: "robinhood-chain-concentration", title: "단일 rollup 집중 수요" },
-      { id: "bpo-sparse-blobpool", title: "BPO 파라미터 조정과 sparse blobpool" },
-      { id: "reading-checklist", title: "재검증 체크리스트" },
+      {
+        "id": "overview",
+        "title": "블롭 수요에서 가격 압력과 특정 체인의 기여를 구분한다"
+      },
+      {
+        "id": "black-box",
+        "title": "게시하는 곳, 담는 곳, 합계를 읽는 곳"
+      },
+      {
+        "id": "case",
+        "title": "18개가 들어간 블록과 평균10개는 동시에 성립한다"
+      },
+      {
+        "id": "picture",
+        "title": "네 블록을 같은 시간 창으로 묶는다"
+      },
+      {
+        "id": "need",
+        "title": "많이 사용한 순간만으로 공급 부족을 판단할 수 없다"
+      },
+      {
+        "id": "target-vs-average",
+        "title": "목표·상한·평균·초과분에 이름을 붙인다"
+      },
+      {
+        "id": "robinhood-chain-concentration",
+        "title": "같은 블록 범위에서 사용량과 게시자를 다시 계산한다"
+      },
+      {
+        "id": "source",
+        "title": "기본값이 아니라 메인넷 일정에 연결된 값을 읽는다"
+      },
+      {
+        "id": "bpo-sparse-blobpool",
+        "title": "목표 상향과 전송 절감은 서로 다른 계산이다"
+      },
+      {
+        "id": "reading-checklist",
+        "title": "측정한 범위보다 큰 결론을 내리지 않는다"
+      }
     ],
     component: () => import("@/pages/articles/blockchain/robinhood-chain-blob-demand"),
   },
@@ -199,25 +329,97 @@ export const ethereum2Articles: Article[] = [
   },
   {
     slug: "pq-account",
-    title: "Post-Quantum Account Abstraction",
+    title: "양자내성 계정: 송금·검증·nonce·복구 이전",
     subcategory: "eth-privacy",
     sections: [
-      { id: "overview", title: "UserOperation에서 receipt까지" },
-      { id: "account-abstraction-validation", title: "AA validation과 execution 경계" },
-      { id: "ml-dsa-signature-boundary", title: "ML-DSA signature artifact" },
-      { id: "migration-release", title: "Hybrid migration release gate" },
-    ],
+      {
+            "id": "overview",
+            "title": "계정의 서명을 바꿔도 돈을 보내는 모든 권한이 함께 바뀌어야 한다"
+      },
+      {
+            "id": "black-box",
+            "title": "요청 작성, 권한 검사, 실행, 비용 지급은 다른 역할이다"
+      },
+      {
+            "id": "case",
+            "title": "계정 1 ETH, 비용 예치금 0.02 ETH에서 0.1 ETH를 보낸다"
+      },
+      {
+            "id": "picture",
+            "title": "잔액·예치금·요청 순번이 바뀌는 시점을 나눈다"
+      },
+      {
+            "id": "need",
+            "title": "서명 성공만으로 재사용 방지와 송금 성공을 보장할 수 없다"
+      },
+      {
+            "id": "names",
+            "title": "요청 객체, EntryPoint, 예치금, nonce의 이름"
+      },
+      {
+            "id": "account-abstraction-validation",
+            "title": "검증을 통과한 0.1 ETH 요청을 실행하고 정산한다"
+      },
+      {
+            "id": "source",
+            "title": "실제 원본은 EIP-712 해시와 두 실행 단계를 보여 준다"
+      },
+      {
+            "id": "ml-dsa-signature-boundary",
+            "title": "서명 표준·체인 실행 능력·전환 권한을 따로 확인한다"
+      },
+      {
+            "id": "migration-release",
+            "title": "새 서명 실패와 복구 때도 허용한 권한만 돈을 움직이게 한다"
+      }
+],
     component: () => import("@/pages/articles/blockchain/pq-account"),
   },
   {
     slug: "ethereum-future-roadmap",
-    title: "Ethereum 미래 로드맵: PQ·ZK·formal verification",
-    subcategory: "eth-privacy",
+    title: "Ethereum 로드맵: 제안·시험·메인넷 적용 구분",
+    subcategory: "eth-scaling",
     sections: [
-      { id: "overview", title: "로드맵 maturity부터 읽기" },
-      { id: "pq-surfaces", title: "Post-Quantum 전환의 네 표면" },
-      { id: "proving-execution", title: "Proving·native rollup·leanISA" },
-      { id: "formal-simplification", title: "AI-assisted formal verification" },
+      {
+        "id": "overview",
+        "title": "이름이 발표된 변화가 언제부터 내 거래의 규칙이 되는가"
+      },
+      {
+        "id": "black-box",
+        "title": "연구자·구현자·운영자는 서로 다른 결과물을 만든다"
+      },
+      {
+        "id": "case",
+        "title": "10월4일에 10월6일 시험 일정을 읽었다면"
+      },
+      {
+        "id": "picture",
+        "title": "문서 상태와 배포 상태를 같은 행에 적는다"
+      },
+      {
+        "id": "need",
+        "title": "시험 성공과 서비스의 지원 가능성은 다른 질문이다"
+      },
+      {
+        "id": "names",
+        "title": "문서의 Review와 업그레이드의 SFI를 분리한다"
+      },
+      {
+        "id": "mechanism",
+        "title": "제안에서 활성화 후 관측까지 한 줄로 추적한다"
+      },
+      {
+        "id": "source",
+        "title": "활성화라는 말에는 실제 네트워크 조건이 붙는다"
+      },
+      {
+        "id": "comparison",
+        "title": "Hegotá와 연구 로드맵에도 같은 질문을 던진다"
+      },
+      {
+        "id": "formal-simplification",
+        "title": "검사할 명제가 잘못되면 증명이 있어도 목표를 놓친다"
+      }
     ],
     component: () => import("@/pages/articles/blockchain/ethereum-future-roadmap"),
   },

@@ -1,341 +1,127 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ProgressiveDetail from "@/components/articles/progressive-detail";
-import TermBreakdown from "@/components/articles/term-breakdown";
-import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import FastWeightMemoryAndChunkwiseRecurrenceViz from "./fast-weight-memory-and-chunkwise-recurrence/viz/FastWeightMemoryAndChunkwiseRecurrenceViz";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import NumericPath from "@/pages/articles/world-systems/NumericPath";
+import SourceApplication from "@/pages/articles/world-systems/SourceApplication";
+import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
+import PaperReading from "./research-audit-sources/PaperReading";
+import { codeRefs, fileTrees, projectMetas } from "./research-audit-sources/codeRefs";
 
-/**
- * Fast weight memory 는 delta rule 로 쓰고 chunkwise scan 으로 병렬화합니다
- *
- * 작성 규칙은 docs/coverage-batch-playbook.md 를 따른다.
- */
-export default function FastWeightMemoryAndChunkwiseRecurrenceArticle() {
-  return (
-    <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Outer-product 로 눌러 쓴 기억은 겹쳐 쓰기 때문에 삭제·수정이 안 됩니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            <Link to="/cs/ai/linear-attention-and-state-space-models#recurrent-state">Linear attention 의 φ(K)ᵀV 누적</Link>
-            은 key·value 쌍을 고정 크기 행렬 하나에 눌러 담는 기억입니다. 이 글은 그 눌러
-            담기를 delta rule 로 고쳐 겹쳐 쓴 값을 지우고 다시 쓰는 방법과, 이 수정 때문에
-            생긴 순차 의존성을 chunk 단위 병렬 scan 으로 되돌리는 방법을 다룹니다.
-          </p>
-          <p>
-            순수 덧셈으로 값을 눌러 담으면 지우거나 고칠 방법이 없습니다. 한 번 쓴 key-value association 은 계속 남아 있고 비슷한 key 로 다시 쓰면 새 값이 기존
-            값 위에 더해질 뿐입니다. 문맥이 바뀌어 예전 정보가 필요 없어져도 지울 수단이 없습니다.
-          </p>
-          <p>
-            Delta rule 은 새 값을 더하기 전에 지금 이 key 로 이미 읽히는 값을 먼저 빼서
-            얻은 오차만 씁니다. 그런데 이 뺄셈이 상태 전체(S_{"{t-1}"})에 의존해, 표준
-            linear attention 처럼 모든 step 을 한 번의 행렬곱으로 병렬 계산할 수 없게
-            만듭니다. Chunkwise parallel form 이 이 문제를 되돌리는 절충입니다.
-          </p>
-          <p>
-            수치로 미리 봅니다. 4096 token 시퀀스를 64 개씩 chunk 로 나누면 순차적으로 기다려야 하는 단계가 4096 개에서 64 개로 줄고 그 대가로 head 당 곱셈은
-            대략 50 % 늘어납니다. 이 교환이 순이익인 이유는 chunkwise-scan 절에서 계산합니다.
-          </p>
-        </div>
-        <div id="paper-schlag" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Schlag, Irie, Schmidhuber · Linear Transformers Are Secretly Fast Weight Programmers"
-            citeKey={1}
-            href="https://arxiv.org/abs/2102.11174"
-          >
-            2021년 논문은 linear attention 이 1990년대 fast weight programmer 와 수학적으로
-            같은 구조임을 보이고, 순수 덧셈 누적이 만드는 간섭 문제를 지적하며 delta rule
-            변형을 제안합니다. 실험은 기계번역·언어모델링 두 task 로 저자가 직접 측정한
-            결과입니다.
-          </CitationBlock>
-        </div>
-        <ContentBoundary article="fast-weight-memory-and-chunkwise-recurrence" />
-      </section>
+export default function Article(){
+  const sidebar=useCodeSidebar();
+  return <div className="space-y-16">
+    <section id="overview" data-teach-level="S" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">1 · 작은 행렬 하나에 기억을 쓰면 서로 섞일 수 있다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">두 쌍을 기억하겠습니다. key k₁=(1,0)의 값은 (2,0), k₂=(0.6,0.8)의 값은 (0,3)입니다. 네 숫자짜리 행렬에 둘을 넣으면 첫 key를 읽을 때 원래 없던 1.8이 함께 나옵니다.</p>
+        <p className="leading-8">이 글은 그 간섭을 확인하고 같은 key의 값을 (5,0)으로 고칩니다. 수정 규칙을 이해한 뒤, 토큰을 하나씩 처리하는 계산을 여러 개씩 병렬로 바꾸는 방법과 2026년 Gated DeltaNet-2의 독립 erase/write를 연결합니다.</p>
+      </div>
 
-      <section id="associative-memory" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          k⊗v 외적의 합이 곧 content-addressable 기억입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            Key-value 쌍을 k⊗v 외적의 합으로 하나의 행렬 M 에 눌러 담고 query 때 M 과 곱해 값을 읽어내는 기억이 associative memory 입니다. Key 로
-            값을 찾아간다는 점에서 주소가 아니라 내용으로 찾는다고 해서 content-addressable 이라 부릅니다.
-          </p>
-          <p>
-            신경망에서는 이 M 을 fast weight memory 라 부릅니다. 고정 weight 는 학습으로 천천히 정해지는데, 그와 구분해 매 시퀀스마다 새로 쓰이고 지워지는
-            weight 라는 뜻입니다. Fast weight programmer 는 이 구도 자체를 가리킵니다. 느린 학습으로 고정된 slow network 가 매 시점 key·value
-            를 내보내 fast weight 행렬을 프로그래밍하고 그 행렬이 별도의 계산을 수행합니다.
-          </p>
-          <p>
-            숫자로 겹쳐 쓰기를 봅니다. 4차원에서 k₁=(1,0,0,0), v₁=(2,0,0,0)과
-            k₂=(0.6,0.8,0,0), v₂=(0,3,0,0)을 M=v₁k₁ᵀ+v₂k₂ᵀ 로 눌러 담습니다. k₁ 로
-            읽으면 M k₁=(k₁·k₁)v₁+(k₁·k₂)v₂=1·(2,0,0,0)+0.6·(0,3,0,0)=(2, 1.8, 0, 0)
-            으로, 원래 값 (2,0,0,0)에 v₂ 의 조각이 섞여 나옵니다.
-          </p>
-          <p>
-            두 key 가 직교하면(k₁·k₂=0) 이 섞임이 사라집니다. 실제로는 head 차원보다
-            훨씬 많은 token 을 같은 행렬에 눌러 담으므로 완전한 직교를 기대할 수 없고,
-            <Link to="/cs/ai/linear-attention-and-state-space-models#tradeoff">이 겹쳐 쓰기가 왜 고정 크기 상태의 근본 한계인지</Link>
-            는 그 글이 다룹니다. 이 글은 겹쳐 쓰기 자체를 고치는 쓰기 규칙에 집중합니다.
-          </p>
-        </div>
-        <TermBreakdown
-          title="Fast weight memory 를 이루는 두 가지 말"
-          description="같은 구조를 가리키는 용어를 신경망 문헌과 옛 fast weight 문헌이 다르게 부릅니다."
-          items={[
-            { term: "Associative memory", description: "k⊗v 외적의 합으로 값을 눌러 담고 곱으로 읽어내는 기억 구조 자체입니다.", example: "M=Σ vᵢkᵢᵀ, 읽기는 Mq", boundary: "Key 가 직교하지 않으면 읽기 결과에 다른 항이 섞여 듭니다." },
-            { term: "Fast weight memory", description: "위 행렬 M 을 학습된 고정 weight 와 구분해 부르는 이름입니다. 시퀀스마다 새로 쓰입니다.", example: "Linear attention 의 φ(K)ᵀV", boundary: "가중치라는 이름과 달리 gradient 로 학습되지 않고 forward pass 중 계산됩니다." },
-            { term: "Fast weight programmer", description: "Slow network 가 key·value 를 내보내 fast weight 를 프로그래밍하는 구도 전체를 가리킵니다.", example: "Schlag et al. 2021", boundary: "Linear attention 이 이 구도의 한 사례임은 사후에 밝혀진 대응 관계입니다." },
-          ]}
-        />
-      </section>
+      <ContentBoundary article="fast-weight-memory-and-chunkwise-recurrence" />
+      <p data-stage-bridge="overview" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">무엇을 기억하고 바꿀지 정했습니다. 먼저 상태의 입출력을 봅니다.</p>
+    </section>
+    <section id="black-box" data-teach-level="B" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">2 · 현재 기억과 새 key·값을 받아 기억을 고친다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">입력은 이전 상태 M과 현재 key·value·query, 쓰기·망각 계수입니다. 출력은 갱신한 M과 query로 읽은 값입니다. 문맥을 원문 배열로 계속 쌓는 대신 정해진 크기의 M을 계속 고칩니다.</p>
+        <p className="leading-8">고정된 것은 한 head의 상태 크기입니다. 새 token의 투영과 상태 갱신은 계속 계산해야 하며, 내용이 무한히 정확하게 저장된다는 뜻은 아닙니다. 여러 sequence의 상태도 서로 섞지 않아야 합니다.</p>
+      </div>
 
-      <section id="delta-rule" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Delta rule 은 더하기 전에 이미 읽히는 값을 먼저 뺍니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            Delta rule 은 새 값을 그대로 더하지 않고 지금 key 로 이미 읽히는 값을 먼저 빼서 얻은 예측 오차(prediction error, delta)만 다시 씁니다.
-            같은 key 에 다시 쓸 때 옛 값과 새 값이 함께 쌓이지 않고 새 값이 옛 값을 대체합니다.
-          </p>
-          <p>
-            앞 절의 M 을 그대로 이어 씁니다. k₁ 의 값을 (2,0,0,0)에서 (5,0,0,0)으로
-            바꾸고 싶다고 합시다. 그냥 v₁_new k₁ᵀ 를 더하면 옛 (2,1.8,0,0)이 여전히 섞여
-            남습니다. Delta rule 은 M k₁=(2,1.8,0,0)을 먼저 구해 목표값에서 뺀 뒤
-            (3,−1.8,0,0)만 k₁ 방향으로 씁니다.
-          </p>
-          <p>
-            β=1(완전 대체)이면 k₁ 로 다시 읽었을 때 정확히 (5,0,0,0)이 나옵니다. k₁ 이
-            단위벡터라 자기 자신과의 내적이 1이기 때문입니다. 다만 k₂ 로 읽은 값도
-            (1.2,3,0,0)에서 (3.0,1.92,0,0)으로 바뀝니다. k₁·k₂=0.6 만큼 이번 correction 이
-            k₂ 의 읽기에도 새어 들어간 결과입니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="새 값을 어떻게 더해야 같은 key 로 다시 읽었을 때 옛 값이 남지 않나요?"
-          idea="지금 state 로 이 key 를 읽었을 때 나오는 값을 먼저 계산해 목표값에서 빼면, 그 차이(오차)만 다시 써도 같은 key 의 읽기 결과가 목표값이 됩니다."
-          formula={String.raw`S_t=S_{t-1}(I-\beta_t \mathbf{k}_t\mathbf{k}_t^\top)+\beta_t \mathbf{v}_t\mathbf{k}_t^\top \;=\; S_{t-1}+\beta_t(\mathbf{v}_t-S_{t-1}\mathbf{k}_t)\mathbf{k}_t^\top`}
-          annotatedFormula={String.raw`\underbrace{S_{t-1}(I-\beta_t \mathbf{k}_t\mathbf{k}_t^\top)}_{\text{옛 상태에서 }k_t\text{ 방향 성분을 }\beta_t\text{만큼 제거}}+\underbrace{\beta_t \mathbf{v}_t\mathbf{k}_t^\top}_{\text{새 값을 그 방향에 다시 씀}} \;=\; S_{t-1}+\beta_t\underbrace{(\mathbf{v}_t-S_{t-1}\mathbf{k}_t)}_{\text{prediction error, delta}}\mathbf{k}_t^\top`}
-          operations={[
-            { expression: String.raw`S_{t-1}\mathbf{k}_t`, annotation: ["지금 state 로 이 key 를 읽으면 무엇이 나오는지 먼저 구함", "= 겹쳐 쓰인 다른 key 들의 기여까지 포함한 현재 예측값"] },
-            { expression: String.raw`\mathbf{v}_t-S_{t-1}\mathbf{k}_t`, annotation: ["목표값에서 현재 예측을 빼 오차만 남김", "옛 값이 이미 옳다면 이 오차는 0"] },
-            { expression: String.raw`\beta_t(\cdot)\mathbf{k}_t^\top`, annotation: ["오차를 학습률 β_t 만큼 줄여 k_t 방향으로만 씀", "다른 key 방향의 저장값은 그대로 둠(단, k 가 직교하지 않으면 일부 새어듦)"] },
-          ]}
-          terms={[
-            { symbol: String.raw`S_{t-1}`, name: "이전 fast weight 상태", description: "d×d 행렬로, 지금까지 쓰인 모든 key-value correction 의 합입니다." },
-            { symbol: String.raw`\beta_t`, name: "학습률(쓰기 강도)", description: "0과 1 사이 스칼라로, 1이면 이 key 의 값을 완전히 새 값으로 대체합니다." },
-            { symbol: String.raw`\mathbf{v}_t-S_{t-1}\mathbf{k}_t`, name: "prediction error · delta", description: "지금 state 가 이 key 로 이미 예측하는 값과 목표값의 차이입니다." },
-          ]}
-          assumptions={["k_t 가 단위벡터가 아니면 β_t 의 범위와 정확한 대체 조건이 달라집니다.", "k 들이 서로 직교하지 않으면 한 key 의 correction 이 다른 key 의 읽기에도 일부 새어 듭니다."]}
-          interpretation="왼쪽 두 항의 형태는 상태 전체를 지우고 다시 쓰는 것처럼 보이지만, 오른쪽으로 다시 쓰면 실제로는 딱 하나의 오차 항만 더하는 것과 같습니다. 이 오차가 S_{t-1} 전체에 의존한다는 사실이 다음 절 병렬화 문제의 원인입니다."
-        />
-      </section>
+      <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">저장 크기와 기억 품질을 구분했습니다. 작은 행렬을 직접 만듭니다.</p>
+    </section>
+    <section id="case" data-teach-level="0" className="scroll-mt-20">
+      <span id="associative-memory" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">3 · 첫 key를 읽으면 (2, 1.8)이 나온다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">값 v와 key k의 외적 vkᵀ를 더하면 M=[[2,0],[1.8,2.4]]입니다. 첫 열은 k₁로 읽는 결과이므로 Mk₁=(2,1.8)입니다. 두 번째 쌍의 key가 첫 key와 0.6만큼 겹쳐 0.6×3=1.8이 섞였습니다.</p>
+        <p className="leading-8">k₂로 읽으면 (1.2,3)입니다. 두 key가 직교할 때에는 서로의 값이 섞이지 않지만 실제로는 제한된 차원에 많은 정보를 넣습니다. 작은 행렬의 절약과 간섭은 같은 설계에서 함께 생깁니다.</p>
+      </div>
+<NumericPath title="기억의 쓰기와 읽기" steps={[{"label": "두 쌍", "value": "k₁→(2,0), k₂→(0,3)", "detail": "key 내적 0.6"}, {"label": "기억", "value": "[[2,0],[1.8,2.4]]", "detail": "값×key 배치"}, {"label": "첫 key 질의", "value": "(2,1.8)", "detail": "다른 값의 일부가 섞임"}, {"label": "수정 목표", "value": "(5,0)", "detail": "현재 읽기와 목표의 차이를 기록"}]} />
+      <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">섞인 값을 계산했습니다. 수정 요청이 행렬을 통과하는 길을 그립니다.</p>
+    </section>
+    <section id="picture" data-teach-level="1" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">4 · 읽기·차이·쓰기의 순서로 기억을 고친다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">k₁의 새 목표가 (5,0)이면 현재 읽기 (2,1.8)을 빼 오차 (3,−1.8)을 얻습니다. 이 오차를 k₁ 방향에 더하면 첫 열만 바뀌어 M=[[5,0],[0,2.4]]가 됩니다.</p>
+        <p className="leading-8">이후 k₁은 정확히 (5,0)을 읽습니다. 그러나 k₂는 (3,1.92)를 읽습니다. 첫 key를 고친 영향이 내적 0.6만큼 두 번째 읽기에도 전해졌기 때문입니다. 선택적으로 쓴다는 말이 다른 기억을 모두 보존한다는 보장은 아닙니다.</p>
+      </div>
 
-      <section id="memory-gate" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Delta rule 만으로는 못 지우는 것을 gate 가 한꺼번에 지웁니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            Delta rule 은 한 step 에 정확히 하나의 key 방향만 고칩니다. 문맥이 완전히
-            바뀌어 기억 전체를 빠르게 지워야 하는 상황에는 맞지 않습니다. Memory update
-            gate 는 상태 전체에 곱해지는 decay 계수로 이 빠른 삭제를 담당합니다.
-          </p>
-          <p>
-            Gated delta rule 은 α_t 라는 0과 1 사이의 data-dependent 계수를 delta rule 앞에 곱합니다. α_t 를 0에 가깝게 만들면
-            correction 이 적용되기 전에 옛 상태 전체가 거의 지워지고 1에 가까우면 delta rule 만 남아 특정 key 방향만 고칩니다.
-          </p>
-          <p>
-            앞 절의 M 에 α=0.1 을 곱하면 k₁ 방향의 (2,1.8,0,0)은 (0.2,0.18,0,0)로 거의
-            사라진 뒤에 delta rule 이 새 값을 씁니다. Delta rule 혼자서는 이렇게 다른 모든
-            key 의 기여를 한꺼번에 낮출 수 없습니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="옛 기억을 빠르게 지우는 것과 특정 key 만 정확히 고치는 것을 어떻게 한 식에 같이 넣나요?"
-          idea="상태 전체에 곱하는 decay 계수 하나와, 특정 key 방향만 골라 고치는 delta rule 항 하나를 곱해서 이어 붙입니다. 서로 다른 스칼라가 서로 다른 범위(전체 대 한 방향)를 담당합니다."
-          formula={String.raw`S_t=\alpha_t\,S_{t-1}(I-\beta_t \mathbf{k}_t\mathbf{k}_t^\top)+\beta_t \mathbf{v}_t\mathbf{k}_t^\top`}
-          annotatedFormula={String.raw`S_t=\underbrace{\alpha_t}_{\text{전체 decay, 문맥 전환 시 }\to 0}\underbrace{S_{t-1}(I-\beta_t \mathbf{k}_t\mathbf{k}_t^\top)}_{\text{delta rule 로 이미 }k_t\text{ 방향만 고친 상태}}+\underbrace{\beta_t \mathbf{v}_t\mathbf{k}_t^\top}_{\text{새 값 쓰기(decay 영향 밖)}}`}
-          operations={[
-            { expression: String.raw`\alpha_t\,S_{t-1}`, annotation: ["상태 전체를 한 스칼라로 줄여", "특정 key 와 무관하게 옛 기억 전부를 빠르게 낮춤"] },
-            { expression: String.raw`(I-\beta_t \mathbf{k}_t\mathbf{k}_t^\top)`, annotation: ["decay 뒤 남은 상태에서 다시 k_t 방향만 골라 고쳐", "delta rule 의 표적 수정이 여전히 적용됨"] },
-            { expression: String.raw`\beta_t \mathbf{v}_t\mathbf{k}_t^\top`, annotation: ["새 값은 decay 를 거치지 않고 그대로 써", "이번 step 의 기여가 줄어들지 않게 함"] },
-          ]}
-          terms={[
-            { symbol: String.raw`\alpha_t`, name: "memory decay · forgetting gate", description: "0과 1 사이 스칼라로, 매 step data 로부터 계산됩니다. 0이면 전체 삭제, 1이면 delta rule 만 남습니다." },
-            { symbol: String.raw`\beta_t`, name: "delta rule 학습률", description: "α_t 와 별도로 특정 key 방향의 correction 강도를 정합니다." },
-          ]}
-          assumptions={["α_t 는 head 전체에 하나의 스칼라로 쓰이거나 채널별로 다르게 쓰일 수 있고, 어느 쪽이든 특정 key 방향에 한정되지 않습니다.", "α_t=1 이면 이 식은 앞 절의 순수 delta rule 로 정확히 되돌아갑니다."]}
-          interpretation="Delta rule 혼자서는 한 step 에 한 방향만 고치므로 문맥 전환처럼 다수의 연관을 한꺼번에 지워야 하는 상황에서 느립니다. Gate 가 그 빠른 삭제를, delta rule 이 표적 수정을 각각 맡아 나눠 가집니다."
-        />
-        <div id="paper-gated-deltanet" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Yang, Kautz, Hatamizadeh · Gated Delta Networks: Improving Mamba2 with Delta Rule"
-            citeKey={2}
-            href="https://arxiv.org/abs/2412.06464"
-          >
-            2024년 논문(ICLR 2025)은 delta rule 만으로는 문맥 전환에서 옛 정보를 빠르게
-            지우지 못한다고 지적하고 Mamba2 의 decay gate 와 delta rule 을 결합합니다.
-            1.3B 모델 기준 perplexity·retrieval 벤치마크는 저자 자기보고입니다.
-          </CitationBlock>
-        </div>
-      </section>
+      <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">수정이 어디로 새는지 알았습니다. 왜 단순 덧셈만으로 부족한지 확인합니다.</p>
+    </section>
+    <section id="need" data-teach-level="2" className="scroll-mt-20">
+      <span id="problem" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">5 · 새 값을 그냥 더하면 옛 값이 남는다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">기존 M에 새 값 (5,0)의 외적을 그대로 더하면 k₁의 읽기는 (7,1.8)이 됩니다. 수정하려던 (5,0)과 다릅니다. 현재 이미 기억한 값을 먼저 읽고 빼야 이 중복을 피할 수 있습니다.</p>
+        <p className="leading-8">그 대가로 이번 오차가 이전 M에 의존합니다. 모든 token의 외적을 독립적으로 만들어 한 번에 합치던 방식과 달리, 순서가 생깁니다. 학습에서 GPU의 행렬곱을 활용하려면 이 의존성을 다시 묶어 표현해야 합니다.</p>
+      </div>
 
-      <section id="chunkwise-scan" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Chunk 안은 행렬곱으로, chunk 사이만 순서대로 진행합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            같은 상태 갱신 식은 한 step 씩 순서대로 계산하는 recurrent 형태로도, 여러 step 을 한 번의 행렬곱으로 계산하는 parallel 형태로도 쓸 수 있습니다.
-            학습은 parallel 형태로 GPU 를 채우고 추론은 recurrent 형태로 고정 크기 상태만 들고 이어갑니다. 이 둘이 같은 계산의 다른 표현이라는 사실이 duality
-            입니다.
-          </p>
-          <p>
-            문제는 delta rule 의 오차 항 v_t−S_{"{t-1}"}k_t 가 이전 상태 전체에 의존한다는
-            점입니다. 표준 linear attention 은 φ(K)ᵀV 를 한 번의 행렬곱으로 구할 수
-            있지만, delta rule 은 S_{"{t-1}"} 을 먼저 알아야 다음 오차를 계산할 수 있어
-            순서를 강제합니다.
-          </p>
-          <p>
-            Chunkwise parallel form 은 시퀀스를 길이 C 의 chunk 로 나눠 절충합니다. Chunk 안에서는 WY 표현과 UT transform 으로 순차 의존성을
-            C×C 크기의 작은 행렬 역행렬 하나로 미리 풀어 두고 chunk 사이에서만 상태를 순서대로 넘깁니다.
-          </p>
-          <p>
-            수치로 보면 절충이 뚜렷합니다. L=4096, C=64, d=128 이면 chunk 안 계산은
-            L·C·d≈3.355×10⁷, chunk 사이 상태 갱신은 L·d²≈6.711×10⁷ 로 합쳐 약 1.007×10⁸
-            입니다. 순수 순차 recurrence 는 상태 갱신만 필요해 6.711×10⁷ 이지만 4096 개
-            단계를 하나씩 기다려야 합니다. Chunkwise 는 계산을 정확히 C/d=50 % 더 하는
-            대신 기다려야 하는 단계를 4096 개에서 64 개로 줄입니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="Chunk 하나의 출력과 다음 chunk 로 넘길 상태를 어떻게 한 번의 행렬곱으로 얻나요?"
-          idea="Chunk 진입 시점의 상태가 예측하는 값을 행렬 형태로 한 번에 빼고, chunk 안에서는 causal mask 를 곱한 QKᵀ 로 표준 attention 처럼 병렬 계산합니다."
-          formula={String.raw`O=QS^\top+(QK^\top\odot M)\,\tilde U,\qquad S_{\text{next}}=S+\tilde U^\top K,\qquad \tilde U=U-WS^\top`}
-          annotatedFormula={String.raw`O=\underbrace{QS^\top}_{\text{chunk 진입 상태가 바로 주는 기여}}+\underbrace{(QK^\top\odot M)}_{\text{chunk 안 causal 유사도}}\underbrace{\tilde U}_{\text{chunk 안에서 미리 푼 correction}},\qquad S_{\text{next}}=S+\underbrace{\tilde U^\top K}_{\text{이 chunk 전체의 쓰기를 한 번에 반영}}`}
-          operations={[
-            { expression: String.raw`QS^\top`, annotation: ["이전 chunk 까지의 상태 하나로 이번 chunk 전체 query 를 한 번에 읽어", "chunk 진입 시점의 기억 기여를 계산"] },
-            { expression: String.raw`(QK^\top\odot M)\tilde U`, annotation: ["Chunk 안에서는 표준 attention 처럼 QKᵀ 에 causal mask 를 곱해", "각 위치가 자기 이전 위치의 correction 만 보게 함"] },
-            { expression: String.raw`S+\tilde U^\top K`, annotation: ["Chunk 안 C 개 step 의 correction 을 한 번의 행렬곱으로 합쳐", "다음 chunk 로 넘길 상태 하나만 갱신"] },
-          ]}
-          terms={[
-            { symbol: String.raw`\tilde U`, name: "chunk 안 prediction error", description: "UT transform 으로 chunk 진입 상태 S 의 예측까지 마저 뺀 C×d 행렬입니다." },
-            { symbol: "M", name: "causal mask", description: "Chunk 안에서 뒤 위치가 앞 위치의 correction 을 보지 못하게 막는 C×C 하삼각 mask." },
-            { symbol: String.raw`S`, name: "chunk 진입 상태", description: "이전 chunk 가 넘긴 d×d 상태로, chunk 안 모든 step 이 공유합니다." },
-          ]}
-          assumptions={["Ũ 를 구하는 UT transform 은 C×C 크기의 하삼각행렬 역행렬 하나만 필요해 C 가 64~128 정도면 저렴합니다.", "Gate α_t 가 있으면 Ũ, S_next 계산에 chunk 안 누적 decay 항이 추가로 곱해집니다."]}
-          interpretation="Chunk 안의 모든 step 은 하나의 행렬곱 묶음으로 병렬 계산되고, chunk 와 chunk 사이에서만 상태 하나가 순서대로 전달됩니다. Chunk 수(L/C)만큼만 순차 대기가 남습니다."
-        />
-        <FastWeightMemoryAndChunkwiseRecurrenceViz />
-        <AlgorithmBlock
-          title="Chunkwise forward: chunk 하나를 병렬로 처리하고 상태 하나만 다음 chunk 로 넘김"
-          input={[
-            "이번 chunk 의 Q, K, V, β ∈ R^{C×d} (또는 β ∈ R^C)",
-            "이전 chunk 가 넘긴 상태 S ∈ R^{d×d}",
-            "Causal mask M ∈ R^{C×C} (하삼각)",
-          ]}
-          steps={[
-            { code: "T ← (I − tril(diag(β) K Kᵀ, −1))⁻¹ diag(β)", note: "C×C 하삼각행렬의 역행렬 하나로 chunk 안의 순차 의존성을 미리 풀어 둡니다. C≈64면 저렴합니다." },
-            { code: "W ← T K;  U ← T V", note: "실제 값과 그 방향을 chunk 진입 이전 상태와 무관한 형태로 재표현합니다." },
-            { code: "Ũ ← U − W Sᵀ", note: "이전 chunk 가 넘긴 상태 S 가 예측할 값을 마저 빼 완전한 prediction error 를 얻습니다." },
-            { code: "O ← Q Sᵀ + (Q Kᵀ ⊙ M) Ũ", note: "Chunk 진입 상태의 기여와 chunk 안 causal 항을 더해 이 chunk 의 모든 출력을 한 번에 계산합니다." },
-            { code: "S ← S + Ũᵀ K", note: "Chunk 전체가 쓴 correction 을 한 번에 반영해 다음 chunk 로 넘길 상태를 갱신합니다." },
-          ]}
-          repeatUntil="L/C 개 chunk 를 순서대로 반복합니다. 각 chunk 내부의 다섯 줄은 chunk 사이에서만 순차이고, chunk 안에서는 행렬곱으로 병렬입니다."
-          output="이번 chunk 의 출력 O ∈ R^{C×d}, 다음 chunk 로 넘길 상태 S ∈ R^{d×d}"
-        />
-        <div id="paper-deltanet-parallel" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Yang, Wang, Zhang, Shen, Kim · Parallelizing Linear Transformers with the Delta Rule over Sequence Length"
-            citeKey={3}
-            href="https://arxiv.org/abs/2406.06484"
-          >
-            2024년 논문은 WY 표현과 UT transform 으로 delta rule 의 순차 recurrence 를
-            chunkwise 행렬곱으로 재구성합니다. 1.3B 모델·100B token 학습과 H100 에서
-            recurrent 형태 대비 4~16배 속도는 저자 측정값이며 chunk 크기·head 차원에
-            따라 달라집니다.
-          </CitationBlock>
-        </div>
-      </section>
+      <p data-stage-bridge="need" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">정확한 쓰기와 병렬성의 충돌을 찾았습니다. 이제 상태와 계수의 이름을 붙입니다.</p>
+    </section>
+    <section id="names" data-teach-level="3" className="scroll-mt-20">
+      <span id="memory-gate" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">6 · Fast weight는 매 문맥에서 바뀌는 기억 행렬이다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">M처럼 forward 중 갱신되는 상태를 fast weight memory라고 부릅니다. 학습이 끝난 고정 parameter와 구별되는 이름입니다. 느린 parameter가 key·value와 계수를 만들고 빠른 상태의 갱신을 지시하는 구도를 fast weight programmer라고 합니다.</p>
+        <p className="leading-8">현재 읽기와 목표의 차이를 쓰는 규칙이 delta rule입니다. 수정 강도 β는 해당 key 방향을 얼마나 고칠지, decay α는 그 전에 기존 기억을 얼마나 남길지 정합니다. 문맥별 상태를 갱신한다고 모든 모델 parameter를 추론 때 gradient로 학습하는 것은 아닙니다.</p>
+      </div>
 
-      <section id="prefix-scan" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Parallel scan 은 순차 누적을 O(log n) 단계로 바꾸는 일반 해법입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            순차 누적을 병렬화하는 문제는 delta rule 이전부터 있었습니다. Parallel scan (prefix scan)은 이 누적합을 두 단계로 바꾸는 일반 알고리즘입니다.
-            균형 이진 트리로 n 개 원소의 부분합을 모았다가 다시 내려보내므로 n 번이 아니라 O(log n) 번의 병렬 단계면 됩니다.
-          </p>
-          <p>
-            n=64 라면 log₂64=6 이라 up-sweep 여섯 단계와 down-sweep 여섯 단계를 더해 열두 번의 병렬 단계로 끝납니다. 순차로 하나씩 누적하면 64 단계가
-            필요하니 단계 수가 약 5.3배 줄어듭니다. 앞 절의 chunk 크기 C=64 를 그대로 넣은 값입니다.
-          </p>
-          <p>
-            DeltaNet 의 chunkwise 알고리즘은 이 일반 scan 을 그대로 쓰지는 않습니다. 대신 C×C 하삼각행렬을 통째로 역행렬 계산해 같은 목표(순차 의존성을 병렬
-            단계로 바꾸기)를 다른 방식으로 이룹니다. 둘은 같은 문제의 서로 다른 해법이고 한쪽이 다른 쪽의 상위호환은 아닙니다.
-          </p>
-        </div>
-        <ProgressiveDetail
-          title="균형 이진 트리로 부분합을 모았다가 내려보내는 두 단계는 각각 무엇을 하나요?"
-          preview="Up-sweep 은 트리를 따라 올라가며 부분합을 모으고, down-sweep 은 그 부분합을 이용해 각 위치의 정확한 prefix 값을 다시 내려보냅니다."
-        >
-          <p>
-            Up-sweep 은 인접한 두 원소를 합쳐 상위 노드에 저장하는 과정을 log₂n 번 반복해 루트에 전체 합을 남깁니다. 이 단계만으로는 각 원소의 prefix 값을 아직 알
-            수 없고 부분합만 트리에 흩어져 있습니다.
-          </p>
-          <p>
-            Down-sweep 은 루트에서부터 내려오며 왼쪽 자식이 가진 값을 오른쪽 자식에게
-            더해 주는 과정을 다시 log₂n 번 반복합니다. 끝나면 각 원소 위치에 그 앞까지의
-            정확한 누적값이 남습니다.
-          </p>
-        </ProgressiveDetail>
-      </section>
+      <p data-stage-bridge="names" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">어떤 숫자가 고정 parameter이고 어떤 것이 상태인지 구분했습니다. 갱신식과 병렬화를 유도합니다.</p>
+    </section>
+    <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
+      <span id="delta-rule" className="scroll-mt-20" />
+      <span id="chunkwise-scan" className="scroll-mt-20" />
+      <span id="prefix-scan" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">7 · 의존성을 작은 삼각 연립방정식으로 묶는다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">단위 key에 β=1을 쓰면 목표값으로 대체됩니다. 먼저 α=0.1을 적용한다면 기존 읽기 (2,1.8)이 (0.2,0.18)로 줄고 그 상태에 대한 새 오차를 계산해야 합니다. decay 전의 읽기를 빼면 다른 식이 됩니다.</p>
+        <p className="leading-8">병렬화 계산에서는 같은 두 쌍을 초기 기억 M₀=0부터 순서대로 쓴다고 둡니다. decay 없이 실제 correction을 u₁,u₂라고 합시다. u₁=β₁v₁이고 u₂=β₂v₂−β₂(k₂·k₁)u₁입니다. β=1인 위 사례는 u₁=(2,0), u₂=(−1.2,3)입니다. 따라서 u₂+0.6u₁=v₂라는 하삼각 연립식으로 한 chunk의 corrections를 구할 수 있습니다.</p>
+        <p className="leading-8">일반적으로 strictly-lower 행렬 L의 항을 Lᵢⱼ=βᵢ(kᵢ·kⱼ)로 놓으면 (I+L)U=diag(β)V입니다. 부호는 더하기입니다. 역행렬을 명시적으로 만들 필요 없이 triangular solve나 UT/WY 변환으로 풀고 chunk 사이에서 상태를 넘깁니다. 초기 기억이 0이 아니면 그 읽기 항도 반영합니다. gate가 있으면 누적 decay와 축 배치까지 포함해야 합니다.</p>
+        <p className="leading-8">4096 token을 64개씩 묶으면 chunk 사이 상태 전달은 64회입니다. chunk 내부 연산·동기화가 사라진 것은 아닙니다. LCd와 Ld²의 단순 비용모형에서 C/d=0.5가 나오더라도 실제 FLOPs가 정확히 50% 증가하거나 64배 빨라진다는 뜻은 아닙니다.</p>
+      </div>
+<ExplainedFormula question={"기존 값 위에 더하지 않고 목표값으로 바꾸려면?"} idea={"현재 key로 읽힌 값과 목표값의 차이만 같은 key 방향으로 씁니다. 단위 key에 다시 질의하면 이 차이가 그대로 더해집니다."} formula={"M^+=M+\\beta(v-Mk)k^\\top"} annotatedFormula={"M^+=M+\\beta\\underbrace{(v-Mk)}_{\\text{목표와 현재 읽기의 차이}}\\underbrace{k^\\top}_{\\text{고칠 key 방향}}"} operations={[{"expression": "Mk", "annotation": ["지금 기억이 반환하는 값을 읽습니다."]}, {"expression": "(v-Mk)k^\\top", "annotation": ["값의 오차를 key 방향의 외적으로 기록합니다."]}]} terms={[{"symbol": "M", "name": "기억 행렬", "description": "이 글은 값×key 배치의 2×2 행렬입니다."}, {"symbol": "k,v", "name": "주소와 목표값", "description": "k=(1,0), v=(5,0)인 사례를 유지합니다."}, {"symbol": "\\beta", "name": "수정 강도", "description": "0이면 유지, 단위 key와 β=1이면 그 key의 읽기를 대체합니다."}]} assumptions={["k의 norm이 1인 사례입니다.", "다른 key와의 내적이 0이 아니면 그 읽기에도 수정이 새어듭니다."]} interpretation={"Mk=(2,1.8), 오차=(3,−1.8)이므로 새 M=[[5,0],[0,2.4]]입니다. 같은 key는 (5,0)을, 다른 key (0.6,0.8)는 (3,1.92)를 읽습니다."} />
+<AlgorithmBlock title={"현재 읽기를 지운 양만큼 새 값을 씁니다 (의사코드)"} input={["M=[[2,0],[1.8,2.4]], k=[1,0], v=[5,0], α=1", "erase b=[1,1], write w=[1,1]; M은 값×key 배치입니다."]} steps={[{"code": "M_decay = α * M", "note": "먼저 기존 상태에 감쇠를 적용합니다. 이번에는 α=1입니다."}, {"code": "erase_read = M_decay @ (b * k)", "note": "지울 방향으로 읽으면 [2,1.8]입니다."}, {"code": "correction = w * v − erase_read", "note": "목표 [5,0]에서 기존 읽기를 빼 [3,−1.8]을 만듭니다."}, {"code": "M_next = M_decay + outer(correction, k)", "note": "첫 key 방향만 갱신합니다."}, {"code": "return M_next, M_next @ k", "note": "행렬 갱신과 읽기 결과를 함께 확인합니다."}]} output={"M_next=[[5,0],[0,2.4]], 읽기=[5,0]. b=[.25,1], w=[.5,1]이면 읽기=[4,1.35]입니다."} />
+      <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">갱신의 부호와 상태 전달 위치를 정했습니다. 공식 kernel에 같은 숫자를 넣습니다.</p>
+    </section>
+    <section id="source" data-teach-level="5" className="scroll-mt-20">
+      <span id="paper-schlag" className="scroll-mt-20" />
+      <span id="paper-gated-deltanet" className="scroll-mt-20" />
+      <span id="paper-deltanet-parallel" className="scroll-mt-20" />
+      <span id="paper-blelloch" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">8 · 공식 kernel은 decay·지우기·쓰기를 나눠 실행한다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">공식 GDN2 원문의 218–243행에서 b_h가 상태이고 b_b_tile은 key축 erase gate, b_w_tile은 value축 write gate입니다. 먼저 decay를 곱하고 기존 값을 읽은 뒤, 조절한 새 값에서 그 읽기를 뺍니다. 마지막 외적을 상태에 더합니다.</p>
+        <p className="leading-8">우리의 M을 쓰는 값×key 배치는 IS_V_FIRST 분기에 대응합니다. α=1, erase와 write를 모두 1로 두면 erase_d=(2,1.8), 새 값=(5,0), correction=(3,−1.8)입니다. 결과 M과 읽기는 7절 계산과 같습니다. 원문에는 반대 전치 배치도 있으므로 축을 먼저 맞춥니다.</p>
+      </div>
+<CodeViewButton label="공식 소스 · 상태 갱신 218–243행" onClick={() => sidebar.open("delta", codeRefs.delta)} /><SourceApplication source={"GDN2 공식 kernel"} excerpt={"b_v_new = b_w_tile * b_v - erase_d"} application={"erase=write=1이면 (5,0)−(2,1.8)=(3,−1.8)입니다."} /><CitationBlock source={"GDN2 공식 kernel"} citeKey={2} href={"https://github.com/NVlabs/GatedDeltaNet-2/blob/a5552fe3c67e0ebc7ef1220df68ae8896ec62d56/lit_gpt/gdn2_ops/fused_recurrent_gdn2.py"}>2026-10-04에 고정한 공식 원문입니다.</CitationBlock><PaperReading id="paper-delta-reading" title={"Parallelizing Linear Transformers with the Delta Rule · 2024"} href={"https://arxiv.org/abs/2406.06484"} problem={"상태 의존적인 delta update의 병렬화"} idea={"순차 correction을 chunk별 삼각 계산과 행렬곱으로 바꿈"} assumption={"state와 key/value의 축 및 gate를 동일하게 유지"} experiment={"원 논문의 모델 크기·token budget·GPU 조건의 저자 실험"} boundary={"단순 prefix sum은 교환 가능한 합의 사례다. delta update를 같은 스캔 코드로 바꿀 수 있다는 뜻은 아니다."} />
+      <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">같은 수치가 실제 뺄셈과 외적을 통과했습니다. 두 gate를 다르게 두면 무엇이 달라지는지 봅니다.</p>
+    </section>
+    <section id="comparison" data-teach-level="6" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">9 · GDN2는 지울 성분과 쓸 성분을 다른 축에서 조절한다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">같은 M과 k₁, 목표 (5,0)에 α=1, erase b=(0.25,1), write w=(0.5,1)을 넣습니다. 지울 읽기는 M(b⊙k₁)=(0.5,0.45), 넣을 값은 w⊙v=(2.5,0)입니다. correction=(2,−0.45)을 쓰면 k₁의 결과는 (4,1.35)입니다.</p>
+        <p className="leading-8">기존 scalar β=0.5는 지우기와 쓰기 둘 다 절반으로 묶어 결과 (3.5,0.9)를 만듭니다. GDN2는 두 일을 서로 다른 channel에서 정할 수 있습니다. 더 자유로운 표현이 생긴 것이며 모든 과제에서 더 좋거나 다른 key의 간섭이 없어졌다는 보장은 아닙니다.</p>
+        <p className="leading-8">원 논문의 S는 key×value 배치입니다. 이 글의 M=Sᵀ로 전치하면 원문의 갱신식은 M′=M D(I−e kᵀ)+z kᵀ가 됩니다. e=b⊙k, z=w⊙v이며 D는 key축 decay입니다. 행렬곱의 순서를 바꾸면 다른 연산이 됩니다.</p>
+      </div>
+<SourceApplication source={"GDN2 식 (29) · 원문의 key×value 배치"} excerpt={"S=(I−keᵀ)Diag(α)S_prev+kzᵀ"} application={"M=Sᵀ로 전치해 우리 사례를 대입하면 첫 key의 읽기는 (4,1.35)입니다."} /><CitationBlock source={"GDN2 식 (29) · 원문의 key×value 배치"} citeKey={2} href={"https://arxiv.org/html/2605.22791v1"}>2026-10-04에 고정한 공식 원문입니다.</CitationBlock><PaperReading id="paper-gdn2" title={"Gated DeltaNet-2 · arXiv 2605.22791v1"} href={"https://arxiv.org/html/2605.22791v1"} problem={"하나의 scalar gate가 지우기와 쓰기를 함께 제한"} idea={"key축 erase와 value축 write 분리"} assumption={"상태 배치와 gate 축, fp32 decay·누적 조건"} experiment={"1.3B, FineWeb-Edu 100B token, 학습 길이 4K, recurrent·hybrid 비교의 저자 실험"} boundary={"표의 순위는 그 조건의 결과다. 고정 크기 상태가 임의 길이의 정보를 무손실 저장하는 보장은 아니다."} />
+      <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">독립 gate의 숫자 효과와 축을 확인했습니다. 마지막으로 기억의 한계를 점검합니다.</p>
+    </section>
+    <section id="limits" data-teach-level="7" className="scroll-mt-20">
+      <span id="boundary" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">10 · 같은 key의 수정과 전체 기억 보존은 다른 조건이다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">M의 크기는 고정되어도 많은 key가 겹치면 회상 정보가 손실됩니다. β=1에서 정확한 대체라는 설명도 단위 key와 같은 key 재질의 조건입니다. 다른 query, 낮은 정밀도, decay, 비단위 norm에서는 조건을 다시 계산해야 합니다.</p>
+        <p className="leading-8">Prefix scan은 결합법칙이 있는 연산을 트리로 묶는 일반 기법입니다. 64개 합의 up/down sweep이 각 6단계라는 사실만으로 위 delta kernel의 실행시간을 예측할 수 없습니다. state update와 triangular solve의 실제 GPU 비용을 재야 합니다.</p>
+        <p className="leading-8"><Link to="/cs/ai/linear-attention-and-state-space-models">고정 크기 상태의 표현 한계</Link>와 <Link to="/cs/ai/agent-memory-lifecycle">에이전트의 외부 기억</Link>은 다른 층입니다. MLA도 token당 KV를 압축하지만 context 전체 상태를 고정 크기로 만드는 것은 아닙니다.</p>
+        <p className="leading-8">예측해 보세요. erase=0이고 write=1이면 k₁의 읽기는 어떻게 될까요? 같은 α=1 사례에서는 옛 (2,1.8)에 (5,0)이 더해져 (7,1.8)입니다. 8절의 실제 뺄셈에서 확인할 수 있습니다.</p>
+      </div>
 
-      <section id="boundary" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          병렬화는 계산을 늘리고, delta rule 은 직교하지 않는 key 앞에서 완전하지 않습니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            Chunkwise parallel form 은 공짜가 아닙니다. Chunk 크기 C 를 키우면 순차 대기 단계는 줄지만 chunk 안 계산(L·C·d 항)이 늘어 어느
-            지점부터는 GPU 활용이 늘어난 만큼의 이득을 계산 증가가 갉아먹습니다. 논문이 보고한 4~16배는 H100, 특정 head 차원·chunk 크기 조합에서 저자가 잰 값입니다.
-          </p>
-          <p>
-            Delta rule 은 정확한 key 재현에서만 완전합니다. β=1 로 정확히 겹쳐 썼던 key 는 정확히 대체되지만 겹쳐 쓰지 않은 비슷한 key 는 이번 글의 수치 예처럼
-            여전히 일부 새어 듭니다. 완전한 직교 기저를 강제하지 않는 한 이 누출은 남습니다.
-          </p>
-          <p>
-            <Link to="/cs/ai/qwen36-hybrid-architecture#delta-update">Qwen3.6 의 Gated DeltaNet</Link>
-            은 이 글의 gated delta rule 을 48 개 head·128×128 상태로 구체화한 실제
-            production 사례입니다. Head 수·상태 크기·layer 배치 같은 구현 세부는 이 글이
-            아니라 그 글이 정본으로 다룹니다.
-          </p>
-          <p>
-            <Link to="/cs/ai/multi-head-latent-attention-mechanics">MLA</Link> 는 같은
-            "고정 크기로 압축"이라는 동기를 attention 쪽에서 latent 압축으로 풀었고,
-            이 글은 attention 을 아예 recurrent state 로 바꾸는 다른 계열입니다. 두 계열을
-            결합하는 설계는 이 글의 범위 밖입니다.
-          </p>
-        </div>
-        <div id="paper-blelloch" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Blelloch · Prefix Sums and Their Applications (CMU-CS-90-190)"
-            citeKey={4}
-            href="https://www.cs.cmu.edu/~guyb/papers/Ble93.pdf"
-          >
-            1990년 기술보고서는 up-sweep·down-sweep 두 단계로 이뤄진 work-efficient
-            parallel scan 을 제시합니다. 정렬·문자열 비교 등 다른 응용까지 포함하며,
-            이 글은 그중 순차 누적을 병렬 단계로 바꾸는 일반 원리만 인용합니다.
-          </CitationBlock>
-        </div>
-      </section>
-    </div>
-  );
+      <p data-stage-bridge="limits" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">저장 크기, 수정 규칙, 병렬 실행과 회상 품질을 각각 검증하면 추적이 끝납니다.</p>
+    </section>
+    <ReviewPrompts questions={["첫 key의 값을 정확히 고쳐도 두 번째 key의 읽기가 바뀌는 이유는 무엇일까요? (답: 4절)", "두 token의 삼각 연립식에 왜 I−L이 아닌 I+L이 나올까요? (답: 7절)", "erase=0·write=1이면 같은 key의 읽기는 어떻게 될까요? (답: 8절)"]} />
+    <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas} />
+  </div>;
 }

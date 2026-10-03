@@ -1,0 +1,8 @@
+{
+  "reviewed": "2026-10-04",
+  "files": [
+    { "local": "codebase/cuda/vectorAdd.cu", "repository": "https://github.com/NVIDIA/cuda-samples", "revision": "3f1c50965017932fc81e6d94a3fc9e04c105b312", "tag": "v13.0", "path": "Samples/0_Introduction/vectorAdd/vectorAdd.cu", "modified": false, "license": "BSD-3-Clause notice retained in source" },
+    { "local": "codebase/hip/vectoradd_hip.cpp", "repository": "https://github.com/ROCm/HIP-Examples", "revision": "cdf9d101acd9a3fc89ee750f73c1f1958cbd5cc3", "path": "vectorAdd/vectoradd_hip.cpp", "modified": false, "license": "MIT notice retained in source" }
+  ],
+  "execution": "No CUDA or AMD GPU benchmark was run. Source snapshots and illustrative index/byte arithmetic were verified."
+}

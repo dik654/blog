@@ -110,19 +110,19 @@ export function PromptRegressionViz() {
         onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
       >
-        <div className="grid gap-4 lg:grid-cols-[1fr_auto_1fr_auto_1fr] lg:items-center">
+        <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-center">
           {[
             ["01", "Failure fixture", "input · expected · trace"],
             ["02", "Paired comparison", "한 번에 한 축"],
             ["03", "Canary gate", "quality · violation · p95"],
           ].map(([id, name, detail], index) => (
             <div key={name} className="contents">
-              <div className={`border p-5 ${scenes.active === index ? "border-primary bg-primary/10" : "border-border"}`}>
-                <div className="flex items-center gap-3">
+              <div className={`min-w-0 border p-4 ${scenes.active === index ? "border-primary bg-primary/10" : "border-border"}`}>
+                <div className="flex min-w-0 flex-col items-start gap-3">
                   <div className={`${index === 1 ? "rotate-45" : index === 2 ? "rounded-full" : ""} flex h-11 w-11 items-center justify-center border border-current font-mono text-xs font-black`}>
                     {id}
                   </div>
-                  <div>
+                  <div className="min-w-0 break-words">
                     <p className="font-bold">{name}</p>
                     <p className="mt-1 text-xs text-muted-foreground">{detail}</p>
                   </div>

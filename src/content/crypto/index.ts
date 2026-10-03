@@ -6,12 +6,19 @@ import { zkpSystems2Articles } from "../blockchain/articlesZkpSystems2";
 import { zkpVmArticles } from "../blockchain/articlesZkpVm";
 import { zkpMath3Articles } from "../blockchain/articlesZkpMath3";
 import { classicalArticles } from "./articlesClassical";
+import { postQuantumArticles } from "./articlesPostQuantum";
 
 const crypto: Category = {
   slug: "crypto",
   name: "Cryptography",
-  description: "영지식 증명, 다자간 연산, 타원곡선, 페어링 등 암호학 학습 노트",
+  description: "공개키 암호, 영지식 증명, 양자 계산과 양자내성암호·양자키분배의 원리",
   subcategories: [
+    {
+      slug: "post-quantum",
+      name: "Quantum & Post-Quantum",
+      description: "양자 계산·오류를 섞은 키 합의·서명·광학 키 분배",
+      icon: "🔬",
+    },
     {
       slug: "classical",
       name: "Classical Cryptography",
@@ -167,6 +174,7 @@ const crypto: Category = {
   ],
   articles: [
     ...classicalArticles,
+    ...postQuantumArticles,
     ...zkpMathArticles,
     ...zkpMath2Articles,
     ...zkpMath3Articles,

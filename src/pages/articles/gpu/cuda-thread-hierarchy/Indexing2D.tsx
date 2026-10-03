@@ -104,7 +104,8 @@ export default function Indexing2D() {
           16×16과 32×8은 모두 256-thread block이고 같은 image를 올바르게 덮을 수
           있지만 memory transaction과 neighborhood reuse는 달라질 수 있습니다.
           Row-major image에서 <code>threadIdx.x</code>가 인접 column을 가리키면
-          같은 warp lane의 주소가 가까워져 coalescing에 유리합니다. 반면
+          같은 warp lane의 주소가 가까워져 coalescing에 유리합니다.</p>
+        <p>반면
           stencil처럼 halo를 shared memory에 담는 kernel은 x·y tile 모양과 edge
           overhead도 함께 봐야 합니다. 먼저 rectangular·non-multiple shape로
           correctness를 검증한 뒤 Nsight Compute에서 global transaction

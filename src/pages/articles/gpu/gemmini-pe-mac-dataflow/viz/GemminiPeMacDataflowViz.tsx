@@ -19,6 +19,8 @@ const SCENES = [
   "재사용 K → I_PE = 2K/w",
 ] as const;
 
+const CONTROL_LABELS = ["유휴", "가중치 고정", "부분합 고정", "역할 교대", "재사용 강도"] as const;
+
 const NOTES = [
   "PE 안에서 실제로 계산하는 것은 MacUnit 하나뿐입니다. out_d = in_c.mac(in_a, in_b). 지금은 PEControl.dataflow 도 c1·c2 도 아직 아무 값도 고정하지 않은 상태입니다.",
   "dataflow = WS(1) 이면 weight 가 c1(또는 c2)에 고정되고, activation 이 흐르는 사이클마다 같은 weight 로 mac 을 수행합니다. 결과는 out_b 로 즉시 다음 PE 에 넘어가 이 PE 안에는 남지 않습니다 — weight 하나를 K 번 재사용하는 것이 곧 다음 장면의 I_PE 입니다.",
@@ -557,7 +559,7 @@ export default function GemminiPeMacDataflowViz() {
             {NOTES[scenes.active]}
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} labels={CONTROL_LABELS} />
       </div>
     </VizFrame>
   );

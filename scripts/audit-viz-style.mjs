@@ -7,7 +7,7 @@ import {
 
 const roots = process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
 const strict = process.argv.includes("--strict");
-const allArticles = process.argv.includes("--all-articles");
+const allArticles = process.argv.includes("--all-articles") || roots.length === 0;
 const targets = roots.length ? roots : ["src/components/viz", "src/pages/articles"];
 const extensions = new Set([".tsx", ".ts", ".jsx", ".js"]);
 
@@ -35,7 +35,9 @@ const files = allArticles
   ? [
       ...new Set(
         (await loadPublicArticleCatalog()).flatMap((article) =>
-          collectArticleSourceClosure(article.sourcePath),
+          collectArticleSourceClosure(article.sourcePath, {
+            additionalSourceRoots: ["src/components/viz"],
+          }),
         ),
       ),
     ]

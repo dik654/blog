@@ -176,6 +176,7 @@ z_0&=\underbrace{\operatorname{Solve}(z_1,v_\theta,c)}_{\text{noise에서 data l
         <h2 className="mb-6 text-2xl font-bold">
           월드모델에는 시간·행동·검증 루프가 더 필요합니다
         </h2>
+        <p className="my-5 leading-8"><Link to="/cs/ai/world-model-latent-planning">월드모델 계획 정본</Link>은 위치 0에서 목표 2로 가는 네 후보를 비교한 뒤, 예측 1.0과 관측 0.8의 차이를 다시 계획에 넣습니다. LeWM의 공식 rollout 코드와 JEPA의 표현 붕괴, 짧은 예측으로 먼 목표를 판단할 때의 한계를 같은 흐름에서 다룹니다.</p>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Text-to-image model은 조건 <code>c</code>에 맞는 sample <code>x</code>를

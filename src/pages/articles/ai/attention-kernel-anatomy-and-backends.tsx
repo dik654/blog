@@ -360,13 +360,17 @@ export default function AttentionKernelAnatomyAndBackendsArticle() {
         />
         <ProgressiveDetail
           title="어느 backend 를 언제 고르나요?"
-          preview="Hopper 이상에서 FlashAttention-3 가 지원하는 dtype 과 head dim 이면 그것이 기본이고, 공유 prefix 가 많거나 attention 변형이 있으면 FlashInfer, 새 GPU 나 실험적 mask 는 Triton 과 FlexAttention 이 대안입니다."
+          preview="GPU target, dtype·head dim·mask, KV 배치와 서빙 엔진 버전에 맞는 구현을 먼저 찾습니다. 같은 workload의 정확성과 완료 시간을 비교해 선택합니다."
         >
           <p>
             판단 기준은 세 가지입니다. 첫째, GPU 세대와 dtype 이 kernel 의 전제와 맞는지.
-            FlashAttention-3 는 Hopper 전용이고 FP8 은 block scale 이 있어야 정확도가 유지됩니다.
+            FA3의 Hopper 경로와 FA4의 Blackwell 경로는 지원 조건과 병목이 다릅니다. FP8도 scale 방식과 허용 오차를 함께 확인합니다.
             둘째, KV cache 배치가 kernel 이 읽는 형식과 맞는지. 공유 prefix 나 radix tree 는
             block-sparse 형식을 읽는 FlashInfer 가 유리합니다.
+          </p>
+          <p>
+            2026-10-04 기준 공식 FA4 논문과 공개 구현이 있습니다. <Link to="/cs/ai/flash-attention-io-aware-kernel#comparison">같은 네 점수가 FA4의 조건부 rescaling을 통과하는 과정</Link>에서
+            지수 연산·TMEM·비동기 MMA를 연결합니다. 큰 compute capability 숫자나 최신 라이브러리 이름만으로 빠른 경로가 선택된다고 가정하지 않습니다.
           </p>
           <p>
             셋째, 같은 workload 에서 실측했는지입니다. 논문의 배율은 저자의 GPU 와 shape 에서

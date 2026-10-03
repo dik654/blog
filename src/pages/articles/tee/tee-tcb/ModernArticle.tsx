@@ -23,13 +23,13 @@ export default function ModernTcbArticle() {
           주는지 그립니다. Host VMM을 confidentiality TCB 밖에 둘 수 있어도 shared I/O parsing이나 availability에는 여전히 영향을 미칩니다.
           Property가 바뀌면 TCB도 바뀝니다.
         </p>
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid min-w-0 grid-cols-1 gap-3 md:grid-cols-2">
           {[
             ["Inside", "CPU security logic · TEE module · attestation key · verifier policy"],
             ["Outside for confidentiality", "Host OS·VMM이 private plaintext를 직접 읽지 못한다는 목표"],
             ["Still influential", "Host scheduling·I/O·page supply는 availability와 input integrity에 영향"],
             ["Version receipt", "Firmware SVN·microcode·module·image·policy·endorsement revision"],
-          ].map(([title, body]) => <div key={title} className="rounded-lg border border-border p-4"><p className="text-sm font-semibold">{title}</p><p className="mt-2 text-sm leading-6 text-muted-foreground">{body}</p></div>)}
+          ].map(([title, body]) => <div key={title} className="min-w-0 rounded-lg border border-border p-4 [overflow-wrap:anywhere]"><p className="text-sm font-semibold">{title}</p><p className="mt-2 text-sm leading-6 text-muted-foreground">{body}</p></div>)}
         </div>
       </section>
 

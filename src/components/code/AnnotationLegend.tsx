@@ -13,7 +13,7 @@ export default function AnnotationLegend({
   if (annotations.length === 0) return null;
 
   return (
-    <div className="shrink-0 border-b border-[#d0d7de] dark:border-[#30363d] bg-[#f6f8fa] dark:bg-[#161b22] px-4 py-2">
+    <div className="max-h-[35vh] shrink-0 overflow-y-auto border-b border-[#d0d7de] dark:border-[#30363d] bg-[#f6f8fa] dark:bg-[#161b22] px-4 py-2">
       <div className="flex items-center justify-between mb-1">
         <p className="text-[11px] font-semibold uppercase tracking-wider text-[#57606a] dark:text-[#8b949e]">
           코드 구간 설명
@@ -44,7 +44,7 @@ export default function AnnotationLegend({
             >
               L{a.lines[0]}–{a.lines[1]}
             </span>
-            <span className="text-[11px] text-[#24292f] dark:text-[#e6edf3] leading-snug">
+            <span className="min-w-0 text-sm leading-6 text-[#24292f] dark:text-[#e6edf3] sm:text-[11px] sm:leading-snug">
               {a.note}
             </span>
             <span className="ml-auto text-[11px] text-[#0969da] dark:text-[#58a6ff] shrink-0">

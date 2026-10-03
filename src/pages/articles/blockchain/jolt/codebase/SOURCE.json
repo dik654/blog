@@ -1,0 +1,19 @@
+{
+  "repository": "https://github.com/a16z/jolt",
+  "revision": "47130f3dc9a51a7ac2754a98ff0aa31981a6b810",
+  "committedAt": "2026-10-02T22:28:19Z",
+  "checkedAt": "2026-10-04",
+  "files": {
+    "LICENSE-APACHE": "64c2c3bffa37ff79fc724150c9015a974369cea4c63e25b0b1f41c389ab646a7",
+    "README.md": "659879c3961ced1729b594cf8a5de53f8e10471f1409a9ea853b5409369cad3d",
+    "LICENSE-MIT": "452532d531b7503f55729a3b1fe136de15814f14ae5ac18a0e33c6476b70997b",
+    "tracer/src/instruction/add.rs": "b8f24f6560557241aefe864216065ceb31680192dd6503db792bd457ad9d9913",
+    "crates/jolt-verifier/src/lib.rs": "2155866243ae41807b6c132ec1e7fe3931cae73030b21298f1c790a2f381f81c",
+    "crates/jolt-verifier/src/verifier.rs": "1025ac21b97c06ddf77c8a38a41123b7e4b9b5fa9027d5af1c5ae2be17a8809c",
+    "crates/jolt-riscv/src/instructions/i/add.rs": "44e473c329f85e981e002831133b26bc09fc6006f4bd200169536abd2b473bdb",
+    "crates/jolt-prover/src/lib.rs": "8c0e8b5db19baa6475d1bd7a4bf6a11f646d9737242373507aef0bdbb4ec46d3",
+    "crates/jolt-claims/src/twist/memory_checking.rs": "3ad8cef65c2fde75d9525eb265a4656274c17bd87595045eec126868b3445b28",
+    "crates/jolt-lookup-tables/src/instructions/riscv/add.rs": "81fd92d1c349439ce3a93973f5463afdbdafcc507ae06f4c7409bac14d684599"
+  },
+  "scope": "Only the listed files belong to this revision; retained legacy snapshots outside this list are not used by codeRefsPinned.ts."
+}

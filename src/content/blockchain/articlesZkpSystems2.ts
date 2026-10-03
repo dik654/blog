@@ -45,15 +45,9 @@ export const zkpSystems2Articles: Article[] = [
   // ── Folding (재귀 증명) ──
   {
     slug: "nova",
-    title: "Nova: NIFS 폴딩 기반 재귀 증명 (IVC)",
+    title: "Nova: 계산을 접고 반복 실행을 잇는 방법",
     subcategory: "zkp-nova-concept",
-    sections: [
-      { id: "overview", title: "Step→fold→IVC 전체 지도" },
-      { id: "ivc", title: "IVC state·step relation" },
-      { id: "relaxed-r1cs", title: "Relaxed R1CS와 NIFS" },
-      { id: "compression-security", title: "Compression·ZK 경계" },
-      { id: "release", title: "Resume·rollback gate" },
-    ],
+    sections: [{"id": "overview", "title": "1. 긴 계산을 이어 갈 때 지난 검사를 다시 쌓지 않으려면"}, {"id": "black-box", "title": "2. 이전 과제와 새 과제를 하나의 같은 형식으로 만듭니다"}, {"id": "case", "title": "3. 3×4=12와 2×5=10을 두 배로 섞습니다"}, {"id": "picture", "title": "4. 없애려던 차이를 별도 항으로 정확히 기록합니다"}, {"id": "ivc", "title": "5. 실행을 이어 붙이는 조건은 별도로 필요합니다"}, {"id": "names", "title": "6. 완화된 등식·폴딩·누적 실행을 구별합니다"}, {"id": "relaxed-r1cs", "title": "7. 곱을 전개하면 교차항이 왜 필요한지 드러납니다"}, {"id": "source", "title": "8. 원문의 배율·오차 갱신이 같은 숫자를 보존합니다"}, {"id": "compression-security", "title": "9. 폴딩 후 남은 확인 과제를 마지막 증거로 만듭니다"}, {"id": "release", "title": "10. 상태가 이어지고 가정이 유지되는지 마지막까지 확인합니다"}],
     component: () => import("@/pages/articles/blockchain/nova"),
   },
 

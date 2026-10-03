@@ -26,7 +26,7 @@ function Glyph({ shape, active }: { shape: Shape; active: boolean }) {
   const stroke = active ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))";
   if (shape === "sample") {
     return (
-      <svg viewBox="0 0 112 82" aria-hidden className="h-20 w-28">
+      <svg viewBox="0 0 112 82" aria-hidden className="h-20 w-28 max-w-full">
         {[0, 1, 2, 3].map((row) =>
           [0, 1, 2, 3, 4].map((column) => (
             <motion.rect
@@ -49,7 +49,7 @@ function Glyph({ shape, active }: { shape: Shape; active: boolean }) {
   }
   if (shape === "bottleneck") {
     return (
-      <svg viewBox="0 0 112 82" aria-hidden className="h-20 w-28">
+      <svg viewBox="0 0 112 82" aria-hidden className="h-20 w-28 max-w-full">
         <path d="M10 9h28l17 26L38 73H10zM102 9H74L57 35l17 38h28z" fill="hsl(var(--muted) / .55)" stroke={stroke} strokeWidth="1.25" />
         <motion.circle cx="56" cy="41" r="8" fill="hsl(var(--primary) / .2)" stroke="hsl(var(--primary))" strokeWidth="1.25" animate={active ? { opacity: [.45, 1, .45] } : { opacity: .65 }} transition={{ duration: 1.25, repeat: active ? Infinity : 0 }} />
       </svg>
@@ -57,15 +57,19 @@ function Glyph({ shape, active }: { shape: Shape; active: boolean }) {
   }
   if (shape === "plane") {
     return (
-      <svg viewBox="0 0 112 82" aria-hidden className="h-20 w-28">
+      <svg viewBox="0 0 112 82" aria-hidden className="h-20 w-28 max-w-full">
         <path d="M13 68 98 14M14 70h86M14 70V9" fill="none" stroke={stroke} strokeWidth="1.25" />
-        {[[26,57],[36,51],[47,44],[58,38],[70,31],[82,25]].map(([x,y], index) => <motion.circle key={x} cx={x} cy={y} r="4" fill="hsl(var(--primary) / .34)" stroke="hsl(var(--primary))" strokeWidth="1" animate={active ? { cy: [y, y - 3, y] } : undefined} transition={{ duration: 1.4, repeat: Infinity, delay: index * .08 }} />)}
+        {[[26,57],[36,51],[47,44],[58,38],[70,31],[82,25]].map(([x,y], index) => (
+          <motion.g key={x} animate={active ? { y: [0, -3, 0] } : { y: 0 }} transition={{ duration: 1.4, repeat: active ? Infinity : 0, delay: index * .08 }}>
+            <circle cx={x} cy={y} r="4" fill="hsl(var(--primary) / .34)" stroke="hsl(var(--primary))" strokeWidth="1" />
+          </motion.g>
+        ))}
       </svg>
     );
   }
   if (shape === "mask") {
     return (
-      <svg viewBox="0 0 112 82" aria-hidden className="h-20 w-28">
+      <svg viewBox="0 0 112 82" aria-hidden className="h-20 w-28 max-w-full">
         {[0,1,2].map((row) => [0,1,2,3].map((column) => {
           const hidden = (row + column) % 3 !== 0;
           return <motion.rect key={`${row}-${column}`} x={16 + column * 21} y={13 + row * 20} width="15" height="14" fill={hidden ? "hsl(var(--foreground) / .08)" : "hsl(var(--primary) / .3)"} stroke={hidden ? "hsl(var(--border))" : "hsl(var(--primary))"} strokeWidth="1" animate={active && hidden ? { opacity: [.2,.85,.2] } : undefined} transition={{ duration: 1.5, repeat: Infinity, delay: (row+column)*.06 }} />;
@@ -74,7 +78,7 @@ function Glyph({ shape, active }: { shape: Shape; active: boolean }) {
     );
   }
   return (
-    <svg viewBox="0 0 112 82" aria-hidden className="h-20 w-28">
+    <svg viewBox="0 0 112 82" aria-hidden className="h-20 w-28 max-w-full">
       <path d="M18 66a38 38 0 0 1 76 0" fill="none" stroke={stroke} strokeWidth="1.25" strokeLinecap="round" />
       <motion.path d="M56 66 78 34" fill="none" stroke="hsl(var(--primary))" strokeWidth="1.25" strokeLinecap="round" animate={active ? { rotate: [-10, 8, -10] } : undefined} style={{ transformOrigin: "56px 66px" }} transition={{ duration: 1.3, repeat: Infinity }} />
       <circle cx="56" cy="66" r="5" fill="hsl(var(--primary))" />
@@ -84,12 +88,12 @@ function Glyph({ shape, active }: { shape: Shape; active: boolean }) {
 
 function FlowArrow({ active, label }: { active: boolean; label: string }) {
   return (
-    <div className="grid shrink-0 place-items-center gap-1 py-1 lg:w-14">
-      <svg viewBox="0 0 54 22" aria-hidden className="h-7 w-11 rotate-90 lg:rotate-0">
+    <div className="grid min-w-0 shrink-0 place-items-center gap-1 py-1 lg:w-8">
+      <svg viewBox="0 0 54 22" aria-hidden className="h-7 w-11 max-w-full rotate-90 lg:rotate-0">
         <motion.path d="M3 11h41" fill="none" stroke="currentColor" strokeWidth="1.25" strokeDasharray="5 4" className={active ? "text-primary" : "text-border"} animate={active ? { strokeDashoffset: [9, 0] } : undefined} transition={{ duration: .75, repeat: Infinity, ease: "linear" }} />
         <path d="m39 5 10 6-10 6" fill="none" stroke="currentColor" strokeWidth="1.25" className={active ? "text-primary" : "text-border"} />
       </svg>
-      <span className="max-w-14 text-center font-mono text-[9px] font-bold text-muted-foreground">{label}</span>
+      <span className="max-w-full break-words text-center font-mono text-[9px] font-bold text-muted-foreground">{label}</span>
     </div>
   );
 }
@@ -99,7 +103,7 @@ function LearningViz({ id, eyebrow, title, description, scenes, edgeLabels, note
   return (
     <VizFrame eyebrow={eyebrow} title={title} description={description} note={note}>
       <div data-viz={id} tabIndex={0} role="group" aria-label={`${title} animation`} onKeyDown={controls.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
-        <div data-viz-canvas className="grid min-w-0 gap-2 lg:grid-cols-[minmax(0,1fr)_3.5rem_minmax(0,1fr)_3.5rem_minmax(0,1fr)_3.5rem_minmax(0,1fr)] lg:items-center">
+        <div data-viz-canvas className="grid min-w-0 gap-2 lg:grid-cols-[minmax(0,1fr)_2rem_minmax(0,1fr)_2rem_minmax(0,1fr)_2rem_minmax(0,1fr)] lg:items-center">
           {scenes.map((scene, index) => {
             const selected = index === controls.active;
             const reached = index <= controls.active;

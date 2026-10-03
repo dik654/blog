@@ -20,7 +20,7 @@ export default function BarterCostViz() {
         위 곡선이 직접 교환 n(n−1)/2, 아래 직선이 공통 매개를 쓸 때의 n−1입니다.
       </p>
       <div className="themed-mafs mt-4 min-w-0 overflow-x-auto">
-        <Mafs height={220} preserveAspectRatio={false} viewBox={{ x: [-0.6, 20.6], y: [-24, 196], padding: 0 }}>
+        <Mafs height={220} preserveAspectRatio={false} viewBox={{ x: [-0.6, 22], y: [-24, 220], padding: 0 }}>
           <Coordinates.Cartesian
             xAxis={{ lines: 5, labels: (v) => String(v) }}
             yAxis={{ lines: 50 }}

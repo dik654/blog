@@ -460,20 +460,46 @@ export const vllmServingArticles: Article[] = [
     subcategory: "ai-llm-serving",
     sections: [
       {
-        id: "problem",
-        title: "표준 attention 은 N×N 행렬을 HBM 에 썼다가 다시 읽는다",
-        subsections: [{ id: "paper-flashattention", title: "FlashAttention 논문의 문제와 기여" }],
+            "id": "overview",
+            "title": "1 · 같은 답을 더 적은 왕복으로 구한다"
       },
-      { id: "io-aware", title: "IO-aware 비용 모델과 SRAM residency" },
       {
-        id: "online-softmax",
-        title: "Online softmax 의 running max·normalizer 갱신",
-        subsections: [{ id: "paper-online-softmax", title: "Online normalizer 논문의 문제와 기여" }],
+            "id": "black-box",
+            "title": "2 · 점수와 값을 받아 가중평균을 돌려준다"
       },
-      { id: "tiling", title: "Tile 이 SRAM 에 머무는 동안 attention 을 끝내는 forward loop" },
-      { id: "backward", title: "Backward 의 recompute-vs-store tradeoff" },
-      { id: "boundary", title: "SRAM 크기·head dim·hardware 의존성과 다음 읽기" },
-    ],
+      {
+            "id": "case",
+            "title": "3 · 네 항을 한 번에 계산하면 7.376113이다"
+      },
+      {
+            "id": "picture",
+            "title": "4 · 조각을 버리고 기준값과 두 합만 남긴다"
+      },
+      {
+            "id": "need",
+            "title": "5 · 계산보다 중간 행렬의 왕복이 커질 수 있다"
+      },
+      {
+            "id": "names",
+            "title": "6 · FlashAttention은 attention 행렬의 저장을 피하는 구현이다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7 · 옛 합의 기준을 옮기면 중간 행렬이 필요 없다"
+      },
+      {
+            "id": "source",
+            "title": "8 · 공식 코드의 row_scale에 e⁻²를 넣는다"
+      },
+      {
+            "id": "comparison",
+            "title": "9 · FA4는 지수 계산과 온칩 이동도 함께 겹친다"
+      },
+      {
+            "id": "limits",
+            "title": "10 · 같은 shape와 오차 기준으로 시간을 재야 한다"
+      }
+],
     component: () => import("@/pages/articles/ai/flash-attention-io-aware-kernel"),
   },
   {
@@ -706,23 +732,47 @@ export const vllmServingArticles: Article[] = [
     title: "Expert parallelism은 all-to-all 통신량이 expert 계산 시간을 넘지 않게 설계합니다",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "problem", title: "Expert를 나누면 token이 건너야 하는 이유" },
-      { id: "sharding", title: "Expert parallelism과 expert sharding" },
-      { id: "all-to-all", title: "All-to-all의 byte·시간·절차" },
-      { id: "locality", title: "Expert locality와 node-limited routing" },
-      { id: "bottleneck", title: "통신 병목·straggler·routing overhead" },
       {
-        id: "evidence",
-        title: "근거: GShard·Switch·DeepSpeed-MoE·DeepSeek-V3·DeepEP",
-        subsections: [
-          { id: "paper-gshard", title: "GShard" },
-          { id: "paper-switch", title: "Switch Transformers" },
-          { id: "paper-deepspeed-moe", title: "DeepSpeed-MoE" },
-          { id: "paper-deepseek-v3", title: "DeepSeek-V3" },
-          { id: "paper-deepep", title: "DeepEP README" },
-        ],
+            "id": "overview",
+            "title": "1 · 선택한 계산기가 다른 GPU에 있으면 입력을 옮겨야 한다"
       },
-    ],
+      {
+            "id": "black-box",
+            "title": "2 · 입력·expert 번호·가중치를 받아 결합 결과를 돌려준다"
+      },
+      {
+            "id": "case",
+            "title": "3 · token 37은 8192바이트를 두 곳에 보낸다"
+      },
+      {
+            "id": "picture",
+            "title": "4 · 입력을 보내고 결과를 원래 위치로 돌려놓는다"
+      },
+      {
+            "id": "need",
+            "title": "5 · weight를 나눈 절약과 token 이동을 함께 계산한다"
+      },
+      {
+            "id": "names",
+            "title": "6 · Expert parallelism은 expert의 배치 축을 나눈다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7 · 평균 바이트와 가장 늦은 GPU를 함께 본다"
+      },
+      {
+            "id": "source",
+            "title": "8 · EPBuffer는 배정 결과와 유효 수신 범위를 함께 전달한다"
+      },
+      {
+            "id": "comparison",
+            "title": "9 · 전송 공유와 expert 복제는 서로 다른 비용을 바꾼다"
+      },
+      {
+            "id": "limits",
+            "title": "10 · 작은 decode에서는 고정 지연이 남는다"
+      }
+],
     component: () => import("@/pages/articles/ai/expert-parallelism-moe-systems"),
   },
   {

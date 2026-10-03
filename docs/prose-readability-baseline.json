@@ -878,8 +878,10 @@
       "score": 10
     },
     "gpu/gpu-collective-network": {
-      "fingerprint": "18d388909178baf7",
-      "score": 10
+      "fingerprint": "8dbc191d0201c18d",
+      "score": 10,
+      "reviewedAt": "2026-10-04",
+      "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
     },
     "gpu/hw-nvme-storage": {
       "fingerprint": "a422c6e42f139167",
@@ -946,8 +948,10 @@
       "score": 8
     },
     "ai/rnn-language-model": {
-      "fingerprint": "37c7ff92aa7cbf12",
-      "score": 8
+      "fingerprint": "80eed67c60ee5453",
+      "score": 8,
+      "reviewedAt": "2026-10-04",
+      "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
     },
     "ai/self-distillation": {
       "fingerprint": "c34ee0bc7f5383e8",
@@ -1018,8 +1022,10 @@
       "score": 8
     },
     "gpu/gpu-interconnects": {
-      "fingerprint": "75e34c7258acaa26",
-      "score": 8
+      "fingerprint": "edd03d5a424fd6b3",
+      "score": 8,
+      "reviewedAt": "2026-10-04",
+      "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
     },
     "gpu/hw-power-cooling": {
       "fingerprint": "1cc8a36920903f08",
@@ -1126,8 +1132,10 @@
       "score": 6
     },
     "ai/denoising-masked-autoencoders": {
-      "fingerprint": "1cedb03639e9b325",
-      "score": 6
+      "fingerprint": "8d8261e585f5ce9f",
+      "score": 6,
+      "reviewedAt": "2026-10-04",
+      "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
     },
     "ai/hyper-connections-residual-streams": {
       "fingerprint": "0d2705f91d6012d8",
@@ -1230,16 +1238,22 @@
       "score": 6
     },
     "gpu/hw-network": {
-      "fingerprint": "b3b3f838fef97bb4",
-      "score": 6
+      "fingerprint": "d01e28e3204ec767",
+      "score": 6,
+      "reviewedAt": "2026-10-04",
+      "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
     },
     "gpu/rdma-roce": {
-      "fingerprint": "b0e017cf12730d53",
-      "score": 6
+      "fingerprint": "4202970665623ef5",
+      "score": 6,
+      "reviewedAt": "2026-10-04",
+      "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
     },
     "gpu/warp-stall-reasons-and-issue-utilization": {
-      "fingerprint": "2c7cc821c12d33f5",
-      "score": 6
+      "fingerprint": "d6960be8cece4572",
+      "score": 6,
+      "reviewedAt": "2026-10-04",
+      "reviewNote": "모바일 조작부가 그림을 가리지 않도록 버튼만 W0 선택 등 짧은 단계명으로 줄였습니다. 긴 장면 제목과 본문·수치 설명은 그대로 유지되어 기존 문장 검수 결정을 유지합니다."
     },
     "isms-aml/aml-fds-deep": {
       "fingerprint": "dc872bb120159689",

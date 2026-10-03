@@ -12458,36 +12458,36 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/blockchain/eip4844-blob-fee#overview",
   },
   "blob-demand-average-target-peak-split": {
-    id: "blob-demand-average-target-peak-split",
-    kind: "concept",
-    domain: "economics",
-    label: "Blob demand average · target · peak split",
-    definition: "블록당 blob 개별 피크, 여러 블록에 걸친 이동평균, 프로토콜 target을 서로 다른 시간 창으로 구분해 지속적 초과 수요와 일시적 피크를 혼동하지 않는 읽기 방법입니다.",
-    canonicalHref: "/cs/blockchain/robinhood-chain-blob-demand#overview",
+    "id": "blob-demand-average-target-peak-split",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "Blob demand average · target · peak split",
+    "definition": "블록당 blob 개별 피크, 여러 블록에 걸친 이동평균, 프로토콜 target을 서로 다른 시간 창으로 구분해 지속적 초과 수요와 일시적 피크를 혼동하지 않는 읽기 방법입니다.",
+    "canonicalHref": "/cs/blockchain/robinhood-chain-blob-demand#target-vs-average"
   },
   "single-rollup-blob-demand-concentration": {
-    id: "single-rollup-blob-demand-concentration",
-    kind: "concept",
-    domain: "economics",
-    label: "Single-rollup blob demand concentration",
-    definition: "여러 rollup이 공유하는 blob 시장에서 특정 rollup 하나의 posting 활동이 전체 집계 지표를 눈에 띄게 움직이는 상태로, 넓은 기반의 구조적 수요 증가와 구분해야 하는 집중 위험입니다.",
-    canonicalHref: "/cs/blockchain/robinhood-chain-blob-demand#robinhood-chain-concentration",
+    "id": "single-rollup-blob-demand-concentration",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "Single-rollup blob demand concentration",
+    "definition": "여러 rollup이 공유하는 blob 시장에서 특정 rollup 하나의 posting 활동이 전체 집계 지표를 눈에 띄게 움직이는 상태로, 넓은 기반의 구조적 수요 증가와 구분해야 하는 집중 위험입니다.",
+    "canonicalHref": "/cs/blockchain/robinhood-chain-blob-demand#robinhood-chain-concentration"
   },
   "eip7892-bpo-parameter-only-fork": {
-    id: "eip7892-bpo-parameter-only-fork",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "EIP-7892 BPO parameter-only fork",
-    definition: "Blob target·max 같은 파라미터만 다른 EVM·consensus 변경과 분리해 별도 일정의 경량 포크로 조정하는 메커니즘으로, 수요 변화에 전체 하드포크보다 빠르게 대응하게 합니다.",
-    canonicalHref: "/cs/blockchain/robinhood-chain-blob-demand#bpo-sparse-blobpool",
+    "id": "eip7892-bpo-parameter-only-fork",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "EIP-7892 BPO parameter-only fork",
+    "definition": "Blob target·max 같은 파라미터만 다른 EVM·consensus 변경과 분리해 별도 일정의 경량 포크로 조정하는 메커니즘으로, 수요 변화에 전체 하드포크보다 빠르게 대응하게 합니다.",
+    "canonicalHref": "/cs/blockchain/robinhood-chain-blob-demand#source"
   },
   "sparse-blobpool-capacity-precondition": {
-    id: "sparse-blobpool-capacity-precondition",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Sparse blobpool capacity precondition",
-    definition: "Target 상향으로 늘어난 대기 중 blob 트랜잭션의 중복 저장을 줄여, 노드가 같은 자원으로 더 높은 target을 감당하도록 하는 mempool 최적화이자 추가 BPO 포크의 전제 조건입니다.",
-    canonicalHref: "/cs/blockchain/robinhood-chain-blob-demand#bpo-sparse-blobpool",
+    "id": "sparse-blobpool-capacity-precondition",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Sparse blobpool의 전송량·가용성 모형",
+    "definition": "EIP-8070이 전체 자료 제공자와 표본 수신자로 blobpool 전송을 나누는 제안입니다. 확률·피어·가용성 가정 아래의 기대 전송량을 실제 대역폭 측정이나 BPO의 필수 전제로 확대하지 않습니다.",
+    "canonicalHref": "/cs/blockchain/robinhood-chain-blob-demand#bpo-sparse-blobpool"
   },
   "reth-blob-reorg-retention-boundary": {
     id: "reth-blob-reorg-retention-boundary",
@@ -14397,130 +14397,172 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/tee/arm-cca#release-gate",
   },
   "polynomial-commitment-interface": {
-    id: "polynomial-commitment-interface", kind: "concept", domain: "computer-science",
-    label: "Polynomial commitment Commit · Open · Verify interface",
-    definition: "Degree-bounded polynomial f를 짧은 commitment C에 결속하고 point z와 claimed value y=f(z)에 대한 opening proof π를 만들어 verifier가 f 전체를 받지 않고 evaluation consistency를 검사하는 cryptographic interface입니다.",
-    canonicalHref: "/cs/crypto/polycommit#commit-open",
+    "id": "polynomial-commitment-interface",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "다항식 고정·열기·검사",
+    "definition": "다항식을 고정한 뒤 위치와 평가값이 그 고정 내용에 맞는지 검사합니다.",
+    "canonicalHref": "/cs/crypto/polycommit#names"
   },
   "kzg-quotient-opening-equation": {
-    id: "kzg-quotient-opening-equation", kind: "method", domain: "mathematics",
-    label: "KZG quotient opening equation",
-    definition: "f(X)−y가 X−z로 나뉘는 quotient q(X)를 SRS의 hidden τ에서 group element로 encode하고 e(C−yG,G2)=e(π,[τ−z]G2)로 evaluation claim을 검사하는 KZG opening 방법입니다.",
-    canonicalHref: "/cs/crypto/polycommit#commit-open",
+    "id": "kzg-quotient-opening-equation",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "KZG의 몫 다항식",
+    "definition": "평가값이 맞으면 그 값을 뺀 다항식은 X−z로 정확히 나누어집니다.",
+    "canonicalHref": "/cs/crypto/polycommit#commit-open"
   },
   "ipa-polynomial-opening": {
-    id: "ipa-polynomial-opening", kind: "method", domain: "computer-science",
-    label: "Inner-product polynomial opening",
-    definition: "Coefficient vector a와 power vector (1,z,…,z^d)의 inner product가 f(z)라는 관계를 logarithmic rounds로 fold해 discrete-log group commitment의 evaluation을 증명하는 transparent-setup 계열 방법입니다.",
-    canonicalHref: "/cs/crypto/polycommit#schemes",
+    "id": "ipa-polynomial-opening",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "IPA의 내적 접기",
+    "definition": "평가를 계수와 거듭제곱 벡터의 내적으로 쓰고 교차항과 함께 길이를 줄입니다.",
+    "canonicalHref": "/cs/crypto/polycommit#schemes"
   },
   "pcs-degree-hiding-setup-boundary": {
-    id: "pcs-degree-hiding-setup-boundary", kind: "concept", domain: "computer-science",
-    label: "PCS degree · hiding · setup boundary",
-    definition: "Polynomial commitment의 binding, degree bound, coefficient/value hiding과 trusted/universal/transparent setup을 별도 property와 randomness로 평가해 commitment가 자동으로 polynomial을 숨긴다고 보지 않는 경계입니다.",
-    canonicalHref: "/cs/crypto/polycommit#schemes",
+    "id": "pcs-degree-hiding-setup-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "차수·은닉·준비 가정",
+    "definition": "차수 제한, 은닉, 준비 가정은 서로 다른 질문입니다.",
+    "canonicalHref": "/cs/crypto/polycommit#selection"
   },
   "pcs-release-gate": {
-    id: "pcs-release-gate", kind: "method", domain: "computer-science",
-    label: "Polynomial-commitment release gate",
-    definition: "Polynomial·degree·field·SRS/generator·transcript profile을 고정하고 wrong value/point·degree overflow·bad subgroup·setup mismatch·randomness reuse를 거절한 뒤 commit/open/verify time·bytes·memory를 비교하는 채택 절차입니다.",
-    canonicalHref: "/cs/crypto/polycommit#selection",
+    "id": "pcs-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "다항식 증명의 비용 비교",
+    "definition": "같은 계수 수와 공개 질문, 보안 목표에서 실패 조건과 비용을 비교합니다.",
+    "canonicalHref": "/cs/crypto/polycommit#selection"
   },
   "fri-reed-solomon-oracle-proximity": {
-    id: "fri-reed-solomon-oracle-proximity", kind: "concept", domain: "mathematics",
-    label: "FRI Reed–Solomon oracle proximity claim",
-    definition: "큰 evaluation domain의 oracle vector가 degree bound 이하 polynomial의 Reed–Solomon codeword와 정확히 같거나 충분히 가까운지를 전체 vector를 읽지 않고 interactive oracle queries로 검사하는 주장입니다.",
-    canonicalHref: "/cs/crypto/fri#overview",
+    "id": "fri-reed-solomon-oracle-proximity",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "낮은 차수 평가표의 근접성",
+    "definition": "평가표가 정해진 낮은 차수의 다항식 표에 가까운지 검사합니다.",
+    "canonicalHref": "/cs/crypto/fri#names"
   },
   "fri-even-odd-folding": {
-    id: "fri-even-odd-folding", kind: "method", domain: "mathematics",
-    label: "FRI even · odd polynomial folding",
-    definition: "f(X)=f_even(X²)+Xf_odd(X²)를 random challenge β로 g(T)=f_even(T)+βf_odd(T)로 합쳐 evaluation domain과 degree bound를 대략 절반씩 줄이는 FRI round 변환입니다.",
-    canonicalHref: "/cs/crypto/fri#folding",
+    "id": "fri-even-odd-folding",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "FRI의 짝수·홀수 접기",
+    "definition": "반대 위치의 값을 짝수·홀수 부분으로 나누어 표 크기와 차수를 줄입니다.",
+    "canonicalHref": "/cs/crypto/fri#folding"
   },
   "fri-merkle-query-transcript": {
-    id: "fri-merkle-query-transcript", kind: "method", domain: "computer-science",
-    label: "FRI commitment · challenge · query transcript",
-    definition: "각 round oracle의 Merkle root를 먼저 고정하고 challenge를 파생한 뒤 연관된 x·−x와 folded position의 values·authentication paths를 열어 folding consistency를 검사하는 transcript 순서입니다.",
-    canonicalHref: "/cs/crypto/fri#soundness",
+    "id": "fri-merkle-query-transcript",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "표 고정과 해시 질문 순서",
+    "definition": "표를 먼저 고정한 뒤 질문을 정하고 열린 값의 인증 경로를 확인합니다.",
+    "canonicalHref": "/cs/crypto/fri#soundness"
   },
   "fri-sampling-miss-bound": {
-    id: "fri-sampling-miss-bound", kind: "theorem", domain: "mathematics",
-    label: "Independent query miss bound",
-    definition: "검사 위치의 δ 비율이 bad이고 q개 위치를 독립 균일 표본으로 뽑는 단순 모델에서 모든 bad position을 놓칠 확률이 (1−δ)^q라는 sampling bound이며 전체 FRI soundness theorem과 동일하지 않습니다.",
-    canonicalHref: "/cs/crypto/fri#soundness",
+    "id": "fri-sampling-miss-bound",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "독립 표본의 오류 누락 상한",
+    "definition": "고정된 오류 위치를 독립 표본이 놓치는 확률은 반복 곱으로 계산합니다.",
+    "canonicalHref": "/cs/crypto/fri#soundness"
   },
   "fri-release-gate": {
-    id: "fri-release-gate", kind: "method", domain: "computer-science",
-    label: "FRI correctness · soundness release gate",
-    definition: "Field/domain/rate/blowup/folding/query/hash profile을 고정하고 wrong fold·root/path·degree/final polynomial·transcript order를 거절한 뒤 prover·proof·verifier·soundness budget을 비교하는 채택 절차입니다.",
-    canonicalHref: "/cs/crypto/fri#stark-boundary",
+    "id": "fri-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "차수·실행·비밀성의 경계",
+    "definition": "차수·평가 결속·실행 의미·비밀성을 서로 다른 조건으로 검증합니다.",
+    "canonicalHref": "/cs/crypto/fri#stark-boundary"
   },
   "stark-execution-trace": {
-    id: "stark-execution-trace", kind: "concept", domain: "computer-science",
-    label: "STARK execution trace",
-    definition: "Program의 시간 step마다 register·memory-derived columns를 field row에 기록해 공개 input/output과 비공개 witness computation을 transition 검사가 가능한 직사각형 table로 나타낸 실행 증거입니다.",
-    canonicalHref: "/cs/crypto/stark-theory#trace-air",
+    "id": "stark-execution-trace",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "시간별 실행 기록",
+    "definition": "프로그램의 중간 상태를 시간별 행으로 기록합니다.",
+    "canonicalHref": "/cs/crypto/stark-theory#case"
   },
   "air-transition-boundary-constraints": {
-    id: "air-transition-boundary-constraints", kind: "concept", domain: "mathematics",
-    label: "AIR transition · boundary constraints",
-    definition: "Trace의 인접 rows가 실행 규칙을 따르는 transition constraints와 첫·마지막·public row를 statement에 결속하는 boundary constraints로 computation validity를 정의하는 algebraic intermediate representation입니다.",
-    canonicalHref: "/cs/crypto/stark-theory#trace-air",
+    "id": "air-transition-boundary-constraints",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "전이와 시작·끝 조건",
+    "definition": "이웃 행의 규칙과 첫 행·마지막 공개값의 조건을 식으로 묶습니다.",
+    "canonicalHref": "/cs/crypto/stark-theory#trace-air"
   },
   "stark-composition-polynomial": {
-    id: "stark-composition-polynomial", kind: "method", domain: "mathematics",
-    label: "STARK composition polynomial",
-    definition: "Transition·boundary constraint numerators를 각 constraint domain의 zerofier로 나누고 random coefficients로 합쳐 모든 AIR 위반을 하나의 degree-bounded polynomial claim으로 모으는 방법입니다.",
-    canonicalHref: "/cs/crypto/stark-theory#lde-fri",
+    "id": "stark-composition-polynomial",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "조건 몫의 선형 결합",
+    "definition": "서로 다른 조건의 몫을 질문의 가중치로 결합합니다.",
+    "canonicalHref": "/cs/crypto/stark-theory#trace-air"
   },
   "stark-lde-fri-pipeline": {
-    id: "stark-lde-fri-pipeline", kind: "method", domain: "computer-science",
-    label: "STARK low-degree extension · FRI pipeline",
-    definition: "Trace/composition polynomials를 larger coset domain에 low-degree extend해 Merkle-commit하고 random spot checks와 FRI proximity proof로 AIR consistency를 succinct하게 검사하는 protocol pipeline입니다.",
-    canonicalHref: "/cs/crypto/stark-theory#lde-fri",
+    "id": "stark-lde-fri-pipeline",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "평가 확장과 FRI 검사",
+    "definition": "행의 값을 더 큰 평가 영역에 펼치고 표 고정과 차수 검사를 연결합니다.",
+    "canonicalHref": "/cs/crypto/stark-theory#lde-fri"
   },
   "stark-transparent-hash-security-boundary": {
-    id: "stark-transparent-hash-security-boundary", kind: "concept", domain: "computer-science",
-    label: "STARK transparency · hash security boundary",
-    definition: "Secret toxic-waste setup을 쓰지 않는 transparency와 hash/Merkle·Fiat–Shamir·field·query soundness assumptions를 구분하고 이를 무조건적 또는 자동 post-quantum security로 확대하지 않는 경계입니다.",
-    canonicalHref: "/cs/crypto/stark-theory#security-cost",
+    "id": "stark-transparent-hash-security-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "투명한 준비와 해시 보안",
+    "definition": "비밀 준비값의 부재, 해시 가정, 영지식은 별도의 보안 조건입니다.",
+    "canonicalHref": "/cs/crypto/stark-theory#security-cost"
   },
   "stark-release-gate": {
-    id: "stark-release-gate", kind: "method", domain: "computer-science",
-    label: "STARK trace · proof release gate",
-    definition: "Program/AIR/field/domain/hash/transcript를 고정하고 wrong trace·boundary·composition·Merkle·FRI·public input을 거절한 뒤 trace/LDE/hash/proof/verify time·bytes·memory를 비교하는 채택 절차입니다.",
-    canonicalHref: "/cs/crypto/stark-theory#security-cost",
+    "id": "stark-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "실행 의미와 증명 비용",
+    "definition": "실행의 의미가 빠진 조건과 비용의 가정을 함께 검토합니다.",
+    "canonicalHref": "/cs/crypto/stark-theory#security-cost"
   },
   "interactive-proof-message-challenge": {
-    id: "interactive-proof-message-challenge", kind: "concept", domain: "computer-science",
-    label: "Interactive proof message · challenge flow",
-    definition: "Prover commitment, verifier의 예측하기 어려운 random challenge, prover response와 verification predicate를 순서대로 실행해 사전에 한 답만 준비한 cheating prover를 반복 질문으로 제한하는 proof flow입니다.",
-    canonicalHref: "/cs/crypto/zk-theory#overview",
+    "id": "interactive-proof-message-challenge",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "메시지·질문·응답 순서",
+    "definition": "첫 메시지를 고정한 뒤 질문에 답하는 순서가 검사의 의미를 만듭니다.",
+    "canonicalHref": "/cs/crypto/zk-theory#names"
   },
   "sigma-protocol-special-soundness": {
-    id: "sigma-protocol-special-soundness", kind: "theorem", domain: "computer-science",
-    label: "Sigma protocol special soundness",
-    definition: "같은 first message에 서로 다른 challenges로 accept되는 두 transcripts가 있으면 polynomial-time extractor가 witness를 복원할 수 있다는 three-move public-coin protocol의 knowledge-soundness 성질입니다.",
-    canonicalHref: "/cs/crypto/zk-theory#sigma",
+    "id": "sigma-protocol-special-soundness",
+    "kind": "theorem",
+    "domain": "computer-science",
+    "label": "두 응답에서 증인 추출",
+    "definition": "같은 첫 메시지에 서로 다른 질문의 유효 응답이 있으면 비밀을 추출할 수 있습니다.",
+    "canonicalHref": "/cs/crypto/zk-theory#sigma"
   },
   "zero-knowledge-simulator-definition": {
-    id: "zero-knowledge-simulator-definition", kind: "concept", domain: "computer-science",
-    label: "Zero-knowledge simulator definition",
-    definition: "Witness 없이 public statement만 받은 simulator가 real verifier view와 동일하거나 계산적으로 구분하기 어려운 transcript를 만들 수 있어 validity 밖의 witness knowledge가 전달되지 않음을 정의하는 기준입니다.",
-    canonicalHref: "/cs/crypto/zk-theory#simulation",
+    "id": "zero-knowledge-simulator-definition",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "비밀 없는 대화 시뮬레이션",
+    "definition": "비밀 없이 만든 대화와 실제 대화를 비교하여 추가 정보가 없는지 정의합니다.",
+    "canonicalHref": "/cs/crypto/zk-theory#simulation"
   },
   "pedersen-hiding-binding-boundary": {
-    id: "pedersen-hiding-binding-boundary", kind: "concept", domain: "computer-science",
-    label: "Pedersen perfect hiding · computational binding",
-    definition: "C=mG+rH에서 uniform r가 message에 대한 perfect hiding을 제공하고 G와 H의 discrete-log 관계를 모르면 서로 다른 openings를 찾기 어렵다는 computational binding을 분리한 commitment 성질입니다.",
-    canonicalHref: "/cs/crypto/zk-theory#simulation",
+    "id": "pedersen-hiding-binding-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Pedersen의 은닉과 결속",
+    "definition": "무작위 가리기는 내용을 숨기고 생성자 사이 이산로그의 어려움은 다른 열림을 막습니다.",
+    "canonicalHref": "/cs/crypto/zk-theory#source"
   },
   "zk-property-release-gate": {
-    id: "zk-property-release-gate", kind: "method", domain: "computer-science",
-    label: "Zero-knowledge protocol property release gate",
-    definition: "Relation·group·challenge·transcript·commitment·RNG profile을 고정하고 honest completeness, false-statement rejection, two-transcript extraction, simulator indistinguishability와 nonce/domain failures를 검사한 뒤 비용을 비교하는 채택 절차입니다.",
-    canonicalHref: "/cs/crypto/zk-theory#noninteractive-boundary",
+    "id": "zk-property-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "영지식 구성의 실패 조건",
+    "definition": "검사 성공과 공개 입력 결속, 난수 사용, 공격 모델을 따로 확인합니다.",
+    "canonicalHref": "/cs/crypto/zk-theory#noninteractive-boundary"
   },
   "bplus-page-fanout-height-bound": { id:"bplus-page-fanout-height-bound", kind:"theorem", domain:"computer-science", label:"B+ tree page fanout · height bound", definition:"고정 page에서 header·slot·key·child pointer 크기로 내부 node fanout을 계산하고 최소 occupancy가 지켜질 때 N개 leaf entry의 root-to-leaf I/O 높이를 logarithmic upper bound로 연결하는 비용 모델입니다.", canonicalHref:"/cs/blockchain/bplus-tree#page-layout" },
   "bplus-separator-leaf-chain-search": { id:"bplus-separator-leaf-chain-search", kind:"method", domain:"computer-science", label:"B+ tree separator · leaf-chain search", definition:"Internal separator key는 child page를 고르고 실제 record 또는 record pointer는 leaf에만 두며, point lookup은 한 root-to-leaf path를, range scan은 첫 leaf 탐색 뒤 sibling chain을 순회하는 조회 계약입니다.", canonicalHref:"/cs/blockchain/bplus-tree#search-range" },
@@ -14564,9 +14606,30 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "circom-signal-constraint-lowering": { id:"circom-signal-constraint-lowering", kind:"method", domain:"computer-science", label:"Circom signal · constraint lowering", definition:"Template instantiation과 signal assignments를 witness computation과 quadratic R1CS constraints로 나누고 constrained/unconstrained assignment의 차이를 compiler artifacts에서 확인하는 lowering 경계입니다.", canonicalHref:"/cs/crypto/circom#lowering" },
   "circom-witness-public-layout-artifact": { id:"circom-witness-public-layout-artifact", kind:"concept", domain:"computer-science", label:"Circom witness · public layout artifact", definition:"Compiler/version/source hash와 R1CS, witness generator, symbol map, public signal order, field/profile을 하나의 reproducible circuit artifact로 결속하는 계약입니다.", canonicalHref:"/cs/crypto/circom#artifacts" },
   "circom-snarkjs-release-gate": { id:"circom-snarkjs-release-gate", kind:"method", domain:"computer-science", label:"Circom · snarkjs release gate", definition:"Pinned compiler/snarkjs/backend에서 unconstrained signal·wrong public order·witness mismatch·key/circuit drift를 거절한 뒤 compile/witness/prove/verify/RSS를 비교하는 절차입니다.", canonicalHref:"/cs/crypto/circom#release" },
-  "jolt-instruction-lookup-sumcheck-lowering": { id:"jolt-instruction-lookup-sumcheck-lowering", kind:"method", domain:"computer-science", label:"Jolt instruction lookup · sumcheck lowering", definition:"VM instruction semantics를 lookup tables와 multilinear evaluations로 표현하고 read/write/memory consistency claims를 sumcheck·commitment openings로 줄이는 Jolt lowering입니다.", canonicalHref:"/cs/crypto/jolt#lookup-sumcheck" },
-  "jolt-bytecode-trace-claim-artifact": { id:"jolt-bytecode-trace-claim-artifact", kind:"concept", domain:"computer-science", label:"Jolt bytecode · trace · claim artifact", definition:"Program hash, inputs/outputs, memory initialization, trace length, field/commitment/transcript profile을 proof statement와 reproducible artifact에 결속하는 계약입니다.", canonicalHref:"/cs/crypto/jolt#artifact" },
-  "jolt-release-gate": { id:"jolt-release-gate", kind:"method", domain:"computer-science", label:"Jolt implementation release gate", definition:"Pinned Jolt source에서 interpreter parity와 wrong opcode/memory/input/output/transcript/opening failures를 확인한 뒤 preprocess/prove/verify/proof/RSS를 비교하는 절차입니다.", canonicalHref:"/cs/crypto/jolt#release" },
+  "jolt-instruction-lookup-sumcheck-lowering": {
+    "id": "jolt-instruction-lookup-sumcheck-lowering",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "명령 계산과 lookup 검사",
+    "definition": "기계 명령의 계산을 lookup 주장과 다항식의 합 검사로 연결합니다.",
+    "canonicalHref": "/cs/crypto/jolt#lookup-sumcheck"
+  },
+  "jolt-bytecode-trace-claim-artifact": {
+    "id": "jolt-bytecode-trace-claim-artifact",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "프로그램·기록·공개값의 결속",
+    "definition": "프로그램·초기 자료·공개 입출력과 실행 길이를 증명할 주장에 묶습니다.",
+    "canonicalHref": "/cs/crypto/jolt#artifact"
+  },
+  "jolt-release-gate": {
+    "id": "jolt-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Jolt 버전과 실행 조건",
+    "definition": "버전·명령 집합·프로그램·보안 설정·하드웨어를 고정해 결과와 비용을 비교합니다.",
+    "canonicalHref": "/cs/crypto/jolt#release"
+  },
   "libiop-r1cs-oracle-reduction-profile": { id:"libiop-r1cs-oracle-reduction-profile", kind:"method", domain:"computer-science", label:"libiop R1CS · oracle reduction profile", definition:"R1CS instance/witness를 Aurora/Ligero 계열 encoded oracles, degree/proximity tests와 query parameters로 바꾸는 protocol-specific reduction profile입니다.", canonicalHref:"/cs/crypto/libiop#r1cs-iop" },
   "bcs-transcript-query-artifact": { id:"bcs-transcript-query-artifact", kind:"concept", domain:"computer-science", label:"BCS transcript · oracle query artifact", definition:"Public-coin IOP round messages를 Merkle commitments와 Fiat–Shamir challenges/query positions에 commit-first 순서로 결속하는 non-interactive compiler artifact입니다.", canonicalHref:"/cs/crypto/libiop#bcs" },
   "libiop-profile-release-gate": { id:"libiop-profile-release-gate", kind:"method", domain:"computer-science", label:"libiop protocol profile release gate", definition:"Pinned source와 field/code/rate/query/hash/PCS/transcript parameters에서 malformed oracle/path/degree/query/order를 거절한 뒤 encode/prove/verify/proof/RSS를 비교하는 절차입니다.", canonicalHref:"/cs/crypto/libiop#release" },
@@ -14697,100 +14760,132 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/crypto/hyperplonk#release",
   },
   "ivc-state-step-relation": {
-    id: "ivc-state-step-relation", kind: "concept", domain: "computer-science",
-    label: "Incrementally verifiable computation state · step relation",
-    definition: "공개 state z_i와 z_{i+1}가 고정 step circuit F와 private per-step witness로 연결된다는 proof를 매 step 갱신해 누적 실행 길이에 비례해 verifier state가 커지지 않게 하는 IVC 문제 정의입니다.",
-    canonicalHref: "/cs/crypto/nova#ivc",
+    "id": "ivc-state-step-relation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "반복 실행의 상태 연결",
+    "definition": "반복 계산을 잇기 위해 앞 단계의 끝 상태를 다음 시작 상태와 연결합니다.",
+    "canonicalHref": "/cs/crypto/nova#ivc"
   },
   "relaxed-r1cs-error-slack": {
-    id: "relaxed-r1cs-error-slack", kind: "concept", domain: "mathematics",
-    label: "Relaxed R1CS scalar · error slack",
-    definition: "R1CS equality Az∘Bz=Cz를 Az∘Bz=uCz+E로 확장해 scalar u와 error vector E가 folding 중 생기는 cross terms를 흡수하게 하는 Nova의 algebraic relation입니다.",
-    canonicalHref: "/cs/crypto/nova#relaxed-r1cs",
+    "id": "relaxed-r1cs-error-slack",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "완화된 R1CS의 배율과 오차",
+    "definition": "곱셈 조건에 배율과 유도된 오차를 두어 합친 결과가 같은 형식에 남게 합니다.",
+    "canonicalHref": "/cs/crypto/nova#names"
   },
   "nova-nifs-folding-equation": {
-    id: "nova-nifs-folding-equation", kind: "method", domain: "mathematics",
-    label: "Nova NIFS folding equation",
-    definition: "두 committed relaxed-R1CS instances와 witnesses를 transcript challenge r의 선형 결합으로 접고 cross term T를 E'=E1+rT+r²E2에 넣어 하나의 relaxed instance/witness satisfaction claim으로 만드는 folding 방법입니다.",
-    canonicalHref: "/cs/crypto/nova#relaxed-r1cs",
+    "id": "nova-nifs-folding-equation",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Nova의 교차항 폴딩",
+    "definition": "두 원본 곱을 전개해 생긴 교차항을 새 오차에 반영합니다.",
+    "canonicalHref": "/cs/crypto/nova#relaxed-r1cs"
   },
   "nova-folding-challenge-soundness": {
-    id: "nova-folding-challenge-soundness", kind: "theorem", domain: "mathematics",
-    label: "Nova folding random-challenge soundness",
-    definition: "두 instance를 challenge r로 선형 결합한 polynomial identity에서 거짓 constituent claims의 오차가 nonzero low-degree polynomial이면 commitment 뒤 random r에서 우연히 0이 될 확률을 degree/field-size로 제한하는 folding soundness 직관입니다.",
-    canonicalHref: "/cs/crypto/nova#relaxed-r1cs",
+    "id": "nova-folding-challenge-soundness",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "폴딩 질문의 오류 통과 상한",
+    "definition": "원본과 교차항을 고정한 뒤 무작위 질문을 받아 거짓 조건의 우연한 일치를 제한합니다.",
+    "canonicalHref": "/cs/crypto/nova#source"
   },
   "nova-ivc-compression-zk-boundary": {
-    id: "nova-ivc-compression-zk-boundary", kind: "concept", domain: "computer-science",
-    label: "Nova folding · IVC · compression · ZK boundary",
-    definition: "Per-step NIFS folding accumulator, recursive IVC proof, final Spartan-style compression과 zero-knowledge randomization을 서로 다른 layer와 cost/security claim으로 구분하는 경계입니다.",
-    canonicalHref: "/cs/crypto/nova#compression-security",
+    "id": "nova-ivc-compression-zk-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "누적 관계의 압축과 영지식",
+    "definition": "누적 관계를 접는 단계와 최종 짧은 영지식 증명을 만드는 단계를 구별합니다.",
+    "canonicalHref": "/cs/crypto/nova#compression-security"
   },
   "nova-release-gate": {
-    id: "nova-release-gate", kind: "method", domain: "computer-science",
-    label: "Nova IVC folding release gate",
-    definition: "Step circuit/curve cycle/commitment/transcript/compression profile을 pin하고 wrong state·step index·cross term·commitment·challenge·resume/serialization을 거절한 뒤 per-step fold·memory·final compression/verify 비용과 rollback artifact를 기록하는 채택 절차입니다.",
-    canonicalHref: "/cs/crypto/nova#release",
+    "id": "nova-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "누적 실행의 재시작 조건",
+    "definition": "규칙 식별자·시작 상태·현재 상태·계산 횟수로 이어진 실행을 확인합니다.",
+    "canonicalHref": "/cs/crypto/nova#release"
   },
   "arithmetic-relation-instance-witness": {
-    id: "arithmetic-relation-instance-witness", kind: "concept", domain: "computer-science",
-    label: "Arithmetic relation · instance · witness",
-    definition: "유한체 위 relation R(x,w)에서 verifier에게 공개되는 instance x와 prover만 보유하는 witness w를 분리하고, 존재하는 w가 relation을 만족한다는 명제를 증명 대상으로 고정하는 문제 정의입니다.",
-    canonicalHref: "/cs/crypto/constraint-systems#overview",
+    "id": "arithmetic-relation-instance-witness",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "공개값·증인·산술 관계",
+    "definition": "공개 입력과 출력, 개인 값과 중간값을 같은 변수 순서의 조건에 넣습니다.",
+    "canonicalHref": "/cs/crypto/constraint-systems#names"
   },
   "r1cs-bilinear-row": {
-    id: "r1cs-bilinear-row", kind: "concept", domain: "mathematics",
-    label: "R1CS bilinear constraint row",
-    definition: "상수·public input·witness assignment z에 대해 세 coefficient vector의 선형 조합이 ⟨A,z⟩⟨B,z⟩=⟨C,z⟩을 만족하도록 산술 계산을 행들의 conjunction으로 표현하는 형식입니다.",
-    canonicalHref: "/cs/crypto/constraint-systems#r1cs",
+    "id": "r1cs-bilinear-row",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "R1CS의 곱셈 행",
+    "definition": "세 선형 조합으로 만든 두 입력의 곱이 결과와 같은지 행마다 검사합니다.",
+    "canonicalHref": "/cs/crypto/constraint-systems#r1cs"
   },
   "r1cs-gadget-semantic-boundary": {
-    id: "r1cs-gadget-semantic-boundary", kind: "concept", domain: "computer-science",
-    label: "R1CS gadget semantic boundary",
-    definition: "Field equation만으로 생기지 않는 bit·range·integer·copy 의미를 explicit constraints로 강제하고, witness 생성 성공을 원 프로그램 semantic completeness와 구분하는 compiler/gadget 경계입니다.",
-    canonicalHref: "/cs/crypto/constraint-systems#r1cs",
+    "id": "r1cs-gadget-semantic-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "비트·범위와 제약의 의미",
+    "definition": "의도한 비트·범위·선택 의미가 식에 실제로 들어가야 합니다.",
+    "canonicalHref": "/cs/crypto/constraint-systems#r1cs"
   },
   "qap-divisibility-reduction": {
-    id: "qap-divisibility-reduction", kind: "method", domain: "mathematics",
-    label: "R1CS-to-QAP divisibility reduction",
-    definition: "R1CS coefficient columns를 row points에서 보간하고 assignment로 합쳐 A(X)B(X)−C(X)가 모든 row root를 가진 target polynomial t(X)로 나누어지는지로 전체 constraint 만족을 환원하는 방법입니다.",
-    canonicalHref: "/cs/crypto/constraint-systems#qap",
+    "id": "qap-divisibility-reduction",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "QAP의 정확한 나눗셈",
+    "definition": "모든 행에서 0인 차이를 행 위치에서 0이 되는 다항식의 배수로 표현합니다.",
+    "canonicalHref": "/cs/crypto/constraint-systems#qap"
   },
   "constraint-system-release-gate": {
-    id: "constraint-system-release-gate", kind: "method", domain: "computer-science",
-    label: "Constraint-system semantic release gate",
-    definition: "Valid·invalid·boundary program fixtures를 witness·R1CS·QAP 결과에 재생해 public ordering·range·copy·division failure가 같은 이유로 통과·거절되는지 확인한 뒤 constraint·memory·latency를 비교하는 채택 절차입니다.",
-    canonicalHref: "/cs/crypto/constraint-systems#verification",
+    "id": "constraint-system-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "제약 누락과 공개값 변경 검사",
+    "definition": "공개값 변경과 누락 조건의 실패를 확인한 뒤 압축 증명의 비용을 봅니다.",
+    "canonicalHref": "/cs/crypto/constraint-systems#verification"
   },
   "snark-setup-prove-verify-interface": {
-    id: "snark-setup-prove-verify-interface", kind: "concept", domain: "computer-science",
-    label: "SNARK Setup · Prove · Verify interface",
-    definition: "Relation과 security parameter에서 key를 만들고 public instance·private witness로 proof를 생성하며 verifier가 key·instance·proof만으로 decision을 내리는 증명 시스템의 입력 소유권 계약입니다.",
-    canonicalHref: "/cs/crypto/snark-overview#interface",
+    "id": "snark-setup-prove-verify-interface",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "증명 준비·생성·검사",
+    "definition": "증명 규칙 준비, 증거 생성, 공개 검사를 서로 다른 입출력으로 나눕니다.",
+    "canonicalHref": "/cs/crypto/snark-overview#interface"
   },
   "snark-completeness-soundness-zk": {
-    id: "snark-completeness-soundness-zk", kind: "concept", domain: "computer-science",
-    label: "SNARK completeness · soundness · zero knowledge",
-    definition: "참인 relation의 honest proof 수락, 거짓 statement나 witness 없는 효율적 prover의 수락 제한, validity 밖의 witness 정보 비노출을 서로 다른 game·assumption으로 평가하는 보안 성질 묶음입니다.",
-    canonicalHref: "/cs/crypto/snark-overview#security",
+    "id": "snark-completeness-soundness-zk",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "완전성·건전성·영지식",
+    "definition": "정상 증인의 성공, 거짓 명제의 거절, 추가 정보의 은닉은 서로 다른 보장입니다.",
+    "canonicalHref": "/cs/crypto/snark-overview#security"
   },
   "snark-succinctness-cost-boundary": {
-    id: "snark-succinctness-cost-boundary", kind: "concept", domain: "computer-science",
-    label: "SNARK succinctness · cost boundary",
-    definition: "Proof bytes와 verifier work의 succinctness를 setup·proving key·witness generation·prover memory/time·public-input work·batch 비용과 분리해 scheme·curve·backend별로 측정하는 경계입니다.",
-    canonicalHref: "/cs/crypto/snark-overview#selection",
+    "id": "snark-succinctness-cost-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "짧은 증거와 생성 비용",
+    "definition": "짧은 전달 자료와 만드는 동안의 작업 공간은 다른 양입니다.",
+    "canonicalHref": "/cs/crypto/snark-overview#selection"
   },
   "snark-fiat-shamir-statement-binding": {
-    id: "snark-fiat-shamir-statement-binding", kind: "method", domain: "computer-science",
-    label: "SNARK Fiat–Shamir statement binding",
-    definition: "Protocol·key/circuit ID·public instance와 앞선 commitments를 canonical 순서로 hash transcript에 흡수한 뒤 challenge를 파생해 proof round와 statement의 재배치·재사용을 막는 비대화형 변환 경계입니다.",
-    canonicalHref: "/cs/crypto/snark-overview#security",
+    "id": "snark-fiat-shamir-statement-binding",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "공개 문제와 해시 질문의 결속",
+    "definition": "해시로 정하는 질문에는 공개 문제와 앞선 메시지를 함께 묶습니다.",
+    "canonicalHref": "/cs/crypto/snark-overview#security"
   },
   "snark-system-selection-envelope": {
-    id: "snark-system-selection-envelope", kind: "method", domain: "computer-science",
-    label: "SNARK system-selection envelope",
-    definition: "같은 relation·input·security target에서 setup trust, proof/key bytes, prover/verifier breakdown, failure fixtures와 cryptographic assumptions를 고정해 Groth16·PLONK·transparent 계열을 비교하는 선택 절차입니다.",
-    canonicalHref: "/cs/crypto/snark-overview#selection",
+    "id": "snark-system-selection-envelope",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "같은 조건의 증명 방식 비교",
+    "definition": "계산 내용과 보안 목표를 같게 두고 증거·시간·메모리를 비교합니다.",
+    "canonicalHref": "/cs/crypto/snark-overview#selection"
   },
   "groth16-relation-specific-crs": {
     id: "groth16-relation-specific-crs", kind: "concept", domain: "computer-science",
@@ -15207,10 +15302,38 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "evmos-statedb-commit-bridge": { id: "evmos-statedb-commit-bridge", kind: "concept", domain: "distributed-systems", label: "Evmos StateDB · Cosmos commit bridge", definition: "EVM account·code·storage·log·refund journal의 snapshot/revert를 Cosmos cache branch result와 application Commit에 원자적으로 맞추는 Evmos v20.0.0 상태 경계입니다.", canonicalHref: "/cs/blockchain/evmos#revenue-module" },
   "evmos-token-representation-boundary": { id: "evmos-token-representation-boundary", kind: "concept", domain: "distributed-systems", label: "Evmos token representation boundary", definition: "Native Cosmos coin의 bank balance, ERC-20 contract storage balance와 IBC voucher denom trace를 서로 다른 authoritative store·supply·rollback owner로 구분하는 Evmos v20.0.0 경계입니다.", canonicalHref: "/cs/blockchain/evmos#ibc-integration" },
   "evmos-ibc-ack-rollback-boundary": { id: "evmos-ibc-ack-rollback-boundary", kind: "concept", domain: "distributed-systems", label: "Evmos IBC acknowledgement · rollback boundary", definition: "ICS-20 local send, remote receive, acknowledgement·timeout callback의 packet receipt를 구분해 coin/ERC-20 conversion·refund을 idempotent하게 처리하는 Evmos v20.0.0 middleware 경계입니다.", canonicalHref: "/cs/blockchain/evmos#ibc-integration" },
-  "hyperliquid-order-action-lifecycle": { id: "hyperliquid-order-action-lifecycle", kind: "concept", domain: "distributed-systems", label: "Hyperliquid order action lifecycle", definition: "지갑이 승인한 주문 action을 API validation, resting order, partial/full fill, cancel·reject 상태로 나누고 nonce·order ID·fill·position 영수증으로 이어 보는 거래 lifecycle입니다.", canonicalHref: "/cs/blockchain/hyperliquid#order-lifecycle" },
-  "hyperliquid-margin-liquidation-boundary": { id: "hyperliquid-margin-liquidation-boundary", kind: "concept", domain: "economics", label: "Hyperliquid margin · liquidation boundary", definition: "Cross 또는 isolated 범위의 담보에 mark-price 손익·funding과 asset별 유지 증거금을 적용해 position이 유지 가능한지 또는 청산 자격에 들어가는지 판정하는 경계입니다.", canonicalHref: "/cs/blockchain/hyperliquid#margin-liquidation" },
-  "hyperliquid-hyperbft-core-authority": { id: "hyperliquid-hyperbft-core-authority", kind: "concept", domain: "distributed-systems", label: "HyperBFT · HyperCore authority boundary", definition: "API 접수·query view와 validator가 합의한 action 순서 및 HyperCore order·fill·position·balance state를 분리하고 block·state delta로 대조하는 권위 경계입니다.", canonicalHref: "/cs/blockchain/hyperliquid#consensus" },
-  "hyperliquid-core-evm-bridge-boundary": { id: "hyperliquid-core-evm-bridge-boundary", kind: "concept", domain: "distributed-systems", label: "HyperCore · HyperEVM · bridge boundary", definition: "HyperCore 금융 상태, HyperEVM transaction/storage와 외부 체인 자산 이동을 precompile·CoreWriter·source/destination receipt로 잇되 각 성공과 finality를 별도로 확인하는 상호운용 경계입니다.", canonicalHref: "/cs/blockchain/hyperliquid#hyperevm-bridge" },
+  "hyperliquid-order-action-lifecycle": {
+    "id": "hyperliquid-order-action-lifecycle",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Hyperliquid order action lifecycle",
+    "definition": "지갑이 승인한 주문 action을 API validation, resting order, partial/full fill, cancel·reject 상태로 나누고 nonce·order ID·fill·position 영수증으로 이어 보는 거래 lifecycle입니다.",
+    "canonicalHref": "/cs/blockchain/hyperliquid#order-lifecycle"
+  },
+  "hyperliquid-margin-liquidation-boundary": {
+    "id": "hyperliquid-margin-liquidation-boundary",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "Hyperliquid margin · liquidation boundary",
+    "definition": "Cross 또는 isolated 범위의 담보에 mark-price 손익·funding과 asset별 유지 증거금을 적용해 position이 유지 가능한지 또는 청산 자격에 들어가는지 판정하는 경계입니다.",
+    "canonicalHref": "/cs/blockchain/hyperliquid#margin-liquidation"
+  },
+  "hyperliquid-hyperbft-core-authority": {
+    "id": "hyperliquid-hyperbft-core-authority",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "HyperBFT · HyperCore authority boundary",
+    "definition": "API 접수·query view와 validator가 합의한 action 순서 및 HyperCore order·fill·position·balance state를 분리하고 block·state delta로 대조하는 권위 경계입니다.",
+    "canonicalHref": "/cs/blockchain/hyperliquid#consensus"
+  },
+  "hyperliquid-core-evm-bridge-boundary": {
+    "id": "hyperliquid-core-evm-bridge-boundary",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "HyperCore · HyperEVM · bridge boundary",
+    "definition": "HyperCore 금융 상태, HyperEVM transaction/storage와 외부 체인 자산 이동을 precompile·CoreWriter·source/destination receipt로 잇되 각 성공과 finality를 별도로 확인하는 상호운용 경계입니다.",
+    "canonicalHref": "/cs/blockchain/hyperliquid#hyperevm-bridge"
+  },
   "dydx-order-persistence-class": { id: "dydx-order-persistence-class", kind: "concept", domain: "distributed-systems", label: "dYdX order persistence class", definition: "Short-term order의 node-local MemClob·block-height expiry와 long-term·conditional order의 KV state·block-time/trigger lifecycle를 OrderId flags로 나누는 protocol/v9.6.3 계약입니다.", canonicalHref: "/cs/blockchain/dydx#orderbook-architecture" },
   "dydx-proposer-match-validation": { id: "dydx-proposer-match-validation", kind: "method", domain: "distributed-systems", label: "dYdX proposer match validation", definition: "Node-local price-time order view에서 proposer가 match/removal operations를 만들고 replicas가 order identity·remaining fill·duplicate·ordering/limits를 재검증하는 protocol/v9.6.3 방법입니다.", canonicalHref: "/cs/blockchain/dydx#matching-engine" },
   "dydx-risk-settlement-boundary": { id: "dydx-risk-settlement-boundary", kind: "concept", domain: "distributed-systems", label: "dYdX risk · settlement boundary", definition: "Price-cross candidate fill을 subaccount collateral·position·liquidation/rate limit에 대입해 통과한 수량만 balance·position·fee·event state로 commit하는 protocol/v9.6.3 경계입니다.", canonicalHref: "/cs/blockchain/dydx#cosmos-integration" },
@@ -15466,12 +15589,54 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "curve-amplification-ramp-boundary": { id: "curve-amplification-ramp-boundary", kind: "concept", domain: "distributed-systems", label: "Curve amplification-ramp boundary", definition: "A의 시작값·목표값·시작/종료시각과 적용 block을 quote·swap receipt에 묶어 ramp 중 parameter race를 재현하는 경계입니다.", canonicalHref: "/cs/blockchain/curve-stable#amplification-risk" },
   "curve-depeg-inventory-risk": { id: "curve-depeg-inventory-risk", kind: "concept", domain: "computer-science", label: "Curve depeg · inventory risk", definition: "한 pegged asset의 외부 가치·상환이 무너질 때 arbitrage가 약한 asset을 pool에 집중시켜 낮은 평시 slippage와 별개로 LP inventory loss를 만드는 위험입니다.", canonicalHref: "/cs/blockchain/curve-stable#amplification-risk" },
   "curve-stableswap-release-gate": { id: "curve-stableswap-release-gate", kind: "method", domain: "computer-science", label: "Curve StableSwap release gate", definition: "Balance/rate/A generation, integer invariant parity, fee·rounding·min-output, adversarial token과 depeg fixtures를 검사해 pool/router revision을 채택하는 절차입니다.", canonicalHref: "/cs/blockchain/curve-stable#curve-release" },
-  "rwa-legal-claim-asset-linkage": { id: "rwa-legal-claim-asset-linkage", kind: "concept", domain: "computer-science", label: "RWA legal claim · asset linkage", definition: "Token holder가 issuer·vehicle·reference asset에 대해 갖는 cash-flow·redemption·insolvency rights와 authoritative ownership record를 onchain balance와 구분해 연결하는 경계입니다.", canonicalHref: "/cs/blockchain/rwa-composition#overview" },
-  "rwa-issuer-custodian-servicer-map": { id: "rwa-issuer-custodian-servicer-map", kind: "concept", domain: "computer-science", label: "RWA issuer · custodian · servicer map", definition: "Issuer/SPV, asset custodian, servicer, administrator, transfer agent와 smart contract가 각각 보유·평가·cash collection·registry·token control 중 무엇을 책임지는지 나타낸 기능 지도입니다.", canonicalHref: "/cs/blockchain/rwa-composition#claim-asset-map" },
-  "rwa-valuation-cashflow-cutoff": { id: "rwa-valuation-cashflow-cutoff", kind: "concept", domain: "distributed-systems", label: "RWA valuation · cash-flow cutoff", definition: "Asset value·liability·eligible supply·coupon/redemption cash와 authoritative register를 같은 시각·통화·policy generation에서 reconcile하는 기준입니다.", canonicalHref: "/cs/blockchain/rwa-composition#claim-asset-map" },
-  "rwa-transfer-eligibility-enforcement": { id: "rwa-transfer-eligibility-enforcement", kind: "method", domain: "computer-science", label: "RWA transfer-eligibility enforcement", definition: "Jurisdiction·investor eligibility·allowlist와 legal register update를 mint/transfer/burn 앞에서 검사하고 mismatch를 조사 queue로 보내는 통제 경계입니다.", canonicalHref: "/cs/blockchain/rwa-composition#token-cashflow-control" },
-  "rwa-onchain-composability-risk": { id: "rwa-onchain-composability-risk", kind: "concept", domain: "distributed-systems", label: "RWA onchain composability risk", definition: "Stale NAV·redemption gate·thin liquidity·legal-record mismatch가 oracle·haircut·liquidation을 통해 다른 DeFi positions에 전파되는 결합 위험입니다.", canonicalHref: "/cs/blockchain/rwa-composition#token-cashflow-control" },
-  "rwa-composition-release-gate": { id: "rwa-composition-release-gate", kind: "method", domain: "distributed-systems", label: "RWA composition release gate", definition: "Legal opinion·asset/custody ledger·token supply·cash queue와 DeFi oracle를 같은 cutoff에서 대조하고 mismatch·insolvency·reorg fixtures로 integration을 채택하는 절차입니다.", canonicalHref: "/cs/blockchain/rwa-composition#rwa-release" },
+  "rwa-legal-claim-asset-linkage": {
+    "id": "rwa-legal-claim-asset-linkage",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "RWA legal claim · asset linkage",
+    "definition": "Token holder가 issuer·vehicle·reference asset에 대해 갖는 cash-flow·redemption·insolvency rights와 authoritative ownership record를 onchain balance와 구분해 연결하는 경계입니다.",
+    "canonicalHref": "/cs/blockchain/rwa-composition#overview"
+  },
+  "rwa-issuer-custodian-servicer-map": {
+    "id": "rwa-issuer-custodian-servicer-map",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "RWA issuer · custodian · servicer map",
+    "definition": "Issuer/SPV, asset custodian, servicer, administrator, transfer agent와 smart contract가 각각 보유·평가·cash collection·registry·token control 중 무엇을 책임지는지 나타낸 기능 지도입니다.",
+    "canonicalHref": "/cs/blockchain/rwa-composition#source"
+  },
+  "rwa-valuation-cashflow-cutoff": {
+    "id": "rwa-valuation-cashflow-cutoff",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "RWA valuation · cash-flow cutoff",
+    "definition": "Asset value·liability·eligible supply·coupon/redemption cash와 authoritative register를 같은 시각·통화·policy generation에서 reconcile하는 기준입니다.",
+    "canonicalHref": "/cs/blockchain/rwa-composition#claim-asset-map"
+  },
+  "rwa-transfer-eligibility-enforcement": {
+    "id": "rwa-transfer-eligibility-enforcement",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "RWA transfer-eligibility enforcement",
+    "definition": "Jurisdiction·investor eligibility·allowlist와 legal register update를 mint/transfer/burn 앞에서 검사하고 mismatch를 조사 queue로 보내는 통제 경계입니다.",
+    "canonicalHref": "/cs/blockchain/rwa-composition#token-cashflow-control"
+  },
+  "rwa-onchain-composability-risk": {
+    "id": "rwa-onchain-composability-risk",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "RWA onchain composability risk",
+    "definition": "Stale NAV·redemption gate·thin liquidity·legal-record mismatch가 oracle·haircut·liquidation을 통해 다른 DeFi positions에 전파되는 결합 위험입니다.",
+    "canonicalHref": "/cs/blockchain/rwa-composition#permissioned-market-stack"
+  },
+  "rwa-composition-release-gate": {
+    "id": "rwa-composition-release-gate",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "RWA composition release gate",
+    "definition": "Legal opinion·asset/custody ledger·token supply·cash queue와 DeFi oracle를 같은 cutoff에서 대조하고 mismatch·insolvency·reorg fixtures로 integration을 채택하는 절차입니다.",
+    "canonicalHref": "/cs/blockchain/rwa-composition#rwa-release"
+  },
   "berachain-pol-incentive-flow": { id: "berachain-pol-incentive-flow", kind: "concept", domain: "distributed-systems", label: "Berachain PoL incentive flow", definition: "BERA-secured validator가 block에서 받은 variable BGT emission을 reward allocation에 따라 whitelisted vault로 보내고 protocol incentives·user stake와 순환시키는 lifecycle입니다.", canonicalHref: "/cs/blockchain/berachain#pol-flow" },
   "berachain-bgt-governance-boost-boundary": { id: "berachain-bgt-governance-boost-boundary", kind: "concept", domain: "distributed-systems", label: "Berachain BGT governance · boost boundary", definition: "Non-transferable BGT의 governance·validator boost·reward 권한과 BERA stake·gas·block finality를 서로 다른 state와 authority로 구분하는 경계입니다.", canonicalHref: "/cs/blockchain/berachain#overview" },
   "berachain-reward-vault-eligibility": { id: "berachain-reward-vault-eligibility", kind: "concept", domain: "computer-science", label: "Berachain Reward Vault eligibility", definition: "Vault 생성·stake 가능성과 governance whitelist·eligible receipt token·active reward period를 분리해 BGT emission 수령 가능성을 결정하는 계약입니다.", canonicalHref: "/cs/blockchain/berachain#pol-flow" },
@@ -15556,11 +15721,46 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "conventional-hash-friendly-proving": { id: "conventional-hash-friendly-proving", kind: "concept", domain: "computer-science", label: "Conventional-hash-friendly proving", definition: "SHA·BLAKE·Keccak semantics를 field-native primitive로 교체하지 않고 proof representation과 prover를 workload에 맞추는 방향입니다.", canonicalHref: "/cs/crypto/binary-field-proving#overview" },
   "flock-batched-boolean-proof": { id: "flock-batched-boolean-proof", kind: "method", domain: "computer-science", label: "Flock batched Boolean proof", definition: "여러 Boolean computation instances를 batch해 conventional-hash proof throughput을 높이는 연구 prototype의 방법과 조건부 benchmark 경계입니다.", canonicalHref: "/cs/crypto/binary-field-proving#flock-selection" },
   "primitive-proof-layer-selection-gate": { id: "primitive-proof-layer-selection-gate", kind: "method", domain: "computer-science", label: "Primitive · proof-layer selection gate", definition: "Security history·compatibility·prover/verifier cost·memory·proof size·hardware·audit maturity를 함께 비교해 primitive 교체와 prover 교체 중 하나를 선택하는 기준입니다.", canonicalHref: "/cs/crypto/binary-field-proving#flock-selection" },
-  "ethereum-roadmap-maturity-lanes": { id: "ethereum-roadmap-maturity-lanes", kind: "concept", domain: "distributed-systems", label: "Ethereum roadmap maturity lanes", definition: "현재 배포·채택 검토·연구 방향·실험 결과를 분리해 proposal·strawmap·prototype을 protocol fact로 확대하지 않는 독해 경계입니다.", canonicalHref: "/cs/blockchain/ethereum-future-roadmap#overview" },
-  "ethereum-post-quantum-surface-map": { id: "ethereum-post-quantum-surface-map", kind: "concept", domain: "computer-science", label: "Ethereum post-quantum surface map", definition: "Consensus BLS·KZG data availability·account ECDSA·application proof dependencies를 별도 migration surface와 artifact로 추적하는 지도입니다.", canonicalHref: "/cs/blockchain/ethereum-future-roadmap#pq-surfaces" },
-  "ethereum-proof-native-direction": { id: "ethereum-proof-native-direction", kind: "concept", domain: "distributed-systems", label: "Ethereum proof-native direction", definition: "Native rollup·binary-field proving·zkVM instruction semantics처럼 L1 verification과 execution/proof interface를 강화하는 연구 방향을 채택 상태와 분리한 개념입니다.", canonicalHref: "/cs/blockchain/ethereum-future-roadmap#proving-execution" },
-  "ethereum-formal-candidate-verifier-loop": { id: "ethereum-formal-candidate-verifier-loop", kind: "method", domain: "computer-science", label: "AI candidate · formal verifier loop", definition: "AI가 invariant·proof·counterexample candidate를 만들고 deterministic trusted kernel이 acceptance를 결정하게 하는 authority separation 방법입니다.", canonicalHref: "/cs/blockchain/ethereum-future-roadmap#formal-simplification" },
-  "ethereum-spec-simplification-horizon": { id: "ethereum-spec-simplification-horizon", kind: "concept", domain: "distributed-systems", label: "Ethereum specification simplification horizon", definition: "State-transition·fork·dependency surface를 줄여 implementation cases와 machine-checked proof burden을 낮추려는 장기 방향과 release evidence 경계입니다.", canonicalHref: "/cs/blockchain/ethereum-future-roadmap#formal-simplification" },
+  "ethereum-roadmap-maturity-lanes": {
+    "id": "ethereum-roadmap-maturity-lanes",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Ethereum roadmap maturity lanes",
+    "definition": "현재 배포·채택 검토·연구 방향·실험 결과를 분리해 proposal·strawmap·prototype을 protocol fact로 확대하지 않는 독해 경계입니다.",
+    "canonicalHref": "/cs/blockchain/ethereum-future-roadmap#names"
+  },
+  "ethereum-post-quantum-surface-map": {
+    "id": "ethereum-post-quantum-surface-map",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Ethereum post-quantum surface map",
+    "definition": "Consensus BLS·KZG data availability·account ECDSA·application proof dependencies를 별도 migration surface와 artifact로 추적하는 지도입니다.",
+    "canonicalHref": "/cs/blockchain/ethereum-future-roadmap#pq-surfaces"
+  },
+  "ethereum-proof-native-direction": {
+    "id": "ethereum-proof-native-direction",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Ethereum proof-native direction",
+    "definition": "Native rollup·binary-field proving·zkVM instruction semantics처럼 L1 verification과 execution/proof interface를 강화하는 연구 방향을 채택 상태와 분리한 개념입니다.",
+    "canonicalHref": "/cs/blockchain/ethereum-future-roadmap#proving-execution"
+  },
+  "ethereum-formal-candidate-verifier-loop": {
+    "id": "ethereum-formal-candidate-verifier-loop",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "AI candidate · formal verifier loop",
+    "definition": "AI가 invariant·proof·counterexample candidate를 만들고 deterministic trusted kernel이 acceptance를 결정하게 하는 authority separation 방법입니다.",
+    "canonicalHref": "/cs/blockchain/ethereum-future-roadmap#formal-simplification"
+  },
+  "ethereum-spec-simplification-horizon": {
+    "id": "ethereum-spec-simplification-horizon",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Ethereum specification simplification horizon",
+    "definition": "State-transition·fork·dependency surface를 줄여 implementation cases와 machine-checked proof burden을 낮추려는 장기 방향과 release evidence 경계입니다.",
+    "canonicalHref": "/cs/blockchain/ethereum-future-roadmap#formal-simplification"
+  },
   "qwen36-hybrid-layer-schedule": { id: "qwen36-hybrid-layer-schedule", kind: "concept", domain: "machine-learning", label: "Qwen3.6 3:1 hybrid layer schedule", definition: "Qwen3.6-27B의 64 decoder layers를 16회 반복되는 세 Gated DeltaNet과 한 Gated Attention으로 나눠, 48개 fixed-state mixer와 16개 token-history attention mixer의 역할을 구분하는 공개 configuration입니다.", canonicalHref: "/cs/ai/qwen36-hybrid-architecture#overview" },
   "qwen36-gated-deltanet-state": { id: "qwen36-gated-deltanet-state", kind: "concept", domain: "machine-learning", label: "Qwen3.6 Gated DeltaNet recurrent state", aliases: ["Gated DeltaNet state", "DeltaNet recurrent state"], definition: "과거 token별 K/V 열을 보존하는 대신 request마다 48 heads×128 key dimension×128 value dimension의 association matrices와 짧은 convolution history를 layer별로 갱신하는 Qwen3.6의 fixed-shape sequence state입니다.", canonicalHref: "/cs/ai/qwen36-hybrid-architecture#deltanet-state" },
   "qwen36-delta-correction-update": { id: "qwen36-delta-correction-update", kind: "method", domain: "machine-learning", label: "Qwen3.6 gated delta correction update", definition: "이전 recurrent state를 decay한 뒤 현재 key에서 이미 예측한 value를 실제 value에서 빼고, 그 prediction error만 key 방향 outer product로 다시 쓰며 current query로 읽는 Gated DeltaNet update입니다.", canonicalHref: "/cs/ai/qwen36-hybrid-architecture#delta-update" },
@@ -15610,58 +15810,82 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "cfd-gpu-memory-mapping": { id: "cfd-gpu-memory-mapping", kind: "method", domain: "computer-science", label: "CFD GPU memory mapping", aliases: ["GPU-accelerated CFD"], definition: "Cell·face field와 connectivity를 coalesced access와 bounded working set에 맞춰 배치하고 flux·residual·linear-solver stages의 compute와 halo communication을 병목별로 나누는 실행 설계입니다.", canonicalHref: "/cs/gpu/cfd-finite-volume-gpu#gpu-mapping" },
   "cfd-verification-validation-gate": { id: "cfd-verification-validation-gate", kind: "method", domain: "physics", label: "CFD verification · validation gate", aliases: ["CFD V&V"], definition: "Manufactured·analytic solution과 grid/time refinement로 방정식을 올바르게 푸는지 검증하고, 별도의 실험 data와 uncertainty 범위로 선택한 물리 model이 현실을 설명하는지 확인하는 채택 절차입니다.", canonicalHref: "/cs/gpu/cfd-finite-volume-gpu#verification" },
   "attention-materialization": {
-    id: "attention-materialization",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Attention materialization",
-    aliases: ["N×N attention matrix materialization", "Score matrix materialization"],
-    definition: "Attention 의 중간 결과인 점수 행렬 S=QKᵀ/√d 와 softmax 결과 P 를 N×N 실제 크기로 HBM 에 써 두는 일로, kernel 사이마다 sequence 길이의 제곱에 비례하는 메모리 왕복을 만듭니다.",
-    canonicalHref: "/cs/ai/flash-attention-io-aware-kernel#problem",
+    "id": "attention-materialization",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Attention materialization",
+    "aliases": [
+      "N×N attention matrix materialization",
+      "Score matrix materialization"
+    ],
+    "definition": "Attention의 중간 점수 S와 확률 P를 N×N 배열로 HBM에 저장해 뒤 계산이 다시 읽게 하는 방식입니다. 저장한 배열 수·dtype·읽기 횟수를 명시해야 실제 왕복 바이트를 계산할 수 있습니다.",
+    "canonicalHref": "/cs/ai/flash-attention-io-aware-kernel#problem"
   },
   "io-aware-attention": {
-    id: "io-aware-attention",
-    kind: "concept",
-    domain: "computer-science",
-    label: "IO-aware attention · SRAM residency",
-    aliases: ["IO-Aware Algorithm", "SRAM Residency", "HBM Traffic Reduction", "IO complexity"],
-    definition: "계산 횟수 대신 HBM 과 SRAM 사이를 오가는 byte 수를 비용으로 세는 관점으로, tile 이 SRAM 에 머무는 동안 attention 의 모든 단계를 끝내 HBM 접근을 Θ(N²) 에서 Θ(N²d²/M) 으로 줄이는 설계 기준입니다.",
-    canonicalHref: "/cs/ai/flash-attention-io-aware-kernel#io-aware",
+    "id": "io-aware-attention",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "IO-aware attention · SRAM residency",
+    "aliases": [
+      "IO-Aware Algorithm",
+      "SRAM Residency",
+      "HBM Traffic Reduction",
+      "IO complexity"
+    ],
+    "definition": "연산량과 함께 HBM·온칩 저장 공간 사이의 이동량을 비용으로 보는 설계입니다. FlashAttention의 O(N²d²/M) 접근량은 해당 IO 모형의 가정 안에서 쓰는 점근식이며 정확한 바이트 비율이나 실측 가속비가 아닙니다.",
+    "canonicalHref": "/cs/ai/flash-attention-io-aware-kernel#io-aware"
   },
   "online-softmax": {
-    id: "online-softmax",
-    kind: "method",
-    domain: "mathematics",
-    label: "Online softmax · running max · normalizer",
-    aliases: ["Online Softmax", "Running Maximum", "Running Normalizer", "Online normalizer calculation"],
-    definition: "행을 조각내 읽으면서 지금까지의 최댓값 m 과 지수합 ℓ 만 유지하고, 더 큰 값이 나오면 이전 합에 e^{m_old−m_new} 를 곱해 기준점을 옮기는 softmax 계산법으로, 행 전체를 한 번에 계산한 값과 정확히 같습니다.",
-    canonicalHref: "/cs/ai/flash-attention-io-aware-kernel#online-softmax",
+    "id": "online-softmax",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Online softmax · running max · normalizer",
+    "aliases": [
+      "Online Softmax",
+      "Running Maximum",
+      "Running Normalizer",
+      "Online normalizer calculation"
+    ],
+    "definition": "한 행의 점수를 조각으로 읽으며 최대값과 지수합을 갱신하는 계산법입니다. 최대 기준이 바뀌면 옛 합에 같은 지수 배율을 곱해 옮깁니다. 실수 산술에서는 전체 행 계산과 동치지만 부동소수점 결과의 bit 동일성을 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/flash-attention-io-aware-kernel#online-softmax"
   },
   "attention-tiling": {
-    id: "attention-tiling",
-    kind: "method",
-    domain: "computer-science",
-    label: "Tiled attention",
-    aliases: ["Attention tiling", "Block-wise attention computation"],
-    definition: "Q 를 B_r 행 block 으로, K 와 V 를 B_c 행 block 으로 나눠 한 쌍씩 SRAM 에 올리고 B_r×B_c 점수 tile 을 online softmax 로 그 자리에서 소비해 N×N 행렬이 어느 순간에도 통째로 존재하지 않게 하는 계산 배치입니다.",
-    canonicalHref: "/cs/ai/flash-attention-io-aware-kernel#tiling",
+    "id": "attention-tiling",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Tiled attention",
+    "aliases": [
+      "Attention tiling",
+      "Block-wise attention computation"
+    ],
+    "definition": "Q의 행 묶음과 K·V의 조각을 온칩에서 처리하고 점수 조각을 소비한 뒤 버리는 배치입니다. 행의 기준값·분모·값의 누적합을 이어서 갱신하면 N×N 중간 배열 전체를 HBM에 남기지 않아도 됩니다.",
+    "canonicalHref": "/cs/ai/flash-attention-io-aware-kernel#tiling"
   },
   "flash-attention": {
-    id: "flash-attention",
-    kind: "method",
-    domain: "computer-science",
-    label: "FlashAttention",
-    aliases: ["Flash Attention", "FlashAttention-1", "IO-aware exact attention kernel"],
-    definition: "Tiling 과 online softmax 로 N×N 행렬을 HBM 에 쓰지 않고, backward 에서는 P 대신 행별 logsumexp 로 점수를 다시 계산하는 exact attention CUDA kernel 로, FLOPs 를 늘리는 대신 HBM 접근을 줄여 wall-clock 을 단축합니다.",
-    canonicalHref: "/cs/ai/flash-attention-io-aware-kernel#tiling",
+    "id": "flash-attention",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "FlashAttention",
+    "aliases": [
+      "Flash Attention",
+      "FlashAttention-1",
+      "IO-aware exact attention kernel"
+    ],
+    "definition": "Tiling과 online softmax로 큰 attention 중간 배열의 HBM 저장을 피하는 구현입니다. Backward는 필요한 점수·확률을 재계산하며, 연결을 근사로 줄이지 않는 수학적 exactness와 실제 수치 오차·성능은 구별합니다.",
+    "canonicalHref": "/cs/ai/flash-attention-io-aware-kernel#tiling"
   },
   "attention-recompute-vs-store": {
-    id: "attention-recompute-vs-store",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Attention recompute vs store tradeoff",
-    aliases: ["Recompute vs Store Tradeoff", "Attention backward recomputation", "Logsumexp checkpoint"],
-    definition: "Backward 에 필요한 N×N softmax 행렬 P 를 forward 에서 저장하는 대신 행별 logsumexp L=m+log ℓ 만 남기고 backward 에서 QKᵀ 를 다시 곱해 P=e^{S−L} 로 복원하는 선택으로, 계산을 늘리고 memory 왕복을 줄이는 tradeoff 입니다.",
-    canonicalHref: "/cs/ai/flash-attention-io-aware-kernel#backward",
+    "id": "attention-recompute-vs-store",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Attention recompute vs store tradeoff",
+    "aliases": [
+      "Recompute vs Store Tradeoff",
+      "Attention backward recomputation",
+      "Logsumexp checkpoint"
+    ],
+    "definition": "Backward에 필요한 확률 전체를 저장하는 대신 입력과 행 통계 등을 남겨 필요한 조각을 다시 계산하는 선택입니다. 추가 연산과 줄어든 메모리 이동의 효과는 shape·dtype·GPU 조건에서 측정합니다.",
+    "canonicalHref": "/cs/ai/flash-attention-io-aware-kernel#backward"
   },
   "scheduling-step": {
     id: "scheduling-step",
@@ -17298,64 +17522,81 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/parallelism-strategy-and-placement#overlap-bottleneck",
   },
   "expert-parallelism": {
-    id: "expert-parallelism",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Expert parallelism",
-    aliases: ["Expert Parallelism (EP)", "EP", "expert-parallel MoE"],
-    definition:
-      "MoE layer의 expert 집합을 여러 GPU에 나눠 두고 각 token의 hidden vector를 자기가 고른 expert가 있는 GPU로 보내 계산한 뒤 돌려받는 병렬화로, tensor parallel이 weight를 조각내는 것과 달리 expert 하나를 한 GPU가 통째로 맡고 token 쪽이 움직이며 보통 data parallel과 겹쳐 MoE layer에서만 token을 교환합니다.",
-    canonicalHref: "/cs/ai/expert-parallelism-moe-systems#sharding",
+    "id": "expert-parallelism",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Expert parallelism",
+    "aliases": [
+      "Expert Parallelism (EP)",
+      "EP",
+      "expert-parallel MoE"
+    ],
+    "definition": "MoE의 expert를 여러 장치에 나누어 놓고 선택된 expert로 token 입력을 보낸 뒤 결과를 원래 위치에 결합하는 실행 방식입니다. Weight 저장 절약과 입력·결과 이동 비용을 함께 계산합니다.",
+    "canonicalHref": "/cs/ai/expert-parallelism-moe-systems#sharding"
   },
   "expert-sharding-placement": {
-    id: "expert-sharding-placement",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Expert sharding · placement",
-    aliases: ["Expert Sharding", "expert placement table", "redundant experts"],
-    definition:
-      "어느 expert가 어느 GPU에 있는지 정한 배치표로, 64 expert를 8 GPU에 8개씩 두는 균등 분할부터 GPU마다 expert 하나를 두고 자주 뽑히는 expert를 여러 GPU에 복제하는 배치까지 포함하며 token 복사본의 목적지와 GPU당 expert weight memory를 동시에 정합니다.",
-    canonicalHref: "/cs/ai/expert-parallelism-moe-systems#sharding",
+    "id": "expert-sharding-placement",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Expert sharding · placement",
+    "aliases": [
+      "Expert Sharding",
+      "expert placement table",
+      "redundant experts"
+    ],
+    "definition": "Expert weight를 어느 장치와 node에 둘지 정하는 배치입니다. 장치별 저장 용량뿐 아니라 token 이동과 부하 쏠림이 달라지며 attention·activation·통신 buffer 공간도 별도로 필요합니다.",
+    "canonicalHref": "/cs/ai/expert-parallelism-moe-systems#sharding"
   },
   "all-to-all-collective": {
-    id: "all-to-all-collective",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "All-to-all collective",
-    aliases: ["All-to-All Communication", "all_to_all", "MoE dispatch · combine"],
-    definition:
-      "Group의 모든 rank가 다른 모든 rank에게 서로 다른 chunk를 보내는 collective로, MoE에서는 token 복사본을 expert가 있는 GPU로 보내는 dispatch와 expert 출력을 원래 GPU로 돌려보내는 combine 두 번이 layer마다 일어나며 GPU당 byte는 token 수·top-k·hidden·dtype에 비례하고 자기 GPU 몫 1/G만 빠집니다.",
-    canonicalHref: "/cs/ai/expert-parallelism-moe-systems#all-to-all",
+    "id": "all-to-all-collective",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "All-to-all collective",
+    "aliases": [
+      "All-to-All Communication",
+      "all_to_all",
+      "MoE dispatch · combine"
+    ],
+    "definition": "여러 rank가 목적지별 데이터를 서로 교환하는 collective입니다. MoE dispatch와 combine의 실제 payload는 routing에 따라 달라지며 원격 비율 1−1/G는 균등 배정 가정의 기대값입니다.",
+    "canonicalHref": "/cs/ai/expert-parallelism-moe-systems#all-to-all"
   },
   "expert-locality-node-limited-routing": {
-    id: "expert-locality-node-limited-routing",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Expert locality · node-limited routing",
-    aliases: ["Expert Locality", "node-limited routing", "hierarchical all-to-all", "group-limited routing"],
-    definition:
-      "Token이 닿는 node 수를 M 이하로 제한하는 routing과 같은 node로 가는 복사본을 IB로 한 번만 보낸 뒤 node 안 NVLink로 뿌리는 두 단계 전송을 합쳐, node 사이 link를 건너는 byte를 top-k가 아니라 node 수에 비례하게 만드는 방법입니다.",
-    canonicalHref: "/cs/ai/expert-parallelism-moe-systems#locality",
+    "id": "expert-locality-node-limited-routing",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Expert locality · node-limited routing",
+    "aliases": [
+      "Expert Locality",
+      "node-limited routing",
+      "hierarchical all-to-all",
+      "group-limited routing"
+    ],
+    "definition": "선택할 expert의 위치나 node 수를 제한하고 같은 node로 가는 복사본의 전송을 공유해 원격 이동을 줄이는 방법입니다. Routing 선택·모델 품질·부하와 실제 라이브러리의 전달 방식도 함께 바뀔 수 있습니다.",
+    "canonicalHref": "/cs/ai/expert-parallelism-moe-systems#locality"
   },
   "moe-communication-bottleneck": {
-    id: "moe-communication-bottleneck",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "MoE communication bottleneck",
-    aliases: ["all-to-all bottleneck", "expert straggler"],
-    definition:
-      "한 MoE layer의 step 시간을 expert GEMM이 아니라 all-to-all이 정하는 상태로, GPU당 통신 byte를 link 대역폭으로 나눈 시간에 고정 latency를 더한 값이 계산을 넘거나 가장 많은 복사본을 받은 GPU의 계산이 나머지를 combine에서 기다리게 하는 두 조건 가운데 하나로 생깁니다.",
-    canonicalHref: "/cs/ai/expert-parallelism-moe-systems#bottleneck",
+    "id": "moe-communication-bottleneck",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "MoE communication bottleneck",
+    "aliases": [
+      "all-to-all bottleneck",
+      "expert straggler"
+    ],
+    "definition": "Expert 입력과 결과의 통신이 MoE 완료 시간을 제한하는 상태입니다. 바이트·유효 대역폭·고정 지연·통신 겹침을 확인하고, 한 expert의 계산 쏠림 때문에 기다리는 경우와 구별해야 합니다.",
+    "canonicalHref": "/cs/ai/expert-parallelism-moe-systems#bottleneck"
   },
   "ep-routing-overhead": {
-    id: "ep-routing-overhead",
-    kind: "metric",
-    domain: "distributed-systems",
-    label: "EP routing overhead",
-    aliases: ["dispatch metadata overhead", "routing metadata overhead"],
-    definition:
-      "Expert parallel에서 payload byte와 무관하게 드는 비용의 묶음으로 top-k 정렬과 permutation, rank별 count 교환, receive buffer 할당, CPU·GPU 동기화, all-to-all kernel의 고정 latency를 포함하며 큰 batch에서는 payload 시간에 묻히지만 decode처럼 GPU당 token이 적을 때 통신 시간의 대부분이 됩니다.",
-    canonicalHref: "/cs/ai/expert-parallelism-moe-systems#bottleneck",
+    "id": "ep-routing-overhead",
+    "kind": "metric",
+    "domain": "distributed-systems",
+    "label": "EP routing overhead",
+    "aliases": [
+      "dispatch metadata overhead",
+      "routing metadata overhead"
+    ],
+    "definition": "Expert 번호에 따라 입력을 모으고 수신 개수·버퍼·원래 token 위치를 관리하는 비용입니다. Token 수에 따라 늘어나는 정렬·재배치 작업과 동기화·launch의 고정 비용을 구별하며 decode에서의 비중은 실제로 측정합니다.",
+    "canonicalHref": "/cs/ai/expert-parallelism-moe-systems#bottleneck"
   },
   "static-batching": {
     id: "static-batching",
@@ -18368,66 +18609,84 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/hyper-connections-residual-streams#stability",
   },
   "associative-memory-outer-product": {
-    id: "associative-memory-outer-product",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Associative memory · fast weight memory",
-    aliases: ["Associative Memory", "Fast Weight Memory"],
-    definition: "Key-value 쌍을 k⊗v 외적의 합으로 하나의 고정 크기 행렬에 눌러 담고 query 와의 곱으로 읽어내는 content-addressable 기억으로, 신경망에서는 이 행렬을 학습된 고정 weight 와 구분해 fast weight 라 부릅니다.",
-    canonicalHref: "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#associative-memory",
+    "id": "associative-memory-outer-product",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Associative memory · fast weight memory",
+    "aliases": [
+      "Associative Memory",
+      "Fast Weight Memory"
+    ],
+    "definition": "key와 값의 외적을 더한 고정 크기 기억 행렬을 query로 읽는 구조입니다. key×value와 value×key의 전치 배치를 구별해야 하며 key끼리 겹치면 다른 값이 간섭할 수 있습니다.",
+    "canonicalHref": "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#associative-memory"
   },
   "fast-weight-programmer": {
-    id: "fast-weight-programmer",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Fast weight programmer",
-    definition: "느리게 학습되는 고정 weight 를 가진 slow network 가 매 시점 key·value 를 내보내 fast weight 행렬을 프로그래밍하고, 그 fast weight 로 별도의 계산을 수행하게 하는 구조로, linear attention 의 누적이 이 구조의 한 사례임이 사후에 밝혀졌습니다.",
-    canonicalHref: "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#associative-memory",
+    "id": "fast-weight-programmer",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Fast weight programmer",
+    "definition": "학습된 고정 parameter가 문맥별 key·value·gate를 만들고 forward 중 바뀌는 fast weight 상태를 갱신하게 하는 구조입니다. 상태 갱신과 전체 parameter의 재학습은 다른 과정입니다.",
+    "canonicalHref": "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#associative-memory"
   },
   "delta-rule-error-correction": {
-    id: "delta-rule-error-correction",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Delta rule · error-correction memory write",
-    aliases: ["Delta Rule", "Prediction Error / Delta"],
-    definition: "새 값을 그대로 더하는 대신 지금 key 로 이미 읽히는 값을 먼저 빼서 얻은 예측 오차(delta)만 다시 쓰는 fast weight 갱신 규칙으로, 같은 key 에 다시 쓸 때 옛 값이 새 값과 함께 누적되지 않고 대체되게 만듭니다.",
-    canonicalHref: "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#delta-rule",
+    "id": "delta-rule-error-correction",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Delta rule · error-correction memory write",
+    "aliases": [
+      "Delta Rule",
+      "Prediction Error / Delta"
+    ],
+    "definition": "목표값에서 현재 key로 읽힌 값을 뺀 오차를 해당 key 방향으로 쓰는 기억 갱신입니다. 단위 key와 수정 계수 1에서는 그 key의 읽기를 대체하지만 다른 key의 기억까지 모두 보존하지는 않습니다.",
+    "canonicalHref": "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#delta-rule"
   },
   "memory-gate-decay": {
-    id: "memory-gate-decay",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Memory update gate · decay",
-    aliases: ["Gating Mechanism", "Memory Update Gate", "Memory Decay / Forgetting"],
-    definition: "매 step 상태 행렬 전체에 곱해지는 0과 1 사이의 data-dependent 계수로, delta rule 이 고치지 못하는 '한꺼번에 빠르게 지우기'를 담당해 문맥이 바뀔 때 이전 기억 전체를 낮추는 역할을 합니다.",
-    canonicalHref: "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#memory-gate",
+    "id": "memory-gate-decay",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Memory update gate · decay",
+    "aliases": [
+      "Gating Mechanism",
+      "Memory Update Gate",
+      "Memory Decay / Forgetting"
+    ],
+    "definition": "이전 상태를 얼마나 남기고 새 정보를 얼마나 쓸지 조절하는 계수입니다. Scalar·channel별 gate, key·value 축과 적용 순서를 구별하고 decay 뒤의 상태를 기준으로 쓰기 오차를 계산해야 합니다.",
+    "canonicalHref": "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#memory-gate"
   },
   "recurrent-parallel-duality": {
-    id: "recurrent-parallel-duality",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Recurrent/parallel formulation duality",
-    aliases: ["Parallel Training / Recurrent Inference Duality", "Recurrent/Parallel Formulation"],
-    definition: "같은 상태 갱신 식을 한 step씩 순서대로 계산하는 recurrent 형태로도, 여러 step 을 한꺼번에 행렬곱으로 계산하는 parallel 형태로도 쓸 수 있다는 사실로, 학습이 parallel 형태로 병렬화하고 추론이 recurrent 형태로 고정 크기 상태만 들고 이어가는 이유입니다.",
-    canonicalHref: "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#chunkwise-scan",
+    "id": "recurrent-parallel-duality",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Recurrent/parallel formulation duality",
+    "aliases": [
+      "Parallel Training / Recurrent Inference Duality",
+      "Recurrent/Parallel Formulation"
+    ],
+    "definition": "같은 상태 갱신의 의존 관계를 순차 처리나 병렬 행렬 계산으로 다르게 표현하는 성질입니다. 초기 상태·gate·축 배치를 보존해야 동치이며 두 실행 방식의 속도는 별도 측정이 필요합니다.",
+    "canonicalHref": "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#chunkwise-scan"
   },
   "chunkwise-parallel-form": {
-    id: "chunkwise-parallel-form",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Chunkwise parallel form",
-    aliases: ["Chunkwise Parallelism"],
-    definition: "시퀀스를 길이 C 의 chunk 로 나눠 chunk 안에서는 여러 step 의 기억 쓰기를 행렬곱으로 한꺼번에 계산하고 chunk 사이에서만 상태를 순차로 넘겨, 완전 순차 recurrence 와 완전 병렬 attention 사이를 절충하는 계산 배치입니다.",
-    canonicalHref: "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#chunkwise-scan",
+    "id": "chunkwise-parallel-form",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Chunkwise parallel form",
+    "aliases": [
+      "Chunkwise Parallelism"
+    ],
+    "definition": "시퀀스를 묶음으로 나누어 내부 correction을 삼각 계산과 행렬곱으로 처리하고 묶음 사이에 상태를 전달하는 배치입니다. 내부 연산·동기화와 묶음 간 의존성이 함께 남습니다.",
+    "canonicalHref": "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#chunkwise-scan"
   },
   "parallel-prefix-scan": {
-    id: "parallel-prefix-scan",
-    kind: "method",
-    domain: "computer-science",
-    label: "Parallel scan · prefix scan",
-    aliases: ["Parallel Scan", "Prefix Scan"],
-    definition: "앞에서부터 하나씩 계산해야 하는 순차 누적을 균형 이진 트리로 부분합을 모았다가(up-sweep) 다시 내려보내는(down-sweep) 두 단계로 바꿔 O(log n) 병렬 단계로 계산하는 일반 알고리즘으로, chunk 안의 순차 의존성을 병렬 단계로 바꾸려는 시도들이 공통으로 마주치는 문제입니다.",
-    canonicalHref: "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#prefix-scan",
+    "id": "parallel-prefix-scan",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Parallel scan · prefix scan",
+    "aliases": [
+      "Parallel Scan",
+      "Prefix Scan"
+    ],
+    "definition": "결합법칙이 있는 연산의 prefix 결과를 트리 구조로 계산하는 병렬 기법입니다. 추상 단계 수가 줄어도 특정 kernel의 상태 크기·메모리 이동·동기화 비용까지 같은 배율로 줄어드는 것은 아닙니다.",
+    "canonicalHref": "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#prefix-scan"
   },
   "byte-level-tokenization": {
     id: "byte-level-tokenization",
@@ -20080,73 +20339,86 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/rl-foundations-for-llm-post-training#credit-assignment",
   },
   "rlvr-verifiable-task": {
-    id: "rlvr-verifiable-task",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "RLVR · verifiable task",
-    aliases: ["RLVR", "Reinforcement Learning with Verifiable Rewards", "Verifiable Task"],
-    definition:
-      "Verifiable task는 정답 여부를 사람의 판단 없이 프로그램(math parser·code sandbox·정답 checker 등)으로 확인할 수 있는 task이고, RLVR(Reinforcement Learning with Verifiable Rewards)은 이런 task에서 그 자동 검증 결과를 학습된 reward model 대신 reward로 그대로 쓰는 RL 방식입니다.",
-    canonicalHref: "/cs/ai/reward-design-for-verifiable-rl#rlvr",
+    "id": "rlvr-verifiable-task",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "RLVR · verifiable task",
+    "aliases": [
+      "RLVR",
+      "Reinforcement Learning with Verifiable Rewards",
+      "Verifiable Task"
+    ],
+    "definition": "프로그램으로 검사할 수 있는 규칙이나 환경 결과를 학습 보상으로 쓰는 과제와 방법입니다. Learned reward model을 쓰지 않아도 parser·정답 라벨·test의 오류가 남으므로 통과와 실제 정답을 별도 검수합니다.",
+    "canonicalHref": "/cs/ai/reward-design-for-verifiable-rl#rlvr"
   },
   "sparse-vs-dense-reward": {
-    id: "sparse-vs-dense-reward",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Sparse reward vs dense reward",
-    aliases: ["Sparse Reward", "Dense Reward"],
-    definition:
-      "Sparse reward는 trajectory가 끝나야만(또는 아주 드물게만) 0이 아닌 값을 주는 reward이고, dense reward는 거의 매 step마다 0이 아닌 값을 주는 reward로, 이 축은 reward를 언제 주는지를 정하며 sparse reward는 gradient 신호가 드물어 학습이 느리고 dense reward는 신호는 잦지만 중간 신호 자체를 새로 설계해야 하는 대가가 있습니다.",
-    canonicalHref: "/cs/ai/reward-design-for-verifiable-rl#sparse-vs-dense",
+    "id": "sparse-vs-dense-reward",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Sparse reward vs dense reward",
+    "aliases": [
+      "Sparse Reward",
+      "Dense Reward"
+    ],
+    "definition": "Reward가 드물게 발생하는지 여러 단계에서 자주 주어지는지를 구별하는 빈도 축입니다. 더 잦은 신호가 올바른 행동에 가까운 정보를 줄 수 있지만 그 신호의 정확성과 목표 정합성은 별도 조건입니다.",
+    "canonicalHref": "/cs/ai/reward-design-for-verifiable-rl#sparse-vs-dense"
   },
   "outcome-vs-process-reward": {
-    id: "outcome-vs-process-reward",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Outcome reward vs process reward",
-    aliases: ["Outcome Reward", "Process Reward"],
-    definition:
-      "Outcome reward는 trajectory의 최종 결과만 보고 매기는 reward이고, process reward는 중간 추론 단계 각각의 타당성을 보고 매기는 reward로, sparse/dense가 언제 주는지의 축이라면 outcome/process는 무엇을 채점하는지의 독립적인 축이며 실무에서는 outcome reward가 보통 sparse로, process reward가 보통 dense로 구현됩니다.",
-    canonicalHref: "/cs/ai/reward-design-for-verifiable-rl#outcome-vs-process",
+    "id": "outcome-vs-process-reward",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Outcome reward vs process reward",
+    "aliases": [
+      "Outcome Reward",
+      "Process Reward"
+    ],
+    "definition": "최종 결과를 검사하는지 중간 행동이나 추론을 검사하는지를 구별하는 축입니다. 점수를 주는 빈도와는 별개이며 과정 검사를 일부 단계에만 두는 경우도 있습니다.",
+    "canonicalHref": "/cs/ai/reward-design-for-verifiable-rl#outcome-vs-process"
   },
   "reward-hacking-and-specification-gaming": {
-    id: "reward-hacking-and-specification-gaming",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Reward hacking · specification gaming",
-    aliases: ["Reward Hacking", "Specification Gaming", "Reward Misspecification"],
-    definition:
-      "Reward hacking(specification gaming)은 policy가 설계된 proxy reward 값은 높이면서 그 reward가 대신하려던 진짜 목표(true objective)에서는 멀어지는 현상이고, reward misspecification은 애초에 reward 함수가 진짜 목표를 정확히 담지 못한 상태로 이 현상의 근본 원인입니다.",
-    canonicalHref: "/cs/ai/reward-design-for-verifiable-rl#hacking",
+    "id": "reward-hacking-and-specification-gaming",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Reward hacking · specification gaming",
+    "aliases": [
+      "Reward Hacking",
+      "Specification Gaming",
+      "Reward Misspecification"
+    ],
+    "definition": "학습자가 실제 목표를 충족하지 않고 점수 규칙의 허점을 이용해 보상을 높이는 현상입니다. 관측 reward의 증가와 독립적으로 확인한 작업 성공을 비교하고 반복 가능한 실패 경로를 조사해야 합니다.",
+    "canonicalHref": "/cs/ai/reward-design-for-verifiable-rl#hacking"
   },
   "reward-shaping": {
-    id: "reward-shaping",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Potential-based reward shaping",
-    aliases: ["Reward Shaping", "Potential-Based Shaping"],
-    definition:
-      "Reward shaping은 sparse reward의 신호 부족을 완화하려고 원래 reward에 추가 항을 더하는 방법이고, 그 추가 항을 상태의 potential 함수 Φ의 차이(γΦ(s')−Φ(s))로만 만드는 potential-based shaping은 어떤 trajectory를 완주하든 중간 항이 상쇄돼 총합에 영향을 주지 않으므로 원래 MDP의 optimal policy를 보존한다는 것이 증명된 특정 형태입니다.",
-    canonicalHref: "/cs/ai/reward-design-for-verifiable-rl#shaping",
+    "id": "reward-shaping",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Potential-based reward shaping",
+    "aliases": [
+      "Reward Shaping",
+      "Potential-Based Shaping"
+    ],
+    "definition": "원래 reward에 보조 항을 더해 학습 신호를 바꾸는 방법입니다. Potential 차이 γΦ(s′)−Φ(s)는 같은 할인율과 적절한 MDP·종료 조건에서 정책을 보존하며, 임의의 과정 점수나 항상 합계 0이라는 주장으로 일반화하지 않습니다.",
+    "canonicalHref": "/cs/ai/reward-design-for-verifiable-rl#shaping"
   },
   "binary-vs-continuous-reward": {
-    id: "binary-vs-continuous-reward",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Binary reward vs continuous reward",
-    aliases: ["Binary Reward", "Continuous Reward"],
-    definition:
-      "Binary reward는 성공·실패 두 값(0 또는 1)만 내는 reward이고, continuous reward는 그 사이 실수 값을 내는 reward로, 이 값 형태의 선택은 sparse/dense·outcome/process 축과 독립적으로 정할 수 있는 별개의 설계 축입니다.",
-    canonicalHref: "/cs/ai/reward-design-for-verifiable-rl#reward-shape-and-calibration",
+    "id": "binary-vs-continuous-reward",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Binary reward vs continuous reward",
+    "aliases": [
+      "Binary Reward",
+      "Continuous Reward"
+    ],
+    "definition": "두 값으로 결과를 구별하는 reward와 연속적인 실수 점수를 사용하는 reward의 차이입니다. 연속 점수의 범위가 반드시 0~1인 것은 아니며 값의 형태와 채점 정확성·빈도는 각각 확인합니다.",
+    "canonicalHref": "/cs/ai/reward-design-for-verifiable-rl#reward-shape-and-calibration"
   },
   "reward-calibration": {
-    id: "reward-calibration",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Reward calibration",
-    definition:
-      "Reward calibration은 서로 다른 reward 원천(verifier·reward model 등)의 값 척도를 비교·합산 가능하게 맞추는 절차로, 값 형태(binary/continuous)가 같아도 원점수 범위가 다른 reward를 그대로 섞으면 척도가 큰 쪽이 학습 방향을 과도하게 지배하는 문제를 막습니다.",
-    canonicalHref: "/cs/ai/reward-design-for-verifiable-rl#reward-shape-and-calibration",
+    "id": "reward-calibration",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Reward calibration",
+    "definition": "서로 다른 reward 원천을 합칠 때 척도와 가중치를 맞추고 점수와 실제 성공의 관계를 검증하는 작업입니다. 척도를 맞추는 것만으로 verifier 오류가 사라지거나 점수가 성공 확률로 보정되지는 않습니다.",
+    "canonicalHref": "/cs/ai/reward-design-for-verifiable-rl#reward-shape-and-calibration"
   },
   "full-fine-tuning-vs-peft": {
     id: "full-fine-tuning-vs-peft",
@@ -26943,66 +27215,423 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/history/inference-from-sources/naming-the-past#translated-words",
   },
-  "gross-net-revenue": {"id": "gross-net-revenue", "kind": "concept", "domain": "economics", "label": "총액과 순액 매출", "definition": "거래에서 상품을 통제하는 주체인지 중개하는 주체인지에 따라 고객 지급액 가운데 자기 매출로 기록할 몫이 달라집니다.", "canonicalHref": "/economics/business/business-model-cashflow#mechanism"},
-  "working-capital-gap": {"id": "working-capital-gap", "kind": "concept", "domain": "economics", "label": "운전자금 간격", "definition": "재고와 미수금에 돈을 쓰는 날부터 고객 대금을 회수하는 날까지 사업자가 메워야 하는 현금 간격입니다.", "canonicalHref": "/economics/business/business-model-cashflow#comparison"},
-  "contribution-cash-trace": {"id": "contribution-cash-trace", "kind": "concept", "domain": "economics", "label": "거래당 남는 돈의 추적", "definition": "가격에서 거래에 따라 늘어나는 비용을 순서대로 빼고 고정비와 조달비를 지급할 여지를 계산하는 방법입니다.", "canonicalHref": "/economics/business/business-model-cashflow#limits"},
-  "shop-contribution-margin": {"id": "shop-contribution-margin", "kind": "concept", "domain": "economics", "label": "점포의 건당 공헌이익", "definition": "한 건의 판매가격에서 그 건이 늘 때 함께 늘어나는 비용을 뺀 금액으로, 고정비를 충당하는 첫 재원입니다.", "canonicalHref": "/economics/business/shop-unit-economics#mechanism"},
-  "shop-break-even-count": {"id": "shop-break-even-count", "kind": "concept", "domain": "economics", "label": "점포의 손익분기 판매량", "definition": "월 고정비를 건당 공헌이익으로 나누어 고정비를 충당하는 데 필요한 거래 건수를 구합니다.", "canonicalHref": "/economics/business/shop-unit-economics#comparison"},
-  "shop-investment-recovery": {"id": "shop-investment-recovery", "kind": "concept", "domain": "economics", "label": "개업비 회수 기간", "definition": "영업으로 남는 현금에서 초기 인테리어·설비·권리금과 종료 비용을 얼마나 빨리 되찾는지 따로 따지는 장부입니다.", "canonicalHref": "/economics/business/shop-unit-economics#limits"},
-  "site-conversion-funnel": {"id": "site-conversion-funnel", "kind": "concept", "domain": "economics", "label": "통행에서 구매까지의 전환", "definition": "같은 시간대의 통행 인원에서 실제 입점과 구매에 이르는 비율을 단계별로 나누는 입지 추정입니다.", "canonicalHref": "/economics/business/shop-site-selection#mechanism"},
-  "site-permitted-use": {"id": "site-permitted-use", "kind": "concept", "domain": "economics", "label": "점포의 허용 용도", "definition": "계약상 사용 허용과 건축·위생·소방 등 공법상 영업 가능 여부를 별도로 확인하는 점포의 조건입니다.", "canonicalHref": "/economics/business/shop-site-selection#comparison"},
-  "site-downside-budget": {"id": "site-downside-budget", "kind": "concept", "domain": "economics", "label": "입지의 하방 예산", "definition": "예상 손님이 적을 때 임대료와 개업비를 버틸 기간과 철수 비용을 미리 계산하는 방법입니다.", "canonicalHref": "/economics/business/shop-site-selection#limits"},
-  "fitout-dependency-order": {"id": "fitout-dependency-order", "kind": "concept", "domain": "economics", "label": "점포 공사의 선후관계", "definition": "임대차 동의와 업종 적합성 확인 뒤에 실측·설계·견적·시공·검수·영업신고를 놓아 되돌림 비용을 줄이는 순서입니다.", "canonicalHref": "/economics/business/shop-fitout-and-opening#mechanism"},
-  "fitout-change-order": {"id": "fitout-change-order", "kind": "concept", "domain": "economics", "label": "추가 공사 승인", "definition": "공사 도중 발견한 변경의 범위·금액·기간을 서면으로 확정하고 누가 부담할지 정하는 통제입니다.", "canonicalHref": "/economics/business/shop-fitout-and-opening#comparison"},
-  "fitout-exit-liability": {"id": "fitout-exit-liability", "kind": "concept", "domain": "economics", "label": "인테리어의 종료 의무", "definition": "설치한 설비가 나중에 이전·양도될지 철거·원상복구 비용이 될지를 개업 전에 분류하는 장부입니다.", "canonicalHref": "/economics/business/shop-fitout-and-opening#limits"},
-  "lease-right-and-deposit": {"id": "lease-right-and-deposit", "kind": "concept", "domain": "economics", "label": "사용권과 보증금 청구권", "definition": "임차인은 약정 기간 공간을 사용할 권리를 얻고 보증금은 임대차 채무를 정산한 뒤 반환받을 청구권으로 남깁니다.", "canonicalHref": "/economics/property/commercial-lease-and-rent#mechanism"},
-  "commercial-lease-jurisdiction": {"id": "commercial-lease-jurisdiction", "kind": "concept", "domain": "economics", "label": "상가 임차권의 관할권 차이", "definition": "갱신·양도·임대료·공실·복구에 대한 법정 보호와 계약 자유의 범위가 나라와 지역마다 달라지는 성질입니다.", "canonicalHref": "/economics/property/commercial-lease-and-rent#comparison"},
-  "rent-property-net-income": {"id": "rent-property-net-income", "kind": "concept", "domain": "economics", "label": "임대 부동산의 순현금", "definition": "명목 월세에서 공실·수선·세금·관리·금융 비용을 빼고 보증금 반환 의무를 따로 남기는 건물주의 장부입니다.", "canonicalHref": "/economics/property/commercial-lease-and-rent#limits"},
-  "shop-transfer-asset-bundle": {"id": "shop-transfer-asset-bundle", "kind": "concept", "domain": "economics", "label": "점포 양도 자산 묶음", "definition": "시설·재고·브랜드·고객 관계·계약·채무가 같은 가게 안에 있어도 소유권과 이전 절차가 서로 다르다는 점입니다.", "canonicalHref": "/economics/property/shop-transfer-and-goodwill#mechanism"},
-  "lease-assignment-consent": {"id": "lease-assignment-consent", "kind": "concept", "domain": "economics", "label": "임대차 지위 이전과 동의", "definition": "기존 임차인이 새 운영자에게 장소 사용권을 넘기려면 계약과 법이 정한 임대인의 동의·정보 공개 요건을 확인해야 한다는 조건입니다.", "canonicalHref": "/economics/property/shop-transfer-and-goodwill#comparison"},
-  "goodwill-future-uncertainty": {"id": "goodwill-future-uncertainty", "kind": "concept", "domain": "economics", "label": "영업상 이점의 미래 불확실성", "definition": "기존 고객·상호·입지에서 기대하는 미래 초과수익은 과거 매출 자체가 아니며 새 조건에서 다시 검증해야 하는 가치입니다.", "canonicalHref": "/economics/property/shop-transfer-and-goodwill#limits"},
-  "closure-settlement-order": {"id": "closure-settlement-order", "kind": "concept", "domain": "economics", "label": "폐업의 정산 순서", "definition": "영업 정지와 고객·직원·공급자·세금·임대차 채무를 상대방별로 정산하고 인도·보증금 반환까지 연결하는 순서입니다.", "canonicalHref": "/economics/property/shop-closure-and-restoration#mechanism"},
-  "restoration-scope-evidence": {"id": "restoration-scope-evidence", "kind": "concept", "domain": "economics", "label": "원상복구 범위의 증거", "definition": "임대차 계약의 약정, 최초 인도 상태, 허용된 공사와 종료 합의·실제 복구 필요를 대조하는 근거 묶음입니다.", "canonicalHref": "/economics/property/shop-closure-and-restoration#comparison"},
-  "deposit-closeout": {"id": "deposit-closeout", "kind": "concept", "domain": "economics", "label": "보증금 최종 정산", "definition": "반환할 보증금에서 공제 가능한 임대차 채무를 확인하고 점포 인도와 함께 잔액을 확정하는 절차입니다.", "canonicalHref": "/economics/property/shop-closure-and-restoration#limits"},
-  "franchise-split-ledger": {"id": "franchise-split-ledger", "kind": "concept", "domain": "economics", "label": "가맹본부와 점주의 분리 장부", "definition": "같은 고객 결제에서 본부의 로열티·공급 수입과 점주의 재료·임금·임대료·잔여현금을 별도로 적는 방법입니다.", "canonicalHref": "/economics/business/franchise-incentives#mechanism"},
-  "franchise-contract-controls": {"id": "franchise-contract-controls", "kind": "concept", "domain": "economics", "label": "가맹 계약의 통제권", "definition": "품질·상표 사용·가격·공급·영업 구역·갱신과 양도를 누가 결정하는지 계약으로 배분한 권한입니다.", "canonicalHref": "/economics/business/franchise-incentives#comparison"},
-  "franchise-average-sales-limit": {"id": "franchise-average-sales-limit", "kind": "concept", "domain": "economics", "label": "평균 매출의 한계", "definition": "공개된 가맹점 평균 매출이 점주의 순이익과 다르고 표본·연식·폐점 처리에 영향을 받는다는 경계입니다.", "canonicalHref": "/economics/business/franchise-incentives#limits"},
-  "development-residual-land-value": {"id": "development-residual-land-value", "kind": "concept", "domain": "economics", "label": "개발 잔여 토지가치", "definition": "완공 후 가치에서 공사·금융·판매 등 비용과 요구 이익을 빼 토지에 지불 가능한 금액을 추정하는 방법입니다.", "canonicalHref": "/economics/property/land-development-residual#mechanism"},
-  "land-permit-stack": {"id": "land-permit-stack", "kind": "concept", "domain": "economics", "label": "토지 개발 허가의 층", "definition": "소유권과 도시계획상 사용 가능성, 개발행위허가, 건축허가, 기반시설 연결을 서로 다른 확인 단계로 보는 틀입니다.", "canonicalHref": "/economics/property/land-development-residual#comparison"},
-  "development-time-risk": {"id": "development-time-risk", "kind": "concept", "domain": "economics", "label": "개발의 시간 위험", "definition": "공사비가 먼저 나가고 인허가와 매각 대금이 뒤따를 때 금리·지연·분양 실패가 잔여가치를 바꾸는 위험입니다.", "canonicalHref": "/economics/property/land-development-residual#limits"},
-  "global-value-added-chain": {"id": "global-value-added-chain", "kind": "concept", "domain": "economics", "label": "국제 가치사슬의 부가가치", "definition": "완제품의 총거래액에 여러 나라에서 이미 투입된 중간재가 포함되므로 국내에 새로 생긴 가치만 따로 계산해야 한다는 관점입니다.", "canonicalHref": "/economics/business/supply-chain-bargaining#mechanism"},
-  "supply-chain-bargaining-node": {"id": "supply-chain-bargaining-node", "kind": "concept", "domain": "economics", "label": "공급망의 협상력 지점", "definition": "제품 규격·고객 접근·희소 기술·대체 가능한 공급자를 결정하는 권한이 어느 단계에 있는지 찾는 방법입니다.", "canonicalHref": "/economics/business/supply-chain-bargaining#comparison"},
-  "supply-chain-policy-transmission": {"id": "supply-chain-policy-transmission", "kind": "concept", "domain": "economics", "label": "정책의 공급망 전달", "definition": "관세·보조금·수출통제가 한 단계의 비용과 대체 가능성을 바꾸어 다른 나라의 가격과 투자로 전해지는 과정입니다.", "canonicalHref": "/economics/business/supply-chain-bargaining#limits"},
-  "fund-share-vs-note": {"id": "fund-share-vs-note", "kind": "concept", "domain": "economics", "label": "펀드 지분과 발행자 채무", "definition": "펀드·ETF 투자자는 보유 자산 묶음의 지분을 갖지만 ETN 보유자는 발행자의 계약상 지급 청구권을 갖는 차이입니다.", "canonicalHref": "/finance/markets/funds-etfs-and-etns#mechanism"},
-  "etf-nav-market-gap": {"id": "etf-nav-market-gap", "kind": "concept", "domain": "economics", "label": "ETF 시장가격과 순자산가치 괴리", "definition": "거래소 체결 가격과 펀드 한 좌의 순자산가치 사이에 생기는 차이로, 설정·환매와 시장 유동성이 크기에 영향을 줍니다.", "canonicalHref": "/finance/markets/funds-etfs-and-etns#comparison"},
-  "leveraged-etf-reset": {"id": "leveraged-etf-reset", "kind": "concept", "domain": "economics", "label": "레버리지 ETF의 일일 재설정", "definition": "일일 목표 배수를 맞추는 구조가 여러 날 보유 수익을 기초지수 누적 수익의 단순 배수와 다르게 만드는 조건입니다.", "canonicalHref": "/finance/markets/funds-etfs-and-etns#limits"},
-  "forward-futures-symmetric-payoff": {"id": "forward-futures-symmetric-payoff", "kind": "concept", "domain": "economics", "label": "선도·선물의 대칭 손익", "definition": "정해진 미래 가격과 실제 정산 가격의 차이가 계약 양쪽에 반대 부호로 귀속되는 구조입니다.", "canonicalHref": "/finance/markets/forwards-and-futures#mechanism"},
-  "futures-daily-settlement": {"id": "futures-daily-settlement", "kind": "concept", "domain": "economics", "label": "선물의 일별 정산", "definition": "표준화된 거래소 계약에서 청산기관이 평가손익을 매일 현금으로 반영하고 증거금을 요구하는 방식입니다.", "canonicalHref": "/finance/markets/forwards-and-futures#comparison"},
-  "basis-risk-in-hedging": {"id": "basis-risk-in-hedging", "kind": "concept", "domain": "economics", "label": "헤지의 베이시스 위험", "definition": "현지에서 실제 거래할 물건의 가격과 헤지 계약이 참조하는 표준 가격이 다르게 움직일 위험입니다.", "canonicalHref": "/finance/markets/forwards-and-futures#limits"},
-  "option-right-obligation": {"id": "option-right-obligation", "kind": "concept", "domain": "economics", "label": "옵션의 권리와 의무", "definition": "매수자는 불리하면 행사하지 않을 수 있는 권리를 얻고 매도자는 요청받으면 계약을 이행해야 하는 비대칭입니다.", "canonicalHref": "/finance/markets/options-and-asymmetric-payoffs#mechanism"},
-  "option-premium-time-value": {"id": "option-premium-time-value", "kind": "concept", "domain": "economics", "label": "옵션 프리미엄과 남은 시간", "definition": "만기 전 옵션가격은 즉시 행사 가치 외에 남은 기간에 유리하게 바뀔 가능성의 값을 포함합니다.", "canonicalHref": "/finance/markets/options-and-asymmetric-payoffs#comparison"},
-  "uncovered-option-tail": {"id": "uncovered-option-tail", "kind": "concept", "domain": "economics", "label": "무담보 옵션 매도의 꼬리 위험", "definition": "받는 프리미엄은 제한되어도 기초가격의 큰 이동 때 계약 이행 손실이 훨씬 클 수 있는 비대칭입니다.", "canonicalHref": "/finance/markets/options-and-asymmetric-payoffs#limits"},
-  "swap-cashflow-exchange": {"id": "swap-cashflow-exchange", "kind": "concept", "domain": "economics", "label": "스왑 현금흐름 교환", "definition": "명목원금을 기준으로 계산한 서로 다른 금리·통화 지급 흐름을 계약 기간 동안 맞바꾸는 구조입니다.", "canonicalHref": "/finance/markets/swaps-and-credit-risk#mechanism"},
-  "cds-credit-protection": {"id": "cds-credit-protection", "kind": "concept", "domain": "economics", "label": "CDS 신용 보호", "definition": "보호 매수자가 정기 지급을 하고 정해진 신용 사건 때 보호 매도자가 보상하는 계약입니다.", "canonicalHref": "/finance/markets/swaps-and-credit-risk#comparison"},
-  "derivatives-notional-vs-exposure": {"id": "derivatives-notional-vs-exposure", "kind": "concept", "domain": "economics", "label": "명목원금과 실제 노출의 구분", "definition": "계약 지급을 계산하는 기준 금액과 오늘 대체 비용·미래 손실 가능성을 서로 다른 지표로 읽는 원칙입니다.", "canonicalHref": "/finance/markets/swaps-and-credit-risk#limits"},
-  "margin-liquidity-timing": {"id": "margin-liquidity-timing", "kind": "concept", "domain": "economics", "label": "증거금의 현금 시점", "definition": "최종 헤지 손익을 실현하기 전에 시가 변동으로 현금이나 담보를 먼저 요구받는 시간차입니다.", "canonicalHref": "/finance/risk/margin-collateral-and-leverage#comparison"},
-  "funding-market-liquidity-loop": {"id": "funding-market-liquidity-loop", "kind": "concept", "domain": "economics", "label": "자금·시장 유동성의 되먹임", "definition": "자금 부족으로 자산을 팔면 거래가격이 떨어지고 담보 가치가 줄어 다시 자금 부족이 심해지는 연결입니다.", "canonicalHref": "/finance/risk/margin-collateral-and-leverage#limits"},
-  "currency-mismatch-balance-sheet": {"id": "currency-mismatch-balance-sheet", "kind": "concept", "domain": "economics", "label": "통화 불일치의 재무 압박", "definition": "수입은 현지통화이고 부채는 외화일 때 환율 변동이 현지통화 상환액을 바꾸는 노출입니다.", "canonicalHref": "/economics/macro/global-capital-and-policy#mechanism"},
-  "global-funding-transmission": {"id": "global-funding-transmission", "kind": "concept", "domain": "economics", "label": "국제 자금의 정책 전달", "definition": "주요 통화의 금리·조달 환경 변화가 은행·채권·환율을 거쳐 다른 나라의 신용과 자산가격에 전달되는 경로입니다.", "canonicalHref": "/economics/macro/global-capital-and-policy#comparison"},
-  "policy-price-causality-boundary": {"id": "policy-price-causality-boundary", "kind": "concept", "domain": "economics", "label": "정책과 가격의 인과 경계", "definition": "발표 뒤 가격 변화가 정책 자체 때문인지 이미 예상된 정보·동시 실적·포지션 청산 때문인지 구별해야 한다는 기준입니다.", "canonicalHref": "/economics/macro/global-capital-and-policy#limits"},
-  "narrative-order-channel": {"id": "narrative-order-channel", "kind": "concept", "domain": "economics", "label": "서사의 주문 전달", "definition": "미래에 관한 이야기가 투자자의 현금흐름·위험 기대를 바꾸고 실제 매수·매도 주문으로 이어져 가격에 닿는 경로입니다.", "canonicalHref": "/economics/macro/narratives-and-market-regimes#mechanism"},
-  "reflexive-financing-loop": {"id": "reflexive-financing-loop", "kind": "concept", "domain": "economics", "label": "가격과 자금조달의 되먹임", "definition": "가격 상승이 담보 가치와 증자 조건을 높여 실제 투자·생산을 돕고 그것이 다시 기대를 바꿀 수 있는 순환입니다.", "canonicalHref": "/economics/macro/narratives-and-market-regimes#comparison"},
-  "narrative-falsification-metrics": {"id": "narrative-falsification-metrics", "kind": "concept", "domain": "economics", "label": "시장 서사의 반증 지표", "definition": "가격 자체와 별도로 매출·현금 회수·예산 집행·고객 채택 등 이야기가 예고한 관측값을 미리 정하는 방법입니다.", "canonicalHref": "/economics/macro/narratives-and-market-regimes#limits"},
+  "gross-net-revenue": {
+    "id": "gross-net-revenue",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "총액과 순액 매출",
+    "definition": "거래에서 상품을 통제하는 주체인지 중개하는 주체인지에 따라 고객 지급액 가운데 자기 매출로 기록할 몫이 달라집니다.",
+    "canonicalHref": "/economics/business/business-model-cashflow#mechanism"
+  },
+  "working-capital-gap": {
+    "id": "working-capital-gap",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "운전자금 간격",
+    "definition": "재고와 미수금에 돈을 쓰는 날부터 고객 대금을 회수하는 날까지 사업자가 메워야 하는 현금 간격입니다.",
+    "canonicalHref": "/economics/business/business-model-cashflow#need"
+  },
+  "contribution-cash-trace": {
+    "id": "contribution-cash-trace",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "거래당 남는 돈의 추적",
+    "definition": "가격에서 거래에 따라 늘어나는 비용을 순서대로 빼고 고정비와 조달비를 지급할 여지를 계산하는 방법입니다.",
+    "canonicalHref": "/economics/business/business-model-cashflow#limits"
+  },
+  "shop-contribution-margin": {
+    "id": "shop-contribution-margin",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "점포의 건당 공헌이익",
+    "definition": "한 건의 판매가격에서 그 건이 늘 때 함께 늘어나는 비용을 뺀 금액으로, 고정비를 충당하는 첫 재원입니다.",
+    "canonicalHref": "/economics/business/shop-unit-economics#mechanism"
+  },
+  "shop-break-even-count": {
+    "id": "shop-break-even-count",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "점포의 손익분기 판매량",
+    "definition": "월 고정비를 건당 공헌이익으로 나누어 고정비를 충당하는 데 필요한 거래 건수를 구합니다.",
+    "canonicalHref": "/economics/business/shop-unit-economics#mechanism"
+  },
+  "shop-investment-recovery": {
+    "id": "shop-investment-recovery",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "개업비 회수 기간",
+    "definition": "영업으로 남는 현금에서 초기 인테리어·설비·권리금과 종료 비용을 얼마나 빨리 되찾는지 따로 따지는 장부입니다.",
+    "canonicalHref": "/economics/business/shop-unit-economics#limits"
+  },
+  "site-conversion-funnel": {
+    "id": "site-conversion-funnel",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "통행에서 구매까지의 전환",
+    "definition": "같은 시간대의 통행 인원에서 실제 입점과 구매에 이르는 비율을 단계별로 나누는 입지 추정입니다.",
+    "canonicalHref": "/economics/business/shop-site-selection#mechanism"
+  },
+  "site-permitted-use": {
+    "id": "site-permitted-use",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "점포의 허용 용도",
+    "definition": "계약상 사용 허용과 건축·위생·소방 등 공법상 영업 가능 여부를 별도로 확인하는 점포의 조건입니다.",
+    "canonicalHref": "/economics/business/shop-site-selection#comparison"
+  },
+  "site-downside-budget": {
+    "id": "site-downside-budget",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "입지의 하방 예산",
+    "definition": "예상 손님이 적을 때 임대료와 개업비를 버틸 기간과 철수 비용을 미리 계산하는 방법입니다.",
+    "canonicalHref": "/economics/business/shop-site-selection#limits"
+  },
+  "fitout-dependency-order": {
+    "id": "fitout-dependency-order",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "점포 공사의 선후관계",
+    "definition": "임대차 동의와 업종 적합성 확인 뒤에 실측·설계·견적·시공·검수·영업신고를 놓아 되돌림 비용을 줄이는 순서입니다.",
+    "canonicalHref": "/economics/business/shop-fitout-and-opening#mechanism"
+  },
+  "fitout-change-order": {
+    "id": "fitout-change-order",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "추가 공사 승인",
+    "definition": "공사 도중 발견한 변경의 범위·금액·기간을 서면으로 확정하고 누가 부담할지 정하는 통제입니다.",
+    "canonicalHref": "/economics/business/shop-fitout-and-opening#mechanism"
+  },
+  "fitout-exit-liability": {
+    "id": "fitout-exit-liability",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "인테리어의 종료 의무",
+    "definition": "설치한 설비가 나중에 이전·양도될지 철거·원상복구 비용이 될지를 개업 전에 분류하는 장부입니다.",
+    "canonicalHref": "/economics/business/shop-fitout-and-opening#limits"
+  },
+  "lease-right-and-deposit": {
+    "id": "lease-right-and-deposit",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "사용권과 보증금 청구권",
+    "definition": "임차인은 약정 기간 공간을 사용할 권리를 얻고 보증금은 임대차 채무를 정산한 뒤 반환받을 청구권으로 남깁니다.",
+    "canonicalHref": "/economics/property/commercial-lease-and-rent#mechanism"
+  },
+  "commercial-lease-jurisdiction": {
+    "id": "commercial-lease-jurisdiction",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "상가 임차권의 관할권 차이",
+    "definition": "갱신·양도·임대료·공실·복구에 대한 법정 보호와 계약 자유의 범위가 나라와 지역마다 달라지는 성질입니다.",
+    "canonicalHref": "/economics/property/commercial-lease-and-rent#comparison"
+  },
+  "rent-property-net-income": {
+    "id": "rent-property-net-income",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "임대 부동산의 순현금",
+    "definition": "명목 월세에서 공실·수선·세금·관리·금융 비용을 빼고 보증금 반환 의무를 따로 남기는 건물주의 장부입니다.",
+    "canonicalHref": "/economics/property/commercial-lease-and-rent#need"
+  },
+  "shop-transfer-asset-bundle": {
+    "id": "shop-transfer-asset-bundle",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "점포 양도 자산 묶음",
+    "definition": "시설·재고·브랜드·고객 관계·계약·채무가 같은 가게 안에 있어도 소유권과 이전 절차가 서로 다르다는 점입니다.",
+    "canonicalHref": "/economics/property/shop-transfer-and-goodwill#mechanism"
+  },
+  "lease-assignment-consent": {
+    "id": "lease-assignment-consent",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "임대차 지위 이전과 동의",
+    "definition": "기존 임차인이 새 운영자에게 장소 사용권을 넘기려면 계약과 법이 정한 임대인의 동의·정보 공개 요건을 확인해야 한다는 조건입니다.",
+    "canonicalHref": "/economics/property/shop-transfer-and-goodwill#mechanism"
+  },
+  "goodwill-future-uncertainty": {
+    "id": "goodwill-future-uncertainty",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "영업상 이점의 미래 불확실성",
+    "definition": "기존 고객·상호·입지에서 기대하는 미래 초과수익은 과거 매출 자체가 아니며 새 조건에서 다시 검증해야 하는 가치입니다.",
+    "canonicalHref": "/economics/property/shop-transfer-and-goodwill#limits"
+  },
+  "closure-settlement-order": {
+    "id": "closure-settlement-order",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "폐업의 정산 순서",
+    "definition": "영업 정지와 고객·직원·공급자·세금·임대차 채무를 상대방별로 정산하고 인도·보증금 반환까지 연결하는 순서입니다.",
+    "canonicalHref": "/economics/property/shop-closure-and-restoration#mechanism"
+  },
+  "restoration-scope-evidence": {
+    "id": "restoration-scope-evidence",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "원상복구 범위의 증거",
+    "definition": "임대차 계약의 약정, 최초 인도 상태, 허용된 공사와 종료 합의·실제 복구 필요를 대조하는 근거 묶음입니다.",
+    "canonicalHref": "/economics/property/shop-closure-and-restoration#comparison"
+  },
+  "deposit-closeout": {
+    "id": "deposit-closeout",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "보증금 최종 정산",
+    "definition": "반환할 보증금에서 공제 가능한 임대차 채무를 확인하고 점포 인도와 함께 잔액을 확정하는 절차입니다.",
+    "canonicalHref": "/economics/property/shop-closure-and-restoration#limits"
+  },
+  "franchise-split-ledger": {
+    "id": "franchise-split-ledger",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "가맹본부와 점주의 분리 장부",
+    "definition": "같은 고객 결제에서 본부의 로열티·공급 수입과 점주의 재료·임금·임대료·잔여현금을 별도로 적는 방법입니다.",
+    "canonicalHref": "/economics/business/franchise-incentives#mechanism"
+  },
+  "franchise-contract-controls": {
+    "id": "franchise-contract-controls",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "가맹 계약의 통제권",
+    "definition": "품질·상표 사용·가격·공급·영업 구역·갱신과 양도를 누가 결정하는지 계약으로 배분한 권한입니다.",
+    "canonicalHref": "/economics/business/franchise-incentives#mechanism"
+  },
+  "franchise-average-sales-limit": {
+    "id": "franchise-average-sales-limit",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "평균 매출의 한계",
+    "definition": "공개된 가맹점 평균 매출이 점주의 순이익과 다르고 표본·연식·폐점 처리에 영향을 받는다는 경계입니다.",
+    "canonicalHref": "/economics/business/franchise-incentives#limits"
+  },
+  "development-residual-land-value": {
+    "id": "development-residual-land-value",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "개발 잔여 토지가치",
+    "definition": "완공 후 가치에서 공사·금융·판매 등 비용과 요구 이익을 빼 토지에 지불 가능한 금액을 추정하는 방법입니다.",
+    "canonicalHref": "/economics/property/land-development-residual#mechanism"
+  },
+  "land-permit-stack": {
+    "id": "land-permit-stack",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "토지 개발 허가의 층",
+    "definition": "소유권과 도시계획상 사용 가능성, 개발행위허가, 건축허가, 기반시설 연결을 서로 다른 확인 단계로 보는 틀입니다.",
+    "canonicalHref": "/economics/property/land-development-residual#comparison"
+  },
+  "development-time-risk": {
+    "id": "development-time-risk",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "개발의 시간 위험",
+    "definition": "공사비가 먼저 나가고 인허가와 매각 대금이 뒤따를 때 금리·지연·분양 실패가 잔여가치를 바꾸는 위험입니다.",
+    "canonicalHref": "/economics/property/land-development-residual#limits"
+  },
+  "global-value-added-chain": {
+    "id": "global-value-added-chain",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "국제 가치사슬의 부가가치",
+    "definition": "완제품의 총거래액에 여러 나라에서 이미 투입된 중간재가 포함되므로 국내에 새로 생긴 가치만 따로 계산해야 한다는 관점입니다.",
+    "canonicalHref": "/economics/business/supply-chain-bargaining#source"
+  },
+  "supply-chain-bargaining-node": {
+    "id": "supply-chain-bargaining-node",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "공급망의 협상력 지점",
+    "definition": "제품 규격·고객 접근·희소 기술·대체 가능한 공급자를 결정하는 권한이 어느 단계에 있는지 찾는 방법입니다.",
+    "canonicalHref": "/economics/business/supply-chain-bargaining#mechanism"
+  },
+  "supply-chain-policy-transmission": {
+    "id": "supply-chain-policy-transmission",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "정책의 공급망 전달",
+    "definition": "관세·보조금·수출통제가 한 단계의 비용과 대체 가능성을 바꾸어 다른 나라의 가격과 투자로 전해지는 과정입니다.",
+    "canonicalHref": "/economics/business/supply-chain-bargaining#limits"
+  },
+  "fund-share-vs-note": {
+    "id": "fund-share-vs-note",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "펀드 지분과 발행자 채무",
+    "definition": "펀드·ETF 투자자는 보유 자산 묶음의 지분을 갖지만 ETN 보유자는 발행자의 계약상 지급 청구권을 갖는 차이입니다.",
+    "canonicalHref": "/finance/markets/funds-etfs-and-etns#mechanism"
+  },
+  "etf-nav-market-gap": {
+    "id": "etf-nav-market-gap",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "ETF 시장가격과 순자산가치 괴리",
+    "definition": "거래소 체결 가격과 펀드 한 좌의 순자산가치 사이에 생기는 차이로, 설정·환매와 시장 유동성이 크기에 영향을 줍니다.",
+    "canonicalHref": "/finance/markets/funds-etfs-and-etns#mechanism"
+  },
+  "leveraged-etf-reset": {
+    "id": "leveraged-etf-reset",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "레버리지 ETF의 일일 재설정",
+    "definition": "일일 목표 배수를 맞추는 구조가 여러 날 보유 수익을 기초지수 누적 수익의 단순 배수와 다르게 만드는 조건입니다.",
+    "canonicalHref": "/finance/markets/funds-etfs-and-etns#comparison"
+  },
+  "forward-futures-symmetric-payoff": {
+    "id": "forward-futures-symmetric-payoff",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "선도·선물의 대칭 손익",
+    "definition": "정해진 미래 가격과 실제 정산 가격의 차이가 계약 양쪽에 반대 부호로 귀속되는 구조입니다.",
+    "canonicalHref": "/finance/markets/forwards-and-futures#mechanism"
+  },
+  "futures-daily-settlement": {
+    "id": "futures-daily-settlement",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "선물의 일별 정산",
+    "definition": "표준화된 거래소 계약에서 청산기관이 평가손익을 매일 현금으로 반영하고 증거금을 요구하는 방식입니다.",
+    "canonicalHref": "/finance/markets/forwards-and-futures#source"
+  },
+  "basis-risk-in-hedging": {
+    "id": "basis-risk-in-hedging",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "헤지의 베이시스 위험",
+    "definition": "현지에서 실제 거래할 물건의 가격과 헤지 계약이 참조하는 표준 가격이 다르게 움직일 위험입니다.",
+    "canonicalHref": "/finance/markets/forwards-and-futures#mechanism"
+  },
+  "option-right-obligation": {
+    "id": "option-right-obligation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "옵션의 권리와 의무",
+    "definition": "매수자는 불리하면 행사하지 않을 수 있는 권리를 얻고 매도자는 요청받으면 계약을 이행해야 하는 비대칭입니다.",
+    "canonicalHref": "/finance/markets/options-and-asymmetric-payoffs#mechanism"
+  },
+  "option-premium-time-value": {
+    "id": "option-premium-time-value",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "옵션 프리미엄과 남은 시간",
+    "definition": "만기 전 옵션가격은 즉시 행사 가치 외에 남은 기간에 유리하게 바뀔 가능성의 값을 포함합니다.",
+    "canonicalHref": "/finance/markets/options-and-asymmetric-payoffs#comparison"
+  },
+  "uncovered-option-tail": {
+    "id": "uncovered-option-tail",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "무담보 옵션 매도의 꼬리 위험",
+    "definition": "받는 프리미엄은 제한되어도 기초가격의 큰 이동 때 계약 이행 손실이 훨씬 클 수 있는 비대칭입니다.",
+    "canonicalHref": "/finance/markets/options-and-asymmetric-payoffs#limits"
+  },
+  "swap-cashflow-exchange": {
+    "id": "swap-cashflow-exchange",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "스왑 현금흐름 교환",
+    "definition": "명목원금을 기준으로 계산한 서로 다른 금리·통화 지급 흐름을 계약 기간 동안 맞바꾸는 구조입니다.",
+    "canonicalHref": "/finance/markets/swaps-and-credit-risk#mechanism"
+  },
+  "cds-credit-protection": {
+    "id": "cds-credit-protection",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "CDS 신용 보호",
+    "definition": "보호 매수자가 정기 지급을 하고 정해진 신용 사건 때 보호 매도자가 보상하는 계약입니다.",
+    "canonicalHref": "/finance/markets/swaps-and-credit-risk#comparison"
+  },
+  "derivatives-notional-vs-exposure": {
+    "id": "derivatives-notional-vs-exposure",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "명목원금과 실제 노출의 구분",
+    "definition": "계약 지급을 계산하는 기준 금액과 오늘 대체 비용·미래 손실 가능성을 서로 다른 지표로 읽는 원칙입니다.",
+    "canonicalHref": "/finance/markets/swaps-and-credit-risk#limits"
+  },
+  "margin-liquidity-timing": {
+    "id": "margin-liquidity-timing",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "증거금의 현금 시점",
+    "definition": "최종 헤지 손익을 실현하기 전에 시가 변동으로 현금이나 담보를 먼저 요구받는 시간차입니다.",
+    "canonicalHref": "/finance/risk/margin-collateral-and-leverage#comparison"
+  },
+  "funding-market-liquidity-loop": {
+    "id": "funding-market-liquidity-loop",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "자금·시장 유동성의 되먹임",
+    "definition": "자금 부족으로 자산을 팔면 거래가격이 떨어지고 담보 가치가 줄어 다시 자금 부족이 심해지는 연결입니다.",
+    "canonicalHref": "/finance/risk/margin-collateral-and-leverage#limits"
+  },
+  "currency-mismatch-balance-sheet": {
+    "id": "currency-mismatch-balance-sheet",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "통화 불일치의 재무 압박",
+    "definition": "수입은 현지통화이고 부채는 외화일 때 환율 변동이 현지통화 상환액을 바꾸는 노출입니다.",
+    "canonicalHref": "/finance/macro/global-capital-and-policy#mechanism"
+  },
+  "global-funding-transmission": {
+    "id": "global-funding-transmission",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "국제 자금의 정책 전달",
+    "definition": "주요 통화의 금리·조달 환경 변화가 은행·채권·환율을 거쳐 다른 나라의 신용과 자산가격에 전달되는 경로입니다.",
+    "canonicalHref": "/finance/macro/global-capital-and-policy#comparison"
+  },
+  "policy-price-causality-boundary": {
+    "id": "policy-price-causality-boundary",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "정책과 가격의 인과 경계",
+    "definition": "발표 뒤 가격 변화가 정책 자체 때문인지 이미 예상된 정보·동시 실적·포지션 청산 때문인지 구별해야 한다는 기준입니다.",
+    "canonicalHref": "/finance/macro/global-capital-and-policy#limits"
+  },
+  "narrative-order-channel": {
+    "id": "narrative-order-channel",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "서사의 주문 전달",
+    "definition": "미래에 관한 이야기가 투자자의 현금흐름·위험 기대를 바꾸고 실제 매수·매도 주문으로 이어져 가격에 닿는 경로입니다.",
+    "canonicalHref": "/finance/macro/narratives-and-market-regimes#mechanism"
+  },
+  "reflexive-financing-loop": {
+    "id": "reflexive-financing-loop",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "가격과 자금조달의 되먹임",
+    "definition": "가격 상승이 담보 가치와 증자 조건을 높여 실제 투자·생산을 돕고 그것이 다시 기대를 바꿀 수 있는 순환입니다.",
+    "canonicalHref": "/finance/macro/narratives-and-market-regimes#comparison"
+  },
+  "narrative-falsification-metrics": {
+    "id": "narrative-falsification-metrics",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "시장 서사의 반증 지표",
+    "definition": "가격 자체와 별도로 매출·현금 회수·예산 집행·고객 채택 등 이야기가 예고한 관측값을 미리 정하는 방법입니다.",
+    "canonicalHref": "/finance/macro/narratives-and-market-regimes#limits"
+  },
   "insurance-risk-pool": {"id": "insurance-risk-pool", "kind": "concept", "domain": "economics", "label": "보험 위험 풀", "definition": "다수의 보험료를 모아 약정한 사고가 생긴 일부 가입자에게 지급하는 공동 장부입니다.", "canonicalHref": "/economics/institutions/insurance-risk-pooling#mechanism"},
   "insurance-exclusion-limit": {"id": "insurance-exclusion-limit", "kind": "concept", "domain": "economics", "label": "보험의 면책과 한도", "definition": "보험 계약이 어떤 사건에 얼마까지 언제 지급하는지 정하는 경계로, 가입자의 잔여 위험을 결정합니다.", "canonicalHref": "/economics/institutions/insurance-risk-pooling#comparison"},
   "correlated-insurance-loss": {"id": "correlated-insurance-loss", "kind": "concept", "domain": "economics", "label": "동시 사고의 위험", "definition": "많은 가입자가 같은 충격으로 함께 손해를 입어 위험을 풀 안에서 나누는 효과가 약해지는 상황입니다.", "canonicalHref": "/economics/institutions/insurance-risk-pooling#limits"},
   "health-financing-three-functions": {"id": "health-financing-three-functions", "kind": "concept", "domain": "economics", "label": "의료 재정의 세 기능", "definition": "재원 조달, 위험 풀 형성, 의료 서비스 구매를 서로 다른 결정으로 나누어 의료제도를 비교하는 틀입니다.", "canonicalHref": "/economics/institutions/healthcare-payment-systems#mechanism"},
   "provider-payment-incentive": {"id": "provider-payment-incentive", "kind": "concept", "domain": "economics", "label": "의료기관 지급 방식의 유인", "definition": "건별·정액·인두 등 지급 단위가 의료기관의 진료량·서비스 선택에 미치는 조건을 살피는 관점입니다.", "canonicalHref": "/economics/institutions/healthcare-payment-systems#comparison"},
   "patient-price-vs-system-cost": {"id": "patient-price-vs-system-cost", "kind": "concept", "domain": "economics", "label": "환자 부담과 전체 의료비", "definition": "창구에서 환자가 낸 금액과 보험자·정부를 포함한 사회의 총지급액을 분리하는 장부입니다.", "canonicalHref": "/economics/institutions/healthcare-payment-systems#limits"},
-  "country-seven-ledgers": {"id": "country-seven-ledgers", "kind": "concept", "domain": "economics", "label": "국가의 일곱 장부", "definition": "정치·법, 예산, 생산, 대외 거래, 생활 서비스, 정보, 기대를 구분한 뒤 결정권·돈·위험의 연결을 찾는 비교 틀입니다.", "canonicalHref": "/economics/institutions/how-to-read-a-country#mechanism"},
-  "country-data-comparability": {"id": "country-data-comparability", "kind": "concept", "domain": "economics", "label": "국가 통계의 비교 가능성", "definition": "같은 이름의 지표도 환율·가격 기준·비공식 경제·지역 범위와 관측 시점이 달라 직접 비교가 어려울 수 있다는 조건입니다.", "canonicalHref": "/economics/institutions/how-to-read-a-country#comparison"},
-  "country-hypothesis-test": {"id": "country-hypothesis-test", "kind": "concept", "domain": "economics", "label": "국가 이야기의 검증 질문", "definition": "한 나라에 붙인 서사를 권리·재정·생산·자금의 관측값으로 바꾸고 반례를 찾는 방법입니다.", "canonicalHref": "/economics/institutions/how-to-read-a-country#limits"},
-  "collateral-headroom": {"id": "collateral-headroom", "kind": "concept", "domain": "economics", "label": "담보 여력", "definition": "시가로 평가한 담보 가치에서 계약이 요구하는 유지 담보를 뺀 여유이며, 가격 하락이나 담보 할인율 변경 때 먼저 소진됩니다.", "canonicalHref": "/finance/risk/margin-collateral-and-leverage#mechanism"},
+  "country-seven-ledgers": {"id": "country-seven-ledgers", "kind": "concept", "domain": "economics", "label": "국가의 일곱 장부", "definition": "정치·법, 예산, 생산, 대외 거래, 생활 서비스, 정보, 기대를 나눈 뒤 결정권·돈·위험을 잇는 비교 틀입니다.", "canonicalHref": "/economics/institutions/how-to-read-a-country#mechanism"},
+  "country-data-comparability": {"id": "country-data-comparability", "kind": "concept", "domain": "economics", "label": "국가 통계의 비교 가능성", "definition": "관측 시점·가격 기준·통화·포함 지역이 같은지 확인한 뒤 숫자를 비교하는 조건입니다.", "canonicalHref": "/economics/institutions/how-to-read-a-country#comparison"},
+  "country-hypothesis-test": {"id": "country-hypothesis-test", "kind": "concept", "domain": "economics", "label": "국가 이야기의 검증 질문", "definition": "나라에 관한 주장을 구체적 관측값과 대안 설명으로 바꾸어 검증하는 방법입니다.", "canonicalHref": "/economics/institutions/how-to-read-a-country#limits"},
+  "collateral-headroom": {
+    "id": "collateral-headroom",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "담보 여력",
+    "definition": "시가로 평가한 담보 가치에서 계약이 요구하는 유지 담보를 뺀 여유이며, 가격 하락이나 담보 할인율 변경 때 먼저 소진됩니다.",
+    "canonicalHref": "/finance/risk/margin-collateral-and-leverage#mechanism"
+  },
   "grid-connection-constraint": {"id": "grid-connection-constraint", "kind": "concept", "domain": "economics", "label": "전력망 접속 제약", "definition": "발전이나 수요 설비가 있어도 연결 가능한 송배전 용량과 인허가가 부족하면 전기를 주고받지 못하는 조건입니다.", "canonicalHref": "/economics/infrastructure/electricity-grid-and-power#mechanism"},
   "electricity-system-cost": {"id": "electricity-system-cost", "kind": "concept", "domain": "economics", "label": "전력 시스템 비용", "definition": "발전비뿐 아니라 망·운영·예비력·저장 비용을 합쳐 최종 공급에 필요한 자원을 보는 장부입니다.", "canonicalHref": "/economics/infrastructure/electricity-grid-and-power#comparison"},
   "power-price-reliability-boundary": {"id": "power-price-reliability-boundary", "kind": "concept", "domain": "economics", "label": "전력 가격과 공급 안정성의 경계", "definition": "낮은 평균 요금이 피크 시간 공급과 접속 권리까지 보장하지 않는다는 확인 기준입니다.", "canonicalHref": "/economics/infrastructure/electricity-grid-and-power#limits"},
@@ -27030,6 +27659,421 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "attention-allocation": {"id": "attention-allocation", "kind": "concept", "domain": "economics", "label": "주목의 배분", "definition": "많은 정보 중 플랫폼·편집자가 제한된 화면과 시간을 어떤 주장에 줄지 결정하는 과정입니다.", "canonicalHref": "/economics/institutions/media-attention-and-public-belief#mechanism"},
   "media-revenue-incentive": {"id": "media-revenue-incentive", "kind": "concept", "domain": "economics", "label": "정보 매체의 수익 유인", "definition": "취재·제작 비용을 구독·광고·후원으로 회수하는 방식이 콘텐츠 선택에 미치는 조건입니다.", "canonicalHref": "/economics/institutions/media-attention-and-public-belief#comparison"},
   "belief-causality-boundary": {"id": "belief-causality-boundary", "kind": "concept", "domain": "economics", "label": "인식 변화의 인과 경계", "definition": "노출·신뢰·행동의 순서를 관찰해 유행을 원인으로 오인하지 않는 검증 기준입니다.", "canonicalHref": "/economics/institutions/media-attention-and-public-belief#limits"},
+  "shop-stock-reconciliation": {
+    "id": "shop-stock-reconciliation",
+    "kind": "method",
+    "domain": "economics",
+    "label": "점포의 재고실사",
+    "definition": "시작10+입고15−판매20−폐기1=잔여4로 실제4개와 맞춥니다. 수량 대조만으로 식품의 안전과 사용 가능 가치를 보장할 수 없습니다.",
+    "canonicalHref": "/economics/business/shop-daily-operations#mechanism"
+  },
+  "shop-payout-reconciliation": {
+    "id": "shop-payout-reconciliation",
+    "kind": "method",
+    "domain": "economics",
+    "label": "점포의 매출 정산 대조",
+    "definition": "고객결제16만−수수료3천200=입금15만6천800원을 같은 주문과 지급일로 맞춥니다. 결제방식별 할인·환불·보류·조정과 지급기한은 계약마다 다릅니다.",
+    "canonicalHref": "/economics/business/shop-daily-operations#mechanism"
+  },
+  "shop-payroll-reconciliation": {
+    "id": "shop-payroll-reconciliation",
+    "kind": "method",
+    "domain": "economics",
+    "label": "점포의 근무·급여 대조",
+    "definition": "직원4시간 기록에서 임금률·수당·공제를 적용해 실제 지급과 명세서를 맞춥니다. 임금률·수당·보험·보관기한은 현지 적용법과 고용형태를 확인해야 합니다.",
+    "canonicalHref": "/economics/business/shop-daily-operations#mechanism"
+  },
+  "population-stock-flow-account": {"id": "population-stock-flow-account", "kind": "concept", "domain": "economics", "label": "인구의 잔액과 출입", "definition": "같은 거주지와 기간에서 처음 인구에 출생·전입을 더하고 사망·전출을 빼 마지막 인구를 계산하는 장부입니다.", "canonicalHref": "/economics/institutions/population-migration-and-care#mechanism"},
+  "age-structure-employment-boundary": {"id": "age-structure-employment-boundary", "kind": "concept", "domain": "economics", "label": "연령 구성과 실제 고용의 구분", "definition": "특정 나이 구간의 인구와 실제 일하는 사람·시간을 분리해 부양 부담을 판단하는 조건입니다.", "canonicalHref": "/economics/institutions/population-migration-and-care#names"},
+  "care-time-labor-capacity": {"id": "care-time-labor-capacity", "kind": "concept", "domain": "economics", "label": "돌봄시간과 노동 참여", "definition": "유급·무급 돌봄의 필요시간과 공급을 고려해 가계의 유급 노동 가능시간과 서비스 부담을 계산하는 관점입니다.", "canonicalHref": "/economics/institutions/population-migration-and-care#comparison"},
+  "social-norm-expectations": {"id": "social-norm-expectations", "kind": "concept", "domain": "economics", "label": "사회 규범과 서로의 기대", "definition": "다른 사람이 어떻게 행동하고 무엇을 해야 한다고 여길지에 대한 공유된 기대가 행동에 영향을 주는 구조입니다.", "canonicalHref": "/economics/institutions/culture-norms-and-coordination#names"},
+  "collective-action-monitoring": {"id": "collective-action-monitoring", "kind": "concept", "domain": "economics", "label": "공동 행동의 관찰과 집행", "definition": "여러 사람이 함께 얻는 결과를 위해 분담·기록·의사결정·분쟁해결을 마련하는 과정입니다.", "canonicalHref": "/economics/institutions/culture-norms-and-coordination#mechanism"},
+  "cultural-rights-institution-boundary": {"id": "cultural-rights-institution-boundary", "kind": "concept", "domain": "economics", "label": "문화의 다양성과 권리의 경계", "definition": "서로 다른 관행을 이해하되 문화라는 이유로 사람의 권리 침해를 정당화하지 않는 원칙입니다.", "canonicalHref": "/economics/institutions/culture-norms-and-coordination#comparison"},
+  "measurement-repeatability-boundary": {"id": "measurement-repeatability-boundary", "kind": "concept", "domain": "statistics", "label": "측정의 반복성과 불확실성", "definition": "같은 조건에서 수치가 비슷하게 나오는 성질과 결과의 가능한 차이를 평가하는 불확실성을 구분하는 기준입니다.", "canonicalHref": "/economics/institutions/evidence-measurement-and-causality#source"},
+  "counterfactual-comparison-design": {"id": "counterfactual-comparison-design", "kind": "concept", "domain": "statistics", "label": "원인 판단을 위한 비교 설계", "definition": "개입한 집단이 개입 없이 어떻게 되었을지를 적절한 비교와 가정으로 평가하는 방법입니다.", "canonicalHref": "/economics/institutions/evidence-measurement-and-causality#mechanism"},
+  "evidence-scope-and-replication": {"id": "evidence-scope-and-replication", "kind": "concept", "domain": "statistics", "label": "증거 범위와 재검증", "definition": "대상·기간·측정·분석을 공개하고 다른 조건에서 다시 확인해 주장의 적용 범위를 정하는 원칙입니다.", "canonicalHref": "/economics/institutions/evidence-measurement-and-causality#limits"},
+  "collection-recovery-yield": {"id": "collection-recovery-yield", "kind": "concept", "domain": "economics", "label": "수거량과 재료 회수 수율", "definition": "버려진 양 가운데 모은 양과 그중 다시 쓸 수 있는 재료가 된 양을 각각의 분모로 계산하는 기준입니다.", "canonicalHref": "/economics/infrastructure/materials-waste-and-circularity#mechanism"},
+  "waste-financing-responsibility": {"id": "waste-financing-responsibility", "kind": "concept", "domain": "economics", "label": "폐기물 처리의 비용과 부담", "definition": "수거·선별·재처리·잔여물 처리의 실물 비용과 판매수입·요금·생산자 부담 등 재원을 구분하는 장부입니다.", "canonicalHref": "/economics/infrastructure/materials-waste-and-circularity#comparison"},
+  "circularity-displacement-boundary": {"id": "circularity-displacement-boundary", "kind": "concept", "domain": "economics", "label": "순환과 신규 원료 대체의 경계", "definition": "회수 재료가 같은 기능과 품질의 새 원료를 얼마나 실제로 대신했는지 전체 수요와 함께 검증하는 조건입니다.", "canonicalHref": "/economics/infrastructure/materials-waste-and-circularity#limits"},
+  "amd-wavefront-execution": {
+    "id": "amd-wavefront-execution",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "AMD wavefront·CU execution",
+    "definition": "CDNA의 64개 wavefront와 HIP에서 지원하는 RDNA의 32개 실행 단위를 구별하고, workgroup의 작업이 CU에서 명령으로 진행되는 구조입니다.",
+    "canonicalHref": "/cs/gpu/amd-gpu-execution-and-hip#names"
+  },
+  "amd-register-lds-residency": {
+    "id": "amd-register-lds-residency",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "AMD registers·LDS resource bound",
+    "definition": "작업별 VGPR, wave 공통 SGPR과 명시적 공유 공간 LDS가 상주 작업 수와 spill·bank 경합을 제약하는 구조입니다. CDNA4의 LDS 160KB를 CDNA3의 64KB와 구별합니다.",
+    "canonicalHref": "/cs/gpu/amd-gpu-execution-and-hip#mechanism"
+  },
+  "hip-source-portability": {
+    "id": "hip-source-portability",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "HIP source portability",
+    "definition": "CUDA와 HIP에서 배열의 역할, 번호와 API를 맞춘 뒤 warpSize·mask·동기화·라이브러리·기계 명령의 차이를 별도로 검증하는 소스 이식 절차입니다.",
+    "canonicalHref": "/cs/gpu/amd-gpu-execution-and-hip#comparison"
+  },
+  "amd-matrix-instruction-family": {
+    "id": "amd-matrix-instruction-family",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "AMD MFMA·WMMA instruction families",
+    "definition": "CDNA의 MFMA와 RDNA의 WMMA 명령을 상위 rocWMMA API와 구별하고, target·dtype·shape별 지원 조건과 실제 명령을 확인하는 방법입니다.",
+    "canonicalHref": "/cs/gpu/amd-gpu-execution-and-hip#comparison"
+  },
+  "hbm-stack-tsv-interface": {
+    "id": "hbm-stack-tsv-interface",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "HBM stack·TSV·interface width",
+    "definition": "HBM의 적층 용량, 수직 TSV, 칩 사이 interposer와 외부 데이터 폭을 구별하는 구조입니다. 외부 폭에 pin당 전송률을 곱하고 8로 나누어 스택당 이론 대역폭을 계산합니다.",
+    "canonicalHref": "/cs/gpu/hbm-stack-and-memory-requests#names"
+  },
+  "hbm-channel-bank-row-refresh": {
+    "id": "hbm-channel-bank-row-refresh",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "HBM channel·bank·row·refresh",
+    "definition": "메모리 제어기가 channel과 bank를 선택하고 행을 연 뒤 필요한 열을 읽는 DRAM 접근 경로입니다. 열린 행의 상태와 refresh 제약을 함께 지켜야 합니다.",
+    "canonicalHref": "/cs/gpu/hbm-stack-and-memory-requests#mechanism"
+  },
+  "hbm-address-mapping-boundary": {
+    "id": "hbm-address-mapping-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "HBM request·physical mapping boundary",
+    "definition": "프로그램의 논리 주소와 sector 요청이 cache·controller를 거쳐 실제 HBM 명령으로 변환되는 경계입니다. 공개되지 않은 주소 bit 매핑은 숫자만으로 추정하지 않습니다.",
+    "canonicalHref": "/cs/gpu/hbm-stack-and-memory-requests#mechanism"
+  },
+  "financial-product-claim-map": {
+    "id": "financial-product-claim-map",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "금융상품의 지급 청구권 지도",
+    "definition": "금융상품을 판매 창구 대신 법적 지급자·지급 조건·손실 부담·중도 인출 조건으로 구분하는 방법입니다.",
+    "canonicalHref": "/finance/markets/financial-products-and-claims#names"
+  },
+  "loan-repayment-schedule": {
+    "id": "loan-repayment-schedule",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "대출의 상환 일정과 총이자",
+    "definition": "동일한 연이율에서도 남은 원금이 줄어드는 시점에 따라 이자와 월별 현금 부담이 달라지는 구조입니다.",
+    "canonicalHref": "/finance/markets/financial-products-and-claims#mechanism"
+  },
+  "retirement-wrapper-risk": {
+    "id": "retirement-wrapper-risk",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "연금의 지급 약속과 계좌 자산 위험",
+    "definition": "급여 산식을 약속하는 DB와 적립액·운용 결과가 급여에 반영되는 DC 및 개인 계좌의 법적 포장을 구별하는 틀입니다.",
+    "canonicalHref": "/finance/markets/financial-products-and-claims#source"
+  },
+  "securitization-asset-transfer": {
+    "id": "securitization-asset-transfer",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "유동화의 자산 이전",
+    "definition": "대출 등에서 받을 현금흐름의 권리를 별도 기구로 이전하고 그 권리를 바탕으로 증권을 발행하는 구조입니다.",
+    "canonicalHref": "/finance/markets/securitization-and-tranches#names"
+  },
+  "securitization-loss-waterfall": {
+    "id": "securitization-loss-waterfall",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "유동화의 손실 배분 순서",
+    "definition": "동일 자산에서 발생한 손실을 후순위에서 선순위로 정해진 순서에 따라 배분하는 구조입니다.",
+    "canonicalHref": "/finance/markets/securitization-and-tranches#mechanism"
+  },
+  "securitization-correlation-risk": {
+    "id": "securitization-correlation-risk",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "유동화의 동시 부도 위험",
+    "definition": "여러 대출이 공통 경기·가격 충격에 의존하면 함께 부도나서 후순위 완충을 넘어 선순위까지 손실이 닿을 수 있는 위험입니다.",
+    "canonicalHref": "/finance/markets/securitization-and-tranches#limits"
+  },
+  "repo-repurchase-cashflow": {
+    "id": "repo-repurchase-cashflow",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "레포의 매도와 환매 현금흐름",
+    "definition": "증권을 현금과 교환한 뒤 약정한 미래 가격에 되사는 계약의 경제적 단기 담보조달 구조입니다.",
+    "canonicalHref": "/finance/banking/repo-and-collateral-funding#names"
+  },
+  "repo-haircut-funding": {
+    "id": "repo-haircut-funding",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "레포 헤어컷과 조달액",
+    "definition": "담보 시장가치에서 일정 비율을 공제해 현금 조달액을 정하고 가격과 공제율 변화에 따라 부족액을 계산하는 방식입니다.",
+    "canonicalHref": "/finance/banking/repo-and-collateral-funding#mechanism"
+  },
+  "repo-rollover-risk": {
+    "id": "repo-rollover-risk",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "레포의 만기 연장 위험",
+    "definition": "자산의 보유기간보다 짧은 자금계약을 반복할 때 연장 거절로 원금을 즉시 갚아야 하는 위험입니다.",
+    "canonicalHref": "/finance/banking/repo-and-collateral-funding#limits"
+  },
+  "covered-call-payoff": {
+    "id": "covered-call-payoff",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "커버드콜의 제한된 상승과 남는 하락",
+    "definition": "보유 주식에 대응하는 콜을 팔아 받은 대가만큼 일부 하락을 메우고 행사가격 위의 상승분을 넘기는 손익 구조입니다.",
+    "canonicalHref": "/finance/markets/covered-calls-and-income-funds#mechanism"
+  },
+  "income-distribution-total-return": {
+    "id": "income-distribution-total-return",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "분배금과 총수익의 구분",
+    "definition": "투자자가 받은 현금과 남은 자산 가치를 더해 투자 성과를 계산하고 분배율·자본환급 분류와 구분하는 방법입니다.",
+    "canonicalHref": "/finance/markets/covered-calls-and-income-funds#mechanism"
+  },
+  "covered-call-coverage-choice": {
+    "id": "covered-call-coverage-choice",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "커버드콜의 매도 비율·행사가·만기",
+    "definition": "보유 수량 중 얼마나 어떤 가격과 만기로 팔 의무를 걸었는지가 프리미엄과 상승 참여를 바꾸는 계약 선택입니다.",
+    "canonicalHref": "/finance/markets/covered-calls-and-income-funds#comparison"
+  },
+  "futures-roll-convergence": {
+    "id": "futures-roll-convergence",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "선물 만기 교체와 가격 수렴",
+    "definition": "만기를 이어 가기 위해 계약을 교체할 때 새 계약 가격의 수렴 경로가 현물과 다른 손익을 만드는 구조입니다.",
+    "canonicalHref": "/finance/markets/forwards-and-futures#mechanism"
+  },
+  "synthetic-etf-counterparty": {
+    "id": "synthetic-etf-counterparty",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "합성 ETF의 계약 상대방 위험",
+    "definition": "펀드 지분을 소유하되 내부에서 스왑 등으로 지수 성과를 받으면 펀드 자산에 계약 상대방의 지급 위험이 포함되는 구조입니다.",
+    "canonicalHref": "/finance/markets/funds-etfs-and-etns#limits"
+  },
+  "structured-note-conditional-payoff": {
+    "id": "structured-note-conditional-payoff",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "구조화증권의 조건부 지급과 발행자 위험",
+    "definition": "발행자의 채무에 참여율·수익 상한·가격 문턱 등 파생 조건을 결합해 만기 지급액을 바꾸는 구조입니다.",
+    "canonicalHref": "/finance/markets/financial-products-and-claims#source"
+  },
+  "money-market-fund-claim": {
+    "id": "money-market-fund-claim",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "MMF의 단기자산 지분과 환매 위험",
+    "definition": "단기 금융자산 수익을 받는 펀드 지분으로서 예금 지급 약속과 다른 손실·현금화 조건을 가지는 구조입니다.",
+    "canonicalHref": "/finance/markets/financial-products-and-claims#limits"
+  },
+  "target-date-glide-path": {
+    "id": "target-date-glide-path",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "타깃데이트펀드의 배분 변화",
+    "definition": "목표 연도에 맞춰 주식과 채권 등 자산 배분을 바꾸는 펀드 운용 경로입니다.",
+    "canonicalHref": "/finance/markets/financial-products-and-claims#source"
+  },
+  "reit-cashflow-claim": {
+    "id": "reit-cashflow-claim",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "리츠의 비용 이후 지급 재원",
+    "definition": "부동산과 관련 금융에서 생긴 수입으로 부채·운영·투자를 지출한 뒤 주주에게 현금을 분배하는 구조입니다.",
+    "canonicalHref": "/finance/markets/financial-products-and-claims#limits"
+  },
+  "robinhood-staged-finality": {
+    "id": "robinhood-staged-finality",
+    "canonicalHref": "/cs/blockchain/robinhood-chain-settlement#names",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Robinhood Chain의 단계별 확정",
+    "definition": "빠른 실행 확인과 Ethereum 자료 확정은 다른 단계입니다. 통상 지연은 지급기한 보장이 아니며 상품 권리도 별도입니다."
+  },
+  "robinhood-canonical-withdrawal": {
+    "id": "robinhood-canonical-withdrawal",
+    "canonicalHref": "/cs/blockchain/robinhood-chain-settlement#source",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Robinhood Chain의 인출 대기와 집행",
+    "definition": "인출 실행 가능 상태와 지급 완료 상태를 나눕니다. SDK 참조 코드와 라이브 배포 bytecode의 동일성을 주장하지 않습니다."
+  },
+  "robinhood-stock-token-rights": {
+    "id": "robinhood-stock-token-rights",
+    "canonicalHref": "/cs/blockchain/robinhood-chain-settlement#comparison",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Stock Token의 법적 권리와 수량",
+    "definition": "온체인 토큰의 수량과 기초 증권에 대한 법적 권리는 다릅니다. 가상 TOK의 canonical 인출 지원을 Stock Token에 확대하지 않습니다."
+  },
+  "glamsterdam-bal-state-diff": {
+    "id": "glamsterdam-bal-state-diff",
+    "canonicalHref": "/cs/blockchain/glamsterdam-block-execution#names",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "BAL의 거래별 상태 변화",
+    "definition": "거래 뒤 중간값을 알면 다음 작업의 준비와 검증을 나눌 수 있습니다. 목록을 받는 것만으로 실제 실행의 정확성이 증명되지는 않습니다."
+  },
+  "glamsterdam-epbs-bid-payload": {
+    "id": "glamsterdam-epbs-bid-payload",
+    "canonicalHref": "/cs/blockchain/glamsterdam-block-execution#source",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "ePBS의 입찰과 실행 자료",
+    "definition": "내용에 대한 서명한 약속과 실제 내용을 따로 전달합니다. 진행 중 명세의 snapshot이며 메인넷 배포 사양으로 단정하지 않습니다."
+  },
+  "glamsterdam-payload-execution-validation": {
+    "id": "glamsterdam-payload-execution-validation",
+    "canonicalHref": "/cs/blockchain/glamsterdam-block-execution#comparison",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "자료 도착과 실행 검증의 분리",
+    "definition": "도착 확인과 실제 상태 전이 검증은 다른 검사입니다. 실측 처리량과 가용성·보안 가정은 별도 검증이 필요합니다."
+  },
+  "attention-conditional-rescaling": {
+    "id": "attention-conditional-rescaling",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "조건부 softmax 기준 갱신",
+    "definition": "같은 기준으로 분자와 분모를 누적하되 수치적으로 안전한 구간에서는 최대값 기준의 재조정을 생략하는 방식입니다.",
+    "canonicalHref": "/cs/ai/flash-attention-io-aware-kernel#comparison"
+  },
+  "independent-memory-erase-write": {
+    "id": "independent-memory-erase-write",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "기억의 독립 erase·write gate",
+    "definition": "key축에서 지울 기존 읽기와 value축에서 새로 쓸 값을 다른 gate로 조절하는 기억 갱신입니다.",
+    "canonicalHref": "/cs/ai/fast-weight-memory-and-chunkwise-recurrence#comparison"
+  },
+  "action-conditioned-latent-dynamics": {
+    "id": "action-conditioned-latent-dynamics",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "행동 조건부 latent 동역학",
+    "definition": "현재 관측의 숫자 표현과 후보 행동을 입력으로 받아 다음 상태의 표현을 예측하는 모델입니다.",
+    "canonicalHref": "/cs/ai/world-model-latent-planning#names"
+  },
+  "world-model-receding-horizon-planning": {
+    "id": "world-model-receding-horizon-planning",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "월드모델의 관측·재계획",
+    "definition": "후보 행동의 예측 비용을 비교해 선택하고 일부를 실행한 뒤 실제 관측에서 다시 계획하는 과정입니다.",
+    "canonicalHref": "/cs/ai/world-model-latent-planning#mechanism"
+  },
+  "latent-collapse-prevention": {
+    "id": "latent-collapse-prevention",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Latent 표현 붕괴 방지",
+    "definition": "모든 관측을 같은 표현으로 만들어 예측 목적만 쉽게 만족하는 해를 제한하고 구별 가능한 상태 정보를 유지하려는 학습 조건입니다.",
+    "canonicalHref": "/cs/ai/world-model-latent-planning#comparison"
+  },
+  "world-model-planning-evaluation": {
+    "id": "world-model-planning-evaluation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "월드모델의 계획 성능 평가",
+    "definition": "예측 표현의 오차와 실제 행동으로 목표를 달성하는 성공률을 분리하고 horizon·환경·계산 예산을 고정해 검증하는 방법입니다.",
+    "canonicalHref": "/cs/ai/world-model-latent-planning#limits"
+  },
+  "constrained-reed-solomon-query": {
+    "id": "constrained-reed-solomon-query",
+    "canonicalHref": "/cs/crypto/fri#source",
+    "definition": "낮은 차수 조건에 평가나 선형 함수의 제약을 함께 묶습니다.",
+    "label": "제약이 붙은 Reed–Solomon 평가 질문",
+    "kind": "method",
+    "domain": "computer-science"
+  },
+  "one-hot-memory-increment-check": {
+    "id": "one-hot-memory-increment-check",
+    "canonicalHref": "/cs/crypto/jolt#artifact",
+    "definition": "한 주소의 선택과 값의 변화량을 연결해 메모리 읽기·쓰기를 검사합니다.",
+    "label": "주소 선택과 변화량을 이용한 메모리 검사",
+    "kind": "method",
+    "domain": "computer-science"
+  },
+  "proof-memory-live-set": {
+    "id": "proof-memory-live-set",
+    "canonicalHref": "/cs/crypto/prover-memory-and-verifier-cost#mechanism",
+    "definition": "실행 시점마다 함께 남은 버퍼의 바이트를 더하여 메모리 최고점을 계산합니다.",
+    "label": "증명 생성의 동시 생존 메모리",
+    "kind": "method",
+    "domain": "computer-science"
+  },
+  "msm-window-memory-tradeoff": {
+    "id": "msm-window-memory-tradeoff",
+    "canonicalHref": "/cs/crypto/prover-memory-and-verifier-cost#source",
+    "definition": "MSM의 창을 넓히면 묶음 수는 줄어도 버킷 수가 커져 메모리가 늘 수 있습니다.",
+    "label": "MSM 창 크기와 메모리의 교환 관계",
+    "kind": "method",
+    "domain": "computer-science"
+  },
+  "evm-proof-verification-cost": {
+    "id": "evm-proof-verification-cost",
+    "canonicalHref": "/cs/crypto/prover-memory-and-verifier-cost#comparison",
+    "definition": "증거 검증의 암호 원시 연산 가스와 전체 거래 비용을 나누어 셉니다.",
+    "label": "EVM 증거 검증 원시 연산 비용",
+    "kind": "metric",
+    "domain": "computer-science"
+  },
+  "proof-wrapper-security-boundary": {
+    "id": "proof-wrapper-security-boundary",
+    "canonicalHref": "/cs/crypto/prover-memory-and-verifier-cost#limits",
+    "definition": "다른 증명으로 감싸면 최종 검증 비용과 함께 생성 비용·키·보안 가정이 바뀝니다.",
+    "label": "증명 압축 wrapper의 비용과 보안 가정",
+    "kind": "concept",
+    "domain": "computer-science"
+  },
+  "quantum-amplitude-measurement": {"id": "quantum-amplitude-measurement", "kind": "concept", "domain": "physics", "label": "진폭·간섭·측정", "definition": "양자 상태의 복소수 진폭을 변환하고, 정한 측정 기저에서 그 절댓값의 제곱을 결과 확률로 읽는 모델입니다.", "canonicalHref": "/cs/crypto/quantum-computing-and-cryptographic-risk#names"},
+  "grover-amplitude-amplification": {"id": "grover-amplitude-amplification", "kind": "concept", "domain": "computer-science", "label": "Grover의 진폭 증폭", "definition": "정답의 위상 반전과 평균에 대한 반사를 반복해 비구조적 검색의 정답 측정 확률을 높이는 방법입니다.", "canonicalHref": "/cs/crypto/quantum-computing-and-cryptographic-risk#mechanism"},
+  "shor-order-finding-cryptography": {"id": "shor-order-finding-cryptography", "kind": "concept", "domain": "computer-science", "label": "Shor의 주기 찾기와 암호 위험", "definition": "모듈러 거듭제곱의 주기 또는 군의 숨은 관계를 양자 계산으로 찾고 고전 후처리하여 인수분해·이산로그를 푸는 원리입니다.", "canonicalHref": "/cs/crypto/quantum-computing-and-cryptographic-risk#source"},
+  "quantum-logical-physical-resource-boundary": {"id": "quantum-logical-physical-resource-boundary", "kind": "concept", "domain": "computer-science", "label": "논리 자원과 물리 장치의 구분", "definition": "알고리즘의 논리 큐비트·게이트 수를 오류 정정·연결·게이트 속도 가정으로 물리 큐비트와 실행 시간에 대응시키는 분석 경계입니다.", "canonicalHref": "/cs/crypto/quantum-computing-and-cryptographic-risk#comparison"},
+  "module-lwe-noisy-equations": {"id": "module-lwe-noisy-equations", "kind": "concept", "domain": "computer-science", "label": "오류를 섞은 모듈 격자 방정식", "definition": "공개 행렬과 비밀 벡터의 곱에 작은 오류를 더한 관계를 이용하는 문제이며, ML-KEM에서는 그 성분이 다항식인 모듈 구조를 사용합니다.", "canonicalHref": "/cs/crypto/ml-kem-and-noisy-equations#names"},
+  "ml-kem-noise-cancellation": {"id": "ml-kem-noise-cancellation", "kind": "concept", "domain": "computer-science", "label": "암호문에서 큰 항을 상쇄하고 비트 읽기", "definition": "송신자의 임시 비밀과 수신자의 비밀이 만든 공통 곱을 상쇄한 뒤 남은 작은 오류에서 메시지 비트를 복원하는 원리입니다.", "canonicalHref": "/cs/crypto/ml-kem-and-noisy-equations#mechanism"},
+  "kem-encapsulation-and-rejection": {"id": "kem-encapsulation-and-rejection", "kind": "concept", "domain": "computer-science", "label": "키 캡슐화와 암묵적 거절", "definition": "새 공유 비밀과 캡슐을 만들고, 수신자가 복원·재암호화 일치 검사로 정상 키 또는 비밀 대체 키를 선택하는 KEM 절차입니다.", "canonicalHref": "/cs/crypto/ml-kem-and-noisy-equations#source"},
+  "ml-dsa-masked-response": {"id": "ml-dsa-masked-response", "kind": "concept", "domain": "computer-science", "label": "ML-DSA의 가린 응답과 재구성", "definition": "비밀 벡터에 challenge를 곱한 값을 새 마스크와 합쳐 응답을 만들고, 공개 관계로 약속의 높은 부분을 재구성해 challenge를 확인하는 서명 원리입니다.", "canonicalHref": "/cs/crypto/post-quantum-signatures#mechanism"},
+  "ml-dsa-rejection-and-hints": {"id": "ml-dsa-rejection-and-hints", "kind": "concept", "domain": "computer-science", "label": "서명 후보 거절과 제한된 힌트", "definition": "비밀에 따라 치우친 응답이나 복원 불일치가 드러나지 않도록 후보를 거절하고, 공개 키 반올림의 영향을 복원하는 제한된 힌트를 포함하는 절차입니다.", "canonicalHref": "/cs/crypto/post-quantum-signatures#source"},
+  "slh-dsa-hash-tree-signatures": {"id": "slh-dsa-hash-tree-signatures", "kind": "concept", "domain": "computer-science", "label": "SLH-DSA의 해시 사슬과 인증 경로", "definition": "일회용 서명 요소를 해시 사슬과 여러 나무에 결속하고 공개 루트까지의 경로를 검증하는 상태 비보존형 해시 기반 서명입니다.", "canonicalHref": "/cs/crypto/post-quantum-signatures#comparison"},
+  "post-quantum-signature-deployment": {"id": "post-quantum-signature-deployment", "kind": "concept", "domain": "computer-science", "label": "양자내성 서명 배포와 교체 경계", "definition": "표준의 서명 형식·context·검증 비용·업데이트 권한과 인증 체계를 함께 확인하여 키 교체가 실제 권한 경로에 반영되는지 판단하는 절차입니다.", "canonicalHref": "/cs/crypto/post-quantum-signatures#limits"},
+  "qkd-bb84-basis-sifting": {
+    "id": "qkd-bb84-basis-sifting",
+    "kind": "concept",
+    "domain": "physics",
+    "label": "BB84의 기저 선택과 선별",
+    "definition": "같은 기저의 기록만 남기고, 지정 도청 모형에서 오류가 생기는 조건부 확률을 계산합니다.",
+    "canonicalHref": "/cs/crypto/quantum-key-distribution#source"
+  },
+  "qkd-finite-key-information-budget": {
+    "id": "qkd-finite-key-information-budget",
+    "kind": "concept",
+    "domain": "statistics",
+    "label": "유한 표본과 공개 누출을 반영한 키 길이",
+    "definition": "검사 표본·정정 누출·검증·추출 여유를 반영해 실제 내보낼 키 길이를 판단합니다.",
+    "canonicalHref": "/cs/crypto/quantum-key-distribution#comparison"
+  },
+  "qkd-authenticated-device-boundary": {
+    "id": "qkd-authenticated-device-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "QKD의 인증과 장치 신뢰 조건",
+    "definition": "공개 대화의 인증과 광원·검출기·중계소의 신뢰 가정을 구분합니다.",
+    "canonicalHref": "/cs/crypto/quantum-key-distribution#limits"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -50230,7 +51274,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   {"to": "supply-chain-policy-transmission", "relation": "produces", "reason": "공급망의 협상력 지점의 결과를 확인해야 정책의 공급망 전달이 어디서 생기는지 같은 사례로 추적할 수 있습니다.", "from": "supply-chain-bargaining-node"},
   {"to": "fund-share-vs-note", "relation": "extends", "reason": "주식의 잔여청구권을 이 글의 펀드 지분과 발행자 채무 사례로 확장해 장부를 연결합니다.", "from": "residual-claim"},
   {"to": "etf-nav-market-gap", "relation": "produces", "reason": "펀드 지분과 발행자 채무의 결과를 확인해야 ETF 시장가격과 순자산가치 괴리가 어디서 생기는지 같은 사례로 추적할 수 있습니다.", "from": "fund-share-vs-note"},
-  {"to": "leveraged-etf-reset", "relation": "produces", "reason": "ETF 시장가격과 순자산가치 괴리의 결과를 확인해야 레버리지 ETF의 일일 재설정이 어디서 생기는지 같은 사례로 추적할 수 있습니다.", "from": "etf-nav-market-gap"},
+  {"from":"etf-nav-market-gap","to":"leveraged-etf-reset","relation":"contrasts","reason":"NAV 대비 체결가 차이와 일일 노출 재설정은 ETF의 서로 다른 수익 경로이며 하나가 다른 하나를 발생시키지 않습니다."},
   {"to": "forward-futures-symmetric-payoff", "relation": "extends", "reason": "미래 현금흐름과 현재 가격의 관계를 이 글의 선도·선물의 대칭 손익 사례로 확장해 장부를 연결합니다.", "from": "bond-cashflow-pricing"},
   {"to": "futures-daily-settlement", "relation": "produces", "reason": "선도·선물의 대칭 손익의 결과를 확인해야 선물의 일별 정산이 어디서 생기는지 같은 사례로 추적할 수 있습니다.", "from": "forward-futures-symmetric-payoff"},
   {"to": "basis-risk-in-hedging", "relation": "produces", "reason": "선물의 일별 정산의 결과를 확인해야 헤지의 베이시스 위험이 어디서 생기는지 같은 사례로 추적할 수 있습니다.", "from": "futures-daily-settlement"},
@@ -50276,6 +51320,384 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   {"to": "education-return-boundary", "relation": "produces", "reason": "자격의 신호 효과의 결과를 확인해야 교육 수익 계산의 한계가 어디서 생기는지 같은 사례로 추적할 수 있습니다.", "from": "education-signal"},
   {"to": "media-revenue-incentive", "relation": "produces", "reason": "주목의 배분의 결과를 확인해야 정보 매체의 수익 유인이 어디서 생기는지 같은 사례로 추적할 수 있습니다.", "from": "attention-allocation"},
   {"to": "belief-causality-boundary", "relation": "produces", "reason": "정보 매체의 수익 유인의 결과를 확인해야 인식 변화의 인과 경계가 어디서 생기는지 같은 사례로 추적할 수 있습니다.", "from": "media-revenue-incentive"},
+  {
+    "from": "shop-contribution-margin",
+    "to": "shop-stock-reconciliation",
+    "relation": "prerequisite",
+    "reason": "건당 남는 돈을 계산하려면 실제 사용과 폐기를 나누어 원가를 맞춰야 합니다."
+  },
+  {
+    "from": "working-capital-gap",
+    "to": "shop-payout-reconciliation",
+    "relation": "prerequisite",
+    "reason": "주문과 입금의 시점 차이를 이해한 뒤 정산 대상과 지급일을 대조합니다."
+  },
+  {
+    "from": "shop-stock-reconciliation",
+    "to": "shop-payout-reconciliation",
+    "relation": "evaluates",
+    "reason": "재고 출고와 판매 주문을 맞추어 입금 대상 주문의 누락을 확인합니다."
+  },
+  {
+    "from": "shop-payroll-reconciliation",
+    "to": "shop-contribution-margin",
+    "relation": "constrains",
+    "reason": "실제 근무와 지급의무가 주문별 기여 뒤 남는 점포 현금을 제한합니다."
+  },
+  {"from": "country-seven-ledgers", "to": "country-data-comparability", "relation": "extends", "reason": "숫자를 나란히 놓기 전에 무엇을 셌는지 맞춥니다."},
+  {"from": "country-data-comparability", "to": "country-hypothesis-test", "relation": "extends", "reason": "위기라는 말이 맞을 때 먼저 달라질 장부를 고릅니다."},
+  {"from": "population-stock-flow-account", "to": "age-structure-employment-boundary", "relation": "extends", "reason": "나이로 나눈 60명 모두가 같은 시간을 일한다고 가정하지 않습니다."},
+  {"from": "age-structure-employment-boundary", "to": "care-time-labor-capacity", "relation": "extends", "reason": "돈을 받지 않는 돌봄도 누군가의 시간과 일을 필요로 합니다."},
+  {"from": "age-structure-employment-boundary", "to": "country-seven-ledgers", "relation": "extends", "reason": "국가의 생활·생산 장부를 인구 구성과 실제 취업시간으로 채웁니다."},
+  {"from": "social-norm-expectations", "to": "collective-action-monitoring", "relation": "extends", "reason": "깨끗한 시장의 혜택을 받는 것과 비용을 내는 것을 따로 관찰합니다."},
+  {"from": "collective-action-monitoring", "to": "cultural-rights-institution-boundary", "relation": "extends", "reason": "협력을 잘 만든 규칙도 참여자의 권리를 따로 확인해야 합니다."},
+  {"from": "social-norm-expectations", "to": "country-seven-ledgers", "relation": "extends", "reason": "국가의 정보·기대 장부를 공동체의 구체적 관행과 관측으로 확장합니다."},
+  {"from": "measurement-repeatability-boundary", "to": "counterfactual-comparison-design", "relation": "extends", "reason": "개입 뒤의 변화에서 개입 없이도 생겼을 변화를 구분합니다."},
+  {"from": "counterfactual-comparison-design", "to": "evidence-scope-and-replication", "relation": "extends", "reason": "20가구의 결과가 공장과 모든 계절에서도 같을지는 별도 질문입니다."},
+  {"from": "counterfactual-comparison-design", "to": "policy-price-causality-boundary", "relation": "prerequisite", "reason": "정책 발표와 시장가격의 동시 변화를 원인으로 해석하기 전에 비교의 전제를 알아야 합니다."},
+  {"from": "collection-recovery-yield", "to": "waste-financing-responsibility", "relation": "extends", "reason": "누가 돈을 내는지를 바꿔도 처리에 쓰는 자원이 사라지지 않습니다."},
+  {"from": "waste-financing-responsibility", "to": "circularity-displacement-boundary", "relation": "extends", "reason": "재생재료가 늘어도 전체 생산이 더 빨리 늘면 새 원료 사용도 늘 수 있습니다."},
+  {"from": "collection-recovery-yield", "to": "country-seven-ledgers", "relation": "extends", "reason": "생산 장부의 원료 시작점과 사용 뒤 처리 비용까지 연결합니다."},
+  {
+    "from": "cuda-host-device-kernel-lifecycle",
+    "to": "amd-wavefront-execution",
+    "relation": "prerequisite",
+    "reason": "같은 입출력·launch를 유지한 채 실행 묶음만 변경합니다."
+  },
+  {
+    "from": "amd-wavefront-execution",
+    "to": "amd-register-lds-residency",
+    "relation": "prerequisite",
+    "reason": "wave와 CU 범위를 알아야 register와 LDS의 상주 제약을 계산합니다."
+  },
+  {
+    "from": "amd-register-lds-residency",
+    "to": "hip-source-portability",
+    "relation": "constrains",
+    "reason": "문법 이식 후 장치 자원에 맞는 성능 검증이 필요합니다."
+  },
+  {
+    "from": "amd-wavefront-execution",
+    "to": "amd-matrix-instruction-family",
+    "relation": "prerequisite",
+    "reason": "일반 벡터 작업과 협력 행렬 명령의 참여 범위를 구분합니다."
+  },
+  {
+    "from": "gpu-memory-transaction-sector",
+    "to": "hbm-address-mapping-boundary",
+    "relation": "prerequisite",
+    "reason": "요청 조각 수와 HBM 명령 수의 관측 경계를 나눕니다."
+  },
+  {
+    "from": "hbm-stack-tsv-interface",
+    "to": "hbm-channel-bank-row-refresh",
+    "relation": "prerequisite",
+    "reason": "물리 통로 뒤에서 실제 읽기 명령이 진행됩니다."
+  },
+  {
+    "from": "hbm-channel-bank-row-refresh",
+    "to": "hbm-address-mapping-boundary",
+    "relation": "prerequisite",
+    "reason": "논리 주소에서 행·열까지 가려면 controller 변환이 필요합니다."
+  },
+  {
+    "from": "hbm-stack-tsv-interface",
+    "to": "gpu-memory-latency-bandwidth",
+    "relation": "extends",
+    "reason": "메모리 폭 × 신호 속도의 물리 상한을 응답 지연과 구분합니다."
+  },
+  {
+    "from": "deposit-insurance",
+    "to": "financial-product-claim-map",
+    "relation": "extends",
+    "reason": "기존 지급 권리와 장부를 금융상품은 누가 언제 무엇을 지급하는지로 구별한다의 같은 수치 사례로 확장합니다."
+  },
+  {
+    "from": "financial-product-claim-map",
+    "to": "loan-repayment-schedule",
+    "relation": "extends",
+    "reason": "기존 지급 권리와 장부를 금융상품은 누가 언제 무엇을 지급하는지로 구별한다의 같은 수치 사례로 확장합니다."
+  },
+  {
+    "from": "loan-repayment-schedule",
+    "to": "retirement-wrapper-risk",
+    "relation": "extends",
+    "reason": "기존 지급 권리와 장부를 금융상품은 누가 언제 무엇을 지급하는지로 구별한다의 같은 수치 사례로 확장합니다."
+  },
+  {
+    "from": "residual-claim",
+    "to": "securitization-asset-transfer",
+    "relation": "extends",
+    "reason": "기존 지급 권리와 장부를 유동화는 대출의 현금흐름을 옮기고 손실을 받는 순서를 나눈다의 같은 수치 사례로 확장합니다."
+  },
+  {
+    "from": "securitization-asset-transfer",
+    "to": "securitization-loss-waterfall",
+    "relation": "extends",
+    "reason": "기존 지급 권리와 장부를 유동화는 대출의 현금흐름을 옮기고 손실을 받는 순서를 나눈다의 같은 수치 사례로 확장합니다."
+  },
+  {
+    "from": "securitization-loss-waterfall",
+    "to": "securitization-correlation-risk",
+    "relation": "extends",
+    "reason": "기존 지급 권리와 장부를 유동화는 대출의 현금흐름을 옮기고 손실을 받는 순서를 나눈다의 같은 수치 사례로 확장합니다."
+  },
+  {
+    "from": "bank-balance-sheet",
+    "to": "repo-repurchase-cashflow",
+    "relation": "extends",
+    "reason": "기존 지급 권리와 장부를 레포는 증권을 맡겨 짧은 돈을 구하고 만기마다 다시 연결한다의 같은 수치 사례로 확장합니다."
+  },
+  {
+    "from": "repo-repurchase-cashflow",
+    "to": "repo-haircut-funding",
+    "relation": "extends",
+    "reason": "기존 지급 권리와 장부를 레포는 증권을 맡겨 짧은 돈을 구하고 만기마다 다시 연결한다의 같은 수치 사례로 확장합니다."
+  },
+  {
+    "from": "repo-haircut-funding",
+    "to": "repo-rollover-risk",
+    "relation": "extends",
+    "reason": "기존 지급 권리와 장부를 레포는 증권을 맡겨 짧은 돈을 구하고 만기마다 다시 연결한다의 같은 수치 사례로 확장합니다."
+  },
+  {
+    "from": "option-right-obligation",
+    "to": "covered-call-payoff",
+    "relation": "extends",
+    "reason": "100주·매수가100·행사가105·수취3에서 주가90/103/120의 손익은 −700/+600/+800달러입니다."
+  },
+  {
+    "from": "covered-call-payoff",
+    "to": "income-distribution-total-return",
+    "relation": "extends",
+    "reason": "NAV100→88·분배12이면 재투자 없는 총수익은0%입니다. 19a의0.0022+0.1745=0.1767은 분배 원천의 추정입니다."
+  },
+  {
+    "from": "covered-call-payoff",
+    "to": "covered-call-coverage-choice",
+    "relation": "extends",
+    "reason": "200주에100주 콜 하나를 팔면50%이고 주가120에서 주당손익20−7.5+1.5=14달러로100%매도의8과 다릅니다."
+  },
+  {
+    "from": "forward-futures-symmetric-payoff",
+    "to": "futures-roll-convergence",
+    "relation": "extends",
+    "reason": "밀100톤의 새 만기 가격31만5000원이 현물30만 원으로 수렴하면 매수 손익은−150만 원입니다."
+  },
+  {
+    "from": "fund-share-vs-note",
+    "to": "synthetic-etf-counterparty",
+    "relation": "extends",
+    "reason": "자산 풀의 지분이라는 ETF의 권리는 유지되지만 약정 성과의 지급 실패는 NAV를 줄일 수 있습니다. ETN의 발행자 직접 채무와 구별합니다."
+  },
+  {
+    "from": "financial-product-claim-map",
+    "to": "structured-note-conditional-payoff",
+    "relation": "extends",
+    "reason": "1000만 원·50%참여·10%상한에서 지수+30%여도1100만 원입니다. 별도60%문턱 가정에서는61%→1060만,59%→590만입니다."
+  },
+  {
+    "from": "fund-share-vs-note",
+    "to": "money-market-fund-claim",
+    "relation": "extends",
+    "reason": "1000만 원의 MMF 지분이995만 원이 되면5만 원 손실이며 같은 판매 창구의 예금보호로 메우지 않습니다."
+  },
+  {
+    "from": "retirement-wrapper-risk",
+    "to": "target-date-glide-path",
+    "relation": "extends",
+    "reason": "주식비중80%와40%에서 주가−20%·채권0%를 가정하면 손실은 각각16%와8%입니다."
+  },
+  {
+    "from": "residual-claim",
+    "to": "reit-cashflow-claim",
+    "relation": "extends",
+    "reason": "가정한 임대료100−운영30−이자20−수선25=잔여현금25입니다."
+  },
+  {
+    "to": "robinhood-canonical-withdrawal",
+    "relation": "constrains",
+    "reason": "자료 확정과 인출 집행의 다른 조건을 구분합니다.",
+    "from": "robinhood-staged-finality"
+  },
+  {
+    "to": "robinhood-stock-token-rights",
+    "relation": "extends",
+    "reason": "일반 토큰 권리 구분을 RHJ 채무증권에 적용합니다.",
+    "from": "rwa-legal-claim-asset-linkage"
+  },
+  {
+    "to": "robinhood-stock-token-rights",
+    "relation": "constrains",
+    "reason": "브리지 지원과 상품의 법적 회수를 동일하게 취급하지 않습니다.",
+    "from": "robinhood-canonical-withdrawal"
+  },
+  {
+    "to": "glamsterdam-epbs-bid-payload",
+    "relation": "constrains",
+    "reason": "개발 명세와 실제 메인넷 적용을 구분합니다.",
+    "from": "ethereum-roadmap-maturity-lanes"
+  },
+  {
+    "to": "glamsterdam-payload-execution-validation",
+    "relation": "produces",
+    "reason": "서명한 약속과 공개 자료가 실행 검증의 입력입니다.",
+    "from": "glamsterdam-epbs-bid-payload"
+  },
+  {
+    "to": "glamsterdam-payload-execution-validation",
+    "relation": "produces",
+    "reason": "거래별 접근·결과 목록을 실제 실행과 대조합니다.",
+    "from": "glamsterdam-bal-state-diff"
+  },
+  {
+    "from": "capacitor-voltage-state",
+    "to": "hbm-channel-bank-row-refresh",
+    "relation": "prerequisite",
+    "reason": "전하로 값을 저장하는 상태가 누설될 수 있어 DRAM refresh가 필요합니다. 이상적 축전기와 실제 셀의 차이는 본문에 명시합니다."
+  },
+  {
+    "to": "attention-conditional-rescaling",
+    "relation": "extends",
+    "reason": "같은 기준 이동의 동치를 이해한 뒤 안전한 조건에서 보정을 생략하는 분기를 비교합니다.",
+    "from": "online-softmax"
+  },
+  {
+    "to": "independent-memory-erase-write",
+    "relation": "extends",
+    "reason": "현재 읽기를 빼는 규칙에서 지울 성분과 쓸 성분의 독립 제어로 확장합니다.",
+    "from": "delta-rule-error-correction"
+  },
+  {
+    "to": "action-conditioned-latent-dynamics",
+    "relation": "prerequisite",
+    "reason": "영상 생성과 행동 결과 예측의 계약을 구별한 뒤 예측 상태를 정의합니다.",
+    "from": "image-to-world-transition-boundary"
+  },
+  {
+    "to": "action-conditioned-latent-dynamics",
+    "relation": "prerequisite",
+    "reason": "계획에 필요한 차이를 표현해야 행동에 따른 미래를 구별할 수 있습니다.",
+    "from": "world-state-representation-gate"
+  },
+  {
+    "to": "world-model-receding-horizon-planning",
+    "relation": "prerequisite",
+    "reason": "행동 후보의 rollout을 비용으로 비교한 뒤 실행과 재관측으로 연결합니다.",
+    "from": "action-conditioned-latent-dynamics"
+  },
+  {
+    "to": "latent-collapse-prevention",
+    "relation": "constrains",
+    "reason": "표현이 모두 같아지면 예측 오차가 작아도 행동 결과를 구별할 수 없습니다.",
+    "from": "action-conditioned-latent-dynamics"
+  },
+  {
+    "to": "world-model-planning-evaluation",
+    "relation": "prerequisite",
+    "reason": "후보 선택과 재계획의 실제 목표 달성을 예측 오차와 별도로 측정합니다.",
+    "from": "world-model-receding-horizon-planning"
+  },
+  {
+    "from": "fri-reed-solomon-oracle-proximity",
+    "to": "constrained-reed-solomon-query",
+    "relation": "extends",
+    "reason": "낮은 차수에 대한 근접성 조건에 평가·선형 질문 제약을 더합니다."
+  },
+  {
+    "from": "polynomial-commitment-interface",
+    "to": "constrained-reed-solomon-query",
+    "relation": "prerequisite",
+    "reason": "평가값을 고정된 함수와 연결해야 한다는 인터페이스를 이어받습니다."
+  },
+  {
+    "from": "jolt-instruction-lookup-sumcheck-lowering",
+    "to": "one-hot-memory-increment-check",
+    "relation": "prerequisite",
+    "reason": "명령 계산의 주장에 실제 주소와 값의 읽기·쓰기 연결을 추가합니다."
+  },
+  {
+    "from": "one-hot-memory-increment-check",
+    "to": "jolt-bytecode-trace-claim-artifact",
+    "relation": "produces",
+    "reason": "메모리 검사가 프로그램·공개값에 묶인 전체 실행 주장의 일부가 됩니다."
+  },
+  {
+    "from": "stark-lde-fri-pipeline",
+    "to": "proof-memory-live-set",
+    "relation": "produces",
+    "reason": "평가 확장과 표 고정에서 생기는 원본·작업표·해시 버퍼를 셉니다."
+  },
+  {
+    "from": "gpu-memory-traffic-hierarchy",
+    "to": "proof-memory-live-set",
+    "relation": "prerequisite",
+    "reason": "장치별 용량과 계층별 자료 이동을 나누는 기반입니다."
+  },
+  {
+    "from": "proof-memory-live-set",
+    "to": "msm-window-memory-tradeoff",
+    "relation": "prerequisite",
+    "reason": "MSM의 단계별 배열 생존량으로 창 크기의 최고점을 계산합니다."
+  },
+  {
+    "from": "polynomial-commitment-interface",
+    "to": "evm-proof-verification-cost",
+    "relation": "prerequisite",
+    "reason": "커밋먼트 평가 검사를 어떤 곡선 원시 연산으로 수행하는지 구분합니다."
+  },
+  {
+    "from": "evm-proof-verification-cost",
+    "to": "proof-wrapper-security-boundary",
+    "relation": "constrains",
+    "reason": "검증 비용을 바꾸는 wrapper를 선택할 때 생성 비용과 가정이 추가됩니다."
+  },
+  {
+    "from": "stark-transparent-hash-security-boundary",
+    "to": "proof-wrapper-security-boundary",
+    "relation": "constrains",
+    "reason": "안쪽의 해시 가정은 바깥 곡선 증명의 양자 공격 가정을 대체하지 않습니다."
+  },
+  {
+    "from": "proof-memory-live-set",
+    "to": "snark-succinctness-cost-boundary",
+    "relation": "evaluates",
+    "reason": "작은 증거와 큰 생성 작업 공간을 실제 바이트로 분리해 비교합니다."
+  },
+
+
+
+  {"from": "complex-number", "to": "quantum-amplitude-measurement", "relation": "prerequisite", "reason": "진폭의 위상과 절댓값을 복소수로 읽습니다."},
+  {"from": "euclidean-norm", "to": "quantum-amplitude-measurement", "relation": "prerequisite", "reason": "상태의 정규화와 확률 합을 연결합니다."},
+  {"from": "module-lwe-noisy-equations", "to": "ml-kem-noise-cancellation", "relation": "extends", "reason": "서로 모르는 비밀을 쓰더라도 같은 큰 항을 만들 수 있어 그 차이만 읽습니다."},
+  {"from": "ml-kem-noise-cancellation", "to": "kem-encapsulation-and-rejection", "relation": "extends", "reason": "수신자가 복원한 값을 그대로 믿지 않고 같은 캡슐이 재생성되는지 확인합니다."},
+  {"from": "prime-field-modular-arithmetic", "to": "module-lwe-noisy-equations", "relation": "prerequisite", "reason": "공개값과 상쇄 결과를 나머지로 계산합니다."},
+  {"from": "ml-dsa-masked-response", "to": "ml-dsa-rejection-and-hints", "relation": "extends", "reason": "새 마스크를 썼다는 사실만으로 비밀이 가려지는 것은 아니어서 공개할 응답의 범위를 검사합니다."},
+
+  {"from": "slh-dsa-hash-tree-signatures", "to": "post-quantum-signature-deployment", "relation": "extends", "reason": "서명 파일이 검증된다는 사실과 기존 권한을 모두 옮겼다는 사실은 다릅니다."},
+  {"from": "module-lwe-noisy-equations", "to": "ml-dsa-masked-response", "relation": "prerequisite", "reason": "공개 행렬·비밀·작은 오류의 역할을 재사용합니다."},
+  {
+    "to": "qkd-bb84-basis-sifting",
+    "relation": "prerequisite",
+    "reason": "기저에 따른 측정 확률이 선별과 지정 도청 모형의 계산을 설명합니다.",
+    "from": "quantum-amplitude-measurement"
+  },
+  {
+    "to": "qkd-finite-key-information-budget",
+    "relation": "produces",
+    "reason": "선별된 기록과 검사 결과를 유한 키 분석의 입력으로 사용합니다.",
+    "from": "qkd-bb84-basis-sifting"
+  },
+  {
+    "to": "qkd-finite-key-information-budget",
+    "relation": "constrains",
+    "reason": "인증과 장치 가정을 만족하는 모형에서만 누출·추출의 보안 주장을 적용합니다.",
+    "from": "qkd-authenticated-device-boundary"
+  },
+  {"from": "quantum-amplitude-measurement", "to": "grover-amplitude-amplification", "relation": "prerequisite", "reason": "음수 진폭도 확률로 제곱하기 전에 다른 진폭과 더하고 뺄 수 있습니다."},
+  {"from": "grover-amplitude-amplification", "to": "shor-order-finding-cryptography", "relation": "contrasts", "reason": "어려운 문제를 아무 수나 대입하는 일에서 반복 규칙을 알아내는 일로 바꿉니다."},
+  {"from": "shor-order-finding-cryptography", "to": "quantum-logical-physical-resource-boundary", "relation": "constrains", "reason": "장부 속 오류 없는 작업 칸과 실제 잡음 있는 소자는 다릅니다."},
+  {"from": "ml-dsa-rejection-and-hints", "to": "slh-dsa-hash-tree-signatures", "relation": "contrasts", "reason": "짧은 공개 루트 하나에 많은 서명용 요소를 묶되 각 요소의 사용 규칙이 필요합니다."},
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

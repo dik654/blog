@@ -1,382 +1,119 @@
 import { Link } from "react-router-dom";
-import ContentBoundary from "@/components/articles/content-boundary";
-import ProgressiveDetail from "@/components/articles/progressive-detail";
-import TermBreakdown from "@/components/articles/term-breakdown";
-import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
-import ExplainedFormula from "@/components/ui/explained-formula";
-import GpuMemoryHierarchyAndRooflineViz from "./gpu-memory-hierarchy-and-roofline/viz/GpuMemoryHierarchyAndRooflineViz";
-import RooflineRidgeChart from "./gpu-memory-hierarchy-and-roofline/viz/RooflineRidgeChart";
+import NumericPath from "@/pages/articles/world-systems/NumericPath";
+import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
+import SourceApplication from "@/pages/articles/world-systems/SourceApplication";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs, fileTrees } from "@/pages/articles/gpu/gpu-execution-sources/codeRefs";
 
-const BEST_PRACTICES = "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html";
-const NSIGHT = "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html";
-const ROOFLINE = "https://escholarship.org/uc/item/3qf383m0";
-const HOPPER = "https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/";
-
-/**
- * GPU memory hierarchy 와 roofline: kernel 은 네 가지 bound 중 하나에 묶입니다
- *
- * L1·L2·local·constant 의 위치와 32-byte sector transaction, latency 와 bandwidth 의
- * 구분, 그리고 compute·memory·latency·launch-bound 네 부류의 판정을 소유한다.
- * Roofline 의 peak/achieved 분리는 /gpu/gpu-architecture, coalescing 설계는
- * /gpu/cuda-shared-memory, ready warp 와 MLP 는 /gpu/sm-warp-scheduling-and-issue 가 소유한다.
- */
-export default function GpuMemoryHierarchyAndRooflineArticle() {
-  return (
-    <div id="overview" className="space-y-16">
-      <section id="hierarchy" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Byte 는 register 에서 HBM 까지 다섯 계층을 지나며 비싸집니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            Kernel 이 읽는 byte 하나는 register, shared memory 와 L1, L2, HBM 가운데 어디서 오느냐에 따라 시간과 대역폭이 열 배 단위로 달라집니다.
-            이 글은 그 계층을 숫자로 놓고 warp 의 요청이 transaction 으로 바뀌는 규칙과 latency·bandwidth 의 구분을 거쳐 kernel 이 네 가지 bound
-            가운데 어디에 묶였는지 판정하는 데까지 갑니다.
-          </p>
-          <p>
-            H100 SXM5 를 예로 두면 SM 하나에 register file 256 KB, shared memory 와 합쳐 쓰는 L1 data cache 256 KB 가 있고
-            chip 전체가 공유하는 L2 는 50 MB, 그 바깥의 HBM3 는 80 GB 를 3.35 TB/s 로 읽습니다. 위로 갈수록 작고 가까우며 아래로 갈수록 크고 멉니다.
-          </p>
-          <p>
-            L1 cache 는 SM 안에 있어 그 SM 의 warp 만 쓰고 global load 가 L1 을 거칠지는 compiler 와 instruction 종류가 정합니다. L2
-            cache 는 모든 SM 이 공유하는 마지막 on-chip 계층이라 HBM 에서 온 byte 는 반드시 여기를 지나고 다른 SM 이 방금 읽은 줄을 다시 읽으면 HBM 까지
-            가지 않습니다.
-          </p>
-          <p>
-            CUDA local memory 는 이름과 달리 가까운 곳이 아닙니다. Thread 하나만 보는 주소
-            공간이지만 실제 저장소는 HBM 이고 L1·L2 에 cache 됩니다. Register 가 모자라
-            spill 된 값과 동적 index 로 접근하는 thread 배열이 여기로 가며, 그 경로는{" "}
-            <Link to="/cs/gpu/cuda-register-pressure#spill-path">register spill 경로</Link> 에 있습니다.
-          </p>
-          <p>
-            Constant memory 는 64 KB 짜리 읽기 전용 공간으로 SM 마다 constant cache 를 거칩니다. Warp 의 32 lane 이 같은 주소를 읽으면 한 번
-            읽어 broadcast 하지만 서로 다른 주소를 읽으면 주소 수만큼 직렬화됩니다. Kernel 인자와 모든 thread 가 같은 값을 보는 계수표에 맞는 자리입니다.
-          </p>
-          <p>
-            이 다섯 계층의 scope 와 traffic 경로는{" "}
-            <Link to="/cs/gpu/gpu-architecture#gpu-memory-traffic-hierarchy">GPU memory traffic hierarchy</Link> 가
-            먼저 그렸습니다. 이 글은 그 위에 각 계층의 크기와 요청이 옮겨지는 단위를 얹습니다.
-          </p>
-        </div>
-        <GpuMemoryHierarchyAndRooflineViz />
-        <ContentBoundary article="gpu-memory-hierarchy-and-roofline" />
-      </section>
-
-      <section id="transactions" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Warp 의 요청은 32-byte sector 수만큼 transaction 이 됩니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Memory 는 byte 하나씩 오지 않습니다. Warp 의 load instruction 하나가 낸 32개 주소를 하드웨어가 32-byte sector 로 묶고 걸린
-            sector 하나가 memory transaction 하나가 됩니다. Best Practices Guide 는 compute capability 6.0 이상에서 warp 의
-            접근이 필요한 32-byte transaction 수만큼으로 합쳐진다고 적습니다.
-          </p>
-          <p>
-            Lane 32개가 float 32개를 이어서 읽고 시작 주소가 128 B 에 맞으면 sector 4개,
-            transaction 4개이고 옮긴 128 B 가 전부 쓰입니다. 시작이 4 B 어긋나면 sector
-            5개가 되어 160 B 를 옮기고 128 B 만 쓰니 효율 80% 입니다.
-          </p>
-          <p>
-            Lane 이 float 하나씩 건너뛰면(stride 2) sector 8개에 256 B, 효율 50% 이고,
-            lane 마다 32 B 씩 떨어지면(stride 8) lane 하나가 sector 하나를 통째로 불러
-            transaction 32개에 1024 B 를 옮기고 128 B 만 씁니다. 효율 12.5% 인 이 상태가
-            uncoalesced access 입니다.
-          </p>
-          <p>
-            Uncoalesced access 의 비용은 두 겹입니다. 같은 useful byte 를 위해 HBM 대역폭을 여덟 배 쓰고 transaction 이 여덟 배 많아 load
-            하나의 latency 도 길어집니다. Nsight Compute 는 이 둘을 requested byte 와 실제 옮긴 sector 수의 비율로 보여 줍니다.
-          </p>
-          <p>
-            접근 pattern 을 바꿔 sector 수를 줄이는 설계가{" "}
-            <Link to="/cs/gpu/cuda-shared-memory#coalescing">coalescing</Link> 이고, 어쩔 수 없이
-            흩어진 접근은 <Link to="/cs/gpu/cuda-shared-memory#overview">shared memory</Link> 에
-            한 번 정렬해 올린 뒤 읽습니다. 이 글은 transaction 이 어떻게 세어지는지까지만
-            다룹니다.
-          </p>
-        </div>
-      </section>
-
-      <section id="latency-bandwidth" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Latency 는 한 요청의 시간, bandwidth 는 초당 byte 이며 서로 대신하지 못합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Memory latency 는 요청 하나를 내고 첫 byte 가 돌아오기까지의 시간이고, memory bandwidth 는 충분히 많은 요청이 겹칠 때 초당 옮겨지는 byte
-            입니다. HBM 의 latency 는 수백 clock, bandwidth 는 3.35 TB/s 처럼 단위부터 다르며 요청이 하나뿐이면 bandwidth 가 아무리 커도
-            latency 만큼 기다립니다.
-          </p>
-          <p>
-            둘을 잇는 것이 Little's law 입니다. 대역폭을 다 쓰려면 latency 동안 옮겨질 만큼의
-            byte 가 항상 요청 중이어야 합니다. Latency 를 가정값 600 ns 로 두면
-            3.35 TB/s × 600 ns ≈ 2 MB 가 늘 비행 중이어야 하고, SM 132개로 나누면 SM 당
-            약 15 KB, 즉 128 B 짜리 warp load 약 120개가 동시에 떠 있어야 합니다.
-          </p>
-          <p>
-            SM 에 warp 64개가 있어도 warp 마다 load 두 개 가까이를 결과가 오기 전에 더
-            내야 한다는 뜻입니다. 이것이 앞 글의{" "}
-            <Link to="/cs/gpu/sm-warp-scheduling-and-issue#latency-hiding">memory-level parallelism</Link> 이
-            bandwidth 와 만나는 지점이고, load 뒤에 바로 그 값을 쓰는 코드가 대역폭을
-            못 채우는 이유입니다.
-          </p>
-          <p>
-            Effective bandwidth 는 kernel 이 실제로 낸 성적입니다. Best Practices Guide 의 식대로 읽은 byte 와 쓴 byte 를 더해 시간으로
-            나눕니다. 1 GB 를 읽고 1 GB 를 쓰는 kernel 이 0.8 ms 걸렸으면 2 GB / 0.8 ms = 2.5 TB/s 이고 3.35 TB/s 의 약 75% 입니다.
-          </p>
-          <p>
-            이 식의 byte 는 kernel 이 필요로 한 useful byte 입니다. Uncoalesced access 로 실제 옮긴 byte 는 그보다 클 수 있으므로
-            effective bandwidth 가 낮은 kernel 은 HBM 이 놀고 있는 것일 수도, 쓸모없는 byte 를 나르느라 꽉 차 있는 것일 수도 있습니다. 둘을 가르는 것이
-            profiler 의 실제 sector 수입니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="Kernel 이 대역폭을 얼마나 썼는지와, 그 대역폭을 채우려면 얼마나 많은 요청이 떠 있어야 하는지를 어떻게 계산하나요?"
-          idea="Effective bandwidth 는 kernel 이 필요로 한 byte 를 시간으로 나눈 성적이고, in-flight byte 는 그 대역폭이 latency 동안 옮길 수 있는 양이므로 이만큼이 항상 요청 중이어야 대역폭이 채워집니다."
-          formula={String.raw`\begin{aligned}
-BW_{\mathrm{eff}} &= \frac{B_r + B_w}{t} \\
-B_{\mathrm{flight}} &= BW_{\mathrm{peak}} \cdot L_{\mathrm{mem}}
-\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}
-BW_{\mathrm{eff}} &= \underbrace{\frac{B_r + B_w}{t}}_{\text{읽고 쓴 useful byte 를 kernel 시간으로 나눔}} \\
-B_{\mathrm{flight}} &= \underbrace{BW_{\mathrm{peak}} \cdot L_{\mathrm{mem}}}_{\text{latency 동안 옮겨질 byte = 항상 요청 중이어야 하는 양}}
-\end{aligned}`}
-          operations={[
-            { expression: String.raw`B_r + B_w`, annotation: ["읽은 byte 와 쓴 byte 를 더해", "kernel 이 필요로 한 총 traffic 을 만듦"] },
-            { expression: String.raw`\frac{B_r + B_w}{t}`, annotation: ["그 byte 를 kernel 시간으로 나눠", "초당 byte 인 effective bandwidth 를 얻음"] },
-            { expression: String.raw`BW_{\mathrm{peak}} \cdot L_{\mathrm{mem}}`, annotation: ["Peak bandwidth 에 latency 를 곱해", "Little's law 로 필요한 in-flight byte 를 얻음"] },
-          ]}
-          terms={[
-            { symbol: String.raw`B_r,\ B_w`, name: "읽은 byte · 쓴 byte", description: "Kernel 이 필요로 한 useful byte 입니다. Uncoalesced access 로 실제 옮긴 byte 는 더 클 수 있습니다." },
-            { symbol: String.raw`t`, name: "Kernel 시간", description: "같은 stream 의 CUDA event 로 잰 device 구간의 초 단위 시간입니다." },
-            { symbol: String.raw`BW_{\mathrm{peak}}`, name: "Peak memory bandwidth", description: "HBM 의 이론 대역폭으로 H100 SXM5 는 3.35 TB/s 입니다." },
-            { symbol: String.raw`L_{\mathrm{mem}}`, name: "Memory latency", description: "요청 하나가 돌아오기까지의 시간입니다. 이 글은 가정값 600 ns 를 씁니다." },
-          ]}
-          assumptions={["Effective bandwidth 의 byte 는 useful byte 기준입니다. 실제 옮긴 byte 로 계산하면 achieved DRAM throughput 이 되며 둘은 다른 질문에 답합니다.", "Little's law 식은 장기 평균이며 kernel 의 시작과 끝, cache hit 으로 latency 가 짧아지는 경우는 따로 봅니다.", "Latency 600 ns 는 가정값입니다. 세대와 hit 여부에 따라 수백 ns 범위에서 움직입니다."]}
-          interpretation="2 GB / 0.8 ms = 2.5 TB/s 는 peak 의 75% 이고, 3.35 TB/s × 600 ns ≈ 2 MB 는 SM 당 약 15 KB, warp load 약 120개가 늘 떠 있어야 한다는 뜻입니다. Effective bandwidth 가 낮으면 요청이 부족한지 쓸모없는 byte 가 많은지를 sector 수로 갈라야 합니다."
-        />
-      </section>
-
-      <section id="roofline-bound" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Ridge point 아래는 memory-bound, 위는 compute-bound 입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Roofline 은 kernel 의 FLOP/byte 인 arithmetic intensity 를 x 축에 놓고 도달 가능한 FLOP/s 를 min(peak compute,
-            bandwidth × intensity) 로 긋는 그림입니다. 두 지붕이 만나는 x 가 ridge point 이고 kernel 의 intensity 가 그보다 작으면
-            memory-bound, 크면 compute-bound 입니다.
-          </p>
-          <p>
-            H100 SXM5 의 FP16 Tensor Core dense peak 989 TFLOPS 를 3.35 TB/s 로 나누면
-            ridge point 는 약 295 FLOP/byte 입니다. FP32 CUDA core 67 TFLOPS 로 계산하면
-            약 20 FLOP/byte 로, 같은 GPU 라도 어느 pipe 를 쓰느냐에 따라 지붕과 ridge 가
-            다릅니다.
-          </p>
-          <p>
-            Decode 의 GEMV 는 FP16 weight 2 byte 마다 FLOP 2개를 하니 intensity 가 약 1
-            이고, 7B model 의 14 GB weight 를 한 token 마다 읽으면 3.35 TB/s 로 4.2 ms 가
-            하한입니다. 4096³ FP16 GEMM 은 137 GFLOP 에 100 MB 를 읽어 intensity 약 1,365
-            로 compute-bound 이며 989 TFLOPS 기준 0.14 ms 가 하한입니다.
-          </p>
-          <p>
-            Compute-bound 의 증거는 pipe utilization 입니다. Nsight Compute 는 FMA·ALU 같은 CUDA core pipe 와 Tensor pipe
-            가 전체 cycle 가운데 바쁜 비율을 따로 보여 주고 Tensor pipe 가 80% 넘게 바쁘면 그 kernel 은 지붕에 닿은 것입니다. ALU utilization 이
-            높은데 Tensor utilization 이 0 이면 Tensor Core 를 안 쓰는 compute-bound 입니다.
-          </p>
-          <p>
-            Memory-bound 의 증거는 DRAM throughput 이 peak 에 가깝고 pipe utilization 은
-            낮은 상태입니다. 처방은 정반대여서, compute-bound 는 pipe 를 바꾸거나 연산을
-            줄이고 memory-bound 는 byte 를 줄입니다. Tile 로 재사용을 늘려 intensity 를
-            올리는 것이 <Link to="/cs/gpu/cuda-matrix-multiply#tiled">shared-memory tiling</Link> 입니다.
-          </p>
-          <p>
-            Roofline 의 peak 와 achieved 를 분리하는 규칙은{" "}
-            <Link to="/cs/gpu/gpu-architecture#gpu-peak-achieved-boundary">peak/achieved boundary</Link> 가
-            소유합니다. 이 글은 그 지붕 위에 bound 부류의 이름과 판정 증거를 얹습니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="Kernel 이 도달할 수 있는 FLOP/s 의 상한과 ridge point 는 어떻게 계산하나요?"
-          idea="연산이 memory 를 기다리지 않으면 compute peak 가, byte 가 모자라면 bandwidth × intensity 가 상한이므로 둘 중 작은 쪽이 지붕이고, 두 지붕이 같아지는 intensity 가 ridge point 입니다."
-          formula={String.raw`\begin{aligned}
-I &= \frac{F}{Q} \\
-P_{\mathrm{attain}} &= \min\!\left(P_{\mathrm{peak}},\; BW_{\mathrm{peak}} \cdot I\right) \\
-I_{\mathrm{ridge}} &= \frac{P_{\mathrm{peak}}}{BW_{\mathrm{peak}}}
-\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}
-I &= \underbrace{\frac{F}{Q}}_{\text{FLOP 을 HBM byte 로 나눈 intensity}} \\
-P_{\mathrm{attain}} &= \min\!\left(\underbrace{P_{\mathrm{peak}}}_{\text{compute 지붕}},\; \underbrace{BW_{\mathrm{peak}} \cdot I}_{\text{bandwidth 지붕}}\right) \\
-I_{\mathrm{ridge}} &= \underbrace{\frac{P_{\mathrm{peak}}}{BW_{\mathrm{peak}}}}_{\text{두 지붕이 만나는 intensity}}
-\end{aligned}`}
-          operations={[
-            { expression: String.raw`\frac{F}{Q}`, annotation: ["Kernel 의 FLOP 을 HBM 에서 옮긴 byte 로 나눠", "byte 당 연산량인 arithmetic intensity 를 얻음"] },
-            { expression: String.raw`BW_{\mathrm{peak}} \cdot I`, annotation: ["Bandwidth 에 intensity 를 곱해", "byte 공급 속도가 허용하는 FLOP/s 상한을 만듦"] },
-            { expression: String.raw`\min\!\left(P_{\mathrm{peak}},\; BW_{\mathrm{peak}} \cdot I\right)`, annotation: ["두 상한 중 작은 쪽을 택해", "이 kernel 이 도달할 수 있는 지붕을 정함"] },
-            { expression: String.raw`\frac{P_{\mathrm{peak}}}{BW_{\mathrm{peak}}}`, annotation: ["Compute peak 를 bandwidth 로 나눠", "두 지붕이 같아지는 ridge point 를 얻음"] },
-          ]}
-          terms={[
-            { symbol: String.raw`F`, name: "Kernel 의 FLOP 수", description: "정의한 convention(FMA 를 2 로 셈)에 따른 useful 연산 수입니다." },
-            { symbol: String.raw`Q`, name: "HBM traffic byte", description: "분석 경계에서 HBM 과 주고받은 byte 입니다. L2 hit 은 여기 들어가지 않습니다." },
-            { symbol: String.raw`P_{\mathrm{peak}}`, name: "Compute peak", description: "쓰는 pipe 와 precision 의 peak 로, H100 FP16 Tensor dense 989 TFLOPS, FP32 67 TFLOPS 입니다." },
-            { symbol: String.raw`BW_{\mathrm{peak}}`, name: "Peak memory bandwidth", description: "H100 SXM5 HBM3 의 3.35 TB/s 입니다." },
-            { symbol: String.raw`I_{\mathrm{ridge}}`, name: "Ridge point", description: "989/3.35 ≈ 295 FLOP/B, FP32 는 67/3.35 ≈ 20 FLOP/B 입니다." },
-          ]}
-          assumptions={["Peak 는 NVIDIA 자기보고 값이며 clock·SKU·sparsity 조건에 묶입니다. Dense 값을 썼습니다.", "Q 를 HBM byte 로 잡은 HBM roofline 입니다. L2 나 shared memory 를 경계로 잡으면 다른 지붕이 나옵니다.", "지붕은 상한일 뿐이며 latency-bound 나 launch-bound kernel 은 지붕에 못 미친 채 어느 쪽에도 묶이지 않습니다."]}
-          interpretation="Intensity 1 인 GEMV 는 3.35 TFLOPS 가 상한이라 Tensor Core 가 놀고, intensity 1,365 인 GEMM 은 989 TFLOPS 가 상한이라 HBM 이 놉니다. 지붕과 실측의 차이가 latency·launch 의 몫입니다."
-        />
-        <RooflineRidgeChart />
-      </section>
-
-      <section id="latency-launch-bound" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          지붕에 못 닿은 kernel 은 latency-bound 나 launch-bound 입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Roofline 은 상한만 그립니다. DRAM throughput 도 pipe utilization 도 낮은 kernel
-            은 어느 지붕에도 닿지 않은 것이고, 원인은 두 가지 가운데 하나입니다. 요청이
-            충분히 겹치지 않아 latency 를 기다리는 latency-bound 이거나, kernel 이 너무 짧아
-            launch 자체가 시간을 먹는 launch-bound 입니다.
-          </p>
-          <p>
-            Latency-bound 는 Nsight Compute 에서 eligible warp 가 scheduler 당 평균 1개
-            미만이고 stall 이 long scoreboard 에 몰린 모습으로 나타납니다. DRAM 은 30%,
-            pipe 는 15% 만 바쁘면서 issue slot 은 대부분 비어 있습니다. 처방은 byte 도 FLOP
-            도 아닌 parallelism 이며 occupancy 를 올리거나 warp 당 outstanding load 를
-            늘립니다.
-          </p>
-          <p>
-            Launch-bound 는 kernel 하나의 일이 launch overhead 보다 짧을 때 생깁니다.
-            Launch overhead 를 경험 범위인 수 µs, 계산 예로 4 µs 라고 두면 1 MB 를 옮기는
-            kernel 의 일은 3.35 TB/s 에서 0.3 µs 라 시간의 90% 이상이 launch 입니다.
-            이런 kernel 1,000개는 일 0.3 ms 에 overhead 4 ms 입니다.
-          </p>
-          <p>
-            Launch-bound 의 처방은 kernel 수를 줄이는 것이고, 그 방법이{" "}
-            <Link to="/cs/gpu/cuda-kernel-fusion">kernel fusion</Link> 과{" "}
-            <Link to="/cs/ai/cuda-graph-capture#mechanics">CUDA graph</Link> 입니다. Profiler 의
-            timeline 에서 kernel 사이 빈틈이 kernel 자체보다 길면 이 부류입니다.
-          </p>
-          <p>
-            네 부류는 서로 배타가 아닙니다. Uncoalesced access 는 memory-bound 처럼 DRAM 을 채우면서 useful byte 로는 latency-bound
-            처럼 보이고 decode 는 step 이 짧아 memory-bound 와 launch-bound 를 함께 앓습니다. 판정은 아래 순서로 한 번에 하나씩 좁힙니다.
-          </p>
-        </div>
-        <AlgorithmBlock
-          title="Kernel 의 bound 부류 판정"
-          input={["Nsight Systems timeline 의 kernel 시간과 kernel 사이 빈틈", "F: kernel 의 useful FLOP, Q: HBM byte(profiler 의 실제 sector 수 기준)", "peak: 쓰는 pipe 의 P_peak 와 BW_peak", "Nsight Compute 의 DRAM throughput, pipe utilization, eligible warps, stall 분포"]}
-          steps={[
-            { code: "if 빈틈 ≥ kernel 시간 or kernel 시간 < 수 µs: launch-bound → fusion·graph 로 kernel 수를 줄임", note: "Kernel 안을 보기 전에 kernel 밖을 먼저 봅니다. 여기서 끝나면 roofline 은 필요 없습니다." },
-            { code: "I = F / Q;  I_ridge = P_peak / BW_peak", note: "Q 는 requested 가 아니라 실제 옮긴 byte 로 잡아야 uncoalesced access 가 드러납니다." },
-            { code: "if DRAM throughput ≥ ~80% peak: memory-bound → byte 를 줄임(coalescing·tiling·낮은 precision)", note: "I < I_ridge 이면서 DRAM 이 차 있는 상태입니다. Useful byte 가 적은데 DRAM 이 차 있으면 먼저 sector 효율을 봅니다." },
-            { code: "elif pipe utilization ≥ ~80%: compute-bound → 연산을 줄이거나 Tensor pipe 로 옮김", note: "ALU 만 높고 Tensor 가 0 이면 pipe 선택의 문제입니다." },
-            { code: "else: latency-bound → eligible warps·stall 분포로 원인 확인 후 occupancy·MLP·ILP 를 올림", note: "둘 다 낮으면 자원이 아니라 겹침이 부족한 것입니다." },
-            { code: "변경 하나를 적용하고 같은 경계에서 F/Q·시간을 다시 재어 부류가 바뀌었는지 확인", note: "Memory-bound 를 풀면 다음 병목은 compute 나 latency 로 옮겨 갑니다." },
-          ]}
-          repeatUntil="Kernel 시간이 목표 안에 들거나 지붕에 닿아 다음 개선이 다른 kernel 로 넘어갈 때까지 반복합니다."
-          output="이 kernel 의 bound 부류 하나와 그 부류에 맞는 다음 변경 하나"
-        />
-        <TermBreakdown
-          title="네 가지 bound 의 증거와 처방"
-          description="같은 kernel 이 어느 부류에 있는지는 profiler 의 어느 숫자가 높은지로 가릅니다. 처방은 부류마다 다르고 잘못 고르면 시간이 줄지 않습니다."
-          items={[
-            { term: "Compute-bound", description: "Intensity 가 ridge 보다 크고 쓰는 pipe 의 utilization 이 peak 근처입니다.", example: "4096³ FP16 GEMM, Tensor pipe 80% 이상.", boundary: "ALU 만 높고 Tensor 가 0 이면 pipe 를 바꾸는 것이 처방입니다." },
-            { term: "Memory-bound", description: "Intensity 가 ridge 보다 작고 DRAM throughput 이 peak 근처입니다.", example: "Decode GEMV, intensity 1, DRAM 85%.", boundary: "Useful byte 는 적은데 DRAM 이 차 있으면 uncoalesced access 를 먼저 봅니다." },
-            { term: "Latency-bound", description: "DRAM 도 pipe 도 낮고 eligible warp 가 scheduler 당 1개 미만입니다.", example: "Load 뒤 바로 값을 쓰는 pointer chasing, DRAM 30%·pipe 15%.", boundary: "Byte 나 FLOP 을 줄여도 안 빨라지고 parallelism 을 늘려야 합니다." },
-            { term: "Launch-bound", description: "Kernel 의 일이 launch overhead 보다 짧아 timeline 의 빈틈이 kernel 보다 깁니다.", example: "1 MB 짜리 elementwise kernel 1,000개, 일 0.3 ms 에 overhead 4 ms.", boundary: "Kernel 안을 최적화해도 시간이 줄지 않으며 kernel 수를 줄여야 합니다." },
-          ]}
-        />
-        <ProgressiveDetail
-          title="HBM roofline 말고 L2 나 shared memory 를 경계로 잡으면 무엇이 달라지나요?"
-          preview="지붕이 계층마다 따로 생깁니다. L2 bandwidth 는 HBM 보다 높아 ridge 가 오른쪽으로 가고, HBM 기준으로 compute-bound 인 kernel 이 L2 기준으로는 memory-bound 일 수 있습니다."
-        >
-          <p>
-            Q 를 HBM byte 로 잡은 roofline 은 HBM 이 병목일 때만 맞습니다. L2 hit 이 많은 kernel 은 HBM byte 가 적어 intensity 가 커
-            보이지만 실제로는 L2 bandwidth 에 묶여 있을 수 있습니다. Nsight Compute 의 roofline chart 는 계층별 지붕을 함께 그려 이 경우를 가립니다.
-          </p>
-          <p>
-            같은 이유로 shared memory 를 많이 쓰는 tiled GEMM 은 HBM roofline 으로는 여유가 있어도 shared memory bandwidth 나 bank
-            conflict 에 묶일 수 있습니다. 어느 경계의 지붕에 닿았는지를 먼저 정하고 그 경계의 byte 로 intensity 를 다시 계산해야 합니다.
-          </p>
-        </ProgressiveDetail>
-      </section>
-
-      <section id="evidence" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Best Practices Guide, Nsight Compute, Roofline 논문이 근거입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            32-byte transaction 으로 합쳐진다는 규칙, 어긋난 접근이 sector 5개를 부른다는
-            예, effective bandwidth 의 식, local memory 가 off-chip 이라는 표는 NVIDIA CUDA
-            C++ Best Practices Guide 12.8.1 의 것입니다. Pipe utilization 과 DRAM
-            throughput, eligible warp 의 정의는 Nsight Compute Profiling Guide 에서
-            가져왔습니다.
-          </p>
-          <p>
-            Roofline 은 Williams, Waterman, Patterson 이 2009년에 multicore 를 위해 제안한
-            model 이며 GPU 에 그대로 적용됩니다. H100 SXM5 의 SM 132개, L2 50 MB, SM 당
-            L1·shared 256 KB 는 NVIDIA Hopper 소개 글에서, 3.35 TB/s 와 67 TFLOPS 는
-            H100 제품 명세에서 읽었습니다.
-          </p>
-          <p>
-            Memory latency 600 ns 와 launch overhead 4 µs 는 문서 수치가 아니라 계산 예를 위한 가정값입니다. Bound 판정의 80% 같은 문턱도
-            관행이지 규격이 아니므로 자기 kernel 의 값은 같은 GPU 에서 profiler 로 직접 읽어야 합니다.
-          </p>
-        </div>
-        <div id="paper-cuda-best-practices-memory" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="NVIDIA · CUDA C++ Best Practices Guide 12.8.1 · Coalesced Access, Effective Bandwidth Calculation, Device Memory Spaces"
-            citeKey={1}
-            href={BEST_PRACTICES}
-            type="code"
-          >
-            Compute capability 6.0 이상에서 warp 의 접근이 필요한 32-byte transaction 수로
-            합쳐진다는 규칙과 misaligned·strided 예, effective bandwidth = ((Br+Bw)/10⁹)/time
-            식, local·constant memory 의 위치와 cache 여부를 적은 표가 이 문서에 있습니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-nsight-compute-roofline" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="NVIDIA · Nsight Compute Profiling Guide · Speed Of Light, Roofline Charts, Memory Chart, Scheduler Statistics"
-            citeKey={2}
-            href={NSIGHT}
-            type="code"
-          >
-            Compute·memory throughput 의 Speed Of Light 요약, 계층별 roofline chart, pipe
-            utilization 과 DRAM throughput, active·eligible·issued warp 의 정의가 여기에
-            있습니다. 이 글의 bound 판정 증거는 이 metric 들의 조합입니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-roofline-williams" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Williams, Waterman, Patterson · Roofline: An Insightful Visual Performance Model for Multicore Architectures (CACM 2009)"
-            citeKey={3}
-            href={ROOFLINE}
-          >
-            Operational intensity 를 x 축에, min(peak FLOP/s, bandwidth × intensity) 를
-            지붕으로 그려 kernel 이 어느 자원에 먼저 묶이는지 보이는 model 을 제안했습니다.
-            원 논문은 multicore CPU 가 대상이며 GPU 적용은 같은 식을 다른 peak 에 넣은 것입니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-hopper-h100-memory" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="NVIDIA Developer Blog · NVIDIA Hopper Architecture In-Depth"
-            citeKey={4}
-            href={HOPPER}
-          >
-            H100 SXM5 의 SM 132개, L2 50 MB, SM 당 L1·shared memory 256 KB, HBM3 3 TB/s
-            이상이라는 구성을 읽었습니다. Peak FLOPS 와 3.35 TB/s 는 NVIDIA 자기보고이며
-            SKU·clock 조건에 묶입니다.
-          </CitationBlock>
-        </div>
-        <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/cs/gpu/cuda-perf-analysis#throughput-ledger">Achieved FLOP/s·bandwidth ledger</Link>,
-          그리고 <Link to="/cs/gpu/cuda-matrix-multiply#tiled">Tile 로 intensity 를 올리는 GEMM</Link>.
-        </p>
-      </section>
-    </div>
-  );
+/** teach-system S→B→0…7. Same 64-element trace; official source snapshots pinned. */
+export default function Article() {
+  const sidebar = useCodeSidebar();
+  return <div className="space-y-16">
+    <section id="overview" data-teach-level="S" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">1 · 계산기는 놀고 있는데 왜 프로그램은 끝나지 않을까요</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">같은 덧셈 수를 가진 프로그램도 데이터가 오는 길과 요청 순서가 다르면 시간이 달라집니다. 계산 속도와 데이터를 옮기는 속도를 먼저 구별합니다. 다음 요청을 낼 수 없어 기다리는지도 확인합니다. 이 구분이 개선 방향을 정합니다.</p>
+        <p className="leading-8">이 글은 64개 덧셈에 필요한 768바이트를 유지한 채 저장 계층과 접근 간격, 시간당 처리량을 차례로 계산합니다. 계산한 상한과 측정한 성능을 비교합니다. 상한 아래에 있다는 사실만으로 원인을 확정하지는 않습니다.</p>
+      </div>
+      <p data-stage-bridge="overview" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">병목을 한 수치로 이름 붙이기 전에 데이터가 지나가는 경로를 펼칩니다.</p>
+    </section>
+    <section id="black-box" data-teach-level="B" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">2 · 가까운 곳에서 찾으면 먼 저장 장치로 가지 않습니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">계산 직전 값은 가장 가까운 공간에 둡니다. 거기에 없는 값은 더 크고 멀리 있는 저장 공간에서 찾습니다. 가까운 공간이 최근 값을 보관하고 있으면 큰 저장 장치에서 다시 가져올 필요가 없습니다.</p>
+        <p className="leading-8">따라서 프로그램이 읽으라고 요구한 양과 실제로 바깥 통로를 지난 양은 다를 수 있습니다. 시간당 처리량을 계산할 때는 어느 지점의 바이트를 세는지 먼저 고정해야 합니다.</p>
+      </div>
+      <NumericPath title="한 값이 없는 경우에만 다음 단계로 내려갑니다" steps={[{"label": "계산 직전", "value": "작은 값"}, {"label": "가까운 보관", "value": "최근 데이터"}, {"label": "큰 저장소", "value": "원본 배열"}]} />
+      <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">요청량과 실제 전송량을 구별했습니다. 두 양이 같다고 가정할 수 있는 작은 계산부터 시작합니다.</p>
+    </section>
+    <section id="case" data-teach-level="0" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">3 · 64번 더하려고 유효 768바이트를 읽고 씁니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">원소 64개짜리 배열 두 개를 더하며 각 원소는 4바이트라고 놓습니다(가정). 입력 512바이트와 출력 256바이트를 합한 유효량은 768바이트입니다. 덧셈은 64번이므로 유효량 기준으로 1바이트당 1/12번 계산합니다.</p>
+        <p className="leading-8">성능 상한을 연습하기 위해 해당 덧셈의 계산 능력을 초당 1 조 회, 해당 메모리 경계의 대역폭을 초당 1 조 바이트로 놓습니다(가정). 이 숫자는 실제 GPU의 사양이 아니며 복사와 요청 시작 비용을 포함하지 않습니다.</p>
+      </div>
+      <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">64회·768바이트와 두 상한을 고정했습니다. 첫 32개 요청이 어떻게 모이는지 확대합니다.</p>
+    </section>
+    <section id="picture" data-teach-level="1" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">4 · 연속 128바이트는 32바이트 조각 4개에 들어갑니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">첫 32개 작업이 각각 4바이트를 읽으면 유효량은 128바이트입니다. 시작 주소가 128바이트 경계에 맞으면 32바이트씩 4 조각에 걸립니다. 시작 위치가 4바이트 어긋나면 5 조각 160바이트 범위에 걸려 128/160=80%가 유효한 부분입니다.</p>
+        <p className="leading-8">각 작업이 원소 하나씩 건너뛰는 간격 2이면 조각 8개, 256바이트 범위입니다. 간격 8이면 조각 32개, 1024바이트 범위입니다. 같은 128바이트를 사용해도 주소가 흩어질수록 요청에 걸리는 조각이 늘어납니다. 아래 계층에서 실제로 읽는 양은 아직 계산하지 않았습니다. 간격 8의 변형에는 최소 249개 원소가 있는 입력이 필요합니다. 64개짜리 원본 배열 밖을 읽으라는 뜻은 아닙니다.</p>
+      </div>
+      <NumericPath title="32개 작업이 유효 128B를 요청하는 세 가지 주소 배치" steps={[{"label": "연속·정렬", "value": "4×32B"}, {"label": "간격 2", "value": "8×32B"}, {"label": "간격 8", "value": "32×32B"}]} />
+      <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">4·5·8·32는 주소 분포에 따른 요청 조각 수입니다. 왜 이 조각을 따로 세는지 살펴봅니다.</p>
+    </section>
+    <section id="need" data-teach-level="2" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">5 · 같은 요청을 합치고 중간값을 재사용하면 이동을 줄일 수 있습니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">가까운 주소들을 한 번에 가져오면 전송한 값을 더 많이 씁니다. 여러 계산이 같은 입력을 반복해서 쓰면 가까운 공간에 유지하는 것도 도움이 됩니다. 이 두 방법은 주소를 모으는 일과 재사용을 늘리는 일로 역할이 다릅니다.</p>
+        <p className="leading-8">이번 64개 덧셈은 각 입력을 한 번만 읽습니다. 별도의 공동 작업 공간에 복사하고 기다리는 절차를 추가해도 원본 읽기가 줄지 않을 수 있습니다. 최적화를 선택할 때는 절약되는 이동량에서 새 복사와 대기 비용을 빼야 합니다.</p>
+      </div>
+      <p data-stage-bridge="need" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">이번 예의 재사용이 없다는 조건을 정했습니다. 저장소와 측정 지표의 이름을 붙입니다.</p>
+    </section>
+    <section id="names" data-teach-level="3" className="scroll-mt-20">
+      <span id="hierarchy" className="scroll-mt-20" />
+      <span id="paper-hopper-h100-memory" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">6 · 저장 계층과 주소 공간은 다른 분류입니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">Thread의 계산값을 두는 곳은 register입니다. Block이 직접 공유하는 공간은 shared memory이고, 자동으로 최근 데이터를 보관하는 cache는 L1·L2처럼 계층 이름을 갖습니다. NVIDIA에서는 L1이 SM 단위이고 L2가 더 넓은 범위의 요청을 받습니다. 정확한 크기와 경로는 GPU 세대에 따릅니다.</p>
+        <p className="leading-8">CUDA local memory는 thread 전용 주소 공간입니다. Register에서 넘친 spill이나 동적 배열이 여기에 놓일 수 있고 실제 장치 메모리를 cache해서 접근합니다. 이름의 local이 낮은 지연을 보장하지 않습니다. Constant memory는 읽기 전용 주소 공간이며 한 warp가 같은 주소를 읽으면 broadcast할 수 있지만 서로 다른 주소는 요청이 분리됩니다.</p>
+        <p className="leading-8">한 요청이 돌아오는 시간은 latency이고 시간당 전송량은 bandwidth입니다. NVIDIA의 32바이트 요청 조각을 sector라고 부릅니다. 주소를 모아 적은 조각으로 처리하는 것이 coalescing입니다. Sector는 HBM의 row나 명령 하나와 같은 개념이 아닙니다.</p>
+        <p className="leading-8">선택한 메모리 경계의 1바이트당 연산 수를 arithmetic intensity라고 부릅니다. 계산 능력과 이동 능력으로 성능 상한을 그린 것이 roofline입니다. FLOP은 부동소수점 연산 횟수이며 덧셈 하나를 1로 셉니다. 다른 dtype나 행렬 전용 명령의 peak를 이번 덧셈에 대입하지 않습니다.</p>
+      </div>
+      <p data-stage-bridge="names" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">주소 공간·물리 계층·측정 단위를 분리했습니다. 같은 64개 사례에서 상한을 계산합니다.</p>
+    </section>
+    <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
+      <span id="transactions" className="scroll-mt-20" />
+      <span id="latency-bandwidth" className="scroll-mt-20" />
+      <span id="roofline-bound" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">7 · 1/12FLOP/B에 1TB/s를 곱하면 약 83.3GFLOP/s입니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">64개 덧셈의 유효 연산 강도는 64/768=1/12FLOP/B입니다. 측정 경계의 실제 전송량도 768바이트라고 가정합니다. 이때 1TB/s×1/12=약 83.3GFLOP/s가 이동에 의한 상한입니다. 계산 상한 1TFLOP/s보다 낮으므로 이상적인 정상 상태에서는 이동이 먼저 제한합니다.</p>
+        <p className="leading-8">같은 계산을 시간으로 보면 64÷10¹² =0.064ns 의 계산 물량과 768÷10¹² =0.768ns의 이동 물량을 비교합니다. 더 큰 0.768ns는 포화된 장치의 처리량 모델입니다. 64개만 제출한 실제 kernel이 그 시간에 완료된다는 예측은 아닙니다. 요청 시작과 메모리 응답을 기다리는 시간이 남습니다.</p>
+        <p className="leading-8">두 상한이 만나는 점은 1TFLOP/s÷1TB/s =1FLOP/B입니다. 이를 ridge point라고 부릅니다. 같은 경계의 실제 byte가 늘면 연산 강도는 왼쪽으로 이동합니다. Cache 재사용으로 HBM byte가 줄면 HBM 기준의 연산 강도는 오른쪽으로 이동할 수 있습니다.</p>
+        <p className="leading-8">한 요청의 평균 왕복 시간을 500ns로 가정합니다. 1TB/s를 지속하려면 평균 500000바이트, 즉 500KB가 처리 중이어야 합니다. 처리량 × 평균 대기 시간으로 구한 평균 진행 중 데이터량입니다. 64개 예의 768바이트만으로는 이 정상 상태를 채울 수 없습니다. 독립 요청을 늘리지 못하면 지연이 성능을 제한합니다.</p>
+        <p className="leading-8">실측 유효 768바이트를 1μs에 처리했다면 유효 대역폭은 0.768GB/s입니다(시간 가정). 이것은 유효 요청 기준입니다. DRAM counter가 읽기와 쓰기에 다른 byte를 보고하면 그 값을 같은 구간 시간으로 나눈 물리 대역폭을 별도로 표시해야 합니다.</p>
+      </div>
+      <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">83.3GFLOP/s 상한과 64개 작업의 실제 완료 시간을 구별했습니다. 공식 문서의 바이트 정의에 대입합니다.</p>
+    </section>
+    <section id="source" data-teach-level="5" className="scroll-mt-20">
+      <span id="paper-cuda-best-practices-memory" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">8 · 공식 대역폭 식의 읽기와 쓰기에 512와 256을 넣습니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">CUDA Best Practices Guide 13.0.2의 Effective Bandwidth Calculation은 읽은 바이트와 쓴 바이트를 더한 뒤 시간으로 나눕니다. 이 글에서는 유효 읽기 512와 쓰기 256을 넣습니다. 1μs라면 768/10⁻⁶=768000000B/s, 즉 0.768GB/s입니다.</p>
+        <p className="leading-8">문서의 coalesced access 설명은 compute capability 6.0 이상을 다룹니다. 이 범위에서는 warp 요청을 32바이트 transaction 단위로 합칩니다. 앞의 연속 128바이트는 4개, 4바이트 어긋난 경우 5개에 걸립니다. Cache에서 재사용되는 조각이 있으면 HBM까지 추가 읽기가 내려가지 않을 수 있습니다.</p>
+        <p className="leading-8">요청 범위에서 32 sectors는 4 sectors의 8배입니다. 이 계산으로 HBM 전송량과 한 load의 latency가 모두 8배라고 결론 내릴 수는 없습니다. 병합과 cache, 다른 요청과의 겹침을 확인해야 합니다.</p>
+      </div>
+      <SourceApplication source="CUDA Best Practices13.0.2 ·Effective Bandwidth Calculation" excerpt="effective bandwidth" application="(512B +256B)/1μs =0.768GB/s. 유효 바이트 기준 값과 DRAM counter 기준 값을 섞지 않습니다." /><CitationBlock source="CUDA Best Practices13.0.2 ·Effective Bandwidth Calculation" citeKey={1} href="https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-best-practices-guide/index.html">CUDA Best Practices13.0.2 ·Effective Bandwidth Calculation</CitationBlock>
+      <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">바이트 식과 sector 규칙을 각자의 관측 위치에 두었습니다. 실제 코드가 내는 읽기·쓰기를 다시 확인합니다.</p>
+    </section>
+    <section id="comparison" data-teach-level="6" className="scroll-mt-20">
+      <span id="paper-roofline-williams" className="scroll-mt-20" />
+      <span id="paper-nsight-compute-roofline" className="scroll-mt-20" />
+      <span id="evidence" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">9 · 실제 코드의 한 덧셈과 분석 도구의 여러 자원을 대조합니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">고정 vectorAdd 소스의 C[i]=A[i]+B[i]+0.0f는 입력 둘과 출력 하나를 보여 줍니다. Compiler가 불필요한 0.0f를 제거한 일반 덧셈 경로를 가정하면 64개는 64FLOP입니다. 특정 빌드의 실제 명령은 SASS로 확인합니다. 소스에 한 줄이라는 이유로 memory 명령도 하나라고 세지 않습니다.</p>
+        <p className="leading-8">계산 상한에 가까운지 보려면 실제로 사용한 실행 pipe의 throughput과 명령 구성을 확인합니다. Scalar FP32 덧셈에 FP16 Tensor peak를 대입하면 다른 계산기의 능력을 비교하게 됩니다. 어느 pipe가 80%를 넘었다는 임의 문턱만으로 compute-bound를 확정하지 않습니다.</p>
+        <p className="leading-8">DRAM throughput이 높다고 놓습니다. Byte를 줄였을 때 시간도 줄면 메모리 대역폭이 병목이라는 증거가 쌓입니다. DRAM과 계산 pipe가 둘 다 낮다면 ready warp 부족이나 직렬 의존, 작은 grid, launch 사이 공백을 더 확인합니다. Profiler의 eligible warp는 실행 가능한 warp를 보는 지표입니다. 한counter가 모든 원인을 대표하지는 않습니다.</p>
+        <p className="leading-8">Roofline 원논문은 연산 강도와 메모리·계산 상한을 같은 그림에 놓는 모델입니다. 실제 측정점이 선 아래에 있다는 사실만으로 어느 동기화나 주소 의존이 원인인지는 설명하지 않습니다. <Link to="/cs/gpu/sm-warp-scheduling-and-issue#issue-scoreboard">SM의 준비된 명령과 scoreboard</Link>가 그다음 질문을 다룹니다.</p>
+      </div>
+      <CodeViewButton label="vectorAdd의 실제 읽기 2회·쓰기 1회" onClick={() => sidebar.open("cuda-kernel", codeRefs["cuda-kernel"])} /><SourceApplication source="NVIDIA vectorAdd · 3f1c509 · 52행" excerpt="C[i] = A[i] + B[i] + 0.0f;" application="Compiler가 추가 0.0f를 제거한 64개 덧셈 모델에서 64FLOP·유효 768B입니다. Tensor 행렬 peak를이 scalar 계산 상한으로 쓰지 않습니다." /><CitationBlock source="NVIDIA vectorAdd · 3f1c509 · 52행" citeKey={2} href="https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu">NVIDIA vectorAdd · 3f1c509 · 52행</CitationBlock><CitationBlock source="Williams 외 ·Roofline(2009)" citeKey={3} href="https://escholarship.org/uc/item/3qf383m0">연산 강도와 대역폭·계산 상한을 결합하는 모델. 실제 병목 원인의 완전한 진단은 아닙니다.</CitationBlock><CitationBlock source="NVIDIA Nsight Compute ·2026-10-04 확인 ·Profiling Guide" citeKey={4} href="https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html">메모리 계층·실행 pipe·scheduler counter의 정의를 함께 확인합니다.</CitationBlock>
+      <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">상한과 counter를 같은 연산 종류에 맞췄습니다. 서로 다른 병목을 개선하는 방법을 마지막으로 나눕니다.</p>
+    </section>
+    <section id="limits" data-teach-level="7" className="scroll-mt-20">
+      <span id="latency-launch-bound" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">10 · 상한에 못 미치는 이유에 따라 다음 실험을 고릅니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">작은 kernel 1000개를 순차 제출하고 각각의 추가 launch 비용이 4μs라면 시작 비용만 4ms입니다(가정). 이 경우 요청 byte를 조금 줄이는 것보다 launch 수를 줄이는 실험이 유용할 수 있습니다. 다만 fusion은 register와 shared memory를 늘릴 수 있습니다. Spill이나 상주 자원 감소도 생길 수 있으므로 전체 시간을 다시 잽니다.</p>
+        <p className="leading-8">다음 주소가 이전 읽기 값에 달려 있으면 넓은 메모리 통로도 놀 수 있습니다. 이때 독립 작업을 늘리거나 의존 경로를 바꾸는 실험을 합니다. 반대로 이미 대역폭을 채웠다면 작업 수를 더 늘리는 것만으로 바이트당 시간이 줄지 않습니다.</p>
+        <p className="leading-8">H100 같은 제품의 실제 수치를 쓸 때는 SKU·clock·dtype·sparsity와 문서 버전을 같이 기록합니다. 이 글의 1TFLOP/s와 1TB/s는 서로 맞춘 가정이며 제품 벤치마크가 아닙니다. 물리 HBM의 층·channel·행 동작은 <Link to="/cs/gpu/hbm-stack-and-memory-requests#mechanism">메모리 제어기 뒤의 경로</Link>에서 이어집니다.</p>
+      </div>
+      <p data-stage-bridge="limits" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">같은 64개 사례로 요청 효율·처리량 상한·지연과 launch 비용을 구별했습니다.</p>
+    </section>
+    <ReviewPrompts questions={["유효 768B를 1μs에 처리하면 대역폭은 얼마입니까? (답: 7·8절)", "32 sectors라는 수치만으로 HBM 거래량과 지연 시간이 8배라고 말할 수 있습니까? (답: 8절)", "scalar 덧셈에 Tensor FP16 최대 처리량을 넣으면 왜 잘못됩니까? (답: 9절)"]} />
+    <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={{ cuda: { id: "cuda", label: "NVIDIA cuda-samples · v13.0", badgeClass: "bg-sky-50 border-sky-300 text-sky-800" }, hip: { id: "hip", label: "ROCm HIP-Examples · pinned source", badgeClass: "bg-amber-50 border-amber-300 text-amber-800" } }} />
+  </div>;
 }

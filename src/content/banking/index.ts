@@ -25,6 +25,12 @@ const banking: Category = {
       description: "지급·청산·결제의 분리와 결제 최종성",
       icon: "🔁",
     },
+    {
+      slug: "banking-funding",
+      name: "담보 자금조달",
+      description: "레포의 현금 교환·헤어컷·만기 연장 위험",
+      icon: "🔗",
+    },
   ],
   articles: bankingArticles,
 };

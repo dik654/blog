@@ -51,6 +51,26 @@ figure[data-viz="modern"]:has([data-viz-controls])
   flex-direction: column;
 }
 
+/* 내부 wrapper가 별도 scrollport가 되면 sticky 조작부가 장면 높이를 따라
+   움직인다. 스크롤은 figure의 직계 canvas 하나가 맡도록 한다. */
+figure[data-viz="modern"]:has([data-viz-controls]) > [data-viz-canvas]
+  :is([data-viz], [data-viz-canvas]):has(> [data-viz-controls]) {
+  overflow: visible;
+  padding-bottom: 0;
+}
+
+/* 고정 높이를 가진 내부 장면이 flex-1 본문을 줄이면 그림과 설명이 조작부에
+   겹친다. 이 구조에서만 자연 높이를 보존하고 바깥 canvas로 스크롤한다. */
+figure[data-viz="modern"] > [data-viz-canvas]
+  [data-viz-canvas]:has(> .flex.min-h-0.flex-1.flex-col.justify-center) {
+  height: auto;
+}
+
+figure[data-viz="modern"] > [data-viz-canvas]
+  [data-viz-canvas] > .flex.min-h-0.flex-1.flex-col.justify-center {
+  flex: 0 0 auto;
+}
+
 /*
  * 그림 칸은 flex 축소 대상이 아니다.
  *
@@ -99,6 +119,11 @@ figure[data-viz="lesson-flow-v4"] > [data-viz-canvas] {
   flex: 1 1 auto;
   overflow-y: auto;
   overscroll-behavior: contain;
+}
+
+/* 펼친 개념의 컷이 길어져도 조작부는 위 canvas를 기준으로 고정한다. */
+figure[data-viz="lesson-flow-v4"] [data-concept-step] {
+  overflow: visible;
 }
 
 @media (max-height: 40rem) {

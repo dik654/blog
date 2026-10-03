@@ -8,7 +8,8 @@ import {
 const roots = process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
 const json = process.argv.includes("--json");
 const strict = process.argv.includes("--strict");
-const allArticles = process.argv.includes("--all-articles");
+// A global audit means public articles, not every historical directory on disk.
+const allArticles = process.argv.includes("--all-articles") || roots.length === 0;
 const sourceExtensions = new Set([".tsx", ".ts"]);
 
 function collect(target, files = []) {
@@ -20,31 +21,6 @@ function collect(target, files = []) {
   }
   for (const entry of fs.readdirSync(target)) collect(path.join(target, entry), files);
   return files;
-}
-
-const articleFiles = collect("src/pages/articles");
-const fileSet = new Set(articleFiles.map((file) => path.resolve(file)));
-
-function resolveImport(from, specifier) {
-  if (!specifier.startsWith(".")) return undefined;
-  const base = path.resolve(path.dirname(from), specifier);
-  for (const candidate of [base, `${base}.tsx`, `${base}.ts`, path.join(base, "index.tsx"), path.join(base, "index.ts")]) {
-    if (fileSet.has(candidate)) return candidate;
-  }
-  return undefined;
-}
-
-function trace(entry, seen = new Set()) {
-  const absolute = path.resolve(entry);
-  if (!fileSet.has(absolute) || seen.has(absolute)) return seen;
-  seen.add(absolute);
-  const source = fs.readFileSync(absolute, "utf8");
-  const importPattern = /(?:import|export)\s+(?:[^"']+?\s+from\s+)?["']([^"']+)["']/g;
-  for (const match of source.matchAll(importPattern)) {
-    const resolved = resolveImport(absolute, match[1]);
-    if (resolved) trace(resolved, seen);
-  }
-  return seen;
 }
 
 const groups = new Map();
@@ -71,7 +47,7 @@ if (allArticles) {
 const rows = [];
 for (const [group, groupFiles] of groups) {
   const entry = allArticles ? undefined : `${group}.tsx`;
-  const reachable = entry && fs.existsSync(entry) ? [...trace(entry)] : groupFiles;
+  const reachable = entry && fs.existsSync(entry) ? collectArticleSourceClosure(entry) : groupFiles;
   const source = reachable.map((file) => fs.readFileSync(file, "utf8")).join("\n");
   const sectionCount = (source.match(/<section\b/g) ?? []).length;
   // `ExplainedFormula` owns its own display math.  Anything still rendered

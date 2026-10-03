@@ -1,0 +1,238 @@
+{
+  "checkedAt": "2026-10-04",
+  "scope": "교육용 가정 사례의 산술 및 국가 탐색 동작. 암호·GPU의 실장치 실행이나 성능 재현이 아님.",
+  "ai": {
+    "online_softmax": {
+      "denominator": 1.2034379904932109,
+      "numerator": 8.876694820931103,
+      "output": 7.376113178289414,
+      "same_reference_3": 7.376113178289414
+    },
+    "attention_memory": {
+      "QKV_MiB": 1.5,
+      "SP_roundtrip_MiB": 128.0,
+      "ratio_QKV": 85.33333333333333,
+      "32GiB_at_2TBps_ms": 17.179869184
+    },
+    "delta": {
+      "plain_read": [
+        2,
+        1.8
+      ],
+      "delta_read": [
+        5,
+        0.0
+      ],
+      "other_key_read": [
+        3.0,
+        1.92
+      ],
+      "gdn2_read": [
+        4.0,
+        1.35
+      ],
+      "correction_u2": [
+        -1.2,
+        3
+      ]
+    },
+    "moe": {
+      "expert_MiB": 258.0,
+      "all_experts_GiB": 16.125,
+      "logical_roundtrip_MiB": 64.0,
+      "remote_expected_MiB": 56.0,
+      "communication_ms": 1.17440512,
+      "compute_ms": 1.8468359372799998
+    },
+    "verifier": {
+      "pass_rate": 0.5,
+      "accuracy": 0.4,
+      "precision": 0.76,
+      "recall": 0.95,
+      "shaping_total": 0.0
+    },
+    "world": {
+      "initial_costs": [
+        16,
+        4,
+        4,
+        0
+      ],
+      "observed_costs": [
+        10.240000000000002,
+        1.44,
+        1.44,
+        0.6399999999999997
+      ]
+    }
+  },
+  "zk": {
+    "SNARK false instance": true,
+    "Schnorr response": true,
+    "Schnorr extraction": true,
+    "Schnorr simulator": true,
+    "RFC response sign": true,
+    "Pedersen alternate opening": true,
+    "R1CS rows": true,
+    "QAP coefficient identity": true,
+    "KZG quotient": true,
+    "KZG exposed tau": true,
+    "IPA folds": true,
+    "IPA corrected inner product": true,
+    "FRI fold": true,
+    "FRI second fold": true,
+    "sampling": true,
+    "WHIR linear condition": true,
+    "STARK interpolation": true,
+    "STARK transition identity": true,
+    "STARK boundary quotients": true,
+    "STARK composition": true,
+    "STARK blinding example": true,
+    "Nova cross term": true,
+    "Jolt memory": true,
+    "trace memory": true,
+    "live memory": true,
+    "MSM memory": true,
+    "EIP primitive gas": true,
+    "pairing input bytes": true,
+    "SP1 legal masked target": true
+  },
+  "postQuantumIndependent": {
+    "kem": {
+      "t": [
+        9,
+        6
+      ],
+      "u": [
+        6,
+        5
+      ],
+      "v": 6,
+      "su": 16,
+      "decoded": 7,
+      "errorCounterexample": 3
+    },
+    "signature": {
+      "z": [
+        3,
+        3
+      ],
+      "Az": [
+        15,
+        15
+      ],
+      "Ay": [
+        7,
+        9
+      ],
+      "reconstruction": [
+        6,
+        9
+      ]
+    },
+    "grover": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.5,
+        -0.5,
+        -0.5,
+        -0.5
+      ]
+    ],
+    "shorQFT256": {
+      "assumption": "second register measured as1 in N15 base2 example",
+      "q": 256,
+      "firstRegisterCandidates": 64,
+      "conditionalOutcomes": [
+        [
+          0,
+          0.25
+        ],
+        [
+          64,
+          0.25
+        ],
+        [
+          128,
+          0.25
+        ],
+        [
+          192,
+          0.25
+        ]
+      ],
+      "periodCandidate4Check": 1,
+      "periodCandidate2Check": 4,
+      "factors": [
+        3,
+        5
+      ]
+    }
+  },
+  "qkd": {
+    "signals": 12,
+    "sifted": 8,
+    "sample": 2,
+    "remaining": 6,
+    "A": [
+      0,
+      1,
+      0,
+      1,
+      1,
+      0
+    ],
+    "B": [
+      0,
+      1,
+      1,
+      1,
+      1,
+      0
+    ],
+    "publicParity": [
+      1,
+      1,
+      0
+    ],
+    "candidates": 8,
+    "hashDemo": [
+      0,
+      1
+    ],
+    "missAttack": 0.5625,
+    "missFixed": 0.75,
+    "extractBound": 0.3535533905932738,
+    "approvedKeyBits": 0
+  },
+  "countryExplorer": {
+    "countries": 250,
+    "results": [
+      {
+        "width": 1440,
+        "search": true,
+        "empty": true,
+        "region": true,
+        "pagination": true,
+        "comparison": true,
+        "missing": true,
+        "overflow": false
+      },
+      {
+        "width": 390,
+        "search": true,
+        "empty": true,
+        "region": true,
+        "pagination": true,
+        "comparison": true,
+        "missing": true,
+        "overflow": false
+      }
+    ]
+  }
+}

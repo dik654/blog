@@ -1,0 +1,18 @@
+import type { CodeRef, FileNode } from "@/components/code/types";
+import softmax from "./codebase/flash-attention/flash_attn/cute/softmax.py?raw";
+import delta from "./codebase/GatedDeltaNet-2/lit_gpt/gdn2_ops/fused_recurrent_gdn2.py?raw";
+import ep from "./codebase/DeepEP/deep_ep/buffers/ep.py?raw";
+import rewards from "./codebase/open-r1/src/open_r1/rewards.py?raw";
+import world from "./codebase/le-wm/jepa.py?raw";
+import cem from "./codebase/stable-worldmodel/stable_worldmodel/planning/solver/cem.py?raw";
+
+export const codeRefs: Record<string, CodeRef> = {
+  world: {path:"le-wm/jepa.py",code:world,lang:"python",highlight:[87,124],desc:"논문 저자의 공식 le-wm 원문 전체 · 8edfeb3 · 2026-05-22. rollout은 예측 상태를 다음 입력으로 이어 붙이고 criterion은 마지막 상태와 목표의 제곱 차이를 합합니다.",annotations:[{lines:[87,95],color:"sky",note:"실제 관측을 새로 읽는 대신 예측한 latent를 다음 예측의 입력으로 씁니다. 이것이 모델 안의 rollout입니다."},{lines:[112,124],color:"emerald",note:"각 후보의 마지막 예측과 목표를 비교합니다. 이름은 mse_loss지만 reduction='none' 뒤 sum을 하므로 본문의 제곱거리 합과 연결됩니다."}]},
+  cem: {path:"stable-worldmodel/cem.py",code:cem,lang:"python",highlight:[215,253],desc:"논문이 사용하는 planning framework의 공식 원문 전체 · 21446f1 · 2026-10-02. 이 revision은 논문 발표 때 코드와 동일하다고 주장하지 않습니다.",annotations:[{lines:[215,231],color:"sky",note:"각 후보의 cost를 계산한 뒤 작은 값을 가진 top-k를 선택합니다."},{lines:[244,253],color:"amber",note:"선택한 후보들의 평균·표준편차로 다음 표본 분포를 갱신합니다. 전체 후보를 빠짐없이 탐색한다는 보장은 없습니다."}]},
+  softmax: { path: "flash-attention/softmax.py", code: softmax, lang: "python", highlight: [213, 251], desc: "공식 원문 전체 · e9515d5 · 2026-10-03. 이 일반 online_softmax 경로에서 기준값과 누적합을 추적합니다. FA4의 모든 특수 경로가 이 함수 하나라는 뜻은 아닙니다.", annotations: [{lines:[213,225],color:"sky",note:"현재 tile과 이전 기준을 비교합니다. 완전히 가린 행은 별도의 무한대 처리가 필요합니다."},{lines:[236,248],color:"amber",note:"이전 지수합을 row_scale로 옮긴 뒤 현재 tile의 지수를 더합니다. 본문의 3→5 기준 이동이 이 경로에 대응합니다."}] },
+  delta: { path: "GatedDeltaNet-2/fused_recurrent_gdn2.py", code: delta, lang: "python", highlight: [218, 243], desc: "공식 Triton 원문 전체 · a5552fe · 2026-08-29. IS_V_FIRST 분기는 값×key 저장 배치이며 반대 분기는 논문의 key×값 배치입니다.", annotations:[{lines:[218,225],color:"sky",note:"먼저 decay를 적용하고 erase gate b와 key를 원소별로 곱합니다."},{lines:[227,235],color:"rose",note:"기존 상태에서 지울 성분을 읽고, 독립적인 write gate w가 조절한 새 값에서 뺍니다."},{lines:[237,243],color:"emerald",note:"같은 correction을 외적으로 기록한 뒤 query로 읽습니다. 두 저장 배치는 서로 전치 관계입니다."}] },
+  dispatch: { path:"DeepEP/ep.py",code:ep,lang:"python",highlight:[562,625],desc:"공식 DeepEP V2.5 원문 전체 · 93eb6eb · 2026-09-30. prefill과 decode가 같은 EPBuffer.dispatch API를 쓰되 count 처리와 메모리 준비 조건이 다릅니다.",annotations:[{lines:[562,582],color:"sky",note:"token, expert 번호, weight와 handle을 받는 실제 경계입니다. 새로운 routing 결과에는 새로운 dispatch가 필요합니다."},{lines:[610,625],color:"amber",note:"do_cpu_sync는 CPU에서 정확한 수신 개수를 얻는 선택입니다. False일 때도 유효 범위를 GPU의 수신 개수로 제한해야 합니다."}]},
+  rewards:{path:"open-r1/rewards.py",code:rewards,lang:"python",highlight:[40,91],desc:"Hugging Face 공식 원문 전체 · 5b6ff22 · 2026-10-02. 이 코드의 파싱·동치 검사와 형식 검사는 다른 측정입니다. 최신 소스는 이번 블로그용으로 재작성하지 않았습니다.",annotations:[{lines:[40,82],color:"sky",note:"정답과 응답을 파싱하고 verify를 호출합니다. 채점할 수 없는 경우와 틀렸다고 판정한 경우를 구별해야 합니다."},{lines:[85,91],color:"rose",note:"format_reward는 정규식 형태를 확인합니다. 태그가 맞는 오답도 형식 점수를 받을 수 있습니다."}]},
+};
+export const fileTrees: Record<string, FileNode> = Object.fromEntries(Object.entries(codeRefs).map(([key,ref])=>[ref.path.split("/")[0],{name:ref.path.split("/")[0],type:"dir",children:[{name:ref.path.split("/")[1],type:"file",path:ref.path,codeKey:key}]}]));
+export const projectMetas = Object.fromEntries(Object.keys(fileTrees).map(id=>[id,{id,label:id,badgeClass:"bg-sky-50 border-sky-300 text-sky-800"}]));

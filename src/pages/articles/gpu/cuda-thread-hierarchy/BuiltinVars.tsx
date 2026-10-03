@@ -27,7 +27,8 @@ export default function BuiltinVars() {
         <p>
           <code>&lt;&lt;&lt;gridDim, blockDim&gt;&gt;&gt;</code>은 “core를 몇 개
           켠다”는 명령이 아닙니다. Runtime에 logical block 수와 block당 thread
-          수를 제출하는 계약입니다. Hardware scheduler는 register·shared
+          수를 제출하는 계약입니다.</p>
+        <p>Hardware scheduler는 register·shared
           memory·최대 resident block/warp 한도를 함께 보고 SM에 block을
           배치합니다. 따라서 같은 256-thread block도 register를 많이 쓰면 동시에
           머무는 block 수가 줄 수 있습니다.
@@ -98,7 +99,8 @@ export default function BuiltinVars() {
         <p>
           Warp 배수는 마지막 warp의 빈 lane을 줄이는 데 유리하지만 block을 크게 만들수록 항상 빠른 것은 아닙니다. 큰 block은 block당 warp 수를 늘리는 대신
           register와 shared-memory budget을 한 번에 더 소비합니다. 긴 dependency chain이나 memory latency가 병목이면 resident
-          warp 수가 부족해질 수 있습니다. 반대로 block이 너무 작으면 scheduler가 가진 block 한도에 먼저 걸릴 수 있습니다. 먼저 128·256·512처럼 합법적인
+          warp 수가 부족해질 수 있습니다.</p>
+        <p>반대로 block이 너무 작으면 scheduler가 가진 block 한도에 먼저 걸릴 수 있습니다. 먼저 128·256·512처럼 합법적인
           후보를 만들고 같은 workload에서 achieved occupancy·eligible warps·memory throughput·kernel time을 비교합니다.
         </p>
       </div>

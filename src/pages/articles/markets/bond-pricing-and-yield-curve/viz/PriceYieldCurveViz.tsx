@@ -40,7 +40,7 @@ export default function PriceYieldCurveViz() {
         곡선이 실제 가격입니다.
       </p>
       <div className="themed-mafs mt-4 min-w-0 overflow-x-auto">
-        <Mafs height={240} preserveAspectRatio={false} viewBox={{ x: [-0.4, 12.4], y: [-22, 168], padding: 0 }}>
+        <Mafs height={240} preserveAspectRatio={false} viewBox={{ x: [-0.4, 13.2], y: [-22, 168], padding: 0 }}>
           <Coordinates.Cartesian
             xAxis={{ lines: 2, labels: (v) => `${v}%` }}
             yAxis={{ lines: 50 }}

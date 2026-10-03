@@ -3,6 +3,7 @@ import {
   type EditorialBoundaryKey,
 } from "@/content/editorial-ownership";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
+import { Link } from "react-router-dom";
 
 const EVIDENCE_LABEL = {
   standard: "표준·명세",
@@ -45,7 +46,7 @@ export default function ContentBoundary({
           <ul>
             {boundary.reuses.map((item) => (
               <li key={`${item.href}-${item.label}`}>
-                <a href={item.href}>{item.label}</a>
+                <Link to={item.href}>{item.label}</Link>
               </li>
             ))}
           </ul>

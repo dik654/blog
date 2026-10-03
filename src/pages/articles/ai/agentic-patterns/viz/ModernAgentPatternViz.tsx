@@ -31,8 +31,8 @@ function shapeClass(shape: NodeShape) {
 
 function FlowArrow({ active, label }: { active: boolean; label: string }) {
   return (
-    <div className="grid shrink-0 place-items-center gap-1 py-1 lg:w-16">
-      <svg viewBox="0 0 60 22" aria-hidden className="h-7 w-12 rotate-90 lg:rotate-0">
+    <div className="grid min-w-0 shrink-0 place-items-center gap-1 py-1 lg:w-8">
+      <svg viewBox="0 0 60 22" aria-hidden className="h-7 w-12 rotate-90 lg:w-8 lg:rotate-0">
         <motion.path
           d="M3 11h46"
           fill="none"
@@ -45,7 +45,7 @@ function FlowArrow({ active, label }: { active: boolean; label: string }) {
         />
         <path d="m44 5 10 6-10 6" fill="none" stroke="currentColor" strokeWidth="1.25" className={active ? "text-primary" : "text-border"} />
       </svg>
-      <span className="max-w-16 text-center font-mono text-[9px] font-bold text-muted-foreground">{label}</span>
+      <span className="max-w-16 break-words text-center font-mono text-[9px] font-bold text-muted-foreground lg:max-w-8">{label}</span>
     </div>
   );
 }
@@ -64,7 +64,7 @@ function PatternViz({ id, eyebrow, title, description, nodes, edgeLabels, sceneN
         onKeyDown={controls.onKeyDown}
         className="outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
       >
-        <div data-viz-canvas className="grid min-w-0 gap-2 lg:grid-cols-[repeat(7,minmax(0,1fr))] lg:items-center">
+        <div data-viz-canvas className="grid min-w-0 gap-2 lg:grid-cols-[minmax(0,1fr)_2rem_minmax(0,1fr)_2rem_minmax(0,1fr)_2rem_minmax(0,1fr)] lg:items-center">
           {nodes.map((node, index) => {
             const reached = index <= controls.active;
             const selected = index === controls.active;

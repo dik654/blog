@@ -1,0 +1,187 @@
+{
+  "checkedAt": "2026-10-04",
+  "checks": [
+    {
+      "check": "learning",
+      "command": [
+        "npm",
+        "run",
+        "audit:learning",
+        "--",
+        "--strict",
+        "--require-registration",
+        "--all-articles"
+      ],
+      "exitCode": 0,
+      "seconds": 9.92
+    },
+    {
+      "check": "graph",
+      "command": [
+        "npm",
+        "run",
+        "audit:graph",
+        "--",
+        "--strict"
+      ],
+      "exitCode": 0,
+      "seconds": 0.42
+    },
+    {
+      "check": "formula",
+      "command": [
+        "npm",
+        "run",
+        "audit:formula",
+        "--",
+        "--strict",
+        "--require-explicit"
+      ],
+      "exitCode": 0,
+      "seconds": 2.01
+    },
+    {
+      "check": "articles",
+      "command": [
+        "npm",
+        "run",
+        "audit:articles",
+        "--",
+        "--strict",
+        "--all-articles"
+      ],
+      "exitCode": 0,
+      "seconds": 1.64
+    },
+    {
+      "check": "viz",
+      "command": [
+        "npm",
+        "run",
+        "audit:viz",
+        "--",
+        "--strict",
+        "--all-articles"
+      ],
+      "exitCode": 0,
+      "seconds": 1.66
+    },
+    {
+      "check": "reading",
+      "command": [
+        "npm",
+        "run",
+        "audit:reading",
+        "--",
+        "--strict"
+      ],
+      "exitCode": 0,
+      "seconds": 0.76
+    },
+    {
+      "check": "order",
+      "command": [
+        "npm",
+        "run",
+        "audit:order",
+        "--",
+        "--strict"
+      ],
+      "exitCode": 0,
+      "seconds": 1.96
+    },
+    {
+      "check": "prose",
+      "command": [
+        "npm",
+        "run",
+        "audit:prose",
+        "--",
+        "--strict"
+      ],
+      "exitCode": 0,
+      "seconds": 1.69
+    },
+    {
+      "check": "positive_scope_tests",
+      "command": [
+        "node",
+        "--test",
+        "scripts/audit-learning-routes.test.mjs",
+        "scripts/audit-public-scope.test.mjs"
+      ],
+      "exitCode": 0,
+      "seconds": 2.67
+    },
+    {
+      "check": "lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exitCode": 0,
+      "seconds": 73.9
+    },
+    {
+      "check": "diff_check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "seconds": 0.15
+    },
+    {
+      "check": "topology",
+      "command": [
+        "npm",
+        "run",
+        "audit:topology",
+        "--",
+        "--strict"
+      ],
+      "exitCode": 0,
+      "seconds": 1.83
+    },
+    {
+      "check": "terms",
+      "command": [
+        "npm",
+        "run",
+        "audit:terms",
+        "--",
+        "--strict"
+      ],
+      "exitCode": 0,
+      "seconds": 1.91
+    }
+  ],
+  "build": {
+    "command": "GITHUB_PAGES=true npm run build",
+    "exitCode": 0,
+    "publicStaticRoutes": 1679,
+    "note": "최종 런타임 수정 뒤 전체 TypeScript·Vite·정적 route 생성 재실행, 종료 코드 0."
+  },
+  "lastChangesRechecked": [
+    "prose strict",
+    "topology strict",
+    "Viz strict public",
+    "세 GPU·macro 변경 Viz ESLint",
+    "git diff --check"
+  ],
+  "vendoredWhitespace": {
+    "fullStagedDiffCheck": "upstream codebase 파일 8개의 원래 공백·CRLF·마지막 빈 줄을 보고함",
+    "decision": "버전 고정 원문과 LICENSE의 byte를 보존한다. 직접 작성한 파일의 공백 검사는 codebase 자산을 제외하고 별도 수행한다.",
+    "authoredCheck": [
+      "git",
+      "diff",
+      "--cached",
+      "--check",
+      "--",
+      ".",
+      ":!**/codebase/**"
+    ]
+  }
+}

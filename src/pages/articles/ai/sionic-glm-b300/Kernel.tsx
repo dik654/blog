@@ -2,6 +2,7 @@ import {
   GLM_B300_PROJECT_MEASUREMENTS as M,
   GLM_B300_SOURCE_LINKS,
 } from "@/content/sionic-glm-b300";
+import TmemSource from "./TmemSource";
 
 export default function Kernel() {
   const q = M.liveQuantKernel;
@@ -63,11 +64,14 @@ export default function Kernel() {
           </span>
         </div>
 
+        <TmemSource />
+
         <h3 className="mt-8 mb-3 text-xl font-semibold">3. PQ-GEMM fusion</h3>
         <p className="leading-7">
           프로젝트에서 PQ-GEMM이라 부른 경로는 activation quantization과 GEMM을
           같은 pipeline에 넣어 중간 activation의 HBM write/read와 kernel
-          launch를 줄인다. DeepGEMM 같은 범용 library가 “구현할 수 없다”는 뜻은
+          launch를 줄인다.</p>
+        <p className="leading-7">DeepGEMM 같은 범용 library가 “구현할 수 없다”는 뜻은
           아니다. 빠르게 변하는 범용 kernel set과 특정 model·shape·SM에 고정한
           bespoke kernel의 최적화 범위가 다르다는 뜻으로 제한해서 읽어야 한다.
         </p>

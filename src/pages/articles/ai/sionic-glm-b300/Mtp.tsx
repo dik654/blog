@@ -11,7 +11,8 @@ export default function Mtp() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           일반 decode는 main model forward마다 다음 token 하나를 확정한다. MTP 기반 speculative decoding은 model-native draft
-          path가 future token 후보를 만들고 main model이 여러 위치를 한 번에 검증한다. 앞에서부터 일치한 token을 받아들여 한 verification
+          path가 future token 후보를 만들고 main model이 여러 위치를 한 번에 검증한다.</p>
+        <p className="leading-7">앞에서부터 일치한 token을 받아들여 한 verification
           iteration에서 하나보다 많은 token을 확정한다. GLM-5.2 공식 config에는 next-token-prediction layer가 1개이며, 별도 독립 draft
           model이 반드시 있다는 뜻은 아니다.
         </p>
@@ -33,7 +34,8 @@ export default function Mtp() {
           직관적으로 effective weight traffic/token은 “iteration의 main-model
           traffic ÷ acceptance length”로 줄지만, draft·verification·KV·sampling
           비용이 0이 아니므로 정확한 속도 향상은 acceptance length와 iteration
-          latency를 함께 측정해야 한다. batch가 여러 request가 weight를
+          latency를 함께 측정해야 한다.</p>
+        <p className="leading-7">batch가 여러 request가 weight를
           공유한다면 MTP는 한 request의 future positions가 같은 효과를 일부
           만든다는 비유는 가능하지만, scheduling과 attention shape가 같으므로
           진짜 batch와 동일하다고 말할 수는 없다.

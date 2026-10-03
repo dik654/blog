@@ -1,188 +1,70 @@
-import TermBreakdown from "@/components/articles/term-breakdown";
-import { CitationBlock } from "@/components/ui/citation-block";
-import ExplainedFormula from "@/components/ui/explained-formula";
-import { BlobDemandGapViz, BlobpoolPipelineViz } from "./robinhood-chain-blob-demand/viz/BlobDemandViz";
-
-const DUNE_BLOBS = "https://dune.com/hildobby/blobs";
-const EIP_4844 = "https://eips.ethereum.org/EIPS/eip-4844";
-const EIP_7892 = "https://eips.ethereum.org/EIPS/eip-7892";
-const EIP_8070 = "https://eips.ethereum.org/EIPS/eip-8070";
-const GETH_MAINNET_CONFIG = "https://github.com/ethereum/go-ethereum/blob/master/params/config.go";
-
-export default function RobinhoodChainBlobDemandArticle() {
-  return (
-    <article className="space-y-14">
-      <section id="overview" className="space-y-6">
-        <header className="space-y-3">
-          <p className="text-sm font-semibold text-primary">Dune 대시보드 스냅샷 · 2026-09-12 기준</p>
-          <h2 className="text-3xl font-bold tracking-tight">로빈후드 체인 관련 블롭 수요를 읽을 때는 평균·타겟·피크를 먼저 나눈다</h2>
-        </header>
-        <p className="text-lg leading-8 text-foreground/90">
-          &ldquo;이더리움 블롭 사용량이 사상 최대치를 경신했다&rdquo;는 문장 하나에는 서로 다른 세 숫자가 섞여 있습니다. 개별 블록이 잠깐 넘긴 피크,
-          여러 날에 걸친 3일 이동평균, 그리고 프로토콜이 정해 둔 타겟입니다.
-        </p>
-        <p className="text-lg leading-8 text-foreground/90">
-          제공된 2026-09-12 자료는 최근 로빈후드 체인(Robinhood Chain)의 활동과 함께 타겟을 넘기는 블록이 종종 보이고 3일 평균도 6.4개까지
-          올라왔다고 전합니다. 당시 활성 BPO2의 공식 메인넷 설정은 블록당 타겟 14개·최대 21개입니다. 이 글은 관측값과 출처의 attribution을 분리하고,
-          BPO(Blob Parameter Only) 포크와 sparse blobpool 후보가 왜 같은 용량 문제의 서로 다른 절반인지 따라갑니다.
-        </p>
-        <p>
-          먼저 짚을 것은 두 가지입니다. 첫째, 평균(6.4)은 당시 타겟(14)의 절반에도 못 미칩니다. 둘째, 제공된 자료는 로빈후드 체인 활동량이
-          최근 오히려 줄어드는 추세로 보고됩니다. &ldquo;사상 최대&rdquo;라는 표현과 &ldquo;아직 타겟에 한참 못 미친다&rdquo;는 관측, &ldquo;최근
-          활동이 줄고 있다&rdquo;는 관측은 서로 모순이 아니라 각기 다른 시간 창을 가리킵니다.
-        </p>
-        <BlobDemandGapViz />
-      </section>
-
-      <section id="target-vs-average" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">01 · 시장 메커니즘</p><h2 className="mt-2 text-2xl font-bold">타겟을 넘긴 블록은 기록이 아니라 다음 블록에 남는 압력이다</h2></header>
-        <p>
-          EIP-4844의 blob fee는 execution gas와 분리된 자체 수요 장부를 씁니다. 블록이 타겟보다 많은 blob을 담으면 그 초과분이
-          <code>excess</code> 상태에 더해지고, 다음 블록의 최소 가격을 끌어올립니다. 타겟보다 적게 담으면 excess가 줄어 가격이 내려갑니다.
-        </p>
-        <p>
-          따라서 개별 블록이 타겟을 넘겼다는 사실 하나만으로는 &ldquo;공급이 부족하다&rdquo;고 말할 수 없습니다. 그 블록이 만든 압력이 이후
-          블록들에서 상쇄되는지가 관건입니다. 3일 평균이 타겟에 근접하거나 넘어서야 비로소 지속적인 초과 수요로 읽을 수 있습니다.
-        </p>
-        <TermBreakdown title="블롭 뉴스에서 자주 섞이는 세 숫자" items={[
-          { term: "타겟(target)", description: "이 값 위로 쌓이면 다음 블록의 최소 가격이 오르고, 아래면 내려가는 균형점입니다.", boundary: "고정 상수가 아니라 BPO 포크로 바뀌는 파라미터입니다." },
-          { term: "이동평균(rolling average)", description: "여러 블록에 걸친 실제 사용량으로, 지속적인 수요 방향을 보여줍니다.", example: "3일 평균 6.4는 당시 BPO2 타겟 14보다 한참 낮습니다." },
-          { term: "개별 피크(single-block peak)", description: "특정 블록 하나가 우연히 많은 blob을 담은 경우입니다.", boundary: "피크가 잦아진다고 평균이 타겟을 넘었다고 결론짓지 않습니다." },
-        ]} />
-        <p>
-          이번 관측이 흥미로운 이유는 평균이 타겟보다 한참 낮은데도 최고치 경신이라는 표현이 성립한다는 점입니다. 즉 이 소식은 &ldquo;공급이
-          모자라다&rdquo;는 경고가 아니라 &ldquo;수요 곡선이 얼마나 빠르게 움직였는가&rdquo;에 대한 신호입니다. 그 속도를 다음 절에서 봅니다.
-        </p>
-        <div id="paper-mainnet-blob-config">
-          <CitationBlock source="go-ethereum · MainnetChainConfig" citeKey={2} href={GETH_MAINNET_CONFIG}>
-            <p><strong>문제:</strong> 기사 시점에 실제 활성화된 blob target과 max를 EIP의 예시값과 구분해야 합니다.</p>
-            <p><strong>기여:</strong> 메인넷 BPO1·BPO2 활성화 시각과 BPO2 target 14·max 21 설정을 제공합니다.</p>
-            <p><strong>전제:</strong> 2026-09-12 스냅샷은 2026-01-07 BPO2 활성화 이후이며 후속 BPO는 메인넷 설정에 없었습니다.</p>
-            <p><strong>근거 범위:</strong> 해당 시점 go-ethereum 메인넷 chain configuration의 blob schedule입니다.</p>
-            <p><strong>말하지 않는 것:</strong> 한 클라이언트 코드 링크만으로 실제 블록 사용량이나 미래 BPO 일정을 보장하지 않습니다.</p>
-          </CitationBlock>
-        </div>
-      </section>
-
-      <section id="growth-rate" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">02 · 성장률</p><h2 className="mt-2 text-2xl font-bold">다섯 달 만에 두 배라는 말은 압력의 방향은 알려줘도 다음 달을 보장하지 않는다</h2></header>
-        <p>
-          올해 4월 수치와 비교해 약 다섯 달 만에 두 배 넘게 늘었다는 관측을 월간 성장률로 바꾸면, 그 성장이 이번 한두 주가 아니라
-          한 분기 넘게 이어진 흐름이라는 점이 드러납니다. 동시에 같은 기간에 사용된 &ldquo;최근 감소 추세&rdquo;라는 관측과 나란히 놓으면,
-          평균 성장률 하나로 앞으로도 같은 속도가 이어진다고 가정할 수 없다는 한계도 같이 보입니다.
-        </p>
-        <ExplainedFormula
-          question="다섯 달 만에 두 배가 됐다는 문장은 한 달에 몇 %씩 늘었다는 뜻인가?"
-          idea={<>시작값과 끝값의 비율을 구하고, 그 비율이 몇 달에 걸쳐 누적됐는지로 나눈 지수를 취하면 월평균 복리 성장률이 나옵니다.</>}
-          formula={String.raw`r=\left(\frac{V_2}{V_1}\right)^{1/n}-1`}
-          annotatedFormula={String.raw`r=\underbrace{\left(\frac{V_2}{V_1}\right)^{1/n}}_{\text{다섯 달 총 배율을 n개월로 나눠 월 단위 배율로 환산}}-1`}
-          operations={[
-            { expression: String.raw`V_2/V_1`, annotation: ["끝값을 시작값으로 나눠", "누적 배율을 구합니다."] },
-            { expression: String.raw`(V_2/V_1)^{1/n}`, annotation: ["n제곱근을 취해", "한 달치 배율로 되돌립니다."] },
-            { expression: String.raw`(\cdot)-1`, annotation: ["1을 빼서", "배율을 증가율로 바꿉니다."] },
-          ]}
-          terms={[
-            { symbol: "V_1", name: "시작 시점 평균", description: "4월 기준 블록당 blob 평균 사용량입니다." },
-            { symbol: "V_2", name: "현재 평균", description: "9월 기준 3일 평균 6.4를 사용한 관측값입니다." },
-            { symbol: "n", name: "경과 개월", description: "약 5개월입니다." },
-            { symbol: "r", name: "월평균 성장률", description: "같은 배율이 매달 반복됐다고 가정했을 때의 성장률입니다." },
-          ]}
-          assumptions={["두 시점 모두 같은 방식으로 집계한 평균값이라고 가정합니다.", "성장이 매달 같은 비율로 일어났다고 단순화합니다.", "이 값은 미래 예측이 아니라 과거 구간의 사후 요약입니다."]}
-          interpretation="배율이 2배(V₂/V₁=2)이고 n=5면 r은 약 0.149, 월 14.9%에 해당합니다. 이 숫자는 지난 다섯 달의 평균 속도일 뿐이며, 같은 기간에 보고된 로빈후드 체인의 최근 활동 둔화를 반영하지 않습니다 — 다음 다섯 달에 그대로 복리로 이어진다고 읽으면 과장입니다."
-        />
-      </section>
-
-      <section id="robinhood-chain-concentration" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">03 · 수요의 출처</p><h2 className="mt-2 text-2xl font-bold">체인 하나의 활동이 프로토콜 전체 지표를 흔들 수 있다</h2></header>
-        <p>
-          로빈후드 체인은 로빈후드가 토큰화 자산 거래를 위해 만든 rollup으로, 자체 트랜잭션 데이터를 이더리움 blob으로 posting합니다. 여러
-          rollup이 blob을 나눠 쓰는 구조에서는 특정 체인의 활동이 전체 지표를 얼마나 움직였는지 따로 검증해야 합니다. 현재 시장이 소수의 대형 소비자에
-          집중돼 있을 가능성도 있기 때문입니다.
-        </p>
-        <p>
-          넓은 기반의 L2 수요 증가와 특정 애플리케이션 하나의 트래픽 급증은 같은 &ldquo;blob 수요 증가&rdquo;라는 제목 아래서도 서로 다른 지속성을
-          가집니다.
-        </p>
-        <p>
-          제공된 원 소식은 로빈후드의 활동량이 최근 줄어드는 추세라고 밝히고 있습니다. 다만 Dune의 체인 전체 집계만으로는 그 attribution을 독립
-          검증할 수 없습니다. 이를 전제로 보면 이번 최고치는 &ldquo;구조적으로
-          자리 잡은 새로운 baseline&rdquo;이라기보다 &ldquo;한 rollup이 만든 피크가 아직 다 가라앉지 않은 구간&rdquo;에 가깝습니다. 이 구분은
-          이후 몇 주의 3일 평균이 6.4 근처에서 유지되는지, 아니면 다시 낮아지는지를 보고 나서야 확정할 수 있습니다.
-        </p>
-        <div id="paper-robinhood-blob-demand">
-          <CitationBlock source="Dune · hildobby/blobs 대시보드" citeKey={1} href={DUNE_BLOBS}>
-            <p><strong>문제:</strong> 블록별 blob 개수와 이동평균을 공개적으로 추적할 수 있어야 합니다.</p>
-            <p><strong>기여:</strong> 블록당 blob 개수, 타겟 대비 초과 빈도, 기간별 평균 추이를 시계열로 제공합니다.</p>
-            <p><strong>전제:</strong> 이 글이 인용한 수치는 2026-09-12 시점 스냅샷이며, 대시보드는 이후에도 계속 갱신됩니다.</p>
-            <p><strong>근거 범위:</strong> 체인 전체 집계이며, 이 글의 &ldquo;로빈후드 체인 기여&rdquo; 서술은 원 소식이 전한 맥락을 인용한 것이지 이 대시보드가 rollup별로 분리해 확인해 주는 값이 아닙니다.</p>
-            <p><strong>말하지 않는 것:</strong> 특정 rollup의 정확한 기여 비율이나 앞으로의 추세를 보장하지 않습니다.</p>
-          </CitationBlock>
-        </div>
-      </section>
-
-      <section id="bpo-sparse-blobpool" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">04 · 공급 측 대응</p><h2 className="mt-2 text-2xl font-bold">타겟을 올리는 결정과 그 타겟을 감당할 자원을 줄이는 작업은 서로 다른 절반이다</h2></header>
-        <p>
-          EIP-4844 이후 blob target과 max를 바꾸려면 원래 전체 하드포크가 필요했습니다. BPO(Blob Parameter Only) 포크는 이 변경을
-          다른 EVM·consensus 로직 변경과 분리해, target·max 같은 파라미터만 별도 일정으로 올릴 수 있게 하는 접근입니다. 수요가 계속
-          타겟에 근접하거나 넘어서는 흐름이 이어진다면, 다음 대응은 새 EIP 셋을 담은 전체 포크가 아니라 이런 파라미터 전용 조정일 가능성이
-          높습니다.
-        </p>
-        <p>
-          다만 target을 올리는 결정 자체가 공짜는 아닙니다. 블록에 포함되기 전까지 대기 중인 blob 트랜잭션은 blobpool(mempool의 blob
-          버전)에 전체 blob 데이터를 들고 있어야 합니다. Target이 올라가 평균 대기량이 늘면 노드가 보관할 데이터도 늘어납니다.
-        </p>
-        <p>
-          EIP-8070 sparse blobpool은 글램스터담(Glamsterdam) 후보로 검토되는 Review 단계 제안입니다. 전체 blob을 항상 받는 대신 custody에
-          맞춰 cell을 sampling해 대역폭 부담을 줄이고 더 높은 target을 감당할 여지를 만들지만, 최종 포함이나 배포 완료로 읽어서는 안 됩니다.
-        </p>
-        <BlobpoolPipelineViz />
-        <div id="paper-robinhood-bpo">
-          <CitationBlock source="EIP-7892 · Blob Parameter Only Hardforks" citeKey={3} href={EIP_7892}>
-            <p><strong>문제:</strong> Blob target·max 변경마다 전체 하드포크 주기를 기다리면 수요 변화에 대응이 느립니다.</p>
-            <p><strong>기여:</strong> Blob 관련 파라미터만 스케줄된 별도 포크로 조정하는 메커니즘을 정의합니다.</p>
-            <p><strong>전제:</strong> 클라이언트가 파라미터 전용 활성화 로직을 지원해야 합니다.</p>
-            <p><strong>근거 범위:</strong> Target·max 파라미터 조정 절차 자체입니다.</p>
-            <p><strong>말하지 않는 것:</strong> 특정 시점의 정확한 target·max 값이나 향후 BPO 일정을 이 글이 고정값으로 못박지 않습니다 — 실제 값은 활성화 시점의 공식 사양을 따로 확인해야 합니다.</p>
-          </CitationBlock>
-        </div>
-        <div id="paper-robinhood-blob-fee">
-          <CitationBlock source="EIP-4844 · Shard Blob Transactions" citeKey={4} href={EIP_4844}>
-            <p><strong>문제:</strong> Blob 수요를 execution gas와 독립적으로 target 주변에 유지해야 합니다.</p>
-            <p><strong>기여:</strong> Excess 기반 fee feedback과 target·max의 기본 정의를 제공합니다.</p>
-            <p><strong>전제:</strong> 활성 fork의 target·max·update fraction을 사용합니다.</p>
-            <p><strong>근거 범위:</strong> 이 글의 01절에서 재사용하는 blob fee 기본 메커니즘입니다. 계산 세부는 <a href="/cs/blockchain/eip4844-blob-fee">EIP-4844 Blob Fee 글</a>이 정본입니다.</p>
-            <p><strong>말하지 않는 것:</strong> Rollup의 실제 posting 비용이나 로빈후드 체인 같은 특정 소비자의 행동을 규정하지 않습니다.</p>
-          </CitationBlock>
-        </div>
-        <div id="paper-robinhood-sparse-blobpool">
-          <CitationBlock source="EIP-8070 · eth/72 Sparse Blobpool" citeKey={5} href={EIP_8070}>
-            <p><strong>문제:</strong> 모든 실행 노드가 pending blob transaction의 전체 payload를 받으면 blob 용량과 함께 대역폭 부담도 커집니다.</p>
-            <p><strong>기여:</strong> Custody-aligned cell sampling과 일부 full provider를 결합한 sparse blobpool 프로토콜을 제안합니다.</p>
-            <p><strong>전제:</strong> EIP-7594 data columns와 eth/72 지원, 제안된 sampling·provider 가정을 사용합니다.</p>
-            <p><strong>근거 범위:</strong> Review 상태인 네트워킹 제안의 설계·확률 가정·테스트 계획입니다.</p>
-            <p><strong>말하지 않는 것:</strong> Glamsterdam 최종 포함, 모든 클라이언트 배포 완료, 실제 메인넷 자원 절감을 보장하지 않습니다.</p>
-          </CitationBlock>
-        </div>
-      </section>
-
-      <section id="reading-checklist" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">05 · 검증</p><h2 className="mt-2 text-2xl font-bold">이 통계를 다시 확인하려면 무엇을 대조해야 하는가</h2></header>
-        <p>
-          이런 종류의 뉴스는 &ldquo;사상 최대&rdquo;라는 제목이 가장 먼저 눈에 띄지만, 그 제목만으로 공급 부족이나 수수료 급등을 단정하면
-          안 됩니다. 아래 네 가지를 항상 나눠서 다시 확인하는 편이 안전합니다.
-        </p>
-        <ul className="list-disc space-y-2 pl-6 text-foreground/90">
-          <li>피크 블록 개수와 3일 이상 이동평균을 같은 문장에서 섞어 인용하지 않았는지 — 이 글의 관측에서는 평균(6.4)이 당시 타겟(14)의 절반에도 못 미쳤습니다.</li>
-          <li>&ldquo;최고치 경신&rdquo;과 &ldquo;해당 기간 활동 감소 추세&rdquo;가 같은 소식 안에 함께 있는지 — 함께 있다면 최고치는 baseline이 아니라 아직 가라앉지 않은 피크일 가능성을 먼저 의심합니다.</li>
-          <li>수요 증가가 여러 rollup에 걸친 분산된 증가인지, 하나의 rollup에 몰린 집중인지 — 이 글에서는 로빈후드 체인이라는 단일 소비자가 언급됐습니다.</li>
-          <li>타겟·max 숫자를 인용할 때 스냅샷 시점을 함께 적었는지 — BPO 포크로 바뀌는 값이므로 날짜 없이 인용하면 이후 갱신과 혼동됩니다.</li>
-        </ul>
-        <p>
-          이 네 가지를 통과해야 &ldquo;블롭 수요가 늘고 있다&rdquo;는 문장을 &ldquo;그래서 다음 BPO 일정이 얼마나 급해지는가&rdquo;라는
-          질문으로 바꿔 읽을 수 있습니다.
-        </p>
-      </section>
-    </article>
-  );
+import { Link } from "react-router-dom";
+import { CitationBlock } from "@/components/ui/citation";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import FlowRail from "../world-systems/FlowRail";
+import SourceApplication from "../world-systems/SourceApplication";
+import ReviewPrompts from "../world-systems/ReviewPrompts";
+import { codeRefs } from "./robinhood-chain-blob-demand/codeRefs";
+export default function RobinhoodChainBlobDemandArticle(){
+ const sidebar=useCodeSidebar();
+ return <><article className="space-y-14">
+<section id="overview" data-teach-level="S" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">1. 블롭 수요에서 가격 압력과 특정 체인의 기여를 구분한다</h2>
+<p>롤업이 거래 자료를 Ethereum에 올리면 다른 롤업과 같은 저장 공간을 나누어 씁니다. 어느 체인의 사용자가 늘어도 처리 요청 수와 게시 데이터의 크기는 압축·묶음 주기에 따라 다르게 변합니다. 수요를 읽으려면 실제 게시한 자료와 그때의 공급 설정을 함께 봐야 합니다.</p>
+<p>Robinhood Chain 공식 문서는 2026-10-04 현재 메인넷과 Ethereum blobs 사용을 명시합니다. 이 사실만으로 최근 Ethereum 전체 사용량 증가의 원인을 Robinhood로 정할 수는 없습니다. 이 글은 네 블록의 작은 가정 사례로 필요한 회계를 설명합니다.</p>
+<p data-stage-bridge="overview" className="text-sm text-muted-foreground">전체 사용량과 원인을 따로 확인한다는 목표를 세웠습니다. 먼저 누가 어떤 수를 만드는지 나눕니다.</p></section>
+<section id="black-box" data-teach-level="B" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">2. 게시하는 곳, 담는 곳, 합계를 읽는 곳</h2>
+<p>롤업은 거래 여러 개를 묶어 데이터를 게시합니다. 블록을 만드는 참여자는 허용량과 비용 조건 안에서 게시 요청을 담습니다. 분석자는 블록별 양을 합하고 게시자를 분류합니다. 마지막 분석이 앞 두 단계의 실제 거래를 재현할 수 있어야 원인까지 말할 수 있습니다.</p>
+<FlowRail title="자료가 게시되고 집계되는 역할" steps={[{actor:"얼마를 게시하나",movement:"거래를 묶어 데이터를 올립니다.",receives:"게시 요청"},{actor:"얼마를 담았나",movement:"허용량 안에서 블록을 만듭니다.",receives:"블록별 개수"},{actor:"누구의 자료인가",movement:"같은 기간의 게시자를 분류합니다.",receives:"전체와 기여분"}]} />
+<p data-stage-bridge="black-box" className="text-sm text-muted-foreground">자료 게시와 집계의 역할에 네 블록을 넣어 봅니다.</p></section>
+<section id="case" data-teach-level="0" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">3. 18개가 들어간 블록과 평균 10개는 동시에 성립한다</h2>
+<p>연속 네 블록에 18·10·6·6개의 blob이 들어갔다고 합시다. 총 40개를 4로 나누면 평균 10개입니다. 해당 기간 목표량 14개, 최대량 21개를 적용하면 첫 18개는 목표를 넘지만 허용 최대에는 못 미칩니다. 블록별 사용량은 모두 (가정)이며 실제 관측값과 구분합니다.</p>
+<p>같은 네 블록 중 특정 롤업 A가 14·2·2·2개를 게시했다면 A의 총 20개는 전체 40개의 50%입니다. 이 분류도 (가정)입니다. 첫 블록만 보면 14/18로 약 77.8%이므로 전체 기간의 50%와 다른 질문에 답합니다.</p>
+<p data-stage-bridge="case" className="text-sm text-muted-foreground">피크 18, 평균 10, 기간 기여 50%가 서로 다른 수라는 것을 같은 그림으로 확인합니다.</p></section>
+<section id="picture" data-teach-level="1" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">4. 네 블록을 같은 시간 창으로 묶는다</h2>
+<p>각 블록의 전체 개수와 A의 개수를 같은 행에 둡니다. A와 나머지를 더한 값이 전체와 같아야 하며, 네 행을 합친 분모 40을 유지해야 합니다. 한 블록의 비율과 네 블록 합계의 비율을 섞으면 기여가 과장됩니다.</p>
+<div className="overflow-x-auto"><table className="w-full min-w-[480px] text-sm"><caption className="mb-3 text-left">(가정) 전체 40개 중 A20개, 목표는 블록당 14</caption><thead><tr><th className="p-3 text-left">블록</th><th className="p-3">전체</th><th className="p-3">A</th><th className="p-3">나머지</th></tr></thead><tbody>{[[1,18,14,4],[2,10,2,8],[3,6,2,4],[4,6,2,4]].map(row=><tr key={row[0]} className="border-t">{row.map((n,j)=><td key={j} className="p-3 text-center">{n}</td>)}</tr>)}</tbody></table></div>
+<p data-stage-bridge="picture" className="text-sm text-muted-foreground">개수와 분모가 보였습니다. 이제 순간 최고치가 왜 지속적인 부족을 뜻하지 않는지 살펴봅니다.</p></section>
+<section id="need" data-teach-level="2" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">5. 많이 사용한 순간만으로 공급 부족을 판단할 수 없다</h2>
+<p>18개가 든 뒤 10개가 든 블록에서는 목표보다 4개 적게 사용합니다. 일반적인 목표 차감 계산에서는 앞 블록의 초과 4개가 뒤 블록의 부족 4개로 상쇄됩니다. 네 블록의 평균 10은 목표 14보다 낮으므로 이 사례를 지속적인 초과 사용이라고 설명할 수 없습니다. 실제 비용이 떨어지는지는 실행 비용에 연동된 하한 조건까지 봐야 합니다.</p>
+<p>특정 롤업의 거래 수가 늘어도 압축이 좋아지거나 자료를 더 오래 모으면 blob 사용량은 같은 비율로 늘지 않습니다. 주소 이름표가 틀리거나 게시자를 다른 체인과 함께 쓰는 경우도 있어, 브랜드 이름과 전체 그래프만으로 50% 기여를 확인할 수 없습니다.</p>
+<p data-stage-bridge="need" className="text-sm text-muted-foreground">숫자마다 답하는 질문이 생겼으니 분석에 쓰는 이름을 붙입니다.</p></section>
+<section id="target-vs-average" data-teach-level="3" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">6. 목표·상한·평균·초과분에 이름을 붙인다</h2>
+<p>Target은 비용 조정이 기준으로 삼는 목표량, max는 한 블록에 담을 수 있는 상한입니다. 평균은 특정 기간의 실제 사용 합계를 블록 수로 나눈 값입니다. 목표 14와 상한 21은 프로토콜 설정이고 평균 10은 이 글이 가정한 사용 결과입니다.</p>
+<p>Excess blob gas는 앞선 사용이 목표보다 많았던 부담을 다음 블록으로 넘기는 상태입니다. 실제 단위는 gas지만 각 blob의 gas가 같으므로 여기서는 blob 개수에 해당하는 단위로 환산해 봅니다. 정확한 정수 가격 계산은 기존 EIP-4844 정본을 사용합니다.</p>
+<p>BPO는 blob 관련 파라미터만 별도 일정으로 바꾸는 포크입니다. Sparse blobpool은 아직 블록에 들지 않은 자료를 모든 노드가 전부 받는 비용을 줄이려는 네트워크 제안입니다. 공급 숫자를 정하는 작업과 전송 방식을 바꾸는 작업은 구별됩니다.</p>
+<p><Link className="underline" to="/cs/blockchain/eip4844-blob-fee">초과 blob gas와 실제 비용 함수</Link>에서 가격 계산을 이어 읽을 수 있습니다.</p>
+<p data-stage-bridge="target-vs-average" className="text-sm text-muted-foreground">용어를 알았으니 18·10·6·6이 초과분과 분석 결과를 어떻게 바꾸는지 추적합니다.</p></section>
+<section id="robinhood-chain-concentration" data-teach-level="4" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">7. 같은 블록 범위에서 사용량과 게시자를 다시 계산한다</h2>
+<p>시작 초과분을 0으로 두고 실행 비용에 연동된 하한 분기가 작동하지 않는다고 가정합니다. 18개 블록 뒤 초과분은 max(0,0+18−14)=4입니다. 이어 10개 뒤에는 max(0,4+10−14)=0, 이후 6개와 6개 뒤에도 0입니다. 이는 초과량의 교육용 환산 계산입니다. 실제 blob 최소가격은 gas 단위 정수 함수와 활성 포크의 update fraction으로 계산하므로 4를 곧바로 가격 4배라고 읽지 않습니다.</p>
+<p>EIP-7918은 실행 base fee에 비해 blob 가격이 낮으면 다른 증가식을 적용합니다. 같은 첫 18개에 그 조건이 성립하면 환산 초과분은 18×(21−14)/21=6입니다. 따라서 사용량 18·10·6·6만으로 실제 초과분 경로를 확정할 수 없습니다. 부모 블록의 실행·blob base fee와 활성 규칙도 필요합니다.</p>
+<CitationBlock source="EIP-7918 · Blob base fee bounded by execution cost" citeKey={6} href="https://eips.ethereum.org/EIPS/eip-7918">Final 원문의 calc_excess_blob_gas 분기를 대조했습니다. 일반 목표 차감 경로와 실행 비용에 연동된 하한 경로를 구분합니다.</CitationBlock>
+<p>실제 연구에서는 체인 ID, 시작·끝 블록과 hash, timestamp, 재조직 처리 기준을 먼저 고정합니다. blob 거래의 versioned hash 수를 블록별로 합하고, 공식 배포 정보와 게시 주소·inbox 경로로 롤업을 분류합니다. 미분류 자료도 전체 분모에 남깁니다. A의 20과 나머지 20이 전체 40과 맞는지 확인한 뒤 비율을 계산합니다.</p>
+<p>Robinhood 공식 연결 문서는 mainnet 4663, testnet 46630을 구분하고 Ethereum blobs를 데이터 가용성 수단으로 명시합니다. 하지만 그 문서는 이 사례의 20개나 과거 3일 평균을 증명하지 않습니다. 예전 본문의 6.4 및 특정 체인이 증가를 만들었다는 서술은 재현 가능한 쿼리·블록 범위를 확보하지 못했으므로 관측값으로 유지하지 않습니다.</p>
+<CitationBlock source="Robinhood Chain · Connecting" citeKey={1} href="https://docs.robinhood.com/chain/connecting/">2026-10-04 공식 네트워크와 DA 설명. 사용량 기여 비율의 관측 근거와 구분합니다.</CitationBlock>
+<p data-stage-bridge="robinhood-chain-concentration" className="text-sm text-muted-foreground">네 블록의 계산과 실제 자료에 필요한 항목을 연결했습니다. 다음은 목표 14를 어떤 원문에서 읽는지 확인합니다.</p></section>
+<section id="source" data-teach-level="5" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">8. 기본값이 아니라 메인넷 일정에 연결된 값을 읽는다</h2>
+<p>go-ethereum commit c9a2bc73c847319a8faa57de59e42c0efc420682의 메인넷 설정은 BPO2 활성화 timestamp 1767747671과 BPO2 설정을 연결합니다. BPO2의 target 14·max 21·update fraction 11684671을 함께 읽습니다. 이 값의 유효 시점은 2026-01-07 01:01:11 UTC 이후이며 후속 활성화 여부도 계속 확인해야 합니다.</p>
+<p>같은 파일에는 BPO3·BPO4 기본값도 있습니다. 이름이 코드에 존재한다는 사실과 MainnetChainConfig에서 해당 시각·설정을 연결했다는 사실은 다릅니다. 이 snapshot에는 메인넷 BPO3 활성화가 연결돼 있지 않습니다.</p>
+<SourceApplication source="go-ethereum · DefaultBPO2BlobConfig" excerpt="Target:         14," application="18개는 14보다 4 크고 21보다 3 작습니다. 평균 10은 이 설정과 별도로 집계한 결과이므로 목표를 실제 사용량이라고 바꾸어 읽지 않습니다. 원본에는 각 필드가 별도 행에 놓입니다." />
+<div className="flex flex-wrap gap-3"><CodeViewButton label="메인넷 일정과 설정 연결" onClick={()=>sidebar.open("mainnet",codeRefs.mainnet)}/><CodeViewButton label="BPO2·3·4 기본값 비교" onClick={()=>sidebar.open("params",codeRefs.params)}/></div>
+<CitationBlock source="go-ethereum · pinned c9a2bc7 config.go" citeKey={2} href="https://github.com/ethereum/go-ethereum/blob/c9a2bc73c847319a8faa57de59e42c0efc420682/params/config.go">정확한 commit과 원본 파일을 보존했습니다. 클라이언트 설정은 사용량 측정의 대체물이 아닙니다.</CitationBlock>
+<CitationBlock source="EIP-7892 · BPO" citeKey={3} href="https://eips.ethereum.org/EIPS/eip-7892">BPO 메커니즘. EIP의 예시 timestamp는 실제 메인넷 일정으로 쓰지 않습니다.</CitationBlock>
+<p data-stage-bridge="source" className="text-sm text-muted-foreground">실제 설정과 활성화 조건을 확인했습니다. 같은 18개를 노드가 받는 비용은 어떻게 줄이려는지 비교합니다.</p></section>
+<section id="bpo-sparse-blobpool" data-teach-level="6" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">9. 목표 상향과 전송 절감은 서로 다른 계산이다</h2>
+<p>EIP-8070은 2026-10-04 Review 상태입니다. Glamsterdam의 meta EIP에서는 별도 Networking 목록에 있고 메인넷 적용 시각은 확정돼 있지 않습니다. 이 제안은 블록에 들어가기 전 자료를 모두 복제하던 부담을 일부 전체 제공자와 샘플을 받는 노드로 나눕니다.</p>
+<p>제안의 단순 모델에서 15% 확률로 전체를 받고 나머지 85%에서는 1/8을 받으면 평균은 0.15+0.85/8=0.25625입니다. 같은 18개 분량을 전체 수신 18 단위로 놓으면 평균 4.6125 단위입니다. 이는 확률적 payload 모델의 약 74.4% 감소이며, 개별 노드가 매번 그 양만 받거나 실제 전체 대역폭이 정확히 그만큼 감소한다는 측정 결과가 아닙니다.</p>
+<p>전체 제공자가 부족하거나 이웃 선택이 편향되면 자료를 얻는 가정이 깨집니다. 추가 표본·재요청·메시지·증명과 공격 방어 비용도 있습니다. BPO로max를 높여도 이 전송 최적화가 저절로 생기지 않고, 전송이 줄어도 target 상향 일정이 자동으로 결정되지는 않습니다.</p>
+<SourceApplication source="EIP-8070 · Abstract" excerpt="0.15 + 0.85/8 ~ 0.25" application="가정한 18개 분량에 0.25625를 곱해 4.6125를 얻습니다. 제안 모델의 평균 전송량이며 네 블록의 사용 개수 18·10·6·6 자체나 target14를 줄이는 식은 아닙니다." />
+<CitationBlock source="EIP-8070 · Sparse Blobpool" citeKey={4} href="https://eips.ethereum.org/EIPS/eip-8070">Review 상태·전체 제공 확률·custody 표본·공격 가정의 원문입니다.</CitationBlock>
+<CitationBlock source="EIP-7773 · Glamsterdam meta" citeKey={5} href="https://eips.ethereum.org/EIPS/eip-7773">2026-10-04 Networking 목록과 메인넷 activation 미정 상태를 확인했습니다.</CitationBlock>
+<p data-stage-bridge="bpo-sparse-blobpool" className="text-sm text-muted-foreground">18개 게시와 18개 분량의 전송 비용을 나눴습니다. 마지막으로 성장률과 시장 해석의 한계를 확인합니다.</p></section>
+<section id="reading-checklist" data-teach-level="7" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">10. 측정한 범위보다 큰 결론을 내리지 않는다</h2>
+<p>평균을 올린 체인이 확인돼도 그 수요가 유료 사용자·경제적 거래·지속 가능한 수익에서 나왔는지는 추가 자료가 필요합니다. 작은blob을 자주 올리는 방식과 충분히 채운blob을 드물게 올리는 방식도 개수만으로 같다고 평가할 수 없습니다.</p>
+<p>시작 평균 5에서 다섯 달 뒤 10이 됐다고 가정하면 월평균 복리 변화는 2의 5제곱근−1, 약 14.9%입니다. 이것은 가정한 두 끝점의 환산값입니다. 중간 변동이나 다음 다섯 달의 수요를 예측하지 않습니다.</p>
+<p>실제 사용량·활성 공급 설정·게시자 분류·측정 기간을 함께 제시해야 기여와 가격 압력을 검증할 수 있습니다. 본문 네 블록은 그 검증법을 익히는 예제이며 특정 날짜의 시장 기록을 대신하지 않습니다.</p>
+<div id="growth-rate" className="scroll-mt-20"><p>성장률은 같은 정의와 시간 간격의 두 집계값에만 적용합니다. 날짜별 원자료가 없으면 14.9%도 관측 결과로 인용하지 않습니다.</p></div>
+<p data-stage-bridge="reading-checklist" className="text-sm text-muted-foreground">피크·평균·기여를 같은 원자료에 묶어야 수요 변화와 일시적 변동을 구분할 수 있습니다.</p>
+<ReviewPrompts questions={["18·10·6·6의 평균은 얼마이며, 첫 블록 뒤 초과분4에는 어떤 하한 조건이 붙나요? (답: 3절·7절)","A가 14·2·2·2개를 올렸을 때 첫 블록의 비율과 기간 전체 비율이 다른 이유는 무엇인가요? (답: 3절·4절)"]}/>
+</section>
+</article><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{}} projectMetas={{"go-ethereum":{id:"go-ethereum",label:"go-ethereum · c9a2bc7",badgeClass:"border-sky-500 bg-sky-500/10 text-sky-700"}}}/></>;
 }

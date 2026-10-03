@@ -32,7 +32,7 @@ export default function DiversificationCurveViz() {
         <Mafs
           height={240}
           preserveAspectRatio={false}
-          viewBox={{ x: [-2, 52], y: [-4, 32], padding: 0 }}
+          viewBox={{ x: [-2, 54], y: [-4, 32], padding: 0 }}
         >
           <Coordinates.Cartesian
             xAxis={{ lines: 10, labels: (v) => `${v}개` }}

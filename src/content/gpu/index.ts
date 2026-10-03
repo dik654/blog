@@ -76,11 +76,144 @@ const gpu: Category = {
       title: "CUDA 실행 기초: Host·Kernel·Memory·Workload Fit",
       subcategory: "gpu-fundamentals",
       sections: [
-        { id: "overview", title: "Host에서 device execution까지" },
-        { id: "memory-model", title: "메모리 계층과 이동 비용" },
-        { id: "blockchain-gpu", title: "Workload fit과 측정 경계" },
-      ],
+      {
+            "id": "overview",
+            "title": "1 · 배열의 한 칸을 더할 때 실제로 무엇이 움직일까요"
+      },
+      {
+            "id": "black-box",
+            "title": "2 · 준비하고 보내고 기다린 뒤 결과를 받습니다"
+      },
+      {
+            "id": "case",
+            "title": "3 · 64 칸을 더하면 입력 512바이트와 출력 256바이트가 필요합니다"
+      },
+      {
+            "id": "picture",
+            "title": "4 · 37번은 시작 위치에서 148바이트 떨어져 있습니다"
+      },
+      {
+            "id": "need",
+            "title": "5 · 저장 공간을 여러 겹 두는 이유는 기다림을 줄이기 위해서입니다"
+      },
+      {
+            "id": "names",
+            "title": "6 · 작업 번호와 실제 실행 묶음은 다른 층에 있습니다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7 · 37번 thread가 읽고 더하고 쓸 때 두 종류의 경로를 지납니다"
+      },
+      {
+            "id": "source",
+            "title": "8 · 공식 vectorAdd의 49번째 줄이 37을 만듭니다"
+      },
+      {
+            "id": "comparison",
+            "title": "9 · 32개 묶음 규칙과 최신 행렬 명령의 지원 범위를 구분합니다"
+      },
+      {
+            "id": "limits",
+            "title": "10 · 64개가 맞게 계산됐다는 사실로 큰 작업의 속도를 예측할 수는 없습니다"
+      }
+],
       component: () => import("@/pages/articles/blockchain/cuda-basics"),
+    },
+    {
+      slug: "amd-gpu-execution-and-hip",
+      title: "AMD GPU 실행 구조와 CUDA에서 HIP으로 옮기는 경로",
+      subcategory: "gpu-fundamentals",
+      sections: [
+      {
+            "id": "overview",
+            "title": "1 · 같은 64개 덧셈을 다른 칩에 옮겨도 같은 방식으로 실행될까요"
+      },
+      {
+            "id": "black-box",
+            "title": "2 · 입력과 답 사이에는 번역과 실행이 있습니다"
+      },
+      {
+            "id": "case",
+            "title": "3 · 64명을 32명씩 묶으면 둘이고 64명씩 묶으면 하나입니다"
+      },
+      {
+            "id": "picture",
+            "title": "4 · 함께 진행하는 범위가 바뀌면 서로 값을 건네는 규칙도 바뀝니다"
+      },
+      {
+            "id": "need",
+            "title": "5 · 공통 명령은 공유하고 값은 각자 보관합니다"
+      },
+      {
+            "id": "names",
+            "title": "6 · CU와 wavefront는 서로 다른 크기의 부품입니다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7 · CDNA4에서는 37번이 64개 wavefront의 37번 lane입니다"
+      },
+      {
+            "id": "source",
+            "title": "8 · AMD 예제의 2차원 번호도 64×1로 놓으면 37을 만듭니다"
+      },
+      {
+            "id": "comparison",
+            "title": "9 · 이름을 바꿔도 32개라는 가정은 자동으로 바뀌지 않습니다"
+      },
+      {
+            "id": "limits",
+            "title": "10 · 큰 묶음 하나가 작은 묶음 둘보다 빠르다는 결론은 나오지 않습니다"
+      }
+],
+      component: () => import("@/pages/articles/gpu/amd-gpu-execution-and-hip"),
+    },
+    {
+      slug: "hbm-stack-and-memory-requests",
+      title: "HBM 적층 구조에서 코드의 메모리 요청까지",
+      subcategory: "gpu-fundamentals",
+      sections: [
+      {
+            "id": "overview",
+            "title": "1 · 메모리를 높이 쌓으면 프로그램이 왜 빨라질 수 있을까요"
+      },
+      {
+            "id": "black-box",
+            "title": "2 · 계산부가 요청하면 저장부는 주소를 찾아 데이터를 보냅니다"
+      },
+      {
+            "id": "case",
+            "title": "3 · 유효 128바이트를 읽어도 필요한 조각은 4개 또는 32개입니다"
+      },
+      {
+            "id": "picture",
+            "title": "4 · 여러 층의 저장 칩이 넓은 아래 통로로 연결됩니다"
+      },
+      {
+            "id": "need",
+            "title": "5 · 많은 연결선은 처리량을 키우지만 열과 제조 비용도 늘립니다"
+      },
+      {
+            "id": "names",
+            "title": "6 · 적층과 채널, 행을 여는 동작은 서로 다른 역할입니다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7 · 요청을 합친 뒤에도 행을 열고 기다리는 동작이 남습니다"
+      },
+      {
+            "id": "source",
+            "title": "8 · HBM3의 1024비트 폭에 가정한 속도를 곱합니다"
+      },
+      {
+            "id": "comparison",
+            "title": "9 · 같은 64개 덧셈의 연산량과 바이트를 같은 경계에서 셉니다"
+      },
+      {
+            "id": "limits",
+            "title": "10 · 메모리 사양은 서로 다른 단위로 읽어야 합니다"
+      }
+],
+      component: () => import("@/pages/articles/gpu/hbm-stack-and-memory-requests"),
     },
     {
       slug: "cuda-compilation-and-isa-analysis",
@@ -169,22 +302,47 @@ const gpu: Category = {
       title: "GPU memory hierarchy 와 roofline: 네 가지 bound",
       subcategory: "gpu-fundamentals",
       sections: [
-        { id: "hierarchy", title: "다섯 계층과 local·constant memory" },
-        { id: "transactions", title: "32-byte sector transaction" },
-        { id: "latency-bandwidth", title: "Latency·bandwidth·effective bandwidth" },
-        { id: "roofline-bound", title: "Ridge point 와 compute·memory-bound" },
-        { id: "latency-launch-bound", title: "Latency-bound 와 launch-bound" },
-        {
-          id: "evidence",
-          title: "Best Practices·Nsight·Roofline 근거",
-          subsections: [
-            { id: "paper-cuda-best-practices-memory", title: "Best Practices Guide 의 transaction·bandwidth" },
-            { id: "paper-nsight-compute-roofline", title: "Nsight Compute 의 throughput metric" },
-            { id: "paper-roofline-williams", title: "Roofline 원 논문" },
-            { id: "paper-hopper-h100-memory", title: "Hopper H100 구성" },
-          ],
-        },
-      ],
+      {
+            "id": "overview",
+            "title": "1 · 계산기는 놀고 있는데 왜 프로그램은 끝나지 않을까요"
+      },
+      {
+            "id": "black-box",
+            "title": "2 · 가까운 곳에서 찾으면 먼 저장 장치로 가지 않습니다"
+      },
+      {
+            "id": "case",
+            "title": "3 · 64번 더하려고 유효 768바이트를 읽고 씁니다"
+      },
+      {
+            "id": "picture",
+            "title": "4 · 연속 128바이트는 32바이트 조각 4개에 들어갑니다"
+      },
+      {
+            "id": "need",
+            "title": "5 · 같은 요청을 합치고 중간값을 재사용하면 이동을 줄일 수 있습니다"
+      },
+      {
+            "id": "names",
+            "title": "6 · 저장 계층과 주소 공간은 다른 분류입니다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7 · 1/12FLOP/B에 1TB/s를 곱하면 약 83.3GFLOP/s입니다"
+      },
+      {
+            "id": "source",
+            "title": "8 · 공식 대역폭 식의 읽기와 쓰기에 512와 256을 넣습니다"
+      },
+      {
+            "id": "comparison",
+            "title": "9 · 실제 코드의 한 덧셈과 분석 도구의 여러 자원을 대조합니다"
+      },
+      {
+            "id": "limits",
+            "title": "10 · 상한에 못 미치는 이유에 따라 다음 실험을 고릅니다"
+      }
+],
       component: () => import("@/pages/articles/gpu/gpu-memory-hierarchy-and-roofline"),
     },
     {

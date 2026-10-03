@@ -2651,6 +2651,12 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     { kind: "핵심 논문", label: "Generative Agents: Interactive Simulacra of Human Behavior", href: "https://arxiv.org/abs/2304.03442", note: "Memory stream·recency·importance·relevance 가중합 salience scoring과 reflection" },
     { kind: "핵심 논문", label: "Cognitive Architectures for Language Agents", href: "https://arxiv.org/abs/2309.02427", note: "Working·episodic·semantic·procedural memory 구분을 language agent에 대응" },
+    {
+      "kind": "평가 논문",
+      "label": "MemoryArena · arXiv 2602.16313",
+      "href": "https://arxiv.org/abs/2602.16313",
+      "note": "memory-action-evaluation 절에서 기억 회상 90/100과 후속 과제 성공 8/20을 구분합니다. 숫자는 가정이며 논문 benchmark 결과가 아닙니다."
+    },
 ],
   "ai/context-window-optimization": [
     {
@@ -3939,7 +3945,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "SionicAI B300 TP8 · batch 1 측정",
       note: "kernel µs·bandwidth·acceptance length·tok/s는 이 환경에 귀속",
     },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "PTX ISA 9.0·CUDA 13.0.2·tcgen05.mma Examples와 Target ISA Notes",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/parallel-thread-execution/index.html#tcgen05-mma-instructions-mma",
+      "note": "본문의 tmem-official-source 절에 공식 MMA와 commit·parity wait 발췌를 CodeSidebar로 보존했습니다. sm_100a 계열의 지원을 sm_120으로 일반화하지 않습니다."
+    },
+],
   "ai/dezero-autodiff": [
     {
       kind: "공식 코드",
@@ -4401,18 +4413,98 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Evmos v20.0.0 — ERC-20 IBC middleware", href: "https://github.com/evmos/evmos/blob/v20.0.0/x/erc20/ibc_middleware.go", note: "Receive·acknowledgement·timeout callback과 token representation 경계" },
   ],
   "blockchain/hyperliquid": [
-    { kind: "공식 문서", label: "Hyperliquid Docs — Trading", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/trading", note: "주문 유형·체결·취소의 공개 사용자 interface. Matching engine source나 전역 도착 공정성의 증거는 아님" },
-    { kind: "공식 문서", label: "Hyperliquid Docs — Margining", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/trading/margining", note: "Cross·isolated margin과 청산 경계. 실제 판정에는 기준 시점의 asset별 table·oracle 설정이 필요" },
-    { kind: "공식 문서", label: "Hyperliquid Docs — HyperBFT", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/hyperbft", note: "합의와 validator 역할의 공식 설명. 비공개 구현 전체의 독립 재현 근거는 아님" },
-    { kind: "공식 문서", label: "Hyperliquid Docs — HyperEVM", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm", note: "HyperCore precompile·CoreWriter 상호운용 경계와 EVM execution surface" },
+    {
+      "kind": "공식 문서",
+      "label": "Hyperliquid Python SDK · pinned 2fdb18f",
+      "href": "https://github.com/hyperliquid-dex/hyperliquid-python-sdk/tree/2fdb18f9517675ea03695a0962bd19eece9c83f0",
+      "note": "원본 파일과 MIT 라이선스를 보존했습니다. 예제 ETH0.2·1100은 testnet이며 이 글의 BTC 사례와 구분합니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Hyperliquid · Fees",
+      "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees",
+      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Hyperliquid · HyperEVM",
+      "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm",
+      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Hyperliquid · USDC",
+      "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/usdc",
+      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Hyperliquid · Liquidations",
+      "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/trading/liquidations",
+      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Hyperliquid · HIP-3",
+      "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/hip-3-builder-deployed-perpetuals",
+      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Hyperliquid · Interacting with HyperCore",
+      "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore",
+      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Hyperliquid · HIP-4",
+      "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/hip-4-outcome-markets",
+      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Hyperliquid · HIP-4 deployer actions",
+      "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/hip-4-deployer-actions",
+      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+    }
   ],
   "blockchain/robinhood-chain-blob-demand": [
-    { kind: "프로젝트 실측", label: "Dune — hildobby/blobs 대시보드", href: "https://dune.com/hildobby/blobs", note: "블록당 blob 개수·타겟 초과 빈도·이동평균의 시계열. 이 글이 인용한 수치는 2026-09-12 스냅샷이며 rollup별 기여도는 대시보드가 직접 분리해 확인해 주지 않음" },
-    { kind: "공식 문서", label: "Robinhood Chain Documentation — About", href: "https://docs.robinhood.com/chain/", note: "Robinhood Chain이 Arbitrum 기반 Ethereum L2이며 tokenized asset 인프라를 목표로 한다는 프로젝트 설명" },
-    { kind: "공식 코드", label: "go-ethereum — MainnetChainConfig", href: "https://github.com/ethereum/go-ethereum/blob/master/params/config.go", note: "2026-09-12 시점 활성 BPO2의 target 14·max 21과 메인넷 활성화 시각을 대조하는 client configuration" },
-    { kind: "공식 규격", label: "EIP-4844 — Shard Blob Transactions", href: "https://eips.ethereum.org/EIPS/eip-4844", note: "Blob target·max와 excess 기반 fee feedback의 기본 정의. 계산 세부는 eip4844-blob-fee 글이 정본" },
-    { kind: "공식 규격", label: "EIP-7892 — Blob Parameter Only Hardforks", href: "https://eips.ethereum.org/EIPS/eip-7892", note: "Target·max 파라미터를 전체 하드포크 없이 별도 일정으로 조정하는 메커니즘. 특정 시점의 정확한 값을 고정하지 않음" },
-    { kind: "공식 규격", label: "EIP-8070 — eth/72 Sparse Blobpool", href: "https://eips.ethereum.org/EIPS/eip-8070", note: "Custody-aligned cell sampling과 full provider를 결합하는 Review 상태 제안. Glamsterdam 최종 포함이나 배포 완료의 증거는 아님" },
+    {
+      "kind": "공식 문서",
+      "label": "Robinhood Chain · Connecting",
+      "href": "https://docs.robinhood.com/chain/connecting/",
+      "note": "2026-10-04 공식 네트워크와 DA 설명. 사용량 기여 비율의 관측 근거와 구분합니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "go-ethereum · pinned c9a2bc7 config.go",
+      "href": "https://github.com/ethereum/go-ethereum/blob/c9a2bc73c847319a8faa57de59e42c0efc420682/params/config.go",
+      "note": "정확한 commit과 원본 파일을 보존했습니다. 클라이언트 설정은 사용량 측정의 대체물이 아닙니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-7892 · BPO",
+      "href": "https://eips.ethereum.org/EIPS/eip-7892",
+      "note": "BPO 메커니즘. EIP의 예시 timestamp는 실제 메인넷 일정으로 쓰지 않습니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-8070 · Sparse Blobpool",
+      "href": "https://eips.ethereum.org/EIPS/eip-8070",
+      "note": "Review 상태·전체 제공 확률·custody 표본·공격 가정의 원문입니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-7773 · Glamsterdam meta",
+      "href": "https://eips.ethereum.org/EIPS/eip-7773",
+      "note": "2026-10-04 Networking 목록과 메인넷 activation 미정 상태를 확인했습니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 규격",
+      "label": "EIP-7918 · Blob base fee bounded by execution cost",
+      "href": "https://eips.ethereum.org/EIPS/eip-7918",
+      "note": "2026-10-04 Final 원문. 실행 비용 하한 분기가 작동하지 않을 때만 초과량 0→4→0 계산을 적용하며, 첫 18개에 하한 분기가 작동하면 환산 초과량은 6입니다."
+    }
   ],
   "blockchain/dydx": [
     { kind: "공식 코드", label: "dYdX v4-chain protocol/v9.6.3 — OrderId", href: "https://github.com/dydxprotocol/v4-chain/blob/protocol/v9.6.3/protocol/x/clob/types/order_id.go", note: "Short-term·stateful·conditional/TWAP flags, state key와 deterministic sort contract" },
@@ -5431,8 +5523,36 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "iden3/circom @ a100fae", href: "https://github.com/iden3/circom/tree/a100faedb1c62d4d3e1463f8a3f88342d82351cd", note: "Compiler·artifact·tests의 pinned official source" },
   ],
   "crypto/jolt": [
-    { kind: "핵심 논문", label: "Jolt: SNARKs for Virtual Machines via Lookups", href: "https://eprint.iacr.org/2023/1217.pdf", note: "Lookup-based zkVM arithmetization의 primary paper" },
-    { kind: "공식 코드", label: "a16z/jolt @ 915faf4", href: "https://github.com/a16z/jolt/tree/915faf453f36871249615a7fdf2704d77a88f259", note: "Rust implementation·tests의 pinned official source" },
+    {
+      "kind": "공식 코드",
+      "label": "a16z/jolt · ADD LookupQuery, commit47130f3",
+      "href": "https://github.com/a16z/jolt/blob/47130f3dc9a51a7ac2754a98ff0aa31981a6b810/crates/jolt-lookup-tables/src/instructions/riscv/add.rs",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "a16z/jolt · read_write_checking_input, commit47130f3",
+      "href": "https://github.com/a16z/jolt/blob/47130f3dc9a51a7ac2754a98ff0aa31981a6b810/crates/jolt-claims/src/twist/memory_checking.rs",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Twist and Shout: Faster memory checking arguments via one-hot addressing and increments",
+      "href": "https://eprint.iacr.org/2025/105.pdf",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Jolt: SNARKs for Virtual Machines via Lookups",
+      "href": "https://eprint.iacr.org/2023/1217.pdf",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Jolt complete source files · 47130f3dc9a51a7ac2754a98ff0aa31981a6b810, 2026-10-02",
+      "href": "https://github.com/a16z/jolt/tree/47130f3dc9a51a7ac2754a98ff0aa31981a6b810",
+      "note": "tracer ADD.exec, lookup ADD, Twist read/write check, transcript preamble 네 실제 파일과 함수 줄 범위를 로컬 CodeSidebar에서 열 수 있습니다. 이 머신의 전체 prover 실행 측정은 아닙니다."
+    }
   ],
   "crypto/libiop": [
     { kind: "핵심 논문", label: "Aurora: Transparent Succinct Arguments for R1CS", href: "https://eprint.iacr.org/2018/828.pdf", note: "R1CS-to-IOP reduction과 transparent argument의 primary paper" },
@@ -5477,31 +5597,108 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "EspressoSystems/hyperplonk @ 2a3b55c", href: "https://github.com/EspressoSystems/hyperplonk/tree/2a3b55c97ad8a5d6627108a2e7def2aeccb7f3b9", note: "공식 unaudited Rust reference implementation의 pinned source" },
   ],
   "crypto/nova": [
-    { kind: "핵심 논문", label: "Kothapalli et al. · Nova", href: "https://eprint.iacr.org/2021/370.pdf", note: "Relaxed R1CS·NIFS folding·IVC construction과 security의 원 연구" },
-    { kind: "공식 코드", label: "microsoft/Nova @ 9092303", href: "https://github.com/microsoft/Nova/tree/909230314a7173b0f96d06e0c810d10f65f599f1", note: "Nova IVC·folding·compression backends의 pinned official source" },
+    {
+      "kind": "핵심 논문",
+      "label": "Nova §4.1, Construction1, PDF p.15",
+      "href": "https://eprint.iacr.org/2021/370.pdf",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    }
   ],
   "crypto/polycommit": [
-    { kind: "핵심 논문", label: "Kate·Zaverucha·Goldberg · Polynomial Commitments", href: "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf", note: "Degree-bounded pairing SRS를 이용한 constant-size polynomial commitment와 evaluation witness의 원 연구" },
-    { kind: "핵심 논문", label: "Bowe·Grigg·Hopwood · Halo", href: "https://eprint.iacr.org/2019/1021.pdf", note: "Inner-product polynomial commitment와 setup-free recursive proof composition의 원 연구" },
+    {
+      "kind": "핵심 논문",
+      "label": "Kate·Zaverucha·Goldberg §3.2, CreateWitness·VerifyEval, PDF p.7",
+      "href": "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Bulletproofs (2017/1066) · §3, PDF p.13, inner-product argument",
+      "href": "https://eprint.iacr.org/2017/1066.pdf",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Halo: Recursive Proof Composition without a Trusted Setup",
+      "href": "https://eprint.iacr.org/2019/1021.pdf",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    }
   ],
   "crypto/fri": [
-    { kind: "핵심 논문", label: "Ben-Sasson et al. · Fast Reed–Solomon IOP of Proximity", href: "https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ICALP.2018.14", note: "Reed–Solomon oracle proximity와 recursive even/odd folding·soundness의 원 연구" },
+    {
+      "kind": "핵심 논문",
+      "label": "Fast Reed–Solomon IOP of Proximity · §1, PDF p.2",
+      "href": "https://drops.dagstuhl.de/storage/00lipics/lipics-vol107-icalp2018/LIPIcs.ICALP.2018.14/LIPIcs.ICALP.2018.14.pdf",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "WHIR · Abstract 및 §1, 2024-11-21 개정본",
+      "href": "https://eprint.iacr.org/2024/1586.pdf",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    }
   ],
   "crypto/stark-theory": [
-    { kind: "핵심 논문", label: "Ben-Sasson et al. · Scalable, transparent, and post-quantum secure computational integrity", href: "https://eprint.iacr.org/2018/046.pdf", note: "Trace·AIR·oracle commitment·FRI를 잇는 STARK construction과 당시 evaluation의 원 연구" },
-    { kind: "핵심 논문", label: "Ben-Sasson et al. · FRI", href: "https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ICALP.2018.14", note: "STARK pipeline의 low-degree proximity 구성요소와 별도 soundness 경계" },
+    {
+      "kind": "핵심 논문",
+      "label": "Scalable, transparent, and post-quantum secure computational integrity · AIR 정의, PDF p.36",
+      "href": "https://eprint.iacr.org/2018/046.pdf",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    }
   ],
   "crypto/zk-theory": [
-    { kind: "핵심 논문", label: "Goldwasser·Micali·Rackoff · Knowledge Complexity", href: "https://doi.org/10.1137/0218012", note: "Interactive proof와 simulator 기반 zero-knowledge 정의의 토대" },
-    { kind: "핵심 논문", label: "Fiat·Shamir · How To Prove Yourself", href: "https://doi.org/10.1007/3-540-47721-7_12", note: "Public-coin identification challenge를 hash로 바꾸는 non-interactive 변환의 원 연구" },
+    {
+      "kind": "공식 규격",
+      "label": "RFC8235 §2.2, pp.4–5 · 원문의 응답·검증 표기",
+      "href": "https://www.rfc-editor.org/rfc/rfc8235",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Kate·Zaverucha·Goldberg · Constant-Size Commitments to Polynomials, PDF p.1",
+      "href": "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Goldwasser·Micali·Rackoff · The Knowledge Complexity of Interactive Proof Systems",
+      "href": "https://doi.org/10.1137/0218012",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Fiat·Shamir · How To Prove Yourself (1986)",
+      "href": "https://doi.org/10.1007/3-540-47721-7_12",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    }
   ],
   "crypto/constraint-systems": [
-    { kind: "핵심 논문", label: "Parno et al. · Pinocchio", href: "https://eprint.iacr.org/2013/279.pdf", note: "Arithmetic circuit→QAP reduction·pairing 기반 public verification과 당시 implementation evaluation의 원 연구" },
+    {
+      "kind": "핵심 논문",
+      "label": "Pinocchio §2.2.1, Definition2, PDF p.3",
+      "href": "https://eprint.iacr.org/2013/279.pdf",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Nova §4, Definition10, PDF p.13",
+      "href": "https://eprint.iacr.org/2021/370.pdf",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    }
   ],
   "crypto/snark-overview": [
-    { kind: "핵심 논문", label: "Ben-Sasson et al. · SNARKs for C", href: "https://eprint.iacr.org/2013/507", note: "Publicly-verifiable non-interactive argument·zero knowledge·knowledge soundness와 TinyRAM/QAP prototype의 원 연구" },
-    { kind: "핵심 논문", label: "Groth · Pairing-based Non-interactive Arguments", href: "https://eprint.iacr.org/2016/260.pdf", note: "Groth16의 preprocessing SNARK construction과 proof/verifier size 경계" },
-    { kind: "핵심 논문", label: "Gabizon et al. · PLONK", href: "https://eprint.iacr.org/2019/953.pdf", note: "Universal updatable SRS·permutation argument 계열의 비교 원문" },
+    {
+      "kind": "핵심 논문",
+      "label": "Groth · On the Size of Pairing-based Non-interactive Arguments, §2.2, PDF pp.7–8",
+      "href": "https://eprint.iacr.org/2016/260.pdf",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Ben-Sasson et al. · SNARKs for C (2013)",
+      "href": "https://eprint.iacr.org/2013/507",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    }
   ],
   "crypto/groth16": [
     { kind: "핵심 논문", label: "Groth · On the Size of Pairing-based Non-interactive Arguments", href: "https://eprint.iacr.org/2016/260.pdf", note: "세 group element proof·pairing verification·relation-specific CRS와 security model의 원 연구" },
@@ -5548,9 +5745,24 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "CometBFT v0.38 — Validator Signing", href: "https://docs.cometbft.com/v0.38/spec/consensus/signing", note: "Canonical vote fields·same H/R/type double-sign과 lock-related signing 경계" },
   ],
   "gpu/cuda-basics": [
-    { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Host/device·kernel·grid/block/thread·warp·memory semantics의 version-pinned 정본이며 특정 speedup·block size 보장은 아님" },
-    { kind: "공식 문서", label: "NVIDIA CUDA C++ Best Practices Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html", note: "APOD·effective bandwidth·coalescing·transfer·occupancy 측정 기준이며 단일 metric의 성능 보장은 아님" },
-    { kind: "공식 코드", label: "NVIDIA cuda-samples v12.8", href: "https://github.com/NVIDIA/cuda-samples/tree/v12.8", note: "Vector·reduction·matrix·stream CUDA API pattern의 pinned example source이며 production blockchain 최적 구현이나 benchmark는 아님" },
+    {
+      "kind": "공식 문서",
+      "label": "NVIDIA cuda-samples v13.0·3f1c509·49 –52 행",
+      "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu",
+      "note": "NVIDIA cuda-samples v13.0·3f1c509·49 –52 행"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CUDA C++ Programming Guide13.0.2 ·SIMT architecture",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-programming-guide/index.html",
+      "note": "CUDA C++ Programming Guide13.0.2 ·SIMT architecture"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NVIDIA Blackwell Tuning Guide13.0.2",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/blackwell-tuning-guide/index.html",
+      "note": "Data center Blackwell과 compute capability별 자원·지원 조건을 확인합니다."
+    }
   ],
   "gpu/cuda-matrix-multiply": [
     { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Block·shared memory·barrier의 pinned semantics이며 특정 tile 선택·speedup 보장은 아님" },
@@ -5895,7 +6107,13 @@ export const ARTICLE_EVIDENCE: Readonly<
   "crypto/sp1": [
     { kind: "공식 코드", label: "SP1 executor Program·ExecutionRecord · v6.4.0", href: "https://github.com/succinctlabs/sp1/tree/f66b4bff51d0ccff51d152e0f7f66b2ffedf3529/crates/core/executor/src", note: "RV64IM ELF parsing과 record/shard source이며 모든 ELF·optimal shard size 보장은 아님" },
     { kind: "공식 코드", label: "SP1 SDK proof/prover · v6.4.0", href: "https://github.com/succinctlabs/sp1/tree/f66b4bff51d0ccff51d152e0f7f66b2ffedf3529/crates/sdk/src", note: "Proof modes·public values·vkey checks와 lifecycle source이며 cross-version compatibility·fixed backend speed 보장은 아님" },
-  ],
+    {
+      "kind": "공식 연구",
+      "label": "EF zkEVM · On Formal Verification and a Bug in SP1 Hypercube (2026-05-20)",
+      "href": "https://zkevm.ethereum.foundation/blog/sp1-fv",
+      "note": "JALR 100+1→100 장난감 사례로 과거 completeness bug와 정리의 h_valid_pc 전제를 구분했습니다. EF 보고서상 v6.1.0 수정 통보이며 현재 고정 v6.4.0에 같은 버그가 남았다는 주장이 아닙니다."
+    },
+],
   "isms-aml/vasp-custody-management": [
     { kind: "공식 문서", label: "금융위원회 · 가상자산이용자보호법 시행 Q&A", href: "https://www.fsc.go.kr/po020201/83937", note: "2026-08-14 확인한 국내 콜드월렛 경제적 가치 80%·일일 산정 경계이며 PoR·지급능력·key safety 보장은 아님" },
     { kind: "공식 가이드", label: "FATF · Updated Guidance for VA and VASPs", href: "https://www.fatf-gafi.org/content/dam/fatf/documents/recommendations/Updated-Guidance-VA-VASP.pdf", note: "VASP와 third-party custody의 risk-based control 원칙이며 특정 wallet·custodian·PoR 제품 승인은 아님" },
@@ -5909,9 +6127,36 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "금융위원회 · 불공정거래 조사 2년 성과", href: "https://www.fsc.go.kr/po010105/87357", note: "2026-07 공개된 감시→혐의통보→당국 조사 흐름의 snapshot이며 건수·평균을 detector 성능으로 일반화하지 않음" },
   ],
   "blockchain/pq-account": [
-    { kind: "공식 규격", label: "ERC-4337 · Account Abstraction Using Alt Mempool", href: "https://eips.ethereum.org/EIPS/eip-4337", note: "UserOperation·bundler·EntryPoint validation/execution 경계이며 ML-DSA·native verifier·block inclusion 보장은 아님" },
-    { kind: "공식 규격", label: "NIST FIPS 204 · ML-DSA", href: "https://csrc.nist.gov/pubs/fips/204/final", note: "ML-DSA algorithm·parameter·encoding의 최종 표준과 errata 진입점이며 EVM integration·gas·recovery 보장은 아님" },
-    { kind: "공식 규격", label: "ERC-7562 · Account Abstraction Validation Scope Rules", href: "https://eips.ethereum.org/EIPS/eip-7562", note: "Bundler validation scope·DoS admission 규칙이며 모든 bundler의 PQ verifier 지원을 의미하지 않음" },
+    {
+      "kind": "공식 규격",
+      "label": "ERC-4337 · Account Abstraction Using Alt Mempool",
+      "href": "https://eips.ethereum.org/EIPS/eip-4337",
+      "note": "현재 원문의 EIP-712·nonce·검증·실행·예치금 정산 범위입니다. ML-DSA 구현·native precompile·bundler 수락과 송금 성공을 제공하지 않습니다."
+    },
+    {
+      "kind": "공식 규격",
+      "label": "NIST FIPS 204 · ML-DSA",
+      "href": "https://csrc.nist.gov/pubs/fips/204/final",
+      "note": "본 글은 ML-DSA-44 공개키1312바이트와 서명2420바이트 및 표준 범위를 사용합니다. EVM 통합·gas·복구 권한·구현 인증과 전체 계정 안전을 보장하지 않습니다."
+    },
+    {
+      "kind": "공식 규격",
+      "label": "ERC-7562 · Account Abstraction Validation Scope Rules",
+      "href": "https://eips.ethereum.org/EIPS/eip-7562",
+      "note": "오프체인 제출 수락과 검증 범위의 조건에 한정한 원문 근거입니다. 모든 verifier의 실행 안전이나 모든 bundler의 PQ 지원을 인증하지 않습니다."
+    },
+    {
+      "kind": "공식 규격",
+      "label": "NIST CSWP 39upd1 · Crypto Agility",
+      "href": "https://csrc.nist.gov/pubs/cswp/39/upd1/considerations-for-achieving-crypto-agility/final",
+      "note": "암호 교체의 운영 원칙과 downgrade 위험을 계정의 같은 송금 사례에 적용합니다. 특정 블록체인 계정의 안전한 이전이나 AND 정책의 보편적 최적성을 증명하지 않습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "eth-infinitism/account-abstraction · pinned 1c6b669",
+      "href": "https://github.com/eth-infinitism/account-abstraction/tree/1c6b669d0eea734e09a87e095ba15e076151718a",
+      "note": "실제 EIP-712·계정 검증·EntryPoint nonce·실행 실패·deposit 환급 경로를 읽었습니다. SimpleAccount는 ECDSA 예제이며 배포된 ML-DSA 계정이 아닙니다."
+    }
   ],
   "blockchain/stablecoin-overview": [
     { kind: "공식 문서", label: "FSB · Global Stablecoin Recommendations", href: "https://www.fsb.org/2023/07/high-level-recommendations-for-the-regulation-supervision-and-oversight-of-global-stablecoin-arrangements-final-report/", note: "발행·상환·안정화·transfer·governance 기능을 arrangement로 읽는 2023 공식 권고이며 특정 token safety 보장은 아님" },
@@ -5990,9 +6235,30 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "Curve StableSwap-NG · commit 2abe778f", href: "https://github.com/curvefi/stableswap-ng/tree/2abe778f40206a6c0fd108a0a53ad3266cbedeee", note: "Pinned pool/factory·rate·fee implementation이며 모든 historical pool/deployment와 동일하다는 뜻은 아님" },
   ],
   "blockchain/rwa-composition": [
-    { kind: "공식 연구", label: "IOSCO · Tokenization of Financial Assets (2025)", href: "https://www.iosco.org/library/pubdocs/pdf/IOSCOPD809.pdf", note: "Authoritative ownership record·legal recognition·custody 위험 분석이며 개별 상품 법률 의견은 아님" },
-    { kind: "공식 연구", label: "BIS · The tokenisation continuum", href: "https://www.bis.org/publ/bisbull72.htm", note: "Core claim layer와 service/governance layer의 개념 근거이며 tokenisation 편익·유동성 보장은 아님" },
-    { kind: "공식 문서", label: "Uniswap · Permissioned Pools architecture", href: "https://developers.uniswap.org/docs/protocols/v4-hooks/permissioned-pools/architecture", note: "Regulated pool의 compliance execution layer 근거이며 token holder의 법적 권리·issuer solvency·authoritative registry를 만들지는 않음" },
+    {
+      "kind": "공식 문서",
+      "label": "Securitize · BlackRock BUIDL launch",
+      "href": "https://investors.securitize.io/news/news-details/2024/BlackRock-Launches-Its-First-Tokenized-Fund-BUIDL-on-the-Ethereum-Network-03-20-2024/default.aspx",
+      "note": "공식 출시 발표의 투자 대상·역할·지급 방식·초기 자격 조건입니다. 현재 청약에는 최신 발행 문서를 다시 확인합니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Circle · BUIDL USDC transfer contract, 2024-04-11",
+      "href": "https://www.circle.com/pressroom/circle-announces-usdc-smart-contract-for-transfers-by-blackrocks-buidl-fund-investors",
+      "note": "지분을 Circle에 넘기고 USDC를 받는 교환 구조입니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Uniswap Labs · BUIDL liquidity, 2026-02-11",
+      "href": "https://blog.uniswap.org/unlocking-defi-liquidity-for-buidl",
+      "note": "자격·허용 목록·RFQ 상대방·원자적 결제를 확인했습니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Circle · Tokenizing and redeeming USDC",
+      "href": "https://help.circle.com/support/en/tokenizing-and-redeeming-usdc?id=kb_article_view&sysparm_article=KB0010781",
+      "note": "USDC 소각과 은행 송금은 별도의 상환 절차입니다. 확인일2026-10-04."
+    }
   ],
   "blockchain/berachain": [
     { kind: "공식 문서", label: "Berachain · Proof of Liquidity overview", href: "https://docs.berachain.com/general/proof-of-liquidity/overview", note: "2026-08-14 PoL actor·boost·allocation flow의 current docs이며 parameter·APR를 영구 고정하지 않음" },
@@ -6029,8 +6295,42 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Flock · Fast batched proofs for Boolean computations", href: "https://arxiv.org/abs/2607.27491", note: "Boolean batch proof와 conventional-hash prototype benchmark 근거이며 hardware·batch 조건 밖의 보편 throughput은 아님" },
   ],
   "blockchain/ethereum-future-roadmap": [
-    { kind: "공식 문서", label: "Ethereum · Quantum resistance roadmap", href: "https://ethereum.org/roadmap/security/quantum-resistance/", note: "Consensus BLS·KZG·account ECDSA·application ZK migration surface의 공식 방향이며 최종 선택·날짜 확정은 아님" },
-    { kind: "공식 연구", label: "Lean Ethereum roadmap", href: "https://leanroadmap.org/", note: "FRI·STIR·WHIR formalization milestones의 공개 연구 방향이며 Ethereum 전체 formal verification 완료는 아님" },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-7773 · Glamsterdam",
+      "href": "https://eips.ethereum.org/EIPS/eip-7773",
+      "note": "2026-10-04 확인: Review 상태, Sepolia 일정과 비어 있는 Hoodi·Mainnet 활성화 항목. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-7723 · Network upgrade inclusion stages",
+      "href": "https://eips.ethereum.org/EIPS/eip-7723",
+      "note": "확인일 Last Call. 문서의 EIP 상태와 특정 업그레이드의 포함 단계가 다름을 설명합니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-7773 · Scheduled EIPs and activation",
+      "href": "https://eips.ethereum.org/EIPS/eip-7773",
+      "note": "목록과 활성화 표를 함께 읽어 포함 의도와 실행 여부를 연결합니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-8081 · Hegotá",
+      "href": "https://eips.ethereum.org/EIPS/eip-8081",
+      "note": "Draft와 SFI·CFI·PFI 목록, 비어 있는 활성화 표를 확인했습니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Ethereum · Hegotá roadmap",
+      "href": "https://ethereum.org/roadmap/hegota/",
+      "note": "2027년2분기는 예상 일정입니다. 확인일 이후 변경될 수 있습니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Lean Consensus R&D Progress",
+      "href": "https://leanroadmap.org/",
+      "note": "형식 검증의 연구 목표와 개별 작업 범위를 확인하는 자료입니다. 완료된 전체 시스템 증명으로 확대하지 않습니다. 확인일2026-10-04."
+    }
   ],
   "ai/qwen36-hybrid-architecture": [
     { kind: "공식 문서", label: "Qwen/Qwen3.6-27B · official model card", href: "https://huggingface.co/Qwen/Qwen3.6-27B", note: "27B dense·64 layers·3:1 Gated DeltaNet/Attention·native 262,144·extended 1,010,000·multimodal·MTP 공개 범위이며 모든 runtime의 품질·VRAM·latency 보장은 아님" },
@@ -6065,10 +6365,24 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Cross-Validation: What Does It Estimate and How Well Does It Do It?", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/", note: "Cross-validation estimand와 독립 final evaluation 경계" },
   ],
   "ai/flash-attention-io-aware-kernel": [
-    { kind: "핵심 논문", label: "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness", href: "https://arxiv.org/abs/2205.14135", note: "IO-aware tiling·recomputation 과 A100 속도·HBM 접근 수치의 출처로 결과는 저자 자기보고 범위" },
-    { kind: "핵심 논문", label: "Online normalizer calculation for softmax", href: "https://arxiv.org/abs/1805.02867", note: "Running max·normalizer 갱신식의 원 출처인 2018 년 NVIDIA 기술 보고서" },
-    { kind: "후속 논문", label: "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", href: "https://arxiv.org/abs/2307.08691", note: "Loop 순서 교체·지연 정규화·sequence 축 병렬을 다룬 후속으로 이 글은 언급만 하고 다음 글이 정본" },
-    { kind: "공식 구현", label: "Dao-AILab/flash-attention", href: "https://github.com/Dao-AILab/flash-attention", note: "논문 저자의 CUDA 구현으로 지원 head dim 과 GPU 세대는 release 마다 확인" },
+    {
+      "kind": "핵심 논문",
+      "label": "FlashAttention · 2022",
+      "href": "https://arxiv.org/abs/2205.14135",
+      "note": "원 논문의 모델·GPU 구성에서 저자 측정. FLOPs가 같아도 시간은 달라지며 모든 shape에서 같은 이득은 아니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "FlashAttention-4 · arXiv 2603.05451v1",
+      "href": "https://arxiv.org/html/2603.05451v1",
+      "note": "저자 비교는 BF16, head dim·sequence length와 baseline version별 kernel 측정. v1 본문은 B200, 부록 A.1은 B100으로 표기가 불일치한다. 이 글은 최고 가속비를 제품 성능 보장으로 인용하지 않는다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "본문에서 사용하는 고정 commit의 전체 구현",
+      "href": "https://github.com/Dao-AILab/flash-attention/blob/e9515d5dee6ade134a33d6020d38d01ef0596996/flash_attn/cute/softmax.py",
+      "note": "CodeSidebar에 원문 전체와 LICENSE를 보관했습니다. 주석의 숫자 대입은 설명용 검산이며 GPU 학습·성능 재현을 뜻하지 않습니다."
+    }
   ],
   "ai/continuous-batching-step-anatomy": [
     { kind: "공식 코드", label: "vLLM V1 scheduler: vllm/v1/core/sched/scheduler.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/core/sched/scheduler.py", note: "schedule() 의 running 순회·preemption·waiting admission 순서와 token_budget·long_prefill_token_threshold clipping 의 근거" },
@@ -6136,11 +6450,30 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "EVT: Accelerating Deep Learning Training with Epilogue Visitor Tree (ASPLOS 2024)", href: "https://dl.acm.org/doi/10.1145/3620666.3651369", note: "Epilogue visitor tree 의 구조와 compiler 자동 생성 근거이며 수치는 저자 자기보고" },
   ],
   "gpu/gpu-memory-hierarchy-and-roofline": [
-    { kind: "공식 문서", label: "NVIDIA CUDA C++ Best Practices Guide 12.8.1 · Coalesced Access / Effective Bandwidth / Device Memory Spaces", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html", note: "32-byte transaction 규칙, misaligned·strided 예, effective bandwidth 식, local·constant memory 위치 표의 근거" },
-    { kind: "공식 문서", label: "NVIDIA Nsight Compute Profiling Guide · Speed Of Light / Roofline Charts / Scheduler Statistics", href: "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html", note: "Pipe utilization·DRAM throughput·eligible warp 와 계층별 roofline chart 의 근거" },
-    { kind: "핵심 논문", label: "Williams, Waterman, Patterson · Roofline: An Insightful Visual Performance Model for Multicore Architectures (CACM 2009)", href: "https://escholarship.org/uc/item/3qf383m0", note: "min(peak, bandwidth × intensity) 지붕과 ridge point 의 원 model" },
-    { kind: "공식 문서", label: "NVIDIA Hopper Architecture In-Depth", href: "https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/", note: "H100 SXM5 SM 132개·L2 50 MB·SM 당 L1/shared 256 KB·HBM3 구성의 근거" },
-    { kind: "공식 문서", label: "NVIDIA H100 Tensor Core GPU 제품 명세", href: "https://www.nvidia.com/en-us/data-center/h100/", note: "H100 SXM 의 3.35 TB/s 와 FP32 67 TFLOPS, FP16 Tensor peak 의 근거" },
+    {
+      "kind": "공식 문서",
+      "label": "CUDA Best Practices13.0.2 ·Effective Bandwidth Calculation",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-best-practices-guide/index.html",
+      "note": "CUDA Best Practices13.0.2 ·Effective Bandwidth Calculation"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NVIDIA vectorAdd·3f1c509·52 행",
+      "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu",
+      "note": "NVIDIA vectorAdd·3f1c509·52 행"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Williams 외·Roofline(2009)",
+      "href": "https://escholarship.org/uc/item/3qf383m0",
+      "note": "연산 강도와 대역폭·계산 상한을 결합하는 모델. 실제 병목 원인의 완전한 진단은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NVIDIA Nsight Compute·2026-10-04 확인·Profiling Guide",
+      "href": "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html",
+      "note": "메모리 계층·실행 pipe·scheduler counter의 정의를 함께 확인합니다."
+    }
   ],
   "gpu/cutlass-collectives-and-tile-schedulers": [
     { kind: "핵심 논문", label: "Stream-K: Work-centric Parallel Decomposition for Dense Matrix-Matrix Multiplication on the GPU (PPoPP 2023)", href: "https://arxiv.org/abs/2301.03598", note: "k-iteration 균등 분배·partial fixup·hybrid 와 wave quantization 정의의 근거이며 A100 수치는 저자 자기보고" },
@@ -6222,11 +6555,24 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "NCCL User Guide · Collective Operations", href: "https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/usage/collectives.html", note: "배치 계산에 쓰는 all-reduce 정의의 근거" },
   ],
   "ai/expert-parallelism-moe-systems": [
-    { kind: "핵심 논문", label: "GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding", href: "https://arxiv.org/abs/2006.16668", note: "Expert 하나를 device 하나에 두는 EP, einsum all-to-all dispatch·combine, 2N/E capacity, 2,048 TPU v3 600B 학습" },
-    { kind: "핵심 논문", label: "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity", href: "https://arxiv.org/abs/2101.03961", note: "Expert capacity = tokens/experts × capacity factor, 초과 token residual 통과, factor 1.0·1.25·2.0, α = 0.01" },
-    { kind: "핵심 논문", label: "DeepSpeed-MoE: Advancing Mixture-of-Experts Inference and Training to Power Next-Generation AI Scale", href: "https://arxiv.org/abs/2201.05596", note: "추론용 EP·DP·TP 결합과 hierarchical all-to-all, 7.3배·4.5배·9배 자기보고" },
-    { kind: "핵심 논문", label: "DeepSeek-V3 Technical Report", href: "https://arxiv.org/abs/2412.19437", note: "Node-limited routing M = 4, NVLink 160 GB/s 대 IB 50 GB/s, IB→NVLink forwarding kernel 20 SM, bias γ = 0.001, prefill EP 32·decode EP 320 배포" },
-    { kind: "공식 구현", label: "DeepEP README", href: "https://github.com/deepseek-ai/DeepEP", note: "Normal·low-latency kernel 구분, node 사이 RDMA dispatch 약 90 GB/s와 node 안 NVLink 700 GB/s대 표, hardware 요구" },
+    {
+      "kind": "공식 구현",
+      "label": "DeepEP V2.5 · 93eb6eb",
+      "href": "https://github.com/deepseek-ai/DeepEP/blob/93eb6eb238127e96c6d7a4a625a6dad158348509/README.md",
+      "note": "이 글에서는 공식 API와 README를 대조했으며 GPU benchmark는 수행하지 않음. V1의 normal/low-latency API와 zero-SM 설명을 이 commit에 일반화하지 않는다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "DeepSeek-V3 Technical Report",
+      "href": "https://arxiv.org/abs/2412.19437",
+      "note": "보고서의 학습·추론 구성에 대한 저자 측정. 이 글의 64 expert·8GPU 수치는 설명용이며 V3의 실제 제품 구성을 옮긴 것이 아니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "본문에서 사용하는 고정 commit의 전체 구현",
+      "href": "https://github.com/deepseek-ai/DeepEP/blob/93eb6eb238127e96c6d7a4a625a6dad158348509/deep_ep/buffers/ep.py",
+      "note": "CodeSidebar에 원문 전체와 LICENSE를 보관했습니다. 주석의 숫자 대입은 설명용 검산이며 GPU 학습·성능 재현을 뜻하지 않습니다."
+    }
   ],
   "ai/launch-overhead-and-cpu-gpu-synchronization": [
     { kind: "공식 문서", label: "Getting Started with CUDA Graphs (NVIDIA Technical Blog)", href: "https://developer.nvidia.com/blog/cuda-graphs/", note: "V100 에서 kernel 당 9.6·3.8·3.4 µs 와 첫 graph launch 약 33% 추가 비용이라는 저자 자기보고 수치의 출처" },
@@ -6320,10 +6666,24 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "선행·비교 논문", label: "Identity Mappings in Deep Residual Networks", href: "https://arxiv.org/abs/1603.05027", note: "Shortcut 항등이 신호 전파를 보존한다는 원 근거" },
   ],
   "ai/fast-weight-memory-and-chunkwise-recurrence": [
-    { kind: "핵심 논문", label: "Linear Transformers Are Secretly Fast Weight Programmers", href: "https://arxiv.org/abs/2102.11174", note: "Fast weight memory·delta rule 의 원 출처, 저자 자기보고 범위" },
-    { kind: "핵심 논문", label: "Parallelizing Linear Transformers with the Delta Rule over Sequence Length", href: "https://arxiv.org/abs/2406.06484", note: "Chunkwise WY/UT transform 알고리즘과 4~16배 속도 수치의 출처" },
-    { kind: "핵심 논문", label: "Gated Delta Networks: Improving Mamba2 with Delta Rule", href: "https://arxiv.org/abs/2412.06464", note: "Gated delta rule 식과 perplexity·retrieval 벤치마크의 출처" },
-    { kind: "공식 규격", label: "Blelloch · Prefix Sums and Their Applications (CMU-CS-90-190)", href: "https://www.cs.cmu.edu/~guyb/papers/Ble93.pdf", note: "Up-sweep·down-sweep parallel scan 의 원 출처, 1990년 기술보고서" },
+    {
+      "kind": "핵심 논문",
+      "label": "Parallelizing Linear Transformers with the Delta Rule · 2024",
+      "href": "https://arxiv.org/abs/2406.06484",
+      "note": "원 논문의 모델 크기·token budget·GPU 조건의 저자 실험. 단순 prefix sum은 교환 가능한 합의 사례다. delta update를 같은 스캔 코드로 바꿀 수 있다는 뜻은 아니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Gated DeltaNet-2 · arXiv 2605.22791v1",
+      "href": "https://arxiv.org/html/2605.22791v1",
+      "note": "1.3B, FineWeb-Edu 100B token, 학습 길이 4K, recurrent·hybrid 비교의 저자 실험. 표의 순위는 그 조건의 결과다. 고정 크기 상태가 임의 길이의 정보를 무손실 저장하는 보장은 아니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "본문에서 사용하는 고정 commit의 전체 구현",
+      "href": "https://github.com/NVlabs/GatedDeltaNet-2/blob/a5552fe3c67e0ebc7ef1220df68ae8896ec62d56/lit_gpt/gdn2_ops/fused_recurrent_gdn2.py",
+      "note": "CodeSidebar에 원문 전체와 LICENSE를 보관했습니다. 주석의 숫자 대입은 설명용 검산이며 GPU 학습·성능 재현을 뜻하지 않습니다."
+    }
   ],
   "ai/llm-evaluation-criteria-and-methods": [
     { kind: "핵심 논문", label: "Holistic Evaluation of Language Models (HELM)", href: "https://arxiv.org/abs/2211.09110", note: "Criteria·metric 대응과 42개 시나리오 설계의 출처" },
@@ -6443,10 +6803,30 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Reinforcement Learning: An Introduction (2nd ed.)", href: "https://mitpress.mit.edu/9780262039246/reinforcement-learning/", note: "Return·MDP·REINFORCE 정의의 표준 교과서 출처" },
   ],
   "ai/reward-design-for-verifiable-rl": [
-    { kind: "핵심 논문", label: "Let's Verify Step by Step", href: "https://arxiv.org/abs/2305.20050", note: "Outcome/process reward 구분과 MATH 정확도 수치의 출처" },
-    { kind: "핵심 논문", label: "Defining and Characterizing Reward Hacking", href: "https://arxiv.org/abs/2209.13085", note: "Reward hacking의 형식적 정의와 unhackable 조건의 출처" },
-    { kind: "핵심 논문", label: "Concrete Problems in AI Safety", href: "https://arxiv.org/abs/1606.06565", note: "Specification gaming·reward misspecification 이름의 출처" },
-    { kind: "핵심 논문", label: "Policy Invariance Under Reward Transformations", href: "https://dl.acm.org/doi/10.5555/645528.657613", note: "Potential-based reward shaping의 optimal policy 보존 증명 출처" },
+    {
+      "kind": "핵심 논문",
+      "label": "Policy invariance under reward transformations · 1999",
+      "href": "https://people.eecs.berkeley.edu/~russell/papers/icml99-shaping.pdf",
+      "note": "정책 보존 정리와 논문이 보고한 제한된 환경 실험. 추가 보상의 합이 언제나 0이라는 주장이 아니다. 적절한 경계 조건에서 행동 선택에 무관한 항으로 남아 정책을 보존한다."
+    },
+    {
+      "kind": "공식 구현",
+      "label": "Open-R1 rewards.py · 5b6ff22",
+      "href": "https://github.com/huggingface/open-r1/blob/5b6ff22b3fb7aa069c54866e517f39dfc3160e09/src/open_r1/rewards.py",
+      "note": "이 글은 공식 코드 경로를 대조했으며 모델 학습을 재현하지 않음. 자동 실행된다는 사실은 verifier가 정답을 완벽하게 판정한다는 보장이 아니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Verifiable Process Rewards · arXiv 2605.10325v1",
+      "href": "https://arxiv.org/html/2605.10325v1",
+      "note": "Tic-Tac-Toe·Sudoku·Minesweeper와 전이 benchmark의 저자 실험. 과정 verifier의 품질에 의존한다. 열린 환경에서 범용적으로 정확한 oracle을 제공하는 결과는 아니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Reasoning Arena · arXiv 2606.09380v1",
+      "href": "https://arxiv.org/html/2606.09380v1",
+      "note": "논문의 수학·코드 benchmark 비교에 대한 저자 자기보고. 판정자 점수를 객관적인 정답 증명으로 바꿔 읽지 않는다."
+    }
   ],
   "ai/fine-tuning-tradeoffs-forgetting-and-merging": [
     { kind: "핵심 논문", label: "Catastrophic Interference in Connectionist Networks: The Sequential Learning Problem", href: "https://doi.org/10.1016/S0079-7421(08)60536-8", note: "Catastrophic forgetting을 처음 정식화한 원 논문" },
@@ -7988,33 +8368,1134 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "돌의 제작 시기를 약 기원전 1750년으로 설명하고 현대적 의미의 법전과 구분함. 1903년 머리말의 시간 간격은 학교 판본의 연대를 대조하지 않아 채택하지 않음",
     },
   ],
-  "business/business-model-cashflow": [{"kind": "공식 문서", "label": "IFRS 15 Revenue from Contracts with Customers", "href": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-15-revenue-from-contracts-with-customers/", "note": "고객 계약의 수익 인식과 통제 이전 기준. 세법이나 현금 수령 시점을 정하는 문서는 아닙니다."}, {"kind": "공식 문서", "label": "IAS 7 Statement of Cash Flows", "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-7-statement-of-cash-flows/", "note": "이익과 영업·투자·재무 현금흐름을 구분하는 회계 원문입니다."}],
-  "business/shop-unit-economics": [{"kind": "공식 문서", "label": "IAS 2 Inventories", "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/", "note": "재고의 비용 인식과 순실현가능가치 기준. 본문의 잔당 계산은 설명용 현금 사례입니다."}, {"kind": "공식 문서", "label": "UK Business rates overview", "href": "https://www.gov.uk/introduction-to-business-rates", "note": "잉글랜드 등의 상업용 부동산 관련 비용을 확인하는 영국 정부 안내입니다."}, {"kind": "공식 문서", "label": "NSW Retail Tenancy Guide", "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide", "note": "NSW 상업 임대차의 outgoings와 fit-out 비용을 구분하는 원문입니다."}],
-  "business/shop-site-selection": [{"kind": "공식 문서", "label": "Australia: Choose your business location", "href": "https://business.gov.au/planning/new-businesses/choose-your-business-location", "note": "입지 비용·시설·고객 접근·지방정부 확인 항목을 제시하는 공식 안내입니다."}, {"kind": "공식 문서", "label": "Korea: 식품위생법 시행규칙 제36조", "href": "https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=115900", "note": "한국 음식점 등의 시설기준이 별표 14와 연결됨을 확인합니다."}, {"kind": "보충 읽기", "label": "YouTube · 소상공인시장진흥공단 소상공인365 안내", "href": "https://www.youtube.com/watch?v=OafyT4h9lyQ", "note": "영상 자막의 3분 20초 간단 분석과 4분 40초 상세 분석에서 지역·업종·보고서 항목을 확인했습니다. 개별 점포 매출 예측의 검증 자료는 아닙니다."}],
-  "business/shop-fitout-and-opening": [{"kind": "공식 문서", "label": "한국 식품위생법 시행규칙 제36조 및 별표 14", "href": "https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=115900", "note": "업종별 시설기준의 법적 출발점입니다. 개별 점포의 허가 여부를 이 문서만으로 단정하지 않습니다."}, {"kind": "공식 문서", "label": "NSW Retail Tenancy Guide", "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide", "note": "임차인의 fit-out·outgoings·make good 확인 항목을 제시합니다."}, {"kind": "보충 읽기", "label": "YouTube · Square The Build Out (Ggiata)", "href": "https://www.youtube.com/watch?v=odwii7_bJww", "note": "Square가 공개한 영상과 자체 전사에서 임대료 선발생·가스 용량 부족·최종 검사 불확실성을 확인했습니다. 특정 미국 매장의 사례로만 씁니다."}],
-  "property/commercial-lease-and-rent": [{"kind": "공식 문서", "label": "대한민국 상가건물 임대차보호법", "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancNo=21083&ancYd=20251111&efYd=20260512&lsiSeq=279651", "note": "2026-10-03 기준 시행 법령에서 갱신·권리금 관련 조문을 확인합니다."}, {"kind": "공식 문서", "label": "UK Business tenancies: right to renew", "href": "https://lawcom.gov.uk/project/business-tenancies-the-right-to-renew/", "note": "잉글랜드·웨일스 사업 임차의 갱신권과 계약 전 배제 가능성 안내입니다."}, {"kind": "공식 문서", "label": "NSW Retail Tenancy Guide", "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide", "note": "호주 NSW의 소매 임대차 비용과 종료 의무 안내입니다."}],
-  "property/shop-transfer-and-goodwill": [{"kind": "공식 문서", "label": "한국 상가건물 임대차보호법 제10조의3·제10조의4", "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancNo=21083&ancYd=20251111&efYd=20260512&lsiSeq=279651", "note": "권리금 정의와 회수 기회 보호의 현재 조문입니다."}, {"kind": "공식 문서", "label": "NSW Small Business Commissioner: Transferring your lease", "href": "https://www.smallbusiness.nsw.gov.au/help/common-questions/transferring-your-lease", "note": "호주 NSW의 retail lease 양도 동의와 공개 절차를 안내합니다."}, {"kind": "보충 읽기", "label": "YouTube · KTV 권리금 분쟁 사례", "href": "https://www.youtube.com/watch?v=39_iUHr0t6I&t=560s", "note": "영상 9분대부터 후보 임차인·임대인 협의의 증거를 남길 필요를 다룹니다. 법적 근거는 현행 법령에서 확인합니다."}],
-  "property/shop-closure-and-restoration": [{"kind": "공식 문서", "label": "한국 대법원 2002년 건물명도 판례", "href": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=194367", "note": "특정 사실관계에서 복구비 공제와 실제 복구 의사를 다룬 판례입니다. 일반 규칙으로 확대하지 않습니다."}, {"kind": "공식 문서", "label": "국세청 폐업 부가가치세 안내", "href": "https://nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2448&nttSn=1393", "note": "폐업일이 속한 달 다음 달 25일 신고와 잔존 재화 관련 안내입니다."}, {"kind": "공식 문서", "label": "NSW Retail Tenancy Guide", "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide", "note": "호주 NSW의 임대차 종료 make good와 인도 준비 안내입니다."}, {"kind": "보충 읽기", "label": "YouTube · KTV 상가 임대차 분쟁 사례", "href": "https://www.youtube.com/watch?v=39_iUHr0t6I&t=990s", "note": "영상 16분대의 전 임차인 시설·복구 특약 사례를 전사로 확인했습니다. 개별 법리는 판례와 계약으로 재확인합니다."}],
-  "business/franchise-incentives": [{"kind": "공식 문서", "label": "US FTC Franchise Rule", "href": "https://www.ftc.gov/legal-library/browse/rules/franchise-rule", "note": "미국 가맹사업 공시 규칙의 원문입니다."}, {"kind": "공식 문서", "label": "US FTC Consumer Guide to Buying a Franchise", "href": "https://www.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise", "note": "미국의 FDD 14일 사전 제공과 항목별 검토를 설명합니다."}, {"kind": "공식 문서", "label": "한국 공정위 가맹 정보공개서 비교", "href": "https://franchise.ftc.go.kr/firHope/comparePopup.do", "note": "한국의 점포 수·평균 매출·비용 비교 항목을 확인합니다."}, {"kind": "공식 문서", "label": "EU Vertical Guidelines 2022", "href": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=intcom%3AC%282022%294238", "note": "유럽연합 수직 계약·가맹 제한의 경쟁법 해석 자료입니다."}],
-  "property/land-development-residual": [{"kind": "공식 문서", "label": "RICS Valuation of development property", "href": "https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf", "note": "잔여법과 개발 부동산의 현금흐름·민감도를 설명하는 전문 기준입니다."}, {"kind": "공식 문서", "label": "한국 국토의 계획 및 이용에 관한 법률", "href": "https://www.law.go.kr/LSW/lsInfoP.do?efYd=20260701&lsiSeq=284013", "note": "2026-10-03 기준 개발행위허가·건폐율·용적률 조문의 출발점입니다."}, {"kind": "공식 문서", "label": "한국 건축법 제11조", "href": "https://law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1032199815", "note": "건축허가의 법적 출발점입니다."}],
-  "business/supply-chain-bargaining": [{"kind": "공식 문서", "label": "World Bank World Development Report 2020", "href": "https://www.worldbank.org/en/publication/wdr2020", "note": "국제 가치사슬의 분업과 정책 파급을 설명하는 공식 보고서입니다."}, {"kind": "공식 문서", "label": "World Bank Global Value Chains", "href": "https://www.worldbank.org/ext/en/topic/trade/global-value-chains", "note": "국가 사이의 생산 단계 분리와 고부가가치 단계 이동을 설명합니다."}, {"kind": "공식 문서", "label": "OECD Trade in Value Added", "href": "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html", "note": "총수출과 국내 부가가치의 차이를 확인할 통계 안내입니다."}],
-  "markets/funds-etfs-and-etns": [{"kind": "공식 문서", "label": "SEC Investor Bulletin: Exchange-Traded Funds", "href": "https://www.sec.gov/files/etfs.pdf", "note": "미국 ETF의 펀드 지분·시장가격·NAV·설정 환매 구조 안내입니다."}, {"kind": "공식 문서", "label": "SEC Testimony on ETFs and ETNs", "href": "https://www.sec.gov/newsroom/speeches-statements/ts101911er-testimony-market-micro-structure-examination-etfs", "note": "미국 ETN의 발행자 무담보 채무 성격을 설명합니다."}, {"kind": "공식 문서", "label": "SEC Leveraged and Inverse ETF Alert", "href": "https://www.sec.gov/files/investor/pubs/leveragedetfs-alert.htm", "note": "일일 재설정 상품의 장기 성과 해석 한계를 안내합니다."}],
-  "markets/forwards-and-futures": [{"kind": "공식 문서", "label": "CME Understanding Margin Changes", "href": "https://www.cmegroup.com/education/articles-and-reports/understanding-margin-changes", "note": "선물 증거금과 일별 평가·유지 요건의 공식 설명입니다."}, {"kind": "공식 문서", "label": "CME Money Calculations for Futures and Options", "href": "https://www.cmegroup.com/education/articles-and-reports/money-calculations-for-futures-and-options", "note": "선물 손익이 변동증거금으로 현금 정산되는 계산 설명입니다."}, {"kind": "공식 문서", "label": "BIS OTC Derivatives Data", "href": "https://data.bis.org/topics/OTC_DER", "note": "명목원금과 시가·신용노출을 구분하는 국제 통계입니다."}],
-  "markets/options-and-asymmetric-payoffs": [{"kind": "공식 문서", "label": "Options Industry Council: Options Basics", "href": "https://www.optionseducation.org/optionsoverview/options-basics", "note": "옵션 매수·매도의 권리와 의무, 프리미엄, 손실 구조의 공식 교육 자료입니다."}, {"kind": "공식 문서", "label": "Options Industry Council: Benefits and Risks", "href": "https://www.optionseducation.org/optionsoverview/what-are-the-benefits-risks", "note": "매수 손실 한도와 무담보 콜 매도의 손실 가능성을 설명합니다."}],
-  "markets/swaps-and-credit-risk": [{"kind": "공식 문서", "label": "CFTC Swaps Report Data Dictionary", "href": "https://www.cftc.gov/MarketReports/SwapsReports/DataDictionary/index.htm", "note": "CDS와 금리·총수익 스왑의 계약 다리 정의를 제공합니다."}, {"kind": "공식 문서", "label": "BIS OTC Derivatives Statistics", "href": "https://data.bis.org/topics/OTC_DER", "note": "명목원금·총시가·신용노출을 구분하는 공식 국제 통계입니다."}],
-  "risk/margin-collateral-and-leverage": [{"kind": "공식 문서", "label": "CME Understanding Margin Changes", "href": "https://www.cmegroup.com/education/articles-and-reports/understanding-margin-changes", "note": "초기·유지 증거금과 평가손익 정산의 공식 설명입니다."}, {"kind": "공식 문서", "label": "CPMI-IOSCO Principles for Financial Market Infrastructures", "href": "https://www.iosco.org/library/pubdocs/pdf/ioscopd377-pfmi.pdf", "note": "청산기관·담보·위험 관리의 국제 원칙입니다."}, {"kind": "공식 문서", "label": "BIS Market and Funding Liquidity", "href": "https://www.bis.org/speeches/20160502-market-and-funding-liquidity-overview", "note": "자금 유동성과 거래 유동성 사이의 되먹임을 설명합니다."}],
-  "macro/global-capital-and-policy": [{"kind": "공식 문서", "label": "BIS Global Liquidity Indicators", "href": "https://data.bis.org/topics/GLI?m=213", "note": "달러·유로·엔화 표시 비거주자 신용의 범위와 정의를 제공합니다."}, {"kind": "공식 문서", "label": "IMF Facing the Global Financial Cycle", "href": "https://www.imf.org/en/publications/wp/issues/2021/02/12/facing-the-global-financial-cycle-what-role-for-policy-50053", "note": "글로벌 충격과 국가별 민감도의 차이를 연구한 IMF 작업 논문입니다. IMF 공식 정책 결론으로 확대하지 않습니다."}, {"kind": "공식 문서", "label": "IMF Balance of Payments Data", "href": "https://data.imf.org/Datasets/BOP", "note": "국제수지의 상품·소득·금융 거래를 확인할 공식 통계 경로입니다."}],
-  "macro/narratives-and-market-regimes": [{"kind": "공식 문서", "label": "BIS Market and Funding Liquidity", "href": "https://www.bis.org/speeches/20160502-market-and-funding-liquidity-overview", "note": "자금 제약과 시장 가격·거래량 사이의 되먹임을 설명합니다."}, {"kind": "공식 문서", "label": "IMF Finance & Development: Are Housing Markets Broken?", "href": "https://www.elibrary.imf.org/view/journals/022/0061/004/article-A003-en.xml", "note": "주택 가격과 상승 기대 서사의 되먹임 사례입니다."}, {"kind": "공식 문서", "label": "IAS 7 Cash Flows", "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-7-statement-of-cash-flows/", "note": "서사와 구분할 실제 영업 현금흐름 확인의 회계 기준입니다."}],
-  "institutions/insurance-risk-pooling": [{"kind": "공식 문서", "label": "NAIC How Does Insurance Work?", "href": "https://content.naic.org/consumer/how-does-insurance-work", "note": "미국 보험 감독당국 협의체의 위험 풀·보험료·보상 개요입니다."}, {"kind": "공식 문서", "label": "WHO Pooling revenues and reducing fragmentation", "href": "https://www.who.int/activities/pooling", "note": "의료 재원의 위험 공유와 풀 분절의 한계를 설명합니다."}],
-  "institutions/healthcare-payment-systems": [{"kind": "공식 문서", "label": "WHO Pooling revenues and reducing fragmentation", "href": "https://www.who.int/activities/pooling", "note": "재원 조달·pooling·구매의 기능과 위험 공유를 설명합니다."}, {"kind": "공식 문서", "label": "NHS England 2026/27 Payment Scheme", "href": "https://www.england.nhs.uk/pay-syst/nhs-payment-scheme/", "note": "2026년 4월 시행된 대상 의료기관 지급 규칙. NHS 전체 예산과 구분합니다."}, {"kind": "공식 문서", "label": "US CMS Fee Schedules", "href": "https://www.cms.gov/medicare/payment/fee-schedules", "note": "미국 Original Medicare 일부 의료 서비스의 건별 지급표를 설명합니다."}, {"kind": "공식 문서", "label": "국민건강보험공단 건강보험 제도", "href": "https://www.nhis.or.kr/static/html/wbma/c/wbmac0103.html", "note": "한국의 환자 본인부담과 보험자 급여 지불 구조를 확인합니다."}],
-  "institutions/how-to-read-a-country": [{"kind": "공식 문서", "label": "World Bank World Development Indicators", "href": "https://databank.worldbank.org/source/world-development-indicators", "note": "여러 나라의 인구·생산·생활 지표의 정의와 시계열을 찾는 출발점입니다."}, {"kind": "공식 문서", "label": "IMF Balance of Payments", "href": "https://data.imf.org/Datasets/BOP", "note": "대외 거래·금융 흐름의 공식 비교 자료입니다."}, {"kind": "공식 문서", "label": "World Bank World Development Report 2020", "href": "https://www.worldbank.org/en/publication/wdr2020", "note": "무역·생산망에서 국가별 역할을 비교하는 공식 보고서입니다."}],
-  "infrastructure/electricity-grid-and-power": [{"kind": "공식 문서", "label": "IEA Electricity 2026: Grids", "href": "https://www.iea.org/reports/electricity-2026/grids", "note": "전력망 접속 대기와 혼잡, 투자·운영 대안을 설명하는 IEA 2026년 보고서입니다."}],
-  "infrastructure/food-chain-and-prices": [{"kind": "공식 문서", "label": "FAO Sustainable Food Value Chains", "href": "https://www.fao.org/sustainable-food-value-chains/what-is-it/en/", "note": "생산부터 집하·가공·유통·소비까지의 가치사슬 범위를 정의합니다."}, {"kind": "공식 문서", "label": "FAO Food Prices", "href": "https://www.fao.org/prices/en", "note": "나라와 단계에 따른 식품 가격 자료를 찾는 공식 경로입니다."}],
-  "infrastructure/water-utility-and-tariffs": [{"kind": "공식 문서", "label": "World Bank Troubled Tariffs", "href": "https://documents1.worldbank.org/curated/en/568291635871410812/pdf/Troubled-Tariffs-Revisiting-Water-Pricing-for-Affordable-and-Sustainable-Water-Services.pdf", "note": "수도 요금의 비용 회수와 부담 가능성을 함께 검토한 세계은행 연구입니다."}],
-  "infrastructure/transport-access-and-land-value": [{"kind": "공식 문서", "label": "World Bank Leaders in Urban Transport Planning", "href": "https://academy.worldbank.org/en/infrastructure/transport/leaders-in-urban-transport-planning", "note": "도시 교통 계획에서 접근성과 서비스·재정의 연결을 다루는 교육 자료입니다."}, {"kind": "공식 문서", "label": "World Bank Urban Mobility Results", "href": "https://www.worldbank.org/en/results/2024/03/13/promoting-livable-cities-by-investing-in-urban-mobility", "note": "교통 투자와 도시 생활 접근의 사례를 제공합니다."}],
-  "infrastructure/housing-land-and-supply": [{"kind": "공식 문서", "label": "UN-Habitat The Role of Land in Achieving Adequate and Affordable Housing", "href": "https://unhabitat.org/the-role-of-land-in-achieving-adequate-and-affordable-housing", "note": "토지 접근과 제도가 적정 가격 주택 공급에 미치는 역할을 다룹니다."}],
-  "infrastructure/climate-risk-and-exposure": [{"kind": "공식 문서", "label": "IPCC AR6 WGII Summary for Policymakers", "href": "https://www.ipcc.ch/report/ar6/wg2/chapter/summary-for-policymakers/", "note": "기후 위험·노출·취약성과 적응의 관계를 정리한 평가보고서입니다."}, {"kind": "공식 문서", "label": "UNDRR Exposure Terminology", "href": "https://www.undrr.org/terminology/exposure", "note": "재난 위험 분석에서 노출의 정의를 제공합니다."}],
-  "institutions/public-budget-and-taxes": [{"kind": "공식 문서", "label": "IMF Government Finance Statistics Manual 2014", "href": "https://www.imf.org/external/np/sta/gfsm/pdf/text14.pdf", "note": "정부 수입·지출·재정수지·자산·부채의 통계 분류 기준입니다."}, {"kind": "공식 문서", "label": "IMF Quarterly Government Finance Statistics", "href": "https://data.imf.org/en/Datasets/QGFS", "note": "나라별 정부재정 통계의 시점과 범위를 확인할 수 있습니다."}],
-  "institutions/education-skills-and-signals": [{"kind": "공식 문서", "label": "OECD Education at a Glance 2026: Education Finance", "href": "https://www.oecd.org/en/publications/education-at-a-glance-2026_b4968bbc-en/full-report/key-system-level-indicators-of-education-finance_d143f855.html", "note": "2026년 교육 단계별 재원과 지출의 국제 비교 자료입니다."}],
-  "institutions/media-attention-and-public-belief": [{"kind": "공식 문서", "label": "European Commission: DSA impact on platforms", "href": "https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms", "note": "EU 플랫폼의 추천·광고 투명성 규칙의 관할 범위를 설명합니다."}, {"kind": "공식 문서", "label": "European Commission: DSA transparency", "href": "https://digital-strategy.ec.europa.eu/en/policies/dsa-brings-transparency", "note": "EU 디지털서비스법의 이용자 정보와 광고 투명성 설명입니다."}],
+  "business/business-model-cashflow": [{"kind": "공식 문서", "label": "IFRS 15 Revenue from Contracts with Customers", "href": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-15-revenue-from-contracts-with-customers/", "note": "고객 계약의 수익 인식과 통제 이전 기준. 세법이나 현금 수령 시점을 정하는 문서는 아닙니다."}, {"kind": "공식 문서", "label": "IAS 7 Statement of Cash Flows", "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-7-statement-of-cash-flows/", "note": "이익과 영업·투자·재무 현금흐름을 구분하는 회계 원문입니다."},
+    {
+      "kind": "공식 문서",
+      "label": "IFRS 15 · About, step 5",
+      "href": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-15-revenue-from-contracts-with-customers/",
+      "note": "2026-10-04 원문 확인. 100개를 고객에게 넘긴 시점과 194만 원이 은행에 들어온 시점을 따로 기록합니다. 단순 중개회사가 200만 원을 잠시 받았다면 상품 전체 금액과 중개 보수를 구분해 본인·대리인 판단을 해야 합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "IAS 7 · About, indirect method",
+      "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-7-statement-of-cash-flows/",
+      "note": "2026-10-04 원문 확인. 상품 판매를 인식한 날에도 194만 원을 아직 못 받았으면 이익과 입금은 일치하지 않습니다. 120만 원을 먼저 지급한 날과 194만 원을 받는 날을 붙여 읽어 자금 부족 기간 21일을 확인합니다."
+    },
+],
+  "business/shop-unit-economics": [{"kind": "공식 문서", "label": "IAS 2 Inventories", "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/", "note": "재고의 비용 인식과 순실현가능가치 기준. 본문의 잔당 계산은 설명용 현금 사례입니다."},             {
+      "kind": "공식 문서",
+      "label": "UK Business rates overview",
+      "href": "https://www.gov.uk/introduction-to-business-rates",
+      "note": "잉글랜드 등의 상업용 부동산 관련 비용을 확인하는 영국 정부 안내입니다."
+    },             {
+      "kind": "공식 문서",
+      "label": "NSW Retail Tenancy Guide",
+      "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide",
+      "note": "NSW 상업 임대차의 outgoings와 fit-out 비용을 구분하는 원문입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "IAS 2 · About, expense recognition",
+      "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/",
+      "note": "2026-10-04 원문 확인. 2천 원 가운데 재료 부분을 공급 명세와 실제 사용량으로 확인합니다. 남은 재료와 버린 재료를 따로 세어 비용을 잘못 낮추지 않습니다. 결제 수수료는 재고가 아닌 별도 비용으로 합칩니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Business Queensland · Break-even point",
+      "href": "https://www.business.qld.gov.au/running-business/finance/essentials/break-even-profit",
+      "note": "2026-10-04 원문 확인. 월 2천 잔이면 매출 1,200만 원, 주문별 비용 400만 원, 고정비 800만 원입니다. 두 비용의 합이 1,200만 원이므로 이 사례에 포함한 비용만큼은 정확히 충당합니다."
+    },
+],
+  "business/shop-site-selection": [
+    {
+      "kind": "공식 문서",
+      "label": "Australia: Choose your business location",
+      "href": "https://business.gov.au/planning/new-businesses/choose-your-business-location",
+      "note": "입지 비용·시설·고객 접근·지방정부 확인 항목을 제시하는 공식 안내입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Korea: 식품위생법 시행규칙 제36조",
+      "href": "https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=115900",
+      "note": "한국 음식점 등의 시설기준이 별표 14와 연결됨을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Australian Government · Choose your business location, Location",
+      "href": "https://business.gov.au/planning/new-businesses/choose-your-business-location",
+      "note": "2026-10-04 원문 확인. 1천 명 가운데 실제로 들어온 50명과 산 20명을 각각 기록합니다. 보고서에 천 명만 있어도 5%와 40%를 증명한 것은 아니므로, 시간대 관찰과 짧은 시험 판매로 가정을 점검합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 식품위생법 시행규칙 제36조",
+      "href": "https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=115900",
+      "note": "2026-10-04 원문 확인. 하루 20건이 예상되는 후보지가 음식점이라면 건축물 용도만 확인하고 끝내지 않습니다. 별표 14의 해당 업종 시설요건을 도면과 대조하고 관할 위생부서에 배기·급배수·구획 등을 확인한 뒤 계약 조건을 정합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "중소벤처기업부 · 소상공인365 정식 서비스 개시",
+      "href": "https://www.mss.go.kr/site/chungbuk/ex/bbs/View.do?bcIdx=1055594&cbIdx=180",
+      "note": "2025-01-02 공식 보도자료에서 기능의 범위를 확인했습니다. 플랫폼의 제공 항목과 특정 점포의 매출 예측 정확도는 별도 문제입니다."
+    },
+],
+  "business/shop-fitout-and-opening": [            {
+      "kind": "공식 문서",
+      "label": "한국 식품위생법 시행규칙 제36조 및 별표 14",
+      "href": "https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=115900",
+      "note": "업종별 시설기준의 법적 출발점입니다. 개별 점포의 허가 여부를 이 문서만으로 단정하지 않습니다."
+    }, {"kind": "공식 문서", "label": "NSW Retail Tenancy Guide", "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide", "note": "임차인의 fit-out·outgoings·make good 확인 항목을 제시합니다."},             {
+      "kind": "공개 강의",
+      "label": "YouTube · Square The Build Out (Ggiata)",
+      "href": "https://www.youtube.com/watch?v=odwii7_bJww",
+      "note": "게시기관의 공식 전사에서 임대료 선발생·가스 용량 부족·최종 검사 불확실성을 확인했습니다. 정확한 영상 시각은 확인하지 않았으며 특정 미국 매장의 사례로만 씁니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "국세청 · 사업자등록 신청 절차",
+      "href": "https://g.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7777&mi=2444",
+      "note": "2026-10-04 원문 확인. 30일 공사 중 임대차계약서와 업종 신고에 필요한 서류를 준비합니다. 등록 신청 자체는 개업 전에도 가능하므로 4천800만 원 공사 관련 증빙을 받을 사업자 정보를 정하되, 영업 시작은 업종별 요건 충족과 별도로 판단합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NSW Retail Tenancy Guide · Shopping centre tips",
+      "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide",
+      "note": "2026-10-04 원문 확인. 4천800만 원 시설 중 남길 배관과 철거할 간판을 설치 전에 적습니다. 사례의 공사비는 현재의 지출이며 퇴거 때 받을 가격이나 철거비를 포함한 최종 비용과 같지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "법제처 · 음식점 화재배상책임보험 가입과 소방 안전 의무",
+      "href": "https://easylaw.go.kr/CSP/OnhunqueansInfoRetrieve.laf?onhunqnaAstSeq=91&onhunqueSeq=4365",
+      "note": "2026-08-15 안내를 2026-10-04 확인. 면적·층·출입구와 업종별 대상 및 제외 조건을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "법제처 · 음식점 건강진단과 식품위생교육",
+      "href": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=4&cciNo=1&cnpClsNo=1&csmSeq=839&popMenu=ov",
+      "note": "2026-09-15 기준 안내를 2026-10-04 확인. 식품위생법 제40조·제41조와 대상·예외는 건강진단 본문 및 연결된 식품위생교육 절에서 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Square · The Build Out 전사",
+      "href": "https://squareup.com/us/en/the-bottom-line/videos/making-a-restaurant-with-ggiata/the-build-out",
+      "note": "해당 영상의 공식 전사입니다. Square는 Ggiata가 제작 참여 보수를 받았다고 공개하므로 독립적인 성과 검증과 구분합니다."
+    },
+],
+  "property/commercial-lease-and-rent": [            {
+      "kind": "공식 문서",
+      "label": "대한민국 상가건물 임대차보호법",
+      "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancNo=21083&ancYd=20251111&efYd=20260512&lsiSeq=279651",
+      "note": "2026-10-03 기준 시행 법령에서 갱신·권리금 관련 조문을 확인합니다."
+    },             {
+      "kind": "공식 문서",
+      "label": "UK Business tenancies: right to renew",
+      "href": "https://lawcom.gov.uk/project/business-tenancies-the-right-to-renew/",
+      "note": "잉글랜드·웨일스 사업 임차의 갱신권과 계약 전 배제 가능성 안내입니다."
+    }, {"kind": "공식 문서", "label": "NSW Retail Tenancy Guide", "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide", "note": "호주 NSW의 소매 임대차 비용과 종료 의무 안내입니다."},
+    {
+      "kind": "공식 문서",
+      "label": "한국 상가건물 임대차보호법 제3조 제1항",
+      "href": "https://law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=1013685403",
+      "note": "2026-10-04 원문 확인. 3천만 원을 맡기는 점주는 실제 공간을 인도받은 사실과 등록 신청의 사업장 표시를 맞춥니다. 이 조항의 효력과 보증금을 남보다 먼저 돌려받는 요건은 별개이므로 선순위 권리·확정일자·적용 범위도 함께 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NSW Retail Tenancy Guide · Make good",
+      "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide",
+      "note": "2026-10-04 원문 확인. 한국의 3천만 원·월 200만 원·3년 계약을 NSW 규칙으로 처리할 수는 없습니다. 다만 종료 전 반환 의무를 계약 때 확인한다는 질문을 가져와 사진과 공사 동의, 반환 기준을 대조할 수 있습니다."
+    },
+],
+  "property/shop-transfer-and-goodwill": [
+    {
+      "kind": "공식 문서",
+      "label": "한국 상가건물 임대차보호법 제10조의3·제10조의4",
+      "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancNo=21083&ancYd=20251111&efYd=20260512&lsiSeq=279651",
+      "note": "권리금 정의와 회수 기회 보호의 현재 조문입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NSW Small Business Commissioner: Transferring your lease",
+      "href": "https://www.smallbusiness.nsw.gov.au/help/common-questions/transferring-your-lease",
+      "note": "호주 NSW의 retail lease 양도 동의와 공개 절차를 안내합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 개인정보 보호법 제27조 제1항",
+      "href": "https://www.law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335679",
+      "note": "2026-10-04 원문 확인. 3천300만 원 양도계약에는 시설·재고 목록과 별도로 고객정보 이전 여부를 적습니다. 이전 사실, 받는 사람의 연락처, 이전을 원하지 않을 때의 조치 방법을 미리 알리고, 양수자는 원래 목적의 범위 등 법률상 조건을 지킵니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 상가건물 임대차보호법 제10조의4 제1항",
+      "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancNo=21083&ancYd=20251111&efYd=20260512&lsiSeq=279651",
+      "note": "2026-10-04 원문 확인. 시설 2천만 원·재고 300만 원·영업상 이점 1천만 원에 합의해도 법은 임대인의 특정 방해행위와 기간·예외를 다룹니다. 합의된 양도대금만으로 새 임대차가 자동 성립하지 않으므로 장소 사용 조건을 잔금 전에 확인합니다."
+    },
+  ],
+  "property/shop-closure-and-restoration": [
+    {
+      "kind": "공식 문서",
+      "label": "한국 대법원 2002년 건물명도 판례",
+      "href": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=194367",
+      "note": "특정 사실관계에서 복구비 공제와 실제 복구 의사를 다룬 판례입니다. 일반 규칙으로 확대하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "국세청 폐업 부가가치세 안내",
+      "href": "https://nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2448&nttSn=1393",
+      "note": "폐업일이 속한 달 다음 달 25일 신고와 잔존 재화 관련 안내입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NSW Retail Tenancy Guide",
+      "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide",
+      "note": "호주 NSW의 임대차 종료 make good와 인도 준비 안내입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "국세청 · 사업을 폐업하는 경우의 신고 안내",
+      "href": "https://nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2448&nttSn=1393",
+      "note": "2026-10-04 원문 확인. 사례의 3천만 원 보증금 정산과 별도로 폐업일까지의 거래와 남은 재화를 확인합니다. 2026-10-04 확인 기준 위 기한을 세무 달력에 적고, 폐업 신고만으로 부가세·소득세·원천세 등이 모두 끝났다고 처리하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "대법원 2002다52657 · 판결요지 [2]",
+      "href": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=194367",
+      "note": "2026-10-04 원문 확인. 600만 원 견적을 자동으로 공제하지 않고 실제 반환 합의와 시설 사용을 확인합니다. 이 판결은 특정 사실관계에서 공제를 부정했으므로 모든 복구 의무가 없어진다는 결론으로 확대할 수 없습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 근로기준법 제36조",
+      "href": "https://law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0036&lsiSeq=283457&urlMode=lsScJoRltInfoR",
+      "note": "2026-10-04 확인. 퇴직 시 금품 청산 기한과 당사자 합의의 예외입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 개인정보 보호법 제21조",
+      "href": "https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335625",
+      "note": "2026-09-11 시행 조문을 2026-10-04 확인. 불필요한 정보 파기와 법정 보존 자료의 분리 관리를 구분합니다."
+    },
+    {
+      "kind": "공개 강의",
+      "label": "중소벤처기업부 · 2025 소상공인 지원사업 영상",
+      "href": "https://www.youtube.com/watch?v=T6KNxj3hawQ&t=230s",
+      "note": "2025-01-23 공개 영상의 03:50 화면에서 250만 원→400만 원을 확인했습니다. 아래 게시기관 전사와 대조했으며 당시 발표의 근거로 씁니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "중소벤처기업부 · 1월 영상 공식 자막",
+      "href": "https://www.mss.go.kr/site/smba/brdcststnVod/brdcststnVodView.do?ctgr_code=C03&searchSeq=ST_000000001222422",
+      "note": "희망리턴패키지의 점포 철거비 설명을 읽었습니다. 게시기관의 영상 등록일은 2025-01-24입니다."
+    },
+    {
+      "kind": "공개 강의",
+      "label": "중소벤처기업부 · 2차 추경 요약 영상",
+      "href": "https://www.youtube.com/watch?v=A55z8XrEEdM&t=113s",
+      "note": "2025-07-11 공개 영상의 01:53 화면에서 400만 원→600만 원을 확인했습니다. 영상 설명의 경영회복 장은 00:58부터 시작합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "중소벤처기업부 · 7월 영상 공식 자막",
+      "href": "https://www.mss.go.kr/site/smba/brdcststnVod/brdcststnVodView.do?ctgr_code=C03&searchSeq=ST_000000001231716",
+      "note": "지원 확대 설명과 추후 세부 공고 안내를 대조했습니다. 영상 발표만으로 개별 신청의 지급액을 확정하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "중소벤처기업부 · 2025-07-30 점포철거비 확대 보도자료",
+      "href": "https://www.mss.go.kr/site/smba/ex/bbs/View.do?bcIdx=1060542&cbIdx=86&parentSeq=1060542",
+      "note": "영상 뒤에 나온 서면 자료로 적용 폐업일과 변경 공고 일정을 확인했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "소상공인시장진흥공단 · 2026-01-19 원스톱폐업지원 공고",
+      "href": "https://ssrf.or.kr/site/kr/html/sub04/0401.html?category=sc04&file_id=3953&mode=D&no=abaae44719e649e9f32b348bdd1d35f0",
+      "note": "서천군지속가능지역재단이 게시한 공단 공고 PDF의 3~4쪽입니다. 33㎡ 사례는 이 날짜의 공고에만 적용한 계산이며 이후 변경 여부는 신청할 때 확인합니다."
+    },
+],
+  "business/franchise-incentives": [            {
+      "kind": "공식 문서",
+      "label": "US FTC Franchise Rule",
+      "href": "https://www.ftc.gov/legal-library/browse/rules/franchise-rule",
+      "note": "미국 가맹사업 공시 규칙의 원문입니다."
+    }, {"kind": "공식 문서", "label": "US FTC Consumer Guide to Buying a Franchise", "href": "https://www.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise", "note": "미국의 FDD 14일 사전 제공과 항목별 검토를 설명합니다."},             {
+      "kind": "공식 문서",
+      "label": "한국 공정위 가맹 정보공개서 비교",
+      "href": "https://franchise.ftc.go.kr/firHope/comparePopup.do",
+      "note": "한국의 점포 수·평균 매출·비용 비교 항목을 확인합니다."
+    },             {
+      "kind": "공식 문서",
+      "label": "EU Vertical Guidelines 2022",
+      "href": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=intcom%3AC%282022%294238",
+      "note": "유럽연합 수직 계약·가맹 제한의 경쟁법 해석 자료입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "US FTC · Consumer Guide, Royalties",
+      "href": "https://www.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise",
+      "note": "2026-10-04 원문 확인. 점주의 임금·광고·공과금 등 추가 비용이 1천550만 원을 넘으면 적자가 되지만, 매출 연동 약정의 150만 원은 자동으로 없어지지 않습니다. 실제 면제·유예 여부는 계약으로 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "US FTC · FDD Item 19 안내",
+      "href": "https://www.ftc.gov/business-guidance/blog/2023/05/franchise-fundamentals-taking-deep-dive-franchise-disclosure-document",
+      "note": "2026-10-04 원문 확인. 예상 월매출 3천만 원을 권유받았다면 미국에서는 그 수치가 FDD의 해당 항목에 어떻게 기재됐는지 확인합니다. 한국 정보공개서의 평균 매출과도 점포 연식·면적·제외 점포를 맞춰 비교하고, 어느 공시도 1천550만 원의 순이익을 보장한다고 읽지 않습니다."
+    },
+],
+  "property/land-development-residual": [{"kind": "공식 문서", "label": "RICS Valuation of development property", "href": "https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf", "note": "잔여법과 개발 부동산의 현금흐름·민감도를 설명하는 전문 기준입니다."},             {
+      "kind": "공식 문서",
+      "label": "한국 국토의 계획 및 이용에 관한 법률",
+      "href": "https://www.law.go.kr/LSW/lsInfoP.do?efYd=20260701&lsiSeq=284013",
+      "note": "2026-10-03 기준 개발행위허가·건폐율·용적률 조문의 출발점입니다."
+    },             {
+      "kind": "공식 문서",
+      "label": "한국 건축법 제11조",
+      "href": "https://law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1032199815",
+      "note": "건축허가의 법적 출발점입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "RICS Valuation of development property · 6.1.1, p.24",
+      "href": "https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf",
+      "note": "2026-10-04 원문 확인. 100−(70+15)=15억 원입니다. 원문의 total development costs에는 개발업자 이익도 들어가므로 이 글처럼 70억 원과 15억 원을 따로 표시했을 때 둘을 모두 한 번씩 뺍니다. 이익을 두 번 차감하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 국토계획법 제56조 제1항 제2호",
+      "href": "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1016204783",
+      "note": "2026-10-04 원문 확인. 100억 원 매각을 기대하며 15억 원을 토지와 취득에 배정해도 땅을 깎고 메우는 행위의 허가 여부를 먼저 확인합니다. 허가 조건 때문에 도로·배수 비용이 10억 원 더 필요하면 다른 가정이 같을 때 잔여는 5억 원으로 줄어듭니다."
+    },
+],
+  "business/supply-chain-bargaining": [{"kind": "공식 문서", "label": "World Bank World Development Report 2020", "href": "https://www.worldbank.org/en/publication/wdr2020", "note": "국제 가치사슬의 분업과 정책 파급을 설명하는 공식 보고서입니다."},             {
+      "kind": "공식 문서",
+      "label": "World Bank Global Value Chains",
+      "href": "https://www.worldbank.org/ext/en/topic/trade/global-value-chains",
+      "note": "국가 사이의 생산 단계 분리와 고부가가치 단계 이동을 설명합니다."
+    }, {"kind": "공식 문서", "label": "OECD Trade in Value Added", "href": "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html", "note": "총수출과 국내 부가가치의 차이를 확인할 통계 안내입니다."},
+    {
+      "kind": "공식 문서",
+      "label": "OECD TiVA · About, indicator list",
+      "href": "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html",
+      "note": "2026-10-04 원문 확인. 단순 사례의 조립국 총수출 60달러를 외국 부품 40달러와 국내에서 더한 20달러로 나눕니다. 실제 통계는 부품 안에 재수입된 자국 가치 등이 섞이므로 기업 송장 하나의 뺄셈보다 넓은 산업연관 자료가 필요합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "World Bank WDR 2020 · About",
+      "href": "https://www.worldbank.org/en/publication/wdr2020",
+      "note": "2026-10-04 원문 확인. 부품 40달러의 국경 비용이나 조달 기간이 늘면 조립 출하 60달러와 최종가격 100달러의 계약에 압력이 전해집니다. 누가 부담하는지는 재고 소유와 가격 조정 조항, 대체 공급자에 달립니다."
+    },
+],
+  "markets/funds-etfs-and-etns": [
+    {
+      "kind": "공식 문서",
+      "label": "SEC ETF Bulletin · How are ETFs similar to mutual funds?",
+      "href": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-24",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "SEC ETN Bulletin · What is an ETN?",
+      "href": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-50",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "SEC · Leveraged and Inverse ETFs",
+      "href": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-12",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ProShares · TQQQ Summary Prospectus, 2026-09-28",
+      "href": "https://prod.proshares.com/globalassets/proshares/prospectuses/tqqq_summary_prospectus.pdf",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ProShares · SQQQ Summary Prospectus, 2026-09-28",
+      "href": "https://prod.proshares.com/globalassets/proshares/prospectuses/sqqq_summary_prospectus.pdf",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Global X Europe · QYLD UCITS synthetic structure",
+      "href": "https://globalxetfs.eu/funds/qyld",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    }
+  ],
+  "markets/forwards-and-futures": [
+    {
+      "kind": "공식 문서",
+      "label": "CME · Contango, Backwardation and Convergence",
+      "href": "https://www.cmegroup.com/education/courses/introduction-to-ferrous-metals/what-is-contango-and-backwardation",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CME · Understanding Margin Changes, margin philosophies",
+      "href": "https://www.cmegroup.com/education/articles-and-reports/understanding-margin-changes",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CME · Performance Bonds/Margins FAQ",
+      "href": "https://www.cmegroup.com/solutions/risk-management/performance-bonds-margins/faq-performance-bonds-margins.html",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "BIS · Covered interest parity lost",
+      "href": "https://www.bis.org/publ/qtrpdf/r_qt1609e.htm",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    }
+  ],
+  "markets/options-and-asymmetric-payoffs": [
+    {
+      "kind": "공식 문서",
+      "label": "OIC · Options Basics, Describing Equity Options",
+      "href": "https://www.optionseducation.org/optionsoverview/options-basics",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "KRX · KOSPI 200 Options, Final Settlement / Exercise Style",
+      "href": "https://global.krx.co.kr/contents/GLB/02/0201/0201040202/GLB0201040202.jsp",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    }
+  ],
+  "markets/swaps-and-credit-risk": [
+    {
+      "kind": "공식 문서",
+      "label": "CFTC · Swaps Report Data Dictionary, Fixed-Float",
+      "href": "https://www.cftc.gov/MarketReports/SwapsReports/DataDictionary/index.htm",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ESMA · Clearing obligation and risk mitigation techniques under EMIR",
+      "href": "https://www.esma.europa.eu/post-trading/clearing-obligation-and-risk-mitigation-techniques-under-emir",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "BIS · OTC derivatives statistics",
+      "href": "https://data.bis.org/topics/OTC_DER",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    }
+  ],
+  "risk/margin-collateral-and-leverage": [
+    {
+      "kind": "공식 문서",
+      "label": "FINRA · Guidance on Margin, risks",
+      "href": "https://www.finra.org/sites/default/files/InvestorDocument/p005895.pdf",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CME · Performance Bonds/Margins FAQ",
+      "href": "https://www.cmegroup.com/solutions/risk-management/performance-bonds-margins/faq-performance-bonds-margins.html",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CPMI-IOSCO · Principles for Financial Market Infrastructures",
+      "href": "https://www.iosco.org/library/pubdocs/pdf/ioscopd377-pfmi.pdf",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "BIS · Market and funding liquidity, overview",
+      "href": "https://www.bis.org/speeches/20160502-market-and-funding-liquidity-overview",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    }
+  ],
+  "macro/global-capital-and-policy": [
+    {
+      "kind": "공식 문서",
+      "label": "BIS GLI · About",
+      "href": "https://data.bis.org/topics/GLI",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ECB · ECB, ESCB and the Eurosystem",
+      "href": "https://www.ecb.europa.eu/ecb/orga/escb/html/index.en.html",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "HKMA · Linked Exchange Rate System",
+      "href": "https://www.hkma.gov.hk/eng/key-functions/money/linked-exchange-rate-system/",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    }
+  ],
+  "macro/narratives-and-market-regimes": [
+    {
+      "kind": "공식 문서",
+      "label": "IFRS · IAS 7, About",
+      "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-7-statement-of-cash-flows/",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "BIS · Market and funding liquidity, overview",
+      "href": "https://www.bis.org/speeches/20160502-market-and-funding-liquidity-overview",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    }
+  ],
+  "institutions/insurance-risk-pooling": [
+    {
+      "kind": "공식 문서",
+      "label": "NAIC · How Does Insurance Work?",
+      "href": "https://content.naic.org/consumer/how-does-insurance-work",
+      "note": "미국 보험 입문 안내. 약관의 보장 사건과 자기부담금 구조."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "US NFIP · Eligibility, frequently asked questions",
+      "href": "https://www.floodsmart.gov/get-insured/eligibility",
+      "note": "미국 일반 주택보험과 홍수보험의 구분. 2026-10-04 확인."
+    }
+  ],
+  "institutions/healthcare-payment-systems": [
+    {
+      "kind": "공식 문서",
+      "label": "WHO · Pooling revenues and reducing fragmentation",
+      "href": "https://www.who.int/activities/pooling/pooling",
+      "note": "의료 재정의 위험 공유 기능을 설명하는 WHO 원문."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "US CMS · Fee Schedules, General Information",
+      "href": "https://www.cms.gov/medicare/payment/fee-schedules",
+      "note": "미국 Original Medicare의 해당 서비스 지급표. 모든 보험에 같은 가격을 적용하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "국민건강보험공단 · 급여의 범위 및 비용부담",
+      "href": "https://www.nhis.or.kr/static/html/wbma/c/wbmac0103.html",
+      "note": "한국 급여 범위와 비용부담의 공식 안내. 2026-10-04 확인."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NHS England · NHS Payment Scheme",
+      "href": "https://www.england.nhs.uk/pay-syst/nhs-payment-scheme/",
+      "note": "잉글랜드 대상 서비스 지급 규칙이며 총 NHS 재원을 정하지 않음. 2026-10-04 확인."
+    }
+  ],
+  "institutions/how-to-read-a-country": [{"kind": "공식 문서", "label": "World Bank · WDI DataBank", "href": "https://databank.worldbank.org/home", "note": "WDI의 수집 범위와 원자료 설명. 통계 조회 2026-10-04."}, {"kind": "공식 문서", "label": "UNSD · M49, Countries or Areas와 FAQ", "href": "https://unstats.un.org/unsd/methodology/m49/", "note": "목록 248개, FAQ의 별도 통계 코드 412·158. 확인 2026-10-04."}, {"kind": "공식 문서", "label": "World Bank · API Basic Call Structures", "href": "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures", "note": "네 지표의 2020–2025 자료를 조회하고 국가별 마지막 비결측 값을 표시합니다. 소득 구간·대륙 합계는 국가 값에서 제외합니다."}],
+  "infrastructure/electricity-grid-and-power": [
+    {
+      "kind": "공식 문서",
+      "label": "IEA Electricity 2026 · Grids",
+      "href": "https://www.iea.org/reports/electricity-2026/grids",
+      "note": "전력망 접속 병목에 관한 2026년 국제 분석. 현지 요금이나 계약을 정하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "FERC · Electric Power Markets, National Overview",
+      "href": "https://www.ferc.gov/electric-power-markets",
+      "note": "미국 내부의 시장 구조 차이와 지역 규제 범위. 2026-10-04 확인."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "US EIA · Generation, capacity and sales",
+      "href": "https://www.eia.gov/energyexplained/electricity/electricity-in-the-us-generation-capacity-and-sales.php",
+      "note": "MW 출력과 MWh 에너지 단위를 구분하는 공식 안내."
+    }
+  ],
+  "infrastructure/food-chain-and-prices": [
+    {
+      "kind": "공식 문서",
+      "label": "FAO · Sustainable Food Value Chains, Figure 3",
+      "href": "https://www.fao.org/sustainable-food-value-chains/what-is-it/en/",
+      "note": "식품 가치사슬의 기능과 거래 연결을 정의하는 FAO 원문."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "USDA ERS · Food Dollar, marketing bill",
+      "href": "https://www.ers.usda.gov/data-products/food-dollar",
+      "note": "미국 국내 생산 식품 지출 통계의 범위와 2026년 방법 개편 주의. 2026-10-04 확인."
+    }
+  ],
+  "infrastructure/water-utility-and-tariffs": [
+    {
+      "kind": "공식 문서",
+      "label": "World Bank · Troubled Tariffs, How Should Costs Be (re)Covered?",
+      "href": "https://documents1.worldbank.org/curated/en/568291635871410812/pdf/Troubled-Tariffs-Revisiting-Water-Pricing-for-Affordable-and-Sustainable-Water-Services.pdf",
+      "note": "요금·지원·전체 비용을 구분하는 세계은행 연구. 사례는 현금 지출을 단순화했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PUB Singapore · Water Price, Components of the Water Price",
+      "href": "https://www.pub.gov.sg/Public/WaterLoop/Water-Price",
+      "note": "싱가포르 급수·절약세·하수처리세의 목적. 2026-10-04 확인."
+    }
+  ],
+  "infrastructure/transport-access-and-land-value": [
+    {
+      "kind": "공식 문서",
+      "label": "World Bank · Leaders in Urban Transport Planning",
+      "href": "https://academy.worldbank.org/en/infrastructure/transport/leaders-in-urban-transport-planning",
+      "note": "도시별 접근성과 교통 계획의 연결을 다루는 세계은행 자료."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "UK MHCLG Appraisal Guide · 4.39",
+      "href": "https://www.gov.uk/government/publications/the-mhclg-appraisal-guide/the-mhclg-appraisal-guide",
+      "note": "영국 평가 지침의 중복 계산 경계. 2026-10-04 확인."
+    }
+  ],
+  "infrastructure/housing-land-and-supply": [
+    {
+      "kind": "공식 문서",
+      "label": "RICS Valuation of development property · 6.1.1, p.24",
+      "href": "https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf",
+      "note": "개발 비용에 정상 이익을 포함하는 잔여 평가 설명. 본문5절에서10−7=3과 이익 이중차감 방지 적용."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Singapore Government · Do HDB flat buyers own their flat?",
+      "href": "https://www.gov.sg/explainers/do-hdb-flat-buyers-own-their-flat/",
+      "note": "싱가포르 HDB 권리의 기간에 대한 정부 설명. 2023년 설명을 2026-10-04 재확인."
+    }
+  ],
+  "infrastructure/climate-risk-and-exposure": [
+    {
+      "kind": "공식 문서",
+      "label": "IPCC AR6 WGII · Chapter 1, Figure 1.4",
+      "href": "https://www.ipcc.ch/report/ar6/wg2/downloads/report/IPCC_AR6_WGII_Chapter01.pdf",
+      "note": "기후 위험의 세 요소와 상호작용을 설명하는 IPCC 평가."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "UNDRR · Exposure terminology",
+      "href": "https://www.undrr.org/terminology/exposure",
+      "note": "노출의 범위에 관한 국제 재난위험 정의. 2026-10-04 확인."
+    }
+  ],
+  "institutions/public-budget-and-taxes": [
+    {
+      "kind": "공식 문서",
+      "label": "IMF · About GFS, Analytical Framework",
+      "href": "https://www.imf.org/external/pubs/ft/gfs/manual/aboutgfs.htm",
+      "note": "현금·발생주의 구분과 수입/비용/자산 취득의 연결. 사례는 감가상각 등을 생략."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "IMF · Quarterly Government Finance Statistics",
+      "href": "https://data.imf.org/en/Datasets/QGFS",
+      "note": "정부 재정 흐름과 자산·부채 데이터 범위."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "US CBO · Introduction to CBO",
+      "href": "https://www.cbo.gov/about/overview",
+      "note": "미국 의회 예산 과정의 분석 지원 기관. 2026-10-04 확인."
+    }
+  ],
+  "institutions/education-skills-and-signals": [
+    {
+      "kind": "공식 문서",
+      "label": "OECD Education at a Glance 2026 · C1, Distribution by source of funds",
+      "href": "https://www.oecd.org/en/publications/education-at-a-glance-2026_b4968bbc-en/full-report/key-system-level-indicators-of-education-finance_d143f855.html",
+      "note": "교육 지출의 초기 재원과 최종 지급 구분. 본문 2023 관측자료를 포함하는 2026 보고서."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "UK Government · Repaying your student loan, How to repay",
+      "href": "https://www.gov.uk/repaying-your-student-loan/how-you-repay",
+      "note": "영국 해당 학자금 상환 계획의 소득 조건. 2026-10-04 확인."
+    }
+  ],
+  "institutions/media-attention-and-public-belief": [
+    {
+      "kind": "공식 문서",
+      "label": "EU Regulation 2022/2065 · Article 27(1)",
+      "href": "https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng",
+      "note": "EU DSA 추천 기준 공개 조항. 적용 대상과 관할 확인, 2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "US FTC · Endorsement Guides update, June 2023",
+      "href": "https://www.ftc.gov/news-events/news/press-releases/2023/06/federal-trade-commission-announces-updated-advertising-guides-combat-deceptive-reviews-endorsements",
+      "note": "미국 FTC 추천·후기 광고 가이드의 공개 판단. 2026-10-04 확인."
+    }
+  ],
+  "business/shop-daily-operations": [
+    {
+      "kind": "공식 문서",
+      "label": "고용노동부 · 소규모 사업장 7가지 노동법",
+      "href": "https://www.moel.go.kr/news/cardinfo/view.do?bbs_seq=20220500493",
+      "note": "근로계약서 교부와 임금명세서의 구성·계산·공제 기재를 확인했습니다. 2026-10-04 대조."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 소득세법 제160조의5",
+      "href": "https://law.go.kr/LSW/lsLinkProc.do?lsNm=%EC%86%8C%EB%93%9D%EC%84%B8%EB%B2%95&mode=11",
+      "note": "사업용계좌의 신고·사용 대상과 기한을 2026-10-04 확인했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "IAS 2 Inventories",
+      "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/",
+      "note": "공식 About의 재고 판매·손실 비용 인식 설명입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Stripe · Payout reconciliation report",
+      "href": "https://docs.stripe.com/reports/payout-reconciliation",
+      "note": "송금별 거래·수수료·잔액을 맞추는 결제업체 원문입니다. 사례의 2%와 이틀은 Stripe의 요금·일정이 아닌 가정입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Australia Fair Work Ombudsman · Record-keeping and pay slips",
+      "href": "https://www.fairwork.gov.au/tools-and-resources/fact-sheets/rights-and-obligations/record-keeping-pay-slips",
+      "note": "2026-10-04 확인. 호주 적용 노동법의 기록·명세서와 보관 의무 설명입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "법제처 · 음식점 화재배상책임보험과 안전시설",
+      "href": "https://easylaw.go.kr/CSP/OnhunqueansInfoRetrieve.laf?onhunqnaAstSeq=91&onhunqueSeq=4365",
+      "note": "2026-10-04 확인. 면적·층·출입구와 업종에 따른 대상·예외를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 개인정보 보호법 제21조",
+      "href": "https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335625",
+      "note": "불필요한 개인정보의 파기와 다른 법령에 따른 보존 자료 분리를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "법제처 · 음식점 건강진단과 식품위생교육",
+      "href": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=4&cciNo=1&cnpClsNo=1&csmSeq=839&popMenu=ov",
+      "note": "2026-09-15 기준 안내를 2026-10-04 확인. 식품위생법 제40조·제41조에 따른 대상·예외는 건강진단과 연결된 식품위생교육 절에서 확인합니다."
+    }
+  ],
+  "institutions/population-migration-and-care": [{"kind": "공식 문서", "label": "UN DESA · WPP2024 Methodology, p.1–2 및 II.G", "href": "https://population.un.org/wpp/assets/Files/WPP2024_Methodology.pdf", "note": "2024판은 연령·성별 출생·사망·국제이동으로 매년 인구를 전진시킵니다. 추정과 전망을 구분합니다."}, {"kind": "공식 문서", "label": "ILO · Care economy, What is the care economy?", "href": "https://www.ilo.org/topics-and-sectors/care-economy", "note": "유급·무급, 직접·간접 돌봄과 제공자·수혜자·고용주·서비스 기관의 범위. 확인 2026-10-04."}, {"kind": "공식 문서", "label": "ONS · National population projections methodology", "href": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/methodologies/methodologyusedtoproducethenationalpopulationprojections", "note": "출생·사망·이동의 가정에 따른 전망이라는 방법적 경계. 한국의 장기 전망이나 다른 나라의 실제 수치를 대신하지 않습니다."}],
+  "institutions/culture-norms-and-coordination": [{"kind": "공식 문서", "label": "UNESCO · 문화다양성 선언 제 1조", "href": "https://www.unesco.org/en/legal-affairs/unesco-universal-declaration-cultural-diversity", "note": "2001-11-02 채택. 같은 선언의 두 짧은 인용은 합계 21단어입니다. 확인 2026-10-04."}, {"kind": "공식 문서", "label": "UNESCO · 문화다양성 선언 제 4조", "href": "https://www.unesco.org/en/legal-affairs/unesco-universal-declaration-cultural-diversity", "note": "문화의 차이를 인권침해의 근거로 사용할 수 없다는 원칙. 선언과 국내법 구제 절차는 구분합니다."}, {"kind": "공식 문서", "label": "Elinor Ostrom · Nobel 인터뷰 원문", "href": "https://www.nobelprize.org/prizes/economic-sciences/2009/ostrom/164465-ostrom-williamson-interview-transcript/", "note": "원문에서 장기간 유지된 제도의 공통 원리를 실제 적용할 방식은 체계마다 다르다고 설명합니다. 본문 10개 가게 계산은 연구 실측이 아닙니다."}],
+  "institutions/evidence-measurement-and-causality": [{"kind": "공식 문서", "label": "NIST · TN1297 Appendix D1, §D.1.1.2", "href": "https://www.nist.gov/pml/nist-technical-note-1297/nist-tn-1297-appendix-d1-terminology", "note": "반복성의 측정 조건과 정확도·오차·불확실성을 구분합니다. 계기교체 사례는 설명용 가정입니다."}, {"kind": "공식 문서", "label": "ICH · E9 Statistical Principles, §2.3.2 Randomisation", "href": "https://database.ich.org/sites/default/files/E9_Guideline.pdf", "note": "임상시험 설계의 무작위 배정 원칙. 여기서는 비교 설계의 아이디어를 전력 실험에 적용하며 의학적 효과를 주장하지 않습니다."}, {"kind": "공식 문서", "label": "ICH · E8(R1), §5.3 및 §6", "href": "https://database.ich.org/sites/default/files/E8-R1_Guideline_Step4_2022_0204%20%281%29.pdf", "note": "배정 이후 탈락·측정·분석의 차이도 결과 해석에 영향을 준다는 설계 원칙."}],
+  "infrastructure/materials-waste-and-circularity": [{"kind": "공식 문서", "label": "OECD · Global Plastics Outlook, Box6.4·Figure6.4", "href": "https://www.oecd.org/en/publications/global-plastics-outlook_de747aef-en/full-report/component-11.html", "note": "Figure6.4는 물리적 물질 이동과 돈의 흐름을 다른 화살표로 구분합니다.100kg 계산은 본문 가정입니다."}, {"kind": "공식 문서", "label": "OECD · Extended Producer Responsibility, Abstract (2024)", "href": "https://www.oecd.org/en/publications/extended-producer-responsibility_67587b0b-en.html", "note": "제품 사용 후 단계까지 생산자 책임을 확장하는 정책 원리. 품목·부담방식·법적의무는 관할마다 다릅니다."}, {"kind": "공식 문서", "label": "UNEP·IRP · Global Resources Outlook2024", "href": "https://www.unep.org/resources/Global-Resource-Outlook-2024", "note": "2020년 대비 2060년 추출량 증가를 조건부 전망으로 읽습니다. 보고서와 방법론의 범위를 확인하며 사례의 60%회수율과 섞지 않습니다."}],
+  "gpu/amd-gpu-execution-and-hip": [
+    {
+      "kind": "공식 문서",
+      "label": "ROCm HIP-Examples·cdf9d101·54 –56 행",
+      "href": "https://github.com/ROCm/HIP-Examples/blob/cdf9d101acd9a3fc89ee750f73c1f1958cbd5cc3/vectorAdd/vectoradd_hip.cpp",
+      "note": "ROCm HIP-Examples·cdf9d101·54 –56 행"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NVIDIA vectorAdd·3f1c509·49 행",
+      "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu",
+      "note": "NVIDIA vectorAdd·3f1c509·49 행"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "AMD HIP7.0.0 ·hardware implementation",
+      "href": "https://rocm.docs.amd.com/projects/HIP/en/docs-7.0.0/understand/hardware_implementation.html",
+      "note": "CU·wavefront와 실행 계층. 특정 SKU의 성능 수치는 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "AMD CDNA4 Architecture 2258402-C·9 쪽",
+      "href": "https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/white-papers/amd-cdna-4-architecture-whitepaper.pdf",
+      "note": "LDS 160 KB와 메모리 계층의 세대별 구성."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "AMD CDNA4 ISA ·Matrix Arithmetic",
+      "href": "https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/instruction-set-architectures/amd-instinct-cdna4-instruction-set-architecture.pdf",
+      "note": "MFMA 명령의 target·operand·shape는 해당 ISA로 확인합니다."
+    }
+  ],
+  "gpu/hbm-stack-and-memory-requests": [
+    {
+      "kind": "공식 문서",
+      "label": "Synopsys HBM3 PHY ·interface features",
+      "href": "https://www.synopsys.com/designware-ip/interface-ip/hbm/hbm3-phy.html",
+      "note": "Synopsys HBM3 PHY ·interface features"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NVIDIA vectorAdd·3f1c509·52 행",
+      "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu",
+      "note": "NVIDIA vectorAdd·3f1c509·52 행"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Synopsys HBM3 Controller ·command scheduling",
+      "href": "https://www.synopsys.com/designware-ip/interface-ip/hbm/hbm3-controller.html",
+      "note": "Controller가 관리하는 channel·bank와 메모리 명령 지원 범위를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "AMD CDNA4 Architecture 2258402-C·11 쪽",
+      "href": "https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/white-papers/amd-cdna-4-architecture-whitepaper.pdf",
+      "note": "MI350 계열의 메모리 구성은 해당 SKU 공식 수치에 한정합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Synopsys HBM4 PHY·2026-10-04 확인",
+      "href": "https://www.synopsys.com/designware-ip/interface-ip/hbm/hbm4-phy.html",
+      "note": "HBM4의 2048비트 인터페이스와 64개 32비트 pseudo-channel을 확인합니다."
+    }
+  ],
+  "markets/financial-products-and-claims": [
+    {
+      "kind": "공식 문서",
+      "label": "CFPB · How does paying down a mortgage work?",
+      "href": "https://www.consumerfinance.gov/ask-cfpb/how-does-paying-down-a-mortgage-work-en-1943/",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "SEC · Investor Bulletin: Structured Notes, What are Structured Notes?",
+      "href": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-76",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "US DOL · Types of Retirement Plans",
+      "href": "https://www.dol.gov/general/topic/retirement/typesofplans",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "DB증권 · 제92회 ELB 투자설명서, 2026-07-30",
+      "href": "https://kind.krx.co.kr/external/2026/07/30/000632/20260730001461/10603.htm",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "SEC · Target Date Funds, 2025-03-25",
+      "href": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins/target-date-funds-investor-bulletin",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "신한투자증권 · ELS/DLS 기초자산 분류",
+      "href": "https://www.shinhansec.com/wts/wealth-management/els/els_guide_invest_tab1/contents.do",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 · 2025-09-01 예금보호한도 시행",
+      "href": "https://www.fsc.go.kr/po010105/85200",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "FDIC · Deposit insurance calculator rules",
+      "href": "https://edie.fdic.gov/print.html",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EBA · Deposit Guarantee Schemes data",
+      "href": "https://www.eba.europa.eu/activities/single-rulebook/regulatory-activities/depositor-protection/deposit-guarantee-schemes-data",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "SEC · Publicly Traded REITs",
+      "href": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-65",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "SEC · Money Market Funds",
+      "href": "https://www.investor.gov/introduction-investing/investing-basics/investment-products/mutual-funds-and-exchange-traded-5",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    }
+  ],
+  "markets/securitization-and-tranches": [
+    {
+      "kind": "공식 문서",
+      "label": "IMF F&D · What Is Securitization?, three-tier structure",
+      "href": "https://www.imf.org/external/pubs/ft/fandd/2008/09/basics.htm",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ESMA · Securitisation Regulation Article 6(3)(a)",
+      "href": "https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/secr/article-6-risk-retention",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 · 개정 자산유동화법 시행",
+      "href": "https://www.fsc.go.kr/po010102/81349",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    }
+  ],
+  "banking/repo-and-collateral-funding": [
+    {
+      "kind": "공식 문서",
+      "label": "ICMA · Repo FAQ 21, What is a haircut?",
+      "href": "https://www.icmagroup.org/market-practice-and-regulatory-policy/repo-and-collateral-markets/icma-ercc-publications/frequently-asked-questions-on-repo/21-what-is-a-haircut/",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "New York Fed · Repo and Reverse Repo Agreements",
+      "href": "https://www.newyorkfed.org/markets/domestic-market-operations/monetary-policy-implementation/repo-reverse-repo-agreements",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국은행 · RP매입을 통한 시장안정화 조치 이해하기",
+      "href": "https://www.bok.or.kr/portal/bbs/B0000347/view.do?menuNo=201106&nttId=10088622",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    }
+  ],
+  "markets/covered-calls-and-income-funds": [
+    {
+      "kind": "공식 문서",
+      "label": "OIC · Covered Call, Maximum Gain",
+      "href": "https://www.optionseducation.org/strategies/all-strategies/covered-call-buy-write",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공개 강의",
+      "label": "Fidelity/OIC · Exercise and Assignment, transcript pp.6–7,18",
+      "href": "https://www.fidelity.com/bin-public/060_www_fidelity_com/documents/learning-center/Exercise_an_%20assignment_TRANSCRIPT.pdf",
+      "note": "공식 강의록의 조기 행사와 계약 교체 부분을 직접 확인했습니다."
+    },
+    {
+      "kind": "공개 강의",
+      "label": "OIC · The Covered Call Options Strategy, YouTube",
+      "href": "https://www.youtube.com/watch?v=5fRa78w8f0k",
+      "note": "영상 설명의 장 구분·발행 주체를 확인했습니다. 전체 자막을 확보하거나 영상을 전부 시청했다는 의미는 아닙니다. 관련 주장과 계산은 OIC 정본·공개 강의록으로 대조했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "QYLD · 2026 Summary Prospectus, Principal Investment Strategies",
+      "href": "https://www.sec.gov/Archives/edgar/data/1432353/000143235326000239/a497knasdaq100coveredcall.htm",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "QYLD · 19a Notice, 2026-09-24",
+      "href": "https://assets.globalxetfs.com/funds/tax_supplements/QYLD_Form-19a_09242026.docx",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "J.P. Morgan · JEPI Fact Sheet, ELN Risk Summary",
+      "href": "https://am.jpmorgan.com/content/dam/jpm-am-aem/americas/us/en/literature/fact-sheet/specialty/fs-epi-c.pdf",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Global X Europe · QYLD UCITS, synthetic strategy",
+      "href": "https://globalxetfs.eu/funds/qyld",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Global X · QYLD distribution rate definition",
+      "href": "https://www.globalxetfs.com/funds/qyld",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "IRS · Publication 515 (2026), Withholding on Specific Income",
+      "href": "https://www.irs.gov/publications/p515",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "국세청 · 2026 펀드 외국납부세액공제 안내",
+      "href": "https://s.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2201&nttSn=1350542",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    }
+  ],
+  "blockchain/robinhood-chain-settlement": [
+    {
+      "kind": "공식 문서",
+      "label": "Robinhood Chain · Connecting",
+      "href": "https://docs.robinhood.com/chain/connecting/",
+      "note": "현재 네트워크 식별자·RPC·ETH gas·Ethereum blobs 사용을 확인했습니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Robinhood Chain · Transaction finality",
+      "href": "https://docs.robinhood.com/chain/transaction-finality/",
+      "note": "단계별 확인과 canonical 인출의7일 대기를 구분합니다. 통상 지연은 장애·혼잡에 따라 달라집니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Robinhood Chain · Bridging",
+      "href": "https://docs.robinhood.com/chain/bridging/",
+      "note": "입금 재실행과 인출 시작→대기→L1 claim, 서로 다른 체인의 토큰 주소를 확인합니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Robinhood Chain · Protocol contracts",
+      "href": "https://docs.robinhood.com/chain/protocol-contracts/",
+      "note": "Mainnet·Testnet, L1·L2의 inbox·outbox·gateway 목록을 구분합니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "OffchainLabs · Arbitrum SDK, pinned cbb96c6",
+      "href": "https://github.com/OffchainLabs/arbitrum-sdk/blob/cbb96c6f7f84d71bdef65d0fd9d3d7275a236711/packages/sdk/src/lib/message/ChildToParentMessageNitro.ts",
+      "note": "원본과 라이선스를 보존했습니다. 상태 조회와 지급 트랜잭션의 실행을 구분합니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Robinhood Chain · Stock Tokens",
+      "href": "https://docs.robinhood.com/chain/stock-tokens/",
+      "note": "권리·발행자·raw balance와 multiplier·청약 자격·시간 창을 확인했습니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Robinhood Assets Jersey · Product documents",
+      "href": "https://docs.robinhood.com/rhj",
+      "note": "상품별 권리와 국가별 제한은 투자설명서·추가 문서·최종 조건의 적용 대상입니다. 확인일2026-10-04."
+    }
+  ],
+  "blockchain/glamsterdam-block-execution": [
+    {
+      "kind": "공식 문서",
+      "label": "EIP-7773 · Glamsterdam",
+      "href": "https://eips.ethereum.org/EIPS/eip-7773",
+      "note": "7732·7928의 예정 목록과 활성화 상태. 메인넷 적용 여부는 별도로 확인합니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-7732 · ePBS",
+      "href": "https://eips.ethereum.org/EIPS/eip-7732",
+      "note": "제안·제작 분리와 자료 도착 확인, 실행 검증의 시간 분리를 설명합니다. Review 상태의 제안입니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Ethereum consensus-specs · pinned 889a389",
+      "href": "https://github.com/ethereum/consensus-specs/blob/889a389f9f95d2aba52aedf233217f370772dd3d/specs/gloas/beacon-chain.md",
+      "note": "Gloas의 실제 자료 구조와 bid 처리 원문입니다. 개발 명세의 commit과 라이선스를 보존했습니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Ethereum execution-specs · pinned a87891f",
+      "href": "https://github.com/ethereum/execution-specs/blob/a87891f7e69eab1f903233c61c5514d8c94bd5d1/src/ethereum/forks/amsterdam/fork.py",
+      "note": "계산한 목록의hash와 블록 header를 대조하는 참조 구현입니다. 확인일2026-10-04."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-7928 · Block-Level Access Lists",
+      "href": "https://eips.ethereum.org/EIPS/eip-7928",
+      "note": "실제 접근·변화의 기록, 인덱스와 검증 조건을 설명합니다. 제안의 성능 가능성과 실측은 구분합니다. 확인일2026-10-04."
+    }
+  ],
+  "ai/world-model-latent-planning": [
+    {
+      "kind": "공식 구현",
+      "label": "LeWM official implementation · 8edfeb3",
+      "href": "https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/jepa.py",
+      "note": "공식 코드 경로를 대조했으며 이 작업에서 학습·로봇 실행은 재현하지 않음. 1차원 수치는 API 역할을 검산하는 가정이다. 학습된 encoder 출력이나 실측 성공률이 아니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "LeWorldModel · arXiv 2603.19312v1",
+      "href": "https://arxiv.org/html/2603.19312v1",
+      "note": "Two-Room·Reacher·Push-T·OGBench-Cube, 단일 L40S의 저자 실험. 본문은 일부 행동 후 재계획을 일반적으로 설명하지만 부록 F.1의 설정은 H=5 전체를 실행한다. 이 글의 H=2·K=1 가정과 다르다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "V-JEPA 2 · arXiv 2506.09985",
+      "href": "https://arxiv.org/abs/2506.09985",
+      "note": "공식 논문에 보고된 비디오·로봇 과제의 저자 실험. 비디오 예측 성능 자체가 모든 로봇의 closed-loop 성공을 보장하지 않는다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "The Planning Limits of Latent World Models · arXiv 2609.39235",
+      "href": "https://arxiv.org/abs/2609.39235",
+      "note": "Meta-World·BridgeData V2 기반의 저자 실험; 2026-09-30 공개 preprint. 다른 제약·subgoal·value를 쓴 계획기까지 같은 수치 한계라고 단정하지 않는다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "본문에서 사용하는 고정 commit의 전체 구현",
+      "href": "https://github.com/galilai-group/stable-worldmodel/blob/21446f1ede6d5284e981bd7b47f432b994e6d812/stable_worldmodel/planning/solver/cem.py",
+      "note": "CodeSidebar에 원문 전체와 LICENSE를 보관했습니다. 주석의 숫자 대입은 설명용 검산이며 GPU 학습·성능 재현을 뜻하지 않습니다."
+    }
+  ],
+  "crypto/prover-memory-and-verifier-cost": [
+    {
+      "kind": "공식 문서",
+      "label": "ICICLE2.8.0 · MSM / Memory usage estimation",
+      "href": "https://dev.ingonyama.com/2.8.0/icicle/primitives/msm",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "공식 규격",
+      "label": "EIP1108 · Specification 요율표",
+      "href": "https://eips.ethereum.org/EIPS/eip-1108",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    },
+    {
+      "kind": "공식 규격",
+      "label": "EIP197 · Encoding",
+      "href": "https://eips.ethereum.org/EIPS/eip-197",
+      "note": "2026-10-04 원문 대조. 본문의 작은 수치는 설명용 가정이며 원 논문의 실측 성능과 구별합니다."
+    }
+  ],
+  "crypto/quantum-computing-and-cryptographic-risk": [    {
+      "kind": "핵심 논문",
+      "label": "Grover · A fast quantum mechanical algorithm for database search",
+      "href": "https://arxiv.org/abs/quant-ph/9605043",
+      "note": "네 후보의 진폭 [−0.5,0.5,0.5,0.5]와 반사 결과를 원문의 연산에 대입합니다."
+    },     {
+      "kind": "핵심 논문",
+      "label": "Shor · Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms",
+      "href": "https://arxiv.org/abs/quant-ph/9508027",
+      "note": "15·밑2·첫 공간256에서 주기4와 측정64, 최대공약수3·5를 연결한 교육용 계산입니다."
+    }, {"kind": "공식 문서", "label": "Babbush 외 · 2026 ECDLP 자원 추정", "href": "https://arxiv.org/abs/2603.28846", "note": "2026-10-04 확인. §II.2의 논리·물리 자원 가정을 대조합니다. 공개 HTML 표시 날짜와 버전 표기가 달라 추정 수치·절을 함께 명시합니다."}, {"kind": "공식 문서", "label": "IBM Quantum Learning · Grover introduction", "href": "https://quantum.cloud.ibm.com/learning/en/courses/fundamentals-of-quantum-algorithms/grover-algorithm/introduction", "note": "공식 강의의 제곱근 질의 개선과 실제 장치 비용 구별. 본문을 읽었으며 연결된 동영상 전체 시청을 주장하지 않습니다."}, {"kind": "공식 문서", "label": "NIST · Post-Quantum Cryptography", "href": "https://csrc.nist.gov/Projects/Post-Quantum-Cryptography", "note": "2026-10-04 확인. 표준화 상태는 최종 FIPS와 후보 선정·표준 작성 중인 상태를 나눠 읽습니다."}],
+  "crypto/ml-kem-and-noisy-equations": [{"kind": "공식 문서", "label": "FIPS 203 · Algorithm 18, Tables 2–3", "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf", "note": "2024 최종 표준 §6·8. 2025-11-17 errata 안내가 있으므로 구현 시 최신 정정표도 확인합니다."}, {"kind": "공식 문서", "label": "PQClean · ML-KEM-768 kem.c · 0586a824", "href": "https://github.com/PQClean/PQClean/blob/0586a824fc0d49df0b6b6e9179d8d15d06d0974f/crypto_kem/ml-kem-768/clean/kem.c", "note": "136–163행의 원문 바이트와 라이선스를 코드 패널에 보존했습니다. 본문 사례의 작은 수는 이 코드의 파라미터가 아닙니다."}, {"kind": "공식 문서", "label": "NIST SP 800-227 · Recommendations for KEMs", "href": "https://csrc.nist.gov/pubs/sp/800/227/final", "note": "2025-09-18 최종 권고. KEM의 기능과 이를 통신 프로토콜에 조합할 때 필요한 검사를 읽습니다."}, {"kind": "공식 문서", "label": "FIPS 203 최종본·정정 안내", "href": "https://csrc.nist.gov/pubs/fips/203/final", "note": "2026-10-04 확인. 정정표 파일은 접근 제한으로 직접 읽지 못했으며 정정 내용을 추측하지 않습니다."}],
+  "crypto/post-quantum-signatures": [{"kind": "공식 문서", "label": "FIPS 204 · Algorithms 7–8, Table 2", "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.204.pdf", "note": "ML-DSA 최종 표준. 서명·검증, domain context와 key/signature 크기를 대조합니다."}, {"kind": "공식 문서", "label": "PQClean · ML-DSA-44 sign.c · 0586a824", "href": "https://github.com/PQClean/PQClean/blob/0586a824fc0d49df0b6b6e9179d8d15d06d0974f/crypto_sign/ml-dsa-44/clean/sign.c", "note": "135–194행 생성과265–328행 검증을 보존했습니다. 난수·인코딩·일치 검사의 실제 순서를 읽습니다."}, {"kind": "공식 문서", "label": "FIPS 205 · §6–10와 Table 2", "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.205.pdf", "note": "SLH-DSA 최종 표준. WOTS+·FORS·hypertree의 역할과12개 파라미터 묶음의 크기를 확인합니다."}, {"kind": "공식 문서", "label": "NIST PQC · 최신 표준화 상태", "href": "https://csrc.nist.gov/Projects/Post-Quantum-Cryptography", "note": "2026-10-04 확인. FIPS203·204·205와 후속 Falcon·HQC 표준화 상태를 구분합니다."}, {"kind": "공식 문서", "label": "FIPS 204 · 최신 정정 안내", "href": "https://csrc.nist.gov/pubs/fips/204/final", "note": "2026-07-31 정정 예정 항목 안내가 추가됐습니다. 정정표 파일은 접근 제한으로 직접 열지 못했으며 구체 정정 내용을 추정하지 않습니다."}],
+  "crypto/quantum-key-distribution": [
+    {
+      "kind": "핵심 논문",
+      "label": "BB84 original scan",
+      "href": "https://arxiv.org/abs/2003.06557",
+      "note": "p.175~177의 두 기저·선별·공개 검사·인증과 조건부 1/4 불일치를 확인했습니다. 12신호는 교육용 가정입니다. 확인일 2026-10-04."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Tight Finite-Key Analysis for Quantum Cryptography",
+      "href": "https://arxiv.org/html/1103.4130v2",
+      "note": "Table I, Methods식(6)·(7),Supplementary(S2). 교육표는 원문 비대칭 기저 프로토콜과 달라식(2)을 직접 대입하지 않았습니다. 확인일 2026-10-04."
+    },
+    {
+      "kind": "공식 규격",
+      "label": "ITU-T X.1711 (03/2026)",
+      "href": "https://www.itu.int/rec/T-REC-X.1711",
+      "note": "2026-03-16 승인·05-12 게시·in force를 확인했습니다. 보안 증명과 구현 보안은 이 프레임워크의 규정 범위 밖입니다. 확인일 2026-10-04."
+    },
+    {
+      "kind": "공식 규격",
+      "label": "ITU-T X.1711 full text",
+      "href": "https://www.itu.int/epublications/publication/itu-t-x-1711-2026-03-framework-of-quantum-key-distribution-qkd-protocols-in-qkd-networks",
+      "note": "§7.2.2의 공개 대화 인증·Note4 PQC 서명, §7.4·8.2·AppendixIV의 후처리를 읽었습니다. 확인일 2026-10-04."
+    },
+    {
+      "kind": "선행·비교 논문",
+      "label": "Decoy State Quantum Key Distribution",
+      "href": "https://arxiv.org/abs/quant-ph/0411004",
+      "note": "강도별 검출 통계로 단일 광자 기여와 오류를 제한하는 조건을 확인했습니다. 확인일 2026-10-04."
+    },
+    {
+      "kind": "선행·비교 논문",
+      "label": "Measurement-device-independent quantum key distribution",
+      "href": "https://arxiv.org/abs/1109.1473",
+      "note": "측정 장치의 신뢰 제거와 양끝 광원 가정의 경계를 구분합니다. 확인일 2026-10-04."
+    },
+    {
+      "kind": "선행·비교 논문",
+      "label": "A device-independent quantum key distribution system for distant users",
+      "href": "https://www.nature.com/articles/s41586-022-04891-y",
+      "note": "DIQKD protocol의 난수·격리·인증·후처리 조건을 확인했습니다. 점근적 키율을 실제 유한 블록 산출량으로 바꾸지 않았습니다. 확인일 2026-10-04."
+    },
+    {
+      "kind": "공식 가이드",
+      "label": "NSA QKD and Quantum Cryptography",
+      "href": "https://www.nsa.gov/Cybersecurity/Quantum-Key-Distribution-QKD-and-Quantum-Cryptography-QC/",
+      "note": "NSS 관할 권고·장치·중계·가용성 범위로만 사용했습니다. 페이지의 오래된 NIST 표준화 진행 설명은 현재 상태 근거로 사용하지 않았습니다. 확인일 2026-10-04."
+    }
+  ],
 };

@@ -139,11 +139,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     targetRoutes: ["crypto/mpc", "crypto/shamir-secret-sharing", "crypto/paillier-cryptosystem"],
   },
   "gpu/cuda-basics": {
-    action: "rename",
-    status: "implemented",
-    reviewedAt: "2026-08-27",
-    rationale: "본문은 generic CUDA lifecycle과 workload-fit을 소유하며 기존 제목의 블록체인 괄호는 실제 소유 범위를 과장합니다.",
-    targetRoutes: ["gpu/cuda-basics"],
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "이 글에서는 같은 크기의 두 배열을 더하는 작업 하나를 끝까지 따라갑니다. 번호를 나누는 규칙에서 시작해 실제 명령과 저장 공간에 도달한 뒤, 어느 시간을 측정해야 하는지 판단합니다.",
+    "sharedGate": "64개 × 4B × 입력 2개 = 512B이고 출력은 256B입니다. 합계 768B와 37번의 offset 148B를 본문·공식 코드·문제에서 일관되게 추적합니다. stride 8 변형은 최소 249개 원소를 가진 입력에서 32개를 선택합니다."
   },
   "gpu/gpu-arch-hopper": KEEP("TMA·cluster·precision feature를 같은 Hopper compatibility gate 아래 비교하는 generation overview입니다."),
   "gpu/cuda-persistent-kernels": KEEP("Persistent thread 정의→work queue 계약→static/dynamic 배분→release gate가 하나의 device-side scheduling 학습 단위입니다. CUTLASS tile scheduler는 이 정의의 구체 사례로만 링크하며 별도 prerequisite로 만들지 않아 순환을 피합니다."),
@@ -616,35 +616,427 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Johns 판의 같은 대목(본문 끝의 '올바름의 판결들', 머리말의 열두 장과 Ninu ilu sirum, 아시리아의 이름, 표제와 1~282조 번호)이 본문·Viz·연습문제에서 일치하는지로 판정한다.",
   },
-  "business/business-model-cashflow": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "사업 모델을 비교할 때는 매출 이름보다 비용을 먼저 내는 사람, 고객에게서 돈을 받는 시점, 재고·반품·미수금을 떠안는 주체를 추적해야 합니다.", "sharedGate": "(가정) 주문 100건 × 2만 원, 원가 120만 원, 결제 수수료 6만 원의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "business/shop-unit-economics": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "점포의 손익분기점은 객단가에서 재료·수수료 같은 변동비를 뺀 한 건의 공헌이익으로 고정비를 나눈 결과이며, 점주 노동과 개업비 회수는 별도로 계산해야 합니다.", "sharedGate": "(가정) 한 잔 6천 원, 변동비 2천 원, 월 고정비 800만 원의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "business/shop-site-selection": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "입지는 유동인구 숫자 하나가 아니라 예상 방문자·구매전환·객단가·임대료를 같은 시간대와 동일 업종에서 대조하고 그 건물에서 영업이 가능한지 확인하는 선택입니다.", "sharedGate": "(가정) 하루 통행 1천 명, 입점 5%, 구매 40%, 객단가 8천 원의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "business/shop-fitout-and-opening": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "점포 공사는 임대인의 사용 동의, 업종에 필요한 설비 확인, 범위가 적힌 견적·변경 승인, 공정 검수, 신고와 개업 준비가 이어지는 계약과 현금의 순서입니다.", "sharedGate": "(가정) 공사 견적 4천만 원, 추가 전기·배기 8백만 원, 무매출 30일의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "property/commercial-lease-and-rent": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "상가 임대차의 경제적 본질은 임차인이 일정 기간 공간을 쓰는 대신 고정 현금흐름과 원상복구 의무를 부담하고, 임대인은 공실·수선·보증금 반환 위험을 지는 교환입니다.", "sharedGate": "(가정) 보증금 3천만 원, 월세 200만 원, 3년, 공실 2개월의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "property/shop-transfer-and-goodwill": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "점포 양도 대금은 시설·재고·고객 관계의 가치와 임대차 지위, 영업 허가·채무 인수 여부가 섞여 보이므로 각각의 소유자와 동의권자, 인도 시점을 분리해야 합니다.", "sharedGate": "(가정) 시설 2천만 원, 재고 3백만 원, 영업상 이점 1천만 원의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "property/shop-closure-and-restoration": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "점포 폐업은 영업 중단, 직원·고객·공급자·세금 채무, 임대차 종료, 시설 철거와 원상복구, 보증금 반환을 서로 다른 상대방과 순서대로 정산하는 과정입니다.", "sharedGate": "(가정) 보증금 3천만 원, 미납 월세 4백만 원, 복구 견적 6백만 원의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "business/franchise-incentives": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "가맹본부의 브랜드·매뉴얼·공급망 수입과 가맹점의 매출·임금·월세·로열티를 별도로 그려야 양쪽의 인센티브와 위험 배분을 볼 수 있습니다.", "sharedGate": "(가정) 월매출 3천만 원, 로열티 5%, 원재료 1천만 원, 월세 300만 원의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "property/land-development-residual": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "개발 가능성은 등기상의 소유와 다르며 허가·용적·기반시설·분양가격·금융비용의 조건을 거꾸로 계산한 잔여액이 토지에 지불할 수 있는 값의 상한을 만듭니다.", "sharedGate": "(가정) 완공 매각 100억 원, 공사·금융·판매 70억 원, 요구 이익 15억 원의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "business/supply-chain-bargaining": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "국제 공급망에서는 각 나라가 다른 단계를 맡아도 제품 규격·브랜드·고객 접점·교체 가능한 공급자를 통제하는 주체가 협상력을 얻으며, 한 나라의 수출액은 그 나라에 남는 부가가치와 다릅니다.", "sharedGate": "(가정) 완제품 100달러, 부품·조립 60달러, 물류 10달러, 유통·브랜드 30달러의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "markets/funds-etfs-and-etns": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "펀드·ETF는 자산 묶음에 대한 지분이고 ETN은 발행자에 대한 채무 청구권이므로 지수 이름보다 법적 소유, NAV와 거래가격, 발행자 신용과 비용을 먼저 구분해야 합니다.", "sharedGate": "(가정) 자산 순가치 1만 원, ETF 거래가격 1만100원, ETN 발행자 부도의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "markets/forwards-and-futures": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "선도·선물은 미래에 정한 가격으로 거래할 의무를 양쪽에 만들어 가격 변동 손익을 재배분하며, 선물은 거래소·청산과 일별 정산으로 중간 현금흐름이 생깁니다.", "sharedGate": "(가정) 밀 100톤을 톤당 30만 원에 3개월 뒤 사기로 약속의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "markets/options-and-asymmetric-payoffs": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "콜·풋 옵션의 매수자는 행사 여부를 선택할 권리를 얻고 프리미엄을 내며, 매도자는 프리미엄을 받는 대신 불리할 때 계약 이행 의무를 집니다.", "sharedGate": "(가정) 주식 1주, 행사가 100, 콜 프리미엄 8, 만기 주가 120의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "markets/swaps-and-credit-risk": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "금리·통화 스왑은 정해진 명목원금을 기준으로 서로 다른 지급 흐름을 교환하고 CDS는 채무불이행 위험의 보상 의무를 넘기며, 명목원금이 곧 현재 손실은 아닙니다.", "sharedGate": "(가정) 명목원금 10억 원, 고정금리 4%, 변동금리 6%의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "risk/margin-collateral-and-leverage": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "레버리지 거래와 파생상품은 시가 하락 때 증거금을 추가하고 담보 가치를 다시 매기므로 만기의 수익 전망과 별개로 오늘의 현금 부족이 강제 매도를 만들 수 있습니다.", "sharedGate": "(가정) 자기자본 20억 원, 차입 80억 원, 자산 100억 원이 10% 하락의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "macro/global-capital-and-policy": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "정부·중앙은행의 결정권은 환율, 해외 차입, 은행 담보와 투자자 포트폴리오를 거쳐 가격에 전달되며 같은 글로벌 충격도 국가의 부채 통화·제도에 따라 다른 결과를 냅니다.", "sharedGate": "(가정) 달러 부채 1억 달러, 환율 1달러=1천 원에서 1천200원의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "macro/narratives-and-market-regimes": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "새로운 기술·정책·국가 서사는 미래 현금흐름에 대한 기대를 바꾸고 매수 주문과 자금조달을 거쳐 가격을 움직이지만, 가격 상승 자체가 다시 서사의 증거처럼 쓰일 때 취약한 순환이 생깁니다.", "sharedGate": "(가정) 매년 받을 현금 기대 100→150, 할인율 10%→8%, 실제 첫해 현금 105의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "institutions/insurance-risk-pooling": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "보험은 많은 가입자의 보험료를 모아 일부의 약정 손실을 지급하는 위험 풀이고, 가격에는 예상 사고액뿐 아니라 운영비·자본·불확실성이 포함되며 대형 공통 충격은 다시 밖으로 넘겨야 합니다.", "sharedGate": "(가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "institutions/healthcare-payment-systems": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "의료제도는 재원을 누가 모으고 위험을 누가 묶으며 어떤 가격표로 의료기관에 지급하는지를 분리해야 비교할 수 있고, 환자의 진료비 지불액만으로 의료 서비스의 총비용을 알 수 없습니다.", "sharedGate": "(가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "institutions/how-to-read-a-country": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "국가를 비교할 때는 이름이나 순위보다 누가 규칙을 바꾸고 세금을 걷는지, 누가 무엇을 생산하며 외화와 에너지를 조달하는지, 대중이 어떤 미래를 믿고 자금을 움직이는지 같은 질문을 반복해야 합니다.", "sharedGate": "(가정) A국 수출 100, 수입 중간재 60, 외화 부채 30, 정부 재정 적자 5의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "infrastructure/electricity-grid-and-power": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "전력 시장은 전기를 생산하는 설비, 같은 순간 수요와 공급을 맞추는 운영자, 송배전망을 소유하는 주체, 요금을 내는 사용자의 장부가 겹칩니다.", "sharedGate": "(가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "infrastructure/food-chain-and-prices": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "식품의 소비자가격은 농가 출하 가격에 가공·저장·운송·소매의 비용과 협상력을 더한 결과이며 각 단계의 재고와 폐기 위험이 다릅니다.", "sharedGate": "(가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "infrastructure/water-utility-and-tariffs": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "수도는 취수한 물의 양뿐 아니라 정수·배관·누수·위생 처리와 저소득층 접근을 함께 지불해야 하는 공공 서비스입니다.", "sharedGate": "(가정) 정수·운영 60, 배관 교체 30, 저소득 지원 10의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "infrastructure/transport-access-and-land-value": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "교통 투자는 차량 속도뿐 아니라 사람이 일자리·학교·서비스에 도달하는 범위와 그 이익이 임대료로 이동하는 과정을 함께 바꿉니다.", "sharedGate": "(가정) 통근 60분에서 35분, 월 절약 20일×25분의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "infrastructure/housing-land-and-supply": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "주택 가격과 임대료는 토지 사용권, 인허가, 기반 시설, 건설비, 금융과 지역 일자리 수요가 서로 제약하면서 형성됩니다.", "sharedGate": "(가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "infrastructure/climate-risk-and-exposure": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "홍수·폭염 등 위험을 평가할 때는 자연 현상의 강도, 노출된 사람과 자산, 취약성과 대응 능력을 분리해야 손실과 투자 판단이 가능합니다.", "sharedGate": "(가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "institutions/public-budget-and-taxes": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "공공 예산은 세입·차입으로 모은 돈을 서비스와 이전지출, 투자, 이자에 배분한 약속이며 부담자와 수혜자가 다른 시점과 집단에 걸칩니다.", "sharedGate": "(가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "institutions/education-skills-and-signals": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "교육비 지출은 학습자의 실제 능력 향상, 고용주가 믿는 자격 신호, 직업 연결과 기회 접근에 서로 다른 경로로 영향을 줍니다.", "sharedGate": "(가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
-  "institutions/media-attention-and-public-belief": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-03", "rationale": "플랫폼·언론은 정보를 선택·배치하고 관심을 광고주에게 판매하며, 사람의 믿음은 관측 정보뿐 아니라 반복 노출과 신뢰 관계를 통해 바뀝니다.", "sharedGate": "(가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회의 현금·권리·위험 수치가 본문과 연습문제에서 일치하는지 확인합니다."},
+  "business/business-model-cashflow": {
+    "action": "keep",
+    "status": "reviewed",
+    "rationale": "사업 모델을 비교할 때는 매출 이름보다 비용을 먼저 내는 사람, 고객에게서 돈을 받는 시점, 재고·반품·미수금을 떠안는 주체를 추적해야 합니다.",
+    "reviewedAt": "2026-10-04",
+    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 200만 원 주문에서 중개 플랫폼은 계약상 수수료만 자기 수익일 수 있습니다."
+  },
+  "business/shop-unit-economics": {
+    "action": "keep",
+    "status": "reviewed",
+    "rationale": "점포의 손익분기점은 객단가에서 재료·수수료 같은 변동비를 뺀 한 건의 공헌이익으로 고정비를 나눈 결과이며, 점주 노동과 개업비 회수는 별도로 계산해야 합니다.",
+    "reviewedAt": "2026-10-04",
+    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 잔당 가격 6천 원에서 재료·포장·결제 2천 원을 빼면 4천 원이 남습니다."
+  },
+  "business/shop-site-selection": {
+    "action": "keep",
+    "status": "reviewed",
+    "rationale": "입지는 유동인구 숫자 하나가 아니라 예상 방문자·구매전환·객단가·임대료를 같은 시간대와 동일 업종에서 대조하고 그 건물에서 영업이 가능한지 확인하는 선택입니다.",
+    "reviewedAt": "2026-10-04",
+    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 하루 1천 명 × 5% 입점 × 40% 구매는 하루 20건입니다."
+  },
+  "business/shop-fitout-and-opening": {
+    "action": "keep",
+    "status": "reviewed",
+    "rationale": "점포 공사는 임대인의 사용 동의, 업종에 필요한 설비 확인, 범위가 적힌 견적·변경 승인, 공정 검수, 신고와 개업 준비가 이어지는 계약과 현금의 순서입니다.",
+    "reviewedAt": "2026-10-04",
+    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 4천만 원 공사에 배기 800만 원이 추가되면 예산과 개업일이 함께 바뀝니다."
+  },
+  "property/commercial-lease-and-rent": {
+    "action": "keep",
+    "status": "reviewed",
+    "rationale": "상가 임대차의 경제적 본질은 임차인이 일정 기간 공간을 쓰는 대신 고정 현금흐름과 원상복구 의무를 부담하고, 임대인은 공실·수선·보증금 반환 위험을 지는 교환입니다.",
+    "reviewedAt": "2026-10-04",
+    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 3천만 원을 맡긴 점주는 3년 뒤 정산 잔액을 청구할 수 있습니다."
+  },
+  "property/shop-transfer-and-goodwill": {
+    "action": "keep",
+    "status": "reviewed",
+    "rationale": "점포 양도 대금은 시설·재고·고객 관계의 가치와 임대차 지위, 영업 허가·채무 인수 여부가 섞여 보이므로 각각의 소유자와 동의권자, 인도 시점을 분리해야 합니다.",
+    "reviewedAt": "2026-10-04",
+    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 3천300만 원을 시설·재고·영업 기회로 나눠 실사합니다."
+  },
+  "property/shop-closure-and-restoration": {
+    "action": "keep",
+    "status": "reviewed",
+    "rationale": "점포 폐업은 영업 중단, 직원·고객·공급자·세금 채무, 임대차 종료, 시설 철거와 원상복구, 보증금 반환을 서로 다른 상대방과 순서대로 정산하는 과정입니다.",
+    "reviewedAt": "2026-10-04",
+    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 3천만 원 보증금에서 실제 채무와 복구액을 확인한 뒤 잔액을 받습니다."
+  },
+  "business/franchise-incentives": {
+    "action": "keep",
+    "status": "reviewed",
+    "rationale": "가맹본부의 브랜드·매뉴얼·공급망 수입과 가맹점의 매출·임금·월세·로열티를 별도로 그려야 양쪽의 인센티브와 위험 배분을 볼 수 있습니다.",
+    "reviewedAt": "2026-10-04",
+    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 월매출 3천만 원의 로열티 5%는 본부 150만 원 수입이면서 점주 비용입니다."
+  },
+  "property/land-development-residual": {
+    "action": "keep",
+    "status": "reviewed",
+    "rationale": "개발 가능성은 등기상의 소유와 다르며 허가·용적·기반시설·분양가격·금융비용의 조건을 거꾸로 계산한 잔여액이 토지에 지불할 수 있는 값의 상한을 만듭니다.",
+    "reviewedAt": "2026-10-04",
+    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 100억 원에서 비용 70억 원과 요구 이익 15억 원을 빼면 15억 원입니다."
+  },
+  "business/supply-chain-bargaining": {
+    "action": "keep",
+    "status": "reviewed",
+    "rationale": "국제 공급망에서는 각 나라가 다른 단계를 맡아도 제품 규격·브랜드·고객 접점·교체 가능한 공급자를 통제하는 주체가 협상력을 얻으며, 한 나라의 수출액은 그 나라에 남는 부가가치와 다릅니다.",
+    "reviewedAt": "2026-10-04",
+    "sharedGate": "3절의 가정 금액과 단위가 7절의 경로와 8·9절 원문 적용, 연습문제에서 일치하는지 확인합니다. 최종소비100달러와 조립국출하60달러를 구분하고,60 안의 수입부품40을 빼 국내20달러를 계산합니다."
+  },
+  "markets/funds-etfs-and-etns": {
+    "rationale": "하나의 수치 사례에서 ETF와 ETN은 거래 화면이 비슷해도 손에 쥔 청구권이 다르다의 지급·조건·한계를 순서대로 추적합니다.",
+    "reviewedAt": "2026-10-04",
+    "status": "implemented",
+    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "action": "keep"
+  },
+  "markets/forwards-and-futures": {
+    "rationale": "하나의 수치 사례에서 선물은 미래 가격을 고정하면서 반대편에 같은 크기의 위험을 건넨다의 지급·조건·한계를 순서대로 추적합니다.",
+    "reviewedAt": "2026-10-04",
+    "status": "implemented",
+    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "action": "keep"
+  },
+  "markets/options-and-asymmetric-payoffs": {
+    "rationale": "하나의 수치 사례에서 옵션은 손해를 피할 선택권을 사고 그 값으로 프리미엄을 낸다의 지급·조건·한계를 순서대로 추적합니다.",
+    "reviewedAt": "2026-10-04",
+    "status": "implemented",
+    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "action": "keep"
+  },
+  "markets/swaps-and-credit-risk": {
+    "rationale": "하나의 수치 사례에서 스왑은 서로 다른 조건의 현금흐름을 교환한다의 지급·조건·한계를 순서대로 추적합니다.",
+    "reviewedAt": "2026-10-04",
+    "status": "implemented",
+    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "action": "keep"
+  },
+  "risk/margin-collateral-and-leverage": {
+    "rationale": "하나의 수치 사례에서 담보와 증거금은 최종 손익보다 먼저 현금을 요구한다의 지급·조건·한계를 순서대로 추적합니다.",
+    "reviewedAt": "2026-10-04",
+    "status": "implemented",
+    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "action": "keep"
+  },
+  "macro/global-capital-and-policy": {
+    "rationale": "하나의 수치 사례에서 국가 정책은 국제 자금의 제약을 지나 환율·금리·자산값에 닿는다의 지급·조건·한계를 순서대로 추적합니다.",
+    "reviewedAt": "2026-10-04",
+    "status": "implemented",
+    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "action": "keep"
+  },
+  "macro/narratives-and-market-regimes": {
+    "rationale": "하나의 수치 사례에서 대세는 사람들이 믿는 이야기와 실제 자금 제약이 서로를 바꿀 때 생긴다의 지급·조건·한계를 순서대로 추적합니다.",
+    "reviewedAt": "2026-10-04",
+    "status": "implemented",
+    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "action": "keep"
+  },
+  "institutions/insurance-risk-pooling": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "보험은 많은 가입자의 보험료를 모아 일부의 약정 손실을 지급하는 위험 풀이고, 가격에는 예상 사고액뿐 아니라 운영비·자본·불확실성이 포함되며 대형 공통 충격은 다시 밖으로 넘겨야 합니다.",
+    "sharedGate": "1천 명이 한 해 10만 원씩 내면 총 1억 원입니다(가정). 그해 20명에게 각 300만 원을 지급한다면 총 6천만 원이 나갑니다. 돈의 차이는 4천만 원입니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+  },
+  "institutions/healthcare-payment-systems": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "의료제도는 재원을 누가 모으고 위험을 누가 묶으며 어떤 가격표로 의료기관에 지급하는지를 분리해야 비교할 수 있고, 환자의 진료비 지불액만으로 의료 서비스의 총비용을 알 수 없습니다.",
+    "sharedGate": "한 번의 진료에 의료기관이 받는 총액을 10만 원, 환자가 내는 금액을 2만 원, 공동 재원에서 지급하는 금액을 8만 원으로 놓습니다(가정). 이는 특정 국가의 본인부담률이 아닙니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+  },
+  "institutions/how-to-read-a-country": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "국가의 생산·자금·생활·권력·정보를 같은 질문으로 추적하고, 통계의 지역 범위와 시점을 확인한 뒤 이야기를 검증합니다.", "sharedGate": "(가정) 수출 100·수입 중간재 60·외화 부채 30·정부 적자 5의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
+  "infrastructure/electricity-grid-and-power": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "전력 시장은 전기를 생산하는 설비, 같은 순간 수요와 공급을 맞추는 운영자, 송배전망을 소유하는 주체, 요금을 내는 사용자의 장부가 겹칩니다.",
+    "sharedGate": "오후 한 시간 동안 한 발전소는 100MWh를 만들 수 있고, 먼 공장으로 보내는 길은 그 시간에 80MWh까지만 통과시킨다고 놓습니다(가정). 공장이 원하는 양은 100MWh입니다. 손실과 다른 이용자는 우선 생략합니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+  },
+  "infrastructure/food-chain-and-prices": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "식품의 소비자가격은 농가 출하 가격에 가공·저장·운송·소매의 비용과 협상력을 더한 결과이며 각 단계의 재고와 폐기 위험이 다릅니다.",
+    "sharedGate": "같은 품질의 식품 한 단위가 모두 판매된다고 놓습니다(가정). 농가 출하액 100원에 선별·저장 단계 30원, 운송 단계 20원, 소매 단계 50원이 더해져 소비자가 200원을 냅니다. 세금은 생략하고 추가 금액에는 각 단계의 비용과 이익이 함께 들어 있습니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+  },
+  "infrastructure/water-utility-and-tariffs": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "수도는 취수한 물의 양뿐 아니라 정수·배관·누수·위생 처리와 저소득층 접근을 함께 지불해야 하는 공공 서비스입니다.",
+    "sharedGate": "한 해 정수·운영에 60, 배관 교체에 30이 필요하다고 놓습니다(가정). 서비스에 필요한 자원은 합계 90입니다. 정부가 취약 가구를 대신해 요금 10을 내면 가구는 80, 정부는 10을 내서 공급자가 90을 받습니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+  },
+  "infrastructure/transport-access-and-land-value": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "교통 투자는 차량 속도뿐 아니라 사람이 일자리·학교·서비스에 도달하는 범위와 그 이익이 임대료로 이동하는 과정을 함께 바꿉니다.",
+    "sharedGate": "통근이 편도 60분에서 35분으로 줄고 한 달에 20일 출근한다고 놓습니다(가정). 편도 절약은 25분, 한 달 편도 합계는 500분입니다. 같은 조건으로 귀가한다면 왕복 합계는 1,000분, 약 16시간 40분입니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+  },
+  "infrastructure/housing-land-and-supply": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "주택 가격과 임대료는 토지 사용권, 인허가, 기반 시설, 건설비, 금융과 지역 일자리 수요가 서로 제약하면서 형성됩니다.",
+    "sharedGate": "완성한 집의 예상 판매대금을 10억 원으로 놓습니다(가정). 공사 5억 원, 금융·허가·관련 비용 1억 원, 사업자가 요구하는 정상 이익 1억 원이 필요하면 토지에 지불할 수 있는 금액은 3억 원입니다. 세금과 시간 차이를 이 합계에 반영했다고 단순화합니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+  },
+  "infrastructure/climate-risk-and-exposure": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "홍수·폭염 등 위험을 평가할 때는 자연 현상의 강도, 노출된 사람과 자산, 취약성과 대응 능력을 분리해야 손실과 투자 판단이 가능합니다.",
+    "sharedGate": "동일한 홍수가 난 두 지역을 가정합니다. A에는 자산가치 100이 놓여 있고 10%가 손상돼 손실은 10입니다. B에는 자산 300이 있고 20%가 손상돼 손실은 60입니다. 모두 설명용 값이며 단위는 같은 금액 단위입니다(가정). 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+  },
+  "institutions/public-budget-and-taxes": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "공공 예산은 세입·차입으로 모은 돈을 서비스와 이전지출, 투자, 이자에 배분한 약속이며 부담자와 수혜자가 다른 시점과 집단에 걸칩니다.",
+    "sharedGate": "세금 80, 새로 빌린 돈 20이 들어온다고 놓습니다(가정). 의료 40, 교육 30, 도로 건설 20, 이자 10을 지급하면 총지출은 100입니다. 기존 빚의 원금 상환과 다른 수입은 없다고 단순화합니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+  },
+  "institutions/education-skills-and-signals": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "교육비 지출은 학습자의 실제 능력 향상, 고용주가 믿는 자격 신호, 직업 연결과 기회 접근에 서로 다른 경로로 영향을 줍니다.",
+    "sharedGate": "교육비가 1천만 원이고 취업을 1년 늦추며 그동안 받을 수 있었던 소득이 2천만 원이라고 놓습니다(가정). 교육 뒤 연 임금이 200만 원 높아진다면 학비만 나눠 얻은 5년은 비용의 일부만 회수하는 계산입니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+  },
+  "institutions/media-attention-and-public-belief": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "플랫폼·언론은 정보를 선택·배치하고 관심을 광고주에게 판매하며, 사람의 믿음은 관측 정보뿐 아니라 반복 노출과 신뢰 관계를 통해 바뀝니다.",
+    "sharedGate": "게시물 100개 가운데 선택된 10개가 이용자 화면에서 반복 노출된다고 놓습니다(가정). 광고주는 그 화면에서 광고 1천 회 노출을 1만 원에 샀다고도 놓습니다. 실제 플랫폼의 선택 방식이나 단가는 아닙니다. 이 사례를 4절에서 재사용하고 5·6절 원문에 적용했는지 확인합니다."
+  },
+  "business/shop-daily-operations": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "주문 하나의 기록이 재고·급여·결제 정산에서 누락되는 지점을 찾는 하나의 운영 경로입니다. 개업 시설, 장기 투자회수, 양도·폐업은 기존 정본을 재사용합니다.",
+    "sharedGate": "동일한 하루20건×8천원, 재료25=판매20+폐기1+잔여4, 수수료3200원과입금156800원, 근무4시간을 본문·의사코드·문제에서 보존합니다."
+  },
+  "institutions/population-migration-and-care": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "인구의 출입 장부, 연령 구성, 실제 취업과 돌봄시간을 구분해야 노동·소비·공공서비스의 변화를 읽을 수 있습니다.", "sharedGate": "(가정) 인구 100·출생 2·사망 1·전입 3·전출 2, 20/60/20의 연령 구성, 하루 8시간 중 돌봄 4시간의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
+  "institutions/culture-norms-and-coordination": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "문화의 설명은 국적별 성격 분류가 아니라 공유한 기대·관측·규칙·권리가 실제 협력을 만드는 경로를 확인하는 일입니다.", "sharedGate": "(가정) 가게 10곳×월 2만원, 공동청소비 16만원, 잔액 4만원의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
+  "institutions/evidence-measurement-and-causality": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "측정의 신뢰성, 비교 집단의 적절성, 결과를 일반화할 범위는 서로 다른 질문이며 각각의 근거가 필요합니다.", "sharedGate": "(가정) 각 10가구 A10→8·B10→9kWh/가구·일, 반복측정 8.0·8.1·7.9의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
+  "infrastructure/materials-waste-and-circularity": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "수거율과 실제 회수량, 처리비용과 재원 이전, 재생재료와 새 원료 대체를 구분해야 순환의 효과를 계산할 수 있습니다.", "sharedGate": "(가정) 발생 100kg·수거 80kg·수율 75%·회수 60kg, 처리총비용 12만원·판매수입 6만원의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
+  "gpu/amd-gpu-execution-and-hip": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "이 글은 두 배열의 64개 원소를 더하는 요청을 AMD 장치 안으로 보냅니다. 작업 수는 유지하면서 실행 묶음과 명령, 저장 공간의 차이를 따라갑니다. 공식 구현 두 개를 비교하되 특정 제품의 성능 순위를 만들지는 않습니다.",
+    "sharedGate": "64개 × 4B × 입력 2개 = 512B이고 출력은 256B입니다. 합계 768B와 37번의 offset 148B를 본문·공식 코드·문제에서 일관되게 추적합니다. stride 8 변형은 최소 249개 원소를 가진 입력에서 32개를 선택합니다."
+  },
+  "gpu/hbm-stack-and-memory-requests": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "이 글은 64개 덧셈에 필요한 데이터를 저장 장치에서 가져오는 과정을 따라갑니다. 칩을 쌓는 모습에서 출발해 주소를 받는 제어기와 내부 읽기 동작을 연결합니다. 이어 코드의 접근 순서가 그 길을 어떻게 바꾸는지 계산합니다.",
+    "sharedGate": "64개 × 4B × 입력 2개 = 512B이고 출력은 256B입니다. 합계 768B와 37번의 offset 148B를 본문·공식 코드·문제에서 일관되게 추적합니다. stride 8 변형은 최소 249개 원소를 가진 입력에서 32개를 선택합니다."
+  },
+  "gpu/gpu-memory-hierarchy-and-roofline": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "이 글은 64개 덧셈에 필요한 768바이트를 유지한 채 저장 계층과 접근 간격, 시간당 처리량을 차례로 계산합니다. 계산한 상한과 측정한 성능을 비교합니다. 상한 아래에 있다는 사실만으로 원인을 확정하지는 않습니다.",
+    "sharedGate": "64개 × 4B × 입력 2개 = 512B이고 출력은 256B입니다. 합계 768B와 37번의 offset 148B를 본문·공식 코드·문제에서 일관되게 추적합니다. stride 8 변형은 최소 249개 원소를 가진 입력에서 32개를 선택합니다."
+  },
+  "markets/financial-products-and-claims": {
+    "rationale": "하나의 수치 사례에서 금융상품은 누가 언제 무엇을 지급하는지로 구별한다의 지급·조건·한계를 순서대로 추적합니다.",
+    "reviewedAt": "2026-10-04",
+    "status": "implemented",
+    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "action": "keep"
+  },
+  "markets/securitization-and-tranches": {
+    "rationale": "하나의 수치 사례에서 유동화는 대출의 현금흐름을 옮기고 손실을 받는 순서를 나눈다의 지급·조건·한계를 순서대로 추적합니다.",
+    "reviewedAt": "2026-10-04",
+    "status": "implemented",
+    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "action": "keep"
+  },
+  "banking/repo-and-collateral-funding": {
+    "rationale": "하나의 수치 사례에서 레포는 증권을 맡겨 짧은 돈을 구하고 만기마다 다시 연결한다의 지급·조건·한계를 순서대로 추적합니다.",
+    "reviewedAt": "2026-10-04",
+    "status": "implemented",
+    "sharedGate": "층위0의 숫자를 층위4와 원문 적용5·6 및 연습문제에서 같은 단위로 계산하고, 손익·현금시점·국가별 범위를 일치시킵니다.",
+    "action": "keep"
+  },
+  "markets/covered-calls-and-income-funds": {
+    "rationale": "100주 보유와 콜 매도의 같은 현금흐름에서 손익 상한·분배 재원·매도 비율을 연속해서 검증하는 한 수업입니다.",
+    "reviewedAt": "2026-10-04",
+    "status": "implemented",
+    "sharedGate": "100주 손익과 주당 그래프가 일치하고 NAV 및 분배금을 더한 총수익, 실제 옵션결제와 19a의 잠정 분류가 같은 계산에 대응해야 합니다.",
+    "action": "keep"
+  },
+  "blockchain/hyperliquid": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 주문의 서명·체결·수수료·담보·청산과 Core/EVM/외부 자금 이동을 각각의 기록으로 이어야 실제 결과를 알 수 있습니다.",
+    "sharedGate": "동일 사례·수량·상태를 본문, 원문 적용, 코드 주석, 기초6·심화4문제에서 보존합니다."
+  },
+  "blockchain/robinhood-chain-blob-demand": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "블록별 개수·기간 평균·공급 설정·게시자 기여·자료 전송 비용은 다른 계산이며 가정과 관측을 분리해야 합니다.",
+    "sharedGate": "동일 사례·수량·상태를 본문, 원문 적용, 코드 주석, 기초6·심화4문제에서 보존합니다."
+  },
+  "blockchain/rwa-composition": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "기관 토큰의 가치는 발행된 권리, 같은 시각의 자산과 부채, 이전 자격, 실제 매매·상환 경로를 함께 읽어야 설명됩니다.",
+    "sharedGate": "동일 사례·수량·상태를 본문, 원문 적용, 코드 주석, 기초6·심화4문제에서 보존합니다."
+  },
+  "blockchain/ethereum-future-roadmap": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "연구·EIP 문서 상태·업그레이드 포함 단계·네트워크 활성화는 서로 다른 증거로 판정합니다.",
+    "sharedGate": "동일 사례·수량·상태를 본문, 원문 적용, 코드 주석, 기초6·심화4문제에서 보존합니다."
+  },
+  "blockchain/robinhood-chain-settlement": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "빠른 전송 영수증, Ethereum 자료 확정, 브리지 인출 집행, 토큰의 법적 권리를 별도로 연결합니다.",
+    "sharedGate": "동일 사례·수량·상태를 본문, 원문 적용, 코드 주석, 기초6·심화4문제에서 보존합니다."
+  },
+  "blockchain/glamsterdam-block-execution": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "ePBS의 입찰·공개 책임과 BAL의 거래별 상태 자료를 나누어 같은 블록의 지급 조건·가용성·실행 정확성을 검증합니다.",
+    "sharedGate": "동일 사례·수량·상태를 본문, 원문 적용, 코드 주석, 기초6·심화4문제에서 보존합니다."
+  },
+  "ai/flash-attention-io-aware-kernel": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 숫자 사례의 입력·상태·계산·공식 구현·실패 조건이 하나의 질문을 이룹니다. 최신 결과는 해당 원리를 확장하는 비교 절에 연결했습니다.",
+    "sharedGate": "본문 사례를 같은 단위와 축으로 재계산하고, 공식 원문과 코드의 버전·가정·측정 범위를 일치시켜야 합니다."
+  },
+  "ai/fast-weight-memory-and-chunkwise-recurrence": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 숫자 사례의 입력·상태·계산·공식 구현·실패 조건이 하나의 질문을 이룹니다. 최신 결과는 해당 원리를 확장하는 비교 절에 연결했습니다.",
+    "sharedGate": "본문 사례를 같은 단위와 축으로 재계산하고, 공식 원문과 코드의 버전·가정·측정 범위를 일치시켜야 합니다."
+  },
+  "ai/expert-parallelism-moe-systems": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 숫자 사례의 입력·상태·계산·공식 구현·실패 조건이 하나의 질문을 이룹니다. 최신 결과는 해당 원리를 확장하는 비교 절에 연결했습니다.",
+    "sharedGate": "본문 사례를 같은 단위와 축으로 재계산하고, 공식 원문과 코드의 버전·가정·측정 범위를 일치시켜야 합니다."
+  },
+  "ai/reward-design-for-verifiable-rl": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 숫자 사례의 입력·상태·계산·공식 구현·실패 조건이 하나의 질문을 이룹니다. 최신 결과는 해당 원리를 확장하는 비교 절에 연결했습니다.",
+    "sharedGate": "본문 사례를 같은 단위와 축으로 재계산하고, 공식 원문과 코드의 버전·가정·측정 범위를 일치시켜야 합니다."
+  },
+  "ai/world-model-latent-planning": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 숫자 사례의 입력·상태·계산·공식 구현·실패 조건이 하나의 질문을 이룹니다. 최신 결과는 해당 원리를 확장하는 비교 절에 연결했습니다.",
+    "sharedGate": "본문 사례를 같은 단위와 축으로 재계산하고, 공식 원문과 코드의 버전·가정·측정 범위를 일치시켜야 합니다."
+  },
+  "crypto/snark-overview": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 수치 사례를 역할·조건·공식 원문·반례·자원 경계까지 열 단계로 이어 설명하는 하나의 학습 단위입니다.",
+    "sharedGate": "Prove에는 공개값 (3,12)와 증인 4가 들어가고 Verify에는 (3,12)와 증거가 들어갑니다."
+  },
+  "crypto/zk-theory": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 수치 사례를 역할·조건·공식 원문·반례·자원 경계까지 열 단계로 이어 설명하는 하나의 학습 단위입니다.",
+    "sharedGate": "23을 법으로 2의 4제곱은 16이며, 첫 값 12 뒤 질문 2에 응답 7을 보냅니다."
+  },
+  "crypto/constraint-systems": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 수치 사례를 역할·조건·공식 원문·반례·자원 경계까지 열 단계로 이어 설명하는 하나의 학습 단위입니다.",
+    "sharedGate": "z=(1,3,16,4,12)에서 공개 (3,16), 개인 4, 중간 12를 구분합니다."
+  },
+  "crypto/polycommit": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 수치 사례를 역할·조건·공식 원문·반례·자원 경계까지 열 단계로 이어 설명하는 하나의 학습 단위입니다.",
+    "sharedGate": "f=X²+2X+3에 위치 4와 답 10, opening 증거를 연결합니다."
+  },
+  "crypto/fri": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 수치 사례를 역할·조건·공식 원문·반례·자원 경계까지 열 단계로 이어 설명하는 하나의 학습 단위입니다.",
+    "sharedGate": "F17의 16개 위치에서 차수 2는 엄격한 경계 3보다 작습니다."
+  },
+  "crypto/stark-theory": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 수치 사례를 역할·조건·공식 원문·반례·자원 경계까지 열 단계로 이어 설명하는 하나의 학습 단위입니다.",
+    "sharedGate": "입력 4의 Horner 실행은 1→6→10으로 이어집니다."
+  },
+  "crypto/nova": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 수치 사례를 역할·조건·공식 원문·반례·자원 경계까지 열 단계로 이어 설명하는 하나의 학습 단위입니다.",
+    "sharedGate": "4배 규칙의 3→12→14에서 둘째 시작은 12여야 하며 11이면 다른 실행입니다."
+  },
+  "crypto/jolt": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 수치 사례를 역할·조건·공식 원문·반례·자원 경계까지 열 단계로 이어 설명하는 하나의 학습 단위입니다.",
+    "sharedGate": "ADD의 3+4=7은 tracer와 마스크를 적용한 lookup 출력에서 일치합니다."
+  },
+  "crypto/prover-memory-and-verifier-cost": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 수치 사례를 역할·조건·공식 원문·반례·자원 경계까지 열 단계로 이어 설명하는 하나의 학습 단위입니다.",
+    "sharedGate": "256MiB 원본, 두 2GiB 평가표, 512MiB−32B 해시가 겹치면 4.75GiB−32B입니다."
+  },
+  "blockchain/pq-account": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "하나의0.1 ETH 요청을 검증·nonce·실행·비용·서명 교체와 복구까지 추적합니다. 암호 수학은 새 서명 정본을 재사용합니다.",
+    "sharedGate": "동일 요청에서 domain·nonce·서명·호출을 바꿔 검증 실패와 실행 실패를 구분하고 잔액·deposit·nonce·요청 receipt를 함께 대조합니다."
+  },
+  "crypto/quantum-computing-and-cryptographic-risk": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "진폭의 간섭으로 계산을 설계한다는 원리와 논리·물리 자원의 차이를 알아야 Shor·Grover가 암호에 주는 영향을 판단할 수 있습니다.", "sharedGate": "진폭 0.5 네 개와 15의 주기 4의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
+  "crypto/ml-kem-and-noisy-equations": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "공통 곱의 상쇄로 작은 비트를 복원하고 재암호화로 캡슐을 검증한 뒤, 별도 인증된 프로토콜에서 공유 비밀을 사용합니다.", "sharedGate": "A의 두 행 [2,3]·[4,1], u=[6,5], v=6의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
+  "crypto/post-quantum-signatures": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "메시지에 결속한 응답을 공개 정보로 재구성하되 마스크·거절·힌트의 조건을 지키며, 해시 기반 서명의 다른 비용과 배포 경계까지 비교합니다.", "sharedGate": "z=[3,3], Az−ct=[6,9]의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
+  "crypto/quantum-key-distribution": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "PQC 키 합의·서명과 다른 물리적 키 생성 및 인증 조건을 독립 정본으로 소유합니다.",
+    "sharedGate": "12→8→6과 패리티 110·출력시연 01·실제키 0비트를 본문·연습문제·근거 해설에서 함께 대조합니다."
+  },
+  "ai/agent-memory-lifecycle": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-04",
+    "rationale": "관측에서 기억 쓰기·읽기·망각·행동 평가까지 같은 기록의 수명주기를 따라갑니다. 추가 MemoryArena 해설은 회상 점수와 실제 후속 행동 성과를 구분하는 기존 질문의 검증 단계입니다.",
+    "sharedGate": "동일 관측 기록이 장기 기억으로 채택되는 조건과 다음 행동에 쓰이는 경로를 추적하고, 회상 성공만으로 전체 작업 성공을 주장하지 않습니다."
+  },
 };
 
 /**
@@ -652,35 +1044,35 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
-  "institutions/public-budget-and-taxes": "858616f20106cac0",
-  "institutions/media-attention-and-public-belief": "bc7321e7db566444",
-  "institutions/education-skills-and-signals": "b841f26ce41c486f",
-  "infrastructure/water-utility-and-tariffs": "ac1d1e0cb8891b5a",
-  "infrastructure/transport-access-and-land-value": "24a87e2a7141bf99",
-  "infrastructure/housing-land-and-supply": "63bec3fabc784c4e",
-  "infrastructure/food-chain-and-prices": "5025197ed934627c",
-  "infrastructure/electricity-grid-and-power": "7f737a8bdf71456d",
-  "infrastructure/climate-risk-and-exposure": "a722e8692722611a",
-  "business/business-model-cashflow": "c272d56683e6bc7b",
-  "business/franchise-incentives": "24269b4a14f7667f",
-  "business/shop-fitout-and-opening": "6f806e1c01b92732",
-  "business/shop-site-selection": "d785f79bbb76f7c8",
-  "business/shop-unit-economics": "659b86568b06d19b",
-  "business/supply-chain-bargaining": "d7bf7ca40cded5c7",
-  "institutions/healthcare-payment-systems": "2ae8411f72576272",
-  "institutions/how-to-read-a-country": "7ac6b05c21959279",
-  "institutions/insurance-risk-pooling": "eca4bed3ee21a4e5",
-  "macro/global-capital-and-policy": "bc21989182ad88de",
-  "macro/narratives-and-market-regimes": "3ddc1928f31bdeb0",
-  "markets/forwards-and-futures": "d46341b46a021c8b",
-  "markets/funds-etfs-and-etns": "8b87cfba93e0174c",
-  "markets/options-and-asymmetric-payoffs": "c772deedce082375",
-  "markets/swaps-and-credit-risk": "11d9be758e279454",
-  "property/commercial-lease-and-rent": "ededa299e0fb91cd",
-  "property/land-development-residual": "fa16ba308c60c722",
-  "property/shop-closure-and-restoration": "0992cd6d736252ee",
-  "property/shop-transfer-and-goodwill": "e7c4441ec6abfcfe",
-  "risk/margin-collateral-and-leverage": "bcbeb3bd34e2e2ff",
+  "institutions/public-budget-and-taxes": "c34329142b861ee1",
+  "institutions/media-attention-and-public-belief": "e1368345f124f1ac",
+  "institutions/education-skills-and-signals": "9853e5435f8204c1",
+  "infrastructure/water-utility-and-tariffs": "574f8404067226e8",
+  "infrastructure/transport-access-and-land-value": "4b06f3c15f6a78eb",
+  "infrastructure/housing-land-and-supply": "6b0cf4f95ee19f9f",
+  "infrastructure/food-chain-and-prices": "6111a66d5c2ceefd",
+  "infrastructure/electricity-grid-and-power": "d4901083041053ad",
+  "infrastructure/climate-risk-and-exposure": "2dfca89c7ec5bb09",
+  "business/business-model-cashflow": "815491a924c31787",
+  "business/franchise-incentives": "f8215ec3d57de1ac",
+  "business/shop-fitout-and-opening": "79930f0f0473d091",
+  "business/shop-site-selection": "c234354d4fbdfc7a",
+  "business/shop-unit-economics": "05954906d5d9bf37",
+  "business/supply-chain-bargaining": "9ac935b509088b19",
+  "institutions/healthcare-payment-systems": "2e1ca0897a7b1151",
+  "institutions/how-to-read-a-country": "436b348e745e7179",
+  "institutions/insurance-risk-pooling": "930b27098a1a795e",
+  "macro/global-capital-and-policy": "c169ae992e741ba4",
+  "macro/narratives-and-market-regimes": "9b0ab093e34caa58",
+  "markets/forwards-and-futures": "e4db4ba88e33dbbf",
+  "markets/funds-etfs-and-etns": "d737fae21c67e16f",
+  "markets/options-and-asymmetric-payoffs": "e7ea53156ed34514",
+  "markets/swaps-and-credit-risk": "c1add7c3c5db9fb9",
+  "property/commercial-lease-and-rent": "985d12575d5f4613",
+  "property/land-development-residual": "53cae6351af0bb2b",
+  "property/shop-closure-and-restoration": "245f0e685b2d2555",
+  "property/shop-transfer-and-goodwill": "6726bfcc1b276675",
+  "risk/margin-collateral-and-leverage": "9e95bb842afc2ebf",
   "macro/what-ricardo-assumed": "6566e07f66c31f32",
   "macro/who-counts-as-unemployed": "0e99dde8bd38dd55",
   "macro/what-the-price-level-hides": "a44701dc2ad7feae",
@@ -730,7 +1122,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/image-embedding-pipeline": "183b7fb7e57921f8",
   "gpu/datacenter-site-readiness": "07b871983667a242",
   "gpu/server-cpu-lineup-comparison": "f8273f0dacbcd008",
-  "gpu/ai-accelerator-vendor-comparison": "a95a27113319cc2f",
+  "gpu/ai-accelerator-vendor-comparison": "f82e89ae427c88c0",
   "ai/multi-component-finetuning-vram": "c3f7e981c26b48fc",
   "ai/vision-backbone-selection": "cdd9671993dee419",
   "ai/image-text-contrastive-pretraining": "f5b36610fc8dff17",
@@ -741,7 +1133,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/smoothie-qwen-weight-editing": "68499b22e204f442",
   "ai/sequence-modeling-tabular": "aacb8b5d191a4f55",
   "ai/sionic-eureka": "5e76a02b279d1390",
-  "ai/sionic-glm-b300": "e16981193eb189c8",
+  "ai/sionic-glm-b300": "c7eaeef55f28947d",
   "ai/skills-anatomy": "61679abd14267eab",
   "ai/time-features": "36e27f8b4d5ac20f",
   "ai/training-pipeline": "b5b3f8ce59ac29e9",
@@ -770,7 +1162,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/reth-sync": "da31c51eece15592",
   "blockchain/reth-txpool": "610e2f10b793ae99",
   "crypto/mpc": "487961f55cafda95",
-  "gpu/cuda-basics": "65ca6f0e8f4a01a0",
+  "gpu/cuda-basics": "8da354583dfb4cb2",
   "gpu/gpu-arch-hopper": "036cadb2e337870a",
   "gpu/cuda-persistent-kernels": "9a0d1ef64c90bed2",
   "gpu/cuda-register-pressure": "de34dcf7cffc5752",
@@ -793,4 +1185,43 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "inference-from-sources/ruins-mislead": "00e46e35e3fb93b9",
   "inference-from-sources/the-gap-was-made": "6224616aee8d25d8",
   "inference-from-sources/naming-the-past": "58060787a5f1d221",
+
+"ai/agent-memory-lifecycle":"e3bb408c931ea9af",
+"ai/expert-parallelism-moe-systems":"1025d7f9fa6ef1a6",
+"ai/fast-weight-memory-and-chunkwise-recurrence":"4e73bd16767bf7dc",
+"ai/flash-attention-io-aware-kernel":"4bc6b3022c566c1f",
+"ai/reward-design-for-verifiable-rl":"b82b3190faa642aa",
+"ai/world-model-latent-planning":"2c02ff942e6eb395",
+"banking/repo-and-collateral-funding":"ef687e7557d1a2b0",
+"blockchain/ethereum-future-roadmap":"1f2bb0357f878321",
+"blockchain/glamsterdam-block-execution":"e611a92accbeb7da",
+"blockchain/hyperliquid":"19e22f5f577fc95f",
+"blockchain/pq-account":"652971c258adb08e",
+"blockchain/robinhood-chain-blob-demand":"30c5c236fea938b8",
+"blockchain/robinhood-chain-settlement":"2bc832f4a623a363",
+"blockchain/rwa-composition":"d7b3622726d50ca4",
+"business/shop-daily-operations":"c37c9c2b3a26c9f3",
+"crypto/constraint-systems":"180451df5e454382",
+"crypto/fri":"ac11504ca83c08d9",
+"crypto/jolt":"ce2cf82725d8cb32",
+"crypto/ml-kem-and-noisy-equations":"329eb227a458992b",
+"crypto/nova":"c77c366b260e6985",
+"crypto/polycommit":"5c10899d100ec9d1",
+"crypto/post-quantum-signatures":"bbd9a75525a1bc9e",
+"crypto/prover-memory-and-verifier-cost":"268bbd7ee27658e6",
+"crypto/quantum-computing-and-cryptographic-risk":"fdb29244df1b5b98",
+"crypto/quantum-key-distribution":"94d23fc15a99243c",
+"crypto/snark-overview":"961154e8537ab05f",
+"crypto/stark-theory":"544cd9e5420b7914",
+"crypto/zk-theory":"d8c8dd6527fe6308",
+"gpu/amd-gpu-execution-and-hip":"29a76da9f5ac7b19",
+"gpu/gpu-memory-hierarchy-and-roofline":"6e8c4486d9c5d116",
+"gpu/hbm-stack-and-memory-requests":"13fdf060d2284abf",
+"infrastructure/materials-waste-and-circularity":"89730ed273657bf2",
+"institutions/culture-norms-and-coordination":"588ebc2e3eeb88e7",
+"institutions/evidence-measurement-and-causality":"e4ce1a8e47b8197d",
+"institutions/population-migration-and-care":"ca6733d2216266b0",
+"markets/covered-calls-and-income-funds":"b3bf1d0cf748a674",
+"markets/financial-products-and-claims":"a2c324243fb9fcee",
+"markets/securitization-and-tranches":"112869ad29851ed5",
 };
