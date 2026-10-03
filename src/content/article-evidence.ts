@@ -7598,4 +7598,30 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "집중 회로 근사의 전하 축적·변하는 자기 선속 조건, 전하 보존과 패러데이 법칙에서 회로식을 얻는 설명의 출처. 논문 증거와 교육용 모델을 구분한다.",
     },
   ],
+  "semiconductors/bands-and-doping": [
+    {
+      kind: "핵심 논문",
+      label: "A. H. Wilson, ‘The Theory of Electronic Semi-Conductors,’ Proceedings of the Royal Society A 133 (1931), 458–491",
+      href: "https://ethw-images.s3.us-east-va.perf.cloud.ovh.us/ieee/b/b4/P3_Proc._R._Soc._Lond._A-1931-Wilson-458-91.pdf",
+      note: "원문 스캔 460쪽에서 허용·금지 에너지띠와 꽉 찬 아래 띠에서 작은 전기장만으로 전류가 나지 않는 논의를 직접 확인했다. 현대 실리콘 농도 수치의 출처는 아니다.",
+    },
+    {
+      kind: "핵심 논문",
+      label: "W. Shockley, ‘The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors,’ Bell System Technical Journal 28 (1949), 435–489",
+      href: "https://vtda.org/pubs/BSTJ/vol28-1949/articles/bstj28-3-435.pdf",
+      note: "435쪽 서론의 도너·억셉터 농도와 n형·p형 접합 출발점을 원문 스캔에서 확인했다. 본문의 10^16 cm^-3 설정은 이 글의 가정이다.",
+    },
+    {
+      kind: "공개 강의",
+      label: "MIT OpenCourseWare 6.012 Lecture 2, Semiconductor Physics (2005)",
+      href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/e1a94598c1fd641fc15636a9ad14de1a_lec2.pdf",
+      note: "실리콘 원자 밀도, 전자·정공 짝 생성, 열평형 곱, 300 K 고유 농도 10^10 cm^-3, 도너·억셉터 계산의 교육용 기준을 확인했다.",
+    },
+    {
+      kind: "공개 강의",
+      label: "MIT OpenCourseWare 6.012 Tutorial 1 (Spring 2009)",
+      href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-spring-2009/70b3d239e4037abf0856a71f4ef22616_MIT6_012S09_tutor01.pdf",
+      note: "300 K의 n_i=10^10 cm^-3와 실리콘 띠틈 1.1 eV를 명시한 예제의 출처. 본문의 10^16 도핑 수치는 별도 가정이다.",
+    },
+  ],
 };

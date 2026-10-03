@@ -36,8 +36,8 @@ export const DOMAIN_READING_PATHS: Readonly<
     description: "회로에서 읽은 전압과 전류가 소자의 상태, 칩의 동작, 임베디드 시스템의 시간 약속으로 이어지는 경로입니다.",
     stages: [
       { eyebrow: "01 · 회로", title: "흐름을 계산하기", description: "전하와 에너지의 보존을 한 회로의 전압·전류·전력으로 옮깁니다.", categories: ["circuits"] },
-      { eyebrow: "02 · 소자", title: "흐름을 조절하기", description: "반도체 소자의 전류와 전압을 이용해 증폭과 스위칭을 설명합니다.", categories: ["devices"] },
-      { eyebrow: "03 · 반도체", title: "많은 소자를 함께 만들기", description: "접합과 트랜지스터에서 공정·배선·수율로 시야를 넓힙니다.", categories: ["semiconductors"] },
+      { eyebrow: "02 · 반도체", title: "흐름을 바꿀 재료", description: "움직일 수 있는 전하의 수를 에너지 상태와 도핑에서 설명하고 공정으로 확장합니다.", categories: ["semiconductors"] },
+      { eyebrow: "03 · 소자", title: "흐름을 조절하기", description: "반도체 소자의 전류와 전압을 이용해 정류·증폭·스위칭을 설명합니다.", categories: ["devices"] },
       { eyebrow: "04 · 임베디드", title: "물리 시간에 맞춰 제어하기", description: "칩 안의 레지스터부터 인터럽트·실시간 스케줄링까지 따라갑니다.", categories: ["embedded"] },
     ],
     showFullSequence: true,
