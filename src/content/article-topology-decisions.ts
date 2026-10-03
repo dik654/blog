@@ -382,6 +382,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "같은 수요와 한계비용에서 멈추는 수량·읽히는 값·틈의 비율·사라지는 삼각형이 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
   },
+  "labor/wage-floor-natural-experiment": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "얻는 몫·두 가지 멈추는 자리·갈라지는 예측·재는 방법·읽는 규율까지가 임금이 어디서 멈추는가라는 하나의 질문을 푸는 한 묶음이다. 측정을 떼어 내면 앞의 분기가 왜 중요한지가 남지 않고, 분기를 떼어 내면 측정 결과를 한쪽 증거로 오독하게 된다.",
+    sharedGate:
+      "같은 숫자 묶음(더 파는 몫 13−n, 부르는 임금 n+3, 바닥 9)에서 멈추는 사람 수·임금·틈과, 원문 표 3·표 7의 값이 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
 };
 
 /**
@@ -462,7 +471,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "saas/anycast-delivery-continuity": "aff159589f1c6bbb",
   "saas/private-access-inbound-closure": "4ce0f54f2ee45937",
   "ai/onprem-k8s-inference-platform": "acd23d8e4dc14592",
-  "firms/why-firms-exist": "3b1079e4fa979d9f",
-  "firms/scale-and-cost-structure": "e1f1355815729170",
-  "firms/market-power-and-markup": "5b410043b58ff7f5",
+  "firms/why-firms-exist": "63891a70391f81d0",
+  "firms/scale-and-cost-structure": "81801244a44eeece",
+  "firms/market-power-and-markup": "bd7e2fcb297b90d2",
+  "labor/wage-floor-natural-experiment": "f4cee633e36a9767",
 };

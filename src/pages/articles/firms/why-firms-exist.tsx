@@ -59,6 +59,14 @@ export default function WhyFirmsExistArticle() {
             줄이는지, 그래서 조직이 어디서 커지기를 멈추는지, 그 멈추는 자리를
             무엇이 옮기는지입니다.
           </p>
+
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 이 글이 겨루는 질문은 잡힙니다 — 값이 그렇게 잘
+              조정한다면 왜 조직이 생기고 왜 세상 전체가 하나가 되지
+              않는가입니다.
+            </em>
+          </p>
         </div>
       </section>
 
@@ -92,6 +100,13 @@ export default function WhyFirmsExistArticle() {
             값이 기회비용의 차이보다 커지면 교환 자체가 일어나지 않는다고
             했습니다. 여기서는 같은 몫이 다른 일을 합니다. 교환을 막는 대신{" "}
             <strong>교환을 조직으로 바꿉니다.</strong>
+          </p>
+
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 조직이 생기는 이유는 잡힙니다. 조직이 그 몫을
+              정확히 어떻게 줄이는지가 다음 부품입니다.
+            </em>
           </p>
         </div>
 
@@ -145,6 +160,13 @@ export default function WhyFirmsExistArticle() {
             할지를 미리 적어 두기가 어려워집니다. 그래서 내용을 비워 두고 나중에
             채우는 쪽을 고릅니다. 비워 둔 자리를 채우는 것이 지시이고, 지시가
             값을 대신하는 범위가 조직입니다.
+          </p>
+
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 조직이 아끼는 것이 무엇인지 셀 수 있습니다. 그러면
+              왜 끝없이 커지지 않는가가 바로 다음 질문이 됩니다.
+            </em>
           </p>
         </div>
 
@@ -369,6 +391,26 @@ export default function WhyFirmsExistArticle() {
             파는 쪽이 하나일 때 값이 어디에 멈추는지를 셉니다. 1단계에서 세운
             균형값 <code>P* = 7</code>이 그때 어디로 움직이는지가 그 글의
             숫자입니다.
+          </p>
+
+          <h3 className="mt-10 mb-4 text-lg font-bold">
+            읽고 나서 맞춰 볼 질문
+          </h3>
+
+          <p className="leading-7">
+            1. 어떤 회사가 작년보다 훨씬 커졌습니다. 이것만 보고 그 회사가
+            잘한다고 읽으면 안 되는 이유를 한 문장으로 말해 보십시오.{" "}
+            <strong>(답: 부품 4절)</strong>
+          </p>
+
+          <p className="leading-7">
+            2. 안쪽 값이 1·2·3·4·5·6인데 밖에서 사 오는 값이 2로 내려가면 조직은
+            몇 단계까지 안으로 들입니까. <strong>(답: 부품 3절)</strong>
+          </p>
+
+          <p className="leading-7">
+            3. 고용 계약에 내일 할 일이 적혀 있지 않은 것이 왜 값을 아끼는 일이
+            되는지 설명해 보십시오. <strong>(답: 부품 2절)</strong>
           </p>
         </div>
 

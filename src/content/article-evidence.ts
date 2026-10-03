@@ -7584,4 +7584,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "값과 한계비용의 틈을 지표로 쓴 출처로 알려진 글. 접근할 수 있는 전문을 찾지 못해 읽지 못했고, 그래서 이 글의 어떤 주장도 여기에 기대지 않는다. 본문의 틈 식은 Cournot 57쪽 식 (2)에서 직접 옮겨 적은 것",
     },
   ],
+  "labor/wage-floor-natural-experiment": [
+    {
+      kind: "핵심 논문",
+      label:
+        "David Card · Alan B. Krueger, “Minimum Wages and Employment: A Case Study of the Fast-Food Industry in New Jersey and Pennsylvania”, The American Economic Review, Vol. 84, No. 4 (Sept. 1994), pp. 772–793",
+      href: "https://davidcard.berkeley.edu/papers/njmin-aer.pdf",
+      note: "겨루는 예측을 못 박은 772쪽 첫 문단, 고용 변화를 담은 780쪽 표 3, 한 끼 값을 담은 788쪽 표 7, 두 설명 모두로 설명하기 어렵다는 792쪽 맺음 문장의 출처. 저자 공개본 PDF를 읽고 표와 인용 문장은 쪽 이미지로 대조했음",
+    },
+  ],
 };

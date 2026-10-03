@@ -40,6 +40,18 @@ export default function ArticleEvidenceRail({
   const readingByHref = new Map(
     paperReadings?.map((reading) => [reading.href, reading]) ?? [],
   );
+  /**
+   * 열 수를 항목 수에 맞춘다. 근거가 하나뿐인데 4열을 쓰면 긴 설명이 133px
+   * 폭의 세로 띠가 되어, 데스크톱에서만 좁은 열에 본문이 눌리는 결함이 난다.
+   */
+  const gridCols =
+    items.length <= 1
+      ? ""
+      : items.length === 2
+        ? "sm:grid-cols-2"
+        : items.length === 3
+          ? "sm:grid-cols-2 lg:grid-cols-3"
+          : "sm:grid-cols-2 lg:grid-cols-4";
   return (
     <aside
       className="not-prose mb-8 min-w-0 overflow-hidden rounded-2xl border border-border/70 bg-card"
@@ -57,7 +69,7 @@ export default function ArticleEvidenceRail({
         </span>
       </div>
 
-      <div className="grid min-w-0 gap-2 p-3 sm:grid-cols-2 sm:p-4 lg:grid-cols-4">
+      <div className={`grid min-w-0 gap-2 p-3 sm:p-4 ${gridCols}`}>
         {items.map((item, index) => {
           const reading = item.href ? readingByHref.get(item.href) : undefined;
           const content = (

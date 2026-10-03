@@ -64,6 +64,7 @@ export const CATEGORY_DOMAIN: Readonly<Record<string, DomainSlug>> = {
   saas: "cs",
   scarcity: "economics",
   firms: "economics",
+  labor: "economics",
   prices: "economics",
   "market-failure": "economics",
   macro: "economics",

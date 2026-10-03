@@ -86433,4 +86433,299 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "labor/wage-floor-natural-experiment": {
+    entryNote:
+      "앞 세 편은 조직과 물건의 값을 다뤘습니다. 여기서는 같은 셈을 사람이 파는 시간에 적용하고, 그 예측이 실제 측정과 어떻게 만나는지까지 봅니다.",
+    coreIdea:
+      "한 사람을 더 쓸 때 얻는 몫과 드는 값을 견주는 규칙은 같지만, 사는 쪽이 여럿이면 임금이 그 몫에서 멈추고 하나뿐이면 이미 일하던 사람의 임금까지 올려야 해서 그보다 낮게 멈춥니다. 그래서 같은 임금 바닥이 앞의 경우에는 사람을 줄이고 뒤의 경우에는 늘리므로 어느 쪽인지는 재 봐야 알 수 있는데, 한쪽만 바닥을 올린 자리에서 실제로 재 보니 사람 수는 첫 셈의 예측과 어긋났고 값의 움직임은 두 번째 셈의 예측과 어긋났습니다.",
+    assumedKnowledge: [
+      {
+        id: "marginal-decision-rule",
+        role: "하나 더 할 때의 비교로 멈출 자리를 찾는 셈을 사람 쪽에 그대로 씁니다.",
+      },
+      {
+        id: "marginal-revenue-below-price",
+        role: "이미 팔던 것에서 깎이던 몫을 이미 일하던 사람에게 더 주는 몫으로 뒤집어 읽습니다.",
+      },
+      {
+        id: "markup-set-by-elasticity",
+        role: "민감도의 역수가 틈을 정한다는 형태를 공급 쪽으로 옮겨 씁니다.",
+      },
+      {
+        id: "price-setter-faces-whole-demand",
+        role: "값을 고르는 쪽이 선 전체를 마주한다는 구조를 임금 쪽에 대응시킵니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "value-of-marginal-product",
+        role: "사람을 쓸 때 얻는 쪽의 내용을 정의합니다.",
+      },
+      {
+        id: "wage-at-marginal-product",
+        role: "사는 쪽이 여럿일 때 임금이 멈추는 자리를 정합니다.",
+      },
+      {
+        id: "monopsony-wage-gap",
+        role: "사는 쪽이 하나일 때 생기는 틈을 식으로 적습니다.",
+      },
+      {
+        id: "minimum-wage-prediction-split",
+        role: "같은 바닥이 두 경우에 반대 방향으로 작용함을 보입니다.",
+      },
+      {
+        id: "side-by-side-comparison",
+        role: "두 예측을 자료로 가르는 방법을 정의합니다.",
+      },
+      {
+        id: "neither-model-fits",
+        role: "한 설명의 반증이 다른 설명의 확인이 아니라는 규율을 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "value-of-marginal-product",
+        sectionId: "two-counts",
+        intuition:
+          "조리대와 계산대는 그대로인데 손만 늘면, 뒤에 온 사람은 앞사람이 비켜 줄 때를 기다리게 됩니다.",
+        workedExample:
+          "첫 사람은 한 시간에 12달러어치를 더 만들어 팔고, 둘째는 11, 셋째는 10, 다섯째는 8달러어치입니다.",
+        boundary:
+          "사람 자체의 값이 아니라 그 사람이 만들 물건이 팔리는 값에 매달려 있습니다. 물건 값이 내려가면 같은 사람의 몫도 함께 내려갑니다.",
+      },
+      {
+        id: "wage-at-marginal-product",
+        sectionId: "many-buyers",
+        intuition:
+          "비슷한 가게가 여럿이면 혼자 적게 부를 수도, 괜히 더 줄 이유도 없습니다. 정할 수 있는 것은 몇 명을 쓸지뿐입니다.",
+        workedExample:
+          "동네 임금이 8달러이면 한 명 더 써서 8달러보다 더 버는 자리까지만 씁니다. 다섯째가 8달러어치를 보태므로 다섯 명에서 멈추고, 8달러를 부르면 마침 다섯 명이 옵니다.",
+        boundary:
+          "가게가 임금을 흔들 수 없다는 전제 위에서만 성립합니다. 이 전제가 깨지는 경우가 바로 다음 개념입니다.",
+      },
+      {
+        id: "monopsony-wage-gap",
+        sectionId: "one-buyer",
+        intuition:
+          "한 사람을 더 부르려고 임금을 올리면 이미 일하던 사람도 그 임금을 받게 됩니다. 그 몫까지 세면 한 명 더 쓰는 값이 임금보다 비쌉니다.",
+        workedExample:
+          "네 명을 부르려면 7달러를 줘야 하는데 이미 일하던 세 사람도 6달러에서 7달러가 되므로 3달러가 더 나갑니다. 네 번째 사람에게 드는 값은 7이 아니라 10이고, 그가 보태는 몫은 9이므로 쓰지 않습니다.",
+        proofIdea:
+          "n명을 쓸 때 나가는 임금의 합은 w(n)·n입니다. 한 명 더 쓸 때 이 합이 늘어나는 폭은 새로 주는 w(n)에 이미 일하던 사람 수만큼 임금이 오른 몫 n·(dw/dn)을 더한 것입니다. 이 폭이 그 사람의 한계생산가치보다 작으면 쓰고 크면 쓰지 않으므로, 멈춘 자리에서 둘이 같아집니다. 양변을 w로 나누고 공급 민감도를 n과 w의 비로 정리하면 틈의 비율이 그 민감도의 역수로 남습니다.",
+        counterexample:
+          "사람마다 다른 임금을 줄 수 있으면 새로 부르는 사람에게만 더 주면 되므로 둘째 항이 사라지고 틈도 사라집니다. 사는 쪽이 하나라는 것만으로 틈이 생기는 것이 아니라, 모두에게 같은 임금을 준다는 조건이 함께 있어야 합니다.",
+        boundary:
+          "표는 한 명 단위로 끊어 본 것입니다. 이어서 풀면 3.3명·임금 6.3달러에서 멈추고 틈은 53%이며 그 자리의 민감도 1.9의 역수와 맞습니다.",
+      },
+      {
+        id: "minimum-wage-prediction-split",
+        sectionId: "two-predictions",
+        intuition:
+          "바닥을 걸면 그 구간에서 임금이 사람 수에 따라 오르지 않습니다. 한 명 더 쓴다고 나머지 임금이 오르지 않으니 더 줘야 하던 몫이 사라집니다.",
+        workedExample:
+          "바닥을 9달러로 걸면 여럿이 사던 쪽은 다섯 명에서 네 명으로 줄고, 하나가 사던 쪽은 세 명에서 네 명으로 늘어 둘 다 네 명이 됩니다.",
+        proofIdea:
+          "바닥 F가 걸린 구간에서는 한 명 더 쓰는 값이 w(n)+n·(dw/dn)이 아니라 F로 평평해집니다. 멈추는 조건이 v(n)=F가 되므로 사람 수는 F가 올라갈수록 단조로 줄어듭니다. 바닥이 없을 때의 출발점이 이 선보다 왼쪽에 있던 경우에만 F를 걸면 사람 수가 오른쪽으로, 즉 늘어나는 쪽으로 움직입니다.",
+        counterexample:
+          "바닥을 12달러로 올리면 사는 쪽이 하나인 경우에도 v(n)=12를 만족하는 n이 1이 되어 사람 수가 세 명보다 줄어듭니다. 늘어나는 것은 특정 구간 안에서만 성립합니다.",
+        boundary:
+          "어느 쪽 조건에 있는지는 셈으로 정할 수 없습니다. 이 분기 자체가 측정을 필요하게 만드는 이유입니다.",
+      },
+      {
+        id: "side-by-side-comparison",
+        sectionId: "what-happened",
+        intuition:
+          "바뀐 쪽만 보면 경기 때문인지 바뀐 것 때문인지 알 수 없습니다. 바뀌지 않은 비슷한 쪽을 옆에 두면 공통된 영향이 상쇄됩니다.",
+        workedExample:
+          "바닥을 올리지 않은 쪽은 가게당 2.16명 줄고 올린 쪽은 0.59명 늘어, 차이가 2.76명입니다. 두 쪽에 똑같이 걸린 불황은 이 차이에서 빠집니다.",
+        boundary:
+          "비교 집단이 실제로 비슷했는지가 결론을 떠받칩니다. 같은 집단 안에서 세게 영향받은 쪽과 거의 받지 않은 쪽을 다시 갈라 같은 방향이 나오는지 보는 것이 그 점검입니다.",
+      },
+      {
+        id: "neither-model-fits",
+        sectionId: "what-happened",
+        intuition:
+          "한 설명이 틀렸다는 것이 맞은편 설명이 옳다는 뜻은 아닙니다. 둘 다 틀릴 수 있습니다.",
+        workedExample:
+          "사람 수는 줄어야 한다는 예측과 어긋났지만, 값은 내려가야 한다는 반대편 예측과도 어긋나 3.2% 더 올랐습니다.",
+        boundary:
+          "이 상태를 어느 한쪽의 증거로 인용하지 않는 것과, 적용 범위를 업종·지역·시점으로 좁혀 적는 것이 같이 가야 합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 얻는 쪽",
+        relation: "사람을 쓸 때 얻는 것을 셉니다.",
+        concepts: ["value-of-marginal-product"],
+      },
+      {
+        label: "01 멈추는 자리 둘",
+        relation: "사는 쪽의 수에 따라 멈추는 자리가 갈립니다.",
+        concepts: ["wage-at-marginal-product", "monopsony-wage-gap"],
+      },
+      {
+        label: "02 갈라지는 예측",
+        relation: "같은 바닥이 두 경우에 반대로 작용합니다.",
+        concepts: ["minimum-wage-prediction-split"],
+      },
+      {
+        label: "03 재는 방법과 읽는 규율",
+        relation: "자료로 가르고, 가른 결과를 넘겨 읽지 않습니다.",
+        concepts: ["side-by-side-comparison", "neither-model-fits"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "사람을 한 명씩 늘릴 때 더 만들어 파는 몫이 줄어드는 이유와, 그 줄어듦이 없으면 무엇이 성립하지 않는지 쓰세요.",
+        answerChecklist: [
+          "설비와 자리는 그대로인데 손만 늘어남",
+          "기다리는 시간이 생겨 보태는 몫이 작아짐",
+          "줄어듦이 없으면 멈출 자리가 생기지 않음",
+          "사람을 무한히 쓰지 않는 이유가 사라짐",
+        ],
+        requiredConcepts: ["value-of-marginal-product"],
+        sectionId: "two-counts",
+      },
+      {
+        level: "basic",
+        question:
+          "비슷한 가게가 여럿일 때 가게 하나가 정할 수 있는 것과 정할 수 없는 것을 가르고, 임금 8달러에서 몇 명을 쓰는지 구하세요.",
+        answerChecklist: [
+          "임금은 정할 수 없고 사람 수만 정함",
+          "더 적게 부르면 아무도 오지 않음",
+          "다섯째가 8달러어치를 보탬",
+          "다섯 명에서 멈춤",
+        ],
+        requiredConcepts: ["wage-at-marginal-product"],
+        sectionId: "many-buyers",
+      },
+      {
+        level: "basic",
+        question:
+          "사는 가게가 하나뿐일 때 네 번째 사람을 쓰는 데 드는 값을 계산하고, 그 값이 임금과 다른 이유를 쓰세요.",
+        answerChecklist: [
+          "네 명을 부르려면 임금 7달러",
+          "이미 일하던 세 사람도 6에서 7로 오름",
+          "3달러가 더 나가 모두 10달러",
+          "이미 일하던 사람의 임금까지 오르기 때문",
+        ],
+        requiredConcepts: ["monopsony-wage-gap"],
+        sectionId: "one-buyer",
+      },
+      {
+        level: "basic",
+        question:
+          "사는 쪽이 여럿일 때와 하나일 때의 사람 수와 임금을 각각 적고, 두 경우를 한 문장으로 견주세요.",
+        answerChecklist: [
+          "여럿일 때 다섯 명·임금 8달러",
+          "하나일 때 세 명·임금 6달러",
+          "하나일 때가 사람도 적고 임금도 낮음",
+          "한계생산가치와 임금 사이에 틈이 남음",
+        ],
+        requiredConcepts: ["monopsony-wage-gap", "wage-at-marginal-product"],
+        sectionId: "one-buyer",
+      },
+      {
+        level: "basic",
+        question:
+          "바닥을 9달러로 걸었을 때 두 경우의 사람 수가 각각 어떻게 바뀌는지 쓰고, 방향이 반대인 이유를 쓰세요.",
+        answerChecklist: [
+          "여럿이 사던 쪽 다섯 명에서 네 명",
+          "하나가 사던 쪽 세 명에서 네 명",
+          "바닥이 걸리면 임금이 사람 수에 따라 오르지 않음",
+          "이미 일하던 사람에게 더 줘야 하던 몫이 사라짐",
+        ],
+        requiredConcepts: ["minimum-wage-prediction-split"],
+        sectionId: "two-predictions",
+      },
+      {
+        level: "basic",
+        question:
+          "한쪽만 바뀐 자리를 찾아 두 변화를 견주는 방법이 무엇을 상쇄해 주는지, 그리고 그 방법의 신뢰가 무엇에 달려 있는지 쓰세요.",
+        answerChecklist: [
+          "두 쪽에 똑같이 걸리는 경기와 계절이 상쇄됨",
+          "차이를 바뀐 것의 몫으로 읽음",
+          "비교 집단이 실제로 비슷한지에 달려 있음",
+          "같은 집단 안에서 다시 갈라 보는 것이 점검 방법",
+        ],
+        requiredConcepts: ["side-by-side-comparison"],
+        sectionId: "what-happened",
+      },
+      {
+        level: "advanced",
+        question:
+          "n명을 쓸 때의 임금 합에서 출발해 사는 쪽이 하나일 때의 멈추는 조건을 유도하고, 틈이 민감도의 역수가 됨을 보이세요.",
+        answerChecklist: [
+          "임금 합은 w(n)·n",
+          "한 명 더 쓸 때 늘어나는 폭은 w(n) + n·(dw/dn)",
+          "그 폭이 한계생산가치와 같아지는 자리에서 멈춤",
+          "양변을 w로 나누면 틈이 공급 민감도의 역수",
+        ],
+        requiredConcepts: ["monopsony-wage-gap"],
+        sectionId: "one-buyer",
+      },
+      {
+        level: "advanced",
+        question:
+          "사람마다 다른 임금을 줄 수 있으면 틈이 사라지는 이유를 설명하고, 이 사실이 수요독점의 어떤 조건을 드러내는지 쓰세요.",
+        answerChecklist: [
+          "새로 부르는 사람에게만 더 주면 됨",
+          "이미 일하던 사람의 임금이 오르지 않음",
+          "한 명 더 쓰는 값이 그때 주는 임금과 같아짐",
+          "사는 쪽이 하나라는 것만으로는 부족하고 같은 임금 조건이 함께 필요",
+        ],
+        requiredConcepts: ["monopsony-wage-gap"],
+        sectionId: "one-buyer",
+      },
+      {
+        level: "advanced",
+        question:
+          "바닥을 계속 올리면 사는 쪽이 하나인 경우에도 사람 수가 줄어드는 지점이 옵니다. 그 이유를 멈추는 조건으로 설명하세요.",
+        answerChecklist: [
+          "바닥이 걸린 구간에서는 멈추는 조건이 v(n)=F",
+          "F가 오를수록 n이 단조로 줄어듦",
+          "늘어나는 것은 출발점이 그 선보다 왼쪽일 때뿐",
+          "바닥 12달러에서는 세 명보다 적어짐",
+        ],
+        requiredConcepts: [
+          "minimum-wage-prediction-split",
+          "monopsony-wage-gap",
+        ],
+        sectionId: "two-predictions",
+      },
+      {
+        level: "advanced",
+        question:
+          "사람 수가 줄지 않았다는 결과만으로 사는 쪽이 하나였다고 말할 수 없는 이유를, 같은 측정의 값 결과와 함께 쓰세요.",
+        answerChecklist: [
+          "사는 쪽이 하나여서 더 썼다면 더 만들어 값이 내려가야 함",
+          "실제로는 값이 3.2% 더 올랐음",
+          "한 설명의 반증이 다른 설명의 확인이 아님",
+          "두 설명 모두 부족하다는 것이 결과",
+        ],
+        requiredConcepts: ["neither-model-fits", "monopsony-wage-gap"],
+        sectionId: "what-happened",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "David Card · Alan B. Krueger, “Minimum Wages and Employment: A Case Study of the Fast-Food Industry in New Jersey and Pennsylvania” (1994)",
+        href: "https://davidcard.berkeley.edu/papers/njmin-aer.pdf",
+        problem:
+          "임금의 바닥을 올리면 일자리가 준다는 예측은 사는 쪽이 여럿이라는 전제 위에 서 있는데, 그 전제가 실제로 성립하는지를 가릴 자료가 부족했습니다. 전국 단위 시계열 비교는 경기와 뒤섞여 바닥의 몫만 떼어 내기 어려웠습니다.",
+        contribution:
+          "한쪽 주만 바닥을 올리고 바로 옆 주는 그대로 둔 시점을 잡아, 같은 업종 가게 410곳을 인상 직전과 7~8개월 뒤 두 번 조사했습니다. 두 주의 고용 변화 차이로 바닥의 몫을 읽었고, 같은 주 안에서 처음 시작임금이 낮아 반드시 올려야 했던 가게와 이미 높게 주던 가게를 다시 갈라 비교 집단의 타당성을 점검했습니다. 고용과 함께 한 끼 값도 재어, 고용 결과만으로는 가릴 수 없는 설명들을 추가로 걸러 냈습니다.",
+        assumptions:
+          "바닥 말고는 두 주의 같은 업종 가게가 비슷한 흐름을 탄다고 보고, 계절 변동이 두 쪽에서 비슷해 차이를 낼 때 상쇄된다고 둡니다. 정규 환산 인원은 시간제 한 사람을 반 사람으로 세며, 문 닫은 가게의 인원은 0으로 둡니다.",
+        evidenceScope:
+          "1992년 미국 뉴저지주와 펜실베이니아주 동부의 패스트푸드 가게 410곳, 한 번의 인상(시간당 4.25→5.05달러), 조사 두 차례(1992년 2~3월과 11~12월)입니다. 저자 공개본 PDF를 내려받아 읽었고, 표 3(780쪽)·표 7(788쪽)의 값과 772·792쪽의 인용 문장은 해당 쪽 이미지를 직접 열어 대조했습니다.",
+        notClaim:
+          "이 결과는 수요독점이 확인됐다는 뜻이 아닙니다. 저자들은 792쪽에서 이 발견들이 경쟁 모형으로도, 수요독점이나 균형 탐색 모형으로도 설명하기 어렵다고 적었고, 791쪽에서는 수요독점을 직접 시험한 비교에서도 차이를 찾지 못했다고 적습니다. 또 한 업종·두 주·한 번의 인상에서 잰 것이므로 모든 노동이나 모든 인상 폭으로 늘릴 수 없고, 이 글은 1994년 논문 안에서 저자들이 보고한 범위까지만 싣습니다.",
+        sectionId: "what-happened",
+      },
+    ],
+  },
 };
