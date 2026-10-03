@@ -7942,4 +7942,38 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "세 칸의 사다리와 답의 네 꼴, 10·5·2와 5·3·2 금액, 종 값의 절반과 소 값의 4분의 1, 채찍 60대, 품삯과 임차료의 출처. 1마나 = 60세켈 환산은 같은 판 색인의 주. Project Gutenberg 전사본(eBook 17150)으로 읽었고 쪽수 대신 조항 번호만 적음",
     },
   ],
+  "inference-from-sources/ruins-mislead": [
+    {
+      kind: "핵심 사료",
+      label:
+        "Thucydides, 『History of the Peloponnesian War』, Richard Crawley 영역, 1권 10절",
+      href: "https://www.gutenberg.org/ebooks/7142",
+      note: "두 도시가 폐허가 되는 사고실험과 '두 배'라는 표현, 겉모습과 힘을 따로 따지라는 규칙, 배 1,200척·120명·50명과 평균을 잡으면 대단치 않다는 결론의 출처. Project Gutenberg 전사본(eBook 7142)으로 읽었고 쪽수 대신 권·절 번호만 적음",
+    },
+  ],
+  "inference-from-sources/the-gap-was-made": [
+    {
+      kind: "핵심 사료",
+      label:
+        "C. H. W. Johns 영역, 『The Oldest Code of Laws in the World』 (T. & T. Clark, 1903) · 머리말, 65조 뒤 편집자 주, 본문 끝의 추가 세 조항",
+      href: "https://www.gutenberg.org/ebooks/17150",
+      note: "돌기둥의 상태와 지워진 다섯 단, 35개 조항이라는 분량 추정과 100조부터의 재시작, 사라진 부분의 주제 목록, 아시리아 사본에서 온 세 조항의 처리, 번역하지 않은 700행과 그 이유의 출처. Project Gutenberg 전사본(eBook 17150)으로 읽음",
+    },
+  ],
+  "inference-from-sources/naming-the-past": [
+    {
+      kind: "핵심 사료",
+      label:
+        "C. H. W. Johns 영역, 『The Oldest Code of Laws in the World』 (T. & T. Clark, 1903) · 표제, 본문 끝 문장, 머리말의 전승 서술",
+      href: "https://www.gutenberg.org/ebooks/17150",
+      note: "글이 자기를 올바름의 판결들이라 부르는 문장, 바빌로니아 학교에서 열두 장으로 나뉘고 Ninu ilu sirum으로 불린 일, 아시리아에서의 이름, 그리고 이 판의 표제와 조항 번호의 출처. Project Gutenberg 전사본(eBook 17150)으로 읽음",
+    },
+    {
+      kind: "비교 사료",
+      label:
+        "Thucydides, 『History of the Peloponnesian War』, Richard Crawley 영역, 1권 22절",
+      href: "https://www.gutenberg.org/ebooks/7142",
+      note: "저자가 방법을 적어 두면 독자가 신뢰 범위를 추측하지 않아도 된다는 기준을, 읽는 쪽에도 적용하기 위해 다시 가져온 자리",
+    },
+  ],
 };
