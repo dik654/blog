@@ -7642,4 +7642,8 @@ export const ARTICLE_EVIDENCE: Readonly<
   "circuits/resistance-and-power-dissipation": [
     { kind: "공식 문서", label: "Vishay D/CRCW e3, document 20035 (14-Apr-2026), 1–2쪽", href: "https://www.vishay.com/docs/20035/dcrcwe3.pdf", note: "D11/CRCW0603의 저항 범위, 표준 0.10 W와 확장 0.125 W, 열 조건을 공식 PDF에서 확인했다. 회로 숫자는 가정이다." },
   ],
+  "circuits/storage-elements-and-transients": [
+    { kind: "공개 강의", label: "MIT OCW 6.002 Lecture 12, ‘Capacitors and First-Order Systems’, 4–5·10–11쪽", href: "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/84f4b553fc6a1ddd7007465041c4e213_6002_l12.pdf", note: "축전기 q=Cv, i=C dv/dt와 RC 지수 응답·초기 조건을 공식 강의안에서 확인했다. 수치는 글의 가정이다." },
+    { kind: "공개 강의", label: "MIT OCW 8.02 Chapter 11, ‘Inductance’ (2007), 10·17–19쪽", href: "https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2007/f5c35823a7faac0d893754ab42804e7e_chap11inductance.pdf", note: "½LI², RL 상승식과 L/R 시간 상수·자기장 에너지 장부를 공식 PDF에서 확인했다. 1 H는 가정이다." },
+  ],
 };

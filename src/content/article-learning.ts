@@ -86846,4 +86846,48 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "Vishay, D/CRCW e3 Standard Thick Film Chip Resistors, document 20035, revision 14-Apr-2026", href: "https://www.vishay.com/docs/20035/dcrcwe3.pdf", problem: "가상 회로의 부품별 계산 전력을 실제 저항의 정격·열 조건과 어떻게 대조할지 보여 줍니다.", contribution: "1쪽은 D11/CRCW0603 e3의 저항 범위와 기판 열저항·표면 온도 조건, 2쪽은 표준 P70 0.10 W와 확장 0.125 W를 구분합니다.", assumptions: "데이터시트의 표준 동작 모드와 70 °C 기준을 예시로 삼습니다. 본문 12 V 망은 제품 시험 결과가 아닙니다.", evidenceScope: "공식 PDF 1–2쪽의 표를 직접 확인했습니다. 51.84 mW와 144 mW는 가상 회로에서 계산했습니다.", notClaim: "0.10 W 아래라는 사실만으로 모든 주변 온도와 기판에서 안전하다고 결론내리지 않습니다.", sectionId: "rating" },
     ],
   },
+  "circuits/storage-elements-and-transients": {
+    coreIdea: "같은 가상 5 V·1 kΩ에 1 µF 축전기 또는 1 H 인덕터 하나를 더해 RC·RL 시간 상수 1 ms를 비교합니다. 축전기는 전압, 인덕터는 전류를 이어 가고 지수 응답의 1τ는 최종값의 63.2%임을 수치로 확인합니다.",
+    assumedKnowledge: [
+      { id: "series-resistance-equivalent", role: "전원에서 저장 부품으로 가는 길의 직렬 저항을 둡니다." },
+      { id: "ohmic-resistance", role: "남은 전압 차이가 저항 전류를 정합니다." },
+      { id: "kirchhoff-voltage-law", role: "전원 5 V를 저항·저장 부품의 전압으로 나눕니다." },
+      { id: "electrical-power-balance", role: "열과 저장 에너지를 구분합니다." },
+    ],
+    introducedHere: [
+      { id: "capacitor-voltage-state", role: "전하와 전압·전류·저장 에너지의 관계를 설명합니다." },
+      { id: "rc-step-time-constant", role: "남은 전압 차이가 RC 시간으로 줄어듦을 계산합니다." },
+      { id: "inductor-current-state", role: "자기장 에너지와 이어지는 전류를 설명합니다." },
+      { id: "rl-step-time-constant", role: "남은 전류 차이가 L/R 시간으로 줄어듦을 계산합니다." },
+      { id: "single-storage-boundary", role: "시간 상수가 회로 전체 경로의 값이며 모델 경계를 가짐을 확인합니다." },
+    ],
+    conceptExplanations: [
+      { id: "capacitor-voltage-state", sectionId: "capacitor", intuition: "두 판에 모인 전하가 현재 전압을 남겨 다음 순간의 시작점을 정합니다.", workedExample: "처음 0 V인 1 µF를 5 V까지 채우면 5 µC와 12.5 µJ가 남습니다.", boundary: "유한 전류에서 즉시 5 V가 될 수 없고 실제 누설 때문에 전압이 영원히 남지도 않습니다.", scientificGrounding: { observable: "축전기 양단 전압과 충전 전류의 시간 기록, 축적된 전하", unitsAndDimensions: "전하 C, 전압 V, 정전용량 F=C/V, 에너지 J입니다.", modelAssumptions: "일정한 1 µF 용량과 처음 0 V, 누설 없는 이상 두 판을 둡니다.", measurementExample: "5 V 도착 때 5 µC와 ½×1 µF×25 V²=12.5 µJ를 구합니다.", invalidConditions: "누설·비선형 용량·큰 직렬 저항·유전체 파괴는 이상식을 벗어납니다.", referenceFrame: "접지 0 V에 대한 축전기 윗판 전압을 양수로, 전류는 윗판으로 들어오는 방향을 양수로 둡니다." } },
+      { id: "rc-step-time-constant", sectionId: "rc", intuition: "5 V까지 남은 차이가 작아질수록 흐르는 전류도 줄어듭니다.", workedExample: "1 kΩ×1 µF=1 ms이고 이때 전압은 3.16 V, 전류는 1.84 mA입니다.", boundary: "1τ는 충전 완료가 아니라 남은 오차가 약 36.8%가 된 때입니다.", scientificGrounding: { observable: "스위치를 닫은 뒤 축전기 전압과 직렬 저항 전류의 시간 곡선", unitsAndDimensions: "RΩ×CF=s, 전압 V, 전류 A로 시간 상수를 검산합니다.", modelAssumptions: "5 V 이상 계단과 일정한 1 kΩ·1 µF, 처음 0 V를 둡니다.", measurementExample: "1 ms에서 5(1−e^-1)=3.16 V와 (5−3.16)V/1 kΩ=1.84 mA입니다.", invalidConditions: "입력 상승 시간이 길거나 용량·저항이 비선형이면 단일 지수식과 달라집니다.", referenceFrame: "스위치를 닫은 순간 t=0, 접지 0 V를 전압 기준으로 둡니다." } },
+      { id: "inductor-current-state", sectionId: "inductor", intuition: "감은 선의 자기장에 에너지가 있어 전류가 직전 값에서 이어집니다.", workedExample: "가상 1 H에 5 mA가 흐르면 ½×1 H×(5 mA)²=12.5 µJ입니다.", boundary: "유한 전압에서 전류는 즉시 점프하지 않지만 권선 저항과 코어 포화가 실제 한계입니다.", scientificGrounding: { observable: "인덕터 전류의 시간 변화와 양단 전압 및 자기장 에너지", unitsAndDimensions: "L의 단위 H=V·s/A이고 ½LI²의 단위는 J입니다.", modelAssumptions: "일정한 1 H와 처음 0 mA인 이상 인덕터를 둡니다.", measurementExample: "최종 5 mA에서 12.5 µJ와 정상 상태 인덕터 전압 0 V를 구합니다.", invalidConditions: "코어 포화·권선 저항·기생 용량·절연 파괴를 이상 모형에 넣지 않았습니다.", referenceFrame: "전원에서 저항과 인덕터를 지나 접지로 흐르는 전류를 양수로 둡니다." } },
+      { id: "rl-step-time-constant", sectionId: "inductor", intuition: "전류가 커질수록 저항이 더 많은 전압을 가져가 변화 전압은 줄어듭니다.", workedExample: "1 H/1 kΩ=1 ms이고 전류는 0에서 1 ms 뒤 약 3.16 mA로 갑니다.", boundary: "1 H는 교육용 가정이며 실제 코일의 권선 저항·포화와 절연 조건을 반영하지 않습니다.", scientificGrounding: { observable: "스위치 뒤 직렬 전류와 인덕터·저항 양끝 전압의 시간 곡선", unitsAndDimensions: "H/Ω=s, 전류 A, 전압 V로 5=Ri+L di/dt를 맞춥니다.", modelAssumptions: "이상 5 V 계단·1 kΩ·1 H와 초기 0 mA를 둡니다.", measurementExample: "1 ms에서 5 mA×(1−e^-1)=3.16 mA이고 인덕터 전압은 1.84 V입니다.", invalidConditions: "저항과 인덕턴스가 전류·온도에 의존하거나 코어가 포화되면 지수식이 부족합니다.", referenceFrame: "스위치를 닫은 시각 t=0, 전원→저항→인덕터→접지 방향으로 전류를 셉니다." } },
+      { id: "single-storage-boundary", sectionId: "boundary", intuition: "저장된 상태가 변하는 시간은 저장 부품과 이를 채우는 경로가 함께 정합니다.", workedExample: "R을 2 kΩ으로 늘리면 RC는 2 ms, L/R은 0.5 ms이며 RL 최종 전류는 2.5 mA입니다.", boundary: "저장 요소가 둘이거나 실제 기생 성분이 크면 단일 시간 상수 하나로 설명할 수 없습니다.", scientificGrounding: { observable: "저항 변경 전후의 축전기 전압·인덕터 전류 시간 곡선", unitsAndDimensions: "RC와 L/R은 모두 초 s이고 RC 전압은 V, RL 전류는 A입니다.", modelAssumptions: "서로 다른 단일 저장 부품 회로에서 R만 두 배로 바꿉니다.", measurementExample: "RC 1→2 ms, RL 1→0.5 ms와 최종 5→2.5 mA를 비교합니다.", invalidConditions: "RLC 2상태 회로·분포 배선·소자 비선형에서는 이 단순 비교를 확장하지 않습니다.", referenceFrame: "두 가상 회로 모두 접지 0 V와 스위치 t=0을 기준으로 각자 측정합니다." } },
+    ],
+    conceptStages: [
+      { label: "01 전압 상태", relation: "전하가 남긴 전압과 RC 충전 속도를 연결합니다.", concepts: ["capacitor-voltage-state", "rc-step-time-constant"] },
+      { label: "02 전류 상태", relation: "자기장이 남긴 전류와 RL 상승 속도를 연결합니다.", concepts: ["inductor-current-state", "rl-step-time-constant"] },
+      { label: "03 회로 경계", relation: "저항이 시간에 미치는 반대 효과와 실제 모델 한계를 확인합니다.", concepts: ["single-storage-boundary"] },
+    ],
+    exercises: [
+      { level: "basic", question: "가정한 5 V·1 kΩ·1 µF RC 회로의 시간 상수는?", answerChecklist: ["RC", "1 ms", "RΩ×CF=s"], requiredConcepts: ["rc-step-time-constant"], sectionId: "rc" },
+      { level: "basic", question: "축전기 전압은 스위치 직후·1τ·3τ·오래 뒤 각각 얼마입니까?", answerChecklist: ["0 V", "3.16 V", "4.75 V", "5 V에 점근"], requiredConcepts: ["capacitor-voltage-state", "rc-step-time-constant"], sectionId: "rc" },
+      { level: "basic", question: "RC의 초기 전류와 1τ 뒤 전류는?", answerChecklist: ["5 mA", "1.84 mA", "남은 저항 전압으로 계산"], requiredConcepts: ["rc-step-time-constant"], sectionId: "rc" },
+      { level: "basic", question: "축전기가 이어 가는 상태와 5 V에 저장한 최종 에너지는?", answerChecklist: ["전압", "½CV²", "12.5 µJ"], requiredConcepts: ["capacitor-voltage-state"], sectionId: "capacitor" },
+      { level: "basic", question: "5 V·1 kΩ·1 H RL 회로의 시간 상수와 최종 전류는?", answerChecklist: ["L/R=1 ms", "5 V/1 kΩ=5 mA"], requiredConcepts: ["rl-step-time-constant"], sectionId: "inductor" },
+      { level: "basic", question: "RL의 스위치 직후·1τ·오래 뒤 전류는?", answerChecklist: ["0 mA", "3.16 mA", "5 mA에 점근"], requiredConcepts: ["rl-step-time-constant", "inductor-current-state"], sectionId: "inductor" },
+      { level: "advanced", question: "축전기 전압이 즉시 5 V로 뛴다는 주장에 i=C dv/dt로 답하세요.", answerChecklist: ["유한 전압 변화의 순간 도약", "무한한 순간 전류 필요", "유한 1 kΩ 경로와 충돌"], requiredConcepts: ["capacitor-voltage-state"], sectionId: "capacitor" },
+      { level: "advanced", question: "RC에서 1τ·3τ의 남은 오차와 1% 이내 도착 시간을 계산하세요.", answerChecklist: ["e^-1=36.8%", "e^-3≈5%", "ln100≈4.605τ"], requiredConcepts: ["rc-step-time-constant"], sectionId: "rc" },
+      { level: "advanced", question: "인덕터 전류가 즉시 5 mA로 뛸 수 없는 이유와 최종 에너지는?", answerChecklist: ["v=L di/dt", "유한 전압에서 순간 유한 전류 점프 불가", "12.5 µJ"], requiredConcepts: ["inductor-current-state"], sectionId: "inductor" },
+      { level: "advanced", question: "두 회로의 R을 2 kΩ으로 키우면 각 시간 상수와 RL 최종 전류는?", answerChecklist: ["RC 2 ms", "RL 0.5 ms", "RL 최종 2.5 mA", "두 회로는 별개"], requiredConcepts: ["single-storage-boundary", "rc-step-time-constant", "rl-step-time-constant"], sectionId: "boundary" },
+    ],
+    papers: [
+      { title: "MIT OpenCourseWare 6.002, Lecture 12, ‘Capacitors and First-Order Systems’ (Fall 2000 자료)", href: "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/84f4b553fc6a1ddd7007465041c4e213_6002_l12.pdf", problem: "저장 전하와 유한한 충전 전류가 왜 축전기 전압을 시간에 따라 바꾸는지 설명합니다.", contribution: "4–5쪽의 q=Cv·i=C dv/dt·에너지와 10–11쪽의 RC 해·초기 조건·시간 상수를 제시합니다.", assumptions: "이상 선형 축전기, 일정 R, 계단 입력과 주어진 초기 전압입니다.", evidenceScope: "MIT 공식 PDF 해당 쪽의 식과 그림을 대조했습니다. 본문의 5 V·1 kΩ·1 µF는 별도 가정입니다.", notClaim: "강의안이 본문의 1 ms·3.16 V 회로를 실험하거나 모든 실제 축전기의 누설을 0이라고 주장한 것은 아닙니다.", sectionId: "rc" },
+      { title: "MIT OpenCourseWare 8.02, Chapter 11, ‘Inductance’ (Spring 2007)", href: "https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2007/f5c35823a7faac0d893754ab42804e7e_chap11inductance.pdf", problem: "코일의 전류가 이전 상태에서 이어지며 얼마나 빨리 최종값에 닿는지 설명합니다.", contribution: "10쪽 식 (11.3.4)의 ½LI², 17–18쪽 식 (11.4.5)–(11.4.8)의 RL 상승식과 τ=L/R, 19쪽의 저항 열·자기장 저장을 구분합니다.", assumptions: "이상 인덕턴스와 저항, 계단 전원, 처음 전류 0입니다.", evidenceScope: "MIT 공식 PDF 10·17–19쪽의 식과 조건을 대조했습니다. 1 H·5 V·1 kΩ은 별도 가정입니다.", notClaim: "1 H 코일이 이 회로에서 실제로 1 ms를 측정했다거나 권선 저항·코어 포화가 없다는 뜻이 아닙니다.", sectionId: "inductor" },
+    ],
+  },
 };

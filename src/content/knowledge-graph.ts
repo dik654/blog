@@ -25433,6 +25433,11 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "resistor-joule-heating": { id: "resistor-joule-heating", domain: "physics", label: "각 저항의 전류와 전압이 그 부품의 열을 정한다", aliases: ["Joule heating", "저항 발열"], definition: "저항의 직류 정상 상태에서 소비 전력은 P=VI=I²R=V²/R입니다. 12 V 가상 망에서 오른쪽을 1 kΩ으로 바꾸면 첫 1 kΩ은 (7.2 mA)²×1 kΩ=51.84 mW, 두 갈래는 11.52와 23.04 mW입니다. 합은 전원 86.4 mW와 같습니다. 부품별 I를 써야 합니다.", canonicalHref: "/electronics/circuits/resistance-and-power-dissipation#heat" },
   "resistor-power-rating": { id: "resistor-power-rating", domain: "physics", label: "저항값과 허용 발열 전력은 서로 다른 사양이다", aliases: ["resistor rated dissipation", "저항 전력 정격"], definition: "Vishay D11/CRCW0603 e3 데이터시트 2026년 4월 개정의 표준 P70은 0.10 W이며 확장 동작은 0.125 W입니다. 가상 1 kΩ 첫 부품의 51.84 mW는 표준 정격 아래지만, 12 V 직결의 144 mW는 두 정격을 넘습니다. 실제 허용 발열은 기판의 열저항과 주변 온도에도 달립니다.", canonicalHref: "/electronics/circuits/resistance-and-power-dissipation#rating" },
   "resistor-tolerance-thermal-boundary": { id: "resistor-tolerance-thermal-boundary", domain: "physics", label: "허용차와 열 조건을 넣으면 공칭 회로의 숫자가 달라진다", aliases: ["resistor tolerance and thermal", "저항 허용차"], definition: "1 kΩ은 공칭값이며 ±1%와 ±5% 같은 허용차 선택지가 있습니다. 실제 값이 달라지면 직렬·병렬 합, 전류, 소비 전력이 함께 변합니다. 전력 정격도 부품 온도와 기판 열저항을 확인해야 하므로 공칭 전류·정격 숫자 하나로 모든 장착 조건의 안전성을 보장하지 않습니다.", canonicalHref: "/electronics/circuits/resistance-and-power-dissipation#limits" },
+  "capacitor-voltage-state": { id: "capacitor-voltage-state", domain: "physics", label: "축전기 전압은 저장 전하가 정하는 이어지는 상태다", aliases: ["capacitor state", "축전기 전압 상태"], definition: "이상적인 일정 용량 C에서 q=Cv, i=C dv/dt이고 저장 에너지는 ½Cv²입니다. 1 µF가 5 V에 도착하면 전하 5 µC와 에너지 12.5 µJ를 담습니다. 유한 전류에서는 전압이 순식간에 유한한 폭으로 뛰지 않습니다. 누설·기생 저항을 뺀 근사입니다.", canonicalHref: "/electronics/circuits/storage-elements-and-transients#capacitor" },
+  "rc-step-time-constant": { id: "rc-step-time-constant", domain: "physics", label: "RC 회로의 남은 전압 차이는 RC 시간으로 지수 감소한다", aliases: ["RC transient", "RC time constant"], definition: "5 V 계단을 1 kΩ과 처음 0 V인 1 µF 축전기에 걸면 (5−v)/R=C dv/dt입니다. τ=RC=1 ms이고 v(t)=5(1−e^(−t/τ)) V입니다. 1 ms 뒤 약 3.16 V와 1.84 mA, 3 ms 뒤 약 4.75 V와 0.25 mA입니다. τ는 완성 시각이 아닙니다.", canonicalHref: "/electronics/circuits/storage-elements-and-transients#rc" },
+  "inductor-current-state": { id: "inductor-current-state", domain: "physics", label: "인덕터 전류는 자기장 에너지가 정하는 이어지는 상태다", aliases: ["inductor state", "인덕터 전류 상태"], definition: "이상 인덕터에서 v=L di/dt이고 저장 에너지는 ½Li²입니다. 1 H에 5 mA가 흐르면 12.5 µJ를 저장합니다. 유한한 전압으로 전류를 단 한순간에 유한 폭으로 바꿀 수 없습니다. 권선 저항·코어 포화·기생 용량은 다른 조건입니다.", canonicalHref: "/electronics/circuits/storage-elements-and-transients#inductor" },
+  "rl-step-time-constant": { id: "rl-step-time-constant", domain: "physics", label: "RL 회로의 남은 전류 차이는 L/R 시간으로 지수 감소한다", aliases: ["RL transient", "RL time constant"], definition: "5 V 계단과 1 kΩ·1 H의 가상 직렬 회로는 5=Ri+L di/dt이고 τ=L/R=1 ms입니다. 처음 0에서 시작한 전류는 1 ms 뒤 3.16 mA, 오래 지나 5 mA입니다. 축전기와 같은 63.2%라도 이어지는 상태는 전압이 아니라 전류입니다.", canonicalHref: "/electronics/circuits/storage-elements-and-transients#inductor" },
+  "single-storage-boundary": { id: "single-storage-boundary", domain: "physics", label: "시간 상수는 저장 부품과 에너지가 오가는 경로의 조합이다", aliases: ["first-order circuit boundary", "시간 상수 경계"], definition: "같은 5 V·1 kΩ에서 1 µF와 1 H를 각각 넣으면 RC와 L/R이 우연히 모두 1 ms입니다. R을 2 kΩ으로 키우면 RC는 2 ms, L/R은 0.5 ms이며 RL 최종 전류도 2.5 mA로 바뀝니다. 저장 부품 둘이나 비선형·기생 성분이 있으면 지수 하나가 부족합니다.", canonicalHref: "/electronics/circuits/storage-elements-and-transients#boundary" },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47317,6 +47322,14 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "electrical-power-balance", to: "resistor-joule-heating", relation: "prerequisite", reason: "세 저항의 열 합을 전원의 공급 전력과 검산합니다." },
   { from: "resistor-joule-heating", to: "resistor-power-rating", relation: "produces", reason: "계산한 부품별 전력을 실제 허용 전력과 비교합니다." },
   { from: "resistor-power-rating", to: "resistor-tolerance-thermal-boundary", relation: "constrains", reason: "정격은 주변 온도와 기판 열저항 조건을 함께 확인해야 합니다." },
+  { from: "series-resistance-equivalent", to: "capacitor-voltage-state", relation: "prerequisite", reason: "저장 부품을 충전하는 길의 저항과 전압 강하를 구분합니다." },
+  { from: "electrical-power-balance", to: "capacitor-voltage-state", relation: "prerequisite", reason: "저항의 열과 축전기에 잠시 저장된 에너지를 나눕니다." },
+  { from: "capacitor-voltage-state", to: "rc-step-time-constant", relation: "produces", reason: "전류 i=C dv/dt를 저항 전류와 같게 놓아 변화 속도를 구합니다." },
+  { from: "ohmic-resistance", to: "rc-step-time-constant", relation: "prerequisite", reason: "남은 전압 차이를 저항으로 나눈 충전 전류가 필요합니다." },
+  { from: "kirchhoff-voltage-law", to: "inductor-current-state", relation: "prerequisite", reason: "전원 전압을 저항 강하와 인덕터 변화 전압에 나눕니다." },
+  { from: "inductor-current-state", to: "rl-step-time-constant", relation: "produces", reason: "전류 변화에 필요한 전압 L di/dt를 저항 강하와 연결합니다." },
+  { from: "rc-step-time-constant", to: "single-storage-boundary", relation: "constrains", reason: "RC를 바꿔 시간이 어떻게 변하는지 확인합니다." },
+  { from: "rl-step-time-constant", to: "single-storage-boundary", relation: "constrains", reason: "L/R을 바꿔 RC와 반대 방향의 변화를 확인합니다." },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

@@ -13,6 +13,12 @@ const circuits: Category = {
       description: "전압·전류·저항과 보존 법칙으로 한 회로를 처음부터 계산합니다.",
       icon: "⚡",
     },
+    {
+      slug: "circuit-dynamics",
+      name: "시간에 따라 바뀌는 회로",
+      description: "저장된 전하와 자기장이 전압·전류의 변화를 늦추는 이유를 계산합니다.",
+      icon: "⏱️",
+    },
   ],
   articles: circuitsArticles,
 };

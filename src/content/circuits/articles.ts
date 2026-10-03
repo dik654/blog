@@ -32,4 +32,18 @@ export const circuitsArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/circuits/resistance-and-power-dissipation"),
   },
+  {
+    slug: "storage-elements-and-transients",
+    title: "전하와 자기장을 담으면 변화에 시간이 걸립니다",
+    subcategory: "circuit-dynamics",
+    sections: [
+      { id: "overview", title: "스위치를 닫아도 출력은 한순간에 도착하지 않습니다" },
+      { id: "capacitor", title: "두 판 사이에는 전하가 쌓인 만큼 전압이 남습니다" },
+      { id: "rc", title: "5 V까지 남은 차이가 충전 속도를 정합니다" },
+      { id: "inductor", title: "감은 선에는 전류가 만든 자기장 에너지가 남습니다" },
+      { id: "boundary", title: "같은 1 ms라도 저항을 바꾸면 반대로 움직입니다" },
+      { id: "handoff", title: "주기적으로 흔들면 지연을 다른 언어로 읽습니다" },
+    ],
+    component: () => import("@/pages/articles/circuits/storage-elements-and-transients"),
+  },
 ];
