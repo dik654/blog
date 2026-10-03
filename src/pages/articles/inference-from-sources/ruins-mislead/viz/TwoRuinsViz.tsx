@@ -97,7 +97,7 @@ export default function TwoRuinsViz() {
                         ? "실제로는 전체를 이끎"
                         : s >= 3
                           ? "실제보다 커 보임"
-                          : "실제 힘은 보이는 것만큼"}
+                          : "겉모습만으로 힘을 잴 수 없음"}
                     </text>
                   </g>
                 );

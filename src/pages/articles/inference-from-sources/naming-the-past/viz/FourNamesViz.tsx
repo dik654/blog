@@ -21,7 +21,7 @@ const NAMES = [
   },
   {
     color: SCHOOL,
-    when: "이천 년도 더 지난 뒤",
+    when: "훗날 학교에서",
     name: "Ninu ilu sirum",
     how: "바빌로니아 학교의 교재가 되며 첫 단어로 불림",
   },
@@ -44,24 +44,24 @@ export default function FourNamesViz() {
   const s = scenes.active;
 
   const NOTES = [
-    `돌에 새겨진 글은 끝에서 자기를 한 번 부릅니다. 강한 왕 함무라비가 확정하여 이 땅이 확실한 인도와 은혜로운 다스림을 얻게 한 올바름의 판결들이라는 것입니다. 판결이라는 말은 이미 내려진 판단의 모음을 가리킵니다.`,
-    `이천 년도 더 지난 뒤에 이 글은 바빌로니아 학교의 교재가 됩니다. 그러면서 열두 장쯤으로 나뉘고, 셈 지방의 관습대로 첫머리 단어를 따서 Ninu ilu sirum이라 불립니다. 이름이 내용에서 오지 않고 첫 줄에서 온 경우입니다.`,
+    `돌에 새겨진 글은 끝에서 자기를 한 번 부릅니다. 강한 왕 함무라비가 확정하여 이 땅이 확실한 인도와 은혜로운 다스림을 얻게 한 올바름의 판결들이라는 것입니다. 이 이름은 구체적 상황에 내려진 판단을 떠올리게 합니다.`,
+    `1903년 머리말은 이 글이 훗날 바빌로니아 학교의 교재가 되며 열두 장쯤으로 나뉘고, 첫머리 단어를 따서 Ninu ilu sirum이라 불렸다고 전합니다. 학교 판본의 연대를 따로 대조하지 않았으므로 머리말의 시간 간격은 여기서 채택하지 않습니다.`,
     `기원전 7세기의 아시리아에서는 또 다른 판으로 읽혔고, 거기서는 함무라비 대왕이 세운 올바름의 판결들이라는 이름이 붙은 것으로 보입니다. 자기 이름에 왕의 칭호가 더해진 꼴입니다.`,
-    `오늘 이 대상을 가리키는 말은 법전입니다. 이 번역본의 표제부터 세계에서 가장 오래된 법전이고, 본문은 1조부터 282조까지 번호가 매겨져 있습니다. 네 이름 가운데 가장 늦게 붙었고, 지금 가장 널리 쓰입니다.`,
+    `오늘 이 대상을 가리키는 말은 법전입니다. 1903년 영역본의 표제는 세계에서 가장 오래된 법전이고, 본문은 1조부터 282조까지 번호가 매겨져 있습니다. 여기 놓은 네 이름의 표시 순서는 설명 순서이며 연표가 아닙니다.`,
   ] as const;
 
   return (
     <VizFrame
       eyebrow="네 이름"
-      title="한 대상에 시대마다 다른 이름이 붙었고 우리는 가장 늦게 붙은 이름을 씁니다"
-      description="글 자체가 자기를 부르는 이름, 학교에서 첫 단어로 붙인 이름, 아시리아에서 붙은 이름, 그리고 근대의 번역본이 붙인 이름이 차례로 쌓였습니다."
-      note="네 이름은 Johns 영역본의 표제와 본문 끝 문장, 그리고 머리말의 서술에서 가져온 것입니다. 네 개로 묶어 늘어놓은 것은 이 글입니다."
+      title="한 대상이 네 맥락에서 다른 이름으로 불렸습니다"
+      description="돌에 적힌 자기 이름, 학교에서 쓴 이름, 아시리아 판의 이름, 근대 번역본의 표제를 출처별로 비교합니다. 표시 순서는 연대순이 아닙니다."
+      note="네 이름은 Johns 영역본의 표제와 본문 끝 문장, 머리말에서 가져왔습니다. 머리말의 시간 간격은 학교 판본의 연대를 따로 대조하지 않아 사용하지 않습니다."
     >
       <div
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="한 대상에 시대마다 붙은 네 이름을 차례로 보이는 그림"
+        aria-label="한 대상이 여러 맥락에서 얻은 네 이름을 출처별로 보이는 그림"
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(30rem,calc(100dvh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
@@ -78,12 +78,8 @@ export default function FourNamesViz() {
               aria-label={SCENES[s]}
               className="h-auto w-full min-w-[30rem] max-w-2xl"
             >
-              <line x1={30} y1={168} x2={450} y2={168} stroke={MUTED} strokeWidth={1.25} />
               <text x={30} y={182} fontSize={7.5} fill={MUTED}>
-                이른 때
-              </text>
-              <text x={450} y={182} fontSize={7.5} fill={MUTED} textAnchor="end">
-                늦은 때
+                네 이름의 출처 · 설명 순서이며 연표가 아닙니다
               </text>
 
               {NAMES.map((n, i) => {
@@ -125,7 +121,7 @@ export default function FourNamesViz() {
                     이름과 함께 구조도 붙었습니다
                   </text>
                   <text x={44} y={122} fontSize={7.5} fill={INK}>
-                    학교에서 붙인 열두 장과 번역본의 1~282조 번호는 돌에 새겨진 것이 아닙니다
+                    학교에서 쓰인 열두 장과 번역본의 1~282조 번호는 돌에 새겨진 것이 아닙니다
                   </text>
                 </g>
               )}

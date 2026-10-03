@@ -69,11 +69,11 @@ export const inferenceFromSourcesArticles: Article[] = [
       { id: "overview", title: "돌은 자기를 법전이라고 부르지 않습니다" },
       {
         id: "four-names",
-        title: "부품 1. 한 대상에 네 개의 이름이 쌓여 있습니다",
+        title: "부품 1. 한 대상이 네 이름으로 불렸습니다",
       },
       {
         id: "what-the-name-adds",
-        title: "부품 2. 법전이라는 이름은 네 가지를 딸고 옵니다",
+        title: "부품 2. 법전이라는 이름에서 떠올릴 네 기대를 점검합니다",
       },
       {
         id: "imposed-structure",

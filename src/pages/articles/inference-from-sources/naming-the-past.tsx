@@ -50,8 +50,8 @@ export default function NamingThePastArticle() {
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
-            네 부품입니다. 이 대상에 붙은 이름이 몇 개인지, 법전이라는 이름이
-            무엇을 딸고 오는지, 이름과 함께 들어온 구조가 무엇인지, 그리고 번역어가
+            네 부품입니다. 이 대상에 붙은 이름이 몇 개인지, 법전이라는 이름에서
+            어떤 기대가 생기는지, 이름과 함께 들어온 구조가 무엇인지, 그리고 번역어가
             같은 일을 어떻게 하는지입니다.
           </p>
 
@@ -66,19 +66,19 @@ export default function NamingThePastArticle() {
 
       <section id="four-names" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          부품 1. 한 대상에 네 개의 이름이 쌓여 있습니다
+          부품 1. 한 대상이 네 이름으로 불렸습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             첫 번째는 글 자체의 것입니다. 번역본에서 조항들이 끝나는 자리에 한
             줄이 있습니다. 강한 왕 함무라비가 확정하여 이 땅이 확실한 인도와
-            은혜로운 다스림을 얻게 한 올바름의 판결들이라는 것입니다. 판결이라는
-            말은 이미 내려진 판단을 가리킵니다.
+            은혜로운 다스림을 얻게 한 올바름의 판결들이라는 것입니다. 이 이름은
+            구체적 상황에 내려진 판단을 먼저 떠올리게 합니다.
           </p>
 
           <p className="leading-7">
-            두 번째는 학교의 것입니다. 머리말에 따르면 이천 년도 더 지난 뒤에 이
-            글이 바빌로니아의 학교에서 교재가 되었고, 그러면서 열두 장쯤으로
+            두 번째는 학교의 것입니다. 1903년 머리말에 따르면 이 글은 훗날
+            바빌로니아의 학교에서 교재가 되었고, 그러면서 열두 장쯤으로
             나뉘고 셈 지방의 관습대로 첫머리 단어를 따서 <em>Ninu ilu sirum</em>
             이라 불렸습니다. <strong>이름이 내용에서 오지 않고 첫 줄에서 온
             경우</strong>입니다.
@@ -118,9 +118,21 @@ export default function NamingThePastArticle() {
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
+            머리말의 <em>"이천 년도 더 지난 뒤"</em>라는 시간 간격은 여기서
+            검증할 수 없습니다. 존스는 같은 머리말에서 함무라비를 기원전 3천년에
+            두었지만, 현재 소장기관인{" "}
+            <a href="https://www.louvre.fr/en/the-code-of-hammurabi">루브르 박물관</a>은
+            돌에 글이 새겨진 때를 약 기원전 1750년으로 설명합니다. 학교에서 쓴
+            판본의 연대를 따로 대조하지 않았으므로, 여기서는 존스가 전한 이름과
+            장 구분만 소개하고 시간 간격은 주장하지 않습니다.
+          </p>
+        </div>
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p className="leading-7">
             <em>
-              이름이 넷이라는 것이 잡혔습니다. 그 가운데 우리가 쓰는 이름이
-              무엇을 딸고 오는지가 다음 부품입니다.
+              이름이 넷이라는 것이 잡혔습니다. 그 가운데 우리가 쓰는 이름에서
+              떠오르는 기대가 다음 부품입니다.
             </em>
           </p>
         </div>
@@ -128,15 +140,23 @@ export default function NamingThePastArticle() {
 
       <section id="what-the-name-adds" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          부품 2. 법전이라는 이름은 네 가지를 딸고 옵니다
+          부품 2. 법전이라는 이름에서 떠올릴 네 기대를 점검합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             두 이름이 가리키는 것은 같은 돌인데 머릿속에 그려지는 것이 다릅니다.
-            판결들은 이미 내려진 판단의 모음이고 사례가 앞섭니다. 법전은 앞으로
-            적용될 규칙의 묶음이고 규칙이 앞섭니다. 같은 조항을 읽어도 어느
-            이름으로 부르느냐에 따라 그것이 사례의 기록으로 보이기도 하고 규칙의
-            선언으로 보이기도 합니다.
+            판결들이라는 이름은 구체적 상황의 판단을, 법전이라는 이름은 일반
+            규칙을 먼저 떠올리게 합니다. 같은 문장도 어느 이름으로 부르느냐에
+            따라 읽는 관점이 달라집니다. <strong>그 이름만으로 실제 판결을 모아
+            만든 것인지, 제정한 규칙을 얼마나 집행했는지는 알 수 없습니다.</strong>
+          </p>
+
+          <p className="leading-7">
+            <a href="https://www.louvre.fr/en/the-code-of-hammurabi">루브르 박물관</a>도
+            오늘 이 돌을 <em>법전</em>이라 부르면서, 현대의 법전과
+            같은 것은 아니고 판결을 모은 자료에 가깝다고 설명합니다. 통용되는
+            이름을 쓰되 그 이름에서 떠오른 현대의 모습을 그대로 가져오지 않는
+            읽기입니다.
           </p>
         </div>
 
@@ -144,23 +164,24 @@ export default function NamingThePastArticle() {
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
-            법전이라는 말을 쓰면 네 가지가 함께 들어옵니다. 다룰 영역을 빠짐없이
-            덮는다는 것, 체계를 갖추고 있다는 것, 누군가 새로 정했다는 것, 그리고
-            정해진 대로 집행된다는 것입니다. 네 가지 모두 그 사회에 대한 주장이고,
-            이름을 쓴다고 해서 저절로 참이 되지 않습니다.
+            이 번역본의 <em>법전</em>이라는 표제와 조항 번호를 함께 볼 때 독자가
+            떠올릴 수 있는 기대 네 가지를 점검해 보겠습니다. 다룰 영역을 빠짐없이
+            담았는가, 지금 보이는 장·조 번호가 원래 있었는가, 왕의 권위로
+            확정되었는가, 적힌 대로 집행되었는가입니다. <strong>이것은 점검할
+            질문이지 "법전"이라는 단어의 필수 뜻은 아닙니다.</strong>
           </p>
 
           <p className="leading-7">
-            넷을 사료에 대어 보면 하나만 남습니다. 왕이 확정했다는 것은 글 자체가
-            적어 둔 것입니다. 나머지 셋은 받쳐지지 않습니다. 빠짐없음은 앞 글의
-            지워진 다섯 단 때문에 확인할 길이 없고, 체계는 뒷사람이 붙인 것이며,
-            집행되었는지는 이 돌이 보여 주지 않습니다.{" "}
-            <strong>이름이 넷을 딸고 오는데 사료는 하나만 받칩니다.</strong>
+            네 질문 가운데 왕이 확정했다는 것은 글 자체가 적어 둡니다. 다룰
+            영역을 빠짐없이 담았는지는 돌만으로 확인할 수 없고 지워진 다섯 단은
+            그 한계를 더합니다. 지금 보이는 장·조 번호는 뒷사람이 붙였으며,
+            실제 집행 빈도도 돌은 보여 주지 않습니다. <strong>독자가 떠올린
+            네 기대 가운데 돌이 직접 받치는 것은 왕의 확정뿐입니다.</strong>
           </p>
 
           <p className="leading-7">
-            그러니 이름을 쓰는 것 자체가 잘못은 아니고, 이름이 딸고 온 것을 사료가
-            말한 것으로 착각하는 것이 잘못입니다. 둘을 가르는 방법은 간단합니다.
+            그러니 이름을 쓰는 것 자체가 잘못은 아니고, 이름에서 떠오른 기대를
+            사료가 확인한 사실로 착각하는 것이 잘못입니다. 둘을 가르는 방법은 간단합니다.
             결론에 쓰려는 성질을 하나씩 떼어 그 성질이 어느 문장에서 나왔는지를
             찾아보는 것입니다. 찾지 못하면 그것은 이름에서 온 것입니다.
           </p>
@@ -190,8 +211,8 @@ export default function NamingThePastArticle() {
           </p>
 
           <p className="leading-7">
-            장 구분도 마찬가지입니다. 열두 장쯤으로 나뉜 것은 이천 년도 더 지난 뒤
-            학교에서 공부하기 좋게 한 일이고, 이 번역본에서는 그 구분도 따르지
+            장 구분도 마찬가지입니다. 존스의 머리말에 따르면 열두 장쯤의 구분은
+            훗날 학교에서 공부할 때 붙었고, 이 번역본에서는 그 구분도 따르지
             않습니다. 그러니까 지금 우리가 보는 꼴은{" "}
             <strong>돌의 꼴이 아니라 읽기 좋게 여러 번 손본 꼴</strong>입니다.
           </p>
@@ -200,7 +221,7 @@ export default function NamingThePastArticle() {
             구조가 더해지는 것이 이름이 더해지는 것보다 알아채기 어렵습니다. 이름은
             말이라서 다른 말로 바꿔 볼 수 있지만, 번호는 자료처럼 보입니다. 1조에서
             282조까지 매겨져 있으면 전체가 282개로 이루어진 하나의 덩어리라는 인상이
-            따라오고, 그 인상은 빠짐없음이라는 함의와 맞물립니다.
+            따라오고, 그 인상은 완전성을 기대하게 만들 수 있지만 증거는 아닙니다.
           </p>
         </div>
 
@@ -211,7 +232,7 @@ export default function NamingThePastArticle() {
             {
               term: "돌에 있던 것",
               description:
-                "조항의 문장들, 왕이 법을 받는 그림, 그리고 자기를 부르는 이름입니다.",
+                "조항의 문장들, 왕과 샤마시가 마주한 부조, 그리고 자기를 부르는 이름입니다.",
               example:
                 "올바름의 판결들이라는 자기 이름은 본문 끝에 적혀 있습니다.",
               boundary:
@@ -222,7 +243,7 @@ export default function NamingThePastArticle() {
               description:
                 "열두 장의 구분, 1~282조의 번호, 법전이라는 표제, 그리고 번역어입니다.",
               example:
-                "장 구분은 이천 년 뒤 학교가, 번호와 표제는 근대의 판이 붙였습니다.",
+                "장 구분은 훗날 학교에서 쓰였고, 번호와 표제는 근대의 판이 붙였습니다.",
               boundary:
                 "붙은 것이 쓸모없다는 뜻이 아닙니다. 번호가 없으면 이 시리즈처럼 조항을 가리키며 이야기할 수 없습니다.",
             },
@@ -319,7 +340,7 @@ export default function NamingThePastArticle() {
 
           <p className="leading-7">
             셋째 분류는 남은 것과 우리를 물었습니다. 폐허는 돌로 지은 쪽에 유리하게
-            남고, 지워진 자리에는 지웠다는 사실만 남으며, 우리가 붙인 이름은 사료가
+            남고, 돌의 지운 자리에는 삭제 흔적이 남으며, 우리가 붙인 이름은 사료가
             말하지 않은 것을 함께 들여옵니다.
           </p>
 
@@ -341,7 +362,7 @@ export default function NamingThePastArticle() {
           </p>
 
           <p className="leading-7">
-            2. 법전이라는 이름이 딸고 오는 네 가지 가운데 사료가 받치는 것은
+            2. 법전이라는 표제에서 떠올릴 네 질문 가운데 사료가 직접 답하는 것은
             무엇입니까. <strong>(답: 부품 2절)</strong>
           </p>
 
