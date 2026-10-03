@@ -87280,4 +87280,308 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "semiconductors/wafer-and-planar-process": {
+    "coreIdea": "Hoerni의 1959년 출원 평면 공정 특허를 따라 웨이퍼의 산화막 창→선택 확산→접합 보호→접촉 창을 추적합니다. 100 µm 창·양쪽 2 µm 옆 확산·80 µm 접촉은 가상 예여서 104 µm p형 폭과 한쪽 12 µm 명목 거리를 계산합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "donor-acceptor-doping",
+        "role": "불순물에 따라 p형·n형 영역을 만들 수 있다는 전제를 가져옵니다."
+      },
+      {
+        "id": "depletion-space-charge",
+        "role": "서로 다른 도핑 영역 사이의 p-n 접합을 가져옵니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "wafer-batch-substrate",
+        "role": "웨이퍼와 소자 경계를 구분합니다."
+      },
+      {
+        "id": "oxide-diffusion-mask",
+        "role": "산화막 덮음과 열린 입구를 설명합니다."
+      },
+      {
+        "id": "lateral-diffusion-geometry",
+        "role": "100+2+2 µm의 가상 기하를 계산합니다."
+      },
+      {
+        "id": "planar-junction-passivation",
+        "role": "접합 위 막을 남기는 이유를 설명합니다."
+      },
+      {
+        "id": "contact-window-clearance",
+        "role": "가운데 정렬의 12 µm를 검산합니다."
+      },
+      {
+        "id": "planar-process-scope",
+        "role": "1차 자료의 대상 소자와 현대 적용 경계를 정합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "wafer-batch-substrate",
+        "sectionId": "wafer",
+        "intuition": "한 판에 여러 위치의 창을 반복해서 낸 뒤 개별 소자로 나눕니다.",
+        "workedExample": "원 특허 도 1의 다이오드 배열과 가상 단면의 p-n 경계는 서로 다른 구분입니다.",
+        "boundary": "현대 모든 웨이퍼가 같은 크기·분할 방식이라고 일반화하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "웨이퍼 표면의 반복 창 위치와 이후 분리된 소자 위치의 대응",
+          "unitsAndDimensions": "웨이퍼·창·소자 길이는 m 또는 µm, 개수는 무차원입니다.",
+          "modelAssumptions": "원 특허의 실리콘 웨이퍼와 가상 n형 바탕을 구분합니다.",
+          "measurementExample": "한 웨이퍼에서 같은 무늬가 반복되는 위치를 관찰합니다.",
+          "invalidConditions": "절단 중 결함·공정별 다이 크기는 단순 반복 설명에서 제외됩니다.",
+          "referenceFrame": "실리콘 윗면을 단면의 위쪽, 좌우 중심을 가상 산화막 창의 가운데로 둡니다."
+        }
+      },
+      {
+        "id": "oxide-diffusion-mask",
+        "sectionId": "mask",
+        "intuition": "덮은 곳은 입구가 아니고 가운데 열린 100 µm 창만 출발점입니다.",
+        "workedExample": "폭 100 µm 창 아래 p형 영역을 만드는 가상 예입니다.",
+        "boundary": "막이 모든 도펀트와 모든 조건을 완벽히 막는다고 일반화하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "확산 전 산화막의 열린 폭과 확산 뒤 바뀐 실리콘 표면 영역",
+          "unitsAndDimensions": "창 폭 m 또는 µm, 도핑 농도 cm^-3입니다.",
+          "modelAssumptions": "산화막 마스크와 n형 실리콘, 창으로 들어가는 p형 불순물을 둡니다.",
+          "measurementExample": "산화막 패턴과 확산 뒤 p형 영역의 위치를 비교합니다.",
+          "invalidConditions": "산화막 결함이나 막을 잘 통과하는 종이면 보호·차단이 달라집니다.",
+          "referenceFrame": "실리콘 윗면을 단면의 위쪽, 좌우 중심을 가상 산화막 창의 가운데로 둡니다."
+        }
+      },
+      {
+        "id": "lateral-diffusion-geometry",
+        "sectionId": "mask",
+        "intuition": "창보다 p형 영역이 약간 넓어질 수 있습니다.",
+        "workedExample": "100 µm+2 µm+2 µm=104 µm입니다.",
+        "boundary": "실제 확산 모양은 온도·시간·농도에 따라 달라집니다.",
+        "scientificGrounding": {
+          "observable": "산화막 창 끝과 p형 표면 영역 끝의 좌우 거리",
+          "unitsAndDimensions": "모든 폭·거리 단위는 µm이며 더할 때 같은 길이 단위입니다.",
+          "modelAssumptions": "좌우 대칭·각 2 µm의 단순 표면 옆 확산을 둡니다.",
+          "measurementExample": "창 폭과 확산 뒤 표면 접합 끝의 위치를 단면에서 비교합니다.",
+          "invalidConditions": "비대칭 확산·농도 구배·복잡한 접합 형태는 단순 2L 식에 맞지 않습니다.",
+          "referenceFrame": "실리콘 윗면을 단면의 위쪽, 좌우 중심을 가상 산화막 창의 가운데로 둡니다."
+        }
+      },
+      {
+        "id": "planar-junction-passivation",
+        "sectionId": "protect",
+        "intuition": "전극은 닿아야 하지만 p-n 경계는 그대로 드러내지 않습니다.",
+        "workedExample": "가상 p형 104 µm 영역에서 접촉 80 µm만 열어 경계 쪽 막을 남깁니다.",
+        "boundary": "산화막이 모든 오염과 모든 누설을 영구히 막는다는 뜻은 아닙니다.",
+        "scientificGrounding": {
+          "observable": "접합 표면 끝의 산화막 덮임과 접촉 창 위치",
+          "unitsAndDimensions": "접합·창 위치 길이는 µm, 누설 전류는 A입니다.",
+          "modelAssumptions": "산화막이 접합 끝을 덮고 선택한 창에서만 접촉합니다.",
+          "measurementExample": "현미경 단면으로 접합 끝이 막 아래에 남았는지 확인합니다.",
+          "invalidConditions": "핀홀·오염·전계 손상·막 결함이 있으면 보호 효과가 줄어듭니다.",
+          "referenceFrame": "실리콘 윗면을 단면의 위쪽, 좌우 중심을 가상 산화막 창의 가운데로 둡니다."
+        }
+      },
+      {
+        "id": "contact-window-clearance",
+        "sectionId": "protect",
+        "intuition": "두 끝의 남는 폭을 반으로 나눠 전극이 접합을 밟지 않게 계획합니다.",
+        "workedExample": "(104−80)/2=12 µm를 가상 단면에서 셉니다.",
+        "boundary": "정렬 오차가 생기면 한쪽 실제 거리는 12 µm보다 작아집니다.",
+        "scientificGrounding": {
+          "observable": "전극 창 가장자리와 표면 p-n 경계 사이의 최소 거리",
+          "unitsAndDimensions": "Wm·Wp·Wc·M 모두 길이 µm입니다.",
+          "modelAssumptions": "전극 80 µm가 가상 p형 104 µm 중앙에 정렬됩니다.",
+          "measurementExample": "왼쪽과 오른쪽 거리 모두 12 µm인지 단면에서 잽니다.",
+          "invalidConditions": "마스크 오정렬·확산 편차·금속 번짐은 명목 거리를 줄입니다.",
+          "referenceFrame": "실리콘 윗면을 단면의 위쪽, 좌우 중심을 가상 산화막 창의 가운데로 둡니다."
+        }
+      },
+      {
+        "id": "planar-process-scope",
+        "sectionId": "limits",
+        "intuition": "덮고 필요한 곳만 여는 순서는 이어져도 재료·소자 단계는 달라질 수 있습니다.",
+        "workedExample": "원 특허 도 2–4의 다이오드 접촉과 도 10의 트랜지스터 접촉을 나누어 읽습니다.",
+        "boundary": "특허가 오늘의 모든 CMOS 공정 변수와 수율을 검증했다는 뜻은 아닙니다.",
+        "scientificGrounding": {
+          "observable": "특허 단면의 층·접촉 구조와 비교하는 현대 소자 구조",
+          "unitsAndDimensions": "층 두께·창 위치는 길이, 확산 농도는 cm^-3입니다.",
+          "modelAssumptions": "원 특허는 주로 확산 양극성 소자이며 본문 수치는 가상입니다.",
+          "measurementExample": "도 2–4와 도 10의 접촉 위치를 표시하고 다른 소자임을 확인합니다.",
+          "invalidConditions": "MOS 게이트·현대 미세 패턴 공정을 동일 공정으로 치환하면 설명이 틀립니다.",
+          "referenceFrame": "실리콘 윗면을 단면의 위쪽, 좌우 중심을 가상 산화막 창의 가운데로 둡니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 웨이퍼와 창",
+        "relation": "한 장에서 여러 소자를 가공하고 선택한 곳만 엽니다.",
+        "concepts": [
+          "wafer-batch-substrate",
+          "oxide-diffusion-mask"
+        ]
+      },
+      {
+        "label": "02 확산과 보호",
+        "relation": "가상 옆 확산 폭을 계산하고 접합 위 막을 남깁니다.",
+        "concepts": [
+          "lateral-diffusion-geometry",
+          "planar-junction-passivation"
+        ]
+      },
+      {
+        "label": "03 접촉과 원전 범위",
+        "relation": "전극 창 거리를 계산하고 특허 대상 소자를 구분합니다.",
+        "concepts": [
+          "contact-window-clearance",
+          "planar-process-scope"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "불순물을 들이기 전 산화막 창은 무엇을 노출합니까?",
+        "answerChecklist": [
+          "선택한 실리콘 표면",
+          "덮인 곳은 마스크",
+          "가상 창 100 µm"
+        ],
+        "requiredConcepts": [
+          "oxide-diffusion-mask"
+        ],
+        "sectionId": "mask"
+      },
+      {
+        "level": "basic",
+        "question": "100 µm 창에서 양쪽으로 2 µm씩 퍼지면 p형 표면 폭은?",
+        "answerChecklist": [
+          "100+2+2",
+          "104 µm",
+          "교육용 가정"
+        ],
+        "requiredConcepts": [
+          "lateral-diffusion-geometry"
+        ],
+        "sectionId": "mask"
+      },
+      {
+        "level": "basic",
+        "question": "104 µm p형 영역에 중앙 80 µm 접촉 창을 두면 한쪽 명목 거리는?",
+        "answerChecklist": [
+          "(104−80)/2",
+          "12 µm",
+          "중앙 정렬"
+        ],
+        "requiredConcepts": [
+          "contact-window-clearance"
+        ],
+        "sectionId": "protect"
+      },
+      {
+        "level": "basic",
+        "question": "왜 p-n 접합 위의 산화막을 남깁니까?",
+        "answerChecklist": [
+          "표면 오염 경감",
+          "접촉 단락 위험 경감",
+          "전극 자리만 선택 개방"
+        ],
+        "requiredConcepts": [
+          "planar-junction-passivation"
+        ],
+        "sectionId": "protect"
+      },
+      {
+        "level": "basic",
+        "question": "특허 다이오드와 도 10 트랜지스터의 n형 접촉 위치를 구분하세요.",
+        "answerChecklist": [
+          "다이오드는 밑면 n형 접촉 예",
+          "트랜지스터 도 10은 윗면 여러 접촉",
+          "서로 다른 구조"
+        ],
+        "requiredConcepts": [
+          "planar-process-scope"
+        ],
+        "sectionId": "protect"
+      },
+      {
+        "level": "basic",
+        "question": "가상 공정 단계를 순서대로 놓으세요.",
+        "answerChecklist": [
+          "웨이퍼·산화막",
+          "선택 창",
+          "p형 확산",
+          "접촉 창·전극"
+        ],
+        "requiredConcepts": [
+          "oxide-diffusion-mask",
+          "planar-junction-passivation"
+        ],
+        "sectionId": "protect"
+      },
+      {
+        "level": "advanced",
+        "question": "옆 확산이 한쪽 5 µm라면 p형 폭과 80 µm 접촉 창의 명목 거리는?",
+        "answerChecklist": [
+          "110 µm",
+          "(110−80)/2=15 µm",
+          "확산값 가정"
+        ],
+        "requiredConcepts": [
+          "lateral-diffusion-geometry",
+          "contact-window-clearance"
+        ],
+        "sectionId": "mask"
+      },
+      {
+        "level": "advanced",
+        "question": "접촉 창을 100 µm로 늘리면 가상 104 µm p형 폭의 명목 거리는?",
+        "answerChecklist": [
+          "2 µm씩",
+          "정렬 편차에 취약",
+          "합격 보증 아님"
+        ],
+        "requiredConcepts": [
+          "contact-window-clearance"
+        ],
+        "sectionId": "protect"
+      },
+      {
+        "level": "advanced",
+        "question": "확산 뒤 산화막을 모두 벗기면 특허가 지키려던 무엇을 잃습니까?",
+        "answerChecklist": [
+          "표면 접합 덮임",
+          "오염·접촉 단락 완화",
+          "절대 신뢰도 수치는 주장하지 않음"
+        ],
+        "requiredConcepts": [
+          "planar-junction-passivation"
+        ],
+        "sectionId": "protect"
+      },
+      {
+        "level": "advanced",
+        "question": "왜 Hoerni의 이중 확산 소자 특허만으로 현대 CMOS 공정 전체를 설명할 수 없습니까?",
+        "answerChecklist": [
+          "특허 대상은 다이오드·양극성 트랜지스터",
+          "MOS 게이트와 현대 다층 공정은 별도",
+          "산화막 마스크 원리만 범위 내 재사용"
+        ],
+        "requiredConcepts": [
+          "planar-process-scope"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Jean A. Hoerni, US Patent 3,025,589, ‘Method of Manufacturing Semiconductor Devices’ (1959 출원, 1962 등록)",
+        "href": "https://patentimages.storage.googleapis.com/cc/fb/db/690d609db55af5/US3025589.pdf",
+        "problem": "작은 확산 소자의 접합을 오염·접촉 단락에서 지키고 접촉 가능한 영역을 남깁니다.",
+        "contribution": "원본 2–4쪽의 산화막 마스크·창·다이오드 및 이중 확산 트랜지스터 단면과 접합 보호 설명입니다.",
+        "assumptions": "주로 실리콘 확산 다이오드·양극성 트랜지스터의 제조 방법입니다.",
+        "evidenceScope": "특허 원본 PDF 2–4쪽과 도 1–10을 직접 확인했습니다. 100·2·80 µm는 글의 가상 기하입니다.",
+        "notClaim": "특허가 104 µm p형 폭·12 µm 거리 또는 오늘날 CMOS 전체 공정을 실측·보증했다는 뜻이 아닙니다.",
+        "sectionId": "protect"
+      }
+    ]
+  },
 };

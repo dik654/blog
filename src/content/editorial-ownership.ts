@@ -13035,6 +13035,34 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "wafer-and-planar-process": {
+    "title": "웨이퍼와 평면 공정의 산화막·확산·접촉 글이 소유하는 범위",
+    "owns": [
+      "Hoerni 특허의 웨이퍼·산화막 선택 확산·접합 표면 보호 순서",
+      "가상 100·2·80 µm의 p형 폭 104 µm와 한쪽 명목 거리 12 µm",
+      "원 특허의 다이오드와 트랜지스터 접촉 구조 및 현대 공정과의 경계"
+    ],
+    "reuses": [
+      {
+        "label": "p형·n형 불순물의 역할",
+        "href": "/electronics/semiconductors/bands-and-doping#dopants"
+      },
+      {
+        "label": "p-n 접합의 의미",
+        "href": "/electronics/devices/pn-junction-and-rectification#junction"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Hoerni 원 특허의 도면·문장과 교육용 단면 치수를 분리한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "12 µm는 중앙 정렬·대칭 확산의 명목 기하이며 제조 허용값으로 쓰지 않는다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

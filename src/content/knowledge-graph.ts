@@ -25516,6 +25516,72 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "β=0.1의 59.3°와 β=0.5의 27.9°는 무부하 가상 두 극 모델 수치입니다. 축전성 부하나 공급 제한·추가 지연은 교차점과 계단 응답을 바꿉니다. 실제 제품은 데이터시트 조건 및 연결 상태에서 검증해야 합니다.",
     "canonicalHref": "/electronics/circuits/feedback-gain-and-stability#limits"
   },
+  "wafer-batch-substrate": {
+    "id": "wafer-batch-substrate",
+    "domain": "physics",
+    "label": "한 웨이퍼에 여러 소자를 가공하고 나중에 분리할 수 있다",
+    "aliases": [
+      "wafer",
+      "웨이퍼"
+    ],
+    "definition": "Hoerni 특허 도 1의 실리콘 웨이퍼는 여러 창을 한 번에 가공하고 나중에 개별 다이오드로 나눌 수 있는 바탕입니다. 절단선은 p-n 접합과 다른 경계입니다.",
+    "canonicalHref": "/electronics/semiconductors/wafer-and-planar-process#wafer"
+  },
+  "oxide-diffusion-mask": {
+    "id": "oxide-diffusion-mask",
+    "domain": "physics",
+    "label": "산화막 창은 불순물의 입구를 정한다",
+    "aliases": [
+      "oxide mask",
+      "산화막 마스크"
+    ],
+    "definition": "실리콘 표면 산화막에 창을 내면 노출된 곳으로 불순물이 들어갑니다. 본문은 폭 100 µm 창을 가정합니다. 막의 덮인 곳은 확산 영역의 옆범위를 제한합니다.",
+    "canonicalHref": "/electronics/semiconductors/wafer-and-planar-process#mask"
+  },
+  "lateral-diffusion-geometry": {
+    "id": "lateral-diffusion-geometry",
+    "domain": "physics",
+    "label": "확산은 창 아래에서 옆으로도 퍼져 표면 폭을 바꾼다",
+    "aliases": [
+      "lateral diffusion",
+      "옆 확산"
+    ],
+    "definition": "가상 표면 단면에서 100 µm 창 양쪽으로 p형 영역이 각각 2 µm 퍼지면 표면 폭은 104 µm입니다. 확산 거리 2 µm는 특허 계측치가 아닌 교육용 가정입니다.",
+    "canonicalHref": "/electronics/semiconductors/wafer-and-planar-process#mask"
+  },
+  "planar-junction-passivation": {
+    "id": "planar-junction-passivation",
+    "domain": "physics",
+    "label": "접합 위 산화막을 남기면 표면을 보호할 수 있다",
+    "aliases": [
+      "planar junction passivation",
+      "평면 접합 보호"
+    ],
+    "definition": "Hoerni 특허는 확산 뒤 접합이 표면에 닿는 위치를 산화막 아래에 남기고, 필요한 접촉 자리만 엽니다. 이는 오염·접촉 단락을 줄이려는 구조이며 모든 고장을 제거한다는 보장은 아닙니다.",
+    "canonicalHref": "/electronics/semiconductors/wafer-and-planar-process#protect"
+  },
+  "contact-window-clearance": {
+    "id": "contact-window-clearance",
+    "domain": "physics",
+    "label": "접촉 창 끝과 접합 끝의 명목 거리를 계산한다",
+    "aliases": [
+      "contact clearance",
+      "접촉 창 거리"
+    ],
+    "definition": "가상 p형 표면 폭 104 µm 안에 80 µm 전극 창을 중앙 정렬하면 한쪽 명목 거리는 (104−80)/2=12 µm입니다. 정렬 편차를 빼지 않았으므로 공정 허용값은 아닙니다.",
+    "canonicalHref": "/electronics/semiconductors/wafer-and-planar-process#protect"
+  },
+  "planar-process-scope": {
+    "id": "planar-process-scope",
+    "domain": "physics",
+    "label": "Hoerni의 확산 소자 특허와 현대 MOS 공정 전체를 구분한다",
+    "aliases": [
+      "planar process boundary",
+      "평면 공정 범위"
+    ],
+    "definition": "원 특허는 다이오드·이중 확산 양극성 트랜지스터의 산화막 마스크와 접합 보호를 다룹니다. 현대 MOSFET 게이트 절연막·이온 주입·다층 배선을 이 특허의 같은 단계로 단정할 수 없습니다.",
+    "canonicalHref": "/electronics/semiconductors/wafer-and-planar-process#limits"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47464,6 +47530,48 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "feedback-real-load-boundary",
     "relation": "constrains",
     "reason": "계산한 여유는 모델 부하 조건 안에서만 적용합니다."
+  },
+  {
+    "from": "wafer-batch-substrate",
+    "to": "oxide-diffusion-mask",
+    "relation": "prerequisite",
+    "reason": "웨이퍼 표면의 여러 위치에 동일한 창을 반복해 만들 수 있습니다."
+  },
+  {
+    "from": "oxide-diffusion-mask",
+    "to": "lateral-diffusion-geometry",
+    "relation": "produces",
+    "reason": "창 폭과 옆 확산을 더해 가상 p형 표면 폭을 얻습니다."
+  },
+  {
+    "from": "lateral-diffusion-geometry",
+    "to": "contact-window-clearance",
+    "relation": "produces",
+    "reason": "p형 영역 폭이 전극 창과의 남는 거리를 정합니다."
+  },
+  {
+    "from": "oxide-diffusion-mask",
+    "to": "planar-junction-passivation",
+    "relation": "produces",
+    "reason": "창을 선택해 확산하고 접합 위의 막을 남깁니다."
+  },
+  {
+    "from": "planar-junction-passivation",
+    "to": "contact-window-clearance",
+    "relation": "constrains",
+    "reason": "접합 보호를 위해 접촉 창을 안쪽에 둡니다."
+  },
+  {
+    "from": "contact-window-clearance",
+    "to": "planar-process-scope",
+    "relation": "constrains",
+    "reason": "명목 기하와 실제 정렬 오차를 구분합니다."
+  },
+  {
+    "from": "donor-acceptor-doping",
+    "to": "oxide-diffusion-mask",
+    "relation": "prerequisite",
+    "reason": "앞 글에서 불순물이 p형·n형을 만든다는 설명을 웨이퍼의 선택 확산으로 옮깁니다."
   },
 ];
 
