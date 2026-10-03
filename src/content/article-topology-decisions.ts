@@ -20,6 +20,13 @@ const KEEP = (rationale: string): ArticleTopologyDecision => ({
 });
 
 export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopologyDecision>> = {
+  "circuits/lumped-circuit-and-conservation": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-10-03",
+    rationale: "전압·전류의 뜻에서 갈림길·고리·풀이·전력 검산·근사 경계까지 같은 12 V 저항망 하나를 따라가므로 독립 글로 자르면 예제의 연결이 끊깁니다.",
+    sharedGate: "12 V·1 kΩ·2 kΩ·2 kΩ 예제와 한 갈래를 1 kΩ으로 바꾼 예제에서 KCL·KVL·전력 합이 모두 일치해야 합니다.",
+  },
   "ai/claw-bash": KEEP("Parse→classify→authorize→execute→release가 한 Bash effect의 단일 실행 계약을 이룹니다."),
   "ai/claw-cli": KEEP("입력 dispatch→slash parse→stream reducer→초기화가 하나의 CLI control-plane 경로입니다."),
   "ai/claw-compaction": KEEP("Trigger→projection→budget→state 보존→fidelity 검증이 하나의 compaction 수명주기입니다."),
@@ -465,4 +472,5 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "firms/why-firms-exist": "3b1079e4fa979d9f",
   "firms/scale-and-cost-structure": "e1f1355815729170",
   "firms/market-power-and-markup": "5b410043b58ff7f5",
+  "circuits/lumped-circuit-and-conservation": "39d24f87803f1cd1",
 };

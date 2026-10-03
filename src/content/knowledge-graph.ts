@@ -25296,6 +25296,71 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "값이 올라 사는 쪽에서 파는 쪽으로 넘어간 몫은 누가 갖느냐의 문제일 뿐 세상에서 없어진 것이 아닙니다. 같은 때 수량이 줄어 만들었더라면 드는 값보다 더 쳐주었을 거래가 아예 일어나지 않는데, 이 몫은 누구에게도 가지 않습니다. 값에 상한을 씌웠을 때 생기던 것과 같은 삼각형이 이번에는 아무도 상한을 씌우지 않았는데 생깁니다.",
     canonicalHref: "/economics/firms/market-power-and-markup#what-is-lost",
   },
+  "electric-current": {
+    id: "electric-current",
+    domain: "physics",
+    label: "전류는 경계를 지나는 전하의 속도다",
+    aliases: ["electric current", "전류"],
+    definition:
+      "도선의 한 단면을 1초 동안 0.006쿨롬의 전하가 지나면 전류는 0.006암페어, 곧 6밀리암페어입니다. 전류는 한 점에 쌓인 전하의 양이 아니라 그 점을 가로질러 흐르는 속도이므로, 갈림길에서 6밀리암페어가 들어와 3밀리암페어씩 두 길로 나뉘어도 전하가 사라진 것은 아닙니다.",
+    canonicalHref: "/electronics/circuits/lumped-circuit-and-conservation#small-circuit",
+  },
+  "electric-potential-difference": {
+    id: "electric-potential-difference",
+    domain: "physics",
+    label: "전압은 두 점 사이에서 전하 하나가 주고받는 에너지다",
+    aliases: ["voltage", "전위차", "전압"],
+    definition:
+      "두 점 사이의 전압이 6볼트라면 1쿨롬의 전하가 그 사이를 지날 때 에너지 6줄을 주고받는다는 뜻입니다. 전압은 언제나 두 점을 지정해야 하며, 같은 두 점에 연결된 두 갈래는 각각 같은 6볼트를 마주합니다. 한 점의 절대적인 전압이라는 말은 기준점을 정하기 전에는 뜻이 없습니다.",
+    canonicalHref: "/electronics/circuits/lumped-circuit-and-conservation#small-circuit",
+  },
+  "ohmic-resistance": {
+    id: "ohmic-resistance",
+    domain: "physics",
+    label: "저항은 정해진 전압에서 흐름을 제한하는 비례값이다",
+    aliases: ["Ohm's law", "옴의 법칙", "저항"],
+    definition:
+      "6볼트를 걸었을 때 2킬로옴의 저항에 3밀리암페어가 흐른다면 같은 조건에서 전압을 절반인 3볼트로 낮출 때 전류도 1.5밀리암페어가 되는 선형 부품을 생각할 수 있습니다. 이때 V/I=R이 일정합니다. 전압과 전류의 비를 언제나 계산할 수 있다는 사실만으로 모든 소자가 이 선형 관계를 따른다는 뜻은 아닙니다.",
+    canonicalHref: "/electronics/circuits/lumped-circuit-and-conservation#small-circuit",
+  },
+  "lumped-circuit-abstraction": {
+    id: "lumped-circuit-abstraction",
+    domain: "physics",
+    label: "회로를 점과 선과 부품으로 줄이는 조건",
+    aliases: ["집중 소자 근사", "lumped circuit"],
+    definition:
+      "전구 속 전기장과 도선의 모든 위치를 풀지 않고, 양끝 전압과 통과 전류만으로 부품을 나타내는 근사입니다. 부품 밖의 변하는 자기 선속과 따로 모델링하지 않은 전하 축적이 무시될 만큼 작아야 같은 점을 같은 전위로, 한 가지 길을 같은 전류로 읽을 수 있습니다. 긴 전송선이나 강한 유도 결합에서는 이 간략화가 깨집니다.",
+    canonicalHref: "/electronics/circuits/lumped-circuit-and-conservation#limits",
+  },
+  "kirchhoff-current-law": {
+    id: "kirchhoff-current-law",
+    kind: "theorem",
+    domain: "physics",
+    label: "갈림길로 들어온 전류는 나간 전류와 맞아야 한다",
+    aliases: ["KCL", "키르히호프 전류 법칙"],
+    definition:
+      "한 갈림길로 6밀리암페어가 들어오고 두 갈래로 3밀리암페어씩 나가면 6−3−3=0입니다. 그 자리에 전하가 계속 쌓이지 않는다는 보존 조건을 쓴 것입니다. 축적이 실제로 일어나거나 축전기로 향하는 전류를 빼놓으면 이 세 숫자만으로 0이라고 적을 수 없습니다.",
+    canonicalHref: "/electronics/circuits/lumped-circuit-and-conservation#junction",
+  },
+  "kirchhoff-voltage-law": {
+    id: "kirchhoff-voltage-law",
+    kind: "theorem",
+    domain: "physics",
+    label: "한 바퀴의 전압 상승과 하강은 맞아야 한다",
+    aliases: ["KVL", "키르히호프 전압 법칙"],
+    definition:
+      "전원에서 12볼트 올라가고 두 부품에서 6볼트씩 내려가 출발점으로 돌아오면 12−6−6=0입니다. 각 구간의 전압을 같은 방향으로 재어 더한 것입니다. 회로 바깥에 시간에 따라 변하는 자기 선속이 링크되면 Faraday 유도 전압을 별도 항이나 부품으로 포함해야 하므로 단순한 합 0을 그대로 적용할 수 없습니다.",
+    canonicalHref: "/electronics/circuits/lumped-circuit-and-conservation#loop",
+  },
+  "electrical-power-balance": {
+    id: "electrical-power-balance",
+    domain: "physics",
+    label: "전원의 전력과 부품이 받는 전력은 맞아야 한다",
+    aliases: ["전력 보존", "power balance"],
+    definition:
+      "12볼트 전원이 6밀리암페어를 내면 72밀리와트를 보냅니다. 1킬로옴에 6밀리암페어가 흘러 36밀리와트를 쓰고, 두 2킬로옴 갈래가 각각 18밀리와트를 써 합계 72밀리와트가 됩니다. 와트는 매초 이동하는 줄이므로 전력 합은 같은 회로 계산을 에너지 관점에서 다시 검산한 것입니다.",
+    canonicalHref: "/electronics/circuits/lumped-circuit-and-conservation#power",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47121,6 +47186,14 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     reason:
       "틈의 크기를 재는 일과 그 틈을 어떻게 할지 정하는 일이 다른 단계라는 구분이 여기서도 그대로 성립합니다.",
   },
+  { from: "electric-current", to: "kirchhoff-current-law", relation: "prerequisite", reason: "한 경계를 지나는 전하의 속도로 전류를 읽어야 갈림길의 보존식을 세울 수 있습니다." },
+  { from: "electric-potential-difference", to: "kirchhoff-voltage-law", relation: "prerequisite", reason: "두 점 사이의 에너지 차이를 같은 방향으로 더해야 한 바퀴의 합을 해석할 수 있습니다." },
+  { from: "electric-potential-difference", to: "ohmic-resistance", relation: "prerequisite", reason: "저항의 선형 관계는 양끝 두 점의 전압과 부품을 지나는 전류의 대응입니다." },
+  { from: "electric-current", to: "ohmic-resistance", relation: "prerequisite", reason: "저항값을 계산하려면 부품을 통과한 전류를 알아야 합니다." },
+  { from: "lumped-circuit-abstraction", to: "kirchhoff-current-law", relation: "constrains", reason: "모델 밖 전하 축적이 없다는 조건에서 갈림길의 순전류를 0으로 둡니다." },
+  { from: "lumped-circuit-abstraction", to: "kirchhoff-voltage-law", relation: "constrains", reason: "회로 바깥의 변하는 자기 선속을 무시할 수 있어야 단순한 전압 합 0이 성립합니다." },
+  { from: "ohmic-resistance", to: "electrical-power-balance", relation: "produces", reason: "각 저항의 V·I를 곱해 전원에서 나간 전력을 부품별로 검산합니다." },
+  { from: "kirchhoff-current-law", to: "electrical-power-balance", relation: "prerequisite", reason: "갈림길의 전류를 빠짐없이 세야 전원과 각 갈래의 전력이 맞습니다." },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

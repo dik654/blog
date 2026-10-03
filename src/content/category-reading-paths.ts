@@ -20,6 +20,14 @@ export interface CategoryReadingPath {
 export const CATEGORY_READING_PATHS: Readonly<
   Partial<Record<string, CategoryReadingPath>>
 > = {
+  circuits: {
+    title: "한 회로를 계산하는 순서",
+    description: "갈림길의 전류부터 시간에 따라 바뀌는 신호까지, 매 글에서 같은 물리량을 더 깊게 읽습니다.",
+    stages: [
+      { eyebrow: "01 · 보존", title: "전압·전류·저항", description: "갈림길과 고리를 따라 전하와 에너지의 보존을 수치로 확인합니다.", subcategories: ["circuit-foundations"] },
+    ],
+    featuredArticles: ["lumped-circuit-and-conservation"],
+  },
   ai: {
     title: "AI를 위에서 아래로 읽는 네 단계",
     description:
