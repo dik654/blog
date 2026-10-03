@@ -92084,4 +92084,1046 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "testimony/speeches-were-reconstructed": {
+    entryLevel: true,
+    entryNote:
+      "역사 지식을 가정하지 않습니다. 2,400년 전 책 한 권의 한 문단을 열어, 저자가 자기 책의 어느 부분을 어떻게 만들었다고 적었는지만 읽습니다.",
+    coreIdea:
+      "투키디데스는 자기 책에 실린 연설이 들은 말의 기록이 아니라 그 자리에 요구되었다고 자기가 판단한 말이라고 밝히고, 같은 문단에서 사건 쪽은 자기 인상조차 믿지 않고 보고의 정확함을 엄하게 시험했다고 적습니다. 그래서 한 권 안에 만들어진 방법이 다른 두 칸이 있고, 그 구분은 해석이 아니라 저자가 적어 둔 것입니다. 이어서 그가 목격자들이 갈리는 이유로 든 두 가지는 성질이 달라, 하나는 증언을 모으면 줄고 하나는 모을수록 굳습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      {
+        id: "source-is-a-record-not-the-past",
+        role: "이 시리즈 전체가 서는 구분을 세웁니다.",
+      },
+      {
+        id: "two-kinds-in-one-source",
+        role: "한 책 안에서 성격이 갈리는 두 칸을 정의합니다.",
+      },
+      {
+        id: "authorial-method-statement",
+        role: "그 구분의 근거가 저자의 진술이라는 점을 세웁니다.",
+      },
+      {
+        id: "cross-checking-reports",
+        role: "사건 칸을 만든 절차를 세 단계로 적습니다.",
+      },
+      {
+        id: "scatter-versus-shift-in-testimony",
+        role: "어긋남의 두 원인이 왜 성질이 다른지를 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "source-is-a-record-not-the-past",
+        sectionId: "overview",
+        intuition:
+          "책에 실린 연설을 읽으면 그 사람이 그렇게 말한 것처럼 느껴지지만, 읽고 있는 것은 그 사람의 말이 아니라 저자가 적은 글입니다.",
+        workedExample:
+          "장군의 연설이 몇 쪽에 걸쳐 실려 있습니다. 녹음도 속기도 없던 시절이므로 그 문장들은 누군가의 기억과 판단을 거쳐 적힌 것입니다.",
+        boundary:
+          "기록이라서 쓸 수 없다는 뜻이 아니라, 무엇의 기록인지를 먼저 물어야 한다는 뜻입니다.",
+      },
+      {
+        id: "two-kinds-in-one-source",
+        sectionId: "two-kinds",
+        intuition:
+          "같은 활자로 인쇄되어 있어도 연설 칸과 사건 칸은 만들어진 방법이 다릅니다.",
+        workedExample:
+          "연설은 저자가 그 자리에 요구되었다고 판단한 말로 다시 쓴 것이고, 사건은 두 출처의 보고를 대어 본 것입니다. 책에는 그 둘과, 둘을 어떻게 만들었는지에 대한 진술까지 세 가지가 들어 있습니다.",
+        boundary:
+          "모든 사료에 두 칸이 있다는 주장이 아닙니다. 이 책에 두 칸이 있다는 것은 저자가 밝혀서 알 수 있는 것입니다.",
+      },
+      {
+        id: "authorial-method-statement",
+        sectionId: "speeches",
+        intuition:
+          "저자가 '나는 이렇게 만들었다'고 적어 두면 독자는 신뢰의 범위를 추측하지 않아도 됩니다.",
+        workedExample:
+          "1권 22절에서 저자는 말을 한 마디씩 기억에 담아 두기 어려웠다고 적고, 그래서 그 자리가 말하는 이에게 요구했다고 자기가 판단한 것을 말하게 했으며 실제로 한 말의 전체 뜻에는 할 수 있는 한 가깝게 붙였다고 덧붙입니다.",
+        boundary:
+          "두 제약이 모두 저자의 판단을 거치므로 독자가 그 판단을 검증할 수는 없습니다.",
+      },
+      {
+        id: "cross-checking-reports",
+        sectionId: "events",
+        intuition:
+          "들은 것을 그대로 옮기지 않고, 자기가 본 것까지 하나의 보고로 취급해 서로 대어 봅니다.",
+        workedExample:
+          "손에 닿는 첫 출처를 쓰지 않고, 자기 인상도 믿지 않고, 자기가 본 것과 남이 자기를 위해 본 것을 두고 정확함을 할 수 있는 한 엄하게 시험했다는 세 단계가 같은 문단에 적혀 있습니다.",
+        boundary:
+          "시험을 거쳤다는 것이 틀림이 없다는 뜻은 아닙니다. 저자 자신이 다음 문장에서 그 시험이 왜 어려웠는지를 적습니다.",
+      },
+      {
+        id: "scatter-versus-shift-in-testimony",
+        sectionId: "why-they-diverge",
+        intuition:
+          "잘못 기억한 사람들은 서로 다른 쪽으로 틀리고, 한쪽을 편든 사람들은 모두 같은 쪽으로 틀립니다.",
+        workedExample:
+          "기억이 흐려 생긴 어긋남은 방향에 규칙이 없으니 여러 증언을 모으면 줄어듭니다. 편들어 생긴 어긋남은 방향이 같으니 열 개를 모아도 같은 쪽으로 더 확실해질 뿐입니다.",
+        proofIdea:
+          "어긋남을 참값에 더해진 차이로 보면, 원인이 흐린 기억일 때 그 차이의 부호가 증언마다 달라 모은 값에서 서로 지워집니다. 원인이 편드는 마음일 때는 같은 편의 증언이 모두 같은 부호를 가지므로 지워지지 않고 그대로 남아, 증언이 늘수록 모은 값은 치우친 쪽에 더 가까워집니다.",
+        counterexample:
+          "같은 일을 서로 다른 편의 목격자들에게서 모았고 각 편의 치우침이 반대 방향이면, 편드는 마음에서 온 어긋남도 모으면 줄어듭니다. 그러므로 모으기가 무용한 쪽은 편든 증언 일반이 아니라 같은 편에서만 모은 증언입니다.",
+        boundary:
+          "흩어짐과 쏠림이라는 그림은 이 글이 그린 것입니다. 저자가 적은 것은 어긋남의 두 원인까지이고, 그 둘이 모으기에 어떻게 반응하는지는 적혀 있지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 기록이라는 것",
+        relation: "사료는 사건이 아니라 사건에 대한 기록입니다.",
+        concepts: ["source-is-a-record-not-the-past"],
+      },
+      {
+        label: "01 한 책 두 칸",
+        relation: "한 기록 안에서 만들어진 방법이 갈립니다.",
+        concepts: ["two-kinds-in-one-source"],
+      },
+      {
+        label: "02 저자의 진술",
+        relation: "그 구분의 근거는 저자가 적어 둔 것입니다.",
+        concepts: ["authorial-method-statement", "cross-checking-reports"],
+      },
+      {
+        label: "03 어긋남의 성질",
+        relation: "원인에 따라 증언을 모으는 일의 값이 달라집니다.",
+        concepts: ["scatter-versus-shift-in-testimony"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "이 책에 실린 연설이 어떻게 만들어졌다고 저자가 적었는지 쓰세요.",
+        answerChecklist: [
+          "말을 한 마디씩 기억에 담아 두기 어려웠다고 적음",
+          "그 자리가 말하는 이에게 요구했다고 저자가 판단한 것을 말하게 함",
+          "실제로 한 말의 전체 뜻에는 할 수 있는 한 가깝게 붙였다고 덧붙임",
+          "저자가 1권 22절에 직접 적음",
+        ],
+        requiredConcepts: ["authorial-method-statement"],
+        sectionId: "speeches",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 책 안의 연설 칸과 사건 칸이 어떻게 다른지 한 줄씩 쓰세요.",
+        answerChecklist: [
+          "연설은 저자가 판단해 다시 쓴 것",
+          "사건은 둘 이상의 보고를 대어 본 것",
+          "활자로는 구분되지 않음",
+          "구분의 근거는 저자의 진술",
+        ],
+        requiredConcepts: ["two-kinds-in-one-source"],
+        sectionId: "two-kinds",
+      },
+      {
+        level: "basic",
+        question:
+          "저자가 사건을 적을 때 쓴 절차를 순서대로 세 단계로 쓰세요.",
+        answerChecklist: [
+          "손에 닿는 첫 출처를 그대로 쓰지 않음",
+          "자기 자신의 인상도 믿지 않음",
+          "자기가 본 것과 남이 본 것의 정확함을 엄하게 시험함",
+          "세 단계가 같은 문단에 적혀 있음",
+        ],
+        requiredConcepts: ["cross-checking-reports"],
+        sectionId: "events",
+      },
+      {
+        level: "basic",
+        question:
+          "목격자들의 말이 갈리는 이유로 저자가 든 두 가지를 쓰세요.",
+        answerChecklist: [
+          "기억이 온전하지 않아서",
+          "한쪽을 지나치게 편들어서",
+          "그 어긋남 때문에 결론을 내는 데 품이 들었다고 적음",
+          "둘을 나란히 적어 둠",
+        ],
+        requiredConcepts: ["scatter-versus-shift-in-testimony"],
+        sectionId: "why-they-diverge",
+      },
+      {
+        level: "basic",
+        question:
+          "어느 장군의 연설을 인용해 '그가 이렇게 말했다'고 쓰면 무엇이 잘못되는지 쓰세요.",
+        answerChecklist: [
+          "그 문장은 그 사람의 말이 아님",
+          "저자의 판단으로 다시 쓴 것",
+          "저자 자신이 그렇다고 밝혀 둠",
+          "전체 뜻은 맞추려 했다는 범위까지만 말할 수 있음",
+        ],
+        requiredConcepts: ["two-kinds-in-one-source", "authorial-method-statement"],
+        sectionId: "speeches",
+      },
+      {
+        level: "basic",
+        question:
+          "사료가 지난 일이 아니라 지난 일에 대한 기록이라는 말이 무엇을 바꾸는지 쓰세요.",
+        answerChecklist: [
+          "적힌 것을 사건으로 읽지 않음",
+          "적은 사람이 무엇을 할 수 있었는지를 먼저 물음",
+          "기록의 한계를 사건의 성질로 착각하지 않게 됨",
+          "읽는 순서가 사건에서 기록으로 바뀜",
+        ],
+        requiredConcepts: ["source-is-a-record-not-the-past"],
+        sectionId: "overview",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 사건에 대한 증언을 열 개 모았더니 모두 한쪽으로 쏠려 있습니다. 안심해도 되는지 판단하고 이유를 쓰세요.",
+        answerChecklist: [
+          "안심할 수 없음",
+          "쏠림의 원인이 사건 자체일 수도 있고 증언자의 편일 수도 있음",
+          "편드는 마음에서 온 어긋남은 모을수록 굳음",
+          "증언의 수로는 답할 수 없고 증언자의 자리를 물어야 함",
+        ],
+        requiredConcepts: ["scatter-versus-shift-in-testimony"],
+        sectionId: "why-they-diverge",
+      },
+      {
+        level: "advanced",
+        question:
+          "흐린 기억에서 온 어긋남이 모으면 줄고 편든 마음에서 온 어긋남이 줄지 않는 이유를 어긋남의 방향으로 유도하세요.",
+        answerChecklist: [
+          "어긋남을 참값에 더해진 차이로 봄",
+          "흐린 기억은 차이의 부호가 증언마다 달라 서로 지워짐",
+          "같은 편의 증언은 부호가 같아 지워지지 않음",
+          "증언이 늘수록 모은 값이 치우친 쪽에 더 가까워짐",
+        ],
+        requiredConcepts: ["scatter-versus-shift-in-testimony"],
+        sectionId: "why-they-diverge",
+      },
+      {
+        level: "advanced",
+        question:
+          "편드는 마음에서 온 어긋남도 모으면 줄어드는 경우를 들고, 그래서 무엇이 무용한지를 다시 적으세요.",
+        answerChecklist: [
+          "서로 다른 편의 목격자에게서 모은 경우",
+          "각 편의 치우침이 반대 방향이면 상쇄됨",
+          "무용한 것은 편든 증언 일반이 아님",
+          "같은 편에서만 모은 증언이 무용함",
+        ],
+        requiredConcepts: ["scatter-versus-shift-in-testimony", "cross-checking-reports"],
+        sectionId: "why-they-diverge",
+      },
+      {
+        level: "advanced",
+        question:
+          "저자가 자기 방법을 적어 두지 않은 사료를 이 글의 기준으로 어떻게 다뤄야 하는지 쓰세요.",
+        answerChecklist: [
+          "두 칸의 구분을 독자가 추측해야 함",
+          "추측은 검증되지 않음",
+          "방법 진술이 없다는 사실 자체를 결론의 한계에 적음",
+          "진술이 있는 사료와 같은 신뢰를 주지 않음",
+        ],
+        requiredConcepts: ["authorial-method-statement", "source-is-a-record-not-the-past"],
+        sectionId: "why-they-diverge",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Thucydides, 『History of the Peloponnesian War』, 1권 22절 · Richard Crawley 영역",
+        href: "https://www.gutenberg.org/ebooks/7142",
+        problem:
+          "전쟁의 당대 기록을 쓰면서, 사람들이 한 말과 일어난 일을 같은 책에 담아야 했습니다. 말은 한 마디씩 기억될 수 없고 일은 목격자마다 다르게 전해지므로, 둘을 같은 방식으로 적으면 어느 쪽도 쓸 수 없는 기록이 됩니다.",
+        contribution:
+          "두 부분을 다른 방법으로 만들고 그 방법을 책 앞쪽에 적었습니다. 연설은 그 자리에 요구되었다고 저자가 판단한 말로 다시 쓰되 실제로 한 말의 전체 뜻에 붙이고, 사건은 첫 출처와 자기 인상을 모두 물리친 뒤 보고의 정확함을 엄하게 시험했습니다. 이어서 목격자들이 갈리는 이유를 온전하지 않은 기억과 한쪽을 편드는 마음 둘로 나눠 적었습니다.",
+        assumptions:
+          "두 제약이 모두 저자 자신의 판단을 거치므로 독자가 검증할 수 없다는 것이 가장 큰 전제입니다. 또 보고를 엄하게 시험했다는 진술의 내용이 무엇이었는지는 적혀 있지 않고, 시험을 거쳤다는 저자의 말을 받아들이는 것이 독자에게 남습니다.",
+        evidenceScope:
+          "Project Gutenberg의 Crawley 영역본 전사본(eBook 7142)으로 1권을 읽고 22절 전체를 대조했습니다. facsimile이 아니라 전사본이므로 쪽 이미지로 대조하지 못했고, 그래서 쪽수를 적지 않고 권·절 번호까지만 적습니다. 그리스어 원문은 읽지 않았으므로 번역을 거친 문장을 읽었다는 사실이 이 글의 범위에 포함됩니다.",
+        notClaim:
+          "이 책의 사건 서술이 실제로 정확한지는 판정하지 않습니다. 저자가 어떤 방법을 썼다고 적었는지까지만 읽습니다. 본문의 '흩어짐과 쏠림'이라는 그림과 '두 칸'이라는 표현은 이 글이 정리한 것이고 원문에 그 꼴로 없습니다. 한국어 서술도 이 글이 옮긴 것이며 공인된 번역이 아닙니다.",
+        sectionId: "speeches",
+      },
+    ],
+  },
+  "testimony/told-but-not-believed": {
+    entryNote:
+      "1편이 한 사료 안에 만들어진 방법이 다른 두 칸이 있다는 것을 소유합니다. 이 글은 그 구분을 다시 세우지 않고, 저자가 믿는 문장과 믿지 않는 문장을 어떻게 구분해 두었는지만 봅니다.",
+    coreIdea:
+      "헤로도토스는 아르고스가 왜 전쟁에서 빠졌는지에 대한 세 설명을 하나도 지우지 않고 각각 누구의 보고인지를 붙여 남깁니다. 그러고 나서 전해지는 것을 전할 의무는 있으나 그것을 다 믿을 의무는 없다고 적고, 그 말이 이 역사의 모든 서술에 해당한다고 범위까지 못 박습니다. 그래서 이 책의 문장은 저자가 믿는 문장이 아니라 저자가 전해 들은 문장으로 읽는 것이 기본값이 됩니다.",
+    assumedKnowledge: [
+      {
+        id: "source-is-a-record-not-the-past",
+        role: "적힌 것이 사건이 아니라 기록이라는 구분을 전제로 두고 씁니다.",
+      },
+      {
+        id: "authorial-method-statement",
+        role: "저자가 자기 방법을 적어 둔다는 것이 무엇인지는 1편이 소유합니다.",
+      },
+      {
+        id: "scatter-versus-shift-in-testimony",
+        role: "보고가 어느 편에서 나왔는지를 왜 물어야 하는지에 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "competing-accounts-kept-side-by-side",
+        role: "서로를 부정하는 설명을 함께 남기는 선택을 정의합니다.",
+      },
+      {
+        id: "attribution-tag",
+        role: "그 설명들이 섞이지 않게 하는 장치를 세웁니다.",
+      },
+      {
+        id: "reporting-apart-from-believing",
+        role: "저자가 적어 둔 두 의무의 분리를 세웁니다.",
+      },
+      {
+        id: "declared-scope-of-a-method",
+        role: "그 규칙이 책 전체에 걸린다는 선언의 값을 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "competing-accounts-kept-side-by-side",
+        sectionId: "three-accounts",
+        intuition:
+          "아르고스가 왜 빠졌는지에 대한 답이 하나가 아니라 셋 적혀 있습니다.",
+        workedExample:
+          "아르고스인 자신의 설명은 신탁과 지휘권 조건을 들고, 헬라스에 돌던 이야기는 페르시아의 제안을 받고 구실을 만들었다고 하며, 세 번째 이야기는 아르고스인이 침략을 불러들였다고 합니다.",
+        boundary:
+          "셋을 남긴다는 것이 셋이 모두 그럴듯하다는 뜻은 아닙니다. 저자는 확실히 말할 수 없다고 적고 아르고스인의 보고 외에는 의견을 밝히지 않겠다고 둡니다.",
+      },
+      {
+        id: "attribution-tag",
+        sectionId: "tags",
+        intuition:
+          "'그들은 말한다'가 문장마다 붙어 있어 누구의 주장인지가 유지됩니다.",
+        workedExample:
+          "아르고스인의 설명 안에서 신탁을 받았다는 것도 조건을 걸었다는 것도 저자의 서술이 아니라 그들의 보고로 적혀 있습니다. 둘째 설명은 헬라스에 전해진다고, 셋째는 이런 말도 전해진다고 들어옵니다.",
+        boundary:
+          "꼬리표는 어느 보고가 맞는지를 가려 주지 않습니다. 섞이지 않게만 해 줍니다.",
+      },
+      {
+        id: "reporting-apart-from-believing",
+        sectionId: "two-duties",
+        intuition:
+          "전할 의무와 믿을 의무가 하나로 묶여 있으면 믿지 못하는 이야기는 책에 들어오지 못합니다.",
+        workedExample:
+          "저자는 전해지는 것을 전할 의무는 있으나 그것을 다 믿을 의무는 없다고 적습니다. 그래서 책에는 이야기와 저자의 유보가 함께 남습니다.",
+        boundary:
+          "유보를 적는 것이 판정을 대신하지는 않습니다. 저자는 같은 절에서 누가 가장 비열했는가에 대한 말을 따로 적어, 두 작업이 다른 일임을 보입니다.",
+      },
+      {
+        id: "declared-scope-of-a-method",
+        sectionId: "scope",
+        intuition:
+          "한 대목의 변명인지 책 전체의 규칙인지가 적혀 있어야 독자가 쓸 수 있습니다.",
+        workedExample:
+          "저자는 그 말이 이 역사의 모든 서술에 대해 유효한 것으로 여겨지게 하라고 적습니다. 그래서 다른 대목에서도 꼬리표의 유무를 먼저 보는 것이 기본 읽기가 됩니다.",
+        boundary:
+          "범위 선언이 그 책의 사실이 정확하다는 보증은 아닙니다. 어디까지가 저자의 주장인지의 경계만 정합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 세 설명",
+        relation: "같은 일에 대한 답이 셋 남아 있습니다.",
+        concepts: ["competing-accounts-kept-side-by-side"],
+      },
+      {
+        label: "01 꼬리표",
+        relation: "셋이 섞이지 않게 하는 장치가 있습니다.",
+        concepts: ["attribution-tag"],
+      },
+      {
+        label: "02 두 의무",
+        relation: "전하는 일과 믿는 일을 갈라 둡니다.",
+        concepts: ["reporting-apart-from-believing"],
+      },
+      {
+        label: "03 범위",
+        relation: "그 규칙이 책 전체에 걸린다고 적습니다.",
+        concepts: ["declared-scope-of-a-method"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "아르고스가 전쟁에서 빠진 이유로 책에 적힌 세 설명을 각각 한 줄로 쓰세요.",
+        answerChecklist: [
+          "신탁을 따랐고 지휘권 조건이 맞지 않아 빠졌다는 아르고스인의 설명",
+          "페르시아의 혈연 제안을 받고 구실을 만들었다는 헬라스의 이야기",
+          "아르고스인이 페르시아를 불러들였다는 이야기",
+          "셋이 모두 책에 남아 있음",
+        ],
+        requiredConcepts: ["competing-accounts-kept-side-by-side"],
+        sectionId: "three-accounts",
+      },
+      {
+        level: "basic",
+        question:
+          "저자가 전할 의무와 믿을 의무에 대해 적은 문장의 내용을 쓰세요.",
+        answerChecklist: [
+          "전해지는 것을 전할 의무는 있다",
+          "그것을 다 믿을 의무는 없다",
+          "7권 152절에 저자가 직접 적음",
+          "두 의무가 따로라는 선언",
+        ],
+        requiredConcepts: ["reporting-apart-from-believing"],
+        sectionId: "two-duties",
+      },
+      {
+        level: "basic",
+        question:
+          "그 규칙이 어디까지 걸린다고 저자가 적었는지 쓰세요.",
+        answerChecklist: [
+          "이 역사의 모든 서술에 해당한다고 적음",
+          "아르고스 대목의 예외가 아님",
+          "범위를 저자가 직접 선언함",
+          "그래서 다른 대목도 같은 기준으로 읽음",
+        ],
+        requiredConcepts: ["declared-scope-of-a-method"],
+        sectionId: "scope",
+      },
+      {
+        level: "basic",
+        question:
+          "출처 꼬리표가 하는 일과 하지 않는 일을 각각 쓰세요.",
+        answerChecklist: [
+          "하는 일: 어느 서술이 누구의 보고인지 표시",
+          "하는 일: 설명들이 섞이지 않게 함",
+          "하지 않는 일: 어느 보고가 맞는지 가리기",
+          "모순이 저자의 것이 아니라 보고들 사이의 것이 됨",
+        ],
+        requiredConcepts: ["attribution-tag"],
+        sectionId: "tags",
+      },
+      {
+        level: "basic",
+        question:
+          "아르고스가 지휘권을 요구한 같은 행동을 두 설명이 어떻게 다르게 읽는지 쓰세요.",
+        answerChecklist: [
+          "첫째 설명에서는 연합에 응하기 위한 조건",
+          "둘째 설명에서는 가만히 있을 구실",
+          "행동은 같고 해석이 반대",
+          "행동만으로는 두 설명을 가릴 수 없음",
+        ],
+        requiredConcepts: ["competing-accounts-kept-side-by-side", "attribution-tag"],
+        sectionId: "three-accounts",
+      },
+      {
+        level: "basic",
+        question:
+          "적는 일과 믿는 일이 하나로 묶여 있을 때 기록에서 무엇이 사라지는지 쓰세요.",
+        answerChecklist: [
+          "믿지 못하는 이야기가 들어오지 못함",
+          "그런 이야기가 있었다는 사실도 사라짐",
+          "저자가 무엇을 버렸는지 알 수 없음",
+          "뒷사람이 다시 따질 재료가 없어짐",
+        ],
+        requiredConcepts: ["reporting-apart-from-believing"],
+        sectionId: "two-duties",
+      },
+      {
+        level: "advanced",
+        question:
+          "전해진 것을 다 남기는 것만으로는 쓸 수 있는 기록이 되지 않는 이유를 들고, 함께 필요한 두 가지를 쓰세요.",
+        answerChecklist: [
+          "꼬리표가 없으면 한 저자의 모순된 서술로 읽힘",
+          "범위가 없으면 믿어서 적은 것과 전해서 적은 것을 가릴 수 없음",
+          "각 서술에 출처를 붙이는 것이 필요",
+          "그 방식이 책 전체에 걸린다고 적어 두는 것이 필요",
+        ],
+        requiredConcepts: ["attribution-tag", "declared-scope-of-a-method"],
+        sectionId: "scope",
+      },
+      {
+        level: "advanced",
+        question:
+          "저자가 같은 절에서 누가 가장 비열했는가에 대한 말을 따로 적은 것이 무엇을 보이는지 쓰세요.",
+        answerChecklist: [
+          "모든 사람이 이웃의 나쁜 일을 보면 자기 것을 되가져갈 것이라고 적음",
+          "그러니 가장 비열한 것이 아르고스인은 아니라고 덧붙임",
+          "판정하는 일과 전해진 것을 적는 일이 다른 일",
+          "두 작업을 한 절에서 따로 해 보임",
+        ],
+        requiredConcepts: ["reporting-apart-from-believing"],
+        sectionId: "two-duties",
+      },
+      {
+        level: "advanced",
+        question:
+          "범위 선언이 있는 책과 없는 책에서 어긋난 서술을 만났을 때 독자의 읽기가 어떻게 달라지는지 쓰세요.",
+        answerChecklist: [
+          "없으면 모든 문장을 저자의 주장으로 읽음",
+          "없으면 어긋난 대목이 책 전체의 신뢰를 깎음",
+          "있으면 어긋남이 당대 보고의 차이로 읽힘",
+          "꺼낼 수 있는 것의 경계가 선언에 따라 정해짐",
+        ],
+        requiredConcepts: ["declared-scope-of-a-method", "competing-accounts-kept-side-by-side"],
+        sectionId: "scope",
+      },
+      {
+        level: "advanced",
+        question:
+          "이 책의 한 문장을 인용하려 할 때 확인해야 하는 것을 순서대로 쓰세요.",
+        answerChecklist: [
+          "그 자리에 출처 꼬리표가 붙어 있는지",
+          "저자가 자기 판단을 따로 적어 두었는지",
+          "저자가 믿는 문장이라고 가정하지 않는 것이 기본값",
+          "전해지는 것을 옮긴 문장으로 먼저 읽음",
+        ],
+        requiredConcepts: ["attribution-tag", "reporting-apart-from-believing"],
+        sectionId: "scope",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Herodotus, 『The History of Herodotus』, 7권 148~152절 · G. C. Macaulay 영역",
+        href: "https://www.gutenberg.org/ebooks/2456",
+        problem:
+          "아르고스가 전쟁에서 빠진 이유에 대해 서로를 부정하는 설명이 여럿 전해졌습니다. 하나를 골라 적으면 다른 설명이 있었다는 사실이 사라지고, 다 적으면 책이 모순된 서술을 담은 것으로 보입니다.",
+        contribution:
+          "세 설명을 모두 남기되 각각이 누구의 보고인지를 그 자리에 적고, 자기는 확실히 말할 수 없으며 아르고스인이 보고하는 것 외에는 의견을 밝히지 않는다고 둡니다. 이어서 전해지는 것을 전할 의무는 있으나 다 믿을 의무는 없다고 적고, 그 말이 이 역사의 모든 서술에 해당한다고 범위를 선언합니다.",
+        assumptions:
+          "꼬리표가 붙은 보고의 내용이 실제로 그렇게 전해졌다는 것은 저자의 말로만 확인됩니다. 또 저자가 어느 보고에 더 무게를 두었는지는 대개 적혀 있지 않으므로, 유보의 정도까지는 독자가 알 수 없습니다.",
+        evidenceScope:
+          "Project Gutenberg의 Macaulay 영역본 전사본(eBook 2456)으로 7권 148~153절을 읽고 152절 전문을 대조했습니다. facsimile이 아니라 전사본이므로 쪽 이미지로 대조하지 못했고, 그래서 쪽수를 적지 않고 권·절 번호까지만 적습니다. 그리스어 원문은 읽지 않았습니다.",
+        notClaim:
+          "세 설명 중 무엇이 사실인지는 판정하지 않습니다. 저자가 그것들을 어떻게 적어 두었는지까지만 읽습니다. '꼬리표'와 '두 의무'라는 표현은 이 글이 정리한 것이고 원문에 그 꼴로 없습니다. 한국어 서술도 이 글이 옮긴 것이며 공인된 번역이 아닙니다.",
+        sectionId: "two-duties",
+      },
+    ],
+  },
+  "testimony/the-writer-was-there": {
+    entryNote:
+      "1편이 저자의 방법 진술을, 2편이 믿음의 범위 선언을 소유합니다. 이 글은 그 둘을 다시 세우지 않고, 저자가 사건의 당사자일 때 무엇을 더 적어야 하는지만 봅니다.",
+    coreIdea:
+      "요세푸스는 서문에서 그 자리에 있던 사람들도 아첨이나 증오 때문에 거짓을 적었다고 쓰고, 바로 다음 줄에서 자기가 처음에 로마와 맞서 싸웠고 그 뒤에는 있도록 강제되었다고 밝힙니다. 이어서 사실과 애도가 섞여 있으니 나눠 읽어 달라고 요청하고, 내부 책임을 말하는 대목에는 티투스를 증인으로 대며, 그 전쟁을 겪어 아는 사람들을 독자로 둡니다. 네 장치가 하는 일은 당사자의 기록을 믿게 만드는 것이 아니라 어느 부분을 어느 정도 믿을지 독자가 정할 재료를 내놓는 것입니다.",
+    assumedKnowledge: [
+      {
+        id: "source-is-a-record-not-the-past",
+        role: "적힌 것이 기록이라는 구분을 전제로 둡니다.",
+      },
+      {
+        id: "scatter-versus-shift-in-testimony",
+        role: "편드는 마음에서 온 어긋남이 지워지지 않는다는 결과를 가져다 씁니다.",
+      },
+      {
+        id: "attribution-tag",
+        role: "꼬리표를 저자 자신에게 붙이는 쪽으로 넓히는 데 씁니다.",
+      },
+      {
+        id: "two-kinds-in-one-source",
+        role: "저자가 두 칸을 나눠 만든 경우와 비교하는 기준으로 씁니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "presence-is-not-credibility",
+        role: "목격이 신뢰의 근거가 아니라는 출발점을 세웁니다.",
+      },
+      {
+        id: "disclosed-partiality",
+        role: "치우침을 먼저 적는 방식을 정의합니다.",
+      },
+      {
+        id: "reader-side-separation",
+        role: "나누는 일을 독자에게 맡기는 방식과 그 조건을 세웁니다.",
+      },
+      {
+        id: "witness-direction-of-interest",
+        role: "증인을 세는 기준을 신분에서 이해의 방향으로 옮깁니다.",
+      },
+      {
+        id: "audience-as-a-constraint",
+        role: "독자의 구성이 글에 걸리는 제약이 된다는 것을 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "presence-is-not-credibility",
+        sectionId: "not-enough",
+        intuition:
+          "목격이 신뢰를 준다면 자리에 있던 사람들의 기록은 실패할 수 없었을 것입니다.",
+        workedExample:
+          "저자는 관여하지 않은 자들이 들은 말로 어긋나는 이야기를 적었다고 하고, 자리에 있던 자들은 로마에 아첨하거나 유대인을 미워해 거짓을 적었다고 합니다. 그래서 그들의 글에는 고발과 찬사가 번갈아 들어 있고 사실의 정확한 진실은 어디에도 없다고 둡니다.",
+        boundary:
+          "목격이 쓸모가 없다는 뜻은 아닙니다. 첫 번째 실패는 자리에 가면 줄어듭니다.",
+      },
+      {
+        id: "disclosed-partiality",
+        sectionId: "own-position",
+        intuition:
+          "자기가 어느 편에 있었는지를 적어 두면 독자가 의심의 방향을 정할 수 있습니다.",
+        workedExample:
+          "마티아스의 아들 요셉, 태생이 히브리인이고 제사장이며, 처음에는 로마와 맞서 싸웠고 그 뒤의 일에는 있도록 강제되었다고 적습니다. 아첨과 증오를 실패 원인으로 적은 바로 뒤에 둔 자리입니다.",
+        boundary:
+          "치우침을 공개하는 것이 치우침을 없애지는 않습니다. 의심을 균일하게 걸지 않게만 해 줍니다.",
+      },
+      {
+        id: "reader-side-separation",
+        sectionId: "split",
+        intuition:
+          "섞여 있다고 미리 말해 두면, 사실 서술이 감정과 함께 깎이지 않습니다.",
+        workedExample:
+          "저자는 자기 감정에 말을 맞추겠다고 적고, 끝까지 비난하려는 사람에게는 사실은 역사 부분으로 애도는 글쓴이에게만 돌리라고 요청합니다.",
+        boundary:
+          "나누는 기준을 주지 않았으므로 문장별 경계는 독자마다 달라집니다. 꼬리표가 문장마다 붙던 경우보다 경계가 흐립니다.",
+      },
+      {
+        id: "witness-direction-of-interest",
+        sectionId: "hostile-witness",
+        intuition:
+          "적장의 증언은 같은 편의 증언보다 세게 보이지만, 그 주장이 적장에게도 유리하면 다시 약해집니다.",
+        workedExample:
+          "나라를 망친 것이 내부의 폭군들이고 로마는 마음에 없이 공격해 왔다는 주장에, 저자는 성을 무너뜨린 티투스를 증인으로 댑니다. 그 주장의 방향은 책임을 로마에서 유대 내부로 옮깁니다.",
+        proofIdea:
+          "증언의 값은 그 증언이 증인 자신의 이해에 반할 때 커집니다. 적대 증언이 세게 보이는 이유도 신분 때문이 아니라 통상 적의 이해에 반하기 때문입니다. 그런데 이 주장은 책임을 로마에서 유대 내부로 옮기므로 로마 쪽 이해와 같은 방향이고, 그래서 이해에 반한다는 조건이 성립하지 않습니다. 조건이 깨지면 신분만 남고 증언의 추가 무게는 사라집니다.",
+        counterexample:
+          "같은 저자가 로마군이 성전을 황제의 뜻과 달리 불태웠다고 적을 때, 그 주장은 로마 쪽 이해에 반합니다. 이런 대목에서 로마 쪽 증언이 나오면 이해에 반하는 증언이 되어 무게가 살아납니다. 그러므로 깎이는 것은 이 저자의 증인 전부가 아니라 저자와 증인의 이해가 같은 방향인 주장들입니다.",
+        boundary:
+          "증인의 이해 방향을 따지는 읽기는 이 글이 더한 것이고 저자가 적어 둔 것이 아닙니다. 저자가 적은 것은 주장과 증인까지입니다.",
+      },
+      {
+        id: "audience-as-a-constraint",
+        sectionId: "audience",
+        intuition:
+          "거짓을 적으면 걸릴 상대가 독자 가운데 있으면 그 자체가 제약입니다.",
+        workedExample:
+          "저자는 자기가 겪은 재난도 감추지 않겠다고 적고 그 까닭을 그것들의 진실을 아는 사람들에게 이야기할 것이기 때문이라고 둡니다. 서문을 닫으면서도 이 전쟁을 겪어 아는 사람들에게 불평할 거리를 남기지 않았다고 적습니다.",
+        boundary:
+          "이 제약은 그런 독자가 살아 있는 동안만 걸립니다. 세대가 지난 뒤의 독자에게는 같은 방식으로 작동하지 않습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 목격의 한계",
+        relation: "자리에 있던 사람도 실패했습니다.",
+        concepts: ["presence-is-not-credibility"],
+      },
+      {
+        label: "01 자기 자리",
+        relation: "치우침을 먼저 적어 둡니다.",
+        concepts: ["disclosed-partiality"],
+      },
+      {
+        label: "02 나눠 읽기",
+        relation: "나누는 일을 독자에게 넘깁니다.",
+        concepts: ["reader-side-separation"],
+      },
+      {
+        label: "03 바깥 고정점",
+        relation: "증인과 독자를 글 바깥에 둡니다.",
+        concepts: ["witness-direction-of-interest", "audience-as-a-constraint"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "저자가 적은 두 묶음의 실패를 원인과 함께 각각 쓰세요.",
+        answerChecklist: [
+          "관여하지 않은 사람: 들은 말을 모아 어긋나는 이야기를 적음",
+          "자리에 있던 사람: 거짓된 서술을 적음",
+          "뒤쪽의 동기는 로마에 아첨하는 기분이나 유대인을 미워하는 마음",
+          "그들의 글에 사실의 정확한 진실은 어디에도 없다고 적음",
+        ],
+        requiredConcepts: ["presence-is-not-credibility"],
+        sectionId: "not-enough",
+      },
+      {
+        level: "basic",
+        question:
+          "저자가 글머리에 적은 자기 소개의 내용을 쓰세요.",
+        answerChecklist: [
+          "마티아스의 아들 요셉",
+          "태생이 히브리인이고 제사장",
+          "처음에는 로마와 맞서 싸웠음",
+          "그 뒤에 벌어진 일에는 있도록 강제되었음",
+        ],
+        requiredConcepts: ["disclosed-partiality"],
+        sectionId: "own-position",
+      },
+      {
+        level: "basic",
+        question:
+          "사실과 애도에 대해 저자가 독자에게 요청한 것을 쓰세요.",
+        answerChecklist: [
+          "자기 감정에 말을 맞추겠다고 미리 적음",
+          "자기 나라의 비참에 대한 탄식은 허락되어야 한다고 적음",
+          "사실은 역사 부분으로 돌릴 것",
+          "탄식은 글쓴이 자신에게만 돌릴 것",
+        ],
+        requiredConcepts: ["reader-side-separation"],
+        sectionId: "split",
+      },
+      {
+        level: "basic",
+        question:
+          "나라를 망친 책임에 대한 주장과 그 증인을 쓰세요.",
+        answerChecklist: [
+          "내부의 난동하는 기질과 유대인 가운데 폭군들이 원인이라고 적음",
+          "로마는 마음에 없이 공격해 왔다고 적음",
+          "성을 무너뜨린 티투스를 증인으로 댐",
+          "티투스가 성을 치는 일을 자주 늦추었다고 적음",
+        ],
+        requiredConcepts: ["witness-direction-of-interest"],
+        sectionId: "hostile-witness",
+      },
+      {
+        level: "basic",
+        question:
+          "저자가 자기 재난을 감추지 않겠다고 한 까닭을 쓰세요.",
+        answerChecklist: [
+          "그것들의 진실을 아는 사람들에게 이야기할 것이기 때문",
+          "겪어 아는 사람들이 독자에 들어 있음",
+          "거짓을 적으면 걸릴 상대가 있음",
+          "서문 끝에서도 불평할 거리를 남기지 않았다고 적음",
+        ],
+        requiredConcepts: ["audience-as-a-constraint"],
+        sectionId: "audience",
+      },
+      {
+        level: "basic",
+        question:
+          "저자가 두 칸을 나눠 만든 경우와 나누는 일을 독자에게 넘긴 경우의 차이를 쓰세요.",
+        answerChecklist: [
+          "앞쪽은 저자가 만듦새를 밝혀 칸이 정해짐",
+          "뒤쪽은 섞였다는 사실만 공개되고 경계는 독자가 그음",
+          "뒤쪽은 문장별 판단이 독자마다 달라짐",
+          "그래서 글 바깥의 고정점이 더 필요해짐",
+        ],
+        requiredConcepts: ["reader-side-separation", "two-kinds-in-one-source"],
+        sectionId: "split",
+      },
+      {
+        level: "advanced",
+        question:
+          "적장의 증언이 세게 보이는 이유를 적고, 이 대목에서 그 무게가 왜 줄어드는지 유도하세요.",
+        answerChecklist: [
+          "증언은 증인 자신의 이해에 반할 때 값이 커짐",
+          "적대 증언이 센 이유도 신분이 아니라 이해에 반하기 때문",
+          "이 주장은 책임을 로마에서 유대 내부로 옮겨 로마 쪽 이해와 같은 방향",
+          "조건이 깨지면 신분만 남고 추가 무게는 사라짐",
+        ],
+        requiredConcepts: ["witness-direction-of-interest"],
+        sectionId: "hostile-witness",
+      },
+      {
+        level: "advanced",
+        question:
+          "같은 저자의 증인이라도 무게가 살아나는 대목을 들고, 그래서 깎이는 범위를 다시 적으세요.",
+        answerChecklist: [
+          "성전이 황제의 뜻과 달리 불탔다는 주장은 로마 쪽 이해에 반함",
+          "그 대목에서는 이해에 반하는 증언이 되어 무게가 살아남",
+          "깎이는 것은 이 저자의 증인 전부가 아님",
+          "저자와 증인의 이해가 같은 방향인 주장들만 깎임",
+        ],
+        requiredConcepts: ["witness-direction-of-interest", "disclosed-partiality"],
+        sectionId: "hostile-witness",
+      },
+      {
+        level: "advanced",
+        question:
+          "독자를 제약으로 두는 장치가 저자의 성실성에 기대는 장치와 어떻게 다른지, 그리고 그 제약이 언제 풀리는지 쓰세요.",
+        answerChecklist: [
+          "성실성은 확인할 수 없고 독자의 구성은 확인할 수 있음",
+          "걸릴 상대가 글 바깥에 있다는 것이 제약",
+          "겪어 아는 독자가 살아 있는 동안만 걸림",
+          "세대가 지나면 같은 방식으로 작동하지 않음",
+        ],
+        requiredConcepts: ["audience-as-a-constraint"],
+        sectionId: "audience",
+      },
+      {
+        level: "advanced",
+        question:
+          "티투스를 증인으로 세운 대목에서 쓸 수 있는 결론을 두 겹으로 적고, 어느 쪽이 저자의 것이고 어느 쪽이 독자의 것인지 가르세요.",
+        answerChecklist: [
+          "그런 주장이 제기되고 티투스가 근거로 거론되었다는 것",
+          "그 주장의 방향이 저자의 당시 처지와 같은 쪽이었다는 것",
+          "앞쪽은 저자가 적은 것",
+          "뒤쪽은 독자가 더하는 읽기",
+        ],
+        requiredConcepts: ["witness-direction-of-interest", "disclosed-partiality"],
+        sectionId: "hostile-witness",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Flavius Josephus, 『The Wars of the Jews』 서문 1·4·8·12절 · William Whiston 영역",
+        href: "https://www.gutenberg.org/ebooks/2850",
+        problem:
+          "사건의 당사자이고 한쪽 편에서 싸웠던 사람이 그 전쟁의 역사를 쓰려 했습니다. 목격은 자산이지만 같은 자리에 있던 자들이 아첨과 증오로 거짓을 적었으므로, 목격만으로는 자기 글을 다른 글과 구별할 수 없었습니다.",
+        contribution:
+          "두 묶음의 실패를 먼저 적고 자기 이름·혈통·신분과 전쟁에서의 자리를 글머리에 밝혔습니다. 사실과 애도가 섞여 있다고 공개하고 사실은 역사 부분으로 애도는 글쓴이에게 돌려 읽어 달라고 요청했으며, 내부 책임을 말하는 대목에는 성을 무너뜨린 티투스를 증인으로 댔습니다. 그리고 그 전쟁을 겪어 아는 사람들을 독자로 선언해 거짓을 적으면 걸릴 상대를 글 바깥에 두었습니다.",
+        assumptions:
+          "자기가 본 것과 겪은 것을 정확히 적겠다는 선언은 저자의 말로만 확인됩니다. 나눠 읽기 요청에는 나누는 기준이 함께 주어지지 않으므로 문장별 경계가 독자에게 남습니다. 티투스의 증언은 그 내용이 아니라 거론 자체가 적혀 있을 뿐입니다.",
+        evidenceScope:
+          "Project Gutenberg의 Whiston 영역본 전사본(eBook 2850)으로 『유대 전쟁사』 서문 1~12절 전체를 읽었습니다. facsimile이 아니라 전사본이므로 쪽 이미지로 대조하지 못했고, 그래서 쪽수를 적지 않고 서문의 절 번호까지만 적습니다. 그리스어 원문은 읽지 않았으며 영역자가 대괄호로 보충한 부분이 있다는 사실도 본문에 적었습니다.",
+        notClaim:
+          "이 전쟁의 사실 관계나 책임을 판정하지 않습니다. 저자가 자기 기록을 읽히게 하려고 무엇을 적어 두었는지까지만 읽습니다. 증인의 이해 방향을 따지는 읽기와 '네 장치'라는 정리는 이 글이 더한 것이고 원문에 그 꼴로 없습니다. 한국어 서술도 이 글이 옮긴 것이며 공인된 번역이 아닙니다.",
+        sectionId: "own-position",
+      },
+    ],
+  },
+  "record-numbers/how-the-army-was-counted": {
+    entryNote:
+      "앞 분류가 서술의 만듦새를 소유합니다. 이 글은 그 방법을 숫자에 적용해, 적힌 수가 어떤 절차에서 나왔는지만 봅니다.",
+    coreIdea:
+      "헤로도토스는 민족별 인원은 보고가 없어 적을 수 없다고 한 뒤 육군 전체를 170만으로 적고, 그 수를 얻은 절차를 바로 이어서 적습니다. 1만 명을 빽빽하게 세워 둘레에 배꼽 높이의 담을 쌓아 눈금을 만들고, 그 뒤로는 담이 몇 번 찼는지만 헤아리는 방법입니다. 그래서 170만은 사람을 헤아린 수가 아니라 1만이라는 눈금을 170번 적용한 수이고, 끝자리 0들은 그만큼이었다는 주장이 아니라 그 자리에 정보가 없다는 표시입니다.",
+    assumedKnowledge: [
+      {
+        id: "source-is-a-record-not-the-past",
+        role: "숫자도 누군가 만든 기록이라는 전제로 둡니다.",
+      },
+      {
+        id: "authorial-method-statement",
+        role: "저자가 방법을 적어 두는 관행이 숫자에도 적용된 경우로 읽습니다.",
+      },
+      {
+        id: "attribution-tag",
+        role: "보고가 없어 적지 못한다는 표시를 꼬리표의 한 꼴로 읽습니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "provenance-of-a-recorded-number",
+        role: "전문에서 온 수와 절차에서 온 수를 가릅니다.",
+      },
+      {
+        id: "counting-by-unit-enclosure",
+        role: "사료에 적힌 세는 절차를 단계로 세웁니다.",
+      },
+      {
+        id: "resolution-of-a-number",
+        role: "그 절차가 수의 어느 자리까지 말하는지를 정합니다.",
+      },
+      {
+        id: "unit-error-multiplies",
+        role: "절차를 아는 것과 결과를 믿는 것이 다른 문제임을 세웁니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "provenance-of-a-recorded-number",
+        sectionId: "two-numbers",
+        intuition:
+          "같은 절에서 한 숫자는 적을 수 없다고 하고 다른 숫자는 적습니다.",
+        workedExample:
+          "민족별 인원은 아무도 보고하지 않아 확실한 정보를 줄 수 없다고 적고, 육군 전체는 170만으로 나왔다고 적습니다.",
+        boundary:
+          "두 숫자를 가르는 것은 숫자의 모양이 아니라 그 옆에 적힌 말입니다. 모양만 보면 같은 무게로 읽힙니다.",
+      },
+      {
+        id: "counting-by-unit-enclosure",
+        sectionId: "procedure",
+        intuition:
+          "사람을 세는 대신 1만 명이 들어가는 공간을 만들고 그것이 몇 번 찼는지를 셉니다.",
+        workedExample:
+          "1만 명을 빽빽하게 세우고 바깥에 원을 두르고, 사람을 내보낸 뒤 둘레에 배꼽 높이의 돌담을 쌓습니다. 그다음부터 다른 사람들을 들여보내 채우기를 되풀이하고, 다 센 뒤에 민족별로 편성합니다.",
+        boundary:
+          "출발점의 1만 명을 무엇으로 세었는지는 적혀 있지 않습니다. 절차의 기준은 절차 바깥에서 옵니다.",
+      },
+      {
+        id: "resolution-of-a-number",
+        sectionId: "what-was-counted",
+        intuition:
+          "묶음으로 센 수는 묶음보다 작은 차이를 담지 못합니다.",
+        workedExample:
+          "170만은 1만 × 170번입니다. 끝 네 자리는 그 자리에 정보가 없다는 표시이고, 사람이 정확히 그만큼이었다는 뜻이 아닙니다.",
+        proofIdea:
+          "이 방법으로 얻을 수 있는 결과는 눈금의 정수배뿐입니다. 실제 인원이 눈금의 정수배와 다를 때 그 차이는 마지막 채움이 덜 찬 상태로만 나타나고, 기록에는 채움 횟수만 남습니다. 그러므로 눈금보다 작은 자리의 값은 결과에 전달되는 경로가 없습니다.",
+        counterexample:
+          "마지막 채움의 덜 찬 정도를 눈으로 가늠해 따로 적었다면 그 자리에도 정보가 생깁니다. 이 사료는 그렇게 적지 않았으므로, 해상도가 1만인 것은 방법의 필연이 아니라 이 기록의 사실입니다.",
+        boundary:
+          "해상도가 1만이라는 것은 이 수로 하나 단위의 비교를 할 수 없다는 뜻이고, 이 수가 틀렸다는 뜻은 아닙니다.",
+      },
+      {
+        id: "unit-error-multiplies",
+        sectionId: "where-it-slips",
+        intuition:
+          "담에 들어가는 사람 수를 실제보다 많게 잡으면 그 차이가 170번 곱해집니다.",
+        workedExample:
+          "빽빽함의 정도, 담을 한 번만 쌓았다는 점, 마지막 채움의 처리가 각각 어긋남을 만들고 어느 것도 기록에 흔적을 남기지 않습니다.",
+        proofIdea:
+          "결과는 눈금 크기와 채움 횟수의 곱입니다. 곱의 한 인자에 생긴 상대 오차는 곱에 그대로 전달되므로, 눈금에 생긴 차이는 상쇄되지 않고 횟수만큼 커진 절대 오차로 나타납니다.",
+        counterexample:
+          "채움마다 빽빽함이 들쑥날쑥하고 그 방향에 규칙이 없으면 오차는 서로 지워지는 쪽으로 움직입니다. 곱해지는 것은 눈금 자체가 한쪽으로 치우쳐 고정된 경우입니다.",
+        boundary:
+          "절차를 아는 것은 해상도를 계산하게 해 주지만 결과가 실제에 가깝다는 보증을 주지 않습니다. 두 판단은 따로 해야 합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 숫자의 출처",
+        relation: "적을 수 있는 수와 적을 수 없는 수가 갈립니다.",
+        concepts: ["provenance-of-a-recorded-number"],
+      },
+      {
+        label: "01 세는 절차",
+        relation: "눈금을 만들고 채움을 셉니다.",
+        concepts: ["counting-by-unit-enclosure"],
+      },
+      {
+        label: "02 해상도",
+        relation: "눈금보다 작은 자리에는 정보가 없습니다.",
+        concepts: ["resolution-of-a-number"],
+      },
+      {
+        label: "03 단위 오차",
+        relation: "눈금이 치우치면 오차가 곱해집니다.",
+        concepts: ["unit-error-multiplies"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "같은 절에서 민족별 수를 적지 못한 이유와 전체 수를 적은 근거를 각각 쓰세요.",
+        answerChecklist: [
+          "민족별 수는 아무도 보고하지 않아 확실한 정보를 줄 수 없다고 적음",
+          "전체 수는 세는 절차가 있어 적음",
+          "두 숫자의 출처가 다름",
+          "육군 전체는 170만으로 적힘",
+        ],
+        requiredConcepts: ["provenance-of-a-recorded-number"],
+        sectionId: "two-numbers",
+      },
+      {
+        level: "basic",
+        question: "사료에 적힌 세는 절차를 순서대로 쓰세요.",
+        answerChecklist: [
+          "1만 명을 한곳에 모아 할 수 있는 만큼 빽빽하게 세움",
+          "바깥으로 원을 두름",
+          "사람을 내보내고 둘레에 배꼽 높이의 거친 돌담을 쌓음",
+          "다른 사람들을 들여보내 채우기를 되풀이하고 뒤에 민족별로 편성함",
+        ],
+        requiredConcepts: ["counting-by-unit-enclosure"],
+        sectionId: "procedure",
+      },
+      {
+        level: "basic",
+        question:
+          "이 절차에서 실제로 세어진 것이 무엇인지와 170만이 어떻게 나오는지 쓰세요.",
+        answerChecklist: [
+          "세어진 것은 담이 찬 횟수",
+          "사람을 하나씩 헤아리는 단계가 없음",
+          "1만 × 170번",
+          "출발점의 1만은 절차 바깥에서 온 수",
+        ],
+        requiredConcepts: ["counting-by-unit-enclosure", "resolution-of-a-number"],
+        sectionId: "what-was-counted",
+      },
+      {
+        level: "basic",
+        question: "170만의 끝 네 자리를 어떻게 읽어야 하는지 쓰세요.",
+        answerChecklist: [
+          "사람이 정확히 그만큼이었다는 뜻이 아님",
+          "그 자리에 정보가 없다는 표시",
+          "눈금이 1만이기 때문",
+          "하나 단위의 비교에 쓸 수 없음",
+        ],
+        requiredConcepts: ["resolution-of-a-number"],
+        sectionId: "what-was-counted",
+      },
+      {
+        level: "basic",
+        question:
+          "사람을 하나씩 세는 방법과 채움으로 세는 방법의 품을 비교하세요.",
+        answerChecklist: [
+          "하나씩 세면 품이 인원에 비례해 늘어남",
+          "중간에 틀리면 어디서 틀렸는지 찾기 어려움",
+          "채움으로 세면 한 번의 품이 일정함",
+          "횟수만 기억하면 되므로 큰 집단에서 유리함",
+        ],
+        requiredConcepts: ["counting-by-unit-enclosure"],
+        sectionId: "what-was-counted",
+      },
+      {
+        level: "basic",
+        question:
+          "이 절차에서 어긋날 수 있는 자리 셋을 쓰고, 그것들이 기록에 남는지 쓰세요.",
+        answerChecklist: [
+          "빽빽함의 정도가 숫자로 적혀 있지 않음",
+          "담을 한 번만 쌓아 몸집·장비 차이를 흡수하지 못함",
+          "마지막 채움의 덜 찬 몫 처리가 적혀 있지 않음",
+          "어느 것도 기록에 흔적을 남기지 않음",
+        ],
+        requiredConcepts: ["unit-error-multiplies"],
+        sectionId: "where-it-slips",
+      },
+      {
+        level: "advanced",
+        question:
+          "눈금보다 작은 자리의 값이 결과에 전달되지 못하는 이유를 유도하세요.",
+        answerChecklist: [
+          "이 방법의 결과는 눈금의 정수배뿐",
+          "정수배와의 차이는 마지막 채움이 덜 찬 상태로만 나타남",
+          "기록에는 채움 횟수만 남음",
+          "그래서 전달 경로가 없음",
+        ],
+        requiredConcepts: ["resolution-of-a-number"],
+        sectionId: "what-was-counted",
+      },
+      {
+        level: "advanced",
+        question:
+          "해상도가 1만인 것이 방법의 필연이 아닌 경우를 들고, 이 사료에서 그것이 왜 사실이 되는지 쓰세요.",
+        answerChecklist: [
+          "마지막 채움의 덜 찬 정도를 가늠해 따로 적었다면 정보가 생김",
+          "그러면 해상도가 1만보다 작아짐",
+          "이 사료는 그렇게 적지 않았음",
+          "해상도 1만은 이 기록의 사실",
+        ],
+        requiredConcepts: ["resolution-of-a-number", "counting-by-unit-enclosure"],
+        sectionId: "what-was-counted",
+      },
+      {
+        level: "advanced",
+        question:
+          "담의 밀도를 실제보다 크게 잡았을 때 결과가 어느 쪽으로 얼마만큼 치우치는지 유도하세요.",
+        answerChecklist: [
+          "결과는 눈금 크기와 채움 횟수의 곱",
+          "눈금에 생긴 상대 오차가 곱에 그대로 전달됨",
+          "많은 쪽으로 치우치고 절대 오차는 횟수만큼 커짐",
+          "상쇄되지 않음",
+        ],
+        requiredConcepts: ["unit-error-multiplies"],
+        sectionId: "where-it-slips",
+      },
+      {
+        level: "advanced",
+        question:
+          "오차가 곱해지지 않고 지워지는 경우를 들고, 절차를 아는 것과 결과를 믿는 것의 관계를 쓰세요.",
+        answerChecklist: [
+          "채움마다 빽빽함이 들쑥날쑥하고 방향에 규칙이 없으면 지워짐",
+          "곱해지는 것은 눈금이 한쪽으로 치우쳐 고정된 경우",
+          "절차를 알면 해상도를 계산할 수 있음",
+          "그것이 결과가 실제에 가깝다는 보증은 아님",
+        ],
+        requiredConcepts: ["unit-error-multiplies", "resolution-of-a-number"],
+        sectionId: "where-it-slips",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Herodotus, 『The History of Herodotus』, 7권 60절 · G. C. Macaulay 영역",
+        href: "https://www.gutenberg.org/ebooks/2456",
+        problem:
+          "수십만 명 규모의 군대 인원을 적어야 했지만 민족별 보고는 없었고, 사람을 하나씩 헤아리는 일은 품이 인원에 비례해 늘어나 실행하기 어려웠습니다.",
+        contribution:
+          "민족별 수는 보고가 없어 줄 수 없다고 먼저 적고, 전체 육군을 170만으로 적은 뒤 그 수를 얻은 절차를 이어서 적었습니다. 1만 명을 빽빽하게 세워 둘레에 배꼽 높이의 담을 쌓아 눈금을 만들고 그 공간을 채우기를 되풀이한 방법이며, 세고 난 뒤에 민족별로 편성했다고 적습니다.",
+        assumptions:
+          "출발점의 1만 명을 어떻게 세었는지는 적혀 있지 않습니다. 빽빽함의 정도도 숫자로 적혀 있지 않고, 마지막 채움이 덜 찼을 때 어떻게 처리했는지도 없습니다. 영역자가 170 myriads를 1,700,000으로 주석에서 풀었습니다.",
+        evidenceScope:
+          "Project Gutenberg의 Macaulay 영역본 전사본(eBook 2456)으로 7권 60절과 영역자 주석을 읽었습니다. facsimile이 아니라 전사본이므로 쪽 이미지로 대조하지 못했고, 그래서 쪽수를 적지 않고 권·절 번호까지만 적습니다. 그리스어 원문은 읽지 않았습니다.",
+        notClaim:
+          "이 군대의 실제 규모를 판정하지 않습니다. 적힌 절차에서 수의 해상도를 읽는 것까지만 합니다. 어긋날 자리를 셋으로 가른 정리와 오차가 곱해진다는 유도는 이 글이 더한 것이고 사료에 그 꼴로 없습니다. 한국어 서술도 이 글이 옮긴 것이며 공인된 번역이 아닙니다.",
+        sectionId: "procedure",
+      },
+    ],
+  },
 };

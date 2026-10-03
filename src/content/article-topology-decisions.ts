@@ -535,6 +535,42 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Ricardo 7장의 같은 네 숫자(영국 100·120, 포르투갈 90·80)에서 두 나라 안의 맞바꿈 비율과 자본이 움직일 때의 절대 비교가 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
   },
+  "testimony/speeches-were-reconstructed": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "한 문단에 적힌 두 방법과 그 뒤의 두 어긋남이 '이 책의 어느 문장을 어디까지 믿을 수 있는가'라는 한 질문을 푼다. 연설 쪽만 떼면 재구성이 예외처럼 보이고, 사건 쪽만 떼면 저자가 왜 두 방법을 나눠 썼는지가 사라진다.",
+    sharedGate:
+      "1권 22절의 같은 문단에서 연설 칸의 두 제약과 사건 칸의 세 단계, 어긋남의 두 원인이 본문·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
+  "testimony/told-but-not-believed": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "세 설명·꼬리표·두 의무·범위 선언이 '믿지 않으면서 적은 문장을 어떻게 읽는가'라는 한 질문의 네 부품이다. 꼬리표를 떼면 세 설명이 모순으로 보이고, 범위 선언을 떼면 두 의무의 분리가 한 대목의 변명과 구별되지 않는다.",
+    sharedGate:
+      "7권 148~152절의 같은 세 설명과 152절의 두 의무·범위 문장이 본문·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
+  "testimony/the-writer-was-there": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "목격의 한계·치우침 공개·나눠 읽기·증인·독자 제약이 '당사자의 기록을 어디까지 믿을 수 있는가'라는 한 질문의 다섯 부품이다. 목격의 한계를 떼면 나머지 네 장치가 왜 필요한지가 사라지고, 증인과 독자를 떼면 나눠 읽기 요청이 저자의 선의에만 기대게 된다.",
+    sharedGate:
+      "서문 1·4·8·12절의 같은 진술(두 실패와 동기, 자기 소개, 나눠 읽기 요청, 티투스 증언, 겪어 아는 독자)이 본문·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
+  "record-numbers/how-the-army-was-counted": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "숫자의 출처·절차·해상도·단위 오차가 '적힌 수를 어디까지 쓸 수 있는가'라는 한 질문의 네 부품이다. 절차를 떼면 해상도를 계산할 근거가 없고, 단위 오차를 떼면 절차를 아는 것이 곧 신뢰라는 오독이 남는다.",
+    sharedGate:
+      "7권 60절의 같은 절차(1만 명·원·배꼽 높이 담·채움 되풀이)와 170만이 본문·Viz·연습문제에서 일치하고, 1만 × 170 = 1,700,000의 환산이 어긋나지 않는지로 판정한다.",
+  },
 };
 
 /**
@@ -544,10 +580,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "macro/what-ricardo-assumed": "6566e07f66c31f32",
   "macro/who-counts-as-unemployed": "0e99dde8bd38dd55",
-  "macro/what-the-price-level-hides": "18fde37b5c739139",
+  "macro/what-the-price-level-hides": "a44701dc2ad7feae",
   "macro/why-per-head-stalls": "288664818602d036",
   "labor/measuring-the-spread": "9c6d52345e9d0a9c",
-  "labor/wage-floor-natural-experiment": "f4cee633e36a9767",
+  "labor/wage-floor-natural-experiment": "24f8973f6bfad249",
   "embedded/firmware-update-and-recovery": "11af404968f4feda",
   "embedded/scheduling-and-real-time": "854c44f36c3d7c77",
   "embedded/serial-buses-and-tradeoffs": "1b52a6c0969c064e",
@@ -645,4 +681,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "firms/scale-and-cost-structure": "81801244a44eeece",
   "firms/market-power-and-markup": "bd7e2fcb297b90d2",
   "circuits/lumped-circuit-and-conservation": "ae617ac8e7582b07",
+  "testimony/speeches-were-reconstructed": "945f7faae9112da8",
+  "testimony/told-but-not-believed": "383412e348dd7bee",
+  "testimony/the-writer-was-there": "4db0036e09cdc5cc",
+  "record-numbers/how-the-army-was-counted": "8c2640e7b3d4794a",
 };
