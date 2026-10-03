@@ -43,7 +43,7 @@ export const CATEGORY_READING_PATHS: Readonly<
       { eyebrow: "01 · 접합", title: "전하가 만드는 장벽", description: "두 영역을 붙인 뒤 스스로 생기는 전기장과 외부 전압의 효과를 구분합니다.", subcategories: ["junction-devices"] },
       { eyebrow: "02 · 표면", title: "절연층 너머의 전기장", description: "전극을 직접 닿게 하지 않고 표면의 전하를 모으거나 밀어내는 방법입니다.", subcategories: ["field-effect-devices"] },
     ],
-    featuredArticles: ["pn-junction-and-rectification", "mos-capacitor-and-inversion"],
+    featuredArticles: ["pn-junction-and-rectification", "mos-capacitor-and-inversion", "mosfet-regions-and-transfer"],
   },
   ai: {
     title: "AI를 위에서 아래로 읽는 네 단계",
