@@ -25716,6 +25716,138 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "MIT 공식 강의는 일정 D의 가우스 해가 낮은 농도와 제한된 초기조건에서 맞고, 산화·결함·고농도에서는 확산이 달라진다고 설명합니다. 본문의 D1·D2는 특정 불순물이나 온도 자료가 아닙니다.",
     "canonicalHref": "/electronics/semiconductors/doping-and-thermal-budget#limits"
   },
+  "interconnect-distributed-rc": {
+    "id": "interconnect-distributed-rc",
+    "domain": "physics",
+    "label": "배선의 저항과 주변 용량은 길이를 따라 분포한다",
+    "aliases": [
+      "interconnect distributed rc",
+      "배선의"
+    ],
+    "definition": "같은 단면·재료·주변 구조에서 배선 저항 Rw와 용량 Cw는 길이 L에 거의 비례합니다. 기준 200 Ω·100 fF를 길이 두 배에서 400 Ω·200 fF로 둡니다.",
+    "canonicalHref": "/electronics/semiconductors/interconnect-and-rc-delay#wire"
+  },
+  "wire-pi-equivalent": {
+    "id": "wire-pi-equivalent",
+    "domain": "physics",
+    "label": "π 근사는 배선 용량을 양끝 절반씩 둔다",
+    "aliases": [
+      "wire pi equivalent",
+      "π"
+    ],
+    "definition": "분포 RC 배선을 간단히 계산하기 위해 총 배선 용량 Cw를 선 앞과 뒤에 Cw/2씩 두고 Rw를 사이에 둡니다. 기준 100 fF면 양끝 50 fF입니다.",
+    "canonicalHref": "/electronics/semiconductors/interconnect-and-rc-delay#wire"
+  },
+  "elmore-first-moment": {
+    "id": "elmore-first-moment",
+    "domain": "physics",
+    "label": "각 저항이 충전하는 뒤쪽 용량을 합하면 Elmore 척도다",
+    "aliases": [
+      "elmore first moment",
+      "각"
+    ],
+    "definition": "π 배선에서 tE=Rd(Cw+CL)+Rw(Cw/2+CL)입니다. 가상 500 Ω·100 fF·20 fF·200 Ω이면 60+14=74 ps입니다. tE는 첫 모멘트 척도이지 정확한 50% 지연이 아닙니다.",
+    "canonicalHref": "/electronics/semiconductors/interconnect-and-rc-delay#delay"
+  },
+  "wire-length-quadratic-term": {
+    "id": "wire-length-quadratic-term",
+    "domain": "physics",
+    "label": "배선 자체의 RwCw/2 항은 길이의 제곱으로 커진다",
+    "aliases": [
+      "wire length quadratic term",
+      "배선"
+    ],
+    "definition": "같은 단면의 길이를 두 배로 하면 Rw·Cw가 각각 두 배라 RwCw/2는 10→40 ps입니다. 하지만 RdCL·RdCw·RwCL을 포함한 전체 tE는 74→158 ps, 약 2.14배입니다.",
+    "canonicalHref": "/electronics/semiconductors/interconnect-and-rc-delay#length"
+  },
+  "interconnect-material-tradeoff": {
+    "id": "interconnect-material-tradeoff",
+    "domain": "physics",
+    "label": "낮은 저항과 낮은 용량은 식의 다른 항을 줄인다",
+    "aliases": [
+      "interconnect material tradeoff",
+      "낮은"
+    ],
+    "definition": "기준 Rw=200 Ω,Cw=100 fF에서 저항만 140 Ω이면 69.8 ps, 용량만 50 fF이면 44 ps, 둘 다면 41.3 ps입니다. 구리·낮은 유전율 절연막은 실제 배선 R·C 개선의 예이지만 본문 감소율은 가정입니다.",
+    "canonicalHref": "/electronics/semiconductors/interconnect-and-rc-delay#materials"
+  },
+  "interconnect-timing-boundary": {
+    "id": "interconnect-timing-boundary",
+    "domain": "physics",
+    "label": "실제 50% 도착 시각은 추출 RC와 파형으로 다시 구한다",
+    "aliases": [
+      "interconnect timing boundary",
+      "실제"
+    ],
+    "definition": "Elmore 첫 모멘트는 수동 RC의 빠른 비교 척도입니다. 실제 회로에서는 출력 구동 비선형성·입력 문턱·결합·유도성·버퍼·배치가 도착 시각을 바꿉니다.",
+    "canonicalHref": "/electronics/semiconductors/interconnect-and-rc-delay#limits"
+  },
+  "defect-critical-area": {
+    "id": "defect-critical-area",
+    "domain": "physics",
+    "label": "치명적 결함의 임계 면적은 다이 외곽 면적과 다르다",
+    "aliases": [
+      "defect critical area",
+      "치명적"
+    ],
+    "definition": "임계 면적 Ac는 특정 크기의 결함 중심이 놓였을 때 회로 기능을 망가뜨리는 위치의 효과적 면적입니다. 다이의 바깥 치수만으로 Ac를 정할 수 없습니다.",
+    "canonicalHref": "/electronics/semiconductors/yield-defect-and-packaging#area"
+  },
+  "mean-defect-count": {
+    "id": "mean-defect-count",
+    "domain": "physics",
+    "label": "평균 결함 수는 밀도와 임계 면적의 곱이다",
+    "aliases": [
+      "mean defect count",
+      "평균"
+    ],
+    "definition": "일정한 평균 치명적 결함 밀도 D0와 임계 면적 Ac를 곱하면 한 다이당 평균 λ=D0Ac입니다. 가상 0.1 cm^-2×1 cm²=0.1이며, 한 다이에 0.1개의 실물 결함이 있다는 말은 아닙니다.",
+    "canonicalHref": "/electronics/semiconductors/yield-defect-and-packaging#poisson"
+  },
+  "poisson-zero-defect-yield": {
+    "id": "poisson-zero-defect-yield",
+    "domain": "physics",
+    "label": "독립 점 결함의 0개 확률은 e의 음의 평균승이다",
+    "aliases": [
+      "poisson zero defect yield",
+      "독립"
+    ],
+    "definition": "서로 무관한 점 결함이 임계 면적에 하나만 생겨도 기능을 잃는다면 0개일 확률 Y0=e^-λ입니다. 가상 λ=.1에서 Y0≈.9048이며 이는 전체 제조·패키징 수율이 아닙니다.",
+    "canonicalHref": "/electronics/semiconductors/yield-defect-and-packaging#poisson"
+  },
+  "yield-area-density-sensitivity": {
+    "id": "yield-area-density-sensitivity",
+    "domain": "physics",
+    "label": "임계 면적과 결함 밀도는 곱으로 확률을 바꾼다",
+    "aliases": [
+      "yield area density sensitivity",
+      "임계"
+    ],
+    "definition": "D0=.1개/cm²에서 Ac=1→4cm²이면 λ=.1→.4, Y0≈90.48→67.03%입니다. Ac=1cm²에서 D0=.2개/cm²라면 Y0≈81.87%입니다.",
+    "canonicalHref": "/electronics/semiconductors/yield-defect-and-packaging#sensitivity"
+  },
+  "conditional-package-survival": {
+    "id": "conditional-package-survival",
+    "domain": "physics",
+    "label": "다음 단계의 통과율은 앞 단계 생존분에 곱한다",
+    "aliases": [
+      "conditional package survival",
+      "다음"
+    ],
+    "definition": "가상 결함 단계 통과 확률 .9048과 그 통과 다이에 대한 조립·시험 통과율 .98을 곱하면 초기 후보 대비 .8867입니다. 1000 후보에서 출하 기댓값은 약 886.7개입니다. .98은 Intel 실측이 아닙니다.",
+    "canonicalHref": "/electronics/semiconductors/yield-defect-and-packaging#package"
+  },
+  "yield-model-boundary": {
+    "id": "yield-model-boundary",
+    "domain": "physics",
+    "label": "결함 뭉침과 사양 실패는 단순 포아송 모형 밖이다",
+    "aliases": [
+      "yield model boundary",
+      "결함"
+    ],
+    "definition": "점 결함이 독립이고 임계 위치의 하나가 반드시 기능을 잃게 한다는 조건이 깨지면 e^-D0Ac로 전체 수율을 설명할 수 없습니다. 결함 크기·공간 뭉침·회로 중복·전기적 사양도 봐야 합니다.",
+    "canonicalHref": "/electronics/semiconductors/yield-defect-and-packaging#limits"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47802,6 +47934,96 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "dopant-diffusion-limit",
     "relation": "constrains",
     "reason": "가상 폭만으로 전기적 접합·누설을 판정하지 않습니다."
+  },
+  {
+    "from": "ohmic-resistance",
+    "to": "interconnect-distributed-rc",
+    "relation": "prerequisite",
+    "reason": "도체 길이와 저항의 관계를 배선에 적용합니다."
+  },
+  {
+    "from": "capacitor-voltage-state",
+    "to": "wire-pi-equivalent",
+    "relation": "prerequisite",
+    "reason": "배선과 입력에 저장되는 전하를 용량으로 나타냅니다."
+  },
+  {
+    "from": "interconnect-distributed-rc",
+    "to": "wire-pi-equivalent",
+    "relation": "produces",
+    "reason": "분포 저항·용량을 π 회로로 묶습니다."
+  },
+  {
+    "from": "wire-pi-equivalent",
+    "to": "elmore-first-moment",
+    "relation": "produces",
+    "reason": "π 회로의 저항이 충전하는 용량을 합합니다."
+  },
+  {
+    "from": "elmore-first-moment",
+    "to": "wire-length-quadratic-term",
+    "relation": "produces",
+    "reason": "전체 식에서 배선 자체 항을 따로 읽습니다."
+  },
+  {
+    "from": "interconnect-distributed-rc",
+    "to": "interconnect-material-tradeoff",
+    "relation": "constrains",
+    "reason": "금속과 유전체는 R과 C에 다르게 작용합니다."
+  },
+  {
+    "from": "elmore-first-moment",
+    "to": "interconnect-timing-boundary",
+    "relation": "constrains",
+    "reason": "첫 모멘트와 실제 문턱 교차 시간을 구분합니다."
+  },
+  {
+    "from": "interconnect-material-tradeoff",
+    "to": "interconnect-timing-boundary",
+    "relation": "constrains",
+    "reason": "공정 변경 후에는 완성 배선 R·C를 다시 추출합니다."
+  },
+  {
+    "from": "interconnect-distributed-rc",
+    "to": "defect-critical-area",
+    "relation": "prerequisite",
+    "reason": "배선 오픈·쇼트가 생기는 위치를 임계 면적으로 생각합니다."
+  },
+  {
+    "from": "defect-critical-area",
+    "to": "mean-defect-count",
+    "relation": "produces",
+    "reason": "임계 면적에 평균 결함 밀도를 곱합니다."
+  },
+  {
+    "from": "mean-defect-count",
+    "to": "poisson-zero-defect-yield",
+    "relation": "produces",
+    "reason": "평균 λ에서 0개일 확률을 구합니다."
+  },
+  {
+    "from": "poisson-zero-defect-yield",
+    "to": "yield-area-density-sensitivity",
+    "relation": "produces",
+    "reason": "같은 식에서 면적과 밀도 변화만 비교합니다."
+  },
+  {
+    "from": "poisson-zero-defect-yield",
+    "to": "conditional-package-survival",
+    "relation": "produces",
+    "reason": "앞 단계 통과분에 다음 단계 조건부 비율을 곱합니다."
+  },
+  {
+    "from": "yield-area-density-sensitivity",
+    "to": "yield-model-boundary",
+    "relation": "constrains",
+    "reason": "후보 개수와 모형 적용 조건을 분리합니다."
+  },
+  {
+    "from": "conditional-package-survival",
+    "to": "yield-model-boundary",
+    "relation": "constrains",
+    "reason": "실제 시험 단계·분모가 같지 않으면 단순 곱을 검토합니다."
   },
 ];
 

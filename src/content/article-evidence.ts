@@ -7700,4 +7700,32 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "단계별 Dt 합산과 열 예산의 가정·예외를 확인했다."
     }
   ],
+  "semiconductors/interconnect-and-rc-delay": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT OCW 6.884 L04 Wires, 원본 11–13쪽",
+      "href": "https://ocw.mit.edu/courses/6-884-complex-digital-systems-spring-2005/fd75994e0ea84378705dd12ee8c16326_l04_wires.pdf",
+      "note": "분포 RC, π 배선, Elmore 첫 모멘트 식과 길이 의존성을 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Intel Technology Journal 2002 Vol. 6 No. 2, 원본 10–11쪽",
+      "href": "https://www.intel.com/content/dam/www/public/us/en/documents/research/2002-vol06-iss-2-intel-technology-journal.pdf",
+      "note": "동일 피치 공정 비교의 구리·낮은 유전율 배선 개선을 확인했다."
+    }
+  ],
+  "semiconductors/yield-defect-and-packaging": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT OCW 2.830J Lecture 10 Yield Modeling, 원본 6–7·14·17·30쪽",
+      "href": "https://ocw.mit.edu/courses/2-830j-control-of-manufacturing-processes-sma-6303-spring-2008/4aff1e21de13870355ef44dbe71f45c6_lecture10.pdf",
+      "note": "기능·파라미터 수율, 임계 면적, 포아송 가정을 확인했다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Intel Tech 101 How Silicon Die Become Chip Packages, 2025-02-19",
+      "href": "https://www.intel.com/content/www/us/en/newsroom/tech101/manufacturing/how-silicon-die-become-chip-packages.html",
+      "note": "패키징 역할과 조립·시험의 단계별 순서를 확인했다."
+    }
+  ],
 };

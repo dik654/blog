@@ -55,4 +55,32 @@ export const semiconductorArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/semiconductors/doping-and-thermal-budget"),
   },
+  {
+    slug: "interconnect-and-rc-delay",
+    title: "배선이 길어지면 신호가 얼마나 늦어질까",
+    subcategory: "semiconductor-fabrication",
+    sections: [
+      { id: "overview", title: "트랜지스터가 빨라도 먼 곳의 입력은 늦게 바뀝니다" },
+      { id: "wire", title: "선이 길어지면 저항도, 충전할 용량도 커집니다" },
+      { id: "delay", title: "누가 어느 용량을 충전하는지 세면 74 ps가 나옵니다" },
+      { id: "length", title: "길이를 두 배로 늘리면 전체는 158 ps입니다" },
+      { id: "materials", title: "금속과 절연막은 식의 다른 자리를 바꿉니다" },
+      { id: "limits", title: "정확한 도착 시각은 실제 파형과 배치에서 다시 구합니다" },
+    ],
+    component: () => import("@/pages/articles/semiconductors/interconnect-and-rc-delay"),
+  },
+  {
+    slug: "yield-defect-and-packaging",
+    title: "결함이 없는 다이와 출하되는 칩은 몇 개일까",
+    subcategory: "semiconductor-fabrication",
+    sections: [
+      { id: "overview", title: "같은 웨이퍼에서 나온 다이가 모두 출하되지는 않습니다" },
+      { id: "area", title: "결함이 떨어진 위치가 회로를 망가뜨리는지가 중요합니다" },
+      { id: "poisson", title: "평균 0.1개라면 0개일 확률은 약 90.48%입니다" },
+      { id: "sensitivity", title: "위험 면적이 네 배면 결함 0개 확률은 67.03%입니다" },
+      { id: "package", title: "패키지와 시험을 통과하는 비율은 다음 분모에서 셉니다" },
+      { id: "limits", title: "실제 수율에는 결함의 뭉침과 사양 탈락도 들어갑니다" },
+    ],
+    component: () => import("@/pages/articles/semiconductors/yield-defect-and-packaging"),
+  },
 ];

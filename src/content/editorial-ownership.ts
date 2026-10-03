@@ -13117,6 +13117,64 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "interconnect-and-rc-delay": {
+    "title": "배선 지연 글이 소유하는 범위",
+    "owns": [
+      "π RC 배선의 출력 저항 항과 배선 저항 항",
+      "가상 74·158 ps 및 길이 제곱 항의 구분",
+      "가상 금속·유전체 변화의 효과",
+      "Elmore 첫 모멘트와 실제 50% 타이밍의 경계"
+    ],
+    "reuses": [
+      {
+        "label": "축전기 충전의 RC 시간",
+        "href": "/electronics/circuits/storage-elements-and-transients#rc"
+      },
+      {
+        "label": "앞의 도핑·열 공정",
+        "href": "/electronics/semiconductors/doping-and-thermal-budget#limits"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "MIT 배선 모델과 인텔 공정 비교의 원문 범위를 명시한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "가상 R·C 감소율을 인텔 실측치로 말하지 않는다."
+      }
+    ]
+  },
+  "yield-defect-and-packaging": {
+    "title": "수율과 패키징 글이 소유하는 범위",
+    "owns": [
+      "결함 민감 임계 면적과 점 결함 평균",
+      "가상 포아송 0개 확률 90.48%와 면적 4배의 67.03%",
+      "조건부 조립·시험 98% 뒤의 가상 886.7개",
+      "뭉친 결함·파라미터 불량 등 적용 경계"
+    ],
+    "reuses": [
+      {
+        "label": "배선의 저항·용량과 연결",
+        "href": "/electronics/semiconductors/interconnect-and-rc-delay#wire"
+      },
+      {
+        "label": "노광으로 정해진 패턴",
+        "href": "/electronics/semiconductors/lithography-and-resolution#transfer"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "MIT 결함 모형과 Intel 조립·시험 단계의 출처 범위를 분리한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "D0·Ac·98%를 실측 수율로 쓰지 않는다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

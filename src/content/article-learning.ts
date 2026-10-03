@@ -88226,4 +88226,630 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "semiconductors/interconnect-and-rc-delay": {
+    "coreIdea": "가상 π 배선에서 출력 저항×전체 용량 60 ps와 배선 저항×뒤쪽 용량 14 ps를 합해 74 ps를 구하고, 길이 두 배의 158 ps 및 재료별 R·C 변경을 비교합니다. Elmore 값은 정확한 50% 지연이 아닙니다.",
+    "assumedKnowledge": [
+      {
+        "id": "ohmic-resistance",
+        "role": "앞 회로 글의 저항과 전압·전류 관계를 씁니다."
+      },
+      {
+        "id": "capacitor-voltage-state",
+        "role": "충전할 전하를 용량으로 표현합니다."
+      },
+      {
+        "id": "rc-step-time-constant",
+        "role": "RC 곱이 시간 단위가 된다는 직관을 재사용합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "interconnect-distributed-rc",
+        "role": "배선을 RC 부품으로 읽습니다."
+      },
+      {
+        "id": "wire-pi-equivalent",
+        "role": "충전 경로를 나눕니다."
+      },
+      {
+        "id": "elmore-first-moment",
+        "role": "기준 74 ps를 계산합니다."
+      },
+      {
+        "id": "wire-length-quadratic-term",
+        "role": "항별 길이 의존성을 분리합니다."
+      },
+      {
+        "id": "interconnect-material-tradeoff",
+        "role": "금속·절연막의 작용을 분리합니다."
+      },
+      {
+        "id": "interconnect-timing-boundary",
+        "role": "가상 74 ps의 적용 한계를 밝힙니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "interconnect-distributed-rc",
+        "sectionId": "wire",
+        "intuition": "같은 단면·재료·주변 구조에서 배선 저항 Rw와 용량 Cw는 길이 L에 거의 비례합니다.",
+        "workedExample": "기준 200 Ω·100 fF가 길이 두 배면 400 Ω·200 fF입니다.",
+        "boundary": "층·선폭·간격이 달라지면 단순 길이 비례가 달라집니다.",
+        "scientificGrounding": {
+          "observable": "같은 단면의 배선 길이를 바꿀 때 측정되는 저항과 용량의 변화",
+          "unitsAndDimensions": "R은 Ω, C는 fF, L은 길이 단위입니다.",
+          "modelAssumptions": "같은 선폭·두께·재료·주변 구조를 둡니다.",
+          "measurementExample": "길이별 테스트 배선의 R과 C를 추출합니다.",
+          "invalidConditions": "재료·단면·주변 유전체가 변하면 비례식이 달라집니다.",
+          "referenceFrame": "가상 출력 저항에서 수신 입력까지 배선을 따라 전압이 전파하는 시간을 비교합니다."
+        }
+      },
+      {
+        "id": "wire-pi-equivalent",
+        "sectionId": "wire",
+        "intuition": "분포 RC 배선을 간단히 계산하기 위해 총 배선 용량 Cw를 선 앞과 뒤에 Cw/2씩 두고 Rw를 사이에 둡니다.",
+        "workedExample": "100 fF를 앞 50 fF·뒤 50 fF로 두고 뒤쪽에 입력 20 fF를 보탭니다.",
+        "boundary": "π 모형은 실제 연속 배선의 모든 극점을 정확히 재현하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "배선 양끝에서 시간에 따라 측정되는 전압 응답과 추출된 저항·용량",
+          "unitsAndDimensions": "Cw와 CL은 fF, Rw는 Ω입니다.",
+          "modelAssumptions": "한 가닥의 선형 수동 RC 배선입니다.",
+          "measurementExample": "분포 회로와 π 회로의 시간 응답을 비교합니다.",
+          "invalidConditions": "긴 전송선의 유도성·결합이 강하면 RC π 근사로 부족합니다.",
+          "referenceFrame": "가상 출력 저항에서 수신 입력까지 배선을 따라 전압이 전파하는 시간을 비교합니다."
+        }
+      },
+      {
+        "id": "elmore-first-moment",
+        "sectionId": "delay",
+        "intuition": "π 배선에서 tE=Rd(Cw+CL)+Rw(Cw/2+CL)입니다.",
+        "workedExample": "출력 항 500×120 fF=60 ps, 배선 항 200×70 fF=14 ps입니다.",
+        "boundary": "구동기 비선형·문턱·결합이 있으면 실제 50% 지연은 달라집니다.",
+        "scientificGrounding": {
+          "observable": "입력 계단 신호 뒤 수신단에서 측정되는 출력 전압의 시간 응답과 지연",
+          "unitsAndDimensions": "Ω×fF=fs, 1000 fs=1 ps입니다.",
+          "modelAssumptions": "수동 선형 RC, π 모형, 계단 입력 근사입니다.",
+          "measurementExample": "추출 RC 회로의 Elmore 첫 모멘트와 파형 50% 시각을 따로 계산합니다.",
+          "invalidConditions": "유도성·비선형 구동·인접 선 결합에서 정확한 50% 지연으로 쓰지 않습니다.",
+          "referenceFrame": "가상 출력 저항에서 수신 입력까지 배선을 따라 전압이 전파하는 시간을 비교합니다."
+        }
+      },
+      {
+        "id": "wire-length-quadratic-term",
+        "sectionId": "length",
+        "intuition": "같은 단면의 길이를 두 배로 하면 Rw·Cw가 각각 두 배라 RwCw/2는 10→40 ps입니다.",
+        "workedExample": "400 Ω·200 fF에서 출력 110 ps와 배선 48 ps, 합 158 ps입니다.",
+        "boundary": "전체 지연을 무조건 네 배라고 하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "길이 변화에 따른 추출 저항·용량과 도착 시간",
+          "unitsAndDimensions": "길이는 µm, 지연은 ps, R은 Ω, C는 fF입니다.",
+          "modelAssumptions": "같은 단면·층·재료, 고정 Rd·CL을 둡니다.",
+          "measurementExample": "길이 L와 2L 배선의 RC 추출값으로 항별 지연을 비교합니다.",
+          "invalidConditions": "버퍼 삽입·폭 변화·결합이 있으면 한 선의 제곱 길이 항만으로 설명되지 않습니다.",
+          "referenceFrame": "가상 출력 저항에서 수신 입력까지 배선을 따라 전압이 전파하는 시간을 비교합니다."
+        }
+      },
+      {
+        "id": "interconnect-material-tradeoff",
+        "sectionId": "materials",
+        "intuition": "기준 Rw=200 Ω,Cw=100 fF에서 저항만 140 Ω이면 69.",
+        "workedExample": "저항만 140 Ω이면 60+9.8=69.8 ps, 용량만 50 fF이면 35+9=44 ps입니다.",
+        "boundary": "Intel의 공정 비교 수치를 본문 가정치로 대체하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "동일 피치 완성 배선의 시트 저항·용량·RC 지연",
+          "unitsAndDimensions": "R은 Ω, C는 fF, 지연은 ps, 피치는 nm 또는 µm입니다.",
+          "modelAssumptions": "가상 비교에서 Rd와 CL·기하를 고정합니다.",
+          "measurementExample": "재료·유전체별 완성 배선의 R·C를 동일 기하에서 측정합니다.",
+          "invalidConditions": "폭·장벽층·간격까지 바뀌면 재료 하나의 효과로 분리하기 어렵습니다.",
+          "referenceFrame": "가상 출력 저항에서 수신 입력까지 배선을 따라 전압이 전파하는 시간을 비교합니다."
+        }
+      },
+      {
+        "id": "interconnect-timing-boundary",
+        "sectionId": "limits",
+        "intuition": "Elmore 첫 모멘트는 수동 RC의 빠른 비교 척도입니다.",
+        "workedExample": "가상 tE=74 ps를 소자의 실측 50% 전파 지연으로 보고하지 않습니다.",
+        "boundary": "π RC의 첫 모멘트와 파형 기준 도착 시간을 구분합니다.",
+        "scientificGrounding": {
+          "observable": "추출 배선의 시간 파형, 50% 임계 교차와 인접 선 스위칭",
+          "unitsAndDimensions": "시간은 ps, 전압은 V, R·C는 Ω·fF입니다.",
+          "modelAssumptions": "고정 입력 파형과 비교 가능한 추출 네트워크가 필요합니다.",
+          "measurementExample": "추출 RC 시뮬레이션의 첫 모멘트와 50% 교차를 나란히 검사합니다.",
+          "invalidConditions": "비선형 구동·결합·전송선 효과가 크면 단순 첫 모멘트는 정확한 도착 시각이 아닙니다.",
+          "referenceFrame": "가상 출력 저항에서 수신 입력까지 배선을 따라 전압이 전파하는 시간을 비교합니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 배선을 회로로",
+        "relation": "배선의 분포 저항·용량을 π 모형으로 줄입니다.",
+        "concepts": [
+          "interconnect-distributed-rc",
+          "wire-pi-equivalent"
+        ]
+      },
+      {
+        "label": "02 74에서 158 ps",
+        "relation": "충전 경로를 더하고 길이 변화에 따른 항을 분리합니다.",
+        "concepts": [
+          "elmore-first-moment",
+          "wire-length-quadratic-term"
+        ]
+      },
+      {
+        "label": "03 재료와 실제 타이밍",
+        "relation": "R·C 변경 효과와 첫 모멘트 근사의 경계를 구분합니다.",
+        "concepts": [
+          "interconnect-material-tradeoff",
+          "interconnect-timing-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "배선이 없다면 500 Ω 출력과 20 fF 입력의 RC 곱은? ",
+        "answerChecklist": [
+          "10 ps",
+          "Ω×fF=fs"
+        ],
+        "requiredConcepts": [
+          "elmore-first-moment"
+        ],
+        "sectionId": "delay"
+      },
+      {
+        "level": "basic",
+        "question": "기준 π 배선에서 출력 저항 항은 몇 ps입니까?",
+        "answerChecklist": [
+          "Cw+CL=120 fF",
+          "500 Ω×120 fF=60 ps"
+        ],
+        "requiredConcepts": [
+          "wire-pi-equivalent",
+          "elmore-first-moment"
+        ],
+        "sectionId": "delay"
+      },
+      {
+        "level": "basic",
+        "question": "기준 π 배선에서 배선 저항 항과 전체 Elmore 값은?",
+        "answerChecklist": [
+          "Cw/2+CL=70 fF",
+          "14 ps",
+          "합 74 ps"
+        ],
+        "requiredConcepts": [
+          "elmore-first-moment"
+        ],
+        "sectionId": "delay"
+      },
+      {
+        "level": "basic",
+        "question": "길이 두 배에서 Rw·Cw를 각각 얼마로 놓습니까?",
+        "answerChecklist": [
+          "400 Ω",
+          "200 fF",
+          "같은 단면·재료 가정"
+        ],
+        "requiredConcepts": [
+          "interconnect-distributed-rc"
+        ],
+        "sectionId": "length"
+      },
+      {
+        "level": "basic",
+        "question": "같은 단면에서 배선 길이를 두 배로 할 때 Elmore 지연 합은 얼마입니까?",
+        "answerChecklist": [
+          "출력 항 110 ps",
+          "배선 항 48 ps",
+          "합 158 ps"
+        ],
+        "requiredConcepts": [
+          "wire-length-quadratic-term"
+        ],
+        "sectionId": "length"
+      },
+      {
+        "level": "basic",
+        "question": "기준에서 배선 저항만 140 Ω이면 값은?",
+        "answerChecklist": [
+          "출력 항 60 ps 유지",
+          "배선 항 9.8 ps",
+          "69.8 ps"
+        ],
+        "requiredConcepts": [
+          "interconnect-material-tradeoff"
+        ],
+        "sectionId": "materials"
+      },
+      {
+        "level": "advanced",
+        "question": "길이 두 배에서 배선 자체 항 RwCw/2와 전체 지연의 증가 배율은?",
+        "answerChecklist": [
+          "10→40 ps 네 배",
+          "74→158 ps 약 2.14배",
+          "다른 항 포함"
+        ],
+        "requiredConcepts": [
+          "wire-length-quadratic-term"
+        ],
+        "sectionId": "length"
+      },
+      {
+        "level": "advanced",
+        "question": "배선 용량만 50 fF일 때와 저항도 140 Ω일 때 각각 계산하세요.",
+        "answerChecklist": [
+          "용량만 44 ps",
+          "둘 다 41.3 ps",
+          "출력 항도 감소"
+        ],
+        "requiredConcepts": [
+          "interconnect-material-tradeoff"
+        ],
+        "sectionId": "materials"
+      },
+      {
+        "level": "advanced",
+        "question": "74 ps를 실측 50% 지연으로 보고할 수 있습니까?",
+        "answerChecklist": [
+          "아니요",
+          "Elmore 첫 모멘트",
+          "비선형 구동·문턱·결합 등"
+        ],
+        "requiredConcepts": [
+          "interconnect-timing-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "Intel의 동일 피치 RC 개선 보고를 가상 30% 저항·50% 용량 감소로 바꿔도 됩니까?",
+        "answerChecklist": [
+          "안 됨",
+          "원문 특정 공정 비교",
+          "본문 수치는 독립 가정",
+          "실제 R·C·기하 추출 필요"
+        ],
+        "requiredConcepts": [
+          "interconnect-material-tradeoff",
+          "interconnect-timing-boundary"
+        ],
+        "sectionId": "materials"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT OpenCourseWare 6.884, Lecture 4, ‘Wires’ (2005)",
+        "href": "https://ocw.mit.edu/courses/6-884-complex-digital-systems-spring-2005/fd75994e0ea84378705dd12ee8c16326_l04_wires.pdf",
+        "problem": "분포 배선 RC가 디지털 신호를 늦추는 방식을 간단한 회로로 추정합니다.",
+        "contribution": "원본 11–13쪽의 π 모형과 Elmore 첫 모멘트 식, 길이 제곱 항을 설명합니다.",
+        "assumptions": "선형 수동 RC와 단순 배선 형상을 전제로 합니다.",
+        "evidenceScope": "MIT 공식 원본 PDF 해당 쪽을 확인했습니다. 500 Ω·20 fF·200 Ω·100 fF는 본문 가정입니다.",
+        "notClaim": "74 ps가 MIT의 실측값이나 정확한 50% 지연이라는 뜻은 아닙니다.",
+        "sectionId": "wire"
+      },
+      {
+        "title": "Intel Technology Journal Vol. 6 No. 2, interconnect technology (2002)",
+        "href": "https://www.intel.com/content/dam/www/public/us/en/documents/research/2002-vol06-iss-2-intel-technology-journal.pdf",
+        "problem": "구리와 낮은 유전율 공정으로 당시 배선의 저항·RC 지연을 줄입니다.",
+        "contribution": "원본 10–11쪽에서 특정 피치 비교의 시트 저항 및 RC 개선을 보고합니다.",
+        "assumptions": "당시 제시한 공정·피치·측정 구조의 비교입니다.",
+        "evidenceScope": "인텔 공식 원문 PDF의 해당 쪽을 확인했습니다. 본문 140 Ω·50 fF는 독립 가정입니다.",
+        "notClaim": "본문의 가상 감소율이나 41.3 ps가 인텔의 측정치라는 뜻은 아닙니다.",
+        "sectionId": "materials"
+      }
+    ]
+  },
+  "semiconductors/yield-defect-and-packaging": {
+    "coreIdea": "가상 임계 면적 1 cm²와 결함 밀도 0.1개/cm²에서 포아송 0개 확률 90.48%를 계산하고, 면적 네 배의 67.03%와 조건부 조립·시험 98% 뒤의 출하 기대 886.7/1000개를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "interconnect-distributed-rc",
+        "role": "앞 글의 배선 단선·쇼트가 다이 기능을 바꿀 수 있음을 이용합니다."
+      },
+      {
+        "id": "lithography-pattern-transfer",
+        "role": "패턴이 정해져 결함 민감 위치를 만들었다는 점을 이어받습니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "defect-critical-area",
+        "role": "다이 크기와 결함 기회를 분리합니다."
+      },
+      {
+        "id": "mean-defect-count",
+        "role": "확률식의 입력 λ를 계산합니다."
+      },
+      {
+        "id": "poisson-zero-defect-yield",
+        "role": "90.48%의 분모와 뜻을 설명합니다."
+      },
+      {
+        "id": "yield-area-density-sensitivity",
+        "role": "면적과 밀도 변화의 효과를 비교합니다."
+      },
+      {
+        "id": "conditional-package-survival",
+        "role": "공정 단계를 이어서 셉니다."
+      },
+      {
+        "id": "yield-model-boundary",
+        "role": "모형과 실제 수율의 경계를 밝힙니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "defect-critical-area",
+        "sectionId": "area",
+        "intuition": "선이 끊어지거나 붙는 위치만 결함 민감 면적에 기여합니다.",
+        "workedExample": "가상 Ac=1 cm²를 실제 다이의 실측 물리 면적으로 단정하지 않습니다.",
+        "boundary": "결함 크기를 바꾸면 같은 배치도 임계 면적이 달라집니다.",
+        "scientificGrounding": {
+          "observable": "다이 배치에서 결함이 기능 고장을 내는 위치의 면적",
+          "unitsAndDimensions": "Ac는 cm², 물리적 다이 면적도 cm²이지만 값은 같지 않을 수 있습니다.",
+          "modelAssumptions": "결함 크기와 고장 종류를 고정해 임계 면적을 정의합니다.",
+          "measurementExample": "특정 결함 크기를 가정해 배치에서 쇼트·오픈 민감 위치를 추출합니다.",
+          "invalidConditions": "결함 크기·배치·중복 회로가 바뀌면 임계 면적도 변합니다.",
+          "referenceFrame": "웨이퍼 위 후보 다이 한 개의 임계 위치와 이후 패키징·시험 단계를 차례로 셉니다."
+        }
+      },
+      {
+        "id": "mean-defect-count",
+        "sectionId": "poisson",
+        "intuition": "많은 후보 다이를 평균하면 다이당 0.1개가 되는 분포입니다.",
+        "workedExample": "D0=.1개/cm², Ac=1cm²에서 λ=.1개입니다.",
+        "boundary": "λ를 한 다이의 확정 결함 수로 읽지 않습니다.",
+        "scientificGrounding": {
+          "observable": "여러 다이의 임계 위치에서 세어지는 치명적 결함 개수의 평균",
+          "unitsAndDimensions": "D0는 개/cm², Ac는 cm², λ는 무차원 평균 개수입니다.",
+          "modelAssumptions": "평균 밀도가 공간에 걸쳐 일정한 점 결함 모형입니다.",
+          "measurementExample": "동일 조건의 여러 다이에서 치명적 결함 수를 기록해 평균을 비교합니다.",
+          "invalidConditions": "공간별 밀도 변화·결함 뭉침이 크면 단일 D0가 부족합니다.",
+          "referenceFrame": "웨이퍼 위 후보 다이 한 개의 임계 위치와 이후 패키징·시험 단계를 차례로 셉니다."
+        }
+      },
+      {
+        "id": "poisson-zero-defect-yield",
+        "sectionId": "poisson",
+        "intuition": "가끔 결함이 생기지만 대부분의 다이에는 0개일 수 있습니다.",
+        "workedExample": "1000 가상 후보의 결함 모형상 양품 기댓값은 약 904.8개입니다.",
+        "boundary": "실제 검사 양품 수가 904.8개라는 뜻이 아닙니다.",
+        "scientificGrounding": {
+          "observable": "임계 면적의 치명적 결함 수가 0인 다이의 비율",
+          "unitsAndDimensions": "Y0는 무차원 확률, λ는 평균 개수입니다.",
+          "modelAssumptions": "결함은 독립·균일한 점이고 임계 결함 하나가 기능 고장을 냅니다.",
+          "measurementExample": "다이별 결함 지도와 기능 검사로 0개 빈도와 예측 확률을 비교합니다.",
+          "invalidConditions": "뭉친 결함·복구 회로·파라미터 사양 실패가 크면 단순 Y0가 전체 수율이 아닙니다.",
+          "referenceFrame": "웨이퍼 위 후보 다이 한 개의 임계 위치와 이후 패키징·시험 단계를 차례로 셉니다."
+        }
+      },
+      {
+        "id": "yield-area-density-sensitivity",
+        "sectionId": "sensitivity",
+        "intuition": "위험 위치가 넓거나 결함이 많으면 아무 결함도 없기 어렵습니다.",
+        "workedExample": "가상 면적 네 배는 한 다이의 0개 확률을 67.03%로 낮춥니다.",
+        "boundary": "다이 한 장의 확률을 같은 웨이퍼의 후보 개수 변화와 혼동하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "임계 면적·결함 밀도에 따른 결함 없는 다이 비율",
+          "unitsAndDimensions": "Ac는 cm², D0는 개/cm², Y0는 %입니다.",
+          "modelAssumptions": "서로 비교할 때 같은 점 결함 모형과 고장 정의를 둡니다.",
+          "measurementExample": "면적·밀도별 후보 다이의 0개 비율을 비교합니다.",
+          "invalidConditions": "물리적 다이 크기·가장자리 손실까지 바뀌면 웨이퍼당 후보 수가 달라집니다.",
+          "referenceFrame": "웨이퍼 위 후보 다이 한 개의 임계 위치와 이후 패키징·시험 단계를 차례로 셉니다."
+        }
+      },
+      {
+        "id": "conditional-package-survival",
+        "sectionId": "package",
+        "intuition": "첫 단계에서 남은 것 중 다음 단계가 통과시키는 몫을 적용합니다.",
+        "workedExample": "1000×.904837×.98≈886.7개가 가상 출하 기대 개수입니다.",
+        "boundary": "포아송 결함식에 패키징 .98을 결함 밀도처럼 대입하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "각 단계 입고·통과 다이 수와 최종 출하 개수",
+          "unitsAndDimensions": "통과율은 무차원 %, 후보·출하 수는 개입니다.",
+          "modelAssumptions": ".98을 앞 단계 생존 다이에 대한 조건부 통과 확률로 둡니다.",
+          "measurementExample": "웨이퍼 검사·조립 투입·최종 시험의 분모와 통과 수를 기록합니다.",
+          "invalidConditions": "분모가 다른 수율을 바로 곱하거나 중복 탈락을 세면 결과가 틀립니다.",
+          "referenceFrame": "웨이퍼 위 후보 다이 한 개의 임계 위치와 이후 패키징·시험 단계를 차례로 셉니다."
+        }
+      },
+      {
+        "id": "yield-model-boundary",
+        "sectionId": "limits",
+        "intuition": "결함 지도에서 뭉침을 보거나 시험에서 속도 탈락을 찾습니다.",
+        "workedExample": "가상 90.48%를 실제 팹 전체의 양품률로 보고하지 않습니다.",
+        "boundary": "포아송 결과를 조립·시험을 포함한 전체 공장 수율로 쓰지 않습니다.",
+        "scientificGrounding": {
+          "observable": "결함 지도, 기능 시험, 속도·전력 사양 및 패키지 시험 결과",
+          "unitsAndDimensions": "결함 밀도는 개/cm², 전기 사양은 V·A·s 등 각 물리 단위입니다.",
+          "modelAssumptions": "포아송 예시는 독립 점 결함의 한 손실 단계만 잡습니다.",
+          "measurementExample": "공간 지도·프로브 검사·최종 시험의 불량 원인 분포를 대조합니다.",
+          "invalidConditions": "결함 뭉침·파라미터 손실·패키지 고장이 지배하면 단일 결함 모형이 부족합니다.",
+          "referenceFrame": "웨이퍼 위 후보 다이 한 개의 임계 위치와 이후 패키징·시험 단계를 차례로 셉니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 결함이 해로운 자리",
+        "relation": "임계 면적과 평균 결함 수를 따로 정합니다.",
+        "concepts": [
+          "defect-critical-area",
+          "mean-defect-count"
+        ]
+      },
+      {
+        "label": "02 다이 통과 확률",
+        "relation": "0개 확률과 면적·밀도 변화 효과를 구합니다.",
+        "concepts": [
+          "poisson-zero-defect-yield",
+          "yield-area-density-sensitivity"
+        ]
+      },
+      {
+        "label": "03 조립 후 출하",
+        "relation": "조건부 시험 통과율과 포아송 모형의 경계를 구분합니다.",
+        "concepts": [
+          "conditional-package-survival",
+          "yield-model-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "임계 면적 Ac와 다이의 물리적 바깥 면적이 꼭 같습니까?",
+        "answerChecklist": [
+          "아니요",
+          "결함이 고장을 내는 위치의 효과적 면적"
+        ],
+        "requiredConcepts": [
+          "defect-critical-area"
+        ],
+        "sectionId": "area"
+      },
+      {
+        "level": "basic",
+        "question": "Ac=1 cm², D0=0.1개/cm²에서 평균 λ는 얼마입니까?",
+        "answerChecklist": [
+          "λ=D0Ac",
+          "0.1개",
+          "개별 다이의 확정 결함 수 아님"
+        ],
+        "requiredConcepts": [
+          "mean-defect-count"
+        ],
+        "sectionId": "poisson"
+      },
+      {
+        "level": "basic",
+        "question": "평균 λ=0.1에서 결함이 0개일 확률은 얼마입니까?",
+        "answerChecklist": [
+          "e^-0.1",
+          "약 90.48%"
+        ],
+        "requiredConcepts": [
+          "poisson-zero-defect-yield"
+        ],
+        "sectionId": "poisson"
+      },
+      {
+        "level": "basic",
+        "question": "같은 밀도에서 임계 면적을 4 cm²로 두면 0개 확률은?",
+        "answerChecklist": [
+          "λ=.4",
+          "e^-.4≈67.03%"
+        ],
+        "requiredConcepts": [
+          "yield-area-density-sensitivity"
+        ],
+        "sectionId": "sensitivity"
+      },
+      {
+        "level": "basic",
+        "question": "조건이 같은 가상 후보 1000개의 결함 모형상 양품 기댓값은?",
+        "answerChecklist": [
+          "1000×.9048",
+          "약 904.8개",
+          "한 번의 실제 정수 개수 아님"
+        ],
+        "requiredConcepts": [
+          "poisson-zero-defect-yield"
+        ],
+        "sectionId": "poisson"
+      },
+      {
+        "level": "basic",
+        "question": "앞 단계 통과 다이에 대한 다음 단계 98%를 적용한 출하 기댓값은?",
+        "answerChecklist": [
+          "1000×.9048×.98",
+          "약 886.7개",
+          "98%는 가정"
+        ],
+        "requiredConcepts": [
+          "conditional-package-survival"
+        ],
+        "sectionId": "package"
+      },
+      {
+        "level": "advanced",
+        "question": "임계 면적은 1 cm²이고 밀도만 0.2개/cm²면 확률은?",
+        "answerChecklist": [
+          "λ=.2",
+          "e^-.2≈81.87%",
+          "기준보다 낮음"
+        ],
+        "requiredConcepts": [
+          "yield-area-density-sensitivity"
+        ],
+        "sectionId": "sensitivity"
+      },
+      {
+        "level": "advanced",
+        "question": "임계 면적 1·4 cm² 사례를 같은 웨이퍼에 후보 1000개씩 놓인다고 할 수 있습니까?",
+        "answerChecklist": [
+          "할 수 없음",
+          "실제 다이 물리 크기 정보 없음",
+          "웨이퍼당 후보 개수·가장자리 손실 별도"
+        ],
+        "requiredConcepts": [
+          "defect-critical-area",
+          "yield-area-density-sensitivity"
+        ],
+        "sectionId": "sensitivity"
+      },
+      {
+        "level": "advanced",
+        "question": "결함이 뭉치고 속도 사양 실패도 있다면 단순 포아송값을 전체 수율로 써도 됩니까?",
+        "answerChecklist": [
+          "안 됨",
+          "독립 점 결함 가정 위반",
+          "파라미터 수율·기능 시험 별도"
+        ],
+        "requiredConcepts": [
+          "yield-model-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "90.48%와 98%를 곱할 때 두 수율의 분모는 어떻게 이어져야 합니까?",
+        "answerChecklist": [
+          "앞은 초기 후보",
+          "뒤는 앞 단계 통과분",
+          "조건부 통과율의 곱",
+          "패키징 실측 98% 주장 아님"
+        ],
+        "requiredConcepts": [
+          "conditional-package-survival"
+        ],
+        "sectionId": "package"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT OpenCourseWare 2.830J/6.780J, Lecture 10, Yield Modeling (2008)",
+        "href": "https://ocw.mit.edu/courses/2-830j-control-of-manufacturing-processes-sma-6303-spring-2008/4aff1e21de13870355ef44dbe71f45c6_lecture10.pdf",
+        "problem": "결함과 사양 등 여러 제조 수율 손실을 분류하고 다이의 결함 확률을 추정합니다.",
+        "contribution": "원본 6–7·14·17·30쪽의 기능·파라미터 수율, 임계 면적, 독립 점 결함의 포아송 모형과 가정입니다.",
+        "assumptions": "점 결함·공간 독립성·치명적 결함 하나의 기능 실패를 둡니다.",
+        "evidenceScope": "MIT 공식 원본 PDF 해당 쪽을 확인했습니다. 면적·밀도·98%는 본문의 가상 조건입니다.",
+        "notClaim": "90.48%가 MIT 강의의 실측 공장 수율이거나 모든 탈락 원인을 포함한다는 뜻이 아닙니다.",
+        "sectionId": "area"
+      },
+      {
+        "title": "Intel Tech 101, How Silicon Die Become Chip Packages (2025)",
+        "href": "https://www.intel.com/content/www/us/en/newsroom/tech101/manufacturing/how-silicon-die-become-chip-packages.html",
+        "problem": "제조된 다이를 패키지로 조립하고 출하 전 시험합니다.",
+        "contribution": "다이 부착, 패키지의 보호·연결·열 기능과 열·전기·기능 시험 순서를 설명합니다.",
+        "assumptions": "특정 제품의 수율 수치를 제공하지 않는 공정 개요입니다.",
+        "evidenceScope": "인텔 공식 페이지의 조립·시험 단계 설명을 확인했습니다. 조건부 98%는 본문 가정입니다.",
+        "notClaim": "인텔의 실제 조립·시험 통과율이 98%라는 뜻이 아닙니다.",
+        "sectionId": "package"
+      }
+    ]
+  },
 };
