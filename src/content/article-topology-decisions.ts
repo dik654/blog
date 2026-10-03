@@ -486,7 +486,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     status: "reviewed" as const,
     reviewedAt: "2026-10-03",
     rationale:
-      "답의 꼴·같은 사다리·네 종류·물가 읽기가 '명령하는 숫자에서 무엇을 읽을 수 있는가'라는 한 질문의 네 부품이다. 사다리를 떼면 금액이 신분을 담는다는 결론의 근거가 없고, 물가 읽기를 떼면 측정 숫자와 섞어 쓰는 오독이 남는다.",
+      "답의 꼴·같은 사다리·네 종류·물가 읽기가 '명령하는 숫자에서 무엇을 읽을 수 있는가'라는 한 질문의 네 부품이다. 사다리를 떼면 두 조항의 신분별 금액 기준을 비교할 수 없고, 물가 읽기를 떼면 측정 숫자와 섞어 쓰는 오독이 남는다.",
     sharedGate:
       "196~199·209~217·221~223조의 같은 금액(1마나·값의 절반·10·5·2·5·3·2)과 202조의 채찍 60대, 273조의 하루 품삯이 본문·Viz·연습문제에서 일치하는지로 판정한다.",
   },
@@ -611,7 +611,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "testimony/the-writer-was-there": "4db0036e09cdc5cc",
   "record-numbers/how-the-army-was-counted": "8c2640e7b3d4794a",
   "record-numbers/what-the-total-cannot-tell": "2fc6127542caf224",
-  "record-numbers/numbers-that-command": "78a0bdad1afb000d",
+  "record-numbers/numbers-that-command": "c4dc3a1b3c7ce7c4",
   "inference-from-sources/ruins-mislead": "d29bd5208325e4cb",
   "inference-from-sources/the-gap-was-made": "5cd1ffa387bca7df",
   "inference-from-sources/naming-the-past": "2718dc89f3ed6cee",

@@ -25827,7 +25827,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "합계의 끝자리는 가장 거친 재료보다 정밀해 보인다",
     aliases: ["합산의 겉보기 정밀도", "끝자리의 출처"],
     definition:
-      "여러 수를 더하면 결과의 믿을 수 있는 자리는 가장 거친 재료에 맞춰지지만 표기는 그렇게 되지 않습니다. 작은 비율을 큰 수에 곱해 만든 재료 하나가 끝자리를 남기면 합계 전체가 그 자리까지 숫자를 갖게 되고, 읽는 쪽이 그것을 정밀함으로 읽으면 다른 재료의 어림과 가정이 결과에서 지워집니다.",
+      "여러 수를 더하면 결과의 믿을 수 있는 자리는 가장 거친 재료에 맞춰져야 하지만 표기는 그렇게 되지 않습니다. 이 총계의 끝자리는 1,207척에 곱한 두 비율과 유럽 배의 수를 더하고 두 배로 만드는 과정에서 생겼습니다. 출처를 따질 수 있는 끝자리를 전체 총계의 측정 정밀도로 읽으면 다른 재료의 어림과 가정이 가려집니다.",
     canonicalHref:
       "/history/record-numbers/what-the-total-cannot-tell#last-digits",
   },
@@ -25859,27 +25859,27 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "같은 사안에서 상대에 따라 답의 꼴이 바뀐다",
     aliases: ["사다리 안의 종류 변화", "되갚기와 금액"],
     definition:
-      "한 사안을 신분별로 나눠 적을 때 금액만 달라지는 것이 아니라 답의 종류가 달라집니다. 되갚을 수 있는 자리에는 같은 해를 돌려주는 답이 들어가고, 되갚을 자리가 없을 때 금액이나 값의 비율이 들어옵니다. 그래서 숫자가 들어간 자리 자체가 그 사회가 무엇을 되갚을 수 있다고 보았는지를 드러냅니다.",
+      "한 사안을 상대의 신분별로 나눠 적을 때 금액만 달라지는 것이 아니라 처분의 종류가 달라집니다. 신사에게 입힌 해에는 같은 해를 돌려주고, 가난한 사람에게 입힌 해에는 정액을, 종에게 입힌 해에는 종 값의 비율을 적습니다. 왜 이런 차이를 두었는지는 이 조항들만으로 확정할 수 없습니다.",
     canonicalHref: "/history/record-numbers/numbers-that-command#rungs",
   },
   "amount-encodes-standing": {
     id: "amount-encodes-standing",
     kind: "theorem",
     domain: "history",
-    label: "정해진 금액은 사안의 크기가 아니라 상대의 자리를 담는다",
+    label: "두 조항에서 금액은 상대의 신분에 따라 나뉜다",
     aliases: ["금액이 담는 것", "같은 사다리의 재사용"],
     definition:
-      "서로 성격이 반대인 사안에 같은 금액 사다리가 쓰이면 그 금액은 사안의 경중을 재는 값일 수 없고, 두 사안에 공통된 축인 상대의 신분을 담는 값입니다. 다만 칸의 순서만 규칙이고 칸 사이의 간격은 사안마다 따로 정해지므로, 금액의 비를 고정된 환산율로 읽을 수는 없습니다.",
+      "배상과 치료 사례금이라는 서로 다른 두 조항에 10·5·2세켈이 쓰입니다. 두 조항에서 금액을 나누는 공통 기준은 상대의 신분입니다. 부러진 뼈의 치료 사례금은 5·3·2세켈이므로, 비교한 조항들에서 칸의 순서는 같지만 간격이 일정하지 않습니다. 같은 금액만으로 두 사안을 같은 가치로 평가했다고 볼 수 없습니다.",
     canonicalHref: "/history/record-numbers/numbers-that-command#same-ladder",
   },
   "form-of-a-prescribed-amount": {
     id: "form-of-a-prescribed-amount",
     kind: "concept",
     domain: "history",
-    label: "정해 둔 답의 꼴이 전제를 드러낸다",
+    label: "정해 둔 답의 꼴마다 기준이 다르다",
     aliases: ["명령 숫자의 네 꼴", "고정액과 비율과 횟수"],
     definition:
-      "명령하는 답은 숫자가 없는 되갚기, 고정된 금액, 대상 값에 대한 비율, 횟수의 네 꼴로 나타나며 각각 성립 조건이 다릅니다. 되갚기는 가해자 쪽에 같은 것이 있어야 하고, 고정액은 화폐 재료의 값이 안정적이어야 하며, 비율은 그 대상에 거래되는 값이 있어야 하고, 횟수는 집행할 자리를 전제합니다. 어느 꼴을 어디에 썼는지가 무엇을 값으로 쟀는지의 경계를 그립니다.",
+      "명령하는 답은 숫자 없는 되갚기, 정액, 대상 값의 비율, 횟수의 네 꼴로 나타납니다. 각각 상해의 종류, 정해 둔 은의 무게, 대상에게 매긴 값, 정해 둔 행동의 수를 기준으로 삼습니다. 이 분류로 해당 조항의 처분을 비교할 수 있지만 당시 사회 전체의 가치 판단이나 실제 집행을 알 수는 없습니다.",
     canonicalHref: "/history/record-numbers/numbers-that-command#four-kinds",
   },
   "prescribed-price-is-not-observed-price": {
@@ -25889,7 +25889,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "정해진 값에서 치러진 값을 꺼낼 수 없다",
     aliases: ["법정 가격의 한계", "명령 숫자로 물가 읽기"],
     definition:
-      "법이 정한 품삯이나 임차료는 그 값에 거래가 이루어졌다는 관찰이 아니라 그렇게 하라는 명령입니다. 정할 필요가 있었다는 사실은 오히려 다른 값이 오갔을 가능성을 가리키므로, 거기서 읽을 수 있는 것은 그 값이 당시 사정에서 아주 동떨어지지는 않았으리라는 것과, 한 조항 안에 나란히 정해진 항목들 사이의 비 정도입니다.",
+      "법이 정한 품삯이나 임차료는 그 값에 거래가 이루어졌다는 관찰이 아니라 그렇게 하라는 명령입니다. 법전 안에서는 소 20카와 나귀 10카처럼 정해 둔 값의 2:1 비율을 읽을 수 있습니다. 실제 거래의 값이나 준수 빈도, 시장의 비율을 알려면 다른 기록이 필요합니다.",
     canonicalHref:
       "/history/record-numbers/numbers-that-command#reading-prices",
   },
@@ -48414,7 +48414,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "precision-of-a-sum",
     relation: "constrains",
     reason:
-      "큰 수에 곱해진 비율 하나가 끝자리를 만든다는 사실이 단위 오차가 곱해지는 구조에서 나옵니다.",
+      "배의 수에 곱한 두 비율이 끝자리에 기여하므로, 비율을 정할 때의 오차도 척수만큼 곱해집니다.",
   },
   {
     from: "precision-of-a-sum",
@@ -48470,7 +48470,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "prescribed-price-is-not-observed-price",
     relation: "constrains",
     reason:
-      "답의 꼴이 전제를 드러낼 뿐 관찰을 전하지 않는다는 것이 물가 읽기의 한계를 정합니다.",
+      "답의 꼴과 기준은 조항에 드러나지만 실제 거래 관찰을 전하지 않는다는 것이 물가 읽기의 한계를 정합니다.",
   },
   {
     from: "disclosed-partiality",

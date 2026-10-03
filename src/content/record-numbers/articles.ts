@@ -53,7 +53,7 @@ export const recordNumbersArticles: Article[] = [
       },
       {
         id: "last-digits",
-        title: "부품 3. 끝 네 자리를 만든 재료는 하나뿐입니다",
+        title: "부품 3. 끝자리는 여러 재료와 자리올림이 함께 만듭니다",
       },
       {
         id: "the-check",
@@ -86,7 +86,7 @@ export const recordNumbersArticles: Article[] = [
       },
       {
         id: "four-kinds",
-        title: "부품 3. 명령하는 숫자는 네 종류이고 각각 다른 것을 전제합니다",
+        title: "부품 3. 네 종류는 서로 다른 기준을 씁니다",
       },
       {
         id: "reading-prices",
