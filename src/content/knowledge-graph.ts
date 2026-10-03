@@ -22,7 +22,8 @@ export interface KnowledgeConcept {
     | "distributed-systems"
     | "economics"
     | "political-science"
-    | "law";
+    | "law"
+    | "history";
   label: string;
   /** 검색·원문 대조용 별칭입니다. 별칭 자체를 별도 concept node로 만들지 않습니다. */
   aliases?: readonly string[];
@@ -25611,6 +25612,193 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "자본이 국경을 넘지 않는 이유로 제시된 것은 기술이나 비용표가 아니라, 손이 닿지 않는 곳에 재산을 두는 불안과 태어난 곳을 떠나기를 꺼리는 마음이었습니다. 전제를 떠받치는 근거가 측정되는 것인지 마음과 제도처럼 바뀔 수 있는 것인지를 가르면 결론의 수명이 무엇에 묶여 있는지가 드러나며, 저자가 그 마음이 약해지는 것을 보고 싶지 않다고 덧붙인 대목은 이 전제가 관찰이 아니라 바라는 상태로 제시되었음을 보입니다.",
     canonicalHref: "/economics/macro/what-ricardo-assumed#what-he-leaned-on",
   },
+  "source-is-a-record-not-the-past": {
+    id: "source-is-a-record-not-the-past",
+    kind: "concept",
+    domain: "history",
+    label: "사료는 지난 일이 아니라 지난 일에 대한 기록이다",
+    aliases: ["사료의 성격", "기록과 사건의 구분"],
+    definition:
+      "남아 있는 글은 일어난 일이 아니라 일어난 일에 대해 누군가 적은 것입니다. 그래서 그 글을 읽는 일은 사건을 보는 일이 아니라 적은 사람의 기록을 보는 일이고, 적은 사람이 무엇을 할 수 있었고 무엇을 할 수 없었는지가 적힌 것의 모양을 정합니다. 이 구분을 세워 두지 않으면 기록의 한계를 사건의 성질로 착각하게 됩니다.",
+    canonicalHref:
+      "/history/testimony/speeches-were-reconstructed#overview",
+  },
+  "two-kinds-in-one-source": {
+    id: "two-kinds-in-one-source",
+    kind: "concept",
+    domain: "history",
+    label: "한 사료 안에 만들어진 방법이 다른 부분이 섞여 있다",
+    aliases: ["사료 내부의 두 칸", "연설과 사건의 구분"],
+    definition:
+      "같은 책 안에서도 어떤 부분은 저자가 판단해 다시 쓴 것이고 어떤 부분은 여러 보고를 대어 본 것일 수 있습니다. 활자로는 구분되지 않으므로 읽는 쪽이 문장마다 어느 쪽에서 왔는지를 따로 물어야 하며, 두 부분에 같은 신뢰를 주면 한쪽은 과하게 믿고 다른 쪽은 헐하게 믿게 됩니다.",
+    canonicalHref:
+      "/history/testimony/speeches-were-reconstructed#two-kinds",
+  },
+  "authorial-method-statement": {
+    id: "authorial-method-statement",
+    kind: "concept",
+    domain: "history",
+    label: "저자가 자기 방법을 적어 둔 진술",
+    aliases: ["방법 진술", "기록 방식의 자기 공개"],
+    definition:
+      "사료 안에서 저자가 이 책을 어떻게 만들었는지 직접 밝힌 대목입니다. 이것이 있으면 독자는 신뢰의 범위를 추측하지 않고 저자가 적은 범위에서 잡을 수 있고, 없으면 그 사실 자체를 결론의 한계에 적어야 합니다. 방법 진술은 사건에 대한 정보가 아니라 기록에 대한 정보이므로 사건 서술과 따로 읽습니다.",
+    canonicalHref:
+      "/history/testimony/speeches-were-reconstructed#speeches",
+  },
+  "cross-checking-reports": {
+    id: "cross-checking-reports",
+    kind: "method",
+    domain: "history",
+    label: "보고를 서로 대어 보는 절차",
+    aliases: ["교차 확인", "증언 대조"],
+    definition:
+      "손에 닿는 첫 이야기를 그대로 옮기지 않고, 자기가 본 것까지 하나의 보고로 취급해 둘 이상의 보고를 서로 대어 보는 절차입니다. 맞지 않는 곳이 드러나는 것이 이 절차의 성과이고, 그 어긋남을 메우는 데 품이 듭니다. 거쳤다는 것이 틀림이 없다는 뜻은 아니며 어긋남의 원인은 절차 뒤에도 남습니다.",
+    canonicalHref:
+      "/history/testimony/speeches-were-reconstructed#events",
+  },
+  "scatter-versus-shift-in-testimony": {
+    id: "scatter-versus-shift-in-testimony",
+    kind: "theorem",
+    domain: "history",
+    label: "흐린 기억은 모으면 줄고 편든 기억은 모으면 굳는다",
+    aliases: ["흩어짐과 쏠림", "증언 어긋남의 두 성질"],
+    definition:
+      "목격자들의 말이 갈리는 원인이 온전하지 않은 기억이면 어긋남의 방향에 규칙이 없어 여러 증언을 모을 때 상쇄되지만, 원인이 한쪽을 편드는 마음이면 방향이 같아 모을수록 같은 쪽으로 더 확실해집니다. 그래서 증언의 수는 둘째 경우에 아무 보장을 주지 않고, 증언한 사람이 어디에 서 있었는지를 따로 물어야 합니다.",
+    canonicalHref:
+      "/history/testimony/speeches-were-reconstructed#why-they-diverge",
+  },
+  "competing-accounts-kept-side-by-side": {
+    id: "competing-accounts-kept-side-by-side",
+    kind: "concept",
+    domain: "history",
+    label: "서로 부정하는 설명을 지우지 않고 함께 남긴다",
+    aliases: ["경합하는 설명", "세 이야기 병치"],
+    definition:
+      "같은 일에 대해 서로를 부정하는 설명이 여럿 전해질 때, 하나를 골라 남기면 판정이 되지만 그 판정의 근거는 사라지고, 모두 남기면 판정은 미뤄지지만 뒷사람이 같은 자료로 다시 따질 수 있습니다. 설명이 갈렸다는 사실 자체가 기록할 내용이 된다는 점이 이 선택의 근거입니다.",
+    canonicalHref: "/history/testimony/told-but-not-believed#three-accounts",
+  },
+  "attribution-tag": {
+    id: "attribution-tag",
+    kind: "method",
+    domain: "history",
+    label: "문장에 붙은 출처 꼬리표",
+    aliases: ["누구의 말인지 적기", "전문 표지"],
+    definition:
+      "'그들은 말한다', '이런 이야기가 전해진다'처럼 각 서술이 누구의 보고인지를 그 자리에 적어 두는 장치입니다. 꼬리표가 유지되면 서로를 부정하는 설명들이 한 저자의 모순이 아니라 여러 보고의 차이로 읽히고, 독자는 한 문단 안에서도 어디까지가 누구의 주장인지를 잃지 않습니다.",
+    canonicalHref: "/history/testimony/told-but-not-believed#tags",
+  },
+  "reporting-apart-from-believing": {
+    id: "reporting-apart-from-believing",
+    kind: "concept",
+    domain: "history",
+    label: "전할 의무와 믿을 의무를 가른다",
+    aliases: ["적는 일과 믿는 일", "보고와 신뢰의 분리"],
+    definition:
+      "전해지는 것을 전할 의무는 지되 그것을 다 믿을 의무는 지지 않는다는 원칙입니다. 두 일이 하나로 묶여 있으면 믿지 못하는 이야기가 책에 들어오지 못하고 버렸다는 사실까지 사라지지만, 갈라 두면 이야기와 저자의 유보가 함께 남아 읽는 쪽이 판정에 필요한 재료를 얻습니다.",
+    canonicalHref: "/history/testimony/told-but-not-believed#two-duties",
+  },
+  "declared-scope-of-a-method": {
+    id: "declared-scope-of-a-method",
+    kind: "concept",
+    domain: "history",
+    label: "방법이 어디까지 걸리는지를 선언한다",
+    aliases: ["규칙의 범위", "책 전체 적용 선언"],
+    definition:
+      "저자가 자기 방법을 밝힐 때 그것이 한 대목의 예외인지 책 전체의 규칙인지를 함께 적는 것입니다. 범위가 선언되어 있으면 독자는 어느 대목에서든 같은 기준으로 읽을 수 있고, 어긋난 서술을 저자의 모순이 아니라 당대 보고의 차이로 읽습니다. 범위가 없으면 그 방법은 그 자리의 변명과 구별되지 않습니다.",
+    canonicalHref: "/history/testimony/told-but-not-believed#scope",
+  },
+  "presence-is-not-credibility": {
+    id: "presence-is-not-credibility",
+    kind: "concept",
+    domain: "history",
+    label: "그 자리에 있었다는 것이 신뢰의 근거는 아니다",
+    aliases: ["목격의 한계", "두 묶음의 실패"],
+    definition:
+      "관여하지 않은 사람은 들은 말을 모아 서로 어긋나는 이야기를 적고, 자리에 있던 사람은 아첨이나 증오 때문에 거짓을 적습니다. 두 실패의 원인이 다르므로 고치는 방법도 다르며, 앞쪽은 자리에 가면 줄지만 뒤쪽은 자리에 가도 줄지 않습니다. 그래서 목격은 따져야 할 조건이고 혼자서는 아무것도 보증하지 않습니다.",
+    canonicalHref: "/history/testimony/the-writer-was-there#not-enough",
+  },
+  "disclosed-partiality": {
+    id: "disclosed-partiality",
+    kind: "method",
+    domain: "history",
+    label: "저자가 자기 치우침의 자리를 먼저 적는다",
+    aliases: ["자기 자리 공개", "저자에게 붙은 꼬리표"],
+    definition:
+      "이름·혈통·신분과 사건에서 자기가 어느 편에 있었는지를 글머리에 적어, 독자가 어느 주장에 더 의심을 걸어야 하는지를 정할 수 있게 하는 방식입니다. 꼬리표가 각 보고에 붙는 대신 저자 자신에게 붙으므로, 모든 문장에 같은 무게의 의심을 걸지 않고 주장의 방향에 따라 다르게 걸게 됩니다.",
+    canonicalHref: "/history/testimony/the-writer-was-there#own-position",
+  },
+  "reader-side-separation": {
+    id: "reader-side-separation",
+    kind: "method",
+    domain: "history",
+    label: "나누는 일을 독자에게 맡기고 섞였다는 사실만 공개한다",
+    aliases: ["사실과 애도의 분리", "독자 쪽 분리"],
+    definition:
+      "저자가 사실 서술과 감정 표현을 직접 구분해 두지 않고, 그런 것이 섞여 있다고 밝힌 뒤 사실은 역사 부분으로 애도는 글쓴이에게 돌려 읽어 달라고 요청하는 방식입니다. 공개가 있어야 사실 서술이 감정과 함께 깎이지 않지만, 나누는 기준이 주어지지 않으므로 문장별 경계는 독자마다 달라집니다.",
+    canonicalHref: "/history/testimony/the-writer-was-there#split",
+  },
+  "witness-direction-of-interest": {
+    id: "witness-direction-of-interest",
+    kind: "theorem",
+    domain: "history",
+    label: "증인의 값은 신분이 아니라 이해의 방향으로 정해진다",
+    aliases: ["적대 증인", "증인의 이해 방향"],
+    definition:
+      "적국의 사령관처럼 보기에 적대적인 증인을 세우면 같은 편의 증언에서 생기는 쏠림을 피할 수 있습니다. 그러나 그 증언이 떠받치는 주장의 방향이 증인에게도 유리하면, 적이라는 신분만으로 그 증언을 적대 증언으로 셀 수 없습니다. 증인을 셀 때 보아야 할 것은 누구인지가 아니라 그 주장이 누구에게 유리한지입니다.",
+    canonicalHref: "/history/testimony/the-writer-was-there#hostile-witness",
+  },
+  "audience-as-a-constraint": {
+    id: "audience-as-a-constraint",
+    kind: "method",
+    domain: "history",
+    label: "겪어 아는 사람을 독자로 두어 글에 제약을 건다",
+    aliases: ["독자라는 검증 장치", "걸릴 상대를 두기"],
+    definition:
+      "그 일을 직접 겪어 진실을 아는 사람들을 독자로 선언하면, 거짓을 적었을 때 걸릴 상대가 글 바깥에 생깁니다. 이 제약은 저자의 성실성에 기대지 않고 독자의 구성에 기대므로 확인할 수 있는 종류이며, 반대로 그런 독자가 사라진 시대의 기록에는 이 제약이 걸리지 않습니다.",
+    canonicalHref: "/history/testimony/the-writer-was-there#audience",
+  },
+  "provenance-of-a-recorded-number": {
+    id: "provenance-of-a-recorded-number",
+    kind: "concept",
+    domain: "history",
+    label: "적힌 숫자의 출처가 전문인지 절차인지",
+    aliases: ["숫자의 출처", "전해 들은 수와 절차에서 나온 수"],
+    definition:
+      "같은 꼴로 적힌 숫자라도 누군가 보고한 것을 옮긴 것과 저자가 아는 절차에서 나온 것은 다른 종류입니다. 보고가 없으면 수를 적지 않는 저자라면 적힌 수와 적히지 않은 수의 차이 자체가 정보가 되고, 읽는 쪽은 숫자의 모양이 아니라 그 옆에 적힌 말로 두 종류를 가릅니다.",
+    canonicalHref: "/history/record-numbers/how-the-army-was-counted#two-numbers",
+  },
+  "counting-by-unit-enclosure": {
+    id: "counting-by-unit-enclosure",
+    kind: "method",
+    domain: "history",
+    label: "단위 공간을 만들어 채움 횟수를 센다",
+    aliases: ["담으로 세기", "눈금 만들어 세기"],
+    definition:
+      "먼저 정해진 인원을 빽빽하게 세워 그들이 차지하는 면적을 담으로 고정해 눈금을 만들고, 그 뒤로는 사람을 헤아리지 않고 그 공간이 몇 번 찼는지만 헤아리는 방법입니다. 한 번 채우는 데 드는 품이 전체 인원과 무관하게 일정하므로 큰 집단에서 실행 가능성을 얻고, 그 대가로 눈금보다 작은 차이를 잃습니다.",
+    canonicalHref: "/history/record-numbers/how-the-army-was-counted#procedure",
+  },
+  "resolution-of-a-number": {
+    id: "resolution-of-a-number",
+    kind: "theorem",
+    domain: "history",
+    label: "눈금으로 센 수는 눈금보다 작은 자리에 정보가 없다",
+    aliases: ["수의 해상도", "끝자리 0의 뜻"],
+    definition:
+      "단위를 정해 그 단위의 개수를 센 수는 단위보다 작은 차이를 표현하지 못합니다. 그래서 그런 수의 끝자리 0들은 그만큼이었다는 주장이 아니라 그 자리에 정보가 없다는 표시이며, 두 수의 끝자리를 맞춰 보는 비교나 하나 단위의 진술은 이 수로 할 수 없습니다.",
+    canonicalHref:
+      "/history/record-numbers/how-the-army-was-counted#what-was-counted",
+  },
+  "unit-error-multiplies": {
+    id: "unit-error-multiplies",
+    kind: "theorem",
+    domain: "history",
+    label: "단위가 틀리면 오차가 단위 개수만큼 곱해진다",
+    aliases: ["눈금 오차의 증폭", "단위 오차"],
+    definition:
+      "단위의 개수를 세는 방법에서 단위 자체가 실제와 다르면 그 차이는 상쇄되지 않고 개수만큼 곱해집니다. 그래서 절차를 알면 수의 해상도를 계산할 수 있지만 그것이 결과가 실제에 가깝다는 보증은 아니며, 절차를 아는 일과 결과를 신뢰하는 일은 따로 판단해야 합니다.",
+    canonicalHref:
+      "/history/record-numbers/how-the-army-was-counted#where-it-slips",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47778,6 +47966,181 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "prerequisite",
     reason:
       "양쪽 모두 이득인 교환 비율의 구간이 먼저 정의되어야 그 구간이 어디서 유지되는지를 물을 수 있습니다.",
+  },
+  {
+    from: "source-is-a-record-not-the-past",
+    to: "two-kinds-in-one-source",
+    relation: "produces",
+    reason:
+      "기록과 사건을 가르고 나면 한 기록 안에서도 만들어진 방법이 갈릴 수 있다는 물음이 생깁니다.",
+  },
+  {
+    from: "two-kinds-in-one-source",
+    to: "authorial-method-statement",
+    relation: "prerequisite",
+    reason:
+      "두 칸을 가르는 근거가 독자의 추측이 아니라 저자의 진술이어야 하므로 그 진술의 자리를 먼저 세웁니다.",
+  },
+  {
+    from: "authorial-method-statement",
+    to: "cross-checking-reports",
+    relation: "produces",
+    reason:
+      "저자가 사건 쪽에 썼다고 밝힌 절차가 교차 확인이고, 그 절차의 내용이 진술 안에 적혀 있습니다.",
+  },
+  {
+    from: "cross-checking-reports",
+    to: "scatter-versus-shift-in-testimony",
+    relation: "constrains",
+    reason:
+      "교차 확인이 무엇을 걸러 내고 무엇을 걸러 내지 못하는지가 어긋남의 두 성질에서 갈립니다.",
+  },
+  {
+    from: "scatter-versus-shift-in-testimony",
+    to: "two-kinds-in-one-source",
+    relation: "evaluates",
+    reason:
+      "두 칸을 가른 뒤에도 사건 칸이 어디까지 믿을 만한지를 판정하려면 어긋남의 성질로 되돌아가야 합니다.",
+  },
+  {
+    from: "source-is-a-record-not-the-past",
+    to: "competing-accounts-kept-side-by-side",
+    relation: "prerequisite",
+    reason:
+      "적힌 것이 기록이라는 구분이 서 있어야, 설명이 갈렸다는 사실이 기록할 내용이 된다는 말이 성립합니다.",
+  },
+  {
+    from: "competing-accounts-kept-side-by-side",
+    to: "attribution-tag",
+    relation: "produces",
+    reason:
+      "서로를 부정하는 설명을 함께 남기려면 각각이 누구의 말인지 적는 장치가 필요해집니다.",
+  },
+  {
+    from: "attribution-tag",
+    to: "reporting-apart-from-believing",
+    relation: "prerequisite",
+    reason:
+      "꼬리표가 유지되어야 믿지 않는 이야기를 적어도 저자의 주장으로 읽히지 않습니다.",
+  },
+  {
+    from: "reporting-apart-from-believing",
+    to: "declared-scope-of-a-method",
+    relation: "constrains",
+    reason:
+      "두 의무를 가른 원칙이 한 대목의 예외인지 책 전체의 규칙인지가 그 원칙의 쓸모를 정합니다.",
+  },
+  {
+    from: "authorial-method-statement",
+    to: "declared-scope-of-a-method",
+    relation: "extends",
+    reason:
+      "저자가 방법을 적어 두는 일에 그 방법이 어디까지 걸리는지를 적는 일이 더해집니다.",
+  },
+  {
+    from: "scatter-versus-shift-in-testimony",
+    to: "attribution-tag",
+    relation: "evaluates",
+    reason:
+      "어느 설명이 어느 편에서 나온 보고인지를 꼬리표가 남겨 두어야 쏠림을 의심할 수 있습니다.",
+  },
+  {
+    from: "source-is-a-record-not-the-past",
+    to: "presence-is-not-credibility",
+    relation: "prerequisite",
+    reason:
+      "적힌 것이 기록이라는 구분이 있어야 목격자의 기록도 따져야 할 기록으로 읽힙니다.",
+  },
+  {
+    from: "scatter-versus-shift-in-testimony",
+    to: "presence-is-not-credibility",
+    relation: "produces",
+    reason:
+      "편드는 마음에서 온 어긋남이 모으기로 지워지지 않는다는 결과가, 자리에 있던 사람의 실패를 설명합니다.",
+  },
+  {
+    from: "presence-is-not-credibility",
+    to: "disclosed-partiality",
+    relation: "produces",
+    reason:
+      "목격으로 신뢰를 세울 수 없으니 저자가 자기 자리를 적는 쪽으로 넘어갑니다.",
+  },
+  {
+    from: "attribution-tag",
+    to: "disclosed-partiality",
+    relation: "extends",
+    reason:
+      "각 보고에 붙던 꼬리표를 저자 자신에게 붙이는 쪽으로 넓힌 것입니다.",
+  },
+  {
+    from: "disclosed-partiality",
+    to: "reader-side-separation",
+    relation: "prerequisite",
+    reason:
+      "치우침이 공개되어 있어야 사실과 애도를 나눠 읽으라는 요청이 받아들여집니다.",
+  },
+  {
+    from: "reader-side-separation",
+    to: "witness-direction-of-interest",
+    relation: "constrains",
+    reason:
+      "나누는 기준이 독자에게 넘어가 경계가 흐려지므로 글 바깥의 고정점이 필요해집니다.",
+  },
+  {
+    from: "witness-direction-of-interest",
+    to: "audience-as-a-constraint",
+    relation: "contrasts",
+    reason:
+      "한쪽은 사람 하나를 증인으로 세우는 일이고 다른 쪽은 독자의 구성으로 제약을 거는 일이어서, 확인할 수 있는 정도가 다릅니다.",
+  },
+  {
+    from: "two-kinds-in-one-source",
+    to: "reader-side-separation",
+    relation: "contrasts",
+    reason:
+      "저자가 두 칸을 나눠 만든 경우와 나누는 일을 독자에게 넘긴 경우가 대조됩니다.",
+  },
+  {
+    from: "source-is-a-record-not-the-past",
+    to: "provenance-of-a-recorded-number",
+    relation: "prerequisite",
+    reason:
+      "적힌 것이 기록이라는 구분이 서 있어야 숫자도 누군가 만든 것으로 읽힙니다.",
+  },
+  {
+    from: "authorial-method-statement",
+    to: "counting-by-unit-enclosure",
+    relation: "produces",
+    reason:
+      "저자가 방법을 적어 두는 관행이 숫자에 적용되었을 때 세는 절차가 남습니다.",
+  },
+  {
+    from: "provenance-of-a-recorded-number",
+    to: "counting-by-unit-enclosure",
+    relation: "produces",
+    reason:
+      "절차에서 나온 수라는 것이 확인되면 그 절차의 내부를 열어 보게 됩니다.",
+  },
+  {
+    from: "counting-by-unit-enclosure",
+    to: "resolution-of-a-number",
+    relation: "constrains",
+    reason:
+      "세는 대상이 사람이 아니라 채움이므로 수가 표현할 수 있는 자리가 정해집니다.",
+  },
+  {
+    from: "counting-by-unit-enclosure",
+    to: "unit-error-multiplies",
+    relation: "constrains",
+    reason:
+      "눈금을 한 번만 만들고 되풀어 쓰는 구조에서 눈금의 오차가 곱해집니다.",
+  },
+  {
+    from: "resolution-of-a-number",
+    to: "unit-error-multiplies",
+    relation: "contrasts",
+    reason:
+      "해상도는 수가 말할 수 있는 자리의 문제이고 단위 오차는 수가 가리키는 값의 문제여서, 하나를 알아도 다른 하나는 남습니다.",
   },
 ];
 
