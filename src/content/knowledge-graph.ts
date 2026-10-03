@@ -25359,6 +25359,68 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/economics/labor/wage-floor-natural-experiment#what-happened",
   },
+  "class-table-ambiguity": {
+    id: "class-table-ambiguity",
+    kind: "concept",
+    domain: "economics",
+    label: "구간별 사람 수만으로는 쏠림의 방향이 결정되지 않는다",
+    aliases: ["계급별 표의 한계"],
+    definition:
+      "소득을 구간으로 나누고 각 구간의 사람 수만 세면, 위 구간의 사람이 줄었다는 사실과 그 적은 사람이 전체에서 차지하는 몫이 커졌다는 사실이 동시에 성립할 수 있습니다. 세는 단위가 사람 하나뿐이라 몫의 변화가 표에 들어오지 않기 때문이며, 그래서 쏠렸는지 퍼졌는지가 원리적으로 가려지지 않습니다. 사람과 몫을 함께 세는 것이 이 한계를 푸는 유일한 길입니다.",
+    canonicalHref: "/economics/labor/measuring-the-spread#why-tables-fail",
+  },
+  "cumulative-share-curve": {
+    id: "cumulative-share-curve",
+    kind: "method",
+    domain: "economics",
+    label: "가난한 쪽부터 쌓아 그린 몫의 곡선",
+    aliases: ["누적 몫 곡선", "로렌츠 곡선"],
+    definition:
+      "한 축에 가난한 쪽부터 쌓은 사람의 비율을, 다른 축에 그 사람들이 가진 몫의 비율을 두고 그린 곡선입니다. 점 하나가 아래 몇 퍼센트가 전체의 몇 퍼센트를 가졌는지를 말하며, 똑같이 나눈 경우에는 대각선이 되고 평균 재산이나 인구 크기와 무관하게 같은 모양이 나옵니다. 구간을 어떻게 끊든 같은 답이 나오도록 구간이 아니라 누적으로 읽는 것이 이 방법의 핵심입니다.",
+    canonicalHref: "/economics/labor/measuring-the-spread#cumulate-and-draw",
+  },
+  "bow-bending-rule": {
+    id: "bow-bending-rule",
+    kind: "concept",
+    domain: "economics",
+    label: "시작점과 끝점이 같으므로 차이는 휜 정도에만 남는다",
+    aliases: ["활이 휘는 규칙"],
+    definition:
+      "어떤 분배에서도 곡선은 아무도 가지지 않은 점에서 시작해 전부 더한 점에서 끝나므로, 두 분배의 차이는 가운데가 대각선에서 얼마나 멀어졌는지에만 남습니다. 활이 휠수록 쏠린 것이라는 읽기 규칙이 여기서 나오며, 크기와 인구가 지워진 뒤 남는 것이 모양 하나뿐이라는 점이 서로 다른 나라와 시점을 견줄 수 있게 만듭니다.",
+    canonicalHref: "/economics/labor/measuring-the-spread#cumulate-and-draw",
+  },
+  "area-ratio-summary": {
+    id: "area-ratio-summary",
+    kind: "theorem",
+    domain: "economics",
+    label: "휜 넓이를 삼각형 넓이로 나눈 한 숫자",
+    aliases: ["넓이 비", "집중도 지수"],
+    definition:
+      "대각선과 곡선 사이의 넓이를 대각선 아래 삼각형 전체 넓이로 나눈 값입니다. 분모와 분자가 같은 비율로 커지므로 그림의 크기에 영향받지 않고, 똑같이 나누면 0이며 한 사람이 다 가지는 쪽으로 갈수록 1에 가까워집니다. 비율 좌표에서 삼각형 넓이가 1/2로 고정되므로 곡선 아래 넓이만 적분하면 바로 구해집니다.",
+    canonicalHref: "/economics/labor/measuring-the-spread#one-number",
+  },
+  "crossing-curves-incomparability": {
+    id: "crossing-curves-incomparability",
+    kind: "theorem",
+    domain: "economics",
+    label: "곡선이 엇갈리면 한 숫자로 순서를 매길 수 없다",
+    aliases: ["교차하는 분배", "요약 지표의 사각지대"],
+    definition:
+      "두 분배의 곡선이 한 지점에서 만나고 그 앞뒤로 위아래가 바뀌면, 아래쪽 사람에게 나은 분배와 전체 넓이가 작은 분배가 서로 다를 수 있습니다. 넓이 비는 대각선에서 평균적으로 얼마나 떨어졌는지만 말하고 어느 구간에서 떨어졌는지는 말하지 않기 때문입니다. 한쪽 곡선이 전 구간에서 다른 쪽 아래에 있을 때만 숫자의 순서와 곡선의 순서가 일치합니다.",
+    canonicalHref:
+      "/economics/labor/measuring-the-spread#what-one-number-loses",
+  },
+  "two-sources-of-wage-spread": {
+    id: "two-sources-of-wage-spread",
+    kind: "concept",
+    domain: "economics",
+    label: "벌어짐에는 만드는 몫의 차이와 옮길 자리의 차이가 섞여 있다",
+    aliases: ["벌어짐의 두 갈래"],
+    definition:
+      "같은 벌어짐이라도 더 만들어 파는 몫 자체가 달라서 생긴 부분과, 같은 몫을 만들어도 옮겨 갈 자리가 적어 덜 받는 데서 생긴 부분이 섞여 있습니다. 뒤쪽은 사는 쪽이 하나일 때의 틈이 사람마다 다른 크기로 걸린 것이고, 그래서 자격이 여러 곳에서 통하는 사람과 한 곳에서만 쓰이는 기술을 가진 사람이 같은 몫을 만들어도 다른 임금을 받습니다. 누적 몫 곡선은 둘을 합한 결과만 보이며 어느 쪽이 얼마인지는 가르지 못합니다.",
+    canonicalHref:
+      "/economics/labor/measuring-the-spread#where-the-spread-comes-from",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47246,6 +47308,69 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "한 사실에서 따라 나오지 않는 결론을 따로 적어 두는 규율이 두 글에서 같은 모양으로 반복됩니다.",
+  },
+  {
+    from: "class-table-ambiguity",
+    to: "cumulative-share-curve",
+    relation: "produces",
+    reason:
+      "사람 하나만 세면 방향이 결정되지 않으므로, 사람과 몫을 함께 쌓아 세는 방법이 필요해집니다.",
+  },
+  {
+    from: "cumulative-share-curve",
+    to: "bow-bending-rule",
+    relation: "produces",
+    reason:
+      "누적으로 그리면 시작점과 끝점이 고정되므로, 남는 차이가 휜 정도 하나로 좁혀집니다.",
+  },
+  {
+    from: "bow-bending-rule",
+    to: "area-ratio-summary",
+    relation: "produces",
+    reason:
+      "차이가 휜 정도에만 남는다면 그 휜 양을 재는 것으로 비교를 숫자 하나로 바꿀 수 있습니다.",
+  },
+  {
+    from: "area-ratio-summary",
+    to: "crossing-curves-incomparability",
+    relation: "constrains",
+    reason:
+      "평균적으로 얼마나 떨어졌는지만 담는 값이라, 어디서 떨어졌는지가 다른 두 분배를 같은 값으로 뭉갭니다.",
+  },
+  {
+    from: "monopsony-wage-gap",
+    to: "two-sources-of-wage-spread",
+    relation: "produces",
+    reason:
+      "임금이 한계생산가치 아래로 내려가는 폭이 사람마다 다르면, 같은 몫을 만드는 사람 사이에도 차이가 생깁니다.",
+  },
+  {
+    from: "value-of-marginal-product",
+    to: "two-sources-of-wage-spread",
+    relation: "produces",
+    reason:
+      "더 만들어 파는 몫 자체가 다른 것이 벌어짐의 다른 한 갈래를 이룹니다.",
+  },
+  {
+    from: "cumulative-share-curve",
+    to: "two-sources-of-wage-spread",
+    relation: "constrains",
+    reason:
+      "곡선은 두 갈래를 합한 결과만 보이므로, 어느 쪽이 얼마인지는 이 방법으로 가를 수 없습니다.",
+  },
+  {
+    from: "efficiency-is-not-fairness",
+    to: "crossing-curves-incomparability",
+    relation: "extends",
+    reason:
+      "재는 일과 어느 쪽이 나은지 판단하는 일이 다른 단계라는 구분이 여기서 한 숫자의 한계로 다시 나타납니다.",
+  },
+  {
+    from: "neither-model-fits",
+    to: "crossing-curves-incomparability",
+    relation: "contrasts",
+    reason:
+      "측정이 한쪽 설명을 반증해도 다른 설명을 세우지 못하듯, 요약 숫자가 순서를 줘도 그 순서가 더 나음을 뜻하지는 않습니다.",
   },
 ];
 

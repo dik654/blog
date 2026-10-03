@@ -391,6 +391,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "같은 숫자 묶음(더 파는 몫 13−n, 부르는 임금 n+3, 바닥 9)에서 멈추는 사람 수·임금·틈과, 원문 표 3·표 7의 값이 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
   },
+  "labor/measuring-the-spread": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "표의 한계·그리는 방법·읽는 규칙·한 숫자로 줄이기·그 숫자가 틀리는 자리·벌어짐의 출처까지가 벌어진 정도를 어떻게 재는가라는 하나의 질문을 푸는 한 묶음이다. 요약 숫자를 떼어 내면 곡선을 그릴 이유가 약해지고, 교차 반례를 떼어 내면 그 숫자를 무조건 믿게 된다.",
+    sharedGate:
+      "Lorenz 218쪽의 열 사람 두 경우에서 누적값·교차 지점·넓이 비(0.120과 0.144)와 214쪽 프로이센 표의 누적값·넓이 비(0.357과 0.394)가 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
 };
 
 /**
@@ -475,4 +484,5 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "firms/scale-and-cost-structure": "81801244a44eeece",
   "firms/market-power-and-markup": "bd7e2fcb297b90d2",
   "labor/wage-floor-natural-experiment": "f4cee633e36a9767",
+  "labor/measuring-the-spread": "9c6d52345e9d0a9c",
 };

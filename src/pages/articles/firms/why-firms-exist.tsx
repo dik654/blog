@@ -62,7 +62,7 @@ export default function WhyFirmsExistArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 이 글이 겨루는 질문은 잡힙니다 — 값이 그렇게 잘
+              여기까지만 읽어도 이 글이 겨루는 질문은 잡힙니다 — 값이 그렇게 잘
               조정한다면 왜 조직이 생기고 왜 세상 전체가 하나가 되지
               않는가입니다.
             </em>
@@ -104,7 +104,7 @@ export default function WhyFirmsExistArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 조직이 생기는 이유는 잡힙니다. 조직이 그 몫을
+              이 절에서 조직이 생기는 이유는 잡혔습니다. 조직이 그 몫을
               정확히 어떻게 줄이는지가 다음 부품입니다.
             </em>
           </p>
@@ -164,7 +164,7 @@ export default function WhyFirmsExistArticle() {
 
           <p className="leading-7">
             <em>
-              여기까지 읽으면 조직이 아끼는 것이 무엇인지 셀 수 있습니다. 그러면
+              이제 조직이 아끼는 것이 무엇인지 셀 수 있습니다. 그러면
               왜 끝없이 커지지 않는가가 바로 다음 질문이 됩니다.
             </em>
           </p>

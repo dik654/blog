@@ -13009,6 +13009,37 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "measuring-the-spread": {
+    title: "벌어진 정도는 표가 아니라 곡선으로 잽니다 글이 소유하는 범위",
+    owns: [
+      "구간별 사람 수만으로는 쏠림의 방향이 결정되지 않는다는 한계",
+      "가난한 쪽부터 사람과 몫을 함께 쌓아 그리는 방법",
+      "양 끝이 고정되므로 차이가 휜 정도에만 남는다는 구조",
+      "휜 넓이를 삼각형 넓이로 나눈 한 숫자와 그 유도",
+      "곡선이 엇갈릴 때 그 숫자의 순서를 믿을 수 없다는 조건",
+      "벌어짐에 섞인 두 갈래의 구분",
+    ],
+    reuses: [
+      {
+        label: "임금이 한계생산가치 아래에 남는 틈과 그 크기",
+        href: "/economics/labor/wage-floor-natural-experiment#one-buyer",
+      },
+      {
+        label: "한 사람을 더 써서 더 만들어 파는 몫",
+        href: "/economics/labor/wage-floor-natural-experiment#two-counts",
+      },
+      {
+        label: "재는 일과 무엇을 할지 정하는 일의 구분",
+        href: "/economics/prices/surplus-and-efficiency#not-fairness",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "Lorenz 1905에 적혀 있는 것(곡선과 읽는 규칙)과 이 글이 그 곡선에서 계산한 것(넓이 비와 모든 수치)을 본문과 note 양쪽에서 가른다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

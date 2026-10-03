@@ -1971,3 +1971,23 @@
 **검증**: CI와 동일한 플래그로 감사 10종 통과(`learning --all-articles`, `graph`, `formula --require-explicit`, `articles --all-articles`, `topology`, `reading`, `order`, `prose`, `terms`, `viz --strict`), `tsc -b`·`GITHUB_PAGES=true npm run build` 통과(정적 route 1,487개), clipping 검사 8건 0문제, desktop 1440px·mobile 390px에서 4편 전부 narrow-column 0·katex-error 0·가로 스크롤 0·`ExplainedFormula` 질문 선행 확인·page/console error 0. topology fingerprint 4개 갱신.
 
 **주의**: `npx tsc --noEmit`은 이 저장소에서 아무것도 검사하지 않는다(solution-style tsconfig). 실제 타입 검사는 `tsc -b`다.
+
+### 2026-10-03 (2) · 노동 2편, 경제 읽기 순서 정정, 전자 4분야 편목 설계
+
+**범위**: `labor/measuring-the-spread` 신규 1편, `economics` 대분류 읽기 순서 정정, `docs/electronics-series-outline.md` 설계안 작성. 전자공학·소자·반도체·임베디드 집필은 `electronics-series` 브랜치(별도 worktree)가 맡으므로 그쪽 글 파일은 건드리지 않았다.
+
+**읽기 순서에서 선수 역전을 발견해 고쳤다.** 앞 회차에 `firms`·`labor`를 만들면서 `domain-reading-paths.ts`와 `src/content/index.ts`의 카테고리 순서를 함께 갱신하지 않았다. 그 결과 경제 대분류 페이지의 전체 순서가 1·2(scarcity) 다음에 바로 10·11·12에 와야 할 firms로 건너뛰었고, 두 카테고리는 `그 밖의 분야` 더미로 밀려 있었다. `audit:order --strict`는 카테고리 안의 순서만 보므로 이 교차 카테고리 역전을 잡지 못한다 — 렌더된 페이지의 번호 목록을 직접 읽어서 발견했다. 스테이지 05·06을 추가하고 카테고리 배열을 `scarcity → prices → market-failure → macro → firms → labor`로 고쳐 1~9(1단계)·10~13(2단계)가 됐다. 제목의 "아홉 편"도 낡아 있어 함께 고쳤다.
+
+**labor/measuring-the-spread** — 원자료는 Lorenz(1905), *Publications of the American Statistical Association* 9(70), 209–219쪽. JSTOR Early Journal Content 공개본(archive.org `jstor-2276207`)을 받아 전문을 읽었고, 210쪽 영국 소득세 표·214쪽 프로이센 표·217쪽 방법 문장·218쪽 열 사람 반례를 전부 쪽 이미지로 대조했다.
+- 입구의 작은 수치 사례를 **원문 218쪽의 반례 그대로** 썼다(6 7 8 9 10 12 12 12 12 12 / 8 8 8 8 8 8 8 14 14 16). 이 두 분배는 곡선이 50%에서 엇갈리므로, 부품 4에서 한 숫자로 줄였을 때 순서가 뒤집히는 것을 입구 사례로 바로 보일 수 있다.
+- **넓이 비(0.120·0.144·0.357·0.394)는 Lorenz 글에 없다.** 그는 곡선과 읽는 규칙까지만 적었고 넓이를 한 숫자로 바꾸는 계산은 이 글이 그의 곡선에서 이어 적은 것이다. 본문·note·`notClaim` 세 곳에서 이 경계를 적었다.
+
+**정본을 한 번 더 고쳤다 — 내가 넣은 템플릿이 AI 티로 잡혔다.** 1.3에 `여기까지 읽으면 …`이라는 고정 문구를 예시가 아니라 사실상 규격으로 적어 둔 탓에, 다섯 글 25곳의 층위 마무리 문장이 전부 같은 말로 시작하고 있었다. humanize 진단이 이것을 **C-6 동형 중간 요약**의 가장 선명한 사례로 집어냈다. 1.3과 DoD를 "기능만 고정하고 표현은 매번 다르게"로 고치고, 네 글 21곳의 첫머리를 서로 다르게 바꿨다(나머지 4곳은 윤문 콜이 처리).
+
+**humanize**: standard 경로(진단 1콜 + 윤문 1콜). 게이트 exit 0 수렴 — 문자율 3.2%, P1 `ending_comma_rate` z +5.20 → −0.52 **달성**(앞 회차에서 미달로 남겼던 축), P3 golden PASS, 터치율 33.6%. 마커 31·숫자 121·굵게 26·고유명사 보존을 직접 검증하고 재삽입 후 31문단 전부 왕복 대조했다. 진단이 "한자 추상어로 올려 쓰면 개악"이라고 못 박아 준 것이 유효했다 — 몫·벌어짐·쏠림이 분배·격차·편중으로 바뀌지 않았다.
+
+**검수에서 내 검사 스크립트의 오탐 1건**: `ExplainedFormula` 순서 검사기의 질문 탐지 정규식을 바꾸다가 다섯 글 전부 `false`가 나왔다. 페이지가 아니라 검사기 문제였고, 질문 라벨("이 식이 답하는 질문")·KaTeX·`data-formula-operations`의 DOM 순서와 `annotation-mode="explicit"`을 함께 보는 쪽으로 고치니 전부 통과했다. Viz 쪽 실제 결함은 2건 — 두 Viz 모두 x축 제목이 100 눈금을 덮고 있었고, 교차 지점 라벨이 하단 문장과 겹쳤다.
+
+**검증**: 감사 10종 통과(CI와 동일 플래그), `tsc -b`·`GITHUB_PAGES=true npm run build` 통과(정적 route 1,489개), clipping 10건 0문제, desktop 1440·mobile 390에서 다섯 글과 경제 대분류 페이지 전부 narrow 0·katexErr 0·가로 스크롤 0·수식 순서 통과·page/console error 0. fingerprint 5개 최신.
+
+**전자 4분야 설계안**: `docs/electronics-series-outline.md`. knowledge graph에 MOSFET·반도체·다이오드·임베디드·인터럽트·RTOS·리소그래피 등이 **0건**이라 신설 분야끼리의 중복은 없고, 기존 글과 닿는 경계가 다섯 군데(메모리/전력·열/배선/하드웨어 신뢰/연산 배열)임을 조사해 소유권을 나눴다. 대분류 `electronics` 아래 `circuits` 6편·`devices` 5편·`fabrication` 5편·`embedded` 6편, 모두 22편의 읽기 순서와 1차 자료 후보를 적었다. 집필 레인이 확인할 것 — 1차 자료 열람 가능 여부는 검증하지 않았다.
