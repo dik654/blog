@@ -29,4 +29,17 @@ export const semiconductorArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/semiconductors/wafer-and-planar-process"),
   },
+  {
+    slug: "lithography-and-resolution",
+    title: "작게 찍는 해상도와 제자리에 맞추는 정렬은 다릅니다",
+    subcategory: "semiconductor-fabrication",
+    sections: [
+      { id: "overview", title: "같은 자리에 두 번 찍어야 연결됩니다" },
+      { id: "transfer", title: "빛은 보호막이 아니라 감광막에 먼저 무늬를 남깁니다" },
+      { id: "resolution", title: "193 nm 빛으로 계산한 가상 경계는 96.5 nm입니다" },
+      { id: "overlay", title: "새 창이 옆으로 밀리면 좁은 쪽의 여유가 먼저 사라집니다" },
+      { id: "limits", title: "찍힌 감광막과 식각 뒤 실제 구조를 다시 재야 합니다" },
+    ],
+    component: () => import("@/pages/articles/semiconductors/lithography-and-resolution"),
+  },
 ];

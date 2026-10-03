@@ -87584,4 +87584,330 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "semiconductors/lithography-and-resolution": {
+    "coreIdea": "ASML 공식 광학식과 노광·계측 순서를 따라 가상 193 nm·NA0.8·k1=0.4의 CD 96.5 nm를 계산하고, 별도의 200 nm 선·120 nm 창에서 30/50 nm 중심 이동의 최소 여유 10/−10 nm를 비교합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "oxide-diffusion-mask",
+        "role": "앞 글에서 산화막의 선택 창을 만들었음을 가져옵니다."
+      },
+      {
+        "id": "contact-window-clearance",
+        "role": "중앙 정렬의 명목 거리를 가져와 오버레이 이동을 뺍니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "lithography-pattern-transfer",
+        "role": "감광막과 아래 막의 역할을 구분합니다."
+      },
+      {
+        "id": "rayleigh-critical-dimension",
+        "role": "193 nm 가상 광학 조건의 96.5 nm를 계산합니다."
+      },
+      {
+        "id": "lithography-process-factor",
+        "role": "k1 변화와 CD의 비례 관계를 읽습니다."
+      },
+      {
+        "id": "overlay-clearance-geometry",
+        "role": "200·120 nm 두 층과 30/50 nm 오차를 계산합니다."
+      },
+      {
+        "id": "lithography-overlay-metrology",
+        "role": "계산 뒤 실제 인쇄 무늬를 재는 이유를 설명합니다."
+      },
+      {
+        "id": "lithography-model-boundary",
+        "role": "두 계산과 실제 제조 검증의 차이를 정리합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "lithography-pattern-transfer",
+        "sectionId": "transfer",
+        "intuition": "빛은 우선 반응막에 무늬를 만들고 그 창을 아래 층으로 옮깁니다.",
+        "workedExample": "가상 120 nm 접촉 창도 감광막 무늬가 아래 층에 전달되어야 합니다.",
+        "boundary": "감광막의 양성·음성 종류에 따라 비춘 자리와 남는 자리는 달라집니다.",
+        "scientificGrounding": {
+          "observable": "레티클 무늬·현상 뒤 감광막 창·식각 뒤 아래 층 창의 위치 비교",
+          "unitsAndDimensions": "무늬 폭·위치는 nm, 노광 파장은 nm입니다.",
+          "modelAssumptions": "감광막·레티클·투영 광학·현상·식각의 일반 순서를 둡니다.",
+          "measurementExample": "노광 뒤 감광막과 식각 뒤 아래 층을 각각 관찰합니다.",
+          "invalidConditions": "감광막 종류·식각 편차를 지정하지 않으면 어느 노광 부분이 남는지 단정할 수 없습니다.",
+          "referenceFrame": "이전 층 선의 중심을 x=0, 새 접촉 창의 중심 이동을 Δx로 놓고 위에서 내려다봅니다."
+        }
+      },
+      {
+        "id": "rayleigh-critical-dimension",
+        "sectionId": "resolution",
+        "intuition": "빛이 짧고 더 넓은 각으로 모일수록 작은 무늬를 구분하기 쉽습니다.",
+        "workedExample": "0.4×193/0.8=96.5 nm입니다.",
+        "boundary": "CD 식만으로 실제 식각 뒤의 모든 폭이나 제품 노드를 정할 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "같은 조건에서 감광막에 인쇄된 최소 반복 무늬 폭",
+          "unitsAndDimensions": "CD·파장 단위는 nm, k1·NA는 무차원입니다.",
+          "modelAssumptions": "λ=193 nm·NA=0.8·k1=0.4의 가상 조합입니다.",
+          "measurementExample": "계산 96.5 nm와 인쇄 무늬의 실측 폭을 분리해 비교합니다.",
+          "invalidConditions": "초점·감광막·식각·마스크 편차가 크면 단순 식의 실제 구현이 달라집니다.",
+          "referenceFrame": "이전 층 선의 중심을 x=0, 새 접촉 창의 중심 이동을 Δx로 놓고 위에서 내려다봅니다."
+        }
+      },
+      {
+        "id": "lithography-process-factor",
+        "sectionId": "resolution",
+        "intuition": "광학만 같아도 공정 최적화에 따라 찍을 수 있는 기준이 달라집니다.",
+        "workedExample": "0.3×193/0.8≈72.4 nm로 줄어듭니다.",
+        "boundary": "k1만 임의로 설정하면 실제 장비가 같은 결과를 낸다고 말할 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "동일 파장·NA에서 공정 조건에 따른 인쇄 가능 선폭 비교",
+          "unitsAndDimensions": "k1은 무차원이고 결과 CD는 nm입니다.",
+          "modelAssumptions": "다른 요인은 같고 k1만 다른 두 교육용 경우입니다.",
+          "measurementExample": "같은 광학 조건의 가상 96.5 nm와 72.4 nm를 비교합니다.",
+          "invalidConditions": "광학·레지스트·계산 보정의 상호작용을 모르면 실제 k1 달성을 보장할 수 없습니다.",
+          "referenceFrame": "이전 층 선의 중심을 x=0, 새 접촉 창의 중심 이동을 Δx로 놓고 위에서 내려다봅니다."
+        }
+      },
+      {
+        "id": "overlay-clearance-geometry",
+        "sectionId": "overlay",
+        "intuition": "작은 창이라도 잘못된 곳에 놓이면 이전 선과 충분히 겹치지 않습니다.",
+        "workedExample": "(200−120)/2−30=10 nm, 50 nm 이동이면 −10 nm입니다.",
+        "boundary": "직사각형·같은 선폭·1차원 이동의 기하이며 전기 접촉 품질의 보증은 아닙니다.",
+        "scientificGrounding": {
+          "observable": "이전 선과 새 창의 중심 차이 및 양쪽 가장자리 거리",
+          "unitsAndDimensions": "선·창 폭, 중심 차이, 여유는 모두 nm입니다.",
+          "modelAssumptions": "200 nm 선·120 nm 창의 직사각형 무늬와 수평 이동만 둡니다.",
+          "measurementExample": "같은 위치의 두 층 무늬에서 최소 가장자리 거리를 잽니다.",
+          "invalidConditions": "회전·왜곡·식각 편차·상하 높이 차이가 있으면 단순 1차원 식으로 부족합니다.",
+          "referenceFrame": "이전 층 선의 중심을 x=0, 새 접촉 창의 중심 이동을 Δx로 놓고 위에서 내려다봅니다."
+        }
+      },
+      {
+        "id": "lithography-overlay-metrology",
+        "sectionId": "limits",
+        "intuition": "설계한 중심과 인쇄된 중심이 다를 수 있으므로 측정 후 보정합니다.",
+        "workedExample": "가상 10 nm 여유가 식각 뒤에도 남는지 계측으로 확인해야 합니다.",
+        "boundary": "계측 표적의 값만으로 실제 소자와 전기 접촉 품질을 보증하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "계측 표적의 층 간 위치 차이·초점과 식각 뒤 실제 구조 위치",
+          "unitsAndDimensions": "위치·초점 오차는 길이 nm, 수율은 비율입니다.",
+          "modelAssumptions": "공식 ASML 계측 설명과 별개의 가상 연결 도식입니다.",
+          "measurementExample": "층 간 정렬 표적을 재고 식각 뒤 선·창 위치를 다시 확인합니다.",
+          "invalidConditions": "표적만 맞고 실제 소자 패턴이 변형되면 연결 품질은 보장되지 않습니다.",
+          "referenceFrame": "이전 층 선의 중심을 x=0, 새 접촉 창의 중심 이동을 Δx로 놓고 위에서 내려다봅니다."
+        }
+      },
+      {
+        "id": "lithography-model-boundary",
+        "sectionId": "limits",
+        "intuition": "작은 무늬와 맞는 위치가 모두 필요하지만 그것만으로 전기 연결이 증명되지 않습니다.",
+        "workedExample": "가상 120 nm 창이 200 nm 선에 10 nm 여유로 놓여도 식각 뒤 접촉을 따로 확인합니다.",
+        "boundary": "광학식과 평면 기하만으로 식각 뒤 전기적 양품을 판단할 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "감광막·식각 뒤 실제 선폭과 전기 연결 여부",
+          "unitsAndDimensions": "길이는 nm, 저항은 Ω, 양품률은 무차원 비입니다.",
+          "modelAssumptions": "교육용 직사각형 기하와 공식 광학 기준을 나누어 둡니다.",
+          "measurementExample": "식각 뒤 단면·접촉 저항을 측정해 가상 여유와 비교합니다.",
+          "invalidConditions": "막 두께·식각 손상·오염·정렬 분포는 두 간단한 식 밖에 있습니다.",
+          "referenceFrame": "이전 층 선의 중심을 x=0, 새 접촉 창의 중심 이동을 Δx로 놓고 위에서 내려다봅니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 무늬 전달",
+        "relation": "레티클·감광막·식각의 순서를 따라 아래 층의 창을 만듭니다.",
+        "concepts": [
+          "lithography-pattern-transfer"
+        ]
+      },
+      {
+        "label": "02 크기",
+        "relation": "파장·NA·k1의 가상 조합에서 최소 무늬 기준을 계산합니다.",
+        "concepts": [
+          "rayleigh-critical-dimension",
+          "lithography-process-factor"
+        ]
+      },
+      {
+        "label": "03 위치와 검증",
+        "relation": "두 층의 최소 겹침 여유와 실제 계측·전기 경계를 확인합니다.",
+        "concepts": [
+          "overlay-clearance-geometry",
+          "lithography-overlay-metrology",
+          "lithography-model-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "레티클 무늬를 산화막 창으로 옮기는 순서는?",
+        "answerChecklist": [
+          "감광막 도포",
+          "투영 노광",
+          "베이크·현상",
+          "아래 층 식각"
+        ],
+        "requiredConcepts": [
+          "lithography-pattern-transfer"
+        ],
+        "sectionId": "transfer"
+      },
+      {
+        "level": "basic",
+        "question": "가상 λ=193 nm·NA=0.8·k1=0.4에서 CD는?",
+        "answerChecklist": [
+          "0.4×193/0.8",
+          "96.5 nm",
+          "장비 사양이 아닌 가정"
+        ],
+        "requiredConcepts": [
+          "rayleigh-critical-dimension"
+        ],
+        "sectionId": "resolution"
+      },
+      {
+        "level": "basic",
+        "question": "CD 식에서 NA만 두 배면 같은 조건의 계산 CD는?",
+        "answerChecklist": [
+          "절반",
+          "다른 조건 일정",
+          "실제 초점·공정 고려 필요"
+        ],
+        "requiredConcepts": [
+          "rayleigh-critical-dimension"
+        ],
+        "sectionId": "resolution"
+      },
+      {
+        "level": "basic",
+        "question": "나머지 조건을 유지하고 k1만 0.3이면 가상 CD는 얼마입니까?",
+        "answerChecklist": [
+          "0.3×193/0.8",
+          "약 72.4 nm",
+          "k1은 공정 관련 계수"
+        ],
+        "requiredConcepts": [
+          "lithography-process-factor"
+        ],
+        "sectionId": "resolution"
+      },
+      {
+        "level": "basic",
+        "question": "200 nm 선에 120 nm 창을 중앙 정렬하면 한쪽 여유는?",
+        "answerChecklist": [
+          "(200−120)/2",
+          "40 nm"
+        ],
+        "requiredConcepts": [
+          "overlay-clearance-geometry"
+        ],
+        "sectionId": "overlay"
+      },
+      {
+        "level": "basic",
+        "question": "같은 창을 30 nm 옮기면 가까운 쪽과 먼 쪽 여유는?",
+        "answerChecklist": [
+          "가까운 쪽 10 nm",
+          "먼 쪽 70 nm",
+          "오버레이와 CD 구분"
+        ],
+        "requiredConcepts": [
+          "overlay-clearance-geometry"
+        ],
+        "sectionId": "overlay"
+      },
+      {
+        "level": "advanced",
+        "question": "50 nm 옮기면 최소 여유는? CD가 96.5 nm여도 왜 문제가 됩니까?",
+        "answerChecklist": [
+          "40−50=−10 nm",
+          "창이 이전 선 밖으로 10 nm",
+          "CD는 층 정렬을 나타내지 않음"
+        ],
+        "requiredConcepts": [
+          "overlay-clearance-geometry",
+          "rayleigh-critical-dimension"
+        ],
+        "sectionId": "overlay"
+      },
+      {
+        "level": "advanced",
+        "question": "CD를 줄이는 λ·NA·k1의 변화 방향을 식 안에서 설명하고 실제 결과에 필요한 추가 조건을 말하세요.",
+        "answerChecklist": [
+          "λ 감소",
+          "NA 증가",
+          "k1 감소",
+          "초점·감광막·식각 확인"
+        ],
+        "requiredConcepts": [
+          "rayleigh-critical-dimension",
+          "lithography-process-factor"
+        ],
+        "sectionId": "resolution"
+      },
+      {
+        "level": "advanced",
+        "question": "왜 계측 표적의 오버레이뿐 아니라 식각 뒤 구조도 볼 필요가 있습니까?",
+        "answerChecklist": [
+          "표적과 실제 구조 차이",
+          "식각·감광막 변형",
+          "전기 연결 확인"
+        ],
+        "requiredConcepts": [
+          "lithography-overlay-metrology",
+          "lithography-model-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "193 nm·NA0.8·k1=0.4의 96.5 nm를 실제 장비 사양·공정 노드로 인용해도 됩니까?",
+        "answerChecklist": [
+          "안 됨",
+          "가상 조합",
+          "CD 식의 한 계산",
+          "제품·공정 측정값 아님"
+        ],
+        "requiredConcepts": [
+          "lithography-model-boundary"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "ASML, ‘How microchips are made’, lithography process",
+        "href": "https://www.asml.com/en/technology/all-about-microchips/how-microchips-are-made",
+        "problem": "레티클 무늬가 감광막과 아래 층에 전달되는 공정 순서를 설명합니다.",
+        "contribution": "감광막 도포·노광·베이크/현상·식각·계측의 장비 제조사 설명입니다.",
+        "assumptions": "일반적인 반도체 제조 순서이며 특정 양성·음성 감광막은 고정하지 않습니다.",
+        "evidenceScope": "ASML 공식 웹페이지 각 절을 직접 확인했습니다. 본문 선·창 폭은 가상입니다.",
+        "notClaim": "ASML이 가상 200·120 nm 예를 측정했다는 뜻은 아닙니다.",
+        "sectionId": "transfer"
+      },
+      {
+        "title": "ASML, ‘The Rayleigh criterion for resolution’",
+        "href": "https://www.asml.com/en/technology/lithography-principles/rayleigh-criterion",
+        "problem": "노광의 최소 무늬 크기를 파장·개구·공정 계수로 비교합니다.",
+        "contribution": "CD=k1λ/NA와 각 인자의 뜻을 설명합니다.",
+        "assumptions": "광학·공정 해상도 기준식으로 완성 칩의 모든 치수·수율을 뜻하지 않습니다.",
+        "evidenceScope": "ASML 공식 식을 확인하고 가상 193 nm·0.8·0.4를 대입했습니다.",
+        "notClaim": "96.5 nm가 특정 ASML 장비의 사양이나 공정 노드라는 뜻은 아닙니다.",
+        "sectionId": "resolution"
+      },
+      {
+        "title": "ASML, ‘Measuring accuracy’, overlay and focus metrology",
+        "href": "https://www.asml.com/en/technology/lithography-principles/measuring-accuracy",
+        "problem": "찍힌 층의 위치와 초점을 계측해 제조 조건을 보정합니다.",
+        "contribution": "오버레이를 두 층의 정렬 정확도로 정의하고 계측 표적·식각 뒤 측정을 설명합니다.",
+        "assumptions": "가상 직사각형 겹침 기하의 정확도 수치와 ASML 장비 성능을 분리합니다.",
+        "evidenceScope": "ASML 공식 계측 페이지의 YieldStar·metrology target·after-etch 절을 확인했습니다.",
+        "notClaim": "30·50 nm가 해당 장비의 오버레이 성능이라는 뜻은 아닙니다.",
+        "sectionId": "overlay"
+      }
+    ]
+  },
 };

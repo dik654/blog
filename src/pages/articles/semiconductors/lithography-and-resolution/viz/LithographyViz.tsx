@@ -1,0 +1,11 @@
+import { useState } from "react";
+import VizFrame from "@/components/viz/VizFrame";
+
+const CASES=[{label:"정렬",shift:0,minimum:40,far:40},{label:"30 nm 이동",shift:30,minimum:10,far:70},{label:"50 nm 이동",shift:50,minimum:-10,far:90}] as const;
+export default function LithographyViz(){
+ const [selected,setSelected]=useState(0),state=CASES[selected];
+ return <VizFrame eyebrow="가상 선 200 nm · 연결 창 120 nm" title="작게 찍는 것과 맞춰 찍는 것을 따로 보세요" description="새 층의 중심 이동을 바꾸면 이전 선 안에 남는 최소 폭이 달라집니다." note="수치와 도식은 설명용 기하입니다. 직사각형 무늬·완전한 선폭을 가정하며 식각·전기 접촉 품질과 실제 장비 성능을 뜻하지 않습니다.">
+  <div className="flex flex-wrap gap-2" role="group" aria-label="오버레이 이동 선택">{CASES.map((x,i)=><button type="button" key={x.label} aria-pressed={selected===i} onClick={()=>setSelected(i)} className={"rounded-md border px-3 py-2 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary "+(selected===i?"border-primary bg-primary/10 text-primary":"border-border bg-background text-foreground hover:bg-muted")}>{x.label}</button>)}</div>
+  <div className="mt-5 grid gap-4 md:grid-cols-2" aria-live="polite"><div className="rounded-lg border border-border bg-background p-4 text-sm"><p className="font-semibold">새 창 중심: {state.shift} nm 이동</p><p className="mt-3">가까운 쪽 여유 <strong>{state.minimum} nm</strong></p><p className="mt-2">먼 쪽 여유 <strong>{state.far} nm</strong></p><p className="mt-3 text-muted-foreground">{state.minimum<0?"새 창이 이전 선의 경계를 넘습니다.":"새 창이 가상 선 폭 안에 있습니다."}</p></div><div className="rounded-lg border border-border bg-background p-4"><p className="text-xs font-semibold">위에서 내려다본 두 층</p><div className="relative mx-auto mt-6 h-24 w-full max-w-xs rounded border border-border bg-background" role="img" aria-label={"이전 선 200나노미터, 새 창 120나노미터, 중심 이동 "+state.shift+"나노미터"}><div className="absolute left-[17%] top-5 h-14 w-[66%] rounded bg-blue-500/45"/><div className="absolute top-8 h-8 w-[40%] rounded border border-amber-700 bg-amber-400/70" style={{left:String(30+state.shift/3)+"%"}}/></div><div className="mt-2 flex gap-3 text-xs"><span className="text-blue-600 dark:text-blue-400">■ 이전 선</span><span className="text-amber-600 dark:text-amber-400">■ 새 창</span></div></div></div>
+ </VizFrame>;
+}

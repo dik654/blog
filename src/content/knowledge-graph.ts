@@ -25582,6 +25582,74 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "원 특허는 다이오드·이중 확산 양극성 트랜지스터의 산화막 마스크와 접합 보호를 다룹니다. 현대 MOSFET 게이트 절연막·이온 주입·다층 배선을 이 특허의 같은 단계로 단정할 수 없습니다.",
     "canonicalHref": "/electronics/semiconductors/wafer-and-planar-process#limits"
   },
+  "lithography-pattern-transfer": {
+    "id": "lithography-pattern-transfer",
+    "domain": "physics",
+    "label": "레티클 무늬는 감광막을 거쳐 아래 층에 전달된다",
+    "aliases": [
+      "photolithography",
+      "감광막",
+      "레티클"
+    ],
+    "definition": "ASML의 공식 제조 설명은 감광막 도포, 레티클 투영 노광, 베이크·현상, 열린 부분의 식각 순서입니다. 산화막의 실제 창은 빛만 쪼인 순간이 아니라 현상·식각을 거친 결과입니다.",
+    "canonicalHref": "/electronics/semiconductors/lithography-and-resolution#transfer"
+  },
+  "rayleigh-critical-dimension": {
+    "id": "rayleigh-critical-dimension",
+    "domain": "physics",
+    "label": "파장·수치 개구·공정 계수가 임계 치수 기준을 정한다",
+    "aliases": [
+      "Rayleigh criterion",
+      "critical dimension",
+      "임계 치수"
+    ],
+    "definition": "ASML의 CD=k1λ/NA 식에서 가상 λ=193 nm·NA=0.8·k1=0.4면 CD=96.5 nm입니다. CD는 작은 무늬 기준이지 층 정렬이나 완성 소자의 전기적 양품 보증이 아닙니다.",
+    "canonicalHref": "/electronics/semiconductors/lithography-and-resolution#resolution"
+  },
+  "lithography-process-factor": {
+    "id": "lithography-process-factor",
+    "domain": "physics",
+    "label": "k1은 독립된 장비 버튼이 아니라 공정 조건을 묶은 계수이다",
+    "aliases": [
+      "k1 factor",
+      "공정 계수"
+    ],
+    "definition": "같은 가상 λ=193 nm·NA=0.8에서 k1을 0.4에서 0.3으로 낮춘 경우 CD 계산은 96.5 nm에서 약 72.4 nm입니다. ASML은 k1이 공정 관련 여러 조건에 달린다고 설명합니다.",
+    "canonicalHref": "/electronics/semiconductors/lithography-and-resolution#resolution"
+  },
+  "overlay-clearance-geometry": {
+    "id": "overlay-clearance-geometry",
+    "domain": "physics",
+    "label": "층 중심이 밀리면 가까운 쪽 연결 여유가 줄어든다",
+    "aliases": [
+      "overlay",
+      "오버레이"
+    ],
+    "definition": "가상 이전 선 200 nm·새 접촉 창 120 nm이면 중앙 정렬의 한쪽 여유는 40 nm입니다. 새 창이 30 nm 밀리면 최소 10 nm, 50 nm 밀리면 −10 nm로 선 밖으로 나갑니다. 이는 CD와 별도인 층 간 위치 계산입니다.",
+    "canonicalHref": "/electronics/semiconductors/lithography-and-resolution#overlay"
+  },
+  "lithography-overlay-metrology": {
+    "id": "lithography-overlay-metrology",
+    "domain": "physics",
+    "label": "오버레이와 초점은 실제 인쇄 무늬를 계측해 되먹임한다",
+    "aliases": [
+      "overlay metrology",
+      "초점 계측"
+    ],
+    "definition": "ASML은 계측 표적에서 두 층 정렬 정확도인 오버레이와 초점을 확인하고, 일부 구조는 식각 뒤에도 계측한다고 설명합니다. 30 nm 가상 이동은 공식 장비 성능 수치가 아닙니다.",
+    "canonicalHref": "/electronics/semiconductors/lithography-and-resolution#limits"
+  },
+  "lithography-model-boundary": {
+    "id": "lithography-model-boundary",
+    "domain": "physics",
+    "label": "CD와 정렬 여유는 제조된 소자의 양품 판정이 아니다",
+    "aliases": [
+      "lithography limits",
+      "노광 적용 경계"
+    ],
+    "definition": "CD 식의 가상 96.5 nm와 오버레이 기하의 최소 10 nm는 서로 다른 근사입니다. 감광막·초점·식각·전기 접촉을 함께 보지 않으면 실제 연결의 성공 여부와 수율을 알 수 없습니다.",
+    "canonicalHref": "/electronics/semiconductors/lithography-and-resolution#limits"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47572,6 +47640,54 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "oxide-diffusion-mask",
     "relation": "prerequisite",
     "reason": "앞 글에서 불순물이 p형·n형을 만든다는 설명을 웨이퍼의 선택 확산으로 옮깁니다."
+  },
+  {
+    "from": "oxide-diffusion-mask",
+    "to": "lithography-pattern-transfer",
+    "relation": "prerequisite",
+    "reason": "앞 글의 산화막 창을 실제로 만들려면 감광막 무늬를 아래 층에 옮겨야 합니다."
+  },
+  {
+    "from": "lithography-pattern-transfer",
+    "to": "rayleigh-critical-dimension",
+    "relation": "produces",
+    "reason": "투영 무늬의 최소 크기를 광학·공정 조건으로 따집니다."
+  },
+  {
+    "from": "rayleigh-critical-dimension",
+    "to": "lithography-process-factor",
+    "relation": "constrains",
+    "reason": "같은 파장·NA에서 k1 변화가 CD 계산에 미치는 몫을 분리합니다."
+  },
+  {
+    "from": "lithography-pattern-transfer",
+    "to": "overlay-clearance-geometry",
+    "relation": "produces",
+    "reason": "여러 층에 찍은 무늬의 상대 위치를 비교합니다."
+  },
+  {
+    "from": "contact-window-clearance",
+    "to": "overlay-clearance-geometry",
+    "relation": "prerequisite",
+    "reason": "앞 글의 중앙 접촉 여유에서 중심 이동을 빼는 계산으로 확장합니다."
+  },
+  {
+    "from": "overlay-clearance-geometry",
+    "to": "lithography-overlay-metrology",
+    "relation": "produces",
+    "reason": "가상 정렬 여유를 실제 인쇄 위치 측정으로 확인합니다."
+  },
+  {
+    "from": "rayleigh-critical-dimension",
+    "to": "lithography-model-boundary",
+    "relation": "constrains",
+    "reason": "작은 무늬 기준과 실제 완성 구조의 차이를 확인합니다."
+  },
+  {
+    "from": "lithography-overlay-metrology",
+    "to": "lithography-model-boundary",
+    "relation": "constrains",
+    "reason": "실제 측정·전기 검사가 남은 연결 품질을 판단합니다."
   },
 ];
 
