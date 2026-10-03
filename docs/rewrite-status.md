@@ -12,6 +12,7 @@
 - [x] graph 3,765 concepts·6,040 relations·780 registered articles, learning 780/780, article·topology·reading-order·terms·prose·formula·Viz 감사, TypeScript·ESLint·production build 통과. 정적 public route 1,641개.
 - [x] 29편 각각에 실제 1차 자료의 짧은 구절, 첫 숫자 사례에 대한 적용, 절 사이의 멈춤 문장 3개와 답변 절을 가리키는 예측 질문 2개를 넣었다. 점포 4편과 파생상품·국가 비교 표본을 읽으며 출처 문구의 적용 범위와 숫자 연결을 재확인했다.
 - [x] Playwright Chromium으로 새 글 29편을 390×844와 1440×1000에서 총 58회 열어 overflow·KaTeX·console·Viz 오류 0건 확인. 결과: `output/playwright/sweep/2026-10-03T14-48-33/summary.json`. 공사·옵션 글의 양쪽 화면도 스크린샷으로 확인했다.
+- [x] 공개 후 추가 검토에서 시장 서사 글의 `매출을 할인해 가격을 설명`한 오류를 찾았다. 주주에게 남는 연간 현금 100→150, 할인율 10%→8%의 영구 지속 가정을 밝혀 평가액 1,000→1,875로 계산하고, 실제 첫해 105와 구분했다. 본문·학습 문제·topology 사례를 함께 수정한 뒤 해당 route를 390/1440 화면에서 재검사했다.
 - [ ] `blog-rewrite-contract.md` 1.3의 S·B·0~7 층위가 각 HTML 절에서 독립되고 순서대로 올라가는지 29편 전부 수동 검수한다. 현재 네 개의 본문 절에 일부 층위가 함께 있어 이 항목의 충족을 주장하지 않는다.
 
 ## 공통 기반
