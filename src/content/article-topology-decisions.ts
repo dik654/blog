@@ -703,6 +703,6 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "testimony/told-but-not-believed": "383412e348dd7bee",
   "testimony/the-writer-was-there": "4db0036e09cdc5cc",
   "record-numbers/how-the-army-was-counted": "8c2640e7b3d4794a",
-  "record-numbers/what-the-total-cannot-tell": "4a56414aa5294477",
+  "record-numbers/what-the-total-cannot-tell": "2fc6127542caf224",
   "record-numbers/numbers-that-command": "c4dc3a1b3c7ce7c4",
 };

@@ -3,7 +3,7 @@ import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 /** 본문 대응: last-digits·the-check 절. 수치는 헤로도토스 7권 184~187절, 나눗셈은 이 글의 검산 */
-const SCENES = ["끝자리 3220", "하나뿐인 출처", "검산", "남는 것"] as const;
+const SCENES = ["끝자리 3220", "끝자리의 출처", "검산", "남는 것"] as const;
 
 const KEEP = "#0ea5e9";
 const SLIP = "#ef4444";
@@ -16,16 +16,16 @@ export default function LastDigitsViz() {
 
   const NOTES = [
     `적힌 총계는 528만 3220입니다. 끝자리까지 0이 아니어서 하나하나 센 수처럼 보입니다. 앞 글에서 본 170만과 달리 이 수는 정밀해 보이는 자리를 가지고 있습니다.`,
-    `그 자리가 어디서 왔는지 거슬러 가면 하나로 모입니다. 재료 가운데 만 단위나 천 단위가 아닌 것은 배마다 전사 30명을 곱해 얻은 3만 6210 하나뿐입니다. 1,207 × 30 = 36,210이고, 그 610이 전투원 합계 264만 1610의 끝에 남았다가 두 배가 되어 3220이 된 것입니다.`,
+    `천 단위 아래에는 1,207 × 200에서 나온 400과 1,207 × 30에서 나온 210이 함께 들어가 610을 만듭니다. 끝 네 자리에는 유럽 배 24,000의 4,000도 들어갑니다. 1,400 + 6,210 + 4,000 = 11,610이고, 나머지 재료 2,340,000을 더해 전투원 합계 2,641,610이 됩니다. 이를 두 배로 하면 총계의 끝 네 자리는 3,220입니다.`,
     `저자는 이 총계로 검산까지 해 둡니다. 한 사람에게 하루 한 코이닉스의 밀만 준다고 해도 하루에 11만 340 메딤노이가 든다는 것입니다. 1 메딤노스는 48 코이닉스이므로 5,283,220을 48로 나누면 11만 67 메딤노이와 4 코이닉스가 나옵니다. 적힌 수와 맞지 않고, 영역자도 주석에서 이 계산이 틀렸다고 적습니다.`,
-    `그래서 이 총계에서 쓸 수 있는 것이 정해집니다. 끝 네 자리는 센 결과가 아니라 가정 하나가 곱해져 생긴 자리이고, 검산은 저자 쪽에서 어긋납니다. 남는 것은 총계의 자릿수와, 그 자릿수가 어떤 가정들 위에 올라가 있는지입니다.`,
+    `그래서 이 총계에서 쓸 수 있는 것이 정해집니다. 끝 네 자리는 여러 재료를 더하고 총계를 두 배로 하는 과정에서 생겼으며, 검산은 저자 쪽에서 어긋납니다. 남는 것은 총계의 자릿수와, 그 자릿수가 어떤 가정들 위에 올라가 있는지입니다.`,
   ] as const;
 
   return (
     <VizFrame
       eyebrow="끝자리"
-      title="정밀해 보이는 끝자리의 출처는 가정 하나이고, 저자의 검산은 맞지 않습니다"
-      description="총계의 끝 네 자리는 배마다 전사 30명이라는 비율에서만 나오고, 그 총계로 한 하루치 식량 계산은 48로 나눠 보면 어긋납니다."
+      title="정밀해 보이는 끝자리는 여러 재료가 만들고, 저자의 검산은 맞지 않습니다"
+      description="총계의 끝 네 자리는 배의 인원과 유럽 배의 수를 더한 뒤 두 배로 하면서 생기며, 하루치 식량 계산은 48로 나눠 보면 어긋납니다."
       note="총계와 식량 계산은 헤로도토스 7권 184~187절의 것이고, 영역자가 그 계산이 틀렸다고 주석에 적었습니다. 나눗셈을 다시 해 본 것은 이 글입니다."
     >
       <div
@@ -90,29 +90,30 @@ export default function LastDigitsViz() {
               {s === 1 && (
                 <g>
                   {[
+                    ["배 1,207척 × 200명", "241,400", true],
                     ["배 1,207척 × 30명", "36,210", true],
-                    ["나머지 모든 재료", "만·천 단위", false],
+                    ["유럽 배와 나머지", "24,000 + 2,340,000", false],
                   ].map(([t, v, lit], i) => (
                     <g key={String(t)}>
-                      <rect x={40} y={78 + i * 34} width={240} height={28} rx={4}
+                      <rect x={20} y={74 + i * 30} width={270} height={25} rx={4}
                         fill={lit ? SLIP : MUTED} opacity={lit ? 0.14 : 0.07}
                         stroke={lit ? SLIP : MUTED} strokeWidth={lit ? 1.25 : 0.75} />
-                      <text x={52} y={96 + i * 34} fontSize={8} fontWeight={700} fill={INK}>
+                      <text x={28} y={90 + i * 30} fontSize={7.5} fontWeight={700} fill={INK}>
                         {String(t)}
                       </text>
-                      <text x={270} y={96 + i * 34} fontSize={8.5} fontWeight={700} fill={lit ? SLIP : MUTED} textAnchor="end">
+                      <text x={282} y={90 + i * 30} fontSize={7.5} fontWeight={700} fill={lit ? SLIP : MUTED} textAnchor="end">
                         {String(v)}
                       </text>
                     </g>
                   ))}
-                  <text x={300} y={96} fontSize={8} fill={INK}>
-                    → 610이 남음
+                  <text x={300} y={90} fontSize={7.5} fill={INK}>
+                    400 + 210 = 610
                   </text>
-                  <text x={300} y={116} fontSize={8} fill={INK}>
-                    → 합계 2,641,610
+                  <text x={300} y={116} fontSize={7.5} fill={INK}>
+                    합계 2,641,610
                   </text>
-                  <text x={300} y={136} fontSize={8} fontWeight={700} fill={SLIP}>
-                    → 두 배로 3220
+                  <text x={300} y={142} fontSize={7.5} fontWeight={700} fill={SLIP}>
+                    × 2 → 5,283,220
                   </text>
                 </g>
               )}
@@ -198,7 +199,7 @@ export default function LastDigitsViz() {
                 {s === 0
                   ? "끝자리가 0이 아니면 센 수처럼 보입니다"
                   : s === 1
-                    ? "그 자리를 만든 재료는 하나뿐입니다"
+                    ? "서로 다른 재료를 더하고 두 배로 합니다"
                     : s === 2
                       ? "저자의 검산을 48로 나눠 보면 맞지 않습니다"
                       : "자릿수는 남고 끝자리는 남지 않습니다"}
