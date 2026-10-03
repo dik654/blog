@@ -46,4 +46,18 @@ export const circuitsArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/circuits/storage-elements-and-transients"),
   },
+  {
+    slug: "steady-state-and-impedance",
+    title: "반복 신호에서는 크기와 늦는 각도를 함께 셉니다",
+    subcategory: "circuit-dynamics",
+    sections: [
+      { id: "overview", title: "같은 5 V라도 빠르게 흔들면 덜 따라옵니다" },
+      { id: "wave", title: "반복 입력에서는 크기와 늦는 각도를 함께 적습니다" },
+      { id: "complex", title: "미분을 곱셈으로 바꿔 두 숫자를 묶습니다" },
+      { id: "divider", title: "저항과 축전기의 몫으로 출력을 구합니다" },
+      { id: "limits", title: "정현파 하나일 때 간단해지는 도구입니다" },
+      { id: "handoff", title: "한 속도의 답을 여러 속도의 지도로 펼칩니다" },
+    ],
+    component: () => import("@/pages/articles/circuits/steady-state-and-impedance"),
+  },
 ];

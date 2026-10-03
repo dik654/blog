@@ -395,6 +395,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "devices/switching-energy-and-leakage": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "가상 CMOS 출력 하나에서 충전·방전 장부, 활동률, 누설, 전압 변경의 경계까지 같은 10 pF·3.3 V 사례로 따라갑니다. MOSFET 영역은 앞 글, 제조는 다음 글이 소유합니다.", sharedGate: "0→1→0 한 쌍당 108.9 pJ, 10%·1 MHz의 10.89 µW, 누설 3.3 µW와 합 14.19 µW가 본문·식·Viz·연습문제에 일치하는지 확인합니다." },
   "circuits/resistance-and-power-dissipation": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "같은 12 V 망의 등가 계산에서 각 부품 발열과 실제 부품표 정격을 이어 답합니다. 보존 법칙은 앞 글, 시간 변화는 다음 글이 소유합니다.", sharedGate: "오른쪽 2→1 kΩ 변경 전후의 6→7.2 mA, 갈림길 6→4.8 V, 첫 부품 36→51.84 mW, 공급 72→86.4 mW가 본문·식·Viz·문제에 일치하는지 확인합니다." },
   "circuits/storage-elements-and-transients": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "저항 회로에 저장 요소 하나를 넣을 때 이어지는 상태와 지수 시간 상수를 RC·RL 쌍으로 설명합니다. 정상 상태 저항은 앞 글, 반복 입력은 다음 글이 소유합니다.", sharedGate: "5 V·1 kΩ에서 1 µF의 RC와 1 H의 RL이 모두 1 ms, 1τ에 3.16 V와 3.16 mA, 최종 저장 에너지가 각각 12.5 µJ라는 가정이 본문·식·Viz·문제에 일치하는지 확인합니다." },
+  "circuits/steady-state-and-impedance": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "한 RC 회로의 반복 입력에서 진폭·위상 읽기, 복소 임피던스, 분압, 정상 상태 경계까지를 한 질문으로 설명합니다. 스위치 과도는 앞 글, 폭넓은 주파수 그림은 다음 글이 소유합니다.", sharedGate: "1 kΩ·1 µF·5 V 최대 진폭에서 ω=1000 rad/s이면 −j1000 Ω, H=0.707∠−45°, 출력 3.54 V가 본문·식·Viz·문제에 일치하는지 확인합니다." },
 };
 
 /**
@@ -402,6 +403,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "circuits/steady-state-and-impedance": "f2cf3866dd83a148",
   "circuits/storage-elements-and-transients": "cc761424ab916184",
   "circuits/resistance-and-power-dissipation": "c6f5fea1f52dda34",
   "devices/switching-energy-and-leakage": "ceb9d7570a210e44",
