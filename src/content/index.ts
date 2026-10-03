@@ -30,6 +30,7 @@ import criminalLaw from "./criminal-law";
 import disputeResolution from "./dispute-resolution";
 import circuits from "./circuits";
 import semiconductors from "./semiconductors";
+import devices from "./devices";
 
 export const categories = [
   ai,
@@ -59,6 +60,7 @@ export const categories = [
   disputeResolution,
   circuits,
   semiconductors,
+  devices,
 ];
 
 export interface DomainGroup {

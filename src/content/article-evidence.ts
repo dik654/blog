@@ -7624,4 +7624,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "300 K의 n_i=10^10 cm^-3와 실리콘 띠틈 1.1 eV를 명시한 예제의 출처. 본문의 10^16 도핑 수치는 별도 가정이다.",
     },
   ],
+  "devices/pn-junction-and-rectification": [
+    { kind: "핵심 논문", label: "W. Shockley, ‘The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors,’ BSTJ 28 (1949), 461쪽 식 (4.18)–(4.22)", href: "https://vtda.org/pubs/BSTJ/vol28-1949/articles/bstj28-3-435.pdf", note: "원문 스캔 461쪽에서 캐리어별 전류식과 합친 식을 확인했다. 1 pA·300 K·0.5/0.6 V는 이 글의 이상 접합 가정이다." },
+    { kind: "공개 강의", label: "MIT OCW 6.720J Lecture 14, p-n Junction Diode I–V Characteristics (2007)", href: "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/369ddf4748729cfe5fe48c7528fd1d42_lecture14.pdf", note: "현대 표기의 이상 접합 전류식과 순·역방향 장벽 설명을 대조했다." },
+  ],
+  "devices/mos-capacitor-and-inversion": [
+    { kind: "공식 문서", label: "D. Kahng, US Patent 3,102,230, ‘Electric Field Controlled Semiconductor Device’ (1960 출원·1963 등록)", href: "https://patents.google.com/patent/US3102230A/en", note: "명세서 1–2쪽과 도 1A의 산화막 위 전극·전압원 구조를 확인했다. 특허의 다접합 회로와 본문의 두 단자 축전기는 구분한다." },
+    { kind: "공개 강의", label: "MIT OCW 6.012 Lecture 9, ‘MOS Capacitors I’ (2009), 23·30쪽", href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2009/42c863e2e1e9744ce6b797646a30e463_MIT6_012F09_lec09.pdf", note: "면적당 산화막 용량 εox/tox와 반전 전하식, 축적·공핍·반전 상태를 확인했다. 10 nm·100 µm²·문턱 0.5 V는 본문 가정이다." },
+  ],
 };
