@@ -25421,6 +25421,106 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref:
       "/economics/labor/measuring-the-spread#where-the-spread-comes-from",
   },
+  "multiplicative-vs-additive-growth": {
+    id: "multiplicative-vs-additive-growth",
+    kind: "concept",
+    domain: "economics",
+    label: "곱으로 느는 것과 더해서 느는 것",
+    aliases: ["기하급수와 산술급수", "늘어나는 방식의 차이"],
+    definition:
+      "매번 직전 값에 일정한 배수를 곱하는 늘어남은 한 번에 늘어나는 양 자체가 함께 커지지만, 매번 같은 양을 더하는 늘어남은 한 번에 늘어나는 양이 처음부터 끝까지 같습니다. 처음 몇 기간은 두 줄의 차이가 거의 보이지 않다가 시간이 지나면 벌어지고, 한번 벌어지면 좁혀지지 않습니다. 배수가 1보다 크기만 하면 어떤 더하기도 결국 따라잡히므로, 둘 중 어느 쪽인지가 긴 눈으로 보는 결론을 정합니다.",
+    canonicalHref: "/economics/macro/why-per-head-stalls#two-ratios",
+  },
+  "per-head-division": {
+    id: "per-head-division",
+    kind: "concept",
+    domain: "economics",
+    label: "총량을 사람 수로 나누면 다른 이야기가 된다",
+    aliases: ["1인당", "한 사람 몫"],
+    definition:
+      "더한 숫자 두 줄을 따로 보면 둘 다 늘었다는 말밖에 할 수 없으므로, 살림이 나아졌는지를 물으려면 거두는 양을 사람 수로 나눠야 합니다. 분자와 분모가 늘어나는 방식이 다르면 총량의 방향과 이 값의 방향이 갈려, 총량이 다섯 배가 되는 동안 한 사람 몫이 3분의 1로 내려가는 일이 같은 셈에서 나옵니다. 모두가 똑같이 나눠 가진다고 두고 계산한 값이므로 벌어진 정도는 여기 담기지 않습니다.",
+    canonicalHref: "/economics/macro/why-per-head-stalls#per-head",
+  },
+  "subsistence-check-loop": {
+    id: "subsistence-check-loop",
+    kind: "theorem",
+    domain: "economics",
+    label: "줄어든 몫이 사람 수를 도로 누르면 한 사람 몫이 한자리에 묶인다",
+    aliases: ["맬서스의 되먹임", "생계 수준 고정"],
+    definition:
+      "사람이 늘면 한 사람 몫이 줄고, 몫이 줄면 사람 수가 눌리고, 눌리면 몫이 다시 올라가는 고리가 닫히면, 늘어난 것이 그 늘어남을 막는 쪽으로 돌아옵니다. 그러면 총량은 얼마든지 커질 수 있는데 한 사람 몫은 오르내리기만 하고 긴 눈으로는 제자리에 머뭅니다. 사람 수가 늘어나는 배수가 한 사람 몫의 함수라는 한 줄이 이 고리를 닫는 자리입니다.",
+    canonicalHref: "/economics/macro/why-per-head-stalls#the-check",
+  },
+  "broken-assumption-diagnosis": {
+    id: "broken-assumption-diagnosis",
+    kind: "method",
+    domain: "economics",
+    label: "빗나간 예측에서 어느 가정이 깨졌는지 짚기",
+    aliases: ["조건부 명제로 읽기", "반증 뒤의 진단"],
+    definition:
+      "예측이 빗나갔을 때 결론을 버리는 것과 어느 가정이 깨졌는지 짚는 것은 다른 작업입니다. 구조가 옳고 입력이 틀린 경우에는 가정을 하나씩 대어 보면 어떤 조건에서 그 결론이 여전히 성립하는지가 남고, 그 조건 목록이 원래 결론보다 쓸모 있습니다. 결론을 조건부 명제로 되돌려 적는 것이 이 방법의 결과물입니다.",
+    canonicalHref: "/economics/macro/why-per-head-stalls#what-broke",
+  },
+  "population-as-two-sided-force": {
+    id: "population-as-two-sided-force",
+    kind: "concept",
+    domain: "economics",
+    label: "사람이 느는 것은 나눌 것을 줄이면서 동시에 수량을 키운다",
+    aliases: ["인구의 양면", "분모이자 시장"],
+    definition:
+      "사람이 늘면 같은 총량을 더 많이 나눠야 하므로 한 사람 몫을 낮추는 쪽으로 작용하지만, 동시에 수량이 커져 먼저 들이는 몫을 나눠 질 수 있는 돌아가는 방법이 열리는 쪽으로도 작용합니다. 두 힘이 반대 방향이므로 어느 쪽이 이기는지는 미리 정해져 있지 않으며, 뒤쪽 힘을 0으로 두면 한 사람 몫이 반드시 내려간다는 결론이 나옵니다.",
+    canonicalHref: "/economics/macro/why-per-head-stalls#what-it-leaves",
+  },
+  "exchange-identity": {
+    id: "exchange-identity",
+    kind: "concept",
+    domain: "economics",
+    label: "한 해에 건너간 돈과 건너온 물건은 값으로 같다",
+    aliases: ["교환방정식", "양변이 같은 등식"],
+    definition:
+      "거래 하나에서 주고받은 두 쪽이 같은 값이라는 것은 발견이 아니라 거래의 정의이므로, 한 해의 모든 거래를 더해도 양쪽은 반드시 같습니다. 자료로 확인한 법칙이 아니라 더하기의 결과이기 때문에 틀릴 수가 없고, 그 틀릴 수 없음이 이 등식의 쓸모와 한계를 동시에 정합니다.",
+    canonicalHref: "/economics/macro/what-the-price-level-hides#two-sides",
+  },
+  "velocity-of-circulation": {
+    id: "velocity-of-circulation",
+    kind: "concept",
+    domain: "economics",
+    label: "같은 돈이 한 해에 몇 번 손을 바꾸는지",
+    aliases: ["화폐의 유통 속도", "손 바뀐 횟수"],
+    definition:
+      "가진 돈은 어느 시점에 세어 본 양이라 한 해 동안 얼마가 오갔는지를 말하지 못합니다. 같은 돈이 여러 번 쓰이므로 건너간 돈을 세려면 가진 돈에 한 해 동안 손을 바꾼 횟수를 곱해야 하며, 이 횟수는 각자가 한 해에 쓴 돈을 평소 지니는 돈으로 나눈 값의 평균 같은 것입니다. 가진 돈과 전혀 다른 것을 재므로 따로 움직일 수 있고, 사람들이 돈을 쥐고 있으려 하면 가진 돈이 그대로여도 이 수가 내려갑니다.",
+    canonicalHref: "/economics/macro/what-the-price-level-hides#velocity",
+  },
+  "four-way-constraint": {
+    id: "four-way-constraint",
+    kind: "theorem",
+    domain: "economics",
+    label: "네 자리 가운데 셋이 정해지면 나머지 하나가 따라온다",
+    aliases: ["MV = ΣpQ", "네 자리의 묶임"],
+    definition:
+      "가진 돈·손 바뀐 횟수·오간 물량·값 수준이 한 등식에 묶여 있어 어느 셋이 정해지든 나머지 하나는 선택의 여지가 없습니다. 돈의 양이 그대로여도 손 바뀜이 두 배면 값이 두 배가 되고, 돈이 두 배여도 손 바뀜이 절반이면 값이 움직이지 않습니다. 오른쪽을 값 하나와 물량 하나로 줄이려면 무엇을 얼마의 비중으로 평균할지 먼저 정해야 하므로, 그 선택이 결과의 일부가 됩니다.",
+    canonicalHref: "/economics/macro/what-the-price-level-hides#four-knobs",
+  },
+  "identity-is-not-causation": {
+    id: "identity-is-not-causation",
+    kind: "concept",
+    domain: "economics",
+    label: "틀릴 수 없는 식은 아무것도 반증하지 못한다",
+    aliases: ["항등식과 인과", "역산된 나머지"],
+    definition:
+      "항등식은 네 자리가 서로를 제약한다는 것만 말하고 어느 자리가 먼저 움직였는지는 담지 않으므로, 관찰된 값 하나로는 원인을 좁힐 수 없습니다. 더구나 넷 중 셋을 세고 하나를 역산하면 식은 반드시 맞으므로 맞았다는 사실 자체가 증거가 되지 못합니다. 돈과 값 사이의 규칙적인 관계를 주장하려면 식 밖에서 자료를 따로 모아야 하고, 그때 그 주장을 떠받치는 것은 식이 아니라 자료입니다.",
+    canonicalHref: "/economics/macro/what-the-price-level-hides#not-a-cause",
+  },
+  "deflating-before-comparing": {
+    id: "deflating-before-comparing",
+    kind: "method",
+    domain: "economics",
+    label: "두 해를 견주기 전에 값이 변한 몫을 걷어낸다",
+    aliases: ["실질로 바꾸기", "값으로 나누기"],
+    definition:
+      "서로 다른 해의 총량을 그대로 견주면 물량이 늘어난 몫과 값이 오른 몫이 섞여 있으므로, 먼저 오른쪽 항을 값과 물량으로 갈라 값이 변한 몫을 걷어내야 합니다. 사람 수로 나누는 일보다 앞에 오는 나눗셈이며, 값 수준 하나를 만들 때 무엇을 얼마의 비중으로 평균할지 정해야 한다는 선택이 그대로 따라붙습니다.",
+    canonicalHref: "/economics/macro/what-the-price-level-hides#what-to-ask",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47371,6 +47471,118 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "측정이 한쪽 설명을 반증해도 다른 설명을 세우지 못하듯, 요약 숫자가 순서를 줘도 그 순서가 더 나음을 뜻하지는 않습니다.",
+  },
+  {
+    from: "multiplicative-vs-additive-growth",
+    to: "per-head-division",
+    relation: "produces",
+    reason:
+      "두 줄이 다른 방식으로 늘어날 때에만 나눈 값의 방향이 총량의 방향과 갈립니다.",
+  },
+  {
+    from: "per-head-division",
+    to: "subsistence-check-loop",
+    relation: "prerequisite",
+    reason:
+      "사람 수가 늘어나는 배수가 한 사람 몫에 달려 있다고 두려면 그 몫이 먼저 정의되어야 합니다.",
+  },
+  {
+    from: "subsistence-check-loop",
+    to: "broken-assumption-diagnosis",
+    relation: "evaluates",
+    reason:
+      "고리가 말한 결론이 실제와 어긋났을 때, 고리를 버리는 대신 들어가는 가정을 하나씩 대어 보게 됩니다.",
+  },
+  {
+    from: "broken-assumption-diagnosis",
+    to: "population-as-two-sided-force",
+    relation: "produces",
+    reason:
+      "깨진 가정을 짚고 나면 그 자리에 원래 0으로 두었던 반대 방향의 힘이 드러납니다.",
+  },
+  {
+    from: "minimum-market-for-a-detour",
+    to: "population-as-two-sided-force",
+    relation: "produces",
+    reason:
+      "수량이 커질수록 먼저 들이는 몫을 나눠 질 수 있어 더 돌아가는 방법이 열린다는 조건이 사람이 느는 쪽의 다른 효과를 만듭니다.",
+  },
+  {
+    from: "paradox-of-thrift",
+    to: "per-head-division",
+    relation: "contrasts",
+    reason:
+      "개별로 참인 것이 전체에서 뒤집히는 자리와, 총량으로 참인 것이 한 사람 몫에서 뒤집히는 자리가 같은 종류의 함정입니다.",
+  },
+  {
+    from: "cumulative-share-curve",
+    to: "per-head-division",
+    relation: "constrains",
+    reason:
+      "모두가 똑같이 나눠 가진다고 두고 계산한 평균이므로, 벌어진 정도는 이 값에 담기지 않습니다.",
+  },
+  {
+    from: "minimum-wage-prediction-split",
+    to: "broken-assumption-diagnosis",
+    relation: "extends",
+    reason:
+      "같은 셈이 조건에 따라 반대 결론을 낸다는 구조를 빗나간 예측을 읽는 방법으로 일반화한 것입니다.",
+  },
+  {
+    from: "exchange-identity",
+    to: "velocity-of-circulation",
+    relation: "produces",
+    reason:
+      "양변이 같다는 것을 실제로 세려면 돈 쪽에 가진 돈 말고 한 수가 더 필요하다는 것이 바로 드러납니다.",
+  },
+  {
+    from: "velocity-of-circulation",
+    to: "four-way-constraint",
+    relation: "prerequisite",
+    reason:
+      "손 바뀐 횟수가 독립된 자리로 들어가야 네 자리의 묶임이 성립합니다.",
+  },
+  {
+    from: "four-way-constraint",
+    to: "identity-is-not-causation",
+    relation: "constrains",
+    reason:
+      "셋이 정해지면 하나가 따라온다는 성질 자체가 어느 자리가 먼저 움직였는지를 식 안에서 가릴 수 없게 만듭니다.",
+  },
+  {
+    from: "four-way-constraint",
+    to: "deflating-before-comparing",
+    relation: "produces",
+    reason:
+      "오른쪽 항을 값과 물량으로 가를 수 있어야 두 해의 총량을 견줄 수 있습니다.",
+  },
+  {
+    from: "deflating-before-comparing",
+    to: "per-head-division",
+    relation: "prerequisite",
+    reason:
+      "사람 수로 나누기 전에 값이 변한 몫을 먼저 걷어내지 않으면 두 해의 한 사람 몫이 같은 자로 잰 값이 아닙니다.",
+  },
+  {
+    from: "crossing-curves-incomparability",
+    to: "deflating-before-comparing",
+    relation: "extends",
+    reason:
+      "여럿을 한 숫자로 줄일 때 무엇을 얼마의 비중으로 평균할지가 결과를 바꾼다는 문제가 값 수준에서도 똑같이 나타납니다.",
+  },
+  {
+    from: "neither-model-fits",
+    to: "identity-is-not-causation",
+    relation: "extends",
+    reason:
+      "측정이 한 설명을 반증해도 다른 설명을 세우지 못하듯, 반증될 수 없는 식은 어떤 설명도 세워 주지 못합니다.",
+  },
+  {
+    from: "money-multiplier-ceiling",
+    to: "velocity-of-circulation",
+    relation: "contrasts",
+    reason:
+      "돈의 양이 늘어나는 경로를 다루는 설명과, 같은 돈이 얼마나 자주 쓰이는지를 다루는 설명이 서로 다른 자리를 봅니다.",
   },
 ];
 

@@ -13040,6 +13040,70 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "why-per-head-stalls": {
+    title: "총량이 늘어도 한 사람 몫은 제자리일 수 있습니다 글이 소유하는 범위",
+    owns: [
+      "곱으로 느는 것과 더해서 느는 것의 차이와 그 차이가 시간에 따라 벌어지는 구조",
+      "총량을 사람 수로 나눈 값과 그 값이 총량과 반대로 움직일 수 있다는 점",
+      "줄어든 몫이 사람 수를 누르는 되먹임과 그것이 한 사람 몫을 묶는 조건",
+      "빗나간 예측에서 어느 가정이 깨졌는지 짚는 방법",
+      "사람이 느는 것이 분모이면서 동시에 수량이라는 양면",
+    ],
+    reuses: [
+      {
+        label: "개별에서 참인 것이 전체에서 뒤집히는 구조",
+        href: "/economics/macro/aggregation-and-composition",
+      },
+      {
+        label: "평균 하나로는 벌어진 정도를 말할 수 없다는 제약",
+        href: "/economics/labor/measuring-the-spread#one-number",
+      },
+      {
+        label: "수량이 커지면 더 돌아가는 방법이 열린다는 조건",
+        href: "/economics/firms/scale-and-cost-structure#minimum-market",
+      },
+      {
+        label: "같은 셈이 조건에 따라 반대 결론을 내는 자리",
+        href: "/economics/labor/wage-floor-natural-experiment#two-predictions",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "초판에 적힌 숫자와 문장만 저자에게 귀속하고, 되먹임 그림·시간 경로·g(y) 표기처럼 이 글이 정리한 것은 그렇게 표시한다. 쪽수는 쪽 이미지로 대조한 범위와 OCR 머리글로 확인한 범위를 구분해 적는다",
+      },
+    ],
+  },
+  "what-the-price-level-hides": {
+    title: "값이 올랐다는 말이 무엇을 숨기는지 다루는 글이 소유하는 범위",
+    owns: [
+      "거래의 정의에서 한 해의 등식이 나오는 경로와 그것이 발견이 아니라는 점",
+      "가진 돈과 손 바뀐 횟수가 서로 다른 것을 잰다는 구분",
+      "네 자리가 묶여 셋이 정해지면 나머지가 따라온다는 성질",
+      "항등식이 원인을 말하지 못한다는 것과 역산된 나머지의 문제",
+      "두 해를 견주기 전에 값이 변한 몫을 걷어내는 단계",
+    ],
+    reuses: [
+      {
+        label: "총량을 사람 수로 나누는 규칙",
+        href: "/economics/macro/why-per-head-stalls#per-head",
+      },
+      {
+        label: "여럿을 한 숫자로 줄일 때 잃는 것",
+        href: "/economics/labor/measuring-the-spread#what-one-number-loses",
+      },
+      {
+        label: "돈의 양이 늘어나는 경로",
+        href: "/finance/banking/deposit-creation",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "개정판 2장에 숫자와 함께 적힌 것만 저자에게 귀속하고, 역산 절차와 반증 불가에 대한 정리는 이 글이 적은 것으로 표시한다. 사본이 초판이 아님을 쪽수와 함께 밝힌다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
