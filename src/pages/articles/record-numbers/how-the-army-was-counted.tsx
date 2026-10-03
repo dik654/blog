@@ -219,7 +219,7 @@ export default function HowTheArmyWasCountedArticle() {
           <p className="leading-7">
             이 둘은 같은 크기를 가리키면서도 성질이 다릅니다. 사람을 하나씩 센
             수라면 끝자리까지 뜻이 있고, 눈금으로 센 수는 눈금보다 작은 차이를
-            담지 못합니다. 170만의 끝자리 0 네 개는 사람이 정확히 그만큼이었다는
+            담지 못합니다. 170만의 끝 네 자리는 사람이 정확히 그만큼이었다는
             뜻이 아니라 <strong>그 자리에 정보가 없다는 뜻</strong>입니다.
           </p>
 
@@ -246,7 +246,8 @@ export default function HowTheArmyWasCountedArticle() {
             달라진 것은 눈금을 적어 두는 관행입니다. 오늘의 통계는 단위와 측정
             방법을 함께 적고, 그래서 뒷사람이 해상도를 계산할 수 있습니다. 이
             사료가 드문 이유도 같습니다. 절차를 적어 두었으므로 2,400년 뒤에도
-            이 수의 해상도를 1만으로 읽을 수 있습니다.
+            이 수가 1만 단위로 기록됐다는 것은 읽을 수 있습니다. 실제 사람 수와의
+            총오차가 1만 이내인지는 이 절차만으로 알 수 없습니다.
           </p>
         </ProgressiveDetail>
 
@@ -262,7 +263,7 @@ export default function HowTheArmyWasCountedArticle() {
 
       <section id="where-it-slips" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          부품 4. 어긋날 자리가 셋 있고 모두 눈금 안에 묻힙니다
+          부품 4. 표기 단위는 1만이지만 총오차는 더 클 수 있습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
@@ -276,10 +277,11 @@ export default function HowTheArmyWasCountedArticle() {
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
-            세 자리의 어긋남에는 공통점이 있습니다. 어느 것도 1만보다 큰 차이를
-            만들기 어렵고, 어느 것도 기록에 흔적을 남기지 않습니다. 그래서 이
-            수를 쓸 때의 기준이 정해집니다. 1만 단위에서는 관찰을 전하는 수이고,
-            그보다 작은 자리에서는 아무 말도 하지 않는 수입니다.
+            마지막 채움에서 빠진 몫은 한 번의 눈금 안에 있을 수 있습니다. 그러나
+            빽빽함과 부대 구성의 차이는 여러 채움에서 반복됩니다. 한 번에 100명씩
+            차이가 나면 170번에 1만 7천 명입니다. 따라서 1만은 표기 단위이지
+            총오차의 상한이 아닙니다. 이 기록만으로 실제 인원이 어느 범위에
+            있었는지 정할 수 없습니다.
           </p>
 
           <p className="leading-7">
@@ -334,7 +336,7 @@ export default function HowTheArmyWasCountedArticle() {
           </p>
 
           <p className="leading-7">
-            2. 170만의 끝자리 0 네 개를 어떻게 읽어야 합니까.{" "}
+            2. 170만의 끝 네 자리를 어떻게 읽어야 합니까.{" "}
             <strong>(답: 부품 3절)</strong>
           </p>
 
