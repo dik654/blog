@@ -733,6 +733,6 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "record-numbers/what-the-total-cannot-tell": "4a56414aa5294477",
   "record-numbers/numbers-that-command": "068b1440b780d915",
   "inference-from-sources/ruins-mislead": "00e46e35e3fb93b9",
-  "inference-from-sources/the-gap-was-made": "0fd684b9d764e9fb",
+  "inference-from-sources/the-gap-was-made": "6224616aee8d25d8",
   "inference-from-sources/naming-the-past": "58060787a5f1d221",
 };
