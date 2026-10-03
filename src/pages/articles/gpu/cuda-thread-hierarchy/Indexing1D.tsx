@@ -80,7 +80,8 @@ export default function Indexing1D() {
         <p>
           Boundary check는 성능을 망치는 예외 처리가 아니라 launch shape와 실제
           data shape를 분리해 주는 안전 계약입니다. 마지막 warp 일부만 조건에서
-          빠지므로 대개 전체 grid를 복잡하게 맞추는 것보다 단순합니다. 다만
+          빠지므로 대개 전체 grid를 복잡하게 맞추는 것보다 단순합니다.</p>
+        <p>다만
           kernel launch는 host에 비동기로 돌아올 수 있어,{" "}
           <code>cudaGetLastError()</code>는 잘못된 launch configuration을
           확인하고 synchronization 뒤 status는 실행 중 illegal access를 확인하는

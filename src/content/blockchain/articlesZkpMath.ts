@@ -145,24 +145,14 @@ export const zkpMathArticles: Article[] = [
     slug: "zk-theory",
     title: "영지식 증명 이론",
     subcategory: "zkp-math",
-    sections: [
-      { id: "overview", title: "완전성 · 건전성 · 영지식성" },
-      { id: "sigma", title: "Sigma protocol과 extractor" },
-      { id: "simulation", title: "Simulator와 commitment" },
-      { id: "noninteractive-boundary", title: "Fiat–Shamir와 release gate" },
-    ],
+    sections: [{"id": "overview", "title": "1. 비밀을 보내지 않고 알고 있다는 사실을 보이려면"}, {"id": "black-box", "title": "2. 먼저 약속하고 질문을 받은 뒤 답합니다"}, {"id": "case", "title": "3. 12를 보낸 뒤 질문 2에 답 7을 보냅니다"}, {"id": "picture", "title": "4. 처음 보낸 12와 마지막 답 7이 공개 16으로 이어집니다"}, {"id": "need", "title": "5. 새 질문마다 처음 고른 수를 새로 써야 합니다"}, {"id": "names", "title": "6. 세 메시지·추출기·시뮬레이터를 구분합니다"}, {"id": "sigma", "title": "7. 두 답의 차이에서 처음 고른 10을 지웁니다"}, {"id": "simulation", "title": "8. 역순 계산은 실제 대화의 순서와 다릅니다"}, {"id": "source", "title": "9. 숨겨도 바꿀 수 있으면 약속이 되지 않습니다"}, {"id": "noninteractive-boundary", "title": "10. 해시가 질문을 대신해도 입력과 순서를 지켜야 합니다"}],
     component: () => import("@/pages/articles/blockchain/zk-theory"),
   },
   {
     slug: "fri",
     title: "FRI (Fast Reed-Solomon IOP)",
     subcategory: "zkp-math",
-    sections: [
-      { id: "overview", title: "RS oracle proximity" },
-      { id: "folding", title: "Even/odd folding" },
-      { id: "soundness", title: "Merkle query와 soundness" },
-      { id: "stark-boundary", title: "STARK에 넘기는 경계" },
-    ],
+    sections: [{"id": "overview", "title": "1. 긴 표를 다 읽지 않고 일정한 규칙을 따르는지 확인하려면"}, {"id": "black-box", "title": "2. 표를 고정하고 줄인 표와 일부 위치를 대조합니다"}, {"id": "case", "title": "3. 위치 4와 13의 값 10과 11을 하나로 합칩니다"}, {"id": "picture", "title": "4. 서로 반대인 위치가 같은 새 위치로 모입니다"}, {"id": "need", "title": "5. 미리 알려 준 섞기 숫자에는 속임수를 맞출 수 있습니다"}, {"id": "names", "title": "6. 낮은 차수의 평가표와 근접성을 검사합니다"}, {"id": "folding", "title": "7. 짝수 차수와 홀수 차수를 나누면 차수가 줄어듭니다"}, {"id": "soundness", "title": "8. 원문은 부호와의 거리를 기준으로 거절 확률을 정의합니다"}, {"id": "source", "title": "9. WHIR는 값에 대한 제약도 같은 낮은 차수 검사와 연결합니다"}, {"id": "stark-boundary", "title": "10. 표의 차수와 프로그램의 실행은 서로 다른 검사입니다"}],
     component: () => import("@/pages/articles/blockchain/fri"),
   },
 

@@ -131,10 +131,16 @@ export default function CodeSidebar({
                     animate={{ height: flowOpen ? "55%" : "100%", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="flex overflow-hidden min-h-0 shrink-0"
+                    className="flex flex-col overflow-hidden min-h-0 shrink-0 sm:flex-row"
                   >
                     {tree && (
-                      <div className="w-[200px] shrink-0 border-r border-[#d0d7de] dark:border-[#30363d] overflow-y-auto bg-[#f6f8fa] dark:bg-[#161b22]">
+                      <details className="max-h-40 shrink-0 overflow-y-auto border-b border-[#d0d7de] bg-[#f6f8fa] dark:border-[#30363d] dark:bg-[#161b22] sm:hidden">
+                        <summary className="cursor-pointer px-4 py-2 text-sm font-semibold">파일 선택</summary>
+                        <FileTree root={tree} currentPath={codeRef?.path ?? ""} onSelect={handleNav} codeRefs={codeRefs} />
+                      </details>
+                    )}
+                    {tree && (
+                      <div className="hidden w-[200px] shrink-0 border-r border-[#d0d7de] dark:border-[#30363d] overflow-y-auto bg-[#f6f8fa] dark:bg-[#161b22] sm:block">
                         <div className="px-3 py-2 border-b border-[#d0d7de] dark:border-[#30363d]">
                           <p className="text-[9px] font-semibold uppercase tracking-wider text-[#57606a] dark:text-[#8b949e]">
                             {projectId}
@@ -148,7 +154,7 @@ export default function CodeSidebar({
                         />
                       </div>
                     )}
-                    <div className="flex-1 flex flex-col overflow-hidden bg-white dark:bg-[#0d1117]">
+                    <div className="min-h-0 min-w-0 flex-1 flex flex-col overflow-hidden bg-white dark:bg-[#0d1117]">
                       <AnnotationLegend
                         annotations={annotations}
                         flowNodes={flowNodes}

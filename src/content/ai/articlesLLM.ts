@@ -519,29 +519,46 @@ export const llmArticles: Article[] = [
     subcategory: "ai-llm-theory",
     sections: [
       {
-        id: "problem",
-        title: "겹쳐 쓴 outer-product 기억은 지우거나 고칠 수 없다",
-        subsections: [{ id: "paper-schlag", title: "Fast weight programmer 논문의 제안" }],
-      },
-      { id: "associative-memory", title: "k⊗v 외적의 합이 만드는 content-addressable 기억" },
-      { id: "delta-rule", title: "예측 오차만 다시 쓰는 delta rule" },
-      {
-        id: "memory-gate",
-        title: "Delta rule 이 못 하는 한꺼번에 지우기를 맡는 gate",
-        subsections: [{ id: "paper-gated-deltanet", title: "Gated Delta Networks 논문의 제안" }],
+            "id": "overview",
+            "title": "1 · 작은 행렬 하나에 기억을 쓰면 서로 섞일 수 있다"
       },
       {
-        id: "chunkwise-scan",
-        title: "Chunk 안 병렬 행렬곱과 chunk 사이 순차 전달",
-        subsections: [{ id: "paper-deltanet-parallel", title: "DeltaNet chunkwise 병렬화 논문의 제안" }],
+            "id": "black-box",
+            "title": "2 · 현재 기억과 새 key·값을 받아 기억을 고친다"
       },
-      { id: "prefix-scan", title: "O(log n) 단계로 순차 누적을 없애는 parallel scan" },
       {
-        id: "boundary",
-        title: "병렬화의 계산 비용과 delta rule 의 한계",
-        subsections: [{ id: "paper-blelloch", title: "Blelloch prefix scan 기술보고서" }],
+            "id": "case",
+            "title": "3 · 첫 key를 읽으면 (2, 1.8)이 나온다"
       },
-    ],
+      {
+            "id": "picture",
+            "title": "4 · 읽기·차이·쓰기의 순서로 기억을 고친다"
+      },
+      {
+            "id": "need",
+            "title": "5 · 새 값을 그냥 더하면 옛 값이 남는다"
+      },
+      {
+            "id": "names",
+            "title": "6 · Fast weight는 매 문맥에서 바뀌는 기억 행렬이다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7 · 의존성을 작은 삼각 연립방정식으로 묶는다"
+      },
+      {
+            "id": "source",
+            "title": "8 · 공식 kernel은 decay·지우기·쓰기를 나눠 실행한다"
+      },
+      {
+            "id": "comparison",
+            "title": "9 · GDN2는 지울 성분과 쓸 성분을 다른 축에서 조절한다"
+      },
+      {
+            "id": "limits",
+            "title": "10 · 같은 key의 수정과 전체 기억 보존은 다른 조건이다"
+      }
+],
     component: () => import("@/pages/articles/ai/fast-weight-memory-and-chunkwise-recurrence"),
   },
   {
@@ -817,29 +834,47 @@ export const llmArticles: Article[] = [
     title: "Reward는 검증 가능성과 밀도로 설계되며 잘못 설계하면 hacking을 부릅니다",
     subcategory: "ai-llm-theory",
     sections: [
-      { id: "problem", title: "검증 가능성·밀도·hacking 세 축" },
-      { id: "rlvr", title: "RLVR: 자동 검증 결과를 그대로 reward로" },
-      { id: "sparse-vs-dense", title: "Sparse reward와 dense reward의 신호 빈도" },
       {
-        id: "outcome-vs-process",
-        title: "Outcome reward와 process reward의 채점 대상",
-        subsections: [{ id: "paper-prm", title: "Let's Verify Step by Step의 문제와 기여" }],
+            "id": "overview",
+            "title": "1 · 채점기가 통과시킨 답과 실제 정답을 나눠 센다"
       },
       {
-        id: "hacking",
-        title: "Reward hacking과 specification gaming",
-        subsections: [
-          { id: "paper-reward-hacking", title: "Defining and Characterizing Reward Hacking" },
-          { id: "paper-concrete-problems", title: "Concrete Problems in AI Safety" },
-        ],
+            "id": "black-box",
+            "title": "2 · 문제·응답·환경 증거를 받아 점수를 만든다"
       },
       {
-        id: "shaping",
-        title: "Potential-based reward shaping과 optimal policy 보존",
-        subsections: [{ id: "paper-reward-shaping", title: "Ng, Harada, Russell 1999 논문의 증명" }],
+            "id": "case",
+            "title": "3 · 통과 50개 중 정답은 38개다"
       },
-      { id: "reward-shape-and-calibration", title: "Binary/continuous reward의 형태와 calibration" },
-    ],
+      {
+            "id": "picture",
+            "title": "4 · 보상 오류도 최적화 경로를 따라 확대될 수 있다"
+      },
+      {
+            "id": "need",
+            "title": "5 · 마지막 0점만으로 어느 행동이 틀렸는지 알기 어렵다"
+      },
+      {
+            "id": "names",
+            "title": "6 · 언제 점수를 주는지와 무엇을 채점하는지는 다른 축이다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7 · 그룹의 점수가 모두 같으면 상대 신호가 사라진다"
+      },
+      {
+            "id": "source",
+            "title": "8 · 공식 코드도 정답 검사와 형식 검사를 따로 둔다"
+      },
+      {
+            "id": "comparison",
+            "title": "9 · 과정 oracle과 learned judge는 다른 증거를 준다"
+      },
+      {
+            "id": "limits",
+            "title": "10 · 좋은 점수가 실제 성공을 뜻하는지 계속 검증한다"
+      }
+],
     component: () => import("@/pages/articles/ai/reward-design-for-verifiable-rl"),
   },
 ];

@@ -1,231 +1,47 @@
-import ContentBoundary from "@/components/articles/content-boundary";
-import ExplainedFormula from "@/components/ui/explained-formula";
-import { CitationBlock } from "@/components/ui/citation-block";
-import ModernRwaViz from "./viz/ModernRwaViz";
-import PermissionedMarketStackViz from "./viz/PermissionedMarketStackViz";
-
-export default function ModernRwaCompositionArticle() {
-  return (
-    <article className="space-y-14">
-      <section id="overview" className="space-y-6">
-        <header className="space-y-3">
-          <p className="text-sm font-semibold text-primary">
-            RWA · claim before token
-          </p>
-          <h2 className="text-3xl font-bold tracking-tight">
-            RWA token은 현실 자산 그 자체가 아니라, 법적 청구권과 원장을 onchain
-            identifier에 연결한 arrangement다
-          </h2>
-        </header>
-        <p className="text-lg leading-8 text-foreground/90">
-          고정 사례는 단기 국채 포트폴리오 순자산 102달러를 100 tokens가
-          나타내는 구조입니다. 계산상 token당 NAV는 1.02달러지만 holder가 국채의
-          직접 소유자인지, issuer에 대한 채권자인지, fund share를 가진 것인지는
-          법률 문서와 authoritative ownership record가 정합니다. Wallet
-          balance만으로 bankruptcy priority나 redemption 권리가 생기지 않습니다.
-        </p>
-        <p>
-          이 글은 교육용 system map이며 법률·투자 자문이 아닙니다. Jurisdiction,
-          investor class, securities law, tax, insolvency와 transfer
-          restriction은 arrangement마다 달라집니다.
-        </p>
-        <ContentBoundary article="rwa-composition" />
-        <ModernRwaViz />
-        <div id="paper-iosco-tokenization">
-          <CitationBlock
-            source="IOSCO · Tokenization of Financial Assets (2025)"
-            citeKey={1}
-            type="paper"
-            href="https://www.iosco.org/library/pubdocs/pdf/IOSCOPD809.pdf"
-          >
-            <p>
-              <strong>문제:</strong> Tokenized financial asset에서 ownership
-              record·investor rights·custody·settlement가 기존 법적 구조와
-              어긋날 수 있습니다.
-            </p>
-            <p>
-              <strong>기여:</strong> On/offchain authoritative record, legal
-              recognition, third-party dependency와 investor-protection 위험을
-              비교합니다.
-            </p>
-            <p>
-              <strong>전제:</strong> 여러 관할의 2025 시장 관행을 조사한 정책
-              보고서이며 개별 상품 법률 의견이 아닙니다.
-            </p>
-            <p>
-              <strong>근거 범위:</strong> Token과 legal ownership·transfer
-              record를 분리하는 분석 경계입니다.
-            </p>
-            <p>
-              <strong>말하지 않는 것:</strong> 특정 token이 유가증권인지,
-              파산격리됐는지 또는 어느 국가에서 적법한지 판정하지 않습니다.
-            </p>
-          </CitationBlock>
-        </div>
-      </section>
-      <section id="claim-asset-map" className="space-y-6">
-        <header>
-          <p className="text-sm font-semibold text-primary">
-            01 · legal and asset map
-          </p>
-          <h2 className="mt-2 text-2xl font-bold">
-            Issuer·SPV·custodian·servicer·registry의 책임을 한 화살표로 줄이지
-            않는다
-          </h2>
-        </header>
-        <p>
-          Issuer는 token과 contractual claim을 발행하고 SPV나 fund vehicle은 reference assets를 보유할 수 있습니다. Custodian은
-          securities/cash를 보관하고 servicer는 coupon·rent·loan payment를 모으며 administrator는 NAV를 계산합니다. Transfer
-          agent 또는 registry가 legal holder record를 관리할 수 있습니다. Smart contract는 mint/burn과 allowlist를 집행하지만
-          offchain asset existence·lien·cash collection을 스스로 관찰하지 못합니다.
-        </p>
-        <ExplainedFormula
-          question="102달러 순자산을 100 tokens가 나타낼 때 token당 NAV와 80% haircut 담보가치는 얼마인가요?"
-          idea="같은 cutoff의 asset value에서 liability와 accrued cost를 빼고 eligible token supply로 나눈 뒤, DeFi 담보 사용 시 별도 haircut을 적용합니다."
-          formula={String.raw`\begin{aligned}NAV_{token}&=\frac{V_{asset}-L}{N_{eligible}}\\V_{collateral}&=q\,NAV_{token}(1-h)\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}NAV_{token}&=\underbrace{\frac{V_{asset}-L}{N_{eligible}}}_{\text{기준량당 비율}}\\V_{collateral}&=\underbrace{q\,NAV_{token}(1-h)}_{\text{token quantity 계산}}\end{aligned}`}
-          operations={[
-            { expression: String.raw`\frac{V_{asset}-L}{N_{eligible}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","같은 cutoff의 asset value에서","liability와 accrued cost를 빼고","eligible token supply로 나눈 뒤, DeFi"] },
-            { expression: String.raw`q\,NAV_{token}(1-h)`, annotation: ["token quantity이(가) 식의 결과에 기여하는 방식을","계산합니다.","같은 cutoff의 asset value에서","liability와 accrued cost를 빼고"] },
-          ]}
-          terms={[
-            {
-              symbol: "V_asset",
-              name: "asset value",
-              description:
-                "Valuation cutoff에서 reference assets의 공통 통화 가치입니다.",
-            },
-            {
-              symbol: "L",
-              name: "liabilities",
-              description:
-                "Accrued fee·payable·other senior claims의 같은 cutoff 합계입니다.",
-            },
-            {
-              symbol: "N_eligible",
-              name: "eligible token supply",
-              description: "NAV claim에 참여하는 reconciled token 수입니다.",
-            },
-            {
-              symbol: "q",
-              name: "token quantity",
-              description: "담보로 제출한 token 수입니다.",
-            },
-            {
-              symbol: "h",
-              name: "haircut",
-              description:
-                "Oracle·liquidity·legal/operational risk를 반영한 0~1 risk discount입니다.",
-            },
-          ]}
-          assumptions={[
-            "Asset, liability, supply가 동일한 valuation cutoff와 currency를 사용합니다.",
-            "Token holder의 legal claim과 redemption waterfall이 문서로 확인됩니다.",
-            "Stale price·uncollected coupon·blocked redemption은 별도 status입니다.",
-            "Haircut은 loss guarantee가 아니라 versioned risk parameter입니다.",
-          ]}
-          interpretation="Vasset−L=102달러, N=100이면 NAV=1.02달러입니다. q=100, h=20%라면 담보가치는 81.60달러지만 실제 차입한도는 protocol threshold·oracle·liquidity에 더 제한됩니다."
-        />
-      </section>
-      <section id="token-cashflow-control" className="space-y-6">
-        <header>
-          <p className="text-sm font-semibold text-primary">
-            02 · token, cash flow, control
-          </p>
-          <h2 className="mt-2 text-2xl font-bold">
-            Mint·transfer·coupon·redemption을 같은 transaction처럼 보이면 끊어진
-            reconciliation을 찾을 수 없다
-          </h2>
-        </header>
-        <p>
-          Mint 전에는 subscription cash settlement, eligibility/KYC, legal
-          register update와 asset acquisition status가 필요합니다. Transfer는
-          allowlist와 jurisdiction restriction을 통과해도 legal registry가
-          offchain이라면 양쪽 원장을 조정해야 합니다. Coupon은 record
-          date·servicer receipt·withholding·distribution claim을, redemption은
-          burn intent·cutoff NAV·cash availability·bank settlement·final
-          register update를 별도 receipt로 남깁니다.
-        </p>
-        <p>
-          DeFi collateral로 쓰면 token contract risk 외에도 stale NAV, thin
-          secondary liquidity, redemption gate, maturity mismatch와
-          smart-contract liquidation이 겹칩니다. 1.02달러 NAV를 즉시 1.02달러
-          cash로 바꿀 수 있다고 가정하지 않습니다. Oracle timestamp와
-          authoritative record mismatch가 나면 신규 mint·borrow를 fail
-          closed하고 조사 queue로 보냅니다.
-        </p>
-        <div id="paper-bis-tokenisation">
-          <CitationBlock
-            source="BIS · The tokenisation continuum"
-            citeKey={2}
-            type="paper"
-            href="https://www.bis.org/publ/bisbull72.htm"
-          >
-            <p>
-              <strong>문제:</strong> Money·financial·real asset claims를
-              programmable platform에 옮길 때 기술적 용이성과 경제·법적 가치가
-              일치하지 않을 수 있습니다.
-            </p>
-            <p>
-              <strong>기여:</strong> Core claim layer와 service/governance
-              layer, tokenisation feasibility의 연속선을 제시합니다.
-            </p>
-            <p>
-              <strong>전제:</strong> 2023년 공개 제도·시장 구조에 대한 BIS
-              분석입니다.
-            </p>
-            <p>
-              <strong>근거 범위:</strong> Claim·service·governance를 분리해
-              composability를 읽는 개념 근거입니다.
-            </p>
-            <p>
-              <strong>말하지 않는 것:</strong> DLT가 법률·custody·settlement
-              finality를 자동 해결하거나 특정 RWA의 수익·유동성을 보장한다는
-              뜻은 아닙니다.
-            </p>
-          </CitationBlock>
-        </div>
-      </section>
-      <section id="permissioned-market-stack" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">03 · Permissioned market stack</p><h2 className="mt-2 text-2xl font-bold">AMM·compliance·법적 권리·settlement는 한 transaction 안에서도 서로 다른 책임 층이다</h2></header>
-        <p><strong>Tokenized security</strong>는 가격을 추종하는 synthetic token과 다릅니다. Token balance가 배당·이자·상환·의결권 또는 ownership claim을 나타내려면 issuer 문서와 authoritative legal registry가 그 관계를 만들어야 합니다. Permissioned Pool은 그 법적 관계를 생성하지 않고, 이미 정의된 eligibility policy를 거래·LP action에 집행합니다.</p>
-        <PermissionedMarketStackViz />
-        <p><strong>Delivery versus Payment(DvP)</strong>는 asset leg와 cash leg가 함께 성공하거나 함께 실패하도록 결제하는 원칙입니다. Smart contract는 두 token transfers를 atomic하게 만들 수 있지만, offchain cash·custody·legal register가 섞이면 그 외부 receipts와 finality를 다시 reconcile해야 합니다.</p>
-        <ExplainedFormula question="Onchain DvP가 완료됐다고 부르려면 어떤 두 leg가 함께 끝나야 하나요?" idea="같은 settlement identifier에서 cash debit과 security credit이 둘 다 성공하고, 한쪽만 남는 partial outcome을 허용하지 않습니다." formula={String.raw`\begin{aligned}C(s)&=\underbrace{[D_{cash}(s)=1]}_{\text{payment leg 최종 반영}}\\A(s)&=\underbrace{[D_{asset}(s)=1]}_{\text{security leg 최종 반영}}\\DvP(s)&=\underbrace{C(s)\land A(s)}_{\text{같은 settlement에서 둘 다 완료}}\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}C(s)&=\underbrace{\underbrace{[D_{cash}(s)=1]}_{\text{payment leg 최종 반영}}}_{\text{Settlement identity 계산}}\\A(s)&=\underbrace{\underbrace{[D_{asset}(s)=1]}_{\text{security leg 최종 반영}}}_{\text{Settlement identity 계산}}\\DvP(s)&=\underbrace{\underbrace{C(s)\land A(s)}_{\text{같은 settlement에서 둘 다 완료}}}_{\text{판정 조건 결합}}\end{aligned}`}
-        operations={[
-          { expression: String.raw`\underbrace{[D_{cash}(s)=1]}_{\text{payment leg 최종 반영}}`, annotation: ["Settlement identity이(가) 식의 결과에","기여하는 방식을 계산합니다.","같은 settlement identifier에서 cash","debit과 security credit이 둘 다"] },
-          { expression: String.raw`\underbrace{[D_{asset}(s)=1]}_{\text{security leg 최종 반영}}`, annotation: ["Settlement identity이(가) 식의 결과에","기여하는 방식을 계산합니다.","같은 settlement identifier에서 cash","debit과 security credit이 둘 다"] },
-          { expression: String.raw`\underbrace{C(s)\land A(s)}_{\text{같은 settlement에서 둘 다 완료}}`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","같은 settlement identifier에서 cash","debit과 security credit이 둘 다"] },
-        ]} terms={[{symbol:"s",name:"Settlement identity",description:"Order·pool·parties·amounts·chain/ledger cutoff를 묶은 ID입니다."},{symbol:"D_cash",name:"Cash-leg receipt",description:"구매 대금 이전의 final outcome입니다."},{symbol:"D_asset",name:"Asset-leg receipt",description:"Tokenized security 이전의 final outcome입니다."},{symbol:"DvP",name:"Delivery-versus-payment verdict",description:"두 leg가 동일 identity에서 함께 완료됐는지 나타냅니다."}]} assumptions={["두 receipts가 같은 parties·amount·cutoff·finality profile을 참조합니다.","Token transfer가 legal registry의 ownership update와 같다는 보장은 별도입니다.","Oracle valuation·KYC·issuer solvency·redemption은 DvP 밖의 경계입니다.","Offchain leg가 있으면 atomic smart-contract execution만으로 완료라 부르지 않습니다."]} interpretation="USDC debit만 1이고 security token credit이 0이면 DvP=0입니다. 둘 다 onchain 성공해도 법적 원장이 authoritative하다면 registry receipt까지 기다립니다." />
-        <p>장기 stack은 issuer·KYC provider·custodian·transfer agent가 사라지는 구조가 아니라 역할이 더 명시적으로 연결되는 구조입니다. Uniswap V4의 <a className="text-primary underline" href="/cs/blockchain/uniswap-v4#permissioned-pools">Permissioned Pools</a>는 trading·liquidity·atomic settlement 층을 제공합니다. Issuance·legal claim·corporate actions·redemption은 각 owner가 계속 책임집니다.</p>
-      </section>
-      <section id="rwa-release" className="space-y-6">
-        <header>
-          <p className="text-sm font-semibold text-primary">
-            04 · release gate
-          </p>
-          <h2 className="mt-2 text-2xl font-bold">
-            Legal opinion·asset ledger·token supply·cash ledger를 같은
-            cutoff에서 reconcile한 뒤에만 조합한다
-          </h2>
-        </header>
-        <p>
-          Release bundle은 governing documents와 jurisdiction,
-          issuer/SPV/custodian/servicer identity, authoritative holder record,
-          asset IDs, encumbrance, valuation source/time, liabilities, token
-          supply, eligibility policy, cash distribution·redemption queue를
-          versioning합니다. Fixtures는 duplicate mint, failed bank settlement,
-          late coupon, stale NAV, sanctioned holder, custodian shortfall, chain
-          reorg와 insolvency waterfall ambiguity를 포함합니다.
-        </p>
-        <p>
-          기초 6문제는 token/claim, actor map, NAV, transfer와 redemption을
-          묻습니다. 심화 4문제는 authoritative-record conflict, stale oracle
-          collateral, cashflow reconciliation과 jurisdiction-aware release
-          matrix를 설계하게 합니다.
-        </p>
-      </section>
-    </article>
-  );
-}
+import { CitationBlock } from "@/components/ui/citation";
+import FlowRail from "../../world-systems/FlowRail";
+import SourceApplication from "../../world-systems/SourceApplication";
+import ReviewPrompts from "../../world-systems/ReviewPrompts";
+export default function ModernRwaCompositionArticle() { return <article className="space-y-14">
+<section id="overview" data-teach-level="S" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">1. 화면의 토큰 잔액이 실제 자산의 어떤 권리를 뜻하는가</h2>
+<p>국채나 펀드 지분을 토큰으로 옮기면 지갑에서 전달하고 계약에 연결하기 쉬워집니다. 하지만 돈을 받을 권리는 발행 조건과 등록부, 자산을 맡은 기관, 지급 절차로 정해집니다. 체인의 잔액이 바뀐 뒤 은행 계좌에 현금이 들어올 때까지 어떤 절차가 남는지 확인해야 합니다.</p><p>이 글은 작은 가상 펀드를 먼저 계산한 뒤 BlackRock의 BUIDL을 실제 기관 사례로 비교합니다. 계산용 가격 1.02와 실제 BUIDL이 목표로 하는 1달러는 서로 다른 사례 조건입니다. 확인일은 2026-10-04이며 과거 출시 조건을 모든 현재 지분 종류의 조건으로 확대하지 않습니다.</p>
+<p data-stage-bridge="overview" className="text-sm text-muted-foreground">토큰과 지급 권리를 함께 보려면 돈과 기록을 맡는 역할부터 나눠야 합니다.</p>
+</section>
+<section id="black-box" data-teach-level="B" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">2. 자산을 운용하는 곳과 보유자를 기록하는 곳</h2>
+<FlowRail title="기관 자산의 권리와 지급을 연결하는 역할" steps={[{actor:"자산 운용·보관",movement:"현금과 증권을 투자하고 보관합니다.",receives:"평가한 순자산"},{actor:"발행·등록",movement:"보유 자격과 지분 수를 기록합니다.",receives:"이전 가능한 권리"},{actor:"매매·상환",movement:"양도하거나 조건에 따라 회수합니다.",receives:"대금 또는 은행 입금"}]} /><p>운용사는 무엇을 살지 결정하고 수탁자는 정한 자산을 보관합니다. 명의개서 기관은 누가 지분을 보유하는지 기록합니다. 거래 상대방은 지분을 사는 사람이며 항상 펀드 자체와 같지는 않습니다. 각 역할을 합쳐 “블록체인이 보장한다”고 적으면 실패 지점을 찾기 어렵습니다.</p>
+<p data-stage-bridge="black-box" className="text-sm text-muted-foreground">역할을 나눴으니 작은 장부의 자산과 발행 수를 계산합니다.</p>
+</section>
+<section id="case" data-teach-level="0" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">3. 순자산 102를 100개로 나누면 개당 1.02다</h2>
+<p>모든 금액을 달러로 두고, 자산 평가액 105에서 지급할 비용·부채 3을 빼면 순자산 102입니다. 발행 지분 100개로 나누면 개당 1.02입니다. 보유자 A의 10개는 같은 평가 기준으로 10.20이며,100개 전부를 담보로 보는 대출자가 20%를 할인하면 102×0.8=81.60입니다. 모두 설명용 가정입니다.</p><p>81.60은 담보를 평가한 금액입니다. 실제 대출 한도와 같으려면 추가 담보비율·집중도 제한 등 다른 조건이 없다는 가정이 필요합니다. 10.20도 지금 즉시 그 가격으로 팔 수 있다는 약속이 아닙니다. 평가 기준 시각과 실제 거래 상대방이 필요합니다.</p>
+<p data-stage-bridge="case" className="text-sm text-muted-foreground">계산 결과를 자산 장부와 토큰 장부의 두 줄로 그려 봅니다.</p>
+</section>
+<section id="picture" data-teach-level="1" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">4. 105−3의 자산 장부와 100개의 권리 장부를 맞춘다</h2>
+<div className="grid gap-4 md:grid-cols-2"><div className="rounded-xl border p-5"><h3 className="font-bold">기초 자산 장부</h3><p className="mt-3">자산 105 − 부채·비용 3 = 순자산 102</p><p className="mt-2 text-sm">수탁 명세·가격·미지급 비용·평가 시각을 확인합니다.</p></div><div className="rounded-xl border p-5"><h3 className="font-bold">보유 권리 장부</h3><p className="mt-3">발행 100 × 개당 1.02 = 순자산 102</p><p className="mt-2 text-sm">발행·소각·등록 보유자와 토큰 공급량을 맞춥니다.</p></div></div><p>두 장부가 같은 시각을 가리켜야 합니다. 신규 입금만 반영하고 발행할 지분을 빠뜨리거나, 소각만 반영하고 상환할 현금을 빼지 않으면 개당 가치가 일시적으로 부풀어 보입니다. A의 10개 이전도 어느 등록부를 언제 갱신하는지 연결해야 합니다.</p>
+<p data-stage-bridge="picture" className="text-sm text-muted-foreground">두 장부의 합계가 같아야 하는 이유가 보였습니다. 체인 잔액만 읽을 때 놓치는 일을 살펴봅니다.</p>
+</section>
+<section id="need" data-teach-level="2" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">5. 24시간 옮길 수 있어도 24시간 같은 가격으로 팔리지는 않는다</h2>
+<p>A가 주말에 10개를 보내는 것은 계약이 허용하면 가능합니다. 그러나 자산 시장이 닫혔거나 환매 창구가 쉬면 10.20에 현금을 회수할 경로가 바로 열리지 않을 수 있습니다. 시세를 내는 상대방은 이 지연과 가격 위험을 견적에 반영합니다.</p><p>보유 자격이 필요한 지분은 받는 주소나 담보 계약도 자격 조건을 만족해야 합니다. 계약이 transfer를 지원한다는 사실만으로 그 권리를 누구나 합법적으로 취득하거나 다른 프로토콜에서 담보로 쓸 수 있다고 판단하지 않습니다. 정지·동결·오발행 정정 권한도 권리의 조건에 포함됩니다.</p>
+<p data-stage-bridge="need" className="text-sm text-muted-foreground">이전·평가·회수를 구분했으니 관련 용어를 사례에 붙입니다.</p>
+</section>
+<section id="claim-asset-map" data-teach-level="3" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">6. 순자산 가치와 명의개서, 시장 매매와 상환</h2>
+<p>105−3의 102는 순자산,102/100의 1.02는 지분당 순자산 가치(NAV)입니다. 어느 시각까지의 자산과 거래를 반영할지 정하는 것이 평가 기준 시각과 마감 조건입니다. 20% 할인은 haircut이며 담보 평가에서 회수 불확실성을 반영합니다.</p><p>명의개서 기관(transfer agent)은 보유자와 지분 이전의 등록을 담당합니다. 기존 보유자의 10개를 다른 투자자에게 파는 것은 유통시장 거래입니다. 펀드의 정해진 절차로 지분을 없애고 대가를 받는 것은 환매 또는 상환입니다. 유통시장 가격과 환매 산정 가격·지급 시각은 같을 필요가 없습니다.</p>
+<p data-stage-bridge="claim-asset-map" className="text-sm text-muted-foreground">같은 10개가 매매될 때 누가 어떤 장부를 바꾸는지 한 번 추적합니다.</p>
+</section>
+<section id="token-cashflow-control" data-teach-level="4" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">7. 자격 확인에서 대금 회수까지 같은 10개를 따라간다</h2>
+<p>A가 10개를 팔려면 먼저 상품과 받을 주소의 자격을 확인합니다. 이어 평가 시각·가격과 견적 유효기간을 확인합니다. 상대방 B가 10.15를 지급하는 견적을 제시하고 A가 동의했다고 합시다. 두 토큰의 교환이 한 거래에서 성공하면 A는 10개를 내고 10.15의 결제 토큰을 받습니다. 장부 평가 10.20과 매매 대금 10.15의 차이는 0.05입니다.</p><p>결제 토큰을 받았다는 사실과 은행의 달러를 받았다는 사실은 다릅니다. 그 토큰의 발행자에게 상환을 신청할 자격, 수수료, 은행 송금 시각을 추가로 확인해야 합니다. 원자적 교환은 한 체인 거래 안에서 두 자산의 전달이 함께 성공하거나 되돌아가는 성질이며, 체인 밖 자산의 건전성까지 검사하지는 않습니다.</p><p>담보 계약에 100개를 넣는 경로라면 1.02 가격의 출처와 최신성,20% haircut, 허용 주소, 청산 때 인수할 상대방을 이어서 확인합니다. 대출 계약이 토큰을 압류할 수 있어도 발행자의 이전 제한 때문에 팔 수 없다면 81.60 평가만으로 회수 가능성을 설명할 수 없습니다.</p>
+<p data-stage-bridge="token-cashflow-control" className="text-sm text-muted-foreground">가상 사례에서 토큰과 돈이 이동하는 조건을 확인했습니다. 실제 펀드의 발행 원문에 대입합니다.</p>
+</section>
+<section id="source" data-teach-level="5" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">8. BUIDL은 국채 그 자체가 아니라 펀드 지분이다</h2>
+<SourceApplication source="Securitize · BlackRock BUIDL 출시 발표, 2024-03-20" excerpt="a stable value of $1 per token" application="가상 펀드의 102/100=1.02를 BUIDL 현재 가격이라고 복사하지 않습니다. BUIDL 발표는 1달러의 안정적 가치 목표와 일별 수익 발생·월별 추가 토큰 분배를 설명합니다. 목표 가치와 원금 보장은 구별해야 합니다." /><p>출시 발표에서 자산은 현금·미국 국채·환매조건부채권으로 구성됩니다. BlackRock Financial Management가 운용하고 BNY Mellon이 수탁·관리, Securitize가 토큰화와 명의개서를 담당합니다. 투자자는 개별 국채의 직접 소유자라는 설명 대신 해당 펀드 지분의 발행 문서와 권리를 확인해야 합니다.</p><p>발표에는 사전 승인 투자자 간 이전과 Rule 506(c)·Investment Company Act 3(c)(7)에 따른 구조가 명시됩니다. 당시 최소 투자 500만 달러도 출시 조건입니다. 이를 모든 현재 지분 종류의 최소액이나 일반 개인의 접근 조건으로 사용하지 않습니다.</p><CitationBlock source="Securitize · BlackRock BUIDL launch" citeKey={1} href="https://investors.securitize.io/news/news-details/2024/BlackRock-Launches-Its-First-Tokenized-Fund-BUIDL-on-the-Ethereum-Network-03-20-2024/default.aspx">공식 출시 발표의 투자 대상·역할·지급 방식·초기 자격 조건입니다. 현재 청약에는 최신 발행 문서를 다시 확인합니다.</CitationBlock>
+<p data-stage-bridge="source" className="text-sm text-muted-foreground">실제 발행 구조가 정리됐습니다. 같은 지분을 현금성 토큰으로 바꾸는 후속 서비스를 비교합니다.</p>
+</section>
+<section id="permissioned-market-stack" data-teach-level="6" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">9. Circle 교환과 UniswapX 거래는 회수 경로를 늘린다</h2>
+<SourceApplication source="Uniswap Labs · BUIDL 연동 발표, 2026-02-11" excerpt="pre-qualified and whitelisted through Securitize" application="A의 10개를 10.15에 교환하는 가상 거래도 자격과 유효한 견적이 먼저 필요합니다. 원자적으로 전달한다는 기술 조건만으로 모든 지갑에 거래가 열리거나 NAV 10.20에 매수자가 항상 있다고 결론내리지 않습니다." /><p>2024년 Circle 발표의 경로는 BUIDL 지분을 Circle에 전달하고 USDC를 받는 유통시장 교환입니다. 펀드 자체의 환매와 구분합니다. 2026년 UniswapX 연동은 Securitize의 자격 확인과 허용된 견적 상대방을 통해 지분을 매매하는 구조입니다. 공개된 아무 풀에 누구나 참여하는 구조로 요약하면 조건을 놓칩니다.</p><p>가상 사례의 A가 받은 10.15 USDC를 은행 달러로 바꾸려면 다시 USDC 상환 경로를 거칩니다. Circle의 안내는 상환 요청에 따른 소각과 등록 은행 계좌 송금, 수수료를 설명합니다. 따라서 지분→USDC와 USDC→은행 달러는 별도 사건이며 24시간 거래 가능성이 모든 은행 지급을 즉시 끝낸다는 뜻은 아닙니다.</p><CitationBlock source="Circle · BUIDL USDC transfer contract, 2024-04-11" citeKey={2} href="https://www.circle.com/pressroom/circle-announces-usdc-smart-contract-for-transfers-by-blackrocks-buidl-fund-investors">지분을 Circle에 넘기고 USDC를 받는 교환 구조입니다.</CitationBlock><CitationBlock source="Uniswap Labs · BUIDL liquidity, 2026-02-11" citeKey={3} href="https://blog.uniswap.org/unlocking-defi-liquidity-for-buidl">자격·허용 목록·RFQ 상대방·원자적 결제를 확인했습니다.</CitationBlock><CitationBlock source="Circle · Tokenizing and redeeming USDC" citeKey={4} href="https://help.circle.com/support/en/tokenizing-and-redeeming-usdc?id=kb_article_view&amp;sysparm_article=KB0010781">USDC 소각과 은행 송금은 별도의 상환 절차입니다.</CitationBlock>
+<p data-stage-bridge="permissioned-market-stack" className="text-sm text-muted-foreground">지분·USDC·은행 달러가 각각 다른 장부의 결과임을 확인했습니다. 마지막으로 결합 과정의 실패를 정리합니다.</p>
+</section>
+<section id="rwa-release" data-teach-level="7" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">10. 빠른 결제는 잘못된 평가와 회수 제한을 없애지 않는다</h2>
+<p>평가가 오래됐거나 부채 3을 빠뜨리면 최초 1.02부터 잘못됩니다. 받을 주소가 자격을 잃거나 이전이 중지되면 원자적 거래는 성립하지 않을 수 있습니다. 수탁·발행·등록의 법적 관계가 잘못되면 체인 기록이 정확해도 누구에게 어떤 청구를 할 수 있는지가 달라집니다.</p><p>실제 연동에서는 같은 기준 시각의 공급량·자산·부채를 맞추고, 정상 이전·거절·정지·환매 지연을 따로 확인합니다. 위탁기관과 발행 문서는 국가·상품마다 다르므로 미국의 사모 펀드 조건을 다른 국가의 예금·공모 펀드·부동산 권리에 복사하지 않습니다.</p><p>RWA의 이점은 권리 전달과 결제를 프로그램에 연결하는 데 있습니다. 판단의 끝에는 102의 근거,100의 등록,1.02의 시각,81.60의 가정,10.15의 실제 수령을 다시 놓습니다. 토큰 이름이나 총발행액 하나로 이 다섯 질문을 대신할 수 없습니다.</p>
+<p data-stage-bridge="rwa-release" className="text-sm text-muted-foreground">같은 권리의 평가·이전·담보·회수 기록이 연결되면 어디서 돈이 멈추는지 설명할 수 있습니다.</p>
+<ReviewPrompts questions={["순자산102와 발행 100개에 20% haircut을 적용하면 담보 평가액은 얼마인가요? (답: 3·6절)", "10개를 10.15 USDC에 팔았다는 사실은 왜 은행 달러 10.15의 수령과 다르나요? (답: 7·9절)"]} />
+</section>
+</article>; }

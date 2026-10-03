@@ -1,0 +1,49 @@
+[
+  {
+    "repo": "Dao-AILab/flash-attention",
+    "sha": "e9515d5dee6ade134a33d6020d38d01ef0596996",
+    "date": "2026-10-03T04:11:52Z",
+    "candidates": [
+      "csrc/flash_attn/src/softmax.h",
+      "examples",
+      "examples/inference",
+      "examples/inference/README.md",
+      "flash_attn/cute/softmax.py",
+      "hopper/softmax.h",
+      "tests/test_flash_attn.py",
+      "tests/test_flash_attn_ck.py",
+      "tests/test_flash_attn_triton_amd.py",
+      "tests/test_rotary.py",
+      "tests/test_util.py"
+    ]
+  },
+  {
+    "repo": "NVlabs/GatedDeltaNet-2",
+    "sha": "a5552fe3c67e0ebc7ef1220df68ae8896ec62d56",
+    "date": "2026-08-29T17:54:49Z",
+    "candidates": [
+      "lit_gpt/gdn2_ops/fused_recurrent_gdn2.py"
+    ]
+  },
+  {
+    "repo": "deepseek-ai/DeepEP",
+    "sha": "93eb6eb238127e96c6d7a4a625a6dad158348509",
+    "date": "2026-09-30T01:09:46Z",
+    "candidates": []
+  },
+  {
+    "repo": "huggingface/open-r1",
+    "sha": "5b6ff22b3fb7aa069c54866e517f39dfc3160e09",
+    "date": "2026-10-02T03:57:37Z"
+  },
+  {
+    "repo": "lucas-maes/le-wm",
+    "sha": "8edfeb336732b5f3ce7b8b210d0ba370a09e2cac",
+    "date": "2026-05-22T21:32:57Z"
+  },
+  {
+    "repo": "galilai-group/stable-worldmodel",
+    "sha": "21446f1ede6d5284e981bd7b47f432b994e6d812",
+    "date": "2026-10-02T16:15:54Z"
+  }
+]

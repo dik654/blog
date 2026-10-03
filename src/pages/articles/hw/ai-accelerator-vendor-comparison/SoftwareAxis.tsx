@@ -26,6 +26,7 @@ export default function SoftwareAxis() {
         </p>
       </div>
 
+      <p className="my-6 leading-8">작은 이식 사례부터 확인하려면 <Link to="/cs/gpu/amd-gpu-execution-and-hip#source">CUDA와HIP의 실제 vectorAdd 원문</Link>을 대조합니다. 같은64개·768바이트를 처리해도 CDNA wave64와 HIP RDNA wave32, LDS와register 제약은 달라집니다. API 변환 성공과 실제 명령·라이브러리 지원, 성능 재현은 각각 확인합니다.</p>
       <SoftwareViz />
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">

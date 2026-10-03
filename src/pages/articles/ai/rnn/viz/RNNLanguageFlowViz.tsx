@@ -72,5 +72,5 @@ function MetricNode({ label, value, active }: { label: string; value: string; ac
 }
 
 function Arrow({ active }: { active: boolean }) {
-  return <div aria-hidden="true" className="flex rotate-90 items-center text-primary sm:rotate-0"><span className="h-px w-7 bg-primary" />{active ? <span className="h-2 w-2 animate-pulse rounded-full bg-primary" /> : null}<span className="text-lg">→</span></div>;
+  return <div aria-hidden="true" className="flex rotate-90 items-center text-primary sm:rotate-0"><span className="h-px w-5 bg-primary" />{active ? <span className="h-2 w-2 animate-pulse rounded-full bg-primary" /> : null}<span className="text-lg">→</span></div>;
 }

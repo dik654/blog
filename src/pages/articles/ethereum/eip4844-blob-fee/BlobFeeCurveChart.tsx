@@ -18,7 +18,7 @@ export default function BlobFeeCurveChart() {
         수식) 모양 자체는 이 지수 곡선과 같습니다.
       </p>
       <div className="themed-mafs mt-4 min-w-0 overflow-x-auto">
-        <Mafs height={220} viewBox={{ x: [0, 3], y: [0, 20], padding: 0 }}>
+        <Mafs height={220} viewBox={{ x: [0, 3], y: [0, 22], padding: 0 }}>
           <Coordinates.Cartesian
             xAxis={{ lines: 0.5, labels: (v) => v.toFixed(1) }}
             yAxis={{ lines: 5 }}

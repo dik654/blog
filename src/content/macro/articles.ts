@@ -179,14 +179,14 @@ export const macroArticles: Article[] = [
     slug: "global-capital-and-policy",
     title: "국가 정책은 국제 자금의 제약을 지나 환율·금리·자산값에 닿는다",
     subcategory: "macro-global",
-    sections: [{"id": "overview", "title": "달러 빚은 원화 환율이 오르면 원화 장부에서 커집니다"}, {"id": "mechanism", "title": "결정권에서 가격까지 다섯 고리를 그립니다"}, {"id": "comparison", "title": "전 세계에 하나의 자금 흐름이 있어도 국가는 같지 않습니다"}, {"id": "limits", "title": "환율 변동 뒤 주가가 움직였다는 순서만으로 정책의 원인이라 말할 수 없습니다"}],
+    sections: [{"id": "overview", "title": "1. 다른 나라의 돈값이 내 사업의 지출을 바꿉니다"}, {"id": "black-box", "title": "2. 결정권과 돈의 경로를 함께 그립니다"}, {"id": "case", "title": "3. 1억 달러가 1000억 원에서 1200억 원으로 바뀝니다"}, {"id": "picture", "title": "4. 통화·만기·다시 정하는 날짜가 민감도를 만듭니다"}, {"id": "need", "title": "5. 환율을 붙잡으면 다른 곳에서 조정이 일어납니다"}, {"id": "names", "title": "6. 통화 불일치와 만기 연장은 다른 노출입니다"}, {"id": "mechanism", "title": "7. 은행의 조건 변화가 회사의 투자 예산에 닿습니다"}, {"id": "source", "title": "8. 국제 신용 통계는 개별 회사의 순위험을 보여 주지 않습니다"}, {"id": "comparison", "title": "9. 같은 달러 빚도 통화 제도에 따라 조정 경로가 다릅니다"}, {"id": "limits", "title": "10. 발표 뒤 움직인 가격이 모두 발표 때문에 움직인 것은 아닙니다"}],
     component: () => import("@/pages/articles/macro/global-capital-and-policy"),
   },
   {
     slug: "narratives-and-market-regimes",
     title: "대세는 사람들이 믿는 이야기와 실제 자금 제약이 서로를 바꿀 때 생긴다",
     subcategory: "macro-global",
-    sections: [{"id": "overview", "title": "좋은 기술 설명만으로 자산 가격이 오르지는 않습니다"}, {"id": "mechanism", "title": "이야기 → 기대 → 자금 → 주문 → 가격 → 새 이야기의 고리를 봅니다"}, {"id": "comparison", "title": "인식의 힘은 시장 구조와 나라의 제도를 통과합니다"}, {"id": "limits", "title": "서사가 틀렸는지 알려면 가격보다 검증할 지표를 먼저 정해야 합니다"}],
+    sections: [{"id": "overview", "title": "1. 좋은 미래 이야기가 주문과 사업비로 바뀌는 길을 봅니다"}, {"id": "black-box", "title": "2. 발표·주문·투자가 서로를 바꿉니다"}, {"id": "case", "title": "3. 매년 100을 받던 기대가 150으로 높아집니다"}, {"id": "picture", "title": "4. 미래 현금·기다림의 값·새 지분 수를 따로 적습니다"}, {"id": "need", "title": "5. 미래를 기다리는 동안 자금이 있어야 계획을 실행합니다"}, {"id": "names", "title": "6. 서사·할인율·희석을 서로 다른 숫자에 붙입니다"}, {"id": "mechanism", "title": "7. 높아진 가격은 같은 투자비로 넘길 지분을 줄일 수 있습니다"}, {"id": "source", "title": "8. 현금이 늘어난 이유를 영업·투자·조달로 나눕니다"}, {"id": "comparison", "title": "9. 믿음의 변화가 가격 하락을 키우려면 자금의 통로가 있어야 합니다"}, {"id": "limits", "title": "10. 가격 밖에서 틀렸다고 말할 기준을 정합니다"}],
     component: () => import("@/pages/articles/macro/narratives-and-market-regimes"),
   },
 ];

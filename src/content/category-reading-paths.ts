@@ -27,7 +27,7 @@ export const CATEGORY_READING_PATHS: Readonly<
       { eyebrow: "01 · 현금", title: "모델과 손익", description: "결제액과 실제 남는 돈, 필요한 판매량을 구분합니다.", subcategories: ["business-cash"] },
       { eyebrow: "02 · 관계", title: "브랜드와 공급망", description: "가맹본부·점주·제조업체 사이의 수입과 통제권을 나눕니다.", subcategories: ["business-network"] },
     ],
-    featuredArticles: ["business-model-cashflow", "shop-unit-economics", "shop-site-selection", "shop-fitout-and-opening", "franchise-incentives", "supply-chain-bargaining"],
+    featuredArticles: ["business-model-cashflow", "shop-unit-economics", "shop-site-selection", "shop-fitout-and-opening", "shop-daily-operations", "franchise-incentives", "supply-chain-bargaining"],
   },
   property: {
     title: "공간을 쓰고, 넘기고, 돌려주는 순서",
@@ -40,23 +40,45 @@ export const CATEGORY_READING_PATHS: Readonly<
   },
   institutions: {
     title: "사회의 위험과 나라를 읽는 장부",
-    description: "보험·의료·예산·교육·정보에서 누가 결정하고 비용을 내는지 살핀 뒤 국가 비교로 이어갑니다.",
+    description: "보험·의료·인구·교육·문화·정보의 조건을 살피고 측정과 비교를 배운 뒤 국가별 자료로 이어갑니다.",
     stages: [
       { eyebrow: "01 · 위험", title: "보험과 의료", description: "보험료·세금·본인부담과 지급 상대를 추적합니다.", subcategories: ["institutions-risk"] },
-      { eyebrow: "02 · 교육", title: "기술과 자격", description: "학비와 배운 능력, 자격의 신호를 구분합니다.", subcategories: ["institutions-capacity"] },
+      { eyebrow: "02 · 역량", title: "사람의 시간과 배움", description: "인구와 돌봄, 기술과 자격을 살피고 주장을 검증하는 법을 배웁니다.", subcategories: ["institutions-capacity"] },
       { eyebrow: "03 · 나라", title: "일곱 장부", description: "정치·법·예산·생산·대외거래·생활·인식으로 비교합니다.", subcategories: ["institutions-country"] },
     ],
-    featuredArticles: ["insurance-risk-pooling", "healthcare-payment-systems", "education-skills-and-signals", "public-budget-and-taxes", "media-attention-and-public-belief", "how-to-read-a-country"],
+    featuredArticles: ["insurance-risk-pooling", "healthcare-payment-systems", "population-migration-and-care", "education-skills-and-signals", "evidence-measurement-and-causality", "public-budget-and-taxes", "culture-norms-and-coordination", "media-attention-and-public-belief", "how-to-read-a-country"],
   },
   infrastructure: {
     title: "생활을 지탱하는 망과 공급 읽기",
-    description: "전기·식품·수도·교통·주택·기후의 비용과 접근 권리를 같은 장부에 놓습니다.",
+    description: "전기·식품·수도·교통·주택·자원·기후의 비용과 접근 권리를 같은 장부에 놓습니다.",
     stages: [
       { eyebrow: "01 · 연결", title: "망과 요금", description: "전력·수도·교통의 접속, 유지비와 접근성을 봅니다.", subcategories: ["infrastructure-networks"] },
       { eyebrow: "02 · 공급", title: "상품과 공간", description: "식품과 주택이 생산돼 사람에게 닿는 제약을 봅니다.", subcategories: ["infrastructure-supply"] },
       { eyebrow: "03 · 위험", title: "기후와 노출", description: "자연 현상이 사람과 자산에 닿을 때 손실이 달라지는 이유를 봅니다.", subcategories: ["infrastructure-risk"] },
     ],
-    featuredArticles: ["electricity-grid-and-power", "food-chain-and-prices", "water-utility-and-tariffs", "transport-access-and-land-value", "housing-land-and-supply", "climate-risk-and-exposure"],
+    featuredArticles: ["electricity-grid-and-power", "food-chain-and-prices", "water-utility-and-tariffs", "transport-access-and-land-value", "housing-land-and-supply", "materials-waste-and-circularity", "climate-risk-and-exposure"],
+  },
+  banking: {
+    title: "은행의 장부에서 담보 조달까지",
+    description: "예금과 대출, 통화정책, 결제를 배운 뒤 증권을 맡겨 단기 자금을 구하는 경로를 봅니다.",
+    stages: [
+      { eyebrow: "01 · 예금", title: "은행의 돈", description: "대출·예금과 은행의 지급 약속을 구분합니다.", subcategories: ["banking-deposit"] },
+      { eyebrow: "02 · 금리", title: "통화정책", description: "정책금리와 시장의 자금 비용이 이어지는 경로를 봅니다.", subcategories: ["banking-policy"] },
+      { eyebrow: "03 · 지급", title: "결제와 최종성", description: "기록된 지급과 최종 자금 이전을 구분합니다.", subcategories: ["banking-settlement"] },
+      { eyebrow: "04 · 조달", title: "담보와 만기", description: "레포의 현금·증권 교환과 담보 부족을 계산합니다.", subcategories: ["banking-funding"] },
+    ],
+    featuredArticles: ["repo-and-collateral-funding"],
+  },
+  markets: {
+    title: "청구권에서 전략 상품의 실제 손익까지",
+    description: "채권·주식의 기초 위에 상품별 재원과 지급 조건을 놓고 ETF·파생상품·커버드콜을 비교합니다.",
+    stages: [
+      { eyebrow: "01 · 채무", title: "채권과 금리", description: "약정 지급과 현재 가격을 연결합니다.", subcategories: ["markets-bond"] },
+      { eyebrow: "02 · 소유", title: "주식의 몫", description: "채무 지급 뒤 남는 청구권을 봅니다.", subcategories: ["markets-equity"] },
+      { eyebrow: "03 · 상품", title: "포장과 실제 자산", description: "상품 지도·펀드·ETF·ETN·유동화를 비교합니다.", subcategories: ["markets-products"] },
+      { eyebrow: "04 · 계약", title: "손익의 이전", description: "선물·옵션·커버드콜·스왑에서 이익과 의무를 계산합니다.", subcategories: ["markets-derivatives"] },
+    ],
+    featuredArticles: ["bond-pricing-and-yield-curve", "equity-claims-and-valuation", "financial-products-and-claims", "funds-etfs-and-etns", "securitization-and-tranches", "forwards-and-futures", "options-and-asymmetric-payoffs", "covered-calls-and-income-funds", "swaps-and-credit-risk"],
   },
   circuits: {
     title: "한 회로를 계산하는 순서",
@@ -95,165 +117,210 @@ export const CATEGORY_READING_PATHS: Readonly<
     featuredArticles: ["mcu-memory-map-and-registers", "interrupts-and-latency-budget", "timers-and-sampling", "serial-buses-and-tradeoffs", "scheduling-and-real-time", "firmware-update-and-recovery"],
   },
   ai: {
-    title: "AI를 위에서 아래로 읽는 네 단계",
-    description:
-      "먼저 공통 원리를 잡고, 모델 구조와 논문을 읽은 뒤, 서빙·에이전트 시스템과 실제 구현으로 내려갑니다. 이미 아는 단계는 건너뛰어도 됩니다.",
-    stages: [
-      {
-        eyebrow: "01 · 기준선",
-        title: "데이터와 모델의 공통 언어",
-        description:
-          "신경망·attention·시계열·생성 모델이 무엇을 입력받아 무엇을 학습하는지부터 잡습니다.",
-        subcategories: [
-          "ai-foundations",
-          "ai-nlp",
-          "ai-vision",
-          "ai-timeseries",
-          "ai-generative",
-        ],
-      },
-      {
-        eyebrow: "02 · 원리와 근거",
-        title: "LLM 구조와 논문을 읽는 층",
-        description:
-          "Transformer를 기준 블록으로 삼고, 정렬·긴 문맥·구조 변경을 원 논문과 함께 확인합니다.",
-        subcategories: ["ai-llm-theory", "ai-llm-applied"],
-      },
-      {
-        eyebrow: "03 · 시스템",
-        title: "서빙과 에이전트 실행 구조",
-        description:
-          "KV cache·scheduler·tool loop·sandbox처럼 모델 밖에서 성능과 안전성을 결정하는 계층으로 확장합니다.",
-        subcategories: ["ai-llm-serving", "ai-agents", "ai-agents-claw"],
-      },
-      {
-        eyebrow: "04 · 적용",
-        title: "구현·실험·운영으로 검증",
-        description:
-          "직접 구현하고, 데이터와 평가를 고정한 뒤, 재현 가능한 기록과 운영 판단으로 마무리합니다.",
-        subcategories: ["ai-from-scratch", "ai-practical", "ai-agents-ops"],
-      },
-    ],
-    featuredArticles: [
-      "deep-learning-overview",
-      "math-vectors-inner-products",
-      "math-functions-composition",
-      "math-functions-derivatives-gradients",
-      "math-gradients-jacobians",
-      "math-exponents-logarithms",
-      "math-probability-expectation-variance",
-      "math-random-variables-expectation",
-      "math-variance-sampling",
-      "math-optimization-objectives",
-      "math-optimization-convexity",
-      "math-gradient-descent-convergence",
-      "gan",
-      "gan-training-dynamics",
-      "gan-wasserstein-critics",
-      "gan-conditional-evaluation",
-      "transformer-architecture",
-      "supervised-fine-tuning",
-      "grammar-constrained-generation",
-      "kimi-k3-architecture",
-      "yarn-rope-extension",
-      "sionic-eureka",
-      "sionic-glm-b300",
-      "kv-cache-fundamentals",
-      "hybrid-kv-cache-allocation",
-      "llm-serving-capacity",
-      "agent-sandbox-security",
-    ],
-  },
+  "title": "AI를 위에서 아래로 읽는 네 단계",
+  "description": "먼저 공통 원리를 잡고, 모델 구조와 논문을 읽은 뒤, 서빙·에이전트 시스템과 실제 구현으로 내려갑니다. 이미 아는 단계는 건너뛰어도 됩니다.",
+  "stages": [
+    {
+      "eyebrow": "01 · 기준선",
+      "title": "데이터와 모델의 공통 언어",
+      "description": "신경망·attention·시계열·생성 모델의 입출력을 먼저 잡고, 관측을 예측해 행동을 고르는 월드모델의 차이를 살펴봅니다.",
+      "subcategories": [
+        "ai-foundations",
+        "ai-nlp",
+        "ai-vision",
+        "ai-timeseries",
+        "ai-generative"
+      ]
+    },
+    {
+      "eyebrow": "02 · 원리와 근거",
+      "title": "LLM 구조와 논문을 읽는 층",
+      "description": "Transformer를 기준 블록으로 삼고, 정렬·긴 문맥·구조 변경을 원 논문과 함께 확인합니다.",
+      "subcategories": [
+        "ai-llm-theory",
+        "ai-llm-applied"
+      ]
+    },
+    {
+      "eyebrow": "03 · 시스템",
+      "title": "서빙과 에이전트 실행 구조",
+      "description": "KV cache·scheduler·tool loop·sandbox처럼 모델 밖에서 성능과 안전성을 결정하는 계층으로 확장합니다.",
+      "subcategories": [
+        "ai-llm-serving",
+        "ai-agents",
+        "ai-agents-claw"
+      ]
+    },
+    {
+      "eyebrow": "04 · 적용",
+      "title": "구현·실험·운영으로 검증",
+      "description": "직접 구현하고, 데이터와 평가를 고정한 뒤, 재현 가능한 기록과 운영 판단으로 마무리합니다.",
+      "subcategories": [
+        "ai-from-scratch",
+        "ai-practical",
+        "ai-agents-ops"
+      ]
+    }
+  ],
+  "featuredArticles": [
+    "deep-learning-overview",
+    "math-vectors-inner-products",
+    "math-functions-composition",
+    "math-functions-derivatives-gradients",
+    "math-gradients-jacobians",
+    "math-exponents-logarithms",
+    "math-probability-expectation-variance",
+    "math-random-variables-expectation",
+    "math-variance-sampling",
+    "math-optimization-objectives",
+    "math-optimization-convexity",
+    "math-gradient-descent-convergence",
+    "gan",
+    "gan-training-dynamics",
+    "gan-wasserstein-critics",
+    "gan-conditional-evaluation",
+    "modern-image-model-stack",
+    "visual-representation-tokenizers",
+    "world-model-latent-planning",
+    "transformer-architecture",
+    "supervised-fine-tuning",
+    "grammar-constrained-generation",
+    "kimi-k3-architecture",
+    "yarn-rope-extension",
+    "sionic-eureka",
+    "sionic-glm-b300",
+    "kv-cache-fundamentals",
+    "hybrid-kv-cache-allocation",
+    "llm-serving-capacity",
+    "agent-sandbox-security"
+  ]
+},
   blockchain: {
-    title: "블록체인을 프로토콜에서 운영까지 읽는 네 단계",
-    description:
-      "분산 시스템과 합의의 공통 전제를 먼저 잡은 뒤, 체인별 실행 구조와 저장·DeFi·ZK 구현으로 내려갑니다. 프로젝트 이름보다 상태가 만들어지고 확정되는 경로를 기준으로 읽습니다.",
-    stages: [
-      {
-        eyebrow: "01 · 공통 전제",
-        title: "상태·네트워크·합의",
-        description:
-          "노드가 서로 다른 정보를 보더라도 하나의 상태에 합의해야 하는 이유와 안전성·활성의 기준을 잡습니다.",
-        subcategories: ["fundamentals", "bft-consensus"],
-      },
-      {
-        eyebrow: "02 · 체인 구조",
-        title: "Ethereum과 Cosmos의 실행 경계",
-        description:
-          "실행·합의·mempool·상태 저장이 실제 클라이언트에서 어디까지 분리되는지 비교합니다.",
-        subcategories: ["ethereum", "cosmos"],
-      },
-      {
-        eyebrow: "03 · 데이터와 모듈",
-        title: "Filecoin과 재사용 가능한 프리미티브",
-        description:
-          "저장 약속이 증명과 체인 상태로 바뀌는 과정, 그리고 작은 합의·네트워크 부품을 조립하는 방식을 봅니다.",
-        subcategories: ["filecoin", "commonware"],
-      },
-      {
-        eyebrow: "04 · 응용과 검증",
-        title: "금융 프로토콜과 ZK 구현",
-        description:
-          "프로토콜의 경제적 불변식과 암호학적 검증을 구현·운영 관점에서 연결합니다.",
-        subcategories: ["defi", "zk-from-scratch"],
-      },
-    ],
-    featuredArticles: [
-      "distributed-systems",
-      "bft-theory",
-      "node-architecture",
-      "reth",
-      "prysm",
-      "cometbft",
-      "filecoin-lotus",
-      "filecoin-proofs",
-    ],
-  },
+  "title": "블록체인을 프로토콜에서 운영까지 읽는 네 단계",
+  "description": "분산 시스템과 합의의 공통 전제를 먼저 잡은 뒤, 체인별 실행 구조와 저장·DeFi·ZK 구현으로 내려갑니다. 프로젝트 이름보다 상태가 만들어지고 확정되는 경로를 기준으로 읽습니다.",
+  "stages": [
+    {
+      "eyebrow": "01 · 공통 전제",
+      "title": "상태·네트워크·합의",
+      "description": "노드가 서로 다른 정보를 보더라도 하나의 상태에 합의해야 하는 이유와 안전성·활성의 기준을 잡습니다.",
+      "subcategories": [
+        "fundamentals",
+        "bft-consensus"
+      ]
+    },
+    {
+      "eyebrow": "02 · 체인 구조",
+      "title": "Ethereum과 Cosmos의 실행 경계",
+      "description": "실행·합의·mempool·상태 저장이 실제 클라이언트에서 어디까지 분리되는지 비교합니다.",
+      "subcategories": [
+        "ethereum",
+        "cosmos"
+      ]
+    },
+    {
+      "eyebrow": "03 · 데이터와 모듈",
+      "title": "Filecoin과 재사용 가능한 프리미티브",
+      "description": "저장 약속이 증명과 체인 상태로 바뀌는 과정, 그리고 작은 합의·네트워크 부품을 조립하는 방식을 봅니다.",
+      "subcategories": [
+        "filecoin",
+        "commonware"
+      ]
+    },
+    {
+      "eyebrow": "04 · 응용과 검증",
+      "title": "금융 프로토콜과 ZK 구현",
+      "description": "프로토콜의 경제적 불변식과 암호학적 검증을 구현·운영 관점에서 연결합니다.",
+      "subcategories": [
+        "defi",
+        "zk-from-scratch"
+      ]
+    }
+  ],
+  "featuredArticles": [
+    "distributed-systems",
+    "bft-theory",
+    "node-architecture",
+    "reth",
+    "prysm",
+    "cometbft",
+    "filecoin-lotus",
+    "filecoin-proofs",
+    "ethereum-future-roadmap",
+    "glamsterdam-block-execution",
+    "robinhood-chain-settlement",
+    "robinhood-chain-blob-demand",
+    "hyperliquid",
+    "rwa-composition",
+    "pq-account"
+  ]
+},
   crypto: {
-    title: "암호학을 가정에서 증명 시스템까지 읽는 네 단계",
-    description:
-      "수식을 외우기보다 어떤 가정을 두고 무엇을 숨기거나 검증하는지부터 시작합니다. 유한체·곡선의 연산이 commitment와 proof, 실제 zkVM으로 이어지는 순서입니다.",
-    stages: [
-      {
-        eyebrow: "01 · 산술 기반",
-        title: "공개키 암호와 유한체",
-        description:
-          "정수 연산과 체 연산의 차이, 이산로그 가정, 곡선 위 연산을 먼저 구분합니다.",
-        subcategories: ["classical", "zkp-math"],
-      },
-      {
-        eyebrow: "02 · 대표 증명계",
-        title: "SNARK와 STARK의 설계 축",
-        description:
-          "Groth16·PLONK·STARK를 산술화, commitment, setup, verifier 비용이라는 같은 축에서 읽습니다.",
-        subcategories: ["zkp-groth16", "zkp-plonk", "zkp-stark"],
-      },
-      {
-        eyebrow: "03 · 재귀와 투명성",
-        title: "Folding·IPA·IOP",
-        description:
-          "재귀 증명과 투명한 setup이 어떤 대수 구조와 상호작용 모델을 선택하는지 비교합니다.",
-        subcategories: ["zkp-nova", "zkp-bulletproofs", "zkp-iop"],
-      },
-      {
-        eyebrow: "04 · 시스템",
-        title: "zkVM과 다자간 계산",
-        description:
-          "개별 proof를 프로그램 실행과 여러 참여자의 안전한 계산으로 확장합니다.",
-        subcategories: ["zkp-vm", "mpc"],
-      },
-    ],
-    featuredArticles: [
-      "finite-field-theory",
-      "elliptic-curve",
-      "snark-overview",
-      "groth16",
-      "plonk",
-      "stark",
-      "fri",
-      "nova",
-    ],
-  },
+  "title": "암호학을 공개키·증명·양자 위협으로 읽는 다섯 단계",
+  "description": "무엇을 숨기고 검증하는지부터 시작해 증명 시스템을 읽습니다. 이어 양자 계산이 바꾸는 가정과 새로운 키 합의·서명·물리 키 분배를 비교합니다.",
+  "stages": [
+    {
+      "eyebrow": "01 · 산술 기반",
+      "title": "공개키 암호와 유한체",
+      "description": "정수 연산과 체 연산의 차이, 이산로그 가정, 곡선 위 연산을 먼저 구분합니다.",
+      "subcategories": [
+        "classical",
+        "zkp-math"
+      ]
+    },
+    {
+      "eyebrow": "02 · 대표 증명계",
+      "title": "SNARK와 STARK의 설계 축",
+      "description": "Groth16·PLONK·STARK를 산술화, commitment, setup, verifier 비용이라는 같은 축에서 읽습니다.",
+      "subcategories": [
+        "zkp-groth16",
+        "zkp-plonk",
+        "zkp-stark"
+      ]
+    },
+    {
+      "eyebrow": "03 · 재귀와 투명성",
+      "title": "Folding·IPA·IOP",
+      "description": "재귀 증명과 투명한 setup이 어떤 대수 구조와 상호작용 모델을 선택하는지 비교합니다.",
+      "subcategories": [
+        "zkp-nova",
+        "zkp-bulletproofs",
+        "zkp-iop"
+      ]
+    },
+    {
+      "eyebrow": "04 · 시스템",
+      "title": "zkVM과 다자간 계산",
+      "description": "개별 proof를 프로그램 실행과 여러 참여자의 안전한 계산으로 확장합니다.",
+      "subcategories": [
+        "zkp-vm",
+        "mpc"
+      ]
+    },
+    {
+      "eyebrow": "05 · 양자 위협과 대응",
+      "title": "양자 계산·키 합의·서명·광학 통신",
+      "description": "네 후보의 진폭 계산에서 출발해 오류를 섞은 키 합의와 서명, 실제 신호로 키를 나누는 방법을 구분합니다.",
+      "subcategories": [
+        "post-quantum"
+      ]
+    }
+  ],
+  "featuredArticles": [
+    "finite-field-theory",
+    "elliptic-curve",
+    "snark-overview",
+    "groth16",
+    "plonk",
+    "stark-theory",
+    "fri",
+    "nova",
+    "prover-memory-and-verifier-cost",
+    "quantum-computing-and-cryptographic-risk",
+    "ml-kem-and-noisy-equations",
+    "post-quantum-signatures",
+    "quantum-key-distribution"
+  ]
+},
   p2p: {
     title: "P2P를 발견에서 데이터 전달까지 읽는 네 단계",
     description:
@@ -300,54 +367,64 @@ export const CATEGORY_READING_PATHS: Readonly<
     ],
   },
   gpu: {
-    title: "GPU를 하드웨어 예산에서 커널 성능까지 읽는 세 단계",
-    description:
-      "부품 스펙을 나열하기보다 데이터가 메모리 계층을 지나 SM에서 실행되는 경로를 먼저 잡고, CUDA 최적화와 ZK 가속으로 확장합니다.",
-    stages: [
-      {
-        eyebrow: "01 · 시스템 예산",
-        title: "연산·메모리·스토리지·인프라",
-        description:
-          "서버가 감당할 수 있는 전력·대역폭·용량의 상한을 먼저 계산합니다.",
-        subcategories: ["hw-compute", "hw-memory", "hw-storage", "hw-infra"],
-      },
-      {
-        eyebrow: "02 · 실행 모델",
-        title: "SIMT와 CUDA 메모리 계층",
-        description:
-          "thread·warp·block·SM의 관계와 coalescing·shared memory·동기화를 한 실행 흐름으로 봅니다.",
-        subcategories: ["gpu-fundamentals"],
-      },
-      {
-        eyebrow: "03 · 특화 가속",
-        title: "MSM·NTT·증명 파이프라인",
-        description:
-          "수학 연산의 병렬성을 kernel에 배치하고 CPU·GPU 경계 비용까지 포함해 성능을 측정합니다.",
-        subcategories: ["zk-acceleration"],
-      },
-      {
-        eyebrow: "04 · 가속기 설계",
-        title: "PE 한 칸에서 시스톨릭 배열까지",
-        description:
-          "GPU가 소프트웨어로 만드는 재사용을 이번에는 RTL 배선 자체로 만듭니다. 실제 오픈소스 NPU 저장소를 코드 단위로 추적합니다.",
-        subcategories: ["accelerator-design"],
-      },
-    ],
-    featuredArticles: [
-      "gpu-architecture",
-      "cuda-thread-hierarchy",
-      "cuda-shared-memory",
-      "cuda-perf-analysis",
-      "cuda-register-pressure",
-      "cuda-kernel-fusion",
-      "cuda-persistent-kernels",
-      "gpu-arch-hopper",
-      "msm-ntt",
-      "msm-gpu-impl",
-      "ntt-gpu-impl",
-      "gemmini-pe-mac-dataflow",
-    ],
-  },
+  "title": "GPU를 하드웨어 예산에서 커널 성능까지 읽는 네 단계",
+  "description": "64개 배열의 코드에서 출발해 NVIDIA·AMD 실행 단위와 HBM의 실제 접근 경로를 비교하고, CUDA·HIP 최적화와 특화 가속으로 이어갑니다.",
+  "stages": [
+    {
+      "eyebrow": "01 · 시스템 예산",
+      "title": "연산·메모리·스토리지·인프라",
+      "description": "서버가 감당할 수 있는 전력·대역폭·용량의 상한을 먼저 계산합니다.",
+      "subcategories": [
+        "hw-compute",
+        "hw-memory",
+        "hw-storage",
+        "hw-infra"
+      ]
+    },
+    {
+      "eyebrow": "02 · 실행 모델",
+      "title": "CUDA·HIP 실행과 메모리 요청",
+      "description": "같은 원소의 번호와 주소를 thread·warp 또는 wave에서 추적하고, register·shared memory·LDS·HBM의 역할을 구분합니다.",
+      "subcategories": [
+        "gpu-fundamentals"
+      ]
+    },
+    {
+      "eyebrow": "03 · 특화 가속",
+      "title": "MSM·NTT·증명 파이프라인",
+      "description": "수학 연산의 병렬성을 kernel에 배치하고 CPU·GPU 경계 비용까지 포함해 성능을 측정합니다.",
+      "subcategories": [
+        "zk-acceleration"
+      ]
+    },
+    {
+      "eyebrow": "04 · 가속기 설계",
+      "title": "PE 한 칸에서 시스톨릭 배열까지",
+      "description": "GPU가 소프트웨어로 만드는 재사용을 이번에는 RTL 배선 자체로 만듭니다. 실제 오픈소스 NPU 저장소를 코드 단위로 추적합니다.",
+      "subcategories": [
+        "accelerator-design"
+      ]
+    }
+  ],
+  "featuredArticles": [
+    "cuda-basics",
+    "gpu-architecture",
+    "cuda-thread-hierarchy",
+    "amd-gpu-execution-and-hip",
+    "gpu-memory-hierarchy-and-roofline",
+    "hbm-stack-and-memory-requests",
+    "cuda-shared-memory",
+    "cuda-perf-analysis",
+    "cuda-register-pressure",
+    "cuda-kernel-fusion",
+    "cuda-persistent-kernels",
+    "gpu-arch-hopper",
+    "msm-ntt",
+    "msm-gpu-impl",
+    "ntt-gpu-impl",
+    "gemmini-pe-mac-dataflow"
+  ]
+},
   tee: {
     title: "TEE를 위협 모델에서 배포까지 읽는 네 단계",
     description:

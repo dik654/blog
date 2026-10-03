@@ -24,7 +24,7 @@ export default function SmWarpSchedulingAndIssueArticle() {
     <div id="overview" className="space-y-16">
       <section id="sm-structure" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          SM 은 warp 를 issue 하는 subpartition 4개로 나뉩니다
+          Hopper SM의 네 구역이 준비된 warp 명령을 고릅니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
@@ -38,7 +38,7 @@ export default function SmWarpSchedulingAndIssueArticle() {
             SM 안의 subpartition 하나에 배정됩니다.
           </p>
           <p>
-            SM 하나는 subpartition 4개로 나뉩니다. Subpartition 마다 warp scheduler 하나,
+            이 글의 수치 대상인 Hopper H100에서는 SM 하나가 subpartition 4개로 나뉩니다. Subpartition 마다 warp scheduler 하나,
             dispatch unit, register file 의 한 조각, 그리고 FP32·INT32·Tensor Core 같은
             실행 pipe 가 있습니다. Nsight Compute 문서는 이 단위를 SMSP 라고 부르고 SM 의
             일차 처리 요소로 정의합니다.
@@ -59,6 +59,8 @@ export default function SmWarpSchedulingAndIssueArticle() {
         <SmWarpSchedulingAndIssueViz />
         <ContentBoundary article="sm-warp-scheduling-and-issue" />
       </section>
+
+      <p className="leading-8">4개 scheduler와132개 SM의 곱은 이 글에서 고정한 H100 구성의 issue 모델입니다. 명령별 실행 처리량이나 모든 NVIDIA 세대의 공통 수치가 아닙니다. AMD의 CU·wavefront는 <Link to="/cs/gpu/amd-gpu-execution-and-hip#names">AMD 실행 구조</Link>에서 별도로 확인합니다. Blackwell의 특수 행렬 명령은 <Link to="/cs/ai/sionic-glm-b300#kernel">tcgen05·TMEM 정본</Link>에서 target별 지원을 봅니다.</p>
 
       <section id="issue-scoreboard" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
@@ -82,8 +84,9 @@ export default function SmWarpSchedulingAndIssueArticle() {
           </p>
           <p>
             Issue 와 dispatch 는 다른 단계입니다. Issue 는 scheduler 가 후보 가운데 warp 를 골라 instruction 을 내보내는 결정이고 dispatch
-            는 그 instruction 을 FMA·ALU· LSU 같은 실제 pipe 로 보내는 단계입니다. Pipe 가 이미 차 있으면 issue 된 instruction 도
-            기다립니다. 문서는 이 상태를 math pipe throttle 로 구분합니다.
+            는 그 instruction 을 FMA·ALU· LSU 같은 실제 pipe 로 보내는 단계입니다.</p>
+        <p>실행 pipe가 받을 여유가 없으면 해당 명령의 발행이 막힐 수 있습니다. Nsight의 math pipe throttle은
+            해당 pipe의 가용성이 제한하는 대기이며, 일반적인 발행 이후 대기열의 길이와 같은 뜻은 아닙니다.
           </p>
           <p>
             Subpartition 하나에 warp 4개가 있고 매 clock 그중 하나만 준비돼 있어도 scheduler 는 clock 마다 issue 를 이어 갈 수 있습니다. 어느
@@ -98,7 +101,7 @@ export default function SmWarpSchedulingAndIssueArticle() {
             { code: "if eligible == ∅: issue slot 을 비움 (pipeline bubble); return", note: "Nsight Compute 의 No Eligible 비율이 이 분기를 셉니다." },
             { code: "w* = select(eligible)  // 정책은 문서화되지 않은 hardware 우선순위", note: "선택되지 않은 나머지 eligible warp 는 not selected 로 기록됩니다." },
             { code: "issue(w*.next_instruction);  scoreboard[w*] += 결과 register 표시", note: "결과가 pipe 를 지나 register 에 쓰일 때까지 표시가 남습니다." },
-            { code: "dispatch(instruction → pipe);  pipe 가 차 있으면 대기 (pipe throttle)", note: "Issue 가 됐다고 즉시 실행되지 않습니다. Pipe 폭이 두 번째 상한입니다." },
+            { code: "pipe 수용 가능 여부 확인 → issue·dispatch 진행 (개념도)", note: "Pipe 자원도 발행 가능성을 제한합니다. 이 순서는 개념도이며 실제 하드웨어 큐 구조를 복원한 소스가 아닙니다." },
             { code: "결과 도착 시 scoreboard[w] 의 해당 표시를 지움 → w 는 다시 eligible 후보", note: "이 clearing 이 dependency latency 만큼 늦게 일어납니다." },
           ]}
           repeatUntil="Subpartition 에 resident warp 가 남아 있는 동안 매 clock 반복합니다."
@@ -113,7 +116,8 @@ export default function SmWarpSchedulingAndIssueArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             한 warp 안에서 앞 instruction 의 결과를 다음 instruction 이 바로 쓰면 그 사이의 시간은 어떤 최적화로도 없어지지 않습니다. 이 시간이
-            instruction dependency latency 입니다. 결과를 이어받는 instruction 의 줄은 dependency chain 이라고 부릅니다. Scheduler
+            instruction dependency latency 입니다.</p>
+        <p>결과를 이어받는 instruction 의 줄은 dependency chain 이라고 부릅니다. Scheduler
             가 할 수 있는 일은 그 시간 동안 다른 warp 의 instruction 을 issue 하는 것뿐입니다.
           </p>
           <p>
@@ -126,19 +130,22 @@ export default function SmWarpSchedulingAndIssueArticle() {
           </p>
           <p>
             이 셈은 Little's law 입니다. Issue 속도 1 instruction/clock 에 latency 4 clock
-            이면 언제나 instruction 4개가 결과를 기다리는 중이어야 합니다. 그 4개를 warp
+            이면 언제나 instruction 4개가 결과를 기다리는 중이어야 합니다.</p>
+        <p>그 4개를 warp
             4개가 하나씩 들고 있는 것이 thread-level parallelism(TLP) 이고, warp 2개가 서로
             독립인 instruction 을 2개씩 들고 있는 것이 instruction-level parallelism(ILP)
             입니다.
           </p>
           <p>
             Memory 는 같은 식에 큰 latency 를 넣는 경우입니다. Global load 의 latency 를 가정값 500 clock 으로 두면 기다리는 load 가 언제나
-            500개 있어야 하는데 subpartition 의 warp 상한은 16개입니다. Warp 마다 독립 load 를 32개 가까이 띄워야 합니다. 이렇게 한 warp 가 여러
+            500개 있어야 하는데 subpartition 의 warp 상한은 16개입니다.</p>
+        <p>Warp 마다 독립 load 를 32개 가까이 띄워야 합니다. 이렇게 한 warp 가 여러
             memory 요청을 동시에 띄우는 정도가 memory-level parallelism(MLP) 입니다.
           </p>
           <p>
             Pipeline bubble 은 준비된 warp 가 하나도 없는 clock 을 가리킵니다. 이 글의 bubble 은 SM 의 issue pipeline 에 생기는 빈 slot
-            을 뜻하며 분산 추론에서 pipeline parallel stage 가 노는 bubble 과는 다른 층위의 말입니다. Nsight Compute 는 이 비율을 No
+            을 뜻하며 분산 추론에서 pipeline parallel stage 가 노는 bubble 과는 다른 층위의 말입니다.</p>
+        <p>Nsight Compute 는 이 비율을 No
             Eligible 로 보여 줍니다. 1000 clock 에 600번 issue 했다면 slot 의 40% 가 bubble 입니다.
           </p>
           <p>

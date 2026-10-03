@@ -108,7 +108,8 @@ export default function DDR() {
         </div>
         <p>
           실제 측정에서는 한 DIMM을 더 꽂아 capacity가 늘어도 2DPC 신호 조건으로 MT/s가 낮아질 수 있습니다. thread가 remote NUMA node를 읽으면
-          socket 간 interconnect도 추가됩니다. 같은 CPU·firmware에서 channel population, NUMA pinning과 read/write mix를
+          socket 간 interconnect도 추가됩니다.</p>
+        <p>같은 CPU·firmware에서 channel population, NUMA pinning과 read/write mix를
           고정해 STREAM 같은 순차 bandwidth와 실제 application 시간을 함께 비교합니다.
         </p>
         <div id="paper-jedec-ddr5" className="scroll-mt-24">

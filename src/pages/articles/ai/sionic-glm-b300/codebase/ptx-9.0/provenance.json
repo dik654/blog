@@ -1,0 +1,10 @@
+{
+  "source": "https://docs.nvidia.com/cuda/archive/13.0.2/parallel-thread-execution/index.html#tcgen05-mma-instructions-mma",
+  "version": "PTX ISA9.0 / CUDA13.0.2",
+  "reviewed": "2026-10-04",
+  "excerpts": {
+    "mma.ptx": "Examples, first line",
+    "completion.ptx": "Examples, commit through parity wait loop"
+  },
+  "note": "Separate verbatim documentation excerpts; not a standalone runnable kernel."
+}

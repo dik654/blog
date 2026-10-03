@@ -72,7 +72,7 @@ export default function FourMeasuresViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(30rem,calc(100dvh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex min-h-0 flex-none flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(s + 1).padStart(2, "0")}
           </p>
@@ -112,7 +112,7 @@ export default function FourMeasuresViz() {
               </text>
 
               {/* 네 지표 비교 */}
-              <g>
+              <g transform="translate(-24 0)">
                 {MEASURES.map((x, i) => {
                   const v = (x.num / x.den) * 100;
                   return (

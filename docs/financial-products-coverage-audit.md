@@ -1,0 +1,54 @@
+# 금융상품 학습 누락 검증
+
+확인일: 2026-10-04. 이 표는 특정 종목의 매수 목록이 아니라 지급 청구권·재원·상대방·손실 조건이 본문에서 설명되는지 검증한 기록이다. 시장에 존재하는 모든 개별 발행 상품을 열거했다는 뜻은 아니다. 분류가 같아도 실제 만기·준거법·상환식은 투자설명서로 확인한다.
+
+## 상품과 정본의 대응
+
+| 상품·주제 | 돈의 재원과 청구 대상 | 실제로 계산한 조건·반례 | 정본과 위치 | 검증 상태 |
+| --- | --- | --- | --- | --- |
+| 예금·예금보호 | 은행 지급 의무와 적격 예금 보호 | 1000만 원 4%→1040만 원, 한국·미국·EU 합산 단위 차이 | `markets/financial-products-and-claims#comparison` | 본문·공식 근거 |
+| 소비자 대출·상환 일정 | 차주의 원리금 지급 | 만기 일시상환 이자60만 원 / 월 원금균등32만5000원 | `markets/financial-products-and-claims#mechanism` | 본문·수치 |
+| 주식 | 채무 지급 뒤 남는 재산·현금 | 잔여 청구권과 가격 기대 | 기존 `markets/equity-claims-and-valuation` | 기존 정본 재사용 |
+| 채권·수익률곡선 | 발행자의 약정 현금흐름 | 수정 듀레이션5, 금리+1%포인트→가격 약−5% | 기존 `markets/bond-pricing-and-yield-curve#duration`, ETF 한계절 연결 | 기존 정본 재사용 |
+| 펀드·실물 ETF·적극 운용 ETF | 분리된 펀드 재산 지분 | NAV10000 / 매수10100 / 매도11000→8.91% | `markets/funds-etfs-and-etns#mechanism` | 본문·SEC 원문 적용 |
+| 합성 ETF | 펀드 지분 안의 스왑 등 계약 | 기초자산 상승에도 상대방 지급 실패 가능, 담보 규정 별도 | `markets/funds-etfs-and-etns#limits`, 커버드콜9절 | 미국 QYLD·유럽 UCITS 구분 |
+| ETN | 발행 금융회사의 채무 | 11000원 청구·회수40%→4400원 | `markets/funds-etfs-and-etns#mechanism` | 본문·SEC 원문 적용 |
+| MMF | 단기 채무·레포 등의 수익을 받는 펀드 지분 | 1000→995만 원이면5만 손실, 예금 보호와 분리 | `markets/financial-products-and-claims#limits` | SEC 유형·NAV·유동성 근거 |
+| 레버리지·인버스 ETF | 매일 목표 노출을 재설정하는 펀드 | 지수100→110→100에서2x98.18 /3x94.55 /−3x89.09 | `markets/funds-etfs-and-etns#comparison` | TQQQ/SQQQ 2026-09-28 설명서 |
+| 차입 투자·마진 거래 | 자산에서 빚을 뺀 자기 몫 | 자산90·빚80·허용80%에서 현금8/담보10/내부매각40 | `risk/margin-collateral-and-leverage#mechanism` | 가정 비율 명시·금액 검산 |
+| 외화·환헤지형 상품 | 외화 자산과 반대 통화 계약 | 달러 자산+10%, 달러당 원화−10%→원화−1% | ETF10절, 선물9절, `macro/global-capital-and-policy` | 금리차·통화·현금 날짜 연결 |
+| 선도·선물 | 계약 상대방·청산 정산 | 밀100톤30만→35만:500만 반대 손익, 중간 현금 별도 | `markets/forwards-and-futures#mechanism` | CME 원문 적용 |
+| 원자재 선물형 ETF·롤오버 | 만기별 선물 손익과 담보 이자 | 밀 새 만기31.5만→30만·100톤:−150만, 교체 즉시 손실로 오해하지 않음 | `markets/forwards-and-futures#mechanism` | 콘탱고·백워데이션·수렴 조건 |
+| 콜·풋·보호적 풋 | 선택권과 이행 의무 | 콜K100·비용8·S120→12, 주식+풋 최대손실8 | `markets/options-and-asymmetric-payoffs#mechanism` | 수식·손익곡선·OCC/KRX |
+| 커버드콜·인컴 펀드 | 보유 주식과 콜 매도대금 | 100주100·K105·비용수취3·S90/103/120→−700/600/800 | `markets/covered-calls-and-income-funds#mechanism` | 독립10층위·손익곡선 |
+| 부분 커버드콜·ATM/OTM·0DTE | 매도 수량·가격·만기 선택 | 200주에100주 콜이면 주당120에서14, 초과매도는 미담보 | 커버드콜9절 | 계약 단위와 경로 설명 |
+| 분배금·자본환급·총수익 | 자산에서 지급된 현금 | NAV100→88+분배12=총수익0%, ROC는 세무 추정과 구분 | 커버드콜7·9절 | QYLD 실제19a·최종 세무자료 아님 |
+| 금리·통화 스왑 | 서로 다른 조건의 지급 교환 | 10억 고정4%·변동6%→순수취2000만, 대출 합산4000만 | `markets/swaps-and-credit-risk#mechanism` | 순현금·명목금액 구분 |
+| CDS | 신용 사건 발생 시 보호 매도자의 지급 | 10억·회수40%→채권4억+보호6억, 상대방 이행 조건 | `markets/swaps-and-credit-risk#comparison` | 동시 부도 반례 |
+| ELS·DLS | 지수·금리·환율·신용 등 조건부 발행자 채무 | 가정 문턱60%:최종61%→1060만 /59%→590만 | `markets/financial-products-and-claims#source` | 청구권·관측·상환식·발행자 구분 |
+| ELB·DLB·원금지급형 구조화증권 | 만기 원금 지급을 약속한 발행자 | 만기 약속과 중도960만 평가·발행자 부도는 별도 | 상품지도7·8절 | 실제 한국 ELB 공시·SEC 구조화 설명 |
+| ELN | 주가 등에 연동된 채무 | ETF 내부 ELN은 발행자의 신용·현금화 위험 추가 | 상품지도8절, 커버드콜9절 | JEPI 공식 위험 설명 |
+| 리츠 | 임대·부동산 관련 수익에서 비용·차입 지급 차감 | 임대료100−운영30−이자20−수선25=현금25 | 상품지도10절 | SEC 근거·세무이익과 구분 |
+| 보험·보장·해약 | 보험료 공동 부담과 보험자의 계약 의무 | 사건·면책·지급 한도 | 기존 `institutions/insurance-risk-pooling` | 별도 정본 재사용 |
+| DB·DC·개인 연금계좌 | 급여 산식 또는 적립자산 | 적립1000→900의 손실 부담 차이 | 상품지도8절 | DOL 정의·국가별 지급/세금 경계 |
+| TDF·글라이드패스 | 배분을 바꾸는 펀드 자산 | 주식80%/40%, 주가−20%·채권0%→−16%/−8% | 상품지도8절 | SEC 2025-03-25, 목표일 보장 아님 |
+| 사모펀드 | 펀드의 실제 자산·차입 및 계약상 환매 | 모집 방식만으로 기초자산 안전성 판단 불가 | 상품지도6절 | 분류 경계, ETF·자산 정본 연결 |
+| 유동화·트랜치 | 이전된 대출 현금흐름 | 70/20/10 구조에서손실35→10+20+5 | `markets/securitization-and-tranches#mechanism` | EU/KR 위험보유·상관 반례 |
+| 레포·역레포·헤어컷 | 증권 매매와 되사기 약정 | 담보100·5%→현금95, 담보90·10%→현금81·부족14 | `banking/repo-and-collateral-funding#mechanism` | ICMA/NYFed/BOK 원문 적용 |
+
+## 원문 확인 기록
+
+- [QYLD SEC 요약설명서, 2026-03-01](https://www.sec.gov/Archives/edgar/data/1432353/000143235326000239/a497knasdaq100coveredcall.htm): 월간 지수 콜, 만기 전 청산, 현금결제. 개별주식 조기 배정과 구별한다.
+- [QYLD 19a 원본 DOCX, 2026-09-24](https://assets.globalxetfs.com/funds/tax_supplements/QYLD_Form-19a_09242026.docx): 0.1767달러를 0.0022와 0.1745로 추정 분류. 원본을 내려받아 DOCX XML 본문을 읽었으며 별도 NAV/총수익 계산과 분리했다.
+- [TQQQ 요약설명서](https://prod.proshares.com/globalassets/proshares/prospectuses/tqqq_summary_prospectus.pdf), [SQQQ 요약설명서](https://prod.proshares.com/globalassets/proshares/prospectuses/sqqq_summary_prospectus.pdf): 둘 다 2026-09-28 표지와 하루 투자목표를 확인했다. 여러 날 배수는 예시로 직접 계산했다.
+- [CME 콘탱고·백워데이션 교육](https://www.cmegroup.com/education/courses/introduction-to-ferrous-metals/what-is-contango-and-backwardation): 공식 영상이 포함된 교육 페이지와 본문을 읽었다. 영상 전체를 시청하거나 자동 자막을 검증했다는 주장은 하지 않는다.
+- [신한투자증권 ELS/DLS 공식 분류](https://www.shinhansec.com/wts/wealth-management/els/els_guide_invest_tab1/contents.do), [DB 제92회 ELB 설명서](https://kind.krx.co.kr/external/2026/07/30/000632/20260730001461/10603.htm): 기초자산 분류와 발행자 지급불능·중도상환 위험을 확인했다.
+- [국세청 펀드 외국납부세액공제, 2026 안내](https://s.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2201&nttSn=1350542), [IRS Publication 515](https://www.irs.gov/publications/p515): 관할·소득분류·계좌 구분만 설명하며 개인의 실제 세후 금액은 단정하지 않았다.
+
+## 검수 경계
+
+수치 예시는 특정 종목 전망이나 실제 가입 조건이 아니다. 커버드콜의 50% 비율은 200주에 100주분 계약 하나를 대응시켜 반쪽 계약을 실제 거래하는 것처럼 설명하지 않았다. 연준 레포의 명칭은 거래 현금 방향과 별도로 확인했다. 금융상품의 높은 지급률을 시장 성과·보장 수익으로 전환하지 않았다.
+
+## 영상 조사 범위
+
+[OIC의 2024-07-19 YouTube 강의](https://www.youtube.com/watch?v=5fRa78w8f0k)는 공식 게시자와 공개 설명의 장 구분(기본4:31·하락35:33·상승40:38·오해48:15)을 확인했다. 전체 자막이나 영상 시청을 주장하지 않는다. 조기 행사와 계약 교체는 별도 [Fidelity/OIC 공식 강의록](https://www.fidelity.com/bin-public/060_www_fidelity_com/documents/learning-center/Exercise_an_%20assignment_TRANSCRIPT.pdf) 6–7쪽·18쪽에서 원문으로 대조했다. 영상은 복습 경로이고 지급·세금의 최종 근거는 설명서와 공시다.

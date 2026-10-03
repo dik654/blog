@@ -7561,95 +7561,174 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [{ label: "PLONK gate·copy", href: "/cs/crypto/plonk" }, { label: "Polynomial root bound", href: "/cs/crypto/polynomial" }, { label: "Polynomial commitment", href: "/cs/crypto/polycommit" }],
     evidence: [{ kind: "primary-source", rule: "Linear-time·custom gate·security claim은 HyperPlonk 원문 model에 귀속한다." }, { kind: "primary-source", rule: "구현 claim은 pinned Espresso source와 unaudited disclaimer에 한정한다." }, { kind: "project-measurement", rule: "Wrong round/degree/copy/opening parity 뒤 MLE/sumcheck/PCS phase와 RSS를 비교한다." }],
   },
-  nova: {
-    title: "Nova relaxed R1CS·NIFS·IVC 글이 소유하는 범위",
-    owns: ["IVC state/step relation", "Relaxed R1CS cross term과 NIFS folding", "Folding·compression·ZK boundary와 resume release gate"],
-    reuses: [{ label: "R1CS row", href: "/cs/crypto/constraint-systems#r1cs" }, { label: "Commitment binding/hiding", href: "/cs/crypto/zk-theory#simulation" }, { label: "SNARK succinctness cost", href: "/cs/crypto/snark-overview#selection" }],
-    evidence: [{ kind: "primary-source", rule: "Relaxed R1CS·NIFS·IVC claim은 Nova 원문 model에 귀속한다." }, { kind: "primary-source", rule: "Backend/source claim은 pinned microsoft/Nova commit에 한정한다." }, { kind: "project-measurement", rule: "Wrong state/index/T/E/challenge/resume parity 뒤 per-step과 final compression costs를 분리한다." }],
+  "nova": {
+    "title": "반복 실행의 상태 연결의 설명 경계",
+    "owns": [
+      "ivc-state-step-relation",
+      "relaxed-r1cs-error-slack",
+      "nova-nifs-folding-equation",
+      "nova-folding-challenge-soundness",
+      "nova-ivc-compression-zk-boundary",
+      "nova-release-gate"
+    ],
+    "reuses": [
+      {
+        "label": "증명 생성의 동시 생존 메모리",
+        "href": "/cs/crypto/prover-memory-and-verifier-cost"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "원 논문과 공식 고정 소스의 조건에서 작은 사례를 대조합니다. 실제 장치 측정과 가정 계산을 구분합니다."
+      }
+    ]
   },
-  polycommit: {
-    title: "Polynomial commitment interface·KZG·IPA 선택 글이 소유하는 범위",
-    owns: ["Commit·Open·Verify와 evaluation claim의 소유권", "KZG quotient·pairing opening과 IPA inner-product opening", "Binding·hiding·degree·setup 분리와 PCS release gate"],
-    reuses: [
-      { label: "Prime-field polynomial과 root bound", href: "/cs/crypto/polynomial" },
-      { label: "Pairing bilinearity", href: "/cs/crypto/elliptic-curves#g1-g2-bn254" },
-      { label: "Commitment binding·hiding", href: "/cs/crypto/crypto-primitives#merkle-commitment" },
+  "polycommit": {
+    "title": "다항식 고정·열기·검사의 설명 경계",
+    "owns": [
+      "polynomial-commitment-interface",
+      "kzg-quotient-opening-equation",
+      "ipa-polynomial-opening",
+      "pcs-degree-hiding-setup-boundary",
+      "pcs-release-gate"
     ],
-    evidence: [
-      { kind: "primary-source", rule: "KZG claim은 KZG 원문, IPA claim은 Halo 원문의 setup·group·security model 범위에 각각 귀속한다." },
-      { kind: "project-claim", rule: "PCS라는 이름을 hiding·transparent setup·post-quantum·외부 statement validity로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "Wrong value·point·degree·key·subgroup parity 뒤 setup/commit/open/verify·bytes·RSS를 같은 workload에서 비교한다." },
+    "reuses": [
+      {
+        "label": "낮은 차수 평가표의 근접성",
+        "href": "/cs/crypto/fri"
+      }
     ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "원 논문과 공식 고정 소스의 조건에서 작은 사례를 대조합니다. 실제 장치 측정과 가정 계산을 구분합니다."
+      }
+    ]
   },
-  fri: {
-    title: "FRI Reed–Solomon proximity·folding·query 글이 소유하는 범위",
-    owns: ["RS oracle membership과 proximity claim", "Even/odd folding·Merkle query transcript", "Sampling intuition과 FRI 전체 soundness 경계·release gate"],
-    reuses: [
-      { label: "Polynomial coefficient·evaluation form", href: "/cs/crypto/polynomial" },
-      { label: "Reed–Solomon encoding", href: "/cs/crypto/reed-solomon" },
-      { label: "Merkle selective opening", href: "/cs/crypto/crypto-primitives#merkle-commitment" },
+  "fri": {
+    "title": "낮은 차수 평가표의 근접성의 설명 경계",
+    "owns": [
+      "fri-reed-solomon-oracle-proximity",
+      "fri-even-odd-folding",
+      "fri-merkle-query-transcript",
+      "fri-sampling-miss-bound",
+      "fri-release-gate",
+      "constrained-reed-solomon-query"
     ],
-    evidence: [
-      { kind: "primary-source", rule: "Folding·proximity·soundness claim은 FRI 원문의 field·domain·distance·oracle model 범위에 귀속한다." },
-      { kind: "project-claim", rule: "FRI accept를 AIR completeness·program semantics·STARK 전체 zero knowledge로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "Wrong pair·fold·root·path·final degree·round order parity 뒤 hash/query/proof 비용을 비교한다." },
+    "reuses": [
+      {
+        "label": "시간별 실행 기록",
+        "href": "/cs/crypto/stark-theory"
+      }
     ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "원 논문과 공식 고정 소스의 조건에서 작은 사례를 대조합니다. 실제 장치 측정과 가정 계산을 구분합니다."
+      }
+    ]
   },
   "stark-theory": {
-    title: "STARK trace·AIR·composition·LDE 파이프라인 글이 소유하는 범위",
-    owns: ["Execution trace와 transition·boundary AIR", "Composition polynomial과 LDE·Merkle·FRI 연결", "Transparent/hash/ZK assumption 경계와 STARK release gate"],
-    reuses: [
-      { label: "Finite-field NTT·evaluation domain", href: "/cs/crypto/fft#fft-domain" },
-      { label: "FRI low-degree proximity", href: "/cs/crypto/fri" },
-      { label: "Relation·public input·witness", href: "/cs/crypto/constraint-systems#overview" },
+    "title": "시간별 실행 기록의 설명 경계",
+    "owns": [
+      "stark-execution-trace",
+      "air-transition-boundary-constraints",
+      "stark-composition-polynomial",
+      "stark-lde-fri-pipeline",
+      "stark-transparent-hash-security-boundary",
+      "stark-release-gate"
     ],
-    evidence: [
-      { kind: "primary-source", rule: "STARK pipeline claim은 STARK 원문, low-degree test claim은 FRI 원문의 모델과 parameter 범위에 각각 귀속한다." },
-      { kind: "project-claim", rule: "Transparent를 assumption-free로, STARK를 자동 zero knowledge나 모든 구현의 post-quantum 보장으로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "Trace·AIR·composition·domain·Merkle·FRI·transcript failure parity 뒤 phase time·RSS·proof bytes·verify cost를 측정한다." },
+    "reuses": [
+      {
+        "label": "증명 생성의 동시 생존 메모리",
+        "href": "/cs/crypto/prover-memory-and-verifier-cost"
+      }
     ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "원 논문과 공식 고정 소스의 조건에서 작은 사례를 대조합니다. 실제 장치 측정과 가정 계산을 구분합니다."
+      }
+    ]
   },
   "zk-theory": {
-    title: "Zero knowledge 정의·Sigma·simulation·Fiat–Shamir 글이 소유하는 범위",
-    owns: ["Completeness·soundness·zero knowledge의 속성 분리", "Sigma special soundness와 simulator 정의", "Pedersen hiding/binding·Fiat–Shamir transcript·ZK release gate"],
-    reuses: [
-      { label: "Cyclic group·DLP", href: "/cs/crypto/elliptic-curves" },
-      { label: "Commitment binding·hiding", href: "/cs/crypto/crypto-primitives#merkle-commitment" },
-      { label: "SNARK property와 statement", href: "/cs/crypto/snark-overview#security" },
+    "title": "메시지·질문·응답 순서의 설명 경계",
+    "owns": [
+      "interactive-proof-message-challenge",
+      "sigma-protocol-special-soundness",
+      "zero-knowledge-simulator-definition",
+      "pedersen-hiding-binding-boundary",
+      "zk-property-release-gate"
     ],
-    evidence: [
-      { kind: "primary-source", rule: "Simulator 기반 ZK 정의는 GMR, hash challenge 변환은 Fiat–Shamir 원문의 protocol·model 범위에 귀속한다." },
-      { kind: "project-claim", rule: "ZK theorem을 side channel·broken randomness·malformed encoding·context replay 방지로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "Wrong witness·statement·subgroup·nonce reuse·context·round order·replay와 simulator distribution을 release 전에 검사한다." },
+    "reuses": [
+      {
+        "label": "Discrete logarithm in a cyclic subgroup",
+        "href": "/cs/crypto/discrete-log"
+      },
+      {
+        "label": "증명 준비·생성·검사",
+        "href": "/cs/crypto/snark-overview#security"
+      }
     ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "원 논문과 공식 고정 소스의 조건에서 작은 사례를 대조합니다. 실제 장치 측정과 가정 계산을 구분합니다."
+      }
+    ]
   },
   "constraint-systems": {
-    title: "R1CS·QAP 제약 시스템 글이 소유하는 범위",
-    owns: ["Relation의 public instance·private witness와 R1CS bilinear row", "Bit·range·integer gadget semantic boundary", "R1CS column interpolation과 QAP divisibility·semantic release gate"],
-    reuses: [
-      { label: "Prime-field arithmetic", href: "/cs/crypto/finite-field-theory#prime-field" },
-      { label: "Lagrange interpolation", href: "/cs/crypto/lagrange#formula" },
-      { label: "Vanishing polynomial·NTT domain", href: "/cs/crypto/fft#fft-domain" },
+    "title": "공개값·증인·산술 관계의 설명 경계",
+    "owns": [
+      "arithmetic-relation-instance-witness",
+      "r1cs-bilinear-row",
+      "r1cs-gadget-semantic-boundary",
+      "qap-divisibility-reduction",
+      "constraint-system-release-gate"
     ],
-    evidence: [
-      { kind: "primary-source", rule: "QAP reduction과 performance claim은 Pinocchio 논문의 construction·application·당시 구현 범위에 귀속한다." },
-      { kind: "project-claim", rule: "R1CS/QAP 만족을 원 program 의미·range·provenance나 zero knowledge로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "Valid·invalid·boundary·public-order·remainder parity 뒤 constraints·memory·latency를 비교한다." },
+    "reuses": [
+      {
+        "label": "Groth16 relation-specific CRS",
+        "href": "/cs/crypto/groth16"
+      },
+      {
+        "label": "PLONKish selector gate",
+        "href": "/cs/crypto/plonk"
+      }
     ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "원 논문과 공식 고정 소스의 조건에서 작은 사례를 대조합니다. 실제 장치 측정과 가정 계산을 구분합니다."
+      }
+    ]
   },
   "snark-overview": {
-    title: "SNARK 공통 인터페이스·보안·선택 글이 소유하는 범위",
-    owns: ["Setup·Prove·Verify와 relation/instance/witness 소유권", "Completeness·soundness·zero knowledge와 Fiat–Shamir statement binding", "Setup trust·succinctness·prover/verifier 비용의 계열 선택 envelope"],
-    reuses: [
-      { label: "R1CS·QAP relation", href: "/cs/crypto/constraint-systems" },
-      { label: "Commitment binding·hiding", href: "/cs/crypto/crypto-primitives#merkle-commitment" },
-      { label: "Fiat–Shamir commit-first 원리", href: "/cs/crypto/crypto-primitives#schnorr" },
+    "title": "증명 준비·생성·검사의 설명 경계",
+    "owns": [
+      "snark-setup-prove-verify-interface",
+      "snark-completeness-soundness-zk",
+      "snark-succinctness-cost-boundary",
+      "snark-fiat-shamir-statement-binding",
+      "snark-system-selection-envelope"
     ],
-    evidence: [
-      { kind: "primary-source", rule: "SNARK definition·construction claim은 SNARKs for C와 각 concrete system 원문의 model에 귀속한다." },
-      { kind: "project-claim", rule: "Verifier accept를 external data provenance·authorization·회로 semantic completeness로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "같은 relation·security target·negative corpus에서 setup·prover·verifier·bytes를 함께 비교한다." },
+    "reuses": [
+      {
+        "label": "메시지·질문·응답 순서",
+        "href": "/cs/crypto/zk-theory#sigma"
+      },
+      {
+        "label": "공개값·증인·산술 관계",
+        "href": "/cs/crypto/constraint-systems"
+      }
     ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "원 논문과 공식 고정 소스의 조건에서 작은 사례를 대조합니다. 실제 장치 측정과 가정 계산을 구분합니다."
+      }
+    ]
   },
   groth16: {
     title: "Groth16 QAP·CRS·proof·pairing 글이 소유하는 범위",
@@ -8167,25 +8246,50 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Evmos 구현 사실은 historical v20.0.0 tag에 귀속하며 current cosmos/evm으로 확대하지 않는다." }, { kind: "project-measurement", rule: "Signer·fee·fork·revert·receipt/state·supply·ack/timeout parity를 같은 config에서 재생한다." }, { kind: "project-claim", rule: "Ante/EVM return/send receipt를 call success·commit·remote finality로 확대하지 않는다." }],
   },
   "hyperliquid": {
-    title: "Hyperliquid order·risk·consensus·EVM 경계 글이 소유하는 범위",
-    owns: ["서명 action에서 HyperCore order·fill·margin 상태로 이어지는 권위 경계", "HyperBFT 합의와 HyperEVM·CoreWriter·bridge receipt 분리"],
-    reuses: [{ label: "dYdX proposer·settlement 비교", href: "/cs/blockchain/dydx#matching-engine" }],
-    evidence: [
-      { kind: "primary-source", rule: "주문·margin·HyperBFT·HyperEVM 동작은 기준일의 Hyperliquid 공식 문서에 귀속한다." },
-      { kind: "project-claim", rule: "API 접수·EVM receipt·bridge UI 상태를 fill·Core state·destination finality로 확대하지 않는다." },
-      { kind: "project-claim", rule: "공개되지 않은 matching·validator 내부 source와 성능 수치를 추정하지 않는다." },
+    "title": "한 주문의 서명·체결·수수료·담보·청산과 Core/EVM/외부 자금 이동을 각각의 기록으로 이어야 실제 결과를 알 수 있습니다.",
+    "owns": [
+      "Hyperliquid order action lifecycle",
+      "Hyperliquid margin · liquidation boundary",
+      "HyperBFT · HyperCore authority boundary",
+      "HyperCore · HyperEVM · bridge boundary"
     ],
+    "reuses": [
+      {
+        "label": "선물과 담보",
+        "href": "/finance/markets/forwards-and-futures"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "확인일의 공식 원문과 고정 commit을 사용합니다. 교육용 수치·제안·실측·메인넷 활성화를 구분하며 원문 충돌과 범위를 명시합니다."
+      }
+    ]
   },
   "robinhood-chain-blob-demand": {
-    title: "로빈후드 체인·블롭 수요 글이 소유하는 범위",
-    owns: ["평균·타겟·개별 피크를 구분해 읽는 blob 수요 해석", "단일 rollup 집중도와 BPO·sparse blobpool 공급 대응의 연결"],
-    reuses: [{ label: "EIP-4844 excess feedback 계산", href: "/cs/blockchain/eip4844-blob-fee#overview" }, { label: "DA·blob 기초 개념", href: "/cs/blockchain/da-theory#eip-4844" }],
-    evidence: [
-      { kind: "primary-source", rule: "블록당 blob·이동평균 수치는 2026-09-12 Dune 대시보드 스냅샷에 귀속하며 이후 갱신값으로 확대하지 않는다." },
-      { kind: "primary-source", rule: "BPO·target·max 메커니즘은 EIP-4844·EIP-7892 정의를 따르고 특정 시점의 값을 고정 상수로 서술하지 않는다." },
-      { kind: "project-claim", rule: "로빈후드 체인의 rollup별 기여 비율은 원 소식이 전한 맥락 인용이며 이 글이 독자적으로 재계산한 값이 아니다." },
-      { kind: "project-claim", rule: "다섯 달 성장률의 월평균 환산을 향후 성장 예측으로 확대하지 않는다." },
+    "title": "블록별 개수·기간 평균·공급 설정·게시자 기여·자료 전송 비용은 다른 계산이며 가정과 관측을 분리해야 합니다.",
+    "owns": [
+      "Blob demand average · target · peak split",
+      "Single-rollup blob demand concentration",
+      "EIP-7892 BPO parameter-only fork",
+      "Sparse blobpool capacity precondition"
     ],
+    "reuses": [
+      {
+        "label": "Blob 수수료 피드백",
+        "href": "/cs/blockchain/eip4844-blob-fee#overview"
+      },
+      {
+        "label": "Robinhood 전송과 인출",
+        "href": "/cs/blockchain/robinhood-chain-settlement#mechanism"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "확인일의 공식 원문과 고정 commit을 사용합니다. 교육용 수치·제안·실측·메인넷 활성화를 구분하며 원문 충돌과 범위를 명시합니다."
+      }
+    ]
   },
   "dydx": {
     title: "dYdX protocol/v9.6.3 CLOB·settlement 글이 소유하는 범위",
@@ -8500,10 +8604,44 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "상시감시·당국 조사 흐름은 2026-08-14 현행 금융위 자료와 법령에 귀속한다." }, { kind: "project-measurement", rule: "Order/access feeds, identity graph, holdout·queue·shadow external effects를 generation별 재생한다." }, { kind: "project-claim", rule: "Cancel ratio·linked account·model score·alert를 위법·유죄·부당이득·자동 고발로 확대하지 않는다." }],
   },
   "pq-account": {
-    title: "ERC-4337·ML-DSA verifier·hybrid migration 글이 소유하는 범위",
-    owns: ["UserOperation domain·EntryPoint validation-before-effect와 PQ verifier capability boundary", "FIPS 204 signature artifact와 hybrid key/recovery/rollback release gate"],
-    reuses: [{ label: "Hash domain separation", href: "/cs/crypto/hash-theory" }, { label: "Key lifecycle", href: "/cs/isms-aml/isms-encryption#key-lifecycle" }, { label: "EVM execution", href: "/cs/blockchain/evm-fundamentals" }],
-    evidence: [{ kind: "standard", rule: "AA semantics는 current ERC-4337/7562, ML-DSA는 FIPS 204와 published errata에 각각 귀속한다." }, { kind: "project-measurement", rule: "Exact chain·EntryPoint·bundler·account/verifier bytecode·FIPS profile에서 gas·negative fixture·on-chain receipt를 측정한다." }, { kind: "project-claim", rule: "ERC-4337 signature freedom·FIPS standard 존재를 EVM native precompile·cheap gas·bundler acceptance·PQ security 전체로 확대하지 않는다." }],
+    "title": "PQ 계정의 권한과 실제 요청 수명주기가 소유하는 범위",
+    "owns": [
+      "EIP-712 UserOperation의 domain·nonce·검증·실행·수수료 장부",
+      "ML-DSA 표준 입력과 target-chain 검증 가능성의 연결",
+      "기존 owner 직접 실행·업그레이드·복구를 포함한 서명 정책 이전"
+    ],
+    "reuses": [
+      {
+        "label": "양자내성 서명의 원리와 실제 구현",
+        "href": "/cs/crypto/post-quantum-signatures"
+      },
+      {
+        "label": "양자 계산과 암호 위험의 범위",
+        "href": "/cs/crypto/quantum-computing-and-cryptographic-risk"
+      },
+      {
+        "label": "ML-KEM 키 합의의 다른 목적",
+        "href": "/cs/crypto/ml-kem-and-noisy-equations"
+      },
+      {
+        "label": "QKD 통신 키와 인증 조건",
+        "href": "/cs/crypto/quantum-key-distribution"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "호출 순서와 권한은 실제 고정 Solidity 원본에 귀속하며 교육용 축약 구현을 실제 소스로 제시하지 않습니다."
+      },
+      {
+        "kind": "standard",
+        "rule": "서명 규격·제출 검증·운영 전환은 FIPS204·ERC4337/7562·CSWP39upd1의 서로 다른 범위로 구분합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "본문 비용은 가정이며 ML-DSA의 EVM gas·실제 체인 배포 동등성과 운영 성공을 측정했다고 주장하지 않습니다."
+      }
+    ]
   },
   "filecoin-proofs": {
     title: "rust-fil-proofs proof-type·phase·verification stack 글이 소유하는 범위",
@@ -8602,10 +8740,27 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Invariant와 A의 주장은 StableSwap whitepaper, 구현 주장은 pinned stableswap-ng commit 2abe778f에 귀속한다." }, { kind: "project-measurement", rule: "같은 token/rate/A generation에서 integer D·output·fee·LP supply와 depeg stress를 paired 비교한다." }, { kind: "project-claim", rule: "낮은 slippage를 peg·issuer solvency·LP 무손실 또는 고정 current parameter로 확대하지 않는다." }],
   },
   "rwa-composition": {
-    title: "RWA claim·asset·token composition 글이 소유하는 범위",
-    owns: ["Legal claim과 authoritative ownership record의 token linkage", "Issuer/custodian/servicer map·valuation cutoff·DeFi composition release gate"],
-    reuses: [{ label: "Stablecoin arrangement functions", href: "/cs/blockchain/stablecoin-overview#overview" }, { label: "VASP custody reconciliation", href: "/cs/isms-aml/vasp-custody-management#proof-withdrawal-boundary" }],
-    evidence: [{ kind: "primary-source", rule: "Legal/ownership 위험은 IOSCO 2025, claim/service layer는 BIS tokenisation analysis에 귀속한다." }, { kind: "project-measurement", rule: "Legal register·asset/custody·NAV·token supply·cash queue·oracle를 같은 cutoff에서 대조한다." }, { kind: "project-claim", rule: "Token balance·NAV·allowlist를 직접 title·파산격리·즉시 상환·투자 적합성 또는 법률 자문으로 확대하지 않는다." }],
+    "title": "기관 토큰의 가치는 발행된 권리, 같은 시각의 자산과 부채, 이전 자격, 실제 매매·상환 경로를 함께 읽어야 설명됩니다.",
+    "owns": [
+      "RWA legal claim · asset linkage",
+      "RWA issuer · custodian · servicer map",
+      "RWA valuation · cash-flow cutoff",
+      "RWA transfer-eligibility enforcement",
+      "RWA onchain composability risk",
+      "RWA composition release gate"
+    ],
+    "reuses": [
+      {
+        "label": "Robinhood Stock Token 권리",
+        "href": "/cs/blockchain/robinhood-chain-settlement#comparison"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "확인일의 공식 원문과 고정 commit을 사용합니다. 교육용 수치·제안·실측·메인넷 활성화를 구분하며 원문 충돌과 범위를 명시합니다."
+      }
+    ]
   },
   "berachain": {
     title: "Berachain PoL incentive·consensus boundary 글이 소유하는 범위",
@@ -8716,10 +8871,30 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Binius·Flock construction과 benchmark는 각 논문의 exact field·batch·hardware 조건에 귀속한다." }, { kind: "project-claim", rule: "Reduced-round cryptanalysis를 full-round break로, prototype throughput을 Ethereum 채택으로 확대하지 않는다." }],
   },
   "ethereum-future-roadmap": {
-    title: "Ethereum future roadmap ownership",
-    owns: ["배포·채택 검토·연구 방향·실험 결과 maturity 분리", "PQ surfaces·proof/execution direction·AI candidate/deterministic verifier 경계"],
-    reuses: [{ label: "PQ account migration", href: "/cs/blockchain/pq-account" }, { label: "Binary-field proving", href: "/cs/crypto/binary-field-proving" }],
-    evidence: [{ kind: "standard", rule: "Protocol fact는 accepted EIP/spec과 deployment를 확인하고 roadmap·strawmap wording을 채택 완료로 쓰지 않는다." }, { kind: "project-claim", rule: "AI가 만든 proof candidate를 deterministic formal verification 결과로 확대하지 않는다." }],
+    "title": "연구·EIP 문서 상태·업그레이드 포함 단계·네트워크 활성화는 서로 다른 증거로 판정합니다.",
+    "owns": [
+      "Ethereum roadmap maturity lanes",
+      "Ethereum post-quantum surface map",
+      "Ethereum proof-native direction",
+      "AI candidate · formal verifier loop",
+      "Ethereum specification simplification horizon"
+    ],
+    "reuses": [
+      {
+        "label": "두 거래의 Glamsterdam 실행",
+        "href": "/cs/blockchain/glamsterdam-block-execution#mechanism"
+      },
+      {
+        "label": "양자 대비 계정",
+        "href": "/cs/blockchain/pq-account"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "확인일의 공식 원문과 고정 commit을 사용합니다. 교육용 수치·제안·실측·메인넷 활성화를 구분하며 원문 충돌과 범위를 명시합니다."
+      }
+    ]
   },
   "activation-functions": {
     title: "활성화 함수 기초 글이 소유하는 범위",
@@ -13802,16 +13977,161 @@ export const EDITORIAL_BOUNDARIES = {
   "franchise-incentives": {"title": "프랜차이즈는 브랜드를 빌려 주는 계약이면서 비용을 나누는 시스템이다의 설명 경계", "owns": ["가맹본부와 점주의 분리 장부", "가맹 계약의 통제권", "평균 매출의 한계"], "reuses": [{"label": "점포 손익", "href": "/economics/business/shop-unit-economics#mechanism"}, {"label": "임대차 비용", "href": "/economics/property/commercial-lease-and-rent#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
   "land-development-residual": {"title": "땅값은 허가 뒤 팔 수 있는 것에서 공사비와 시간을 거꾸로 뺀다의 설명 경계", "owns": ["개발 잔여 토지가치", "토지 개발 허가의 층", "개발의 시간 위험"], "reuses": [{"label": "할인과 순현재가치", "href": "/finance/money/time-value-and-discounting#npv"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
   "supply-chain-bargaining": {"title": "공급망의 힘은 공장 소유보다 규격·주문·판매처를 쥔 곳에 생긴다의 설명 경계", "owns": ["국제 가치사슬의 부가가치", "공급망의 협상력 지점", "정책의 공급망 전달"], "reuses": [{"label": "사업 가치 포획", "href": "/economics/business/business-model-cashflow#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
-  "funds-etfs-and-etns": {"title": "ETF와 ETN은 거래 화면이 비슷해도 손에 쥔 청구권이 다르다의 설명 경계", "owns": ["펀드 지분과 발행자 채무", "ETF 시장가격과 순자산가치 괴리", "레버리지 ETF의 일일 재설정"], "reuses": [{"label": "주식 청구권", "href": "/finance/markets/equity-claims-and-valuation#residual-claim"}, {"label": "채권 현금흐름", "href": "/finance/markets/bond-pricing-and-yield-curve#cashflow-to-price"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
-  "forwards-and-futures": {"title": "선물은 미래 가격을 고정하면서 반대편에 같은 크기의 위험을 건넨다의 설명 경계", "owns": ["선도·선물의 대칭 손익", "선물의 일별 정산", "헤지의 베이시스 위험"], "reuses": [{"label": "채권의 할인", "href": "/finance/markets/bond-pricing-and-yield-curve#cashflow-to-price"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
-  "options-and-asymmetric-payoffs": {"title": "옵션은 손해를 피할 선택권을 사고 그 값으로 프리미엄을 낸다의 설명 경계", "owns": ["옵션의 권리와 의무", "옵션 프리미엄과 남은 시간", "무담보 옵션 매도의 꼬리 위험"], "reuses": [{"label": "미래 가격 고정 계약", "href": "/finance/markets/forwards-and-futures#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
-  "swaps-and-credit-risk": {"title": "스왑은 원금을 통째로 바꾸기보다 서로 필요한 현금흐름을 교환한다의 설명 경계", "owns": ["스왑 현금흐름 교환", "CDS 신용 보호", "명목원금과 실제 노출의 구분"], "reuses": [{"label": "미래 가격 계약", "href": "/finance/markets/forwards-and-futures#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
-  "margin-collateral-and-leverage": {"title": "담보와 증거금은 최종 손익보다 먼저 현금을 요구한다의 설명 경계", "owns": ["담보 여력", "증거금의 현금 시점", "자금·시장 유동성의 되먹임"], "reuses": [{"label": "재무 레버리지의 일반 원리", "href": "/finance/markets/equity-claims-and-valuation#leverage"}, {"label": "선물의 중간 정산", "href": "/finance/markets/forwards-and-futures#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
-  "global-capital-and-policy": {"title": "국가 정책은 국제 자금의 제약을 지나 환율·금리·자산값에 닿는다의 설명 경계", "owns": ["통화 불일치의 재무 압박", "국제 자금의 정책 전달", "정책과 가격의 인과 경계"], "reuses": [{"label": "중앙은행의 정책 전달", "href": "/finance/banking/central-bank-and-policy-transmission"}, {"label": "증거금의 자금 제약", "href": "/finance/risk/margin-collateral-and-leverage#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
-  "narratives-and-market-regimes": {"title": "대세는 사람들이 믿는 이야기와 실제 자금 제약이 서로를 바꿀 때 생긴다의 설명 경계", "owns": ["서사의 주문 전달", "가격과 자금조달의 되먹임", "시장 서사의 반증 지표"], "reuses": [{"label": "국가의 자금 제약", "href": "/economics/macro/global-capital-and-policy#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
+  "funds-etfs-and-etns": {
+    "title": "funds-etfs-and-etns의 설명 경계",
+    "owns": [
+      "fund-share-vs-note",
+      "etf-nav-market-gap",
+      "leveraged-etf-reset",
+      "synthetic-etf-counterparty"
+    ],
+    "reuses": [
+      {
+        "label": "관련 개념 정본",
+        "href": "/finance/risk/margin-collateral-and-leverage"
+      },
+      {
+        "label": "채권 가격의 금리 민감도",
+        "href": "/finance/markets/bond-pricing-and-yield-curve#duration"
+      },
+      {
+        "label": "관련 개념 정본",
+        "href": "/finance/markets/forwards-and-futures#comparison"
+      },
+      {
+        "label": "관련 개념 정본",
+        "href": "/finance/markets/forwards-and-futures#mechanism"
+      },
+      {
+        "label": "커버드 콜의 현금과 총수익",
+        "href": "/finance/markets/covered-calls-and-income-funds"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "공식 투자설명서·계약의 지급 조건과 관할을 확인하며 설명용 가정 수치와 실제 상품을 구분합니다."
+      }
+    ]
+  },
+  "forwards-and-futures": {
+    "title": "forwards-and-futures의 설명 경계",
+    "owns": [
+      "forward-futures-symmetric-payoff",
+      "futures-daily-settlement",
+      "basis-risk-in-hedging",
+      "futures-roll-convergence"
+    ],
+    "reuses": [
+      {
+        "label": "관련 개념 정본",
+        "href": "/finance/risk/margin-collateral-and-leverage"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "공식 투자설명서·계약의 지급 조건과 관할을 확인하며 설명용 가정 수치와 실제 상품을 구분합니다."
+      }
+    ]
+  },
+  "options-and-asymmetric-payoffs": {
+    "title": "options-and-asymmetric-payoffs의 설명 경계",
+    "owns": [
+      "option-right-obligation",
+      "option-premium-time-value",
+      "uncovered-option-tail"
+    ],
+    "reuses": [],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "공식 투자설명서·계약의 지급 조건과 관할을 확인하며 설명용 가정 수치와 실제 상품을 구분합니다."
+      }
+    ]
+  },
+  "swaps-and-credit-risk": {
+    "title": "swaps-and-credit-risk의 설명 경계",
+    "owns": [
+      "swap-cashflow-exchange",
+      "cds-credit-protection",
+      "derivatives-notional-vs-exposure"
+    ],
+    "reuses": [],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "공식 투자설명서·계약의 지급 조건과 관할을 확인하며 설명용 가정 수치와 실제 상품을 구분합니다."
+      }
+    ]
+  },
+  "margin-collateral-and-leverage": {
+    "title": "margin-collateral-and-leverage의 설명 경계",
+    "owns": [
+      "collateral-headroom",
+      "margin-liquidity-timing",
+      "funding-market-liquidity-loop"
+    ],
+    "reuses": [
+      {
+        "label": "관련 개념 정본",
+        "href": "/finance/markets/equity-claims-and-valuation#leverage"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "공식 투자설명서·계약의 지급 조건과 관할을 확인하며 설명용 가정 수치와 실제 상품을 구분합니다."
+      }
+    ]
+  },
+  "global-capital-and-policy": {
+    "title": "global-capital-and-policy의 설명 경계",
+    "owns": [
+      "currency-mismatch-balance-sheet",
+      "global-funding-transmission",
+      "policy-price-causality-boundary"
+    ],
+    "reuses": [
+      {
+        "label": "관련 개념 정본",
+        "href": "/finance/markets/forwards-and-futures"
+      },
+      {
+        "label": "관련 개념 정본",
+        "href": "/finance/banking/central-bank-and-policy-transmission"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "공식 투자설명서·계약의 지급 조건과 관할을 확인하며 설명용 가정 수치와 실제 상품을 구분합니다."
+      }
+    ]
+  },
+  "narratives-and-market-regimes": {
+    "title": "narratives-and-market-regimes의 설명 경계",
+    "owns": [
+      "narrative-order-channel",
+      "reflexive-financing-loop",
+      "narrative-falsification-metrics"
+    ],
+    "reuses": [
+      {
+        "label": "관련 개념 정본",
+        "href": "/finance/risk/margin-collateral-and-leverage"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "공식 투자설명서·계약의 지급 조건과 관할을 확인하며 설명용 가정 수치와 실제 상품을 구분합니다."
+      }
+    ]
+  },
   "insurance-risk-pooling": {"title": "보험은 작은 보험료를 모아 큰 손실을 나누지만 모든 위험을 없애지는 못한다의 설명 경계", "owns": ["보험 위험 풀", "보험의 면책과 한도", "동시 사고의 위험"], "reuses": [{"label": "위험 분산", "href": "/finance/risk/risk-diversification-and-pricing"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
   "healthcare-payment-systems": {"title": "의료비는 환자·보험자·정부·병원 사이를 돌아서 움직인다의 설명 경계", "owns": ["의료 재정의 세 기능", "의료기관 지급 방식의 유인", "환자 부담과 전체 의료비"], "reuses": [{"label": "보험 위험 풀", "href": "/economics/institutions/insurance-risk-pooling#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
-  "how-to-read-a-country": {"title": "어느 나라든 일곱 장부로 읽는 법의 설명 경계", "owns": ["국가의 일곱 장부", "국가 통계의 비교 가능성", "국가 이야기의 검증 질문"], "reuses": [{"label": "국제 자금", "href": "/economics/macro/global-capital-and-policy#mechanism"}, {"label": "공급망 가치", "href": "/economics/business/supply-chain-bargaining#mechanism"}, {"label": "의료비의 흐름", "href": "/economics/institutions/healthcare-payment-systems#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
+  "how-to-read-a-country": {"title": "어느 나라든 일곱 장부로 읽는 법의 설명 경계", "owns": ["국가의 일곱 장부", "국가 통계의 비교 가능성", "국가 이야기의 검증 질문"], "reuses": [], "evidence": [{"kind": "primary-source", "rule": "2026-10-04 확인. 실제 자료와 설명용 가정을 분리하고 두 원문의 문구를 같은 사례에 적용합니다."}]},
   "electricity-grid-and-power": {"title": "전기는 발전소보다 전력망의 연결과 시간 제약을 함께 봐야 한다의 설명 경계", "owns": ["전력망 접속 제약", "전력 시스템 비용", "전력 가격과 공급 안정성의 경계"], "reuses": [{"label": "국가의 생산 장부", "href": "/economics/institutions/how-to-read-a-country#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
   "food-chain-and-prices": {"title": "식품 가격은 농장의 생산량에서 식탁까지의 손실과 권력으로 만들어진다의 설명 경계", "owns": ["식품 가치사슬의 가격 간격", "부패성과 협상력", "식품 가격 인과의 경계"], "reuses": [{"label": "공급망의 협상력", "href": "/economics/business/supply-chain-bargaining#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
   "water-utility-and-tariffs": {"title": "수도 요금은 물값과 배관을 계속 유지할 돈을 함께 묻는다의 설명 경계", "owns": ["수도 서비스의 전체 비용", "수도 요금의 부담 귀속", "부담 가능성과 안정 공급"], "reuses": [{"label": "공공예산의 부담", "href": "/economics/institutions/public-budget-and-taxes#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
@@ -13821,6 +14141,318 @@ export const EDITORIAL_BOUNDARIES = {
   "public-budget-and-taxes": {"title": "세금은 국가가 서비스를 사는 돈이고 예산은 우선순위의 기록이다의 설명 경계", "owns": ["공공 예산의 자금 흐름", "조세 부담과 공공 편익", "재정 여력의 경계"], "reuses": [{"label": "국가의 일곱 장부", "href": "/economics/institutions/how-to-read-a-country#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
   "education-skills-and-signals": {"title": "교육은 기술을 만들고 자격을 보여 주지만 두 효과는 다르다의 설명 경계", "owns": ["교육의 능력 축적", "자격의 신호 효과", "교육 수익 계산의 한계"], "reuses": [{"label": "가계 현금의 시간값", "href": "/finance/money/time-value-and-discounting"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
   "media-attention-and-public-belief": {"title": "정보는 사실이 전달되는 길과 주목을 파는 시장을 동시에 지난다의 설명 경계", "owns": ["주목의 배분", "정보 매체의 수익 유인", "인식 변화의 인과 경계"], "reuses": [{"label": "시장 서사의 주문 전달", "href": "/economics/macro/narratives-and-market-regimes#mechanism"}], "evidence": [{"kind": "primary-source", "rule": "관할권별 법·상품 규칙과 통계는 공식 원문·확인일에만 귀속합니다. 숫자 사례는 모두 설명용 가정입니다."}]},
+  "shop-daily-operations": {
+    "title": "하루 주문에서 재고·급여·은행입금까지의 대조",
+    "owns": [
+      "점포의 재고실사",
+      "점포의 매출 정산 대조",
+      "점포의 근무·급여 대조"
+    ],
+    "reuses": [
+      {
+        "label": "점포의 한 건당 남는 돈",
+        "href": "/economics/business/shop-unit-economics#mechanism"
+      },
+      {
+        "label": "현금이 먼저 묶이는 기간",
+        "href": "/economics/business/business-model-cashflow#need"
+      },
+      {
+        "label": "개업 시설과 신고 준비",
+        "href": "/economics/business/shop-fitout-and-opening#mechanism"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "관할별 세무·노무·식품안전 의무는 공식 자료와 확인일을 붙이며 20건·2%·이틀의 계산은 가정입니다."
+      }
+    ]
+  },
+  "population-migration-and-care": {"title": "인구·이주·돌봄은 사람 수를 일할 시간과 생활 수요로 바꾼다의 설명 경계", "owns": ["인구의 잔액과 출입", "연령 구성과 실제 고용의 구분", "돌봄시간과 노동 참여"], "reuses": [], "evidence": [{"kind": "primary-source", "rule": "2026-10-04 확인. 실제 자료와 설명용 가정을 분리하고 두 원문의 문구를 같은 사례에 적용합니다."}]},
+  "culture-norms-and-coordination": {"title": "문화와 규범은 서로의 행동을 예상하고 함께 일하는 방식을 바꾼다의 설명 경계", "owns": ["사회 규범과 서로의 기대", "공동 행동의 관찰과 집행", "문화의 다양성과 권리의 경계"], "reuses": [], "evidence": [{"kind": "primary-source", "rule": "2026-10-04 확인. 실제 자료와 설명용 가정을 분리하고 두 원문의 문구를 같은 사례에 적용합니다."}]},
+  "evidence-measurement-and-causality": {"title": "숫자를 믿기 전에 무엇을 재고 무엇과 비교했는지 묻는다의 설명 경계", "owns": ["측정의 반복성과 불확실성", "원인 판단을 위한 비교 설계", "증거 범위와 재검증"], "reuses": [], "evidence": [{"kind": "primary-source", "rule": "2026-10-04 확인. 실제 자료와 설명용 가정을 분리하고 두 원문의 문구를 같은 사례에 적용합니다."}]},
+  "materials-waste-and-circularity": {"title": "자원과 폐기물은 수거된 양·다시 쓸 양·비용을 나눠 읽는다의 설명 경계", "owns": ["수거량과 재료 회수 수율", "폐기물 처리의 비용과 부담", "순환과 신규 원료 대체의 경계"], "reuses": [], "evidence": [{"kind": "primary-source", "rule": "2026-10-04 확인. 실제 자료와 설명용 가정을 분리하고 두 원문의 문구를 같은 사례에 적용합니다."}]},
+  "financial-products-and-claims": {
+    "title": "financial-products-and-claims의 설명 경계",
+    "owns": [
+      "financial-product-claim-map",
+      "loan-repayment-schedule",
+      "retirement-wrapper-risk",
+      "structured-note-conditional-payoff",
+      "money-market-fund-claim",
+      "target-date-glide-path",
+      "reit-cashflow-claim"
+    ],
+    "reuses": [
+      {
+        "label": "은행의 예금과 대차대조표",
+        "href": "/finance/banking/bank-balance-sheet-and-deposit-creation"
+      },
+      {
+        "label": "주주의 잔여청구권",
+        "href": "/finance/markets/equity-claims-and-valuation"
+      },
+      {
+        "label": "채권의 지급 약속",
+        "href": "/finance/markets/bond-pricing-and-yield-curve"
+      },
+      {
+        "label": "ETF와 ETN의 소유·청구권 차이",
+        "href": "/finance/markets/funds-etfs-and-etns"
+      },
+      {
+        "label": "보험의 위험 분산",
+        "href": "/economics/institutions/insurance-risk-pooling"
+      },
+      {
+        "label": "채권 가격의 금리 민감도",
+        "href": "/finance/markets/bond-pricing-and-yield-curve#duration"
+      },
+      {
+        "label": "상장 상품의 한계",
+        "href": "/finance/markets/funds-etfs-and-etns#limits"
+      },
+      {
+        "label": "커버드 콜의 현금과 총수익",
+        "href": "/finance/markets/covered-calls-and-income-funds"
+      },
+      {
+        "label": "유동화와 손실 배분",
+        "href": "/finance/markets/securitization-and-tranches"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "공식 투자설명서·계약의 지급 조건과 관할을 확인하며 설명용 가정 수치와 실제 상품을 구분합니다."
+      }
+    ]
+  },
+  "securitization-and-tranches": {
+    "title": "securitization-and-tranches의 설명 경계",
+    "owns": [
+      "securitization-asset-transfer",
+      "securitization-loss-waterfall",
+      "securitization-correlation-risk"
+    ],
+    "reuses": [
+      {
+        "label": "담보의 조달 여력",
+        "href": "/finance/banking/repo-and-collateral-funding"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "공식 투자설명서·계약의 지급 조건과 관할을 확인하며 설명용 가정 수치와 실제 상품을 구분합니다."
+      }
+    ]
+  },
+  "repo-and-collateral-funding": {
+    "title": "repo-and-collateral-funding의 설명 경계",
+    "owns": [
+      "repo-repurchase-cashflow",
+      "repo-haircut-funding",
+      "repo-rollover-risk"
+    ],
+    "reuses": [],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "공식 투자설명서·계약의 지급 조건과 관할을 확인하며 설명용 가정 수치와 실제 상품을 구분합니다."
+      }
+    ]
+  },
+  "covered-calls-and-income-funds": {
+    "title": "covered-calls-and-income-funds의 설명 경계",
+    "owns": [
+      "covered-call-payoff",
+      "income-distribution-total-return",
+      "covered-call-coverage-choice"
+    ],
+    "reuses": [
+      {
+        "label": "ETF와 ETN의 소유·청구권 차이",
+        "href": "/finance/markets/funds-etfs-and-etns"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "공식 투자설명서·계약의 지급 조건과 관할을 확인하며 설명용 가정 수치와 실제 상품을 구분합니다."
+      }
+    ]
+  },
+  "robinhood-chain-settlement": {
+    "title": "빠른 전송 영수증, Ethereum 자료 확정, 브리지 인출 집행, 토큰의 법적 권리를 별도로 연결합니다.",
+    "owns": [
+      "Robinhood Chain의 단계별 확정",
+      "Robinhood Chain의 인출 대기와 집행",
+      "Stock Token의 법적 권리와 수량"
+    ],
+    "reuses": [
+      {
+        "label": "블롭 수요 회계",
+        "href": "/cs/blockchain/robinhood-chain-blob-demand#robinhood-chain-concentration"
+      },
+      {
+        "label": "기관 상품 권리와 회수",
+        "href": "/cs/blockchain/rwa-composition#source"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "확인일의 공식 원문과 고정 commit을 사용합니다. 교육용 수치·제안·실측·메인넷 활성화를 구분하며 원문 충돌과 범위를 명시합니다."
+      }
+    ]
+  },
+  "glamsterdam-block-execution": {
+    "title": "ePBS의 입찰·공개 책임과 BAL의 거래별 상태 자료를 나누어 같은 블록의 지급 조건·가용성·실행 정확성을 검증합니다.",
+    "owns": [
+      "BAL의 거래별 상태 변화",
+      "ePBS의 입찰과 실행 자료",
+      "자료 도착과 실행 검증의 분리"
+    ],
+    "reuses": [
+      {
+        "label": "로드맵 적용 상태",
+        "href": "/cs/blockchain/ethereum-future-roadmap#names"
+      },
+      {
+        "label": "블롭 수요 회계",
+        "href": "/cs/blockchain/robinhood-chain-blob-demand#source"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "확인일의 공식 원문과 고정 commit을 사용합니다. 교육용 수치·제안·실측·메인넷 활성화를 구분하며 원문 충돌과 범위를 명시합니다."
+      }
+    ]
+  },
+  "world-model-latent-planning": {
+    "title": "행동 후보를 예측하고 실제 관측으로 다시 계획하는 경로",
+    "owns": [
+      "행동 조건부 latent rollout과 후보 비용 계산",
+      "표현 붕괴·관측 오차·재계획 주기",
+      "짧은 예측과 실제 목표 성공의 평가 경계"
+    ],
+    "reuses": [
+      {
+        "label": "영상 생성과 월드모델의 차이",
+        "href": "/cs/ai/modern-image-model-stack#world-model-boundary"
+      },
+      {
+        "label": "계획에 필요한 상태 표현",
+        "href": "/cs/ai/visual-representation-tokenizers#world-state"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "각 논문의 데이터·horizon·실행 간격·장치 조건으로 결과를 제한합니다. 1차원 수치는 설명용 가정입니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "LeWM과 planning framework는 고정 commit의 실제 코드로 대조하며 로봇 학습·실행 재현을 주장하지 않습니다."
+      }
+    ]
+  },
+  "jolt": {
+    "title": "명령 계산과 lookup 검사의 설명 경계",
+    "owns": [
+      "jolt-instruction-lookup-sumcheck-lowering",
+      "jolt-bytecode-trace-claim-artifact",
+      "jolt-release-gate",
+      "one-hot-memory-increment-check"
+    ],
+    "reuses": [
+      {
+        "label": "Multilinear extension over the Boolean hypercube",
+        "href": "/cs/crypto/hyperplonk#sumcheck"
+      },
+      {
+        "label": "다항식 고정·열기·검사",
+        "href": "/cs/crypto/polycommit"
+      },
+      {
+        "label": "증명 생성의 동시 생존 메모리",
+        "href": "/cs/crypto/prover-memory-and-verifier-cost"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "원 논문과 공식 고정 소스의 조건에서 작은 사례를 대조합니다. 실제 장치 측정과 가정 계산을 구분합니다."
+      }
+    ]
+  },
+  "prover-memory-and-verifier-cost": {
+    "title": "증명 생성의 동시 생존 메모리의 설명 경계",
+    "owns": [
+      "proof-memory-live-set",
+      "msm-window-memory-tradeoff",
+      "evm-proof-verification-cost",
+      "proof-wrapper-security-boundary"
+    ],
+    "reuses": [
+      {
+        "label": "시간별 실행 기록",
+        "href": "/cs/crypto/stark-theory"
+      },
+      {
+        "label": "다항식 고정·열기·검사",
+        "href": "/cs/crypto/polycommit"
+      },
+      {
+        "label": "Ethereum roadmap maturity lanes",
+        "href": "/cs/blockchain/ethereum-future-roadmap"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "원 논문과 공식 고정 소스의 조건에서 작은 사례를 대조합니다. 실제 장치 측정과 가정 계산을 구분합니다."
+      }
+    ]
+  },
+  "quantum-computing-and-cryptographic-risk": {"title": "양자컴퓨터는 어떤 계산을 바꾸고 어떤 암호를 위협할까의 설명 경계", "owns": ["진폭·간섭·측정", "Grover의 진폭 증폭", "Shor의 주기 찾기와 암호 위험", "논리 자원과 물리 장치의 구분"], "reuses": [], "evidence": [{"kind": "primary-source", "rule": "2026-10-04 확인. 실제 자료와 설명용 가정을 분리하고 두 원문의 문구를 같은 사례에 적용합니다."}]},
+  "ml-kem-and-noisy-equations": {"title": "ML-KEM: 오류를 섞은 계산에서 두 사람이 같은 비밀을 얻는 과정의 설명 경계", "owns": ["오류를 섞은 모듈 격자 방정식", "암호문에서 큰 항을 상쇄하고 비트 읽기", "키 캡슐화와 암묵적 거절"], "reuses": [], "evidence": [{"kind": "primary-source", "rule": "2026-10-04 확인. 실제 자료와 설명용 가정을 분리하고 두 원문의 문구를 같은 사례에 적용합니다."}]},
+  "post-quantum-signatures": {"title": "양자내성 서명: ML-DSA의 가린 응답과 SLH-DSA의 해시 나무의 설명 경계", "owns": ["ML-DSA의 가린 응답과 재구성", "서명 후보 거절과 제한된 힌트", "SLH-DSA의 해시 사슬과 인증 경로", "양자내성 서명 배포와 교체 경계"], "reuses": [], "evidence": [{"kind": "primary-source", "rule": "2026-10-04 확인. 실제 자료와 설명용 가정을 분리하고 두 원문의 문구를 같은 사례에 적용합니다."}]},
+  "quantum-key-distribution": {
+    "title": "12신호에서 기저 선별·검사·정정 누출·추출 길이·인증의 같은 사례를 추적합니다.",
+    "owns": [
+      "BB84의 기저 선택과 선별",
+      "유한 표본과 공개 누출을 반영한 키 길이",
+      "QKD의 인증과 장치 신뢰 조건"
+    ],
+    "reuses": [
+      {
+        "label": "진폭과 측정의 기초",
+        "href": "/cs/crypto/quantum-computing-and-cryptographic-risk#names"
+      },
+      {
+        "label": "양자내성 서명으로 인증",
+        "href": "/cs/crypto/post-quantum-signatures"
+      },
+      {
+        "label": "일반 네트워크의 키 합의",
+        "href": "/cs/crypto/ml-kem-and-noisy-equations"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "원 논문과 2026-03 ITU 권고를 읽고 공격 모형·통계 상계·구현 조건을 나눕니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "신호표·패리티·압축값은 교육용 가정입니다. 상용 장치의 거리·키율·보안 인증을 측정하지 않았습니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -82,7 +82,7 @@ export const riskArticles: Article[] = [
     slug: "margin-collateral-and-leverage",
     title: "담보와 증거금은 최종 손익보다 먼저 현금을 요구한다",
     subcategory: "risk-collateral",
-    sections: [{"id": "overview", "title": "자산이 10% 내리면 자기 돈은 절반이 줄 수 있습니다"}, {"id": "mechanism", "title": "시가 평가와 유지 기준이 매도 시점을 앞당깁니다"}, {"id": "comparison", "title": "담보 규칙은 손실을 없애지 않고 분배를 바꿉니다"}, {"id": "limits", "title": "명목상 헤지에도 현금 위기는 남습니다"}],
+    sections: [{"id": "overview", "title": "1. 나중에 회복될 자산도 오늘 돈이 없으면 팔아야 합니다"}, {"id": "black-box", "title": "2. 자산의 값과 갚을 돈을 매일 다시 비교합니다"}, {"id": "case", "title": "3. 100억 원이 90억 원이 되면 자기 몫은 절반입니다"}, {"id": "picture", "title": "4. 손익 장부와 계약 유지 장부는 다른 질문을 합니다"}, {"id": "need", "title": "5. 팔기까지 시간이 걸리기 때문에 가치 전부를 빌려주지 않습니다"}, {"id": "names", "title": "6. 담보 여력과 레버리지는 같은 값이 아닙니다"}, {"id": "mechanism", "title": "7. 현금 상환·추가 담보·매각은 필요한 금액이 다릅니다"}, {"id": "source", "title": "8. 미국 증권 계좌는 사전 연락을 기다려 주지 않을 수 있습니다"}, {"id": "comparison", "title": "9. 선물은 자산을 사지 않아도 정산 현금이 필요합니다"}, {"id": "limits", "title": "10. 모두의 매각이 다른 사람의 담보 부족을 만듭니다"}],
     component: () => import("@/pages/articles/risk/margin-collateral-and-leverage"),
   },
 ];

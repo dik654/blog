@@ -47,7 +47,7 @@ export default function VerbViz() {
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <svg viewBox="0 0 480 216" className="mt-4 w-full max-w-2xl">
             <text x={24} y={22} fontSize={9} fill={MUTED}>
               같은 마스크, 같은 호출 — 그런데 요구가 다릅니다
             </text>

@@ -31445,6 +31445,16 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "Anthropic — Managing context on the Claude Developer Platform", href: "https://claude.com/blog/context-management", problem: "긴 agent run에서 stale tool result와 durable note가 context를 잠식하는 문제", contribution: "Context editing과 client-side file memory tool의 product boundary와 내부 evaluation을 설명", assumptions: "공개 시점의 Claude product·model·agentic-search 조건", evidenceScope: "Anthropic platform의 context-management 기능과 측정", notClaim: "모든 model·workload에서 같은 compaction 성능이 보장된다는 뜻은 아님", sectionId: "paper-anthropic-context-management" },
       { title: "Generative Agents: Interactive Simulacra of Human Behavior", href: "https://arxiv.org/abs/2304.03442", problem: "여러 agent가 오래 상호작용할 때 어떤 기억을 저장하고 언제 다시 불러올지 정하는 문제", contribution: "Memory stream과 recency·importance·relevance 가중합 salience scoring, retrieval, reflection을 결합한 architecture를 제시", assumptions: "논문의 sandbox 환경·agent 수·model 조건", evidenceScope: "해당 sandbox 실험에서 관측한 believability·memory retrieval 행동", notClaim: "다른 model·workload·agent 규모에서 같은 가중치·성능이 재현된다는 보장은 아님", sectionId: "paper-generative-agents" },
       { title: "Cognitive Architectures for Language Agents", href: "https://arxiv.org/abs/2309.02427", problem: "Language agent의 memory·action·decision을 흩어진 구현이 아니라 공통 인지구조로 설명하는 문제", contribution: "Working·episodic·semantic·procedural memory 구분을 language agent에 대응시킨 CoALA framework를 제안", assumptions: "논문이 조사한 공개 agent 구현과 저자들의 framework 정의", evidenceScope: "여러 기존 agent 시스템을 framework로 재해석한 conceptual survey 범위", notClaim: "이 구분을 채택하면 성능이 개선된다는 실험적 주장은 아님", sectionId: "paper-coala" },
+      {
+        "title": "MemoryArena · arXiv 2602.16313",
+        "href": "https://arxiv.org/abs/2602.16313",
+        "problem": "여러 session에서 기억을 후속 행동에 활용하는 능력의 평가",
+        "contribution": "상호 의존적인 기억과 행동을 이어서 검증하는 benchmark",
+        "assumptions": "같은 memory budget·tool·환경·과제와 session 조건을 유지",
+        "evidenceScope": "논문 benchmark의 저자 실험이며 본문의 90/100·8/20은 설명용 가정",
+        "notClaim": "높은 사실 회상률이 후속 행동 성공을 보장하지 않습니다.",
+        "sectionId": "paper-memoryarena"
+      },
 ],
   },
   "ai/context-window-optimization": {
@@ -36865,7 +36875,17 @@ export const ARTICLE_LEARNING: Readonly<
           "GLM-5.2의 구체적 MTP architecture·B300에서 600 tok/s·모든 natural-language benchmark 향상을 이 논문이 증명한다는 뜻은 아님",
         internalHref: "/cs/ai/vllm-spec-decode#paper-mtp",
       },
-    ],
+      {
+        "title": "PTX ISA9.0 ·tcgen05.mma",
+        "href": "https://docs.nvidia.com/cuda/archive/13.0.2/parallel-thread-execution/index.html#tcgen05-mma-instructions-mma",
+        "problem": "TMEM에 누산 결과를 저장하는 명령과 비동기 작업의 완료를 확인하는 명령을 구별합니다.",
+        "contribution": "MMA의 TMEM 결과 주소, 입력 descriptor, commit과 mbarrier parity wait를 공식 실물로 대조합니다.",
+        "assumptions": "CUDA 13.0.2의 PTX ISA 9.0 target notes에 열거된 architecture와 qualifier의 지원 범위를 적용합니다.",
+        "evidenceScope": "공식 ISA 문법과 완료 계약. 독립 실행 kernel이나 벤치마크가 아닙니다.",
+        "notClaim": "모든 Blackwell 제품과 dtype에 동일한 tcgen05 지원이 있다는 뜻이 아닙니다.",
+        "sectionId": "tmem-official-source"
+      },
+],
   },
   "ai/vllm-serving": {
     coreIdea:
@@ -52073,12 +52093,232 @@ export const ARTICLE_LEARNING: Readonly<
     papers:[{title:"Circom: A Circuit Description Language for Building Zero-Knowledge Applications",href:"https://eprint.iacr.org/2020/1003.pdf",problem:"ZK circuit과 witness generation을 modular DSL로 작성",contribution:"Template·signal·constraint compilation model과 toolchain 설계",assumptions:"Paper의 Circom version과 R1CS/SNARK model",evidenceScope:"Language/compiler design과 generated constraint 경계",notClaim:"현재 compiler의 모든 syntax·backend·circuit이 자동으로 safe하다고 보장하지 않음",sectionId:"paper-circom"},{title:"iden3/circom pinned source a100fae",href:"https://github.com/iden3/circom/tree/a100faedb1c62d4d3e1463f8a3f88342d82351cd",problem:"현재 compiler pipeline·artifact seam을 재현 가능하게 확인",contribution:"Official Rust compiler source·tests의 pinned snapshot",assumptions:"Commit a100fae와 의존성·backend profile 고정",evidenceScope:"선택 commit의 source/artifact behavior",notClaim:"Moving main·snarkjs·배포 circuit audit를 대신하지 않음",sectionId:"paper-circom-source"}]
   },
   "crypto/jolt": {
-    entryLevel:true, entryNote:"ADD 3,4→7 하나를 VM instruction, lookup, sumcheck, proof artifact 순으로 연결합니다.", coreIdea:"Jolt는 instruction semantics를 거대한 monolithic circuit로 다시 쓰기보다 lookup table에 묻고, table·trace·memory claims을 multilinear polynomial과 sumcheck로 접어 적은 openings으로 확인하는 zkVM pipeline입니다.", assumedKnowledge:[],
-    introducedHere:[{id:"jolt-instruction-lookup-sumcheck-lowering",role:"Instruction semantics를 lookup·MLE·sumcheck claims로 낮춥니다."},{id:"jolt-bytecode-trace-claim-artifact",role:"Program·I/O·trace·profile을 proof statement에 결속합니다."},{id:"jolt-release-gate",role:"Interpreter parity와 malformed claim을 성능 전에 거절합니다."}],
-    conceptExplanations:[{id:"jolt-instruction-lookup-sumcheck-lowering",sectionId:"lookup-sumcheck",intuition:"ADD를 매 trace row마다 새 제약으로 펼치기보다 valid instruction table의 항목인지 묻습니다.",workedExample:"Toy ADD table의 row (opcode=ADD,3,4,7)과 trace lookup이 일치하고, four-entry table [0,1,1,2]는 two-variable MLE로 보냅니다.",boundary:"Paper protocol과 pinned implementation의 supported ISA·memory model·commitment profile을 구분합니다.",proofIdea:"Lookup equality와 memory consistency를 polynomial identities로 만들고 sumcheck가 Boolean hypercube sum을 random point evaluation으로 축소합니다.",counterexample:"Opcode는 ADD인데 output=8을 기록하면 table relation을 만족하지 못합니다."},{id:"jolt-bytecode-trace-claim-artifact",sectionId:"artifact",intuition:"Proof bytes만으로는 무슨 program과 I/O를 증명했는지 알 수 없습니다.",workedExample:"Program hash H, input (3,4), public output 7, memory init, trace length 1, field·PCS·transcript profile을 receipt에 넣습니다.",boundary:"Program semantics·public/private I/O schema가 다르면 같은 proof format이어도 다른 statement입니다.",counterexample:"Output 7 proof를 output 8 API response에 재사용하면 statement binding이 깨집니다."},{id:"jolt-release-gate",sectionId:"release",intuition:"Native interpreter와 proof semantics의 parity가 최우선입니다.",workedExample:"ADD 3,4→7은 accept, output 8·wrong opcode·stale memory·program hash swap은 reject한 뒤 preprocess/prove/verify ms, proof bytes, RSS를 잽습니다.",boundary:"Benchmark는 ISA·trace length·security profile·hardware·preprocessing inclusion을 같게 맞춥니다."}],
-    conceptStages:[{label:"00 VM claim",relation:"Program·I/O·witness relation을 고정합니다.",concepts:["arithmetic-relation-instance-witness"]},{label:"01 polynomial",relation:"MLE와 sumcheck를 재사용합니다.",concepts:["multilinear-extension-boolean-hypercube","sumcheck-round-reduction"]},{label:"02 lowering",relation:"Instruction lookup으로 낮춥니다.",concepts:["jolt-instruction-lookup-sumcheck-lowering"]},{label:"03 artifact",relation:"Bytecode·trace·claim을 결속합니다.",concepts:["hash-canonical-bit-byte-input","jolt-bytecode-trace-claim-artifact"]},{label:"04 release",relation:"Parity·failure·cost를 확인합니다.",concepts:["jolt-release-gate"]}],
-    exercises:[{level:"basic",question:"ADD 3,4→7의 public claim과 execution witness를 구분하세요.",answerChecklist:["program hash","input schema","output 7","instruction trace","memory witness"],requiredConcepts:["jolt-bytecode-trace-claim-artifact"],sectionId:"overview"},{level:"basic",question:"Toy ADD lookup row가 output=8을 거절하는 이유를 쓰세요.",answerChecklist:["table semantics","3+4=7","row mismatch","reject"],requiredConcepts:["jolt-instruction-lookup-sumcheck-lowering"],sectionId:"lookup-sumcheck"},{level:"basic",question:"[0,1,1,2]를 Boolean square 평가값으로 배치하세요.",answerChecklist:["00 to 0","01 to 1","10 to 1","11 to 2","MLE unique"],requiredConcepts:["multilinear-extension-boolean-hypercube"],sectionId:"lookup-sumcheck"},{level:"basic",question:"Sumcheck가 hypercube sum을 무엇으로 줄이는지 설명하세요.",answerChecklist:["one variable per round","random challenge","univariate check","final random point"],requiredConcepts:["sumcheck-round-reduction"],sectionId:"lookup-sumcheck"},{level:"basic",question:"Jolt receipt에 필요한 artifact fields를 나열하세요.",answerChecklist:["source SHA","program hash","I/O","memory init","trace length","field/PCS/transcript"],requiredConcepts:["jolt-bytecode-trace-claim-artifact"],sectionId:"artifact"},{level:"basic",question:"Program hash swap을 verifier가 거절해야 하는 이유를 쓰세요.",answerChecklist:["different semantics","statement binding","transcript","replay reject"],requiredConcepts:["jolt-bytecode-trace-claim-artifact"],sectionId:"artifact"},{level:"advanced",question:"Instruction lookup과 memory consistency claim을 다른 obligations로 나누어 test를 설계하세요.",answerChecklist:["opcode table","read/write order","address","timestamp","initial/final memory","independent mutations"],requiredConcepts:["jolt-instruction-lookup-sumcheck-lowering"],sectionId:"lookup-sumcheck"},{level:"advanced",question:"Sumcheck challenge를 commitment 전에 알 수 있는 반례를 설명하세요.",answerChecklist:["adaptive oracle","commit first","Fiat-Shamir order","soundness boundary"],requiredConcepts:["sumcheck-round-reduction","jolt-bytecode-trace-claim-artifact"],sectionId:"lookup-sumcheck"},{level:"advanced",question:"Interpreter/prover differential corpus를 설계하세요.",answerChecklist:["same bytecode","edge opcodes","overflow/profile","memory alias","I/O","accept/reject parity"],requiredConcepts:["jolt-release-gate"],sectionId:"release"},{level:"advanced",question:"Jolt release receipt와 rollback 조건을 작성하세요.",answerChecklist:["source SHA","ISA/profile","program artifact","negative vectors","preprocess/prove/verify","proof bytes","RSS","rollback"],requiredConcepts:["jolt-release-gate"],sectionId:"release"}],
-    papers:[{title:"Jolt: SNARKs for Virtual Machines via Lookups",href:"https://eprint.iacr.org/2023/1217.pdf",problem:"VM execution proof의 instruction semantics 제약 비용 감소",contribution:"Lasso lookup arguments를 활용한 zkVM arithmetization과 protocol 제시",assumptions:"Paper의 commitment·sumcheck·lookup·security model",evidenceScope:"Jolt protocol과 asymptotic/cost design",notClaim:"Pinned repository의 모든 ISA·API·benchmark와 동일하다고 주장하지 않음",sectionId:"paper-jolt"},{title:"a16z/jolt pinned source 915faf4",href:"https://github.com/a16z/jolt/tree/915faf453f36871249615a7fdf2704d77a88f259",problem:"실제 Rust implementation·artifact·benchmark seam을 고정",contribution:"Official source·tests의 pinned snapshot",assumptions:"Commit 915faf4와 toolchain·features·parameters 고정",evidenceScope:"선택 commit의 implementation behavior",notClaim:"Moving main·production audit·모든 target performance를 보장하지 않음",sectionId:"paper-jolt-source"}]
+    "entryLevel": true,
+    "entryNote": "작은 수치와 자원 크기는 설명용 가정입니다. 2026-10-04 원문을 대조했으며 1~10절의 같은 사례에서 보장·실패·비용을 계산합니다.",
+    "coreIdea": "기계 명령의 계산을 lookup 주장과 다항식의 합 검사로 연결합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "jolt-instruction-lookup-sumcheck-lowering",
+        "role": "기계 명령의 계산을 lookup 주장과 다항식의 합 검사로 연결합니다."
+      },
+      {
+        "id": "jolt-bytecode-trace-claim-artifact",
+        "role": "프로그램·초기 자료·공개 입출력과 실행 길이를 증명할 주장에 묶습니다."
+      },
+      {
+        "id": "jolt-release-gate",
+        "role": "버전·명령 집합·프로그램·보안 설정·하드웨어를 고정해 결과와 비용을 비교합니다."
+      },
+      {
+        "id": "one-hot-memory-increment-check",
+        "role": "한 주소의 선택과 값의 변화량을 연결해 메모리 읽기·쓰기를 검사합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "jolt-instruction-lookup-sumcheck-lowering",
+        "sectionId": "lookup-sumcheck",
+        "intuition": "기계 명령의 계산을 lookup 주장과 다항식의 합 검사로 연결합니다.",
+        "workedExample": "ADD의 3+4=7은 tracer와 마스크를 적용한 lookup 출력에서 일치합니다.",
+        "boundary": "명령 하나의 산술 일치가 주소와 전체 실행의 일치를 보장하지는 않습니다."
+      },
+      {
+        "id": "jolt-bytecode-trace-claim-artifact",
+        "sectionId": "artifact",
+        "intuition": "프로그램·초기 자료·공개 입출력과 실행 길이를 증명할 주장에 묶습니다.",
+        "workedExample": "고정 소스의 absorb_transcript_preamble은 outputs와 preprocessing_digest를 해시에 넣습니다.",
+        "boundary": "출력 7을 8로 바꾸었는데 같은 주장의 증거로 받아서는 안 됩니다."
+      },
+      {
+        "id": "jolt-release-gate",
+        "sectionId": "release",
+        "intuition": "버전·명령 집합·프로그램·보안 설정·하드웨어를 고정해 결과와 비용을 비교합니다.",
+        "workedExample": "2026-10-02 소스는 RV64IMAC alpha이며 2023 논문 구성을 그대로 뜻하지 않습니다.",
+        "boundary": "소스 대조를 전체 증명기를 실행한 실측 벤치마크로 표현하지 않습니다."
+      },
+      {
+        "id": "one-hot-memory-increment-check",
+        "sectionId": "artifact",
+        "intuition": "한 주소의 선택과 값의 변화량을 연결해 메모리 읽기·쓰기를 검사합니다.",
+        "workedExample": "[0,3,4,0]에서 위치 3에 변화량 7을 더하고 γ=2로 7+6+16=29를 만듭니다.",
+        "boundary": "임의 점의 다항식 연장값은 0·1 선택 그림 자체와 다르며 유효 주소 제약과 opening이 필요합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 명령 계산과 lookup 검사",
+        "relation": "ADD의 3+4=7은 tracer와 마스크를 적용한 lookup 출력에서 일치합니다.",
+        "concepts": [
+          "jolt-instruction-lookup-sumcheck-lowering"
+        ]
+      },
+      {
+        "label": "02 · 프로그램·기록·공개값의 결속",
+        "relation": "고정 소스의 absorb_transcript_preamble은 outputs와 preprocessing_digest를 해시에 넣습니다.",
+        "concepts": [
+          "jolt-bytecode-trace-claim-artifact"
+        ]
+      },
+      {
+        "label": "03 · Jolt 버전과 실행 조건",
+        "relation": "2026-10-02 소스는 RV64IMAC alpha이며 2023 논문 구성을 그대로 뜻하지 않습니다.",
+        "concepts": [
+          "jolt-release-gate"
+        ]
+      },
+      {
+        "label": "04 · 주소 선택과 변화량을 이용한 메모리 검사",
+        "relation": "[0,3,4,0]에서 위치 3에 변화량 7을 더하고 γ=2로 7+6+16=29를 만듭니다.",
+        "concepts": [
+          "one-hot-memory-increment-check"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "축약 메모리 [0,3,4,0]에서 위치 1·2를 더해 위치 3에 쓰면 어떻게 바뀌나요?",
+        "answerChecklist": [
+          "읽은 값은 3과 4이고 계산 결과는 7입니다.",
+          "위치 3의 변화량 7을 더해 [0,3,4,7]이 됩니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "one-hot-memory-increment-check"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "위치 1을 읽는 one-hot 벡터와 메모리의 내적은 얼마인가요?",
+        "answerChecklist": [
+          "선택 벡터는 [0,1,0,0]입니다.",
+          "[0,3,4,0]와 자리별로 곱해 더하면 3만 남습니다."
+        ],
+        "sectionId": "picture",
+        "requiredConcepts": [
+          "one-hot-memory-increment-check"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "주소 선택 벡터의 각 원소와 합에 어떤 조건이 필요하며 왜 필요한가요?",
+        "answerChecklist": [
+          "각 원소가 0 또는 1이고 합이 1이어야 합니다.",
+          "여러 칸 선택이나 분수로 섞은 값을 한 주소의 읽기로 오인하지 않도록 합니다."
+        ],
+        "sectionId": "picture",
+        "requiredConcepts": [
+          "one-hot-memory-increment-check"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "고정 ADD 구현에 x=3,y=4,XLEN=64를 넣으면 마스크 후 결과는 무엇인가요?",
+        "answerChecklist": [
+          "두 입력은 64비트 범위 안이어서 그대로 3과 4입니다.",
+          "wrapping_add와 결과 마스크를 적용해 7이 됩니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "jolt-instruction-lookup-sumcheck-lowering"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "to_lookup_operands의 첫 성분 0은 레지스터 0을 읽는 주소인가요?",
+        "answerChecklist": [
+          "이 함수는 lookup 검사의 입력 표현으로 0과 더 넓은 합을 반환합니다.",
+          "실제 레지스터 주소는 별도 실행 기록에서 연결하므로 두 표현을 혼동하지 않습니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "jolt-instruction-lookup-sumcheck-lowering"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "목적값 7·읽기값 3·4를 γ=2로 묶은 메모리 주장 값을 계산하세요.",
+        "answerChecklist": [
+          "7+2×3+2²×4를 계산합니다.",
+          "7+6+16=29이며 주소와 변화량에서 만든 출력도 같은 값이어야 합니다."
+        ],
+        "sectionId": "artifact",
+        "requiredConcepts": [
+          "one-hot-memory-increment-check"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "64비트 최댓값에 1을 더하는 명령을 일반 정수 덧셈과 구별하세요.",
+        "answerChecklist": [
+          "wrapping_add는 정해진 비트 폭 밖의 올림을 버려 0으로 돌아옵니다.",
+          "lookup도 같은 XLEN 마스크와 연산 의미를 사용해야 실행과 일치합니다."
+        ],
+        "sectionId": "lookup-sumcheck",
+        "requiredConcepts": [
+          "jolt-instruction-lookup-sumcheck-lowering"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "공개 출력 바이트를 7에서 8로 바꾸면 실제 어느 함수의 입력 기록이 달라지나요?",
+        "answerChecklist": [
+          "absorb_transcript_preamble이 outputs를 해시에 흡수합니다.",
+          "프로그램 준비 digest·입출력·실행 길이를 같은 주장으로 묶어야 하므로 이전 증거를 같은 입력으로 검증해서는 안 됩니다."
+        ],
+        "sectionId": "artifact",
+        "requiredConcepts": [
+          "jolt-bytecode-trace-claim-artifact"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "임의 점의 다항식에서 one-hot 연장값을 항상 0 또는 1이라고 보면 왜 틀리나요?",
+        "answerChecklist": [
+          "정수 주소 격자의 0·1 조건과 임의 점 평가값은 서로 다른 층위입니다.",
+          "원래 격자의 주소 제약과 최종 commitment opening을 함께 검사해야 합니다."
+        ],
+        "sectionId": "artifact",
+        "requiredConcepts": [
+          "one-hot-memory-increment-check"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "2023 Jolt 논문의 비용 수치를 최신 소스의 실제 처리 속도로 그대로 옮기면 왜 안 되나요?",
+        "answerChecklist": [
+          "이후 Twist/Shout과 RV64 전환 등 구성이 바뀌었습니다.",
+          "프로그램·보안 목표·버전·하드웨어를 고정한 실측이 필요하며 소스 대조는 벤치마크가 아닙니다."
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "jolt-release-gate"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "problem": "메모리 읽기·쓰기 증명의 생성 비용을 줄입니다.",
+        "contribution": "one-hot 주소와 변화량을 사용해 읽기 전용·읽기 쓰기 검사를 구성합니다.",
+        "assumptions": "주소의 유효성, 다항식 검사와 commitment 가정을 사용합니다.",
+        "evidenceScope": "2025-02-27 개정 논문과 그 비용 분석입니다.",
+        "notClaim": "논문에서 보고한 배수를 현재 모든 Jolt 실행의 실측 속도로 해석하지 않습니다.",
+        "title": "Twist and Shout: Faster memory checking arguments via one-hot addressing and increments",
+        "href": "https://eprint.iacr.org/2025/105.pdf",
+        "sectionId": "paper-twist-shout"
+      },
+      {
+        "problem": "VM 명령 검사의 반복 비용을 줄이는 문제입니다.",
+        "contribution": "명령의 계산을 lookup 구조로 연결합니다.",
+        "assumptions": "논문의 명령표·lookup·commitment 가정을 사용합니다.",
+        "evidenceScope": "2023 논문의 구성과 비용 설계입니다.",
+        "notClaim": "이후 Twist/Shout 및 RV64 구현을 모두 그대로 기술한 논문은 아닙니다.",
+        "title": "Jolt: SNARKs for Virtual Machines via Lookups",
+        "href": "https://eprint.iacr.org/2023/1217.pdf",
+        "sectionId": "paper-jolt"
+      }
+    ]
   },
   "crypto/libiop": {
     entryLevel:true, entryNote:"R1CS의 a·b=c 한 row에서 시작해 왜 prover가 encoded oracle를 먼저 commit하고 verifier가 몇 위치만 묻는지 설명합니다.", coreIdea:"libiop는 R1CS를 Aurora·Ligero 등의 encoded-oracle claims로 바꾸고, public-coin IOP의 메시지와 queries를 BCS가 Merkle commitment·Fiat–Shamir transcript로 바꾸는 research implementation이며 protocol/profile 선택을 상호 교환하면 안 됩니다.", assumedKnowledge:[],
@@ -52371,299 +52611,1756 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "crypto/nova": {
-    entryLevel: true,
-    entryNote: "Recursive proof·relaxed R1CS를 안다고 가정하지 않고 step F(z)=4z, 3→12와 두 scalar rows의 folding 계산에서 시작합니다.",
-    coreIdea: "Nova는 이전 accumulator와 새 step relation을 relaxed R1CS로 만들고 random challenge로 하나에 fold해 per-step IVC update를 유지하며, final succinct compression과 zero knowledge는 folding과 별도 layer로 다룹니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "ivc-state-step-relation", role: "반복 state transition과 누적 proof 목표를 정의합니다." },
-      { id: "relaxed-r1cs-error-slack", role: "Folding cross term을 u,E로 흡수합니다." },
-      { id: "nova-nifs-folding-equation", role: "두 relaxed instances를 한 accumulator로 접습니다." },
-      { id: "nova-folding-challenge-soundness", role: "Random challenge가 거짓 cancellation을 제한합니다." },
-      { id: "nova-ivc-compression-zk-boundary", role: "Folding·IVC·compression·ZK를 분리합니다." },
-      { id: "nova-release-gate", role: "Step/resume/compression failure와 rollback을 검증합니다." },
+    "entryLevel": true,
+    "entryNote": "작은 수치와 자원 크기는 설명용 가정입니다. 2026-10-04 원문을 대조했으며 1~10절의 같은 사례에서 보장·실패·비용을 계산합니다.",
+    "coreIdea": "반복 계산을 잇기 위해 앞 단계의 끝 상태를 다음 시작 상태와 연결합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "ivc-state-step-relation",
+        "role": "반복 계산을 잇기 위해 앞 단계의 끝 상태를 다음 시작 상태와 연결합니다."
+      },
+      {
+        "id": "relaxed-r1cs-error-slack",
+        "role": "곱셈 조건에 배율과 유도된 오차를 두어 합친 결과가 같은 형식에 남게 합니다."
+      },
+      {
+        "id": "nova-nifs-folding-equation",
+        "role": "두 원본 곱을 전개해 생긴 교차항을 새 오차에 반영합니다."
+      },
+      {
+        "id": "nova-folding-challenge-soundness",
+        "role": "원본과 교차항을 고정한 뒤 무작위 질문을 받아 거짓 조건의 우연한 일치를 제한합니다."
+      },
+      {
+        "id": "nova-ivc-compression-zk-boundary",
+        "role": "누적 관계를 접는 단계와 최종 짧은 영지식 증명을 만드는 단계를 구별합니다."
+      },
+      {
+        "id": "nova-release-gate",
+        "role": "규칙 식별자·시작 상태·현재 상태·계산 횟수로 이어진 실행을 확인합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "ivc-state-step-relation", sectionId: "ivc", intuition: "긴 계산 전체를 다시 증명하지 않고 이전 영수증에 다음 한 step 영수증을 누적합니다.", workedExample: "F(z)=4z이면 z0=3,z1=12,z2=48≡14 mod17이며 각 step은 z_{i+1}=4z_i를 증명합니다.", boundary: "고정 step circuit과 index/state binding이 없으면 순서가 다른 실행을 같은 IVC로 볼 수 있습니다." },
-      { id: "relaxed-r1cs-error-slack", sectionId: "relaxed-r1cs", intuition: "두 quadratic equations를 선형 결합할 때 생기는 교차항을 error vector E에 기록해 relation을 닫습니다.", workedExample: "3·4=12와 2·5=10을 r=2로 접으면 x'=7,w'=14,y'=15,u'=3이고 residual E'=2입니다.", boundary: "E가 임의여도 accept하면 exact computation과 연결이 끊기므로 accumulator commitment와 folding equation이 E를 결속해야 합니다." },
-      { id: "nova-nifs-folding-equation", sectionId: "relaxed-r1cs", intuition: "Assignments와 commitments는 선형 결합하고 quadratic cross term T는 r과 r² coefficient로 E에 넣습니다.", workedExample: "T=3·5+2·4−10−12=1이고 E'=0+2·1+4·0=2라서 7·14=3·15+2 mod17입니다.", boundary: "r은 두 input commitments와 step statement가 고정된 뒤 transcript에서 나와야 합니다." },
-      { id: "nova-folding-challenge-soundness", sectionId: "relaxed-r1cs", intuition: "거짓 두 식의 오차가 특정 r에서만 우연히 상쇄될 수 있으므로 큰 field의 random r로 그 점을 피합니다.", workedExample: "Degree≤2 error polynomial이면 F17 random r에서 단순 root bound는 최대 2/17입니다.", boundary: "r을 prover가 고르거나 재사용·bias하면 degree/field bound를 적용할 수 없습니다.", proofIdea: "Committed inputs가 만드는 nonzero low-degree error polynomial은 root가 degree보다 많을 수 없습니다.", counterexample: "오차 polynomial P(r)=r이고 verifier가 항상 r=0을 쓰면 거짓 relation도 항상 상쇄됩니다." },
-      { id: "nova-ivc-compression-zk-boundary", sectionId: "compression-security", intuition: "매 step accumulator를 갱신하는 일과 마지막 proof를 작게 압축·randomize하는 일은 다른 단계입니다.", workedExample: "두 steps 뒤 uncompressed IVC accumulator를 유지하고 배포 시 Spartan 계열 compression profile을 별도로 실행합니다.", boundary: "NIFS folding만으로 final succinct verifier·zero knowledge·on-chain proof가 자동 생성된다고 보지 않습니다." },
-      { id: "nova-release-gate", sectionId: "release", intuition: "정상 연속 실행 외에 wrong previous state·step index·cross term·resume file을 주입합니다.", workedExample: "3→12 accept 뒤 3→13, swapped step, altered T/E, truncated accumulator, wrong curve/commit key를 reject합니다.", boundary: "Per-step latency 하나를 final compression/setup/serialization/recovery 비용 전체로 확대하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "ivc-state-step-relation",
+        "sectionId": "ivc",
+        "intuition": "반복 계산을 잇기 위해 앞 단계의 끝 상태를 다음 시작 상태와 연결합니다.",
+        "workedExample": "4배 규칙의 3→12→14에서 둘째 시작은 12여야 하며 11이면 다른 실행입니다.",
+        "boundary": "서로 다른 두 곱셈을 접는 대수 예 자체가 전체 IVC 회로는 아닙니다."
+      },
+      {
+        "id": "relaxed-r1cs-error-slack",
+        "sectionId": "names",
+        "intuition": "곱셈 조건에 배율과 유도된 오차를 두어 합친 결과가 같은 형식에 남게 합니다.",
+        "workedExample": "배율 3과 오차 2에서 7×14≡3×15+2≡13 mod17입니다.",
+        "boundary": "오차를 검증 없이 임의로 고르는 허가는 아닙니다."
+      },
+      {
+        "id": "nova-nifs-folding-equation",
+        "sectionId": "relaxed-r1cs",
+        "intuition": "두 원본 곱을 전개해 생긴 교차항을 새 오차에 반영합니다.",
+        "workedExample": "T=3×5+2×4−10−12=1, r=2에서 E′=0+2×1+4×0=2입니다.",
+        "boundary": "두 원본은 같은 체와 계수표를 사용해야 합니다."
+      },
+      {
+        "id": "nova-folding-challenge-soundness",
+        "sectionId": "source",
+        "intuition": "원본과 교차항을 고정한 뒤 무작위 질문을 받아 거짓 조건의 우연한 일치를 제한합니다.",
+        "workedExample": "차수 2 이하의 고정된 0이 아닌 차이는 작은 체에서 최대 2/17로 우연히 0입니다.",
+        "boundary": "r=0만 쓰면 둘째 원본이 사라지며 이 단순 상한은 전체 Nova 보안 정리가 아닙니다.",
+        "proofIdea": "두 원본과 교차항을 고정하면 틀린 등식의 차이는 질문 r에 관한 고정 다항식입니다. 차수 2 이하의 0이 아닌 다항식은 근이 최대 2개라서 17개 중 균일 질문의 단순 통과 확률은 최대 2/17입니다.",
+        "counterexample": "r을 항상 0으로 두면 두 번째 원본의 항이 전부 사라집니다. 질문을 보고 원본이나 교차항을 고르게 해도 고정된 다항식의 근 개수 논증을 적용할 수 없습니다."
+      },
+      {
+        "id": "nova-ivc-compression-zk-boundary",
+        "sectionId": "compression-security",
+        "intuition": "누적 관계를 접는 단계와 최종 짧은 영지식 증명을 만드는 단계를 구별합니다.",
+        "workedExample": "u′=3,E′=2는 누적 관계의 일부이고 최종 압축은 그 관계를 만족하는 증인의 존재를 검증합니다.",
+        "boundary": "산술 폴딩만으로 비밀성이나 작은 생성 메모리가 따라오지는 않습니다."
+      },
+      {
+        "id": "nova-release-gate",
+        "sectionId": "release",
+        "intuition": "규칙 식별자·시작 상태·현재 상태·계산 횟수로 이어진 실행을 확인합니다.",
+        "workedExample": "저장 자료를 읽은 뒤 다음 시작을 12 대신 11로 두면 연속성이 깨집니다.",
+        "boundary": "곡선 기반 폴딩의 투명한 준비는 양자 안전성을 뜻하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 step", relation: "Public state와 witness가 고정 step relation을 만족합니다.", concepts: ["prime-field-modular-arithmetic", "arithmetic-relation-instance-witness", "ivc-state-step-relation"] },
-      { label: "02 relax", relation: "R1CS를 u,E가 있는 fold-closed relation으로 확장합니다.", concepts: ["r1cs-bilinear-row", "relaxed-r1cs-error-slack"] },
-      { label: "03 fold", relation: "Commit-first challenge로 두 instances를 결합합니다.", concepts: ["pedersen-hiding-binding-boundary", "polynomial-root-degree-bound", "nova-nifs-folding-equation", "nova-folding-challenge-soundness"] },
-      { label: "04 recurse/compress", relation: "IVC accumulator와 final compression·ZK를 분리합니다.", concepts: ["snark-succinctness-cost-boundary", "nova-ivc-compression-zk-boundary"] },
-      { label: "05 release", relation: "Step/resume/compression parity 뒤 비용과 rollback을 검증합니다.", concepts: ["nova-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "01 · 반복 실행의 상태 연결",
+        "relation": "4배 규칙의 3→12→14에서 둘째 시작은 12여야 하며 11이면 다른 실행입니다.",
+        "concepts": [
+          "ivc-state-step-relation"
+        ]
+      },
+      {
+        "label": "02 · 완화된 R1CS의 배율과 오차",
+        "relation": "배율 3과 오차 2에서 7×14≡3×15+2≡13 mod17입니다.",
+        "concepts": [
+          "relaxed-r1cs-error-slack"
+        ]
+      },
+      {
+        "label": "03 · Nova의 교차항 폴딩",
+        "relation": "T=3×5+2×4−10−12=1, r=2에서 E′=0+2×1+4×0=2입니다.",
+        "concepts": [
+          "nova-nifs-folding-equation"
+        ]
+      },
+      {
+        "label": "04 · 폴딩 질문의 오류 통과 상한",
+        "relation": "차수 2 이하의 고정된 0이 아닌 차이는 작은 체에서 최대 2/17로 우연히 0입니다.",
+        "concepts": [
+          "nova-folding-challenge-soundness"
+        ]
+      },
+      {
+        "label": "05 · 누적 관계의 압축과 영지식",
+        "relation": "u′=3,E′=2는 누적 관계의 일부이고 최종 압축은 그 관계를 만족하는 증인의 존재를 검증합니다.",
+        "concepts": [
+          "nova-ivc-compression-zk-boundary"
+        ]
+      },
+      {
+        "label": "06 · 누적 실행의 재시작 조건",
+        "relation": "저장 자료를 읽은 뒤 다음 시작을 12 대신 11로 두면 연속성이 깨집니다.",
+        "concepts": [
+          "nova-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "F(z)=4z in F17에서 z0=3부터 두 steps의 state를 계산하세요.", answerChecklist: ["z1=12", "z2=48", "mod17", "z2=14", "same step circuit", "ordered states"], requiredConcepts: ["ivc-state-step-relation", "prime-field-modular-arithmetic"], sectionId: "ivc" },
-      { level: "basic", question: "IVC의 이전 proof/state·새 step witness·다음 proof/state 역할을 설명하세요.", answerChecklist: ["previous accumulator", "z_i public", "step witness private", "F relation", "z_i+1 public", "updated accumulator", "constant step work goal"], requiredConcepts: ["ivc-state-step-relation"], sectionId: "ivc" },
-      { level: "basic", question: "Relaxed R1CS Az∘Bz=uCz+E에서 u와 E 역할을 설명하세요.", answerChecklist: ["A/B/C linear maps", "Hadamard product", "u scalar", "E error vector", "standard u=1 E=0", "fold closure"], requiredConcepts: ["relaxed-r1cs-error-slack"], sectionId: "relaxed-r1cs" },
-      { level: "basic", question: "두 scalar rows 예에서 T=1을 계산하세요.", answerChecklist: ["3*5", "2*4", "subtract 10", "subtract 12", "15+8-22", "T=1 mod17"], requiredConcepts: ["nova-nifs-folding-equation"], sectionId: "relaxed-r1cs" },
-      { level: "basic", question: "r=2 folded x',w',y',u',E'와 relaxed equality를 검산하세요.", answerChecklist: ["x'=7", "w'=14", "y'=15", "u'=3", "E'=2", "7*14=13", "3*15+2=13 mod17"], requiredConcepts: ["nova-nifs-folding-equation", "relaxed-r1cs-error-slack"], sectionId: "relaxed-r1cs" },
-      { level: "basic", question: "NIFS folding, IVC, final compression, ZK의 역할을 구분하세요.", answerChecklist: ["two to one fold", "repeated accumulator", "final succinct proof", "randomization/simulator property", "different costs", "profile pin"], requiredConcepts: ["nova-ivc-compression-zk-boundary"], sectionId: "compression-security" },
-      { level: "advanced", question: "Nova folding cross term 공식을 전개해 E'에 rT+r²E2가 필요한 이유를 보이세요.", answerChecklist: ["linear combine Az/Bz", "quadratic expansion", "self terms", "two cross terms", "uC expansion", "define T", "r and r squared", "relaxed equality"], requiredConcepts: ["nova-nifs-folding-equation"], sectionId: "relaxed-r1cs" },
-      { level: "advanced", question: "고정 challenge r=0 반례와 soundness 수정안을 설명하세요.", answerChecklist: ["error P(r)=r", "root zero", "always miss", "commit inputs first", "uniform transcript challenge", "field size", "degree bound", "domain separation"], requiredConcepts: ["nova-folding-challenge-soundness"], sectionId: "relaxed-r1cs" },
-      { level: "advanced", question: "Uncompressed IVC와 final compressed proof의 benchmark를 분리하세요.", answerChecklist: ["per-step fold", "accumulator bytes/RSS", "step count scaling", "compression time", "compressed bytes", "final verify", "setup/PCS", "ZK profile"], requiredConcepts: ["nova-ivc-compression-zk-boundary", "snark-succinctness-cost-boundary"], sectionId: "compression-security" },
-      { level: "advanced", question: "Pinned Nova implementation의 resume·release·rollback matrix를 설계하세요.", answerChecklist: ["commit SHA", "step circuit hash", "curve cycle/commitment", "state/index", "wrong T/E/challenge", "serialization truncate", "resume parity", "phase time/RSS", "rollback artifact"], requiredConcepts: ["nova-release-gate"], sectionId: "release" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "F17에서 두 조건 3×4=12와 2×5=10을 r=2로 선형 결합한 입력과 결과를 구하세요.",
+        "answerChecklist": [
+          "입력은 3+2×2=7과 4+2×5=14입니다.",
+          "결과는 12+2×10=32≡15인데 7×14≡13이어서 단순 등식은 맞지 않습니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "nova-nifs-folding-equation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "두 원본에서 Nova 교차항 T가 왜 1이 되는지 전개하세요.",
+        "answerChecklist": [
+          "3×5+2×4=23이 교차 곱의 합입니다.",
+          "1×10+1×12=22를 빼면 T=1입니다."
+        ],
+        "sectionId": "relaxed-r1cs",
+        "requiredConcepts": [
+          "nova-nifs-folding-equation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "u₁=u₂=1,E₁=E₂=0,r=2에서 새 배율과 오차를 계산하세요.",
+        "answerChecklist": [
+          "u′=1+2×1=3입니다.",
+          "E′=0+2×1+4×0=2입니다."
+        ],
+        "sectionId": "relaxed-r1cs",
+        "requiredConcepts": [
+          "relaxed-r1cs-error-slack"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "새 입력 7·14와 결과 15에 배율 3·오차 2를 넣어 검산하세요.",
+        "answerChecklist": [
+          "왼쪽 7×14=98≡13 mod17입니다.",
+          "오른쪽 3×15+2=47≡13으로 같은 형식이 유지됩니다."
+        ],
+        "sectionId": "relaxed-r1cs",
+        "requiredConcepts": [
+          "relaxed-r1cs-error-slack"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "4배 계산의 3→12→14에서 두 번째 시작이 11이면 왜 같은 실행이 아닌가요?",
+        "answerChecklist": [
+          "앞 단계 끝값은 12이므로 다음 시작도 12여야 합니다.",
+          "서로 다른 상태에서 시작한 두 조건의 합은 연속 실행의 증명이 아닙니다."
+        ],
+        "sectionId": "ivc",
+        "requiredConcepts": [
+          "ivc-state-step-relation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "u′=3,E′=2를 계산한 것과 마지막 짧은 증명을 만든 것을 구분하세요.",
+        "answerChecklist": [
+          "3과 2는 아직 만족을 확인해야 하는 누적 관계의 일부입니다.",
+          "압축은 그 관계에 맞는 증인이 있음을 더 짧은 증명으로 확인하는 별도 단계입니다."
+        ],
+        "sectionId": "compression-security",
+        "requiredConcepts": [
+          "nova-ivc-compression-zk-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "질문 r을 항상 0으로 고르면 어느 원본이 새 조건에서 사라지나요?",
+        "answerChecklist": [
+          "Z′=Z₁,u′=u₁,E′=E₁이 됩니다.",
+          "둘째 원본이 반영되지 않아 무작위 질문이 주는 검사의 의미를 잃습니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "nova-folding-challenge-soundness"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "고정된 거짓 차이가 r의 차수 2 이하일 때 작은 체의 단순 성공 상한을 설명하세요.",
+        "answerChecklist": [
+          "0이 아닌 다항식의 근은 최대 2개입니다.",
+          "17개 중 균일 선택이면 최대 2/17이며 commitment 등을 포함한 전체 Nova 정리와 구별합니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "nova-folding-challenge-soundness"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "E′를 자유롭게 고르게 허용하면 왜 완화된 조건의 검사가 무의미해질 수 있나요?",
+        "answerChecklist": [
+          "틀린 곱의 차이를 그대로 E′에 넣어 등식을 맞출 수 있습니다.",
+          "원본과 T의 commitment를 고정하고 같은 선형 결합으로 오차를 유도해야 합니다."
+        ],
+        "sectionId": "relaxed-r1cs",
+        "requiredConcepts": [
+          "nova-nifs-folding-equation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "누적 자료를 저장했다가 다시 실행할 때 무엇을 함께 확인해야 하나요?",
+        "answerChecklist": [
+          "규칙 식별자·시작 상태·현재 상태·계산 횟수를 함께 읽습니다.",
+          "다음 입력 상태가 저장한 끝 상태와 이어지는지 검사해야 파일 로드 이상의 연속성이 생깁니다."
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "nova-release-gate"
+        ]
+      }
     ],
-    papers: [
-      { title: "Nova: Recursive Zero-Knowledge Arguments from Folding Schemes", href: "https://eprint.iacr.org/2021/370.pdf", problem: "긴 sequential computation의 recursive proof를 매 step 낮은 overhead로 갱신해야 합니다.", contribution: "Relaxed R1CS와 non-interactive folding scheme을 이용한 Nova IVC construction을 제시합니다.", assumptions: "Commitment scheme, curve cycle/random oracle와 논문의 folding/security model을 사용합니다.", evidenceScope: "Nova 원 protocol·theorem·논문 evaluation 범위에 한정합니다.", notClaim: "Folding 하나가 final compression·모든 ZK variant·production recovery를 자동 보장하지 않습니다.", sectionId: "paper-nova" },
-      { title: "microsoft/Nova pinned source", href: "https://github.com/microsoft/Nova/tree/909230314a7173b0f96d06e0c810d10f65f599f1", problem: "IVC·folding·compression·curve/commitment profiles의 실제 Rust path를 versioned source로 확인해야 합니다.", contribution: "공식 nova-snark implementation, examples, tests와 multiple commitment/compression backends를 제공합니다.", assumptions: "Commit 9092303과 Cargo.lock/features/toolchain을 고정합니다.", evidenceScope: "선택 commit의 source/API/examples 범위입니다.", notClaim: "모든 experimental feature·downstream circuit·production audit와 fixed 성능을 보장하지 않습니다.", sectionId: "paper-nova-source" },
-    ],
+    "papers": [
+      {
+        "problem": "오래 이어지는 계산을 매 단계 효율적으로 갱신하며 검증합니다.",
+        "contribution": "완화된 R1CS의 폴딩으로 IVC를 구성하고 압축을 별도로 연결합니다.",
+        "assumptions": "동형 commitment·곡선·무작위 오라클 등 원문의 조건을 사용합니다.",
+        "evidenceScope": "원 논문의 구성과 저자 실험 환경에서의 평가입니다.",
+        "notClaim": "특정 구현의 모든 회로·재시작 기능·양자 안전성을 보장하지는 않습니다.",
+        "title": "Nova: Recursive Zero-Knowledge Arguments from Folding Schemes",
+        "href": "https://eprint.iacr.org/2021/370.pdf",
+        "sectionId": "paper-nova"
+      }
+    ]
   },
   "crypto/polycommit": {
-    entryLevel: true,
-    entryNote: "다항식·commitment·pairing을 안다고 가정하지 않고 F17의 f(X)=X²+2X+3과 f(4)=10 계산에서 시작합니다.",
-    coreIdea: "Polynomial commitment는 polynomial 전체를 보내지 않고 먼저 짧은 commitment에 결속한 뒤 특정 point의 evaluation claim만 proof로 열며, KZG·IPA는 같은 interface를 다른 setup·assumption·cost로 구현합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "polynomial-commitment-interface", role: "Commit·Open·Verify의 입력과 보장을 정의합니다." },
-      { id: "kzg-quotient-opening-equation", role: "Factor theorem을 pairing opening으로 바꿉니다." },
-      { id: "ipa-polynomial-opening", role: "Evaluation을 inner product folding으로 엽니다." },
-      { id: "pcs-degree-hiding-setup-boundary", role: "Degree·hiding·setup을 별도 보안 축으로 나눕니다." },
-      { id: "pcs-release-gate", role: "Failure parity 뒤 scheme 비용을 비교합니다." },
+    "entryLevel": true,
+    "entryNote": "작은 수치와 자원 크기는 설명용 가정입니다. 2026-10-04 원문을 대조했으며 1~10절의 같은 사례에서 보장·실패·비용을 계산합니다.",
+    "coreIdea": "다항식을 고정한 뒤 위치와 평가값이 그 고정 내용에 맞는지 검사합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "polynomial-commitment-interface",
+        "role": "다항식을 고정한 뒤 위치와 평가값이 그 고정 내용에 맞는지 검사합니다."
+      },
+      {
+        "id": "kzg-quotient-opening-equation",
+        "role": "평가값이 맞으면 그 값을 뺀 다항식은 X−z로 정확히 나누어집니다."
+      },
+      {
+        "id": "ipa-polynomial-opening",
+        "role": "평가를 계수와 거듭제곱 벡터의 내적으로 쓰고 교차항과 함께 길이를 줄입니다."
+      },
+      {
+        "id": "pcs-degree-hiding-setup-boundary",
+        "role": "차수 제한, 은닉, 준비 가정은 서로 다른 질문입니다."
+      },
+      {
+        "id": "pcs-release-gate",
+        "role": "같은 계수 수와 공개 질문, 보안 목표에서 실패 조건과 비용을 비교합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "polynomial-commitment-interface", sectionId: "commit-open", intuition: "긴 계산표를 봉인한 뒤 요청한 한 칸의 값만 원본 봉인과 일치한다는 영수증으로 엽니다.", workedExample: "F17의 f=X²+2X+3을 C에 commit하고 z=4,y=10,π를 Verify(C,4,10,π)에 넣습니다.", boundary: "Opening 성공은 degree·hiding·setup 안전과 polynomial의 외부 의미를 자동 보장하지 않습니다." },
-      { id: "kzg-quotient-opening-equation", sectionId: "commit-open", intuition: "f(4)=10이면 f(X)−10은 X−4를 인수로 가지므로 그 몫을 group element로 증명합니다.", workedExample: "f−10=X²+2X−7=(X−4)(X+6) in F17이므로 q=X+6입니다.", boundary: "SRS degree를 넘기거나 τ가 노출되면 constant-size opening의 binding을 신뢰할 수 없습니다.", proofIdea: "Pairing bilinearity가 [q(τ)]·[τ−z]=[f(τ)−y]의 scalar identity를 GT equality로 옮깁니다." },
-      { id: "ipa-polynomial-opening", sectionId: "schemes", intuition: "Coefficient 목록과 1,z,z² 목록의 dot product가 y라는 사실을 두 벡터를 반씩 접으며 증명합니다.", workedExample: "a=(3,2,1), b=(1,4,16)이면 ⟨a,b⟩=27≡10 mod17입니다.", boundary: "Trusted powers는 없지만 generator derivation·DLP assumption과 logarithmic proof/verifier work가 남습니다." },
-      { id: "pcs-degree-hiding-setup-boundary", sectionId: "schemes", intuition: "봉인을 바꾸기 어려운지, 내용이 안 보이는지, 너무 긴 문서를 몰래 넣지 못하는지는 서로 다른 검사입니다.", workedExample: "Basic KZG C=[f(τ)]는 별도 blinding 없이는 coefficient hiding을 약속하지 않으며 degree≤d SRS 범위를 지켜야 합니다.", boundary: "Commitment라는 이름만으로 hiding이나 transparent setup을 결론내리지 않습니다.", counterexample: "작은 후보 polynomial을 deterministic commitment와 대조하면 hiding이 없어도 binding은 유지될 수 있습니다." },
-      { id: "pcs-release-gate", sectionId: "selection", intuition: "정상 opening뿐 아니라 틀린 값·점·degree·key가 모두 거절된 뒤 크기와 시간을 비교합니다.", workedExample: "같은 f,z에서 y=11, z=5, degree overflow, wrong SRS, non-subgroup proof를 reason-coded reject합니다.", boundary: "Proof bytes 하나나 microbenchmark 한 함수로 end-to-end prover·verifier 우위를 단정하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "polynomial-commitment-interface",
+        "sectionId": "names",
+        "intuition": "다항식을 고정한 뒤 위치와 평가값이 그 고정 내용에 맞는지 검사합니다.",
+        "workedExample": "f=X²+2X+3에 위치 4와 답 10, opening 증거를 연결합니다.",
+        "boundary": "내용을 바꾸기 어려운 성질이 내용의 은닉까지 뜻하지는 않습니다."
+      },
+      {
+        "id": "kzg-quotient-opening-equation",
+        "sectionId": "commit-open",
+        "intuition": "평가값이 맞으면 그 값을 뺀 다항식은 X−z로 정확히 나누어집니다.",
+        "workedExample": "답 10의 몫은 X+6이고 답 11의 나머지는 16입니다.",
+        "boundary": "비밀 준비값 τ가 노출되면 다항식 몫 없이도 평가점의 검사를 위조할 수 있습니다."
+      },
+      {
+        "id": "ipa-polynomial-opening",
+        "sectionId": "schemes",
+        "intuition": "평가를 계수와 거듭제곱 벡터의 내적으로 쓰고 교차항과 함께 길이를 줄입니다.",
+        "workedExample": "x=2에서 접힌 벡터 (15,4),(7,2)의 내적 11은 10+4×14+13×1과 같습니다.",
+        "boundary": "교차항을 연결하는 군 자료와 마지막 검사까지 있어야 증명이 됩니다."
+      },
+      {
+        "id": "pcs-degree-hiding-setup-boundary",
+        "sectionId": "selection",
+        "intuition": "차수 제한, 은닉, 준비 가정은 서로 다른 질문입니다.",
+        "workedExample": "τ=7을 안다면 거짓 답 11에 맞춰 (15−11)/(7−4)=7이라는 위조 지수를 만듭니다.",
+        "boundary": "비밀 준비가 없다는 사실과 이산로그에 대한 양자 안전성은 별개입니다."
+      },
+      {
+        "id": "pcs-release-gate",
+        "sectionId": "selection",
+        "intuition": "같은 계수 수와 공개 질문, 보안 목표에서 실패 조건과 비용을 비교합니다.",
+        "workedExample": "답 10을 11로 바꾼 실패부터 확인하고 생성 시간·검증 시간·메모리를 따로 셉니다.",
+        "boundary": "작은 증거 크기 하나로 전체 작업의 우열을 결정하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 claim", relation: "Field polynomial과 evaluation을 직접 계산합니다.", concepts: ["prime-field-modular-arithmetic", "polynomial-coefficient-evaluation-form", "polynomial-root-degree-bound"] },
-      { label: "02 commit/open", relation: "Generic commitment를 polynomial evaluation interface로 확장합니다.", concepts: ["commitment-binding-hiding-separation", "polynomial-commitment-interface"] },
-      { label: "03 instantiate", relation: "KZG와 IPA의 equation·assumption·setup을 분리합니다.", concepts: ["pairing-bilinearity-boundary", "cyclic-subgroup-dlp", "kzg-quotient-opening-equation", "ipa-polynomial-opening", "pcs-degree-hiding-setup-boundary"] },
-      { label: "04 release", relation: "Negative parity 뒤 bytes·time·memory를 비교합니다.", concepts: ["pcs-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "01 · 다항식 고정·열기·검사",
+        "relation": "f=X²+2X+3에 위치 4와 답 10, opening 증거를 연결합니다.",
+        "concepts": [
+          "polynomial-commitment-interface"
+        ]
+      },
+      {
+        "label": "02 · KZG의 몫 다항식",
+        "relation": "답 10의 몫은 X+6이고 답 11의 나머지는 16입니다.",
+        "concepts": [
+          "kzg-quotient-opening-equation"
+        ]
+      },
+      {
+        "label": "03 · IPA의 내적 접기",
+        "relation": "x=2에서 접힌 벡터 (15,4),(7,2)의 내적 11은 10+4×14+13×1과 같습니다.",
+        "concepts": [
+          "ipa-polynomial-opening"
+        ]
+      },
+      {
+        "label": "04 · 차수·은닉·준비 가정",
+        "relation": "τ=7을 안다면 거짓 답 11에 맞춰 (15−11)/(7−4)=7이라는 위조 지수를 만듭니다.",
+        "concepts": [
+          "pcs-degree-hiding-setup-boundary"
+        ]
+      },
+      {
+        "label": "05 · 다항식 증명의 비용 비교",
+        "relation": "답 10을 11로 바꾼 실패부터 확인하고 생성 시간·검증 시간·메모리를 따로 셉니다.",
+        "concepts": [
+          "pcs-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "F17에서 f(X)=X²+2X+3의 f(4)를 계산하고 canonical residue를 쓰세요.", answerChecklist: ["16+8+3", "27", "mod 17", "10", "field arithmetic", "degree two"], requiredConcepts: ["prime-field-modular-arithmetic", "polynomial-coefficient-evaluation-form"], sectionId: "overview" },
-      { level: "basic", question: "Polynomial commitment의 Commit·Open·Verify 입력과 공개되는 값을 구분하세요.", answerChecklist: ["degree bound/profile", "polynomial", "commitment C", "point z", "value y", "proof pi", "verifier no full polynomial"], requiredConcepts: ["polynomial-commitment-interface"], sectionId: "commit-open" },
-      { level: "basic", question: "f(4)=10 claim의 KZG quotient q=(f−10)/(X−4)를 F17에서 계산하세요.", answerChecklist: ["f-10", "-7 equals 10", "factor X-4", "q=X+6", "multiply back", "exact division"], requiredConcepts: ["kzg-quotient-opening-equation", "prime-field-modular-arithmetic"], sectionId: "commit-open" },
-      { level: "basic", question: "KZG pairing opening equation의 양쪽과 SRS τ의 역할을 설명하세요.", answerChecklist: ["C-yG", "proof q(tau)", "tau-z G2", "pairing", "bilinearity", "hidden tau", "degree-bound SRS"], requiredConcepts: ["kzg-quotient-opening-equation", "pairing-bilinearity-boundary"], sectionId: "commit-open" },
-      { level: "basic", question: "IPA에서 coefficient vector와 power vector의 inner product가 10이 되는지 계산하세요.", answerChecklist: ["a 3,2,1", "b 1,4,16", "3+8+16", "27 mod17", "10", "folding", "DLP group"], requiredConcepts: ["ipa-polynomial-opening", "cyclic-subgroup-dlp"], sectionId: "schemes" },
-      { level: "basic", question: "PCS의 binding·hiding·degree bound·setup을 서로 다른 질문으로 설명하세요.", answerChecklist: ["alternate opening", "conceal polynomial", "maximum degree", "SRS/generators", "randomness", "toxic waste", "transparent not assumption-free"], requiredConcepts: ["pcs-degree-hiding-setup-boundary", "commitment-binding-hiding-separation"], sectionId: "schemes" },
-      { level: "advanced", question: "KZG proof에 y=10 대신 y=11을 넣었을 때 quotient와 pairing이 실패해야 하는 이유를 유도하세요.", answerChecklist: ["f-11", "not divisible by X-4", "remainder f4-11", "-1", "no q polynomial", "pairing mismatch", "binding"], requiredConcepts: ["kzg-quotient-opening-equation", "polynomial-root-degree-bound"], sectionId: "commit-open" },
-      { level: "advanced", question: "Degree bound가 없는 PCS와 τ가 노출된 KZG의 위조 경계를 구분하세요.", answerChecklist: ["high-degree freedom", "SRS max degree", "binding game", "known tau", "construct collision/opening", "ceremony", "not hiding issue", "revoke keys"], requiredConcepts: ["pcs-degree-hiding-setup-boundary", "kzg-quotient-opening-equation"], sectionId: "schemes" },
-      { level: "advanced", question: "KZG·IPA·FRI-style commitment 후보를 같은 workload에서 비교하는 benchmark를 설계하세요.", answerChecklist: ["same field/degree", "same openings", "setup bytes/time", "commit time", "open time", "verify time", "proof bytes", "peak RSS", "batch", "negative parity"], requiredConcepts: ["pcs-release-gate", "pcs-degree-hiding-setup-boundary"], sectionId: "selection" },
-      { level: "advanced", question: "작은 on-chain proof·transparent setup·post-quantum horizon 요구가 충돌할 때 PCS 선택을 설명하세요.", answerChecklist: ["KZG constant group proof", "trusted SRS/pairing", "IPA transparent generators", "DLP not post-quantum", "FRI hash/code", "larger proof", "verifier environment", "no universal winner"], requiredConcepts: ["pcs-release-gate", "kzg-quotient-opening-equation", "ipa-polynomial-opening"], sectionId: "selection" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "F17에서 f=X²+2X+3의 위치 4 평가값을 직접 계산하세요.",
+        "answerChecklist": [
+          "16+8+3=27입니다.",
+          "27 mod17=10이며 위치와 답을 구별합니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "polynomial-commitment-interface"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Commit·Open·Verify는 같은 다항식 사례에서 각각 무엇을 주고받나요?",
+        "answerChecklist": [
+          "Commit은 다항식을 고정하고 Open은 위치 4·답 10의 증거를 만듭니다.",
+          "Verify는 commitment와 위치·답·증거로 전체 다항식 없이 일치를 검사합니다."
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "polynomial-commitment-interface"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "답 10을 뺀 다항식을 X−4로 나누면 몫은 무엇인가요?",
+        "answerChecklist": [
+          "몫은 X+6입니다.",
+          "(X−4)(X+6)=X²+2X−24≡X²+2X−7 mod17입니다."
+        ],
+        "sectionId": "commit-open",
+        "requiredConcepts": [
+          "kzg-quotient-opening-equation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 위치 4에서 거짓 답 11을 주장하면 나머지가 얼마인가요?",
+        "answerChecklist": [
+          "나머지는 f(4)−11=−1≡16 mod17입니다.",
+          "0이 아니므로 다항식 몫만으로 같은 항등식을 만족하지 못합니다."
+        ],
+        "sectionId": "commit-open",
+        "requiredConcepts": [
+          "kzg-quotient-opening-equation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "원문 평가식에 τ=7을 넣은 장난감 검산에서 정상 등식의 양쪽은 얼마인가요?",
+        "answerChecklist": [
+          "f(7)=66≡15이고 q(7)=13입니다.",
+          "13×(7−4)+10=49≡15로 같습니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "kzg-quotient-opening-equation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "계수 (3,2,1,0)와 거듭제곱 (1,4,16,0)의 내적을 구하세요.",
+        "answerChecklist": [
+          "3+8+16+0=27입니다.",
+          "F17에서 10이고 마지막 0은 길이를 4로 맞춘 패딩입니다."
+        ],
+        "sectionId": "schemes",
+        "requiredConcepts": [
+          "ipa-polynomial-opening"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "비밀 τ=7이 노출되면 거짓 답 11에 맞는 위조 지수를 어떻게 만드나요?",
+        "answerChecklist": [
+          "(f(7)−11)/(7−4)=4/3=7 mod17을 구합니다.",
+          "π=[7]로 평가점의 검사를 맞추므로 안전한 준비에서는 τ를 알려 주지 않습니다."
+        ],
+        "sectionId": "commit-open",
+        "requiredConcepts": [
+          "pcs-degree-hiding-setup-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "질문 x=2로 벡터를 접었을 때 새 내적 11을 원래 내적과 교차항으로 복원하세요.",
+        "answerChecklist": [
+          "a′=(15,4), b′=(7,2)의 내적은 113≡11입니다.",
+          "L=14,R=1과 x²=4,x⁻²=13을 넣으면 10+4×14+13×1≡11입니다."
+        ],
+        "sectionId": "schemes",
+        "requiredConcepts": [
+          "ipa-polynomial-opening"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "비밀 준비값이 없는 IPA도 곧바로 양자 안전하다고 할 수 없는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "생성자를 투명하게 만들 수 있어도 곡선 이산로그 가정은 남습니다.",
+          "준비의 신뢰 조건과 양자 공격 모델은 서로 다른 보안 축입니다."
+        ],
+        "sectionId": "selection",
+        "requiredConcepts": [
+          "pcs-degree-hiding-setup-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "KZG와 FRI의 증거 크기를 비교하기 전에 무엇을 같은 조건으로 맞추나요?",
+        "answerChecklist": [
+          "계수 수·질문 수·보안 목표·검증 환경을 맞춥니다.",
+          "준비 자료·생성 및 검증 시간·최대 메모리와 실패 조건을 각각 비교합니다."
+        ],
+        "sectionId": "selection",
+        "requiredConcepts": [
+          "pcs-release-gate"
+        ]
+      }
     ],
-    papers: [
-      { title: "Constant-Size Commitments to Polynomials and Their Applications", href: "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf", problem: "큰 polynomial을 짧게 commit하고 evaluation을 짧게 증명해야 합니다.", contribution: "상수 크기 pairing 기반 polynomial commitment와 evaluation witness를 정의합니다.", assumptions: "Degree-bounded SRS·bilinear group과 논문의 binding/hiding assumptions를 사용합니다.", evidenceScope: "KZG construction과 원 논문의 applications에 한정합니다.", notClaim: "Transparent setup·post-quantum security·모든 batching variant를 보장하지 않습니다.", sectionId: "paper-kzg" },
-      { title: "Halo: Recursive Proof Composition without a Trusted Setup", href: "https://eprint.iacr.org/2019/1021.pdf", problem: "Trusted setup 없이 recursive proof와 polynomial opening 비용을 다뤄야 합니다.", contribution: "Inner-product 기반 polynomial commitment와 amortized verification 전략을 제시합니다.", assumptions: "Prime-order curve cycle·DLP·random-oracle와 논문의 helper/amortization model을 사용합니다.", evidenceScope: "Halo의 IPA PCS와 recursive prototype 범위에 한정합니다.", notClaim: "모든 IPA verifier가 logarithmic이거나 post-quantum이라는 뜻은 아닙니다.", sectionId: "paper-halo-ipa" },
-    ],
+    "papers": [
+      {
+        "problem": "함수 전체를 보내지 않고 특정 평가를 짧게 확인합니다.",
+        "contribution": "인수정리를 군 원소와 페어링 검사로 연결합니다.",
+        "assumptions": "차수가 제한된 준비 자료와 해당 SDH 계열 가정을 사용합니다.",
+        "evidenceScope": "원문의 CreateWitness·VerifyEval 식과 차수가 제한된 커밋먼트 구성의 분석이며, 이 글에서는 f(4)=10의 몫 X+6으로 대조합니다.",
+        "notClaim": "임의 작은 후보 다항식의 은닉이나 양자 내성을 자동 보장하지 않습니다.",
+        "title": "Constant-Size Commitments to Polynomials and Their Applications (2010)",
+        "href": "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf",
+        "sectionId": "paper-kzg"
+      },
+      {
+        "problem": "두 긴 벡터의 내적 주장을 짧은 자료로 확인합니다.",
+        "contribution": "교차항을 공개 자료에 묶고 질문으로 벡터 길이를 절반씩 줄입니다.",
+        "assumptions": "소수 차수 군과 이산로그 가정, 올바른 질문 순서를 사용합니다.",
+        "evidenceScope": "이 글은 논문의 내적 논증 한 단계를 4개 항에서 2개 항으로 계산했습니다.",
+        "notClaim": "한 단계의 산술이 전체 범위 증명이나 숨김 성질을 대신하지는 않습니다.",
+        "title": "Bulletproofs · Inner-product argument, §3",
+        "href": "https://eprint.iacr.org/2017/1066.pdf",
+        "sectionId": "paper-bulletproofs-ipa"
+      },
+      {
+        "problem": "재귀 검증에서 커밋먼트 검사의 비용과 준비 가정을 다룹니다.",
+        "contribution": "내적 기반 커밋먼트와 검증 누적을 연결합니다.",
+        "assumptions": "곡선과 이산로그, 논문의 누적 검증 조건을 사용합니다.",
+        "evidenceScope": "해당 Halo 구성의 내적 기반 커밋먼트와 재귀 검증 누적 범위이며, 모든 IPA 구현의 성능 비교를 제공하는 근거는 아닙니다.",
+        "notClaim": "모든 IPA 방식의 비용이나 양자 내성이 같다는 뜻은 아닙니다.",
+        "title": "Halo: Recursive Proof Composition without a Trusted Setup",
+        "href": "https://eprint.iacr.org/2019/1021.pdf",
+        "sectionId": "paper-halo-ipa"
+      }
+    ]
   },
   "crypto/fri": {
-    entryLevel: true,
-    entryNote: "Reed–Solomon·oracle·folding을 안다고 가정하지 않고 F17의 같은 f와 paired evaluations f(4)=10,f(−4)=11에서 시작합니다.",
-    coreIdea: "FRI는 committed evaluation oracle가 low-degree Reed–Solomon codeword에 가깝다는 주장을 random even/odd folding으로 반복 축소하고 소수의 Merkle queries로 round consistency를 검사합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "fri-reed-solomon-oracle-proximity", role: "Low-degree membership과 proximity claim을 정의합니다." },
-      { id: "fri-even-odd-folding", role: "Degree와 domain을 절반으로 줄이는 round를 설명합니다." },
-      { id: "fri-merkle-query-transcript", role: "Commit·challenge·query 순서를 고정합니다." },
-      { id: "fri-sampling-miss-bound", role: "독립 query의 단순 miss probability를 계산합니다." },
-      { id: "fri-release-gate", role: "FRI failure·soundness·비용을 함께 검증합니다." },
+    "entryLevel": true,
+    "entryNote": "작은 수치와 자원 크기는 설명용 가정입니다. 2026-10-04 원문을 대조했으며 1~10절의 같은 사례에서 보장·실패·비용을 계산합니다.",
+    "coreIdea": "평가표가 정해진 낮은 차수의 다항식 표에 가까운지 검사합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "fri-reed-solomon-oracle-proximity",
+        "role": "평가표가 정해진 낮은 차수의 다항식 표에 가까운지 검사합니다."
+      },
+      {
+        "id": "fri-even-odd-folding",
+        "role": "반대 위치의 값을 짝수·홀수 부분으로 나누어 표 크기와 차수를 줄입니다."
+      },
+      {
+        "id": "fri-merkle-query-transcript",
+        "role": "표를 먼저 고정한 뒤 질문을 정하고 열린 값의 인증 경로를 확인합니다."
+      },
+      {
+        "id": "fri-sampling-miss-bound",
+        "role": "고정된 오류 위치를 독립 표본이 놓치는 확률은 반복 곱으로 계산합니다."
+      },
+      {
+        "id": "fri-release-gate",
+        "role": "차수·평가 결속·실행 의미·비밀성을 서로 다른 조건으로 검증합니다."
+      },
+      {
+        "id": "constrained-reed-solomon-query",
+        "role": "낮은 차수 조건에 평가나 선형 함수의 제약을 함께 묶습니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "fri-reed-solomon-oracle-proximity", sectionId: "overview", intuition: "아주 긴 값 표가 낮은 차수 polynomial에서 나왔는지 모든 칸을 읽지 않고 몇 칸과 재귀적 요약으로 검사합니다.", workedExample: "Degree≤2 f를 16개 domain points에서 평가한 vector는 RS codeword이며 한 칸 변조는 exact membership을 깨뜨립니다.", boundary: "Proximity는 oracle가 가까운 codeword를 가짐을 뜻하며 원래 data 의미·unique polynomial·STARK 전체 soundness를 자동 보장하지 않습니다." },
-      { id: "fri-even-odd-folding", sectionId: "folding", intuition: "짝수 차수 항과 홀수 차수 항을 나눈 뒤 무작위 β로 섞어 차수가 절반인 새 polynomial을 만듭니다.", workedExample: "f=X²+2X+3, β=5이면 f_even(T)=T+3, f_odd(T)=2, g(T)=T+13이고 g(16)=12입니다.", boundary: "β를 oracle commitment 전에 알거나 x와 −x pairing/domain mapping이 틀리면 degree reduction soundness가 깨집니다.", proofIdea: "Coefficient parity 분해는 항상 유일하고 random β가 inconsistent even/odd claims를 한 polynomial에 동시에 맞추기 어렵게 합니다." },
-      { id: "fri-merkle-query-transcript", sectionId: "soundness", intuition: "각 접힌 표를 먼저 봉인한 뒤 무작위 검사 칸을 정해 원본 두 칸과 다음 표 한 칸을 함께 엽니다.", workedExample: "Root R0→β0→root R1→query i 순서를 hash하고 f(x),f(−x),g(x²)의 Merkle paths와 folding 식을 검사합니다.", boundary: "Merkle path는 committed value authenticity만 보장하며 낮은 차수는 folding·query·final polynomial 검사가 함께 필요합니다." },
-      { id: "fri-sampling-miss-bound", sectionId: "soundness", intuition: "틀린 칸이 δ 비율인데 q번 독립 추첨에서 모두 정상 칸만 뽑을 확률을 곱합니다.", workedExample: "δ=1/4,q=3이면 miss≤(3/4)³=27/64≈0.422입니다.", boundary: "Query 상관·adaptive adversary·code distance·folding error가 있는 실제 FRI 전체 soundness를 이 식 하나로 대체하지 않습니다.", proofIdea: "각 독립 query가 bad set을 피할 조건부 확률이 1−δ이므로 q회 곱합니다.", counterexample: "항상 같은 index를 세 번 검사하면 독립성이 없어 miss 확률은 (1−δ)이지 (1−δ)³이 아닙니다." },
-      { id: "fri-release-gate", sectionId: "stark-boundary", intuition: "낮은 차수 표와 일부러 망가뜨린 표를 같은 profile로 재생해 reject와 soundness budget을 먼저 확인합니다.", workedExample: "Wrong pair/fold/root/path/final degree/transcript order를 주입하고 prover·proof bytes·hash·query verify를 분해합니다.", boundary: "Query 수 증가의 단순 보안·성능 trade-off를 모든 field/hash/domain에 동일한 수치로 일반화하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "fri-reed-solomon-oracle-proximity",
+        "sectionId": "names",
+        "intuition": "평가표가 정해진 낮은 차수의 다항식 표에 가까운지 검사합니다.",
+        "workedExample": "F17의 16개 위치에서 차수 2는 엄격한 경계 3보다 작습니다.",
+        "boundary": "표가 낮은 차수라는 사실이 특정 프로그램의 실행을 뜻하지는 않습니다."
+      },
+      {
+        "id": "fri-even-odd-folding",
+        "sectionId": "folding",
+        "intuition": "반대 위치의 값을 짝수·홀수 부분으로 나누어 표 크기와 차수를 줄입니다.",
+        "workedExample": "f(4)=10,f(13)=11,β=5를 넣으면 새 위치 16의 값은 12입니다.",
+        "boundary": "2와 x의 역수가 필요하므로 이 식을 특성 2나 x=0에 그대로 쓰지 않습니다."
+      },
+      {
+        "id": "fri-merkle-query-transcript",
+        "sectionId": "soundness",
+        "intuition": "표를 먼저 고정한 뒤 질문을 정하고 열린 값의 인증 경로를 확인합니다.",
+        "workedExample": "현재 표 root를 정한 뒤 β=5를 받고 다음 표를 고정합니다.",
+        "boundary": "해시 경로만 맞아도 낮은 차수나 비밀성이 자동 성립하는 것은 아닙니다."
+      },
+      {
+        "id": "fri-sampling-miss-bound",
+        "sectionId": "soundness",
+        "intuition": "고정된 오류 위치를 독립 표본이 놓치는 확률은 반복 곱으로 계산합니다.",
+        "workedExample": "16칸 중 틀린 4칸을 독립 검사 3회가 모두 놓칠 확률은 27/64입니다.",
+        "boundary": "같은 위치를 반복하면 3/4이며 이 단순 식은 FRI 전체 건전성 정리가 아닙니다.",
+        "proofIdea": "틀린 위치를 미리 4개로 고정하면 균일 표본이 맞는 칸을 고를 확률은 12/16입니다. 세 선택이 독립일 때만 이 값을 세 번 곱해 27/64를 얻습니다.",
+        "counterexample": "검사 위치를 한 번 뽑아 세 번 반복하면 사건이 같아서 누락 확률은 12/16입니다. 따라서 질문 수만 세어 독립 검사의 보안으로 해석할 수 없습니다."
+      },
+      {
+        "id": "fri-release-gate",
+        "sectionId": "stark-boundary",
+        "intuition": "차수·평가 결속·실행 의미·비밀성을 서로 다른 조건으로 검증합니다.",
+        "workedExample": "낮은 차수의 다른 함수도 존재하므로 차수 통과만으로 f(4)=10을 정할 수 없습니다.",
+        "boundary": "해시 기반 구성이라도 질문 변환과 양자 공격 모델의 분석이 필요합니다."
+      },
+      {
+        "id": "constrained-reed-solomon-query",
+        "sectionId": "source",
+        "intuition": "낮은 차수 조건에 평가나 선형 함수의 제약을 함께 묶습니다.",
+        "workedExample": "f(4)=10,f(2)=11에서 f(4)+2f(2)=15 mod17을 주장합니다.",
+        "boundary": "작은 선형 질문은 WHIR 전체 프로토콜이나 원 논문의 속도 수치를 재현한 것이 아닙니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 encode", relation: "Polynomial evaluations를 RS membership·proximity 문제로 봅니다.", concepts: ["prime-field-modular-arithmetic", "polynomial-coefficient-evaluation-form", "reed-solomon-evaluation-code", "reed-solomon-proximity-boundary", "fri-reed-solomon-oracle-proximity"] },
-      { label: "02 fold", relation: "짝·홀 coefficient를 random challenge로 접습니다.", concepts: ["fri-even-odd-folding"] },
-      { label: "03 commit/query", relation: "Merkle·Fiat–Shamir와 sampling bound를 연결합니다.", concepts: ["merkle-selective-opening", "schnorr-fiat-shamir-transcript", "fri-merkle-query-transcript", "fri-sampling-miss-bound"] },
-      { label: "04 release", relation: "STARK에 넘기기 전 FRI 자체를 검증합니다.", concepts: ["fri-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "01 · 낮은 차수 평가표의 근접성",
+        "relation": "F17의 16개 위치에서 차수 2는 엄격한 경계 3보다 작습니다.",
+        "concepts": [
+          "fri-reed-solomon-oracle-proximity"
+        ]
+      },
+      {
+        "label": "02 · FRI의 짝수·홀수 접기",
+        "relation": "f(4)=10,f(13)=11,β=5를 넣으면 새 위치 16의 값은 12입니다.",
+        "concepts": [
+          "fri-even-odd-folding"
+        ]
+      },
+      {
+        "label": "03 · 표 고정과 해시 질문 순서",
+        "relation": "현재 표 root를 정한 뒤 β=5를 받고 다음 표를 고정합니다.",
+        "concepts": [
+          "fri-merkle-query-transcript"
+        ]
+      },
+      {
+        "label": "04 · 독립 표본의 오류 누락 상한",
+        "relation": "16칸 중 틀린 4칸을 독립 검사 3회가 모두 놓칠 확률은 27/64입니다.",
+        "concepts": [
+          "fri-sampling-miss-bound"
+        ]
+      },
+      {
+        "label": "05 · 차수·실행·비밀성의 경계",
+        "relation": "낮은 차수의 다른 함수도 존재하므로 차수 통과만으로 f(4)=10을 정할 수 없습니다.",
+        "concepts": [
+          "fri-release-gate"
+        ]
+      },
+      {
+        "label": "06 · 제약이 붙은 Reed–Solomon 평가 질문",
+        "relation": "f(4)=10,f(2)=11에서 f(4)+2f(2)=15 mod17을 주장합니다.",
+        "concepts": [
+          "constrained-reed-solomon-query"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Degree≤2 polynomial의 evaluation vector와 RS membership·proximity를 구분하세요.", answerChecklist: ["distinct domain", "evaluation vector", "degree bound", "exact membership", "nearest codeword", "relative Hamming distance", "not data validity"], requiredConcepts: ["reed-solomon-evaluation-code", "fri-reed-solomon-oracle-proximity", "reed-solomon-proximity-boundary"], sectionId: "overview" },
-      { level: "basic", question: "F17에서 f(4)=10과 f(−4)=f(13)=11을 계산하세요.", answerChecklist: ["-4 equals13", "169+26+3", "198", "mod17", "11", "paired points"], requiredConcepts: ["prime-field-modular-arithmetic", "fri-even-odd-folding"], sectionId: "folding" },
-      { level: "basic", question: "f의 even·odd decomposition과 β=5 folded g(T)를 계산하세요.", answerChecklist: ["f_even=T+3", "f_odd=2", "g=even+5odd", "T+13", "degree one", "degree halved"], requiredConcepts: ["fri-even-odd-folding", "polynomial-coefficient-evaluation-form"], sectionId: "folding" },
-      { level: "basic", question: "f(4),f(−4)에서 even=2, odd=2와 g(16)=12를 복원하세요.", answerChecklist: ["inverse 2", "even=(10+11)/2", "even value 2", "odd=(10-11)/(8)", "odd value 2", "2+5*2", "12"], requiredConcepts: ["fri-even-odd-folding", "prime-field-modular-arithmetic"], sectionId: "folding" },
-      { level: "basic", question: "FRI 한 round의 root·challenge·folded root·query opening 순서를 설명하세요.", answerChecklist: ["commit oracle root", "derive beta", "fold", "commit next root", "derive query", "x/-x", "Merkle paths", "next value"], requiredConcepts: ["fri-merkle-query-transcript", "merkle-selective-opening"], sectionId: "soundness" },
-      { level: "basic", question: "δ=1/4,q=3 독립 query에서 모든 bad 위치를 놓칠 확률을 계산하세요.", answerChecklist: ["1-delta", "3/4", "cube", "27/64", "0.421875", "independence", "upper model"], requiredConcepts: ["fri-sampling-miss-bound"], sectionId: "soundness" },
-      { level: "advanced", question: "FRI even/odd folding이 degree를 줄이는 증명 아이디어와 β 선공개 반례를 설명하세요.", answerChecklist: ["unique parity split", "degree halves", "random linear combination", "commit first", "inconsistent claims", "beta known tailoring", "domain pair", "soundness"], requiredConcepts: ["fri-even-odd-folding", "fri-merkle-query-transcript"], sectionId: "folding" },
-      { level: "advanced", question: "같은 index를 q번 재사용할 때 (1−δ)^q를 쓸 수 없는 이유를 설명하세요.", answerChecklist: ["not independent", "same event", "miss 1-delta", "conditional probability", "query derivation", "dedup", "actual FRI more complex"], requiredConcepts: ["fri-sampling-miss-bound", "fri-merkle-query-transcript"], sectionId: "soundness" },
-      { level: "advanced", question: "Merkle path가 모두 맞지만 final polynomial degree가 높은 proof를 왜 거절해야 하는지 설명하세요.", answerChecklist: ["authentic committed values", "not low degree", "fold consistency", "final coefficients", "degree check", "transcript", "proximity separate"], requiredConcepts: ["fri-merkle-query-transcript", "fri-reed-solomon-oracle-proximity"], sectionId: "soundness" },
-      { level: "advanced", question: "FRI blowup·round·query 수를 바꾸는 release gate와 비용 장부를 설계하세요.", answerChecklist: ["field/domain", "rate/blowup", "degree", "rounds", "queries", "hash", "soundness budget", "wrong fixtures", "prover/proof/verifier", "memory"], requiredConcepts: ["fri-release-gate", "fri-sampling-miss-bound"], sectionId: "stark-boundary" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "F17의 f=X²+2X+3에서 서로 반대인 4와 13의 평가값을 구하세요.",
+        "answerChecklist": [
+          "f(4)=27≡10입니다.",
+          "f(13)=198≡11이며 13=−4 mod17입니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "fri-even-odd-folding"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "평가값 10·11에서 짝수 부분과 홀수 부분을 각각 계산하세요.",
+        "answerChecklist": [
+          "(10+11)/2≡2 mod17입니다.",
+          "(10−11)/(2×4)=−1/8≡2 mod17입니다."
+        ],
+        "sectionId": "folding",
+        "requiredConcepts": [
+          "fri-even-odd-folding"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "질문 β=5를 넣은 새 위치 16의 평가값은 얼마인가요?",
+        "answerChecklist": [
+          "x²=4²=16입니다.",
+          "짝수 부분 2에 5×홀수 부분 2를 더해 12가 됩니다."
+        ],
+        "sectionId": "folding",
+        "requiredConcepts": [
+          "fri-even-odd-folding"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "첫 접힘이 g(T)=T+13이면 다음 질문 3으로 접힌 상수는 얼마인가요?",
+        "answerChecklist": [
+          "짝수 부분은 13, 홀수 부분은 1입니다.",
+          "13+3×1=16으로 상수 함수가 됩니다."
+        ],
+        "sectionId": "folding",
+        "requiredConcepts": [
+          "fri-even-odd-folding"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "N=16,ρ=3/16일 때 차수 2가 원문의 엄격한 경계를 만족하나요?",
+        "answerChecklist": [
+          "ρN=3입니다.",
+          "차수 2<3이며 경계를 2≤2처럼 다른 조건으로 바꾸지 않습니다."
+        ],
+        "sectionId": "soundness",
+        "requiredConcepts": [
+          "fri-reed-solomon-oracle-proximity"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "16칸 중 오류 4칸을 독립적으로 세 번 검사해 모두 놓칠 확률을 구하세요.",
+        "answerChecklist": [
+          "한 번 놓칠 확률은 12/16입니다.",
+          "독립 세 번은 (12/16)³=27/64이고 전체 FRI 보안식은 아닙니다."
+        ],
+        "sectionId": "soundness",
+        "requiredConcepts": [
+          "fri-sampling-miss-bound"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 위치를 세 번 보는 검사와 독립 표본 세 번의 결과가 왜 다른가요?",
+        "answerChecklist": [
+          "같은 위치는 첫 선택을 반복하므로 누락 확률이 12/16에 머뭅니다.",
+          "독립 표본만 각 단계 확률을 곱해 27/64로 줄일 수 있습니다."
+        ],
+        "sectionId": "soundness",
+        "requiredConcepts": [
+          "fri-sampling-miss-bound"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "짝수·홀수 분해 식을 특성 2인 체나 위치 0에 그대로 쓸 수 없다는 것을 설명하세요.",
+        "answerChecklist": [
+          "특성 2에서는 2=0이어서 2의 역수가 없습니다.",
+          "x=0에서는 2x의 역수가 없어 같은 식의 홀수 부분을 계산할 수 없습니다."
+        ],
+        "sectionId": "folding",
+        "requiredConcepts": [
+          "fri-even-odd-folding"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "f(4)=10과 f(2)=11을 묶은 선형 질문 f(4)+2f(2)의 답을 계산하세요.",
+        "answerChecklist": [
+          "10+2×11=32≡15 mod17입니다.",
+          "이런 평가 제약은 낮은 차수라는 모양 조건과 별도로 원래 함수에 연결해야 합니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "constrained-reed-solomon-query"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "차수 검사를 통과한 표가 곧바로 올바른 프로그램 실행이나 영지식을 뜻하지 않는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "전이·공개 입력·출력의 조건을 별도로 연결해야 실행의 의미가 생깁니다.",
+          "열린 값의 추가 정보와 무작위 가리기, 공격 모델도 별도로 확인해야 합니다."
+        ],
+        "sectionId": "stark-boundary",
+        "requiredConcepts": [
+          "fri-release-gate"
+        ]
+      }
     ],
-    papers: [
-      { title: "Fast Reed-Solomon Interactive Oracle Proofs of Proximity", href: "https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ICALP.2018.14", problem: "RS proximity proof의 prover를 linear time, verifier를 logarithmic 수준으로 낮춰야 합니다.", contribution: "FFT와 닮은 recursive folding 기반 FRI IOPP와 soundness analysis를 제시합니다.", assumptions: "논문의 RS code rate·field/domain·oracle/query model과 randomness를 사용합니다.", evidenceScope: "FRI construction·theorem·보고된 asymptotic 범위에 한정합니다.", notClaim: "단순 독립 query 식이 전체 FRI soundness이거나 Merkle/Fiat–Shamir 구현을 자동 보장하지 않습니다.", sectionId: "paper-fri" },
-    ],
+    "papers": [
+      {
+        "problem": "긴 평가표가 낮은 차수 부호에 가까운지 적게 읽고 검사합니다.",
+        "contribution": "재귀적인 표 축소와 근접성 분석을 제공합니다.",
+        "assumptions": "정의한 체·평가 영역·거리·질문 모델을 사용합니다.",
+        "evidenceScope": "원문의 정리와 매개변수별 분석입니다.",
+        "notClaim": "프로그램 의미, 영지식 또는 단순 독립표본 식만으로 전체 보안을 보장하지 않습니다.",
+        "title": "Fast Reed–Solomon IOP of Proximity (ICALP2018)",
+        "href": "https://drops.dagstuhl.de/storage/00lipics/lipics-vol107-icalp2018/LIPIcs.ICALP.2018.14/LIPIcs.ICALP.2018.14.pdf",
+        "sectionId": "paper-fri"
+      },
+      {
+        "problem": "해시 기반 증명에서 평가 질문을 처리하는 검증 비용을 줄입니다.",
+        "contribution": "제약된 부호의 근접성 검사와 sumcheck 기반 연결을 결합합니다.",
+        "assumptions": "논문의 체·부호율·오류 경계·해시 모델을 사용합니다.",
+        "evidenceScope": "2024-11-21 개정 논문과 저자 평가 조건입니다.",
+        "notClaim": "모든 FRI 구현을 같은 보안과 비용으로 대체하거나 온체인 가스가 자동 감소한다는 결론은 아닙니다.",
+        "title": "WHIR: Reed–Solomon Proximity Testing with Super-Fast Verification",
+        "href": "https://eprint.iacr.org/2024/1586.pdf",
+        "sectionId": "paper-whir"
+      }
+    ]
   },
   "crypto/stark-theory": {
-    entryLevel: true,
-    entryNote: "STARK·AIR·trace를 안다고 가정하지 않고 F17에서 Horner 방식으로 f(4)=10을 계산한 세 rows에서 시작합니다.",
-    coreIdea: "STARK는 computation을 execution trace와 AIR constraints로 바꾸고 composition polynomial을 low-degree extend·Merkle commit한 뒤 FRI로 proximity를 검사하는 transparent proof pipeline입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "stark-execution-trace", role: "시간순 computation witness table을 정의합니다." },
-      { id: "air-transition-boundary-constraints", role: "인접 실행과 public start/end를 algebraic하게 강제합니다." },
-      { id: "stark-composition-polynomial", role: "여러 AIR 위반을 하나의 quotient claim으로 합칩니다." },
-      { id: "stark-lde-fri-pipeline", role: "LDE·Merkle·query·FRI의 검증 흐름을 연결합니다." },
-      { id: "stark-transparent-hash-security-boundary", role: "Transparency와 남는 assumptions를 구분합니다." },
-      { id: "stark-release-gate", role: "Trace부터 verifier까지 correctness 뒤 비용을 측정합니다." },
+    "entryLevel": true,
+    "entryNote": "작은 수치와 자원 크기는 설명용 가정입니다. 2026-10-04 원문을 대조했으며 1~10절의 같은 사례에서 보장·실패·비용을 계산합니다.",
+    "coreIdea": "프로그램의 중간 상태를 시간별 행으로 기록합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "stark-execution-trace",
+        "role": "프로그램의 중간 상태를 시간별 행으로 기록합니다."
+      },
+      {
+        "id": "air-transition-boundary-constraints",
+        "role": "이웃 행의 규칙과 첫 행·마지막 공개값의 조건을 식으로 묶습니다."
+      },
+      {
+        "id": "stark-composition-polynomial",
+        "role": "서로 다른 조건의 몫을 질문의 가중치로 결합합니다."
+      },
+      {
+        "id": "stark-lde-fri-pipeline",
+        "role": "행의 값을 더 큰 평가 영역에 펼치고 표 고정과 차수 검사를 연결합니다."
+      },
+      {
+        "id": "stark-transparent-hash-security-boundary",
+        "role": "비밀 준비값의 부재, 해시 가정, 영지식은 별도의 보안 조건입니다."
+      },
+      {
+        "id": "stark-release-gate",
+        "role": "실행의 의미가 빠진 조건과 비용의 가정을 함께 검토합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "stark-execution-trace", sectionId: "trace-air", intuition: "프로그램 실행을 시간순 장부로 펼쳐 각 행에서 다음 행으로 어떻게 변했는지 검사하게 합니다.", workedExample: "Horner trace v0=1, v1=1·4+2=6, v2=6·4+3=27≡10은 f(4)=10을 계산합니다.", boundary: "Trace가 채워졌다는 사실만으로 transition·memory·public boundary가 강제되지는 않습니다." },
-      { id: "air-transition-boundary-constraints", sectionId: "trace-air", intuition: "모든 인접 행의 계산 규칙과 첫·마지막 공개 값을 서로 다른 식으로 검사합니다.", workedExample: "v1−4v0−2=0, v2−4v1−3=0과 v0−1=0,v2−10=0을 함께 둡니다.", boundary: "Transition만 있으면 임의 시작값의 유효 궤적도 통과하고 boundary만 있으면 중간 계산을 건너뛸 수 있습니다.", counterexample: "마지막 boundary를 빼면 출력 11인 trace도 transition만 맞으면 다른 statement로 통과할 수 있습니다." },
-      { id: "stark-composition-polynomial", sectionId: "lde-fri", intuition: "여러 검사식의 오차를 적용 domain의 zerofier로 나눈 뒤 무작위 계수로 한 장부에 합칩니다.", workedExample: "C=α0·transition/Ztrans+α1·(v0−1)/(X−1)+α2·(v2−10)/(X−ω²)처럼 구성합니다.", boundary: "분모 root에서의 처리·degree accounting·challenge order가 빠지면 quotient 식만으로 soundness가 생기지 않습니다.", proofIdea: "각 numerator가 지정 domain에서 0이면 대응 zerofier로 나뉘고 random combination이 서로 다른 위반의 cancellation을 어렵게 합니다." },
-      { id: "stark-lde-fri-pipeline", sectionId: "lde-fri", intuition: "작은 trace polynomial을 더 큰 domain에 펼쳐 봉인하고 몇 위치의 AIR 일관성과 전체 low-degree 성질을 함께 검사합니다.", workedExample: "Trace domain 4를 blowup 4로 16 evaluations에 확장하고 roots를 commit한 뒤 query rows와 FRI folds를 엽니다.", boundary: "FRI는 low degree를, Merkle은 opening authenticity를, AIR는 computation semantics를 각각 맡습니다." },
-      { id: "stark-transparent-hash-security-boundary", sectionId: "security-cost", intuition: "비밀 setup ceremony가 없다는 말과 아무 cryptographic assumption도 없다는 말은 다릅니다.", workedExample: "Publicly derived domain과 hash roots를 쓰더라도 collision resistance·Fiat–Shamir model·field/query soundness가 필요합니다.", boundary: "Hash-based라는 이유만으로 모든 hash·parameter·implementation이 post-quantum safe하거나 zero knowledge라고 단정하지 않습니다." },
-      { id: "stark-release-gate", sectionId: "security-cost", intuition: "잘못된 실행·boundary·Merkle·FRI를 모두 거절한 같은 program에서 stage별 시간을 잽니다.", workedExample: "Trace/LDE/composition/hash/FRI/proof serialization/verify를 p50/p95·bytes·RSS로 분해합니다.", boundary: "논문의 큰-instance scaling이나 proof size를 다른 VM·hash·security target의 고정값으로 옮기지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "stark-execution-trace",
+        "sectionId": "case",
+        "intuition": "프로그램의 중간 상태를 시간별 행으로 기록합니다.",
+        "workedExample": "입력 4의 Horner 실행은 1→6→10으로 이어집니다.",
+        "boundary": "임의로 채운 표를 올바른 실행으로 해석하려면 전이와 경계 조건이 필요합니다."
+      },
+      {
+        "id": "air-transition-boundary-constraints",
+        "sectionId": "trace-air",
+        "intuition": "이웃 행의 규칙과 첫 행·마지막 공개값의 조건을 식으로 묶습니다.",
+        "workedExample": "전이 분자는 v(T+1)−4v(T)−(T+2)=10T(T−1)입니다.",
+        "boundary": "마지막 행 2에는 다음 실행이 없으므로 같은 전이를 무조건 적용하지 않습니다."
+      },
+      {
+        "id": "stark-composition-polynomial",
+        "sectionId": "trace-air",
+        "intuition": "서로 다른 조건의 몫을 질문의 가중치로 결합합니다.",
+        "workedExample": "전이 몫 10, 시작 몫 8T+14, 끝 몫 8T+13을 1·2·3으로 합치면 6T+9입니다.",
+        "boundary": "가중치는 조건을 고정한 뒤 정해야 하며 합 하나가 원래 의미를 새로 만들지는 않습니다."
+      },
+      {
+        "id": "stark-lde-fri-pipeline",
+        "sectionId": "lde-fri",
+        "intuition": "행의 값을 더 큰 평가 영역에 펼치고 표 고정과 차수 검사를 연결합니다.",
+        "workedExample": "v=8T²+14T+1을 T=3에 평가하면 13으로 원래 세 행 외의 값을 얻습니다.",
+        "boundary": "FRI만 통과했다고 공개 출력 10과의 연결이 검증된 것은 아닙니다."
+      },
+      {
+        "id": "stark-transparent-hash-security-boundary",
+        "sectionId": "security-cost",
+        "intuition": "비밀 준비값의 부재, 해시 가정, 영지식은 별도의 보안 조건입니다.",
+        "workedExample": "v에 T(T−1)(T−2)를 더하면 1·6·10은 보존되고 T=3의 13은 2로 바뀝니다.",
+        "boundary": "무작위 상수 하나가 전체 영지식을 보장하지 않으며 외부 곡선 wrapper는 새 가정을 더합니다."
+      },
+      {
+        "id": "stark-release-gate",
+        "sectionId": "security-cost",
+        "intuition": "실행의 의미가 빠진 조건과 비용의 가정을 함께 검토합니다.",
+        "workedExample": "마지막 공개값 연결을 빼면 내부 표 1·6·10을 두고 출력 11을 주장할 수 있습니다.",
+        "boundary": "해시와 차수 검사가 누락된 프로그램 조건을 고치지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 trace", relation: "Relation의 witness computation을 time rows로 펼칩니다.", concepts: ["prime-field-modular-arithmetic", "arithmetic-relation-instance-witness", "stark-execution-trace", "air-transition-boundary-constraints"] },
-      { label: "02 compose", relation: "AIR constraints를 vanishing quotient 하나로 합칩니다.", concepts: ["vanishing-polynomial-domain", "stark-composition-polynomial"] },
-      { label: "03 commit/test", relation: "NTT LDE·Merkle·FRI로 low degree와 openings를 검사합니다.", concepts: ["finite-field-ntt", "merkle-selective-opening", "fri-reed-solomon-oracle-proximity", "stark-lde-fri-pipeline"] },
-      { label: "04 release", relation: "Transparency assumptions와 전체 비용을 검증합니다.", concepts: ["snark-completeness-soundness-zk", "stark-transparent-hash-security-boundary", "stark-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "01 · 시간별 실행 기록",
+        "relation": "입력 4의 Horner 실행은 1→6→10으로 이어집니다.",
+        "concepts": [
+          "stark-execution-trace"
+        ]
+      },
+      {
+        "label": "02 · 전이와 시작·끝 조건",
+        "relation": "전이 분자는 v(T+1)−4v(T)−(T+2)=10T(T−1)입니다.",
+        "concepts": [
+          "air-transition-boundary-constraints"
+        ]
+      },
+      {
+        "label": "03 · 조건 몫의 선형 결합",
+        "relation": "전이 몫 10, 시작 몫 8T+14, 끝 몫 8T+13을 1·2·3으로 합치면 6T+9입니다.",
+        "concepts": [
+          "stark-composition-polynomial"
+        ]
+      },
+      {
+        "label": "04 · 평가 확장과 FRI 검사",
+        "relation": "v=8T²+14T+1을 T=3에 평가하면 13으로 원래 세 행 외의 값을 얻습니다.",
+        "concepts": [
+          "stark-lde-fri-pipeline"
+        ]
+      },
+      {
+        "label": "05 · 투명한 준비와 해시 보안",
+        "relation": "v에 T(T−1)(T−2)를 더하면 1·6·10은 보존되고 T=3의 13은 2로 바뀝니다.",
+        "concepts": [
+          "stark-transparent-hash-security-boundary"
+        ]
+      },
+      {
+        "label": "06 · 실행 의미와 증명 비용",
+        "relation": "마지막 공개값 연결을 빼면 내부 표 1·6·10을 두고 출력 11을 주장할 수 있습니다.",
+        "concepts": [
+          "stark-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "F17에서 f(4)=10을 계산하는 Horner execution trace 세 rows를 작성하세요.", answerChecklist: ["v0=1", "v1=1*4+2", "6", "v2=6*4+3", "27 mod17", "10", "time rows"], requiredConcepts: ["stark-execution-trace", "prime-field-modular-arithmetic"], sectionId: "overview" },
-      { level: "basic", question: "위 trace의 transition constraints와 boundary constraints를 각각 쓰세요.", answerChecklist: ["v1-4v0-2", "v2-4v1-3", "equals zero", "v0=1", "v2=10", "public statement", "both needed"], requiredConcepts: ["air-transition-boundary-constraints", "stark-execution-trace"], sectionId: "trace-air" },
-      { level: "basic", question: "Transition만 또는 boundary만 검사할 때 생기는 반례를 설명하세요.", answerChecklist: ["arbitrary valid trajectory", "wrong start/end", "boundary no middle", "skip computation", "semantic completeness", "negative fixture"], requiredConcepts: ["air-transition-boundary-constraints"], sectionId: "trace-air" },
-      { level: "basic", question: "Composition polynomial이 numerator·zerofier·random α를 사용하는 이유를 설명하세요.", answerChecklist: ["constraint numerator", "applicable domain", "vanishing polynomial", "exact division", "random coefficients", "combine violations", "degree accounting"], requiredConcepts: ["stark-composition-polynomial", "vanishing-polynomial-domain"], sectionId: "lde-fri" },
-      { level: "basic", question: "Trace domain 4를 blowup 4로 LDE할 때 evaluation 수와 각 구성 요소 역할을 설명하세요.", answerChecklist: ["4*4", "16 evaluations", "NTT/coset", "Merkle commit", "query AIR", "FRI low degree", "not same guarantee"], requiredConcepts: ["finite-field-ntt", "stark-lde-fri-pipeline", "merkle-selective-opening"], sectionId: "lde-fri" },
-      { level: "basic", question: "Transparent STARK에도 남는 hash·Fiat–Shamir·field·query assumptions를 설명하세요.", answerChecklist: ["no toxic waste", "public setup", "collision resistance", "random oracle", "field size", "query soundness", "not unconditional", "ZK separate"], requiredConcepts: ["stark-transparent-hash-security-boundary", "snark-completeness-soundness-zk"], sectionId: "security-cost" },
-      { level: "advanced", question: "AIR numerator가 zerofier로 나뉘는 proof idea와 denominator root 처리 경계를 설명하세요.", answerChecklist: ["zero on domain", "factor theorem", "vanishing divides", "quotient degree", "excluded/trace domain", "boundary denominator", "challenge point", "no division by zero"], requiredConcepts: ["stark-composition-polynomial", "vanishing-polynomial-domain"], sectionId: "lde-fri" },
-      { level: "advanced", question: "Merkle openings은 맞지만 composition degree가 높은 STARK proof를 왜 거절해야 하나요?", answerChecklist: ["authentic values", "not low degree", "AIR quotient claim", "FRI", "degree bound", "commitment not semantics", "reject"], requiredConcepts: ["stark-lde-fri-pipeline", "fri-reed-solomon-oracle-proximity"], sectionId: "lde-fri" },
-      { level: "advanced", question: "STARK zero knowledge를 위해 trace blinding을 넣을 때 correctness·degree·leakage를 검사하세요.", answerChecklist: ["ZK not automatic", "mask polynomial", "boundary preserve", "degree budget", "query leakage", "randomness", "simulator/security proof", "performance"], requiredConcepts: ["stark-transparent-hash-security-boundary", "snark-completeness-soundness-zk"], sectionId: "security-cost" },
-      { level: "advanced", question: "STARK trace부터 verifier까지 release gate와 benchmark breakdown을 설계하세요.", answerChecklist: ["program/AIR hash", "field/domain", "wrong trace/boundary", "composition", "Merkle/FRI", "public input", "trace/LDE/hash time", "proof bytes", "verify p50/p95", "RSS"], requiredConcepts: ["stark-release-gate", "stark-lde-fri-pipeline"], sectionId: "security-cost" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "입력 4에서 계수 2·3을 순서대로 쓰는 Horner 실행의 상태를 계산하세요.",
+        "answerChecklist": [
+          "시작 1에서 1×4+2=6입니다.",
+          "다음은 6×4+3=27≡10 mod17입니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "stark-execution-trace"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "왜 세 행 중 시간 0·1에는 전이가 있고 마지막 행 2에는 같은 전이를 두지 않나요?",
+        "answerChecklist": [
+          "0→1과 1→2의 두 실행이 실제로 존재합니다.",
+          "마지막 행 이후 상태는 정의하지 않았으므로 불필요한 전이를 만들면 다른 조건이 됩니다."
+        ],
+        "sectionId": "trace-air",
+        "requiredConcepts": [
+          "air-transition-boundary-constraints"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "v(T)=8T²+14T+1이 세 상태를 보간하는지 직접 확인하세요.",
+        "answerChecklist": [
+          "v(0)=1이고 v(1)=23≡6입니다.",
+          "v(2)=61≡10으로 원래 상태와 같습니다."
+        ],
+        "sectionId": "trace-air",
+        "requiredConcepts": [
+          "stark-execution-trace"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "전이 분자 10T²+7T를 T(T−1)로 나누면 몫이 얼마인가요?",
+        "answerChecklist": [
+          "−10≡7 mod17이므로 분자는 10T(T−1)입니다.",
+          "정확한 다항식 몫은 10이며 각 점의 분수 계산과 구별합니다."
+        ],
+        "sectionId": "trace-air",
+        "requiredConcepts": [
+          "air-transition-boundary-constraints"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "몫 10,8T+14,8T+13을 가중치 1·2·3으로 합치세요.",
+        "answerChecklist": [
+          "T 계수는 16+24=40≡6입니다.",
+          "상수는 10+28+39=77≡9로 조합은 6T+9입니다."
+        ],
+        "sectionId": "trace-air",
+        "requiredConcepts": [
+          "stark-composition-polynomial"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "원래 세 행 밖의 T=3에서 보간 다항식의 값은 얼마인가요?",
+        "answerChecklist": [
+          "8×9+14×3+1=115입니다.",
+          "115 mod17=13이며 더 넓은 평가표에 넣는 값입니다."
+        ],
+        "sectionId": "lde-fri",
+        "requiredConcepts": [
+          "stark-lde-fri-pipeline"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "v에 T(T−1)(T−2)를 더할 때 원래 세 값과 T=3의 값은 어떻게 바뀌나요?",
+        "answerChecklist": [
+          "T=0,1,2에서 추가항은 0이므로 1·6·10이 보존됩니다.",
+          "T=3에서는 6을 더해 13+6≡2 mod17이 됩니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "stark-transparent-hash-security-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "원래 행을 보존하는 무작위 항 하나가 왜 전체 영지식 증명을 대신하지 못하나요?",
+        "answerChecklist": [
+          "열어 주는 평가와 결합 조건에 비해 충분한 무작위 자유도가 필요합니다.",
+          "차수가 늘어난 만큼 검증 조건과 전체 프로토콜의 비밀성 분석도 바꿔야 합니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "stark-transparent-hash-security-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "마지막 공개 출력과의 경계를 빼면 내부 표를 유지한 채 어떤 잘못된 주장이 가능하나요?",
+        "answerChecklist": [
+          "내부 표 1·6·10의 전이는 계속 맞을 수 있습니다.",
+          "그 표를 공개 출력 11과 연결하는 조건이 없으므로 잘못된 끝값을 막지 못합니다."
+        ],
+        "sectionId": "security-cost",
+        "requiredConcepts": [
+          "stark-release-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "STARK를 곡선 증명으로 감싼 경우 해시 기반이라는 설명만으로 보안 결론을 내릴 수 있나요?",
+        "answerChecklist": [
+          "바깥 증명의 곡선과 준비 가정이 추가됩니다.",
+          "안쪽 해시의 공격 모델과 바깥 이산로그의 양자 공격 경계를 함께 봐야 합니다."
+        ],
+        "sectionId": "security-cost",
+        "requiredConcepts": [
+          "stark-transparent-hash-security-boundary"
+        ]
+      }
     ],
-    papers: [
-      { title: "Scalable, Transparent, and Post-Quantum Secure Computational Integrity", href: "https://eprint.iacr.org/2018/046.pdf", problem: "Trusted party 없이 큰 computation의 integrity와 privacy를 sublinear verification으로 증명해야 합니다.", contribution: "IOP·FRI 계열을 사용한 transparent ZK-STARK system과 proof-of-concept를 제시합니다.", assumptions: "논문의 algebraic/hash/oracle model·security parameters와 evaluated computations를 사용합니다.", evidenceScope: "원 construction과 DNA database proof-of-concept·reported scaling에 한정합니다.", notClaim: "모든 STARK 구현·hash가 자동 post-quantum/ZK이거나 모든 크기에서 작은 proof라는 뜻은 아닙니다.", sectionId: "paper-stark" },
-      { title: "Fast Reed-Solomon Interactive Oracle Proofs of Proximity", href: "https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ICALP.2018.14", problem: "STARK가 사용할 빠른 RS proximity test가 필요합니다.", contribution: "Linear-time prover·logarithmic verifier를 목표로 한 FRI IOPP를 제시합니다.", assumptions: "논문의 code rate·field/domain·oracle model을 따릅니다.", evidenceScope: "STARK pipeline 중 low-degree proximity layer에만 사용합니다.", notClaim: "FRI 하나가 AIR·Merkle·ZK·Fiat–Shamir 전체를 보장하지 않습니다.", sectionId: "paper-fri-in-stark" },
-    ],
+    "papers": [
+      {
+        "problem": "비밀 준비값 없이 큰 계산의 정확성을 효율적으로 확인합니다.",
+        "contribution": "실행 관계·대수 검사·표의 고정과 근접성 검사를 연결합니다.",
+        "assumptions": "논문이 지정한 체·해시·무작위 오라클과 오류 분석을 사용합니다.",
+        "evidenceScope": "원 논문의 구성과 저자 구현 평가입니다.",
+        "notClaim": "모든 STARK 매개변수나 하위 암호를 포함한 전체 서비스의 영지식·양자 안전성을 보장하지 않습니다.",
+        "title": "Scalable, transparent, and post-quantum secure computational integrity (2018)",
+        "href": "https://eprint.iacr.org/2018/046.pdf",
+        "sectionId": "paper-stark"
+      }
+    ]
   },
   "crypto/zk-theory": {
-    entryLevel: true,
-    entryNote: "영지식·Sigma·simulator를 안다고 가정하지 않고 공개 x=4,y=10과 숨긴 polynomial 계수 witness의 관계에서 시작합니다.",
-    coreIdea: "Zero knowledge는 proof가 짧거나 secret을 단순 암호화했다는 말이 아니라, verifier view를 witness 없이 simulation할 수 있다는 성질이며 completeness·soundness/knowledge extraction과 별도로 증명합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "interactive-proof-message-challenge", role: "Commitment·challenge·response 흐름을 정의합니다." },
-      { id: "sigma-protocol-special-soundness", role: "두 accepting transcripts에서 witness를 추출합니다." },
-      { id: "zero-knowledge-simulator-definition", role: "Witness 없는 simulator로 privacy를 정의합니다." },
-      { id: "pedersen-hiding-binding-boundary", role: "Commitment의 hiding과 binding assumptions를 분리합니다." },
-      { id: "zk-property-release-gate", role: "Completeness·extraction·simulation·Fiat–Shamir 실패를 검사합니다." },
+    "entryLevel": true,
+    "entryNote": "작은 수치와 자원 크기는 설명용 가정입니다. 2026-10-04 원문을 대조했으며 1~10절의 같은 사례에서 보장·실패·비용을 계산합니다.",
+    "coreIdea": "첫 메시지를 고정한 뒤 질문에 답하는 순서가 검사의 의미를 만듭니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "interactive-proof-message-challenge",
+        "role": "첫 메시지를 고정한 뒤 질문에 답하는 순서가 검사의 의미를 만듭니다."
+      },
+      {
+        "id": "sigma-protocol-special-soundness",
+        "role": "같은 첫 메시지에 서로 다른 질문의 유효 응답이 있으면 비밀을 추출할 수 있습니다."
+      },
+      {
+        "id": "zero-knowledge-simulator-definition",
+        "role": "비밀 없이 만든 대화와 실제 대화를 비교하여 추가 정보가 없는지 정의합니다."
+      },
+      {
+        "id": "pedersen-hiding-binding-boundary",
+        "role": "무작위 가리기는 내용을 숨기고 생성자 사이 이산로그의 어려움은 다른 열림을 막습니다."
+      },
+      {
+        "id": "zk-property-release-gate",
+        "role": "검사 성공과 공개 입력 결속, 난수 사용, 공격 모델을 따로 확인합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "interactive-proof-message-challenge", sectionId: "overview", intuition: "Prover가 답을 봉인한 뒤 verifier가 예측 불가능한 문제를 골라 보내고 prover가 봉인과 일관된 답을 냅니다.", workedExample: "Schnorr에서 R=kG를 보낸 뒤 e를 받고 s=k+ex를 답하며 sG=R+eP를 검사합니다.", boundary: "Challenge가 예측 가능하거나 first message가 challenge 뒤 선택되면 soundness 직관이 깨집니다." },
-      { id: "sigma-protocol-special-soundness", sectionId: "sigma", intuition: "같은 봉인 R에 서로 다른 두 문제를 모두 맞힌 답이 있으면 두 식의 차로 secret을 풀 수 있습니다.", workedExample: "F17에서 e1=3,s1=8,e2=5,s2=14이면 x=(8−14)/(3−5)=(-6)/(-2)=3입니다.", boundary: "Same first message·different invertible challenges·same statement와 field/group order가 필요합니다.", proofIdea: "s1−s2=(e1−e2)x에서 nonzero e1−e2의 inverse를 곱합니다.", counterexample: "서로 다른 R의 transcripts나 e1=e2에서는 nonce가 소거되지 않아 이 extractor 식을 쓸 수 없습니다." },
-      { id: "zero-knowledge-simulator-definition", sectionId: "simulation", intuition: "비밀을 전혀 모르는 simulator도 verifier가 보는 대화와 구분 못할 가짜 대화를 만들 수 있어야 합니다.", workedExample: "Honest-verifier Schnorr simulator는 e,s를 먼저 뽑고 R=sG−eP로 만들어 sG=R+eP를 만족시킵니다.", boundary: "Honest-verifier ZK와 malicious-verifier ZK, perfect/statistical/computational indistinguishability를 구분합니다.", counterexample: "Transcript에 witness 자체나 deterministic nonce-dependent leakage가 있으면 simulator가 public statement만으로 같은 분포를 만들 수 없습니다." },
-      { id: "pedersen-hiding-binding-boundary", sectionId: "simulation", intuition: "Message 방향과 무작위 blinding 방향을 더해 commitment만 보면 어느 message인지 같은 수로 설명할 수 있게 합니다.", workedExample: "C=mG+rH에서 m=3의 opening에 대해 다른 m′에는 적절한 r′가 존재하지만 그 값을 찾으려면 G와 H의 log 관계가 필요합니다.", boundary: "Uniform r는 hiding에 필요하고 generator relation 노출은 binding을 깨뜨리며 range proof는 별도입니다." },
-      { id: "zk-property-release-gate", sectionId: "noninteractive-boundary", intuition: "정상 proof만 보는 대신 거짓 statement·nonce reuse·round reorder와 simulator/extractor fixture를 함께 검사합니다.", workedExample: "Honest accept, wrong relation reject, same-R extraction, simulated/real distribution, omitted public input replay를 versioned transcript에서 확인합니다.", boundary: "통계 test만으로 cryptographic ZK proof를 대신하거나 Fiat–Shamir를 임의 multi-round protocol에 자동 적용하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "interactive-proof-message-challenge",
+        "sectionId": "names",
+        "intuition": "첫 메시지를 고정한 뒤 질문에 답하는 순서가 검사의 의미를 만듭니다.",
+        "workedExample": "23을 법으로 2의 4제곱은 16이며, 첫 값 12 뒤 질문 2에 응답 7을 보냅니다.",
+        "boundary": "질문을 먼저 정할 수 있는 시뮬레이터의 순서와 실제 대화의 순서를 구별합니다."
+      },
+      {
+        "id": "sigma-protocol-special-soundness",
+        "sectionId": "sigma",
+        "intuition": "같은 첫 메시지에 서로 다른 질문의 유효 응답이 있으면 비밀을 추출할 수 있습니다.",
+        "workedExample": "질문 2·5와 응답 7·8에서 (7−8)/(2−5)=4 mod11입니다.",
+        "boundary": "같은 질문이면 분모가 0이어서 이 추출을 적용할 수 없습니다.",
+        "proofIdea": "같은 첫 메시지를 만든 난수 r이 두 식 s=r+ew, s′=r+e′w에서 같습니다. 두 식을 빼면 r이 사라지고 서로 다른 질문의 차이로 나누어 w를 얻습니다.",
+        "counterexample": "질문이 같으면 e−e′=0이어서 역수가 없습니다. 서로 다른 첫 메시지라면 난수 항도 함께 남으므로 같은 추출을 쓸 수 없습니다."
+      },
+      {
+        "id": "zero-knowledge-simulator-definition",
+        "sectionId": "simulation",
+        "intuition": "비밀 없이 만든 대화와 실제 대화를 비교하여 추가 정보가 없는지 정의합니다.",
+        "workedExample": "질문 2와 응답 7을 먼저 정해 2⁷×16⁻²=12 mod23을 만듭니다.",
+        "boundary": "이 계산은 정직한 검증자에 대한 시뮬레이션이며 임의 구현의 비밀성을 자동 보장하지 않습니다."
+      },
+      {
+        "id": "pedersen-hiding-binding-boundary",
+        "sectionId": "source",
+        "intuition": "무작위 가리기는 내용을 숨기고 생성자 사이 이산로그의 어려움은 다른 열림을 막습니다.",
+        "workedExample": "g=2,h=8에서 (m,r)=(4,10)과 (7,9)는 모두 2로 열립니다. 알려진 log₂8=3이 원인입니다.",
+        "boundary": "실제 구성은 생성자 관계를 모르게 하고 무작위 수를 균일하게 새로 뽑아야 합니다."
+      },
+      {
+        "id": "zk-property-release-gate",
+        "sectionId": "noninteractive-boundary",
+        "intuition": "검사 성공과 공개 입력 결속, 난수 사용, 공격 모델을 따로 확인합니다.",
+        "workedExample": "ab와 c, a와 bc를 그냥 연결하면 같은 abc이므로 길이로 항목 경계를 정합니다.",
+        "boundary": "곡선의 이산로그를 쓰는 구성은 양자 공격에 자동 안전하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 interact", relation: "Public relation에서 commitment·challenge·response를 만듭니다.", concepts: ["arithmetic-relation-instance-witness", "interactive-proof-message-challenge"] },
-      { label: "02 extract", relation: "Cyclic-group 두 transcripts로 knowledge soundness를 봅니다.", concepts: ["prime-field-modular-arithmetic", "cyclic-subgroup-dlp", "sigma-protocol-special-soundness"] },
-      { label: "03 simulate", relation: "Commitment hiding과 verifier-view simulation을 연결합니다.", concepts: ["commitment-binding-hiding-separation", "pedersen-hiding-binding-boundary", "zero-knowledge-simulator-definition"] },
-      { label: "04 compile/release", relation: "Fiat–Shamir와 세 property를 분리 검증합니다.", concepts: ["schnorr-fiat-shamir-transcript", "snark-completeness-soundness-zk", "zk-property-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "01 · 메시지·질문·응답 순서",
+        "relation": "23을 법으로 2의 4제곱은 16이며, 첫 값 12 뒤 질문 2에 응답 7을 보냅니다.",
+        "concepts": [
+          "interactive-proof-message-challenge"
+        ]
+      },
+      {
+        "label": "02 · 두 응답에서 증인 추출",
+        "relation": "질문 2·5와 응답 7·8에서 (7−8)/(2−5)=4 mod11입니다.",
+        "concepts": [
+          "sigma-protocol-special-soundness"
+        ]
+      },
+      {
+        "label": "03 · 비밀 없는 대화 시뮬레이션",
+        "relation": "질문 2와 응답 7을 먼저 정해 2⁷×16⁻²=12 mod23을 만듭니다.",
+        "concepts": [
+          "zero-knowledge-simulator-definition"
+        ]
+      },
+      {
+        "label": "04 · Pedersen의 은닉과 결속",
+        "relation": "g=2,h=8에서 (m,r)=(4,10)과 (7,9)는 모두 2로 열립니다. 알려진 log₂8=3이 원인입니다.",
+        "concepts": [
+          "pedersen-hiding-binding-boundary"
+        ]
+      },
+      {
+        "label": "05 · 영지식 구성의 실패 조건",
+        "relation": "ab와 c, a와 bc를 그냥 연결하면 같은 abc이므로 길이로 항목 경계를 정합니다.",
+        "concepts": [
+          "zk-property-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Public x=4,y=10과 숨긴 coefficient witness의 relation·statement·witness를 구분하세요.", answerChecklist: ["polynomial coefficients witness", "x/y public", "f4=10 relation", "prover", "verifier", "validity only", "not reveal coefficients"], requiredConcepts: ["arithmetic-relation-instance-witness", "interactive-proof-message-challenge"], sectionId: "overview" },
-      { level: "basic", question: "Three-move Sigma protocol의 first message·challenge·response·검증 순서를 설명하세요.", answerChecklist: ["commitment first", "random public challenge", "response", "verification predicate", "unpredictability", "same statement", "interaction"], requiredConcepts: ["interactive-proof-message-challenge"], sectionId: "overview" },
-      { level: "basic", question: "Schnorr의 R·e·s와 sG=R+eP를 witness x와 nonce k로 전개하세요.", answerChecklist: ["P=xG", "R=kG", "e random", "s=k+ex", "sG=kG+exG", "R+eP", "prime order"], requiredConcepts: ["interactive-proof-message-challenge", "cyclic-subgroup-dlp"], sectionId: "sigma" },
-      { level: "basic", question: "F17의 두 accepting transcript에서 x=(s1−s2)/(e1−e2)=3을 계산하세요.", answerChecklist: ["8-14=-6", "3-5=-2", "inverse", "ratio 3", "same R", "different challenge", "mod17"], requiredConcepts: ["sigma-protocol-special-soundness", "prime-field-modular-arithmetic"], sectionId: "sigma" },
-      { level: "basic", question: "Honest-verifier Schnorr simulator가 e,s에서 R=sG−eP를 만드는 이유를 설명하세요.", answerChecklist: ["no witness", "choose e/s", "construct R", "verification equation", "same distribution", "honest verifier", "view"], requiredConcepts: ["zero-knowledge-simulator-definition"], sectionId: "simulation" },
-      { level: "basic", question: "Pedersen commitment의 perfect hiding과 computational binding을 구분하세요.", answerChecklist: ["C=mG+rH", "uniform r", "same commitment distributions", "unknown log relation", "alternate opening hard", "range not provided", "generator setup"], requiredConcepts: ["pedersen-hiding-binding-boundary", "commitment-binding-hiding-separation"], sectionId: "simulation" },
-      { level: "advanced", question: "Special soundness extractor의 전제와 서로 다른 R·같은 e 반례를 설명하세요.", answerChecklist: ["same first message", "same statement", "different challenges", "nonzero difference", "inverse", "two accepts", "different R no nonce cancellation", "same e no inverse"], requiredConcepts: ["sigma-protocol-special-soundness"], sectionId: "sigma" },
-      { level: "advanced", question: "Perfect·statistical·computational ZK와 honest/malicious verifier 범위를 구분하세요.", answerChecklist: ["identical distribution", "statistical distance", "efficient distinguisher", "HVZK", "malicious strategy", "auxiliary input", "simulator", "explicit claim"], requiredConcepts: ["zero-knowledge-simulator-definition", "snark-completeness-soundness-zk"], sectionId: "simulation" },
-      { level: "advanced", question: "Fiat–Shamir transcript에서 statement·R·domain을 빼거나 nonce를 재사용할 때 실패를 설명하세요.", answerChecklist: ["commit first", "hash statement", "protocol/domain", "R", "replay/cross protocol", "same nonce", "two challenge extraction", "random oracle", "canonical encoding"], requiredConcepts: ["schnorr-fiat-shamir-transcript", "sigma-protocol-special-soundness", "zk-property-release-gate"], sectionId: "noninteractive-boundary" },
-      { level: "advanced", question: "ZK protocol release gate에 completeness·soundness·extraction·simulation·side-channel 검사를 설계하세요.", answerChecklist: ["honest vectors", "false statement", "malformed group", "same-R extraction", "real/simulated views", "RNG/nonce", "transcript order", "timing/metadata", "version", "then cost"], requiredConcepts: ["zk-property-release-gate", "zero-knowledge-simulator-definition", "snark-completeness-soundness-zk"], sectionId: "noninteractive-boundary" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "23을 법으로 공개값 16·처음 값 12가 비밀 4·난수 10에서 나오는지 확인하세요.",
+        "answerChecklist": [
+          "2⁴ mod23=16입니다.",
+          "2¹⁰ mod23=12이며 지수는 군의 차수 11을 기준으로 계산합니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "interactive-proof-message-challenge"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "질문 2에 응답 7을 보낸 Schnorr 등식의 양쪽을 직접 계산하세요.",
+        "answerChecklist": [
+          "응답은 10+2×4=18≡7 mod11입니다.",
+          "2⁷=13이고 12×16²≡12×3≡13 mod23입니다."
+        ],
+        "sectionId": "sigma",
+        "requiredConcepts": [
+          "sigma-protocol-special-soundness"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 처음 값 12에 질문 2·5와 응답 7·8이 있으면 비밀은 얼마인가요?",
+        "answerChecklist": [
+          "질문 차이 −3은 mod11에서 8이고 역수는 7입니다.",
+          "응답 차이 −1에 7을 곱하면 4 mod11이 됩니다."
+        ],
+        "sectionId": "sigma",
+        "requiredConcepts": [
+          "sigma-protocol-special-soundness"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "질문 2와 응답 7을 먼저 고른 시뮬레이터는 처음 값을 어떻게 만드나요?",
+        "answerChecklist": [
+          "2⁷×16⁻²를 계산합니다.",
+          "16²=3, 3의 역수는 8이므로 13×8≡12 mod23입니다."
+        ],
+        "sectionId": "simulation",
+        "requiredConcepts": [
+          "zero-knowledge-simulator-definition"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "g=2,h=8에서 (4,10)과 (7,9)의 Pedersen 값이 같은지 구하세요.",
+        "answerChecklist": [
+          "2⁴×8¹⁰≡2 mod23입니다.",
+          "2⁷×8⁹≡2이며 h=2³이라는 관계를 알고 다른 열림을 만든 사례입니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "pedersen-hiding-binding-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "RFC8235의 빼는 응답 표기에서 v=10,a=4,c=2를 대입하세요.",
+        "answerChecklist": [
+          "r=v−ac=2 mod11입니다.",
+          "gʳAᶜ=2²×16²≡4×3=12로 첫 메시지를 복원합니다."
+        ],
+        "sectionId": "simulation",
+        "requiredConcepts": [
+          "interactive-proof-message-challenge"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "두 응답을 얻어도 질문이 같으면 왜 앞 절의 추출 식을 쓸 수 없나요?",
+        "answerChecklist": [
+          "질문 차이가 0이 되어 역수가 없습니다.",
+          "서로 다른 질문과 같은 처음 메시지라는 두 조건이 추출에 필요합니다."
+        ],
+        "sectionId": "sigma",
+        "requiredConcepts": [
+          "sigma-protocol-special-soundness"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "시뮬레이터가 비밀 없이 대화를 만드는데 실제 검사가 유용한 이유를 설명하세요.",
+        "answerChecklist": [
+          "시뮬레이터는 질문과 응답을 먼저 고르고 처음 메시지를 역산합니다.",
+          "실제 생성자는 처음 메시지 고정 뒤 무작위 질문을 받으므로 순서가 다릅니다."
+        ],
+        "sectionId": "simulation",
+        "requiredConcepts": [
+          "zero-knowledge-simulator-definition"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "두 Pedersen 열림에서 알려진 생성자 관계 a=log_g h를 추출하세요.",
+        "answerChecklist": [
+          "m+ar=m′+ar′에서 a=(m−m′)/(r′−r)입니다.",
+          "(4−7)/(9−10)=3 mod11이며 일반 실수 로그가 아닌 군의 지수입니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "pedersen-hiding-binding-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "문자열 ab·c와 a·bc를 해시 입력에 넣을 때 필요한 규칙을 설명하세요.",
+        "answerChecklist": [
+          "그냥 연결하면 모두 abc여서 서로 다른 항목이 구분되지 않습니다.",
+          "길이·순서·프로토콜 맥락과 공개 문제를 명확하게 인코딩해야 합니다."
+        ],
+        "sectionId": "noninteractive-boundary",
+        "requiredConcepts": [
+          "zk-property-release-gate"
+        ]
+      }
     ],
-    papers: [
-      { title: "The Knowledge Complexity of Interactive Proof Systems", href: "https://doi.org/10.1137/0218012", problem: "Proof validity를 설득하면서 verifier가 얻는 추가 knowledge를 형식화해야 합니다.", contribution: "Interactive proof와 zero-knowledge의 simulator 기반 토대를 제시합니다.", assumptions: "논문의 probabilistic polynomial-time verifier·view·knowledge-complexity model을 사용합니다.", evidenceScope: "Zero-knowledge 정의와 원 논문의 protocol/theorem 범위에 한정합니다.", notClaim: "현대 SNARK 구현·Fiat–Shamir transcript·side-channel privacy를 자동 보장하지 않습니다.", sectionId: "paper-gmr" },
-      { title: "How To Prove Yourself: Practical Solutions to Identification and Signature Problems", href: "https://doi.org/10.1007/3-540-47721-7_12", problem: "Interactive identification을 공개 검증 가능한 signature로 바꿔야 합니다.", contribution: "Public-coin identification의 challenge를 hash로 대체하는 Fiat–Shamir 방법을 제시합니다.", assumptions: "원 protocol 구조와 random-oracle heuristic·message/domain binding을 사용합니다.", evidenceScope: "Interactive-to-noninteractive 변환의 역사적 construction 범위에 한정합니다.", notClaim: "모든 multi-round proof·quantum adversary·임의 encoding에서 자동 secure하다는 뜻은 아닙니다.", sectionId: "paper-fiat-shamir" },
-    ],
+    "papers": [
+      {
+        "problem": "검증자가 얻는 추가 정보를 형식화하는 문제입니다.",
+        "contribution": "실제 대화와 시뮬레이션을 비교하는 정의의 토대입니다.",
+        "assumptions": "확률적 검증자와 정의된 view·모델을 사용합니다.",
+        "evidenceScope": "정의와 원 논문의 프로토콜 범위입니다.",
+        "notClaim": "현대 구현의 부채널이나 무작위 수 재사용까지 자동으로 막는다는 결론은 아닙니다.",
+        "title": "Goldwasser·Micali·Rackoff · The Knowledge Complexity of Interactive Proof Systems",
+        "href": "https://doi.org/10.1137/0218012",
+        "sectionId": "paper-gmr"
+      },
+      {
+        "problem": "신원 확인의 대화를 공개 검증 가능한 서명으로 바꿉니다.",
+        "contribution": "검증자가 고르던 질문을 앞선 공개 자료의 해시로 정합니다.",
+        "assumptions": "원래 프로토콜의 구조와 해시를 사용하는 모델을 함께 봅니다.",
+        "evidenceScope": "역사적 변환의 구성입니다. 여기의 16·12를 묶는 실제 인코딩은 RFC8235로 대조했습니다.",
+        "notClaim": "임의의 다단계 대화나 양자 공격자에게 같은 보안 결론을 자동 적용하지 않습니다.",
+        "title": "Fiat·Shamir · How To Prove Yourself (1986)",
+        "href": "https://doi.org/10.1007/3-540-47721-7_12",
+        "sectionId": "paper-fiat-shamir"
+      }
+    ]
   },
   "crypto/constraint-systems": {
-    entryLevel: true,
-    entryNote: "유한체·회로·witness를 안다고 가정하지 않고 공개 x=3,y=12와 비공개 w=4의 곱셈 한 줄에서 시작합니다.",
-    coreIdea: "R1CS는 public input과 witness의 산술 관계를 선형식 곱의 행들로 만들고, QAP는 모든 행의 만족을 target polynomial divisibility 하나로 환원합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "arithmetic-relation-instance-witness", role: "Public instance와 private witness의 소유권을 구분합니다." },
-      { id: "r1cs-bilinear-row", role: "계산을 선형식×선형식=선형식 행으로 나타냅니다." },
-      { id: "r1cs-gadget-semantic-boundary", role: "Bit·range·integer 의미에 필요한 추가 제약을 구분합니다." },
-      { id: "qap-divisibility-reduction", role: "모든 R1CS 행을 하나의 polynomial divisibility로 환원합니다." },
-      { id: "constraint-system-release-gate", role: "Semantic fixture 뒤 비용을 비교합니다." },
+    "entryLevel": true,
+    "entryNote": "작은 수치와 자원 크기는 설명용 가정입니다. 2026-10-04 원문을 대조했으며 1~10절의 같은 사례에서 보장·실패·비용을 계산합니다.",
+    "coreIdea": "공개 입력과 출력, 개인 값과 중간값을 같은 변수 순서의 조건에 넣습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "arithmetic-relation-instance-witness",
+        "role": "공개 입력과 출력, 개인 값과 중간값을 같은 변수 순서의 조건에 넣습니다."
+      },
+      {
+        "id": "r1cs-bilinear-row",
+        "role": "세 선형 조합으로 만든 두 입력의 곱이 결과와 같은지 행마다 검사합니다."
+      },
+      {
+        "id": "r1cs-gadget-semantic-boundary",
+        "role": "의도한 비트·범위·선택 의미가 식에 실제로 들어가야 합니다."
+      },
+      {
+        "id": "qap-divisibility-reduction",
+        "role": "모든 행에서 0인 차이를 행 위치에서 0이 되는 다항식의 배수로 표현합니다."
+      },
+      {
+        "id": "constraint-system-release-gate",
+        "role": "공개값 변경과 누락 조건의 실패를 확인한 뒤 압축 증명의 비용을 봅니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "arithmetic-relation-instance-witness", sectionId: "overview", intuition: "자물쇠 규칙과 공개 번호는 모두가 보지만 그 자물쇠를 여는 비밀 숫자는 prover만 갖습니다.", workedExample: "R((3,12),4)는 3·4=12라 참이며 x,y는 public, w는 witness입니다.", boundary: "Witness 존재는 그 값의 외부 provenance나 사용 권한을 증명하지 않습니다.", counterexample: "w=5면 3·5≠12이므로 같은 public instance를 만족하지 않습니다." },
-      { id: "r1cs-bilinear-row", sectionId: "r1cs", intuition: "복잡한 계산을 두 선형 조합을 곱해 세 번째와 맞추는 작은 검산 칸으로 나눕니다.", workedExample: "z=(1,3,12,4), A=(0,1,0,0), B=(0,0,0,1), C=(0,0,1,0)이면 3·4=12입니다.", boundary: "모든 dot product는 정수 산술이 아니라 같은 Fp에서 계산합니다.", proofIdea: "공통 assignment z를 모든 행에 넣으면 중간 변수의 사용을 행 사이에서 일관되게 강제할 수 있습니다." },
-      { id: "r1cs-gadget-semantic-boundary", sectionId: "r1cs", intuition: "Field 숫자에 'bit'라는 이름만 붙이지 않고 0 또는 1만 남는 별도 검사문을 추가합니다.", workedExample: "b(b−1)=0을 넣으면 field에서 b=0 또는 1만 허용됩니다.", boundary: "Witness generator가 b=0/1을 출력한다는 사실만으로 malicious witness를 제한하지 않습니다.", counterexample: "Boolean constraint를 빼면 b=2도 conditional selector에 들어갈 수 있습니다." },
-      { id: "qap-divisibility-reduction", sectionId: "qap", intuition: "각 시험 날짜에서 0점인 오차 다항식은 그 날짜들을 모두 root로 가진 polynomial의 배수입니다.", workedExample: "한 row에서 t=X−1이고 valid assignment의 P=A·B−C=0이라 h=0입니다. w=5면 P=3이라 나누어지지 않습니다.", boundary: "서로 다른 row points·degree bound·같은 field와 ordering이 필요합니다.", proofIdea: "P(r_i)=0이 모든 i에서 성립하는 것과 ∏(X−r_i)가 P를 나누는 것이 field polynomial에서 동치입니다." },
-      { id: "constraint-system-release-gate", sectionId: "verification", intuition: "빠른 회로를 고르기 전에 정답·오답·경계 입력을 원 프로그램과 같은 이유로 판정하는지 확인합니다.", workedExample: "Valid 3·4=12, invalid 3·5=12, b=2, public-order swap, division remainder를 각각 typed outcome으로 비교합니다.", boundary: "Constraint 수 하나나 proof 생성 성공만으로 semantic correctness와 end-to-end latency를 판단하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "arithmetic-relation-instance-witness",
+        "sectionId": "names",
+        "intuition": "공개 입력과 출력, 개인 값과 중간값을 같은 변수 순서의 조건에 넣습니다.",
+        "workedExample": "z=(1,3,16,4,12)에서 공개 (3,16), 개인 4, 중간 12를 구분합니다.",
+        "boundary": "현실 입력의 진실성이나 정수 범위는 산술 등식 외의 조건입니다."
+      },
+      {
+        "id": "r1cs-bilinear-row",
+        "sectionId": "r1cs",
+        "intuition": "세 선형 조합으로 만든 두 입력의 곱이 결과와 같은지 행마다 검사합니다.",
+        "workedExample": "첫 행은 3×4=12, 둘째 행은 (12+4)×1=16입니다.",
+        "boundary": "변수 순서를 바꾸면 세 계수 행도 함께 바꿔야 합니다."
+      },
+      {
+        "id": "r1cs-gadget-semantic-boundary",
+        "sectionId": "r1cs",
+        "intuition": "의도한 비트·범위·선택 의미가 식에 실제로 들어가야 합니다.",
+        "workedExample": "b(b−1)=0을 넣으면 체에서 b는 0 또는 1이어야 합니다.",
+        "boundary": "이 조건이 빠지면 b=2처럼 선택 비트가 아닌 값도 허용할 수 있습니다."
+      },
+      {
+        "id": "qap-divisibility-reduction",
+        "sectionId": "qap",
+        "intuition": "모든 행에서 0인 차이를 행 위치에서 0이 되는 다항식의 배수로 표현합니다.",
+        "workedExample": "F17에서 12X²+15X+7=12(X−1)(X−2)이므로 몫은 12입니다.",
+        "boundary": "정확한 나눗셈의 성립과 그것을 암호학적으로 검사하는 보안은 다른 단계입니다."
+      },
+      {
+        "id": "constraint-system-release-gate",
+        "sectionId": "verification",
+        "intuition": "공개값 변경과 누락 조건의 실패를 확인한 뒤 압축 증명의 비용을 봅니다.",
+        "workedExample": "출력 16을 15로 바꾸면 둘째 행 차이가 1이므로 거절합니다.",
+        "boundary": "임의 점 검사를 쓸 때는 차수 제한과 질문의 선택 순서도 필요합니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 state", relation: "Relation의 공개·비공개 입력을 나눕니다.", concepts: ["prime-field-modular-arithmetic", "arithmetic-relation-instance-witness"] },
-      { label: "02 constrain", relation: "계산과 gadget 의미를 행들로 강제합니다.", concepts: ["r1cs-bilinear-row", "r1cs-gadget-semantic-boundary"] },
-      { label: "03 reduce", relation: "보간·root bound·vanishing polynomial로 divisibility를 만듭니다.", concepts: ["lagrange-interpolation-basis", "polynomial-root-degree-bound", "vanishing-polynomial-domain", "qap-divisibility-reduction"] },
-      { label: "04 release", relation: "Semantic parity 뒤 크기와 시간을 잽니다.", concepts: ["constraint-system-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "01 · 공개값·증인·산술 관계",
+        "relation": "z=(1,3,16,4,12)에서 공개 (3,16), 개인 4, 중간 12를 구분합니다.",
+        "concepts": [
+          "arithmetic-relation-instance-witness"
+        ]
+      },
+      {
+        "label": "02 · R1CS의 곱셈 행",
+        "relation": "첫 행은 3×4=12, 둘째 행은 (12+4)×1=16입니다.",
+        "concepts": [
+          "r1cs-bilinear-row"
+        ]
+      },
+      {
+        "label": "03 · 비트·범위와 제약의 의미",
+        "relation": "b(b−1)=0을 넣으면 체에서 b는 0 또는 1이어야 합니다.",
+        "concepts": [
+          "r1cs-gadget-semantic-boundary"
+        ]
+      },
+      {
+        "label": "04 · QAP의 정확한 나눗셈",
+        "relation": "F17에서 12X²+15X+7=12(X−1)(X−2)이므로 몫은 12입니다.",
+        "concepts": [
+          "qap-divisibility-reduction"
+        ]
+      },
+      {
+        "label": "05 · 제약 누락과 공개값 변경 검사",
+        "relation": "출력 16을 15로 바꾸면 둘째 행 차이가 1이므로 거절합니다.",
+        "concepts": [
+          "constraint-system-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "x=3,y=12,w=4 예에서 relation·public instance·private witness를 구분하세요.", answerChecklist: ["R(x,w)", "x와 y public", "w private", "3·4=12", "verifier no witness", "existence statement"], requiredConcepts: ["arithmetic-relation-instance-witness"], sectionId: "overview" },
-      { level: "basic", question: "z=(1,3,12,4)와 주어진 A·B·C 행의 세 dot product를 계산하세요.", answerChecklist: ["constant slot", "variable order", "Az=3", "Bz=4", "Cz=12", "product equality", "Fp arithmetic"], requiredConcepts: ["r1cs-bilinear-row", "prime-field-modular-arithmetic"], sectionId: "r1cs" },
-      { level: "basic", question: "y=(x+1)(x+2)를 중간 변수 v로 두 R1CS 행으로 나누세요.", answerChecklist: ["v=x+1", "linear combination", "multiply by one", "v(x+2)=y", "shared v", "two rows"], requiredConcepts: ["r1cs-bilinear-row"], sectionId: "r1cs" },
-      { level: "basic", question: "Boolean b에 b(b−1)=0이 필요한 이유와 생략 반례를 설명하세요.", answerChecklist: ["field element", "roots 0 and 1", "explicit constraint", "b=2 counterexample", "generator not enforcement", "conditional unsound"], requiredConcepts: ["r1cs-gadget-semantic-boundary"], sectionId: "r1cs" },
-      { level: "basic", question: "R1CS 행 수가 prover 비용 전체와 같지 않은 이유를 설명하세요.", answerChecklist: ["nonzero coefficients", "witness generation", "FFT", "MSM", "memory", "backend", "same fixtures"], requiredConcepts: ["constraint-system-release-gate"], sectionId: "r1cs" },
-      { level: "basic", question: "R1CS column sample을 Lagrange 보간해 QAP A·B·C를 만드는 순서를 설명하세요.", answerChecklist: ["distinct row points", "column samples", "Lagrange basis", "A_j B_j C_j", "assignment combination", "same field", "ordering"], requiredConcepts: ["lagrange-interpolation-basis", "qap-divisibility-reduction"], sectionId: "qap" },
-      { level: "advanced", question: "모든 R1CS 행 만족과 t(X)|A(X)B(X)−C(X)의 동치를 증명 아이디어로 설명하세요.", answerChecklist: ["P definition", "P(ri)=0", "distinct roots", "t product", "factor theorem", "quotient h", "reverse evaluation", "field"], requiredConcepts: ["qap-divisibility-reduction", "vanishing-polynomial-domain"], sectionId: "qap" },
-      { level: "advanced", question: "w=5인 한-row 예에서 quotient가 존재하지 않는 이유를 계산하세요.", answerChecklist: ["A=3", "B=5", "C=12", "P=3", "t=X-1", "nonzero constant not divisible", "remainder", "fail closed"], requiredConcepts: ["qap-divisibility-reduction"], sectionId: "qap" },
-      { level: "advanced", question: "Random-point polynomial 검사에 degree bound와 commitment가 함께 필요한 이유를 반례와 설명하세요.", answerChecklist: ["finite roots", "degree bound", "field size", "commit before challenge", "arbitrary high degree", "binding", "nonzero error probability", "not standalone QAP"], requiredConcepts: ["qap-divisibility-reduction", "polynomial-root-degree-bound"], sectionId: "qap" },
-      { level: "advanced", question: "Public ordering·range 누락·copy 누락·division remainder를 포함한 constraint compiler release gate를 설계하세요.", answerChecklist: ["circuit hash", "valid fixture", "invalid witness", "boundary/range", "copy", "public order", "exact division", "typed reject", "then benchmark"], requiredConcepts: ["r1cs-gadget-semantic-boundary", "constraint-system-release-gate"], sectionId: "verification" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "공개 입력 3·출력 16과 개인 값 4에서 중간값과 최종값을 계산하세요.",
+        "answerChecklist": [
+          "중간값 v=3×4=12입니다.",
+          "최종값 y=v+4=16이며 z 순서는 (1,3,16,4,12)입니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "arithmetic-relation-instance-witness"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "두 R1CS 행이 같은 값 벡터를 사용해 무엇을 계산하는지 쓰세요.",
+        "answerChecklist": [
+          "첫 행은 A가 3, B가 4, C가 12를 선택해 곱을 검사합니다.",
+          "둘째 행은 A가 12+4, B가 1, C가 16을 골라 검사합니다."
+        ],
+        "sectionId": "r1cs",
+        "requiredConcepts": [
+          "r1cs-bilinear-row"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "공개 출력만 16에서 15로 바꾸면 어느 행의 차이가 얼마가 되나요?",
+        "answerChecklist": [
+          "중간값 12를 쓰는 첫 행은 그대로 0입니다.",
+          "둘째 행은 16×1−15=1이므로 전체 조건을 거절합니다."
+        ],
+        "sectionId": "r1cs",
+        "requiredConcepts": [
+          "r1cs-bilinear-row"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "체에서 b가 비트여야 할 때 b(b−1)=0이라는 조건이 필요한 이유를 설명하세요.",
+        "answerChecklist": [
+          "체에는 영인자가 없어 b=0 또는 b=1이어야 합니다.",
+          "이 줄이 없으면 b=2 같은 값이 선택 의미를 어길 수 있습니다."
+        ],
+        "sectionId": "r1cs",
+        "requiredConcepts": [
+          "r1cs-gadget-semantic-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "F17에서 12(X−1)(X−2)를 전개해 QAP의 분자와 비교하세요.",
+        "answerChecklist": [
+          "12X²−36X+24를 17로 줄이면 12X²+15X+7입니다.",
+          "행 위치 1과 2에서 모두 0이며 몫은 12입니다."
+        ],
+        "sectionId": "qap",
+        "requiredConcepts": [
+          "qap-divisibility-reduction"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Nova의 Z=(W,x,1) 표기에서는 기존 다섯 값을 어떤 순서로 놓나요?",
+        "answerChecklist": [
+          "개인·중간값 4,12를 앞에 놓고 공개값 3,16, 마지막 상수 1을 놓습니다.",
+          "Z=(4,12,3,16,1)이며 A·B·C의 열도 같은 순서로 옮깁니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "r1cs-bilinear-row"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "값 벡터만 순서를 바꾸고 계수 행을 그대로 두면 어떤 의미 오류가 생기나요?",
+        "answerChecklist": [
+          "같은 계수 위치가 다른 변수를 읽어 원래 곱셈과 다른 조건이 됩니다.",
+          "각 변수에 대응하는 세 계수 행의 열을 함께 순열해야 0,0이 보존됩니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "r1cs-bilinear-row"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "A=13X+7,B=−3X+7,C=4X+8에서 AB−C의 계수를 구하세요.",
+        "answerChecklist": [
+          "정수 전개는 −39X²+66X+41입니다.",
+          "17로 줄이면 12X²+15X+7이고 (X−1)(X−2)로 나누어집니다."
+        ],
+        "sectionId": "qap",
+        "requiredConcepts": [
+          "qap-divisibility-reduction"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "정수 금액을 체의 원소로 옮길 때 등식 외에 범위 조건을 확인하는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "체의 같은 나머지가 서로 다른 정수를 나타낼 수 있습니다.",
+          "허용 범위와 부호를 식으로 강제해야 원래 금액 의미가 보존됩니다."
+        ],
+        "sectionId": "verification",
+        "requiredConcepts": [
+          "constraint-system-release-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "행 전체 검사 대신 임의 점의 비교로 줄일 때 차수와 선택 순서가 왜 필요한가요?",
+        "answerChecklist": [
+          "차수 d의 0이 아닌 다항식은 체에서 최대 d개 근을 가집니다.",
+          "자료를 고정한 뒤 점을 골라야 질문에 맞춘 거짓 다항식 선택을 막습니다."
+        ],
+        "sectionId": "verification",
+        "requiredConcepts": [
+          "constraint-system-release-gate"
+        ]
+      }
     ],
-    papers: [
-      { title: "Pinocchio: Nearly Practical Verifiable Computation", href: "https://eprint.iacr.org/2013/279.pdf", problem: "일반 계산을 원 실행보다 싸게 공개 검증해야 합니다.", contribution: "Arithmetic circuit의 QAP reduction과 pairing 기반 검증·ZK 변형을 제시합니다.", assumptions: "논문의 pairing/knowledge assumptions, 회로별 key와 올바른 compilation을 사용합니다.", evidenceScope: "QAP construction과 논문의 일곱 application·당시 구현 평가에 한정합니다.", notClaim: "현재 모든 library·회로의 안전이나 고정 speedup, 누락 constraint 발견을 보장하지 않습니다.", sectionId: "paper-pinocchio-qap" },
-    ],
+    "papers": [
+      {
+        "problem": "긴 계산을 공개 검증할 때 같은 계산을 반복하는 비용을 줄입니다.",
+        "contribution": "산술 회로의 관계를 QAP와 암호 검증으로 연결합니다.",
+        "assumptions": "정확한 컴파일과 논문의 회로별 준비·암호 가정을 사용합니다.",
+        "evidenceScope": "논문의 당시 구현과 애플리케이션 평가입니다.",
+        "notClaim": "빠진 범위 조건을 발견하거나 모든 구현의 동일 속도를 보장하지 않습니다.",
+        "title": "Pinocchio: Nearly Practical Verifiable Computation (2013)",
+        "href": "https://eprint.iacr.org/2013/279.pdf",
+        "sectionId": "paper-pinocchio-qap"
+      }
+    ]
   },
   "crypto/snark-overview": {
-    entryLevel: true,
-    entryNote: "SNARK 약어·증명 게임·trusted setup을 안다고 가정하지 않고 x·w=y 한 관계의 proof 인터페이스에서 시작합니다.",
-    coreIdea: "SNARK는 public instance에 대한 witness 존재를 짧고 비대화형으로 검증하되 completeness·computational soundness·zero knowledge와 setup/transcript 가정을 분리합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "snark-setup-prove-verify-interface", role: "세 알고리즘의 입력·출력과 소유권을 고정합니다." },
-      { id: "snark-completeness-soundness-zk", role: "세 보안 성질의 질문과 비보장을 구분합니다." },
-      { id: "snark-succinctness-cost-boundary", role: "Proof·verify와 setup·prover 비용을 분리합니다." },
-      { id: "snark-fiat-shamir-statement-binding", role: "Challenge를 statement와 이전 rounds에 결속합니다." },
-      { id: "snark-system-selection-envelope", role: "같은 relation·security target에서 계열을 비교합니다." },
+    "entryLevel": true,
+    "entryNote": "작은 수치와 자원 크기는 설명용 가정입니다. 2026-10-04 원문을 대조했으며 1~10절의 같은 사례에서 보장·실패·비용을 계산합니다.",
+    "coreIdea": "증명 규칙 준비, 증거 생성, 공개 검사를 서로 다른 입출력으로 나눕니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "snark-setup-prove-verify-interface",
+        "role": "증명 규칙 준비, 증거 생성, 공개 검사를 서로 다른 입출력으로 나눕니다."
+      },
+      {
+        "id": "snark-completeness-soundness-zk",
+        "role": "정상 증인의 성공, 거짓 명제의 거절, 추가 정보의 은닉은 서로 다른 보장입니다."
+      },
+      {
+        "id": "snark-succinctness-cost-boundary",
+        "role": "짧은 전달 자료와 만드는 동안의 작업 공간은 다른 양입니다."
+      },
+      {
+        "id": "snark-fiat-shamir-statement-binding",
+        "role": "해시로 정하는 질문에는 공개 문제와 앞선 메시지를 함께 묶습니다."
+      },
+      {
+        "id": "snark-system-selection-envelope",
+        "role": "계산 내용과 보안 목표를 같게 두고 증거·시간·메모리를 비교합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "snark-setup-prove-verify-interface", sectionId: "interface", intuition: "규칙용 열쇠를 만들고, 비밀 답으로 짧은 영수증을 만든 뒤 공개 문제와 영수증만 검사합니다.", workedExample: "Setup(R), Prove(pk,(3,12),4), Verify(vk,(3,12),π)=true 흐름입니다.", boundary: "Verifier true는 외부 data source·authorization·business meaning을 보장하지 않습니다." },
-      { id: "snark-completeness-soundness-zk", sectionId: "security", intuition: "정답은 통과하고 거짓은 속이기 어려우며 영수증은 비밀 답을 추가로 드러내지 않아야 합니다.", workedExample: "w=4 honest proof 수락, w=5 false relation 거절, proof에서 4 자체는 복원되지 않음을 각각 묻습니다.", boundary: "Argument soundness는 계산적으로 제한된 adversary와 scheme assumptions에 의존합니다.", counterexample: "Public input이 transcript에서 빠지면 proof를 다른 statement에 재사용할 수 있습니다." },
-      { id: "snark-succinctness-cost-boundary", sectionId: "selection", intuition: "우편 영수증이 작아도 영수증 제작 공장과 설비가 작다는 뜻은 아닙니다.", workedExample: "Proof bytes·verify latency와 setup time·pk bytes·witness/FFT/MSM·peak RSS를 별도 열로 기록합니다.", boundary: "Succinct라는 이름을 prover가 항상 빠르거나 end-to-end가 싸다는 뜻으로 확대하지 않습니다." },
-      { id: "snark-fiat-shamir-statement-binding", sectionId: "security", intuition: "답안을 봉인한 뒤 문제·봉인·이전 기록을 hash해 예측하기 어려운 검사 번호를 만듭니다.", workedExample: "Protocol ID, key/circuit ID, x=(3,12), commitments를 canonical bytes로 흡수한 후 r을 뽑습니다.", boundary: "Random-oracle proof가 임의 transcript 구현·encoding에 자동 적용되지는 않습니다.", counterexample: "Challenge를 commitment 전에 알면 그 challenge에서만 맞는 polynomial을 고를 수 있습니다." },
-      { id: "snark-system-selection-envelope", sectionId: "selection", intuition: "차량을 최고속도 한 숫자가 아니라 연료·도로·정비·충돌검사까지 같은 코스로 비교합니다.", workedExample: "같은 relation/input/security에서 Groth16·PLONK·transparent 후보의 trust·bytes·p50/p95·memory·reject parity를 기록합니다.", boundary: "서로 다른 논문의 TPS·proof bytes를 환경 보정 없이 제품 우위로 읽지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "snark-setup-prove-verify-interface",
+        "sectionId": "interface",
+        "intuition": "증명 규칙 준비, 증거 생성, 공개 검사를 서로 다른 입출력으로 나눕니다.",
+        "workedExample": "Prove에는 공개값 (3,12)와 증인 4가 들어가고 Verify에는 (3,12)와 증거가 들어갑니다.",
+        "boundary": "Setup에 항상 회로별 비밀 준비가 필요한 것은 아닙니다."
+      },
+      {
+        "id": "snark-completeness-soundness-zk",
+        "sectionId": "security",
+        "intuition": "정상 증인의 성공, 거짓 명제의 거절, 추가 정보의 은닉은 서로 다른 보장입니다.",
+        "workedExample": "(3,12)에 후보 5가 틀린 것과 증인이 없는 (0,1)을 구분합니다.",
+        "boundary": "공개값에서 이미 알 수 있는 4를 영지식이 지워 주지는 않습니다."
+      },
+      {
+        "id": "snark-succinctness-cost-boundary",
+        "sectionId": "selection",
+        "intuition": "짧은 전달 자료와 만드는 동안의 작업 공간은 다른 양입니다.",
+        "workedExample": "가정한 증거 1KiB, 생성 메모리 1GiB, 생성 시간 10초를 각각 기록합니다.",
+        "boundary": "하나의 장난감 수치를 특정 증명기의 실측 성능으로 해석하지 않습니다."
+      },
+      {
+        "id": "snark-fiat-shamir-statement-binding",
+        "sectionId": "security",
+        "intuition": "해시로 정하는 질문에는 공개 문제와 앞선 메시지를 함께 묶습니다.",
+        "workedExample": "(3,12)를 다른 공개값으로 바꾼 자료는 같은 주장의 증거가 아닙니다.",
+        "boundary": "단순히 해시 함수가 있다는 사실로 인코딩과 순서의 안전성이 보장되지는 않습니다."
+      },
+      {
+        "id": "snark-system-selection-envelope",
+        "sectionId": "selection",
+        "intuition": "계산 내용과 보안 목표를 같게 두고 증거·시간·메모리를 비교합니다.",
+        "workedExample": "증거가 작아도 생성기에는 1GiB가 필요한 가정 사례를 구별합니다.",
+        "boundary": "누락한 생년월일 신뢰성이나 금액 범위를 증명 방식 선택이 복원하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 define", relation: "Relation을 세 알고리즘 인터페이스에 넣습니다.", concepts: ["arithmetic-relation-instance-witness", "snark-setup-prove-verify-interface"] },
-      { label: "02 secure", relation: "Root bound·commitment와 세 security game·transcript를 연결합니다.", concepts: ["polynomial-root-degree-bound", "commitment-binding-hiding-separation", "schnorr-fiat-shamir-transcript", "snark-completeness-soundness-zk", "snark-fiat-shamir-statement-binding"] },
-      { label: "03 compare", relation: "Succinctness와 전체 비용을 같은 envelope에서 잽니다.", concepts: ["snark-succinctness-cost-boundary", "snark-system-selection-envelope"] },
+    "conceptStages": [
+      {
+        "label": "01 · 증명 준비·생성·검사",
+        "relation": "Prove에는 공개값 (3,12)와 증인 4가 들어가고 Verify에는 (3,12)와 증거가 들어갑니다.",
+        "concepts": [
+          "snark-setup-prove-verify-interface"
+        ]
+      },
+      {
+        "label": "02 · 완전성·건전성·영지식",
+        "relation": "(3,12)에 후보 5가 틀린 것과 증인이 없는 (0,1)을 구분합니다.",
+        "concepts": [
+          "snark-completeness-soundness-zk"
+        ]
+      },
+      {
+        "label": "03 · 짧은 증거와 생성 비용",
+        "relation": "가정한 증거 1KiB, 생성 메모리 1GiB, 생성 시간 10초를 각각 기록합니다.",
+        "concepts": [
+          "snark-succinctness-cost-boundary"
+        ]
+      },
+      {
+        "label": "04 · 공개 문제와 해시 질문의 결속",
+        "relation": "(3,12)를 다른 공개값으로 바꾼 자료는 같은 주장의 증거가 아닙니다.",
+        "concepts": [
+          "snark-fiat-shamir-statement-binding"
+        ]
+      },
+      {
+        "label": "05 · 같은 조건의 증명 방식 비교",
+        "relation": "증거가 작아도 생성기에는 1GiB가 필요한 가정 사례를 구별합니다.",
+        "concepts": [
+          "snark-system-selection-envelope"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "SNARK 약어의 네 단어가 각각 어떤 속성과 경계를 뜻하는지 설명하세요.", answerChecklist: ["succinct proof/verify", "non-interactive message", "argument computational", "knowledge witness extractor", "not all same cost", "assumptions"], requiredConcepts: ["snark-setup-prove-verify-interface", "snark-succinctness-cost-boundary"], sectionId: "overview" },
-      { level: "basic", question: "x·w=y 예에서 relation·instance·witness·proof의 공개 범위를 구분하세요.", answerChecklist: ["relation xw=y", "x/y public", "w private", "proof public", "verifier no witness", "statement membership"], requiredConcepts: ["arithmetic-relation-instance-witness", "snark-setup-prove-verify-interface"], sectionId: "overview" },
-      { level: "basic", question: "Setup·Prove·Verify 식의 입력과 출력을 순서대로 쓰세요.", answerChecklist: ["security parameter", "relation", "pk/vk", "instance", "witness", "proof", "boolean", "same encoding"], requiredConcepts: ["snark-setup-prove-verify-interface"], sectionId: "interface" },
-      { level: "basic", question: "Completeness·soundness·zero knowledge가 답하는 실패 질문을 구분하세요.", answerChecklist: ["true reject", "false accept", "efficient adversary", "witness leakage", "separate games", "separate assumptions", "public metadata not hidden"], requiredConcepts: ["snark-completeness-soundness-zk"], sectionId: "security" },
-      { level: "basic", question: "Circuit-specific·universal updatable·transparent setup의 trust와 재사용 범위를 비교하세요.", answerChecklist: ["Groth16 circuit-specific", "PLONK degree universal", "trim", "updatable contribution", "toxic waste", "transparent public randomness", "different cost"], requiredConcepts: ["snark-setup-prove-verify-interface", "snark-system-selection-envelope"], sectionId: "interface" },
-      { level: "basic", question: "|F|=101, degree≤2인 nonzero polynomial의 한 random check 실패 상한을 계산하세요.", answerChecklist: ["at most two roots", "2/101", "commit first", "uniform challenge", "degree bound", "not zero probability"], requiredConcepts: ["polynomial-root-degree-bound", "snark-completeness-soundness-zk"], sectionId: "security" },
-      { level: "advanced", question: "SNARK Fiat–Shamir transcript에 넣을 항목과 순서를 설계하세요.", answerChecklist: ["protocol/version", "field/curve", "key/circuit ID", "public input", "prior commitments", "canonical encoding", "domain separation", "commit before challenge", "round order"], requiredConcepts: ["snark-fiat-shamir-statement-binding"], sectionId: "security" },
-      { level: "advanced", question: "Public amount를 transcript/input binding에서 뺀 verifier의 재사용 공격을 설명하세요.", answerChecklist: ["proof same", "statement changed", "omitted amount", "challenge same", "input LC absent", "cryptographic true not intended", "reject fixture", "fix binding"], requiredConcepts: ["snark-fiat-shamir-statement-binding", "snark-completeness-soundness-zk"], sectionId: "security" },
-      { level: "advanced", question: "SNARK 후보의 setup·prover·verifier 비용을 같은 workload에서 측정하는 표를 설계하세요.", answerChecklist: ["same relation", "same inputs", "security target", "setup/key bytes", "witness/FFT/MSM", "peak RSS", "proof bytes", "decode/public/pairing", "p50/p95", "negative parity"], requiredConcepts: ["snark-succinctness-cost-boundary", "snark-system-selection-envelope"], sectionId: "selection" },
-      { level: "advanced", question: "Groth16·PLONK·STARK 계열을 setup trust·PCS/hash·proof·verifier 기준으로 선택하세요.", answerChecklist: ["circuit-specific CRS", "universal/updatable SRS", "transparent", "pairing/KZG", "hash/FRI", "proof size", "prover/verifier", "post-quantum boundary", "no universal winner"], requiredConcepts: ["snark-system-selection-envelope", "snark-succinctness-cost-boundary"], sectionId: "selection" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "F17에서 공개값 (3,12)와 후보 4·5를 각각 대입하면 어떤 차이가 나나요?",
+        "answerChecklist": [
+          "3×4−12=0이므로 4는 조건을 만족합니다.",
+          "3×5−12=3이므로 5는 같은 조건의 증인이 아닙니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "snark-completeness-soundness-zk"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "후보 5가 틀린 (3,12)와 공개 명제 (0,1)의 차이를 설명하세요.",
+        "answerChecklist": [
+          "(3,12)는 올바른 증인 4가 있으므로 참인 명제입니다.",
+          "(0,1)은 어떤 w에도 0×w=1이 되지 않아 증인이 없습니다."
+        ],
+        "sectionId": "security",
+        "requiredConcepts": [
+          "snark-completeness-soundness-zk"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "공개값 (3,12)와 개인값 4는 Prove·Verify 중 어디에 들어가나요?",
+        "answerChecklist": [
+          "Prove는 공개값과 증인 4로 증거를 만듭니다.",
+          "Verify에는 공개값과 증거를 주며 증인 4를 직접 넘기지 않습니다."
+        ],
+        "sectionId": "interface",
+        "requiredConcepts": [
+          "snark-setup-prove-verify-interface"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "완전성·건전성·영지식은 같은 사례에 각각 어떤 질문을 하나요?",
+        "answerChecklist": [
+          "정상 증인 4가 만든 증거의 성공은 완전성입니다.",
+          "증인 없는 (0,1)의 거짓 증거를 막는 것은 건전성이고 추가 정보의 유출은 영지식입니다."
+        ],
+        "sectionId": "security",
+        "requiredConcepts": [
+          "snark-completeness-soundness-zk"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "공개값 3과 12만으로 4를 알 수 있으면 왜 곧바로 영지식 위반이 아닌가요?",
+        "answerChecklist": [
+          "3의 역수를 곱하면 증거 없이 공개값만으로 4를 구합니다.",
+          "영지식은 공개 정보 외의 추가 유출을 제한하며 이미 공개된 추론을 지우지 않습니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "snark-completeness-soundness-zk"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "증거 1KiB·생성 메모리 1GiB·생성 시간 10초라는 가정을 어떻게 기록하나요?",
+        "answerChecklist": [
+          "전송 크기와 작업 공간은 각각 바이트지만 서로 다른 자료를 셉니다.",
+          "10초는 생성 시간이며 작은 증거가 짧은 생성 시간을 뜻하지 않습니다."
+        ],
+        "sectionId": "selection",
+        "requiredConcepts": [
+          "snark-succinctness-cost-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "자료를 고정하기 전에 질문 번호를 알려 주는 순서가 왜 위험한가요?",
+        "answerChecklist": [
+          "알려진 질문 위치에서만 맞는 자료를 만들 여지가 생깁니다.",
+          "공개 문제와 앞선 자료를 묶고 고정한 다음 해시로 질문을 정해야 합니다."
+        ],
+        "sectionId": "security",
+        "requiredConcepts": [
+          "snark-fiat-shamir-statement-binding"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "건전성과 지식 건전성을 증인의 존재·추출이라는 말로 구별하세요.",
+        "answerChecklist": [
+          "건전성은 증인 없는 거짓 명제의 승인을 제한합니다.",
+          "지식 건전성은 통과하는 생성자로부터 증인을 얻는 추출기를 논할 수 있어야 합니다."
+        ],
+        "sectionId": "security",
+        "requiredConcepts": [
+          "snark-completeness-soundness-zk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "창고의 실제 재고가 잘못 입력되었다면 정확한 증명은 무엇을 보장하나요?",
+        "answerChecklist": [
+          "입력된 수치에 약속한 계산 규칙을 적용했음을 보장합니다.",
+          "현실 재고와 입력의 일치는 별도 관측·검증 조건이므로 증명이 복원하지 않습니다."
+        ],
+        "sectionId": "selection",
+        "requiredConcepts": [
+          "snark-system-selection-envelope"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 증명 크기를 가진 두 방식을 비교할 때 어떤 조건과 비용을 더 맞추나요?",
+        "answerChecklist": [
+          "같은 계산·공개 입력·보안 목표·실행 환경을 맞춥니다.",
+          "준비 자료·생성 시간·검증 시간·최대 메모리를 각각 비교합니다."
+        ],
+        "sectionId": "selection",
+        "requiredConcepts": [
+          "snark-system-selection-envelope"
+        ]
+      }
     ],
-    papers: [
-      { title: "SNARKs for C: Verifying Program Executions Succinctly and in Zero Knowledge", href: "https://eprint.iacr.org/2013/507", problem: "일반 program execution을 짧고 공개 검증 가능한 ZK argument로 만들어야 합니다.", contribution: "TinyRAM·QAP linear PCP를 연결한 공개 검증 SNARK 구현을 제시합니다.", assumptions: "논문의 setup·pairing/knowledge assumptions와 bounded TinyRAM compilation을 사용합니다.", evidenceScope: "해당 construction과 당시 prototype 평가에 한정합니다.", notClaim: "모든 SNARK가 같은 setup·proof size·post-quantum security를 갖는다는 뜻은 아닙니다.", sectionId: "paper-snarks-for-c" },
-    ],
+    "papers": [
+      {
+        "problem": "일반 프로그램 실행을 짧게 공개 검증하려는 문제입니다.",
+        "contribution": "TinyRAM 실행을 대수 조건과 짧은 증명으로 연결합니다.",
+        "assumptions": "유계 실행과 컴파일러, 해당 setup·암호 가정을 사용합니다.",
+        "evidenceScope": "당시 구현과 논문의 프로그램 평가 범위입니다.",
+        "notClaim": "현재 모든 SNARK의 동일 비용이나 임의 프로그램의 올바른 제약 생성을 보장하지 않습니다.",
+        "title": "Ben-Sasson et al. · SNARKs for C (2013)",
+        "href": "https://eprint.iacr.org/2013/507",
+        "sectionId": "paper-snarks-for-c"
+      }
+    ]
   },
   "crypto/groth16": {
     entryLevel: true,
@@ -56305,44 +58002,255 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "gpu/cuda-basics": {
-    entryLevel: true,
-    entryNote: "CPU·GPU·thread·memory를 안다고 가정하지 않습니다. 길이 10인 배열을 여러 일꾼에게 나누는 예에서 실행과 데이터 이동을 시작합니다.",
-    coreIdea: "CUDA 성능은 kernel 병렬성만이 아니라 host→device transfer, grid·block·thread mapping, warp 실행, memory traffic과 synchronization의 전체 critical path에서 결정됩니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "cuda-host-device-kernel-lifecycle", role: "Host allocation·transfer·launch·completion·result 회수를 하나의 실행 경로로 묶습니다." },
-      { id: "cuda-memory-transfer-amortization", role: "H2D·kernel·D2H·sync를 더해 GPU end-to-end break-even을 판단합니다." },
-      { id: "cuda-parallel-workload-fit", role: "독립성·batch·branch·data layout으로 GPU 후보 workload를 판별합니다." },
-      { id: "cuda-measurement-release-gate", role: "CPU parity 뒤 timeline·traffic·stall·throughput으로 최적화 채택을 결정합니다." },
+    "entryLevel": true,
+    "entryNote": "64개 원소를 더하는 같은 사례로 입력 512B와 출력 256B를 추적합니다. 본문의 시간과 처리량 상한은 가정한 계산이며 실제 측정값과 구분합니다.",
+    "coreIdea": "이 글에서는 같은 크기의 두 배열을 더하는 작업 하나를 끝까지 따라갑니다. 번호를 나누는 규칙에서 시작해 실제 명령과 저장 공간에 도달한 뒤, 어느 시간을 측정해야 하는지 판단합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "cuda-host-device-kernel-lifecycle",
+        "role": "입력 전송부터 kernel 제출, 완료 확인과 결과 회수까지 64개 원소의 경로를 추적합니다."
+      },
+      {
+        "id": "cuda-memory-transfer-amortization",
+        "role": "이동과 전체 시간을 64개·768바이트 사례에서 설명합니다."
+      },
+      {
+        "id": "cuda-parallel-workload-fit",
+        "role": "작업의 독립성과 재사용을 64개·768바이트 사례에서 설명합니다."
+      },
+      {
+        "id": "cuda-measurement-release-gate",
+        "role": "정확성과 성능 확인을 64개·768바이트 사례에서 설명합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "cuda-host-device-kernel-lifecycle", sectionId: "execution-path", intuition: "주방에 재료를 보내고 여러 요리사가 조리한 뒤 완성 접시를 돌려받는 전체 과정이 GPU 실행입니다.", workedExample: "Vector input을 device에 복사하고 3 blocks×4 threads kernel을 launch한 뒤 완료를 기다려 10개 결과만 host로 회수합니다.", boundary: "Host API 반환이 device 완료를 뜻하지 않을 수 있으며 thread를 physical core 하나와 일대일로 보지 않습니다." },
-      { id: "cuda-memory-transfer-amortization", sectionId: "memory", intuition: "빠른 공장도 배송 시간이 길면 작은 주문은 동네 작업보다 늦을 수 있어 앞뒤 이동까지 합칩니다.", workedExample: "H2D 0.3ms, kernel 0.1ms, D2H 0.2ms, sync 0.1ms이면 GPU 경로는 0.7ms이며 CPU 0.5ms보다 느립니다.", boundary: "Transfer와 compute가 overlap되면 단순 합 대신 timeline critical path를 쓰며 kernel time만으로 speedup을 말하지 않습니다." },
-      { id: "cuda-parallel-workload-fit", sectionId: "workload-fit", intuition: "같은 조리법을 많은 독립 재료에 적용할수록 여러 일꾼이 효율적이고 작업 순서가 얽히면 기다림이 늘어납니다.", workedExample: "독립 hash 후보 100만 개는 같은 kernel에 잘 맞지만 순차 dependency가 긴 단일 proof step은 바로 수천 threads로 나뉘지 않습니다.", boundary: "Cryptography·blockchain이라는 분야 이름만으로 GPU 적합성이나 고정 speedup을 결론 내리지 않습니다." },
-      { id: "cuda-measurement-release-gate", sectionId: "release-gate", intuition: "더 빨라 보이는 답도 정답이 다르면 탈락시키고, 맞은 뒤에 어느 시간이 줄었는지 계기판으로 확인합니다.", workedExample: "Odd size·invalid input·large batch에서 CPU parity를 확인하고 H2D/kernel/D2H, bandwidth, stalls와 throughput을 paired 비교합니다.", boundary: "Occupancy·peak FLOPS·kernel microbenchmark 하나의 상승은 end-to-end 채택 근거가 아닙니다." },
+    "conceptExplanations": [
+      {
+        "id": "cuda-host-device-kernel-lifecycle",
+        "sectionId": "mechanism",
+        "intuition": "Host는 두 입력 512바이트를 device에 복사하고 block 1개 ×64 threads를 제출합니다. Block은 실행 자원에 여유가 있는 SM에 배치되며 32개씩 warp 2개로 진행합니다. 37번은 두 번째 warp의 lane 5입니다. Block 내부 번호 32 +5 =37을 주소 계산에 씁니다.",
+        "workedExample": "Host는 두 입력 512바이트를 device에 복사하고 block 1개 ×64 threads를 제출합니다. Block은 실행 자원에 여유가 있는 SM에 배치되며 32개씩 warp 2개로 진행합니다. 37번은 두 번째 warp의 lane 5입니다. Block 내부 번호 32 +5 =37을 주소 계산에 씁니다.",
+        "boundary": "64개는 한 block이므로 GPU 전체를 채우지 못합니다. 많은 SM을 바쁘게 하려면 충분한 block이 필요합니다. 데이터 규모가 작을수록 launch와 복사가 계산보다 커질 수 있습니다. 입력이 이미 device에 있다고 놓습니다. 다음 계산도 그 결과를 쓴다면 매 단계 host 왕복을 생략할 수 있습니다."
+      },
+      {
+        "id": "cuda-memory-transfer-amortization",
+        "sectionId": "mechanism",
+        "intuition": "Load 명령은 각 lane의 주소를 모아 memory 요청을 만듭니다. Cache에서 찾지 못한 요청이 아래 계층으로 내려갑니다. 데이터가 돌아오면 register에 놓이고 덧셈 명령이 결과를 만든 뒤 store 명령이 C의 148바이트 위치에 씁니다. 요청·계산·저장은 서로 다른 명령이며 C++ 한 줄과 기계 명령 한 개가 대응하지 않습니다.",
+        "workedExample": "Load 명령은 각 lane의 주소를 모아 memory 요청을 만듭니다. Cache에서 찾지 못한 요청이 아래 계층으로 내려갑니다. 데이터가 돌아오면 register에 놓이고 덧셈 명령이 결과를 만든 뒤 store 명령이 C의 148바이트 위치에 씁니다. 요청·계산·저장은 서로 다른 명령이며 C++ 한 줄과 기계 명령 한 개가 대응하지 않습니다.",
+        "boundary": "독립 hash 후보나 서명 여러 개는 번호를 나누기 쉽습니다. 한 결과가 다음 입력인 긴 직렬 사슬은 같은 방법으로 나눌 수 없습니다. 분야 이름보다 의존 관계와 재사용량을 먼저 봅니다. Thread끼리 shared memory로 값을 주고받는 경우도 있습니다. 이때는 필요한 모든 thread가 같은 규칙으로 barrier를 통과해야 합니다."
+      },
+      {
+        "id": "cuda-parallel-workload-fit",
+        "sectionId": "limits",
+        "intuition": "먼저 CPU 기준 결과와 비교하고 길이 63·64·65에서 경계 검사를 확인합니다. 이후 같은 GPU·driver·Toolkit·옵션을 기록하고 준비 운동 뒤 device event로 kernel을 잽니다. Host가 완료를 확인하는 전체 시간도 따로 잽니다. 이번 환경에는 CUDA 장치가 없어 실행 성능을 측정하지 않았습니다. 64개 주소와 바이트 계산만 검산했습니다.",
+        "workedExample": "첫 warp의 입력 한 개는 32×4 =128 바이트입니다. 시작 주소가 128바이트 경계에 맞고 현대 NVIDIA의 32바이트 sector 규칙을 적용하면 4 sectors에 걸칩니다. 두 warps의 두 입력은 총 16 sectors, 출력은 8 sectors에 걸쳐 유효 768바이트를 다룹니다. 이것은 요청의 주소 범위 계산입니다. Cache 적중과 쓰기 정책이 개입하므로 곧바로 HBM 실측 768바이트라고 부르지 않습니다.",
+        "boundary": "먼저 CPU 기준 결과와 비교하고 길이 63·64·65에서 경계 검사를 확인합니다. 이후 같은 GPU·driver·Toolkit·옵션을 기록하고 준비 운동 뒤 device event로 kernel을 잽니다. Host가 완료를 확인하는 전체 시간도 따로 잽니다. 이번 환경에는 CUDA 장치가 없어 실행 성능을 측정하지 않았습니다. 64개 주소와 바이트 계산만 검산했습니다."
+      },
+      {
+        "id": "cuda-measurement-release-gate",
+        "sectionId": "limits",
+        "intuition": "먼저 CPU 기준 결과와 비교하고 길이 63·64·65에서 경계 검사를 확인합니다. 이후 같은 GPU·driver·Toolkit·옵션을 기록하고 준비 운동 뒤 device event로 kernel을 잽니다. Host가 완료를 확인하는 전체 시간도 따로 잽니다. 이번 환경에는 CUDA 장치가 없어 실행 성능을 측정하지 않았습니다. 64개 주소와 바이트 계산만 검산했습니다.",
+        "workedExample": "Compiler는 register 수를 배정합니다. 값이 많아 register에서 넘치면 thread 전용 주소 공간인 local memory로 일부를 보낼 수 있습니다. 이것이 spill이며 cache를 거쳐 장치 메모리를 사용할 수 있습니다. 반대로 shared memory에 올린다고 자동으로 register 부족이 해결되지는 않습니다.",
+        "boundary": "먼저 CPU 기준 결과와 비교하고 길이 63·64·65에서 경계 검사를 확인합니다. 이후 같은 GPU·driver·Toolkit·옵션을 기록하고 준비 운동 뒤 device event로 kernel을 잽니다. Host가 완료를 확인하는 전체 시간도 따로 잽니다. 이번 환경에는 CUDA 장치가 없어 실행 성능을 측정하지 않았습니다. 64개 주소와 바이트 계산만 검산했습니다."
+      }
     ],
-    conceptStages: [
-      { label: "Launch", relation: "Host lifecycle에서 grid·block·thread와 global index를 연결합니다.", concepts: ["cuda-host-device-kernel-lifecycle", "cuda-launch-hierarchy", "cuda-warp-simt", "cuda-global-index"] },
-      { label: "Move", relation: "Memory scope·coalescing과 end-to-end transfer 비용을 계산합니다.", concepts: ["cuda-memory-transfer-amortization", "cuda-shared-scratchpad", "cuda-global-coalescing"] },
-      { label: "Choose", relation: "Workload parallelism과 correctness-first measurement로 채택합니다.", concepts: ["cuda-parallel-workload-fit", "cuda-measurement-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "01·입력에서 완료까지",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "cuda-host-device-kernel-lifecycle"
+        ]
+      },
+      {
+        "label": "02·이동과 전체 시간",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "cuda-memory-transfer-amortization"
+        ]
+      },
+      {
+        "label": "03·작업의 독립성과 재사용",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "cuda-parallel-workload-fit"
+        ]
+      },
+      {
+        "label": "04·정확성과 성능 확인",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "cuda-measurement-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Host가 input을 준비한 뒤 GPU result를 받기까지 allocation·copy·launch·completion 순서를 설명하세요.", answerChecklist: ["device allocation", "H2D", "kernel launch", "completion/sync", "D2H"], requiredConcepts: ["cuda-host-device-kernel-lifecycle"], sectionId: "execution-path" },
-      { level: "basic", question: "Grid·block·thread와 hardware warp를 구분하고 block이 shared memory 협력 단위인 이유를 설명하세요.", answerChecklist: ["grid launch", "block collaboration", "thread logical worker", "32-lane warp", "not core mapping"], requiredConcepts: ["cuda-launch-hierarchy", "cuda-warp-simt"], sectionId: "execution-path" },
-      { level: "basic", question: "N=10, B=4에서 grid block 수와 i=blockIdx×B+threadIdx를 계산해 마지막 guard thread를 찾으세요.", answerChecklist: ["G=3", "12 logical threads", "i=10,11 guarded", "i<N"], requiredConcepts: ["cuda-global-index"], sectionId: "indexing" },
-      { level: "basic", question: "Register·shared memory·global memory의 공유 범위와 한 가지 비용을 각각 연결하세요.", answerChecklist: ["thread register/spill", "block shared/capacity-barrier", "device global/traffic", "scope matters"], requiredConcepts: ["cuda-shared-scratchpad"], sectionId: "memory" },
-      { level: "basic", question: "H2D 0.3ms, kernel 0.1ms, D2H 0.2ms, sync 0.1ms인 GPU와 CPU 0.5ms를 비교하세요.", answerChecklist: ["GPU 0.7ms", "CPU 0.5ms", "GPU slower", "kernel-only misleading"], requiredConcepts: ["cuda-memory-transfer-amortization"], sectionId: "memory" },
-      { level: "basic", question: "독립 hash batch와 순차 dependency 작업을 thread 독립성·batch·branch 기준으로 비교하세요.", answerChecklist: ["independent hash candidates", "large batch", "same control flow", "sequential dependency poor fit"], requiredConcepts: ["cuda-parallel-workload-fit"], sectionId: "workload-fit" },
-      { level: "advanced", question: "Warp lanes가 서로 다른 signature validation branch를 타는 경우 divergence를 측정하고 data grouping 대안을 설계하세요.", answerChecklist: ["same warp branches", "active lane loss", "profile branch efficiency/stall", "group similar inputs", "correctness parity"], requiredConcepts: ["cuda-warp-simt", "cuda-parallel-workload-fit"], sectionId: "workload-fit" },
-      { level: "advanced", question: "Global data를 shared tile에 올릴 때 reuse 이득과 staging·barrier·capacity 비용의 break-even 실험을 설계하세요.", answerChecklist: ["reuse count", "global transactions", "shared capacity", "barrier/bank", "paired kernel time"], requiredConcepts: ["cuda-shared-scratchpad", "cuda-global-coalescing", "cuda-memory-transfer-amortization"], sectionId: "memory" },
-      { level: "advanced", question: "MSM·NTT·batch signature verification을 병렬 단위·synchronization·memory contention 기준으로 비교하세요.", answerChecklist: ["MSM buckets/reduction", "NTT stage dependency", "signature batch independence", "data layout", "no universal speedup"], requiredConcepts: ["cuda-parallel-workload-fit"], sectionId: "workload-fit" },
-      { level: "advanced", question: "CPU baseline과 CUDA candidate의 correctness·timeline·traffic·stall·throughput release gate를 작성하세요.", answerChecklist: ["same input/precision/version", "edge-case parity", "H2D/kernel/D2H/sync", "bandwidth/stalls/occupancy", "end-to-end threshold", "rollback"], requiredConcepts: ["cuda-measurement-release-gate", "cuda-memory-transfer-amortization"], sectionId: "release-gate" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "64개 float 두 배열을 더할 때 유효 읽기·쓰기 바이트를 계산하세요.",
+        "answerChecklist": [
+          "읽기 512B",
+          "쓰기 256B",
+          "합 768B"
+        ],
+        "requiredConcepts": [
+          "cuda-memory-transfer-amortization"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "37번 thread의 배열 내 바이트 위치를 계산하세요.",
+        "answerChecklist": [
+          "37×4=148B",
+          "입력과 출력 각 배열 시작점 기준"
+        ],
+        "requiredConcepts": [
+          "cuda-host-device-kernel-lifecycle"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "64 threads block 하나는 몇 warp이며 37번은 어디에 속합니까?",
+        "answerChecklist": [
+          "2warps",
+          "두 번째 warp",
+          "lane5"
+        ],
+        "requiredConcepts": [
+          "cuda-host-device-kernel-lifecycle"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "Host 제출과 device 완료는 어떻게 다릅니까?",
+        "answerChecklist": [
+          "제출은 queue에 요청",
+          "결과 읽기 전 완료 확인"
+        ],
+        "requiredConcepts": [
+          "cuda-host-device-kernel-lifecycle"
+        ],
+        "sectionId": "black-box"
+      },
+      {
+        "level": "basic",
+        "question": "Register·shared memory·cache의 관리 주체를 구별하세요.",
+        "answerChecklist": [
+          "thread 중간값",
+          "block 공동 공간",
+          "cache 자동 보관",
+          "shared 복사와 순서 프로그램 관리"
+        ],
+        "requiredConcepts": [
+          "cuda-memory-transfer-amortization"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "공식 vectorAdd에 64·0·37을 넣고 경계 검사를 설명하세요.",
+        "answerChecklist": [
+          "64×0+37=37",
+          "37<64",
+          "C[37]에 결과"
+        ],
+        "requiredConcepts": [
+          "cuda-host-device-kernel-lifecycle"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "0.3 +0.1 +0.2 +0.1 ms와 CPU 0.5 ms를 비교하고 겹침 조건을 설명하세요.",
+        "answerChecklist": [
+          "0.7ms",
+          "CPU보다 느림",
+          "overlap이면 critical path"
+        ],
+        "requiredConcepts": [
+          "cuda-memory-transfer-amortization"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "한 번만 읽는 덧셈에 shared memory를 추가하면 왜 손해일 수 있습니까?",
+        "answerChecklist": [
+          "재사용 없음",
+          "staging과 barrier 비용",
+          "절약 바이트 없음"
+        ],
+        "requiredConcepts": [
+          "cuda-parallel-workload-fit"
+        ],
+        "sectionId": "need"
+      },
+      {
+        "level": "advanced",
+        "question": "Hopper TMA·WGMMA와 Blackwell TMEM의 역할을 구분하세요.",
+        "answerChecklist": [
+          "TMA 복사",
+          "WGMMA 행렬 연산",
+          "TMEM 전용 누산 저장",
+          "target별 지원",
+          "64개 덧셈 자동 행렬화 아님"
+        ],
+        "requiredConcepts": [
+          "cuda-parallel-workload-fit"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "길이 63·64·65의 정확성과 성능을 어떻게 검증합니까?",
+        "answerChecklist": [
+          "CPU 결과 비교",
+          "경계 검사",
+          "고정 GPU·driver·Toolkit",
+          "warmup",
+          "kernel과 전체 완료 별도"
+        ],
+        "requiredConcepts": [
+          "cuda-measurement-release-gate"
+        ],
+        "sectionId": "limits"
+      }
     ],
-    papers: [
-      { title: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", problem: "CUDA execution·thread·memory semantics를 정의합니다.", contribution: "Grid·block·thread, warp, memory와 runtime 계약을 제공합니다.", assumptions: "Toolkit 12.8.1과 target compute capability를 확인합니다.", evidenceScope: "Archive version의 공식 programming model semantics입니다.", notClaim: "고정 block size·latency·speedup의 보편 법칙은 아닙니다.", sectionId: "paper-cuda-programming-guide" },
-      { title: "NVIDIA CUDA C++ Best Practices Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html", problem: "Correct kernel의 성능 병목을 측정하고 개선합니다.", contribution: "APOD·bandwidth·coalescing·occupancy 평가 방법을 제공합니다.", assumptions: "같은 workload·compiler·GPU에서 paired 측정합니다.", evidenceScope: "공식 optimization method와 metric 정의입니다.", notClaim: "Occupancy 최대나 shared memory가 단독 성능 보장은 아닙니다.", sectionId: "paper-cuda-best-practices" },
-      { title: "NVIDIA cuda-samples v12.8", href: "https://github.com/NVIDIA/cuda-samples/tree/v12.8", problem: "CUDA pattern을 build 가능한 작은 코드로 확인합니다.", contribution: "Vector·reduction·matrix·stream official examples를 제공합니다.", assumptions: "Tag v12.8과 sample별 hardware requirement를 고정합니다.", evidenceScope: "해당 tag example의 API·correctness demonstration입니다.", notClaim: "Production blockchain 최적 구현이나 speed benchmark는 아닙니다.", sectionId: "paper-cuda-samples" },
-    ],
+    "papers": [
+      {
+        "title": "NVIDIA cuda-samples v13.0·3f1c509·49 –52 행",
+        "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "NVIDIA cuda-samples v13.0·3f1c509·49 –52 행",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "CUDA C++ Programming Guide13.0.2 ·SIMT architecture",
+        "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-programming-guide/index.html",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "CUDA C++ Programming Guide13.0.2 ·SIMT architecture",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      },
+      {
+        "title": "NVIDIA Blackwell Tuning Guide13.0.2",
+        "href": "https://docs.nvidia.com/cuda/archive/13.0.2/blackwell-tuning-guide/index.html",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "Data center Blackwell과 compute capability별 자원·지원 조건을 확인합니다.",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
   },
   "blockchain/bft-comparison": {
     entryLevel: true,
@@ -57257,89 +59165,423 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [{ title: "Evmos v20 EVM Ante", href: "https://github.com/evmos/evmos/tree/v20.0.0/app/ante/evm", problem: "Ethereum transaction sender·fee·nonce를 Cosmos execution context에서 admission합니다.", contribution: "Signature recovery·account·transfer·gas·sequence를 ordered decorators로 구현합니다.", assumptions: "Evmos v20.0.0 chain/fork configuration과 fee-market·account state를 사용합니다.", evidenceScope: "Historical Evmos v20 Ethereum ante transaction path에 한정됩니다.", notClaim: "Ante success가 EVM call success·block inclusion·application commit을 보장하지 않습니다.", sectionId: "paper-evmos-ante-v20" }, { title: "Evmos v20 x/evm", href: "https://github.com/evmos/evmos/tree/v20.0.0/x/evm", problem: "Ethereum state transition·revert·receipt를 Cosmos KV state와 일치시킵니다.", contribution: "EVM keeper·StateDB journal·message server·result conversion을 구현합니다.", assumptions: "Evmos v20 fork config, deterministic block context와 Cosmos cache/store semantics를 사용합니다.", evidenceScope: "Historical Evmos v20 EVM execution·state bridge behavior에 한정됩니다.", notClaim: "Current cosmos/evm과 같거나 external side effect까지 rollback한다고 말하지 않습니다.", sectionId: "paper-evmos-statedb-v20" }, { title: "Evmos v20 ERC20 IBC middleware", href: "https://github.com/evmos/evmos/blob/v20.0.0/x/erc20/ibc_middleware.go", problem: "ICS-20 packet lifecycle에 Cosmos coin·ERC-20 representation conversion을 연결합니다.", contribution: "Receive·acknowledgement·timeout callback을 underlying IBC app/keeper에 연결합니다.", assumptions: "Evmos v20 token-pair registration, compatible IBC stack과 proof/timeout semantics를 사용합니다.", evidenceScope: "Evmos v20 ERC-20 IBC middleware callback boundary에 한정됩니다.", notClaim: "Local send receipt를 remote credit finality로, symbol equality를 asset identity로 보장하지 않습니다.", sectionId: "paper-evmos-erc20-ibc-v20" }],
   },
   "blockchain/hyperliquid": {
-    entryLevel: true,
-    entryNote: "지갑 서명과 실제 체결이 왜 다른지를 주문 5계약 예제로 시작합니다.",
-    coreIdea: "Hyperliquid는 서명 action, HyperCore order·risk state, HyperBFT ordering, HyperEVM과 bridge를 서로 다른 receipt로 확인해야 안전하게 이해할 수 있습니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "hyperliquid-order-action-lifecycle", role: "서명·접수·resting·fill·cancel 상태를 분리합니다." },
-      { id: "hyperliquid-margin-liquidation-boundary", role: "PnL·funding·유지 증거금과 청산 자격을 연결합니다." },
-      { id: "hyperliquid-hyperbft-core-authority", role: "API view와 합의된 HyperCore state를 구분합니다." },
-      { id: "hyperliquid-core-evm-bridge-boundary", role: "Core·EVM·외부 체인 receipt를 분리합니다." },
+    "entryLevel": true,
+    "entryNote": "같은 작은 사례를 10단계에서 추적합니다. 공식 문서는 2026-10-04 확인했고 가정 수치·개발 명세·실제 배포를 구분합니다.",
+    "coreIdea": "한 주문의 서명·체결·수수료·담보·청산과 Core/EVM/외부 자금 이동을 각각의 기록으로 이어야 실제 결과를 알 수 있습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "hyperliquid-order-action-lifecycle",
+        "role": "접수 성공과 체결 수량은 다른 기록입니다."
+      },
+      {
+        "id": "hyperliquid-margin-liquidation-boundary",
+        "role": "담보에서 비용과 손실을 반영한 뒤 유지 요구액과 비교합니다."
+      },
+      {
+        "id": "hyperliquid-hyperbft-core-authority",
+        "role": "체결과 취소 중 먼저 적용된 사건을 공통 기록에서 읽습니다."
+      },
+      {
+        "id": "hyperliquid-core-evm-bridge-boundary",
+        "role": "같은 합의의 두 상태와 외부 자금 이동도 따로 확인합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "hyperliquid-order-action-lifecycle", sectionId: "order-lifecycle", intuition: "택배 접수증과 배달 완료증은 다릅니다.", workedExample: "매수 8과 매도 5가 교차하면 잔량 후보는 5지만 margin 검사 뒤 fill은 더 작거나 0일 수 있습니다.", boundary: "유효한 서명이나 API 성공은 체결 영수증이 아닙니다.", counterexample: "Timeout 뒤 같은 nonce를 새 주문처럼 재전송하면 상태 확인 없는 retry가 됩니다." },
-      { id: "hyperliquid-margin-liquidation-boundary", sectionId: "margin-liquidation", intuition: "담보에서 손실과 유지해야 할 최소 여유를 함께 뺍니다.", workedExample: "C=1000, P=-700, F=20, M=300이면 buffer=-20으로 청산 자격 경계를 넘습니다.", boundary: "교육용 buffer 식은 asset tier가 반영된 실제 liquidation-price 계산기가 아닙니다.", counterexample: "표시 청산가만 고정값으로 저장하면 funding·oracle·tier 변화가 빠집니다." },
-      { id: "hyperliquid-hyperbft-core-authority", sectionId: "consensus", intuition: "화면의 주문 상태가 아니라 검증자들이 같은 순서와 잔액을 확정했는지 봅니다.", workedExample: "Order status, fill block, position과 balance delta를 같은 action과 대조합니다.", boundary: "합의 안전성은 전역 도착 순서의 공정성이나 API 가용성 보장이 아닙니다.", counterexample: "한 API의 accepted 응답만으로 position을 갱신하면 거절·부분 체결과 어긋납니다." },
-      { id: "hyperliquid-core-evm-bridge-boundary", sectionId: "hyperevm-bridge", intuition: "같은 건물의 두 장부와 외부 은행 장부를 영수증으로 잇습니다.", workedExample: "EVM receipt 뒤 CoreWriter action 결과를 확인하고 bridge는 source debit과 destination credit을 대조합니다.", boundary: "같은 합의를 써도 Core와 EVM은 같은 storage가 아니며 bridge는 외부 finality를 포함합니다.", counterexample: "EVM transaction success를 perp fill이나 목적 체인 입금 완료로 표시하면 조기 완료입니다." },
+    "conceptExplanations": [
+      {
+        "id": "hyperliquid-order-action-lifecycle",
+        "sectionId": "order-lifecycle",
+        "intuition": "접수 성공과 체결 수량은 다른 기록입니다.",
+        "workedExample": "0.04 taker와0.06 maker의 합0.1, 수수료 합1.35를 fills·잔량과 맞춥니다.",
+        "boundary": "API ok나 서명은 완전 체결을 보장하지 않습니다."
+      },
+      {
+        "id": "hyperliquid-margin-liquidation-boundary",
+        "sectionId": "margin-liquidation",
+        "intuition": "담보에서 비용과 손실을 반영한 뒤 유지 요구액과 비교합니다.",
+        "workedExample": "1,000−1.35−700−20=278.65, 요구액300보다21.35 부족합니다.",
+        "boundary": "300은 가정이며 실제 tier·mark·계정 모드를 조회해야 합니다."
+      },
+      {
+        "id": "hyperliquid-hyperbft-core-authority",
+        "sectionId": "consensus",
+        "intuition": "체결과 취소 중 먼저 적용된 사건을 공통 기록에서 읽습니다.",
+        "workedExample": "0.04 체결 뒤0.06 취소가 언제 적용됐는지 동일 주문으로 대조합니다.",
+        "boundary": "합의는 전 세계 클릭 순서의 공정성 보장이 아닙니다."
+      },
+      {
+        "id": "hyperliquid-core-evm-bridge-boundary",
+        "sectionId": "hyperevm-bridge",
+        "intuition": "같은 합의의 두 상태와 외부 자금 이동도 따로 확인합니다.",
+        "workedExample": "EVM 영수증 뒤 Core의0.1 주문 결과와 CCTP 담보 반영을 구분합니다.",
+        "boundary": "Legacy Bridge2의 시간·최소액을 현재 CCTP 경로에 복사하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 order", relation: "서명 action을 상태로 추적합니다.", concepts: ["hyperliquid-order-action-lifecycle"] },
-      { label: "01 risk", relation: "체결 후보를 margin과 청산 경계에 대입합니다.", concepts: ["hyperliquid-margin-liquidation-boundary"] },
-      { label: "02 consensus", relation: "합의된 Core state를 확인합니다.", concepts: ["hyperliquid-hyperbft-core-authority"] },
-      { label: "03 interop", relation: "EVM과 외부 chain receipt를 잇습니다.", concepts: ["hyperliquid-core-evm-bridge-boundary"] },
+    "conceptStages": [
+      {
+        "label": "Hyperliquid order action lifecycle",
+        "relation": "0.04 taker와0.06 maker의 합0.1, 수수료 합1.35를 fills·잔량과 맞춥니다.",
+        "concepts": [
+          "hyperliquid-order-action-lifecycle"
+        ]
+      },
+      {
+        "label": "Hyperliquid margin · liquidation boundary",
+        "relation": "1,000−1.35−700−20=278.65, 요구액300보다21.35 부족합니다.",
+        "concepts": [
+          "hyperliquid-margin-liquidation-boundary"
+        ]
+      },
+      {
+        "label": "HyperBFT · HyperCore authority boundary",
+        "relation": "0.04 체결 뒤0.06 취소가 언제 적용됐는지 동일 주문으로 대조합니다.",
+        "concepts": [
+          "hyperliquid-hyperbft-core-authority"
+        ]
+      },
+      {
+        "label": "HyperCore · HyperEVM · bridge boundary",
+        "relation": "EVM 영수증 뒤 Core의0.1 주문 결과와 CCTP 담보 반영을 구분합니다.",
+        "concepts": [
+          "hyperliquid-core-evm-bridge-boundary"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "서명·API 접수·resting order·fill을 구분하세요.", answerChecklist: ["authorization", "validation", "book state", "fill receipt", "not interchangeable"], requiredConcepts: ["hyperliquid-order-action-lifecycle"], sectionId: "order-lifecycle" },
-      { level: "basic", question: "매수 잔량 8, 매도 잔량 5의 체결 후보와 한계를 계산하세요.", answerChecklist: ["price cross", "min", "5", "risk later", "not committed"], requiredConcepts: ["hyperliquid-order-action-lifecycle"], sectionId: "order-lifecycle" },
-      { level: "basic", question: "Cross와 isolated margin의 담보 공유 범위를 비교하세요.", answerChecklist: ["shared collateral", "position interaction", "isolated allocation", "loss scope", "liquidation"], requiredConcepts: ["hyperliquid-margin-liquidation-boundary"], sectionId: "margin-liquidation" },
-      { level: "basic", question: "C=1000, P=-700, F=20, M=300의 buffer를 계산하세요.", answerChecklist: ["1000-700-20-300", "-20", "eligible boundary", "simplified", "tier omitted"], requiredConcepts: ["hyperliquid-margin-liquidation-boundary"], sectionId: "margin-liquidation" },
-      { level: "basic", question: "API view와 합의된 HyperCore state를 구분하세요.", answerChecklist: ["accepted", "ordered", "fill block", "position delta", "balance delta"], requiredConcepts: ["hyperliquid-hyperbft-core-authority"], sectionId: "consensus" },
-      { level: "basic", question: "HyperCore·HyperEVM·외부 bridge의 receipt를 배치하세요.", answerChecklist: ["Core state", "EVM tx receipt", "CoreWriter result", "source tx", "destination receipt"], requiredConcepts: ["hyperliquid-core-evm-bridge-boundary"], sectionId: "hyperevm-bridge" },
-      { level: "advanced", question: "주문 timeout 뒤 중복 체결을 막는 reconcile 절차를 설계하세요.", answerChecklist: ["nonce", "query first", "order status", "fills", "position", "bounded retry"], requiredConcepts: ["hyperliquid-order-action-lifecycle", "hyperliquid-hyperbft-core-authority"], sectionId: "risk-checklist" },
-      { level: "advanced", question: "일부 체결과 취소가 경쟁하는 failure fixture를 만드세요.", answerChecklist: ["same order ID", "partial fill", "cancel action", "consensus order", "remaining", "final position"], requiredConcepts: ["hyperliquid-order-action-lifecycle", "hyperliquid-hyperbft-core-authority"], sectionId: "risk-checklist" },
-      { level: "advanced", question: "Oracle 급변과 funding 반영 경계의 liquidation 검사를 설계하세요.", answerChecklist: ["mark source", "before/after", "funding", "margin tier", "position", "receipt"], requiredConcepts: ["hyperliquid-margin-liquidation-boundary"], sectionId: "risk-checklist" },
-      { level: "advanced", question: "CoreWriter와 bridge에서 조기 성공 표시를 막는 검사를 설계하세요.", answerChecklist: ["EVM receipt", "Core action", "Core state", "source bridge", "validator processing", "destination finality", "reconcile"], requiredConcepts: ["hyperliquid-core-evm-bridge-boundary"], sectionId: "risk-checklist" },
-    ],
-    papers: [
-      { title: "Hyperliquid Docs · Trading", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/trading", problem: "서명한 주문의 유형과 체결·취소 상태를 구분해야 합니다.", contribution: "거래 interface와 주문 옵션의 공개 동작을 설명합니다.", assumptions: "기준일의 mainnet asset configuration을 함께 확인합니다.", evidenceScope: "공식 문서에 공개된 사용자 거래 interface입니다.", notClaim: "Matching engine source, 전역 도착 공정성이나 체결 보장이 아닙니다.", sectionId: "paper-hyperliquid-trading" },
-      { title: "Hyperliquid Docs · Margining", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/trading/margining", problem: "담보 공유 범위와 청산 경계를 정해야 합니다.", contribution: "Cross·isolated margin과 유지 증거금 규칙을 설명합니다.", assumptions: "자산별 tier·oracle·현재 설정을 고정합니다.", evidenceScope: "공식 문서가 공개한 cross·isolated margin과 유지 증거금 판정 범위에 한정됩니다.", notClaim: "표시 청산가와 실제 체결가의 동일성을 보장하지 않습니다.", sectionId: "paper-hyperliquid-margin" },
-      { title: "Hyperliquid Docs · HyperBFT", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/hyperbft", problem: "Action 순서와 상태를 검증자들이 합의해야 합니다.", contribution: "합의와 validator 역할을 설명합니다.", assumptions: "기준일 validator set과 network configuration을 사용합니다.", evidenceScope: "공식 consensus architecture 설명입니다.", notClaim: "비공개 구현의 독립 재현이나 주문 공정성 증명이 아닙니다.", sectionId: "paper-hyperliquid-consensus" },
-      { title: "Hyperliquid Docs · HyperEVM", href: "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm", problem: "EVM과 Core 금융 상태가 상호작용해야 합니다.", contribution: "Precompile·CoreWriter interface를 설명합니다.", assumptions: "배포 system address·ABI·network revision을 고정합니다.", evidenceScope: "공개된 EVM↔Core interface입니다.", notClaim: "EVM success가 Core fill이나 bridge finality를 보장하지 않습니다.", sectionId: "paper-hyperliquid-hyperevm" },
-    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "0.04개 taker와 0.06개 maker 체결의 수수료를 구하세요.",
+        "answerChecklist": [
+          "0.04 × 50,000 = 2,000 USDC에 0.045%를 적용하면 taker 수수료는 0.90 USDC입니다.",
+          "0.06 × 50,000 = 3,000 USDC에 0.015%를 적용하면 maker 수수료는 0.45 USDC이며 합계는 1.35 USDC입니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "hyperliquid-order-action-lifecycle"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "가격 손익을 반영하기 전 담보 잔액은 얼마인가요?",
+        "answerChecklist": [
+          "1,000 − 1.35 = 998.65 USDC입니다.",
+          "이 단계는 체결 수수료만 차감했으며 가격 손익과 펀딩은 아직 반영하지 않았습니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "hyperliquid-margin-liquidation-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "손실 700과 펀딩 20을 반영한 계정 가치, 유지 요구액 300에 대한 여유를 구하세요.",
+        "answerChecklist": [
+          "998.65 − 700 − 20 = 계정 가치 278.65 USDC입니다.",
+          "유지 요구액 300 USDC를 빼면 여유는 −21.35 USDC이므로 이 단순 사례의 유지 조건을 충족하지 못합니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "hyperliquid-margin-liquidation-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "유지 요구액 300의 2/3와 계정 가치 278.65를 비교하세요.",
+        "answerChecklist": [
+          "300 × 2/3 = 200 USDC이며 계정 가치는 이보다 78.65 USDC 높습니다.",
+          "유지 요구액 300 미달로 일반 청산 대상이지만, 2/3의 backstop 기준 아래까지 내려간 상태는 아닙니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "hyperliquid-margin-liquidation-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "EVM 영수증이 성공한 뒤 주문에서 추가로 확인할 것은 무엇인가요?",
+        "answerChecklist": [
+          "CoreWriter action이 실제로 처리됐는지 Core 기록을 읽어야 합니다.",
+          "체결량·대기 잔량·취소·포지션을 조회해 0.04 체결과 0.06 대기를 구분합니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "hyperliquid-core-evm-bridge-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Yes100개를 60에 사면 이진 결과별 손익은 무엇인가요?",
+        "answerChecklist": [
+          "Yes로 정산되면 100 − 60 = +40 USDC, No면 0 − 60 = −60 USDC입니다.",
+          "수수료를 제외한 계산이며 사용하지 않은 940 USDC는 이 포지션의 손익과 구분합니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "hyperliquid-order-action-lifecycle",
+          "hyperliquid-margin-liquidation-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "HIP-3 시장 운영자의 종료권은 왜 상품 비교에 포함되나요?",
+        "answerChecklist": [
+          "HIP-3의 haltTrading은 해당 시장 주문을 취소하고 mark 가격으로 정산하는 결과를 낼 수 있습니다.",
+          "가격 자료와 시장 설정, 담보 구분 및 운영자 책임을 확인해야 거래소 이름이 같아도 다른 위험을 비교할 수 있습니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "hyperliquid-margin-liquidation-boundary",
+          "hyperliquid-hyperbft-core-authority"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "API 응답이 성공했을 때 포지션을 즉시 0.1로 표시하면 어떤 오류가 생기나요?",
+        "answerChecklist": [
+          "성공 응답 안에서도 0.04 체결과 0.06 대기가 다르므로 즉시 0.1 포지션으로 표시하면 미체결량을 보유량에 포함합니다.",
+          "후속 fill과 취소 순서, 잔량·잔액을 대조해 최종 보유량을 갱신합니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "hyperliquid-order-action-lifecycle",
+          "hyperliquid-hyperbft-core-authority"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "HIP-4의 메인넷 문구와 Testnet-only API 문구가 함께 있으면 어떻게 기록하나요?",
+        "answerChecklist": [
+          "확인일과 네트워크, 개요의 초기 출시 범위와 별도 배포 API의 지원 범위를 각각 적습니다.",
+          "모든 기능의 메인넷 활성화나 영구적인 수수료 면제로 합쳐 해석하지 않습니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "hyperliquid-order-action-lifecycle",
+          "hyperliquid-core-evm-bridge-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "현재 USDC 입금에 예전 Bridge2의 조건을 그대로 쓰면 왜 틀리나요?",
+        "answerChecklist": [
+          "현재 공식 안내는 native USDC와 CCTP 경로를 권장하고 기존 Bridge2를 deprecated로 구분합니다.",
+          "이용하는 경로의 소각·인증·발행·Core 반영을 확인하며 예전 최소액과 대기 시간을 그대로 적용하지 않습니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "hyperliquid-core-evm-bridge-boundary"
+        ]
+      }
+    ]
   },
   "blockchain/robinhood-chain-blob-demand": {
-    entryLevel: true,
-    entryNote: "블롭 피크·이동평균·프로토콜 타겟이 서로 다른 숫자라는 구분에서 시작합니다.",
-    coreIdea: "로빈후드 체인 관련 블롭 수요 관측은 개별 피크·이동평균·타겟과 단일 rollup 집중도를 분리해 읽고, 지속 수요가 확인될 때만 BPO 파라미터 조정과 노드 blobpool 용량 문제로 연결해야 합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "blob-demand-average-target-peak-split", role: "개별 블록 피크와 이동평균, 프로토콜 타겟을 서로 다른 시간 창으로 나눕니다." },
-      { id: "single-rollup-blob-demand-concentration", role: "특정 rollup 하나의 활동과 생태계 전반의 구조적 수요 증가를 구분합니다." },
-      { id: "eip7892-bpo-parameter-only-fork", role: "Blob 파라미터만 별도 일정으로 조정하는 포크 경계를 설명합니다." },
-      { id: "sparse-blobpool-capacity-precondition", role: "Target 상향 전에 노드의 대기 데이터 저장 비용을 줄여야 하는 이유를 설명합니다." },
+    "entryLevel": true,
+    "entryNote": "같은 작은 사례를 10단계에서 추적합니다. 공식 문서는 2026-10-04 확인했고 가정 수치·개발 명세·실제 배포를 구분합니다.",
+    "coreIdea": "블록별 개수·기간 평균·공급 설정·게시자 기여·자료 전송 비용은 다른 계산이며 가정과 관측을 분리해야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "blob-demand-average-target-peak-split",
+        "role": "한 번의 최고치와 기간 평균은 다른 질문에 답합니다."
+      },
+      {
+        "id": "single-rollup-blob-demand-concentration",
+        "role": "전체 사용량과 한 게시자의 기여를 같은 분모로 계산합니다."
+      },
+      {
+        "id": "eip7892-bpo-parameter-only-fork",
+        "role": "기본 설정과 그 설정을 사용하는 네트워크 일정을 함께 읽습니다."
+      },
+      {
+        "id": "sparse-blobpool-capacity-precondition",
+        "role": "자료 수를 줄이는 일과 같은 자료의 전송량을 줄이는 일은 다릅니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "blob-demand-average-target-peak-split", sectionId: "target-vs-average", intuition: "한 번 붐빈 순간과 며칠간의 평균, 시스템 균형점을 서로 다른 계기판으로 봅니다.", workedExample: "개별 블록이 BPO2 타겟 14개를 넘더라도 3일 평균이 6.4라면 지속적으로 타겟을 초과했다고 결론내리지 않습니다.", boundary: "스냅샷 수치는 관측 시점과 집계 창을 함께 고정해야 하며 미래 수요 예측값이 아닙니다.", counterexample: "최고 피크 하나를 평균처럼 인용하면 일시적 burst를 구조적 용량 부족으로 과장하게 됩니다." },
-      { id: "single-rollup-blob-demand-concentration", sectionId: "robinhood-chain-concentration", intuition: "시장 전체 매출 증가와 큰 고객 한 곳의 일시 주문 증가는 지속성이 다릅니다.", workedExample: "체인 전체 평균이 올라가도 rollup별 기여를 분리하지 못한 대시보드만으로 로빈후드 체인의 정확한 비중을 계산하지 않습니다.", boundary: "원 소식의 attribution과 체인 전체 시계열은 서로 다른 근거이며 같은 측정으로 합치지 않습니다.", counterexample: "단일 소비자의 피크를 모든 rollup의 고른 채택 증가로 설명하면 집중 위험을 숨기게 됩니다." },
-      { id: "eip7892-bpo-parameter-only-fork", sectionId: "bpo-sparse-blobpool", intuition: "건물 전체를 다시 설계하지 않고도 정해진 절차로 수용 인원 숫자만 바꿉니다.", workedExample: "활성화 시점의 공식 사양이 정한 blob target·max를 클라이언트가 같은 일정으로 적용합니다.", boundary: "BPO 메커니즘은 특정 포크의 실제 파라미터 값이나 채택 일정을 자동으로 확정하지 않습니다.", counterexample: "기사 작성 시점의 target을 영구 상수로 코드에 넣으면 다음 BPO 뒤 설명과 계산이 어긋납니다." },
-      { id: "sparse-blobpool-capacity-precondition", sectionId: "bpo-sparse-blobpool", intuition: "창고 수용량을 늘리기 전에 같은 물건을 중복 보관하는 공간부터 줄입니다.", workedExample: "Blob target 상향 후보를 평가할 때 블록 포함 전 대기 데이터의 메모리·디스크·전파 비용을 함께 측정합니다.", boundary: "저장 최적화 하나만으로 검증·대역폭·합의 지연까지 모두 해결됐다고 주장하지 않습니다.", counterexample: "노드 자원 측정 없이 target 숫자만 올리면 대기열 압력과 운영 비용을 숨길 수 있습니다." },
+    "conceptExplanations": [
+      {
+        "id": "blob-demand-average-target-peak-split",
+        "sectionId": "target-vs-average",
+        "intuition": "한 번의 최고치와 기간 평균은 다른 질문에 답합니다.",
+        "workedExample": "18·10·6·6의 평균10, 목표14, 최대21을 구분합니다.",
+        "boundary": "실제 관측에는 기간·재현 쿼리가 필요하며, 평균이 target보다 작아도 EIP-7918 하한 분기 때문에 실제 비용 하락을 단정할 수 없습니다."
+      },
+      {
+        "id": "single-rollup-blob-demand-concentration",
+        "sectionId": "robinhood-chain-concentration",
+        "intuition": "전체 사용량과 한 게시자의 기여를 같은 분모로 계산합니다.",
+        "workedExample": "A의14·2·2·2는 총20/40=50%, 첫블록14/18은약77.8%입니다.",
+        "boundary": "공식 네트워크 소개는 실제 사용량 기여를 증명하지 않습니다."
+      },
+      {
+        "id": "eip7892-bpo-parameter-only-fork",
+        "sectionId": "source",
+        "intuition": "기본 설정과 그 설정을 사용하는 네트워크 일정을 함께 읽습니다.",
+        "workedExample": "고정한 Geth mainnet BPO2는 target14·max21이며18은목표만넘습니다.",
+        "boundary": "파일에 BPO3 기본값이 있어도 메인넷 활성화 연결은 별도입니다."
+      },
+      {
+        "id": "sparse-blobpool-capacity-precondition",
+        "sectionId": "bpo-sparse-blobpool",
+        "intuition": "자료 수를 줄이는 일과 같은 자료의 전송량을 줄이는 일은 다릅니다.",
+        "workedExample": "0.15+0.85/8=0.25625,18단위의 기대payload는4.6125입니다.",
+        "boundary": "Review인 제안 모형이며 실측 전체 대역폭이나 BPO의 필수 전제로 단정하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 measure", relation: "피크·평균·타겟을 나눠 수요를 측정합니다.", concepts: ["blob-demand-average-target-peak-split"] },
-      { label: "01 attribute", relation: "수요가 어느 rollup에 집중됐는지 구분합니다.", concepts: ["single-rollup-blob-demand-concentration"] },
-      { label: "02 adjust", relation: "지속 수요에 맞춰 파라미터 조정 경계를 검토합니다.", concepts: ["eip7892-bpo-parameter-only-fork"] },
-      { label: "03 capacity", relation: "노드 저장·전파 용량의 전제 조건을 확인합니다.", concepts: ["sparse-blobpool-capacity-precondition"] },
+    "conceptStages": [
+      {
+        "label": "Blob demand average · target · peak split",
+        "relation": "18·10·6·6의 평균10, 목표14, 최대21을 구분합니다.",
+        "concepts": [
+          "blob-demand-average-target-peak-split"
+        ]
+      },
+      {
+        "label": "Single-rollup blob demand concentration",
+        "relation": "A의14·2·2·2는 총20/40=50%, 첫블록14/18은약77.8%입니다.",
+        "concepts": [
+          "single-rollup-blob-demand-concentration"
+        ]
+      },
+      {
+        "label": "EIP-7892 BPO parameter-only fork",
+        "relation": "고정한 Geth mainnet BPO2는 target14·max21이며18은목표만넘습니다.",
+        "concepts": [
+          "eip7892-bpo-parameter-only-fork"
+        ]
+      },
+      {
+        "label": "Sparse blobpool capacity precondition",
+        "relation": "0.15+0.85/8=0.25625,18단위의 기대payload는4.6125입니다.",
+        "concepts": [
+          "sparse-blobpool-capacity-precondition"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "개별 블록 피크와 3일 이동평균, 프로토콜 타겟이 각각 무엇을 뜻하는지 구분하세요.", answerChecklist: ["single block", "rolling window", "protocol balance point", "different time scale", "no substitution"], requiredConcepts: ["blob-demand-average-target-peak-split"], sectionId: "target-vs-average" },
-      { level: "basic", question: "피크가 타겟을 넘지만 이동평균은 낮은 관측을 지속적 공급 부족으로 볼 수 없는 이유를 설명하세요.", answerChecklist: ["temporary burst", "average below target", "excess feedback", "subsequent blocks", "no forecast"], requiredConcepts: ["blob-demand-average-target-peak-split"], sectionId: "target-vs-average" },
-      { level: "basic", question: "다섯 달 동안 두 배가 된 관측의 월평균 복리 증가율과 해석 한계를 계산하세요.", answerChecklist: ["ratio two", "fifth root", "about 14.9 percent", "historical summary", "not projection"], requiredConcepts: ["blob-demand-average-target-peak-split"], sectionId: "growth-rate" },
-      { level: "basic", question: "체인 전체 대시보드와 특정 rollup 기여도 주장에 필요한 근거가 왜 다른지 설명하세요.", answerChecklist: ["aggregate", "per-rollup attribution", "same time window", "source boundary", "no exact share"], requiredConcepts: ["single-rollup-blob-demand-concentration"], sectionId: "robinhood-chain-concentration" },
-      { level: "basic", question: "BPO 포크가 바꾸는 범위와 일반 하드포크 변경에서 분리하는 이유를 설명하세요.", answerChecklist: ["blob parameters", "separate schedule", "client support", "activation", "not automatic adoption"], requiredConcepts: ["eip7892-bpo-parameter-only-fork"], sectionId: "bpo-sparse-blobpool" },
-      { level: "basic", question: "Blob target 상향 전에 blobpool 저장 비용을 함께 확인해야 하는 이유를 설명하세요.", answerChecklist: ["pending blobs", "memory or disk", "network propagation", "node capacity", "resource measurement"], requiredConcepts: ["sparse-blobpool-capacity-precondition"], sectionId: "bpo-sparse-blobpool" },
-      { level: "advanced", question: "피크·이동평균·타겟을 섞은 과장된 뉴스 문장을 찾아 고치는 검증 표를 설계하세요.", answerChecklist: ["timestamp", "window", "units", "peak", "average", "target", "source snapshot", "corrected claim"], requiredConcepts: ["blob-demand-average-target-peak-split"], sectionId: "reading-checklist" },
-      { level: "advanced", question: "단일 rollup 집중과 생태계 전반의 수요 증가를 분리하는 관측 실험을 설계하세요.", answerChecklist: ["rollup labels", "same window", "share", "other rollups", "persistence", "attribution uncertainty"], requiredConcepts: ["single-rollup-blob-demand-concentration"], sectionId: "reading-checklist" },
-      { level: "advanced", question: "새 BPO 후보를 채택하기 전에 확인할 파라미터·활성화·클라이언트 합의 검사를 설계하세요.", answerChecklist: ["official spec", "target and max", "activation epoch", "client parity", "boundary blocks", "rollback"], requiredConcepts: ["eip7892-bpo-parameter-only-fork"], sectionId: "bpo-sparse-blobpool" },
-      { level: "advanced", question: "Target 상향과 sparse blobpool 최적화를 함께 검증하는 노드 자원 release gate를 설계하세요.", answerChecklist: ["same corpus", "pending blob count", "memory", "disk", "bandwidth", "latency", "failure recovery", "capacity ceiling"], requiredConcepts: ["eip7892-bpo-parameter-only-fork", "sparse-blobpool-capacity-precondition"], sectionId: "bpo-sparse-blobpool" },
-    ],
-    papers: [
-      { title: "Dune · hildobby/blobs dashboard", href: "https://dune.com/hildobby/blobs", problem: "블록별 blob 개수와 기간별 평균 수요를 같은 시간축에서 관찰해야 합니다.", contribution: "체인 전체 blob 사용량의 시계열과 집계 지표를 공개 대시보드로 제공합니다.", assumptions: "인용 수치는 2026-09-12 스냅샷이며 이후 대시보드 값은 계속 갱신됩니다.", evidenceScope: "대시보드가 집계한 이더리움 체인 전체 blob 사용량과 해당 시점의 공개 시계열에 한정됩니다.", notClaim: "특정 rollup의 정확한 기여 비율이나 이후 수요 추세를 독립적으로 보장하지 않습니다.", sectionId: "paper-robinhood-blob-demand" },
-      { title: "go-ethereum · MainnetChainConfig", href: "https://github.com/ethereum/go-ethereum/blob/master/params/config.go", problem: "관측 시점에 활성화된 blob target·max를 EIP 예시값과 구분해야 합니다.", contribution: "메인넷 BPO 활성화 시각과 BPO2 target 14·max 21 client 설정을 제공합니다.", assumptions: "2026-09-12가 BPO2 활성화 뒤이며 후속 메인넷 BPO 설정이 없던 시점을 기준으로 합니다.", evidenceScope: "해당 시점 go-ethereum 메인넷 chain configuration의 blob schedule에 한정됩니다.", notClaim: "실제 블록 수요·다른 클라이언트 배포 상태·미래 BPO 일정을 단독으로 보장하지 않습니다.", sectionId: "paper-mainnet-blob-config" },
-      { title: "EIP-7892 · Blob Parameter Only Hardforks", href: "https://eips.ethereum.org/EIPS/eip-7892", problem: "Blob 수요 변화에 맞춘 파라미터 조정을 전체 기능 포크와 분리할 필요가 있습니다.", contribution: "Blob target·max 파라미터 전용 포크를 스케줄하고 활성화하는 메커니즘을 정의합니다.", assumptions: "참여 클라이언트가 같은 공식 파라미터와 활성화 일정을 구현한다고 가정합니다.", evidenceScope: "EIP-7892가 정의한 blob 파라미터 전용 포크 절차와 설정 경계에 한정됩니다.", notClaim: "특정 BPO의 최종 값·배포 일정·네트워크 용량 안전성을 자동으로 확정하지 않습니다.", sectionId: "paper-robinhood-bpo" },
-      { title: "EIP-4844 · Shard Blob Transactions", href: "https://eips.ethereum.org/EIPS/eip-4844", problem: "Blob 수요를 execution gas와 분리해 target 주변에서 가격으로 조절해야 합니다.", contribution: "Excess blob gas 상태와 독립 fee feedback, blob transaction 기본 경계를 정의합니다.", assumptions: "계산 시점에 활성화된 공식 fork 파라미터와 정수 산술을 사용한다고 가정합니다.", evidenceScope: "EIP-4844가 정의한 blob transaction과 excess 기반 수수료 피드백 메커니즘에 한정됩니다.", notClaim: "특정 rollup의 실제 posting 비용이나 미래 수요, BPO 채택 여부를 보장하지 않습니다.", sectionId: "paper-robinhood-blob-fee" },
-      { title: "EIP-8070 · eth/72 Sparse Blobpool", href: "https://eips.ethereum.org/EIPS/eip-8070", problem: "Blob 용량 증가와 함께 실행 노드의 pending blob 대역폭 부담을 줄여야 합니다.", contribution: "Custody-aligned cell sampling과 일부 full provider를 결합한 sparse blobpool을 제안합니다.", assumptions: "EIP-7594 data columns·eth/72와 문서에 명시된 sampling·peer 가정을 사용합니다.", evidenceScope: "Review 상태인 EIP-8070의 네트워킹 설계와 분석·테스트 계획에 한정됩니다.", notClaim: "Glamsterdam 최종 포함·배포 완료·메인넷에서의 실제 절감 효과를 보장하지 않습니다.", sectionId: "paper-robinhood-sparse-blobpool" },
-    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "18·10·6·6의 합계와 평균은 얼마인가요?",
+        "answerChecklist": [
+          "18 + 10 + 6 + 6 = 총 40개의 blob입니다.",
+          "40개 ÷ 4블록 = 블록당 평균 10개이며 첫 블록의 18개와 다른 통계입니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "blob-demand-average-target-peak-split"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "목표 14·최대 21과 첫 블록 18을 비교하세요.",
+        "answerChecklist": [
+          "첫 블록 18개는 목표 14개보다 4개 많습니다.",
+          "최대 21개보다 3개 적으므로 목표를 넘은 사실만으로 블록이 허용량을 위반했다고 할 수 없습니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "blob-demand-average-target-peak-split",
+          "eip7892-bpo-parameter-only-fork"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "A의 14·2·2·2개는 전체 40개의 몇 퍼센트인가요?",
+        "answerChecklist": [
+          "A의 합계는 14 + 2 + 2 + 2 = 20개이므로 전체 40개의 50%입니다.",
+          "첫 블록만의 14/18 ≈ 77.8%와 기간 전체 50%는 서로 다른 분모를 사용합니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "single-rollup-blob-demand-concentration"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "실행 비용 하한 분기가 작동하지 않는 조건에서 초기 excess 0과 사용량 18·10·6·6의 다음 값을 구하고, 하한 조건이 성립할 때 첫 값과 비교하세요.",
+        "answerChecklist": [
+          "실행 비용에 연동된 EIP-7918 하한 분기가 작동하지 않는 조건에서 4 → 0 → 0 → 0입니다.",
+          "각 값은 blob 개수로 환산한 초과량이며 가격 배수가 아닙니다. 첫 18개에 하한 분기가 작동하면 같은 시작값에서도 18 × (21−14)/21 = 6이 됩니다."
+        ],
+        "sectionId": "robinhood-chain-concentration",
+        "requiredConcepts": [
+          "blob-demand-average-target-peak-split",
+          "eip7892-bpo-parameter-only-fork"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "EIP-8070 모형의 평균 payload 비율은 얼마인가요?",
+        "answerChecklist": [
+          "평균 수신 비율은 0.15 + 0.85/8 = 0.25625입니다.",
+          "전체 수신 18단위를 기준으로 18 × 0.25625 = 평균 4.6125단위이며 확률 모형의 값입니다."
+        ],
+        "sectionId": "bpo-sparse-blobpool",
+        "requiredConcepts": [
+          "sparse-blobpool-capacity-precondition"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "다섯 달 동안 5에서 10으로 늘었다면 월 복리 성장률은 얼마인가요?",
+        "answerChecklist": [
+          "(10/5)^(1/5) − 1 ≈ 14.9%가 월 복리 환산 변화율입니다.",
+          "두 끝점을 가정한 계산이며 실제 관측이나 다음 기간의 예측을 뜻하지 않습니다."
+        ],
+        "sectionId": "reading-checklist",
+        "requiredConcepts": [
+          "blob-demand-average-target-peak-split"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "특정 체인의 50% 기여를 실제로 재현하려면 무엇을 고정해야 하나요?",
+        "answerChecklist": [
+          "체인과 블록 범위·hash·시각·재조직 처리 기준을 먼저 고정합니다.",
+          "게시 주소와 inbox를 공식 배포 정보로 분류하고 미분류 항목도 전체 분모에 남겨 20/40을 재현합니다."
+        ],
+        "sectionId": "robinhood-chain-concentration",
+        "requiredConcepts": [
+          "single-rollup-blob-demand-concentration"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "파일에 BPO3 기본값이 있으면 메인넷에서 활성화됐다고 할 수 있나요?",
+        "answerChecklist": [
+          "기본값의 존재와 MainnetChainConfig에 활성화 시각·설정이 연결된 사실은 다릅니다.",
+          "고정한 commit에서는 BPO2의 일정과 target 14·max 21 연결을 확인하며 BPO3 기본값만으로 메인넷 활성화를 선언하지 않습니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "eip7892-bpo-parameter-only-fork"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "payload 약 74.4% 감소를 전체 네트워크의 실측 결과로 쓰면 무엇을 놓치나요?",
+        "answerChecklist": [
+          "약 74.4%는 확률 모형의 payload 절감이며 이웃 선택과 가용성 가정에 의존합니다.",
+          "메시지·재요청·증명·공격 방어 비용을 포함한 전체 대역폭은 별도 실측이 필요합니다."
+        ],
+        "sectionId": "bpo-sparse-blobpool",
+        "requiredConcepts": [
+          "sparse-blobpool-capacity-precondition"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "Robinhood 메인넷 공식 문서가 전체 blob 수요의 성장 원인을 증명하지 못하는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "네트워크 존재와 Ethereum DA 사용 방식은 실제 게시량 및 증가 원인의 관측과 다른 증거입니다.",
+          "블록 범위와 재현 쿼리를 확보하지 못한 평균 6.4 및 특정 체인 기여 주장은 관측 사실로 유지할 수 없습니다."
+        ],
+        "sectionId": "robinhood-chain-concentration",
+        "requiredConcepts": [
+          "blob-demand-average-target-peak-split",
+          "single-rollup-blob-demand-concentration"
+        ]
+      }
+    ]
   },
   "blockchain/dydx": {
     entryLevel: true, entryNote: "이체 요청과 거래 order가 어떻게 다른지를 Alice bid·Bob ask 예제로 시작합니다.", coreIdea: "dYdX protocol/v9.6.3은 short-term order를 node-local MemClob/gossip에, stateful order를 KV state에 다르게 보존하고 proposer match를 replica가 order·risk·settlement 규칙으로 검증한 뒤 indexer에 rebuildable projection으로 전달합니다.", assumedKnowledge: [],
@@ -60081,47 +62323,279 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "blockchain/pq-account": {
-    entryLevel: true,
-    entryNote: "민지의 0.1 ETH UserOperation 한 건으로 account abstraction과 ML-DSA signature, gas·replay·migration을 처음부터 연결합니다.",
-    coreIdea: "PQ smart account는 ERC-4337 validation-before-effect 경계에 FIPS 204 ML-DSA artifact를 실제 target-chain verifier capability로 연결하고 dual validation·recovery·rollback으로 migration해야 합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "erc4337-useroperation-validation-boundary", role: "UserOperation·chain·EntryPoint·nonce·simulation을 결속합니다." },
-      { id: "erc4337-entrypoint-effect-order", role: "Validation loop와 execution effect 순서를 분리합니다." },
-      { id: "ml-dsa-signature-artifact", role: "FIPS revision·parameter·key·encoding·verifier generation을 봉인합니다." },
-      { id: "pq-account-verifier-capability-boundary", role: "표준 존재와 target-chain code·gas·bundler 지원을 구분합니다." },
-      { id: "pq-account-hybrid-migration-gate", role: "Classical/PQ dual validation·recovery·rollback을 검증합니다." },
+    "entryLevel": true,
+    "entryNote": "송금용1 ETH·별도deposit0.02 ETH에서0.1 ETH를 보내는 가정 사례를 실제 고정 Solidity 원문과 연결합니다.",
+    "coreIdea": "양자내성 계정 이전은 서명 함수의 교체와 함께 UserOperation의 domain·nonce·실행·비용 정산, owner 직접 실행과 복구·업그레이드 권한을 모두 검증하는 과정입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "erc4337-useroperation-validation-boundary",
+        "role": "UserOperation·chain·EntryPoint·nonce·simulation을 결속합니다."
+      },
+      {
+        "id": "erc4337-entrypoint-effect-order",
+        "role": "Validation loop와 execution effect 순서를 분리합니다."
+      },
+      {
+        "id": "ml-dsa-signature-artifact",
+        "role": "FIPS revision·parameter·key·encoding·verifier generation을 봉인합니다."
+      },
+      {
+        "id": "pq-account-verifier-capability-boundary",
+        "role": "표준 존재와 target-chain code·gas·bundler 지원을 구분합니다."
+      },
+      {
+        "id": "pq-account-hybrid-migration-gate",
+        "role": "Classical/PQ dual validation·recovery·rollback을 검증합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "erc4337-useroperation-validation-boundary", sectionId: "account-abstraction-validation", intuition: "UserOperation은 smart account가 검증할 서명된 실행 요청서입니다.", workedExample: "0.1 ETH call에 chainId·EntryPoint·nonce를 함께 hash합니다.", boundary: "일반 transaction이나 block inclusion 보장이 아닙니다." },
-      { id: "erc4337-entrypoint-effect-order", sectionId: "account-abstraction-validation", intuition: "입장권 검사 뒤에만 공연장 안의 행동을 실행합니다.", workedExample: "Account/paymaster validation과 gas precharge 뒤 call을 실행합니다.", boundary: "Simulation pass는 execution success가 아닙니다." },
-      { id: "ml-dsa-signature-artifact", sectionId: "ml-dsa-signature-boundary", intuition: "‘PQ 서명’이라는 이름 대신 정확한 표준·parameter·encoding 영수증을 남깁니다.", workedExample: "FIPS 204 ML-DSA-65, public-key hash, verifier code hash를 pin합니다.", boundary: "옛 Dilithium 이름은 exact standard artifact가 아닙니다." },
-      { id: "pq-account-verifier-capability-boundary", sectionId: "ml-dsa-signature-boundary", intuition: "표준 알고리즘이 있어도 EVM이 싸게 실행할 수 있다는 뜻은 아닙니다.", workedExample: "Bytecode·calldata·validation gas·bundler support를 target chain에서 측정합니다.", boundary: "ERC-4337은 ML-DSA precompile을 제공하지 않습니다.", counterexample: "Signature field가 bytes라서 아무 verifier나 무료라는 주장은 틀립니다." },
-      { id: "pq-account-hybrid-migration-gate", sectionId: "migration-release", intuition: "새 자물쇠를 달 때 기존 열쇠·복구·되돌리기까지 함께 시험합니다.", workedExample: "Canary generation은 ECDSA∧ML-DSA, key loss·bundler reject에서 explicit rollback을 사용합니다.", boundary: "Hybrid AND가 영구 최적 정책이라는 뜻은 아닙니다." },
+    "conceptExplanations": [
+      {
+        "id": "erc4337-useroperation-validation-boundary",
+        "sectionId": "account-abstraction-validation",
+        "intuition": "서명한 송금 요청에는 수량뿐 아니라 체인·검사 계약·순번·비용 조건이 함께 묶입니다.",
+        "workedExample": "nonce key=0·sequence=7, B에게0.1 ETH를 보내는 요청을 EIP-712 domain과 실제 구조 인코딩에 결합합니다.",
+        "boundary": "현재 고정 코드의 getUserOpHash를 사용하며 임의의 단순 해시 식이나 다른 버전의 인코딩으로 바꾸지 않습니다."
+      },
+      {
+        "id": "erc4337-entrypoint-effect-order",
+        "sectionId": "account-abstraction-validation",
+        "intuition": "요청 검증과 실제 송금은 다른 단계라 어느 단계가 실패했는지에 따라 남는 비용과 순번이 다릅니다.",
+        "workedExample": "검증 성공 뒤 sequence7→8, 송금0.1 ETH, 비용0.001 ETH를 기록합니다. 실행만 실패하면 nonce8과 청구 비용은 남을 수 있습니다.",
+        "boundary": "전체 handleOps가 revert하면 계정 순번·deposit 변경도 되돌아가지만 제출자의 체인 거래 gas는 별도로 발생할 수 있습니다."
+      },
+      {
+        "id": "ml-dsa-signature-artifact",
+        "sectionId": "ml-dsa-signature-boundary",
+        "intuition": "알고리즘 이름과 함께 표준·매개변수·키·인코딩·검증 코드의 실제 버전을 맞춰야 합니다.",
+        "workedExample": "ML-DSA-44의 공개키1312바이트·서명2420바이트를 확인하고 비교용65바이트보다2355바이트 큰 서명 입력을 준비합니다.",
+        "boundary": "서명 바이트 수는 EVM gas나 검증 시간의 측정값이 아니며 old Dilithium 이름만으로 최종 FIPS204 규격이 정해지지 않습니다."
+      },
+      {
+        "id": "pq-account-verifier-capability-boundary",
+        "sectionId": "ml-dsa-signature-boundary",
+        "intuition": "표준 서명이 있어도 체인과 bundler가 그 검증 프로그램을 받아들일지는 추가 조건입니다.",
+        "workedExample": "SimpleAccount는 ECDSA.recover를 사용합니다. ML-DSA verifier로 교체할 경우 bytecode·calldata·검증gas·ERC7562 지원을 시험해야 합니다.",
+        "boundary": "본 글은 실제 ML-DSA EVM gas를 측정하지 않았으며 ERC4337이 native PQ precompile을 제공한다고 주장하지 않습니다."
+      },
+      {
+        "id": "pq-account-hybrid-migration-gate",
+        "sectionId": "migration-release",
+        "intuition": "서명 함수뿐 아니라 직접 실행·업그레이드·복구의 권한도 같은 정책으로 옮겨야 합니다.",
+        "workedExample": "nonce7·0.1 ETH 요청에 ECDSA=1과 ML-DSA=0을 AND로 적용하면 거절합니다. 기존 owner 직접 execute는 따로 막거나 이전해야 합니다.",
+        "boundary": "AND 정책은 가용성을 낮출 수 있고 자동 classical-only fallback은 downgrade 경로가 됩니다. 안전하지 않은 기존 키로 복구를 허용하면 이전의 목적을 잃을 수 있습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 crypto/runtime boundary", relation: "AA와 signature 표준의 다른 책임을 구분합니다.", concepts: ["erc4337-useroperation-validation-boundary", "ml-dsa-signature-artifact"] },
-      { label: "01 validate", relation: "Simulation과 EntryPoint validation을 실행합니다.", concepts: ["erc4337-entrypoint-effect-order"] },
-      { label: "02 capability", relation: "Target chain verifier·gas·bundler 지원을 측정합니다.", concepts: ["pq-account-verifier-capability-boundary"] },
-      { label: "03 migrate", relation: "Dual validation·recovery·rollback 뒤 채택합니다.", concepts: ["pq-account-hybrid-migration-gate"] },
+    "conceptStages": [
+      {
+        "label": "1. UserOperation·chain·EntryPoint·nonce·simulation을 결속합니다.",
+        "relation": "nonce key=0·sequence=7, B에게0.1 ETH를 보내는 요청을 EIP-712 domain과 실제 구조 인코딩에 결합합니다.",
+        "concepts": [
+          "erc4337-useroperation-validation-boundary"
+        ]
+      },
+      {
+        "label": "2. Validation loop와 execution effect 순서를 분리합니다.",
+        "relation": "검증 성공 뒤 sequence7→8, 송금0.1 ETH, 비용0.001 ETH를 기록합니다. 실행만 실패하면 nonce8과 청구 비용은 남을 수 있습니다.",
+        "concepts": [
+          "erc4337-entrypoint-effect-order"
+        ]
+      },
+      {
+        "label": "3. FIPS revision·parameter·key·encoding·verifier generation을 봉인합니다.",
+        "relation": "ML-DSA-44의 공개키1312바이트·서명2420바이트를 확인하고 비교용65바이트보다2355바이트 큰 서명 입력을 준비합니다.",
+        "concepts": [
+          "ml-dsa-signature-artifact"
+        ]
+      },
+      {
+        "label": "4. 표준 존재와 target-chain code·gas·bundler 지원을 구분합니다.",
+        "relation": "SimpleAccount는 ECDSA.recover를 사용합니다. ML-DSA verifier로 교체할 경우 bytecode·calldata·검증gas·ERC7562 지원을 시험해야 합니다.",
+        "concepts": [
+          "pq-account-verifier-capability-boundary"
+        ]
+      },
+      {
+        "label": "5. Classical/PQ dual validation·recovery·rollback을 검증합니다.",
+        "relation": "nonce7·0.1 ETH 요청에 ECDSA=1과 ML-DSA=0을 AND로 적용하면 거절합니다. 기존 owner 직접 execute는 따로 막거나 이전해야 합니다.",
+        "concepts": [
+          "pq-account-hybrid-migration-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "UserOperation과 일반 transaction의 차이와 주요 fields를 설명하세요.", answerChecklist: ["pseudo-transaction", "sender/nonce/call", "gas/fees", "signature", "separate mempool"], requiredConcepts: ["erc4337-useroperation-validation-boundary"], sectionId: "account-abstraction-validation" },
-      { level: "basic", question: "왜 userOpHash에 chainId와 EntryPoint를 묶습니까?", answerChecklist: ["domain separation", "cross-chain", "EntryPoint replay", "same canonical encoding"], requiredConcepts: ["erc4337-useroperation-validation-boundary"], sectionId: "account-abstraction-validation" },
-      { level: "basic", question: "Bundler simulation, validation loop, execution loop을 순서대로 구분하세요.", answerChecklist: ["off-chain admission", "account/paymaster validation", "gas precharge", "execution", "settlement"], requiredConcepts: ["erc4337-entrypoint-effect-order"], sectionId: "account-abstraction-validation" },
-      { level: "basic", question: "ML-DSA artifact에 넣을 fields를 나열하세요.", answerChecklist: ["FIPS revision", "parameter set", "public-key hash", "encoding/context", "verifier code", "policy generation"], requiredConcepts: ["ml-dsa-signature-artifact"], sectionId: "ml-dsa-signature-boundary" },
-      { level: "basic", question: "ERC-4337 signature bytes가 ML-DSA native precompile을 뜻하지 않는 이유를 설명하세요.", answerChecklist: ["account-defined verifier", "bytecode/library/aggregator/precompile", "gas", "bundler support", "target chain"], requiredConcepts: ["pq-account-verifier-capability-boundary"], sectionId: "ml-dsa-signature-boundary" },
-      { level: "basic", question: "ECDSA=1, ML-DSA=0인 hybrid AND gate를 계산하세요.", answerChecklist: ["1 AND 0", "0", "no execution", "explicit rollback only"], requiredConcepts: ["pq-account-hybrid-migration-gate"], sectionId: "ml-dsa-signature-boundary" },
-      { level: "advanced", question: "Wrong chain·nonce replay·altered callData negative suite를 설계하세요.", answerChecklist: ["same base op", "change one field", "simulation reject", "no effect", "typed receipt"], requiredConcepts: ["erc4337-useroperation-validation-boundary", "erc4337-entrypoint-effect-order"], sectionId: "migration-release" },
-      { level: "advanced", question: "FIPS known-answer와 account-level verifier test를 분리하세요.", answerChecklist: ["algorithm vector", "encoding/profile", "userOpHash", "gas/bundler", "failure owner"], requiredConcepts: ["ml-dsa-signature-artifact", "pq-account-verifier-capability-boundary"], sectionId: "ml-dsa-signature-boundary" },
-      { level: "advanced", question: "PQ verifier의 chain compatibility benchmark를 설계하세요.", answerChecklist: ["bytecode/calldata", "validation gas", "simulation", "bundler/EntryPoint versions", "wrong signature", "on-chain receipt"], requiredConcepts: ["pq-account-verifier-capability-boundary"], sectionId: "migration-release" },
-      { level: "advanced", question: "Key loss·bundler rejection·downgrade attack을 포함한 migration plan을 작성하세요.", answerChecklist: ["dual key custody", "recovery test", "nonce continuity", "canary", "no silent downgrade", "signed rollback generation"], requiredConcepts: ["pq-account-hybrid-migration-gate"], sectionId: "migration-release" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "송금 잔액 1 ETH와 비용 예치금 0.02 ETH에서 0.1 ETH를 보내고 0.001 ETH가 청구됐다면 최종 세 잔액은 얼마인가요?",
+        "answerChecklist": [
+          "A 송금 잔액은 0.9 ETH, B는 0.1 ETH, A의 별도 deposit은 0.019 ETH입니다.",
+          "세 잔액 1.019 ETH와 청구 비용 0.001 ETH를 더하면 처음 합계 1.02 ETH와 맞습니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "erc4337-useroperation-validation-boundary",
+          "erc4337-entrypoint-effect-order"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "예약 비용 0.003 ETH와 실제 청구 0.001 ETH의 차액은 얼마이며 어디로 돌아가나요?",
+        "answerChecklist": [
+          "차액 0.002 ETH가 환급됩니다.",
+          "A의 EntryPoint deposit에 돌아가므로 송금용 계정으로 바로 출금한 것으로 기록하지 않습니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "erc4337-entrypoint-effect-order"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "key=0·sequence=7인 요청이 통과하면 어떤 코드가 다음 순번을 8로 바꾸나요?",
+        "answerChecklist": [
+          "EntryPoint가 부르는 NonceManager._validateAndUpdateNonce가 계정·key별 sequence를 비교·갱신합니다.",
+          "BaseAccount._validateNonce는 기본적으로 빈 계정 정책 확장점이며 순번 유일성 관리와 구분합니다."
+        ],
+        "sectionId": "account-abstraction-validation",
+        "requiredConcepts": [
+          "erc4337-useroperation-validation-boundary",
+          "erc4337-entrypoint-effect-order"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "수량과 nonce가 같은 서명을 다른 체인에서 다시 쓰지 못하게 해시에 어떤 실행 환경을 묶나요?",
+        "answerChecklist": [
+          "고정 구현의 EIP-712 domain에 chainId와 검증 계약 주소, 이름ERC4337과 버전 1이 포함됩니다.",
+          "실제 PackedUserOperation 타입·동적 바이트 인코딩까지 같은 버전으로 계산해야 합니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "erc4337-useroperation-validation-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "ML-DSA-44 서명 2420바이트는 비교용 65바이트 서명보다 얼마나 크며 그 차이가 무엇을 증명하지 않나요?",
+        "answerChecklist": [
+          "2420−65=2355바이트가 늘어납니다.",
+          "바이트 차이만으로 EVM 검증 gas·지연이나 bundler 지원을 측정한 것으로 볼 수 없습니다."
+        ],
+        "sectionId": "ml-dsa-signature-boundary",
+        "requiredConcepts": [
+          "ml-dsa-signature-artifact",
+          "pq-account-verifier-capability-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "동일한 0.1 ETH 요청에서 ECDSA=1·ML-DSA=0이면 AND와 OR 정책의 허용 결과가 어떻게 다른가요?",
+        "answerChecklist": [
+          "AND는 0이므로 거절하고 OR는 1이므로 허용합니다.",
+          "두 검증을 모두 요구하려는 정책을 자동 OR 또는 classical-only로 바꾸면 허용 범위가 넓어집니다."
+        ],
+        "sectionId": "migration-release",
+        "requiredConcepts": [
+          "pq-account-hybrid-migration-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "잘못된 서명으로 전체 handleOps가 revert한 경우와 검증 후 수신자 호출만 실패한 경우의 순번·비용을 비교하세요.",
+        "answerChecklist": [
+          "전체 revert에서는 계정 nonce와 deposit 변경도 되돌아가지만 제출자의 체인 거래 gas는 발생할 수 있습니다.",
+          "호출 실패를 처리하고 bundle이 성공한 경우 요청success=false여도 nonce8과 해당 실행 시도 비용은 남을 수 있습니다."
+        ],
+        "sectionId": "account-abstraction-validation",
+        "requiredConcepts": [
+          "erc4337-useroperation-validation-boundary",
+          "erc4337-entrypoint-effect-order"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "SimpleAccount의 서명 함수를 ML-DSA로 바꿨지만 기존 owner가 남았습니다. 추가로 확인할 자산 이동 경로를 설명하세요.",
+        "answerChecklist": [
+          "_requireForExecute가 owner 직접 실행을 허용하고 업그레이드도 owner 권한을 사용합니다.",
+          "직접 송금·업그레이드·복구·다른 허용 키까지 살펴 옛 서명이 새 검증을 우회하지 못하도록 이전해야 합니다."
+        ],
+        "sectionId": "ml-dsa-signature-boundary",
+        "requiredConcepts": [
+          "pq-account-verifier-capability-boundary",
+          "pq-account-hybrid-migration-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 nonce7·0.1 ETH 요청으로 알고리즘 검증과 계정·bundler 통합 검증을 구분한 시험 계획을 만드세요.",
+        "answerChecklist": [
+          "공식 벡터와 잘린 서명·인코딩·매개변수는 ML-DSA 알고리즘 층에서 확인합니다.",
+          "다른chain·EntryPoint·nonce·callData와 policy를 하나씩 바꾸고 bundler 수락·gas·실제 요청 receipt·잔액을 계정 층에서 대조합니다."
+        ],
+        "sectionId": "migration-release",
+        "requiredConcepts": [
+          "erc4337-useroperation-validation-boundary",
+          "ml-dsa-signature-artifact",
+          "pq-account-verifier-capability-boundary",
+          "pq-account-hybrid-migration-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "키 분실이나 새 verifier 오류가 났을 때 자동 ECDSA-only로 되돌리는 복구가 위험한 이유를 설명하세요.",
+        "answerChecklist": [
+          "공격자가 실패를 유도해 약한 검증 경로를 선택하게 할 수 있으며 기존 키의 안전성이 이미 깨진 상황이라면 그 키로 복구도 신뢰할 수 없습니다.",
+          "전환 전에 승인된 복구 권한·정책 세대·키 보관과 실패 시 가용성을 시험하고 모든 실행 경로에 동일한 권한 조건을 적용해야 합니다."
+        ],
+        "sectionId": "migration-release",
+        "requiredConcepts": [
+          "pq-account-verifier-capability-boundary",
+          "pq-account-hybrid-migration-gate"
+        ]
+      }
     ],
-    papers: [
-      { title: "ERC-4337 · Account Abstraction Using Alt Mempool", href: "https://eips.ethereum.org/EIPS/eip-4337", problem: "Consensus 변경 없이 smart account validation·fee·execution을 지원해야 합니다.", contribution: "UserOperation·bundler·EntryPoint·account/paymaster와 두-loop 실행을 정의합니다.", assumptions: "적용 EIP revision·chain·EntryPoint·bundler를 고정합니다.", evidenceScope: "ERC-4337 protocol interface입니다.", notClaim: "ML-DSA verifier·precompile·block inclusion을 제공하지 않습니다.", sectionId: "paper-erc4337" },
-      { title: "NIST FIPS 204 · ML-DSA", href: "https://csrc.nist.gov/pubs/fips/204/final", problem: "양자내성 digital signature의 algorithm·parameter·encoding을 표준화해야 합니다.", contribution: "ML-DSA-44/65/87 keygen·sign·verify 표준을 제공합니다.", assumptions: "FIPS revision·errata·parameter set을 고정합니다.", evidenceScope: "ML-DSA cryptographic standard입니다.", notClaim: "EVM gas·integration·recovery·side-channel safety를 보장하지 않습니다.", sectionId: "paper-fips204" },
-      { title: "ERC-7562 · Account Abstraction Validation Scope Rules", href: "https://eips.ethereum.org/EIPS/eip-7562", problem: "Arbitrary account validation code의 DoS·state dependency를 제한해야 합니다.", contribution: "Bundler가 적용할 validation scope rules와 rationale을 제공합니다.", assumptions: "Bundler·mempool·EntryPoint revision을 확인합니다.", evidenceScope: "AA validation admission입니다.", notClaim: "모든 bundler의 PQ verifier 지원을 보장하지 않습니다.", sectionId: "paper-erc7562" },
-    ],
+    "papers": [
+      {
+        "title": "ERC-4337 · Account Abstraction Using Alt Mempool",
+        "href": "https://eips.ethereum.org/EIPS/eip-4337",
+        "problem": "서로 다른 계정 권한·비용 정책을 공통 제출 경로에서 실행해야 합니다.",
+        "contribution": "UserOperation·bundler·EntryPoint와 검증 후 실행 및 비용 정산을 정의합니다.",
+        "assumptions": "사용하는 EIP revision과 실제 체인·배포된 EntryPoint·계정 버전을 맞춥니다.",
+        "evidenceScope": "현재 원문의 EIP-712·nonce·검증·실행·예치금 정산 범위입니다.",
+        "notClaim": "ML-DSA 구현·native precompile·bundler 수락과 송금 성공을 제공하지 않습니다.",
+        "sectionId": "paper-erc4337"
+      },
+      {
+        "title": "NIST FIPS 204 · ML-DSA",
+        "href": "https://csrc.nist.gov/pubs/fips/204/final",
+        "problem": "양자 공격을 고려한 디지털 서명의 알고리즘과 인코딩을 표준화해야 합니다.",
+        "contribution": "ML-DSA 매개변수별 키 생성·서명·검증 규칙과 바이트 크기를 정의합니다.",
+        "assumptions": "최종판과 errata, 매개변수·context·pure 또는 prehash 방식을 고정합니다.",
+        "evidenceScope": "본 글은 ML-DSA-44 공개키1312바이트와 서명2420바이트 및 표준 범위를 사용합니다.",
+        "notClaim": "EVM 통합·gas·복구 권한·구현 인증과 전체 계정 안전을 보장하지 않습니다.",
+        "sectionId": "paper-fips204"
+      },
+      {
+        "title": "ERC-7562 · Account Abstraction Validation Scope Rules",
+        "href": "https://eips.ethereum.org/EIPS/eip-7562",
+        "problem": "임의의 계정 검증 코드가 제출 경로의 상태·자원 사용을 과도하게 바꿀 수 있습니다.",
+        "contribution": "검증 단계의 환경 opcode·저장소·precompile 접근과 제출 수락 규칙을 설명합니다.",
+        "assumptions": "대상 네트워크·bundler·mempool과 EntryPoint revision을 실제로 확인합니다.",
+        "evidenceScope": "오프체인 제출 수락과 검증 범위의 조건에 한정한 원문 근거입니다.",
+        "notClaim": "모든 verifier의 실행 안전이나 모든 bundler의 PQ 지원을 인증하지 않습니다.",
+        "sectionId": "paper-erc7562"
+      },
+      {
+        "title": "NIST CSWP 39upd1 · Crypto Agility",
+        "href": "https://csrc.nist.gov/pubs/cswp/39/upd1/considerations-for-achieving-crypto-agility/final",
+        "problem": "암호 알고리즘을 교체하는 동안 보안과 기존 운영을 함께 유지해야 합니다.",
+        "contribution": "교체 능력의 범위와 운영·호환성·알고리즘 선택의 절충을 정리합니다.",
+        "assumptions": "2026-06-29 업데이트를 사용하며 시스템의 허용 알고리즘과 복구 권한을 별도로 정합니다.",
+        "evidenceScope": "암호 교체의 운영 원칙과 downgrade 위험을 계정의 같은 송금 사례에 적용합니다.",
+        "notClaim": "특정 블록체인 계정의 안전한 이전이나 AND 정책의 보편적 최적성을 증명하지 않습니다.",
+        "sectionId": "paper-crypto-agility"
+      }
+    ]
   },
   "blockchain/commonware-deep-dive": {
     entryLevel: true,
@@ -60803,33 +63277,254 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "blockchain/rwa-composition": {
-    entryLevel: true, entryNote: "Token balance와 현실 자산 소유권이 같다고 가정하지 않고 102달러 NAV/100 token 사례로 시작합니다.", coreIdea: "RWA composition은 legal claim·authoritative record·asset/cash operators·token controls와 DeFi risk를 같은 cutoff에서 연결하는 문제입니다.", assumedKnowledge: [],
-    introducedHere: [{ id: "rwa-legal-claim-asset-linkage", role: "Token과 holder rights를 구분합니다." }, { id: "rwa-issuer-custodian-servicer-map", role: "Offchain/onchain 책임자를 배치합니다." }, { id: "rwa-valuation-cashflow-cutoff", role: "NAV·supply·cash 시점을 고정합니다." }, { id: "rwa-transfer-eligibility-enforcement", role: "Transfer control과 legal register를 연결합니다." }, { id: "rwa-onchain-composability-risk", role: "RWA risk의 DeFi 전파를 설명합니다." }, { id: "rwa-composition-release-gate", role: "법률·원장·token·cash를 통합 검증합니다." }],
-    conceptExplanations: [
-      { id: "rwa-legal-claim-asset-linkage", sectionId: "overview", intuition: "Token은 권리의 표지일 수 있지만 권리 자체의 법적 출처는 계약과 registry입니다.", workedExample: "1 token NAV가 1.02달러여도 직접 국채 소유인지 issuer claim인지 문서를 봅니다.", boundary: "Wallet balance는 title·bankruptcy priority를 보장하지 않습니다." },
-      { id: "rwa-issuer-custodian-servicer-map", sectionId: "claim-asset-map", intuition: "자산을 들고, 돈을 모으고, NAV를 계산하고, token을 움직이는 주체가 다릅니다.", workedExample: "SPV가 bond를 보유하고 custodian이 보관하며 servicer가 coupon을 받아 administrator가 NAV를 계산합니다.", boundary: "Smart contract가 offchain asset existence를 직접 관찰하지 못합니다." },
-      { id: "rwa-valuation-cashflow-cutoff", sectionId: "claim-asset-map", intuition: "서로 다른 날의 asset value·liability·supply를 나누면 가짜 NAV가 됩니다.", workedExample: "같은 cutoff의 순자산 102달러/eligible 100 tokens=1.02달러입니다.", boundary: "NAV는 즉시 redeemable cash price와 같지 않습니다." },
-      { id: "rwa-transfer-eligibility-enforcement", sectionId: "token-cashflow-control", intuition: "Onchain allowlist와 legally authoritative holder update가 둘 다 필요할 수 있습니다.", workedExample: "KYC가 만료된 address transfer는 effect 전 거절하고 register mismatch는 review queue로 보냅니다.", boundary: "Allowlist 통과가 투자 적합성·법적 title을 보장하지 않습니다." },
-      { id: "rwa-onchain-composability-risk", sectionId: "token-cashflow-control", intuition: "Stale NAV와 막힌 redemption이 담보 oracle을 거쳐 다른 loan까지 흔듭니다.", workedExample: "NAV 1.02, haircut 20%인 100 tokens 담보가치는 81.60달러입니다.", boundary: "Haircut은 손실 보장이나 liquidity guarantee가 아닙니다." },
-      { id: "rwa-composition-release-gate", sectionId: "rwa-release", intuition: "Legal·asset·cash·token 원장이 같은 사실을 가리킬 때만 조합합니다.", workedExample: "Duplicate mint·late coupon·custodian shortfall·reorg를 같은 cutoff ledger로 재생합니다.", boundary: "기술 audit만으로 법률 의견을 대체하지 않습니다." },
+    "entryLevel": true,
+    "entryNote": "같은 작은 사례를 10단계에서 추적합니다. 공식 문서는 2026-10-04 확인했고 가정 수치·개발 명세·실제 배포를 구분합니다.",
+    "coreIdea": "기관 토큰의 가치는 발행된 권리, 같은 시각의 자산과 부채, 이전 자격, 실제 매매·상환 경로를 함께 읽어야 설명됩니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "rwa-legal-claim-asset-linkage",
+        "role": "토큰 잔액과 법적 지급 청구권을 함께 읽어야 합니다."
+      },
+      {
+        "id": "rwa-issuer-custodian-servicer-map",
+        "role": "운용·보관·등록·매매 주체가 서로 다릅니다."
+      },
+      {
+        "id": "rwa-valuation-cashflow-cutoff",
+        "role": "자산과 발행 수를 같은 시각에 맞춰야 개당 가치를 구합니다."
+      },
+      {
+        "id": "rwa-transfer-eligibility-enforcement",
+        "role": "받을 주소와 계약의 자격이 이전 가능성을 제한합니다."
+      },
+      {
+        "id": "rwa-onchain-composability-risk",
+        "role": "지분 교환과 은행 현금 회수는 별도 사건입니다."
+      },
+      {
+        "id": "rwa-composition-release-gate",
+        "role": "정상 거래와 거절·정지·지연을 같은 장부로 확인합니다."
+      }
     ],
-    conceptStages: [{ label: "Claim", relation: "권리와 자산 linkage", concepts: ["rwa-legal-claim-asset-linkage"] }, { label: "Owners", relation: "책임·cutoff map", concepts: ["rwa-issuer-custodian-servicer-map", "rwa-valuation-cashflow-cutoff"] }, { label: "Controls", relation: "Transfer·DeFi risk", concepts: ["rwa-transfer-eligibility-enforcement", "rwa-onchain-composability-risk"] }, { label: "Release", relation: "Cross-ledger reconciliation", concepts: ["rwa-composition-release-gate"] }],
-    exercises: [
-      { level: "basic", question: "RWA token balance와 underlying legal ownership이 같은 뜻이 아닌 이유를 설명하세요.", answerChecklist: ["contractual claim", "authoritative record", "issuer/vehicle", "insolvency rights", "jurisdiction"], requiredConcepts: ["rwa-legal-claim-asset-linkage"], sectionId: "overview" },
-      { level: "basic", question: "Issuer·SPV·custodian·servicer·administrator·smart contract의 책임을 매핑하세요.", answerChecklist: ["issuance", "asset holding", "safekeeping", "cash collection", "NAV", "token control"], requiredConcepts: ["rwa-issuer-custodian-servicer-map"], sectionId: "claim-asset-map" },
-      { level: "basic", question: "순자산 102달러/100 tokens의 NAV와 20% haircut 담보가치를 계산하세요.", answerChecklist: ["NAV 1.02", "same cutoff", "100 token value 102", "haircut 20%", "81.60"], requiredConcepts: ["rwa-valuation-cashflow-cutoff", "rwa-onchain-composability-risk"], sectionId: "claim-asset-map" },
-      { level: "basic", question: "Mint 전 확인할 offchain/onchain receipts를 순서대로 적으세요.", answerChecklist: ["subscription settlement", "eligibility", "legal register", "asset acquisition", "mint receipt"], requiredConcepts: ["rwa-transfer-eligibility-enforcement", "rwa-issuer-custodian-servicer-map"], sectionId: "token-cashflow-control" },
-      { level: "basic", question: "Coupon distribution과 redemption을 별도 lifecycle로 설명하세요.", answerChecklist: ["record/cutoff", "servicer cash", "withholding/distribution", "burn intent", "bank settlement/register"], requiredConcepts: ["rwa-valuation-cashflow-cutoff"], sectionId: "token-cashflow-control" },
-      { level: "basic", question: "NAV 1.02달러가 즉시 현금 1.02달러를 뜻하지 않는 이유를 말하세요.", answerChecklist: ["redemption terms", "queue", "cash availability", "market liquidity", "legal claim"], requiredConcepts: ["rwa-legal-claim-asset-linkage", "rwa-onchain-composability-risk"], sectionId: "token-cashflow-control" },
-      { level: "advanced", question: "Onchain balance와 legal register가 충돌한 사건을 처리하세요.", answerChecklist: ["freeze new effect", "source authority", "cutoff/hash", "human/legal review", "reconcile/rollback"], requiredConcepts: ["rwa-transfer-eligibility-enforcement", "rwa-composition-release-gate"], sectionId: "rwa-release" },
-      { level: "advanced", question: "Stale NAV RWA가 DeFi collateral로 전파되는 반례를 설계하세요.", answerChecklist: ["late valuation", "oracle timestamp", "haircut", "borrow/liquidation", "redemption gate"], requiredConcepts: ["rwa-onchain-composability-risk"], sectionId: "rwa-release" },
-      { level: "advanced", question: "Coupon·fee·liability·token supply reconciliation ledger를 설계하세요.", answerChecklist: ["same currency/cutoff", "asset IDs", "cash receipt", "liabilities", "eligible supply", "difference owner"], requiredConcepts: ["rwa-valuation-cashflow-cutoff", "rwa-issuer-custodian-servicer-map"], sectionId: "rwa-release" },
-      { level: "advanced", question: "Jurisdiction-aware RWA integration release matrix를 작성하세요.", answerChecklist: ["legal opinion/version", "actor licenses/contracts", "negative transfer", "custody/default/reorg", "exit/rollback"], requiredConcepts: ["rwa-composition-release-gate"], sectionId: "rwa-release" },
+    "conceptExplanations": [
+      {
+        "id": "rwa-legal-claim-asset-linkage",
+        "sectionId": "overview",
+        "intuition": "토큰 잔액과 법적 지급 청구권을 함께 읽어야 합니다.",
+        "workedExample": "BUIDL의 지분10개 권리는 발행 문서와 등록부로 확인합니다.",
+        "boundary": "기초 국채의 직접 소유권이나 원금 보장으로 확대하지 않습니다."
+      },
+      {
+        "id": "rwa-issuer-custodian-servicer-map",
+        "sectionId": "source",
+        "intuition": "운용·보관·등록·매매 주체가 서로 다릅니다.",
+        "workedExample": "BlackRock 운용·BNY 수탁/관리·Securitize 명의개서를 지분 이동과 연결합니다.",
+        "boundary": "2024 출시 발표의 역할이며 현재 조건과 지분 종류를 다시 확인합니다."
+      },
+      {
+        "id": "rwa-valuation-cashflow-cutoff",
+        "sectionId": "claim-asset-map",
+        "intuition": "자산과 발행 수를 같은 시각에 맞춰야 개당 가치를 구합니다.",
+        "workedExample": "(105−3)/100=1.02,20%haircut 뒤81.60입니다.",
+        "boundary": "가상 펀드의1.02를 BUIDL의1달러 목표에 복사하지 않습니다."
+      },
+      {
+        "id": "rwa-transfer-eligibility-enforcement",
+        "sectionId": "token-cashflow-control",
+        "intuition": "받을 주소와 계약의 자격이 이전 가능성을 제한합니다.",
+        "workedExample": "A의10개를 B가10.15에 매수해도 허용된 상대방과 주소여야 합니다.",
+        "boundary": "ERC20 호환성과 모든 투자자에 대한 상품 접근은 별개입니다."
+      },
+      {
+        "id": "rwa-onchain-composability-risk",
+        "sectionId": "permissioned-market-stack",
+        "intuition": "지분 교환과 은행 현금 회수는 별도 사건입니다.",
+        "workedExample": "지분10개→USDC10.15 뒤 USDC 상환·은행 송금이 남습니다.",
+        "boundary": "원자성은 기초 자산의 건전성과 은행 지급 시각을 보장하지 않습니다."
+      },
+      {
+        "id": "rwa-composition-release-gate",
+        "sectionId": "rwa-release",
+        "intuition": "정상 거래와 거절·정지·지연을 같은 장부로 확인합니다.",
+        "workedExample": "102의 평가와100의 등록을 맞춘 뒤10.15의 실제 수령까지 추적합니다.",
+        "boundary": "국가·상품별 법적 권리와 발행 문서가 다릅니다."
+      }
     ],
-    papers: [
-      { title: "IOSCO · Tokenization of Financial Assets", href: "https://www.iosco.org/library/pubdocs/pdf/IOSCOPD809.pdf", problem: "Token ownership과 법적 record·investor rights가 어긋날 수 있습니다.", contribution: "Authoritative record·legal recognition·third-party risk를 분석합니다.", assumptions: "2025 cross-jurisdiction policy report 범위입니다.", evidenceScope: "Legal/ownership risk 분류에 한정합니다.", notClaim: "개별 상품 법적 지위나 적합성을 판정하지 않습니다.", sectionId: "paper-iosco-tokenization" },
-      { title: "BIS · The tokenisation continuum", href: "https://www.bis.org/publ/bisbull72.htm", problem: "Tokenisation의 기술적 용이성과 법·경제적 가치가 다릅니다.", contribution: "Core claim과 service/governance layer를 구분합니다.", assumptions: "2023 공개 시장 구조 분석입니다.", evidenceScope: "Claim composition 개념 근거입니다.", notClaim: "DLT가 custody·law·settlement를 자동 해결하지 않습니다.", sectionId: "paper-bis-tokenisation" },
+    "conceptStages": [
+      {
+        "label": "RWA legal claim · asset linkage",
+        "relation": "BUIDL의 지분10개 권리는 발행 문서와 등록부로 확인합니다.",
+        "concepts": [
+          "rwa-legal-claim-asset-linkage"
+        ]
+      },
+      {
+        "label": "RWA issuer · custodian · servicer map",
+        "relation": "BlackRock 운용·BNY 수탁/관리·Securitize 명의개서를 지분 이동과 연결합니다.",
+        "concepts": [
+          "rwa-issuer-custodian-servicer-map"
+        ]
+      },
+      {
+        "label": "RWA valuation · cash-flow cutoff",
+        "relation": "(105−3)/100=1.02,20%haircut 뒤81.60입니다.",
+        "concepts": [
+          "rwa-valuation-cashflow-cutoff"
+        ]
+      },
+      {
+        "label": "RWA transfer-eligibility enforcement",
+        "relation": "A의10개를 B가10.15에 매수해도 허용된 상대방과 주소여야 합니다.",
+        "concepts": [
+          "rwa-transfer-eligibility-enforcement"
+        ]
+      },
+      {
+        "label": "RWA onchain composability risk",
+        "relation": "지분10개→USDC10.15 뒤 USDC 상환·은행 송금이 남습니다.",
+        "concepts": [
+          "rwa-onchain-composability-risk"
+        ]
+      },
+      {
+        "label": "RWA composition release gate",
+        "relation": "102의 평가와100의 등록을 맞춘 뒤10.15의 실제 수령까지 추적합니다.",
+        "concepts": [
+          "rwa-composition-release-gate"
+        ]
+      }
     ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "자산 105·부채 3·발행 100개의 지분당 NAV는 얼마인가요?",
+        "answerChecklist": [
+          "자산 105 − 부채·비용 3 = 순자산 102달러입니다.",
+          "102달러 ÷ 100개 = 지분당 NAV 1.02달러이며 같은 평가 시각을 사용해야 합니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "rwa-valuation-cashflow-cutoff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "100개에 20% haircut을 적용한 담보 평가액은 얼마인가요?",
+        "answerChecklist": [
+          "100개 × 1.02달러 × (1−0.20) = 담보 평가액 81.60달러입니다.",
+          "추가 담보비율·집중도 등은 생략했으므로 이 계산만으로 실제 대출 한도를 확정할 수 없습니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "rwa-valuation-cashflow-cutoff",
+          "rwa-onchain-composability-risk"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "10개의 평가액 10.20과 매매 대금 10.15의 차이는 얼마인가요?",
+        "answerChecklist": [
+          "10.20 − 10.15 = 0.05달러이며 매매 대금이 장부 평가보다 낮습니다.",
+          "장부의 평가 기준 시각과 거래 상대방의 실제 견적은 다른 조건을 반영할 수 있습니다."
+        ],
+        "sectionId": "token-cashflow-control",
+        "requiredConcepts": [
+          "rwa-valuation-cashflow-cutoff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "BUIDL 출시 문서의 운용·수탁·명의개서 주체는 누구인가요?",
+        "answerChecklist": [
+          "출시 발표에서 BlackRock Financial Management는 운용을 맡습니다.",
+          "BNY Mellon은 수탁·관리, Securitize는 토큰화와 명의개서를 맡으며 실제 권리는 펀드 발행 문서로 확인합니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "rwa-issuer-custodian-servicer-map"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "BUIDL의 1달러 목표 가치에 가정 사례의 NAV1.02를 복사할 수 있나요?",
+        "answerChecklist": [
+          "가상 펀드의 자산·부채·공급량에서 구한 1.02와 BUIDL의 1달러 목표는 서로 다른 조건입니다.",
+          "안정적 가치 목표, 일별 수익과 월별 토큰 분배, 원금 보장은 각각 구별해야 합니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "rwa-legal-claim-asset-linkage",
+          "rwa-valuation-cashflow-cutoff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "USDC 수령과 은행 달러 수령을 구별하세요.",
+        "answerChecklist": [
+          "지분을 넘기고 USDC를 받는 거래는 지분→USDC 교환입니다.",
+          "USDC의 상환 신청·소각·은행 송금은 별도 경로이므로 USDC 잔액만으로 은행 달러 수령을 확인할 수 없습니다."
+        ],
+        "sectionId": "permissioned-market-stack",
+        "requiredConcepts": [
+          "rwa-legal-claim-asset-linkage",
+          "rwa-onchain-composability-risk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "허용되지 않은 담보 계약이 100개를 인수하면 청산 때 무엇이 막힐 수 있나요?",
+        "answerChecklist": [
+          "담보 계약이나 인수 주소가 발행자의 자격·이전 제한을 충족하지 못할 수 있습니다.",
+          "100개를 압류할 수 있어도 처분할 상대방과 회수 경로가 없으면 81.60달러 평가를 실제 회수액으로 쓸 수 없습니다."
+        ],
+        "sectionId": "token-cashflow-control",
+        "requiredConcepts": [
+          "rwa-transfer-eligibility-enforcement",
+          "rwa-onchain-composability-risk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "UniswapX의 원자적 교환이 10.20의 매수 가격을 보장하나요?",
+        "answerChecklist": [
+          "허용된 참가자의 자격과 유효한 RFQ 견적 상대방이 필요하며 10.20에 매수할 사람을 자동으로 만들지 않습니다.",
+          "원자성은 한 체인 거래에서 두 토큰 전달이 함께 성공하거나 되돌아가는 성질입니다."
+        ],
+        "sectionId": "permissioned-market-stack",
+        "requiredConcepts": [
+          "rwa-transfer-eligibility-enforcement",
+          "rwa-onchain-composability-risk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "신규 입금만 반영하고 발행할 지분을 누락하면 왜 NAV가 왜곡되나요?",
+        "answerChecklist": [
+          "신규 입금으로 자산만 늘고 발행할 지분이 분모에 빠지면 지분당 가치가 과대 계산됩니다.",
+          "같은 기준 시각의 자산·부채·발행·소각·공급량을 맞춰야 합니다."
+        ],
+        "sectionId": "picture",
+        "requiredConcepts": [
+          "rwa-valuation-cashflow-cutoff",
+          "rwa-composition-release-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "미국 사모 펀드의 조건을 다른 나라의 토큰 예금에 적용하면 왜 안 되나요?",
+        "answerChecklist": [
+          "사모 펀드 지분과 예금은 발행 문서·법적 청구권·수탁·보호 범위가 다릅니다.",
+          "상품과 국가별 보유 자격, 등록부, 이전 및 상환 조건을 각각 확인해야 합니다."
+        ],
+        "sectionId": "rwa-release",
+        "requiredConcepts": [
+          "rwa-legal-claim-asset-linkage",
+          "rwa-issuer-custodian-servicer-map",
+          "rwa-composition-release-gate"
+        ]
+      }
+    ]
   },
   "blockchain/berachain": {
     entryLevel: true, entryNote: "BERA·BGT·HONEY를 같은 token으로 보지 않고 100/1000 vault share 사례로 시작합니다.", coreIdea: "Berachain은 BERA consensus security와 BGT PoL incentive routing을 연결하지만 finality evidence와 reward receipt를 분리합니다.", assumedKnowledge: [],
@@ -61502,46 +64197,232 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "blockchain/ethereum-future-roadmap": {
-    entryLevel: true,
-    entryNote: "Ethereum roadmap·PQ·formal proof를 모른다고 가정하고 확정도 분류부터 시작합니다.",
-    coreIdea: "Ethereum 미래 기술은 PQ surfaces, native proof/execution과 formal simplification의 의존성을 보되 roadmap·prototype과 deployed protocol을 구분해야 합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "ethereum-roadmap-maturity-lanes", role: "방향의 확정도를 분류합니다." },
-      { id: "ethereum-post-quantum-surface-map", role: "PQ migration surfaces를 분리합니다." },
-      { id: "ethereum-proof-native-direction", role: "Proof/execution research direction을 묶습니다." },
-      { id: "ethereum-formal-candidate-verifier-loop", role: "AI와 verifier 권한을 나눕니다." },
-      { id: "ethereum-spec-simplification-horizon", role: "작은 spec의 장기 목표를 설명합니다." },
+    "entryLevel": true,
+    "entryNote": "같은 작은 사례를 10단계에서 추적합니다. 공식 문서는 2026-10-04 확인했고 가정 수치·개발 명세·실제 배포를 구분합니다.",
+    "coreIdea": "연구·EIP 문서 상태·업그레이드 포함 단계·네트워크 활성화는 서로 다른 증거로 판정합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "ethereum-roadmap-maturity-lanes",
+        "role": "문서 상태와 특정 네트워크의 적용 상태를 따로 읽습니다."
+      },
+      {
+        "id": "ethereum-post-quantum-surface-map",
+        "role": "양자 대비는 하나의 서명 교체보다 넓은 이전입니다."
+      },
+      {
+        "id": "ethereum-proof-native-direction",
+        "role": "연구 성능과 프로토콜 채택은 다른 결과입니다."
+      },
+      {
+        "id": "ethereum-formal-candidate-verifier-loop",
+        "role": "후보 증명이 검사돼도 잘못 적은 목표는 남습니다."
+      },
+      {
+        "id": "ethereum-spec-simplification-horizon",
+        "role": "명세를 줄이면 검사할 경우의 수를 관리하기 쉬워집니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "ethereum-roadmap-maturity-lanes", sectionId: "overview", intuition: "Roadmap 문장은 배포·검토·연구·실험의 확정도가 다릅니다.", workedExample: "Prototype benchmark를 accepted EIP나 mainnet feature로 표시하지 않습니다.", boundary: "Roadmap 일정·후보·명칭은 바뀔 수 있으므로 accepted spec, client release와 mainnet activation을 별도 evidence로 확인합니다." },
-      { id: "ethereum-post-quantum-surface-map", sectionId: "pq-surfaces", intuition: "서명 하나가 아니라 BLS·KZG·ECDSA·application proofs를 각각 옮깁니다.", workedExample: "ML-DSA smart account가 있어도 validator BLS와 blob KZG는 남습니다.", boundary: "Shor와 Grover의 위협을 동일하게 쓰지 않습니다." },
-      { id: "ethereum-proof-native-direction", sectionId: "proving-execution", intuition: "Native rollup·binary proving·zkVM ISA는 다른 층의 verification choices입니다.", workedExample: "기존 hash를 유지하는 prover 방향과 L1 verifier primitive 방향을 분리합니다.", boundary: "Roadmap 언급이 최종 채택을 뜻하지 않습니다." },
-      { id: "ethereum-formal-candidate-verifier-loop", sectionId: "formal-simplification", intuition: "AI는 candidate를 만들고 trusted kernel이 최종 Boolean을 냅니다.", workedExample: "LLM confidence가 높아도 kernel check 0이면 proof를 폐기합니다.", boundary: "잘못 formalized된 spec은 valid proof로도 고칠 수 없습니다." },
-      { id: "ethereum-spec-simplification-horizon", sectionId: "formal-simplification", intuition: "Spec surface를 줄여 구현 case와 proof burden을 함께 낮춥니다.", workedExample: "Fork·state transition·dependency를 줄인 뒤 formalized coverage와 client parity를 측정합니다.", boundary: "짧은 문서와 단순한 protocol은 같은 말이 아닙니다." },
+    "conceptExplanations": [
+      {
+        "id": "ethereum-roadmap-maturity-lanes",
+        "sectionId": "names",
+        "intuition": "문서 상태와 특정 네트워크의 적용 상태를 따로 읽습니다.",
+        "workedExample": "10월4일의Review/SFI와10월6일Sepolia예정은 메인넷완료가 아닙니다.",
+        "boundary": "확인일 이후 문서·일정·배포가 바뀔 수 있습니다."
+      },
+      {
+        "id": "ethereum-post-quantum-surface-map",
+        "sectionId": "pq-surfaces",
+        "intuition": "양자 대비는 하나의 서명 교체보다 넓은 이전입니다.",
+        "workedExample": "합의·계정·커밋먼트·응용증명의 네 영역에 별도 적용 증거가 필요합니다.",
+        "boundary": "구체 암호 선택과 이전은 PQ 정본으로 연결합니다."
+      },
+      {
+        "id": "ethereum-proof-native-direction",
+        "sectionId": "proving-execution",
+        "intuition": "연구 성능과 프로토콜 채택은 다른 결과입니다.",
+        "workedExample": "Hegotá8025의PFI를 현재 메인넷 실행증명 적용으로 읽지 않습니다.",
+        "boundary": "특정 zkVM의 성능이 프로토콜의 최종 선택을 보장하지 않습니다."
+      },
+      {
+        "id": "ethereum-formal-candidate-verifier-loop",
+        "sectionId": "formal-simplification",
+        "intuition": "후보 증명이 검사돼도 잘못 적은 목표는 남습니다.",
+        "workedExample": "10월6일 이후 모두 새규칙이라는 명제는 네트워크를 빠뜨리면 잘못됩니다.",
+        "boundary": "검사기·가정과 명세의 실제 적합성을 별도로 확인합니다."
+      },
+      {
+        "id": "ethereum-spec-simplification-horizon",
+        "sectionId": "formal-simplification",
+        "intuition": "명세를 줄이면 검사할 경우의 수를 관리하기 쉬워집니다.",
+        "workedExample": "네트워크·버전·활성화조건을 분리해 같은 거래의 전후 결과를 대조합니다.",
+        "boundary": "짧은 문서나 연구 로드맵이 전체 시스템 검증 완료의 증거는 아닙니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 maturity", relation: "Roadmap claim을 분류합니다.", concepts: ["ethereum-roadmap-maturity-lanes"] },
-      { label: "01 PQ", relation: "Migration surfaces를 나눕니다.", concepts: ["ethereum-post-quantum-surface-map"] },
-      { label: "02 proof", relation: "Native proof/execution 방향을 연결합니다.", concepts: ["ethereum-proof-native-direction"] },
-      { label: "03 verify", relation: "Formal loop와 simplification을 연결합니다.", concepts: ["ethereum-formal-candidate-verifier-loop", "ethereum-spec-simplification-horizon"] },
+    "conceptStages": [
+      {
+        "label": "Ethereum roadmap maturity lanes",
+        "relation": "10월4일의Review/SFI와10월6일Sepolia예정은 메인넷완료가 아닙니다.",
+        "concepts": [
+          "ethereum-roadmap-maturity-lanes"
+        ]
+      },
+      {
+        "label": "Ethereum post-quantum surface map",
+        "relation": "합의·계정·커밋먼트·응용증명의 네 영역에 별도 적용 증거가 필요합니다.",
+        "concepts": [
+          "ethereum-post-quantum-surface-map"
+        ]
+      },
+      {
+        "label": "Ethereum proof-native direction",
+        "relation": "Hegotá8025의PFI를 현재 메인넷 실행증명 적용으로 읽지 않습니다.",
+        "concepts": [
+          "ethereum-proof-native-direction"
+        ]
+      },
+      {
+        "label": "AI candidate · formal verifier loop",
+        "relation": "10월6일 이후 모두 새규칙이라는 명제는 네트워크를 빠뜨리면 잘못됩니다.",
+        "concepts": [
+          "ethereum-formal-candidate-verifier-loop"
+        ]
+      },
+      {
+        "label": "Ethereum specification simplification horizon",
+        "relation": "네트워크·버전·활성화조건을 분리해 같은 거래의 전후 결과를 대조합니다.",
+        "concepts": [
+          "ethereum-spec-simplification-horizon"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Roadmap maturity 네 lanes를 쓰세요.", answerChecklist: ["deployed", "considered", "research", "experiment"], requiredConcepts: ["ethereum-roadmap-maturity-lanes"], sectionId: "overview" },
-      { level: "basic", question: "Ethereum PQ migration의 네 surfaces를 쓰세요.", answerChecklist: ["BLS", "KZG", "ECDSA accounts", "application ZK"], requiredConcepts: ["ethereum-post-quantum-surface-map"], sectionId: "pq-surfaces" },
-      { level: "basic", question: "Shor와 Grover의 위협을 구분하세요.", answerChecklist: ["factoring/discrete log", "ECC", "hash search", "square root"], requiredConcepts: ["ethereum-post-quantum-surface-map"], sectionId: "pq-surfaces" },
-      { level: "basic", question: "PQ smart account만으로 migration이 끝나지 않는 이유는?", answerChecklist: ["consensus BLS", "KZG", "application commitments", "separate surfaces"], requiredConcepts: ["ethereum-post-quantum-surface-map"], sectionId: "pq-surfaces" },
-      { level: "basic", question: "Native rollup·binary proving·leanISA가 바꾸는 층을 구분하세요.", answerChecklist: ["L1 verification", "proof representation", "execution semantics", "not one product"], requiredConcepts: ["ethereum-proof-native-direction"], sectionId: "proving-execution" },
-      { level: "basic", question: "AI-assisted proof loop에서 최종 권한은 누구에게 있나요?", answerChecklist: ["AI candidate", "deterministic kernel", "Boolean acceptance", "not confidence"], requiredConcepts: ["ethereum-formal-candidate-verifier-loop"], sectionId: "formal-simplification" },
-      { level: "advanced", question: "한 roadmap item의 evidence maturity receipt를 설계하세요.", answerChecklist: ["proposal status", "spec", "prototype", "formal coverage", "client interop", "deployment"], requiredConcepts: ["ethereum-roadmap-maturity-lanes"], sectionId: "overview" },
-      { level: "advanced", question: "Pairing-based proof의 PQ dependency trace를 작성하세요.", answerChecklist: ["elliptic curve", "pairing", "commitment", "verifier", "migration surface"], requiredConcepts: ["ethereum-post-quantum-surface-map", "ethereum-proof-native-direction"], sectionId: "proving-execution" },
-      { level: "advanced", question: "AI가 증명했지만 spec이 틀린 반례를 설명하세요.", answerChecklist: ["wrong formalization", "valid proof", "wrong intended system", "traceability", "review"], requiredConcepts: ["ethereum-formal-candidate-verifier-loop"], sectionId: "formal-simplification" },
-      { level: "advanced", question: "Spec simplification release gate를 설계하세요.", answerChecklist: ["state transition surface", "fork cases", "formal proof", "client parity", "negative tests", "rollback"], requiredConcepts: ["ethereum-spec-simplification-horizon"], sectionId: "formal-simplification" },
-    ],
-    papers: [
-      { title: "Ethereum quantum-resistance roadmap", href: "https://ethereum.org/roadmap/security/quantum-resistance/", problem: "Ethereum cryptographic surfaces의 PQ migration", contribution: "BLS·KZG·ECDSA·application ZK problem map", assumptions: "Roadmap intent와 current page", evidenceScope: "공식 roadmap이 구분한 consensus signature, data-availability commitment, account signature와 application proof migration surface입니다.", notClaim: "특정 PQ signature·commitment·proof system의 최종 선택, EIP acceptance, client 배포나 mainnet activation 날짜를 확정하지 않습니다.", sectionId: "paper-ethereum-security-roadmap" },
-      { title: "Lean Ethereum roadmap", href: "https://leanroadmap.org/", problem: "Cryptographic specs의 machine-checked formalization", contribution: "FRI·STIR·WHIR milestones", assumptions: "각 repository와 coverage 별도 확인", evidenceScope: "공개 roadmap에 명시된 FRI·STIR·WHIR formalization milestones와 연결된 component-level proof 범위입니다.", notClaim: "Ethereum 전체 verification 완료 아님", sectionId: "paper-lean-roadmap" },
-    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "10월 4일에 읽은 10월 6일 Sepolia 일정은 무엇을 뜻하나요?",
+        "answerChecklist": [
+          "2026-10-04 확인 시 Sepolia의 2026-10-06 활성화를 준비하는 예정 일정입니다.",
+          "확인 시점의 적용 완료나 메인넷 활성화 날짜를 뜻하지 않습니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "ethereum-roadmap-maturity-lanes"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Review와 SFI는 왜 동시에 성립할 수 있나요?",
+        "answerChecklist": [
+          "Review는 EIP 문서의 표준화 진행 상태입니다.",
+          "SFI는 특정 업그레이드에 포함하려는 단계이므로 두 상태는 서로 다른 축입니다."
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "ethereum-roadmap-maturity-lanes"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Hegotá에서 8025와 7805·8141의 포함 단계는 어떻게 다른가요?",
+        "answerChecklist": [
+          "2026-10-04 확인 시 EIP-8025는 Hegotá PFI로 제안된 단계입니다.",
+          "EIP-7805와 EIP-8141은 SFI이며 이 구분 자체도 메인넷 활성화 완료를 뜻하지 않습니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "ethereum-roadmap-maturity-lanes",
+          "ethereum-proof-native-direction"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "메인넷 활성화 칸이 비어 있으면 무엇을 말할 수 없나요?",
+        "answerChecklist": [
+          "메인넷 활성화 날짜가 확정됐다고 말할 수 없습니다.",
+          "새 규칙이 이미 적용되어 메인넷 거래를 지원한다고 주장하려면 일정과 실제 적용 증거가 더 필요합니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "ethereum-roadmap-maturity-lanes"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "양자 대비 전환에서 나눠야 할 네 영역은 무엇인가요?",
+        "answerChecklist": [
+          "합의 서명과 계정 서명의 전환을 각각 확인합니다.",
+          "데이터 커밋먼트와 응용 증명도 별도 영역이므로 한 서명의 교체만으로 전체 이전이 끝나지 않습니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "ethereum-post-quantum-surface-map"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "AI의 증명 후보가 그럴듯하면 검증이 끝난 것인가요?",
+        "answerChecklist": [
+          "AI나 사람이 제시한 후보는 정한 검사기를 통과해야 합니다.",
+          "통과한 뒤에도 검사한 가정·명세가 실제 목표와 맞는지 검토해야 합니다."
+        ],
+        "sectionId": "formal-simplification",
+        "requiredConcepts": [
+          "ethereum-formal-candidate-verifier-loop"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "공식 소개의 Draft와 EIP 원문의 Review가 다르면 어떻게 기록하나요?",
+        "answerChecklist": [
+          "같은 확인일의 공식 소개와 EIP 원문을 직접 대조합니다.",
+          "원문의 Review를 인용하고 소개 문서에 Draft가 남은 시차를 밝혀 하나의 상태로 임의 합치지 않습니다."
+        ],
+        "sectionId": "picture",
+        "requiredConcepts": [
+          "ethereum-roadmap-maturity-lanes"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "테스트넷 활성화 전후에 필요한 운영 검증 자료를 설계하세요.",
+        "answerChecklist": [
+          "네트워크·실행 및 합의 클라이언트 릴리스·fork 설정을 고정합니다.",
+          "활성화 직전·직후 블록과 거래, 클라이언트 결과 일치, 동기화·재조직·장애 로그를 보존합니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "ethereum-roadmap-maturity-lanes",
+          "ethereum-spec-simplification-horizon"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "10월 6일 이후에는 모두 새 규칙이라는 명제를 완벽히 증명해도 왜 틀릴 수 있나요?",
+        "answerChecklist": [
+          "그 명제는 Sepolia와 메인넷, 버전과 활성화 조건을 구분하지 않았습니다.",
+          "명제 검사의 정확성과 명세가 실제 목표를 표현하는지는 별도 질문입니다."
+        ],
+        "sectionId": "formal-simplification",
+        "requiredConcepts": [
+          "ethereum-formal-candidate-verifier-loop",
+          "ethereum-spec-simplification-horizon"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "빠른 증명 연구 결과를 현재 프로토콜의 기능으로 과장하지 않는 방법은 무엇인가요?",
+        "answerChecklist": [
+          "EIP 제안·구현·시험·네트워크 활성화에 각각 어떤 증거가 있는지 나눕니다.",
+          "연구 성능의 장비·입력·측정 조건을 확인하고 프로토콜의 선택 또는 적용 완료로 확대하지 않습니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "ethereum-roadmap-maturity-lanes",
+          "ethereum-proof-native-direction"
+        ]
+      }
+    ]
   },
   "ai/qwen36-hybrid-architecture": {
     entryLevel: true,
@@ -62462,72 +65343,296 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/flash-attention-io-aware-kernel": {
-    entryNote: "Scaled dot-product attention 의 식과 softmax 가 max 를 빼도 같다는 성질, KV cache 의 모양을 알고 들어옵니다. GPU 메모리 계층의 수치는 이 글에서 다시 적습니다.",
-    coreIdea: "FlashAttention 은 HBM 접근을 비용으로 세는 IO-aware 관점에서 attention 을 tile 로 나누고 online softmax 로 tile 을 이어 붙여 N×N 행렬을 한 번도 HBM 에 쓰지 않으며, backward 는 P 대신 logsumexp 로 점수를 다시 계산해 계산을 늘리고 메모리 왕복을 줄입니다.",
-    assumedKnowledge: [
-      { id: "scaled-dot-product-attention", role: "S=QKᵀ/√d 와 softmax(S)V 라는 표준 attention 식의 기준선입니다." },
-      { id: "softmax-max-shift-invariance", role: "기준점을 옮겨도 softmax 가 같다는 성질이 online 갱신식의 근거입니다." },
-      { id: "kv-cache-decode-state", role: "Decode 에서 query 가 한 행뿐이라는 조건이 tiling 의 모양을 바꿉니다." },
-      { id: "cuda-gemm-tile-reuse-budget", role: "Shared-memory tile 재사용으로 global 접근을 줄이는 GEMM 의 선례입니다." },
-      { id: "autodiff-save-recompute-boundary", role: "Activation 을 저장할지 다시 계산할지 고르는 일반 원리입니다." },
-    ],
-    introducedHere: [
-      { id: "attention-materialization", role: "표준 attention 이 N×N 행렬을 HBM 에 쓰는 비용을 수치로 보입니다." },
-      { id: "io-aware-attention", role: "FLOPs 대신 HBM 접근을 세는 비용 모델과 SRAM residency 를 정의합니다." },
-      { id: "online-softmax", role: "Running max 와 normalizer 를 tile 마다 고쳐 쓰는 갱신식을 유도합니다." },
-      { id: "attention-tiling", role: "Q/K/V block 을 SRAM 에 올려 attention 을 끝까지 계산하는 loop 를 설명합니다." },
-      { id: "flash-attention", role: "위 요소를 합친 exact attention kernel 의 forward 와 접근량 절감을 정리합니다." },
-      { id: "attention-recompute-vs-store", role: "Backward 가 P 대신 logsumexp 로 다시 계산하는 선택을 비용으로 비교합니다." },
-    ],
-    conceptExplanations: [
-      { id: "attention-materialization", sectionId: "problem", intuition: "계산 중간 결과를 매번 창고에 실어 갔다가 다시 실어 오는 일입니다. 창고가 멀면 계산보다 운반이 오래 걸립니다.", workedExample: "N=4096, d=64, FP16 이면 Q·K·V 는 512 KiB 씩인데 S 와 P 는 32 MiB 씩이라 쓰고 읽는 왕복이 128 MiB 로 입력의 64 배입니다.", boundary: "S 를 만들어도 SRAM 안에서만 쓰고 버리면 materialization 이 아닙니다." },
-      { id: "io-aware-attention", sectionId: "io-aware", intuition: "요리 시간을 칼질 횟수가 아니라 냉장고를 여닫은 횟수로 재는 관점입니다. 재료를 한 번에 꺼내 조리대에서 다 끝내면 빨라집니다.", workedExample: "SRAM 에 원소 5 만 개가 들어가면 N=4096, d=64 에서 접근량이 N²=1.7×10⁷ 에서 N²d²/M=1.3×10⁶ 원소로 12 배 넘게 줍니다.", boundary: "Compute-bound 인 큰 matmul 에서는 HBM 접근을 줄여도 시간이 비례해 줄지 않습니다." },
-      { id: "online-softmax", sectionId: "online-softmax", intuition: "성적표가 한 장씩 도착할 때 지금까지의 최고점과 환산 합계만 들고 있다가 더 높은 점수가 오면 합계를 한 번 다시 환산하는 방식입니다.", workedExample: "행 [1,3,2,5] 를 [1,3],[2,5] 로 읽으면 첫 tile 에서 m=3, ℓ=1.135 이고 둘째 tile 에서 m=5, ℓ=0.135×1.135+0.050+1=1.203 으로 한 번에 계산한 값과 같습니다.", boundary: "보정 계수를 출력 누적 Õ 에도 똑같이 곱하지 않으면 O 가 틀립니다." },
-      { id: "attention-tiling", sectionId: "tiling", intuition: "긴 명단을 한 페이지씩 책상에 올려 처리하고 페이지는 덮어 버리는 방식입니다. 책상에는 현재 페이지와 메모 몇 줄만 있습니다.", workedExample: "B_r=B_c=128, d=64, FP16 이면 Q·K·V tile 이 16 KiB 씩, FP32 점수 tile 이 64 KiB 로 합쳐 112 KiB 라 A100 SM 의 192 KB 에 들어갑니다.", boundary: "Head dim 이 커지면 tile 을 줄여야 하고 그만큼 K/V 를 다시 읽는 횟수가 늘어납니다." },
-      { id: "flash-attention", sectionId: "tiling", intuition: "결과가 똑같은 attention 을 창고 왕복 없이 조리대에서 끝내도록 다시 짠 kernel 입니다. 계산은 조금 늘고 시간은 줄어듭니다.", workedExample: "N=4096, B_r=128 이면 Q block 32 개가 K/V 1 MiB 씩을 읽어 33 MiB 가 오가고, 표준 구현의 130 MiB 와 견주면 약 4 배 적습니다.", boundary: "2022 년 kernel 은 head dim ≤128 과 batch×head 병렬만 지원해 긴 sequence 작은 batch 에서 SM 이 놉니다." },
-      { id: "attention-recompute-vs-store", sectionId: "backward", intuition: "계산 결과 전체를 보관하는 대신 다시 계산할 수 있는 짧은 요약만 남기는 선택입니다. 보관료가 비싸면 다시 만드는 편이 쌉니다.", workedExample: "N=4096 이면 head 당 P 는 32 MiB 이지만 logsumexp L 은 16 KiB 이고, backward 는 QKᵀ 곱셈 한 번을 더 합니다.", boundary: "Kernel 이 compute-bound 라면 추가 FLOPs 가 그대로 시간이 되어 이 tradeoff 가 불리해집니다." },
-    ],
-    conceptStages: [
-      { label: "00 병목", relation: "표준 attention 의 N×N 왕복이 시간을 결정합니다.", concepts: ["attention-materialization"] },
-      { label: "01 비용 모델", relation: "HBM 접근 횟수를 비용으로 세고 SRAM residency 를 목표로 둡니다.", concepts: ["io-aware-attention"] },
-      { label: "02 접착제", relation: "Tile 별 softmax 를 running max 와 normalizer 로 정확히 잇습니다.", concepts: ["online-softmax"] },
-      { label: "03 Kernel", relation: "Tiling loop 가 forward kernel 이 되고 접근량이 Θ(N²d²/M) 으로 줄어듭니다.", concepts: ["attention-tiling", "flash-attention"] },
-      { label: "04 Backward", relation: "P 대신 logsumexp 를 저장하고 점수를 다시 계산합니다.", concepts: ["attention-recompute-vs-store"] },
-    ],
-    exercises: [
-      { level: "basic", question: "N=2048, d=64, FP16 에서 S 행렬 하나의 byte 와 Q 행렬의 byte 를 각각 계산하세요.", answerChecklist: ["S = 2048×2048×2 = 8 MiB", "Q = 2048×64×2 = 256 KiB", "비율 32 배"], requiredConcepts: ["attention-materialization"], sectionId: "problem" },
-      { level: "basic", question: "표준 attention 과 FlashAttention 의 HBM 접근량 차수를 쓰고 M 이 커지면 어느 쪽이 줄어드는지 설명하세요.", answerChecklist: ["Θ(Nd + N²)", "Θ(N²d²/M)", "M 에 반비례", "표준은 M 과 무관"], requiredConcepts: ["io-aware-attention"], sectionId: "io-aware" },
-      { level: "basic", question: "점수 행 [2, 4] 뒤에 [6] 이 도착했을 때 running max 와 normalizer 의 갱신을 계산하세요.", answerChecklist: ["m 4 → 6", "보정 계수 e⁻²", "ℓ = e⁻²(e⁻²+1) + 1", "약 1.154"], requiredConcepts: ["online-softmax"], sectionId: "online-softmax" },
-      { level: "basic", question: "Online softmax 에서 보정 계수를 ℓ 에만 곱하고 Õ 에 곱하지 않으면 무엇이 틀리는지 설명하세요.", answerChecklist: ["옛 tile 의 가중치가 과대", "O 가 옛 기준점", "정규화 불일치"], requiredConcepts: ["online-softmax"], sectionId: "online-softmax" },
-      { level: "basic", question: "B_r=B_c=64, d=128, FP16 일 때 Q·K·V tile 과 FP32 점수 tile 의 SRAM 사용량을 계산하세요.", answerChecklist: ["Q/K/V 16 KiB 씩", "S 64×64×4 = 16 KiB", "합 64 KiB"], requiredConcepts: ["attention-tiling"], sectionId: "tiling" },
-      { level: "basic", question: "FlashAttention backward 가 forward 에서 저장하는 것과 다시 계산하는 것을 구분하세요.", answerChecklist: ["저장: O, L=m+log ℓ", "재계산: S=QKᵀ, P=e^{S−L}", "P 저장 안 함"], requiredConcepts: ["attention-recompute-vs-store"], sectionId: "backward" },
-      { level: "advanced", question: "N=8192, d=128, B_r=128 에서 K/V 를 다시 읽는 총 byte 를 계산하고 표준 구현의 S·P 왕복과 비교하세요.", answerChecklist: ["Q block 64 개", "K+V 4 MiB", "256 MiB 읽기", "표준 S·P 왕복 512 MiB", "약 2 배"], requiredConcepts: ["flash-attention", "attention-tiling"], sectionId: "tiling" },
-      { level: "advanced", question: "Head dim 을 64 에서 256 으로 올릴 때 같은 SRAM 에서 tile 크기와 HBM 접근량이 어떻게 변하는지 추정하세요.", answerChecklist: ["tile 행 수 1/4", "K/V 재읽기 4 배", "N²d²/M 의 d²", "head dim 지원 한계"], requiredConcepts: ["attention-tiling", "io-aware-attention"], sectionId: "boundary" },
-      { level: "advanced", question: "FlashAttention 이 FLOPs 를 늘리고도 빨라지는 조건을 roofline 관점에서 서술하고 성립하지 않는 경우를 드세요.", answerChecklist: ["memory-bound", "arithmetic intensity 상승", "compute-bound 면 이득 감소", "HBM 대역폭 상한"], requiredConcepts: ["io-aware-attention", "attention-recompute-vs-store"], sectionId: "backward" },
-      { level: "advanced", question: "Decode 단계에서 query 가 한 행일 때 이 글의 tiling 이 왜 불충분한지, 어떤 축으로 병렬화해야 하는지 설명하세요.", answerChecklist: ["Q block 하나", "SM 대부분 유휴", "K/V 축 분할", "부분 m·ℓ 병합", "paged block"], requiredConcepts: ["flash-attention", "online-softmax"], sectionId: "boundary" },
-    ],
-    papers: [
+    "coreIdea": "문장 속 한 위치가 앞의 네 위치를 얼마나 참고할지 정한다고 해 봅시다. 이미 계산한 점수는 [1, 3, 2, 5]이고 가져올 값은 [2, 4, 6, 8]입니다. 이 글은 가중평균 7.376113을 구하는 과정을 끝까지 따라갑니다. 핵심은 점수 전체를 메모리에 적어 두지 않아도, 지금까지의 기준값과 두 합만 고쳐 가면 답을 구할 수 있다는 것입니다. 이후 같은 계산이 GPU에서 어디를 기다리는지 살펴봅니다.",
+    "entryNote": "본문의 작은 숫자는 원리를 검산하기 위한 가정입니다. 공식 논문과 코드의 버전을 고정하고, 저자 실험과 이 글의 산술 검산을 구분합니다.",
+    "assumedKnowledge": [
       {
-        title: "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness",
-        href: "https://arxiv.org/abs/2205.14135",
-        problem: "Self-attention 의 시간과 메모리가 sequence 길이의 제곱으로 늘고, FLOPs 를 줄이는 근사 attention 이 wall-clock 을 줄이지 못하는 문제",
-        contribution: "HBM 접근을 비용으로 세는 IO-aware 관점에서 tiling 과 recomputation 으로 N×N 행렬을 쓰지 않는 exact attention kernel 과 IO complexity 하한을 제시합니다.",
-        assumptions: "A100 GPU, head dim ≤128, FP16/BF16, 2022 년 CUDA 구현 기준입니다.",
-        evidenceScope: "GPT-2 3 배, BERT-large 15 %, HBM 접근 9 배 감소는 저자 자기보고이며 A100 에서 측정한 값입니다.",
-        notClaim: "모든 GPU 세대와 head dim 에서 같은 배율로 빨라진다거나 compute-bound 상황에서도 이득이 유지된다는 뜻은 아닙니다.",
-        sectionId: "paper-flashattention",
+        "id": "scaled-dot-product-attention",
+        "role": "S=QKᵀ/√d와 softmax(S)V 라는 표준 attention 식의 기준선입니다."
       },
       {
-        title: "Online normalizer calculation for softmax",
-        href: "https://arxiv.org/abs/1805.02867",
-        problem: "Softmax 가 max, 지수합, 정규화를 위해 입력을 세 번 읽어야 하는 메모리 접근 문제",
-        contribution: "최댓값과 지수합을 한 pass 에서 함께 갱신하는 online normalizer 식을 제시해 읽기를 두 번으로 줄입니다.",
-        assumptions: "NVIDIA GPU 의 단일 softmax kernel 과 TopK 결합 kernel 을 대상으로 한 2018 년 기술 보고서입니다.",
-        evidenceScope: "Softmax 1.3 배, Softmax+TopK 5 배 가속은 저자 측정이며 attention 적용 결과는 포함하지 않습니다.",
-        notClaim: "Attention 의 HBM 병목을 이 식만으로 해결한다는 주장은 아니며 tiling 과 결합해야 FlashAttention 이 됩니다.",
-        sectionId: "paper-online-softmax",
+        "id": "softmax-max-shift-invariance",
+        "role": "기준점을 옮겨도 softmax가 같다는 성질이 online 갱신식의 근거입니다."
       },
+      {
+        "id": "kv-cache-decode-state",
+        "role": "Decode에서 query가 한 행뿐이라는 조건이 tiling의 모양을 바꿉니다."
+      },
+      {
+        "id": "cuda-gemm-tile-reuse-budget",
+        "role": "Shared-memory tile 재사용으로 global 접근을 줄이는 GEMM의 선례입니다."
+      },
+      {
+        "id": "autodiff-save-recompute-boundary",
+        "role": "Activation을 저장할지 다시 계산할지 고르는 일반 원리입니다."
+      }
     ],
+    "introducedHere": [
+      {
+        "id": "attention-materialization",
+        "role": "중간 점수와 확률을 큰 배열로 저장하면 계산 외에 쓰기와 읽기가 필요합니다."
+      },
+      {
+        "id": "io-aware-attention",
+        "role": "계산 횟수뿐 아니라 저장 계층 사이의 이동량도 비용으로 셉니다."
+      },
+      {
+        "id": "online-softmax",
+        "role": "기준 최대값이 바뀌면 옛 분자와 분모를 같은 배율로 옮겨 새 조각과 더합니다."
+      },
+      {
+        "id": "attention-tiling",
+        "role": "Q의 행 묶음과 K·V 조각을 작은 저장 공간에서 만나게 하고 사용한 점수 조각을 버립니다."
+      },
+      {
+        "id": "flash-attention",
+        "role": "연결을 근사로 줄이지 않고 attention의 중간 저장 방식을 바꾸는 구현입니다."
+      },
+      {
+        "id": "attention-recompute-vs-store",
+        "role": "역전파에서 필요한 점수를 다시 만들면 큰 중간 행렬을 보관하는 비용을 줄일 수 있습니다."
+      },
+      {
+        "id": "attention-conditional-rescaling",
+        "role": "최댓값이 커졌어도 안전한 범위에서는 옛 기준으로 합산해 보정 작업을 줄일 수 있습니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "attention-materialization",
+        "sectionId": "need",
+        "intuition": "중간 점수와 확률을 큰 배열로 저장하면 계산 외에 쓰기와 읽기가 필요합니다.",
+        "workedExample": "N=4096·FP16에서 S와 P는 각각 32MiB이고 한 번씩 쓰고 읽으면 128MiB입니다.",
+        "boundary": "128MiB는 Q/K/V 합 1.5MiB의 약 85.33배입니다. 이미 fused backend를 쓰는 API에 이 왕복을 일괄 적용하지 않습니다."
+      },
+      {
+        "id": "io-aware-attention",
+        "sectionId": "names",
+        "intuition": "계산 횟수뿐 아니라 저장 계층 사이의 이동량도 비용으로 셉니다.",
+        "workedExample": "128MiB×head 32×batch 8=32GiB입니다. 가정한 2TB/s로 나눈 값은 약 17.18ms입니다.",
+        "boundary": "이동량을 대역폭으로 나눈 하한은 kernel 실행시간이 아닙니다. 점근식 O(N²d²/M)도 정확한 바이트 비율이 아닙니다."
+      },
+      {
+        "id": "online-softmax",
+        "sectionId": "mechanism",
+        "intuition": "기준 최대값이 바뀌면 옛 분자와 분모를 같은 배율로 옮겨 새 조각과 더합니다.",
+        "workedExample": "기준 3에서 5로 바꾸면 옛 합에 e⁻²를 곱합니다. 최종 8.876695/1.203438≈7.376113입니다.",
+        "boundary": "분모만 보정하고 분자는 그대로 두면 다른 출력이 됩니다. 실제 부동소수점 오차는 별도로 확인합니다."
+      },
+      {
+        "id": "attention-tiling",
+        "sectionId": "picture",
+        "intuition": "Q의 행 묶음과 K·V 조각을 작은 저장 공간에서 만나게 하고 사용한 점수 조각을 버립니다.",
+        "workedExample": "점수 [1,3] 뒤에는 m=3, ℓ=1.135335, u=4.270671만 남겨 다음 [2,5]와 합칩니다.",
+        "boundary": "실제 tile은 register·shared memory·dtype·head dim의 제약을 받습니다. 온칩 전체 용량을 하나의 자유로운 배열처럼 쓰지 못합니다."
+      },
+      {
+        "id": "flash-attention",
+        "sectionId": "names",
+        "intuition": "연결을 근사로 줄이지 않고 attention의 중간 저장 방식을 바꾸는 구현입니다.",
+        "workedExample": "네 점수를 한 번에 계산하거나 둘씩 처리해도 실수 산술의 출력은 약 7.376113입니다.",
+        "boundary": "Exact라는 말은 부동소수점 결과가 bit 단위로 같다는 뜻이 아닙니다. mask·dropout·dtype 조건도 맞춰야 합니다."
+      },
+      {
+        "id": "attention-recompute-vs-store",
+        "sectionId": "mechanism",
+        "intuition": "역전파에서 필요한 점수를 다시 만들면 큰 중간 행렬을 보관하는 비용을 줄일 수 있습니다.",
+        "workedExample": "N=4096에서 FP16 확률 P는 head당 32MiB지만 행별 FP32 통계 4096개는 16KiB입니다.",
+        "boundary": "입력·출력과 필요한 통계·난수 상태를 보존해야 합니다. 추가 계산이 실제 시간에 미치는 영향은 GPU와 shape에 달려 있습니다."
+      },
+      {
+        "id": "attention-conditional-rescaling",
+        "sectionId": "comparison",
+        "intuition": "최댓값이 커졌어도 안전한 범위에서는 옛 기준으로 합산해 보정 작업을 줄일 수 있습니다.",
+        "workedExample": "둘째 조각에서 기준 3을 유지하면 u=65.590396, ℓ=8.892271이고 비율은 여전히 7.376113입니다.",
+        "boundary": "큰 지수를 무조건 허용하면 overflow가 납니다. FA4의 갱신 조건·근사 오차·지원 target을 함께 지켜야 합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "조각을 버리고 기준값과 두 합만 남긴다",
+        "relation": "Q의 행 묶음과 K·V 조각을 작은 저장 공간에서 만나게 하고 사용한 점수 조각을 버립니다.",
+        "concepts": [
+          "attention-tiling"
+        ]
+      },
+      {
+        "label": "계산보다 중간 행렬의 왕복이 커질 수 있다",
+        "relation": "중간 점수와 확률을 큰 배열로 저장하면 계산 외에 쓰기와 읽기가 필요합니다.",
+        "concepts": [
+          "attention-materialization"
+        ]
+      },
+      {
+        "label": "FlashAttention은 attention 행렬의 저장을 피하는 구현이다",
+        "relation": "계산 횟수뿐 아니라 저장 계층 사이의 이동량도 비용으로 셉니다. 연결을 근사로 줄이지 않고 attention의 중간 저장 방식을 바꾸는 구현입니다.",
+        "concepts": [
+          "io-aware-attention",
+          "flash-attention"
+        ]
+      },
+      {
+        "label": "옛 합의 기준을 옮기면 중간 행렬이 필요 없다",
+        "relation": "기준 최대값이 바뀌면 옛 분자와 분모를 같은 배율로 옮겨 새 조각과 더합니다. 역전파에서 필요한 점수를 다시 만들면 큰 중간 행렬을 보관하는 비용을 줄일 수 있습니다.",
+        "concepts": [
+          "online-softmax",
+          "attention-recompute-vs-store"
+        ]
+      },
+      {
+        "label": "FA4는 지수 계산과 온칩 이동도 함께 겹친다",
+        "relation": "최댓값이 커졌어도 안전한 범위에서는 옛 기준으로 합산해 보정 작업을 줄일 수 있습니다.",
+        "concepts": [
+          "attention-conditional-rescaling"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "네 점수 [1,3,2,5]에서 최대 5를 뺀 뒤 출력 가중평균을 계산해 보세요.",
+        "answerChecklist": [
+          "지수합은 약 1.203438이고 값의 가중합은 약 8.876695입니다.",
+          "두 합을 나누면 약 7.376113이며 분자·분모에 같은 기준을 사용해야 합니다."
+        ],
+        "requiredConcepts": [
+          "attention-materialization"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "첫 조각의 최대가 3이고 다음 최대가 5일 때 옛 합에 어떤 배율을 곱하나요?",
+        "answerChecklist": [
+          "기준 차이 3−5를 지수로 바꿔 e⁻²를 곱합니다.",
+          "지수합과 값의 가중합 양쪽을 보정해야 같은 출력이 유지됩니다."
+        ],
+        "requiredConcepts": [
+          "attention-tiling"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "N=4096·FP16인 S와 P를 한 번씩 쓰고 읽는 바이트 수를 구해 보세요.",
+        "answerChecklist": [
+          "각 N×N 배열은 32MiB이고 두 배열은 합계 64MiB입니다.",
+          "쓰기와 읽기를 각각 한 번 수행하면 중간 왕복은 128MiB입니다."
+        ],
+        "requiredConcepts": [
+          "attention-materialization"
+        ],
+        "sectionId": "need"
+      },
+      {
+        "level": "basic",
+        "question": "128MiB를 입력 Q·K·V 합과 비교하면 64배라는 설명이 왜 틀린가요?",
+        "answerChecklist": [
+          "세 입력은 각각 512KiB이므로 합계 1.5MiB이고 비율은 약 85.33배입니다.",
+          "출력 O까지 네 배열의 합 2MiB를 분모로 잡을 때 비율이 64배가 됩니다."
+        ],
+        "requiredConcepts": [
+          "attention-materialization"
+        ],
+        "sectionId": "need"
+      },
+      {
+        "level": "basic",
+        "question": "FlashAttention의 exact가 모든 실행에서 같은 bit 결과를 뜻하지 않는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "attention 연결을 sparse 근사로 줄이지 않는다는 수학적 의미입니다.",
+          "덧셈 순서·지수 구현·dtype 차이로 반올림 오차는 달라질 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "io-aware-attention",
+          "flash-attention"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "역전파에서 점수를 다시 계산하는 선택은 어떤 저장 비용을 줄이나요?",
+        "answerChecklist": [
+          "N×N 확률 전체를 보관하고 다시 읽는 비용을 줄입니다.",
+          "그 대신 입력과 행 통계 등을 이용한 추가 계산이 생기므로 실제 시간을 측정해야 합니다."
+        ],
+        "requiredConcepts": [
+          "online-softmax",
+          "attention-recompute-vs-store"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "둘째 조각에서도 기준 3을 유지하면 두 합과 출력은 어떻게 달라지나요?",
+        "answerChecklist": [
+          "지수합은 약 8.892271이고 가중합은 약 65.590396으로 함께 커집니다.",
+          "비율은 약 7.376113으로 같지만 무제한 기준 유지에는 overflow 위험이 있습니다."
+        ],
+        "requiredConcepts": [
+          "attention-conditional-rescaling"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "총 10시간 중 행렬곱 5시간만 절반으로 줄면 전체 가속비를 얼마로 계산하나요?",
+        "answerChecklist": [
+          "새 시간은 2.5+5=7.5시간입니다.",
+          "전체 가속비는 10/7.5≈1.33배이며 행렬곱 장치의 2배와 다릅니다."
+        ],
+        "requiredConcepts": [
+          "attention-conditional-rescaling"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "32GiB를 가정한 2TB/s로 나눈 17.18ms를 실측 kernel 시간이라고 부르면 왜 안 되나요?",
+        "answerChecklist": [
+          "같은 단위로 변환해 얻은 이동량의 처리량 하한입니다.",
+          "실제 실행에는 연산·동기화·cache·겹침과 유효 대역폭 차이가 개입합니다."
+        ],
+        "requiredConcepts": [
+          "attention-materialization"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "FA4 논문의 B200·B100 표기가 다른 상태에서 제품 성능을 비교하려면 무엇을 확인하나요?",
+        "answerChecklist": [
+          "본문과 부록의 장치 불일치를 기록하고 정확한 실험 장치를 추가로 확인합니다.",
+          "dtype·shape·mask·backend 버전과 측정 절차까지 맞추기 전에는 최고 가속비를 일반화하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "attention-materialization"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "FlashAttention · 2022",
+        "href": "https://arxiv.org/abs/2205.14135",
+        "problem": "N×N 점수와 확률 중간값을 HBM에 쓰고 읽는 비용",
+        "contribution": "tile과 online softmax, backward 재계산",
+        "assumptions": "온칩 저장량과 dtype에 맞는 tile이 필요",
+        "evidenceScope": "원 논문의 모델·GPU 구성에서 저자 측정",
+        "notClaim": "FLOPs가 같아도 시간은 달라지며 모든 shape에서 같은 이득은 아니다.",
+        "sectionId": "paper-flashattention-reading"
+      },
+      {
+        "title": "FlashAttention-4 · arXiv 2603.05451v1",
+        "href": "https://arxiv.org/html/2603.05451v1",
+        "problem": "Blackwell에서 행렬곱 외 자원이 병목으로 남음",
+        "contribution": "지수·MMA·이동 겹침, 조건부 rescaling, TMEM·2CTA",
+        "assumptions": "지원 target·tile·dtype의 오차와 자원 조건을 지켜야 함",
+        "evidenceScope": "저자 비교는 BF16, head dim·sequence length와 baseline version별 kernel 측정",
+        "notClaim": "v1 본문은 B200, 부록 A.1은 B100으로 표기가 불일치한다. 이 글은 최고 가속비를 제품 성능 보장으로 인용하지 않는다.",
+        "sectionId": "paper-flashattention4"
+      }
+    ]
   },
   "ai/continuous-batching-step-anatomy": {
     entryNote: "Iteration-level continuous batching 이 무엇인지와 request 의 progress gap 을 token 으로 센다는 것을 안 상태에서, 한 step 안에서 그 token 이 어떤 순서로 배정되는지로 들어갑니다.",
@@ -63342,97 +66447,356 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "gpu/gpu-memory-hierarchy-and-roofline": {
-    entryNote: "Register·shared·L1·L2·HBM 의 traffic 경로, coalescing 의 목적, roofline 이 peak 와 achieved 를 나눈다는 것을 안 상태에서, 각 계층의 크기와 transaction 단위, latency 와 bandwidth 의 구분, 네 가지 bound 판정으로 들어갑니다.",
-    coreIdea: "Warp 의 요청은 32-byte sector 단위 transaction 으로 옮겨지고 latency 와 bandwidth 는 Little's law 로만 이어지므로, kernel 은 ridge point 를 기준으로 compute·memory-bound 로, 어느 지붕에도 못 닿으면 eligible warp 부족의 latency-bound 나 launch overhead 의 launch-bound 로 갈리며 부류마다 처방이 다릅니다.",
-    assumedKnowledge: [
-      { id: "gpu-memory-traffic-hierarchy", role: "Register 부터 HBM 까지의 scope 와 traffic 경로를 출발점으로 삼습니다." },
-      { id: "gpu-roofline-peak-achieved", role: "Roofline 의 peak/achieved 분리를 재사용하고 이 글은 bound 부류만 얹습니다." },
-      { id: "gpu-latency-hiding-occupancy", role: "Resident warp 수의 resource 한도를 latency-bound 처방의 손잡이로 씁니다." },
-      { id: "cuda-warp-simt", role: "Warp 32 lane 이 한 instruction 으로 주소 32개를 낸다는 단위를 가져옵니다." },
-      { id: "cuda-global-coalescing", role: "Transaction 수를 줄이는 접근 설계는 재사용하고 이 글은 세는 규칙만 다룹니다." },
-      { id: "cuda-shared-scratchpad", role: "L1 과 용량을 나누는 shared memory 의 역할을 가져옵니다." },
-      { id: "little-law-stable-system", role: "In-flight byte = bandwidth × latency 의 근거로만 씁니다." },
-      { id: "tlp-ilp-mlp-latency-hiding", role: "MLP 가 in-flight byte 를 채우는 수단이라는 연결에만 씁니다." },
-      { id: "warp-scoreboard-ready-stalled", role: "Eligible warp 와 long scoreboard stall 을 latency-bound 의 증거로 읽습니다." },
-    ],
-    introducedHere: [
-      { id: "gpu-cache-levels-l1-l2", role: "L1 과 L2 의 scope·용량·공유 범위를 H100 수치로 고정합니다." },
-      { id: "cuda-local-constant-memory-space", role: "Local memory 가 off-chip 이고 constant memory 가 broadcast·직렬화 규칙을 갖는다는 위치를 정합니다." },
-      { id: "gpu-memory-transaction-sector", role: "32-byte sector 로 transaction 을 세는 규칙과 uncoalesced access 의 효율을 수치로 보입니다." },
-      { id: "gpu-memory-latency-bandwidth", role: "Latency 와 bandwidth 를 Little's law 로 잇고 effective bandwidth 식을 둡니다." },
-      { id: "gpu-execution-pipe-utilization", role: "ALU·Tensor 등 pipe 별 바쁜 비율을 compute-bound 의 증거로 정의합니다." },
-      { id: "compute-memory-bound-kernel", role: "Ridge point 로 두 부류를 가르고 H100 수치로 계산합니다." },
-      { id: "latency-launch-bound-kernel", role: "지붕에 못 닿은 kernel 을 eligible warp 와 timeline 빈틈으로 두 부류로 나눕니다." },
-    ],
-    conceptExplanations: [
-      { id: "gpu-cache-levels-l1-l2", sectionId: "hierarchy", intuition: "책상 서랍(L1)은 내 자리에서만 열고, 사무실 공용 캐비닛(L2)은 모두가 같이 쓰며, 창고(HBM)에서 온 물건은 캐비닛을 거쳐 옵니다.", workedExample: "H100 SXM5 는 SM 당 L1·shared 256 KB, chip 전체 L2 50 MB 이며 다른 SM 이 방금 읽은 줄은 L2 에서 받아 HBM 까지 가지 않습니다.", boundary: "Global load 가 L1 을 거칠지는 compiler 와 instruction 이 정하므로 L1 hit 을 당연히 기대하면 안 됩니다." },
-      { id: "cuda-local-constant-memory-space", sectionId: "hierarchy", intuition: "이름은 개인 보관함이지만 실제로는 먼 창고에 두고 번호표만 개인 것인 셈이고, constant 는 모두가 같은 페이지를 보는 게시판입니다.", workedExample: "Register 가 모자라 spill 된 값은 local memory 로 가 HBM 에 저장되고, constant 계수를 warp 32 lane 이 같은 주소로 읽으면 한 번 읽어 broadcast 됩니다.", boundary: "Constant memory 를 lane 마다 다른 주소로 읽으면 주소 수만큼 직렬화되어 global 보다 느려질 수 있습니다." },
-      { id: "gpu-memory-transaction-sector", sectionId: "transactions", intuition: "택배가 한 상자 32 B 단위로만 오므로 필요한 물건이 상자 몇 개에 흩어져 있느냐가 비용입니다.", workedExample: "연속 정렬 float 32개는 sector 4개, 4 B 어긋나면 5개(80%), stride 2 는 8개(50%), stride 8 은 32개로 1024 B 를 옮겨 128 B 만 쓰는 12.5% 입니다.", boundary: "L1 을 거치는 load 는 128 B line 단위 allocation 이 더해지고 L2 hit 이면 HBM transaction 이 되지 않습니다." },
-      { id: "gpu-memory-latency-bandwidth", sectionId: "latency-bandwidth", intuition: "택배 한 건의 배송 시간과 하루 배송량은 다른 숫자이며, 하루 배송량을 채우려면 배송 시간 동안 그만큼의 택배가 늘 길 위에 있어야 합니다.", workedExample: "3.35 TB/s × 가정 latency 600 ns ≈ 2 MB 가 늘 비행 중이어야 하고 SM 당 약 15 KB, warp load 약 120개입니다. 2 GB 를 0.8 ms 에 옮긴 kernel 의 effective bandwidth 는 2.5 TB/s 입니다.", boundary: "Effective bandwidth 의 byte 는 useful byte 이므로 uncoalesced access 로 실제 옮긴 byte 가 더 많으면 낮은 값이 HBM 여유를 뜻하지 않습니다." },
-      { id: "gpu-execution-pipe-utilization", sectionId: "roofline-bound", intuition: "주방의 화구(FMA)·오븐(Tensor)·배송(LSU) 가운데 어느 것이 하루 종일 돌아가는지를 따로 보는 것입니다.", workedExample: "Tensor pipe 가 cycle 의 80% 넘게 바쁘면 compute-bound 이고, ALU 가 높은데 Tensor 가 0 이면 Tensor Core 를 안 쓰는 compute-bound 입니다.", boundary: "Pipe utilization 이 낮다는 사실만으로 memory-bound 라고 할 수 없으며 DRAM throughput 과 eligible warp 를 같이 봐야 합니다." },
-      { id: "compute-memory-bound-kernel", sectionId: "roofline-bound", intuition: "재료 공급이 요리 속도를 못 따라가면 재료(memory)에, 재료는 쌓이는데 요리사가 바쁘면 요리(compute)에 묶인 것입니다.", workedExample: "H100 FP16 Tensor 989 TFLOPS / 3.35 TB/s ≈ 295 FLOP/B 가 ridge 이고, intensity 1 인 GEMV 는 3.35 TFLOPS 에, intensity 1,365 인 4096³ GEMM 은 989 TFLOPS 에 묶입니다.", boundary: "Ridge 는 쓰는 pipe 의 peak 에 따라 다르며(FP32 는 약 20 FLOP/B) HBM 이 아닌 L2·shared 경계로 잡으면 다른 지붕이 나옵니다." },
-      { id: "latency-launch-bound-kernel", sectionId: "latency-launch-bound", intuition: "재료도 요리사도 놀고 있다면 주문이 한 번에 하나씩만 오거나(latency), 주문서 한 장 처리하는 시간이 요리보다 긴 것(launch)입니다.", workedExample: "DRAM 30%·pipe 15%·eligible warp 1개 미만이면 latency-bound 이고, 1 MB 짜리 kernel 1,000개는 일 0.3 ms 에 가정 overhead 4 µs × 1,000 = 4 ms 라 launch-bound 입니다.", boundary: "두 부류는 byte 나 FLOP 을 줄여도 빨라지지 않으며 각각 parallelism 과 kernel 수를 바꿔야 합니다. 4 µs 는 가정값입니다." },
-    ],
-    conceptStages: [
-      { label: "00 계층", relation: "각 계층의 위치·크기와 local·constant 의 자리를 정합니다.", concepts: ["gpu-cache-levels-l1-l2", "cuda-local-constant-memory-space"] },
-      { label: "01 단위", relation: "Warp 의 요청이 sector transaction 으로 세어지는 규칙을 봅니다.", concepts: ["gpu-memory-transaction-sector"] },
-      { label: "02 지표", relation: "Latency·bandwidth·effective bandwidth 와 pipe utilization 을 정의합니다.", concepts: ["gpu-memory-latency-bandwidth", "gpu-execution-pipe-utilization"] },
-      { label: "03 부류", relation: "Roofline 위에서 네 가지 bound 를 판정합니다.", concepts: ["compute-memory-bound-kernel", "latency-launch-bound-kernel"] },
-    ],
-    exercises: [
-      { level: "basic", question: "L1 cache 와 L2 cache 의 scope 와 H100 SXM5 의 용량을 각각 쓰고, HBM 에서 온 byte 가 어느 계층을 반드시 지나는지 답하세요.", answerChecklist: ["L1 은 SM 안", "SM 당 L1·shared 256 KB", "L2 는 chip 공유 50 MB", "HBM byte 는 L2 를 지남"], requiredConcepts: ["gpu-cache-levels-l1-l2"], sectionId: "hierarchy" },
-      { level: "basic", question: "CUDA local memory 가 실제로 어디에 저장되는지와, constant memory 를 warp 가 같은 주소·다른 주소로 읽을 때의 차이를 설명하세요.", answerChecklist: ["HBM 에 저장·L1/L2 cache", "spill 과 동적 index 배열", "같은 주소는 broadcast", "다른 주소는 직렬화"], requiredConcepts: ["cuda-local-constant-memory-space"], sectionId: "hierarchy" },
-      { level: "basic", question: "Float 32개를 stride 2 로 읽는 warp load 의 sector 수와 효율을 계산하세요.", answerChecklist: ["256 B 범위", "sector 8개", "useful 128 B", "50%"], requiredConcepts: ["gpu-memory-transaction-sector"], sectionId: "transactions" },
-      { level: "basic", question: "1 GB 를 읽고 1 GB 를 쓴 kernel 이 0.8 ms 걸렸을 때 effective bandwidth 와 3.35 TB/s 대비 비율을 계산하세요.", answerChecklist: ["(1+1) GB / 0.8 ms", "2.5 TB/s", "약 75%", "useful byte 기준"], requiredConcepts: ["gpu-memory-latency-bandwidth"], sectionId: "latency-bandwidth" },
-      { level: "basic", question: "H100 FP16 Tensor Core 와 FP32 CUDA core 의 ridge point 를 각각 계산하세요.", answerChecklist: ["989/3.35", "약 295 FLOP/B", "67/3.35", "약 20 FLOP/B"], requiredConcepts: ["compute-memory-bound-kernel"], sectionId: "roofline-bound" },
-      { level: "basic", question: "Tensor pipe utilization 85%, DRAM throughput 20% 인 kernel 과 그 반대인 kernel 의 bound 부류와 처방을 쓰세요.", answerChecklist: ["compute-bound", "연산 감소·pipe 선택", "memory-bound", "byte 감소"], requiredConcepts: ["gpu-execution-pipe-utilization", "compute-memory-bound-kernel"], sectionId: "roofline-bound" },
-      { level: "advanced", question: "Latency 600 ns 가정에서 3.35 TB/s 를 채우려면 SM 당 몇 byte, warp load(128 B) 몇 개가 비행 중이어야 하는지 계산하고 warp 64개일 때 warp 당 outstanding load 수를 구하세요.", answerChecklist: ["2 MB in flight", "SM 당 약 15 KB", "약 120개", "warp 당 약 2개"], requiredConcepts: ["gpu-memory-latency-bandwidth"], sectionId: "latency-bandwidth" },
-      { level: "advanced", question: "Effective bandwidth 는 낮은데 Nsight Compute 의 DRAM throughput 은 peak 근처인 kernel 에서 무슨 일이 일어나고 있는지 sector 로 설명하고 처방을 쓰세요.", answerChecklist: ["useful byte 와 실제 byte 의 차이", "uncoalesced access", "sector 효율", "coalescing 또는 shared staging"], requiredConcepts: ["gpu-memory-transaction-sector", "gpu-memory-latency-bandwidth"], sectionId: "transactions" },
-      { level: "advanced", question: "DRAM 30%·pipe 15%·eligible warp 0.6개인 kernel 이 왜 memory-bound 도 compute-bound 도 아닌지 설명하고 처방 두 가지를 쓰세요.", answerChecklist: ["어느 지붕에도 못 닿음", "latency-bound", "occupancy 증가", "warp 당 MLP·ILP 증가"], requiredConcepts: ["latency-launch-bound-kernel"], sectionId: "latency-launch-bound" },
-      { level: "advanced", question: "1 MB 짜리 elementwise kernel 1,000개가 launch-bound 임을 수치로 보이고, kernel 안 최적화가 왜 도움이 안 되는지와 맞는 처방을 쓰세요.", answerChecklist: ["kernel 당 0.3 µs", "overhead 가정 4 µs", "일 0.3 ms 대 overhead 4 ms", "fusion 또는 CUDA graph"], requiredConcepts: ["latency-launch-bound-kernel"], sectionId: "latency-launch-bound" },
-    ],
-    papers: [
+    "entryLevel": false,
+    "entryNote": "64개 원소를 더하는 같은 사례로 입력 512B와 출력 256B를 추적합니다. 본문의 시간과 처리량 상한은 가정한 계산이며 실제 측정값과 구분합니다.",
+    "coreIdea": "이 글은 64개 덧셈에 필요한 768바이트를 유지한 채 저장 계층과 접근 간격, 시간당 처리량을 차례로 계산합니다. 계산한 상한과 측정한 성능을 비교합니다. 상한 아래에 있다는 사실만으로 원인을 확정하지는 않습니다.",
+    "assumedKnowledge": [
       {
-        title: "NVIDIA CUDA C++ Best Practices Guide 12.8.1 · Coalesced Access, Effective Bandwidth Calculation, Device Memory Spaces",
-        href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html",
-        problem: "Warp 의 접근이 몇 개의 transaction 이 되고 kernel 의 대역폭 성적을 어떻게 재는지에 대한 공식 규칙이 필요합니다.",
-        contribution: "32-byte transaction 으로 합쳐진다는 규칙과 misaligned·strided 예, effective bandwidth 식, local·constant memory 의 위치 표를 제공합니다.",
-        assumptions: "CUDA Toolkit 12.8.1 문서이며 transaction 규칙은 compute capability 6.0 이상에 대한 서술입니다.",
-        evidenceScope: "공식 가이드의 규칙과 예시이며 특정 kernel 의 측정치는 아닙니다.",
-        notClaim: "문서의 예시 배수가 모든 GPU·kernel 에서 같은 비율로 재현된다는 뜻은 아닙니다.",
-        sectionId: "paper-cuda-best-practices-memory",
+        "id": "gpu-memory-traffic-hierarchy",
+        "role": "Register부터 HBM까지의 scope와 traffic 경로를 출발점으로 삼습니다."
       },
       {
-        title: "NVIDIA Nsight Compute Profiling Guide · Speed Of Light, Roofline Charts, Memory Chart, Scheduler Statistics",
-        href: "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html",
-        problem: "Kernel 이 어느 자원에 묶였는지를 판정할 metric 의 정의가 필요합니다.",
-        contribution: "Compute·memory throughput 의 Speed Of Light, 계층별 roofline chart, pipe utilization·DRAM throughput·eligible warp 를 정의합니다.",
-        assumptions: "Nsight Compute 가 지원하는 GPU·driver 에서 수집한 metric 의 정의입니다.",
-        evidenceScope: "Profiler 의 metric semantics 이며 판정 문턱(80% 등)은 문서가 아니라 관행입니다.",
-        notClaim: "Metric 하나가 peak 근처라는 사실이 그 자원을 늘리면 빨라진다는 증명은 아닙니다.",
-        sectionId: "paper-nsight-compute-roofline",
+        "id": "gpu-roofline-peak-achieved",
+        "role": "Roofline의 peak/achieved 분리를 재사용하고 이 글은 bound 부류만 얹습니다."
       },
       {
-        title: "Roofline: An Insightful Visual Performance Model for Multicore Architectures",
-        href: "https://escholarship.org/uc/item/3qf383m0",
-        problem: "Kernel 이 compute 와 memory 가운데 어느 쪽에 먼저 묶이는지를 한 그림으로 보일 model 이 필요합니다.",
-        contribution: "Operational intensity 를 x 축에 놓고 min(peak FLOP/s, bandwidth × intensity) 를 지붕으로 그리는 roofline model 을 제안했습니다.",
-        assumptions: "2009년 multicore CPU 를 대상으로 했고 DRAM bandwidth 를 memory 경계로 잡았습니다.",
-        evidenceScope: "저자가 제안한 분석 model 이며 GPU 적용은 같은 식에 다른 peak 를 넣은 것입니다.",
-        notClaim: "Roofline 이 latency·launch 로 지붕에 못 닿는 이유까지 설명한다는 뜻은 아닙니다.",
-        sectionId: "paper-roofline-williams",
+        "id": "gpu-latency-hiding-occupancy",
+        "role": "Resident warp 수의 resource 한도를 latency-bound 처방의 손잡이로 씁니다."
       },
       {
-        title: "NVIDIA Hopper Architecture In-Depth",
-        href: "https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/",
-        problem: "이 글의 계층 크기와 ridge point 계산에 쓸 H100 SXM5 의 구성과 peak 수치가 필요합니다.",
-        contribution: "SM 132개, L2 50 MB, SM 당 L1·shared 256 KB, HBM3 3 TB/s 이상과 FP16 Tensor peak 를 제공합니다.",
-        assumptions: "발표된 H100 SXM5 구성이며 3.35 TB/s 와 67 TFLOPS 는 제품 명세의 값입니다.",
-        evidenceScope: "NVIDIA 자기보고 architecture 설명과 peak 이며 clock·SKU 조건에 묶입니다.",
-        notClaim: "Peak 로 계산한 ridge point 가 실제 kernel 의 달성 성능을 보장한다는 뜻은 아닙니다.",
-        sectionId: "paper-hopper-h100-memory",
+        "id": "cuda-warp-simt",
+        "role": "Warp 32개 lane이 한 instruction으로 주소 32개를 낸다는 단위를 가져옵니다."
       },
+      {
+        "id": "cuda-global-coalescing",
+        "role": "Transaction 수를 줄이는 접근 설계는 재사용하고 이 글은 세는 규칙만 다룹니다."
+      },
+      {
+        "id": "cuda-shared-scratchpad",
+        "role": "L1과 용량을 나누는 shared memory의 역할을 가져옵니다."
+      },
+      {
+        "id": "little-law-stable-system",
+        "role": "In-flight byte = bandwidth × latency의 근거로만 씁니다."
+      },
+      {
+        "id": "tlp-ilp-mlp-latency-hiding",
+        "role": "MLP가 in-flight byte를 채우는 수단이라는 연결에만 씁니다."
+      },
+      {
+        "id": "warp-scoreboard-ready-stalled",
+        "role": "Eligible warp와 long scoreboard stall을 latency-bound의 증거로 읽습니다."
+      }
     ],
+    "introducedHere": [
+      {
+        "id": "gpu-cache-levels-l1-l2",
+        "role": "Cache의 공유 범위를 64개·768바이트 사례에서 설명합니다."
+      },
+      {
+        "id": "cuda-local-constant-memory-space",
+        "role": "주소 공간과 저장 위치를 64개·768바이트 사례에서 설명합니다."
+      },
+      {
+        "id": "gpu-memory-transaction-sector",
+        "role": "요청을 sector로 세는 방법을 64개·768바이트 사례에서 설명합니다."
+      },
+      {
+        "id": "gpu-memory-latency-bandwidth",
+        "role": "대기와 처리량을 64개·768바이트 사례에서 설명합니다."
+      },
+      {
+        "id": "gpu-execution-pipe-utilization",
+        "role": "실제 실행 pipe 확인을 64개·768바이트 사례에서 설명합니다."
+      },
+      {
+        "id": "compute-memory-bound-kernel",
+        "role": "계산과 메모리 상한을 64개·768바이트 사례에서 설명합니다."
+      },
+      {
+        "id": "latency-launch-bound-kernel",
+        "role": "지연과 launch 비용을 64개·768바이트 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "gpu-cache-levels-l1-l2",
+        "sectionId": "names",
+        "intuition": "Thread의 계산 값을 두는 곳은 register입니다. Block이 직접 공유하는 공간은 shared memory이고, 자동으로 최근 데이터를 보관하는 cache는 L1·L2처럼 계층 이름을 갖습니다. NVIDIA에서는 L1이 SM 단위이고 L2가 더 넓은 범위의 요청을 받습니다. 정확한 크기와 경로는 GPU 세대에 따릅니다.",
+        "workedExample": "64개 덧셈의 유효 연산 강도는 64/768=1/12 FLOP/B입니다. 측정 경계의 실제 전송량도 768바이트라고 가정합니다. 이때 1 TB/s×1/12=약 83.3 GFLOP/s가 이동에 의한 상한입니다. 계산 상한 1 TFLOP/s보다 낮으므로 이상적인 정상 상태에서는 이동이 먼저 제한합니다.",
+        "boundary": "작은 kernel1000개를 순차 제출하고 각각의 추가 launch 비용이 4 μs라면 시작 비용만 4 ms입니다(가정). 이 경우 요청 byte를 조금 줄이는 것보다 launch 수를 줄이는 실험이 유용할 수 있습니다. 다만 fusion은 register와 shared memory를 늘릴 수 있습니다. Spill이나 상주 자원 감소도 생길 수 있으므로 전체 시간을 다시 잽니다."
+      },
+      {
+        "id": "cuda-local-constant-memory-space",
+        "sectionId": "names",
+        "intuition": "CUDA local memory는 thread 전용 주소 공간입니다. Register에서 넘친 spill이나 동적 배열이 여기에 놓일 수 있고 실제 장치 메모리를 cache해서 접근합니다. 이름의 local이 낮은 지연을 보장하지 않습니다. Constant memory는 읽기 전용 주소 공간이며 한 warp가 같은 주소를 읽으면 broadcast할 수 있지만 서로 다른 주소는 요청이 분리됩니다.",
+        "workedExample": "같은 계산을 시간으로 보면 64÷10¹² =0.064 ns 의 계산 물량과 768÷10¹² =0.768 ns의 이동 물량을 비교합니다. 더 큰 0.768 ns는 포화된 장치의 처리량 모델입니다. 64개만 제출한 실제 kernel이 그 시간에 완료된다는 예측은 아닙니다. 요청 시작과 메모리 응답을 기다리는 시간이 남습니다.",
+        "boundary": "다음 주소가 이전 읽기 값에 달려 있으면 넓은 메모리 통로도 놀 수 있습니다. 이때 독립 작업을 늘리거나 의존 경로를 바꾸는 실험을 합니다. 반대로 이미 대역폭을 채웠다면 작업 수를 더 늘리는 것만으로 바이트당 시간이 줄지 않습니다."
+      },
+      {
+        "id": "gpu-memory-transaction-sector",
+        "sectionId": "source",
+        "intuition": "요청 범위에서 32 sectors는 4 sectors의 8 배입니다. 이 계산으로 HBM 전송량과 한 load의 latency가 모두 8 배라고 결론 내릴 수는 없습니다. 병합과 cache, 다른 요청과의 겹침을 확인해야합니다.",
+        "workedExample": "두 상한이 만나는 점은 1 TFLOP/s÷1 TB/s =1 FLOP/B입니다. 이를 ridge point라고 부릅니다. 같은 경계의 실제 byte가 늘면 연산 강도는 왼쪽으로 이동합니다. Cache 재사용으로 HBM byte가 줄면 HBM 기준의 연산 강도는 오른쪽으로 이동할 수 있습니다.",
+        "boundary": "H100 같은 제품의 실제 수치를 쓸 때는 SKU·clock·dtype·sparsity와 문서 버전을 같이 기록합니다. 이 글의 1 TFLOP/s와 1 TB/s는 서로 맞춘 가정이며 제품 벤치마크가 아닙니다. 물리 HBM의 층·channel·행 동작은 메모리 제어기 뒤의 경로에서 이어집니다."
+      },
+      {
+        "id": "gpu-memory-latency-bandwidth",
+        "sectionId": "mechanism",
+        "intuition": "한 요청의 평균 왕복 시간을 500 ns로 가정합니다. 1 TB/s를 지속하려면 평균 500000바이트, 즉 500 KB 가 처리 중이어야 합니다. 처리량 × 평균 대기 시간으로 구한 평균 진행 중 데이터량입니다. 64개 예의 768바이트만으로는 이 정상 상태를 채울 수 없습니다. 독립 요청을 늘리지 못하면 지연이 성능을 제한합니다.",
+        "workedExample": "한 요청의 평균 왕복 시간을 500 ns로 가정합니다. 1 TB/s를 지속하려면 평균 500000바이트, 즉 500 KB 가 처리 중이어야 합니다. 처리량 × 평균 대기 시간으로 구한 평균 진행 중 데이터량입니다. 64개 예의 768바이트만으로는 이 정상 상태를 채울 수 없습니다. 독립 요청을 늘리지 못하면 지연이 성능을 제한합니다.",
+        "boundary": "H100 같은 제품의 실제 수치를 쓸 때는 SKU·clock·dtype·sparsity와 문서 버전을 같이 기록합니다. 이 글의 1 TFLOP/s와 1 TB/s는 서로 맞춘 가정이며 제품 벤치마크가 아닙니다. 물리 HBM의 층·channel·행 동작은 메모리 제어기 뒤의 경로에서 이어집니다."
+      },
+      {
+        "id": "gpu-execution-pipe-utilization",
+        "sectionId": "comparison",
+        "intuition": "Roofline 원 논문은 연산 강도와 메모리·계산 상한을 같은 그림에 놓는 모델입니다. 실제 측정 점이 선 아래에 있다는 사실만으로 어느 동기화나 주소 의존이 원인인지는 설명하지 않습니다. SM의 준비된 명령과 scoreboard가 그다음 질문을 다룹니다.",
+        "workedExample": "유효 768바이트를 처리한 시간을 1μs로 가정하면 유효 대역폭은 0.768 GB/s입니다(시간 가정). 이것은 유효 요청 기준입니다. DRAM counter가 읽기와 쓰기에 다른 byte를 보고하면 그 값을 같은 구간 시간으로 나눈 물리 대역폭을 별도로 표시해야 합니다.",
+        "boundary": "H100 같은 제품의 실제 수치를 쓸 때는 SKU·clock·dtype·sparsity와 문서 버전을 같이 기록합니다. 이 글의 1 TFLOP/s와 1 TB/s는 서로 맞춘 가정이며 제품 벤치마크가 아닙니다. 물리 HBM의 층·channel·행 동작은 메모리 제어기 뒤의 경로에서 이어집니다."
+      },
+      {
+        "id": "compute-memory-bound-kernel",
+        "sectionId": "mechanism",
+        "intuition": "유효 768바이트를 처리한 시간을 1μs로 가정하면 유효 대역폭은 0.768 GB/s입니다(시간 가정). 이것은 유효 요청 기준입니다. DRAM counter가 읽기와 쓰기에 다른 byte를 보고하면 그 값을 같은 구간 시간으로 나눈 물리 대역폭을 별도로 표시해야 합니다.",
+        "workedExample": "유효 768바이트를 처리한 시간을 1μs로 가정하면 유효 대역폭은 0.768 GB/s입니다(시간 가정). 이것은 유효 요청 기준입니다. DRAM counter가 읽기와 쓰기에 다른 byte를 보고하면 그 값을 같은 구간 시간으로 나눈 물리 대역폭을 별도로 표시해야 합니다.",
+        "boundary": "H100 같은 제품의 실제 수치를 쓸 때는 SKU·clock·dtype·sparsity와 문서 버전을 같이 기록합니다. 이 글의 1 TFLOP/s와 1 TB/s는 서로 맞춘 가정이며 제품 벤치마크가 아닙니다. 물리 HBM의 층·channel·행 동작은 메모리 제어기 뒤의 경로에서 이어집니다."
+      },
+      {
+        "id": "latency-launch-bound-kernel",
+        "sectionId": "limits",
+        "intuition": "H100 같은 제품의 실제 수치를 쓸 때는 SKU·clock·dtype·sparsity와 문서 버전을 같이 기록합니다. 이 글의 1 TFLOP/s와 1 TB/s는 서로 맞춘 가정이며 제품 벤치마크가 아닙니다. 물리 HBM의 층·channel·행 동작은 메모리 제어기 뒤의 경로에서 이어집니다.",
+        "workedExample": "유효 768바이트를 처리한 시간을 1μs로 가정하면 유효 대역폭은 0.768 GB/s입니다(시간 가정). 이것은 유효 요청 기준입니다. DRAM counter가 읽기와 쓰기에 다른 byte를 보고하면 그 값을 같은 구간 시간으로 나눈 물리 대역폭을 별도로 표시해야 합니다.",
+        "boundary": "H100 같은 제품의 실제 수치를 쓸 때는 SKU·clock·dtype·sparsity와 문서 버전을 같이 기록합니다. 이 글의 1 TFLOP/s와 1 TB/s는 서로 맞춘 가정이며 제품 벤치마크가 아닙니다. 물리 HBM의 층·channel·행 동작은 메모리 제어기 뒤의 경로에서 이어집니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01·Cache의 공유 범위",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "gpu-cache-levels-l1-l2"
+        ]
+      },
+      {
+        "label": "02·주소 공간과 저장 위치",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "cuda-local-constant-memory-space"
+        ]
+      },
+      {
+        "label": "03·요청을 sector로 세기",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "gpu-memory-transaction-sector"
+        ]
+      },
+      {
+        "label": "04·대기와 처리량",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "gpu-memory-latency-bandwidth"
+        ]
+      },
+      {
+        "label": "05·실제 실행 pipe 확인",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "gpu-execution-pipe-utilization"
+        ]
+      },
+      {
+        "label": "06·계산과 메모리 상한",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "compute-memory-bound-kernel"
+        ]
+      },
+      {
+        "label": "07·지연과 launch 비용",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "latency-launch-bound-kernel"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "L1·L2·register·shared memory를 관리 범위로 구분하세요.",
+        "answerChecklist": [
+          "register thread",
+          "shared block",
+          "L1 SM",
+          "L2 더 넓은 범위"
+        ],
+        "requiredConcepts": [
+          "gpu-cache-levels-l1-l2"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Local memory의 local을 낮은 지연이라고 읽으면 왜 틀립니까?",
+        "answerChecklist": [
+          "thread 전용 주소 공간",
+          "장치 메모리 cache",
+          "spill 가능"
+        ],
+        "requiredConcepts": [
+          "cuda-local-constant-memory-space"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "연속 정렬·4B 어긋남·stride 2·stride 8의 sector 수를 쓰세요.",
+        "answerChecklist": [
+          "4",
+          "5",
+          "8",
+          "32",
+          "HBM 거래 수와 구별"
+        ],
+        "requiredConcepts": [
+          "gpu-memory-transaction-sector"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "768B를 1 μs에 처리한 유효 대역폭을 구하세요.",
+        "answerChecklist": [
+          "0.768GB/s",
+          "유효 바이트 경계"
+        ],
+        "requiredConcepts": [
+          "gpu-memory-latency-bandwidth"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "1 TFLOP/s와 1 TB/s의 ridge point는 얼마입니까?",
+        "answerChecklist": [
+          "1FLOP/B",
+          "같은 dtype와 관측 경계"
+        ],
+        "requiredConcepts": [
+          "compute-memory-bound-kernel"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "실행 pipe와 DRAM throughput을 함께 보는 이유를 설명하세요.",
+        "answerChecklist": [
+          "실제 사용한 pipe",
+          "단일 80% 문턱 불충분",
+          "둘 다 낮으면 다른 병목"
+        ],
+        "requiredConcepts": [
+          "gpu-execution-pipe-utilization"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "64 FLOP/768B에서 대역폭 상한을 계산하세요.",
+        "answerChecklist": [
+          "1/12FLOP/B",
+          "약 83.3 GFLOP/s",
+          "kernel 완료 시간 아님"
+        ],
+        "requiredConcepts": [
+          "compute-memory-bound-kernel"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "1 TB/s·평균 500 ns로 진행 중 바이트를 구하고 768B와 비교하세요.",
+        "answerChecklist": [
+          "500000B",
+          "500KB",
+          "정상 상태 평균",
+          "작은 요청만으로 포화 안 됨"
+        ],
+        "requiredConcepts": [
+          "gpu-memory-latency-bandwidth"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "Launch 1000회 ×4 μs와 fusion의 새 비용을 비교하세요.",
+        "answerChecklist": [
+          "4 ms 가정",
+          "register shared 증가",
+          "spill 상주 감소",
+          "전체 재측정"
+        ],
+        "requiredConcepts": [
+          "latency-launch-bound-kernel"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "Scalar FP32에 FP16 Tensor peak를 대입할 수 없는 이유는 무엇입니까?",
+        "answerChecklist": [
+          "다른 연산 종류와 pipe",
+          "dtype와 sparsity 맞춤",
+          "실제 SASS 확인"
+        ],
+        "requiredConcepts": [
+          "gpu-execution-pipe-utilization"
+        ],
+        "sectionId": "comparison"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CUDA Best Practices13.0.2 ·Effective Bandwidth Calculation",
+        "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-best-practices-guide/index.html",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "CUDA Best Practices13.0.2 ·Effective Bandwidth Calculation",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "NVIDIA vectorAdd·3f1c509·52 행",
+        "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "NVIDIA vectorAdd·3f1c509·52 행",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      },
+      {
+        "title": "Williams 외·Roofline(2009)",
+        "href": "https://escholarship.org/uc/item/3qf383m0",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "연산 강도와 대역폭·계산 상한을 결합하는 모델. 실제 병목 원인의 완전한 진단은 아닙니다.",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      },
+      {
+        "title": "NVIDIA Nsight Compute·2026-10-04 확인·Profiling Guide",
+        "href": "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "메모리 계층·실행 pipe·scheduler counter의 정의를 함께 확인합니다.",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
   },
   "gpu/cutlass-collectives-and-tile-schedulers": {
     entryNote: "앞 글에서 tile 계층과 mainloop 한 k-iteration, CuTe layout·atom·swizzle 을 본 상태에서, threadblock 하나가 tile 하나를 처리하는 collective 계약과 그 tile 을 SM 에 나누는 scheduler 로 올라갑니다.",
@@ -64360,106 +67724,308 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/expert-parallelism-moe-systems": {
-    entryNote: "MoE의 router가 token마다 top-k expert를 고르고 expert FFN을 계산한다는 것, total과 active parameter가 다른 장부라는 것은 안다고 가정합니다. Expert를 GPU에 나눈 순간 생기는 token 이동에서 시작합니다.",
-    coreIdea: "Expert를 GPU에 나누면 token은 dispatch와 combine 두 번의 all-to-all로 GPU 사이를 건너고 그 byte는 token 수·top-k·hidden에 비례해 GPU 수와 무관하므로, 통신 시간에 고정 latency를 더한 값이 expert 계산을 넘거나 가장 많은 복사본을 받은 GPU가 나머지를 세울 때 MoE는 network에 막히며, node-limited routing과 node 단위 묶음은 IB byte를 node 수에 비례하게 줄여 그 경계를 늦춥니다.",
-    assumedKnowledge: [
-      { id: "conditional-expert-ffn", role: "Token마다 일부 expert FFN만 계산한다는 MoE의 구조입니다." },
-      { id: "token-router-topk", role: "복사본의 목적지를 정하는 top-k index의 출처입니다." },
-      { id: "expert-parallel-dispatch-cost", role: "Dispatch·gather payload의 하한식이며 이 글은 그 위에 GPU당 link byte와 시간을 더합니다." },
-      { id: "expert-load-balance-target", role: "균등 기준과 실제 expert별 token count의 차이가 straggler를 만듭니다." },
-      { id: "expert-capacity-overflow-policy", role: "Straggler 상한을 주는 capacity factor와 overflow 처리의 정의입니다." },
-      { id: "moe-residency-active-path-boundary", role: "전체 expert의 memory와 token당 active path의 통신을 나눈 장부입니다." },
-      { id: "model-parallel-replica-layout", role: "EP가 겹쳐지는 DP·TP·PP worker topology입니다." },
-      { id: "collective-rank-semantics", role: "All-to-all이 정의되는 communicator와 rank 계약입니다." },
-      { id: "nvlink-device-fabric-boundary", role: "Node 안 NVLink와 node 밖 link의 경계로 locality의 전제입니다." },
-      { id: "decode-memory-bound-regime", role: "Decode의 작은 batch가 routing overhead를 드러내는 이유입니다." },
-    ],
-    introducedHere: [
-      { id: "expert-parallelism", role: "Expert를 GPU에 나누고 token을 보내는 병렬화를 TP·DP와 구분해 정의합니다." },
-      { id: "expert-sharding-placement", role: "Expert 배치표가 목적지와 GPU당 memory를 정하는 방식을 설명합니다." },
-      { id: "all-to-all-collective", role: "Dispatch·combine collective와 GPU당 byte 식, 절차를 정의합니다." },
-      { id: "expert-locality-node-limited-routing", role: "Node 수 제한과 두 단계 전송으로 IB byte를 줄이는 방법을 설명합니다." },
-      { id: "moe-communication-bottleneck", role: "통신 시간과 straggler 두 조건으로 병목을 판정하는 식을 정의합니다." },
-      { id: "ep-routing-overhead", role: "Payload와 무관한 비용의 묶음과 decode에서의 비중을 설명합니다." },
-    ],
-    conceptExplanations: [
-      { id: "expert-parallelism", sectionId: "sharding", intuition: "전문의가 병원마다 흩어져 있어 환자가 자기 병을 맡는 병원으로 찾아가는 것과 같습니다. 병원을 쪼개는 대신 환자가 움직입니다.", workedExample: "64 expert를 8 GPU에 8개씩 두면 GPU 0의 token이 expert 13과 42를 고를 때 GPU 1과 GPU 5로 hidden vector를 보내고 결과를 돌려받아 gate 가중치로 합칩니다.", boundary: "Expert 하나가 GPU memory보다 크면 EP만으로 못 올리고 expert 안에서 TP를 더 써야 하며 그때는 all-reduce가 추가됩니다." },
-      { id: "expert-sharding-placement", sectionId: "sharding", intuition: "어느 전문의가 어느 병원에 있는지 적은 안내표이며, 인기 있는 전문의는 여러 병원에 두기도 합니다.", workedExample: "Expert 하나가 hidden 4,096·FFN 11,008·행렬 3개·FP16이면 258 MiB이고 64개 16 GiB를 8 GPU에 나누면 GPU당 2 GiB이며, DeepSeek-V3 decode는 320 GPU에 expert 하나씩과 redundant 64개를 두었습니다.", boundary: "복제한 expert만큼 weight memory가 늘고, 배치표가 고르지 않으면 특정 GPU의 수신 byte가 평균을 넘습니다." },
-      { id: "all-to-all-collective", sectionId: "all-to-all", intuition: "모든 우체국이 다른 모든 우체국에 서로 다른 소포 묶음을 보내는 것과 같습니다. 같은 소포를 모두에게 보내는 broadcast와 다릅니다.", workedExample: "GPU당 token 2,048·top-2·hidden 4,096·FP16이면 dispatch 32 MiB, combine까지 64 MiB이고 8 GPU면 56 MiB가 link를 건너 NVLink 450 GB/s에서 0.13 ms, IB 50 GB/s에서 1.2 ms입니다.", boundary: "Expert 선택이 GPU에 고르게 퍼진다는 가정이며 index·gate·padding byte는 제외한 payload만 셉니다." },
-      { id: "expert-locality-node-limited-routing", sectionId: "locality", intuition: "다른 도시로 가는 소포는 도시당 한 상자로 묶어 보내고 도착한 뒤 시내 배송으로 나누는 것과 같습니다.", workedExample: "8 node·256 expert·top-8에서 제한 없이 뽑으면 token이 닿는 node 수 기대값이 약 5.3인데 M = 4로 묶으면 4 이하이고, node 단위 묶음까지 하면 IB 복사본이 expert마다 보낼 때의 8개에서 최대 4개로 줄어듭니다.", boundary: "Router의 선택지를 좁혀 품질과 맞바꾸며 node 안 NVLink가 IB보다 충분히 빠를 때만 묶음의 이득이 있습니다." },
-      { id: "moe-communication-bottleneck", sectionId: "bottleneck", intuition: "택배가 조립보다 오래 걸리거나 한 작업대에 일이 몰려 나머지가 기다리는 공장 라인입니다.", workedExample: "예시 구성은 IB 1.2 ms 대 계산 1.85 ms로 계산이 정하지만, 한 GPU가 평균 4,096의 1.75배인 7,168 복사본을 받으면 그 GPU의 계산 3.2 ms가 step 전체가 됩니다.", boundary: "통신과 계산이 완전히 겹친다는 하한식이며 겹침이 없으면 두 항의 합에 가까워집니다." },
-      { id: "ep-routing-overhead", sectionId: "bottleneck", intuition: "소포가 작아도 송장을 쓰고 분류하고 트럭을 부르는 시간은 그대로인 것과 같습니다.", workedExample: "Decode에서 GPU당 token 32개면 dispatch payload는 32 × 2 × 8 KiB = 512 KiB뿐이라 시간은 byte가 아니라 count 교환·정렬·kernel 왕복이 정하고, DeepEP는 이를 위해 metadata를 재사용하는 low-latency kernel을 따로 둡니다.", boundary: "큰 batch의 prefill 측정값에서는 payload에 묻혀 보이지 않으므로 그 값을 decode로 옮기면 안 됩니다." },
-    ],
-    conceptStages: [
-      { label: "00 Shard", relation: "Expert를 GPU에 나누고 배치표를 정합니다.", concepts: ["expert-parallelism", "expert-sharding-placement"] },
-      { label: "01 Move", relation: "Token 복사본을 보내고 돌려받는 byte와 시간을 셉니다.", concepts: ["all-to-all-collective"] },
-      { label: "02 Localize", relation: "Node 사이를 건너는 byte를 줄입니다.", concepts: ["expert-locality-node-limited-routing"] },
-      { label: "03 Bound", relation: "통신·straggler·overhead가 step을 정하는 조건을 판정합니다.", concepts: ["moe-communication-bottleneck", "ep-routing-overhead"] },
-    ],
-    exercises: [
-      { level: "basic", question: "Expert parallelism과 tensor parallelism이 각각 무엇을 나누고 무엇을 옮기는지 대비해 설명하세요.", answerChecklist: ["expert 통째로 한 GPU", "token hidden vector 이동", "weight 조각·partial sum all-reduce"], requiredConcepts: ["expert-parallelism"], sectionId: "sharding" },
-      { level: "basic", question: "64 expert를 8 GPU에 8개씩 둘 때 expert 13과 42를 고른 GPU 0의 token이 거치는 경로를 쓰세요.", answerChecklist: ["GPU 1", "GPU 5", "GPU 0으로 combine"], requiredConcepts: ["expert-sharding-placement"], sectionId: "sharding" },
-      { level: "basic", question: "GPU당 token 2,048·top-2·hidden 4,096·FP16·8 GPU에서 GPU 하나가 link로 내보내고 받는 byte를 계산하세요.", answerChecklist: ["32 MiB dispatch", "× 2 = 64 MiB", "× 7/8 = 56 MiB"], requiredConcepts: ["all-to-all-collective"], sectionId: "all-to-all" },
-      { level: "basic", question: "All-to-all이 all-reduce와 다른 점을 rank가 보내는 chunk의 성질로 설명하세요.", answerChecklist: ["rank마다 다른 chunk", "크기도 다를 수 있음", "합산 없음"], requiredConcepts: ["all-to-all-collective"], sectionId: "all-to-all" },
-      { level: "basic", question: "Node-limited routing에서 M = 4가 뜻하는 것과 그것이 IB byte를 줄이는 이유를 설명하세요.", answerChecklist: ["token당 최대 4 node", "node당 한 번 전송", "8 복사본 → 4 이하"], requiredConcepts: ["expert-locality-node-limited-routing"], sectionId: "locality" },
-      { level: "basic", question: "EP routing overhead에 포함되는 비용을 세 가지 이상 들고 왜 decode에서 비중이 큰지 설명하세요.", answerChecklist: ["count 교환", "정렬·permutation", "kernel latency", "payload가 작음"], requiredConcepts: ["ep-routing-overhead"], sectionId: "bottleneck" },
-      { level: "advanced", question: "GPU 수 G를 8에서 64로 늘리면 GPU당 통신 byte와 계산 시간이 각각 어떻게 변하고 통신 대 계산 비율이 왜 나빠지는지 식으로 보이세요.", answerChecklist: ["1 − 1/G → 거의 그대로", "GPU당 받은 token ∝ 1/G", "비율 ∝ G", "batch로 상쇄 필요"], requiredConcepts: ["all-to-all-collective", "moe-communication-bottleneck"], sectionId: "all-to-all" },
-      { level: "advanced", question: "8 node에 expert 32개씩, top-8에서 token이 닿는 node 수의 기대값을 구하는 식을 세우고 M = 4 제한과 node 단위 묶음이 각각 IB byte를 얼마나 줄이는지 계산하세요.", answerChecklist: ["8 × (1 − C(224,8)/C(256,8)) ≈ 5.3", "M = 4 → 4 이하", "expert별 8 → node별 4", "router 선택지 축소"], requiredConcepts: ["expert-locality-node-limited-routing"], sectionId: "locality" },
-      { level: "advanced", question: "8 GPU가 평균 4,096 복사본을 받는데 한 GPU가 7,168개를 받을 때 step 시간을 구하고, capacity factor 1.0·1.25·2.0이 이 straggler와 dropped token·padding에 미치는 영향을 비교하세요.", answerChecklist: ["7,168 × 270 MFLOP / 600 TFLOP/s ≈ 3.2 ms", "1.0은 초과 전부 drop", "2.0은 padding 절반", "복제·bias는 drop 없음"], requiredConcepts: ["moe-communication-bottleneck", "expert-sharding-placement"], sectionId: "bottleneck" },
-      { level: "advanced", question: "Prefill에서 잰 all-to-all 시간을 decode 배포에 옮기면 안 되는 이유를 t_layer 식의 두 항으로 설명하고 DeepEP가 kernel을 두 벌로 나눈 근거와 연결하세요.", answerChecklist: ["B_gpu/B_link는 batch에 비례", "t_lat은 batch와 무관", "decode는 t_lat 지배", "metadata 재사용·CPU 동기화 감소"], requiredConcepts: ["ep-routing-overhead", "moe-communication-bottleneck"], sectionId: "bottleneck" },
-    ],
-    papers: [
+    "coreIdea": "64개 expert를 GPU 8개에 8개씩 나누겠습니다. GPU 0의 token 37이 expert 13과 42를 선택했습니다. 두 expert가 있는 GPU 1과 5로 값을 보내고 결과를 돌려받아 합칩니다. Expert 수를 늘려 모델의 저장 능력을 키울 수 있어도, 이 왕복이 계산보다 오래 걸리면 기다림이 커집니다. 이 글은 token 37의 이동에서 시작해 같은 경로 2048개의 바이트, 부하 쏠림과 최신 DeepEP API까지 추적합니다.",
+    "entryNote": "본문의 작은 숫자는 원리를 검산하기 위한 가정입니다. 공식 논문과 코드의 버전을 고정하고, 저자 실험과 이 글의 산술 검산을 구분합니다.",
+    "assumedKnowledge": [
       {
-        title: "GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding",
-        href: "https://arxiv.org/abs/2006.16668",
-        problem: "수백 billion parameter의 conditional computation을 수천 accelerator에 나눠 표현하고 실행하는 문제",
-        contribution: "Expert 하나를 device 하나에 두는 sharded MoE layer, einsum으로 표현한 all-to-all dispatch·combine, 약 2N/E의 expert capacity, random second-expert routing과 auxiliary balance loss를 정의했습니다.",
-        assumptions: "2,048 TPU v3와 multilingual translation, 저자의 compiler·sharding annotation 환경입니다.",
-        evidenceScope: "ICLR 2021 저자 자기보고이며 600B 규모 학습이 4일 안에 끝났다는 결과는 그 환경 범위의 값입니다.",
-        notClaim: "추론 효율이나 GPU cluster에서의 all-to-all 비용, MoE 품질의 보편적 우위는 주장하지 않습니다.",
-        sectionId: "paper-gshard",
+        "id": "conditional-expert-ffn",
+        "role": "Token마다 일부 expert FFN만 계산한다는 MoE의 구조입니다."
       },
       {
-        title: "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity",
-        href: "https://arxiv.org/abs/2101.03961",
-        problem: "Top-2 routing과 큰 capacity가 만드는 계산·통신·복잡도를 줄이면서 sparse model을 안정적으로 학습하는 문제",
-        contribution: "Top-1 routing과 batch token 수를 expert 수로 나눈 값에 factor를 곱한 expert capacity, 초과 token의 residual 통과, α = 0.01 balance loss를 정의하고 factor 1.0·1.25·2.0을 비교했습니다.",
-        assumptions: "T5 계열 encoder-decoder와 TPU, bfloat16 학습입니다.",
-        evidenceScope: "JMLR 2022 저자 자기보고이며 7배 사전학습 속도는 T5-Base·Large 대비 값입니다.",
-        notClaim: "All-to-all 시간이나 GPU 추론 latency를 측정하지 않았으며 top-1이 모든 설정에서 top-2보다 낫다는 주장은 아닙니다.",
-        sectionId: "paper-switch",
+        "id": "token-router-topk",
+        "role": "복사본의 목적지를 정하는 top-k index의 출처입니다."
       },
       {
-        title: "DeepSpeed-MoE: Advancing Mixture-of-Experts Inference and Training to Power Next-Generation AI Scale",
-        href: "https://arxiv.org/abs/2201.05596",
-        problem: "MoE의 큰 parameter와 all-to-all 통신 때문에 추론 latency와 비용이 dense model보다 나빠지는 문제",
-        contribution: "Expert parallel을 data·tensor parallel과 겹치는 추론 system, node 안과 node 사이를 나눈 hierarchical all-to-all, 병렬화를 조율한 통신 최적화와 model 압축을 제안했습니다.",
-        assumptions: "당시 A100 cluster와 DeepSpeed 구현, 비교 대상 MoE 추론 system입니다.",
-        evidenceScope: "ICML 2022 저자 자기보고이며 7.3배·4.5배·9배는 그 비교 범위의 값입니다.",
-        notClaim: "다른 framework나 최신 GPU에서 같은 배수가 난다는 주장은 아닙니다.",
-        sectionId: "paper-deepspeed-moe",
+        "id": "expert-parallel-dispatch-cost",
+        "role": "Dispatch·gather payload의 하한식이며 이 글은 그 위에 GPU당 link byte와 시간을 더합니다."
       },
       {
-        title: "DeepSeek-V3 Technical Report",
-        href: "https://arxiv.org/abs/2412.19437",
-        problem: "256 expert·top-8 MoE를 8 node에 걸친 64-way EP로 학습·배포할 때 IB all-to-all이 계산을 넘지 않게 하는 문제",
-        contribution: "Token당 최대 4 node의 node-limited routing, IB로 보낸 뒤 NVLink로 forwarding하는 all-to-all kernel과 20 SM, DualPipe overlap, bias 갱신 기반 auxiliary-loss-free balancing, redundant expert 배포를 보고했습니다.",
-        assumptions: "H800 cluster의 NVLink 160 GB/s와 IB 50 GB/s, 저자의 학습·배포 환경입니다.",
-        evidenceScope: "저자 자기보고이며 3.2배 비율과 SM 수, EP 32·320 배포는 그 hardware 범위의 값입니다.",
-        notClaim: "Node-limited routing이 품질 손실 없이 모든 MoE에 적용된다는 주장은 아니며 다른 interconnect에서의 이득은 다루지 않습니다.",
-        sectionId: "paper-deepseek-v3",
+        "id": "expert-load-balance-target",
+        "role": "균등 기준과 실제 expert별 token count의 차이가 straggler를 만듭니다."
       },
       {
-        title: "DeepEP README",
-        href: "https://github.com/deepseek-ai/DeepEP",
-        problem: "MoE dispatch·combine all-to-all을 학습·prefill의 대역폭과 decode의 latency 요구에 맞춰 따로 최적화하는 문제",
-        contribution: "Normal kernel과 low-latency kernel 두 벌, FP8 dispatch, routing metadata 재사용과 CPU 동기화 감소, node 안·사이 대역폭 표를 제공합니다.",
-        assumptions: "Hopper 이상 GPU, NVLink와 RDMA, README 기준일의 CUDA·PyTorch·NCCL version입니다.",
-        evidenceScope: "공식 구현 README의 자기 측정값이며 SM90·CX7 같은 hardware에 묶여 있습니다.",
-        notClaim: "표의 대역폭이 다른 cluster나 다른 expert 수에서 재현된다는 주장은 아닙니다.",
-        sectionId: "paper-deepep",
+        "id": "expert-capacity-overflow-policy",
+        "role": "Straggler 상한을 주는 capacity factor와 overflow 처리의 정의입니다."
       },
+      {
+        "id": "moe-residency-active-path-boundary",
+        "role": "전체 expert의 memory와 token당 active path의 통신을 나눈 장부입니다."
+      },
+      {
+        "id": "model-parallel-replica-layout",
+        "role": "EP가 겹쳐지는 DP·TP·PP worker topology입니다."
+      },
+      {
+        "id": "collective-rank-semantics",
+        "role": "All-to-all이 정의되는 communicator와 rank 계약입니다."
+      },
+      {
+        "id": "nvlink-device-fabric-boundary",
+        "role": "Node 안 NVLink와 node 밖 link의 경계로 locality의 전제입니다."
+      },
+      {
+        "id": "decode-memory-bound-regime",
+        "role": "Decode의 작은 batch가 routing overhead를 드러내는 이유입니다."
+      }
     ],
+    "introducedHere": [
+      {
+        "id": "expert-parallelism",
+        "role": "선택한 expert가 있는 장치로 입력을 보내고 계산 결과를 돌려받습니다."
+      },
+      {
+        "id": "expert-sharding-placement",
+        "role": "weight를 여러 GPU에 나누면 저장 부담이 줄지만 원격 입력 이동이 생깁니다."
+      },
+      {
+        "id": "all-to-all-collective",
+        "role": "각 장치가 목적지별 입력을 보내고 돌아온 결과를 원래 token 위치에 맞춥니다."
+      },
+      {
+        "id": "expert-locality-node-limited-routing",
+        "role": "expert의 위치와 routing 제약으로 원격 이동을 줄일 수 있지만 선택의 자유도도 달라집니다."
+      },
+      {
+        "id": "moe-communication-bottleneck",
+        "role": "바이트 이동과 가장 느린 expert 계산을 함께 비교해야 대기 원인을 찾습니다."
+      },
+      {
+        "id": "ep-routing-overhead",
+        "role": "데이터 위치뿐 아니라 expert별 재배치와 원래 위치 복원을 위한 metadata도 관리합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "expert-parallelism",
+        "sectionId": "case",
+        "intuition": "선택한 expert가 있는 장치로 입력을 보내고 계산 결과를 돌려받습니다.",
+        "workedExample": "GPU 0의 token 37은 expert 13과 42가 있는 GPU 1과 5로 각각 8KiB를 보냅니다.",
+        "boundary": "유효 payload 32KiB 왕복에는 metadata·header·padding이 포함되지 않습니다."
+      },
+      {
+        "id": "expert-sharding-placement",
+        "sectionId": "need",
+        "intuition": "weight를 여러 GPU에 나누면 저장 부담이 줄지만 원격 입력 이동이 생깁니다.",
+        "workedExample": "expert 64개의 FP16 weight 16.125GiB를 8개 GPU에 나누면 각각 약 2.016GiB입니다.",
+        "boundary": "attention·activation·통신 buffer는 별도입니다. Expert를 로컬로 제한하면 모델의 routing 선택도 바뀔 수 있습니다."
+      },
+      {
+        "id": "all-to-all-collective",
+        "sectionId": "picture",
+        "intuition": "각 장치가 목적지별 입력을 보내고 돌아온 결과를 원래 token 위치에 맞춥니다.",
+        "workedExample": "expert 번호를 8로 나눈 몫으로 13→GPU 1, 42→GPU 5를 얻고 combine에서 두 결과를 합칩니다.",
+        "boundary": "모든 GPU 쌍에 항상 같은 양을 보내는 것은 아닙니다. sparse routing과 실제 구현의 집계 방식을 확인합니다."
+      },
+      {
+        "id": "expert-locality-node-limited-routing",
+        "sectionId": "comparison",
+        "intuition": "expert의 위치와 routing 제약으로 원격 이동을 줄일 수 있지만 선택의 자유도도 달라집니다.",
+        "workedExample": "균등한 8개 GPU에서 원격 비율의 기대값은 7/8입니다. 64MiB 논리 왕복 중 기대 remote는 56MiB입니다.",
+        "boundary": "기대값은 실제 link counter가 아닙니다. node별 복제 공유·압축·부하 쏠림에 따라 물리 전송이 달라집니다."
+      },
+      {
+        "id": "moe-communication-bottleneck",
+        "sectionId": "mechanism",
+        "intuition": "바이트 이동과 가장 느린 expert 계산을 함께 비교해야 대기 원인을 찾습니다.",
+        "workedExample": "56MiB/50GB/s≈1.174ms입니다. 균등 계산 1.847ms가 부하 1.75배인 장치에서는 약 3.232ms가 됩니다.",
+        "boundary": "대역폭과 처리량은 설명용 가정입니다. 평균 바이트만으로 overlap·고정 지연·경합을 예측하지 않습니다."
+      },
+      {
+        "id": "ep-routing-overhead",
+        "sectionId": "source",
+        "intuition": "데이터 위치뿐 아니라 expert별 재배치와 원래 위치 복원을 위한 metadata도 관리합니다.",
+        "workedExample": "expert 13에서 14로 배정이 바뀌면 목적 GPU는 같아도 expert 구간이 달라져 새 routing handle이 필요합니다.",
+        "boundary": "DeepEP V2.5의 공통 EPBuffer를 V1의 별도 경로와 혼동하지 않습니다. dispatch/combine에 SM이 필요합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "token 37은 8192바이트를 두 곳에 보낸다",
+        "relation": "선택한 expert가 있는 장치로 입력을 보내고 계산 결과를 돌려받습니다.",
+        "concepts": [
+          "expert-parallelism"
+        ]
+      },
+      {
+        "label": "입력을 보내고 결과를 원래 위치로 돌려놓는다",
+        "relation": "각 장치가 목적지별 입력을 보내고 돌아온 결과를 원래 token 위치에 맞춥니다.",
+        "concepts": [
+          "all-to-all-collective"
+        ]
+      },
+      {
+        "label": "weight를 나눈 절약과 token 이동을 함께 계산한다",
+        "relation": "weight를 여러 GPU에 나누면 저장 부담이 줄지만 원격 입력 이동이 생깁니다.",
+        "concepts": [
+          "expert-sharding-placement"
+        ]
+      },
+      {
+        "label": "평균 바이트와 가장 늦은 GPU를 함께 본다",
+        "relation": "바이트 이동과 가장 느린 expert 계산을 함께 비교해야 대기 원인을 찾습니다.",
+        "concepts": [
+          "moe-communication-bottleneck"
+        ]
+      },
+      {
+        "label": "EPBuffer는 배정 결과와 유효 수신 범위를 함께 전달한다",
+        "relation": "데이터 위치뿐 아니라 expert별 재배치와 원래 위치 복원을 위한 metadata도 관리합니다.",
+        "concepts": [
+          "ep-routing-overhead"
+        ]
+      },
+      {
+        "label": "전송 공유와 expert 복제는 서로 다른 비용을 바꾼다",
+        "relation": "expert의 위치와 routing 제약으로 원격 이동을 줄일 수 있지만 선택의 자유도도 달라집니다.",
+        "concepts": [
+          "expert-locality-node-limited-routing"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "폭 4096·FP16인 token 37을 두 expert에 보내고 같은 폭의 결과를 받으면 payload는 얼마인가요?",
+        "answerChecklist": [
+          "입력 하나는 4096×2=8192B, 즉 8KiB입니다.",
+          "두 expert에 보내는 16KiB와 돌아오는 16KiB를 합치면 32KiB입니다."
+        ],
+        "requiredConcepts": [
+          "expert-parallelism"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "GPU마다 expert 8개를 연속 배치했을 때 expert 13과 42의 목적지를 구해 보세요.",
+        "answerChecklist": [
+          "expert 번호를 8로 나눈 정수 몫이 GPU 번호입니다.",
+          "13은 GPU 1, 42는 GPU 5이며 두 결과를 원래 token 위치로 결합해야 합니다."
+        ],
+        "requiredConcepts": [
+          "all-to-all-collective"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "expert weight 16.125GiB를 GPU 8개에 균등 배치하면 각 장치의 몫은 얼마인가요?",
+        "answerChecklist": [
+          "각 장치는 16.125/8≈2.016GiB의 expert weight를 가집니다.",
+          "attention·activation·통신 buffer를 제외한 값이므로 전체 VRAM 요구량과 같지 않습니다."
+        ],
+        "requiredConcepts": [
+          "expert-sharding-placement"
+        ],
+        "sectionId": "need"
+      },
+      {
+        "level": "basic",
+        "question": "GPU당 token 2048개·top-2의 논리 왕복과 균등 remote 기대값을 구해 보세요.",
+        "answerChecklist": [
+          "논리 왕복은 2×2048×2×4096×2B=64MiB입니다.",
+          "8개 GPU 중 원격 기대 비율 7/8을 곱하면 56MiB입니다."
+        ],
+        "requiredConcepts": [
+          "moe-communication-bottleneck"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "가정한 유효 대역폭 50GB/s에서 56MiB 전송 시간의 하한은 얼마인가요?",
+        "answerChecklist": [
+          "56MiB를 바이트로 변환해 50×10⁹B/s로 나누면 약 1.174ms입니다.",
+          "고정 지연·경합·연산과의 겹침을 포함한 전체 layer 시간은 별도입니다."
+        ],
+        "requiredConcepts": [
+          "moe-communication-bottleneck"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "expert 13에서 14로 routing이 바뀌면 목적 GPU가 같아도 handle을 다시 만들어야 하는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "두 expert는 GPU 1에 있지만 장치 안에서 사용할 expert 구간이 다릅니다.",
+          "기존 metadata를 재사용하면 잘못된 expert 계산이나 token 복원이 생길 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "ep-routing-overhead"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "균등 계산 시간이 1.847ms일 때 한 장치의 부하가 1.75배이면 완료 시간이 왜 늘어나나요?",
+        "answerChecklist": [
+          "같은 처리량 가정에서 그 장치의 계산은 약 3.232ms가 됩니다.",
+          "다른 장치가 먼저 끝나도 필요한 결과를 기다려야 하므로 평균 payload만으로 지연을 설명할 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "moe-communication-bottleneck"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "node별 expert 제한으로 통신을 줄인 실험을 unrestricted routing과 같은 모델이라고 비교해도 되나요?",
+        "answerChecklist": [
+          "선택 가능한 expert 집합과 배정 분포가 바뀔 수 있습니다.",
+          "같은 통신 비용뿐 아니라 출력 품질·부하·routing 조건을 함께 비교해야 합니다."
+        ],
+        "requiredConcepts": [
+          "expert-locality-node-limited-routing"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "DeepEP V1의 zero-SM 설명을 V2.5의 EP dispatch/combine에 그대로 적용하면 어떤 오류가 생기나요?",
+        "answerChecklist": [
+          "고정한 V2.5 구현은 공통 EPBuffer 경로이며 EP dispatch/combine에 SM을 사용합니다.",
+          "V1의 경로 특성과 현재 API의 동기화·자원 점유를 버전별로 구별해야 합니다."
+        ],
+        "requiredConcepts": [
+          "ep-routing-overhead"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "batch를 절반으로 줄였다는 사실만으로 계산 병목이 통신 병목으로 바뀌었다고 할 수 있나요?",
+        "answerChecklist": [
+          "균등한 단순 모형에서는 계산량과 payload가 함께 절반으로 줄어 비율이 같을 수 있습니다.",
+          "고정 지연·작은 GEMM 효율·부하·통신 겹침이 어떻게 달라졌는지를 실제로 측정해야 합니다."
+        ],
+        "requiredConcepts": [
+          "expert-parallelism"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "DeepEP V2.5 · 93eb6eb",
+        "href": "https://github.com/deepseek-ai/DeepEP/blob/93eb6eb238127e96c6d7a4a625a6dad158348509/README.md",
+        "problem": "크기와 지연 조건이 다른 MoE 교환",
+        "contribution": "공통 EPBuffer, count·완료·통신 자원 계약",
+        "assumptions": "모든 rank의 공통 용량과 지원 topology·dependency version",
+        "evidenceScope": "이 글에서는 공식 API와 README를 대조했으며 GPU benchmark는 수행하지 않음",
+        "notClaim": "V1의 normal/low-latency API와 zero-SM 설명을 이 commit에 일반화하지 않는다.",
+        "sectionId": "paper-deepep-current"
+      },
+      {
+        "title": "DeepSeek-V3 Technical Report",
+        "href": "https://arxiv.org/abs/2412.19437",
+        "problem": "MoE routing과 대규모 교환 비용",
+        "contribution": "node 제한 routing과 부하 균형·통신 계산 겹침",
+        "assumptions": "해당 모델의 topology·expert 배치와 workload",
+        "evidenceScope": "보고서의 학습·추론 구성에 대한 저자 측정",
+        "notClaim": "이 글의 64 expert·8GPU 수치는 설명용이며 V3의 실제 제품 구성을 옮긴 것이 아니다.",
+        "sectionId": "paper-deepseek-reading"
+      }
+    ]
   },
   "ai/launch-overhead-and-cpu-gpu-synchronization": {
     entryNote: "CUDA graph 의 capture·replay 계약과 stream 의 비동기 실행을 알고, decode step 의 kernel 수와 시간을 profiler 로 본 적이 있는 독자가 시작점입니다.",
@@ -65843,128 +69409,317 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/fast-weight-memory-and-chunkwise-recurrence": {
-    entryNote: "Linear attention 이 φ(K)ᵀV 를 고정 크기 상태로 누적한다는 것과 그 상태가 왜 정보를 잃는지(retrieval-compression tradeoff), 행렬곱의 결합·분배 성질을 알고 들어옵니다. Delta rule 의 쓰기 규칙과 chunkwise 병렬화는 이 글에서 처음 다룹니다.",
-    coreIdea: "Fast weight memory 는 outer product 로 key-value 를 눌러 담는 기억이고, delta rule 은 새 값을 쓰기 전에 지금 key 로 읽히는 값을 먼저 빼 겹쳐 쓰기를 교정하며, gate 는 그 교정이 못 하는 한꺼번에 지우기를 맡습니다. 이 오차 항이 상태 전체에 의존해 생기는 순차 의존성은 chunk 단위로 WY 표현·UT transform 을 써서 병렬 행렬곱으로 되돌릴 수 있고, 같은 문제를 O(log n) 단계로 푸는 일반 해법이 parallel prefix scan 입니다.",
-    assumedKnowledge: [
-      { id: "linear-attention-kernel-feature-map", role: "φ(K)ᵀV 재구성이 fast weight memory 로 읽히는 구체적 사례의 기준선입니다." },
-      { id: "recurrent-fixed-size-state", role: "고정 크기 d×d 상태로 누적된다는 사실이 이 글의 모든 기억 연산의 전제입니다." },
-      { id: "retrieval-compression-tradeoff", role: "겹쳐 쓰기가 정보를 잃는 일반 이유로, 이 글은 그 쓰기 자체를 고치는 규칙에 집중합니다." },
-      { id: "matrix-multiplication", role: "결합·분배 성질이 delta rule 재작성과 recurrent/parallel duality 양쪽의 근거입니다." },
-      { id: "rnn-state-transition", role: "한 step씩 이전 상태를 갱신하는 recurrent 계산의 기준선입니다." },
-      { id: "qwen36-delta-correction-update", role: "이 글의 gated delta rule 을 48-head 규모로 구체화한 production 사례입니다." },
-      { id: "qwen36-gated-deltanet-state", role: "이 글의 memory gate·decay 가 실제 model 에서 어떤 상태 크기로 구현되는지 보여 주는 사례입니다." },
+    "coreIdea": "두 쌍을 기억하겠습니다. key k₁=(1,0)의 값은 (2,0), k₂=(0.6,0.8)의 값은 (0,3)입니다. 네 숫자짜리 행렬에 둘을 넣으면 첫 key를 읽을 때 원래 없던 1.8이 함께 나옵니다. 이 글은 그 간섭을 확인하고 같은 key의 값을 (5,0)으로 고칩니다. 수정 규칙을 이해한 뒤, 토큰을 하나씩 처리하는 계산을 여러 개씩 병렬로 바꾸는 방법과 2026년 Gated DeltaNet-2의 독립 erase/write를 연결합니다.",
+    "entryNote": "본문의 작은 숫자는 원리를 검산하기 위한 가정입니다. 공식 논문과 코드의 버전을 고정하고, 저자 실험과 이 글의 산술 검산을 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "linear-attention-kernel-feature-map",
+        "role": "φ(K)ᵀV 재구성이 fast weight memory 로 읽히는 구체적 사례의 기준선입니다."
+      },
+      {
+        "id": "recurrent-fixed-size-state",
+        "role": "고정 크기 d×d 상태로 누적된다는 사실이 이 글의 모든 기억 연산의 전제입니다."
+      },
+      {
+        "id": "retrieval-compression-tradeoff",
+        "role": "겹쳐 쓰기가 정보를 잃는 일반 이유로, 이 글은 그 쓰기 자체를 고치는 규칙에 집중합니다."
+      },
+      {
+        "id": "matrix-multiplication",
+        "role": "결합·분배 성질이 delta rule 재작성과 recurrent/parallel duality 양쪽의 근거입니다."
+      },
+      {
+        "id": "rnn-state-transition",
+        "role": "한 step씩 이전 상태를 갱신하는 recurrent 계산의 기준선입니다."
+      },
+      {
+        "id": "qwen36-delta-correction-update",
+        "role": "이 글의 gated delta rule을 48-head 규모로 구체화한 production 사례입니다."
+      },
+      {
+        "id": "qwen36-gated-deltanet-state",
+        "role": "이 글의 memory gate·decay가 실제 model에서 어떤 상태 크기로 구현되는지 보여 주는 사례입니다."
+      }
     ],
-    introducedHere: [
-      { id: "associative-memory-outer-product", role: "Outer product 로 key-value 를 눌러 담는 기억 연산과 겹쳐 쓰기 간섭을 수치로 보입니다." },
-      { id: "fast-weight-programmer", role: "Slow network 가 fast weight 를 프로그래밍하는 구도를 정의합니다." },
-      { id: "delta-rule-error-correction", role: "새 값을 쓰기 전에 예측 오차만 남기는 쓰기 규칙과 그 재작성을 유도합니다." },
-      { id: "memory-gate-decay", role: "상태 전체를 한꺼번에 지우는 decay 계수와 delta rule 의 표적 수정을 구분합니다." },
-      { id: "recurrent-parallel-duality", role: "같은 갱신식이 recurrent·parallel 두 형태로 계산될 수 있다는 사실을 보입니다." },
-      { id: "chunkwise-parallel-form", role: "Chunk 단위로 두 형태를 절충하는 알고리즘과 FLOP·순차 단계 교환을 계산합니다." },
-      { id: "parallel-prefix-scan", role: "같은 순차-병렬 문제를 O(log n) 단계로 푸는 일반 알고리즘과 chunkwise 형태의 차이를 밝힙니다." },
+    "introducedHere": [
+      {
+        "id": "associative-memory-outer-product",
+        "role": "값과 key의 외적을 더한 행렬은 key와 겹치는 성분을 읽어냅니다."
+      },
+      {
+        "id": "fast-weight-programmer",
+        "role": "고정된 모델 parameter가 새 key·value·gate를 만들고 문맥별 기억 행렬을 고칩니다."
+      },
+      {
+        "id": "delta-rule-error-correction",
+        "role": "현재 읽기를 목표에서 빼고 그 차이만 해당 key 방향으로 씁니다."
+      },
+      {
+        "id": "memory-gate-decay",
+        "role": "먼저 남길 기존 상태를 정한 뒤 그 상태의 읽기에 대해 쓰기 오차를 구합니다."
+      },
+      {
+        "id": "recurrent-parallel-duality",
+        "role": "시간 순서의 갱신을 같은 의존성을 보존하는 연립식으로 다시 표현할 수 있습니다."
+      },
+      {
+        "id": "chunkwise-parallel-form",
+        "role": "한 묶음 안의 correction을 삼각 계산으로 만들고 묶음 사이에 상태를 넘깁니다."
+      },
+      {
+        "id": "parallel-prefix-scan",
+        "role": "결합법칙이 있는 연산은 트리로 묶어 병렬 계산할 수 있습니다."
+      },
+      {
+        "id": "independent-memory-erase-write",
+        "role": "기존 기억에서 지울 key축 성분과 새로 쓸 value축 성분을 다른 gate로 정합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "associative-memory-outer-product",
-        sectionId: "associative-memory",
-        intuition: "여러 사람의 이름표와 답을 같은 칠판에 겹쳐 적어 두고, 이름을 대면 그 칠판 전체에서 비슷한 이름표들의 답이 섞여 나오는 것과 같습니다.",
-        workedExample: "k₁=(1,0,0,0), v₁=(2,0,0,0)과 k₂=(0.6,0.8,0,0), v₂=(0,3,0,0)을 눌러 담으면 k₁ 로 읽은 값이 (2,0,0,0)이 아니라 (2,1.8,0,0)으로 v₂ 의 조각이 섞여 나옵니다.",
-        boundary: "Key 들이 완전히 직교하면 섞임이 사라지지만, 저장하는 key 수가 차원보다 많아지면 직교를 보장할 수 없습니다.",
+        "id": "associative-memory-outer-product",
+        "sectionId": "case",
+        "intuition": "값과 key의 외적을 더한 행렬은 key와 겹치는 성분을 읽어냅니다.",
+        "workedExample": "M=[[2,0],[1.8,2.4]]에 k₁=(1,0)을 곱하면 (2,1.8)입니다. 1.8은 두 번째 값 3에 key 내적 0.6이 곱해진 간섭입니다.",
+        "boundary": "key가 직교하지 않으면 다른 기억이 섞입니다. 고정 크기 저장이 무손실 기억을 보장하지 않습니다."
       },
       {
-        id: "fast-weight-programmer",
-        sectionId: "associative-memory",
-        intuition: "느린 설계자가 규칙을 한 번 정해 두고, 그 규칙에 따라 매 순간 빠르게 바뀌는 메모지에 내용을 적고 지우는 실무자를 따로 두는 구도입니다.",
-        workedExample: "Linear attention 에서 φ(K), V 를 내보내는 것이 slow network 의 역할이고 φ(K)ᵀV 로 누적된 행렬이 fast weight 입니다.",
-        boundary: "이 구도 자체는 1990년대 fast weight controller 문헌에서 먼저 나왔고, linear attention 과의 대응은 2021년에야 명시됐습니다.",
+        "id": "fast-weight-programmer",
+        "sectionId": "names",
+        "intuition": "고정된 모델 parameter가 새 key·value·gate를 만들고 문맥별 기억 행렬을 고칩니다.",
+        "workedExample": "네 숫자짜리 2×2 상태에 두 쌍을 기록한 뒤 같은 k₁의 목표를 (2,0)에서 (5,0)으로 바꿉니다.",
+        "boundary": "forward 상태 갱신을 모든 parameter의 추론 중 gradient 학습으로 해석하지 않습니다."
       },
       {
-        id: "delta-rule-error-correction",
-        sectionId: "delta-rule",
-        intuition: "칠판에 새 답을 적기 전에 지금 그 이름으로 이미 적혀 있는 답을 지우개로 지우고 그 자리에만 새로 쓰는 것과 같습니다.",
-        workedExample: "k₁ 의 값을 (2,1.8,0,0)에서 목표 (5,0,0,0)으로 바꿀 때 β=1이면 차이 (3,−1.8,0,0)만 k₁ 방향으로 써서 k₁ 로 다시 읽으면 정확히 (5,0,0,0)이 나옵니다.",
-        boundary: "k₁ 과 직교하지 않는 다른 key(k₂)의 읽기 값도 이 correction 의 일부(0.6배)만큼 함께 바뀝니다.",
+        "id": "delta-rule-error-correction",
+        "sectionId": "mechanism",
+        "intuition": "현재 읽기를 목표에서 빼고 그 차이만 해당 key 방향으로 씁니다.",
+        "workedExample": "(5,0)−(2,1.8)=(3,−1.8)을 써서 새 M=[[5,0],[0,2.4]]를 얻습니다.",
+        "boundary": "같은 단위 key는 목표를 읽지만 다른 k₂는 (3,1.92)로 바뀝니다. 다른 기억까지 모두 보존하지 않습니다."
       },
       {
-        id: "memory-gate-decay",
-        sectionId: "memory-gate",
-        intuition: "지우개로 이름 하나만 지우는 것과 칠판 전체를 물로 씻어 흐리게 만드는 것을 상황에 따라 골라 쓰는 것과 같습니다.",
-        workedExample: "α=0.1을 곱하면 k₁ 방향의 (2,1.8,0,0)이 (0.2,0.18,0,0)으로 거의 지워진 뒤에 delta rule 의 새 값이 더해집니다.",
-        boundary: "α=1이면 이 식은 순수 delta rule 로, β=0이면 decay 만 있는 상태로 정확히 되돌아갑니다.",
+        "id": "memory-gate-decay",
+        "sectionId": "mechanism",
+        "intuition": "먼저 남길 기존 상태를 정한 뒤 그 상태의 읽기에 대해 쓰기 오차를 구합니다.",
+        "workedExample": "α=0.1이면 이전 읽기 (2,1.8)이 (0.2,0.18)이 됩니다. 그 후 목표 (5,0)에서 이 값을 빼야 합니다.",
+        "boundary": "decay 전의 읽기를 빼면 다른 갱신식이 됩니다. key축·value축과 gate의 적용 순서를 고정해야 합니다."
       },
       {
-        id: "recurrent-parallel-duality",
-        sectionId: "chunkwise-scan",
-        intuition: "같은 계산을 한 사람이 순서대로 처리하거나 여러 사람이 나눠서 한 번에 처리할 수 있는 것과 같습니다. 결과는 같고 걸리는 시간과 필요한 자원만 다릅니다.",
-        workedExample: "학습은 전체 시퀀스가 미리 주어지므로 parallel 형태의 행렬곱으로 GPU 를 채우고, 추론은 다음 token 이 아직 없어 recurrent 형태로 한 step씩 진행합니다.",
-        boundary: "두 형태가 항상 같은 계산 비용은 아닙니다. Delta rule 처럼 오차 항이 이전 상태 전체에 의존하면 parallel 형태를 그대로 쓸 수 없습니다.",
+        "id": "recurrent-parallel-duality",
+        "sectionId": "mechanism",
+        "intuition": "시간 순서의 갱신을 같은 의존성을 보존하는 연립식으로 다시 표현할 수 있습니다.",
+        "workedExample": "초기 기억이 0이고 β=1인 두 token에서 u₁=(2,0), u₂=(−1.2,3)이고 u₂+0.6u₁=(0,3)입니다.",
+        "boundary": "순서를 무시한 외적 합과 delta update는 같지 않습니다. gate와 초기 상태가 있으면 해당 항도 포함합니다."
       },
       {
-        id: "chunkwise-parallel-form",
-        sectionId: "chunkwise-scan",
-        intuition: "긴 줄을 한 명씩 처리하는 대신 소규모 조로 나눠 조 안에서는 동시에 처리하고, 조와 조 사이에서만 순서를 지키는 방식입니다.",
-        workedExample: "L=4096, C=64, d=128이면 chunk 안 계산 L·C·d≈3.355×10⁷과 chunk 사이 상태 갱신 L·d²≈6.711×10⁷을 더해 약 1.007×10⁸로, 계산은 정확히 C/d=50% 늘지만 순차 대기는 4096에서 64로 줄어듭니다.",
-        boundary: "Chunk 크기 C 를 계속 키우면 순차 대기는 더 줄지만 chunk 안 계산(L·C·d 항)이 늘어 어느 지점부터 이득이 줄어듭니다.",
+        "id": "chunkwise-parallel-form",
+        "sectionId": "mechanism",
+        "intuition": "한 묶음 안의 correction을 삼각 계산으로 만들고 묶음 사이에 상태를 넘깁니다.",
+        "workedExample": "4096개 token을 64개씩 묶으면 chunk 간 상태 전달은 64회입니다. 식은 (I+L)U=diag(β)V입니다.",
+        "boundary": "chunk 내부 연산과 동기화도 남습니다. 전달 횟수가 줄었다고 실행시간이 같은 배율로 줄지는 않습니다."
       },
       {
-        id: "parallel-prefix-scan",
-        sectionId: "prefix-scan",
-        intuition: "n 개를 한 줄로 세워 하나씩 누적하는 대신, 두 개씩 짝지어 트리 위로 합쳤다가 다시 트리 아래로 정확한 값을 내려보내는 것과 같습니다.",
-        workedExample: "n=64면 log₂64=6이라 up-sweep 6단계와 down-sweep 6단계를 더해 12단계로 끝나, 순차 64단계보다 약 5.3배 적은 병렬 단계가 필요합니다.",
-        boundary: "DeltaNet 의 chunkwise 알고리즘은 이 트리 scan 을 그대로 쓰지 않고 C×C 하삼각행렬 역행렬로 같은 문제를 다르게 풉니다.",
+        "id": "parallel-prefix-scan",
+        "sectionId": "limits",
+        "intuition": "결합법칙이 있는 연산은 트리로 묶어 병렬 계산할 수 있습니다.",
+        "workedExample": "64개 합의 up/down sweep은 각각 6단계지만 delta kernel에는 상태 갱신과 triangular solve 비용이 더 있습니다.",
+        "boundary": "일반 합의 scan 깊이를 실제 delta 구현의 지연으로 대체하지 않습니다."
       },
+      {
+        "id": "independent-memory-erase-write",
+        "sectionId": "comparison",
+        "intuition": "기존 기억에서 지울 key축 성분과 새로 쓸 value축 성분을 다른 gate로 정합니다.",
+        "workedExample": "erase=(0.25,1), write=(0.5,1)일 때 correction=(2,−0.45)이고 첫 key의 읽기는 (4,1.35)입니다.",
+        "boundary": "scalar β=0.5의 결과 (3.5,0.9)와 다릅니다. 독립 gate가 모든 과제의 개선이나 간섭 제거를 보장하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 기억", relation: "Outer product 로 key-value 를 눌러 담고, 그 구도를 slow/fast network 로 구분합니다.", concepts: ["associative-memory-outer-product", "fast-weight-programmer"] },
-      { label: "01 교정", relation: "새 값을 쓰기 전에 예측 오차만 남겨 겹쳐 쓰기를 고칩니다.", concepts: ["delta-rule-error-correction"] },
-      { label: "02 삭제", relation: "상태 전체를 한꺼번에 지우는 decay 계수를 delta rule 과 함께 씁니다.", concepts: ["memory-gate-decay"] },
-      { label: "03 이중성·chunk", relation: "같은 갱신식의 recurrent·parallel 형태를 chunk 단위로 절충합니다.", concepts: ["recurrent-parallel-duality", "chunkwise-parallel-form"] },
-      { label: "04 scan", relation: "같은 순차-병렬 문제를 O(log n) 단계로 푸는 일반 해법과 비교합니다.", concepts: ["parallel-prefix-scan"] },
-    ],
-    exercises: [
-      { level: "basic", question: "k₁=(1,0,0,0), v₁=(2,0,0,0), k₂=(0.6,0.8,0,0), v₂=(0,3,0,0)을 M=v₁k₁ᵀ+v₂k₂ᵀ 로 눌러 담았을 때 M k₁ 을 계산하세요.", answerChecklist: ["M k₁=(k₁·k₁)v₁+(k₁·k₂)v₂", "=1·(2,0,0,0)+0.6·(0,3,0,0)", "=(2,1.8,0,0)"], requiredConcepts: ["associative-memory-outer-product"], sectionId: "associative-memory" },
-      { level: "basic", question: "순수 덧셈으로만 기억을 쓰면 왜 이미 쓴 key-value association 을 지우거나 고칠 수 없는지 설명하세요.", answerChecklist: ["새 값이 옛 값 위에 더해질 뿐", "빼는 연산이 없어 대체 불가"], requiredConcepts: ["associative-memory-outer-product", "fast-weight-programmer"], sectionId: "associative-memory" },
-      { level: "basic", question: "위 M에서 k₁ 의 값을 β=1 delta rule 로 목표값 (5,0,0,0)으로 바꾼 뒤, k₁ 로 다시 읽은 값이 정확히 (5,0,0,0)이 되는 이유를 한 문장으로 설명하세요.", answerChecklist: ["k₁이 단위벡터라 k₁·k₁=1", "M'k₁=Mk₁+(v_new−Mk₁)·1=v_new"], requiredConcepts: ["delta-rule-error-correction"], sectionId: "delta-rule" },
-      { level: "basic", question: "Gated delta rule 의 α_t 와 β_t 가 각각 무엇에 곱해지는지, 다루는 범위가 왜 다른지 설명하세요.", answerChecklist: ["α_t 는 상태 전체(모든 key 방향)", "β_t 는 k_t 한 방향만", "α→0 전체 삭제, β 는 표적 수정"], requiredConcepts: ["memory-gate-decay"], sectionId: "memory-gate" },
-      { level: "basic", question: "L=4096, C=64일 때 chunkwise parallel form 이 줄이는 순차 대기 단계 수를 계산하세요.", answerChecklist: ["L/C=4096/64=64", "4096에서 64로, 64배 감소"], requiredConcepts: ["chunkwise-parallel-form", "recurrent-parallel-duality"], sectionId: "chunkwise-scan" },
-      { level: "basic", question: "n=64인 parallel prefix scan 이 필요한 up-sweep·down-sweep 총 단계 수를 계산하고 순차 64단계와 비교하세요.", answerChecklist: ["log₂64=6", "up+down=12단계", "64/12≈5.3배 감소"], requiredConcepts: ["parallel-prefix-scan"], sectionId: "prefix-scan" },
-      { level: "advanced", question: "S_t=S_{t-1}(I−β_t k_t k_tᵀ)+β_t v_t k_tᵀ 를 S_t=S_{t-1}+β_t(v_t−S_{t-1}k_t)k_tᵀ 로 다시 쓰는 과정을 분배법칙을 이용해 유도하세요.", answerChecklist: ["S_{t-1}−β_t S_{t-1}k_t k_tᵀ+β_t v_t k_tᵀ", "공통 인수 k_tᵀ로 묶음", "S_{t-1}+β_t(v_t−S_{t-1}k_t)k_tᵀ"], requiredConcepts: ["delta-rule-error-correction"], sectionId: "delta-rule" },
-      { level: "advanced", question: "L=4096, C=64, d=128일 때 chunkwise 형태의 총 연산량(LCd+Ld²)과 순수 recurrent 형태의 연산량(Ld²)을 각각 계산하고 그 비율을 구하세요.", answerChecklist: ["LCd=3.355×10⁷", "Ld²=6.711×10⁷", "chunkwise 합 약 1.007×10⁸", "비율 정확히 C/d=0.5, 즉 50% 증가"], requiredConcepts: ["chunkwise-parallel-form"], sectionId: "chunkwise-scan" },
-      { level: "advanced", question: "Gated delta rule 식에서 α_t=1일 때와 β_t=0일 때 각각 어떤 식으로 되돌아가는지 쓰세요.", answerChecklist: ["α_t=1: 순수 delta rule", "β_t=0: S_t=α_t S_{t-1}, decay만 남음"], requiredConcepts: ["memory-gate-decay", "delta-rule-error-correction"], sectionId: "memory-gate" },
-      { level: "advanced", question: "Recurrent/parallel duality 가 일반적으로 성립하는 것과, delta rule 이 그 병렬 형태를 바로 못 쓰는 이유가 무엇이 다른지 설명하세요.", answerChecklist: ["duality는 계산 형태의 등가성", "delta rule 오차 항이 S_{t-1} 전체에 의존", "표준 linear attention은 그런 의존 없음"], requiredConcepts: ["recurrent-parallel-duality", "delta-rule-error-correction"], sectionId: "chunkwise-scan" },
-    ],
-    papers: [
+    "conceptStages": [
       {
-        title: "Linear Transformers Are Secretly Fast Weight Programmers",
-        href: "https://arxiv.org/abs/2102.11174",
-        problem: "선형화된 attention 이 key-value 연관을 순수 덧셈으로 누적해 서로 다른 연관이 겹쳐 쓰여 손실되는 문제",
-        contribution: "Linear attention 과 1990년대 fast weight programmer 의 수학적 대응을 밝히고, 겹쳐 쓰기 전에 오차만 남기는 delta rule 변형을 제안합니다.",
-        assumptions: "기계번역·언어모델링 실험이며 kernel feature map 선택에 따라 결과가 달라질 수 있습니다.",
-        evidenceScope: "성능 비교는 저자 자기보고이며 제안된 kernel·delta rule 조합에 한정됩니다.",
-        notClaim: "이 delta rule 이 모든 key 조합에서 간섭을 완전히 없앤다는 뜻은 아니며, 직교하지 않는 key 사이의 누출은 남습니다.",
-        sectionId: "paper-schlag",
+        "label": "첫 key를 읽으면 (2, 1.8)이 나온다",
+        "relation": "값과 key의 외적을 더한 행렬은 key와 겹치는 성분을 읽어냅니다.",
+        "concepts": [
+          "associative-memory-outer-product"
+        ]
       },
       {
-        title: "Parallelizing Linear Transformers with the Delta Rule over Sequence Length",
-        href: "https://arxiv.org/abs/2406.06484",
-        problem: "Delta rule 의 오차 항이 이전 상태 전체에 의존해 표준 linear attention 처럼 시퀀스 길이에 걸쳐 병렬화할 수 없는 문제",
-        contribution: "WY 표현과 UT transform 으로 delta rule 의 순차 recurrence 를 chunk 단위 행렬곱으로 재구성하는 하드웨어 효율적 알고리즘을 제시합니다.",
-        assumptions: "1.3B 파라미터 모델, 100B token 학습, H100 GPU, chunk 크기 64~128 기준입니다.",
-        evidenceScope: "Recurrent 형태 대비 4~16배 속도와 Mamba·GLA 대비 perplexity 우위는 저자 측정이며 head 차원·chunk 크기 조합에 따라 달라집니다.",
-        notClaim: "모든 하드웨어·시퀀스 길이에서 같은 배율의 속도 향상이 나온다는 뜻은 아닙니다.",
-        sectionId: "paper-deltanet-parallel",
+        "label": "Fast weight는 매 문맥에서 바뀌는 기억 행렬이다",
+        "relation": "고정된 모델 parameter가 새 key·value·gate를 만들고 문맥별 기억 행렬을 고칩니다.",
+        "concepts": [
+          "fast-weight-programmer"
+        ]
       },
       {
-        title: "Gated Delta Networks: Improving Mamba2 with Delta Rule",
-        href: "https://arxiv.org/abs/2412.06464",
-        problem: "Delta rule 만으로는 문맥 전환처럼 다수의 기억을 한꺼번에 지워야 하는 상황에서 빠른 삭제가 되지 않는 문제",
-        contribution: "Mamba2 의 data-dependent decay gate 와 delta rule 을 결합한 gated delta rule 과 그 chunkwise 병렬 학습 알고리즘을 제시합니다.",
-        assumptions: "1.3B 파라미터 모델 기준이며 언어모델링·검색·길이 외삽 벤치마크로 평가했습니다.",
-        evidenceScope: "Perplexity·S-NIAH retrieval 수치는 저자 자기보고이며 Mamba2·DeltaNet 과의 비교도 같은 저자 실험 범위입니다.",
-        notClaim: "모든 retrieval 시나리오에서 순수 DeltaNet 보다 낫다는 뜻은 아니며, 논문 자체도 노이즈 없는 S-NIAH 에서는 DeltaNet 이 더 높은 수치를 보였다고 보고합니다.",
-        sectionId: "paper-gated-deltanet",
+        "label": "의존성을 작은 삼각 연립방정식으로 묶는다",
+        "relation": "현재 읽기를 목표에서 빼고 그 차이만 해당 key 방향으로 씁니다. 먼저 남길 기존 상태를 정한 뒤 그 상태의 읽기에 대해 쓰기 오차를 구합니다. 시간 순서의 갱신을 같은 의존성을 보존하는 연립식으로 다시 표현할 수 있습니다. 한 묶음 안의 correction을 삼각 계산으로 만들고 묶음 사이에 상태를 넘깁니다.",
+        "concepts": [
+          "delta-rule-error-correction",
+          "memory-gate-decay",
+          "recurrent-parallel-duality",
+          "chunkwise-parallel-form"
+        ]
       },
+      {
+        "label": "GDN2는 지울 성분과 쓸 성분을 다른 축에서 조절한다",
+        "relation": "기존 기억에서 지울 key축 성분과 새로 쓸 value축 성분을 다른 gate로 정합니다.",
+        "concepts": [
+          "independent-memory-erase-write"
+        ]
+      },
+      {
+        "label": "같은 key의 수정과 전체 기억 보존은 다른 조건이다",
+        "relation": "결합법칙이 있는 연산은 트리로 묶어 병렬 계산할 수 있습니다.",
+        "concepts": [
+          "parallel-prefix-scan"
+        ]
+      }
     ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "M=[[2,0],[1.8,2.4]]에서 첫 key (1,0)을 읽으면 왜 두 번째 성분이 1.8인가요?",
+        "answerChecklist": [
+          "읽기 결과는 행렬의 첫 열인 (2,1.8)입니다.",
+          "다른 key와의 내적 0.6에 그 값의 두 번째 성분 3이 곱해져 간섭 1.8이 생깁니다."
+        ],
+        "requiredConcepts": [
+          "associative-memory-outer-product"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "첫 key의 새 목표 (5,0)을 그냥 더하면 어떤 잘못된 읽기가 생기나요?",
+        "answerChecklist": [
+          "기존 읽기 (2,1.8)에 새 값이 더해져 (7,1.8)이 됩니다.",
+          "대체하려면 현재 읽기를 먼저 빼 오차 (3,−1.8)을 써야 합니다."
+        ],
+        "requiredConcepts": [
+          "associative-memory-outer-product"
+        ],
+        "sectionId": "need"
+      },
+      {
+        "level": "basic",
+        "question": "첫 key를 (5,0)으로 고친 뒤 두 번째 key (0.6,0.8)의 읽기를 계산해 보세요.",
+        "answerChecklist": [
+          "새 행렬은 [[5,0],[0,2.4]]입니다.",
+          "행렬과 두 번째 key를 곱하면 (3,1.92)이며 다른 기억도 바뀌었습니다."
+        ],
+        "requiredConcepts": [
+          "associative-memory-outer-product"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "이 사례의 fast weight와 학습이 끝난 고정 parameter는 어떻게 다른가요?",
+        "answerChecklist": [
+          "2×2 기억 행렬은 새 문맥과 token을 따라 forward 중에 갱신됩니다.",
+          "고정 parameter는 key·value·gate를 만드는 규칙이며 이 상태 갱신만으로 전부 재학습되는 것은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "fast-weight-programmer"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "기존 읽기 (2,1.8)에 decay 0.1을 먼저 적용하면 어떤 값을 목표에서 빼나요?",
+        "answerChecklist": [
+          "줄어든 상태의 읽기는 (0.2,0.18)입니다.",
+          "목표 (5,0)에서 이 값을 빼야 하며 decay 전 읽기를 쓰면 다른 갱신이 됩니다."
+        ],
+        "requiredConcepts": [
+          "delta-rule-error-correction",
+          "memory-gate-decay"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "4096개 token을 64개씩 묶으면 chunk 사이 상태 전달은 몇 번인가요?",
+        "answerChecklist": [
+          "묶음 수는 4096/64=64개입니다.",
+          "chunk 내부 계산과 동기화가 남으므로 이것만으로 64배 가속을 주장할 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "delta-rule-error-correction",
+          "memory-gate-decay"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "초기 기억 0인 두 token의 correction 식에서 I−L이 아니라 I+L인 이유를 유도하세요.",
+        "answerChecklist": [
+          "u₂=v₂−0.6u₁의 이전 항을 좌변으로 옮기면 u₂+0.6u₁=v₂입니다.",
+          "양의 lower 항을 L로 정의하면 (I+L)U=diag(β)V이며 L의 정의와 부호를 함께 고정해야 합니다."
+        ],
+        "requiredConcepts": [
+          "delta-rule-error-correction",
+          "memory-gate-decay"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "erase=(0.25,1)·write=(0.5,1)일 때 같은 첫 key의 갱신 결과를 구해 보세요.",
+        "answerChecklist": [
+          "지울 읽기는 (0.5,0.45), 쓸 값은 (2.5,0)이므로 correction은 (2,−0.45)입니다.",
+          "기존 (2,1.8)에 더하면 (4,1.35)로 scalar β=0.5의 (3.5,0.9)와 다릅니다."
+        ],
+        "requiredConcepts": [
+          "independent-memory-erase-write"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "같은 상태에서 erase=0·write=1이면 왜 기억 대체가 아니라 덧셈이 되나요?",
+        "answerChecklist": [
+          "지울 읽기가 0이므로 목표 (5,0) 전체가 correction이 됩니다.",
+          "기존 읽기와 합쳐 (7,1.8)이 되며 옛 값과 간섭이 남습니다."
+        ],
+        "requiredConcepts": [
+          "associative-memory-outer-product"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "64개 합의 scan 깊이 6을 delta kernel의 실제 실행 지연으로 사용할 수 있나요?",
+        "answerChecklist": [
+          "scan 깊이는 결합법칙이 있는 일반 연산을 묶는 추상 단계 수입니다.",
+          "delta kernel의 state 갱신·삼각 계산·메모리·동기화 비용을 포함한 GPU 측정이 추가로 필요합니다."
+        ],
+        "requiredConcepts": [
+          "parallel-prefix-scan"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Parallelizing Linear Transformers with the Delta Rule · 2024",
+        "href": "https://arxiv.org/abs/2406.06484",
+        "problem": "상태 의존적인 delta update의 병렬화",
+        "contribution": "순차 correction을 chunk별 삼각 계산과 행렬곱으로 바꿈",
+        "assumptions": "state와 key/value의 축 및 gate를 동일하게 유지",
+        "evidenceScope": "원 논문의 모델 크기·token budget·GPU 조건의 저자 실험",
+        "notClaim": "단순 prefix sum은 교환 가능한 합의 사례다. delta update를 같은 스캔 코드로 바꿀 수 있다는 뜻은 아니다.",
+        "sectionId": "paper-delta-reading"
+      },
+      {
+        "title": "Gated DeltaNet-2 · arXiv 2605.22791v1",
+        "href": "https://arxiv.org/html/2605.22791v1",
+        "problem": "하나의 scalar gate가 지우기와 쓰기를 함께 제한",
+        "contribution": "key축 erase와 value축 write 분리",
+        "assumptions": "상태 배치와 gate 축, fp32 decay·누적 조건",
+        "evidenceScope": "1.3B, FineWeb-Edu 100B token, 학습 길이 4K, recurrent·hybrid 비교의 저자 실험",
+        "notClaim": "표의 순위는 그 조건의 결과다. 고정 크기 상태가 임의 길이의 정보를 무손실 저장하는 보장은 아니다.",
+        "sectionId": "paper-gdn2"
+      }
+    ]
   },
   "ai/llm-evaluation-criteria-and-methods": {
     entryNote: "Prompt 의 parse→schema→domain validation ladder 와 실패 trace 를 versioned case 로 만드는 evaluation regression loop 를 안다고 가정합니다. 그 위에 criteria·metric·비교 방식이라는 평가 자체의 어휘를 놓습니다.",
@@ -67961,137 +71716,319 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/reward-design-for-verifiable-rl": {
-    entryNote: "앞 글의 policy gradient·credit assignment를 이미 안다고 가정하고, 그 return을 만드는 reward 자체를 무엇으로 어떻게 설계할지로 넘어갑니다.",
-    coreIdea: "Reward 설계는 검증 가능성(RLVR·verifiable task)부터 정하고, 그 reward를 언제(sparse/dense) 무엇을(outcome/process) 채점할지 고른 뒤, 그 선택이 실제 목표와 어긋나는 proxy가 되지 않는지(reward hacking)와 값 형태·척도(binary/continuous·calibration)가 일관되는지를 확인하는 순서로 이뤄집니다.",
-    assumedKnowledge: [
-      { id: "rl-mdp-and-return", role: "Reward를 누적한 return의 정의가 이 글이 설계하는 reward 자체의 재료입니다." },
-      { id: "credit-assignment-problem", role: "Return의 신호 희석 문제가 sparse/dense·reward shaping 설계의 동기입니다." },
-      { id: "reward-model", role: "RLHF의 scalar reward model이 outcome/process reward 축을 대비할 기준점입니다." },
+    "coreIdea": "정답 여부를 별도로 확인한 답 100개가 있습니다. 실제 정답 40개 중 채점기는 38개를 통과시켰고 오답 60개 중에서도 12개를 통과시켰습니다. 점수 1인 답은 50개이지만 모두 정답은 아닙니다. 이 글은 이 채점 결과가 학습 신호로 바뀌는 길을 추적합니다. 최종 답과 중간 과정을 어디서 확인하는지, 보상을 자주 주는 선택이 왜 도움이 되거나 실패하는지, 2026년 과정 검증 논문이 어떤 범위에서 성립하는지 살펴봅니다.",
+    "entryNote": "본문의 작은 숫자는 원리를 검산하기 위한 가정입니다. 공식 논문과 코드의 버전을 고정하고, 저자 실험과 이 글의 산술 검산을 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "rl-mdp-and-return",
+        "role": "Reward를 누적한 return의 정의가 이 글이 설계하는 reward 자체의 재료입니다."
+      },
+      {
+        "id": "credit-assignment-problem",
+        "role": "Return의 신호 희석 문제가 sparse/dense·reward shaping 설계의 동기입니다."
+      },
+      {
+        "id": "reward-model",
+        "role": "RLHF의 scalar reward model이 outcome/process reward 축을 대비할 기준점입니다."
+      },
+      {
+        "id": "precision-recall-prevalence",
+        "role": "통과 답과 실제 정답이라는 서로 다른 분모를 구분합니다."
+      }
     ],
-    introducedHere: [
-      { id: "rlvr-verifiable-task", role: "자동 검증 가능한 task와 그 결과를 reward로 쓰는 RLVR을 정의합니다." },
-      { id: "sparse-vs-dense-reward", role: "Reward를 언제 주는지의 축과 학습 속도 차이를 정의합니다." },
-      { id: "outcome-vs-process-reward", role: "Reward가 무엇을 채점하는지의 독립적인 축을 정의합니다." },
-      { id: "reward-hacking-and-specification-gaming", role: "Proxy reward 최적화가 true objective에서 멀어지는 현상과 원인을 정의합니다." },
-      { id: "reward-shaping", role: "Optimal policy를 보존하면서 신호를 앞당기는 potential-based 형태를 정의합니다." },
-      { id: "binary-vs-continuous-reward", role: "Reward의 값 형태 축을 값 형태·outcome/process·sparse/dense와 독립적으로 정의합니다." },
-      { id: "reward-calibration", role: "서로 다른 reward 원천의 척도를 맞추는 절차를 정의합니다." },
+    "introducedHere": [
+      {
+        "id": "rlvr-verifiable-task",
+        "role": "자동으로 검사할 수 있는 규칙을 보상에 쓰되 검사기의 범위와 오류를 따로 확인합니다."
+      },
+      {
+        "id": "sparse-vs-dense-reward",
+        "role": "점수를 얼마나 자주 주는지에 따라 학습 신호가 행동에 얼마나 가까운지가 달라집니다."
+      },
+      {
+        "id": "outcome-vs-process-reward",
+        "role": "최종 결과를 검사하는지 중간 행동을 검사하는지를 구분합니다."
+      },
+      {
+        "id": "reward-hacking-and-specification-gaming",
+        "role": "최적화가 실제 목표보다 점수의 허점을 이용하면 관측 보상과 성공이 벌어집니다."
+      },
+      {
+        "id": "reward-shaping",
+        "role": "상태의 potential 차이를 더하면 조건에 따라 중간 신호를 주면서 경로 전체 목표를 유지할 수 있습니다."
+      },
+      {
+        "id": "binary-vs-continuous-reward",
+        "role": "점수가 0/1인지 정도를 나타내는지와 학습 가능한 상대 차이가 있는지를 따로 봅니다."
+      },
+      {
+        "id": "reward-calibration",
+        "role": "합산할 reward의 척도를 맞추고 점수가 실제 성공을 반영하는지도 별도로 검사합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "rlvr-verifiable-task",
-        sectionId: "rlvr",
-        intuition: "정답 여부를 사람 없이 프로그램으로 바로 확인할 수 있는 task에서는 그 확인 결과를 reward로 바로 쓸 수 있습니다.",
-        workedExample: "Code 생성 task에서 unit test 5개 중 5개 통과하면 reward 1, 하나라도 실패하면 0을 그대로 씁니다.",
-        boundary: "Verifier가 확인하지 못하는 중간 추론의 타당성이나 안전성은 RLVR reward에 반영되지 않습니다.",
+        "id": "rlvr-verifiable-task",
+        "sectionId": "source",
+        "intuition": "자동으로 검사할 수 있는 규칙을 보상에 쓰되 검사기의 범위와 오류를 따로 확인합니다.",
+        "workedExample": "정답 40개·오답 60개 중 통과는 38+12=50개입니다. 자동 통과율 50%는 실제 정답률 40%와 다릅니다.",
+        "boundary": "parser·정답 라벨·test가 틀릴 수 있습니다. 자동 채점만으로 참인 답을 완벽히 판정하지 못합니다."
       },
       {
-        id: "sparse-vs-dense-reward",
-        sectionId: "sparse-vs-dense",
-        intuition: "결과가 나올 때만 점수를 주는 것과 매 단계 진척을 채점하는 것은 학습 신호의 빈도가 다릅니다.",
-        workedExample: "6-station 경로에서 목표 도달만 +1인 sparse reward는 초기 rollout 대부분이 0으로 끝나지만, 진척 비율을 주는 dense reward는 S3까지만 가도 0.5를 남깁니다.",
-        boundary: "Dense reward의 중간 신호를 잘못 정의하면 policy가 실제 목표 대신 그 신호를 최적화하는 reward hacking 위험이 생깁니다.",
+        "id": "sparse-vs-dense-reward",
+        "sectionId": "need",
+        "intuition": "점수를 얼마나 자주 주는지에 따라 학습 신호가 행동에 얼마나 가까운지가 달라집니다.",
+        "workedExample": "여섯 행동 뒤 마지막 0 하나를 받는 경우와 [1,1,0,1,1,0] 여섯 값을 받는 경우는 오류 위치 정보가 다릅니다.",
+        "boundary": "자주 주는 신호가 정확하다는 보장은 없습니다. 잘못된 중간 점수는 잘못된 행동을 강화할 수 있습니다."
       },
       {
-        id: "outcome-vs-process-reward",
-        sectionId: "outcome-vs-process",
-        intuition: "최종 답만 보는 채점과 풀이 과정 각 단계를 보는 채점은 같은 결과에도 다른 점수를 줄 수 있습니다.",
-        workedExample: "10단계 풀이 중 3단계 계산이 틀렸는데 우연히 최종 답이 맞으면 outcome reward는 1이지만 process reward는 3단계에서 이미 낮은 점수를 매깁니다.",
-        boundary: "Process reward는 단계 채점 기준 자체를 사람이나 별도 model이 정해야 해 outcome reward보다 설계·주석 비용이 큽니다.",
+        "id": "outcome-vs-process-reward",
+        "sectionId": "comparison",
+        "intuition": "최종 결과를 검사하는지 중간 행동을 검사하는지를 구분합니다.",
+        "workedExample": "과정 검사 [1,1,0,1,1,0]을 합계 4로만 남기면 실패가 세 번째·여섯 번째였다는 정보가 사라집니다.",
+        "boundary": "과정 검사를 일부 시점에만 둘 수도 있습니다. outcome/process와 sparse/dense는 같은 분류가 아닙니다."
       },
       {
-        id: "reward-hacking-and-specification-gaming",
-        sectionId: "hacking",
-        intuition: "설계한 reward(proxy)를 열심히 높였는데 정작 원하던 진짜 목표는 그대로거나 나빠지는 상황입니다.",
-        workedExample: "거리 감소를 진척 reward로 정의했더니 policy가 실제 목표로 가지 않고 거리 계산만 속이는 위치에서 맴돕니다.",
-        boundary: "Reward accuracy나 proxy 점수가 높다는 사실만으로는 hacking이 없다는 증명이 되지 않고, true objective 기준 별도 검증이 필요합니다.",
+        "id": "reward-hacking-and-specification-gaming",
+        "sectionId": "picture",
+        "intuition": "최적화가 실제 목표보다 점수의 허점을 이용하면 관측 보상과 성공이 벌어집니다.",
+        "workedExample": "통과 답 50개 중 오답 12개가 반복 가능한 채점 허점이라면 그 출력 경로도 학습으로 강화될 수 있습니다.",
+        "boundary": "보상 증가만으로 허점 이용인지 진짜 개선인지 단정하지 않습니다. 독립 정답 검수와 실패 사례가 필요합니다."
       },
       {
-        id: "reward-shaping",
-        sectionId: "shaping",
-        intuition: "추가 reward 항을 아무렇게나 더하면 hacking 위험이 생기지만, 상태 potential의 차이로만 만들면 안전합니다.",
-        workedExample: "R'(s,a,s')=R(s,a,s')+γΦ(s')−Φ(s) 형태로 더하면 trajectory 전체를 합칠 때 중간 potential 항이 상쇄됩니다.",
-        boundary: "Φ가 episode 끝에서 항상 같은 값으로 고정되지 않으면 상쇄가 깨지고, Φ를 목표와 무관하게 고르면 optimal policy는 보존돼도 속도 이득은 사라질 수 있습니다.",
-        proofIdea: "임의의 policy에서 return을 전개하면 각 시점의 γΦ(s_{t+1})−Φ(s_t) 항이 telescoping sum으로 상쇄돼 시작 상태 potential과 끝 상태 potential의 차이만 남고, 이 차이는 모든 policy에서 같은 상수이므로 policy 사이의 return 순위(따라서 optimal policy)를 바꾸지 않습니다.",
-        counterexample: "Φ를 episode 끝에서 0으로 고정하지 않고 trajectory마다 다른 값으로 두면 telescoping이 깨져, shaping 이전에는 열등했던 policy가 shaping 이후 더 높은 return을 받아 optimal policy가 바뀔 수 있습니다.",
+        "id": "reward-shaping",
+        "sectionId": "mechanism",
+        "intuition": "상태의 potential 차이를 더하면 조건에 따라 중간 신호를 주면서 경로 전체 목표를 유지할 수 있습니다.",
+        "workedExample": "γ=1이고 potential이 0→0.5→0.2→0이면 추가 합은 0.5−0.3−0.2=0입니다.",
+        "boundary": "같은 할인율과 종료 조건이 필요합니다. 방문마다 +0.5를 주는 임의 점수는 순환으로 보상을 만들 수 있습니다."
       },
       {
-        id: "binary-vs-continuous-reward",
-        sectionId: "reward-shape-and-calibration",
-        intuition: "성공·실패만 구분하는 채점과 얼마나 성공했는지까지 재는 채점은 값의 해상도가 다릅니다.",
-        workedExample: "Unit test 전부 통과하면 binary reward는 1, 5개 중 3개만 통과하면 continuous reward는 0.6입니다.",
-        boundary: "값 형태가 연속적이라고 해서 다른 reward 원천과 척도가 자동으로 맞는 것은 아니며 별도 calibration이 필요합니다.",
+        "id": "binary-vs-continuous-reward",
+        "sectionId": "mechanism",
+        "intuition": "점수가 0/1인지 정도를 나타내는지와 학습 가능한 상대 차이가 있는지를 따로 봅니다.",
+        "workedExample": "[0,0,1,1]에서 평균을 빼면 [−0.5,−0.5,0.5,0.5]입니다. [1,1,1,1]에서는 모두 0입니다.",
+        "boundary": "같은 reward의 상대 advantage가 0이어도 KL 등 다른 loss는 남을 수 있습니다. 정규화는 trainer 설정을 확인합니다."
       },
       {
-        id: "reward-calibration",
-        sectionId: "reward-shape-and-calibration",
-        intuition: "서로 다른 채점 기준이 내는 값의 범위를 맞추지 않으면 범위가 큰 쪽이 학습을 사실상 독점합니다.",
-        workedExample: "Verifier A가 {0,1}만, verifier B가 0~100 원점수를 낼 때 그대로 더하면 B가 A보다 100배 큰 영향을 줘 0~1로 정규화한 뒤 합쳐야 합니다.",
-        boundary: "척도를 맞춰도 두 reward가 재는 대상 자체가 다르면 여전히 서로 다른 것을 채점하는 것이라는 사실은 calibration으로 해결되지 않습니다.",
-      },
+        "id": "reward-calibration",
+        "sectionId": "names",
+        "intuition": "합산할 reward의 척도를 맞추고 점수가 실제 성공을 반영하는지도 별도로 검사합니다.",
+        "workedExample": "형식 10점·정답 1점이면 형식만 맞는 오답이 형식을 어긴 정답보다 높은 점수를 받습니다. 통과 답의 정답 비율 38/50=76%도 별도로 검수합니다.",
+        "boundary": "척도 조정만으로 verifier 오류가 사라지지 않습니다. 100개 표본의 관측 비율도 모든 분포의 고정 상수로 쓰지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 재료", relation: "Return과 credit assignment, RLHF의 reward model을 전제합니다.", concepts: ["rl-mdp-and-return", "credit-assignment-problem", "reward-model"] },
-      { label: "01 검증 가능성", relation: "자동 검증 가능한 task와 그 reward를 정의합니다.", concepts: ["rlvr-verifiable-task"] },
-      { label: "02 시점과 대상", relation: "언제 주는지와 무엇을 채점하는지의 두 독립 축을 나눕니다.", concepts: ["sparse-vs-dense-reward", "outcome-vs-process-reward"] },
-      { label: "03 hacking", relation: "Proxy reward 최적화가 true objective에서 벗어나는 현상을 다룹니다.", concepts: ["reward-hacking-and-specification-gaming"] },
-      { label: "04 shaping", relation: "Optimal policy를 보존하며 신호를 앞당기는 방법을 다룹니다.", concepts: ["reward-shaping"] },
-      { label: "05 형태와 척도", relation: "값 형태와 서로 다른 reward 원천의 척도를 맞춥니다.", concepts: ["binary-vs-continuous-reward", "reward-calibration"] },
+    "conceptStages": [
+      {
+        "label": "보상 오류도 최적화 경로를 따라 확대될 수 있다",
+        "relation": "최적화가 실제 목표보다 점수의 허점을 이용하면 관측 보상과 성공이 벌어집니다.",
+        "concepts": [
+          "reward-hacking-and-specification-gaming"
+        ]
+      },
+      {
+        "label": "마지막 0점만으로 어느 행동이 틀렸는지 알기 어렵다",
+        "relation": "점수를 얼마나 자주 주는지에 따라 학습 신호가 행동에 얼마나 가까운지가 달라집니다.",
+        "concepts": [
+          "sparse-vs-dense-reward"
+        ]
+      },
+      {
+        "label": "언제 점수를 주는지와 무엇을 채점하는지는 다른 축이다",
+        "relation": "합산할 reward의 척도를 맞추고 점수가 실제 성공을 반영하는지도 별도로 검사합니다.",
+        "concepts": [
+          "reward-calibration"
+        ]
+      },
+      {
+        "label": "그룹의 점수가 모두 같으면 상대 신호가 사라진다",
+        "relation": "상태의 potential 차이를 더하면 조건에 따라 중간 신호를 주면서 경로 전체 목표를 유지할 수 있습니다. 점수가 0/1인지 정도를 나타내는지와 학습 가능한 상대 차이가 있는지를 따로 봅니다.",
+        "concepts": [
+          "reward-shaping",
+          "binary-vs-continuous-reward"
+        ]
+      },
+      {
+        "label": "공식 코드도 정답 검사와 형식 검사를 따로 둔다",
+        "relation": "자동으로 검사할 수 있는 규칙을 보상에 쓰되 검사기의 범위와 오류를 따로 확인합니다.",
+        "concepts": [
+          "rlvr-verifiable-task"
+        ]
+      },
+      {
+        "label": "과정 oracle과 learned judge는 다른 증거를 준다",
+        "relation": "최종 결과를 검사하는지 중간 행동을 검사하는지를 구분합니다.",
+        "concepts": [
+          "outcome-vs-process-reward"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Verifiable task의 정의와 RLVR이 그 결과를 reward로 쓰는 방식을 설명하세요.", answerChecklist: ["프로그램으로 확인", "사람 판단 없음", "검증 결과 그대로 reward"], requiredConcepts: ["rlvr-verifiable-task"], sectionId: "rlvr" },
-      { level: "basic", question: "6-station 경로 예로 sparse reward와 dense reward의 신호 빈도 차이를 설명하세요.", answerChecklist: ["끝에만 +1", "진척 비율마다", "gradient 신호 빈도"], requiredConcepts: ["sparse-vs-dense-reward"], sectionId: "sparse-vs-dense" },
-      { level: "basic", question: "Outcome reward와 process reward가 각각 무엇을 채점하는지 구분하세요.", answerChecklist: ["최종 결과만", "중간 단계 각각", "독립적인 축"], requiredConcepts: ["outcome-vs-process-reward"], sectionId: "outcome-vs-process" },
-      { level: "basic", question: "Reward hacking에서 proxy reward와 true objective가 어떻게 갈라지는지 예로 설명하세요.", answerChecklist: ["proxy 개선", "true objective 정체·악화", "구체 예"], requiredConcepts: ["reward-hacking-and-specification-gaming"], sectionId: "hacking" },
-      { level: "basic", question: "Potential-based reward shaping이 optimal policy를 보존하는 이유를 한 문장으로 쓰세요.", answerChecklist: ["potential 차이", "telescoping 상쇄", "policy 순위 불변"], requiredConcepts: ["reward-shaping"], sectionId: "shaping" },
-      { level: "basic", question: "Binary reward와 continuous reward의 값 형태 차이를 예로 설명하세요.", answerChecklist: ["0 또는 1", "0~1 실수", "부분 성공 구분"], requiredConcepts: ["binary-vs-continuous-reward"], sectionId: "reward-shape-and-calibration" },
-      { level: "advanced", question: "Verifier reward가 outcome reward의 한 구현이면서도 hacking에 취약할 수 있는 이유를 설명하세요.", answerChecklist: ["verifier 확인 범위 조작", "예외 삼키기 예", "확인 범위 밖 오류"], requiredConcepts: ["rlvr-verifiable-task", "reward-hacking-and-specification-gaming"], sectionId: "hacking" },
-      { level: "advanced", question: "Sparse reward를 dense reward로 바꿀 때 hacking 위험이 왜 커지는지 설계 관점에서 논하세요.", answerChecklist: ["중간 신호 새로 정의", "신호 자체가 조작 대상", "proxy misspecification"], requiredConcepts: ["sparse-vs-dense-reward", "reward-hacking-and-specification-gaming"], sectionId: "sparse-vs-dense" },
-      { level: "advanced", question: "Potential function Φ를 episode 끝에서 고정하지 않으면 무엇이 깨지는지 설명하세요.", answerChecklist: ["telescoping 실패", "optimal policy 변경 가능", "counterexample"], requiredConcepts: ["reward-shaping"], sectionId: "shaping" },
-      { level: "advanced", question: "서로 다른 verifier의 원점수를 calibration 없이 합쳤을 때 생기는 문제를 설계 관점에서 서술하세요.", answerChecklist: ["척도 큰 쪽 지배", "정규화 필요", "재는 대상 차이는 별개"], requiredConcepts: ["reward-calibration"], sectionId: "reward-shape-and-calibration" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "100개 답 중 정답 40개, 통과한 정답 38개와 오답 12개일 때 통과율과 정답률을 구하세요.",
+        "answerChecklist": [
+          "통과율은 (38+12)/100=50%입니다.",
+          "실제 정답률은 40/100=40%이며 두 집합은 다릅니다."
+        ],
+        "requiredConcepts": [
+          "rlvr-verifiable-task"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "같은 표에서 통과 답의 정답 비율과 정답을 통과시킨 비율을 각각 구하세요.",
+        "answerChecklist": [
+          "통과 답의 정답 비율은 38/50=76%입니다.",
+          "정답을 통과시킨 비율은 38/40=95%로 분모가 다릅니다."
+        ],
+        "requiredConcepts": [
+          "rlvr-verifiable-task"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "매 단계 형식 검사를 하는 보상을 dense라는 이유만으로 process correctness라고 불러도 되나요?",
+        "answerChecklist": [
+          "dense는 점수를 자주 준다는 빈도 설명입니다.",
+          "형식 검사는 내용의 올바름을 확인하지 않으므로 검사 대상과 규칙을 따로 명시해야 합니다."
+        ],
+        "requiredConcepts": [
+          "reward-calibration"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "reward [0,0,1,1]에서 그룹 평균을 뺀 네 값을 계산해 보세요.",
+        "answerChecklist": [
+          "그룹 평균은 0.5입니다.",
+          "중심화한 값은 [−0.5,−0.5,0.5,0.5]이며 표준편차 정규화는 trainer 설정에 따릅니다."
+        ],
+        "requiredConcepts": [
+          "reward-shaping",
+          "binary-vs-continuous-reward"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "정답 파싱 실패에 대한 None을 오답 reward 0으로 자동 해석하면 왜 안 되나요?",
+        "answerChecklist": [
+          "채점 불가와 확인된 오답은 다른 상태입니다.",
+          "실제 trainer의 제외·집계 규칙을 확인하고 평가 분모에도 처리 방식을 기록해야 합니다."
+        ],
+        "requiredConcepts": [
+          "rlvr-verifiable-task"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "과정 검사 [1,1,0,1,1,0]을 합계 4로 바꾸면 어떤 정보가 사라지나요?",
+        "answerChecklist": [
+          "세 번째와 여섯 번째 행동이 통과하지 못했다는 위치 정보가 사라집니다.",
+          "과정 신호의 이점은 점수 개수뿐 아니라 어떤 행동에 연결되는지에 달려 있습니다."
+        ],
+        "requiredConcepts": [
+          "outcome-vs-process-reward"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "γ=1·potential 0→0.5→0.2→0일 때 shaping 합을 계산하고 임의 방문 보상과 비교하세요.",
+        "answerChecklist": [
+          "potential 변화량의 합은 0.5−0.3−0.2=0으로 중간 항이 상쇄됩니다.",
+          "방문마다 +0.5를 주면 순환만으로 양의 점수가 생기며 같은 보존 성질을 갖지 않습니다."
+        ],
+        "requiredConcepts": [
+          "reward-shaping",
+          "binary-vs-continuous-reward"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "reward [1,1,1,1]에서 상대 advantage가 0이면 전체 모델 학습도 반드시 멈추나요?",
+        "answerChecklist": [
+          "순수한 group-relative 비교 신호는 모두 같아서 0이 됩니다.",
+          "KL 등 다른 loss 항은 남을 수 있으므로 전체 목적식과 trainer 설정을 확인해야 합니다."
+        ],
+        "requiredConcepts": [
+          "reward-shaping",
+          "binary-vs-continuous-reward"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "Sudoku oracle과 learned trace judge의 과정 점수를 같은 정답 증거로 취급하면 왜 안 되나요?",
+        "answerChecklist": [
+          "Sudoku oracle은 정해진 격자·제약·정답 조건 아래 중간 행동을 확인합니다.",
+          "learned judge의 상대 평가에는 판정 오류와 편향이 있으므로 별도의 정확성 검수가 필요합니다."
+        ],
+        "requiredConcepts": [
+          "outcome-vs-process-reward"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "통과 답이 50개에서 70개로 증가했을 때 실제 성공이 20%p 개선됐다고 결론 내리려면 무엇이 더 필요한가요?",
+        "answerChecklist": [
+          "추가로 통과한 답 중 실제 정답 수를 독립적으로 확인해야 합니다.",
+          "동일한 문제 분포·분모·채점 불가 처리와 새로운 허점 여부까지 비교해야 합니다."
+        ],
+        "requiredConcepts": [
+          "rlvr-verifiable-task"
+        ],
+        "sectionId": "limits"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "Let's Verify Step by Step",
-        href: "https://arxiv.org/abs/2305.20050",
-        problem: "최종 답만 채점하는 outcome supervision이 중간 추론 오류를 놓치는 문제",
-        contribution: "각 추론 단계를 채점하는 process supervision을 제시하고 outcome supervision과 비교",
-        assumptions: "논문의 MATH 데이터셋·PRM800K 주석·GPT 계열 model 조건",
-        evidenceScope: "MATH test 부분집합에서 process-supervised model이 78% 정확도를 기록했다는 저자 자기보고",
-        notClaim: "다른 domain이나 model 규모에서 같은 정확도 격차가 난다는 뜻은 아님",
-        sectionId: "paper-prm",
+        "title": "Policy invariance under reward transformations · 1999",
+        "href": "https://people.eecs.berkeley.edu/~russell/papers/icml99-shaping.pdf",
+        "problem": "중간 보상을 더했을 때 원래 최적 정책이 달라지는 문제",
+        "contribution": "같은 할인율의 potential 차이로 보상 변환을 제한",
+        "assumptions": "논문의 MDP 조건과 할인율, 종료 상태의 potential 조건",
+        "evidenceScope": "정책 보존 정리와 논문이 보고한 제한된 환경 실험",
+        "notClaim": "추가 보상의 합이 언제나 0이라는 주장이 아니다. 적절한 경계 조건에서 행동 선택에 무관한 항으로 남아 정책을 보존한다.",
+        "sectionId": "paper-shaping-theorem"
       },
       {
-        title: "Defining and Characterizing Reward Hacking",
-        href: "https://arxiv.org/abs/2209.13085",
-        problem: "부정확한 proxy reward를 최적화하면 true reward 기준 성능이 나빠질 수 있다는 현상이 형식적으로 정의되지 않은 문제",
-        contribution: "Reward hacking을 형식적으로 정의하고 proxy 개선이 true reward를 해치지 않는 unhackable 조건을 분석",
-        assumptions: "논문의 MDP 정식화와 확률적/결정적 policy 조건",
-        evidenceScope: "저자가 제시한 이론적 증명과 조건 분석 범위",
-        notClaim: "모든 실제 reward model·verifier 설계가 이 조건을 만족하거나 만족하지 않는다는 개별 판정은 아님",
-        sectionId: "paper-reward-hacking",
+        "title": "Open-R1 rewards.py · 5b6ff22",
+        "href": "https://github.com/huggingface/open-r1/blob/5b6ff22b3fb7aa069c54866e517f39dfc3160e09/src/open_r1/rewards.py",
+        "problem": "학습에 사용할 correctness와 format 점수를 구현",
+        "contribution": "parser·symbolic verifier와 형식 함수를 분리",
+        "assumptions": "의존성·정답 표현·예외 처리와 trainer의 None 처리",
+        "evidenceScope": "이 글은 공식 코드 경로를 대조했으며 모델 학습을 재현하지 않음",
+        "notClaim": "자동 실행된다는 사실은 verifier가 정답을 완벽하게 판정한다는 보장이 아니다.",
+        "sectionId": "paper-verifier-code"
       },
       {
-        title: "Concrete Problems in AI Safety",
-        href: "https://arxiv.org/abs/1606.06565",
-        problem: "잘못된 objective function이 만드는 의도치 않은 harmful behavior(accident)를 체계적으로 분류하지 못한 문제",
-        contribution: "Reward hacking을 포함한 다섯 범주의 AI safety 연구 문제를 제시",
-        assumptions: "논문이 정의한 accident 범주와 당시 RL·ML 시스템 조건",
-        evidenceScope: "저자가 제시한 문제 분류와 예시 범위",
-        notClaim: "다섯 범주가 AI safety 문제 전체를 망라한다는 뜻은 아님",
-        sectionId: "paper-concrete-problems",
+        "title": "Verifiable Process Rewards · arXiv 2605.10325v1",
+        "href": "https://arxiv.org/html/2605.10325v1",
+        "problem": "긴 경로에서 마지막 결과만 주는 credit assignment 문제",
+        "contribution": "환경별 oracle로 행동 단계마다 검증 신호를 생성",
+        "assumptions": "중간 행동을 신뢰성 있게 검사할 구조가 존재해야 함",
+        "evidenceScope": "Tic-Tac-Toe·Sudoku·Minesweeper와 전이 benchmark의 저자 실험",
+        "notClaim": "과정 verifier의 품질에 의존한다. 열린 환경에서 범용적으로 정확한 oracle을 제공하는 결과는 아니다.",
+        "sectionId": "paper-vpr"
       },
       {
-        title: "Policy Invariance Under Reward Transformations: Theory and Application to Reward Shaping",
-        href: "https://dl.acm.org/doi/10.5555/645528.657613",
-        problem: "Sparse reward에 임의의 추가 항을 더하면 optimal policy가 바뀔 위험이 있는 문제",
-        contribution: "상태 potential 함수의 차이로만 추가 항을 만드는 potential-based shaping만이 임의의 MDP에서 optimal policy를 보존한다는 것을 증명",
-        assumptions: "논문의 MDP 정식화와 potential function Φ의 episode-끝 고정 조건",
-        evidenceScope: "1999년 ICML 논문 저자가 제시한 이론적 증명 범위",
-        notClaim: "Potential-based가 아닌 다른 형태의 추가 reward 항도 같은 보장을 갖는다는 뜻은 아님",
-        sectionId: "paper-reward-shaping",
-      },
-    ],
+        "title": "Reasoning Arena · arXiv 2606.09380v1",
+        "href": "https://arxiv.org/html/2606.09380v1",
+        "problem": "reward가 모두 같은 그룹의 상대 신호 부재",
+        "contribution": "trace 비교를 통한 상대 학습 신호",
+        "assumptions": "judge가 비교해야 할 이유와 평가 기준이 타당해야 함",
+        "evidenceScope": "논문의 수학·코드 benchmark 비교에 대한 저자 자기보고",
+        "notClaim": "판정자 점수를 객관적인 정답 증명으로 바꿔 읽지 않는다.",
+        "sectionId": "paper-reasoning-arena"
+      }
+    ]
   },
   "ai/fine-tuning-tradeoffs-forgetting-and-merging": {
     entryNote:
@@ -94462,33 +98399,8269 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
-  "business/business-model-cashflow": {"coreIdea": "사업 모델을 비교할 때는 매출 이름보다 비용을 먼저 내는 사람, 고객에게서 돈을 받는 시점, 재고·반품·미수금을 떠안는 주체를 추적해야 합니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "firm-boundary-at-equal-margin", "role": "기업이 내부에서 하거나 시장에서 사는 선택"}], "introducedHere": [{"id": "gross-net-revenue", "role": "총액과 순액 매출이 (가정) 주문 100건 × 2만 원, 원가 120만 원, 결제 수수료 6만 원에서 하는 역할을 설명합니다."}, {"id": "working-capital-gap", "role": "운전자금 간격이 (가정) 주문 100건 × 2만 원, 원가 120만 원, 결제 수수료 6만 원에서 하는 역할을 설명합니다."}, {"id": "contribution-cash-trace", "role": "거래당 남는 돈의 추적이 (가정) 주문 100건 × 2만 원, 원가 120만 원, 결제 수수료 6만 원에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "gross-net-revenue", "sectionId": "mechanism", "intuition": "결제액을 손에 쥐었다는 사실과 매출의 소유는 다릅니다.", "workedExample": "200만 원 주문에서 중개 플랫폼은 계약상 수수료만 자기 수익일 수 있습니다.", "boundary": "회계 표시 기준과 세무 신고 기준은 관할권별로 따로 검토해야 합니다."}, {"id": "working-capital-gap", "sectionId": "comparison", "intuition": "이익이 나도 정산이 늦으면 월급을 지급할 돈이 모자랄 수 있습니다.", "workedExample": "원가 120만 원을 먼저 쓰고 2주 뒤 판매 대금을 받는 가게가 그 사이 현금을 조달합니다.", "boundary": "결제 선불·재고 위탁이면 간격이 반대로 바뀔 수도 있습니다."}, {"id": "contribution-cash-trace", "sectionId": "limits", "intuition": "매출을 두 배로 만드는 일이 남는 돈도 두 배로 만들지는 않습니다.", "workedExample": "200만 원에서 원가 120만 원과 수수료 6만 원을 빼도 임차료·인건비·세금은 남습니다.", "boundary": "고정비 배분 방식에 따라 거래당 이익의 표현이 달라질 수 있습니다."}], "conceptStages": [{"label": "01 · 총액과 순액 매출", "relation": "(가정) 주문 100건 × 2만 원, 원가 120만 원, 결제 수수료 6만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["gross-net-revenue"]}, {"label": "02 · 운전자금 간격", "relation": "(가정) 주문 100건 × 2만 원, 원가 120만 원, 결제 수수료 6만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["working-capital-gap"]}, {"label": "03 · 거래당 남는 돈의 추적", "relation": "(가정) 주문 100건 × 2만 원, 원가 120만 원, 결제 수수료 6만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["contribution-cash-trace"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["고객: 주문할 때 200만 원을 결제합니다.", "판매자: 재고에 120만 원을 먼저 쓰고 배송합니다.", "결제·플랫폼: 결제·노출·환불 절차를 운영합니다."], "requiredConcepts": ["gross-net-revenue"], "sectionId": "overview"}, {"level": "basic", "question": "총액과 순액 매출의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["200만 원 주문에서 중개 플랫폼은 계약상 수수료만 자기 수익일 수 있습니다.", "회계 표시 기준과 세무 신고 기준은 관할권별로 따로 검토해야 합니다."], "requiredConcepts": ["gross-net-revenue"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 주문 100건 × 2만 원, 원가 120만 원, 결제 수수료 6만 원에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["고객가 받는 것: 상품과 반품 청구권", "판매자가 받는 것: 수수료 차감 뒤 정산금", "결제·플랫폼가 받는 것: 계약에 따른 수수료"], "requiredConcepts": ["gross-net-revenue", "working-capital-gap"], "sectionId": "mechanism"}, {"level": "basic", "question": "운전자금 간격가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["원가 120만 원을 먼저 쓰고 2주 뒤 판매 대금을 받는 가게가 그 사이 현금을 조달합니다.", "공식 근거: IFRS 15 Revenue from Contracts with Customers", "결제 선불·재고 위탁이면 간격이 반대로 바뀔 수도 있습니다."], "requiredConcepts": ["working-capital-gap"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["200만 원 주문에서 중개 플랫폼은 계약상 수수료만 자기 수익일 수 있습니다.", "원가 120만 원을 먼저 쓰고 2주 뒤 판매 대금을 받는 가게가 그 사이 현금을 조달합니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["gross-net-revenue", "working-capital-gap"], "sectionId": "comparison"}, {"level": "basic", "question": "거래당 남는 돈의 추적를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["매출을 두 배로 만드는 일이 남는 돈도 두 배로 만들지는 않습니다.", "고정비 배분 방식에 따라 거래당 이익의 표현이 달라질 수 있습니다."], "requiredConcepts": ["contribution-cash-trace"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 주문 100건 × 2만 원, 원가 120만 원, 결제 수수료 6만 원에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 주문 100건 × 2만 원, 원가 120만 원, 결제 수수료 6만 원", "200만 원 주문에서 중개 플랫폼은 계약상 수수료만 자기 수익일 수 있습니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["gross-net-revenue", "working-capital-gap"], "sectionId": "mechanism"}, {"level": "advanced", "question": "운전자금 간격에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: IFRS 15 Revenue from Contracts with Customers", "결제 선불·재고 위탁이면 간격이 반대로 바뀔 수도 있습니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["working-capital-gap", "contribution-cash-trace"], "sectionId": "comparison"}, {"level": "advanced", "question": "거래당 남는 돈의 추적 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["200만 원에서 원가 120만 원과 수수료 6만 원을 빼도 임차료·인건비·세금은 남습니다.", "고정비 배분 방식에 따라 거래당 이익의 표현이 달라질 수 있습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["contribution-cash-trace"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 주문 100건 × 2만 원, 원가 120만 원, 결제 수수료 6만 원의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["200만 원 주문에서 중개 플랫폼은 계약상 수수료만 자기 수익일 수 있습니다.", "원가 120만 원을 먼저 쓰고 2주 뒤 판매 대금을 받는 가게가 그 사이 현금을 조달합니다.", "고정비 배분 방식에 따라 거래당 이익의 표현이 달라질 수 있습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["gross-net-revenue", "working-capital-gap", "contribution-cash-trace"], "sectionId": "limits"}]},
-  "business/shop-unit-economics": {"coreIdea": "점포의 손익분기점은 객단가에서 재료·수수료 같은 변동비를 뺀 한 건의 공헌이익으로 고정비를 나눈 결과이며, 점주 노동과 개업비 회수는 별도로 계산해야 합니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "contribution-cash-trace", "role": "거래당 남는 돈의 추적"}], "introducedHere": [{"id": "shop-contribution-margin", "role": "점포의 건당 공헌이익이 (가정) 한 잔 6천 원, 변동비 2천 원, 월 고정비 800만 원에서 하는 역할을 설명합니다."}, {"id": "shop-break-even-count", "role": "점포의 손익분기 판매량이 (가정) 한 잔 6천 원, 변동비 2천 원, 월 고정비 800만 원에서 하는 역할을 설명합니다."}, {"id": "shop-investment-recovery", "role": "개업비 회수 기간이 (가정) 한 잔 6천 원, 변동비 2천 원, 월 고정비 800만 원에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "shop-contribution-margin", "sectionId": "mechanism", "intuition": "6천 원 매출을 모두 월세에 쓸 수는 없습니다.", "workedExample": "잔당 가격 6천 원에서 재료·포장·결제 2천 원을 빼면 4천 원이 남습니다.", "boundary": "업종과 주문 채널이 달라지면 건당 변동비도 달라집니다."}, {"id": "shop-break-even-count", "sectionId": "comparison", "intuition": "문을 열어두는 비용을 한 건씩 채워야 합니다.", "workedExample": "월 800만 원을 잔당 4천 원으로 나누면 월 2천 잔입니다.", "boundary": "점주 임금·세금·투자비 회수는 계산에 추가해야 합니다."}, {"id": "shop-investment-recovery", "sectionId": "limits", "intuition": "월별 흑자가 난다고 초기 투자금을 회수한 것은 아닙니다.", "workedExample": "6천만 원을 쓴 가게가 월 100만 원씩 순현금을 남기면 단순 회수에 60개월이 걸립니다.", "boundary": "단순 회수 기간은 이자·세금·기회비용과 폐업 비용을 생략합니다."}], "conceptStages": [{"label": "01 · 점포의 건당 공헌이익", "relation": "(가정) 한 잔 6천 원, 변동비 2천 원, 월 고정비 800만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["shop-contribution-margin"]}, {"label": "02 · 점포의 손익분기 판매량", "relation": "(가정) 한 잔 6천 원, 변동비 2천 원, 월 고정비 800만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["shop-break-even-count"]}, {"label": "03 · 개업비 회수 기간", "relation": "(가정) 한 잔 6천 원, 변동비 2천 원, 월 고정비 800만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["shop-investment-recovery"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["고객: 6천 원을 내고 음료를 받습니다.", "점주: 한 잔당 2천 원과 월 고정비 800만 원을 냅니다.", "건물주·직원: 계약된 임대료와 임금을 받습니다."], "requiredConcepts": ["shop-contribution-margin"], "sectionId": "overview"}, {"level": "basic", "question": "점포의 건당 공헌이익의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["잔당 가격 6천 원에서 재료·포장·결제 2천 원을 빼면 4천 원이 남습니다.", "업종과 주문 채널이 달라지면 건당 변동비도 달라집니다."], "requiredConcepts": ["shop-contribution-margin"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 한 잔 6천 원, 변동비 2천 원, 월 고정비 800만 원에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["고객가 받는 것: 음료", "점주가 받는 것: 잔당 4천 원의 고정비 충당액", "건물주·직원가 받는 것: 매출과 무관한 우선 지급액"], "requiredConcepts": ["shop-contribution-margin", "shop-break-even-count"], "sectionId": "mechanism"}, {"level": "basic", "question": "점포의 손익분기 판매량가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["월 800만 원을 잔당 4천 원으로 나누면 월 2천 잔입니다.", "공식 근거: IAS 2 Inventories", "점주 임금·세금·투자비 회수는 계산에 추가해야 합니다."], "requiredConcepts": ["shop-break-even-count"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["잔당 가격 6천 원에서 재료·포장·결제 2천 원을 빼면 4천 원이 남습니다.", "월 800만 원을 잔당 4천 원으로 나누면 월 2천 잔입니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["shop-contribution-margin", "shop-break-even-count"], "sectionId": "comparison"}, {"level": "basic", "question": "개업비 회수 기간를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["월별 흑자가 난다고 초기 투자금을 회수한 것은 아닙니다.", "단순 회수 기간은 이자·세금·기회비용과 폐업 비용을 생략합니다."], "requiredConcepts": ["shop-investment-recovery"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 한 잔 6천 원, 변동비 2천 원, 월 고정비 800만 원에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 한 잔 6천 원, 변동비 2천 원, 월 고정비 800만 원", "잔당 가격 6천 원에서 재료·포장·결제 2천 원을 빼면 4천 원이 남습니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["shop-contribution-margin", "shop-break-even-count"], "sectionId": "mechanism"}, {"level": "advanced", "question": "점포의 손익분기 판매량에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: IAS 2 Inventories", "점주 임금·세금·투자비 회수는 계산에 추가해야 합니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["shop-break-even-count", "shop-investment-recovery"], "sectionId": "comparison"}, {"level": "advanced", "question": "개업비 회수 기간 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["6천만 원을 쓴 가게가 월 100만 원씩 순현금을 남기면 단순 회수에 60개월이 걸립니다.", "단순 회수 기간은 이자·세금·기회비용과 폐업 비용을 생략합니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["shop-investment-recovery"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 한 잔 6천 원, 변동비 2천 원, 월 고정비 800만 원의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["잔당 가격 6천 원에서 재료·포장·결제 2천 원을 빼면 4천 원이 남습니다.", "월 800만 원을 잔당 4천 원으로 나누면 월 2천 잔입니다.", "단순 회수 기간은 이자·세금·기회비용과 폐업 비용을 생략합니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["shop-contribution-margin", "shop-break-even-count", "shop-investment-recovery"], "sectionId": "limits"}]},
-  "business/shop-site-selection": {"coreIdea": "입지는 유동인구 숫자 하나가 아니라 예상 방문자·구매전환·객단가·임대료를 같은 시간대와 동일 업종에서 대조하고 그 건물에서 영업이 가능한지 확인하는 선택입니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "shop-break-even-count", "role": "점포의 손익분기 판매량"}], "introducedHere": [{"id": "site-conversion-funnel", "role": "통행에서 구매까지의 전환이 (가정) 하루 통행 1천 명, 입점 5%, 구매 40%, 객단가 8천 원에서 하는 역할을 설명합니다."}, {"id": "site-permitted-use", "role": "점포의 허용 용도가 (가정) 하루 통행 1천 명, 입점 5%, 구매 40%, 객단가 8천 원에서 하는 역할을 설명합니다."}, {"id": "site-downside-budget", "role": "입지의 하방 예산이 (가정) 하루 통행 1천 명, 입점 5%, 구매 40%, 객단가 8천 원에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "site-conversion-funnel", "sectionId": "mechanism", "intuition": "길을 지나는 인파의 숫자가 그대로 매장 안 구매와 매출로 이어지는 것은 아닙니다.", "workedExample": "하루 1천 명 × 5% 입점 × 40% 구매는 하루 20건입니다.", "boundary": "관찰 날짜와 업종·날씨를 바꾸면 비율이 달라집니다."}, {"id": "site-permitted-use", "sectionId": "comparison", "intuition": "건물주가 괜찮다고 해도 허가가 나는 것은 아닙니다.", "workedExample": "음식점을 하려면 건물 용도와 조리·배기·위생 시설을 계약 전에 확인합니다.", "boundary": "구체적인 허가·신고 요건은 업종과 지방정부마다 다릅니다."}, {"id": "site-downside-budget", "sectionId": "limits", "intuition": "좋은 자리처럼 보이는 곳도 손님이 적은 달을 견뎌야 합니다.", "workedExample": "예상 20건이 10건으로 줄면 월 공헌이익이 절반으로 떨어지는지 확인합니다.", "boundary": "반드시 이전 점포의 매출을 새 점포가 재현한다는 전제를 두지 않습니다."}], "conceptStages": [{"label": "01 · 통행에서 구매까지의 전환", "relation": "(가정) 하루 통행 1천 명, 입점 5%, 구매 40%, 객단가 8천 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["site-conversion-funnel"]}, {"label": "02 · 점포의 허용 용도", "relation": "(가정) 하루 통행 1천 명, 입점 5%, 구매 40%, 객단가 8천 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["site-permitted-use"]}, {"label": "03 · 입지의 하방 예산", "relation": "(가정) 하루 통행 1천 명, 입점 5%, 구매 40%, 객단가 8천 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["site-downside-budget"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["길을 지나는 사람: 하루 1천 명이 점포 앞을 지납니다.", "가게: 50명이 들어와 20명이 구매한다고 가정합니다.", "건물주·관청: 공간 사용권과 업종 허용 여부를 결정합니다."], "requiredConcepts": ["site-conversion-funnel"], "sectionId": "overview"}, {"level": "basic", "question": "통행에서 구매까지의 전환의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["하루 1천 명 × 5% 입점 × 40% 구매는 하루 20건입니다.", "관찰 날짜와 업종·날씨를 바꾸면 비율이 달라집니다."], "requiredConcepts": ["site-conversion-funnel"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 하루 통행 1천 명, 입점 5%, 구매 40%, 객단가 8천 원에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["길을 지나는 사람가 받는 것: 통행 경로", "가게가 받는 것: 하루 매출 16만 원", "건물주·관청가 받는 것: 임대료·허가 통제"], "requiredConcepts": ["site-conversion-funnel", "site-permitted-use"], "sectionId": "mechanism"}, {"level": "basic", "question": "점포의 허용 용도가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["음식점을 하려면 건물 용도와 조리·배기·위생 시설을 계약 전에 확인합니다.", "공식 근거: Australia: Choose your business location", "구체적인 허가·신고 요건은 업종과 지방정부마다 다릅니다."], "requiredConcepts": ["site-permitted-use"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["하루 1천 명 × 5% 입점 × 40% 구매는 하루 20건입니다.", "음식점을 하려면 건물 용도와 조리·배기·위생 시설을 계약 전에 확인합니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["site-conversion-funnel", "site-permitted-use"], "sectionId": "comparison"}, {"level": "basic", "question": "입지의 하방 예산를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["좋은 자리처럼 보이는 곳도 손님이 적은 달을 견뎌야 합니다.", "반드시 이전 점포의 매출을 새 점포가 재현한다는 전제를 두지 않습니다."], "requiredConcepts": ["site-downside-budget"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 하루 통행 1천 명, 입점 5%, 구매 40%, 객단가 8천 원에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 하루 통행 1천 명, 입점 5%, 구매 40%, 객단가 8천 원", "하루 1천 명 × 5% 입점 × 40% 구매는 하루 20건입니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["site-conversion-funnel", "site-permitted-use"], "sectionId": "mechanism"}, {"level": "advanced", "question": "점포의 허용 용도에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: Australia: Choose your business location", "구체적인 허가·신고 요건은 업종과 지방정부마다 다릅니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["site-permitted-use", "site-downside-budget"], "sectionId": "comparison"}, {"level": "advanced", "question": "입지의 하방 예산 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["예상 20건이 10건으로 줄면 월 공헌이익이 절반으로 떨어지는지 확인합니다.", "반드시 이전 점포의 매출을 새 점포가 재현한다는 전제를 두지 않습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["site-downside-budget"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 하루 통행 1천 명, 입점 5%, 구매 40%, 객단가 8천 원의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["하루 1천 명 × 5% 입점 × 40% 구매는 하루 20건입니다.", "음식점을 하려면 건물 용도와 조리·배기·위생 시설을 계약 전에 확인합니다.", "반드시 이전 점포의 매출을 새 점포가 재현한다는 전제를 두지 않습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["site-conversion-funnel", "site-permitted-use", "site-downside-budget"], "sectionId": "limits"}]},
-  "business/shop-fitout-and-opening": {"coreIdea": "점포 공사는 임대인의 사용 동의, 업종에 필요한 설비 확인, 범위가 적힌 견적·변경 승인, 공정 검수, 신고와 개업 준비가 이어지는 계약과 현금의 순서입니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "site-permitted-use", "role": "점포의 허용 용도"}], "introducedHere": [{"id": "fitout-dependency-order", "role": "점포 공사의 선후관계가 (가정) 공사 견적 4천만 원, 추가 전기·배기 8백만 원, 무매출 30일에서 하는 역할을 설명합니다."}, {"id": "fitout-change-order", "role": "추가 공사 승인가 (가정) 공사 견적 4천만 원, 추가 전기·배기 8백만 원, 무매출 30일에서 하는 역할을 설명합니다."}, {"id": "fitout-exit-liability", "role": "인테리어의 종료 의무가 (가정) 공사 견적 4천만 원, 추가 전기·배기 8백만 원, 무매출 30일에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "fitout-dependency-order", "sectionId": "mechanism", "intuition": "도면 전에 전력과 배기가 가능한지 알아야 합니다.", "workedExample": "4천만 원 공사에 배기 800만 원이 추가되면 예산과 개업일이 함께 바뀝니다.", "boundary": "업종과 건물의 실제 상태에 따라 공정과 신고 순서는 달라집니다."}, {"id": "fitout-change-order", "sectionId": "comparison", "intuition": "추가 비용이 구두로 쌓이면 처음 견적은 의미가 없어집니다.", "workedExample": "숨은 배관을 고칠 때 작업 전 견적과 공기 연장을 기록합니다.", "boundary": "법적 효력은 해당 계약과 관할권의 건설·소비자 규칙에 좌우됩니다."}, {"id": "fitout-exit-liability", "sectionId": "limits", "intuition": "벽에 쓴 돈이 모두 자산으로 회수되지는 않습니다.", "workedExample": "배기 덕트는 인수자가 원하면 가치가 있지만 임대인이 철거를 요구하면 비용이 됩니다.", "boundary": "임대차 특약과 실제 인수인계 합의가 종료 의무를 바꿀 수 있습니다."}], "conceptStages": [{"label": "01 · 점포 공사의 선후관계", "relation": "(가정) 공사 견적 4천만 원, 추가 전기·배기 8백만 원, 무매출 30일에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["fitout-dependency-order"]}, {"label": "02 · 추가 공사 승인", "relation": "(가정) 공사 견적 4천만 원, 추가 전기·배기 8백만 원, 무매출 30일에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["fitout-change-order"]}, {"label": "03 · 인테리어의 종료 의무", "relation": "(가정) 공사 견적 4천만 원, 추가 전기·배기 8백만 원, 무매출 30일에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["fitout-exit-liability"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["점주: 도면·견적·계약금을 확정하고 공사 기간 월세를 냅니다.", "시공사: 철거·설비·마감 공정을 수행하고 검수받습니다.", "임대인·관청: 공사 동의와 업종별 시설·안전 요건을 확인합니다."], "requiredConcepts": ["fitout-dependency-order"], "sectionId": "overview"}, {"level": "basic", "question": "점포 공사의 선후관계의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["4천만 원 공사에 배기 800만 원이 추가되면 예산과 개업일이 함께 바뀝니다.", "업종과 건물의 실제 상태에 따라 공정과 신고 순서는 달라집니다."], "requiredConcepts": ["fitout-dependency-order"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 공사 견적 4천만 원, 추가 전기·배기 8백만 원, 무매출 30일에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["점주가 받는 것: 영업 가능한 시설", "시공사가 받는 것: 기성금과 잔금", "임대인·관청가 받는 것: 건물 보호·규정 준수"], "requiredConcepts": ["fitout-dependency-order", "fitout-change-order"], "sectionId": "mechanism"}, {"level": "basic", "question": "추가 공사 승인가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["숨은 배관을 고칠 때 작업 전 견적과 공기 연장을 기록합니다.", "공식 근거: 한국 식품위생법 시행규칙 제36조 및 별표 14", "법적 효력은 해당 계약과 관할권의 건설·소비자 규칙에 좌우됩니다."], "requiredConcepts": ["fitout-change-order"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["4천만 원 공사에 배기 800만 원이 추가되면 예산과 개업일이 함께 바뀝니다.", "숨은 배관을 고칠 때 작업 전 견적과 공기 연장을 기록합니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["fitout-dependency-order", "fitout-change-order"], "sectionId": "comparison"}, {"level": "basic", "question": "인테리어의 종료 의무를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["벽에 쓴 돈이 모두 자산으로 회수되지는 않습니다.", "임대차 특약과 실제 인수인계 합의가 종료 의무를 바꿀 수 있습니다."], "requiredConcepts": ["fitout-exit-liability"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 공사 견적 4천만 원, 추가 전기·배기 8백만 원, 무매출 30일에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 공사 견적 4천만 원, 추가 전기·배기 8백만 원, 무매출 30일", "4천만 원 공사에 배기 800만 원이 추가되면 예산과 개업일이 함께 바뀝니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["fitout-dependency-order", "fitout-change-order"], "sectionId": "mechanism"}, {"level": "advanced", "question": "추가 공사 승인에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: 한국 식품위생법 시행규칙 제36조 및 별표 14", "법적 효력은 해당 계약과 관할권의 건설·소비자 규칙에 좌우됩니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["fitout-change-order", "fitout-exit-liability"], "sectionId": "comparison"}, {"level": "advanced", "question": "인테리어의 종료 의무 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["배기 덕트는 인수자가 원하면 가치가 있지만 임대인이 철거를 요구하면 비용이 됩니다.", "임대차 특약과 실제 인수인계 합의가 종료 의무를 바꿀 수 있습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["fitout-exit-liability"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 공사 견적 4천만 원, 추가 전기·배기 8백만 원, 무매출 30일의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["4천만 원 공사에 배기 800만 원이 추가되면 예산과 개업일이 함께 바뀝니다.", "숨은 배관을 고칠 때 작업 전 견적과 공기 연장을 기록합니다.", "임대차 특약과 실제 인수인계 합의가 종료 의무를 바꿀 수 있습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["fitout-dependency-order", "fitout-change-order", "fitout-exit-liability"], "sectionId": "limits"}]},
-  "property/commercial-lease-and-rent": {"coreIdea": "상가 임대차의 경제적 본질은 임차인이 일정 기간 공간을 쓰는 대신 고정 현금흐름과 원상복구 의무를 부담하고, 임대인은 공실·수선·보증금 반환 위험을 지는 교환입니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "shop-break-even-count", "role": "점포의 고정비 계산"}], "introducedHere": [{"id": "lease-right-and-deposit", "role": "사용권과 보증금 청구권이 (가정) 보증금 3천만 원, 월세 200만 원, 3년, 공실 2개월에서 하는 역할을 설명합니다."}, {"id": "commercial-lease-jurisdiction", "role": "상가 임차권의 관할권 차이이 (가정) 보증금 3천만 원, 월세 200만 원, 3년, 공실 2개월에서 하는 역할을 설명합니다."}, {"id": "rent-property-net-income", "role": "임대 부동산의 순현금이 (가정) 보증금 3천만 원, 월세 200만 원, 3년, 공실 2개월에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "lease-right-and-deposit", "sectionId": "mechanism", "intuition": "보증금은 월세처럼 매달 사라지는 돈이 아닙니다.", "workedExample": "3천만 원을 맡긴 점주는 3년 뒤 정산 잔액을 청구할 수 있습니다.", "boundary": "연체·손해·복구비 공제 여부는 계약과 법에 달립니다."}, {"id": "commercial-lease-jurisdiction", "sectionId": "comparison", "intuition": "한국에서 가능한 갱신을 외국 점포에도 당연하게 요구할 수 없습니다.", "workedExample": "한국 법과 영국 1954년 사업 임차권, 호주 NSW retail lease를 각각 원문으로 확인합니다.", "boundary": "국가 안에서도 지역·업종·계약 날짜에 따라 적용 규칙이 다릅니다."}, {"id": "rent-property-net-income", "sectionId": "limits", "intuition": "월세 수입이 그대로 부동산 투자 수익은 아닙니다.", "workedExample": "월 200만 원 계약이어도 공실 2개월이면 연간 수입은 2천만 원입니다.", "boundary": "취득가·세금·대출 구조에 따라 순수익률은 달라집니다."}], "conceptStages": [{"label": "01 · 사용권과 보증금 청구권", "relation": "(가정) 보증금 3천만 원, 월세 200만 원, 3년, 공실 2개월에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["lease-right-and-deposit"]}, {"label": "02 · 상가 임차권의 관할권 차이", "relation": "(가정) 보증금 3천만 원, 월세 200만 원, 3년, 공실 2개월에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["commercial-lease-jurisdiction"]}, {"label": "03 · 임대 부동산의 순현금", "relation": "(가정) 보증금 3천만 원, 월세 200만 원, 3년, 공실 2개월에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["rent-property-net-income"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["임차인: 보증금 3천만 원을 맡기고 매달 200만 원을 냅니다.", "임대인: 점포를 제공하고 공실·수선 위험을 지닙니다.", "다음 임차인: 기존 시설 인수 여부를 선택합니다."], "requiredConcepts": ["lease-right-and-deposit"], "sectionId": "overview"}, {"level": "basic", "question": "사용권과 보증금 청구권의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["3천만 원을 맡긴 점주는 3년 뒤 정산 잔액을 청구할 수 있습니다.", "연체·손해·복구비 공제 여부는 계약과 법에 달립니다."], "requiredConcepts": ["lease-right-and-deposit"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 보증금 3천만 원, 월세 200만 원, 3년, 공실 2개월에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["임차인가 받는 것: 3년간 약정된 사용권", "임대인가 받는 것: 월 임대료", "다음 임차인가 받는 것: 새 계약 또는 양도된 사용권"], "requiredConcepts": ["lease-right-and-deposit", "commercial-lease-jurisdiction"], "sectionId": "mechanism"}, {"level": "basic", "question": "상가 임차권의 관할권 차이가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["한국 법과 영국 1954년 사업 임차권, 호주 NSW retail lease를 각각 원문으로 확인합니다.", "공식 근거: 대한민국 상가건물 임대차보호법", "국가 안에서도 지역·업종·계약 날짜에 따라 적용 규칙이 다릅니다."], "requiredConcepts": ["commercial-lease-jurisdiction"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["3천만 원을 맡긴 점주는 3년 뒤 정산 잔액을 청구할 수 있습니다.", "한국 법과 영국 1954년 사업 임차권, 호주 NSW retail lease를 각각 원문으로 확인합니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["lease-right-and-deposit", "commercial-lease-jurisdiction"], "sectionId": "comparison"}, {"level": "basic", "question": "임대 부동산의 순현금를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["월세 수입이 그대로 부동산 투자 수익은 아닙니다.", "취득가·세금·대출 구조에 따라 순수익률은 달라집니다."], "requiredConcepts": ["rent-property-net-income"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 보증금 3천만 원, 월세 200만 원, 3년, 공실 2개월에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 보증금 3천만 원, 월세 200만 원, 3년, 공실 2개월", "3천만 원을 맡긴 점주는 3년 뒤 정산 잔액을 청구할 수 있습니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["lease-right-and-deposit", "commercial-lease-jurisdiction"], "sectionId": "mechanism"}, {"level": "advanced", "question": "상가 임차권의 관할권 차이에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: 대한민국 상가건물 임대차보호법", "국가 안에서도 지역·업종·계약 날짜에 따라 적용 규칙이 다릅니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["commercial-lease-jurisdiction", "rent-property-net-income"], "sectionId": "comparison"}, {"level": "advanced", "question": "임대 부동산의 순현금 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["월 200만 원 계약이어도 공실 2개월이면 연간 수입은 2천만 원입니다.", "취득가·세금·대출 구조에 따라 순수익률은 달라집니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["rent-property-net-income"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 보증금 3천만 원, 월세 200만 원, 3년, 공실 2개월의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["3천만 원을 맡긴 점주는 3년 뒤 정산 잔액을 청구할 수 있습니다.", "한국 법과 영국 1954년 사업 임차권, 호주 NSW retail lease를 각각 원문으로 확인합니다.", "취득가·세금·대출 구조에 따라 순수익률은 달라집니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["lease-right-and-deposit", "commercial-lease-jurisdiction", "rent-property-net-income"], "sectionId": "limits"}]},
-  "property/shop-transfer-and-goodwill": {"coreIdea": "점포 양도 대금은 시설·재고·고객 관계의 가치와 임대차 지위, 영업 허가·채무 인수 여부가 섞여 보이므로 각각의 소유자와 동의권자, 인도 시점을 분리해야 합니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "lease-right-and-deposit", "role": "임대차 사용권과 보증금 반환"}], "introducedHere": [{"id": "shop-transfer-asset-bundle", "role": "점포 양도 자산 묶음이 (가정) 시설 2천만 원, 재고 3백만 원, 영업상 이점 1천만 원에서 하는 역할을 설명합니다."}, {"id": "lease-assignment-consent", "role": "임대차 지위 이전과 동의가 (가정) 시설 2천만 원, 재고 3백만 원, 영업상 이점 1천만 원에서 하는 역할을 설명합니다."}, {"id": "goodwill-future-uncertainty", "role": "영업상 이점의 미래 불확실성이 (가정) 시설 2천만 원, 재고 3백만 원, 영업상 이점 1천만 원에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "shop-transfer-asset-bundle", "sectionId": "mechanism", "intuition": "가게를 판다는 말만으로 모든 권리가 넘어가지는 않습니다.", "workedExample": "3천300만 원을 시설·재고·영업 기회로 나눠 실사합니다.", "boundary": "영업 허가와 직원·공급 계약은 관할법과 계약에 따라 별도 이전 절차가 필요할 수 있습니다."}, {"id": "lease-assignment-consent", "sectionId": "comparison", "intuition": "시설을 샀어도 그 자리에 계속 있을 권리는 별개입니다.", "workedExample": "한국 권리금 회수와 NSW assignment 절차는 서로 다른 규칙입니다.", "boundary": "임대차 종료와 새 계약 체결인지, 기존 계약 양도인지 구분해야 합니다."}, {"id": "goodwill-future-uncertainty", "sectionId": "limits", "intuition": "단골이 예전 점주를 따라 떠나면 기대한 돈이 들어오지 않습니다.", "workedExample": "영업상 이점에 1천만 원을 냈더라도 신규 월세 인상으로 남는 돈은 줄 수 있습니다.", "boundary": "영업상 이점의 법률·회계·세무 정의는 문맥별로 구분합니다."}], "conceptStages": [{"label": "01 · 점포 양도 자산 묶음", "relation": "(가정) 시설 2천만 원, 재고 3백만 원, 영업상 이점 1천만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["shop-transfer-asset-bundle"]}, {"label": "02 · 임대차 지위 이전과 동의", "relation": "(가정) 시설 2천만 원, 재고 3백만 원, 영업상 이점 1천만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["lease-assignment-consent"]}, {"label": "03 · 영업상 이점의 미래 불확실성", "relation": "(가정) 시설 2천만 원, 재고 3백만 원, 영업상 이점 1천만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["goodwill-future-uncertainty"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["기존 점주: 시설·재고와 영업 자료를 넘기고 대금을 받습니다.", "새 점주: 실사 후 3천300만 원을 지급합니다.", "임대인·관청: 새 임차·양도 동의와 업종 지위 승계를 판단합니다."], "requiredConcepts": ["shop-transfer-asset-bundle"], "sectionId": "overview"}, {"level": "basic", "question": "점포 양도 자산 묶음의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["3천300만 원을 시설·재고·영업 기회로 나눠 실사합니다.", "영업 허가와 직원·공급 계약은 관할법과 계약에 따라 별도 이전 절차가 필요할 수 있습니다."], "requiredConcepts": ["shop-transfer-asset-bundle"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 시설 2천만 원, 재고 3백만 원, 영업상 이점 1천만 원에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["기존 점주가 받는 것: 합의된 양도대금", "새 점주가 받는 것: 시설·재고·영업 기회", "임대인·관청가 받는 것: 새 계약 상대방·규정 준수"], "requiredConcepts": ["shop-transfer-asset-bundle", "lease-assignment-consent"], "sectionId": "mechanism"}, {"level": "basic", "question": "임대차 지위 이전과 동의가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["한국 권리금 회수와 NSW assignment 절차는 서로 다른 규칙입니다.", "공식 근거: 한국 상가건물 임대차보호법 제10조의3·제10조의4", "임대차 종료와 새 계약 체결인지, 기존 계약 양도인지 구분해야 합니다."], "requiredConcepts": ["lease-assignment-consent"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["3천300만 원을 시설·재고·영업 기회로 나눠 실사합니다.", "한국 권리금 회수와 NSW assignment 절차는 서로 다른 규칙입니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["shop-transfer-asset-bundle", "lease-assignment-consent"], "sectionId": "comparison"}, {"level": "basic", "question": "영업상 이점의 미래 불확실성를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["단골이 예전 점주를 따라 떠나면 기대한 돈이 들어오지 않습니다.", "영업상 이점의 법률·회계·세무 정의는 문맥별로 구분합니다."], "requiredConcepts": ["goodwill-future-uncertainty"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 시설 2천만 원, 재고 3백만 원, 영업상 이점 1천만 원에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 시설 2천만 원, 재고 3백만 원, 영업상 이점 1천만 원", "3천300만 원을 시설·재고·영업 기회로 나눠 실사합니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["shop-transfer-asset-bundle", "lease-assignment-consent"], "sectionId": "mechanism"}, {"level": "advanced", "question": "임대차 지위 이전과 동의에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: 한국 상가건물 임대차보호법 제10조의3·제10조의4", "임대차 종료와 새 계약 체결인지, 기존 계약 양도인지 구분해야 합니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["lease-assignment-consent", "goodwill-future-uncertainty"], "sectionId": "comparison"}, {"level": "advanced", "question": "영업상 이점의 미래 불확실성 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["영업상 이점에 1천만 원을 냈더라도 신규 월세 인상으로 남는 돈은 줄 수 있습니다.", "영업상 이점의 법률·회계·세무 정의는 문맥별로 구분합니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["goodwill-future-uncertainty"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 시설 2천만 원, 재고 3백만 원, 영업상 이점 1천만 원의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["3천300만 원을 시설·재고·영업 기회로 나눠 실사합니다.", "한국 권리금 회수와 NSW assignment 절차는 서로 다른 규칙입니다.", "영업상 이점의 법률·회계·세무 정의는 문맥별로 구분합니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["shop-transfer-asset-bundle", "lease-assignment-consent", "goodwill-future-uncertainty"], "sectionId": "limits"}]},
-  "property/shop-closure-and-restoration": {"coreIdea": "점포 폐업은 영업 중단, 직원·고객·공급자·세금 채무, 임대차 종료, 시설 철거와 원상복구, 보증금 반환을 서로 다른 상대방과 순서대로 정산하는 과정입니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "lease-right-and-deposit", "role": "임대차 보증금과 사용권"}], "introducedHere": [{"id": "closure-settlement-order", "role": "폐업의 정산 순서가 (가정) 보증금 3천만 원, 미납 월세 4백만 원, 복구 견적 6백만 원에서 하는 역할을 설명합니다."}, {"id": "restoration-scope-evidence", "role": "원상복구 범위의 증거가 (가정) 보증금 3천만 원, 미납 월세 4백만 원, 복구 견적 6백만 원에서 하는 역할을 설명합니다."}, {"id": "deposit-closeout", "role": "보증금 최종 정산이 (가정) 보증금 3천만 원, 미납 월세 4백만 원, 복구 견적 6백만 원에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "closure-settlement-order", "sectionId": "mechanism", "intuition": "문을 닫아도 돈을 줄 상대방이 남습니다.", "workedExample": "3천만 원 보증금에서 실제 채무와 복구액을 확인한 뒤 잔액을 받습니다.", "boundary": "사업자 신고 완료가 민사상 채무 소멸을 뜻하지 않습니다."}, {"id": "restoration-scope-evidence", "sectionId": "comparison", "intuition": "철거할 범위를 기억에만 맡기면 보증금 다툼이 납니다.", "workedExample": "입주 사진과 공사 동의서로 600만 원 복구 견적의 항목을 비교합니다.", "boundary": "판례의 사실관계와 관할권이 다르면 같은 결론이 아닙니다."}, {"id": "deposit-closeout", "sectionId": "limits", "intuition": "3천만 원을 냈어도 마지막에 같은 액수가 돌아오는 것은 아닙니다.", "workedExample": "미납 400만 원·복구 600만 원을 공제할 수 있다면 2천만 원이 남습니다.", "boundary": "공제 가능성과 실제 복구비는 협의·판결에 따라 다를 수 있습니다."}], "conceptStages": [{"label": "01 · 폐업의 정산 순서", "relation": "(가정) 보증금 3천만 원, 미납 월세 4백만 원, 복구 견적 6백만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["closure-settlement-order"]}, {"label": "02 · 원상복구 범위의 증거", "relation": "(가정) 보증금 3천만 원, 미납 월세 4백만 원, 복구 견적 6백만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["restoration-scope-evidence"]}, {"label": "03 · 보증금 최종 정산", "relation": "(가정) 보증금 3천만 원, 미납 월세 4백만 원, 복구 견적 6백만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["deposit-closeout"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["점주: 영업을 멈추고 미납금·세금·복구비를 정산합니다.", "임대인: 점포를 인도받고 계약상 공제액을 확인합니다.", "시공사·관청: 철거·검수와 폐업 신고를 처리합니다."], "requiredConcepts": ["closure-settlement-order"], "sectionId": "overview"}, {"level": "basic", "question": "폐업의 정산 순서의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["3천만 원 보증금에서 실제 채무와 복구액을 확인한 뒤 잔액을 받습니다.", "사업자 신고 완료가 민사상 채무 소멸을 뜻하지 않습니다."], "requiredConcepts": ["closure-settlement-order"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 보증금 3천만 원, 미납 월세 4백만 원, 복구 견적 6백만 원에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["점주가 받는 것: 보증금 잔액과 채무 종료", "임대인가 받는 것: 공간과 미납금 회수", "시공사·관청가 받는 것: 공사비·신고 완료"], "requiredConcepts": ["closure-settlement-order", "restoration-scope-evidence"], "sectionId": "mechanism"}, {"level": "basic", "question": "원상복구 범위의 증거가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["입주 사진과 공사 동의서로 600만 원 복구 견적의 항목을 비교합니다.", "공식 근거: 한국 대법원 2002년 건물명도 판례", "판례의 사실관계와 관할권이 다르면 같은 결론이 아닙니다."], "requiredConcepts": ["restoration-scope-evidence"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["3천만 원 보증금에서 실제 채무와 복구액을 확인한 뒤 잔액을 받습니다.", "입주 사진과 공사 동의서로 600만 원 복구 견적의 항목을 비교합니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["closure-settlement-order", "restoration-scope-evidence"], "sectionId": "comparison"}, {"level": "basic", "question": "보증금 최종 정산를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["3천만 원을 냈어도 마지막에 같은 액수가 돌아오는 것은 아닙니다.", "공제 가능성과 실제 복구비는 협의·판결에 따라 다를 수 있습니다."], "requiredConcepts": ["deposit-closeout"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 보증금 3천만 원, 미납 월세 4백만 원, 복구 견적 6백만 원에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 보증금 3천만 원, 미납 월세 4백만 원, 복구 견적 6백만 원", "3천만 원 보증금에서 실제 채무와 복구액을 확인한 뒤 잔액을 받습니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["closure-settlement-order", "restoration-scope-evidence"], "sectionId": "mechanism"}, {"level": "advanced", "question": "원상복구 범위의 증거에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: 한국 대법원 2002년 건물명도 판례", "판례의 사실관계와 관할권이 다르면 같은 결론이 아닙니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["restoration-scope-evidence", "deposit-closeout"], "sectionId": "comparison"}, {"level": "advanced", "question": "보증금 최종 정산 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["미납 400만 원·복구 600만 원을 공제할 수 있다면 2천만 원이 남습니다.", "공제 가능성과 실제 복구비는 협의·판결에 따라 다를 수 있습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["deposit-closeout"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 보증금 3천만 원, 미납 월세 4백만 원, 복구 견적 6백만 원의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["3천만 원 보증금에서 실제 채무와 복구액을 확인한 뒤 잔액을 받습니다.", "입주 사진과 공사 동의서로 600만 원 복구 견적의 항목을 비교합니다.", "공제 가능성과 실제 복구비는 협의·판결에 따라 다를 수 있습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["closure-settlement-order", "restoration-scope-evidence", "deposit-closeout"], "sectionId": "limits"}]},
-  "business/franchise-incentives": {"coreIdea": "가맹본부의 브랜드·매뉴얼·공급망 수입과 가맹점의 매출·임금·월세·로열티를 별도로 그려야 양쪽의 인센티브와 위험 배분을 볼 수 있습니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "shop-break-even-count", "role": "점포의 손익분기 판매량"}], "introducedHere": [{"id": "franchise-split-ledger", "role": "가맹본부와 점주의 분리 장부가 (가정) 월매출 3천만 원, 로열티 5%, 원재료 1천만 원, 월세 300만 원에서 하는 역할을 설명합니다."}, {"id": "franchise-contract-controls", "role": "가맹 계약의 통제권이 (가정) 월매출 3천만 원, 로열티 5%, 원재료 1천만 원, 월세 300만 원에서 하는 역할을 설명합니다."}, {"id": "franchise-average-sales-limit", "role": "평균 매출의 한계가 (가정) 월매출 3천만 원, 로열티 5%, 원재료 1천만 원, 월세 300만 원에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "franchise-split-ledger", "sectionId": "mechanism", "intuition": "브랜드 전체 매출을 점주 개인 이익으로 읽을 수 없습니다.", "workedExample": "월매출 3천만 원의 로열티 5%는 본부 150만 원 수입이면서 점주 비용입니다.", "boundary": "본부 공급 수입은 계약과 상품별 원가를 확인해야 합니다."}, {"id": "franchise-contract-controls", "sectionId": "comparison", "intuition": "브랜드를 빌리면 마음대로 운영할 권한도 줄어듭니다.", "workedExample": "필수 품목 지정과 영업 구역이 바뀌면 점주의 원가와 매출이 함께 변합니다.", "boundary": "효력과 공시 의무는 관할국 법과 계약에 따라 다릅니다."}, {"id": "franchise-average-sales-limit", "sectionId": "limits", "intuition": "평균 숫자만으로 새 점포의 이익을 예측하지 않습니다.", "workedExample": "월매출 3천만 원이라도 로열티·월세·임금이 다르면 두 점주의 소득은 달라집니다.", "boundary": "자료의 산출 방법과 조사 기간을 반드시 확인해야 합니다."}], "conceptStages": [{"label": "01 · 가맹본부와 점주의 분리 장부", "relation": "(가정) 월매출 3천만 원, 로열티 5%, 원재료 1천만 원, 월세 300만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["franchise-split-ledger"]}, {"label": "02 · 가맹 계약의 통제권", "relation": "(가정) 월매출 3천만 원, 로열티 5%, 원재료 1천만 원, 월세 300만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["franchise-contract-controls"]}, {"label": "03 · 평균 매출의 한계", "relation": "(가정) 월매출 3천만 원, 로열티 5%, 원재료 1천만 원, 월세 300만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["franchise-average-sales-limit"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["고객: 점포에서 3천만 원을 결제합니다.", "가맹점주: 재료·임금·월세와 로열티를 냅니다.", "가맹본부: 상표·매뉴얼·공급망을 제공합니다."], "requiredConcepts": ["franchise-split-ledger"], "sectionId": "overview"}, {"level": "basic", "question": "가맹본부와 점주의 분리 장부의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["월매출 3천만 원의 로열티 5%는 본부 150만 원 수입이면서 점주 비용입니다.", "본부 공급 수입은 계약과 상품별 원가를 확인해야 합니다."], "requiredConcepts": ["franchise-split-ledger"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 월매출 3천만 원, 로열티 5%, 원재료 1천만 원, 월세 300만 원에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["고객가 받는 것: 상품과 브랜드 경험", "가맹점주가 받는 것: 운영 후 잔여현금", "가맹본부가 받는 것: 로열티 150만 원과 계약상 공급 수입"], "requiredConcepts": ["franchise-split-ledger", "franchise-contract-controls"], "sectionId": "mechanism"}, {"level": "basic", "question": "가맹 계약의 통제권가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["필수 품목 지정과 영업 구역이 바뀌면 점주의 원가와 매출이 함께 변합니다.", "공식 근거: US FTC Franchise Rule", "효력과 공시 의무는 관할국 법과 계약에 따라 다릅니다."], "requiredConcepts": ["franchise-contract-controls"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["월매출 3천만 원의 로열티 5%는 본부 150만 원 수입이면서 점주 비용입니다.", "필수 품목 지정과 영업 구역이 바뀌면 점주의 원가와 매출이 함께 변합니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["franchise-split-ledger", "franchise-contract-controls"], "sectionId": "comparison"}, {"level": "basic", "question": "평균 매출의 한계를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["평균 숫자만으로 새 점포의 이익을 예측하지 않습니다.", "자료의 산출 방법과 조사 기간을 반드시 확인해야 합니다."], "requiredConcepts": ["franchise-average-sales-limit"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 월매출 3천만 원, 로열티 5%, 원재료 1천만 원, 월세 300만 원에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 월매출 3천만 원, 로열티 5%, 원재료 1천만 원, 월세 300만 원", "월매출 3천만 원의 로열티 5%는 본부 150만 원 수입이면서 점주 비용입니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["franchise-split-ledger", "franchise-contract-controls"], "sectionId": "mechanism"}, {"level": "advanced", "question": "가맹 계약의 통제권에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: US FTC Franchise Rule", "효력과 공시 의무는 관할국 법과 계약에 따라 다릅니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["franchise-contract-controls", "franchise-average-sales-limit"], "sectionId": "comparison"}, {"level": "advanced", "question": "평균 매출의 한계 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["월매출 3천만 원이라도 로열티·월세·임금이 다르면 두 점주의 소득은 달라집니다.", "자료의 산출 방법과 조사 기간을 반드시 확인해야 합니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["franchise-average-sales-limit"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 월매출 3천만 원, 로열티 5%, 원재료 1천만 원, 월세 300만 원의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["월매출 3천만 원의 로열티 5%는 본부 150만 원 수입이면서 점주 비용입니다.", "필수 품목 지정과 영업 구역이 바뀌면 점주의 원가와 매출이 함께 변합니다.", "자료의 산출 방법과 조사 기간을 반드시 확인해야 합니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["franchise-split-ledger", "franchise-contract-controls", "franchise-average-sales-limit"], "sectionId": "limits"}]},
-  "property/land-development-residual": {"coreIdea": "개발 가능성은 등기상의 소유와 다르며 허가·용적·기반시설·분양가격·금융비용의 조건을 거꾸로 계산한 잔여액이 토지에 지불할 수 있는 값의 상한을 만듭니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "discount-factor", "role": "미래 현금흐름의 현재가치"}], "introducedHere": [{"id": "development-residual-land-value", "role": "개발 잔여 토지가치가 (가정) 완공 매각 100억 원, 공사·금융·판매 70억 원, 요구 이익 15억 원에서 하는 역할을 설명합니다."}, {"id": "land-permit-stack", "role": "토지 개발 허가의 층이 (가정) 완공 매각 100억 원, 공사·금융·판매 70억 원, 요구 이익 15억 원에서 하는 역할을 설명합니다."}, {"id": "development-time-risk", "role": "개발의 시간 위험이 (가정) 완공 매각 100억 원, 공사·금융·판매 70억 원, 요구 이익 15억 원에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "development-residual-land-value", "sectionId": "mechanism", "intuition": "건물 매각액 가운데 땅에 돌아갈 몫만 남깁니다.", "workedExample": "100억 원에서 비용 70억 원과 요구 이익 15억 원을 빼면 15억 원입니다.", "boundary": "분양가·허가·시간과 비용이 가정이므로 확정된 시장가격이 아닙니다."}, {"id": "land-permit-stack", "sectionId": "comparison", "intuition": "땅을 소유해도 원하는 건물을 바로 지을 수는 없습니다.", "workedExample": "한국에서 개발행위허가와 건축허가를 따로 확인합니다.", "boundary": "구체적 요건은 지역·용도·사업 규모·시점에 달립니다."}, {"id": "development-time-risk", "sectionId": "limits", "intuition": "같은 매각액이어도 2년 늦으면 남는 돈이 줄어듭니다.", "workedExample": "공사비가 70억 원에서 80억 원으로 오르면 가정상 잔여 땅값은 15억 원에서 5억 원으로 줄어듭니다.", "boundary": "단순 잔여법은 현금 시점 차이를 생략하므로 할인 현금흐름으로 교차검증합니다."}], "conceptStages": [{"label": "01 · 개발 잔여 토지가치", "relation": "(가정) 완공 매각 100억 원, 공사·금융·판매 70억 원, 요구 이익 15억 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["development-residual-land-value"]}, {"label": "02 · 토지 개발 허가의 층", "relation": "(가정) 완공 매각 100억 원, 공사·금융·판매 70억 원, 요구 이익 15억 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["land-permit-stack"]}, {"label": "03 · 개발의 시간 위험", "relation": "(가정) 완공 매각 100억 원, 공사·금융·판매 70억 원, 요구 이익 15억 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["development-time-risk"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["토지 소유자: 땅을 매각하거나 개발권을 계약합니다.", "개발업자: 허가·자금·공사를 조정하고 실패 위험을 집니다.", "행정기관·시공사: 허가 기준과 공사 계약을 집행합니다."], "requiredConcepts": ["development-residual-land-value"], "sectionId": "overview"}, {"level": "basic", "question": "개발 잔여 토지가치의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["100억 원에서 비용 70억 원과 요구 이익 15억 원을 빼면 15억 원입니다.", "분양가·허가·시간과 비용이 가정이므로 확정된 시장가격이 아닙니다."], "requiredConcepts": ["development-residual-land-value"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 완공 매각 100억 원, 공사·금융·판매 70억 원, 요구 이익 15억 원에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["토지 소유자가 받는 것: 토지대금", "개발업자가 받는 것: 성공하면 잔여 이익", "행정기관·시공사가 받는 것: 공공 기준 충족·공사대금"], "requiredConcepts": ["development-residual-land-value", "land-permit-stack"], "sectionId": "mechanism"}, {"level": "basic", "question": "토지 개발 허가의 층가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["한국에서 개발행위허가와 건축허가를 따로 확인합니다.", "공식 근거: RICS Valuation of development property", "구체적 요건은 지역·용도·사업 규모·시점에 달립니다."], "requiredConcepts": ["land-permit-stack"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["100억 원에서 비용 70억 원과 요구 이익 15억 원을 빼면 15억 원입니다.", "한국에서 개발행위허가와 건축허가를 따로 확인합니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["development-residual-land-value", "land-permit-stack"], "sectionId": "comparison"}, {"level": "basic", "question": "개발의 시간 위험를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["같은 매각액이어도 2년 늦으면 남는 돈이 줄어듭니다.", "단순 잔여법은 현금 시점 차이를 생략하므로 할인 현금흐름으로 교차검증합니다."], "requiredConcepts": ["development-time-risk"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 완공 매각 100억 원, 공사·금융·판매 70억 원, 요구 이익 15억 원에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 완공 매각 100억 원, 공사·금융·판매 70억 원, 요구 이익 15억 원", "100억 원에서 비용 70억 원과 요구 이익 15억 원을 빼면 15억 원입니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["development-residual-land-value", "land-permit-stack"], "sectionId": "mechanism"}, {"level": "advanced", "question": "토지 개발 허가의 층에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: RICS Valuation of development property", "구체적 요건은 지역·용도·사업 규모·시점에 달립니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["land-permit-stack", "development-time-risk"], "sectionId": "comparison"}, {"level": "advanced", "question": "개발의 시간 위험 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["공사비가 70억 원에서 80억 원으로 오르면 가정상 잔여 땅값은 15억 원에서 5억 원으로 줄어듭니다.", "단순 잔여법은 현금 시점 차이를 생략하므로 할인 현금흐름으로 교차검증합니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["development-time-risk"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 완공 매각 100억 원, 공사·금융·판매 70억 원, 요구 이익 15억 원의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["100억 원에서 비용 70억 원과 요구 이익 15억 원을 빼면 15억 원입니다.", "한국에서 개발행위허가와 건축허가를 따로 확인합니다.", "단순 잔여법은 현금 시점 차이를 생략하므로 할인 현금흐름으로 교차검증합니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["development-residual-land-value", "land-permit-stack", "development-time-risk"], "sectionId": "limits"}]},
-  "business/supply-chain-bargaining": {"coreIdea": "국제 공급망에서는 각 나라가 다른 단계를 맡아도 제품 규격·브랜드·고객 접점·교체 가능한 공급자를 통제하는 주체가 협상력을 얻으며, 한 나라의 수출액은 그 나라에 남는 부가가치와 다릅니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "gross-net-revenue", "role": "총액과 순액을 구분하는 사업 장부"}], "introducedHere": [{"id": "global-value-added-chain", "role": "국제 가치사슬의 부가가치가 (가정) 완제품 100달러, 부품·조립 60달러, 물류 10달러, 유통·브랜드 30달러에서 하는 역할을 설명합니다."}, {"id": "supply-chain-bargaining-node", "role": "공급망의 협상력 지점이 (가정) 완제품 100달러, 부품·조립 60달러, 물류 10달러, 유통·브랜드 30달러에서 하는 역할을 설명합니다."}, {"id": "supply-chain-policy-transmission", "role": "정책의 공급망 전달이 (가정) 완제품 100달러, 부품·조립 60달러, 물류 10달러, 유통·브랜드 30달러에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "global-value-added-chain", "sectionId": "mechanism", "intuition": "100달러가 국경을 넘었다고 그 나라가 100달러를 새로 만든 것은 아닙니다.", "workedExample": "100달러 제품에서 60달러 중간 투입과 10달러 물류를 분리합니다.", "boundary": "국가별 실제 수치는 산업연관표와 부가가치 무역 통계가 필요합니다."}, {"id": "supply-chain-bargaining-node", "sectionId": "comparison", "intuition": "공장 소유만으로 가장 큰 몫을 갖는 것은 아닙니다.", "workedExample": "브랜드가 여러 조립업체 중 하나를 고르면 조립 단가 협상력이 달라집니다.", "boundary": "병목 기술이나 장기 계약이 있으면 제조자가 더 강할 수 있습니다."}, {"id": "supply-chain-policy-transmission", "sectionId": "limits", "intuition": "한 나라의 규칙이 국경 밖 공장에도 주문 변화를 만듭니다.", "workedExample": "부품 관세가 오르면 브랜드의 조달처와 최종 가격 선택이 달라질 수 있습니다.", "boundary": "실제 효과는 계약·재고·대체 공급 속도에 따라 달라집니다."}], "conceptStages": [{"label": "01 · 국제 가치사슬의 부가가치", "relation": "(가정) 완제품 100달러, 부품·조립 60달러, 물류 10달러, 유통·브랜드 30달러에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["global-value-added-chain"]}, {"label": "02 · 공급망의 협상력 지점", "relation": "(가정) 완제품 100달러, 부품·조립 60달러, 물류 10달러, 유통·브랜드 30달러에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["supply-chain-bargaining-node"]}, {"label": "03 · 정책의 공급망 전달", "relation": "(가정) 완제품 100달러, 부품·조립 60달러, 물류 10달러, 유통·브랜드 30달러에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["supply-chain-policy-transmission"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["부품·조립 업체: 여러 나라에서 부품과 노동을 투입합니다.", "물류·통관: 국경을 넘어 운송과 통관을 수행합니다.", "브랜드·판매자: 규격과 고객 접점을 정하고 재고를 팝니다."], "requiredConcepts": ["global-value-added-chain"], "sectionId": "overview"}, {"level": "basic", "question": "국제 가치사슬의 부가가치의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["100달러 제품에서 60달러 중간 투입과 10달러 물류를 분리합니다.", "국가별 실제 수치는 산업연관표와 부가가치 무역 통계가 필요합니다."], "requiredConcepts": ["global-value-added-chain"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 완제품 100달러, 부품·조립 60달러, 물류 10달러, 유통·브랜드 30달러에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["부품·조립 업체가 받는 것: 계약상 제조대금 60달러", "물류·통관가 받는 것: 운송대금 10달러", "브랜드·판매자가 받는 것: 나머지 30달러에서 마케팅·위험 비용 지급"], "requiredConcepts": ["global-value-added-chain", "supply-chain-bargaining-node"], "sectionId": "mechanism"}, {"level": "basic", "question": "공급망의 협상력 지점가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["브랜드가 여러 조립업체 중 하나를 고르면 조립 단가 협상력이 달라집니다.", "공식 근거: World Bank World Development Report 2020", "병목 기술이나 장기 계약이 있으면 제조자가 더 강할 수 있습니다."], "requiredConcepts": ["supply-chain-bargaining-node"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["100달러 제품에서 60달러 중간 투입과 10달러 물류를 분리합니다.", "브랜드가 여러 조립업체 중 하나를 고르면 조립 단가 협상력이 달라집니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["global-value-added-chain", "supply-chain-bargaining-node"], "sectionId": "comparison"}, {"level": "basic", "question": "정책의 공급망 전달를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["한 나라의 규칙이 국경 밖 공장에도 주문 변화를 만듭니다.", "실제 효과는 계약·재고·대체 공급 속도에 따라 달라집니다."], "requiredConcepts": ["supply-chain-policy-transmission"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 완제품 100달러, 부품·조립 60달러, 물류 10달러, 유통·브랜드 30달러에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 완제품 100달러, 부품·조립 60달러, 물류 10달러, 유통·브랜드 30달러", "100달러 제품에서 60달러 중간 투입과 10달러 물류를 분리합니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["global-value-added-chain", "supply-chain-bargaining-node"], "sectionId": "mechanism"}, {"level": "advanced", "question": "공급망의 협상력 지점에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: World Bank World Development Report 2020", "병목 기술이나 장기 계약이 있으면 제조자가 더 강할 수 있습니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["supply-chain-bargaining-node", "supply-chain-policy-transmission"], "sectionId": "comparison"}, {"level": "advanced", "question": "정책의 공급망 전달 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["부품 관세가 오르면 브랜드의 조달처와 최종 가격 선택이 달라질 수 있습니다.", "실제 효과는 계약·재고·대체 공급 속도에 따라 달라집니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["supply-chain-policy-transmission"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 완제품 100달러, 부품·조립 60달러, 물류 10달러, 유통·브랜드 30달러의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["100달러 제품에서 60달러 중간 투입과 10달러 물류를 분리합니다.", "브랜드가 여러 조립업체 중 하나를 고르면 조립 단가 협상력이 달라집니다.", "실제 효과는 계약·재고·대체 공급 속도에 따라 달라집니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["global-value-added-chain", "supply-chain-bargaining-node", "supply-chain-policy-transmission"], "sectionId": "limits"}]},
-  "markets/funds-etfs-and-etns": {"coreIdea": "펀드·ETF는 자산 묶음에 대한 지분이고 ETN은 발행자에 대한 채무 청구권이므로 지수 이름보다 법적 소유, NAV와 거래가격, 발행자 신용과 비용을 먼저 구분해야 합니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "residual-claim", "role": "주식의 잔여청구권"}], "introducedHere": [{"id": "fund-share-vs-note", "role": "펀드 지분과 발행자 채무가 (가정) 자산 순가치 1만 원, ETF 거래가격 1만100원, ETN 발행자 부도에서 하는 역할을 설명합니다."}, {"id": "etf-nav-market-gap", "role": "ETF 시장가격과 순자산가치 괴리가 (가정) 자산 순가치 1만 원, ETF 거래가격 1만100원, ETN 발행자 부도에서 하는 역할을 설명합니다."}, {"id": "leveraged-etf-reset", "role": "레버리지 ETF의 일일 재설정이 (가정) 자산 순가치 1만 원, ETF 거래가격 1만100원, ETN 발행자 부도에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "fund-share-vs-note", "sectionId": "mechanism", "intuition": "같은 지수 이름을 붙여도 누구에게 청구하는지가 다릅니다.", "workedExample": "ETF는 자산 묶음 지분, ETN은 발행자 약속을 보유합니다.", "boundary": "구체적인 담보·상환 구조는 상품설명서로 확인해야 합니다."}, {"id": "etf-nav-market-gap", "sectionId": "comparison", "intuition": "ETF를 살 때 화면 가격이 보유 자산값과 다를 수 있습니다.", "workedExample": "순자산가치 1만 원에 1만100원 체결이면 100원 프리미엄입니다.", "boundary": "거래시간과 해외 기초시장 휴장 때 괴리 해석이 더 어렵습니다."}, {"id": "leveraged-etf-reset", "sectionId": "limits", "intuition": "하루 2배가 한 달 2배를 뜻하지 않습니다.", "workedExample": "지수가 하루 오르고 다음 날 같은 비율로 내려오면 재설정된 상품의 누적 성과가 달라집니다.", "boundary": "상품별 목표 기간과 재설정 방식은 설명서로 확인합니다."}], "conceptStages": [{"label": "01 · 펀드 지분과 발행자 채무", "relation": "(가정) 자산 순가치 1만 원, ETF 거래가격 1만100원, ETN 발행자 부도에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["fund-share-vs-note"]}, {"label": "02 · ETF 시장가격과 순자산가치 괴리", "relation": "(가정) 자산 순가치 1만 원, ETF 거래가격 1만100원, ETN 발행자 부도에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["etf-nav-market-gap"]}, {"label": "03 · 레버리지 ETF의 일일 재설정", "relation": "(가정) 자산 순가치 1만 원, ETF 거래가격 1만100원, ETN 발행자 부도에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["leveraged-etf-reset"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["투자자: 시장가격 1만100원에 상품을 삽니다.", "운용사·지정참가자: 자산 묶음과 ETF 설정·환매를 관리합니다.", "ETN 발행자: 지수 연계 지급을 약속합니다."], "requiredConcepts": ["fund-share-vs-note"], "sectionId": "overview"}, {"level": "basic", "question": "펀드 지분과 발행자 채무의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["ETF는 자산 묶음 지분, ETN은 발행자 약속을 보유합니다.", "구체적인 담보·상환 구조는 상품설명서로 확인해야 합니다."], "requiredConcepts": ["fund-share-vs-note"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 자산 순가치 1만 원, ETF 거래가격 1만100원, ETN 발행자 부도에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["투자자가 받는 것: 펀드 지분 또는 발행자 청구권", "운용사·지정참가자가 받는 것: 보수와 거래 차익 기회", "ETN 발행자가 받는 것: 채무 조달과 수수료"], "requiredConcepts": ["fund-share-vs-note", "etf-nav-market-gap"], "sectionId": "mechanism"}, {"level": "basic", "question": "ETF 시장가격과 순자산가치 괴리가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["순자산가치 1만 원에 1만100원 체결이면 100원 프리미엄입니다.", "공식 근거: SEC Investor Bulletin: Exchange-Traded Funds", "거래시간과 해외 기초시장 휴장 때 괴리 해석이 더 어렵습니다."], "requiredConcepts": ["etf-nav-market-gap"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["ETF는 자산 묶음 지분, ETN은 발행자 약속을 보유합니다.", "순자산가치 1만 원에 1만100원 체결이면 100원 프리미엄입니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["fund-share-vs-note", "etf-nav-market-gap"], "sectionId": "comparison"}, {"level": "basic", "question": "레버리지 ETF의 일일 재설정를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["하루 2배가 한 달 2배를 뜻하지 않습니다.", "상품별 목표 기간과 재설정 방식은 설명서로 확인합니다."], "requiredConcepts": ["leveraged-etf-reset"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 자산 순가치 1만 원, ETF 거래가격 1만100원, ETN 발행자 부도에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 자산 순가치 1만 원, ETF 거래가격 1만100원, ETN 발행자 부도", "ETF는 자산 묶음 지분, ETN은 발행자 약속을 보유합니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["fund-share-vs-note", "etf-nav-market-gap"], "sectionId": "mechanism"}, {"level": "advanced", "question": "ETF 시장가격과 순자산가치 괴리에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: SEC Investor Bulletin: Exchange-Traded Funds", "거래시간과 해외 기초시장 휴장 때 괴리 해석이 더 어렵습니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["etf-nav-market-gap", "leveraged-etf-reset"], "sectionId": "comparison"}, {"level": "advanced", "question": "레버리지 ETF의 일일 재설정 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["지수가 하루 오르고 다음 날 같은 비율로 내려오면 재설정된 상품의 누적 성과가 달라집니다.", "상품별 목표 기간과 재설정 방식은 설명서로 확인합니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["leveraged-etf-reset"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 자산 순가치 1만 원, ETF 거래가격 1만100원, ETN 발행자 부도의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["ETF는 자산 묶음 지분, ETN은 발행자 약속을 보유합니다.", "순자산가치 1만 원에 1만100원 체결이면 100원 프리미엄입니다.", "상품별 목표 기간과 재설정 방식은 설명서로 확인합니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["fund-share-vs-note", "etf-nav-market-gap", "leveraged-etf-reset"], "sectionId": "limits"}]},
-  "markets/forwards-and-futures": {"coreIdea": "선도·선물은 미래에 정한 가격으로 거래할 의무를 양쪽에 만들어 가격 변동 손익을 재배분하며, 선물은 거래소·청산과 일별 정산으로 중간 현금흐름이 생깁니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "bond-cashflow-pricing", "role": "미래 현금흐름과 현재 가격의 관계"}], "introducedHere": [{"id": "forward-futures-symmetric-payoff", "role": "선도·선물의 대칭 손익이 (가정) 밀 100톤을 톤당 30만 원에 3개월 뒤 사기로 약속에서 하는 역할을 설명합니다."}, {"id": "futures-daily-settlement", "role": "선물의 일별 정산이 (가정) 밀 100톤을 톤당 30만 원에 3개월 뒤 사기로 약속에서 하는 역할을 설명합니다."}, {"id": "basis-risk-in-hedging", "role": "헤지의 베이시스 위험이 (가정) 밀 100톤을 톤당 30만 원에 3개월 뒤 사기로 약속에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "forward-futures-symmetric-payoff", "sectionId": "mechanism", "intuition": "한쪽이 500만 원 유리하면 상대방은 같은 가격 기회를 포기합니다.", "workedExample": "100톤 × 톤당 5만 원 차이는 500만 원입니다.", "boundary": "현물 사업의 전체 손익과 계약 손익은 별도로 더해야 합니다."}, {"id": "futures-daily-settlement", "sectionId": "comparison", "intuition": "만기 전에도 가격 변동에 따른 현금이 청산기관을 거쳐 매일 오갑니다.", "workedExample": "농가의 매도 선물 가격이 오르면 만기 판매 전 추가 현금이 필요할 수 있습니다.", "boundary": "거래소·계약별 증거금과 정산 주기는 다릅니다."}, {"id": "basis-risk-in-hedging", "sectionId": "limits", "intuition": "선물로 막은 가격과 실제 매장 원가가 정확히 같지는 않습니다.", "workedExample": "밀의 품질이나 인도 장소가 다르면 현물 가격과 거래소 선물이 다르게 움직입니다.", "boundary": "완전 일치 계약이라도 운영·생산량 위험은 남습니다."}], "conceptStages": [{"label": "01 · 선도·선물의 대칭 손익", "relation": "(가정) 밀 100톤을 톤당 30만 원에 3개월 뒤 사기로 약속에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["forward-futures-symmetric-payoff"]}, {"label": "02 · 선물의 일별 정산", "relation": "(가정) 밀 100톤을 톤당 30만 원에 3개월 뒤 사기로 약속에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["futures-daily-settlement"]}, {"label": "03 · 헤지의 베이시스 위험", "relation": "(가정) 밀 100톤을 톤당 30만 원에 3개월 뒤 사기로 약속에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["basis-risk-in-hedging"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["제빵업자: 미래 원료 구매 가격을 3천만 원으로 고정합니다.", "농가: 미래 판매 가격을 3천만 원으로 고정합니다.", "청산기관: 거래소 선물의 증거금과 일별 손익을 관리합니다."], "requiredConcepts": ["forward-futures-symmetric-payoff"], "sectionId": "overview"}, {"level": "basic", "question": "선도·선물의 대칭 손익의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["100톤 × 톤당 5만 원 차이는 500만 원입니다.", "현물 사업의 전체 손익과 계약 손익은 별도로 더해야 합니다."], "requiredConcepts": ["forward-futures-symmetric-payoff"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 밀 100톤을 톤당 30만 원에 3개월 뒤 사기로 약속에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["제빵업자가 받는 것: 가격 상승 위험 감소", "농가가 받는 것: 가격 하락 위험 감소", "청산기관가 받는 것: 계약 이행 보장 체계"], "requiredConcepts": ["forward-futures-symmetric-payoff", "futures-daily-settlement"], "sectionId": "mechanism"}, {"level": "basic", "question": "선물의 일별 정산가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["농가의 매도 선물 가격이 오르면 만기 판매 전 추가 현금이 필요할 수 있습니다.", "공식 근거: CME Understanding Margin Changes", "거래소·계약별 증거금과 정산 주기는 다릅니다."], "requiredConcepts": ["futures-daily-settlement"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["100톤 × 톤당 5만 원 차이는 500만 원입니다.", "농가의 매도 선물 가격이 오르면 만기 판매 전 추가 현금이 필요할 수 있습니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["forward-futures-symmetric-payoff", "futures-daily-settlement"], "sectionId": "comparison"}, {"level": "basic", "question": "헤지의 베이시스 위험를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["선물로 막은 가격과 실제 매장 원가가 정확히 같지는 않습니다.", "완전 일치 계약이라도 운영·생산량 위험은 남습니다."], "requiredConcepts": ["basis-risk-in-hedging"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 밀 100톤을 톤당 30만 원에 3개월 뒤 사기로 약속에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 밀 100톤을 톤당 30만 원에 3개월 뒤 사기로 약속", "100톤 × 톤당 5만 원 차이는 500만 원입니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["forward-futures-symmetric-payoff", "futures-daily-settlement"], "sectionId": "mechanism"}, {"level": "advanced", "question": "선물의 일별 정산에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: CME Understanding Margin Changes", "거래소·계약별 증거금과 정산 주기는 다릅니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["futures-daily-settlement", "basis-risk-in-hedging"], "sectionId": "comparison"}, {"level": "advanced", "question": "헤지의 베이시스 위험 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["밀의 품질이나 인도 장소가 다르면 현물 가격과 거래소 선물이 다르게 움직입니다.", "완전 일치 계약이라도 운영·생산량 위험은 남습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["basis-risk-in-hedging"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 밀 100톤을 톤당 30만 원에 3개월 뒤 사기로 약속의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["100톤 × 톤당 5만 원 차이는 500만 원입니다.", "농가의 매도 선물 가격이 오르면 만기 판매 전 추가 현금이 필요할 수 있습니다.", "완전 일치 계약이라도 운영·생산량 위험은 남습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["forward-futures-symmetric-payoff", "futures-daily-settlement", "basis-risk-in-hedging"], "sectionId": "limits"}]},
-  "markets/options-and-asymmetric-payoffs": {"coreIdea": "콜·풋 옵션의 매수자는 행사 여부를 선택할 권리를 얻고 프리미엄을 내며, 매도자는 프리미엄을 받는 대신 불리할 때 계약 이행 의무를 집니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "forward-futures-symmetric-payoff", "role": "선도·선물의 대칭 손익"}], "introducedHere": [{"id": "option-right-obligation", "role": "옵션의 권리와 의무가 (가정) 주식 1주, 행사가 100, 콜 프리미엄 8, 만기 주가 120에서 하는 역할을 설명합니다."}, {"id": "option-premium-time-value", "role": "옵션 프리미엄과 남은 시간이 (가정) 주식 1주, 행사가 100, 콜 프리미엄 8, 만기 주가 120에서 하는 역할을 설명합니다."}, {"id": "uncovered-option-tail", "role": "무담보 옵션 매도의 꼬리 위험이 (가정) 주식 1주, 행사가 100, 콜 프리미엄 8, 만기 주가 120에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "option-right-obligation", "sectionId": "mechanism", "intuition": "매수자는 8을 잃고 끝낼 수 있지만 매도자의 손실은 더 클 수 있습니다.", "workedExample": "주가 120일 때 콜 행사 가치 20에서 프리미엄 8을 빼 순손익 12입니다.", "boundary": "실제 계약 승수와 결제 방식이 있으면 한 주 계산을 확장해야 합니다."}, {"id": "option-premium-time-value", "sectionId": "comparison", "intuition": "지금 행사 가치가 0이어도 옵션 가격이 0은 아닐 수 있습니다.", "workedExample": "주가 90의 콜이 만기 전에는 남은 시간 때문에 거래될 수 있습니다.", "boundary": "변동성과 금리 변화가 프리미엄에 영향을 주므로 단일 숫자 예로 가격을 일반화할 수 없습니다."}, {"id": "uncovered-option-tail", "sectionId": "limits", "intuition": "자주 작은 돈을 벌어도 한 번 큰 손실이 날 수 있습니다.", "workedExample": "행사가 100 콜을 팔고 주가가 200이 되면 받은 8보다 이행 손실 100이 훨씬 큽니다.", "boundary": "담보·헤지·포지션 제한과 결제 규칙을 함께 봐야 합니다."}], "conceptStages": [{"label": "01 · 옵션의 권리와 의무", "relation": "(가정) 주식 1주, 행사가 100, 콜 프리미엄 8, 만기 주가 120에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["option-right-obligation"]}, {"label": "02 · 옵션 프리미엄과 남은 시간", "relation": "(가정) 주식 1주, 행사가 100, 콜 프리미엄 8, 만기 주가 120에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["option-premium-time-value"]}, {"label": "03 · 무담보 옵션 매도의 꼬리 위험", "relation": "(가정) 주식 1주, 행사가 100, 콜 프리미엄 8, 만기 주가 120에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["uncovered-option-tail"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["콜 매수자: 8을 먼저 내고 100에 살 권리를 얻습니다.", "콜 매도자: 8을 먼저 받고 요청 시 100에 팝니다.", "청산·중개: 계약 조건과 담보를 관리합니다."], "requiredConcepts": ["option-right-obligation"], "sectionId": "overview"}, {"level": "basic", "question": "옵션의 권리와 의무의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["주가 120일 때 콜 행사 가치 20에서 프리미엄 8을 빼 순손익 12입니다.", "실제 계약 승수와 결제 방식이 있으면 한 주 계산을 확장해야 합니다."], "requiredConcepts": ["option-right-obligation"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 주식 1주, 행사가 100, 콜 프리미엄 8, 만기 주가 120에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["콜 매수자가 받는 것: 주가 상승 때 선택권", "콜 매도자가 받는 것: 프리미엄과 의무", "청산·중개가 받는 것: 수수료와 이행 체계"], "requiredConcepts": ["option-right-obligation", "option-premium-time-value"], "sectionId": "mechanism"}, {"level": "basic", "question": "옵션 프리미엄과 남은 시간가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["주가 90의 콜이 만기 전에는 남은 시간 때문에 거래될 수 있습니다.", "공식 근거: Options Industry Council: Options Basics", "변동성과 금리 변화가 프리미엄에 영향을 주므로 단일 숫자 예로 가격을 일반화할 수 없습니다."], "requiredConcepts": ["option-premium-time-value"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["주가 120일 때 콜 행사 가치 20에서 프리미엄 8을 빼 순손익 12입니다.", "주가 90의 콜이 만기 전에는 남은 시간 때문에 거래될 수 있습니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["option-right-obligation", "option-premium-time-value"], "sectionId": "comparison"}, {"level": "basic", "question": "무담보 옵션 매도의 꼬리 위험를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["자주 작은 돈을 벌어도 한 번 큰 손실이 날 수 있습니다.", "담보·헤지·포지션 제한과 결제 규칙을 함께 봐야 합니다."], "requiredConcepts": ["uncovered-option-tail"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 주식 1주, 행사가 100, 콜 프리미엄 8, 만기 주가 120에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 주식 1주, 행사가 100, 콜 프리미엄 8, 만기 주가 120", "주가 120일 때 콜 행사 가치 20에서 프리미엄 8을 빼 순손익 12입니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["option-right-obligation", "option-premium-time-value"], "sectionId": "mechanism"}, {"level": "advanced", "question": "옵션 프리미엄과 남은 시간에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: Options Industry Council: Options Basics", "변동성과 금리 변화가 프리미엄에 영향을 주므로 단일 숫자 예로 가격을 일반화할 수 없습니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["option-premium-time-value", "uncovered-option-tail"], "sectionId": "comparison"}, {"level": "advanced", "question": "무담보 옵션 매도의 꼬리 위험 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["행사가 100 콜을 팔고 주가가 200이 되면 받은 8보다 이행 손실 100이 훨씬 큽니다.", "담보·헤지·포지션 제한과 결제 규칙을 함께 봐야 합니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["uncovered-option-tail"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 주식 1주, 행사가 100, 콜 프리미엄 8, 만기 주가 120의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["주가 120일 때 콜 행사 가치 20에서 프리미엄 8을 빼 순손익 12입니다.", "주가 90의 콜이 만기 전에는 남은 시간 때문에 거래될 수 있습니다.", "담보·헤지·포지션 제한과 결제 규칙을 함께 봐야 합니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["option-right-obligation", "option-premium-time-value", "uncovered-option-tail"], "sectionId": "limits"}]},
-  "markets/swaps-and-credit-risk": {"coreIdea": "금리·통화 스왑은 정해진 명목원금을 기준으로 서로 다른 지급 흐름을 교환하고 CDS는 채무불이행 위험의 보상 의무를 넘기며, 명목원금이 곧 현재 손실은 아닙니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "forward-futures-symmetric-payoff", "role": "선도 계약의 양쪽 지급"}], "introducedHere": [{"id": "swap-cashflow-exchange", "role": "스왑 현금흐름 교환이 (가정) 명목원금 10억 원, 고정금리 4%, 변동금리 6%에서 하는 역할을 설명합니다."}, {"id": "cds-credit-protection", "role": "CDS 신용 보호가 (가정) 명목원금 10억 원, 고정금리 4%, 변동금리 6%에서 하는 역할을 설명합니다."}, {"id": "derivatives-notional-vs-exposure", "role": "명목원금과 실제 노출의 구분이 (가정) 명목원금 10억 원, 고정금리 4%, 변동금리 6%에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "swap-cashflow-exchange", "sectionId": "mechanism", "intuition": "원금 10억 원 자체를 매 지급일에 주고받는 것은 아닙니다.", "workedExample": "4천만 원 고정 지급과 6천만 원 변동 지급을 상계하면 차액 2천만 원이 이동합니다.", "boundary": "통화 스왑은 계약에 따라 원금 교환이 있을 수 있습니다."}, {"id": "cds-credit-protection", "sectionId": "comparison", "intuition": "대출이나 채권의 부도 위험을 다른 상대에게 옮길 수 있습니다.", "workedExample": "채권 보유자가 CDS를 사면 채무불이행 손실 일부를 계약 상대가 부담합니다.", "boundary": "보호 범위와 정산은 신용 사건 정의·상대방 이행에 달립니다."}, {"id": "derivatives-notional-vs-exposure", "sectionId": "limits", "intuition": "10억 원 명목 계약이 오늘 10억 원 손실이라는 말은 아닙니다.", "workedExample": "10억 원 기준 4%와 6%의 차액은 연 2천만 원입니다.", "boundary": "스트레스 손실은 시장 변동과 계약·담보 구조에 따라 훨씬 달라질 수 있습니다."}], "conceptStages": [{"label": "01 · 스왑 현금흐름 교환", "relation": "(가정) 명목원금 10억 원, 고정금리 4%, 변동금리 6%에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["swap-cashflow-exchange"]}, {"label": "02 · CDS 신용 보호", "relation": "(가정) 명목원금 10억 원, 고정금리 4%, 변동금리 6%에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["cds-credit-protection"]}, {"label": "03 · 명목원금과 실제 노출의 구분", "relation": "(가정) 명목원금 10억 원, 고정금리 4%, 변동금리 6%에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["derivatives-notional-vs-exposure"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["고정금리 지급자: 10억 원 기준 연 4천만 원을 지급합니다.", "변동금리 지급자: 현재 기준 연 6천만 원을 지급합니다.", "담보·청산 상대: 시가 변동과 채무불이행을 관리합니다."], "requiredConcepts": ["swap-cashflow-exchange"], "sectionId": "overview"}, {"level": "basic", "question": "스왑 현금흐름 교환의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["4천만 원 고정 지급과 6천만 원 변동 지급을 상계하면 차액 2천만 원이 이동합니다.", "통화 스왑은 계약에 따라 원금 교환이 있을 수 있습니다."], "requiredConcepts": ["swap-cashflow-exchange"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 명목원금 10억 원, 고정금리 4%, 변동금리 6%에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["고정금리 지급자가 받는 것: 변동금리 수취", "변동금리 지급자가 받는 것: 고정금리 수취", "담보·청산 상대가 받는 것: 담보와 수수료"], "requiredConcepts": ["swap-cashflow-exchange", "cds-credit-protection"], "sectionId": "mechanism"}, {"level": "basic", "question": "CDS 신용 보호가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["채권 보유자가 CDS를 사면 채무불이행 손실 일부를 계약 상대가 부담합니다.", "공식 근거: CFTC Swaps Report Data Dictionary", "보호 범위와 정산은 신용 사건 정의·상대방 이행에 달립니다."], "requiredConcepts": ["cds-credit-protection"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["4천만 원 고정 지급과 6천만 원 변동 지급을 상계하면 차액 2천만 원이 이동합니다.", "채권 보유자가 CDS를 사면 채무불이행 손실 일부를 계약 상대가 부담합니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["swap-cashflow-exchange", "cds-credit-protection"], "sectionId": "comparison"}, {"level": "basic", "question": "명목원금과 실제 노출의 구분를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["10억 원 명목 계약이 오늘 10억 원 손실이라는 말은 아닙니다.", "스트레스 손실은 시장 변동과 계약·담보 구조에 따라 훨씬 달라질 수 있습니다."], "requiredConcepts": ["derivatives-notional-vs-exposure"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 명목원금 10억 원, 고정금리 4%, 변동금리 6%에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 명목원금 10억 원, 고정금리 4%, 변동금리 6%", "4천만 원 고정 지급과 6천만 원 변동 지급을 상계하면 차액 2천만 원이 이동합니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["swap-cashflow-exchange", "cds-credit-protection"], "sectionId": "mechanism"}, {"level": "advanced", "question": "CDS 신용 보호에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: CFTC Swaps Report Data Dictionary", "보호 범위와 정산은 신용 사건 정의·상대방 이행에 달립니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["cds-credit-protection", "derivatives-notional-vs-exposure"], "sectionId": "comparison"}, {"level": "advanced", "question": "명목원금과 실제 노출의 구분 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["10억 원 기준 4%와 6%의 차액은 연 2천만 원입니다.", "스트레스 손실은 시장 변동과 계약·담보 구조에 따라 훨씬 달라질 수 있습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["derivatives-notional-vs-exposure"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 명목원금 10억 원, 고정금리 4%, 변동금리 6%의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["4천만 원 고정 지급과 6천만 원 변동 지급을 상계하면 차액 2천만 원이 이동합니다.", "채권 보유자가 CDS를 사면 채무불이행 손실 일부를 계약 상대가 부담합니다.", "스트레스 손실은 시장 변동과 계약·담보 구조에 따라 훨씬 달라질 수 있습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["swap-cashflow-exchange", "cds-credit-protection", "derivatives-notional-vs-exposure"], "sectionId": "limits"}]},
-  "risk/margin-collateral-and-leverage": {"coreIdea": "레버리지 거래와 파생상품은 시가 하락 때 증거금을 추가하고 담보 가치를 다시 매기므로 만기의 수익 전망과 별개로 오늘의 현금 부족이 강제 매도를 만들 수 있습니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "financial-leverage", "role": "차입이 자기자본 손익을 증폭하는 원리"}, {"id": "futures-daily-settlement", "role": "선물의 일별 정산"}], "introducedHere": [{"id": "collateral-headroom", "role": "담보 여력이 (가정) 자기자본 20억 원, 차입 80억 원, 자산 100억 원이 10% 하락에서 하는 역할을 설명합니다."}, {"id": "margin-liquidity-timing", "role": "증거금의 현금 시점이 (가정) 자기자본 20억 원, 차입 80억 원, 자산 100억 원이 10% 하락에서 하는 역할을 설명합니다."}, {"id": "funding-market-liquidity-loop", "role": "자금·시장 유동성의 되먹임이 (가정) 자기자본 20억 원, 차입 80억 원, 자산 100억 원이 10% 하락에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "collateral-headroom", "sectionId": "mechanism", "intuition": "자산값이 내려가면 추가 납입 전까지 남은 담보 여력이 줄어듭니다.", "workedExample": "100억 원 자산-80억 원 빚=20억 원의 완충액이 자산 90억 원에서 10억 원으로 줄어듭니다.", "boundary": "실제 유지 기준과 담보 인정 비율은 계약·청산기관마다 다릅니다."}, {"id": "margin-liquidity-timing", "sectionId": "comparison", "intuition": "만기에 이겨도 오늘 돈이 없으면 계약을 접을 수 있습니다.", "workedExample": "선물의 평가손실이 발생한 날에 현금 납입이 필요합니다.", "boundary": "거래소·청산기관·장외 계약의 기준이 다릅니다."}, {"id": "funding-market-liquidity-loop", "sectionId": "limits", "intuition": "같은 자산을 여러 사람이 동시에 팔면 한 명의 손실보다 큰 파장이 생깁니다.", "workedExample": "100억 원 자산의 가격이 내려 90억 원이 되자 매물이 늘고 호가가 더 낮아질 수 있습니다.", "boundary": "항상 발생하는 법칙은 아니며 매수 유동성과 중앙은행·규제 대응이 완충할 수 있습니다."}], "conceptStages": [{"label": "01 · 담보 여력", "relation": "(가정) 자기자본 20억 원, 차입 80억 원, 자산 100억 원이 10% 하락에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["collateral-headroom"]}, {"label": "02 · 증거금의 현금 시점", "relation": "(가정) 자기자본 20억 원, 차입 80억 원, 자산 100억 원이 10% 하락에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["margin-liquidity-timing"]}, {"label": "03 · 자금·시장 유동성의 되먹임", "relation": "(가정) 자기자본 20억 원, 차입 80억 원, 자산 100억 원이 10% 하락에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["funding-market-liquidity-loop"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["투자자: 20억 원을 넣고 80억 원을 빌려 100억 원 자산을 삽니다.", "대출자·청산기관: 담보 가치와 유지 기준을 매일 확인합니다.", "시장: 강제 매도 물량을 현재 호가에 받아들입니다."], "requiredConcepts": ["collateral-headroom"], "sectionId": "overview"}, {"level": "basic", "question": "담보 여력의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["100억 원 자산-80억 원 빚=20억 원의 완충액이 자산 90억 원에서 10억 원으로 줄어듭니다.", "실제 유지 기준과 담보 인정 비율은 계약·청산기관마다 다릅니다."], "requiredConcepts": ["collateral-headroom"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 자기자본 20억 원, 차입 80억 원, 자산 100억 원이 10% 하락에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["투자자가 받는 것: 자산 상승 시 확대된 자기 몫", "대출자·청산기관가 받는 것: 대출 상환과 보호 담보", "시장가 받는 것: 가격 변화와 추가 담보 요구"], "requiredConcepts": ["collateral-headroom", "margin-liquidity-timing"], "sectionId": "mechanism"}, {"level": "basic", "question": "증거금의 현금 시점가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["선물의 평가손실이 발생한 날에 현금 납입이 필요합니다.", "공식 근거: CME Understanding Margin Changes", "거래소·청산기관·장외 계약의 기준이 다릅니다."], "requiredConcepts": ["margin-liquidity-timing"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["100억 원 자산-80억 원 빚=20억 원의 완충액이 자산 90억 원에서 10억 원으로 줄어듭니다.", "선물의 평가손실이 발생한 날에 현금 납입이 필요합니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["collateral-headroom", "margin-liquidity-timing"], "sectionId": "comparison"}, {"level": "basic", "question": "자금·시장 유동성의 되먹임를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["같은 자산을 여러 사람이 동시에 팔면 한 명의 손실보다 큰 파장이 생깁니다.", "항상 발생하는 법칙은 아니며 매수 유동성과 중앙은행·규제 대응이 완충할 수 있습니다."], "requiredConcepts": ["funding-market-liquidity-loop"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 자기자본 20억 원, 차입 80억 원, 자산 100억 원이 10% 하락에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 자기자본 20억 원, 차입 80억 원, 자산 100억 원이 10% 하락", "100억 원 자산-80억 원 빚=20억 원의 완충액이 자산 90억 원에서 10억 원으로 줄어듭니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["collateral-headroom", "margin-liquidity-timing"], "sectionId": "mechanism"}, {"level": "advanced", "question": "증거금의 현금 시점에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: CME Understanding Margin Changes", "거래소·청산기관·장외 계약의 기준이 다릅니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["margin-liquidity-timing", "funding-market-liquidity-loop"], "sectionId": "comparison"}, {"level": "advanced", "question": "자금·시장 유동성의 되먹임 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["100억 원 자산의 가격이 내려 90억 원이 되자 매물이 늘고 호가가 더 낮아질 수 있습니다.", "항상 발생하는 법칙은 아니며 매수 유동성과 중앙은행·규제 대응이 완충할 수 있습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["funding-market-liquidity-loop"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 자기자본 20억 원, 차입 80억 원, 자산 100억 원이 10% 하락의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["100억 원 자산-80억 원 빚=20억 원의 완충액이 자산 90억 원에서 10억 원으로 줄어듭니다.", "선물의 평가손실이 발생한 날에 현금 납입이 필요합니다.", "항상 발생하는 법칙은 아니며 매수 유동성과 중앙은행·규제 대응이 완충할 수 있습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["collateral-headroom", "margin-liquidity-timing", "funding-market-liquidity-loop"], "sectionId": "limits"}]},
-  "macro/global-capital-and-policy": {"coreIdea": "정부·중앙은행의 결정권은 환율, 해외 차입, 은행 담보와 투자자 포트폴리오를 거쳐 가격에 전달되며 같은 글로벌 충격도 국가의 부채 통화·제도에 따라 다른 결과를 냅니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "central-bank-balance-sheet", "role": "중앙은행의 대차대조표"}], "introducedHere": [{"id": "currency-mismatch-balance-sheet", "role": "통화 불일치의 재무 압박이 (가정) 달러 부채 1억 달러, 환율 1달러=1천 원에서 1천200원에서 하는 역할을 설명합니다."}, {"id": "global-funding-transmission", "role": "국제 자금의 정책 전달이 (가정) 달러 부채 1억 달러, 환율 1달러=1천 원에서 1천200원에서 하는 역할을 설명합니다."}, {"id": "policy-price-causality-boundary", "role": "정책과 가격의 인과 경계가 (가정) 달러 부채 1억 달러, 환율 1달러=1천 원에서 1천200원에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "currency-mismatch-balance-sheet", "sectionId": "mechanism", "intuition": "사업이 그대로여도 환율이 오르면 빚이 커 보이고 실제 상환 부담도 늘 수 있습니다.", "workedExample": "1억 달러 부채는 1천 원 환율에서 1천억 원, 1천200원에서 1천200억 원입니다.", "boundary": "외화 수출 수입이나 헤지가 있으면 순노출은 줄어듭니다."}, {"id": "global-funding-transmission", "sectionId": "comparison", "intuition": "주요 통화의 조달 비용과 투자자의 선택은 국경을 넘어 다른 나라의 대출 조건을 바꿉니다.", "workedExample": "달러 조달 비용이 오르면 달러 부채 기업의 만기 연장 비용이 늘어날 수 있습니다.", "boundary": "국가별 외채 구조와 규제·완충자산에 따라 반응은 다릅니다."}, {"id": "policy-price-causality-boundary", "sectionId": "limits", "intuition": "시간상 먼저 일어났다는 이유만으로 원인이라 할 수 없습니다.", "workedExample": "금리 발표와 원자재 급등이 같은 날 일어나면 주가 하락의 몫을 분리해야 합니다.", "boundary": "단일 사건의 가격 반응만으로 장기 정책 효과를 확정하지 않습니다."}], "conceptStages": [{"label": "01 · 통화 불일치의 재무 압박", "relation": "(가정) 달러 부채 1억 달러, 환율 1달러=1천 원에서 1천200원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["currency-mismatch-balance-sheet"]}, {"label": "02 · 국제 자금의 정책 전달", "relation": "(가정) 달러 부채 1억 달러, 환율 1달러=1천 원에서 1천200원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["global-funding-transmission"]}, {"label": "03 · 정책과 가격의 인과 경계", "relation": "(가정) 달러 부채 1억 달러, 환율 1달러=1천 원에서 1천200원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["policy-price-causality-boundary"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["정부·중앙은행: 세금·지출·금리와 외환 정책을 정합니다.", "기업·은행: 달러 부채와 현지통화 수입을 관리합니다.", "해외 투자자: 금리·환율·위험을 보고 자산을 사고팝니다."], "requiredConcepts": ["currency-mismatch-balance-sheet"], "sectionId": "overview"}, {"level": "basic", "question": "통화 불일치의 재무 압박의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["1억 달러 부채는 1천 원 환율에서 1천억 원, 1천200원에서 1천200억 원입니다.", "외화 수출 수입이나 헤지가 있으면 순노출은 줄어듭니다."], "requiredConcepts": ["currency-mismatch-balance-sheet"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 달러 부채 1억 달러, 환율 1달러=1천 원에서 1천200원에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["정부·중앙은행가 받는 것: 공공 목표의 실행", "기업·은행가 받는 것: 사업 자금", "해외 투자자가 받는 것: 해당 통화 청구권"], "requiredConcepts": ["currency-mismatch-balance-sheet", "global-funding-transmission"], "sectionId": "mechanism"}, {"level": "basic", "question": "국제 자금의 정책 전달가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["달러 조달 비용이 오르면 달러 부채 기업의 만기 연장 비용이 늘어날 수 있습니다.", "공식 근거: BIS Global Liquidity Indicators", "국가별 외채 구조와 규제·완충자산에 따라 반응은 다릅니다."], "requiredConcepts": ["global-funding-transmission"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["1억 달러 부채는 1천 원 환율에서 1천억 원, 1천200원에서 1천200억 원입니다.", "달러 조달 비용이 오르면 달러 부채 기업의 만기 연장 비용이 늘어날 수 있습니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["currency-mismatch-balance-sheet", "global-funding-transmission"], "sectionId": "comparison"}, {"level": "basic", "question": "정책과 가격의 인과 경계를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["시간상 먼저 일어났다는 이유만으로 원인이라 할 수 없습니다.", "단일 사건의 가격 반응만으로 장기 정책 효과를 확정하지 않습니다."], "requiredConcepts": ["policy-price-causality-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 달러 부채 1억 달러, 환율 1달러=1천 원에서 1천200원에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 달러 부채 1억 달러, 환율 1달러=1천 원에서 1천200원", "1억 달러 부채는 1천 원 환율에서 1천억 원, 1천200원에서 1천200억 원입니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["currency-mismatch-balance-sheet", "global-funding-transmission"], "sectionId": "mechanism"}, {"level": "advanced", "question": "국제 자금의 정책 전달에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: BIS Global Liquidity Indicators", "국가별 외채 구조와 규제·완충자산에 따라 반응은 다릅니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["global-funding-transmission", "policy-price-causality-boundary"], "sectionId": "comparison"}, {"level": "advanced", "question": "정책과 가격의 인과 경계 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["금리 발표와 원자재 급등이 같은 날 일어나면 주가 하락의 몫을 분리해야 합니다.", "단일 사건의 가격 반응만으로 장기 정책 효과를 확정하지 않습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["policy-price-causality-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 달러 부채 1억 달러, 환율 1달러=1천 원에서 1천200원의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["1억 달러 부채는 1천 원 환율에서 1천억 원, 1천200원에서 1천200억 원입니다.", "달러 조달 비용이 오르면 달러 부채 기업의 만기 연장 비용이 늘어날 수 있습니다.", "단일 사건의 가격 반응만으로 장기 정책 효과를 확정하지 않습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["currency-mismatch-balance-sheet", "global-funding-transmission", "policy-price-causality-boundary"], "sectionId": "limits"}]},
-  "macro/narratives-and-market-regimes": {"coreIdea": "새로운 기술·정책·국가 서사는 미래 현금흐름에 대한 기대를 바꾸고 매수 주문과 자금조달을 거쳐 가격을 움직이지만, 가격 상승 자체가 다시 서사의 증거처럼 쓰일 때 취약한 순환이 생깁니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "global-funding-transmission", "role": "국제 자금의 정책 전달"}], "introducedHere": [{"id": "narrative-order-channel", "role": "서사의 주문 전달이 (가정) 매년 받을 현금 기대 100→150, 할인율 10%→8%, 실제 첫해 현금 105에서 하는 역할을 설명합니다."}, {"id": "reflexive-financing-loop", "role": "가격과 자금조달의 되먹임이 (가정) 매년 받을 현금 기대 100→150, 할인율 10%→8%, 실제 첫해 현금 105에서 하는 역할을 설명합니다."}, {"id": "narrative-falsification-metrics", "role": "시장 서사의 반증 지표가 (가정) 매년 받을 현금 기대 100→150, 할인율 10%→8%, 실제 첫해 현금 105에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "narrative-order-channel", "sectionId": "mechanism", "intuition": "사람들이 믿는 것 자체보다 그 믿음으로 돈을 움직이는지가 가격을 바꿉니다.", "workedExample": "매년 받을 현금 기대가 100에서 150으로, 할인율이 10%에서 8%로 바뀌면 영구 지속 가정의 평가액은 1,000에서 1,875로 오릅니다.", "boundary": "실제 실적과 할인율은 별개로 검증해야 합니다."}, {"id": "reflexive-financing-loop", "sectionId": "comparison", "intuition": "주가가 오르면 기업이 자금을 더 싸게 모을 수 있습니다.", "workedExample": "높아진 주가로 설비 자금을 조달하면 기대가 일부 현실 생산으로 이어질 수 있습니다.", "boundary": "증자·차입이 막히거나 수요가 없으면 이 경로는 작동하지 않습니다."}, {"id": "narrative-falsification-metrics", "sectionId": "limits", "intuition": "오른 가격을 오른 가격의 근거로 다시 쓰지 않습니다.", "workedExample": "매년 현금 150이라는 기대를 첫해 실제 현금 105와 수주·원가로 점검합니다.", "boundary": "한 기간의 미달만으로 장기 가능성을 완전히 기각하지 않습니다."}], "conceptStages": [{"label": "01 · 서사의 주문 전달", "relation": "(가정) 매년 받을 현금 기대 100→150, 할인율 10%→8%, 실제 첫해 현금 105에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["narrative-order-channel"]}, {"label": "02 · 가격과 자금조달의 되먹임", "relation": "(가정) 매년 받을 현금 기대 100→150, 할인율 10%→8%, 실제 첫해 현금 105에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["reflexive-financing-loop"]}, {"label": "03 · 시장 서사의 반증 지표", "relation": "(가정) 매년 받을 현금 기대 100→150, 할인율 10%→8%, 실제 첫해 현금 105에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["narrative-falsification-metrics"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["기업·정부: 미래 계획과 정책 목표를 발표합니다.", "투자자·대출자: 기대 현금과 할인율을 다시 계산하고 주문합니다.", "대중·언론: 오른 가격을 보고 이야기를 확산합니다."], "requiredConcepts": ["narrative-order-channel"], "sectionId": "overview"}, {"level": "basic", "question": "서사의 주문 전달의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["매년 받을 현금 기대가 100에서 150으로, 할인율이 10%에서 8%로 바뀌면 영구 지속 가정의 평가액은 1,000에서 1,875로 오릅니다.", "실제 실적과 할인율은 별개로 검증해야 합니다."], "requiredConcepts": ["narrative-order-channel"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 매년 받을 현금 기대 100→150, 할인율 10%→8%, 실제 첫해 현금 105에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["기업·정부가 받는 것: 자금·정치적 지지", "투자자·대출자가 받는 것: 청구권과 가격 변동", "대중·언론가 받는 것: 새 기대와 참여"], "requiredConcepts": ["narrative-order-channel", "reflexive-financing-loop"], "sectionId": "mechanism"}, {"level": "basic", "question": "가격과 자금조달의 되먹임가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["높아진 주가로 설비 자금을 조달하면 기대가 일부 현실 생산으로 이어질 수 있습니다.", "공식 근거: BIS Market and Funding Liquidity", "증자·차입이 막히거나 수요가 없으면 이 경로는 작동하지 않습니다."], "requiredConcepts": ["reflexive-financing-loop"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["매년 받을 현금 기대가 100에서 150으로, 할인율이 10%에서 8%로 바뀌면 영구 지속 가정의 평가액은 1,000에서 1,875로 오릅니다.", "높아진 주가로 설비 자금을 조달하면 기대가 일부 현실 생산으로 이어질 수 있습니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["narrative-order-channel", "reflexive-financing-loop"], "sectionId": "comparison"}, {"level": "basic", "question": "시장 서사의 반증 지표를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["오른 가격을 오른 가격의 근거로 다시 쓰지 않습니다.", "한 기간의 미달만으로 장기 가능성을 완전히 기각하지 않습니다."], "requiredConcepts": ["narrative-falsification-metrics"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 매년 받을 현금 기대 100→150, 할인율 10%→8%, 실제 첫해 현금 105에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 매년 받을 현금 기대 100→150, 할인율 10%→8%, 실제 첫해 현금 105", "매년 받을 현금 기대가 100에서 150으로, 할인율이 10%에서 8%로 바뀌면 영구 지속 가정의 평가액은 1,000에서 1,875로 오릅니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["narrative-order-channel", "reflexive-financing-loop"], "sectionId": "mechanism"}, {"level": "advanced", "question": "가격과 자금조달의 되먹임에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: BIS Market and Funding Liquidity", "증자·차입이 막히거나 수요가 없으면 이 경로는 작동하지 않습니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["reflexive-financing-loop", "narrative-falsification-metrics"], "sectionId": "comparison"}, {"level": "advanced", "question": "시장 서사의 반증 지표 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["매년 현금 150이라는 기대를 첫해 실제 현금 105와 수주·원가로 점검합니다.", "한 기간의 미달만으로 장기 가능성을 완전히 기각하지 않습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["narrative-falsification-metrics"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 매년 받을 현금 기대 100→150, 할인율 10%→8%, 실제 첫해 현금 105의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["매년 받을 현금 기대가 100에서 150으로, 할인율이 10%에서 8%로 바뀌면 영구 지속 가정의 평가액은 1,000에서 1,875로 오릅니다.", "높아진 주가로 설비 자금을 조달하면 기대가 일부 현실 생산으로 이어질 수 있습니다.", "한 기간의 미달만으로 장기 가능성을 완전히 기각하지 않습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["narrative-order-channel", "reflexive-financing-loop", "narrative-falsification-metrics"], "sectionId": "limits"}]},
-  "institutions/insurance-risk-pooling": {"coreIdea": "보험은 많은 가입자의 보험료를 모아 일부의 약정 손실을 지급하는 위험 풀이고, 가격에는 예상 사고액뿐 아니라 운영비·자본·불확실성이 포함되며 대형 공통 충격은 다시 밖으로 넘겨야 합니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "portfolio-variance", "role": "여러 위험의 합에서 분산을 보는 기준"}], "introducedHere": [{"id": "insurance-risk-pool", "role": "보험 위험 풀이 (가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 하는 역할을 설명합니다."}, {"id": "insurance-exclusion-limit", "role": "보험의 면책과 한도가 (가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 하는 역할을 설명합니다."}, {"id": "correlated-insurance-loss", "role": "동시 사고의 위험이 (가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "insurance-risk-pool", "sectionId": "mechanism", "intuition": "큰 사고를 겪는 사람이 혼자 300만 원을 준비하지 않아도 됩니다.", "workedExample": "1천 명이 10만 원씩 내고 사고 20건에 6천만 원을 지급합니다.", "boundary": "사고가 동시에 몰리면 평균 추정과 자본이 부족할 수 있습니다."}, {"id": "insurance-exclusion-limit", "sectionId": "comparison", "intuition": "보험에 가입했다는 말만으로 모든 손해가 덮이지 않습니다.", "workedExample": "300만 원 손해라도 자기부담금과 보상 한도가 있으면 지급액은 달라집니다.", "boundary": "상품 약관과 관할국 소비자 보호를 확인해야 합니다."}, {"id": "correlated-insurance-loss", "sectionId": "limits", "intuition": "홍수 한 번에 지역의 많은 계약이 손해를 냅니다.", "workedExample": "가정에서는 사고 20건이지만 같은 재난으로 200건이면 지급액이 크게 늘어납니다.", "boundary": "재보험·지역 분산·정부 지원 여부에 따라 대응이 다릅니다."}], "conceptStages": [{"label": "01 · 보험 위험 풀", "relation": "(가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["insurance-risk-pool"]}, {"label": "02 · 보험의 면책과 한도", "relation": "(가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["insurance-exclusion-limit"]}, {"label": "03 · 동시 사고의 위험", "relation": "(가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["correlated-insurance-loss"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["가입자 1천 명: 각 10만 원, 모두 합해 1억 원을 냅니다.", "사고자 20명: 각 평균 300만 원 손해를 신고합니다.", "보험사·재보험사: 심사·지급·준비금과 대형 위험을 관리합니다."], "requiredConcepts": ["insurance-risk-pool"], "sectionId": "overview"}, {"level": "basic", "question": "보험 위험 풀의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["1천 명이 10만 원씩 내고 사고 20건에 6천만 원을 지급합니다.", "사고가 동시에 몰리면 평균 추정과 자본이 부족할 수 있습니다."], "requiredConcepts": ["insurance-risk-pool"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["가입자 1천 명가 받는 것: 약정 사고 때 보상 청구권", "사고자 20명가 받는 것: 합계 6천만 원 보험금", "보험사·재보험사가 받는 것: 비용·자본 몫과 재보험료"], "requiredConcepts": ["insurance-risk-pool", "insurance-exclusion-limit"], "sectionId": "mechanism"}, {"level": "basic", "question": "보험의 면책과 한도가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["300만 원 손해라도 자기부담금과 보상 한도가 있으면 지급액은 달라집니다.", "공식 근거: NAIC How Does Insurance Work?", "상품 약관과 관할국 소비자 보호를 확인해야 합니다."], "requiredConcepts": ["insurance-exclusion-limit"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["1천 명이 10만 원씩 내고 사고 20건에 6천만 원을 지급합니다.", "300만 원 손해라도 자기부담금과 보상 한도가 있으면 지급액은 달라집니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["insurance-risk-pool", "insurance-exclusion-limit"], "sectionId": "comparison"}, {"level": "basic", "question": "동시 사고의 위험를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["홍수 한 번에 지역의 많은 계약이 손해를 냅니다.", "재보험·지역 분산·정부 지원 여부에 따라 대응이 다릅니다."], "requiredConcepts": ["correlated-insurance-loss"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해", "1천 명이 10만 원씩 내고 사고 20건에 6천만 원을 지급합니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["insurance-risk-pool", "insurance-exclusion-limit"], "sectionId": "mechanism"}, {"level": "advanced", "question": "보험의 면책과 한도에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: NAIC How Does Insurance Work?", "상품 약관과 관할국 소비자 보호를 확인해야 합니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["insurance-exclusion-limit", "correlated-insurance-loss"], "sectionId": "comparison"}, {"level": "advanced", "question": "동시 사고의 위험 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["가정에서는 사고 20건이지만 같은 재난으로 200건이면 지급액이 크게 늘어납니다.", "재보험·지역 분산·정부 지원 여부에 따라 대응이 다릅니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["correlated-insurance-loss"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["1천 명이 10만 원씩 내고 사고 20건에 6천만 원을 지급합니다.", "300만 원 손해라도 자기부담금과 보상 한도가 있으면 지급액은 달라집니다.", "재보험·지역 분산·정부 지원 여부에 따라 대응이 다릅니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["insurance-risk-pool", "insurance-exclusion-limit", "correlated-insurance-loss"], "sectionId": "limits"}]},
-  "institutions/healthcare-payment-systems": {"coreIdea": "의료제도는 재원을 누가 모으고 위험을 누가 묶으며 어떤 가격표로 의료기관에 지급하는지를 분리해야 비교할 수 있고, 환자의 진료비 지불액만으로 의료 서비스의 총비용을 알 수 없습니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "insurance-risk-pool", "role": "보험료를 모으는 위험 풀"}], "introducedHere": [{"id": "health-financing-three-functions", "role": "의료 재정의 세 기능이 (가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 하는 역할을 설명합니다."}, {"id": "provider-payment-incentive", "role": "의료기관 지급 방식의 유인이 (가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 하는 역할을 설명합니다."}, {"id": "patient-price-vs-system-cost", "role": "환자 부담과 전체 의료비가 (가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "health-financing-three-functions", "sectionId": "mechanism", "intuition": "환자의 2만 원 뒤에 보험자의 8만 원이 어디서 왔는지 봅니다.", "workedExample": "10만 원 진료비를 보험료·세금·본인부담과 의료기관 지급으로 나눕니다.", "boundary": "국가별 급여 범위와 지급 방식이 다릅니다."}, {"id": "provider-payment-incentive", "sectionId": "comparison", "intuition": "어떻게 지급하느냐에 따라 같은 진료의 공급 행동이 달라질 수 있습니다.", "workedExample": "건별 10만 원 지급과 환자당 정액 계약은 진료량 변화에 대한 보상이 다릅니다.", "boundary": "품질 규제와 환자 상태가 함께 달라져 단일 원인으로 단정할 수 없습니다."}, {"id": "patient-price-vs-system-cost", "sectionId": "limits", "intuition": "2만 원을 냈어도 의료기관은 10만 원을 받습니다.", "workedExample": "환자 2만 원+보험자 8만 원=총지급 10만 원입니다.", "boundary": "총지급액도 건강 결과와 서비스 원가를 직접 뜻하지 않습니다."}], "conceptStages": [{"label": "01 · 의료 재정의 세 기능", "relation": "(가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["health-financing-three-functions"]}, {"label": "02 · 의료기관 지급 방식의 유인", "relation": "(가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["provider-payment-incentive"]}, {"label": "03 · 환자 부담과 전체 의료비", "relation": "(가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["patient-price-vs-system-cost"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["환자: 진료 후 2만 원을 부담합니다.", "보험자·정부: 모은 보험료·세금에서 8만 원을 지급합니다.", "의료기관: 진료를 제공하고 10만 원을 받습니다."], "requiredConcepts": ["health-financing-three-functions"], "sectionId": "overview"}, {"level": "basic", "question": "의료 재정의 세 기능의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["10만 원 진료비를 보험료·세금·본인부담과 의료기관 지급으로 나눕니다.", "국가별 급여 범위와 지급 방식이 다릅니다."], "requiredConcepts": ["health-financing-three-functions"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["환자가 받는 것: 의료 서비스와 보장", "보험자·정부가 받는 것: 위험 공동 부담", "의료기관가 받는 것: 운영비 지급 뒤 남는 돈"], "requiredConcepts": ["health-financing-three-functions", "provider-payment-incentive"], "sectionId": "mechanism"}, {"level": "basic", "question": "의료기관 지급 방식의 유인가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["건별 10만 원 지급과 환자당 정액 계약은 진료량 변화에 대한 보상이 다릅니다.", "공식 근거: WHO Pooling revenues and reducing fragmentation", "품질 규제와 환자 상태가 함께 달라져 단일 원인으로 단정할 수 없습니다."], "requiredConcepts": ["provider-payment-incentive"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["10만 원 진료비를 보험료·세금·본인부담과 의료기관 지급으로 나눕니다.", "건별 10만 원 지급과 환자당 정액 계약은 진료량 변화에 대한 보상이 다릅니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["health-financing-three-functions", "provider-payment-incentive"], "sectionId": "comparison"}, {"level": "basic", "question": "환자 부담과 전체 의료비를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["2만 원을 냈어도 의료기관은 10만 원을 받습니다.", "총지급액도 건강 결과와 서비스 원가를 직접 뜻하지 않습니다."], "requiredConcepts": ["patient-price-vs-system-cost"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원", "10만 원 진료비를 보험료·세금·본인부담과 의료기관 지급으로 나눕니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["health-financing-three-functions", "provider-payment-incentive"], "sectionId": "mechanism"}, {"level": "advanced", "question": "의료기관 지급 방식의 유인에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: WHO Pooling revenues and reducing fragmentation", "품질 규제와 환자 상태가 함께 달라져 단일 원인으로 단정할 수 없습니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["provider-payment-incentive", "patient-price-vs-system-cost"], "sectionId": "comparison"}, {"level": "advanced", "question": "환자 부담과 전체 의료비 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["환자 2만 원+보험자 8만 원=총지급 10만 원입니다.", "총지급액도 건강 결과와 서비스 원가를 직접 뜻하지 않습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["patient-price-vs-system-cost"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["10만 원 진료비를 보험료·세금·본인부담과 의료기관 지급으로 나눕니다.", "건별 10만 원 지급과 환자당 정액 계약은 진료량 변화에 대한 보상이 다릅니다.", "총지급액도 건강 결과와 서비스 원가를 직접 뜻하지 않습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["health-financing-three-functions", "provider-payment-incentive", "patient-price-vs-system-cost"], "sectionId": "limits"}]},
-  "institutions/how-to-read-a-country": {"coreIdea": "국가를 비교할 때는 이름이나 순위보다 누가 규칙을 바꾸고 세금을 걷는지, 누가 무엇을 생산하며 외화와 에너지를 조달하는지, 대중이 어떤 미래를 믿고 자금을 움직이는지 같은 질문을 반복해야 합니다.", "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [{"id": "global-funding-transmission", "role": "국가의 외화 조달 경로"}], "introducedHere": [{"id": "country-seven-ledgers", "role": "국가의 일곱 장부가 (가정) A국 수출 100, 수입 중간재 60, 외화 부채 30, 정부 재정 적자 5에서 하는 역할을 설명합니다."}, {"id": "country-data-comparability", "role": "국가 통계의 비교 가능성이 (가정) A국 수출 100, 수입 중간재 60, 외화 부채 30, 정부 재정 적자 5에서 하는 역할을 설명합니다."}, {"id": "country-hypothesis-test", "role": "국가 이야기의 검증 질문이 (가정) A국 수출 100, 수입 중간재 60, 외화 부채 30, 정부 재정 적자 5에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "country-seven-ledgers", "sectionId": "mechanism", "intuition": "GDP 순위 하나보다 그 나라가 어떤 약속을 지킬 수 있는지 보게 합니다.", "workedExample": "A국의 수출 100·중간재 60·외화 부채 30·재정 적자 5를 서로 다른 장부에 놓습니다.", "boundary": "이 틀은 분석 순서이며 모든 국가의 완전한 묘사는 아닙니다."}, {"id": "country-data-comparability", "sectionId": "comparison", "intuition": "수출 100이 어떤 통화와 가격, 어떤 기간인지 먼저 묻습니다.", "workedExample": "A국의 총수출 100과 국내 부가가치 40은 다른 질문에 답합니다.", "boundary": "공식 통계도 개정되며 법과 서비스의 품질을 모두 담지 못합니다."}, {"id": "country-hypothesis-test", "sectionId": "limits", "intuition": "나라의 별명보다 그 말이 예고한 지표를 먼저 정합니다.", "workedExample": "외화 위기 가설은 단기 외채 만기와 외환 보유액·조달 금리로 점검합니다.", "boundary": "지표 하나가 일치해도 인과 관계를 확정할 수 없습니다."}], "conceptStages": [{"label": "01 · 국가의 일곱 장부", "relation": "(가정) A국 수출 100, 수입 중간재 60, 외화 부채 30, 정부 재정 적자 5에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["country-seven-ledgers"]}, {"label": "02 · 국가 통계의 비교 가능성", "relation": "(가정) A국 수출 100, 수입 중간재 60, 외화 부채 30, 정부 재정 적자 5에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["country-data-comparability"]}, {"label": "03 · 국가 이야기의 검증 질문", "relation": "(가정) A국 수출 100, 수입 중간재 60, 외화 부채 30, 정부 재정 적자 5에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["country-hypothesis-test"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["국가·지방정부: 규칙·예산·공공 서비스를 정합니다.", "가계·기업: 노동·생산·저축·투자를 결정합니다.", "해외 상대·언론: 무역·자금·정보를 주고받습니다."], "requiredConcepts": ["country-seven-ledgers"], "sectionId": "overview"}, {"level": "basic", "question": "국가의 일곱 장부의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["A국의 수출 100·중간재 60·외화 부채 30·재정 적자 5를 서로 다른 장부에 놓습니다.", "이 틀은 분석 순서이며 모든 국가의 완전한 묘사는 아닙니다."], "requiredConcepts": ["country-seven-ledgers"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) A국 수출 100, 수입 중간재 60, 외화 부채 30, 정부 재정 적자 5에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["국가·지방정부가 받는 것: 세입과 정당성", "가계·기업가 받는 것: 소득과 청구권", "해외 상대·언론가 받는 것: 상품·채권·기대"], "requiredConcepts": ["country-seven-ledgers", "country-data-comparability"], "sectionId": "mechanism"}, {"level": "basic", "question": "국가 통계의 비교 가능성가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["A국의 총수출 100과 국내 부가가치 40은 다른 질문에 답합니다.", "공식 근거: World Bank World Development Indicators", "공식 통계도 개정되며 법과 서비스의 품질을 모두 담지 못합니다."], "requiredConcepts": ["country-data-comparability"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["A국의 수출 100·중간재 60·외화 부채 30·재정 적자 5를 서로 다른 장부에 놓습니다.", "A국의 총수출 100과 국내 부가가치 40은 다른 질문에 답합니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["country-seven-ledgers", "country-data-comparability"], "sectionId": "comparison"}, {"level": "basic", "question": "국가 이야기의 검증 질문를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["나라의 별명보다 그 말이 예고한 지표를 먼저 정합니다.", "지표 하나가 일치해도 인과 관계를 확정할 수 없습니다."], "requiredConcepts": ["country-hypothesis-test"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) A국 수출 100, 수입 중간재 60, 외화 부채 30, 정부 재정 적자 5에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) A국 수출 100, 수입 중간재 60, 외화 부채 30, 정부 재정 적자 5", "A국의 수출 100·중간재 60·외화 부채 30·재정 적자 5를 서로 다른 장부에 놓습니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["country-seven-ledgers", "country-data-comparability"], "sectionId": "mechanism"}, {"level": "advanced", "question": "국가 통계의 비교 가능성에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: World Bank World Development Indicators", "공식 통계도 개정되며 법과 서비스의 품질을 모두 담지 못합니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["country-data-comparability", "country-hypothesis-test"], "sectionId": "comparison"}, {"level": "advanced", "question": "국가 이야기의 검증 질문 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["외화 위기 가설은 단기 외채 만기와 외환 보유액·조달 금리로 점검합니다.", "지표 하나가 일치해도 인과 관계를 확정할 수 없습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["country-hypothesis-test"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) A국 수출 100, 수입 중간재 60, 외화 부채 30, 정부 재정 적자 5의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["A국의 수출 100·중간재 60·외화 부채 30·재정 적자 5를 서로 다른 장부에 놓습니다.", "A국의 총수출 100과 국내 부가가치 40은 다른 질문에 답합니다.", "지표 하나가 일치해도 인과 관계를 확정할 수 없습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["country-seven-ledgers", "country-data-comparability", "country-hypothesis-test"], "sectionId": "limits"}]},
-  "infrastructure/electricity-grid-and-power": {"coreIdea": "전력 시장은 전기를 생산하는 설비, 같은 순간 수요와 공급을 맞추는 운영자, 송배전망을 소유하는 주체, 요금을 내는 사용자의 장부가 겹칩니다.", "entryLevel": true, "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "grid-connection-constraint", "role": "전력망 접속 제약이 (가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함에서 하는 역할을 설명합니다."}, {"id": "electricity-system-cost", "role": "전력 시스템 비용이 (가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함에서 하는 역할을 설명합니다."}, {"id": "power-price-reliability-boundary", "role": "전력 가격과 공급 안정성의 경계가 (가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "grid-connection-constraint", "sectionId": "mechanism", "intuition": "만들 수 있는 전기와 보낼 수 있는 전기는 다릅니다.", "workedExample": "100MWh 중 20MWh가 혼잡 때문에 원격 수요로 이동하지 못합니다.", "boundary": "시간대와 위치별 망 상태가 다릅니다."}, {"id": "electricity-system-cost", "sectionId": "comparison", "intuition": "발전소의 판매 가격 하나가 사용자의 전기 원가 전부는 아닙니다.", "workedExample": "공장 전력요금에는 발전과 송배전, 계통 운영 비용이 들어갈 수 있습니다.", "boundary": "규제와 보조금에 따라 비용 부담 주체가 달라집니다."}, {"id": "power-price-reliability-boundary", "sectionId": "limits", "intuition": "싼 전기를 계약해도 필요한 날의 전기가 없으면 공장은 멈춥니다.", "workedExample": "20MWh 혼잡 구간은 값싼 발전량이 있어도 다른 전원을 요구합니다.", "boundary": "수요 관리·저장이 제약을 일부 완화할 수 있습니다."}], "conceptStages": [{"label": "01 · 전력망 접속 제약", "relation": "(가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["grid-connection-constraint"]}, {"label": "02 · 전력 시스템 비용", "relation": "(가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["electricity-system-cost"]}, {"label": "03 · 전력 가격과 공급 안정성의 경계", "relation": "(가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["power-price-reliability-boundary"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["발전사업자: 100MWh를 생산할 능력을 준비합니다.", "계통운영자·망사업자: 선로 용량과 수급 균형을 운영합니다.", "가정·공장: 필요한 시간에 전기를 구매합니다."], "requiredConcepts": ["grid-connection-constraint"], "sectionId": "overview"}, {"level": "basic", "question": "전력망 접속 제약의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["100MWh 중 20MWh가 혼잡 때문에 원격 수요로 이동하지 못합니다.", "시간대와 위치별 망 상태가 다릅니다."], "requiredConcepts": ["grid-connection-constraint"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["발전사업자가 받는 것: 판매 대금과 접속 권리", "계통운영자·망사업자가 받는 것: 망 요금과 운영 책임", "가정·공장가 받는 것: 사용 전력과 공급 안정성"], "requiredConcepts": ["grid-connection-constraint", "electricity-system-cost"], "sectionId": "mechanism"}, {"level": "basic", "question": "전력 시스템 비용가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["공장 전력요금에는 발전과 송배전, 계통 운영 비용이 들어갈 수 있습니다.", "공식 근거: IEA Electricity 2026: Grids", "규제와 보조금에 따라 비용 부담 주체가 달라집니다."], "requiredConcepts": ["electricity-system-cost"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["100MWh 중 20MWh가 혼잡 때문에 원격 수요로 이동하지 못합니다.", "공장 전력요금에는 발전과 송배전, 계통 운영 비용이 들어갈 수 있습니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["grid-connection-constraint", "electricity-system-cost"], "sectionId": "comparison"}, {"level": "basic", "question": "전력 가격과 공급 안정성의 경계를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["싼 전기를 계약해도 필요한 날의 전기가 없으면 공장은 멈춥니다.", "수요 관리·저장이 제약을 일부 완화할 수 있습니다."], "requiredConcepts": ["power-price-reliability-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함", "100MWh 중 20MWh가 혼잡 때문에 원격 수요로 이동하지 못합니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["grid-connection-constraint", "electricity-system-cost"], "sectionId": "mechanism"}, {"level": "advanced", "question": "전력 시스템 비용에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: IEA Electricity 2026: Grids", "규제와 보조금에 따라 비용 부담 주체가 달라집니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["electricity-system-cost", "power-price-reliability-boundary"], "sectionId": "comparison"}, {"level": "advanced", "question": "전력 가격과 공급 안정성의 경계 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["20MWh 혼잡 구간은 값싼 발전량이 있어도 다른 전원을 요구합니다.", "수요 관리·저장이 제약을 일부 완화할 수 있습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["power-price-reliability-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["100MWh 중 20MWh가 혼잡 때문에 원격 수요로 이동하지 못합니다.", "공장 전력요금에는 발전과 송배전, 계통 운영 비용이 들어갈 수 있습니다.", "수요 관리·저장이 제약을 일부 완화할 수 있습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["grid-connection-constraint", "electricity-system-cost", "power-price-reliability-boundary"], "sectionId": "limits"}]},
-  "infrastructure/food-chain-and-prices": {"coreIdea": "식품의 소비자가격은 농가 출하 가격에 가공·저장·운송·소매의 비용과 협상력을 더한 결과이며 각 단계의 재고와 폐기 위험이 다릅니다.", "entryLevel": true, "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "food-value-chain-gap", "role": "식품 가치사슬의 가격 간격이 (가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 하는 역할을 설명합니다."}, {"id": "perishable-bargaining-power", "role": "부패성과 협상력이 (가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 하는 역할을 설명합니다."}, {"id": "food-price-causality-boundary", "role": "식품 가격 인과의 경계가 (가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "food-value-chain-gap", "sectionId": "mechanism", "intuition": "200원 중 농가 몫 100원을 제외한 100원이 어디서 생겼는지 봅니다.", "workedExample": "100+30+20+50=200원입니다.", "boundary": "각 단계 금액은 순이익과 같지 않습니다."}, {"id": "perishable-bargaining-power", "sectionId": "comparison", "intuition": "상하기 전에 팔아야 하면 낮은 가격도 받아들일 수 있습니다.", "workedExample": "냉장 시설을 가진 상인은 농가보다 판매 시점을 늦출 수 있습니다.", "boundary": "협동조합·계약재배·수입 대체가 협상력을 바꿉니다."}, {"id": "food-price-causality-boundary", "sectionId": "limits", "intuition": "비싼 식품에는 실제 운송·폐기 비용이 있을 수 있습니다.", "workedExample": "200원 가격 중 소매 50원의 인건비·폐기·순이익을 다시 나눕니다.", "boundary": "동일 품질·시점의 비교 자료가 없으면 원인을 확정하지 않습니다."}], "conceptStages": [{"label": "01 · 식품 가치사슬의 가격 간격", "relation": "(가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["food-value-chain-gap"]}, {"label": "02 · 부패성과 협상력", "relation": "(가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["perishable-bargaining-power"]}, {"label": "03 · 식품 가격 인과의 경계", "relation": "(가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["food-price-causality-boundary"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["농가: 식품 한 단위를 100원에 넘깁니다.", "가공·물류: 선별·저장 30원과 운송 20원을 투입합니다.", "소매·소비자: 소매 단계 50원을 포함한 200원에 거래합니다."], "requiredConcepts": ["food-value-chain-gap"], "sectionId": "overview"}, {"level": "basic", "question": "식품 가치사슬의 가격 간격의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["100+30+20+50=200원입니다.", "각 단계 금액은 순이익과 같지 않습니다."], "requiredConcepts": ["food-value-chain-gap"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["농가가 받는 것: 출하 대금과 생산 위험", "가공·물류가 받는 것: 재고와 납기 책임", "소매·소비자가 받는 것: 식품과 품질 기대"], "requiredConcepts": ["food-value-chain-gap", "perishable-bargaining-power"], "sectionId": "mechanism"}, {"level": "basic", "question": "부패성과 협상력가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["냉장 시설을 가진 상인은 농가보다 판매 시점을 늦출 수 있습니다.", "공식 근거: FAO Sustainable Food Value Chains", "협동조합·계약재배·수입 대체가 협상력을 바꿉니다."], "requiredConcepts": ["perishable-bargaining-power"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["100+30+20+50=200원입니다.", "냉장 시설을 가진 상인은 농가보다 판매 시점을 늦출 수 있습니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["food-value-chain-gap", "perishable-bargaining-power"], "sectionId": "comparison"}, {"level": "basic", "question": "식품 가격 인과의 경계를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["비싼 식품에는 실제 운송·폐기 비용이 있을 수 있습니다.", "동일 품질·시점의 비교 자료가 없으면 원인을 확정하지 않습니다."], "requiredConcepts": ["food-price-causality-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원", "100+30+20+50=200원입니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["food-value-chain-gap", "perishable-bargaining-power"], "sectionId": "mechanism"}, {"level": "advanced", "question": "부패성과 협상력에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: FAO Sustainable Food Value Chains", "협동조합·계약재배·수입 대체가 협상력을 바꿉니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["perishable-bargaining-power", "food-price-causality-boundary"], "sectionId": "comparison"}, {"level": "advanced", "question": "식품 가격 인과의 경계 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["200원 가격 중 소매 50원의 인건비·폐기·순이익을 다시 나눕니다.", "동일 품질·시점의 비교 자료가 없으면 원인을 확정하지 않습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["food-price-causality-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["100+30+20+50=200원입니다.", "냉장 시설을 가진 상인은 농가보다 판매 시점을 늦출 수 있습니다.", "동일 품질·시점의 비교 자료가 없으면 원인을 확정하지 않습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["food-value-chain-gap", "perishable-bargaining-power", "food-price-causality-boundary"], "sectionId": "limits"}]},
-  "infrastructure/water-utility-and-tariffs": {"coreIdea": "수도는 취수한 물의 양뿐 아니라 정수·배관·누수·위생 처리와 저소득층 접근을 함께 지불해야 하는 공공 서비스입니다.", "entryLevel": true, "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "water-full-service-cost", "role": "수도 서비스의 전체 비용이 (가정) 정수·운영 60, 배관 교체 30, 저소득 지원 10에서 하는 역할을 설명합니다."}, {"id": "water-tariff-incidence", "role": "수도 요금의 부담 귀속이 (가정) 정수·운영 60, 배관 교체 30, 저소득 지원 10에서 하는 역할을 설명합니다."}, {"id": "water-affordability-reliability", "role": "부담 가능성과 안정 공급이 (가정) 정수·운영 60, 배관 교체 30, 저소득 지원 10에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "water-full-service-cost", "sectionId": "mechanism", "intuition": "오늘의 물값에 내일 바꿀 관 비용도 들어가야 합니다.", "workedExample": "운영 60과 교체 30, 지원 10의 재원을 합계 100으로 확인합니다.", "boundary": "회계와 기후, 도시 밀도에 따라 필요한 지출이 다릅니다."}, {"id": "water-tariff-incidence", "sectionId": "comparison", "intuition": "요금표를 낮춰도 미연결 가구는 혜택이 없을 수 있습니다.", "workedExample": "배관 교체비 30을 요금 대신 세금으로 내면 부담자가 달라집니다.", "boundary": "보조 대상 선정과 연결 권리가 효과를 바꿉니다."}, {"id": "water-affordability-reliability", "sectionId": "limits", "intuition": "싼 물이 자주 끊기면 생활비와 건강 비용이 더 들 수 있습니다.", "workedExample": "운영비 60만 회수하면 교체비 30이 밀려 단수 위험이 커질 수 있습니다.", "boundary": "짧은 기간 요금과 장기 설비 상태를 함께 봅니다."}], "conceptStages": [{"label": "01 · 수도 서비스의 전체 비용", "relation": "(가정) 정수·운영 60, 배관 교체 30, 저소득 지원 10에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["water-full-service-cost"]}, {"label": "02 · 수도 요금의 부담 귀속", "relation": "(가정) 정수·운영 60, 배관 교체 30, 저소득 지원 10에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["water-tariff-incidence"]}, {"label": "03 · 부담 가능성과 안정 공급", "relation": "(가정) 정수·운영 60, 배관 교체 30, 저소득 지원 10에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["water-affordability-reliability"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["수도사업자: 정수·운영 60과 배관 교체 30을 준비합니다.", "가구·기업: 사용량에 따라 요금을 냅니다.", "정부·지원 대상: 지원 10의 재원을 세금이나 요금에서 정합니다."], "requiredConcepts": ["water-full-service-cost"], "sectionId": "overview"}, {"level": "basic", "question": "수도 서비스의 전체 비용의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["운영 60과 교체 30, 지원 10의 재원을 합계 100으로 확인합니다.", "회계와 기후, 도시 밀도에 따라 필요한 지출이 다릅니다."], "requiredConcepts": ["water-full-service-cost"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 정수·운영 60, 배관 교체 30, 저소득 지원 10에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["수도사업자가 받는 것: 요금 수입과 유지 책임", "가구·기업가 받는 것: 안전한 급수와 하수 처리", "정부·지원 대상가 받는 것: 접근성과 재정 부담"], "requiredConcepts": ["water-full-service-cost", "water-tariff-incidence"], "sectionId": "mechanism"}, {"level": "basic", "question": "수도 요금의 부담 귀속가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["배관 교체비 30을 요금 대신 세금으로 내면 부담자가 달라집니다.", "공식 근거: World Bank Troubled Tariffs", "보조 대상 선정과 연결 권리가 효과를 바꿉니다."], "requiredConcepts": ["water-tariff-incidence"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["운영 60과 교체 30, 지원 10의 재원을 합계 100으로 확인합니다.", "배관 교체비 30을 요금 대신 세금으로 내면 부담자가 달라집니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["water-full-service-cost", "water-tariff-incidence"], "sectionId": "comparison"}, {"level": "basic", "question": "부담 가능성과 안정 공급를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["싼 물이 자주 끊기면 생활비와 건강 비용이 더 들 수 있습니다.", "짧은 기간 요금과 장기 설비 상태를 함께 봅니다."], "requiredConcepts": ["water-affordability-reliability"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 정수·운영 60, 배관 교체 30, 저소득 지원 10에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 정수·운영 60, 배관 교체 30, 저소득 지원 10", "운영 60과 교체 30, 지원 10의 재원을 합계 100으로 확인합니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["water-full-service-cost", "water-tariff-incidence"], "sectionId": "mechanism"}, {"level": "advanced", "question": "수도 요금의 부담 귀속에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: World Bank Troubled Tariffs", "보조 대상 선정과 연결 권리가 효과를 바꿉니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["water-tariff-incidence", "water-affordability-reliability"], "sectionId": "comparison"}, {"level": "advanced", "question": "부담 가능성과 안정 공급 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["운영비 60만 회수하면 교체비 30이 밀려 단수 위험이 커질 수 있습니다.", "짧은 기간 요금과 장기 설비 상태를 함께 봅니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["water-affordability-reliability"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 정수·운영 60, 배관 교체 30, 저소득 지원 10의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["운영 60과 교체 30, 지원 10의 재원을 합계 100으로 확인합니다.", "배관 교체비 30을 요금 대신 세금으로 내면 부담자가 달라집니다.", "짧은 기간 요금과 장기 설비 상태를 함께 봅니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["water-full-service-cost", "water-tariff-incidence", "water-affordability-reliability"], "sectionId": "limits"}]},
-  "infrastructure/transport-access-and-land-value": {"coreIdea": "교통 투자는 차량 속도뿐 아니라 사람이 일자리·학교·서비스에 도달하는 범위와 그 이익이 임대료로 이동하는 과정을 함께 바꿉니다.", "entryLevel": true, "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "transport-accessibility", "role": "교통 접근성이 (가정) 통근 60분에서 35분, 월 절약 20일×25분에서 하는 역할을 설명합니다."}, {"id": "transit-land-rent-shift", "role": "교통 이익의 지대 이동이 (가정) 통근 60분에서 35분, 월 절약 20일×25분에서 하는 역할을 설명합니다."}, {"id": "transport-benefit-boundary", "role": "교통 편익 계산의 경계가 (가정) 통근 60분에서 35분, 월 절약 20일×25분에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "transport-accessibility", "sectionId": "mechanism", "intuition": "속도가 아니라 갈 수 있는 기회가 늘었는지를 봅니다.", "workedExample": "편도 25분을 아껴 월 약 500분을 다른 활동에 쓸 수 있습니다.", "boundary": "일자리 위치와 환승·대기 시간에 따라 실제 접근성이 다릅니다."}, {"id": "transit-land-rent-shift", "sectionId": "comparison", "intuition": "승객이 아낀 시간의 일부가 나중에 월세로 옮겨갈 수 있습니다.", "workedExample": "새 역 주변 임대료 상승은 토지 소유자의 현금흐름을 바꿉니다.", "boundary": "다른 개발·금리 변화도 지가에 영향을 줍니다."}, {"id": "transport-benefit-boundary", "sectionId": "limits", "intuition": "땅값 상승을 시간 절약에 다시 더하면 같은 이익을 두 번 셀 수 있습니다.", "workedExample": "월 500분 절약의 가치와 역세권 임대료 상승을 분리합니다.", "boundary": "반사실 노선과 이주 효과가 필요합니다."}], "conceptStages": [{"label": "01 · 교통 접근성", "relation": "(가정) 통근 60분에서 35분, 월 절약 20일×25분에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["transport-accessibility"]}, {"label": "02 · 교통 이익의 지대 이동", "relation": "(가정) 통근 60분에서 35분, 월 절약 20일×25분에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["transit-land-rent-shift"]}, {"label": "03 · 교통 편익 계산의 경계", "relation": "(가정) 통근 60분에서 35분, 월 절약 20일×25분에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["transport-benefit-boundary"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["통근자: 한 달 약 500분의 이동 시간을 아낍니다.", "교통 운영자·정부: 노선·차량·도로를 건설하고 운영합니다.", "토지 소유자·상인: 역 주변 접근성 변화를 맞습니다."], "requiredConcepts": ["transport-accessibility"], "sectionId": "overview"}, {"level": "basic", "question": "교통 접근성의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["편도 25분을 아껴 월 약 500분을 다른 활동에 쓸 수 있습니다.", "일자리 위치와 환승·대기 시간에 따라 실제 접근성이 다릅니다."], "requiredConcepts": ["transport-accessibility"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 통근 60분에서 35분, 월 절약 20일×25분에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["통근자가 받는 것: 접근 가능한 일자리 확대", "교통 운영자·정부가 받는 것: 요금·세입과 유지 책임", "토지 소유자·상인가 받는 것: 임대료와 매출 변화"], "requiredConcepts": ["transport-accessibility", "transit-land-rent-shift"], "sectionId": "mechanism"}, {"level": "basic", "question": "교통 이익의 지대 이동가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["새 역 주변 임대료 상승은 토지 소유자의 현금흐름을 바꿉니다.", "공식 근거: World Bank Leaders in Urban Transport Planning", "다른 개발·금리 변화도 지가에 영향을 줍니다."], "requiredConcepts": ["transit-land-rent-shift"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["편도 25분을 아껴 월 약 500분을 다른 활동에 쓸 수 있습니다.", "새 역 주변 임대료 상승은 토지 소유자의 현금흐름을 바꿉니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["transport-accessibility", "transit-land-rent-shift"], "sectionId": "comparison"}, {"level": "basic", "question": "교통 편익 계산의 경계를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["땅값 상승을 시간 절약에 다시 더하면 같은 이익을 두 번 셀 수 있습니다.", "반사실 노선과 이주 효과가 필요합니다."], "requiredConcepts": ["transport-benefit-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 통근 60분에서 35분, 월 절약 20일×25분에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 통근 60분에서 35분, 월 절약 20일×25분", "편도 25분을 아껴 월 약 500분을 다른 활동에 쓸 수 있습니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["transport-accessibility", "transit-land-rent-shift"], "sectionId": "mechanism"}, {"level": "advanced", "question": "교통 이익의 지대 이동에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: World Bank Leaders in Urban Transport Planning", "다른 개발·금리 변화도 지가에 영향을 줍니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["transit-land-rent-shift", "transport-benefit-boundary"], "sectionId": "comparison"}, {"level": "advanced", "question": "교통 편익 계산의 경계 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["월 500분 절약의 가치와 역세권 임대료 상승을 분리합니다.", "반사실 노선과 이주 효과가 필요합니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["transport-benefit-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 통근 60분에서 35분, 월 절약 20일×25분의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["편도 25분을 아껴 월 약 500분을 다른 활동에 쓸 수 있습니다.", "새 역 주변 임대료 상승은 토지 소유자의 현금흐름을 바꿉니다.", "반사실 노선과 이주 효과가 필요합니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["transport-accessibility", "transit-land-rent-shift", "transport-benefit-boundary"], "sectionId": "limits"}]},
-  "infrastructure/housing-land-and-supply": {"coreIdea": "주택 가격과 임대료는 토지 사용권, 인허가, 기반 시설, 건설비, 금융과 지역 일자리 수요가 서로 제약하면서 형성됩니다.", "entryLevel": true, "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "housing-residual-land", "role": "주택 토지 잔여가치가 (가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 하는 역할을 설명합니다."}, {"id": "housing-permit-lag", "role": "주택 공급의 허가 시간가 (가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 하는 역할을 설명합니다."}, {"id": "housing-affordability-distribution", "role": "주거비 부담의 분배가 (가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "housing-residual-land", "sectionId": "mechanism", "intuition": "집값 10억이 모두 건축사의 수입은 아닙니다.", "workedExample": "10억-7억=토지 잔여 3억이라는 설명용 계산입니다.", "boundary": "비용·가격·허가 조건이 변하면 잔여는 크게 달라집니다."}, {"id": "housing-permit-lag", "sectionId": "comparison", "intuition": "오늘 집이 부족해도 내일 바로 완공할 수 없습니다.", "workedExample": "허용 세대 수가 늘어도 관로와 학교 준비가 늦으면 입주가 밀립니다.", "boundary": "기존 주택의 재배치와 공실은 더 빨리 변할 수 있습니다."}, {"id": "housing-affordability-distribution", "sectionId": "limits", "intuition": "평균 집값이 내려도 낮은 소득 가구가 접근하지 못할 수 있습니다.", "workedExample": "판매가 10억 새 집은 중위 월세 부담을 직접 설명하지 않습니다.", "boundary": "도시 내부 격차와 가구 구성에 따라 다릅니다."}], "conceptStages": [{"label": "01 · 주택 토지 잔여가치", "relation": "(가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["housing-residual-land"]}, {"label": "02 · 주택 공급의 허가 시간", "relation": "(가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["housing-permit-lag"]}, {"label": "03 · 주거비 부담의 분배", "relation": "(가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["housing-affordability-distribution"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["가구: 주거비를 내고 위치와 공간을 선택합니다.", "개발자·건설사: 공사·금융·허가 비용 7억을 부담합니다.", "토지 소유자·지자체: 토지 권리와 허가·기반 시설을 제공합니다."], "requiredConcepts": ["housing-residual-land"], "sectionId": "overview"}, {"level": "basic", "question": "주택 토지 잔여가치의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["10억-7억=토지 잔여 3억이라는 설명용 계산입니다.", "비용·가격·허가 조건이 변하면 잔여는 크게 달라집니다."], "requiredConcepts": ["housing-residual-land"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["가구가 받는 것: 주거 서비스와 통근 조건", "개발자·건설사가 받는 것: 판매가 10억의 청구권", "토지 소유자·지자체가 받는 것: 잔여 땅값과 세입"], "requiredConcepts": ["housing-residual-land", "housing-permit-lag"], "sectionId": "mechanism"}, {"level": "basic", "question": "주택 공급의 허가 시간가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["허용 세대 수가 늘어도 관로와 학교 준비가 늦으면 입주가 밀립니다.", "공식 근거: UN-Habitat The Role of Land in Achieving Adequate and Affordable Housing", "기존 주택의 재배치와 공실은 더 빨리 변할 수 있습니다."], "requiredConcepts": ["housing-permit-lag"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["10억-7억=토지 잔여 3억이라는 설명용 계산입니다.", "허용 세대 수가 늘어도 관로와 학교 준비가 늦으면 입주가 밀립니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["housing-residual-land", "housing-permit-lag"], "sectionId": "comparison"}, {"level": "basic", "question": "주거비 부담의 분배를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["평균 집값이 내려도 낮은 소득 가구가 접근하지 못할 수 있습니다.", "도시 내부 격차와 가구 구성에 따라 다릅니다."], "requiredConcepts": ["housing-affordability-distribution"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억", "10억-7억=토지 잔여 3억이라는 설명용 계산입니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["housing-residual-land", "housing-permit-lag"], "sectionId": "mechanism"}, {"level": "advanced", "question": "주택 공급의 허가 시간에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: UN-Habitat The Role of Land in Achieving Adequate and Affordable Housing", "기존 주택의 재배치와 공실은 더 빨리 변할 수 있습니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["housing-permit-lag", "housing-affordability-distribution"], "sectionId": "comparison"}, {"level": "advanced", "question": "주거비 부담의 분배 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["판매가 10억 새 집은 중위 월세 부담을 직접 설명하지 않습니다.", "도시 내부 격차와 가구 구성에 따라 다릅니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["housing-affordability-distribution"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["10억-7억=토지 잔여 3억이라는 설명용 계산입니다.", "허용 세대 수가 늘어도 관로와 학교 준비가 늦으면 입주가 밀립니다.", "도시 내부 격차와 가구 구성에 따라 다릅니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["housing-residual-land", "housing-permit-lag", "housing-affordability-distribution"], "sectionId": "limits"}]},
-  "infrastructure/climate-risk-and-exposure": {"coreIdea": "홍수·폭염 등 위험을 평가할 때는 자연 현상의 강도, 노출된 사람과 자산, 취약성과 대응 능력을 분리해야 손실과 투자 판단이 가능합니다.", "entryLevel": true, "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "climate-risk-components", "role": "기후 위험의 세 요소가 (가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 하는 역할을 설명합니다."}, {"id": "climate-financial-transmission", "role": "기후 손실의 금융 전달이 (가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 하는 역할을 설명합니다."}, {"id": "climate-history-boundary", "role": "과거 재난 자료의 한계가 (가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "climate-risk-components", "sectionId": "mechanism", "intuition": "같은 홍수에도 어디에 무엇을 지었는지에 따라 피해가 달라집니다.", "workedExample": "A 손실 10, B 손실 60의 차이는 노출과 피해 비율의 차이로 설명합니다.", "boundary": "실제 손실에는 확률·복구 비용·간접 피해가 더해집니다."}, {"id": "climate-financial-transmission", "sectionId": "comparison", "intuition": "보험료가 비싸지면 집을 보유하는 비용과 대출 조건이 바뀔 수 있습니다.", "workedExample": "B지역 예상 손실이 큰 경우 보험료와 담보 평가를 다시 볼 수 있습니다.", "boundary": "제도적 보증과 적응 투자가 전달을 완화할 수 있습니다."}, {"id": "climate-history-boundary", "sectionId": "limits", "intuition": "과거 안전했던 땅이라도 새 개발 뒤 물길이 달라질 수 있습니다.", "workedExample": "자산 100이 300으로 늘면 같은 홍수의 노출이 커집니다.", "boundary": "시나리오와 현지 조사 결과를 함께 봅니다."}], "conceptStages": [{"label": "01 · 기후 위험의 세 요소", "relation": "(가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["climate-risk-components"]}, {"label": "02 · 기후 손실의 금융 전달", "relation": "(가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["climate-financial-transmission"]}, {"label": "03 · 과거 재난 자료의 한계", "relation": "(가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["climate-history-boundary"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["가구·기업: 위험 지역에 생활과 설비를 둡니다.", "정부·도시: 배수·경보·건축 기준에 투자합니다.", "보험자·대출자: 손실 가능성을 가격과 계약에 반영합니다."], "requiredConcepts": ["climate-risk-components"], "sectionId": "overview"}, {"level": "basic", "question": "기후 위험의 세 요소의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["A 손실 10, B 손실 60의 차이는 노출과 피해 비율의 차이로 설명합니다.", "실제 손실에는 확률·복구 비용·간접 피해가 더해집니다."], "requiredConcepts": ["climate-risk-components"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["가구·기업가 받는 것: 소득과 재산, 손실 노출", "정부·도시가 받는 것: 안전과 재정 의무", "보험자·대출자가 받는 것: 보험료·이자와 대형 손실 위험"], "requiredConcepts": ["climate-risk-components", "climate-financial-transmission"], "sectionId": "mechanism"}, {"level": "basic", "question": "기후 손실의 금융 전달가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["B지역 예상 손실이 큰 경우 보험료와 담보 평가를 다시 볼 수 있습니다.", "공식 근거: IPCC AR6 WGII Summary for Policymakers", "제도적 보증과 적응 투자가 전달을 완화할 수 있습니다."], "requiredConcepts": ["climate-financial-transmission"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["A 손실 10, B 손실 60의 차이는 노출과 피해 비율의 차이로 설명합니다.", "B지역 예상 손실이 큰 경우 보험료와 담보 평가를 다시 볼 수 있습니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["climate-risk-components", "climate-financial-transmission"], "sectionId": "comparison"}, {"level": "basic", "question": "과거 재난 자료의 한계를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["과거 안전했던 땅이라도 새 개발 뒤 물길이 달라질 수 있습니다.", "시나리오와 현지 조사 결과를 함께 봅니다."], "requiredConcepts": ["climate-history-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%", "A 손실 10, B 손실 60의 차이는 노출과 피해 비율의 차이로 설명합니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["climate-risk-components", "climate-financial-transmission"], "sectionId": "mechanism"}, {"level": "advanced", "question": "기후 손실의 금융 전달에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: IPCC AR6 WGII Summary for Policymakers", "제도적 보증과 적응 투자가 전달을 완화할 수 있습니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["climate-financial-transmission", "climate-history-boundary"], "sectionId": "comparison"}, {"level": "advanced", "question": "과거 재난 자료의 한계 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["자산 100이 300으로 늘면 같은 홍수의 노출이 커집니다.", "시나리오와 현지 조사 결과를 함께 봅니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["climate-history-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["A 손실 10, B 손실 60의 차이는 노출과 피해 비율의 차이로 설명합니다.", "B지역 예상 손실이 큰 경우 보험료와 담보 평가를 다시 볼 수 있습니다.", "시나리오와 현지 조사 결과를 함께 봅니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["climate-risk-components", "climate-financial-transmission", "climate-history-boundary"], "sectionId": "limits"}]},
-  "institutions/public-budget-and-taxes": {"coreIdea": "공공 예산은 세입·차입으로 모은 돈을 서비스와 이전지출, 투자, 이자에 배분한 약속이며 부담자와 수혜자가 다른 시점과 집단에 걸칩니다.", "entryLevel": true, "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "public-budget-flow", "role": "공공 예산의 자금 흐름이 (가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 하는 역할을 설명합니다."}, {"id": "tax-incidence-public-benefit", "role": "조세 부담과 공공 편익이 (가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 하는 역할을 설명합니다."}, {"id": "fiscal-capacity-boundary", "role": "재정 여력의 경계가 (가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "public-budget-flow", "sectionId": "mechanism", "intuition": "올해 지출 100의 재원은 세금 80과 빚 20입니다.", "workedExample": "80+20=40+30+20+10=100입니다.", "boundary": "예산 승인과 실제 집행, 성과는 다릅니다."}, {"id": "tax-incidence-public-benefit", "sectionId": "comparison", "intuition": "회사 명의의 세금도 임금·가격·이익으로 나뉠 수 있습니다.", "workedExample": "세금 80의 부담자와 의료 40의 이용자를 따로 적습니다.", "boundary": "시장 조건과 제도에 따라 실제 귀착이 바뀝니다."}, {"id": "fiscal-capacity-boundary", "sectionId": "limits", "intuition": "새 차입 20이 같아도 외화 상환이면 환율 위험이 다릅니다.", "workedExample": "올해 차입 20과 이자 10을 지출 100에서 분리합니다.", "boundary": "미래 성장과 정책 선택은 불확실합니다."}], "conceptStages": [{"label": "01 · 공공 예산의 자금 흐름", "relation": "(가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["public-budget-flow"]}, {"label": "02 · 조세 부담과 공공 편익", "relation": "(가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["tax-incidence-public-benefit"]}, {"label": "03 · 재정 여력의 경계", "relation": "(가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["fiscal-capacity-boundary"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["납세자·채권자: 세금 80과 신규 차입 20을 공급합니다.", "정부·지자체: 의료 40·교육 30·도로 20·이자 10에 배분합니다.", "가구·기업: 서비스와 이전지출을 받습니다."], "requiredConcepts": ["public-budget-flow"], "sectionId": "overview"}, {"level": "basic", "question": "공공 예산의 자금 흐름의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["80+20=40+30+20+10=100입니다.", "예산 승인과 실제 집행, 성과는 다릅니다."], "requiredConcepts": ["public-budget-flow"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["납세자·채권자가 받는 것: 공공 서비스와 채권 청구권", "정부·지자체가 받는 것: 정책 집행 권한과 상환 의무", "가구·기업가 받는 것: 편익과 장래 세부담"], "requiredConcepts": ["public-budget-flow", "tax-incidence-public-benefit"], "sectionId": "mechanism"}, {"level": "basic", "question": "조세 부담과 공공 편익가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["세금 80의 부담자와 의료 40의 이용자를 따로 적습니다.", "공식 근거: IMF Government Finance Statistics Manual 2014", "시장 조건과 제도에 따라 실제 귀착이 바뀝니다."], "requiredConcepts": ["tax-incidence-public-benefit"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["80+20=40+30+20+10=100입니다.", "세금 80의 부담자와 의료 40의 이용자를 따로 적습니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["public-budget-flow", "tax-incidence-public-benefit"], "sectionId": "comparison"}, {"level": "basic", "question": "재정 여력의 경계를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["새 차입 20이 같아도 외화 상환이면 환율 위험이 다릅니다.", "미래 성장과 정책 선택은 불확실합니다."], "requiredConcepts": ["fiscal-capacity-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10", "80+20=40+30+20+10=100입니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["public-budget-flow", "tax-incidence-public-benefit"], "sectionId": "mechanism"}, {"level": "advanced", "question": "조세 부담과 공공 편익에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: IMF Government Finance Statistics Manual 2014", "시장 조건과 제도에 따라 실제 귀착이 바뀝니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["tax-incidence-public-benefit", "fiscal-capacity-boundary"], "sectionId": "comparison"}, {"level": "advanced", "question": "재정 여력의 경계 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["올해 차입 20과 이자 10을 지출 100에서 분리합니다.", "미래 성장과 정책 선택은 불확실합니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["fiscal-capacity-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["80+20=40+30+20+10=100입니다.", "세금 80의 부담자와 의료 40의 이용자를 따로 적습니다.", "미래 성장과 정책 선택은 불확실합니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["public-budget-flow", "tax-incidence-public-benefit", "fiscal-capacity-boundary"], "sectionId": "limits"}]},
-  "institutions/education-skills-and-signals": {"coreIdea": "교육비 지출은 학습자의 실제 능력 향상, 고용주가 믿는 자격 신호, 직업 연결과 기회 접근에 서로 다른 경로로 영향을 줍니다.", "entryLevel": true, "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "education-human-capital", "role": "교육의 능력 축적이 (가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 하는 역할을 설명합니다."}, {"id": "education-signal", "role": "자격의 신호 효과가 (가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 하는 역할을 설명합니다."}, {"id": "education-return-boundary", "role": "교육 수익 계산의 한계가 (가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "education-human-capital", "sectionId": "mechanism", "intuition": "수업 후 같은 사람이 할 수 있는 일이 늘어나는지 봅니다.", "workedExample": "교육비 1천만 원 뒤 실제 직무 능력 개선과 임금 증가를 따로 관찰합니다.", "boundary": "원래 능력과 경력 변화가 결과를 섞습니다."}, {"id": "education-signal", "sectionId": "comparison", "intuition": "졸업장은 배운 것과 선발된 사실을 함께 보여 줄 수 있습니다.", "workedExample": "연 임금 200만 원 차이 중 자격 신호의 몫은 별도 비교가 필요합니다.", "boundary": "신호의 크기는 직업과 채용 제도에 따라 다릅니다."}, {"id": "education-return-boundary", "sectionId": "limits", "intuition": "학비만 회수해도 잃은 1년의 소득은 남습니다.", "workedExample": "1천만 원을 연 200만 원으로 나누는 5년은 취업 지연과 세금을 뺀 단순 계산입니다.", "boundary": "장기 임금과 완료 확률이 불확실합니다."}], "conceptStages": [{"label": "01 · 교육의 능력 축적", "relation": "(가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["education-human-capital"]}, {"label": "02 · 자격의 신호 효과", "relation": "(가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["education-signal"]}, {"label": "03 · 교육 수익 계산의 한계", "relation": "(가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["education-return-boundary"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["학습자·가계: 교육비 1천만 원과 학습 시간을 냅니다.", "학교·훈련기관: 교사·시설·평가에 돈을 씁니다.", "고용주·정부: 기술을 쓰고 교육에 보조금을 댑니다."], "requiredConcepts": ["education-human-capital"], "sectionId": "overview"}, {"level": "basic", "question": "교육의 능력 축적의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["교육비 1천만 원 뒤 실제 직무 능력 개선과 임금 증가를 따로 관찰합니다.", "원래 능력과 경력 변화가 결과를 섞습니다."], "requiredConcepts": ["education-human-capital"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["학습자·가계가 받는 것: 능력·자격·취업 기회", "학교·훈련기관가 받는 것: 수업료와 공공 재원", "고용주·정부가 받는 것: 생산성과 세입"], "requiredConcepts": ["education-human-capital", "education-signal"], "sectionId": "mechanism"}, {"level": "basic", "question": "자격의 신호 효과가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["연 임금 200만 원 차이 중 자격 신호의 몫은 별도 비교가 필요합니다.", "공식 근거: OECD Education at a Glance 2026: Education Finance", "신호의 크기는 직업과 채용 제도에 따라 다릅니다."], "requiredConcepts": ["education-signal"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["교육비 1천만 원 뒤 실제 직무 능력 개선과 임금 증가를 따로 관찰합니다.", "연 임금 200만 원 차이 중 자격 신호의 몫은 별도 비교가 필요합니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["education-human-capital", "education-signal"], "sectionId": "comparison"}, {"level": "basic", "question": "교육 수익 계산의 한계를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["학비만 회수해도 잃은 1년의 소득은 남습니다.", "장기 임금과 완료 확률이 불확실합니다."], "requiredConcepts": ["education-return-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년", "교육비 1천만 원 뒤 실제 직무 능력 개선과 임금 증가를 따로 관찰합니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["education-human-capital", "education-signal"], "sectionId": "mechanism"}, {"level": "advanced", "question": "자격의 신호 효과에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: OECD Education at a Glance 2026: Education Finance", "신호의 크기는 직업과 채용 제도에 따라 다릅니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["education-signal", "education-return-boundary"], "sectionId": "comparison"}, {"level": "advanced", "question": "교육 수익 계산의 한계 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["1천만 원을 연 200만 원으로 나누는 5년은 취업 지연과 세금을 뺀 단순 계산입니다.", "장기 임금과 완료 확률이 불확실합니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["education-return-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["교육비 1천만 원 뒤 실제 직무 능력 개선과 임금 증가를 따로 관찰합니다.", "연 임금 200만 원 차이 중 자격 신호의 몫은 별도 비교가 필요합니다.", "장기 임금과 완료 확률이 불확실합니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["education-human-capital", "education-signal", "education-return-boundary"], "sectionId": "limits"}]},
-  "institutions/media-attention-and-public-belief": {"coreIdea": "플랫폼·언론은 정보를 선택·배치하고 관심을 광고주에게 판매하며, 사람의 믿음은 관측 정보뿐 아니라 반복 노출과 신뢰 관계를 통해 바뀝니다.", "entryLevel": true, "entryNote": "숫자는 설명을 위한 가정이고, 국가별 제도는 확인일과 공식 원문을 구분합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "attention-allocation", "role": "주목의 배분이 (가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 하는 역할을 설명합니다."}, {"id": "media-revenue-incentive", "role": "정보 매체의 수익 유인이 (가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 하는 역할을 설명합니다."}, {"id": "belief-causality-boundary", "role": "인식 변화의 인과 경계가 (가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 하는 역할을 설명합니다."}], "conceptExplanations": [{"id": "attention-allocation", "sectionId": "mechanism", "intuition": "100개 중 10개만 반복 보이면 체감 현실이 달라질 수 있습니다.", "workedExample": "게시물 100개 중 추천 10개와 광고 1천 회를 따로 기록합니다.", "boundary": "노출은 수용이나 믿음의 변화와 같지 않습니다."}, {"id": "media-revenue-incentive", "sectionId": "comparison", "intuition": "광고 1천 회를 팔면 오래 머물게 할 유인이 생깁니다.", "workedExample": "광고주·플랫폼·제작자의 수입 경로를 분리합니다.", "boundary": "편집 독립성과 공공 재원 등 제도가 유인을 바꿉니다."}, {"id": "belief-causality-boundary", "sectionId": "limits", "intuition": "조회수가 높다고 모두 믿거나 매수하지는 않습니다.", "workedExample": "추천 10개를 본 사람의 실제 주문과 보지 않은 사람의 행동을 비교합니다.", "boundary": "원래 같은 생각을 가진 사람이 더 많이 클릭하는 선택 편향과 동시에 벌어진 사건의 영향까지 분리해야 인과를 말할 수 있습니다."}], "conceptStages": [{"label": "01 · 주목의 배분", "relation": "(가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["attention-allocation"]}, {"label": "02 · 정보 매체의 수익 유인", "relation": "(가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["media-revenue-incentive"]}, {"label": "03 · 인식 변화의 인과 경계", "relation": "(가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 이 단계의 돈·권리·위험을 확인합니다.", "concepts": ["belief-causality-boundary"]}], "exercises": [{"level": "basic", "question": "기준 사례에서 세 행위자가 내는 돈·자원·결정과 받는 것을 순서대로 적어 보세요.", "answerChecklist": ["제작자·언론: 게시물 100개를 만들고 취재·검증비를 냅니다.", "플랫폼·광고주: 추천 10개와 광고 1천 회의 배치를 정합니다.", "시민·투자자: 보이는 정보를 읽고 판단·주문·투표합니다."], "requiredConcepts": ["attention-allocation"], "sectionId": "overview"}, {"level": "basic", "question": "주목의 배분의 뜻을 이 글의 수치 사례로 다시 설명하고 단위나 분모를 적어 보세요.", "answerChecklist": ["게시물 100개 중 추천 10개와 광고 1천 회를 따로 기록합니다.", "노출은 수용이나 믿음의 변화와 같지 않습니다."], "requiredConcepts": ["attention-allocation"], "sectionId": "mechanism"}, {"level": "basic", "question": "(가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 세 행위자가 각각 받는 권리와 떠안는 위험을 구분해 보세요.", "answerChecklist": ["제작자·언론가 받는 것: 독자·광고·구독 수입", "플랫폼·광고주가 받는 것: 주목·노출과 판매 기회", "시민·투자자가 받는 것: 인식 변화와 선택 결과"], "requiredConcepts": ["attention-allocation", "media-revenue-incentive"], "sectionId": "mechanism"}, {"level": "basic", "question": "정보 매체의 수익 유인가 나라나 계약에 따라 어떻게 달라지는지 본문의 조건을 비교해 보세요.", "answerChecklist": ["광고주·플랫폼·제작자의 수입 경로를 분리합니다.", "공식 근거: European Commission: DSA impact on platforms", "편집 독립성과 공공 재원 등 제도가 유인을 바꿉니다."], "requiredConcepts": ["media-revenue-incentive"], "sectionId": "comparison"}, {"level": "basic", "question": "본문의 가정에서 숫자로 바로 알 수 있는 것과 추가 자료가 있어야 알 수 있는 것을 한 가지씩 적어 보세요.", "answerChecklist": ["게시물 100개 중 추천 10개와 광고 1천 회를 따로 기록합니다.", "광고주·플랫폼·제작자의 수입 경로를 분리합니다.", "빠진 비용·권리·시간 또는 관할권 자료 한 가지를 적기"], "requiredConcepts": ["attention-allocation", "media-revenue-incentive"], "sectionId": "comparison"}, {"level": "basic", "question": "인식 변화의 인과 경계를 무시하면 이 글의 사례에서 어떤 판단이 틀어지는지 한 문장으로 적어 보세요.", "answerChecklist": ["조회수가 높다고 모두 믿거나 매수하지는 않습니다.", "원래 같은 생각을 가진 사람이 더 많이 클릭하는 선택 편향과 동시에 벌어진 사건의 영향까지 분리해야 인과를 말할 수 있습니다."], "requiredConcepts": ["belief-causality-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 한 수치를 바꾸어 세 행위자의 돈·권리·위험이 어떻게 달라지는지 계산하거나 비교해 보세요.", "answerChecklist": ["기준 사례: (가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회", "게시물 100개 중 추천 10개와 광고 1천 회를 따로 기록합니다.", "변경한 항목과 세 행위자의 손익을 각각 다시 계산"], "requiredConcepts": ["attention-allocation", "media-revenue-incentive"], "sectionId": "mechanism"}, {"level": "advanced", "question": "정보 매체의 수익 유인에 관한 본문의 공식 자료가 다루는 나라·기구의 설명을 다른 나라에 그대로 적용하면 생기는 오류를 설명해 보세요.", "answerChecklist": ["비교 원문: European Commission: DSA impact on platforms", "편집 독립성과 공공 재원 등 제도가 유인을 바꿉니다.", "다른 나라에 적용하려면 현지 계약·법·상품설명서·통계 정의를 확인"], "requiredConcepts": ["media-revenue-incentive", "belief-causality-boundary"], "sectionId": "comparison"}, {"level": "advanced", "question": "인식 변화의 인과 경계 때문에 같은 결과를 다른 원인으로 설명할 수 있는 반례를 만들고 구별할 관측값을 제안해 보세요.", "answerChecklist": ["추천 10개를 본 사람의 실제 주문과 보지 않은 사람의 행동을 비교합니다.", "원래 같은 생각을 가진 사람이 더 많이 클릭하는 선택 편향과 동시에 벌어진 사건의 영향까지 분리해야 인과를 말할 수 있습니다.", "두 설명을 구별할 수 있는 실제 관측값"], "requiredConcepts": ["belief-causality-boundary"], "sectionId": "limits"}, {"level": "advanced", "question": "(가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회의 결론이 뒤집히는 가장 작은 조건 변화를 찾고 누구의 의사결정이 먼저 바뀌는지 적어 보세요.", "answerChecklist": ["게시물 100개 중 추천 10개와 광고 1천 회를 따로 기록합니다.", "광고주·플랫폼·제작자의 수입 경로를 분리합니다.", "원래 같은 생각을 가진 사람이 더 많이 클릭하는 선택 편향과 동시에 벌어진 사건의 영향까지 분리해야 인과를 말할 수 있습니다.", "결론이 바뀌는 조건과 먼저 반응하는 행위자"], "requiredConcepts": ["attention-allocation", "media-revenue-incentive", "belief-causality-boundary"], "sectionId": "limits"}]},
+  "business/business-model-cashflow": {
+    "coreIdea": "사업 모델을 비교할 때는 매출 이름보다 비용을 먼저 내는 사람, 고객에게서 돈을 받는 시점, 재고·반품·미수금을 떠안는 주체를 추적해야 합니다.",
+    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "firm-boundary-at-equal-margin",
+        "role": "기업이 내부에서 하거나 시장에서 사는 선택"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "gross-net-revenue",
+        "role": "결제액을 손에 쥐었다는 사실과 매출의 소유는 다릅니다."
+      },
+      {
+        "id": "working-capital-gap",
+        "role": "이익이 나도 정산이 늦으면 월급을 지급할 돈이 모자랄 수 있습니다."
+      },
+      {
+        "id": "contribution-cash-trace",
+        "role": "매출을 두 배로 만드는 일이 남는 돈도 두 배로 만들지는 않습니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "gross-net-revenue",
+        "sectionId": "mechanism",
+        "intuition": "결제액을 손에 쥐었다는 사실과 매출의 소유는 다릅니다.",
+        "workedExample": "200만 원 주문에서 중개 플랫폼은 계약상 수수료만 자기 수익일 수 있습니다.",
+        "boundary": "회계 표시 기준과 세무 신고 기준은 관할권별로 따로 검토해야 합니다."
+      },
+      {
+        "id": "working-capital-gap",
+        "sectionId": "need",
+        "intuition": "이익이 나도 정산이 늦으면 월급을 지급할 돈이 모자랄 수 있습니다.",
+        "workedExample": "판매7일 전120만 원을 내고 판매14일 뒤194만 원을 받아21일 자금 공백이 생깁니다.",
+        "boundary": "결제 선불·재고 위탁이면 간격이 반대로 바뀔 수도 있습니다."
+      },
+      {
+        "id": "contribution-cash-trace",
+        "sectionId": "limits",
+        "intuition": "매출을 두 배로 만드는 일이 남는 돈도 두 배로 만들지는 않습니다.",
+        "workedExample": "200만 원에서 원가 120만 원과 수수료 6만 원을 빼도 임차료·인건비·세금은 남습니다.",
+        "boundary": "고정비 배분 방식에 따라 거래당 이익의 표현이 달라질 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 총액과 순액 매출",
+        "relation": "200만 원 주문에서 중개 플랫폼은 계약상 수수료만 자기 수익일 수 있습니다.",
+        "concepts": [
+          "gross-net-revenue"
+        ]
+      },
+      {
+        "label": "02 · 운전자금 간격",
+        "relation": "판매7일 전120만 원을 내고 판매14일 뒤194만 원을 받아21일 자금 공백이 생깁니다.",
+        "concepts": [
+          "working-capital-gap"
+        ]
+      },
+      {
+        "label": "03 · 거래당 남는 돈의 추적",
+        "relation": "200만 원에서 원가 120만 원과 수수료 6만 원을 빼도 임차료·인건비·세금은 남습니다.",
+        "concepts": [
+          "contribution-cash-trace"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "100개를 준비하고 판매한 사례의 지급액과 수령액을 적으세요.",
+        "answerChecklist": [
+          "물건 구입 120만 원",
+          "고객 결제 200만 원, 결제업체 수수료 6만 원, 판매자 입금 194만 원"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "gross-net-revenue",
+          "working-capital-gap"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "120만 원은 총 며칠 동안 먼저 묶이나요?",
+        "answerChecklist": [
+          "판매 전 7일+판매 뒤 정산 14일=21일",
+          "수익 인식 시점과 입금 날짜는 다름"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "working-capital-gap"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "74만 원을 순이익이라고 부를 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "200−120−6=74만 원",
+          "배송·임금·세금·반품 등 아직 빠진 비용이 있음"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "contribution-cash-trace"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "고객의 200만 원을 보관한 중개회사가 전부 자기 매출이라고 해도 되나요?",
+        "answerChecklist": [
+          "현금 보관과 상품 통제는 다름",
+          "약속한 재화·서비스와 본인·대리인 역할을 확인"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "gross-net-revenue"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "입금 뒤 아직 받을 돈 기록을 어떻게 바꾸나요?",
+        "answerChecklist": [
+          "정산 대상 주문과 입금 194만 원을 맞춤",
+          "동일 금액을 다시 매출로 만들지 않고 받을 돈을 지움"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "working-capital-gap",
+          "contribution-cash-trace"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "나라가 바뀔 때 같은 100건에서 다시 확인할 세 가지를 적으세요.",
+        "answerChecklist": [
+          "적용 회계·세무 기준",
+          "세금 포함 여부와 통화·정산 기한"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "gross-net-revenue",
+          "working-capital-gap"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "첫 입금 전 다음 100개를 준비하면 선지출은 얼마이며 무엇이 위험해지나요?",
+        "answerChecklist": [
+          "120만 원 두 번=240만 원",
+          "판매 수익이 예상돼도 다음 구입일까지 현금이 필요"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "working-capital-gap",
+          "contribution-cash-trace"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "구독의 선입금이 모두 벌어들인 돈이라는 해석을 반박하세요.",
+        "answerChecklist": [
+          "향후 서비스를 제공할 의무가 남음",
+          "서비스 제공과 현금 수령의 시점을 나눔"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "gross-net-revenue",
+          "working-capital-gap"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "상품 제공일과 대금 입금일이 다를 때 두 공식 자료를 어떻게 함께 쓰나요?",
+        "answerChecklist": [
+          "IFRS15로 약속 이행을 확인",
+          "IAS7로 이익과 실제 현금의 차이를 조정"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "gross-net-revenue",
+          "working-capital-gap"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "주문 두 배가 좋은 성장인지 검증할 자료를 설계하세요.",
+        "answerChecklist": [
+          "재고 선지출과 정산 기한",
+          "반품·취소와 반복 구매, 남는 돈·추가 자금비용"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "working-capital-gap",
+          "contribution-cash-trace"
+        ]
+      }
+    ]
+  },
+  "business/shop-unit-economics": {
+    "coreIdea": "점포의 손익분기점은 객단가에서 재료·수수료 같은 변동비를 뺀 한 건의 공헌이익으로 고정비를 나눈 결과이며, 점주 노동과 개업비 회수는 별도로 계산해야 합니다.",
+    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "contribution-cash-trace",
+        "role": "거래당 남는 돈의 추적"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "shop-contribution-margin",
+        "role": "6천 원 매출을 모두 월세에 쓸 수는 없습니다."
+      },
+      {
+        "id": "shop-break-even-count",
+        "role": "문을 열어두는 비용을 한 건씩 채워야 합니다."
+      },
+      {
+        "id": "shop-investment-recovery",
+        "role": "월별 흑자가 난다고 초기 투자금을 회수한 것은 아닙니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "shop-contribution-margin",
+        "sectionId": "mechanism",
+        "intuition": "6천 원 매출을 모두 월세에 쓸 수는 없습니다.",
+        "workedExample": "잔당 가격 6천 원에서 재료·포장·결제 2천 원을 빼면 4천 원이 남습니다.",
+        "boundary": "업종과 주문 채널이 달라지면 건당 변동비도 달라집니다."
+      },
+      {
+        "id": "shop-break-even-count",
+        "sectionId": "mechanism",
+        "intuition": "문을 열어두는 비용을 한 건씩 채워야 합니다.",
+        "workedExample": "800만÷4천=월2천 잔; 월1,500잔이면200만 원이 부족합니다.",
+        "boundary": "점주 임금·세금·투자비 회수는 계산에 추가해야 합니다."
+      },
+      {
+        "id": "shop-investment-recovery",
+        "sectionId": "limits",
+        "intuition": "월별 흑자가 난다고 초기 투자금을 회수한 것은 아닙니다.",
+        "workedExample": "시설6천만 원을36개월에 단순 회수하려면 월 약166만7천 원을 추가로 남겨야 합니다.",
+        "boundary": "단순 회수 기간은 이자·세금·기회비용과 폐업 비용을 생략합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 점포의 건당 공헌이익",
+        "relation": "잔당 가격 6천 원에서 재료·포장·결제 2천 원을 빼면 4천 원이 남습니다.",
+        "concepts": [
+          "shop-contribution-margin"
+        ]
+      },
+      {
+        "label": "02 · 점포의 손익분기 판매량",
+        "relation": "800만÷4천=월2천 잔; 월1,500잔이면200만 원이 부족합니다.",
+        "concepts": [
+          "shop-break-even-count"
+        ]
+      },
+      {
+        "label": "03 · 개업비 회수 기간",
+        "relation": "시설6천만 원을36개월에 단순 회수하려면 월 약166만7천 원을 추가로 남겨야 합니다.",
+        "concepts": [
+          "shop-investment-recovery"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "6천 원 한 잔에서 월 비용에 보탤 돈은 얼마인가요?",
+        "answerChecklist": [
+          "변동비 2천 원 차감",
+          "공헌이익 4천 원"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "shop-contribution-margin"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "월 800만 원을 충당할 판매량을 구하세요.",
+        "answerChecklist": [
+          "800만÷4천=월 2천 잔",
+          "30일이면 하루 평균66.67잔, 정수 목표67잔"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "shop-break-even-count"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "매일 67잔과 월 2천 잔이 완전히 같은가요?",
+        "answerChecklist": [
+          "67×30=2,010잔",
+          "67잔은 하루 평균을 올림한 목표"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "shop-break-even-count"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "월 1,500잔일 때 비용 부족액은 얼마인가요?",
+        "answerChecklist": [
+          "매출900만−변동비300만=600만",
+          "고정비800만에서200만 부족"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "shop-contribution-margin",
+          "shop-break-even-count"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "IAS2가 사례의 2천 원 전체를 재고비라고 정의하나요?",
+        "answerChecklist": [
+          "2천 원에는 재료·포장·결제비가 포함",
+          "결제 수수료는 재고와 별도 비용"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "shop-contribution-margin"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "시설비6천만 원을36개월에 단순 회수하려면 월 얼마를 남겨야 하나요?",
+        "answerChecklist": [
+          "약166만7천 원",
+          "세금·할인율·잔존가치를 생략한 가정"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "shop-investment-recovery"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "배달 주문에1천 원이 더 들면 손익분기 판매량은 어떤 방향으로 움직이나요?",
+        "answerChecklist": [
+          "건당 기여4천→3천 원",
+          "고정비가 같으면 필요한 건수가 늘어남"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "shop-contribution-margin",
+          "shop-break-even-count"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "판매량을 늘릴 때 직원 추가가 필요하면 선형 계산은 왜 틀릴 수 있나요?",
+        "answerChecklist": [
+          "고정비800만 원 가정이 깨짐",
+          "근무표와 처리능력 기준으로 비용을 다시 계산"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "shop-contribution-margin",
+          "shop-break-even-count"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "월2천 잔을 팔아도 점주 생활비가 부족할 수 있는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "가정의 고정비에 점주 노동과 투자 회수를 제외",
+          "실제 목표 판매량에는 이를 추가"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "shop-break-even-count",
+          "shop-investment-recovery"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "해외 점포 손익을 비교할 때 월세만 바꾸면 되나요?",
+        "answerChecklist": [
+          "임금·세금·별도 부동산 비용과 임대차 전가 비용 확인",
+          "주문별 변동비·영업일·처리능력도 같은 기준으로 비교"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "shop-contribution-margin",
+          "shop-break-even-count"
+        ]
+      }
+    ]
+  },
+  "business/shop-site-selection": {
+    "coreIdea": "입지는 유동인구 숫자 하나가 아니라 예상 방문자·구매전환·객단가·임대료를 같은 시간대와 동일 업종에서 대조하고 그 건물에서 영업이 가능한지 확인하는 선택입니다.",
+    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "shop-break-even-count",
+        "role": "점포의 손익분기 판매량"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "site-conversion-funnel",
+        "role": "길을 지나는 인파의 숫자가 그대로 매장 안 구매와 매출로 이어지는 것은 아닙니다."
+      },
+      {
+        "id": "site-permitted-use",
+        "role": "건물주가 괜찮다고 해도 허가가 나는 것은 아닙니다."
+      },
+      {
+        "id": "site-downside-budget",
+        "role": "좋은 자리처럼 보이는 곳도 손님이 적은 달을 견뎌야 합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "site-conversion-funnel",
+        "sectionId": "mechanism",
+        "intuition": "길을 지나는 인파의 숫자가 그대로 매장 안 구매와 매출로 이어지는 것은 아닙니다.",
+        "workedExample": "하루 1천 명 × 5% 입점 × 40% 구매는 하루 20건입니다.",
+        "boundary": "관찰 날짜와 업종·날씨를 바꾸면 비율이 달라집니다."
+      },
+      {
+        "id": "site-permitted-use",
+        "sectionId": "comparison",
+        "intuition": "건물주가 괜찮다고 해도 허가가 나는 것은 아닙니다.",
+        "workedExample": "일반음식점 후보의 시설기준과 건축물 용도·배기·급배수를 계약 전에 확인합니다.",
+        "boundary": "구체적인 허가·신고 요건은 업종과 지방정부마다 다릅니다."
+      },
+      {
+        "id": "site-downside-budget",
+        "sectionId": "limits",
+        "intuition": "좋은 자리처럼 보이는 곳도 손님이 적은 달을 견뎌야 합니다.",
+        "workedExample": "예상 20건이 10건으로 줄면 월 공헌이익이 절반으로 떨어지는지 확인합니다.",
+        "boundary": "반드시 이전 점포의 매출을 새 점포가 재현한다는 전제를 두지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 통행에서 구매까지의 전환",
+        "relation": "하루 1천 명 × 5% 입점 × 40% 구매는 하루 20건입니다.",
+        "concepts": [
+          "site-conversion-funnel"
+        ]
+      },
+      {
+        "label": "02 · 점포의 허용 용도",
+        "relation": "일반음식점 후보의 시설기준과 건축물 용도·배기·급배수를 계약 전에 확인합니다.",
+        "concepts": [
+          "site-permitted-use"
+        ]
+      },
+      {
+        "label": "03 · 입지의 하방 예산",
+        "relation": "예상 20건이 10건으로 줄면 월 공헌이익이 절반으로 떨어지는지 확인합니다.",
+        "concepts": [
+          "site-downside-budget"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "1천 명 중5%입장, 그중40%구매면 주문 수는 얼마인가요?",
+        "answerChecklist": [
+          "입장50명",
+          "구매20건"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "site-conversion-funnel"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "하루20건·8천 원이면 매출과 월 비용 충당액은 얼마인가요?",
+        "answerChecklist": [
+          "하루매출16만 원",
+          "건당변동비2천 차감 후 하루12만,30일360만"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "site-conversion-funnel",
+          "site-downside-budget"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "고정비800만 원에 얼마가 부족한가요?",
+        "answerChecklist": [
+          "800−360=440만 원",
+          "매출과 남는 돈을 구분"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "site-downside-budget"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "월 고정비가 800만 원이고 한 주문의 판매가 8천 원에서 변동비 2천 원이 나갑니다. 월 최소 주문 수를 구하고 소수점 처리의 이유를 설명하세요.",
+        "answerChecklist": [
+          "한 주문에서 고정비를 충당할 금액은 8천 원 − 2천 원 = 6천 원입니다.",
+          "800만 원 ÷ 6천 원 = 1,333.33…건이므로 온전한 주문으로는 최소 월 1,334건이 필요합니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "site-conversion-funnel",
+          "site-downside-budget"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "음식점 계약 전 건축물 용도 외에 무엇을 확인하나요?",
+        "answerChecklist": [
+          "해당 업종의 시설기준",
+          "배기·급배수·구획과 관할부서 확인"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "site-permitted-use"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "상권보고서의1천 명은 무엇을 증명하지 못하나요?",
+        "answerChecklist": [
+          "실제 점포 입장5%와 구매40%",
+          "출입구·시간대별 구매 이유"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "site-conversion-funnel"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "통행이 두 배면 손익분기점을 보장하나요?",
+        "answerChecklist": [
+          "전환이 같아도20→40건",
+          "월1,200건은1,334건에 미달"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "site-conversion-funnel",
+          "site-downside-budget"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 반경의 두 점포를 현장에서 비교할 계획을 세우세요.",
+        "answerChecklist": [
+          "영업 요일과 시간 반복 관찰",
+          "출입구·횡단보도·진행 방향·경쟁점과 배달 접근"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "site-conversion-funnel"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "손님이 충분한데도 계약을 보류해야 하는 경우를 만드세요.",
+        "answerChecklist": [
+          "업종 시설·배기·전기·용도 조건 미충족",
+          "공사·신고 가능 여부를 지출 전에 확인"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "site-permitted-use"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "개업 뒤 주변 공사가 생기면 어떤 가정을 다시 검토하나요?",
+        "answerChecklist": [
+          "통행·입장·구매 비율",
+          "현금 버틸 기간과 계약 종료 비용"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "site-conversion-funnel",
+          "site-downside-budget"
+        ]
+      }
+    ]
+  },
+  "business/shop-fitout-and-opening": {
+    "coreIdea": "점포 공사는 임대인의 사용 동의, 업종에 필요한 설비 확인, 범위가 적힌 견적·변경 승인, 공정 검수, 신고와 개업 준비가 이어지는 계약과 현금의 순서입니다.",
+    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "site-permitted-use",
+        "role": "점포의 허용 용도"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "fitout-dependency-order",
+        "role": "도면 전에 전력과 배기가 가능한지 알아야 합니다."
+      },
+      {
+        "id": "fitout-change-order",
+        "role": "추가 비용이 구두로 쌓이면 처음 견적은 의미가 없어집니다."
+      },
+      {
+        "id": "fitout-exit-liability",
+        "role": "벽에 쓴 돈이 모두 자산으로 회수되지는 않습니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "fitout-dependency-order",
+        "sectionId": "mechanism",
+        "intuition": "도면 전에 전력과 배기가 가능한지 알아야 합니다.",
+        "workedExample": "4천만 원 공사에 배기 800만 원이 추가되면 예산과 개업일이 함께 바뀝니다.",
+        "boundary": "업종과 건물의 실제 상태에 따라 공정과 신고 순서는 달라집니다."
+      },
+      {
+        "id": "fitout-change-order",
+        "sectionId": "mechanism",
+        "intuition": "추가 비용이 구두로 쌓이면 처음 견적은 의미가 없어집니다.",
+        "workedExample": "추가전기·배기800만 원을 착수 전 금액·범위·일정 변경 승인으로 남깁니다.",
+        "boundary": "법적 효력은 해당 계약과 관할권의 건설·소비자 규칙에 좌우됩니다."
+      },
+      {
+        "id": "fitout-exit-liability",
+        "sectionId": "limits",
+        "intuition": "벽에 쓴 돈이 모두 자산으로 회수되지는 않습니다.",
+        "workedExample": "배기 덕트는 인수자가 원하면 가치가 있지만 임대인이 철거를 요구하면 비용이 됩니다.",
+        "boundary": "임대차 특약과 실제 인수인계 합의가 종료 의무를 바꿀 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 점포 공사의 선후관계",
+        "relation": "4천만 원 공사에 배기 800만 원이 추가되면 예산과 개업일이 함께 바뀝니다.",
+        "concepts": [
+          "fitout-dependency-order"
+        ]
+      },
+      {
+        "label": "02 · 추가 공사 승인",
+        "relation": "추가전기·배기800만 원을 착수 전 금액·범위·일정 변경 승인으로 남깁니다.",
+        "concepts": [
+          "fitout-change-order"
+        ]
+      },
+      {
+        "label": "03 · 인테리어의 종료 의무",
+        "relation": "배기 덕트는 인수자가 원하면 가치가 있지만 임대인이 철거를 요구하면 비용이 됩니다.",
+        "concepts": [
+          "fitout-exit-liability"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "기본 공사 4천만 원, 추가 공사 800만 원, 매출 없이 기다린 한 달 월세 200만 원을 합하세요. 이 합계가 전체 개업자금과 다른 이유도 설명하세요.",
+        "answerChecklist": [
+          "4천만 원 + 800만 원 + 200만 원 = 확인된 현금 지출 5천만 원입니다.",
+          "세금·이자·초도 재료·보험·개업 이후 운영비가 제외되어 있으므로 전체 필요자금으로 단정할 수 없습니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "fitout-dependency-order"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "벽 마감 전에 확인할 설비는 무엇인가요?",
+        "answerChecklist": [
+          "배관·방수·배선 기록",
+          "전기 부하·가스·배기·배수 용량과 경로"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "fitout-dependency-order"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "기성금은 무엇을 확인하고 지급하도록 정하나요?",
+        "answerChecklist": [
+          "공종별 진행과 검수 결과",
+          "수량·자재·완료 조건을 계약과 연결"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "fitout-dependency-order",
+          "fitout-change-order"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "추가 공사800만 원이 생겼을 때 기록할 사항은 무엇인가요?",
+        "answerChecklist": [
+          "변경 범위와 금액",
+          "착수 전 변경 일정과 승인"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "fitout-change-order"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "사업자등록증이 영업 가능 승인을 대신하나요?",
+        "answerChecklist": [
+          "세무 등록과 업종 시설·신고가 다름",
+          "개업 전 등록 신청도 가능"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "fitout-dependency-order"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "설치한 시설의 퇴거 비용을 언제 확인하나요?",
+        "answerChecklist": [
+          "설치 전 남길 것과 제거할 것을 서면 합의",
+          "공사비와 나중 양도가치는 다름"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "fitout-exit-liability"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "추가 공사로 개업이 한 달 더 늦으면 고정 견적만 비교한 판단에 무엇이 빠지나요?",
+        "answerChecklist": [
+          "추가 공사비와 대기 월세·이자·보험",
+          "첫 매출과 운영자금 회수 날짜의 지연"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "fitout-dependency-order",
+          "fitout-change-order"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "소방과 의무보험을 모든 작은 음식점에 똑같이 적용하면 왜 틀리나요?",
+        "answerChecklist": [
+          "다중이용업소 해당 여부 확인",
+          "면적·층·출입구·업종 조건과 제외"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "fitout-dependency-order"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "장비가 고장났을 때 시공사와 제조사 중 누구에게 요청할지 준비하세요.",
+        "answerChecklist": [
+          "장비 보증과 시공 하자 책임 구분",
+          "보증서·시공 도면·연락처·기간·보수 범위 인계"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "fitout-dependency-order",
+          "fitout-change-order"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "완성사진만 보고 잔금을 지급하기 어려운 이유를 설명하세요.",
+        "answerChecklist": [
+          "기능 시험·안전·신고 완료 별도",
+          "임대인 허용과 반환 의무·인수 문서 확인"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "fitout-dependency-order",
+          "fitout-exit-liability"
+        ]
+      }
+    ]
+  },
+  "property/commercial-lease-and-rent": {
+    "coreIdea": "상가 임대차의 경제적 본질은 임차인이 일정 기간 공간을 쓰는 대신 고정 현금흐름과 원상복구 의무를 부담하고, 임대인은 공실·수선·보증금 반환 위험을 지는 교환입니다.",
+    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "shop-break-even-count",
+        "role": "점포의 고정비 계산"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "lease-right-and-deposit",
+        "role": "보증금은 월세처럼 매달 사라지는 돈이 아닙니다."
+      },
+      {
+        "id": "commercial-lease-jurisdiction",
+        "role": "한국에서 가능한 갱신을 외국 점포에도 당연하게 요구할 수 없습니다."
+      },
+      {
+        "id": "rent-property-net-income",
+        "role": "월세 수입이 그대로 부동산 투자 수익은 아닙니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "lease-right-and-deposit",
+        "sectionId": "mechanism",
+        "intuition": "보증금은 월세처럼 매달 사라지는 돈이 아닙니다.",
+        "workedExample": "3천만 원을 맡긴 점주는 3년 뒤 정산 잔액을 청구할 수 있습니다.",
+        "boundary": "연체·손해·복구비 공제 여부는 계약과 법에 달립니다."
+      },
+      {
+        "id": "commercial-lease-jurisdiction",
+        "sectionId": "comparison",
+        "intuition": "한국에서 가능한 갱신을 외국 점포에도 당연하게 요구할 수 없습니다.",
+        "workedExample": "한국 법과 영국 1954년 사업 임차권, 호주 NSW retail lease를 각각 원문으로 확인합니다.",
+        "boundary": "국가 안에서도 지역·업종·계약 날짜에 따라 적용 규칙이 다릅니다."
+      },
+      {
+        "id": "rent-property-net-income",
+        "sectionId": "need",
+        "intuition": "월세 수입이 그대로 부동산 투자 수익은 아닙니다.",
+        "workedExample": "월200만 원 계약에 공실2개월이면 연간 명목 임대수입2천만 원이며 수선·세금·이자는 더 빼야 합니다.",
+        "boundary": "취득가·세금·대출 구조에 따라 순수익률은 달라집니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 사용권과 보증금 청구권",
+        "relation": "3천만 원을 맡긴 점주는 3년 뒤 정산 잔액을 청구할 수 있습니다.",
+        "concepts": [
+          "lease-right-and-deposit"
+        ]
+      },
+      {
+        "label": "02 · 상가 임차권의 관할권 차이",
+        "relation": "한국 법과 영국 1954년 사업 임차권, 호주 NSW retail lease를 각각 원문으로 확인합니다.",
+        "concepts": [
+          "commercial-lease-jurisdiction"
+        ]
+      },
+      {
+        "label": "03 · 임대 부동산의 순현금",
+        "relation": "월200만 원 계약에 공실2개월이면 연간 명목 임대수입2천만 원이며 수선·세금·이자는 더 빼야 합니다.",
+        "concepts": [
+          "rent-property-net-income"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "월200만 원을36개월 내는 총액을 구하세요.",
+        "answerChecklist": [
+          "7천200만 원",
+          "보증금3천만 원과 별도"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "lease-right-and-deposit"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "보증금과 차임은 종료 때 어떻게 다른가요?",
+        "answerChecklist": [
+          "보증금은 남은 채무와 정산 후 반환 청구",
+          "차임은 공간 사용의 대가"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "lease-right-and-deposit"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "입주 전 사진과 도면은 어떤 분쟁을 줄이나요?",
+        "answerChecklist": [
+          "처음 있던 시설과 이후 설치를 구분",
+          "원상복구 범위 확인"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "lease-right-and-deposit"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "두 달 공실이면 월200만 원의 연간 명목 임대수입은 얼마인가요?",
+        "answerChecklist": [
+          "2천400만−400만=2천만 원",
+          "수선·세금·이자 전 수입"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "rent-property-net-income"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "한국 제3조에서 건물 인도와 함께 요구하는 것은 무엇인가요?",
+        "answerChecklist": [
+          "사업자등록 신청",
+          "다음 날 제3자 효력, 반환 우선순위는 별도"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "commercial-lease-jurisdiction"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "중도 이전·갱신·수선은 어디서 확인하나요?",
+        "answerChecklist": [
+          "계약 조항과 현지 강행규정",
+          "통지기한·비용·수선 담당을 문서로 확인"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "commercial-lease-jurisdiction"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "3년보다 시설 회수기간이 긴 투자를 평가할 때 추가 질문은 무엇인가요?",
+        "answerChecklist": [
+          "연장 가능성과 조건",
+          "이전·양도·철거 비용과 회수 가능성"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "lease-right-and-deposit",
+          "commercial-lease-jurisdiction"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "임대료 면제 약속을 검토할 때 월세0만 확인하면 안 되는 이유를 쓰세요.",
+        "answerChecklist": [
+          "공사기간 시작일 확인",
+          "관리비 등 다른 비용도 면제되는지 구분"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "lease-right-and-deposit",
+          "rent-property-net-income"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "한국의 보호 규정을 NSW나 영국 계약에 그대로 쓰면 무엇이 틀리나요?",
+        "answerChecklist": [
+          "관할별 적용대상·갱신·양도·반환 규칙 다름",
+          "현지 계약과 강행규정·배제 합의 확인"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "commercial-lease-jurisdiction"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "시설을 샀다는 사실만으로 임대차와 복구가 해결되지 않는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "시설 소유와 공간 사용권 다름",
+          "임대인 동의·새 계약·반환 범위 별도"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "lease-right-and-deposit",
+          "commercial-lease-jurisdiction"
+        ]
+      }
+    ]
+  },
+  "property/shop-transfer-and-goodwill": {
+    "coreIdea": "점포 양도 대금은 시설·재고·고객 관계의 가치와 임대차 지위, 영업 허가·채무 인수 여부가 섞여 보이므로 각각의 소유자와 동의권자, 인도 시점을 분리해야 합니다.",
+    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "lease-right-and-deposit",
+        "role": "임대차 사용권과 보증금 반환"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "shop-transfer-asset-bundle",
+        "role": "가게를 판다는 말만으로 모든 권리가 넘어가지는 않습니다."
+      },
+      {
+        "id": "lease-assignment-consent",
+        "role": "시설을 샀어도 그 자리에 계속 있을 권리는 별개입니다."
+      },
+      {
+        "id": "goodwill-future-uncertainty",
+        "role": "단골이 예전 점주를 따라 떠나면 기대한 돈이 들어오지 않습니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "shop-transfer-asset-bundle",
+        "sectionId": "mechanism",
+        "intuition": "가게를 판다는 말만으로 모든 권리가 넘어가지는 않습니다.",
+        "workedExample": "3천300만 원을 시설·재고·영업 기회로 나눠 실사합니다.",
+        "boundary": "영업 허가와 직원·공급 계약은 관할법과 계약에 따라 별도 이전 절차가 필요할 수 있습니다."
+      },
+      {
+        "id": "lease-assignment-consent",
+        "sectionId": "mechanism",
+        "intuition": "시설을 샀어도 그 자리에 계속 있을 권리는 별개입니다.",
+        "workedExample": "시설·재고·영업상 이점3천300만 원의 지급 앞에 새 임대차와 필요한 영업승계 조건을 둡니다.",
+        "boundary": "임대차 종료와 새 계약 체결인지, 기존 계약 양도인지 구분해야 합니다."
+      },
+      {
+        "id": "goodwill-future-uncertainty",
+        "sectionId": "limits",
+        "intuition": "단골이 예전 점주를 따라 떠나면 기대한 돈이 들어오지 않습니다.",
+        "workedExample": "영업상 이점에 1천만 원을 냈더라도 신규 월세 인상으로 남는 돈은 줄 수 있습니다.",
+        "boundary": "영업상 이점의 법률·회계·세무 정의는 문맥별로 구분합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 점포 양도 자산 묶음",
+        "relation": "3천300만 원을 시설·재고·영업 기회로 나눠 실사합니다.",
+        "concepts": [
+          "shop-transfer-asset-bundle"
+        ]
+      },
+      {
+        "label": "02 · 임대차 지위 이전과 동의",
+        "relation": "시설·재고·영업상 이점3천300만 원의 지급 앞에 새 임대차와 필요한 영업승계 조건을 둡니다.",
+        "concepts": [
+          "lease-assignment-consent"
+        ]
+      },
+      {
+        "label": "03 · 영업상 이점의 미래 불확실성",
+        "relation": "영업상 이점에 1천만 원을 냈더라도 신규 월세 인상으로 남는 돈은 줄 수 있습니다.",
+        "concepts": [
+          "goodwill-future-uncertainty"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "3천300만 원의 세 대상을 적으세요.",
+        "answerChecklist": [
+          "시설2천만·재고300만·영업상 이점1천만",
+          "보증금은 포함하지 않은 가정"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "shop-transfer-asset-bundle"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "재고300만 원을 검증할 자료는 무엇인가요?",
+        "answerChecklist": [
+          "인수일 실제 수량·사용기한",
+          "수량 변화의 대금 조정 조건"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "shop-transfer-asset-bundle"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "매장 장비를 기존 점주가 마음대로 팔 수 없는 경우는 무엇인가요?",
+        "answerChecklist": [
+          "리스·담보·소유권 유보",
+          "소유자와 공급계약 확인"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "shop-transfer-asset-bundle"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "영업상 이점1천만 원을 확정수익이라고 해도 되나요?",
+        "answerChecklist": [
+          "과거 고객의 미래 재방문은 불확실",
+          "새 임대료·점주 노동·광고·상권 변화 반영"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "goodwill-future-uncertainty"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "잔금 앞에 붙일 영업 가능 조건을 두 가지 적으세요.",
+        "answerChecklist": [
+          "임대인 동의 또는 새 임대차",
+          "필요한 지위승계·허가·본부 또는 장비 소유자 승인"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "lease-assignment-consent"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "고객정보 이전을 알릴 핵심 내용은 무엇인가요?",
+        "answerChecklist": [
+          "이전 사실과 받는 사람 연락처",
+          "이전 거부 시 방법·절차, 원래 목적 범위"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "shop-transfer-asset-bundle"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "양도 전 주문의 입금이 양도 후에 오면 어떻게 기록하나요?",
+        "answerChecklist": [
+          "주문일과 정산일 구분",
+          "양도 전 주문 정산·환불 책임을 계약으로 특정"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "shop-transfer-asset-bundle",
+          "lease-assignment-consent"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "권리금 보호와 새 임대차 자동성립이 다른 이유를 설명하세요.",
+        "answerChecklist": [
+          "보호 조항의 방해행위·기간·예외",
+          "새 공간 사용권은 별도 조건과 문서 필요"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "lease-assignment-consent"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "점주가 하루 종일 일해 낸 매출을 양수자가 그대로 평가하면 무엇을 놓치나요?",
+        "answerChecklist": [
+          "대체할 노동의 임금",
+          "새 임대료와 판촉·배달 비용, 지속 가능 주문"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "goodwill-future-uncertainty"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "최고가 제안보다 낮은 양도가가 더 나을 수 있는 조건을 쓰세요.",
+        "answerChecklist": [
+          "잔금 확실성과 임대차 책임 종료",
+          "미납·쿠폰·장비·직원 책임과 보증금 반환 경로"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "shop-transfer-asset-bundle",
+          "lease-assignment-consent",
+          "goodwill-future-uncertainty"
+        ]
+      }
+    ]
+  },
+  "property/shop-closure-and-restoration": {
+    "coreIdea": "점포 폐업은 영업 중단, 직원·고객·공급자·세금 채무, 임대차 종료, 시설 철거와 원상복구, 보증금 반환을 서로 다른 상대방과 순서대로 정산하는 과정입니다.",
+    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "lease-right-and-deposit",
+        "role": "임대차 보증금과 사용권"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "closure-settlement-order",
+        "role": "문을 닫아도 돈을 줄 상대방이 남습니다."
+      },
+      {
+        "id": "restoration-scope-evidence",
+        "role": "철거할 범위를 기억에만 맡기면 보증금 다툼이 납니다."
+      },
+      {
+        "id": "deposit-closeout",
+        "role": "3천만 원을 냈어도 마지막에 같은 액수가 돌아오는 것은 아닙니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "closure-settlement-order",
+        "sectionId": "mechanism",
+        "intuition": "문을 닫아도 돈을 줄 상대방이 남습니다.",
+        "workedExample": "3천만 원 보증금에서 실제 채무와 복구액을 확인한 뒤 잔액을 받습니다.",
+        "boundary": "사업자 신고 완료가 민사상 채무 소멸을 뜻하지 않습니다."
+      },
+      {
+        "id": "restoration-scope-evidence",
+        "sectionId": "comparison",
+        "intuition": "철거할 범위를 기억에만 맡기면 보증금 다툼이 납니다.",
+        "workedExample": "600만 원 견적의 공제 가능성을 입주사진·합의와 실제 재임대 사실관계에 대조합니다.",
+        "boundary": "판례의 사실관계와 관할권이 다르면 같은 결론이 아닙니다."
+      },
+      {
+        "id": "deposit-closeout",
+        "sectionId": "limits",
+        "intuition": "3천만 원을 냈어도 마지막에 같은 액수가 돌아오는 것은 아닙니다.",
+        "workedExample": "미납 400만 원·복구 600만 원을 공제할 수 있다면 2천만 원이 남습니다.",
+        "boundary": "공제 가능성과 실제 복구비는 협의·판결에 따라 다를 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 폐업의 정산 순서",
+        "relation": "3천만 원 보증금에서 실제 채무와 복구액을 확인한 뒤 잔액을 받습니다.",
+        "concepts": [
+          "closure-settlement-order"
+        ]
+      },
+      {
+        "label": "02 · 원상복구 범위의 증거",
+        "relation": "600만 원 견적의 공제 가능성을 입주사진·합의와 실제 재임대 사실관계에 대조합니다.",
+        "concepts": [
+          "restoration-scope-evidence"
+        ]
+      },
+      {
+        "label": "03 · 보증금 최종 정산",
+        "relation": "미납 400만 원·복구 600만 원을 공제할 수 있다면 2천만 원이 남습니다.",
+        "concepts": [
+          "deposit-closeout"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "보증금3천만에서400만·600만을 빼면 얼마인가요?",
+        "answerChecklist": [
+          "2천만 원",
+          "두 공제액이 유효하게 확정된 조건"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "deposit-closeout"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "600만 원 견적이 곧 공제 가능한 채무인가요?",
+        "answerChecklist": [
+          "계약·인도 상태·합의와 실제 사실 확인",
+          "견적과 확정 정산액 구분"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "restoration-scope-evidence",
+          "deposit-closeout"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "마지막 주문과 마지막 입금을 따로 관리하는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "카드·배달 정산이 폐점 후 가능",
+          "환불·선불권과 거래 자료 보관"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "closure-settlement-order"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "한국 퇴직 금품의 원칙적 지급 기한은 무엇인가요?",
+        "answerChecklist": [
+          "사유 발생일부터14일 이내",
+          "특별한 사정과 당사자 합의에 따른 연장 예외"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "closure-settlement-order"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "한국 폐업 부가세의 일반 신고기한을 적으세요.",
+        "answerChecklist": [
+          "폐업일 속한달 다음달25일",
+          "거래와 잔존 재화 확인, 폐업신고와 별도"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "closure-settlement-order"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "복구를 하지 않고 시설을 재사용한 판례를 모든 사건에 적용할 수 있나요?",
+        "answerChecklist": [
+          "특정 사실관계의 판단",
+          "계약·실제 사용·인도 상태 대조 필요"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "restoration-scope-evidence"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "보증금2천만 반환액이 최종 폐업순현금이 아닐 수 있는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "환불·임금·세금·대출·장비 정산 제외",
+          "각 책임자와 기한을 따로 계산"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "closure-settlement-order",
+          "deposit-closeout"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "철거 시작 전 시설과 업체에 무엇을 확인할지 제안하세요.",
+        "answerChecklist": [
+          "리스 장비 소유·반납과 남길/철거할 시설 서면합의",
+          "안전 차단·반출·폐기물 적법처리 증빙"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "closure-settlement-order",
+          "restoration-scope-evidence"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "고객정보를 폐업 즉시 모두 지우거나 모두 보관하는 방식이 각각 왜 문제인가요?",
+        "answerChecklist": [
+          "불필요한 정보는 파기",
+          "다른 법령상 보존자료는 분리보관·접근제한"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "closure-settlement-order"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "새 점주가 시설을 원할 때 복구를 생략하려면 어떤 약속이 필요할까요?",
+        "answerChecklist": [
+          "임대인·기존점주·새점주 인수조건 일치",
+          "미납과 고객채무·기존 임대차 책임이 자동 소멸하지 않음"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "closure-settlement-order",
+          "restoration-scope-evidence",
+          "deposit-closeout"
+        ]
+      }
+    ]
+  },
+  "business/franchise-incentives": {
+    "coreIdea": "가맹본부의 브랜드·매뉴얼·공급망 수입과 가맹점의 매출·임금·월세·로열티를 별도로 그려야 양쪽의 인센티브와 위험 배분을 볼 수 있습니다.",
+    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "shop-break-even-count",
+        "role": "점포의 손익분기 판매량"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "franchise-split-ledger",
+        "role": "브랜드 전체 매출을 점주 개인 이익으로 읽을 수 없습니다."
+      },
+      {
+        "id": "franchise-contract-controls",
+        "role": "브랜드를 빌리면 마음대로 운영할 권한도 줄어듭니다."
+      },
+      {
+        "id": "franchise-average-sales-limit",
+        "role": "평균 숫자만으로 새 점포의 이익을 예측하지 않습니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "franchise-split-ledger",
+        "sectionId": "mechanism",
+        "intuition": "브랜드 전체 매출을 점주 개인 이익으로 읽을 수 없습니다.",
+        "workedExample": "월매출 3천만 원의 로열티 5%는 본부 150만 원 수입이면서 점주 비용입니다.",
+        "boundary": "본부 공급 수입은 계약과 상품별 원가를 확인해야 합니다."
+      },
+      {
+        "id": "franchise-contract-controls",
+        "sectionId": "mechanism",
+        "intuition": "브랜드를 빌리면 마음대로 운영할 권한도 줄어듭니다.",
+        "workedExample": "필수 품목 지정과 영업 구역이 바뀌면 점주의 원가와 매출이 함께 변합니다.",
+        "boundary": "효력과 공시 의무는 관할국 법과 계약에 따라 다릅니다."
+      },
+      {
+        "id": "franchise-average-sales-limit",
+        "sectionId": "limits",
+        "intuition": "평균 숫자만으로 새 점포의 이익을 예측하지 않습니다.",
+        "workedExample": "월매출 3천만 원이라도 로열티·월세·임금이 다르면 두 점주의 소득은 달라집니다.",
+        "boundary": "자료의 산출 방법과 조사 기간을 반드시 확인해야 합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 가맹본부와 점주의 분리 장부",
+        "relation": "월매출 3천만 원의 로열티 5%는 본부 150만 원 수입이면서 점주 비용입니다.",
+        "concepts": [
+          "franchise-split-ledger"
+        ]
+      },
+      {
+        "label": "02 · 가맹 계약의 통제권",
+        "relation": "필수 품목 지정과 영업 구역이 바뀌면 점주의 원가와 매출이 함께 변합니다.",
+        "concepts": [
+          "franchise-contract-controls"
+        ]
+      },
+      {
+        "label": "03 · 평균 매출의 한계",
+        "relation": "월매출 3천만 원이라도 로열티·월세·임금이 다르면 두 점주의 소득은 달라집니다.",
+        "concepts": [
+          "franchise-average-sales-limit"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "월매출 3천만 원에 매출의 5%를 로열티로 내는 점포입니다. 지급액을 계산하고 점주와 본부의 장부에 각각 어떻게 기록되는지 설명하세요.",
+        "answerChecklist": [
+          "3천만 원 × 0.05 = 월 150만 원을 지급합니다.",
+          "점주에게는 로열티 비용이고 본부에는 계약상 수입입니다. 점주의 순이익과 같은 금액이 아닙니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "franchise-split-ledger"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "재료1천만·월세300만·로열티150만을 빼면 얼마가 남나요?",
+        "answerChecklist": [
+          "1천550만 원",
+          "임금·광고·공과금·세금 전 금액"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "franchise-split-ledger"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "필수품목은 점주의 어떤 선택을 제한하나요?",
+        "answerChecklist": [
+          "지정 품목·공급자 조건",
+          "가격 상승 때 대체 구입 선택 제한 가능"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "franchise-contract-controls"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "운영비가1천550만 원보다 커져도 로열티가 자동 면제되나요?",
+        "answerChecklist": [
+          "매출 연동 약정은 이익과 별개",
+          "면제·유예 조항 별도 확인"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "franchise-split-ledger",
+          "franchise-contract-controls"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "미국 FDD의 Item19에서 확인할 것은 무엇인가요?",
+        "answerChecklist": [
+          "본부가 제시한 매출·수익 주장",
+          "예상3천만 원의 표본·전제·범위"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "franchise-average-sales-limit"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "점포의 이익 계산에서 가족 노동도 넣어야 하나요?",
+        "answerChecklist": [
+          "무료라고 보면 수익 과장",
+          "새 점주가 대체할 임금으로 확인"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "franchise-average-sales-limit"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "초기 가맹비가 낮은 계약이 꼭 싼 계약이 아닌 이유는 무엇인가요?",
+        "answerChecklist": [
+          "필수품목·로열티·광고·갱신·양도 비용",
+          "전체 계약기간 지급액과 책임 비교"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "franchise-split-ledger",
+          "franchise-contract-controls"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 지역에 새 점포가 열릴 때 본부와 기존 점주의 유인을 비교하세요.",
+        "answerChecklist": [
+          "본부 지급 수입 증가 가능",
+          "기존점 고객 분산 가능, 영업구역과 온라인 배분 확인"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "franchise-split-ledger",
+          "franchise-contract-controls"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "평균3천만 원 매출의 자료를 검증할 사람과 질문을 제안하세요.",
+        "answerChecklist": [
+          "신생·기존·폐점·양도점 확인",
+          "실제 공사·인력·지정품목 비용과 손익 차이"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "franchise-contract-controls",
+          "franchise-average-sales-limit"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "임대차가 본부 계약보다 먼저 끝나면 무엇이 남을 수 있나요?",
+        "answerChecklist": [
+          "영업장 이전·간판·재고·장비리스 의무",
+          "기간·종료·양도 조건을 각각 대조"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "franchise-contract-controls"
+        ]
+      }
+    ]
+  },
+  "property/land-development-residual": {
+    "coreIdea": "개발 가능성은 등기상의 소유와 다르며 허가·용적·기반시설·분양가격·금융비용의 조건을 거꾸로 계산한 잔여액이 토지에 지불할 수 있는 값의 상한을 만듭니다.",
+    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "discount-factor",
+        "role": "미래 현금흐름의 현재가치"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "development-residual-land-value",
+        "role": "건물 매각액 가운데 땅에 돌아갈 몫만 남깁니다."
+      },
+      {
+        "id": "land-permit-stack",
+        "role": "땅을 소유해도 원하는 건물을 바로 지을 수는 없습니다."
+      },
+      {
+        "id": "development-time-risk",
+        "role": "같은 매각액이어도 2년 늦으면 남는 돈이 줄어듭니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "development-residual-land-value",
+        "sectionId": "mechanism",
+        "intuition": "건물 매각액 가운데 땅에 돌아갈 몫만 남깁니다.",
+        "workedExample": "100억 원에서 비용 70억 원과 요구 이익 15억 원을 빼면 15억 원입니다.",
+        "boundary": "분양가·허가·시간과 비용이 가정이므로 확정된 시장가격이 아닙니다."
+      },
+      {
+        "id": "land-permit-stack",
+        "sectionId": "comparison",
+        "intuition": "땅을 소유해도 원하는 건물을 바로 지을 수는 없습니다.",
+        "workedExample": "한국에서 개발행위허가와 건축허가의 법적 근거를 나누되 의제·협의로 연결되는 요건을 확인합니다.",
+        "boundary": "구체적 요건은 지역·용도·사업 규모·시점에 달립니다."
+      },
+      {
+        "id": "development-time-risk",
+        "sectionId": "limits",
+        "intuition": "같은 매각액이어도 2년 늦으면 남는 돈이 줄어듭니다.",
+        "workedExample": "공사비가 70억 원에서 80억 원으로 오르면 가정상 잔여 땅값은 15억 원에서 5억 원으로 줄어듭니다.",
+        "boundary": "단순 잔여법은 현금 시점 차이를 생략하므로 할인 현금흐름으로 교차검증합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 개발 잔여 토지가치",
+        "relation": "100억 원에서 비용 70억 원과 요구 이익 15억 원을 빼면 15억 원입니다.",
+        "concepts": [
+          "development-residual-land-value"
+        ]
+      },
+      {
+        "label": "02 · 토지 개발 허가의 층",
+        "relation": "한국에서 개발행위허가와 건축허가의 법적 근거를 나누되 의제·협의로 연결되는 요건을 확인합니다.",
+        "concepts": [
+          "land-permit-stack"
+        ]
+      },
+      {
+        "label": "03 · 개발의 시간 위험",
+        "relation": "공사비가 70억 원에서 80억 원으로 오르면 가정상 잔여 땅값은 15억 원에서 5억 원으로 줄어듭니다.",
+        "concepts": [
+          "development-time-risk"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "100억 완공가치에서70억 비용과15억 요구이익을 빼세요.",
+        "answerChecklist": [
+          "15억 원",
+          "토지와 취득에 배정할 잔여액"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "development-residual-land-value"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "토지 매도자에게15억 원을 전부 줄 수 있다고 단정할 수 있나요?",
+        "answerChecklist": [
+          "취득 부대비용도 검토",
+          "가정에 따른 잔여이지 확정 거래가 아님"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "development-residual-land-value"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "공사등 비용이80억으로 오르면 잔여는 얼마인가요?",
+        "answerChecklist": [
+          "100−80−15=5억",
+          "비용10억 증가가 잔여10억 감소"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "development-residual-land-value",
+          "development-time-risk"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "토지·취득에 배정할 잔여액 15억 원을 계산한 뒤 땅을 샀습니다. 이것만으로 계획한 건물을 지을 수 없는 이유와 추가 확인 대상을 설명하세요.",
+        "answerChecklist": [
+          "15억 원은 완공가치와 비용을 가정해 계산한 금액이며 토지 소유권을 얻어도 원하는 용도·규모의 개발이 자동 허용되지 않습니다.",
+          "용도지역과 계획 제한, 도로·기반시설, 토질·오염·점유권 및 개발행위·건축허가 조건을 별도로 확인해야 합니다."
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "land-permit-stack"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "RICS 원문의 비용에 개발업자 이익이 포함되나요?",
+        "answerChecklist": [
+          "including profit 명시",
+          "70억과15억을 한 번씩 차감, 이익 중복차감 금지"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "development-residual-land-value"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "한국 개발행위허가와 건축허가를 항상 두 번 순차 신청하나요?",
+        "answerChecklist": [
+          "법적 근거는 다름",
+          "요건에 따라 의제·협의로 연결 가능"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "land-permit-stack"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "매각액만90억으로 내려가면 잔여가 어떻게 되나요?",
+        "answerChecklist": [
+          "90−70−15=5억",
+          "다른 조건이 같다는 가정 필요"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "development-residual-land-value",
+          "development-time-risk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은100억 매각인데 완공이 늦으면 가치는 왜 변하나요?",
+        "answerChecklist": [
+          "추가 이자·관리비와 늦은 회수",
+          "월별 자금 부족 가능"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "development-time-risk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "토지계약 전에 실패 시 돈을 돌려받는 조건을 설계하세요.",
+        "answerChecklist": [
+          "허가·금융·토질조사 조건과 기한",
+          "불성립 시 계약금 반환·비용 부담을 명시"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "land-permit-stack",
+          "development-time-risk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "숫자가 맞아도 실행할 수 없는 토지계획의 반례를 제시하세요.",
+        "answerChecklist": [
+          "경계·오염·점유권·담보·도로 또는 허가 불충족",
+          "해당 권리와 계획조건을 조사해 판별"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "development-residual-land-value",
+          "land-permit-stack",
+          "development-time-risk"
+        ]
+      }
+    ]
+  },
+  "business/supply-chain-bargaining": {
+    "coreIdea": "국제 공급망에서는 각 나라가 다른 단계를 맡아도 제품 규격·브랜드·고객 접점·교체 가능한 공급자를 통제하는 주체가 협상력을 얻으며, 한 나라의 수출액은 그 나라에 남는 부가가치와 다릅니다.",
+    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "gross-net-revenue",
+        "role": "총액과 순액을 구분하는 사업 장부"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "global-value-added-chain",
+        "role": "100달러가 국경을 넘었다고 그 나라가 100달러를 새로 만든 것은 아닙니다."
+      },
+      {
+        "id": "supply-chain-bargaining-node",
+        "role": "공장 소유만으로 가장 큰 몫을 갖는 것은 아닙니다."
+      },
+      {
+        "id": "supply-chain-policy-transmission",
+        "role": "한 나라의 규칙이 국경 밖 공장에도 주문 변화를 만듭니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "global-value-added-chain",
+        "sectionId": "source",
+        "intuition": "100달러가 국경을 넘었다고 그 나라가 100달러를 새로 만든 것은 아닙니다.",
+        "workedExample": "최종소비100달러와 조립국출하60달러를 구분하고,60 안의 수입부품40을 빼 국내20달러를 계산합니다.",
+        "boundary": "국가별 실제 수치는 산업연관표와 부가가치 무역 통계가 필요합니다."
+      },
+      {
+        "id": "supply-chain-bargaining-node",
+        "sectionId": "mechanism",
+        "intuition": "공장 소유만으로 가장 큰 몫을 갖는 것은 아닙니다.",
+        "workedExample": "브랜드가 여러 조립업체 중 하나를 고르면 조립 단가 협상력이 달라집니다.",
+        "boundary": "병목 기술이나 장기 계약이 있으면 제조자가 더 강할 수 있습니다."
+      },
+      {
+        "id": "supply-chain-policy-transmission",
+        "sectionId": "limits",
+        "intuition": "한 나라의 규칙이 국경 밖 공장에도 주문 변화를 만듭니다.",
+        "workedExample": "부품 관세가 오르면 브랜드의 조달처와 최종 가격 선택이 달라질 수 있습니다.",
+        "boundary": "실제 효과는 계약·재고·대체 공급 속도에 따라 달라집니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 국제 가치사슬의 부가가치",
+        "relation": "최종소비100달러와 조립국출하60달러를 구분하고,60 안의 수입부품40을 빼 국내20달러를 계산합니다.",
+        "concepts": [
+          "global-value-added-chain"
+        ]
+      },
+      {
+        "label": "02 · 공급망의 협상력 지점",
+        "relation": "브랜드가 여러 조립업체 중 하나를 고르면 조립 단가 협상력이 달라집니다.",
+        "concepts": [
+          "supply-chain-bargaining-node"
+        ]
+      },
+      {
+        "label": "03 · 정책의 공급망 전달",
+        "relation": "부품 관세가 오르면 브랜드의 조달처와 최종 가격 선택이 달라질 수 있습니다.",
+        "concepts": [
+          "supply-chain-policy-transmission"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "최종100달러의 단계별 금액을 구분하세요.",
+        "answerChecklist": [
+          "제조60·물류10·판매30",
+          "제조60 안에 수입부품40·국내20"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "global-value-added-chain"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "조립국의 단순 국내 부가가치는 얼마인가요?",
+        "answerChecklist": [
+          "60−40=20달러",
+          "최종소비100과 총수출60은 경계가 다름"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "global-value-added-chain"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "20달러를 조립회사 순이익이라고 해도 되나요?",
+        "answerChecklist": [
+          "노동·자본 등에 돌아가는 몫 포함",
+          "순이익은 비용과 분배를 더 확인"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "global-value-added-chain"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "협상력이 생기는 대체 가능성을 설명하세요.",
+        "answerChecklist": [
+          "조립업체 둘이면 주문 전환 선택",
+          "유일 공급 부품이면 변경 비용·시간이 커짐"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "supply-chain-bargaining-node"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "판매단계30달러에 어떤 부담이 아직 남나요?",
+        "answerChecklist": [
+          "광고·반품·재고 부담",
+          "30달러 전부를 순이익이라고 읽지 않음"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "global-value-added-chain",
+          "supply-chain-bargaining-node"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "관세 충격은 어떤 계약조건을 타고 전달되나요?",
+        "answerChecklist": [
+          "조달 가격·납기·가격 조정",
+          "재고 소유와 대체 공급자"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "supply-chain-policy-transmission"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "40달러부품과60달러완제품 수출 합계100을 새 가치라 읽으면 왜 틀리나요?",
+        "answerChecklist": [
+          "앞선40달러가60달러 안에 포함",
+          "총국경거래와 단계별 부가가치는 다른 합계"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "global-value-added-chain"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "동일 제조원가에도 두 회사 협상력이 다른 사례를 만드세요.",
+        "answerChecklist": [
+          "규격 승인·인증·고객 접근 또는 대체업체 차이",
+          "가격 한 번보다 지속 가능한 대체 조건 확인"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "supply-chain-bargaining-node"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "관세가 올라가도 최종가격100이 그대로일 수 있는 경로를 설명하세요.",
+        "answerChecklist": [
+          "브랜드·제조·물류 몫 사이 부담 재배분",
+          "계약과 경쟁·대체 조달 조건에 따라 달라짐"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "supply-chain-bargaining-node",
+          "supply-chain-policy-transmission"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "공장이 옮겨온 나라가 무조건 큰 이익을 얻었다는 주장을 검증하세요.",
+        "answerChecklist": [
+          "수입 중간재와 국내 부가가치 구분",
+          "공장 수 외에 수율·인력·전환 비용·고객 계약 확인"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "global-value-added-chain",
+          "supply-chain-bargaining-node",
+          "supply-chain-policy-transmission"
+        ]
+      }
+    ]
+  },
+  "markets/funds-etfs-and-etns": {
+    "coreIdea": "펀드·ETF는 자산 묶음에 대한 지분이고 ETN은 발행자에 대한 채무 청구권이므로 지수 이름보다 법적 소유, NAV와 거래가격, 발행자 신용과 비용을 먼저 구분해야 합니다.",
+    "entryNote": "본문의 금액·수량은 (가정)이며, 원문 제도는 2026-10-04 확인했습니다. 1~10절에서 사례·계약·정산·국가 차이를 순서대로 설명합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "residual-claim",
+        "role": "주식의 잔여청구권"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "fund-share-vs-note",
+        "role": "펀드·ETF 투자자는 보유 자산 묶음의 지분을 갖지만 ETN 보유자는 발행자의 계약상 지급 청구권을 갖는 차이입니다."
+      },
+      {
+        "id": "etf-nav-market-gap",
+        "role": "거래소 체결 가격과 펀드 한 좌의 순자산가치 사이에 생기는 차이로, 설정·환매와 시장 유동성이 크기에 영향을 줍니다."
+      },
+      {
+        "id": "leveraged-etf-reset",
+        "role": "일일 목표 배수를 맞추는 구조가 여러 날 보유 수익을 기초지수 누적 수익의 단순 배수와 다르게 만드는 조건입니다."
+      },
+      {
+        "id": "synthetic-etf-counterparty",
+        "role": "펀드 지분을 소유하되 내부에서 스왑 등으로 지수 성과를 받으면 펀드 자산에 계약 상대방의 지급 위험이 포함되는 구조입니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "fund-share-vs-note",
+        "sectionId": "mechanism",
+        "intuition": "같은 지수 이름을 붙여도 누구에게 청구하는지가 다릅니다.",
+        "workedExample": "ETF는 자산 묶음 지분, ETN은 발행자 약속을 보유합니다.",
+        "boundary": "구체적인 담보·상환 구조는 상품설명서로 확인해야 합니다."
+      },
+      {
+        "id": "etf-nav-market-gap",
+        "sectionId": "mechanism",
+        "intuition": "ETF를 살 때 화면 가격이 보유 자산값과 다를 수 있습니다.",
+        "workedExample": "1만100원에 사서1만1000원에 팔면900원/1만100원≈8.91%; AP비용60이면 차익40, 비용130이면 손실30입니다.",
+        "boundary": "거래시간과 해외 기초시장 휴장 때 괴리 해석이 더 어렵습니다."
+      },
+      {
+        "id": "leveraged-etf-reset",
+        "sectionId": "comparison",
+        "intuition": "하루 2배가 한 달 2배를 뜻하지 않습니다.",
+        "workedExample": "지수100→110→100에서 일일2배 상품100→120→98.18로 내려갑니다.",
+        "boundary": "상품별 목표 기간과 재설정 방식은 설명서로 확인합니다."
+      },
+      {
+        "id": "synthetic-etf-counterparty",
+        "sectionId": "limits",
+        "intuition": "펀드 지분을 소유하되 내부에서 스왑 등으로 지수 성과를 받으면 펀드 자산에 계약 상대방의 지급 위험이 포함되는 구조입니다.",
+        "workedExample": "자산 풀의 지분이라는 ETF의 권리는 유지되지만 약정 성과의 지급 실패는 NAV를 줄일 수 있습니다. ETN의 발행자 직접 채무와 구별합니다.",
+        "boundary": "담보·위험 한도·준거법에 따라 손실 범위가 다르며 미국 QYLD와 유럽 UCITS의 이름만으로 보유구조를 동일시하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 펀드 지분과 발행자 채무",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "fund-share-vs-note"
+        ]
+      },
+      {
+        "label": "02 · ETF 시장가격과 순자산가치 괴리",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "etf-nav-market-gap"
+        ]
+      },
+      {
+        "label": "03 · 레버리지 ETF의 일일 재설정",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "leveraged-etf-reset"
+        ]
+      },
+      {
+        "label": "04 · 합성 ETF의 계약 상대방 위험",
+        "relation": "자산 풀의 지분이라는 ETF의 권리는 유지되지만 약정 성과의 지급 실패는 NAV를 줄일 수 있습니다. ETN의 발행자 직접 채무와 구별합니다.",
+        "concepts": [
+          "synthetic-etf-counterparty"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "비용과 부채를 뺀 순자산1억 원을1만 좌로 나눌 때 한 좌의 가치는 얼마인가요?",
+        "answerChecklist": [
+          "1억 원÷1만 좌",
+          "1만 원"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "fund-share-vs-note"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "1만100원에 사서 1만1000원에 팔면 수익률은 얼마인가요?",
+        "answerChecklist": [
+          "900원",
+          "900÷10100≈8.91%",
+          "자산수익10%와 구별"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "etf-nav-market-gap"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "ETF와 ETN의 청구 대상을 구별하세요.",
+        "answerChecklist": [
+          "ETF 자산 풀 지분",
+          "ETN 발행자 채무"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "fund-share-vs-note"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "AP 비용60원일 때 괴리100원의 차익을 계산하세요.",
+        "answerChecklist": [
+          "좌당40원",
+          "자산 조달과 설정이 가능하다는 조건"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "etf-nav-market-gap"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "AP 비용130원일 때 괴리가 바로 사라지지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "100−130<0",
+          "거래 유인 없음",
+          "기초시장 휴장 제약"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "etf-nav-market-gap"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "ETN 청구액11000원의 회수율40% 사례를 계산하세요.",
+        "answerChecklist": [
+          "4400원 회수",
+          "10100원 투자 대비5700원 손실"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "fund-share-vs-note"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "지수100→110→100에서 일일2배 상품을 계산하세요.",
+        "answerChecklist": [
+          "100→120",
+          "둘째 날 지수−9.09%",
+          "최종98.18"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "leveraged-etf-reset"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "NAV가 같아도 즉시 매도 손익이 달라지는 이유를 설명하세요.",
+        "answerChecklist": [
+          "매수10100",
+          "매도호가10000",
+          "100원 손실",
+          "호가 차이"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "etf-nav-market-gap"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 ETF 이름의 미국 실물 구조와 유럽 합성 구조, ETN의 법적 청구권을 비교하세요.",
+        "answerChecklist": [
+          "ETF 재산지분",
+          "합성 내부 계약상대 위험",
+          "ETN 발행자 직접채무",
+          "관할·담보 확인"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "synthetic-etf-counterparty",
+          "fund-share-vs-note"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "지수100→110→100에서 일일2배·3배·−3배와 수량 고정 차입 투자의 결과를 비교하세요.",
+        "answerChecklist": [
+          "98.18",
+          "94.55",
+          "89.09",
+          "차입 고정수량 자기몫100→120→100",
+          "일일재설정 기준금액 차이",
+          "비용제외"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "leveraged-etf-reset"
+        ]
+      }
+    ]
+  },
+  "markets/forwards-and-futures": {
+    "coreIdea": "선도·선물은 미래에 정한 가격으로 거래할 의무를 양쪽에 만들어 가격 변동 손익을 재배분하며, 선물은 거래소·청산과 일별 정산으로 중간 현금흐름이 생깁니다.",
+    "entryNote": "본문의 금액·수량은 (가정)이며, 원문 제도는 2026-10-04 확인했습니다. 1~10절에서 사례·계약·정산·국가 차이를 순서대로 설명합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "bond-cashflow-pricing",
+        "role": "미래 현금흐름과 현재 가격의 관계"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "forward-futures-symmetric-payoff",
+        "role": "정해진 미래 가격과 실제 정산 가격의 차이가 계약 양쪽에 반대 부호로 귀속되는 구조입니다."
+      },
+      {
+        "id": "futures-daily-settlement",
+        "role": "표준화된 거래소 계약에서 청산기관이 평가손익을 매일 현금으로 반영하고 증거금을 요구하는 방식입니다."
+      },
+      {
+        "id": "basis-risk-in-hedging",
+        "role": "현지에서 실제 거래할 물건의 가격과 헤지 계약이 참조하는 표준 가격이 다르게 움직일 위험입니다."
+      },
+      {
+        "id": "futures-roll-convergence",
+        "role": "만기를 이어 가기 위해 계약을 교체할 때 새 계약 가격의 수렴 경로가 현물과 다른 손익을 만드는 구조입니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "forward-futures-symmetric-payoff",
+        "sectionId": "mechanism",
+        "intuition": "한쪽이 500만 원 유리하면 상대방은 같은 가격 기회를 포기합니다.",
+        "workedExample": "100톤 × 톤당 5만 원 차이는 500만 원입니다.",
+        "boundary": "현물 사업의 전체 손익과 계약 손익은 별도로 더해야 합니다."
+      },
+      {
+        "id": "futures-daily-settlement",
+        "sectionId": "source",
+        "intuition": "만기 전에도 가격 변동에 따른 현금이 청산기관을 거쳐 매일 오갑니다.",
+        "workedExample": "농가의 매도 선물 가격이 오르면 만기 판매 전 추가 현금이 필요할 수 있습니다.",
+        "boundary": "거래소·계약별 증거금과 정산 주기는 다릅니다."
+      },
+      {
+        "id": "basis-risk-in-hedging",
+        "sectionId": "mechanism",
+        "intuition": "선물로 막은 가격과 실제 매장 원가가 정확히 같지는 않습니다.",
+        "workedExample": "현물36만·정산35만·약정30만·100톤이면 순지출3600−500=3100만으로100만 위험이 남습니다.",
+        "boundary": "완전 일치 계약이라도 운영·생산량 위험은 남습니다."
+      },
+      {
+        "id": "futures-roll-convergence",
+        "sectionId": "mechanism",
+        "intuition": "만기를 이어 가기 위해 계약을 교체할 때 새 계약 가격의 수렴 경로가 현물과 다른 손익을 만드는 구조입니다.",
+        "workedExample": "밀100톤의 새 만기 가격31만5000원이 현물30만 원으로 수렴하면 매수 손익은−150만 원입니다.",
+        "boundary": "교체 순간 두 가격의 차이가 자동 확정 손실은 아니며 이후 곡선 변화·담보 이자·비용과 실제 보유 규칙이 필요합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 선도·선물의 대칭 손익",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "forward-futures-symmetric-payoff"
+        ]
+      },
+      {
+        "label": "02 · 선물의 일별 정산",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "futures-daily-settlement"
+        ]
+      },
+      {
+        "label": "03 · 헤지의 베이시스 위험",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "basis-risk-in-hedging"
+        ]
+      },
+      {
+        "label": "04 · 선물 만기 교체와 가격 수렴",
+        "relation": "밀100톤의 새 만기 가격31만5000원이 현물30만 원으로 수렴하면 매수 손익은−150만 원입니다.",
+        "concepts": [
+          "futures-roll-convergence"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "100톤·톤당30만 원의 약정 대금을 계산하세요.",
+        "answerChecklist": [
+          "약정 단가30만 원/톤에100톤을 곱합니다.",
+          "대금은3000만 원이며 증거금이나 당일 손익과 구별합니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "forward-futures-symmetric-payoff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "만기35만 원에서 구매자와 판매자 차액을 계산하세요.",
+        "answerChecklist": [
+          "구매자+500만",
+          "판매자−500만"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "forward-futures-symmetric-payoff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "선도와 선물의 계약·정산 차이를 설명하세요.",
+        "answerChecklist": [
+          "맞춤 약속",
+          "표준 거래소",
+          "중간 정산"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "futures-daily-settlement"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "30만→31만 원 때100톤 선물 정산액을 구하세요.",
+        "answerChecklist": [
+          "100만 원",
+          "매수자 수취",
+          "매도자 지급"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "futures-daily-settlement"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "만기25만 원에서 현물과 계약을 합산하세요.",
+        "answerChecklist": [
+          "현물2500만",
+          "계약손실500만",
+          "합계3000만"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "forward-futures-symmetric-payoff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "헤지와 투기를 같은 매도 계약에서 구분하세요.",
+        "answerChecklist": [
+          "농가 현물매출 존재",
+          "무보유자는 상쇄할 현물 없음"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "forward-futures-symmetric-payoff"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "현물36만·정산35만이면 구매자의 순지출은 얼마인가요?",
+        "answerChecklist": [
+          "3600−500=3100만",
+          "100만 잔여",
+          "품질·지역 차이"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "basis-risk-in-hedging"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "수확60톤으로 줄었는데100톤 매도면 어떤 위험이 있나요?",
+        "answerChecklist": [
+          "40톤 초과",
+          "현물수입 감소",
+          "가격상승 시 계약손실"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "basis-risk-in-hedging"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "밀100톤을 다음 만기31만5000원에 새로 매수하고30만 원으로 수렴하면 손익은? 교체 직후 손실과 구별하세요.",
+        "answerChecklist": [
+          "−150만 원",
+          "가격 수렴 가정",
+          "교체 즉시 확정손실 아님",
+          "담보이자·비용 별도"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "futures-roll-convergence"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "만기 헤지가 맞아도 중간에 닫아야 하는 조건을 제시하세요.",
+        "answerChecklist": [
+          "선물손실 현금 오늘",
+          "현물대금 나중",
+          "증거금 납부실패"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "futures-daily-settlement"
+        ]
+      }
+    ]
+  },
+  "markets/options-and-asymmetric-payoffs": {
+    "coreIdea": "콜·풋 옵션의 매수자는 행사 여부를 선택할 권리를 얻고 프리미엄을 내며, 매도자는 프리미엄을 받는 대신 불리할 때 계약 이행 의무를 집니다.",
+    "entryNote": "본문의 금액·수량은 (가정)이며, 원문 제도는 2026-10-04 확인했습니다. 1~10절에서 사례·계약·정산·국가 차이를 순서대로 설명합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "forward-futures-symmetric-payoff",
+        "role": "선도·선물의 대칭 손익"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "option-right-obligation",
+        "role": "매수자는 불리하면 행사하지 않을 수 있는 권리를 얻고 매도자는 요청받으면 계약을 이행해야 하는 비대칭입니다."
+      },
+      {
+        "id": "option-premium-time-value",
+        "role": "만기 전 옵션가격은 즉시 행사 가치 외에 남은 기간에 유리하게 바뀔 가능성의 값을 포함합니다."
+      },
+      {
+        "id": "uncovered-option-tail",
+        "role": "받는 프리미엄은 제한되어도 기초가격의 큰 이동 때 계약 이행 손실이 훨씬 클 수 있는 비대칭입니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "option-right-obligation",
+        "sectionId": "mechanism",
+        "intuition": "매수자는 8을 잃고 끝낼 수 있지만 매도자의 손실은 더 클 수 있습니다.",
+        "workedExample": "주가 120일 때 콜 행사 가치 20에서 프리미엄 8을 빼 순손익 12입니다.",
+        "boundary": "실제 계약 승수와 결제 방식이 있으면 한 주 계산을 확장해야 합니다."
+      },
+      {
+        "id": "option-premium-time-value",
+        "sectionId": "comparison",
+        "intuition": "지금 행사 가치가 0이어도 옵션 가격이 0은 아닐 수 있습니다.",
+        "workedExample": "주가 90의 콜이 만기 전에는 남은 시간 때문에 거래될 수 있습니다.",
+        "boundary": "변동성과 금리 변화가 프리미엄에 영향을 주므로 단일 숫자 예로 가격을 일반화할 수 없습니다."
+      },
+      {
+        "id": "uncovered-option-tail",
+        "sectionId": "limits",
+        "intuition": "자주 작은 돈을 벌어도 한 번 큰 손실이 날 수 있습니다.",
+        "workedExample": "행사가 100 콜을 팔고 주가가 200이 되면 받은 8보다 이행 손실 100이 훨씬 큽니다.",
+        "boundary": "담보·헤지·포지션 제한과 결제 규칙을 함께 봐야 합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 옵션의 권리와 의무",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "option-right-obligation"
+        ]
+      },
+      {
+        "label": "02 · 옵션 프리미엄과 남은 시간",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "option-premium-time-value"
+        ]
+      },
+      {
+        "label": "03 · 무담보 옵션 매도의 꼬리 위험",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "uncovered-option-tail"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "행사가100·프리미엄8·만기120의 행사 가치와 순손익은?",
+        "answerChecklist": [
+          "20",
+          "12"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "option-right-obligation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "주가90에서 매수자가100에 살 의무가 있나요?",
+        "answerChecklist": [
+          "행사 거절",
+          "프리미엄8 손실"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "option-right-obligation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "행사가100과 매수 프리미엄8인 콜에서 만기 순손익이0이 되는 주가를 계산하고 이유를 설명하세요.",
+        "answerChecklist": [
+          "행사 이익이 구입비8을 회수하려면 만기 주가는100+8=108입니다.",
+          "108에서는 행사 가치8−프리미엄8=0이며 비용과 세금은 제외합니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "option-right-obligation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "콜 매수자와 매도자의120일 때 손익을 비교하세요.",
+        "answerChecklist": [
+          "+12",
+          "−12",
+          "비용 전 반대"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "uncovered-option-tail"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "만기 전 가격이 행사 가치와 다른 이유를 설명하세요.",
+        "answerChecklist": [
+          "시간",
+          "변동성",
+          "금리·배당 조건"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "option-premium-time-value"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "주가90·행사가100·풋구입비8의 순손익은?",
+        "answerChecklist": [
+          "100에 팔 권리를 사용하므로 행사 가치는100−90=10입니다.",
+          "구입비8을 빼면 순이익2이며 주식 자체를 보유한 손익과 별개입니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "option-right-obligation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "미국100주 계약과 KRX25만원 승수에 차액20·비용8을 넣으세요.",
+        "answerChecklist": [
+          "미국1200달러",
+          "KRX300만원",
+          "단위 가정"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "option-right-obligation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "주식100과 풋8을 결합한 만기 손실 바닥을 구하세요.",
+        "answerChecklist": [
+          "투입108",
+          "만기최소100",
+          "손실바닥−8"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "uncovered-option-tail"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "8을10번 받고 한번92를 잃는 전략의 결과를 계산하세요.",
+        "answerChecklist": [
+          "80−92=−12",
+          "빈도와 손실규모 동시 검토"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "uncovered-option-tail"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "주가가 올라도 만기 전 콜 가격이 내릴 수 있는 조건은?",
+        "answerChecklist": [
+          "변동성 하락",
+          "남은시간 감소",
+          "만기손익과 시가 구별"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "option-premium-time-value"
+        ]
+      }
+    ]
+  },
+  "markets/swaps-and-credit-risk": {
+    "coreIdea": "금리·통화 스왑은 정해진 명목원금을 기준으로 서로 다른 지급 흐름을 교환하고 CDS는 채무불이행 위험의 보상 의무를 넘기며, 명목원금이 곧 현재 손실은 아닙니다.",
+    "entryNote": "본문의 금액·수량은 (가정)이며, 원문 제도는 2026-10-04 확인했습니다. 1~10절에서 사례·계약·정산·국가 차이를 순서대로 설명합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "forward-futures-symmetric-payoff",
+        "role": "선도 계약의 양쪽 지급"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "swap-cashflow-exchange",
+        "role": "명목원금을 기준으로 계산한 서로 다른 금리·통화 지급 흐름을 계약 기간 동안 맞바꾸는 구조입니다."
+      },
+      {
+        "id": "cds-credit-protection",
+        "role": "보호 매수자가 정기 지급을 하고 정해진 신용 사건 때 보호 매도자가 보상하는 계약입니다."
+      },
+      {
+        "id": "derivatives-notional-vs-exposure",
+        "role": "계약 지급을 계산하는 기준 금액과 오늘 대체 비용·미래 손실 가능성을 서로 다른 지표로 읽는 원칙입니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "swap-cashflow-exchange",
+        "sectionId": "mechanism",
+        "intuition": "원금 10억 원 자체를 매 지급일에 주고받는 것은 아닙니다.",
+        "workedExample": "4천만 원 고정 지급과 6천만 원 변동 지급을 상계하면 차액 2천만 원이 이동합니다.",
+        "boundary": "통화 스왑은 계약에 따라 원금 교환이 있을 수 있습니다."
+      },
+      {
+        "id": "cds-credit-protection",
+        "sectionId": "comparison",
+        "intuition": "대출이나 채권의 부도 위험을 다른 상대에게 옮길 수 있습니다.",
+        "workedExample": "채권 보유자가 CDS를 사면 채무불이행 손실 일부를 계약 상대가 부담합니다.",
+        "boundary": "보호 범위와 정산은 신용 사건 정의·상대방 이행에 달립니다."
+      },
+      {
+        "id": "derivatives-notional-vs-exposure",
+        "sectionId": "limits",
+        "intuition": "10억 원 명목 계약이 오늘 10억 원 손실이라는 말은 아닙니다.",
+        "workedExample": "10억 원 기준 4%와 6%의 차액은 연 2천만 원입니다.",
+        "boundary": "스트레스 손실은 시장 변동과 계약·담보 구조에 따라 훨씬 달라질 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 스왑 현금흐름 교환",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "swap-cashflow-exchange"
+        ]
+      },
+      {
+        "label": "02 · CDS 신용 보호",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "cds-credit-protection"
+        ]
+      },
+      {
+        "label": "03 · 명목원금과 실제 노출의 구분",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "derivatives-notional-vs-exposure"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "10억 원의4%와6% 연 지급액을 구하세요.",
+        "answerChecklist": [
+          "4000만",
+          "6000만"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "swap-cashflow-exchange"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "고정지급·변동수취 회사의 순수취액은?",
+        "answerChecklist": [
+          "10억 원에 대해 변동6%인6000만 원을 받고 고정4%인4000만 원을 지급합니다.",
+          "같은1년·원금·결제일 가정에서 순수취액은2000만 원입니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "swap-cashflow-exchange"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "10억 원의 변동6% 은행 대출과 고정4% 지급·변동6% 수취 스왑을 합치면 연 순지출은 얼마인가요?",
+        "answerChecklist": [
+          "은행6000만 지급",
+          "스왑2000만 수취",
+          "순4000만"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "swap-cashflow-exchange"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은10억 원 계약에서 변동 기준금리가2%로 내려가면 대출 이자·스왑 차액·합계는 각각 얼마인가요?",
+        "answerChecklist": [
+          "은행2000만",
+          "스왑2000만 지급",
+          "합계4000만"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "swap-cashflow-exchange"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "명목원금·시가·당기차액을 구별하세요.",
+        "answerChecklist": [
+          "계산기준10억",
+          "당기차액2000만",
+          "남은현금 현재가치"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "derivatives-notional-vs-exposure"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "CDS에서 지급을 시작하는 조건은 무엇인가요?",
+        "answerChecklist": [
+          "계약상 신용사건",
+          "결제조건",
+          "상대방 지급능력"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "cds-credit-protection"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "대출 가산금리1%가 남으면 순지출은 얼마인가요?",
+        "answerChecklist": [
+          "은행7000만",
+          "스왑2000만 수취",
+          "5000만"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "swap-cashflow-exchange"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "10억 채권 회수율40%에서 CDS 포함 회수액을 계산하세요.",
+        "answerChecklist": [
+          "채권4억",
+          "CDS6억",
+          "정기지급 제외",
+          "보호매도자 이행조건"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "cds-credit-protection"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "금리 스왑 설명을 통화 스왑에 그대로 적용할 수 없는 이유는?",
+        "answerChecklist": [
+          "통화별 원금교환 가능",
+          "시작·만기 조건 확인"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "swap-cashflow-exchange"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "보호매도자와 채권발행자가 함께 부도나면 무엇이 틀어지나요?",
+        "answerChecklist": [
+          "6억 지급 미실현",
+          "동시 부도",
+          "담보처분·상계 확인"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "cds-credit-protection"
+        ]
+      }
+    ]
+  },
+  "risk/margin-collateral-and-leverage": {
+    "coreIdea": "레버리지 거래와 파생상품은 시가 하락 때 증거금을 추가하고 담보 가치를 다시 매기므로 만기의 수익 전망과 별개로 오늘의 현금 부족이 강제 매도를 만들 수 있습니다.",
+    "entryNote": "본문의 금액·수량은 (가정)이며, 원문 제도는 2026-10-04 확인했습니다. 1~10절에서 사례·계약·정산·국가 차이를 순서대로 설명합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "financial-leverage",
+        "role": "차입이 자기자본 손익을 증폭하는 원리"
+      },
+      {
+        "id": "futures-daily-settlement",
+        "role": "선물의 일별 정산"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "collateral-headroom",
+        "role": "시가로 평가한 담보 가치에서 계약이 요구하는 유지 담보를 뺀 여유이며, 가격 하락이나 담보 할인율 변경 때 먼저 소진됩니다."
+      },
+      {
+        "id": "margin-liquidity-timing",
+        "role": "최종 헤지 손익을 실현하기 전에 시가 변동으로 현금이나 담보를 먼저 요구받는 시간차입니다."
+      },
+      {
+        "id": "funding-market-liquidity-loop",
+        "role": "자금 부족으로 자산을 팔면 거래가격이 떨어지고 담보 가치가 줄어 다시 자금 부족이 심해지는 연결입니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "collateral-headroom",
+        "sectionId": "mechanism",
+        "intuition": "자산값이 내려가면 추가 납입 전까지 남은 담보 여력이 줄어듭니다.",
+        "workedExample": "자산90억·빚80억·80% 한도에서 현금상환8억, 담보추가10억, 내부매각40억이 각각 필요합니다.",
+        "boundary": "실제 유지 기준과 담보 인정 비율은 계약·청산기관마다 다릅니다."
+      },
+      {
+        "id": "margin-liquidity-timing",
+        "sectionId": "comparison",
+        "intuition": "만기에 이겨도 오늘 돈이 없으면 계약을 접을 수 있습니다.",
+        "workedExample": "선물잔액6억·유지7억·초기복원10억 가정이면4억을 추가해야 합니다.",
+        "boundary": "거래소·청산기관·장외 계약의 기준이 다릅니다."
+      },
+      {
+        "id": "funding-market-liquidity-loop",
+        "sectionId": "limits",
+        "intuition": "같은 자산을 여러 사람이 동시에 팔면 한 명의 손실보다 큰 파장이 생깁니다.",
+        "workedExample": "100억 원 자산의 가격이 내려 90억 원이 되자 매물이 늘고 호가가 더 낮아질 수 있습니다.",
+        "boundary": "항상 발생하는 법칙은 아니며 매수 유동성과 중앙은행·규제 대응이 완충할 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 담보 여력",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "collateral-headroom"
+        ]
+      },
+      {
+        "label": "02 · 증거금의 현금 시점",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "margin-liquidity-timing"
+        ]
+      },
+      {
+        "label": "03 · 자금·시장 유동성의 되먹임",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "funding-market-liquidity-loop"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "100억 자산·80억 빚이 자산90억으로 바뀌면 자기 몫은?",
+        "answerChecklist": [
+          "20억→10억",
+          "자산−10%",
+          "자기몫−50%"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "collateral-headroom"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "80% 한도에서90억 담보의 허용차입과 부족액은?",
+        "answerChecklist": [
+          "72억",
+          "8억"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "collateral-headroom"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "외부현금으로 빚을 갚으면 얼마가 필요한가요?",
+        "answerChecklist": [
+          "8억 상환",
+          "빚72억"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "collateral-headroom"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 인정률의 담보를 추가하면 얼마가 필요한가요?",
+        "answerChecklist": [
+          "10억 추가",
+          "총100억×80%=80억"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "collateral-headroom"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "증거금과 자산 매수 계약금을 구별하세요.",
+        "answerChecklist": [
+          "이행담보",
+          "정산현금 별도",
+          "자산 선납 아님"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "margin-liquidity-timing"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "자금 유동성과 시장 유동성을 구별하세요.",
+        "answerChecklist": [
+          "현금조달 능력",
+          "가격충격 없이 거래"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "funding-market-liquidity-loop"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "내부매각으로80% 비율을 맞추는 금액을 계산하세요.",
+        "answerChecklist": [
+          "80−x=0.8(90−x)",
+          "x=40",
+          "자산50 빚40"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "collateral-headroom"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "허용비율70%에서 외부현금과 내부매각을 비교하세요.",
+        "answerChecklist": [
+          "현금17억",
+          "내부매각56.67억",
+          "비용제외"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "collateral-headroom"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "증거금6·유지7·복원10이면 추가액은?",
+        "answerChecklist": [
+          "4억",
+          "유지까지1억 아님",
+          "가정 규칙"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "margin-liquidity-timing"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "강제매각이 다른 투자자에게 번지는 과정을 설명하세요.",
+        "answerChecklist": [
+          "매물증가",
+          "가격하락",
+          "다른 담보부족",
+          "추가매각"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "funding-market-liquidity-loop"
+        ]
+      }
+    ]
+  },
+  "macro/global-capital-and-policy": {
+    "coreIdea": "정부·중앙은행의 결정권은 환율, 해외 차입, 은행 담보와 투자자 포트폴리오를 거쳐 가격에 전달되며 같은 글로벌 충격도 국가의 부채 통화·제도에 따라 다른 결과를 냅니다.",
+    "entryNote": "본문의 금액·수량은 (가정)이며, 원문 제도는 2026-10-04 확인했습니다. 1~10절에서 사례·계약·정산·국가 차이를 순서대로 설명합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "central-bank-balance-sheet",
+        "role": "중앙은행의 대차대조표"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "currency-mismatch-balance-sheet",
+        "role": "수입은 현지통화이고 부채는 외화일 때 환율 변동이 현지통화 상환액을 바꾸는 노출입니다."
+      },
+      {
+        "id": "global-funding-transmission",
+        "role": "주요 통화의 금리·조달 환경 변화가 은행·채권·환율을 거쳐 다른 나라의 신용과 자산가격에 전달되는 경로입니다."
+      },
+      {
+        "id": "policy-price-causality-boundary",
+        "role": "발표 뒤 가격 변화가 정책 자체 때문인지 이미 예상된 정보·동시 실적·포지션 청산 때문인지 구별해야 한다는 기준입니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "currency-mismatch-balance-sheet",
+        "sectionId": "mechanism",
+        "intuition": "사업이 그대로여도 환율이 오르면 빚이 커 보이고 실제 상환 부담도 늘 수 있습니다.",
+        "workedExample": "1억 달러·환율1000→1200에서 원금1000→1200억; 이자4→6%까지 바뀌면 연40→72억입니다.",
+        "boundary": "외화 수출 수입이나 헤지가 있으면 순노출은 줄어듭니다."
+      },
+      {
+        "id": "global-funding-transmission",
+        "sectionId": "comparison",
+        "intuition": "주요 통화의 조달 비용과 투자자의 선택은 국경을 넘어 다른 나라의 대출 조건을 바꿉니다.",
+        "workedExample": "달러 조달 비용이 오르면 달러 부채 기업의 만기 연장 비용이 늘어날 수 있습니다.",
+        "boundary": "국가별 외채 구조와 규제·완충자산에 따라 반응은 다릅니다."
+      },
+      {
+        "id": "policy-price-causality-boundary",
+        "sectionId": "limits",
+        "intuition": "시간상 먼저 일어났다는 이유만으로 원인이라 할 수 없습니다.",
+        "workedExample": "금리 발표와 원자재 급등이 같은 날 일어나면 주가 하락의 몫을 분리해야 합니다.",
+        "boundary": "단일 사건의 가격 반응만으로 장기 정책 효과를 확정하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 통화 불일치의 재무 압박",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "currency-mismatch-balance-sheet"
+        ]
+      },
+      {
+        "label": "02 · 국제 자금의 정책 전달",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "global-funding-transmission"
+        ]
+      },
+      {
+        "label": "03 · 정책과 가격의 인과 경계",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "policy-price-causality-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "1억 달러를 환율1000·1200원으로 환산하세요.",
+        "answerChecklist": [
+          "1000억",
+          "1200억",
+          "200억 증가"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "currency-mismatch-balance-sheet"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "이자4%·환율1000과6%·1200을 비교하세요.",
+        "answerChecklist": [
+          "40억",
+          "72억",
+          "32억 증가"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "currency-mismatch-balance-sheet"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "원금 만기와 금리 재설정이 왜 다른가요?",
+        "answerChecklist": [
+          "원금갚는 날",
+          "이자율 바뀌는 날",
+          "고정금리 차이"
+        ],
+        "sectionId": "picture",
+        "requiredConcepts": [
+          "currency-mismatch-balance-sheet"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 날 달러 수출수입이 있으면 무엇이 줄어드나요?",
+        "answerChecklist": [
+          "추가로 사야 할 달러",
+          "통화·시점·확실성 조건"
+        ],
+        "sectionId": "picture",
+        "requiredConcepts": [
+          "currency-mismatch-balance-sheet"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "경상거래와 금융거래 및 평가차이를 구별하세요.",
+        "answerChecklist": [
+          "상품·서비스·소득",
+          "금융자산·부채 거래",
+          "환산 평가 별도"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "global-funding-transmission"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "BIS GLI로 개별기업 순노출을 알 수 있나요?",
+        "answerChecklist": [
+          "총 외화신용 범위",
+          "수출수입·헤지 별도"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "global-funding-transmission"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "8000만 달러만 차환되면 원금 조달액은?",
+        "answerChecklist": [
+          "2000만 달러",
+          "환율1200",
+          "240억"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "global-funding-transmission"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "현금200억인 회사의 원금 부족액과 완충 사례를 제시하세요.",
+        "answerChecklist": [
+          "40억 부족",
+          "동일일 수출2000만달러로 상쇄 가능"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "currency-mismatch-balance-sheet"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "유로지역 공동통화정책과 홍콩의 제도 차이를 설명하세요.",
+        "answerChecklist": [
+          "회원국 독립금리 가정 불가",
+          "환율연계는 자금·금리 조정"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "global-funding-transmission"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "정책 발표 이후 가격 변화를 인과로 확인할 관측값은?",
+        "answerChecklist": [
+          "예상과 실제 차이",
+          "정확한 시각",
+          "대출금리·대출량",
+          "비교기업"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "policy-price-causality-boundary"
+        ]
+      }
+    ]
+  },
+  "macro/narratives-and-market-regimes": {
+    "coreIdea": "새로운 기술·정책·국가 서사는 미래 현금흐름에 대한 기대를 바꾸고 매수 주문과 자금조달을 거쳐 가격을 움직이지만, 가격 상승 자체가 다시 서사의 증거처럼 쓰일 때 취약한 순환이 생깁니다.",
+    "entryNote": "본문의 금액·수량은 (가정)이며, 원문 제도는 2026-10-04 확인했습니다. 1~10절에서 사례·계약·정산·국가 차이를 순서대로 설명합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "global-funding-transmission",
+        "role": "국제 자금의 정책 전달"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "narrative-order-channel",
+        "role": "미래에 관한 이야기가 투자자의 현금흐름·위험 기대를 바꾸고 실제 매수·매도 주문으로 이어져 가격에 닿는 경로입니다."
+      },
+      {
+        "id": "reflexive-financing-loop",
+        "role": "가격 상승이 담보 가치와 증자 조건을 높여 실제 투자·생산을 돕고 그것이 다시 기대를 바꿀 수 있는 순환입니다."
+      },
+      {
+        "id": "narrative-falsification-metrics",
+        "role": "가격 자체와 별도로 매출·현금 회수·예산 집행·고객 채택 등 이야기가 예고한 관측값을 미리 정하는 방법입니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "narrative-order-channel",
+        "sectionId": "mechanism",
+        "intuition": "사람들이 믿는 것 자체보다 그 믿음으로 돈을 움직이는지가 가격을 바꿉니다.",
+        "workedExample": "영구현금100/10%=1000에서150/8%=1875, 첫해105 뒤150이면1833.33, 영구105이면1312.5입니다.",
+        "boundary": "실제 실적과 할인율은 별개로 검증해야 합니다."
+      },
+      {
+        "id": "reflexive-financing-loop",
+        "sectionId": "comparison",
+        "intuition": "주가가 오르면 기업이 자금을 더 싸게 모을 수 있습니다.",
+        "workedExample": "같은200 조달시 새 투자자 몫은200/1200=16.67%와200/2075=9.64%이며 담보평가1875→1312.5는30% 감소입니다.",
+        "boundary": "증자·차입이 막히거나 수요가 없으면 이 경로는 작동하지 않습니다."
+      },
+      {
+        "id": "narrative-falsification-metrics",
+        "sectionId": "limits",
+        "intuition": "오른 가격을 오른 가격의 근거로 다시 쓰지 않습니다.",
+        "workedExample": "매년 현금 150이라는 기대를 첫해 실제 현금 105와 수주·원가로 점검합니다.",
+        "boundary": "한 기간의 미달만으로 장기 가능성을 완전히 기각하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 서사의 주문 전달",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "narrative-order-channel"
+        ]
+      },
+      {
+        "label": "02 · 가격과 자금조달의 되먹임",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "reflexive-financing-loop"
+        ]
+      },
+      {
+        "label": "03 · 시장 서사의 반증 지표",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "narrative-falsification-metrics"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "매년100·10%와150·8%의 단순 영구가치를 계산하세요.",
+        "answerChecklist": [
+          "1000",
+          "1875",
+          "첫지급1년뒤"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "narrative-order-channel"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "C/r식을 한 기간 관계에서 유도하세요.",
+        "answerChecklist": [
+          "V=(C+V)/(1+r)",
+          "rV=C",
+          "r>0",
+          "일정현금"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "narrative-order-channel"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "기대150과 실제 첫해105를 구분하세요.",
+        "answerChecklist": [
+          "전망",
+          "관측가정",
+          "영구전망과 다름"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "narrative-falsification-metrics"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "가격과 회사 자금조달은 어떤 경로로 연결되나요?",
+        "answerChecklist": [
+          "증자",
+          "같은돈에 줄 지분",
+          "사업투자"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "reflexive-financing-loop"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "조달현금200과 실적현금105가 다른 이유를 설명하세요.",
+        "answerChecklist": [
+          "재무활동",
+          "반복성과 구분",
+          "이중계산 금지"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "narrative-falsification-metrics"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "서사를 검증할 가격 외 지표를 제시하세요.",
+        "answerChecklist": [
+          "고객회수",
+          "원가",
+          "유지투자",
+          "예산집행"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "narrative-falsification-metrics"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "가치1000과1875에서200 조달시 새 투자자 몫은?",
+        "answerChecklist": [
+          "200/1200=16.67%",
+          "200/2075=9.64%"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "reflexive-financing-loop"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "첫해105 후150과 영구105의 가치를 비교하세요.",
+        "answerChecklist": [
+          "1833.33",
+          "1312.5",
+          "기대 경로 구분"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "narrative-order-channel"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "1875가1312.5로 변하면 담보한도에 어떤 일이 생길 수 있나요?",
+        "answerChecklist": [
+          "30% 하락",
+          "동일인정비율",
+          "실제담보 적용조건",
+          "강제매각 가능"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "reflexive-financing-loop"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "영구현금105의 할인율이8%에서10%가 되면?",
+        "answerChecklist": [
+          "1312.5→1050",
+          "실적과 돈값 분리"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "narrative-falsification-metrics"
+        ]
+      }
+    ]
+  },
+  "institutions/insurance-risk-pooling": {
+    "coreIdea": "보험은 많은 가입자의 보험료를 모아 일부의 약정 손실을 지급하는 위험 풀이고, 가격에는 예상 사고액뿐 아니라 운영비·자본·불확실성이 포함되며 대형 공통 충격은 다시 밖으로 넘겨야 합니다.",
+    "entryNote": "숫자는 설명용 (가정)이며, 같은 사례를 0절에서 7절까지 추적합니다. 국가별 문서의 적용 범위와 확인일을 본문에서 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "portfolio-variance",
+        "role": "여러 위험의 합에서 분산을 보는 기준"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "insurance-risk-pool",
+        "role": "보험 위험 풀이 (가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "insurance-exclusion-limit",
+        "role": "보험의 면책과 한도가 (가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "correlated-insurance-loss",
+        "role": "동시 사고의 위험이 (가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 하는 역할을 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "insurance-risk-pool",
+        "sectionId": "mechanism",
+        "intuition": "첫 사례의 300만 원은 보험금으로 약정된 금액이었습니다. 이제 같은 크기의 실제 손실에 다른 계약을 적용해 봅니다(가정). 자기부담금 20만 원을 먼저 빼고 지급 한도 230만 원을 적용하면, 280만 원 중 230만 원만 지급됩니다. 가입자에게 남는 손실은 70만 원입니다.",
+        "workedExample": "첫 사례의 300만 원은 보험금으로 약정된 금액이었습니다. 이제 같은 크기의 실제 손실에 다른 계약을 적용해 봅니다(가정). 자기부담금 20만 원을 먼저 빼고 지급 한도 230만 원을 적용하면, 280만 원 중 230만 원만 지급됩니다. 가입자에게 남는 손실은 70만 원입니다.",
+        "boundary": "최초 조건처럼 1인당 300만 원을 지급하는 사고가 500명에게 생기면 총 15억 원이 필요합니다(가정). 보험료 1억 원만으로는 부족합니다. 계약상 지급 약속을 지키려면 자본과 미리 쌓은 준비, 다른 보험자와 나누는 계약이 필요합니다."
+      },
+      {
+        "id": "insurance-exclusion-limit",
+        "sectionId": "comparison",
+        "intuition": "미국 NFIP의 공식 안내는 일반적인 주택보험 대부분이 홍수 피해를 보장하지 않는다고 설명합니다. 사례의 300만 원 손실이 홍수 때문이라면 총손실부터 보기 전에 그 사고가 계약에 포함되는지 확인해야 합니다.",
+        "workedExample": "20명이 이 조건의 사고를 겪으면 지급액은 4,600만 원입니다. 최초의 6천만 원보다 1,400만 원 적지만 가입자에게 그만큼 손실이 더 남습니다. 낮은 보험료만으로 유리한 계약인지 판단하기 어려운 이유입니다.",
+        "boundary": "독립적인 작은 사고를 모을 때의 효과를 지역 전체 재난에 그대로 적용하면 안 됩니다. 가입 지역과 사고 원인의 집중, 지급 능력과 보장 중단 가능성을 함께 봅니다."
+      },
+      {
+        "id": "correlated-insurance-loss",
+        "sectionId": "limits",
+        "intuition": "최초 조건처럼 1인당 300만 원을 지급하는 사고가 500명에게 생기면 총 15억 원이 필요합니다(가정). 보험료 1억 원만으로는 부족합니다. 계약상 지급 약속을 지키려면 자본과 미리 쌓은 준비, 다른 보험자와 나누는 계약이 필요합니다.",
+        "workedExample": "계약별로 자기부담금과 한도를 적용하는 순서가 다를 수 있으므로 이 순서는 설명용입니다. 실제로는 약관의 계산 순서와 보장 대상을 읽습니다.",
+        "boundary": "남는 4천만 원을 이익으로 판단하려면 운영비와 미래 지급 의무를 확인해야 합니다. 보험은 약정된 재정 부담을 옮기는 장치이며 실제 안전과 모든 손실을 보장하지는 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 보험 위험 풀",
+        "relation": "(가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "insurance-risk-pool"
+        ]
+      },
+      {
+        "label": "02 · 보험의 면책과 한도",
+        "relation": "(가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "insurance-exclusion-limit"
+        ]
+      },
+      {
+        "label": "03 · 동시 사고의 위험",
+        "relation": "(가정) 1천 명이 각 10만 원 보험료, 20명이 평균 300만 원 손해에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "correlated-insurance-loss"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "1천 명이10만 원씩 내면 얼마가 모이나요?",
+        "answerChecklist": [
+          "1억 원",
+          "연간 가정"
+        ],
+        "requiredConcepts": [
+          "insurance-risk-pool"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "20명에게300만 원씩 지급하면 차액은 얼마인가요?",
+        "answerChecklist": [
+          "지급6000만 원",
+          "차액4000만 원"
+        ],
+        "requiredConcepts": [
+          "insurance-risk-pool"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "차액4000만 원이 바로 순이익인가요?",
+        "answerChecklist": [
+          "운영·사고 조사비",
+          "미보고 지급 의무 차감 전"
+        ],
+        "requiredConcepts": [
+          "insurance-risk-pool"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "손실 300만 원인 보험 사례에서 면책과 지급 한도는 어떤 서로 다른 질문에 답하나요? 자기부담금과도 구별하세요.",
+        "answerChecklist": [
+          "면책은 그 사건이나 조건이 보장 대상인지 정한다. 면책이면 한도 이내 손실도 지급되지 않을 수 있다.",
+          "한도는 보장되는 사건에 지급할 최대 금액이다. 자기부담금은 그 안에서 가입자가 먼저 부담하는 금액으로 별도 계산한다."
+        ],
+        "requiredConcepts": [
+          "insurance-exclusion-limit"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "손실300·공제20·한도230이면 지급과 잔여손실은 얼마인가요?",
+        "answerChecklist": [
+          "지급230만 원",
+          "가입자잔여70만 원"
+        ],
+        "requiredConcepts": [
+          "insurance-exclusion-limit"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "20명에 지급230만 원이면 총지급은 얼마인가요?",
+        "answerChecklist": [
+          "4600만 원",
+          "최초6000만보다1400만 감소"
+        ],
+        "requiredConcepts": [
+          "insurance-exclusion-limit"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "동시에500명이 최초 약정 사고를 당하면 필요한 지급액은 얼마인가요?",
+        "answerChecklist": [
+          "15억 원",
+          "보험료1억 원만으로 부족",
+          "자본·준비·위험분담 필요"
+        ],
+        "requiredConcepts": [
+          "correlated-insurance-loss"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "미국 주택보험의 홍수 안내를 다른 나라에 그대로 적용하면 안 되는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "현지 약관과 특별약정의 보장 범위",
+          "감독기관 관할 차이"
+        ],
+        "requiredConcepts": [
+          "insurance-exclusion-limit"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "가입자가 많아도 공동 장부가 부족해지는 조건은 무엇인가요?",
+        "answerChecklist": [
+          "같은 재난으로 동시 손실",
+          "지역·원인 집중",
+          "독립 사고 가정 붕괴"
+        ],
+        "requiredConcepts": [
+          "correlated-insurance-loss"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "보험료만으로 계약을 비교할 수 있나요?",
+        "answerChecklist": [
+          "면책·한도·자기부담금",
+          "남은 손실과 지급 능력"
+        ],
+        "requiredConcepts": [
+          "insurance-exclusion-limit"
+        ],
+        "sectionId": "mechanism"
+      }
+    ]
+  },
+  "institutions/healthcare-payment-systems": {
+    "coreIdea": "의료제도는 재원을 누가 모으고 위험을 누가 묶으며 어떤 가격표로 의료기관에 지급하는지를 분리해야 비교할 수 있고, 환자의 진료비 지불액만으로 의료 서비스의 총비용을 알 수 없습니다.",
+    "entryNote": "숫자는 설명용 (가정)이며, 같은 사례를 0절에서 7절까지 추적합니다. 국가별 문서의 적용 범위와 확인일을 본문에서 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "insurance-risk-pool",
+        "role": "보험료를 모으는 위험 풀"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "health-financing-three-functions",
+        "role": "의료 재정의 세 기능이 (가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "provider-payment-incentive",
+        "role": "의료기관 지급 방식의 유인이 (가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "patient-price-vs-system-cost",
+        "role": "환자 부담과 전체 의료비가 (가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 하는 역할을 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "health-financing-three-functions",
+        "sectionId": "mechanism",
+        "intuition": "같은 조건의 진료를 두 번 제공하고 각각 10만 원을 받으면 병원 수입은 20만 원입니다. 환자 몫은 합계 4만 원, 공동 재원 지급은 16만 원입니다(가정). 진료 한 건마다 지급하는 방식을 건별 지급이라고 부릅니다.",
+        "workedExample": "같은 조건의 진료를 두 번 제공하고 각각 10만 원을 받으면 병원 수입은 20만 원입니다. 환자 몫은 합계 4만 원, 공동 재원 지급은 16만 원입니다(가정). 진료 한 건마다 지급하는 방식을 건별 지급이라고 부릅니다.",
+        "boundary": "환자 부담과 전체 의료비를 비교하려면 창구 지출 2만 원과 공동 지급 8만 원을 합쳐 10만 원으로 봅니다. 이미 모은 보험료를 같은 진료비에 또 더하면 지급과 재원을 중복해 셉니다."
+      },
+      {
+        "id": "provider-payment-incentive",
+        "sectionId": "comparison",
+        "intuition": "한국 국민건강보험공단은 급여 항목과 비용 부담을 구분해 안내합니다. 사례의 20%를 실제 진료에 일괄 적용할 수 없고 급여 여부와 진료 종류 등을 확인해야 합니다.",
+        "workedExample": "반대로 치료 과정 전체에 총 10만 원을 주기로 정하면 두 번 진료해도 수입이 20만 원으로 늘지 않습니다(가정). 이를 묶음 지급이라고 합니다. 정해진 사람을 돌보는 기간에 따라 금액을 주는 인두제도 있으며 지급 단위가 다릅니다.",
+        "boundary": "총지급을 줄였어도 필요한 진료를 못 받거나 대기가 길어졌다면 비용 절감만으로 좋은 제도라고 할 수 없습니다. 반대로 같은 건강 결과를 더 적은 자원으로 얻었다면 효율이 좋아졌을 수 있습니다."
+      },
+      {
+        "id": "patient-price-vs-system-cost",
+        "sectionId": "limits",
+        "intuition": "환자 부담과 전체 의료비를 비교하려면 창구 지출 2만 원과 공동 지급 8만 원을 합쳐 10만 원으로 봅니다. 이미 모은 보험료를 같은 진료비에 또 더하면 지급과 재원을 중복해 셉니다.",
+        "workedExample": "건별 지급은 필요한 진료를 늘릴 수 있지만 과잉 진료 유인도 있습니다. 정액 성격의 지급은 비용을 아끼게 하지만 필요한 진료를 줄이거나 위험한 환자를 피할 유인이 생길 수 있습니다. 진료의 질과 환자 구성을 함께 평가해야 합니다.",
+        "boundary": "국가 비교에서는 나이와 질병 구성, 미충족 의료, 치료 결과와 가계 부담을 함께 맞춥니다. 10만 원 사례는 지불 경로를 보여 주며 어떤 치료를 받아야 할지 판단하는 의료 지침은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 의료 재정의 세 기능",
+        "relation": "(가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "health-financing-three-functions"
+        ]
+      },
+      {
+        "label": "02 · 의료기관 지급 방식의 유인",
+        "relation": "(가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "provider-payment-incentive"
+        ]
+      },
+      {
+        "label": "03 · 환자 부담과 전체 의료비",
+        "relation": "(가정) 진료 총지급 10만 원, 환자 2만 원, 보험자 8만 원에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "patient-price-vs-system-cost"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "환자2만과 공동8만의 총지급은 얼마인가요?",
+        "answerChecklist": [
+          "10만 원",
+          "특정 국가 부담률 아님"
+        ],
+        "requiredConcepts": [
+          "patient-price-vs-system-cost"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "병원비용7만이면 총수입10만과 차액은 얼마인가요?",
+        "answerChecklist": [
+          "3만 원",
+          "공통 비용 포함 범위 확인"
+        ],
+        "requiredConcepts": [
+          "patient-price-vs-system-cost"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "의료 재정의 세 기능을 역할로 설명하세요.",
+        "answerChecklist": [
+          "재원 조달",
+          "위험 풀",
+          "서비스 구매"
+        ],
+        "requiredConcepts": [
+          "health-financing-three-functions"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "같은 진료2회에10만 원씩 지급하면 각 부담은 얼마인가요?",
+        "answerChecklist": [
+          "총20만 원",
+          "환자4만 원",
+          "공동16만 원"
+        ],
+        "requiredConcepts": [
+          "provider-payment-incentive"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "과정 전체를10만 원에 사면2회 진료의 수입은 얼마인가요?",
+        "answerChecklist": [
+          "총10만 원",
+          "진료 건수와 별도 지급단위"
+        ],
+        "requiredConcepts": [
+          "provider-payment-incentive"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "NHS England 지급 규칙을 영국 전체 예산으로 볼 수 있나요?",
+        "answerChecklist": [
+          "잉글랜드 대상 서비스 규칙",
+          "총재원과 다른 관할의 규칙 아님"
+        ],
+        "requiredConcepts": [
+          "provider-payment-incentive"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "건별 지급과 묶음 지급이 서로 다른 행동을 유도하는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "추가 진료의 수입 차이",
+          "과잉 진료와 과소 진료 유인",
+          "질·환자구성 평가"
+        ],
+        "requiredConcepts": [
+          "provider-payment-incentive"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "총진료비10만에 이미 모은 보험료를 더하면 왜 문제인가요?",
+        "answerChecklist": [
+          "조달 재원과 최종 지급의 중복",
+          "환자2+공동8로 총지급 계산"
+        ],
+        "requiredConcepts": [
+          "patient-price-vs-system-cost"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "의료비 감소를 좋은 결과로 해석하려면 무엇을 확인하나요?",
+        "answerChecklist": [
+          "미충족 의료·대기시간",
+          "치료 결과",
+          "같은 환자 구성과 접근성"
+        ],
+        "requiredConcepts": [
+          "patient-price-vs-system-cost"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "CMS 지급표를 한국 또는 미국 민간보험에 그대로 적용할 수 있나요?",
+        "answerChecklist": [
+          "Original Medicare 해당 서비스 범위",
+          "각 제도의 급여·계약 가격 별도"
+        ],
+        "requiredConcepts": [
+          "provider-payment-incentive"
+        ],
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "institutions/how-to-read-a-country": {"coreIdea": "국가의 생산·자금·생활·권력·정보를 같은 질문으로 추적하고, 통계의 지역 범위와 시점을 확인한 뒤 이야기를 검증합니다.", "entryLevel": true, "entryNote": "국가 순위를 외울 필요가 없습니다. 100을 벌고 60을 밖에 내는 작은 나라에서 출발합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "country-seven-ledgers", "role": "수출액을 실제 소득·외화 상환·생활 변화와 이어 읽습니다."}, {"id": "country-data-comparability", "role": "숫자를 나란히 놓기 전에 무엇을 셌는지 맞춥니다."}, {"id": "country-hypothesis-test", "role": "위기라는 말이 맞을 때 먼저 달라질 장부를 고릅니다."}], "conceptExplanations": [{"id": "country-seven-ledgers", "sectionId": "mechanism", "intuition": "수출액을 실제 소득·외화 상환·생활 변화와 이어 읽습니다.", "workedExample": "수출 100−수입 투입 60=40은 단순 생산사슬 잔액이며 부채 30과 적자 5는 별도 장부입니다.", "boundary": "국가 전체 GDP나 순이익으로 일반화하지 않습니다."}, {"id": "country-data-comparability", "sectionId": "comparison", "intuition": "숫자를 나란히 놓기 전에 무엇을 셌는지 맞춥니다.", "workedExample": "M49248개와 보충 2개를 표시하고 WDI각 값에 2020–2025 중 실제 연도를 붙입니다.", "boundary": "자료 없음은 0이 아니며 통계 지역은 외교상 국가와 다릅니다."}, {"id": "country-hypothesis-test", "sectionId": "limits", "intuition": "위기라는 말이 맞을 때 먼저 달라질 장부를 고릅니다.", "workedExample": "외화 부채 30의 만기와 외화 가용액을 대조합니다.", "boundary": "시점이 이어졌다는 것만으로 원인이 입증되지는 않습니다."}], "conceptStages": [{"label": "국가의 일곱 장부", "relation": "수출액을 실제 소득·외화 상환·생활 변화와 이어 읽습니다.", "concepts": ["country-seven-ledgers"]}, {"label": "국가 통계의 비교 가능성", "relation": "숫자를 나란히 놓기 전에 무엇을 셌는지 맞춥니다.", "concepts": ["country-data-comparability"]}, {"label": "국가 이야기의 검증 질문", "relation": "위기라는 말이 맞을 때 먼저 달라질 장부를 고릅니다.", "concepts": ["country-hypothesis-test"]}], "exercises": [{"level": "basic", "question": "A국의 수출 100과 수입 중간재 60에서 계산한 40은 무엇이며 무엇이 아닌가요?", "answerChecklist": ["수출 생산 사슬 안에 남은 가치의 단순 잔액", "다른 투입을 생략한 가정", "국가 전체 GDP도 기업 순이익도 아님"], "sectionId": "mechanism", "requiredConcepts": ["country-seven-ledgers"]}, {"level": "basic", "question": "외화 부채 30과 정부 적자 5를 합쳐 35의 올해 지출이라고 할 수 있나요?", "answerChecklist": ["30은 특정 시점의 잔액", "5는 한 해의 흐름", "부채의 통화·차입자·만기를 따로 확인"], "sectionId": "case", "requiredConcepts": ["country-seven-ledgers"]}, {"level": "basic", "question": "일곱 장부에서 규칙을 바꾸는 사람과 손실을 부담하는 사람이 다를 수 있는 예를 쓰세요.", "answerChecklist": ["정부가 전기요금을 정함", "전력회사의 수입·소비자의 비용에 영향", "적자 보전 시 납세자까지 부담"], "sectionId": "names", "requiredConcepts": ["country-seven-ledgers"]}, {"level": "basic", "question": "탐색기에서 자료 없음이 뜻하는 두 가지를 쓰세요.", "answerChecklist": ["선택한 2020–2025 범위에서 값이 없거나 WDI대상 아님", "0이 아니며 다른 지역 평균으로 채우지 않음"], "sectionId": "comparison", "requiredConcepts": ["country-data-comparability"]}, {"level": "basic", "question": "한국과 미국의 1인당 생산액을 비교하기 전 확인할 항목을 적으세요.", "answerChecklist": ["관측 연도", "현재 달러와 환율 영향", "생산액이지 개인 실수령 임금이 아님"], "sectionId": "comparison", "requiredConcepts": ["country-data-comparability"]}, {"level": "basic", "question": "외화 위기 가설의 반증 자료를 두 개 제시하세요.", "answerChecklist": ["임박한 만기에 비해 사용 가능한 외화 충분", "외화 수입으로 같은 통화 부채를 상환", "부채잔액만 보고 확정하지 않음"], "sectionId": "limits", "requiredConcepts": ["country-hypothesis-test"]}, {"level": "advanced", "question": "A국 환율이 자국 돈 기준 외화 1당 1에서 1.2로 바뀌면 외화 부채 30의 장부상 부담은 어떻게 되나요?", "answerChecklist": ["자국 돈 30→36", "부담 6증가", "외화 100매출과 60비용도 변하므로 부채만으로 순효과 확정 불가"], "sectionId": "mechanism", "requiredConcepts": ["country-seven-ledgers", "country-hypothesis-test"]}, {"level": "advanced", "question": "UN248개와 탐색기 250개의 차이, World Bank217개와 비교할 때 생기는 함정을 설명하세요.", "answerChecklist": ["M49 FAQ가 허용한 코소보 412·대만 158 별도 표시", "217에는 Channel Islands처럼 M49개별행과 다른 경제가 있음", "목록 수가 외교상 국가 수가 아님"], "sectionId": "comparison", "requiredConcepts": ["country-data-comparability"]}, {"level": "advanced", "question": "수출 증가 뒤 집값이 올랐습니다. 수출이 원인이라는 주장을 어떻게 검증하나요?", "answerChecklist": ["현지 소득·고용·주택공급·금리·자금 유입을 비교", "수출기업 소유자와 주택 구매자가 연결되는지 확인", "시간순서만으로 인과 확정 불가"], "sectionId": "limits", "requiredConcepts": ["country-hypothesis-test"]}, {"level": "advanced", "question": "국가 평균으로 가게를 고를 때 생기는 오류를 줄일 자료 경로를 설계하세요.", "answerChecklist": ["국가 지표→도시/상권 수요·교통→임대차·허가 원문", "관할기관과 기준일 기록", "지역 내 분포와 실제 계약 확인"], "sectionId": "need", "requiredConcepts": ["country-seven-ledgers", "country-data-comparability", "country-hypothesis-test"]}]},
+  "infrastructure/electricity-grid-and-power": {
+    "coreIdea": "전력 시장은 전기를 생산하는 설비, 같은 순간 수요와 공급을 맞추는 운영자, 송배전망을 소유하는 주체, 요금을 내는 사용자의 장부가 겹칩니다.",
+    "entryLevel": true,
+    "entryNote": "숫자는 설명용 (가정)이며, 같은 사례를 0절에서 7절까지 추적합니다. 국가별 문서의 적용 범위와 확인일을 본문에서 구분합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "grid-connection-constraint",
+        "role": "전력망 접속 제약이 (가정) 한 시간 발전 가능100MWh·송전한도80MWh·대체조달20MWh에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "electricity-system-cost",
+        "role": "전력 시스템 비용이 (가정) 한 시간 발전 가능100MWh·송전한도80MWh·대체조달20MWh에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "power-price-reliability-boundary",
+        "role": "전력 가격과 공급 안정성의 경계가 (가정) 한 시간 발전 가능100MWh·송전한도80MWh·대체조달20MWh에서 하는 역할을 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "grid-connection-constraint",
+        "sectionId": "mechanism",
+        "intuition": "먼 발전의 단가를 MWh당 5만 원, 공장 근처 대체 공급을 10만 원으로 둡니다(가정). 먼 곳에서 80MWh를 받아 400만 원, 가까운 곳에서 20MWh를 받아 200만 원을 냅니다. 에너지 조달비는 합계 600만 원입니다.",
+        "workedExample": "먼 발전의 단가를 MWh당 5만 원, 공장 근처 대체 공급을 10만 원으로 둡니다(가정). 먼 곳에서 80MWh를 받아 400만 원, 가까운 곳에서 20MWh를 받아 200만 원을 냅니다. 에너지 조달비는 합계 600만 원입니다.",
+        "boundary": "저장 설비가 20MWh를 담을 수 있어도 한 시간에 5MW만 낼 수 있다면 그 시간의 부족 20MWh를 모두 채우지 못합니다(가정). 저장량과 방전 속도를 함께 확인해야 합니다."
+      },
+      {
+        "id": "electricity-system-cost",
+        "sectionId": "comparison",
+        "intuition": "미국 FERC의 시장 안내는 독립 운영자가 도매시장을 여는 지역과 발전·송전·배전을 함께 맡는 전력회사가 있는 지역을 구분합니다. 따라서 미국 전력요금 하나로 사례의 600만 원 청구 방식을 정할 수 없습니다.",
+        "workedExample": "길의 제약이 없어서 먼 곳에서 100MWh를 모두 살 수 있었다면 500만 원입니다. 두 조건의 차이 100만 원은 이 한 시간의 추가 조달비입니다. 이것만으로 송전선 건설비를 회수할 수 있는지는 연간 혼잡 시간과 공사비를 더 알아야 합니다.",
+        "boundary": "전력 가격과 공급 안정성의 경계는 계약상 받을 권리, 실제 연결 용량, 정전 때의 대체 수단에 있습니다. 낮은 평균 요금과 연간 발전량만으로 공장의 생산 손실을 추정할 수 없습니다."
+      },
+      {
+        "id": "power-price-reliability-boundary",
+        "sectionId": "limits",
+        "intuition": "저장 설비가 20MWh를 담을 수 있어도 한 시간에 5MW만 낼 수 있다면 그 시간의 부족 20MWh를 모두 채우지 못합니다(가정). 저장량과 방전 속도를 함께 확인해야 합니다.",
+        "workedExample": "최종 전력 시스템 비용에는 망 유지, 운영, 고장 대비와 저장 비용도 들어갑니다. 600만 원은 최종 청구서 전체가 아니며, 실제 도매시장에서는 단가 결정과 혼잡 비용의 배분 방식도 계약에 따라 달라집니다.",
+        "boundary": "실제 투자에서는 최대 사용량의 시간표와 접속일을 맞추고, 공급 지연과 정전 때 손실을 계산합니다. 100·80·20 모델은 이 질문을 열어 주지만 복잡한 전력 흐름이나 고장 확률을 대신 계산하지는 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 전력망 접속 제약",
+        "relation": "(가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "grid-connection-constraint"
+        ]
+      },
+      {
+        "label": "02 · 전력 시스템 비용",
+        "relation": "(가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "electricity-system-cost"
+        ]
+      },
+      {
+        "label": "03 · 전력 가격과 공급 안정성의 경계",
+        "relation": "(가정) 발전 100MWh, 송전 혼잡으로 20MWh를 멀리 보내지 못함에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "power-price-reliability-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "먼 발전소에서 공장으로 보낼 수 있는 양은 얼마인가요?",
+        "answerChecklist": [
+          "80MWh",
+          "한 시간 통과 한도80이 생산 가능량100보다 작음"
+        ],
+        "requiredConcepts": [
+          "grid-connection-constraint"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "100MW와 100MWh는 어떻게 다른가요?",
+        "answerChecklist": [
+          "MW는 출력",
+          "100MW를 한 시간 유지하면100MWh"
+        ],
+        "requiredConcepts": [
+          "grid-connection-constraint"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "먼 곳과 가까운 곳의 에너지 조달비를 계산하세요.",
+        "answerChecklist": [
+          "80×5만=400만 원",
+          "20×10만=200만 원",
+          "합계600만 원"
+        ],
+        "requiredConcepts": [
+          "electricity-system-cost"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "혼잡이 없을 때와 조달비 차이는 얼마인가요?",
+        "answerChecklist": [
+          "100×5만=500만 원",
+          "현재600만−500만=100만 원"
+        ],
+        "requiredConcepts": [
+          "electricity-system-cost"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "600만 원에 망 운영비까지 포함됐나요?",
+        "answerChecklist": [
+          "에너지 조달비만 계산",
+          "망 유지·운영·고장 대비 비용 별도"
+        ],
+        "requiredConcepts": [
+          "electricity-system-cost"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "20MWh 저장량만으로 한 시간의 부족을 메울 수 있나요?",
+        "answerChecklist": [
+          "5MW 출력이면 한 시간 최대5MWh",
+          "저장량과 방전 출력 구분"
+        ],
+        "requiredConcepts": [
+          "power-price-reliability-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "추가 조달비100만 원을 송전선 건설 편익으로 확정하려면 무엇이 더 필요한가요?",
+        "answerChecklist": [
+          "혼잡 시간의 연간 빈도",
+          "건설비와 유지비",
+          "공사 뒤 실제 공급 조건"
+        ],
+        "requiredConcepts": [
+          "electricity-system-cost"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "미국의 시장 구조를 한 가지로 놓으면 어떤 계약을 놓치나요?",
+        "answerChecklist": [
+          "독립 운영자 시장과 수직 통합 전력회사 구별",
+          "도매·소매·망 계약 범위 확인"
+        ],
+        "requiredConcepts": [
+          "electricity-system-cost"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "작업20MWh를 밤으로 옮기면 어떤 비용이 새로 생기나요?",
+        "answerChecklist": [
+          "혼잡 완화 가능",
+          "교대 인력과 납기 비용",
+          "야간 연결 여유 확인"
+        ],
+        "requiredConcepts": [
+          "power-price-reliability-boundary"
+        ],
+        "sectionId": "need"
+      },
+      {
+        "level": "advanced",
+        "question": "낮은 평균 요금과 공급 안정성을 구별할 자료를 적으세요.",
+        "answerChecklist": [
+          "시간별 최대 사용량",
+          "접속일과 권리",
+          "정전 대체수단과 생산 손실"
+        ],
+        "requiredConcepts": [
+          "power-price-reliability-boundary"
+        ],
+        "sectionId": "limits"
+      }
+    ]
+  },
+  "infrastructure/food-chain-and-prices": {
+    "coreIdea": "식품의 소비자가격은 농가 출하 가격에 가공·저장·운송·소매의 비용과 협상력을 더한 결과이며 각 단계의 재고와 폐기 위험이 다릅니다.",
+    "entryLevel": true,
+    "entryNote": "숫자는 설명용 (가정)이며, 같은 사례를 0절에서 7절까지 추적합니다. 국가별 문서의 적용 범위와 확인일을 본문에서 구분합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "food-value-chain-gap",
+        "role": "식품 가치사슬의 가격 간격이 (가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "perishable-bargaining-power",
+        "role": "부패성과 협상력이 (가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "food-price-causality-boundary",
+        "role": "식품 가격 인과의 경계가 (가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 하는 역할을 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "food-value-chain-gap",
+        "sectionId": "mechanism",
+        "intuition": "처음의 한 단위를 10개 묶음으로 늘려 봅니다(가정). 출하 1,000원, 선별·저장 300원, 운송 200원이 들면 가게에 들어오기까지 1,500원입니다. 모두 팔면 개당 150원이지만 2개를 버리면 판매 가능한 8개당 187.5원이 됩니다.",
+        "workedExample": "처음의 한 단위를 10개 묶음으로 늘려 봅니다(가정). 출하 1,000원, 선별·저장 300원, 운송 200원이 들면 가게에 들어오기까지 1,500원입니다. 모두 팔면 개당 150원이지만 2개를 버리면 판매 가능한 8개당 187.5원이 됩니다.",
+        "boundary": "작황이 나빠져 가격이 올라도 보관 물량과 대체 수입이 충격을 줄일 수 있습니다. 반대로 농가가격이 그대로여도 폐기율, 연료비나 임금이 오르면 소매가격이 바뀝니다."
+      },
+      {
+        "id": "perishable-bargaining-power",
+        "sectionId": "comparison",
+        "intuition": "미국 농무부 ERS의 Food Dollar는 미국에서 생산한 식품에 대한 지출이 어디로 가는지 나누는 통계입니다. 그 안의 농가 몫은 농가의 순이익률과 다릅니다.",
+        "workedExample": "소매 단계가 총 500원을 추가로 회수해야 한다면 전체 필요액은 2,000원입니다. 8개로 나눠 개당 250원을 받아야 같은 총액을 회수합니다. 200원에서 250원으로 올라도 이 가정에서는 총이익이 늘었다고 볼 수 없습니다.",
+        "boundary": "같은 품질·수량·기간으로 맞췄는데 비용은 그대로이고 특정 단계의 순마진만 커졌다면 계약과 구매자 집중도를 조사할 이유가 생깁니다. 가격 차이 자체만으로 누가 폭리를 취했는지는 확정되지 않습니다."
+      },
+      {
+        "id": "food-price-causality-boundary",
+        "sectionId": "limits",
+        "intuition": "작황이 나빠져 가격이 올라도 보관 물량과 대체 수입이 충격을 줄일 수 있습니다. 반대로 농가가격이 그대로여도 폐기율, 연료비나 임금이 오르면 소매가격이 바뀝니다.",
+        "workedExample": "실제 폐기는 어느 단계에서 생기고 누가 비용을 부담하는지 다릅니다. 반품 손실을 농가에 넘기면 소매 장부만 봐서는 전체 손실이 드러나지 않습니다.",
+        "boundary": "실제 자료를 읽을 때는 출하량, 판매량, 폐기량의 세 수량과 각 단계의 원가·지급일을 함께 적습니다. 이를 맞춰야 250원이 손실 보전인지 협상력 변화인지 구분할 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 식품 가치사슬의 가격 간격",
+        "relation": "(가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "food-value-chain-gap"
+        ]
+      },
+      {
+        "label": "02 · 부패성과 협상력",
+        "relation": "(가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "perishable-bargaining-power"
+        ]
+      },
+      {
+        "label": "03 · 식품 가격 인과의 경계",
+        "relation": "(가정) 농가 100원, 선별·저장 30원, 운송 20원, 소매 50원에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "food-price-causality-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "한 단위가 소비자에게 가기까지 가격을 더하세요.",
+        "answerChecklist": [
+          "100+30+20+50=200원",
+          "추가된 금액만 합산"
+        ],
+        "requiredConcepts": [
+          "food-value-chain-gap"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "농가 몫50%가 왜 순이익률은 아닌가요?",
+        "answerChecklist": [
+          "100÷200=50%",
+          "농가 판매액에는 생산비 포함"
+        ],
+        "requiredConcepts": [
+          "food-value-chain-gap"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "10개 중2개를 버리면 소매 전 단위 비용은 얼마인가요?",
+        "answerChecklist": [
+          "1500÷8=187.5원",
+          "판매 가능한 수량으로 나눔"
+        ],
+        "requiredConcepts": [
+          "food-value-chain-gap"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "2천 원을8개로 회수하는 판매가는 얼마인가요?",
+        "answerChecklist": [
+          "2000÷8=250원",
+          "판매가 상승만으로 총이익 증가 아님"
+        ],
+        "requiredConcepts": [
+          "food-value-chain-gap"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "보관 시설은 협상에 어떤 역할을 하나요?",
+        "answerChecklist": [
+          "판매 시점 선택 가능",
+          "설비와 전기·자금비 부담"
+        ],
+        "requiredConcepts": [
+          "perishable-bargaining-power"
+        ],
+        "sectionId": "need"
+      },
+      {
+        "level": "basic",
+        "question": "국가별 농가 몫 비교에서 맞출 범위는 무엇인가요?",
+        "answerChecklist": [
+          "국내 생산과 수입 구별",
+          "외식 포함과 품목 구성",
+          "통계 방법 시점"
+        ],
+        "requiredConcepts": [
+          "food-price-causality-boundary"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "소매가격이250원으로 오른 원인을 폐기와 순마진으로 어떻게 구별하나요?",
+        "answerChecklist": [
+          "판매수량·폐기량과 비용 확인",
+          "전체 회수액이2000이면 폐기 보전 가능"
+        ],
+        "requiredConcepts": [
+          "food-price-causality-boundary"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "가격 상승만으로 폭리라 부르려면 빠진 증거가 무엇인가요?",
+        "answerChecklist": [
+          "같은 품질·수량·기간",
+          "원가 변화",
+          "단계별 순마진과 시장 집중"
+        ],
+        "requiredConcepts": [
+          "food-price-causality-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "소매업자가 반품을 농가에 넘기면 어느 장부를 추가로 봐야 하나요?",
+        "answerChecklist": [
+          "농가의 반품·폐기 손실",
+          "소매 장부만으로 전체 손실 미확인"
+        ],
+        "requiredConcepts": [
+          "perishable-bargaining-power"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "ERS의 과거 자료와 개편 자료를 바로 잇기 어려운 이유는 무엇인가요?",
+        "answerChecklist": [
+          "2026년 방법 개편",
+          "과거 데이터와 직접 비교되지 않음",
+          "동일 통계 정의 필요"
+        ],
+        "requiredConcepts": [
+          "food-price-causality-boundary"
+        ],
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "infrastructure/water-utility-and-tariffs": {
+    "coreIdea": "수도는 취수한 물의 양뿐 아니라 정수·배관·누수·위생 처리와 저소득층 접근을 함께 지불해야 하는 공공 서비스입니다.",
+    "entryLevel": true,
+    "entryNote": "숫자는 설명용 (가정)이며, 같은 사례를 0절에서 7절까지 추적합니다. 국가별 문서의 적용 범위와 확인일을 본문에서 구분합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "water-full-service-cost",
+        "role": "수도 서비스의 전체 비용을 운영60·교체30의 서비스90과 가구80·지원10의 부담 배분에서 설명합니다."
+      },
+      {
+        "id": "water-tariff-incidence",
+        "role": "수도 요금의 부담 귀속을 운영60·교체30의 서비스90과 가구80·지원10의 부담 배분에서 설명합니다."
+      },
+      {
+        "id": "water-affordability-reliability",
+        "role": "부담 가능성과 안정 공급을 운영60·교체30의 서비스90과 가구80·지원10의 부담 배분에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "water-full-service-cost",
+        "sectionId": "mechanism",
+        "intuition": "가구 수입 80과 정부 지급 10이면 서비스 90을 충당합니다. 가구 수입을 60으로 낮추고 지원은 10에 두면 총수입은 70, 부족액은 20입니다(가정). 지원을 더 받거나 다른 수입을 마련하지 않으면 교체나 운영을 줄여야 합니다.",
+        "workedExample": "가구 수입 80과 정부 지급 10이면 서비스 90을 충당합니다. 가구 수입을 60으로 낮추고 지원은 10에 두면 총수입은 70, 부족액은 20입니다(가정). 지원을 더 받거나 다른 수입을 마련하지 않으면 교체나 운영을 줄여야 합니다.",
+        "boundary": "이미 연결된 집의 요금을 낮추면 물을 많이 쓰는 집이 더 큰 금액을 지원받을 수 있습니다. 연결되지 않은 집은 여전히 다른 판매자에게 더 비싸게 물을 살 수 있습니다. 연결비 지원과 매달 요금 지원은 서로 다른 문제를 풉니다."
+      },
+      {
+        "id": "water-tariff-incidence",
+        "sectionId": "comparison",
+        "intuition": "싱가포르 PUB는 물 생산·공급 요금, 물 절약과 희소성을 반영하는 세금, 사용한 물 처리의 세금을 구분합니다. 하나의 단가 안에 어떤 비용과 정책 목적이 들어 있는지 먼저 읽어야 합니다.",
+        "workedExample": "사용량과 무관하게 받는 기본 금액을 늘리면 수입은 안정되지만 적게 쓰는 집의 부담이 커질 수 있습니다. 사용량별 가격을 높이면 절수를 유도할 수 있지만 가구원 수가 많은 저소득 가구가 불리할 수 있습니다.",
+        "boundary": "부담 가능성과 안정 공급을 함께 보려면 가구 소득 대비 청구액, 수질, 공급 시간, 누수와 미연결 가구를 봅니다. 낮은 요금만으로 공정성을 판정할 수 없습니다."
+      },
+      {
+        "id": "water-affordability-reliability",
+        "sectionId": "limits",
+        "intuition": "이미 연결된 집의 요금을 낮추면 물을 많이 쓰는 집이 더 큰 금액을 지원받을 수 있습니다. 연결되지 않은 집은 여전히 다른 판매자에게 더 비싸게 물을 살 수 있습니다. 연결비 지원과 매달 요금 지원은 서로 다른 문제를 풉니다.",
+        "workedExample": "어떤 요금표든 수도 서비스의 전체 비용을 사라지게 하지는 않습니다. 요금·세금·차입 중 누가 언제 부담할지를 바꾸므로 차입을 쓰면 뒤의 상환 재원도 적습니다.",
+        "boundary": "90의 가정 장부는 부담 이전을 보여 줄 뿐 실제 공사 수명이나 물 수요를 추정하지 않습니다. 실제 조정에서는 사업자의 설비 상태와 현지 지원 규칙을 대조합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 수도 서비스의 전체 비용",
+        "relation": "서비스 비용90과 가구80·정부10의 지급 경로를 나누어 읽습니다.",
+        "concepts": [
+          "water-full-service-cost"
+        ]
+      },
+      {
+        "label": "02 · 수도 요금의 부담 귀속",
+        "relation": "서비스 비용90과 가구80·정부10의 지급 경로를 나누어 읽습니다.",
+        "concepts": [
+          "water-tariff-incidence"
+        ]
+      },
+      {
+        "label": "03 · 부담 가능성과 안정 공급",
+        "relation": "서비스 비용90과 가구80·정부10의 지급 경로를 나누어 읽습니다.",
+        "concepts": [
+          "water-affordability-reliability"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "운영60과 배관30의 서비스 비용은 얼마인가요?",
+        "answerChecklist": [
+          "90",
+          "같은 요금의 대납10은 새 실물 비용 아님"
+        ],
+        "requiredConcepts": [
+          "water-full-service-cost"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "가구80과 정부10이면 공급자는 얼마를 받나요?",
+        "answerChecklist": [
+          "90",
+          "가구와 정부가 부담 분담"
+        ],
+        "requiredConcepts": [
+          "water-tariff-incidence"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "가구60·정부10으로 서비스90을 제공하면 공백은 얼마인가요?",
+        "answerChecklist": [
+          "총수입70",
+          "부족20"
+        ],
+        "requiredConcepts": [
+          "water-full-service-cost"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "요금만의 공백과 지원 뒤 공백은 어떻게 다른가요?",
+        "answerChecklist": [
+          "요금60 대비90의 공백30",
+          "지원10 뒤20"
+        ],
+        "requiredConcepts": [
+          "water-tariff-incidence"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "절수가 모든 비용을 같은 비율로 줄이나요?",
+        "answerChecklist": [
+          "전력·약품 일부 감소",
+          "배관 교체와 인력은 같은 비율 감소 아님"
+        ],
+        "requiredConcepts": [
+          "water-full-service-cost"
+        ],
+        "sectionId": "need"
+      },
+      {
+        "level": "basic",
+        "question": "요금 할인 혜택에서 빠질 수 있는 가구는 누구인가요?",
+        "answerChecklist": [
+          "배관 미연결 가구",
+          "연결비 지원과 매달 요금 지원 구별"
+        ],
+        "requiredConcepts": [
+          "water-affordability-reliability"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "지원10을 더해 서비스100으로 계산해도 되는 조건은 무엇인가요?",
+        "answerChecklist": [
+          "별도 연결 공사·행정 등 실제 추가 자원이10일 때",
+          "동일 요금 대납이면 중복"
+        ],
+        "requiredConcepts": [
+          "water-full-service-cost"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "advanced",
+        "question": "기본요금을 높일 때 안정성과 부담은 어떻게 달라지나요?",
+        "answerChecklist": [
+          "고정 수입 안정",
+          "적게 쓰는 가구 부담 증가 가능",
+          "가구원수와 소득 확인"
+        ],
+        "requiredConcepts": [
+          "water-tariff-incidence"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "싱가포르의 청구액과 공급비90을 바로 비교할 수 있나요?",
+        "answerChecklist": [
+          "급수·절약세·하수 처리 범위 정렬",
+          "실제 현지 요금과 가정90 구별"
+        ],
+        "requiredConcepts": [
+          "water-tariff-incidence"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "낮은 요금이 공정한지 판단할 결과 지표는 무엇인가요?",
+        "answerChecklist": [
+          "소득 대비 청구액",
+          "수질·공급시간·누수",
+          "미연결 가구"
+        ],
+        "requiredConcepts": [
+          "water-affordability-reliability"
+        ],
+        "sectionId": "limits"
+      }
+    ]
+  },
+  "infrastructure/transport-access-and-land-value": {
+    "coreIdea": "교통 투자는 차량 속도뿐 아니라 사람이 일자리·학교·서비스에 도달하는 범위와 그 이익이 임대료로 이동하는 과정을 함께 바꿉니다.",
+    "entryLevel": true,
+    "entryNote": "숫자는 설명용 (가정)이며, 같은 사례를 0절에서 7절까지 추적합니다. 국가별 문서의 적용 범위와 확인일을 본문에서 구분합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "transport-accessibility",
+        "role": "교통 접근성이 (가정) 통근 60분에서 35분, 월 절약 20일×25분에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "transit-land-rent-shift",
+        "role": "교통 이익의 지대 이동이 (가정) 통근 60분에서 35분, 월 절약 20일×25분에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "transport-benefit-boundary",
+        "role": "교통 편익 계산의 경계가 (가정) 통근 60분에서 35분, 월 절약 20일×25분에서 하는 역할을 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "transport-accessibility",
+        "sectionId": "mechanism",
+        "intuition": "한 달 왕복 1,000분을 아끼고 추가 요금 2만 원, 월세 10만 원을 낸다는 사례를 다시 봅니다. 시간을 쉴 때 쓸지 일을 더 할지는 개인의 선택입니다. 16시간 40분에 시급을 곱한 값이 통장에 자동으로 들어오지는 않습니다.",
+        "workedExample": "한 달 왕복 1,000분을 아끼고 추가 요금 2만 원, 월세 10만 원을 낸다는 사례를 다시 봅니다. 시간을 쉴 때 쓸지 일을 더 할지는 개인의 선택입니다. 16시간 40분에 시급을 곱한 값이 통장에 자동으로 들어오지는 않습니다.",
+        "boundary": "노선이 좋아진 뒤 사람이 더 모여 혼잡과 대기가 늘 수 있습니다. 다른 상권의 소비가 새 역 주변으로 옮겨 온 것이라면 한 지역의 매출 증가를 나라 전체의 새 매출로 세기 어렵습니다."
+      },
+      {
+        "id": "transit-land-rent-shift",
+        "sectionId": "comparison",
+        "intuition": "영국 MHCLG의 사업 평가 안내는 토지가치 변화와 다른 편익을 합칠 때 중복을 확인하도록 합니다. 이 원칙을 사례에 적용하면 1,000분 절약의 가치와 월세 상승 10만 원이 같은 접근성 개선을 반영하는지부터 봅니다.",
+        "workedExample": "집주인은 월세 인상의 수입을 얻고 교통 운영자는 요금을 받습니다. 정부는 공사비와 운영 지원을 부담할 수 있습니다. 통근자 이익을 계산한 뒤 임대료 상승액을 사회 전체의 새 이익으로 그대로 더하면 같은 접근성 가치를 두 번 셀 수 있습니다.",
+        "boundary": "공사비 초과, 개통 지연, 유지비, 소음과 이주 부담도 지역별로 나눠 봅니다. 특히 평균 이용자 수가 맞아도 출근시간 한 방향에 수요가 몰리면 필요한 차량과 설비가 달라집니다."
+      },
+      {
+        "id": "transport-benefit-boundary",
+        "sectionId": "limits",
+        "intuition": "노선이 좋아진 뒤 사람이 더 모여 혼잡과 대기가 늘 수 있습니다. 다른 상권의 소비가 새 역 주변으로 옮겨 온 것이라면 한 지역의 매출 증가를 나라 전체의 새 매출로 세기 어렵습니다.",
+        "workedExample": "접근성 향상도 모든 주민에게 같지 않습니다. 기존 임차인이 월세를 감당하지 못해 더 먼 곳으로 이동하면 원래 기대한 시간 절약을 누리지 못할 수 있습니다.",
+        "boundary": "교통 편익 계산의 경계는 시간·소득·지가가 무엇을 대표하는지에 있습니다. 같은 1,000분을 실제 절약했는지 먼저 확인한 뒤 편익의 분배와 추가 비용을 계산합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 교통 접근성",
+        "relation": "(가정) 통근 60분에서 35분, 월 절약 20일×25분에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "transport-accessibility"
+        ]
+      },
+      {
+        "label": "02 · 교통 이익의 지대 이동",
+        "relation": "(가정) 통근 60분에서 35분, 월 절약 20일×25분에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "transit-land-rent-shift"
+        ]
+      },
+      {
+        "label": "03 · 교통 편익 계산의 경계",
+        "relation": "(가정) 통근 60분에서 35분, 월 절약 20일×25분에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "transport-benefit-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "편도60분이35분이 되면 편도 절약은 얼마인가요?",
+        "answerChecklist": [
+          "25분",
+          "집에서 회사까지 동일 범위"
+        ],
+        "requiredConcepts": [
+          "transport-accessibility"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "편도 시간이 60분에서 35분으로 줄고 한 달에 20일 왕복 출근하면 월 절약 시간은 얼마인가요?",
+        "answerChecklist": [
+          "편도 절약 25분에 왕복 2회와 출근 20일을 곱해 1000분을 구한다.",
+          "1000분은 16시간 40분이다. 시간이 줄어든 것이며 임금이나 현금 수입이 자동으로 늘어난 것은 아니다."
+        ],
+        "requiredConcepts": [
+          "transport-accessibility"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "교통비2만과 월세10만 증가가 합쳐진 지출은 얼마인가요?",
+        "answerChecklist": [
+          "월12만 원",
+          "시간 절약과 현금 구별"
+        ],
+        "requiredConcepts": [
+          "transit-land-rent-shift"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "탑승35분에 도보10·대기10을 더하면 총시간은 얼마인가요?",
+        "answerChecklist": [
+          "55분",
+          "차내 시간과 문앞 시간 구별"
+        ],
+        "requiredConcepts": [
+          "transport-accessibility"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "지대 이동은 사례에서 어떤 금액으로 나타나나요?",
+        "answerChecklist": [
+          "위치 이익 일부가 월세10만 원 상승에 반영",
+          "임차인과 소유자 분배 차이"
+        ],
+        "requiredConcepts": [
+          "transit-land-rent-shift"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "절약 시간을 시급으로 곱하면 자동으로 현금이 되나요?",
+        "answerChecklist": [
+          "유급 노동으로 쓰는지 별도",
+          "휴식 등 선택 존재"
+        ],
+        "requiredConcepts": [
+          "transport-benefit-boundary"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "시간가치와 임대료 상승을 더하기 전 무엇을 검사하나요?",
+        "answerChecklist": [
+          "같은 접근성 편익의 중복 반영 여부",
+          "평가 범위 일치"
+        ],
+        "requiredConcepts": [
+          "transport-benefit-boundary"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "시설을 지어도 접근성이 좋아지지 않을 조건을 설명하세요.",
+        "answerChecklist": [
+          "긴 배차·환승·보행 장벽",
+          "운영시간",
+          "실제 목적지와 연결"
+        ],
+        "requiredConcepts": [
+          "transport-accessibility"
+        ],
+        "sectionId": "need"
+      },
+      {
+        "level": "advanced",
+        "question": "새 역 매출 증가를 국가 전체 성장으로 바로 합산할 수 있나요?",
+        "answerChecklist": [
+          "다른 상권에서 이전 가능",
+          "지역과 전체 추가 효과 구별"
+        ],
+        "requiredConcepts": [
+          "transport-benefit-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "수요 증가 뒤 첫 예측이 틀릴 때 어떤 자료를 다시 보나요?",
+        "answerChecklist": [
+          "혼잡과 배차",
+          "문앞 이동시간",
+          "공사·운영 비용과 이용자 분포"
+        ],
+        "requiredConcepts": [
+          "transport-benefit-boundary"
+        ],
+        "sectionId": "limits"
+      }
+    ]
+  },
+  "infrastructure/housing-land-and-supply": {
+    "coreIdea": "주택 가격과 임대료는 토지 사용권, 인허가, 기반 시설, 건설비, 금융과 지역 일자리 수요가 서로 제약하면서 형성됩니다.",
+    "entryLevel": true,
+    "entryNote": "숫자는 설명용 (가정)이며, 같은 사례를 0절에서 7절까지 추적합니다. 국가별 문서의 적용 범위와 확인일을 본문에서 구분합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "housing-residual-land",
+        "role": "주택 토지 잔여가치가 (가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "housing-permit-lag",
+        "role": "주택 공급의 허가 시간가 (가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "housing-affordability-distribution",
+        "role": "주거비 부담의 분배가 (가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 하는 역할을 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "housing-residual-land",
+        "sectionId": "mechanism",
+        "intuition": "처음 판매 10억 원, 토지 외 비용·정상 이익 7억 원을 고정합니다. 허가나 공사 지연으로 금융·관리 비용이 5천만 원 늘면 토지에 남는 금액은 2억5천만 원입니다(가정). 토지를 아직 안 샀다면 제안 가격을 낮출 수 있습니다.",
+        "workedExample": "처음 판매 10억 원, 토지 외 비용·정상 이익 7억 원을 고정합니다. 허가나 공사 지연으로 금융·관리 비용이 5천만 원 늘면 토지에 남는 금액은 2억5천만 원입니다(가정). 토지를 아직 안 샀다면 제안 가격을 낮출 수 있습니다.",
+        "boundary": "새 공급이 늘어도 소득이 낮은 가구가 보증금이나 대출 조건을 충족하지 못할 수 있습니다. 기존 임차인의 이주 비용과 일자리에서 멀어지는 비용도 남습니다."
+      },
+      {
+        "id": "housing-permit-lag",
+        "sectionId": "comparison",
+        "intuition": "싱가포르 정부는 일반적인 새 HDB 주택의 구매자가 99년 동안 주택 권리를 소유한다고 설명합니다. 이것은 거주할 때마다 임대료를 내는 단순 임차와 다르면서, 기간이 없는 소유권과도 다릅니다.",
+        "workedExample": "이미 토지비 3억 원을 지급했다면 땅값을 소급해 줄일 수 없습니다. 판매가나 다른 비용이 그대로라면 요구했던 이익 1억 원 중 5천만 원을 잃습니다. 토지 거래 전 계산과 거래 후 손익은 다른 결정을 만듭니다.",
+        "boundary": "반대로 공급을 제한한 채 구매 보조만 늘리면 지을 수 있는 양이 짧은 기간에 늘지 않아 가격에 일부 반영될 수 있습니다. 얼마나 반영되는지는 지역 수요와 공급 조건을 따로 확인해야 합니다."
+      },
+      {
+        "id": "housing-affordability-distribution",
+        "sectionId": "limits",
+        "intuition": "새 공급이 늘어도 소득이 낮은 가구가 보증금이나 대출 조건을 충족하지 못할 수 있습니다. 기존 임차인의 이주 비용과 일자리에서 멀어지는 비용도 남습니다.",
+        "workedExample": "판매 예상이 10억에서 9억으로 줄면 원래 조건에서도 토지 잔여가치는 2억입니다. 가격과 비용의 작은 변화가 마지막에 남는 토지 금액에는 큰 비율로 나타납니다.",
+        "boundary": "실제 선택에서는 거래가, 신규 허가·착공·입주, 공실과 월세, 가구 소득과 대출 부담을 시간순으로 읽습니다. 10억의 사업 계산으로 모든 가구의 살림을 대신 판단할 수 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 주택 토지 잔여가치",
+        "relation": "(가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "housing-residual-land"
+        ]
+      },
+      {
+        "label": "02 · 주택 공급의 허가 시간",
+        "relation": "(가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "housing-permit-lag"
+        ]
+      },
+      {
+        "label": "03 · 주거비 부담의 분배",
+        "relation": "(가정) 새 집 판매가 10억, 공사·금융·허가 7억, 토지 잔여 3억에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "housing-affordability-distribution"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "판매10억에서 다른 비용7억을 빼면 토지 여력은 얼마인가요?",
+        "answerChecklist": [
+          "3억",
+          "거래 시세 보장이 아닌 가정 잔여값"
+        ],
+        "requiredConcepts": [
+          "housing-residual-land"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "토지 소유자가4억을 요구하면 계산과 얼마 차이인가요?",
+        "answerChecklist": [
+          "1억",
+          "수입·비용 조정 없으면 거래 어려움"
+        ],
+        "requiredConcepts": [
+          "housing-residual-land"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "지연비5천만 원이 추가되면 토지 여력은 얼마인가요?",
+        "answerChecklist": [
+          "2억5천만 원",
+          "판매가와 다른 비용 고정"
+        ],
+        "requiredConcepts": [
+          "housing-permit-lag"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "땅을 이미3억에 샀다면 지연비는 어디에 반영되나요?",
+        "answerChecklist": [
+          "토지비 소급 인하 불가",
+          "사업자 요구 이익 감소"
+        ],
+        "requiredConcepts": [
+          "housing-residual-land"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "판매 예상가가 10억 원에서 9억 원으로 낮아지고 다른 비용 7억 원이 유지되면 토지 지불 여력은 얼마인가요?",
+        "answerChecklist": [
+          "9억 원−7억 원=2억 원이며 원래 잔여 3억 원보다 1억 원 줄어든다.",
+          "토지비를 빼기 전 사업의 잔여액이다. 시장에서 실제로 이 가격에 토지를 살 수 있다는 보장은 아니다."
+        ],
+        "requiredConcepts": [
+          "housing-residual-land"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "신규 허가와 입주 물량은 왜 다른가요?",
+        "answerChecklist": [
+          "허가·기반시설·공사 시간",
+          "허가만으로 완공 보장 안 됨"
+        ],
+        "requiredConcepts": [
+          "housing-permit-lag"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "advanced",
+        "question": "같은 가격의 기간 있는 권리와 영구 권리를 어떻게 비교하나요?",
+        "answerChecklist": [
+          "남은 기간과 처분 조건",
+          "같은 권리를 거래하는지 확인"
+        ],
+        "requiredConcepts": [
+          "housing-permit-lag"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "토지 잔여3억을 사회 전체 순편익으로 볼 수 있나요?",
+        "answerChecklist": [
+          "사업 지불 여력",
+          "기존 토지가치와 주민 편익·외부 비용 별도"
+        ],
+        "requiredConcepts": [
+          "housing-residual-land"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "공급이 단기간 늘지 않을 때 구매 보조만 늘면 어떤 경로가 생기나요?",
+        "answerChecklist": [
+          "수요 증가 일부가 가격에 반영 가능",
+          "지역 공급·수요 조건 검증"
+        ],
+        "requiredConcepts": [
+          "housing-affordability-distribution"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "새 집이 늘어도 현재 임차인의 부담을 줄이지 못할 조건은 무엇인가요?",
+        "answerChecklist": [
+          "보증금·대출 자격",
+          "이주·교통비",
+          "소득과 주거 권리"
+        ],
+        "requiredConcepts": [
+          "housing-affordability-distribution"
+        ],
+        "sectionId": "limits"
+      }
+    ]
+  },
+  "infrastructure/climate-risk-and-exposure": {
+    "coreIdea": "홍수·폭염 등 위험을 평가할 때는 자연 현상의 강도, 노출된 사람과 자산, 취약성과 대응 능력을 분리해야 손실과 투자 판단이 가능합니다.",
+    "entryLevel": true,
+    "entryNote": "숫자는 설명용 (가정)이며, 같은 사례를 0절에서 7절까지 추적합니다. 국가별 문서의 적용 범위와 확인일을 본문에서 구분합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "climate-risk-components",
+        "role": "기후 위험의 세 요소가 (가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "climate-financial-transmission",
+        "role": "기후 손실의 금융 전달이 (가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "climate-history-boundary",
+        "role": "과거 재난 자료의 한계가 (가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 하는 역할을 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "climate-risk-components",
+        "sectionId": "mechanism",
+        "intuition": "B의 손실 60 중 보험이 40을 지급하고 소유자가 20을 부담한다고 놓습니다(가정). 총물리 손실은 여전히 60입니다. 지급이 복구를 도울 수 있지만 보험금이 손상 자체를 없애지는 않습니다.",
+        "workedExample": "B의 손실 60 중 보험이 40을 지급하고 소유자가 20을 부담한다고 놓습니다(가정). 총물리 손실은 여전히 60입니다. 지급이 복구를 도울 수 있지만 보험금이 손상 자체를 없애지는 않습니다.",
+        "boundary": "같은 지역에 건물이 늘면 날씨가 그대로여도 노출이 커집니다. 배수 시설이 낡거나 보강되면 취약성이 바뀝니다. 기후 변화까지 있으면 과거 발생 빈도가 미래를 그대로 대표하지 않을 수 있습니다."
+      },
+      {
+        "id": "climate-financial-transmission",
+        "sectionId": "comparison",
+        "intuition": "UNDRR은 위험 지역에 있는 사람, 주택과 기반 시설 등을 노출에 포함합니다. 따라서 사례의 자산 300만으로 지역 B의 위험 전체를 대표할 수 없습니다. 거주 인구, 병원 접근과 생활 기반도 따로 조사합니다.",
+        "workedExample": "다음 해에 보험료가 오르거나 보장 한도가 줄면 소유자의 지출과 잔여 부담이 커집니다. 대출자는 담보 복구 가능성과 보험 조건을 다시 살필 수 있습니다. 이 경로가 기후 손실의 금융 전달입니다.",
+        "boundary": "연간 예상 손실을 계산하려면 다양한 사건의 확률과 각 사건의 손실을 함께 알아야 합니다. 이번 사건의 손실 60만으로 연 보험료나 대출 손실률을 정할 수 없습니다."
+      },
+      {
+        "id": "climate-history-boundary",
+        "sectionId": "limits",
+        "intuition": "같은 지역에 건물이 늘면 날씨가 그대로여도 노출이 커집니다. 배수 시설이 낡거나 보강되면 취약성이 바뀝니다. 기후 변화까지 있으면 과거 발생 빈도가 미래를 그대로 대표하지 않을 수 있습니다.",
+        "workedExample": "방재로 손상 비율을 20%에서 10%로 줄이면 같은 자산 300의 직접 손실은 30입니다. 다만 공사비와 유지비를 내야 하므로 30 감소가 곧 그 사업의 순편익은 아닙니다.",
+        "boundary": "실제 계약에서는 현지 높이와 배수, 위험 지도의 해상도와 시나리오, 보험의 면책과 지급 한도를 확인합니다. 큰 피해가 동시에 나면 복구 인력과 자재의 부족도 회복을 늦출 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 기후 위험의 세 요소",
+        "relation": "(가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "climate-risk-components"
+        ]
+      },
+      {
+        "label": "02 · 기후 손실의 금융 전달",
+        "relation": "(가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "climate-financial-transmission"
+        ]
+      },
+      {
+        "label": "03 · 과거 재난 자료의 한계",
+        "relation": "(가정) 동일 홍수, A지역 자산 100·취약률 10%, B지역 자산 300·취약률 20%에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "climate-history-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "A와B의 조건부 직접손실을 계산하세요.",
+        "answerChecklist": [
+          "100×10%=10",
+          "300×20%=60"
+        ],
+        "requiredConcepts": [
+          "climate-risk-components"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "B의 노출 자산이 300에서 150으로 줄고 손상률 20%가 유지되면 조건부 직접손실은 얼마인가요?",
+        "answerChecklist": [
+          "노출 150에 손상률 20%를 곱해 손실 30을 구한다. 단위는 본문의 자산가치 단위와 같다.",
+          "이전 손실 60의 절반이지만 사건 발생확률을 곱한 연간 예상 손실은 아니다."
+        ],
+        "requiredConcepts": [
+          "climate-risk-components"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "B의 노출 자산 300을 유지하고 손상률만 20%에서 10%로 낮추면 조건부 직접손실은 얼마인가요?",
+        "answerChecklist": [
+          "300×10%=30이며 노출 자산의 금액 단위와 같은 단위로 읽는다.",
+          "방재가 손상률을 낮춘 가정이다. 노출 300이나 사건 발생확률이 함께 줄었다고 해석하지 않는다."
+        ],
+        "requiredConcepts": [
+          "climate-risk-components"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "손실60에 보험금40이면 남는 부담은 얼마인가요?",
+        "answerChecklist": [
+          "20",
+          "총물리손실은60으로 같음"
+        ],
+        "requiredConcepts": [
+          "climate-financial-transmission"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "보험과 방재는 무엇을 각각 바꾸나요?",
+        "answerChecklist": [
+          "보험은 약정 금전부담 배분",
+          "방재는 물리 영향과 손상률 감소 가능"
+        ],
+        "requiredConcepts": [
+          "climate-financial-transmission"
+        ],
+        "sectionId": "need"
+      },
+      {
+        "level": "basic",
+        "question": "노출에는 자산금액 외에 무엇이 들어가나요?",
+        "answerChecklist": [
+          "사람·주택·기반시설",
+          "병원·도로·생계 위치"
+        ],
+        "requiredConcepts": [
+          "climate-risk-components"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이번 손실60으로 연간 예상 손실을 정할 수 있나요?",
+        "answerChecklist": [
+          "사건 발생확률 필요",
+          "여러 사건의 손실과 확률 함께 평가"
+        ],
+        "requiredConcepts": [
+          "climate-history-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "보험료 상승이 대출에 전달되는 경로를 설명하세요.",
+        "answerChecklist": [
+          "소유자 지출·잔여부담 증가",
+          "담보복구 가능성과 보험 조건 재평가"
+        ],
+        "requiredConcepts": [
+          "climate-financial-transmission"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "같은 날씨에서 위험이 바뀌는 반례를 드세요.",
+        "answerChecklist": [
+          "새 개발로 노출 증가",
+          "노후·보강으로 취약성 변화"
+        ],
+        "requiredConcepts": [
+          "climate-history-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "방재로 손실30을 줄이면 순편익도30인가요?",
+        "answerChecklist": [
+          "방재 건설비와 유지비 차감",
+          "사건 빈도·다른 피해 영향 필요"
+        ],
+        "requiredConcepts": [
+          "climate-history-boundary"
+        ],
+        "sectionId": "mechanism"
+      }
+    ]
+  },
+  "institutions/public-budget-and-taxes": {
+    "coreIdea": "공공 예산은 세입·차입으로 모은 돈을 서비스와 이전지출, 투자, 이자에 배분한 약속이며 부담자와 수혜자가 다른 시점과 집단에 걸칩니다.",
+    "entryLevel": true,
+    "entryNote": "숫자는 설명용 (가정)이며, 같은 사례를 0절에서 7절까지 추적합니다. 국가별 문서의 적용 범위와 확인일을 본문에서 구분합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "public-budget-flow",
+        "role": "공공 예산의 자금 흐름이 (가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "tax-incidence-public-benefit",
+        "role": "조세 부담과 공공 편익이 (가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "fiscal-capacity-boundary",
+        "role": "재정 여력의 경계가 (가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 하는 역할을 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "public-budget-flow",
+        "sectionId": "mechanism",
+        "intuition": "모든 발생과 지급이 그해에 일치하고 도로 감가상각과 자산 매각을 생략한다고 추가로 가정합니다. 수입은 세금 80, 비용은 의료 40+교육 30+이자 10=80이므로 순운영수지는 0입니다.",
+        "workedExample": "모든 발생과 지급이 그해에 일치하고 도로 감가상각과 자산 매각을 생략한다고 추가로 가정합니다. 수입은 세금 80, 비용은 의료 40+교육 30+이자 10=80이므로 순운영수지는 0입니다.",
+        "boundary": "부채 220 중 외화 몫이 있다면 자국 통화가 약해질 때 같은 외화 원금의 자국 통화 부담이 늘 수 있습니다. 자국 통화 부채도 물가, 금리와 차환 조건의 제약을 받습니다."
+      },
+      {
+        "id": "tax-incidence-public-benefit",
+        "sectionId": "comparison",
+        "intuition": "IMF의 비교 자료에는 정부 수입·지출뿐 아니라 자산·부채와 금융 조달도 들어갑니다. 사례의 부채 220을 다른 나라와 비교하려면 중앙정부인지 지방정부와 사회보험을 포함한 일반정부인지 맞춰야 합니다.",
+        "workedExample": "도로의 비금융자산 순취득 20을 빼면 순융자·순차입은 −20입니다. 이를 새 채무 20으로 조달해 현금은 맞고 부채는 200에서 220으로 늘어납니다. 올해 현금 지출 100을 전부 비용이라고 써 순운영수지 −20이라 하면 다른 지표가 됩니다.",
+        "boundary": "짧은 만기의 돈을 계속 빌려야 한다면 금리 상승과 차환 실패에 더 민감할 수 있습니다. 금리, 성장과 세입 기반을 함께 살펴야 같은 적자 20의 부담을 비교할 수 있습니다."
+      },
+      {
+        "id": "fiscal-capacity-boundary",
+        "sectionId": "limits",
+        "intuition": "부채 220 중 외화 몫이 있다면 자국 통화가 약해질 때 같은 외화 원금의 자국 통화 부담이 늘 수 있습니다. 자국 통화 부채도 물가, 금리와 차환 조건의 제약을 받습니다.",
+        "workedExample": "예산 승인 뒤 도로 공사가 지연되면 지급과 자산 취득의 시점이 달라집니다. 실제 통계에서는 미지급액과 감가상각, 평가 변화까지 조정해야 이 가정의 계산과 비교할 수 있습니다.",
+        "boundary": "도로 20이 미래 생산성을 높일지, 의료 40이 필요한 서비스를 늘렸는지는 지출액만으로 알 수 없습니다. 재정 여력은 지급 능력의 문제이고 사업의 정당성과 효과는 별도로 검증합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 공공 예산의 자금 흐름",
+        "relation": "(가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "public-budget-flow"
+        ]
+      },
+      {
+        "label": "02 · 조세 부담과 공공 편익",
+        "relation": "(가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "tax-incidence-public-benefit"
+        ]
+      },
+      {
+        "label": "03 · 재정 여력의 경계",
+        "relation": "(가정) 세금 80, 신규 차입 20, 의료 40·교육 30·도로 20·이자 10에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "fiscal-capacity-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "가정의 현금 조달과 지출을 각각 합산하세요.",
+        "answerChecklist": [
+          "80+20=100",
+          "40+30+20+10=100"
+        ],
+        "requiredConcepts": [
+          "public-budget-flow"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "기초부채200과 신규차입20이면 기말부채는 얼마인가요?",
+        "answerChecklist": [
+          "220",
+          "원금상환·평가변화 생략"
+        ],
+        "requiredConcepts": [
+          "public-budget-flow"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "세금 수입 80, 서비스 비용 40, 이전 비용 30, 이자 비용 10인 정부의 순운영수지를 계산하고 도로 취득 20을 구별하세요.",
+        "answerChecklist": [
+          "당기 비용은 40+30+10=80이므로 순운영수지는 수입 80−비용 80=0이다.",
+          "도로 취득 20은 이 사례의 비금융자산 취득이다. 순융자·순차입은 0−20=−20이며 차입 20으로 조달한다."
+        ],
+        "requiredConcepts": [
+          "public-budget-flow"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "도로20의 취득 뒤 순융자·순차입은 얼마인가요?",
+        "answerChecklist": [
+          "0−20=−20",
+          "신규차입20으로 조달"
+        ],
+        "requiredConcepts": [
+          "public-budget-flow"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "차입20을 세금80과 같은 수입으로 분류하나요?",
+        "answerChecklist": [
+          "차입은 상환의무 동반 금융조달",
+          "수입과 구분"
+        ],
+        "requiredConcepts": [
+          "public-budget-flow"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "판매자 세금1과 가격인상0.6이면 부담은 어떻게 갈리나요?",
+        "answerChecklist": [
+          "구매자0.6",
+          "판매자0.4",
+          "다른 조건 같은 가정"
+        ],
+        "requiredConcepts": [
+          "tax-incidence-public-benefit"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "현금지출100을 전부 당기비용에 넣으면 무엇이 달라지나요?",
+        "answerChecklist": [
+          "도로20 자산취득을 비용과 혼동",
+          "순운영수지−20과 순차입−20 지표 혼동"
+        ],
+        "requiredConcepts": [
+          "public-budget-flow"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "부채220을 다른 나라와 비교할 때 범위를 어떻게 맞추나요?",
+        "answerChecklist": [
+          "중앙/일반정부",
+          "지방·사회보험",
+          "측정일과 자산부채 정의"
+        ],
+        "requiredConcepts": [
+          "fiscal-capacity-boundary"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "자국 통화가 약해지면 외화채무 부담은 어떤 경로로 바뀌나요?",
+        "answerChecklist": [
+          "외화 원금 동일",
+          "자국 통화 환산부담 증가 가능",
+          "통화 구성 확인"
+        ],
+        "requiredConcepts": [
+          "fiscal-capacity-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "도로20을 좋은 투자라 판단하려면 예산 외에 무엇이 필요한가요?",
+        "answerChecklist": [
+          "통행·생산성 등 서비스 결과",
+          "유지비",
+          "실제 집행과 완공"
+        ],
+        "requiredConcepts": [
+          "fiscal-capacity-boundary"
+        ],
+        "sectionId": "limits"
+      }
+    ]
+  },
+  "institutions/education-skills-and-signals": {
+    "coreIdea": "교육비 지출은 학습자의 실제 능력 향상, 고용주가 믿는 자격 신호, 직업 연결과 기회 접근에 서로 다른 경로로 영향을 줍니다.",
+    "entryLevel": true,
+    "entryNote": "숫자는 설명용 (가정)이며, 같은 사례를 0절에서 7절까지 추적합니다. 국가별 문서의 적용 범위와 확인일을 본문에서 구분합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "education-human-capital",
+        "role": "교육의 능력 축적이 (가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "education-signal",
+        "role": "자격의 신호 효과가 (가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "education-return-boundary",
+        "role": "교육 수익 계산의 한계가 (가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 하는 역할을 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "education-human-capital",
+        "sectionId": "mechanism",
+        "intuition": "학비 1천만 원과 포기 소득 2천만 원을 합한 3천만 원을 연 추가 임금 200만 원으로 나누면 단순 회수 기간은 15년입니다. 학비만 나눈 5년보다 길어졌습니다. 세금과 할인, 임금 성장과 실업을 생략한 계산입니다.",
+        "workedExample": "학비 1천만 원과 포기 소득 2천만 원을 합한 3천만 원을 연 추가 임금 200만 원으로 나누면 단순 회수 기간은 15년입니다. 학비만 나눈 5년보다 길어졌습니다. 세금과 할인, 임금 성장과 실업을 생략한 계산입니다.",
+        "boundary": "가정 배경과 원래 능력, 거주 지역과 전공 선택이 임금에 함께 영향을 줍니다. 졸업자 평균이 높아도 특정 개인이 같은 차이를 얻는다는 보장은 없습니다. 기술과 산업 수요가 바뀌면 자격의 가치도 달라집니다."
+      },
+      {
+        "id": "education-signal",
+        "sectionId": "comparison",
+        "intuition": "영국 정부 안내는 해당 학자금 대출의 상환을 소득 기준과 연결합니다. 어떤 상환 계획인지, 소득이 기준을 넘는지에 따라 실제 현금 지급이 달라집니다. 다른 나라의 학비 대출이나 일반 대출에 같은 규칙을 적용할 수 없습니다.",
+        "workedExample": "추가 임금 200만 원이 매년 계속되고 교육을 받지 않았을 대안도 그대로라는 전제가 필요합니다. 교육 과정 중 퇴학하거나 다른 산업으로 이동하면 실제 경로가 달라집니다.",
+        "boundary": "교육 수익을 비교할 때는 완료율, 취업까지의 기간, 직무 연결, 부채 지급과 대안 경로를 봅니다. 건강과 시민 참여, 직업 선택의 폭처럼 돈으로 바로 세기 어려운 편익도 따로 남깁니다."
+      },
+      {
+        "id": "education-return-boundary",
+        "sectionId": "limits",
+        "intuition": "가정 배경과 원래 능력, 거주 지역과 전공 선택이 임금에 함께 영향을 줍니다. 졸업자 평균이 높아도 특정 개인이 같은 차이를 얻는다는 보장은 없습니다. 기술과 산업 수요가 바뀌면 자격의 가치도 달라집니다.",
+        "workedExample": "임금 상승이 능력 축적에서 왔는지 보려면 이전 능력과 배경, 같은 시기의 노동 수요를 맞춰 비교해야 합니다. 자격의 신호 효과를 살피려면 실제 능력과 수행은 비슷한데 자격 표시만 달라지는 상황이 도움이 됩니다. 단순 졸업자 평균만으로 두 효과를 분리할 수 없습니다.",
+        "boundary": "15년은 단순 계산의 결과입니다. 실제 선택에는 불확실한 미래 소득과 그동안의 생활비를 견딜 수 있는지까지 반영해야 합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 교육의 능력 축적",
+        "relation": "(가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "education-human-capital"
+        ]
+      },
+      {
+        "label": "02 · 자격의 신호 효과",
+        "relation": "(가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "education-signal"
+        ]
+      },
+      {
+        "label": "03 · 교육 수익 계산의 한계",
+        "relation": "(가정) 교육비 1천만 원, 연 임금 증가 200만 원, 취업 지연 1년에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "education-return-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "학비1천만과 포기소득2천만을 합한 비용은 얼마인가요?",
+        "answerChecklist": [
+          "3000만 원",
+          "학교 지급과 다른 선택 포기 구별"
+        ],
+        "requiredConcepts": [
+          "education-return-boundary"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "연추가임금200만으로 비용을 나누면 몇 년인가요?",
+        "answerChecklist": [
+          "3000÷200=15년",
+          "세금·할인·위험 생략"
+        ],
+        "requiredConcepts": [
+          "education-return-boundary"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "능력 축적과 신호는 무엇이 다른가요?",
+        "answerChecklist": [
+          "실제 수행 변화",
+          "자격이 고용주에게 주는 정보"
+        ],
+        "requiredConcepts": [
+          "education-human-capital"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "정부 장학금400만을 받으면 학비1천만의 가계몫은 얼마인가요?",
+        "answerChecklist": [
+          "600만 원",
+          "학교 수입1000만은 동일"
+        ],
+        "requiredConcepts": [
+          "education-return-boundary"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "진학 때문에 포기한 연 소득 2000만 원은 학교가 받는 수입인가요? 학비 1000만 원과 구별해 설명하세요.",
+        "answerChecklist": [
+          "학교로 지급되는 현금은 학비 1000만 원이다. 포기한 2000만 원은 학교에 이전되지 않는다.",
+          "포기 소득은 취업 등 대안 경로를 선택했다면 벌 수 있었던 금액으로, 진학 선택의 기회비용이다."
+        ],
+        "requiredConcepts": [
+          "education-return-boundary"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "영국 학자금 대출의 연 상환액을 교육 후 추가임금 200만 원만으로 계산할 수 있나요? 필요한 조건을 설명하세요.",
+        "answerChecklist": [
+          "추가임금과 상환 기준이 되는 전체 소득은 다른 값이다. 현재 총소득부터 확인해야 한다.",
+          "적용 대출 plan의 소득 문턱·상환 비율·시점과 해당 관할 규칙을 확인한다. 교육의 임금 효과만으로 상환액을 정하지 않는다."
+        ],
+        "requiredConcepts": [
+          "education-return-boundary"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "졸업자의 평균임금 차이가 수업 효과를 증명하나요?",
+        "answerChecklist": [
+          "기존 능력·가정배경·선발과 수요 차이",
+          "동일 조건 비교 필요"
+        ],
+        "requiredConcepts": [
+          "education-signal"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "자격의 신호 효과를 분리할 비교는 무엇인가요?",
+        "answerChecklist": [
+          "능력과 수행 비슷",
+          "자격 표시 차이",
+          "다른 채용 조건 통제"
+        ],
+        "requiredConcepts": [
+          "education-signal"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "15년 계산이 틀어지는 조건을 적으세요.",
+        "answerChecklist": [
+          "완료 실패·실업·추가임금 변화",
+          "세금·시간가치",
+          "대안 소득 경로"
+        ],
+        "requiredConcepts": [
+          "education-return-boundary"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "진로 선택에서 평균임금 밖에 확인할 것은 무엇인가요?",
+        "answerChecklist": [
+          "완료율과 직무연결",
+          "부채와 생활비",
+          "비금전 편익·대안 교육"
+        ],
+        "requiredConcepts": [
+          "education-return-boundary"
+        ],
+        "sectionId": "limits"
+      }
+    ]
+  },
+  "institutions/media-attention-and-public-belief": {
+    "coreIdea": "플랫폼·언론은 정보를 선택·배치하고 관심을 광고주에게 판매하며, 사람의 믿음은 관측 정보뿐 아니라 반복 노출과 신뢰 관계를 통해 바뀝니다.",
+    "entryLevel": true,
+    "entryNote": "숫자는 설명용 (가정)이며, 같은 사례를 0절에서 7절까지 추적합니다. 국가별 문서의 적용 범위와 확인일을 본문에서 구분합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "attention-allocation",
+        "role": "주목의 배분이 (가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "media-revenue-incentive",
+        "role": "정보 매체의 수익 유인이 (가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 하는 역할을 설명합니다."
+      },
+      {
+        "id": "belief-causality-boundary",
+        "role": "인식 변화의 인과 경계가 (가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 하는 역할을 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "attention-allocation",
+        "sectionId": "mechanism",
+        "intuition": "광고 1천 회 노출 뒤 20번 클릭과 2건 구매가 기록됐다고 놓습니다(가정). 노출 기준 클릭 비율은 20÷1,000=2%, 클릭 기준 구매 비율은 2÷20=10%입니다. 플랫폼은 약정대로 노출을 제공해 1만 원을 받고 광고주는 상품 판매의 결과를 봅니다.",
+        "workedExample": "광고 1천 회 노출 뒤 20번 클릭과 2건 구매가 기록됐다고 놓습니다(가정). 노출 기준 클릭 비율은 20÷1,000=2%, 클릭 기준 구매 비율은 2÷20=10%입니다. 플랫폼은 약정대로 노출을 제공해 1만 원을 받고 광고주는 상품 판매의 결과를 봅니다.",
+        "boundary": "광고를 본 사람이 2건 구매했어도 원래 살 생각이 있었을 수 있습니다. 노출 전 관심과 조건이 비슷한 사람들 중 광고를 본 경우와 보지 않은 경우를 비교해야 추가 효과를 좁혀 볼 수 있습니다. 무작위 배정도 실제 행동 차이와 측정 누락을 확인해야 합니다."
+      },
+      {
+        "id": "media-revenue-incentive",
+        "sectionId": "comparison",
+        "intuition": "미국 FTC의 추천·보증 광고 안내는 소비자의 판단에 영향을 줄 수 있는 지급 관계를 명확히 알리는 문제를 다룹니다. 플랫폼의 표시 기능이 있다는 사실만으로 언제나 충분한 공개가 됐다고 보지는 않습니다.",
+        "workedExample": "매출을 알더라도 제품 원가와 광고비를 빼야 이익을 계산합니다. 더 나아가 2건 모두 광고가 없었으면 일어나지 않았을 구매인지 확인해야 광고의 추가 효과를 알 수 있습니다.",
+        "boundary": "조회수 뒤에 주가가 올랐다면 기업 발표나 정책 변화가 둘 다 움직였을 수도 있습니다. 시점의 순서만으로 영상이 가격 상승의 원인이라고 단정할 수 없습니다."
+      },
+      {
+        "id": "belief-causality-boundary",
+        "sectionId": "limits",
+        "intuition": "광고를 본 사람이 2건 구매했어도 원래 살 생각이 있었을 수 있습니다. 노출 전 관심과 조건이 비슷한 사람들 중 광고를 본 경우와 보지 않은 경우를 비교해야 추가 효과를 좁혀 볼 수 있습니다. 무작위 배정도 실제 행동 차이와 측정 누락을 확인해야 합니다.",
+        "workedExample": "시장 이야기 역시 같은 순서로 읽습니다. 게시물 증가, 노출, 믿음의 변화, 실제 주문과 자금 유입을 각각 관측해야 합니다. 주가가 오른 뒤 사람들이 글을 더 찾는 반대 방향도 가능합니다.",
+        "boundary": "실제 검증에서는 원문과 발표일, 반대 자료, 주문과 자금의 변화를 나눠 기록합니다. 1천 회의 노출과 2건 구매를 전체 여론이나 지속적인 믿음의 변화로 확대하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 주목의 배분",
+        "relation": "(가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "attention-allocation"
+        ]
+      },
+      {
+        "label": "02 · 정보 매체의 수익 유인",
+        "relation": "(가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "media-revenue-incentive"
+        ]
+      },
+      {
+        "label": "03 · 인식 변화의 인과 경계",
+        "relation": "(가정) 게시물 100개 중 추천 10개, 광고 노출 1천 회에서 이 단계의 돈·권리·위험을 확인합니다.",
+        "concepts": [
+          "belief-causality-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "게시물100개와 추천10개는 무엇을 각각 세나요?",
+        "answerChecklist": [
+          "전체 후보 수",
+          "화면 선택 일부",
+          "실제 플랫폼 수치 아님"
+        ],
+        "requiredConcepts": [
+          "attention-allocation"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "광고1천 회 노출은1천 명을 뜻하나요?",
+        "answerChecklist": [
+          "반복 노출 가능",
+          "회수와 사람수 구별"
+        ],
+        "requiredConcepts": [
+          "attention-allocation"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "1천 회 중20번 클릭의 비율은 얼마인가요?",
+        "answerChecklist": [
+          "2%",
+          "노출 분모"
+        ],
+        "requiredConcepts": [
+          "attention-allocation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "20번 클릭 중2건 구매의 비율은 얼마인가요?",
+        "answerChecklist": [
+          "10%",
+          "클릭 분모"
+        ],
+        "requiredConcepts": [
+          "attention-allocation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "광고 1000회 노출에 약정한 1만 원은 누가 누구에게 지급하나요? 클릭·구매와 지급 계약을 구별하세요.",
+        "answerChecklist": [
+          "이 사례의 광고주가 플랫폼에 1만 원을 지급하고 플랫폼은 약정한 노출을 제공한다.",
+          "20회 클릭이나 2건 구매가 있었다는 사실만으로 제작자 협찬금이나 구매 대금이 이 광고비와 같은 지급 관계가 되지는 않는다."
+        ],
+        "requiredConcepts": [
+          "media-revenue-incentive"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "추천 기준 공개는 모든 글의 진위를 보증하나요?",
+        "answerChecklist": [
+          "배치 기준 공개",
+          "사실 검증과 인과 효과는 별도"
+        ],
+        "requiredConcepts": [
+          "belief-causality-boundary"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "구매2건을 모두 광고의 추가 효과로 볼 수 있나요?",
+        "answerChecklist": [
+          "광고 없이도 구매했을 수 있음",
+          "노출 전 관심과 비교집단 필요"
+        ],
+        "requiredConcepts": [
+          "belief-causality-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "조회수와 주가가 함께 오르는 다른 원인은 무엇인가요?",
+        "answerChecklist": [
+          "기업 발표나 정책이 공통 원인",
+          "주가 상승 뒤 조회 증가 반대방향"
+        ],
+        "requiredConcepts": [
+          "belief-causality-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "플랫폼 광고비와 제작자 협찬을 왜 나누나요?",
+        "answerChecklist": [
+          "서로 다른 지급 관계",
+          "제작자 이해관계 공개 여부",
+          "배치 계약과 분리"
+        ],
+        "requiredConcepts": [
+          "media-revenue-incentive"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "EU와 미국의 두 공개 규칙은 어떤 질문이 다른가요?",
+        "answerChecklist": [
+          "추천 주요기준과 광고 지급관계",
+          "관할·적용대상",
+          "진위 보장 아님"
+        ],
+        "requiredConcepts": [
+          "belief-causality-boundary"
+        ],
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "business/shop-daily-operations": {
+    "coreIdea": "가게의 하루 주문을 입고·사용·폐기·근무·결제·은행입금과 연결하고 차이의 이유를 남겨야 실제로 남는 돈과 책임을 알 수 있습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "shop-contribution-margin",
+        "role": "판매한 한 건의 가격에서 추가 비용을 빼 남는 돈을 이해합니다."
+      },
+      {
+        "id": "working-capital-gap",
+        "role": "주문과 실제 입금의 날짜가 달라지는 이유를 이해합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "shop-stock-reconciliation",
+        "role": "팔린 재료와 버린 재료를 같은 손실 없는 출고로 처리하면 실제 원가를 놓칩니다."
+      },
+      {
+        "id": "shop-payout-reconciliation",
+        "role": "상품을 판 금액과 나중 은행에 들어온 금액은 두 매출이 아닙니다."
+      },
+      {
+        "id": "shop-payroll-reconciliation",
+        "role": "주문이 적어도 실제 일한 시간의 지급 기록은 필요합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "shop-stock-reconciliation",
+        "sectionId": "mechanism",
+        "intuition": "팔린 재료와 버린 재료를 같은 손실 없는 출고로 처리하면 실제 원가를 놓칩니다.",
+        "workedExample": "시작10+입고15−판매20−폐기1=잔여4로 실제4개와 맞춥니다.",
+        "boundary": "수량 대조만으로 식품의 안전과 사용 가능 가치를 보장할 수 없습니다."
+      },
+      {
+        "id": "shop-payout-reconciliation",
+        "sectionId": "mechanism",
+        "intuition": "상품을 판 금액과 나중 은행에 들어온 금액은 두 매출이 아닙니다.",
+        "workedExample": "고객결제16만−수수료3천200=입금15만6천800원을 같은 주문과 지급일로 맞춥니다.",
+        "boundary": "결제방식별 할인·환불·보류·조정과 지급기한은 계약마다 다릅니다."
+      },
+      {
+        "id": "shop-payroll-reconciliation",
+        "sectionId": "mechanism",
+        "intuition": "주문이 적어도 실제 일한 시간의 지급 기록은 필요합니다.",
+        "workedExample": "직원4시간 기록에서 임금률·수당·공제를 적용해 실제 지급과 명세서를 맞춥니다.",
+        "boundary": "임금률·수당·보험·보관기한은 현지 적용법과 고용형태를 확인해야 합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 점포의 재고실사",
+        "relation": "시작10+입고15−판매20−폐기1=잔여4로 실제4개와 맞춥니다.",
+        "concepts": [
+          "shop-stock-reconciliation"
+        ]
+      },
+      {
+        "label": "02 · 점포의 매출 정산 대조",
+        "relation": "고객결제16만−수수료3천200=입금15만6천800원을 같은 주문과 지급일로 맞춥니다.",
+        "concepts": [
+          "shop-payout-reconciliation"
+        ]
+      },
+      {
+        "label": "03 · 점포의 근무·급여 대조",
+        "relation": "직원4시간 기록에서 임금률·수당·공제를 적용해 실제 지급과 명세서를 맞춥니다.",
+        "concepts": [
+          "shop-payroll-reconciliation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "20건×8천 원의 고객결제와2% 수수료를 계산하세요.",
+        "answerChecklist": [
+          "결제16만 원",
+          "수수료3천200원,입금예정15만6천800원"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "shop-payout-reconciliation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "시작10·입고15·판매20·폐기1이면 남은 재료는 얼마인가요?",
+        "answerChecklist": [
+          "10+15−20−1=4",
+          "실사4와 비교해 차이0"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "shop-stock-reconciliation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "재료를1개 버렸을 때 어떤 비용을 별도로 남기나요?",
+        "answerChecklist": [
+          "폐기1×2천=2천 원",
+          "판매재료4만과 합계4만2천"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "shop-stock-reconciliation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "통장입금15만6천800원을 추가매출로 잡으면 왜 틀리나요?",
+        "answerChecklist": [
+          "판매16만은 이미 주문에서 기록",
+          "입금은 받을 돈의 도착, 이중매출 방지"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "shop-payout-reconciliation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "직원4시간을 지급액으로 바꾸려면 무엇이 필요한가요?",
+        "answerChecklist": [
+          "실제 근무와 휴게 기록",
+          "계약 임금률·적용수당·적법공제·명세서"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "shop-payroll-reconciliation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "11만4천800원을 하루 순이익이라 할 수 없는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "직원과점주 노동·월세·보험·세금·설비 비용 미반영",
+          "세금 전 중간 결과"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "shop-stock-reconciliation",
+          "shop-payout-reconciliation",
+          "shop-payroll-reconciliation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "장부 예상5개인데 실사4개라면 차이를 어떻게 해결하나요?",
+        "answerChecklist": [
+          "사유를 확인해 폐기·직원식사·누락주문을 구분",
+          "숫자를 지우지 않고 증거와 비용·조치를 기록"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "shop-stock-reconciliation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "배달앱 주문을 카드2% 사례로 그대로 정산하면 무엇을 놓치나요?",
+        "answerChecklist": [
+          "부담자별 할인·배달·광고비와 환불",
+          "정산 대상 주문·일자와 은행입금을 대조"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "shop-payout-reconciliation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "해외 지점의4시간 근무를 같은 임금률만 적용하면 왜 부족한가요?",
+        "answerChecklist": [
+          "고용형태·직종규정·시간대수당·연금 조건",
+          "현지 명세서와 기록·보관기한 확인"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "shop-payroll-reconciliation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "돈과 재고가 맞아도 영업이 위험할 수 있는 경우와 대응을 제안하세요.",
+        "answerChecklist": [
+          "보관·위생·설비·화재·개인정보 위험",
+          "담당자·예방점검·해당보험·증빙·개선절차 연결"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "shop-stock-reconciliation",
+          "shop-payout-reconciliation",
+          "shop-payroll-reconciliation"
+        ]
+      }
+    ]
+  },
+  "institutions/population-migration-and-care": {"coreIdea": "인구의 출입 장부, 연령 구성, 실제 취업과 돌봄시간을 구분해야 노동·소비·공공서비스의 변화를 읽을 수 있습니다.", "entryLevel": true, "entryNote": "100명이 사는 가정 마을에서 출생·사망·이동과 하루 8시간을 먼저 계산합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "population-stock-flow-account", "role": "사람 수가 늘어난 이유를 출생과 이동으로 나눕니다."}, {"id": "age-structure-employment-boundary", "role": "나이로 나눈 60명 모두가 같은 시간을 일한다고 가정하지 않습니다."}, {"id": "care-time-labor-capacity", "role": "돈을 받지 않는 돌봄도 누군가의 시간과 일을 필요로 합니다."}], "conceptExplanations": [{"id": "population-stock-flow-account", "sectionId": "mechanism", "intuition": "사람 수가 늘어난 이유를 출생과 이동으로 나눕니다.", "workedExample": "100+2−1+3−2=102명입니다.", "boundary": "인구조사 누락·거주지 변경·기준기간 차이는 별도 조정이 필요합니다."}, {"id": "age-structure-employment-boundary", "sectionId": "names", "intuition": "나이로 나눈 60명 모두가 같은 시간을 일한다고 가정하지 않습니다.", "workedExample": "(20+20)/60×100=약 66.7의 연령비, 실제 취업자는 45명입니다.", "boundary": "연령비는 건강·임금·공공서비스·재산을 설명하지 않습니다."}, {"id": "care-time-labor-capacity", "sectionId": "comparison", "intuition": "돈을 받지 않는 돌봄도 누군가의 시간과 일을 필요로 합니다.", "workedExample": "돌봄 2시간 대체는 근로수입 4만원과 비용 3만원의 차액 1만원을 만듭니다.", "boundary": "근무 가능시간이 늘어도 일자리·접근성·서비스 품질이 확보돼야 합니다."}], "conceptStages": [{"label": "인구의 잔액과 출입", "relation": "사람 수가 늘어난 이유를 출생과 이동으로 나눕니다.", "concepts": ["population-stock-flow-account"]}, {"label": "연령 구성과 실제 고용의 구분", "relation": "나이로 나눈 60명 모두가 같은 시간을 일한다고 가정하지 않습니다.", "concepts": ["age-structure-employment-boundary"]}, {"label": "돌봄시간과 노동 참여", "relation": "돈을 받지 않는 돌봄도 누군가의 시간과 일을 필요로 합니다.", "concepts": ["care-time-labor-capacity"]}], "exercises": [{"level": "basic", "question": "A마을 100명에 출생 2·사망 1·전입 3·전출 2가 생기면 연말 몇 명인가요?", "answerChecklist": ["100+2−1+3−2=102", "출생−사망 1, 전입−전출 1", "같은 기간과 거주지 기준 사용"], "sectionId": "mechanism", "requiredConcepts": ["population-stock-flow-account"]}, {"level": "basic", "question": "아이 20·15–64세 60·65세 이상 20의 연령 부양비를 계산하세요.", "answerChecklist": ["(20+20)/60×100≈66.7", "15–64세 100명당 다른 연령 66.7명", "실제 취업자 수와 다름"], "sectionId": "names", "requiredConcepts": ["age-structure-employment-boundary"]}, {"level": "basic", "question": "60명 가운데 45명만 유급 취업했다면 60을 노동공급으로 쓰면 왜 틀릴까요?", "answerChecklist": ["15명은 실제 유급취업자가 아님", "건강·구직·교육·돌봄·취업권리 등을 구분", "연령 구간만으로 고용을 단정하지 않음"], "sectionId": "need", "requiredConcepts": ["age-structure-employment-boundary"]}, {"level": "basic", "question": "하루 8시간 중 돌봄 4시간을 맡는 사람의 유급근무 가능시간은 얼마인가요?", "answerChecklist": ["단순 가정 4시간", "통근·휴식·겹치는 일정 생략", "돌봄시간도 실제 노동임"], "sectionId": "case", "requiredConcepts": ["care-time-labor-capacity"]}, {"level": "basic", "question": "이주로 총인구가 2명 늘어난 것이 노동자 2명이 늘어난 것과 같은가요?", "answerChecklist": ["나이·건강·숙련·언어·자격·체류/취업권리 확인", "총수와 취업자는 다름", "이주자도 생활서비스와 돌봄이 필요"], "sectionId": "limits", "requiredConcepts": ["population-stock-flow-account", "age-structure-employment-boundary"]}, {"level": "basic", "question": "UN의 장기 인구 전망에서 확인할 가정을 세 가지 쓰세요.", "answerChecklist": ["출생", "사망", "국제이동", "기준시점과 전망 범위"], "sectionId": "source", "requiredConcepts": ["population-stock-flow-account"]}, {"level": "advanced", "question": "돌봄 2시간을 시간당 1.5만원에 맡기고 시간당 2만원의 일을 2시간 더 하면 가계현금은 얼마나 늘까요?", "answerChecklist": ["유급소득 4만원 증가", "서비스지출 3만원 증가", "차액 1만원, 세금·교통 생략"], "sectionId": "mechanism", "requiredConcepts": ["care-time-labor-capacity"]}, {"level": "advanced", "question": "A마을의 연말 102명만으로 다음 해 학교와 요양시설 수요를 계산할 수 없는 이유를 설명하세요.", "answerChecklist": ["102명의 연령·건강 분포가 없음", "이동자 연령과 가족 동반 여부 필요", "연령별로 한 살 이동하는 경로를 따로 계산"], "sectionId": "source", "requiredConcepts": ["population-stock-flow-account", "age-structure-employment-boundary"]}, {"level": "advanced", "question": "무료 돌봄을 유료 서비스로 바꾸면 새 생산이 얼마나 늘었다고 말할 수 있나요?", "answerChecklist": ["장부에 잡히는 유료서비스가 늘어도 기존 무급활동이 사라진 것이 아님", "동일한 서비스양·품질·유급근무 증가를 따로 측정", "비용 이전과 실물 개선 구분"], "sectionId": "comparison", "requiredConcepts": ["care-time-labor-capacity"]}, {"level": "advanced", "question": "연령 부양비가 같아도 가계 부담이 다른 두 마을의 조건을 만드세요.", "answerChecklist": ["취업률·근무시간·임금 차이", "건강·공공돌봄·가족 분담 차이", "비율 하나를 운명으로 해석하지 않음"], "sectionId": "limits", "requiredConcepts": ["age-structure-employment-boundary", "care-time-labor-capacity"]}]},
+  "institutions/culture-norms-and-coordination": {"coreIdea": "문화의 설명은 국적별 성격 분류가 아니라 공유한 기대·관측·규칙·권리가 실제 협력을 만드는 경로를 확인하는 일입니다.", "entryLevel": true, "entryNote": "가게 10곳의 공동 청소비에서 약속과 관찰이 왜 필요한지 알아봅니다.", "assumedKnowledge": [], "introducedHere": [{"id": "social-norm-expectations", "role": "회비를 내라는 문장과 다른 가게도 낼 것이라는 예상은 다릅니다."}, {"id": "collective-action-monitoring", "role": "깨끗한 시장의 혜택을 받는 것과 비용을 내는 것을 따로 관찰합니다."}, {"id": "cultural-rights-institution-boundary", "role": "협력을 잘 만든 규칙도 참여자의 권리를 따로 확인해야 합니다."}], "conceptExplanations": [{"id": "social-norm-expectations", "sectionId": "names", "intuition": "회비를 내라는 문장과 다른 가게도 낼 것이라는 예상은 다릅니다.", "workedExample": "10곳이 모두 내면 20만원이지만 3곳이 미납하면 14만원입니다.", "boundary": "관찰된 협력을 특정 국적의 타고난 성격으로 일반화하지 않습니다."}, {"id": "collective-action-monitoring", "sectionId": "mechanism", "intuition": "깨끗한 시장의 혜택을 받는 것과 비용을 내는 것을 따로 관찰합니다.", "workedExample": "청소비 16만원은 8곳의 납부로 충당되지만 7곳이면 2만원 부족합니다.", "boundary": "제재가 강하다는 것만으로 공정성과 정당성이 보장되지 않습니다."}, {"id": "cultural-rights-institution-boundary", "sectionId": "comparison", "intuition": "협력을 잘 만든 규칙도 참여자의 권리를 따로 확인해야 합니다.", "workedExample": "시장 회비를 걷는 효율이 특정 출신 가게의 발언권 배제를 정당화하지 않습니다.", "boundary": "국제 선언의 원칙과 구체적 사건에 적용되는 현지 법적 구제를 구분합니다."}], "conceptStages": [{"label": "사회 규범과 서로의 기대", "relation": "회비를 내라는 문장과 다른 가게도 낼 것이라는 예상은 다릅니다.", "concepts": ["social-norm-expectations"]}, {"label": "공동 행동의 관찰과 집행", "relation": "깨끗한 시장의 혜택을 받는 것과 비용을 내는 것을 따로 관찰합니다.", "concepts": ["collective-action-monitoring"]}, {"label": "문화의 다양성과 권리의 경계", "relation": "협력을 잘 만든 규칙도 참여자의 권리를 따로 확인해야 합니다.", "concepts": ["cultural-rights-institution-boundary"]}], "exercises": [{"level": "basic", "question": "가게 10곳이 각각 2만원을 내고 청소비 16만원을 지급하면 얼마가 남나요?", "answerChecklist": ["20만원 수입−16만원 비용=4만원", "잔액의 소유·반환·다음달 사용 규칙 필요"], "sectionId": "case", "requiredConcepts": ["collective-action-monitoring"]}, {"level": "basic", "question": "2곳이 안 내는 경우와 3곳이 안 내는 경우를 계산하세요.", "answerChecklist": ["8×2=16만원으로 비용과 같음", "7×2=14만원으로 2만원 부족", "다른 조건은 고정"], "sectionId": "mechanism", "requiredConcepts": ["collective-action-monitoring"]}, {"level": "basic", "question": "평소 사람들이 한다는 예상과 해야 한다는 믿음을 구분하세요.", "answerChecklist": ["대부분 회비를 낸다는 관찰", "내야 한다고 여기는 규범적 기대", "둘은 다르며 스스로 내는 행동도 별도"], "sectionId": "names", "requiredConcepts": ["social-norm-expectations"]}, {"level": "basic", "question": "청소가 됐다는 사실만으로 회비를 성실히 냈다고 알 수 있나요?", "answerChecklist": ["청소 결과와 납부기록은 다른 관측", "비용을 안 낸 가게도 편익을 얻을 수 있음"], "sectionId": "need", "requiredConcepts": ["collective-action-monitoring"]}, {"level": "basic", "question": "현지 문화라는 이유로 차별적 참여 제한이 정당해지나요?", "answerChecklist": ["UNESCO 제 4조는 문화다양성으로 인권침해를 정당화하지 못하게 함", "협력효과와권리판단별도", "실제분쟁은관할법/절차확인"], "sectionId": "comparison", "requiredConcepts": ["cultural-rights-institution-boundary"]}, {"level": "basic", "question": "같은 국가 안에서 규범이 달라질 수 있는 축을 적으세요.", "answerChecklist": ["지역·세대·직업·종교·이주경험", "국적만으로 개인 행동을 예측하지 않음"], "sectionId": "source", "requiredConcepts": ["social-norm-expectations", "cultural-rights-institution-boundary"]}, {"level": "advanced", "question": "미납을 제재하기 전에 확인할 두 가지와 이의 절차를 설계하세요.", "answerChecklist": ["납부기록 오류/일시적 어려움 확인", "규칙과 부담 산정의 합의 여부 확인", "설명·정정·이의절차를모두에게적용"], "sectionId": "mechanism", "requiredConcepts": ["collective-action-monitoring", "cultural-rights-institution-boundary"]}, {"level": "advanced", "question": "회비가 잘 걷히는 두 시장의 원인을 문화 하나로 설명할 수 없음을 보이세요.", "answerChecklist": ["청소 품질·매출·집행·참여 구조가 동시에 다를 수 있음", "비슷한 경제 조건과 규칙 변경 전후 비교", "인과단정금지"], "sectionId": "limits", "requiredConcepts": ["social-norm-expectations", "collective-action-monitoring"]}, {"level": "advanced", "question": "가게가 1곳 줄었는데 회비 2만원과 비용 16만원이 고정되면 잔액은 어떻게 되나요?", "answerChecklist": ["9×2−16=2만원", "처음 4만원보다 2만원감소", "매출 비례 분담 등 새 규칙은 별도 합의 필요"], "sectionId": "limits", "requiredConcepts": ["collective-action-monitoring"]}, {"level": "advanced", "question": "시장A의 규칙을 다른 나라 시장B에 옮길 때 확인할 경계를 적으세요.", "answerChecklist": ["참여자·언어·영업시간·부담능력", "결정과기록접근·현지법", "목적과 권리 보호를 유지하며 절차 조정"], "sectionId": "comparison", "requiredConcepts": ["social-norm-expectations", "collective-action-monitoring", "cultural-rights-institution-boundary"]}]},
+  "institutions/evidence-measurement-and-causality": {"coreIdea": "측정의 신뢰성, 비교 집단의 적절성, 결과를 일반화할 범위는 서로 다른 질문이며 각각의 근거가 필요합니다.", "entryLevel": true, "entryNote": "전기 사용량 10이 8이 된 가정 사례에서 실제 변화와 원인에 대한 주장을 나눕니다.", "assumedKnowledge": [], "introducedHere": [{"id": "measurement-repeatability-boundary", "role": "반복값이 고르게 나와도 계기가 한쪽으로 치우칠 수 있습니다."}, {"id": "counterfactual-comparison-design", "role": "개입 뒤의 변화에서 개입 없이도 생겼을 변화를 구분합니다."}, {"id": "evidence-scope-and-replication", "role": "20가구의 결과가 공장과 모든 계절에서도 같을지는 별도 질문입니다."}], "conceptExplanations": [{"id": "measurement-repeatability-boundary", "sectionId": "source", "intuition": "반복값이 고르게 나와도 계기가 한쪽으로 치우칠 수 있습니다.", "workedExample": "8.0·8.1·7.9의 평균 8.0만으로 계기교체의 0.5차이를 제거하지 못합니다.", "boundary": "표시 자릿수나 반복 표준편차가 모든 불확실성을 포함하지는 않습니다."}, {"id": "counterfactual-comparison-design", "sectionId": "mechanism", "intuition": "개입 뒤의 변화에서 개입 없이도 생겼을 변화를 구분합니다.", "workedExample": "A−2와B−1의 차이−1은 같은추세라는조건에서만 추가변화의근거가 됩니다.", "boundary": "동시 변화·선택·측정 차이가 있으면 원인 해석이 깨집니다."}, {"id": "evidence-scope-and-replication", "sectionId": "limits", "intuition": "20가구의 결과가 공장과 모든 계절에서도 같을지는 별도 질문입니다.", "workedExample": "가정 자료의 추가 감소 1을 보고하되 분산·대표성·장기 지속은 미확인으로 둡니다.", "boundary": "재검증은 무조건 동일숫자를 요구하는 것이 아니라 차이와 조건을 설명하는 과정입니다."}], "conceptStages": [{"label": "측정의 반복성과 불확실성", "relation": "반복값이 고르게 나와도 계기가 한쪽으로 치우칠 수 있습니다.", "concepts": ["measurement-repeatability-boundary"]}, {"label": "원인 판단을 위한 비교 설계", "relation": "개입 뒤의 변화에서 개입 없이도 생겼을 변화를 구분합니다.", "concepts": ["counterfactual-comparison-design"]}, {"label": "증거 범위와 재검증", "relation": "20가구의 결과가 공장과 모든 계절에서도 같을지는 별도 질문입니다.", "concepts": ["evidence-scope-and-replication"]}], "exercises": [{"level": "basic", "question": "A의 사용량 10→8, B의 10→9에서 각각 얼마나 줄었나요?", "answerChecklist": ["A2kWh/가구·일 감소", "B1kWh/가구·일 감소", "A의 단순 전후차이 2가 곧 원인효과는 아님"], "sectionId": "case", "requiredConcepts": ["counterfactual-comparison-design"]}, {"level": "basic", "question": "A가 B와 같은 1만큼 줄었을 것이라고 가정하면 추가 감소는 얼마인가요?", "answerChecklist": ["A변화−2, B변화−1", "−2−(−1)=−1kWh/가구·일", "같은 추세라는 반사실 가정 필요"], "sectionId": "mechanism", "requiredConcepts": ["counterfactual-comparison-design"]}, {"level": "basic", "question": "8.0·8.1·7.9의 평균을 구하고 반복만으로 못 찾는 오류를 쓰세요.", "answerChecklist": ["평균 8.0kWh", "계기가 매번 같게 높게 표시하는 오류는 반복해도 남음", "교정·측정조건확인필요"], "sectionId": "source", "requiredConcepts": ["measurement-repeatability-boundary"]}, {"level": "basic", "question": "표시 자릿수 0.1kWh가 총불확실성±0.1kWh를 보장하나요?", "answerChecklist": ["표시 분해능과 불확실성은 다름", "교정·환경·반복변동·측정대상정의도필요"], "sectionId": "names", "requiredConcepts": ["measurement-repeatability-boundary"]}, {"level": "basic", "question": "무작위 배정과 전국민 무작위 표본 추출은 무엇이 다른가요?", "answerChecklist": ["이미 모은 참가자에게 개입을 정하는 것", "누가 참여하는지 모집하는 것", "전자만으로 전국 대표성을 보장하지 못함"], "sectionId": "comparison", "requiredConcepts": ["counterfactual-comparison-design", "evidence-scope-and-replication"]}, {"level": "basic", "question": "20가구 실험의 결과를 공장에 그대로 적용할 수 있나요?", "answerChecklist": ["장치·부하·시간·사용자조건다름", "실험대상과측정기간제시", "적용범위밖별도검증"], "sectionId": "limits", "requiredConcepts": ["evidence-scope-and-replication"]}, {"level": "advanced", "question": "A에만 계기 교체로 이후 값이 0.5 낮게 기록되었다면 관측된 추가 감소 1은 어떻게 해석하나요?", "answerChecklist": ["0.5가 장치 효과가 아닌 측정 변화일 수 있음", "교정정보와원자료로보정", "남은 0.5도인과전제검증필요"], "sectionId": "source", "requiredConcepts": ["measurement-repeatability-boundary", "counterfactual-comparison-design"]}, {"level": "advanced", "question": "A만 집을 비운 시간이 늘었다면 B차이를 빼는 계산이 충분한가요?", "answerChecklist": ["A에만영향주는동시변화", "공통추세가정이깨짐", "재실시간 측정 또는 더 나은 설계 필요"], "sectionId": "mechanism", "requiredConcepts": ["counterfactual-comparison-design"]}, {"level": "advanced", "question": "결과가 좋아 보이는 지표 하나만 고르는 위험을 줄일 절차를 적으세요.", "answerChecklist": ["질문·주지표·기간·분석계획을미리정함", "중도탈락·모든주요결과보고", "다른데이터·연구자재검증"], "sectionId": "limits", "requiredConcepts": ["evidence-scope-and-replication"]}, {"level": "advanced", "question": "현재 사례로 보고할 수 있는 주장과 아직 못 할 주장을 각각 쓰세요.", "answerChecklist": ["20가구 가정 자료에서 차이의 차이 −1 관측", "분산·표본 설계가 없어 통계적 확실성을 판정하지 못함", "전국·장기효과는별도증거"], "sectionId": "limits", "requiredConcepts": ["measurement-repeatability-boundary", "counterfactual-comparison-design", "evidence-scope-and-replication"]}]},
+  "infrastructure/materials-waste-and-circularity": {"coreIdea": "수거율과 실제 회수량, 처리비용과 재원 이전, 재생재료와 새 원료 대체를 구분해야 순환의 효과를 계산할 수 있습니다.", "entryLevel": true, "entryNote": "사용이 끝난 100kg의 포장재가 60kg의 재료로 돌아오는 가정 경로를 따라갑니다.", "assumedKnowledge": [], "introducedHere": [{"id": "collection-recovery-yield", "role": "수거함에 들어간 80kg 모두가 새 재료가 되지는 않습니다."}, {"id": "waste-financing-responsibility", "role": "누가 돈을 내는지를 바꿔도 처리에 쓰는 자원이 사라지지 않습니다."}, {"id": "circularity-displacement-boundary", "role": "재생재료가 늘어도 전체 생산이 더 빨리 늘면 새 원료 사용도 늘 수 있습니다."}], "conceptExplanations": [{"id": "collection-recovery-yield", "sectionId": "mechanism", "intuition": "수거함에 들어간 80kg 모두가 새 재료가 되지는 않습니다.", "workedExample": "100kg중 80kg수거후 75%회수이면 60kg재료와총 40kg미회수분입니다.", "boundary": "수분·다른 투입·저장량 변동을 생략한 단순한 동일 재료 장부입니다."}, {"id": "waste-financing-responsibility", "sectionId": "comparison", "intuition": "누가 돈을 내는지를 바꿔도 처리에 쓰는 자원이 사라지지 않습니다.", "workedExample": "비용 12만원에판매 6만원이면추가재원 6만원이필요합니다.", "boundary": "현지 제도의 책임 주체·대상 품목·보고 기준은 관할별로 확인합니다."}, {"id": "circularity-displacement-boundary", "sectionId": "limits", "intuition": "재생재료가 늘어도 전체 생산이 더 빨리 늘면 새 원료 사용도 늘 수 있습니다.", "workedExample": "새수요 100→120kg에회수 60kg이같으면새원료 40→60kg입니다.", "boundary": "회수 톤수나 재활용 가능 표시만으로 전 과정 환경부하 감소를 보장하지 않습니다."}], "conceptStages": [{"label": "수거량과 재료 회수 수율", "relation": "수거함에 들어간 80kg 모두가 새 재료가 되지는 않습니다.", "concepts": ["collection-recovery-yield"]}, {"label": "폐기물 처리의 비용과 부담", "relation": "누가 돈을 내는지를 바꿔도 처리에 쓰는 자원이 사라지지 않습니다.", "concepts": ["waste-financing-responsibility"]}, {"label": "순환과 신규 원료 대체의 경계", "relation": "재생재료가 늘어도 전체 생산이 더 빨리 늘면 새 원료 사용도 늘 수 있습니다.", "concepts": ["circularity-displacement-boundary"]}], "exercises": [{"level": "basic", "question": "사용이 끝난 100kg 중 80kg을모아 75%를회수하면 실제 회수량은 얼마인가요?", "answerChecklist": ["80×0.75=60kg", "100kg대비 60%", "수거율 80%와회수율 60%다름"], "sectionId": "mechanism", "requiredConcepts": ["collection-recovery-yield"]}, {"level": "basic", "question": "처음 100kg의 행선지를 검산하세요.", "answerChecklist": ["미수거 20kg", "처리잔여 20kg", "회수 60kg", "100=20+20+60"], "sectionId": "picture", "requiredConcepts": ["collection-recovery-yield"]}, {"level": "basic", "question": "수거 4만·처리 6만·잔여물 2만원에 판매 6만원이면 부족액은 얼마인가요?", "answerChecklist": ["총비용 12만원", "판매수입 6만원", "자금부족 6만원"], "sectionId": "mechanism", "requiredConcepts": ["waste-financing-responsibility"]}, {"level": "basic", "question": "생산자가 6만원을지원하면 처리비용이 0이된건가요?", "answerChecklist": ["비용 12만원은그대로", "판매 6+지원 6으로재원충당", "부담주체가이동"], "sectionId": "comparison", "requiredConcepts": ["waste-financing-responsibility"]}, {"level": "basic", "question": "재생재료 60kg이 항상 새 원료 60kg을대체하나요?", "answerChecklist": ["같은품질·용도·수요에맞는지확인", "실제 구매자가 새 원료를 덜 쓰는지 확인", "회수량만으로 일대일 대체를 단정할 수 없음"], "sectionId": "need", "requiredConcepts": ["circularity-displacement-boundary"]}, {"level": "basic", "question": "추출량 2060년 60% 증가라는 보고서를 확정된 미래로 읽으면 왜 틀리나요?", "answerChecklist": ["기준 2020년과시나리오조건있음", "정책·수요·기술조건에따라달라짐"], "sectionId": "limits", "requiredConcepts": ["circularity-displacement-boundary"]}, {"level": "advanced", "question": "재생재료 kg 가격이 1000원에서 800원이 되면 부족액은 얼마인가요?", "answerChecklist": ["판매 60×800=48000원", "비용 120000원가정", "부족 72000원"], "sectionId": "mechanism", "requiredConcepts": ["waste-financing-responsibility"]}, {"level": "advanced", "question": "회수 60kg을 모두 쓸 수 있고 새 제품 수요가 100→120kg이면 새 원료 필요량은 어떻게 되나요?", "answerChecklist": ["40→60kg", "회수량이 같아도 총수요 증가로 신규 투입 증가", "품질·대체 1대 1가정"], "sectionId": "limits", "requiredConcepts": ["collection-recovery-yield", "circularity-displacement-boundary"]}, {"level": "advanced", "question": "발생량 100→80kg, 수거율 80%·처리 수율 75%가 같을 때 회수량 감소를 실패라고 할 수 있나요?", "answerChecklist": ["회수 80×0.8×0.75=48kg", "발생량 20kg감소", "회수 톤수만으로 예방 효과를 판정할 수 없음"], "sectionId": "limits", "requiredConcepts": ["collection-recovery-yield", "circularity-displacement-boundary"]}, {"level": "advanced", "question": "포장재를 바꿀 때 환경 효과 비교의 경계를 설계하세요.", "answerChecklist": ["동일한보호/운송서비스", "제조·세척·운송·사용횟수·처리", "온실가스·물·유해성·노동조건별도", "실제자료필요"], "sectionId": "limits", "requiredConcepts": ["circularity-displacement-boundary"]}]},
+  "gpu/amd-gpu-execution-and-hip": {
+    "entryLevel": false,
+    "entryNote": "64개 원소를 더하는 같은 사례로 입력 512B와 출력 256B를 추적합니다. 본문의 시간과 처리량 상한은 가정한 계산이며 실제 측정값과 구분합니다.",
+    "coreIdea": "이 글은 두 배열의 64개 원소를 더하는 요청을 AMD 장치 안으로 보냅니다. 작업 수는 유지하면서 실행 묶음과 명령, 저장 공간의 차이를 따라갑니다. 공식 구현 두 개를 비교하되 특정 제품의 성능 순위를 만들지는 않습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "cuda-host-device-kernel-lifecycle",
+        "role": "입력 전송·launch·완료·결과 회수의 순서를 같은 64개 사례로 사용합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "amd-wavefront-execution",
+        "role": "AMD wavefront·CU execution"
+      },
+      {
+        "id": "amd-register-lds-residency",
+        "role": "AMD registers·LDS resource bound"
+      },
+      {
+        "id": "hip-source-portability",
+        "role": "HIP source portability"
+      },
+      {
+        "id": "amd-matrix-instruction-family",
+        "role": "AMD MFMA·WMMA instruction families"
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "amd-wavefront-execution",
+        "sectionId": "names",
+        "intuition": "명령을 함께 진행하는 작업 묶음을 AMD에서는 wavefront라고 부릅니다. CDNA 계열의 계산에서는 64개가 기본 단위입니다. ROCm 7.0의 HIP 지원 RDNA 실행은 32개 단위로 읽습니다. RDNA ISA의 wave 64 능력과 HIP runtime이 지원하는 실행 모드는 같은 명제가 아닙니다. Lane은 이 묶음 안의 작업 위치입니다.",
+        "workedExample": "MI350X·MI355X의 CDNA4를 대상으로 64 threads block 1개를 제출한다고 놓습니다. 이 block은 64개 lane으로 이루어진 wavefront 1개를 이룹니다. 37번 lane은 입력 A와 B의 148바이트 위치를 읽습니다. 각 lane의 load 결과는 VGPR에 놓이고 벡터 덧셈 뒤 결과를 씁니다. 공통 주소의 일부나 동일한 제어 값에는 스칼라 경로를 사용할 수 있지만 실제 배정은 compiler 결과로 확인합니다.",
+        "boundary": "한 명령에 참여하는 논리적 작업 수를 실행 묶음의 폭이라고 합니다. 실제 명령 처리량·메모리 대기·분기 경로·동시 상주 자원이 실행 시간을 정합니다. 64개로 묶인다고 32개보다 2 배 빠르거나 느리다고 단정할 수 없습니다."
+      },
+      {
+        "id": "amd-register-lds-residency",
+        "sectionId": "mechanism",
+        "intuition": "CDNA4에서는 CU의 L1 뒤에 XCD별 L2가 있습니다. 그다음 메모리 쪽 Infinity Cache와 제어기를 지나 HBM으로 갑니다. Cache에서 찾으면 다음 단계의 읽기를 줄입니다. NVIDIA의 32바이트 sector 계산을 AMD의 실제 전송 규칙이라고 옮겨 적지 않습니다. 64개 유효 읽기 256바이트와 특정 계층의 거래량은 다른 수치입니다.",
+        "workedExample": "CDNA4에서는 CU의 L1 뒤에 XCD별 L2가 있습니다. 그다음 메모리 쪽 Infinity Cache와 제어기를 지나 HBM으로 갑니다. Cache에서 찾으면 다음 단계의 읽기를 줄입니다. NVIDIA의 32바이트 sector 계산을 AMD의 실제 전송 규칙이라고 옮겨 적지 않습니다. 64개 유효 읽기 256바이트와 특정 계층의 거래량은 다른 수치입니다.",
+        "boundary": "같은 GPU라도 compute·memory partition 설정과 대상 compiler 옵션을 확인합니다. 설정이 달라지면 보이는 자원과 주소 접근 경로도 달라질 수 있습니다. GPU 정확한 SKU, gfx target, ROCm·driver 버전, dtype, 배열 크기와 device 완료 기준을 기록하고 비교합니다."
+      },
+      {
+        "id": "hip-source-portability",
+        "sectionId": "comparison",
+        "intuition": "행렬 연산에서는 CDNA의 MFMA와 RDNA3 이후의 WMMA 명령군을 구별합니다. rocWMMA는 두 계열을 지원할 수 있는 상위 라이브러리입니다. Dtype·shape·target에 따라 실제 명령은 달라집니다. 이번 64개 덧셈은 행렬곱이 아닙니다. MFMA를 넣을 이유가 없습니다.",
+        "workedExample": "CUDA의 64×0 +37과 HIP의 0×64 +37은 같은 37번을 가리킵니다. 32 lane 참여 mask는 CDNA 64 lane의 상위 절반을 표현하지 못하므로 API 변환 뒤 별도 검사가 필요합니다.",
+        "boundary": "이번 환경에서는 AMD 장치 실행이나 HIP compile을 수행하지 않았습니다. 원문 보존과 주소·바이트 계산만 검증했습니다. 실제 이식은 경계 입력에서도 답이 맞고 동기화 오류가 없어야 끝납니다. 전체 완료 시간과 counter도 같은 조건에서 확인합니다."
+      },
+      {
+        "id": "amd-matrix-instruction-family",
+        "sectionId": "comparison",
+        "intuition": "문서 기준은 ROCm 7.0.0의 HIP 문법·실행 모델과 CDNA4 ISA입니다. 제품 내부 구성은 2025-10-01 개정 백서에 고정했습니다. CDNA5 같은 후속 발표를 이 글의 실제 검증 target으로 섞지 않습니다. 설치할 때는 선택한 ROCm 릴리스의 GPU·OS 지원 표를 따로 확인합니다.",
+        "workedExample": "64개 독립 덧셈은 행렬곱이 아니어서 MFMA로 바꾸는 문제가 아닙니다. CDNA MFMA·RDNA WMMA 명령과 상위 rocWMMA API를 분리하고 dtype·shape·target을 확인합니다.",
+        "boundary": "이번 환경에서는 AMD 장치 실행이나 HIP compile을 수행하지 않았습니다. 원문 보존과 주소·바이트 계산만 검증했습니다. 실제 이식은 경계 입력에서도 답이 맞고 동기화 오류가 없어야 끝납니다. 전체 완료 시간과 counter도 같은 조건에서 확인합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · AMD wavefront·CU execution",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "amd-wavefront-execution"
+        ]
+      },
+      {
+        "label": "02 · AMD registers·LDS resource bound",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "amd-register-lds-residency"
+        ]
+      },
+      {
+        "label": "03 · HIP source portability",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "hip-source-portability"
+        ]
+      },
+      {
+        "label": "04 · AMD MFMA·WMMA instruction families",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "amd-matrix-instruction-family"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "같은 64개 작업을 32개와 64개 단위로 묶으면 몇 묶음입니까?",
+        "answerChecklist": [
+          "2개와 1개",
+          "속도 비율 아님"
+        ],
+        "requiredConcepts": [
+          "amd-wavefront-execution"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "CDNA4에서 37번 lane이 읽을 주소 offset과 유효 바이트를 계산하세요.",
+        "answerChecklist": [
+          "148B",
+          "읽기 512B 쓰기 256B"
+        ],
+        "requiredConcepts": [
+          "amd-wavefront-execution"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "CU·VGPR·SGPR은 각각 무엇을 맡습니까?",
+        "answerChecklist": [
+          "CU 실행 구역",
+          "VGPR 작업별 값",
+          "SGPR의 wave 공통 값"
+        ],
+        "requiredConcepts": [
+          "amd-register-lds-residency"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "LDS와 cache의 관리 차이를 설명하세요.",
+        "answerChecklist": [
+          "LDS 명시적 공유",
+          "cache 자동 보관",
+          "프로그램 순서 관리"
+        ],
+        "requiredConcepts": [
+          "amd-register-lds-residency"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "HIP와 ROCm은 같은 범위의 이름입니까?",
+        "answerChecklist": [
+          "HIP 소스 표현과 API",
+          "ROCm은 compiler, runtime, 라이브러리와 도구를 포함한다."
+        ],
+        "requiredConcepts": [
+          "hip-source-portability"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "HIP 원문의 width 64·height 1·x 37·y 0을 계산하세요.",
+        "answerChecklist": [
+          "0×64+37=37",
+          "출력은 a, 두 입력은 b와 c",
+          "원본은 1024×1024"
+        ],
+        "requiredConcepts": [
+          "hip-source-portability"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "32비트 참여 mask를 CDNA wave 64에 복사하면 왜 부족합니까?",
+        "answerChecklist": [
+          "상위 32 lane 표현 못 함",
+          "warpSize와 mask 타입 검증"
+        ],
+        "requiredConcepts": [
+          "hip-source-portability"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "CDNA3의 LDS 64 KB·32 banks를 CDNA4에 그대로 쓰면 왜 잘못됩니까?",
+        "answerChecklist": [
+          "CDNA4 백서 160 KB",
+          "bank 및 명령 구성 target별",
+          "padding 자동 이식 불가"
+        ],
+        "requiredConcepts": [
+          "amd-register-lds-residency"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "CDNA MFMA·RDNA WMMA·rocWMMA의 층을 구분하세요.",
+        "answerChecklist": [
+          "MFMA와 WMMA는 하드웨어 명령 계열이다.",
+          "rocWMMA 상위 라이브러리",
+          "dtype shape target 지원 조건이 다름"
+        ],
+        "requiredConcepts": [
+          "amd-matrix-instruction-family"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "HIP 2D 예제의 i<width×height만으로 모든 width의 안전성을 보장할 수 있습니까?",
+        "answerChecklist": [
+          "x가 width 넘어도 i 유효 가능",
+          "축별 경계 확인",
+          "launch와 함께 검증"
+        ],
+        "requiredConcepts": [
+          "hip-source-portability"
+        ],
+        "sectionId": "source"
+      }
+    ],
+    "papers": [
+      {
+        "title": "ROCm HIP-Examples·cdf9d101·54 –56 행",
+        "href": "https://github.com/ROCm/HIP-Examples/blob/cdf9d101acd9a3fc89ee750f73c1f1958cbd5cc3/vectorAdd/vectoradd_hip.cpp",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "ROCm HIP-Examples·cdf9d101·54 –56 행",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "NVIDIA vectorAdd·3f1c509·49 행",
+        "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "NVIDIA vectorAdd·3f1c509·49 행",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      },
+      {
+        "title": "AMD HIP7.0.0 ·hardware implementation",
+        "href": "https://rocm.docs.amd.com/projects/HIP/en/docs-7.0.0/understand/hardware_implementation.html",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "CU·wavefront와 실행 계층. 특정 SKU의 성능 수치는 아닙니다.",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      },
+      {
+        "title": "AMD CDNA4 Architecture 2258402-C·9 쪽",
+        "href": "https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/white-papers/amd-cdna-4-architecture-whitepaper.pdf",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "LDS 160 KB와 메모리 계층의 세대별 구성.",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      },
+      {
+        "title": "AMD CDNA4 ISA ·Matrix Arithmetic",
+        "href": "https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/instruction-set-architectures/amd-instinct-cdna4-instruction-set-architecture.pdf",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "MFMA 명령의 target·operand·shape는 해당 ISA로 확인합니다.",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "gpu/hbm-stack-and-memory-requests": {
+    "entryLevel": false,
+    "entryNote": "64개 원소를 더하는 같은 사례로 입력 512B와 출력 256B를 추적합니다. 본문의 시간과 처리량 상한은 가정한 계산이며 실제 측정값과 구분합니다.",
+    "coreIdea": "이 글은 64개 덧셈에 필요한 데이터를 저장 장치에서 가져오는 과정을 따라갑니다. 칩을 쌓는 모습에서 출발해 주소를 받는 제어기와 내부 읽기 동작을 연결합니다. 이어 코드의 접근 순서가 그 길을 어떻게 바꾸는지 계산합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "gpu-memory-transaction-sector",
+        "role": "요청 단계의 32B sector를 실제 HBM 명령과 구분하는 출발점입니다."
+      },
+      {
+        "id": "capacitor-voltage-state",
+        "role": "셀에 저장된 전하와 누설 때문에 refresh가 필요한 물리적 출발점입니다. 이상적 축전기와 실제 DRAM 셀의 차이를 본문에 남깁니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "hbm-stack-tsv-interface",
+        "role": "HBM stack·TSV·interface width"
+      },
+      {
+        "id": "hbm-channel-bank-row-refresh",
+        "role": "HBM channel·bank·row·refresh"
+      },
+      {
+        "id": "hbm-address-mapping-boundary",
+        "role": "HBM request·physical mapping boundary"
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "hbm-stack-tsv-interface",
+        "sectionId": "names",
+        "intuition": "층 수는 저장 용량과 관련되고 외부 데이터 폭은 한 번에 옮기는 양을 정합니다. TSV는 수직 연결, interposer는 칩 사이 배선입니다.",
+        "workedExample": "HBM3의 16×64 =1024 bit에 가정한 8 Gb/s/pin을 곱하면 1.024 TB/s입니다. HBM4의 2048 bit에서는 같은 가정으로 2.048 TB/s입니다.",
+        "boundary": "층 수만 두 배가 되어도 외부 폭·속도가 같으면 대역폭은 자동으로 두 배가 되지 않습니다."
+      },
+      {
+        "id": "hbm-channel-bank-row-refresh",
+        "sectionId": "mechanism",
+        "intuition": "메모리 제어기는 주소를 통로와 작업 구역으로 나누고 열린 행에서 열을 골라 읽습니다. 다른 행과 refresh에는 추가 타이밍이 필요합니다.",
+        "workedExample": "64개 덧셈의 768B를 1.024 TB/s로 나눈 0.75 ns는 처리량 비율입니다. Row를 열고 응답을 받는 대기 시간은 이 계산에 포함되지 않습니다.",
+        "boundary": "Refresh와 다른 bank 작업이 겹치는 정도는 제품·controller·조건별로 검증합니다."
+      },
+      {
+        "id": "hbm-address-mapping-boundary",
+        "sectionId": "mechanism",
+        "intuition": "32개 연속 읽기는 요청 단계에서 4 sectors에 걸칩니다. 32바이트 간격 읽기는 32 sectors에 걸칩니다. 전자가 가까운 주소를 합치기 좋다는 것은 계산할 수 있습니다. 그러나 4 sectors가 HBM 명령 4개라는 결론은 아닙니다. 아래 계층의 cache hit, 요청 병합, burst 크기와 쓰기 정책이 물리 전송량을 바꿉니다.",
+        "workedExample": "32개 연속 읽기는 요청 단계에서 4 sectors에 걸칩니다. 32바이트 간격 읽기는 32 sectors에 걸칩니다. 전자가 가까운 주소를 합치기 좋다는 것은 계산할 수 있습니다. 그러나 4 sectors가 HBM 명령 4개라는 결론은 아닙니다. 아래 계층의 cache hit, 요청 병합, burst 크기와 쓰기 정책이 물리 전송량을 바꿉니다.",
+        "boundary": "채널 균형과 refresh의 실제 비용은 설정·온도·주소 변환·접근 패턴을 고정해 측정합니다. 이 글은 실측 대역폭 결과를 제시하지 않습니다. 공개되지 않은 주소 매핑과 controller 스케줄러의 정확한 정책은 남은 정보로 명시합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · HBM stack·TSV·interface width",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "hbm-stack-tsv-interface"
+        ]
+      },
+      {
+        "label": "02 · HBM channel·bank·row·refresh",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "hbm-channel-bank-row-refresh"
+        ]
+      },
+      {
+        "label": "03 · HBM request·physical mapping boundary",
+        "relation": "64개 배열의 번호, 바이트 수, 실행 단위를 이 단계에서 설명하는 관리 범위와 대조합니다.",
+        "concepts": [
+          "hbm-address-mapping-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "HBM·TSV·interposer의 역할을 구분하세요.",
+        "answerChecklist": [
+          "메모리 계열",
+          "수직 연결",
+          "칩 사이를 잇는 수평 배선"
+        ],
+        "requiredConcepts": [
+          "hbm-stack-tsv-interface"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "HBM3의 16×64 bit와 32×32 bit는 총 폭이 같습니까?",
+        "answerChecklist": [
+          "1024 bit로 같음",
+          "channel과 pseudochannel 분류"
+        ],
+        "requiredConcepts": [
+          "hbm-stack-tsv-interface"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "32개 연속 4B 읽기가 32B sector 몇 개에 걸립니까?",
+        "answerChecklist": [
+          "정렬이면 4개",
+          "128B 유효"
+        ],
+        "requiredConcepts": [
+          "hbm-address-mapping-boundary"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "같은 32개를 stride 8로 읽으려면 왜 입력 길이를 늘려야 합니까?",
+        "answerChecklist": [
+          "마지막 index 248",
+          "최소 249 원소",
+          "64개 원본 밖 금지"
+        ],
+        "requiredConcepts": [
+          "hbm-address-mapping-boundary"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "행이 이미 열렸을 때와 다른 행을 읽을 때의 차이를 설명하세요.",
+        "answerChecklist": [
+          "rowbuffer",
+          "다른 행 precharge activate",
+          "read 뒤 반환"
+        ],
+        "requiredConcepts": [
+          "hbm-channel-bank-row-refresh"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "1024 bit×8 Gb/s/pin을 바이트 단위로 계산하세요.",
+        "answerChecklist": [
+          "1024GB/s",
+          "1.024TB/s",
+          "이론상 상한"
+        ],
+        "requiredConcepts": [
+          "hbm-stack-tsv-interface"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "768B/1.024 TB/s =0.75 ns를 응답 지연으로 쓸 수 없는 이유는 무엇입니까?",
+        "answerChecklist": [
+          "포화 처리량 비율",
+          "요청, 행 접근, 왕복 전송과 대기 시간은 별도로 계산한다."
+        ],
+        "requiredConcepts": [
+          "hbm-channel-bank-row-refresh"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "32 sectors가 HBM 명령 32개와 같지 않은 이유는 무엇입니까?",
+        "answerChecklist": [
+          "cachehit",
+          "병합",
+          "burst와 쓰기 정책",
+          "계층 차이"
+        ],
+        "requiredConcepts": [
+          "hbm-address-mapping-boundary"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "148B offset으로 channel 번호를 계산할 수 있습니까?",
+        "answerChecklist": [
+          "추가적인 주소 매핑 정보가 필요하다.",
+          "공개 안 되면 미확정",
+          "stride 실측"
+        ],
+        "requiredConcepts": [
+          "hbm-address-mapping-boundary"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "적층 높이와 용량·대역폭·지연을 분리해 판정하세요.",
+        "answerChecklist": [
+          "높이만으로 대역폭 두 배 아님",
+          "외부 폭과 pin 속도",
+          "pointer chasing 지연 제약"
+        ],
+        "requiredConcepts": [
+          "hbm-stack-tsv-interface"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Synopsys HBM3 PHY ·interface features",
+        "href": "https://www.synopsys.com/designware-ip/interface-ip/hbm/hbm3-phy.html",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "Synopsys HBM3 PHY ·interface features",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "NVIDIA vectorAdd·3f1c509·52 행",
+        "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "NVIDIA vectorAdd·3f1c509·52 행",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      },
+      {
+        "title": "Synopsys HBM3 Controller ·command scheduling",
+        "href": "https://www.synopsys.com/designware-ip/interface-ip/hbm/hbm3-controller.html",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "Controller가 관리하는 channel·bank와 메모리 명령 지원 범위를 확인합니다.",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      },
+      {
+        "title": "AMD CDNA4 Architecture 2258402-C·11 쪽",
+        "href": "https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/white-papers/amd-cdna-4-architecture-whitepaper.pdf",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "MI350 계열의 메모리 구성은 해당 SKU 공식 수치에 한정합니다.",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      },
+      {
+        "title": "Synopsys HBM4 PHY·2026-10-04 확인",
+        "href": "https://www.synopsys.com/designware-ip/interface-ip/hbm/hbm4-phy.html",
+        "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
+        "contribution": "HBM4의 2048비트 인터페이스와 64개 32비트 pseudo-channel을 확인합니다.",
+        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
+        "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/financial-products-and-claims": {
+    "coreIdea": "상품 이름보다 지급 청구권과 돈의 재원, 갚는 상대방과 손실 조건을 읽어야 예금·대출·펀드·보험·연금을 같은 기준으로 비교할 수 있습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "deposit-insurance",
+        "role": "예금 보호의 기본 목적을 이어받아 실제 합산 범위를 비교합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "financial-product-claim-map",
+        "role": "금융상품을 판매 창구 대신 법적 지급자·지급 조건·손실 부담·중도 인출 조건으로 구분하는 방법입니다."
+      },
+      {
+        "id": "loan-repayment-schedule",
+        "role": "동일한 연이율에서도 남은 원금이 줄어드는 시점에 따라 이자와 월별 현금 부담이 달라지는 구조입니다."
+      },
+      {
+        "id": "retirement-wrapper-risk",
+        "role": "급여 산식을 약속하는 DB와 적립액·운용 결과가 급여에 반영되는 DC 및 개인 계좌의 법적 포장을 구별하는 틀입니다."
+      },
+      {
+        "id": "structured-note-conditional-payoff",
+        "role": "발행자의 채무에 참여율·수익 상한·가격 문턱 등 파생 조건을 결합해 만기 지급액을 바꾸는 구조입니다."
+      },
+      {
+        "id": "money-market-fund-claim",
+        "role": "단기 금융자산 수익을 받는 펀드 지분으로서 예금 지급 약속과 다른 손실·현금화 조건을 가지는 구조입니다."
+      },
+      {
+        "id": "target-date-glide-path",
+        "role": "목표 연도에 맞춰 주식과 채권 등 자산 배분을 바꾸는 펀드 운용 경로입니다."
+      },
+      {
+        "id": "reit-cashflow-claim",
+        "role": "부동산과 관련 금융에서 생긴 수입으로 부채·운영·투자를 지출한 뒤 주주에게 현금을 분배하는 구조입니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "financial-product-claim-map",
+        "sectionId": "names",
+        "intuition": "금융상품을 판매 창구 대신 법적 지급자·지급 조건·손실 부담·중도 인출 조건으로 구분하는 방법입니다.",
+        "workedExample": "같은 1000만 원이라도 예금 1040만 원 약속과 자산 운용 결과 900만 원은 다른 권리입니다.",
+        "boundary": "예금·채권·주식·펀드의 세부 정본을 대체하지 않으며 실제 상품은 설명서와 관할법으로 확인합니다."
+      },
+      {
+        "id": "loan-repayment-schedule",
+        "sectionId": "mechanism",
+        "intuition": "동일한 연이율에서도 남은 원금이 줄어드는 시점에 따라 이자와 월별 현금 부담이 달라지는 구조입니다.",
+        "workedExample": "1000만 원 연6%를 1년 만기상환하면 이자60만 원, 월원금균등·월0.5% 가정이면 32만5000원입니다.",
+        "boundary": "월별 날짜·수수료·변동금리 재설정·중도상환 비용을 생략한 계산입니다."
+      },
+      {
+        "id": "retirement-wrapper-risk",
+        "sectionId": "source",
+        "intuition": "급여 산식을 약속하는 DB와 적립액·운용 결과가 급여에 반영되는 DC 및 개인 계좌의 법적 포장을 구별하는 틀입니다.",
+        "workedExample": "DC 적립금1000만 원이900만 원이면 지급재원이 줄지만 DB의 약정급여는 같은 손실만큼 자동 감소하지 않습니다.",
+        "boundary": "DB도 지급자 건전성과 적립 부족 위험이 있고 국가별 보장·인출·세금 규칙이 다릅니다."
+      },
+      {
+        "id": "structured-note-conditional-payoff",
+        "sectionId": "source",
+        "intuition": "발행자의 채무에 참여율·수익 상한·가격 문턱 등 파생 조건을 결합해 만기 지급액을 바꾸는 구조입니다.",
+        "workedExample": "1000만 원·50%참여·10%상한에서 지수+30%여도1100만 원입니다. 별도60%문턱 가정에서는61%→1060만,59%→590만입니다.",
+        "boundary": "ELS/DLS와 ELB/DLB의 약정·발행자 부도·중도매각을 구분하고 예시는 실제 발행 조건으로 취급하지 않습니다."
+      },
+      {
+        "id": "money-market-fund-claim",
+        "sectionId": "limits",
+        "intuition": "단기 금융자산 수익을 받는 펀드 지분으로서 예금 지급 약속과 다른 손실·현금화 조건을 가지는 구조입니다.",
+        "workedExample": "1000만 원의 MMF 지분이995만 원이 되면5만 원 손실이며 같은 판매 창구의 예금보호로 메우지 않습니다.",
+        "boundary": "고정·변동 NAV와 유동성 수수료는 유형과 관할에 따라 다르며 짧은 만기가 원금 보증은 아닙니다."
+      },
+      {
+        "id": "target-date-glide-path",
+        "sectionId": "source",
+        "intuition": "목표 연도에 맞춰 주식과 채권 등 자산 배분을 바꾸는 펀드 운용 경로입니다.",
+        "workedExample": "주식비중80%와40%에서 주가−20%·채권0%를 가정하면 손실은 각각16%와8%입니다.",
+        "boundary": "동일 목표 연도라도 배분과 보수가 다르고 은퇴소득·원금을 보장하지 않으며 연금계좌의 제도와 구별합니다."
+      },
+      {
+        "id": "reit-cashflow-claim",
+        "sectionId": "limits",
+        "intuition": "부동산과 관련 금융에서 생긴 수입으로 부채·운영·투자를 지출한 뒤 주주에게 현금을 분배하는 구조입니다.",
+        "workedExample": "가정한 임대료100−운영30−이자20−수선25=잔여현금25입니다.",
+        "boundary": "배당의 법적 기준과 세무상 이익은 단순 현금 잔여와 다르며 차입·자산매각으로 보충한 지급의 지속성을 따로 검토합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 금융상품의 지급 청구권 지도",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "financial-product-claim-map"
+        ]
+      },
+      {
+        "label": "02 · 대출의 상환 일정과 총이자",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "loan-repayment-schedule"
+        ]
+      },
+      {
+        "label": "03 · 연금의 지급 약속과 계좌 자산 위험",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "retirement-wrapper-risk"
+        ]
+      },
+      {
+        "label": "04 · 구조화증권의 조건부 지급과 발행자 위험",
+        "relation": "1000만 원·50%참여·10%상한에서 지수+30%여도1100만 원입니다. 별도60%문턱 가정에서는61%→1060만,59%→590만입니다.",
+        "concepts": [
+          "structured-note-conditional-payoff"
+        ]
+      },
+      {
+        "label": "05 · MMF의 단기자산 지분과 환매 위험",
+        "relation": "1000만 원의 MMF 지분이995만 원이 되면5만 원 손실이며 같은 판매 창구의 예금보호로 메우지 않습니다.",
+        "concepts": [
+          "money-market-fund-claim"
+        ]
+      },
+      {
+        "label": "06 · 타깃데이트펀드의 배분 변화",
+        "relation": "주식비중80%와40%에서 주가−20%·채권0%를 가정하면 손실은 각각16%와8%입니다.",
+        "concepts": [
+          "target-date-glide-path"
+        ]
+      },
+      {
+        "label": "07 · 리츠의 비용 이후 지급 재원",
+        "relation": "가정한 임대료100−운영30−이자20−수선25=잔여현금25입니다.",
+        "concepts": [
+          "reit-cashflow-claim"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "1000만 원 연4% 1년 예금의 세전 지급은?",
+        "answerChecklist": [
+          "1040만 원",
+          "지급이행 조건"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "financial-product-claim-map"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "만기상환1000만 원 연6%의 원리금은?",
+        "answerChecklist": [
+          "1060만 원",
+          "이자60만"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "loan-repayment-schedule"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "창구와 실제 지급자를 구별해야 하는 이유는?",
+        "answerChecklist": [
+          "판매수수료",
+          "법적청구대상",
+          "실제 자산 보관"
+        ],
+        "sectionId": "black-box",
+        "requiredConcepts": [
+          "financial-product-claim-map"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "연금계좌 안의 TDF에서 주식80%와40%, 주가−20%·채권0%의 손실을 비교하세요.",
+        "answerChecklist": [
+          "−16%와−8%",
+          "배분 변화 경로",
+          "계좌와 상품 구분",
+          "목표일 원금보장 아님"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "retirement-wrapper-risk",
+          "target-date-glide-path"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "리츠 임대료100·비용30·이자20·수선25의 잔여현금은?",
+        "answerChecklist": [
+          "25",
+          "세무이익과 구별"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "reit-cashflow-claim"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "DB와 DC의1000→900 운용손실을 비교하세요.",
+        "answerChecklist": [
+          "DC 지급재원 감소",
+          "DB 급여가 자동동액감소 아님",
+          "지급자건전성"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "retirement-wrapper-risk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "월원금균등1000만·연6%의1년총이자를 계산하세요.",
+        "answerChecklist": [
+          "월0.5%",
+          "12+…+1=78",
+          "32만5000원"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "loan-repayment-schedule"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 은행의 예금9900만과 이자400만을 합산하세요.",
+        "answerChecklist": [
+          "1억300만",
+          "기본한도초과300만",
+          "적격예금 조건"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "financial-product-claim-map"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "지수30% 상승·참여50%·상한10%·원금1000만의 지급은?",
+        "answerChecklist": [
+          "계산15%",
+          "상한10%",
+          "1100만",
+          "발행자신용 별도"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "structured-note-conditional-payoff"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "1000만 원 MMF가995만 원이 되면 같은 은행 예금보호로 메울 수 있나요? 한국·미국·EU의 보호 기준과 구별하세요.",
+        "answerChecklist": [
+          "5만 원 시장손실",
+          "펀드 지분은 적격예금과 다름",
+          "각국 한도와 합산 단위",
+          "실제 상품 법적 분류"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "money-market-fund-claim",
+          "financial-product-claim-map"
+        ]
+      }
+    ]
+  },
+  "markets/securitization-and-tranches": {
+    "coreIdea": "유동화는 대출 현금흐름을 이전하고 손실을 받는 순서를 나누며, 전체 대출 손실 자체를 없애지는 않습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "residual-claim",
+        "role": "지급 우선순위 뒤 남는 몫을 이어받아 대출 손실의 순서를 비교합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "securitization-asset-transfer",
+        "role": "대출 등에서 받을 현금흐름의 권리를 별도 기구로 이전하고 그 권리를 바탕으로 증권을 발행하는 구조입니다."
+      },
+      {
+        "id": "securitization-loss-waterfall",
+        "role": "동일 자산에서 발생한 손실을 후순위에서 선순위로 정해진 순서에 따라 배분하는 구조입니다."
+      },
+      {
+        "id": "securitization-correlation-risk",
+        "role": "여러 대출이 공통 경기·가격 충격에 의존하면 함께 부도나서 후순위 완충을 넘어 선순위까지 손실이 닿을 수 있는 위험입니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "securitization-asset-transfer",
+        "sectionId": "names",
+        "intuition": "대출 등에서 받을 현금흐름의 권리를 별도 기구로 이전하고 그 권리를 바탕으로 증권을 발행하는 구조입니다.",
+        "workedExample": "대출100억 원을 별도 기구에 넘기고 투자자의 매수대금으로 원래 보유자에게 지급합니다.",
+        "boundary": "수금 업무와 법적 소유는 다르며 진정한 이전·도산격리의 효력은 계약과 준거법에 따릅니다."
+      },
+      {
+        "id": "securitization-loss-waterfall",
+        "sectionId": "mechanism",
+        "intuition": "동일 자산에서 발생한 손실을 후순위에서 선순위로 정해진 순서에 따라 배분하는 구조입니다.",
+        "workedExample": "70·20·10억 원 구조에서 손실35억 원은 후순위10·중순위20·선순위5로 분배됩니다.",
+        "boundary": "이자·비용·조기상환·지급중단 조건을 제외한 최종 원금 모형이며 총손실은 줄지 않습니다."
+      },
+      {
+        "id": "securitization-correlation-risk",
+        "sectionId": "limits",
+        "intuition": "여러 대출이 공통 경기·가격 충격에 의존하면 함께 부도나서 후순위 완충을 넘어 선순위까지 손실이 닿을 수 있는 위험입니다.",
+        "workedExample": "손실35억 원이 완충30억 원을 넘어 선순위70억 원에5억 원 손실을 만듭니다.",
+        "boundary": "대출 수가 많다는 사실만으로 독립 손실이나 분산 효과를 보장할 수 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 유동화의 자산 이전",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "securitization-asset-transfer"
+        ]
+      },
+      {
+        "label": "02 · 유동화의 손실 배분 순서",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "securitization-loss-waterfall"
+        ]
+      },
+      {
+        "label": "03 · 유동화의 동시 부도 위험",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "securitization-correlation-risk"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "대출100억 원 유동화에서 자산과 매수대금 방향은?",
+        "answerChecklist": [
+          "대출권리 별도기구",
+          "투자자대금 원보유자",
+          "수금업무 구별"
+        ],
+        "sectionId": "black-box",
+        "requiredConcepts": [
+          "securitization-asset-transfer"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "70·20·10의 지급 순서와 손실 순서는?",
+        "answerChecklist": [
+          "지급70부터",
+          "손실10부터"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "securitization-loss-waterfall"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "대출100억 원을 선순위70·중순위20·후순위10으로 나눴을 때 손실8억 원을 배분하세요.",
+        "answerChecklist": [
+          "후순위8",
+          "후순위잔여2",
+          "총손실8"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "securitization-loss-waterfall"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은70·20·10 구조에서 손실15억 원이 나면 각 순위의 손실과 남은 원금은 얼마인가요?",
+        "answerChecklist": [
+          "후순위10억 원을 모두 잃어 남은 원금은0입니다.",
+          "중순위가 다음5억 원을 잃어15억 원이 남고 선순위70억 원은 이 가정에서 손실이 없습니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "securitization-loss-waterfall"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "대출권리를 별도 기구에 넘긴 뒤 원래 은행이 수금한다면 수금업무와 자산소유권은 어떻게 다른가요?",
+        "answerChecklist": [
+          "관리업무",
+          "법적권리",
+          "수금돈 별도보관"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "securitization-asset-transfer"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "조기상환은 원금손실 없이 무엇을 바꾸나요?",
+        "answerChecklist": [
+          "이자수취",
+          "재투자 시점"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "securitization-loss-waterfall"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "손실35억 원일 때 선순위 손실률을 구하세요.",
+        "answerChecklist": [
+          "10+20+5",
+          "5/70=7.14%"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "securitization-loss-waterfall"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "100개 대출을 묶어도 분산이 약한 반례는?",
+        "answerChecklist": [
+          "같은 집값·고용",
+          "동시부도",
+          "공통요인"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "securitization-correlation-risk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "각 트랜치5% 보유를 계산하고 후순위5억과 비교하세요.",
+        "answerChecklist": [
+          "3.5+1+0.5=5",
+          "다른 손실모양",
+          "보증아님"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "securitization-loss-waterfall"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "법적이전과 동시부도를 함께 검토해야 하는 이유는?",
+        "answerChecklist": [
+          "원보유자도산 분리",
+          "자산손실은 남음",
+          "처분·수금권 확인"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "securitization-asset-transfer"
+        ]
+      }
+    ]
+  },
+  "banking/repo-and-collateral-funding": {
+    "coreIdea": "레포는 증권 매매와 되사기를 결합해 짧은 현금을 구하는 계약이며 가격·헤어컷·만기 연장 실패가 조달액을 바꿉니다.",
+    "assumedKnowledge": [
+      {
+        "id": "bank-balance-sheet",
+        "role": "자산과 지급 의무의 두 장부로 담보 조달을 읽습니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "repo-repurchase-cashflow",
+        "role": "증권을 현금과 교환한 뒤 약정한 미래 가격에 되사는 계약의 경제적 단기 담보조달 구조입니다."
+      },
+      {
+        "id": "repo-haircut-funding",
+        "role": "담보 시장가치에서 일정 비율을 공제해 현금 조달액을 정하고 가격과 공제율 변화에 따라 부족액을 계산하는 방식입니다."
+      },
+      {
+        "id": "repo-rollover-risk",
+        "role": "자산의 보유기간보다 짧은 자금계약을 반복할 때 연장 거절로 원금을 즉시 갚아야 하는 위험입니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "repo-repurchase-cashflow",
+        "sectionId": "names",
+        "intuition": "증권을 현금과 교환한 뒤 약정한 미래 가격에 되사는 계약의 경제적 단기 담보조달 구조입니다.",
+        "workedExample": "100억 원 증권에95억 원을 조달하고 연3.65%·365일 가정에서 하루 뒤95억95만 원을 냅니다.",
+        "boundary": "명칭은 관점에 따라 달라지며 법적 소유권·반환·재사용은 준거법과 계약을 확인합니다."
+      },
+      {
+        "id": "repo-haircut-funding",
+        "sectionId": "mechanism",
+        "intuition": "담보 시장가치에서 일정 비율을 공제해 현금 조달액을 정하고 가격과 공제율 변화에 따라 부족액을 계산하는 방식입니다.",
+        "workedExample": "100억×95%=95억, 가격90억·헤어컷10%이면 허용81억이 되어95억 차입 대비14억이 부족합니다.",
+        "boundary": "누적 이자·최소이체액·담보 적격성·처분 비용에 따라 실제 요구액은 달라집니다."
+      },
+      {
+        "id": "repo-rollover-risk",
+        "sectionId": "limits",
+        "intuition": "자산의 보유기간보다 짧은 자금계약을 반복할 때 연장 거절로 원금을 즉시 갚아야 하는 위험입니다.",
+        "workedExample": "95억 차입의 연장이 거절되고 증권을90억에만 팔면 원금5억과 별도 이자가 부족합니다.",
+        "boundary": "담보가 있어도 매각가격이나 새 대출을 보장하지 않으며 동시 부도·법적 상계 위험이 남습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 레포의 매도와 환매 현금흐름",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "repo-repurchase-cashflow"
+        ]
+      },
+      {
+        "label": "02 · 레포 헤어컷과 조달액",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "repo-haircut-funding"
+        ]
+      },
+      {
+        "label": "03 · 레포의 만기 연장 위험",
+        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "concepts": [
+          "repo-rollover-risk"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "100억 담보·5% 헤어컷의 조달액은?",
+        "answerChecklist": [
+          "95억",
+          "가치공제5억"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "repo-haircut-funding"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "처음과 만기에 증권·현금은 어떻게 움직이나요?",
+        "answerChecklist": [
+          "증권매도 현금수취",
+          "만기 현금지급 증권반환"
+        ],
+        "sectionId": "black-box",
+        "requiredConcepts": [
+          "repo-repurchase-cashflow"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "95억·연3.65%·365일의 하루이자는?",
+        "answerChecklist": [
+          "95만원",
+          "환매95억95만원"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "repo-repurchase-cashflow"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "담보90억·공제5%에서95억 차입 부족액은?",
+        "answerChecklist": [
+          "허용85.5억",
+          "현금9.5억"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "repo-haircut-funding"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 거래가 레포와 역레포인 이유는?",
+        "answerChecklist": [
+          "매도후환매 관점",
+          "매수후재매도 관점"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "repo-repurchase-cashflow"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "중앙은행 매입이 현금에 미치는 방향은?",
+        "answerChecklist": [
+          "거래상대 자금수취",
+          "준비금 일시증가",
+          "만기반대"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "repo-repurchase-cashflow"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "담보90억·공제10%이면 현금 부족액은?",
+        "answerChecklist": [
+          "허용81억",
+          "14억"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "repo-haircut-funding"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "5% 헤어컷과105% 담보비율을 비교하세요.",
+        "answerChecklist": [
+          "100/95=105.26%",
+          "분모다름"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "repo-haircut-funding"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "95억 차입 연장실패·담보매각90억의 원금공백은?",
+        "answerChecklist": [
+          "5억",
+          "별도이자",
+          "연장비보장"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "repo-rollover-risk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "담보발행자와 차입자의 동시부도에서 남는 위험은?",
+        "answerChecklist": [
+          "담보가격도 하락",
+          "매각손실",
+          "상계·재사용 법적조건"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "repo-rollover-risk"
+        ]
+      }
+    ]
+  },
+  "markets/covered-calls-and-income-funds": {
+    "coreIdea": "주식 보유와 콜 매도로 받은 프리미엄은 일부 하락을 메우는 대가이며 상승을 제한합니다. 분배금과 NAV를 합쳐 총수익을 계산해야 합니다.",
+    "entryNote": "100주·매수가100·행사가105·프리미엄3은 (가정)입니다. 2026-10-04 확인한 OIC 설명과 실제 QYLD 설명서·19a 공시를 같은 장부에 적용합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "option-right-obligation",
+        "role": "콜 매수자의 선택권과 매도자의 이행 의무를 이어받습니다."
+      },
+      {
+        "id": "fund-share-vs-note",
+        "role": "펀드 재산 지분과 발행자 채무의 차이를 실제 ETF의 내부 계약에 적용합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "covered-call-payoff",
+        "role": "보유 주식에 대응하는 콜을 팔아 받은 대가만큼 일부 하락을 메우고 행사가격 위의 상승분을 넘기는 손익 구조입니다."
+      },
+      {
+        "id": "income-distribution-total-return",
+        "role": "투자자가 받은 현금과 남은 자산 가치를 더해 투자 성과를 계산하고 분배율·자본환급 분류와 구분하는 방법입니다."
+      },
+      {
+        "id": "covered-call-coverage-choice",
+        "role": "보유 수량 중 얼마나 어떤 가격과 만기로 팔 의무를 걸었는지가 프리미엄과 상승 참여를 바꾸는 계약 선택입니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "covered-call-payoff",
+        "sectionId": "mechanism",
+        "intuition": "보유 주식에 대응하는 콜을 팔아 받은 대가만큼 일부 하락을 메우고 행사가격 위의 상승분을 넘기는 손익 구조입니다.",
+        "workedExample": "100주·매수가100·행사가105·수취3에서 주가90/103/120의 손익은 −700/+600/+800달러입니다.",
+        "boundary": "만기까지 대응 수량을 유지한 비용 전 계산이며 조기 배정·재매도·주가 급락이 남습니다."
+      },
+      {
+        "id": "income-distribution-total-return",
+        "sectionId": "mechanism",
+        "intuition": "투자자가 받은 현금과 남은 자산 가치를 더해 투자 성과를 계산하고 분배율·자본환급 분류와 구분하는 방법입니다.",
+        "workedExample": "NAV100→88·분배12이면 재투자 없는 총수익은0%입니다. 19a의0.0022+0.1745=0.1767은 분배 원천의 추정입니다.",
+        "boundary": "자본환급 세무 분류만으로 경제적 손실을 확정할 수 없고 재투자·보수·환율·세금 조건을 맞춰야 합니다."
+      },
+      {
+        "id": "covered-call-coverage-choice",
+        "sectionId": "comparison",
+        "intuition": "보유 수량 중 얼마나 어떤 가격과 만기로 팔 의무를 걸었는지가 프리미엄과 상승 참여를 바꾸는 계약 선택입니다.",
+        "workedExample": "200주에100주 콜 하나를 팔면50%이고 주가120에서 주당손익20−7.5+1.5=14달러로100%매도의8과 다릅니다.",
+        "boundary": "0DTE의 재매도 경로와 거래비용·초과매도·기초자산 불일치·합성계약 상대방 위험을 확인해야 합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 커버드콜의 제한된 상승과 남는 하락",
+        "relation": "100주·매수가100·행사가105·수취3에서 주가90/103/120의 손익은 −700/+600/+800달러입니다.",
+        "concepts": [
+          "covered-call-payoff"
+        ]
+      },
+      {
+        "label": "02 · 분배금과 총수익의 구분",
+        "relation": "NAV100→88·분배12이면 재투자 없는 총수익은0%입니다. 19a의0.0022+0.1745=0.1767은 분배 원천의 추정입니다.",
+        "concepts": [
+          "income-distribution-total-return"
+        ]
+      },
+      {
+        "label": "03 · 커버드콜의 매도 비율·행사가·만기",
+        "relation": "200주에100주 콜 하나를 팔면50%이고 주가120에서 주당손익20−7.5+1.5=14달러로100%매도의8과 다릅니다.",
+        "concepts": [
+          "covered-call-coverage-choice"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "주가90에서100주 커버드콜의 손익을 구하세요.",
+        "answerChecklist": [
+          "주식−1000",
+          "프리미엄+300",
+          "합계−700"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "covered-call-payoff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "주가103에서 행사 여부와 전체 손익을 구하세요.",
+        "answerChecklist": [
+          "만기 행사가105미달",
+          "주식+300",
+          "수취+300",
+          "전체+600"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "covered-call-payoff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "주가120에서 주식만 보유와 커버드콜을 비교하세요.",
+        "answerChecklist": [
+          "주식만+2000",
+          "커버드콜+800",
+          "차이−1200"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "covered-call-payoff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "손익분기 주가와 주가0의 손실을 계산하세요.",
+        "answerChecklist": [
+          "97",
+          "10000−300=9700 손실",
+          "전액 하락 보호 아님"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "covered-call-payoff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "NAV100→88·분배12의 재투자 없는 총수익을 구하세요.",
+        "answerChecklist": [
+          "(88+12−100)/100=0%",
+          "분배율과 구별"
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "income-distribution-total-return"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "19a 공시의0.0022와0.1745는 무엇을 더한 값인가요?",
+        "answerChecklist": [
+          "순투자소득",
+          "자본환급 추정",
+          "합계0.1767",
+          "최종 세무 신고자료 아님"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "income-distribution-total-return"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "200주에100주분 콜 하나의120일 때 주당손익을 계산하세요.",
+        "answerChecklist": [
+          "50%매도",
+          "주당프리미엄1.5",
+          "넘긴상승7.5",
+          "20−7.5+1.5=14"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "covered-call-coverage-choice"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "QYLD 지수 콜과 예시 개별주식 콜의 결제를 비교하세요.",
+        "answerChecklist": [
+          "설명서의현금결제",
+          "만기일행사",
+          "개별주식조기배정 가능",
+          "실제만기전청산규칙"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "covered-call-coverage-choice"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "달러 총수익8%·달러당 원화−10%의 원화수익을 구하고 비용 중복을 피하세요.",
+        "answerChecklist": [
+          "1.08×.9−1=−2.8%",
+          "NAV에 반영된 보수 재차감 금지",
+          "투자자 세금 별도"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "income-distribution-total-return"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "100%·50%·0DTE·ELN의 현금 지급을 같은 수익으로 비교하면 왜 틀리나요?",
+        "answerChecklist": [
+          "매도수량",
+          "만기별경로",
+          "상승포기",
+          "발행상대위험",
+          "같은기간총수익 필요"
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "covered-call-coverage-choice",
+          "income-distribution-total-return"
+        ]
+      }
+    ]
+  },
+  "blockchain/robinhood-chain-settlement": {
+    "entryLevel": true,
+    "entryNote": "같은 작은 사례를 10단계에서 추적합니다. 공식 문서는 2026-10-04 확인했고 가정 수치·개발 명세·실제 배포를 구분합니다.",
+    "coreIdea": "빠른 전송 영수증, Ethereum 자료 확정, 브리지 인출 집행, 토큰의 법적 권리를 별도로 연결합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "robinhood-staged-finality",
+        "role": "빠른 실행 확인과 Ethereum 자료 확정은 다른 단계입니다."
+      },
+      {
+        "id": "robinhood-canonical-withdrawal",
+        "role": "인출 실행 가능 상태와 지급 완료 상태를 나눕니다."
+      },
+      {
+        "id": "robinhood-stock-token-rights",
+        "role": "온체인 토큰의 수량과 기초 증권에 대한 법적 권리는 다릅니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "robinhood-staged-finality",
+        "sectionId": "names",
+        "intuition": "빠른 실행 확인과 Ethereum 자료 확정은 다른 단계입니다.",
+        "workedExample": "A100→A90·B10의 영수증을 L1 batch게시·확정과 연결합니다.",
+        "boundary": "통상 지연은 지급기한 보장이 아니며 상품 권리도 별도입니다."
+      },
+      {
+        "id": "robinhood-canonical-withdrawal",
+        "sectionId": "source",
+        "intuition": "인출 실행 가능 상태와 지급 완료 상태를 나눕니다.",
+        "workedExample": "B가5를 인출하면 CONFIRMED 뒤 L1 execute 성공에서만 수령5로 옮깁니다.",
+        "boundary": "SDK 참조 코드와 라이브 배포 bytecode의 동일성을 주장하지 않습니다."
+      },
+      {
+        "id": "robinhood-stock-token-rights",
+        "sectionId": "comparison",
+        "intuition": "온체인 토큰의 수량과 기초 증권에 대한 법적 권리는 다릅니다.",
+        "workedExample": "Stock Token raw balance10은 RHJ 채무증권이며 multiplier에 따른 비율을 읽습니다.",
+        "boundary": "가상 TOK의 canonical 인출 지원을 Stock Token에 확대하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Robinhood Chain의 단계별 확정",
+        "relation": "A100→A90·B10의 영수증을 L1 batch게시·확정과 연결합니다.",
+        "concepts": [
+          "robinhood-staged-finality"
+        ]
+      },
+      {
+        "label": "Robinhood Chain의 인출 대기와 집행",
+        "relation": "B가5를 인출하면 CONFIRMED 뒤 L1 execute 성공에서만 수령5로 옮깁니다.",
+        "concepts": [
+          "robinhood-canonical-withdrawal"
+        ]
+      },
+      {
+        "label": "Stock Token의 법적 권리와 수량",
+        "relation": "Stock Token raw balance10은 RHJ 채무증권이며 multiplier에 따른 비율을 읽습니다.",
+        "concepts": [
+          "robinhood-stock-token-rights"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "A가 100개 중 10개를 B에게 전송한 뒤 잔액은 얼마인가요?",
+        "answerChecklist": [
+          "토큰 잔액은 A 90개, B 10개입니다.",
+          "TOK와 gas를 내는 ETH는 다른 자산이므로 ETH 수수료를 TOK 10개에서 자동 차감하지 않습니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "robinhood-staged-finality"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "B가 5개를 인출했다면 L1 지급 전에 그 수량을 어디에 기록하나요?",
+        "answerChecklist": [
+          "B의 L2 가용 잔액은 5개이고 나머지 5개는 인출 진행 중으로 기록합니다.",
+          "L1 실행이 완료되어 수령할 때까지 같은 5개를 이미 받은 L1 잔액으로 중복 계산하지 않습니다."
+        ],
+        "sectionId": "picture",
+        "requiredConcepts": [
+          "robinhood-canonical-withdrawal"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "18자리 단위의 TOK10개를 어떤 정수로 전송하나요?",
+        "answerChecklist": [
+          "소수 자릿수 18이라는 가정에서 10 × 10^18을 정수 수량으로 사용합니다.",
+          "실제 전송 대상 토큰의 decimals를 확인해야 하며 표시 수량과 raw 정수를 구분합니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "robinhood-staged-finality"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "약 13분의 확정과 약 7일의 인출 대기는 왜 다른가요?",
+        "answerChecklist": [
+          "약 13분은 L1에 게시한 Ethereum 블록의 확정에 관한 안내입니다.",
+          "약 7일은 canonical 인출 메시지의 challenge period이며 이후 L1 claim도 따로 남습니다."
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "robinhood-staged-finality",
+          "robinhood-canonical-withdrawal"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "SDK의 CONFIRMED와 EXECUTED를 구분하세요.",
+        "answerChecklist": [
+          "CONFIRMED는 해당 경로에서 실행할 수 있는 메시지 상태를 뜻합니다.",
+          "EXECUTED는 이미 집행된 상태이므로 실행 가능성과 실제 L1 지급 완료를 구분합니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "robinhood-canonical-withdrawal"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Stock Token10개가 기초 주식 10주의 직접 소유권과 다른 이유는 무엇인가요?",
+        "answerChecklist": [
+          "Stock Token은 Robinhood Assets (Jersey) Limited가 발행한 채무증권의 경제적 노출입니다.",
+          "기초 주식 발행자에 대한 직접적인 법적·수익적 권리를 주는 구조와 구분해야 합니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "robinhood-stock-token-rights"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "입금 재실행의 7일과 인출 대기의 7일을 하나로 안내하면 무엇이 틀리나요?",
+        "answerChecklist": [
+          "입금 쪽 7일은 L2 실행 leg가 실패했을 때 retryable을 재실행할 수 있는 기간입니다.",
+          "인출 쪽은 주장에 대한 challenge와 L1 claim 경로로 진행하므로 같은 대기 안내로 합칠 수 없습니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "robinhood-canonical-withdrawal"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "SDK 코드만으로 실제 배포와 동일하다고 결론낼 수 있나요?",
+        "answerChecklist": [
+          "고정한 SDK는 공개 메시지 처리 경로를 읽는 참조 코드입니다.",
+          "실제 체인의 배포 주소·설정·버전과 대조해야 라이브 동작에 같은 조건을 적용할 수 있습니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "robinhood-canonical-withdrawal"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "raw balance10이 그대로인 Stock Token의 표시 수량이 바뀔 수 있는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "문서의 uiMultiplier가 바뀌면 raw balance가 같아도 표시하는 기초 자산 환산량이 달라질 수 있습니다.",
+          "토큰 raw 수량, decimals와 화면의 경제적 환산 수량을 구분합니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "robinhood-stock-token-rights"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "빠른 bridge로 5개를 받을 때 추가로 확인할 조건은 무엇인가요?",
+        "answerChecklist": [
+          "유동성 제공자, 메시지 검증, 별도 bridge 계약 및 목적지 지급 조건을 확인합니다.",
+          "추가 수수료와 실패 책임이 있으며 빠른 선지급만으로 canonical 인출 조건이 사라지는 것은 아닙니다."
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "robinhood-canonical-withdrawal",
+          "robinhood-stock-token-rights"
+        ]
+      }
+    ]
+  },
+  "blockchain/glamsterdam-block-execution": {
+    "entryLevel": true,
+    "entryNote": "같은 작은 사례를 10단계에서 추적합니다. 공식 문서는 2026-10-04 확인했고 가정 수치·개발 명세·실제 배포를 구분합니다.",
+    "coreIdea": "ePBS의 입찰·공개 책임과 BAL의 거래별 상태 자료를 나누어 같은 블록의 지급 조건·가용성·실행 정확성을 검증합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "glamsterdam-bal-state-diff",
+        "role": "거래 뒤 중간값을 알면 다음 작업의 준비와 검증을 나눌 수 있습니다."
+      },
+      {
+        "id": "glamsterdam-epbs-bid-payload",
+        "role": "내용에 대한 서명한 약속과 실제 내용을 따로 전달합니다."
+      },
+      {
+        "id": "glamsterdam-payload-execution-validation",
+        "role": "도착 확인과 실제 상태 전이 검증은 다른 검사입니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "glamsterdam-bal-state-diff",
+        "sectionId": "names",
+        "intuition": "거래 뒤 중간값을 알면 다음 작업의 준비와 검증을 나눌 수 있습니다.",
+        "workedExample": "X100→90→95를 index1/value90,index2/value95로 연결합니다.",
+        "boundary": "목록을 받는 것만으로 실제 실행의 정확성이 증명되지는 않습니다."
+      },
+      {
+        "id": "glamsterdam-epbs-bid-payload",
+        "sectionId": "source",
+        "intuition": "내용에 대한 서명한 약속과 실제 내용을 따로 전달합니다.",
+        "workedExample": "0.01ETH=10,000,000Gwei bid의 지급 여력과 payload 내용을 각각 확인합니다.",
+        "boundary": "진행 중 명세의 snapshot이며 메인넷 배포 사양으로 단정하지 않습니다."
+      },
+      {
+        "id": "glamsterdam-payload-execution-validation",
+        "sectionId": "comparison",
+        "intuition": "도착 확인과 실제 상태 전이 검증은 다른 검사입니다.",
+        "workedExample": "실행으로 만든 X90·95의 목록hash가 header와 다르면 InvalidBlock입니다.",
+        "boundary": "실측 처리량과 가용성·보안 가정은 별도 검증이 필요합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "BAL의 거래별 상태 변화",
+        "relation": "X100→90→95를 index1/value90,index2/value95로 연결합니다.",
+        "concepts": [
+          "glamsterdam-bal-state-diff"
+        ]
+      },
+      {
+        "label": "ePBS의 입찰과 실행 자료",
+        "relation": "0.01ETH=10,000,000Gwei bid의 지급 여력과 payload 내용을 각각 확인합니다.",
+        "concepts": [
+          "glamsterdam-epbs-bid-payload"
+        ]
+      },
+      {
+        "label": "자료 도착과 실행 검증의 분리",
+        "relation": "실행으로 만든 X90·95의 목록hash가 header와 다르면 InvalidBlock입니다.",
+        "concepts": [
+          "glamsterdam-payload-execution-validation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "X100에−10과+5를 순서대로 적용한 중간값과 최종값은 얼마인가요?",
+        "answerChecklist": [
+          "T1이 X의 100에서 10을 빼면 중간값은 90입니다.",
+          "T2는 그 90에 5를 더하므로 최종값은 95이며 처음 값 100을 다시 읽어서는 안 됩니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "glamsterdam-bal-state-diff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "두 거래 블록의 사전·거래·사후 처리 인덱스는 무엇인가요?",
+        "answerChecklist": [
+          "두 거래 사례에서 사전 처리는 0, T1과 T2는 각각 1과 2입니다.",
+          "거래 이후 시스템 처리는 n+1 = 3이며 거래 인덱스와 구분합니다."
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "glamsterdam-bal-state-diff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "0.01 ETH는 몇 Gwei인가요?",
+        "answerChecklist": [
+          "1 ETH = 10^9 Gwei이므로 0.01 ETH = 10,000,000 Gwei입니다.",
+          "입찰 가격은 설명용 가정이며 실제 시장의 입찰 통계가 아닙니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "glamsterdam-epbs-bid-payload"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Bid와 Envelope가 각각 담는 것은 무엇인가요?",
+        "answerChecklist": [
+          "Bid는 내용 hash, slot과 부모 연결, 지급 가치 등의 약속을 담습니다.",
+          "Envelope는 실제 execution payload를 전달하므로 약속과 자료 도착을 구분합니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "glamsterdam-epbs-bid-payload"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "접근 목록의 hash가 실제 실행과 다르면 어떻게 하나요?",
+        "answerChecklist": [
+          "실행해 계산한 목록 hash와 제출된 header의 hash가 다르면 참조 구현은 InvalidBlock으로 거절합니다.",
+          "접근 목록에 95라고 적혀 있다는 사실만으로 T1·T2 실행을 검증한 것으로 취급하지 않습니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "glamsterdam-bal-state-diff",
+          "glamsterdam-payload-execution-validation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "PTC의 자료 도착 확인과 X=95의 실행 검증을 구분하세요.",
+        "answerChecklist": [
+          "PTC는 약속한 payload의 적시 공개와 가용성에 관한 표를 만듭니다.",
+          "실행 결과 X=95의 유효성은 거래와 상태를 실제 검증하는 별도 조건입니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "glamsterdam-epbs-bid-payload",
+          "glamsterdam-payload-execution-validation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "T2가 처음 값 100에서 105를 만들면 어떤 의존성을 놓친 것인가요?",
+        "answerChecklist": [
+          "T2는 T1 이후의 90을 입력으로 사용해야 하므로 처음 값 100에서 105를 만들면 순서 의존성을 놓칩니다.",
+          "중간 상태와 실제 실행 결과를 검증해 같은 칸의 갱신을 연결해야 합니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "glamsterdam-bal-state-diff",
+          "glamsterdam-payload-execution-validation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "T2가 별도 Y50에 5를 더하면 결과와 남은 병렬화 조건은 무엇인가요?",
+        "answerChecklist": [
+          "저장 칸만 본 단순 결과는 X=90, Y=55입니다.",
+          "공통 수수료 수령 계정 등 생략한 공유 상태도 있어 두 칸이 달라졌다는 이유만으로 전체 독립 실행을 보장하지 않습니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "glamsterdam-bal-state-diff"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "두 거래이므로 처리량도 두 배라는 주장은 왜 근거가 부족한가요?",
+        "answerChecklist": [
+          "저장소 I/O·전송·접근 목록 검증·공유 상태와 의존성 처리 비용이 남습니다.",
+          "같은 장비·클라이언트·블록 입력에서 시간을 나눠 측정해야 실제 처리량 개선을 말할 수 있습니다."
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "glamsterdam-bal-state-diff",
+          "glamsterdam-payload-execution-validation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "개발 명세의 구조를 메인넷 사양으로 그대로 쓰면 안 되는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "고정한 commit은 진행 중인 개발 명세이며 EIP 본문과 세부 구조가 다를 수 있습니다.",
+          "네트워크별 활성화 상태와 실제 배포 버전·설정을 별도로 확인해야 현재 규칙으로 사용할 수 있습니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "glamsterdam-epbs-bid-payload",
+          "glamsterdam-payload-execution-validation"
+        ]
+      }
+    ]
+  },
+  "ai/world-model-latent-planning": {
+    "coreIdea": "물체가 위치 0에 있고 목표는 2라고 합시다. 왼쪽 −1 또는 오른쪽 +1의 두 번 이동을 미리 비교하면 [+1,+1]이 목표에 닿습니다. 그러나 실제로는 한 번에 0.8만 움직였다면 계획을 새 관측에서 다시 계산해야 합니다. 월드모델은 행동에 따른 다음 상태를 예측하는 도구입니다. 예측을 만드는 모델, 후보를 고르는 계획기, 실제 행동을 실행하는 환경을 나누어 보면 이미지 생성과 로봇 행동 사이에 필요한 조건이 드러납니다. 이 숫자는 물리 단위를 생략한 설명용 1차원 가정입니다.",
+    "entryNote": "본문의 작은 숫자는 원리를 검산하기 위한 가정입니다. 공식 논문과 코드의 버전을 고정하고, 저자 실험과 이 글의 산술 검산을 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "image-to-world-transition-boundary",
+        "role": "보기 좋은 영상 생성과 행동에 따른 상태 예측이 서로 다른 계약임을 구분합니다."
+      },
+      {
+        "id": "world-state-representation-gate",
+        "role": "표현이 계획에 필요한 상태 차이를 보존하는지 확인합니다."
+      },
+      {
+        "id": "function-composition",
+        "role": "한 단계 예측을 다음 단계의 입력으로 연결합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "action-conditioned-latent-dynamics",
+        "role": "현재 관측을 숫자 표현으로 바꾼 뒤 후보 행동에 따른 다음 표현을 예측합니다."
+      },
+      {
+        "id": "world-model-receding-horizon-planning",
+        "role": "여러 행동 후보를 예측해 고르고 일부를 실행한 뒤 새 관측에서 다시 계획합니다."
+      },
+      {
+        "id": "latent-collapse-prevention",
+        "role": "모든 관측을 같은 값으로 압축하면 예측 오차가 작아도 행동 선택에 쓸 차이를 잃습니다."
+      },
+      {
+        "id": "world-model-planning-evaluation",
+        "role": "짧은 예측 오차와 실제 목표에 도달하는 능력을 서로 다른 실험으로 측정합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "action-conditioned-latent-dynamics",
+        "sectionId": "names",
+        "intuition": "현재 관측을 숫자 표현으로 바꾼 뒤 후보 행동에 따른 다음 표현을 예측합니다.",
+        "workedExample": "가정한 z=x, x′=x+a에서 시작 0에 행동 (+1,+1)을 넣으면 예측 끝점은 2입니다.",
+        "boundary": "한 차원 가정은 API 역할을 설명합니다. 실제 encoder의 표현이나 현실 동역학이 이 단순 식이라는 뜻은 아닙니다."
+      },
+      {
+        "id": "world-model-receding-horizon-planning",
+        "sectionId": "mechanism",
+        "intuition": "여러 행동 후보를 예측해 고르고 일부를 실행한 뒤 새 관측에서 다시 계획합니다.",
+        "workedExample": "목표 2에 대해 네 후보 비용은 16·4·4·0입니다. 첫 +1 뒤 실제 관측이 0.8이면 그 지점에서 다시 후보를 계산합니다.",
+        "boundary": "이 글의 H=2·K=1은 가정입니다. LeWM 부록 F.1의 H=5 전체 실행 설정과 동일하다고 주장하지 않습니다."
+      },
+      {
+        "id": "latent-collapse-prevention",
+        "sectionId": "comparison",
+        "intuition": "모든 관측을 같은 값으로 압축하면 예측 오차가 작아도 행동 선택에 쓸 차이를 잃습니다.",
+        "workedExample": "서로 다른 상태 −1·0·1을 모두 z=0으로 만들면 prediction loss는 0일 수 있지만 Gaussian 표현 제약은 충족하지 못합니다.",
+        "boundary": "SIGReg는 분포 제약을 통해 붕괴를 막으려는 설계입니다. 그 자체로 모든 행동 결과를 정확히 예측하는 보장은 아닙니다."
+      },
+      {
+        "id": "world-model-planning-evaluation",
+        "sectionId": "limits",
+        "intuition": "짧은 예측 오차와 실제 목표에 도달하는 능력을 서로 다른 실험으로 측정합니다.",
+        "workedExample": "첫 실제 이동이 0.8씩이면 두 행동을 관측 없이 실행한 끝점은 1.6입니다. 모델의 예측 끝점 2와 다릅니다.",
+        "boundary": "짧은 rollout의 좋은 순위가 긴 계획의 성공 순위를 보장하지 않습니다. 데이터 분포·horizon·계산 예산을 고정해 비교합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "JEPA는 표현을 예측하고 계획기는 행동을 고른다",
+        "relation": "현재 관측을 숫자 표현으로 바꾼 뒤 후보 행동에 따른 다음 표현을 예측합니다.",
+        "concepts": [
+          "action-conditioned-latent-dynamics"
+        ]
+      },
+      {
+        "label": "후보를 고르는 동안 모델 가중치는 고정한다",
+        "relation": "여러 행동 후보를 예측해 고르고 일부를 실행한 뒤 새 관측에서 다시 계획합니다.",
+        "concepts": [
+          "world-model-receding-horizon-planning"
+        ]
+      },
+      {
+        "label": "예측 오차 0도 모든 표현이 같다면 쓸모없다",
+        "relation": "모든 관측을 같은 값으로 압축하면 예측 오차가 작아도 행동 선택에 쓸 차이를 잃습니다.",
+        "concepts": [
+          "latent-collapse-prevention"
+        ]
+      },
+      {
+        "label": "예측이 정확해도 너무 먼 목표의 순위를 못 매길 수 있다",
+        "relation": "짧은 예측 오차와 실제 목표에 도달하는 능력을 서로 다른 실험으로 측정합니다.",
+        "concepts": [
+          "world-model-planning-evaluation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "시작 0·목표 2·예측 x′=x+a에서 행동 (+1,+1)의 끝점과 비용을 구해 보세요.",
+        "answerChecklist": [
+          "예측 끝점은 0+1+1=2입니다.",
+          "마지막 목표 오차 제곱은 (2−2)²=0입니다."
+        ],
+        "requiredConcepts": [
+          "action-conditioned-latent-dynamics"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "같은 조건에서 행동 (−1,−1)과 (−1,+1)의 끝점 비용을 비교해 보세요.",
+        "answerChecklist": [
+          "(−1,−1)의 끝점은 −2이고 비용은 (−2−2)²=16입니다.",
+          "(−1,+1)의 끝점은 0이고 비용은 (0−2)²=4입니다."
+        ],
+        "requiredConcepts": [
+          "action-conditioned-latent-dynamics"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "첫 +1 행동의 실제 관측이 0.8이면 다음 계획을 왜 예측값 1에서 시작하지 않나요?",
+        "answerChecklist": [
+          "환경이 실제로 도달한 상태는 0.8이므로 새 관측을 기준으로 후보를 만들어야 합니다.",
+          "예측값 1을 그대로 사용하면 이미 생긴 모델 오차를 다음 계획에 계속 넘깁니다."
+        ],
+        "requiredConcepts": [
+          "world-model-receding-horizon-planning"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "이 글의 latent z=x 가정이 실제 이미지 encoder의 출력과 같다는 뜻인가요?",
+        "answerChecklist": [
+          "z=x는 행동·예측·비용의 역할을 손으로 계산하려는 한 차원 가정입니다.",
+          "실제 encoder는 학습한 여러 좌표를 만들며 각 좌표가 물리 위치와 직접 같지 않을 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "action-conditioned-latent-dynamics"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "모든 상태 −1·0·1을 z=0으로 만들면 prediction loss가 작은데도 왜 계획에 쓸 수 없나요?",
+        "answerChecklist": [
+          "미래와 목표의 표현도 모두 같아져 예측 오차를 0으로 만들 수 있습니다.",
+          "상태와 행동 결과의 차이를 잃어 후보를 구별할 정보가 없어집니다."
+        ],
+        "requiredConcepts": [
+          "latent-collapse-prevention"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "CEM에서 상위 후보 (+1,+1), (+1,−1)의 평균을 구하면 무엇이며 최적해 증명인가요?",
+        "answerChecklist": [
+          "각 시간 좌표의 평균은 (1,0)입니다.",
+          "선택한 후보로 샘플 분포를 갱신한 값이며 모든 행동 조합을 검사한 전역 최적성 증명은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "action-conditioned-latent-dynamics"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 H=2·K=1과 LeWM 부록 F.1의 H=5 전체 실행 설정은 어떻게 다른가요?",
+        "answerChecklist": [
+          "여기서는 두 행동을 예측하고 첫 행동 하나 뒤 새 관측으로 다시 계획합니다.",
+          "부록의 해당 설정은 다섯 행동을 실행한 뒤 재계획하므로 관측과 보정 간격이 다릅니다."
+        ],
+        "requiredConcepts": [
+          "world-model-receding-horizon-planning"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "SIGReg로 표현 붕괴를 막았다는 사실만으로 모든 행동 결과를 정확히 예측한다고 말할 수 있나요?",
+        "answerChecklist": [
+          "분포 제약은 모든 입력을 같은 표현으로 만드는 붕괴를 억제하려는 조건입니다.",
+          "정확한 동역학·데이터 밖 일반화·목표 도달은 별도의 학습과 평가가 필요합니다."
+        ],
+        "requiredConcepts": [
+          "latent-collapse-prevention"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "실제 이동이 매번 0.8일 때 두 +1 행동을 관측 없이 실행하면 모델 예측과 얼마나 다른가요?",
+        "answerChecklist": [
+          "모델은 끝점 2를 예측하지만 실제 끝점은 0.8+0.8=1.6입니다.",
+          "목표와 0.4만큼 차이가 나며 이 간단한 오차도 재관측의 필요성을 보여 줍니다."
+        ],
+        "requiredConcepts": [
+          "world-model-planning-evaluation"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "짧은 rollout의 예측 오차가 낮은 모델이 장기 계획에서도 더 좋다고 비교하려면 어떤 실험이 필요한가요?",
+        "answerChecklist": [
+          "같은 데이터·환경·horizon·후보 수와 계산 예산에서 실제 목표 성공률을 비교해야 합니다.",
+          "짧은 표현 오차와 장기 계획 순위가 다를 수 있으므로 열린 반복 실행의 결과를 별도로 기록해야 합니다."
+        ],
+        "requiredConcepts": [
+          "world-model-planning-evaluation"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "LeWM official implementation · 8edfeb3",
+        "href": "https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/jepa.py",
+        "problem": "관측·action 후보를 latent rollout과 cost로 연결",
+        "contribution": "예측을 다음 입력으로 연결하고 마지막 표현을 목표와 비교",
+        "assumptions": "encoder·action 간 시간 정렬과 학습된 표현을 유지",
+        "evidenceScope": "공식 코드 경로를 대조했으며 이 작업에서 학습·로봇 실행은 재현하지 않음",
+        "notClaim": "1차원 수치는 API 역할을 검산하는 가정이다. 학습된 encoder 출력이나 실측 성공률이 아니다.",
+        "sectionId": "paper-lewm-code"
+      },
+      {
+        "title": "LeWorldModel · arXiv 2603.19312v1",
+        "href": "https://arxiv.org/html/2603.19312v1",
+        "problem": "end-to-end latent prediction의 표현 붕괴와 복잡한 loss 설계",
+        "contribution": "prediction loss와 Gaussian 분포 regularizer의 결합",
+        "assumptions": "offline 데이터가 담은 상태·행동과 표현 차원·정규화 조건",
+        "evidenceScope": "Two-Room·Reacher·Push-T·OGBench-Cube, 단일 L40S의 저자 실험",
+        "notClaim": "본문은 일부 행동 후 재계획을 일반적으로 설명하지만 부록 F.1의 설정은 H=5 전체를 실행한다. 이 글의 H=2·K=1 가정과 다르다.",
+        "sectionId": "paper-lewm"
+      },
+      {
+        "title": "V-JEPA 2 · arXiv 2506.09985",
+        "href": "https://arxiv.org/abs/2506.09985",
+        "problem": "관측 중심 표현을 이해·예측·행동에 연결",
+        "contribution": "비디오 표현을 학습하고 action-conditioned 모델로 후속 학습",
+        "assumptions": "action과 관측의 대응, 배포 환경의 시각·동역학 조건",
+        "evidenceScope": "공식 논문에 보고된 비디오·로봇 과제의 저자 실험",
+        "notClaim": "비디오 예측 성능 자체가 모든 로봇의 closed-loop 성공을 보장하지 않는다.",
+        "sectionId": "paper-vjepa2"
+      },
+      {
+        "title": "The Planning Limits of Latent World Models · arXiv 2609.39235",
+        "href": "https://arxiv.org/abs/2609.39235",
+        "problem": "예측이 계획의 행동 순위에 유용한 거리와 실패 범위",
+        "contribution": "목표 거리·rollout 길이·표현과 피드백을 나눠 비교",
+        "assumptions": "해당 frozen backbone·predictor·목표 분포에 한정",
+        "evidenceScope": "Meta-World·BridgeData V2 기반의 저자 실험; 2026-09-30 공개 preprint",
+        "notClaim": "다른 제약·subgoal·value를 쓴 계획기까지 같은 수치 한계라고 단정하지 않는다.",
+        "sectionId": "paper-planning-limits"
+      }
+    ]
+  },
+  "crypto/prover-memory-and-verifier-cost": {
+    "entryLevel": true,
+    "entryNote": "작은 수치와 자원 크기는 설명용 가정입니다. 2026-10-04 원문을 대조했으며 1~10절의 같은 사례에서 보장·실패·비용을 계산합니다.",
+    "coreIdea": "증명기를 고를 때는 생성 도중 함께 남는 버퍼의 바이트와 검증자가 실행하는 암호 연산의 가스를 별도 계산해야 합니다. 짧은 증거나 빠른 커널 하나가 전체 생성 비용과 보안 가정을 대신하지 않습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "proof-memory-live-set",
+        "role": "실행 시점마다 함께 남은 버퍼의 바이트를 더하여 메모리 최고점을 계산합니다."
+      },
+      {
+        "id": "msm-window-memory-tradeoff",
+        "role": "MSM의 창을 넓히면 묶음 수는 줄어도 버킷 수가 커져 메모리가 늘 수 있습니다."
+      },
+      {
+        "id": "evm-proof-verification-cost",
+        "role": "증거 검증의 암호 원시 연산 가스와 전체 거래 비용을 나누어 셉니다."
+      },
+      {
+        "id": "proof-wrapper-security-boundary",
+        "role": "다른 증명으로 감싸면 최종 검증 비용과 함께 생성 비용·키·보안 가정이 바뀝니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "proof-memory-live-set",
+        "sectionId": "mechanism",
+        "intuition": "실행 시점마다 함께 남은 버퍼의 바이트를 더하여 메모리 최고점을 계산합니다.",
+        "workedExample": "256MiB 원본, 두 2GiB 평가표, 512MiB−32B 해시가 겹치면 4.75GiB−32B입니다.",
+        "boundary": "장치별 용량, 패딩, 할당기와 런타임 여유를 따로 반영합니다."
+      },
+      {
+        "id": "msm-window-memory-tradeoff",
+        "sectionId": "source",
+        "intuition": "MSM의 창을 넓히면 묶음 수는 줄어도 버킷 수가 커져 메모리가 늘 수 있습니다.",
+        "workedExample": "ICICLE2.8.0 모델의 가정에서 창 16은 416MiB이고 창 18은 456MiB입니다.",
+        "boundary": "자료형과 배치·사전계산·버전이 바뀌면 같은 수치를 재사용하지 않습니다."
+      },
+      {
+        "id": "evm-proof-verification-cost",
+        "sectionId": "comparison",
+        "intuition": "증거 검증의 암호 원시 연산 가스와 전체 거래 비용을 나누어 셉니다.",
+        "workedExample": "EIP1108의 4페어링은 181,000gas, 공개입력 3개 가정까지 더하면 199,450gas입니다.",
+        "boundary": "calldata·호출·메모리·기본 거래 비용을 포함한 실측값은 아닙니다."
+      },
+      {
+        "id": "proof-wrapper-security-boundary",
+        "sectionId": "limits",
+        "intuition": "다른 증명으로 감싸면 최종 검증 비용과 함께 생성 비용·키·보안 가정이 바뀝니다.",
+        "workedExample": "해시 기반 STARK를 Groth16으로 감싸면 바깥쪽에는 곡선과 준비 가정이 추가됩니다.",
+        "boundary": "안쪽의 해시 기반 보안만으로 바깥 곡선이 양자 안전하다고 할 수 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 · 증명 생성의 동시 생존 메모리",
+        "relation": "256MiB 원본, 두 2GiB 평가표, 512MiB−32B 해시가 겹치면 4.75GiB−32B입니다.",
+        "concepts": [
+          "proof-memory-live-set"
+        ]
+      },
+      {
+        "label": "02 · MSM 창 크기와 메모리의 교환 관계",
+        "relation": "ICICLE2.8.0 모델의 가정에서 창 16은 416MiB이고 창 18은 456MiB입니다.",
+        "concepts": [
+          "msm-window-memory-tradeoff"
+        ]
+      },
+      {
+        "label": "03 · EVM 증거 검증 원시 연산 비용",
+        "relation": "EIP1108의 4페어링은 181,000gas, 공개입력 3개 가정까지 더하면 199,450gas입니다.",
+        "concepts": [
+          "evm-proof-verification-cost"
+        ]
+      },
+      {
+        "label": "04 · 증명 압축 wrapper의 비용과 보안 가정",
+        "relation": "해시 기반 STARK를 Groth16으로 감싸면 바깥쪽에는 곡선과 준비 가정이 추가됩니다.",
+        "concepts": [
+          "proof-wrapper-security-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "2²⁰행·64열·값당 4바이트인 원본 실행표의 바이트와 MiB를 구하세요.",
+        "answerChecklist": [
+          "1,048,576×64×4=268,435,456바이트입니다.",
+          "MiB=2²⁰바이트이므로 256MiB입니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "proof-memory-live-set"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 표를 8배로 평가하고 입력·출력 버퍼를 동시에 유지하면 원본 포함 용량은 얼마인가요?",
+        "answerChecklist": [
+          "한 평가표는 8×256MiB=2GiB입니다.",
+          "두 평가표 4GiB와 원본 0.25GiB를 합해 4.25GiB입니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "proof-memory-live-set"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "L=8,388,608잎의 완전 이진 해시 트리에 노드당 32바이트를 쓰면 얼마인가요?",
+        "answerChecklist": [
+          "노드 수는 2L−1=16,777,215입니다.",
+          "32를 곱하면 536,870,880바이트로 512MiB보다 32바이트 작습니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "proof-memory-live-set"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "평가 버퍼 하나를 해시 생성 전에 해제하면 가정한 최고점이 어떻게 바뀌나요?",
+        "answerChecklist": [
+          "원본·두 평가표·해시가 겹치면 4.75GiB−32B입니다.",
+          "2GiB 버퍼가 겹치지 않으면 2.75GiB−32B로 내려갑니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "proof-memory-live-set"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "창 16의 MSM 가정에서 두 생존 단계 416MiB와 192MiB는 어떻게 나오나요?",
+        "answerChecklist": [
+          "스칼라 32MiB와 인덱스 384MiB를 합하면 416MiB입니다.",
+          "스칼라 32MiB·점 64MiB·버킷 96MiB는 192MiB이며 최고점은 416MiB입니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "msm-window-memory-tradeoff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "EIP1108 요율로 페어링쌍 4개만 검사하면 원시 연산 가스는 얼마인가요?",
+        "answerChecklist": [
+          "34,000×4+45,000을 계산합니다.",
+          "결과는 181,000gas이며 전체 거래 비용은 별도입니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "evm-proof-verification-cost"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "창을 18로 넓힐 때 묶음은 15개로 줄어도 메모리가 커지는 이유를 계산하세요.",
+        "answerChecklist": [
+          "버킷은 96×15×2¹⁸바이트=360MiB가 됩니다.",
+          "두 단계는 32+360=392MiB와 32+64+360=456MiB여서 최고점이 456MiB입니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "msm-window-memory-tradeoff"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "공개 입력당 ECMUL·ECADD 한 번씩이라는 가정에서 입력 3개를 8개로 늘리면 가스가 얼마나 늘어나나요?",
+        "answerChecklist": [
+          "한 입력은 6,000+150=6,150gas입니다.",
+          "5개 추가는 30,750gas이며 원시 합은 199,450에서 230,200gas로 바뀝니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "evm-proof-verification-cost"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "페어링 내부 입력 768바이트를 proof 크기나 전체 거래 가스와 동일시하면 왜 틀리나요?",
+        "answerChecklist": [
+          "한 쌍의 192바이트에 4를 곱한 내부 호출 자료의 양입니다.",
+          "전송 proof와 calldata·호출·메모리·기본 거래 비용은 다른 항목입니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "evm-proof-verification-cost"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "두 GPU의 메모리를 합한 용량과 곡선 wrapper의 작은 검증비용을 선택할 때 무엇이 추가되나요?",
+        "answerChecklist": [
+          "장치별로 동시에 들어갈 버퍼, 복제 자료와 장치 간 전송을 확인해야 합니다.",
+          "wrapper는 추가 생성 시간·키·준비·곡선 가정을 가져오므로 안쪽 해시의 양자 안전성을 그대로 물려받지 않습니다."
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "proof-wrapper-security-boundary"
+        ]
+      }
+    ],
+    "papers": []
+  },
+  "crypto/quantum-computing-and-cryptographic-risk": {"coreIdea": "진폭의 간섭으로 계산을 설계한다는 원리와 논리·물리 자원의 차이를 알아야 Shor·Grover가 암호에 주는 영향을 판단할 수 있습니다.", "entryLevel": true, "entryNote": "네 후보·15의 인수분해를 손으로 계산합니다. 장치 자원은 논문의 가정이며 실측과 구분합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "quantum-amplitude-measurement", "role": "결과를 모두 읽는 대신 원하는 결과의 진폭이 커지도록 계산합니다."}, {"id": "grover-amplitude-amplification", "role": "음수 진폭도 확률로 제곱하기 전에 다른 진폭과 더하고 뺄 수 있습니다."}, {"id": "shor-order-finding-cryptography", "role": "어려운 문제를 아무 수나 대입하는 일에서 반복 규칙을 알아내는 일로 바꿉니다."}, {"id": "quantum-logical-physical-resource-boundary", "role": "장부 속 오류 없는 작업 칸과 실제 잡음 있는 소자는 다릅니다."}], "conceptExplanations": [{"id": "quantum-amplitude-measurement", "sectionId": "names", "intuition": "결과를 모두 읽는 대신 원하는 결과의 진폭이 커지도록 계산합니다.", "workedExample": "네 진폭이 각각 0.5이면 각 확률은 0.25이며 합은 1입니다.", "boundary": "한 번 측정하면 한 결과만 얻습니다. 잡음이 있는 장치의 빈도는 이상적 확률과 다를 수 있습니다.", "scientificGrounding": {"observable": "같은 회로를 준비하고 반복 측정한 00·01·10·11의 빈도와 위상 변화 뒤의 분포", "unitsAndDimensions": "진폭·확률은 무차원, 반복 횟수는 shots, 게이트 시간은 s이며 서로 바꾸어 쓰지 않습니다.", "modelAssumptions": "본문은 잡음·손실이 없는 순수 상태와 이상적인 단위 변환을 가정합니다.", "measurementExample": "초기 상태를 400회 측정하면 각 결과의 기대 횟수는 100회입니다. 실제로 정확히 100회씩 나와야 하는 것은 아닙니다.", "invalidConditions": "결맞음 손실·게이트 오차·측정 오차가 있거나 기저가 다르면 같은 이상적 분포를 그대로 적용하지 않습니다.", "referenceFrame": "두 큐비트의 계산 기저를 00·01·10·11 순서로 고정합니다. 상대 위상은 이 기저 표현의 진폭 사이에서 비교합니다."}}, {"id": "grover-amplitude-amplification", "sectionId": "mechanism", "intuition": "음수 진폭도 확률로 제곱하기 전에 다른 진폭과 더하고 뺄 수 있습니다.", "workedExample": "[-0.5,0.5,0.5,0.5]의 평균 0.25에서 각 값을 0.5−기존 값으로 바꾸면 [1,0,0,0]입니다.", "boundary": "네 후보 중 정답 하나인 이상적 사례입니다. 반복을 계속하면 성공 확률이 다시 작아질 수 있고 실제 판정 회로 비용도 듭니다."}, {"id": "shor-order-finding-cryptography", "sectionId": "source", "intuition": "어려운 문제를 아무 수나 대입하는 일에서 반복 규칙을 알아내는 일로 바꿉니다.", "workedExample": "15에 대해 2의 거듭제곱 나머지는 1·2·4·8·1이고 주기 4입니다. gcd(4−1,15)=3, gcd(4+1,15)=5입니다.", "boundary": "작은 주기를 손으로 계산한 예는 큰 암호를 실제 양자 장치로 해독한 실험이 아닙니다. 홀수 주기나 자명한 결과면 다른 시도가 필요합니다."}, {"id": "quantum-logical-physical-resource-boundary", "sectionId": "comparison", "intuition": "장부 속 오류 없는 작업 칸과 실제 잡음 있는 소자는 다릅니다.", "workedExample": "논리 큐비트 1,200개라는 회로 추정만으로 물리 소자 1,200개가 충분하다고 결론낼 수 없습니다.", "boundary": "자원 추정, 소형 장치 실험, 상용 암호 해독 성공은 서로 다른 증거입니다."}], "conceptStages": [{"label": "진폭·간섭·측정", "relation": "결과를 모두 읽는 대신 원하는 결과의 진폭이 커지도록 계산합니다.", "concepts": ["quantum-amplitude-measurement"]}, {"label": "Grover의 진폭 증폭", "relation": "음수 진폭도 확률로 제곱하기 전에 다른 진폭과 더하고 뺄 수 있습니다.", "concepts": ["grover-amplitude-amplification"]}, {"label": "Shor의 주기 찾기와 암호 위험", "relation": "어려운 문제를 아무 수나 대입하는 일에서 반복 규칙을 알아내는 일로 바꿉니다.", "concepts": ["shor-order-finding-cryptography"]}, {"label": "논리 자원과 물리 장치의 구분", "relation": "장부 속 오류 없는 작업 칸과 실제 잡음 있는 소자는 다릅니다.", "concepts": ["quantum-logical-physical-resource-boundary"]}], "exercises": [{"level": "basic", "question": "네 후보의 진폭이 모두 0.5일 때 각 측정 확률과 전체 합을 구하세요.", "answerChecklist": ["각 확률은 0.5의 제곱인 0.25입니다.", "네 확률을 더하면 1이며 한 번의 측정 결과는 한 후보입니다."], "sectionId": "names", "requiredConcepts": ["quantum-amplitude-measurement"]}, {"level": "basic", "question": "첫 후보의 진폭만 −0.5로 바꾸면 곧바로 정답 확률이 높아지나요?", "answerChecklist": ["반전 직후 절댓값 제곱은 모두 0.25로 같습니다.", "뒤의 간섭 변환이 상대 부호 차이를 확률 차이로 바꿉니다."], "sectionId": "mechanism", "requiredConcepts": ["quantum-amplitude-measurement", "grover-amplitude-amplification"]}, {"level": "basic", "question": "부호 반전 뒤 평균 0.25에 대해 반사한 네 진폭을 계산하세요.", "answerChecklist": ["첫 진폭은 2×0.25−(−0.5)=1입니다.", "나머지 세 진폭은 2×0.25−0.5=0입니다."], "sectionId": "mechanism", "requiredConcepts": ["grover-amplitude-amplification"]}, {"level": "basic", "question": "15와 밑 2의 작은 사례에서 주기와 두 비자명한 인수를 구하세요.", "answerChecklist": ["2의 0·1·2·3·4제곱 나머지는 1·2·4·8·1로 주기는 4입니다.", "2의 2제곱은 4이고 gcd(3,15)=3, gcd(5,15)=5입니다."], "sectionId": "source", "requiredConcepts": ["shor-order-finding-cryptography"]}, {"level": "basic", "question": "논리 큐비트 수만 나온 표에서 실제 칩 크기를 읽으려면 무엇이 더 필요한가요?", "answerChecklist": ["물리 오류율·오류 정정 코드·연결 구조를 확인합니다.", "게이트 시간·오류 예산·추가 작업 공간까지 맞춰야 실행 시간을 비교할 수 있습니다."], "sectionId": "comparison", "requiredConcepts": ["quantum-logical-physical-resource-boundary"]}, {"level": "basic", "question": "양자내성 알고리즘을 적용한 일반 서버에는 반드시 광자 송수신기가 필요한가요?", "answerChecklist": ["PQC는 기존 컴퓨터에서 다른 수학적 난제를 사용하는 암호입니다.", "QKD는 양자 신호를 다루는 별도 물리 장비를 요구하는 키 분배 방식입니다."], "sectionId": "limits", "requiredConcepts": ["shor-order-finding-cryptography"]}, {"level": "advanced", "question": "네 후보 사례에서 증폭 한 번으로 정답 진폭이 1이 된 뒤 두 번째 반복을 하면 왜 더 좋지 않나요?", "answerChecklist": ["다시 부호를 뒤집으면 [−1,0,0,0]이고 평균은 −0.25입니다.", "반사 뒤 [0.5,−0.5,−0.5,−0.5]라서 정답 확률은 다시 0.25입니다."], "sectionId": "mechanism", "requiredConcepts": ["grover-amplitude-amplification"]}, {"level": "advanced", "question": "두 연구의 물리 큐비트 수와 시간 중 작은 값만 골라 하나의 사양으로 합쳐도 되나요?", "answerChecklist": ["오류율·소자 종류·연결·정정 일정이 달라 같은 기계의 수치가 아닙니다.", "동일한 조건으로 다시 산정하지 않고 최소값을 합치면 존재하지 않는 장치를 만들게 됩니다."], "sectionId": "comparison", "requiredConcepts": ["quantum-logical-physical-resource-boundary"]}, {"level": "advanced", "question": "공개 설정의 비밀 값을 삭제했다는 사실만으로 KZG의 양자 안전성을 보장할 수 있나요?", "answerChecklist": ["공개된 군 원소에 대해 이산로그를 푸는 공격 능력은 별도로 남습니다.", "초기 비밀의 삭제는 고전 설정 절차의 신뢰 문제를 줄이지만 Shor의 위협을 제거하지 않습니다."], "sectionId": "limits", "requiredConcepts": ["shor-order-finding-cryptography"]}, {"level": "advanced", "question": "미래에 강한 양자컴퓨터가 생길 경우 과거 기록의 기밀과 앞으로의 서명 권한은 어떻게 다르게 위험해지나요?", "answerChecklist": ["보관된 암호문과 당시 공개 키 교환 기록은 추후 해독의 대상이 될 수 있습니다.", "노출된 서명 공개키에서 개인키를 계산할 수 있다면 새로운 서명 위조가 가능해져 권한 이전과 복구도 검토해야 합니다."], "sectionId": "limits", "requiredConcepts": ["shor-order-finding-cryptography", "quantum-logical-physical-resource-boundary"]}], "papers": [{"title": "Babbush 외 · 2026 ECDLP 자원 추정", "href": "https://arxiv.org/abs/2603.28846", "problem": "양자 공격의 자원 규모와 블록체인 노출 경로를 연결합니다.", "contribution": "두 회로의 공간·연산 절충과 하드웨어 가정에 따른 자원 추정을 제시합니다.", "assumptions": "secp256k1·지정 오류율·연결 구조·오류 정정 및 회로 모형을 고정합니다.", "evidenceScope": "§II.2의 논리 자원과 조건부 물리 자원 추정입니다.", "notClaim": "현재 장치에서 상용 키를 해독한 실험이나 위협 발생 연도 예측이 아닙니다.", "sectionId": "comparison"},
+      {
+        "title": "Grover · A fast quantum mechanical algorithm for database search",
+        "href": "https://arxiv.org/abs/quant-ph/9605043",
+        "problem": "비구조적인 후보 검색에서 정답 판정 질의 수를 줄일 수 있는지 다룹니다.",
+        "contribution": "위상 반전과 평균 반사의 반복으로 정답 진폭을 높이는 검색 절차를 제시합니다.",
+        "assumptions": "정답 판정의 양자 질의가 가능하고 필요한 결맞음 연산을 구현할 수 있다고 놓습니다.",
+        "evidenceScope": "네 후보의 진폭 [−0.5,0.5,0.5,0.5]와 반사 결과를 원문의 연산에 대입합니다.",
+        "notClaim": "질의 수 개선만으로 실제 장치 시간이나 모든 암호의 보안 수치가 같은 비율로 줄어든다는 뜻은 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Shor · Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms",
+        "href": "https://arxiv.org/abs/quant-ph/9508027",
+        "problem": "고전적으로 어려운 인수분해와 이산로그를 다른 계산 모형에서 효율적으로 푸는 문제입니다.",
+        "contribution": "모듈러 연산의 주기 정보와 푸리에 변환·측정, 고전 후처리를 결합하는 절차입니다.",
+        "assumptions": "충분히 정확한 양자 연산·작업 공간·반복 실행을 할 수 있으며 얻은 후보를 검산합니다.",
+        "evidenceScope": "15·밑2·첫 공간256에서 주기4와 측정64, 최대공약수3·5를 연결한 교육용 계산입니다.",
+        "notClaim": "작은 수의 계산은 현재 하드웨어에서 상용 공개키 암호를 해독한 결과가 아닙니다.",
+        "sectionId": "source"
+      },
+]},
+  "crypto/ml-kem-and-noisy-equations": {"coreIdea": "공통 곱의 상쇄로 작은 비트를 복원하고 재암호화로 캡슐을 검증한 뒤, 별도 인증된 프로토콜에서 공유 비밀을 사용합니다.", "entryLevel": true, "entryNote": "17로 나눈 작은 계산은 교육용입니다. FIPS203과 PQClean의 실제 파라미터를 뒤에서 구분합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "module-lwe-noisy-equations", "role": "비밀을 아는 쪽은 큰 공통 항을 지우지만 공개값만 보는 쪽은 오류가 섞인 관계를 풀어야 합니다."}, {"id": "ml-kem-noise-cancellation", "role": "서로 모르는 비밀을 쓰더라도 같은 큰 항을 만들 수 있어 그 차이만 읽습니다."}, {"id": "kem-encapsulation-and-rejection", "role": "수신자가 복원한 값을 그대로 믿지 않고 같은 캡슐이 재생성되는지 확인합니다."}], "conceptExplanations": [{"id": "module-lwe-noisy-equations", "sectionId": "names", "intuition": "비밀을 아는 쪽은 큰 공통 항을 지우지만 공개값만 보는 쪽은 오류가 섞인 관계를 풀어야 합니다.", "workedExample": "17로 나누는 장난감 계산에서 A=[[2,3],[4,1]], s=[1,2], e=[1,0]이면 t=[9,6]입니다.", "boundary": "두 차원의 작은 예는 손으로도 풀 수 있어 안전하지 않습니다. 실제 차원·분포·파라미터에 대한 계산 난도가 중요합니다."}, {"id": "ml-kem-noise-cancellation", "sectionId": "mechanism", "intuition": "서로 모르는 비밀을 쓰더라도 같은 큰 항을 만들 수 있어 그 차이만 읽습니다.", "workedExample": "u=[6,5], v=6에서 s·u=16을 빼면 mod17에서 7이고, 0보다 비트1의 중심8에 가깝습니다.", "boundary": "남은 오류가 너무 크거나 압축 오차가 허용 범위를 벗어나면 잘못 복원할 수 있습니다."}, {"id": "kem-encapsulation-and-rejection", "sectionId": "source", "intuition": "수신자가 복원한 값을 그대로 믿지 않고 같은 캡슐이 재생성되는지 확인합니다.", "workedExample": "ML-KEM-768은 1,184바이트 공개 키와 1,088바이트 캡슐로 32바이트 공유 비밀을 만듭니다.", "boundary": "길이·공개 키 등의 외부 입력 검사는 별도입니다. 암묵적 거절만으로 상대의 신원이나 전체 통신의 인증이 생기지 않습니다."}], "conceptStages": [{"label": "오류를 섞은 모듈 격자 방정식", "relation": "비밀을 아는 쪽은 큰 공통 항을 지우지만 공개값만 보는 쪽은 오류가 섞인 관계를 풀어야 합니다.", "concepts": ["module-lwe-noisy-equations"]}, {"label": "암호문에서 큰 항을 상쇄하고 비트 읽기", "relation": "서로 모르는 비밀을 쓰더라도 같은 큰 항을 만들 수 있어 그 차이만 읽습니다.", "concepts": ["ml-kem-noise-cancellation"]}, {"label": "키 캡슐화와 암묵적 거절", "relation": "수신자가 복원한 값을 그대로 믿지 않고 같은 캡슐이 재생성되는지 확인합니다.", "concepts": ["kem-encapsulation-and-rejection"]}], "exercises": [{"level": "basic", "question": "17로 나눈 계산에서 A의 첫 행 [2,3]과 s=[1,2], 오류1로 공개값 첫 성분을 구하세요.", "answerChecklist": ["2×1+3×2+1=9입니다.", "둘째 행에서는 4×1+1×2+0=6이므로 t=[9,6]입니다."], "sectionId": "case", "requiredConcepts": ["module-lwe-noisy-equations"]}, {"level": "basic", "question": "임시 벡터 r=[1,1]과 오류 e1=[0,1]일 때 u를 계산하세요.", "answerChecklist": ["전치 행렬의 곱은 [2+4,3+1]=[6,4]입니다.", "오류를 더하면 u=[6,5]이며 계산은 mod17입니다."], "sectionId": "mechanism", "requiredConcepts": ["ml-kem-noise-cancellation"]}, {"level": "basic", "question": "비트1을 중심8로 나타낼 때 v와 수신자의 상쇄 결과를 구하세요.", "answerChecklist": ["t·r+8=9+6+8=23이고 mod17에서 v=6입니다.", "s·u=1×6+2×5=16이라 6−16 mod17=7입니다."], "sectionId": "mechanism", "requiredConcepts": ["ml-kem-noise-cancellation"]}, {"level": "basic", "question": "작은 사례의 결과7을 비트1로 읽는 이유와 안전성의 한계를 설명하세요.", "answerChecklist": ["원 위 거리에서 7은 0보다 8에 가까워 비트1로 읽습니다.", "작은 차원·작은 수 예제이므로 보안 파라미터로 사용할 수 없습니다."], "sectionId": "mechanism", "requiredConcepts": ["module-lwe-noisy-equations", "ml-kem-noise-cancellation"]}, {"level": "basic", "question": "ML-KEM-768의 공개 키·캡슐·공유 비밀 길이는 각각 얼마인가요?", "answerChecklist": ["FIPS203 표3에서 공개 키 1,184바이트, 캡슐 1,088바이트입니다.", "공유 비밀은 32바이트이며 768이라는 이름은 비밀 키의 비트 길이가 아닙니다."], "sectionId": "comparison", "requiredConcepts": ["kem-encapsulation-and-rejection"]}, {"level": "basic", "question": "정상 길이 캡슐의 재암호화 결과가 다를 때 수신자가 어떤 값을 내보내나요?", "answerChecklist": ["비밀 z와 받은 캡슐에 결속한 대체 키를 선택합니다.", "내부 일치 여부를 그대로 반환하지 않으며 외부 프로토콜에서 이후 인증 검사를 해야 합니다."], "sectionId": "source", "requiredConcepts": ["kem-encapsulation-and-rejection"]}, {"level": "advanced", "question": "같은 사례에서 v에 더하는 오류가 −4로 바뀌면 복원 비트는 어떻게 바뀌나요?", "answerChecklist": ["원래 남은 값7에서4를 빼면3입니다.", "3은 중심8보다0에 가까워 비트0으로 잘못 읽어 오류 크기의 경계를 보여 줍니다."], "sectionId": "limits", "requiredConcepts": ["ml-kem-noise-cancellation"]}, {"level": "advanced", "question": "공개 키가 공격자의 것으로 바뀌었는데 ML-KEM 계산은 정상일 때 무엇이 실패하나요?", "answerChecklist": ["공유 비밀은 잘 만들어져도 의도한 상대와 공유했다는 보장이 없습니다.", "인증서·서명·사전 공유 신뢰 등으로 키와 상대의 신원을 결속해야 합니다."], "sectionId": "limits", "requiredConcepts": ["kem-encapsulation-and-rejection"]}, {"level": "advanced", "question": "수신자가 새 캡슐마다 같은 공개 키를 쓰는 것만으로 과거 세션의 전방 비밀성이 보장되나요?", "answerChecklist": ["장기 복호 비밀키가 나중에 유출되면 보관된 캡슐이 해독될 수 있습니다.", "임시 키 사용·삭제·인증된 프로토콜 구성이 전방 비밀성의 전제를 결정합니다."], "sectionId": "limits", "requiredConcepts": ["kem-encapsulation-and-rejection"]}, {"level": "advanced", "question": "표준을 구현한 저장소를 읽었다는 사실과 제품의 인증·부채널 안전성을 왜 구분해야 하나요?", "answerChecklist": ["코드 경로를 확인하는 일과 특정 빌드·장치의 검증 또는 인증은 다릅니다.", "난수·시간·전력 누출·오류 주입·입력 검사를 실제 실행 환경에서 별도로 평가해야 합니다."], "sectionId": "limits", "requiredConcepts": ["kem-encapsulation-and-rejection"]}]},
+  "crypto/post-quantum-signatures": {"coreIdea": "메시지에 결속한 응답을 공개 정보로 재구성하되 마스크·거절·힌트의 조건을 지키며, 해시 기반 서명의 다른 비용과 배포 경계까지 비교합니다.", "entryLevel": true, "entryNote": "작은 mod17 행렬과 길이4 해시 사슬은 교육용입니다. 표준 파라미터와 실제 고정 C 원문을 뒤에서 대조합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "ml-dsa-masked-response", "role": "검증자는 비밀을 받지 않고도 같은 약속과 메시지가 묶였는지 다시 계산합니다."}, {"id": "ml-dsa-rejection-and-hints", "role": "새 마스크를 썼다는 사실만으로 비밀이 가려지는 것은 아니어서 공개할 응답의 범위를 검사합니다."}, {"id": "slh-dsa-hash-tree-signatures", "role": "짧은 공개 루트 하나에 많은 서명용 요소를 묶되 각 요소의 사용 규칙이 필요합니다."}, {"id": "post-quantum-signature-deployment", "role": "서명 파일이 검증된다는 사실과 기존 권한을 모두 옮겼다는 사실은 다릅니다."}], "conceptExplanations": [{"id": "ml-dsa-masked-response", "sectionId": "mechanism", "intuition": "검증자는 비밀을 받지 않고도 같은 약속과 메시지가 묶였는지 다시 계산합니다.", "workedExample": "mod17 장난감에서 y=[2,1], c=1, s=[1,2]이면 z=[3,3]이고 Az−ct=[6,9]=Ay−ce입니다.", "boundary": "실제 ML-DSA는 큰 다항식·희소 challenge·높은 비트·hint와 거절을 사용합니다. 작은 c=1 사례 자체는 안전한 서명이 아닙니다."}, {"id": "ml-dsa-rejection-and-hints", "sectionId": "source", "intuition": "새 마스크를 썼다는 사실만으로 비밀이 가려지는 것은 아니어서 공개할 응답의 범위를 검사합니다.", "workedExample": "절댓값이4 미만이어야 하는 장난감 조건에서 [3,3]은 통과하고 [4,3]은 거절합니다.", "boundary": "장난감 임계값은 실제 표준의 상수가 아닙니다. 거절·난수·힌트 검사를 생략한 구현은 표준과 같은 보장을 주장할 수 없습니다."}, {"id": "slh-dsa-hash-tree-signatures", "sectionId": "comparison", "intuition": "짧은 공개 루트 하나에 많은 서명용 요소를 묶되 각 요소의 사용 규칙이 필요합니다.", "workedExample": "길이4의 장난감 해시 사슬에서 H²(x)를 보여 주면 검증자는 두 번 더 해시해 공개 끝값 H⁴(x)를 확인합니다.", "boundary": "사슬 하나는 안전한 다회용 서명이 아닙니다. 실제 SLH-DSA에는 checksum·FORS·WOTS+·hypertree와 주소 분리가 들어갑니다."}, {"id": "post-quantum-signature-deployment", "sectionId": "limits", "intuition": "서명 파일이 검증된다는 사실과 기존 권한을 모두 옮겼다는 사실은 다릅니다.", "workedExample": "ML-DSA-44 공개 키1,312바이트·서명2,420바이트와 SLH-DSA-128s 공개 키32바이트·서명7,856바이트의 배포 비용을 비교합니다.", "boundary": "서명 크기만으로 속도·가스·안전성을 순위 매기지 않습니다. 구현·파라미터·메시지·플랫폼 조건이 필요합니다."}], "conceptStages": [{"label": "ML-DSA의 가린 응답과 재구성", "relation": "검증자는 비밀을 받지 않고도 같은 약속과 메시지가 묶였는지 다시 계산합니다.", "concepts": ["ml-dsa-masked-response"]}, {"label": "서명 후보 거절과 제한된 힌트", "relation": "새 마스크를 썼다는 사실만으로 비밀이 가려지는 것은 아니어서 공개할 응답의 범위를 검사합니다.", "concepts": ["ml-dsa-rejection-and-hints"]}, {"label": "SLH-DSA의 해시 사슬과 인증 경로", "relation": "짧은 공개 루트 하나에 많은 서명용 요소를 묶되 각 요소의 사용 규칙이 필요합니다.", "concepts": ["slh-dsa-hash-tree-signatures"]}, {"label": "양자내성 서명 배포와 교체 경계", "relation": "서명 파일이 검증된다는 사실과 기존 권한을 모두 옮겼다는 사실은 다릅니다.", "concepts": ["post-quantum-signature-deployment"]}], "exercises": [{"level": "basic", "question": "비밀 [1,2]와 마스크 [2,1], challenge1의 장난감 응답 z를 계산하세요.", "answerChecklist": ["성분별로 더하면 z=[3,3]입니다.", "마스크는 매 시도 새로 선택하며 이 두 차원 계산은 실제 서명 파라미터가 아닙니다."], "sectionId": "mechanism", "requiredConcepts": ["ml-dsa-masked-response"]}, {"level": "basic", "question": "공개 t=[9,6]일 때 A의 두 행 [2,3]·[4,1]로 Az−ct를 구하세요.", "answerChecklist": ["Az=[15,15]이고 ct=[9,6]입니다.", "차이는 [6,9]이며 Ay=[7,9]에서 ce=[1,0]을 뺀 값과 같습니다."], "sectionId": "mechanism", "requiredConcepts": ["ml-dsa-masked-response"]}, {"level": "basic", "question": "응답 성분의 절댓값이4 미만이어야 한다면 [4,3]은 왜 거절하나요?", "answerChecklist": ["첫 성분4는 엄격한 미만 조건을 만족하지 않습니다.", "표준에서도 응답과 남은 값의 크기를 제한하지만 실제 상수는 장난감4와 다릅니다."], "sectionId": "source", "requiredConcepts": ["ml-dsa-rejection-and-hints"]}, {"level": "basic", "question": "공개 키와 메시지가 같아도 context가 다르면 검증자는 무엇을 다시 확인하나요?", "answerChecklist": ["context의 길이와 바이트를 메시지 요약에 포함해야 합니다.", "다른 용도에서 만든 서명이 같은 승인으로 재사용되지 않도록 같은 문맥으로 검증합니다."], "sectionId": "source", "requiredConcepts": ["ml-dsa-masked-response", "post-quantum-signature-deployment"]}, {"level": "basic", "question": "ML-DSA-44와 SLH-DSA-128s의 공개 키·서명 크기를 비교하세요.", "answerChecklist": ["ML-DSA-44는 공개 키1,312바이트·서명2,420바이트입니다.", "SLH-DSA-128s는 공개 키32바이트·서명7,856바이트이므로 키가 작아도 서명이 더 큽니다."], "sectionId": "comparison", "requiredConcepts": ["slh-dsa-hash-tree-signatures", "post-quantum-signature-deployment"]}, {"level": "basic", "question": "해시 사슬의 H²(x)를 받았을 때 공개 끝값 H⁴(x)를 어떻게 확인하나요?", "answerChecklist": ["받은 값에 H를 두 번 적용합니다.", "이 확인만으로 임의 메시지의 다회용 서명이 되지는 않습니다."], "sectionId": "comparison", "requiredConcepts": ["slh-dsa-hash-tree-signatures"]}, {"level": "advanced", "question": "H²(x)를 알면 H³(x)도 만들 수 있다는 사실은 단순 해시 사슬 서명에 어떤 문제를 주나요?", "answerChecklist": ["앞으로 해시하는 것은 쉬워 더 뒤의 위치를 공격자도 계산할 수 있습니다.", "실제 방식은 여러 사슬의 숫자 표현과 checksum, 제한된 사용 및 인증 나무를 함께 설계합니다."], "sectionId": "comparison", "requiredConcepts": ["slh-dsa-hash-tree-signatures"]}, {"level": "advanced", "question": "동일한 마스크로 서로 다른 challenge의 응답을 만들면 왜 위험할 수 있나요?", "answerChecklist": ["두 응답을 빼면 마스크가 사라져 비밀에 관한 관계가 노출됩니다.", "장난감 z1=y+c1s와 z2=y+c2s의 차이는 (c1−c2)s이며 실제 구현도 난수와 내부 nonce 규칙을 지켜야 합니다."], "sectionId": "limits", "requiredConcepts": ["ml-dsa-masked-response", "ml-dsa-rejection-and-hints"]}, {"level": "advanced", "question": "올바른 서명이 붙은 펌웨어가 오래된 취약 버전이라면 서명 검사만으로 설치해도 되나요?", "answerChecklist": ["서명은 해당 키와 바이트의 관계를 확인하며 최신성·무해함까지 증명하지 않습니다.", "버전 하향 방지·권한 정책·폐기 키와 복구 경로를 별도로 검사해야 합니다."], "sectionId": "limits", "requiredConcepts": ["post-quantum-signature-deployment"]}, {"level": "advanced", "question": "2026년 기준 ML-DSA·SLH-DSA의 최종 표준과 Falcon·HQC의 상태를 구분하세요.", "answerChecklist": ["FIPS204·205는 2024년 최종 표준으로 발표됐습니다.", "Falcon 기반 FN-DSA와 HQC는 NIST의 후속 표준화 작업 중이며 이미 최종 FIPS라고 부르지 않습니다."], "sectionId": "limits", "requiredConcepts": ["post-quantum-signature-deployment"]}]},
+  "crypto/quantum-key-distribution": {
+    "coreIdea": "QKD는 물리 신호의 변화로 공격자의 정보를 제한하고 공개 누출·유한 표본·인증 조건을 반영해 짧은 키를 추출하거나 중단하는 절차입니다.",
+    "entryLevel": false,
+    "entryNote": "기초 글의 진폭·측정 확률을 재사용하며 두 기저의 역할부터 12신호 표로 다시 설명합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "quantum-amplitude-measurement",
+        "role": "측정 방향과 상태에 따라 결과의 확률이 달라진다는 기초를 재사용합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "qkd-bb84-basis-sifting",
+        "role": "같은 기저의 기록만 남기고, 지정 도청 모형에서 오류가 생기는 조건부 확률을 계산합니다."
+      },
+      {
+        "id": "qkd-finite-key-information-budget",
+        "role": "검사 표본·정정 누출·검증·추출 여유를 반영해 실제 내보낼 키 길이를 판단합니다."
+      },
+      {
+        "id": "qkd-authenticated-device-boundary",
+        "role": "공개 대화의 인증과 광원·검출기·중계소의 신뢰 가정을 구분합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "qkd-bb84-basis-sifting",
+        "sectionId": "source",
+        "intuition": "송신과 측정의 방향이 같을 때 읽을 수 있는 기록을 모으고, 일부를 공개해 변화의 정도를 추정합니다.",
+        "workedExample": "12신호 중 같은 기저 8개에서 검사 2개를 빼면 6개가 남습니다. 지정 intercept-resend 모형의 조건부 오류율은 1/2×1/2=25%입니다.",
+        "boundary": "25%는 모든 신호를 측정·재전송하는 이상적 모형의 기대값이며 일반 공격·장치 잡음의 보편 오류율이 아닙니다.",
+        "proofIdea": "A와 B가 같은 기저를 썼다는 조건에서 Eve의 기저 불일치 1/2와 그때 Bob의 오답 1/2를 곱합니다.",
+        "counterexample": "서로 다른 기저를 쓴 9번의 값은 우연히 같지만 선별에서는 제외합니다.",
+        "scientificGrounding": {
+          "observable": "신호 번호별 검출 여부·송신 기저·측정 기저·0/1 결과와 공개 표본의 불일치 횟수입니다.",
+          "unitsAndDimensions": "신호 수는 회, 길이는 bit, 편광 방향은 도(°), 오류율·확률은 무차원입니다. 실제 키율은 bit/s로 따로 측정합니다.",
+          "modelAssumptions": "단일 광자·이상적 두 기저·독립 균등 선택을 기준으로 설명하며 교육 표에는 같은 기저의 오류 1개를 별도로 가정했습니다.",
+          "measurementExample": "12회 중 기저 일치 8회·공개 검사 2회 오류 0회이며 미공개 6회에는 오류 1회가 남는 교육용 기록입니다.",
+          "invalidConditions": "다중 광자·광원 누출·검출기 공격·기저 의존 손실·상관된 선택에는 이상적 25% 도청 계산을 그대로 적용할 수 없습니다.",
+          "referenceFrame": "빛의 진행 방향에 수직인 평면에서 송수신기가 정렬한 가로 0°·세로 90°와 대각 45°·135°를 기준으로 합니다."
+        }
+      },
+      {
+        "id": "qkd-finite-key-information-budget",
+        "sectionId": "comparison",
+        "intuition": "기록을 같게 만드는 데 공개한 정보만큼 비밀 후보가 줄고, 작은 검사 표본의 불확실성도 최종 길이에 남습니다.",
+        "workedExample": "A의 010110과 B의 011110에 패리티 110을 공개해 세 번째 오류를 고칩니다. 세 독립 식은 균등한 6비트의 64개 후보를 8개로 줄입니다. 2비트 압축값 01은 안전한 키로 승인하지 않습니다.",
+        "boundary": "전체 프로토콜의 엔트로피 하한·보안 오차를 입증하지 않아 예제의 실제 키 출력은 0비트입니다. 원문의 비대칭 기저별 식(2)을 혼합 기저 표에 그대로 대입하지 않습니다.",
+        "proofIdea": "양자 부가정보와 공개 대화를 조건으로 한 최소 엔트로피에서 출력 길이를 정하는 leftover-hash 상계를 사용합니다. ε=0, H=3, ℓ=2의 상계 약 0.354로 목표 10⁻⁶을 증명하지 못합니다.",
+        "counterexample": "고정된 8개 중 오류 1개를 피해 2개를 뽑을 확률은 21/28=75%이므로 검사 오류 0을 전체 오류 0으로 바꿀 수 없습니다."
+      },
+      {
+        "id": "qkd-authenticated-device-boundary",
+        "sectionId": "limits",
+        "intuition": "키를 만드는 물리적 성질은 상대의 신원이나 모든 장치의 행동을 대신 확인하지 않습니다.",
+        "workedExample": "기저 목록·검사 2비트·패리티 110·추출 함수 선택을 세션과 상대에 묶어 인증합니다. 미리 공유한 비밀이나 PQC 서명을 선택하고 실패하면 키를 버립니다.",
+        "boundary": "MDI는 측정소의 신뢰를 줄이지만 광원·난수·인증 조건이 남습니다. DI도 격리·인증·신뢰할 후처리와 유한 표본의 조건이 남습니다.",
+        "counterexample": "신뢰 중계소가 키를 받아 전달하는 방식은 키를 알 필요가 없는 MDI 측정소와 다릅니다. 통신 차단은 안전한 중단을 만들 수 있지만 가용성을 보장하지는 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "BB84의 기저 선택과 선별",
+        "relation": "같은 기저의 기록만 남기고, 지정 도청 모형에서 오류가 생기는 조건부 확률을 계산합니다.",
+        "concepts": [
+          "qkd-bb84-basis-sifting"
+        ]
+      },
+      {
+        "label": "유한 표본과 공개 누출을 반영한 키 길이",
+        "relation": "검사 표본·정정 누출·검증·추출 여유를 반영해 실제 내보낼 키 길이를 판단합니다.",
+        "concepts": [
+          "qkd-finite-key-information-budget"
+        ]
+      },
+      {
+        "label": "QKD의 인증과 장치 신뢰 조건",
+        "relation": "공개 대화의 인증과 광원·검출기·중계소의 신뢰 가정을 구분합니다.",
+        "concepts": [
+          "qkd-authenticated-device-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "12개 신호에서 같은 기저 8개 중 검사 2개를 공개하면 몇 비트가 남고 양쪽 기록은 무엇인가요?",
+        "answerChecklist": [
+          "8−2=6비트가 남으며 A는 010110, B는 011110입니다.",
+          "공개한 2번·10번은 비밀 후보에서 제외하며 남은 세 번째 값의 불일치는 아직 고쳐야 합니다."
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "qkd-bb84-basis-sifting",
+          "qkd-finite-key-information-budget"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "9번은 A와 B의 값이 모두 0인데도 왜 키 후보에서 제외하나요?",
+        "answerChecklist": [
+          "A는+이고 B는×여서 기저가 다릅니다. 다른 기저의 결과는 이상적 조건에서 각각 1/2 확률로 나옵니다.",
+          "값의 우연한 일치로 고르면 값 자체를 공개하는 비교가 필요해 비밀이 새므로 기저 일치로 선별합니다."
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "qkd-bb84-basis-sifting"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "A와 B의 기저가 같은 기록에서 전량 intercept-resend 공격의 25% 오류율은 어떻게 계산하나요?",
+        "answerChecklist": [
+          "Eve의 기저 불일치 확률 1/2와 그때 B가 다른 값을 낼 확률 1/2를 곱해 1/4를 얻습니다.",
+          "이상적인 단일 광자·독립 균등 기저·추가 잡음 없음과 모든 신호 재전송의 조건부 기대값입니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "qkd-bb84-basis-sifting"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "010110과 011110에서 패리티 묶음 1·3·5,2·3·6,4·5·6을 비교하면 어느 값을 고치나요?",
+        "answerChecklist": [
+          "A 패리티 110과 B 패리티 000의 차이 110은 첫째·둘째 묶음에만 포함되는 3번 자리를 가리킵니다.",
+          "오류가 최대 1개라는 교육용 가정에서 B의 세 번째 1을 0으로 고치며 실제 통신에서는 별도 일치 검증이 필요합니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "qkd-finite-key-information-budget"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "균등한 6비트에 관한 독립 패리티 3개를 공개하면 공격자의 후보 수가 어떻게 바뀌나요?",
+        "answerChecklist": [
+          "64개 가능성이 세 독립 조건마다 절반으로 줄어 8개가 됩니다. 다른 정보가 없다는 가정에서 남은 최소 엔트로피는 3비트입니다.",
+          "양쪽 값이 같아졌다는 사실은 공격자에게도 비밀이라는 뜻이 아니며 추가 검증 누출도 고려합니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "qkd-finite-key-information-budget"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "QKD 공개 대화에서 기저와 패리티를 읽을 수 있게 두더라도 어떤 보호가 필요한가요?",
+        "answerChecklist": [
+          "상대 신원과 메시지 무결성을 인증하고, 기저·검사·정정·추출 선택을 세션에 묶어야 합니다.",
+          "사전 공유 비밀이나 PQC 서명을 사용할 수 있고 인증 실패 시 키를 내보내지 않습니다."
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "qkd-authenticated-device-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "검사 2개에 오류가 없을 확률 9/16과 21/28은 각각 어떤 가정이며 왜 같은 값이 아닌가요?",
+        "answerChecklist": [
+          "9/16=(3/4)²는 지정한 독립 intercept-resend 모형에서 검사한 두 기록이 모두 맞는 확률입니다.",
+          "21/28은 이미 8개 중 오류 1개인 기록에서 비복원 추출 2개가 오류를 피할 확률입니다. 공격으로 기록을 만드는 모형과 고정 기록을 표집하는 모형의 질문이 다릅니다."
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "qkd-bb84-basis-sifting",
+          "qkd-finite-key-information-budget"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "6비트 정정 뒤 2비트 01을 계산했습니다. H=3,ε=0의 추출 상계약 0.354를 목표 10⁻⁶과 비교해 무엇을 결론 내리나요?",
+        "answerChecklist": [
+          "그 계산으로 요구한 보안 오차를 입증하지 못하므로 시연 01을 실제 비밀 키로 내보내지 않습니다. 본 예제는 0비트 출력으로 중단합니다.",
+          "실제 공격 성공률이 0.354라는 결론은 아닙니다. 실제 증명에는 공격자의 정보·표본 변동·정정 검증·인증의 오차를 함께 제한해야 합니다."
+        ],
+        "sectionId": "comparison",
+        "requiredConcepts": [
+          "qkd-finite-key-information-budget",
+          "qkd-authenticated-device-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "광원에 여러 광자가 생기거나 검출기를 신뢰하기 어려운 경우 decoy-state·MDI·DI가 각각 무엇을 바꾸나요?",
+        "answerChecklist": [
+          "Decoy-state는 강도별 통계로 단일 광자 기여를 제한하고, MDI는 신뢰하지 않는 측정소의 발표를 이용하되 양끝 상태 준비 가정은 남깁니다.",
+          "DI는 Bell 상관관계로 장치 내부 모형 의존을 줄이지만 비밀 난수·실험실 격리·인증·후처리·유한 표본 조건까지 없애지는 않습니다."
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "qkd-bb84-basis-sifting",
+          "qkd-authenticated-device-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "PQC 서명으로 QKD 상대를 인증하고 신뢰 중계소를 거칩니다. 전체 통신이 무조건 안전하다는 주장을 어떻게 점검하나요?",
+        "answerChecklist": [
+          "인증에는 선택한 서명의 계산상 가정이 들어가며 중계소가 키를 보유한다면 그 지점의 보관·운영 보안도 필요합니다.",
+          "QKD 키 외에 암호화·키 관리·인증 실패·통신 차단을 확인합니다. X.1711 프레임워크와 NSA NSS 관할 의견은 개별 제품 보안 인증이나 보편 금지 규칙이 아닙니다."
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "qkd-finite-key-information-budget",
+          "qkd-authenticated-device-boundary"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "BB84 original scan",
+        "href": "https://arxiv.org/abs/2003.06557",
+        "problem": "비밀 값을 미리 모두 공유하지 않은 두 사람이 통신 중 개입을 검사해야 합니다.",
+        "contribution": "두 기저로 신호를 준비·측정하고 공개 선별·표본 검사·인증을 결합합니다.",
+        "assumptions": "고전 대화 인증과 물리 모형을 구분하며 본문 25% 계산은 전량 intercept-resend 모형입니다.",
+        "evidenceScope": "원문 p.175~177의 절차와 지정 공격에 따른 불일치입니다.",
+        "notClaim": "작은 표본의 오류 0으로 상용 장비의 안전이나 무조건적인 도청 검출을 보장하지 않습니다.",
+        "sectionId": "paper-bb84"
+      },
+      {
+        "title": "Tight Finite-Key Analysis for Quantum Cryptography",
+        "href": "https://arxiv.org/html/1103.4130v2",
+        "problem": "무한히 긴 데이터의 보안 논증을 실제 유한 데이터에 그대로 사용할 수 없습니다.",
+        "contribution": "공개 누출·유한 표본·일치 검증·추출 오차를 키 길이에 반영합니다.",
+        "assumptions": "원문의 소스·검출·기저별 표본 모형과 인증 가정을 맞춥니다.",
+        "evidenceScope": "식(6)·(7)의 엔트로피와 추출 상계를 교육 사례에 적용합니다.",
+        "notClaim": "본문의 12신호가 원문의 전체 프로토콜을 실행하거나 비밀 키 2비트를 인증했다는 뜻이 아닙니다.",
+        "sectionId": "paper-finite-key"
+      },
+      {
+        "title": "ITU-T X.1711 full text",
+        "href": "https://www.itu.int/epublications/publication/itu-t-x-1711-2026-03-framework-of-quantum-key-distribution-qkd-protocols-in-qkd-networks",
+        "problem": "QKD 신호 전달과 공개 후처리의 역할·인증 범위를 공통 구조로 설명해야 합니다.",
+        "contribution": "양자 통신·키 추출 단계와 인증된 공개 대화, PQC 인증 결합을 정리합니다.",
+        "assumptions": "2026-03 판의 프레임워크와 개별 프로토콜·제품 구현의 보안 주장을 나눕니다.",
+        "evidenceScope": "§1·7.2.2·7.4·8.2·Appendix IV입니다.",
+        "notClaim": "권고 자체가 특정 제품의 보안 증명이나 구현 인증을 제공하지 않습니다.",
+        "sectionId": "paper-x1711"
+      },
+      {
+        "title": "Decoy State Quantum Key Distribution",
+        "href": "https://arxiv.org/abs/quant-ph/0411004",
+        "problem": "약한 광원의 다중 광자 성분이 이상적 단일 광자 가정을 흔듭니다.",
+        "contribution": "강도를 달리한 신호의 검출 통계로 단일 광자 기여를 제한합니다.",
+        "assumptions": "준비한 상태와 강도 선택·검출 통계가 해당 보안 모형을 만족해야 합니다.",
+        "evidenceScope": "Decoy-state의 역할과 광원 경계입니다.",
+        "notClaim": "임의의 광원 누출이나 모든 검출기 공격을 자동으로 해결하지 않습니다.",
+        "sectionId": "paper-decoy"
+      },
+      {
+        "title": "Measurement-device-independent quantum key distribution",
+        "href": "https://arxiv.org/abs/1109.1473",
+        "problem": "검출기 모형의 결함이 기존 보안 증명의 전제를 깨뜨릴 수 있습니다.",
+        "contribution": "양끝의 신호를 가운데에서 측정하는 발표로 검출 장치의 신뢰를 줄입니다.",
+        "assumptions": "양끝 광원·난수·인증과 후처리의 조건이 남습니다.",
+        "evidenceScope": "MDI의 측정소 역할과 신뢰 중계소의 차이입니다.",
+        "notClaim": "전체 장치와 고전 통신의 모든 신뢰 가정을 제거하지 않습니다.",
+        "sectionId": "paper-mdi"
+      },
+      {
+        "title": "A device-independent quantum key distribution system for distant users",
+        "href": "https://www.nature.com/articles/s41586-022-04891-y",
+        "problem": "장치 내부의 자세한 모형 없이도 보안을 제한할 관측 근거가 필요합니다.",
+        "contribution": "Bell 상관관계와 명시적 운영 가정을 결합하는 DIQKD 실험을 제시합니다.",
+        "assumptions": "비밀 난수·통제된 통신·정보 유출 방지·인증·신뢰할 후처리가 필요합니다.",
+        "evidenceScope": "논문 DIQKD protocol의 가정 목록을 사용합니다.",
+        "notClaim": "점근적 성능을 유한 키 산출량이나 무조건 안전한 상용망으로 확대하지 않습니다.",
+        "sectionId": "paper-di"
+      }
+    ]
+  },
 };

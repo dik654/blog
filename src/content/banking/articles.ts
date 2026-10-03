@@ -121,4 +121,11 @@ export const bankingArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/banking/payment-clearing-settlement"),
   },
+  {
+    slug: "repo-and-collateral-funding",
+    title: "레포는 증권을 맡겨 짧은 돈을 구하고 만기마다 다시 연결한다",
+    subcategory: "banking-funding",
+    sections: [{"id": "overview", "title": "1. 오래 보유할 자산도 오늘 결제할 돈이 필요합니다"}, {"id": "black-box", "title": "2. 증권과 돈은 반대 방향으로 움직이고 만기에 되돌아갑니다"}, {"id": "case", "title": "3. 100억 원 자산에서 5%를 남기면 현금은 95억 원입니다"}, {"id": "picture", "title": "4. 현금액·증권가치·되살 값을 따로 기록합니다"}, {"id": "need", "title": "5. 증권을 팔기 전의 가격 변화와 만기 공백을 감당합니다"}, {"id": "names", "title": "6. 레포·역레포·헤어컷은 관점과 금액을 가리킵니다"}, {"id": "mechanism", "title": "7. 가격 하락과 공제율 상승을 동시에 계산합니다"}, {"id": "source", "title": "8. 원문 공제 정의에 100과 95를 대입합니다"}, {"id": "comparison", "title": "9. 중앙은행이 사는지 파는지에 따라 준비금 방향이 달라집니다"}, {"id": "limits", "title": "10. 담보가 있어도 만기 연장과 처분 가격은 보장되지 않습니다"}],
+    component: () => import("@/pages/articles/banking/repo-and-collateral-funding"),
+  },
 ];

@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 function FlowArrow({ active = false }: { active?: boolean }) {
   return (
-    <svg viewBox="0 0 54 16" aria-hidden="true" className="h-4 w-10 shrink-0">
+    <svg viewBox="0 0 54 16" aria-hidden="true" className="h-4 w-10 max-w-full">
       <motion.path
         d="M2 8h44"
         fill="none"
@@ -38,7 +38,7 @@ function KernelNode({
 }) {
   return (
     <div
-      className={`flex h-16 w-24 shrink-0 items-center justify-center border px-3 text-center font-mono text-xs font-black ${
+      className={`flex h-16 w-24 min-w-0 max-w-full items-center justify-center border px-3 break-words text-center font-mono text-xs font-black ${
         accent
           ? "border-primary bg-primary/[0.07] text-primary"
           : "border-border bg-background text-foreground"
@@ -51,12 +51,12 @@ function KernelNode({
 
 function MemoryNode({ label = "HBM" }: { label?: string }) {
   return (
-    <div className="flex w-20 shrink-0 flex-col items-center gap-1 text-center">
+    <div className="flex w-20 min-w-0 max-w-full flex-col items-center gap-1 text-center">
       <svg
         viewBox="0 0 64 52"
         role="img"
         aria-label={`${label} memory`}
-        className="h-14 w-16"
+        className="h-14 w-16 max-w-full"
       >
         <title>{label}</title>
         <g fill="none" className="stroke-muted-foreground" strokeWidth="1.25">
@@ -77,19 +77,19 @@ function UnfusedScene({ active }: { active: boolean }) {
     <div className="space-y-5">
       <div className="flex min-w-0 flex-col items-center justify-center gap-2 sm:flex-row sm:gap-1">
         <KernelNode label="Kernel A" />
-        <span className="rotate-90 sm:rotate-0">
+        <span className="min-w-0 rotate-90 sm:rotate-0">
           <FlowArrow active={active} />
         </span>
         <MemoryNode />
-        <span className="rotate-90 sm:rotate-0">
+        <span className="min-w-0 rotate-90 sm:rotate-0">
           <FlowArrow active={active} />
         </span>
         <KernelNode label="Kernel B" />
-        <span className="rotate-90 sm:rotate-0">
+        <span className="min-w-0 rotate-90 sm:rotate-0">
           <FlowArrow active={active} />
         </span>
         <MemoryNode />
-        <span className="rotate-90 sm:rotate-0">
+        <span className="min-w-0 rotate-90 sm:rotate-0">
           <FlowArrow active={active} />
         </span>
         <KernelNode label="Kernel C" />
@@ -119,11 +119,11 @@ function SmallFusionScene({ active }: { active: boolean }) {
         </p>
         <div className="flex flex-col items-center justify-center gap-2 sm:flex-row">
           <KernelNode label="Bias" />
-          <span className="rotate-90 sm:rotate-0">
+          <span className="min-w-0 rotate-90 sm:rotate-0">
             <FlowArrow active={active} />
           </span>
           <KernelNode label="Activation" accent />
-          <span className="rotate-90 sm:rotate-0">
+          <span className="min-w-0 rotate-90 sm:rotate-0">
             <FlowArrow active={active} />
           </span>
           <KernelNode label="Multiply" />
@@ -217,16 +217,16 @@ function MegakernelScene({ active }: { active: boolean }) {
 
 function FlashAttentionScene({ active }: { active: boolean }) {
   return (
-    <div className="grid gap-5 lg:grid-cols-[9rem_1fr_9rem] lg:items-center">
+    <div className="grid gap-5 lg:grid-cols-[7rem_minmax(0,1fr)_7rem] lg:items-center">
       <MemoryNode label="HBM · Q/K/V" />
       <div className="border border-primary/55 bg-primary/[0.025] p-5">
         <div className="flex flex-col items-center justify-center gap-2 sm:flex-row">
           <KernelNode label="QKᵀ tile" />
-          <span className="rotate-90 sm:rotate-0">
+          <span className="min-w-0 rotate-90 sm:rotate-0">
             <FlowArrow active={active} />
           </span>
           <KernelNode label="Online softmax" accent />
-          <span className="rotate-90 sm:rotate-0">
+          <span className="min-w-0 rotate-90 sm:rotate-0">
             <FlowArrow active={active} />
           </span>
           <KernelNode label="× V tile" />

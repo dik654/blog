@@ -1,0 +1,5 @@
+tcgen05.commit.cta_group::1.mbarrier::arrive::one.b64 [mbarObj0];
+
+loop:
+mbarrier.try_wait.parity.b64 p, [mbarObj0], 0;
+@!p bra loop;

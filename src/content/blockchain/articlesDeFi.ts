@@ -17,15 +17,49 @@ export const defiArticles: Article[] = [
   },
   {
     slug: "hyperliquid",
-    title: "Hyperliquid: order·margin·consensus·bridge 경계",
+    title: "Hyperliquid: 주문·담보·HIP-3·HIP-4·자금 이동",
     subcategory: "defi-dex",
     sections: [
-      { id: "overview", title: "하나의 화면, 여러 권위 경계" },
-      { id: "order-lifecycle", title: "서명한 주문에서 체결까지" },
-      { id: "margin-liquidation", title: "마진·펀딩·청산" },
-      { id: "consensus", title: "HyperBFT와 HyperCore 상태" },
-      { id: "hyperevm-bridge", title: "HyperEVM·CoreWriter·브리지" },
-      { id: "risk-checklist", title: "검증과 운영 판단" },
+      {
+        "id": "overview",
+        "title": "매매 버튼 뒤에서 돈과 책임이 어떻게 바뀌는가"
+      },
+      {
+        "id": "black-box",
+        "title": "승인한 내용, 거래 결과, 모두가 인정한 기록"
+      },
+      {
+        "id": "case",
+        "title": "0.1개를 주문해도 처음에는 0.04개만 체결된다"
+      },
+      {
+        "id": "picture",
+        "title": "주문 번호와 체결 기록으로 잔량을 따라간다"
+      },
+      {
+        "id": "need",
+        "title": "승인만으로 돈을 바꾸면 안 되는 이유"
+      },
+      {
+        "id": "order-lifecycle",
+        "title": "주문·담보·실행 환경의 이름을 연결한다"
+      },
+      {
+        "id": "mechanism",
+        "title": "담보가 들어오고 주문이 체결된 뒤에도 검사는 계속된다"
+      },
+      {
+        "id": "source",
+        "title": "공개 SDK는 요청을 만들고 결과를 조회한다"
+      },
+      {
+        "id": "comparison",
+        "title": "HIP-4는 같은 주문장 위에서도 지급 구조가 다르다"
+      },
+      {
+        "id": "risk-checklist",
+        "title": "체결이 맞아도 외부 가격과 자금 회수의 위험은 남는다"
+      }
     ],
     component: () => import("@/pages/articles/blockchain/hyperliquid"),
   },
@@ -148,14 +182,49 @@ export const defiArticles: Article[] = [
   },
   {
     slug: "rwa-composition",
-    title: "RWA (Real World Assets) — 온체인 자산 토큰화 구조",
+    title: "기관 토큰화: BUIDL의 권리·평가·매매·현금 회수",
     subcategory: "defi-stablecoin",
     sections: [
-      { id: "overview", title: "Token보다 먼저 보는 claim" },
-      { id: "claim-asset-map", title: "법적·자산 책임 지도" },
-      { id: "token-cashflow-control", title: "Token·cash flow·통제" },
-      { id: "permissioned-market-stack", title: "Permissioned market·DvP" },
-      { id: "rwa-release", title: "Reconciliation·release gate" },
+      {
+        "id": "overview",
+        "title": "화면의 토큰 잔액이 실제 자산의 어떤 권리를 뜻하는가"
+      },
+      {
+        "id": "black-box",
+        "title": "자산을 운용하는 곳과 보유자를 기록하는 곳"
+      },
+      {
+        "id": "case",
+        "title": "순자산102를 100개로 나누면 개당1.02다"
+      },
+      {
+        "id": "picture",
+        "title": "105−3의 자산 장부와 100개의 권리 장부를 맞춘다"
+      },
+      {
+        "id": "need",
+        "title": "24시간 옮길 수 있어도 24시간 같은 가격으로 팔리지는 않는다"
+      },
+      {
+        "id": "claim-asset-map",
+        "title": "순자산 가치와 명의개서, 시장 매매와 상환"
+      },
+      {
+        "id": "token-cashflow-control",
+        "title": "자격 확인에서 대금 회수까지 같은10개를 따라간다"
+      },
+      {
+        "id": "source",
+        "title": "BUIDL은 국채 그 자체가 아니라 펀드 지분이다"
+      },
+      {
+        "id": "permissioned-market-stack",
+        "title": "Circle 교환과 UniswapX 거래는 회수 경로를 늘린다"
+      },
+      {
+        "id": "rwa-release",
+        "title": "빠른 결제는 잘못된 평가와 회수 제한을 없애지 않는다"
+      }
     ],
     component: () => import("@/pages/articles/blockchain/rwa-composition"),
   },

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ContextViz from "./viz/ContextViz";
@@ -36,6 +37,7 @@ export default function Overview() {
           운영까지 한 acceptance test로 묶는 것입니다. ECC 로고나 DIMM 슬롯 수 하나만으로는 이 네 조건을 보장할 수 없습니다.
         </p>
       </div>
+      <p className="my-6 leading-8">이 글은 CPU 쪽 DIMM과 메모리 채널을 다룹니다. GPU 옆의 적층 메모리는 <Link to="/cs/gpu/hbm-stack-and-memory-requests#picture">HBM의 층과 넓은 연결</Link>에서 이어집니다. 용량·대역폭·응답 지연을 나누는 질문은 같지만, DIMM의 채널 폭을 HBM에 그대로 대입하지 않습니다.</p>
       <ContentBoundary article="hw-memory" />
       <ContextViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -64,7 +66,8 @@ export default function Overview() {
             Working set이 physical memory를 넘으면 page reclaim과 storage I/O가
             시작되어 memory tuning과 다른 문제로 바뀝니다. 반대로 용량이
             충분해도 channel 하나만 채웠거나 remote NUMA node에서 읽으면 core가
-            data를 기다릴 수 있습니다. 그래서 peak RSS, page fault, local/remote
+            data를 기다릴 수 있습니다.</p>
+        <p>그래서 peak RSS, page fault, local/remote
             memory bandwidth와 p50·p99 access latency를 workload phase와 함께
             기록합니다.
           </p>

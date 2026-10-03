@@ -21,8 +21,8 @@ const markets: Category = {
     },
     {
       slug: "markets-products",
-      name: "펀드와 상장 상품",
-      description: "펀드 지분·ETF 가격·ETN 발행자 채무",
+      name: "금융상품과 청구권",
+      description: "상품별 지급 권리·펀드·ETF·ETN·유동화 손실 순서",
       icon: "🧺",
     },
     {

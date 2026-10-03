@@ -31,7 +31,7 @@ export default function ComplianceThresholdViz() {
         <Mafs
           height={240}
           preserveAspectRatio={false}
-          viewBox={{ x: [-0.6, 20.6], y: [-26, 215], padding: 0 }}
+          viewBox={{ x: [-0.6, 22], y: [-26, 215], padding: 0 }}
         >
           <Coordinates.Cartesian
             xAxis={{ lines: 5, labels: (v) => `${v}%` }}

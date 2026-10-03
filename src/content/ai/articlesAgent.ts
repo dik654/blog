@@ -186,6 +186,7 @@ export const agentArticles: Article[] = [
       { id: "lifetimes", title: "Owner·source·expiry·delete" },
       { id: "compaction", title: "Compaction fidelity" },
       { id: "resume", title: "Resume test" },
+      { id: "memory-action-evaluation", title: "기억 회상과 후속 행동의 성공을 따로 평가한다" },
     ],
     component: () => import("@/pages/articles/ai/agent-memory-lifecycle"),
   },

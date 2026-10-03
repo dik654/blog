@@ -1,331 +1,123 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ProgressiveDetail from "@/components/articles/progressive-detail";
-import TermBreakdown from "@/components/articles/term-breakdown";
-import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import FlashAttentionIoAwareKernelViz from "./flash-attention-io-aware-kernel/viz/FlashAttentionIoAwareKernelViz";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import NumericPath from "@/pages/articles/world-systems/NumericPath";
+import SourceApplication from "@/pages/articles/world-systems/SourceApplication";
+import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
+import PaperReading from "./research-audit-sources/PaperReading";
+import { codeRefs, fileTrees, projectMetas } from "./research-audit-sources/codeRefs";
 
-/**
- * FlashAttention 은 online softmax 로 attention 행렬을 HBM 에 쓰지 않습니다
- *
- * 작성 규칙은 docs/coverage-batch-playbook.md 를 따른다.
- */
-export default function FlashAttentionIoAwareKernelArticle() {
-  return (
-    <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          표준 attention 은 N×N 행렬을 HBM 에 썼다가 다시 읽느라 느립니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            Attention 의 곱셈 횟수는 sequence 길이 N 의 제곱에 비례합니다. 그런데 실제 시간을 잡아먹는 것은 N×N 점수 행렬을 GPU 주메모리에 적었다가 다시 읽는
-            왕복입니다. FlashAttention 은 그 행렬을 메모리에 만들지 않고 작은 tile 단위로 on-chip 메모리 안에서 소비합니다. 결과는 표준 attention 과 같고
-            왕복만 사라집니다.
-          </p>
-          <p>
-            HBM(high bandwidth memory)은 GPU 의 주메모리로, A100 기준 40 GB 용량에
-            초당 1.5~2 TB 를 읽습니다. SRAM 은 각 streaming multiprocessor 안에 붙은
-            on-chip 메모리로 192 KB 밖에 안 되지만 대역폭이 약 19 TB/s 로 열 배 가까이
-            빠릅니다. 이 두 숫자는 FlashAttention 논문이 A100 을 기준으로 적은 값입니다.
-          </p>
-          <p>
-            Attention materialization 은 <Link to="/cs/ai/attention-theory#multiplicative">scaled dot-product attention</Link>
-            의 중간 결과인 점수 행렬 S = QKᵀ/√d 와 softmax 결과 P 를 HBM 에 실제 크기로
-            써 두는 일을 뜻합니다. PyTorch 의 기본 구현은 matmul, softmax, dropout, matmul 을
-            서로 다른 kernel 로 부르므로 kernel 사이마다 이 행렬이 HBM 을 거칩니다.
-          </p>
-          <p>
-            N=4096, head dim d=64, FP16 이면 Q, K, V 는 각각 4096×64×2 B = 512 KiB 입니다. 반면 S 는 4096×4096×2 B = 32
-            MiB 이고 P 도 32 MiB 입니다. S 쓰기와 읽기, P 쓰기와 읽기를 더하면 head 하나에 128 MiB, 입력의 64 배가 오갑니다.
-          </p>
-          <p>
-            Head 32 개, batch 8 이면 layer 하나가 32 GiB 를 왕복해 2 TB/s 로도 16 ms 가 듭니다. 같은 layer 의 곱셈은 tensor core 로 1
-            ms 안에 끝나므로 병목은 계산이 아니라 메모리입니다. 곱셈 횟수를 줄이는 근사 attention 이 wall-clock 을 못 줄인 이유가 여기에 있습니다.
-          </p>
-        </div>
-        <div id="paper-flashattention" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Dao, Fu, Ermon, Rudra, Ré · FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness"
-            citeKey={1}
-            href="https://arxiv.org/abs/2205.14135"
-          >
-            2022 년 논문은 attention 의 병목을 FLOPs 가 아닌 HBM 접근으로 진단하고,
-            tiling 과 recomputation 으로 N×N 행렬을 쓰지 않는 exact attention kernel 을
-            제시했습니다. GPT-2 3 배, BERT-large 15 % 가속과 HBM 접근 9 배 감소는 A100 에서
-            저자가 잰 값입니다.
-          </CitationBlock>
-        </div>
-        <ContentBoundary article="flash-attention-io-aware-kernel" />
-      </section>
+export default function Article(){
+  const sidebar=useCodeSidebar();
+  return <div className="space-y-16">
+    <section id="overview" data-teach-level="S" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">1 · 같은 답을 더 적은 왕복으로 구한다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">문장 속 한 위치가 앞의 네 위치를 얼마나 참고할지 정한다고 해 봅시다. 이미 계산한 점수는 [1, 3, 2, 5]이고 가져올 값은 [2, 4, 6, 8]입니다. 이 글은 가중평균 7.376113을 구하는 과정을 끝까지 따라갑니다.</p>
+        <p className="leading-8">핵심은 점수 전체를 메모리에 적어 두지 않아도, 지금까지의 기준값과 두 합만 고쳐 가면 답을 구할 수 있다는 것입니다. 이후 같은 계산이 GPU에서 어디를 기다리는지 살펴봅니다.</p>
+      </div>
 
-      <section id="io-aware" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          IO-aware 알고리즘은 FLOPs 대신 HBM 접근 횟수를 비용으로 셉니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            IO-aware algorithm 은 계산 횟수 대신 메모리 계층 사이를 오가는 byte 수를 비용 함수로 삼습니다. FlashAttention 은 attention 을 이
-            비용 함수로 다시 설계한 결과입니다. 그래서 곱셈 횟수는 오히려 늘어도 시간은 줄어듭니다.
-          </p>
-          <p>
-            비용 모델은 두 층입니다. 계산은 크기 M 인 빠른 SRAM 안에서만 일어나고 크고 느린 HBM 과는 block 단위로만 데이터를 주고받습니다. 이 모델에서 표준
-            attention 의 HBM 접근량은 Θ(Nd + N²) 이고 FlashAttention 은 Θ(N²d²/M) 입니다.
-          </p>
-          <p>
-            SRAM 에 FP16 원소 5 만 개(약 100 KB)가 들어간다고 두고 N=4096, d=64 를 대입해 보겠습니다. N² 은 1.7×10⁷ 원소이고 N²d²/M 은
-            1.3×10⁶ 원소입니다. 접근량이 12 배 넘게 줄어듭니다. SRAM 이 커질수록 격차는 더 벌어집니다.
-          </p>
-          <p>
-            SRAM residency 는 이 절감을 실제로 만드는 조건입니다. Tile 하나가 SRAM 에 올라온
-            동안 matmul, mask, softmax, dropout, 두 번째 matmul 을 모두 끝내고 HBM 에는
-            최종 출력만 씁니다. 여러 kernel 을 하나로 합치는 <Link to="/cs/gpu/cuda-kernel-fusion">kernel fusion</Link>
-            이 attention 에서는 이런 모양으로 나타납니다.
-          </p>
-          <p>
-            HBM traffic reduction 은 그 결과로 줄어든 왕복 byte 를 부르는 이름입니다. 같은
-            원리를 GEMM 에서 먼저 쓴 것이 <Link to="/cs/gpu/cuda-matrix-multiply#tiled">shared-memory tile 재사용</Link>
-            이고, tile 을 어디에 올리는지는 <Link to="/cs/gpu/cuda-shared-memory#overview">CUDA shared memory</Link>
-            글이 다룹니다.
-          </p>
-        </div>
-        <TermBreakdown
-          title="IO-aware 비용 모델의 네 가지 말"
-          description="같은 메모리 이야기를 서로 다른 층위에서 부르는 용어입니다."
-          items={[
-            { term: "HBM", description: "GPU 주메모리입니다. 크지만 SRAM 보다 열 배쯤 느립니다.", example: "A100 40 GB, 1.5~2 TB/s", boundary: "세대마다 용량과 대역폭이 달라 수치는 hardware 별로 다시 확인합니다." },
-            { term: "SRAM", description: "SM 안의 on-chip 메모리로 shared memory 와 register 를 가리킵니다.", example: "A100 SM 당 192 KB, 약 19 TB/s", boundary: "용량이 작아 tile 크기의 상한을 정합니다." },
-            { term: "Attention materialization", description: "S 와 P 를 N×N 크기로 HBM 에 실제로 적는 일입니다.", example: "N=4096 FP16 에서 head 당 32 MiB", boundary: "행렬을 만들어도 SRAM 안에서만 쓰면 materialization 이 아닙니다." },
-            { term: "IO complexity", description: "SRAM 크기 M 을 고정했을 때 HBM 접근 횟수의 점근 차수입니다.", example: "표준 Θ(N²), FlashAttention Θ(N²d²/M)", boundary: "상수 항과 실제 latency 는 kernel 구현이 정합니다." },
-          ]}
-        />
-      </section>
+      <ContentBoundary article="flash-attention-io-aware-kernel" />
+      <p data-stage-bridge="overview" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">출력 숫자 하나를 고정했습니다. 먼저 입력과 출력의 계약을 봅니다.</p>
+    </section>
+    <section id="black-box" data-teach-level="B" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">2 · 점수와 값을 받아 가중평균을 돌려준다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">입력은 query·key·value 배열과 scale·mask입니다. 점수 S=QKᵀ/√d를 만든 뒤 softmax 가중치를 값 V에 곱해 출력 O를 구합니다. 네 점수 사례는 이미 scale을 적용한 한 행이며 실제 attention은 이 작업을 여러 행과 head에 수행합니다.</p>
+        <p className="leading-8">구현을 바꿔도 허용한 dtype 오차 안에서 같은 수학적 연산을 해야 합니다. 인과 mask를 빼거나 attention을 sparse 근사로 바꾸면 계산 대상 자체가 달라집니다. 속도를 비교하기 전에 이 계약을 맞춥니다.</p>
+      </div>
 
-      <section id="online-softmax" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Online softmax 는 행 전체를 보지 않고도 max 와 normalizer 를 고쳐 씁니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            <Link to="/cs/ai/softmax#overview">Softmax</Link> 는 행의 최댓값을 빼고 지수를 취한
-            뒤 합으로 나누므로 한 행을 끝까지 읽어야 답이 나옵니다. Online softmax 는 지금까지
-            본 부분의 최댓값 m 과 지수합 ℓ 만 들고 있다가, 더 큰 값이 나타나면 이전 합에
-            보정 계수를 곱해 기준점을 옮깁니다. 행을 조각내 읽어도 최종 답이 같습니다.
-          </p>
-          <p>
-            성립 이유는 <Link to="/cs/ai/softmax#overview">softmax 의 max-shift invariance</Link>
-            입니다. 기준점을 m_old 에서 m_new 로 바꾸면 모든 항에 {"e^{m_old − m_new}"} 가 똑같이
-            곱해지므로, 이미 더해 둔 합에도 그 계수 하나만 곱하면 새 기준점의 합이 됩니다.
-            Running maximum 이 m 이고 running normalizer 가 ℓ 입니다.
-          </p>
-          <p>
-            작은 예로 확인합니다. 점수 행 [1, 3, 2, 5] 를 [1, 3] 과 [2, 5] 두 tile 로 읽습니다.
-            첫 tile 에서 m=3, ℓ=e⁻²+e⁰=1.135 입니다. 둘째 tile 에서 최댓값이 5 로 바뀌므로
-            ℓ={"e^{3−5}"}×1.135+{"e^{2−5}"}+e⁰=0.154+0.050+1=1.203 입니다.
-          </p>
-          <p>
-            행 전체를 한 번에 계산하면 e⁻⁴+e⁻²+e⁻³+e⁰=0.018+0.135+0.050+1=1.203 으로 같은 값이 나옵니다. Milakov 와 Gimelshein 은
-            2018 년 이 갱신식으로 세 번 읽던 softmax 를 두 번 읽기로 줄였습니다. FlashAttention 은 같은 식을 tile 사이의 접착제로 씁니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="다음 tile 의 점수 S_j 를 읽었을 때 running max 와 normalizer 를 어떻게 고치나요?"
-          idea="새 최댓값을 먼저 정하고, 옛 기준으로 쌓아 둔 합에는 기준 차이의 지수를 한 번 곱한 뒤 새 tile 의 지수합을 더합니다."
-          formula={String.raw`m^{(j)}=\max\!\big(m^{(j-1)},\operatorname{rowmax}(S_j)\big),\qquad \ell^{(j)}=e^{\,m^{(j-1)}-m^{(j)}}\,\ell^{(j-1)}+\operatorname{rowsum}\!\big(e^{\,S_j-m^{(j)}}\big)`}
-          annotatedFormula={String.raw`\ell^{(j)}=\underbrace{e^{\,m^{(j-1)}-m^{(j)}}}_{\text{기준점 이동 보정 계수}}\;\underbrace{\ell^{(j-1)}}_{\text{이전 tile 까지의 지수합}}+\underbrace{\operatorname{rowsum}\!\big(e^{\,S_j-m^{(j)}}\big)}_{\text{새 tile 의 지수합}},\qquad \underbrace{m^{(j)}=\max(m^{(j-1)},\operatorname{rowmax}(S_j))}_{\text{running maximum 갱신}}`}
-          operations={[
-            { expression: String.raw`\max\!\big(m^{(j-1)},\operatorname{rowmax}(S_j)\big)`, annotation: ["새 tile 의 행별 최댓값과 지금까지의 최댓값을 비교해", "지수가 넘치지 않는 새 기준점을 정함"] },
-            { expression: String.raw`e^{\,m^{(j-1)}-m^{(j)}}\,\ell^{(j-1)}`, annotation: ["옛 기준으로 쌓은 합에 기준 차이의 지수를 곱해", "새 기준점에서 계산한 값과 일치시킴"] },
-            { expression: String.raw`\operatorname{rowsum}\!\big(e^{\,S_j-m^{(j)}}\big)`, annotation: ["새 tile 의 점수에서 새 기준점을 빼고 지수합을 구해", "누적 normalizer 에 더함"] },
-          ]}
-          terms={[
-            { symbol: String.raw`S_j`, name: "j 번째 점수 tile", description: "Q block 과 K_j block 의 곱을 √d 로 나눈 B_r×B_c 행렬입니다." },
-            { symbol: String.raw`m^{(j)}`, name: "Running maximum", description: "j 번째 tile 까지 본 점수의 행별 최댓값입니다. 초기값은 −∞ 입니다." },
-            { symbol: String.raw`\ell^{(j)}`, name: "Running normalizer", description: "현재 기준점 m^{(j)} 으로 계산한 행별 지수합입니다. 초기값은 0 입니다." },
-          ]}
-          assumptions={["행마다 독립적으로 적용되므로 m 과 ℓ 은 B_r 길이의 벡터입니다.", "보정 계수 e^{m_old − m_new} 는 항상 1 이하라 FP16 에서도 넘치지 않습니다."]}
-          interpretation="최종 softmax 는 마지막 tile 뒤에 e^{S − m^{(T)}} / ℓ^{(T)} 로 나오며, 행 전체를 한 번에 계산한 값과 정확히 같습니다."
-        />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            같은 보정을 P·V 누적에도 적용해야 출력 O 가 맞습니다. 옛 기준으로 쌓은 출력에
-            같은 계수를 곱한 뒤 새 tile 의 {"e^{S_j − m}"}·V_j 를 더합니다. 원 논문은 매 tile 마다
-            ℓ 로 나눠 O 를 정규화된 상태로 유지하고, FlashAttention-2 는 나눗셈을 맨 끝 한 번으로
-            미룹니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="Tile 마다 갱신되는 출력 누적값은 어떻게 최종 attention 출력이 되나요?"
-          idea="정규화하지 않은 출력 Õ 를 같은 보정 계수로 고쳐 가며 쌓고, 모든 tile 이 끝난 뒤 normalizer 로 한 번만 나눕니다."
-          formula={String.raw`\tilde O^{(j)}=e^{\,m^{(j-1)}-m^{(j)}}\,\tilde O^{(j-1)}+e^{\,S_j-m^{(j)}}\,V_j,\qquad O=\tilde O^{(T)}/\ell^{(T)}`}
-          annotatedFormula={String.raw`\tilde O^{(j)}=\underbrace{e^{\,m^{(j-1)}-m^{(j)}}\,\tilde O^{(j-1)}}_{\text{옛 기준으로 쌓은 출력의 보정}}+\underbrace{e^{\,S_j-m^{(j)}}\,V_j}_{\text{새 tile 의 가중 value 합}},\qquad \underbrace{O=\tilde O^{(T)}/\ell^{(T)}}_{\text{마지막 한 번의 정규화}}`}
-          operations={[
-            { expression: String.raw`e^{\,m^{(j-1)}-m^{(j)}}\,\tilde O^{(j-1)}`, annotation: ["이전 누적 출력에 기준점 이동 계수를 곱해", "새 기준점의 가중치와 맞춤"] },
-            { expression: String.raw`e^{\,S_j-m^{(j)}}\,V_j`, annotation: ["정규화 전 가중치로 value tile 을 곱해", "SRAM 안에서 B_r×d 부분합 생성"] },
-            { expression: String.raw`\tilde O^{(T)}/\ell^{(T)}`, annotation: ["마지막 tile 뒤 행마다 normalizer 로 나눠", "표준 softmax 와 같은 출력 완성"] },
-          ]}
-          terms={[
-            { symbol: String.raw`\tilde O^{(j)}`, name: "정규화 전 출력 누적", description: "B_r×d 크기이며 SRAM 이나 register 에 머뭅니다." },
-            { symbol: String.raw`V_j`, name: "j 번째 value tile", description: "B_c×d 크기로 K_j 와 함께 HBM 에서 읽어 옵니다." },
-            { symbol: "T", name: "K/V tile 수", description: "N/B_c 개입니다. N=4096, B_c=128 이면 32 개입니다." },
-          ]}
-          assumptions={["원 논문의 Algorithm 1 은 매 tile 마다 ℓ 로 나누는 정규화 상태를 유지합니다. 위 식은 FlashAttention-2 가 택한 지연 정규화 형태입니다.", "Dropout 을 쓰면 e^{S_j − m} 뒤에 같은 tile 위치의 mask 를 곱합니다."]}
-          interpretation="출력을 tile 마다 정규화하지 않아도 마지막에 한 번 나누면 같습니다. 계수 곱셈이 줄어드는 만큼 non-matmul 연산이 줄어듭니다."
-        />
-        <div id="paper-online-softmax" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Milakov, Gimelshein · Online normalizer calculation for softmax"
-            citeKey={2}
-            href="https://arxiv.org/abs/1805.02867"
-          >
-            2018 년 NVIDIA 기술 보고서는 softmax 의 max 와 normalizer 를 한 pass 로 함께 갱신하는
-            식을 제시하고 메모리 읽기를 세 번에서 두 번으로 줄였습니다. 보고한 1.3 배, TopK 결합
-            5 배 가속은 저자 측정이며 attention 에 적용한 결과는 아닙니다.
-          </CitationBlock>
-        </div>
-      </section>
+      <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">같은 출력이라는 조건을 정했습니다. 이제 네 항을 직접 더합니다.</p>
+    </section>
+    <section id="case" data-teach-level="0" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">3 · 네 항을 한 번에 계산하면 7.376113이다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">가장 큰 점수 5를 빼면 지수는 약 [0.018316, 0.135335, 0.049787, 1]입니다. 합은 1.203438이고 각 항에 [2, 4, 6, 8]을 곱한 합은 8.876695입니다. 둘을 나누면 7.376113입니다.</p>
+        <p className="leading-8">모든 지수에 같은 e⁻⁵를 곱했으므로 분자와 분모의 비율은 유지됩니다. 큰 지수로 넘치지 않게 기준을 옮기는 이유이며 뒤에서 조각을 합칠 때도 같은 원리를 씁니다.</p>
+      </div>
+<NumericPath title="한 행의 값이 출력이 되는 길" steps={[{"label": "점수", "value": "1, 3, 2, 5", "detail": "이미 scale을 적용한 한 행"}, {"label": "공통 기준", "value": "최대 5", "detail": "지수에서 같은 값을 뺌"}, {"label": "두 합", "value": "8.876695 / 1.203438", "detail": "값의 가중합 / 지수합"}, {"label": "출력", "value": "7.376113", "detail": "반올림한 가중평균"}]} />
+      <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">전체 계산의 답을 얻었습니다. 조각마다 무엇을 보관할지 그려봅니다.</p>
+    </section>
+    <section id="picture" data-teach-level="1" className="scroll-mt-20">
+      <span id="tiling" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">4 · 조각을 버리고 기준값과 두 합만 남긴다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">첫 조각 [1, 3]을 읽으면 기준 m=3, 지수합 ℓ=1.135335, 값의 합 u=4.270671입니다. 다음 조각 [2, 5]에서는 최대가 5로 바뀝니다. 옛 두 합을 e⁻²만큼 줄이고 새 조각의 합을 더하면 됩니다.</p>
+        <p className="leading-8">GPU에서는 Q의 행 묶음과 K·V의 조각을 작은 온칩 저장 공간에서 만납니다. 점수 조각을 소비한 뒤 버리고 다음 K·V를 가져옵니다. HBM에 모든 N×N 점수와 확률을 저장할 필요가 사라집니다.</p>
+      </div>
+<NumericPath title="두 조각이 하나의 기준을 공유하는 과정" steps={[{"label": "첫 조각", "value": "m=3, ℓ=1.135335", "detail": "u=4.270671"}, {"label": "기준 이동", "value": "이전 합 × e⁻²", "detail": "분자와 분모에 같은 배율"}, {"label": "둘째 조각", "value": "e⁻³와 1 추가", "detail": "값 6과 8도 함께 반영"}, {"label": "최종 상태", "value": "m=5, O≈7.376113", "detail": "점수 전체를 보관하지 않음"}]} />
+      <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">조각을 합칠 자리를 찾았습니다. 왜 이 구조가 필요한지 바이트로 확인합니다.</p>
+    </section>
+    <section id="need" data-teach-level="2" className="scroll-mt-20">
+      <span id="problem" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">5 · 계산보다 중간 행렬의 왕복이 커질 수 있다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">크기 효과를 따로 보기 위해 N=4096, d=64, FP16, mask·dropout 없는 예를 둡니다. Q·K·V는 각각 512KiB이고 합은 1.5MiB입니다. 점수 S와 확률 P는 각각 32MiB입니다. 두 행렬을 한 번씩 쓰고 읽으면 중간 왕복만 128MiB입니다.</p>
+        <p className="leading-8">128MiB는 입력 세 배열 합의 약 85.33배입니다. 출력 O까지 포함한 네 배열 합 2MiB를 분모로 삼아야 64배가 됩니다. head 32개·batch 8이면 32GiB이고 가정한 2TB/s로 나눈 17.18ms는 이 왕복만의 처리량 하한입니다. 실제 실행시간이나 모든 attention의 병목을 단정하는 숫자가 아닙니다.</p>
+        <p className="leading-8">PyTorch의 attention API도 backend에 따라 이미 fused kernel을 선택합니다. 여기서 비교하는 대상은 S·P를 따로 저장하는 설명용 구현입니다. 라이브러리 이름만 보고 같은 왕복이 발생한다고 가정하지 않습니다.</p>
+      </div>
 
-      <section id="tiling" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Tile 하나가 SRAM 에 머무는 동안 attention 을 끝까지 계산합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            Tiled attention 은 Q 를 B_r 행짜리 block 으로, K 와 V 를 B_c 행짜리 block 으로 잘라 한 번에 한 쌍씩 SRAM 에 올립니다. Q block
-            하나를 맡은 thread block 이 K/V block 을 차례로 읽으며 B_r×B_c 점수 tile 을 만들고 online softmax 로 그 자리에서 소비합니다. N×N
-            행렬은 어느 순간에도 통째로 존재하지 않습니다.
-          </p>
-          <p>
-            Tile 크기는 SRAM 이 정합니다. B_r=B_c=128, d=64, FP16 이면 Q tile, K tile, V tile 이
-            각각 128×64×2 B = 16 KiB 이고 점수 tile 을 FP32 로 두면 128×128×4 B = 64 KiB 입니다.
-            합쳐 112 KiB 로 A100 의 192 KB 안에 들어갑니다. 논문은 B_c 를 ⌈M/4d⌉ 로 잡아 이
-            네 조각이 M 을 나눠 쓰게 합니다.
-          </p>
-          <p>
-            HBM 왕복을 세어 보겠습니다. Q block 은 4096/128 = 32 개이고 각 block 이 K 와 V 전체 1 MiB 를 한 번씩 읽으므로 32 MiB, 여기에 Q
-            읽기와 O 쓰기 1 MiB 가 더해집니다. 표준 구현의 130 MiB 와 견주면 약 4 배 차이이고 B_r 을 키울수록 비율이 커집니다.
-          </p>
-          <p>
-            아래 그림은 query 행 하나가 K/V tile 두 개를 차례로 만나는 동안 m, ℓ, Õ 가 어떻게
-            바뀌고 HBM 에는 무엇이 오가는지 보여 줍니다. 앞 절의 점수 [1, 3, 2, 5] 를 그대로
-            씁니다.
-          </p>
-        </div>
-        <FlashAttentionIoAwareKernelViz />
-        <AlgorithmBlock
-          title="FlashAttention forward: Q block 하나를 맡은 thread block 의 tiling loop"
-          input={["Q, K, V ∈ HBM, 각각 N×d", "block 크기 B_r, B_c (SRAM 크기 M 에서 결정)", "scale 1/√d, 선택적 causal mask"]}
-          steps={[
-            { code: "T_r ← N / B_r,  T_c ← N / B_c", note: "복사 없이 HBM 위의 Q, K, V 를 block 경계로만 나눕니다." },
-            { code: "load Q_i → SRAM;  m_i ← −∞;  ℓ_i ← 0;  Õ_i ← 0", note: "Q block 과 세 running state 는 loop 내내 on-chip 에 머뭅니다." },
-            { code: "for j = 1 … T_c:", note: "K/V block 을 순서대로 한 쌍씩 스트리밍합니다." },
-            { code: "  load K_j, V_j → SRAM", note: "HBM 읽기는 이 줄에서만 일어납니다." },
-            { code: "  S_ij ← Q_i K_jᵀ / √d", note: "B_r×B_c 점수 tile 을 tensor core 로 만들고 SRAM 에 둡니다." },
-            { code: "  if causal and block j entirely after block i: continue", note: "Mask 로 전부 가려지는 tile 은 읽지도 않고 건너뜁니다." },
-            { code: "  m_new ← max(m_i, rowmax(S_ij));  P̃ ← exp(S_ij − m_new)", note: "새 기준점과 정규화 전 가중치를 구합니다." },
-            { code: "  ℓ_i ← e^{m_i − m_new} ℓ_i + rowsum(P̃)", note: "Running normalizer 를 보정한 뒤 더합니다." },
-            { code: "  Õ_i ← e^{m_i − m_new} Õ_i + P̃ V_j;  m_i ← m_new", note: "출력 누적도 같은 계수로 보정합니다. S_ij 와 P̃ 는 여기서 버려집니다." },
-            { code: "O_i ← Õ_i / ℓ_i → HBM;  L_i ← m_i + log ℓ_i → HBM", note: "출력과 행별 logsumexp 만 HBM 에 씁니다. Backward 가 L 을 씁니다." },
-          ]}
-          repeatUntil="모든 Q block i = 1 … T_r 이 서로 다른 thread block 에서 같은 loop 를 끝낼 때까지 반복합니다."
-          output="O ∈ HBM (N×d), L ∈ HBM (N). S 와 P 는 HBM 에 한 번도 쓰이지 않습니다."
-        />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            원 논문의 Algorithm 1 은 바깥 loop 가 K/V block, 안쪽 loop 가 Q block 이라 O, ℓ, m 을 tile 마다 HBM 에서 읽고 씁니다. 위
-            pseudocode 처럼 Q block 을 바깥에 두고 running state 를 on-chip 에 고정한 것은 FlashAttention-2 의 재배치입니다. 접근량 차수는
-            둘 다 Θ(N²d²/M) 입니다.
-          </p>
-        </div>
-      </section>
+      <p data-stage-bridge="need" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">왕복을 줄일 동기가 생겼습니다. 각 저장물과 알고리즘에 이름을 붙입니다.</p>
+    </section>
+    <section id="names" data-teach-level="3" className="scroll-mt-20">
+      <span id="io-aware" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">6 · FlashAttention은 attention 행렬의 저장을 피하는 구현이다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">점수와 확률을 큰 행렬로 남기는 일을 materialization, HBM과 온칩 공간 사이의 이동량을 함께 설계하는 일을 IO-aware 설계라고 부릅니다. Tile은 한 번에 처리하는 조각이고 online softmax는 조각을 읽으며 기준과 합을 갱신하는 규칙입니다.</p>
+        <p className="leading-8">FlashAttention의 exact는 sparse·저차원 근사로 attention 연결을 줄이지 않는다는 뜻입니다. 덧셈 순서와 지수 구현, dtype가 달라 수치 오차는 생길 수 있습니다. SRAM도 shared memory와 register 등 서로 다른 자원을 묶어 부르는 말이므로, SM 한 개의 용량을 GPU 전체 대역폭과 직접 짝지어 비교하지 않습니다.</p>
+        <p className="leading-8">고전적인 IO 모델은 온칩 저장량 M을 원소 개수로 두고 해당 가정 범위에서 FlashAttention의 HBM 접근을 O(N²d²/M)로 분석합니다. 이는 점근식입니다. 차수에 숫자를 넣은 비율은 kernel의 정확한 바이트나 실측 가속비가 아닙니다.</p>
+      </div>
 
-      <section id="backward" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Backward 는 P 를 저장하는 대신 logsumexp 하나로 다시 계산합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            역전파는 gradient 를 흘리려면 softmax 결과 P 가 필요합니다. 표준 구현은 forward 에서
-            N×N 인 P 를 저장해 두고, FlashAttention 은 행마다 logsumexp 한 값 L = m + log ℓ 만
-            저장한 뒤 backward 에서 점수 tile 을 QKᵀ 로 다시 만들어 P = {"e^{S − L}"} 로 복원합니다.
-            이것이 recompute-vs-store tradeoff 입니다.
-          </p>
-          <p>
-            N=4096 이면 head 당 P 는 32 MiB 이지만 L 은 4096×4 B = 16 KiB 로 저장량 차이가 큽니다. 대신 backward 가 점수 tile 을 얻으려고
-            QKᵀ 곱셈을 한 번 더 하므로 곱셈 횟수는 표준보다 늘어납니다. Memory-bound 인 kernel 에서는 계산이 늘어도 HBM 왕복이 줄면 wall-clock 이
-            짧아진다는 것이 논문의 주장이자 측정입니다.
-          </p>
-          <p>
-            같은 판단을 layer 단위로 하는 것이 <Link to="/cs/ai/reverse-mode-autodiff#save-recompute">autodiff 의 save–recompute 경계</Link>
-            입니다. Gradient checkpointing 은 activation 을 버리고 layer 를 다시 돌리지만,
-            FlashAttention 은 kernel 안 tile 단위로 같은 선택을 하고 저장 대상을 통계량 벡터
-            L 하나로 줄입니다.
-          </p>
-          <p>
-            Activation 이 N² 에서 N 으로 줄어든 덕에 같은 GPU 에서 훨씬 긴 sequence 를 학습할 수 있게 됐습니다. 논문은 Path-X(16K) 를 처음 우연
-            이상으로 푼 결과로 이 효과를 보고했습니다. 이것 역시 저자 자기보고 범위입니다.
-          </p>
-        </div>
-        <ProgressiveDetail
-          title="Backward tile 안에서는 어떤 gradient 를 어떤 순서로 만드나요?"
-          preview="Tile 마다 S 와 P 를 다시 만들고 dV, dP, dS, dQ, dK 를 순서대로 누적합니다. HBM 에는 dQ, dK, dV 만 씁니다."
-        >
-          <p>
-            먼저 forward 출력으로 행별 상수 D = rowsum(dO ∘ O) 를 계산해 둡니다. 각 K/V block
-            j 와 Q block i 마다 S_ij = Q_i K_jᵀ/√d 를 다시 만들고 P_ij = {"e^{S_ij − L_i}"} 로
-            복원합니다.
-          </p>
-          <p>
-            그다음 dV_j += P_ijᵀ dO_i, dP_ij = dO_i V_jᵀ, dS_ij = P_ij ∘ (dP_ij − D_i) 를 SRAM
-            안에서 계산하고, dQ_i += dS_ij K_j /√d 와 dK_j += dS_ijᵀ Q_i /√d 를 누적합니다. dQ 는
-            여러 thread block 이 같은 행에 더하므로 atomic add 나 별도 pass 가 필요합니다.
-          </p>
-        </ProgressiveDetail>
-      </section>
+      <p data-stage-bridge="names" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">용어가 같은 네 점수 계산을 가리키는지 확인했습니다. 이제 갱신식을 유도합니다.</p>
+    </section>
+    <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
+      <span id="online-softmax" className="scroll-mt-20" />
+      <span id="backward" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">7 · 옛 합의 기준을 옮기면 중간 행렬이 필요 없다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">점수 s에 대해 e^(s−m)=e^(s−m_old)×e^(m_old−m)입니다. 따라서 이전 조각의 개별 점수를 다시 읽을 필요 없이 이미 쌓은 합 전체에 같은 배율을 곱할 수 있습니다. 값의 가중합에도 동일하게 적용됩니다.</p>
+        <p className="leading-8">학습의 backward에서는 Q·K를 다시 곱해 점수와 확률을 필요한 조각만 재계산할 수 있습니다. 저장했던 O와 행 통계, 입력 및 dropout을 썼다면 동일 난수 상태를 이용합니다. 계산을 추가하는 대가로 큰 중간 행렬을 저장·읽는 비용을 피하는 선택입니다.</p>
+      </div>
+<ExplainedFormula question={"점수 네 개를 둘씩 읽어도 어떻게 같은 가중평균이 나올까?"} idea={"옛 합과 새 항을 같은 기준점으로 바꾸면 덧셈이 가능해집니다. 분자와 분모에 같은 배율을 적용하면 비율도 보존됩니다."} formula={"m=\\max(m_o,\\max S_j),\\ a=e^{m_o-m},\\ \\ell=a\\ell_o+\\sum e^{S_j-m},\\ u=au_o+\\sum e^{S_j-m}V_j,\\ O=u/\\ell"} annotatedFormula={"\\ell=\\underbrace{e^{m_o-m}\\ell_o}_{\\text{옛 합의 기준 이동}}+\\underbrace{\\sum e^{S_j-m}}_{\\text{새 조각의 합}},\\quad O=\\underbrace{u/\\ell}_{\\text{마지막 정규화}}"} operations={[{"expression": "e^{m_o-m}", "annotation": ["옛 기준에서 새 기준으로 지수합과 분자를 함께 옮깁니다."]}, {"expression": "\\sum e^{S_j-m}V_j", "annotation": ["같은 기준으로 계산한 현재 조각의 가중값을 더합니다."]}]} terms={[{"symbol": "m_o,m", "name": "이전·현재 기준", "description": "지수 overflow를 막기 위한 행의 최대 점수입니다."}, {"symbol": "\\ell,u", "name": "분모·분자", "description": "지수합과 값의 가중합을 정규화하지 않은 채 보관합니다."}, {"symbol": "S_j,V_j", "name": "현재 tile", "description": "이미 scale·mask를 적용한 점수와 그 위치의 값입니다."}]} assumptions={["여기서는 dropout이 없고 적어도 하나의 유효 key가 있는 행을 다룹니다.", "실수 산술의 동치이며 실제 부동소수점 결과의 bit 단위 동일성은 보장하지 않습니다."]} interpretation={"[1,3] 뒤 m=3, ℓ=1.135335, u=4.270671입니다. [2,5]를 읽으면 m=5, ℓ=1.203438, u=8.876695이 되어 O≈7.376113입니다."} />
+<AlgorithmBlock title={"두 조각의 분자와 분모를 같은 기준으로 합칩니다 (의사코드)"} input={["점수 S=[1,3,2,5], 값 V=[2,4,6,8], tile 크기 2", "점수에는 scale과 mask를 이미 적용했다고 가정합니다."]} steps={[{"code": "m = −∞; l = 0; u = 0", "note": "최댓값, 지수 합, 가중합을 보관합니다."}, {"code": "for (scores, values) in paired_tiles(S, V, 2):", "note": "점수와 값의 같은 위치를 둘씩 읽습니다."}, {"code": "  new_m = max(m, max(scores)); a = 0 if l == 0 else exp(m − new_m)", "note": "첫 조각에서는 옛 합이 없으므로 0을 씁니다."}, {"code": "  p = exp(scores − new_m)", "note": "새 조각을 새 기준점에 맞춥니다."}, {"code": "  l = a * l + sum(p); u = a * u + sum(p * values); m = new_m", "note": "옛 합도 같은 배율로 바꾼 뒤 새 항을 더합니다."}, {"code": "return u / l", "note": "분자와 분모의 공통 배율이 사라집니다."}]} output={"u≈8.876695, l≈1.203438, O≈7.376113; 실제 커널의 병렬 실행 순서는 별도입니다."} />
+      <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">식에서 보관할 상태가 정해졌습니다. 공식 코드의 실제 변수와 대조합니다.</p>
+    </section>
+    <section id="source" data-teach-level="5" className="scroll-mt-20">
+      <span id="paper-online-softmax" className="scroll-mt-20" />
+      <span id="paper-flashattention" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">8 · 공식 코드의 row_scale에 e⁻²를 넣는다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">공식 소스 e9515d5의 Softmax.online_softmax는 row_max_prev와 row_max_cur의 차이에 scale_log2를 곱한 뒤 exp2를 호출합니다. 이미 scale한 네 점수 사례에서는 log₂e를 곱하므로 2^((3−5)log₂e)=e⁻²입니다. 이어 옛 row_sum에 이 배율을 곱해 현재 조각의 합에 더합니다.</p>
+        <p className="leading-8">사이드바는 2026-10-03 commit의 파일 원문 전체입니다. 이 일반 online-softmax 함수는 갱신 원리를 확인하는 경로이며 다음 절의 FA4 특수 경로 전체를 대표하지 않습니다. 공식 구현도 무효 행과 dtype·architecture에 따른 별도 분기를 갖습니다.</p>
+      </div>
+<CodeViewButton label="공식 소스 · online_softmax 213–251행" onClick={() => sidebar.open("softmax", codeRefs.softmax)} /><SourceApplication source={"공식 코드의 갱신식"} excerpt={"row_sum[r] * row_scale[r]"} application={"1.135335 × e⁻²에 e⁻³+1을 더해 1.203438을 얻습니다."} /><CitationBlock source={"공식 코드의 갱신식"} citeKey={2} href={"https://github.com/Dao-AILab/flash-attention/blob/e9515d5dee6ade134a33d6020d38d01ef0596996/flash_attn/cute/softmax.py"}>2026-10-04에 고정한 공식 원문입니다.</CitationBlock><PaperReading id="paper-flashattention-reading" title={"FlashAttention · 2022"} href={"https://arxiv.org/abs/2205.14135"} problem={"N×N 점수와 확률 중간값을 HBM에 쓰고 읽는 비용"} idea={"tile과 online softmax, backward 재계산"} assumption={"온칩 저장량과 dtype에 맞는 tile이 필요"} experiment={"원 논문의 모델·GPU 구성에서 저자 측정"} boundary={"FLOPs가 같아도 시간은 달라지며 모든 shape에서 같은 이득은 아니다."} />
+      <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">실물 코드와 3→5 계산이 맞았습니다. Blackwell에서 새로 남는 병목을 비교합니다.</p>
+    </section>
+    <section id="comparison" data-teach-level="6" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">9 · FA4는 지수 계산과 온칩 이동도 함께 겹친다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">같은 네 점수에서 둘째 조각을 반드시 기준 5로 옮길 필요는 없습니다. 기준 3을 유지하면 ℓ=1.135335+e⁻¹+e²≈8.892271이고 u≈65.590396입니다. 비율은 여전히 7.376113입니다. 다만 큰 지수를 계속 허용하면 overflow가 생기므로 기준 갱신 조건과 dtype의 범위를 함께 지켜야 합니다.</p>
+        <p className="leading-8">FA4는 이런 조건부 rescaling과 FMA를 이용한 지수 근사, 비동기 MMA·softmax 겹침을 함께 설계합니다. backward에서는 TMEM과 2-CTA MMA로 shared-memory 이동·원자적 누적 부담을 줄입니다. <Link to="/cs/ai/sionic-glm-b300#tmem-official-source">tcgen05·TMEM 실제 명령</Link>과 <Link to="/cs/gpu/warp-specialization-and-async-pipelines">Hopper의 TMA·WGMMA</Link>는 각 정본에서 이어집니다.</p>
+        <p className="leading-8">행렬 연산 장치만 빨라졌다고 전체 attention이 같은 배율로 빨라지지 않습니다. 가정상 10시간 중 행렬곱 5시간을 절반으로 줄여도 총 7.5시간, 약 1.33배입니다. FA4의 질문은 나머지 지수·이동·동기화가 실행 경로에서 얼마나 남는가입니다.</p>
+      </div>
+<SourceApplication source={"FA4 식 (6) · 기준을 유지하는 분기"} excerpt={"O_{j-1}+e^{S_j−m_{j-1}}V_j"} application={"기준 3을 유지해도 분자·분모를 같은 기준으로 누적하면 65.590396/8.892271≈7.376113입니다."} /><CitationBlock source={"FA4 식 (6) · 기준을 유지하는 분기"} citeKey={2} href={"https://arxiv.org/html/2603.05451v1"}>2026-10-04에 고정한 공식 원문입니다.</CitationBlock><PaperReading id="paper-flashattention4" title={"FlashAttention-4 · arXiv 2603.05451v1"} href={"https://arxiv.org/html/2603.05451v1"} problem={"Blackwell에서 행렬곱 외 자원이 병목으로 남음"} idea={"지수·MMA·이동 겹침, 조건부 rescaling, TMEM·2CTA"} assumption={"지원 target·tile·dtype의 오차와 자원 조건을 지켜야 함"} experiment={"저자 비교는 BF16, head dim·sequence length와 baseline version별 kernel 측정"} boundary={"v1 본문은 B200, 부록 A.1은 B100으로 표기가 불일치한다. 이 글은 최고 가속비를 제품 성능 보장으로 인용하지 않는다."} />
+      <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">같은 수학과 서로 다른 실행 비용을 분리했습니다. 마지막으로 측정과 실패 조건을 정합니다.</p>
+    </section>
+    <section id="limits" data-teach-level="7" className="scroll-mt-20">
+      <span id="boundary" className="scroll-mt-20" />
+      <h2 className="mb-6 text-2xl font-bold">10 · 같은 shape와 오차 기준으로 시간을 재야 한다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">비교할 때 batch·head·sequence·head dim, causal mask, dtype, dropout, forward/backward와 backend 버전을 고정합니다. warmup·동기화·반복 측정도 같아야 합니다. 네 점수의 CPU 계산 검산은 GPU 성능 재현이 아닙니다.</p>
+        <p className="leading-8">긴 prefill과 query 한 개의 decode는 활용할 병렬성과 KV 이동이 다릅니다. <Link to="/cs/ai/attention-kernel-anatomy-and-backends">backend 선택 정본</Link>에서 지원 shape를 확인하고 <Link to="/cs/gpu/gpu-memory-hierarchy-and-roofline">메모리와 연산 상한</Link>을 실제 counter와 비교합니다.</p>
+        <p className="leading-8">예측해 보세요. 모든 점수에 100을 더하면 출력은 변할까요? 같은 mask와 정확한 실수 계산에서는 변하지 않습니다. 왜 그런지는 7절의 공통 기준 이동식으로 돌아가 설명할 수 있어야 합니다.</p>
+      </div>
 
-      <section id="boundary" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          SRAM 크기와 head dim 에 묶인 hardware kernel 입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            FlashAttention 의 정체는 수학이 아닌 CUDA kernel 입니다. 특정 GPU 의 메모리 계층에 맞춰 손으로 짠 코드입니다. 결과는 exact 하지만 어떤
-            tile 크기가 맞는지, head dim 을 어디까지 받는지, 얼마나 빨라지는지는 전부 hardware 에 달려 있습니다.
-          </p>
-          <p>
-            첫 한계는 head dim 입니다. Q, K, V, S tile 이 한 SM 의 SRAM 에 같이 들어가야 하므로 d 가 커지면 B 를 줄여야 하고 그러면 HBM 왕복이 다시
-            늘어납니다. 2022 년 구현은 d ≤ 128 만 지원했고 더 큰 head dim 은 후속 버전에서 열렸습니다.
-          </p>
-          <p>
-            Hardware 에 묶여 있다는 점도 한계입니다. SRAM 용량·tensor core 의 입력 형식·warp 수가 세대마다 달라 A100 용 tile 이 H100 에서 최적이
-            아닙니다. 그래서 FlashAttention-2, 3 가 같은 수학 위에 kernel 을 다시 썼습니다. Triton 같은 compiler 로 다시 짜는 시도도 같은 이유에서
-            나왔습니다.
-          </p>
-          <p>
-            마지막은 병렬화 축입니다. 2022 년 kernel 은 batch×head 단위로만 thread block 을 띄우기 때문에 sequence 가 길고 batch 가 작으면 SM
-            대부분이 놉니다. FlashAttention-2 가 sequence 축 병렬과 loop 순서 교체로 이 문제를 풀었고 그 차이는 다음 글인 attention kernel
-            anatomy 에서 다룹니다.
-          </p>
-          <p>
-            Decode 에서는 모양이 달라집니다. Query 가 한 행뿐이라 Q tiling 은 의미가 없고,
-            <Link to="/cs/ai/kv-cache-fundamentals#kv-shape">KV cache</Link> 가 page 단위로 흩어져
-            있습니다. <Link to="/cs/ai/vllm-paged-attention#memory-kernel-boundary">vLLM 의 PagedAttention</Link>
-            은 같은 online softmax 를 block table 위에서 돌리며, 긴 context 에서는 K/V 축을
-            나눠 병렬화하는 Flash-Decoding 이 필요해집니다.
-          </p>
-        </div>
-        <ProgressiveDetail
-          title="FlashAttention 과 근사 attention 은 어떻게 다른가요?"
-          preview="FlashAttention 은 곱셈을 하나도 줄이지 않는 exact attention 입니다. Sparse·low-rank 근사는 FLOPs 를 줄이지만 memory-bound 병목을 건드리지 못해 wall-clock 이 잘 줄지 않았습니다."
-        >
-          <p>
-            논문은 block-sparse FlashAttention 도 함께 제시해 mask 로 통째로 가려지는 tile 을 읽지 않는 방식으로 IO 를 더 줄였습니다. 근사가 들어가는
-            곳은 sparsity pattern 뿐이고 kernel 자체는 남은 tile 을 여전히 exact 하게 계산합니다.
-          </p>
-        </ProgressiveDetail>
-      </section>
-    </div>
-  );
+      <p data-stage-bridge="limits" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">출력의 동치, 수치 오차, 실제 시간을 각각 검증하면 이 글의 추적이 끝납니다.</p>
+    </section>
+    <ReviewPrompts questions={["모든 점수에 같은 100을 더하면 출력이 바뀔까요? (답: 7절)", "128MiB가 입력 세 배열의 64배라는 주장은 왜 틀릴까요? (답: 5절)", "행렬곱만 두 배 빨라져도 전체 시간이 두 배 줄지 않는 이유는 무엇일까요? (답: 9절)"]} />
+    <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas} />
+  </div>;
 }

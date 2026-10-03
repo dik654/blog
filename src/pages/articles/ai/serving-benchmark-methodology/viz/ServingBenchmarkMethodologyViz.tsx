@@ -69,15 +69,15 @@ export default function ServingBenchmarkMethodologyViz() {
         role="group"
         aria-label="Offered load 에 따른 throughput 과 latency 곡선"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(32rem,calc(100dvh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex shrink-0 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scenes.active + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
 
-          <div className="mt-4 h-52 min-w-0 w-full">
+          <div className="mt-4 h-52 min-w-0 w-full shrink-0">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data} margin={{ top: 8, right: 8, bottom: 4, left: -8 }}>
                 <CartesianGrid stroke="#9ca3af" strokeOpacity={0.25} strokeDasharray="2 4" />

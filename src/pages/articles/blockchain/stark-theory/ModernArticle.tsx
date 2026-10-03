@@ -1,88 +1,85 @@
-import ContentBoundary from "@/components/articles/content-boundary";
-import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import STARKPipelineViz from "./STARKPipelineViz";
+import ExplainedFormula from "@/components/ui/explained-formula";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
+import ReviewPrompts from "../../world-systems/ReviewPrompts";
+import ZkCaseDiagram from "../ZkCaseDiagram";
 
-export default function ModernSTARKTheoryArticle() {
-  return (
-    <article className="space-y-14">
-      <section id="overview" className="space-y-6">
-        <header className="space-y-3"><p className="text-sm font-semibold text-primary">한 줄 실행을 검증 가능한 trace로 바꾸는 STARK</p><h2 className="text-3xl font-bold tracking-tight">계산의 매 step을 기록하고 그 규칙을 low-degree claim으로 낮춘다</h2></header>
-        <p className="text-lg leading-8 text-foreground/90">
-            F₁₇에서 f(X)=X²+2X+3을 x=4에 계산하는 Horner 방법을 써 봅시다. v₀=1, v₁=v₀·4+2=6, v₂=v₁·4+3=27≡10입니다. STARK의
-            execution trace는 이 중간 상태를 표로 기록하고 AIR(algebraic intermediate representation)는 인접 행이 같은 전이 규칙을 따르는지
-            검사합니다.
-          </p>
-        <p>그다음 여러 제약을 composition polynomial 하나로 결합하고 더 큰 domain에 low-degree extension(LDE)한 뒤 Merkle root로 commit합니다. 마지막 low-degree proximity 검사는 FRI가 담당합니다. 즉 STARK는 특정 polynomial commitment 한 식이 아니라 trace·AIR·composition·LDE·oracle transcript의 파이프라인입니다.</p>
-        <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> “프로그램을 실행했다”는 의미를 trace와 AIR가 소유하고, “그 제약 polynomial이 낮은 차수다”는 검사를 FRI가 소유합니다. Hash 기반 transparent setup은 trusted ceremony를 없애지만 보안 가정 자체를 없애지는 않습니다.</aside>
-        <ContentBoundary article="stark-theory" />
-        <STARKPipelineViz />
-      </section>
+/** 원문 확인: 2026-10-04. 작은 수치는 별도 가정입니다. */
+export default function Article() { return <article className="space-y-16">
+<section id="overview" data-teach-level="S" className="scroll-mt-20 space-y-6">
+<h2 className="text-2xl font-bold">1. 실행의 중간 상태를 검사 가능한 표로 바꿉니다</h2>
+<p className="leading-8">다른 컴퓨터가 프로그램을 실행했다고 할 때 마지막 숫자만으로는 과정이 맞았는지 알기 어렵습니다. 중간 상태가 이전 상태의 규칙을 따랐는지 확인하고 그 확인을 짧은 증거로 전달하고 싶습니다.</p>
+<p className="leading-8">이 글은 세 상태의 작은 계산을 표로 기록한 뒤, 이웃한 상태와 공개된 답이 맞는지 검사합니다. 마지막에는 긴 표를 조금만 읽는 암호 검사로 이어지는 경로를 보여 줍니다.</p>
 
-      <section id="trace-air" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">01 · Execution trace와 AIR</p><h2 className="mt-2 text-2xl font-bold">행 사이의 전이와 첫·마지막 행의 경계를 분리한다</h2></header>
-        <ExplainedFormula
-          question="Horner trace가 x=4에서 f(4)=10을 계산했다는 것을 어떤 제약으로 확인하는가?"
-          idea={<>각 행의 상태 vᵢ와 다음 행 vᵢ₊₁ 사이에 곱셈·덧셈 규칙을 둡니다. 첫 coefficient와 마지막 공개 output은 boundary constraint로 고정합니다.</>}
-          formula={String.raw`v_0=1,\quad v_{i+1}=xv_i+a_{i+1},\quad (a_1,a_2)=(2,3),\quad v_2=y=10\quad\text{in }\mathbb F_{17}`}
-          annotatedFormula={String.raw`v_0=\underbrace{1,\quad v_{i+1}=xv_i+a_{i+1},\quad (a_1,a_2)=(2,3),\quad v_2=y=10\quad\text{in }\mathbb F_{17}}_{\text{Trace state 계산}}`}
-          operations={[
-            { expression: String.raw`1,\quad v_{i+1}=xv_i+a_{i+1},\quad (a_1,a_2)=(2,3),\quad v_2=y=10\quad\text{in }\mathbb F_{17}`, annotation: ["Trace state이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 행의 상태 vᵢ와 다음 행 vᵢ₊₁ 사이에 곱셈·덧셈","규칙을 둡니다."] },
-          ]}
-          terms={[
-            { symbol: "v_i", name: "Trace state", description: "i번째 step까지 Horner 계산이 누적한 field 값입니다." },
-            { symbol: "x", name: "Public evaluation point", description: "예에서는 4이며 statement에 binding되어야 합니다." },
-            { symbol: "a_i", name: "Coefficient schedule", description: "각 step에서 더할 coefficient입니다." },
-            { symbol: "y", name: "Public output", description: "마지막 trace row가 일치해야 하는 값 10입니다." },
-          ]}
-          assumptions={["Trace row ordering과 coefficient schedule이 AIR에 고정되고 같은 field F₁₇을 사용합니다.", "Transition constraint는 적용해야 할 모든 row에 selector로 활성화됩니다.", "첫 row와 마지막 output은 별도 boundary constraint로 public statement에 binding됩니다."]}
-          interpretation="v₀=1에서 v₁=1·4+2=6, v₂=6·4+3=27≡10이므로 honest trace는 통과합니다. 전이 제약만 두고 마지막 y=10 경계를 빼면 y=11이라는 거짓 public claim과 무관한 올바른 내부 trace도 통과할 수 있습니다."
-        />
-        <p><strong>증명 아이디어:</strong> Trace columns를 domain H 위 polynomial로 보간하면 현재 행과 다음 행은 X와 generator·X evaluation 관계로 표현됩니다. 각 transition numerator가 적용 row에서 0이면 해당 selector/vanishing factor로 나누어떨어집니다. 모든 제약을 random coefficient로 섞어 composition polynomial 하나로 만들면 prover가 challenge를 보기 전에 특정 제약의 오차를 다른 제약으로 상쇄하기 어렵습니다.</p>
-        <ExplainedFormula
-          question="여러 AIR 제약을 verifier가 검사할 하나의 low-degree claim으로 어떻게 묶는가?"
-          idea={<>각 constraint numerator Nⱼ가 적용 domain의 zero polynomial Zⱼ로 나누어떨어져야 합니다. Quotient들을 commitment 뒤 random αⱼ로 합쳐 composition polynomial을 만듭니다.</>}
-          formula={String.raw`Q_j(X)=\frac{N_j(X)}{Z_j(X)},\qquad C(X)=\sum_{j=1}^{m}\alpha_j Q_j(X)`}
-          annotatedFormula={String.raw`Q_j(X)=\underbrace{\frac{N_j(X)}{Z_j(X)},\qquad C(X)=\sum_{j=1}^{m}\alpha_j Q_j(X)}_{\text{기준량당 비율}}`}
-          operations={[
-            { expression: String.raw`\frac{N_j(X)}{Z_j(X)},\qquad C(X)=\sum_{j=1}^{m}\alpha_j Q_j(X)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 constraint numerator Nⱼ가 적용","domain의 zero polynomial Zⱼ로","나누어떨어져야 합니다."] },
-          ]}
-          terms={[
-            { symbol: "N_j", name: "Constraint numerator", description: "j번째 전이 또는 경계 식을 polynomial로 표현한 오차입니다." },
-            { symbol: "Z_j", name: "Constraint zero polynomial", description: "그 제약이 적용되는 row set에서 0입니다." },
-            { symbol: "Q_j", name: "Constraint quotient", description: "AIR가 만족될 때 polynomial로 존재합니다." },
-            { symbol: "\\alpha_j", name: "Composition challenge", description: "Committed trace 뒤 transcript에서 뽑는 random mixing coefficient입니다." },
-            { symbol: "C(X)", name: "Composition polynomial", description: "FRI에 넘길 combined low-degree object입니다." },
-          ]}
-          assumptions={["각 Nⱼ의 degree와 적용 domain·Zⱼ가 정확히 산정됩니다.", "αⱼ는 trace commitment 뒤 생성되고 statement·AIR profile에 binding됩니다.", "Division 결과와 claimed degree bound를 consistency openings와 함께 검사합니다."]}
-          interpretation="Valid trace에서는 각 remainder가 0이라 Qⱼ가 존재합니다. AIR가 누락된 경우에는 composition이 완벽히 low degree여도 원래 프로그램 의미를 증명하지 못합니다. 따라서 constraint coverage test가 cryptographic test보다 먼저입니다."
-        />
-      </section>
+<p data-stage-bridge="overview" className="text-sm leading-7 text-muted-foreground">실행 의미를 중간 상태로 잡았습니다. 기록과 검사를 나누어 봅니다.</p>
+</section>
+<section id="black-box" data-teach-level="B" className="scroll-mt-20 space-y-6">
+<h2 className="text-2xl font-bold">2. 상태표·규칙·표의 진위를 따로 확인합니다</h2>
+<p className="leading-8">만드는 쪽은 실행한 상태를 표에 적고 표가 지켜야 할 규칙을 적용합니다. 그 표를 고정한 뒤, 일부만 열어도 일관성을 검사할 수 있는 자료를 추가합니다.</p>
+<p className="leading-8">확인하는 쪽은 공개 입력과 출력에 맞는 규칙인지, 열린 값이 처음 표에 있던 것인지, 표를 줄이는 계산이 맞는지를 순서대로 검사합니다. 이 중 어느 하나가 빠지면 다른 검사가 대신해 주지 못합니다.</p>
 
-      <section id="lde-fri" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">02 · LDE, Merkle, FRI</p><h2 className="mt-2 text-2xl font-bold">Trace domain 밖으로 평가해 distance를 만든 뒤 일부만 연다</h2></header>
-        <p>Trace가 n개 row에만 있으면 그 n개 값에는 degree&lt;n polynomial이 항상 하나 존재하므로 “낮은 차수” 검사가 약합니다. STARK는 NTT-friendly larger coset domain으로 polynomial을 다시 평가해 LDE oracle를 만듭니다. Blowup factor가 커지면 code distance와 sampling 여유가 늘 수 있지만 prover의 FFT·hash·memory와 proof query path도 늘어납니다.</p>
-        <p>
-            Prover는 trace LDE와 composition evaluations를 Merkle root로 고정하고 transcript challenge를 받은 다음 필요한
-            consistency openings와 FRI queries를 제공합니다. FRI는 oracle proximity만 검사하므로 trace root, public
-            statement, AIR identifier, domain, round roots와 challenges의 순서가 모두 transcript에 binding되어야 합니다.
-          </p>
-        <div className="overflow-x-auto rounded-lg border border-border"><table className="min-w-[720px] w-full text-sm"><thead className="bg-muted/50 text-left"><tr><th className="p-3">비용 축</th><th className="p-3">주요 원인</th><th className="p-3">같이 기록할 경계</th></tr></thead><tbody className="divide-y divide-border text-muted-foreground"><tr><td className="p-3 font-medium text-foreground">Prover time</td><td className="p-3">trace 생성, NTT/LDE, composition, hash, FRI</td><td className="p-3">같은 trace 길이·blowup·query 수</td></tr><tr><td className="p-3 font-medium text-foreground">Peak memory</td><td className="p-3">여러 LDE columns와 Merkle layers</td><td className="p-3">Streaming 여부와 materialized buffers</td></tr><tr><td className="p-3 font-medium text-foreground">Proof bytes</td><td className="p-3">roots, field openings, authentication paths</td><td className="p-3">Batch path dedup·hash width</td></tr><tr><td className="p-3 font-medium text-foreground">Verifier</td><td className="p-3">hash paths, field checks, FRI rounds</td><td className="p-3">Security target와 failure parity</td></tr></tbody></table></div>
-      </section>
+<p data-stage-bridge="black-box" className="text-sm leading-7 text-muted-foreground">세 검사 역할을 나눴습니다. 같은 다항식의 실제 계산 상태를 적습니다.</p>
+</section>
+<section id="case" data-teach-level="0" className="scroll-mt-20 space-y-6">
+<h2 className="text-2xl font-bold">3. 1에서 6을 거쳐 10에 도착합니다</h2>
+<p className="leading-8">17로 나눈 나머지에서 X²+2X+3을 X=4에 계산합니다. 제일 높은 계수 1에서 시작해 4를 곱하고 2를 더하면 6, 다시 4를 곱하고 3을 더하면 27의 나머지 10입니다. 숫자는 설명용 가정입니다.</p>
+<p className="leading-8">시간 0,1,2의 상태는(1,6,10)입니다. 첫 상태 1, 입력 4, 단계별 더하는 수 2와 3, 최종 공개값 10을 모두 고정해야 합니다. 마지막 연결을 빼면 내부에서 10을 계산하고도 공개 답을 11이라고 주장할 수 있습니다.</p>
 
-      <section id="security-cost" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">03 · 보안·ZK·release gate</p><h2 className="mt-2 text-2xl font-bold">Transparent는 ceremony가 없다는 뜻이지 assumption-free라는 뜻이 아니다</h2></header>
-        <p>
-            STARK의 soundness는 AIR reduction, polynomial degree bounds, field size, code distance, sampling,
-            Fiat–Shamir modeling과 collision-resistant hash에 걸쳐 있습니다. Post-quantum 방향이라는 표현도 선택 hash와 security
-            model에 귀속해야 하며 모든 parameter와 구현이 자동으로 양자 공격에 안전하다는 뜻은 아닙니다.
-          </p>
-        <p>또한 STARK라는 이름만으로 zero knowledge가 생기지 않습니다. Raw trace LDE를 그대로 commit하면 private witness가 query openings나 algebraic relation을 통해 새어 나갈 수 있습니다. ZK가 필요하면 trace/composition blinding, randomized padding, query distribution과 simulator argument가 protocol profile에 명시되어야 합니다.</p>
-        <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-5 text-sm leading-6"><strong>Release gate:</strong> 잘못된 첫·마지막 row, 누락 transition, wrong public input, composition remainder, LDE domain, Merkle path, FRI fold, transcript reorder를 각각 주입합니다. False accept 0과 stable reason code를 확인한 다음 prover phase time·peak RSS·proof bytes·verify hash/field time을 측정합니다.</div>
-        <div id="paper-stark"><CitationBlock source="Ben-Sasson et al. · Scalable, transparent, and post-quantum secure computational integrity (2018)" citeKey={1} href="https://eprint.iacr.org/2018/046.pdf"><p><strong>문제:</strong> Trusted setup 없이 큰 계산의 integrity를 scalable prover와 succinct verifier로 증명해야 합니다.</p><p><strong>기여:</strong> Algebraic execution trace, constraint composition, oracle commitment와 FRI 계열을 잇는 STARK construction·evaluation을 제시합니다.</p><p><strong>전제:</strong> 논문의 RAM/AIR encoding, field·hash·random-oracle, proximity와 parameter model을 사용합니다.</p><p><strong>근거 범위:</strong> 논문 construction과 보고된 implementation experiment 범위입니다.</p><p><strong>말하지 않는 것:</strong> 모든 STARK library의 동일 보안·성능이나 자동 zero knowledge를 보장하지 않습니다.</p></CitationBlock></div>
-        <div id="paper-fri-in-stark"><CitationBlock source="Ben-Sasson et al. · FRI (ICALP 2018)" citeKey={2} href="https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ICALP.2018.14"><p><strong>문제:</strong> Committed evaluation oracle의 Reed–Solomon proximity를 적은 query로 검사해야 합니다.</p><p><strong>기여:</strong> Recursive even/odd folding과 IOPP soundness 분석을 제시합니다.</p><p><strong>전제:</strong> 논문의 code, distance, domain, randomness와 oracle model을 사용합니다.</p><p><strong>근거 범위:</strong> STARK pipeline 중 low-degree testing 구성요소에 한정합니다.</p><p><strong>말하지 않는 것:</strong> Trace/AIR semantic correctness나 STARK 전체 ZK를 맡지 않습니다.</p></CitationBlock></div>
-        <p>이 글의 10문항은 Horner trace, 전이·경계, AIR→composition, LDE, Merkle/FRI 역할, transparency, 누락 경계 반례, degree 계산, ZK leakage, release benchmark를 묻습니다. 본문의 수치 trace·식·전제·negative corpus로 모두 답할 수 있습니다.</p>
-      </section>
-    </article>
-  );
-}
+<p data-stage-bridge="case" className="text-sm leading-7 text-muted-foreground">세 상태와 공개 끝점을 고정했습니다. 이웃 상태의 차이를 0으로 만드는 그림을 봅니다.</p>
+</section>
+<section id="picture" data-teach-level="1" className="scroll-mt-20 space-y-6">
+<h2 className="text-2xl font-bold">4. 다음 상태에서 계산 규칙을 빼면 0이어야 합니다</h2>
+<p className="leading-8">첫 전이에서는 6−4×1−2=0입니다. 둘째 전이에서는 10−4×6−3=−17이므로 나머지가 0입니다. 각각의 차이가 0이라는 조건이 실행 규칙을 나타냅니다.</p>
+<p className="leading-8">이웃 상태가 모두 맞아도 시작점과 끝점은 따로 연결합니다. 첫 값이 1인지, 끝 값이 공개 답 10인지 확인해야 이 실행이 의도한 계산이라는 뜻이 됩니다.</p>
+<ZkCaseDiagram title="같은 입력 4를 사용하는 두 단계" steps={["v₀=1", "v₁=4×1+2=6", "v₂=4×6+3=10"]} arrows={["첫 단계", "mod17"]} />
+<p data-stage-bridge="picture" className="text-sm leading-7 text-muted-foreground">전이와 시작·끝의 역할을 분리했습니다. 긴 표에서 이 조건을 묶는 이유를 봅니다.</p>
+</section>
+<section id="need" data-teach-level="2" className="scroll-mt-20 space-y-6">
+<h2 className="text-2xl font-bold">5. 모든 줄을 다시 읽지 않도록 규칙을 넓혀 적습니다</h2>
+<p className="leading-8">실행이 길어지면 모든 이웃 행을 직접 읽는 일이 비싸집니다. 표의 값들을 다항식으로 표현하면 행마다 맞아야 할 조건을 다항식 관계로 옮길 수 있습니다. 다만 행 수만큼 자유로운 다항식은 아무 표나 표현하므로 여분의 평가 위치가 필요합니다.</p>
+<p className="leading-8">조건들을 합칠 때도 오류가 서로 지워질 수 있습니다. 차이가 1인 조건과−1인 조건을 그냥 더하면 0입니다. 표를 고정한 뒤 예측하기 어려운 가중치를 주는 이유가 여기에 있습니다.</p>
+
+<p data-stage-bridge="need" className="text-sm leading-7 text-muted-foreground">다항식 표현과 무작위 결합이 필요한 이유를 잡았습니다. 각 단계의 이름을 붙입니다.</p>
+</section>
+<section id="names" data-teach-level="3" className="scroll-mt-20 space-y-6">
+<h2 className="text-2xl font-bold">6. 실행표·대수 조건·차수 검사를 잇습니다</h2>
+<p className="leading-8">중간 상태표는 execution trace입니다. 인접 행과 공개 끝점에 적용할 대수 조건은 AIR, Algebraic Intermediate Representation입니다. 이웃 행의 조건은 transition, 시작·끝의 조건은 boundary constraint라고 합니다.</p>
+<p className="leading-8">각 조건을 다항식의 정확한 나눗셈으로 바꾸고 가중치를 줘 합친 것은 composition polynomial입니다. 같은 낮은 차수 함수를 더 많은 점에서 계산하는 과정은 LDE, low-degree extension입니다.</p>
+<p className="leading-8">Merkle commitment는 표를 고정하고 FRI는 그 표가 정한 차수의 함수에 가까운지 검사합니다. 이 조합이 STARK 계열 증명에 사용됩니다. transparent는 비밀 준비값을 가진 의식이 필요 없다는 뜻이며 암호 가정이 없다는 뜻은 아닙니다.</p>
+
+<p data-stage-bridge="names" className="text-sm leading-7 text-muted-foreground">실행 의미와 차수 검사에 이름을 붙였습니다. 세 상태를 다항식으로 실제 옮깁니다.</p>
+</section>
+<section id="trace-air" data-teach-level="4" className="scroll-mt-20 space-y-6">
+<h2 className="text-2xl font-bold">7. 세 상태를 잇는 다항식에서 전이 몫 10이 나옵니다</h2>
+<p className="leading-8">시간을 T로 적으면 상태(1,6,10)을 잇는 다항식은 v(T)=8T²+14T+1입니다. T=0,1,2를 넣어 1,23≡6,61≡10을 확인합니다. 각 단계에서 더할 수는 a(T)=T+2로 표현할 수 있습니다.</p>
+<p className="leading-8">전이 차이 N(T)=v(T+1)−4v(T)−(T+2)를 전개하면 10T²+7T=10T(T−1)입니다. 실제 전이가 적용되는 시간 0과 1에서 0이어야 하므로 T(T−1)로 나누며 몫은 10입니다. 마지막 행 2에는 다음 실행이 없으므로 전이 조건을 무조건 적용하지 않습니다.</p>
+<p className="leading-8">첫 경계의 몫은(v(T)−1)/T=8T+14, 마지막 경계의 몫은(v(T)−10)/(T−2)=8T+13입니다. 세 몫에 가정한 가중치 1,2,3을 주면 10+2(8T+14)+3(8T+13)=6T+9가 됩니다. 실제 가중치는 표 고정 뒤 정합니다.</p>
+<ExplainedFormula question="전이 조건을 왜 다항식의 정확한 나눗셈으로 쓰나요?" idea="전이가 필요한 T=0,1에서 차이가 0이면 T와 T−1이 모두 인수입니다." formula={String.raw`Q(T)=\frac{v(T+1)-4v(T)-(T+2)}{T(T-1)}=10`} annotatedFormula={String.raw`Q(T)=\frac{v(T+1)-4v(T)-(T+2)}{T(T-1)}=10`} operations={[{"expression": "v(T+1)-4v(T)-(T+2)", "annotation": ["다음 상태에서 규칙대로 계산한 값을 뺍니다."]}, {"expression": "T(T-1)", "annotation": ["전이가 실제로 필요한 두 행에서 0인 인수입니다."]}]} terms={[{"symbol": "T", "name": "시간 좌표", "description": "다항식을 평가하는 변수입니다."}, {"symbol": "v", "name": "상태 다항식", "description": "세 행을 보간한 8T²+14T+1입니다."}, {"symbol": "Q", "name": "전이 몫", "description": "분수의 비율이 아니라 정확한 다항식 몫입니다."}]} interpretation="분자가 10T(T−1)이므로 몫 10이 존재합니다." assumptions={["17로 나눈 나머지에서 계산합니다.", "이 장난감 예는 연속 시간좌표를 사용하며 실제 곱셈 부분군 기반 구현의 인덱스와 구별합니다."]} /><AlgorithmBlock title="작은 실행의 AIR 검사 (의사코드)" input={["상태[1,6,10], 입력 4, 단계계수[2,3], 공개답 10"]} steps={[{"code": "state[0]=1, state[2]=10인지 확인", "note": "시작과 공개 끝점을 묶습니다."}, {"code": "t=0,1 각각에서 (state[t+1]−4×state[t]−coeff[t]) mod17=0 확인", "note": "마지막 행 이후에는 전이를 만들지 않습니다."}, {"code": "실패가 있으면 거절; 통과한 표를 약정한 보간 형식으로 변환", "note": "이 계산은 전체 암호 프로토콜의 입력 조건입니다."}]} output="경계 2개와 전이 2개를 만족한 실행표" />
+<p data-stage-bridge="trace-air" className="text-sm leading-7 text-muted-foreground">실제 표에서 전이·경계 몫을 모두 계산했습니다. 원문의 행 조건과 대응시킵니다.</p>
+</section>
+<section id="lde-fri" data-teach-level="5" className="scroll-mt-20 space-y-6">
+<h2 className="text-2xl font-bold">8. 원문은 이웃 행과 지정된 끝점을 따로 적습니다</h2>
+<p className="leading-8">STARK 원문의 AIR 관계는 지정한 행·열의 값과 인접 시간의 조건을 따로 둡니다. 원문의 wⱼ(i)=α에 처음 행의 1과 마지막 행의 10을 넣으면 경계 조건입니다. P(w[t],w[t+1])=0에는 앞 절의 두 전이 차이를 넣습니다.</p>
+<p className="leading-8">이 표를 세 점에서만 보간하면 어떤 세 값에도 차수 2 이하 다항식이 존재합니다. 같은 함수를 8개의 다른 점에서 다시 평가하면 허용된 함수들이 임의의 8칸 표보다 적어집니다. 예를 들어 T=3에서 v(3)=115≡13입니다. 단순히 기존 세 값을 복사해 길이만 늘리는 것이 아닙니다.</p>
+<p className="leading-8">평가표의 고정값과 필요한 위치의 값을 연결하고 조건의 몫과 FRI 검사를 함께 확인해야 합니다. FRI만 통과했다고 특정 공개 출력 10까지 확인한 것은 아닙니다.</p>
+<div id="source-air"><CitationBlock source="Scalable, transparent, and post-quantum secure computational integrity · AIR 정의, PDF p.36" citeKey={1} href="https://eprint.iacr.org/2018/046.pdf"><p className="leading-8">원문: <q>wj(i) = α</q></p><p className="leading-8">시간 0의 상태를 1, 시간 2의 상태를 10에 묶습니다. 전이 조건 두 개와 별도인 경계입니다.</p></CitationBlock></div>
+<p data-stage-bridge="lde-fri" className="text-sm leading-7 text-muted-foreground">원문의 조건과 더 넓은 평가표를 연결했습니다. 영지식에 필요한 별도 가리기를 봅니다.</p>
+</section>
+<section id="source" data-teach-level="6" className="scroll-mt-20 space-y-6">
+<h2 className="text-2xl font-bold">9. 표를 열어 주면 감춘 값도 새로 드러날 수 있습니다</h2>
+<p className="leading-8">원 논문은 계산 무결성 증명과 영지식 구성을 구분해서 다룹니다. 작은 예의 표를 그대로 열면 상태 1·6·10을 보게 됩니다. 이 값들이 공개 정보로부터 이미 결정된다면 새로운 비밀은 없지만 비공개 계수가 포함된 실제 작업에서는 열어 준 값이 추가 정보를 줄 수 있습니다.</p>
+<p className="leading-8">상태를 숨겨야 하는 경우에는 원래 행에서 0이 되는 다항식 Z(T)=T(T−1)(T−2)에 무작위 다항식 r(T)를 곱해 v(T)+Z(T)r(T)로 가리는 아이디어를 사용할 수 있습니다. 원래 0·1·2행의 값은 보존됩니다. 예제로 r=1이면 T=3의 값은 13+6=19≡2로 바뀝니다.</p>
+<p className="leading-8">무작위 상수 하나가 전체 영지식을 보장한다는 뜻은 아닙니다. 열어 주는 평가 수와 결합 관계에 비해 충분한 무작위 자유도가 남아야 하고 증가한 차수와 모든 검증 조건을 함께 바꿔야 합니다. 원문의 영지식 분석이 필요한 이유입니다.</p>
+<div id="source-stark-zk"><CitationBlock source="STARK 원 논문 · Abstract, zero-knowledge 구성" citeKey={1} href="https://eprint.iacr.org/2018/046.pdf"><p className="leading-8">원문: <q>zero knowledge</q></p><p className="leading-8">v+Zr에서 r=1인 작은 계산은 원래(1,6,10)을 보존하고 T=3의 13을 2로 바꿉니다. 이 한 번의 가리기는 전체 영지식 증명이 아닙니다.</p></CitationBlock></div><div id="paper-stark"><CitationBlock source="Scalable, transparent, and post-quantum secure computational integrity (2018)" citeKey={2} href="https://eprint.iacr.org/2018/046.pdf"><p className="leading-8"><strong>문제:</strong> 비밀 준비값 없이 큰 계산의 정확성을 효율적으로 확인합니다.</p><p className="leading-8"><strong>기여:</strong> 실행 관계·대수 검사·표의 고정과 근접성 검사를 연결합니다.</p><p className="leading-8"><strong>전제:</strong> 논문이 지정한 체·해시·무작위 오라클과 오류 분석을 사용합니다.</p><p className="leading-8"><strong>근거 범위:</strong> 원 논문의 구성과 저자 구현 평가입니다.</p><p className="leading-8"><strong>일반화할 수 없는 결론:</strong> 모든 STARK 매개변수나 하위 암호를 포함한 전체 서비스의 영지식·양자 안전성을 보장하지 않습니다.</p></CitationBlock></div>
+<p data-stage-bridge="source" className="text-sm leading-7 text-muted-foreground">원래 행 보존과 바깥 값 가리기를 수치로 구별했습니다. 마지막으로 보안과 비용의 경계를 확인합니다.</p>
+</section>
+<section id="security-cost" data-teach-level="7" className="scroll-mt-20 space-y-6">
+<h2 className="text-2xl font-bold">10. 표현이 정확해야 빠른 검증도 의미가 있습니다</h2>
+<p className="leading-8">마지막 경계를 빼면 공개 답 11에도 내부 표(1,6,10)가 남을 수 있습니다. 잘못된 계수 순서, 누락된 전이와 잘못된 범위도 같은 종류의 문제입니다. 해시 경로와 차수 검사는 이런 의미상의 누락을 대신 고치지 않습니다.</p>
+<p className="leading-8">해시 기반 구성은 이산로그 기반 KZG·IPA와 다른 보안 가정을 사용합니다. 양자 공격에 대해 어떤 해시와 출력 길이, 변환의 모델을 사용했는지 따로 보아야 합니다. 투명성은 준비 과정의 성질이며 안전성 전체의 이름이 아닙니다.</p>
+<p className="leading-8">더 넓은 평가표는 읽고 쓰는 메모리와 해시 작업을 늘립니다. 생성기의 작업 메모리, 증거 바이트, 검증 시간은 따로 셉니다. <a href="/cs/crypto/prover-memory-and-verifier-cost">증명기 메모리와 검증 비용</a>에서 행·열·바이트와 온체인 연산으로 이 비용을 계산합니다.</p>
+
+<p data-stage-bridge="security-cost" className="text-sm leading-7 text-muted-foreground">1→6→10의 실행을 다항식과 검사로 연결했고 남는 비밀성·메모리 조건도 확인했습니다.</p>
+<ReviewPrompts questions={["왜 마지막 행 2에는 앞 행과 같은 전이 조건을 적용하지 않나요? (답: 7절)", "마지막 공개 답과의 연결을 빼면 11이라는 주장을 무엇이 막지 못하나요? (답: 10절)", "v에T(T−1)(T−2)를 더하면 어떤 세 값이 보존되고 T=3에서는 무엇이 바뀌나요? (답: 9절)"]} />
+</section>
+</article>; }
