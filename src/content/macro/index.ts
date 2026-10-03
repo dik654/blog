@@ -8,6 +8,12 @@ const macro: Category = {
     "한 사람에게 맞는 판단이 모두에게 동시에 적용되면 왜 뒤집히는지, 그리고 그렇게 더한 숫자를 읽을 때 무엇을 먼저 정해야 하는지",
   subcategories: [
     {
+      slug: "macro-global",
+      name: "국제 자금과 대세",
+      description: "외화 자금·정책 결정권·기대가 시장가격에 닿는 경로",
+      icon: "🌐",
+    },
+    {
       slug: "macro-aggregate",
       name: "구성의 오류",
       description: "내 지출이 남의 소득이라는 사실이 만드는 되먹임",

@@ -17,6 +17,10 @@ import labor from "./labor";
 import prices from "./prices";
 import marketFailure from "./market-failure";
 import macro from "./macro";
+import business from "./business";
+import property from "./property";
+import institutions from "./institutions";
+import infrastructure from "./infrastructure";
 import money from "./money";
 import banking from "./banking";
 import markets from "./markets";
@@ -50,6 +54,10 @@ export const categories = [
   prices,
   marketFailure,
   macro,
+  business,
+  property,
+  institutions,
+  infrastructure,
   firms,
   labor,
   money,

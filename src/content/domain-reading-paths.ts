@@ -80,9 +80,9 @@ export const DOMAIN_READING_PATHS: Readonly<
   },
 
   economics: {
-    title: "경제를 두 단계로 쌓아 올리는 순서",
+    title: "가격에서 실제 사업과 국가의 장부까지",
     description:
-      "아무도 전체를 정하지 않는데 누가 무엇을 갖고 무엇을 하는지가 정해집니다. 1단계는 그 일이 값으로 어떻게 일어나고 어디서 어긋나는지를 세우고, 2단계는 값이 아니라 지시로 조정되는 자리와 값을 고르는 힘이 생기는 자리를 셉니다.",
+      "가격과 기업의 원리를 배운 뒤 가게·임대·개발·공급망·보험·의료에 적용하고, 나라 사이의 자금과 인식이 시장으로 전달되는 경로를 읽습니다.",
     stages: [
       {
         eyebrow: "01 · 왜 골라야 하는가",
@@ -126,14 +126,26 @@ export const DOMAIN_READING_PATHS: Readonly<
           "같은 셈을 사람이 파는 시간에 적용하면 어디까지 맞는지, 그리고 그 예측을 실제로 재면 무엇이 나오는지를 봅니다.",
         categories: ["labor"],
       },
+      {
+        eyebrow: "07 · 사업 현장",
+        title: "가게와 공간",
+        description: "입지·공사·임대·가맹·양도·폐업과 토지 개발에서 누가 돈과 권리를 갖는지 봅니다.",
+        categories: ["business", "property"],
+      },
+      {
+        eyebrow: "08 · 국경과 제도",
+        title: "자금·위험·생활",
+        description: "국제 자금과 시장 기대를 공공예산·정보·생활 기반과 국가 비교의 장부로 연결합니다.",
+        categories: ["institutions", "infrastructure"],
+      },
     ],
-    showFullSequence: true,
+    showFullSequence: false,
   },
 
   finance: {
-    title: "금융을 아홉 편으로 쌓아 올리는 순서",
+    title: "금융의 청구권과 위험 이전을 읽는 순서",
     description:
-      "돈이 무엇인지에서 시작해 그것을 만드는 곳, 값이 정해지는 곳, 무너지지 않게 붙드는 장치 순으로 내려갑니다. 앞 글이 뒤 글의 선수라 순서대로 읽는 것이 가장 짧습니다.",
+      "돈과 은행에서 채권·주식으로 간 뒤 펀드·ETF·ETN과 파생상품의 현금흐름, 담보와 강제 매도까지 따라갑니다.",
     stages: [
       {
         eyebrow: "01 · 기준선",
@@ -153,14 +165,14 @@ export const DOMAIN_READING_PATHS: Readonly<
         eyebrow: "03 · 값이 정해지는 곳",
         title: "시장과 가격",
         description:
-          "01의 할인을 그대로 채권에 대면 가격이 나오고, 남는 것을 갖는 청구권에 대면 주식이 나옵니다.",
+          "채권·주식의 청구권을 먼저 세운 뒤 펀드·ETF·ETN과 선도·선물·옵션·스왑의 지급 구조로 확장합니다.",
         categories: ["markets"],
       },
       {
         eyebrow: "04 · 무너지지 않게",
         title: "위험과 규제",
         description:
-          "나눌 수 있는 위험과 없는 위험을 가른 뒤, 자본 규제가 무엇을 막으려는 장치인지로 닫습니다.",
+          "위험 분산과 자본 규제에 이어 증거금·레버리지·유동성이 포지션을 언제 닫게 하는지 봅니다.",
         categories: ["risk"],
       },
     ],

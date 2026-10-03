@@ -83,4 +83,32 @@ export const marketsArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/markets/equity-claims-and-valuation"),
   },
+  {
+    slug: "funds-etfs-and-etns",
+    title: "ETF와 ETN은 거래 화면이 비슷해도 손에 쥔 청구권이 다르다",
+    subcategory: "markets-products",
+    sections: [{"id": "overview", "title": "두 상품 모두 지수를 따라도 위험의 상대방은 다릅니다"}, {"id": "mechanism", "title": "상품 이름 대신 재산과 청구권을 적습니다"}, {"id": "comparison", "title": "관할권과 상품설명서가 보호 범위를 정합니다"}, {"id": "limits", "title": "지수를 맞혔어도 상품을 잘 고른 것은 아닐 수 있습니다"}],
+    component: () => import("@/pages/articles/markets/funds-etfs-and-etns"),
+  },
+  {
+    slug: "forwards-and-futures",
+    title: "선물은 미래 가격을 고정하면서 반대편에 같은 크기의 위험을 건넨다",
+    subcategory: "markets-derivatives",
+    sections: [{"id": "overview", "title": "미래 밀값이 오르면 누가 좋아하고 누가 아쉬운가"}, {"id": "mechanism", "title": "선도와 선물의 차이는 계약을 어디서 어떻게 정산하느냐입니다"}, {"id": "comparison", "title": "헤지와 투기는 같은 계약을 다른 기존 위험에 붙입니다"}, {"id": "limits", "title": "최종 가격을 맞혀도 중간 증거금을 못 내면 계약을 유지할 수 없습니다"}],
+    component: () => import("@/pages/articles/markets/forwards-and-futures"),
+  },
+  {
+    slug: "options-and-asymmetric-payoffs",
+    title: "옵션은 손해를 피할 선택권을 사고 그 값으로 프리미엄을 낸다",
+    subcategory: "markets-derivatives",
+    sections: [{"id": "overview", "title": "주가가 120이어도 콜 매수자가 20을 번 것은 아닙니다"}, {"id": "mechanism", "title": "매수자는 선택하고 매도자는 의무를 받습니다"}, {"id": "comparison", "title": "보험과 비슷하지만 동일한 계약은 아닙니다"}, {"id": "limits", "title": "싸 보이는 프리미엄은 낮은 확률과 유동성 비용을 숨길 수 있습니다"}],
+    component: () => import("@/pages/articles/markets/options-and-asymmetric-payoffs"),
+  },
+  {
+    slug: "swaps-and-credit-risk",
+    title: "스왑은 원금을 통째로 바꾸기보다 서로 필요한 현금흐름을 교환한다",
+    subcategory: "markets-derivatives",
+    sections: [{"id": "overview", "title": "10억 원이라는 숫자가 오가야 스왑이 성립하는 것은 아닙니다"}, {"id": "mechanism", "title": "기존 부채와 스왑을 더해 실제 노출을 봅니다"}, {"id": "comparison", "title": "장외 계약은 상대방과 청산·담보 방식이 중요합니다"}, {"id": "limits", "title": "위험을 넘겨도 상대방이 돈을 못 내면 보호는 실패합니다"}],
+    component: () => import("@/pages/articles/markets/swaps-and-credit-risk"),
+  },
 ];

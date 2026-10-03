@@ -20,6 +20,44 @@ export interface CategoryReadingPath {
 export const CATEGORY_READING_PATHS: Readonly<
   Partial<Record<string, CategoryReadingPath>>
 > = {
+  business: {
+    title: "한 가게의 시작과 사업 관계 읽기",
+    description: "사업 모델의 현금 장부를 만들고, 자리·공사·영업·가맹과 국제 공급망의 권한을 봅니다.",
+    stages: [
+      { eyebrow: "01 · 현금", title: "모델과 손익", description: "결제액과 실제 남는 돈, 필요한 판매량을 구분합니다.", subcategories: ["business-cash"] },
+      { eyebrow: "02 · 관계", title: "브랜드와 공급망", description: "가맹본부·점주·제조업체 사이의 수입과 통제권을 나눕니다.", subcategories: ["business-network"] },
+    ],
+    featuredArticles: ["business-model-cashflow", "shop-unit-economics", "shop-site-selection", "shop-fitout-and-opening", "franchise-incentives", "supply-chain-bargaining"],
+  },
+  property: {
+    title: "공간을 쓰고, 넘기고, 돌려주는 순서",
+    description: "상가의 계약과 종료를 따라간 뒤 토지의 허가와 개발 잔여가치를 계산합니다.",
+    stages: [
+      { eyebrow: "01 · 임대", title: "사용권과 종료 책임", description: "보증금·권리금·양도·복구를 서로 다른 청구권으로 봅니다.", subcategories: ["property-lease"] },
+      { eyebrow: "02 · 개발", title: "허가와 땅값", description: "완공 가치에서 비용과 개발 이익을 거꾸로 뺍니다.", subcategories: ["property-development"] },
+    ],
+    featuredArticles: ["commercial-lease-and-rent", "shop-transfer-and-goodwill", "shop-closure-and-restoration", "land-development-residual"],
+  },
+  institutions: {
+    title: "사회의 위험과 나라를 읽는 장부",
+    description: "보험·의료·예산·교육·정보에서 누가 결정하고 비용을 내는지 살핀 뒤 국가 비교로 이어갑니다.",
+    stages: [
+      { eyebrow: "01 · 위험", title: "보험과 의료", description: "보험료·세금·본인부담과 지급 상대를 추적합니다.", subcategories: ["institutions-risk"] },
+      { eyebrow: "02 · 교육", title: "기술과 자격", description: "학비와 배운 능력, 자격의 신호를 구분합니다.", subcategories: ["institutions-capacity"] },
+      { eyebrow: "03 · 나라", title: "일곱 장부", description: "정치·법·예산·생산·대외거래·생활·인식으로 비교합니다.", subcategories: ["institutions-country"] },
+    ],
+    featuredArticles: ["insurance-risk-pooling", "healthcare-payment-systems", "education-skills-and-signals", "public-budget-and-taxes", "media-attention-and-public-belief", "how-to-read-a-country"],
+  },
+  infrastructure: {
+    title: "생활을 지탱하는 망과 공급 읽기",
+    description: "전기·식품·수도·교통·주택·기후의 비용과 접근 권리를 같은 장부에 놓습니다.",
+    stages: [
+      { eyebrow: "01 · 연결", title: "망과 요금", description: "전력·수도·교통의 접속, 유지비와 접근성을 봅니다.", subcategories: ["infrastructure-networks"] },
+      { eyebrow: "02 · 공급", title: "상품과 공간", description: "식품과 주택이 생산돼 사람에게 닿는 제약을 봅니다.", subcategories: ["infrastructure-supply"] },
+      { eyebrow: "03 · 위험", title: "기후와 노출", description: "자연 현상이 사람과 자산에 닿을 때 손실이 달라지는 이유를 봅니다.", subcategories: ["infrastructure-risk"] },
+    ],
+    featuredArticles: ["electricity-grid-and-power", "food-chain-and-prices", "water-utility-and-tariffs", "transport-access-and-land-value", "housing-land-and-supply", "climate-risk-and-exposure"],
+  },
   circuits: {
     title: "한 회로를 계산하는 순서",
     description: "갈림길의 전류부터 시간에 따라 바뀌는 신호까지, 매 글에서 같은 물리량을 더 깊게 읽습니다.",

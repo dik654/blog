@@ -19,6 +19,12 @@ const risk: Category = {
       description: "손실흡수·위험가중자산·자기자본비율과 시스템 리스크",
       icon: "🛡️",
     },
+    {
+      slug: "risk-collateral",
+      name: "담보와 강제 매도",
+      description: "증거금·레버리지·유동성의 시간 차이",
+      icon: "🧱",
+    },
   ],
   articles: riskArticles,
 };

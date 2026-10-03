@@ -175,4 +175,18 @@ export const macroArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/macro/what-ricardo-assumed"),
   },
+  {
+    slug: "global-capital-and-policy",
+    title: "국가 정책은 국제 자금의 제약을 지나 환율·금리·자산값에 닿는다",
+    subcategory: "macro-global",
+    sections: [{"id": "overview", "title": "달러 빚은 원화 환율이 오르면 원화 장부에서 커집니다"}, {"id": "mechanism", "title": "결정권에서 가격까지 다섯 고리를 그립니다"}, {"id": "comparison", "title": "전 세계에 하나의 자금 흐름이 있어도 국가는 같지 않습니다"}, {"id": "limits", "title": "환율 변동 뒤 주가가 움직였다는 순서만으로 정책의 원인이라 말할 수 없습니다"}],
+    component: () => import("@/pages/articles/macro/global-capital-and-policy"),
+  },
+  {
+    slug: "narratives-and-market-regimes",
+    title: "대세는 사람들이 믿는 이야기와 실제 자금 제약이 서로를 바꿀 때 생긴다",
+    subcategory: "macro-global",
+    sections: [{"id": "overview", "title": "좋은 기술 설명만으로 자산 가격이 오르지는 않습니다"}, {"id": "mechanism", "title": "이야기 → 기대 → 자금 → 주문 → 가격 → 새 이야기의 고리를 봅니다"}, {"id": "comparison", "title": "인식의 힘은 시장 구조와 나라의 제도를 통과합니다"}, {"id": "limits", "title": "서사가 틀렸는지 알려면 가격보다 검증할 지표를 먼저 정해야 합니다"}],
+    component: () => import("@/pages/articles/macro/narratives-and-market-regimes"),
+  },
 ];
