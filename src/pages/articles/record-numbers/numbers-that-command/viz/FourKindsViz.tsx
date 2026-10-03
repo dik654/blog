@@ -3,7 +3,7 @@ import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 /** 본문 대응: four-kinds·reading-prices 절. 조항은 함무라비 법전 196~204·220·225·273조 */
-const SCENES = ["네 종류", "각각의 전제", "값을 읽을 때", "남는 것"] as const;
+const SCENES = ["네 종류", "각각의 기준", "값을 읽을 때", "남는 것"] as const;
 
 const NONE = "#ef4444";
 const FIXED = "#0ea5e9";
@@ -17,25 +17,25 @@ const KINDS = [
     color: NONE,
     name: "숫자가 없는 자리",
     ex: "그의 눈을 잃게 한다 · 그의 딸을 죽인다",
-    pre: "가해자 쪽에 같은 것이 있어야 합니다",
+    pre: "상해의 종류를 기준으로 삼습니다",
   },
   {
     color: FIXED,
     name: "고정된 금액",
     ex: "은 1마나 · 10세켈 · 5세켈",
-    pre: "은의 값이 오래 안정적이어야 합니다",
+    pre: "정해 둔 은의 무게를 기준으로 삼습니다",
   },
   {
     color: SHARE,
     name: "값의 비율",
     ex: "그 값의 절반 · 값의 4분의 1",
-    pre: "그 대상에 거래되는 값이 있어야 합니다",
+    pre: "대상에게 매긴 값을 기준으로 삼습니다",
   },
   {
     color: COUNT,
     name: "횟수",
     ex: "집회에서 쇠가죽 채찍 60대",
-    pre: "집행할 자리와 사람이 있어야 합니다",
+    pre: "정해 둔 집행 횟수를 기준으로 삼습니다",
   },
 ] as const;
 
@@ -45,23 +45,23 @@ export default function FourKindsViz() {
 
   const NOTES = [
     `명령하는 숫자는 한 종류가 아닙니다. 아예 숫자가 들어가지 않는 자리, 정해진 금액, 그 대상의 값에 대한 비율, 그리고 몇 번이라는 횟수까지 네 가지가 같은 법전 안에 있습니다.`,
-    `네 종류는 각각 다른 것을 전제합니다. 같은 해를 돌려주려면 가해자 쪽에 같은 것이 있어야 하고, 고정된 금액이 뜻을 가지려면 은의 값이 오래 흔들리지 않아야 하며, 비율로 정하려면 그 대상에 거래되는 값이 있어야 하고, 횟수로 정하려면 집행할 자리와 사람이 있어야 합니다.`,
-    `비율로 적힌 자리가 뜻밖의 정보를 줍니다. 종의 눈이나 소의 목숨에는 값이 있다고 전제되어 있고, 신사의 눈에는 그런 자리가 없습니다. 어떤 대상에 비율을 쓰고 어떤 대상에 쓰지 않았는지가, 무엇이 값으로 재는 것이었는지를 알려 줍니다.`,
-    `그래도 이 숫자들은 관찰이 아닙니다. 하루 품삯이 은 6세라고 적혀 있다 해서 그 값에 사람이 실제로 일했다는 뜻은 아닙니다. 적힌 것은 그렇게 하라는 명령이고, 거기서 읽을 수 있는 것은 그 비율이 당시에 터무니없지 않았으리라는 것까지입니다.`,
+    `네 종류는 서로 다른 기준을 씁니다. 같은 해를 돌려주는 조항은 상해의 종류를, 정액은 정해 둔 은의 무게를, 비율은 대상에게 매긴 값을, 횟수는 정해 둔 행동의 수를 붙잡습니다. 이 기준은 조항에 드러나지만 실제 집행 빈도는 알 수 없습니다.`,
+    `220조는 종의 눈에 그 값의 절반을, 225조는 죽은 소·양에 값의 4분의 1을 씁니다. 196조는 신사의 눈에 같은 해를 돌려주라는 처분을 씁니다. 이 조항들의 선택은 비교할 수 있지만 당시 사람들의 모든 가치 판단을 여기서 알아낼 수는 없습니다.`,
+    `이 숫자들은 관찰값이 아닙니다. 273조는 품꾼의 하루 삯을 해의 첫 다섯 달에는 은 6세, 나머지 달에는 5세로 정합니다. 실제로 이 값에 고용했는지, 다른 값에 고용했는지는 이 조항만으로 알 수 없습니다.`,
   ] as const;
 
   return (
     <VizFrame
       eyebrow="네 종류"
-      title="명령하는 숫자는 네 종류이고 각각 다른 것을 전제합니다"
-      description="같은 해를 돌려주는 자리, 고정된 금액, 값의 비율, 횟수가 한 법전 안에 함께 있고, 어느 자리에 무엇을 썼는지가 그 사회에서 무엇을 값으로 쟀는지를 드러냅니다."
-      note="조항과 문구는 함무라비 법전 196~204·220·225·273조의 것입니다. 네 종류로 가른 것과 각각의 전제는 이 글이 정리한 것이고 법전에 그 꼴로 적혀 있지 않습니다."
+      title="명령하는 숫자의 네 종류는 서로 다른 기준을 씁니다"
+      description="같은 해를 돌려주는 자리, 정액, 값의 비율, 횟수가 한 법전 안에 함께 있습니다. 조항마다 어떤 기준으로 처분을 적었는지 비교합니다."
+      note="조항과 문구는 함무라비 법전 196~204·220·225·273조의 것입니다. 네 종류로 가른 것은 이 글의 정리이며 법전에 그 꼴로 적혀 있지 않습니다."
     >
       <div
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="명령하는 숫자의 네 종류와 각각의 전제를 보이는 그림"
+        aria-label="명령하는 숫자의 네 종류와 각각의 기준을 보이는 그림"
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(30rem,calc(100dvh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
@@ -94,7 +94,7 @@ export default function FourKindsViz() {
                         <>
                           <rect x={182} y={y + 22} width={278} height={14} rx={3} fill={MUTED} opacity={0.08} />
                           <text x={190} y={y + 32} fontSize={7.5} fill={MUTED}>
-                            전제 · {k.pre}
+                            기준 · {k.pre}
                           </text>
                         </>
                       )}
@@ -115,7 +115,7 @@ export default function FourKindsViz() {
                     죽은 소·양 · 값의 4분의 1 (225조)
                   </text>
                   <text x={32} y={88} fontSize={7.5} fill={MUTED}>
-                    값이 있다고 전제된 대상입니다
+                    값의 분수를 쓴 조항입니다
                   </text>
 
                   <rect x={246} y={24} width={214} height={74} rx={5} fill={NONE} opacity={0.1} stroke={NONE} strokeWidth={1.25} strokeDasharray="3 2" />
@@ -129,7 +129,7 @@ export default function FourKindsViz() {
                     신사의 딸의 죽음 · 그의 딸 (210조)
                   </text>
                   <text x={258} y={88} fontSize={7.5} fill={MUTED}>
-                    값으로 재지 않는 자리입니다
+                    다른 처분을 쓴 조항입니다
                   </text>
 
                   <rect x={20} y={110} width={440} height={34} rx={4} fill={INK} opacity={0.06} stroke={INK} strokeWidth={0.75} />
@@ -137,7 +137,7 @@ export default function FourKindsViz() {
                     어디에 비율을 썼고 어디에 쓰지 않았는지가
                   </text>
                   <text x={32} y={139} fontSize={8} fill={INK}>
-                    무엇이 값으로 재는 것이었는지를 알려 줍니다
+                    조항별 처분의 기준을 비교하게 합니다
                   </text>
                 </g>
               )}
@@ -152,10 +152,10 @@ export default function FourKindsViz() {
                     무엇을 어느 칸에 두었는가
                   </text>
                   <text x={32} y={72} fontSize={7.5} fill={INK}>
-                    값으로 잰 것과 재지 않은 것의 경계
+                    어느 조항에 값의 분수를 썼는가
                   </text>
                   <text x={32} y={88} fontSize={7.5} fill={INK}>
-                    비율이 터무니없지 않았으리라는 것
+                    조항 안에 정해 둔 2:1 비율
                   </text>
 
                   <rect x={246} y={24} width={214} height={72} rx={5} fill={NONE} opacity={0.1} stroke={NONE} strokeWidth={1.25} strokeDasharray="3 2" />
@@ -186,9 +186,9 @@ export default function FourKindsViz() {
                 {s === 0
                   ? "같은 법전 안에 네 종류가 함께 있습니다"
                   : s === 1
-                    ? "종류마다 성립 조건이 다릅니다"
+                    ? "종류마다 계산 기준이 다릅니다"
                     : s === 2
-                      ? "값으로 잰 것과 재지 않은 것이 갈려 있습니다"
+                      ? "조항별 처분 기준이 갈립니다"
                       : "명령 숫자에서 관찰값을 꺼낼 수는 없습니다"}
               </text>
             </svg>
