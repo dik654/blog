@@ -13,6 +13,7 @@ import ismsAml from "./isms-aml";
 import saas from "./saas";
 import scarcity from "./scarcity";
 import firms from "./firms";
+import labor from "./labor";
 import prices from "./prices";
 import marketFailure from "./market-failure";
 import macro from "./macro";
@@ -40,6 +41,7 @@ export const categories = [
   saas,
   scarcity,
   firms,
+  labor,
   prices,
   marketFailure,
   macro,

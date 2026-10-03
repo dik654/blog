@@ -62,6 +62,13 @@ export default function ScaleAndCostStructureArticle() {
             나타나는지, 그리고 그 모양에서 무엇이 따라 나오지 <em>않는지</em>
             입니다.
           </p>
+
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 이 글이 고치려는 오해는 잡힙니다 — 하나당 값이
+              내려간 것을 공장이 커진 결과로 읽는 습관입니다.
+            </em>
+          </p>
         </div>
       </section>
 
@@ -126,6 +133,15 @@ export default function ScaleAndCostStructureArticle() {
             },
           ]}
         />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 싸지는 힘이 어디서 오는지는 잡힙니다. 그 힘을 언제
+              쓸 수 있는지가 바로 다음 질문입니다.
+            </em>
+          </p>
+        </div>
       </section>
 
       <section id="minimum-market" className="scroll-mt-20">
@@ -238,6 +254,15 @@ export default function ScaleAndCostStructureArticle() {
           output="그 수량에서 실제로 쓰이는 방법 하나 — 앞 그림의 아래쪽 테두리"
           repeatUntil="다음 단계의 N*이 내다보는 수량보다 커질 때까지"
         />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 어떤 방법이 쓰일지 계산할 수 있습니다. 남은 것은 그
+              수량이 어디서 오는가입니다.
+            </em>
+          </p>
+        </div>
       </section>
 
       <section id="market-is-produced" className="scroll-mt-20">
@@ -287,6 +312,13 @@ export default function ScaleAndCostStructureArticle() {
             가 여기서도 나옵니다. 한 산업이 보는 시장은 밖에서 주어진 것이지만,
             모든 산업이 서로의 시장이므로 전체로 보면 주어진 것이 아닙니다.
           </p>
+
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 고리가 닫힙니다. 그 고리가 실제 세상에서 어떤
+              모양으로 나타나는지가 다음 부품입니다.
+            </em>
+          </p>
         </div>
       </section>
 
@@ -321,6 +353,13 @@ export default function ScaleAndCostStructureArticle() {
             커질 수 있는 크기에는 — 느슨하기는 해도 — 실제로 한계가 있다고 보고,
             그 한계 때문에 한 회사 안에서 다 가져갈 수 없는 돌아감의 이득이 별도
             산업의 몫으로 넘어간다고 적습니다.
+          </p>
+
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 수확 체증이 실제로 어떤 모양인지 보입니다. 그
+              모양에서 무엇이 따라 나오지 않는지가 마지막 부품입니다.
+            </em>
           </p>
         </div>
 
@@ -423,11 +462,39 @@ export default function ScaleAndCostStructureArticle() {
           </p>
 
           <p className="leading-7">
+            <em>
+              여기까지 읽으면 이 글의 질문에 답이 나왔습니다. 싸지는 힘은 크기가
+              아니라 방법에서 오고, 방법은 수량이 열며, 수량은 생산이 함께
+              키웁니다.
+            </em>
+          </p>
+
+          <p className="leading-7">
             그리고 하나가 남은 다음에 묻게 되는 것은 값입니다. 1단계에서 값은
             사려는 쪽과 팔려는 쪽이 만나 정해졌고, 아무도 그 값을 고르지
             않았습니다. 파는 쪽이 하나면 그 쪽이 값을 <strong>고릅니다</strong>.
             무엇을 보고 고르는지, 그리고 그 값이 1단계에서 세운 균형값{" "}
             <code>P* = 7</code>에서 어디로 움직이는지가 다음 글의 숫자입니다.
+          </p>
+
+          <h3 className="mt-10 mb-4 text-lg font-bold">
+            읽고 나서 맞춰 볼 질문
+          </h3>
+
+          <p className="leading-7">
+            1. 먼저 드는 몫이 120이고 하나당 값이 10에서 7로 내려간다면 그 방법이
+            열리는 최소 수량은 몇 개입니까. <strong>(답: 부품 2절)</strong>
+          </p>
+
+          <p className="leading-7">
+            2. 어떤 나라에서만 쓰이는 생산 방법이 있습니다. 기술을 숨겨서가
+            아니라면 무엇으로 설명할 수 있습니까.{" "}
+            <strong>(답: 부품 2절)</strong>
+          </p>
+
+          <p className="leading-7">
+            3. 한 업종에서 회사 수가 늘었는데 하나당 값은 내려갔습니다. 이것이 왜
+            모순이 아닌지 말해 보십시오. <strong>(답: 부품 4절)</strong>
           </p>
         </div>
 

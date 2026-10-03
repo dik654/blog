@@ -12974,6 +12974,41 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
+  "wage-floor-natural-experiment": {
+    title: "임금을 올리면 일자리가 준다는 예측을 재 본 글이 소유하는 범위",
+    owns: [
+      "한 사람을 더 써서 더 만들어 파는 몫과 그것이 사람 수와 함께 줄어드는 이유",
+      "사는 쪽이 여럿일 때 임금이 그 몫에서 멈춘다는 조건",
+      "사는 쪽이 하나일 때 임금이 그 몫 아래에 남는 구조와 틈의 식",
+      "같은 임금 바닥이 두 경우에 반대 방향으로 작용한다는 분기",
+      "한쪽만 바뀐 자리를 찾아 두 변화를 견주는 방법",
+      "한 설명의 반증을 다른 설명의 확인으로 읽지 않는 규율",
+    ],
+    reuses: [
+      {
+        label: "하나 더 팔 때 이미 팔던 것에서 깎이는 몫",
+        href: "/economics/firms/market-power-and-markup#marginal-revenue",
+      },
+      {
+        label: "틈의 크기가 민감도의 역수로 적히는 형태",
+        href: "/economics/firms/market-power-and-markup#markup-size",
+      },
+      {
+        label: "하나 더 할 때의 값으로 멈출 자리를 찾는 셈",
+        href: "/economics/scarcity/scarcity-and-opportunity-cost#margin",
+      },
+      {
+        label: "값에 상한을 씌웠을 때 생기는 사라지는 몫",
+        href: "/economics/prices/surplus-and-efficiency#price-cap",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "표의 값과 인용 문장은 쪽 이미지로 대조한 범위에서만 쪽수를 붙이고, 저자들이 보고하지 않은 후속 논쟁은 이 글에 싣지 않는다",
+      },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

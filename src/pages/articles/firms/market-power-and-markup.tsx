@@ -64,6 +64,13 @@ export default function MarketPowerAndMarkupArticle() {
             무엇이 정하는지, 그리고 그 틈이 옮겨 가는 몫만 만드는 것이 아니라는
             점입니다.
           </p>
+
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 이 글의 질문은 잡힙니다 — 아무도 고르지 않던 값이
+              누군가 고르는 값이 되면 그 값은 어디에 멈추는가입니다.
+            </em>
+          </p>
         </div>
       </section>
 
@@ -132,6 +139,15 @@ export default function MarketPowerAndMarkupArticle() {
             },
           ]}
         />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 무엇이 달라졌는지는 잡힙니다. 그 차이가 셈에
+              구체적으로 얼마를 더하고 빼는지가 다음 부품입니다.
+            </em>
+          </p>
+        </div>
       </section>
 
       <section id="marginal-revenue" className="scroll-mt-20">
@@ -157,6 +173,13 @@ export default function MarketPowerAndMarkupArticle() {
             위 그림의 네 번째 장면에서 빨간 선이 그 늘어나는 돈이고, 수요 선보다
             두 배 빠르게 내려갑니다. 멈추는 자리를 정할 때 보는 것은 값이 아니라
             이 선입니다.
+          </p>
+
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 멈출 때 무엇을 보는지 알게 됩니다. 그 선으로 실제로
+              멈춰 보는 것이 다음 부품입니다.
+            </em>
           </p>
         </div>
       </section>
@@ -228,6 +251,15 @@ export default function MarketPowerAndMarkupArticle() {
           output="수량 하나와 그 위에서 읽히는 값 하나 — 그리고 둘 사이에 벌어진 틈"
           repeatUntil="늘어나는 돈이 하나 더 만드는 값과 같아질 때까지"
         />
+
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 틈이 생긴다는 것까지는 셀 수 있습니다. 그 틈이
+              얼마나 벌어지는지는 아직 세지 않았습니다.
+            </em>
+          </p>
+        </div>
       </section>
 
       <section id="markup-size" className="scroll-mt-20">
@@ -316,6 +348,13 @@ export default function MarketPowerAndMarkupArticle() {
             쪽이 얼마나 빠져나갈 수 있는지가 함께 적혀 있습니다. 값 하나를 보고는
             둘을 가를 수 없습니다.
           </p>
+
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 틈의 크기를 무엇이 정하는지 알게 됩니다. 남은 것은
+              그 틈이 세상에서 무엇을 만드는가입니다.
+            </em>
+          </p>
         </div>
       </section>
 
@@ -347,6 +386,14 @@ export default function MarketPowerAndMarkupArticle() {
             몫은 누가 갖느냐의 문제가 아니라{" "}
             <strong>아예 만들어지지 않은 몫</strong>입니다. 그리고 그것을 만든
             것은 높은 값이 아니라 줄어든 수량입니다.
+          </p>
+
+          <p className="leading-7">
+            <em>
+              여기까지 읽으면 이 글의 답이 끝납니다. 값은 늘어나는 돈이
+              한계비용과 만나는 수량에서 멈추고, 그 위에 민감도만큼 떠 있으며, 그
+              틈과 함께 일어나지 않은 거래가 남습니다.
+            </em>
           </p>
         </div>
 
@@ -399,6 +446,26 @@ export default function MarketPowerAndMarkupArticle() {
             사이에 어떻게 벌어지는지를 봅니다. 이번 글에서 본 틈이 거기서 한 번 더
             나옵니다 — 사는 쪽이 하나일 때의 값도 같은 구조로 정해지기
             때문입니다.
+          </p>
+
+          <h3 className="mt-10 mb-4 text-lg font-bold">
+            읽고 나서 맞춰 볼 질문
+          </h3>
+
+          <p className="leading-7">
+            1. 값 12에 2개를 팔던 곳이 11로 내려 3개를 팝니다. 늘어난 돈은
+            얼마입니까. <strong>(답: 부품 2절)</strong>
+          </p>
+
+          <p className="leading-7">
+            2. 어떤 약에 비슷한 대체약이 여럿 나왔습니다. 그 약을 만드는 곳의
+            규모와 비용이 그대로여도 값이 내려가는 이유를 말해 보십시오.{" "}
+            <strong>(답: 부품 4절)</strong>
+          </p>
+
+          <p className="leading-7">
+            3. 값이 올라 파는 쪽이 더 번 몫과, 거래가 일어나지 않아 사라진 몫은
+            무엇이 다릅니까. <strong>(답: 부품 5절)</strong>
           </p>
         </div>
 

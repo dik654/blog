@@ -25296,6 +25296,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "값이 올라 사는 쪽에서 파는 쪽으로 넘어간 몫은 누가 갖느냐의 문제일 뿐 세상에서 없어진 것이 아닙니다. 같은 때 수량이 줄어 만들었더라면 드는 값보다 더 쳐주었을 거래가 아예 일어나지 않는데, 이 몫은 누구에게도 가지 않습니다. 값에 상한을 씌웠을 때 생기던 것과 같은 삼각형이 이번에는 아무도 상한을 씌우지 않았는데 생깁니다.",
     canonicalHref: "/economics/firms/market-power-and-markup#what-is-lost",
   },
+  "value-of-marginal-product": {
+    id: "value-of-marginal-product",
+    kind: "concept",
+    domain: "economics",
+    label: "한 사람을 더 써서 더 만들어 파는 몫",
+    aliases: ["한계생산가치", "파생수요"],
+    definition:
+      "가게가 사람을 한 명 더 써서 같은 시간에 더 만들어 파는 금액입니다. 설비와 자리가 그대로인 채 손만 늘면 기다리는 시간이 생기므로 사람이 늘수록 이 몫은 줄어들고, 그 줄어듦이 사람을 무한히 쓰지 않는 이유가 됩니다. 사람을 원하는 이유가 사람 자체가 아니라 그가 만들 물건이 팔리는 데 있으므로 이 수요는 물건의 값에 매달려 있습니다.",
+    canonicalHref: "/economics/labor/wage-floor-natural-experiment#two-counts",
+  },
+  "wage-at-marginal-product": {
+    id: "wage-at-marginal-product",
+    kind: "concept",
+    domain: "economics",
+    label: "사는 쪽이 여럿이면 임금은 그 몫에서 멈춘다",
+    aliases: ["임금 수용자", "경쟁 노동시장의 임금"],
+    definition:
+      "비슷한 가게가 여럿이면 가게 하나가 임금을 흔들 수 없어 고를 수 있는 것은 몇 명을 쓸지뿐입니다. 한 명 더 써서 얻는 몫이 임금보다 크면 쓰고 작으면 쓰지 않으므로, 멈추는 자리에서 임금과 마지막 사람의 한계생산가치가 같아집니다. 1단계가 값에 대해 세운 전제를 사람이 파는 시간에 그대로 옮긴 경우입니다.",
+    canonicalHref: "/economics/labor/wage-floor-natural-experiment#many-buyers",
+  },
+  "monopsony-wage-gap": {
+    id: "monopsony-wage-gap",
+    kind: "theorem",
+    domain: "economics",
+    label: "사는 쪽이 하나면 임금이 한계생산가치보다 낮게 멈춘다",
+    aliases: ["수요독점", "임금의 틈"],
+    definition:
+      "사는 쪽이 하나뿐이면 한 명 더 부르려고 임금을 올릴 때 이미 일하던 사람의 임금도 함께 오르므로, 한 명 더 쓰는 데 드는 값이 그때 주는 임금보다 큽니다. 그래서 멈추는 자리가 당겨져 사람도 적고 임금도 낮으며, 임금과 한계생산가치 사이에 틈이 남습니다. 틈의 비율은 사람이 임금에 얼마나 민감하게 모이는지의 역수로 적히며, 파는 쪽이 하나일 때의 값 틈과 부호만 뒤집힌 같은 구조입니다.",
+    canonicalHref: "/economics/labor/wage-floor-natural-experiment#one-buyer",
+  },
+  "minimum-wage-prediction-split": {
+    id: "minimum-wage-prediction-split",
+    kind: "theorem",
+    domain: "economics",
+    label: "같은 바닥이 두 셈에서 반대 방향의 예측을 낳는다",
+    aliases: ["최저임금 예측의 분기"],
+    definition:
+      "임금에 바닥을 걸면 그 구간에서 임금이 사람 수에 따라 오르지 않으므로, 이미 일하던 사람에게 더 줘야 하던 몫이 사라집니다. 사는 쪽이 여럿이던 경우에는 맞던 자리를 위로 밀어 올려 사람이 줄지만, 사는 쪽이 하나이던 경우에는 그 몫이 없어져 사람이 오히려 늘 수 있습니다. 바닥을 올리면 일자리가 준다는 명제가 조건부임을 보이며, 어느 조건인지는 자료로만 가를 수 있습니다.",
+    canonicalHref:
+      "/economics/labor/wage-floor-natural-experiment#two-predictions",
+  },
+  "side-by-side-comparison": {
+    id: "side-by-side-comparison",
+    kind: "method",
+    domain: "economics",
+    label: "한쪽만 바뀐 자리를 찾아 두 변화를 견준다",
+    aliases: ["나란히 두고 견주기", "비교 집단"],
+    definition:
+      "바뀐 쪽과 바뀌지 않은 쪽을 같은 기간 같은 조건에서 각각 전후로 재고, 두 변화의 차이를 바뀐 것의 몫으로 읽는 방법입니다. 두 쪽에 똑같이 걸리는 경기나 계절의 영향은 차이를 낼 때 상쇄되므로, 비교 집단이 얼마나 비슷한지가 결과의 신뢰를 정합니다. 같은 집단 안에서 영향을 세게 받은 쪽과 거의 받지 않은 쪽을 다시 갈라 보는 것이 그 비슷함을 점검하는 방법입니다.",
+    canonicalHref:
+      "/economics/labor/wage-floor-natural-experiment#what-happened",
+  },
+  "neither-model-fits": {
+    id: "neither-model-fits",
+    kind: "concept",
+    domain: "economics",
+    label: "재 본 결과가 두 설명 중 어느 쪽도 그대로 맞히지 못하는 상태",
+    aliases: ["설명되지 않은 측정", "열린 결론"],
+    definition:
+      "한 측정이 어떤 설명의 예측을 반증했다고 해서 경쟁하던 다른 설명이 확인된 것은 아닙니다. 사람 수는 한쪽 예측과 어긋나고 값의 움직임은 다른 쪽 예측과 어긋나면, 결과는 둘 중 하나를 고르는 것이 아니라 둘 다 부족하다는 것입니다. 이 상태를 한쪽의 증거로 읽지 않는 것이 측정을 해석하는 기본 규율이며, 적용 범위를 업종·지역·시점으로 좁혀 적는 일과 짝을 이룹니다.",
+    canonicalHref:
+      "/economics/labor/wage-floor-natural-experiment#what-happened",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -47120,6 +47183,69 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "contrasts",
     reason:
       "틈의 크기를 재는 일과 그 틈을 어떻게 할지 정하는 일이 다른 단계라는 구분이 여기서도 그대로 성립합니다.",
+  },
+  {
+    from: "marginal-decision-rule",
+    to: "value-of-marginal-product",
+    relation: "prerequisite",
+    reason:
+      "하나 더 할 때 얻는 것과 드는 것을 견주는 셈을 그대로 쓰되, 얻는 쪽을 그 사람이 더 만들어 파는 몫으로 둡니다.",
+  },
+  {
+    from: "value-of-marginal-product",
+    to: "wage-at-marginal-product",
+    relation: "produces",
+    reason:
+      "얻는 몫이 사람 수와 함께 줄어들므로, 임금을 흔들 수 없는 가게는 그 몫이 임금과 같아지는 자리에서 멈춥니다.",
+  },
+  {
+    from: "marginal-revenue-below-price",
+    to: "monopsony-wage-gap",
+    relation: "contrasts",
+    reason:
+      "하나 더 팔 때 이미 팔던 것에서 깎이던 몫이, 하나 더 쓸 때 이미 일하던 사람에게 더 줘야 하는 몫으로 부호만 뒤집혀 나타납니다.",
+  },
+  {
+    from: "markup-set-by-elasticity",
+    to: "monopsony-wage-gap",
+    relation: "contrasts",
+    reason:
+      "값과 한계비용의 틈을 수요 민감도가 정하듯, 한계생산가치와 임금의 틈을 공급 민감도가 정합니다.",
+  },
+  {
+    from: "wage-at-marginal-product",
+    to: "minimum-wage-prediction-split",
+    relation: "produces",
+    reason:
+      "맞던 자리가 어디인지 정해져 있어야 바닥을 걸었을 때 그 자리가 어느 쪽으로 밀리는지 셀 수 있습니다.",
+  },
+  {
+    from: "monopsony-wage-gap",
+    to: "minimum-wage-prediction-split",
+    relation: "produces",
+    reason:
+      "바닥이 이미 일하던 사람에게 더 줘야 하던 몫을 없애므로, 틈이 있던 경우에만 사람이 늘어나는 구간이 생깁니다.",
+  },
+  {
+    from: "minimum-wage-prediction-split",
+    to: "side-by-side-comparison",
+    relation: "evaluates",
+    reason:
+      "두 셈이 반대를 가리키면 책상에서 가를 수 없으므로, 한쪽만 바뀐 자리를 찾아 재는 방법이 필요해집니다.",
+  },
+  {
+    from: "side-by-side-comparison",
+    to: "neither-model-fits",
+    relation: "produces",
+    reason:
+      "같은 설계에서 사람 수와 값을 함께 재면 한 설명만으로 둘을 다 설명할 수 없는 경우가 드러납니다.",
+  },
+  {
+    from: "neither-model-fits",
+    to: "increasing-returns-not-monopoly",
+    relation: "extends",
+    reason:
+      "한 사실에서 따라 나오지 않는 결론을 따로 적어 두는 규율이 두 글에서 같은 모양으로 반복됩니다.",
   },
 ];
 
