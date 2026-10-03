@@ -7632,4 +7632,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "D. Kahng, US Patent 3,102,230, ‘Electric Field Controlled Semiconductor Device’ (1960 출원·1963 등록)", href: "https://patents.google.com/patent/US3102230A/en", note: "명세서 1–2쪽과 도 1A의 산화막 위 전극·전압원 구조를 확인했다. 특허의 다접합 회로와 본문의 두 단자 축전기는 구분한다." },
     { kind: "공개 강의", label: "MIT OCW 6.012 Lecture 9, ‘MOS Capacitors I’ (2009), 23·30쪽", href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2009/42c863e2e1e9744ce6b797646a30e463_MIT6_012F09_lec09.pdf", note: "면적당 산화막 용량 εox/tox와 반전 전하식, 축적·공핍·반전 상태를 확인했다. 10 nm·100 µm²·문턱 0.5 V는 본문 가정이다." },
   ],
+  "devices/mosfet-regions-and-transfer": [
+    { kind: "공개 강의", label: "MIT OCW 6.720J Lecture 25, ‘Long MOSFET’ (2007), 10·13쪽", href: "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/8ad0e553fbdaed10f6102b04451e547e_lecture25.pdf", note: "국소 반전 전하와 선형 영역 전류 적분을 공식 PDF로 확인했다. k와 전압 수치는 본문의 가정이다." },
+    { kind: "공개 강의", label: "MIT OCW 6.720J Lecture 26, ‘Long MOSFET’ (2007), 5·7·8쪽", href: "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/59850a07f95e9f50d32185eb46503460_lecture26.pdf", note: "핀치오프와 포화 경계·제곱식을 공식 PDF에서 직접 확인했다. 실제 소자의 완전히 평평한 출력 곡선을 주장하지 않는다." },
+  ],
 };

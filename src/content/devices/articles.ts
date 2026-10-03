@@ -31,4 +31,19 @@ export const deviceArticles: Article[] = [
     ],
     component: () => import("@/pages/articles/devices/mos-capacitor-and-inversion"),
   },
+  {
+    slug: "mosfet-regions-and-transfer",
+    title: "문 하나로 두 단자 사이의 전류를 조절합니다",
+    subcategory: "field-effect-devices",
+    sections: [
+      { id: "overview", title: "길을 만들고 양끝에 전압을 겁니다" },
+      { id: "terminals", title: "전극과 두 통로 끝의 역할을 나눕니다" },
+      { id: "channel", title: "표면 전하가 양끝을 잇는 길이 됩니다" },
+      { id: "states", title: "닫힘·완만한 증가·거의 일정한 전류" },
+      { id: "current", title: "같은 소자를 세 전압에서 계산합니다" },
+      { id: "limits", title: "평평한 전류도 실제로는 기울어집니다" },
+      { id: "handoff", title: "한 번 바꿀 때 드는 에너지를 셉니다" },
+    ],
+    component: () => import("@/pages/articles/devices/mosfet-regions-and-transfer"),
+  },
 ];

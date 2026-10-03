@@ -391,6 +391,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "devices/pn-junction-and-rectification": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "붙인 직후 확산부터 내장 전기장, 외부 바이어스, 이상 전류와 모델 한계까지가 한 접합의 작동 질문을 이룹니다. 도핑의 정본 정의는 앞 글에 남기고 다음 게이트 소자는 분리합니다.", sharedGate: "300 K, Is=1 pA, VT=25.85 mV라는 같은 가정에서 −0.5·0·+0.5·+0.6 V의 본문·식·Viz·문제 수치가 일치하는지 확인합니다." },
   "devices/mos-capacitor-and-inversion": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "절연 전극 구조에서 표면 상태, 전압 기준, 반전 전하 계산, 산화막 경계까지가 하나의 MOS 축전기 질문을 풉니다. 양단자 전류를 조절하는 MOSFET은 다음 글로 분리합니다.", sharedGate: "10 nm·100 µm²·평탄띠 0 V·문턱 0.5 V·전극 1.0 V의 가정에서 0.345 pF·0.173 pC·전자 약 108만 개가 본문·식·Viz·연습문제에서 일치하는지 확인합니다." },
+  "devices/mosfet-regions-and-transfer": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "한 긴 채널 소자의 네 단자와 채널에서 세 전류 영역·실제 모델 경계까지를 같은 전압 가정으로 추적합니다. 축전기의 표면 전하 정의는 앞 글, 스위칭 에너지는 다음 글이 소유합니다.", sharedGate: "Vth=0.5 V·k=1 mA/V²·VGS=1.5 V의 가정에서 VDS=0.2/1.0/1.5 V의 0.18/0.5/0.5 mA가 본문·식·Viz·연습문제에 일치하는지 확인합니다." },
 };
 
 /**
@@ -398,6 +399,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "devices/mosfet-regions-and-transfer": "1879d22ab7ea8d40",
   "devices/mos-capacitor-and-inversion": "8cc6ce4600003dae",
   "devices/pn-junction-and-rectification": "4d8acd6a58093d10",
   "ai/negative-result-3d-face-control": "6b146f6ac0e0984c",
