@@ -7602,4 +7602,22 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "계급별 표로는 판정할 수 없다는 210쪽, 그리는 방법과 활의 규칙을 적은 217쪽, 프로이센 자료의 214쪽 표, 곡선이 엇갈리는 반례의 218쪽이 출처. JSTOR Early Journal Content 공개본을 읽고 표와 인용 문장은 쪽 이미지로 대조했음",
     },
   ],
+  "macro/why-per-head-stalls": [
+    {
+      kind: "핵심 논문",
+      label:
+        "T. R. Malthus, 『An Essay on the Principle of Population』, London: J. Johnson, 1798 (초판), 14·21·25~28쪽",
+      href: "https://archive.org/details/essayonprincipl00malt",
+      note: "두 비율의 선언(14쪽), 25년마다 두 배의 근거(21쪽), 섬의 100년 셈과 7,700만 명(25~26쪽), 세계로 넓힌 512 대 10(28쪽)의 출처. Internet Archive의 1798년 초판 스캔을 읽었고 14·26쪽은 쪽 이미지로 대조, 나머지는 OCR 쪽 머리글로 확인했음",
+    },
+  ],
+  "macro/what-the-price-level-hides": [
+    {
+      kind: "핵심 논문",
+      label:
+        "Irving Fisher, 『The Purchasing Power of Money: Its Determination and Relation to Credit, Interest and Crises』, New York: Macmillan, 개정판(1926년 인쇄), 2장 16~21쪽",
+      href: "https://archive.org/details/purchasingpower00fish",
+      note: "설탕 거래와 교환방정식의 정의(16쪽), 빵·석탄·옷감 1억 달러와 500만×20(17~18쪽), 세 가지 변형(19~20쪽), 돈의 양은 세 요인 중 하나일 뿐이라는 경고(21쪽)의 출처. Internet Archive 공개본 2장을 읽고 21쪽 문장은 쪽 이미지로 대조했음. 1911년 초판이 아니라 개정판 사본",
+    },
+  ],
 };

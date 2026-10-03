@@ -400,6 +400,24 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Lorenz 218쪽의 열 사람 두 경우에서 누적값·교차 지점·넓이 비(0.120과 0.144)와 214쪽 프로이센 표의 누적값·넓이 비(0.357과 0.394)가 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
   },
+  "macro/why-per-head-stalls": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "두 줄의 늘어남·나눗셈·되먹임·깨진 가정·남는 힘까지가 총량과 살림이 왜 갈리는가라는 하나의 질문을 푸는 한 묶음이다. 되먹임을 떼면 나눗셈이 왜 중요한지가 남지 않고, 깨진 가정을 떼면 빗나간 예측을 그대로 결론처럼 읽게 된다.",
+    sharedGate:
+      "Malthus 초판의 같은 숫자 묶음(700만 시작, 25년마다 두 배, 25년마다 700만분 추가)에서 100년 뒤 인구·식량·한 사람 몫과 7,700만이라는 모자람이 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
+  "macro/what-the-price-level-hides": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-03",
+    rationale:
+      "등식의 성립·돈 쪽을 세는 법·네 자리의 묶임·원인을 말하지 못함·남는 쓸모까지가 값이 올랐다는 말을 어떻게 읽어야 하는가라는 하나의 질문을 푸는 한 묶음이다. 경고를 떼면 항등식이 인과처럼 읽히고, 등식을 떼면 경고가 설 자리가 없다.",
+    sharedGate:
+      "Fisher 개정판 2장의 같은 숫자 묶음(가진 돈 500만·손 바뀜 20·빵 2억×0.1·석탄 1,000만×5·옷감 3,000만×1)에서 양변 1억 달러와 세 가지 변형의 값이 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
+  },
 };
 
 /**
@@ -485,4 +503,6 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "firms/market-power-and-markup": "bd7e2fcb297b90d2",
   "labor/wage-floor-natural-experiment": "f4cee633e36a9767",
   "labor/measuring-the-spread": "9c6d52345e9d0a9c",
+  "macro/why-per-head-stalls": "288664818602d036",
+  "macro/what-the-price-level-hides": "18fde37b5c739139",
 };

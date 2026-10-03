@@ -87023,4 +87023,555 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
   },
+  "macro/why-per-head-stalls": {
+    entryNote:
+      "앞 다섯 편은 한 가게와 한 사람의 이야기였습니다. 여기서부터는 그것들을 전부 더한 숫자를 다루고, 더한 숫자를 읽는 첫 번째 규칙을 세웁니다.",
+    coreIdea:
+      "총량 두 줄이 서로 다른 방식으로 늘어나면 둘 다 커지는데도 나눈 값은 내려갈 수 있으므로, 살림이 나아졌는지를 물을 때는 사람 수로 나눈 값을 봐야 합니다. 거기에 더해 줄어든 몫이 사람 수를 도로 누르는 고리가 닫히면 한 사람 몫은 긴 눈으로 제자리에 묶이는데, 실제 역사는 그렇게 되지 않았으므로 고리를 버리는 대신 어느 가정이 깨졌는지를 짚어야 합니다.",
+    assumedKnowledge: [
+      {
+        id: "paradox-of-thrift",
+        role: "개별에서 참인 것이 전체에서 뒤집히는 구조를 가져와, 총량과 한 사람 몫 사이에서 다시 씁니다.",
+      },
+      {
+        id: "cumulative-share-curve",
+        role: "평균 하나로는 벌어진 정도를 말할 수 없다는 제약을 그대로 가져옵니다.",
+      },
+      {
+        id: "minimum-market-for-a-detour",
+        role: "수량이 커지면 더 돌아가는 방법이 열린다는 조건을 사람이 느는 쪽의 다른 효과로 씁니다.",
+      },
+      {
+        id: "minimum-wage-prediction-split",
+        role: "같은 셈이 조건에 따라 반대 결론을 낸다는 경험을 빗나간 예측을 읽는 방법으로 잇습니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "multiplicative-vs-additive-growth",
+        role: "두 줄이 늘어나는 방식의 차이를 정의합니다.",
+      },
+      {
+        id: "per-head-division",
+        role: "총량에서 살림으로 넘어가는 나눗셈을 정의합니다.",
+      },
+      {
+        id: "subsistence-check-loop",
+        role: "그 값이 한자리에 묶이는 조건을 고리로 적습니다.",
+      },
+      {
+        id: "broken-assumption-diagnosis",
+        role: "빗나간 예측을 다루는 방법을 세웁니다.",
+      },
+      {
+        id: "population-as-two-sided-force",
+        role: "그 진단이 드러낸 반대 방향의 힘을 정의합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "multiplicative-vs-additive-growth",
+        sectionId: "two-ratios",
+        intuition:
+          "매번 두 배가 되는 줄은 뒤로 갈수록 한 번에 늘어나는 양이 커지고, 매번 같은 양을 더하는 줄은 끝까지 같은 양만 늘어납니다.",
+        workedExample:
+          "700만에서 두 배씩 가면 1,400만·2,800만·5,600만·1억 1,200만이고, 700만씩 더하면 1,400만·2,100만·2,800만·3,500만입니다. 첫 25년에는 둘 다 1,400만으로 같습니다.",
+        boundary:
+          "더해서 느는 쪽도 총량은 계속 커집니다. 느리게 느는 것과 늘지 않는 것을 섞으면 안 됩니다.",
+      },
+      {
+        id: "per-head-division",
+        sectionId: "per-head",
+        intuition:
+          "둘 다 늘었다는 말로는 살림이 나아졌는지 알 수 없습니다. 나눠 가질 사람 수로 나눠 봐야 합니다.",
+        workedExample:
+          "100년 뒤 거두는 양은 다섯 배가 되었는데 사람은 열여섯 배가 되어, 한 사람 몫은 1에서 0.31로 내려갑니다.",
+        boundary:
+          "모두가 똑같이 나눠 가진다고 두고 계산한 값입니다. 한 사람 몫이 올라가도 아래쪽 사람의 몫은 내려갈 수 있습니다.",
+      },
+      {
+        id: "subsistence-check-loop",
+        sectionId: "the-check",
+        intuition:
+          "몫이 줄면 먹고살기 어려워지고, 어려워지면 사람 수가 눌리고, 눌리면 몫이 다시 올라갑니다.",
+        workedExample:
+          "100년 뒤 7,700만 명분이 비어 있다는 것은 그만큼이 태어나 굶는다는 뜻이 아니라 애초에 그만큼이 늘지 못한다는 뜻입니다.",
+        proofIdea:
+          "사람 수가 늘어나는 배수를 한 사람 몫의 함수 g(y)로 두면, g가 y에 대해 증가하고 거두는 양이 사람 수와 무관하게 늘 때 y는 g(y)=1인 값으로 끌려갑니다. y가 그보다 크면 사람이 늘어 분모가 커지므로 y가 내려가고, 작으면 사람이 줄어 y가 올라가므로, 양쪽에서 같은 자리로 되돌아옵니다.",
+        counterexample:
+          "g가 y와 무관하게 1이면 사람 수가 몫에 반응하지 않아 고리가 끊기고, y는 거두는 양이 늘어나는 대로 올라갑니다. 고리를 닫는 것은 인구 자체가 아니라 인구가 몫에 반응한다는 가정입니다.",
+        boundary:
+          "묶이는 것은 한 사람 몫이지 총량이 아닙니다. 총량은 이 고리 안에서도 계속 커집니다.",
+      },
+      {
+        id: "broken-assumption-diagnosis",
+        sectionId: "what-broke",
+        intuition:
+          "예측이 틀렸다고 셈까지 버릴 필요는 없습니다. 셈에 들어간 가정을 하나씩 대어 보면 어디가 어긋났는지 나옵니다.",
+        workedExample:
+          "거두는 양이 더하기로만 늘지 않았다는 것과, 몫이 늘어도 사람 수가 그만큼 늘지 않았다는 것 둘이 깨졌습니다. 땅이 늘지 않는다는 셋째 가정은 깨지지 않았습니다.",
+        boundary:
+          "가정을 짚는 것과 결론을 지지하거나 기각하는 것은 다릅니다. 이 방법의 결과물은 조건 목록이지 판정이 아닙니다.",
+      },
+      {
+        id: "population-as-two-sided-force",
+        sectionId: "what-it-leaves",
+        intuition:
+          "사람이 늘면 나눌 몫이 줄지만, 동시에 그 사람들이 사 가는 양이 늘어 더 돌아가는 방법이 열립니다.",
+        workedExample:
+          "앞 글의 식에서 먼저 들이는 몫을 나눠 질 수량이 커지면 그 전까지 열리지 않던 방법이 열립니다. 같은 인구 증가가 두 방향으로 동시에 작용합니다.",
+        boundary:
+          "어느 쪽이 이기는지는 이 글이 답하지 않습니다. 한쪽을 0으로 두면 결론이 정해진다는 것까지가 여기서 말할 수 있는 것입니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 늘어나는 방식",
+        relation: "두 줄이 어떻게 갈라지는지 봅니다.",
+        concepts: ["multiplicative-vs-additive-growth"],
+      },
+      {
+        label: "01 나누기",
+        relation: "총량에서 한 사람 몫으로 넘어갑니다.",
+        concepts: ["per-head-division"],
+      },
+      {
+        label: "02 묶이는 조건",
+        relation: "되먹임이 닫히면 그 값이 제자리에 묶입니다.",
+        concepts: ["subsistence-check-loop"],
+      },
+      {
+        label: "03 빗나간 뒤",
+        relation: "어느 가정이 깨졌는지 짚고, 거기서 드러난 힘을 봅니다.",
+        concepts: ["broken-assumption-diagnosis", "population-as-two-sided-force"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "곱으로 느는 줄과 더해서 느는 줄에서 한 번에 늘어나는 양이 각각 어떻게 되는지 쓰고, 두 줄의 차이가 언제 보이기 시작하는지 쓰세요.",
+        answerChecklist: [
+          "곱으로 느는 쪽은 늘어나는 양 자체가 커짐",
+          "더해서 느는 쪽은 늘어나는 양이 일정",
+          "첫 기간에는 둘이 같아 차이가 안 보임",
+          "시간이 지나야 벌어지고 한번 벌어지면 안 좁혀짐",
+        ],
+        requiredConcepts: ["multiplicative-vs-additive-growth"],
+        sectionId: "two-ratios",
+      },
+      {
+        level: "basic",
+        question:
+          "섬의 100년 셈에서 거두는 양과 사람 수가 각각 몇 배가 되었는지 구하고, 한 사람 몫이 어떻게 변했는지 쓰세요.",
+        answerChecklist: [
+          "거두는 양은 700만분에서 3,500만분으로 다섯 배",
+          "사람은 700만에서 1억 1,200만으로 열여섯 배",
+          "한 사람 몫은 1에서 0.31로 내려감",
+          "총량은 둘 다 늘었는데 나눈 값은 내려감",
+        ],
+        requiredConcepts: ["per-head-division"],
+        sectionId: "per-head",
+      },
+      {
+        level: "basic",
+        question:
+          "총량이 늘었다는 사실만으로 살림이 나아졌다고 말할 수 없는 이유를 쓰세요.",
+        answerChecklist: [
+          "분모인 사람 수도 함께 늘 수 있음",
+          "분모가 더 빨리 늘면 나눈 값은 내려감",
+          "총량의 방향과 한 사람 몫의 방향이 갈릴 수 있음",
+          "둘 다 늘었다는 말로는 어느 쪽인지 알 수 없음",
+        ],
+        requiredConcepts: ["per-head-division", "multiplicative-vs-additive-growth"],
+        sectionId: "per-head",
+      },
+      {
+        level: "basic",
+        question:
+          "줄어든 몫이 사람 수를 누르는 고리를 네 단계로 적고, 그 고리가 닫히면 한 사람 몫이 어떻게 되는지 쓰세요.",
+        answerChecklist: [
+          "사람이 늘면 한 사람 몫이 줆",
+          "몫이 줄면 먹고살기 어려워짐",
+          "어려워지면 사람 수가 눌림",
+          "눌리면 몫이 다시 올라 제자리로 돌아옴",
+        ],
+        requiredConcepts: ["subsistence-check-loop"],
+        sectionId: "the-check",
+      },
+      {
+        level: "basic",
+        question:
+          "이 셈의 예측이 빗나간 뒤에 깨진 가정 두 개와 깨지지 않은 가정 하나를 각각 쓰세요.",
+        answerChecklist: [
+          "거두는 양이 더하기로만 늘지 않음",
+          "몫이 늘어도 사람 수가 그만큼 늘지 않음",
+          "땅이 늘지 않는다는 가정은 그대로",
+          "깨진 것은 같은 땅에서 거두는 양이 늘었다는 쪽",
+        ],
+        requiredConcepts: ["broken-assumption-diagnosis"],
+        sectionId: "what-broke",
+      },
+      {
+        level: "basic",
+        question:
+          "사람이 느는 것이 한 사람 몫에 미치는 두 가지 반대 방향의 작용을 쓰세요.",
+        answerChecklist: [
+          "같은 총량을 더 많이 나눠야 해서 몫을 낮춤",
+          "수량이 커져 더 돌아가는 방법이 열림",
+          "두 힘의 방향이 반대",
+          "어느 쪽이 이기는지는 미리 정해져 있지 않음",
+        ],
+        requiredConcepts: ["population-as-two-sided-force"],
+        sectionId: "what-it-leaves",
+      },
+      {
+        level: "advanced",
+        question:
+          "사람 수가 늘어나는 배수를 한 사람 몫의 함수로 두었을 때 그 몫이 한자리로 끌려가는 이유를 유도하세요.",
+        answerChecklist: [
+          "배수 g가 몫 y에 대해 증가한다고 둠",
+          "y가 크면 사람이 늘어 분모가 커지고 y가 내려감",
+          "y가 작으면 사람이 줄어 y가 올라감",
+          "양쪽에서 g(y)=1인 자리로 되돌아옴",
+        ],
+        requiredConcepts: ["subsistence-check-loop", "per-head-division"],
+        sectionId: "the-check",
+      },
+      {
+        level: "advanced",
+        question:
+          "고리를 닫는 것이 인구 자체가 아니라 어떤 가정인지 밝히고, 그 가정이 사라지면 한 사람 몫이 어떻게 움직이는지 쓰세요.",
+        answerChecklist: [
+          "닫는 것은 인구가 몫에 반응한다는 가정",
+          "g가 y와 무관하면 고리가 끊김",
+          "그러면 분모가 몫에 반응하지 않음",
+          "한 사람 몫은 거두는 양이 늘어나는 대로 올라감",
+        ],
+        requiredConcepts: ["subsistence-check-loop"],
+        sectionId: "the-check",
+      },
+      {
+        level: "advanced",
+        question:
+          "빗나간 예측을 버리는 것과 가정을 짚는 것이 어떻게 다른지 쓰고, 뒤쪽이 남기는 결과물이 무엇인지 쓰세요.",
+        answerChecklist: [
+          "버리면 구조까지 함께 사라짐",
+          "짚으면 어떤 조건에서 성립하는지가 남음",
+          "결론이 조건부 명제로 되돌아감",
+          "결과물은 판정이 아니라 조건 목록",
+        ],
+        requiredConcepts: ["broken-assumption-diagnosis"],
+        sectionId: "what-broke",
+      },
+      {
+        level: "advanced",
+        question:
+          "한 사람 몫이 올랐다는 사실만으로 모두의 살림이 나아졌다고 말할 수 없는 이유를, 앞 글의 곡선과 함께 쓰세요.",
+        answerChecklist: [
+          "평균은 똑같이 나눠 가진다고 두고 계산한 값",
+          "벌어진 정도는 이 나눗셈에 담기지 않음",
+          "평균이 올라도 아래쪽 몫은 내려갈 수 있음",
+          "두 질문에는 두 가지 측정이 필요",
+        ],
+        requiredConcepts: ["per-head-division", "cumulative-share-curve"],
+        sectionId: "per-head",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "T. R. Malthus, 『An Essay on the Principle of Population』 (1798) 초판",
+        href: "https://archive.org/details/essayonprincipl00malt",
+        problem:
+          "사회가 끝없이 나아질 수 있다는 당대의 주장에 맞서, 늘어나는 생산이 왜 반드시 살림의 개선으로 이어지지는 않는지를 셈으로 보일 필요가 있었습니다.",
+        contribution:
+          "사람과 먹을 것이 서로 다른 방식으로 늘어난다고 두고, 두 줄을 100년에 걸쳐 숫자로 적어 나눈 값이 내려가는 것을 보였습니다. 이어서 모자람이 사람 수를 도로 누르는 되먹임을 세워, 총량이 커져도 한 사람 몫이 한자리에 묶이는 구조를 만들었습니다. 결론보다 중요한 것은 총량의 변화와 한 사람 몫의 변화를 분리해 적은 형식입니다.",
+        assumptions:
+          "먹을 것이 25년마다 지금 거두는 양만큼씩만 더 늘 수 있다고 두고, 사람 수는 제약이 없으면 25년마다 두 배가 된다고 둡니다. 뒤쪽 비율은 당시 미국의 관찰에서 가져왔습니다. 땅이 늘지 않는다는 것과 사람 수가 먹을 것의 넉넉함에 반응한다는 것도 전제입니다.",
+        evidenceScope:
+          "Internet Archive의 1798년 초판 스캔(430쪽)을 내려받아 해당 장을 읽었습니다. 14쪽의 두 비율 선언과 26쪽의 100년 셈은 쪽 이미지를 직접 열어 대조했고, 21·25·28쪽은 같은 스캔 OCR 본문의 쪽 머리글로 확인했습니다. 이후 판본에서 저자가 논지를 상당히 수정했으나 이 글은 초판만 읽었습니다.",
+        notClaim:
+          "이 글은 저자의 결론을 지지하지도 기각하지도 않습니다. 실제로 지난 두 세기 동안 사람과 한 사람 몫이 함께 올랐으므로 예측 자체는 빗나갔고, 이 글이 하는 일은 어느 가정이 깨졌는지를 짚는 데까지입니다. 또 되먹임 고리의 네 단계는 저자의 서술을 이 글이 그림으로 정리한 것이고, 한 사람 몫의 시간 경로와 g(y) 표기도 원문에 없습니다.",
+        sectionId: "the-check",
+      },
+    ],
+  },
+  "macro/what-the-price-level-hides": {
+    entryNote:
+      "앞 글에서 총량을 사람 수로 나눴습니다. 여러 해를 견주려면 그 앞에 값이 변한 몫을 걷어내는 일이 하나 더 있고, 그러려면 값이 무엇과 묶여 있는지부터 봐야 합니다.",
+    coreIdea:
+      "거래 하나가 양쪽 같은 값이므로 한 해를 다 더해도 같고, 돈 쪽을 세려면 가진 돈에 손 바뀐 횟수를 곱해야 합니다. 그래서 가진 돈·손 바뀜·오간 물량·값 수준 네 자리가 한 등식에 묶이고 셋이 정해지면 나머지가 따라오는데, 이 등식은 더하기의 결과라 틀릴 수가 없으므로 어느 자리가 먼저 움직였는지는 말하지 못합니다. 쓸모는 답이 아니라 값이 올랐다는 말 앞에서 무엇을 더 물어야 하는지를 빠짐없이 적어 준다는 데 있습니다.",
+    assumedKnowledge: [
+      {
+        id: "per-head-division",
+        role: "총량을 나눠서 읽는다는 앞 글의 규칙에 값으로 나누는 단계를 하나 더 앞세웁니다.",
+      },
+      {
+        id: "crossing-curves-incomparability",
+        role: "여럿을 한 숫자로 줄일 때 비중 선택이 결과를 바꾼다는 문제를 값 수준에 그대로 가져옵니다.",
+      },
+      {
+        id: "neither-model-fits",
+        role: "증거가 무엇을 세우고 무엇을 세우지 못하는지 가르는 규율을 식에도 적용합니다.",
+      },
+      {
+        id: "money-multiplier-ceiling",
+        role: "돈의 양이 어떻게 늘어나는지를 다룬 자리와, 그 돈이 얼마나 자주 쓰이는지를 다루는 이 글의 자리를 구분합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "exchange-identity",
+        role: "양변이 반드시 같은 이유와 그것이 발견이 아니라는 점을 세웁니다.",
+      },
+      {
+        id: "velocity-of-circulation",
+        role: "돈 쪽을 세는 데 필요한 둘째 수를 정의합니다.",
+      },
+      {
+        id: "four-way-constraint",
+        role: "네 자리의 묶임을 식으로 적습니다.",
+      },
+      {
+        id: "identity-is-not-causation",
+        role: "그 식이 말하지 않는 것을 명시합니다.",
+      },
+      {
+        id: "deflating-before-comparing",
+        role: "그럼에도 남는 쓸모를 다음 단계와 잇습니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "exchange-identity",
+        sectionId: "two-sides",
+        intuition:
+          "70센트를 주고 설탕 10파운드를 받았으면 그 둘은 서로 바꿔진 것입니다. 같다는 것은 재 본 결과가 아닙니다.",
+        workedExample:
+          "한 해에 빵 2억 개가 0.1달러에, 석탄 1,000만 톤이 5달러에, 옷감 3,000만 야드가 1달러에 팔리면 1억 달러어치입니다. 건너간 돈도 1억 달러입니다.",
+        boundary:
+          "틀릴 수 없는 등식이라 어떤 자료로도 반증되지 않습니다. 반증될 수 없다는 것이 이 등식의 한계이기도 합니다.",
+      },
+      {
+        id: "velocity-of-circulation",
+        sectionId: "velocity",
+        intuition:
+          "나라에 500만 달러뿐인데 한 해에 1억 달러어치가 오갔다면 같은 돈이 여러 번 쓰인 것입니다.",
+        workedExample:
+          "500만 달러가 한 해에 스무 번 손을 바꾸면 건너간 돈은 1억 달러입니다. 각자가 한 해에 쓴 돈을 평소 지니는 돈으로 나누면 자기 횟수가 나옵니다.",
+        boundary:
+          "가진 돈은 한 시점의 값이고 이 수는 기간이 있어야 뜻이 생깁니다. 둘을 같은 종류의 수로 다루면 안 됩니다.",
+      },
+      {
+        id: "four-way-constraint",
+        sectionId: "four-knobs",
+        intuition:
+          "네 자리가 한 줄로 묶여 있어 셋을 정하면 나머지는 고를 수 없습니다.",
+        workedExample:
+          "돈과 물량이 그대로인데 손 바뀜이 두 배가 되면 빵은 0.1에서 0.2달러, 석탄은 5에서 10달러가 됩니다. 물량이 두 배가 되면 반대로 0.05달러와 2.5달러가 됩니다.",
+        proofIdea:
+          "왼쪽은 가진 돈과 손 바뀜의 곱이고 오른쪽은 종류마다 값과 수량을 곱해 더한 것인데, 둘이 같다는 것이 이미 성립합니다. 한 자리를 k배 하면 등식을 유지하기 위해 같은 변의 다른 자리가 1/k배가 되거나 반대 변의 어느 자리가 k배가 되어야 하므로, 셋을 고정하면 넷째는 비율이 하나로 정해집니다.",
+        counterexample:
+          "가진 돈이 두 배가 되고 손 바뀜이 절반이 되면 왼쪽이 그대로여서 값이 전혀 움직이지 않습니다. 한 자리가 움직였다고 값이 반드시 따라 움직이는 것은 아닙니다.",
+        boundary:
+          "오른쪽을 값 하나와 물량 하나로 줄이려면 무엇을 얼마의 비중으로 평균할지 정해야 합니다. 그 선택은 식 안에 들어 있지 않습니다.",
+      },
+      {
+        id: "identity-is-not-causation",
+        sectionId: "not-a-cause",
+        intuition:
+          "값이 두 배가 되었다는 사실은 네 자리 중 어디가 움직였는지에 대해 여러 답을 동시에 허용합니다.",
+        workedExample:
+          "넷 중 셋을 세고 손 바뀜을 나머지로 역산하면 식은 반드시 맞습니다. 맞았다는 것이 어떤 설명도 지지하지 않습니다.",
+        boundary:
+          "돈과 값의 관계를 주장하는 것이 틀렸다는 뜻이 아니라, 그 주장을 이 식만으로 세울 수 없다는 뜻입니다. 자료가 따로 있어야 합니다.",
+      },
+      {
+        id: "deflating-before-comparing",
+        sectionId: "what-to-ask",
+        intuition:
+          "두 해의 총량을 그대로 견주면 물량이 늘어난 몫과 값이 오른 몫이 섞여 있습니다.",
+        workedExample:
+          "오른쪽 항을 값과 물량으로 가르면 물량 쪽만 남겨 견줄 수 있습니다. 사람 수로 나누는 일은 그다음입니다.",
+        boundary:
+          "값 수준 하나를 만드는 데 비중 선택이 들어가므로, 걷어낸 뒤의 숫자도 그 선택에 달려 있습니다. 중립적인 걷어내기는 없습니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 왜 같은가",
+        relation: "양변이 같은 것은 더하기의 결과입니다.",
+        concepts: ["exchange-identity"],
+      },
+      {
+        label: "01 어떻게 세는가",
+        relation: "돈 쪽을 세려면 수가 하나 더 필요합니다.",
+        concepts: ["velocity-of-circulation"],
+      },
+      {
+        label: "02 네 자리의 묶임",
+        relation: "셋이 정해지면 나머지가 따라옵니다.",
+        concepts: ["four-way-constraint"],
+      },
+      {
+        label: "03 말하지 않는 것과 남는 쓸모",
+        relation: "원인은 담기지 않고, 물어야 할 목록이 남습니다.",
+        concepts: ["identity-is-not-causation", "deflating-before-comparing"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "거래 하나에서 양쪽이 같은 값인 이유와, 그 사실에서 한 해 전체의 등식이 어떻게 나오는지 쓰세요.",
+        answerChecklist: [
+          "주고받은 둘이 같다는 것은 거래의 정의",
+          "재 본 결과가 아니라 정의",
+          "거래마다 같았으므로 전부 더해도 같음",
+          "한 해에 건너간 돈과 건너온 물건이 값으로 같음",
+        ],
+        requiredConcepts: ["exchange-identity"],
+        sectionId: "two-sides",
+      },
+      {
+        level: "basic",
+        question:
+          "나라에 500만 달러뿐인데 한 해에 1억 달러어치가 오갈 수 있는 이유를 쓰고, 건너간 돈을 구하는 식을 쓰세요.",
+        answerChecklist: [
+          "같은 돈이 여러 번 쓰임",
+          "가진 돈만으로는 셀 수 없음",
+          "가진 돈 × 손 바뀐 횟수",
+          "500만 × 20 = 1억",
+        ],
+        requiredConcepts: ["velocity-of-circulation"],
+        sectionId: "velocity",
+      },
+      {
+        level: "basic",
+        question:
+          "가진 돈과 손 바뀐 횟수가 서로 다른 것을 잰다는 점을, 기간이라는 말을 써서 설명하세요.",
+        answerChecklist: [
+          "가진 돈은 어느 시점의 값",
+          "손 바뀜은 기간이 있어야 뜻이 생김",
+          "둘은 따로 움직일 수 있음",
+          "돈을 쥐고 있으면 가진 돈이 그대로여도 횟수가 내려감",
+        ],
+        requiredConcepts: ["velocity-of-circulation"],
+        sectionId: "velocity",
+      },
+      {
+        level: "basic",
+        question:
+          "돈과 물량이 그대로인데 손 바뀜이 두 배가 되면 값이 어떻게 되는지, 물량이 두 배가 되면 어떻게 되는지 각각 쓰세요.",
+        answerChecklist: [
+          "손 바뀜 두 배면 값이 두 배",
+          "빵 0.1에서 0.2달러",
+          "물량 두 배면 값이 절반",
+          "빵 0.1에서 0.05달러",
+        ],
+        requiredConcepts: ["four-way-constraint"],
+        sectionId: "four-knobs",
+      },
+      {
+        level: "basic",
+        question:
+          "가진 돈이 두 배가 되었는데 값이 그대로일 수 있는 경우를 두 가지 쓰세요.",
+        answerChecklist: [
+          "손 바뀜이 절반이 된 경우",
+          "오간 물량이 두 배가 된 경우",
+          "왼쪽이 그대로이거나 양변이 같이 커짐",
+          "돈이 늘었다고 값이 반드시 오르지는 않음",
+        ],
+        requiredConcepts: ["identity-is-not-causation", "four-way-constraint"],
+        sectionId: "not-a-cause",
+      },
+      {
+        level: "basic",
+        question:
+          "두 해의 총량을 견주기 전에 무엇을 먼저 해야 하는지와, 그 일이 사람 수로 나누는 일과 어떤 순서인지 쓰세요.",
+        answerChecklist: [
+          "값이 변한 몫을 먼저 걷어냄",
+          "오른쪽 항을 값과 물량으로 가름",
+          "값으로 나누는 일이 먼저",
+          "사람 수로 나누는 일은 그다음",
+        ],
+        requiredConcepts: ["deflating-before-comparing"],
+        sectionId: "what-to-ask",
+      },
+      {
+        level: "advanced",
+        question:
+          "네 자리 중 셋을 고정하면 넷째가 하나로 정해지는 이유를 등식의 성질로 유도하세요.",
+        answerChecklist: [
+          "왼쪽은 두 수의 곱, 오른쪽은 곱의 합",
+          "둘이 같다는 것이 이미 성립",
+          "한 자리를 k배 하면 같은 변의 다른 자리가 1/k배가 되거나 반대 변이 k배",
+          "셋을 고정하면 넷째의 비율이 하나로 정해짐",
+        ],
+        requiredConcepts: ["four-way-constraint"],
+        sectionId: "four-knobs",
+      },
+      {
+        level: "advanced",
+        question:
+          "넷 중 셋을 세고 하나를 역산했을 때 식이 맞았다는 사실이 왜 아무것도 증명하지 못하는지 쓰세요.",
+        answerChecklist: [
+          "역산한 값은 식을 맞추도록 정해짐",
+          "독립된 관찰이 아님",
+          "어떤 자료에서도 반드시 맞음",
+          "반증될 수 없으므로 어떤 설명도 지지하지 못함",
+        ],
+        requiredConcepts: ["identity-is-not-causation"],
+        sectionId: "not-a-cause",
+      },
+      {
+        level: "advanced",
+        question:
+          "돈을 크게 늘린 곳에서 값이 크게 올랐다는 주장을 세우려면 무엇이 더 필요한지, 그리고 이 식이 그 주장에 어떤 조건을 거는지 쓰세요.",
+        answerChecklist: [
+          "식 밖에서 자료를 따로 모아야 함",
+          "주장을 떠받치는 것은 식이 아니라 자료",
+          "손 바뀜과 물량이 그동안 어떻게 움직였는지 함께 적어야 함",
+          "그 둘을 적지 않으면 다른 경우를 배제하지 못함",
+        ],
+        requiredConcepts: ["identity-is-not-causation", "four-way-constraint"],
+        sectionId: "not-a-cause",
+      },
+      {
+        level: "advanced",
+        question:
+          "값이 변한 몫을 걷어낸 숫자도 중립적이지 않은 이유를, 앞 글에서 본 한 숫자의 한계와 이어 쓰세요.",
+        answerChecklist: [
+          "값 수준 하나를 만들려면 비중을 정해야 함",
+          "무엇을 얼마로 칠지가 결과를 바꿈",
+          "여럿을 한 숫자로 줄일 때 생기는 문제와 같은 종류",
+          "중립적인 걷어내기는 없음",
+        ],
+        requiredConcepts: [
+          "deflating-before-comparing",
+          "crossing-curves-incomparability",
+        ],
+        sectionId: "what-to-ask",
+      },
+    ],
+    papers: [
+      {
+        title:
+          "Irving Fisher, 『The Purchasing Power of Money』 개정판, 2장",
+        href: "https://archive.org/details/purchasingpower00fish",
+        problem:
+          "값이 전반적으로 오르내리는 일을 설명하려면 먼저 값 수준이 무엇과 묶여 있는지를 빠짐없이 적어야 하는데, 돈의 양 하나만 보는 설명이 그 자리를 대신하고 있었습니다.",
+        contribution:
+          "거래 하나의 등식을 한 해 전체로 더해 교환방정식을 세우고, 돈 쪽을 가진 돈과 손 바뀐 횟수의 곱으로 갈라 적었습니다. 그 위에서 가진 돈·손 바뀜·오간 물량 셋이 모두 값 수준을 정하는 데 똑같이 들어간다는 것을 세 가지 숫자 예시로 보였습니다. 돈을 두 배로 만들어도 값이 그대로일 수 있는 경우를 직접 들어, 돈의 양 하나로 값을 설명하는 읽기를 저자 스스로 막아 두었습니다.",
+        assumptions:
+          "한 해라는 기간을 먼저 정하고, 이 장에서는 수표와 예금을 뺀 현금만 셉니다. 오른쪽을 값 하나와 물량 하나로 줄이려면 평균의 비중을 정해야 한다는 것도 전제이며, 저자는 각 단계의 결론이 그 단계에서 둔 가정 위에서만 참이라고 적습니다.",
+        evidenceScope:
+          "Internet Archive 공개본의 2장을 읽었습니다. 16~18쪽의 설탕 예시와 빵·석탄·옷감 세 줄, 19~21쪽의 세 가지 변형, 21쪽의 경고 문장이 근거이며 21쪽 문장은 쪽 이미지로 대조했습니다. 이 사본은 1911년 초판이 아니라 저자가 수정한 개정판이므로 쪽수는 개정판 기준입니다.",
+        notClaim:
+          "교환방정식은 돈이 값을 움직인다는 것을 증명하지 않습니다. 저자 자신이 돈의 양은 세 요인 가운데 하나일 뿐이라고 적었고, 이 글은 그 경계까지만 다룹니다. 또 저자가 뒤 장들에서 전개한 인과 논의와 수표·예금으로의 확장은 이 글에 싣지 않았습니다. 본문의 역산 절차와 '틀릴 수 없는 식은 반증하지 못한다'는 정리도 원문에 그 꼴로 있지 않고 이 글이 적은 것입니다.",
+        sectionId: "four-knobs",
+      },
+    ],
+  },
 };
