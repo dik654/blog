@@ -564,5 +564,5 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "testimony/speeches-were-reconstructed": "945f7faae9112da8",
   "testimony/told-but-not-believed": "383412e348dd7bee",
   "testimony/the-writer-was-there": "4db0036e09cdc5cc",
-  "record-numbers/how-the-army-was-counted": "6025dde0cb84bf2c",
+  "record-numbers/how-the-army-was-counted": "8c2640e7b3d4794a",
 };

@@ -24,7 +24,7 @@ export const recordNumbersArticles: Article[] = [
       },
       {
         id: "where-it-slips",
-        title: "부품 4. 어긋날 자리가 셋 있고 모두 눈금 안에 묻힙니다",
+        title: "부품 4. 표기 단위는 1만이지만 총오차는 더 클 수 있습니다",
       },
       {
         id: "handoff",
