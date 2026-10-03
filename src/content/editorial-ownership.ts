@@ -12987,6 +12987,22 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "수치 예제는 실측이나 원 논문의 데이터로 표현하지 않고 이상 부품의 가정으로 밝힌다." },
     ],
   },
+  "bands-and-doping": {
+    title: "실리콘에 소량을 섞으면 흐름이 달라지는 이유 글이 소유하는 범위",
+    owns: [
+      "허용 에너지띠와 띠틈이 움직이는 전하를 가르는 기준",
+      "300 K 순수 실리콘의 전자·정공 기준 농도와 도너·억셉터 가정의 농도 계산",
+      "움직이는 전하와 고정 이온의 중성 장부",
+      "농도 계산과 이동도·전도도 주장의 경계",
+    ],
+    reuses: [
+      { label: "전류가 전하의 이동 속도인 이유", href: "/electronics/circuits/lumped-circuit-and-conservation#small-circuit" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Wilson 1931의 에너지띠 논의와 Shockley 1949의 도너·억셉터 정의를 원문 쪽수에 한정한다." },
+      { kind: "project-claim", rule: "300 K n_i와 실리콘 띠틈은 MIT 자료에 귀속하고, 10^16 도핑은 가정임을 밝힌다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

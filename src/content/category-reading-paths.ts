@@ -28,6 +28,14 @@ export const CATEGORY_READING_PATHS: Readonly<
     ],
     featuredArticles: ["lumped-circuit-and-conservation"],
   },
+  semiconductors: {
+    title: "재료에서 칩까지 읽기",
+    description: "재료 안에서 움직일 수 있는 전하를 먼저 세고, 제조 과정과 집적의 제약으로 넘어갑니다.",
+    stages: [
+      { eyebrow: "01 · 재료", title: "전자와 빈자리", description: "에너지 상태와 불순물에 따라 전자와 정공의 수가 달라지는 이유입니다.", subcategories: ["semiconductor-physics"] },
+    ],
+    featuredArticles: ["bands-and-doping"],
+  },
   ai: {
     title: "AI를 위에서 아래로 읽는 네 단계",
     description:
