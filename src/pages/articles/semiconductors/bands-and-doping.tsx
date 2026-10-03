@@ -178,7 +178,7 @@ export default function BandsAndDopingArticle() {
           question="전자 수가 늘어난 조각의 정공 수는 얼마입니까?"
           idea="같은 300 K 실리콘의 열평형에서는 양쪽 농도의 곱을 순수 상태의 농도 제곱과 맞춥니다."
           formula={String.raw`np=n_i^2,\qquad p=\frac{(10^{10})^2}{10^{16}}=10^4\;\mathrm{cm}^{-3}`}
-          annotatedFormula={String.raw`\underbrace{np}_{\text{도핑한 조각}}=\underbrace{n_i^2}_{\text{순수한 조각}},\qquad p=\frac{(10^{10})^2}{10^{16}}=10^4\;\mathrm{cm}^{-3}`}
+          annotatedFormula={String.raw`\underbrace{np}_{\text{도핑한 조각}}=\underbrace{n_i^2}_{\text{순수한 조각}}`}
           operations={[{ expression: String.raw`\frac{n_i^2}{n}`, annotation: "순수 상태의 농도 곱을 늘어난 전자 농도로 나누어 남은 정공 농도를 구합니다." }]}
           terms={[
             { symbol: "n", name: "전자 농도", description: "조각 B에서 약 10¹⁶ cm⁻³입니다(가정)." },

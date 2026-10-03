@@ -66,7 +66,7 @@ export default function LumpedCircuitAndConservationArticle() {
           question="한 부품에 걸린 전압을 알면 전류는 얼마입니까?"
           idea="선형 저항에서는 전압과 전류의 비가 일정하다고 가정합니다."
           formula={String.raw`I=\frac{V}{R}=\frac{6\,\mathrm V}{2{,}000\,\Omega}=3\,\mathrm{mA}`}
-          annotatedFormula={String.raw`I=\underbrace{\frac{V}{R}}_{\text{전압에서 전류로}}=\frac{6\,\mathrm V}{2{,}000\,\Omega}=3\,\mathrm{mA}`}
+          annotatedFormula={String.raw`I=\underbrace{\frac{V}{R}}_{\text{전압에서 전류로}}`}
           operations={[{ expression: String.raw`\frac{V}{R}`, annotation: "전압을 저항으로 나누어 해당 갈래의 흐름을 구합니다." }]}
           terms={[
             { symbol: "I", name: "전류", description: "정한 방향으로 초당 지나가는 전하량. 단위는 A입니다." },
@@ -108,7 +108,7 @@ export default function LumpedCircuitAndConservationArticle() {
           question="한 점으로 들어온 전류와 나간 전류는 어떻게 연결됩니까?"
           idea="갈림길 주변에 작은 경계를 그리고, 그 안에 전하가 쌓이지 않는 상태를 셉니다."
           formula={String.raw`I_{\mathrm{in}}-I_1-I_2=0\quad\Rightarrow\quad 6-3-3=0\;\mathrm{mA}`}
-          annotatedFormula={String.raw`\underbrace{I_{\mathrm{in}}-I_1-I_2}_{\text{갈림길 순유입}}=0\quad\Rightarrow\quad 6-3-3=0\;\mathrm{mA}`}
+          annotatedFormula={String.raw`\underbrace{I_{\mathrm{in}}-I_1-I_2}_{\text{갈림길 순유입}}=0`}
           operations={[{ expression: String.raw`I_{\mathrm{in}}-I_1-I_2`, annotation: "들어온 흐름은 양수, 나간 흐름은 음수로 세어 경계의 순유입을 구합니다." }]}
           terms={[
             { symbol: String.raw`I_{\mathrm{in}}`, name: "들어오는 전류", description: "첫 1 kΩ 저항을 지나 갈림길로 들어옵니다." },
@@ -161,7 +161,7 @@ export default function LumpedCircuitAndConservationArticle() {
           question="전원이 준 12 V는 어디로 갔습니까?"
           idea="정한 방향으로 고리를 따라가며 상승은 양수, 하강은 음수로 셉니다."
           formula={String.raw`+V_s-V_{R_s}-V_{R_1}=12-6-6=0\;\mathrm V`}
-          annotatedFormula={String.raw`\underbrace{+V_s}_{\text{전원 상승}}-\underbrace{V_{R_s}+V_{R_1}}_{\text{두 저항 하강}}=12-6-6=0\;\mathrm V`}
+          annotatedFormula={String.raw`+V_s-(V_{R_s}+V_{R_1})=0`}
           operations={[{ expression: String.raw`+V_s-V_{R_s}-V_{R_1}`, annotation: "전원의 전압 상승에서 직렬 저항과 선택한 갈래의 전압강하를 뺍니다." }]}
           terms={[
             { symbol: "V_s", name: "전원", description: "기준점에서 올라가며 얻는 12 V입니다." },
@@ -189,7 +189,7 @@ export default function LumpedCircuitAndConservationArticle() {
           question="갈림길 전압 V를 아직 모를 때 어떻게 구합니까?"
           idea="각 전류를 전압과 저항으로 바꾸고, 갈림길의 유입과 유출을 같게 둡니다."
           formula={String.raw`\frac{12-V}{1{,}000}=\frac{V}{2{,}000}+\frac{V}{2{,}000}\quad\Rightarrow\quad V=6\,\mathrm V`}
-          annotatedFormula={String.raw`\underbrace{\frac{12-V}{1{,}000}}_{\text{들어온 전류}}=\underbrace{\frac{V}{2{,}000}+\frac{V}{2{,}000}}_{\text{나간 전류}}\quad\Rightarrow\quad V=6\,\mathrm V`}
+          annotatedFormula={String.raw`\frac{12-V}{1{,}000}=\frac{2V}{2{,}000}`}
           operations={[
             { expression: String.raw`\frac{12-V}{1{,}000}`, annotation: "전원에서 갈림길까지 1 kΩ을 지나는 전류입니다." },
             { expression: String.raw`\frac{V}{2{,}000}+\frac{V}{2{,}000}`, annotation: "같은 전압 V를 마주한 두 출구의 전류를 합칩니다." },
@@ -238,7 +238,7 @@ export default function LumpedCircuitAndConservationArticle() {
           question="전원이 준 에너지가 회로 안에서 모두 설명됩니까?"
           idea="각 부품의 전압과 그 부품을 통과하는 전류를 곱해 초당 에너지로 바꿉니다."
           formula={String.raw`P_s=V_sI_s=72\,\mathrm{mW}=36+18+18\,\mathrm{mW}`}
-          annotatedFormula={String.raw`P_s=\underbrace{V_sI_s}_{\text{전원 공급}}=72\,\mathrm{mW}=\underbrace{36+18+18}_{\text{저항 소비}}\,\mathrm{mW}`}
+          annotatedFormula={String.raw`P_s=36+18+18=72\,\mathrm{mW}`}
           operations={[{ expression: String.raw`V_sI_s`, annotation: "전하 한 단위당 에너지에 초당 전하량을 곱해 초당 에너지를 구합니다." }]}
           terms={[
             { symbol: "P_s", name: "공급 전력", description: "12 V 전원이 6 mA를 내보내며 공급하는 72 mW입니다." },
