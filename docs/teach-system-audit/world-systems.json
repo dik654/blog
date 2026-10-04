@@ -1013,7 +1013,7 @@
     },
     {
       "route": "gpu/amd-gpu-execution-and-hip",
-      "status": "unreviewed",
+      "status": "retained-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [
           "S",
@@ -1030,7 +1030,40 @@
         "numericAnswerPointers": 3,
         "caseMarkers": 1
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "같은사례의10단계흐름은갖췄으나이름절의여러새용어가산문한번에집중",
+          "소스설명띄어쓰기와요청량/물리전송량의조건보강필요"
+        ],
+        "disposition": "기존teach흐름유지, 역할표·출처·모델경계·문체수정",
+        "fixture": "64개·CDNAwave64·lane37·주소148B. HIP7warpSize32/64근거,CDNA4LDS160KB와원본1024×1024를대조.",
+        "answerCoverage": "기존본문전체·원문코드·각6basic4advanced선독.정본anchor와문제답경로유지.",
+        "sourceApplication": "NVIDIA3f1c509 vectorAdd및HIPcdf9d101원본2개다운로드SHA동일. CUDA13.0.2/PTX9.0,HIP7,CDNA4백서실제9·11쪽,SynopsysHBM3/4,Roofline저자원고3절대조.",
+        "verification": "/tmp/teach-all/root-gpu-four-numeric-source.json 28계산PASS;strict학습4PASS;실제app tsc exit0(root-gpu-four-tsc-final.log).GPU실행성능미측정.",
+        "humanize": {
+          "roundTrip": true,
+          "finalGate": "실제p+역할표셀추출→원문왕복→prepare→실제수정→숫자/마커보존→gate0→apply.미추출props별도확인.",
+          "report": "/tmp/teach-all/humanize-root-gpu-four/summary.json",
+          "layoutFollowup": "모바일설명폭이좁아역할/설명을위아래배치. Roofline283자문단은주제별두문단으로분리."
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "numberedSections": 10,
+          "predictionQuestions": 3,
+          "codePanelsPerViewport": 2,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "report": "/tmp/teach-all/root-gpu-four-screens/summary.json",
+          "genericReport": "/tmp/world-browser-audit/teach-root-gpu-four-summary.json",
+          "actualScreensRead": true
+        },
+        "remaining": "전체799전수검토후전역빌드·배포·운영확인."
+      }
     },
     {
       "route": "gpu/b300-switchless-network",
@@ -1054,7 +1087,7 @@
     },
     {
       "route": "gpu/cuda-basics",
-      "status": "unreviewed",
+      "status": "retained-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [
           "S",
@@ -1071,7 +1104,40 @@
         "numericAnswerPointers": 3,
         "caseMarkers": 1
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "같은사례의10단계흐름은갖췄으나이름절의여러새용어가산문한번에집중",
+          "소스설명띄어쓰기와요청량/물리전송량의조건보강필요"
+        ],
+        "disposition": "기존teach흐름유지, 역할표·출처·모델경계·문체수정",
+        "fixture": "64개·thread37·lane5·주소148B·유효768B. CC6.0+sector범위와원본50000/256설정을분리.",
+        "answerCoverage": "기존본문전체·원문코드·각6basic4advanced선독.정본anchor와문제답경로유지.",
+        "sourceApplication": "NVIDIA3f1c509 vectorAdd및HIPcdf9d101원본2개다운로드SHA동일. CUDA13.0.2/PTX9.0,HIP7,CDNA4백서실제9·11쪽,SynopsysHBM3/4,Roofline저자원고3절대조.",
+        "verification": "/tmp/teach-all/root-gpu-four-numeric-source.json 28계산PASS;strict학습4PASS;실제app tsc exit0(root-gpu-four-tsc-final.log).GPU실행성능미측정.",
+        "humanize": {
+          "roundTrip": true,
+          "finalGate": "실제p+역할표셀추출→원문왕복→prepare→실제수정→숫자/마커보존→gate0→apply.미추출props별도확인.",
+          "report": "/tmp/teach-all/humanize-root-gpu-four/summary.json",
+          "layoutFollowup": "모바일설명폭이좁아역할/설명을위아래배치. Roofline283자문단은주제별두문단으로분리."
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "numberedSections": 10,
+          "predictionQuestions": 3,
+          "codePanelsPerViewport": 2,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "report": "/tmp/teach-all/root-gpu-four-screens/summary.json",
+          "genericReport": "/tmp/world-browser-audit/teach-root-gpu-four-summary.json",
+          "actualScreensRead": true
+        },
+        "remaining": "전체799전수검토후전역빌드·배포·운영확인."
+      }
     },
     {
       "route": "gpu/cuda-compilation-and-isa-analysis",
@@ -1135,13 +1201,23 @@
     },
     {
       "route": "gpu/cuda-shared-memory",
-      "status": "unreviewed",
+      "status": "rewrite-required",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "처음부터미정의이름다수",
+          "작은하나의사례가실제고정원문까지연결되지않음",
+          "수식연산설명generic문구와출처/코드범위보강필요"
+        ],
+        "plan": "/tmp/teach-all/root-cuda-next2-review-plan.md",
+        "answerCoverage": "본문8모듈,Viz2개,각기초6·심화4·개념/출처선독.",
+        "remaining": "본문작성·정적/화면검수진행중"
+      }
     },
     {
       "route": "gpu/cuda-sync-streams",
@@ -1155,13 +1231,73 @@
     },
     {
       "route": "gpu/cuda-thread-hierarchy",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "도입의 용어 나열과 서로 다른 큰 사례로 인해 thread 번호가 주소와 연결되는 흐름이 끊김",
+          "수식의 각 연산 해설과 실제 고정 원문에 대한 같은 사례 적용 부족",
+          "기존 도식은 10개 입력의 경계 검사와 block별 부분 warp를 함께 확인할 수 없음"
+        ],
+        "fixture": "입력 길이 10, block 크기 4, block 3개. block 2의 내부 번호 1→원소 9→36바이트→9+90=99; 빈 후보 10·11, block별 부분 warp 3개.",
+        "stageAnchors": {
+          "S": "overview",
+          "B": "outside",
+          "0": "case",
+          "1": "picture",
+          "2": "why",
+          "3": "names",
+          "4": "trace",
+          "5": [
+            "builtin-vars",
+            "source-1d"
+          ],
+          "6": [
+            "indexing-1d",
+            "indexing-2d",
+            "warp-runtime",
+            "placement"
+          ],
+          "7": "limits"
+        },
+        "preservedDepth": "기초 6·심화 4, 올림과 1D/2D 식 3개, 학습용 CUDA 조각 3개 보존. 정수 넘침·비동기 오류·pitch·부분 warp·자원 제한·cluster 조건 보강.",
+        "sourceApplication": "NVIDIA cuda-samples 3f1c509 vectorAdd.cu 전체 원본과 라이선스 보존. 49–52행에 4×2+1=9와 9<10 대입, 135–149행의 원본 50000/256 설정과 학습 사례 구분. CUDA 13.0.2 공식 문서의 CC9 cluster portable 8 및 작은 구성 예외 대조.",
+        "verification": "26개 정수·주소·원문 검산 PASS. learning strict 및 prose strict, 변경 Viz strict, actual app tsc exit0. GPU 실행·성능 측정 없음.",
+        "numericReport": "/tmp/teach-all/root-thread-numeric-source.json",
+        "humanize": {
+          "report": "/tmp/teach-all/humanize-root-thread/summary.json",
+          "roundTrip": true,
+          "changes": 5,
+          "numberAndMarkerPreserved": true,
+          "gate": 0,
+          "chunksBelow5000": true,
+          "manualPropsReview": true
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "sections": 14,
+          "predictionQuestions": 3,
+          "scenes": 3,
+          "codePanelsPerViewport": 2,
+          "layoutShift": 0,
+          "keyboard": "Enter/Space 및 후보 11의 121 결과 확인",
+          "viewportFit": true,
+          "formulaBaseClips": 0,
+          "actualScreensRead": true,
+          "report": "/tmp/teach-all/root-thread-screens/summary.json",
+          "interactionReport": "/tmp/teach-all/root-thread-final-interactions.json",
+          "genericReport": "/tmp/world-browser-audit/teach-checkpoint125-additions-summary.json"
+        },
+        "remaining": "전체 799편 전수 검토 뒤 전역 빌드·배포·운영 확인."
+      }
     },
     {
       "route": "gpu/cutlass-collectives-and-tile-schedulers",
@@ -1285,7 +1421,7 @@
     },
     {
       "route": "gpu/gpu-memory-hierarchy-and-roofline",
-      "status": "unreviewed",
+      "status": "retained-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [
           "S",
@@ -1302,7 +1438,40 @@
         "numericAnswerPointers": 3,
         "caseMarkers": 3
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "같은사례의10단계흐름은갖췄으나이름절의여러새용어가산문한번에집중",
+          "소스설명띄어쓰기와요청량/물리전송량의조건보강필요"
+        ],
+        "disposition": "기존teach흐름유지, 역할표·출처·모델경계·문체수정",
+        "fixture": "1/12FLOP/B·83.3GFLOP/s·.768ns물량비율·500KB진행중량.2009Roofline실제논문링크교정 및DRAM경계명시.",
+        "answerCoverage": "기존본문전체·원문코드·각6basic4advanced선독.정본anchor와문제답경로유지.",
+        "sourceApplication": "NVIDIA3f1c509 vectorAdd및HIPcdf9d101원본2개다운로드SHA동일. CUDA13.0.2/PTX9.0,HIP7,CDNA4백서실제9·11쪽,SynopsysHBM3/4,Roofline저자원고3절대조.",
+        "verification": "/tmp/teach-all/root-gpu-four-numeric-source.json 28계산PASS;strict학습4PASS;실제app tsc exit0(root-gpu-four-tsc-final.log).GPU실행성능미측정.",
+        "humanize": {
+          "roundTrip": true,
+          "finalGate": "실제p+역할표셀추출→원문왕복→prepare→실제수정→숫자/마커보존→gate0→apply.미추출props별도확인.",
+          "report": "/tmp/teach-all/humanize-root-gpu-four/summary.json",
+          "layoutFollowup": "모바일설명폭이좁아역할/설명을위아래배치. Roofline283자문단은주제별두문단으로분리."
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "numberedSections": 10,
+          "predictionQuestions": 3,
+          "codePanelsPerViewport": 1,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "report": "/tmp/teach-all/root-gpu-four-screens/summary.json",
+          "genericReport": "/tmp/world-browser-audit/teach-root-gpu-four-summary.json",
+          "actualScreensRead": true
+        },
+        "remaining": "전체799전수검토후전역빌드·배포·운영확인."
+      }
     },
     {
       "route": "gpu/gpu-proof-pipeline",
@@ -1326,7 +1495,7 @@
     },
     {
       "route": "gpu/hbm-stack-and-memory-requests",
-      "status": "unreviewed",
+      "status": "retained-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [
           "S",
@@ -1343,7 +1512,40 @@
         "numericAnswerPointers": 3,
         "caseMarkers": 1
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "같은사례의10단계흐름은갖췄으나이름절의여러새용어가산문한번에집중",
+          "소스설명띄어쓰기와요청량/물리전송량의조건보강필요"
+        ],
+        "disposition": "기존teach흐름유지, 역할표·출처·모델경계·문체수정",
+        "fixture": "HBM3 16×64bit·HBM4 32×64bit, 가정1.024/2.048TB/s·.75ns물량비율.적층높이와데이터폭분리.",
+        "answerCoverage": "기존본문전체·원문코드·각6basic4advanced선독.정본anchor와문제답경로유지.",
+        "sourceApplication": "NVIDIA3f1c509 vectorAdd및HIPcdf9d101원본2개다운로드SHA동일. CUDA13.0.2/PTX9.0,HIP7,CDNA4백서실제9·11쪽,SynopsysHBM3/4,Roofline저자원고3절대조.",
+        "verification": "/tmp/teach-all/root-gpu-four-numeric-source.json 28계산PASS;strict학습4PASS;실제app tsc exit0(root-gpu-four-tsc-final.log).GPU실행성능미측정.",
+        "humanize": {
+          "roundTrip": true,
+          "finalGate": "실제p+역할표셀추출→원문왕복→prepare→실제수정→숫자/마커보존→gate0→apply.미추출props별도확인.",
+          "report": "/tmp/teach-all/humanize-root-gpu-four/summary.json",
+          "layoutFollowup": "모바일설명폭이좁아역할/설명을위아래배치. Roofline283자문단은주제별두문단으로분리."
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "numberedSections": 10,
+          "predictionQuestions": 3,
+          "codePanelsPerViewport": 1,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "report": "/tmp/teach-all/root-gpu-four-screens/summary.json",
+          "genericReport": "/tmp/world-browser-audit/teach-root-gpu-four-summary.json",
+          "actualScreensRead": true
+        },
+        "remaining": "전체799전수검토후전역빌드·배포·운영확인."
+      }
     },
     {
       "route": "gpu/hw-gpu-comparison",
@@ -3284,7 +3486,9 @@
     }
   ],
   "counts": {
-    "unreviewed": 203,
-    "rewritten-local-verified": 22
+    "unreviewed": 197,
+    "rewritten-local-verified": 22,
+    "retained-local-verified": 4,
+    "rewrite-required": 2
   }
 }

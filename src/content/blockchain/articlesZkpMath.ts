@@ -8,12 +8,67 @@ export const zkpMathArticles: Article[] = [
     title: "유한체 이론",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "군 · 환 · 체 정의" },
-      { id: "prime-field", title: "소수체 & 원시근" },
-      { id: "polynomial-arithmetic", title: "다항식 산술 & FFT" },
-      { id: "schwartz-zippel", title: "Schwartz-Zippel 보조정리" },
-      { id: "extension-field", title: "확장체 개요" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 작은 값 안에서 나눗셈까지 되돌릴 수 있을까요?"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 값 두 개와 연산을 받고 같은 범위의 값을 돌려줍니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 같은 3으로 6도 나누고 2도 나눠 봅니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 나눗셈은 되돌리는 곱셈과 범위 정리로 진행됩니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 기준을 8로 바꾸면 같은 되돌리기가 막힙니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 곱해 1이 되는 값이 역원입니다"
+  },
+  {
+    "id": "prime-field",
+    "title": "7. 소수 기준이면 0 아닌 값마다 역원이 생깁니다"
+  },
+  {
+    "id": "trace",
+    "title": "8. 입력부터 되곱하기까지 같은 요청을 검산합니다"
+  },
+  {
+    "id": "source",
+    "title": "9. HAC 원문의 역원 절차에 3과 7을 넣습니다"
+  },
+  {
+    "id": "multiplicative-order",
+    "title": "10. 같은 값을 반복해서 곱하면 1로 돌아옵니다"
+  },
+  {
+    "id": "polynomial",
+    "title": "11. 계산 규칙을 계수로 적거나 여러 위치의 값으로 적습니다"
+  },
+  {
+    "id": "root-bound",
+    "title": "12. 다른 두 규칙이 우연히 같은 위치는 차수가 제한합니다"
+  },
+  {
+    "id": "schwartz-zippel",
+    "title": "13. 거짓 규칙이 무작위 검사를 통과할 확률을 셉니다"
+  },
+  {
+    "id": "extension-field",
+    "title": "14. 더 큰 체는 정수 기준만 키워서 만들지 않습니다"
+  },
+  {
+    "id": "release",
+    "title": "15. 나눗셈의 정확성과 암호 사용 조건을 함께 확인합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/finite-field-theory"),
   },
   {
@@ -220,11 +275,59 @@ export const zkpMathArticles: Article[] = [
     title: "Lagrange 보간",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "Lagrange 보간이란?" },
-      { id: "formula", title: "Lagrange 보간 공식" },
-      { id: "vanishing", title: "Vanishing Polynomial" },
-      { id: "usage", title: "ZKP에서의 활용" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 세 기록에서 계산 규칙을 다시 찾으려면"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 위치와 결과를 받고 규칙 또는 새 값을 돌려줍니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 같은 세 기록을 17개의 값 안에서 계산합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 각 기록의 담당 식을 만든 뒤 더합니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 한 기록을 맞추다가 다른 기록을 바꾸지 않으려면"
+  },
+  {
+    "id": "names",
+    "title": "6. 기록은 표본점, 담당 식은 보간 기저입니다"
+  },
+  {
+    "id": "formula",
+    "title": "7. 담당 식 세 개를 1·4·9배 해 더합니다"
+  },
+  {
+    "id": "trace",
+    "title": "8. 입력 3에서는 기저값 1·14·3으로 16을 얻습니다"
+  },
+  {
+    "id": "source",
+    "title": "9. DLMF 원문의 세 점에 같은 기록을 넣습니다"
+  },
+  {
+    "id": "usage",
+    "title": "10. 위치가 고정되면 무게를 미리 계산해 둡니다"
+  },
+  {
+    "id": "vanishing",
+    "title": "11. 세 위치에서 모두 0이 되는 식을 따로 만듭니다"
+  },
+  {
+    "id": "boundaries",
+    "title": "12. 세 점이 같아도 더 높은 차수의 규칙은 다릅니다"
+  },
+  {
+    "id": "release",
+    "title": "13. 필요한 출력과 표본 구조에 맞춰 계산합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/lagrange"),
   },
   {
@@ -243,14 +346,70 @@ export const zkpMathArticles: Article[] = [
   },
   {
     slug: "reed-solomon",
-    title: "Reed–Solomon 구현: profile·decode·proximity",
+    title: "Reed–Solomon: 사라지거나 틀린 기록 복원하기",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "Code profile과 근거 경계" },
-      { id: "encoding", title: "Profile-bound encoding" },
-      { id: "error-correction", title: "Error·erasure와 typed decode" },
-      { id: "zk-connection", title: "RS proximity와 release gate" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 기록 두 개가 사라져도 원본을 되찾으려면"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 위치가 붙은 기록을 만들고 남은 기록으로 되돌립니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 원본 2·3을 네 기록 2·5·1·4로 바꿉니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 같은 규칙을 여러 위치에서 읽어 여유를 만듭니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 값의 개수와 함께 위치와 계산 범위를 알아야 합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 원본의 크기와 보낸 기록의 크기를 구분합니다"
+  },
+  {
+    "id": "encoding",
+    "title": "7. 원본을 계수로 놓고 네 위치에서 계산합니다"
+  },
+  {
+    "id": "trace",
+    "title": "8. 남은 두 기록에서 계수 2·3을 다시 구합니다"
+  },
+  {
+    "id": "source",
+    "title": "9. 원문 식과 행렬에 같은 네 기록을 대응합니다"
+  },
+  {
+    "id": "error-correction",
+    "title": "10. 위치를 모르는 오류는 여유를 두 칸씩 씁니다"
+  },
+  {
+    "id": "berlekamp-welch",
+    "title": "11. 틀린 위치에서 0이 되는 식을 함께 찾습니다"
+  },
+  {
+    "id": "misdecode",
+    "title": "12. 복원기가 성공해도 다른 원본일 수 있습니다"
+  },
+  {
+    "id": "profile",
+    "title": "13. 같은 부호 이름만으로 구현을 섞지 않습니다"
+  },
+  {
+    "id": "zk-connection",
+    "title": "14. 증명에서는 정상 목록과의 거리를 묻기도 합니다"
+  },
+  {
+    "id": "reed-solomon-release-gate",
+    "title": "15. 성공 사례와 잘못된 성공 사례를 함께 확인합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/reed-solomon"),
   },
   {

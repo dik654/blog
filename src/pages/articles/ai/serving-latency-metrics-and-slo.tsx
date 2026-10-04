@@ -1,82 +1,43 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ProgressiveDetail from "@/components/articles/progressive-detail";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./serving-latency-metrics-and-slo/codeRefs";
+import { latencySourceTree } from "./serving-latency-metrics-and-slo/fileTree";
 import ServingLatencyMetricsAndSloViz from "./serving-latency-metrics-and-slo/viz/ServingLatencyMetricsAndSloViz";
 import LatencyPercentileHistogramViz from "./serving-latency-metrics-and-slo/viz/LatencyPercentileHistogramViz";
 
-/**
- * TTFT·TPOT·ITL 은 분포로 읽고 SLO 는 percentile 로 계약합니다
- *
- * 작성 규칙은 docs/coverage-batch-playbook.md 를 따른다.
- */
-export default function ServingLatencyMetricsAndSloArticle() {
-  return (
-    <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          평균 latency 한 줄로는 LLM serving 의 품질을 말할 수 없습니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            LLM 요청 하나는 첫 token 이 나오기까지의 시간과 그 뒤 token 사이의 간격이 전혀 다른 원인으로 정해집니다. 그래서 serving 품질은 latency 하나로 재지
-            않습니다. TTFT·TPOT·ITL·E2E 네 지표를 따로 재고 각 지표를 평균이 아닌 분포로 읽은 뒤 percentile 에 대한 약속인 SLO 로 계약합니다.
-          </p>
-          <p>
-            이 글은 그 세 단계를 순서대로 다룹니다. 먼저 vLLM 과 GenAI-Perf 가 실제로 계산하는 식으로 네 지표와 throughput 을 정의합니다. 다음으로 요청
-            100개의 표본에서 P50·P95·P99 를 손으로 뽑아 꼬리가 왜 생기는지 봅니다. 마지막으로 SLO 를 window 와 violation budget 으로 판정하는 절차를
-            씁니다.
-          </p>
-          <p>
-            지표가 어느 timestamp 에서 나오는지는{" "}
-            <Link to="/cs/ai/vllm-serving#prefill-decode">vLLM 입문</Link>의 request lifecycle 을
-            전제로 합니다. Benchmark 를 어떻게 돌려야 이 숫자가 재현되는지(warm·cold,
-            saturation 곡선)는 다음 배치의 serving benchmark methodology 글이 맡습니다.
-          </p>
-        </div>
-        <ServingLatencyMetricsAndSloViz />
-        <ContentBoundary article="serving-latency-metrics-and-slo" />
-      </section>
+export default function Article() {
+  const sidebar = useCodeSidebar();
+  return <><div className="space-y-16">
+<section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 첫 응답의 기다림과 도중의 멈춤을 따로 봅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>답변이 늦다는 말에는 두 가지 경험이 섞여 있습니다. 처음 아무것도 보이지 않는 기다림과 답변이 나오다가 끊기는 멈춤입니다. 전체 시간이 같아도 어느 쪽이 긴지에 따라 찾아야 할 원인이 달라집니다.</p><p>이 글은 한 요청의 도착 기록을 작은 숫자로 계산한 뒤 여러 요청을 묶어 서비스의 약속을 판정합니다. 측정 도구가 무엇을 세었는지도 실제 코드로 확인합니다.</p></div></section>
 
-      <section id="metrics" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          E2E 는 TTFT 와 (n−1) 개의 token 간격으로 정확히 분해됩니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            요청이 서버에 도착한 시각을 0 으로 두면 첫 token 이 client 에 닿는 시각이 Time to First Token(TTFT) 이고 마지막 token 이 닿는 시각이
-            End-to-End latency(E2E) 입니다. 그 사이에 token 이 n 개 흘러갔다면 간격은 n−1 개입니다. 간격 하나하나가 Inter-Token
-            Latency(ITL) 입니다.
-          </p>
-          <p>
-            Time per Output Token(TPOT) 은 그 간격들의 요청 단위 평균입니다. vLLM 의
-            benchmark 는 <code>(latency − ttft) / (output_len − 1)</code> 로 TPOT 를 계산하고,
-            ITL 은 streaming 응답에서 chunk 가 도착할 때마다 잰 간격을 목록 그대로 모읍니다.
-            같은 요청에서 TPOT 는 값 하나, ITL 은 n−1 개의 값입니다.
-          </p>
-          <p>
-            숫자를 넣어 보면 TTFT 1 s, TPOT 50 ms 인 서버가 200 token 을 내면 E2E 는 1 + 199 × 0.05 = 10.95 s 입니다. 같은 서버에서
-            TPOT 만 30 ms 로 줄이면 E2E 는 6.97 s 가 되지만 TTFT 를 0.3 s 로 줄여도 E2E 는 10.25 s 에 머뭅니다. 긴 응답에서는 decode 간격이,
-            짧은 응답에서는 TTFT 가 E2E 를 지배합니다.
-          </p>
-          <p>
-            TTFT 안에는 gateway 와 queue 에서 기다린 시간, prefill 계산 시간이 함께 들어
-            있습니다. 그래서 TTFT 가 나빠졌을 때 prompt 가 길어진 것인지 대기열이 길어진
-            것인지는 TTFT 만으로 구분되지 않고, 그 분해는{" "}
-            <Link to="/cs/ai/vllm-serving#prefill-decode">latency decomposition</Link> 계약이
-            맡습니다.
-          </p>
-        </div>
-        <ExplainedFormula
+<section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 시각을 남기고 간격을 계산한 뒤 약속과 비교합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>측정기는 보낸 시각과 받은 시각들을 같은 시계로 남깁니다. 계산기는 첫 도착까지의 시간과 이후 간격을 구합니다. 집계기는 여러 요청의 값을 모으고 판정기는 정한 기간과 한도에 따라 결과를 냅니다.</p><p>처음에는 이 네 자리만 잡습니다. 한 값으로 모든 단계를 대신하면 어느 기다림이 길어졌는지 다시 확인하기 어렵습니다.</p></div><ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2"><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">1</span><span>보낸 시각과 받은 시각을 기록한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">2</span><span>한 요청의 기다림과 간격을 계산한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">3</span><span>정한 범위의 여러 요청을 집계한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">4</span><span>한도와 허용 실패 비율로 판정한다</span></li></ol></section>
+
+<section id="small-case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 다섯 조각이 도착한 기록부터 계산합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>요청을 보낸 순간을 0초로 둡니다. 이 예에서는 응답 토큰 다섯 개가 각각 한 번씩 도착하며 시각은 1.000·1.040·1.085·1.285·1.327초입니다. 뒤따르는 별도 이벤트는 없다고 둡니다. 장비 실측이 아닌 설명용 가정입니다. (가정)</p><p>처음 보이기까지 1초가 걸립니다. 그 뒤 네 간격은 40·45·200·42ms이고 합은 327ms입니다. 마지막 도착은 1.327초입니다. 200ms의 멈춤 하나가 있었다는 사실은 전체 시간 하나만으로는 보이지 않습니다. (가정)</p></div></section>
+
+<section id="inside-measurement" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 시계와 응답 개수와 집계 범위가 모두 필요합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>시각 기록은 어느 요청의 어느 수신 이벤트인지 구분해야 합니다. 같은 이벤트에 토큰이 몇 개 묶였는지도 남깁니다. 위 사례에서는 각 이벤트에 하나씩이므로 네 간격을 직접 관측했습니다.</p><p>집계 기록에는 성공·실패, 입력과 출력 길이, 도구 버전, 측정 기간을 붙입니다. 실패한 요청을 빼고 성공 응답의 속도만 보여 주면 장애가 늘어난 서비스가 더 빨라 보일 수 있습니다.</p><p>여러 요청을 묶을 때도 단위를 보존합니다. 요청당 평균 하나를 모은 분포와 모든 수신 간격을 모은 분포는 표본 개수와 긴 응답의 가중치가 다릅니다.</p></div></section>
+
+<section id="why-observations" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 같은 평균이라도 멈춘 순간은 다를 수 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>40·45·200·42ms를 평균내면 81.75ms입니다. 네 간격이 모두 81.75ms인 기록도 평균은 같습니다. 앞의 기록에서 독자가 겪은 200ms 멈춤을 보려면 개별 간격을 남겨야 합니다. (가정)</p><p>마지막 세 토큰이 한 묶음으로 왔다면 측정 가능한 간격 수도 바뀝니다. 평균을 계산하기 전에 토큰 수와 수신 이벤트 수가 같은지 확인하는 이유입니다. 서버 내부의 생성 시각과 화면에서 받은 시각도 같은 측정이 아닙니다.</p></div></section>
+
+<section id="latency-terms" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 첫 도착과 각 간격과 마지막 도착에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>처음까지의 시간을 TTFT(Time to First Token)라고 합니다. 연속한 토큰 도착 사이의 간격이 ITL(Inter-Token Latency)이고 마지막 토큰까지의 전체 시간이 E2E(End-to-End latency)입니다.</p><p>여기서는 모두 client가 요청을 보낸 시각을 기준으로 같은 시계에서 잽니다. 서버 접수 시각을 출발점으로 쓰면 요청 전송 구간이 빠집니다. 한꺼번에 응답을 받는 방식에서는 첫 토큰이 언제 생성됐는지 따로 알 수 없습니다.</p></div><TermBreakdown title="역할을 이해한 뒤 이름을 붙입니다" items={[{"term": "TTFT", "description": "client 전송부터 첫 토큰 수신까지의 시간입니다. 사례에서는 1초입니다.", "boundary": "도구가 빈 응답 이벤트도 첫 이벤트로 세는지 확인해야 합니다."}, {"term": "ITL", "description": "두 토큰의 관측된 도착 간격입니다. 사례에서는 40·45·200·42ms입니다.", "boundary": "여러 토큰이 묶인 이벤트에서는 실제 토큰별 시각을 복원할 수 없습니다."}, {"term": "E2E", "description": "정한 종료 사건까지의 전체 경과 시간입니다. 토큰 기준 사례에서는 1.327초입니다.", "boundary": "도구의 종료 사건이 마지막 usage 이벤트라면 마지막 토큰 시각과 다릅니다."}]} /></section>
+
+<section id="metrics" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 1초와 327ms를 더하고 네 간격으로 나눕니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            네 간격의 평균을 TPOT(Time per Output Token)라고 부릅니다. 이 사례에서는 327/4=81.75ms입니다. 첫 토큰까지 1초에 이후 네 간격을 더하면
+            E2E=1+4×0.08175=1.327초가 됩니다. (가정)
+          </p><p>
+            200토큰 응답으로 길이를 바꿔 보겠습니다. 첫 도착 1초, 이후 평균 50ms라면 간격은 199개이므로 10.95초입니다. 평균을 30ms로 줄이면 6.97초이고 첫 도착만
+            0.3초로 줄이면 10.25초입니다. 응답 길이가 길수록 뒤의 간격 합이 커집니다. (가정)
+          </p><p>TTFT에는 전송과 대기, 입력 처리, 첫 출력의 전달이 함께 들어갑니다. 이 한 값으로 대기열 때문인지 긴 입력 때문인지 가릴 수는 없습니다. 원인을 찾을 때는 <Link to="/cs/ai/vllm-serving#latency-accounting">같은 요청의 단계별 시각</Link>으로 돌아갑니다.</p></div><ExplainedFormula
           question="한 요청의 E2E latency 는 어떤 항으로 정확히 나뉘나요?"
           idea="첫 token 까지의 시간과 그 뒤 token 사이 간격의 합으로 나누면, 두 항이 서로 다른 원인(queue·prefill 대 decode step)을 가리킵니다."
           formula={String.raw`\mathrm{E2E}=\mathrm{TTFT}+\sum_{k=1}^{n-1}\mathrm{ITL}_k=\mathrm{TTFT}+(n-1)\cdot\mathrm{TPOT}`}
-          annotatedFormula={String.raw`\mathrm{E2E}=\underbrace{\mathrm{TTFT}}_{\text{queue + prefill + 첫 token 전송}}+\underbrace{\sum_{k=1}^{n-1}\mathrm{ITL}_k}_{\text{decode 간격 n−1 개의 합}},\qquad \underbrace{\mathrm{TPOT}=\frac{\mathrm{E2E}-\mathrm{TTFT}}{n-1}}_{\text{간격의 요청 단위 평균}}`}
+          annotatedFormula={String.raw`\mathrm{E2E}=\underbrace{\mathrm{TTFT}}_{\text{첫 내용이 도착할 때까지}}+\underbrace{\sum_{k=1}^{n-1}\mathrm{ITL}_k}_{\text{decode 간격 n−1 개의 합}},\qquad \underbrace{\mathrm{TPOT}=\frac{\mathrm{E2E}-\mathrm{TTFT}}{n-1}}_{\text{간격의 요청 단위 평균}}`}
           operations={[
-            { expression: String.raw`\mathrm{TTFT}`, annotation: ["요청 도착부터 첫 token 수신까지를 재어", "대기·prefill 병목을 한 값으로 요약"] },
+            { expression: String.raw`\mathrm{TTFT}`, annotation: ["client 전송부터 첫 token 수신까지를 재어", "대기·prefill 병목을 한 값으로 요약"] },
             { expression: String.raw`\sum_{k=1}^{n-1}\mathrm{ITL}_k`, annotation: ["n−1 개의 token 간격을 모두 더해", "decode 구간의 총 시간 구성"] },
             { expression: String.raw`\mathrm{TPOT}=\frac{\mathrm{E2E}-\mathrm{TTFT}}{n-1}`, annotation: ["decode 총 시간을 간격 수로 나눠", "요청 하나의 평균 token 간격 산출"] },
           ]}
@@ -85,55 +46,16 @@ export default function ServingLatencyMetricsAndSloArticle() {
             { symbol: String.raw`\mathrm{ITL}_k`, name: "k 번째 token 간격", description: "k 번째와 k+1 번째 token 이 client 에 도착한 시각의 차입니다." },
             { symbol: String.raw`\mathrm{TPOT}`, name: "Time per Output Token", description: "간격들의 산술평균이며 vLLM 은 output_len 이 2 이상인 요청에서만 계산합니다." },
           ]}
-          assumptions={["Token 도착 시각을 client 쪽에서 잰다는 전제입니다. 서버 내부 timestamp 로 재면 network 전송 시간이 빠집니다.", "Streaming 이 chunk 하나에 token 여러 개를 실어 보내면 GenAI-Perf 처럼 간격을 chunk 의 token 수로 나눠야 ITL 이 됩니다."]}
+          assumptions={["n≥2에서 TPOT를 정의하고 같은 client 시계에서 토큰 도착을 잽니다. n=1이면 간격이 없어 TPOT는 정의되지 않습니다.", "이 항등식은 토큰별 도착 시각이 있고 E2E를 마지막 토큰 도착으로 정의할 때 성립합니다. Chunk 이벤트와 뒤따르는 usage 이벤트로 재는 도구 값에는 그대로 적용하지 않습니다."]}
           interpretation="E2E 가 같아도 TTFT 가 큰 요청과 TPOT 가 큰 요청은 다른 병목을 가리킵니다. 두 항을 항상 따로 보고해야 하고, 평균 TPOT 가 같다는 사실이 간격이 고르다는 뜻은 아닙니다."
-        />
-        <TermBreakdown
-          title="네 latency 지표가 각각 무엇을 재는지"
-          description="같은 요청 timeline 위에서 잰 값이지만 표본의 단위가 다릅니다."
-          items={[
-            { term: "TTFT", description: "요청 도착부터 첫 token 수신까지의 시간입니다. 요청당 값 하나입니다.", example: "Queue 0.2 s + prefill 0.3 s 면 TTFT 0.5 s 입니다.", boundary: "Non-streaming 응답에서는 첫 token 시각을 잴 수 없어 E2E 와 같아집니다." },
-            { term: "ITL", description: "연속한 두 token 의 도착 시각 차입니다. 요청당 n−1 개의 값입니다.", example: "간격이 40, 45, 200, 42 ms 면 ITL 표본 4개입니다.", boundary: "Chunk 에 token 여러 개가 묶이면 chunk 간격을 token 수로 나눠 씁니다." },
-            { term: "TPOT", description: "한 요청의 ITL 평균입니다. 요청당 값 하나입니다.", example: "위 표본의 TPOT 는 (40+45+200+42)/4 ≈ 82 ms 입니다.", boundary: "200 ms 의 멈춤이 평균 속에 묻히므로 streaming 체감을 대표하지 못합니다." },
-            { term: "E2E", description: "요청 도착부터 마지막 token 수신까지의 시간입니다.", example: "TTFT 1 s + 199 × 50 ms = 10.95 s 입니다.", boundary: "응답 길이에 비례하므로 길이 분포가 다른 두 workload 의 E2E 는 직접 비교하지 않습니다." },
-          ]}
-        />
-      </section>
+        /></section>
 
-      <section id="throughput" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Batch 를 키우면 tokens/s 는 오르고 ITL 은 같이 늘어납니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Throughput 은 서버 전체가 단위 시간에 처리한 양입니다. vLLM benchmark 는 완료된 요청 수를 측정 시간으로 나눈 request throughput(RPS)
-            과 생성한 output token 총수를 측정 시간으로 나눈 output token throughput(tokens/s) 을 따로 냅니다. 둘 다 benchmark 한 번에 값
-            하나이며 요청별 분포가 없습니다.
-          </p>
-          <p>
-            Latency 와 throughput 이 맞서는 이유는 decode step 의 비용 구조에 있습니다. Decode 는 weight 를 한 번 읽어 batch 안의 모든 요청에
-            token 하나씩을 주므로 batch 가 커져도 step 시간은 요청 수에 비례해 늘지 않습니다. 대신 그 step 시간이 batch 안 모든 요청의 ITL 이 됩니다.
-          </p>
-          <p>
-            Step 시간이 batch 1 에서 20 ms, 8 에서 28 ms, 32 에서 50 ms 라고 두면 tokens/s 는
-            50, 286, 640 으로 오르고 ITL 은 20, 28, 50 ms 로 늘어납니다. 요청 하나만 보면
-            batch 32 는 2.5 배 느린 서버이고, GPU 전체로 보면 12.8 배 많은 일을 하는
-            서버입니다. 어느 쪽이 맞는지는 SLO 가 정합니다.
-          </p>
-          <p>
-            Batch 가 채워지는 것 자체가 두 번째 비용을 만듭니다. 도착률이 처리율에 가까워지면
-            요청은 batch 자리를 기다리고, 그 대기가 TTFT 에 더해집니다.{" "}
-            <Link to="/cs/ai/llm-serving-ops#paper-little-law">Little&apos;s law</Link> 대로
-            대기열 길이는 도착률 × 체류 시간이므로, 처리율의 90 % 를 넘긴 구간에서는 throughput
-            이 거의 늘지 않는데 TTFT 만 가파르게 오르는 구간이 나타납니다.
-          </p>
-          <p>
-            그래서 throughput 은 항상 어떤 latency 조건 아래의 값인지 붙여 말합니다. 조건을
-            통과한 요청만 세는 <Link to="/cs/ai/vllm-serving#serving-goodput">goodput</Link> 이
-            그 표기이며, 조건 없는 tokens/s 는 batch 를 무한히 키운 상한에 가깝습니다.
-          </p>
-        </div>
-        <ExplainedFormula
+<section id="throughput" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 서버 전체의 400토큰과 한 사람의 간격을 구분합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            같은 60초 동안 120요청이 끝나고 출력 토큰 24000개를 받았다면 2요청/s와 400토큰/s입니다. 이런 단위 시간당 처리량을 throughput이라고 합니다. 세는
+            대상과 측정 구간을 함께 적습니다. (가정)
+          </p><p>
+            한 번의 계산에서 각 요청에 한 토큰씩 준다고 합시다. 동시에 처리하는 요청을 늘리면 한 번에 나오는 토큰 수도 늘지만 계산 시간이 길어질 수 있습니다. 아래는 요청 수에 따라 출력 간격이 늘어나는 측정값을 가정한 예입니다. (가정)
+          </p><table><thead><tr><th>동시에 처리하는 요청</th><th>각 사용자의 출력 간격</th><th>서버 전체 출력</th></tr></thead><tbody><tr><td>1개</td><td>20ms</td><td>50토큰/s</td></tr><tr><td>8개</td><td>28ms</td><td>약 286토큰/s</td></tr><tr><td>32개</td><td>50ms</td><td>640토큰/s</td></tr></tbody></table><p>서버 합계는 늘었지만 각 사용자가 다음 토큰을 기다리는 시간도 길어졌습니다. 이는 주어진 측정값에서 생기는 latency–throughput trade-off입니다. 장비나 구현을 개선하면 둘 다 좋아질 수도 있습니다. 묶음 크기를 늘릴수록 항상 처리량이 커진다는 법칙은 아닙니다.</p><p>요청을 받는 속도가 처리 능력에 가까워지면 대기가 늘 수 있습니다. <Link to="/cs/ai/llm-serving-ops#paper-little-law">Little의 법칙</Link>은 안정된 계의 평균 개수와 도착률·체류 시간을 연결하며 90%에서 반드시 급격히 나빠진다는 임계값을 주지는 않습니다. 실제 입력 길이와 도착 분포에서 부하를 올리며 측정해야 합니다.</p></div><ExplainedFormula
           question="Batch 크기 B 에서 tokens/s 와 ITL 은 같은 양에서 어떻게 갈라지나요?"
           idea="한 decode step 시간 t(B) 는 batch 안 모든 요청이 공유합니다. 그 값을 요청 하나가 보면 ITL 이고, 서버 전체가 보면 B 개 token 을 t(B) 마다 낸 throughput 입니다."
           formula={String.raw`\mathrm{ITL}(B)=t(B),\qquad \mathrm{tokens/s}(B)=\frac{B}{t(B)},\qquad \mathrm{RPS}=\frac{N_{\text{done}}}{T}`}
@@ -145,63 +67,26 @@ export default function ServingLatencyMetricsAndSloArticle() {
           ]}
           terms={[
             { symbol: "B", name: "Decode batch 크기", description: "한 step 에 함께 token 을 내는 요청 수입니다." },
-            { symbol: "t(B)", name: "Step 시간", description: "Weight 읽기 비용이 지배해 B 에 대해 sublinear 하게 늘어나는 한 iteration 의 시간입니다." },
+            { symbol: "t(B)", name: "Step 시간", description: "같은 조건에서 측정한 한 iteration의 시간입니다. B에 따른 증가 모양은 별도 측정합니다." },
             { symbol: String.raw`N_{\text{done}}`, name: "완료 요청 수", description: "측정 구간 T 안에 마지막 token 까지 받은 요청의 수입니다." },
           ]}
-          assumptions={["Prefill 이 끼어들지 않는 순수 decode step 을 가정합니다. Chunked prefill 이 섞이면 t(B) 에 prefill chunk 비용이 더해집니다.", "t(B) 가 sublinear 한 구간은 memory-bound 인 동안만이며, batch 가 compute-bound 로 넘어가면 tokens/s 증가가 멈춥니다."]}
-          interpretation="tokens/s 와 ITL 은 같은 t(B) 의 두 얼굴이라 한쪽만 좋게 만들 수 없습니다. 운영 질문은 ITL 상한을 정한 뒤 그 아래에서 B 를 얼마나 키울 수 있는가로 바뀝니다."
-        />
-        <ProgressiveDetail
-          title="Tokens/s 가 두 배인데 사용자가 더 느리다고 느끼는 일이 왜 생기나요?"
-          preview="서버 tokens/s 는 batch 합산이고 사용자는 자기 요청의 ITL 만 봅니다. 두 숫자는 같은 step 시간을 다른 분모로 나눈 값입니다."
-        >
-          <p>
-            Batch 8 과 batch 32 를 비교하면 서버 tokens/s 는 286 에서 640 으로 오르지만
-            각 사용자가 받는 속도는 1/0.028 ≈ 36 token/s 에서 1/0.05 = 20 token/s 로
-            떨어집니다. 사용자당 token/s 를 따로 적지 않으면 두 서버의 체감 차이가 보고서에서
-            사라집니다.
-          </p>
-          <p>
-            같은 이유로 "tokens/s 2 배" 라는 주장은 batch 크기, 입력·출력 길이 분포, 어떤
-            latency 조건 아래였는지가 붙어야 비교 가능합니다. 이 조건을 고정하는 실행 절차는
-            다음 배치의 benchmark methodology 글에서 다룹니다.
-          </p>
-        </ProgressiveDetail>
-      </section>
+          assumptions={["각 실행 묶음에서 요청당 한 token을 만들고 전송 지연과 중단 없이 같은 간격으로 관측하는 단순 모형입니다. 실제 client 간격은 별도로 측정합니다.", "t(B) 가 sublinear 한 구간은 memory-bound 인 동안만이며, batch 가 compute-bound 로 넘어가면 tokens/s 증가가 멈춥니다."]}
+          interpretation="같은 측정 t(B)에서 요청당 간격과 서버 합산 처리량을 계산합니다. 구현 개선으로 둘이 함께 좋아질 수도 있으므로 이 식 자체가 보편적인 상충 법칙은 아닙니다."
+        /><ServingLatencyMetricsAndSloViz /></section>
 
-      <section id="distribution" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Latency 는 오른쪽 꼬리가 긴 분포라 percentile 로 읽어야 합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            요청마다 latency 가 다르므로 한 benchmark 는 TTFT 표본 수백 개를 남깁니다. 그 표본을 작은 값부터 정렬했을 때 p % 위치의 값이 Pp percentile
-            latency 입니다. P50 은 중앙값입니다. 요청의 절반은 P50 보다 빠르고 95 % 는 P95 보다 빠릅니다. 100 명 중 한 명은 P99 보다 오래 기다립니다.
-          </p>
-          <p>
-            요청 100개의 TTFT 를 정렬했더니 50 번째가 0.7 s, 95 번째가 1.45 s, 99 번째가
-            2.4 s, 가장 느린 값이 4.0 s 였다고 합시다. Nearest-rank 정의로 P50 = 0.7 s,
-            P95 = 1.45 s, P99 = 2.4 s 이고 평균은 0.90 s 입니다. 평균이 중앙값보다 큰 것은
-            오른쪽 꼬리 몇 개가 평균을 끌어올렸기 때문입니다.
-          </p>
-          <p>
-            이 꼬리 부분이 tail latency 입니다. Serving 에서 꼬리는 우연이 아니라 구조에서 나옵니다. 긴 prompt 는 prefill 이 길고 대기열 뒤에 선 요청은
-            앞 요청의 prefill 을 기다립니다. KV cache 가 차서 preempt 된 요청은 다시 prefill 을 겪습니다. 꼬리를 줄이려면 그 원인을 하나씩 찾아야 합니다.
-            평균을 줄이는 최적화는 꼬리에 거의 닿지 않습니다.
-          </p>
-          <p>
-            Streaming UX 에서는 ITL 의 분산이 P50 보다 먼저 보입니다. 평균 간격 50 ms 로 고르게 흐르는 응답과 40 ms 로 흐르다 300 ms 씩 멈추는 응답은
-            TPOT 가 비슷합니다. 그래도 사용자는 후자를 끊긴다고 느낍니다. ITL 은 요청별 평균이 아니라 간격 전체를 표본으로 두고 P99 를 봅니다. vLLM 이 TPOT 와
-            별도로 ITL 목록을 모아 두는 이유가 이것입니다.
-          </p>
-          <p>
-            Google SRE Book 의 SLO 장이 latency 에 평균 대신 percentile 을 쓰라고 하는 근거도
-            같습니다. 사용자는 조금 느리지만 일정한 시스템을 분산이 큰 시스템보다 선호하며,
-            99.9 번째 percentile 이 좋으면 전형적 경험은 확실히 좋습니다.
-          </p>
-        </div>
-        <LatencyPercentileHistogramViz />
-        <ExplainedFormula
+<section id="distribution" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. 같은 100개를 순서대로 놓으면 느린 쪽이 보입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            한 5분 구간의 요청 100개를 작은 시간부터 세운다고 합시다. 앞 사례의 TTFT 1초도 이 표본에 들어 있습니다. 아래 도식은 명시된 100개 가정 표본을 사용하며 50번째
+            0.7초, 95번째 1.45초, 99번째 2.4초, 최대 4초이고 평균은 0.9초입니다. (가정)
+          </p><p>
+            정렬 순위로 누적 비율의 위치를 읽는 값을 percentile이라고 합니다. 여기서는 p%에 해당하는 순위를 올림해 그 값을 읽는 nearest-rank를 씁니다. 그 정의에서
+            P95는 1.45초이며 적어도 95%가 이 값 이하입니다. 동점이 있으면 정확히 95%라고 할 수는 없습니다.
+          </p><p>
+            NumPy 기본 선형 보간은 0부터 세는 위치 0.95×99=94.05를 씁니다. 95번째 1.45초와 96번째 1.7초 사이 5%이므로 1.4625초입니다. 두 값 모두 아래
+            1.5초 기준을 통과하지만 정의를 섞어 보고하면 비교가 바뀝니다. (가정)
+          </p><p>
+            차이가 언제나 작은 것도 아닙니다. 20개 중 19개가 0초이고 마지막이 100초라면 nearest-rank P95는 0초지만 선형 보간은 5초입니다. 1초 이하가 95%라는
+            조건과 nearest-rank 조건은 같은 표본에서 정확히 동치입니다. 선형 보간은 이 동치를 보장하지 않습니다. (가정)
+          </p><p>느린 끝부분을 tail latency라고 부릅니다. 긴 입력, 대기, 중단 뒤 재계산이 원인 후보이지만 꼬리만 보고 원인을 단정할 수 없습니다. 입력 길이와 대기 시간, 중단 기록을 같은 요청 식별자로 붙여 확인합니다.</p></div><ExplainedFormula
           question="정렬한 latency 표본에서 P95 는 정확히 몇 번째 값인가요?"
           idea="표본 N 개를 오름차순으로 정렬한 뒤, 전체의 p % 가 그 아래에 오도록 순위를 올림해서 고릅니다."
           formula={String.raw`P_p=x_{(\lceil p\cdot N/100\rceil)},\qquad x_{(1)}\le x_{(2)}\le\cdots\le x_{(N)}`}
@@ -213,150 +98,83 @@ export default function ServingLatencyMetricsAndSloArticle() {
           terms={[
             { symbol: "N", name: "표본 수", description: "측정 window 안에서 완료된 요청(또는 ITL 간격)의 수입니다." },
             { symbol: String.raw`x_{(k)}`, name: "k 번째 order statistic", description: "정렬한 표본의 k 번째 값입니다." },
-            { symbol: "p", name: "Percentile", description: "50 이면 중앙값, 95·99 는 꼬리 근처의 값입니다." },
+            { symbol: "p", name: "Percentile", description: "p는 0 초과 100 이하의 원하는 누적 비율입니다. Nearest-rank P50은 짝수 표본의 두 중앙값 평균과 다를 수 있습니다." },
           ]}
-          assumptions={["Nearest-rank 정의입니다. NumPy 기본값과 vLLM benchmark 는 인접 두 순위를 선형 보간하므로 표본이 적으면 소수점 둘째 자리에서 값이 다를 수 있습니다.", "P99 는 표본이 100 개면 값 하나에 좌우됩니다. 꼬리 percentile 일수록 window 안 표본 수가 충분해야 안정합니다."]}
+          assumptions={["N은 0보다 크고 p는 0 초과 100 이하인 nearest-rank 정의입니다. NumPy 기본 선형 보간은 다른 정의이며 그 차이의 크기는 인접 표본 사이 간격에 달려 있습니다.", "P99 는 표본이 100 개면 값 하나에 좌우됩니다. 꼬리 percentile 일수록 window 안 표본 수가 충분해야 안정합니다."]}
           interpretation="P95 는 가장 느린 5 % 의 경계이지 그 5 % 가 얼마나 느린지는 말하지 않습니다. 최댓값이나 P99.9 까지 함께 봐야 꼬리의 길이가 드러납니다."
-        />
-      </section>
+        /><LatencyPercentileHistogramViz /></section>
 
-      <section id="slo" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          SLO 는 percentile 과 window 와 허용 위반율을 함께 적은 약속입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Service-Level Objective(SLO) 는 측정 지표(SLI) 에 대한 목표값입니다. SRE Book 의
-            표기는 "Get RPC 의 99 % 가 100 ms 안에 완료된다" 처럼 percentile, 임계값, 그리고
-            그것을 어느 기간에 걸쳐 만족해야 하는지를 한 문장에 담습니다. LLM serving 에서는
-            "5 분 window 마다 P95 TTFT ≤ 1.5 s, 하루 window 의 99 % 만족" 이 그 꼴입니다.
-          </p>
-          <p>
-            SLO 위반은 두 층으로 나뉩니다. 한 window 에서 P95 TTFT 가 1.5 s 를 넘으면 그 window 가 위반입니다. 하루 288 개 window 중 위반
-            window 가 허용 비율 1 %(2.88 개, 내림해 2 개) 를 넘으면 SLO 자체가 위반입니다. 위반 window 가 5 개면 위반율 1.74 % 로 SLO 를 어긴
-            것이고 3 개면 아직 budget 안입니다.
-          </p>
-          <p>
-            앞의 100 표본 예에서는 P95 가 1.45 s 라 그 window 는 통과합니다. 같은 표본을
-            요청 단위로 세면 1.5 s 를 넘긴 요청이 5 개, 즉 95 % 가 목표 안에 있어 "요청의
-            95 % 가 1.5 s 안" 이라는 다른 표기로도 경계에서 통과합니다. 두 표기는 표본이 클 때 같아지지만
-            window 당 표본이 적을 때 percentile 표기가 더 요동칩니다.
-          </p>
-          <p>
-            허용 위반율이 곧 error budget 입니다. 100 % 만족을 요구하면 어떤 배포도 할 수
-            없으므로 1 % 의 window 는 나쁠 수 있다고 미리 인정하고, 그 budget 을 얼마나 빨리
-            쓰는지는 <Link to="/cs/ai/llm-serving-ops#observability-aiops">burn rate</Link> 로
-            봅니다. 외부에 약속한 SLO 보다 조금 엄격한 내부 SLO 를 두면 budget 이 바닥나기 전에
-            손쓸 여유가 생깁니다.
-          </p>
-          <p>
-            SLO 는 앞 절의 trade-off 를 닫는 열쇠이기도 합니다. "P99 ITL ≤ 80 ms" 를 정하면
-            step 시간이 80 ms 를 넘지 않는 최대 batch 가 정해지고, 그 batch 에서 나오는
-            tokens/s 가 이 서버의 goodput 입니다.{" "}
-            <Link to="/cs/ai/llm-serving-capacity#capacity-admission">Admission 상한</Link>도 memory
-            가 아니라 이 SLO 에서 먼저 막힙니다.
-          </p>
-        </div>
-        <AlgorithmBlock
-          title="Window 단위 SLO 판정과 violation budget 계산"
-          input={["SLI 정의(예: TTFT, client 수신 시각 기준)", "percentile p 와 임계값 θ (예: P95 ≤ 1.5 s)", "window 길이 W 와 평가 기간 D (예: 5 분, 1 일)", "허용 위반율 β (예: 1 %)", "window 당 최소 표본 수 N_min"]}
-          steps={[
-            { code: "for each window w in D:", note: "평가 기간을 겹치지 않는 window 로 자릅니다. 기간 D 에는 D/W 개의 window 가 있습니다." },
-            { code: "  samples ← SLI values of requests completed in w", note: "완료 시각 기준으로 표본을 모읍니다. 진행 중인 긴 요청은 다음 window 로 밀려 꼬리를 숨길 수 있습니다." },
-            { code: "  if |samples| < N_min: mark w as insufficient; continue", note: "표본이 적은 window 의 P95 는 값 하나에 흔들리므로 판정에서 제외하고 따로 셉니다." },
-            { code: "  sort samples; P ← samples[ceil(p·|samples|/100)]", note: "Nearest-rank 로 percentile 을 뽑습니다. 보간 방식은 SLO 문서에 고정해 둡니다." },
-            { code: "  violated[w] ← (P > θ)", note: "Window 하나의 SLO 위반 여부입니다." },
-            { code: "budget ← floor(β · |windows|)", note: "1 일 288 개 window, β = 1 % 면 budget 은 2 개입니다." },
-            { code: "violation_rate ← count(violated) / |windows|", note: "위반 window 수를 전체 window 수로 나눈 값이 SLO 위반율입니다." },
-          ]}
-          repeatUntil="평가 기간 D 가 끝나거나 count(violated) 가 budget 을 넘는 순간 알림을 냅니다."
-          output="SLO 만족 여부(violation_rate ≤ β), 남은 budget, insufficient window 수"
-        />
-        <TermBreakdown
-          title="SLO 문장을 쓸 때 빠뜨리면 판정이 달라지는 항목"
-          items={[
-            { term: "SLI 와 측정 지점", description: "무엇을 어디서 재는지입니다.", example: "TTFT 를 client 수신 시각으로 잴지 서버 첫 token 생성 시각으로 잴지.", boundary: "측정 지점이 다르면 같은 서버의 P95 가 수백 ms 차이 납니다." },
-            { term: "Percentile 과 임계값", description: "분포의 어느 지점을 얼마 이하로 둘지입니다.", example: "P95 TTFT ≤ 1.5 s, P99 ITL ≤ 80 ms.", boundary: "P50 만 적은 SLO 는 꼬리를 전혀 제약하지 않습니다." },
-            { term: "Window 와 평가 기간", description: "표본을 묶는 길이와 위반율을 세는 기간입니다.", example: "5 분 window, 1 일 평가.", boundary: "Window 를 길게 잡으면 짧은 장애가 평균에 묻혀 위반이 사라집니다." },
-            { term: "허용 위반율", description: "위반 window 를 얼마나 허용하는지, 곧 error budget 입니다.", example: "1 % → 하루 2 개 window.", boundary: "0 % 는 배포·재시작을 모두 위반으로 만들어 운영이 불가능합니다." },
-          ]}
-        />
-        <ProgressiveDetail
-          title="Percentile 표기와 요청 비율 표기 중 어느 것을 SLO 로 쓰는 것이 좋은가요?"
-          preview="둘은 같은 분포를 다르게 자른 표기입니다. 표본이 적은 window 에서는 요청 비율 표기가, 대시보드 해석에는 percentile 표기가 안정합니다."
-        >
-          <p>
-            "P95 TTFT ≤ 1.5 s" 와 "TTFT ≤ 1.5 s 인 요청이 95 % 이상" 은 표본이 충분히
-            크면 같은 조건입니다. 표본 20 개짜리 window 에서 P95 는 두 번째로 느린 값 하나로
-            정해지므로 요청 하나가 window 전체를 뒤집습니다. 요청 비율 표기는 그 window 를
-            19/20 = 95 % 로 세어 같은 요동을 덜 겪습니다.
-          </p>
-          <p>
-            SRE Book 은 목표를 현재 성능에서 역산하지 말고 단순하게 유지하라고 권합니다.
-            LLM serving 에서는 TTFT 와 ITL 에 각각 하나의 percentile 조건, E2E 에는 응답
-            길이별 조건을 두는 정도가 읽히는 범위입니다.
-          </p>
-        </ProgressiveDetail>
-      </section>
+<section id="source-client-events" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 실제 수신 코드는 토큰 대신 이벤트를 관측합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            다섯 토큰을 1개·1개·3개로 묶어 1·1.040·1.327초에 받았다고 합시다. (가정)
+          </p><p>vLLM v0.27.1의 아래 chat 수신 경로는 choices 이벤트 사이 시각 차이를 목록에 넣습니다. 이 입력에서는 40·287ms의 두 값입니다. 원래 네 토큰 간격은 관측할 수 없습니다.
+          </p><p>
+            원문의 st는 client 전송 전의 시각이고 timestamp는 메시지를 읽은 시각입니다. 이 버전은 choices가 있으면 빈 content인 첫 이벤트도 TTFT를 정할
+            수 있습니다. 또 usage 메시지를 포함한 timestamp가 most_recent_timestamp를 갱신하므로 마지막 내용 토큰과 latency의 끝이 달라질 수
+            있습니다.
+          </p><p>
+            NVIDIA의 GenAI-Perf 문서는 뒤 응답의 토큰 수로 나눈 값을 사용합니다. 위 묶음에서는 40ms와 287/3≈95.667ms입니다. 이는 묶음 안의 실제 생성
+            간격을 복원한 것이 아닙니다. 두 값을 단순 평균하면 약 67.833ms이며 토큰 수로 가중한 81.75ms와 다릅니다. (가정)
+          </p></div><CodeViewButton label="고정 원문: 수신 이벤트와 시각 갱신" onClick={() => sidebar.open("client-events", codeRefs["client-events"])} /><div id="paper-genai-perf" className="mt-8 scroll-mt-20"><CitationBlock source="NVIDIA GenAI-Perf · Metrics" citeKey={1} href="https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html#metrics"><q>divided by the number of generated tokens of the latter response</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            원문의 나눗셈에서 뒤 응답의 토큰 수가 3이므로 287ms를 3으로 나눕니다. 2026-10-04 확인한 이 문서에는 GenAI-Perf의 신규 개발 중단과 AIPerf 안내가
+            함께 있습니다. 여기서는 기존 결과표를 읽는 정의로 인용하며 새 도구도 해당 버전의 집계 코드를 확인해야 합니다.
+          </p></div></div></section>
 
-      <section id="sources" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          지표 정의는 benchmark 구현에서, SLO 문법은 SRE 실무에서 가져왔습니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            이 글의 TTFT·TPOT·ITL·E2E 계산식은 vLLM 의 serving benchmark 구현이 실제로 쓰는 식입니다. Chunk 당 token 수로 간격을 나누는 ITL
-            정의는 NVIDIA GenAI-Perf 문서를 따랐습니다. 두 도구는 percentile 목록과 기본값이 다르므로 결과를 나란히 놓을 때는 어느 percentile 을 어떤
-            보간으로 냈는지 함께 적어야 합니다.
-          </p>
-          <p>
-            Percentile 을 SLO 로 계약하는 문법과 error budget 의 논리는 Google SRE Book 의
-            SLO 장에서 왔습니다. 그 장은 일반 RPC 서비스를 다루므로, TTFT 와 ITL 을 별도
-            SLI 로 두는 것은 LLM serving 에서 이 글이 적용한 해석입니다.
-          </p>
-        </div>
-        <div id="paper-vllm-bench" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="vLLM project · vllm/benchmarks/serve.py (serving benchmark 구현)"
-            citeKey={1}
-            href="https://github.com/vllm-project/vllm/blob/main/vllm/benchmarks/serve.py"
-            type="code"
-          >
-            TPOT 를 (latency − ttft)/(output_len − 1) 로, ITL 을 streaming chunk 간격
-            목록으로, request throughput 과 output token throughput 을 완료 수·token 총수를
-            측정 시간으로 나눈 값으로 계산합니다. Mean·median 과 선택한 percentile(기본
-            P99)을 보고하며, 보고 형식은 버전마다 바뀔 수 있습니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-genai-perf" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="NVIDIA · GenAI-Perf metrics 문서"
-            citeKey={2}
-            href="https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html"
-          >
-            TTFT, inter token latency(중간 응답 간격을 그 응답의 token 수로 나눈 값), request
-            latency, output token throughput, request throughput 을 정의하고 avg·min·max 와
-            p99·p90·p75 를 보고합니다. vLLM 과 percentile 집합이 달라 두 도구의 표를 같은
-            열로 합치지 않습니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-sre-slo" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Beyer et al. · Site Reliability Engineering, Ch. 4 Service Level Objectives"
-            citeKey={3}
-            href="https://sre.google/sre-book/service-level-objectives/"
-          >
-            SLI·SLO·SLA 를 구분하고, latency 는 평균보다 percentile 로 목표를 세우며, 100 %
-            만족 대신 error budget 을 두고 외부 SLO 보다 엄격한 내부 SLO 로 여유를 확보하라고
-            권합니다. 일반 서비스 기준이므로 LLM 지표를 어떻게 나눌지는 말하지 않습니다.
-          </CitationBlock>
-        </div>
-        <p className="prose prose-neutral max-w-none dark:prose-invert">
-          이어지는 글: 이 지표를 재현 가능하게 측정하는 benchmark 방법론(warm·cold, request
-          rate sweep 과 saturation 곡선)은 다음 배치에서 다룹니다. 지표가 나오는 scheduler 쪽
-          원인은 <Link to="/cs/ai/vllm-scheduler">vLLM scheduler</Link> 를 참고하세요.
-        </p>
-      </section>
-    </div>
-  );
+<section id="paper-vllm-bench" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 같은 기록을 실제 평균과 처리량 코드에 넣습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            원문의 output_len=5, latency=1.327, ttft=1을 넣으면 TPOT=(1.327−1)/(5−1)=0.08175초입니다. 코드가
+            output_len&gt;1인 요청만 TPOT 표본에 추가한다는 조건도 확인합니다. 한 토큰 응답에는 토큰 사이 간격이 없습니다. (가정)
+          </p><p>
+            앞의 묶음 수신에서도 토큰 수가 5로 확인되면 같은 TPOT를 구하지만 ITL 목록은 40·287ms로 남습니다. 따라서 코드의 두 목록을 같은 단위의 관측이라고 합치지
+            않습니다.
+          </p><p>
+            마지막 토큰 뒤 1.350초에 usage 이벤트가 왔다면 이 chat 경로의 latency는 1.350초가 될 수 있습니다. 계산된 TPOT는 87.5ms이며 토큰 기준
+            81.75ms와 다릅니다. 그래서 7절의 토큰 시각 항등식과 도구가 선택한 종료 사건을 구별해야 합니다. (가정)
+          </p><p>
+            처리량 코드에는 completed=120, dur_s=60, total_output=24000을 넣어 2요청/s와 400토큰/s를 확인합니다. 조건을 만족한 요청만 센
+            goodput은 별도 값입니다. 120개 중 90개만 설정된 지연 조건을 모두 만족했다면 request_goodput=90/60=1.5요청/s입니다. 단위도 토큰/s와
+            다릅니다. (가정)
+          </p><p>
+            고정 코드의 goodput은 설정된 TTFT·TPOT·E2E 한도를 요청별로 함께 검사합니다. 5분 구간의 P95 약속을 자동으로 판정하는 기능으로 읽지 않습니다.
+          </p></div><CodeViewButton label="고정 원문: 토큰 수와 TPOT·ITL 목록" onClick={() => sidebar.open("latency-metrics", codeRefs["latency-metrics"])} /><CodeViewButton label="고정 원문: 요청별 조건과 처리량" onClick={() => sidebar.open("throughput-goodput", codeRefs["throughput-goodput"])} /><CodeViewButton label="고정 원문: NumPy percentile 호출" onClick={() => sidebar.open("percentile-calculation", codeRefs["percentile-calculation"])} /><div id="source-bench-formula" className="mt-8 scroll-mt-20"><CitationBlock source="vLLM v0.27.1 · serve.py L608–611" citeKey={1} href="https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/benchmarks/serve.py#L608-L611"><q>tpot = latency_minus_ttft / (output_len - 1)</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            원문의 분자는 같은 backend가 기록한 latency−ttft이고 분모는 확인된 output_len−1입니다. 입력 기록의 의미를 바꾸지 않은 채 5토큰 예제를 대입해야
+            합니다. 전체 고정 파일과 버전·해시는 원문 패널의 저장된 source와 함께 보존했습니다.
+          </p></div></div></section>
+
+<section id="slo" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 하루 288구간에서 세 번째 실패는 허용범위를 넘습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            측정값을 SLI(Service-Level Indicator), 그 값에 대한 목표를 SLO(Service-Level Objective)라고 합니다. 이 사례의 약속은 5분마다
+            nearest-rank P95 TTFT≤1.5초이고 하루의 정해진 288구간 중 99% 이상이 통과하는 것입니다. (가정)
+          </p><p>
+            9절의 구간은 P95=1.45초이므로 통과합니다. 하루에 실패 2개면 2/288≈0.6944%로 허용 1% 이내입니다. 실패 3개면 3/288≈1.0417%로 초과합니다. 실패
+            5개는 약 1.7361%입니다. 정수로 허용할 수 있는 실패는 floor(288×0.01)=2개입니다. (가정)
+          </p><p>
+            이 허용량을 error budget이라고 부릅니다. 실패율을 허용 실패율로 나눈 소진 속도도 추적할 수 있습니다. 예를 들어 같은 평가 범위의 2% 실패는 1% 허용량의
+            2배입니다. 구간 수 기준과 요청 수 기준을 섞으면 이 계산이 달라집니다. (가정)
+          </p><p>
+            한 구간에 요청 1개가 있고 다른 구간에 10000개가 있어도 위 약속에서는 구간마다 한 표입니다. 전체 요청 중 95%가 빠르다는 약속과 하루 구간의 99%가 통과한다는
+            약속은 서로 다른 집계입니다.
+          </p></div><div id="paper-sre-slo" className="mt-8 scroll-mt-20"><CitationBlock source="Google SRE Ch.4 · Defining Objectives" citeKey={1} href="https://sre.google/sre-book/service-level-objectives/"><q>SLOs should specify how they’re measured and the conditions under which they’re valid.</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            이 사례는 client 시계로 측정한 값의 nearest-rank P95를 1.5초와 비교합니다. 5분씩 나눈 하루 288구간 중 99%가 이 비교를 통과해야 합니다. 원문이 요구하는 측정 방식과 유효 조건을 구체화한 것입니다.
+          </p><p>원문은 이 LLM 수치를 권장한 것이 아니며 서비스의 약속을 정한 가정입니다. 100% 목표가 모든 배포를 논리적으로 불가능하게 만든다는 뜻도 아닙니다.
+          </p></div></div></section>
+
+<section id="slo-procedure" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">13. 관측이 빠진 구간을 통과한 구간으로 세지 않습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            구간은 예를 들어 시작 포함·끝 제외인 5분 간격으로 미리 나눕니다. 어느 요청을 어느 구간에 넣을지와 최소 표본 수를 정합니다. 완료 시각 기준을 쓰면 아직 끝나지 않은 긴
+            요청이 다음 구간으로 밀리므로 진행 중 요청과 시간 초과도 별도로 감시해야 합니다.
+          </p><p>
+            하루 288구간을 보기로 정했는데 10구간의 측정이 빠졌다면 나머지 278개가 모두 통과해도 하루 99% 달성을 바로 선언할 수 없습니다. 아래 절차는 관측 누락이 있으면 달성
+            미확인으로 남기는 이 글의 예시 정책입니다. 누락을 실패로 취급하는 다른 정책도 가능하지만 측정 뒤 유리하게 바꾸지 않습니다. (가정)
+          </p><p>서비스가 원래 쉬는 시간을 빼려면 평가 대상 구간을 사전에 정하고 바뀐 분모를 계약에 적습니다. 표본 부족 구간을 조용히 분자에서만 빼거나 통과로 더하면 실제 약속과 다른 비율이 됩니다.</p></div><AlgorithmBlock title="정의가 고정된 구간 SLO 판정 (의사코드)" input={["사전에 정한 평가 구간 집합 E와 표본 포함 규칙", "p=95, θ=1.5초, β=0.01, 사전 최소 표본 수", "관측 누락은 달성 미확인으로 처리하는 예시 정책"]} steps={[{"code": "for w in E:", "note": "정한 대상 구간만 순회합니다. 요청 완료·시간 초과·관측 상태를 함께 보존합니다."}, {"code": "  if missing(w) or count(w) < N_min: unknown.add(w); continue", "note": "이 예에서는 표본 부족이나 누락을 통과로 바꾸지 않습니다."}, {"code": "  x ← sort(samples(w)); k ← ceil(p*len(x)/100)", "note": "정렬 위치는 1부터 세고 프로그램의 0기반 배열에서는k−1을 사용합니다."}, {"code": "  if x[k-1] > θ: failed.add(w)", "note": "한 구간의 지연 기준을 판정합니다."}, {"code": "budget ← floor(β * len(E))", "note": "사례에서는floor(0.01×288)=2개입니다."}, {"code": "if count(failed) > budget: status ← violated", "note": "이미 확인된 실패만으로 넘었다면 누락 여부와 관계없이 위반입니다."}, {"code": "else if count(unknown) > 0: status ← unconfirmed", "note": "이 예시 정책에서는 누락이 남아 있으면 달성을 확정하지 않습니다."}, {"code": "else: status ← met", "note": "모든 대상 구간의 관측이 완전하고 실패가 한도 안일 때만 통과입니다."}]} output="판정·실패 수·관측 누락 수·고정 분모·남은 허용량" /></section>
+
+<section id="boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">14. 지표 하나가 원인이나 용량을 자동으로 결정하지는 않습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            간격의 P99≤80ms를 정해도 요청별로 모든 지연 조건을 만족한다는 뜻은 아닙니다. 출력이 긴 요청은 간격 분포에 더 많은 표본을 주고 여러 조건의 동시 만족 여부도
+            남습니다. 같은 입력·출력 길이와 도착 분포에서 조건을 통과한 요청 수를 직접 셉니다.
+          </p><p>메모리에 들어가는 최대 묶음과 지연 약속을 지키는 최대 부하는 다를 수 있습니다. 어느 쪽이 먼저 막히는지는측정해야 합니다. <Link to="/cs/ai/llm-serving-capacity#capacity-admission">용량과 요청 수용</Link>을 정할 때 메모리·지연·실패를 함께 확인합니다.</p><p>한 평균이 개선됐다고 꼬리도 개선됐다고 결론내리지 않고 반대도 단정하지 않습니다. 종료 사건, 실패 포함 규칙, percentile 방식과 수집 누락까지 같은 조건으로 비교해야 수치의 변화를 해석할 수 있습니다.</p></div><ContentBoundary article="serving-latency-metrics-and-slo" /></section>
+
+<section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">15. 표본과 분모를 바꿨을 때 결과를 예상해 보세요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            5토큰이 세 묶음으로 도착했습니다. 측정 목록의 간격 수가 반드시 4개일까요? (답: 10절)
+          </p><p>
+            하루 288구간의 99% 통과가 약속인데 실패가 3개입니다. 허용범위 안일까요? (답: 12절)
+          </p><p>
+            측정하지 못한 10구간을 지운 뒤 나머지가 모두 통과했습니다. 원래 약속의 달성을 선언해도 될까요? (답: 13절)
+          </p></div></section>
+</div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{vllm:latencySourceTree}} projectMetas={{vllm:{id:"vllm",label:"vLLM v0.27.1 · Python",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;
 }

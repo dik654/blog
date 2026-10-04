@@ -6980,7 +6980,7 @@
     {
       "route": "crypto/fft",
       "title": "FFT / NTT — 다항식 곱셈 가속",
-      "status": "unreviewed",
+      "status": "reviewed-needs-rewrite",
       "publicEntry": "src/pages/articles/blockchain/fft/index.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/fft/Butterfly.tsx",
@@ -7006,12 +7006,17 @@
           "\n        Padding·representation·memory traffic이 실제 선택을 정한다\n      "
         ]
       },
-      "issues": [],
+      "issues": [
+        "Read six old body components, three diagrams and prior 6+4 metadata. Abstract names and complexity precede the case; old numeric NTT is not traced through the butterfly and inverse.",
+        "Generic unrelated formula annotations obscure actual operations. Root4, root9 and root2 examples are not connected clearly.",
+        "The length3 wraparound example omits that F17 has no order3 root; must distinguish a quotient-ring identity from an executable F17 transform.",
+        "Need actual original-source application, inverse numerical proof, ordering and polynomial multiplication boundaries."
+      ],
       "fixture": null,
       "stageEvidence": {},
       "sourceEvidence": [],
       "verification": {
-        "substantiveReading": "pending",
+        "substantiveReading": "All previous bodies, diagrams and learning metadata read; original paper research in progress.",
         "arithmetic": "pending",
         "humanize": "pending",
         "browser390": "pending",
@@ -7065,16 +7070,11 @@
     {
       "route": "crypto/finite-field-theory",
       "title": "유한체 이론",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/finite-field-theory.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/finite-field-theory.tsx",
-        "src/pages/articles/blockchain/finite-field-theory/ExtensionField.tsx",
-        "src/pages/articles/blockchain/finite-field-theory/Overview.tsx",
-        "src/pages/articles/blockchain/finite-field-theory/PolynomialArithmetic.tsx",
-        "src/pages/articles/blockchain/finite-field-theory/PrimeField.tsx",
-        "src/pages/articles/blockchain/finite-field-theory/SchwartzZippel.tsx",
-        "src/pages/articles/blockchain/math-viz-primitives.tsx"
+        "src/pages/articles/blockchain/finite-field-theory/ModernArticle.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -7089,20 +7089,53 @@
           "\n        Schwartz–Zippel: 항등식 검사를 확률로 압축하기\n      "
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 본문5개와그림3개를 모두 읽었습니다. 유한체·군·환·체가 구체적 나눗셈 요청보다 먼저 나옵니다.",
+        "역원과 생성원 수식에 무관한 기준량당 비율 주석이 있고 Schwartz-Zippel식의 괄호 일부가 잘못 묶였습니다.",
+        "원문에 같은 수를 대응해야 하며 Schwartz1980의 기존DOI가 다른문헌으로 보여 공식출처로 교정 중입니다."
+      ],
+      "fixture": {
+        "case": "F7: 6/3=2 and 2/3=3 via inverse 5; Bezout 3*(-2)+7=1. Mod8 inverse failure. Orders of 3 and 2 are 6 and 3. R=x²−1 has 2/7 roots, xy has 13/49. F9 constructed with u²+1 over F3: (1+u)(2+u)=1; same relation fails over F5.",
+        "assumption": "Exact educational small-field arithmetic; no cryptographic deployment or library performance claim."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: undo division within a small set",
+        "B": "black-box: two values and operation to result or failure",
+        "0": "case: same 6/3 and 2/3 inside F7",
+        "1": "picture: validate divisor, invert, multiply, reduce",
+        "2": "need: mod8 collision 2*1=2*5 and zero divisor",
+        "3": "names: inverse, group, commutative ring, field after concrete operation",
+        "4": "prime-field: Bezout and Fermat inverse with numeric calculation",
+        "5": "trace: same 6/3 request then back-multiplication",
+        "6": "source: HAC Algorithm 2.142 and 2.107 applied to 3 and 7",
+        "7": "multiplicative-order through release: generators, polynomial representations, root proof, Schwartz-Zippel induction and actual counts, extension-field inverse proof, FIPS scope; predictions 5/13/14"
+      },
+      "sourceEvidence": [
+        {
+          "source": "HAC Chapter 2 official PDF, Algorithms 2.107/2.142 and Fact 2.224/Algorithm 2.226 freshly read.",
+          "application": "Integer inverse 3 modulo7 and polynomial identity (u+2)(u+1)+2(u²+1)=1 modulo3."
+        },
+        {
+          "source": "Schwartz 1980 original-text reproduction read for Lemma1/Corollary1; publisher deposited Crossref metadata verified correct DOI 10.1145/322217.322225. Direct university PDF retrieval failed; no full downloaded-original claim.",
+          "application": "Q=x²−1, I=F7 gives 2/7; highest-variable coefficient induction explained and independently checked."
+        },
+        {
+          "source": "NIST FIPS186-5 official PDF Appendix D freshly read.",
+          "application": "Corrected prior overbroad binary-field approval description: ECC details moved to SP800-186; binary curves deprecated."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read all five old body components and three diagrams; rewrote 15 connected sections, preserved correct inverse/generator/polynomial/extension statements, replaced generic incorrect formula annotations. Read full final body and all formula props.",
+        "arithmetic": "/tmp/teach-all/chains-field-arithmetic.json: 28 checks, including F7 inverses/orders, actual polynomial roots, independent repeated probability and all eight nonzero F9 inverses.",
+        "humanize": "/tmp/teach-all/humanize-chains-field-final/finite-field-theory: actual roundtrip and 3791/1468-character chunk passes; unchanged final wording, mathematical footnote WARN independently approved by /root/teach_ai_theory in independent-finalize.md. Formula layout props manually reviewed.",
+        "browser390": "Full page and six detailed sections passed. Actual KaTeX .base bounds checked in /tmp/teach-all/chains-math-content-bounds.json. Root-bound, Schwartz-Zippel and extension screenshots visually read after final layout correction.",
+        "browser1440": "Same final full page, six detail sections and actual KaTeX .base bounds: no runtime errors, overflow, narrow text, formula errors or broken page anchors.",
+        "learning": "Parent merged batch11 and strict registration gate passed on 2026-10-04.",
+        "prose": "/tmp/teach-all/chains-prose-batch11.log contains no new blockchain or crypto warning; three outstanding signals belong to other assigned teams.",
+        "static": "Actual app typecheck npx tsc -p tsconfig.app.json --noEmit exited0; parent evidence /tmp/teach-all/root-gpu-four-tsc-final.log, confirmed 2026-10-04. Root reference-only tsc is not used as evidence."
+      },
+      "remaining": [],
+      "reviewDisposition": "substantive-rewrite"
     },
     {
       "route": "crypto/fri",
@@ -7457,7 +7490,7 @@
     {
       "route": "crypto/lagrange",
       "title": "Lagrange 보간",
-      "status": "rewritten-awaiting-integration-and-browser",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/lagrange.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/lagrange.tsx",
@@ -7481,19 +7514,43 @@
         "일반식에 기준량당 비율이라는 무관한 수식 주석이 붙어 있으며 같은 표본을 DLMF와 barycentric 원문에 적용하지 않았습니다.",
         "유일성·소멸다항식·중복입력·실수와유한체경계는 보존하며 같은 작은 사례로 연결해야 합니다."
       ],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "F17 samples(0,1),(1,4),(2,9), bases9x²+7x+1/16x²+2x/9x²+8x, L=x²+2x+1. Query3 bases1,14,3 ->16. Baryweights9,16,9 ->t3,8,9 ->A14,D3 ->16. Z3=6; L+Z3=5; C=Z(x+4) gives C3=8.",
+        "assumption": "Exact F17 educational calculations, distinctnodes and degree≤2; original real/complex numerical stability not imported."
       },
-      "remaining": [
-        "arithmetic/humanize/source review; metadata registration and browser"
-      ]
+      "stageEvidence": {
+        "S": "overview: three records missingrule",
+        "B": "black-box: samplepairs towholepolynomial ornewqueryvalue",
+        "0": "case: same0,1,2 ->1,4,9 withmod17context;query3=16,4=8",
+        "1": "picture: records toindividualselectors tosameL and16",
+        "2": "need: whyconstant1disturbsothers, (x-1)(x-2)/2 isolatesfirst",
+        "3": "names: sample/basis/interpolant/degree/N/field namesaftercase",
+        "4": "formula: threeexplicitbases, weights1,4,9, coefficient154/87mod17; actualbasisdiagram",
+        "5": "trace: query3 values1,14,3 ->84mod17=16; uniquenessrootproof",
+        "6": "source: DLMF3.3.1/.2 n2/z0..2/f1,4,9 appliedsamecase; usage maps BerrutTrefethen(3.2),(4.1),(4.2) to9,16,9/A14/D3",
+        "7": "usage/vanishing/boundaries/release: actualbarybranch exactsample4, denominatorproof, sameZ3=6/C3=8, degreecounterexample5,duplicate/malformedauthboundary, workloadcomplexities; predictions10/12/11"
+      },
+      "sourceEvidence": [
+        {
+          "source": "NIST DLMF official3.3(i) freshread equations3.3.1/.2/.3/_1/_2",
+          "application": "Same3samples andsource n+1 vsarticleN explicitlymapped; fieldidentity conditionseparatedfromrealderivativeerror."
+        },
+        {
+          "source": "BerrutTrefethen2004 originalauthorPDF downloaded504683bytes, pdftotext read printedpp501–505 including(3.2),(4.1),(4.2); /tmp/teach-all/barycentric-original.pdf/.txt",
+          "application": "Originalweights,constant1identity andsecondbaryform mappedtosameF17samplesandquery3; sourcefloatingpointconditionskeptdistinct."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read4previousbodycomponents and3vizfull, thenallnew13sections+formula/vizprops. Keptcorrectbasis,uniqueness,vanishing,barycentric andfailureconditions; replacedunrelatedgenericformulaannotations.",
+        "arithmetic": "/tmp/teach-all/chains-lagrange-arithmetic.json 18checks including all17queries directvsbary anddenominatoridentity14nonnodequeries, basisidentity,coefficients,degreecounterexample5,C3=8.",
+        "humanize": "/tmp/teach-all/humanize-chains-lagrange/lagrange/gate.txt WARN6false mathematicalfootnotes; changed0% andexactroundtrip. /root/teach_ai_systems independentfulltext/numbers/markers/mathreview inindependent-finalize.md approved. Nestedlinks/formula/vizprops manuallyread.",
+        "browser390": "Final details and complete page passed. /tmp/teach-all/chains-math-content-bounds.json measures actual KaTeX .base rectangles: no clipping at 390. H={0,1,2} actual DOM verified in chains-lagrange-set-check.json. Usage and vanishing screenshots visually read after layout correction.",
+        "browser1440": "Final full page and four detail sections passed at 1440, including actual KaTeX .base bounds and the corrected set literal. /tmp/teach-all/chains-lagrange-details.json.",
+        "learning": "Parentmergedbatch10 andstrictrequire-registration passed2026-10-04.",
+        "static": "Actual app typecheck npx tsc -p tsconfig.app.json --noEmit exited0; parent evidence /tmp/teach-all/root-gpu-four-tsc-final.log, confirmed 2026-10-04. Root reference-only tsc is not used as evidence."
+      },
+      "remaining": [],
+      "reviewDisposition": "substantive-rewrite"
     },
     {
       "route": "crypto/libiop",
@@ -8302,15 +8359,12 @@
     },
     {
       "route": "crypto/reed-solomon",
-      "title": "Reed–Solomon 구현: profile·decode·proximity",
-      "status": "unreviewed",
+      "title": "Reed–Solomon: 사라지거나 틀린 기록 복원하기",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/reed-solomon/index.tsx",
       "bodyFiles": [
-        "src/pages/articles/blockchain/reed-solomon/Encoding.tsx",
-        "src/pages/articles/blockchain/reed-solomon/ErrorCorrection.tsx",
-        "src/pages/articles/blockchain/reed-solomon/Overview.tsx",
-        "src/pages/articles/blockchain/reed-solomon/ZKConnection.tsx",
-        "src/pages/articles/blockchain/reed-solomon/index.tsx"
+        "src/pages/articles/blockchain/reed-solomon/index.tsx",
+        "src/pages/articles/blockchain/reed-solomon/ModernArticle.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -8324,20 +8378,54 @@
           "\n        ZK에서는 byte 복구가 아니라 RS code에 대한 proximity를 검사한다\n      "
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "Read all four existing body components and prior 6+4 learning entries. Profile jargon precedes the concrete case; generic formula annotations do not explain the operations.",
+        "Prior learning incorrectly guarantees TooManyErrors outside the unique-decoding bound; a received word can be nearer a different valid codeword.",
+        "Same four-symbol case must be traced through erasure recovery, unknown-error recovery, actual source formulas and authentication limits."
+      ],
+      "fixture": {
+        "case": "F7, coefficients [2,3], word [2,5,1,4]; erasures leave (1,5),(3,4). One error [2,5,6,4] gives E=x+5, N=3+3x+3x². Two-error received [2,6,3,4] is distance one from another valid word [2,6,3,0] and misdecodes to [2,4].",
+        "assumption": "Educational exact small-field arithmetic; RFC structure adapted to F7 explicitly, not a wire-compatible vector or real FRI execution."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: keep two original numbers through missing records",
+        "B": "black-box: original and agreed rules to indexed records and recovery candidate",
+        "0": "case: 2+3x produces 2,5,1,4; same missing positions 0 and2",
+        "1": "picture: one source through records to recovered coefficients",
+        "2": "need: wrong positions change original and real division gives wrong result",
+        "3": "names: symbols, n/k, codeword, field, erasure/error/profile after case",
+        "4": "encoding: annotated rule and actual small encoding algorithm",
+        "5": "trace: a+b=5,a+3b=4 to a2,b3; repeat checks and erroneous pair counterexample",
+        "6": "source: original1960 coefficients/Vandermonde map to same case; RFC5510 systematic matrix and received-column inverse explicitly computed",
+        "7": "error-correction through release: distance proof and budget, BW equations and uniqueness, misdecode/authentication, profile/cyclic limits, FRI original definition applied to same word, predictions9/10/12"
+      },
+      "sourceEvidence": [
+        {
+          "source": "ReedSolomon1960 original scan at Rutgers freshly read pp300–302; publisher DOI10.1137/0108018 verified.",
+          "application": "Coefficient evaluation and distinct-point independence correspond to F7 educational example; original binary-extension/all-field domain explicitly distinguished."
+        },
+        {
+          "source": "Official RFC5510 §§8.2.1–8.3.1 and9.2.2 freshly read.",
+          "application": "G=Vkk^-1 V applied to F7 matrix: [2,5]G returns same word; columns1/3 inverse recovers [2,5]. F7 adaptation is not a RFC-compatible packet vector. Authentication separate."
+        },
+        {
+          "source": "Official Dagstuhl FRI2018 PDF §1 and assumptions freshly read.",
+          "application": "RS[F,S,rho], N4 rho1/2 gives degree<2 and same received word distance1/4. Definition application not actual FRI-domain or execution claim."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "All four old bodies and prior 6+4 learning read; entire new15sections and formula/algorithm props manually reviewed. Fixed generic annotations and false universal detection promise in prior learning.",
+        "arithmetic": "/tmp/teach-all/chains-rs-arithmetic.py/json: minimum distance3 over49codewords, 294 erasure recoveries, 1176 single-error recoveries,49clean BW cases; actual modular Gaussian solve; same systematic matrix and misdecode counterexample. Educational implementation only.",
+        "humanize": "Latest /tmp/teach-all/humanize-chains-rs/reed-solomon: 5413-character extraction and exact roundtrip, full gate0; 3599/1813-character chunk gates0. Existence proof added before final extraction. No wording changes; nested links and formula props manually reviewed.",
+        "browser390": "Full-page gate output/playwright/teach-chains-rs/summary.json passed. Six detailed sections read and actual KaTeX .base bounds in chains-rs-math-bounds.json show no clipping. Parent final integration sweep including latest existence paragraph also passed.",
+        "browser1440": "Same full page, six detail sections and actual math bounds passed. Parent final integration sweep passed on both widths.",
+        "prose": "/tmp/teach-all/chains-rs-prose.log strict exit0.",
+        "static": "Parent confirmed latest actual app tsc exited0 after shared topology correction, 2026-10-04.",
+        "learning": "/tmp/teach-all/chains-rs-learning.log strict require-registration exited0 after parent batch12 merge.",
+        "independentMath": "/root/teach_ai_theory read sections10–12 and independently verified all selected values and root-count uniqueness proof; /tmp/teach-all/reed-solomon-independent-theory.json. Recommended exact-degree E existence paragraph added."
+      },
+      "remaining": [],
+      "reviewDisposition": "substantive-rewrite"
     },
     {
       "route": "crypto/risc0",

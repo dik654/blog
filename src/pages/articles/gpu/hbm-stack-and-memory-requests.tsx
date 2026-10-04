@@ -43,7 +43,9 @@ export default function Article() {
         <p className="leading-8">그림의 네 층은 연결 원리를 보여 주는 모형입니다. 층 수와 실제 용량은 제품마다 다릅니다. 층을 두 배 쌓았다고 외부 통로의 폭과 데이터 속도가 자동으로 두 배가 되지는 않습니다.</p>
       </div>
       <HbmPhysicalViz />
-      <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">층 수와 바깥 통로를 구별했습니다. 넓은 연결을 만들 때 치르는 비용을 확인합니다.</p>
+      <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
+            층 수와 바깥 통로를 구별했습니다. 연결을 넓힐 때 드는 비용을 확인합니다.
+          </p>
     </section>
     <section id="need" data-teach-level="2" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">5 · 많은 연결선은 처리량을 키우지만 열과 제조 비용도 늘립니다</h2>
@@ -55,11 +57,19 @@ export default function Article() {
     </section>
     <section id="names" data-teach-level="3" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">6 · 적층과 채널, 행을 여는 동작은 서로 다른 역할입니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">High Bandwidth Memory를 줄여서 HBM이라고 부릅니다. 넓은 인터페이스와 적층으로 높은 대역폭을 얻는 메모리 계열입니다. 층을 관통하는 전기 연결은 TSV입니다. 계산 칩과 메모리 스택을 연결하는 중간 배선판은 interposer입니다. 세 단어는 제품 계열·수직 연결·수평 연결이라는 서로 다른 역할입니다.</p>
-        <p className="leading-8">독립적인 명령과 데이터 통로를 channel이라고 부릅니다. HBM3의 데이터 폭은 16개 × 64비트 = 1024비트입니다. 각 channel을 두 32비트 pseudo-channel로 다룰 수 있습니다. TSV의 전체 개수와 데이터 폭 1024비트는 같은 숫자가 아닙니다. 전원과 제어 등의 연결도 필요합니다.</p>
-        <p className="leading-8">메모리 안의 독립 작업 구역이 bank입니다. 읽으려는 행을 열어 감지한 값을 임시로 잡는 곳이 row buffer입니다. 열린 행에서 필요한 열을 골라 읽습니다. 다른 행으로 바꾸려면 닫고 다시 여는 시간이 들 수 있습니다.</p>
-        <p className="leading-8">셀 값을 유지하려고 주기적으로 되살리는 동작은 refresh입니다. GPU 쪽 memory controller는 주소를 통로·bank·행·열로 연결하고 명령 순서와 타이밍 제약을 관리합니다. 프로그램이 쓰는 주소의 일부 비트를 그대로 channel 번호라고 가정할 수는 없습니다.</p>
+      <div className="overflow-x-auto rounded-xl border border-neutral-200 dark:border-neutral-800">
+        <table data-role-name-table className="w-full table-fixed text-left text-sm leading-7">
+          <caption className="sr-only">앞에서 본 역할에 이름 붙이기</caption>
+          <thead className="hidden bg-neutral-50 sm:table-header-group dark:bg-neutral-900"><tr><th scope="col" className="w-[30%] p-3 align-top">앞에서 본 역할</th><th scope="col" className="p-3 align-top">이름과 이 사례에서의 뜻</th></tr></thead>
+          <tbody>
+            <tr className="block border-t border-neutral-200 sm:table-row dark:border-neutral-800"><th scope="row" className="block break-words px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">넓은 연결로 전송량을 높인 메모리</th><td className="block break-words p-3 align-top sm:table-cell">High Bandwidth Memory, 줄여서 HBM입니다. 넓은 인터페이스와 적층으로 높은 대역폭을 얻는 메모리 계열입니다.</td></tr>
+            <tr className="block border-t border-neutral-200 sm:table-row dark:border-neutral-800"><th scope="row" className="block break-words px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">층 사이와 칩 사이의 연결</th><td className="block break-words p-3 align-top sm:table-cell">층을 관통하는 전기 연결은 TSV입니다. 계산 칩과 메모리 스택을 연결하는 중간 배선판은 interposer입니다. 수직 연결과 수평 연결이라는 서로 다른 역할입니다.</td></tr>
+            <tr className="block border-t border-neutral-200 sm:table-row dark:border-neutral-800"><th scope="row" className="block break-words px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">명령과 데이터를 나눠 보내는 통로</th><td className="block break-words p-3 align-top sm:table-cell">독립적인 통로는 channel입니다. HBM3의 데이터 폭은 16개 × 64비트 = 1024비트이며, 각 channel을 두 32비트 pseudo-channel로 다룰 수 있습니다. TSV의 전체 개수와 데이터 폭 1024비트는 같은 숫자가 아닙니다. 전원과 제어 등의 연결도 필요합니다.</td></tr>
+            <tr className="block border-t border-neutral-200 sm:table-row dark:border-neutral-800"><th scope="row" className="block break-words px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">메모리 안의 작업 구역</th><td className="block break-words p-3 align-top sm:table-cell">Bank입니다. 읽으려는 행을 열어 감지한 값을 임시로 잡는 곳은 row buffer입니다. 열린 행에서 필요한 열을 골라 읽고, 다른 행으로 바꾸려면 닫고 다시 여는 시간이 들 수 있습니다.</td></tr>
+            <tr className="block border-t border-neutral-200 sm:table-row dark:border-neutral-800"><th scope="row" className="block break-words px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">저장한 값을 유지하는 동작</th><td className="block break-words p-3 align-top sm:table-cell">셀 값을 주기적으로 되살리는 동작은 refresh입니다.</td></tr>
+            <tr className="block border-t border-neutral-200 sm:table-row dark:border-neutral-800"><th scope="row" className="block break-words px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">주소에 맞춰 명령을 배치하는 곳</th><td className="block break-words p-3 align-top sm:table-cell">GPU 쪽 memory controller는 주소를 통로·bank·행·열로 연결하고 명령 순서와 타이밍 제약을 관리합니다. 프로그램 주소의 일부 비트를 그대로 channel 번호라고 가정할 수는 없습니다.</td></tr>
+          </tbody>
+        </table>
       </div>
       <p data-stage-bridge="names" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">같은 메모리에도 물리 연결·명령 통로·셀 동작이라는 층이 있습니다. 64개 요청을 이 층들에 통과시킵니다.</p>
     </section>
@@ -67,8 +77,8 @@ export default function Article() {
       <h2 className="mb-6 text-2xl font-bold">7 · 요청을 합친 뒤에도 행을 열고 기다리는 동작이 남습니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">앞의 64개 덧셈은 유효 512바이트를 읽고 256바이트를 씁니다. 먼저 작업별 주소가 모이고 cache를 조회합니다. Cache에서 찾지 못한 요청은 메모리 제어기로 내려갑니다. 제어기는 실제 주소를 해석해 해당 channel과 bank의 대기열에 넣습니다.</p>
-        <p className="leading-8">필요한 행이 이미 열려 있으면 그 행의 열을 읽을 수 있습니다. 다른 행이 열렸다면 기존 행을 닫는 precharge 와 새 행을 여는 activate가 필요합니다. 읽기 명령 뒤 데이터가 통로를 지나 돌아옵니다. Refresh가 필요한 구역은 정해진 타이밍을 지켜야 합니다. 다른 bank의 작업과 겹칠 수 있는 정도는 제품과 controller에 달려 있습니다.</p>
-        <p className="leading-8">32개 연속 읽기는 요청 단계에서 4 sectors에 걸칩니다. 32바이트 간격 읽기는 32 sectors에 걸칩니다. 전자가 가까운 주소를 합치기 좋다는 것은 계산할 수 있습니다. 그러나 4 sectors가 HBM 명령 4개라는 결론은 아닙니다. 아래 계층의 cache hit, 요청 병합, burst 크기와 쓰기 정책이 물리 전송량을 바꿉니다.</p>
+        <p className="leading-8">필요한 행이 이미 열려 있으면 그 행의 열을 읽을 수 있습니다. 다른 행이 열렸다면 기존 행을 닫는 precharge와 새 행을 여는 activate가 필요합니다. 읽기 명령 뒤 데이터가 통로를 지나 돌아옵니다. Refresh가 필요한 구역은 정해진 타이밍을 지켜야 합니다. 다른 bank의 작업과 겹칠 수 있는 정도는 제품과 controller에 달려 있습니다.</p>
+        <p className="leading-8">시작 주소가 128바이트 경계에 맞고 NVIDIA compute capability 6.0 이상의 32바이트 sector 규칙을 적용한다고 놓습니다. 이때 4바이트 원소 32개의 연속 읽기는 요청 단계에서 4 sectors에 걸칩니다. 32바이트 간격 읽기는 32 sectors에 걸칩니다. 전자가 가까운 주소를 합치기 좋다는 것은 계산할 수 있습니다. 그러나 4 sectors가 HBM 명령 4개라는 결론은 아닙니다. 아래 계층의 cache hit, 요청 병합, burst 크기와 쓰기 정책이 물리 전송량을 바꿉니다.</p>
         <p className="leading-8">주소 bit →channel·bank 대응은 GPU별 공개 자료가 있어야 정할 수 있습니다. 자료가 없다면 추측해 그리지 않습니다. 큰 stride가 항상 같은 channel에 몰린다고 단정할 수는 없습니다. 접근 간격을 바꿔 지연과 실제 DRAM byte counter를 측정합니다. 이번 원소 번호 37은 논리 주소의 148바이트 offset까지만 확정할 수 있습니다.</p>
       </div>
       <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">논리 주소 148바이트와 물리 행·열 사이에 남는 정보를 확인했습니다. 공식 인터페이스 수치로 넓은 통로를 계산합니다.</p>
@@ -77,16 +87,16 @@ export default function Article() {
       <h2 className="mb-6 text-2xl font-bold">8 · HBM3의 1024비트 폭에 가정한 속도를 곱합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">Synopsys의 HBM3 PHY 설명은 16개의 64비트 channel과 32개의 32비트 pseudo-channel을 제시합니다. 두 표현 모두 총 데이터 폭 1024비트입니다. 여기서는 선 하나당 초당 8기가비트를 보낸다고 놓습니다(속도는 계산 가정).</p>
-        <p className="leading-8">1024×8Gb/s÷8 =1024GB/s, 즉 스택하나의 이론상 1.024TB/s입니다. 8 개 스택을 같은 조건으로 동시에 쓰면 8.192TB/s가 됩니다. 이것은 신호 데이터 폭으로 구한 상한입니다. Refresh·명령 대기·읽기 쓰기 전환·접근 불균형을 차감한 측정값은 아닙니다.</p>
+        <p className="leading-8">1024×8Gb/s÷8 =1024GB/s, 즉 스택 하나의 이론상 1.024TB/s입니다. 8개 스택을 같은 조건으로 동시에 쓰면 8.192TB/s가 됩니다. 이것은 신호 데이터 폭으로 구한 상한입니다. Refresh·명령 대기·읽기 쓰기 전환·접근 불균형을 차감한 측정값은 아닙니다.</p>
         <p className="leading-8">64개 덧셈의 768바이트를 1.024TB/s로 나누면 0.75ns입니다. 이 값은 데이터가 통로를 가득 채워 흐르는 정상 상태의 물량 비율입니다. 한 kernel이나 첫 응답이 0.75ns에 끝난다는 예측은 아닙니다. 요청과 주소 해석, 행 동작, 돌아오는 대기가 별도로 있습니다.</p>
       </div>
-      <SourceApplication source="Synopsys HBM3 PHY ·interface features" excerpt="16 independent 64-bit memory channels" application="16×64 = 1024비트. 가정한 8Gb/s/pin을 곱하고 8 로나누면스택당 1.024TB/s입니다. 유효 768바이트를 나눈 0.75ns를 응답 지연으로 오해하지 않습니다." /><CitationBlock source="Synopsys HBM3 PHY ·interface features" citeKey={1} href="https://www.synopsys.com/designware-ip/interface-ip/hbm/hbm3-phy.html">Synopsys HBM3 PHY ·interface features</CitationBlock>
+      <SourceApplication source="Synopsys HBM3 PHY ·interface features" excerpt="16 independent 64-bit memory channels" application="16×64 = 1024비트. 가정한 8Gb/s/pin을 곱하고 8로 나누면 스택당 1.024TB/s입니다. 유효 768바이트를 나눈 0.75ns를 응답 지연으로 오해하지 않습니다." /><CitationBlock source="Synopsys HBM3 PHY ·interface features" citeKey={1} href="https://www.synopsys.com/designware-ip/interface-ip/hbm/hbm3-phy.html">Synopsys HBM3 PHY ·interface features</CitationBlock>
       <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">폭 × 속도는 처리량 상한이며 첫 값의 도착 시간이 아님을 계산했습니다. 코드에서 세는 바이트와 대조합니다.</p>
     </section>
     <section id="comparison" data-teach-level="6" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">9 · 같은 64개 덧셈의 연산량과 바이트를 같은 경계에서 셉니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">NVIDIA vectorAdd 원문은 각 원소마다 입력 둘을 읽고 출력 하나를 씁니다. 사례를 넣으면 64×(4 +4 +4)=768바이트이고 64번 덧셈입니다. 따라서 유효 데이터 기준 연산 강도는 64÷768 =1/12FLOP/B입니다. Cache에서 입력을 재사용한다면 HBM에서 실제로 읽은 양으로 계산한 비율은 달라질 수 있습니다.</p>
+        <p className="leading-8">NVIDIA vectorAdd 원문은 각 원소마다 입력 둘을 읽고 출력 하나를 씁니다. 사례를 넣으면 64×(4 +4 +4)=768바이트입니다. 원문의 추가 0.0f를 compiler가 제거한 단일 덧셈 경로를 가정하면 덧셈은 64번입니다. 따라서 유효 데이터 기준 연산 강도는 64÷768 =1/12FLOP/B입니다. Cache에서 입력을 재사용한다면 HBM에서 실제로 읽은 양으로 계산한 비율은 달라질 수 있습니다.</p>
         <p className="leading-8">32개 읽기의 stride를 8로 바꾸면 유효 128바이트는 그대로지만 주소가 32 sectors에 흩어집니다. 원문 코드는 연속 접근이며 stride 8은 접근 규칙을 바꾼 사고 실험입니다. 실제 수정에서는 입력 길이를 넓혀 경계 검사를 유지해야 합니다. 연산 강도를 낮추는 추가 전송이 있는지는 선택한 계층의 counter로 확인합니다.</p>
         <p className="leading-8">HBM3E는 HBM3보다 빠른 제품군이지만 모든 칩의 속도·층 수·용량을 같게 쓰지 않습니다. 예를 들어 CDNA4 MI350X·MI355X 백서의 288GB와 8TB/s는 정해진 제품 구성 수치입니다. 위의 가정 계산 8.192TB/s를 그 제품의 보장 실효 대역폭으로 치환하지 않습니다.</p>
         <p className="leading-8">Roofline에서는 같은 관측 경계의 바이트와 해당 연산 종류의 계산 상한을 짝지어 봅니다. 상세 계산은 <Link to="/cs/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound">64개 덧셈의 roofline</Link>로 이어집니다. 메모리 용량은 한 번에 담을 수 있는 양이고 대역폭은 시간당 옮기는 양이므로 서로 대신 쓸 수 없습니다.</p>

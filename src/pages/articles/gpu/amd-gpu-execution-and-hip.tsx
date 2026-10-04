@@ -15,7 +15,9 @@ export default function Article() {
         <p className="leading-8">다른 회사의 장치에서 같은 프로그램을 실행하려면 먼저 답이 같아야 합니다. 그다음 어느 작업들이 함께 움직이고 어느 저장 공간을 나누는지 다시 확인합니다. 함수 이름을 바꾸는 일과 빠르게 실행되게 만드는 일에는 서로 다른 검사가 필요합니다.</p>
         <p className="leading-8">이 글은 두 배열의 64개 원소를 더하는 요청을 AMD 장치 안으로 보냅니다. 작업 수는 유지하면서 실행 묶음과 명령, 저장 공간의 차이를 따라갑니다. 공식 구현 두 개를 비교하되 특정 제품의 성능 순위를 만들지는 않습니다.</p>
       </div>
-      <p data-stage-bridge="overview" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">이식의 질문을 정확성과 실행 구조로 나눴습니다. 먼저 변하지 않는 입출력을 붙잡습니다.</p>
+      <p data-stage-bridge="overview" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
+            이식의 질문을 정확성과 실행 구조로 나눴습니다. 먼저 변하지 않는 입출력을 봅니다.
+          </p>
     </section>
     <section id="black-box" data-teach-level="B" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">2 · 입력과 답 사이에는 번역과 실행이 있습니다</h2>
@@ -47,19 +49,33 @@ export default function Article() {
       <h2 className="mb-6 text-2xl font-bold">5 · 공통 명령은 공유하고 값은 각자 보관합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">한 묶음이 같은 동작을 수행하면 명령을 가져오고 해석하는 일을 함께할 수 있습니다. 대신 각 작업은 서로 다른 입력과 중간값을 갖습니다. 모든 작업에 같은 값과 작업마다 다른 값의 저장소를 구별하면 불필요한 복제를 줄일 수 있습니다.</p>
-        <p className="leading-8">같은 입력 조각을 여러 번 사용할 때는 협력 묶음이 함께 쓰는 공간도 필요합니다. 다만 이번 덧셈은 재사용이 없습니다. 중간 공간에 옮기는 명령과 대기만 더할 가능성이 있어 바로 읽고 쓰는 경로를 먼저 측정합니다.</p>
+        <p className="leading-8">
+            협력 묶음이 같은 입력 조각을 여러 번 사용하려면 함께 쓰는 공간도 필요합니다. 다만 이번 덧셈은 재사용이 없습니다. 중간 공간에 옮기는 명령과 대기만 더할 가능성이 있어 바로
+            읽고 쓰는 경로를 먼저 측정합니다.
+          </p>
       </div>
       <p data-stage-bridge="need" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">공유할 명령과 따로 보관할 값의 역할을 구분했습니다. AMD에서 쓰는 이름을 붙입니다.</p>
     </section>
     <section id="names" data-teach-level="3" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">6 · CU와 wavefront는 서로 다른 크기의 부품입니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">명령을 함께 진행하는 작업 묶음을 AMD에서는 wavefront라고 부릅니다. CDNA 계열의 계산에서는 64개가 기본 단위입니다. ROCm 7.0의 HIP 지원 RDNA 실행은 32개 단위로 읽습니다. RDNA ISA의 wave64 능력과 HIP runtime이 지원하는 실행 모드는 같은 명제가 아닙니다. Lane은 이 묶음 안의 작업 위치입니다.</p>
-        <p className="leading-8">Wavefront를 실행하는 처리 구역이 Compute Unit, 줄여서 CU입니다. 각 작업의 벡터 값을 담는 저장소가 VGPR입니다. 묶음이 공통으로 쓰는 스칼라 값은 SGPR에 둡니다. CUDA의 SM·register와 역할을 비교할 수 있지만 수와 배치를 그대로 환산할 수는 없습니다.</p>
-        <p className="leading-8">작업 묶음이 명시적으로 공유하는 공간은 Local Data Share, 줄여서 LDS입니다. CUDA shared memory에 대응하는 역할입니다. LDS는 cache가 아니며 내용을 채우고 사용하는 순서를 프로그램이 관리합니다.</p>
-        <p className="leading-8">CUDA와 비슷한 소스 표현 및 실행 API를 제공하는 층은 HIP입니다. ROCm은 더 큰 소프트웨어 묶음입니다. Compiler·runtime·수학 라이브러리·분석 도구가 들어 있습니다. CDNA는 데이터센터 계산 구조, RDNA는 그래픽과 계산을 함께 고려한 구조입니다. 제품명 하나로 OS와 라이브러리 지원까지 보장하지 않습니다.</p>
+      <div className="overflow-x-auto rounded-xl border border-neutral-200 dark:border-neutral-800">
+        <table data-role-name-table className="w-full table-fixed text-left text-sm leading-7">
+          <caption className="sr-only">앞에서 본 역할에 이름 붙이기</caption>
+          <thead className="hidden bg-neutral-50 sm:table-header-group dark:bg-neutral-900"><tr><th scope="col" className="w-[30%] p-3 align-top">앞에서 본 역할</th><th scope="col" className="p-3 align-top">이름과 이 사례에서의 뜻</th></tr></thead>
+          <tbody>
+            <tr className="block border-t border-neutral-200 sm:table-row dark:border-neutral-800"><th scope="row" className="block break-words px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">명령을 함께 진행하는 묶음</th><td className="block break-words p-3 align-top sm:table-cell">AMD에서는 wavefront라고 부릅니다. CDNA 계열의 계산은 64개가 기본 단위이고, lane은 이 묶음 안의 작업 위치입니다.</td></tr>
+            <tr className="block border-t border-neutral-200 sm:table-row dark:border-neutral-800"><th scope="row" className="block break-words px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">묶음을 실행하는 처리 구역</th><td className="block break-words p-3 align-top sm:table-cell">Compute Unit, 줄여서 CU입니다. CUDA의 SM과 역할을 비교할 수 있지만 수와 배치를 그대로 환산할 수는 없습니다.</td></tr>
+            <tr className="block border-t border-neutral-200 sm:table-row dark:border-neutral-800"><th scope="row" className="block break-words px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">각자의 값과 공통 값</th><td className="block break-words p-3 align-top sm:table-cell">각 작업의 벡터 값은 VGPR에, 묶음이 공통으로 쓰는 스칼라 값은 SGPR에 둡니다. CUDA register와 비교할 때도 종류별 역할을 먼저 맞춥니다.</td></tr>
+            <tr className="block border-t border-neutral-200 sm:table-row dark:border-neutral-800"><th scope="row" className="block break-words px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">작업들이 직접 공유하는 공간</th><td className="block break-words p-3 align-top sm:table-cell">Local Data Share, 줄여서 LDS입니다. CUDA shared memory에 대응하는 역할입니다. LDS는 cache가 아니므로 내용을 채우고 사용하는 순서를 프로그램이 관리합니다.</td></tr>
+            <tr className="block border-t border-neutral-200 sm:table-row dark:border-neutral-800"><th scope="row" className="block break-words px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">코드를 표현하고 실행하는 층</th><td className="block break-words p-3 align-top sm:table-cell">HIP은 CUDA와 비슷한 소스 표현과 실행 API를 제공합니다. ROCm은 compiler·runtime·수학 라이브러리·분석 도구를 포함하는 더 큰 소프트웨어 묶음입니다.</td></tr>
+            <tr className="block border-t border-neutral-200 sm:table-row dark:border-neutral-800"><th scope="row" className="block break-words px-3 pb-0 pt-3 align-top font-medium sm:table-cell sm:pb-3">계산용 구조와 그래픽을 함께 고려한 구조</th><td className="block break-words p-3 align-top sm:table-cell">CDNA는 데이터센터 계산 구조이고 RDNA는 그래픽과 계산을 함께 고려한 구조입니다. 제품명 하나로 OS와 라이브러리 지원까지 보장하지 않습니다.</td></tr>
+          </tbody>
+        </table>
       </div>
-      <p data-stage-bridge="names" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">이름을 일대일 번역표로 오해하지 않을 준비가 됐습니다. 실제 64개 요청을 CU 안으로 보냅니다.</p>
+      <p className="leading-8">실행 폭은 대상 환경에서 확인해야 합니다. ROCm 7.0의 HIP 문서는 gfx9의 warpSize를 64, gfx10 이상을 32로 설명하며 gfx10 이상에서 64를 지원하지 않는다고 명시합니다. RDNA ISA가 표현할 수 있는 wave64와 이 HIP runtime의 지원 범위는 구별해야 합니다. 이식 코드에서는 상수 대신 장치의 warpSize를 확인합니다.</p>
+      <p data-stage-bridge="names" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
+            대응하는 역할과 실제 자원 배치의 차이를 구별했습니다. 실제 64개 요청을 CU 안으로 보냅니다.
+          </p>
     </section>
     <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">7 · CDNA4에서는 37번이 64개 wavefront의 37번 lane입니다</h2>
@@ -79,7 +95,7 @@ export default function Article() {
         <p className="leading-8">원본 예제의 기본 입력은 1024×1024이고 block은 16×16입니다. 64×1은 함수 규칙에 대입한 학습 사례입니다. 원본은 i&lt;width×height를 검사합니다. 일반적인 2차원 비정렬 폭에서는 x&lt;width와 y&lt;height를 각각 검사하는 것과 다릅니다. 바뀐 크기로 실제로 수정할 때는 축별 경계와 launch를 함께 검증해야 합니다.</p>
         <p className="leading-8">사이드바에는 소스를 변경하지 않고 보관했습니다. HIP의 include·할당·복사·launch 표현도 함께 확인할 수 있습니다. 오래된 예제 commit의 동작 표현을 현재 모든 ROCm 지원 장치의 성능 보장으로 확대하지 않습니다.</p>
       </div>
-      <CodeViewButton label="AMD vectoradd _hip.cpp ·46 –61 행" onClick={() => sidebar.open("hip-kernel", codeRefs["hip-kernel"])} /><SourceApplication source="ROCm HIP-Examples ·cdf9d101 ·54–56행" excerpt="int i = y * width + x;" application="width64·height1·x=37·y=0이면 i = 37입니다. 입력과 출력의 이름이 CUDA 샘플과 다르므로 배열 역할을 먼저 맞춥니다." /><CitationBlock source="ROCm HIP-Examples ·cdf9d101 ·54–56행" citeKey={1} href="https://github.com/ROCm/HIP-Examples/blob/cdf9d101acd9a3fc89ee750f73c1f1958cbd5cc3/vectorAdd/vectoradd_hip.cpp">ROCm HIP-Examples ·cdf9d101 ·54 –56 행</CitationBlock>
+      <CodeViewButton label="AMD vectoradd_hip.cpp · 46–61행" onClick={() => sidebar.open("hip-kernel", codeRefs["hip-kernel"])} /><SourceApplication source="ROCm HIP-Examples ·cdf9d101 ·54–56행" excerpt="int i = y * width + x;" application="width 64·height 1·x=37·y=0이면 i = 37입니다. 입력과 출력의 이름이 CUDA 샘플과 다르므로 배열 역할을 먼저 맞춥니다." /><CitationBlock source="ROCm HIP-Examples ·cdf9d101 ·54–56행" citeKey={1} href="https://github.com/ROCm/HIP-Examples/blob/cdf9d101acd9a3fc89ee750f73c1f1958cbd5cc3/vectorAdd/vectoradd_hip.cpp">ROCm HIP-Examples ·cdf9d101 ·54 –56 행</CitationBlock>
       <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">AMD 원문의 번호가 37로 확인됐습니다. 같은 번호를 만드는 CUDA 원문과 이식 시 검사할 가정을 대조합니다.</p>
     </section>
     <section id="comparison" data-teach-level="6" className="scroll-mt-20">
@@ -90,14 +106,15 @@ export default function Article() {
         <p className="leading-8">행렬 연산에서는 CDNA의 MFMA와 RDNA3 이후의 WMMA 명령군을 구별합니다. rocWMMA는 두 계열을 지원할 수 있는 상위 라이브러리입니다. Dtype·shape·target에 따라 실제 명령은 달라집니다. 이번 64개 덧셈은 행렬곱이 아닙니다. MFMA를 넣을 이유가 없습니다.</p>
         <p className="leading-8">문서 기준은 ROCm 7.0.0의 HIP 문법·실행 모델과 CDNA4 ISA입니다. 제품 내부 구성은 2025-10-01 개정 백서에 고정했습니다. CDNA5 같은 후속 발표를 이 글의 실제 검증 target으로 섞지 않습니다. 설치할 때는 선택한 ROCm 릴리스의 GPU·OS 지원표를 따로 확인합니다.</p>
       </div>
-      <CodeViewButton label="NVIDIA vectorAdd.cu ·같은 37번 계산" onClick={() => sidebar.open("cuda-kernel", codeRefs["cuda-kernel"])} /><SourceApplication source="NVIDIA vectorAdd ·3f1c509 ·49행" excerpt="int i = blockDim.x * blockIdx.x + threadIdx.x;" application="64×0 + 37 = 37은 HIP의 0×64 +37과 같습니다. 주소가 같다는 검증은 실행 묶음 크기와 속도까지 같다는 검증이 아닙니다." /><CitationBlock source="NVIDIA vectorAdd ·3f1c509 ·49행" citeKey={2} href="https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu">NVIDIA vectorAdd ·3f1c509 ·49 행</CitationBlock><CitationBlock source="AMD HIP7.0.0 ·hardware implementation" citeKey={3} href="https://rocm.docs.amd.com/projects/HIP/en/docs-7.0.0/understand/hardware_implementation.html">CU·wavefront와 실행 계층. 특정 SKU의 성능 수치는 아닙니다.</CitationBlock><CitationBlock source="AMD CDNA4 Architecture 2258402-C ·9쪽" citeKey={4} href="https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/white-papers/amd-cdna-4-architecture-whitepaper.pdf">LDS160KB와 메모리 계층의 세대별 구성.</CitationBlock><CitationBlock source="AMD CDNA4 ISA ·Matrix Arithmetic" citeKey={5} href="https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/instruction-set-architectures/amd-instinct-cdna4-instruction-set-architecture.pdf">MFMA 명령의 target·operand·shape는 해당 ISA로 확인합니다.</CitationBlock>
+      <CodeViewButton label="NVIDIA vectorAdd.cu ·같은 37번 계산" onClick={() => sidebar.open("cuda-kernel", codeRefs["cuda-kernel"])} /><SourceApplication source="NVIDIA vectorAdd ·3f1c509 ·49행" excerpt="int i = blockDim.x * blockIdx.x + threadIdx.x;" application="64×0 + 37 = 37은 HIP의 0×64 +37과 같습니다. 주소가 같다는 검증은 실행 묶음 크기와 속도까지 같다는 검증이 아닙니다." /><CitationBlock source="NVIDIA vectorAdd ·3f1c509 ·49행" citeKey={2} href="https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu">NVIDIA vectorAdd ·3f1c509 ·49 행</CitationBlock><CitationBlock source="AMD HIP7.0.0 ·hardware implementation" citeKey={3} href="https://rocm.docs.amd.com/projects/HIP/en/docs-7.0.0/understand/hardware_implementation.html">CU·wavefront와 실행 계층. 특정 SKU의 성능 수치는 아닙니다.</CitationBlock><CitationBlock source="AMD CDNA4 Architecture 2258402-C ·9쪽" citeKey={4} href="https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/white-papers/amd-cdna-4-architecture-whitepaper.pdf">LDS 160KB와 메모리 계층의 세대별 구성.</CitationBlock><CitationBlock source="AMD CDNA4 ISA ·Matrix Arithmetic" citeKey={5} href="https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/instruction-set-architectures/amd-instinct-cdna4-instruction-set-architecture.pdf">MFMA 명령의 target·operand·shape는 해당 ISA로 확인합니다.</CitationBlock>
+      <CitationBlock source="HIP 7.0.0 · warpSize" citeKey={6} href="https://rocm.docs.amd.com/projects/HIP/en/docs-7.0.0/how-to/hip_cpp_language_extensions.html#warpsize">장치별 warpSize와 HIP의 지원 범위를 확인합니다.</CitationBlock>
       <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">소스 수준의 같은 답과 장치별 성능을 따로 검사하는 순서를 얻었습니다. 남는 한계를 정리합니다.</p>
     </section>
     <section id="limits" data-teach-level="7" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">10 · 큰 묶음 하나가 작은 묶음 둘보다 빠르다는 결론은 나오지 않습니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">한 명령에 참여하는 논리적 작업 수를 실행 묶음의 폭이라고 합니다. 실제 명령 처리량·메모리 대기·분기 경로·동시 상주 자원이 실행 시간을 정합니다. 64개로 묶인다고 32개보다 2 배 빠르거나 느리다고 단정할 수 없습니다.</p>
-        <p className="leading-8">같은 GPU라도 compute·memory partition 설정과 대상 compiler 옵션을 확인합니다. 설정이 달라지면 보이는 자원과 주소 접근 경로도 달라질 수 있습니다. GPU 정확한 SKU, gfx target, ROCm·driver 버전, dtype, 배열 크기와 device 완료 기준을 기록하고 비교합니다.</p>
+        <p className="leading-8">한 명령에 참여하는 논리적 작업 수를 실행 묶음의 폭이라고 합니다. 실제 명령 처리량·메모리 대기·분기 경로·동시 상주 자원이 실행 시간을 정합니다. 64개로 묶인다고 32개보다 2배 빠르거나 느리다고 단정할 수 없습니다.</p>
+        <p className="leading-8">같은 GPU라도 compute·memory partition 설정과 대상 compiler 옵션을 확인합니다. 설정이 달라지면 보이는 자원과 주소 접근 경로도 달라질 수 있습니다. GPU의 정확한 SKU, gfx target, ROCm·driver 버전, dtype, 배열 크기와 device 완료 기준을 기록하고 비교합니다.</p>
         <p className="leading-8">이번 환경에서는 AMD 장치 실행이나 HIP compile을 수행하지 않았습니다. 원문 보존과 주소·바이트 계산만 검증했습니다. 실제 이식은 경계 입력에서도 답이 맞고 동기화 오류가 없어야 끝납니다. 전체 완료 시간과 counter도 같은 조건에서 확인합니다.</p>
       </div>
       <p data-stage-bridge="limits" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">이식할 때 보존할 답과 다시 측정할 실행 조건을 분리했습니다.</p>

@@ -337,283 +337,285 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/math-vectors-inner-products": {
-    entryLevel: true,
-    entryNote:
-      "제곱과 제곱근을 작은 숫자로 계산하는 데서 시작합니다. 좌표·vector·norm·dot product를 처음 본다고 가정하고, 그림과 수치 예를 수식보다 먼저 연결합니다.",
-    coreIdea:
-      "Vector는 여러 좌표를 한 대상으로 묶고, norm은 그 전체 길이, dot product는 두 방향이 겹치는 양, projection은 특정 방향의 성분을 계산합니다. Cauchy–Schwarz inequality는 그 방향 성분이 전체 길이의 예산을 넘지 못한다는 상한입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
+    "entryLevel": true,
+    "entryNote": "가로 3·세로 4의 이동에서 길이 5와 가로 부분 (3,0)을 먼저 계산합니다. 이름을 붙인 뒤 같은 사례를 실제 교재의 투영식과 작은 분모를 다루는 PyTorch 2.8 문서식까지 이어 갑니다.",
+    "coreIdea": "벡터는 순서 있는 좌표를 한 대상으로 묶습니다. 노름은 전체 길이, 내적은 길이와 방향을 함께 반영한 값, 투영은 기준과 평행한 부분입니다. 코시–슈바르츠는 방향 성분이 전체 길이를 넘지 못함을 보이며 분모 처리와 단위에 따라 실제 계산의 해석이 달라집니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "scalar-quantity",
-        role: "숫자 하나와 여러 좌표를 묶은 vector를 구분합니다.",
+        "id": "scalar-quantity",
+        "role": "숫자 하나로 적는 양과 좌표 묶음을 구별합니다."
       },
       {
-        id: "coordinate-vector",
-        role: "좌표의 순서와 의미를 유지한 계산 단위를 만듭니다.",
+        "id": "coordinate-vector",
+        "role": "좌표의 순서와 의미를 유지하며 더하고 배율을 곱합니다."
       },
       {
-        id: "euclidean-norm",
-        role: "Pythagorean distance를 여러 차원으로 확장해 vector의 길이를 잽니다.",
+        "id": "euclidean-norm",
+        "role": "제곱합의 제곱근으로 전체 길이와 두 점 사이 거리를 구합니다."
       },
       {
-        id: "dot-product",
-        role: "두 vector의 coordinate별 기여를 scalar 하나로 합칩니다.",
+        "id": "dot-product",
+        "role": "같은 좌표의 곱을 더하고 길이와 각도의 영향을 구별합니다."
       },
       {
-        id: "vector-projection",
-        role: "한 vector에서 기준 방향과 평행한 성분만 떼어 냅니다.",
+        "id": "vector-projection",
+        "role": "한 벡터에서 기준과 평행한 부분을 떼어 냅니다."
       },
       {
-        id: "cauchy-schwarz",
-        role: "Dot product가 두 전체 길이의 곱을 넘지 못하는 이유와 등호 조건을 설명합니다.",
-      },
+        "id": "cauchy-schwarz",
+        "role": "투영 길이와 전체 길이를 연결해 내적의 상한과 등호 조건을 설명합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "scalar-quantity",
-        sectionId: "vectors",
-        intuition:
-          "온도 20도나 learning rate 0.01처럼 크기 하나만 필요한 값이 scalar입니다. Vector 전체를 같은 비율로 늘리는 배율에도 사용합니다.",
-        workedExample:
-          "x=(3,4)에 scalar 2를 곱하면 각 좌표에 2가 곱해져 2x=(6,8)이 됩니다.",
-        boundary:
-          "숫자 하나라고 언제나 단위 없이 비교할 수 있는 것은 아닙니다. 온도와 길이처럼 의미와 단위가 다른 scalar는 그대로 더하지 않습니다.",
+        "id": "scalar-quantity",
+        "sectionId": "vectors",
+        "intuition": "온도와 학습률처럼 숫자 하나로 나타내는 양을 좌표 묶음과 구별합니다.",
+        "workedExample": "온도 20과 학습률 0.01은 스칼라입니다. 배율 2를 (3,4)에 곱하면 (6,8)이 됩니다.",
+        "boundary": "온도와 길이처럼 의미와 단위가 다른 양은 숫자 하나여도 그대로 더하지 않습니다."
       },
       {
-        id: "coordinate-vector",
-        sectionId: "vectors",
-        intuition:
-          "지도에서 가로·세로 이동을 함께 기록하듯 여러 관련 숫자를 순서 있는 한 대상으로 묶은 것이 vector입니다.",
-        workedExample:
-          "x=(3,4), y=(-1,2)이면 같은 좌표끼리 더해 x+y=(2,6)을 얻습니다.",
-        boundary:
-          "Dimension이 같아도 좌표의 의미와 scale이 다르면 같은 공간의 vector로 바로 비교할 수 없습니다.",
+        "id": "coordinate-vector",
+        "sectionId": "vectors",
+        "intuition": "가로와 세로를 정해진 순서로 적듯 관련 숫자를 한 대상으로 묶습니다.",
+        "workedExample": "x=(3,4), y=(−1,2)이면 대응 좌표를 더해 x+y=(2,6)을 얻습니다.",
+        "boundary": "좌표 수가 같아도 순서·의미·단위가 다르면 직접 비교하거나 더한 결과를 해석할 수 없습니다."
       },
       {
-        id: "euclidean-norm",
-        sectionId: "norm",
-        intuition:
-          "가로 3, 세로 4만큼 이동한 화살표의 직선 길이를 피타고라스 정리로 재는 방법입니다.",
-        workedExample:
-          "||(3,4)||₂=√(3²+4²)=√25=5이므로 이 vector는 원점에서 거리 5에 있습니다.",
-        boundary:
-          "L2 norm은 여러 norm 중 하나이며 좌표 scale에 영향을 받습니다. 반대 방향 vector도 같은 길이를 가질 수 있습니다.",
+        "id": "euclidean-norm",
+        "sectionId": "norm",
+        "intuition": "서로 직각인 가로 3과 세로 4의 직선 길이를 제곱합의 제곱근으로 잽니다.",
+        "workedExample": "p=(1,2), q=(4,6)이면 차이 (3,4)의 노름은 √25=5입니다.",
+        "boundary": "반대 방향 (−3,−4)도 길이는 5입니다. 거리 기준과 좌표 단위를 확인해야 합니다."
       },
       {
-        id: "dot-product",
-        sectionId: "dot-product",
-        intuition:
-          "두 화살표가 같은 방향으로 얼마나 겹치는지 coordinate별 기여를 더해 숫자 하나로 줄입니다.",
-        workedExample:
-          "(3,4)·(4,-3)=12-12=0이므로 두 vector의 방향 성분이 상쇄되고 서로 직각입니다.",
-        boundary:
-          "Raw dot product에는 길이도 들어갑니다. 방향만 비교하려면 두 norm으로 나눈 cosine similarity를 사용합니다.",
+        "id": "dot-product",
+        "sectionId": "dot-product",
+        "intuition": "대응 좌표의 곱을 더해 두 벡터의 길이와 방향을 숫자 하나에 반영합니다.",
+        "workedExample": "(3,4)·(4,−3)=12−12=0입니다. a=(2,0), b=(5,0)의 내적은 10, 코사인은 1입니다.",
+        "boundary": "0벡터의 방향은 정의되지 않습니다. 내적이 커졌다는 사실만으로 의미가 더 비슷하다고 할 수 없습니다."
       },
       {
-        id: "vector-projection",
-        sectionId: "projection",
-        intuition:
-          "햇빛에 비친 그림자처럼 vector에서 기준 방향과 평행한 부분만 남기는 계산입니다.",
-        workedExample:
-          "(3,4)를 x축 (1,0)에 projection하면 x축 성분만 남아 (3,0)이 됩니다.",
-        boundary:
-          "기준 vector가 0이면 방향이 없어서 projection을 정의할 수 없습니다. Projection은 원래 vector의 수직 성분을 버립니다.",
+        "id": "vector-projection",
+        "sectionId": "projection",
+        "intuition": "원래 이동에서 기준선과 평행한 부분을 남기고 수직인 나머지를 분리합니다.",
+        "workedExample": "기준 (2,0)에서는 (6/4)(2,0)=(3,0)이고 남은 (0,4)는 기준과 내적이 0입니다.",
+        "boundary": "기준 벡터가 0이면 방향과 분모가 정의되지 않습니다. 투영 하나는 수직 성분을 버립니다."
       },
       {
-        id: "cauchy-schwarz",
-        sectionId: "cauchy-schwarz",
-        intuition:
-          "막대의 어느 방향 그림자도 막대 자체보다 길 수 없다는 사실을 모든 차원의 vector에 확장한 부등식입니다.",
-        workedExample:
-          "u=(3,4), v=(6,8)이면 |u·v|=50이고 ||u||||v||=5×10=50입니다. 같은 직선 방향이어서 상한에 닿습니다.",
-        boundary:
-          "Euclidean dot product와 L2 norm에서 적용하며, 상한은 실제 dot product가 항상 길이의 곱과 같다는 뜻이 아닙니다.",
-        proofIdea:
-          "u를 v 방향 projection과 v에 수직인 성분으로 나누면 projection 길이는 빗변인 ||u||를 넘지 못합니다. 이 길이 관계를 dot product 식으로 바꾸면 부등식이 됩니다.",
-        counterexample:
-          "u=(3,4), v=(4,-3)은 두 길이가 모두 5라 오른쪽 상한이 25지만 dot product는 0입니다. 방향이 직각이면 예산을 전혀 사용하지 않습니다.",
-      },
+        "id": "cauchy-schwarz",
+        "sectionId": "cauchy-schwarz",
+        "intuition": "한 방향에 남는 길이는 원래 전체 길이를 넘지 못한다는 관계를 내적으로 적습니다.",
+        "workedExample": "u=(3,4), v=(6,8)의 내적 절댓값 50은 길이의 곱 5×10=50과 같습니다.",
+        "boundary": "등호는 0벡터가 있거나 두 벡터가 같은 직선 위에 있을 때입니다. 상한을 실제 유사도로 읽지 않습니다.",
+        "proofIdea": "v=0이면 양변이 0입니다. v≠0이면 u=p+r에서 p·r=0이므로 ‖u‖²=‖p‖²+‖r‖²≥‖p‖²입니다. ‖p‖=|u·v|/‖v‖를 넣고 ‖v‖를 곱합니다.",
+        "counterexample": "u=(3,4), v=(4,−3)의 내적은 0이지만 길이의 곱은 25입니다. 항상 등호라는 주장을 반박합니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "표현",
-        relation: "숫자 하나에서 좌표 묶음으로 확장",
-        concepts: ["scalar-quantity", "coordinate-vector"],
+        "label": "표현",
+        "relation": "숫자 하나와 순서 있는 좌표 묶음을 구별합니다.",
+        "concepts": [
+          "scalar-quantity",
+          "coordinate-vector"
+        ]
       },
       {
-        label: "크기",
-        relation: "좌표의 제곱합으로 전체 길이를 계산",
-        concepts: ["coordinate-vector", "euclidean-norm"],
+        "label": "크기",
+        "relation": "좌표의 제곱합으로 전체 길이를 구합니다.",
+        "concepts": [
+          "coordinate-vector",
+          "euclidean-norm"
+        ]
       },
       {
-        label: "방향",
-        relation: "겹치는 양을 재고 평행 성분을 분리",
-        concepts: ["dot-product", "vector-projection"],
+        "label": "방향",
+        "relation": "길이와 방향을 함께 재고 평행한 성분을 분리합니다.",
+        "concepts": [
+          "dot-product",
+          "vector-projection"
+        ]
       },
       {
-        label: "상한",
-        relation: "방향 성분을 전체 길이 예산으로 제한",
-        concepts: ["euclidean-norm", "dot-product", "cauchy-schwarz"],
+        "label": "상한",
+        "relation": "방향 성분을 전체 길이의 상한으로 제한합니다.",
+        "concepts": [
+          "euclidean-norm",
+          "dot-product",
+          "cauchy-schwarz"
+        ]
       },
       {
-        label: "재사용",
-        relation: "AI의 score·margin·proof로 이동",
-        concepts: [
+        "label": "재사용",
+        "relation": "분류 점수와 마진 및 수정 횟수의 증명에 재사용합니다.",
+        "concepts": [
           "linear-score",
           "classification-margin",
           "perceptron-convergence",
-          "multilayer-perceptron",
-        ],
-      },
+          "multilayer-perceptron"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "온도 20, learning rate 0.01, (키, 몸무게, 나이), 768차원 embedding을 scalar와 vector로 분류하고, 같은 차원의 vector라도 바로 더하면 안 되는 경우를 설명할 수 있을까요?",
-        answerChecklist: [
-          "온도와 learning rate를 scalar로 분류한다.",
-          "(키, 몸무게, 나이)와 embedding을 순서 있는 coordinate vector로 분류한다.",
-          "Vector의 coordinate 순서와 의미가 보존돼야 한다고 설명한다.",
-          "Dimension이 같아도 coordinate 의미·단위·scale이 다르면 직접 덧셈이나 비교의 해석이 성립하지 않는다고 설명한다.",
+        "level": "basic",
+        "question": "온도 20, 학습률 0.01, (키, 몸무게, 나이), 768차원 문서 표현을 스칼라와 벡터로 구별할 수 있나요?",
+        "answerChecklist": [
+          "온도와 학습률은 스칼라입니다.",
+          "나머지는 순서 있는 좌표 묶음입니다.",
+          "좌표 수가 같아도 의미·단위·순서가 다르면 직접 더하거나 비교하지 않습니다."
         ],
-        requiredConcepts: ["scalar-quantity", "coordinate-vector"],
-        sectionId: "vectors",
+        "requiredConcepts": [
+          "scalar-quantity",
+          "coordinate-vector"
+        ],
+        "sectionId": "vectors"
       },
       {
-        level: "basic",
-        question:
-          "x=(3,4)와 y=(-1,2)의 합과 2x를 계산하고, coordinate별 연산이 허용되는 전제를 설명할 수 있을까요?",
-        answerChecklist: [
-          "같은 coordinate끼리 더해 x+y=(2,6)을 얻는다.",
-          "Scalar 2를 각 coordinate에 곱해 2x=(6,8)을 얻는다.",
-          "두 vector의 dimension과 각 coordinate의 의미가 대응해야 한다고 설명한다.",
-          "좌표의 단위와 scale이 다르면 변환이나 normalization 없이 크기를 비교하지 않는다고 설명한다.",
+        "level": "basic",
+        "question": "x=(3,4), y=(−1,2)의 합과 2x를 계산할 수 있나요?",
+        "answerChecklist": [
+          "같은 좌표를 더하면 (2,6)입니다.",
+          "각 좌표에 2를 곱하면 (6,8)입니다.",
+          "차원과 각 좌표의 의미가 대응해야 합니다.",
+          "단위와 배율이 다르면 비교 기준을 먼저 정합니다."
         ],
-        requiredConcepts: ["scalar-quantity", "coordinate-vector"],
-        sectionId: "vectors",
+        "requiredConcepts": [
+          "scalar-quantity",
+          "coordinate-vector"
+        ],
+        "sectionId": "vectors"
       },
       {
-        level: "basic",
-        question:
-          "두 점 p=(1,2), q=(4,6) 사이의 Euclidean distance를 차이 vector와 L2 norm으로 계산할 수 있을까요?",
-        answerChecklist: [
-          "q−p=(3,4)를 계산한다.",
-          "두 점 사이 거리를 ||q−p||₂로 쓴다.",
-          "√(3²+4²)=5를 얻는다.",
-          "Norm은 방향을 없애므로 p−q=(−3,−4)도 같은 길이 5라고 설명한다.",
+        "level": "basic",
+        "question": "p=(1,2), q=(4,6) 사이의 거리를 차이와 노름으로 계산할 수 있나요?",
+        "answerChecklist": [
+          "q−p=(3,4)입니다.",
+          "‖q−p‖=√(9+16)=5입니다.",
+          "p−q=(−3,−4)도 노름은 5입니다."
         ],
-        requiredConcepts: ["coordinate-vector", "euclidean-norm"],
-        sectionId: "norm",
+        "requiredConcepts": [
+          "coordinate-vector",
+          "euclidean-norm"
+        ],
+        "sectionId": "norm"
       },
       {
-        level: "basic",
-        question:
-          "u=(3,4)와 v=(4,-3)의 dot product가 0인 이유를 좌표 계산과 방향의 말로 함께 설명할 수 있을까요?",
-        answerChecklist: [
-          "3×4+4×(-3)=0을 계산한다.",
-          "한 coordinate의 양수 기여와 다른 coordinate의 음수 기여가 상쇄된다고 설명한다.",
-          "두 nonzero vector가 orthogonal하다고 해석한다.",
+        "level": "basic",
+        "question": "u=(3,4), v=(4,−3)의 내적 0을 계산과 방향으로 설명할 수 있나요?",
+        "answerChecklist": [
+          "3×4+4×(−3)=12−12=0입니다.",
+          "두 축의 기여가 상쇄됩니다.",
+          "두 벡터가 모두 0이 아니므로 서로 직각입니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "coordinate-vector",
           "dot-product",
+          "euclidean-norm"
+        ],
+        "sectionId": "dot-product"
+      },
+      {
+        "level": "basic",
+        "question": "a=(2,0), b=(5,0), c=(−3,0)의 내적과 코사인을 비교할 수 있나요?",
+        "answerChecklist": [
+          "a·b=10, a·c=−6입니다.",
+          "길이는 각각 2, 5, 3입니다.",
+          "코사인은 1과 −1입니다.",
+          "내적은 길이와 방향을 함께 반영하고 코사인은 길이의 영향을 나눕니다."
+        ],
+        "requiredConcepts": [
           "euclidean-norm",
+          "dot-product"
         ],
-        sectionId: "dot-product",
+        "sectionId": "dot-product"
       },
       {
-        level: "basic",
-        question:
-          "a=(2,0), b=(5,0), c=(−3,0)의 a·b와 a·c, cosine similarity를 계산하고 raw dot product와 방향 비교의 차이를 설명할 수 있을까요?",
-        answerChecklist: [
-          "a·b=10과 a·c=−6을 계산한다.",
-          "||a||=2, ||b||=5, ||c||=3을 계산한다.",
-          "cos(a,b)=1, cos(a,c)=−1을 얻는다.",
-          "Raw dot product에는 길이와 방향이 함께 들어가고 cosine은 norm으로 나눠 방향 관계를 분리한다고 설명한다.",
+        "level": "basic",
+        "question": "u=(3,4)를 가로 기준 (1,0)에 투영하고 남은 성분을 구할 수 있나요?",
+        "answerChecklist": [
+          "계수는 3/1=3입니다.",
+          "투영은 (3,0)입니다.",
+          "남은 (0,4)와 기준의 내적은 0입니다."
         ],
-        requiredConcepts: ["euclidean-norm", "dot-product"],
-        sectionId: "dot-product",
-      },
-      {
-        level: "basic",
-        question:
-          "u=(3,4)를 v=(1,0)에 projection한 결과와 남은 수직 성분을 계산할 수 있을까요?",
-        answerChecklist: [
-          "Projection coefficient (u·v)/(v·v)=3을 계산한다.",
-          "Projection vector가 (3,0)이라고 구한다.",
-          "u−projᵥ(u)=(0,4)가 v와 직각임을 dot product로 확인한다.",
-        ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "dot-product",
           "vector-projection",
-          "coordinate-vector",
+          "coordinate-vector"
         ],
-        sectionId: "projection",
+        "sectionId": "projection"
       },
       {
-        level: "advanced",
-        question:
-          "Cauchy–Schwarz inequality를 projection과 직각삼각형의 길이 관계로 설명할 수 있을까요?",
-        answerChecklist: [
-          "u를 v 방향의 parallel component와 orthogonal component로 나눈다.",
-          "Parallel component 길이가 전체 ||u||를 넘지 못한다고 설명한다.",
-          "이를 |u·v|/||v||≤||u||로 쓰고 ||v||를 곱해 결론을 얻는다.",
+        "level": "advanced",
+        "question": "투영과 수직인 나머지로 코시–슈바르츠를 증명할 수 있나요?",
+        "answerChecklist": [
+          "v=0이면 양변이 0인 경우를 먼저 분리합니다.",
+          "v≠0이면 u=p+r이고 p·r=0입니다.",
+          "‖u‖²=‖p‖²+‖r‖²이므로 ‖p‖≤‖u‖입니다.",
+          "|u·v|/‖v‖≤‖u‖에 ‖v‖를 곱합니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "euclidean-norm",
           "dot-product",
           "vector-projection",
-          "cauchy-schwarz",
+          "cauchy-schwarz"
         ],
-        sectionId: "cauchy-schwarz",
+        "sectionId": "cauchy-schwarz"
       },
       {
-        level: "advanced",
-        question:
-          "Cauchy–Schwarz의 등호 조건과 dot product가 0인 조건은 각각 어떤 방향 관계인지 수치 예와 함께 비교할 수 있을까요?",
-        answerChecklist: [
-          "같은 직선 방향에서는 |cosθ|=1이라 등호가 성립한다고 설명한다.",
-          "직각인 nonzero vector에서는 cosθ=0이라 dot product가 0이라고 설명한다.",
-          "Zero vector는 angle이 정의되지 않으므로 별도로 구분한다.",
+        "level": "advanced",
+        "question": "코시–슈바르츠의 등호와 내적 0의 조건을 비교할 수 있나요?",
+        "answerChecklist": [
+          "0벡터가 있거나 두 벡터가 같은 직선 위에 있으면 등호입니다.",
+          "반대 방향도 절댓값 때문에 등호입니다.",
+          "0이 아닌 두 벡터의 내적 0은 직각입니다.",
+          "0벡터에는 각도를 정의하지 않습니다."
         ],
-        requiredConcepts: ["euclidean-norm", "dot-product", "cauchy-schwarz"],
-        sectionId: "cauchy-schwarz",
+        "requiredConcepts": [
+          "euclidean-norm",
+          "dot-product",
+          "cauchy-schwarz"
+        ],
+        "sectionId": "cauchy-schwarz"
       },
       {
-        level: "advanced",
-        question:
-          "'Cauchy–Schwarz에서는 항상 |u·v|=||u||||v||이고 raw dot product가 클수록 의미가 더 비슷하다'는 주장을 전제와 두 반례로 검토할 수 있을까요?",
-        answerChecklist: [
-          "실수 coordinate의 Euclidean dot product와 L2 norm이라는 전제를 적는다.",
-          "정리는 등식이 아니라 |u·v|≤||u||||v||라는 상한이라고 고친다.",
-          "u=(3,4), v=(4,−3)에서 0<25이므로 항상 등호라는 주장을 반박한다.",
-          "같은 방향 vector의 scale을 키우면 raw dot product만 커질 수 있음을 들어 의미 유사도 주장을 반박한다.",
-          "방향만 비교할 때 cosine을 쓰되 norm 자체가 정보를 담을 수도 있다는 경계를 적는다.",
-          "등호는 zero vector가 있거나 두 vector가 같은 직선 위에 있을 때라고 구분한다.",
+        "level": "advanced",
+        "question": "항상 |u·v|=‖u‖‖v‖이며 내적이 클수록 의미가 비슷하다는 주장을 검토할 수 있나요?",
+        "answerChecklist": [
+          "실수의 유클리드 내적과 L2 노름이라는 전제를 확인합니다.",
+          "관계는 등식이 아닌 상한입니다.",
+          "(3,4)와 (4,−3)은 0<25인 반례입니다.",
+          "같은 방향에서 길이만 늘려도 내적이 커집니다.",
+          "코사인은 길이를 나누지만 노름 자체의 정보도 없앨 수 있습니다.",
+          "0 또는 같은 직선 위의 벡터가 등호 조건입니다."
         ],
-        requiredConcepts: ["euclidean-norm", "dot-product", "cauchy-schwarz"],
-        sectionId: "cauchy-schwarz",
+        "requiredConcepts": [
+          "euclidean-norm",
+          "dot-product",
+          "cauchy-schwarz"
+        ],
+        "sectionId": "cauchy-schwarz"
       },
       {
-        level: "advanced",
-        question:
-          "퍼셉트론 convergence proof에서 dot product, norm, Cauchy–Schwarz가 각각 어떤 양을 연결하는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "wₘ·w*가 정답 separator 방향의 누적 전진량이라고 설명한다.",
-          "||wₘ||이 현재 weight 전체 길이의 상한을 제공한다고 설명한다.",
-          "Cauchy–Schwarz로 방향 성분이 전체 길이를 넘지 못하게 묶어 mistake bound를 얻는다고 설명한다.",
+        "level": "advanced",
+        "question": "퍼셉트론 수정 횟수 증명에서 내적·노름·코시–슈바르츠는 무엇을 연결하나요?",
+        "answerChecklist": [
+          "w₀=0과 y(w·x)≤0에서의 수정, 양수 마진과 입력 길이 상한을 확인합니다.",
+          "wₘ·w*≥Mγ는 정답 방향의 누적 전진입니다.",
+          "‖wₘ‖≤R√M는 전체 길이의 상한입니다.",
+          "두 관계 사이에 코시–슈바르츠를 놓아 M≤(R/γ)²를 얻습니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "dot-product",
           "euclidean-norm",
           "cauchy-schwarz",
-          "perceptron-convergence",
+          "perceptron-convergence"
         ],
-        sectionId: "applications",
-      },
-    ],
+        "sectionId": "applications"
+      }
+    ]
   },
   "ai/math-matrices-svd": {
     coreIdea:
@@ -52390,178 +52392,177 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "gpu/cuda-thread-hierarchy": {
-    entryLevel: true,
-    entryNote:
-      "GPU core 수나 CUDA 문법을 안다고 가정하지 않습니다. 반복문을 logical workers로 나누고 그 좌표를 data index로 바꾸는 데서 시작합니다.",
-    coreIdea:
-      "CUDA launch hierarchy는 physical core를 직접 배정하는 표가 아니라 독립적인 blocks와 threads로 logical work를 표현하는 계약이며, SM은 block resource 한도 안에서 이를 32-lane warps로 실행합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
+    "entryLevel": true,
+    "entryNote": "열 원소를 네 자리씩 나누는 예부터 시작합니다. 배열 번호가 실제 주소로 바뀌는 과정과 마지막 빈자리를 제외하는 규칙을 직접 따라갑니다.",
+    "coreIdea": "작업표가 만든 논리적 자리와 실제 칩 자원의 배치는 다릅니다. 각 자리는 block 시작점에 내부 위치를 더해 담당 원소를 구하고 범위 안일 때만 접근합니다. Warp는 block 경계를 넘어서 합쳐지지 않습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "cuda-launch-hierarchy",
-        role: "Grid·block·thread를 logical work partition으로 구분합니다.",
+        "id": "cuda-launch-hierarchy",
+        "role": "Grid·block·thread를 logical work partition으로 구분합니다."
       },
       {
-        id: "cuda-warp-simt",
-        role: "32 lanes의 SIMT execution과 branch masking을 hardware 실행 단위로 읽습니다.",
+        "id": "cuda-warp-simt",
+        "role": "32 lanes의 SIMT execution과 branch masking을 hardware 실행 단위로 읽습니다."
       },
       {
-        id: "cuda-block-resource-placement",
-        role: "Block shape와 register/shared usage가 SM residency를 제한함을 설명합니다.",
+        "id": "cuda-block-resource-placement",
+        "role": "Block shape와 register/shared usage가 SM residency를 제한함을 설명합니다."
       },
       {
-        id: "cuda-global-index",
-        role: "1D·2D 좌표를 boundary-safe data index로 바꿉니다.",
-      },
+        "id": "cuda-global-index",
+        "role": "1D·2D 좌표를 boundary-safe data index로 바꿉니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "cuda-launch-hierarchy",
-        sectionId: "overview",
-        intuition:
-          "큰 좌석표인 grid를 협업 가능한 block 구역으로 나누고 각 좌석 thread가 data 하나를 맡는 방식입니다.",
-        workedExample:
-          "N=1,000을 256-thread blocks로 덮으면 4 blocks와 1,024 logical threads가 생기고 마지막 24개는 boundary check로 제외됩니다.",
-        boundary:
-          "Grid·block 수는 physical SM·CUDA core 수와 일대일이 아니며 scheduler가 여러 차례에 걸쳐 실행합니다.",
+        "id": "cuda-launch-hierarchy",
+        "sectionId": "names",
+        "intuition": "한 번 보낸 작업표를 여러 묶음으로 나누고 각 묶음 안의 번호가 배열 위치를 맡습니다.",
+        "workedExample": "10개를 4개씩 맡기면 3 blocks·12 threads가 생기고 10번·11번 후보는 배열에 접근하지 않습니다.",
+        "boundary": "Grid·block 수는 physical SM·CUDA core 수와 일대일이 아니며 scheduler가 여러 차례에 걸쳐 실행합니다."
       },
       {
-        id: "cuda-warp-simt",
-        sectionId: "overview",
-        intuition:
-          "SM은 32개 logical threads를 한 warp의 lanes로 묶어 같은 instruction을 함께 발행합니다.",
-        workedExample:
-          "Even lane만 branch body를 실행하면 odd lane은 그 구간에서 mask되지만 lane별 address와 register state는 유지됩니다.",
-        boundary:
-          "Warp lockstep 추정으로 communication·memory ordering을 생략하면 안 되고 명시적 synchronization을 사용합니다.",
+        "id": "cuda-warp-simt",
+        "sectionId": "warp-runtime",
+        "intuition": "SM은 32개 logical threads를 한 warp의 lanes로 묶어 같은 instruction을 함께 발행합니다.",
+        "workedExample": "4-thread block 세 개는 부분 warp 세 개입니다. 서로 다른 block의 12 threads를 warp 하나로 합치지 않습니다.",
+        "boundary": "Warp lockstep 추정으로 communication·memory ordering을 생략하면 안 되고 명시적 synchronization을 사용합니다."
       },
       {
-        id: "cuda-block-resource-placement",
-        sectionId: "builtin-vars",
-        intuition:
-          "SM이라는 작업대에 block을 올릴 때 threads뿐 아니라 registers와 shared-memory 공간도 함께 차지합니다.",
-        workedExample:
-          "같은 256-thread block도 block당 shared memory를 늘리면 동시에 resident할 block 수가 줄 수 있습니다.",
-        boundary:
-          "높은 occupancy가 항상 빠른 것은 아니며 target kernel의 stall·memory throughput·time을 함께 측정합니다.",
+        "id": "cuda-block-resource-placement",
+        "sectionId": "placement",
+        "intuition": "SM에 block을 배치할 때 thread 수와 register·shared memory 공간을 함께 셉니다.",
+        "workedExample": "같은 256-thread block도 block당 shared memory를 늘리면 동시에 resident할 block 수가 줄 수 있습니다.",
+        "boundary": "높은 occupancy가 항상 빠른 것은 아니며 target kernel의 stall·memory throughput·time을 함께 측정합니다."
       },
       {
-        id: "cuda-global-index",
-        sectionId: "indexing-1d",
-        intuition:
-          "앞 blocks가 차지한 길이에 현재 block 안 offset을 더해 전체 배열 위치를 만듭니다.",
-        workedExample:
-          "block 2, width 256, local thread 5는 global index 517이며 N=515면 memory access를 건너뜁니다.",
-        boundary:
-          "Pitched·interleaved layout에는 단순 row×width+col이 아니라 실제 byte stride를 반영해야 합니다.",
-      },
+        "id": "cuda-global-index",
+        "sectionId": "indexing-1d",
+        "intuition": "앞선 묶음 전체의 길이에 현재 묶음 안 위치를 더합니다.",
+        "workedExample": "block 2·크기 4·내부 번호 1은 9입니다. 4바이트 원소의 위치는 시작점에서 36바이트 떨어집니다.",
+        "boundary": "Pitched·interleaved layout에는 단순 row×width+col이 아니라 실제 byte stride를 반영해야 합니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "01 logical launch",
-        relation: "Kernel work를 grid·block·thread로 분할",
-        concepts: ["cuda-launch-hierarchy"],
+        "label": "01 logical launch",
+        "relation": "Kernel work를 grid·block·thread로 분할",
+        "concepts": [
+          "cuda-launch-hierarchy"
+        ]
       },
       {
-        label: "02 hardware execution",
-        relation: "SM resource와 warp·SIMT로 실제 실행",
-        concepts: ["cuda-block-resource-placement", "cuda-warp-simt"],
+        "label": "02 hardware execution",
+        "relation": "SM resource와 warp·SIMT로 실제 실행",
+        "concepts": [
+          "cuda-block-resource-placement",
+          "cuda-warp-simt"
+        ]
       },
       {
-        label: "03 data mapping",
-        relation: "Coordinates를 safe memory index로 변환",
-        concepts: ["cuda-global-index"],
-      },
+        "label": "03 data mapping",
+        "relation": "Coordinates를 safe memory index로 변환",
+        "concepts": [
+          "cuda-global-index"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "CUDA grid·block·thread와 SM·warp를 software hierarchy와 hardware execution으로 나눠 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Grid·block·thread가 나눈 작업표와 SM·warp의 실제 실행 역할을 구분하세요.",
+        "answerChecklist": [
           "grid는 launch 전체",
           "block은 협업·resource 단위",
           "thread는 logical worker",
           "SM placement는 scheduler 결정",
-          "warp 32 lanes",
+          "warp 32 lanes"
         ],
-        requiredConcepts: ["cuda-launch-hierarchy", "cuda-warp-simt"],
-        sectionId: "overview",
+        "requiredConcepts": [
+          "cuda-launch-hierarchy",
+          "cuda-warp-simt"
+        ],
+        "sectionId": "names"
       },
       {
-        level: "basic",
-        question:
-          "N=1,000과 block size 256에서 grid size·총 thread·남는 thread를 계산하고 boundary check 이유를 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "N=1,000과 block size 256에서 grid size·총 thread·남는 thread를 계산하고 boundary check 이유를 설명하세요.",
+        "answerChecklist": [
           "ceiling division",
           "grid 4",
           "총 1,024",
           "남는 24",
-          "i<N",
+          "i<N"
         ],
-        requiredConcepts: ["cuda-global-index"],
-        sectionId: "builtin-vars",
+        "requiredConcepts": [
+          "cuda-global-index"
+        ],
+        "sectionId": "builtin-vars"
       },
       {
-        level: "basic",
-        question:
-          "blockIdx.x=3, blockDim.x=128, threadIdx.x=17일 때 global index를 계산하고 각 항의 역할을 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "blockIdx.x=3, blockDim.x=128, threadIdx.x=17일 때 global index를 계산하고 각 항의 역할을 설명하세요.",
+        "answerChecklist": [
           "3×128+17",
           "401",
           "block 시작 offset",
-          "local offset",
+          "local offset"
         ],
-        requiredConcepts: ["cuda-global-index"],
-        sectionId: "indexing-1d",
+        "requiredConcepts": [
+          "cuda-global-index"
+        ],
+        "sectionId": "indexing-1d"
       },
       {
-        level: "basic",
-        question:
-          "Width 5인 row-major matrix의 row=2,col=3 offset을 계산하고 width와 height를 바꾸면 생길 문제를 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Width 5인 row-major matrix의 row=2,col=3 offset을 계산하고 width와 height를 바꾸면 생길 문제를 설명하세요.",
+        "answerChecklist": [
           "2×5+3",
           "offset 13",
           "row-major",
           "rectangular data bug",
-          "row/col boundary",
+          "row/col boundary"
         ],
-        requiredConcepts: ["cuda-global-index"],
-        sectionId: "indexing-2d",
+        "requiredConcepts": [
+          "cuda-global-index"
+        ],
+        "sectionId": "indexing-2d"
       },
       {
-        level: "basic",
-        question:
-          "같은 warp에서 even lane만 branch body를 실행할 때 correctness와 utilization에 각각 어떤 일이 생기나요?",
-        answerChecklist: [
+        "level": "basic",
+        "question": "같은 warp에서 even lane만 branch body를 실행할 때 correctness와 utilization에 각각 어떤 일이 생기나요?",
+        "answerChecklist": [
           "SIMT",
           "active mask",
           "두 경로 발행 가능",
           "결과가 자동으로 틀리진 않음",
-          "utilization 감소",
+          "utilization 감소"
         ],
-        requiredConcepts: ["cuda-warp-simt"],
-        sectionId: "overview",
+        "requiredConcepts": [
+          "cuda-warp-simt"
+        ],
+        "sectionId": "warp-runtime"
       },
       {
-        level: "basic",
-        question:
-          "256-thread block이 합법적이어도 shared memory를 늘리면 동시에 실행하는 block 수가 줄 수 있는 이유를 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "256-thread block이 합법적이어도 shared memory를 늘리면 동시에 실행하는 block 수가 줄 수 있는 이유를 설명하세요.",
+        "answerChecklist": [
           "block resource",
           "SM shared budget",
           "resident blocks",
           "occupancy",
-          "target-device query",
+          "target-device query"
         ],
-        requiredConcepts: ["cuda-block-resource-placement"],
-        sectionId: "builtin-vars",
+        "requiredConcepts": [
+          "cuda-block-resource-placement"
+        ],
+        "sectionId": "placement"
       },
       {
-        level: "advanced",
-        question:
-          "128·256·512 threads/block을 같은 kernel에서 공정 비교하는 profiler 실험과 판정 지표를 설계하세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "128·256·512 threads/block을 같은 kernel에서 공정 비교하는 profiler 실험과 판정 지표를 설계하세요.",
+        "answerChecklist": [
           "same input/compiler/GPU",
           "registers",
           "shared memory",
@@ -52569,79 +52570,89 @@ export const ARTICLE_LEARNING: Readonly<
           "eligible warps",
           "memory throughput",
           "kernel time",
-          "correctness",
+          "correctness"
         ],
-        requiredConcepts: ["cuda-block-resource-placement", "cuda-warp-simt"],
-        sectionId: "builtin-vars",
+        "requiredConcepts": [
+          "cuda-block-resource-placement",
+          "cuda-warp-simt"
+        ],
+        "sectionId": "placement"
       },
       {
-        level: "advanced",
-        question:
-          "1920×1080 image를 32×8 block으로 launch할 때 grid shape와 y축 남는 threads를 계산하고 safe mapping을 작성하세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "1920×1080 image를 32×8 block으로 launch할 때 grid shape와 y축 남는 threads를 계산하고 safe mapping을 작성하세요.",
+        "answerChecklist": [
           "grid x 60",
           "grid y 135",
           "height exact",
           "col/row formula",
           "two-dimensional boundary",
-          "row-major offset",
+          "row-major offset"
         ],
-        requiredConcepts: ["cuda-launch-hierarchy", "cuda-global-index"],
-        sectionId: "indexing-2d",
+        "requiredConcepts": [
+          "cuda-launch-hierarchy",
+          "cuda-global-index"
+        ],
+        "sectionId": "indexing-2d"
       },
       {
-        level: "advanced",
-        question:
-          "Thread 하나를 CUDA core 하나에 고정하는 설명이 틀린 이유와 latency hiding에 block·warp scheduler가 하는 역할을 설명하세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "Thread 하나가 CUDA core 하나에 영구 고정되지 않는 이유와 block 배치·warp 명령 발행이 대기를 줄이는 방식을 설명하세요.",
+        "answerChecklist": [
           "logical thread",
           "block scheduled to SM",
           "warp instruction issue",
           "time multiplex",
           "resource residency",
-          "latency hiding",
+          "latency hiding"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "cuda-launch-hierarchy",
           "cuda-block-resource-placement",
-          "cuda-warp-simt",
+          "cuda-warp-simt"
         ],
-        sectionId: "overview",
+        "sectionId": "placement"
       },
       {
-        level: "advanced",
-        question:
-          "Compute capability 9.0 cluster를 기본 hierarchy에 추가할 때 portable size·co-scheduling·distributed shared memory를 어떻게 제한해 설명해야 하나요?",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "Compute capability 9.0 cluster를 기본 hierarchy에 추가할 때 portable size·co-scheduling·distributed shared memory를 어떻게 제한해 설명해야 하나요?",
+        "answerChecklist": [
           "optional level",
           "CC 9.0+",
           "same GPC",
           "portable max query",
           "cluster sync",
           "gridDim still blocks",
-          "not universal",
+          "not universal"
         ],
-        requiredConcepts: ["cuda-launch-hierarchy"],
-        sectionId: "paper-cuda-thread-model",
-      },
+        "requiredConcepts": [
+          "cuda-launch-hierarchy"
+        ],
+        "sectionId": "paper-cuda-thread-model"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "NVIDIA CUDA Programming Guide — Programming Model",
-        href: "https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html",
-        problem:
-          "많은 logical threads를 scalable hardware에 배치하면서 협력·독립성·execution width를 표현하는 문제",
-        contribution:
-          "Grid·block·thread hierarchy, warp·SIMT, optional thread block cluster의 공식 programming semantics를 문서화",
-        assumptions:
-          "확인한 CUDA Guide revision과 target device compute capability·resource properties를 전제로 함",
-        evidenceScope:
-          "CUDA launch hierarchy와 warp execution·cluster capability의 language/runtime contract",
-        notClaim:
-          "Logical thread가 physical core와 일대일이거나 모든 CUDA GPU가 cluster·동일 resource limit을 지원한다는 뜻은 아님",
-        sectionId: "paper-cuda-thread-model",
+        "title": "CUDA C++ Programming Guide 13.0.2 · Thread Hierarchy·SIMT·Thread Block Clusters",
+        "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-programming-guide/index.html",
+        "problem": "논리적 작업표와 실행 자원을 구별하고 협력 범위를 정합니다.",
+        "contribution": "Block별 warp 구성과 독립 배치, CC 9.0부터의 cluster와 portable 최대 8 및 작은 구성 예외를 대조합니다.",
+        "assumptions": "문서 13.0.2와 선택한 target의 한도에 한정합니다.",
+        "evidenceScope": "작업표·실행·동기화의 공식 의미입니다.",
+        "notClaim": "높은 occupancy나 많은 thread가 속도 향상을 보장하지 않습니다.",
+        "sectionId": "paper-cuda-thread-model"
       },
-    ],
+      {
+        "title": "NVIDIA cuda-samples v13.0 · vectorAdd.cu",
+        "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu",
+        "problem": "각 thread가 맡는 위치와 배열 경계 검사를 실제 구현으로 확인합니다.",
+        "contribution": "49–52행에 block 2·크기 4·내부 번호 1·길이 10을 넣어 i=9와 결과 99를 따라갑니다.",
+        "assumptions": "원문 기본값 50000원소·256 threads와 본문 학습 가정 10원소·4 threads를 구별합니다.",
+        "evidenceScope": "원본 파일과 함수식에 대한 정수·주소 검산입니다.",
+        "notClaim": "실제 GPU 실행·성능 측정이나 수정 예시 전체 프로그램의 컴파일을 주장하지 않습니다.",
+        "sectionId": "source-1d"
+      }
+    ]
   },
   "gpu/cuda-shared-memory": {
     entryLevel: true,
@@ -63441,52 +63452,347 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "crypto/reed-solomon": {
-    coreIdea: "Reed–Solomon 구현은 canonical RS 이론을 중복하지 않고 code profile과 object identity를 고정해 encoding·erasure/error decoding·typed failure를 실행하며 ZK의 exact membership과 proximity를 분리합니다.",
-    assumedKnowledge: [
-      { id: "reed-solomon-evaluation-code", role: "Degree-bounded polynomial evaluation과 MDS 복원의 수학을 재사용합니다." },
-      { id: "reed-solomon-distance-budget", role: "Error와 erasure의 unique-decoding parity budget을 재사용합니다." },
-      { id: "lagrange-interpolation-basis", role: "k개 정확한 point-value pair의 복원식을 재사용합니다." },
+    "coreIdea": "Reed–Solomon 부호는 낮은 차수의 규칙을 여러 위치에서 읽어 소실과 오류를 복원할 여유를 만듭니다. 계산 범위와 위치를 함께 정해야 하며 복원 보장 밖에서는 다른 정상 원본으로 잘못 복원될 수 있어 진위 확인이 따로 필요합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "reed-solomon-evaluation-code",
+        "role": "낮은 차수의 다항식을 여러 위치에서 평가하는 부호의 원리를 사용합니다."
+      },
+      {
+        "id": "reed-solomon-distance-budget",
+        "role": "소실과 오류가 유일한 복원에 쓰는 여유를 계산합니다."
+      },
+      {
+        "id": "lagrange-interpolation-basis",
+        "role": "서로 다른 위치의 정확한 기록에서 규칙을 복원합니다."
+      }
     ],
-    introducedHere: [
-      { id: "reed-solomon-profile-identity", role: "Field·points·layout·encoding을 versioned code identity로 묶습니다." },
-      { id: "reed-solomon-encoding-pipeline", role: "Source transform과 ordered shards에 profile/object identity를 결속합니다." },
-      { id: "reed-solomon-decoder-outcome", role: "Recovered와 보장 밖·malformed·mismatch 실패를 분리합니다." },
-      { id: "berlekamp-welch-reconstruction", role: "Unknown error의 locator와 numerator를 linear system으로 풉니다." },
-      { id: "reed-solomon-proximity-boundary", role: "Exact membership과 nearest-codeword distance를 구분합니다." },
-      { id: "reed-solomon-implementation-release-gate", role: "Adversarial bytes/outcome parity 뒤 구현 비용을 비교합니다." },
+    "introducedHere": [
+      {
+        "id": "reed-solomon-profile-identity",
+        "role": "체·평가점·원본 배치와 바이트 표현을 같은 규칙으로 고정합니다."
+      },
+      {
+        "id": "reed-solomon-encoding-pipeline",
+        "role": "원본을 규칙으로 바꾸고 위치가 붙은 기록을 만듭니다."
+      },
+      {
+        "id": "reed-solomon-decoder-outcome",
+        "role": "확인 가능한 실패와 보장 밖의 잘못된 성공을 구분합니다."
+      },
+      {
+        "id": "berlekamp-welch-reconstruction",
+        "role": "오류 위치를 모른 채 보조 다항식의 연립방정식으로 복원합니다."
+      },
+      {
+        "id": "reed-solomon-proximity-boundary",
+        "role": "정상 목록의 소속과 가까운 정상 목록까지의 거리를 구분합니다."
+      },
+      {
+        "id": "reed-solomon-implementation-release-gate",
+        "role": "정상 복원과 잘못된 입력·잘못된 성공을 함께 검사합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "reed-solomon-profile-identity", sectionId: "overview", intuition: "같은 규격 이름의 퍼즐 조각이라도 숫자 alphabet·자리 순서·원본 배치가 같아야 서로 맞습니다.", workedExample: "GF(7), n=4,k=2, points [0,1,2,3], coefficient source와 index order를 기록하면 [2,5,1,4]의 각 위치 의미가 고정됩니다.", boundary: "RS(n,k)와 GF(2^8) 이름만으로 irreducible polynomial·generator·systematic layout·padding·wire bytes가 정해지지 않습니다." },
-      { id: "reed-solomon-encoding-pipeline", sectionId: "encoding", intuition: "Source를 한 polynomial 규칙으로 바꿔 이름 붙은 여러 관측점에서 읽고 각 값에 object와 index 영수증을 붙입니다.", workedExample: "GF(7)의 p(x)=2+3x를 0,1,2,3에서 평가해 [2,5,1,4]를 만들고 profile ID·source digest·index를 결속합니다.", boundary: "Evaluation construction은 integrity·authenticity를 제공하지 않고 systematic encoder는 별도 invertible mapping을 사용할 수 있습니다." },
-      { id: "reed-solomon-decoder-outcome", sectionId: "error-correction", intuition: "퍼즐을 맞춘 결과와 조각 부족·다른 상자 조각·훼손 조각을 모두 ‘복원’이라고 부르지 않습니다.", workedExample: "(10,6)에서 e=1,s=2는 budget 안이라 candidate를 검증하지만 e=2,s=1은 TooManyErrors로 내고 object digest mismatch도 별도 결과로 냅니다.", boundary: "Distance bound 안의 candidate도 profile/object commitment와 대조해야 하며 timeout·malformed를 erasure success로 바꾸지 않습니다." },
-      { id: "berlekamp-welch-reconstruction", sectionId: "berlekamp-welch", intuition: "틀린 위치에서 0이 되는 지우개 polynomial을 곱해 모든 관측을 하나의 linear equation 모음으로 만듭니다.", workedExample: "GF(7) [2,5,6,4]에서 error index 2의 E=x−2를 쓰면 그 위치 식은 0=0이 되고 나머지 점으로 N=E(2+3x)를 정합니다.", boundary: "Error budget·rank 조건을 넘거나 N/E가 exact하지 않고 degree/mismatch 검증이 실패하면 recovered value를 반환하지 않습니다." },
-      { id: "reed-solomon-proximity-boundary", sectionId: "zk-connection", intuition: "답안 자체가 정답인지와 몇 칸만 고치면 어떤 정답이 되는지는 서로 다른 질문입니다.", workedExample: "|D|=16,k=4에서 valid codeword는 distance 0이고 한 좌표를 바꾼 vector는 nearest distance 최대 1/16이지만 자체 low-degree는 아닙니다.", boundary: "Proximity 정의만으로 FRI soundness·commitment binding·Fiat–Shamir challenge·특정 security bits가 나오지 않습니다." },
-      { id: "reed-solomon-implementation-release-gate", sectionId: "reed-solomon-release-gate", intuition: "빠른 decoder가 잃은 조각뿐 아니라 섞이거나 거짓인 조각에서도 기존과 같은 실패를 내는지 먼저 시험합니다.", workedExample: "Pinned profile에서 n−k erasure, distance 경계 안팎 error, duplicate/wrong index, mixed object, malformed, timeout, restart를 base/candidate에 재생합니다.", boundary: "Happy-path throughput·MDS 문구·FRI 이름만으로 byte equality·typed failure·availability·ZK proof correctness를 보장하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "reed-solomon-profile-identity",
+        "sectionId": "profile",
+        "intuition": "값과 함께 위치·연산·원본 배치가 맞아야 같은 기록을 해석합니다.",
+        "workedExample": "5·4를 위치 1·3으로 읽으면 계수 2·3이지만 위치 0·1로 읽으면 5·6이 됩니다.",
+        "boundary": "RS(4,2)라는 이름만으로 체의 표현, 평가 순서, 심벌 크기와 바이트 순서, 채움 규칙이 정해지지 않습니다."
+      },
+      {
+        "id": "reed-solomon-encoding-pipeline",
+        "sectionId": "encoding",
+        "intuition": "두 계수를 하나의 규칙으로 묶고 여러 위치에서 읽습니다.",
+        "workedExample": "F7에서 2+3x를 0·1·2·3에 넣어 [2,5,1,4]를 얻습니다. 같은 2·3을 앞 두 평가값으로 두면 [2,3,4,5]입니다.",
+        "boundary": "원본 계수와 원본 평가값을 구분합니다. 목록 생성 자체는 원본의 진위 확인을 제공하지 않습니다."
+      },
+      {
+        "id": "reed-solomon-decoder-outcome",
+        "sectionId": "misdecode",
+        "intuition": "복원기는 실제로 확인한 실패와 복원 후보를 구분해야 합니다.",
+        "workedExample": "[2,6,3,4]는 실제 원본 [2,5,1,4]와 두 곳 다르지만 다른 정상 목록 [2,6,3,0]과 한 곳만 달라 계수 2·4로 잘못 복원될 수 있습니다.",
+        "boundary": "보장 범위 밖의 모든 오류를 TooManyErrors로 탐지할 수 없습니다. 원본을 신뢰할 수 있는 근거와 비교해야 합니다.",
+        "proofIdea": "같은 받은 목록이 서로 다른 전송 원본의 서로 다른 오류 패턴에서 나올 수 있으므로 받은 목록만으로 실제 원본을 구별할 수 없습니다.",
+        "counterexample": "계수 2·3에서 두 오류로 [2,6,3,4]를 받으면 오류 한 개 복원기는 계수 2·4의 정상 목록에 더 가깝다고 판단합니다."
+      },
+      {
+        "id": "berlekamp-welch-reconstruction",
+        "sectionId": "berlekamp-welch",
+        "intuition": "틀린 위치에서 0이 되는 보조식과 원래 규칙의 곱을 함께 찾습니다.",
+        "workedExample": "받은 [2,5,6,4]에서 E=x+5, N=3+3x+3x²를 얻고 나누면 2+3x가 됩니다.",
+        "boundary": "차수와 나머지 없는 나눗셈, 받은 목록과 다른 위치 수를 확인합니다. 실제 오류가 t보다 적으면 보조식 E가 유일하지 않아도 원본은 유일할 수 있습니다.",
+        "proofIdea": "올바른 n−e곳에서 N−Ep가 0이고 n−e≥k+t입니다. 차수가 k+t 미만이므로 영다항식이며 N/E=p입니다.",
+        "counterexample": "보장 범위 밖에서는 나머지·차수·다른 위치 수 검사를 통과해도 다른 정상 원본이 반환될 수 있습니다."
+      },
+      {
+        "id": "reed-solomon-proximity-boundary",
+        "sectionId": "zk-connection",
+        "intuition": "이미 정상 목록인 것과 몇 칸만 고치면 정상 목록이 되는 것을 구분합니다.",
+        "workedExample": "[2,5,1,4]의 거리는 0, [2,5,6,4]의 거리는 1/4입니다. 16개 위치에서 k=4인 정상 목록의 한 좌표를 바꾸면 거리는 1/16입니다.",
+        "boundary": "거리 정의만으로 FRI의 거짓 통과 확률이나 실제 도메인 적합성, 전체 증명의 보안 수준이 나오지 않습니다."
+      },
+      {
+        "id": "reed-solomon-implementation-release-gate",
+        "sectionId": "reed-solomon-release-gate",
+        "intuition": "복원 가능한 경우와 잘못된 원본으로 성공하는 경우를 함께 확인합니다.",
+        "workedExample": "같은 프로파일에서 모든 두 위치의 복원, 한 오류 교정, [2,6,3,4]의 잘못된 성공과 인증된 원본 비교를 검사합니다.",
+        "boundary": "정상 처리 속도만으로 잘못된 입력, 섞인 조각, 시간 초과와 재시작의 처리가 맞다고 결론 내리지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 canonical math", relation: "Evaluation·distance·interpolation 정본을 재사용합니다.", concepts: ["reed-solomon-evaluation-code", "reed-solomon-distance-budget", "lagrange-interpolation-basis"] },
-      { label: "01 profile", relation: "Wire에서 같은 code와 object를 식별합니다.", concepts: ["reed-solomon-profile-identity"] },
-      { label: "02 encode", relation: "Ordered evaluation shards를 artifact identity와 연결합니다.", concepts: ["reed-solomon-encoding-pipeline"] },
-      { label: "03 decode", relation: "Known erasure와 unknown error를 typed outcome으로 복원합니다.", concepts: ["berlekamp-welch-reconstruction", "reed-solomon-decoder-outcome"] },
-      { label: "04 proximity·release", relation: "ZK proximity와 storage recovery gate를 분리합니다.", concepts: ["reed-solomon-proximity-boundary", "reed-solomon-implementation-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "01 여러 기록과 복원",
+        "relation": "평가·보간·최소 거리로 복원 가능한 범위를 설명합니다.",
+        "concepts": [
+          "reed-solomon-evaluation-code",
+          "reed-solomon-distance-budget",
+          "lagrange-interpolation-basis"
+        ]
+      },
+      {
+        "label": "02 같은 기록의 의미",
+        "relation": "체·위치·배치·바이트 표현을 맞춰 같은 물건을 다룹니다.",
+        "concepts": [
+          "reed-solomon-profile-identity"
+        ]
+      },
+      {
+        "label": "03 원본에서 기록으로",
+        "relation": "계수 입력과 원본이 앞에 남는 입력 방식을 비교합니다.",
+        "concepts": [
+          "reed-solomon-encoding-pipeline"
+        ]
+      },
+      {
+        "label": "04 오류 위치 찾기",
+        "relation": "보조식으로 오류를 교정하고 잘못된 성공 반례를 확인합니다.",
+        "concepts": [
+          "berlekamp-welch-reconstruction",
+          "reed-solomon-decoder-outcome"
+        ]
+      },
+      {
+        "label": "05 거리와 검증 한계",
+        "relation": "증명의 근접성과 실제 구현 검사의 조건을 구분합니다.",
+        "concepts": [
+          "reed-solomon-proximity-boundary",
+          "reed-solomon-implementation-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "같은 RS(4,2) 이름으로도 호환되지 않을 수 있는 field·point·mapping·wire profile 항목을 나열하세요.", answerChecklist: ["field", "irreducible polynomial/generator", "ordered points", "n/k", "coefficient/evaluation mapping", "systematic layout", "symbol endian/size", "padding", "profile ID"], requiredConcepts: ["reed-solomon-profile-identity"], sectionId: "overview" },
-      { level: "basic", question: "GF(7)의 p(x)=2+3x를 x=0,1,2,3에서 평가하고 각 shard에 결속할 identity를 쓰세요.", answerChecklist: ["2,5,1,4", "mod7", "ordered points", "profile ID", "object digest", "shard index", "symbol encoding"], requiredConcepts: ["reed-solomon-evaluation-code", "reed-solomon-encoding-pipeline"], sectionId: "encoding" },
-      { level: "basic", question: "n=10,k=6 code의 rate·원본 대비 extra storage·최대 known erasure 수를 분모와 함께 계산하세요.", answerChecklist: ["rate 6/10", "0.6", "extra 4/6", "66.7 percent", "four erasures", "MDS/profile assumptions", "not corruption authentication"], requiredConcepts: ["reed-solomon-profile-identity", "reed-solomon-distance-budget"], sectionId: "encoding" },
-      { level: "basic", question: "(10,6)에서 (e=1,s=2)와 (e=2,s=1)을 판정하고 unknown error가 budget 두 칸인 이유를 설명하세요.", answerChecklist: ["n-k=4", "2e+s", "case one 4 pass", "case two 5 fail", "unknown position", "value correction", "unique decoding", "typed outcome"], requiredConcepts: ["reed-solomon-distance-budget", "reed-solomon-decoder-outcome"], sectionId: "error-correction" },
-      { level: "basic", question: "Recovered·InsufficientSymbols·TooManyErrors·ProfileMismatch·MalformedSymbol·integrity mismatch를 입력 예와 연결하세요.", answerChecklist: ["enough valid symbols", "below k", "distance exceeded", "wrong field/points/layout", "bad length/encoding", "wrong object digest", "timeout separate", "fail closed"], requiredConcepts: ["reed-solomon-decoder-outcome", "reed-solomon-profile-identity"], sectionId: "error-correction" },
-      { level: "basic", question: "|D|=16,k=4에서 exact membership과 한 좌표가 다른 vector의 proximity를 구분하세요.", answerChecklist: ["degree below4", "RS set", "distance zero membership", "one changed coordinate", "relative distance at most 1/16", "vector itself not low degree", "proof protocol separate"], requiredConcepts: ["reed-solomon-proximity-boundary"], sectionId: "zk-connection" },
-      { level: "advanced", question: "Degree k−1 root bound에서 RS minimum distance n−k+1을 유도하고 zero polynomial 조건을 설명하세요.", answerChecklist: ["two codewords", "difference nonzero degree below k", "at most k-1 roots", "at most k-1 agreements", "at least n-k+1 differences", "zero polynomial excluded", "distinct points", "field"], requiredConcepts: ["reed-solomon-evaluation-code", "reed-solomon-distance-budget"], sectionId: "error-correction" },
-      { level: "advanced", question: "Berlekamp–Welch의 E,N degree와 equation을 세우고 solve 뒤 반드시 확인할 exact division·degree·mismatch 조건을 쓰세요.", answerChecklist: ["E monic degree <=t", "N degree <k+t", "N(ai)=riE(ai)", "linear system", "N divisible by E", "p degree <k", "mismatch <=t", "otherwise failure"], requiredConcepts: ["berlekamp-welch-reconstruction", "reed-solomon-decoder-outcome"], sectionId: "berlekamp-welch" },
-      { level: "advanced", question: "일반 evaluation code에 cyclic BCH syndrome 식을 그대로 적용하면 틀리는 반례와 필요한 추가 profile을 설명하세요.", answerChecklist: ["arbitrary evaluation points", "not automatically cyclic", "generator polynomial", "consecutive roots", "first root offset", "shortening convention", "syndrome assumption", "choose decoder by profile"], requiredConcepts: ["reed-solomon-profile-identity", "berlekamp-welch-reconstruction"], sectionId: "error-correction" },
-      { level: "advanced", question: "Storage decoder와 ZK proximity path를 함께 바꾸는 release matrix를 profile·adversarial input·proof receipt로 설계하세요.", answerChecklist: ["versioned profile", "golden encode", "erasure/error boundary", "duplicate/wrong index", "mixed object", "malformed/timeout", "restart", "byte/outcome parity", "domain/degree/commitment", "transcript/proof vectors", "performance last", "rollback"], requiredConcepts: ["reed-solomon-implementation-release-gate", "reed-solomon-proximity-boundary"], sectionId: "reed-solomon-release-gate" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "F7에서 계수 2·3으로 네 기록을 만들고 위치 1·3의 기록만으로 원본을 복원하세요.",
+        "answerChecklist": [
+          "규칙 2+3x",
+          "네 값 [2,5,1,4]",
+          "남은 값 5·4",
+          "2b=6",
+          "2의 역원 4",
+          "b=3, a=2",
+          "같은 두 위치에 다시 넣어 검산"
+        ],
+        "sectionId": "trace",
+        "requiredConcepts": [
+          "reed-solomon-evaluation-code",
+          "reed-solomon-encoding-pipeline"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "(4,2)와 (10,6)의 정보 비율, 원본 대비 추가 저장량, 최대 소실 수를 계산하세요.",
+        "answerChecklist": [
+          "2/4=1/2",
+          "2/2=100% 추가",
+          "소실 두 개",
+          "6/10=0.6",
+          "4/6 약 66.7% 추가",
+          "소실 네 개",
+          "남은 기록이 정확하고 위치가 서로 다름"
+        ],
+        "sectionId": "encoding",
+        "requiredConcepts": [
+          "reed-solomon-evaluation-code",
+          "reed-solomon-distance-budget"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 숫자 2·3을 계수로 보낼 때와 앞 두 평가값으로 보낼 때 출력을 비교하세요.",
+        "answerChecklist": [
+          "계수 방식 [2,5,1,4]",
+          "앞 두 값 보존 방식 [2,3,4,5]",
+          "생성 행렬의 앞 두 열이 단위행렬",
+          "같은 입력 숫자도 의미가 다름",
+          "원본 배치를 프로파일에 포함"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "reed-solomon-profile-identity",
+          "reed-solomon-encoding-pipeline"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "(4,2)에서 오류 한 개와 소실 한 개를 함께 보장할 수 있나요? (10,6)의 두 사례와 비교하세요.",
+        "answerChecklist": [
+          "필요한 여유 2×1+1=3",
+          "가진 여유 2라 보장 밖",
+          "(10,6)의 여유 4",
+          "e1,s2는 4로 경계 안",
+          "e2,s1은 5로 보장 밖",
+          "보장 밖은 반드시 탐지된 실패라는 뜻이 아님"
+        ],
+        "sectionId": "error-correction",
+        "requiredConcepts": [
+          "reed-solomon-distance-budget",
+          "reed-solomon-decoder-outcome"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "위치 부족, 규칙 불일치, 잘못된 길이와 초과 오류를 복원 결과에서 어떻게 구분하나요?",
+        "answerChecklist": [
+          "유효한 서로 다른 위치가 k 미만이면 부족",
+          "프로파일 식별자가 다르면 불일치",
+          "잘못된 길이와 값 표현은 형식 오류",
+          "복원 후보를 찾지 못한 상태를 구분",
+          "모든 초과 오류의 탐지는 불가능",
+          "신뢰할 수 있는 원본 근거와 후보 비교"
+        ],
+        "sectionId": "misdecode",
+        "requiredConcepts": [
+          "reed-solomon-decoder-outcome",
+          "reed-solomon-profile-identity"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "정상 목록과 한 위치가 틀린 목록의 소속·상대 거리를 네 위치와 열여섯 위치에서 비교하세요.",
+        "answerChecklist": [
+          "정상 목록의 거리 0",
+          "네 위치 사례의 한 오류는 거리 1/4",
+          "받은 목록 자체는 정상 목록이 아님",
+          "16개 위치와 k4는 최소 거리 13",
+          "한 좌표 변경의 거리 1/16",
+          "거리 정의와 증명 건전성은 별도"
+        ],
+        "sectionId": "zk-connection",
+        "requiredConcepts": [
+          "reed-solomon-proximity-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "최소 거리 n−k+1과 유일 복원 경계 2e+s≤n−k를 근 개수로 유도하세요.",
+        "answerChecklist": [
+          "서로 다른 두 규칙의 차이는 0 아닌 차수 k 미만",
+          "같은 위치는 많아야 k−1개",
+          "다른 위치는 적어도 n−k+1개",
+          "k−1개 평가점의 근을 갖는 식으로 달성",
+          "소실 뒤 후보 간 거리 적어도 d−s",
+          "받은 목록과 각각 e 이내인 두 후보의 거리는 2e 이하",
+          "2e<d−s이면 모순"
+        ],
+        "sectionId": "error-correction",
+        "requiredConcepts": [
+          "reed-solomon-evaluation-code",
+          "reed-solomon-distance-budget"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "[2,5,6,4]에서 Berlekamp–Welch 연립방정식과 해를 구하고 보조식이 유일하지 않은 경우를 설명하세요.",
+        "answerChecklist": [
+          "E=x+b, N=u+vx+wx²",
+          "N(i)=rᵢ(i+b)",
+          "해 b5, u3, v3, w3",
+          "E=x+5, N=3+3x+3x²",
+          "N/E=2+3x와 나머지 0",
+          "차수 1이며 다른 위치 한 곳",
+          "n−e개의 근과 차수 k+t 미만으로 N−Ep=0",
+          "실제 오류가 t보다 적으면 E가 여러 개일 수 있음"
+        ],
+        "sectionId": "berlekamp-welch",
+        "requiredConcepts": [
+          "berlekamp-welch-reconstruction",
+          "reed-solomon-decoder-outcome"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "받은 [2,6,3,4]가 원본 2·3에서 나왔는데 복원기가 2·4를 반환하는 이유를 보이고 진위 확인 조건을 설명하세요.",
+        "answerChecklist": [
+          "원본 목록 [2,5,1,4]와 두 차이",
+          "다른 정상 목록 [2,6,3,0]과 한 차이",
+          "오류 한 개 복원기는 후자를 선택 가능",
+          "검사할 받은 목록은 두 전송 상황에서 동일",
+          "실제 전송 원본을 받은 목록만으로 구별 불가",
+          "신뢰할 수 있는 해시나 서명과 비교",
+          "공격자가 같이 바꾼 해시는 충분하지 않음"
+        ],
+        "sectionId": "misdecode",
+        "requiredConcepts": [
+          "reed-solomon-decoder-outcome"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 저장 복원기를 바꾸거나 증명에서 쓸 때 확인할 조건을 프로파일·실패·근접성으로 정리하세요.",
+        "answerChecklist": [
+          "체와 표현·평가점 순서",
+          "원본 배치·심벌 크기·바이트 순서·채움",
+          "순환 복원기는 생성 다항식·근 시작점·길이 축소 조건 확인",
+          "중복 위치·다른 물건·잘못된 길이",
+          "보장 경계 안팎과 잘못된 성공",
+          "시간 초과·재시작을 성공으로 바꾸지 않음",
+          "증명은 도메인·차수·목록 고정·도전값 연결 확인",
+          "정확성 확인 뒤 처리량·메모리·전송량 비교"
+        ],
+        "sectionId": "reed-solomon-release-gate",
+        "requiredConcepts": [
+          "reed-solomon-profile-identity",
+          "reed-solomon-implementation-release-gate",
+          "reed-solomon-proximity-boundary"
+        ]
+      }
     ],
-    papers: [
-      { title: "Reed & Solomon · Polynomial Codes over Certain Finite Fields", href: "https://doi.org/10.1137/0108018", problem: "Finite-field source vector를 더 긴 codeword로 보내 symbol errors에서 복원", contribution: "Message polynomial을 field points에서 평가하는 polynomial-code construction 제시", assumptions: "선택 finite field와 논문이 구성한 independent message coordinates", evidenceScope: "1960 원 논문의 polynomial evaluation code 아이디어와 problem setting", notClaim: "현대 systematic packet profile·decoder API·FRI·구현 성능을 규정하지 않음", sectionId: "paper-reed-solomon-1960" },
-      { title: "RFC 5510 · Reed-Solomon FEC", href: "https://www.rfc-editor.org/rfc/rfc5510.html", problem: "Packet erasure channel에서 field·symbol·block profile 상호운용", contribution: "GF(2^m) systematic RS FEC·source/repair symbol identity·MDS recovery 규정", assumptions: "RFC가 정한 parameter range와 signaling·packet profile 사용", evidenceScope: "해당 packet FEC scheme과 systematic wire contract", notClaim: "모든 RS field/layout·unknown corruption authentication·blockchain encoding을 고정하지 않음", sectionId: "paper-rfc5510-reed-solomon" },
-      { title: "Fast Reed-Solomon Interactive Oracle Proofs of Proximity", href: "https://doi.org/10.4230/LIPIcs.ICALP.2018.14", problem: "RS proximity를 practical prover와 sublinear verifier 비용으로 검사", contribution: "Folding 기반 FRI IOPP와 prover/verifier complexity·soundness 분석 제공", assumptions: "논문의 finite field·domain·rate·oracle·verifier randomness model", evidenceScope: "원 FRI protocol과 이론적 RS proximity 결과", notClaim: "임의 query 수의 security bits·Merkle binding·Fiat-Shamir implementation 전체를 자동 보장하지 않음", sectionId: "paper-fri-2018" },
+    "papers": [
+      {
+        "title": "Reed & Solomon · Polynomial Codes over Certain Finite Fields",
+        "href": "https://doi.org/10.1137/0108018",
+        "problem": "원본 심벌을 더 많은 기록으로 만들어 오류 뒤 복원합니다.",
+        "contribution": "원본을 다항식 계수로 놓고 체 원소에서 평가하는 부호를 구성합니다.",
+        "assumptions": "원문의 이진 확장체와 평가점 구성을 사용합니다.",
+        "evidenceScope": "원문 300~301쪽의 계수와 평가, Vandermonde 독립성에 같은 2·3과 위치 1·3 복원을 대응했습니다.",
+        "notClaim": "F7의 작은 사례는 일반 구조를 보여 주며 원문 매개변수나 현대 패킷 규격의 실제 실행이 아닙니다.",
+        "sectionId": "paper-reed-solomon-1960"
+      },
+      {
+        "title": "RFC 5510 · Reed-Solomon FEC",
+        "href": "https://www.rfc-editor.org/rfc/rfc5510.html",
+        "problem": "패킷이 사라지는 경로에서 같은 규칙으로 기록을 만들고 복원합니다.",
+        "contribution": "GF(2^m)의 생성 행렬을 앞부분이 단위행렬인 형태로 바꾸고 받은 열의 역행렬로 복원합니다.",
+        "assumptions": "규격의 체·생성원·심벌 식별자와 패킷 소실 채널 전제를 따릅니다.",
+        "evidenceScope": "§8.2.1의 G=Vkk⁻¹V와 §8.3.1의 받은 열 복원 구조를 F7 사례에서 계산해 같은 [2,5,1,4]를 만들고 [5,4]에서 [2,5]를 복원합니다.",
+        "notClaim": "이 계산은 RFC와 호환되는 패킷 벡터가 아닙니다. §9.2.2의 데이터 진위 확인도 별도 기능입니다.",
+        "sectionId": "paper-rfc5510-reed-solomon"
+      },
+      {
+        "title": "Fast Reed-Solomon Interactive Oracle Proofs of Proximity",
+        "href": "https://doi.org/10.4230/LIPIcs.ICALP.2018.14",
+        "problem": "일부 위치 질의로 목록이 정상 RS 목록에서 얼마나 먼지 검사합니다.",
+        "contribution": "접기를 사용하는 상호작용형 근접성 증명과 비용·건전성 분석을 제시합니다.",
+        "assumptions": "원문이 정한 체·도메인 구조·비율·질의와 무작위성 모형을 사용합니다.",
+        "evidenceScope": "§1의 RS[F,S,ρ]에 N4, ρ1/2, 같은 네 기록을 대응해 거리 0과 1/4를 구분했습니다.",
+        "notClaim": "작은 네 위치 사례가 실제 FRI 접기 도메인 또는 특정 보안 수준의 실행 시험이라는 뜻은 아닙니다.",
+        "sectionId": "paper-fri-2018"
+      }
     ],
+    "entryNote": "원본 2·3을 네 기록 2·5·1·4로 늘리고 두 기록이 사라진 경우부터 복원합니다. 같은 사례로 오류 교정과 원문 행렬, 잘못된 성공까지 확인합니다."
   },
   "crypto/diffie-hellman": {
     "coreIdea": "공개값에 자기 비밀을 적용하면 같은 공유값이 나오지만, 실제 통신에는 상대 인증과 KDF, 임시 비밀의 폐기가 함께 필요합니다.",
@@ -65324,618 +65630,620 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "crypto/finite-field-theory": {
-    entryLevel: true,
-    entryNote:
-      "정수의 덧셈·곱셈과 나머지에서 시작합니다. 군·환을 미리 알지 않아도 0이 아닌 값으로 나눗셈이 가능한 이유까지 이 글 안에서 계산합니다.",
-    coreIdea:
-      "유한체는 유한한 원소 집합 안에서 덧셈·곱셈·0이 아닌 값의 나눗셈을 정확히 수행하며, root bound와 무작위 평가로 큰 다항식 주장을 압축 검증하게 합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
+    "entryLevel": true,
+    "entryNote": "6÷3을 0부터 6까지의 값으로 계산하는 요청에서 시작해 역원·곱셈 주기·다항식·무작위 검사·확장체를 연결합니다.",
+    "coreIdea": "유한체는 같은 유한한 집합에서 덧셈·곱셈과 0 아닌 값의 나눗셈을 되돌릴 수 있게 합니다. 다항식의 근 개수는 무작위 검사의 거짓 통과를 제한하며 체의 선택·차수·무작위성 전제를 함께 확인해야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "algebraic-field-contract",
-        role: "군·환·체의 차이를 사용 가능한 연산과 inverse로 구분합니다.",
+        "id": "algebraic-field-contract",
+        "role": "연산·항등원·역원으로 군·가환환·체를 구분합니다."
       },
       {
-        id: "prime-field-modular-arithmetic",
-        role: "소수 modulus의 residue와 field division을 계산합니다.",
+        "id": "prime-field-modular-arithmetic",
+        "role": "소수 기준의 덧셈·곱셈·역원과 나눗셈을 계산합니다."
       },
       {
-        id: "finite-field-multiplicative-order",
-        role: "생성원·subgroup·root order를 판정합니다.",
+        "id": "finite-field-multiplicative-order",
+        "role": "반복 주기로 위수·생성원·단위근을 이해합니다."
       },
       {
-        id: "polynomial-coefficient-evaluation-form",
-        role: "다항식의 coefficient와 evaluation 표현을 구분합니다.",
+        "id": "polynomial-coefficient-evaluation-form",
+        "role": "다항식의 계수와 평가값, 곱셈 뒤 차수를 구분합니다."
       },
       {
-        id: "polynomial-root-degree-bound",
-        role: "Degree가 서로 다른 root 수를 제한하는 이유를 증명합니다.",
+        "id": "polynomial-root-degree-bound",
+        "role": "근마다 필요한 인수로 차수의 근 개수 제한을 보입니다."
       },
       {
-        id: "schwartz-zippel-bound",
-        role: "Random evaluation의 false-acceptance 확률과 전제를 계산합니다.",
+        "id": "schwartz-zippel-bound",
+        "role": "무작위 검사에서 실제 거짓 통과와 상한·전제를 비교합니다."
       },
       {
-        id: "extension-field-quotient",
-        role: "Irreducible polynomial quotient로 p^k 원소 field를 구성합니다.",
-      },
+        "id": "extension-field-quotient",
+        "role": "기약 다항식의 관계로 더 큰 체와 역원을 만듭니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "algebraic-field-contract",
-        sectionId: "overview",
-        intuition:
-          "계산 결과가 같은 집합에 머물고, 0이 아닌 곱셈을 되돌릴 수 있는 숫자 세계입니다.",
-        workedExample:
-          "F7에서 3·5=1이므로 5가 3의 inverse이고 6/3=6·5=2입니다.",
-        boundary:
-          "Ring에는 곱셈 inverse가 없을 수 있고 0으로는 field에서도 나눌 수 없습니다.",
+        "id": "algebraic-field-contract",
+        "sectionId": "names",
+        "intuition": "같은 집합 안의 연산과 그 연산을 되돌리는 값으로 군·가환환·체를 구분합니다.",
+        "workedExample": "F7에서는 3×5=1이므로 6÷3=2이고 2÷3=3입니다.",
+        "boundary": "0의 곱셈 역원은 없습니다. 정수에서는 1/3이 정수가 아니므로 체가 아닙니다."
       },
       {
-        id: "prime-field-modular-arithmetic",
-        sectionId: "prime-field",
-        intuition:
-          "p의 배수만큼 차이 나는 정수를 같은 residue로 보고 매 연산 뒤 0…p−1로 환원합니다.",
-        workedExample: "F7에서 5+6=11≡4이고 3^−1=5입니다.",
-        boundary:
-          "합성수 mod n은 zero divisor 때문에 일반적으로 field가 아닙니다.",
-        proofIdea:
-          "gcd(a,p)=1이므로 Bezout identity ax+py=1에서 x mod p가 inverse입니다.",
-        counterexample: "mod 8에서는 2·4=0이고 2의 inverse가 없습니다.",
+        "id": "prime-field-modular-arithmetic",
+        "sectionId": "prime-field",
+        "intuition": "소수 기준 p에서 0 아닌 a와 p는 서로소이므로 ax+py=1의 x로 역원을 얻습니다.",
+        "workedExample": "3×(−2)+7=1에서 역원은 −2 mod7=5이며 6×5 mod7=2입니다.",
+        "boundary": "mod8의 2×4=0과 2×1=2×5는 역원이 없는 반례입니다.",
+        "proofIdea": "소수 p와 0 아닌 a는 최대공약수가 1이며 확장 유클리드 항등식에서 p의 배수 항을 지우면 역원이 남습니다.",
+        "counterexample": "mod8에서 2×4=0이고 2의 배수는 나머지 1을 만들지 못합니다."
       },
       {
-        id: "finite-field-multiplicative-order",
-        sectionId: "prime-field",
-        intuition:
-          "원소를 반복해서 곱할 때 1로 처음 돌아오는 cycle 길이입니다.",
-        workedExample: "F17에서 3의 order는 16이고 4의 order는 4입니다.",
-        boundary:
-          "a^(p−1)=1만 확인하면 proper divisor order인 후보를 generator로 오판할 수 있습니다.",
+        "id": "finite-field-multiplicative-order",
+        "sectionId": "multiplicative-order",
+        "intuition": "반복해서 곱해 처음 1로 돌아오는 길이가 위수이고 모든 0 아닌 값을 방문하면 생성원입니다.",
+        "workedExample": "F7의 3은 3·2·6·4·5·1로 위수 6, 2는 2·4·1로 위수 3입니다. F17의 4는 위수 4입니다.",
+        "boundary": "g^(p−1)=1만으로 생성원이라 판정할 수 없습니다. p−1의 모든 서로 다른 소인수에 대해 짧은 주기를 배제합니다."
       },
       {
-        id: "polynomial-coefficient-evaluation-form",
-        sectionId: "polynomial",
-        intuition:
-          "같은 다항식을 x의 거듭제곱별 숫자 목록이나 여러 x에서 관찰한 값 목록으로 적습니다.",
-        workedExample:
-          "1+2x는 coefficient [1,2]이고 x=0,1에서 evaluation [1,3]입니다.",
-        boundary:
-          "Evaluation point 수와 degree bound가 없으면 value vector만으로 polynomial이 유일하지 않습니다.",
+        "id": "polynomial-coefficient-evaluation-form",
+        "sectionId": "polynomial",
+        "intuition": "같은 규칙을 계수 목록 또는 정한 위치의 결과 목록으로 표현합니다.",
+        "workedExample": "F7의 1+2x는 계수[1,2], 위치 0·1의 값[1,3]입니다. 제곱의 값[1,2]는 1+x와도 같습니다.",
+        "boundary": "곱셈 뒤 차수가 커집니다. 2차식을 복원하려면 서로 다른 세 점이 필요하며 위치·차수 조건을 버리지 않습니다."
       },
       {
-        id: "polynomial-root-degree-bound",
-        sectionId: "polynomial",
-        intuition:
-          "서로 다른 root마다 x−r factor 하나가 필요하므로 degree보다 많은 root를 담을 수 없습니다.",
-        workedExample: "x²−1은 F7에서 1과 6 두 root를 갖습니다.",
-        boundary: "모든 계수가 0인 zero polynomial에는 적용하지 않습니다.",
-        proofIdea:
-          "Factor theorem을 root마다 반복해 d+1개의 서로 다른 linear factor가 degree d를 나눌 수 없음을 보입니다.",
-        counterexample:
-          "Zero polynomial은 field의 모든 점에서 0이므로 root 수 bound가 없습니다.",
+        "id": "polynomial-root-degree-bound",
+        "sectionId": "root-bound",
+        "intuition": "각 근은 일차 인수 하나를 요구하므로 0 아닌 식은 차수보다 많은 서로 다른 근을 갖지 못합니다.",
+        "workedExample": "F7의 x²−1은 1·6에서만 0이며 x⁷−x는 7차이므로 모든 일곱 값에서 0이어도 모순이 없습니다.",
+        "boundary": "영다항식은 제외합니다. 유한체의 모든 값에서 0이라는 관찰과 형식적인 영다항식을 구분합니다.",
+        "proofIdea": "근마다 인수 x−r을 차례로 제거합니다. 서로 다른 d+1개 일차 인수의 곱이 0 아닌 d차식을 나눌 수 없습니다.",
+        "counterexample": "영다항식은 전제에서 제외하며 x⁷−x는 7차라 일곱 근을 가질 수 있습니다."
       },
       {
-        id: "schwartz-zippel-bound",
-        sectionId: "schwartz-zippel",
-        intuition:
-          "거짓 polynomial identity가 우연히 맞아 보이는 challenge point의 비율을 degree로 제한합니다.",
-        workedExample:
-          "d=3, |S|=101이면 한 번의 false acceptance가 최대 3/101입니다.",
-        boundary:
-          "Challenge를 본 뒤 polynomial을 고르거나 biased·reused challenge를 쓰면 독립 반복 bound를 그대로 적용할 수 없습니다.",
-        proofIdea:
-          "한 변수를 남기고 나머지를 고정한 뒤 univariate root bound를 변수별로 귀납 적용합니다.",
-        counterexample:
-          "|S|≤d이면 d/|S|가 1 이상이라 유용한 보장이 되지 않습니다.",
+        "id": "schwartz-zippel-bound",
+        "sectionId": "schwartz-zippel",
+        "intuition": "고정한 거짓 식의 근을 무작위로 고를 비율을 차수로 제한합니다.",
+        "workedExample": "x²−1의 실제 통과 확률은 2/7, xy는 13/49이며 총차수 상한 2/7=14/49 이하입니다.",
+        "boundary": "식을 먼저 고정하고 각 좌표를 독립·균등하게 고릅니다. 거짓 식의 통과율은 통과 후 거짓일 조건부 확률과 다릅니다.",
+        "proofIdea": "마지막 변수의 k차 계수 A가 0일 확률은 귀납으로 (d−k)/|S| 이하입니다. A가 0이 아니면 남은 식의 근이 k개 이하이므로 상한을 합칩니다.",
+        "counterexample": "도전값 r을 먼저 본 뒤 R(x)=x−r을 고르면 항상 통과합니다. 같은 r을 재사용하면 독립 반복의 곱을 쓸 수 없습니다."
       },
       {
-        id: "extension-field-quotient",
-        sectionId: "extension-field",
-        intuition:
-          "Base field에 없는 root를 기약 다항식의 관계로 추가하고 높은 차수는 그 관계로 줄입니다.",
-        workedExample:
-          "F3[u]/(u²+1)에서 u²=2이고 a+bu 형태의 9개 원소가 있습니다.",
-        boundary:
-          "Modulus polynomial이 reducible이면 zero divisor가 생겨 quotient가 field가 아닐 수 있습니다.",
-      },
+        "id": "extension-field-quotient",
+        "sectionId": "extension-field",
+        "intuition": "기저체의 계수를 묶고 기약 다항식으로 높은 차수 항을 줄여 새 체를 만듭니다.",
+        "workedExample": "F3에서 u²+1=0으로 두면 (1+u)(2+u)=1이며 원소는 a+bu의 아홉 조합입니다.",
+        "boundary": "F5에서는 같은 식이 (u−2)(u+2)로 분해돼 0 아닌 값의 곱이 0이 됩니다. 기저체와 기약식·표현을 함께 정합니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "01 연산 계약",
-        relation: "나눗셈 가능한 algebraic structure를 정합니다.",
-        concepts: [
+        "label": "01 연산 계약",
+        "relation": "같은 요청에서 연산과 역원을 확인합니다.",
+        "concepts": [
           "algebraic-field-contract",
-          "prime-field-modular-arithmetic",
-        ],
+          "prime-field-modular-arithmetic"
+        ]
       },
       {
-        label: "02 곱셈군",
-        relation: "Cycle length로 generator와 subgroup을 읽습니다.",
-        concepts: ["finite-field-multiplicative-order"],
+        "label": "02 곱셈군",
+        "relation": "반복해서 곱하는 주기로 생성원과 작은 부분군을 읽습니다.",
+        "concepts": [
+          "finite-field-multiplicative-order"
+        ]
       },
       {
-        label: "03 다항식",
-        relation: "표현과 degree-root 관계를 연결합니다.",
-        concepts: [
+        "label": "03 다항식",
+        "relation": "계수·평가값·차수와 근 개수를 연결합니다.",
+        "concepts": [
           "polynomial-coefficient-evaluation-form",
-          "polynomial-root-degree-bound",
-        ],
+          "polynomial-root-degree-bound"
+        ]
       },
       {
-        label: "04 확률 검사",
-        relation: "Root bound를 random evaluation error bound로 확장합니다.",
-        concepts: ["schwartz-zippel-bound"],
+        "label": "04 확률 검사",
+        "relation": "근 개수로 무작위 검사의 거짓 통과를 제한합니다.",
+        "concepts": [
+          "schwartz-zippel-bound"
+        ]
       },
       {
-        label: "05 확장",
-        relation: "Irreducible quotient로 더 큰 field를 만듭니다.",
-        concepts: ["extension-field-quotient"],
-      },
+        "label": "05 확장",
+        "relation": "기약 다항식으로 더 많은 원소의 체를 구성합니다.",
+        "concepts": [
+          "extension-field-quotient"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "군·환·체를 연산·항등원·역원 기준으로 구분하고 정수 Z가 field가 아닌 이유를 설명하세요.",
-        answerChecklist: [
-          "group one operation",
-          "ring two operations",
-          "distributivity",
-          "field nonzero inverse",
-          "1/3 not integer",
+        "level": "basic",
+        "question": "군·가환환·체의 연산 조건과 정수가 체가 아닌 이유를 설명하세요.",
+        "answerChecklist": [
+          "군의 닫힘·결합·항등원·역원",
+          "가환환의 두 연산과 분배법칙",
+          "체는 0≠1",
+          "0 아닌 값의 곱셈 역원",
+          "정수에 1/3이 없음"
         ],
-        requiredConcepts: ["algebraic-field-contract"],
-        sectionId: "overview",
+        "sectionId": "names",
+        "requiredConcepts": [
+          "algebraic-field-contract"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "F7에서 5+6, 4·5, 6/3을 계산하고 각 환원·inverse 단계를 쓰세요.",
-        answerChecklist: [
-          "11 mod 7=4",
-          "20 mod 7=6",
-          "3 inverse=5",
-          "6·5=30 mod 7=2",
+        "level": "basic",
+        "question": "F7에서 5+6,4×5,6÷3,2÷3을 계산하세요.",
+        "answerChecklist": [
+          "11 mod7=4",
+          "20 mod7=6",
+          "3의 역원 5",
+          "6×5 mod7=2",
+          "2×5 mod7=3",
+          "각 결과에 3을 되곱해 검산"
         ],
-        requiredConcepts: ["prime-field-modular-arithmetic"],
-        sectionId: "prime-field",
+        "sectionId": "prime-field",
+        "requiredConcepts": [
+          "prime-field-modular-arithmetic"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "mod 8이 field가 아닌 것을 2와 4의 곱으로 보이고 inverse 부재와 연결하세요.",
-        answerChecklist: [
-          "2·4=0 mod 8",
-          "both nonzero",
-          "zero divisor",
-          "2 inverse absent",
+        "level": "basic",
+        "question": "mod8에서 2를 곱하는 연산이 왜 되돌릴 수 없나요?",
+        "answerChecklist": [
+          "2×4=0",
+          "두 원소가 0이 아님",
+          "2×1과 2×5의 결과가 같음",
+          "역원이 있으면 유일하게 되돌아가야 함",
+          "2의 역원 없음"
         ],
-        requiredConcepts: [
-          "prime-field-modular-arithmetic",
+        "sectionId": "need",
+        "requiredConcepts": [
           "algebraic-field-contract",
-        ],
-        sectionId: "prime-field",
+          "prime-field-modular-arithmetic"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "F17에서 4의 거듭제곱을 계산해 order 4임을 보이고 generator가 아닌 이유를 설명하세요.",
-        answerChecklist: [
-          "4²=16",
-          "4⁴=1",
-          "no earlier one",
-          "order 4",
-          "less than 16",
+        "level": "basic",
+        "question": "F7의 3과 2, F17의 4의 위수를 비교하세요.",
+        "answerChecklist": [
+          "3의 순서 3·2·6·4·5·1",
+          "위수 6이며 생성원",
+          "2의 순서 2·4·1과 위수 3",
+          "F17의 4는 4·16·13·1",
+          "위수 4는 16보다 작음"
         ],
-        requiredConcepts: ["finite-field-multiplicative-order"],
-        sectionId: "prime-field",
+        "sectionId": "multiplicative-order",
+        "requiredConcepts": [
+          "finite-field-multiplicative-order"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "f(x)=1+2x의 coefficient 표현과 x=0,1 평가 표현을 쓰고 필요한 degree bound를 설명하세요.",
-        answerChecklist: [
-          "[1,2]",
-          "[1,3]",
-          "two distinct points",
-          "degree below 2",
-          "same polynomial",
+        "level": "basic",
+        "question": "1+2x의 계수와 평가값을 쓰고 제곱 뒤 두 점만으로 복원하면 생기는 문제를 설명하세요.",
+        "answerChecklist": [
+          "계수[1,2]",
+          "위치 0·1의 값[1,3]",
+          "제곱 1+4x+4x²",
+          "같은 위치의 값[1,2]",
+          "1+x도 그 두 점을 지남",
+          "2차식에 세 점 필요"
         ],
-        requiredConcepts: ["polynomial-coefficient-evaluation-form"],
-        sectionId: "polynomial",
+        "sectionId": "polynomial",
+        "requiredConcepts": [
+          "polynomial-coefficient-evaluation-form"
+        ]
       },
       {
-        level: "basic",
-        question: "F3[u]/(u²+1)에서 (1+u)(2+u)를 계산하고 원소 수를 구하세요.",
-        answerChecklist: ["2+3u+u²", "u²=2", "3u=0", "result 1", "3²=9"],
-        requiredConcepts: ["extension-field-quotient"],
-        sectionId: "extension-field",
+        "level": "basic",
+        "question": "F3에서 (1+u)(2+u)를 줄이고 새 체의 원소 수를 구하세요.",
+        "answerChecklist": [
+          "2+3u+u²",
+          "계수 mod3",
+          "u²=2",
+          "결과 1",
+          "서로 역원",
+          "a+bu의 3²=9조합"
+        ],
+        "sectionId": "extension-field",
+        "requiredConcepts": [
+          "extension-field-quotient"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "Fermat 소정리에서 a^(p−2)가 inverse임을 유도하고 a=0·합성수 modulus 반례를 설명하세요.",
-        answerChecklist: [
-          "a^(p−1)=1",
-          "factor a",
-          "a^(p−2)",
-          "a nonzero",
-          "prime p",
-          "mod 8 counterexample",
+        "level": "advanced",
+        "question": "역원을 Bézout 항등식과 Fermat 거듭제곱으로 각각 구하고 적용 조건을 비교하세요.",
+        "answerChecklist": [
+          "3×(−2)+7=1",
+          "−2 mod7=5",
+          "3^(7−2) mod7=5",
+          "거듭제곱식은 소수 p와 a≠0",
+          "합성수도 gcd1이면 유클리드 역원 가능",
+          "mod8의 2는 gcd2라 실패"
         ],
-        requiredConcepts: ["prime-field-modular-arithmetic"],
-        sectionId: "prime-field",
+        "sectionId": "source",
+        "requiredConcepts": [
+          "prime-field-modular-arithmetic"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "Degree d root bound를 factor theorem으로 증명하고 zero polynomial이 반례가 아닌 이유를 구분하세요.",
-        answerChecklist: [
-          "root gives factor",
-          "distinct linear factors",
-          "product degree",
-          "at most d",
-          "zero polynomial excluded",
+        "level": "advanced",
+        "question": "근 개수 제한을 증명하고 영다항식과 x⁷−x의 예를 구분하세요.",
+        "answerChecklist": [
+          "근마다 일차 인수",
+          "서로 다른 인수와 차수",
+          "0 아닌 d차식의 근은 d개 이하",
+          "영다항식 제외",
+          "x⁷−x는 0 아닌 7차",
+          "F7의 일곱 점에서 0 가능"
         ],
-        requiredConcepts: ["polynomial-root-degree-bound"],
-        sectionId: "polynomial",
+        "sectionId": "root-bound",
+        "requiredConcepts": [
+          "polynomial-root-degree-bound"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "d=3, |S|=101인 Schwartz–Zippel 검사를 세 번 독립 반복할 때 bound를 계산하고 곱셈이 무효인 조건을 적으세요.",
-        answerChecklist: [
-          "3/101",
-          "(3/101)^3",
-          "fixed polynomial",
-          "independent uniform challenges",
-          "adaptive/reuse boundary",
+        "level": "advanced",
+        "question": "실제 2/7·13/49와 차수 3의 세 번 검사 상한을 계산하고 전제가 깨지는 경우를 설명하세요.",
+        "answerChecklist": [
+          "x²−1의 근 1·6",
+          "xy의 7+7−1=13쌍",
+          "상한 2/7=14/49",
+          "(3/101)^3=27/1030301",
+          "식 사전 고정",
+          "독립·균등 좌표",
+          "도전값 재사용 또는 사후 식 선택 금지",
+          "조건부 확률과 구분"
         ],
-        requiredConcepts: ["schwartz-zippel-bound"],
-        sectionId: "schwartz-zippel",
+        "sectionId": "schwartz-zippel",
+        "requiredConcepts": [
+          "schwartz-zippel-bound"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "F5에서 u²+1을 modulus로 쓰면 quotient가 field가 아닌 이유를 root와 zero divisor로 보이세요.",
-        answerChecklist: [
-          "2²+1=0 mod 5",
-          "reducible",
-          "(u−2)(u+2)",
-          "nonzero factors product zero",
-          "choose irreducible",
+        "level": "advanced",
+        "question": "u²+1이 F3에서는 가능하고 F5에서는 실패하는 이유를 보이세요.",
+        "answerChecklist": [
+          "F3에서 평가 1·2·2라 근 없음",
+          "2차는 근 없으면 기약",
+          "g와 m이 서로소라 sg+tm=1",
+          "m으로 줄이면 역원",
+          "F5에서 2와 3이 근",
+          "(u−2)(u+2)=u²+1",
+          "0 아닌 인수의 곱 0"
         ],
-        requiredConcepts: ["extension-field-quotient"],
-        sectionId: "extension-field",
-      },
+        "sectionId": "extension-field",
+        "requiredConcepts": [
+          "extension-field-quotient"
+        ]
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "NIST FIPS 186-5: Digital Signature Standard",
-        href: "https://csrc.nist.gov/pubs/fips/186-5/final",
-        problem:
-          "Digital signature의 finite-field·elliptic-curve parameter와 검증 조건을 표준화",
-        contribution:
-          "Prime/binary field를 사용하는 signature algorithm과 parameter validation 규정",
-        assumptions:
-          "규격이 승인한 algorithm·parameter·implementation boundary",
-        evidenceScope:
-          "실제 암호 표준에서 finite-field arithmetic을 사용하는 범위",
-        notClaim:
-          "모든 ZK field·extension representation의 성능과 안전성을 보장하지 않음",
-        sectionId: "paper-fips-finite-field",
+        "title": "NIST FIPS 186-5: Digital Signature Standard",
+        "href": "https://csrc.nist.gov/pubs/fips/186-5/final",
+        "problem": "실제 디지털 서명에서 사용할 알고리즘과 매개변수의 규격 범위를 정합니다.",
+        "contribution": "서명 규칙을 정의하며 Appendix D에서 타원곡선 세부 사항의 SP800-186 이동과 이진체 곡선의 deprecated 상태를 설명합니다.",
+        "assumptions": "승인된 알고리즘·매개변수와 관련 문서의 조건을 함께 따릅니다.",
+        "evidenceScope": "유한체 예제와 승인된 서명 설정을 구분하며 Appendix D의 변경 사항에 따라 기존 범위 설명을 교정했습니다.",
+        "notClaim": "작은 F7·F9 예나 임의의 ZK 체가 승인된 서명 설정 또는 안전한 구현이라는 뜻이 아닙니다.",
+        "sectionId": "paper-fips-finite-field"
       },
       {
-        title:
-          "Fast Probabilistic Algorithms for Verification of Polynomial Identities",
-        href: "https://doi.org/10.1145/322186.322189",
-        problem: "Symbolic polynomial identity verification 비용",
-        contribution:
-          "Random evaluation과 degree 기반 error bound를 사용하는 빠른 검사",
-        assumptions: "고정된 nonzero polynomial·uniform random evaluation set",
-        evidenceScope:
-          "Polynomial identity testing의 algorithm과 probability bound",
-        notClaim:
-          "Challenge generation·commitment binding을 포함한 전체 ZK soundness 증명은 아님",
-        sectionId: "paper-schwartz-zippel",
+        "title": "Fast Probabilistic Algorithms for Verification of Polynomial Identities",
+        "href": "https://doi.org/10.1145/322217.322225",
+        "problem": "복잡한 다항식이 항등적으로 0인지 적은 평가로 검사합니다.",
+        "contribution": "근의 개수와 선택 집합 크기에서 무작위 검사의 오류 상한을 얻습니다.",
+        "assumptions": "0 아닌 고정 다항식과 독립·균등한 좌표 선택을 사용합니다.",
+        "evidenceScope": "원문 Lemma1·Corollary1의 Q와 I에 x²−1과 F7을 대응해 2/7을 계산하고 최고차항 계수에 대한 귀납을 설명했습니다.",
+        "notClaim": "약속의 구속성·도전값 생성·전체 증명 프로토콜의 건전성까지 자동 보장하지 않습니다.",
+        "sectionId": "paper-schwartz-zippel"
       },
-    ],
+      {
+        "title": "Handbook of Applied Cryptography · Chapter2",
+        "href": "https://cacr.uwaterloo.ca/hac/about/chap2.pdf",
+        "problem": "정수 역원과 유한체의 연산·표현을 계산 가능한 절차로 설명합니다.",
+        "contribution": "Algorithm2.142와 Fact2.224·Algorithm2.226으로 정수 및 다항식 역원을 연결합니다.",
+        "assumptions": "해당 최대공약수가 1이고 확장체의 관계식이 기약이어야 합니다.",
+        "evidenceScope": "3×(−2)+7=1에서 역원 5를 얻고 (u+2)(u+1)+2(u²+1)=1 mod3으로 확장체 역원을 확인합니다.",
+        "notClaim": "교육용 정수 재현이며 특정 라이브러리의 부채널·실행 시간·보안 인증 검사가 아닙니다.",
+        "sectionId": "paper-hac-field"
+      }
+    ]
   },
   "crypto/lagrange": {
-    coreIdea:
-      "Lagrange interpolation은 각 sample point에서만 1인 selector polynomial을 만들고 목표값으로 가중해, 서로 다른 n개 point를 통과하는 유일한 degree n−1 이하 polynomial을 구성합니다.",
-    assumedKnowledge: [
+    "coreIdea": "자기 표본 위치에서만 1인 기저에 표본값을 곱해 더하면 제한한 차수 안의 유일한 규칙을 만듭니다. 같은 위치의 반복 질의는 무게를 미리 계산해 처리하고 차수·분모·기록의 진위는 별도로 확인합니다.",
+    "assumedKnowledge": [
       {
-        id: "prime-field-modular-arithmetic",
-        role: "Selector denominator의 field inverse를 계산합니다.",
+        "id": "prime-field-modular-arithmetic",
+        "role": "0 아닌 표본 위치 차이의 역원을 계산합니다."
       },
       {
-        id: "polynomial-coefficient-evaluation-form",
-        role: "Evaluation values에서 coefficient polynomial을 복원한다는 목표를 읽습니다.",
+        "id": "polynomial-coefficient-evaluation-form",
+        "role": "위치별 값에서 다항식 계수나 새 위치의 값을 구합니다."
       },
       {
-        id: "polynomial-root-degree-bound",
-        role: "Interpolant의 유일성과 vanishing divisibility를 증명합니다.",
-      },
+        "id": "polynomial-root-degree-bound",
+        "role": "차수에 따른 근 개수로 유일성을 확인합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "lagrange-interpolation-basis",
-        role: "Sample별 selector와 weighted sum을 구성합니다.",
+        "id": "lagrange-interpolation-basis",
+        "role": "표본마다 담당하는 기저와 값의 가중합을 만듭니다."
       },
       {
-        id: "polynomial-interpolation-uniqueness",
-        role: "Degree bound 아래 interpolant가 하나뿐임을 증명합니다.",
+        "id": "polynomial-interpolation-uniqueness",
+        "role": "차수 제한 아래 보간 결과가 하나임을 증명합니다."
       },
       {
-        id: "vanishing-polynomial-domain",
-        role: "Domain 전체 zero를 divisibility로 표현합니다.",
+        "id": "vanishing-polynomial-domain",
+        "role": "표본 전체에서0인 조건을 인수와 나눗셈으로 표현합니다."
       },
       {
-        id: "barycentric-interpolation",
-        role: "고정 points에서 새 point evaluation을 O(n)에 계산합니다.",
-      },
+        "id": "barycentric-interpolation",
+        "role": "고정 위치의 무게로 새 입력의 값을 계산합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "lagrange-interpolation-basis",
-        sectionId: "formula",
-        intuition:
-          "각 sample 위치에만 켜지는 selector를 만들어 y값을 하나씩 붙입니다.",
-        workedExample: "x=0,1,2에서 l1은 (0,1,0)이므로 y1만 선택합니다.",
-        boundary: "x 좌표가 중복되면 denominator가 0이라 정의되지 않습니다.",
+        "id": "lagrange-interpolation-basis",
+        "sectionId": "formula",
+        "intuition": "다른 표본 위치에서 0이고 자기 위치에서 1인 식으로 각 기록을 따로 맞춥니다.",
+        "workedExample": "F17의 세 기저를 1·4·9배 해 더하면 x²+2x+1이며 입력 3의 기저값1·14·3으로16을 얻습니다.",
+        "boundary": "같은 체에서 위치가 서로 달라야 역원이 존재합니다. 값 하나가 틀려도 다른 식이 만들어질 수 있습니다."
       },
       {
-        id: "polynomial-interpolation-uniqueness",
-        sectionId: "overview",
-        intuition:
-          "두 후보가 같은 n점에서 만나면 그 차이는 n개 root를 갖습니다.",
-        workedExample:
-          "세 점을 통과하는 두 quadratic의 차이는 degree≤2인데 root가 3개라 zero polynomial입니다.",
-        boundary:
-          "Degree bound를 제거하면 Z_H의 배수를 더해 무한히 많은 후보를 만들 수 있습니다.",
-        proofIdea: "Difference polynomial에 root-degree bound를 적용합니다.",
-        counterexample:
-          "L(x)+cZ_H(x)는 같은 sample을 통과하지만 degree가 n 이상일 수 있습니다.",
+        "id": "polynomial-interpolation-uniqueness",
+        "sectionId": "trace",
+        "intuition": "두 후보의 차이는 모든 표본에서 0이지만 제한한 차수로는 그렇게 많은 근을 가질 수 없습니다.",
+        "workedExample": "세 표본을 지나는2차 이하 식은 하나입니다. 차수를 늘린 L+Z_H는 같은 세 기록을 맞추지만 입력 3에서5를 냅니다.",
+        "boundary": "유일성에는 차수 제한이 포함됩니다. 위치 중복은 새로운 독립 조건이 아닙니다.",
+        "proofIdea": "각 기저의 선택 성질로 존재를 보입니다. 두 N−1차 이하 후보의 차이에 서로 다른 근이 N개 있으므로 차이는 영다항식입니다.",
+        "counterexample": "L+Z_H는 같은 세 표본을 지나지만 입력 3에서16+6 mod17=5가 됩니다."
       },
       {
-        id: "vanishing-polynomial-domain",
-        sectionId: "vanishing",
-        intuition:
-          "검사점마다 하나의 zero factor를 두어 domain 전체를 polynomial 하나에 담습니다.",
-        workedExample: "H={0,1,2}이면 Z_H=x(x−1)(x−2)입니다.",
-        boundary:
-          "H 밖에서 C가 0인지 또는 C 자체가 zero polynomial인지는 보장하지 않습니다.",
+        "id": "vanishing-polynomial-domain",
+        "sectionId": "vanishing",
+        "intuition": "각 위치를 근으로 갖는 인수들을 곱해 모든 표본에서 0인 조건을 나눗셈으로 표현합니다.",
+        "workedExample": "H={0,1,2}, Z_H=x(x−1)(x−2), C=Z_H(x+4)는 표본에서 0이고 입력 3에서는8입니다.",
+        "boundary": "표본에서 0이라는 사실만으로 모든 위치에서 0 또는 영다항식이라고 결론내릴 수 없습니다."
       },
       {
-        id: "barycentric-interpolation",
-        sectionId: "usage",
-        intuition:
-          "매 query에서 반복되는 denominator product를 weight로 미리 저장합니다.",
-        workedExample:
-          "고정 x_i에서는 w_i를 한 번 계산하고 각 z에서 numerator·denominator sum만 O(n)에 계산합니다.",
-        boundary:
-          "z=x_i이면 division by zero를 피하고 y_i를 직접 반환해야 합니다.",
-      },
+        "id": "barycentric-interpolation",
+        "sectionId": "usage",
+        "intuition": "표본 위치만으로 정해지는 무게를 저장하고 새 위치에서 두 합의 비율을 계산합니다.",
+        "workedExample": "무게 9·16·9와 새 위치 3에서 항 3·8·9를 만들면 분자 14·분모 3, 결과 16입니다.",
+        "boundary": "표본 위치와 같으면 해당 값을 즉시 반환합니다. 준비 O(N²)와 질의 O(N)를 구분하고 실수 안정성 결론을 유한체 보안으로 옮기지 않습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "00 선수",
-        relation:
-          "Field inverse·polynomial representation·root bound를 가져옵니다.",
-        concepts: [
+        "label": "00 선수",
+        "relation": "같은 체의 역원과 다항식 차수 조건을 확인합니다.",
+        "concepts": [
           "prime-field-modular-arithmetic",
           "polynomial-coefficient-evaluation-form",
-          "polynomial-root-degree-bound",
-        ],
+          "polynomial-root-degree-bound"
+        ]
       },
       {
-        label: "01 구성",
-        relation: "Selector sum으로 interpolant를 만듭니다.",
-        concepts: ["lagrange-interpolation-basis"],
+        "label": "01 구성",
+        "relation": "기저에 각 표본값을 곱해 더합니다.",
+        "concepts": [
+          "lagrange-interpolation-basis"
+        ]
       },
       {
-        label: "02 유일성",
-        relation: "Difference root count로 후보 하나를 고정합니다.",
-        concepts: ["polynomial-interpolation-uniqueness"],
+        "label": "02 유일성",
+        "relation": "두 후보의 차이와 근 개수로 유일성을 보입니다.",
+        "concepts": [
+          "polynomial-interpolation-uniqueness"
+        ]
       },
       {
-        label: "03 도메인",
-        relation: "모든 evaluation constraint를 divisibility로 묶습니다.",
-        concepts: ["vanishing-polynomial-domain"],
+        "label": "03 도메인",
+        "relation": "모든 표본 위치의 조건을 나눗셈으로 묶습니다.",
+        "concepts": [
+          "vanishing-polynomial-domain"
+        ]
       },
       {
-        label: "04 평가",
-        relation: "Fixed samples의 repeated query를 최적화합니다.",
-        concepts: ["barycentric-interpolation"],
-      },
+        "label": "04 평가",
+        "relation": "고정된 위치의 반복 질의에서 무게를 재사용합니다.",
+        "concepts": [
+          "barycentric-interpolation"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "서로 다른 n개 점이 degree n−1 이하 polynomial을 하나로 정하는 이유를 존재와 유일성으로 나눠 설명하세요.",
-        answerChecklist: [
-          "Lagrange construction",
-          "degree at most n−1",
-          "difference polynomial",
-          "n roots",
-          "root bound",
-          "unique",
+        "level": "basic",
+        "question": "세 표본이 2차 이하 규칙을 하나로 정하는 이유를 존재와 유일성으로 나누세요.",
+        "answerChecklist": [
+          "자기 표본에서 1, 다른 표본에서 0",
+          "가중합으로 존재 확인",
+          "차이는 2차 이하",
+          "서로 다른 근 3개",
+          "차이는 영다항식"
         ],
-        requiredConcepts: [
+        "sectionId": "trace",
+        "requiredConcepts": [
           "lagrange-interpolation-basis",
+          "polynomial-interpolation-uniqueness"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "표본 0·1·2에서 세 기저의 값 표를 작성하세요.",
+        "answerChecklist": [
+          "입력 0에서 1·0·0",
+          "입력 1에서 0·1·0",
+          "입력 2에서 0·0·1",
+          "서로 다른 위치와 역원"
+        ],
+        "sectionId": "formula",
+        "requiredConcepts": [
+          "lagrange-interpolation-basis"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "기저의 계수를 F17에서 합쳐 x²+2x+1을 확인하세요.",
+        "answerChecklist": [
+          "기저 9x²+7x+1, 16x²+2x, 9x²+8x",
+          "가중치 1·4·9",
+          "x²의 계수 154 mod17=1",
+          "x의 계수 87 mod17=2",
+          "상수 1",
+          "표본값 1·4·9"
+        ],
+        "sectionId": "formula",
+        "requiredConcepts": [
+          "lagrange-interpolation-basis"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "(1,2)·(1,3)과 (1,2)를 두 번 쓰는 입력은 각각 왜 문제가 되나요?",
+        "answerChecklist": [
+          "같은 입력에서 다른 출력은 불가능",
+          "분모 0의 역원은 없음",
+          "동일 기록의 반복은 새 조건이 아님",
+          "중복 처리 후 표본 수 확인"
+        ],
+        "sectionId": "boundaries",
+        "requiredConcepts": [
+          "lagrange-interpolation-basis",
+          "polynomial-interpolation-uniqueness"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Z_H를 전개하고 C=Z_H(x+4)를 표본과 입력 3에서 비교하세요.",
+        "answerChecklist": [
+          "Z=x³−3x²+2x",
+          "0·1·2에서 0",
+          "Z(3)=6",
+          "C(3)=6×7 mod17=8",
+          "표본 밖에서 0이라는 보장은 없음"
+        ],
+        "sectionId": "vanishing",
+        "requiredConcepts": [
+          "vanishing-polynomial-domain"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "무게 9·16·9를 준비한 뒤 입력 1과 3을 각각 처리하세요.",
+        "answerChecklist": [
+          "입력 1은 바로 4 반환",
+          "입력 3의 역원은 6·9·1",
+          "항 3·8·9",
+          "분자 14, 분모 3",
+          "역원 6을 곱해 16"
+        ],
+        "sectionId": "usage",
+        "requiredConcepts": [
+          "barycentric-interpolation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "차수 제한을 없앤 L+Z_H가 표본을 유지하면서 다른 결과를 주는 이유를 증명하세요.",
+        "answerChecklist": [
+          "표본에서 Z_H=0",
+          "같은 기록 1·4·9",
+          "더 높은 차수를 허용",
+          "입력 3에서 16+6 mod17=5",
+          "차수 제한이 필요"
+        ],
+        "sectionId": "boundaries",
+        "requiredConcepts": [
           "polynomial-interpolation-uniqueness",
-        ],
-        sectionId: "overview",
+          "vanishing-polynomial-domain"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "점 (0,1),(1,4),(2,9)의 l0,l1,l2가 각 sample에서 만드는 값 표를 작성하세요.",
-        answerChecklist: [
-          "l0=(1,0,0)",
-          "l1=(0,1,0)",
-          "l2=(0,0,1)",
-          "distinct x",
-          "selector",
+        "level": "advanced",
+        "question": "C가 H 전체에서 0인 것과 Z_H가 C를 나누는 것이 동치임을 양방향으로 보이세요.",
+        "answerChecklist": [
+          "각 h에 대응하는 인수 x−h",
+          "서로 다른 위치와 서로소 인수",
+          "곱 전체가 C를 나눔",
+          "반대 방향은 h를 대입",
+          "같은 체의 다항식"
         ],
-        requiredConcepts: ["lagrange-interpolation-basis"],
-        sectionId: "formula",
+        "sectionId": "vanishing",
+        "requiredConcepts": [
+          "vanishing-polynomial-domain"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "같은 세 점을 Lagrange 식으로 보간해 L(x)=x²+2x+1을 얻고 세 점에 대입해 확인하세요.",
-        answerChecklist: [
-          "basis formulas",
-          "weighted sum",
-          "coefficient expansion",
-          "L(0)=1",
-          "L(1)=4",
-          "L(2)=9",
+        "level": "advanced",
+        "question": "barycentric 분모가 표본 밖에서 0이 아닌 이유와 입력 3의 두 계산 일치를 설명하세요.",
+        "answerChecklist": [
+          "기저 합은 표본마다 1",
+          "N−1차 이하이므로 상수 1",
+          "기저 합은 Z_H×D",
+          "D=1/Z_H",
+          "표본 밖에서 Z_H≠0",
+          "기저값 1·14·3의 가중합은 84 mod17=16",
+          "14/3도 역원으로 계산하면 16"
         ],
-        requiredConcepts: ["lagrange-interpolation-basis"],
-        sectionId: "formula",
-      },
-      {
-        level: "basic",
-        question:
-          "x 좌표가 중복된 (1,2),(1,3)이 왜 보간 입력이 아닌지 denominator와 함수값으로 설명하세요.",
-        answerChecklist: [
-          "x_i−x_j=0",
-          "inverse absent",
-          "same input different output",
-          "not a function",
-        ],
-        requiredConcepts: [
+        "sectionId": "usage",
+        "requiredConcepts": [
           "lagrange-interpolation-basis",
-          "prime-field-modular-arithmetic",
-        ],
-        sectionId: "formula",
+          "barycentric-interpolation"
+        ]
       },
       {
-        level: "basic",
-        question: "H={0,1,2}의 Z_H를 전개하고 0,1,2,3에서 평가하세요.",
-        answerChecklist: [
-          "x(x−1)(x−2)",
-          "x³−3x²+2x",
-          "zeros at 0,1,2",
-          "Z_H(3)=6",
+        "level": "advanced",
+        "question": "임의 위치 한 번 복원·고정 위치 반복 질의·단위근 전체 변환의 방법과 비용을 비교하세요.",
+        "answerChecklist": [
+          "임의 위치에서 기저 구성",
+          "무게 준비 O(N²)",
+          "반복 질의 O(N)",
+          "위치가 같으면 무게 재사용",
+          "전체 계수 보간은 O(N²)로 가능",
+          "적절한 단위근의 NTT·INTT는 O(N log N)",
+          "준비와 질의 비용을 따로 비교"
         ],
-        requiredConcepts: ["vanishing-polynomial-domain"],
-        sectionId: "vanishing",
-      },
-      {
-        level: "basic",
-        question:
-          "Barycentric weight를 언제 precompute하고 z=x_i일 때 어떤 branch가 필요한지 설명하세요.",
-        answerChecklist: [
-          "fixed x coordinates",
-          "inverse products",
-          "O(n) query",
-          "division by zero",
-          "return y_i",
-        ],
-        requiredConcepts: ["barycentric-interpolation"],
-        sectionId: "usage",
-      },
-      {
-        level: "advanced",
-        question:
-          "Degree bound가 없을 때 interpolant 유일성이 깨지는 family L+cZ_H를 구성하고 이유를 증명하세요.",
-        answerChecklist: [
-          "Z_H(h)=0",
-          "same samples",
-          "arbitrary c",
-          "degree can reach n",
-          "degree bound essential",
-        ],
-        requiredConcepts: [
-          "polynomial-interpolation-uniqueness",
-          "vanishing-polynomial-domain",
-        ],
-        sectionId: "overview",
-      },
-      {
-        level: "advanced",
-        question:
-          "C(h)=0 for all h in H iff Z_H divides C를 factor theorem 양방향으로 증명하세요.",
-        answerChecklist: [
-          "each x−h divides C",
-          "distinct coprime factors",
-          "product divides",
-          "reverse substitution",
-          "same field",
-        ],
-        requiredConcepts: [
-          "vanishing-polynomial-domain",
-          "polynomial-root-degree-bound",
-        ],
-        sectionId: "vanishing",
-      },
-      {
-        level: "advanced",
-        question:
-          "F7의 점 (0,1),(1,3),(2,2)를 보간할 때 모든 division을 inverse로 계산해 L을 구하세요.",
-        answerChecklist: [
-          "field inverses",
-          "three basis",
-          "weighted sum mod 7",
-          "L(x)=2x²+1",
-          "L(0)=1·L(1)=3·L(2)=2",
-        ],
-        requiredConcepts: [
+        "sectionId": "release",
+        "requiredConcepts": [
           "lagrange-interpolation-basis",
-          "prime-field-modular-arithmetic",
-        ],
-        sectionId: "formula",
-      },
-      {
-        level: "advanced",
-        question:
-          "Arbitrary points의 Lagrange·barycentric와 roots-of-unity domain의 INTT를 workload별로 선택하세요.",
-        answerChecklist: [
-          "arbitrary one-off",
-          "fixed points repeated query",
-          "precomputed weights",
-          "full coefficient recovery",
-          "structured roots",
-          "O(n log n)",
-        ],
-        requiredConcepts: [
-          "lagrange-interpolation-basis",
-          "barycentric-interpolation",
-        ],
-        sectionId: "usage",
-      },
+          "barycentric-interpolation"
+        ]
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "NIST DLMF §3.3: Interpolation",
-        href: "https://dlmf.nist.gov/3.3",
-        problem: "Polynomial interpolation formula와 notation의 표준 참고 경로",
-        contribution:
-          "Lagrange form·divided differences와 수치 해석 참고문헌 정리",
-        assumptions:
-          "DLMF가 구분한 real/complex approximation setting과 formula conditions",
-        evidenceScope: "보간 공식과 표준 수학 reference",
-        notClaim:
-          "Finite-field ZK protocol soundness나 implementation 성능을 직접 증명하지 않음",
-        sectionId: "reference-dlmf-interpolation",
+        "title": "NIST DLMF §3.3: Interpolation",
+        "href": "https://dlmf.nist.gov/3.3",
+        "problem": "서로 다른 표본을 맞추는 다항식과 기저·무게 표현을 정리합니다.",
+        "contribution": "Lagrange 합, 표본별 기저와 위치를 근으로 갖는 곱의 표준 수식을 제공합니다.",
+        "assumptions": "원문은 실수·복소수이며 본문은 역원이 존재하는 유한체에서 대수 항등식을 별도로 적용합니다.",
+        "evidenceScope": "식3.3.1·3.3.2에 n=2, 위치 0·1·2, 값 1·4·9를 대입해 같은 2차 식을 만듭니다.",
+        "notClaim": "실수 미분의 근사 오차와 유한체 암호 증명의 건전성을 동일시하지 않습니다.",
+        "sectionId": "reference-dlmf-interpolation"
       },
       {
-        title: "Barycentric Lagrange Interpolation",
-        href: "https://doi.org/10.1137/S0036144502417715",
-        problem: "Lagrange interpolant의 efficient stable evaluation",
-        contribution: "Barycentric forms와 floating-point 특성 정리",
-        assumptions: "Distinct nodes와 논문의 numerical arithmetic model",
-        evidenceScope: "Barycentric identity·algorithm·real numerical analysis",
-        notClaim:
-          "Floating-point stability 결론이 finite-field arithmetic에 그대로 적용되지는 않음",
-        sectionId: "paper-barycentric-interpolation",
-      },
+        "title": "Barycentric Lagrange Interpolation",
+        "href": "https://people.maths.ox.ac.uk/trefethen/barycentric.pdf",
+        "problem": "표본이 고정된 보간값을 효율적으로 반복 계산합니다.",
+        "contribution": "고정 무게의 재사용과 두 barycentric 표현, 실수 수치 계산의 특성을 설명합니다.",
+        "assumptions": "표본 위치가 서로 다르며 원문의 실수 부동소수점과 본문의 정확한F17 계산을 구분합니다.",
+        "evidenceScope": "저자 사이트 원문 식(3.2)·(4.1)·(4.2)에 위치 0·1·2, 값 1·4·9, 새입력 3을 넣어 무게 9·16·9와 분자 14·분모 3의 결과 16을 확인합니다.",
+        "notClaim": "실수 안정성 결과는 유한체 구현의 보안·부채널·실측 성능 보장이 아닙니다.",
+        "sectionId": "paper-barycentric-interpolation"
+      }
     ],
+    "entryNote": "기록 (0,1)·(1,4)·(2,9)에서 시작해 담당 식을 더하고 같은 새 입력 3에서16을 계산합니다."
   },
   "crypto/fft": {
     coreIdea:
@@ -69200,6 +69508,16 @@ export const ARTICLE_LEARNING: Readonly<
         "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
         "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
         "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
+        "sectionId": "comparison"
+      },
+      {
+        "title": "PTX ISA 9.0 · WGMMA·tcgen05",
+        "href": "https://docs.nvidia.com/cuda/archive/13.0.2/parallel-thread-execution/index.html",
+        "problem": "행렬 연산 명령의 협력 범위와 저장 장치 및 지원 target을 구별합니다.",
+        "contribution": "4 warps의 WGMMA 협력 범위, Tensor Memory의 칩 내부 저장 역할, tcgen05 명령별 Target ISA Notes를 대조합니다.",
+        "assumptions": "PTX ISA 9.0에 고정하며 개별 명령과 target을 따로 확인합니다.",
+        "evidenceScope": "문서상 명령 의미와 지원 범위입니다.",
+        "notClaim": "64개 scalar 덧셈이 자동으로 행렬 명령으로 바뀌거나 모든 Blackwell 제품에서 같은 명령이 지원된다고 주장하지 않습니다.",
         "sectionId": "comparison"
       }
     ]
@@ -77977,87 +78295,309 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/continuous-batching-step-anatomy": {
-    entryNote: "Iteration-level continuous batching 이 무엇인지와 request 의 progress gap 을 token 으로 센다는 것을 안 상태에서, 한 step 안에서 그 token 이 어떤 순서로 배정되는지로 들어갑니다.",
-    coreIdea: "한 scheduling step 은 running set 을 먼저 순회해 request 마다 min(need, 잔액) 만큼 token budget 을 빼고, preemption 이 없고 sequence 자리가 남을 때만 waiting 의 prompt 를 남은 잔액 크기의 chunk 로 받아들이며, 그 결과가 step 마다 모양이 다른 decode·prefill·mixed batch 입니다.",
-    assumedKnowledge: [
-      { id: "iteration-level-continuous-batching", role: "Forward 마다 batch 를 다시 고른다는 원리를 출발점으로 삼습니다." },
-      { id: "scheduler-request-progress-gap", role: "Request 의 남은 일을 target−computed token 으로 세는 방식을 재사용합니다." },
-      { id: "serving-iteration-resource-feasibility", role: "Token·sequence·KV 세 hard constraint 를 admission 조건으로 씁니다." },
-      { id: "prefill-decode-execution-phase", role: "Prefill 은 compute-bound, decode 는 memory-bound 라는 한 문장 요약만 가져옵니다." },
-      { id: "chunked-prefill-interleaving", role: "Chunk 를 decode 와 섞는다는 원리를 전제로 chunk 크기 규칙을 더합니다." },
-      { id: "kv-pressure-preemption", role: "Preemption 의 victim 선택과 비용은 재사용하고 step 안에서의 위치만 다룹니다." },
-      { id: "cuda-graph-batch-shape-dispatch", role: "Step 마다 흔들리는 batch 모양을 받아 내는 쪽의 정본으로 링크합니다." },
-    ],
-    introducedHere: [
-      { id: "scheduling-step", role: "매 forward 직전에 running·waiting·budget 을 읽어 SchedulerOutput 을 내는 결정 단위를 정의합니다." },
-      { id: "scheduler-running-set", role: "먼저 순회되는 running 과 admission 을 기다리는 waiting 을 step 의 입력으로 구분합니다." },
-      { id: "sequence-group", role: "Scheduler 가 세는 단위가 sequence 이며 V0 group 과 V1 child request 가 어떻게 다른지 설명합니다." },
-      { id: "token-level-scheduling", role: "Request 가 아니라 token 을 배정해 decode 와 prefill 을 같은 식으로 다루는 원리를 설명합니다." },
-      { id: "step-token-sequence-budget", role: "Token 잔액과 sequence 상한이라는 두 예산이 running 먼저, waiting 나중 순서로 소모됨을 보입니다." },
-      { id: "continuous-request-admission", role: "Batch 경계 없이 매 step 조건이 맞으면 waiting 을 running 으로 올리는 절차를 정의합니다." },
-      { id: "chunked-prefill-chunking-rule", role: "Chunk 크기가 잔액과 threshold 의 min 으로 정해지는 규칙을 수치 예로 보입니다." },
-      { id: "dynamic-batch-composition", role: "Step 결과가 decode·prefill·mixed batch 로 갈리고 mixed batch 의 이득과 비용이 무엇인지 설명합니다." },
-    ],
-    conceptExplanations: [
-      { id: "scheduling-step", sectionId: "step-unit", intuition: "식당 주방이 요리 한 판을 내보내기 직전마다 어느 주문을 얼마나 진행할지 한 번에 정하는 순간입니다.", workedExample: "Running 40개와 waiting 1개, budget 2048 을 읽고 request 41개에 대한 token 수 목록 하나를 worker 에 넘깁니다.", boundary: "Step 은 결정만 하고 실행하지 않습니다. Forward 결과로 counter 를 갱신해야 다음 step 이 성립합니다." },
-      { id: "scheduler-running-set", sectionId: "step-unit", intuition: "이미 자리에 앉아 식사 중인 손님과 문 앞에서 줄 선 손님을 다른 명단으로 관리하는 것입니다.", workedExample: "Decode 40개가 running, 3000-token prompt 가 waiting 에 있으면 step 은 running 부터 순회하고 그 뒤에 waiting 을 봅니다.", boundary: "Running 이라고 매 step 실행이 보장되지는 않습니다. Budget 이 0 이면 순회가 멈추고 KV 가 모자라면 preempt 됩니다." },
-      { id: "sequence-group", sectionId: "step-unit", intuition: "한 주문서에 같은 요리 세 접시를 시키면 자리는 세 개를 쓰는 것과 같습니다.", workedExample: "n=3 sampling 요청 하나는 V0 에서 sequence 3개짜리 group, V1 에서는 child request 3개가 되어 max_num_seqs 를 3 만큼 씁니다.", boundary: "V1 의 request 는 sequence 하나이므로 group 개념을 코드에서 찾으면 없습니다. 개념은 sequence budget 계산에만 남아 있습니다." },
-      { id: "token-level-scheduling", sectionId: "token-budget", intuition: "주문 단위가 아니라 접시 수로 주방 용량을 세면 큰 주문도 몇 접시씩 나눠 낼 수 있습니다.", workedExample: "Decode 는 need 1, 3000-token prompt 는 need 3000 이지만 둘 다 min(need, 잔액) 을 받아 prompt 는 2008 로 잘립니다.", boundary: "Token 수가 같아도 prefill 과 decode 의 계산 시간은 다르므로 token budget 이 step 시간을 보장하지는 않습니다." },
-      { id: "step-token-sequence-budget", sectionId: "token-budget", intuition: "주방에는 한 번에 낼 수 있는 접시 수와 앉힐 수 있는 손님 수라는 다른 두 한도가 있습니다.", workedExample: "Budget 2048 에서 decode 40 을 빼면 2008 이 남고, running 이 max_num_seqs 에 닿으면 token 이 남아도 admission 이 멈춥니다.", boundary: "두 예산은 서로를 대신하지 못하고, KV block 이라는 세 번째 한도가 추가로 있습니다." },
-      { id: "continuous-request-admission", sectionId: "step-procedure", intuition: "빈자리가 나는 즉시 줄 선 손님을 앉히되, 주방이 접시를 도로 거둬 간 순간에는 새 손님을 받지 않는 규칙입니다.", workedExample: "Step 1 에 R41 이 2008 chunk 로, step 2 에 R42 가 500 으로 각각 그 step 의 잔액을 받으며 running 에 들어갑니다.", boundary: "Preemption 이 일어난 step 은 admission 을 건너뛰고, waiting 의 KV 배정 실패는 순회 중단이지 preempt 가 아닙니다." },
-      { id: "chunked-prefill-chunking-rule", sectionId: "step-procedure", intuition: "큰 주문을 남은 화구 수만큼만 먼저 올리고 나머지는 다음 판에 이어서 올리는 규칙입니다.", workedExample: "잔액 2008 에서 3000 prompt 는 2008, 다음 step 의 잔액 2008 에서 992 를 받아 두 step 에 끝납니다. threshold 512 면 여섯 step 이 걸립니다.", boundary: "long_prefill_token_threshold 기본값 0 은 상한이 없다는 뜻이라 긴 prompt 하나가 잔액 전부를 가져갈 수 있습니다." },
-      { id: "dynamic-batch-composition", sectionId: "batch-shape", intuition: "한 판에 올라가는 요리의 조합이 매번 달라지고, 오래 걸리는 요리가 하나라도 있으면 그 판 전체가 늦게 나갑니다.", workedExample: "Step 1 은 decode 40 + prefill 2008, step 2 는 decode 40 + prefill 992, step 3 은 decode 41 로 token 수가 2048·1032·41 로 바뀝니다.", boundary: "Mixed batch 는 처리량을 올리지만 그 step 의 decode 지연을 chunk 크기에 묶으므로 ITL tail 과 함께 재야 합니다." },
-    ],
-    conceptStages: [
-      { label: "00 단위", relation: "Step 의 입력·출력과 세는 단위를 정합니다.", concepts: ["scheduling-step", "scheduler-running-set", "sequence-group"] },
-      { label: "01 예산", relation: "Token 을 배정하는 원리와 두 예산의 소모 순서를 봅니다.", concepts: ["token-level-scheduling", "step-token-sequence-budget"] },
-      { label: "02 절차", relation: "Admission 과 chunk 분할이 절차 안 어디서 일어나는지 봅니다.", concepts: ["continuous-request-admission", "chunked-prefill-chunking-rule"] },
-      { label: "03 모양", relation: "Step 결과가 만드는 batch 모양과 그 비용을 봅니다.", concepts: ["dynamic-batch-composition"] },
-    ],
-    exercises: [
-      { level: "basic", question: "한 scheduling step 의 입력 세 가지와 출력 하나를 이름을 들어 쓰세요.", answerChecklist: ["running set", "waiting queue", "token budget과 free KV block", "SchedulerOutput / num_scheduled_tokens"], requiredConcepts: ["scheduling-step", "scheduler-running-set"], sectionId: "step-unit" },
-      { level: "basic", question: "V0 SequenceGroup 과 V1 child request 가 max_num_seqs 를 각각 어떻게 소모하는지 n=3 예로 설명하세요.", answerChecklist: ["sequence 수로 셈", "group 하나가 3", "child request 3개", "request 하나가 sequence 하나"], requiredConcepts: ["sequence-group"], sectionId: "step-unit" },
-      { level: "basic", question: "Budget 2048, decode 40개, waiting 3000-token prompt 에서 step 1 의 배정 결과를 계산하세요.", answerChecklist: ["decode 40", "잔액 2008", "chunk 2008", "running 으로 승격"], requiredConcepts: ["token-level-scheduling", "step-token-sequence-budget"], sectionId: "token-budget" },
-      { level: "basic", question: "Token 이 남아 있어도 waiting admission 이 멈추는 경우 두 가지를 쓰세요.", answerChecklist: ["max_num_seqs 도달", "KV block 배정 실패", "preemption 발생 step"], requiredConcepts: ["step-token-sequence-budget", "continuous-request-admission"], sectionId: "step-procedure" },
-      { level: "basic", question: "Running request 와 waiting request 의 allocate_slots 실패 처리가 어떻게 다른지 설명하세요.", answerChecklist: ["running 은 preempt 후 재시도", "victim 은 running 끝 또는 최저 priority", "waiting 은 break", "다음 step 대기"], requiredConcepts: ["continuous-request-admission"], sectionId: "step-procedure" },
-      { level: "basic", question: "Decode batch·prefill batch·mixed batch 가 각각 어떤 running·waiting 상태에서 나오는지 쓰세요.", answerChecklist: ["running 전부 need 1", "running 비고 waiting prompt", "decode 뒤에 chunk", "같은 절차의 결과"], requiredConcepts: ["dynamic-batch-composition"], sectionId: "batch-shape" },
-      { level: "advanced", question: "long_prefill_token_threshold 를 512 로 두었을 때 위 예의 3000-token prompt 가 몇 step 에 끝나는지와 그 사이 다른 waiting 요청에 생기는 변화를 설명하세요.", answerChecklist: ["ceil(3000/512)=6 step", "각 step 잔액이 남음", "다른 prompt admission 가능", "TTFT 는 늦어짐"], requiredConcepts: ["chunked-prefill-chunking-rule", "continuous-request-admission"], sectionId: "step-procedure" },
-      { level: "advanced", question: "Mixed batch 가 decode ITL 에 주는 비용을 step 시간 모델로 설명하고, budget 을 줄일 때 TTFT 가 어떻게 변하는지 쓰세요.", answerChecklist: ["forward 는 가장 무거운 작업까지 대기", "chunk 크기에 비례", "ITL tail", "chunk 수 증가로 TTFT 지연"], requiredConcepts: ["dynamic-batch-composition", "step-token-sequence-budget"], sectionId: "batch-shape" },
-      { level: "advanced", question: "Preemption 이 일어난 step 에 waiting admission 을 건너뛰는 설계가 없다면 어떤 현상이 생기는지 running·KV 상태로 추론하세요.", answerChecklist: ["방금 회수한 block 을 새 request 가 차지", "preempt 된 request 재개 지연", "thrashing", "sequence 자리 경쟁"], requiredConcepts: ["continuous-request-admission", "scheduler-running-set"], sectionId: "step-procedure" },
-      { level: "advanced", question: "Step 마다 token 수가 2048·1032·41 로 흔들릴 때 CUDA graph 와 attention kernel 이 받아야 하는 조건을 설명하세요.", answerChecklist: ["batch shape 별 graph 또는 padding", "varlen attention", "decode·prefill 혼합 query 길이", "shape dispatch 비용"], requiredConcepts: ["dynamic-batch-composition", "scheduling-step"], sectionId: "batch-shape" },
-    ],
-    papers: [
+    "entryNote": "A와 B가 1토큰씩 계산하고 새 C의 입력 10토큰을 6과 4로 나누는 사례에서 한 번의 배정 결정을 엽니다.",
+    "coreIdea": "이번 실행의 토큰 잔액과 진행 요청 자리, 실제 저장 공간을 함께 확인해 성공한 배정만 기록하고 예약 진행과 GPU 결과를 구분합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        title: "Orca: A Distributed Serving System for Transformer-Based Generative Models",
-        href: "https://www.usenix.org/conference/osdi22/presentation/yu",
-        problem: "Request 단위로 batch 를 고정하면 먼저 끝난 요청이 늦게 끝나는 요청을 기다리고 새 요청은 batch 가 끝날 때까지 들어오지 못합니다.",
-        contribution: "Iteration 마다 batch 를 다시 고르는 iteration-level scheduling 과 phase 가 다른 요청을 함께 실행하는 selective batching 을 제안했습니다.",
-        assumptions: "OSDI 2022 당시의 model·GPU·workload 와 저자 구현을 기준으로 합니다.",
-        evidenceScope: "저자 자기보고 system 결과이며 이 글은 iteration 단위 결정이라는 원리만 가져옵니다.",
-        notClaim: "Token budget·chunked prefill·sequence budget 은 Orca 의 기여가 아니며 후속 시스템의 확장입니다.",
-        sectionId: "paper-orca-iteration",
+        "id": "scheduling-step",
+        "role": "이번 실행의 요청별 계산량과 저장 위치를 정해 실행 담당자에게 전달하는 결정 단위입니다."
       },
       {
-        title: "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve",
-        href: "https://arxiv.org/abs/2403.02310",
-        problem: "긴 prefill 이 한 iteration 을 독점하면 진행 중인 decode 가 멈추는 generation stall 이 생깁니다.",
-        contribution: "Prompt 를 chunk 로 나누고 decode 를 먼저 배치한 뒤 남은 budget 에 chunk 를 넣는 stall-free schedule 을 제안했습니다.",
-        assumptions: "Mistral-7B·Yi-34B·Falcon-180B 를 A100 과 pipeline parallel 에서 명시된 latency 조건으로 측정했습니다.",
-        evidenceScope: "2.6×·3.7×·5.6× 처리 용량은 당시 vLLM 대비 저자 자기보고입니다.",
-        notClaim: "최신 vLLM 에 chunked prefill 을 켜면 같은 배수가 재현된다는 뜻은 아닙니다.",
-        sectionId: "paper-sarathi-serve",
+        "id": "scheduler-running-set",
+        "role": "이미 진행 중인 요청과 새로 수용을 기다리는 요청을 별도 목록으로 봅니다."
       },
       {
-        title: "vLLM V1 scheduler source (vllm/v1/core/sched/scheduler.py)",
-        href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/core/sched/scheduler.py",
-        problem: "문서의 decode 우선 설명만으로는 step 안의 실제 분기 순서와 field 이름을 알 수 없습니다.",
-        contribution: "schedule() 의 running 순회·preemption·waiting admission 순서와 token_budget·max_num_running_reqs·long_prefill_token_threshold clipping 을 확인했습니다.",
-        assumptions: "2026년 8월 기준 main branch 를 읽었으며 field 이름과 분기는 버전에 따라 바뀔 수 있습니다.",
-        evidenceScope: "공식 구현의 코드 경로이며 성능 수치는 포함하지 않습니다.",
-        notClaim: "여기서 읽은 절차가 V0 scheduler 나 다른 serving engine 에도 그대로 적용된다는 뜻은 아닙니다.",
-        sectionId: "source-vllm-v1-scheduler",
+        "id": "sequence-group",
+        "role": "사용자 요청 하나가 여러 응답을 요구하면 생성 경로도 여러 개가 됩니다."
       },
+      {
+        "id": "token-level-scheduling",
+        "role": "요청 전체 대신 이번에 계산할 토큰 수를 정해 긴 입력을 나눕니다."
+      },
+      {
+        "id": "step-token-sequence-budget",
+        "role": "계산할 토큰 수와 진행할 생성 경로 수는 서로 다른 한도입니다."
+      },
+      {
+        "id": "continuous-request-admission",
+        "role": "매번 조건이 맞는 새 요청을 진행 목록에 넣고 다음 실행에 함께 계산합니다."
+      },
+      {
+        "id": "chunked-prefill-chunking-rule",
+        "role": "남은 입력과 토큰 잔액, 설정된 요청별 조각 상한을 비교해 작은 양을 배정합니다."
+      },
+      {
+        "id": "dynamic-batch-composition",
+        "role": "실행마다 입력 읽기와 다음 토큰 생성의 조합 및 계산량이 달라집니다."
+      }
     ],
+    "conceptExplanations": [
+      {
+        "id": "scheduling-step",
+        "sectionId": "source-output",
+        "intuition": "이번 실행의 요청별 계산량과 저장 위치를 정해 실행 담당자에게 전달하는 결정 단위입니다.",
+        "workedExample": "첫 결과는 A:1, B:1, C:6과 합계 8을 담습니다.",
+        "boundary": "배정과 GPU 실행은 다릅니다. 진행 위치는 반환 전에 예약으로 전진하며 실제 결과는 뒤에 확인합니다."
+      },
+      {
+        "id": "scheduler-running-set",
+        "sectionId": "source-running",
+        "intuition": "이미 진행 중인 요청과 새로 수용을 기다리는 요청을 별도 목록으로 봅니다.",
+        "workedExample": "Running A·B가 각 1을 쓰면 C를 볼 때 잔액 6이 남습니다.",
+        "boundary": "진행 목록 먼저는 모든 decode 먼저가 아닙니다. P가 4를 쓰면 뒤의 A에 잔액이 없을 수 있습니다."
+      },
+      {
+        "id": "sequence-group",
+        "sectionId": "sequence-accounting",
+        "intuition": "사용자 요청 하나가 여러 응답을 요구하면 생성 경로도 여러 개가 됩니다.",
+        "workedExample": "n=3은 V0 그룹 안 3개 sequence, V1에서 각 n=1인 자식 3개로 표현됩니다.",
+        "boundary": "역사적 구조와 현재 구조를 구분하며 세 자식이 모두 동시에 수용된다고 보장하지 않습니다."
+      },
+      {
+        "id": "token-level-scheduling",
+        "sectionId": "token-budget",
+        "intuition": "요청 전체 대신 이번에 계산할 토큰 수를 정해 긴 입력을 나눕니다.",
+        "workedExample": "한도 8에서 A와 B가 1씩 쓰고 C는 min(10,6)=6을 받습니다.",
+        "boundary": "같은 배정량 1도 입력 마지막 위치인지 다음 출력 위치인지에 따라 역할이 달라집니다."
+      },
+      {
+        "id": "step-token-sequence-budget",
+        "sectionId": "why-two-limits",
+        "intuition": "계산할 토큰 수와 진행할 생성 경로 수는 서로 다른 한도입니다.",
+        "workedExample": "상한 2를 A·B가 채우면 잔액 6이 있어도 C를 받지 못합니다.",
+        "boundary": "메모리 저장 공간과 정지된 입력 대기 자리 등 실제 구현의 추가 조건도 확인합니다."
+      },
+      {
+        "id": "continuous-request-admission",
+        "sectionId": "source-admission",
+        "intuition": "매번 조건이 맞는 새 요청을 진행 목록에 넣고 다음 실행에 함께 계산합니다.",
+        "workedExample": "첫 실행 C가 6을 받고 둘째 실행 새 D가 2를 받아 들어옵니다.",
+        "boundary": "Waiting의 공간 배정 실패는 순회 중단입니다. 성공한 것처럼 상태나 잔액을 갱신하지 않습니다."
+      },
+      {
+        "id": "chunked-prefill-chunking-rule",
+        "sectionId": "token-budget",
+        "intuition": "남은 입력과 토큰 잔액, 설정된 요청별 조각 상한을 비교해 작은 양을 배정합니다.",
+        "workedExample": "C의 입력 10과 잔액 6에서 상한 4라면 C는 4를 받고 잔액 2가 남습니다.",
+        "boundary": "상한 0은 별도 조각 제한을 적용하지 않는 설정입니다. 다른 제약과 chunking 허용 여부도 통과해야 합니다."
+      },
+      {
+        "id": "dynamic-batch-composition",
+        "sectionId": "batch-shape",
+        "intuition": "실행마다 입력 읽기와 다음 토큰 생성의 조합 및 계산량이 달라집니다.",
+        "workedExample": "A·B·C 배정 합 8, 새 D가 들어온 둘째 합 8, 네 경로가 이어 쓰는 셋째 합 4입니다.",
+        "boundary": "토큰 수만으로 phase나 실행 시간을 단정하지 않습니다. 큰 원래 사례는 새 D 없이 2048→1032→41입니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 배정 단위",
+        "relation": "요청별 이번 계산량이 하나의 실행 기록으로 이어집니다.",
+        "concepts": [
+          "scheduling-step",
+          "scheduler-running-set",
+          "sequence-group"
+        ]
+      },
+      {
+        "label": "02 다른 한도",
+        "relation": "토큰 잔액과 진행 자리를 함께 확인해 입력 조각을 정합니다.",
+        "concepts": [
+          "token-level-scheduling",
+          "step-token-sequence-budget",
+          "chunked-prefill-chunking-rule"
+        ]
+      },
+      {
+        "label": "03 새 요청",
+        "relation": "공간 확보에 성공한 대기 요청만 진행 목록으로 올립니다.",
+        "concepts": [
+          "continuous-request-admission"
+        ]
+      },
+      {
+        "label": "04 다음 구성",
+        "relation": "완료한 입력과 새 요청을 반영하면 다음 실행의 구성이 바뀝니다.",
+        "concepts": [
+          "dynamic-batch-composition"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "한도 8에서 A와 B가 각각 1토큰 필요하고 C의 입력이 10토큰 남았다면 첫 배정은 무엇인가요?",
+        "answerChecklist": [
+          "A 1, B 1, C 6",
+          "합계 8",
+          "C의 입력은 4 남음"
+        ],
+        "sectionId": "token-budget",
+        "requiredConcepts": [
+          "token-level-scheduling",
+          "step-token-sequence-budget",
+          "chunked-prefill-chunking-rule"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "C가 6토큰까지 처리된 뒤 입력 2토큰인 D가 왔습니다. 둘째와 셋째 실행의 구성은 어떻게 바뀌나요?",
+        "answerChecklist": [
+          "둘째 A 1, B 1, C 4, D 2",
+          "둘째 합계 8",
+          "셋째 네 요청 각각 1, 합계 4"
+        ],
+        "sectionId": "batch-shape",
+        "requiredConcepts": [
+          "dynamic-batch-composition",
+          "continuous-request-admission"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "진행 상한이 2이고 A와 B가 이미 진행 중입니다. 토큰 잔액 6이 있어도 C를 받을 수 있나요?",
+        "answerChecklist": [
+          "받을 수 없음",
+          "진행 요청 자리 상한에 도달",
+          "토큰 수와 요청 자리 수는 다름"
+        ],
+        "sectionId": "why-two-limits",
+        "requiredConcepts": [
+          "step-token-sequence-budget"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "GPU 실행 전에 요청별 배정을 만드는 결정 단위와 실제로 넘기는 출력 기록의 이름은 무엇인가요?",
+        "answerChecklist": [
+          "scheduling step",
+          "SchedulerOutput",
+          "요청별 계산할 토큰 수와 저장 위치"
+        ],
+        "sectionId": "source-output",
+        "requiredConcepts": [
+          "scheduling-step",
+          "scheduler-running-set"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "입력 하나에서 응답 세 개를 요구하는 n=3을 V0의 그룹과 V1의 자식 요청은 어떻게 표현하나요?",
+        "answerChecklist": [
+          "V0 그룹의 sequence 3개",
+          "V1 자식 3개, 각각 n=1",
+          "세 자식이 동시에 수용되는 것은 보장하지 않음"
+        ],
+        "sectionId": "sequence-accounting",
+        "requiredConcepts": [
+          "sequence-group"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "C의 입력 10토큰과 잔액 6에서 별도 조각 상한이 4라면 C의 배정량과 남은 잔액은 얼마인가요?",
+        "answerChecklist": [
+          "min(10,6,4)=4",
+          "잔액 2",
+          "다음 요청도 자리와 저장 조건을 통과해야 함"
+        ],
+        "sectionId": "token-budget",
+        "requiredConcepts": [
+          "chunked-prefill-chunking-rule"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "Running 순서가 입력 6토큰 남은 P 다음 decode A입니다. 미루기 없이 잔액 4를 배정하면 A는 반드시 실행되나요?",
+        "answerChecklist": [
+          "P가 4 사용",
+          "잔액 0으로 A 미배정",
+          "Running 먼저와 모든 decode 먼저는 다른 규칙"
+        ],
+        "sectionId": "source-running",
+        "requiredConcepts": [
+          "scheduler-running-set",
+          "token-level-scheduling"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "C에 6토큰을 배정해 num_computed_tokens가 6이 됐습니다. 이 값으로 GPU 완료를 단정할 수 있나요?",
+        "answerChecklist": [
+          "단정 불가",
+          "_update_after_schedule에서 반환 전 예약 진행",
+          "in-flight도 함께 증가",
+          "뒤 실행 결과에 따라 교정"
+        ],
+        "sectionId": "progress-and-result",
+        "requiredConcepts": [
+          "scheduling-step"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "Waiting의 C에 저장 공간을 배정하지 못했습니다. C의 상태와 토큰 잔액을 성공한 것처럼 바꿔도 되나요?",
+        "answerChecklist": [
+          "불가",
+          "waiting 경로에서 break",
+          "성공 뒤 num_scheduled_tokens와 token_budget 갱신",
+          "C는 새로 수용되지 않음"
+        ],
+        "sectionId": "source-admission",
+        "requiredConcepts": [
+          "continuous-request-admission",
+          "step-token-sequence-budget"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "C의 입력 마지막 토큰과 A의 다음 출력 계산은 모두 배정량 1입니다. 이 숫자만으로 단계를 구별할 수 있나요?",
+        "answerChecklist": [
+          "구별 불가",
+          "입력 길이와 진행 위치 및 출력 상태를 함께 읽음",
+          "배정 입력 위치 수와 새 출력 토큰 수도 구별"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "dynamic-batch-composition",
+          "token-level-scheduling"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Orca: A Distributed Serving System for Transformer-Based Generative Models",
+        "href": "https://www.usenix.org/system/files/osdi22-yu.pdf",
+        "problem": "요청 전체가 끝날 때까지 묶음이 고정되면 새 요청이 빈 계산 여유를 사용하기 어렵습니다.",
+        "contribution": "실행 한 번마다 후보 요청을 다시 고르는 결정과 서로 다른 단계의 요청을 처리하는 방식을 제시했습니다.",
+        "assumptions": "OSDI 2022 원문의 요청 집합과 max_bs 및 최대 토큰 수에 따른 저장 공간 예약을 따릅니다.",
+        "evidenceScope": "p.528 Algorithm 1의 선택과 한 iteration 실행 및 새 요청 예약 조건을 읽었습니다.",
+        "notClaim": "Orca가 본문의 8토큰 잔액과 C의 6·4 조각 배정까지 그대로 구현한다는 뜻은 아닙니다.",
+        "sectionId": "paper-orca-iteration"
+      },
+      {
+        "title": "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve",
+        "href": "https://arxiv.org/html/2403.02310v3",
+        "problem": "긴 입력을 한 실행에 넣으면 이미 답변을 이어 쓰는 요청의 다음 토큰이 늦어지는 문제입니다.",
+        "contribution": "입력을 조각으로 나누고 진행 중인 decode를 먼저 넣은 뒤 예산에 맞춰 나머지 조각을 배정합니다.",
+        "assumptions": "arXiv v3 Algorithm 3과 명시된 A100 및 pipeline 모델 구성의 저자 측정을 구분합니다.",
+        "evidenceScope": "Algorithm 3의 6–20행에 예산 8과 진행 요청 2개 및 C 조각 6을 대입합니다.",
+        "notClaim": "현재 vLLM의 running 순회 전체가 동일한 decode 우선 정렬이거나 같은 성능 배수를 얻는다는 주장은 아닙니다.",
+        "sectionId": "paper-sarathi-serve"
+      },
+      {
+        "title": "vLLM v0.27.1 — Scheduler and SchedulerOutput",
+        "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py",
+        "problem": "진행 목록 우선과 실제 decode 우선을 혼동하거나 배정 예약을 GPU 완료로 오해하는 문제입니다.",
+        "contribution": "고정 코드의 필요량 계산과 저장 공간 성공 분기 및 반환 전 진행 갱신을 각각 사례에 적용합니다.",
+        "assumptions": "commit 6e448d0의 동기식 텍스트 경로이며 재사용 입력과 예상 토큰 및 미루기 조건은 제외합니다.",
+        "evidenceScope": "scheduler.py의 실제 결정 분기와 output.py의 배정 구조체를 전체 저장 원문으로 확인합니다.",
+        "notClaim": "본문의 작은 예가 GPU 실측이거나 모든 backend 및 비동기 경로의 전체 실행을 재현한다는 뜻은 아닙니다.",
+        "sectionId": "source-vllm-v1-scheduler"
+      }
+    ],
+    "entryLevel": true
   },
   "ai/serving-memory-admission-and-preemption": {
     entryNote: "KV cache가 token마다 자라고 block 단위로 할당된다는 것은 안다고 가정합니다. 요청 하나의 byte를 세는 데서 시작해 scheduler가 언제 받고 누구를 내보내는지로 갑니다.",
@@ -78286,86 +78826,310 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/serving-latency-metrics-and-slo": {
-    entryNote: "요청이 queue → prefill → decode 를 거쳐 token 을 streaming 한다는 lifecycle 은 안다고 가정합니다. 그 timeline 위에서 지표를 정의하는 데서 시작합니다.",
-    coreIdea: "LLM serving latency 는 TTFT·ITL·TPOT·E2E 네 지표로 나누어 재고, 각 지표를 평균이 아닌 정렬 표본의 percentile 로 읽으며, SLO 는 percentile·임계값·window·허용 위반율을 함께 적은 약속으로 계약해 latency–throughput 상충을 닫습니다.",
-    assumedKnowledge: [
-      { id: "llm-online-request-lifecycle", role: "요청이 gateway·queue·prefill·decode·stream 을 지나는 timeline 이 모든 지표의 좌표축입니다." },
-      { id: "prefill-decode-execution-phase", role: "TTFT 는 prefill 쪽, ITL 은 decode step 쪽에서 나온다는 위치 구분의 근거입니다." },
-      { id: "serving-latency-decomposition", role: "어느 timestamp 에서 TTFT·ITL 을 자르는지 정한 측정 계약을 그대로 재사용합니다." },
-      { id: "iteration-level-continuous-batching", role: "Batch 크기가 step 시간과 tokens/s 를 함께 바꾸는 scheduler 전제입니다." },
-      { id: "little-law-stable-system", role: "도착률이 처리율에 가까울 때 대기열이 TTFT 에 더해지는 이유를 제공합니다." },
-      { id: "slo-serving-goodput", role: "SLO 조건을 통과한 요청만 세는 throughput 표기로 trade-off 를 닫습니다." },
-    ],
-    introducedHere: [
-      { id: "time-to-first-token", role: "요청 도착부터 첫 token 까지의 시간을 정의하고 queue·prefill 이 함께 든다는 점을 밝힙니다." },
-      { id: "inter-token-latency", role: "연속 token 간격을 요청당 n−1 개의 표본으로 정의합니다." },
-      { id: "time-per-output-token", role: "간격의 요청 단위 평균을 vLLM 계산식으로 정의하고 ITL 과의 차이를 밝힙니다." },
-      { id: "end-to-end-request-latency", role: "E2E = TTFT + (n−1)·TPOT 분해식을 세우고 수치 예로 지배 항을 봅니다." },
-      { id: "serving-throughput-rate", role: "tokens/s 와 RPS 를 서버 단위 값으로 정의합니다." },
-      { id: "latency-throughput-tradeoff", role: "같은 step 시간 t(B) 가 ITL 과 tokens/s 로 갈라지는 구조와 queueing 비용을 설명합니다." },
-      { id: "latency-percentile-distribution", role: "정렬 표본의 순위로 P50·P95·P99 를 정의하고 tail latency 와 ITL 분산을 읽습니다." },
-      { id: "serving-latency-slo", role: "percentile·임계값·window·허용 위반율로 SLO 를 적고 위반을 판정하는 절차를 둡니다." },
-    ],
-    conceptExplanations: [
-      { id: "time-to-first-token", sectionId: "metrics", intuition: "식당에서 주문한 뒤 첫 접시가 나오기까지의 시간이며, 주방 대기와 조리가 함께 들어 있습니다.", workedExample: "Queue 0.2 s + prefill 0.3 s 면 TTFT 0.5 s 이고, 대기열이 1.2 s 로 늘면 prefill 이 같아도 TTFT 는 1.5 s 입니다.", boundary: "Non-streaming 응답에서는 첫 token 시각을 잴 수 없어 TTFT 가 E2E 와 같아지고, 서버 내부 timestamp 로 재면 network 전송이 빠집니다." },
-      { id: "inter-token-latency", sectionId: "metrics", intuition: "자막이 한 단어씩 뜰 때 단어 사이의 간격 하나하나입니다.", workedExample: "간격이 40, 45, 200, 42 ms 로 왔다면 ITL 표본은 4 개이고 그중 하나가 200 ms 로 튄 것입니다.", boundary: "Chunk 하나에 token 여러 개가 묶여 오면 chunk 간격을 token 수로 나눠야 GenAI-Perf 정의와 맞습니다." },
-      { id: "time-per-output-token", sectionId: "metrics", intuition: "그 간격들을 한 요청 안에서 평균낸 값으로, 멈춤이 평균 속에 묻힙니다.", workedExample: "위 표본의 TPOT 는 (40+45+200+42)/4 ≈ 82 ms 이고 vLLM 은 (latency − ttft)/(output_len − 1) 로 같은 값을 냅니다.", boundary: "output_len 이 1 인 요청은 간격이 없어 TPOT 를 정의하지 않고, 평균이 같아도 간격이 고르다는 뜻은 아닙니다." },
-      { id: "end-to-end-request-latency", sectionId: "metrics", intuition: "주문부터 마지막 접시까지의 총 시간이며 첫 접시 시간과 접시 사이 간격의 합입니다.", workedExample: "TTFT 1 s, TPOT 50 ms, 200 token 이면 E2E = 1 + 199 × 0.05 = 10.95 s 이고 TPOT 를 30 ms 로 줄이면 6.97 s 입니다.", boundary: "응답 길이에 비례하므로 길이 분포가 다른 두 workload 의 E2E 를 직접 비교하면 model 차이가 아니라 길이 차이를 읽게 됩니다." },
-      { id: "serving-throughput-rate", sectionId: "throughput", intuition: "서버 전체가 한 시간에 낸 접시 수와 손님 수로, 손님 한 명의 체감과는 다른 숫자입니다.", workedExample: "60 s 동안 요청 120 개가 끝나고 output token 이 24,000 개면 RPS 2, tokens/s 400 입니다.", boundary: "Benchmark 한 번에 값 하나라 요청별 분포가 없고, latency 조건이 붙지 않은 tokens/s 는 batch 를 무한히 키운 상한에 가깝습니다." },
-      { id: "latency-throughput-tradeoff", sectionId: "throughput", intuition: "버스에 승객을 더 태우면 한 번에 더 많이 옮기지만 정류장마다 서는 시간이 길어져 각 승객은 느려집니다.", workedExample: "Step 시간이 batch 1·8·32 에서 20·28·50 ms 면 tokens/s 는 50·286·640 으로 오르고 ITL 은 20·28·50 ms 로 늘어나며, 사용자당 속도는 50 에서 20 token/s 로 떨어집니다.", boundary: "t(B) 가 sublinear 한 구간은 memory-bound 인 동안이며, compute-bound 로 넘어가거나 prefill 이 섞이면 tokens/s 증가가 멈추고 ITL 만 늘어납니다." },
-      { id: "latency-percentile-distribution", sectionId: "distribution", intuition: "100 명을 빠른 순으로 세워 놓고 95 번째 사람의 시간을 읽는 것이 P95 입니다.", workedExample: "TTFT 100 표본을 정렬해 50 번째 0.7 s, 95 번째 1.45 s, 99 번째 2.4 s, 최댓값 4.0 s 이면 P50·P95·P99 가 그 값이고 평균 0.90 s 는 꼬리에 끌려 중앙값보다 큽니다.", boundary: "P95 는 느린 5 % 의 경계일 뿐 그 5 % 가 얼마나 느린지는 말하지 않고, 표본이 100 개면 P99 는 값 하나에 좌우됩니다." },
-      { id: "serving-latency-slo", sectionId: "slo", intuition: "\"거의 항상 이 정도 안에 응답한다\" 를 숫자로 적은 약속이며, 얼마나 자주 어겨도 되는지까지 함께 적습니다.", workedExample: "5 분 window 마다 P95 TTFT ≤ 1.5 s, 하루 288 window 중 허용 위반율 1 % 면 budget 은 2 개이고, 위반 window 가 5 개면 위반율 1.74 % 로 SLO 위반입니다.", boundary: "허용 위반율 0 % 는 배포·재시작을 모두 위반으로 만들어 운영이 불가능하고, window 당 표본이 적으면 percentile 표기가 요청 하나에 뒤집힙니다." },
-    ],
-    conceptStages: [
-      { label: "00 지표", relation: "한 요청 timeline 위에서 네 latency 지표를 정의하고 E2E 를 분해합니다.", concepts: ["time-to-first-token", "inter-token-latency", "time-per-output-token", "end-to-end-request-latency"] },
-      { label: "01 처리량", relation: "서버 단위 throughput 을 정의하고 batch 와 queueing 이 만드는 상충을 봅니다.", concepts: ["serving-throughput-rate", "latency-throughput-tradeoff"] },
-      { label: "02 분포", relation: "표본을 정렬해 percentile 과 꼬리로 읽습니다.", concepts: ["latency-percentile-distribution"] },
-      { label: "03 계약", relation: "percentile 에 임계값·window·허용 위반율을 붙여 SLO 로 판정합니다.", concepts: ["serving-latency-slo"] },
-    ],
-    exercises: [
-      { level: "basic", question: "TTFT 1.2 s, TPOT 40 ms 인 서버가 300 token 응답을 낼 때 E2E 를 계산하세요.", answerChecklist: ["1.2 + 299 × 0.04", "13.16 s", "간격은 n−1 개", "decode 항이 지배"], requiredConcepts: ["end-to-end-request-latency", "time-per-output-token"], sectionId: "metrics" },
-      { level: "basic", question: "한 요청의 ITL 표본이 40, 45, 200, 42 ms 일 때 TPOT 를 구하고 왜 TPOT 만으로 부족한지 설명하세요.", answerChecklist: ["(40+45+200+42)/4", "약 82 ms", "200 ms 멈춤이 평균에 묻힘", "ITL P99"], requiredConcepts: ["inter-token-latency", "time-per-output-token"], sectionId: "metrics" },
-      { level: "basic", question: "TTFT 안에 들어 있는 시간 성분을 나열하고 TTFT 만으로 원인을 가릴 수 없는 이유를 쓰세요.", answerChecklist: ["gateway", "queue 대기", "prefill", "첫 token 전송", "latency decomposition 필요"], requiredConcepts: ["time-to-first-token"], sectionId: "metrics" },
-      { level: "basic", question: "Step 시간이 batch 1 에서 20 ms, batch 16 에서 36 ms 일 때 tokens/s 와 ITL 을 각각 계산하세요.", answerChecklist: ["50 tokens/s", "444 tokens/s", "ITL 20 ms", "ITL 36 ms", "같은 t(B)"], requiredConcepts: ["serving-throughput-rate", "latency-throughput-tradeoff"], sectionId: "throughput" },
-      { level: "basic", question: "정렬한 TTFT 표본 200 개에서 nearest-rank P95 와 P99 는 몇 번째 값인지 쓰세요.", answerChecklist: ["ceil(0.95×200)=190", "ceil(0.99×200)=198", "오름차순", "보간 방식 차이"], requiredConcepts: ["latency-percentile-distribution"], sectionId: "distribution" },
-      { level: "basic", question: "\"5 분 window P95 TTFT ≤ 1.5 s, 하루 99 %\" SLO 에서 하루 budget 과 위반 window 5 개일 때의 판정을 쓰세요.", answerChecklist: ["288 window", "floor(0.01×288)=2", "5/288 ≈ 1.74 %", "SLO 위반"], requiredConcepts: ["serving-latency-slo"], sectionId: "slo" },
-      { level: "advanced", question: "vLLM 과 GenAI-Perf 의 benchmark 표를 한 표로 합치려 할 때 먼저 맞춰야 할 정의 차이를 설계하세요.", answerChecklist: ["ITL chunk 당 token 수 나눔", "TPOT 유무", "percentile 집합", "보간 방식", "측정 지점 client/server", "출력 길이 분포"], requiredConcepts: ["inter-token-latency", "time-per-output-token", "latency-percentile-distribution"], sectionId: "sources" },
-      { level: "advanced", question: "P99 ITL ≤ 80 ms SLO 아래에서 최대 batch 와 goodput 을 정하는 절차를 설계하세요.", answerChecklist: ["t(B) 측정", "B_max = max{B : P99 t(B) ≤ 80}", "prefill 혼합 고려", "goodput = B_max/t(B_max)", "도착률 여유"], requiredConcepts: ["latency-throughput-tradeoff", "serving-latency-slo"], sectionId: "throughput" },
-      { level: "advanced", question: "Window 당 표본이 20 개뿐인 저트래픽 시간대에 percentile SLO 가 요동치는 문제와 대안을 설명하세요.", answerChecklist: ["P95 가 값 하나로 결정", "N_min 미만 제외", "요청 비율 표기", "window 확장의 부작용", "insufficient 별도 집계"], requiredConcepts: ["serving-latency-slo", "latency-percentile-distribution"], sectionId: "slo" },
-      { level: "advanced", question: "TTFT 평균은 그대로인데 P99 만 두 배가 된 배포에서 tail 의 원인 후보와 각 후보를 가릴 측정을 설계하세요.", answerChecklist: ["긴 prompt prefill", "queue 대기", "preemption 재 prefill", "prompt 길이별 분해", "queue time 분리", "preemption count"], requiredConcepts: ["latency-percentile-distribution", "time-to-first-token"], sectionId: "distribution" },
-    ],
-    papers: [
+    "entryNote": "요청을 보낸 뒤 다섯 조각을 받은 시각으로1초·81.75ms·1.327초를 계산하고288구간의 실패 한도2개까지 추적합니다.",
+    "coreIdea": "같은 client 기록에서 첫 수신·토큰 간격·요청 평균·종료 사건을 구분한 뒤 고정된 표본 단위와 percentile 정의·평가 분모로 서비스 약속을 판정합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        title: "vLLM serving benchmark (vllm/benchmarks/serve.py)",
-        href: "https://github.com/vllm-project/vllm/blob/main/vllm/benchmarks/serve.py",
-        problem: "OpenAI 호환 serving endpoint 의 TTFT·TPOT·ITL·E2E·throughput 을 같은 요청 집합에서 재현 가능하게 계산하는 문제",
-        contribution: "TPOT = (latency − ttft)/(output_len − 1), ITL 은 streaming chunk 간격 목록, request/output token throughput 은 완료 수·token 총수를 측정 시간으로 나눈 값으로 정의하고 mean·median·선택 percentile 을 보고합니다.",
-        assumptions: "Streaming 응답을 client 쪽에서 timestamp 로 재고 output_len 이 2 이상인 요청에서만 TPOT 를 계산한다는 구현 전제입니다.",
-        evidenceScope: "공식 구현의 계산식이며 2026-08 시점 main branch 기준입니다. 보고 형식과 기본 percentile 은 버전에 따라 바뀔 수 있습니다.",
-        notClaim: "이 계산식이 다른 도구(GenAI-Perf 등)의 같은 이름 지표와 수치가 일치한다는 뜻은 아닙니다.",
-        sectionId: "paper-vllm-bench",
+        "id": "time-to-first-token",
+        "role": "첫 내용이 보이기까지의 기다림을 별도로 잽니다."
       },
       {
-        title: "GenAI-Perf metrics documentation",
-        href: "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html",
-        problem: "Chunk 하나에 token 여러 개가 실리는 streaming 에서 token 간격을 어떻게 정의할지의 문제",
-        contribution: "Inter token latency 를 중간 응답 간격을 그 응답의 token 수로 나눈 값으로, request latency·output token throughput·request throughput 을 함께 정의하고 avg·min·max·p99·p90·p75 를 보고합니다.",
-        assumptions: "NVIDIA 공식 문서의 정의이며 Triton perf_analyzer 위에서 동작하는 도구 범위입니다.",
-        evidenceScope: "공식 문서의 정의 표이며 2026-08 시점 기준입니다.",
-        notClaim: "vLLM benchmark 와 같은 percentile 집합을 보고하거나 두 도구의 표를 그대로 합칠 수 있다는 뜻은 아닙니다.",
-        sectionId: "paper-genai-perf",
+        "id": "inter-token-latency",
+        "role": "응답이 도중에 끊기는 순간을 각각 남깁니다."
       },
       {
-        title: "Site Reliability Engineering — Chapter 4: Service Level Objectives",
-        href: "https://sre.google/sre-book/service-level-objectives/",
-        problem: "서비스 품질을 측정 가능한 목표로 적고 그 목표를 얼마나 자주 어겨도 되는지 정하는 문제",
-        contribution: "SLI·SLO·SLA 를 구분하고, latency 는 평균 대신 percentile 로 목표를 세우며, 100 % 대신 error budget 을 두고 외부 SLO 보다 엄격한 내부 SLO 를 권합니다.",
-        assumptions: "Google 내부 RPC 서비스 운영 경험에 기반한 일반 원칙입니다.",
-        evidenceScope: "공식 SRE Book 본문이며 운영 경험의 정리입니다. 정량 실험은 아닙니다.",
-        notClaim: "LLM serving 에서 TTFT 와 ITL 을 별도 SLI 로 나누라는 지침은 이 장에 없으며 그 적용은 이 글의 해석입니다.",
-        sectionId: "paper-sre-slo",
+        "id": "time-per-output-token",
+        "role": "첫 도착 뒤 전체 시간을 토큰 사이 간격 수로 나눕니다."
       },
+      {
+        "id": "end-to-end-request-latency",
+        "role": "요청 전송부터 정한 종료 사건까지의 총시간을 잽니다."
+      },
+      {
+        "id": "serving-throughput-rate",
+        "role": "정한 기간에 서버 전체가 완료한 요청과 토큰을 각각 셉니다."
+      },
+      {
+        "id": "latency-throughput-tradeoff",
+        "role": "같은 실행 묶음의 시간을 사용자 간격과 서버 합계 처리량으로 읽습니다."
+      },
+      {
+        "id": "latency-percentile-distribution",
+        "role": "같은 표본을 정렬하고 정해진 순위 또는 보간으로 누적 위치를 읽습니다."
+      },
+      {
+        "id": "serving-latency-slo",
+        "role": "측정 지점과 집계 방법·기간·허용 위반율을 고정해 약속을 판정합니다."
+      }
     ],
+    "conceptExplanations": [
+      {
+        "id": "time-to-first-token",
+        "sectionId": "metrics",
+        "intuition": "첫 내용이 보이기까지의 기다림을 별도로 잽니다.",
+        "workedExample": "client 전송0초에서 첫 토큰1초까지TTFT=1초입니다.",
+        "boundary": "서버 접수 시각과client 전송은 다릅니다. 빈 이벤트와 비streaming에서는 실제 첫 토큰 시각을 따로 알 수 없습니다."
+      },
+      {
+        "id": "inter-token-latency",
+        "sectionId": "metrics",
+        "intuition": "응답이 도중에 끊기는 순간을 각각 남깁니다.",
+        "workedExample": "다섯 토큰의 간격40·45·200·42ms에서200ms의 멈춤을 확인합니다.",
+        "boundary": "원시 chunk 이벤트 간격과 토큰별 도착 간격은 다릅니다. 여러 토큰을 묶어 받은 시각으로 내부 시각을 복원할 수 없습니다."
+      },
+      {
+        "id": "time-per-output-token",
+        "sectionId": "metrics",
+        "intuition": "첫 도착 뒤 전체 시간을 토큰 사이 간격 수로 나눕니다.",
+        "workedExample": "(1.327−1)/(5−1)=0.08175초이며327ms의 네 간격 평균입니다.",
+        "boundary": "한 토큰에는 간격이 없으며 고정 vLLM은TPOT 통계 표본에서 빼고 goodput용으로0을 넣습니다. 종료 이벤트 정의도 확인합니다."
+      },
+      {
+        "id": "end-to-end-request-latency",
+        "sectionId": "metrics",
+        "intuition": "요청 전송부터 정한 종료 사건까지의 총시간을 잽니다.",
+        "workedExample": "토큰 기준E2E=1+4×.08175=1.327초입니다.",
+        "boundary": "vLLM chat 경로의 뒤따르는usage가1.350초이면 도구latency도1.350초일 수 있어 마지막 토큰 시각과 구분해야 합니다."
+      },
+      {
+        "id": "serving-throughput-rate",
+        "sectionId": "throughput",
+        "intuition": "정한 기간에 서버 전체가 완료한 요청과 토큰을 각각 셉니다.",
+        "workedExample": "60초에120요청·24000토큰이면2요청/s·400토큰/s이며90요청만 조건 통과하면goodput1.5요청/s입니다.",
+        "boundary": "요청/s와토큰/s를 섞지 않고 실패 수·측정 구간을 보존합니다. 구간별P95 통과가 요청별 조건의 동시 만족을 대신하지 않습니다."
+      },
+      {
+        "id": "latency-throughput-tradeoff",
+        "sectionId": "throughput",
+        "intuition": "같은 실행 묶음의 시간을 사용자 간격과 서버 합계 처리량으로 읽습니다.",
+        "workedExample": "묶음1·8·32와20·28·50ms에서50·약286·640토큰/s가 되지만 각 간격은 늘어납니다.",
+        "boundary": "이는 주어진 실측 또는 가정 값의 관계입니다. 구현 개선으로둘 다 좋아질 수 있으며Little 법칙은90% 임계값을 주지 않습니다."
+      },
+      {
+        "id": "latency-percentile-distribution",
+        "sectionId": "distribution",
+        "intuition": "같은 표본을 정렬하고 정해진 순위 또는 보간으로 누적 위치를 읽습니다.",
+        "workedExample": "100개 중95번째1.45초·96번째1.7초이면nearest-rank1.45초,기본선형보간1.4625초입니다.",
+        "boundary": "동점·표본 수·보간 정의를 보존합니다. nearest-rank 조건은 같은 표본의요청비율 조건과 정확히 동치지만 선형보간은 아닙니다."
+      },
+      {
+        "id": "serving-latency-slo",
+        "sectionId": "slo",
+        "intuition": "측정 지점과 집계 방법·기간·허용 위반율을 고정해 약속을 판정합니다.",
+        "workedExample": "5분마다P95≤1.5초를 하루288구간의99%에서 요구하면실패2개통과,3개약1.0417%로위반입니다.",
+        "boundary": "미관측 구간을통과로세거나유리하게분모에서빼지않습니다. 구간별약속과요청별약속은집계가다릅니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 지표",
+        "relation": "한 요청 timeline 위에서 네 latency 지표를 정의하고 E2E 를 분해합니다.",
+        "concepts": [
+          "time-to-first-token",
+          "inter-token-latency",
+          "time-per-output-token",
+          "end-to-end-request-latency"
+        ]
+      },
+      {
+        "label": "01 처리량",
+        "relation": "서버 단위 throughput 을 정의하고 batch 와 queueing 이 만드는 상충을 봅니다.",
+        "concepts": [
+          "serving-throughput-rate",
+          "latency-throughput-tradeoff"
+        ]
+      },
+      {
+        "label": "02 분포",
+        "relation": "표본을 정렬해 percentile 과 꼬리로 읽습니다.",
+        "concepts": [
+          "latency-percentile-distribution"
+        ]
+      },
+      {
+        "label": "03 계약",
+        "relation": "percentile 에 임계값·window·허용 위반율을 붙여 SLO 로 판정합니다.",
+        "concepts": [
+          "serving-latency-slo"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "요청 전송이0초, 다섯 토큰 도착이1·1.040·1.085·1.285·1.327초라면 TTFT와E2E는 얼마인가요?",
+        "answerChecklist": [
+          "TTFT1초",
+          "E2E1.327초",
+          "같은 client 시계"
+        ],
+        "sectionId": "metrics",
+        "requiredConcepts": [
+          "time-to-first-token",
+          "end-to-end-request-latency"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 다섯 토큰의 네 간격과 TPOT를 계산하고 가장 긴 멈춤을 찾으세요.",
+        "answerChecklist": [
+          "40·45·200·42ms",
+          "합327ms",
+          "평균81.75ms",
+          "최대200ms"
+        ],
+        "sectionId": "metrics",
+        "requiredConcepts": [
+          "inter-token-latency",
+          "time-per-output-token"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "60초 동안120요청과24000출력 토큰이 완료됐다면 두 처리량은 얼마인가요?",
+        "answerChecklist": [
+          "2요청/s",
+          "400토큰/s",
+          "같은 측정 구간"
+        ],
+        "sectionId": "throughput",
+        "requiredConcepts": [
+          "serving-throughput-rate"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "묶음 크기1·8·32와 간격20·28·50ms에서 처리량과 사용자가 겪는 간격을 비교하세요.",
+        "answerChecklist": [
+          "50·약286·640토큰/s",
+          "간격20·28·50ms",
+          "서버 합산과 사용자 체감 구분"
+        ],
+        "sectionId": "throughput",
+        "requiredConcepts": [
+          "latency-throughput-tradeoff"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "100개 표본의95번째가1.45초이고96번째가1.7초일 때 nearest-rank P95와 기본 선형 보간 P95는 얼마인가요?",
+        "answerChecklist": [
+          "1.45초",
+          "1.4625초",
+          "정의 명시"
+        ],
+        "sectionId": "distribution",
+        "requiredConcepts": [
+          "latency-percentile-distribution"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "하루288개 평가 구간의99%를 만족해야 할 때 실패2개와3개를 각각 판정하세요.",
+        "answerChecklist": [
+          "허용floor2.88=2",
+          "2개통과",
+          "3/288약1.0417%실패"
+        ],
+        "sectionId": "slo",
+        "requiredConcepts": [
+          "serving-latency-slo"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "토큰1개·1개·3개가1·1.040·1.327초에 도착했다면 원시 chunk 간격과 토큰 수로 정규화한 값은 어떻게 다른가요?",
+        "answerChecklist": [
+          "원시40·287ms",
+          "정규화40·약95.667ms",
+          "실제 토큰별 도착 간격 복원 불가",
+          "가중평균81.75ms"
+        ],
+        "sectionId": "source-client-events",
+        "requiredConcepts": [
+          "inter-token-latency",
+          "time-per-output-token"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "마지막 토큰 뒤1.350초에 usage 이벤트가 온 경우 고정 vLLM 구현의 latency와TPOT를 원시 토큰 기록과 비교하세요.",
+        "answerChecklist": [
+          "latency1.350초",
+          "TPOT87.5ms",
+          "토큰 마지막1.327초와차이",
+          "backend 이벤트 정의 확인"
+        ],
+        "sectionId": "paper-vllm-bench",
+        "requiredConcepts": [
+          "end-to-end-request-latency",
+          "time-per-output-token"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "19개가0초이고1개가100초인20표본에서95%가1초 안이라는 조건과 두P95정의를 비교하세요.",
+        "answerChecklist": [
+          "nearest-rank0초",
+          "요청비율19/20정확히동치",
+          "선형보간5초로실패",
+          "소표본 동치 경계"
+        ],
+        "sectionId": "distribution",
+        "requiredConcepts": [
+          "latency-percentile-distribution",
+          "serving-latency-slo"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "288구간 중10구간의 관측이 빠졌다면 나머지 전부 통과했다는 이유만으로 하루99%를 달성했다고 선언할 수 있나요?",
+        "answerChecklist": [
+          "관측 누락을통과로세지 않음",
+          "사전 eligibility 고정",
+          "미측정 정책 또는달성미확인",
+          "실패와누락보고"
+        ],
+        "sectionId": "slo-procedure",
+        "requiredConcepts": [
+          "serving-latency-slo"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "vLLM v0.27.1 — serving benchmark and chat event parser",
+        "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/benchmarks/serve.py#L608-L616",
+        "problem": "첫 수신·토큰 수·종료 사건·이벤트 간격의 정의가 달라 결과를 잘못 비교하는 문제입니다.",
+        "contribution": "고정된 실제 수신 경로와TPOT·ITL·처리량·goodput·percentile 계산을 연결합니다.",
+        "assumptions": "commit6e448d0의chat streaming 경로와서버 토큰 수 또는tokenizer 집계에 한정합니다.",
+        "evidenceScope": "endpoint_request_func.py374–425와serve.py584–756을 전체 고정 원문으로 확인합니다.",
+        "notClaim": "모든backend가 같은첫 토큰·종료시각을 정의하거나원시이벤트 간격이 실제 토큰 간격이라는 뜻은 아닙니다.",
+        "sectionId": "paper-vllm-bench"
+      },
+      {
+        "title": "NVIDIA GenAI-Perf — Metrics",
+        "href": "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html#metrics",
+        "problem": "여러토큰이한응답에묶일때수신간격과토큰당정규화간격을혼동하는문제입니다.",
+        "contribution": "뒤응답의토큰수로나누는지표정의를명시하여다른도구의원시간격과구분합니다.",
+        "assumptions": "2026-10-04확인한기존GenAI-Perf문서이며신규개발중단과AIPerf안내도함께확인했습니다.",
+        "evidenceScope": "Metrics표의InterTokenLatency정의를287ms·3토큰가정사례에직접적용합니다.",
+        "notClaim": "95.667ms가묶음안각토큰의실제생성간격이거나가중치없는평균이TPOT와같다는뜻은아닙니다.",
+        "sectionId": "paper-genai-perf"
+      },
+      {
+        "title": "Google SRE Chapter4 — Service Level Objectives",
+        "href": "https://sre.google/sre-book/service-level-objectives/",
+        "problem": "측정방식과대상·시간범위를명시하지않아서같은성능값의판정이달라지는문제입니다.",
+        "contribution": "측정지표와목표를구분하고유효조건과집계기간·허용실패량을명시하도록설명합니다.",
+        "assumptions": "일반서비스의운영정의이며본문5분·1.5초·99%는별도로정한설명용가정입니다.",
+        "evidenceScope": "StandardizeIndicators와DefiningObjectives의측정조건요구를288구간사례에적용합니다.",
+        "notClaim": "이문서가특정LLM의적정지연값을정하거나관측누락을자동통과처리한다는주장은아닙니다.",
+        "sectionId": "paper-sre-slo"
+      }
+    ],
+    "entryLevel": true
   },
   "ai/prefill-decode-phase-dynamics": {
     entryNote: "Prefill 과 decode 가 다른 phase 라는 것과 KV cache 가 무엇인지 알고 들어옵니다. Roofline 을 처음 보는 독자를 위해 intensity 와 ridge point 를 이 글에서 다시 계산합니다.",
@@ -79120,10 +79884,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "title": "Williams 외·Roofline(2009)",
-        "href": "https://escholarship.org/uc/item/3qf383m0",
+        "href": "https://escholarship.org/uc/item/78h8v7mr",
         "problem": "64개 배열의 실행과 메모리 요청을 공식 규칙 및 고정 소스로 대조합니다.",
-        "contribution": "연산 강도와 대역폭·계산 상한을 결합하는 모델. 실제 병목 원인의 완전한 진단은 아닙니다.",
-        "assumptions": "본문의 문서 버전과 source commit에 한정하며 사례 숫자는 학습 가정입니다.",
+        "contribution": "원문 3절의 DRAM 전송량 기준 operational intensity와 지속 가능한 대역폭의 상한을 64 FLOP·768B 가정에 대입합니다.",
+        "assumptions": "논문 원문은 cache 뒤 DRAM 경계를 사용합니다. 사례의 768B를 쓰려면 실제 DRAM 전송량도 같다는 별도 가정이 필요합니다.",
         "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
         "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
         "sectionId": "comparison"
@@ -118670,6 +119434,16 @@ export const ARTICLE_LEARNING: Readonly<
         "evidenceScope": "공식 원문에서 확인한 구조와 함수 표현. 실제 장치 성능 측정은 포함하지 않습니다.",
         "notClaim": "모든 제품·compiler·접근 패턴의 동일한 실행 시간을 보장하지 않습니다.",
         "sectionId": "comparison"
+      },
+      {
+        "title": "HIP 7.0.0 · warpSize",
+        "href": "https://rocm.docs.amd.com/projects/HIP/en/docs-7.0.0/how-to/hip_cpp_language_extensions.html#warpsize",
+        "problem": "32와 64 중 어느 실행 폭을 코드가 사용해야 하는지 구분합니다.",
+        "contribution": "gfx9의 64와 gfx10 이상 HIP의 32 지원을 RDNA ISA의 표현 능력과 분리합니다.",
+        "assumptions": "ROCm 7.0.0 HIP 문서의 지원 범위입니다.",
+        "evidenceScope": "장치 조회와 이식 코드의 실행 폭 조건입니다.",
+        "notClaim": "향후 모든 compiler와 RDNA 실행 모드를 일괄 보장하지 않습니다.",
+        "sectionId": "names"
       }
     ]
   },

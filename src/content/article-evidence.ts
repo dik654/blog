@@ -211,17 +211,17 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "gpu/cuda-thread-hierarchy": [
     {
-      kind: "공식 문서",
-      label: "NVIDIA CUDA Programming Guide — Programming Model",
-      href: "https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html",
-      note: "Grid·block·thread hierarchy, 32-thread warp·SIMT, optional thread block cluster의 현재 정본",
+      "kind": "공식 문서",
+      "label": "CUDA C++ Programming Guide 13.0.2 · Thread Hierarchy·SIMT·Thread Block Clusters",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-programming-guide/index.html",
+      "note": "Block별 warp 구성과 독립 배치, CC 9.0부터의 cluster와 portable 최대 8 및 작은 구성 예외를 대조합니다."
     },
     {
-      kind: "공식 문서",
-      label: "NVIDIA CUDA Programming Guide — Writing SIMT Kernels",
-      href: "https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html",
-      note: "Built-in variables, 1D/2D mapping, boundary-safe vector kernel과 memory-access 입구",
-    },
+      "kind": "공식 문서",
+      "label": "NVIDIA cuda-samples v13.0 · vectorAdd.cu",
+      "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu",
+      "note": "49–52행에 block 2·크기 4·내부 번호 1·길이 10을 넣어 i=9와 결과 99를 따라갑니다."
+    }
   ],
   "gpu/cuda-shared-memory": [
     {
@@ -809,7 +809,31 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/",
       note: "Vector·inner product·orthogonality·projection을 학부 선형대수 흐름에서 확장하는 공개 강의",
     },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "OpenStax Calculus Volume 3 §2.3 · 식 (2.3)–(2.7)",
+      "href": "https://openstax.org/books/calculus-volume-3/pages/2-3-the-dot-product",
+      "note": "원문의 기준 u=(2,0), 대상 v=(3,4)를 식 (2.6)에 넣어 (6/4)(2,0)=(3,0)을 구합니다. 본문과 원문의 문자 역할 차이를 명시했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.8 · normalize",
+      "href": "https://docs.pytorch.org/docs/2.8/generated/torch.nn.functional.normalize.html",
+      "note": "분모에 eps를 더하지 않고 max(노름, eps)를 사용함을 확인했습니다. 아주 작은 입력에서 결과 길이가 .05인 문서식 계산을 제공합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.8 · cosine_similarity",
+      "href": "https://docs.pytorch.org/docs/2.8/generated/torch.nn.functional.cosine_similarity.html",
+      "note": "기본 eps=1e−8로 두 노름을 각각 제한합니다. 예제의 계산값 .03과 기하학적 코사인 .6의 차이를 설명합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Cornell CS 4/5780 Spring 2023 · Perceptron Convergence",
+      "href": "https://www.cs.cornell.edu/courses/cs4780/2023sp/lectures/lecturenote03.html",
+      "note": "원문의 초기값 0과 두 성장식, 단위 길이 입력의 1/γ² 상한을 읽고 R=5·γ=1 사례를 입력 1/5 축소로 연결합니다."
+    },
+],
   "ai/math-functions-composition": [
     {
       kind: "보충 읽기",
@@ -5657,18 +5681,23 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "crypto/finite-field-theory": [
     {
-      kind: "공식 규격",
-      label: "NIST FIPS 186-5 — Digital Signature Standard",
-      href: "https://csrc.nist.gov/pubs/fips/186-5/final",
-      note: "실제 암호 규격에서 prime·binary field parameter와 validation을 사용하는 범위",
+      "kind": "공식 문서",
+      "label": "NIST FIPS 186-5: Digital Signature Standard",
+      "href": "https://csrc.nist.gov/pubs/fips/186-5/final",
+      "note": "유한체 예제와 승인된 서명 설정을 구분하며 Appendix D의 변경 사항에 따라 기존 범위 설명을 교정했습니다."
     },
     {
-      kind: "핵심 논문",
-      label:
-        "Schwartz — Fast Probabilistic Algorithms for Verification of Polynomial Identities",
-      href: "https://doi.org/10.1145/322186.322189",
-      note: "Random polynomial identity test와 degree 기반 false-acceptance bound의 원문",
+      "kind": "공식 문서",
+      "label": "Fast Probabilistic Algorithms for Verification of Polynomial Identities",
+      "href": "https://doi.org/10.1145/322217.322225",
+      "note": "원문 Lemma1·Corollary1의 Q와 I에 x²−1과 F7을 대응해 2/7을 계산하고 최고차항 계수에 대한 귀납을 설명했습니다."
     },
+    {
+      "kind": "공식 문서",
+      "label": "Handbook of Applied Cryptography · Chapter2",
+      "href": "https://cacr.uwaterloo.ca/hac/about/chap2.pdf",
+      "note": "3×(−2)+7=1에서 역원 5를 얻고 (u+2)(u+1)+2(u²+1)=1 mod3으로 확장체 역원을 확인합니다."
+    }
   ],
   "crypto/lagrange": [
     {
@@ -5683,7 +5712,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://doi.org/10.1137/S0036144502417715",
       note: "Barycentric forms·precomputation·floating-point analysis의 원문 범위",
     },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "NIST DLMF §3.3: Interpolation",
+      "href": "https://dlmf.nist.gov/3.3",
+      "note": "식3.3.1·3.3.2에 n=2, 위치 0·1·2, 값 1·4·9를 대입해 같은 2차 식을 만듭니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Barycentric Lagrange Interpolation",
+      "href": "https://people.maths.ox.ac.uk/trefethen/barycentric.pdf",
+      "note": "저자 사이트 원문 식(3.2)·(4.1)·(4.2)에 위치 0·1·2, 값 1·4·9, 새입력 3을 넣어 무게 9·16·9와 분자 14·분모 3의 결과 16을 확인합니다."
+    },
+],
   "crypto/fft": [
     {
       kind: "핵심 논문",
@@ -5815,9 +5856,24 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ],
   "crypto/reed-solomon": [
-    { kind: "핵심 논문", label: "Reed & Solomon · Polynomial Codes over Certain Finite Fields", href: "https://doi.org/10.1137/0108018", note: "Finite-field message polynomial evaluation code의 1960 원문" },
-    { kind: "공식 규격", label: "RFC 5510 · Reed-Solomon FEC", href: "https://www.rfc-editor.org/rfc/rfc5510.html", note: "GF(2^m) systematic packet-erasure profile·symbol identity·MDS 복구 범위" },
-    { kind: "핵심 논문", label: "Fast Reed-Solomon Interactive Oracle Proofs of Proximity", href: "https://doi.org/10.4230/LIPIcs.ICALP.2018.14", note: "FRI의 RS proximity problem·folding protocol·complexity와 soundness 분석" },
+    {
+      "kind": "공식 문서",
+      "label": "Reed & Solomon · Polynomial Codes over Certain Finite Fields",
+      "href": "https://doi.org/10.1137/0108018",
+      "note": "원문 300~301쪽의 계수와 평가, Vandermonde 독립성에 같은 2·3과 위치 1·3 복원을 대응했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "RFC 5510 · Reed-Solomon FEC",
+      "href": "https://www.rfc-editor.org/rfc/rfc5510.html",
+      "note": "§8.2.1의 G=Vkk⁻¹V와 §8.3.1의 받은 열 복원 구조를 F7 사례에서 계산해 같은 [2,5,1,4]를 만들고 [5,4]에서 [2,5]를 복원합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Fast Reed-Solomon Interactive Oracle Proofs of Proximity",
+      "href": "https://doi.org/10.4230/LIPIcs.ICALP.2018.14",
+      "note": "§1의 RS[F,S,ρ]에 N4, ρ1/2, 같은 네 기록을 대응해 거리 0과 1/4를 구분했습니다."
+    },
   ],
   "blockchain/erasure-coding": [
     {
@@ -6343,6 +6399,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "NVIDIA Blackwell Tuning Guide13.0.2",
       "href": "https://docs.nvidia.com/cuda/archive/13.0.2/blackwell-tuning-guide/index.html",
       "note": "Data center Blackwell과 compute capability별 자원·지원 조건을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PTX ISA 9.0 · WGMMA·tcgen05",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/parallel-thread-execution/index.html",
+      "note": "4 warps의 WGMMA 협력 범위, Tensor Memory의 칩 내부 저장 역할, tcgen05 명령별 Target ISA Notes를 대조합니다."
     }
   ],
   "gpu/cuda-matrix-multiply": [
@@ -6983,7 +7045,37 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "vLLM Optimization and Performance — Chunked Prefill", href: "https://docs.vllm.ai/en/latest/configuration/optimization.html", note: "V1 이 chunked prefill 을 기본으로 켜고 decode 를 먼저 batch 한 뒤 남은 budget 에 prefill 을 넣는다는 설명과 budget 크기의 ITL·TTFT 맞바꿈" },
     { kind: "선행·비교 논문", label: "Orca: A Distributed Serving System for Transformer-Based Generative Models", href: "https://www.usenix.org/conference/osdi22/presentation/yu", note: "Iteration-level scheduling 과 selective batching 의 원 논문(OSDI 2022)" },
     { kind: "핵심 논문", label: "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve", href: "https://arxiv.org/abs/2403.02310", note: "Chunked prefill 과 stall-free scheduling 으로 mixed batch 를 만드는 근거이며 수치는 저자 자기보고" },
-  ],
+    {
+      "kind": "공식 코드",
+      "label": "Continuous batching — v0.27.1 schedule + _update_after_schedule",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py",
+      "note": "2026-10-04 확인. 8→7→6→0; A1 B1 C6; progress reserved before forward"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Continuous batching — SchedulerOutput L192–208",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/output.py",
+      "note": "2026-10-04 확인. num_scheduled_tokens A1 B1 C6, total8"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Continuous batching — ParentRequest L52–94",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/engine/parallel_sampling.py",
+      "note": "2026-10-04 확인. n3 → three children n1"
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Continuous batching — p528 Algorithm1",
+      "href": "https://www.usenix.org/system/files/osdi22-yu.pdf",
+      "note": "2026-10-04 확인. D enters candidate pool at next iteration; different reservation policy"
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Continuous batching — §4.1 Algorithm3 lines6–20",
+      "href": "https://arxiv.org/html/2403.02310v3",
+      "note": "2026-10-04 확인. τ8, n_t2, chunk6 then batch total8"
+    },
+],
   "ai/serving-memory-admission-and-preemption": [
     { kind: "핵심 논문", label: "Efficient Memory Management for Large Language Model Serving with PagedAttention", href: "https://arxiv.org/abs/2309.06180", note: "FCFS·all-or-nothing eviction과 recompute·swap 정의, block 크기별 비교, OPT-13B token당 800 KB와 20.4~38.2% 활용률의 출처" },
     { kind: "공식 문서", label: "vLLM Optimization and Tuning — Preemption", href: "https://docs.vllm.ai/en/latest/configuration/optimization.html", note: "V1 기본 preemption mode RECOMPUTE와 preemption을 줄이는 설정 조정 방향" },
@@ -7005,7 +7097,37 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "NVIDIA · GenAI-Perf metrics", href: "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html", note: "Chunk 당 token 수로 나누는 inter token latency 정의와 avg·p99·p90·p75 보고 집합의 근거" },
     { kind: "공식 문서", label: "Google SRE Book · Service Level Objectives", href: "https://sre.google/sre-book/service-level-objectives/", note: "SLI·SLO·SLA 구분, percentile 기반 latency 목표, error budget 과 내부 SLO 여유의 근거" },
     { kind: "공식 문서", label: "vLLM · Benchmarking CLI", href: "https://github.com/vllm-project/vllm/blob/main/docs/benchmarking/cli.md", note: "Serving benchmark 의 실행 interface 이며 방법론(warm·cold, rate sweep)은 후속 글 범위" },
-  ],
+    {
+      "kind": "공식 코드",
+      "label": "Latency metrics — v0.27.1 chat streaming L374–425",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/benchmarks/lib/endpoint_request_func.py#L374-L425",
+      "note": "2026-10-04 확인. 1·1.040·1.327초 수신 이벤트와 usage1.350초→latency1.350초"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Latency metrics — v0.27.1 calculate_metrics L608–616",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/benchmarks/serve.py#L608-L616",
+      "note": "2026-10-04 확인. (1.327−1)/4=.08175 and raw event gaps"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Latency metrics — v0.27.1 goodput conjunction L621–642 and rates L726–754",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/benchmarks/serve.py#L621-L642",
+      "note": "2026-10-04 확인. 90/60=1.5 request/s; output400 tokens/s"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Latency metrics — Metrics table, retrieved2026-10-04",
+      "href": "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html#metrics",
+      "note": "2026-10-04 확인. 287ms / 3≈95.667ms and legacy tool status"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Latency metrics — Defining Objectives and Standardize Indicators",
+      "href": "https://sre.google/sre-book/service-level-objectives/",
+      "note": "2026-10-04 확인. client clock, nearest-rank,5min windows,288denominator,99%"
+    },
+],
   "ai/prefill-decode-phase-dynamics": [
     { kind: "핵심 논문", label: "Roofline: An Insightful Visual Performance Model for Multicore Architectures", href: "https://doi.org/10.1145/1498765.1498785", note: "Arithmetic intensity 와 ridge point 로 compute·memory 병목을 판정하는 원 model" },
     { kind: "핵심 논문", label: "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve", href: "https://arxiv.org/abs/2403.02310", note: "Chunked prefill 과 stall-free scheduling 으로 decode 간섭을 다룬 OSDI 2024 연구, 수치는 저자 자기보고" },
@@ -7056,10 +7178,10 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "NVIDIA vectorAdd·3f1c509·52 행"
     },
     {
-      "kind": "공식 문서",
+      "kind": "핵심 논문",
       "label": "Williams 외·Roofline(2009)",
-      "href": "https://escholarship.org/uc/item/3qf383m0",
-      "note": "연산 강도와 대역폭·계산 상한을 결합하는 모델. 실제 병목 원인의 완전한 진단은 아닙니다."
+      "href": "https://escholarship.org/uc/item/78h8v7mr",
+      "note": "2009 CACM 논문의 저자 원고. 3절의 cache 뒤 DRAM 바이트와 지속 가능한 대역폭 정의를 읽고 같은 64 FLOP 사례에 대입합니다. 기존 링크가 2008 Hot Chips 발표였던 오류를 바로잡았습니다."
     },
     {
       "kind": "공식 문서",
@@ -9774,6 +9896,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "AMD CDNA4 ISA ·Matrix Arithmetic",
       "href": "https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/instruction-set-architectures/amd-instinct-cdna4-instruction-set-architecture.pdf",
       "note": "MFMA 명령의 target·operand·shape는 해당 ISA로 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "HIP 7.0.0 · warpSize",
+      "href": "https://rocm.docs.amd.com/projects/HIP/en/docs-7.0.0/how-to/hip_cpp_language_extensions.html#warpsize",
+      "note": "gfx9의 64와 gfx10 이상 HIP의 32 지원을 RDNA ISA의 표현 능력과 분리합니다."
     }
   ],
   "gpu/hbm-stack-and-memory-requests": [

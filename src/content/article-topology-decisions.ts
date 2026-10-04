@@ -136,10 +136,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "gpu/cuda-basics": {
     "action": "keep",
-    "status": "reviewed",
+    "status": "implemented",
     "reviewedAt": "2026-10-04",
-    "rationale": "이 글에서는 같은 크기의 두 배열을 더하는 작업 하나를 끝까지 따라갑니다. 번호를 나누는 규칙에서 시작해 실제 명령과 저장 공간에 도달한 뒤, 어느 시간을 측정해야 하는지 판단합니다.",
-    "sharedGate": "64개 × 4B × 입력 2개 = 512B이고 출력은 256B입니다. 합계 768B와 37번의 offset 148B를 본문·공식 코드·문제에서 일관되게 추적합니다. stride 8 변형은 최소 249개 원소를 가진 입력에서 32개를 선택합니다."
+    "rationale": "실제본문의64개사례와S→B→0…7흐름을확인하고역할표·원문근거·관측경계만보강했습니다. 64개·thread37·lane5·주소148B·유효768B. CC6.0+sector범위와원본50000/256설정을분리.",
+    "sharedGate": "기초6·심화4답anchor대조,고정원문SHA,28수치검산,390/1440코드패널및화면실제검수.실측성능을주장하지않습니다."
   },
   "gpu/gpu-arch-hopper": KEEP("TMA·cluster·precision feature를 같은 Hopper compatibility gate 아래 비교하는 generation overview입니다."),
   "gpu/cuda-persistent-kernels": KEEP("Persistent thread 정의→work queue 계약→static/dynamic 배분→release gate가 하나의 device-side scheduling 학습 단위입니다. CUTLASS tile scheduler는 이 정의의 구체 사례로만 링크하며 별도 prerequisite로 만들지 않아 순환을 피합니다."),
@@ -870,24 +870,24 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "infrastructure/materials-waste-and-circularity": {"action": "keep", "status": "reviewed", "reviewedAt": "2026-10-04", "rationale": "수거율과 실제 회수량, 처리비용과 재원 이전, 재생재료와 새 원료 대체를 구분해야 순환의 효과를 계산할 수 있습니다.", "sharedGate": "(가정) 발생 100kg·수거 80kg·수율 75%·회수 60kg, 처리총비용 12만원·판매수입 6만원의 숫자와 전제를 본문·그림·문제에서 함께 확인합니다."},
   "gpu/amd-gpu-execution-and-hip": {
     "action": "keep",
-    "status": "reviewed",
+    "status": "implemented",
     "reviewedAt": "2026-10-04",
-    "rationale": "이 글은 두 배열의 64개 원소를 더하는 요청을 AMD 장치 안으로 보냅니다. 작업 수는 유지하면서 실행 묶음과 명령, 저장 공간의 차이를 따라갑니다. 공식 구현 두 개를 비교하되 특정 제품의 성능 순위를 만들지는 않습니다.",
-    "sharedGate": "64개 × 4B × 입력 2개 = 512B이고 출력은 256B입니다. 합계 768B와 37번의 offset 148B를 본문·공식 코드·문제에서 일관되게 추적합니다. stride 8 변형은 최소 249개 원소를 가진 입력에서 32개를 선택합니다."
+    "rationale": "실제본문의64개사례와S→B→0…7흐름을확인하고역할표·원문근거·관측경계만보강했습니다. 64개·CDNAwave64·lane37·주소148B. HIP7warpSize32/64근거,CDNA4LDS160KB와원본1024×1024를대조.",
+    "sharedGate": "기초6·심화4답anchor대조,고정원문SHA,28수치검산,390/1440코드패널및화면실제검수.실측성능을주장하지않습니다."
   },
   "gpu/hbm-stack-and-memory-requests": {
     "action": "keep",
-    "status": "reviewed",
+    "status": "implemented",
     "reviewedAt": "2026-10-04",
-    "rationale": "이 글은 64개 덧셈에 필요한 데이터를 저장 장치에서 가져오는 과정을 따라갑니다. 칩을 쌓는 모습에서 출발해 주소를 받는 제어기와 내부 읽기 동작을 연결합니다. 이어 코드의 접근 순서가 그 길을 어떻게 바꾸는지 계산합니다.",
-    "sharedGate": "64개 × 4B × 입력 2개 = 512B이고 출력은 256B입니다. 합계 768B와 37번의 offset 148B를 본문·공식 코드·문제에서 일관되게 추적합니다. stride 8 변형은 최소 249개 원소를 가진 입력에서 32개를 선택합니다."
+    "rationale": "실제본문의64개사례와S→B→0…7흐름을확인하고역할표·원문근거·관측경계만보강했습니다. HBM3 16×64bit·HBM4 32×64bit, 가정1.024/2.048TB/s·.75ns물량비율.적층높이와데이터폭분리.",
+    "sharedGate": "기초6·심화4답anchor대조,고정원문SHA,28수치검산,390/1440코드패널및화면실제검수.실측성능을주장하지않습니다."
   },
   "gpu/gpu-memory-hierarchy-and-roofline": {
     "action": "keep",
-    "status": "reviewed",
+    "status": "implemented",
     "reviewedAt": "2026-10-04",
-    "rationale": "이 글은 64개 덧셈에 필요한 768바이트를 유지한 채 저장 계층과 접근 간격, 시간당 처리량을 차례로 계산합니다. 계산한 상한과 측정한 성능을 비교합니다. 상한 아래에 있다는 사실만으로 원인을 확정하지는 않습니다.",
-    "sharedGate": "64개 × 4B × 입력 2개 = 512B이고 출력은 256B입니다. 합계 768B와 37번의 offset 148B를 본문·공식 코드·문제에서 일관되게 추적합니다. stride 8 변형은 최소 249개 원소를 가진 입력에서 32개를 선택합니다."
+    "rationale": "실제본문의64개사례와S→B→0…7흐름을확인하고역할표·원문근거·관측경계만보강했습니다. 1/12FLOP/B·83.3GFLOP/s·.768ns물량비율·500KB진행중량.2009Roofline실제논문링크교정 및DRAM경계명시.",
+    "sharedGate": "기초6·심화4답anchor대조,고정원문SHA,28수치검산,390/1440코드패널및화면실제검수.실측성능을주장하지않습니다."
   },
   "markets/financial-products-and-claims": {
     "rationale": "하나의 수치 사례에서 금융상품은 누가 언제 무엇을 지급하는지로 구별한다의 지급·조건·한계를 순서대로 추적합니다.",
@@ -1564,6 +1564,55 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "reviewedAt": "2026-10-04",
     "action": "keep"
   },
+  "crypto/lagrange": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 세 기록에서 규칙 생성·새 위치 평가·원문 무게식·차수 반례까지 이어져 보간의 의미와 실패 조건을 한 글에서 이해하도록 유지합니다.",
+    "sharedGate": "18개의 정확한 산술 검산으로 모든 F17 입력 17개의 직접식·기저·무게 계산을 비교하고 표본 분기·분모 항등식·차수 반례·소멸식의 표본 밖 값을 확인합니다. DLMF와 저자 PDF의 수식을 같은 사례에 대응하며 실제 암호 라이브러리 실행을 주장하지 않습니다."
+  },
+  "ai/serving-latency-metrics-and-slo": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 요청의 같은 시각 기록을 지표·표본 분포·실제 측정 코드·기간 약속으로 올리는 연속 설명입니다. 원래의 핵심 수식3개와처리량·구간판정절차를 유지하면서 이벤트 단위와분모를 추적하기 위해15절로 나눴습니다. 엔진 병목과용량설계는연결글에맡깁니다.",
+    "sharedGate": "다섯토큰1·1.040·1.085·1.285·1.327초→327/4=81.75ms→고정코드적용; 묶음1·1·3과usage1.350초의다른출력;100개표본P95 1.45/1.4625초;288구간예산2개와3개위반을본문·문제·원문패널·도식에서동일하게검사합니다."
+  },
+  "crypto/finite-field-theory": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 6÷3 요청을 입력·역원·되곱하기·원문 절차까지 추적한 뒤 위수와 다항식, 검사 확률, 확장체에서 무엇이 달라지는지 이어 보도록 유지합니다.",
+    "sharedGate": "28개의 정확한 산술 검산으로 F7의 모든 역원, 위수, 다항식 값과 실제 근 비율, 세 번 독립 상한, F3 확장체의 모든 8개 역원을 확인합니다. 원문 절차의 교육용 재현과 실제 라이브러리 실행을 구분합니다."
+  },
+  "ai/math-vectors-inner-products": {
+    "action": "keep",
+    "rationale": "하나의 이동 (3,4)에서 좌표·길이·내적·투영을 차례로 계산하고 투영 길이의 제한으로 부등식을 얻습니다. 같은 벡터가 무엇을 남기고 버리는지 함께 보아야 내적을 의미 유사도나 투영을 원본 보존으로 잘못 읽지 않습니다. 퍼셉트론 증명은 이 관계의 실제 재사용을 펼침 영역으로 보존합니다.",
+    "sharedGate": "길이 5, 차이 거리 5, 직각 내적 0, 가로 기준 (1,0)/(2,0)의 같은 투영 (3,0), 등호 50과 엄격한 상한 0<25를 검산합니다. 공식 문서의 tiny normalize 길이 .05와 cosine .03/.6, 정리의 R5·γ1 상한25까지 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "crypto/reed-solomon": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 네 기록을 생성·소실 복원·오류 교정·원문 행렬·잘못된 성공·근접성까지 추적해야 계산의 보장과 원본 확인을 구분할 수 있어 한 글로 유지합니다.",
+    "sharedGate": "F7의 49개 원본에 대해 모든 294개 두 위치 복원과 1176개 한 오류 교정, 49개 무오류 복원, 최소 거리와 행렬 변환을 정확한 정수로 재현했습니다. 패킷 구현이나 FRI 실행은 하지 않았습니다."
+  },
+  "ai/continuous-batching-step-anatomy": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 실행에 누구의 토큰을 몇 개 넣는지라는 하나의 질문을 작은 배정부터 실제 코드와 진행 예약까지 순서대로 풉니다. 독립적인 정책 최적화와 성능 모델은 연결 글이 소유합니다.",
+    "sharedGate": "한도 8에서 A1·B1·C6, 다음 A1·B1·C4·D2, 다음 네 요청 1씩 합계 4를 본문·문제·Viz·고정 원문 적용에서 맞춥니다. 요청 상한 2, 공간 배정 실패, P4로 뒤 A 미배정, 반환 전 C의 computed/in-flight 6을 별도 경계로 검사합니다."
+  },
+  "gpu/cuda-thread-hierarchy": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "열 개의 덧셈을 네 자리씩 나누는 한 요청에서 논리적 작업표와 실제 실행 묶음을 구별합니다. 같은 번호의 경계 검사와 주소를 실제 원본으로 확인한 다음 2D 및 자원 제약으로 확장하는 연속 설명이므로 유지합니다.",
+    "sharedGate": "10개·4 threads·3 blocks에서 후보 12개 중 접근 10개와 건너뜀 2개, 9번의 36바이트 주소와 결과 99, block별 부분 warp 3개를 본문·도식·학습·원문에 함께 대조합니다. 2D의 13번·52바이트 및 N=0 등 경계도 정수 검산합니다."
+  },
 };
 
 /**
@@ -1571,6 +1620,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/continuous-batching-step-anatomy": "f6d631f09b82218c",
+  "ai/math-vectors-inner-products": "f710b7d099e734d2",
+  "ai/serving-latency-metrics-and-slo": "78cb5743248b70d4",
+  "crypto/finite-field-theory": "307ba9c3fc691586",
+  "crypto/lagrange": "03472f07b9810658",
+  "crypto/reed-solomon": "ee07dec7d03042cc",
+  "gpu/cuda-thread-hierarchy": "be8be5b5ad1806bc",
   "ai/hyperparameter-tuning": "8b86ec3131edeec2",
   "ai/learning-curve-tracking": "43b2d91519960b02",
   "ai/math-gradient-descent-convergence": "f4eee2384a7fa044",
@@ -1758,7 +1814,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/reth-sync": "da31c51eece15592",
   "blockchain/reth-txpool": "610e2f10b793ae99",
   "crypto/mpc": "487961f55cafda95",
-  "gpu/cuda-basics": "8da354583dfb4cb2",
+  "gpu/cuda-basics": "41615071ec176bec",
   "gpu/gpu-arch-hopper": "036cadb2e337870a",
   "gpu/cuda-persistent-kernels": "9a0d1ef64c90bed2",
   "gpu/cuda-register-pressure": "de34dcf7cffc5752",
@@ -1810,9 +1866,9 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "crypto/snark-overview":"961154e8537ab05f",
 "crypto/stark-theory":"544cd9e5420b7914",
 "crypto/zk-theory":"d8c8dd6527fe6308",
-"gpu/amd-gpu-execution-and-hip":"29a76da9f5ac7b19",
-"gpu/gpu-memory-hierarchy-and-roofline":"6e8c4486d9c5d116",
-"gpu/hbm-stack-and-memory-requests":"13fdf060d2284abf",
+"gpu/amd-gpu-execution-and-hip":"e5a60870e047525d",
+"gpu/gpu-memory-hierarchy-and-roofline":"3c0d9140fdf925f7",
+"gpu/hbm-stack-and-memory-requests":"5a449d78efcc2ad3",
 "infrastructure/materials-waste-and-circularity":"89730ed273657bf2",
 "institutions/culture-norms-and-coordination":"588ebc2e3eeb88e7",
 "institutions/evidence-measurement-and-causality":"e4ce1a8e47b8197d",
