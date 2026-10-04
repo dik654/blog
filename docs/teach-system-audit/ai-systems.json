@@ -1013,25 +1013,290 @@
       "route": "ai/attention-kernel-anatomy-and-backends",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/attention-kernel-anatomy-and-backends.tsx",
       "publicPath": "cs/ai/attention-kernel-anatomy-and-backends",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "정의·약어와추상Viz가작은사례보다앞서고고정사례추적/원문패널/답절예측질문이없음",
+        "함수하나/HBM출력만/출력register상주를attention모든경로로일반화",
+        "지수호출1을일반FLOP하나로더한식과처리량모형을실제시간으로읽게함",
+        "필수입출력크기를실제HBMtraffic으로등치하고prefill/decode병목을단정",
+        "FA2의warp간교환을부분점수64KiB로단정하나논문3.3은PV후부분출력합을설명",
+        "causal의queryblock작업량과실제SM분배를등치하고FA2무거운block역순실행을증거없이단정",
+        "backend자동/명시선택을같은fallback으로읽게하고모든구현이autotune한다고단정",
+        "오류주장이현재learning7정의와owns에도반복됨"
+      ],
+      "fixture": {
+        "assumption": true,
+        "N": 8,
+        "d": 2,
+        "elementBytes": 2,
+        "blockRows": 2,
+        "blockCols": 2,
+        "Q": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "K": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            7,
+            0
+          ],
+          [
+            8,
+            0
+          ]
+        ],
+        "V": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            7,
+            0
+          ],
+          [
+            8,
+            0
+          ]
+        ],
+        "allScores": 0,
+        "causalOutputsFirstComponent": [
+          1,
+          1.5,
+          2,
+          2.5,
+          3,
+          3.5,
+          4,
+          4.5
+        ],
+        "nonCausalOutput": 4.5,
+        "decodeFinalPosition": 7,
+        "logicalActiveEntries": 36,
+        "causalTiles": 10,
+        "denseTileEntries": 40,
+        "skippedTiles": 6,
+        "denseMatmulFlops": 512,
+        "causalTileMatmulFlops": 320,
+        "causalUsefulMatmulFlops": 288,
+        "minimumDenseByteLedger": 128,
+        "rereadEveryQueryBlockBytes": 320,
+        "denseReferenceIntensities": [
+          4,
+          1.6
+        ],
+        "splitLengths": [
+          3,
+          3,
+          2
+        ],
+        "splitNumerators": [
+          6,
+          15,
+          15
+        ],
+        "splitDenominators": [
+          3,
+          3,
+          2
+        ],
+        "splitMeans": [
+          2,
+          5,
+          7.5
+        ],
+        "naiveMean": "29/6",
+        "weightedMean": "9/2"
+      },
+      "stageAnchors": {
+        "strategy": "overview",
+        "blackBox": "black-box",
+        "smallCase": "case",
+        "structure": "picture",
+        "necessity": "why",
+        "names": "names",
+        "trace": "anatomy/causal/split-merge/regimes",
+        "realSource": "split-source/backend-source/autotune-source/triton-trace",
+        "depth": "large-ledger/generations/pipeline/scheduling",
+        "limits": "limits",
+        "prediction": "review · 3개 질문과 답 절"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/html/2307.08691v1",
+          "scope": "원 논문 A100 80GB SXM4, head dim 64·128 등의 벤치마크 조건이며 고정 공개 코드의 이후 선택표와 구별합니다. 첫 세대 대비 약 2 배, 이론 FLOP/s 의 50~73 %, causal 1.7~1.8 배, GPT 학습 72 % MFU 는 저자 자기보고입니다."
+        },
+        {
+          "href": "https://arxiv.org/html/2407.08608v2",
+          "scope": "NVIDIA Hopper(H100) 전용이며 TMA, WGMMA, setmaxnreg 같은 Hopper 명령을 전제합니다. FP16 최고 약 740TFLOP/s와 FP8 약 1.2PFLOP/s는 H100의 저자 측정입니다. 약 2.6배 오차 감소는 비교한 기본 per-tensor FP8 설정 범위입니다."
+        },
+        {
+          "href": "https://arxiv.org/html/2501.01005v1",
+          "scope": "읽은 arXiv v1은 FlashInfer v0.2, A100 40GB/H100 80GB, CUDA 12.4와 PyTorch 2.4의 실험 조건을 밝힙니다. Triton 기반 backend 대비 ITL 29~69 %, 긴 context 28~30 %, 병렬 생성 13~17 % 개선은 저자 측정입니다."
+        },
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/attention/selector.py",
+          "scope": "고정 원격 원문과 SHA-256을 대조했습니다. 선택 조건과 플랫폼 호출을 읽습니다."
+        },
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/platforms/cuda.py",
+          "scope": "고정 원격 원문과 SHA-256을 대조했습니다. 지원 검사를 대체한 CPU 실행으로 자동·명시 선택 제어만 확인합니다."
+        },
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/attention/backend.py",
+          "scope": "고정 원격 원문과 SHA-256을 대조했습니다. 지원하지 않는 조건의 이유를 모으는 원문입니다."
+        },
+        {
+          "href": "https://github.com/triton-lang/triton/blob/7c56a5e40f7fd928dfd5c72902d5def0097db73a/python/tutorials/06-fused-attention.py",
+          "scope": "고정 원격 원문과 SHA-256을 대조했습니다. 후보 생성·keep·prune 몸체를 CPU에서 확인하며 실제 GPU 컴파일과 성능은 측정하지 않았습니다."
+        },
+        {
+          "href": "https://github.com/Dao-AILab/flash-attention/blob/e9515d5dee6ade134a33d6020d38d01ef0596996/csrc/flash_attn/src/flash_fwd_launch_template.h",
+          "scope": "고정 원격 원문과 SHA-256을 대조했습니다. 분할/합치기의 별도 launch와 d=128 수동 설정표를 읽습니다."
+        },
+        {
+          "href": "https://github.com/Dao-AILab/flash-attention/blob/e9515d5dee6ade134a33d6020d38d01ef0596996/csrc/flash_attn/src/flash_fwd_kernel.h",
+          "scope": "고정 원격 원문과 SHA-256을 대조했습니다. 인과 범위·원래 위치 오프셋·분할 LSE 및 출력 합치기를 읽습니다."
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "기존 본문·Viz·6+4·공유 정의7개를 전문 읽고 8위치의 같은 출력4.5로 재작성했습니다. 단일 kernel·출력만 저장·부분 점수64KiB·모든 통신0·강제 backend fallback·고정16autotune 후보의 잘못된 단정을 실제 원문과 대조해 교정했습니다.",
+        "originalPreservation": "기존 N4096/128의1024→528, N2048의256→136, 큰 조각 FLOP, decode8192의4MiB/4.194304M, FA2/3/FlashInfer 기여·저자 측정·GQA 및 계획/실행 구별을 보존하고 각 범위와 한계를 명시했습니다. 잘못된 수식의 지수1FLOP 항과 footprint=traffic 등식은 제거했습니다.",
+        "sourceVerification": "6개 전체 원문과3LICENSE를 고정 commit의 원격 byte/SHA256으로 대조했습니다. FA2 launch/core의 분할-합치기·right-aligned offset·직접 blockIdx.x·수동128×32 선택표를 읽었습니다. vLLM의 우선순위/자동/명시 선택과 Triton의 후보 생성/keep/prune는 원문 AST 몸체를 타입/장식 제거 후 의존성을 대체한 CPU 실행으로 확인했습니다. 실제 backend지원·GPU컴파일·성능실험이라고 하지 않습니다. 보존한 verification/observe.py 자체도 실행 PASS입니다.",
+        "numeric": "theory의 작성 전 독립 검산 PASS입니다. 16/10/6조각,40/36칸,512/320/288FLOP, 비인과128/320B→4/1.6, 3·3·2 분할의29/6 오답·4.5 정답, 큰528조각과 GQA4096/513을 대조했습니다. 추가 반례8→80의 마지막13.5·둘째1.5와 평균 누적합3/10/21/36을 직접 계산했습니다.",
+        "humanize": {
+          "roundTrip": true,
+          "paragraphs": 77,
+          "chunks": 4,
+          "gateExit": 0,
+          "manualReview": "실제 추출·byte 동일 왕복 후 전체를 읽었습니다. 첫 묶음 P1의 실제 연결 쉼표8개를 교정하고 숫자·마커·리스트 쉼표를 보존했습니다. 도식 설명의 네 행→네 행 묶음을 고친 뒤 최신77문단3938/3977/3819/2328자 묶음을 재추출·prepare/gate·apply했으며 최신변경0/누락0/모든gate0입니다."
+        },
+        "humanizeProps": "수식 해설·역할 정의·본문 제목·출처 문구·Viz·codeRefs의 실제 AST151문자열8872자를 추출하고 원시 slice 재삽입 byte동일을 확인했습니다. 전체와3978/3946/944자3묶음을 읽어 모두gate0입니다. 원문코드·숫자만인값·KaTeX일반식·링크포함제외문단1개는 별도로 직접 검수했습니다.",
+        "browser390": true,
+        "browser1440": true,
+        "codePanels3901440": 26,
+        "allScenes3901440": true,
+        "firstFifth": "실제 본문 이름6절 전 비중은390에서0.2125,1440에서0.2124517입니다. 의미 있는8→80 반례·3/10/21/36 누적·32바이트 재읽기를 용어보다 먼저 따라갑니다.",
+        "viz": "13패널×2폭에서 전체 원문과 해당제어문을 확인하고3장면×2폭을 순회했습니다. 1000px높이에서는 최초PASS,900px높이의 모바일설명걸림은 여백/행간으로 해결했습니다. 최종 모든noteVisibleWithoutScroll=true,SVG text bbox오류0,control위치변화0px입니다. 굵은stroke를1.25로 줄이고 대각선 가림4칸에×를 넣었습니다. ArrowLeft/Right, Space 재생·정지, 실제6초타이머장면변경, reduced 자동재생비활성을두폭에서 확인했습니다.",
+        "formula": "일반식Fmm=4BrBcd·Eexp=BrBc와부분LSE합/가중합을 annotatedFormula에 모두 남겼습니다. 모바일긴행을 줄바꿈하고 숫자6/8+15/8+15/8=4.5까지 양폭 실제 math전용PNG로 확인했습니다. KaTeX오류0,전역1444식 explicit주석모두PASS입니다.",
+        "learning": "기초6·심화4를본문작성전에계획하고최종질문을가정·원문범위와맞췄습니다. 부모통합후strictactualexit0,직접strictactualexit0,공유learning/7정의/정본/owns/evidence/full근거9개직렬화mismatch0,최종두폭DOM에10질문모두존재했습니다.",
+        "prose": "전역최신문장호흡strict재검토0·baselinePASS입니다. 소유git diff--check PASS, Viz정적ERROR0의SVG text REVIEW는실제두폭bbox와PNG로검수했습니다.",
+        "typescript": "actualapp npx tsc -p tsconfig.app.json --noEmit 세션1941 실제exit0입니다. 이후수식문자열줄바꿈/도식style와×표기만수정하고실제렌더를재검수했습니다. root고정snapshot전체build는별도입니다."
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 고정 snapshot 전체 build·배포 검증"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/attention-kernel-anatomy-and-backends.tsx",
+      "bodyFiles": [
+        "src/pages/articles/ai/attention-kernel-anatomy-and-backends.tsx"
+      ],
+      "contentHash": "b1dce169b628c9b03fb7c9684c24f5ce78df2f97294d7fb4b3e4a6370cdaa60a",
+      "evidenceFiles": [
+        "/tmp/teach-all/attention21/plan-before-body.json",
+        "/tmp/teach-all/attention21/body-before.tsx",
+        "/tmp/teach-all/attention21-independent-theory.json",
+        "/tmp/teach-all/attention21/source-execution.json",
+        "/tmp/teach-all/attention21/retained-observer.log",
+        "/tmp/teach-all/attention21/research/source-index.json",
+        "/tmp/teach-all/attention21/research/tag-pins.json",
+        "/tmp/teach-all/attention21/shared-verification.json",
+        "/tmp/teach-all/attention21/learning-final.log",
+        "/tmp/teach-all/attention21/tsc-final.log",
+        "/tmp/teach-all/attention21/prose-final.log",
+        "/tmp/teach-all/attention21/formula.log",
+        "/tmp/teach-all/attention21/viz-static-final.log",
+        "/tmp/teach-all/attention21/browser.log",
+        "/tmp/teach-all/attention21/screens/panels.json",
+        "/tmp/teach-all/attention21/screens/layout.json",
+        "/tmp/teach-all/attention21/screens/scenes.json",
+        "/tmp/teach-all/attention21/last-dom.json",
+        "/tmp/teach-all/attention21/last-dom-final.log",
+        "/tmp/teach-all/attention21/playback.json",
+        "/tmp/teach-all/humanize-ai-systems-21-verified/roundtrip.json",
+        "/tmp/teach-all/humanize-ai-systems-21-verified/gate.txt",
+        "/tmp/teach-all/humanize-ai-systems-21-verified/apply.log",
+        "/tmp/teach-all/humanize-ai-systems-21-props-verified/gate.txt",
+        "/tmp/teach-all/humanize-ai-systems-21-props-verified/chunk-review.json"
       ]
     },
     {
@@ -9162,23 +9427,23 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 45,
-    "unreviewed": 140,
+    "rewritten-local-verified": 46,
+    "unreviewed": 139,
     "reviewed-rewrite-required": 1
   },
   "localValidationSummary": {
-    "rewritten": 45,
-    "remainingUnreviewed": 140,
+    "rewritten": 46,
+    "remainingUnreviewed": 139,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
-    "learningStrict": "/tmp/teach-all/flash20/learning-final.log — strict 실제 exit0",
-    "formulaStrict": "/tmp/teach-all/flash20/formula.log — 본 글 일반식/연산주석과 실제 양 폭 표시 PASS; 타팀 초안 전환대기1개는 root 후속 검수",
-    "typescript": "/tmp/teach-all/flash20/tsc-final.log — actual app tsc 세션5866 실제exit0; 공유 메타데이터 SSR 대조 mismatch0. 전체 고정 build는 root 담당.",
-    "note": "현재45편은 실제 본문·원문·계산·문체·두 폭을 검수한 local-verified입니다. 미검토140편과 재작성 필요1편을 완료에 포함하지 않습니다. root 고정 snapshot build는 별도입니다.",
+    "learningStrict": "/tmp/teach-all/attention21/learning-final.log — strict 실제 exit0, 공유 대조 mismatch0",
+    "formulaStrict": "/tmp/teach-all/attention21/formula.log — 전역1444식 explicit 주석 PASS, 본 글2식 실제 양 폭 PNG PASS",
+    "typescript": "/tmp/teach-all/attention21/tsc-final.log — actual app tsc 세션1941 실제 exit0; 이후 수식/도식 표시 조정의 실제 렌더 PASS. 고정 전체 build는 root 담당.",
+    "note": "현재 46편은 실제 본문·원문·산술·문체·두 폭을 검수한 local-verified입니다. 미검토 139편과 재작성 필요 1편을 완료에 포함하지 않습니다. root 고정 snapshot build는 별도입니다.",
     "reviewedRewriteRequired": 1,
-    "verifiedRewrites": 45,
-    "rewrittenLocalVerified": 45,
-    "unreviewed": 140
+    "verifiedRewrites": 46,
+    "rewrittenLocalVerified": 46,
+    "unreviewed": 139
   }
 }

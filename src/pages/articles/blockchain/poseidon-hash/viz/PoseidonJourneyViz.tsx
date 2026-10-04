@@ -1,0 +1,9 @@
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
+const scenes=[
+ {label:"입력",title:"두 칸에 3과 4를 넣습니다",input:"시작 상태 (3,4)",operation:"0부터 16까지만 남기는 F₁₇",output:"같은 두 수를 끝까지 따라갑니다",note:"17이 되면 0으로 돌아옵니다. 전체 두 칸은 17×17=289가지이며 이 그림은 한 라운드의 작은 계산입니다."},
+ {label:"상수",title:"각 칸에 고정한 상수를 더합니다",input:"(3,4) + (1,2)",operation:"첫 칸 3+1 · 둘째 칸 4+2",output:"(4,6)",note:"상수는 비밀키가 아닙니다. 실제 설정은 매 라운드의 상수를 고정하며 이번 (1,2)는 설명용입니다."},
+ {label:"제곱",title:"두 칸을 각각 다섯제곱합니다",input:"4²=16 → 4⁴=1 → 4⁵=4",operation:"6²=2 → 6⁴=4 → 6⁵=7",output:"(4,7)",note:"제곱, 다시 제곱, 원래 값 곱셈의 세 단계입니다. 여기서는 두 칸 모두 처리하는 full round입니다."},
+ {label:"혼합",title:"두 줄의 비율로 서로 섞습니다",input:"첫 줄 4+7 = 11",operation:"둘째 줄 4+2×7 = 18 ≡ 1",output:"(11,1)",note:"두 칸 전체를 알면 역변환으로 (3,4)를 찾습니다. 첫 칸만 공개할 때의 정보 손실은 11절에서 따로 계산합니다."},
+];
+export default function PoseidonJourneyViz(){const controls=useAnimatedScenes(scenes.length,5000);const s=scenes[controls.active];return <figure data-viz="poseidon-journey" className="my-8 border-y border-border py-4"><figcaption className="mb-3 text-sm leading-6">같은 두 수가 한 라운드를 지나는 네 장면입니다. 모든 계산은 mod 17입니다.</figcaption><div data-viz-canvas tabIndex={0} role="group" aria-label="같은 3과 4의 네 단계" onKeyDown={controls.onKeyDown} className="flex h-[min(530px,calc(100dvh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"><div className="min-h-0 flex-1 overflow-y-auto px-1 py-3"><h3 className="text-lg font-semibold">{s.title}</h3><div className="my-5 space-y-4"><p className="border-b border-border pb-3 text-base">{s.input}</p><p className="font-mono text-sm leading-7">{s.operation}</p><p className="border-t border-border pt-3 text-lg font-semibold">{s.output}</p></div><p className="text-sm leading-7">{s.note}</p></div><AnimatedSceneControls {...controls} labels={scenes.map(v=>v.label)}/></div></figure>}

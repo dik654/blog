@@ -6348,7 +6348,7 @@
     {
       "route": "crypto/binary-field-proving",
       "title": "Binary-field proving: Binius·Flock·기존 hash 증명",
-      "status": "unreviewed",
+      "status": "reviewed-needs-rewrite",
       "publicEntry": "src/pages/articles/blockchain/binary-field-proving.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/binary-field-proving.tsx",
@@ -6366,19 +6366,26 @@
           "Conventional-hash-friendly proving은 primitive 신뢰 역사와 proof 비용을 다시 교환한다"
         ]
       },
-      "issues": [],
+      "issues": [
+        "Read public ModernArticle in full, actual ProofDirectionViz, frozen baseline headings/body and all6 concepts/6+4/papers/ownership. Names and alternatives start before a case; XOR1011/0110 only appears late with no multiplication/tower/source tracing.",
+        "Generic formula operations and arbitrary80/30/55 round gap should preserve accurate boundary but support with same-case bits/field/protocol example. Binary extension multiplication is not bitwise AND; packing and small-field challenge soundness need concrete demonstration.",
+        "Actual Binius ePrint2023/1784 latest2025-04-27 publishedEUROCRYPT2025 and Flock arXiv2607.27491 v1 July29 2026 confirmed primary; current ePrint version and genuine source must be examined before algorithm/performance claims.",
+        "Two-way primitive/prover framing excludes 2026 binary-field Poseidon variants; adjust definition/ownership along with actual body and keep existing hashes protocol compatibility scoped."
+      ],
       "fixture": null,
       "stageEvidence": {},
       "sourceEvidence": [],
       "verification": {
-        "substantiveReading": "pending",
+        "substantiveReading": "Complete public body+usedViz, baseline, all current shared learning/concepts/ownership read on2026-10-04.",
         "arithmetic": "pending",
         "humanize": "pending",
         "browser390": "pending",
         "browser1440": "pending"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "small numeric case and6+4 before writing",
+        "primary full paper/source and version review",
+        "substantive body rewrite, humanize, arithmetic, appTS and two-width browser/metadata integration"
       ]
     },
     {
@@ -8309,13 +8316,14 @@
     },
     {
       "route": "crypto/poseidon-hash",
-      "title": "Poseidon: field permutation·HADES·parameter profile",
-      "status": "reviewed-needs-rewrite",
+      "title": "Poseidon: 두 수를 섞는 계산에서 증명 회로까지",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/poseidon-hash.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/poseidon-hash.tsx",
         "src/pages/articles/blockchain/poseidon-hash/ModernArticle.tsx",
-        "src/pages/articles/blockchain/poseidon-hash/PoseidonRoundViz.tsx"
+        "src/pages/articles/blockchain/poseidon-hash/viz/PoseidonJourneyViz.tsx",
+        "src/pages/articles/blockchain/poseidon-hash/codeRefs.ts"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -8337,17 +8345,49 @@
         "2023/537 원문 초록은 높은 목표 보안 수준의 기존 권장 라운드 부족을 지적합니다. 현재 글의 오직 reduced-round 분석이라는 귀속은 부정확합니다. 2025/954와2025/950의 대상·운영 모드 및 실험 범위도 실제 원문에서 대조합니다.",
         "기존 hash-theory#constructions 링크는 재작성 후 오래된 anchor이며 sponge로 변경할 예정입니다. 첫 사례→원문 수치 대입→한계와 마지막 예측 질문이 필요합니다."
       ],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "공개 본문과 실제 두 Viz, baseline 및 정본 metadata 전수 읽음. 고정055bde3 GitHub tree의 실제 파일 존재 확인. 공식 ePrint 2019/458,2023/323,2023/537,2025/954,2025/950 페이지를2026-10-04 확인. PDF/원문 세부 검수 진행 중."
+      "fixture": {
+        "plan": "/tmp/teach-all/poseidon-rewrite-plan.json created before body",
+        "case": "F17 input (3,4), constants (1,2), fifth powers and M=[[1,1],[1,2]]; full (11,1), partial (10,16). Same numeric inputs [3,4,0] in actual fixed BN254 scalar-field modules."
       },
-      "remaining": [
-        "작은 두 입력의 수치·6+4 계획",
-        "Poseidon/Poseidon2 고정 원문과 cryptanalysis의 실제 범위 확인",
-        "본문 재작성·humanize·학습·실제 화면 검수"
-      ]
+      "stageEvidence": {
+        "S": "overview: two private input numbers and public result/proof, with guessing boundary",
+        "B": "black-box: state permutation and reading only selected outputs",
+        "0": "case: explicit mod17 path (3,4)→(4,6)→(4,7)→(11,1)",
+        "1": "picture: four fixed-height interactive scenes",
+        "2": "why: three quadratic constraints for one fifth power, actual u/v/y values",
+        "3": "names: state/round/S-box/linear matrix/full/partial roles named after case",
+        "4": "round through projection: same-case full/partial, inverse exponent13, MDS branch3 vs identity2, 17 preimages per first coordinate",
+        "5": "profile/source/optimized/poseidon2: same [3,4,0] in actual retained 055bde3 modules and independent Python/native comparison",
+        "6": "constraints through binary:240/576/243 direct R1CS scope, omitted y yields12,2, canonical residue, attack-mode and 2026 revision boundaries",
+        "7": "verification/limits: native-selected vs wholepackage/circuit/performance distinction; closing questions answers8/17/18"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Poseidon USENIX2021 2.1–2.3 printed523–524/table1",
+          "mapping": "Read paper text and actual page images: full/partial construction, gcd, MDS allminors/branch and additional trail condition. OriginalRP57 not chosen codeRP56."
+        },
+        {
+          "source": "HorizenLabs/poseidon2 055bde3 original package zkhash0.2.0",
+          "mapping": "Read selected entire non-test function paths and exact parameters. 12 unchanged source/license files with SHA; real Rust1.93.0 locked selected-module run, five inputs, original/optimized plus Poseidon2 and both compression calls."
+        },
+        {
+          "source": "Official ePrint2023/537,ToSC2025 doi10.46586/tosc.v2025.i2.34-86,2025/1916,2026/306,CIC2026/ePrint2025/1893",
+          "mapping": "Read official abstracts and publication/revision notices. Corrected only-reduced-round attribution; included2026 matrix/mode attack with stated security-margin boundary. February6 2026 implementation revision separate. FollowupPDF403 explicitly not read."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "공개 본문과 실제 두 Viz, baseline 및 정본 metadata 전수 읽음. 고정055bde3 GitHub tree의 실제 파일 존재 확인. 공식 ePrint 2019/458,2023/323,2023/537,2025/954,2025/950 페이지를2026-10-04 확인. PDF/원문 세부 검수 진행 중.",
+        "arithmetic": "verification/observed-rust-1.93.0.jsonl and observed-python-3.9.6.json; locked native identical, independent model all five three-coordinate outputs and original KATs PASS; toy289 permutations/inverses, branch3/2, projection17 and missingconstraint12,2. theory plan/body9–11 and16–18 PASS.",
+        "sourceBytes": "/tmp/teach-all/chains-poseidon-source-check.json 12 exact SHA matches.",
+        "typescript": "actual app tsc session63726 exit0 and final95320 exit0; chains-poseidon-tsc-final.log. Following prose correction only4commas.",
+        "prose": "/tmp/teach-all/chains-poseidon-prose.log strict exit0",
+        "humanize": "Final actual67paragraph11318char input→4 connective commas removed and applied,63unchanged,no missing markers. /tmp/teach-all/humanize-chains-poseidon-final2/poseidon-hash full+3chunks; visible-final153strings9469chars+3chunks unchanged. Systems independent-finalize in all8paths and poseidon-humanize-final2-independent-systems.json approves only math-coordinate P3 false positives; P1 resolved.",
+        "browser": "390/1440 all13panels each open; overflow/katexerrors/pageerror/narrow0. Old shared anchors await metadata integration.",
+        "mathAndViz": "/tmp/teach-all/chains-poseidon-detail.json final bothwidth innerKaTeXbounds0; same4sceneheight/relativecontrols,keyboard/reduced/Spaceactualscenechange PASS. Mobileinverse and finaldiffusion images read.",
+        "registration": "부모 batch24의 제목·22절·5개 정의/label·ownership·topology·6+4·7개 full evidence 통합. /tmp/teach-all/poseidon24-integrated-learning.log strict 실제 exit0. 공유 learning을 제안과 deep equal 확인하고 실제 정의5개 및 ownership을 읽음.",
+        "integratedBrowser": "/tmp/teach-all/chains-poseidon-integrated.json 및 chains-poseidon-learning.json: 390/1440 실제 제목·22절·깨진 anchor/수식 내부 잘림/페이지 오류/넘침0. 10개 정답 체크리스트를 모두 열고 제안의 전체 답 문자열 누락0 확인."
+      },
+      "remaining": []
     },
     {
       "route": "crypto/post-quantum-signatures",

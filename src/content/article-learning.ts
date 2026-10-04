@@ -2580,43 +2580,256 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/word2vec": {
-    entryLevel: true,
-    entryNote: "단어가 이미 vector라고 가정하지 않습니다. 문자열이 ID가 되고, ID가 두 table의 row를 고르며, window가 학습 pair를 만드는 순서부터 시작합니다.",
-    coreIdea: "Word2Vec의 출발점은 의미 vector가 아니라 versioned corpus ID와 local word–context pair입니다. 같은 word도 center와 context 역할에서 서로 다른 table row를 사용합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "word-embedding-lookup", role: "Vocabulary ID가 trainable matrix row를 고르는 과정을 읽습니다." },
-      { id: "word2vec-dual-embedding-table", role: "Center input table과 context output table을 분리합니다." },
-      { id: "dynamic-context-window", role: "거리별 pair 관측 빈도를 만드는 radius sampling을 계산합니다." },
-      { id: "word-context-pair-sampling-receipt", role: "Corpus에서 pair까지의 recipe와 random draw를 재현 가능한 artifact로 묶습니다." },
+    "entryLevel": true,
+    "entryNote": "같은 다섯 단어의 문장에서 위치로 이웃을 고르고 번호로 수의 행을 읽습니다. 필요한 곱셈과 확률을 본문에서 직접 설명합니다.",
+    "coreIdea": "문장 속 위치는 이웃을 고르고 단어 ID는 수의 행을 고릅니다. 같은 cat과 saw로 두 역할의 점수 2와 1, 중복 위치, 실제 C의 반경과 방향을 추적하며 재생 조건을 확인합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "word-embedding-lookup",
+        "role": "번호는 뜻의 크기가 아니라 수를 보관한 행의 주소입니다."
+      },
+      {
+        "id": "word2vec-dual-embedding-table",
+        "role": "입력과 예측 대상이 같은 단어라도 서로 다른 역할의 표에서 행을 읽습니다."
+      },
+      {
+        "id": "dynamic-context-window",
+        "role": "가까운 위치는 작은 반경에도 들어오므로 더 자주 관찰할 수 있습니다."
+      },
+      {
+        "id": "word-context-pair-sampling-receipt",
+        "role": "같은 쌍을 다시 만들려면 문장과 번호표뿐 아니라 선택 규칙과 실행 조건을 함께 남깁니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "word-embedding-lookup", sectionId: "overview", intuition: "도서관 청구기호가 책 내용은 아니지만 한 책을 꺼내듯 word ID가 table row 하나를 고릅니다.", workedExample: "V=5,d=3인 table에서 ID 2는 length-5 one-hot product 또는 gather로 W[2]의 세 값을 읽습니다.", boundary: "ID 숫자의 차이는 의미 거리가 아니며 vocabulary order가 바뀌면 같은 row number의 의미도 바뀝니다." },
-      { id: "word2vec-dual-embedding-table", sectionId: "dual-tables", intuition: "같은 배우도 질문하는 역할과 정답 후보 역할에서 다른 메모장을 쓰듯 center와 context parameter를 분리합니다.", workedExample: "ID 2는 center일 때 W[2], context일 때 W′[2]를 읽고 두 row는 서로 다른 gradient를 받습니다.", boundary: "두 table의 shape가 같아도 값을 공유하지 않습니다. 배포 시 input·output·합·평균 중 어느 row를 내보냈는지 기록합니다." },
-      { id: "dynamic-context-window", sectionId: "window", intuition: "매번 실제 반경을 뽑으면 가까운 이웃은 여러 반경에 걸쳐 더 자주 선택됩니다.", workedExample: "Maximum radius 5에서 거리 1은 5/5, 거리 3은 3/5, 거리 5는 1/5로 포함됩니다.", boundary: "거리 sampling heuristic일 뿐 syntax를 자동 인식하지 않으며 sentence boundary를 넘어가면 안 됩니다." },
-      { id: "word-context-pair-sampling-receipt", sectionId: "pairs", intuition: "완성된 pairs만 저장하는 대신 어떤 corpus와 주사위가 그 pairs를 만들었는지 영수증으로 남깁니다.", workedExample: "Corpus r7, tokenizer t3, radius 5, subsampling threshold 10^-5, seed 42를 함께 기록해 같은 pair stream을 재생합니다.", boundary: "Corpus checksum만 같아도 tokenizer·boundary·sampling seed가 다르면 pair population은 달라집니다." },
+    "conceptExplanations": [
+      {
+        "id": "word-embedding-lookup",
+        "sectionId": "lookup",
+        "intuition": "번호는 뜻의 크기가 아니라 수를 보관한 행의 주소입니다.",
+        "workedExample": "V=5,d=3에서 ID 2는 [0,0,1,0,0]으로 선택한 W[2]=[1,2,0]을 읽습니다.",
+        "boundary": "번호와 행의 대응을 함께 바꿔야 합니다. PyTorch max_norm=None의 고정 표 조회를 sparse gradient 저장 형식과 구별합니다."
+      },
+      {
+        "id": "word2vec-dual-embedding-table",
+        "sectionId": "dual-tables",
+        "intuition": "입력과 예측 대상이 같은 단어라도 서로 다른 역할의 표에서 행을 읽습니다.",
+        "workedExample": "W[2]·U[3]=2이지만 역방향 W[3]·U[2]=1입니다. 두 표의 값은 별도 매개변수입니다.",
+        "boundary": "항상 값이나 기울기가 달라야 한다는 뜻은 아닙니다. 단어별 두 표 설명과 계층형 출력의 내부 노드 벡터를 구별하며 원문 C의 중심/입력 방향도 확인합니다."
+      },
+      {
+        "id": "dynamic-context-window",
+        "sectionId": "window",
+        "intuition": "가까운 위치는 작은 반경에도 들어오므로 더 자주 관찰할 수 있습니다.",
+        "workedExample": "균일 반경 c=2에서 거리 1은 항상, 거리 2는 절반 포함됩니다. c=5의 거리 3은 3/5입니다.",
+        "boundary": "실제로 존재하는 이웃에 적용하는 균일 모형입니다. 단어 제거 뒤의 위치와 문장 경계를 확인하며 특정 유한 난수열을 독립 균일 추출로 단정하지 않습니다."
+      },
+      {
+        "id": "word-context-pair-sampling-receipt",
+        "sectionId": "pairs",
+        "intuition": "같은 쌍을 다시 만들려면 문장과 번호표뿐 아니라 선택 규칙과 실행 조건을 함께 남깁니다.",
+        "workedExample": "같은 문장에 수동 번호표·최대 반경 2·sample/hs/negative=0·스레드 1·시작 상태 0을 사용한 관찰에서 10쌍을 확인했습니다.",
+        "boundary": "정상 학습에서 난수 소비 순서와 스레드 구성이 달라지면 같은 시작 상태만으로 같은 쌍을 보장하지 않습니다. 쌍 재생과 최종 가중치의 비트 단위 재현도 다른 요구입니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 ID", relation: "Word ID가 dense row의 주소가 됩니다.", concepts: ["word-embedding-lookup"] },
-      { label: "01 Role", relation: "Center와 context가 별도 parameter table을 읽습니다.", concepts: ["word-embedding-lookup", "word2vec-dual-embedding-table"] },
-      { label: "02 Window", relation: "실제 radius가 local pair의 포함 여부를 정합니다.", concepts: ["dynamic-context-window"] },
-      { label: "03 Receipt", relation: "입력과 sampling recipe를 묶어 pair population을 재현합니다.", concepts: ["dynamic-context-window", "word-context-pair-sampling-receipt"] },
+    "conceptStages": [
+      {
+        "label": "문장과 주소",
+        "relation": "같은 단어의 여러 출현이 한 번호의 행을 읽습니다.",
+        "concepts": [
+          "word-embedding-lookup"
+        ]
+      },
+      {
+        "label": "두 역할의 점수",
+        "relation": "입력과 예측 방향에 따라 읽는 표가 달라집니다.",
+        "concepts": [
+          "word-embedding-lookup",
+          "word2vec-dual-embedding-table"
+        ]
+      },
+      {
+        "label": "위치 선택",
+        "relation": "반경과 문장 경계가 어떤 이웃을 몇 번 보는지 정합니다.",
+        "concepts": [
+          "dynamic-context-window"
+        ]
+      },
+      {
+        "label": "실제 재생",
+        "relation": "코드의 방향과 난수 소비를 함께 기록해 같은 쌍을 확인합니다.",
+        "concepts": [
+          "dynamic-context-window",
+          "word-context-pair-sampling-receipt"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "V=5,d=3 table에서 ID 2의 one-hot product와 row lookup 결과를 설명하세요.", answerChecklist: ["length-5 one-hot", "index 2만 1", "W[2]", "three scalars"], requiredConcepts: ["word-embedding-lookup"], sectionId: "overview" },
-      { level: "basic", question: "Vocabulary ID 자체를 의미 좌표로 사용하면 안 되는 이유를 설명하세요.", answerChecklist: ["address only", "arbitrary ordering", "no metric", "row carries values"], requiredConcepts: ["word-embedding-lookup"], sectionId: "overview" },
-      { level: "basic", question: "같은 word ID가 W와 W′에서 고르는 row와 역할을 각각 말하세요.", answerChecklist: ["input center", "output context", "separate parameters", "different gradients"], requiredConcepts: ["word2vec-dual-embedding-table"], sectionId: "dual-tables" },
-      { level: "basic", question: "V=10,000,d=300일 때 W와 W′의 shape와 총 scalar 수를 계산하세요.", answerChecklist: ["two 10000x300 tables", "3 million each", "6 million total", "dtype separate"], requiredConcepts: ["word2vec-dual-embedding-table"], sectionId: "dual-tables" },
-      { level: "basic", question: "Maximum radius 5에서 거리 3 context의 포함 확률을 계산하세요.", answerChecklist: ["r in 1..5", "r>=3", "three valid draws", "3/5"], requiredConcepts: ["dynamic-context-window"], sectionId: "window" },
-      { level: "basic", question: "Pair receipt가 반드시 가져야 할 네 종류의 revision을 나열하세요.", answerChecklist: ["corpus", "tokenizer vocabulary", "window or filters", "seed"], requiredConcepts: ["word-context-pair-sampling-receipt"], sectionId: "pairs" },
-      { level: "advanced", question: "Vocabulary ordering만 바뀐 checkpoint를 기존 matrix와 함께 배포했을 때 실패를 진단하세요.", answerChecklist: ["same ID new word", "row semantic corruption", "checksum mismatch", "rollback manifest"], requiredConcepts: ["word-embedding-lookup", "word2vec-dual-embedding-table"], sectionId: "dual-tables" },
-      { level: "advanced", question: "Maximum radius 4의 장기 sampling에서 거리별 기대 포함 비율을 계산하고 검증 실험을 설계하세요.", answerChecklist: ["4/4 3/4 2/4 1/4", "large draw count", "seeded histogram", "sentence-edge exclusion"], requiredConcepts: ["dynamic-context-window"], sectionId: "window" },
-      { level: "advanced", question: "두 run의 pair count가 다른 원인을 receipt만으로 좁히는 순서를 설계하세요.", answerChecklist: ["corpus and tokenizer", "sentence boundary", "window recipe", "filters and seed"], requiredConcepts: ["word-context-pair-sampling-receipt"], sectionId: "pairs" },
-      { level: "advanced", question: "Pair stream 재생 결과가 달라졌을 때 release를 중단할 조건과 rollback evidence를 설계하세요.", answerChecklist: ["pair checksum", "sampled trace", "version mismatch owner", "last known receipt"], requiredConcepts: ["dynamic-context-window", "word-context-pair-sampling-receipt"], sectionId: "pairs" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "5×3 표에서 cat의 번호 2가 [1,2,0]을 꺼내는 과정을 7절의 식으로 설명하세요.",
+        "answerChecklist": [
+          "길이 5의 [0,0,1,0,0]",
+          "번호 2의 행만 선택",
+          "결과 [1,2,0]의 세 수",
+          "나머지 행은 0배"
+        ],
+        "sectionId": "lookup",
+        "requiredConcepts": [
+          "word-embedding-lookup"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "cat의 번호 2와 saw의 번호 3이 가깝다는 사실로 뜻이 비슷하다고 할 수 있나요?",
+        "answerChecklist": [
+          "번호는 주소",
+          "단어 순서를 바꿔도 대응 행까지 옮기면 같은 결과",
+          "번호 차이는 뜻의 거리 아님",
+          "학습된 행의 값으로 비교"
+        ],
+        "sectionId": "lookup",
+        "requiredConcepts": [
+          "word-embedding-lookup"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "8·14절을 함께 보며 cat과 saw의 두 역할을 바꾸면 왜 점수 2가 1이 되는지 설명하세요.",
+        "answerChecklist": [
+          "W[2]·U[3]=2",
+          "W[3]·U[2]=1",
+          "입력과 예측 대상의 표는 별도 매개변수",
+          "항상 값이나 기울기가 달라야 한다는 뜻 아님"
+        ],
+        "sectionId": "dual-tables",
+        "requiredConcepts": [
+          "word2vec-dual-embedding-table"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "단어별 입력·출력 표를 쓰고 V=10000,d=300이면 수와 FP32 저장량은 얼마인가요?",
+        "answerChecklist": [
+          "각 표 10000×300의 300만 수",
+          "두 표 합 600만 수",
+          "FP32 수당 4바이트라 24 MB",
+          "자료형과 추가 메모리는 별도 조건"
+        ],
+        "sectionId": "dual-tables",
+        "requiredConcepts": [
+          "word2vec-dual-embedding-table"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "최대 반경 5에서 반경을 균일하게 뽑을 때 거리 3인 실제 이웃의 포함 확률은 얼마인가요?",
+        "answerChecklist": [
+          "가능한 반경 1~5",
+          "3 이상인 3·4·5만 포함",
+          "3/5",
+          "문장 밖에는 이웃이 없으므로 적용하지 않음"
+        ],
+        "sectionId": "window",
+        "requiredConcepts": [
+          "dynamic-context-window"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 문장에서 같은 쌍을 다시 만들려면 16절의 네 묶음에 무엇을 기록하나요?",
+        "answerChecklist": [
+          "본문과 문장 경계",
+          "나누는 규칙과 번호표",
+          "반경과 단어 제거 규칙",
+          "원문 버전·스레드와 난수 상태/소비 순서"
+        ],
+        "sectionId": "pairs",
+        "requiredConcepts": [
+          "word-context-pair-sampling-receipt"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "17절에서 cat과 saw의 번호만 바꾸고 수의 표를 그대로 배포하면 어떤 결과가 나오며 어떻게 복구하나요?",
+        "answerChecklist": [
+          "cat이 새 번호 3의 [0,1,1]을 잘못 읽음",
+          "번호표와 양쪽 표를 함께 재배열해야 함",
+          "함께 기록한 체크섬과 대응 표본으로 확인",
+          "검증된 이전 번호표·표 묶음으로 복구"
+        ],
+        "sectionId": "release-check",
+        "requiredConcepts": [
+          "word-embedding-lookup",
+          "word2vec-dual-embedding-table"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "최대 반경 4의 균일 모형에서 거리별 기대 비율을 구하고 10·15절의 검증 조건을 말하세요.",
+        "answerChecklist": [
+          "1·3/4·1/2·1/4",
+          "반경 표본을 많이 뽑아 난수 초기 상태와 히스토그램 기록",
+          "실제로 그 거리의 이웃이 있는 위치만 비교",
+          "역사적 C의 난수열을 독립 균일 추출로 단정하지 않음"
+        ],
+        "sectionId": "window",
+        "requiredConcepts": [
+          "dynamic-context-window"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "16절에서 두 실행의 쌍 수가 다르면 어떤 순서로 원인을 좁히며 총수만 같으면 충분한가요?",
+        "answerChecklist": [
+          "본문/나누는 규칙/번호표부터 비교",
+          "문장 경계와 제거 전후 위치 확인",
+          "반경 규칙과 난수 소비·스레드 확인",
+          "쌍 수가 같아도 방향·중복·순서가 다를 수 있어 표본과 해시 비교"
+        ],
+        "sectionId": "pairs",
+        "requiredConcepts": [
+          "word-context-pair-sampling-receipt"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "17절의 재생 검사에서 쌍의 해시가 다르면 어떤 조건에서 배포를 멈추고 무엇으로 복구하나요?",
+        "answerChecklist": [
+          "동일 쌍 재생을 약속한 실행의 해시 불일치면 중단",
+          "처음 달라진 위치의 입력/반경/방향 표본 확인",
+          "바뀐 코드나 자료의 버전, 변경 이력과 담당자를 확인합니다.",
+          "검증된 이전 자료·코드·번호표·설정 묶음 복구; 학습 가중치 bitwise 동일 보장과 구별"
+        ],
+        "sectionId": "release-check",
+        "requiredConcepts": [
+          "dynamic-context-window",
+          "word-context-pair-sampling-receipt"
+        ]
+      }
     ],
-    papers: [
-      { title: "Efficient Estimation of Word Representations in Vector Space", href: "https://arxiv.org/abs/1301.3781", problem: "큰 corpus와 vocabulary에서 dense word representation을 현실적인 계산량으로 학습합니다.", contribution: "CBOW와 Skip-gram architecture 및 local context 학습 실험을 제시합니다.", assumptions: "논문의 word vocabulary·window·corpus·training recipe를 전제로 합니다.", evidenceScope: "Word2Vec 입력·window·architecture와 보고된 speed·analogy 결과 범위입니다.", notClaim: "ID ordering이나 특정 window가 모든 언어와 task에서 최적이라는 뜻은 아닙니다.", sectionId: "paper-word2vec-original" },
-    ],
+    "papers": [
+      {
+        "title": "Efficient Estimation of Word Representations in Vector Space",
+        "href": "https://arxiv.org/abs/1301.3781v3",
+        "problem": "많은 문장에서 단어의 수 표현을 현실적인 계산량으로 학습합니다.",
+        "contribution": "§3.2와 5쪽 그림 1의 현재 단어→주변 단어 방향과 R개 좌우 선택을 같은 cat 사례에 적용합니다.",
+        "assumptions": "논문의 문장·단어 목록·반경 설정을 사용하며 문장 끝에는 가능한 위치만 남습니다.",
+        "evidenceScope": "4–5쪽의 그림·문장에 R=1과 2를 넣어 saw 두 위치 또는 네 위치를 선택합니다.",
+        "notClaim": "특정 반경이나 analogy 실험의 결과가 모든 언어에서 최적이라는 뜻은 아닙니다.",
+        "sectionId": "paper-word2vec-original"
+      },
+      {
+        "title": "Distributed Representations of Words and Phrases and their Compositionality",
+        "href": "https://arxiv.org/abs/1310.4546v1",
+        "problem": "단어 예측의 계산 비용을 줄이면서 유용한 수 표현을 학습합니다.",
+        "contribution": "3쪽 식 (2)의 입력·출력 벡터에 같은 cat과 saw의 행을 넣어 점수 2를 계산합니다.",
+        "assumptions": "단어별 두 표를 쓰는 식 (2)와 내부 노드에 출력 벡터를 두는 §2.1을 구별합니다.",
+        "evidenceScope": "현재 글은 두 역할과 쌍 선택을 설명하며 전체 확률·학습 목적은 연결 글에서 다룹니다.",
+        "notClaim": "수치 사례가 전체 학습·품질 평가나 모든 Word2Vec 구현의 같은 방향을 입증하지 않습니다.",
+        "sectionId": "paper-word2vec-original"
+      }
+    ]
   },
   "ai/word2vec-prediction-objectives": {
     entryLevel: true,
@@ -63060,27 +63273,328 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "crypto/poseidon-hash": {
-    entryLevel:true, entryNote:"유한체와 permutation을 모른다고 가정하고 F17의 두-word state 계산부터 시작합니다.", coreIdea:"Poseidon은 field-native power S-box와 MDS mixing을 full/partial HADES rounds로 조합해 circuit constraint를 줄이지만 field·width·round constants 전체가 하나의 보안 profile입니다.", assumedKnowledge:[],
-    introducedHere:[{id:"poseidon-parameter-profile",role:"모든 parameter를 하나의 version으로 고정합니다."},{id:"poseidon-hades-round-schedule",role:"Full/partial rounds의 비용·보안 역할을 나눕니다."},{id:"poseidon-power-sbox-permutation-condition",role:"Power map이 bijection인 조건을 증명합니다."},{id:"poseidon-mds-diffusion-layer",role:"State 전체로 영향을 확산합니다."},{id:"poseidon-release-gate",role:"Vector·inverse·circuit parity를 검증합니다."}],
-    conceptExplanations:[
-      {id:"poseidon-parameter-profile",sectionId:"profile",intuition:"Poseidon이라는 이름만으로 digest가 정해지지 않습니다.",workedExample:"p=17,t=2,α=5,round constants와 MDS를 모두 고정해야 같은 permutation입니다.",boundary:"다른 width·constants·domain은 호환되지 않습니다."},
-      {id:"poseidon-hades-round-schedule",sectionId:"rounds",intuition:"양끝 full rounds는 모든 words를 비선형화하고 중간 partial rounds는 한 word만 처리해 constraints를 줄입니다.",workedExample:"Toy full round [3,4]+[1,2]=[4,6]→x^5=[4,7]→MDS [[1,1],[1,2]]=[11,1] mod17.",boundary:"Toy counts는 production security parameters가 아닙니다."},
-      {id:"poseidon-power-sbox-permutation-condition",sectionId:"rounds",intuition:"Exponentiation이 정보를 잃지 않으려면 nonzero field group에서 exponent가 invertible해야 합니다.",workedExample:"gcd(5,16)=1이고 5^-1=13 mod16이므로 (x^5)^13=x for x≠0.",boundary:"gcd(α,p−1)≠1이면 서로 다른 inputs가 합쳐집니다.",proofIdea:"F_p*는 order p−1 cyclic group이므로 exponent multiplication이 invertible iff gcd=1입니다.",counterexample:"F17에서 α=2는 x와 −x의 square가 같아 permutation이 아닙니다."},
-      {id:"poseidon-mds-diffusion-layer",sectionId:"rounds",intuition:"한 coordinate의 변화가 다음 rounds의 여러 coordinates에 번지게 합니다.",workedExample:"[[1,1],[1,2]] determinant=1 mod17이라 invertible이고 [4,7]을 [11,1]로 섞습니다.",boundary:"단순 invertibility만으로 production MDS/security margin을 증명하지 않습니다."},
-      {id:"poseidon-release-gate",sectionId:"release",intuition:"Profile artifact와 native/circuit output이 정확히 같아야 합니다.",workedExample:"Zero/one/max field, wrong constant, wrong width, inverse round와 byte packing mismatch를 검사합니다.",boundary:"Constraint count와 wall time은 같은 circuit/backend에서 correctness 뒤 비교합니다."}],
-    conceptStages:[{label:"00 field",relation:"Prime field arithmetic을 재사용합니다.",concepts:["prime-field-modular-arithmetic"]},{label:"01 profile",relation:"Field와 width·rounds를 고정합니다.",concepts:["poseidon-field-native-permutation","poseidon-parameter-profile"]},{label:"02 round",relation:"S-box와 diffusion을 계산합니다.",concepts:["poseidon-power-sbox-permutation-condition","poseidon-mds-diffusion-layer","poseidon-hades-round-schedule"]},{label:"03 sponge",relation:"Hash input/output domain으로 확장합니다.",concepts:["sponge-rate-capacity-domain-separation"]},{label:"04 release",relation:"Vectors와 parity를 검증합니다.",concepts:["poseidon-release-gate"]}],
-    exercises:[
-      {level:"basic",question:"Poseidon profile의 필수 항목을 쓰세요.",answerChecklist:["p","t","rate/capacity","alpha","round counts","constants","MDS","domain"],requiredConcepts:["poseidon-parameter-profile"],sectionId:"profile"},
-      {level:"basic",question:"F17에서 gcd(5,16)과 inverse exponent를 구하세요.",answerChecklist:["gcd 1","inverse 13","65=1 mod16","bijection"],requiredConcepts:["poseidon-power-sbox-permutation-condition"],sectionId:"rounds"},
-      {level:"basic",question:"Toy full round [3,4]의 출력을 계산하세요.",answerChecklist:["add constants [4,6]","Sbox [4,7]","MDS","[11,1]"],requiredConcepts:["poseidon-hades-round-schedule","poseidon-mds-diffusion-layer"],sectionId:"rounds"},
-      {level:"basic",question:"Full과 partial round를 구분하세요.",answerChecklist:["all words","one word","nonlinear cost","mix every round"],requiredConcepts:["poseidon-hades-round-schedule"],sectionId:"rounds"},
-      {level:"basic",question:"Rate·capacity를 Poseidon sponge에 연결하세요.",answerChecklist:["state width","absorb rate","hidden capacity","permutation","domain tag"],requiredConcepts:["sponge-rate-capacity-domain-separation"],sectionId:"sponge-boundary"},
-      {level:"basic",question:"α=2가 F17 permutation이 아닌 반례를 드세요.",answerChecklist:["x and -x","same square","gcd(2,16)!=1","information loss"],requiredConcepts:["poseidon-power-sbox-permutation-condition"],sectionId:"rounds"},
-      {level:"advanced",question:"S-box bijection theorem을 group order로 증명하세요.",answerChecklist:["F_p star","order p-1","cyclic","exponent map","gcd","inverse exponent","zero fixed"],requiredConcepts:["poseidon-power-sbox-permutation-condition"],sectionId:"rounds"},
-      {level:"advanced",question:"Invertible matrix만으로 MDS security를 주장할 수 없는 이유를 쓰세요.",answerChecklist:["invertible necessary","branch number","active Sboxes","round schedule","cryptanalysis","parameter generation"],requiredConcepts:["poseidon-mds-diffusion-layer"],sectionId:"rounds"},
-      {level:"advanced",question:"서로 다른 Poseidon profile replay 반례를 설계하세요.",answerChecklist:["same field","different width/constants","domain/version","different digest","reject profile","transcript binding"],requiredConcepts:["poseidon-parameter-profile"],sectionId:"profile"},
-      {level:"advanced",question:"Poseidon release matrix를 작성하세요.",answerChecklist:["artifact hash","official vectors","inverse","wrong profile","byte packing","native/circuit parity","constraints/time","rollback"],requiredConcepts:["poseidon-release-gate"],sectionId:"release"}],
-    papers:[{title:"Poseidon: A New Hash Function for Zero-Knowledge Proof Systems",href:"https://eprint.iacr.org/2019/458.pdf",problem:"Arithmetic circuits에서 기존 bit-oriented hash의 constraint 비용이 큼",contribution:"HADES strategy·field S-box·parameter/security analysis와 Poseidon construction 제시",assumptions:"논문 field·S-box·round/linear-layer parameter generation과 attack model 사용",evidenceScope:"Poseidon construction과 논문 security/cost 분석",notClaim:"임의 constants·축소 rounds·구현이 안전함을 보장하지 않음",sectionId:"paper-poseidon"},{title:"HorizenLabs poseidon2 pinned source",href:"https://github.com/HorizenLabs/poseidon2/tree/055bde3f4782731ba5f5ce5888a440a94327eaf3",problem:"Field/width별 실제 parameter·implementation seam 확인",contribution:"Poseidon2 Rust implementation의 pinned source 제공",assumptions:"Commit 055bde3와 selected feature/field 고정",evidenceScope:"선택 commit의 source와 vectors",notClaim:"원 Poseidon과 byte-for-byte 호환 또는 모든 profile audit를 주장하지 않음",sectionId:"paper-poseidon2-source"}],
+    "entryLevel": true,
+    "entryNote": "두 수 3과 4를 17로 나눈 나머지에서 계산한 뒤 상태·S-box·행렬·회로의 이름을 붙입니다.",
+    "coreIdea": "같은 두 수의 전체·부분 라운드와 역변환을 추적하고 실제 고정 원문·제약 비용·입력 형식·보안 분석의 조건을 연결합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "poseidon-parameter-profile",
+        "role": "체·폭·상수·순서·출력 규칙을 함께 고정합니다."
+      },
+      {
+        "id": "poseidon-hades-round-schedule",
+        "role": "두 칸의 full·partial 계산과 직접 제약 비용을 비교합니다."
+      },
+      {
+        "id": "poseidon-power-sbox-permutation-condition",
+        "role": "작은 역변환과 지수의 서로소 조건을 설명합니다."
+      },
+      {
+        "id": "poseidon-mds-diffusion-layer",
+        "role": "가역성과 분기 수, 실제 반복 설계의 추가 조건을 구분합니다."
+      },
+      {
+        "id": "poseidon-release-gate",
+        "role": "원문 실행과 잘못된 제약, 입력 형식 및 미실행 범위를 확인합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "poseidon-parameter-profile",
+        "sectionId": "profile",
+        "intuition": "같은 두 수라도 섞는 설정과 결과를 읽는 규칙이 달라지면 다른 함수입니다.",
+        "workedExample": "작은 F₁₇의 (3,4)와 실제 BN254 스칼라체의 [3,4,0]을 구분합니다. 고정 원문은 t=3, α=5, RF=8, RP=56입니다.",
+        "boundary": "2021년 표의 RP=57과 다르며 원래 Poseidon과 Poseidon2의 상수·행렬도 다릅니다.",
+        "counterexample": "원래 Poseidon 출력 06754456… 대신 Poseidon2의 0f2021db…를 넣으면 같은 루트가 아닙니다."
+      },
+      {
+        "id": "poseidon-hades-round-schedule",
+        "sectionId": "partial",
+        "intuition": "모든 칸을 비선형으로 바꾸는 라운드 사이에 한 칸만 바꾸는 라운드를 둡니다.",
+        "workedExample": "(3,4)+(1,2)=(4,6)에서 full은 (11,1), partial은 (10,16)입니다. 직접 이차 제약 수는 각각 6과 3입니다.",
+        "boundary": "같은 S-box 개수라도 반복 순서·차수가 달라지면 같은 안전성을 보존하지 않습니다.",
+        "counterexample": "partial에서 둘째 칸의 다섯제곱을 생략해도 마지막 전체 혼합은 생략하지 않습니다."
+      },
+      {
+        "id": "poseidon-power-sbox-permutation-condition",
+        "sectionId": "inverse",
+        "intuition": "거듭제곱이 지수에 곱한 효과를 되돌릴 수 있어야 두 입력이 합쳐지지 않습니다.",
+        "workedExample": "F₁₇에서 5×13≡1 mod 16이므로 열세제곱으로 되돌립니다. (11,1)→(4,7)→(4,6)→(3,4)입니다.",
+        "boundary": "소수체의 양의 지수에 대한 일대일 조건이며 전체 해시 안전성의 충분조건은 아닙니다.",
+        "counterexample": "지수 2에서는 1과 16이 모두 1이 됩니다. 0의 고정도 별도로 확인합니다.",
+        "proofIdea": "비영 원소를 생성원 g의 거듭제곱으로 쓰면 x→x^α는 지수 k→αk mod(p−1)입니다. 서로소일 때 역지수가 있고 0도 별도로 복원합니다."
+      },
+      {
+        "id": "poseidon-mds-diffusion-layer",
+        "sectionId": "diffusion",
+        "intuition": "한 칸에서 생긴 차이가 여러 칸에 퍼지도록 합의 비율을 정합니다.",
+        "workedExample": "M=[[1,1],[1,2]]의 분기 수는 3이고 항등행렬은 2입니다. 네 원소와 행렬식이 모두 비영입니다.",
+        "boundary": "MDS는 모든 정사각 부분행렬의 가역성과 대응하지만 다중 라운드의 불변 부분공간 경로 검사는 별도입니다.",
+        "counterexample": "항등행렬도 행렬식 1로 가역이지만 한 칸 차이를 한 칸에만 남깁니다.",
+        "proofIdea": "이번 두 칸에서는 한 칸 차이가 두 칸에 퍼지고 두 칸 차이는 가역성으로 적어도 한 칸에 남습니다. 합계가 항상 3 이상이며 (1,0)에서 3입니다."
+      },
+      {
+        "id": "poseidon-release-gate",
+        "sectionId": "verification",
+        "intuition": "원문 출력 대조와 실제 증명 관계의 검증을 따로 수행합니다.",
+        "workedExample": "선택 원문 모듈의 5입력·두 압축 호출과 독립 Python 모형, 작은 289상태 순열·역변환을 비교했습니다.",
+        "boundary": "전체 zkhash 패키지·증명 회로·성능·보안 공격·상수 시간은 실행하거나 증명하지 않았습니다.",
+        "counterexample": "마지막 y=v×a 제약을 빼면 잘못된 y=5와 출력 (12,2)가 앞의 두 조건을 통과합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 같은 두 수",
+        "relation": "나머지와 상수·다섯제곱·혼합을 연결합니다.",
+        "concepts": [
+          "poseidon-parameter-profile",
+          "poseidon-hades-round-schedule"
+        ]
+      },
+      {
+        "label": "02 되돌리기와 확산",
+        "relation": "역지수와 분기 수를 증명하고 한 칸 출력의 역상을 셉니다.",
+        "concepts": [
+          "poseidon-power-sbox-permutation-condition",
+          "poseidon-mds-diffusion-layer"
+        ]
+      },
+      {
+        "label": "03 실제 원문",
+        "relation": "같은 숫자를 고정한 두 변형의 원문에서 실행합니다.",
+        "concepts": [
+          "poseidon-parameter-profile",
+          "poseidon-hades-round-schedule",
+          "poseidon-release-gate"
+        ]
+      },
+      {
+        "label": "04 검증의 조건",
+        "relation": "제약 누락·바이트 인코딩·논문 판과 실행 범위를 확인합니다.",
+        "concepts": [
+          "poseidon-parameter-profile",
+          "poseidon-release-gate"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "같은 3과 4에 상수 1과 2를 더하고 두 칸을 다섯제곱해 섞은 결과를 계산하세요.",
+        "answerChecklist": [
+          "mod 17에서 (4,6)→(4,7)",
+          "첫 칸 4+7=11, 둘째 4+2×7=18≡1",
+          "(11,1)은 설명용 한 라운드이며 안전한 해시 설정이 아님"
+        ],
+        "requiredConcepts": [
+          "poseidon-parameter-profile",
+          "poseidon-hades-round-schedule"
+        ],
+        "sectionId": "round"
+      },
+      {
+        "level": "basic",
+        "question": "부분 라운드에서 둘째 칸을 다섯제곱하지 않으면 어떤 결과가 되나요?",
+        "answerChecklist": [
+          "상수 덧셈 후 (4,6), 첫 칸만 거듭제곱한 뒤에도 (4,6)",
+          "전체 혼합은 남아 (10,16)",
+          "직접 이차 곱셈 제약은 두 칸의 6개에서 한 칸의 3개로 감소"
+        ],
+        "requiredConcepts": [
+          "poseidon-hades-round-schedule"
+        ],
+        "sectionId": "partial"
+      },
+      {
+        "level": "basic",
+        "question": "전체 출력 대신 첫 칸만 공개하면 같은 값을 만드는 입력은 몇 개인가요?",
+        "answerChecklist": [
+          "전체 289상태 순열은 일대일",
+          "첫 칸을 고정하면 둘째 칸은 17가지",
+          "각 전체 출력의 역이 하나씩 있어 첫 칸마다 입력 17개",
+          "전체 순열의 역과 해시 역상 찾기를 구분"
+        ],
+        "requiredConcepts": [
+          "poseidon-power-sbox-permutation-condition"
+        ],
+        "sectionId": "projection"
+      },
+      {
+        "level": "basic",
+        "question": "실제 원문의 [3,4,0]을 재현하려면 무엇을 고정해야 하나요?",
+        "answerChecklist": [
+          "실제 modulus는 BN254 스칼라체의 소수",
+          "폭 3, 지수 5, RF 8, RP 56과 고정 상수·행렬",
+          "원래 Poseidon의 06754456…와 Poseidon2의 0f2021db…는 다름",
+          "원논문 RP 57 표와 고정 소스 RP 56을 구별"
+        ],
+        "requiredConcepts": [
+          "poseidon-parameter-profile",
+          "poseidon-release-gate"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "직접 이차 곱셈 제약으로 240과 가상 비교 576을 계산하세요.",
+        "answerChecklist": [
+          "다섯제곱은 x²·x⁴·x⁵의 세 곱셈 식",
+          "8×3+56=80개의 S-box, 80×3=240",
+          "64라운드를 모두 full로 바꾼 비용 모형은 64×3×3=576",
+          "실제 회로·전체 증명 비용과 다르고 원논문 RP 57이면 243"
+        ],
+        "requiredConcepts": [
+          "poseidon-hades-round-schedule"
+        ],
+        "sectionId": "constraints"
+      },
+      {
+        "level": "basic",
+        "question": "20과 3을 F₁₇ 입력으로 받을 때 어떤 차이가 생기나요?",
+        "answerChecklist": [
+          "단순 나머지 변환이면 둘 다 3",
+          "정규 0–16 인코딩이면 20을 거부",
+          "바이트 순서·길이·용도 태그도 합의",
+          "원문의 고정 상수용 from_hex는 외부 입력 정규 파서가 아님"
+        ],
+        "requiredConcepts": [
+          "poseidon-parameter-profile",
+          "poseidon-release-gate"
+        ],
+        "sectionId": "encoding"
+      },
+      {
+        "level": "advanced",
+        "question": "다섯제곱의 역지수가 13인 이유와 제곱의 반례를 설명하세요.",
+        "answerChecklist": [
+          "비영 원소의 순환군 위수는 16이며 지수에 5를 곱함",
+          "gcd(5,16)=1, 5×13≡1 mod 16",
+          "0도 0으로 복원",
+          "지수 2에서는 1과 16이 모두 1"
+        ],
+        "requiredConcepts": [
+          "poseidon-power-sbox-permutation-condition"
+        ],
+        "sectionId": "inverse"
+      },
+      {
+        "level": "advanced",
+        "question": "행렬식 1을 확인하면 MDS와 다중 라운드 안전성까지 충분한가요?",
+        "answerChecklist": [
+          "항등행렬은 가역이지만 분기 수 2",
+          "이번 M은 모든 1×1 소행렬과 전체 행렬식이 비영",
+          "한 칸 차이 1+2, 두 칸 차이 2+1로 분기 수 3",
+          "추가적인 불변 부분공간 경로와 공격 분석은 별도"
+        ],
+        "requiredConcepts": [
+          "poseidon-mds-diffusion-layer"
+        ],
+        "sectionId": "diffusion"
+      },
+      {
+        "level": "advanced",
+        "question": "마지막 다섯제곱 제약을 뺀 회로가 왜 (12,2)를 허용하나요?",
+        "answerChecklist": [
+          "a=4, u=16, v=1은 앞의 두 곱 조건을 만족",
+          "y=5를 막아야 할 y=v×a가 빠짐",
+          "둘째 올바른 값 7과 혼합해 (12,2)",
+          "해시 해독이 아니라 의도와 다른 증명 관계이며 실제 회로 검증 필요"
+        ],
+        "requiredConcepts": [
+          "poseidon-release-gate"
+        ],
+        "sectionId": "constraint-failure"
+      },
+      {
+        "level": "advanced",
+        "question": "후속 보안 연구와 이번 검산 결과를 실제 서비스의 안전성에 적용할 조건을 설명하세요.",
+        "answerChecklist": [
+          "체·폭·상수·행렬·라운드·공격 목표·작동 모드를 확인",
+          "2023/537의 높은 보안 목표 재평가는 단순 축소 라운드만의 분석이 아님",
+          "2026 이진 확장체 설계와 2월 수정 ePrint의 버전을 구분",
+          "후속 공식 초록 확인과 PDF 전문 미열람을 구분",
+          "원문 선택 모듈·자체 산술 검산과 전체 패키지·증명 회로·성능·보안 검증을 구분"
+        ],
+        "requiredConcepts": [
+          "poseidon-parameter-profile",
+          "poseidon-release-gate"
+        ],
+        "sectionId": "security"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Grassi 외 · Poseidon, USENIX Security 2021",
+        "href": "https://www.usenix.org/system/files/sec21-grassi.pdf",
+        "problem": "소수체 증명에서 비트 기반 해시를 표현하는 비용이 큽니다.",
+        "contribution": "full·partial 라운드와 거듭제곱·MDS 혼합 및 추가 보안 조건을 설명합니다.",
+        "assumptions": "논문의 정확한 체·라운드·행렬 생성과 공격 모형을 따라야 합니다.",
+        "evidenceScope": "본문 2.1–2.3절과 인쇄 523–524쪽 그림·각주·행렬 조건을 읽었습니다. 표 1의 RP 57을 선택 소스 RP 56과 구분합니다.",
+        "notClaim": "작은 F₁₇ 예나 임의로 바꾼 상수·반복 횟수의 안전성을 보장하지 않습니다.",
+        "sectionId": "diffusion"
+      },
+      {
+        "title": "HorizenLabs poseidon2 · 055bde3 원문",
+        "href": "https://github.com/HorizenLabs/poseidon2/tree/055bde3f4782731ba5f5ce5888a440a94327eaf3",
+        "problem": "같은 3과 4를 실제 체·상수·함수 경로에 대입해야 합니다.",
+        "contribution": "Poseidon의 일반·최적화 경로와 Poseidon2의 초기·외부·내부 혼합 및 압축을 제공합니다.",
+        "assumptions": "zkhash 0.2.0의 선택 원문을 변경 없이 보존하고 별도 호출 예제와 의존성을 고정합니다.",
+        "evidenceScope": "Rust 1.93.0에서 선택 모듈 5입력·압축 호출을 실행하고 독립 Python 모형 및 원문 KAT와 대조했습니다.",
+        "notClaim": "전체 upstream 패키지·증명 회로·성능·상수 시간·보안 공격 검증은 수행하지 않았습니다.",
+        "sectionId": "verification"
+      },
+      {
+        "title": "Ashur·Buschman·Mahzoun · ePrint 2023/537",
+        "href": "https://eprint.iacr.org/2023/537",
+        "problem": "높은 목표 보안 수준에서 HADES의 원래 대수적 분석을 재검토합니다.",
+        "contribution": "일부 권고 라운드의 목표 보안 미달 추정을 설명하며 설계자에게 전달한 수정 사항을 보고합니다.",
+        "assumptions": "초록의 384비트 수준 및 1024 목표 사례라는 범위를 유지합니다.",
+        "evidenceScope": "2023-11-21판 공식 초록을 읽었습니다. PDF는 접근 오류로 전문을 열지 못했습니다.",
+        "notClaim": "단순히 축소 라운드만의 연구로 축소하거나 모든 배포 설정이 깨졌다고 확대하지 않습니다.",
+        "sectionId": "security"
+      },
+      {
+        "title": "Grassi·Koschatko·Rechberger · ToSC 2025(2), 34–86",
+        "href": "https://research.tue.nl/nl/publications/poseidon-and-neptune-gr%C3%B6bner-basis-cryptanalysis-exploiting-subsp/",
+        "problem": "부분공간 경로를 이용한 대수적 공격에서 라운드와 작동 모드의 영향을 다시 평가합니다.",
+        "contribution": "설정에 따른 기존 분석의 과대·과소평가와 스펀지·압축·CICO 목표의 차이를 설명합니다.",
+        "assumptions": "DOI 10.46586/tosc.v2025.i2.34-86의 제시한 공격 범위에 한정합니다.",
+        "evidenceScope": "저자 소속 대학의 공식 초록·발표 정보를 읽었습니다. PDF 전문은 접근 오류로 미열람입니다.",
+        "notClaim": "제시한 공격에 대한 안전성 언급을 모든 미래 공격의 증명으로 해석하지 않습니다.",
+        "sectionId": "security"
+      },
+      {
+        "title": "Zhao·Sanso·Vitto·Ding · ePrint 2025/1916",
+        "href": "https://eprint.iacr.org/2025/1916",
+        "problem": "라운드를 줄인 순열과 입력·출력 제약 문제의 근 복원 비용을 개선합니다.",
+        "contribution": "근 복원 개선과 NTT 메모리 접근 비용의 분석을 제시합니다.",
+        "assumptions": "공식 초록에서 명시한 round-reduced CICO 범위를 유지합니다.",
+        "evidenceScope": "공식 초록을 확인했고 PDF 전문이나 논문 실행을 재현하지 않았습니다.",
+        "notClaim": "전체 라운드나 임의 서비스의 해시가 깨졌다고 확대하지 않습니다.",
+        "sectionId": "security"
+      },
+      {
+        "title": "Poseidon(2)b · CIC 2026, 수정 ePrint 2025/1893",
+        "href": "https://eprint.iacr.org/2025/1893",
+        "problem": "이진 확장체의 증명 시스템에 맞는 별도 해시 설계가 필요합니다.",
+        "contribution": "Poseidonb·Poseidon2b와 해당 체의 대수적 공격 검토를 제안합니다.",
+        "assumptions": "소수체 버전과 구별하며 DOI 10.62056/a66ce0zn4의 출판본 및 수정판을 구분합니다.",
+        "evidenceScope": "공식 초록과 2026-02-06판의 128비트 Binius 구현 수정 안내를 읽었습니다.",
+        "notClaim": "PDF 전문·구현·보안 분석이나 성능 수치를 직접 재현했다고 주장하지 않습니다.",
+        "sectionId": "binary"
+      },
+      {
+        "title": "Merz·Rodríguez García · ePrint 2026/306",
+        "href": "https://eprint.iacr.org/2026/306",
+        "problem": "Poseidon2(b)의 특정 행렬 구조와 작동 모드에 따른 대수적 공격을 검토합니다.",
+        "contribution": "대응 CICO 문제보다 쉬운 역상 사례와 개선된 충돌 공격 비용을 설명합니다.",
+        "assumptions": "정확한 행렬·모드·설정과 분석의 보안 여유를 함께 읽습니다.",
+        "evidenceScope": "2026-02-18판의 공식 초록을 확인했습니다. PDF 전문과 공격 실행은 미검증입니다.",
+        "notClaim": "저자는 개선이 곧 목표 보안 수준 미달을 뜻하지는 않는다고 명시하며 임의 배포의 안전성을 이 글이 인증하지 않습니다.",
+        "sectionId": "security"
+      }
+    ]
   },
   "blockchain/impl-hash-commitment": {
     entryLevel:true, entryNote:"Rust API와 Merkle tree를 모른다고 가정하고 abc의 one-shot·chunked hash부터 시작합니다.", coreIdea:"Hash·Poseidon·Merkle 구현은 primitive 호출보다 bytes/field encoding, leaf/node tags, index directions와 pinned parameters가 security contract입니다.", assumedKnowledge:[],
@@ -85125,86 +85639,306 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/attention-kernel-anatomy-and-backends": {
-    entryNote: "FlashAttention 의 tiling 과 online softmax, prefill 이 compute-bound 이고 decode 가 memory-bound 인 이유, warp 가 GPU 의 실행 단위라는 것을 알고 들어옵니다. GPU 처리량 수치는 이 글에서 다시 적습니다.",
-    coreIdea: "Attention kernel 은 QK matmul, softmax, PV matmul 을 한 tile 안에서 융합하고, causal mask 로 대각선 위 tile 을 건너뛰며, prefill 은 Q 축 병렬, decode 는 K/V 축 분할로 따로 짜이고, FlashAttention-2 와 3 는 warp 분할과 단계 겹치기로 자원 병목을 층층이 풀었으며, serving engine 은 이 kernel 들을 backend 로 고르고 autotuning 으로 tile 을 정합니다.",
-    assumedKnowledge: [
-      { id: "flash-attention", role: "이 글이 열어 보는 kernel 의 기준선인 tiling loop 와 HBM 절감 원리입니다." },
-      { id: "online-softmax", role: "Softmax 를 tile 단위로 끼워 넣고 decode 의 부분 결과를 합치는 근거입니다." },
-      { id: "attention-tiling", role: "Q/K/V block 격자가 있어야 tile 을 건너뛰거나 나눠 맡길 수 있습니다." },
-      { id: "prefill-compute-bound-regime", role: "Prefill attention 의 byte 당 FLOP 을 계산할 때 비교하는 phase 단위 성질입니다." },
-      { id: "decode-memory-bound-regime", role: "Decode attention 이 K/V 축 분할을 요구하는 이유가 되는 phase 단위 성질입니다." },
-      { id: "cuda-warp-simt", role: "FlashAttention-2 의 warp 사이 work partitioning 을 읽는 데 필요한 실행 단위입니다." },
-    ],
-    introducedHere: [
-      { id: "attention-kernel-stage-anatomy", role: "Kernel 안의 QK matmul, softmax, PV matmul 세 단계와 단계별 FLOP·지수 비용을 셉니다." },
-      { id: "fused-attention-kernel", role: "세 단계를 한 kernel 로 묶어 중간 tile 을 HBM 에 쓰지 않는 구현과 softmax fusion 을 정의합니다." },
-      { id: "causal-attention-kernel-skipping", role: "대각선 위 tile 을 읽지 않는 causal kernel 의 tile 수와 load balancing 을 계산합니다." },
-      { id: "prefill-vs-decode-attention-kernel", role: "두 regime 의 compute intensity 와 memory footprint 를 수치로 비교하고 kernel 모양의 차이를 설명합니다." },
-      { id: "flash-attention-generations", role: "2 세대의 warp 분할·sequence 병렬과 3 세대의 warp specialization·pingpong·FP8 을 각 논문 범위에서 정리합니다." },
-      { id: "attention-backend-selection", role: "vLLM 의 backend 우선순위 선택과 FlashInfer 의 block-sparse KV·JIT·plan–run 을 설명합니다." },
-      { id: "attention-kernel-autotuning", role: "Backend 안의 tile·warp·stage 를 shape key 마다 실측으로 고르는 절차와 비용을 설명합니다." },
-    ],
-    conceptExplanations: [
-      { id: "attention-kernel-stage-anatomy", sectionId: "anatomy", intuition: "한 요리를 재료 손질, 조리, 담기 세 단계로 나눠 보면 어느 단계가 느린지 보입니다. Attention 도 곱셈 둘과 지수 하나로 나눠 재면 병목이 보입니다.", workedExample: "128×128 tile, d=128 이면 QK 와 PV 가 4.2 MFLOP 씩이고 지수는 16,384 번입니다. H100 에서 원소당 matmul 0.52 ps, 지수 0.26 ps 라 겹치지 않으면 softmax 가 3 분의 1 입니다.", boundary: "Head dim 이 작으면 matmul 항이 줄어 지수 항의 비중이 커지고, 세 단계를 직렬로 본 추정이라 겹치면 max 에 가까워집니다." },
-      { id: "fused-attention-kernel", sectionId: "anatomy", intuition: "세 가게를 오가며 요리하는 대신 한 조리대에서 손질부터 담기까지 끝내는 것입니다. 중간 접시를 창고에 넣었다 꺼내는 일이 사라집니다.", workedExample: "N=4096, FP16 에서 kernel 을 셋으로 나누면 점수와 확률 행렬 32 MiB 씩이 HBM 을 두 번 오가지만, fusion 은 tile 당 64 KiB 점수를 register 에 두고 출력 1 MiB 만 씁니다.", boundary: "Register 와 shared memory 에 tile 이 들어가야 하므로 head dim 이 커지면 tile 을 줄여야 하고, 그러면 K/V 를 다시 읽는 횟수가 늘어납니다." },
-      { id: "causal-attention-kernel-skipping", sectionId: "causal", intuition: "답안지를 채점할 때 문제 번호보다 뒤에 있는 칸은 비어 있는 것이 확실하니 아예 넘기는 것입니다. 경계 칸만 한 칸씩 봅니다.", workedExample: "N=4096, B=128 이면 tile 1,024 개 가운데 528 개만 계산하고 496 개(48 %)를 건너뜁니다. 대각선 32 개만 원소별 mask 비교가 필요합니다.", boundary: "마지막 Q block 은 tile 32 개, 첫 block 은 1 개라 순서대로 SM 에 배정하면 32 배 편차가 나므로 무거운 block 부터 띄워야 합니다." },
-      { id: "prefill-vs-decode-attention-kernel", sectionId: "regimes", intuition: "책 한 권을 한꺼번에 읽는 것과 한 줄 읽을 때마다 책 전체를 다시 넘기는 것의 차이입니다. 뒤쪽은 넘기는 시간이 전부입니다.", workedExample: "N=4096, d=128, FP16 에서 prefill 은 8.6 GFLOP 을 4 MiB 로 나눠 약 2,000 FLOP/B, decode 는 2.1 MFLOP 을 2 MiB 로 나눠 1 FLOP/B 입니다. H100 ridge 는 약 295 FLOP/B 입니다.", boundary: "GQA 로 query head g 개가 KV 를 공유하면 decode 가 2g/b 로 오르지만 batch 는 request 마다 KV 가 달라 intensity 를 올리지 못합니다." },
-      { id: "flash-attention-generations", sectionId: "generations", intuition: "같은 조리법으로 주방 동선을 바꾼 것입니다. 2 세대는 요리사끼리 접시를 주고받지 않게 자리를 바꿨고, 3 세대는 한 사람이 볶는 동안 다른 사람이 썰게 했습니다.", workedExample: "1 세대 split-K 는 tile 당 FP32 부분 점수 64 KiB 를 shared memory 에 쓰고 읽었지만, 2 세대가 Q 를 warp 4 개에 32 행씩 나누자 warp 사이 교환이 0 byte 가 됐습니다.", boundary: "2 세대 약 2 배는 A100, 3 세대 1.5~2 배는 H100 에서 각 저자가 잰 값이고 3 세대는 Hopper 의 TMA·WGMMA 가 있어야 동작합니다." },
-      { id: "attention-backend-selection", sectionId: "backends", intuition: "같은 목적지로 가는 여러 교통수단 가운데 시간과 짐에 맞는 것을 고르는 일입니다. Engine 은 목록 위에서부터 조건에 맞는 첫 수단을 탑니다.", workedExample: "vLLM 은 --attention-backend FLASH_ATTN 처럼 명시하거나 우선순위 목록에서 자동 선택하고, MLA model 은 prefill 과 decode backend 를 따로 받습니다. FlashInfer 논문은 Triton backend 대비 ITL 29~69 % 감소를 보고했습니다.", boundary: "논문 배율은 저자의 GPU 와 shape 에서 잰 값이라 자기 head dim·context·batch 에서 backend 를 바꿔 가며 재야 선택이 닫힙니다." },
-      { id: "attention-kernel-autotuning", sectionId: "backends", intuition: "새 오븐을 들이면 몇 가지 온도로 시험 구워 보고 가장 잘 되는 값을 적어 두는 것입니다. 오븐이 바뀌면 다시 시험합니다.", workedExample: "B_r 2 종, B_c 2 종, warp 수 2 종, stage 수 2 종이면 config 16 개를 (head dim, causal, sequence bucket) key 마다 한 번 컴파일·벤치마크하고 이후 호출은 표에서 꺼냅니다.", boundary: "첫 호출에 수 초의 지연을 만들고, 측정한 GPU 와 다른 GPU 에서는 표가 맞지 않아 다시 돌려야 합니다." },
-    ],
-    conceptStages: [
-      { label: "00 기준선", relation: "FlashAttention 의 tiling 과 online softmax, 두 phase 의 regime, warp 실행 단위를 전제합니다.", concepts: ["flash-attention", "online-softmax", "attention-tiling", "prefill-compute-bound-regime", "decode-memory-bound-regime", "cuda-warp-simt"] },
-      { label: "01 해부", relation: "Kernel 안의 세 단계를 나누고 한 kernel 로 융합합니다.", concepts: ["attention-kernel-stage-anatomy", "fused-attention-kernel"] },
-      { label: "02 Causal", relation: "대각선 위 tile 을 건너뛰어 일을 절반으로 줄입니다.", concepts: ["causal-attention-kernel-skipping"] },
-      { label: "03 두 regime", relation: "Prefill 과 decode 의 byte 당 FLOP 이 kernel 모양을 가릅니다.", concepts: ["prefill-vs-decode-attention-kernel"] },
-      { label: "04 세대", relation: "2 세대와 3 세대가 자원 병목을 층층이 풉니다.", concepts: ["flash-attention-generations"] },
-      { label: "05 선택", relation: "Engine 이 backend 를 고르고 autotuning 이 tile 을 정합니다.", concepts: ["attention-backend-selection", "attention-kernel-autotuning"] },
-    ],
-    exercises: [
-      { level: "basic", question: "B_r=B_c=64, d=128 인 tile 에서 QK matmul, 지수, PV matmul 의 횟수를 각각 계산하세요.", answerChecklist: ["QK 2·64·64·128 = 1.05 MFLOP", "지수 4,096 번", "PV 1.05 MFLOP"], requiredConcepts: ["attention-kernel-stage-anatomy"], sectionId: "anatomy" },
-      { level: "basic", question: "Fused attention kernel 이 HBM 에 쓰지 않는 두 행렬이 무엇이고 어디에 머무는지 설명하세요.", answerChecklist: ["점수 tile S", "확률 tile P", "register·shared memory", "출력 O 만 HBM"], requiredConcepts: ["fused-attention-kernel"], sectionId: "anatomy" },
-      { level: "basic", question: "N=2048, B_r=B_c=128 인 causal attention 에서 계산하는 tile 수와 건너뛰는 tile 수를 구하세요.", answerChecklist: ["격자 16×16 = 256", "계산 16·17/2 = 136", "skip 120", "대각선 16 개만 mask"], requiredConcepts: ["causal-attention-kernel-skipping"], sectionId: "causal" },
-      { level: "basic", question: "Context 8192, d=128, FP16 인 decode attention 의 head 당 K/V byte 와 FLOP, byte 당 FLOP 을 계산하세요.", answerChecklist: ["K+V 4 MiB", "FLOP 4·8192·128 = 4.2 M", "1 FLOP/B"], requiredConcepts: ["prefill-vs-decode-attention-kernel"], sectionId: "regimes" },
-      { level: "basic", question: "FlashAttention-1 의 split-K warp 분할이 shared memory 왕복을 만드는 이유와 FlashAttention-2 가 그것을 없앤 방법을 설명하세요.", answerChecklist: ["K 를 warp 에 나눔", "행 전체가 필요한 softmax", "부분 점수 쓰기·동기화·읽기", "Q 를 warp 에 나눔"], requiredConcepts: ["flash-attention-generations"], sectionId: "generations" },
-      { level: "basic", question: "vLLM 이 attention backend 를 자동으로 고를 때 확인하는 조건 세 가지를 드세요.", answerChecklist: ["GPU 세대", "dtype", "head dim", "KV cache 형식", "우선순위 목록"], requiredConcepts: ["attention-backend-selection"], sectionId: "backends" },
-      { level: "advanced", question: "H100 에서 d=64 인 tile 의 matmul 시간과 지수 시간의 비를 구하고, d=128 과 비교해 softmax 겹치기의 필요성이 어떻게 달라지는지 논하세요.", answerChecklist: ["원소당 matmul 256 FLOP", "0.26 ps vs 0.26 ps", "d=64 에서 지수가 절반", "겹치기 필요성 증가"], requiredConcepts: ["attention-kernel-stage-anatomy", "flash-attention-generations"], sectionId: "generations" },
-      { level: "advanced", question: "Causal skip 뒤 Q block 사이의 일 편차가 32 배일 때 SM 108 개에 block 32×8 개를 배정하는 순서를 설계하고 이유를 쓰세요.", answerChecklist: ["무거운 block 먼저", "역순 배정", "tail 단축", "SM 유휴 최소화"], requiredConcepts: ["causal-attention-kernel-skipping", "flash-attention-generations"], sectionId: "causal" },
-      { level: "advanced", question: "GQA 로 query head 8 개가 KV head 하나를 공유하는 decode 에서 kernel 이 head 를 tile 행으로 묶으면 byte 당 FLOP 이 어떻게 변하고 여전히 memory-bound 인지 판단하세요.", answerChecklist: ["2g/b = 8 FLOP/B", "ridge 295 의 40 분의 1", "여전히 memory-bound", "tensor core 사용 가능"], requiredConcepts: ["prefill-vs-decode-attention-kernel"], sectionId: "regimes" },
-      { level: "advanced", question: "공유 prefix 가 많은 workload 에서 FlashAttention backend 와 FlashInfer backend 를 비교 측정하는 절차를 설계하고 autotuning 비용을 어디에 넣을지 정하세요.", answerChecklist: ["같은 model·shape·batch", "ITL 과 TTFT 측정", "첫 호출 warm-up 분리", "block-sparse KV 형식 확인", "backend 인자 교체"], requiredConcepts: ["attention-backend-selection", "attention-kernel-autotuning"], sectionId: "backends" },
-    ],
-    papers: [
+    "entryNote": "곱한 값을 더하고 평균을 내는 계산에서 시작합니다. GPU 용어를 먼저 외우지 않아도 여덟 위치의 입력·출력을 따라갈 수 있습니다. 조각별 정규화의 원리는 연결된 FlashAttention 글에서 더 자세히 읽을 수 있습니다.",
+    "coreIdea": "가정한 여덟 위치의 마지막 출력 4.5를 유지하면서 16조각 중 6개를 건너뛰고, 3·3·2 분할의 부분 평균을 비중으로 합칩니다. FLOP·지수 호출·저장량·이동량을 구별한 뒤 실제 FA2의 분할 합치기, vLLM의 명시 선택 예외, Triton의 36→21→9 후보 필터에 같은 조건을 대응합니다.",
+    "assumedKnowledge": [
       {
-        title: "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
-        href: "https://arxiv.org/abs/2307.08691",
-        problem: "첫 세대 FlashAttention 이 A100 이론 FLOP/s 의 25~40 % 에 머문 원인인 non-matmul FLOP, 낮은 SM 점유율, warp 사이 shared memory 왕복",
-        contribution: "지연 정규화로 non-matmul FLOP 을 줄이고, sequence 축으로 thread block 을 병렬화하며, Q 를 warp 에 나눠 warp 사이 통신을 없애 약 2 배를 얻습니다.",
-        assumptions: "A100 GPU, FP16/BF16, head dim 64·128, 2023 년 CUDA 구현 기준입니다.",
-        evidenceScope: "첫 세대 대비 약 2 배, 이론 FLOP/s 의 50~73 %, causal 1.7~1.8 배, GPT 학습 72 % MFU 는 저자 자기보고입니다.",
-        notClaim: "Hopper 의 비동기 unit 을 활용한다거나 decode 의 memory-bound 병목을 푼다는 주장은 아닙니다.",
-        sectionId: "paper-flashattention-2",
+        "id": "flash-attention",
+        "role": "전체 점수 배열을 남기지 않고 조각별 누적 상태를 유지하는 기준선입니다. 이 글의 작은 평균 사례에서 다시 출발합니다."
       },
       {
-        title: "FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision",
-        href: "https://arxiv.org/abs/2407.08608",
-        problem: "H100 에서 FlashAttention-2 가 이론 FLOP/s 의 35 % 에 머물고, matmul 과 지수의 처리량 차이로 softmax 가 tensor core 를 기다리게 하는 문제",
-        contribution: "TMA 와 WGMMA 의 비동기성으로 producer–consumer warp specialization 과 pingpong scheduling 을 구현해 두 단계를 겹치고, FP8 block quantization 과 incoherent processing 으로 저정밀 오차를 줄입니다.",
-        assumptions: "NVIDIA Hopper(H100) 전용이며 TMA, WGMMA, setmaxnreg 같은 Hopper 명령을 전제합니다.",
-        evidenceScope: "FP16 1.5~2 배와 740 TFLOP/s(75 %), FP8 1.2 PFLOP/s 근처, FP8 오차 2.6 배 감소는 저자가 H100 에서 잰 값입니다.",
-        notClaim: "A100 이하 세대에서 같은 배율이 나온다거나 FP8 이 모든 model 에서 정확도 손실 없이 쓰인다는 뜻은 아닙니다.",
-        sectionId: "paper-flashattention-3",
+        "id": "online-softmax",
+        "role": "Softmax 를 tile 단위로 끼워 넣고 decode 의 부분 결과를 합치는 근거입니다."
       },
       {
-        title: "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
-        href: "https://arxiv.org/abs/2501.01005",
-        problem: "Serving 에서 KV cache 배치(paged, radix tree, 공유 prefix), attention 변형, request 구성이 다양해 kernel 하나로는 효율과 유연성을 함께 얻기 어려운 문제",
-        contribution: "Block-sparse row 형식으로 KV 배치를 통일하고, JIT template 으로 attention 변형을 kernel 에 끼워 넣으며, CUDA graph 와 호환되는 load-balanced plan–run scheduler 를 제시합니다.",
-        assumptions: "H100·A100 에서 Llama 계열 model 과 SGLang·vLLM 통합 환경, 2025 년 MLSys 발표 시점 구현 기준입니다.",
-        evidenceScope: "Triton 기반 backend 대비 ITL 29~69 %, 긴 context 28~30 %, 병렬 생성 13~17 % 개선은 저자 측정입니다.",
-        notClaim: "FlashAttention 계열 kernel 보다 모든 shape 에서 빠르다거나 plan 단계의 비용이 없다는 주장은 아닙니다.",
-        sectionId: "paper-flashinfer",
-      },
+        "id": "attention-tiling",
+        "role": "Q/K/V block 격자가 있어야 tile 을 건너뛰거나 나눠 맡길 수 있습니다."
+      }
     ],
+    "introducedHere": [
+      {
+        "id": "attention-kernel-stage-anatomy",
+        "role": "행렬곱 32 FLOP와 지수 4회를 별도 단위로 세고 처리량 예산과 실제 시간을 구별합니다."
+      },
+      {
+        "id": "fused-attention-kernel",
+        "role": "전체 점수 저장을 줄이는 융합과 부분 출력·LSE·별도 합치기 kernel이 남는 경계를 설명합니다."
+      },
+      {
+        "id": "causal-attention-kernel-skipping",
+        "role": "미래 조각 생략, 대각선 내부 가림, 길이가 다른 query/key의 위치 정렬을 같은 사례로 계산합니다."
+      },
+      {
+        "id": "prefill-vs-decode-attention-kernel",
+        "role": "배열 크기와 실제 전송량, 비인과 512 FLOP의 4/1.6 비교, decode와 GQA의 분모를 구별합니다."
+      },
+      {
+        "id": "flash-attention-generations",
+        "role": "FA2의 부분 출력 reduction 감소와 FA3의 여러 조각 겹치기를 논문 조건에 맞춰 읽습니다."
+      },
+      {
+        "id": "attention-backend-selection",
+        "role": "고정 vLLM의 지원 검사·자동 우선순위와 명시한 부적합 후보의 ValueError를 실제 제어 흐름으로 확인합니다."
+      },
+      {
+        "id": "attention-kernel-autotuning",
+        "role": "수동 표와 autotune을 구별하고 고정 Triton의 후보 36→21→9, 실제 key와 작은 N의 한계를 읽습니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "attention-kernel-stage-anatomy",
+        "sectionId": "anatomy",
+        "intuition": "행렬곱 32 FLOP와 지수 4회를 별도 단위로 세고 처리량 예산과 실제 시간을 구별합니다.",
+        "workedExample": "2×2 조각과 d=2에서 QK 16 FLOP, PV 16 FLOP, 지수 4회입니다. 전체 비인과 16조각이면 행렬곱 512 FLOP이며 인과 밀집 조각은 320 FLOP입니다.",
+        "boundary": "지수 호출 한 번을 일반 FLOP 하나와 같은 가격으로 더하지 않습니다. 최고 처리량으로 나눈 예산은 단일 명령 지연이나 실제 kernel 완료시간이 아닙니다."
+      },
+      {
+        "id": "fused-attention-kernel",
+        "sectionId": "split-source",
+        "intuition": "전체 점수 저장을 줄이는 융합과 부분 출력·LSE·별도 합치기 kernel이 남는 경계를 설명합니다.",
+        "workedExample": "부분 평균 2, 5, 7.5에 LSE에서 구한 3/8, 3/8, 2/8을 곱하면 4.5입니다. 고정 FA2는 분할 수가 1보다 크면 workspace의 부분 출력을 별도 kernel로 합칩니다.",
+        "boundary": "융합은 전체 중간 행렬의 왕복을 줄이지만 최종 O만 저장한다는 뜻은 아닙니다. 서로 겹치지 않는 부분과 같은 로그 밑·정규화 계약이 필요합니다."
+      },
+      {
+        "id": "causal-attention-kernel-skipping",
+        "sectionId": "causal",
+        "intuition": "미래 조각 생략, 대각선 내부 가림, 길이가 다른 query/key의 위치 정렬을 같은 사례로 계산합니다.",
+        "workedExample": "여덟 위치를 둘씩 묶으면 16조각 중 10개를 처리합니다. 이 40칸 중 허용 연결은 36개입니다. 마지막 query 한 행의 원래 위치는 7이며 key 8행을 모두 읽습니다.",
+        "boundary": "조각 수 감소와 유효 연결 수 감소는 같지 않습니다. 불균등 일감의 이상 배정 모형을 CUDA의 실제 SM 배정 순서로 주장하지 않습니다."
+      },
+      {
+        "id": "prefill-vs-decode-attention-kernel",
+        "sectionId": "regimes",
+        "intuition": "배열 크기와 실제 전송량, 비인과 512 FLOP의 4/1.6 비교, decode와 GQA의 분모를 구별합니다.",
+        "workedExample": "전체 비인과 512 FLOP를 네 배열 최소 장부 128바이트로 나누면 4, KV를 query 묶음마다 다시 읽는 320바이트로 나누면 1.6 FLOP/B입니다.",
+        "boundary": "Footprint는 저장 용량이고 traffic은 이동량입니다. N/b와 2g/b는 해당 최소 장부·재사용 가정의 기준 비율이며 실제 병목이나 지연 상한이 아닙니다."
+      },
+      {
+        "id": "flash-attention-generations",
+        "sectionId": "generations",
+        "intuition": "FA2의 부분 출력 reduction 감소와 FA3의 여러 조각 겹치기를 논문 조건에 맞춰 읽습니다.",
+        "workedExample": "서로 다른 출력 행을 맡으면 부분 평균을 합칠 필요가 없지만 같은 행을 key 범위로 나누면 합치기가 필요합니다. 다른 조각의 행렬곱 예산 2와 지수 예산 1은 이상적 겹침 하한 2를 줍니다.",
+        "boundary": "FA2의 감소 대상은 부분 출력 reduction이며 모든 shared memory 접근이 0이라는 뜻이 아닙니다. FA3의 겹치기는 의존성·버퍼·시작 종료 비용을 없애지 않습니다."
+      },
+      {
+        "id": "attention-backend-selection",
+        "sectionId": "backend-source",
+        "intuition": "고정 vLLM의 지원 검사·자동 우선순위와 명시한 부적합 후보의 ValueError를 실제 제어 흐름으로 확인합니다.",
+        "workedExample": "A=FLASH_ATTN 미지원, B=FLASHINFER 지원이라는 가짜 판정으로 원문 Python 제어를 실행하면 자동 선택은 B이고 명시한 A는 ValueError입니다.",
+        "boundary": "CPU 관찰은 지원 판정 의존성을 대체했으며 실제 설치된 GPU backend의 지원이나 속도를 측정하지 않았습니다. 우선순위는 버전·설정에 따라 달라집니다."
+      },
+      {
+        "id": "attention-kernel-autotuning",
+        "sectionId": "autotune-source",
+        "intuition": "수동 표와 autotune을 구별하고 고정 Triton의 후보 36→21→9, 실제 key와 작은 N의 한계를 읽습니다.",
+        "workedExample": "CUDA 후보는 2×3×3×2=36개입니다. 가정한 capability (9,0)의 keep 뒤 21개, N_CTX=64와 HEAD_DIM=128에서는 9개, N_CTX=8에서는 0개입니다.",
+        "boundary": "원문 후보 필터만 CPU에서 확인했으며 GPU 컴파일·벤치마크는 실행하지 않았습니다. 테스트 환경은 후보 하나를 쓰고 작은 N=8은 이 경로의 실행 예제가 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 같은 출력",
+        "relation": "마지막 위치 7의 평균 4.5를 고정하고 계산 조각을 나눕니다.",
+        "concepts": [
+          "attention-kernel-stage-anatomy",
+          "fused-attention-kernel"
+        ]
+      },
+      {
+        "label": "02 허용 범위",
+        "relation": "16조각·10조각·36연결과 원래 위치의 정렬을 구별합니다.",
+        "concepts": [
+          "causal-attention-kernel-skipping"
+        ]
+      },
+      {
+        "label": "03 이동 장부",
+        "relation": "배열 크기와 재읽기를 구별해 FLOP/B를 계산합니다.",
+        "concepts": [
+          "prefill-vs-decode-attention-kernel"
+        ]
+      },
+      {
+        "label": "04 실행 배치",
+        "relation": "부분 출력을 합치는 통신과 다른 조각의 일 겹치기를 읽습니다.",
+        "concepts": [
+          "flash-attention-generations"
+        ]
+      },
+      {
+        "label": "05 구현 선택",
+        "relation": "지원 검사·명시 선택·자동 후보·내부 설정 선택을 구별합니다.",
+        "concepts": [
+          "attention-backend-selection",
+          "attention-kernel-autotuning"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "sectionId": "case",
+        "question": "가정한 여덟 위치의 값이 1부터 8이고 점수는 모두 0입니다. 마지막 위치와 위치 1의 출력은 얼마이며 마지막 query만 새로 계산하면 정렬은 어떻게 되나요?",
+        "answerChecklist": [
+          "마지막 위치는 36/8=4.5이고 위치 1은 값 1과 2의 평균 1.5입니다.",
+          "Query가 한 행이어도 문장 전체 위치 7을 유지하며 여덟 key를 모두 읽습니다."
+        ],
+        "requiredConcepts": [
+          "attention-kernel-stage-anatomy",
+          "causal-attention-kernel-skipping"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "causal",
+        "question": "여덟 위치를 2×2 조각으로 처리할 때 전체·처리·건너뛴 조각 수를 구하고 40칸과 36연결이 왜 다른지 설명하세요.",
+        "answerChecklist": [
+          "전체 16개 중 10개를 처리하고 6개를 건너뜁니다.",
+          "대각선 4조각 안의 미래 4칸을 가려 40개 밀집 칸 중 허용 연결은 36개입니다."
+        ],
+        "requiredConcepts": [
+          "causal-attention-kernel-skipping"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "anatomy",
+        "question": "B_r=B_c=d=2인 한 조각의 두 행렬곱과 지수 호출을 세고 전체 비인과 16조각으로 확대하세요.",
+        "answerChecklist": [
+          "QK 16 FLOP와 PV 16 FLOP를 합쳐 32 FLOP이며 지수는 별도 4회입니다.",
+          "전체 행렬곱은 512 FLOP, 지수는 64회입니다. 지수 한 번을 일반 FLOP 하나와 같은 가격으로 더하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "attention-kernel-stage-anatomy"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "split-merge",
+        "question": "같은 여덟 값을 3·3·2개로 나누어 부분 평균 2, 5, 7.5를 얻었습니다. 원래 답 4.5를 복원하려면 무엇을 함께 남겨야 하나요?",
+        "answerChecklist": [
+          "이 점수 0 사례에서는 분모 3,3,2와 분자 6,15,15를 합쳐 36/8=4.5입니다.",
+          "부분 평균에 3/8,3/8,2/8을 곱합니다. 단순 평균 29/6은 오답입니다.",
+          "일반 점수에서는 부분 LSE와 출력이 필요하며 실제 분할 경로는 임시 출력과 LSE도 저장합니다."
+        ],
+        "requiredConcepts": [
+          "fused-attention-kernel"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "regimes",
+        "question": "전체 비인과 계산 512 FLOP를 최소 QKVO 장부 128바이트와 KV를 각 query 묶음마다 다시 읽는 320바이트로 나누세요. 이 값이 보장하는 범위는 무엇인가요?",
+        "answerChecklist": [
+          "각각 4와 1.6 FLOP/B이며 같은 512 FLOP를 분자로 쓴 비교입니다.",
+          "배열 크기는 실제 HBM 전송량이 아닙니다. 재사용·임시 결과·보조 저장을 확인해야 합니다.",
+          "이 기준 비율은 실측시간, 계산 병목, 지연 상한을 보장하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "prefill-vs-decode-attention-kernel"
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "backend-source",
+        "question": "고정 vLLM에서 우선순위 A가 미지원이고 B가 지원이라고 가정합니다. 자동 선택과 A 명시 선택은 어떻게 다르며 CPU 관찰은 무엇을 확인했나요?",
+        "answerChecklist": [
+          "자동 선택은 지원 후보 B를 고르고 명시한 A는 ValueError를 냅니다.",
+          "원문 제어 몸체에 가짜 지원 판정을 넣은 관찰입니다. 실제 GPU 지원·속도 실험이 아닙니다.",
+          "우선순위 선택은 매 요청의 모든 후보 벤치마크가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "attention-backend-selection"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "scheduling",
+        "question": "N=4096, 조각 변 128의 인과 계산에서 밀집 조각 칸과 유효 연결 수를 구하세요. 길이 1·2·3·4의 일을 세 동일 작업자에게 현재 최소 부하 순으로 넣는 두 순서도 비교하세요.",
+        "answerChecklist": [
+          "528×16384=8,650,752칸, 유효 연결은 4096×4097/2=8,390,656개입니다.",
+          "오름차순의 마지막 종료는 5, 내림차순은 4입니다.",
+          "이상적인 배정 모형이며 실제 CUDA block의 SM 배정 순서나 속도 보장이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "causal-attention-kernel-skipping",
+          "flash-attention-generations"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "pipeline",
+        "question": "여러 일감의 행렬곱 처리량 예산 2와 지수 예산 1에서 직렬 합 3과 겹침 하한 2를 어떻게 해석하나요? FA3의 989T와 3.9T도 연결해 설명하세요.",
+        "answerChecklist": [
+          "한 조각의 QK→softmax→PV는 의존하므로 임의로 겹칠 수 없습니다.",
+          "여러 조각을 겹쳐도 버퍼·메모리·동기화·시작과 끝의 비용이 남습니다.",
+          "989TFLOP/s와 3.9조 지수 호출/s는 다른 단위의 최고 처리량입니다. 이를 나눈 예산은 명령 지연이나 실제 1.5배 가속을 보장하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "attention-kernel-stage-anatomy",
+          "flash-attention-generations"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "large-ledger",
+        "question": "길이 4096, d=128, 원소당 2바이트에서 query head 8개가 KV 하나를 한 번 읽어 재사용합니다. Q/O까지 센 기준 FLOP/B와 근사 8의 조건을 구하세요.",
+        "answerChecklist": [
+          "FLOP은 16,777,216이고 KV 2,097,152바이트에 Q/O 4,096바이트를 더한 분모는 2,101,248바이트입니다.",
+          "비율은 4096/513≈7.9844 FLOP/B이며 KV 지배 근사에서 8입니다.",
+          "실제 공유 읽기와 추가 이동을 확인해야 하며 이 비율만으로 모든 실행의 병목을 단정하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "prefill-vs-decode-attention-kernel"
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "autotune-source",
+        "question": "고정 Triton CUDA 튜토리얼에서 테스트 override가 없고 capability=(9,0), HEAD_DIM=128이라고 가정합니다. 후보 36개는 keep와 N_CTX=64 가지치기 뒤 몇 개이며 N_CTX=8은 왜 GPU 실행 예제가 아닌가요?",
+        "answerChecklist": [
+          "2×3×3×2=36개에서 면적과 8 warp 제약을 적용하면 21개가 남습니다.",
+          "N_CTX=64에서는 9개, N_CTX=8에서는 0개입니다.",
+          "원문 후보 필터의 CPU 관찰과 실제 GPU 컴파일·벤치마크를 구별합니다. 실제 key는 N_CTX,HEAD_DIM,FP8_OUTPUT,warp_specialize입니다."
+        ],
+        "requiredConcepts": [
+          "attention-kernel-autotuning"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning",
+        "href": "https://arxiv.org/html/2307.08691v1",
+        "problem": "첫 세대 FlashAttention 이 A100 이론 FLOP/s 의 25~40 % 에 머문 원인인 non-matmul FLOP, 낮은 SM 점유율, warp 사이 shared memory 왕복",
+        "contribution": "정규화의 부가 연산을 줄이고 sequence 축에 일감을 추가하며 Q 행을 warp에 나눠 부분 출력 reduction을 줄입니다. 모든 shared memory 접근이 사라진다는 뜻은 아닙니다.",
+        "assumptions": "원 논문 A100 80GB SXM4, head dim 64·128 등의 벤치마크 조건이며 고정 공개 코드의 이후 선택표와 구별합니다.",
+        "evidenceScope": "첫 세대 대비 약 2 배, 이론 FLOP/s 의 50~73 %, causal 1.7~1.8 배, GPT 학습 72 % MFU 는 저자 자기보고입니다.",
+        "notClaim": "Hopper 의 비동기 unit 을 활용한다거나 decode 의 memory-bound 병목을 푼다는 주장은 아닙니다.",
+        "sectionId": "paper-flashattention-2"
+      },
+      {
+        "title": "FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision",
+        "href": "https://arxiv.org/html/2407.08608v2",
+        "problem": "H100 에서 FlashAttention-2 가 이론 FLOP/s 의 35 % 에 머물고, matmul 과 지수의 처리량 차이로 softmax 가 tensor core 를 기다리게 하는 문제",
+        "contribution": "TMA 와 WGMMA 의 비동기성으로 producer–consumer warp specialization 과 pingpong scheduling 을 구현해 두 단계를 겹치고, FP8 block quantization 과 incoherent processing 으로 저정밀 오차를 줄입니다.",
+        "assumptions": "NVIDIA Hopper(H100) 전용이며 TMA, WGMMA, setmaxnreg 같은 Hopper 명령을 전제합니다.",
+        "evidenceScope": "FP16 최고 약 740TFLOP/s와 FP8 약 1.2PFLOP/s는 H100의 저자 측정입니다. 약 2.6배 오차 감소는 비교한 기본 per-tensor FP8 설정 범위입니다.",
+        "notClaim": "A100 이하 세대에서 같은 배율이 나온다거나 FP8 이 모든 model 에서 정확도 손실 없이 쓰인다는 뜻은 아닙니다.",
+        "sectionId": "paper-flashattention-3"
+      },
+      {
+        "title": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving",
+        "href": "https://arxiv.org/html/2501.01005v1",
+        "problem": "Serving 에서 KV cache 배치(paged, radix tree, 공유 prefix), attention 변형, request 구성이 다양해 kernel 하나로는 효율과 유연성을 함께 얻기 어려운 문제",
+        "contribution": "KV 저장 형식과 JIT 변형을 구성하고 CPU plan이 CTA 작업 큐와 부분 출력 매핑을 만듭니다. GPU attention·contraction의 run은 CUDA Graph와 호환되며 plan 자체를 그래프에서 실행하지 않습니다.",
+        "assumptions": "읽은 arXiv v1은 FlashInfer v0.2, A100 40GB/H100 80GB, CUDA 12.4와 PyTorch 2.4의 실험 조건을 밝힙니다.",
+        "evidenceScope": "Triton 기반 backend 대비 ITL 29~69 %, 긴 context 28~30 %, 병렬 생성 13~17 % 개선은 저자 측정입니다.",
+        "notClaim": "FlashAttention 계열 kernel 보다 모든 shape 에서 빠르다거나 plan 단계의 비용이 없다는 주장은 아닙니다.",
+        "sectionId": "paper-flashinfer"
+      }
+    ]
   },
   "ai/serving-benchmark-methodology": {
     entryNote: "TTFT·ITL·TPOT·percentile 과 SLO 문장의 정의는 앞 글에서 안다고 가정합니다. 그 지표를 어떤 조건에서 재야 재현되고 비교 가능한지에서 시작합니다.",
@@ -120880,7 +121614,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "property/commercial-lease-and-rent": {
     "coreIdea": "상가 임대차의 경제적 본질은 임차인이 일정 기간 공간을 쓰는 대신 고정 현금흐름과 원상복구 의무를 부담하고, 임대인은 공실·수선·보증금 반환 위험을 지는 교환입니다.",
-    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "entryNote": "같은 3년 계약에서 시작의 3천만 원, 매달 200만 원씩 36번, 종료의 3천만 원 반환을 따라갑니다. 한국의 대항력·우선변제와 잉글랜드·웨일스 및 NSW의 적용 범위를 구분합니다.",
     "assumedKnowledge": [
       {
         "id": "shop-break-even-count",
@@ -120906,42 +121640,42 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "lease-right-and-deposit",
         "sectionId": "mechanism",
         "intuition": "보증금은 월세처럼 매달 사라지는 돈이 아닙니다.",
-        "workedExample": "3천만 원을 맡긴 점주는 3년 뒤 정산 잔액을 청구할 수 있습니다.",
-        "boundary": "연체·손해·복구비 공제 여부는 계약과 법에 달립니다."
+        "workedExample": "3천만 원을 맡기고 월 200만 원씩 36번 지급하면 총 지급액은 1억200만 원입니다. 공제 없이 3천만 원을 반환받으면 순지급액은 7천200만 원입니다.",
+        "boundary": "관리비·세금·공사비를 제외하고 무상 기간·인상이 없는 가정입니다. 보증금은 묶이는 돈이며 반환 위험이 있고 회계상 비용 인식은 별도 문제입니다."
       },
       {
         "id": "commercial-lease-jurisdiction",
         "sectionId": "comparison",
         "intuition": "한국에서 가능한 갱신을 외국 점포에도 당연하게 요구할 수 없습니다.",
-        "workedExample": "한국 법과 영국 1954년 사업 임차권, 호주 NSW retail lease를 각각 원문으로 확인합니다.",
-        "boundary": "국가 안에서도 지역·업종·계약 날짜에 따라 적용 규칙이 다릅니다."
+        "workedExample": "한국의 인도·등록 신청과 갱신 요구를 잉글랜드·웨일스의 갱신권 배제 절차 및 NSW의 계약상 반환 상태와 구분합니다.",
+        "boundary": "보증금 규모에 따른 한국 법의 조항별 적용 범위와 관할·업종·계약 시점을 확인합니다. Law Commission의 2026년 개정 논의는 시행법과 구별합니다."
       },
       {
         "id": "rent-property-net-income",
         "sectionId": "need",
         "intuition": "월세 수입이 그대로 부동산 투자 수익은 아닙니다.",
-        "workedExample": "월200만 원 계약에 공실2개월이면 연간 명목 임대수입2천만 원이며 수선·세금·이자는 더 빼야 합니다.",
-        "boundary": "취득가·세금·대출 구조에 따라 순수익률은 달라집니다."
+        "workedExample": "별도의 1년에 월 200만 원의 공간이 두 달 비면 2천400만 − 400만 = 2천만 원을 받습니다. 여기서 수선·세금·이자 등을 더 빼야 합니다.",
+        "boundary": "앞의 3년 계약에 공실을 넣은 계산이 아닙니다. 취득가·세금·대출 구조를 모르면 순수익률도 계산할 수 없습니다."
       }
     ],
     "conceptStages": [
       {
         "label": "01 · 사용권과 보증금 청구권",
-        "relation": "3천만 원을 맡긴 점주는 3년 뒤 정산 잔액을 청구할 수 있습니다.",
+        "relation": "3천만 원을 맡기고 월 200만 원씩 36번 지급하면 총 지급액은 1억200만 원입니다. 공제 없이 3천만 원을 반환받으면 순지급액은 7천200만 원입니다.",
         "concepts": [
           "lease-right-and-deposit"
         ]
       },
       {
         "label": "02 · 상가 임차권의 관할권 차이",
-        "relation": "한국 법과 영국 1954년 사업 임차권, 호주 NSW retail lease를 각각 원문으로 확인합니다.",
+        "relation": "한국의 인도·등록 신청과 갱신 요구를 잉글랜드·웨일스의 갱신권 배제 절차 및 NSW의 계약상 반환 상태와 구분합니다.",
         "concepts": [
           "commercial-lease-jurisdiction"
         ]
       },
       {
         "label": "03 · 임대 부동산의 순현금",
-        "relation": "월200만 원 계약에 공실2개월이면 연간 명목 임대수입2천만 원이며 수선·세금·이자는 더 빼야 합니다.",
+        "relation": "별도의 1년에 월 200만 원의 공간이 두 달 비면 2천400만 − 400만 = 2천만 원을 받습니다. 여기서 수선·세금·이자 등을 더 빼야 합니다.",
         "concepts": [
           "rent-property-net-income"
         ]
@@ -120950,10 +121684,10 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "월200만 원을36개월 내는 총액을 구하세요.",
+        "question": "월 200만 원을 36개월 지급하고 보증금 3천만 원을 전액 반환받는 현금 흐름을 계산하세요.",
         "answerChecklist": [
-          "7천200만 원",
-          "보증금3천만 원과 별도"
+          "월 지급액 합계는 7천200만 원이며 처음 보증금까지 총 1억200만 원을 지급합니다.",
+          "종료 때 3천만 원이 돌아오면 순지급액은 7천200만 원입니다. 관리비·세금·공사비 등은 제외합니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -120964,8 +121698,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "basic",
         "question": "보증금과 차임은 종료 때 어떻게 다른가요?",
         "answerChecklist": [
-          "보증금은 남은 채무와 정산 후 반환 청구",
-          "차임은 공간 사용의 대가"
+          "보증금은 남은 채무를 정산한 뒤 잔액을 반환 청구하는 돈입니다.",
+          "차임은 공간 사용의 대가입니다. 반환되는 돈도 사용 기간 동안 묶이며 회수 위험이 있습니다."
         ],
         "sectionId": "names",
         "requiredConcepts": [
@@ -120976,8 +121710,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "basic",
         "question": "입주 전 사진과 도면은 어떤 분쟁을 줄이나요?",
         "answerChecklist": [
-          "처음 있던 시설과 이후 설치를 구분",
-          "원상복구 범위 확인"
+          "처음 있던 시설과 이후 점주가 설치한 시설을 구분할 자료가 됩니다.",
+          "계약·이후 합의 및 적용 법과 함께 반환 상태와 복구 범위를 판단합니다."
         ],
         "sectionId": "need",
         "requiredConcepts": [
@@ -120986,10 +121720,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "두 달 공실이면 월200만 원의 연간 명목 임대수입은 얼마인가요?",
+        "question": "별도의 1년에 두 달 공실이면 월 200만 원의 임대수입은 얼마인가요?",
         "answerChecklist": [
-          "2천400만−400만=2천만 원",
-          "수선·세금·이자 전 수입"
+          "2천400만 − 400만 = 2천만 원입니다.",
+          "수선·세금·이자 등을 빼기 전 수입이며 앞의 3년 계약에 공실을 넣은 계산이 아닙니다."
         ],
         "sectionId": "need",
         "requiredConcepts": [
@@ -120998,10 +121732,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "한국 제3조에서 건물 인도와 함께 요구하는 것은 무엇인가요?",
+        "question": "한국 제3조의 대항력을 갖추면 보증금 전액의 우선 회수까지 확정되나요?",
         "answerChecklist": [
-          "사업자등록 신청",
-          "다음 날 제3자 효력, 반환 우선순위는 별도"
+          "건물 인도와 사업자등록 신청을 갖추면 다음 날부터 제3자에 대한 효력이 생깁니다.",
+          "제5조의 우선변제는 확정일자와 적용 범위 등을 별도로 확인합니다. 선순위 권리·배당 재원 때문에 전액 반환을 보장하지는 않습니다."
         ],
         "sectionId": "source",
         "requiredConcepts": [
@@ -121012,8 +121746,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "basic",
         "question": "중도 이전·갱신·수선은 어디서 확인하나요?",
         "answerChecklist": [
-          "계약 조항과 현지 강행규정",
-          "통지기한·비용·수선 담당을 문서로 확인"
+          "계약 조항과 해당 관할의 적용 법을 확인합니다.",
+          "통지 기한·수선 담당·비용 증빙과 새 임차인 조건을 문서로 남깁니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -121022,10 +121756,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "3년보다 시설 회수기간이 긴 투자를 평가할 때 추가 질문은 무엇인가요?",
+        "question": "3년보다 시설 투자 회수기간이 길면 무엇을 더 확인하나요?",
         "answerChecklist": [
-          "연장 가능성과 조건",
-          "이전·양도·철거 비용과 회수 가능성"
+          "연장 가능성과 조건, 요구 시기와 거절 사유를 확인합니다.",
+          "이전·양도·철거 비용과 시설을 팔아 회수할 수 있는 금액을 따로 검토합니다."
         ],
         "sectionId": "need",
         "requiredConcepts": [
@@ -121035,10 +121769,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "임대료 면제 약속을 검토할 때 월세0만 확인하면 안 되는 이유를 쓰세요.",
+        "question": "사례와 달리 공사기간 월세를 면제하기로 했다면 월세 0만 확인해도 되나요?",
         "answerChecklist": [
-          "공사기간 시작일 확인",
-          "관리비 등 다른 비용도 면제되는지 구분"
+          "면제가 시작되는 날짜와 끝나는 날짜를 확인합니다.",
+          "관리비 등 다른 비용도 면제되는지 구분합니다. 기존 36개월 × 200만 원 계산도 새 조건에 맞춰 바뀝니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -121048,10 +121782,11 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "한국의 보호 규정을 NSW나 영국 계약에 그대로 쓰면 무엇이 틀리나요?",
+        "question": "한국의 10년 기준이나 영국의 개정 제안을 다른 점포 계약에 곧바로 적용하면 왜 틀리나요?",
         "answerChecklist": [
-          "관할별 적용대상·갱신·양도·반환 규칙 다름",
-          "현지 계약과 강행규정·배제 합의 확인"
+          "한국도 갱신 요구 기간과 예외가 있어 자동 10년 보장이 아닙니다.",
+          "잉글랜드·웨일스는 1954년 법의 적용과 계약 전 배제 절차를 확인합니다. Law Commission의 의견 수렴·개정 제안은 시행법과 구별합니다.",
+          "NSW 소매 임대차의 종료 안내를 한국 점포에 직접 적용하지 않습니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -121062,8 +121797,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "시설을 샀다는 사실만으로 임대차와 복구가 해결되지 않는 이유는 무엇인가요?",
         "answerChecklist": [
-          "시설 소유와 공간 사용권 다름",
-          "임대인 동의·새 계약·반환 범위 별도"
+          "시설 소유와 공간 사용권, 보증금 반환 청구권은 서로 다릅니다.",
+          "임대인의 동의가 필요한지, 새 계약이나 양도가 성립했는지, 기존 채무·반환 의무가 어떻게 정리되는지 확인해야 합니다."
         ],
         "sectionId": "limits",
         "requiredConcepts": [
@@ -121071,11 +121806,83 @@ export const ARTICLE_LEARNING: Readonly<
           "commercial-lease-jurisdiction"
         ]
       }
+    ],
+    "papers": [
+      {
+        "title": "한국 상가건물 임대차보호법 제3조",
+        "href": "https://law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=1013685403",
+        "sectionId": "source",
+        "problem": "계약서 서명과 제3자에 대한 효력을 혼동하는 문제입니다.",
+        "contribution": "같은 보증금 3천만 원 사례에 건물 인도·사업자등록 신청과 다음 날 효력을 연결합니다.",
+        "assumptions": "2026-05-12 시행 조문이며 실제 요건 충족 여부는 개별 사실에 달려 있습니다.",
+        "evidenceScope": "제1항의 요건·효력과 제2항의 양수인 지위 승계를 실제 읽었습니다.",
+        "notClaim": "대항력만으로 우선변제나 전액 회수가 보장된다는 뜻은 아닙니다."
+      },
+      {
+        "title": "한국 상가건물 임대차보호법 제2조",
+        "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=279651&joNo=0002&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+        "sectionId": "source",
+        "problem": "모든 상가 계약에 모든 보호 조항이 동일하게 적용된다고 읽는 문제입니다.",
+        "contribution": "보증금 규모의 일반 적용 범위와 그 범위를 넘어 적용되는 제3조 등의 예외를 구분합니다.",
+        "assumptions": "2026-05-12 시행 조문이며 지역별 환산 기준과 대상 요건은 따로 확인해야 합니다.",
+        "evidenceScope": "실제 조문 HTML에서 제1·2·3항을 읽고 제5조와의 차이를 확인했습니다.",
+        "notClaim": "사례의 주소·업종·환산보증금을 확정하거나 개별 계약의 적용 여부를 판정한 것은 아닙니다."
+      },
+      {
+        "title": "한국 상가건물 임대차보호법 제5조",
+        "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=279651&joNo=0005&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+        "sectionId": "source",
+        "problem": "대항력과 경매·공매에서 먼저 받을 순위를 혼동하는 문제입니다.",
+        "contribution": "3천만 원 회수에 대항 요건·확정일자·적용 범위뿐 아니라 선순위 권리와 배당 재원이 필요함을 설명합니다.",
+        "assumptions": "제5조가 적용되는 계약과 해당 요건을 전제합니다.",
+        "evidenceScope": "제2항의 대항 요건·확정일자·후순위 우선과 제3항의 인도 조건을 실제 읽었습니다.",
+        "notClaim": "구체적인 배당 순서·배당액이나 전액 반환을 보장한 것은 아닙니다."
+      },
+      {
+        "title": "한국 상가건물 임대차보호법 제10조·제10조의4",
+        "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancNo=21083&ancYd=20251111&efYd=20260512&lsiSeq=279651",
+        "sectionId": "comparison",
+        "problem": "갱신 요구권과 권리금 회수 기회 보호를 자동 보장으로 읽는 문제입니다.",
+        "contribution": "3년을 넘어 시설 투자를 회수하려면 요구 시기·총 10년 한도·거절 사유를 따져야 합니다.",
+        "assumptions": "2026-05-12 시행 조문이며 각 조항의 적용 범위와 예외가 있습니다.",
+        "evidenceScope": "조문별 실제 HTML에서 제10조의 기간·한도·예외와 제10조의4의 회수 기회 보호를 읽었습니다.",
+        "notClaim": "개별 계약이 반드시 갱신되거나 권리금 액수가 보장된다는 뜻은 아닙니다."
+      },
+      {
+        "title": "NSW · What to do at the end of the lease",
+        "href": "https://www.smallbusiness.nsw.gov.au/help/common-questions/what-to-do-at-the-end-of-the-lease",
+        "sectionId": "comparison",
+        "problem": "원상복구를 모든 시설의 무조건 철거로 읽는 문제입니다.",
+        "contribution": "같은 계약의 마지막 날에 입주 사진·약정한 상태·공사 또는 금전 정산 합의를 대조합니다.",
+        "assumptions": "NSW 소매 임대차 안내이며 한국 법의 복구 범위를 정하지 않습니다.",
+        "evidenceScope": "실제 Make good 항목의 계약 상태·최초 기록·금전 합의와 양도 주의를 읽었습니다.",
+        "notClaim": "한국 점포의 공제액이나 실제 복구 범위를 판정한 것은 아닙니다."
+      },
+      {
+        "title": "UK Law Commission · Business tenancies",
+        "href": "https://lawcom.gov.uk/project/business-tenancies-the-right-to-renew/",
+        "sectionId": "comparison",
+        "problem": "갱신권의 현재 배경과 개정 제안을 혼동하는 문제입니다.",
+        "contribution": "한국의 기간을 옮겨 쓰지 않고 1954년 법 적용·배제 여부를 확인합니다.",
+        "assumptions": "잉글랜드·웨일스에 관한 2026-10-04 확인 내용입니다.",
+        "evidenceScope": "Background와 2026-09-16 종료된 2차 의견 수렴 후 답변 분석 상태를 실제 읽었습니다.",
+        "notClaim": "제안된 단기 임대차 기준 등이 이미 시행됐다고 주장하지 않습니다."
+      },
+      {
+        "title": "GOV.UK · Renewing and ending business leases",
+        "href": "https://www.gov.uk/government/publications/renewing-and-ending-business-leases-a-guide-for-tenants-and-landlords",
+        "sectionId": "comparison",
+        "problem": "영국 전역에 같은 보호 규칙이 자동 적용된다고 읽는 문제입니다.",
+        "contribution": "잉글랜드·웨일스의 범위를 확인하고 계약 전 갱신권 배제 절차를 질문에 포함합니다.",
+        "assumptions": "2026-07-30 갱신된 공식 웹 안내입니다.",
+        "evidenceScope": "웹페이지의 Applies to England and Wales와 계약 전 배제 절차 설명을 실제 읽었습니다.",
+        "notClaim": "첨부 PDF 전체를 검토하거나 개별 계약의 유효한 배제를 판정한 것은 아닙니다."
+      }
     ]
   },
   "property/shop-transfer-and-goodwill": {
     "coreIdea": "점포 양도 대금은 시설·재고·고객 관계의 가치와 임대차 지위, 영업 허가·채무 인수 여부가 섞여 보이므로 각각의 소유자와 동의권자, 인도 시점을 분리해야 합니다.",
-    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "entryNote": "시설 2천만·재고 300만·미래 기대 1천만 원의 같은 가게를 인수합니다. 먼저 낸 300만 원과 인수일 재고 250만 원을 잔금에 반영하고, 공간·영업 절차·고객정보·남은 책임을 각각 확인합니다.",
     "assumedKnowledge": [
       {
         "id": "lease-right-and-deposit",
@@ -121101,42 +121908,42 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "shop-transfer-asset-bundle",
         "sectionId": "mechanism",
         "intuition": "가게를 판다는 말만으로 모든 권리가 넘어가지는 않습니다.",
-        "workedExample": "3천300만 원을 시설·재고·영업 기회로 나눠 실사합니다.",
-        "boundary": "영업 허가와 직원·공급 계약은 관할법과 계약에 따라 별도 이전 절차가 필요할 수 있습니다."
+        "workedExample": "3천300만 원의 시설·재고·미래 기대를 나눕니다. 같은 단가로 재고가 250만 원이면 총액 3천250만 원에서 먼저 낸 300만 원을 빼고 잔금 2천950만 원을 지급합니다.",
+        "boundary": "미리 합의한 수량·단가·정산 조건의 가정입니다. 보증금·세금·중개비·운영 자금을 제외하며 각 항목의 법률·회계·세무 처리가 같다는 뜻은 아닙니다."
       },
       {
         "id": "lease-assignment-consent",
         "sectionId": "mechanism",
         "intuition": "시설을 샀어도 그 자리에 계속 있을 권리는 별개입니다.",
-        "workedExample": "시설·재고·영업상 이점3천300만 원의 지급 앞에 새 임대차와 필요한 영업승계 조건을 둡니다.",
-        "boundary": "임대차 종료와 새 계약 체결인지, 기존 계약 양도인지 구분해야 합니다."
+        "workedExample": "먼저 지급한 300만 원과 남은 대금 사이에 장소 사용 계약·필요한 영업 절차·인수일 확인 조건을 두고 실패 시 반환 방법을 정합니다.",
+        "boundary": "새 임대차인지 기존 지위 양도인지 구분합니다. 필요한 동의·신고 수리·책임 종료는 법과 실제 거래에 달려 있으며 지급 비율은 표준이 아닙니다."
       },
       {
         "id": "goodwill-future-uncertainty",
         "sectionId": "limits",
         "intuition": "단골이 예전 점주를 따라 떠나면 기대한 돈이 들어오지 않습니다.",
-        "workedExample": "영업상 이점에 1천만 원을 냈더라도 신규 월세 인상으로 남는 돈은 줄 수 있습니다.",
-        "boundary": "영업상 이점의 법률·회계·세무 정의는 문맥별로 구분합니다."
+        "workedExample": "매달 남길 것으로 예상한 100만 원에서 새 월세가 50만 원 더 나가면 미래 기대에 낸 1천만 원의 단순 회수기간은 10개월에서 20개월로 늘어납니다.",
+        "boundary": "월 잔액 고정·세금·이자·시설값 회수·시간가치를 제외한 설명용 계산입니다. 전체 인수 투자 평가나 적정 권리금 추정이 아닙니다."
       }
     ],
     "conceptStages": [
       {
         "label": "01 · 점포 양도 자산 묶음",
-        "relation": "3천300만 원을 시설·재고·영업 기회로 나눠 실사합니다.",
+        "relation": "3천300만 원의 시설·재고·미래 기대를 나눕니다. 같은 단가로 재고가 250만 원이면 총액 3천250만 원에서 먼저 낸 300만 원을 빼고 잔금 2천950만 원을 지급합니다.",
         "concepts": [
           "shop-transfer-asset-bundle"
         ]
       },
       {
         "label": "02 · 임대차 지위 이전과 동의",
-        "relation": "시설·재고·영업상 이점3천300만 원의 지급 앞에 새 임대차와 필요한 영업승계 조건을 둡니다.",
+        "relation": "먼저 지급한 300만 원과 남은 대금 사이에 장소 사용 계약·필요한 영업 절차·인수일 확인 조건을 두고 실패 시 반환 방법을 정합니다.",
         "concepts": [
           "lease-assignment-consent"
         ]
       },
       {
         "label": "03 · 영업상 이점의 미래 불확실성",
-        "relation": "영업상 이점에 1천만 원을 냈더라도 신규 월세 인상으로 남는 돈은 줄 수 있습니다.",
+        "relation": "매달 남길 것으로 예상한 100만 원에서 새 월세가 50만 원 더 나가면 미래 기대에 낸 1천만 원의 단순 회수기간은 10개월에서 20개월로 늘어납니다.",
         "concepts": [
           "goodwill-future-uncertainty"
         ]
@@ -121145,10 +121952,10 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "3천300만 원의 세 대상을 적으세요.",
+        "question": "3천300만 원의 세 대상과 이 계산에서 제외한 돈을 구분하세요.",
         "answerChecklist": [
-          "시설2천만·재고300만·영업상 이점1천만",
-          "보증금은 포함하지 않은 가정"
+          "시설 2천만·재고 300만·미래 영업상 이점 1천만 원입니다.",
+          "보증금·세금·중개비·인수 뒤 운영 자금은 제외합니다. 실제 거래 통계나 세법상 배분이 아닌 가격 합의입니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -121157,10 +121964,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "재고300만 원을 검증할 자료는 무엇인가요?",
+        "question": "합의한 단가로 센 재고가 250만 원이면 총액과 잔금은 얼마인가요?",
         "answerChecklist": [
-          "인수일 실제 수량·사용기한",
-          "수량 변화의 대금 조정 조건"
+          "시설 2천만 + 재고 250만 + 미래 기대 1천만 = 3천250만 원입니다.",
+          "먼저 지급한 300만 원을 빼면 2천950만 원입니다. 수량·사용기한·단가·조정 조건을 미리 합의한 가정입니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -121169,10 +121976,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "매장 장비를 기존 점주가 마음대로 팔 수 없는 경우는 무엇인가요?",
+        "question": "매장 장비를 기존 점주가 자기 물건처럼 팔 수 없는 경우는 무엇인가요?",
         "answerChecklist": [
-          "리스·담보·소유권 유보",
-          "소유자와 공급계약 확인"
+          "빌린 장비이거나 소유권 유보 등으로 다른 사람에게 권리가 있을 수 있습니다.",
+          "소유자·리스·담보·공급계약을 확인하고 필요한 동의와 권리 정리를 인도 조건에 반영합니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -121181,10 +121988,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "영업상 이점1천만 원을 확정수익이라고 해도 되나요?",
+        "question": "영업상 이점에 준 1천만 원을 확정수익이라고 해도 되나요?",
         "answerChecklist": [
-          "과거 고객의 미래 재방문은 불확실",
-          "새 임대료·점주 노동·광고·상권 변화 반영"
+          "과거 고객이 계속 찾아올지는 불확실합니다.",
+          "새 임대료·점주 노동의 대체 임금·광고·상권 변화가 남는 돈을 바꿉니다."
         ],
         "sectionId": "limits",
         "requiredConcepts": [
@@ -121193,10 +122000,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "잔금 앞에 붙일 영업 가능 조건을 두 가지 적으세요.",
+        "question": "남은 대금을 지급할 때 확인하기로 합의할 조건을 두 가지 적으세요.",
         "answerChecklist": [
-          "임대인 동의 또는 새 임대차",
-          "필요한 지위승계·허가·본부 또는 장비 소유자 승인"
+          "임대인 동의 또는 새 임대차 등 장소 사용 조건을 확인합니다.",
+          "업종별 지위승계·신고 수리와 필요한 본부·장비 소유자 승인을 확인합니다. 절차의 순서와 실패 시 반환 방법도 합의합니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -121205,10 +122012,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "고객정보 이전을 알릴 핵심 내용은 무엇인가요?",
+        "question": "고객정보 이전 때 기존 점주와 새 점주의 의무를 구분하세요.",
         "answerChecklist": [
-          "이전 사실과 받는 사람 연락처",
-          "이전 거부 시 방법·절차, 원래 목적 범위"
+          "기존 점주는 법이 정한 방법으로 이전 사실, 받는 사람의 이름·주소·전화번호 등 연락처, 이전을 원하지 않을 때의 방법·절차를 미리 알립니다.",
+          "새 점주도 지체 없이 알리되 기존 점주가 법에 따라 이미 알린 경우는 예외입니다. 받은 정보는 이전 당시 본래 목적에 따라 이용·제공해야 합니다."
         ],
         "sectionId": "source",
         "requiredConcepts": [
@@ -121219,8 +122026,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "양도 전 주문의 입금이 양도 후에 오면 어떻게 기록하나요?",
         "answerChecklist": [
-          "주문일과 정산일 구분",
-          "양도 전 주문 정산·환불 책임을 계약으로 특정"
+          "주문일과 정산일을 구분해 매출·입금·환불이 어느 거래에 속하는지 확인합니다.",
+          "양도 전 주문의 정산·환불 책임을 계약에서 특정하고 실제 정산 자료와 맞춥니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -121230,10 +122037,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "권리금 보호와 새 임대차 자동성립이 다른 이유를 설명하세요.",
+        "question": "권리금 보호와 새 임대차의 성립은 왜 따로 확인하나요?",
         "answerChecklist": [
-          "보호 조항의 방해행위·기간·예외",
-          "새 공간 사용권은 별도 조건과 문서 필요"
+          "한국 법은 종료 6개월 전부터 종료 때까지의 특정 방해행위, 예외와 정당한 거절 사유를 다룹니다.",
+          "양도 가격에 합의했다고 공간 사용 계약이 자동 성립하지 않습니다. NSW의 동의·공개 절차도 한국에 그대로 적용하지 않습니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -121242,12 +122049,13 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "점주가 하루 종일 일해 낸 매출을 양수자가 그대로 평가하면 무엇을 놓치나요?",
+        "question": "같은 가게의 새 월세가 50만 원 오를 때 1천만 원의 단순 회수기간을 계산하고 한계를 말하세요.",
         "answerChecklist": [
-          "대체할 노동의 임금",
-          "새 임대료와 판촉·배달 비용, 지속 가능 주문"
+          "운영 비용과 점주 노동 대체 임금 반영 후 월 100만 원이 남는 가정에서 50만 원이 됩니다.",
+          "1천만 ÷ 100만 = 10개월, 1천만 ÷ 50만 = 20개월입니다.",
+          "월 잔액 고정·세금·이자·시설값 회수·시간가치를 제외하므로 전체 3천300만 원의 투자 평가가 아닙니다."
         ],
-        "sectionId": "mechanism",
+        "sectionId": "limits",
         "requiredConcepts": [
           "goodwill-future-uncertainty"
         ]
@@ -121256,8 +122064,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "최고가 제안보다 낮은 양도가가 더 나을 수 있는 조건을 쓰세요.",
         "answerChecklist": [
-          "잔금 확실성과 임대차 책임 종료",
-          "미납·쿠폰·장비·직원 책임과 보증금 반환 경로"
+          "받을 잔금의 확실성과 기존 임대차 책임이 실제로 끝나는지를 비교합니다.",
+          "미납·선불권·장비·직원 관련 책임, 보증금 반환과 새 보증금 지급 경로를 대조합니다."
         ],
         "sectionId": "limits",
         "requiredConcepts": [
@@ -121265,6 +122073,88 @@ export const ARTICLE_LEARNING: Readonly<
           "lease-assignment-consent",
           "goodwill-future-uncertainty"
         ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "한국 개인정보 보호법 제27조 제1항",
+        "href": "https://www.law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335679",
+        "sectionId": "source",
+        "problem": "고객 관계에 가격을 매겼다는 이유로 명단을 자유롭게 넘길 수 있다고 읽는 문제입니다.",
+        "contribution": "같은 인수계약의 시설·재고와 개인정보 이전을 구분하고 통지할 세 가지 사항을 확인합니다.",
+        "assumptions": "2026-09-11 시행 조문에서 영업양도에 따른 이전을 다룹니다.",
+        "evidenceScope": "제1항의 이전 전 통지와 이전 사실·양수자 정보·거부 시 조치 방법을 실제 읽었습니다.",
+        "notClaim": "특정 정보의 수집·제공 적법성이나 모든 업종의 계정 이전 약관을 판정하지 않습니다."
+      },
+      {
+        "title": "한국 개인정보 보호법 제27조 제2항",
+        "href": "https://law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1029331507",
+        "sectionId": "source",
+        "problem": "양수인에게는 통지 의무가 없다고 읽는 문제입니다.",
+        "contribution": "새 점주의 지체 없는 통지와 기존 점주가 이미 알린 경우의 예외를 같은 인수에 적용합니다.",
+        "assumptions": "2026-09-11 시행 조문입니다.",
+        "evidenceScope": "제2항 전체의 의무와 예외를 실제 읽었습니다.",
+        "notClaim": "통지만 하면 목적 외 이용이나 모든 제3자 제공이 허용된다는 뜻은 아닙니다."
+      },
+      {
+        "title": "한국 개인정보 보호법 제27조 제3항",
+        "href": "https://law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=1006185845",
+        "sectionId": "source",
+        "problem": "받은 명단을 새 사업의 광고에 자유롭게 사용할 수 있다고 읽는 문제입니다.",
+        "contribution": "새 점주도 이전 당시 본래 목적과 개인정보처리자의 의무를 따져야 합니다.",
+        "assumptions": "영업양도 등으로 이전받은 개인정보에 관한 조문입니다.",
+        "evidenceScope": "본래 목적의 이용·제공과 개인정보처리자 지위를 실제 읽었습니다.",
+        "notClaim": "다른 법적 근거와 개별 사실을 검토하지 않고 특정 마케팅의 적법성을 확정하지 않습니다."
+      },
+      {
+        "title": "한국 상가건물 임대차보호법 제10조의3",
+        "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=279651&joNo=0010&joBrNo=03&docCls=jo&urlMode=lsScJoRltInfoR",
+        "sectionId": "names",
+        "problem": "총 인수대금과 법률상 권리금, 보증금·차임을 한 금액으로 혼동하는 문제입니다.",
+        "contribution": "시설·재고·미래 기대의 가격 배분은 실제 거래의 대상을 확인하기 위한 것임을 설명합니다.",
+        "assumptions": "2026-05-12 시행 조문이며 항목별 실질이 중요합니다.",
+        "evidenceScope": "실제 HTML의 유형·무형 가치와 보증금·차임 이외 대가, 권리금 계약의 정의를 읽었습니다.",
+        "notClaim": "각 항목의 회계·세무 처리가 동일하다거나 재고 가격까지 항상 같은 법률 성격이라고 주장하지 않습니다."
+      },
+      {
+        "title": "한국 상가건물 임대차보호법 제10조의4",
+        "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancNo=21083&ancYd=20251111&efYd=20260512&lsiSeq=279651",
+        "sectionId": "comparison",
+        "problem": "가격 합의나 권리금 보호가 새 임대차의 자동 성립이라고 읽는 문제입니다.",
+        "contribution": "같은 가게에 대해 잔금 전에 장소 사용 조건을 확인하고 회수 기회 보호와 구분합니다.",
+        "assumptions": "종료 6개월 전부터 종료까지의 법정 기간·방해행위·예외·적용 범위가 있습니다.",
+        "evidenceScope": "실제 조문 HTML의 제1항 기간·행위와 제2항 정당한 사유, 후속 항목을 읽었습니다.",
+        "notClaim": "특정 임대인의 거절이 위법한지 또는 양도대금 전액이 보장되는지를 판정하지 않습니다."
+      },
+      {
+        "title": "NSW Small Business Commissioner · Transferring your lease",
+        "href": "https://www.smallbusiness.nsw.gov.au/help/common-questions/transferring-your-lease",
+        "sectionId": "comparison",
+        "problem": "열쇠와 대금을 주고받으면 기존 임차인의 책임도 자동 종료된다고 읽는 문제입니다.",
+        "contribution": "동의 요청·공개 문서·책임 종료 절차를 같은 가게의 인도와 따로 확인합니다.",
+        "assumptions": "NSW Retail Leases Act 적용 계약의 안내를 다른 상업 임대차와 구분합니다.",
+        "evidenceScope": "실제 서면 동의·공개 문서·단계별 절차와 양도 후 책임 종료의 조건을 읽었습니다.",
+        "notClaim": "한국 계약에 NSW 절차나 일정이 그대로 적용된다는 뜻은 아닙니다."
+      },
+      {
+        "title": "한국 식품위생법 제39조",
+        "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=277149&joNo=0039&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+        "sectionId": "mechanism",
+        "problem": "시설 인수만으로 음식점 영업 절차까지 끝났다고 읽는 문제입니다.",
+        "contribution": "같은 인수의 지급 조건과 실제 영업 이전·지위승계 신고 수리 순서를 확인합니다.",
+        "assumptions": "2026-10-04 시행 중인 법률 제21065호이며 실제 영업 양도인지 판단해야 합니다.",
+        "evidenceScope": "제39조 실제 HTML의 승계·신고·수리와 제한 규정 연결을 읽었습니다.",
+        "notClaim": "장비만 산 모든 거래가 영업양도라거나 계약으로 신고 수리를 대신할 수 있다는 뜻은 아닙니다."
+      },
+      {
+        "title": "한국 식품위생법 제78조",
+        "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=277149&joNo=0078&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+        "sectionId": "mechanism",
+        "problem": "장비가 정상 작동하면 행정상 과거 문제도 없다고 읽는 문제입니다.",
+        "contribution": "같은 가게의 위반·처분 이력을 인수 전에 확인할 이유를 설명합니다.",
+        "assumptions": "승계 기간·진행 중 절차와 알지 못했음을 증명하는 예외가 있는 조문입니다.",
+        "evidenceScope": "제78조 실제 HTML에서 처분 효과 승계·진행 중 절차·예외를 읽었습니다.",
+        "notClaim": "모든 과거 위반이 조건 없이 자동 승계된다고 주장하지 않습니다."
       }
     ]
   },
@@ -121912,7 +122802,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "business/supply-chain-bargaining": {
     "coreIdea": "국제 공급망에서는 각 나라가 다른 단계를 맡아도 제품 규격·브랜드·고객 접점·교체 가능한 공급자를 통제하는 주체가 협상력을 얻으며, 한 나라의 수출액은 그 나라에 남는 부가가치와 다릅니다.",
-    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "entryNote": "같은 100달러 제품에서 부품 40·조립 추가 20·물류 10·판매 몫 30을 구분합니다. 조립국 수출 60달러를 읽은 뒤 가정의 수입 관세 6달러가 누구의 몫을 바꾸는지 추적합니다.",
     "assumedKnowledge": [
       {
         "id": "gross-net-revenue",
@@ -121938,8 +122828,8 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "global-value-added-chain",
         "sectionId": "source",
         "intuition": "100달러가 국경을 넘었다고 그 나라가 100달러를 새로 만든 것은 아닙니다.",
-        "workedExample": "최종소비100달러와 조립국출하60달러를 구분하고,60 안의 수입부품40을 빼 국내20달러를 계산합니다.",
-        "boundary": "국가별 실제 수치는 산업연관표와 부가가치 무역 통계가 필요합니다."
+        "workedExample": "최종가격 100달러와 조립국 수출 60달러를 구분합니다. 수입 부품 40달러를 빼면 국내 몫 20달러이며 수출 내 비중은 약 33.3%입니다.",
+        "boundary": "40달러가 전부 외국 가치이고 다른 중간투입이 없는 사례입니다. 실제 통계는 국내 가치의 재수입과 여러 투입 경로를 산업연관 자료로 추적합니다."
       },
       {
         "id": "supply-chain-bargaining-node",
@@ -121950,16 +122840,16 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "id": "supply-chain-policy-transmission",
-        "sectionId": "limits",
+        "sectionId": "comparison",
         "intuition": "한 나라의 규칙이 국경 밖 공장에도 주문 변화를 만듭니다.",
-        "workedExample": "부품 관세가 오르면 브랜드의 조달처와 최종 가격 선택이 달라질 수 있습니다.",
-        "boundary": "실제 효과는 계약·재고·대체 공급 속도에 따라 달라집니다."
+        "workedExample": "완제품 과세가격 60달러에 가정의 10% 관세 6달러가 붙을 때 제조60·물류10·소비가격100이 같으면 판매 몫은24달러입니다. 전액을 고객에게 넘기고 기존 판매 몫30을 유지하면 가격106달러입니다.",
+        "boundary": "실제 세율·과세가격·전가율의 추정이 아닙니다. 세관 납부 책임과 최종 경제적 부담은 구분하며 계약·경쟁·재고·대체 공급 속도에 따라 경로가 달라집니다."
       }
     ],
     "conceptStages": [
       {
         "label": "01 · 국제 가치사슬의 부가가치",
-        "relation": "최종소비100달러와 조립국출하60달러를 구분하고,60 안의 수입부품40을 빼 국내20달러를 계산합니다.",
+        "relation": "최종가격 100달러와 조립국 수출 60달러를 구분합니다. 수입 부품 40달러를 빼면 국내 몫 20달러이며 수출 내 비중은 약 33.3%입니다.",
         "concepts": [
           "global-value-added-chain"
         ]
@@ -121973,7 +122863,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "label": "03 · 정책의 공급망 전달",
-        "relation": "부품 관세가 오르면 브랜드의 조달처와 최종 가격 선택이 달라질 수 있습니다.",
+        "relation": "완제품 과세가격 60달러에 가정의 10% 관세 6달러가 붙을 때 제조60·물류10·소비가격100이 같으면 판매 몫은24달러입니다. 전액을 고객에게 넘기고 기존 판매 몫30을 유지하면 가격106달러입니다.",
         "concepts": [
           "supply-chain-policy-transmission"
         ]
@@ -121982,10 +122872,10 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "최종100달러의 단계별 금액을 구분하세요.",
+        "question": "최종 100달러의 단계별 금액을 구분하세요.",
         "answerChecklist": [
-          "제조60·물류10·판매30",
-          "제조60 안에 수입부품40·국내20"
+          "제조 60·물류 10·판매 30달러입니다.",
+          "제조 60 안에 수입 부품 40·조립국이 더한 20달러가 있습니다. 세금 등은 생략한 기본 사례입니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -121994,10 +122884,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "조립국의 단순 국내 부가가치는 얼마인가요?",
+        "question": "조립국의 국내 몫과 수출 안의 비중은 얼마인가요?",
         "answerChecklist": [
-          "60−40=20달러",
-          "최종소비100과 총수출60은 경계가 다름"
+          "60 − 40 = 20달러이며 20 ÷ 60은 약 33.3%입니다.",
+          "최종 소비가격 100달러를 분모로 쓴 20%와 질문이 다릅니다. 40달러가 모두 외국 가치이고 추가 중간투입이 없는 가정입니다."
         ],
         "sectionId": "source",
         "requiredConcepts": [
@@ -122006,10 +122896,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "20달러를 조립회사 순이익이라고 해도 되나요?",
+        "question": "조립국의 20달러를 회사 순이익이라고 해도 되나요?",
         "answerChecklist": [
-          "노동·자본 등에 돌아가는 몫 포함",
-          "순이익은 비용과 분배를 더 확인"
+          "노동과 자본 등에 돌아갈 몫을 포함합니다.",
+          "임금·비용·분배를 더 확인해야 순이익을 알 수 있습니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -122018,10 +122908,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "협상력이 생기는 대체 가능성을 설명하세요.",
+        "question": "대체 가능성이 협상력을 바꾸는 이유를 설명하세요.",
         "answerChecklist": [
-          "조립업체 둘이면 주문 전환 선택",
-          "유일 공급 부품이면 변경 비용·시간이 커짐"
+          "같은 품질의 조립업체 둘이 있으면 주문자가 옮길 선택지가 있습니다.",
+          "부품 공급자가 유일하거나 인증·설비 전환에 시간이 들면 상대를 바꾸기 어렵습니다."
         ],
         "sectionId": "need",
         "requiredConcepts": [
@@ -122030,10 +122920,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "판매단계30달러에 어떤 부담이 아직 남나요?",
+        "question": "판매 단계 30달러가 조립국의 20달러보다 크면 판매자 순이익도 크다고 할 수 있나요?",
         "answerChecklist": [
-          "광고·반품·재고 부담",
-          "30달러 전부를 순이익이라고 읽지 않음"
+          "광고·반품·재고 등 부담을 아직 빼지 않았습니다.",
+          "금액 크기만으로 순이익이나 지속적인 협상력을 확정하지 않습니다."
         ],
         "sectionId": "need",
         "requiredConcepts": [
@@ -122043,10 +122933,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "관세 충격은 어떤 계약조건을 타고 전달되나요?",
+        "question": "추가 관세의 부담은 어떤 계약과 조건을 타고 전달되나요?",
         "answerChecklist": [
-          "조달 가격·납기·가격 조정",
-          "재고 소유와 대체 공급자"
+          "가격 조정·납기·재고 소유와 대체 공급자·경쟁 조건을 확인합니다.",
+          "세관에 납부할 책임과 가격을 거쳐 최종 비용을 떠안는 주체를 구별합니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -122055,10 +122945,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "40달러부품과60달러완제품 수출 합계100을 새 가치라 읽으면 왜 틀리나요?",
+        "question": "부품 수출 40과 완제품 수출 60의 합계 100을 조립국에서 새로 만든 가치로 읽으면 왜 틀리나요?",
         "answerChecklist": [
-          "앞선40달러가60달러 안에 포함",
-          "총국경거래와 단계별 부가가치는 다른 합계"
+          "앞선 40달러가 완제품 60달러 안에 포함됩니다.",
+          "국경 거래액 합계와 각 단계의 새 부가가치는 다른 집계입니다. 최종 소비가격도 우연히 100인 가정입니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -122067,10 +122957,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "동일 제조원가에도 두 회사 협상력이 다른 사례를 만드세요.",
+        "question": "같은 제조원가인데 협상력이 다른 두 회사의 조건을 비교하세요.",
         "answerChecklist": [
-          "규격 승인·인증·고객 접근 또는 대체업체 차이",
-          "가격 한 번보다 지속 가능한 대체 조건 확인"
+          "규격 승인·인증·고객 접근·대체 업체와 전환 시간의 차이를 확인합니다.",
+          "가격 인상 한 번만으로 지속적인 힘을 판정하지 않습니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -122079,10 +122969,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "관세가 올라가도 최종가격100이 그대로일 수 있는 경로를 설명하세요.",
+        "question": "가정의 완제품 관세 6달러가 생겨도 소비가격 100을 유지하는 경로와 전액 전가하는 경로를 계산하세요.",
         "answerChecklist": [
-          "브랜드·제조·물류 몫 사이 부담 재배분",
-          "계약과 경쟁·대체 조달 조건에 따라 달라짐"
+          "제조 60·물류 10이 같고 소비가격 100을 유지하면 60 + 10 + 6 + 판매 몫 24 = 100입니다.",
+          "판매 몫 30도 유지하며 고객에게 전부 넘길 수 있다면 가격은 106달러입니다. 실제 계약과 경쟁이 허용하는지는 별도 문제입니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -122092,10 +122982,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "공장이 옮겨온 나라가 무조건 큰 이익을 얻었다는 주장을 검증하세요.",
+        "question": "공장이 옮겨온 나라가 무조건 큰 이익을 얻었다는 주장을 어떻게 검증하나요?",
         "answerChecklist": [
-          "수입 중간재와 국내 부가가치 구분",
-          "공장 수 외에 수율·인력·전환 비용·고객 계약 확인"
+          "수입 중간재와 국내 부가가치, 순이익을 나누어 확인합니다.",
+          "공장 수 외에 수율·인력·공급자 생태계·전환 비용·고객 계약을 대조합니다."
         ],
         "sectionId": "limits",
         "requiredConcepts": [
@@ -122103,6 +122993,48 @@ export const ARTICLE_LEARNING: Readonly<
           "supply-chain-bargaining-node",
           "supply-chain-policy-transmission"
         ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "OECD · Trade in Value-Added",
+        "href": "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html",
+        "sectionId": "source",
+        "problem": "국경을 반복 통과한 총수출액을 전부 새로 만든 가치로 읽는 문제입니다.",
+        "contribution": "수출 60달러를 외국 40·국내 20으로 나누고 국내 몫 비중 33.3%의 분모를 확인합니다.",
+        "assumptions": "외국 부품 안에 조립국 가치가 없고 추가 중간투입을 생략한 설명용 사례입니다.",
+        "evidenceScope": "실제 About의 국내외 가치·재수입 가치 지표와 ICIO 기반 설명을 읽었습니다.",
+        "notClaim": "실제 국가별 수치를 계산하거나 한 회사 송장만으로 TiVA를 추정한 것은 아닙니다."
+      },
+      {
+        "title": "World Bank · World Development Report 2020 About",
+        "href": "https://www.worldbank.org/en/publication/wdr2020",
+        "sectionId": "comparison",
+        "problem": "한 나라의 정책 변화가 다른 나라의 계약에 전달되는 경로를 빠뜨리는 문제입니다.",
+        "contribution": "같은 100달러 제품에 가정의 관세 6달러가 붙을 때 판매 몫 24 또는 소비가격 106 경로를 비교합니다.",
+        "assumptions": "60달러 과세가격·10% 세율은 가정이며 다른 비용 변화는 없습니다.",
+        "evidenceScope": "About의 생산 연결을 통한 정책·경제 조건 파급 문장을 실제 읽고 짧게 인용했습니다.",
+        "notClaim": "보고서가 이 상품의 관세 전가율이나 2026년 특정 품목 세율을 추정했다는 뜻은 아닙니다."
+      },
+      {
+        "title": "World Bank · Global Value Chains",
+        "href": "https://www.worldbank.org/ext/en/topic/trade/global-value-chains",
+        "sectionId": "comparison",
+        "problem": "국가나 지역마다 생산·설계·규제 역할 하나가 고정됐다고 읽는 문제입니다.",
+        "contribution": "같은 제품의 부품·조립·물류·판매와 정책 조건을 기업별 계약에 연결합니다.",
+        "assumptions": "공식 주제 안내의 생산·정책 연결이며 개별 산업에 적용하려면 추가 자료가 필요합니다.",
+        "evidenceScope": "Context의 다국가 투입과 Strategy의 무역·물류·투자·표준 항목을 실제 읽었습니다.",
+        "notClaim": "모든 생산 이전이 같은 성장이나 분배 효과를 보장한다는 뜻은 아닙니다."
+      },
+      {
+        "title": "US CBP · Tips for New Importers and Exporters",
+        "href": "https://www.cbp.gov/trade/basic-import-export/importer-exporter-tips",
+        "sectionId": "comparison",
+        "problem": "세관에 납부하는 주체와 경제적으로 최종 부담하는 주체를 혼동하는 문제입니다.",
+        "contribution": "가정의 6달러가 외국 공장에 자동 청구되는 것은 아니며 납부 책임과 가격 조정을 나누어 봅니다.",
+        "assumptions": "미국 importer of record의 책임을 설명하는 안내이며 가정 세율·가격은 실제 품목 조건이 아닙니다.",
+        "evidenceScope": "공식 페이지 실제 HTML에서 통관업자를 쓰더라도 신고 정확성과 관세·세금·수수료 책임이 남는 문장을 읽었습니다.",
+        "notClaim": "개별 품목의 과세가격·세율·면세 여부나 실제 관세 전가율을 판정한 것은 아닙니다."
       }
     ]
   },

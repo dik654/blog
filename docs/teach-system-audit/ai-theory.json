@@ -8469,11 +8469,10 @@
       "publicFiles": [
         "src/pages/articles/ai/word2vec.tsx",
         "src/pages/articles/ai/word2vec/ModernArticle.tsx",
-        "src/pages/articles/ai/word2vec/codeRefs.ts",
-        "src/pages/articles/ai/word2vec/fileTree.ts",
-        "src/pages/articles/ai/word2vec/viz/ModernWord2VecViz.tsx"
+        "src/pages/articles/ai/word2vec/viz/WordPairCaseViz.tsx",
+        "src/pages/articles/ai/word2vec/codeRefs.ts"
       ],
-      "status": "body-reviewed-needs-rewrite",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8489,22 +8488,181 @@
         "번호 선택의 희소 접근을 sparse gradient와 구별하고 max_norm의 표 변경 조건을 명시해야 합니다.",
         "문장 제거 전후 거리·중복 단어 위치·난수 소비와 실행 순서가 빠져 seed만으로 동일 학습을 보장하는 듯 읽힙니다."
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "fixture": {
+        "assumption": true,
+        "sentence": "red saw cat saw dog\n",
+        "vocab": [
+          "</s>",
+          "red",
+          "cat",
+          "saw",
+          "dog"
+        ],
+        "ids": [
+          1,
+          3,
+          2,
+          3,
+          4
+        ],
+        "centerPosition": 2,
+        "centerId": 2,
+        "W": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "U": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            1,
+            1,
+            0
+          ]
+        ],
+        "radius1Positions": [
+          1,
+          3
+        ],
+        "radius2Positions": [
+          0,
+          1,
+          3,
+          4
+        ],
+        "paperScore": 2,
+        "reversedSourceScore": 1,
+        "countRepeatedSaw": 2,
+        "maxRadius": 2,
+        "sourceDisabledObjectivesAndSubsampling": true,
+        "sourceThreadId": 0,
+        "sourceRadii": [
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "sourcePairCount": 10,
+        "twoTablesScalars": 30,
+        "twoTablesFloat32Bytes": 120,
+        "V10000d300Scalars": 6000000,
+        "V10000d300Float32Bytes": 24000000
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "picture",
+        "2": "why",
+        "3": "names",
+        "4": [
+          "lookup",
+          "dual-tables",
+          "pair-trace",
+          "window"
+        ],
+        "5": [
+          "paper-word2vec-original",
+          "pytorch-lookup",
+          "source-sentence",
+          "source-pair"
+        ],
+        "6": [
+          "random-boundary",
+          "pairs"
+        ],
+        "7": [
+          "release-check",
+          "limits"
+        ],
+        "8": "review"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "Mikolov 1301.3781v3 §3.2 pp4–5 and 1310.4546v1 §2 Eq2 p3",
+          "anchor": "paper-word2vec-original",
+          "application": "같은 cat에 R=1/2를 넣어 위치 2/4개를 고르고 원문 두 벡터 점수식에 [1,2,0]과 [0,1,2]를 넣어 2를 얻습니다."
+        },
+        {
+          "source": "PyTorch v2.13.0 cf30153c full sparse.py/functional.py/Embedding.cpp",
+          "anchor": "pytorch-lookup",
+          "application": "indices [2,3,3]의 forward→index_select를 같은 표의 행에 대입합니다. 전체 PyTorch 실행은 주장하지 않습니다."
+        },
+        {
+          "source": "tmikolov/word2vec 20c129af full word2vec.c",
+          "anchor": "source-sentence/source-pair",
+          "application": "printf 한 줄만 추가하고 학습 목적·단어 제거를 끈 실제 CPU 관찰에서 10쌍·중심 saw→cat 두 건·W 불변을 확인했습니다. 점수 1은 별도로 원문 점수식에 대입했습니다."
+        }
+      ],
       "verification": {
         "contentReview": "기존 본문·공유 Viz·코드 패널과 재구성 코드·baseline 전체·학습 6+4·개념4·ownership을 읽고 문제를 확인했습니다.",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending",
-        "planning": "/tmp/teach-all/word2vec-plan-before-body.json"
+        "humanize": "최신 /tmp/teach-all/humanize-ai-theory-word2vec-final/word2vec--ModernArticle: 7381자 42문단 실제 추출·roundtrip·전체/2묶음 gate0. 첫 패스 본문 쉼표1/의존표현1, 별도 실제 AST props 연결 쉼표3을 적용한 뒤 새 추출로 일치를 확인했습니다. 최신 props84·Viz25·code23 문자열 및 모든 묶음 gate0.",
+        "numericTrace": "/tmp/teach-all/word2vec-independent-systems.json 작은 사례 PASS. verification/observe.py CPU 실제 실행 기록 run.log와 observation.json 보존.",
+        "mobile390": "output/playwright/teach-ai-theory-word2vec/word2vec.json: 19절·3예측·9패널·3장면·첫1/5·키보드·콘솔/KaTeX/overflow/narrow/SVG 경계 PASS. 실제 Viz 이미지 읽기 확인.",
+        "desktop1440": "같은 PASS. word2vec-extra-browser.json: 수식 좌우 접근·두 Citation 펼침·Space 재생/정지·reduced 금지. 3장면 frame/control 위치 변화0 및 전체 컨트롤 viewport 내 확인.",
+        "planning": "/tmp/teach-all/word2vec-plan-before-body.json: 본문 전 6+4와 같은 5단어·두 표를 고정했습니다.",
+        "contentPeerReview": "/tmp/teach-all/word2vec-role-independent-systems.json: 실제 12–15절·harness·원문 제어·실행 범위 PASS.",
+        "primarySources": "/tmp/teach-all/word2vec-source-final.json: 원문/라이선스 6파일 원격 byte 동일. PDF 2개 문장·식과 실제 페이지 이미지 검토.",
+        "formula": "/tmp/teach-all/word2vec-formula.log: 1443/1443 명시 주석 PASS.",
+        "prose": "/tmp/teach-all/word2vec-prose.log: 공개799 재검토0.",
+        "viz": "/tmp/teach-all/word2vec-viz.log: ERROR0, SVG text14개 실제 두 너비 경계0.",
+        "typecheck": "/tmp/teach-all/word2vec-tsc1.log actual app tsc exit0. 이후 변경은 글자·주석 줄 범위·로컬 문서입니다.",
+        "learningAnswers": "/tmp/teach-all/ai-theory-learning-answer-review-word2vec.json: 기존6+4의 모든 결과를 같은 사례와 실제 조건으로 갱신하고 본문 답 위치 대조.",
+        "learning": "batch24 공유 등록 후 /tmp/teach-all/word2vec-integrated-learning.log strict exit0. 실제10문항/체크리스트가 제안과 같고 실제 DOM에서10개 답 절 앵커와 모든 체크리스트 일치를 확인했습니다(word2vec-exercises-dom.json).",
+        "metadata": "word2vec-metadata-readback.json:개념4/정본/ownership12필드 제안과 일치.",
+        "integration": "통합 후 /tmp/teach-all/word2vec-browser-integrated-final.log:390/1440 모두9패널·3장면·19절·3예측·첫1/5·콘솔/수식/경계 PASS. word2vec-exercises-dom.json에서 실제6+4 질문·모든체크리스트·답절10개 연결 PASS. 초기 script는본문 lazy대기와루프개수고정이부족해바로잡고재실행했습니다."
       },
       "remaining": [
-        "같은 다섯 단어 사례로 본문 재작성",
-        "원문 보존·실행 범위 검증",
-        "humanize·수식·두 너비 화면·공유 등록"
-      ]
+        "root 전역 build와 게시 검증"
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/word2vec.tsx": "3c0170f5d905a7b83f9d8637d4b1659875a0aad1a90a1a3fafb738465bc99c32",
+        "src/pages/articles/ai/word2vec/ModernArticle.tsx": "c684159810076fcce5ac1c4c247337ceff2f68c1e9fe166112106a07eadbfbdd",
+        "src/pages/articles/ai/word2vec/viz/WordPairCaseViz.tsx": "5b6e5ef7c2336ef266eb30c64d0d1bc3ca8fa7d2b1a11d611b82afca80b1ffcc",
+        "src/pages/articles/ai/word2vec/codeRefs.ts": "b996669326adbdd7acf7c36ba9d73303be3bcc168c2ce9d86f2537a49559f933"
+      }
     },
     {
       "route": "ai/word2vec-negative-sampling",
@@ -8547,7 +8705,7 @@
         "src/pages/articles/ai/word2vec-prediction-objectives/ModernArticle.tsx",
         "src/pages/articles/ai/word2vec/viz/ModernWord2VecViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "body-reviewed-needs-rewrite",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8555,19 +8713,211 @@
         "hasSourceSurface": true,
         "characters": 11267
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
+      "originalProblems": [
+        "기존 네 절의 전체 본문·공유 Viz·학습 6+4를 읽었습니다. 입구가 CBOW/Skip-gram/HS 이름과 추상 방향에서 시작하고 같은 숫자 사례와 예측 답 절이 없습니다.",
+        "CBOW 평균과 Skip-gram 평균 손실 식은 있으나 같은 표의 확률·기울기를 추적하지 않으며 논문 식 (1)의 합과 중심별 평균을 구별하지 않습니다.",
+        "HS 경로식·Huffman 절차는 보존할 내용입니다. 실제 잎 확률의 합·가중 길이와 최적성 증명, 비거듭제곱 균형 나무의 경계가 빠졌습니다.",
+        "원본 구현의 평균 역전파 누락과 정렬 전제를 실제 C 원문과 작은 native 실행으로 확인했습니다. 이 구현의 관찰을 추상 알고리즘 보장과 분리해 설명해야 합니다."
+      ],
+      "fixture": {
+        "assumed": true,
+        "sentence": [
+          "red",
+          "saw",
+          "cat",
+          "saw",
+          "dog"
+        ],
+        "ids": [
+          1,
+          3,
+          2,
+          3,
+          4
+        ],
+        "vocab": [
+          "</s>",
+          "red",
+          "cat",
+          "saw",
+          "dog"
+        ],
+        "W": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "U": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            1,
+            1,
+            0
+          ]
+        ],
+        "cbowScores": [
+          0,
+          1,
+          1,
+          3,
+          1
+        ],
+        "sgScores": [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        "treeFrequenciesSeparateAssumption": [
+          8,
+          4,
+          2,
+          1,
+          1
+        ],
+        "internalNodes": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ]
+        ],
+        "catCode": "001",
+        "catNodes": [
+          3,
+          2,
+          1
+        ],
+        "sourceConditions": {
+          "hs": 1,
+          "negative": 0,
+          "window": 2,
+          "b": 1,
+          "alpha": 0.1,
+          "singleCenterOnly": true
+        },
+        "sourceCounterFrequencies": [
+          1,
+          8,
+          4,
+          2,
+          1
+        ]
+      },
+      "stageAnchors": {
+        "S": [
+          "overview"
+        ],
+        "B": [
+          "black-box"
+        ],
+        "0": [
+          "case"
+        ],
+        "1": [
+          "picture"
+        ],
+        "2": [
+          "why"
+        ],
+        "3": [
+          "names"
+        ],
+        "4": [
+          "cbow",
+          "mean-gradient",
+          "skipgram",
+          "reduction",
+          "hierarchical",
+          "path-probability",
+          "huffman",
+          "huffman-proof"
+        ],
+        "5": [
+          "paper-word2vec-objectives",
+          "source-tree",
+          "source-cbow"
+        ],
+        "6": [
+          "source-update",
+          "source-tree-boundary"
+        ],
+        "7": [
+          "limits"
+        ],
+        "8": [
+          "review"
+        ]
+      },
       "primarySourceApplication": [],
       "verification": {
-        "contentReview": "pending",
+        "contentReview": "기존 ModernArticle 전문, baseline, shared PredictionObjectiveViz, 원래6+4·정의3·ownership 전체 읽기 완료. /tmp/teach-all/word2vec-objectives-plan-before-body.json에 새 문제를 본문 전에 고정했습니다.",
         "humanize": "pending",
         "numericTrace": "pending",
         "mobile390": "pending",
         "desktop1440": "pending"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "21절 실제 본문과 고유 Viz 작성",
+        "원문·수치·humanize·양쪽 폭 검수",
+        "공통 등록 통합과 최종 readback"
       ]
     },
     {
@@ -8738,14 +9088,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 30,
+    "rewritten": 31,
     "existingTeachTargetedRepairs": 3,
-    "reviewedAndImproved": 33,
-    "localVerified": 33,
+    "reviewedAndImproved": 34,
+    "localVerified": 34,
     "awaitingIntegration": 0,
-    "pending": 156,
+    "pending": 154,
     "complete": 0,
     "bodyReviewedNeedsRewrite": 1,
-    "bodyReviewedTotal": 34
+    "bodyReviewedTotal": 35
   }
 }

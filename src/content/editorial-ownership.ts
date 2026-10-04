@@ -1241,31 +1241,51 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
-  word2vec: {
-    title: "Word2Vec 입력·pair 생성 글이 소유하는 범위",
-    owns: [
-      "Vocabulary ID가 input·output embedding table의 역할별 row를 고르는 절차",
-      "Dynamic window와 versioned receipt가 local word–context pair를 만드는 경계",
+  "word2vec": {
+    "title": "Word2Vec의 행 조회와 이웃 선택",
+    "owns": [
+      "같은 다섯 단어의 위치와 ID를 구별하고 두 표의 행을 읽는 과정",
+      "중복 출현과 문장 경계를 보존하는 쌍 선택 및 균일 반경의 포함 확률",
+      "고정 PyTorch의 행 조회·max_norm·기울기 저장 경계",
+      "저자 C의 실제 입력 방향·제거 후 위치·난수 소비와 단일 스레드 관찰",
+      "번호표와 표의 대응, 쌍의 재생 조건과 최종 가중치 재현의 구별"
     ],
-    reuses: [
-      { label: "Tokenizer와 vocabulary 계약", href: "/cs/ai/tokenizer" },
+    "reuses": [
       {
-        label: "분산 가정·PMI·shifted-PMI·cosine",
-        href: "/cs/ai/distributional-semantics",
-      },
-      { label: "CBOW·Skip-gram·hierarchical softmax", href: "/cs/ai/word2vec-prediction-objectives" },
-      { label: "SGNS와 sampling", href: "/cs/ai/word2vec-negative-sampling" },
-    ],
-    evidence: [
-      {
-        kind: "primary-source",
-        rule: "Word ID·dual table·window claim은 원 논문의 corpus·architecture·sampling 범위로 제한한다.",
+        "label": "Tokenizer와 vocabulary 계약",
+        "href": "/cs/ai/tokenizer"
       },
       {
-        kind: "standard",
-        rule: "Corpus·vocabulary·sentence boundary·window draw·frequency filter·seed를 pair receipt로 기록한다.",
+        "label": "분산 가정·PMI·shifted-PMI·cosine",
+        "href": "/cs/ai/distributional-semantics"
       },
+      {
+        "label": "CBOW·Skip-gram·hierarchical softmax",
+        "href": "/cs/ai/word2vec-prediction-objectives"
+      },
+      {
+        "label": "SGNS와 sampling",
+        "href": "/cs/ai/word2vec-negative-sampling"
+      }
     ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "논문 §3.2와 그림 1, 후속 식 (2)에 같은 문장을 대입하고 원문 C의 반대 입력 방향과 구별합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "원본에 관찰 출력문 한 줄만 넣고 제거·학습 목적을 끈 단일 스레드로 10쌍과 W 불변을 확인합니다. 정상 SGNS 학습의 재현으로 확대하지 않습니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "PyTorch v2.13.0의 전체 원문에서 forward→functional→index_select를 추적하며 전체 라이브러리 실행을 주장하지 않습니다."
+      },
+      {
+        "kind": "standard",
+        "rule": "번호표·자료·경계·선택 규칙·코드·난수 소비·스레드를 함께 확인합니다."
+      }
+    ]
   },
   "word2vec-prediction-objectives": {
     title: "Word2Vec prediction objectives 글이 소유하는 범위",
@@ -7687,10 +7707,41 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "poseidon-hash": {
-    title: "Poseidon profile·HADES round·field sponge 글이 소유하는 범위",
-    owns: ["Poseidon parameter profile", "Power S-box permutation 조건과 MDS diffusion", "Full/partial HADES schedule과 release gate"],
-    reuses: [{ label: "Prime field", href: "/cs/crypto/finite-field" }, { label: "Sponge construction", href: "/cs/crypto/hash-theory#constructions" }],
-    evidence: [{ kind: "primary-source", rule: "Security·constraint claim은 Poseidon 원문 parameter model에 귀속한다." }, { kind: "primary-source", rule: "Poseidon2 source claim은 pinned commit에 한정한다." }, { kind: "project-measurement", rule: "Official vector·inverse·native/circuit parity 뒤 비용을 측정한다." }],
+    "title": "두 수의 Poseidon 계산·실제 코드·증명 조건을 설명하는 범위",
+    "owns": [
+      "F₁₇의 같은 두 수에서 full·partial·역변환·분기 수·한 칸 투영",
+      "고정 BN254 스칼라체 소스의 일반·최적화 Poseidon과 Poseidon2 비교",
+      "직접 이차 제약 비용과 누락 제약 반례·정규 입력의 조건",
+      "원논문 본문·후속 공식 초록·수정판과 실제 실행의 범위"
+    ],
+    "reuses": [
+      {
+        "label": "소수체의 나머지와 역원",
+        "href": "/cs/crypto/finite-field"
+      },
+      {
+        "label": "스펀지의 입출력과 capacity",
+        "href": "/cs/crypto/hash-theory#sponge"
+      },
+      {
+        "label": "이진체 증명 방식",
+        "href": "/cs/crypto/binary-field-proving#overview"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "2021년 원문 2.1–2.3절과 행렬 조건을 직접 읽고 후속 연구는 공식 초록과 수정 안내까지 확인한 범위를 적습니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "055bde3의 원문과 상수를 보존합니다. RP 56 설정을 원논문의 RP 57 예와 구별합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "선택 모듈의 5입력·압축 호출을 실제 Rust로 실행하고 독립 Python 및 작은 289상태와 대조합니다. 전체 패키지·회로·성능·보안 검증으로 확대하지 않습니다."
+      }
+    ]
   },
   "impl-hash-commitment": {
     title: "Hash·Poseidon·Merkle 구현 경계 글이 소유하는 범위",
@@ -10336,28 +10387,56 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "attention-kernel-anatomy-and-backends": {
-    title: "Attention kernel anatomy 와 backend 글이 소유하는 범위",
-    owns: [
-      "Attention kernel 의 QK matmul·softmax·PV matmul 단계별 FLOP 과 지수 비용",
-      "Fused attention kernel 과 softmax fusion 의 정의",
-      "Causal kernel 의 tile skip 수와 load balancing",
-      "Prefill·decode attention 의 compute intensity 와 memory footprint 계산",
-      "FlashAttention-2·3 의 warp 분할·병렬화·warp specialization·FP8 요약",
-      "Attention backend 선택 기준, FlashInfer 의 구조, kernel autotuning 절차",
+    "title": "같은 여덟 위치로 읽는 attention kernel의 분할·이동·구현 선택",
+    "owns": [
+      "행렬곱 32 FLOP와 지수 4회를 별도 단위로 세고 처리량 예산과 실제 시간을 구별합니다.",
+      "전체 점수 저장을 줄이는 융합과 부분 출력·LSE·별도 합치기 kernel이 남는 경계를 설명합니다.",
+      "미래 조각 생략, 대각선 내부 가림, 길이가 다른 query/key의 위치 정렬을 같은 사례로 계산합니다.",
+      "배열 크기와 실제 전송량, 비인과 512 FLOP의 4/1.6 비교, decode와 GQA의 분모를 구별합니다.",
+      "FA2의 부분 출력 reduction 감소와 FA3의 여러 조각 겹치기를 논문 조건에 맞춰 읽습니다.",
+      "고정 vLLM의 지원 검사·자동 우선순위와 명시한 부적합 후보의 ValueError를 실제 제어 흐름으로 확인합니다.",
+      "수동 표와 autotune을 구별하고 고정 Triton의 후보 36→21→9, 실제 key와 작은 N의 한계를 읽습니다."
     ],
-    reuses: [
-      { label: "FlashAttention 의 tiling 과 online softmax", href: "/cs/ai/flash-attention-io-aware-kernel" },
-      { label: "Prefill·decode 의 arithmetic intensity regime", href: "/cs/ai/prefill-decode-phase-dynamics" },
-      { label: "KV cache 모양과 GQA", href: "/cs/ai/kv-cache-fundamentals" },
-      { label: "CUDA warp 실행 단위", href: "/cs/gpu/cuda-thread-hierarchy" },
-      { label: "PagedAttention kernel 경계", href: "/cs/ai/vllm-paged-attention" },
-      { label: "Triton autotune search space", href: "/cs/gpu/triton-kernel-programming-and-compiler" },
+    "reuses": [
+      {
+        "label": "FlashAttention 의 tiling 과 online softmax",
+        "href": "/cs/ai/flash-attention-io-aware-kernel"
+      },
+      {
+        "label": "Prefill·decode 의 arithmetic intensity regime",
+        "href": "/cs/ai/prefill-decode-phase-dynamics"
+      },
+      {
+        "label": "KV cache 모양과 GQA",
+        "href": "/cs/ai/kv-cache-fundamentals"
+      },
+      {
+        "label": "CUDA warp 실행 단위",
+        "href": "/cs/gpu/cuda-thread-hierarchy"
+      },
+      {
+        "label": "PagedAttention kernel 경계",
+        "href": "/cs/ai/vllm-paged-attention"
+      },
+      {
+        "label": "Triton autotune search space",
+        "href": "/cs/gpu/triton-kernel-programming-and-compiler"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "FlashAttention-2·3 와 FlashInfer 의 배율은 각 논문의 자기보고 GPU 와 shape 로 한정하고 다른 세대로 일반화하지 않는다." },
-      { kind: "standard", rule: "H100 의 matmul·지수 처리량과 대역폭은 FlashAttention-3 논문과 NVIDIA 공개 사양의 값을 쓰고 ridge point 는 그 비로만 계산한다." },
-      { kind: "project-claim", rule: "vLLM backend 목록과 인자 이름은 공식 문서 기준이며 release 마다 바뀔 수 있음을 전제한다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "FA2 v1·FA3 v2·FlashInfer v1의 기여와 측정 설정을 별도로 읽고 부분 출력 reduction, 겹치기 예산, CPU plan/GPU run 경계를 대조한다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "FlashAttention e9515d5, vLLM 6e448d0, Triton 7c56a5e의 전체 원문 6개와 LICENSE를 보존하고 원격 SHA를 대조한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "여덟 위치의 산술과 원문 Python 함수 몸체의 CPU 관찰만 자체 실행이다. 가짜 지원 판정·가짜 capability를 사용한 제어 확인을 실제 GPU 지원·성능 측정이라고 부르지 않는다."
+      }
+    ]
   },
   "serving-benchmark-methodology": {
     title: "Serving benchmark 방법론 글이 소유하는 범위",

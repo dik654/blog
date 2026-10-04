@@ -187,7 +187,8 @@
     "typescript": "PASS actual app tsc-b inside npm run build; actual exit0",
     "build": "PASS Vite9.53s and1679public routes+404; actual exit0",
     "prose": "PASS799 articles,274 signals,0requiring review; actual exit0",
-    "formula": "PASS1442/1442 explicit operations,0raw displays,0unsafe symbols; actual exit0"
+    "formula": "PASS1442/1442 explicit operations,0raw displays,0unsafe symbols; actual exit0",
+    "whitespace": "git diff --cached --check reported existing whitespace in vendored KISS FFT COPYING/_kiss_fft_guts.h/kiss_fft.h. Preserved byte-identical upstream originals verified by SHA rather than altering source evidence. This check is not claimed PASS."
   },
   "snapshot": {
     "path": "/tmp/blog-teach-checkpoint171",

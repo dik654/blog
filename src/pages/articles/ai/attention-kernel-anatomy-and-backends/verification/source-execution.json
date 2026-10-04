@@ -1,0 +1,55 @@
+{
+  "pass": true,
+  "sourceHashesMatch": true,
+  "triton": {
+    "originalASTBodies": [
+      "configs comprehension",
+      "keep",
+      "prune_invalid_configs"
+    ],
+    "deviceMock": "CUDA capability (9,0); HD128; test override absent",
+    "counts": [
+      36,
+      21,
+      9,
+      0
+    ],
+    "gpuExecution": false
+  },
+  "vllm": {
+    "originalASTBodies": [
+      "_get_backend_priorities",
+      "_backend_cls_path",
+      "CudaPlatformBase.get_valid_backends",
+      "CudaPlatformBase.get_attn_backend_cls"
+    ],
+    "dependencies": "capability/logger/backend validation mocked; real backend support and performance not exercised",
+    "autoWithAInvalid": "fake.FLASHINFER",
+    "explicitInvalid": "Selected backend AttentionBackendEnum.FLASH_ATTN is not valid for this configuration. Reason: ['head_size not supported']",
+    "allInvalid": "No valid attention backend found for FAKE-validation-CPU with Cfg(use_mla=False, kv_cache_dtype='auto', use_non_causal=False, block_size=None). Reasons: {FLASH_ATTN: [fake failure], FLASHINFER: [fake failure], TRITON_ATTN: [fake failure], FLEX_ATTENTION: [fake failure], TURBOQUANT: [fake failure]}.",
+    "priorities": {
+      "9-False": [
+        "FLASH_ATTN",
+        "FLASHINFER",
+        "TRITON_ATTN",
+        "FLEX_ATTENTION",
+        "TURBOQUANT"
+      ],
+      "10-False": [
+        "FLASHINFER",
+        "FLASH_ATTN",
+        "TRITON_ATTN",
+        "FLEX_ATTENTION",
+        "TURBOQUANT"
+      ],
+      "10-True": [
+        "FLASH_ATTN",
+        "FLASHINFER",
+        "TRITON_ATTN",
+        "FLEX_ATTENTION",
+        "TURBOQUANT"
+      ]
+    },
+    "gpuExecution": false
+  }
+}

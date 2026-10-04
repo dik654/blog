@@ -1,0 +1,46 @@
+{
+  "sources": [
+    {
+      "path": "original/word2vec.c",
+      "url": "https://raw.githubusercontent.com/tmikolov/word2vec/20c129af10659f7c50e86e3be406df663beff438/word2vec.c",
+      "sha256": "df07a1d504c22aa747f9fc40ddc6cfed52e12c3a402861398426829b83d96ef4",
+      "modifications": false
+    },
+    {
+      "path": "original/LICENSE",
+      "url": "https://raw.githubusercontent.com/tmikolov/word2vec/20c129af10659f7c50e86e3be406df663beff438/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "modifications": false
+    },
+    {
+      "path": "pytorch/torch/nn/modules/sparse.py",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/cf30153c4c131c8164ee7798e5022d810682e2cb/torch/nn/modules/sparse.py",
+      "sha256": "4897b5402c35e49c830edaee1eacc1b1c3f802ddc8e7ddf4112a71c78bea81f5",
+      "modifications": false
+    },
+    {
+      "path": "pytorch/torch/nn/functional.py",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/cf30153c4c131c8164ee7798e5022d810682e2cb/torch/nn/functional.py",
+      "sha256": "990a8b717645fa603b0dd2957b7b3ed68c5fb937fa205048c096ac8bb532510e",
+      "modifications": false
+    },
+    {
+      "path": "pytorch/aten/src/ATen/native/Embedding.cpp",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/cf30153c4c131c8164ee7798e5022d810682e2cb/aten/src/ATen/native/Embedding.cpp",
+      "sha256": "ee962b129fccc1e48d96a24fccca65c0d34d99243509bc71088e0cfd487fb59a",
+      "modifications": false
+    },
+    {
+      "path": "pytorch/LICENSE",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/cf30153c4c131c8164ee7798e5022d810682e2cb/LICENSE",
+      "sha256": "bd018feef8825e88181c84eb7e3aa4eafb8f08a20d9fd6ef948569610c4a3e43",
+      "modifications": false
+    }
+  ],
+  "pytorchTag": "v2.13.0",
+  "paperVersions": [
+    "1301.3781v3",
+    "1310.4546v1"
+  ],
+  "observation": "One printf added only in generated observation file; original source above unchanged. macOS fgetc_unlocked alias to getc_unlocked compilation flag. hs/negative/sample=0; one thread; supplied vocabulary and W rows. Does not train embeddings."
+}

@@ -558,11 +558,29 @@ export const ARTICLE_EVIDENCE: Readonly<
 ],
   "ai/word2vec": [
     {
-      kind: "핵심 논문",
-      label: "Efficient Estimation of Word Representations in Vector Space",
-      href: "https://arxiv.org/abs/1301.3781",
-      note: "Vocabulary row lookup·local context window·CBOW·Skip-gram 입력 경계를 제시한 원 연구",
+      "kind": "핵심 논문",
+      "label": "Efficient Estimation of Word Representations in Vector Space",
+      "href": "https://arxiv.org/abs/1301.3781",
+      "note": "Vocabulary row lookup·local context window·CBOW·Skip-gram 입력 경계를 제시한 원 연구"
     },
+    {
+      "kind": "공식 코드",
+      "label": "저자 word2vec.c · commit 20c129af",
+      "href": "https://github.com/tmikolov/word2vec/blob/20c129af10659f7c50e86e3be406df663beff438/word2vec.c",
+      "note": "문장 읽기·제거 후 거리·반경·입력 방향을 전체 원문에서 확인하고 제한된 관찰을 CPU에서 실행했습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch v2.13.0 · Embedding.cpp",
+      "href": "https://github.com/pytorch/pytorch/blob/cf30153c4c131c8164ee7798e5022d810682e2cb/aten/src/ATen/native/Embedding.cpp",
+      "note": "실제 index_select 행 조회와 sparse 옵션에 따른 역방향 경로를 구별합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Distributed Representations of Words and Phrases and their Compositionality",
+      "href": "https://arxiv.org/abs/1310.4546v1",
+      "note": "3쪽 식 (2)의 두 역할과 §2.1의 내부 노드 경계를 같은 수치 사례로 설명합니다."
+    }
   ],
   "ai/word2vec-prediction-objectives": [
     {
@@ -6555,9 +6573,48 @@ export const ARTICLE_EVIDENCE: Readonly<
     }
   ],
   "crypto/poseidon-hash": [
-    { kind: "핵심 논문", label: "Grassi et al. · Poseidon", href: "https://eprint.iacr.org/2019/458.pdf", note: "HADES·field S-box·parameter/security/cost analysis의 원 연구" },
-    { kind: "후속 분석", label: "Algebraic cryptanalysis of Poseidon", href: "https://eprint.iacr.org/2023/537.pdf", note: "명시된 variant의 reduced-round algebraic attack 분석이며 production full-round Poseidon/Poseidon2 전체가 깨졌다는 뜻은 아님" },
-    { kind: "공식 코드", label: "HorizenLabs/poseidon2 @ 055bde3", href: "https://github.com/HorizenLabs/poseidon2/tree/055bde3f4782731ba5f5ce5888a440a94327eaf3", note: "Poseidon2 parameter·Rust implementation의 pinned source" },
+    {
+      "kind": "핵심 논문",
+      "label": "Grassi 외 · Poseidon, USENIX Security 2021",
+      "href": "https://www.usenix.org/system/files/sec21-grassi.pdf",
+      "note": "본문 2.1–2.3절과 인쇄 523–524쪽 그림·각주·행렬 조건을 읽었습니다. 표 1의 RP 57을 선택 소스 RP 56과 구분합니다. 작은 F₁₇ 예나 임의로 바꾼 상수·반복 횟수의 안전성을 보장하지 않습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "HorizenLabs poseidon2 · 055bde3 원문",
+      "href": "https://github.com/HorizenLabs/poseidon2/tree/055bde3f4782731ba5f5ce5888a440a94327eaf3",
+      "note": "Rust 1.93.0에서 선택 모듈 5입력·압축 호출을 실행하고 독립 Python 모형 및 원문 KAT와 대조했습니다. 전체 upstream 패키지·증명 회로·성능·상수 시간·보안 공격 검증은 수행하지 않았습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Ashur·Buschman·Mahzoun · ePrint 2023/537",
+      "href": "https://eprint.iacr.org/2023/537",
+      "note": "2023-11-21판 공식 초록을 읽었습니다. PDF는 접근 오류로 전문을 열지 못했습니다. 단순히 축소 라운드만의 연구로 축소하거나 모든 배포 설정이 깨졌다고 확대하지 않습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Grassi·Koschatko·Rechberger · ToSC 2025(2), 34–86",
+      "href": "https://research.tue.nl/nl/publications/poseidon-and-neptune-gr%C3%B6bner-basis-cryptanalysis-exploiting-subsp/",
+      "note": "저자 소속 대학의 공식 초록·발표 정보를 읽었습니다. PDF 전문은 접근 오류로 미열람입니다. 제시한 공격에 대한 안전성 언급을 모든 미래 공격의 증명으로 해석하지 않습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Zhao·Sanso·Vitto·Ding · ePrint 2025/1916",
+      "href": "https://eprint.iacr.org/2025/1916",
+      "note": "공식 초록을 확인했고 PDF 전문이나 논문 실행을 재현하지 않았습니다. 전체 라운드나 임의 서비스의 해시가 깨졌다고 확대하지 않습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Poseidon(2)b · CIC 2026, 수정 ePrint 2025/1893",
+      "href": "https://eprint.iacr.org/2025/1893",
+      "note": "공식 초록과 2026-02-06판의 128비트 Binius 구현 수정 안내를 읽었습니다. PDF 전문·구현·보안 분석이나 성능 수치를 직접 재현했다고 주장하지 않습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Merz·Rodríguez García · ePrint 2026/306",
+      "href": "https://eprint.iacr.org/2026/306",
+      "note": "2026-02-18판의 공식 초록을 확인했습니다. PDF 전문과 공격 실행은 미검증입니다. 저자는 개선이 곧 목표 보안 수준 미달을 뜻하지는 않는다고 명시하며 임의 배포의 안전성을 이 글이 인증하지 않습니다."
+    }
   ],
   "blockchain/impl-hash-commitment": [
     { kind: "공식 규격", label: "NIST FIPS 180-4", href: "https://csrc.nist.gov/pubs/fips/180-4/upd1/final", note: "SHA-2 known-vector compatible semantics" },
@@ -7753,12 +7810,60 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "NVIDIA CUTLASS · Profiler (profiler.md)", href: "https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/profiler.md", note: "--operation·--kernels·--cta_m/n/k·--cluster_m/n·--stages·--raster_order·--swizzle_size flag 와 CUTLASS_LIBRARY_KERNELS 의 근거" },
   ],
   "ai/attention-kernel-anatomy-and-backends": [
-    { kind: "핵심 논문", label: "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning", href: "https://arxiv.org/abs/2307.08691", note: "Warp 분할·sequence 병렬·causal skip 배율의 출처로 A100 자기보고 범위" },
-    { kind: "핵심 논문", label: "FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision", href: "https://arxiv.org/abs/2407.08608", note: "Warp specialization·pingpong·FP8 과 matmul·지수 처리량 수치의 출처로 H100 자기보고 범위" },
-    { kind: "핵심 논문", label: "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving", href: "https://arxiv.org/abs/2501.01005", note: "Block-sparse KV·JIT template·plan–run scheduler 와 ITL 개선 수치의 출처" },
-    { kind: "공식 문서", label: "vLLM · Attention Backend Feature Support", href: "https://docs.vllm.ai/en/latest/design/attention_backends/", note: "Backend 목록, --attention-backend 인자, 우선순위 자동 선택, MLA 의 prefill·decode backend 분리의 근거" },
-    { kind: "공식 구현", label: "Dao-AILab/flash-attention", href: "https://github.com/Dao-AILab/flash-attention", note: "FlashAttention-2·3 kernel 과 tile 크기 표의 실제 코드" },
-    { kind: "공식 구현", label: "flashinfer-ai/flashinfer", href: "https://github.com/flashinfer-ai/flashinfer", note: "Plan–run API 와 block-sparse KV 형식의 실제 코드" },
+    {
+      "kind": "핵심 논문",
+      "label": "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning · 고정 원문",
+      "href": "https://arxiv.org/html/2307.08691v1",
+      "note": "원 논문 A100 80GB SXM4, head dim 64·128 등의 벤치마크 조건이며 고정 공개 코드의 이후 선택표와 구별합니다. 첫 세대 대비 약 2 배, 이론 FLOP/s 의 50~73 %, causal 1.7~1.8 배, GPT 학습 72 % MFU 는 저자 자기보고입니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision · 고정 원문",
+      "href": "https://arxiv.org/html/2407.08608v2",
+      "note": "NVIDIA Hopper(H100) 전용이며 TMA, WGMMA, setmaxnreg 같은 Hopper 명령을 전제합니다. FP16 최고 약 740TFLOP/s와 FP8 약 1.2PFLOP/s는 H100의 저자 측정입니다. 약 2.6배 오차 감소는 비교한 기본 per-tensor FP8 설정 범위입니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "FlashInfer: Efficient and Customizable Attention Engine for LLM Inference Serving · 고정 원문",
+      "href": "https://arxiv.org/html/2501.01005v1",
+      "note": "읽은 arXiv v1은 FlashInfer v0.2, A100 40GB/H100 80GB, CUDA 12.4와 PyTorch 2.4의 실험 조건을 밝힙니다. Triton 기반 backend 대비 ITL 29~69 %, 긴 context 28~30 %, 병렬 생성 13~17 % 개선은 저자 측정입니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vllm/vllm/v1/attention/selector.py · 6e448d0 전체 원문",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/attention/selector.py",
+      "note": "고정 원격 원문과 SHA-256을 대조했습니다. 선택 조건과 플랫폼 호출을 읽습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vllm/vllm/platforms/cuda.py · 6e448d0 전체 원문",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/platforms/cuda.py",
+      "note": "고정 원격 원문과 SHA-256을 대조했습니다. 지원 검사를 대체한 CPU 실행으로 자동·명시 선택 제어만 확인합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vllm/vllm/v1/attention/backend.py · 6e448d0 전체 원문",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/attention/backend.py",
+      "note": "고정 원격 원문과 SHA-256을 대조했습니다. 지원하지 않는 조건의 이유를 모으는 원문입니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "triton/python/tutorials/06-fused-attention.py · 7c56a5e 전체 원문",
+      "href": "https://github.com/triton-lang/triton/blob/7c56a5e40f7fd928dfd5c72902d5def0097db73a/python/tutorials/06-fused-attention.py",
+      "note": "고정 원격 원문과 SHA-256을 대조했습니다. 후보 생성·keep·prune 몸체를 CPU에서 확인하며 실제 GPU 컴파일과 성능은 측정하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "flash-attention/csrc/flash_attn/src/flash_fwd_launch_template.h · e9515d5 전체 원문",
+      "href": "https://github.com/Dao-AILab/flash-attention/blob/e9515d5dee6ade134a33d6020d38d01ef0596996/csrc/flash_attn/src/flash_fwd_launch_template.h",
+      "note": "고정 원격 원문과 SHA-256을 대조했습니다. 분할/합치기의 별도 launch와 d=128 수동 설정표를 읽습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "flash-attention/csrc/flash_attn/src/flash_fwd_kernel.h · e9515d5 전체 원문",
+      "href": "https://github.com/Dao-AILab/flash-attention/blob/e9515d5dee6ade134a33d6020d38d01ef0596996/csrc/flash_attn/src/flash_fwd_kernel.h",
+      "note": "고정 원격 원문과 SHA-256을 대조했습니다. 인과 범위·원래 위치 오프셋·분할 LSE 및 출력 합치기를 읽습니다."
+    }
   ],
   "ai/serving-benchmark-methodology": [
     { kind: "공식 문서", label: "vLLM · Benchmark CLI (docs/benchmarking/cli.md)", href: "https://github.com/vllm-project/vllm/blob/main/docs/benchmarking/cli.md", note: "request-rate·burstiness·max-concurrency·dataset·ramp-up flag 와 보고 지표의 근거" },
@@ -10257,55 +10362,99 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "2026-09-15 안내의 제41조 교육·대리·예외를 읽었습니다. 10월8일 예고 내용을 10월4일 현재 규정으로 적용하지 않습니다."
     }
   ],
-  "property/commercial-lease-and-rent": [            {
-      "kind": "공식 문서",
-      "label": "대한민국 상가건물 임대차보호법",
-      "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancNo=21083&ancYd=20251111&efYd=20260512&lsiSeq=279651",
-      "note": "2026-10-03 기준 시행 법령에서 갱신·권리금 관련 조문을 확인합니다."
-    },             {
-      "kind": "공식 문서",
-      "label": "UK Business tenancies: right to renew",
-      "href": "https://lawcom.gov.uk/project/business-tenancies-the-right-to-renew/",
-      "note": "잉글랜드·웨일스 사업 임차의 갱신권과 계약 전 배제 가능성 안내입니다."
-    }, {"kind": "공식 문서", "label": "NSW Retail Tenancy Guide", "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide", "note": "호주 NSW의 소매 임대차 비용과 종료 의무 안내입니다."},
+  "property/commercial-lease-and-rent": [
     {
       "kind": "공식 문서",
-      "label": "한국 상가건물 임대차보호법 제3조 제1항",
+      "label": "한국 상가건물 임대차보호법 제3조",
       "href": "https://law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=1013685403",
-      "note": "2026-10-04 원문 확인. 3천만 원을 맡기는 점주는 실제 공간을 인도받은 사실과 등록 신청의 사업장 표시를 맞춥니다. 이 조항의 효력과 보증금을 남보다 먼저 돌려받는 요건은 별개이므로 선순위 권리·확정일자·적용 범위도 함께 확인합니다."
+      "note": "제1항의 요건·효력과 제2항의 양수인 지위 승계를 실제 읽었습니다. 대항력만으로 우선변제나 전액 회수가 보장된다는 뜻은 아닙니다."
     },
     {
       "kind": "공식 문서",
-      "label": "NSW Retail Tenancy Guide · Make good",
-      "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide",
-      "note": "2026-10-04 원문 확인. 한국의 3천만 원·월 200만 원·3년 계약을 NSW 규칙으로 처리할 수는 없습니다. 다만 종료 전 반환 의무를 계약 때 확인한다는 질문을 가져와 사진과 공사 동의, 반환 기준을 대조할 수 있습니다."
+      "label": "한국 상가건물 임대차보호법 제2조",
+      "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=279651&joNo=0002&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+      "note": "실제 조문 HTML에서 제1·2·3항을 읽고 제5조와의 차이를 확인했습니다. 사례의 주소·업종·환산보증금을 확정하거나 개별 계약의 적용 여부를 판정한 것은 아닙니다."
     },
-],
-  "property/shop-transfer-and-goodwill": [
     {
       "kind": "공식 문서",
-      "label": "한국 상가건물 임대차보호법 제10조의3·제10조의4",
+      "label": "한국 상가건물 임대차보호법 제5조",
+      "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=279651&joNo=0005&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+      "note": "제2항의 대항 요건·확정일자·후순위 우선과 제3항의 인도 조건을 실제 읽었습니다. 구체적인 배당 순서·배당액이나 전액 반환을 보장한 것은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 상가건물 임대차보호법 제10조·제10조의4",
       "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancNo=21083&ancYd=20251111&efYd=20260512&lsiSeq=279651",
-      "note": "권리금 정의와 회수 기회 보호의 현재 조문입니다."
+      "note": "조문별 실제 HTML에서 제10조의 기간·한도·예외와 제10조의4의 회수 기회 보호를 읽었습니다. 개별 계약이 반드시 갱신되거나 권리금 액수가 보장된다는 뜻은 아닙니다."
     },
     {
       "kind": "공식 문서",
-      "label": "NSW Small Business Commissioner: Transferring your lease",
-      "href": "https://www.smallbusiness.nsw.gov.au/help/common-questions/transferring-your-lease",
-      "note": "호주 NSW의 retail lease 양도 동의와 공개 절차를 안내합니다."
+      "label": "NSW · What to do at the end of the lease",
+      "href": "https://www.smallbusiness.nsw.gov.au/help/common-questions/what-to-do-at-the-end-of-the-lease",
+      "note": "실제 Make good 항목의 계약 상태·최초 기록·금전 합의와 양도 주의를 읽었습니다. 한국 점포의 공제액이나 실제 복구 범위를 판정한 것은 아닙니다."
     },
+    {
+      "kind": "공식 문서",
+      "label": "UK Law Commission · Business tenancies",
+      "href": "https://lawcom.gov.uk/project/business-tenancies-the-right-to-renew/",
+      "note": "Background와 2026-09-16 종료된 2차 의견 수렴 후 답변 분석 상태를 실제 읽었습니다. 제안된 단기 임대차 기준 등이 이미 시행됐다고 주장하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "GOV.UK · Renewing and ending business leases",
+      "href": "https://www.gov.uk/government/publications/renewing-and-ending-business-leases-a-guide-for-tenants-and-landlords",
+      "note": "웹페이지의 Applies to England and Wales와 계약 전 배제 절차 설명을 실제 읽었습니다. 첨부 PDF 전체를 검토하거나 개별 계약의 유효한 배제를 판정한 것은 아닙니다."
+    }
+  ],
+  "property/shop-transfer-and-goodwill": [
     {
       "kind": "공식 문서",
       "label": "한국 개인정보 보호법 제27조 제1항",
       "href": "https://www.law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335679",
-      "note": "2026-10-04 원문 확인. 3천300만 원 양도계약에는 시설·재고 목록과 별도로 고객정보 이전 여부를 적습니다. 이전 사실, 받는 사람의 연락처, 이전을 원하지 않을 때의 조치 방법을 미리 알리고, 양수자는 원래 목적의 범위 등 법률상 조건을 지킵니다."
+      "note": "제1항의 이전 전 통지와 이전 사실·양수자 정보·거부 시 조치 방법을 실제 읽었습니다. 특정 정보의 수집·제공 적법성이나 모든 업종의 계정 이전 약관을 판정하지 않습니다."
     },
     {
       "kind": "공식 문서",
-      "label": "한국 상가건물 임대차보호법 제10조의4 제1항",
-      "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancNo=21083&ancYd=20251111&efYd=20260512&lsiSeq=279651",
-      "note": "2026-10-04 원문 확인. 시설 2천만 원·재고 300만 원·영업상 이점 1천만 원에 합의해도 법은 임대인의 특정 방해행위와 기간·예외를 다룹니다. 합의된 양도대금만으로 새 임대차가 자동 성립하지 않으므로 장소 사용 조건을 잔금 전에 확인합니다."
+      "label": "한국 개인정보 보호법 제27조 제2항",
+      "href": "https://law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1029331507",
+      "note": "제2항 전체의 의무와 예외를 실제 읽었습니다. 통지만 하면 목적 외 이용이나 모든 제3자 제공이 허용된다는 뜻은 아닙니다."
     },
+    {
+      "kind": "공식 문서",
+      "label": "한국 개인정보 보호법 제27조 제3항",
+      "href": "https://law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=1006185845",
+      "note": "본래 목적의 이용·제공과 개인정보처리자 지위를 실제 읽었습니다. 다른 법적 근거와 개별 사실을 검토하지 않고 특정 마케팅의 적법성을 확정하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 상가건물 임대차보호법 제10조의3",
+      "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=279651&joNo=0010&joBrNo=03&docCls=jo&urlMode=lsScJoRltInfoR",
+      "note": "실제 HTML의 유형·무형 가치와 보증금·차임 이외 대가, 권리금 계약의 정의를 읽었습니다. 각 항목의 회계·세무 처리가 동일하다거나 재고 가격까지 항상 같은 법률 성격이라고 주장하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 상가건물 임대차보호법 제10조의4",
+      "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancNo=21083&ancYd=20251111&efYd=20260512&lsiSeq=279651",
+      "note": "실제 조문 HTML의 제1항 기간·행위와 제2항 정당한 사유, 후속 항목을 읽었습니다. 특정 임대인의 거절이 위법한지 또는 양도대금 전액이 보장되는지를 판정하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NSW Small Business Commissioner · Transferring your lease",
+      "href": "https://www.smallbusiness.nsw.gov.au/help/common-questions/transferring-your-lease",
+      "note": "실제 서면 동의·공개 문서·단계별 절차와 양도 후 책임 종료의 조건을 읽었습니다. 한국 계약에 NSW 절차나 일정이 그대로 적용된다는 뜻은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 식품위생법 제39조",
+      "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=277149&joNo=0039&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+      "note": "제39조 실제 HTML의 승계·신고·수리와 제한 규정 연결을 읽었습니다. 장비만 산 모든 거래가 영업양도라거나 계약으로 신고 수리를 대신할 수 있다는 뜻은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 식품위생법 제78조",
+      "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=277149&joNo=0078&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+      "note": "제78조 실제 HTML에서 처분 효과 승계·진행 중 절차·예외를 읽었습니다. 모든 과거 위반이 조건 없이 자동 승계된다고 주장하지 않습니다."
+    }
   ],
   "property/shop-closure-and-restoration": [
     {
@@ -10443,25 +10592,32 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "2026-10-04 원문 확인. 100억 원 매각을 기대하며 15억 원을 토지와 취득에 배정해도 땅을 깎고 메우는 행위의 허가 여부를 먼저 확인합니다. 허가 조건 때문에 도로·배수 비용이 10억 원 더 필요하면 다른 가정이 같을 때 잔여는 5억 원으로 줄어듭니다."
     },
 ],
-  "business/supply-chain-bargaining": [{"kind": "공식 문서", "label": "World Bank World Development Report 2020", "href": "https://www.worldbank.org/en/publication/wdr2020", "note": "국제 가치사슬의 분업과 정책 파급을 설명하는 공식 보고서입니다."},             {
-      "kind": "공식 문서",
-      "label": "World Bank Global Value Chains",
-      "href": "https://www.worldbank.org/ext/en/topic/trade/global-value-chains",
-      "note": "국가 사이의 생산 단계 분리와 고부가가치 단계 이동을 설명합니다."
-    }, {"kind": "공식 문서", "label": "OECD Trade in Value Added", "href": "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html", "note": "총수출과 국내 부가가치의 차이를 확인할 통계 안내입니다."},
+  "business/supply-chain-bargaining": [
     {
       "kind": "공식 문서",
-      "label": "OECD TiVA · About, indicator list",
+      "label": "OECD · Trade in Value-Added",
       "href": "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html",
-      "note": "2026-10-04 원문 확인. 단순 사례의 조립국 총수출 60달러를 외국 부품 40달러와 국내에서 더한 20달러로 나눕니다. 실제 통계는 부품 안에 재수입된 자국 가치 등이 섞이므로 기업 송장 하나의 뺄셈보다 넓은 산업연관 자료가 필요합니다."
+      "note": "실제 About의 국내외 가치·재수입 가치 지표와 ICIO 기반 설명을 읽었습니다. 실제 국가별 수치를 계산하거나 한 회사 송장만으로 TiVA를 추정한 것은 아닙니다."
     },
     {
       "kind": "공식 문서",
-      "label": "World Bank WDR 2020 · About",
+      "label": "World Bank · World Development Report 2020 About",
       "href": "https://www.worldbank.org/en/publication/wdr2020",
-      "note": "2026-10-04 원문 확인. 부품 40달러의 국경 비용이나 조달 기간이 늘면 조립 출하 60달러와 최종가격 100달러의 계약에 압력이 전해집니다. 누가 부담하는지는 재고 소유와 가격 조정 조항, 대체 공급자에 달립니다."
+      "note": "About의 생산 연결을 통한 정책·경제 조건 파급 문장을 실제 읽고 짧게 인용했습니다. 보고서가 이 상품의 관세 전가율이나 2026년 특정 품목 세율을 추정했다는 뜻은 아닙니다."
     },
-],
+    {
+      "kind": "공식 문서",
+      "label": "World Bank · Global Value Chains",
+      "href": "https://www.worldbank.org/ext/en/topic/trade/global-value-chains",
+      "note": "Context의 다국가 투입과 Strategy의 무역·물류·투자·표준 항목을 실제 읽었습니다. 모든 생산 이전이 같은 성장이나 분배 효과를 보장한다는 뜻은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "US CBP · Tips for New Importers and Exporters",
+      "href": "https://www.cbp.gov/trade/basic-import-export/importer-exporter-tips",
+      "note": "공식 페이지 실제 HTML에서 통관업자를 쓰더라도 신고 정확성과 관세·세금·수수료 책임이 남는 문장을 읽었습니다. 개별 품목의 과세가격·세율·면세 여부나 실제 관세 전가율을 판정한 것은 아닙니다."
+    }
+  ],
   "markets/funds-etfs-and-etns": [
     {
       "kind": "공식 문서",

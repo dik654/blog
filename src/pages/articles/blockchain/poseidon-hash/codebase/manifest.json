@@ -1,0 +1,68 @@
+{
+  "repository": "https://github.com/HorizenLabs/poseidon2",
+  "commit": "055bde3f4782731ba5f5ce5888a440a94327eaf3",
+  "originalPackage": "zkhash 0.2.0",
+  "normalization": "None: entire original source files unchanged",
+  "files": [
+    {
+      "file": "poseidon.rs",
+      "upstream": "plain_implementations/src/poseidon/poseidon.rs",
+      "sha256": "28eed92696d43200cea4bbe6f5efbf82a7e50691f019d69cea95956a9e01c495"
+    },
+    {
+      "file": "poseidon_params.rs",
+      "upstream": "plain_implementations/src/poseidon/poseidon_params.rs",
+      "sha256": "484af59b05e94757e8ae464c84c70bde94ea5d16014bd046a8eec03a4a3330a7"
+    },
+    {
+      "file": "poseidon_instance_bn256.rs",
+      "upstream": "plain_implementations/src/poseidon/poseidon_instance_bn256.rs",
+      "sha256": "d0b93fa452b2e18df3cc0badfe0d7602c37ac377233ae9b02df4306a5fe3fc67"
+    },
+    {
+      "file": "poseidon2.rs",
+      "upstream": "plain_implementations/src/poseidon2/poseidon2.rs",
+      "sha256": "09e1e033ca02ca9c136510cb4ffc619d4dc869b7cc97b0c3ee06152b1793360c"
+    },
+    {
+      "file": "poseidon2_params.rs",
+      "upstream": "plain_implementations/src/poseidon2/poseidon2_params.rs",
+      "sha256": "b804a9d026be54fbcf9d7004231acc87557555cecaf9b4b512563583bbab6ad4"
+    },
+    {
+      "file": "poseidon2_instance_bn256.rs",
+      "upstream": "plain_implementations/src/poseidon2/poseidon2_instance_bn256.rs",
+      "sha256": "7b34cc6574424ea4ea56af1a8b568f99c449e092ceaa372e5226c4308937e7ac"
+    },
+    {
+      "file": "bn256.rs",
+      "upstream": "plain_implementations/src/fields/bn256.rs",
+      "sha256": "9d3468d9a36b0e4d6880c8be79ba0bea329bbf35cc49571b83415e130296bc29"
+    },
+    {
+      "file": "field-utils.rs",
+      "upstream": "plain_implementations/src/fields/utils.rs",
+      "sha256": "b6b6b156b75527ec896899b1dc4b4b12f3790eaa03b08627873abb6f4a5d8220"
+    },
+    {
+      "file": "utils.rs",
+      "upstream": "plain_implementations/src/utils.rs",
+      "sha256": "79c4b5bf9d28106d2eba49326f37ea6fc132fc66290181e70528d829be700982"
+    },
+    {
+      "file": "merkle_tree_fp.rs",
+      "upstream": "plain_implementations/src/merkle_tree/merkle_tree_fp.rs",
+      "sha256": "783a91e53d432cd6ae23cdbc3edb1133314cc65db4c04c49f7e86cd19d4f4728"
+    },
+    {
+      "file": "LICENSE-MIT",
+      "upstream": "LICENSE-MIT",
+      "sha256": "8f71659370c5268d9a1dc962a46232540e8fca63462586d8efaa95aab492a208"
+    },
+    {
+      "file": "LICENSE-APACHE",
+      "upstream": "LICENSE-APACHE",
+      "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2"
+    }
+  ]
+}

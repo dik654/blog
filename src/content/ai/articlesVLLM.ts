@@ -1197,27 +1197,94 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "attention-kernel-anatomy-and-backends",
-    title: "Attention kernel 은 세 단계를 한 tile 에 융합하고 prefill 과 decode 에 다른 backend 를 씁니다",
+    title: "Attention 커널: 같은 답을 나눠 계산하고 구현을 고르는 과정",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "problem", title: "Attention kernel 은 세 단계를 한 tile 안에서 끝내는 GPU 함수다" },
-      { id: "anatomy", title: "QK matmul·softmax·PV matmul 과 fused kernel" },
-      { id: "causal", title: "Causal kernel 의 tile skip 과 load balancing" },
-      { id: "regimes", title: "Prefill 은 compute-bound, decode 는 memory-bound" },
-      {
-        id: "generations",
-        title: "FlashAttention-2 의 warp 분할과 3 의 단계 겹치기",
-        subsections: [
-          { id: "paper-flashattention-2", title: "FlashAttention-2 논문의 문제와 기여" },
-          { id: "paper-flashattention-3", title: "FlashAttention-3 논문의 문제와 기여" },
-        ],
-      },
-      {
-        id: "backends",
-        title: "Backend 선택, FlashInfer, kernel autotuning",
-        subsections: [{ id: "paper-flashinfer", title: "FlashInfer 논문의 문제와 기여" }],
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 여덟 위치의 값을 섞되 미래는 보지 않는다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 허용한 위치와 입력 값이 출력의 계약을 정한다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 같은 여덟 값을 둘씩 묶어 처리한다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 저장 공간, 작업 조각, 남길 상태를 나눈다"
+  },
+  {
+    "id": "why",
+    "title": "5 · 나누는 목적과 나눈 뒤의 비용을 함께 본다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 이미 계산한 역할에 이름을 붙인다"
+  },
+  {
+    "id": "anatomy",
+    "title": "7 · 곱셈 두 번과 지수 호출을 별도로 센다"
+  },
+  {
+    "id": "causal",
+    "title": "8 · 10조각과 36개 연결을 원문 범위에 대입한다"
+  },
+  {
+    "id": "split-merge",
+    "title": "9 · 부분 평균에 그 부분의 비중을 곱해 합친다"
+  },
+  {
+    "id": "split-source",
+    "title": "10 · 실제 구현은 부분 결과를 쓰고 다른 커널로 합친다"
+  },
+  {
+    "id": "regimes",
+    "title": "11 · 배열의 크기와 실제로 이동한 바이트를 구별한다"
+  },
+  {
+    "id": "large-ledger",
+    "title": "12 · 큰 입력의 비율도 측정 조건과 함께 읽는다"
+  },
+  {
+    "id": "generations",
+    "title": "13 · 출력 행을 나누면 부분 출력을 합치는 일이 줄어든다"
+  },
+  {
+    "id": "pipeline",
+    "title": "14 · 한 조각의 의존성과 여러 조각의 겹치기를 나눈다"
+  },
+  {
+    "id": "scheduling",
+    "title": "15 · 긴 일감부터 놓는 설명은 배정 주체를 밝혀야 한다"
+  },
+  {
+    "id": "backends",
+    "title": "16 · 먼저 가능한 구현을 찾고 그 안의 설정을 고른다"
+  },
+  {
+    "id": "backend-source",
+    "title": "17 · vLLM은 명시한 부적합 구현을 예외로 처리한다"
+  },
+  {
+    "id": "autotune-source",
+    "title": "18 · Triton의 실제 후보는 36개에서 걸러진다"
+  },
+  {
+    "id": "triton-trace",
+    "title": "19 · 튜토리얼은 대각선과 그 아래를 다른 구간으로 처리한다"
+  },
+  {
+    "id": "limits",
+    "title": "20 · 새 구현의 이름보다 같은 입력의 결과를 비교한다"
+  },
+  {
+    "id": "review",
+    "title": "21 · 마지막 위치의 결과를 다시 예측한다"
+  }
+],
     component: () => import("@/pages/articles/ai/attention-kernel-anatomy-and-backends"),
   },
   {
