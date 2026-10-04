@@ -1,0 +1,2 @@
+import type { FileNode } from "@/components/code/types";
+export const latencySourceTree: FileNode = {name:"vllm",type:"dir",children:[{name:"benchmarks",type:"dir",children:[{name:"serve.py",type:"file",path:"vllm/benchmarks/serve.py",codeKey:"latency-metrics"},{name:"lib",type:"dir",children:[{name:"endpoint_request_func.py",type:"file",path:"vllm/benchmarks/lib/endpoint_request_func.py",codeKey:"client-events"}]}]}]};

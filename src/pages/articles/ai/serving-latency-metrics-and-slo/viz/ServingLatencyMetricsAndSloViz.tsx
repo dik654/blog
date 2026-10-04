@@ -17,23 +17,23 @@ interface Scene {
 }
 
 const FIRST_TOKENS = 10;
+const RESPONSE_TOKENS = 200;
 
 const DATA: readonly Scene[] = [
-  { batch: 1, queueMs: 0, prefillMs: 120, gapsMs: Array(FIRST_TOKENS - 1).fill(20) },
-  { batch: 8, queueMs: 0, prefillMs: 180, gapsMs: Array(FIRST_TOKENS - 1).fill(28) },
-  { batch: 32, queueMs: 0, prefillMs: 300, gapsMs: Array(FIRST_TOKENS - 1).fill(50) },
-  { batch: 32, queueMs: 1200, prefillMs: 300, gapsMs: [50, 50, 50, 220, 50, 50, 50, 50, 50] },
+  { batch: 1, queueMs: 0, prefillMs: 120, gapsMs: Array(RESPONSE_TOKENS - 1).fill(20) },
+  { batch: 8, queueMs: 0, prefillMs: 180, gapsMs: Array(RESPONSE_TOKENS - 1).fill(28) },
+  { batch: 32, queueMs: 0, prefillMs: 300, gapsMs: Array(RESPONSE_TOKENS - 1).fill(50) },
+  { batch: 32, queueMs: 1200, prefillMs: 300, gapsMs: Array.from({length: RESPONSE_TOKENS - 1}, (_, index) => index === 3 ? 220 : 50) },
 ];
 
 const NOTES = [
   "요청 하나만 있으면 queue 0, prefill 120 ms 로 TTFT 0.12 s 이고 decode step 20 ms 가 그대로 ITL 입니다. 서버 tokens/s 는 1/0.02 = 50 에 그칩니다.",
   "요청 8 개를 한 step 에 묶으면 step 시간은 28 ms 로 조금 늘고 서버는 step 마다 8 token 을 냅니다. ITL 은 1.4 배, tokens/s 는 5.7 배가 됩니다.",
   "Batch 32 에서는 step 50 ms 가 모든 요청의 ITL 이 됩니다. 요청 하나는 2.5 배 느려졌지만 서버는 640 tokens/s 로 12.8 배 많은 일을 합니다.",
-  "도착률이 처리율에 가까워지면 batch 자리를 기다리는 시간이 TTFT 앞에 붙고, preemption 같은 멈춤이 ITL 표본 하나를 220 ms 로 튀게 합니다. TPOT 평균은 거의 그대로입니다.",
+  "도착률이 처리율에 가까워지면 batch 자리를 기다리는 시간이 TTFT 앞에 붙고 preemption 같은 멈춤이 ITL 표본 하나를 220 ms 로 튀게 합니다. 전체 199간격 중 하나만 220ms이면 TPOT는 약 50.85ms입니다. 원인은 대기·중단 기록을 따로 확인해야 합니다.",
 ] as const;
 
 const SCALE_MS = 2200;
-const RESPONSE_TOKENS = 200;
 
 function fmtSec(ms: number): string {
   return `${(ms / 1000).toFixed(2)} s`;
@@ -46,12 +46,12 @@ export default function ServingLatencyMetricsAndSloViz() {
   const gapSum = scene.gapsMs.reduce((acc, gap) => acc + gap, 0);
   const tpot = gapSum / scene.gapsMs.length;
   const stepMs = Math.min(...scene.gapsMs);
-  const e2e = ttft + (RESPONSE_TOKENS - 1) * tpot;
-  const tokensPerSec = scene.batch / (stepMs / 1000);
+  const e2e = ttft + gapSum;
+  const tokensPerSec = scene.batch / (tpot / 1000);
   const pct = (ms: number) => `${((ms / SCALE_MS) * 100).toFixed(2)}%`;
 
   let cursor = ttft;
-  const tokenMarks = [0, ...scene.gapsMs].map((gap, index) => {
+  const tokenMarks = [0, ...scene.gapsMs.slice(0, FIRST_TOKENS - 1)].map((gap, index) => {
     cursor += index === 0 ? 0 : gap;
     return { at: cursor, gap, spike: gap > stepMs * 2 };
   });
@@ -60,8 +60,8 @@ export default function ServingLatencyMetricsAndSloViz() {
     <VizFrame
       eyebrow="Serving latency timeline"
       title="같은 decode step 시간이 요청에는 ITL 이고 서버에는 tokens/s 입니다"
-      description="가로축은 요청 도착 뒤 경과 시간(0–2.2 s)입니다. 회색은 queue 대기, 파란색은 prefill, 세로선은 client 에 도착한 token 입니다. 처음 10 token 만 그리고 E2E 는 200 token 응답으로 계산합니다."
-      note="Step 시간은 예시 값입니다. 실제 t(B) 는 model·GPU·prefill 혼합 비율에 따라 다르고, 대기열 길이는 도착률과 처리율의 비로 정해집니다."
+      description="가로축은 client 요청 전송 뒤 경과 시간(0–2.2 s)입니다. 회색은 queue 대기, 파란색은 prefill, 세로선은 client 에 도착한 token 입니다. 처음 10토큰만 그리고 전체 200토큰의 199간격을 보존해 E2E·TPOT를 계산합니다. 처리량은 모든 요청이 같은 간격을 겪는 가정의 decode 구간 평균입니다."
+      note="Step 시간은 예시 값입니다. 실제 t(B) 는 model·GPU·prefill 혼합 비율에 따라 다르고 대기 시간은 도착 분포와 처리 시간·요청 수용 정책에도 달려 있습니다."
     >
       <div
         data-viz-canvas
@@ -133,7 +133,7 @@ export default function ServingLatencyMetricsAndSloViz() {
               <dd className="font-bold text-foreground">{fmtSec(e2e)}</dd>
             </div>
             <div>
-              <dt className="text-muted-foreground">서버 tokens/s</dt>
+              <dt className="text-muted-foreground">decode 토큰/s</dt>
               <dd className="font-bold text-foreground">{Math.round(tokensPerSec)}</dd>
             </div>
           </dl>

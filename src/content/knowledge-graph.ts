@@ -9203,40 +9203,36 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/lstm-timeseries#training",
   },
   "cuda-launch-hierarchy": {
-    id: "cuda-launch-hierarchy",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA grid·block·thread launch hierarchy",
-    definition:
-      "Kernel launch의 전체 logical work를 grid로, 협력·resource ownership 단위를 block으로, 개별 data 위치를 처리하는 worker를 thread로 나누는 CUDA software execution contract입니다. Grid나 block을 physical core 수와 일대일로 매핑하지 않습니다.",
-    canonicalHref: "/cs/gpu/cuda-thread-hierarchy#overview",
+    "id": "cuda-launch-hierarchy",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA grid·block·thread launch hierarchy",
+    "definition": "Kernel launch의 전체 logical work를 grid로, 협력·resource ownership 단위를 block으로, 개별 data 위치를 처리하는 worker를 thread로 나누는 CUDA software execution contract입니다. Grid나 block을 physical core 수와 일대일로 매핑하지 않습니다.",
+    "canonicalHref": "/cs/gpu/cuda-thread-hierarchy#names"
   },
   "cuda-warp-simt": {
-    id: "cuda-warp-simt",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA warp·SIMT execution",
-    definition:
-      "SM이 block의 threads를 32 lanes인 warp로 묶어 같은 kernel instruction을 발행하되 lane별 register·address·branch state를 유지하는 execution model입니다. Branch divergence는 active lane을 mask하며 logical thread가 core 하나에 영구 고정된다는 뜻은 아닙니다.",
-    canonicalHref: "/cs/gpu/cuda-thread-hierarchy#overview",
+    "id": "cuda-warp-simt",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA warp·SIMT execution",
+    "definition": "SM이 block의 threads를 32 lanes인 warp로 묶어 같은 kernel instruction을 발행하되 lane별 register·address·branch state를 유지하는 execution model입니다. Branch divergence는 active lane을 mask하며 logical thread가 core 하나에 영구 고정된다는 뜻은 아닙니다.",
+    "canonicalHref": "/cs/gpu/cuda-thread-hierarchy#warp-runtime"
   },
   "cuda-block-resource-placement": {
-    id: "cuda-block-resource-placement",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA block resource·SM placement",
-    definition:
-      "한 block이 실행 동안 한 SM에 머물며 block당 threads·registers·shared memory를 소비하고, 이 자원 한도가 SM에 동시에 resident할 blocks·warps 수를 제한하는 scheduling 경계입니다.",
-    canonicalHref: "/cs/gpu/cuda-thread-hierarchy#builtin-vars",
+    "id": "cuda-block-resource-placement",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA block resource·SM placement",
+    "definition": "한 block이 실행 동안 한 SM에 머물며 block당 threads·registers·shared memory를 소비하고, 이 자원 한도가 SM에 동시에 resident할 blocks·warps 수를 제한하는 scheduling 경계입니다.",
+    "canonicalHref": "/cs/gpu/cuda-thread-hierarchy#placement"
   },
   "cuda-global-index": {
-    id: "cuda-global-index",
-    kind: "method",
-    domain: "computer-science",
-    label: "CUDA global index·boundary mapping",
-    definition:
-      "Block coordinate와 block dimension으로 block 시작 offset을 만들고 thread-local coordinate를 더해 logical data index를 계산한 뒤, overprovisioned 마지막 block을 data boundary check로 제외하는 mapping입니다.",
-    canonicalHref: "/cs/gpu/cuda-thread-hierarchy#indexing-1d",
+    "id": "cuda-global-index",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "CUDA global index·boundary mapping",
+    "definition": "Block coordinate와 block dimension으로 block 시작 offset을 만들고 thread-local coordinate를 더해 logical data index를 계산한 뒤, overprovisioned 마지막 block을 data boundary check로 제외하는 mapping입니다.",
+    "canonicalHref": "/cs/gpu/cuda-thread-hierarchy#indexing-1d"
   },
   "cuda-shared-scratchpad": {
     id: "cuda-shared-scratchpad",
@@ -9698,98 +9694,87 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/p2p/libp2p-tcp#socket-creation",
   },
   "algebraic-field-contract": {
-    id: "algebraic-field-contract",
-    domain: "mathematics",
-    label: "Field operation contract",
-    definition:
-      "덧셈·곱셈의 항등원과 역원, 분배법칙을 가지며 0이 아닌 모든 원소로 나눌 수 있는 대수 구조의 연산 계약입니다.",
-    canonicalHref: "/cs/crypto/finite-field-theory#overview",
+    "id": "algebraic-field-contract",
+    "domain": "mathematics",
+    "label": "Field operation contract",
+    "definition": "덧셈·곱셈의 항등원과 역원, 분배법칙을 가지며 0이 아닌 모든 원소로 나눌 수 있는 대수 구조의 연산 계약입니다.",
+    "canonicalHref": "/cs/crypto/finite-field-theory#names"
   },
   "prime-field-modular-arithmetic": {
-    id: "prime-field-modular-arithmetic",
-    kind: "method",
-    domain: "mathematics",
-    label: "Prime-field modular arithmetic",
-    definition:
-      "소수 p에 대해 0부터 p−1까지의 residue를 덧셈·곱셈 뒤 mod p로 환원하고, 0이 아닌 원소의 곱셈 역원으로 나눗셈을 정의하는 정확한 산술입니다.",
-    canonicalHref: "/cs/crypto/finite-field-theory#prime-field",
+    "id": "prime-field-modular-arithmetic",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Prime-field modular arithmetic",
+    "definition": "소수 p에 대해 0부터 p−1까지의 residue를 덧셈·곱셈 뒤 mod p로 환원하고, 0이 아닌 원소의 곱셈 역원으로 나눗셈을 정의하는 정확한 산술입니다.",
+    "canonicalHref": "/cs/crypto/finite-field-theory#prime-field"
   },
   "finite-field-multiplicative-order": {
-    id: "finite-field-multiplicative-order",
-    domain: "mathematics",
-    label: "Finite-field multiplicative order",
-    definition:
-      "0이 아닌 field 원소 a에 대해 a^d=1이 되는 가장 작은 양의 정수 d로, subgroup 크기와 primitive root 여부를 결정합니다.",
-    canonicalHref: "/cs/crypto/finite-field-theory#prime-field",
+    "id": "finite-field-multiplicative-order",
+    "domain": "mathematics",
+    "label": "Finite-field multiplicative order",
+    "definition": "0이 아닌 field 원소 a에 대해 a^d=1이 되는 가장 작은 양의 정수 d로, subgroup 크기와 primitive root 여부를 결정합니다.",
+    "canonicalHref": "/cs/crypto/finite-field-theory#multiplicative-order"
   },
   "polynomial-coefficient-evaluation-form": {
-    id: "polynomial-coefficient-evaluation-form",
-    domain: "mathematics",
-    label: "Polynomial coefficient · evaluation form",
-    definition:
-      "같은 degree-bounded polynomial을 거듭제곱별 coefficient vector 또는 서로 다른 points에서의 value vector로 나타내는 두 표현입니다.",
-    canonicalHref: "/cs/crypto/finite-field-theory#polynomial",
+    "id": "polynomial-coefficient-evaluation-form",
+    "domain": "mathematics",
+    "label": "Polynomial coefficient · evaluation form",
+    "definition": "같은 degree-bounded polynomial을 거듭제곱별 coefficient vector 또는 서로 다른 points에서의 value vector로 나타내는 두 표현입니다.",
+    "canonicalHref": "/cs/crypto/finite-field-theory#polynomial"
   },
   "polynomial-root-degree-bound": {
-    id: "polynomial-root-degree-bound",
-    kind: "theorem",
-    domain: "mathematics",
-    label: "Polynomial root–degree bound",
-    definition:
-      "Field 위의 0이 아닌 degree d univariate polynomial은 서로 다른 root를 최대 d개만 가진다는 정리입니다.",
-    canonicalHref: "/cs/crypto/finite-field-theory#polynomial",
+    "id": "polynomial-root-degree-bound",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Polynomial root–degree bound",
+    "definition": "Field 위의 0이 아닌 degree d univariate polynomial은 서로 다른 root를 최대 d개만 가진다는 정리입니다.",
+    "canonicalHref": "/cs/crypto/finite-field-theory#root-bound"
   },
   "schwartz-zippel-bound": {
-    id: "schwartz-zippel-bound",
-    kind: "theorem",
-    domain: "mathematics",
-    label: "Schwartz–Zippel bound",
-    definition:
-      "Total degree d의 0이 아닌 multivariate polynomial을 유한 집합 S에서 독립·균등하게 뽑은 점에 평가할 때 0이 될 확률이 최대 d/|S|라는 bound입니다.",
-    canonicalHref: "/cs/crypto/finite-field-theory#schwartz-zippel",
+    "id": "schwartz-zippel-bound",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Schwartz–Zippel bound",
+    "definition": "Total degree d의 0이 아닌 multivariate polynomial을 유한 집합 S에서 독립·균등하게 뽑은 점에 평가할 때 0이 될 확률이 최대 d/|S|라는 bound입니다.",
+    "canonicalHref": "/cs/crypto/finite-field-theory#schwartz-zippel"
   },
   "extension-field-quotient": {
-    id: "extension-field-quotient",
-    domain: "mathematics",
-    label: "Extension field by polynomial quotient",
-    definition:
-      "Fₚ[x]를 degree k 기약 다항식으로 나눈 residue class로 p^k개 원소의 field를 구성하고, degree k 미만 coefficient vector로 원소를 표현하는 방법입니다.",
-    canonicalHref: "/cs/crypto/finite-field-theory#extension-field",
+    "id": "extension-field-quotient",
+    "domain": "mathematics",
+    "label": "Extension field by polynomial quotient",
+    "definition": "Fₚ[x]를 degree k 기약 다항식으로 나눈 residue class로 p^k개 원소의 field를 구성하고, degree k 미만 coefficient vector로 원소를 표현하는 방법입니다.",
+    "canonicalHref": "/cs/crypto/finite-field-theory#extension-field"
   },
   "lagrange-interpolation-basis": {
-    id: "lagrange-interpolation-basis",
-    kind: "method",
-    domain: "mathematics",
-    label: "Lagrange interpolation basis",
-    definition:
-      "서로 다른 sample point x_i에서 자기 위치는 1, 다른 위치는 0이 되는 selector polynomial l_i를 만들고 y_i l_i를 합해 interpolant를 구성하는 방법입니다.",
-    canonicalHref: "/cs/crypto/lagrange#formula",
+    "id": "lagrange-interpolation-basis",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Lagrange interpolation basis",
+    "definition": "서로 다른 sample point x_i에서 자기 위치는 1, 다른 위치는 0이 되는 selector polynomial l_i를 만들고 y_i l_i를 합해 interpolant를 구성하는 방법입니다.",
+    "canonicalHref": "/cs/crypto/lagrange#formula"
   },
   "polynomial-interpolation-uniqueness": {
-    id: "polynomial-interpolation-uniqueness",
-    kind: "theorem",
-    domain: "mathematics",
-    label: "Polynomial interpolation uniqueness",
-    definition:
-      "서로 다른 n개 x 좌표의 값을 만족하는 degree n−1 이하 polynomial은 정확히 하나라는 정리입니다.",
-    canonicalHref: "/cs/crypto/lagrange#overview",
+    "id": "polynomial-interpolation-uniqueness",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Polynomial interpolation uniqueness",
+    "definition": "서로 다른 n개 x 좌표의 값을 만족하는 degree n−1 이하 polynomial은 정확히 하나라는 정리입니다.",
+    "canonicalHref": "/cs/crypto/lagrange#trace"
   },
   "vanishing-polynomial-domain": {
-    id: "vanishing-polynomial-domain",
-    domain: "mathematics",
-    label: "Evaluation-domain vanishing polynomial",
-    definition:
-      "유한 domain H의 각 h를 root로 갖는 Z_H(x)=∏(x−h)이며, domain 전체의 zero constraint를 divisibility로 표현합니다.",
-    canonicalHref: "/cs/crypto/lagrange#vanishing",
+    "id": "vanishing-polynomial-domain",
+    "domain": "mathematics",
+    "label": "Evaluation-domain vanishing polynomial",
+    "definition": "유한 domain H의 각 h를 root로 갖는 Z_H(x)=∏(x−h)이며, domain 전체의 zero constraint를 divisibility로 표현합니다.",
+    "canonicalHref": "/cs/crypto/lagrange#vanishing"
   },
   "barycentric-interpolation": {
-    id: "barycentric-interpolation",
-    kind: "method",
-    domain: "mathematics",
-    label: "Barycentric Lagrange interpolation",
-    definition:
-      "고정 sample x 좌표의 inverse-product weight를 precompute하고 rational ratio 형태로 interpolant의 새 point value를 O(n)에 평가하는 방법입니다.",
-    canonicalHref: "/cs/crypto/lagrange#usage",
+    "id": "barycentric-interpolation",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Barycentric Lagrange interpolation",
+    "definition": "고정 sample x 좌표의 inverse-product weight를 precompute하고 rational ratio 형태로 interpolant의 새 point value를 O(n)에 평가하는 방법입니다.",
+    "canonicalHref": "/cs/crypto/lagrange#usage"
   },
   "finite-field-ntt": {
     id: "finite-field-ntt",
@@ -13109,40 +13094,52 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/blockchain/erasure-coding#comparison",
   },
   "reed-solomon-profile-identity": {
-    id: "reed-solomon-profile-identity", kind: "concept", domain: "computer-science",
-    label: "Reed–Solomon profile identity",
-    definition: "Field·irreducible polynomial·generator/evaluation points·n,k·source mapping·systematic layout·symbol encoding을 하나의 versioned identity로 묶어 encoder와 decoder가 같은 code를 사용하게 하는 계약입니다.",
-    canonicalHref: "/cs/crypto/reed-solomon#overview",
+    "id": "reed-solomon-profile-identity",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Reed–Solomon profile identity",
+    "definition": "Field·irreducible polynomial·generator/evaluation points·n,k·source mapping·systematic layout·symbol encoding을 하나의 versioned identity로 묶어 encoder와 decoder가 같은 code를 사용하게 하는 계약입니다.",
+    "canonicalHref": "/cs/crypto/reed-solomon#profile"
   },
   "reed-solomon-encoding-pipeline": {
-    id: "reed-solomon-encoding-pipeline", kind: "method", domain: "computer-science",
-    label: "Reed–Solomon encoding pipeline",
-    definition: "Profile에 따라 source symbols를 degree-bounded polynomial 또는 equivalent generator transform으로 옮기고 ordered evaluation values에 profile·object digest·shard index를 결속하는 실행 경로입니다.",
-    canonicalHref: "/cs/crypto/reed-solomon#encoding",
+    "id": "reed-solomon-encoding-pipeline",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Reed–Solomon encoding pipeline",
+    "definition": "Profile에 따라 source symbols를 degree-bounded polynomial 또는 equivalent generator transform으로 옮기고 ordered evaluation values에 profile·object digest·shard index를 결속하는 실행 경로입니다.",
+    "canonicalHref": "/cs/crypto/reed-solomon#encoding"
   },
   "reed-solomon-decoder-outcome": {
-    id: "reed-solomon-decoder-outcome", kind: "concept", domain: "computer-science",
-    label: "Reed–Solomon typed decoder outcome",
-    definition: "Recovered bytes와 insufficient symbols·too many errors·profile mismatch·malformed symbol·integrity mismatch를 구분해 보장 밖의 후보를 success로 돌려주지 않는 decoder 결과 계약입니다.",
-    canonicalHref: "/cs/crypto/reed-solomon#error-correction",
+    "id": "reed-solomon-decoder-outcome",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Reed–Solomon typed decoder outcome",
+    "definition": "Recovered bytes와 insufficient symbols·too many errors·profile mismatch·malformed symbol·integrity mismatch를 구분해 보장 밖의 후보를 success로 돌려주지 않는 decoder 결과 계약입니다.",
+    "canonicalHref": "/cs/crypto/reed-solomon#misdecode"
   },
   "berlekamp-welch-reconstruction": {
-    id: "berlekamp-welch-reconstruction", kind: "method", domain: "mathematics",
-    label: "Berlekamp–Welch reconstruction",
-    definition: "Unknown error 위치에서 0인 locator E와 N=Ep를 두고 N(αᵢ)=rᵢE(αᵢ)의 linear system을 풀어 exact division·degree·mismatch 검증으로 polynomial을 복원하는 방법입니다.",
-    canonicalHref: "/cs/crypto/reed-solomon#berlekamp-welch",
+    "id": "berlekamp-welch-reconstruction",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Berlekamp–Welch reconstruction",
+    "definition": "Unknown error 위치에서 0인 locator E와 N=Ep를 두고 N(αᵢ)=rᵢE(αᵢ)의 linear system을 풀어 exact division·degree·mismatch 검증으로 polynomial을 복원하는 방법입니다.",
+    "canonicalHref": "/cs/crypto/reed-solomon#berlekamp-welch"
   },
   "reed-solomon-proximity-boundary": {
-    id: "reed-solomon-proximity-boundary", kind: "concept", domain: "mathematics",
-    label: "Reed–Solomon membership · proximity boundary",
-    definition: "Exact low-degree evaluation-vector membership과 가장 가까운 RS codeword까지의 relative Hamming distance를 구분하고 proximity를 원래 vector 자체의 low degree나 proof soundness로 확대하지 않는 경계입니다.",
-    canonicalHref: "/cs/crypto/reed-solomon#zk-connection",
+    "id": "reed-solomon-proximity-boundary",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "Reed–Solomon membership · proximity boundary",
+    "definition": "Exact low-degree evaluation-vector membership과 가장 가까운 RS codeword까지의 relative Hamming distance를 구분하고 proximity를 원래 vector 자체의 low degree나 proof soundness로 확대하지 않는 경계입니다.",
+    "canonicalHref": "/cs/crypto/reed-solomon#zk-connection"
   },
   "reed-solomon-implementation-release-gate": {
-    id: "reed-solomon-implementation-release-gate", kind: "method", domain: "computer-science",
-    label: "Reed–Solomon implementation release gate",
-    definition: "Pinned profile/object에서 erasure·distance-boundary error·duplicate/wrong index·mixed object·malformed·timeout·restart와 byte/typed-outcome parity를 검사한 뒤 throughput·memory·repair bandwidth를 비교하는 절차입니다.",
-    canonicalHref: "/cs/crypto/reed-solomon#reed-solomon-release-gate",
+    "id": "reed-solomon-implementation-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Reed–Solomon implementation release gate",
+    "definition": "Pinned profile/object에서 erasure·distance-boundary error·duplicate/wrong index·mixed object·malformed·timeout·restart와 byte/typed-outcome parity를 검사한 뒤 throughput·memory·repair bandwidth를 비교하는 절차입니다.",
+    "canonicalHref": "/cs/crypto/reed-solomon#reed-solomon-release-gate"
   },
   "aa-programmable-validation-boundary": {
     "id": "aa-programmable-validation-boundary",
@@ -15962,84 +15959,106 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/ai/flash-attention-io-aware-kernel#backward"
   },
   "scheduling-step": {
-    id: "scheduling-step",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Scheduling step · 한 forward 의 결정 단위",
-    aliases: ["Scheduling Step", "schedule()"],
-    definition:
-      "Continuous batching 에서 매 forward 직전에 한 번 실행되어 running·waiting 집합과 token budget·KV block 을 읽고, 이번 forward 에 넣을 request 와 request 별 token 수를 SchedulerOutput 으로 확정하는 결정 단위입니다.",
-    canonicalHref: "/cs/ai/continuous-batching-step-anatomy#step-unit",
+    "id": "scheduling-step",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Scheduling step · 한 forward 의 결정 단위",
+    "aliases": [
+      "Scheduling Step",
+      "schedule()"
+    ],
+    "definition": "이번 실행의 요청별 계산량과 저장 위치를 정해 실행 담당자에게 전달하는 결정 단위입니다. 배정과 GPU 실행은 다릅니다. 진행 위치는 반환 전에 예약으로 전진하며 실제 결과는 뒤에 확인합니다.",
+    "canonicalHref": "/cs/ai/continuous-batching-step-anatomy#source-output"
   },
   "scheduler-running-set": {
-    id: "scheduler-running-set",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Running set · waiting queue",
-    aliases: ["Running Set", "Waiting Queue", "self.running", "self.waiting"],
-    definition:
-      "KV block 을 쥐고 진행 중이어서 매 step 먼저 순회되는 request 집합(running)과, 아직 자리를 받지 못해 도착 순으로 admission 을 기다리는 request 집합(waiting)을 구분하는 scheduler 상태입니다.",
-    canonicalHref: "/cs/ai/continuous-batching-step-anatomy#step-unit",
+    "id": "scheduler-running-set",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Running set · waiting queue",
+    "aliases": [
+      "Running Set",
+      "Waiting Queue",
+      "self.running",
+      "self.waiting"
+    ],
+    "definition": "이미 진행 중인 요청과 새로 수용을 기다리는 요청을 별도 목록으로 봅니다. 진행 목록 먼저는 모든 decode 먼저가 아닙니다. P가 4를 쓰면 뒤의 A에 잔액이 없을 수 있습니다.",
+    "canonicalHref": "/cs/ai/continuous-batching-step-anatomy#source-running"
   },
   "sequence-group": {
-    id: "sequence-group",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Sequence group · scheduling 단위 sequence",
-    aliases: ["Sequence Group", "SequenceGroup"],
-    definition:
-      "한 prompt 를 공유하는 여러 sequence(n>1 sampling, beam search)를 하나의 request 로 묶어 함께 scheduling 하되 sequence budget 은 sequence 수로 세는 vLLM V0 의 단위이며, V1 은 이를 child request 로 풀어 request 하나가 sequence 하나가 되게 했습니다.",
-    canonicalHref: "/cs/ai/continuous-batching-step-anatomy#step-unit",
+    "id": "sequence-group",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Sequence group · scheduling 단위 sequence",
+    "aliases": [
+      "Sequence Group",
+      "SequenceGroup"
+    ],
+    "definition": "사용자 요청 하나가 여러 응답을 요구하면 생성 경로도 여러 개가 됩니다. 역사적 구조와 현재 구조를 구분하며 세 자식이 모두 동시에 수용된다고 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/continuous-batching-step-anatomy#sequence-accounting"
   },
   "token-level-scheduling": {
-    id: "token-level-scheduling",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Token-level scheduling",
-    aliases: ["token-level scheduler", "per-token scheduling"],
-    definition:
-      "Scheduler 가 request 단위가 아니라 request 마다 이번 step 에 계산할 token 수를 배정해, decode(need 1)와 prefill(need 남은 prompt 길이)을 같은 min(need, 잔액) 식으로 처리하고 prefill 을 budget 에 맞춰 잘라 내는 방식입니다.",
-    canonicalHref: "/cs/ai/continuous-batching-step-anatomy#token-budget",
+    "id": "token-level-scheduling",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Token-level scheduling",
+    "aliases": [
+      "token-level scheduler",
+      "per-token scheduling"
+    ],
+    "definition": "요청 전체 대신 이번에 계산할 토큰 수를 정해 긴 입력을 나눕니다. 같은 배정량 1도 입력 마지막 위치인지 다음 출력 위치인지에 따라 역할이 달라집니다.",
+    "canonicalHref": "/cs/ai/continuous-batching-step-anatomy#token-budget"
   },
   "step-token-sequence-budget": {
-    id: "step-token-sequence-budget",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Token budget · sequence budget",
-    aliases: ["Sequence Budget", "Token Budget", "max_num_batched_tokens", "max_num_seqs"],
-    definition:
-      "한 step 이 계산할 token 총량(max_num_batched_tokens)과 running set 크기 상한(max_num_seqs)이라는 서로 대신하지 못하는 두 잔액으로, running 이 먼저 쓰고 남은 만큼만 waiting admission 에 쓰이는 step 예산입니다.",
-    canonicalHref: "/cs/ai/continuous-batching-step-anatomy#token-budget",
+    "id": "step-token-sequence-budget",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Token budget · sequence budget",
+    "aliases": [
+      "Sequence Budget",
+      "Token Budget",
+      "max_num_batched_tokens",
+      "max_num_seqs"
+    ],
+    "definition": "계산할 토큰 수와 진행할 생성 경로 수는 서로 다른 한도입니다. 메모리 저장 공간과 정지된 입력 대기 자리 등 실제 구현의 추가 조건도 확인합니다.",
+    "canonicalHref": "/cs/ai/continuous-batching-step-anatomy#why-two-limits"
   },
   "continuous-request-admission": {
-    id: "continuous-request-admission",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Continuous request admission",
-    aliases: ["Waiting admission", "waiting→running promotion"],
-    definition:
-      "Batch 경계를 기다리지 않고 매 step 마다 running 에 빈 sequence 자리·남은 token budget·첫 chunk 를 담을 KV block 이 있으면 waiting 맨 앞 request 를 그 자리에서 running 으로 올리며, preemption 이 일어난 step 에는 건너뛰는 admission 절차입니다.",
-    canonicalHref: "/cs/ai/continuous-batching-step-anatomy#step-procedure",
+    "id": "continuous-request-admission",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Continuous request admission",
+    "aliases": [
+      "Waiting admission",
+      "waiting→running promotion"
+    ],
+    "definition": "매번 조건이 맞는 새 요청을 진행 목록에 넣고 다음 실행에 함께 계산합니다. Waiting의 공간 배정 실패는 순회 중단입니다. 성공한 것처럼 상태나 잔액을 갱신하지 않습니다.",
+    "canonicalHref": "/cs/ai/continuous-batching-step-anatomy#source-admission"
   },
   "chunked-prefill-chunking-rule": {
-    id: "chunked-prefill-chunking-rule",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Chunked prefill scheduler chunking rule",
-    aliases: ["Chunked Prefill Scheduler", "long_prefill_token_threshold"],
-    definition:
-      "Prefill chunk 크기를 상수가 아니라 min(남은 prompt 길이, 그 step 의 남은 token budget, long_prefill_token_threshold) 로 정해, 긴 prompt 가 여러 step 에 걸쳐 running 안에서 마저 계산되게 하는 scheduler 규칙입니다.",
-    canonicalHref: "/cs/ai/continuous-batching-step-anatomy#step-procedure",
+    "id": "chunked-prefill-chunking-rule",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Chunked prefill scheduler chunking rule",
+    "aliases": [
+      "Chunked Prefill Scheduler",
+      "long_prefill_token_threshold"
+    ],
+    "definition": "남은 입력과 토큰 잔액, 설정된 요청별 조각 상한을 비교해 작은 양을 배정합니다. 상한 0은 별도 조각 제한을 적용하지 않는 설정입니다. 다른 제약과 chunking 허용 여부도 통과해야 합니다.",
+    "canonicalHref": "/cs/ai/continuous-batching-step-anatomy#token-budget"
   },
   "dynamic-batch-composition": {
-    id: "dynamic-batch-composition",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Dynamic batch composition · decode/prefill/mixed batch",
-    aliases: ["Dynamic Batch Composition", "Decode Batch", "Prefill Batch", "Mixed Batch"],
-    definition:
-      "같은 step 절차가 running·waiting 상태에 따라 decode 만의 batch, prefill 만의 batch, 둘을 섞은 mixed batch 를 step 마다 다른 token 수로 만들어 내며, mixed batch 는 GPU 를 채우는 대신 그 step 의 decode 지연을 prefill chunk 크기에 묶는 결과입니다.",
-    canonicalHref: "/cs/ai/continuous-batching-step-anatomy#batch-shape",
+    "id": "dynamic-batch-composition",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Dynamic batch composition · decode/prefill/mixed batch",
+    "aliases": [
+      "Dynamic Batch Composition",
+      "Decode Batch",
+      "Prefill Batch",
+      "Mixed Batch"
+    ],
+    "definition": "실행마다 입력 읽기와 다음 토큰 생성의 조합 및 계산량이 달라집니다. 토큰 수만으로 phase나 실행 시간을 단정하지 않습니다. 큰 원래 사례는 새 D 없이 2048→1032→41입니다.",
+    "canonicalHref": "/cs/ai/continuous-batching-step-anatomy#batch-shape"
   },
   "speculation-length": {
     id: "speculation-length",
@@ -16342,84 +16361,118 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/inference-runtime-anatomy#backend",
   },
   "time-to-first-token": {
-    id: "time-to-first-token",
-    kind: "metric",
-    domain: "distributed-systems",
-    label: "Time to First Token (TTFT)",
-    aliases: ["Time to First Token (TTFT)", "TTFT", "첫 token 지연"],
-    definition:
-      "요청이 서버에 도착한 시각부터 첫 output token 이 client 에 닿기까지의 시간으로, gateway·queue 대기와 prefill 계산이 함께 들어 있는 요청당 값 하나의 latency 지표입니다.",
-    canonicalHref: "/cs/ai/serving-latency-metrics-and-slo#metrics",
+    "id": "time-to-first-token",
+    "kind": "metric",
+    "domain": "distributed-systems",
+    "label": "Time to First Token (TTFT)",
+    "aliases": [
+      "Time to First Token (TTFT)",
+      "TTFT",
+      "첫 token 지연"
+    ],
+    "definition": "요청이 서버에 도착한 시각부터 첫 output token 이 client 에 닿기까지의 시간으로, gateway·queue 대기와 prefill 계산이 함께 들어 있는 요청당 값 하나의 latency 지표입니다.",
+    "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#metrics"
   },
   "inter-token-latency": {
-    id: "inter-token-latency",
-    kind: "metric",
-    domain: "distributed-systems",
-    label: "Inter-Token Latency (ITL)",
-    aliases: ["Inter-Token Latency (ITL)", "ITL", "Token 간격 지연"],
-    definition:
-      "Streaming 응답에서 연속한 두 token(또는 chunk 를 token 수로 나눈 값)이 client 에 도착한 시각의 차로, 한 요청이 n−1 개의 표본을 남기며 decode step 시간과 멈춤을 그대로 드러내는 지표입니다.",
-    canonicalHref: "/cs/ai/serving-latency-metrics-and-slo#metrics",
+    "id": "inter-token-latency",
+    "kind": "metric",
+    "domain": "distributed-systems",
+    "label": "Inter-Token Latency (ITL)",
+    "aliases": [
+      "Inter-Token Latency (ITL)",
+      "ITL",
+      "Token 간격 지연"
+    ],
+    "definition": "연속한 토큰 또는 수신 이벤트 사이의 관측 간격입니다. 토큰별 시각과 묶음 응답 시각·토큰 수 정규화의 정의를 명시하며, 원시 이벤트 목록과 요청별 평균 TPOT를 구분합니다.",
+    "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#metrics"
   },
   "time-per-output-token": {
-    id: "time-per-output-token",
-    kind: "metric",
-    domain: "distributed-systems",
-    label: "Time per Output Token (TPOT)",
-    aliases: ["Time per Output Token (TPOT)", "TPOT"],
-    definition:
-      "한 요청의 (E2E − TTFT)/(n−1), 곧 첫 token 이후 간격들의 요청 단위 산술평균으로, 요청당 값 하나이며 ITL 표본의 분산을 숨기는 decode 속도 지표입니다.",
-    canonicalHref: "/cs/ai/serving-latency-metrics-and-slo#metrics",
+    "id": "time-per-output-token",
+    "kind": "metric",
+    "domain": "distributed-systems",
+    "label": "Time per Output Token (TPOT)",
+    "aliases": [
+      "Time per Output Token (TPOT)",
+      "TPOT"
+    ],
+    "definition": "한 요청의 (E2E − TTFT)/(n−1), 곧 첫 token 이후 간격들의 요청 단위 산술평균으로, 요청당 값 하나이며 ITL 표본의 분산을 숨기는 decode 속도 지표입니다.",
+    "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#metrics"
   },
   "end-to-end-request-latency": {
-    id: "end-to-end-request-latency",
-    kind: "metric",
-    domain: "distributed-systems",
-    label: "End-to-end request latency (E2E)",
-    aliases: ["End-to-End Latency", "E2E latency", "E2EL", "Request latency"],
-    definition:
-      "요청 도착부터 마지막 token 수신까지의 시간으로, TTFT + (n−1)·TPOT 로 정확히 분해되며 응답 길이 n 에 비례해 길이 분포가 다른 workload 끼리 직접 비교하지 않는 지표입니다.",
-    canonicalHref: "/cs/ai/serving-latency-metrics-and-slo#metrics",
+    "id": "end-to-end-request-latency",
+    "kind": "metric",
+    "domain": "distributed-systems",
+    "label": "End-to-end request latency (E2E)",
+    "aliases": [
+      "End-to-End Latency",
+      "E2E latency",
+      "E2EL",
+      "Request latency"
+    ],
+    "definition": "요청 도착부터 마지막 token 수신까지의 시간으로, TTFT + (n−1)·TPOT 로 정확히 분해되며 응답 길이 n 에 비례해 길이 분포가 다른 workload 끼리 직접 비교하지 않는 지표입니다.",
+    "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#metrics"
   },
   "serving-throughput-rate": {
-    id: "serving-throughput-rate",
-    kind: "metric",
-    domain: "distributed-systems",
-    label: "Serving throughput · tokens/s · RPS",
-    aliases: ["Tokens per Second", "Output token throughput", "Requests per Second (RPS/QPS)", "RPS", "QPS", "Request throughput"],
-    definition:
-      "측정 시간 T 동안 서버 전체가 낸 output token 총수를 T 로 나눈 tokens/s 와 완료 요청 수를 T 로 나눈 RPS 로, benchmark 한 번에 값 하나이며 요청별 분포가 없는 서버 단위 처리량입니다.",
-    canonicalHref: "/cs/ai/serving-latency-metrics-and-slo#throughput",
+    "id": "serving-throughput-rate",
+    "kind": "metric",
+    "domain": "distributed-systems",
+    "label": "Serving throughput · tokens/s · RPS",
+    "aliases": [
+      "Tokens per Second",
+      "Output token throughput",
+      "Requests per Second (RPS/QPS)",
+      "RPS",
+      "QPS",
+      "Request throughput"
+    ],
+    "definition": "측정 시간 T 동안 서버 전체가 낸 output token 총수를 T 로 나눈 tokens/s 와 완료 요청 수를 T 로 나눈 RPS 로, benchmark 한 번에 값 하나이며 요청별 분포가 없는 서버 단위 처리량입니다.",
+    "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#throughput"
   },
   "latency-throughput-tradeoff": {
-    id: "latency-throughput-tradeoff",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Latency–throughput trade-off",
-    aliases: ["Latency–Throughput Tradeoff", "Latency-throughput tradeoff", "Batch size vs latency"],
-    definition:
-      "Decode batch 를 키우면 한 step 시간 t(B) 가 sublinear 하게 늘어 서버 tokens/s = B/t(B) 는 오르지만 그 t(B) 가 모든 요청의 ITL 이 되고, 처리율에 가까운 도착률에서는 대기가 TTFT 에 더해지는 구조적 상충입니다.",
-    canonicalHref: "/cs/ai/serving-latency-metrics-and-slo#throughput",
+    "id": "latency-throughput-tradeoff",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Latency–throughput trade-off",
+    "aliases": [
+      "Latency–Throughput Tradeoff",
+      "Latency-throughput tradeoff",
+      "Batch size vs latency"
+    ],
+    "definition": "Decode batch 를 키우면 한 step 시간 t(B) 가 sublinear 하게 늘어 서버 tokens/s = B/t(B) 는 오르지만 그 t(B) 가 모든 요청의 ITL 이 되고, 처리율에 가까운 도착률에서는 대기가 TTFT 에 더해지는 구조적 상충입니다.",
+    "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#throughput"
   },
   "latency-percentile-distribution": {
-    id: "latency-percentile-distribution",
-    kind: "metric",
-    domain: "statistics",
-    label: "Latency distribution · percentile · tail",
-    aliases: ["Percentile Latency", "Median Latency (P50)", "P50", "P95 Latency", "P95", "P99 Latency", "P99", "Latency Distribution", "Tail Latency"],
-    definition:
-      "요청 latency 표본을 오름차순으로 정렬해 p % 순위의 값을 읽는 percentile(P50 은 중앙값, P95·P99 는 꼬리 경계)과, 긴 prompt·대기열·preemption 이 만드는 오른쪽 꼬리(tail latency) 를 평균 대신 분포로 읽는 방법입니다.",
-    canonicalHref: "/cs/ai/serving-latency-metrics-and-slo#distribution",
+    "id": "latency-percentile-distribution",
+    "kind": "metric",
+    "domain": "statistics",
+    "label": "Latency distribution · percentile · tail",
+    "aliases": [
+      "Percentile Latency",
+      "Median Latency (P50)",
+      "P50",
+      "P95 Latency",
+      "P95",
+      "P99 Latency",
+      "P99",
+      "Latency Distribution",
+      "Tail Latency"
+    ],
+    "definition": "정렬된 지연 표본에서 정해진 순위 또는 보간 규칙으로 누적 위치를 읽는 분포 요약입니다. Nearest-rank와 선형 보간은 다를 수 있으며 동점·표본 수·실패 및 중도 절단을 함께 보고합니다.",
+    "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#distribution"
   },
   "serving-latency-slo": {
-    id: "serving-latency-slo",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Serving latency SLO · violation budget",
-    aliases: ["Service-Level Objective (SLO)", "SLO", "SLO Violation", "Latency SLO"],
-    definition:
-      "SLI(예: TTFT) 의 percentile 과 임계값, window 길이, 평가 기간, 허용 위반율을 한 문장으로 적은 목표로, window 마다 percentile 을 임계값과 비교해 위반 window 를 세고 그 비율이 허용 위반율(error budget) 을 넘으면 SLO 위반으로 판정하는 계약입니다.",
-    canonicalHref: "/cs/ai/serving-latency-metrics-and-slo#slo",
+    "id": "serving-latency-slo",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Serving latency SLO · violation budget",
+    "aliases": [
+      "Service-Level Objective (SLO)",
+      "SLO",
+      "SLO Violation",
+      "Latency SLO"
+    ],
+    "definition": "지연 측정 지점과 사건·percentile 방식·대상 표본·평가 기간·허용 위반율을 고정한 서비스 목표입니다. 요청별 조건과 구간별 목표를 구분하며 미관측 구간의 처리와 분모를 사전에 정합니다.",
+    "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#slo"
   },
   "prefill-compute-bound-regime": {
     id: "prefill-compute-bound-regime",

@@ -8,40 +8,30 @@ import VizFrame from "@/components/viz/VizFrame";
  */
 const SCENES = ["표본 100개", "P50 = 중앙값", "P95 · P99 꼬리", "SLO 1.5 s 판정"] as const;
 
-/** bin 은 0.2 s 폭. 값은 본문의 예(P50 0.7, P95 1.45, P99 2.4, max 4.0, 평균 0.90)와 맞춘다. */
-const BINS: readonly { from: number; count: number }[] = [
-  { from: 0.2, count: 4 },
-  { from: 0.4, count: 21 },
-  { from: 0.6, count: 27 },
-  { from: 0.8, count: 18 },
-  { from: 1.0, count: 12 },
-  { from: 1.2, count: 7 },
-  { from: 1.4, count: 6 },
-  { from: 1.6, count: 1 },
-  { from: 1.8, count: 1 },
-  { from: 2.0, count: 0 },
-  { from: 2.2, count: 1 },
-  { from: 2.4, count: 1 },
-  { from: 2.6, count: 0 },
-  { from: 2.8, count: 0 },
-  { from: 3.0, count: 0 },
-  { from: 3.2, count: 0 },
-  { from: 3.4, count: 0 },
-  { from: 3.6, count: 0 },
-  { from: 3.8, count: 1 },
-];
+// 같은 명시적 표본에서 histogram·순위·평균을 모두 계산합니다. (가정)
+const SAMPLE_GROUPS = [
+  [0.3, 4], [0.5, 21], [0.7, 27], [0.9, 18], [1.0, 1], [1.1, 11],
+  [1.3, 7], [1.45, 6], [1.7, 1], [1.9, 1], [2.3, 1], [2.4, 1], [4.0, 1],
+] as const;
+const SAMPLES = SAMPLE_GROUPS.flatMap(([value, count]) => Array<number>(count).fill(value));
+const BINS = Array.from({length: 20}, (_, index) => ({
+  from: 0.2 + index * 0.2,
+  count: SAMPLES.filter(value => Math.min(19, Math.floor((value - 0.2 + 1e-9) / 0.2)) === index).length,
+}));
+const MEAN = SAMPLES.reduce((sum, value) => sum + value, 0) / SAMPLES.length;
+const nearestRank = (percent: number) => SAMPLES[Math.ceil(percent * SAMPLES.length / 100) - 1];
 
 const BIN_WIDTH = 0.2;
 const MAX_COUNT = 27;
-const P50 = 0.7;
-const P95 = 1.45;
-const P99 = 2.4;
+const P50 = nearestRank(50);
+const P95 = nearestRank(95);
+const P99 = nearestRank(99);
 const SLO = 1.5;
 
 const NOTES = [
   "가로축은 TTFT(s), 세로축은 그 구간에 든 요청 수입니다. 대부분은 0.4–1.0 s 에 몰려 있고 오른쪽으로 드문 표본이 4.0 s 까지 늘어져 있습니다.",
-  "정렬 순위 50 번째 값이 0.7 s 입니다. 평균 0.90 s 는 오른쪽 꼬리에 끌려 중앙값보다 큽니다. 요청의 절반은 0.7 s 안에 첫 token 을 받았습니다.",
-  "95 번째 값 1.45 s, 99 번째 값 2.4 s 입니다. 두 선 사이의 3 개 요청과 그 오른쪽 1 개가 tail latency 이며, 긴 prompt·대기열·preemption 이 그 원인입니다.",
+  "정렬 순위 50 번째 값이 0.7 s 입니다. 평균 0.90 s 는 오른쪽 꼬리에 끌려 중앙값보다 큽니다. 52개 요청은 0.7초 이하에서 첫 token을 받았습니다.",
+  "95 번째 값 1.45 s, 99 번째 값 2.4 s 입니다. 95번째 뒤에는 5개가 남습니다. 96~98번째 3개, 99번째 경계 1개, 그보다 느린 1개입니다. 느린 원인은 별도 요청 기록으로 확인합니다.",
   "SLO 가 P95 TTFT ≤ 1.5 s 이면 P95 1.45 s 로 이 window 는 통과입니다. 1.5 s 를 넘긴 요청은 5 개(5 %)라 요청 비율 표기(95 % 이상)로도 경계에서 통과입니다.",
 ] as const;
 
@@ -64,7 +54,7 @@ function binState(from: number, active: number): string {
 export default function LatencyPercentileHistogramViz() {
   const scenes = useAnimatedScenes(SCENES.length, 3000);
   const active = scenes.active;
-  const axisMax = 4.0;
+  const axisMax = 4.2;
   const ratio = (x: number) => (x - 0.2) / (axisMax - 0.2);
   const pct = (x: number) => `${ratio(x) * 100}%`;
   // 축 양 끝의 label 은 canvas 밖으로 밀리지 않도록 가운데 정렬 대신 끝 정렬로 바꿉니다.
@@ -83,8 +73,8 @@ export default function LatencyPercentileHistogramViz() {
     <VizFrame
       eyebrow="Latency distribution"
       title="Percentile 은 같은 표본을 정렬 순위로 자른 값입니다"
-      description="요청 100개의 TTFT 표본을 0.2 s 폭 histogram 으로 놓았습니다. 장면이 바뀌어도 표본은 같고, 어느 순위에서 자르는지만 달라집니다."
-      note="Nearest-rank 정의입니다. NumPy·vLLM 의 선형 보간은 표본이 적을 때 값이 조금 다를 수 있습니다. 표본과 bin 은 설명용 예시입니다."
+      description="요청 100개의 TTFT 표본을 0.2 s 폭 histogram 으로 놓았습니다. 장면이 바뀌어도 표본은 같고 어느 순위에서 자르는지만 달라집니다."
+      note="Nearest-rank 정의입니다. NumPy 기본 선형 보간의 P95는 1.4625초입니다. 각 표본과 개수를 고정한 설명용 가정이며 운영 측정값이 아닙니다."
     >
       <div
         data-viz-canvas
@@ -144,7 +134,7 @@ export default function LatencyPercentileHistogramViz() {
           <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-xs sm:grid-cols-4">
             <div>
               <dt className="text-muted-foreground">평균</dt>
-              <dd className="font-bold text-foreground">0.90 s</dd>
+              <dd className="font-bold text-foreground">{MEAN.toFixed(2)} s</dd>
             </div>
             <div>
               <dt className="text-muted-foreground">P50</dt>

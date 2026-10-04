@@ -62,21 +62,67 @@ export const vllmServingArticles: Article[] = [
     title: "TTFT·TPOT·ITL 은 분포로 읽고 SLO 는 percentile 로 계약합니다",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "problem", title: "평균 latency 한 줄로는 부족한 이유" },
-      { id: "metrics", title: "TTFT·ITL·TPOT·E2E 정의와 분해식" },
-      { id: "throughput", title: "tokens/s·RPS 와 latency–throughput 상충" },
-      { id: "distribution", title: "Percentile 과 tail latency 로 읽기" },
-      { id: "slo", title: "SLO 문장과 violation budget 판정" },
-      {
-        id: "sources",
-        title: "근거 문서",
-        subsections: [
-          { id: "paper-vllm-bench", title: "vLLM serving benchmark 계산식" },
-          { id: "paper-genai-perf", title: "GenAI-Perf 지표 정의" },
-          { id: "paper-sre-slo", title: "SRE Book 의 SLO 장" },
-        ],
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 첫 응답의 기다림과 도중의 멈춤을 따로 봅니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 시각을 남기고 간격을 계산한 뒤 약속과 비교합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 다섯 조각이 도착한 기록부터 계산합니다"
+  },
+  {
+    "id": "inside-measurement",
+    "title": "4. 시계와 응답 개수와 집계 범위가 모두 필요합니다"
+  },
+  {
+    "id": "why-observations",
+    "title": "5. 같은 평균이라도 멈춘 순간은 다를 수 있습니다"
+  },
+  {
+    "id": "latency-terms",
+    "title": "6. 첫 도착과 각 간격과 마지막 도착에 이름을 붙입니다"
+  },
+  {
+    "id": "metrics",
+    "title": "7. 1초와 327ms를 더하고 네 간격으로 나눕니다"
+  },
+  {
+    "id": "throughput",
+    "title": "8. 서버 전체의 400토큰과 한 사람의 간격을 구분합니다"
+  },
+  {
+    "id": "distribution",
+    "title": "9. 같은 100개를 순서대로 놓으면 느린 쪽이 보입니다"
+  },
+  {
+    "id": "source-client-events",
+    "title": "10. 실제 수신 코드는 토큰 대신 이벤트를 관측합니다"
+  },
+  {
+    "id": "paper-vllm-bench",
+    "title": "11. 같은 기록을 실제 평균과 처리량 코드에 넣습니다"
+  },
+  {
+    "id": "slo",
+    "title": "12. 하루 288구간에서 세 번째 실패는 허용범위를 넘습니다"
+  },
+  {
+    "id": "slo-procedure",
+    "title": "13. 관측이 빠진 구간을 통과한 구간으로 세지 않습니다"
+  },
+  {
+    "id": "boundary",
+    "title": "14. 지표 하나가 원인이나 용량을 자동으로 결정하지는 않습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "15. 표본과 분모를 바꿨을 때 결과를 예상해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/serving-latency-metrics-and-slo"),
   },
   {
@@ -212,20 +258,75 @@ export const vllmServingArticles: Article[] = [
     title: "Scheduling step 해부: running 먼저, 남은 token budget 은 prefill chunk 로",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "step-unit", title: "한 step 의 입력·출력과 sequence 단위" },
-      { id: "token-budget", title: "Token budget 과 sequence budget 의 소모 순서" },
-      { id: "step-procedure", title: "schedule() 절차: 순회·preempt·admission·chunk" },
-      { id: "batch-shape", title: "Decode·prefill·mixed batch 의 모양과 비용" },
-      {
-        id: "evidence",
-        title: "Orca·Sarathi-Serve·vLLM V1 소스",
-        subsections: [
-          { id: "paper-orca-iteration", title: "Orca 의 iteration-level scheduling" },
-          { id: "paper-sarathi-serve", title: "Sarathi-Serve 의 stall-free schedule" },
-          { id: "source-vllm-v1-scheduler", title: "vLLM V1 schedule() 소스" },
-        ],
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 답변을 이어 쓰면서 새 질문도 받아야 합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 남은 일을 보고 나눠 넣은 뒤 결과를 받습니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 여덟 자리 중 두 자리를 쓰면 여섯 자리가 남습니다"
+  },
+  {
+    "id": "inside-step",
+    "title": "4. 요청의 위치와 남은 용량을 함께 적습니다"
+  },
+  {
+    "id": "why-two-limits",
+    "title": "5. 토큰이 남아도 새 요청의 자리가 없을 수 있습니다"
+  },
+  {
+    "id": "step-unit",
+    "title": "6. 한 번의 배정을 scheduling step이라고 부릅니다"
+  },
+  {
+    "id": "token-budget",
+    "title": "7. 같은 잔액에서 A와 B를 빼고 C에 배정합니다"
+  },
+  {
+    "id": "batch-shape",
+    "title": "8. 둘째 실행에는 C를 마치고 D를 받습니다"
+  },
+  {
+    "id": "source-running",
+    "title": "9. 진행 목록을 먼저 돈다는 말의 범위를 확인합니다"
+  },
+  {
+    "id": "source-admission",
+    "title": "10. 새 요청은 저장 공간을 받은 뒤에 들어옵니다"
+  },
+  {
+    "id": "source-output",
+    "title": "11. 배정한 입력 위치 수를 실행 기록에 담습니다"
+  },
+  {
+    "id": "progress-and-result",
+    "title": "12. 계산된 위치라는 필드도 갱신 시점을 읽어야 합니다"
+  },
+  {
+    "id": "sequence-accounting",
+    "title": "13. 응답 세 개를 요구하면 생성 경로도 세 개입니다"
+  },
+  {
+    "id": "paper-orca-iteration",
+    "title": "14. Orca는 실행 한 번마다 요청을 다시 고릅니다"
+  },
+  {
+    "id": "paper-sarathi-serve",
+    "title": "15. Sarathi는 남은 예산에 입력 조각을 넣습니다"
+  },
+  {
+    "id": "boundary",
+    "title": "16. 토큰 수가 같아도 단계와 시간은 다릅니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "17. 다음 배정을 먼저 예상해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/continuous-batching-step-anatomy"),
   },
   {

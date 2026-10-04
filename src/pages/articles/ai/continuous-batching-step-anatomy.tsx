@@ -1,104 +1,32 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ProgressiveDetail from "@/components/articles/progressive-detail";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./continuous-batching-step-anatomy/codeRefs";
+import { schedulerSourceTree } from "./continuous-batching-step-anatomy/fileTree";
 import ContinuousBatchingStepAnatomyViz from "./continuous-batching-step-anatomy/viz/ContinuousBatchingStepAnatomyViz";
 
-/**
- * Scheduling step 해부: running 먼저, 남은 token budget 은 prefill chunk 로
- *
- * 한 번의 scheduling step 안에서 무엇이 어떤 순서로 결정되는지를 소유한다.
- * Queue 정책·fairness·preemption 비용은 /ai/vllm-scheduler, prefill·decode 의
- * compute·memory 특성은 /ai/prefill-decode-phase-dynamics 가 소유한다.
- */
-export default function ContinuousBatchingStepAnatomyArticle() {
-  return (
-    <div id="overview" className="space-y-16">
-      <section id="step-unit" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          한 step 은 이번 forward 에 넣을 request 와 token 수를 정합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            Continuous batching 의 scheduler 는 request 를 통째로 줄 세우지 않습니다.
-            매 forward 직전에 한 번 도는 scheduling step 이 이번 forward 에 어떤 request 를
-            몇 token 씩 넣을지 결정하고, 그 답이 <code>SchedulerOutput</code> 하나로 worker 에
-            넘어갑니다. 이 글은 그 한 step 의 안쪽을 결정이 내려지는 순서대로 엽니다.
-          </p>
-          <p>
-            Step 의 입력은 세 가지입니다. 이미 KV block 을 쥐고 진행 중인 request 의 집합인
-            running set, 아직 자리를 받지 못한 request 가 도착 순서로 기다리는 waiting queue,
-            그리고 이번 step 이 쓸 수 있는 token budget 과 비어 있는 KV block 수입니다.
-            vLLM V1 은 앞의 둘을 <code>self.running</code> 과 <code>self.waiting</code> 으로 들고 있습니다.
-          </p>
-          <p>
-            Scheduler 가 세는 단위는 sequence 입니다. V0 의 SequenceGroup 은 한 prompt 를
-            공유하는 여러 sequence(n&gt;1 sampling, beam search)를 한 request 로 묶어 함께
-            scheduling 했고, <code>max_num_seqs</code> 는 group 수가 아니라 sequence 수를 셌습니다.
-          </p>
-          <p>
-            V1 은 n&gt;1 요청을 engine 앞단에서 child request 로 나눠 request 하나가
-            sequence 하나가 되게 했습니다.
-          </p>
-          <p>
-            Step 의 출력은 request 마다 이번에 계산할 token 수를 적은
-            <code>num_scheduled_tokens</code> 와 새로 배정한 KV block 목록입니다. 그 안에
-            prefill·decode 표시는 없습니다. 각 request 는 <code>num_computed_tokens</code> 만
-            갖고, 이번에 몇 token 을 더 계산하느냐가 곧 그 request 의 phase 를 말해 줍니다.
-            이 성질이 다음 절의 token budget 배분을 가능하게 합니다.
-          </p>
-          <p>
-            Prefill 은 prompt 여러 token 을 한 번에 읽는 compute-bound 작업이고 decode 는
-            token 하나를 위해 KV cache 전체를 읽는 memory-bound 작업입니다. 두 phase 의
-            compute·memory 특성은 <Link to="/cs/ai/prefill-decode-phase-dynamics">Prefill·decode phase dynamics</Link> 가,
-            queue 정책과 fairness·preemption 은 <Link to="/cs/ai/vllm-scheduler">vLLM Scheduler</Link> 가 다룹니다.
-          </p>
-        </div>
-        <ContinuousBatchingStepAnatomyViz />
-        <ContentBoundary article="continuous-batching-step-anatomy" />
-      </section>
+export default function Article() {
+  const sidebar = useCodeSidebar();
+  return <><div className="space-y-16">
+<section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 답변을 이어 쓰면서 새 질문도 받아야 합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>두 사람이 답변을 받고 있을 때 긴 질문 하나가 새로 왔다고 합시다. 기존 답변이 모두 끝날 때까지 새 질문을 기다리게 하면 계산 장치의 여유를 쓰기 어렵습니다. 반대로 새 질문을 한 번에 전부 읽으면 이미 답을 받던 사람의 다음 글자가 늦어질 수 있습니다.</p><p>그래서 계산을 한 번 실행할 때마다 누구의 어느 부분을 넣을지 다시 고릅니다. 이 글은 그 선택 한 번을 열어 토큰 수와 요청 자리, 저장 공간이 어떻게 함께 제한하는지 살펴봅니다.</p></div></section>
 
-      <section id="token-budget" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Token budget 은 running 이 먼저 쓰고 남은 만큼만 waiting 이 받습니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            한 step 의 token budget 은 <code>max_num_batched_tokens</code> 하나입니다.
-            Running set 을 먼저 순회하며 각 request 가 필요한 token 을 budget 에서 빼고,
-            남은 budget 이 있을 때만 waiting queue 에서 새 request 를 받습니다. 공식 문서가
-            decode 를 우선한다고 적은 것은 이 순서의 결과이지 별도의 규칙이 아닙니다.
-          </p>
-          <p>
-            이 배분이 성립하는 이유는 scheduler 가 request 가 아니라 token 을 배정하기
-            때문입니다. Running 의 decode request 는 need 가 1 이고, prefill 이 덜 끝난
-            request 는 need 가 남은 prompt 길이입니다. 둘 다 <code>min(need, 남은 budget)</code>
-            만큼 받으니 같은 식으로 처리되고, prefill 은 budget 에 맞춰 저절로 잘립니다.
-            이것이 token-level scheduling 입니다.
-          </p>
-          <p>
-            Token budget 옆에 sequence budget 이 하나 더 있습니다. <code>max_num_seqs</code> 는
-            running set 크기의 상한이며, token 이 남아 있어도 running 이 이 값에 닿으면
-            waiting admission 은 멈춥니다. 두 budget 은 서로를 대신하지 못합니다. Token 은
-            남고 sequence 가 꽉 찬 상태는 짧은 decode 가 많을 때, 그 반대는 긴 prompt 가
-            들어올 때 흔합니다.
-          </p>
-          <p>
-            Budget 2048, running 에 decode 40개, waiting 에 3000-token prompt 하나가 있다고
-            합시다. Running 순회가 40 token 을 쓰고 2008 이 남습니다. Waiting 의 prompt 는
-            need 가 3000 이지만 <code>min(3000, 2008) = 2008</code> 만 받고 running 으로
-            올라갑니다.
-          </p>
-          <p>
-            다음 step 에서는 running 순회 안에서 decode 40 뒤에 남은 992 를 받고 그 다음 step 부터는 decode 1 token 이 됩니다.
-          </p>
-        </div>
-        <ExplainedFormula
+<section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 남은 일을 보고 나눠 넣은 뒤 결과를 받습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>선택 담당자는 진행 중인 요청과 새로 기다리는 요청을 읽습니다. 한 번에 계산할 수 있는 양 안에서 각 요청의 몫을 정하고 저장할 공간도 확인합니다. 실행 담당자는 이 배정대로 계산한 뒤 새 결과를 돌려줍니다.</p><p>다음 선택에서는 바뀐 진행 기록과 새로 도착한 요청을 함께 봅니다. 같은 사람들이 처음부터 끝까지 한 묶음에 머물 필요가 없습니다. 이제 작은 숫자로 한 번의 배정을 만들어 보겠습니다.</p></div></section>
+
+<section id="small-case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 여덟 자리 중 두 자리를 쓰면 여섯 자리가 남습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>한 번에 계산할 수 있는 양을 8토큰으로 둡니다. A와 B는 답변을 계속 쓰고 있어 이번에 각각 1토큰씩 계산해야 합니다. 새 요청 C는 입력 10토큰을 아직 읽지 않았습니다. 토큰은 모델이 처리하는 글 조각의 단위입니다. (가정)</p><p>먼저 A와 B에게 하나씩 주면 6토큰을 더 계산할 수 있습니다. C에게 그 6토큰을 주고 나머지 4토큰은 다음에 읽습니다. 이번 배정 합은 8이지만 새 답변 토큰이 8개 나오는 것은 아닙니다. C는 아직 입력을 다 읽지 않았습니다. (가정)</p><p>진행 가능한 요청은 최대 4개이며 저장 공간은 충분하다고 둡니다. A와 B가 먼저 선택되고 세 번의 실행 동안 끝나지 않는 조건입니다. 이런 가정을 고정해야 다음 실행의 변화를 같은 사례로 추적할 수 있습니다. (가정)</p></div></section>
+
+<section id="inside-step" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 요청의 위치와 남은 용량을 함께 적습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>진행 목록에는 이미 선택된 A와 B가 있고 대기 목록에는 C가 있습니다. 요청별 기록은 입력 길이와 어디까지 계산했는지를 구분합니다. C는 처음에 0/10이고 첫 배정에는 6토큰을 넣습니다.</p><p>배정 결과에는 요청 식별자와 이번 계산량, 저장할 공간의 위치가 필요합니다. 실행 담당자가 그 목록을 받으면 A와 B의 다음 위치를 계산하고 C의 앞부분을 읽을 수 있습니다. 결과가 나온 뒤 다음 선택에 쓸 상태도 맞춰야 합니다.</p><p>목록과 기록이 무엇을 맡는지 보였습니다. 다음에는 왜 계산량 하나만 제한해서는 부족한지 확인합니다.</p></div></section>
+
+<section id="why-two-limits" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 토큰이 남아도 새 요청의 자리가 없을 수 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>진행 요청 상한을 4에서 2로 낮춰 보겠습니다. A와 B가 두 자리를 모두 쓰므로 계산량이 6토큰 남아도 C를 추가할 수 없습니다. 요청 한 개가 차지하는 자리와 그 요청이 이번에 계산하는 토큰 수는 서로 다른 양입니다. (가정)</p><p>자리도 있고 토큰도 남았는데 결과를 저장할 공간이 없을 수도 있습니다. 이때 C를 받았다고 기록하면 실행 담당자가 쓸 주소가 없습니다. 세 조건을 함께 확인한 뒤 성공한 배정만 남겨야 합니다.</p><p>이 차이를 알면 사용률이 낮아 보인다는 이유만으로 요청을 더 받을 수 없다는 점이 보입니다. 이제 각 역할에 쓰는 이름을 붙입니다.</p></div></section>
+
+<section id="step-unit" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 한 번의 배정을 scheduling step이라고 부릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>이번 실행에 넣을 요청과 계산량을 정하는 결정 단위가 scheduling step입니다. 이미 진행 중인 목록을 running set, 아직 수용을 기다리는 목록을 waiting queue라고 합니다. 실제 GPU 계산과 배정 결정은 다른 단계입니다.</p><p>아래 대응표는 앞에서 본 역할에 이름을 붙입니다. 목록의 이름을 안 뒤에는 A와 B가 쓴 2토큰이 C의 몫을 어떻게 정하는지 계산할 수 있습니다.</p></div><TermBreakdown title="역할을 이해한 뒤 이름을 붙입니다" items={[{"term": "Token-level scheduling", "description": "요청 전체를 넣을지뿐 아니라 요청별로 이번에 계산할 토큰 수를 정하는 방식입니다.", "boundary": "같은 토큰 수가 같은 실행 시간을 뜻하지 않습니다."}, {"term": "Step token budget", "description": "한 번의 실행에 배정할 토큰 수의 상한입니다. 이 사례는 8입니다.", "boundary": "요청 개수의 상한이나 저장 공간의 상한을 대신하지 않습니다."}, {"term": "Sequence budget", "description": "진행 가능한 생성 경로 수의 상한입니다. 기본 사례는 4개의 자리를 둡니다.", "boundary": "한 사용자 요청이 여러 응답을 요구하면 여러 생성 경로가 필요합니다."}, {"term": "Continuous request admission", "description": "매번 조건을 다시 확인해 새 대기 요청을 진행 목록에 넣는 절차입니다.", "boundary": "새 요청마다 즉시 수용한다는 뜻은 아닙니다."}, {"term": "Dynamic batch composition", "description": "실행마다 요청과 입력·출력 계산의 조합이 달라지는 성질입니다. 아래에서는 합계가 8, 8, 4로 바뀝니다.", "boundary": "구성이 달라진다고 매번 더 빨라지는 것은 아닙니다."}, {"term": "Chunked prefill", "description": "입력을 한 번에 다 읽지 않고 여러 계산 조각으로 나누는 방식입니다. C는 6과 4로 나뉩니다.", "boundary": "조각의 크기는 토큰 잔액 외에도 별도의 상한과 저장 조건에 제한될 수 있습니다."}]} /></section>
+
+<section id="token-budget" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 같은 잔액에서 A와 B를 빼고 C에 배정합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>이 사례의 max_num_batched_tokens는 8입니다. Running 순서가 A 다음 B이고 두 요청의 남은 계산량이 각각 1이면 잔액은 8→7→6이 됩니다. C의 입력은 10토큰 남았으므로 min(10,6)=6을 배정합니다. (가정)</p><p>요청별 입력 조각 상한인 long_prefill_token_threshold를 4로 바꾸면 C는 min(10,6,4)=4를 받고 잔액 2가 남습니다. 다른 요청도 자리와 저장 조건을 통과해야 그 잔액을 쓸 수 있습니다. 0은 이 별도 상한을 적용하지 않는 설정입니다. (가정)</p><p>아래 식은 다른 제약을 통과했고 별도 조각 상한이 없는 경우의 계산입니다. 메모리 배정이 실패한 요청의 토큰을 성공한 것처럼 빼서는 안 됩니다.</p></div><ExplainedFormula
           question="한 step 의 token budget 은 running 과 waiting 에 어떤 순서로 나뉘나요?"
-          idea="Budget 은 하나의 잔액입니다. Running 순회가 request 마다 need 와 잔액 중 작은 쪽을 가져가고, 그 뒤 잔액이 남아 있고 sequence 자리가 있을 때만 waiting 의 prompt 가 잔액 크기의 chunk 를 받습니다."
+          idea="Budget은 하나의 잔액입니다. Running 순회가 request마다 need와 잔액 중 작은 쪽을 가져갑니다. 그 뒤 잔액과 sequence 자리가 남아 있을 때만 waiting의 prompt가 잔액 크기의 chunk를 받습니다."
           formula={String.raw`\begin{aligned}
 B_0 &= B_{tok} \\
 n_r &= \min\!\left(\mathrm{need}_r,\; B_{k}\right),\qquad B_{k+1}=B_k-n_r \quad (r\in\mathcal R\ \text{순서대로}) \\
@@ -121,192 +49,28 @@ n_w &= \underbrace{\min\!\left(P_w - c_w,\; B_{\mathrm{rem}}\right)}_{\text{남�
             { symbol: String.raw`P_w - c_w`, name: "Waiting prompt 의 미계산 길이", description: "Prompt 길이에서 prefix cache 로 이미 채운 token 을 뺀 값입니다." },
             { symbol: String.raw`S_{max}`, name: "Sequence budget", description: "Running set 크기의 상한인 max_num_seqs 입니다." },
           ]}
-          assumptions={["long_prefill_token_threshold 가 0(기본) 이어서 chunk 상한이 잔액뿐인 경우입니다. 값을 두면 min 에 그 항이 하나 더 들어갑니다.", "KV block 배정이 성공한 request 만 n 을 실제로 받습니다. 실패하면 running 은 preemption, waiting 은 admission 중단으로 갑니다.", "Speculative decoding 의 draft token 과 encoder budget 은 need 와 잔액 계산에 추가 항을 더합니다."]}
-          interpretation="Running 이 먼저 잔액을 쓰기 때문에 decode 는 budget 이 0 이 아닌 한 멈추지 않고, waiting prompt 는 남은 잔액 크기로 잘려 여러 step 에 걸쳐 들어옵니다. 잔액이 크면 TTFT 가 짧아지고 그 step 의 decode 지연은 길어집니다."
-        />
-      </section>
+          assumptions={["이 사례는 long_prefill_token_threshold를 0으로 설정해 별도 chunk 상한이 없습니다. 상한을 두면 min에 그 항이 하나 더 들어갑니다.", "저장 공간 배정이 성공하고 모델 길이 등 다른 조건도 통과한 요청만 n을 받습니다. 대기 요청은 저장 공간 배정이 실패하면 순회를 멈춥니다.", "동기식 실행이며 예상 토큰·영상 입력·재사용 입력·중간 입력 대기·요청 미루기가 없는 단순 사례입니다. 실제 경로에는 추가 조건이 있습니다."]}
+          interpretation="A와 B가 1씩 받아 잔액은 6이고 C는 min(10,6)=6을 받습니다. Running 순회가 모든 decode 요청의 우선 실행을 보장하지는 않습니다. 토큰 수만으로 실행 시간도 확정할 수 없습니다."
+        /></section>
 
-      <section id="step-procedure" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Running 순회, preempt, admission, chunk 분할이 step 의 순서입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            <code>schedule()</code> 은 running 순회, preempt 판단, waiting admission, batch
-            조립의 네 구간을 이 순서로 지납니다. 순서가 결과를 바꿉니다. Running 을 먼저
-            보기 때문에 decode 가 멈추지 않고, preemption 이 한 번이라도 일어난 step 에는
-            waiting admission 을 통째로 건너뛰기 때문에 memory 가 모자란 순간 새 request 가
-            밀려 들어오지 않습니다.
-          </p>
-          <p>
-            Waiting admission 은 매 step 반복됩니다. Static batching 이 batch 가 끝나야 다음
-            묶음을 받는 것과 달리, 어느 step 이든 running 에 빈 sequence 자리와 남은 token
-            budget, 첫 chunk 를 담을 KV block 이 있으면 waiting 맨 앞의 request 가 그 자리에서
-            running 으로 올라갑니다. 이것이 continuous request admission 입니다.
-          </p>
-          <p>
-            Chunk 크기는 정해진 상수가 아니라 그 step 에 남은 budget 입니다. V1 은 need 를
-            <code>token_budget</code> 과 비교해 작은 쪽을 택하고,
-            <code>long_prefill_token_threshold</code> 가 0 보다 크면 그 값으로 한 번 더
-            자릅니다. 기본값 0 은 상한을 두지 않는다는 뜻이라, 긴 prompt 하나가 그 step 의
-            남은 budget 을 전부 가져갈 수 있습니다.
-          </p>
-          <p>
-            KV block 이 모자랄 때의 처리는 두 구간이 다릅니다. Running request 의
-            <code>allocate_slots</code> 가 실패하면 running 의 끝(FCFS) 또는 priority 가 가장
-            낮은 request 를 골라 block 을 되찾고 다시 시도합니다.
-          </p>
-          <p>
-            Waiting request 가 실패하면
-            그 자리에서 admission 순회를 끊고 다음 step 을 기다립니다. 되찾은 request 를
-            다시 계산하는 비용은 <Link to="/cs/ai/vllm-scheduler#preemption">KV pressure 와 recomputation</Link> 에 있습니다.
-          </p>
-        </div>
-        <AlgorithmBlock
-          title="vLLM V1 schedule() 의 한 step"
-          input={["running: 진행 중 request 목록(도착 순)", "waiting: 대기 request queue", "token_budget = max_num_batched_tokens", "max_num_seqs, long_prefill_token_threshold", "kv_cache_manager 의 free block 수"]}
-          steps={[
-            { code: "for r in running:  need = r.num_tokens_with_spec − r.num_computed_tokens", note: "Decode 는 1, chunk 가 남은 prefill 은 남은 prompt 길이가 need 입니다." },
-            { code: "  n = min(need, token_budget, long_prefill_token_threshold or ∞)", note: "잔액과 chunk 상한으로 자릅니다. n 이 0 이면 이 request 를 건너뜁니다." },
-            { code: "  while allocate_slots(r, n) fails:  preempt(running.pop() or lowest priority)", note: "KV block 이 없으면 running 의 뒤쪽 request 를 내보내 block 을 회수하고 다시 시도합니다." },
-            { code: "  scheduled[r] = n;  token_budget −= n", note: "성공한 request 만 잔액을 줄입니다." },
-            { code: "if no preemption:  while waiting and token_budget > 0 and len(running) < max_num_seqs:", note: "Preemption 이 있었던 step 은 admission 을 건너뜁니다. Sequence budget 도 여기서 검사합니다." },
-            { code: "  w = waiting.peek();  n = min(w.num_tokens − computed_by_prefix_cache, token_budget, threshold)", note: "Waiting prompt 의 chunk 크기는 running 이 남긴 잔액입니다." },
-            { code: "  if allocate_slots(w, n) fails: break;  waiting.pop(); running.append(w); scheduled[w] = n", note: "Waiting 의 실패는 preempt 가 아니라 순회 중단입니다. 성공하면 상태가 RUNNING 이 됩니다." },
-            { code: "return SchedulerOutput(scheduled_new/cached_reqs, num_scheduled_tokens, new_blocks, finished_req_ids)", note: "Worker 는 이 목록만 보고 한 forward 를 돌립니다." },
-            { code: "update_from_output: r.num_computed_tokens += n;  stop 검사;  완료 request 의 block 반환", note: "Forward 결과로 counter 와 완료 상태를 갱신해야 다음 step 이 같은 token 을 다시 넣지 않습니다." },
-          ]}
-          repeatUntil="Engine 이 멈출 때까지 forward 마다 한 번씩 반복합니다."
-          output="이번 forward 의 request 별 token 수와 KV block 배정, 갱신된 running·waiting 집합"
-        />
-      </section>
+<section id="batch-shape" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 둘째 실행에는 C를 마치고 D를 받습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>둘째 실행 전에 입력 2토큰인 D가 도착했다고 합시다. A와 B에게 1씩, C의 남은 입력에 4를 배정하면 잔액은 2입니다. D가 그 2를 받아 합이 다시 8이 됩니다. C와 D는 이 실행에서 입력을 끝내고 첫 답변 토큰을 만듭니다. (가정)</p><p>셋째 실행에는 네 요청이 답변을 이어 쓰므로 각각 1토큰씩 계산해 합은 4입니다. 입력을 읽는 구간을 prefill, 이전 결과에 이어 다음 토큰을 만드는 구간을 decode라고 합니다. 둘을 같은 실행에 넣은 묶음은 mixed batch입니다.</p><p>첫 두 실행은 같은 8토큰이라도 C와 D의 위치가 다릅니다. 셋째는 4토큰으로 줄어듭니다. 이런 변화가 dynamic batch composition이며 매번 결과를 보고 다음 구성을 다시 고르기 때문에 생깁니다.</p><p>기존의 큰 사례도 같은 계산입니다. 한도 2048에 decode 요청 40개와 입력 3000토큰인 C만 있으면 배정 합은 2048→1032→41입니다. 첫 입력 조각은 2008이고 다음은 992입니다. 여기에는 새 D가 도착하지 않는다고 둡니다. (가정)</p><p>입력 조각을 더하면 계산 장치의 여유를 쓸 수 있지만 모든 구성에서 처리량이나 지연이 좋아지는 것은 아닙니다. 요청 길이와 장비에서 실행 시간을 재야 합니다. 이제 이 숫자를 실제 배정 코드에 넣어 보겠습니다.</p></div><ContinuousBatchingStepAnatomyViz /></section>
 
-      <section id="batch-shape" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Mixed batch 는 GPU 를 채우고 decode 지연은 chunk 크기가 정합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            한 step 의 결과물이 batch 의 모양을 정합니다. Running 에 decode 만 있으면 decode
-            batch, waiting 에서 갓 올라온 prefill 만 있으면 prefill batch, 둘이 같은 step 에
-            들어가면 mixed batch 입니다. Chunked prefill 이 기본인 V1 에서는 request 가
-            이어지는 한 대부분의 step 이 mixed batch 입니다.
-          </p>
-          <p>
-            Batch 의 모양이 step 마다 달라지는 것이 dynamic batch composition 입니다. 앞의
-            예에서 step 1 은 decode 40 + prefill 2008, step 2 는 decode 40 + prefill 992,
-            step 3 은 decode 41 이라 세 step 의 token 수가 2048, 1032, 41 로 흔들립니다.
-          </p>
-          <p>
-            Batch 크기가 고정이라는 가정을 둔 kernel 이나
-            <Link to="/cs/ai/cuda-graph-capture#implementation">CUDA graph</Link> 는 이 흔들림을
-            따로 받아 내야 합니다.
-          </p>
-          <p>
-            Mixed batch 를 만드는 이유는 GPU 를 비우지 않기 위해서입니다. Decode 41 token 만 있는 step 은 weight 를 한 번 읽어 41 token 만
-            계산하니 memory-bound 로 남고 거기에 prefill chunk 를 얹으면 같은 weight 읽기에 수천 token 의 연산이 붙습니다. Sarathi-Serve 는
-            이렇게 채운 batch 로 decode 를 멈추지 않으면서 처리량을 올렸다고 보고했습니다.
-          </p>
-          <p>
-            비용은 그 step 의 decode 지연입니다. 한 forward 는 batch 안에서 가장 무거운 작업이
-            끝나야 돌아오므로, decode 40개는 prefill 2008 token 의 계산 시간을 그대로
-            기다립니다.
-          </p>
-          <p>
-            Decode-only step 이 수 ms 라면 mixed step 은 chunk 크기에 비례해 길어지고 그 차이가 ITL 의 꼬리로 나타납니다. Budget 을 줄이면
-            chunk 가 작아져 ITL 은 안정되지만 prompt 완료가 늦어져 TTFT 가 밀립니다.
-          </p>
-        </div>
-        <TermBreakdown
-          title="한 step 이 만들 수 있는 batch 의 세 모양"
-          description="세 모양은 서로 다른 scheduler 가 아니라 같은 step 절차가 running·waiting 상태에 따라 낸 결과입니다."
-          items={[
-            { term: "Decode batch", description: "Running 의 모든 request 가 need 1 이고 waiting 이 비어 있을 때. Token 수는 running 크기와 같습니다.", example: "Decode 41개 → 41 token, step 시간은 weight 읽기가 정합니다.", boundary: "GPU 연산 단위가 작아 memory-bound 로 남습니다." },
-            { term: "Prefill batch", description: "Running 이 비었고 waiting 의 prompt 가 잔액 전부를 받을 때. 서비스 시작 직후나 burst 첫 step 에 나타납니다.", example: "3000-token prompt 가 budget 2048 을 혼자 채우고 다음 step 에 992 를 받습니다.", boundary: "Decode 가 없어 ITL 에는 영향이 없지만 sequence 자리 하나가 여러 step 을 씁니다." },
-            { term: "Mixed batch", description: "Running 의 decode 뒤에 waiting 또는 chunk 가 남은 running prefill 이 잔액을 채울 때.", example: "Decode 40 + prefill 2008 = 2048 token 한 forward.", boundary: "그 step 의 decode 지연이 chunk 크기에 비례해 늘어납니다." },
-          ]}
-        />
-        <ProgressiveDetail
-          title="Budget 을 max_model_len 만큼 크게 두면 무엇이 달라지나요?"
-          preview="공식 문서는 max_num_batched_tokens 를 max_model_len 과 같게 두면 decode 를 먼저 보는 점만 빼고 V0 기본 정책과 거의 같아진다고 적습니다. Chunk 가 사라져 prompt 하나가 한 step 을 통째로 차지합니다."
-        >
-          <p>
-            문서는 작은 값(예 2048)이 prefill 을 잘게 나눠 ITL 을 좋게 하고 큰 값이 한 step 에 더 많은 prefill token 을 넣어 TTFT 를 좋게 한다고
-            안내합니다. 큰 GPU 의 작은 model 에는 8192 를 넘기는 값을 권합니다. 이 권고는 처리량 기준이며, ITL SLO 가 있는 배포에서는 chunk 크기별 p99
-            ITL 을 함께 재야 합니다.
-          </p>
-          <p>
-            <code>long_prefill_token_threshold</code> 는 잔액과 별도로 한 prompt 의 chunk 상한을
-            둡니다. 잔액이 2008 이어도 threshold 가 512 면 그 step 의 chunk 는 512 로 잘리고,
-            남은 잔액은 waiting 의 다음 request 가 받습니다. 긴 prompt 하나가 여러 짧은
-            prompt 의 admission 을 막지 않게 하는 손잡이입니다.
-          </p>
-        </ProgressiveDetail>
-      </section>
+<section id="source-running" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. 진행 목록을 먼저 돈다는 말의 범위를 확인합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>vLLM v0.27.1의 고정 코드는 running 목록을 순서대로 읽고 남은 토큰 수와 잔액 중 작은 값을 고릅니다. 이 글은 동기식 텍스트 생성이며 예상 토큰, 입력 재사용, 요청 미루기가 없는 경로에 A와 B를 대입합니다. 배포 실측이 아닌 코드 적용 예입니다.</p><p>A의 need=1과 잔액 8을 넣으면 num_new_tokens=1입니다. B는 잔액 7에서 같은 값 1을 받습니다. 저장 공간 배정이 성공하면 각각 기록하고 잔액을 줄입니다. 원문은 모델 길이와 다른 실행 조건도 먼저 검사합니다. (가정)</p><p>Running 먼저가 모든 decode 먼저를 뜻하지는 않습니다. 목록이 입력 6토큰이 남은 P 다음 decode A이고 잔액이 4라면 P가 4를 쓰고 A는 이번에 선택되지 않습니다. 별도 미루기 조건을 끈 이 반례만으로도 순회 순서와 단계별 우선순위를 구별할 수 있습니다. (가정)</p><p>저장 공간이 부족하면 원문의 running 경로는 요청을 중단시켜 공간을 되찾는 preemption을 시도합니다. 이미 배정했던 요청을 빼면 해당 토큰 잔액도 되돌립니다. 성공 여부를 확인한 뒤 목록에 넣는 이유입니다.</p></div><CodeViewButton label="고정 원문: 진행 요청의 필요량" onClick={() => sidebar.open("running-need", codeRefs["running-need"])} /><CodeViewButton label="고정 원문: 저장 공간과 배정 성공" onClick={() => sidebar.open("running-allocation", codeRefs["running-allocation"])} /><div id="source-vllm-v1-scheduler" className="mt-8 scroll-mt-20"><CitationBlock source="vLLM v0.27.1 · scheduler.py L483–523" citeKey={1} href="https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py#L483-L523"><q>num_new_tokens = min(num_new_tokens, token_budget)</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>원문의 min에 A의 1과 8을 넣으면 1, B의 1과 7을 넣으면 1입니다. P가 앞에 있는 반례에서는 min(6,4)=4가 되어 뒤의 A까지 잔액이 남지 않습니다. 현재 고정 버전의 running 순회를 일반적인 decode 정렬과 혼동하지 않습니다.</p></div></div></section>
 
-      <section id="evidence" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Orca 가 iteration 단위를, Sarathi-Serve 가 chunk 배치를 보였습니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Step 단위 결정의 출발은 Orca(OSDI 2022)입니다. Orca 는 batch 가 끝날 때까지
-            구성을 고정하던 request-level scheduling 을 iteration 마다 다시 고르는
-            iteration-level scheduling 으로 바꿨습니다. 이 글의 step 은 그 iteration 안쪽을
-            token budget 과 chunk 로 더 잘게 나눈 것입니다.
-          </p>
-          <p>
-            Sarathi-Serve 는 prompt 를 chunk 로 나누고 decode 를 먼저 배치한 뒤 남은 budget 에
-            chunk 를 넣는 stall-free schedule 을 제안했습니다. 보고된 처리 용량 2.6×(Mistral-7B,
-            A100 1장)·3.7×(Yi-34B, A100 2장)·5.6×(Falcon-180B, pipeline parallel)는 당시 vLLM
-            대비 저자 자기보고이며 최신 vLLM 에서 재현된다는 뜻은 아닙니다.
-          </p>
-          <p>
-            이 글의 필드·함수 이름은 vLLM V1 의 <code>vllm/v1/core/sched/scheduler.py</code> 와
-            <code>vllm/config/scheduler.py</code> 를 2026년 8월 기준으로 읽은 것입니다. 소스는
-            계속 바뀌므로 절차의 뼈대만 믿고 세부 조건은 배포 중인 버전에서 다시 확인해야 합니다.
-          </p>
-        </div>
-        <div id="paper-orca-iteration" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Yu et al. · Orca: A Distributed Serving System for Transformer-Based Generative Models (OSDI 2022)"
-            citeKey={1}
-            href="https://www.usenix.org/conference/osdi22/presentation/yu"
-          >
-            Request 단위로 batch 를 고정하던 serving 에 iteration-level scheduling 과
-            selective batching 을 도입해 완료 request 를 즉시 빼고 새 request 를 iteration
-            경계에서 받게 했습니다. Chunked prefill 과 token budget 은 후속 시스템의 확장입니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-sarathi-serve" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Agrawal et al. · Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve (OSDI 2024)"
-            citeKey={2}
-            href="https://arxiv.org/abs/2403.02310"
-          >
-            Chunked-prefills 와 stall-free scheduling 으로 decode 를 멈추지 않는 mixed batch 를
-            만들고, 균일한 batch 가 pipeline bubble 도 줄인다고 보였습니다. 수치는 명시된
-            model·GPU·latency 조건에서의 저자 측정입니다.
-          </CitationBlock>
-        </div>
-        <div id="source-vllm-v1-scheduler" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="vllm-project/vllm · vllm/v1/core/sched/scheduler.py"
-            citeKey={3}
-            href="https://github.com/vllm-project/vllm/blob/main/vllm/v1/core/sched/scheduler.py"
-            type="code"
-          >
-            <code>schedule()</code> 의 running 순회 → preemption → waiting admission 순서,
-            <code>token_budget</code>·<code>max_num_running_reqs</code>·<code>long_prefill_token_threshold</code>
-            의 clipping, allocation 실패 시 running 은 preempt 하고 waiting 은 break 하는 분기를
-            이 소스에서 확인했습니다.
-          </CitationBlock>
-        </div>
-        <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/cs/ai/vllm-scheduler#prefill-decode">Chunked prefill 과 decode latency</Link>,
-          그리고 <Link to="/cs/ai/vllm-paged-attention#kv-cache-manager">Scheduler 와 KV allocation 계약</Link>.
-        </p>
-      </section>
-    </div>
-  );
+<section id="source-admission" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 새 요청은 저장 공간을 받은 뒤에 들어옵니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>원문의 waiting 경로는 토큰 잔액과 진행 요청 상한을 먼저 검사합니다. 기본 사례에서는 A와 B의 두 자리에 C를 더해도 상한 4 이내이고 잔액 6이 남습니다. 이전 단계에서 preemption도 없다고 둡니다. (가정)</p><p>C의 입력 길이 10과 계산된 위치 0을 빼고 잔액 6으로 자르면 배정 후보는 6입니다. 그 양의 저장 공간을 allocate_slots가 확보해야 running에 추가하고 상태와 num_scheduled_tokens를 갱신합니다. 배정 실패 분기는 break이므로 C를 수용한 것처럼 잔액을 빼지 않습니다.</p><p>실제 상한 검사에는 중간 입력을 기다리느라 일시 정지된 요청 자리도 들어갑니다. 이 사례에서는 그 수가 0입니다. 특정 조건에 막힌 요청은 별도 대기 목록으로 옮길 수 있어 모든 대기 요청이 언제나 엄격한 도착 순서로 실행된다고 단정하지 않습니다.</p><p>첫 실행의 C와 둘째 실행의 D가 같은 조건을 지나 새로 들어옵니다. 다음에는 이 배정을 실행 담당자에게 어떤 기록으로 보내는지 확인합니다.</p></div><CodeViewButton label="고정 원문: 새 요청의 조각 크기" onClick={() => sidebar.open("waiting-need", codeRefs["waiting-need"])} /><CodeViewButton label="고정 원문: 조각 상한과 토큰 잔액" onClick={() => sidebar.open("waiting-clip", codeRefs["waiting-clip"])} /><CodeViewButton label="고정 원문: 저장 공간이 없으면 중단" onClick={() => sidebar.open("waiting-failure", codeRefs["waiting-failure"])} /><CodeViewButton label="고정 원문: 수용 성공 뒤 상태 갱신" onClick={() => sidebar.open("waiting-success", codeRefs["waiting-success"])} /></section>
+
+<section id="source-output" data-teach-level="6" className="scroll-mt-20"><span id="step-procedure" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">11. 배정한 입력 위치 수를 실행 기록에 담습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>SchedulerOutput은 이번에 계산할 양을 요청별로 넘기는 실제 구조체입니다. 첫 실행의 num_scheduled_tokens는 A:1, B:1, C:6이고 total_num_scheduled_tokens는 8입니다. 새로 들어온 C의 입력 정보와 이미 알려진 A·B의 갱신 정보도 나눠 전달합니다. (가정)</p><p>여기서 8은 계산할 입력 위치의 합입니다. 첫 실행의 C는 입력이 4토큰 남으므로 아직 첫 답변을 내지 않습니다. 배정 합을 출력 토큰 수로 보고 처리량을 계산하면 잘못된 단위를 셉니다.</p><p>아래 절차는 주요 결정만 묶은 의사코드입니다. 세부 분기는 원문 패널에서 읽고 단순화된 절차를 원본 함수로 오해하지 않습니다.</p></div><CodeViewButton label="고정 원문: 요청별 토큰 수와 합계" onClick={() => sidebar.open("output-fields", codeRefs["output-fields"])} /><AlgorithmBlock title="첫 실행의 배정을 만드는 절차 (의사코드)" input={["A·B의 running 목록과 C의 waiting 목록", "토큰 한도 8, 진행 요청 상한 4, 충분한 저장 공간", "별도 입력 조각 상한 0, 동기식 실행"]} steps={[{"code": "remaining ← 8; scheduled ← {}", "note": "이번 배정의 잔액과 결과 목록을 시작합니다."}, {"code": "for r in running: propose min(need(r), remaining)", "note": "이 사례의 A와 B는 각각 1입니다. 실제 코드의 길이·미루기 조건도 먼저 통과해야 합니다."}, {"code": "if allocation succeeds: record r; subtract its tokens", "note": "실패 시 중단·회수 분기로 가며 성공 목록을 그대로 만들지 않습니다."}, {"code": "if no preemption and an admission slot remains: inspect C", "note": "잔액 6과 요청 자리가 함께 남아야 합니다."}, {"code": "propose min(10 − 0, 6) = 6; allocate C storage", "note": "공간이 없으면 waiting 순회를 멈추고 C를 수용하지 않습니다."}, {"code": "on success: add C to running; scheduled[C] ← 6", "note": "A:1, B:1, C:6의 합은 8입니다."}, {"code": "make SchedulerOutput; advance scheduled progress; return", "note": "진행 예약은 반환 전에 갱신합니다. GPU 완료를 뜻하지는 않습니다."}]} output="요청별 계산량과 저장 위치를 담은 SchedulerOutput" /></section>
+
+<section id="progress-and-result" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 계산된 위치라는 필드도 갱신 시점을 읽어야 합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>고정 버전은 배정 결과를 만든 뒤 반환하기 전에 _update_after_schedule을 호출합니다. 이 함수에서 C의 num_computed_tokens는 0에서 6으로 늘고 num_in_flight_tokens도 6 늘어납니다. 필드 이름만 보고 실제 GPU가 이미 6토큰을 끝냈다고 결론내리면 안 됩니다. (가정)</p><p>원문 주석은 다음 입력 조각을 곧바로 예약하기 위해 이 위치를 미리 전진시킨다고 설명합니다. 이후 실행 결과에 따라 거부된 예상 토큰 등을 교정합니다. 이 글의 동기식 사례에서는 첫 실행 결과를 받은 다음 C의 남은 4토큰을 선택합니다.</p><p>첫 배정의 6과 실행 결과의 6이 같더라도 둘이 기록되는 시점은 다릅니다. 비동기 실행과 중단이 있는 실제 시스템에서는 예약 중인 양과 완료된 결과를 더 세밀하게 구분해야 합니다.</p></div><CodeViewButton label="고정 원문: 반환 전 진행 예약" onClick={() => sidebar.open("progress-update", codeRefs["progress-update"])} /></section>
+
+<section id="sequence-accounting" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">13. 응답 세 개를 요구하면 생성 경로도 세 개입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>사용자 요청 하나가 응답 세 개를 요구하는 n=3이면 A 같은 생성 경로가 세 개 필요합니다. vLLM v0.6.6의 SequenceGroup은 같은 입력에서 만드는 여러 sequence를 담는 역사적 구조입니다. 현재 버전의 처리와 구분해 읽습니다. (가정)</p><p>v0.27.1의 ParentRequest는 각 자식의 n을 1로 만들고 식별자를 0_p, 1_p, 2_p처럼 나눕니다. 이 세 자식이 들어갈 자리를 각각 확인해야 하며 한 번에 모두 수용된다는 보장은 없습니다. (가정)</p><p>따라서 요청 수를 셀 때 사용자 요청 수인지 생성 경로 수인지 밝혀야 합니다. 본문의 A·B·C·D는 각각 응답 하나를 만드는 경로로 고정했습니다.</p></div><CodeViewButton label="고정 원문: 자식 요청과 n=1" onClick={() => sidebar.open("parallel-children", codeRefs["parallel-children"])} /><CodeViewButton label="역사적 원문: v0.6.6 SequenceGroup" onClick={() => sidebar.open("legacy-group", codeRefs["legacy-group"])} /></section>
+
+<section id="paper-orca-iteration" data-teach-level="6" className="scroll-mt-20"><span id="evidence" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">14. Orca는 실행 한 번마다 요청을 다시 고릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Orca의 Algorithm 1은 요청 집합에서 batch를 고른 뒤 모델의 한 iteration을 실행하도록 보냅니다. 본문의 D처럼 다음 경계 전에 도착한 요청을 새 후보에 넣을 수 있다는 점이 핵심입니다.</p><p>원문은 새 요청의 최대 토큰 수만큼 저장 공간을 예약합니다. C를 6과 4로 나누는 본문의 토큰 조각 규칙까지 Orca Algorithm 1이 제공한다고 읽으면 안 됩니다. 그 차이를 남겨야 후속 방식이 무엇을 더했는지 보입니다.</p></div><div id="orca-algorithm" className="mt-8 scroll-mt-20"><CitationBlock source="Orca · OSDI 2022 p.528 · Algorithm 1 line 4" citeKey={1} href="https://www.usenix.org/system/files/osdi22-yu.pdf"><q>batch, n_rsrv ← Select(request_pool, n_rsrv)</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>이 선택을 둘째 실행 직전에 대응시키면 진행 중인 A·B·C와 새로 도착한 D를 후보로 다시 봅니다. 실제 선택은 원문의 max_bs와 저장 공간 예약 조건에 달려 있습니다. 이 대응은 재선택 시점을 설명하며 Orca가 본문의 8토큰 배정을 그대로 만든다는 주장은 아닙니다.</p></div></div></section>
+
+<section id="paper-sarathi-serve" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">15. Sarathi는 남은 예산에 입력 조각을 넣습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Sarathi-Serve의 Algorithm 3은 진행 중인 decode를 먼저 넣고 미완료 입력의 조각과 새 요청을 토큰 예산 안에 더합니다. v3 원문 §4.1의 6–20행에서 이 순서를 직접 확인할 수 있습니다.</p><p>τ=8에서 A와 B로 nₜ=2가 되고 C의 조각 c=6을 넣으면 nₜ=8입니다. 둘째 실행은 C의 남은 4와 D의 2를 넣어 다시 8이 됩니다. 원문 규칙에 설명용 숫자를 대입한 결과이며 논문의 측정 workload가 아닙니다. (가정)</p><p>논문은 Mistral-7B의 A100 1장 구성에서 최대 2.6배, Yi-34B의 A100 2장 구성에서 3.7배, Falcon-180B의 pipeline 구성에서 5.6배 처리 용량을 보고했습니다. 명시된 지연 조건과 당시 비교 구현에서 얻은 저자 측정입니다.</p><p>이 논문의 decode 우선 절차를 현재 vLLM의 모든 running 순회와 같다고 해석하지 않습니다. 현재 고정 코드에서는 9절의 P·A 순서 반례가 가능합니다. 입력 조각의 크기는 실제 장비와 지연 목표에서 측정해야 합니다.</p></div><div id="sarathi-algorithm" className="mt-8 scroll-mt-20"><CitationBlock source="Sarathi-Serve · arXiv:2403.02310v3 · Algorithm 3 lines 11–12" citeKey={1} href="https://arxiv.org/html/2403.02310v3#S4.SS1"><q>c ← get_next_chunk_size(R, τ, nₜ); nₜ ← nₜ + c</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>A와 B가 쓴 2토큰 뒤 C의 조각 6을 더하면 nₜ=2+6=8입니다. 원문의 남은 예산 계산을 적용한 것이며 같은 8토큰이 항상 같은 실행 시간을 낸다는 뜻은 아닙니다.</p></div></div></section>
+
+<section id="boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">16. 토큰 수가 같아도 단계와 시간은 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>C의 입력이 마지막 1토큰 남은 경우와 A가 답변을 이어 쓰는 경우는 모두 배정량이 1일 수 있습니다. 따라서 num_scheduled_tokens 하나만으로 prefill과 decode를 구별할 수 없습니다. 입력 길이와 진행 위치, 출력 상태를 함께 읽어야 합니다.</p><p>고정 소스에도 is_prefill_chunk와 cached request의 context 판별 정보가 있습니다. 필요량을 같은 식으로 계산할 수 있다는 사실이 단계 관련 상태가 전혀 없다는 뜻은 아닙니다.</p><p>큰 사례의 입력 3000토큰에 조각 상한 512를 두고 매번 잔액이 충분하면 512토큰씩 다섯 번과 마지막 440토큰으로 여섯 번에 걸쳐 읽습니다. 원래 두 번에 나눠 읽던 입력의 실행 횟수가 늘어납니다. (가정)</p><p>작은 조각은 한 실행에 추가하는 입력 계산량을 줄이지만 입력 완료까지 실행 횟수가 늘어납니다. 실제 지연은 저장 데이터 읽기와 계산, 실행 준비 비용에 함께 달려 있어 조각 크기에 항상 비례하지는 않습니다.</p><p>실행마다 모양이 바뀌면 <Link to="/cs/ai/cuda-graph-capture#implementation">CUDA graph의 모양별 선택</Link>도 맞춰야 합니다. 요청 수와 토큰 수가 달라지는 결과를 처리하는 별도 문제입니다. 계산량과 메모리 비용은 <Link to="/cs/ai/prefill-decode-phase-dynamics">입력 읽기와 출력 생성의 비용</Link>에서 이어 봅니다.</p><p>배정의 정확성은 합이 한도 안인지, 새 요청이 실제 공간을 받았는지, 예약과 완료 기록이 일치하는지로 확인합니다. 그 다음에야 같은 workload에서 첫 답변 시간과 이어지는 간격을 재어 설정을 고를 수 있습니다.</p></div><ContentBoundary article="continuous-batching-step-anatomy" /></section>
+
+<section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">17. 다음 배정을 먼저 예상해 보세요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>토큰 잔액은 6이지만 A와 B가 진행 요청 상한 2를 모두 채웠습니다. C를 받아들일 수 있을까요? (답: 5절)</p><p>Running 목록 앞의 P가 입력 6토큰을 더 읽어야 하고 뒤의 A는 decode 1토큰이 필요합니다. 잔액 4에서 A는 반드시 실행될까요? (답: 9절)</p><p>C에 6토큰을 배정하고 num_computed_tokens가 6이 됐습니다. 이 필드만으로 GPU 완료를 확인할 수 있을까요? (답: 12절)</p></div></section>
+</div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{vllm:schedulerSourceTree}} projectMetas={{vllm:{id:"vllm",label:"vLLM v0.27.1 / legacy v0.6.6",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;
 }

@@ -157,14 +157,59 @@ export const dlFoundationArticles: Article[] = [
     title: "벡터·내적·norm: AI 수식을 읽는 최소 선형대수",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "좌표를 하나의 대상으로 묶기" },
-      { id: "vectors", title: "Scalar와 vector" },
-      { id: "norm", title: "Norm과 거리" },
-      { id: "dot-product", title: "Dot product와 방향" },
-      { id: "projection", title: "Projection으로 성분 읽기" },
-      { id: "cauchy-schwarz", title: "Cauchy–Schwarz 부등식" },
-      { id: "applications", title: "퍼셉트론·attention으로 연결" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 여러 숫자로 적은 이동에서 길이와 방향을 따로 읽는다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 좌표 두 개를 넣고 질문에 맞는 값을 받는다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 3²+4²로 길이 5를 구하고 가로 이동 3을 떼어 낸다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 한 화살표에서 전체 길이와 가로 부분을 함께 본다"
+  },
+  {
+    "id": "need",
+    "title": "5 · 크기를 비교할지 방향을 비교할지 먼저 정한다"
+  },
+  {
+    "id": "vectors",
+    "title": "6 · 숫자 하나는 스칼라, 순서 있는 좌표 묶음은 벡터다"
+  },
+  {
+    "id": "norm",
+    "title": "7 · 노름은 전체 크기를, 차이의 노름은 두 점 사이 거리를 잰다"
+  },
+  {
+    "id": "dot-product",
+    "title": "8 · 내적에는 두 벡터의 길이와 방향이 함께 들어간다"
+  },
+  {
+    "id": "projection",
+    "title": "9 · 기준 길이를 보정해야 같은 방향에 같은 투영이 나온다"
+  },
+  {
+    "id": "cauchy-schwarz",
+    "title": "10 · 한 방향의 성분은 전체 길이를 넘지 못한다"
+  },
+  {
+    "id": "source",
+    "title": "11 · 실제 교재의 투영식과 PyTorch의 분모에 같은 숫자를 넣는다"
+  },
+  {
+    "id": "applications",
+    "title": "12 · 내적의 전진량과 전체 길이를 묶으면 학습 횟수도 제한할 수 있다"
+  },
+  {
+    "id": "boundaries",
+    "title": "13 · 크기와 방향, 의미는 다르다"
+  }
+],
     component: () => import("@/pages/articles/ai/math-vectors-inner-products"),
   },
   {
