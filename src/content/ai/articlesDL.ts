@@ -350,15 +350,82 @@ export const dlFoundationArticles: Article[] = [
   },
   {
     slug: "math-numerical-precision-stability",
-    title: "부동소수점은 유효숫자를 잘라 저장하고 그 오차가 계산 순서에 따라 증폭되거나 사라진다",
+    title: "같은 덧셈이 다른 답을 만드는 이유: 부동소수점·안정성·축의 짝짓기",
     subcategory: "ai-foundations",
     sections: [
-      { id: "problem", title: "유한 bit 저장이 남기는 오차" },
-      { id: "precision", title: "FP32·FP16·BF16의 유효숫자" },
-      { id: "stability", title: "계산 순서와 오차 증폭" },
-      { id: "shape", title: "Tensor shape와 broadcasting" },
-      { id: "applications", title: "Quantization·AMP·행렬로 연결" },
-    ],
+  {
+    "id": "problem",
+    "title": "1 · 분명히 두 번 더했는데 저장된 값은 그대로다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 계산할 값과 저장할 자리를 따로 본다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 작은 양 하나는 반 칸이고 두 개는 한 칸이다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 계산한 위치에서 저장할 자리로 이동한다"
+  },
+  {
+    "id": "why",
+    "title": "5 · 저장 공간을 아끼는 선택이 계산 경로에도 들어온다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 지금 본 자리와 선택 규칙에 이름을 붙인다"
+  },
+  {
+    "id": "precision",
+    "title": "7 · 저장하는 소수부 10 bit에 숨은 1이 더해진다"
+  },
+  {
+    "id": "rounding-trace",
+    "title": "8 · 같은 세 입력을 괄호 두 가지로 끝까지 따라간다"
+  },
+  {
+    "id": "code-storage",
+    "title": "9 · 실제 Python에서 두 바이트로 저장하고 다시 읽는다"
+  },
+  {
+    "id": "code-rounding",
+    "title": "10 · 코드의 0.5 비교에 같은 가운데 값을 넣는다"
+  },
+  {
+    "id": "formats",
+    "title": "11 · 같은 16 bit라도 촘촘함과 범위가 다르다"
+  },
+  {
+    "id": "stability",
+    "title": "12 · 큰 지수를 만들기 전에 공통 크기를 뺀다"
+  },
+  {
+    "id": "underflow",
+    "title": "13 · 작은 비중이 0이 되면 로그는 따로 계산한다"
+  },
+  {
+    "id": "cancellation",
+    "title": "14 · 큰 두 모멘트가 같아지면 작은 분산이 지워진다"
+  },
+  {
+    "id": "shape",
+    "title": "15 · 정확하게 더해도 잘못 짝지으면 아홉 값이 나온다"
+  },
+  {
+    "id": "applications",
+    "title": "16 · 입력·연산·누산·출력의 형식을 따로 확인한다"
+  },
+  {
+    "id": "limits",
+    "title": "17 · 값이 다른 이유를 재현 가능한 조건으로 적는다"
+  },
+  {
+    "id": "review",
+    "title": "18 · 바꾸기 전에 다음 저장값을 예측한다"
+  }
+],
     component: () => import("@/pages/articles/ai/math-numerical-precision-stability"),
   },
   {

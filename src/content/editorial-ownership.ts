@@ -7900,22 +7900,42 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "sparse-multiplication": {
-    title: "Sparse multiplication 글이 소유하는 범위",
-    owns: [
-      "Coefficient support와 support-aware convolution의 계산 경로",
-      "Miller line의 profile-pinned Fp¹² slot을 sparse helper로 내리는 경계",
-      "Partial-product 장부·Amdahl 상한·generic parity release gate",
+    "title": "같은 희소 곱의 계수·원문·Miller 적용 범위",
+    "owns": [
+      "같은 네 항·두 항의 여덟 곱과 출력 누적",
+      "실제 여섯 계수 순서와 014·034의 서로 다른 의미",
+      "c4=11의 높은 항 축약과 원문 중간값 추적",
+      "D형 선의 호출 및 직접 다항식으로 바꾼 Miller 누적 비교",
+      "부분 곱·일반 Fq2 곱 호출·조건부 전체 시간의 구분"
     ],
-    reuses: [
-      { label: "Polynomial coefficient와 quotient arithmetic", href: "/cs/crypto/finite-field-theory#polynomial" },
-      { label: "Fp²→Fp¹² tower layout·non-residue", href: "/cs/crypto/extension-fields#overview" },
-      { label: "Miller loop와 pairing 전체 경로", href: "/cs/crypto/pairing#miller-loop" },
+    "reuses": [
+      {
+        "label": "다항식과 유한체의 계수",
+        "href": "/cs/crypto/finite-field-theory"
+      },
+      {
+        "label": "실제 BN254 탑의 기저와 상수",
+        "href": "/cs/crypto/extension-fields#layout"
+      },
+      {
+        "label": "Miller와 마지막 지수 계산",
+        "href": "/cs/crypto/pairing#miller-loop"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "구체 slot·helper claim은 ark-ff 0.5.0 commit 7ad88c46…의 Fp12 source에 고정한다." },
-      { kind: "primary-source", rule: "Pairing sparse multiplication 성능 주장은 인용 논문의 curve·tower·platform 범위로 제한한다." },
-      { kind: "project-measurement", rule: "Generic parity·wrong-slot negative fixture 뒤 operation·memory·Miller/pairing latency를 비교한다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "algebra commit 7ad88c46의 ff·ec 0.5.0과 bn254 0.5.0-alpha.0을 같은 lock으로 실행합니다. 실제 BN254 D형과 034 호출을 구분해 읽습니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "eprint 2012/408은 Grewal·Azarderakhsh·Longa·Hu·Jao의 ARM 논문입니다. 읽은 Algorithms 5·6에 같은 수치를 넣으며 Aranha 등의 선행연구와 저자를 혼동하지 않습니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "실제 산술 36기저·32밀집 입력과 생성원의 준비된 선 87개를 사용한 Miller 누적을 대조합니다. 선 생성 독립 검증·최종 지수·전체 페어링·속도 측정은 수행하지 않았습니다."
+      }
+    ]
   },
   "frobenius-optimization": {
     "title": "같은 p제곱과 기저 변경에서 큰 지수로 이어지는 범위",
@@ -10258,27 +10278,58 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "prefix-caching-radix-attention": {
-    title: "Prefix caching · radix tree · cache-aware scheduling 글이 소유하는 범위",
-    owns: [
-      "Radix tree 에 token 열과 KV 를 두고 갈라지는 지점에서 node 를 쪼개는 RadixAttention 자료구조",
-      "Token 단위 match_prefix 와 full block 단위 hash 조회의 경계 차이, hybrid model 의 group 간 hit 길이 합의",
-      "Ref counter 를 가진 leaf-first LRU eviction 과 vLLM 역순 반환의 비교",
-      "Matched prefix 길이 순 cache-aware scheduling 의 hit rate 이득과 FCFS fairness 손실",
-      "확정된 hit 이 attention metadata·slot mapping(쓰기)·block table lookup(읽기)으로 kernel 에 전달되는 경로",
+    "title": "같은 입력의 기록 탐색·공유·수명과 실행 순서",
+    "owns": [
+      "실제 입력 ID·namespace·page와 마지막 출력 계산을 적용한 prefix 재사용 길이",
+      "radix의 구간 분기와 위치 index 공유 및 실제 KV 저장량의 구별",
+      "사용 중 경로의 잠금과 정책별 leaf 반환 및 vLLM free queue 조건의 차이",
+      "실행 뒤 cache 상태를 갱신하는 순서와 offline 상한·online 대기의 구별",
+      "group별 재사용 길이와 backend 지원 조건 및 같은 요청의 읽기·쓰기 주소"
     ],
-    reuses: [
-      { label: "Block 단위 prefix sharing 과 token·request hit rate", href: "/cs/ai/vllm-paged-attention#prefix-sharing" },
-      { label: "Chained block hash 와 free queue lifecycle", href: "/cs/ai/vllm-paged-attention#prefix-caching" },
-      { label: "Logical→physical address translation", href: "/cs/ai/vllm-paged-attention#logical-physical-address" },
-      { label: "Hybrid cache group 의 allocation 조율", href: "/cs/ai/vllm-paged-attention#hybrid-cache-groups" },
-      { label: "Scheduler output 과 closed-loop 갱신", href: "/cs/ai/vllm-scheduler#closed-loop-update" },
-      { label: "FCFS·priority 정렬과 starvation", href: "/cs/ai/vllm-scheduler#queue-batching" },
+    "reuses": [
+      {
+        "label": "Block 단위 prefix sharing 과 token·request hit rate",
+        "href": "/cs/ai/vllm-paged-attention#prefix-sharing"
+      },
+      {
+        "label": "Chained block hash 와 free queue lifecycle",
+        "href": "/cs/ai/vllm-paged-attention#prefix-caching"
+      },
+      {
+        "label": "Logical→physical address translation",
+        "href": "/cs/ai/vllm-paged-attention#logical-physical-address"
+      },
+      {
+        "label": "Hybrid cache group 의 allocation 조율",
+        "href": "/cs/ai/vllm-paged-attention#hybrid-cache-groups"
+      },
+      {
+        "label": "Scheduler output 과 closed-loop 갱신",
+        "href": "/cs/ai/vllm-scheduler#closed-loop-update"
+      },
+      {
+        "label": "FCFS·priority 정렬과 starvation",
+        "href": "/cs/ai/vllm-scheduler#queue-batching"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "RadixAttention 의 구조·eviction·scheduling·정리는 SGLang 논문 §3·Appendix A 의 서술 범위로만 쓰고 처리량·hit rate 는 저자 자기보고로 표기한다." },
-      { kind: "primary-source", rule: "vLLM 의 class·field 이름은 2026년 8월 main branch 의 attention backends·kv_cache_coordinator·kv_cache_manager·block_pool 에서 읽은 범위로만 쓰고 읽은 시점을 본문에 적는다." },
-      { kind: "standard", rule: "수치 예(2,000+500+100, B=16, 상한 3,200)는 두 자료구조의 산수이며 어느 배포의 측정도 아니라고 본문에 밝힌다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "SGLang commit 35f3c96과 vLLM v0.27.1 commit 6e448d0의 전체 원문을 고정해 함수·필드·page·정렬·지원 조건을 읽는다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "SGLang v2의 offline Theorem 3.1과 Algorithm 1을 실제 구현과 나누며 최대 처리량·hit 결과는 당시 workload로 제한한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "8자리 입력·12/24 재사용·16자리 저장·주소38·hybrid2080 등은 가정한 수치 장부다. 일부 원문 함수 CPU 실행의 대역 사용을 밝히고 GPU 성능 측정으로 표현하지 않는다."
+      },
+      {
+        "kind": "standard",
+        "rule": "입력 일치·실제 재사용·저장 용량·시간 절감은 구분한다. 원문 byte 동일성·숫자 검산·390/1440 화면과 실제 코드 패널로 교정 본문을 확인한다."
+      }
+    ]
   },
   "speculative-decoding-variants": {
     title: "Speculative decoding 변형 글이 소유하는 범위",
@@ -11378,22 +11429,41 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "math-numerical-precision-stability": {
-    title: "부동소수점 정밀도·수치 안정성·tensor shape 글이 소유하는 범위",
-    owns: [
-      "IEEE 754 sign·exponent·mantissa 구조와 FP32·FP16·BF16의 유효숫자·표현 범위 비교",
-      "Machine epsilon과 floating-point rounding error의 정의",
-      "Numerical stability 정의와 softmax max-subtraction·catastrophic cancellation 사례",
-      "Tensor shape contract와 broadcasting이 예외 없이 조용히 다른 축으로 계산되는 사례",
+    "title": "부동소수점 정밀도·수치 안정성·tensor shape 글이 소유하는 범위",
+    "owns": [
+      "같은 δ 덧셈의 저장 순서·최근접 짝수 반올림과 CPython 원문 적용",
+      "소수부 bit·정규수 정밀도·epsilon·단위 반올림 오차 및 FP16/BF16/FP32 범위의 조건",
+      "softmax·log-softmax·큰 모멘트 차의 수치 안정성과 남는 실패 조건",
+      "정확한 정수 표에서 확인하는 shape 계약과 broadcasting의 짝짓기"
     ],
-    reuses: [
-      { label: "행렬의 m×n shape 계약", href: "/cs/ai/math-matrices-svd#matrix-map" },
-      { label: "Quantization의 rounding·clipping 오차", href: "/cs/ai/quantization#error-shape" },
-      { label: "Automatic mixed-precision training contract", href: "/cs/ai/training-pipeline#loop" },
+    "reuses": [
+      {
+        "label": "행렬의 m×n shape 계약",
+        "href": "/cs/ai/math-matrices-svd#matrix-map"
+      },
+      {
+        "label": "Quantization의 rounding·clipping 오차",
+        "href": "/cs/ai/quantization#error-shape"
+      },
+      {
+        "label": "Automatic mixed-precision training contract",
+        "href": "/cs/ai/training-pipeline#loop"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "IEEE 754 유효숫자·범위 수치는 Goldberg survey가 요약한 표준 정의로 제한하고 특정 하드웨어 성능은 주장하지 않는다." },
-      { kind: "standard", rule: "Softmax 안정화 기법은 Deep Learning 교재의 표준 설명을 따르며 모든 수치 불안정 문제의 해법이라고 일반화하지 않는다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "고정 CPython 원문과 실제 struct 저장 변환을 대조하고 GPU 연산·라이브러리 재빌드와 구별한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "소수부와 숨은 1, 정규수와 subnormal, 형식의 범위와 장치의 작은 값 처리를 구별한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "안정화의 입력·합산 조건을 명시하고 수학적 항등식을 bit 단위 동일성이나 모든 오차 제거로 확대하지 않는다."
+      }
+    ]
   },
   "quantization-formats-and-granularity": {
     title: "양자화 숫자 형식과 granularity 글이 소유하는 범위",
@@ -12196,35 +12266,47 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "bank-balance-sheet-and-deposit-creation": {
-    title: "은행은 대출로 예금을 만듭니다 글이 소유하는 범위",
-    owns: [
-      "은행 대차대조표의 자산·부채·자기자본 자리와 예금이 부채인 이유",
-      "대출 실행 시 양쪽이 동시에 늘어나는 분개와 상환 시 함께 줄어드는 대칭",
-      "중개자 설명이 장부의 어느 줄에서 어긋나는지에 대한 반증",
-      "통화승수 1/rr을 상한으로 읽어야 하고 절차로 읽으면 안 되는 이유",
-      "만기 변환이 만드는 조기 인출 유인과 자기실현적 뱅크런의 성립 조건",
-      "예금보험과 최종대부자가 각각 막는 실패의 구분",
+    "title": "같은 대출·송금·상환과 은행의 지급·손실을 잇는 범위",
+    "owns": [
+      "20+80=92+8에서 대출 10·송금 6·상환 4의 두 은행 추적",
+      "원금 상환·추가 손실·이자·자산 매입의 서로 다른 분개",
+      "고정 준비금과 양의 준비율에서만 나오는 예금 상한",
+      "오늘 부족한 6을 급매와 차입으로 해결하는 만기 변환 사례",
+      "실제 취약성과 자기실현적 인출의 결합 및 보호 조건",
+      "한국 일반 예금의 금융기관별 합산과 시행·확인 날짜"
     ],
-    reuses: [
+    "reuses": [
       {
-        label: "예금이 은행의 채무라는 정의",
-        href: "/finance/money/money-as-a-claim#credit-money",
+        "label": "예금과 청구권",
+        "href": "/finance/money/money-as-a-claim#credit-money"
       },
       {
-        label: "통화지표의 집계 기준",
-        href: "/finance/money/money-as-a-claim#money-aggregates",
+        "label": "통화지표의 집계 범위",
+        "href": "/finance/money/money-as-a-claim#money-aggregates"
       },
       {
-        label: "미래 현금흐름을 오늘 값으로 되돌리는 계산",
-        href: "/finance/money/time-value-and-discounting#discounting",
+        "label": "미래 현금흐름의 가치",
+        "href": "/finance/money/time-value-and-discounting#discounting"
       },
+      {
+        "label": "실제 지급·청산·결제의 시간차",
+        "href": "/finance/banking/payment-clearing-settlement"
+      }
     ],
-    evidence: [
+    "evidence": [
       {
-        kind: "primary-source",
-        rule: "은행 제도 서술은 중앙은행·예금보험기관의 공개 자료에만 귀속하고, 보장 한도 금액처럼 제도 개편으로 바뀌는 수치는 구조만 싣고 금액을 사실로 인용하지 않는다",
+        "kind": "primary-source",
+        "rule": "영란은행 Figure 1·2, BIS 부문 모형, IFRS 공개 해석·ITG 논의와 금융위원회·연준 공식 안내를 원문 범위에 맞춰 적용합니다."
       },
-    ],
+      {
+        "kind": "standard",
+        "rule": "자산·부채·자본을 같은 기준으로 맞추고 원금·이자·이미 반영한 충당금·추가 손실을 중복하지 않습니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "20·80·92·8과 거래 10·6·4 및 급매 할인은 작성한 회계 모형입니다. 특정 은행 원장·상품 권유·실제 할인율 추정을 주장하지 않습니다."
+      }
+    ]
   },
   "central-bank-and-policy-transmission": {
     title: "중앙은행은 하나의 가격을 고정합니다 글이 소유하는 범위",

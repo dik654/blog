@@ -6534,8 +6534,18 @@ export const ARTICLE_EVIDENCE: Readonly<
     }
   ],
   "crypto/sparse-multiplication": [
-    { kind: "공식 코드", label: "arkworks algebra 0.5.0 Fp12 @ 7ad88c46", href: "https://github.com/arkworks-rs/algebra/blob/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/fp12_2over3over2.rs", note: "mul_by_034·mul_by_014와 pinned coefficient-layout lowering source" },
-    { kind: "핵심 논문", label: "Aranha et al. · Efficient Implementation of Bilinear Pairings", href: "https://eprint.iacr.org/2012/408", note: "BN curve·degree-12 extension에서 sparse multiplication·reduction·platform benchmark의 원 연구" },
+    {
+      "kind": "공식 코드",
+      "label": "arkworks algebra · 고정 희소 곱과 BN Miller 호출",
+      "href": "https://github.com/arkworks-rs/algebra/blob/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/fp12_2over3over2.rs",
+      "note": "실제 --locked Rust에서 36개 기저 곱·32개 추가 입력·0과 1 및 틀린 위치를 대조했습니다. 생성원의 같은 준비된 선 87개를 직접 다항식으로 곱한 Miller 누적이 원본과 일치했습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Grewal et al. · Efficient Implementation of Bilinear Pairings on ARM Processors",
+      "href": "https://eprint.iacr.org/2012/408",
+      "note": "공식 PDF 3.1절 Algorithms 5·6을 읽고 5·7·11과 같은 A를 넣어 세 중간 묶음 및 아래 14·50·44를 대조했습니다."
+    }
   ],
   "crypto/frobenius-optimization": [
     {
@@ -7700,13 +7710,78 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "NVIDIA NVLink", href: "https://www.nvidia.com/en-us/data-center/nvlink/", note: "Hopper 세대 GPU 당 NVLink 900 GB/s 수치의 근거" },
   ],
   "ai/prefix-caching-radix-attention": [
-    { kind: "핵심 논문", label: "SGLang: Efficient Execution of Structured Language Model Programs (NeurIPS 2024)", href: "https://arxiv.org/abs/2312.07104", note: "§3 RadixAttention 의 radix tree·LRU eviction·cache-aware scheduling 과 Theorem 3.1, Alg. 1 pseudocode 의 근거. 수치는 저자 자기보고" },
-    { kind: "공식 문서", label: "vLLM design docs — Automatic Prefix Caching", href: "https://docs.vllm.ai/en/latest/design/prefix_caching.html", note: "Chained block hash·full block 만 cache·free queue LRU 와 역순 반환의 근거" },
-    { kind: "공식 코드", label: "vLLM V1 CommonAttentionMetadata: vllm/v1/attention/backends/utils.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/attention/backends/utils.py", note: "query_start_loc·seq_lens·num_actual_tokens·block_table_tensor·slot_mapping field 와 build_for_cudagraph_capture 의 근거" },
-    { kind: "공식 코드", label: "vLLM V1 FlashAttentionMetadata: vllm/v1/attention/backends/flash_attn.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/attention/backends/flash_attn.py", note: "use_cascade·common_prefix_len·prefix_kv_lens·suffix_kv_lens field 와 FlashAttentionMetadataBuilder.build 의 근거" },
-    { kind: "공식 코드", label: "vLLM V1 KV cache coordinator: vllm/v1/core/kv_cache_coordinator.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/core/kv_cache_coordinator.py", note: "HybridKVCacheCoordinator.find_longest_cache_hit 의 고정점 반복과 Unitary·NoPrefixCache coordinator 선택의 근거" },
-    { kind: "공식 코드", label: "vLLM V1 KVCacheManager·BlockPool: vllm/v1/core/kv_cache_manager.py · block_pool.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/core/kv_cache_manager.py", note: "get_computed_blocks 의 prompt_length − 1 규칙, free 의 역순 반환, touch·get_new_blocks 의 hash 제거 근거" },
-    { kind: "공식 문서", label: "SGLang — Server Arguments (schedule-policy · radix-eviction-policy)", href: "https://docs.sglang.io/advanced_features/server_arguments.html", note: "lpm·fcfs·dfs-weight 등 schedule-policy 선택지와 lru·lfu·slru·priority eviction 옵션의 근거" },
+    {
+      "kind": "공식 코드",
+      "label": "Prefix cache — sglang python/sglang/srt/mem_cache/radix_cache.py pinned original",
+      "href": "https://raw.githubusercontent.com/sgl-project/sglang/35f3c96ff4794a4de15daf12caad371084a037ee/python/sglang/srt/mem_cache/radix_cache.py",
+      "note": "고정 revision의 전체 원문. 실제 분기와 행 범위를 읽고 가정한 요청의 위치 수를 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Prefix cache — sglang python/sglang/srt/managers/schedule_policy.py pinned original",
+      "href": "https://raw.githubusercontent.com/sgl-project/sglang/35f3c96ff4794a4de15daf12caad371084a037ee/python/sglang/srt/managers/schedule_policy.py",
+      "note": "고정 revision의 전체 원문. 실제 분기와 행 범위를 읽고 가정한 요청의 위치 수를 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Prefix cache — sglang python/sglang/srt/managers/schedule_batch.py pinned original",
+      "href": "https://raw.githubusercontent.com/sgl-project/sglang/35f3c96ff4794a4de15daf12caad371084a037ee/python/sglang/srt/managers/schedule_batch.py",
+      "note": "고정 revision의 전체 원문. 실제 분기와 행 범위를 읽고 가정한 요청의 위치 수를 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Prefix cache — vllm vllm/v1/core/kv_cache_manager.py pinned original",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/kv_cache_manager.py",
+      "note": "고정 revision의 전체 원문. 실제 분기와 행 범위를 읽고 가정한 요청의 위치 수를 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Prefix cache — vllm vllm/v1/core/kv_cache_coordinator.py pinned original",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/kv_cache_coordinator.py",
+      "note": "고정 revision의 전체 원문. 실제 분기와 행 범위를 읽고 가정한 요청의 위치 수를 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Prefix cache — vllm vllm/v1/core/single_type_kv_cache_manager.py pinned original",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/single_type_kv_cache_manager.py",
+      "note": "고정 revision의 전체 원문. 실제 분기와 행 범위를 읽고 가정한 요청의 위치 수를 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Prefix cache — vllm vllm/v1/core/block_pool.py pinned original",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/block_pool.py",
+      "note": "고정 revision의 전체 원문. 실제 분기와 행 범위를 읽고 가정한 요청의 위치 수를 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Prefix cache — vllm vllm/v1/core/kv_cache_utils.py pinned original",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/kv_cache_utils.py",
+      "note": "고정 revision의 전체 원문. 실제 분기와 행 범위를 읽고 가정한 요청의 위치 수를 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Prefix cache — vllm vllm/v1/attention/backends/utils.py pinned original",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/attention/backends/utils.py",
+      "note": "고정 revision의 전체 원문. 실제 분기와 행 범위를 읽고 가정한 요청의 위치 수를 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Prefix cache — vllm vllm/v1/attention/backends/flash_attn.py pinned original",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/attention/backends/flash_attn.py",
+      "note": "고정 revision의 전체 원문. 실제 분기와 행 범위를 읽고 가정한 요청의 위치 수를 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Prefix cache — vllm vllm/v1/attention/backend.py pinned original",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/attention/backend.py",
+      "note": "고정 revision의 전체 원문. 실제 분기와 행 범위를 읽고 가정한 요청의 위치 수를 적용합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "SGLang arXiv v2 — §3, Theorem 3.1 and Appendix A",
+      "href": "https://arxiv.org/html/2312.07104v2",
+      "note": "offline 상한과 의사코드를 현재 구현과 구별하고 자기보고 성능은 당시 workload로 한정합니다."
+    }
   ],
   "ai/speculative-decoding-variants": [
     { kind: "핵심 논문", label: "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding", href: "https://arxiv.org/abs/2404.16710", note: "Self-speculative decoding 의 KV 공유·학습 recipe 와 배율의 출처" },
@@ -8106,8 +8181,36 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
 ],
   "ai/math-numerical-precision-stability": [
-    { kind: "핵심 논문", label: "Goldberg — What Every Computer Scientist Should Know About Floating-Point Arithmetic", href: "https://doi.org/10.1145/103162.103163", note: "IEEE 754 형식·유효숫자·machine epsilon 수치의 근거" },
-    { kind: "보충 읽기", label: "Goodfellow, Bengio & Courville — Deep Learning, Chapter 4", href: "https://www.deeplearningbook.org/contents/numerical.html", note: "Softmax max-subtraction 안정화 기법의 근거" },
+    {
+      "kind": "핵심 논문",
+      "label": "Goldberg 1991 · 형식과 정확한 반올림",
+      "href": "https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html",
+      "note": "정밀도에 선행 1을 포함하고 p=11에 같은 δ와 두 tie를 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "CPython v3.9.6 · binary16 저장 원문",
+      "href": "https://github.com/python/cpython/blob/db3ff76da19004f266b62e98a81bdfd322861436/Objects/floatobject.c#L2021-L2122",
+      "note": "소수부×1024와 bits의 홀짝에 0.5·1.5를 대입해 3c00·3c02를 추적합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Deep Learning §4.1 · softmax와 작은 분자",
+      "href": "https://www.deeplearningbook.org/contents/numerical.html",
+      "note": "최대값 이동으로 분모에 1이 남는 조건과 직접 log-softmax가 필요한 작은 분자를 같은 숫자로 계산합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Kalamkar 외 · BFLOAT16 Table 1과 Figure 1",
+      "href": "https://arxiv.org/html/1905.12322v3#S3",
+      "note": "표의 소수부·지수 bit로 간격과 유한 최대값을 직접 계산하고 입력 BF16·누산 FP32를 구별합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NumPy 2.0 · broadcasting 규칙",
+      "href": "https://numpy.org/doc/2.0/user/basics.broadcasting.html",
+      "note": "오른쪽 정렬과 같은 크기 또는 1이라는 조건을 (3,1)+(3,)와 (3,4)+(5,)에 적용합니다."
+    }
   ],
   "ai/quantization-formats-and-granularity": [
     { kind: "공식 문서", label: "NVIDIA Transformer Engine · FP8 Current Scaling", href: "https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/features/low_precision_training/fp8_current_scaling/fp8_current_scaling.html", note: "E4M3·E5M2 bit 배치와 amax 기반 scaling의 공식 근거" },
@@ -8653,17 +8756,53 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "banking/bank-balance-sheet-and-deposit-creation": [
     {
-      kind: "공식 문서",
-      label: "Bank of England · Money creation in the modern economy (2014 Q1)",
-      href: "https://www.bankofengland.co.uk/quarterly-bulletin/2014/q1/money-creation-in-the-modern-economy",
-      note: "대출이 예금을 만든다는 회계 사실과 중개자·통화승수 설명에 대한 반박의 근거. 영국 제도 기준이며 통화 총량이 중앙은행 정책에 달려 있다는 결론까지 함께 읽어야 함",
+      "kind": "공식 문서",
+      "label": "Money creation in the modern economy · Figures 1–2",
+      "href": "https://www.bankofengland.co.uk/-/media/boe/files/quarterly-bulletin/2014/money-creation-in-the-modern-economy.pdf",
+      "note": "원문 Figure 1·2의 세 부문과 두 은행을 실제 PDF 화면에서 읽었습니다. 숫자와 이후 상환 4는 이 글의 가정입니다. 예금 창조가 은행 자금 조달과 위험 관리를 없애거나 모든 국가의 결제 시점을 정하지 않습니다."
     },
     {
-      kind: "공식 문서",
-      label: "예금보험공사 · 예금자보호제도 안내",
-      href: "https://www.kdic.or.kr/sp/dpstrprot/ProtSyst/selectScrn.do",
-      note: "한국에서 보장 주체와 보장 범위 구조의 근거. 보장 한도 금액은 제도 개편으로 바뀌므로 본문에는 구조만 싣고 금액은 인용하지 않음",
+      "kind": "공식 문서",
+      "label": "BIS · Unpacking international banks’ deposit funding",
+      "href": "https://www.bis.org/publications/qr-202309/unpacking-international-banks-deposit-funding",
+      "note": "공식 본문 Graph 1과 넓은 deposit funding의 정의를 본문의 별도 6 거래에 적용합니다. 그 자료의 repo·은행 간 자금까지 포함한 통계를 고객 통장 잔액과 같게 취급하지 않습니다."
     },
+    {
+      "kind": "공식 문서",
+      "label": "Bank of England · Bank capital and liquidity",
+      "href": "https://www.bankofengland.co.uk/quarterly-bulletin/2013/q3/bank-capital-and-liquidity",
+      "note": "공식 2013년 설명의 범위를 같은 A은행의 급매·차입 분기로 계산합니다. 보험과 유동성 공급이 모든 인출이나 자산 손실을 없애지는 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "IFRS Interpretations Committee · November 2018",
+      "href": "https://www.ifrs.org/news-and-events/updates/ifric/2018/ifric-update-november-2018/",
+      "note": "공식 공개 해석 자료와 ITG의 제각 논의에 따라 손실 3과 상환 4를 별도로 계산합니다. 이 글의 현금 기준 이자 모형이 실제 은행의 발생주의 원장 전체는 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "BCBS · Report on the 2023 banking turmoil",
+      "href": "https://www.bis.org/publications/report-2023-banking-turmoil.pdf",
+      "note": "사건의 복합 원인이라는 범위를 사용하며 40% 할인은 본문 계산용입니다. 모든 뱅크런이 건전한 은행에 대한 오해이거나 특정 고객의 회수액이 정해졌다고 주장하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Federal Reserve · Reserve Requirements",
+      "href": "https://www.federalreserve.gov/monetarypolicy/reservereq.htm",
+      "note": "0으로 나눌 수 없다는 산술과 제도 경계를 연결합니다. 법정 비율이 0이어도 지급용 준비금·자본·유동성 관리가 필요합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 · 예금보호한도 상향 주요 QA",
+      "href": "https://www.fsc.go.kr/po020201/84975",
+      "note": "공식 QA의 일반 예금 조건을 0.6억과 0.5억의 가정에 적용합니다. 모든 금융상품을 보호하거나 한도 밖 금액이 반드시 전액 손실이라는 뜻은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "IFRS ITG · Presentation of loss allowance (2015-12)",
+      "href": "https://www.ifrs.org/content/dam/ifrs/meetings/2015/december/itg/impairment-of-financial-instruments/ap10-presentation-of-the-loss-allowance.pdf",
+      "note": "5.4.4 제각의 직접 총장부가 감소와 충당금 표시를 논의한 공개 문서입니다. 기준서 자체와 구분합니다."
+    }
   ],
   "banking/central-bank-and-policy-transmission": [
     {

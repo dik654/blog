@@ -72,15 +72,74 @@ export const zkpMath3Articles: Article[] = [
   },
   {
     slug: "sparse-multiplication",
-    title: "Sparse multiplication: support·Fp¹²·Miller 비용",
+    title: "희소 곱셈: 빈 칸을 생략하고 같은 결과를 얻기",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "Support-aware 곱셈" },
-      { id: "why-sparse", title: "희소 표현·convolution 예제" },
-      { id: "how-sparse", title: "Fp¹² tower slot 경계" },
-      { id: "cost-saving", title: "비용 모델·Amdahl 상한" },
-      { id: "in-miller", title: "Miller lowering·release gate" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 네 칸 중 두 칸이 0이면 그 열의 곱셈을 생략합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 입력의 빈 위치를 알고도 일반 곱과 같은 값을 내야 합니다"
+  },
+  {
+    "id": "concrete",
+    "title": "3. 같은 여덟 곱을 출력의 여섯 자리에 모읍니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 빈 열과 이동한 두 행을 같은 결과로 연결합니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 반복해서 같은 빈 칸이 생기면 전용 계산을 만들 수 있습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 계수의 값과 0 아닌 위치 집합에 이름을 붙입니다"
+  },
+  {
+    "id": "why-sparse",
+    "title": "7. 곱할 쌍의 수와 출력의 0 아닌 칸 수를 구분합니다"
+  },
+  {
+    "id": "how-sparse",
+    "title": "8. 같은 다항식을 실제 여섯 칸의 순서로 옮깁니다"
+  },
+  {
+    "id": "source",
+    "title": "9. 원본 014 함수에 같은 5·7·0을 넣습니다"
+  },
+  {
+    "id": "reduction",
+    "title": "10. 빈 칸 하나에 11을 넣으면 높은 항이 되돌아옵니다"
+  },
+  {
+    "id": "twist",
+    "title": "11. 같은 세 인자를 034에 넣으면 다른 값을 곱합니다"
+  },
+  {
+    "id": "in-miller",
+    "title": "12. 실제 BN254의 선 곱셈은 D형과 034로 연결됩니다"
+  },
+  {
+    "id": "paper-comparison",
+    "title": "13. 논문의 같은 세 위치를 원문 중간값에 대입합니다"
+  },
+  {
+    "id": "cost-saving",
+    "title": "14. 여덟 부분 곱, 열세 함수 호출, 전체 시간은 다른 장부입니다"
+  },
+  {
+    "id": "boundaries",
+    "title": "15. 0을 찾는 분기와 사라진 입력은 별도로 확인합니다"
+  },
+  {
+    "id": "release",
+    "title": "16. 같은 값과 위치를 맞춘 뒤 전체 계산을 비교합니다"
+  }
+],
     component: () =>
       import("@/pages/articles/blockchain/sparse-multiplication"),
   },

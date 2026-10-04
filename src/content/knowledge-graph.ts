@@ -13940,28 +13940,36 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/crypto/karatsuba#cost-comparison"
   },
   "sparse-coefficient-support": {
-    id: "sparse-coefficient-support", kind: "concept", domain: "mathematics",
-    label: "Sparse coefficient support",
-    definition: "Polynomial이나 basis coefficient 배열에서 값이 0이 아닌 index 집합으로, dense 길이와 실제 partial-product 후보 수를 분리해 표현합니다.",
-    canonicalHref: "/cs/crypto/sparse-multiplication#why-sparse",
+    "id": "sparse-coefficient-support",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "Sparse coefficient support",
+    "definition": "계수 배열에서 값이 0이 아닌 위치의 집합입니다. 최고 지수·배열 길이와 구분하며 값과 기저가 그 위치의 의미를 정합니다. 공개된 고정 support와 비밀 값마다 달라지는 support의 처리 비용과 누출 가능성은 다릅니다.",
+    "canonicalHref": "/cs/crypto/sparse-multiplication#names"
   },
   "support-aware-convolution": {
-    id: "support-aware-convolution", kind: "method", domain: "computer-science",
-    label: "Support-aware coefficient convolution",
-    definition: "두 support의 index 쌍만 곱하고 지수 합이 같은 output coefficient에 누적한 뒤 quotient relation이 있으면 별도 reduction하는 sparse product schedule입니다.",
-    canonicalHref: "/cs/crypto/sparse-multiplication#why-sparse",
+    "id": "support-aware-convolution",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Support-aware coefficient convolution",
+    "definition": "0 아닌 계수의 위치 쌍을 곱해 지수 합이 같은 출력에 더하고, 몫의 관계식이 있으면 높은 항을 되돌리는 계산입니다. 같은 위치의 합·상쇄와 축약 때문에 부분 곱 수와 출력 support 크기는 다를 수 있습니다.",
+    "canonicalHref": "/cs/crypto/sparse-multiplication#why-sparse"
   },
   "pairing-line-sparse-lowering": {
-    id: "pairing-line-sparse-lowering", kind: "method", domain: "computer-science",
-    label: "Pairing line sparse multiplication lowering",
-    definition: "Miller line evaluation의 profile-pinned nonzero Fp12 slots만 받아 dense accumulator product를 tower-specific sparse helper로 내리는 pairing 구현 최적화입니다.",
-    canonicalHref: "/cs/crypto/sparse-multiplication#in-miller",
+    "id": "pairing-line-sparse-lowering",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Pairing line sparse multiplication lowering",
+    "definition": "곡선과 기저에 맞춘 선의 계수 위치를 전용 곱 함수로 계산하는 방법입니다. 고정 BN 원문에서 M형은 014, D형은 034이며 BN254 설정은 D형입니다. 함수 인자 수가 같아도 그 계수가 놓이는 기저가 다르면 다른 값을 곱합니다.",
+    "canonicalHref": "/cs/crypto/sparse-multiplication#in-miller"
   },
   "sparse-multiplication-cost-release": {
-    id: "sparse-multiplication-cost-release", kind: "method", domain: "computer-science",
-    label: "Sparse multiplication cost · release gate",
-    definition: "Support와 tower identity, generic parity, negative slot fixtures를 확인한 뒤 coefficient operation·memory·Miller fraction과 end-to-end latency를 함께 비교하는 채택 절차입니다.",
-    canonicalHref: "/cs/crypto/sparse-multiplication#cost-saving",
+    "id": "sparse-multiplication-cost-release",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Sparse multiplication cost · release gate",
+    "definition": "고정 입력과 위치를 일반 곱·독립 산술에 대조한 뒤 부분 곱 수, 실제 원문의 호출 수와 시스템 시간을 구분하는 검토입니다. 대상 비율 f가 s배 빨라지고 나머지가 그대로인 모형에서 전체 속도는 1/((1−f)+f/s)이며 호출 감소만으로 실측 속도를 정할 수 없습니다.",
+    "canonicalHref": "/cs/crypto/sparse-multiplication#cost-saving"
   },
   "characteristic-p-frobenius-automorphism": {
     "id": "characteristic-p-frobenius-automorphism",
@@ -17523,84 +17531,104 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/tensor-and-pipeline-parallel-inference#sequence-context-parallel",
   },
   "radix-tree-kv-cache": {
-    id: "radix-tree-kv-cache",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Radix tree KV cache · RadixAttention",
-    aliases: ["Radix Tree Cache", "RadixAttention", "Radix Attention"],
-    definition:
-      "Edge 에 token 열을, node 에 그 token 열까지의 KV cache 위치와 reference counter 를 두는 radix tree 로 여러 요청의 공유 prefix 를 보관하고, 새 요청이 갈라지는 지점에서 node 를 쪼개 공유 부분을 함께 가리키게 하는 SGLang 의 prefix reuse 자료구조입니다.",
-    canonicalHref: "/cs/ai/prefix-caching-radix-attention#radix-tree",
+    "id": "radix-tree-kv-cache",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Radix tree KV cache · RadixAttention",
+    "aliases": [
+      "Radix Tree Cache",
+      "RadixAttention",
+      "Radix Attention"
+    ],
+    "definition": "같은 앞 구간의 입력 번호와 저장 위치 목록을 공유하고 달라지는 지점에서 경로를 나눕니다. 고정 SGLang의 node.value는 KV 값 자체가 아닌 위치 index입니다. index clone과 GPU의 모든 KV 복사를 구분하고 page·모델·namespace 조건을 확인합니다.",
+    "canonicalHref": "/cs/ai/prefix-caching-radix-attention#radix-source"
   },
   "prefix-cache-matching": {
-    id: "prefix-cache-matching",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Prefix cache matching · longest prefix match",
-    aliases: ["Prefix Cache Matching", "match_prefix", "Longest Prefix Match"],
-    definition:
-      "새 요청의 prompt 가 처음부터 연속으로 cache 와 일치하는 길이 하나를 찾는 절차로, radix tree 의 match_prefix 는 token 단위로, vLLM 의 chained block hash 조회는 full block 단위로 그 길이를 정하며 중간만 같은 구간은 세지 않습니다.",
-    canonicalHref: "/cs/ai/prefix-caching-radix-attention#matching",
+    "id": "prefix-cache-matching",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Prefix cache matching · longest prefix match",
+    "aliases": [
+      "Prefix Cache Matching",
+      "match_prefix",
+      "Longest Prefix Match"
+    ],
+    "definition": "입력의 처음부터 이어지는 같은 구간을 찾은 뒤 모델 조건과 저장·hash 경계에 맞춰 재사용 길이를 정합니다. radix는 항상 한 자리 단위이고 vLLM은 항상 full block이라는 구분은 정확하지 않습니다. 부분 hash·hybrid·출력 점수 재계산의 실제 경계를 고정합니다.",
+    "canonicalHref": "/cs/ai/prefix-caching-radix-attention#matching"
   },
   "hybrid-kv-cache-manager": {
-    id: "hybrid-kv-cache-manager",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Hybrid KV cache manager · cross-group prefix hit",
-    aliases: ["Hybrid Cache Manager", "HybridKVCacheCoordinator", "find_longest_cache_hit"],
-    definition:
-      "Full attention·sliding window·recurrent 처럼 KV cache group 이 여럿인 model 에서 group 마다 다른 prefix hit 길이를 full attention 의 후보부터 시작하는 고정점 반복으로 한 값으로 합의하는 vLLM V1 의 cache hit 결정 부품입니다.",
-    canonicalHref: "/cs/ai/prefix-caching-radix-attention#hybrid-manager",
+    "id": "hybrid-kv-cache-manager",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Hybrid KV cache manager · cross-group prefix hit",
+    "aliases": [
+      "Hybrid Cache Manager",
+      "HybridKVCacheCoordinator",
+      "find_longest_cache_hit"
+    ],
+    "definition": "여러 cache group이 모두 재사용할 수 있는 입력 길이를 맞추고 각 group의 저장 목록을 그 길이에 맞춥니다. group마다 요구하는 상태가 다릅니다. full group은 기존 결과를 잘라 쓰며 단순 두 group 조합에는 한 번 처리하는 최적화가 있어 항상 모든 group을 재조회하지 않습니다.",
+    "canonicalHref": "/cs/ai/prefix-caching-radix-attention#kernel-and-hybrid"
   },
   "radix-lru-leaf-eviction": {
-    id: "radix-lru-leaf-eviction",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Reference-counted LRU leaf eviction",
-    aliases: ["Leaf-first LRU Eviction", "Radix Eviction Policy"],
-    definition:
-      "Reference counter 가 0 인 node 만 후보로 두고 그 가운데 leaf 를 least recently used 순으로 지워 공유 조상은 leaf 가 된 뒤에야 지우는 radix cache 의 eviction 규칙이며, vLLM 은 block 을 역순으로 free queue 에 반환해 같은 순서를 얻습니다.",
-    canonicalHref: "/cs/ai/prefix-caching-radix-attention#eviction",
+    "id": "radix-lru-leaf-eviction",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Reference-counted LRU leaf eviction",
+    "aliases": [
+      "Leaf-first LRU Eviction",
+      "Radix Eviction Policy"
+    ],
+    "definition": "사용 중인 경로를 보호하고 반환 가능한 끝 구간부터 선택한 정책 순서로 돌려줍니다. LRU는 선택한 정책의 가정입니다. leaf 단위 반환은 요구량을 넘거나 못 채울 수 있고 vLLM의 참조 수·hash별 free queue와 동일한 규칙은 아닙니다.",
+    "canonicalHref": "/cs/ai/prefix-caching-radix-attention#eviction"
   },
   "cache-aware-scheduling": {
-    id: "cache-aware-scheduling",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Cache-aware scheduling · longest-prefix-first",
-    aliases: ["Cache-Aware Scheduling", "Prefix-Aware Scheduling", "Longest Prefix First", "lpm"],
-    definition:
-      "Waiting queue 의 요청을 도착 순이 아니라 matched prefix 길이가 긴 순으로 세워 같은 prefix 를 공유하는 요청을 연달아 돌리고 eviction 전에 다시 hit 하게 하는 정책으로, DFS 순서에 가까워 hit rate 상한에 닿는 대신 hit 이 없는 요청을 무기한 미룰 수 있습니다.",
-    canonicalHref: "/cs/ai/prefix-caching-radix-attention#scheduling",
+    "id": "cache-aware-scheduling",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Cache-aware scheduling · longest-prefix-first",
+    "aliases": [
+      "Cache-Aware Scheduling",
+      "Prefix-Aware Scheduling",
+      "Longest Prefix First",
+      "lpm"
+    ],
+    "definition": "현재 재사용할 기록과 실행 뒤 새로 남을 기록을 보고 요청 순서를 정하는 정책입니다. 원문 LPM은 임시 지연과 대기 129개 이상의 FCFS 전환을 포함합니다. offline DFS 상한은 online 지연 최적성이나 모든 설정의 starvation을 증명하지 않습니다.",
+    "canonicalHref": "/cs/ai/prefix-caching-radix-attention#scheduling"
   },
   "attention-metadata": {
-    id: "attention-metadata",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Attention metadata",
-    aliases: ["CommonAttentionMetadata", "FlashAttentionMetadata"],
-    definition:
-      "Scheduler 가 확정한 요청별 token 수·hit 길이·block 배정을 attention kernel 이 읽는 tensor 묶음(query 시작 위치·seq_lens·block table·slot mapping 과 backend 별 cascade 정보)으로 바꾼 것으로, model runner 가 step 마다 새로 만듭니다.",
-    canonicalHref: "/cs/ai/prefix-caching-radix-attention#attention-metadata",
+    "id": "attention-metadata",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Attention metadata",
+    "aliases": [
+      "CommonAttentionMetadata",
+      "FlashAttentionMetadata"
+    ],
+    "definition": "새 query 범위와 전체 길이 및 기록의 읽기·쓰기 주소를 attention 구현에 전달합니다. 고정 CommonAttentionMetadata 정의는 backend.py에 있습니다. backend·padding·graph 실행에 따라 필드와 갱신 방식이 다르며 공통 prefix만으로 cascade가 선택되지 않습니다.",
+    "canonicalHref": "/cs/ai/prefix-caching-radix-attention#attention-metadata"
   },
   "slot-mapping": {
-    id: "slot-mapping",
-    kind: "method",
-    domain: "computer-science",
-    label: "Slot mapping · KV write path",
-    aliases: ["Slot Mapping", "slot_mapping"],
-    definition:
-      "이번 forward 에서 새로 계산하는 token 마다 K·V 를 저장할 physical slot 번호(physical block 번호 × block 크기 + offset)를 적은 1차원 tensor 로, prefix hit 으로 이미 있는 token 은 포함하지 않는 KV cache 의 쓰기 경로입니다.",
-    canonicalHref: "/cs/ai/prefix-caching-radix-attention#slot-mapping",
+    "id": "slot-mapping",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Slot mapping · KV write path",
+    "aliases": [
+      "Slot Mapping",
+      "slot_mapping"
+    ],
+    "definition": "이번에 계산하는 위치의 K·V를 어느 물리 슬롯에 쓸지 나타내는 주소 목록입니다. 이 주소식은 가정한 block 저장 구조입니다. 실제 graph padding·무효 슬롯·cache group 구성을 확인하며 목록 길이를 항상 유효 token 수와 동일시하지 않습니다.",
+    "canonicalHref": "/cs/ai/prefix-caching-radix-attention#attention-metadata"
   },
   "block-table-lookup": {
-    id: "block-table-lookup",
-    kind: "method",
-    domain: "computer-science",
-    label: "Block table lookup · KV read path",
-    aliases: ["Block Table Lookup"],
-    definition:
-      "Attention kernel 이 query 위치까지의 K·V 를 읽기 위해 요청의 block table 행에서 위치를 block 크기로 나눈 몫 번째 항목을 조회해 physical block 을 얻는 실행 시점의 address translation 으로, 공유 prefix block 과 방금 쓴 block 을 같은 경로로 읽습니다.",
-    canonicalHref: "/cs/ai/prefix-caching-radix-attention#block-table-lookup",
+    "id": "block-table-lookup",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Block table lookup · KV read path",
+    "aliases": [
+      "Block Table Lookup"
+    ],
+    "definition": "입력 위치의 논리 block을 요청의 table로 물리 block에 연결해 읽을 기록을 찾습니다. 큰 사례의 157개 table 항목은 157회 실제 메모리 거래를 뜻하지 않습니다. kernel의 tile·mask·읽기 재사용을 구분합니다.",
+    "canonicalHref": "/cs/ai/prefix-caching-radix-attention#attention-metadata"
   },
   "self-speculative-decoding": {
     id: "self-speculative-decoding",
@@ -21688,33 +21716,35 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/agent-plan-replanning#plan-validation",
   },
   "floating-point-precision-and-error": {
-    id: "floating-point-precision-and-error",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Floating-point precision · rounding error",
-    aliases: ["Numerical Precision", "Floating-Point Error"],
-    definition:
-      "IEEE 754가 실수를 sign·exponent·mantissa의 유한 bit로 나눠 저장하면서 mantissa bit 수만큼만 유효숫자를 남기는 numerical precision과, 그 결과 표현하지 못하는 값이 가장 가까운 표현 가능값으로 반올림되며 남는 floating-point error를 함께 묶은 개념입니다.",
-    canonicalHref: "/cs/ai/math-numerical-precision-stability#precision",
+    "id": "floating-point-precision-and-error",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Floating-point precision · rounding error",
+    "aliases": [
+      "Numerical Precision",
+      "Floating-Point Error"
+    ],
+    "definition": "유한한 부동소수점 형식에서 표현 가능한 자리의 촘촘함과, 그 사이의 값을 정한 규칙으로 저장하며 생기는 오차입니다. 이진 정규수는 저장 소수부 f bit에 숨은 1을 더한 p=f+1 bit 정밀도를 가지며 최근접 짝수 반올림의 ε=2^-f와 단위 반올림 오차 u=ε/2를 구별합니다.",
+    "canonicalHref": "/cs/ai/math-numerical-precision-stability#precision"
   },
   "numerical-stability": {
-    id: "numerical-stability",
-    kind: "concept",
-    domain: "mathematics",
-    label: "Numerical stability",
-    definition:
-      "수학적으로 같은 값을 내는 계산식이라도 부동소수점으로 실행할 때 입력의 작은 오차나 매 단계의 반올림 오차를 얼마나 증폭시키는지가 계산 순서마다 달라지는 성질이며, 안정적인 재정렬(예: softmax의 max-subtraction)은 결과를 바꾸지 않으면서 오차 증폭만 없앱니다.",
-    canonicalHref: "/cs/ai/math-numerical-precision-stability#stability",
+    "id": "numerical-stability",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "Numerical stability",
+    "definition": "같은 수학적 문제를 계산할 때 선택한 알고리즘의 중간 연산과 반올림이 결과에 미치는 영향을 다루는 성질입니다. 안정한 재정렬은 특정 오차·범위 초과를 줄일 수 있으나 입력의 민감도와 모든 수치 실패를 없애지는 않습니다. 유한 입력의 softmax 최대값 이동도 작은 분자 underflow와 합산 조건은 별도로 확인합니다.",
+    "canonicalHref": "/cs/ai/math-numerical-precision-stability#stability"
   },
   "tensor-shape-contract": {
-    id: "tensor-shape-contract",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Tensor shape contract",
-    aliases: ["Tensor Shape"],
-    definition:
-      "Tensor 각 축의 크기가 연산에서 어떤 축끼리 맞대응(broadcast)할지를 정하는 명시적 계약이며, shape가 어긋나도 broadcasting 규칙이 성립하는 형태라면 예외 없이 의도와 다른 축으로 조용히 계산이 진행된다는 사실을 포함합니다.",
-    canonicalHref: "/cs/ai/math-numerical-precision-stability#shape",
+    "id": "tensor-shape-contract",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Tensor shape contract",
+    "aliases": [
+      "Tensor Shape"
+    ],
+    "definition": "배열 각 축의 크기를 통해 어떤 값끼리 짝지어 연산할지 정하는 계약입니다. Broadcasting이 허용하는 축 배치와 사용자가 의도한 짝짓기는 다를 수 있으며, 정수 연산이 정확해도 이 불일치는 남습니다.",
+    "canonicalHref": "/cs/ai/math-numerical-precision-stability#shape"
   },
   "integer-quantization-formats": {
     id: "integer-quantization-formats",
@@ -23479,74 +23509,90 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/finance/money/time-value-and-discounting#real-rate",
   },
   "bank-balance-sheet": {
-    id: "bank-balance-sheet",
-    kind: "concept",
-    domain: "economics",
-    label: "Bank balance sheet · 은행 대차대조표",
-    aliases: ["은행 장부", "T계정"],
-    definition:
-      "은행이 받을 권리를 왼쪽 자산에, 갚을 의무를 오른쪽 부채에 적고 그 차액을 자기자본으로 두는 장부입니다. 예금은 자산이 아니라 부채이며, 은행이 위험을 견디는 힘은 자산의 크기가 아니라 자기자본의 두께가 정합니다.",
-    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#balance-sheet",
+    "id": "bank-balance-sheet",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "Bank balance sheet · 은행 대차대조표",
+    "aliases": [
+      "은행 장부",
+      "T계정"
+    ],
+    "definition": "은행이 받을 자산과 갚을 부채를 같은 시점에 적고 차이를 자본으로 읽습니다. 장부 자본 8은 별도 현금이 아닙니다. 규제자본의 공제·종류와 순자산·총자산을 구분합니다.",
+    "canonicalHref": "/finance/banking/bank-balance-sheet-and-deposit-creation#balance-sheet"
   },
   "deposit-creation": {
-    id: "deposit-creation",
-    kind: "method",
-    domain: "economics",
-    label: "Deposit creation · 예금 창조",
-    aliases: ["신용창조", "대출이 예금을 만든다"],
-    definition:
-      "은행이 대출을 실행하면서 자산의 대출채권과 부채의 예금을 같은 금액으로 동시에 기장하는 것입니다. 기존 예금은 줄지 않으므로 총예금이 늘어나며, 상환 시에는 양쪽이 함께 줄어 통화량이 대출 잔액을 따라 움직입니다.",
-    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#deposit-creation",
+    "id": "deposit-creation",
+    "kind": "method",
+    "domain": "economics",
+    "label": "Deposit creation · 예금 창조",
+    "aliases": [
+      "신용창조",
+      "대출이 예금을 만든다"
+    ],
+    "definition": "새 대출과 함께 은행의 지급 의무인 고객 예금을 적습니다. 은행 자금 조달이 불필요하다는 뜻이 아닙니다. 원금 상환·이자·손실 인식·비은행 자산 매입을 따로 계산합니다.",
+    "canonicalHref": "/finance/banking/bank-balance-sheet-and-deposit-creation#deposit-creation"
   },
   "money-multiplier-ceiling": {
-    id: "money-multiplier-ceiling",
-    kind: "metric",
-    domain: "economics",
-    label: "Money multiplier ceiling · 통화승수의 상한 해석",
-    aliases: ["통화승수", "money multiplier", "지급준비율"],
-    definition:
-      "지급준비율만이 유일한 제약일 때 예금이 늘 수 있는 산술적 최대 배수 1/rr입니다. 준비금이 대출을 낳는 절차가 아니라 상한을 나타내는 항등식이며, 준비금을 늘려도 대출 수요와 자본·유동성 제약이 없으면 이 배수는 실현되지 않습니다.",
-    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#money-multiplier",
+    "id": "money-multiplier-ceiling",
+    "kind": "metric",
+    "domain": "economics",
+    "label": "Money multiplier ceiling · 통화승수의 상한 해석",
+    "aliases": [
+      "통화승수",
+      "money multiplier",
+      "지급준비율"
+    ],
+    "definition": "고정 준비금과 양의 동일 준비율이라는 모형에서 필요한 준비금이 보유량을 넘지 않아야 합니다. 특정 준비율이 모든 나라에 적용되거나 예금이 상한까지 자동 증가한다는 뜻이 아닙니다. r=0으로 나눌 수 없고 다른 대출 제약도 남습니다.",
+    "canonicalHref": "/finance/banking/bank-balance-sheet-and-deposit-creation#money-multiplier"
   },
   "maturity-transformation": {
-    id: "maturity-transformation",
-    kind: "concept",
-    domain: "economics",
-    label: "Maturity transformation · 만기 변환",
-    aliases: ["만기 불일치", "maturity mismatch"],
-    definition:
-      "언제든 청구 가능한 짧은 부채로 수년짜리 긴 자산을 떠받치는 구조입니다. 예금자의 유동성과 차주의 장기 자금을 동시에 만족시키는 은행의 본업이지만, 예금자가 동시에 찾지 않는다는 전제 위에서만 성립합니다.",
-    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#maturity-transformation",
+    "id": "maturity-transformation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "Maturity transformation · 만기 변환",
+    "aliases": [
+      "만기 불일치",
+      "maturity mismatch"
+    ],
+    "definition": "빨리 지급할 수 있는 부채와 더 늦게 돌아오는 자산의 시점을 연결합니다. 예금별 인출 조건과 조달 만기가 다릅니다. 동시에 인출하지 않을 것이라는 기대만으로 충분한 관리는 되지 않습니다.",
+    "canonicalHref": "/finance/banking/bank-balance-sheet-and-deposit-creation#maturity-transformation"
   },
   "self-fulfilling-bank-run": {
-    id: "self-fulfilling-bank-run",
-    kind: "concept",
-    domain: "economics",
-    label: "Self-fulfilling bank run · 자기실현적 인출",
-    aliases: ["뱅크런", "bank run", "조정 실패"],
-    definition:
-      "긴 자산의 급매 손실 때문에 나중에 찾는 예금자가 덜 받는다는 사실이 알려져 있을 때, 남들이 찾을 것이라는 예상만으로 인출이 몰리고 그 인출이 예상을 사실로 만드는 상황입니다. 원인이 자산 부실이 아니라 예금자 사이의 조정 실패라는 점에서 일반적인 파산과 구분됩니다.",
-    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#bank-run",
+    "id": "self-fulfilling-bank-run",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "Self-fulfilling bank run · 자기실현적 인출",
+    "aliases": [
+      "뱅크런",
+      "bank run",
+      "조정 실패"
+    ],
+    "definition": "다른 사람의 인출이 내 회수 가능성을 낮출 것이라는 예상이 인출을 더 부를 수 있습니다. 실제 자산 손실과 조정 문제가 함께 작동할 수 있습니다. 예금자별 잔액과 지급 절차 없이 인출 순서별 회수액을 계산할 수 없습니다.",
+    "canonicalHref": "/finance/banking/bank-balance-sheet-and-deposit-creation#bank-run"
   },
   "deposit-insurance": {
-    id: "deposit-insurance",
-    kind: "method",
-    domain: "economics",
-    label: "Deposit insurance · 예금보험",
-    aliases: ["예금자보호", "보장 한도"],
-    definition:
-      "한도까지는 은행이 파산해도 돌려받는다고 미리 약속해 먼저 찾을 유인을 제거하는 장치입니다. 실제 지급이 아니라 약속의 존재로 조정 실패를 푸는 것이 목적이며, 한도 밖 예금과 다른 채권자에게는 효력이 없습니다.",
-    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#safety-net",
+    "id": "deposit-insurance",
+    "kind": "method",
+    "domain": "economics",
+    "label": "Deposit insurance · 예금보험",
+    "aliases": [
+      "예금자보호",
+      "보장 한도"
+    ],
+    "definition": "보호 약속을 신뢰하는 예금자의 손실 불안과 먼저 인출할 유인을 줄입니다. 보호 대상·기관 단위·소정의 이자·별도 보호 규정을 확인합니다. 한도 밖 금액과 지급 지연 우려가 남아 모든 인출 유인이 없어지지는 않습니다.",
+    "canonicalHref": "/finance/banking/bank-balance-sheet-and-deposit-creation#safety-net"
   },
   "lender-of-last-resort": {
-    id: "lender-of-last-resort",
-    kind: "method",
-    domain: "economics",
-    label: "Lender of last resort · 최종대부자",
-    aliases: ["최종대출자", "유동성 공급"],
-    definition:
-      "지급 능력은 있으나 당장 현금이 부족한 은행에 중앙은행이 담보를 받고 자금을 공급해 급매를 막는 기능입니다. 지급 능력이 없는 은행을 살리는 장치가 아니며, 둘을 실시간으로 가려내기 어렵다는 점이 이 기능의 오래된 난점입니다.",
-    canonicalHref: "/finance/banking/bank-balance-sheet-and-deposit-creation#safety-net",
+    "id": "lender-of-last-resort",
+    "kind": "method",
+    "domain": "economics",
+    "label": "Lender of last resort · 최종대부자",
+    "aliases": [
+      "최종대출자",
+      "유동성 공급"
+    ],
+    "definition": "중앙은행이 조건을 갖춘 금융기관에 유동성을 제공해 지급 시차를 연결합니다. 담보·할인율·금리·상환 능력 조건은 제도별로 다릅니다. 유동성 차입은 기존 손실을 없애지 않으며 차입금 상환 의무도 남습니다.",
+    "canonicalHref": "/finance/banking/bank-balance-sheet-and-deposit-creation#safety-net"
   },
   "central-bank-balance-sheet": {
     id: "central-bank-balance-sheet",
@@ -44631,8 +44677,18 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "radix-tree-kv-cache", to: "radix-lru-leaf-eviction", relation: "constrains", reason: "Tree 의 조상·leaf 관계와 reference counter 가 무엇을 먼저 지울 수 있는지를 정합니다." },
   { from: "kv-free-queue-eviction", to: "radix-lru-leaf-eviction", relation: "contrasts", reason: "vLLM 은 tree 없이 block 반환 순서로, radix 는 leaf 우선 LRU 로 같은 재사용 우선순위를 만듭니다." },
   { from: "prefix-cache-matching", to: "cache-aware-scheduling", relation: "prerequisite", reason: "Waiting 요청마다 match 길이를 먼저 알아야 그 길이로 정렬할 수 있습니다." },
-  { from: "cache-aware-scheduling", to: "prefix-cache-hit-rate", relation: "optimizes", reason: "같은 prefix 를 연달아 돌려 eviction 전에 다시 hit 하게 하므로 hit rate 를 상한 쪽으로 올립니다." },
-  { from: "cache-aware-scheduling", to: "scheduler-policy-starvation", relation: "produces", reason: "Hit 이 없는 요청이 hit 요청의 도착이 멈출 때까지 뒤로 밀리는 starvation 을 만들 수 있습니다." },
+  {
+    "from": "cache-aware-scheduling",
+    "to": "prefix-cache-hit-rate",
+    "relation": "optimizes",
+    "reason": "실행 뒤 남은 기록을 갱신하며 같은 계열을 이어 실행하면 주어진 용량 모형에서 hit을 늘릴 수 있습니다. 처음 모두 cold인 정적 정렬만으로 그룹화되지는 않습니다."
+  },
+  {
+    "from": "cache-aware-scheduling",
+    "to": "scheduler-policy-starvation",
+    "relation": "produces",
+    "reason": "계속 유입되는 hit 요청을 앞세우고 chunk를 허용하지 않는 조건에서는 miss 요청의 대기가 길어질 수 있습니다. 실제 정책 전환·우선순위·도착 조건을 함께 확인합니다."
+  },
   { from: "scheduler-priority-order", to: "cache-aware-scheduling", relation: "contrasts", reason: "FCFS·priority 는 도착·우선순위로, cache-aware 는 match 길이로 순서를 정해 fairness 와 hit rate 를 맞바꿉니다." },
   { from: "scheduling-step", to: "attention-metadata", relation: "produces", reason: "Step 의 SchedulerOutput 이 model runner 에서 kernel 용 tensor 묶음으로 바뀝니다." },
   { from: "attention-metadata", to: "slot-mapping", relation: "produces", reason: "새 token 의 쓰기 위치는 metadata 의 slot_mapping field 로 kernel 에 전달됩니다." },

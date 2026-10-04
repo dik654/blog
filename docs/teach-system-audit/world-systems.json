@@ -5,23 +5,128 @@
   "articles": [
     {
       "route": "banking/bank-balance-sheet-and-deposit-creation",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "Definitions precede a consistent small case; body and diagram use different amounts.",
+          "No two-bank transfer and principal repayment traced end to end.",
+          "Loan write-off, asset purchases and deposit destruction need separate entries.",
+          "Multiplier upper bound lacks fixed-reserve, positive-ratio assumptions.",
+          "Run diagram lacks individual claims and changes initial bank; deposit protection presented too categorically.",
+          "Preserve seven concepts while correcting ECL, settlement timing and capital distinctions."
+        ],
+        "actualBodyRead": true,
+        "publicFiles": [
+          "src/pages/articles/banking/bank-balance-sheet-and-deposit-creation.tsx",
+          "src/pages/articles/banking/bank-balance-sheet-and-deposit-creation/ModernArticle.tsx",
+          "src/pages/articles/banking/bank-balance-sheet-and-deposit-creation/viz/DepositJourneyViz.tsx",
+          "src/pages/articles/banking/bank-balance-sheet-and-deposit-creation/viz/LiquidityBranchViz.tsx"
+        ],
+        "fixture": "억원 단위 20+80=92+8에서 대출 10, 다른 은행 송금 6, 원금 4 상환. 최종 14+86=92+8, B의 새 예금 6. 같은 최종 장부에서 손실·이자·급매·차입을 각각 별도 분기로 계산.",
+        "stageAnchors": {
+          "S": "overview",
+          "B": "why-care",
+          "0": "small-case",
+          "1": "picture",
+          "2": "why-two-records",
+          "3": "balance-sheet",
+          "4": [
+            "deposit-creation",
+            "transfer-repayment"
+          ],
+          "5": "intermediary-myth",
+          "6": [
+            "journal",
+            "loss-interest",
+            "other-creation",
+            "limits",
+            "money-multiplier",
+            "maturity-transformation",
+            "bank-run",
+            "safety-net",
+            "korea"
+          ],
+          "7": [
+            "boundaries",
+            "predict"
+          ]
+        },
+        "preservedDepth": "기초 6·심화 4와 기존 canonical 7을 유지하고 정의·답 경로를 교정. 예금과 준비금, 개별은행과 부문 합계, 손실과 원금상환, 충당금과 제각, 이자 발생/수취, 고정 준비금 모형과 실제 제도, 급매와 차입, 보험과 지급 지연의 구분.",
+        "sourceApplication": "영란은행 2014 PDF 인쇄16·19쪽 Figure1·2를 실제 화면에서 읽고 두 은행 사례에 적용. BIS 부문 모형·IFRIC/ITG·연준·FSC 공식 원문 대조. 원금과 예금 증가 수치는 작성한 모형으로 표시. 한국 시행2025-09-01과 확인2026-10-04 명시.",
+        "numericVerification": "설명용 Python 복식 분개 모형으로 두 은행 네 상태·일곱 별도 분기, 충당금 이후 제각의 순장부가, 양의 준비율 상한·보험 합산을 검산. 실제 은행 원장이나 특정 할인율의 관측값이 아님.",
+        "numericReport": "src/pages/articles/banking/bank-balance-sheet-and-deposit-creation/verification/output.json",
+        "independentReport": "/tmp/teach-all/root-bank-independent-chains.json",
+        "humanize": {
+          "passes": [
+            "/tmp/teach-all/humanize-root-bank/summary.json",
+            "/tmp/teach-all/humanize-root-bank-final/summary.json"
+          ],
+          "roundTrip": true,
+          "gate": 0,
+          "finalChars": 11737,
+          "finalParagraphs": 63,
+          "numbersAndMarkersPreserved": true,
+          "applied": true,
+          "manualProps": "수식 일반형·연산 주석·기호·가정과 6+4를 따로 읽고 같은 수치·조건에 맞춤"
+        },
+        "firstFifth": "실제 표시 본문 기준 이름 붙이기 전 21.816%/21.836% (390/1440).",
+        "verification": "strict learning 3편, Viz 실제2파일, prose baseline, 1441개 명시적 수식 PASS. working 실제 app tsc에서 본문 수식 props를 교정했고 이후 오류는 다음 확률 초안 문법 1건. 고정150편 index snapshot의 전체 build와 tsc는 대기.",
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "sections": 20,
+          "predictionQuestions": 3,
+          "scenesPerViewport": 7,
+          "citationsPerViewport": 10,
+          "formulaViews": 6,
+          "keyboard": true,
+          "playAndReducedMotion": true,
+          "frameAndControlShift": 0,
+          "fitsViewport": true,
+          "overflow": 0,
+          "formulaBaseOutsideCard": 0,
+          "anchors": 0,
+          "console": 0,
+          "actualScreensRead": true,
+          "report": "/tmp/teach-all/root-bank-screens/summary.json",
+          "finalLog": "/tmp/teach-all/root-bank-browser-final.log",
+          "genericReport": "/tmp/world-browser-audit/teach-checkpoint150-additions-summary.json"
+        },
+        "remaining": "고정 index build·전체799편 검토·배포·운영 확인."
+      }
     },
     {
       "route": "banking/central-bank-and-policy-transmission",
-      "status": "unreviewed",
+      "status": "rewrite-required",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "actualBodyRead": true,
+        "publicFiles": [
+          "src/pages/articles/banking/central-bank-and-policy-transmission.tsx",
+          "src/pages/articles/banking/central-bank-and-policy-transmission/viz/PolicyRateViz.tsx",
+          "src/pages/articles/banking/central-bank-and-policy-transmission/viz/TransmissionViz.tsx"
+        ],
+        "findings": [
+          "No consistent small case before names; opening collapses all central banking into fixing one overnight price.",
+          "Administered rates, target ranges and market rates conflated; IORB lower bound leaks under access and intermediary costs.",
+          "Two strategies with uncertain reinvestment are not identical-risk arbitrage; arithmetic term-structure relation needs approximation and term premium can be negative.",
+          "QE against nonbanks can directly create deposits without new lending; quantity and price presented as mutually exclusive.",
+          "Chart mechanically clamps rate path and assigns fixed channel lags without actual mechanism or source.",
+          "Country/time-specific BOK operations and current implementation need primary verification; preserve owned concept depth and quantitative exercises."
+        ]
+      }
     },
     {
       "route": "banking/payment-clearing-settlement",
@@ -3854,8 +3959,9 @@
     }
   ],
   "counts": {
-    "unreviewed": 193,
-    "rewritten-local-verified": 28,
+    "rewritten-local-verified": 29,
+    "rewrite-required": 1,
+    "unreviewed": 191,
     "retained-local-verified": 4
   }
 }

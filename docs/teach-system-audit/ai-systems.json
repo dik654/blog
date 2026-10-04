@@ -6036,7 +6036,7 @@
       "route": "ai/prefix-caching-radix-attention",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prefix-caching-radix-attention.tsx",
       "publicPath": "cs/ai/prefix-caching-radix-attention",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -6057,20 +6057,252 @@
         "cascade는 같은 prefix 길이만으로 켜지지 않으며 실제 backend 비용 휴리스틱·조건 대조 필요",
         "소제목 번호·예측 답 절과 actual source application 부재"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "assumed": true,
+        "R1": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "R2": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          9,
+          10
+        ],
+        "R3": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          11,
+          12
+        ],
+        "scope": "same full-attention model and namespace; sequential; generated records excluded; no eviction until stated; radix page1 vs block B4; CPU numeric positions, not measured GPU timing",
+        "largePreserved": [
+          2000,
+          500,
+          100
+        ],
+        "preservedBoundary": "logical storage does not include metadata, padding, output reservations or allocator overhead"
+      },
+      "stageAnchors": {
+        "strategy": "overview",
+        "blackBox": "black-box",
+        "smallCase": "small-case",
+        "structure": "inside-tree",
+        "necessity": "why-split",
+        "names": "names",
+        "trace": "request-trace",
+        "realSource": [
+          "radix-source",
+          "matching",
+          "block-hash",
+          "full-hit-boundary"
+        ],
+        "depth": [
+          "cache-accounting",
+          "eviction",
+          "free-queue",
+          "scheduling",
+          "schedule-source",
+          "paper-sglang-radixattention",
+          "attention-metadata",
+          "kernel-and-hybrid"
+        ],
+        "limits": [
+          "fairness",
+          "boundary"
+        ],
+        "prediction": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "project": "sglang",
+          "upstreamPath": "python/sglang/srt/mem_cache/radix_cache.py",
+          "localPath": "sglang/python/sglang/srt/mem_cache/radix_cache.py",
+          "url": "https://raw.githubusercontent.com/sgl-project/sglang/35f3c96ff4794a4de15daf12caad371084a037ee/python/sglang/srt/mem_cache/radix_cache.py",
+          "sha256": "b0ca823c2b8a4358293a5aceae9c58f186aded862b06377a8438bfaa2a45d2a1",
+          "bytes": 30726,
+          "byteEqual": true
+        },
+        {
+          "project": "sglang",
+          "upstreamPath": "python/sglang/srt/managers/schedule_policy.py",
+          "localPath": "sglang/python/sglang/srt/managers/schedule_policy.py",
+          "url": "https://raw.githubusercontent.com/sgl-project/sglang/35f3c96ff4794a4de15daf12caad371084a037ee/python/sglang/srt/managers/schedule_policy.py",
+          "sha256": "37b6cdbe85a53476318e97d400588c9396d85726a3fcf639a98eb23ccd60baa6",
+          "bytes": 71349,
+          "byteEqual": true
+        },
+        {
+          "project": "sglang",
+          "upstreamPath": "python/sglang/srt/managers/schedule_batch.py",
+          "localPath": "sglang/python/sglang/srt/managers/schedule_batch.py",
+          "url": "https://raw.githubusercontent.com/sgl-project/sglang/35f3c96ff4794a4de15daf12caad371084a037ee/python/sglang/srt/managers/schedule_batch.py",
+          "sha256": "9041283b11d1b7eac18b0167657d8a5a060cf9c54a838453e2a2421cdeff4003",
+          "bytes": 171263,
+          "byteEqual": true
+        },
+        {
+          "project": "vllm",
+          "upstreamPath": "vllm/v1/core/kv_cache_manager.py",
+          "localPath": "vllm/vllm/v1/core/kv_cache_manager.py",
+          "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/kv_cache_manager.py",
+          "sha256": "70f7f608c0963af155540630a5633483e5c19c0c0280dfd621760d5db2a419a6",
+          "bytes": 38483,
+          "byteEqual": true
+        },
+        {
+          "project": "vllm",
+          "upstreamPath": "vllm/v1/core/kv_cache_coordinator.py",
+          "localPath": "vllm/vllm/v1/core/kv_cache_coordinator.py",
+          "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/kv_cache_coordinator.py",
+          "sha256": "cf1a92db18d079403d8d4c8c9e5b0b615d2a116e3e8ffb5ffb39352a01c04b29",
+          "bytes": 36811,
+          "byteEqual": true
+        },
+        {
+          "project": "vllm",
+          "upstreamPath": "vllm/v1/core/single_type_kv_cache_manager.py",
+          "localPath": "vllm/vllm/v1/core/single_type_kv_cache_manager.py",
+          "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/single_type_kv_cache_manager.py",
+          "sha256": "8c9030040cbc3b7176e228e10ff6491c3cf6c3e95bdfb573532fcf75f5385ebd",
+          "bytes": 85275,
+          "byteEqual": true
+        },
+        {
+          "project": "vllm",
+          "upstreamPath": "vllm/v1/core/block_pool.py",
+          "localPath": "vllm/vllm/v1/core/block_pool.py",
+          "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/block_pool.py",
+          "sha256": "51cad2fd425128a0ff433ca4685acfc022e40659153ea5d7180fc586e1eebb6c",
+          "bytes": 33136,
+          "byteEqual": true
+        },
+        {
+          "project": "vllm",
+          "upstreamPath": "vllm/v1/core/kv_cache_utils.py",
+          "localPath": "vllm/vllm/v1/core/kv_cache_utils.py",
+          "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/kv_cache_utils.py",
+          "sha256": "0ab5385925f660395612e3f69030cad3b18c2e0bd6fb61d3ff43072a6cefb74f",
+          "bytes": 94588,
+          "byteEqual": true
+        },
+        {
+          "project": "vllm",
+          "upstreamPath": "vllm/v1/attention/backends/utils.py",
+          "localPath": "vllm/vllm/v1/attention/backends/utils.py",
+          "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/attention/backends/utils.py",
+          "sha256": "c26ab97625374e10ef79b8d095d7283a964779c991ad7232ee6f94680eb480d4",
+          "bytes": 38183,
+          "byteEqual": true
+        },
+        {
+          "project": "vllm",
+          "upstreamPath": "vllm/v1/attention/backends/flash_attn.py",
+          "localPath": "vllm/vllm/v1/attention/backends/flash_attn.py",
+          "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/attention/backends/flash_attn.py",
+          "sha256": "03017560e89dffc5453b6525bf76940e143b38939022ff5f74f872119fe12e48",
+          "bytes": 67439,
+          "byteEqual": true
+        },
+        {
+          "project": "sglang",
+          "upstreamPath": "LICENSE",
+          "localPath": "sglang/LICENSE",
+          "url": "https://raw.githubusercontent.com/sgl-project/sglang/35f3c96ff4794a4de15daf12caad371084a037ee/LICENSE",
+          "sha256": "1495e1e757ef4d0925a2350563cf5754bb23c51701a8ec4fb3c5cdcbedae6747",
+          "bytes": 11346,
+          "byteEqual": true
+        },
+        {
+          "project": "vllm",
+          "upstreamPath": "LICENSE",
+          "localPath": "vllm/LICENSE",
+          "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/LICENSE",
+          "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+          "bytes": 11357,
+          "byteEqual": true
+        },
+        {
+          "project": "vllm",
+          "upstreamPath": "vllm/v1/attention/backend.py",
+          "localPath": "vllm/vllm/v1/attention/backend.py",
+          "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/attention/backend.py",
+          "sha256": "14803680d6f0f3fcf04dd48def6b961c5dae70c061287610c8f0e1bbc82cb471",
+          "bytes": 40479,
+          "byteEqual": true
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "여덟 자리 R1·R2·R3의 공통6을 저장량12·hit12/24와 이어 설명하고, B=4의 저장16·hit8/24, 마지막 입력의 재계산, 잠금8·반환4 및 kernel slot38까지 같은 사례로 추적했습니다. 실제 SGLang AST 함수의 match/split/insert/lock/evict와 LPM 정렬, vLLM의 hash/cascade/SWA 함수 조건을 CPU 대역과 실행했습니다.",
+        "sourceVerification": "고정 SGLang35f3c96·vLLMv0.27.1/6e448d0의 코드11개와 LICENSE2를 원격 byte·SHA256으로 비교했습니다. 15패널에서 전체 원문과 해당 줄을 열었습니다. CPU index/allocator/pool/request/hash 직렬화 대역을 밝혔고 전체 GPU 엔진 성능으로 표현하지 않았습니다.",
+        "originalPreservation": "큰2500+100 사례, offline 정리·scheduler 공정성·주소14612와 hybrid2080은 보존해 전제를 보완했습니다. token/fullblock 보편 구분, index/KV 혼동, vLLM과radix 동일LRU, cold정적정렬의 그룹화, 모든group 재조회 및 cascade 자동선택의 단정을 교정했습니다.",
+        "humanize": {
+          "roundTrip": true,
+          "paragraphs": 83,
+          "chars": 14285,
+          "gateExit": 0,
+          "finalEdits": 0,
+          "chunks": 4,
+          "chunkMaxChars": 3968,
+          "numbersMarkersPointersPreserved": true,
+          "manualReview": "초기83문단에서47문단 공백 및 연결쉼표2개를 교정한 뒤 의미가 모호한 단위 표기·용어를 보완했습니다. 최신83문단 전체를 새로 extract→동일 재삽입 byte비교→4묶음 prepare/gate→apply했으며 마지막 교정0. 링크2문단은 TSX로 별도 읽었습니다."
+        },
+        "humanizeProps": "수식·기호 설명·제목·Viz·원문 패널의 실제129문자열 AST 추출과 동일 재삽입을 수행했습니다. 17문자열과 후속9문자열 공백 교정, 이후 단위 B=4/page 크기1 표기와query4 공백을 보완했습니다. 최신7820자·2묶음3953/3867을 읽고 gate0·추가변경0을 확인했습니다.",
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "codePanels3901440": 30,
+        "narrowText": 0,
+        "vizInternalScroll": "4장면×2폭을 실제 선택하고 모든 PNG를 읽었습니다. 내부 스크롤 끝에서 설명이 controls 위에 들어오며 frame delta0, button delta≤.5px, 외부 overflow0입니다. 7개 SVG text 자동검토 신호는 실제 양폭 글자·화살표와 world bbox로 확인했습니다.",
+        "firstFifth": "이름을 붙이는6절 이전의 같은 사례는 실제 본문 기준390에서20.9371%,1440에서20.9321%입니다. 첫번호 변화와 R2단독75%/cold포함50%를 사례 안에서 비교합니다.",
+        "learning": "병합 후22절·기초6+심화4·논문/공식코드3 해설 strict PASS. 공유 learning과제안JSON의실제문자열일치도 확인했습니다.",
+        "formula": "두 수식의 일반식은 annotatedFormula에 실제 표시됩니다. H의분모와전체입력상한 및 C≥서로다른구간합,H=1−C/입력합을 양폭DOM으로 대조했습니다. 전역1439개strictPASS, KaTeX오류0.",
+        "prose": "최종 전역strict 재검토0. 실제 수치·전제·고정버전을 보존했습니다.",
+        "graphAndOwnership": "8definition/canonicalHref 및 ownership owns/evidence를 교정본문과 대조했고 공유 등록과 제안의 문자열이 같음을 확인했습니다. edge2의 조건부 이유도 root가병합했습니다.",
+        "numeric": "theory독립검산과유리수장부로0/6/6·12자리,0/4/4·16자리,잠금8/반환4,fullhit7→4,64.102564%/64%,교대0/묶음50%,주소38/14612,hybrid2080을 확인했습니다.",
+        "typescript": "등록 전 app tsc exit0. 이후 evidence enum 논문→핵심논문 교정 후 root corrected app검사에는 타팀 작성중 확률글의 JSX >오류1개만 남았고 prefix의오류는0입니다. root요청으로 localverified로마감하며 고정snapshot build는pending입니다."
       },
       "remaining": [
-        "작은 R1/R2/R3 사례와 기존2500 큰 사례를 연결해 실질 재작성",
-        "SGLang·vLLM actual source와 논문 경계 및 수치·humanize·화면 검수"
+        "root 고정 snapshot 전역 build·배포 검증"
       ],
-      "readEvidence": "src/pages/articles/ai/prefix-caching-radix-attention.tsx 전체 459행과 전용 Viz 전체; pinned radix_cache/schedule_policy 확인"
+      "readEvidence": "src/pages/articles/ai/prefix-caching-radix-attention.tsx 전체 459행과 전용 Viz 전체; pinned radix_cache/schedule_policy 확인",
+      "bodyFiles": [
+        "src/pages/articles/ai/prefix-caching-radix-attention.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/prefix-caching-radix-attention.tsx",
+      "contentHash": "1338f894fdc7edecae7425a35fac4cb95d230ea100feb1530b99293dc5fde3e5",
+      "evidenceFiles": [
+        "/tmp/teach-all/ai-systems-registration-17.json",
+        "/tmp/teach-all/ai-systems-numeric-17.json",
+        "/tmp/teach-all/prefix17-independent-theory.json",
+        "/tmp/teach-all/prefix17/shared-verification.json",
+        "/tmp/teach-all/ai-systems17-learning-final.log",
+        "/tmp/teach-all/ai-systems-tsc-17-draft.log",
+        "/tmp/teach-all/ready150-working-tsc-corrected.log",
+        "/tmp/teach-all/ai-systems-formula-17-draft.log",
+        "/tmp/teach-all/ai-systems-prose-17-final.log",
+        "/tmp/teach-all/ai-systems-viz-17.log",
+        "/tmp/teach-all/ai-systems-screens-17/panels.json",
+        "/tmp/teach-all/ai-systems-screens-17/scenes.json",
+        "/tmp/teach-all/ai-systems-screens-17/layout.json",
+        "/tmp/world-browser-audit/teach-ai-systems-prefix17-merged-final-summary.json",
+        "/tmp/teach-all/humanize-ai-systems-17-final/chunk-review.json",
+        "/tmp/teach-all/humanize-ai-systems-17-props-final/chunk-review.json"
+      ]
     },
     {
       "route": "ai/prompt-engineering",
@@ -8093,25 +8325,36 @@
       "route": "ai/vllm-spec-decode",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/vllm-spec-decode.tsx",
       "publicPath": "cs/ai/vllm-spec-decode",
-      "status": "unreviewed",
+      "status": "reviewed-rewrite-required",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
+      "beforeDefects": [
+        "용어와 비용식이 작은 고정 사례보다 먼저 나오고 네 큰 절 안에서 설명 단계가 반복됨",
+        "v0.27.1 Triton 원문이라고 제시한 파일이 실제 함수·포인터·분기를 바꾼 Python 재구성 코드",
+        "작은 p/q 분포와 네 위치 수락 Viz 및 비용의 α/K 사례가 분리되어 같은 요청을 끝까지 따라가기 어려움",
+        "서빙 손익분기식의 E[Y]와 t_T 사이가 곱셈 대신 쉼표로 표시됨",
+        "후보 거부 뒤 prefix 길이까지 KV를 commit한다고 설명하여 새 correction의 아직 계산하지 않은 KV를 혼동할 수 있음",
+        "α=1 분모 경계·표의 전역 최적과 제한된 K범위·총 연산량 항상 증가의 경계가 빠짐",
+        "EAGLE feature uncertainty와 검증 한 forward의 입력/KV 상태를 실제 원문으로 검증해야 함",
+        "예측 질문·절 번호·실제 코드 단계 anchor가 없음"
+      ],
       "fixture": null,
       "stageAnchors": {},
       "sourceEvidence": [],
       "validation": {
-        "semanticReview": "pending",
+        "semanticReview": "기존 공개 렌더와 Overview/DraftVerify/CostModel/EagleMtp·원문 패널·수락 Viz를 실제 읽음. 고정 원문과 같은 6+4 사례를 준비하는 중",
         "humanize": "pending",
         "browser390": "pending",
         "browser1440": "pending"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "실제 고정 vLLM 원문과 논문 확인",
+        "같은 작은 p/q·K 사례와 6+4 고정",
+        "본문·Viz·원문 패널 재작성 및 humanize·390/1440·공유 등록"
       ]
     },
     {
@@ -8301,21 +8544,21 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 41,
-    "unreviewed": 143,
+    "rewritten-local-verified": 42,
+    "unreviewed": 142,
     "reviewed-rewrite-required": 2
   },
   "localValidationSummary": {
-    "rewritten": 41,
-    "remainingUnreviewed": 143,
+    "rewritten": 42,
+    "remainingUnreviewed": 142,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
-    "learningStrict": "/tmp/teach-all/ai-systems16-learning-final.log — batch16 1편 통과",
-    "formulaStrict": "/tmp/teach-all/ai-systems-formula-16.log — 1434개 strict 통과",
-    "typescript": "분리16 TOC수정후 root 실제 app tsc exit0 — /tmp/teach-all/checkpoint145-working-tsc.log; 전역production build는 root 통합 단계",
-    "note": "담당186편 중41편을 실제본문·고정사례·원문적용·humanize·두폭화면으로 개선 검수했습니다. 나머지145편은 미완료이며 자동screening은 검수판정이 아닙니다.",
+    "learningStrict": "/tmp/teach-all/ai-systems17-learning-final.log — prefix17 strict 통과",
+    "formulaStrict": "/tmp/teach-all/ai-systems-formula-17-draft.log — 1439개 strict 통과",
+    "typescript": "prefix17 등록 전 app tsc exit0. 최종공유수정후 prefix오류0·타팀확률초안1개 남음. root checkpoint150 고정snapshot build pending.",
+    "note": "담당186편 중42편을 실제본문·고정사례·원문적용·humanize·두폭화면으로 개선 검수했습니다. 나머지144편은 미완료이며142편미검토·2편재작성필요입니다. 자동screening은 검수판정이 아닙니다.",
     "reviewedRewriteRequired": 2,
-    "verifiedRewrites": 41
+    "verifiedRewrites": 42
   }
 }

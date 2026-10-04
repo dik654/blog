@@ -2,203 +2,55 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/**
- * 한 mechanism: radix tree 가 요청마다 자라고(match → split → insert) memory 가 모자랄 때
- * ref 0 인 leaf 부터 LRU 로 잘리는 과정. 장면 = 요청 하나가 tree 를 바꾼 순간.
- * stage 높이는 고정, control row 는 아래 고정 row. SVG viewBox 고정, label 은 짧게.
- */
-const SCENES = [
-  "R1 도착 · 단일 edge",
-  "R2 도착 · node split",
-  "R3·R4 도착 · 두 번째 split",
-  "Memory 부족 · leaf 부터 evict",
+const LABELS = ["R1 기록", "R2 분기", "R3 추가", "사용 중인 길 보호"] as const;
+const STATES = [
+  { total: "8자리 보관", hit: "R1 재사용 0", note: "처음에는 저장된 기록이 없습니다. 여덟 자리를 계산해 한 구간으로 남깁니다." },
+  { total: "6 + 2 + 2 = 10자리", hit: "R2 재사용 6", note: "일곱째 입력에서 달라집니다. 앞 여섯 자리의 기록을 공유하고 새 뒤 두 자리만 계산합니다." },
+  { total: "6 + 2 + 2 + 2 = 12자리", hit: "R3 재사용 6", note: "앞 여섯 자리는 그대로입니다. R3의 뒤 두 자리를 추가하며 기록을 찾는 길이 하나 더 생깁니다." },
+  { total: "보호 8자리 · 반환 4자리", hit: "5자리 요청을 채우지 못함", note: "R3가 사용하는 여덟 자리는 보호합니다. 나머지 두 끝 구간을 지워도 네 자리뿐이어서 다섯 자리 요구는 충족하지 못합니다." },
 ] as const;
-
-const NOTES = [
-  "Tree 가 비어 있어 R1 의 2,600 token 은 통째로 miss 입니다. Root 에서 edge 하나가 자라고 R1 이 running 인 동안 ref 는 1 입니다.",
-  "R2 는 2,500 token 까지 일치하고 어긋납니다. Edge 가 그 자리에서 쪼개져 공유 node(2,500) 아래 q1·q2 두 leaf 가 생기고 R2 의 hit 은 2,500 입니다.",
-  "R3 은 같은 2,500 을 hit 해 leaf 만 붙습니다. R4 는 system prompt 2,000 만 같아 공유 node 가 2,000 에서 다시 쪼개지고 hit 은 2,000 입니다.",
-  "250 token 을 비워야 합니다. Ref 0 인 leaf 가운데 가장 오래된 q1, 그다음 q2 가 지워집니다. R3 이 아직 running 이라 q3 과 그 조상은 ref 1 로 보호됩니다.",
-] as const;
-
-type NodeState = "new" | "cached" | "protected" | "evicted";
-
-type TreeNode = {
-  id: string;
-  x: number;
-  y: number;
-  label: string;
-  tokens: string;
-  state: NodeState;
-};
-
-type Scene = {
-  nodes: readonly TreeNode[];
-  edges: readonly (readonly [string, string])[];
-  hit: string;
-  cache: string;
-};
-
-const ROOT = { x: 34, y: 128 } as const;
-
-const STATES: readonly Scene[] = [
-  {
-    nodes: [{ id: "r1", x: 300, y: 128, label: "sys+few+q1", tokens: "2,600", state: "new" }],
-    edges: [["root", "r1"]],
-    hit: "R1 hit 0 / 2,600 (cold)",
-    cache: "cache 2,600 token",
-  },
-  {
-    nodes: [
-      { id: "s", x: 200, y: 128, label: "sys+few", tokens: "2,500", state: "cached" },
-      { id: "q1", x: 420, y: 80, label: "q1", tokens: "100", state: "cached" },
-      { id: "q2", x: 420, y: 176, label: "q2", tokens: "100", state: "new" },
-    ],
-    edges: [["root", "s"], ["s", "q1"], ["s", "q2"]],
-    hit: "R2 hit 2,500 / 2,600",
-    cache: "cache 2,700 token",
-  },
-  {
-    nodes: [
-      { id: "sys", x: 150, y: 128, label: "sys", tokens: "2,000", state: "cached" },
-      { id: "few", x: 290, y: 92, label: "few", tokens: "500", state: "cached" },
-      { id: "q1", x: 440, y: 40, label: "q1", tokens: "100", state: "cached" },
-      { id: "q2", x: 440, y: 92, label: "q2", tokens: "100", state: "cached" },
-      { id: "q3", x: 440, y: 144, label: "q3", tokens: "100", state: "new" },
-      { id: "q4", x: 290, y: 212, label: "few'+q4", tokens: "600", state: "new" },
-    ],
-    edges: [["root", "sys"], ["sys", "few"], ["few", "q1"], ["few", "q2"], ["few", "q3"], ["sys", "q4"]],
-    hit: "R3 hit 2,500 · R4 hit 2,000",
-    cache: "cache 3,400 token",
-  },
-  {
-    nodes: [
-      { id: "sys", x: 150, y: 128, label: "sys", tokens: "2,000", state: "protected" },
-      { id: "few", x: 290, y: 92, label: "few", tokens: "500", state: "protected" },
-      { id: "q1", x: 440, y: 40, label: "q1", tokens: "100", state: "evicted" },
-      { id: "q2", x: 440, y: 92, label: "q2", tokens: "100", state: "evicted" },
-      { id: "q3", x: 440, y: 144, label: "q3", tokens: "100", state: "protected" },
-      { id: "q4", x: 290, y: 212, label: "few'+q4", tokens: "600", state: "cached" },
-    ],
-    edges: [["root", "sys"], ["sys", "few"], ["few", "q1"], ["few", "q2"], ["few", "q3"], ["sys", "q4"]],
-    hit: "evict q1, q2 → 200 token 확보",
-    cache: "protected: R3 경로 (ref 1)",
-  },
-];
-
-const NODE_W = 76;
-const NODE_H = 30;
-
-function nodeClass(state: NodeState) {
-  switch (state) {
-    case "new":
-      return "fill-amber-500/20 stroke-amber-600";
-    case "protected":
-      return "fill-primary/20 stroke-primary";
-    case "evicted":
-      return "fill-transparent stroke-red-600";
-    default:
-      return "fill-muted stroke-border";
-  }
-}
 
 export default function PrefixCachingRadixAttentionViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3000);
-  const state = STATES[scenes.active];
-  const byId = new Map<string, { x: number; y: number }>([["root", ROOT], ...state.nodes.map((node) => [node.id, { x: node.x, y: node.y }] as const)]);
-
-  return (
-    <VizFrame
-      eyebrow="RadixAttention"
-      title="Radix tree 는 요청마다 갈라져 자라고 memory 가 모자라면 leaf 부터 잘립니다"
-      description="각 장면은 요청 하나가 tree 를 바꾼 순간입니다. 노란 node 는 이번에 새로 계산한 부분, 회색은 cache 에 남은 부분, 파란 node 는 running 요청이 지나가 ref 가 0 이 아닌 부분, 빨간 점선은 evict 된 leaf 입니다."
-      note="Page 크기는 1 token 으로 두었고 vLLM 의 16-token block 경계 손실은 본문 수식에서 다룹니다. 숫자는 본문의 예(system 2,000 · few-shot 500 · 질문 100)입니다."
-    >
-      <div
-        data-viz-canvas
-        tabIndex={0}
-        role="group"
-        aria-label="Radix tree 가 요청마다 자라고 LRU 로 잘리는 과정"
-        onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(33rem,calc(100dvh-15rem))] min-h-[26rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-      >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(scenes.active + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
-
-          <div className="mt-4 grid gap-4 sm:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
-            <div className="min-w-0 overflow-x-auto border border-border">
-              <svg viewBox="0 0 520 250" className="h-[15.5rem] w-full min-w-[26rem]" role="img" aria-label="radix tree">
-                {state.edges.map(([from, to]) => {
-                  const a = byId.get(from);
-                  const b = byId.get(to);
-                  if (!a || !b) return null;
-                  const evicted = state.nodes.find((node) => node.id === to)?.state === "evicted";
-                  return (
-                    <line
-                      key={`${from}-${to}`}
-                      x1={from === "root" ? a.x + 8 : a.x + NODE_W / 2}
-                      y1={a.y}
-                      x2={b.x - NODE_W / 2}
-                      y2={b.y}
-                      className={evicted ? "stroke-red-600" : "stroke-muted-foreground"}
-                      strokeWidth={1}
-                      strokeDasharray={evicted ? "3 3" : undefined}
-                    />
-                  );
-                })}
-                <circle cx={ROOT.x} cy={ROOT.y} r={8} className="fill-background stroke-foreground" strokeWidth={1} />
-                <text x={ROOT.x} y={ROOT.y + 22} textAnchor="middle" className="fill-muted-foreground text-[9px]">
-                  root
-                </text>
-                {state.nodes.map((node) => (
-                  <g key={node.id}>
-                    <rect
-                      x={node.x - NODE_W / 2}
-                      y={node.y - NODE_H / 2}
-                      width={NODE_W}
-                      height={NODE_H}
-                      className={nodeClass(node.state)}
-                      strokeWidth={1}
-                      strokeDasharray={node.state === "evicted" ? "3 3" : undefined}
-                    />
-                    <text x={node.x} y={node.y - 3} textAnchor="middle" className="fill-foreground text-[9px] font-bold">
-                      {node.label}
-                    </text>
-                    <text x={node.x} y={node.y + 9} textAnchor="middle" className="fill-muted-foreground text-[8px]">
-                      {node.state === "evicted" ? "evicted" : node.tokens}
-                    </text>
-                  </g>
-                ))}
-              </svg>
-            </div>
-
-            <div className="flex min-h-[9rem] flex-col justify-between border border-border p-3 font-mono text-[11px]">
-              <div>
-                <p className="font-bold text-muted-foreground">hit</p>
-                <p className="mt-1 text-primary">{state.hit}</p>
-              </div>
-              <div>
-                <p className="font-bold text-muted-foreground">memory</p>
-                <p className="mt-1">{state.cache}</p>
-              </div>
-              <div className="flex flex-col gap-1 text-[10px] text-muted-foreground">
-                <span className="flex items-center gap-1"><span className="inline-block h-2 w-3 border border-amber-600 bg-amber-500/20" /> 새로 계산</span>
-                <span className="flex items-center gap-1"><span className="inline-block h-2 w-3 border border-border bg-muted" /> cached · ref 0</span>
-                <span className="flex items-center gap-1"><span className="inline-block h-2 w-3 border border-primary bg-primary/20" /> running 경로 · ref 1</span>
-                <span className="flex items-center gap-1"><span className="inline-block h-2 w-3 border border-dashed border-red-600" /> evicted</span>
-              </div>
-            </div>
-          </div>
-
-          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[scenes.active]}
-          </p>
-        </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+  const scenes = useAnimatedScenes(STATES.length, 4300);
+  const d = STATES[scenes.active];
+  const active = scenes.active;
+  return <VizFrame eyebrow="가정한 세 요청의 기록" title="같은 앞 여섯 자리는 함께 가리킵니다"
+    description="입력 번호와 기록을 저장한 자리를 구분하며 분기와 반환을 따라갑니다."
+    note="한 자리씩 재사용, 같은 모델·재사용 영역, 순차 요청, 생성 기록 제외. 마지막 장면만 R3 경로의 사용 잠금을 유지한 별도 반환 조건입니다.">
+    <div data-viz-canvas role="group" tabIndex={0} aria-label="세 요청의 공통 기록과 사용 중인 경로" onKeyDown={scenes.onKeyDown}
+      className="flex min-h-full min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+      <div className="flex flex-none flex-col py-2">
+        <h4 className="font-bold">{LABELS[active]}</h4>
+        <p className="mt-2 font-mono text-sm text-primary">{d.total}</p>
+        <svg viewBox="0 0 320 225" role="img" aria-label={d.hit} className="mt-2 h-auto max-h-64 w-full">
+          <defs><marker id="prefix-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L8 4L0 8" className="fill-primary" /></marker></defs>
+          <circle cx="18" cy="112" r="7" className="fill-background stroke-border" />
+          <text x="18" y="137" textAnchor="middle" className="fill-muted-foreground text-[12px]">시작</text>
+          {active === 0 ? <>
+            <path d="M27 112H111" className="stroke-primary" fill="none" markerEnd="url(#prefix-arrow)" />
+            <rect x="118" y="84" width="145" height="56" rx="6" className="fill-muted stroke-border" />
+            <text x="190" y="107" textAnchor="middle" className="fill-foreground text-[13px]">1·2·3·4·5·6·7·8</text>
+            <text x="190" y="128" textAnchor="middle" className="fill-muted-foreground text-[12px]">R1의 여덟 자리</text>
+          </> : <>
+            <path d="M27 112H49" className="stroke-primary" fill="none" markerEnd="url(#prefix-arrow)" />
+            <rect x="55" y="84" width="108" height="56" rx="6" className={active === 3 ? "fill-primary/15 stroke-primary" : "fill-muted stroke-border"} />
+            <text x="109" y="108" textAnchor="middle" className="fill-foreground text-[13px]">1·2·3·4·5·6</text>
+            <text x="109" y="128" textAnchor="middle" className="fill-muted-foreground text-[12px]">공통 여섯 자리</text>
+            {[0,1,2].slice(0,active === 1 ? 2 : 3).map((i) => {
+              const y = 18 + i * 73, removed = active === 3 && i < 2;
+              return <g key={i}>
+                <path d={`M164 112L209 ${y + 25}`} fill="none" className="stroke-primary" strokeDasharray={removed ? "4 3" : undefined} markerEnd="url(#prefix-arrow)" />
+                <rect x="215" y={y} width="95" height="50" rx="6" className={active === 3 && i === 2 ? "fill-primary/15 stroke-primary" : "fill-background stroke-border"} strokeDasharray={removed ? "4 3" : undefined} />
+                <text x="262" y={y+20} textAnchor="middle" className="fill-foreground text-[13px]">{["7·8", "9·10", "11·12"][i]}</text>
+                <text x="262" y={y+40} textAnchor="middle" className="fill-muted-foreground text-[12px]">{removed ? "2자리 반환" : `R${i+1}의 두 자리`}</text>
+              </g>;
+            })}
+          </>}
+        </svg>
+        <p className="font-semibold text-sm">{d.hit}</p>
+        <p className="mt-3 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{d.note}</p>
       </div>
-    </VizFrame>
-  );
+      <AnimatedSceneControls {...scenes} labels={LABELS} />
+    </div>
+  </VizFrame>;
 }
