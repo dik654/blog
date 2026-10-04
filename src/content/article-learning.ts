@@ -618,380 +618,351 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/math-matrices-svd": {
-    coreIdea:
-      "Matrix는 vector를 다른 vector로 보내는 linear map이고 matrix multiplication은 map의 합성입니다. Rank는 map이 실제로 보존하는 독립 방향 수이며, SVD는 그 방향을 orthonormal basis와 singular value로 분리합니다. 큰 singular direction k개만 남기면 정해진 rank budget에서 reconstruction error가 가장 작은 low-rank approximation을 얻습니다.",
-    assumedKnowledge: [
+    "coreIdea": "행렬은 입력을 섞어 출력으로 보내고 행렬 곱은 두 계산을 합성합니다. Rank는 출력의 독립 방향 수입니다. SVD는 기준 방향과 배율을 나누며 큰 방향을 남기는 근사는 정해진 표 오차를 최소화합니다. 표의 모양과 수치 rank, 과제에서 필요한 정보는 따로 확인해야 합니다.",
+    "assumedKnowledge": [
       {
-        id: "coordinate-vector",
-        role: "Matrix의 input·output과 row·column을 좌표가 있는 vector로 읽습니다.",
+        "id": "coordinate-vector",
+        "role": "순서 있는 좌표 묶음을 입력과 출력으로 읽습니다."
       },
       {
-        id: "dot-product",
-        role: "한 matrix row와 input vector가 output coordinate 하나를 만드는 계산을 수행합니다.",
+        "id": "dot-product",
+        "role": "한 행과 입력의 대응 숫자를 곱해 더합니다."
       },
       {
-        id: "euclidean-norm",
-        role: "Unit direction과 vector reconstruction error의 길이를 계산합니다.",
+        "id": "euclidean-norm",
+        "role": "방향 길이와 출력 차이의 길이를 구합니다."
       },
       {
-        id: "vector-projection",
-        role: "Input이 orthonormal direction을 얼마나 포함하는지 coefficient로 분리합니다.",
-      },
+        "id": "vector-projection",
+        "role": "입력에서 기준 방향의 성분을 분리합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "linear-map-matrix",
-        role: "m×n matrix를 n차원 input에서 m차원 output으로 가는 함수로 해석합니다.",
+        "id": "linear-map-matrix",
+        "role": "n칸 입력을 m칸 출력으로 보내는 m×n 표를 읽습니다."
       },
       {
-        id: "matrix-multiplication",
-        role: "두 linear map의 중간 interface를 맞춰 하나의 map으로 합성합니다.",
+        "id": "matrix-multiplication",
+        "role": "가운데 좌표 수를 맞춰 두 규칙을 합성합니다."
       },
       {
-        id: "matrix-rank",
-        role: "Matrix가 output에 펼칠 수 있는 독립 방향의 수를 구분합니다.",
+        "id": "matrix-rank",
+        "role": "표의 크기와 독립 출력 방향 수를 구별합니다."
       },
       {
-        id: "orthonormal-basis",
-        role: "서로 직교하고 길이 1인 좌표계에서 방향별 기여를 분리합니다.",
+        "id": "orthonormal-basis",
+        "role": "직각이며 길이가 1인 기준으로 성분의 양을 분리합니다."
       },
       {
-        id: "singular-value-decomposition",
-        role: "Matrix를 input direction·scale·output direction의 세 factor로 분해합니다.",
+        "id": "singular-value-decomposition",
+        "role": "입력의 기준 변경·방향별 배율·출력 합성으로 같은 계산을 추적합니다."
       },
       {
-        id: "frobenius-norm",
-        role: "Matrix 전체 entry의 reconstruction error를 scalar 하나로 측정합니다.",
+        "id": "frobenius-norm",
+        "role": "모든 칸의 제곱합으로 표 전체의 차이를 잽니다."
       },
       {
-        id: "low-rank-approximation",
-        role: "큰 singular direction만 남겨 작은 factor로 matrix를 근사합니다.",
+        "id": "low-rank-approximation",
+        "role": "일부 방향을 생략해 작은 표의 곱으로 근사합니다."
       },
       {
-        id: "eckart-young-theorem",
-        role: "Truncated SVD의 rank-k reconstruction 최적성과 적용 범위를 설명합니다.",
-      },
+        "id": "eckart-young-theorem",
+        "role": "같은 rank 제한에서 표 복원 오차가 최소라는 보장과 과제 성능의 차이를 설명합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "linear-map-matrix",
-        sectionId: "matrix-map",
-        intuition:
-          "여러 재료의 양을 받아 새 제품들의 양을 계산하는 레시피처럼, 각 output coordinate가 input coordinate의 weighted sum으로 정해지는 함수입니다.",
-        workedExample:
-          "A=[[2,1],[-1,3]], x=(4,2)이면 두 row와 x의 dot product가 각각 10과 2를 만들어 Ax=(10,2)가 됩니다.",
-        boundary:
-          "Ax+b는 bias 때문에 origin을 origin으로 보내지 않는 affine map이며 엄밀한 linear map과 구분합니다. Row·column의 실제 의미도 shape와 함께 정해야 합니다.",
+        "id": "linear-map-matrix",
+        "sectionId": "matrix-map",
+        "intuition": "각 출력 칸마다 입력별 기여를 적으면 여러 숫자를 섞는 규칙을 표로 표현할 수 있습니다.",
+        "workedExample": "A=[[2,1],[1,2]]는 (4,2)를 (10,8)로 보냅니다. 둘째 행을 바꾼 D=[[2,1],[−1,3]]은 같은 입력을 (10,2)로 보냅니다.",
+        "boundary": "상수 b≠0을 더하면 0이 b로 가므로 엄밀한 선형 변환과 구분합니다. 축의 순서와 의미도 보존해야 합니다."
       },
       {
-        id: "matrix-multiplication",
-        sectionId: "multiplication",
-        intuition:
-          "첫 기계가 만든 중간 좌표를 둘째 기계에 넣는 연속 작업을 하나의 기계로 미리 합친 계산입니다.",
-        workedExample:
-          "B가 n차원 x를 m차원 z로 바꾸고 A가 z를 p차원 y로 바꾸면 y=A(Bx)=(AB)x이며 AB shape은 p×n입니다.",
-        boundary:
-          "중간 dimension이 맞지 않으면 합성할 수 없고, 일반적으로 실행 순서가 바뀐 BA는 값이 다르거나 아예 정의되지 않습니다.",
+        "id": "matrix-multiplication",
+        "sectionId": "multiplication",
+        "intuition": "첫 규칙이 내놓은 중간 값을 둘째 규칙이 읽도록 연결한 계산입니다.",
+        "workedExample": "B=diag(1,2)를 먼저 쓰면 A(B(4,2))=(12,12)입니다. 순서를 바꾸면 B(A(4,2))=(10,16)입니다.",
+        "boundary": "곱할 가운데 크기가 같아야 하며 순서를 바꾸면 값이 달라지거나 정의되지 않습니다. 유한 정밀도에서는 묶음 순서도 반올림에 영향을 줍니다."
       },
       {
-        id: "matrix-rank",
-        sectionId: "rank-basis",
-        intuition:
-          "여러 손잡이가 있어도 같은 방향만 반복해서 움직인다면 실제 자유도는 하나이며, rank는 독립적으로 움직일 수 있는 방향 수입니다.",
-        workedExample:
-          "[[1,2],[2,4]]의 둘째 column은 첫째의 2배이므로 모든 output이 (1,2) 방향의 직선 위에 놓여 rank가 1입니다.",
-        boundary:
-          "Floating-point data에서는 exact zero 대신 tolerance를 사용하므로 작은 singular value를 signal로 볼지 noise로 볼지 측정 정밀도와 task가 필요합니다.",
+        "id": "matrix-rank",
+        "sectionId": "rank-basis",
+        "intuition": "열을 여러 개 저장해도 모두 한 방향의 배수라면 출력이 움직일 수 있는 독립 방향은 하나입니다.",
+        "workedExample": "R=[[1,2],[2,4]]는 모든 입력을 (1,2)의 배수로 보냅니다. (4,2)는 (8,16), (2,−1)은 (0,0)이 됩니다.",
+        "boundary": "diag(1,10⁻⁸)의 정확한 rank는 2지만 절대 기준 10⁻⁷을 정한 수치 판정은 1입니다. 작은 값을 곧바로 잡음으로 판단하지 않습니다."
       },
       {
-        id: "orthonormal-basis",
-        sectionId: "rank-basis",
-        intuition:
-          "서로 직각이고 길이가 1인 자를 여러 방향에 놓으면 한 방향을 잰 값이 다른 방향의 길이와 섞이지 않습니다.",
-        workedExample:
-          "(1,0)과 (0,1)은 각 norm이 1이고 dot product가 0이며 x=(3,4)의 projection coefficient가 바로 3과 4입니다.",
-        boundary:
-          "Basis vector의 sign과 같은 부분공간 안의 회전은 하나로 고정되지 않을 수 있으므로 coordinate 하나에 본질적인 이름을 붙이지 않습니다.",
+        "id": "orthonormal-basis",
+        "sectionId": "rank-basis",
+        "intuition": "직각이며 길이가 1인 기준을 쓰면 각 방향의 양을 다른 방향의 길이와 섞지 않고 잴 수 있습니다.",
+        "workedExample": "e₁=(1,0), e₂=(0,1)은 길이 1과 내적 0을 만족합니다. (3,4)의 계수는 내적 3과 4입니다.",
+        "boundary": "정사각 정규직교 행렬의 전치는 역행렬이지만 직사각 U에서는 UᵀU=I여도 UUᵀ는 투영일 수 있습니다."
       },
       {
-        id: "singular-value-decomposition",
-        sectionId: "svd",
-        intuition:
-          "Matrix가 잘 구분하는 input 방향으로 좌표계를 돌리고, 각 방향을 독립적으로 늘린 다음 output 방향에 다시 놓는 분해입니다.",
-        workedExample:
-          "Diagonal A=diag(5,2)는 이미 singular directions가 coordinate axis이고 singular values가 5와 2이므로 첫 방향을 더 강하게 전달합니다.",
-        boundary:
-          "Singular vector의 sign은 바뀔 수 있고 repeated singular value의 basis도 유일하지 않습니다. SVD factor 하나만 떼어 의미로 해석하지 않습니다.",
+        "id": "singular-value-decomposition",
+        "sectionId": "svd",
+        "intuition": "입력을 서로 직각인 방향으로 잰 뒤 각 방향의 배율을 적용하고 출력 방향으로 합칩니다.",
+        "workedExample": "A=[[2,1],[1,2]], x=(4,2)는 Qᵀ에서 (3√2,√2), 배율 3·1에서 (9√2,√2), Q에서 (10,8)이 됩니다.",
+        "boundary": "기준은 부호나 반복 특잇값의 공간 안에서 유일하지 않습니다. Reduced의 q=min(m,n)은 실제 rank와 다르며 0인 특잇값도 남을 수 있습니다."
       },
       {
-        id: "frobenius-norm",
-        sectionId: "low-rank",
-        intuition:
-          "Matrix의 모든 cell 차이를 한 줄로 펼쳐 Euclidean length를 재는 것처럼 전체 reconstruction error를 하나로 합칩니다.",
-        workedExample:
-          "Error matrix [[1,2],[0,2]]의 Frobenius norm은 √(1²+2²+0²+2²)=3입니다.",
-        boundary:
-          "모든 entry를 같은 weight로 세므로 희귀 row·중요 feature·downstream label의 가치 차이를 자동으로 반영하지 않습니다.",
+        "id": "frobenius-norm",
+        "sectionId": "low-rank",
+        "intuition": "표의 모든 칸을 한 줄로 놓고 차이의 제곱을 더한 뒤 제곱근을 취합니다.",
+        "workedExample": "E=[[1,2],[0,2]]라면 제곱합 9의 제곱근 3입니다. 원래 A의 rank 1 근사에서는 표 오차가 1입니다.",
+        "boundary": "모든 칸을 같은 비중으로 세므로 과제의 중요도나 희귀 사례를 자동으로 더 크게 반영하지 않습니다."
       },
       {
-        id: "low-rank-approximation",
-        sectionId: "low-rank",
-        intuition:
-          "비슷하게 반복되는 row·column pattern을 소수의 공유 방향으로 묶어 큰 표를 두 작은 좌표표로 표현합니다.",
-        workedExample:
-          "m×n matrix를 rank k로 근사하면 U_kΣ_k와 V_k를 저장해 대략 k(m+n) 값으로 mn 값을 대신할 수 있습니다.",
-        boundary:
-          "Memory와 reconstruction error가 줄어도 작은 singular direction에 든 희귀 신호나 task label 정보가 사라질 수 있어 downstream 평가가 필요합니다.",
+        "id": "low-rank-approximation",
+        "sectionId": "low-rank",
+        "intuition": "함께 움직이는 방향만 남기면 공유하는 작은 표 두 개로 원래 큰 표를 대신할 수 있습니다.",
+        "workedExample": "A₁은 네 칸이 모두 1.5이고 (4,2)를 (9,9)로 보냅니다. 원래 출력과의 차이는 (1,−1)입니다.",
+        "boundary": "k(m+n)<mn이어야 숫자 저장량이 줄어듭니다. 이번 2×2·rank 1 예제는 4개 대 4개라 저장 이득이 없습니다."
       },
       {
-        id: "eckart-young-theorem",
-        sectionId: "low-rank",
-        intuition:
-          "같은 k개 방향만 보관할 수 있다면 가장 큰 singular direction부터 남기는 것이 전체 matrix를 가장 가깝게 복원합니다.",
-        workedExample:
-          "Singular values가 8,3,0.4,0.1이고 k=2이면 squared Frobenius error는 0.4²+0.1²=0.17입니다.",
-        boundary:
-          "정리는 full matrix를 알고 rank≤k인 unconstrained matrix를 Frobenius·spectral norm으로 비교할 때의 결과이며 downstream loss·sparsity·nonnegative constraint 최적성을 보장하지 않습니다.",
-        proofIdea:
-          "Orthonormal singular directions에서는 matrix energy가 서로 직교하는 rank-one component의 squared singular value로 분해됩니다. Rank k 후보는 최대 k개 독립 방향만 보존할 수 있으므로 가장 큰 k개를 남겨야 버린 squared scale 합이 최소가 됩니다.",
-        counterexample:
-          "Classification label이 σ가 작은 방향에만 들어 있으면 truncated SVD는 reconstruction error에는 최적이어도 classification accuracy를 크게 낮출 수 있습니다. 다른 objective의 최적성으로 확대할 수 없습니다.",
-      },
+        "id": "eckart-young-theorem",
+        "sectionId": "low-rank",
+        "intuition": "같은 rank 제한에서 큰 특잇값부터 남기면 표 전체의 차이를 가장 작게 만들 수 있습니다.",
+        "workedExample": "특잇값 8, 3, 0.4, 0.1에서 두 방향을 남기면 제곱 프로베니우스 오차는 0.17이고 스펙트럴 오차는 0.4입니다.",
+        "boundary": "전체 행렬과 정확한 SVD, 추가 제약 없는 rank≤k 후보, 지정한 표 노름이 전제입니다. 분류 목표나 희소성 제약의 최적성을 대신하지 않습니다.",
+        "proofIdea": "후보 B의 열 공간에 투영하는 P를 잡으면 수직 성분 (I−P)A를 없앨 수 없어 그 노름이 오차의 하한입니다. pᵢ=‖Puᵢ‖²는 0≤pᵢ≤1과 합≤k를 만족하므로 큰 σᵢ²에 먼저 배정해야 보존한 제곱합이 최대입니다. 상위 k개 성분이 하한을 달성합니다.",
+        "counterexample": "입력 (1,−1)과 (−1,1)의 두 종류는 A에서 구별되지만 A₁에서는 모두 (0,0)입니다. 같은 빈도와 다른 정보가 없는 가정에서 압축한 출력만으로 분류하면 정확도는 최대 1/2입니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "변환",
-        relation: "Row별 dot product로 vector를 새 좌표로 mapping",
-        concepts: [
+        "label": "변환",
+        "relation": "한 행의 내적으로 출력 한 칸을 만듭니다.",
+        "concepts": [
           "coordinate-vector",
           "dot-product",
           "vector-projection",
+          "linear-map-matrix"
+        ]
+      },
+      {
+        "label": "합성",
+        "relation": "중간 좌표 수를 맞추고 오른쪽 규칙부터 적용합니다.",
+        "concepts": [
           "linear-map-matrix",
-        ],
+          "matrix-multiplication"
+        ]
       },
       {
-        label: "합성",
-        relation: "중간 dimension을 공유하는 두 linear map 결합",
-        concepts: ["linear-map-matrix", "matrix-multiplication"],
-      },
-      {
-        label: "독립 방향",
-        relation: "실제 output 자유도와 간섭 없는 basis 구분",
-        concepts: [
+        "label": "독립 방향",
+        "relation": "출력의 자유도와 길이가 보정된 기준을 구별합니다.",
+        "concepts": [
           "matrix-rank",
           "euclidean-norm",
           "dot-product",
-          "orthonormal-basis",
-        ],
+          "orthonormal-basis"
+        ]
       },
       {
-        label: "분해",
-        relation: "Input direction·scale·output direction으로 matrix 해석",
-        concepts: [
+        "label": "분해",
+        "relation": "같은 입력을 기준 변경·배율 적용·출력 합성으로 추적합니다.",
+        "concepts": [
           "matrix-rank",
           "orthonormal-basis",
-          "singular-value-decomposition",
-        ],
+          "singular-value-decomposition"
+        ]
       },
       {
-        label: "압축",
-        relation: "Rank budget에서 reconstruction error 최소화",
-        concepts: [
+        "label": "근사",
+        "relation": "남길 방향 수를 정하고 표 오차와 과제에서 잃는 정보를 비교합니다.",
+        "concepts": [
           "singular-value-decomposition",
           "frobenius-norm",
           "low-rank-approximation",
-          "eckart-young-theorem",
-        ],
-      },
+          "eckart-young-theorem"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "A=[[2,1],[-1,3]]와 x=(4,2)의 Ax를 row별 dot product로 계산하고 matrix shape의 input·output 의미를 설명할 수 있을까요?",
-        answerChecklist: [
-          "첫 output 10과 둘째 output 2를 계산한다.",
-          "A의 두 column이 2차원 input, 두 row가 2차원 output에 대응한다고 설명한다.",
-          "각 row가 output coordinate 하나를 만든다고 말한다.",
+        "level": "basic",
+        "question": "D=[[2,1],[−1,3]]와 x=(4,2)의 Dx를 행마다 계산하고 입력·출력의 크기를 설명할 수 있나요?",
+        "answerChecklist": [
+          "첫 출력은 2×4+1×2=10입니다.",
+          "둘째 출력은 −1×4+3×2=2입니다.",
+          "두 열은 입력 두 칸, 두 행은 출력 두 칸에 대응합니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "coordinate-vector",
           "dot-product",
+          "linear-map-matrix"
+        ],
+        "sectionId": "matrix-map"
+      },
+      {
+        "level": "basic",
+        "question": "D=[[2,1],[−1,3]], e₁=(1,0), e₂=(0,1)에서 D(2e₁+3e₂)를 계산하고 상수 b≠0을 더한 경우를 구별할 수 있나요?",
+        "answerChecklist": [
+          "2e₁+3e₂=(2,3)이고 D(2,3)=(7,7)입니다.",
+          "De₁=(2,−1), De₂=(1,3)을 각각 2배·3배 해 더해도 (7,7)입니다.",
+          "선형 변환은 원점을 보존하지만 T(x)=Dx+b는 T(0)=b입니다.",
+          "따라서 b≠0이면 아핀 변환으로 구분합니다."
+        ],
+        "requiredConcepts": [
+          "coordinate-vector",
+          "linear-map-matrix"
+        ],
+        "sectionId": "matrix-map"
+      },
+      {
+        "level": "basic",
+        "question": "A가 3×2이고 B가 2×4일 때 AB와 BA의 정의 여부, 크기, 적용 순서를 설명할 수 있나요?",
+        "answerChecklist": [
+          "AB의 가운데 크기는 2로 같고 결과는 3×4입니다.",
+          "BA의 가운데 크기는 4와 3이라 정의되지 않습니다.",
+          "(AB)x에서는 B가 먼저, A가 다음으로 작용합니다."
+        ],
+        "requiredConcepts": [
           "linear-map-matrix",
+          "matrix-multiplication"
         ],
-        sectionId: "matrix-map",
+        "sectionId": "multiplication"
       },
       {
-        level: "basic",
-        question:
-          "A=[[2,1],[-1,3]], x=(1,0), z=(0,1)일 때 A(2x+3z)=2Ax+3Az를 수치로 확인하고, T(x)=Ax+b가 b≠0이면 linear map이 아닌 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "2x+3z=(2,3)을 계산한다.",
-          "A(2,3)=(7,7)을 계산한다.",
-          "Ax=(2,−1), Az=(1,3)이므로 2Ax+3Az=(7,7)임을 확인한다.",
-          "Linear map은 origin을 origin으로 보내야 한다고 설명한다.",
-          "b≠0이면 T(0)=b이므로 Ax+b는 affine map이라고 구분한다.",
+        "level": "basic",
+        "question": "R=[[1,2],[2,4]]의 두 열과 출력 방향을 이용해 rank를 구할 수 있나요?",
+        "answerChecklist": [
+          "둘째 열이 첫째 열 (1,2)의 두 배입니다.",
+          "모든 출력은 (a+2b)(1,2)로 한 직선 위에 있습니다.",
+          "표의 크기는 2×2지만 독립 방향은 하나라 rank가 1입니다."
         ],
-        requiredConcepts: ["coordinate-vector", "linear-map-matrix"],
-        sectionId: "matrix-map",
+        "requiredConcepts": [
+          "linear-map-matrix",
+          "matrix-rank"
+        ],
+        "sectionId": "rank-basis"
       },
       {
-        level: "basic",
-        question:
-          "A가 3×2이고 B가 2×4일 때 AB와 BA의 정의 가능 여부·shape·적용 순서를 설명할 수 있을까요?",
-        answerChecklist: [
-          "AB는 3×4로 정의된다고 계산한다.",
-          "BA는 내부 dimension 4와 3이 달라 정의되지 않는다고 말한다.",
-          "(AB)x에서 B가 먼저, A가 다음이라고 설명한다.",
+        "level": "basic",
+        "question": "e₁=(1,0), e₂=(0,1)이 정규직교 기준인지 확인하고 (3,4)의 성분을 구할 수 있나요?",
+        "answerChecklist": [
+          "각 길이는 1이고 서로 내적은 0입니다.",
+          "직각과 길이 1 조건을 모두 만족하므로 정규직교입니다.",
+          "(3,4)와 각 기준의 내적은 3과 4입니다.",
+          "다른 방향의 길이와 섞이지 않는 계수로 읽습니다."
         ],
-        requiredConcepts: ["linear-map-matrix", "matrix-multiplication"],
-        sectionId: "multiplication",
-      },
-      {
-        level: "basic",
-        question:
-          "A=[[1,2],[2,4]]의 두 column이 왜 독립이 아닌지 보이고 output이 어느 부분공간에 놓이는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "둘째 column이 첫째 column의 2배임을 보인다.",
-          "Rank가 1이라고 결론 낸다.",
-          "Output이 (1,2) 방향의 직선 위에 놓인다고 설명한다.",
-        ],
-        requiredConcepts: ["linear-map-matrix", "matrix-rank"],
-        sectionId: "rank-basis",
-      },
-      {
-        level: "basic",
-        question:
-          "q₁=(1,0), q₂=(0,1)이 orthonormal basis인지 norm과 dot product로 확인하고, x=(3,4)의 두 projection coefficient를 구할 수 있을까요?",
-        answerChecklist: [
-          "||q₁||=||q₂||=1을 계산한다.",
-          "q₁·q₂=0을 계산한다.",
-          "서로 직교하고 각 길이가 1이므로 orthonormal이라고 결론 낸다.",
-          "x·q₁=3, x·q₂=4를 projection coefficient로 구한다.",
-          "Orthonormal direction에서는 한 coefficient가 다른 방향의 길이와 섞이지 않는다고 설명한다.",
-        ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "dot-product",
           "euclidean-norm",
           "vector-projection",
-          "orthonormal-basis",
+          "orthonormal-basis"
         ],
-        sectionId: "rank-basis",
+        "sectionId": "rank-basis"
       },
       {
-        level: "basic",
-        question:
-          "Reconstruction error matrix E=[[1,2],[0,2]]의 Frobenius norm을 계산하고 이 값이 중요 row나 희귀 feature를 자동으로 더 크게 보지 않는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "모든 entry를 제곱해 1+4+0+4=9를 얻는다.",
-          "제곱근을 취해 ||E||F=3을 얻는다.",
-          "Matrix entry를 한 vector로 펼친 Euclidean length처럼 해석한다.",
-          "모든 entry에 같은 weight를 주므로 task 중요도·희귀 집단·label 정보를 자동 반영하지 않는다고 설명한다.",
+        "level": "basic",
+        "question": "차이 표 E=[[1,2],[0,2]]의 프로베니우스 노름과 이 기준의 한계를 설명할 수 있나요?",
+        "answerChecklist": [
+          "모든 칸의 제곱합은 1+4+0+4=9입니다.",
+          "제곱근을 취하면 3입니다.",
+          "표를 한 줄의 좌표로 펼친 길이로 볼 수 있습니다.",
+          "모든 칸의 비중이 같아 과제의 중요도와 희귀 사례를 자동으로 반영하지 않습니다."
         ],
-        requiredConcepts: ["euclidean-norm", "frobenius-norm"],
-        sectionId: "low-rank",
+        "requiredConcepts": [
+          "euclidean-norm",
+          "frobenius-norm"
+        ],
+        "sectionId": "low-rank"
       },
       {
-        level: "advanced",
-        question:
-          "A=UΣVᵀ가 x에 작용하는 순서를 설명하고 V의 두 column이 orthonormal인지 어떤 계산으로 확인할 수 있을까요?",
-        answerChecklist: [
-          "Vᵀx→Σ scale→U placement 순서를 말한다.",
-          "각 column norm이 1인지 확인한다.",
-          "서로 다른 column의 dot product가 0인지 확인한다.",
+        "level": "advanced",
+        "question": "같은 A=[[2,1],[1,2]]의 SVD가 x=(4,2)에 작용하는 세 단계와 기준의 길이를 확인할 수 있나요?",
+        "answerChecklist": [
+          "Q의 두 열은 (1,1)/√2와 (1,−1)/√2입니다.",
+          "각 길이 제곱은 1, 서로 내적은 0입니다.",
+          "Qᵀx=(3√2,√2)에 배율 3·1을 적용하면 (9√2,√2)입니다.",
+          "Q로 합치면 (10,8)입니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "dot-product",
           "euclidean-norm",
           "orthonormal-basis",
-          "singular-value-decomposition",
+          "singular-value-decomposition"
         ],
-        sectionId: "svd",
+        "sectionId": "svd"
       },
       {
-        level: "advanced",
-        question:
-          "Aε=diag(1,ε)에서 ε=10⁻⁸일 때 exact rank와 tolerance를 적용한 numerical rank가 달라질 수 있는 이유, 그리고 ε 방향을 곧바로 noise로 버리면 안 되는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "ε가 0이 아니므로 exact real arithmetic에서는 두 column이 독립이고 rank 2라고 말한다.",
-          "Singular values가 1과 10⁻⁸임을 읽는다.",
-          "선택한 tolerance가 10⁻⁸보다 크면 numerical rank를 1로 판정할 수 있다고 설명한다.",
-          "Tolerance는 측정 정밀도·scale·task와 함께 정해야 한다고 말한다.",
-          "작은 singular direction에도 label·희귀 신호가 있을 수 있다는 반례를 든다.",
+        "level": "advanced",
+        "question": "diag(1,10⁻⁸)의 정확한 rank와 절대 기준 10⁻⁷을 사용한 수치 rank를 비교할 수 있나요?",
+        "answerChecklist": [
+          "둘째 값이 0이 아니므로 정확한 rank는 2입니다.",
+          "특잇값은 1과 10⁻⁸입니다.",
+          "10⁻⁷보다 큰 값만 세면 수치 rank는 1입니다.",
+          "기준은 단위·정밀도·과제와 함께 정하며 작은 값 자체가 잡음이라는 증거는 아닙니다.",
+          "작은 방향에 분류나 희귀 신호가 있을 수 있습니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "matrix-rank",
           "singular-value-decomposition",
-          "low-rank-approximation",
+          "low-rank-approximation"
         ],
-        sectionId: "rank-basis",
+        "sectionId": "rank-basis"
       },
       {
-        level: "advanced",
-        question:
-          "SVD factor를 유일한 의미 좌표라고 부를 수 없는 이유를 paired sign flip과 repeated singular value의 basis rotation으로 설명하고, 무엇은 변하지 않는지 구분할 수 있을까요?",
-        answerChecklist: [
-          "한 singular vector pair의 uᵢ와 vᵢ sign을 함께 뒤집어도 uᵢvᵢᵀ가 같다고 설명한다.",
-          "Repeated singular value가 있으면 그 부분공간 안의 orthonormal basis를 회전할 수 있다고 설명한다.",
-          "개별 U·V column의 좌표나 sign은 유일하지 않다고 말한다.",
-          "Paired directions와 singular value가 만드는 matrix reconstruction 또는 subspace는 유지된다고 구분한다.",
-          "Singular coordinate 하나에 사람 의미를 자동 부여하지 않는다고 설명한다.",
+        "level": "advanced",
+        "question": "SVD의 개별 방향이 유일하지 않은 이유와 바뀌지 않는 것을 설명할 수 있나요?",
+        "answerChecklist": [
+          "uᵢ와 vᵢ의 부호를 함께 뒤집어도 외적이 같습니다.",
+          "같은 특잇값의 공간 안에서는 두 기준을 같은 직교변환으로 바꿀 수 있습니다.",
+          "개별 열의 부호와 좌표는 유일하지 않습니다.",
+          "대응하는 성분들이 만드는 행렬과 해당 부분공간은 유지됩니다.",
+          "한 좌표에 사람의 의미를 자동으로 붙이지 않습니다."
         ],
-        requiredConcepts: ["orthonormal-basis", "singular-value-decomposition"],
-        sectionId: "svd",
+        "requiredConcepts": [
+          "orthonormal-basis",
+          "singular-value-decomposition"
+        ],
+        "sectionId": "svd"
       },
       {
-        level: "advanced",
-        question:
-          "Singular values 8,3,0.4,0.1에서 rank-2 truncated SVD의 squared Frobenius error를 계산하고, 왜 큰 두 방향을 남기는 선택이 reconstruction에는 최적이지만 classification에도 최적이라고 말할 수는 없는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "버린 singular value 제곱합 0.17을 계산한다.",
-          "Orthonormal rank-one component의 squared error가 서로 섞이지 않고 더해진다고 설명한다.",
-          "Rank 2 후보가 최대 두 독립 방향만 보존할 수 있으므로 8과 3을 남겨야 버린 squared scale 합이 최소라고 설명한다.",
-          "Eckart–Young의 rank·norm·unconstrained 조건을 말한다.",
-          "작은 singular direction에 label 정보가 있을 수 있다는 반례를 든다.",
+        "level": "advanced",
+        "question": "특잇값 8, 3, 0.4, 0.1의 rank 2 근사 오차와 정리의 적용 범위를 설명할 수 있나요?",
+        "answerChecklist": [
+          "버린 값의 제곱합은 0.4²+0.1²=0.17입니다.",
+          "직교하는 성분의 제곱 오차는 섞이지 않고 더해집니다.",
+          "임의의 후보 공간 밖에 남는 차이가 하한이며 큰 배율부터 보존한 근사가 이를 달성합니다.",
+          "전체 행렬, 정확한 SVD, rank≤2, 추가 제약 없는 후보와 지정한 노름이 전제입니다.",
+          "작은 방향에 종류 구별 정보가 있으면 표 복원에 최적인 근사도 분류에 실패할 수 있습니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "singular-value-decomposition",
           "frobenius-norm",
           "low-rank-approximation",
-          "eckart-young-theorem",
+          "eckart-young-theorem"
         ],
-        sectionId: "low-rank",
-      },
+        "sectionId": "low-rank"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "MIT 18.06 — Singular Value Decomposition",
-        href: "https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/pages/positive-definite-matrices-and-applications/singular-value-decomposition/",
-        problem:
-          "임의 matrix가 input·output 공간에서 전달하는 독립 방향과 scale을 체계적으로 분해하는 문제",
-        contribution:
-          "A=UΣVᵀ와 AᵀA eigenstructure를 연결하고 orthonormal singular directions로 matrix를 해석",
-        assumptions:
-          "유한 차원 real matrix와 Euclidean inner product를 사용하며 complex case는 conjugate transpose로 확장",
-        evidenceScope: "SVD의 선형대수 구조·계산과 관련 연습문제 범위",
-        notClaim:
-          "각 singular coordinate가 자동으로 사람이 읽을 수 있는 feature거나 downstream task에 최적이라는 뜻은 아님",
-        sectionId: "paper-svd-lecture",
+        "title": "MIT 18.06 — Singular Value Decomposition",
+        "href": "https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/pages/positive-definite-matrices-and-applications/singular-value-decomposition/",
+        "problem": "입력과 출력에서 구별되는 방향과 배율을 분해하는 문제",
+        "contribution": "Avᵢ=σᵢuᵢ와 AᵀA의 배율 σᵢ²를 연결합니다.",
+        "assumptions": "유한 차원의 실수 좌표와 유클리드 내적을 사용합니다. 복소수에서는 켤레전치를 씁니다.",
+        "evidenceScope": "실제 Lecture 29 요약의 관계식에 이번 A의 두 방향을 대입합니다.",
+        "notClaim": "각 특이벡터가 유일한 의미 좌표이거나 모든 행렬에서 U=V라는 보장은 없습니다.",
+        "sectionId": "paper-svd-lecture"
       },
       {
-        title:
-          "MIT 18.065 Lecture 7 — Eckart–Young: The Closest Rank k Matrix to A",
-        href: "https://ocw.mit.edu/courses/18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018/resources/lecture-7-eckart-young-the-closest-rank-k-matrix-to-a/",
-        problem:
-          "정해진 rank k 예산에서 원래 data matrix를 가장 가깝게 근사하는 matrix를 찾는 문제",
-        contribution:
-          "상위 k singular component를 남긴 truncated SVD의 spectral·Frobenius norm 최적성과 PCA 연결을 설명",
-        assumptions:
-          "전체 matrix에 접근할 수 있고 rank≤k인 unconstrained 근사와 지정된 matrix norm을 전제로 함",
-        evidenceScope:
-          "Eckart–Young low-rank approximation theorem·예제·연습문제 범위",
-        notClaim:
-          "Downstream prediction·fairness·희귀 feature 보존이나 sparse·nonnegative 제약 아래의 최적성을 보장하지 않음",
-        sectionId: "paper-eckart-young",
-      },
+        "title": "MIT 18.065 Lecture 7 — Eckart–Young: The Closest Rank k Matrix to A",
+        "href": "https://ocw.mit.edu/courses/18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018/resources/lecture-7-eckart-young-the-closest-rank-k-matrix-to-a/",
+        "problem": "같은 rank 제한에서 원래 표를 가장 가깝게 복원하는 문제",
+        "contribution": "상위 특잇값을 남기는 근사의 두 표 노름 최적성을 설명합니다.",
+        "assumptions": "전체 행렬과 정확한 SVD, 추가 제약 없는 rank≤k 후보와 지정한 노름을 전제합니다.",
+        "evidenceScope": "Lecture 7의 실제 문제 2에 있는 [[2,1],[1,2]]를 분해해 근사와 오차를 계산합니다.",
+        "notClaim": "분류 성능이나 희귀 정보 보존, 희소성·음이 아닌 값의 제약 아래 최적성을 보장하지 않습니다.",
+        "sectionId": "paper-eckart-young"
+      }
     ],
+    "entryNote": "두 숫자 (4,2)가 고정된 규칙을 거쳐 (10,8)이 되는 계산부터 시작합니다. 함께 변하는 부분과 차이를 나누고 같은 입력을 SVD·압축·실제 PyTorch 코드까지 추적합니다."
   },
   "ai/math-complex-numbers-oscillations": {
     coreIdea:
@@ -3573,225 +3544,250 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "빼기와 나누기로 두 점 사이의 변화율을 계산합니다. 같은 제곱 함수에서 현재 값·평균 변화율·한 점의 미분계수를 구별한 뒤, 앞 글의 2→7→49에 연쇄법칙을 적용합니다."
   },
   "ai/math-exponents-logarithms": {
-    coreIdea:
-      "Exponentiation은 같은 배율의 반복을 지수로 기록하고 logarithm은 그 결과에 필요한 지수를 되묻습니다. 이 inverse 관계 때문에 원래 공간의 곱이 log 공간의 합으로 바뀌며, probability product를 stable log-likelihood sum으로 계산할 수 있습니다.",
-    assumedKnowledge: [
+    "coreIdea": "거듭제곱은 같은 배율의 적용 정도를 기록하고 로그는 결과에서 필요한 지수를 되묻습니다. 같은 밑의 지수가 더해지므로 양수의 곱은 로그의 합으로 바뀝니다. 확률을 곱할 조건과 로그의 정의역, 밑 변환의 부호, 컴퓨터에서 잃는 정보는 각각 확인해야 합니다.",
+    "assumedKnowledge": [
       {
-        id: "scalar-quantity",
-        role: "밑·지수·결과와 probability를 하나의 수로 계산합니다.",
-      },
+        "id": "scalar-quantity",
+        "role": "확률과 배율, 적용 횟수를 하나의 숫자로 계산합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "exponentiation",
-        role: "반복 곱셈과 지수 덧셈의 관계를 계산합니다.",
+        "id": "exponentiation",
+        "role": "같은 밑의 곱과 지수의 합을 연결하고 0·음수·분수 지수를 구별합니다."
       },
       {
-        id: "logarithm",
-        role: "Exponentiation의 결과에서 필요한 지수를 역으로 구합니다.",
+        "id": "logarithm",
+        "role": "결과에서 필요한 지수를 구하고 입력과 밑의 조건을 확인합니다."
       },
       {
-        id: "log-product-rule",
-        role: "곱과 나눗셈을 log space의 합과 차로 바꿉니다.",
+        "id": "log-product-rule",
+        "role": "양수의 곱과 나눗셈을 같은 밑의 로그 합과 차로 바꿉니다."
       },
       {
-        id: "change-of-log-base",
-        role: "Bit·nat처럼 logarithm의 scale과 단위를 변환합니다.",
-      },
+        "id": "change-of-log-base",
+        "role": "밑 2와 자연로그의 단위를 바꾸고 양의 변환과 부호 반전을 구별합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "exponentiation",
-        sectionId: "exponents",
-        intuition:
-          "같은 배율을 몇 번 연속 적용했는지 한 번에 기록하는 연산입니다.",
-        workedExample: "2³=2×2×2=8이고 2³×2²=2⁵=32입니다.",
-        boundary:
-          "서로 다른 밑의 곱에서는 지수만 더할 수 없으며, 실수 지수는 단순 반복 횟수보다 넓은 정의가 필요합니다.",
+        "id": "exponentiation",
+        "sectionId": "exponents",
+        "intuition": "절반으로 한 번 줄인 양과 두 번 줄인 양을 곱하면 세 번 줄인 양이 됩니다.",
+        "workedExample": "(1/2)¹×(1/2)²=(1/2)³=1/8입니다. 3²×3³=243이지만 3²×2³=72입니다.",
+        "boundary": "지수만 더하려면 밑이 같아야 합니다. 실수 지수는 정수 반복 횟수를 넘어 양의 밑에서 정의를 확장합니다."
       },
       {
-        id: "logarithm",
-        sectionId: "logarithms",
-        intuition:
-          "결과 x를 만들려면 기준 배율 a를 몇 제곱해야 하는지 되묻습니다.",
-        workedExample:
-          "2³=8이므로 log₂8=3이고 10⁻²=0.01이므로 log₁₀0.01=−2입니다.",
-        boundary:
-          "실수 logarithm은 입력이 양수여야 하며 밑은 양수이고 1이 아니어야 합니다.",
+        "id": "logarithm",
+        "sectionId": "logarithms",
+        "intuition": "남은 양을 보고 같은 배율을 어느 정도 적용했는지 거꾸로 묻습니다.",
+        "workedExample": "2⁻³=1/8이므로 log₂(1/8)=−3입니다. 밑 1/2에서는 같은 양의 로그값이 3입니다.",
+        "boundary": "실수 로그는 입력이 양수이고 밑이 양수이며 1이 아닐 때 정의됩니다. 로그값이 음수인 것과 입력이 음수인 것은 다릅니다."
       },
       {
-        id: "log-product-rule",
-        sectionId: "log-identities",
-        intuition:
-          "곱셈으로 이어진 반복 배율의 횟수를 각각 세어 더하는 규칙입니다.",
-        workedExample: "log₂(8×4)=log₂32=5이고 log₂8+log₂4=3+2=5입니다.",
-        boundary:
-          "Log(u+v)를 log u+log v로 바꾸는 규칙은 없으며 모든 입력은 양수여야 합니다.",
+        "id": "log-product-rule",
+        "sectionId": "log-identities",
+        "intuition": "두 구간의 배율을 곱하면 적용한 지수들이 더해진다는 관계를 역방향으로 읽습니다.",
+        "workedExample": "log₂((1/2)(1/4))=−1−2=−3이며 log₂(8×4)=3+2=5입니다.",
+        "boundary": "양수 입력과 같은 밑이 필요합니다. log₂(1+1)=1은 log₂1+log₂1=0과 다릅니다. 확률을 곱하는 근거는 따로 확인합니다."
       },
       {
-        id: "change-of-log-base",
-        sectionId: "log-bases",
-        intuition:
-          "같은 위치를 metre와 centimetre로 다르게 쓰듯 log 좌표의 기준 scale을 바꿉니다.",
-        workedExample:
-          "log₂8=ln8/ln2=3이며 밑 2 정보량은 bit, 자연로그 정보량은 nat으로 읽습니다.",
-        boundary:
-          "단독 objective에는 양의 상수배지만 다른 loss 항과 섞이면 상대 weight와 gradient scale이 바뀔 수 있습니다.",
-      },
+        "id": "change-of-log-base",
+        "sectionId": "log-bases",
+        "intuition": "같은 양을 서로 다른 기준 배율로 측정한 지수로 바꿉니다.",
+        "workedExample": "−log₂(1/8)=3 bit이고 −ln(1/8)=3ln2≈2.079442 nat입니다.",
+        "boundary": "밑 2와 e 사이의 변환은 양의 상수배입니다. 밑 1/2로 바꾸면 부호가 뒤집힙니다. 여러 비용 중 한 항만 바꾸면 상대 비중이 달라집니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "반복",
-        relation: "같은 배율의 곱을 지수로 압축",
-        concepts: ["scalar-quantity", "exponentiation"],
+        "label": "반복",
+        "relation": "같은 배율의 반복을 지수로 적습니다.",
+        "concepts": [
+          "scalar-quantity",
+          "exponentiation"
+        ]
       },
       {
-        label: "역질문",
-        relation: "결과에서 필요한 지수를 복원",
-        concepts: ["exponentiation", "logarithm"],
+        "label": "역질문",
+        "relation": "결과에서 필요한 지수를 되찾습니다.",
+        "concepts": [
+          "exponentiation",
+          "logarithm"
+        ]
       },
       {
-        label: "연산 이동",
-        relation: "곱·나눗셈을 합·차로 변환",
-        concepts: ["logarithm", "log-product-rule"],
+        "label": "연산 이동",
+        "relation": "양수의 곱과 나눗셈을 합과 차로 옮깁니다.",
+        "concepts": [
+          "logarithm",
+          "log-product-rule"
+        ]
       },
       {
-        label: "단위",
-        relation: "밑에 따라 bit·nat scale 변환",
-        concepts: ["logarithm", "change-of-log-base"],
-      },
+        "label": "단위",
+        "relation": "밑과 부호를 확인하고 bit·nat의 단위를 바꿉니다.",
+        "concepts": [
+          "logarithm",
+          "change-of-log-base"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "2⁵, 2⁻³, log₂32와 log₂(1/8)을 계산하고 지수와 로그가 서로 역연산임을 확인할 수 있을까요?",
-        answerChecklist: [
-          "2⁵=32와 2⁻³=1/8을 계산한다.",
-          "log₂32=5와 log₂(1/8)=−3을 계산한다.",
-          "aʸ=x와 logₐx=y를 양방향으로 연결한다.",
+        "level": "basic",
+        "question": "2⁵, 2⁻³, log₂32, log₂(1/8)을 계산해 지수와 로그의 역관계를 확인할 수 있나요?",
+        "answerChecklist": [
+          "2⁵=32, 2⁻³=1/8입니다.",
+          "log₂32=5, log₂(1/8)=−3입니다.",
+          "aʸ=x와 logₐx=y를 양방향으로 읽습니다."
         ],
-        requiredConcepts: ["exponentiation", "logarithm"],
-        sectionId: "logarithms",
+        "requiredConcepts": [
+          "exponentiation",
+          "logarithm"
+        ],
+        "sectionId": "logarithms"
       },
       {
-        level: "basic",
-        question:
-          "3²×3³과 3²×2³을 각각 계산하고, 첫 번째 식에서만 지수를 더해 3⁵으로 쓸 수 있는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "3²×3³=9×27=243=3⁵를 계산한다.",
-          "3²×2³=9×8=72를 계산한다.",
-          "aᵐaⁿ=aᵐ⁺ⁿ은 밑 a가 같을 때의 규칙이라고 설명한다.",
-          "서로 다른 밑을 곱할 때 지수만 더하는 것은 허용되지 않는다고 제한한다.",
+        "level": "basic",
+        "question": "3²×3³과 3²×2³을 계산하고 어느 식에서 지수만 더할 수 있는지 설명할 수 있나요?",
+        "answerChecklist": [
+          "3²×3³=9×27=243=3⁵입니다.",
+          "3²×2³=9×8=72입니다.",
+          "같은 밑의 거듭제곱끼리 곱할 때 지수를 더합니다.",
+          "밑이 다르면 이 규칙을 그대로 적용할 수 없습니다."
         ],
-        requiredConcepts: ["exponentiation"],
-        sectionId: "exponents",
+        "requiredConcepts": [
+          "exponentiation"
+        ],
+        "sectionId": "exponents"
       },
       {
-        level: "basic",
-        question:
-          "실수 범위에서 log₂8, log₂1, log₂0, log₂(−4)를 계산 가능 여부에 따라 분류하고, 밑이 1이나 −2인 식이 어떤 조건을 위반하는지 말할 수 있을까요?",
-        answerChecklist: [
-          "log₂8=3과 log₂1=0을 계산한다.",
-          "입력 0과 음수에는 실수 logarithm이 정의되지 않는다고 말한다.",
-          "밑은 a>0이고 a≠1이어야 한다고 명시한다.",
-          "밑 1은 a≠1을, 밑 −2는 a>0을 위반한다고 분류한다.",
+        "level": "basic",
+        "question": "log₂8, log₂1, log₂0, log₂(−4)와 밑 1·−2인 로그의 조건을 설명할 수 있나요?",
+        "answerChecklist": [
+          "log₂8=3, log₂1=0입니다.",
+          "0과 음수 입력의 로그는 실수 범위에서 정의되지 않습니다.",
+          "밑은 양수이며 1이 아니어야 합니다.",
+          "밑 1은 지수를 되찾을 수 없고 밑 −2는 이 실수 로그의 양수 밑 조건을 위반합니다."
         ],
-        requiredConcepts: ["exponentiation", "logarithm"],
-        sectionId: "logarithms",
+        "requiredConcepts": [
+          "exponentiation",
+          "logarithm"
+        ],
+        "sectionId": "logarithms"
       },
       {
-        level: "basic",
-        question:
-          "log₂(8×4)와 log₂8+log₂4를 각각 계산해 곱의 logarithm 규칙을 확인할 수 있을까요?",
-        answerChecklist: [
-          "왼쪽에서 log₂32=5를 계산한다.",
-          "오른쪽에서 3+2=5를 계산한다.",
-          "같은 밑과 양수 입력이라는 조건을 말한다.",
-          "원래 공간의 곱셈이 log 공간의 덧셈으로 바뀐다고 해석한다.",
+        "level": "basic",
+        "question": "log₂(8×4)와 log₂8+log₂4가 같은 이유와 수치를 확인할 수 있나요?",
+        "answerChecklist": [
+          "왼쪽은 log₂32=5입니다.",
+          "오른쪽은 3+2=5입니다.",
+          "같은 밑과 각각 양수인 입력이 전제입니다.",
+          "같은 밑의 거듭제곱을 곱하면 지수가 더해지므로 로그도 합으로 바뀝니다."
         ],
-        requiredConcepts: ["logarithm", "log-product-rule"],
-        sectionId: "log-identities",
+        "requiredConcepts": [
+          "logarithm",
+          "log-product-rule"
+        ],
+        "sectionId": "log-identities"
       },
       {
-        level: "basic",
-        question:
-          "확률 1/8의 surprisal을 밑 2와 자연로그로 각각 계산하고, 같은 정보량을 bit와 nat 단위로 어떻게 쓰는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "−log₂(1/8)=log₂8=3을 계산한다.",
-          "−ln(1/8)=ln8=3ln2를 계산한다.",
-          "밑 2의 값은 3 bit, 자연로그 값은 3ln2 nat이라고 구분한다.",
-          "밑 변환은 같은 양을 다른 양의 scale로 나타내는 것이라고 설명한다.",
+        "level": "basic",
+        "question": "확률 1/8의 음의 로그를 bit와 nat으로 계산할 수 있나요?",
+        "answerChecklist": [
+          "−log₂(1/8)=3입니다.",
+          "−ln(1/8)=3ln2입니다.",
+          "각각 3 bit와 약 2.079442 nat입니다.",
+          "밑 2와 e 사이에서는 같은 양을 양의 상수배로 바꿉니다."
         ],
-        requiredConcepts: ["logarithm", "change-of-log-base"],
-        sectionId: "log-bases",
+        "requiredConcepts": [
+          "logarithm",
+          "change-of-log-base"
+        ],
+        "sectionId": "log-bases"
       },
       {
-        level: "basic",
-        question:
-          "확률 q가 1, 1/2, 1/8일 때 −log₂q를 계산하고, 실제 사건에 더 낮은 확률을 준 모델이 더 큰 비용을 받는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "−log₂1=0 bit를 계산한다.",
-          "−log₂(1/2)=1 bit와 −log₂(1/8)=3 bit를 계산한다.",
-          "q가 0에 가까워질수록 −log q가 커진다고 설명한다.",
-          "이 한 사건의 비용을 surprisal이라고 연결한다.",
+        "level": "basic",
+        "question": "q=1, 1/2, 1/8의 −log₂q를 구하고 낮은 예측 확률에 큰 비용이 생기는 이유를 설명할 수 있나요?",
+        "answerChecklist": [
+          "각 비용은 0, 1, 3 bit입니다.",
+          "1보다 큰 밑에서는 q가 0에 가까워질수록 음의 로그가 커집니다.",
+          "실제 사건에 준 낮은 확률이 큰 비용으로 이어집니다.",
+          "한 사건의 이 값이 놀람도이며 q=0에서 유한한 실수 로그가 생기는 것은 아닙니다."
         ],
-        requiredConcepts: ["logarithm", "change-of-log-base"],
-        sectionId: "applications",
+        "requiredConcepts": [
+          "logarithm",
+          "change-of-log-base"
+        ],
+        "sectionId": "applications"
       },
       {
-        level: "advanced",
-        question:
-          "확률 0.5인 독립 사건이 2,000번 연속 일어나는 likelihood를 직접 곱하는 계산과 log 공간의 합으로 계산하는 방법을 비교하고, floating-point underflow를 피하는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Likelihood를 0.5²⁰⁰⁰=2⁻²⁰⁰⁰으로 적는다.",
-          "Log-likelihood를 2,000ln0.5=−2,000ln2로 바꾼다.",
-          "아주 작은 양수의 반복 곱이 floating-point에서 0으로 반올림되는 underflow를 설명한다.",
-          "유한한 음수 log 값을 덧셈으로 누적하면 원래 likelihood의 순서와 정보를 더 오래 보존한다고 비교한다.",
+        "level": "advanced",
+        "question": "확률 1/2인 독립 사건 2000개의 직접 곱과 로그 합을 비교하고 0이 된 뒤의 로그를 구분할 수 있나요?",
+        "answerChecklist": [
+          "정확한 확률은 2⁻²⁰⁰⁰으로 양수입니다.",
+          "로그 확률은 −2000ln2입니다.",
+          "기록한 이진 float 환경에서는 직접 곱이 0으로 반올림됩니다.",
+          "로그 합은 약 −1386.294361로 2001번의 값과 구별됩니다.",
+          "이미 0이 된 곱에 math.log를 적용하면 ValueError가 나고 exp로 되돌려도 다시 0이 됩니다."
         ],
-        requiredConcepts: ["exponentiation", "logarithm", "log-product-rule"],
-        sectionId: "overview",
+        "requiredConcepts": [
+          "exponentiation",
+          "logarithm",
+          "log-product-rule"
+        ],
+        "sectionId": "numerical"
       },
       {
-        level: "advanced",
-        question:
-          "u=v=1을 대입해 log(u+v)=log u+log v라는 식이 거짓임을 보이고, 왜 곱셈 법칙을 덧셈에 그대로 적용할 수 없는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "왼쪽은 log2이고 오른쪽은 log1+log1=0이라고 계산한다.",
-          "log2≠0이므로 하나의 반례만으로 보편 명제가 거짓임을 보인다.",
-          "log-product rule은 uv=aᵐaⁿ=aᵐ⁺ⁿ에서 나오며 u+v에는 같은 지수 덧셈 구조가 없다고 설명한다.",
-          "log-sum을 계산하려면 별도의 식이 필요하다고 제한한다.",
+        "level": "advanced",
+        "question": "u=v=1로 log(u+v)=log u+log v를 검토할 수 있나요?",
+        "answerChecklist": [
+          "밑 2에서 왼쪽은 1이고 오른쪽은 0입니다.",
+          "한 반례로 모든 양수에서 성립한다는 주장을 반박합니다.",
+          "곱의 법칙은 같은 밑의 지수 덧셈에서 나오며 합에는 그 구조가 없습니다.",
+          "원래 양의 합을 로그로 구하려면 별도의 식과 수치 처리가 필요합니다."
         ],
-        requiredConcepts: ["exponentiation", "logarithm", "log-product-rule"],
-        sectionId: "log-identities",
+        "requiredConcepts": [
+          "exponentiation",
+          "logarithm",
+          "log-product-rule"
+        ],
+        "sectionId": "log-identities"
       },
       {
-        level: "advanced",
-        question:
-          "실수 범위에서 ln((−2)(−8))과 ln(−2)+ln(−8)을 비교해 log-product rule의 양수 입력 전제가 왜 필요한지 설명할 수 있을까요?",
-        answerChecklist: [
-          "왼쪽은 ln16으로 실수 범위에서 정의된다고 계산한다.",
-          "ln(−2)와 ln(−8)은 실수 범위에서 정의되지 않아 오른쪽 식을 만들 수 없다고 말한다.",
-          "곱이 양수라는 사실만으로 각 logarithm의 정의역 조건이 충족되지는 않는다고 설명한다.",
-          "logₐ(uv)=logₐu+logₐv에는 u>0, v>0, a>0, a≠1이 필요하다고 명시한다.",
+        "level": "advanced",
+        "question": "ln((−2)(−8))과 ln(−2)+ln(−8)을 비교해 양수 입력 조건을 설명할 수 있나요?",
+        "answerChecklist": [
+          "곱의 로그는 ln16으로 실수 범위에서 정의됩니다.",
+          "각 음수의 로그는 실수로 정의되지 않아 오른쪽 식을 만들 수 없습니다.",
+          "곱이 양수인 것과 각각의 입력이 양수인 것은 다른 조건입니다.",
+          "곱의 로그 법칙에는 u>0, v>0, a>0, a≠1이 필요합니다."
         ],
-        requiredConcepts: ["logarithm", "log-product-rule"],
-        sectionId: "log-identities",
+        "requiredConcepts": [
+          "logarithm",
+          "log-product-rule"
+        ],
+        "sectionId": "log-identities"
       },
       {
-        level: "advanced",
-        question:
-          "같은 probability에 대한 negative log objective를 밑 2와 자연로그로 쓸 때, 단독 objective의 optimum은 같지만 gradient scale과 다른 loss 항과의 균형은 달라질 수 있는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "−log₂q=−lnq/ln2로 두 objective가 양의 상수 1/ln2배 관계임을 보인다.",
-          "양의 상수배는 q에 대한 값의 순서와 단독 minimizer를 유지한다고 설명한다.",
-          "Gradient도 같은 상수배가 되어 learning-rate 감각이 달라진다고 설명한다.",
-          "다른 loss 항의 weight를 그대로 두면 항 사이의 상대 scale이 바뀐다고 제한한다.",
+        "level": "advanced",
+        "question": "음의 로그 비용을 자연로그에서 밑 2로 바꿀 때 단독 최적 위치, 기울기, 다른 비용과의 합은 어떻게 달라지나요?",
+        "answerChecklist": [
+          "−log₂q=−lnq/ln2로 양의 상수배입니다.",
+          "단독 비용의 값 순서와 최소 위치는 유지되지만 함수값은 달라집니다.",
+          "미분값도 같은 배율이므로 같은 학습률의 이동은 달라질 수 있습니다.",
+          "다른 비용을 그대로 두고 한 항만 바꾸면 상대 비중이 바뀝니다.",
+          "펼침 예제의 최소 위치는 1/2에서 1/(1+ln2)≈0.590616으로 바뀝니다."
         ],
-        requiredConcepts: ["logarithm", "change-of-log-base"],
-        sectionId: "log-bases",
-      },
+        "requiredConcepts": [
+          "logarithm",
+          "change-of-log-base"
+        ],
+        "sectionId": "log-bases"
+      }
     ],
+    "entryNote": "세 번의 공정한 동전에서 모두 앞면일 확률 1/8과 절반으로 줄인 횟수 3을 먼저 비교합니다. 같은 양을 지수와 로그로 읽고 실제 교재식·CPython 밑 변환·2000번의 수치 계산까지 이어 갑니다."
   },
   "ai/math-probability-expectation-variance": {
     coreIdea: "Probability model은 experiment·sample space·outcome을 고정하고 distribution mass로 event를 평가합니다. Conditioning은 남은 mass를 다시 정규화하고 chain rule은 joint mass를 conditional product로 복원합니다.",
@@ -30321,184 +30317,294 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/kv-cache-fundamentals": {
-    entryLevel: true,
-    entryNote:
-      "Autoregressive decode의 현재 질문과 과거 기록을 구분한 뒤, head 공유가 token당 KV byte를 어떻게 바꾸는지 계산합니다.",
-    coreIdea:
-      "Autoregressive decode에서 현재 Query는 매 step 새로 만들고 과거 Key·Value는 재계산을 피하려고 보존합니다. MHA·GQA·MQA가 공유하는 KV head 축을 구분한 뒤 layer·KV head·head dimension·K/V tensor·dtype을 곱하면 token 하나가 늘 때의 logical KV byte를 계산할 수 있습니다.",
-    assumedKnowledge: [],
-    introducedHere: [
+    "entryLevel": true,
+    "entryNote": "한 층의 3→4위치에서 저장 48→64byte와 현재 Q16byte를 구분한 뒤 실제 코드와 모델 설정에 같은 계산을 적용합니다.",
+    "coreIdea": "현재 Q는 이번 조회에 쓰고 과거 K/V는 다음 실행에도 남깁니다. 작은 배열의 추가·조회 과정을 실제 cache.update와 repeat_kv에 연결한 뒤 head 공유·층별 모양·latent 표현·보존 길이로 저장량을 셉니다. 저장량과 전체 실행 시간의 절감은 따로 판단합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "kv-cache-decode-state",
-        role: "왜 과거 K/V는 보존하고 현재 Q는 다음 step에 남기지 않는지 설명합니다.",
+        "id": "kv-cache-decode-state",
+        "role": "왜 과거 K/V는 보존하고 현재 Q는 다음 step에 남기지 않는지 설명합니다."
       },
       {
-        id: "grouped-query-kv-sharing",
-        role: "MHA·GQA·MQA에서 Q head와 실제 cache에 남는 KV head의 수를 구분합니다.",
+        "id": "grouped-query-kv-sharing",
+        "role": "MHA·GQA·MQA에서 Q head와 실제 cache에 남는 KV head의 수를 구분합니다."
       },
       {
-        id: "per-token-kv-byte",
-        role: "Layer·KV head·head dimension·K/V tensor·dtype에서 token당 cache byte를 계산합니다.",
-      },
-      { id: "kv-cache-representation-design-axis", role: "GQA 의 head 공유와 MLA 의 latent 압축을 같은 설계 축의 두 지점으로 놓습니다." },
-      { id: "kv-cache-capacity-vs-bandwidth-saving", role: "저장 byte 절감이 언제 읽기 byte·step 시간 절감으로 그대로 이어지고 언제 아닌지 구분합니다." },
-],
-    conceptExplanations: [
-      {
-        id: "kv-cache-decode-state",
-        sectionId: "kv-shape",
-        intuition:
-          "책의 다음 단어를 쓸 때 앞 페이지를 매번 처음부터 다시 분석하지 않고, 각 페이지의 찾아보기 표와 내용을 메모해 두는 것과 같습니다.",
-        workedExample:
-          "Prompt 100 token 뒤 한 token을 생성하면 101번째 step은 앞선 100개의 layer별 K/V를 재사용하고 현재 token의 Q만 새로 계산합니다.",
-        boundary:
-          "KV cache는 계산 재사용을 위한 runtime state이지 model weight나 대화 원문 자체가 아니며, batch·beam·speculative decoding에서는 sequence별 소유 관계가 더 생깁니다.",
+        "id": "per-token-kv-byte",
+        "role": "Layer·KV head·head dimension·K/V tensor·dtype에서 token당 cache byte를 계산합니다."
       },
       {
-        id: "grouped-query-kv-sharing",
-        sectionId: "kv-shape-sharing",
-        intuition:
-          "여덟 명이 각자 질문은 다르게 하되 자료 보관함은 두 개씩 묶어 공유하면 질문 관점은 여덟 개지만 보관함 사본은 두 개만 필요합니다.",
-        workedExample:
-          "Q head 8개에서 MHA는 KV head 8개, group size 4인 GQA는 KV head 2개, MQA는 KV head 1개를 cache에 남깁니다.",
-        boundary:
-          "KV head를 줄이면 cache와 memory traffic은 감소하지만 표현력·품질이 항상 같다는 보장은 없고 model scale·training recipe·task에서 검증해야 합니다.",
+        "id": "kv-cache-representation-design-axis",
+        "role": "GQA 의 head 공유와 MLA 의 latent 압축을 같은 설계 축의 두 지점으로 놓습니다."
       },
       {
-        id: "per-token-kv-byte",
-        sectionId: "kv-shape-formula",
-        intuition:
-          "한 token이 각 층에 남기는 K/V 표의 칸 수를 센 뒤 칸 하나의 byte를 곱하고 모든 층을 더합니다.",
-        workedExample:
-          "Qwen3.6의 64 layer 중 full-attention 16개만 KV를 남기므로 KV head 4·head_dim 256·K/V 2 tensors·BF16 2 bytes이면 16×4×256×2×2=65,536 bytes, 즉 64 KiB/token입니다.",
-        boundary:
-          "이 값은 uniform dense-allocation 근사이며 layer별 shape·K=V 공유·TP head 복제·block padding·allocator metadata가 있으면 실제 rank별 byte와 달라집니다.",
-      },
-      { id: "kv-cache-representation-design-axis", sectionId: "cache-representation-design", intuition: "짐을 줄이는 방법에는 가방 개수를 줄이는 것과, 가방은 그대로 두되 안의 옷을 압축 팩에 눌러 담는 것 두 가지가 있습니다.", workedExample: "GQA 는 KV head 8개처럼 head 개수 자체를 줄이고, MLA 는 head 표현을 latent 벡터 하나로 눌러 담은 뒤 필요할 때만 다시 펼칩니다.", boundary: "두 방법 다 KV byte 를 줄이지만, MLA 의 압축 팩을 펼치는 동작(up-projection)은 GQA 에는 없는 추가 연산입니다." },
-      { id: "kv-cache-capacity-vs-bandwidth-saving", sectionId: "mla-vs-gqa", intuition: "창고 공간을 줄이는 것과 물건을 꺼내 오는 시간을 줄이는 것은 같이 좋아질 때도 있지만 항상 같이 움직이지는 않습니다.", workedExample: "GQA 로 저장 byte 가 4분의 1이 되면 읽는 byte 도 4분의 1이 되어 decode step 이 그만큼 짧아집니다. MLA 는 저장 byte 를 더 줄여도 up-projection 연산이 늘어 step 시간 절감은 그보다 작을 수 있습니다.", boundary: "Decode 가 memory-bound 를 벗어날 만큼 up-projection 연산이 크면, capacity 는 늘어도 bandwidth saving 은 거의 없을 수 있습니다." },
-],
-    conceptStages: [
-      {
-        label: "Decode state",
-        relation: "Autoregressive 반복에서 재사용할 과거 K/V를 보존",
-        concepts: ["autoregressive-decoding", "attention-query-key-value", "kv-cache-decode-state"],
-      },
-      {
-        label: "Cache shape",
-        relation: "MHA·GQA·MQA 공유와 dtype에서 token당 byte 계산",
-        concepts: ["multi-head-attention", "grouped-query-kv-sharing", "bit-byte", "per-token-kv-byte"],
-      },
-      {
-        label: "Representation",
-        relation: "GQA 의 head 공유와 MLA 의 latent 압축을 같은 축에 놓고 capacity·bandwidth 절감을 구분",
-        concepts: ["kv-cache-representation-design-axis", "kv-cache-capacity-vs-bandwidth-saving", "decode-memory-bound-regime"],
-      },
+        "id": "kv-cache-capacity-vs-bandwidth-saving",
+        "role": "저장 byte 절감이 언제 읽기 byte·step 시간 절감으로 그대로 이어지고 언제 아닌지 구분합니다."
+      }
     ],
-    exercises: [
+    "conceptExplanations": [
       {
-        level: "basic",
-        question: "Autoregressive decode에서 과거 K/V는 cache에 남기고 Q는 다음 step에 남기지 않는 이유를 현재 token과 과거 token의 역할로 설명하라.",
-        answerChecklist: ["Q is current lookup", "past K as address", "past V as content", "avoid repeated projection", "next step creates new Q"],
-        requiredConcepts: ["kv-cache-decode-state", "attention-query-key-value"],
-        sectionId: "kv-shape",
+        "id": "kv-cache-decode-state",
+        "sectionId": "kv-shape",
+        "intuition": "다음 위치를 위한 기록과 이번에만 쓰는 질문의 수명이 다릅니다.",
+        "workedExample": "한 층의 과거3위치48byte에 새K/V16byte를 붙여64byte로 만듭니다. 현재Q16byte는 다음용KV에 남기지 않습니다.",
+        "boundary": "같은 모델·앞부분·위치 조건의 causal 실행이며 입력 원문이나 모델 가중치 자체를 저장하는 뜻이 아닙니다."
       },
       {
-        level: "basic",
-        question: "Q head 32개와 KV head 4개인 GQA의 group size를 계산하고 MHA·MQA일 때 KV head 수와 cache 방향을 비교하라.",
-        answerChecklist: ["group size 8", "MHA KV 32", "MQA KV 1", "Q count can stay 32", "cache proportional to KV heads"],
-        requiredConcepts: ["grouped-query-kv-sharing", "multi-head-attention"],
-        sectionId: "kv-shape-sharing",
+        "id": "grouped-query-kv-sharing",
+        "sectionId": "kv-shape-sharing",
+        "intuition": "여러 조회 관점이 동일한 기록 묶음을 나눠 읽습니다.",
+        "workedExample": "Q4·폭2·3위치·숫자2byte에서 KV4/2/1head는 MHA96/GQA48/MQA24byte이며 실제 계산용 head 순서는0,0,1,1입니다.",
+        "boundary": "계산용 펼침과 cache 저장을 구분하며 reshape는 복사할 수 있습니다. 공유가 품질 동등성을 보장하지 않습니다."
       },
       {
-        level: "basic",
-        question: "Qwen3.6의 64 layer 중 full-attention 16개, KV head 4·head_dim 256·K/V 분리·BF16 cache의 token당 KV byte를 계산하고 KiB로 변환하라.",
-        answerChecklist: ["16×4×256×2×2", "65536 bytes", "64 KiB", "48 DeltaNet excluded", "not weight dtype", "uniform dense assumption"],
-        requiredConcepts: ["per-token-kv-byte", "bit-byte"],
-        sectionId: "kv-shape-formula",
+        "id": "per-token-kv-byte",
+        "sectionId": "kv-shape-formula",
+        "intuition": "한 층의 기록 숫자를 세고 원소byte를 곱한 뒤 층별로 더합니다.",
+        "workedExample": "사례는 한 층·KV2·폭2·K/V2·2byte=16byte/위치입니다. Llama3 8B의32층·KV8·폭128·BF16은128KiB입니다.",
+        "boundary": "층별 폭·window·병렬 분할·head 복제·block 빈칸·scale과 실제 최종 K/V 배열을 확인해야 합니다."
       },
       {
-        level: "basic",
-        question: "Llama 3 8B(layer 32·Q head 32·KV head 8·head_dim 128·BF16)의 token당 KV byte를 계산하고, KV head를 32개로 둔 MHA였다면 몇 배 컸을지 구하라.",
-        answerChecklist: ["32×8×128×2×2", "131072 bytes", "128 KiB", "MHA 524288 bytes", "4배(group size)"],
-        requiredConcepts: ["per-token-kv-byte", "grouped-query-kv-sharing"],
-        sectionId: "kv-shape-formula",
+        "id": "kv-cache-representation-design-axis",
+        "sectionId": "cache-representation-design",
+        "intuition": "기록 묶음 수를 줄이거나 그 기록을 만드는 작은 공통 표현을 저장할 수 있습니다.",
+        "workedExample": "K=(0,c),V=(c,2c)를 c1~4로 나타내면 변환query0으로 균등비율을 얻고 latent평균2.5에 V변환을 적용해(2.5,5)를 얻습니다.",
+        "boundary": "MLA의 선형 변환은 query/output에 흡수할 수 있으므로 매번 전체K/V복원을 요구하지 않습니다. 위치key 추가저장·실제kernel 비용은 별도입니다."
       },
       {
-        level: "basic",
-        question: "Cache representation design 관점에서 GQA와 MLA가 각각 KV byte를 줄이는 방법을 한 문장씩 설명하라.",
-        answerChecklist: ["GQA reduces head count", "no extra compute on read", "MLA compresses to low-rank latent", "up-projection needed to restore"],
-        requiredConcepts: ["kv-cache-representation-design-axis"],
-        sectionId: "cache-representation-design",
-      },
-      {
-        level: "basic",
-        question: "Capacity saving과 bandwidth saving을 각각 한 문장으로 정의하라.",
-        answerChecklist: ["capacity: how many tokens/requests fit in fixed memory", "bandwidth: bytes read per decode step / step time"],
-        requiredConcepts: ["kv-cache-capacity-vs-bandwidth-saving"],
-        sectionId: "mla-vs-gqa",
-      },
-      {
-        level: "advanced",
-        question: "MLA가 GQA보다 저장 byte를 더 줄이면서도 decode step이 항상 더 빨라지지는 않을 수 있는 이유를, up-projection 연산과 decode의 memory-bound 성질로 설명하라.",
-        answerChecklist: ["MLA up-projection adds compute", "GQA has no extra compute on read", "decode is memory-bound", "added compute can offset bandwidth saving", "capacity saving still holds"],
-        requiredConcepts: ["kv-cache-representation-design-axis", "kv-cache-capacity-vs-bandwidth-saving", "decode-memory-bound-regime"],
-        sectionId: "mla-vs-gqa",
-      },
-      {
-        level: "advanced",
-        question: "MHA checkpoint를 GQA로 바꿀 때 cache 절감만으로 품질 동등성을 주장할 수 없는 이유를 쓰세요.",
-        answerChecklist: ["shared KV representation", "training/uptraining", "task slices", "quality evaluation", "latency and memory separate"],
-        requiredConcepts: ["grouped-query-kv-sharing"],
-        sectionId: "paper-gqa",
-      },
-      {
-        level: "advanced",
-        question: "Layer별 KV head 수가 다른 model의 token당 byte를 단일 평균 head 수로 계산하면 안 되는 이유와 올바른 합산식을 설명하세요.",
-        answerChecklist: ["layer-specific shape", "sum layer bytes", "K/V tensor count", "dtype", "average can hide wide layers"],
-        requiredConcepts: ["per-token-kv-byte"],
-        sectionId: "kv-shape-formula",
-      },
-      {
-        level: "advanced",
-        question: "Tensor parallel에서 logical KV byte와 rank별 physical KV byte가 달라질 수 있는 조건을 나열하세요.",
-        answerChecklist: ["head sharding", "head replication", "rank-local heads", "block padding", "allocator metadata", "measure actual"],
-        requiredConcepts: ["per-token-kv-byte", "grouped-query-kv-sharing"],
-        sectionId: "kv-shape-runtime",
-      },
+        "id": "kv-cache-capacity-vs-bandwidth-saving",
+        "sectionId": "capacity-bandwidth",
+        "intuition": "고정 공간에 담는 양과 실행에서 옮기는 전체byte를 따로 셉니다.",
+        "workedExample": "가중치100MB와KV100MB에서 KV만25MB로 줄이면 총전송200→125MB, 비율0.625입니다. KV만의0.25와 다릅니다.",
+        "boundary": "같은 유효대역폭과 전송지배를 가정해도 전체시간비는0.625이며 계산·통신·batch·kernel이 바뀌면 측정해야 합니다."
+      }
     ],
-    papers: [
+    "conceptStages": [
       {
-        title: "Fast Transformer Decoding: One Write-Head is All You Need",
-        href: "https://arxiv.org/abs/1911.02150",
-        problem:
-          "Autoregressive decoder inference에서 attention K/V를 매 step memory에서 읽는 bandwidth와 cache size가 batch throughput을 제한하는 문제",
-        contribution:
-          "모든 query head가 단일 key/value head를 공유하는 MQA를 제안해 decode memory traffic을 줄이고 quality·speed를 평가",
-        assumptions:
-          "논문의 Transformer decoder·training tasks·hardware·batch와 autoregressive inference 설정",
-        evidenceScope:
-          "논문이 보고한 translation·language-model quality와 inference performance 범위",
-        notClaim:
-          "MQA가 모든 modern LLM·task·scale에서 MHA와 같은 품질이거나 최적 KV head 수가 1이라는 보편 결론은 아님",
-        sectionId: "paper-mqa",
+        "label": "01 저장 수명",
+        "relation": "현재 Q와 다음에도 남기는 KV를 구분합니다.",
+        "concepts": [
+          "kv-cache-decode-state"
+        ]
       },
       {
-        title:
-          "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints",
-        href: "https://arxiv.org/abs/2305.13245",
-        problem:
-          "MQA가 decode는 빠르지만 quality가 낮아질 수 있고 기존 MHA checkpoint를 처음부터 다시 학습하기 어려운 문제",
-        contribution:
-          "여러 query head가 중간 개수의 KV head group을 공유하는 GQA와 MHA checkpoint uptraining recipe를 제안",
-        assumptions:
-          "T5-family checkpoint·논문의 group 구성·5% uptraining compute·quality와 latency 평가 환경",
-        evidenceScope:
-          "논문이 비교한 MHA·MQA·GQA model과 benchmark·inference 조건 범위",
-        notClaim:
-          "GQA가 모든 architecture에서 MQA와 같은 속도 또는 MHA와 같은 품질을 자동 보장하거나 특정 group ratio가 보편 최적이라는 뜻은 아님",
-        sectionId: "paper-gqa",
+        "label": "02 기록 모양",
+        "relation": "공유 head와 실제 층별 모양에서 byte를 셉니다.",
+        "concepts": [
+          "grouped-query-kv-sharing",
+          "per-token-kv-byte"
+        ]
       },
+      {
+        "label": "03 저장 표현",
+        "relation": "latent의 선형 변환과 위치 경로를 구분합니다.",
+        "concepts": [
+          "kv-cache-representation-design-axis"
+        ]
+      },
+      {
+        "label": "04 비용 구분",
+        "relation": "저장량·총전송량·실행 시간을 따로 봅니다.",
+        "concepts": [
+          "kv-cache-capacity-vs-bandwidth-saving"
+        ]
+      }
     ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "한 층에서 과거3위치·KV head2개·폭2·원소2byte의 K와V를 보존합니다. 한 위치를 더 처리하면 cache는 어떻게 늘까요?",
+        "answerChecklist": [
+          "3×2×2×2×2=48byte",
+          "4위치는64byte",
+          "추가16byte",
+          "현재Q는4head×폭2×2byte=16byte이며 다음용cache에 남기지 않음"
+        ],
+        "sectionId": "request-trace",
+        "requiredConcepts": [
+          "kv-cache-decode-state",
+          "per-token-kv-byte"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "현재Q와 과거K·V는 각각 어떤 역할이며, 토큰 원문이나 모델 가중치와 같은 것인가요?",
+        "answerChecklist": [
+          "Q는현재조회",
+          "K는관련성비교",
+          "V는비율에따라합칠내용",
+          "모두층별계산벡터",
+          "모델가중치나토큰ID와다름"
+        ],
+        "sectionId": "kv-shape",
+        "requiredConcepts": [
+          "kv-cache-decode-state"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은3위치·4Qhead·폭2·2byte에서 KV head를4개·2개·1개로 바꾸면 K와V의 합계는 얼마인가요?",
+        "answerChecklist": [
+          "MHA96byte",
+          "GQA48byte",
+          "MQA24byte",
+          "Q4개는유지",
+          "head공유가품질동일을보장하지않음"
+        ],
+        "sectionId": "kv-shape-sharing",
+        "requiredConcepts": [
+          "grouped-query-kv-sharing"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "고정 repeat_kv에 shape(1,2,4,2)와n_rep=2를 넣으면 어떤 head 순서와 shape가 나오며 원래cache도4head가 되나요?",
+        "answerChecklist": [
+          "(1,4,4,2)",
+          "head순서0,0,1,1",
+          "계산용확장과원래cache분리",
+          "reshape가항상무복사라는보장없음"
+        ],
+        "sectionId": "source-repeat-kv",
+        "requiredConcepts": [
+          "grouped-query-kv-sharing",
+          "kv-cache-decode-state"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "32층·KV head8개·폭128·BF16이면 토큰당KV는 얼마이며 KV head32개를 가정하면 어떻게 달라지나요?",
+        "answerChecklist": [
+          "32×8×128×2×2=131072byte=128KiB",
+          "32KVhead면512KiB",
+          "4배",
+          "실제단말rank할당은병렬분할과복제확인"
+        ],
+        "sectionId": "kv-shape-formula",
+        "requiredConcepts": [
+          "per-token-kv-byte"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은BF16가정에서 Qwen의16attention층·KV4·폭256과 Muse의52층·KV2·폭128을 비교할 때 포함하지 않은 상태는 무엇인가요?",
+        "answerChecklist": [
+          "Qwen64KiB",
+          "Muse52KiB",
+          "52/64=.8125",
+          "Qwen48recurrent층의고정상태별도",
+          "localwindow실제회수와runtimepadding별도"
+        ],
+        "sectionId": "model-configs",
+        "requiredConcepts": [
+          "per-token-kv-byte"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "현재q=(1,0), 네K가(0,1)부터(0,4), 네V가(1,2)부터(4,8)이면 점수와 읽은 결과는 무엇인가요?",
+        "answerChecklist": [
+          "모든내적0",
+          "scaledscore도0",
+          "softmax각1/4",
+          "출력(2.5,5)",
+          "새K/V를포함한4위치"
+        ],
+        "sectionId": "attention-read",
+        "requiredConcepts": [
+          "kv-cache-decode-state"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은K=(0,c)와V=(c,2c)를latent c로 저장한다면 q=(1,0)의 조회 때 모든K/V를 매번 복원해야 하나요?",
+        "answerChecklist": [
+          "qᵀWUKc=(WUKᵀq)ᵀc",
+          "변환query0",
+          "weightedlatent2.5",
+          "출력WUV2.5=(2.5,5)",
+          "RoPE경로는별도저장·조건필요"
+        ],
+        "sectionId": "mla-vs-gqa",
+        "requiredConcepts": [
+          "kv-cache-representation-design-axis"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "한 실행이 weight100MB와KV100MB를 읽는다고 가정합니다. KV만25MB로 줄이면 총전송과시간도4분의1인가요?",
+        "answerChecklist": [
+          "총200→125MB",
+          "비율.625",
+          "KV만.25",
+          "유효대역폭동일·전송지배가정에서도전체시간.625",
+          "계산·통신·kernel조건별도"
+        ],
+        "sectionId": "capacity-bandwidth",
+        "requiredConcepts": [
+          "kv-cache-capacity-vs-bandwidth-saving"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "4096위치의Gemma비교에서50local층·KV16·폭256·window1024와10global층·KV4·폭512를 별도BF16 K/V로 보존하면 용량이 얼마인가요?",
+        "answerChecklist": [
+          "local800MiB",
+          "global320MiB",
+          "합1120MiB",
+          "uniform60×16×256은3840MiBproxy",
+          "K=Vconfig만으로cache실물공유를단정하지않음"
+        ],
+        "sectionId": "kv-shape-runtime",
+        "requiredConcepts": [
+          "per-token-kv-byte",
+          "kv-cache-capacity-vs-bandwidth-saving"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Fast Transformer Decoding: One Write-Head is All You Need",
+        "href": "https://arxiv.org/html/1911.02150v1",
+        "problem": "Autoregressive decoder inference에서 attention K/V를 매 step memory에서 읽는 bandwidth와 cache size가 batch throughput을 제한하는 문제",
+        "contribution": "모든 query head가 단일 key/value head를 공유하는 MQA를 제안해 decode memory traffic을 줄이고 quality·speed를 평가",
+        "assumptions": "논문의 Transformer decoder·training tasks·hardware·batch와 autoregressive inference 설정",
+        "evidenceScope": "§2.4의 과거 기록 연결과 §3의 K/V head 축 제거에 3위치·4Q·1KV 사례24byte를 대입합니다.",
+        "notClaim": "MQA가 모든 modern LLM·task·scale에서 MHA와 같은 품질이거나 최적 KV head 수가 1이라는 보편 결론은 아님",
+        "sectionId": "paper-mqa"
+      },
+      {
+        "title": "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints",
+        "href": "https://arxiv.org/html/2305.13245v3",
+        "problem": "MQA가 decode는 빠르지만 quality가 낮아질 수 있고 기존 MHA checkpoint를 처음부터 다시 학습하기 어려운 문제",
+        "contribution": "여러 query head가 중간 개수의 KV head group을 공유하는 GQA와 MHA checkpoint uptraining recipe를 제안",
+        "assumptions": "T5 계열의 추가5%학습 step과 8 TPU v4·모델별 batch의 평가 조건입니다.",
+        "evidenceScope": "§2.2 묶음별 변환 가중치 평균과 Table1 XXL의1.51초·47.2 대0.28초·47.1 결과입니다.",
+        "notClaim": "GQA가 모든 architecture에서 MQA와 같은 속도 또는 MHA와 같은 품질을 자동 보장하거나 특정 group ratio가 보편 최적이라는 뜻은 아님",
+        "sectionId": "paper-gqa"
+      },
+      {
+        "title": "DeepSeek-V2 — latent compression and matrix absorption",
+        "href": "https://arxiv.org/html/2405.04434v5",
+        "problem": "큰 K/V 기록을 줄이면서도 모든 과거 head를 매번 펼치는 비용을 피하려는 문제입니다.",
+        "contribution": "공통 latent와 query/output 행렬 흡수를 쓰고 위치 회전용 key를 별도 경로에 둡니다.",
+        "assumptions": "식9~11의 선형 변환과 별도 위치 경로를 구분하며 toy의 폭은 실제 모델의 폭이 아닙니다.",
+        "evidenceScope": "§2.1.2의 행렬 흡수와 §2.1.3의 위치 경로, Table1의(dc+dR)L 저장식을 적용합니다.",
+        "notClaim": "임의K/V를 숫자하나로 압축하거나 모든MLA가 모든GQA보다빠르다는 결론은 아닙니다.",
+        "sectionId": "mla-vs-gqa"
+      },
+      {
+        "title": "The Llama 3 Herd — Table 3 model dimensions",
+        "href": "https://arxiv.org/html/2407.21783v3#S3.SS2",
+        "problem": "실제 모델의 층과 head 수에서 논리적 KV byte를 계산하려는 문제입니다.",
+        "contribution": "8B의32층·폭4096·Q32·KV8을 제공하여 head폭128과 BF16가정128KiB를 유도할 수 있습니다.",
+        "assumptions": "cache의BF16 선택과 모든층별도K/V 저장은 본문 계산 가정이며 GPU rank용량은 아닙니다.",
+        "evidenceScope": "§3.2 Table3의8B열 구조값을 읽었고 gatedHFconfig 대신 공개원논문에 근거합니다.",
+        "notClaim": "논문표가 현재엔진의 할당량이나 논리byte와같은 물리용량을 실측했다는 뜻은 아닙니다.",
+        "sectionId": "kv-shape-formula"
+      }
+    ]
   },
   "ai/hybrid-kv-cache-allocation": {
     coreIdea: "Local attention layer가 최근 window만 읽는 계산 규칙과 runtime이 오래된 physical KV blocks를 반환하는 memory 규칙은 별개입니다. Layer별 보존 길이와 KV shape를 합산하고 hybrid allocator의 grouping·padding·fallback을 실제 cache spec과 byte 기울기로 확인해야 절감을 주장할 수 있습니다.",
@@ -52655,217 +52761,212 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "gpu/cuda-shared-memory": {
-    entryLevel: true,
-    entryNote:
-      "Cache나 DRAM latency를 안다고 가정하지 않습니다. Warp가 요청한 byte가 global transaction과 shared bank로 나뉘는 과정부터 설명합니다.",
-    coreIdea:
-      "Shared memory는 block이 global data를 stage·exchange·reuse하는 scratchpad이며, 이득은 줄인 global traffic이 barrier·capacity·bank-conflict 비용보다 클 때만 생깁니다.",
-    assumedKnowledge: [],
-    introducedHere: [
+    "entryLevel": true,
+    "entryNote": "64×64 표에서 행 37·열 3의 값 하나가 출력 행 3·열 37로 옮겨지는 길부터 시작합니다. 주소를 모으는 일과 공동 공간에서 기다리는 일을 구별합니다.",
+    "coreIdea": "Shared memory는 block 안의 thread가 값을 교환하거나 재사용하는 공간입니다. 같은 전치 값의 읽는 thread와 쓰는 thread를 바꾸면 global 주소를 모을 수 있지만, shared bank의 충돌과 복사·대기·자원 점유를 함께 확인해야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "cuda-shared-scratchpad",
-        role: "Block-local on-chip staging과 resource 비용을 설명합니다.",
+        "id": "cuda-shared-scratchpad",
+        "role": "Block 안에서 값을 놓고 기다린 뒤 교환·재사용하는 과정을 설명합니다."
       },
       {
-        id: "cuda-global-coalescing",
-        role: "Warp addresses를 global transaction과 useful bytes로 계산합니다.",
+        "id": "cuda-global-coalescing",
+        "role": "주소가 걸친 sector와 유효 바이트를 계산하고 실제 DRAM 전송량과 구분합니다."
       },
       {
-        id: "cuda-shared-bank-conflict",
-        role: "32-bank mapping·broadcast·padding을 구분합니다.",
+        "id": "cuda-shared-bank-conflict",
+        "role": "32-bank 주소 규칙과 broadcast·padding의 차이를 계산합니다."
       },
       {
-        id: "cuda-data-layout-aos-soa",
-        role: "Kernel field subset에 맞춰 record layout을 선택합니다.",
-      },
+        "id": "cuda-data-layout-aos-soa",
+        "role": "사용할 항목과 배치 변환 비용에 맞춰 기록의 저장 순서를 선택합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "cuda-shared-scratchpad",
-        sectionId: "overview",
-        intuition:
-          "Block threads가 먼 창고에서 한 번 가져온 tile을 가까운 공동 작업대에서 교환하고 재사용합니다.",
-        workedExample:
-          "128 B tile을 8번 재사용하면 매번 global load하는 대신 한 번 stage하고 on-chip에서 반복 접근합니다.",
-        boundary:
-          "Reuse가 없거나 barrier·occupancy 비용이 크면 shared memory를 추가해도 느려질 수 있습니다.",
+        "id": "cuda-shared-scratchpad",
+        "sectionId": "trace",
+        "intuition": "함께 놓은 칸을 통해 읽는 작업과 쓰는 작업이 같은 값을 넘겨줍니다.",
+        "workedExample": "64×64에서 thread(3,5)가 입력 2371번을 tile[5][3]에 놓고 대기 뒤 thread(5,3)가 출력 229번에 씁니다.",
+        "boundary": "원본은 32의 배수인 정사각형 조건입니다. 재사용 모델의 128바이트를 여덟 차례 쓰는 경우와 전치의 순서 교환을 구분합니다."
       },
       {
-        id: "cuda-global-coalescing",
-        sectionId: "coalescing",
-        intuition:
-          "32 lane이 요구한 useful words를 가능한 적은 32-byte 상자에 담아 가져오는 문제입니다.",
-        workedExample:
-          "Aligned float 32개는 128 useful bytes를 네 32-byte transactions로 가져오지만 서로 다른 32 segments면 효율이 12.5%입니다.",
-        boundary:
-          "Cache·ECC·architecture path를 단순화한 model이며 높은 load efficiency가 end-to-end speedup을 보장하지 않습니다.",
+        "id": "cuda-global-coalescing",
+        "sectionId": "coalescing",
+        "intuition": "한 명령의 주소들이 걸치는 서로 다른 32바이트 구간을 셉니다.",
+        "workedExample": "직접 전치의 37+64×lane은 32 sectors, 교환 뒤 224+lane은 4 sectors입니다. 서로 다른 128바이트의 주소 이용 비율은 12.5%와 100%입니다.",
+        "boundary": "CC 6.0 이상과 float 접근의 정렬 조건입니다. 같은 주소의 바이트를 중복해 세지 않으며 실제 HBM 전송량과 구분합니다."
       },
       {
-        id: "cuda-shared-bank-conflict",
-        sectionId: "bank-conflict",
-        intuition:
-          "32개 창구에 요청을 나누는데 같은 창구의 서로 다른 서류가 몰리면 차례로 처리해야 합니다.",
-        workedExample:
-          "Float indices 0·32·64는 모두 bank 0이고 0·33·66은 banks 0·1·2로 분산됩니다.",
-        boundary:
-          "같은 address read는 broadcast이며 data width·architecture별 mapping은 target guide를 확인합니다.",
+        "id": "cuda-shared-bank-conflict",
+        "sectionId": "bank-conflict",
+        "intuition": "같은 bank의 서로 다른 값을 한 번에 요구하면 요청을 나누어 처리합니다.",
+        "workedExample": "tile[lane][3]은 stride 32에서 bank 3에 몰리고 stride 33에서 (lane+3) mod 32로 퍼집니다. 0·32·64와 0·33·66도 같은 규칙으로 계산합니다.",
+        "boundary": "같은 주소의 읽기는 broadcast 예외입니다. 자료형·명령·세대별 요청 분할을 확인하며 padding의 추가 128바이트가 자원 점유에 영향을 줄 수 있습니다."
       },
       {
-        id: "cuda-data-layout-aos-soa",
-        sectionId: "aos-soa",
-        intuition:
-          "사람별 서류철 AoS와 항목별 목록 SoA 중 warp가 동시에 읽는 fields가 붙어 있는 layout을 고릅니다.",
-        workedExample:
-          "16-byte Particle records에서 x만 읽으면 AoS x stride는 16 B이고 SoA x stride는 4 B입니다.",
-        boundary:
-          "모든 fields를 함께 쓰거나 conversion cost가 크면 SoA가 자동으로 최선은 아니며 AoSoA도 비교합니다.",
-      },
+        "id": "cuda-data-layout-aos-soa",
+        "sectionId": "aos-soa",
+        "intuition": "여러 작업이 동시에 쓰는 항목을 붙여 놓으면 같은 항목의 주소 간격이 줄어듭니다.",
+        "workedExample": "16바이트 기록 32개에서 x만 읽으면 16 sectors의 25%, 별도 float 배열은 4 sectors의 100%를 사용합니다.",
+        "boundary": "정렬과 4바이트 float 조건입니다. 모든 항목을 쓰는 작업과 CPU 소비자, AoSoA 및 배치 변환까지 포함한 전체 비용을 비교합니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "01 stage and reuse",
-        relation: "Global data를 block scratchpad로 옮겨 재사용",
-        concepts: ["cuda-shared-scratchpad"],
+        "label": "01 공동 공간에서 교환",
+        "relation": "같은 값이 읽는 thread에서 쓰는 thread로 전달됩니다.",
+        "concepts": [
+          "cuda-shared-scratchpad"
+        ]
       },
       {
-        label: "02 address services",
-        relation: "Global segments와 shared banks의 서로 다른 병목 계산",
-        concepts: ["cuda-global-coalescing", "cuda-shared-bank-conflict"],
+        "label": "02 두 위치의 요청 처리",
+        "relation": "Global 주소를 모으고 shared 주소의 bank 충돌을 구별합니다.",
+        "concepts": [
+          "cuda-global-coalescing",
+          "cuda-shared-bank-conflict"
+        ]
       },
       {
-        label: "03 layout choice",
-        relation: "Field access에 맞춰 contiguous addresses 구성",
-        concepts: ["cuda-data-layout-aos-soa"],
-      },
+        "label": "03 저장 순서 선택",
+        "relation": "항목의 접근 간격과 변환 비용으로 배치를 비교합니다.",
+        "concepts": [
+          "cuda-data-layout-aos-soa"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "Shared memory가 programmer-managed scratchpad라는 뜻과 cache처럼 쓸 때 필요한 세 단계를 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Shared memory가 programmer-managed scratchpad라는 뜻과 cache처럼 쓸 때 필요한 세 단계를 설명하세요.",
+        "answerChecklist": [
           "block scope",
           "global stage",
           "barrier",
           "reuse/exchange",
-          "capacity cost",
+          "capacity cost"
         ],
-        requiredConcepts: ["cuda-shared-scratchpad"],
-        sectionId: "overview",
+        "requiredConcepts": [
+          "cuda-shared-scratchpad"
+        ],
+        "sectionId": "trace"
       },
       {
-        level: "basic",
-        question:
-          "Aligned float 32개를 한 warp가 읽을 때 useful bytes·32-byte transaction 수·효율을 계산하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Aligned float 32개를 한 warp가 읽을 때 useful bytes·32-byte transaction 수·효율을 계산하세요.",
+        "answerChecklist": [
           "128 useful bytes",
-          "4 transactions",
-          "128 transferred",
-          "효율 100%",
+          "4 sectors",
+          "요청한 sector 용량 128바이트",
+          "주소 이용 비율 100%",
+          "실제 DRAM 전송량과 구분"
         ],
-        requiredConcepts: ["cuda-global-coalescing"],
-        sectionId: "coalescing",
+        "requiredConcepts": [
+          "cuda-global-coalescing"
+        ],
+        "sectionId": "coalescing"
       },
       {
-        level: "basic",
-        question:
-          "각 lane이 서로 다른 32-byte segment의 float 하나를 읽을 때 단순 load efficiency를 계산하세요.",
-        answerChecklist: [
-          "128 useful bytes",
-          "32 transactions",
-          "1,024 transferred",
+        "level": "basic",
+        "question": "각 lane이 서로 다른 32-byte segment의 float 하나를 읽을 때 단순 load efficiency를 계산하세요.",
+        "answerChecklist": [
+          "서로 다른 useful bytes 128",
+          "32 sectors",
+          "요청한 sector 용량 1024바이트",
           "12.5%",
-          "cache 단순화",
+          "cache 처리와 DRAM 전송량 별도"
         ],
-        requiredConcepts: ["cuda-global-coalescing"],
-        sectionId: "coalescing",
+        "requiredConcepts": [
+          "cuda-global-coalescing"
+        ],
+        "sectionId": "coalescing"
       },
       {
-        level: "basic",
-        question:
-          "Float indices 0·32·64와 0·33·66의 bank 번호를 계산하고 conflict 차이를 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Float indices 0·32·64와 0·33·66의 bank 번호를 계산하고 conflict 차이를 설명하세요.",
+        "answerChecklist": [
           "address/4 mod 32",
           "0·0·0",
           "0·1·2",
           "same bank different addresses",
-          "serialization",
+          "serialization"
         ],
-        requiredConcepts: ["cuda-shared-bank-conflict"],
-        sectionId: "bank-conflict",
+        "requiredConcepts": [
+          "cuda-shared-bank-conflict"
+        ],
+        "sectionId": "bank-conflict"
       },
       {
-        level: "basic",
-        question:
-          "Warp lanes 모두 shared word 하나를 읽을 때 bank conflict가 아닌 이유를 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Warp lanes 모두 shared word 하나를 읽을 때 bank conflict가 아닌 이유를 설명하세요.",
+        "answerChecklist": [
           "same address",
           "read broadcast",
           "same bank alone insufficient",
-          "one memory instruction",
+          "one memory instruction"
         ],
-        requiredConcepts: ["cuda-shared-bank-conflict"],
-        sectionId: "bank-conflict",
+        "requiredConcepts": [
+          "cuda-shared-bank-conflict"
+        ],
+        "sectionId": "bank-conflict"
       },
       {
-        level: "basic",
-        question:
-          "Particle x field만 scan하는 kernel에서 AoS와 SoA address stride와 useful-byte 차이를 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Particle x field만 scan하는 kernel에서 AoS와 SoA address stride와 useful-byte 차이를 설명하세요.",
+        "answerChecklist": [
           "AoS record-size stride",
           "SoA 4-byte stride",
           "field subset",
           "coalescing",
-          "not universal",
+          "not universal"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "cuda-data-layout-aos-soa",
-          "cuda-global-coalescing",
+          "cuda-global-coalescing"
         ],
-        sectionId: "aos-soa",
+        "sectionId": "aos-soa"
       },
       {
-        level: "advanced",
-        question:
-          "32×32 float transpose tile에 +1 padding을 적용할 때 추가 bytes와 bank mapping·occupancy trade-off를 계산하세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "32×32 float transpose tile에 +1 padding을 적용할 때 추가 bytes와 bank mapping·occupancy trade-off를 계산하세요.",
+        "answerChecklist": [
           "4,096 B",
           "4,224 B",
           "+128 B",
           "stride 33 spreads banks",
           "resident-block threshold",
-          "profile",
+          "profile"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "cuda-shared-bank-conflict",
-          "cuda-shared-scratchpad",
+          "cuda-shared-scratchpad"
         ],
-        sectionId: "bank-conflict",
+        "sectionId": "padding"
       },
       {
-        level: "advanced",
-        question:
-          "Shared-memory transpose의 load·barrier·transposed read·store 경로와 edge block deadlock 방지 조건을 설명하세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "Shared-memory transpose의 load·barrier·transposed read·store 경로와 edge block deadlock 방지 조건을 설명하세요.",
+        "answerChecklist": [
           "coalesced load",
           "all threads reach barrier",
           "padded tile",
           "coordinate swap",
           "coalesced store",
-          "boundary outside barrier",
+          "boundary outside barrier"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "cuda-shared-scratchpad",
           "cuda-global-coalescing",
-          "cuda-shared-bank-conflict",
+          "cuda-shared-bank-conflict"
         ],
-        sectionId: "coalescing",
+        "sectionId": "boundary"
       },
       {
-        level: "advanced",
-        question:
-          "Tiling 전후를 공정 비교하는 Nsight measurement ledger를 설계하고 speedup이 없을 반례를 포함하세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "Tiling 전후를 같은 조건에서 비교할 측정 항목을 정하고 빨라지지 않을 반례를 설명하세요.",
+        "answerChecklist": [
           "same GPU/input/compiler",
           "global sectors",
           "bank conflicts",
@@ -52873,20 +52974,19 @@ export const ARTICLE_LEARNING: Readonly<
           "occupancy",
           "kernel time",
           "reuse count",
-          "cache/compute-bound counterexample",
+          "cache/compute-bound counterexample"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "cuda-shared-scratchpad",
           "cuda-global-coalescing",
-          "cuda-shared-bank-conflict",
+          "cuda-shared-bank-conflict"
         ],
-        sectionId: "paper-cuda-memory",
+        "sectionId": "limits"
       },
       {
-        level: "advanced",
-        question:
-          "AoS·SoA·AoSoA를 한 particle workload에서 비교할 때 field subset과 conversion cost를 포함한 선택 실험을 설계하세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "AoS·SoA·AoSoA를 한 particle workload에서 비교할 때 field subset과 conversion cost를 포함한 선택 실험을 설계하세요.",
+        "answerChecklist": [
           "same fields/work",
           "address stride",
           "alignment",
@@ -52894,32 +52994,37 @@ export const ARTICLE_LEARNING: Readonly<
           "kernel time",
           "layout conversion",
           "CPU consumer",
-          "end-to-end",
+          "end-to-end"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "cuda-data-layout-aos-soa",
-          "cuda-global-coalescing",
+          "cuda-global-coalescing"
         ],
-        sectionId: "aos-soa",
-      },
+        "sectionId": "aos-soa"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "NVIDIA CUDA Programming Guide — Memory Performance",
-        href: "https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html#memory-performance",
-        problem:
-          "Warp의 global addresses와 shared-memory addresses를 높은 bandwidth로 서비스하는 방법을 설명하는 문제",
-        contribution:
-          "32-byte global transactions, 32-bank shared mapping, broadcast와 transpose staging의 공식 model·예제를 제공",
-        assumptions:
-          "확인한 guide revision과 target compute capability·data width·cache/shared configuration을 전제로 함",
-        evidenceScope:
-          "CUDA memory access의 programming semantics와 guide example 범위",
-        notClaim:
-          "고정 latency·speedup이 모든 GPU와 kernel에 적용되거나 shared memory를 쓰면 자동으로 빨라진다는 뜻은 아님",
-        sectionId: "paper-cuda-memory",
+        "title": "CUDA C++ Best Practices Guide 13.0.2 · 10.2.1·10.2.3",
+        "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-best-practices-guide/index.html",
+        "problem": "Global 요청의 주소 범위와 shared bank의 서로 다른 병목을 구분합니다.",
+        "contribution": "32바이트 주소 구간과 정렬, 32-bit bank mapping·broadcast를 64×64 전치의 주소에 적용합니다.",
+        "assumptions": "CC 6.0 이상 global 접근, 문서의 32-bit shared 접근 모형, float 자료형과 정렬을 전제로 합니다.",
+        "evidenceScope": "공식 주소 처리 조건과 본문의 정수 계산입니다.",
+        "notClaim": "요청 sector 수가 실제 HBM 전송량이거나 고정 속도 향상을 보장한다는 뜻은 아닙니다.",
+        "sectionId": "paper-cuda-memory"
       },
-    ],
+      {
+        "title": "NVIDIA cuda-samples v13.0 · transpose.cu",
+        "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/6_Performance/transpose/transpose.cu",
+        "problem": "읽는 thread와 쓰는 thread를 바꾸어 같은 전치를 수행합니다.",
+        "contribution": "124–189행의 세 함수에 입력 2371→tile[5][3]→출력 229를 대입하고 410–433행의 host 조건을 대조합니다.",
+        "assumptions": "원문 크기 초기값 1024×1024, 장치·인자로 정하는 실제 실행 크기, 학습 입력 64×64를 구분합니다. TILE_DIM=32·BLOCK_ROWS=16인 고정 원본입니다.",
+        "evidenceScope": "전체 원본·라이선스·SHA256을 보존한 코드 대조와 주소 식의 정수 재현입니다.",
+        "notClaim": "실제 GPU 실행·성능 측정이나 임의 크기 입력을 처리하는 원본이라는 주장은 하지 않습니다.",
+        "sectionId": "source-exchange"
+      }
+    ]
   },
   "gpu/cuda-sync-streams": {
     entryLevel: true,
@@ -59965,49 +60070,336 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "crypto/field-arithmetic": {
-    coreIdea: "유한체 구현은 canonical bytes를 residue와 limbs로 해석하고 Montgomery domain에서 연산한 뒤 field/type 불변식과 typed failure를 보존해 다시 canonical bytes로 내보내는 표현 수명주기입니다.",
-    assumedKnowledge: [
-      { id: "prime-field-modular-arithmetic", role: "0≤x<p residue·modular inverse와 합성수 반례를 재사용합니다." },
-      { id: "cryptographic-domain-type-separation", role: "Point·scalar·field domain을 구현 타입으로 나누는 원칙을 재사용합니다." },
+    "entryNote": "7×5 mod17의 같은 요청을 일반 숫자에서 내부 표현으로 바꾸고, REDC와 실제 ark-ff 원문을 지나 답 1로 되돌립니다.",
+    "coreIdea": "Montgomery 표현은 같은 체의 값을 aR mod p로 저장합니다. 곱셈 뒤 REDC로 배율 하나를 지워 같은 형식을 유지하고 출력에서 나머지 배율을 되돌립니다. 실제 구현에서는 입력 범위와 올림, 실패를 반환하는 API와 panic 경로, 외부 바이트의 타입과 순서를 따로 확인해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "prime-field-modular-arithmetic",
+        "role": "소수로 나눈 나머지와 역원의 의미를 같은 사례에서 재사용합니다."
+      },
+      {
+        "id": "cryptographic-domain-type-separation",
+        "role": "좌표·스칼라·체 원소의 역할을 구분하며 바이트에 타입이 자동 포함되지는 않음을 확인합니다."
+      }
     ],
-    introducedHere: [
-      { id: "field-limb-canonical-representation", role: "Wire bytes·canonical residue·limb·Montgomery value를 구분합니다." },
-      { id: "montgomery-domain-reduction", role: "Division을 exact shift로 바꾸는 REDC와 전제를 계산합니다." },
-      { id: "field-api-invariant-boundary", role: "Operator·inverse·serialization의 표현과 실패 불변식을 지킵니다." },
-      { id: "base-scalar-field-type-separation", role: "BN254 coordinate Fp와 subgroup scalar Fr을 분리합니다." },
-      { id: "field-implementation-release-gate", role: "Correctness·canonical·parity·side-channel 뒤 성능을 비교합니다." },
+    "introducedHere": [
+      {
+        "id": "field-limb-canonical-representation",
+        "role": "바이트 순서·limb·일반값·계산용 표현을 구분합니다."
+      },
+      {
+        "id": "montgomery-domain-reduction",
+        "role": "같은 7×5를 REDC의 유도와 전체 변환 경로로 계산합니다."
+      },
+      {
+        "id": "field-api-invariant-boundary",
+        "role": "실제 함수의 거부·환원·None·panic·reader 소비를 구분합니다."
+      },
+      {
+        "id": "base-scalar-field-type-separation",
+        "role": "좌표와 스칼라의 법을 구분하고 교차체 바이트가 모두 유효한 경우를 확인합니다."
+      },
+      {
+        "id": "field-implementation-release-gate",
+        "role": "독립 계산과 실제 코드 실행의 범위를 기록하고 성능·부채널 검증과 구분합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "field-limb-canonical-representation", sectionId: "prime-repr", intuition: "큰 수를 2⁶⁴ 진법의 네 자리로 나누되 외부 bytes와 내부 계산용 값의 이름표를 따로 붙입니다.", workedExample: "[5,1,0,0]은 5+2⁶⁴이고 x=p인 bytes는 0으로 조용히 줄이지 않고 noncanonical로 거부합니다.", boundary: "네 u64가 256-bit 공간을 준다는 사실만으로 0≤x<p나 wire endian, Montgomery domain이 자동 결정되지 않습니다." },
-      { id: "montgomery-domain-reduction", sectionId: "montgomery", intuition: "나눌 수를 일부러 R의 배수로 만든 뒤 power-of-two 나눗셈을 bit shift로 바꿉니다.", workedExample: "p=17,R=32,ã=3,b̃=7,T=21,p′=15,m=27이면 (21+27·17)/32=15이고 decode하면 1입니다.", boundary: "p가 짝수면 p inverse mod R가 없고 operand/carry bound나 마지막 correction이 틀리면 대수식만 맞아도 구현은 실패합니다." },
-      { id: "field-api-invariant-boundary", sectionId: "operator-overload", intuition: "편한 +와 * 문법 뒤에서도 같은 field·internal domain에 남고 실패 가능한 inverse는 성공 bit를 함께 돌려줍니다.", workedExample: "decode(encode(x))=x와 candidate_mul(a,b)=bigint_reference(a,b)를 p−1,p,p+1과 carry chain에서 함께 확인합니다.", boundary: "Field 공리 property test가 통과해도 잘못된 representation끼리 일관될 수 있고 constant-time은 기능 test가 증명하지 않습니다." },
-      { id: "base-scalar-field-type-separation", sectionId: "fr-scalar", intuition: "지도 좌표와 이동 횟수가 비슷한 크기의 정수여도 단위가 다르듯 coordinate와 scalar는 다른 modulus와 연산 역할을 가집니다.", workedExample: "BN254 G1의 (x,y)는 Fp에서 환원하지만 [k]P의 k는 subgroup order r의 Fr에서 환원하고 cross-decode를 거부합니다.", boundary: "모든 ZK circuit이 BN254 Fr를 쓰거나 Fp와 Fr가 같은 bit width·limb 수라서 서로 대입 가능하다는 뜻이 아닙니다." },
-      { id: "field-implementation-release-gate", sectionId: "fr-scalar", intuition: "빠른 field 후보가 같은 bytes와 실패를 만드는지 모서리값으로 먼저 채점한 뒤 속도를 잽니다.", workedExample: "ark-ff 0.5.0/SHA, modulus·R/R²/INV를 기록하고 p±1·zero inverse·Fp/Fr swap·official vector·bigint parity를 재생합니다.", boundary: "Happy-path throughput이나 공리 test만으로 canonical decoding·cross-field safety·side-channel·다른 target correctness를 보장하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "field-limb-canonical-representation",
+        "sectionId": "representation",
+        "intuition": "큰 정수를 여러 자리로 읽고 외부 바이트와 내부 저장 숫자의 의미를 각각 확인합니다.",
+        "workedExample": "64비트 limb [5,1]은 5+2⁶⁴입니다. 바이트 [5,1]은 little-endian 261, big-endian 1281이며 F17의 정규 디코더는 17을 거부합니다.",
+        "boundary": "limb 순서가 외부 바이트 순서를 정하지 않습니다. 같은 배열도 Montgomery 값인지에 따라 일반 정수로 읽는 절차가 다릅니다."
+      },
+      {
+        "id": "montgomery-domain-reduction",
+        "sectionId": "redc",
+        "intuition": "p의 배수를 더해 낮은 자리를 0으로 만든 뒤 R로 정확히 나누고 범위를 보정합니다.",
+        "workedExample": "p=17, R=32에서 일반 7·5는 내부 3·7입니다. T=21, p′=15, m=27을 거쳐 내부 15, 출력 1을 얻습니다.",
+        "boundary": "0≤T<pR이어야 한 번의 보정이 충분합니다. T=1088은 한 번 뺀 뒤에도 17이 남습니다. 입력 표현이 섞이면 답 8로 틀립니다.",
+        "proofIdea": "pp′≡−1 modR이므로 T+mp는 R의 배수입니다. uR≡T modp라 u≡TR⁻¹이며 T<pR, m<R에서 u<2p여서 한 번만 p를 빼면 됩니다.",
+        "counterexample": "T=1088은 범위 밖이며 m=0, u=34에서 한 번 보정해도 17이 남습니다."
+      },
+      {
+        "id": "field-api-invariant-boundary",
+        "sectionId": "api",
+        "intuition": "역원 함수와 나눗셈 연산자, 범위 검사와 환원 생성자는 실패 방식이 다를 수 있습니다.",
+        "workedExample": "고정 ark-ff에서 inverse(0)은 None, /0은 unwrap에 의한 panic입니다. 정규 디코더는 17을 거부하고 mod_order는 0으로 줄입니다. [5,99]를 읽으면 99가 남습니다.",
+        "boundary": "메시지 전체 소비는 호출자가 검사해야 합니다. 원문에 없는 CtOption이나 모든 API의 동일한 실패 반환을 가정하지 않습니다."
+      },
+      {
+        "id": "base-scalar-field-type-separation",
+        "sectionId": "fp-fr",
+        "intuition": "점의 좌표와 반복 횟수는 다른 법을 사용하므로 타입과 외부 통신 위치의 뜻을 정합니다.",
+        "workedExample": "EIP-197의 좌표 법 p와 군 위수 q=r은 다릅니다. 작은 5는 둘 다 허용하며 실제 F17의 바이트 [5]도 F19에서 5로 읽힙니다.",
+        "boundary": "범위 검사만으로 원래 체의 종류를 알 수 없습니다. 프로토콜의 필드 위치나 종류 표식이 필요하며 EIP의 big-endian과 ark 직렬화의 little-endian도 구분합니다.",
+        "counterexample": "동일한 바이트 [5]를 F17과 F19가 모두 유효한 5로 역직렬화했습니다. 바이트만으로 출처의 체가 다른지 판단할 수 없습니다."
+      },
+      {
+        "id": "field-implementation-release-gate",
+        "sectionId": "release",
+        "intuition": "독립 정수 계산과 실제 API 경계를 대조한 뒤 같은 작업의 비용을 비교합니다.",
+        "workedExample": "학습용 544개 REDC 입력·289개 곱과 실제 고정 ark-ff의 289개 곱·합을 대조했습니다. 역원 0·입력 17·교차체 5·남은 99도 실행했습니다.",
+        "boundary": "한 limb의 호스트 실행은 모든 큰 체·어셈블리·CPU·상수 시간이나 성능을 검증한 결과가 아닙니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 수학 계약", relation: "Prime residue와 domain type의 의미를 재사용합니다.", concepts: ["prime-field-modular-arithmetic", "cryptographic-domain-type-separation"] },
-      { label: "01 표현", relation: "Bytes를 canonical residue와 limbs에 연결합니다.", concepts: ["field-limb-canonical-representation"] },
-      { label: "02 reduction", relation: "내부 R-domain 곱셈을 exact shift로 환원합니다.", concepts: ["montgomery-domain-reduction"] },
-      { label: "03 API·type", relation: "Operator invariant와 base/scalar field를 분리합니다.", concepts: ["field-api-invariant-boundary", "base-scalar-field-type-separation"] },
-      { label: "04 release", relation: "Adversarial parity 뒤 target 비용을 비교합니다.", concepts: ["field-implementation-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "01 같은 나머지 계산",
+        "relation": "7×5 mod17의 일반 답 1을 기준으로 삼습니다.",
+        "concepts": [
+          "prime-field-modular-arithmetic",
+          "cryptographic-domain-type-separation"
+        ]
+      },
+      {
+        "label": "02 저장 표현",
+        "relation": "바이트 순서·limb·일반값·계산용 표현을 구분합니다.",
+        "concepts": [
+          "field-limb-canonical-representation"
+        ]
+      },
+      {
+        "label": "03 낮은 자리 지우기",
+        "relation": "같은 7×5를 REDC의 유도와 전체 변환 경로로 계산합니다.",
+        "concepts": [
+          "montgomery-domain-reduction"
+        ]
+      },
+      {
+        "label": "04 실제 API",
+        "relation": "실제 함수의 거부·환원·None·panic·reader 소비를 구분합니다.",
+        "concepts": [
+          "field-api-invariant-boundary"
+        ]
+      },
+      {
+        "label": "05 외부 타입",
+        "relation": "좌표와 스칼라의 법을 구분하고 교차체 바이트가 모두 유효한 경우를 확인합니다.",
+        "concepts": [
+          "base-scalar-field-type-separation"
+        ]
+      },
+      {
+        "label": "06 독립 검증",
+        "relation": "독립 계산과 실제 코드 실행의 범위를 기록하고 성능·부채널 검증과 구분합니다.",
+        "concepts": [
+          "field-implementation-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Little-endian limbs [5,1,0,0]의 정수값을 쓰고 x=p 입력을 canonical decoder가 거부해야 하는 이유를 설명하세요.", answerChecklist: ["5+2^64", "radix 2^64", "little-endian limbs", "0<=x<p", "p equivalent to zero mathematically", "duplicate encoding", "typed noncanonical reject"], requiredConcepts: ["field-limb-canonical-representation"], sectionId: "prime-repr" },
-      { level: "basic", question: "두 canonical input의 modular addition에서 p를 최대 한 번 빼면 되는 범위와 이 최적화가 깨지는 입력을 설명하세요.", answerChecklist: ["inputs in [0,p)", "sum below 2p", "one subtraction", "carry preserved", "noncanonical counterexample", "fixed-width overflow", "constant-time correction"], requiredConcepts: ["field-limb-canonical-representation", "field-api-invariant-boundary"], sectionId: "prime-repr" },
-      { level: "basic", question: "p=17,R=32,a=7,b=5의 Montgomery encode, T, m, REDC와 최종 decode 값을 순서대로 계산하세요.", answerChecklist: ["a tilde 3", "b tilde 7", "T=21", "p prime inverse 17", "p prime negative=15", "m=27", "REDC=15", "decode=1"], requiredConcepts: ["montgomery-domain-reduction"], sectionId: "montgomery" },
-      { level: "basic", question: "Montgomery representation의 진입·반복 곱셈·탈출 비용을 구분하고 짧은 계산에서 자동 승리가 아닌 이유를 쓰세요.", answerChecklist: ["aR mod p", "R2 conversion", "domain preserved", "one REDC per multiply", "exit R inverse", "conversion overhead", "benchmark same workload"], requiredConcepts: ["montgomery-domain-reduction", "field-api-invariant-boundary"], sectionId: "montgomery" },
-      { level: "basic", question: "Field inverse API가 0에서 값을 임의 반환하지 않고 typed failure를 제공해야 하는 이유와 test oracle을 설계하세요.", answerChecklist: ["zero has no inverse", "success bit/result", "no divide by zero", "a*inv(a)=1 nonzero", "zero failure", "bigint/reference", "constant-time separate"], requiredConcepts: ["field-api-invariant-boundary"], sectionId: "operator-overload" },
-      { level: "basic", question: "BN254 Fp와 Fr의 modulus 역할·사용처·금지할 cross-field 변환을 point와 scalar 예로 구분하세요.", answerChecklist: ["Fp coordinate", "Fr subgroup scalar", "p not equal r", "similar bit width insufficient", "[k]P", "separate decoder/type", "circuit field profile"], requiredConcepts: ["base-scalar-field-type-separation"], sectionId: "fr-scalar" },
-      { level: "advanced", question: "p′=−p⁻¹ mod R에서 T+mp가 R로 나뉘고 결과가 T·R⁻¹ mod p인 이유를 congruence로 유도하세요.", answerChecklist: ["m=Tp prime mod R", "T+mp=0 mod R", "exact division", "add multiple of p", "multiply R inverse mod p", "gcd(p,R)=1", "odd p"], requiredConcepts: ["montgomery-domain-reduction"], sectionId: "montgomery" },
-      { level: "advanced", question: "L=4 CIOS 설명을 32-bit 또는 다른 limb 수 backend에 그대로 일반화할 수 없는 이유와 비교 receipt를 설계하세요.", answerChecklist: ["R=2^(wL)", "word width", "limb count", "carry schedule", "operand bound", "compiler/target", "same vectors", "cost measured"], requiredConcepts: ["montgomery-domain-reduction", "field-implementation-release-gate"], sectionId: "montgomery" },
-      { level: "advanced", question: "공리 test는 통과하지만 canonical encoding이 틀린 field 구현 반례를 만들고 differential test matrix를 제시하세요.", answerChecklist: ["internally consistent wrong representation", "duplicate p and zero encoding", "round trip", "p-1/p/p+1", "carry chain", "zero inverse", "Fp/Fr swap", "independent bigint"], requiredConcepts: ["field-api-invariant-boundary", "field-limb-canonical-representation", "field-implementation-release-gate"], sectionId: "operator-overload" },
-      { level: "advanced", question: "새 field backend를 채택하기 위한 version·parameter·negative vector·parity·side-channel·rollback release matrix를 작성하세요.", answerChecklist: ["crate version/SHA", "modulus/R/R2/INV", "canonical/malformed", "boundary carry", "inverse zero", "cross-field reject", "official vectors", "independent parity", "side-channel review", "performance last", "rollback"], requiredConcepts: ["field-implementation-release-gate", "base-scalar-field-type-separation"], sectionId: "fr-scalar" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "64비트 limb [5,1]과 바이트 [5,1]을 각각 어떻게 해석하나요?",
+        "answerChecklist": [
+          "limb는 5+2⁶⁴=18446744073709551621",
+          "바이트 little-endian은 261",
+          "big-endian은 1281",
+          "limb 순서와 외부 바이트 순서는 별도 약속",
+          "내부값이면 Montgomery 배율도 되돌림"
+        ],
+        "sectionId": "representation",
+        "requiredConcepts": [
+          "field-limb-canonical-representation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "p=17, R=32에서 일반 7과 5, 답 1은 내부에 어떤 숫자로 저장하나요?",
+        "answerChecklist": [
+          "7×32 mod17=3",
+          "5×32 mod17=7",
+          "1×32 mod17=15",
+          "내부 ONE은 15",
+          "내부 15를 그대로 일반 답으로 내보내면 틀림",
+          "출력 REDC(15)=1"
+        ],
+        "sectionId": "montgomery-form",
+        "requiredConcepts": [
+          "montgomery-domain-reduction"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "T=21과 p′=15에서 REDC의 세 단계를 계산하세요.",
+        "answerChecklist": [
+          "m=21×15 mod32=27",
+          "T+mp=21+27×17=480",
+          "480/32=15",
+          "15<17이라 추가 뺄셈 없음",
+          "이 15는 내부 결과",
+          "출력 변환 후 1"
+        ],
+        "sectionId": "redc",
+        "requiredConcepts": [
+          "montgomery-domain-reduction"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "R²을 사용해 입력 7·5부터 최종 출력까지 계산하세요.",
+        "answerChecklist": [
+          "R² mod17=4",
+          "REDC(28)의 m=4로 내부 3",
+          "REDC(20)의 m=12로 내부 7",
+          "REDC(21)은 15",
+          "REDC(15)의 m=1로 출력 1",
+          "일반 7×5 mod17과 같음"
+        ],
+        "sectionId": "trace",
+        "requiredConcepts": [
+          "montgomery-domain-reduction"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "원본 inverse와 /, 정규 디코더와 mod_order는 0과 17을 어떻게 처리하나요?",
+        "answerChecklist": [
+          "inverse(0)은 None",
+          "/0은 inverse 결과를 unwrap해 panic",
+          "정규 F17 디코더는 17을 거부",
+          "mod_order(17)은 0",
+          "실제 함수별 실패 방식 확인",
+          "[5,99]의 99는 reader에 남아 전체 소비를 별도 검사"
+        ],
+        "sectionId": "api",
+        "requiredConcepts": [
+          "field-api-invariant-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "좌표 Fp와 스칼라 Fr을 구분하고 바이트 5의 교차 해석을 설명하세요.",
+        "answerChecklist": [
+          "좌표는 곡선식의 기저체 p",
+          "스칼라는 부분군 위수 r",
+          "EIP-197의 q가 여기의 r",
+          "p와 r은 서로 다름",
+          "작은 5는 양쪽에서 유효",
+          "실제 F17 바이트 5를 F19도 수용",
+          "타입 위치나 종류 표식 필요"
+        ],
+        "sectionId": "fp-fr",
+        "requiredConcepts": [
+          "base-scalar-field-type-separation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "REDC가 정확하고 한 번의 보정으로 충분한 조건을 유도한 뒤 범위 밖 반례를 쓰세요.",
+        "answerChecklist": [
+          "gcd(p,R)=1",
+          "pp′≡−1 modR",
+          "m=Tp′ modR",
+          "T+mp≡0 modR",
+          "uR≡T modp",
+          "0≤T<pR와 0≤m<R에서 u<2p",
+          "한 번 p를 빼면 정규 범위",
+          "T=1088은 m=0, u=34, 보정 후 17로 실패"
+        ],
+        "sectionId": "redc",
+        "requiredConcepts": [
+          "montgomery-domain-reduction"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "실제 한 limb ark-ff의 기준과 상수를 구해 7×5를 원문에 대입하세요.",
+        "answerChecklist": [
+          "p=17, N=1, R=2⁶⁴",
+          "라이브러리 R 상수와 R2는 나머지 1",
+          "일반 7·5의 내부값도 7·5",
+          "INV=1085102592571150095",
+          "r[0]=35",
+          "k=35INV mod2⁶⁴=1085102592571150093",
+          "35+17k=2⁶⁴",
+          "상위 자리 1",
+          "into_bigint도 1",
+          "학습 R=32와 중간 표현은 다름"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "field-limb-canonical-representation",
+          "montgomery-domain-reduction"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "표현 혼용과 올림 손실이 각각 어떻게 잘못된 답을 만드는지 계산하세요.",
+        "answerChecklist": [
+          "R=32에서 내부 3 대신 일반 7을 넣음",
+          "상대 내부 7과 곱해 REDC(49)=1",
+          "이를 출력 변환하면 8",
+          "정답 1과 다름",
+          "p=17에서 16+16=32의 정답 15",
+          "5비트 올림을 버리면 0",
+          "수학적 범위와 실제 저장 범위 둘 다 필요"
+        ],
+        "sectionId": "carry",
+        "requiredConcepts": [
+          "field-limb-canonical-representation",
+          "montgomery-domain-reduction",
+          "field-api-invariant-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "교차체 디코딩과 구현 성능의 검증 범위를 어떻게 정하나요?",
+        "answerChecklist": [
+          "바이트에 체의 출처가 항상 들어 있지 않음",
+          "작은 5가 여러 체에서 정규 값인 반례",
+          "프로토콜 위치·종류 표식·기대 타입 확인",
+          "EIP는 32바이트 big-endian, 해당 ark 경로는 little-endian",
+          "reader 전체 소비 별도 확인",
+          "독립 정수와 연산·원복 대조",
+          "역원 0·입력 p·올림·빌림 검사",
+          "commit·Cargo.lock·compiler 기록",
+          "같은 체·표현·작업으로 전체 비용 비교",
+          "호스트 한 limb 실행은 모든 target·상수 시간의 증명이 아님"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "field-limb-canonical-representation",
+          "field-api-invariant-boundary",
+          "base-scalar-field-type-separation",
+          "field-implementation-release-gate"
+        ]
+      }
     ],
-    papers: [
-      { title: "arkworks algebra v0.5.0 finite-field source snapshot", href: "https://github.com/arkworks-rs/algebra/tree/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src", problem: "여러 prime field의 representation·trait·Montgomery backend를 reusable Rust source로 구현", contribution: "Pinned bigint·field model·Montgomery configuration과 operation source seam 제공", assumptions: "ark-ff 0.5.0 tag commit 7ad88c46과 target/compiler configuration 고정", evidenceScope: "선택 snapshot의 public/internal implementation structure와 versioned source claim", notClaim: "교육용 의사코드와 줄 단위 동일성·모든 target constant-time·다른 release 동작을 주장하지 않음", sectionId: "paper-ark-ff-050" },
-      { title: "Montgomery · Modular Multiplication Without Trial Division", href: "https://www.ams.org/journals/mcom/1985-44-170/S0025-5718-1985-0777282-X/", problem: "반복 modular multiplication에서 trial division 비용 제거", contribution: "Coprime radix representation과 division-free reduction의 대수적 construction 제시", assumptions: "gcd(p,R)=1과 논문 operand/range 조건을 만족하는 modular arithmetic", evidenceScope: "Montgomery representation·REDC 정당성과 algorithmic cost 아이디어", notClaim: "특정 CIOS layout·고정 speedup·constant-time machine code를 자동 보장하지 않음", sectionId: "paper-montgomery-1985" },
-      { title: "EIP-197 · alt_bn128 pairing precompile", href: "https://eips.ethereum.org/EIPS/eip-197", problem: "Ethereum에서 BN254 G1·G2 pairing input과 product check를 동일하게 실행", contribution: "Base field·group order·Fp/Fp² encoding·subgroup requirement의 protocol contract 제공", assumptions: "EIP-197 curve parameter와 활성 fork semantics를 사용", evidenceScope: "Protocol-visible BN254 field/group/type boundary와 validation 요구", notClaim: "내부 Montgomery constants·arkworks layout·모든 BN254 구현 안전성을 규정하지 않음", sectionId: "paper-eip197-field-boundary" },
-    ],
+    "papers": [
+      {
+        "title": "arkworks algebra v0.5.0 finite-field source snapshot",
+        "href": "https://github.com/arkworks-rs/algebra/tree/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src",
+        "sectionId": "paper-ark-ff-050",
+        "problem": "고정된 유한체 표현과 연산의 실제 구현을 확인합니다.",
+        "contribution": "범위 검사·Montgomery 연산·역직렬화·역원의 구체적 함수를 제공합니다.",
+        "assumptions": "v0.5.0 commit 7ad88c46과 한 limb F17/F19를 고정했습니다. 실험의 MontConfig는 상수만 제공해 기본 Rust 연산 메서드를 사용합니다.",
+        "evidenceScope": "from_bigint·mul_assign·into_bigint에 같은 7×5를 적용하고 실제 빌드로 확인했습니다. 역원 0·입력 17·교차체 5·reader에 남은 99도 실행했습니다.",
+        "notClaim": "모든 CPU·어셈블리 분기·큰 체·상수 시간·성능까지 확인한 것은 아닙니다."
+      },
+      {
+        "title": "Montgomery · Modular Multiplication Without Trial Division",
+        "href": "https://doi.org/10.1090/S0025-5718-1985-0777282-X",
+        "sectionId": "paper-montgomery",
+        "problem": "반복하는 모듈러 곱셈의 나눗셈 비용을 줄입니다.",
+        "contribution": "R 배율의 표현과 REDC, R²을 이용한 입력 변환을 설명합니다.",
+        "assumptions": "R>p, gcd(p,R)=1, 0≤T<pR을 만족합니다.",
+        "evidenceScope": "519–520쪽의 REDC에 p=17, R=32, T=21을 넣고 m=27, u=15와 출력 1을 계산했습니다. 범위 증명과 입력 변환도 대조했습니다.",
+        "notClaim": "특정 기계의 속도나 상수 시간 실행을 자동으로 보장하지 않습니다."
+      },
+      {
+        "title": "EIP-197 · alt_bn128 pairing precompile",
+        "href": "https://eips.ethereum.org/EIPS/eip-197",
+        "sectionId": "paper-eip-197-field",
+        "problem": "Ethereum에서 곡선 입력의 법과 인코딩을 동일하게 해석합니다.",
+        "contribution": "기저체 p와 군 위수 q, 좌표의 32바이트 big-endian 규칙을 정합니다.",
+        "assumptions": "정해진 alt_bn128 매개변수와 각 입력 위치의 역할을 따릅니다.",
+        "evidenceScope": "생성점 (1,2)의 좌표식을 대입하고 서로 다른 p와 q, 작은 5의 유효성과 타입 구분, 바이트 순서를 설명했습니다.",
+        "notClaim": "내부 Montgomery 상수나 arkworks의 직렬화 형식을 정하지 않으며 pairing 실행 검증도 아닙니다."
+      }
+    ]
   },
   "blockchain/bplus-tree": {
     entryLevel:true, entryNote:"정렬된 숫자 key가 4 KiB page에 놓이는 작은 예에서 시작해 fanout·검색·split/merge·page I/O를 설명하므로 tree나 database 선행 지식을 가정하지 않습니다.", coreIdea:"B+ tree는 큰 fanout의 internal separator pages와 linked leaf pages로 ordered index를 구성해 point lookup은 짧은 root-to-leaf path로, range scan은 첫 leaf 이후 순차 page walk로 처리하지만 성능과 안전성은 page layout·comparator·occupancy·crash protocol에 함께 달려 있습니다.", assumedKnowledge:[],
@@ -63282,44 +63674,288 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "crypto/karatsuba": {
-    entryNote: "십진수 자리 나누기와 분배법칙에서 시작해 recurrence와 cutoff까지 연결합니다.",
-    coreIdea: "High·low 두 조각의 교차항을 합의 곱 하나에서 재사용하면 네 절반 곱을 세 절반 곱으로 바꾸고 재귀적으로 n^log2(3) 성장률을 얻습니다.",
-    assumedKnowledge: [
-      { id: "quadratic-extension-karatsuba-inversion", role: "Fp² 적용에서 일반 세 곱과 profile-specific reduction을 구분합니다." },
+    "entryNote": "1234×5678을 네 곱과 세 곱으로 계산한 뒤 같은 네 조각을 GMP의 차의 곱·실제 배열·올림 처리에 연결합니다.",
+    "coreIdea": "높은 곱과 낮은 곱을 재사용하면 두 교차항의 합을 새 곱 한 번에서 얻습니다. 계산량 감소와 실제 속도는 추가 비용과 입력 크기를 포함해 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "quadratic-extension-karatsuba-inversion",
+        "role": "마지막 응용 절에서만 확장체의 기약 다항식과 계수 계산을 재사용합니다."
+      }
     ],
-    introducedHere: [
-      { id: "karatsuba-two-way-recombination", role: "일반 정수·polynomial 두 조각의 세 곱 동일성을 유도합니다." },
-      { id: "karatsuba-recurrence-bound", role: "재귀 tree의 leaf와 선형 결합 비용을 증명합니다." },
-      { id: "karatsuba-crossover-cost-model", role: "점근식과 실제 target cutoff를 분리합니다." },
+    "introducedHere": [
+      {
+        "id": "karatsuba-two-way-recombination",
+        "role": "두 조각의 네 곱을 세 곱으로 줄이고 합·차 두 식을 유도합니다."
+      },
+      {
+        "id": "karatsuba-recurrence-bound",
+        "role": "전체 균형 재귀 나무의 마지막 곱과 합산 비용을 더합니다."
+      },
+      {
+        "id": "karatsuba-crossover-cost-model",
+        "role": "가정한 비용 모형과 실제 플랫폼의 전환 크기를 구분합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "karatsuba-two-way-recombination", sectionId: "karatsuba-trick", intuition: "교차 곱 두 개를 따로 구하지 않고 두 합의 곱에서 이미 아는 low·high 곱을 빼 한꺼번에 얻습니다.", workedExample: "1234·5678을 B=100으로 나눠 z2=672,z0=2652,z1=2840을 만들고 7,006,652로 재결합합니다.", boundary: "세 곱은 addition·subtraction·carry·temporary가 공짜라는 뜻이 아니며 small operand에서는 schoolbook이 더 빠를 수 있습니다.", proofIdea: "(x0+x1)(y0+y1)을 전개해 z0+z2와 두 교차항을 분리합니다.", counterexample: "고정 폭 합에서 carry limb를 버리면 대수식은 맞아도 구현 결과가 틀립니다." },
-      { id: "karatsuba-recurrence-bound", sectionId: "recursive", intuition: "크기는 절반으로 줄고 문제는 세 개로 늘어나므로 깊이 log2 n에서 leaf가 3^log2 n개입니다.", workedExample: "n=8이면 깊이 3과 leaf 27개이며 schoolbook의 64개보다 적습니다.", boundary: "Theta bound는 큰 n의 성장률이며 cutoff 아래 latency·cache·unbalanced operand를 예측하지 않습니다.", proofIdea: "Recurrence tree 또는 Master theorem a=3,b=2,f(n)=Theta(n)을 적용합니다.", counterexample: "n이 작은데 recursive call과 buffer 비용이 크면 더 낮은 exponent여도 실제 시간은 느립니다." },
-      { id: "karatsuba-crossover-cost-model", sectionId: "cost-comparison", intuition: "절약한 multiplication 시간과 추가한 합·carry·memory 시간을 같은 target에서 비교해 알고리즘 전환점을 고릅니다.", workedExample: "Cutoff 전후 limb 크기를 같은 CPU·compiler에서 warmup한 뒤 schoolbook과 Karatsuba p50/p95를 비교합니다.", boundary: "GMP의 threshold나 한 CPU 결과를 다른 library·field·GPU에 복사하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "karatsuba-two-way-recombination",
+        "sectionId": "karatsuba-trick",
+        "intuition": "두 교차항을 따로 구하지 않고 합의 곱에서 이미 아는 두 곱을 뺍니다.",
+        "workedExample": "46×134=6164에서 672와 2652를 빼 2840을 얻고 원래 자리에 놓아 7,006,652를 만듭니다.",
+        "boundary": "합 134의 추가 자리를 버리면 결과가 6,546,652로 틀립니다. 실제 원문은 차의 절댓값과 부호를 사용합니다.",
+        "proofIdea": "합의 곱을 전개하면 높은 곱과 낮은 곱, 두 교차항이 모두 들어 있습니다.",
+        "counterexample": "134를 34로 자르면 세 번째 곱이 1564, 잘못된 교차항이 −1760이 됩니다."
+      },
+      {
+        "id": "karatsuba-recurrence-bound",
+        "sectionId": "recursive",
+        "intuition": "크기를 절반으로 줄일 때 작은 문제는 세 개로 늘어납니다.",
+        "workedExample": "n=8의 전체 균형 나무는 깊이 3, 마지막 곱 27개입니다. 합산 비용도 3ᵏ과 같은 성장 차수입니다.",
+        "boundary": "차의 곱·고정 종료 크기를 둔 모형입니다. 실제 cutoff와 0 처리, 불균형 입력의 호출 수를 그대로 예측하지 않습니다.",
+        "proofIdea": "깊이 j의 비용 cn(3/2)ʲ를 합하고 n=2ᵏ에서 n(3/2)ᵏ=3ᵏ을 사용합니다.",
+        "counterexample": "합의 곱은 중간 합이 한 자리 커질 수 있으므로 모든 하위 입력이 정확히 절반이라는 설명을 그대로 붙이면 안 됩니다."
+      },
+      {
+        "id": "karatsuba-crossover-cost-model",
+        "sectionId": "cost-comparison",
+        "intuition": "절약한 곱의 비용보다 추가 합산과 메모리 비용이 작은 크기부터 이득입니다.",
+        "workedExample": "가정한 n² 대 3(n/2)²+4n은 n8에서 64 대 80, n16에서 동률, n32에서 1024 대 896입니다.",
+        "boundary": "16은 설명용 모형의 값입니다. 실제 CPU와 라이브러리의 임계값은 같은 입력·환경에서 측정합니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 선수 개념", relation: "Fp² 적용 경계를 기존 정본에서 재사용합니다.", concepts: ["quadratic-extension-karatsuba-inversion"] },
-      { label: "01 기준선", relation: "Schoolbook 네 곱을 전개합니다.", concepts: ["karatsuba-two-way-recombination"] },
-      { label: "02 재결합", relation: "세 곱 동일성과 수치 예를 계산합니다.", concepts: ["karatsuba-two-way-recombination"] },
-      { label: "03 점근식", relation: "재귀 tree에서 bound를 증명합니다.", concepts: ["karatsuba-recurrence-bound"] },
-      { label: "04 선택", relation: "Target별 cutoff와 release gate를 정합니다.", concepts: ["karatsuba-crossover-cost-model"] },
+    "conceptStages": [
+      {
+        "label": "01 작은 곱과 재결합",
+        "relation": "같은 두 입력으로 네 곱과 세 곱의 답을 대조합니다.",
+        "concepts": [
+          "karatsuba-two-way-recombination"
+        ]
+      },
+      {
+        "label": "02 원문의 배열과 부호",
+        "relation": "같은 네 조각을 GMP 공식 문서와 배포 소스에서 추적합니다.",
+        "concepts": [
+          "karatsuba-two-way-recombination",
+          "karatsuba-crossover-cost-model"
+        ]
+      },
+      {
+        "label": "03 반복 분할",
+        "relation": "전체 나무의 작은 곱과 합산 비용을 더합니다.",
+        "concepts": [
+          "karatsuba-recurrence-bound"
+        ]
+      },
+      {
+        "label": "04 실제 선택과 응용",
+        "relation": "전환 크기·제곱·확장체의 조건을 구분합니다.",
+        "concepts": [
+          "karatsuba-crossover-cost-model",
+          "quadratic-extension-karatsuba-inversion"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "1234와 5678을 B=100의 high·low 조각으로 나누세요.", answerChecklist: ["x1=12", "x0=34", "y1=56", "y0=78", "x=x1B+x0", "low below B"], requiredConcepts: ["karatsuba-two-way-recombination"], sectionId: "naive-mul" },
-      { level: "basic", question: "Schoolbook 두 조각 식의 네 partial product와 자리 이동을 쓰세요.", answerChecklist: ["x1y1", "x1y0", "x0y1", "x0y0", "B2 high shift", "B cross shift"], requiredConcepts: ["karatsuba-two-way-recombination"], sectionId: "naive-mul" },
-      { level: "basic", question: "Karatsuba로 1234×5678=7,006,652를 계산하세요.", answerChecklist: ["z2=672", "z0=2652", "sum product 6164", "z1=2840", "recombine", "7006652"], requiredConcepts: ["karatsuba-two-way-recombination"], sectionId: "karatsuba-trick" },
-      { level: "basic", question: "z1 식을 전개해 x1y0+x0y1과 같음을 보이세요.", answerChecklist: ["expand sum product", "contains z0", "contains z2", "subtract both", "two cross terms remain"], requiredConcepts: ["karatsuba-two-way-recombination"], sectionId: "karatsuba-trick" },
-      { level: "basic", question: "n=8에서 Karatsuba leaf multiplication 수와 schoolbook 후보 수를 비교하세요.", answerChecklist: ["depth 3", "3^3=27", "8^2=64", "linear combine remains", "not runtime ratio"], requiredConcepts: ["karatsuba-recurrence-bound"], sectionId: "recursive" },
-      { level: "basic", question: "Karatsuba cutoff가 target마다 달라지는 비용 항목을 나열하세요.", answerChecklist: ["addition/subtraction", "carry", "temporary/allocation", "cache", "compiler/limb width", "benchmark"], requiredConcepts: ["karatsuba-crossover-cost-model"], sectionId: "cost-comparison" },
-      { level: "advanced", question: "홀수 limb와 합의 carry overflow를 처리하는 세 곱 schedule을 설계하세요.", answerChecklist: ["high may be shorter", "extra carry limb", "signed middle or sum form", "exact buffer width", "reference parity", "boundary vectors"], requiredConcepts: ["karatsuba-two-way-recombination", "karatsuba-crossover-cost-model"], sectionId: "cost-comparison" },
-      { level: "advanced", question: "T(n)=3T(n/2)+cn을 recurrence tree로 풀어 Theta(n^log2 3)을 증명하세요.", answerChecklist: ["level j nodes 3^j", "size n/2^j", "combine cn(3/2)^j", "depth log2 n", "leaves 3^log2n", "dominant exponent"], requiredConcepts: ["karatsuba-recurrence-bound"], sectionId: "recursive" },
-      { level: "advanced", question: "일반 Karatsuba와 Fp2 Karatsuba가 공유하는 부분과 tower 글이 따로 소유하는 부분을 구분하세요.", answerChecklist: ["bilinear three products", "cross-term reuse", "u2=beta", "nonresidue reduction", "field subtraction", "coefficient order", "no generic 54 claim"], requiredConcepts: ["karatsuba-two-way-recombination", "quadratic-extension-karatsuba-inversion"], sectionId: "recursive" },
-      { level: "advanced", question: "Schoolbook·Karatsuba·Toom 후보의 cutoff를 고르는 paired benchmark를 설계하세요.", answerChecklist: ["same backend/input", "cutoff neighborhood", "odd/even/unbalanced", "warmup", "p50/p95", "temporary/cache counters", "correctness first", "versioned threshold"], requiredConcepts: ["karatsuba-crossover-cost-model"], sectionId: "cost-comparison" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "1234와 5678을 B=100으로 나누고 네 작은 곱의 자리 위치를 설명하세요.",
+        "answerChecklist": [
+          "높은 조각 12·56",
+          "낮은 조각 34·78",
+          "높은 곱 672에 B²",
+          "교차 곱 936과 1904의 합에 B",
+          "낮은 곱 2652는 그대로",
+          "조각의 곱은 B보다 클 수 있음"
+        ],
+        "sectionId": "naive-mul",
+        "requiredConcepts": [
+          "karatsuba-two-way-recombination"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "세 번의 곱으로 같은 답 7,006,652를 구하세요.",
+        "answerChecklist": [
+          "높은 곱 672",
+          "낮은 곱 2652",
+          "합 46과 134",
+          "세 번째 곱 6164",
+          "교차항 6164−672−2652=2840",
+          "672×10000+2840×100+2652=7006652"
+        ],
+        "sectionId": "trace",
+        "requiredConcepts": [
+          "karatsuba-two-way-recombination"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "합의 곱을 전개하고 올림 1을 버렸을 때의 잘못된 답을 계산하세요.",
+        "answerChecklist": [
+          "합의 곱에는 네 작은 곱이 들어 있음",
+          "높은 곱과 낮은 곱을 빼면 두 교차항",
+          "134를 34로 자르면 세 번째 곱 1564",
+          "잘못된 교차항 −1760",
+          "잘못된 최종 답 6546652",
+          "올바른 비음수 조각의 교차항이 음수가 된 것이 아니라 저장 오류"
+        ],
+        "sectionId": "trace",
+        "requiredConcepts": [
+          "karatsuba-two-way-recombination"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "GMP의 차의 곱에 같은 네 조각을 넣고 부호가 바뀐 사례도 설명하세요.",
+        "answerChecklist": [
+          "(12−34)(56−78)=484",
+          "672+2652−484=2840",
+          "두 번째 수가 7856이면 차의 곱 −484",
+          "높은 곱 936과 낮은 곱 1904",
+          "936+1904+484=3324",
+          "부호에 따라 절댓값을 더하거나 뺌"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "karatsuba-two-way-recombination"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "n=8의 전체 균형 재귀 나무에서 마지막 곱의 수를 구하고 실제 호출과 구분하세요.",
+        "answerChecklist": [
+          "크기 8→4→2→1",
+          "깊이 3",
+          "3³=27",
+          "학교식 자리 쌍 64",
+          "차의 곱으로 중간 입력 폭 유지",
+          "고정된 한 자리 종료 모형",
+          "실제 0 처리와 cutoff로 호출 수가 달라질 수 있음",
+          "27/64는 실행 시간 비율이 아님"
+        ],
+        "sectionId": "recursive",
+        "requiredConcepts": [
+          "karatsuba-recurrence-bound"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "가정한 비용 n²과 3(n/2)²+4n을 n=8·16·32에서 비교하세요.",
+        "answerChecklist": [
+          "n8은 64와 80",
+          "n16은 256과 256",
+          "n32는 1024와 896",
+          "추가 비용 4n은 측정값이 아닌 가정",
+          "실제 전환점은 CPU·라이브러리·컴파일러·자리 폭·메모리 비용에 따라 측정"
+        ],
+        "sectionId": "cost-comparison",
+        "requiredConcepts": [
+          "karatsuba-crossover-cost-model"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "GMP 6.3.0 원문에서 두 limb 배열의 분할·부호·곱·재결합 경로를 추적하세요.",
+        "answerChecklist": [
+          "ap=[34,12], bp=[78,56]은 십진 1234·5678과 다른 정수",
+          "각각 12×2⁶⁴+34와 56×2⁶⁴+78",
+          "an=bn2에서 s=n=t1",
+          "낮은 쪽에서 높은 쪽을 빼 22·22",
+          "vm1_neg0",
+          "vm1484, vinf672, v02652",
+          "191행 가운데 3324",
+          "199행 484를 빼 2840",
+          "cy=cy2=0인 사례",
+          "낮은 순서 [2652,2840,672,0]",
+          "본 문서는 원문 대조이며 실제 C 실행이 아님"
+        ],
+        "sectionId": "limbs",
+        "requiredConcepts": [
+          "karatsuba-two-way-recombination",
+          "karatsuba-crossover-cost-model"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "재귀 나무의 중간 합산 비용까지 더해 성장률을 유도하세요.",
+        "answerChecklist": [
+          "n=2ᵏ인 균형 모형",
+          "깊이 j에 3ʲ개 문제",
+          "각 크기 n/2ʲ",
+          "층 비용 cn(3/2)ʲ",
+          "합은 2cn((3/2)ᵏ−1)",
+          "n(3/2)ᵏ=3ᵏ",
+          "마지막 곱도 3ᵏ",
+          "Θ(n^log₂3)",
+          "합의 곱은 추가 자리가 생길 수 있어 정확한 폭 가정 구분"
+        ],
+        "sectionId": "recursive",
+        "requiredConcepts": [
+          "karatsuba-recurrence-bound"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 네 조각을 다항식 곱에 적용하고 확장체로 읽을 조건을 설명하세요.",
+        "answerChecklist": [
+          "(34+12u)(78+56u)",
+          "2652+2840u+672u²",
+          "u²=β에서 (2652+672β)+2840u",
+          "계수가 유한체라면 그 체의 나머지 연산",
+          "체를 만들려면 다항식의 기약성 필요",
+          "계수 순서와 β의 값 확인",
+          "여러 층의 총 연산 수를 세 곱 하나로 단정하지 않음"
+        ],
+        "sectionId": "boundaries",
+        "requiredConcepts": [
+          "karatsuba-two-way-recombination",
+          "quadratic-extension-karatsuba-inversion"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "길이와 연산 종류가 바뀌는 경계에서 정확성과 속도를 어떻게 비교하나요?",
+        "answerChecklist": [
+          "0·1·최대 자리 값·연속 올림",
+          "홀수 길이와 길이가 다른 입력",
+          "합의 추가 자리와 차의 부호",
+          "기준 정수 곱과 대조",
+          "제곱의 기본 알고리즘도 대칭을 재사용",
+          "같은 입력과 실행 환경",
+          "전환점 주변의 크기",
+          "초기 실행 영향과 시간 분포",
+          "임시 공간·메모리 비용",
+          "원문 임계값을 다른 기계로 그대로 복사하지 않음"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "karatsuba-two-way-recombination",
+          "karatsuba-crossover-cost-model"
+        ]
+      }
     ],
-    papers: [
-      { title: "Karatsuba & Ofman · Multiplication of many-digital numbers", href: "https://www.mathnet.ru/eng/dan26729", problem: "Schoolbook quadratic multiplication보다 낮은 operation growth를 구성합니다.", contribution: "Operand 분할과 recursive recombination의 초기 subquadratic result를 제시합니다.", assumptions: "다자리 exact arithmetic과 점근적 operation model을 사용합니다.", evidenceScope: "1962 원문의 algorithmic complexity 주장입니다.", notClaim: "현대 CPU cutoff·memory·fixed speedup을 주장하지 않습니다.", sectionId: "paper-karatsuba-ofman" },
-      { title: "GNU MP 6.3.0 · Karatsuba Multiplication", href: "https://gmplib.org/manual/Karatsuba-Multiplication.html", problem: "Multiprecision production 구현에서 Karatsuba를 정확하고 빠르게 실행합니다.", contribution: "Split·세 곱·sign·carry·threshold 비용을 설명합니다.", assumptions: "GMP 6.3.0과 target tuning을 구분합니다.", evidenceScope: "해당 manual version의 implementation 설명입니다.", notClaim: "다른 target·field의 cutoff나 constant-time을 보장하지 않습니다.", sectionId: "paper-gmp-karatsuba" },
-    ],
+    "papers": [
+      {
+        "title": "GNU MP 6.3.0 · Karatsuba Multiplication",
+        "href": "https://gmplib.org/manual/Karatsuba-Multiplication",
+        "problem": "큰 정수의 곱을 세 작은 곱과 합산으로 계산합니다.",
+        "contribution": "차의 곱으로 추가 자리의 부담을 줄이고 부호에 따라 재결합합니다.",
+        "assumptions": "자리 기준은 2의 거듭제곱이며 부호와 올림을 정확히 처리합니다.",
+        "evidenceScope": "공식 재결합식에 B100과 네 조각 12·34·56·78을 넣어 484와 2840, 같은 최종 답을 확인했습니다.",
+        "notClaim": "설명용 십진 사례가 실제 GMP 호출을 실행했다는 뜻은 아니며 전환점과 실행 시간은 별도입니다.",
+        "sectionId": "paper-gmp-karatsuba"
+      },
+      {
+        "title": "Karatsuba & Ofman · Multiplication of many-digital numbers by automatic computers",
+        "href": "https://www.mathnet.ru/eng/dan26729",
+        "problem": "다자리 수의 곱셈을 다룬 초기 연구의 서지를 연결합니다.",
+        "contribution": "1962년 논문의 저자·제목·권호·쪽수를 확인할 수 있습니다.",
+        "assumptions": "열람한 MathNet 페이지는 서지이며 전문의 유도를 직접 대조한 것으로 기록하지 않습니다.",
+        "evidenceScope": "145권 2호, 293–294쪽과 저자를 확인했습니다. 본문의 유도는 직접 전개했고 구현은 GMP 원문을 대조했습니다.",
+        "notClaim": "서지 확인만으로 논문 전체의 정리·증명이나 현대 구현 성능을 검증한 것은 아닙니다.",
+        "sectionId": "paper-karatsuba-ofman"
+      }
+    ]
   },
   "crypto/sparse-multiplication": {
     entryNote: "0이 아닌 coefficient의 위치라는 support에서 시작해 polynomial 곱과 Fp12 Miller lowering까지 이어 갑니다.",
@@ -66246,317 +66882,340 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "기록 (0,1)·(1,4)·(2,9)에서 시작해 담당 식을 더하고 같은 새 입력 3에서16을 계산합니다."
   },
   "crypto/fft": {
-    coreIdea:
-      "NTT는 finite-field roots-of-unity에서의 polynomial evaluation이며, radix-2 butterfly는 even·odd sub-transform을 재사용해 exact transform과 inverse를 O(n log n)에 계산합니다.",
-    assumedKnowledge: [
+    "coreIdea": "NTT는 다항식 계수를 단위근 위치의 평가값으로 바꾸는 정확한 변환입니다. Radix-2는 짝수·홀수 결과를 재사용해 같은 변환을 빠르게 계산합니다. 체가 지원하는 길이와 근의 위수, 배열 순서, 역변환 배율과 곱의 길이를 함께 맞춰야 합니다.",
+    "assumedKnowledge": [
       {
-        id: "prime-field-modular-arithmetic",
-        role: "Twiddle multiplication·inverse root·n inverse를 field에서 계산합니다.",
+        "id": "prime-field-modular-arithmetic",
+        "role": "모든 덧셈·곱셈과 역원을 같은 체에서 계산합니다."
       },
       {
-        id: "finite-field-multiplicative-order",
-        role: "Transform length와 같은 order의 primitive root를 확인합니다.",
+        "id": "finite-field-multiplicative-order",
+        "role": "근이 원하는 길이만큼 돈 뒤 처음 1이 되는지 확인합니다."
       },
       {
-        id: "polynomial-coefficient-evaluation-form",
-        role: "NTT가 바꾸는 두 polynomial representation을 구분합니다.",
+        "id": "polynomial-coefficient-evaluation-form",
+        "role": "규칙의 계수와 정한 위치의 값 목록을 구분합니다."
       },
       {
-        id: "lagrange-interpolation-basis",
-        role: "INTT를 structured interpolation으로 이해합니다.",
+        "id": "lagrange-interpolation-basis",
+        "role": "서로 다른 위치의 값에서 원래 계수를 복원하는 원리를 사용합니다."
       },
       {
-        id: "roots-of-unity",
-        role: "Root의 주기·대칭이 transform factorization을 만드는 공통 직관을 사용합니다.",
-      },
+        "id": "roots-of-unity",
+        "role": "반복 주기의 대칭이 같은 중간 계산을 공유하게 함을 이해합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "finite-field-ntt",
-        role: "Coefficient를 finite-field root evaluations로 바꾸는 transform을 정의합니다.",
+        "id": "finite-field-ntt",
+        "role": "계수에서 단위근 평가값으로 가는 변환을 정의합니다."
       },
       {
-        id: "ntt-domain-two-adicity",
-        role: "Field가 지원하는 radix-2 domain size를 계산합니다.",
+        "id": "ntt-domain-two-adicity",
+        "role": "원시 단위근과 체가 지원하는 길이를 확인합니다."
       },
       {
-        id: "ntt-butterfly",
-        role: "Even·odd 결과를 두 output으로 결합합니다.",
+        "id": "ntt-butterfly",
+        "role": "짝수·홀수 결과를 공유해 두 출력을 계산합니다."
       },
       {
-        id: "inverse-ntt",
-        role: "Inverse root와 n inverse로 coefficient를 복원합니다.",
+        "id": "inverse-ntt",
+        "role": "반대 근과 길이의 역원으로 계수를 되찾습니다."
       },
       {
-        id: "ntt-linear-convolution",
-        role: "Padding을 포함한 linear polynomial product pipeline을 설계합니다.",
-      },
+        "id": "ntt-linear-convolution",
+        "role": "충분한 길이를 확보한 다항식 곱과 감기는 경우를 구분합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "finite-field-ntt",
-        sectionId: "dft",
-        intuition:
-          "다항식 계수를 여러 규칙적인 field points에서 본 값 목록으로 바꾸는 정확한 좌표 변환입니다.",
-        workedExample:
-          "F17,n=4,omega=4에서 [1,2,3,4]는 [10,7,15,6]으로 변환됩니다.",
-        boundary:
-          "Complex signal spectrum의 Hz·phase 해석은 포함하지 않으며 FFT는 transform 자체가 아니라 빠른 algorithm family입니다.",
+        "id": "finite-field-ntt",
+        "sectionId": "dft",
+        "intuition": "규칙의 계수를 정한 여러 위치의 결과 목록으로 바꾸는 변환입니다.",
+        "workedExample": "F17에서 근 4의 위치는 1·4·16·13이며 [1,2,3,4]의 출력은 [10,7,15,6]입니다.",
+        "boundary": "출력은 계수가 아니며 위치 순서를 포함합니다. 복소수 신호의 Hz 해석과 구분합니다."
       },
       {
-        id: "ntt-domain-two-adicity",
-        sectionId: "unit-root",
-        intuition:
-          "Field의 nonzero cycle 안에 transform 길이만큼의 작은 cycle이 있어야 합니다.",
-        workedExample:
-          "F17* order 16에는 size 8 subgroup이 있고 omega=9가 order 8입니다.",
-        boundary:
-          "Order가 작은 root를 쓰면 evaluation point가 반복되어 transform이 invertible하지 않습니다.",
+        "id": "ntt-domain-two-adicity",
+        "sectionId": "unit-root",
+        "intuition": "0 아닌 값의 반복 주기 안에 필요한 길이의 작은 주기가 있어야 합니다.",
+        "workedExample": "F17에서 근 4는 위수 4, 생성원 3의 제곱 9는 위수 8입니다. 17−1=2⁴이므로 2-adicity는 4입니다.",
+        "boundary": "근 4를 길이 8에 쓰면 위치가 반복됩니다. 길이 3은 16을 나누지 않아 F17에 해당 근이 없습니다."
       },
       {
-        id: "ntt-butterfly",
-        sectionId: "butterfly",
-        intuition:
-          "Even·odd sub-result 한 쌍을 더하고 빼서 반대편 output 두 개를 동시에 만듭니다.",
-        workedExample: "t=omega^k O_k라 두면 outputs는 E_k+t와 E_k−t입니다.",
-        boundary:
-          "Radix-2는 power-of-two length variant이며 bit order와 memory pass는 별도 implementation contract입니다.",
+        "id": "ntt-butterfly",
+        "sectionId": "butterfly",
+        "intuition": "반대 위치는 제곱이 같으므로 짝수·홀수 작은 결과를 한 번씩 구해 더하고 뺍니다.",
+        "workedExample": "E=[4,15], O=[6,15]에서 배율 1로 10·15, 배율 4로 7·6을 만들고 출력 순서에 놓습니다.",
+        "boundary": "Radix-2를 끝까지 쓰려면 길이가 2의 거듭제곱이어야 합니다. 버터플라이 개수와 실제 명령 수는 같지 않습니다.",
+        "proofIdea": "f(x)=E(x²)+xO(x²)이고 ω^(n/2)=−1입니다. ω²의 위수는 n/2이므로 두 작은 변환의 결과를 합과 차로 재사용합니다.",
+        "counterexample": "위수가 부족한 근을 쓰면 필요한 서로 다른 위치가 없어 원래 길이의 가역 변환이 아닙니다."
       },
       {
-        id: "inverse-ntt",
-        sectionId: "intt",
-        intuition:
-          "Root를 반대로 순회해 다른 coefficient 기여를 상쇄하고 n inverse로 scale합니다.",
-        workedExample:
-          "F17,n=4에서는 n inverse=13이고 inverse root 13으로 forward-like kernel을 실행합니다.",
-        boundary:
-          "Characteristic가 n을 나누거나 forward/inverse ordering이 다르면 round trip이 성립하지 않습니다.",
+        "id": "inverse-ntt",
+        "sectionId": "intt",
+        "intuition": "반대 근으로 다른 계수의 영향을 지우고 길이의 역원으로 남은 배율을 되돌립니다.",
+        "workedExample": "근 13으로 [10,7,15,6]을 변환하면 [4,8,12,16]이며 13을 곱하면 [1,2,3,4]입니다.",
+        "boundary": "근의 역원과 길이의 역원은 서로 다른 역할입니다. 배열 순서나 정규화가 틀리면 원복되지 않습니다.",
+        "proofIdea": "i≠j일 때 z=ω^(i−j)는 1이 아니고 zⁿ=1입니다. (z−1)Σzᵏ=0에서 합은 0이며 i=j일 때는 n이 남습니다.",
+        "counterexample": "마지막 길이 역원 13을 빠뜨리면 원래 계수 대신 네 배인 [4,8,12,16]이 남습니다."
       },
       {
-        id: "ntt-linear-convolution",
-        sectionId: "zk-usage",
-        intuition:
-          "Coefficient convolution을 evaluation point별 독립 곱으로 바꾸고 다시 coefficient로 돌아옵니다.",
-        workedExample:
-          "길이 3과 2 polynomial product는 결과 길이 4이므로 n=4 domain으로 padding합니다.",
-        boundary:
-          "n<L_a+L_b−1이면 x^n−1을 기준으로 wrap-around한 cyclic product가 됩니다.",
-      },
+        "id": "ntt-linear-convolution",
+        "sectionId": "zk-usage",
+        "intuition": "같은 위치에서 곱한 평가값을 다시 계수로 바꾸되 곱의 차수를 모두 담습니다.",
+        "workedExample": "A=1+x²와 B=1+x를 길이 4에서 변환하면 위치별 곱 [4,0,0,0], 역변환 [1,1,1,1]을 얻습니다.",
+        "boundary": "길이 2에서는 x²=1로 감겨 2+2x가 됩니다. 길이 3의 나머지 식은 만들 수 있지만 F17의 길이 3 NTT 실행은 불가능합니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "00 선수",
-        relation:
-          "Field·order·polynomial form·interpolation·roots를 연결합니다.",
-        concepts: [
+        "label": "01 계수와 위치",
+        "relation": "같은 체에서 계수와 평가값을 구분합니다.",
+        "concepts": [
           "prime-field-modular-arithmetic",
           "finite-field-multiplicative-order",
           "polynomial-coefficient-evaluation-form",
           "lagrange-interpolation-basis",
-          "roots-of-unity",
-        ],
+          "roots-of-unity"
+        ]
       },
       {
-        label: "01 변환",
-        relation: "Coefficient를 structured evaluations로 바꿉니다.",
-        concepts: ["finite-field-ntt"],
+        "label": "02 직접 평가",
+        "relation": "네 위치에 직접 넣은 값이 빠른 계산의 기준이 됩니다.",
+        "concepts": [
+          "finite-field-ntt"
+        ]
       },
       {
-        label: "02 도메인",
-        relation: "지원 가능한 root order와 radix depth를 정합니다.",
-        concepts: ["ntt-domain-two-adicity"],
+        "label": "03 길이에 맞는 근",
+        "relation": "정확한 위수와 지원 길이를 확인합니다.",
+        "concepts": [
+          "ntt-domain-two-adicity"
+        ]
       },
       {
-        label: "03 재사용",
-        relation: "Even·odd factorization으로 work를 줄입니다.",
-        concepts: ["ntt-butterfly"],
+        "label": "04 작은 결과 재사용",
+        "relation": "짝수·홀수의 합과 차로 같은 값을 만듭니다.",
+        "concepts": [
+          "ntt-butterfly"
+        ]
       },
       {
-        label: "04 복원",
-        relation: "Inverse root와 normalization으로 coefficients를 되찾습니다.",
-        concepts: ["inverse-ntt"],
+        "label": "05 원래 계수 복원",
+        "relation": "근의 방향과 길이 배율, 배열 순서를 맞춥니다.",
+        "concepts": [
+          "inverse-ntt"
+        ]
       },
       {
-        label: "05 곱셈",
-        relation: "Padding한 linear product와 implementation gate를 만듭니다.",
-        concepts: ["ntt-linear-convolution"],
-      },
+        "label": "06 곱셈과 실제 비용",
+        "relation": "곱의 차수를 담는 길이와 데이터 이동 비용을 확인합니다.",
+        "concepts": [
+          "ntt-linear-convolution"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "NTT transform과 radix-2 FFT algorithm을 구분하고 direct·fast work를 비교하세요.",
-        answerChecklist: [
-          "coefficient to evaluations",
-          "invertible linear transform",
-          "algorithm not transform",
-          "O(n²)",
-          "O(n log n)",
-          "exact result",
+        "level": "basic",
+        "question": "NTT와 radix-2 알고리즘이 각각 무엇을 정하는지 같은 네 값으로 설명하세요.",
+        "answerChecklist": [
+          "NTT는 계수에서 정한 위치의 값으로 가는 변환",
+          "직접 계산도 같은 변환",
+          "radix-2는 작은 결과를 재사용하는 알고리즘",
+          "[1,2,3,4]에서 [10,7,15,6]",
+          "근삿값으로 바꾸지 않음",
+          "직접 O(n²), 빠른 계산 O(n log n)"
         ],
-        requiredConcepts: ["finite-field-ntt", "ntt-butterfly"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "F17,n=4,omega=4에서 f=1+2x+3x²+4x³의 네 evaluation을 계산하세요.",
-        answerChecklist: ["points 1,4,16,13", "mod 17", "10", "7", "15", "6"],
-        requiredConcepts: ["finite-field-ntt"],
-        sectionId: "dft",
-      },
-      {
-        level: "basic",
-        question:
-          "F17에서 generator g=3과 n=8로 omega를 만들고 order 8임을 확인하세요.",
-        answerChecklist: [
-          "(p−1)/n=2",
-          "omega=9",
-          "omega^8=1",
-          "omega^4=-1",
-          "no smaller return",
-        ],
-        requiredConcepts: [
-          "ntt-domain-two-adicity",
-          "finite-field-multiplicative-order",
-        ],
-        sectionId: "unit-root",
-      },
-      {
-        level: "basic",
-        question:
-          "Butterfly에서 E=4,O=6,twiddle=1일 때 paired outputs를 F17에서 계산하세요.",
-        answerChecklist: [
-          "t=6",
-          "E+t=10",
-          "E−t=-2",
-          "15 mod 17",
-          "shared intermediates",
-        ],
-        requiredConcepts: ["ntt-butterfly"],
-        sectionId: "butterfly",
-      },
-      {
-        level: "basic",
-        question:
-          "F17,n=4의 n inverse와 omega=4의 inverse를 계산하고 INTT 절차를 설명하세요.",
-        answerChecklist: [
-          "4 inverse=13",
-          "omega inverse=13",
-          "inverse-root transform",
-          "multiply n inverse",
-          "round trip",
-        ],
-        requiredConcepts: ["inverse-ntt", "prime-field-modular-arithmetic"],
-        sectionId: "intt",
-      },
-      {
-        level: "basic",
-        question:
-          "길이 3과 2 polynomial을 linear multiply할 때 최소 n과 padding 이유를 설명하세요.",
-        answerChecklist: [
-          "3+2−1=4",
-          "n≥4",
-          "zero padding",
-          "pointwise product",
-          "prevent wrap-around",
-        ],
-        requiredConcepts: ["ntt-linear-convolution"],
-        sectionId: "zk-usage",
-      },
-      {
-        level: "advanced",
-        question:
-          "Roots geometric sum으로 inverse NTT matrix를 유도하고 i=j와 i!=j를 나눠 설명하세요.",
-        answerChecklist: [
-          "sum omega^{k(i−j)}",
-          "n when equal",
-          "zero otherwise",
-          "inverse root",
-          "n inverse",
-          "field characteristic",
-        ],
-        requiredConcepts: ["inverse-ntt", "finite-field-ntt"],
-        sectionId: "intt",
-      },
-      {
-        level: "advanced",
-        question:
-          "Radix-2 recurrence T(n)=2T(n/2)+O(n)에서 O(n log n)을 유도하고 n=8 stage를 추적하세요.",
-        answerChecklist: [
-          "even odd split",
-          "two half transforms",
-          "linear merge",
-          "log2 n levels",
-          "n work per level",
-          "24-scale work",
-        ],
-        requiredConcepts: ["ntt-butterfly"],
-        sectionId: "butterfly",
-      },
-      {
-        level: "advanced",
-        question:
-          "Length가 부족한 NTT product가 cyclic convolution이 되는 x^n−1 quotient 반례를 만드세요.",
-        answerChecklist: [
-          "A=1+x²·B=1+x",
-          "linear product=1+x+x²+x³",
-          "n=3에서 x³=1",
-          "cyclic result=2+x+x²",
-          "n=4 padding fixes",
-        ],
-        requiredConcepts: ["ntt-linear-convolution"],
-        sectionId: "zk-usage",
-      },
-      {
-        level: "advanced",
-        question:
-          "NTT 구현 후보 두 개를 direct oracle·round trip·product oracle·ordering·memory와 end-to-end 측정으로 비교하는 release gate를 설계하세요.",
-        answerChecklist: [
-          "same field/root/input",
-          "direct NTT oracle",
-          "INTT round trip",
-          "schoolbook product",
-          "bit order/normalization",
-          "kernel and end-to-end",
-          "memory traffic",
-        ],
-        requiredConcepts: [
+        "sectionId": "names",
+        "requiredConcepts": [
           "finite-field-ntt",
-          "inverse-ntt",
-          "ntt-linear-convolution",
+          "ntt-butterfly"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "F17의 근 4가 만드는 네 위치와 f=1+2x+3x²+4x³의 값을 계산하세요.",
+        "answerChecklist": [
+          "위치 1·4·16·13",
+          "f1=10",
+          "f4=313 mod17=7",
+          "f−1=−2 mod17=15",
+          "f−4=−215 mod17=6",
+          "출력 위치 순서 유지"
         ],
-        sectionId: "zk-usage",
-      },
-    ],
-    papers: [
-      {
-        title: "The Fast Fourier Transform in a Finite Field",
-        href: "https://doi.org/10.1007/BF01934338",
-        problem: "Finite field의 Fourier-type transform을 빠르게 계산하는 문제",
-        contribution:
-          "Appropriate roots를 가진 finite field에서 fast transform 구조 전개",
-        assumptions: "Field와 transform length가 요구 root와 inverse를 지원",
-        evidenceScope: "Finite-field FFT/NTT의 algebraic algorithm",
-        notClaim:
-          "모든 prime·length 지원이나 현대 GPU memory 성능을 보장하지 않음",
-        sectionId: "paper-pollard-ntt",
+        "sectionId": "dft",
+        "requiredConcepts": [
+          "finite-field-ntt"
+        ]
       },
       {
-        title:
-          "An Algorithm for the Machine Calculation of Complex Fourier Series",
-        href: "https://doi.org/10.1090/S0025-5718-1965-0178586-1",
-        problem: "Composite-length discrete Fourier sums의 계산량",
-        contribution:
-          "Length factorization으로 sub-transform intermediate를 재사용",
-        assumptions: "원 논문의 complex arithmetic과 factorable length",
-        evidenceScope: "Cooley–Tukey factorization의 원 논문",
-        notClaim:
-          "Finite-field root 존재와 inverse 조건까지 원 논문이 제공하는 것은 아님",
-        sectionId: "paper-cooley-tukey",
+        "level": "basic",
+        "question": "근 4를 길이 8에 쓰면 왜 안 되며 생성원 3에서 다른 근을 어떻게 만드나요?",
+        "answerChecklist": [
+          "4의 위수는 4",
+          "평가점이 두 번 반복",
+          "3^(16/8)=9",
+          "9⁴=16≠1",
+          "9⁸=1",
+          "위수 8",
+          "F17의 2-adicity는 4"
+        ],
+        "sectionId": "unit-root",
+        "requiredConcepts": [
+          "ntt-domain-two-adicity"
+        ]
       },
+      {
+        "level": "basic",
+        "question": "같은 사례의 E=[4,15], O=[6,15]를 결합해 네 출력을 구하세요.",
+        "answerChecklist": [
+          "k0의 배율 1",
+          "4+6=10, 4−6=15",
+          "k1의 배율 4",
+          "4×15 mod17=9",
+          "15+9=7, 15−9=6",
+          "인덱스 순서 [10,7,15,6]"
+        ],
+        "sectionId": "trace",
+        "requiredConcepts": [
+          "ntt-butterfly"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "근 4의 역원과 길이 4의 역원을 계산하고 마지막 배율을 빠뜨린 결과를 쓰세요.",
+        "answerChecklist": [
+          "각각 13이지만 역할은 다름",
+          "반대 근 변환 결과 [4,8,12,16]",
+          "마지막 13을 곱해 [1,2,3,4]",
+          "배율을 빠뜨리면 네 배가 남음",
+          "평가점 순서 일치 필요"
+        ],
+        "sectionId": "intt",
+        "requiredConcepts": [
+          "inverse-ntt"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "A=1+x²와 B=1+x의 곱에 필요한 길이와 실제 변환·곱·역변환 값을 쓰세요.",
+        "answerChecklist": [
+          "3+2−1=4",
+          "입력 [1,0,1,0]과 [1,1,0,0]",
+          "변환 [2,0,2,0]과 [2,5,0,14]",
+          "위치별 곱 [4,0,0,0]",
+          "역변환 [1,1,1,1]",
+          "차수 3을 담는 네 계수"
+        ],
+        "sectionId": "zk-usage",
+        "requiredConcepts": [
+          "ntt-linear-convolution"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "단위근 합으로 역변환을 유도하고 원문 Pollard의 d′와 이 글의 길이 역원을 연결하세요.",
+        "answerChecklist": [
+          "같은 계수의 합은 n",
+          "서로 다른 계수에서 z≠1, zⁿ=1",
+          "(z−1)Σzᵏ=zⁿ−1=0",
+          "역원으로 나누면 합 0",
+          "반대 근 변환 후 n배만 남음",
+          "원문 d′d=17−1",
+          "d′=4, −d′ mod17=13"
+        ],
+        "sectionId": "intt",
+        "requiredConcepts": [
+          "finite-field-ntt",
+          "inverse-ntt"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "짝수·홀수 분할의 정당성과 단계별 버터플라이 수에서 전체 계산량을 유도하세요.",
+        "answerChecklist": [
+          "f=E(x²)+xO(x²)",
+          "반대 위치의 제곱이 같음",
+          "ω²의 위수 n/2",
+          "각 단계 n/2개 버터플라이",
+          "log₂n개 단계",
+          "n4에서는 네 번",
+          "n8에서는 4×3=12번",
+          "명령 수는 최적화에 따라 달라짐"
+        ],
+        "sectionId": "trace",
+        "requiredConcepts": [
+          "ntt-butterfly"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "길이가 부족한 실제 F17 계산과 지원하지 않는 길이 3의 대수적 예를 구분하세요.",
+        "answerChecklist": [
+          "길이 2의 A 평가 [2,2]",
+          "B 평가 [2,0]",
+          "곱 [4,0]을 역변환하면 [2,2]",
+          "x²=1로 감겨 2+2x",
+          "x³=1의 나머지는 2+x+x²",
+          "그러나 3은 16을 나누지 않음",
+          "F17의 길이 3 NTT 실행이라고 부를 수 없음",
+          "길이 4로 원래 곱 복원"
+        ],
+        "sectionId": "zk-usage",
+        "requiredConcepts": [
+          "ntt-domain-two-adicity",
+          "ntt-linear-convolution"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "구현의 순서와 정규화, 정수 복원 범위와 전체 비용을 어떻게 검증하나요?",
+        "answerChecklist": [
+          "직접 평가와 빠른 결과 비교",
+          "역변환 원복",
+          "다항식 곱을 직접 계수 곱과 비교",
+          "근 위수와 지원 길이",
+          "배열 순서와 길이 역원",
+          "체의 정확성과 정수 원본 구분",
+          "정수 복원은 상한과 큰 소수 또는 CRT",
+          "같은 입력·체·길이·방향·묶음",
+          "커널 시간과 전체 요청 시간 구분",
+          "재배열·배율 표·메모리·전송 비용"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "finite-field-ntt",
+          "ntt-domain-two-adicity",
+          "inverse-ntt",
+          "ntt-linear-convolution"
+        ]
+      }
     ],
+    "papers": [
+      {
+        "title": "The Fast Fourier Transform in a Finite Field",
+        "href": "https://doi.org/10.1090/S0025-5718-1971-0301966-0",
+        "problem": "유한체에서 Fourier 형태의 변환과 순환 곱을 정확한 연산으로 계산합니다.",
+        "contribution": "원시 단위근의 변환과 역변환, 곱셈에 필요한 길이와 정수 복원 범위를 설명합니다.",
+        "assumptions": "체의 곱셈군에 원하는 위수의 근이 존재하며 변환 길이의 역원이 있습니다.",
+        "evidenceScope": "원문 식 (1)~(3)의 d4, r4, GF17, d′4와 역배율 −d′13을 같은 네 계수에 대입했습니다. §3(i)의 길이 조건과 §3(ii)의 정수 복원 경계도 구분했습니다.",
+        "notClaim": "모든 체가 모든 길이를 지원하거나 현대 GPU 구현의 속도·메모리 비용까지 보장한다는 뜻은 아닙니다.",
+        "sectionId": "paper-pollard-ntt"
+      },
+      {
+        "title": "An Algorithm for the Machine Calculation of Complex Fourier Series",
+        "href": "https://doi.org/10.1090/S0025-5718-1965-0178586-1",
+        "problem": "큰 복소수 Fourier 합의 반복 계산을 줄입니다.",
+        "contribution": "길이를 인수로 나누고 작은 합을 보조 배열에 저장해 재사용합니다.",
+        "assumptions": "원문은 복소수의 원시 단위근과 분할 가능한 길이를 사용합니다.",
+        "evidenceScope": "원문 식 (3), (6), (7)에 N4, r1=r2=2를 넣고 유한체 근 4에서 보조 배열 [[4,6],[15,15]]가 같은 출력으로 결합됨을 계산했습니다.",
+        "notClaim": "원문이 유한체의 근 존재까지 정하거나 복소수 연산 수가 실제 암호 커널의 실행 시간을 준다는 뜻은 아닙니다.",
+        "sectionId": "paper-cooley-tukey"
+      }
+    ],
+    "entryNote": "네 계수 1·2·3·4를 F17의 네 위치에서 읽고, 작은 합의 재사용으로 같은 값 10·7·15·6을 만든 뒤 원문과 역변환까지 추적합니다."
   },
   "blockchain/reth-eip4844": {
     entryLevel: true,
@@ -78600,98 +79259,328 @@ export const ARTICLE_LEARNING: Readonly<
     "entryLevel": true
   },
   "ai/serving-memory-admission-and-preemption": {
-    entryNote: "KV cache가 token마다 자라고 block 단위로 할당된다는 것은 안다고 가정합니다. 요청 하나의 byte를 세는 데서 시작해 scheduler가 언제 받고 누구를 내보내는지로 갑니다.",
-    coreIdea: "Scheduler는 요청의 prefill block을 free block에서 뺀 여유가 watermark 이상일 때만 받아들이고, 실행 중 요청의 성장으로 free가 수요 아래로 떨어지는 memory pressure에서는 마지막 요청의 KV를 전부 내보내되 recompute는 GPU 연산을, swap은 PCIe 대역폭을 소비하며 hybrid model의 고정 state는 admission 시점에 통째로 잡힙니다.",
-    assumedKnowledge: [
-      { id: "per-token-kv-byte", role: "Token 하나의 KV byte를 layer·head·dim·dtype으로 계산합니다." },
-      { id: "paged-kv-block-allocation", role: "KV를 fixed-size block으로 나눠 필요할 때 추가하는 할당 방식입니다." },
-      { id: "scheduler-running-waiting-order", role: "실행 중 요청을 먼저 배정하고 남은 예산으로 대기 요청을 받는 순서입니다." },
-      { id: "kv-pressure-preemption", role: "Block을 확보하지 못할 때 victim을 골라 PREEMPTED·WAITING으로 되돌리는 경로입니다." },
-      { id: "hybrid-cache-group-coordination", role: "Attention KV와 recurrent state처럼 layout이 다른 layer를 한 pool에 묶는 방법입니다." },
-      { id: "model-request-memory-growth-classes", role: "Token 비례 KV와 요청당 고정 state를 다른 성장축으로 분리합니다." },
-    ],
-    introducedHere: [
-      { id: "request-memory-footprint", role: "요청 하나의 최종 KV byte와 admission 시점 prefill 몫을 계산합니다." },
-      { id: "memory-watermark", role: "새 admission이 쓰지 못하는 free block 예약분을 정의합니다." },
-      { id: "memory-admission-control", role: "Free block에서 prefill block을 뺀 여유로 OK·LATER·NEVER를 판정합니다." },
-      { id: "request-admission-control", role: "Sequence 수·token 예산·memory 세 관문을 합친 승인 절차를 정의합니다." },
-      { id: "memory-pressure", role: "Free block이 실행 중 요청의 다음 step 수요보다 적은 상태를 정의합니다." },
-      { id: "recompute-preemption", role: "Victim의 KV를 버리고 재개 시 한 번의 prefill로 다시 만드는 방식입니다." },
-      { id: "swap-preemption", role: "Victim의 KV를 CPU로 복사했다가 되가져오는 방식과 그 PCIe 비용을 설명합니다." },
-      { id: "fixed-recurrent-state-allocation", role: "Hybrid model의 요청당 고정 state가 admission 계산을 바꾸는 방식입니다." },
-    ],
-    conceptExplanations: [
-      { id: "request-memory-footprint", sectionId: "footprint", intuition: "좌석을 예약할 때 인원수를 한 줄 단위로 올림해 잡는 것처럼 token 수를 block 단위로 올림해 byte로 바꿉니다.", workedExample: "32 layer·KV head 8·dim 128·FP16이면 token당 128 KiB, 16-token block은 2 MiB이고, prompt 1,000에 생성 500이면 94 block 188 MiB입니다.", boundary: "Sliding-window·MLA·quantized KV는 token당 byte가 달라지고 prefix cache hit은 block을 공유하므로 이 식의 상한보다 적게 씁니다." },
-      { id: "memory-watermark", sectionId: "watermark-admission", intuition: "주차장을 만차까지 받지 않고 몇 칸을 비워 두어 이미 들어온 차가 움직일 자리를 남기는 것과 같습니다.", workedExample: "27,648 block의 1%면 276 block, 552 MiB가 새 요청에 배정되지 않고 남습니다.", boundary: "실행 중 요청의 block 추가에는 적용되지 않으므로 free가 0까지 내려가는 pressure 자체는 막지 못합니다." },
-      { id: "memory-admission-control", sectionId: "watermark-admission", intuition: "새 손님을 받은 뒤에도 비워 둬야 할 자리가 남는지 먼저 세어 보고 문을 여는 판정입니다.", workedExample: "Free 300에 63 block 요청이면 237이 276보다 작아 LATER, free 350이면 287이 276 이상이라 OK입니다.", boundary: "Pool 전체에서 watermark를 뺀 것보다 큰 요청은 LATER가 아니라 NEVER로 거절해야 queue 앞을 영원히 막지 않습니다." },
-      { id: "request-admission-control", sectionId: "watermark-admission", intuition: "입장에는 인원 제한, 한 번에 처리할 양 제한, 자리 제한이 각각 있고 셋 다 통과해야 들어갑니다.", workedExample: "max_num_seqs 256에 실행 중이 255개면 memory가 남아도 요청 하나만 더 받고, 그 하나도 memory 관문을 다시 지납니다.", boundary: "세 관문은 독립이므로 memory를 늘려도 sequence 수 상한이 먼저 걸리면 throughput은 오르지 않습니다." },
-      { id: "memory-pressure", sectionId: "watermark-admission", intuition: "이미 앉은 손님들이 한 칸씩 넓혀 앉아야 하는데 빈자리가 그만큼 없는 순간입니다.", workedExample: "실행 중 세 요청이 각각 block 하나를 요구하는데 free가 1개면 둘은 못 받으므로 누군가 나가야 합니다.", boundary: "Pool 크기와 workload의 관계이므로 같은 gpu_memory_utilization에서도 긴 생성이 몰리면 들어가고 짧은 요청이 많으면 안 들어갑니다." },
-      { id: "recompute-preemption", sectionId: "preemption-modes", intuition: "자리를 비워 준 손님이 돌아왔을 때 처음부터 다시 주문하되 한꺼번에 받아 시간을 줄이는 방식입니다.", workedExample: "1,500 token을 계산한 요청을 8B model에서 되살리면 약 24 TFLOP, 유효 400 TFLOP/s에서 약 60 ms입니다.", boundary: "재개 prefill이 GPU를 차지해 다른 요청의 decode step을 밀어내며, prefix cache hit이 없으면 전부 다시 계산합니다." },
-      { id: "swap-preemption", sectionId: "preemption-modes", intuition: "자리를 비우되 짐은 보관소에 맡겨 두었다가 돌아오면 그대로 되찾는 방식입니다.", workedExample: "188 MiB를 25 GB/s로 왕복하면 약 16 ms이지만 32 KiB 조각 6,016개로 나뉘어 작은 block일수록 유효 대역폭이 떨어집니다.", boundary: "CPU swap 공간이 victim의 block 수보다 작으면 쓸 수 없고 engine은 recompute로 떨어집니다." },
-      { id: "fixed-recurrent-state-allocation", sectionId: "hybrid-fixed-state", intuition: "손님 수와 무관하게 테이블마다 고정 크기 세팅이 먼저 놓여야 하는 것과 같습니다.", workedExample: "Recurrent layer 48개가 layer당 1.5 MiB면 요청당 72 MiB로, 100 token 요청의 KV 7 MiB보다 열 배 큽니다.", boundary: "Recurrent state는 recompute로 되살리려면 prompt 전체를 다시 훑어야 하므로 긴 요청에서 KV와 같은 속도로 비용이 늘어납니다." },
-    ],
-    conceptStages: [
-      { label: "00 Footprint", relation: "요청 하나의 byte와 admission 시점 prefill 몫을 셉니다.", concepts: ["request-memory-footprint"] },
-      { label: "01 Reserve", relation: "실행 중 요청의 성장분을 pool에 예약합니다.", concepts: ["memory-watermark"] },
-      { label: "02 Admit", relation: "세 관문을 지나 대기 요청을 실행 집합에 넣습니다.", concepts: ["request-admission-control", "memory-admission-control"] },
-      { label: "03 Pressure", relation: "Free가 수요 아래로 내려가는 상태를 판정합니다.", concepts: ["memory-pressure"] },
-      { label: "04 Evict", relation: "Victim의 KV를 버리거나 CPU로 옮깁니다.", concepts: ["recompute-preemption", "swap-preemption"] },
-      { label: "05 Hybrid", relation: "고정 state가 admission 계산에 더해집니다.", concepts: ["fixed-recurrent-state-allocation"] },
-    ],
-    exercises: [
-      { level: "basic", question: "32 layer·KV head 8·head dim 128·FP16 model에서 16-token block 하나의 byte를 계산하세요.", answerChecklist: ["token당 4 KiB × 32 = 128 KiB", "block 2 MiB", "key와 value 2배"], requiredConcepts: ["request-memory-footprint"], sectionId: "footprint" },
-      { level: "basic", question: "Prompt 1,000 token에 생성 상한 500인 요청이 admission 시점에 잡는 block과 최종 block을 구분하세요.", answerChecklist: ["63 block prefill", "94 block 최종", "decode 중 추가"], requiredConcepts: ["request-memory-footprint"], sectionId: "footprint" },
-      { level: "basic", question: "Watermark를 두는 이유를 decode의 성질과 연결해 설명하세요.", answerChecklist: ["16 token마다 새 block", "실행 중 요청 성장분", "잦은 preemption 방지"], requiredConcepts: ["memory-watermark"], sectionId: "watermark-admission" },
-      { level: "basic", question: "Free 300 block, watermark 276, 요청 63 block일 때 admission 판정과 그 이유를 쓰세요.", answerChecklist: ["300 − 63 = 237", "237 < 276", "LATER"], requiredConcepts: ["memory-admission-control"], sectionId: "watermark-admission" },
-      { level: "basic", question: "Recompute preemption이 재개 시 원래 decode보다 빨리 복구되는 이유를 설명하세요.", answerChecklist: ["prompt와 생성분 이어 붙임", "한 번의 prefill", "block 즉시 반환"], requiredConcepts: ["recompute-preemption"], sectionId: "preemption-modes" },
-      { level: "basic", question: "Swap preemption이 작은 block에서 불리한 이유를 PCIe와 연결해 설명하세요.", answerChecklist: ["32 KiB 조각 다수", "전송 횟수 증가", "유효 대역폭 하락"], requiredConcepts: ["swap-preemption"], sectionId: "preemption-modes" },
-      { level: "advanced", question: "LATER와 NEVER를 구분하지 않는 admission이 queue에 일으키는 문제와 판정식을 쓰세요.", answerChecklist: ["N_total − prefill block < W", "queue 앞 영구 대기", "즉시 거절"], requiredConcepts: ["memory-admission-control", "request-admission-control"], sectionId: "watermark-admission" },
-      { level: "advanced", question: "같은 gpu_memory_utilization에서 memory pressure가 들어오고 나가는 workload 조건을 설계하고 관측 지표를 고르세요.", answerChecklist: ["생성 길이 분포", "동시 요청 수", "free block 시계열", "preemption 횟수"], requiredConcepts: ["memory-pressure", "memory-watermark"], sectionId: "watermark-admission" },
-      { level: "advanced", question: "Block 크기·PCIe 대역폭·prefill 처리량이 주어졌을 때 recompute와 swap 가운데 하나를 고르는 판정을 수치로 세우세요.", answerChecklist: ["prefill FLOP / 유효 TFLOP/s", "byte / 유효 GB/s 왕복", "조각 수와 block 크기", "swap_space 잔량"], requiredConcepts: ["recompute-preemption", "swap-preemption"], sectionId: "preemption-modes" },
-      { level: "advanced", question: "Recurrent layer 48개(layer당 1.5 MiB)와 attention 16 layer(block 1 MiB) hybrid model에서 100 token 요청과 1,500 token 요청의 admission 필요 block을 비교하세요.", answerChecklist: ["고정 72 block", "7 block vs 94 block", "짧은 요청도 79 block", "동시 요청 수 상한"], requiredConcepts: ["fixed-recurrent-state-allocation", "memory-admission-control"], sectionId: "hybrid-fixed-state" },
-    ],
-    papers: [
+    "entryNote": "40개 공간에서 A14·B12 뒤 C9를 받았다가 성장으로 멈추고 C11로 재개하는 사례를 따라갑니다.",
+    "coreIdea": "신규 수용과 진행 중 성장, 중단 뒤 복원을 다른 순간의 공간 수요로 계산하며 실제 버전의 전체 입력 검사와 실패 처리를 확인합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        title: "Efficient Memory Management for Large Language Model Serving with PagedAttention",
-        href: "https://arxiv.org/abs/2309.06180",
-        problem: "가변 길이 KV cache의 연속 예약이 만드는 fragmentation과 낮은 memory 활용률, 그리고 memory가 모자랄 때의 요청 처리",
-        contribution: "Block 단위 KV 할당 위에 FCFS·all-or-nothing eviction과 recompute·swap 두 복구 방식을 정의하고 block 크기별로 비교했습니다.",
-        assumptions: "OPT 계열 model과 A100 GPU, 논문이 시험한 block 크기 범위와 workload입니다.",
-        evidenceScope: "SOSP 2023 저자 자기보고이며 block 16~64에서 두 방식이 비슷하다는 결과도 그 범위입니다.",
-        notClaim: "모든 engine과 GPU·PCIe 세대에서 recompute가 swap보다 항상 낫다거나 그 반대라는 뜻은 아닙니다.",
-        sectionId: "paper-vllm",
+        "id": "request-memory-footprint",
+        "role": "요청의 보존 길이를 block 크기로 올림한 뒤 단위당 byte를 곱한 저장 용량입니다."
       },
       {
-        title: "vLLM Optimization and Tuning — Preemption",
-        href: "https://docs.vllm.ai/en/latest/configuration/optimization.html",
-        problem: "KV cache 공간 부족으로 요청이 preempt될 때 운영자가 무엇을 조정해야 하는지",
-        contribution: "V1 기본 mode가 RECOMPUTE임과 gpu_memory_utilization·max_num_seqs·max_num_batched_tokens·parallelism 조정 방향을 문서화했습니다.",
-        assumptions: "문서 기준일의 vLLM V1 engine이며 V0 인자(swap_space·preemption_mode)는 별도 버전 문서에 있습니다.",
-        evidenceScope: "공식 문서의 설정 설명이며 성능 수치는 포함하지 않습니다.",
-        notClaim: "특정 workload에서 preemption이 사라진다거나 어떤 값이 최적이라는 주장은 아닙니다.",
-        sectionId: "paper-vllm-docs",
+        "id": "memory-watermark",
+        "role": "새 요청을 받은 뒤 남길 빈 공간 개수의 하한입니다. 특정 주소를 잠그는 규칙이 아닙니다."
       },
       {
-        title: "SGLang Server Arguments",
-        href: "https://docs.sglang.io/advanced_features/server_arguments.html",
-        problem: "정적 memory 비율과 scheduler의 보수성을 어떤 인자로 조절하는지",
-        contribution: "mem-fraction-static·max-total-tokens·schedule-conservativeness를 정의하고 retract가 잦으면 보수성을 키우라고 안내합니다.",
-        assumptions: "문서 기준일의 SGLang 인자 이름과 기본값입니다.",
-        evidenceScope: "공식 문서의 인자 설명이며 retract의 내부 mechanism은 이 페이지가 다루지 않습니다.",
-        notClaim: "SGLang의 retract가 vLLM의 recompute와 같은 비용 구조를 갖는다는 주장은 아닙니다.",
-        sectionId: "paper-sglang-scheduler",
+        "id": "memory-admission-control",
+        "role": "새 요청의 공간을 확보할 수 있는지 확인하고 일시 대기와 용량상 불가능을 나눕니다."
       },
       {
-        title: "TensorRT-LLM KV Cache System",
-        href: "https://nvidia.github.io/TensorRT-LLM/features/kvcache.html",
-        problem: "KV pool 크기와 block eviction·host offload를 어떤 설정으로 정하는지",
-        contribution: "free_gpu_memory_fraction 기본 0.9, max_tokens와의 min 규칙, host_cache_size에 의한 secondary offload를 문서화했습니다.",
-        assumptions: "문서 기준일의 TensorRT-LLM KV cache manager입니다.",
-        evidenceScope: "공식 문서의 설정 설명이며 요청 단위 preemption 정책은 다루지 않습니다.",
-        notClaim: "Block offload가 요청 preemption의 swap과 같은 단위·시점으로 동작한다는 주장은 아닙니다.",
-        sectionId: "paper-trtllm-kvcache",
+        "id": "request-admission-control",
+        "role": "저장 공간과 진행 요청 자리 및 이번 계산량 한도를 함께 확인하는 전체 수용 결정입니다."
       },
+      {
+        "id": "memory-pressure",
+        "role": "진행할 요청들이 추가로 요구하는 공간을 현재 빈 공간으로 충족하지 못하는 상태입니다."
+      },
+      {
+        "id": "recompute-preemption",
+        "role": "저장 결과를 해제하고 토큰 이력을 다시 처리해 내부 상태를 복원하는 방식입니다."
+      },
+      {
+        "id": "swap-preemption",
+        "role": "계산 결과의 byte를 CPU 공간에 복사했다가 GPU로 되가져오는 방식입니다."
+      },
+      {
+        "id": "fixed-recurrent-state-allocation",
+        "role": "길이에 따라 커지는 KV와 별도로 요청마다 필요한 고정 모양의 상태를 확보합니다."
+      }
     ],
+    "conceptExplanations": [
+      {
+        "id": "request-memory-footprint",
+        "sectionId": "footprint",
+        "intuition": "요청의 보존 길이를 block 크기로 올림한 뒤 단위당 byte를 곱한 저장 용량입니다.",
+        "workedExample": "32층·8KVhead·128차원·2byte는 토큰당128KiB이며16토큰은2MiB입니다. 1000은63block,1500은94block입니다.",
+        "boundary": "전체 입력 fit 검사와 실제 조각 할당 및 최대 출력 길이 예약을 구분합니다. 공유와 모델별 상태는 실제 수요를 바꿉니다."
+      },
+      {
+        "id": "memory-watermark",
+        "sectionId": "watermark-admission",
+        "intuition": "새 요청을 받은 뒤 남길 빈 공간 개수의 하한입니다. 특정 주소를 잠그는 규칙이 아닙니다.",
+        "workedExample": "free14에서 C9를 빼면5로 하한3을 넘지만 free11에서는2로 대기합니다.",
+        "boundary": "고정 V0 기본1%와 V1 기본0%를 구별합니다. 본문의3은 따로 지정한 값이며 진행 요청 성장 뒤 압박을 없애지는 못합니다."
+      },
+      {
+        "id": "memory-admission-control",
+        "sectionId": "source-v0-admission",
+        "intuition": "새 요청의 공간을 확보할 수 있는지 확인하고 일시 대기와 용량상 불가능을 나눕니다.",
+        "workedExample": "C의 전체40·free14·필요9·하한3은 OK이고 free11로 바꾸면 LATER입니다.",
+        "boundary": "V1은 전체 입력이 들어가는지 먼저 검사할 수 있습니다. chunk 공간이 있어도 free50에서 입력1000의63block은 거절됩니다."
+      },
+      {
+        "id": "request-admission-control",
+        "sectionId": "black-box",
+        "intuition": "저장 공간과 진행 요청 자리 및 이번 계산량 한도를 함께 확인하는 전체 수용 결정입니다.",
+        "workedExample": "본문은 요청 자리와 계산 예산이 충분할 때 C의 공간9와 하한3을 검사합니다.",
+        "boundary": "공간만 늘려도 다른 한도에 걸리면 수용하지 못합니다. 원문은 실제 성공 뒤 상태를 바꿉니다."
+      },
+      {
+        "id": "memory-pressure",
+        "sectionId": "growth-pressure",
+        "intuition": "진행할 요청들이 추가로 요구하는 공간을 현재 빈 공간으로 충족하지 못하는 상태입니다.",
+        "workedExample": "A15·B13·C10으로 free2인데 다음241·209·161위치는 각1씩 합3block을 더 요구합니다.",
+        "boundary": "같은 pool이라도 요청 길이와 동시 요청 수에 따라 달라집니다. 하한 아래라는 사실과 실제 추가 수요 실패는 구별합니다."
+      },
+      {
+        "id": "recompute-preemption",
+        "sectionId": "source-v1-preemption",
+        "intuition": "저장 결과를 해제하고 토큰 이력을 다시 처리해 내부 상태를 복원하는 방식입니다.",
+        "workedExample": "C10을 반환해 computed0으로 만들지만 이력161을 유지하므로 재개에는11block이 필요합니다.",
+        "boundary": "동기식·전용block 사례입니다. 공유 참조와 비동기 결과가 있으면 즉시 전체 반환을 가정하지 않으며 재계산은 GPU 자원을 씁니다."
+      },
+      {
+        "id": "swap-preemption",
+        "sectionId": "source-v0-swap",
+        "intuition": "계산 결과의 byte를 CPU 공간에 복사했다가 GPU로 되가져오는 방식입니다.",
+        "workedExample": "C의10block은 편도20MiB이며25GB/s 왕복의 이상적 전송 시간은 약1.678ms입니다.",
+        "boundary": "고정 V0에서 CPU 공간 실패는 RuntimeError이며 자동 재계산 전환이 아닙니다. 재진입에는 기존 공간과 새 위치의 추가 수요도 확인합니다."
+      },
+      {
+        "id": "fixed-recurrent-state-allocation",
+        "sectionId": "hybrid-fixed-state",
+        "intuition": "길이에 따라 커지는 KV와 별도로 요청마다 필요한 고정 모양의 상태를 확보합니다.",
+        "workedExample": "가정한48층의 상태72MiB에100토큰KV7MiB를 더하면79MiB,1500토큰은94+72=166MiB입니다.",
+        "boundary": "상태 한 벌의 논리 용량입니다. convolution history·복사본·checkpoint·padding·병렬 분할과 실제 group별 배정은 별도로 계산합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 수용 공간",
+        "relation": "현재 빈 공간과 남겨 둘 여유를 함께 확인합니다.",
+        "concepts": [
+          "request-memory-footprint",
+          "memory-watermark",
+          "memory-admission-control",
+          "request-admission-control"
+        ]
+      },
+      {
+        "label": "02 성장과 부족",
+        "relation": "수용 뒤에도 요청이 자라면 추가 수요를 확인합니다.",
+        "concepts": [
+          "memory-pressure"
+        ]
+      },
+      {
+        "label": "03 복구 방식",
+        "relation": "멈춘 요청의 결과를 재계산하거나 복사해 되살립니다.",
+        "concepts": [
+          "recompute-preemption",
+          "swap-preemption"
+        ]
+      },
+      {
+        "label": "04 고정 상태",
+        "relation": "길이에 비례하지 않는 상태를 용량에 더합니다.",
+        "concepts": [
+          "fixed-recurrent-state-allocation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "40개 공간 중 A가 14개, B가 12개를 쓰고 있습니다. C가 9개를 요구하고 남길 하한이 3개라면 수용할 수 있나요?",
+        "answerChecklist": [
+          "빈 공간 14",
+          "14−9=5",
+          "5≥3이므로 수용 가능",
+          "요청 자리와 계산 예산도 별도로 확인"
+        ],
+        "sectionId": "watermark-admission",
+        "requiredConcepts": [
+          "memory-watermark",
+          "memory-admission-control",
+          "request-admission-control"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "A·B·C가 각각 15·13·10개를 차지하면 빈 공간은 몇 개이며 다음에 각각 한 개가 더 필요할 때 어떤 부족이 생기나요?",
+        "answerChecklist": [
+          "40−38=2",
+          "수요 3이 빈 공간 2보다 큼",
+          "성장분을 모두 배정할 수 없는 memory pressure"
+        ],
+        "sectionId": "growth-pressure",
+        "requiredConcepts": [
+          "memory-pressure"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "C의 10개 공간을 되찾고 A와 B에 하나씩 더 주면 빈 공간이 몇 개인가요? 161토큰을 다시 계산할 C는 즉시 돌아올 수 있나요?",
+        "answerChecklist": [
+          "2+10−2=10",
+          "ceil(161/16)=11",
+          "10−11<3이므로 대기",
+          "A의 16개가 반환되면 26−11=15로 수용"
+        ],
+        "sectionId": "resume-trace",
+        "requiredConcepts": [
+          "recompute-preemption",
+          "memory-admission-control"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "32층·KV head 8개·차원128·2byte에서 token당 byte와 16token block을 계산하고 1000·1500token 필요량을 비교하세요.",
+        "answerChecklist": [
+          "2×32×8×128×2=131072byte=128KiB",
+          "block2MiB",
+          "ceil1000/16=63",
+          "ceil1500/16=94=188MiB"
+        ],
+        "sectionId": "footprint",
+        "requiredConcepts": [
+          "request-memory-footprint"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "V0의 전체 27648block과 watermark1%에서 63block 요청은 free300과350에서 각각 어떤 판정을 받나요?",
+        "answerChecklist": [
+          "floor276.48=276",
+          "300−63=237로 LATER",
+          "350−63=287로 OK",
+          "전체로도 하한을 못 남기면 NEVER"
+        ],
+        "sectionId": "pool-budget",
+        "requiredConcepts": [
+          "memory-admission-control",
+          "memory-watermark"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "C의 저장 결과를 버리고 다시 계산하는 방식과 CPU에 복사해 두는 방식은 무엇을 보존하며 어떤 자원을 더 쓰나요?",
+        "answerChecklist": [
+          "recompute는 토큰 이력 보존과 GPU 재계산",
+          "swap은 KV byte 보존과 호스트 공간·전송",
+          "선택과 지원 여부는 버전·설정에 따름"
+        ],
+        "sectionId": "preemption-modes",
+        "requiredConcepts": [
+          "recompute-preemption",
+          "swap-preemption"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "고정 V0 swap 경로에서 CPU 공간이 부족하면 자동으로 recompute로 넘어가나요? 원문 분기로 답하세요.",
+        "answerChecklist": [
+          "아님",
+          "can_swap_out 실패 시 RuntimeError",
+          "mode 선택과 공간 실패 처리는 별도",
+          "V1의 PREEMPTED 경로와 구별"
+        ],
+        "sectionId": "source-v0-swap",
+        "requiredConcepts": [
+          "swap-preemption",
+          "recompute-preemption"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "V1에서 입력 1000token, block16, free50, 이번 chunk256token일 때 full-input 검사를 켜면 왜 첫 chunk가 들어가도 거절할 수 있나요?",
+        "answerChecklist": [
+          "전체 입력63block이50보다 큼",
+          "chunk16block만 확인하는 것과 다름",
+          "full-input fit 검사와 실제 할당을 구별",
+          "생성 상한을 전부 예약한다는 뜻 아님"
+        ],
+        "sectionId": "source-v1-admission",
+        "requiredConcepts": [
+          "request-admission-control",
+          "request-memory-footprint"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "1500token을 8B 모델에서 되살리는 60ms와 188MiB를 왕복 복사하는 약15.77ms를 어떤 전제에서 비교할 수 있나요?",
+        "answerChecklist": [
+          "2×8e9×1500=24TFLOP",
+          "유효400TFLOP/s에서60ms",
+          "2×188MiB/25GBs=15.77ms",
+          "조각6016개·전송준비·attention·경합 비용을 생략한 추정"
+        ],
+        "sectionId": "recovery-cost",
+        "requiredConcepts": [
+          "recompute-preemption",
+          "swap-preemption"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "48개의 recurrent 층이 각각48×128×128×2byte 상태를 갖고 attention token당64KiB라면 100token과1500token 상태 합은 얼마인가요?",
+        "answerChecklist": [
+          "고정72MiB",
+          "16token block1MiB",
+          "7+72=79MiB",
+          "94+72=166MiB",
+          "conv·복사본·allocator padding은 별도"
+        ],
+        "sectionId": "hybrid-fixed-state",
+        "requiredConcepts": [
+          "fixed-recurrent-state-allocation",
+          "memory-admission-control"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention",
+        "href": "https://arxiv.org/html/2309.06180v1",
+        "problem": "가변 길이 KV cache의 연속 예약이 만드는 fragmentation과 낮은 memory 활용률, 그리고 memory가 모자랄 때의 요청 처리",
+        "contribution": "Block 단위 KV 할당 위에 FCFS·all-or-nothing eviction과 recompute·swap 두 복구 방식을 정의하고 block 크기별로 비교했습니다.",
+        "assumptions": "OPT 계열 model과 A100 GPU, 논문이 시험한 block 크기 범위와 workload입니다.",
+        "evidenceScope": "§4.5의 요청 단위 중단과 교환 정책, §7.3의 OPT-13B·ShareGPT 실험 범위를 읽었습니다.",
+        "notClaim": "CPU 교환 상한은 신규 수용을 멈추는 원문 정책에 종속됩니다. 본문의 복구 시간 추정은 논문 실측이 아닙니다.",
+        "sectionId": "paper-vllm"
+      },
+      {
+        "title": "vLLM v0.27.1 and v0.6.6 — admission and preemption source",
+        "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/kv_cache_manager.py",
+        "problem": "입력 전체 검사와 조각 할당을 혼동하거나 과거 교환 실패를 자동 재계산 전환으로 오해하는 문제입니다.",
+        "contribution": "두 고정 버전의 공간 판정과 중단 및 실패 분기에 같은 요청 수치를 대입합니다.",
+        "assumptions": "고정 commit 원문이며 본문의 계산은 단일 attention group·공유 없는 동기식 경로입니다.",
+        "evidenceScope": "V1 allocate_slots와 _preempt_request, V0 can_allocate 및 _swap_out을 전체 저장 원문에서 읽었습니다.",
+        "notClaim": "모든 버전의 하한이1%이거나 CPU 공간 실패 시 자동 복구한다는 뜻이 아니며 GPU 실측도 아닙니다.",
+        "sectionId": "source-v1-admission"
+      },
+      {
+        "title": "SGLang Server Arguments",
+        "href": "https://docs.sglang.io/docs/advanced_features/server_arguments",
+        "problem": "정적 memory 비율과 scheduler의 보수성을 어떤 인자로 조절하는지",
+        "contribution": "정적 메모리 비율과 수용 보수성을 별개 설정으로 정의하고 반복 retraction 시 조정 방향을 설명합니다.",
+        "assumptions": "2026-10-04에 확인한 공식 문서의 메모리 및 스케줄링 설정 설명입니다.",
+        "evidenceScope": "공식 문서의 인자 설명이며 retract의 내부 mechanism은 이 페이지가 다루지 않습니다.",
+        "notClaim": "SGLang의 retract가 vLLM의 recompute와 같은 비용 구조를 갖는다는 주장은 아닙니다.",
+        "sectionId": "paper-sglang-scheduler"
+      },
+      {
+        "title": "TensorRT-LLM KV Cache System",
+        "href": "https://nvidia.github.io/TensorRT-LLM/features/kvcache.html",
+        "problem": "KV pool 크기와 block eviction·host offload를 어떤 설정으로 정하는지",
+        "contribution": "남은 GPU 메모리 비율과 max_tokens 중 작은 용량을 쓰는 규칙 및 host_cache_size의 byte 단위를 설명합니다.",
+        "assumptions": "2026-10-04에 확인한 공식 문서이며 manager와 모델별 지원 조건을 구분합니다.",
+        "evidenceScope": "공식 문서의 설정 설명이며 요청 단위 preemption 정책은 다루지 않습니다.",
+        "notClaim": "Block offload가 요청 preemption의 swap과 같은 단위·시점으로 동작한다는 주장은 아닙니다.",
+        "sectionId": "paper-trtllm-kvcache"
+      }
+    ],
+    "entryLevel": true
   },
   "ai/inference-runtime-anatomy": {
     entryNote:
@@ -79188,179 +80077,691 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "gpu/sm-warp-scheduling-and-issue": {
-    entryNote: "Grid·block·thread 와 warp 32 lane 의 SIMT 실행, 그리고 block 이 SM 하나에 놓인다는 것을 안 상태에서, SM 안에서 warp 의 instruction 하나가 어떤 조건으로 issue 되는지로 들어갑니다.",
-    coreIdea: "SM 은 subpartition 4개로 나뉘고 각 scheduler 가 매 clock scoreboard 가 지운 ready warp 하나의 instruction 을 issue 하므로, dependency latency 는 TLP·ILP·MLP 로 확보한 ready warp 로만 숨겨지고 eligible warp 가 없는 clock 은 bubble, 갈라진 경로는 issue slot 의 직렬화로 나타납니다.",
-    assumedKnowledge: [
-      { id: "cuda-launch-hierarchy", role: "Grid·block·thread 를 논리 작업표로 읽는 출발점입니다." },
-      { id: "cuda-warp-simt", role: "32-lane warp 와 branch mask 를 scheduler 가 다루는 단위로 재사용합니다." },
-      { id: "cuda-block-resource-placement", role: "Block 이 SM 하나에 놓이고 resource 한도가 resident warp 를 정한다는 경계를 가져옵니다." },
-      { id: "gpu-host-device-execution-trace", role: "Launch 뒤 block placement 와 warp issue 로 이어지는 실행 경로 위에 이 글을 놓습니다." },
-      { id: "gpu-latency-hiding-occupancy", role: "Resident warp 수의 resource 한도 계산은 재사용하고 이 글은 ready 판정과 필요한 수만 다룹니다." },
-      { id: "little-law-stable-system", role: "기다리는 instruction 수 = issue 속도 × latency 라는 식의 근거로만 씁니다." },
-    ],
-    introducedHere: [
-      { id: "cuda-programming-model-hardware-mapping", role: "프로그래머가 정하는 것과 하드웨어가 정하는 것의 경계를 SM·subpartition·warp 배정으로 고정합니다." },
-      { id: "sm-subpartition-warp-scheduler", role: "SM 을 scheduler 4개짜리 subpartition 으로 나누고 clock 당 issue 상한을 셉니다." },
-      { id: "warp-instruction-issue-dispatch", role: "Issue 결정과 pipe 로의 dispatch 를 구분하고 pipe throttle 을 둡니다." },
-      { id: "warp-scoreboard-ready-stalled", role: "Scoreboard 가 ready·stalled 를 판정하는 방식과 stall 원인 분류를 설명합니다." },
-      { id: "instruction-dependency-chain-latency", role: "한 warp 안의 결과 의존이 만드는 지울 수 없는 시간을 정의합니다." },
-      { id: "tlp-ilp-mlp-latency-hiding", role: "Little's law 로 필요한 ready warp 수를 계산하고 TLP·ILP·MLP 를 구분합니다." },
-      { id: "gpu-issue-pipeline-bubble", role: "Eligible warp 가 없는 clock 의 빈 issue slot 을 분산 추론의 bubble 과 구분해 정의합니다." },
-      { id: "warp-divergence-reconvergence", role: "경로 직렬화 비용을 경로 길이 합으로 계산하고 independent thread scheduling 의 범위를 둡니다." },
-    ],
-    conceptExplanations: [
-      { id: "cuda-programming-model-hardware-mapping", sectionId: "sm-structure", intuition: "주문서에는 요리 이름과 수량만 적고 어느 화구에서 누가 먼저 만들지는 주방이 정하는 것과 같습니다.", workedExample: "Block 256 thread 는 warp 8개가 되어 한 SM 의 subpartition 4개에 나뉘어 배정되고, 어느 warp 가 먼저 issue 되는지는 프로그램이 정하지 못합니다.", boundary: "Block 이 어느 SM 에 놓이는지, warp 가 어느 subpartition 에 가는지는 모델이 약속하지 않으므로 그 순서에 기대는 코드는 정의되지 않은 동작입니다." },
-      { id: "sm-subpartition-warp-scheduler", sectionId: "sm-structure", intuition: "식당 하나에 독립된 조리대 4개가 있고 조리대마다 요리사 한 명이 매 순간 주문 하나씩 처리하는 구조입니다.", workedExample: "Scheduler 하나가 clock 당 warp instruction 1개를 내므로 SM 은 4개, 132 SM 인 H100 은 clock 당 최대 528개를 issue 합니다.", boundary: "이 상한은 매 clock 모든 subpartition 에 eligible warp 가 있을 때의 값이며 실제 issue 는 scoreboard 와 pipe 폭에 막힙니다." },
-      { id: "warp-instruction-issue-dispatch", sectionId: "issue-scoreboard", intuition: "요리사가 주문표에서 하나를 집는 것이 issue, 그것을 빈 화구에 올리는 것이 dispatch 입니다.", workedExample: "1000 clock 동안 600번 issue 했다면 issue slot 이용률은 60% 이고, 모든 warp 가 FP64 만 쓰면 pipe 폭이 먼저 상한이 됩니다.", boundary: "Issue 됐다고 즉시 실행되지 않으며 pipe 가 차 있으면 math pipe throttle 로 기다립니다." },
-      { id: "warp-scoreboard-ready-stalled", sectionId: "issue-scoreboard", intuition: "재료가 아직 안 온 주문표에 표시를 붙여 두고, 표시가 없는 주문만 집어 드는 것과 같습니다.", workedExample: "W0 가 FFMA 를 issue 하면 결과 register 에 표시가 남아 4 clock 동안 stalled 가 되고, 그 사이 W1·W2·W3 이 한 clock 씩 issue 합니다.", boundary: "Scoreboard 는 register 의존만 봅니다. Barrier 대기나 pipe 포화는 다른 stall 원인으로 따로 셉니다." },
-      { id: "instruction-dependency-chain-latency", sectionId: "latency-hiding", intuition: "앞 요리의 소스가 완성돼야 다음 요리를 시작할 수 있다면 그 기다림은 요리사를 더 뽑아도 줄지 않습니다.", workedExample: "FFMA 결과를 바로 쓰는 chain 은 instruction 마다 약 4 clock 을 기다리고, global load 결과를 쓰는 chain 은 수백 clock 을 기다립니다.", boundary: "이 latency 는 한 warp 안에서는 없어지지 않고 다른 warp 의 issue 로 가려질 뿐입니다." },
-      { id: "tlp-ilp-mlp-latency-hiding", sectionId: "latency-hiding", intuition: "한 손님을 기다리게 하는 동안 다른 손님(TLP) 을 받거나 같은 손님의 다른 요리(ILP) 를 먼저 올리는 것입니다.", workedExample: "Latency 4, issue 1/clock 이면 기다리는 instruction 4개가 필요하고 ILP 1 인 warp 4개 또는 ILP 2 인 warp 2개면 됩니다. Latency 500 은 warp 16개로 warp 당 독립 요청 32개가 필요합니다.", boundary: "Little's law 는 장기 평균 식이므로 kernel 의 fill·drain 구간과 pipe throttle 이 있는 경우는 따로 봅니다." },
-      { id: "gpu-issue-pipeline-bubble", sectionId: "latency-hiding", intuition: "모든 주문이 재료를 기다리고 있어 요리사가 손을 놓는 순간입니다.", workedExample: "1000 clock 에 600번 issue 했으면 slot 의 40% 가 bubble 이며 Nsight Compute 의 No Eligible 이 이 비율을 보여 줍니다.", boundary: "이 bubble 은 SM 의 issue slot 이 비는 것이며 분산 추론에서 pipeline stage 가 노는 bubble 과는 다른 개념입니다." },
-      { id: "warp-divergence-reconvergence", sectionId: "divergence", intuition: "32명이 한 버스로 이동하는데 목적지가 갈리면 버스가 두 곳을 차례로 들르는 것과 같습니다.", workedExample: "Lane 1개가 30 instruction 경로, 31개가 10 instruction 경로로 가면 issue slot 은 40개이고 lane 이용률은 (30+310)/(32×40)≈27% 입니다.", boundary: "Independent thread scheduling 은 경로 사이 교착을 없앨 뿐 issue slot 비용은 그대로이며 reconvergence 는 __syncwarp 로 명시해야 합니다." },
-    ],
-    conceptStages: [
-      { label: "00 배치", relation: "모델이 정하지 않는 것을 하드웨어의 어느 단위가 정하는지 봅니다.", concepts: ["cuda-programming-model-hardware-mapping", "sm-subpartition-warp-scheduler"] },
-      { label: "01 Issue", relation: "Scoreboard 가 ready 를 판정하고 scheduler 가 issue·dispatch 하는 한 clock 을 봅니다.", concepts: ["warp-scoreboard-ready-stalled", "warp-instruction-issue-dispatch"] },
-      { label: "02 Latency", relation: "Dependency latency 를 ready warp 로 숨기는 셈과 bubble 을 봅니다.", concepts: ["instruction-dependency-chain-latency", "tlp-ilp-mlp-latency-hiding", "gpu-issue-pipeline-bubble"] },
-      { label: "03 Divergence", relation: "갈라진 경로가 issue slot 을 어떻게 늘리는지 봅니다.", concepts: ["warp-divergence-reconvergence"] },
-    ],
-    exercises: [
-      { level: "basic", question: "CUDA programming model 이 정하는 것과 하드웨어가 정하는 것을 각각 두 가지씩 쓰세요.", answerChecklist: ["grid·block·thread 와 kernel", "block 이 놓일 SM", "warp 의 subpartition 배정", "issue 순서"], requiredConcepts: ["cuda-programming-model-hardware-mapping"], sectionId: "sm-structure" },
-      { level: "basic", question: "SM 하나와 H100 SXM5 전체의 clock 당 warp instruction issue 상한을 계산하세요.", answerChecklist: ["subpartition 4개", "scheduler 당 1", "SM 당 4", "132×4=528"], requiredConcepts: ["sm-subpartition-warp-scheduler"], sectionId: "sm-structure" },
-      { level: "basic", question: "Scoreboard 가 무엇을 기록하고 언제 지우는지, 그 결과 warp 가 어떤 두 상태로 나뉘는지 설명하세요.", answerChecklist: ["결과 register 의 미완료 표시", "결과 도착 시 clearing", "ready(eligible)", "stalled"], requiredConcepts: ["warp-scoreboard-ready-stalled"], sectionId: "issue-scoreboard" },
-      { level: "basic", question: "Issue 와 dispatch 의 차이를 쓰고 math pipe throttle 이 어느 단계의 stall 인지 답하세요.", answerChecklist: ["issue 는 warp 선택과 instruction 내보내기", "dispatch 는 pipe 로 보내기", "pipe 포화", "issue 뒤 대기"], requiredConcepts: ["warp-instruction-issue-dispatch"], sectionId: "issue-scoreboard" },
-      { level: "basic", question: "산술 latency 4 clock 을 숨기는 데 scheduler 당 ready warp 가 몇 개 필요한지 ILP 1 과 ILP 2 에서 각각 계산하세요.", answerChecklist: ["I_flight=4", "ILP 1 이면 4개", "ILP 2 면 2개", "SM 당 16개"], requiredConcepts: ["tlp-ilp-mlp-latency-hiding", "instruction-dependency-chain-latency"], sectionId: "latency-hiding" },
-      { level: "basic", question: "Lane 16·16 이 각각 10 instruction 경로로 갈라질 때 issue slot 수와 lane 이용률을 계산하세요.", answerChecklist: ["slot 20개", "직렬화", "(160+160)/(32×20)", "50%"], requiredConcepts: ["warp-divergence-reconvergence"], sectionId: "divergence" },
-      { level: "advanced", question: "Global load latency 를 500 clock 으로 가정할 때 subpartition 의 warp 상한 16개로 latency 를 숨기려면 warp 당 몇 개의 독립 요청이 필요한지 계산하고 이것이 MLP 인 이유를 설명하세요.", answerChecklist: ["I_flight=500", "500/16≈32", "warp 당 outstanding load", "TLP 만으로 부족"], requiredConcepts: ["tlp-ilp-mlp-latency-hiding"], sectionId: "latency-hiding" },
-      { level: "advanced", question: "Nsight Compute 에서 not selected 비율이 높은 kernel 과 No Eligible 비율이 높은 kernel 에 각각 어떤 처방이 맞는지 근거와 함께 쓰세요.", answerChecklist: ["not selected 는 warp 가 충분", "warp 를 늘려도 이득 없음", "No Eligible 은 bubble", "ILP·MLP 또는 resident warp 증가"], requiredConcepts: ["gpu-issue-pipeline-bubble", "warp-scoreboard-ready-stalled"], sectionId: "latency-hiding" },
-      { level: "advanced", question: "Lane 1개가 30 instruction 예외 경로로 빠지고 31개가 10 instruction 경로를 갈 때의 lane 이용률을 계산하고, independent thread scheduling 이 이 비용을 바꾸는지 답하세요.", answerChecklist: ["slot 40개", "(30+310)/1280≈27%", "교착만 해소", "issue 비용 동일"], requiredConcepts: ["warp-divergence-reconvergence"], sectionId: "divergence" },
-      { level: "advanced", question: "Resident warp 가 16개인데 eligible 이 평균 1개 미만인 subpartition 에서 무엇이 latency hiding 을 막고 있는지 scoreboard·dependency chain 으로 추론하세요.", answerChecklist: ["모든 warp 가 같은 long scoreboard", "chain 이 길어 ILP 없음", "occupancy 는 충분", "MLP 또는 coalescing 개선"], requiredConcepts: ["warp-scoreboard-ready-stalled", "instruction-dependency-chain-latency", "tlp-ilp-mlp-latency-hiding"], sectionId: "issue-scoreboard" },
-    ],
-    papers: [
+    "entryNote": "네 작업 묶음과 여섯 clock의 시간표에서 시작합니다. 같은 네 warp가 배치되어 있어도 B의 읽기 지연이8인지4인지에 따라 clock6의 후보와 발행이 달라집니다.",
+    "coreIdea": "배치된 warp의 수와 다음 명령을 낼 수 있는 후보 수는 다릅니다. 명령 해독·입력 의존·실행 pipe 가용성을 확인해 후보를 만들고 하나를 선택합니다. 독립 일을 겹쳐 기다림을 가리되 실제 자원·명령 처리량·활성 lane과 측정을 구분해야 합니다.",
+    "assumedKnowledge": [
       {
-        title: "NVIDIA CUDA C++ Programming Guide 12.8.1 · SIMT Architecture, Hardware Multithreading, Multiprocessor Level",
-        href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html",
-        problem: "Warp 가 어떤 단위로 실행되고 divergence 와 latency 가 어떻게 처리되는지를 프로그래머가 알 수 있는 공식 서술이 필요합니다.",
-        contribution: "Warp 32 thread 의 SIMT 실행과 경로 직렬화, execution context 의 on-chip 유지, 산술 latency 약 4 clock 과 warp 16개 요건을 명시합니다.",
-        assumptions: "CUDA Toolkit 12.8.1 문서이며 latency 수치는 compute capability 7.x 에 대한 서술입니다.",
-        evidenceScope: "공식 문서의 실행 모델 semantics 이며 특정 kernel 의 측정치는 아닙니다.",
-        notClaim: "Scheduler 가 eligible warp 가운데 어느 것을 고르는지의 정책은 문서에 없으며 이 글도 정하지 않습니다.",
-        sectionId: "paper-cuda-simt-multithreading",
+        "id": "cuda-launch-hierarchy",
+        "role": "Grid·block·thread 를 논리 작업표로 읽는 출발점입니다."
       },
       {
-        title: "NVIDIA Nsight Compute Profiling Guide · Scheduler Statistics, Warp State Statistics",
-        href: "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html",
-        problem: "Warp 가 issue 되지 못한 clock 의 원인을 종류별로 구분해 읽을 방법이 필요합니다.",
-        contribution: "SM 을 subpartition 4개로 정의하고 active·eligible·issued warp 와 long·short scoreboard·wait·not selected 같은 stall 원인을 정의합니다.",
-        assumptions: "Nsight Compute 가 지원하는 GPU·driver 에서 sampling 으로 수집한 metric 의 정의입니다.",
-        evidenceScope: "Profiler 의 metric semantics 이며 sampling 비율은 인과의 증명이 아닙니다.",
-        notClaim: "Stall 원인 하나의 비율이 높다는 사실이 그 원인을 없애면 빨라진다는 뜻은 아닙니다.",
-        sectionId: "paper-nsight-compute-scheduler",
+        "id": "cuda-warp-simt",
+        "role": "32-lane warp 와 branch mask 를 scheduler 가 다루는 단위로 재사용합니다."
       },
       {
-        title: "NVIDIA Hopper Architecture In-Depth",
-        href: "https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/",
-        problem: "이 글의 issue 상한 계산에 쓸 H100 의 SM 수와 SM 내부 구성을 확인해야 합니다.",
-        contribution: "H100 SXM5 의 SM 132개, SM 당 처리 block 4개와 Tensor Core 4개의 SM diagram 을 제공합니다.",
-        assumptions: "발표된 H100 SXM5 구성 기준이며 다른 SKU 는 SM 수가 다릅니다.",
-        evidenceScope: "NVIDIA 자기보고 architecture 설명이며 peak 수치는 조건에 묶입니다.",
-        notClaim: "SM 수 × 4 라는 issue 상한이 실제 kernel 의 달성 issue 율이라는 뜻은 아닙니다.",
-        sectionId: "paper-hopper-sm-diagram",
+        "id": "cuda-block-resource-placement",
+        "role": "Block 이 SM 하나에 놓이고 resource 한도가 resident warp 를 정한다는 경계를 가져옵니다."
       },
+      {
+        "id": "gpu-host-device-execution-trace",
+        "role": "Launch 뒤 block placement 와 warp issue 로 이어지는 실행 경로 위에 이 글을 놓습니다."
+      },
+      {
+        "id": "gpu-latency-hiding-occupancy",
+        "role": "Resident warp 수의 resource 한도 계산은 재사용하고 이 글은 ready 판정과 필요한 수만 다룹니다."
+      },
+      {
+        "id": "little-law-stable-system",
+        "role": "기다리는 instruction 수 = issue 속도 × latency 라는 식의 근거로만 씁니다."
+      }
     ],
+    "introducedHere": [
+      {
+        "id": "cuda-programming-model-hardware-mapping",
+        "role": "프로그램은 일을 묶고 하드웨어가 실제 실행 위치와 순서를 정합니다."
+      },
+      {
+        "id": "sm-subpartition-warp-scheduler",
+        "role": "각 scheduler가 자기 warp 가운데 낼 수 있는 명령을 고릅니다."
+      },
+      {
+        "id": "warp-instruction-issue-dispatch",
+        "role": "명령을 선택해 내보내고 해당 실행 경로로 보냅니다."
+      },
+      {
+        "id": "warp-scoreboard-ready-stalled",
+        "role": "필요한 결과가 아직 준비되지 않았으면 그것을 읽는 명령이 기다립니다."
+      },
+      {
+        "id": "instruction-dependency-chain-latency",
+        "role": "같은 결과를 이어받는 계산은 결과가 준비되어야 시작합니다."
+      },
+      {
+        "id": "tlp-ilp-mlp-latency-hiding",
+        "role": "기다리는 동안 독립된 다른 일을 유지해 발행을 이어 갑니다."
+      },
+      {
+        "id": "gpu-issue-pipeline-bubble",
+        "role": "준비된 후보가 없으면 이번 발행 기회가 빕니다."
+      },
+      {
+        "id": "warp-divergence-reconvergence",
+        "role": "조건이 갈리면 서로 다른 경로의 명령을 해당 lane들로 실행합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "cuda-programming-model-hardware-mapping",
+        "sectionId": "sm-structure",
+        "intuition": "프로그램은 일을 묶고 하드웨어가 실제 실행 위치와 순서를 정합니다.",
+        "workedExample": "256-thread block은8 warps입니다. 사례의 네 warp는 배치 뒤 한 scheduler가 맡은 일을 확대해 본 모형입니다.",
+        "boundary": "특정 SM·subpartition 배정과 warp 간 진전 순서를 프로그램의 약속으로 사용하지 않습니다."
+      },
+      {
+        "id": "sm-subpartition-warp-scheduler",
+        "sectionId": "sm-structure",
+        "intuition": "각 scheduler가 자기 warp 가운데 낼 수 있는 명령을 고릅니다.",
+        "workedExample": "H100 SXM5의132 SM과 SM당4scheduler, scheduler당1명령/clock 모형의 상한은528 warp instruction/clock입니다.",
+        "boundary": "해당 구성의 발행 모형이며 실제 활성 lane·명령별 실행 처리량·다른 SKU나 세대와 구분합니다."
+      },
+      {
+        "id": "warp-instruction-issue-dispatch",
+        "sectionId": "issue-scoreboard",
+        "intuition": "명령을 선택해 내보내고 해당 실행 경로로 보냅니다.",
+        "workedExample": "Clock5에는 A 하나가 후보라 그 명령을 발행합니다. Clock6에는 후보가 없어 아무것도 내지 않습니다.",
+        "boundary": "Math pipe throttle은 실행 pipe의 가용성을 기다리는 상태이며 일반적인 발행 이후 대기열의 길이가 아닙니다."
+      },
+      {
+        "id": "warp-scoreboard-ready-stalled",
+        "sectionId": "issue-scoreboard",
+        "intuition": "필요한 결과가 아직 준비되지 않았으면 그것을 읽는 명령이 기다립니다.",
+        "workedExample": "Clock6의 준비 시점은A9·B10·C7·D8이라 active4·eligible0·issued0입니다. B의 첫 지연4이면 B가6에 준비됩니다.",
+        "boundary": "후보에는 해독·입력 의존 해소·실행 장치 가용성 세 조건이 필요합니다. Scoreboard clearing 하나로 충분하지 않습니다."
+      },
+      {
+        "id": "instruction-dependency-chain-latency",
+        "sectionId": "latency-hiding",
+        "intuition": "같은 결과를 이어받는 계산은 결과가 준비되어야 시작합니다.",
+        "workedExample": "모형에서clock1의A 결과가5에, clock2의B 결과가10에 준비됩니다. B의 첫 지연을4로 바꾸면6에 준비됩니다.",
+        "boundary": "4·8은 본문 모형입니다. 공식 CC7.x 산술4 clock 설명을 모든 H100 명령의 실측으로 쓰지 않습니다."
+      },
+      {
+        "id": "tlp-ilp-mlp-latency-hiding",
+        "sectionId": "latency-hiding",
+        "intuition": "기다리는 동안 독립된 다른 일을 유지해 발행을 이어 갑니다.",
+        "workedExample": "L4·r1이면 평균4개 진행 중인 일이 필요합니다. 독립 일1개씩인 warp4개 또는2개씩인 warp2개가 모형 하한입니다.",
+        "boundary": "이는 resident 독립 작업 용량의 하한이며 매 순간 eligible4개를 요구하지 않습니다. 큐·대역폭·자원과 변동 지연도 확인합니다."
+      },
+      {
+        "id": "gpu-issue-pipeline-bubble",
+        "sectionId": "memory-and-bubbles",
+        "intuition": "준비된 후보가 없으면 이번 발행 기회가 빕니다.",
+        "workedExample": "사례의6 clock은5회 발행·1회 빈 자리입니다. 1000 clock 중600발행인 단일slot 모형이면60%사용·40%빈 비율입니다.",
+        "boundary": "모든 실제 미발행이 자동으로 No Eligible인 것은 아닙니다. 지표 분모와 원인을 확인하며 분산추론 stage의 bubble과 구분합니다."
+      },
+      {
+        "id": "warp-divergence-reconvergence",
+        "sectionId": "divergence",
+        "intuition": "조건이 갈리면 서로 다른 경로의 명령을 해당 lane들로 실행합니다.",
+        "workedExample": "16/16 lane의10/10명령은20 slots·50%, 1/31 lane의30/10명령은40 slots·26.5625%입니다.",
+        "boundary": "분기·재합류 비용을 생략한 모형입니다.10명령 직선 경로 대비4배slot을 시간4배로 확정하지 않습니다. ITS가 모든 교착과 동기화 오류를 없애지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 배치",
+        "relation": "프로그램의 묶음과 실제 scheduler 배치를 구분합니다.",
+        "concepts": [
+          "cuda-programming-model-hardware-mapping",
+          "sm-subpartition-warp-scheduler"
+        ]
+      },
+      {
+        "label": "02 후보와 발행",
+        "relation": "세 조건을 확인하고 준비된 warp의 명령을 선택합니다.",
+        "concepts": [
+          "warp-instruction-issue-dispatch",
+          "warp-scoreboard-ready-stalled"
+        ]
+      },
+      {
+        "label": "03 독립된 일",
+        "relation": "기다림을 겹치는 모형과 빈 slot·실제 병목을 구분합니다.",
+        "concepts": [
+          "instruction-dependency-chain-latency",
+          "tlp-ilp-mlp-latency-hiding",
+          "gpu-issue-pipeline-bubble"
+        ]
+      },
+      {
+        "label": "04 활성 lane",
+        "relation": "갈라진 경로의 slot 비용과 동기화 규칙을 확인합니다.",
+        "concepts": [
+          "warp-divergence-reconvergence"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "CUDA programming model이 정하는 것과 하드웨어가 배치·선택하는 것을 구별할 수 있나요?",
+        "answerChecklist": [
+          "Kernel·grid·block·thread로 작업을 구성합니다.",
+          "Block이 실행될 SM과 warp의 배정·발행 순서를 특정하게 약속하지 않습니다.",
+          "256-thread block은8 warps입니다.",
+          "특정 배치나 동시 진전에 의존하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "cuda-programming-model-hardware-mapping"
+        ],
+        "sectionId": "sm-structure"
+      },
+      {
+        "level": "basic",
+        "question": "H100 SXM5의 발행 모형에서 SM 하나와 전체 chip의 clock당 상한을 계산할 수 있나요?",
+        "answerChecklist": [
+          "SM당 scheduler4개입니다.",
+          "Scheduler당1 warp instruction/clock인 모형입니다.",
+          "SM당4개,132 SM이면528개/clock입니다.",
+          "명령별 실행 처리량·활성 lane과 실제 측정치가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "sm-subpartition-warp-scheduler"
+        ],
+        "sectionId": "sm-structure"
+      },
+      {
+        "level": "basic",
+        "question": "Clock6의 네 warp와 후보 조건을 scoreboard 및 다른 준비 조건으로 설명할 수 있나요?",
+        "answerChecklist": [
+          "다음 결과의 준비는A9·B10·C7·D8입니다.",
+          "Clock6에는 active4·eligible0·issued0입니다.",
+          "입력 의존 해소 외에 명령 해독과 실행 pipe 가용성도 필요합니다.",
+          "B의 첫 지연4이면6에 준비되어 eligible1·issued1입니다."
+        ],
+        "requiredConcepts": [
+          "warp-scoreboard-ready-stalled"
+        ],
+        "sectionId": "issue-scoreboard"
+      },
+      {
+        "level": "basic",
+        "question": "Issue·dispatch의 역할과 math pipe throttle의 의미를 구별할 수 있나요?",
+        "answerChecklist": [
+          "Scheduler가 후보를 선택해 명령을 내보냅니다.",
+          "선택 명령은 해당 execution pipe로 전달됩니다.",
+          "Math pipe throttle은 execution pipe가 사용 가능하기를 기다리는 상태입니다.",
+          "일반적인 발행 뒤 대기열 또는 완료 시간과 동일하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "warp-instruction-issue-dispatch"
+        ],
+        "sectionId": "profiler-states"
+      },
+      {
+        "level": "basic",
+        "question": "지연4·발행률1의 모형에서 독립 일1개와2개인 warp가 각각 얼마나 필요한가요?",
+        "answerChecklist": [
+          "평균 진행 중인 일4개입니다.",
+          "Warp당1개면4 warps,2개면2 warps라는 하한입니다.",
+          "네 scheduler가 각각 첫 조건이면SM당16 active warps입니다.",
+          "한 시점의 eligible 개수와 다르며 공식4 clock은CC7.x 조건입니다."
+        ],
+        "requiredConcepts": [
+          "tlp-ilp-mlp-latency-hiding",
+          "instruction-dependency-chain-latency"
+        ],
+        "sectionId": "latency-hiding"
+      },
+      {
+        "level": "basic",
+        "question": "Lane16·16이10명령씩 다른 경로로 갈 때 slot 수와 이용 비율을 계산할 수 있나요?",
+        "answerChecklist": [
+          "분기·재합류 비용을 제외한 경로 모형입니다.",
+          "경로의slot은10+10=20입니다.",
+          "유효lane명령은16×10+16×10=320입니다.",
+          "가능한32×20=640자리의50%입니다."
+        ],
+        "requiredConcepts": [
+          "warp-divergence-reconvergence"
+        ],
+        "sectionId": "divergence"
+      },
+      {
+        "level": "advanced",
+        "question": "지연500 clock·발행률1 warp-load/clock·resident16인 모형의 독립 읽기 요구를 계산하고 한계를 설명할 수 있나요?",
+        "answerChecklist": [
+          "평균500개 진행 중인 warp-load가 필요합니다.",
+          "500/16=31.25이며 각 warp에 같은 정수 용량을 둔 모형에서는32개씩 수용할 여지가 필요합니다. 모든 warp의 실제 순간 진행량이32라는 뜻은 아닙니다.",
+          "Lane 주소나 sector 수와 다른 단위입니다.",
+          "MLP의 필요량 모형이며 실제 요청 큐·대역폭·자원이 허용한다는 보장이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "tlp-ilp-mlp-latency-hiding"
+        ],
+        "sectionId": "memory-and-bubbles"
+      },
+      {
+        "level": "advanced",
+        "question": "Not selected와 낮은 eligible을 보고 원인을 어떻게 좁히나요?",
+        "answerChecklist": [
+          "Not selected는 후보였지만 다른 warp가 선택된 상태입니다.",
+          "높은 비율만으로 모든 구간의 후보가 충분하다고 확정하지 않습니다.",
+          "낮은 eligible이면 의존·barrier·명령 공급·pipe 가용성을 확인합니다.",
+          "Issue 사용률과 지표의 분모를 본 뒤 확인한 원인에 맞춰 변경하고 시간을 비교합니다."
+        ],
+        "requiredConcepts": [
+          "gpu-issue-pipeline-bubble",
+          "warp-scoreboard-ready-stalled"
+        ],
+        "sectionId": "profiler-states"
+      },
+      {
+        "level": "advanced",
+        "question": "13·14절을 함께 보며 lane1개가30명령,31개가10명령을 수행할 때 비용과 independent thread scheduling의 범위를 설명할 수 있나요?",
+        "answerChecklist": [
+          "Slot40개·유효lane명령340개입니다.",
+          "340/(32×40)=26.5625%입니다.",
+          "10명령 직선 경로 대비4배slot이지만 시간배율은 확정할 수 없습니다.",
+          "ITS는 진행의 유연성을 주며 모든 교착을 없애지 않습니다.",
+          "14절의 통신·sync 참여 mask와 대응 호출 규칙을 확인합니다."
+        ],
+        "requiredConcepts": [
+          "warp-divergence-reconvergence"
+        ],
+        "sectionId": "divergence"
+      },
+      {
+        "level": "advanced",
+        "question": "Resident16인데 eligible 평균이1개 미만이면 무엇을 확인해야 하나요?",
+        "answerChecklist": [
+          "배치 수와 후보 수를 구별합니다.",
+          "관찰만으로 모두 같은 long scoreboard라고 단정하지 않습니다.",
+          "소비 명령의 의존·barrier·명령 해독·실행 pipe를 나눠 봅니다.",
+          "실제 stall 원인에 맞춰 독립성·cache·coalescing·자원 점유를 비교합니다."
+        ],
+        "requiredConcepts": [
+          "warp-scoreboard-ready-stalled",
+          "instruction-dependency-chain-latency",
+          "tlp-ilp-mlp-latency-hiding"
+        ],
+        "sectionId": "profiler-states"
+      }
+    ],
+    "papers": [
+      {
+        "title": "NVIDIA CUDA C++ Programming Guide 12.8.1 · SIMT Architecture, Hardware Multithreading, Multiprocessor Level",
+        "href": "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html",
+        "problem": "Warp 가 어떤 단위로 실행되고 divergence 와 latency 가 어떻게 처리되는지를 프로그래머가 알 수 있는 공식 서술이 필요합니다.",
+        "contribution": "32-thread SIMT와 경로 분기, CC7.x 산술4 clock·최대처리량·독립성 조건, __syncwarp와*_sync의 참여 규칙을 제공합니다.",
+        "assumptions": "CUDA Toolkit 12.8.1 문서이며 latency 수치는 compute capability 7.x 에 대한 서술입니다.",
+        "evidenceScope": "공식 문서의 실행 모델 semantics 이며 특정 kernel 의 측정치는 아닙니다.",
+        "notClaim": "선택 정책·모든 H100 명령의 지연·모든 spinlock의 진행을 보장하지 않습니다.",
+        "sectionId": "paper-cuda-simt-multithreading"
+      },
+      {
+        "title": "NVIDIA Nsight Compute Profiling Guide · Scheduler Statistics, Warp State Statistics",
+        "href": "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html",
+        "problem": "Warp 가 issue 되지 못한 clock 의 원인을 종류별로 구분해 읽을 방법이 필요합니다.",
+        "contribution": "Resident·eligible·issued와 명령해독·입력의존·실행pipe 조건, scoreboard·not selected·pipe throttle의 정의를 제공합니다.",
+        "assumptions": "2026-10-04 확인한 현행 문서와 target별 metric 정의를 구별합니다.",
+        "evidenceScope": "Profiler 의 metric semantics 이며 sampling 비율은 인과의 증명이 아닙니다.",
+        "notClaim": "Stall 표본은 latency clock이나 개선 가능한 시간의 직접 측정치가 아닙니다.",
+        "sectionId": "paper-nsight-compute-scheduler"
+      },
+      {
+        "title": "NVIDIA Hopper Architecture In-Depth",
+        "href": "https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/",
+        "problem": "이 글의 issue 상한 계산에 쓸 H100 의 SM 수와 SM 내부 구성을 확인해야 합니다.",
+        "contribution": "H100 SXM5의132 SM과 SM당4scheduler 구성을528 warp instruction/clock 발행 모형에 적용합니다.",
+        "assumptions": "발표된 H100 SXM5 구성 기준이며 다른 SKU 는 SM 수가 다릅니다.",
+        "evidenceScope": "NVIDIA 자기보고 architecture 설명이며 peak 수치는 조건에 묶입니다.",
+        "notClaim": "제품구성의 발행 모형은 실제 kernel의 속도와 다르며 다른SKU·세대의 보편값이 아닙니다.",
+        "sectionId": "paper-hopper-sm-diagram"
+      }
+    ]
   },
   "gpu/cuda-compilation-and-isa-analysis": {
-    entryNote: "Host 가 kernel 을 launch 하고 warp 가 SIMT 로 실행된다는 것을 아는 상태에서, 그 kernel 코드가 어떤 단계를 거쳐 GPU 기계어가 되고 그 기계어를 어떻게 읽는지로 들어갑니다.",
-    coreIdea: "nvcc 는 device 코드를 세대 무관한 가상 ISA 인 PTX 로 한 번, 특정 compute capability 의 기계어 SASS 로 한 번 더 컴파일해 fatbinary 에 함께 담고, runtime 은 맞는 cubin 이 있으면 그대로 올리고 없으면 PTX 를 JIT 하며, register allocation·scheduling·unrolling·고전 최적화가 PTX 와 SASS 의 수를 다르게 만들기 때문에 성능은 cuobjdump·nvdisasm 으로 SASS 를 열어 판단합니다.",
-    assumedKnowledge: [
-      { id: "cuda-host-device-kernel-lifecycle", role: "Host 가 kernel 을 launch 하는 실행 경로를 출발점으로 삼습니다." },
-      { id: "cuda-warp-simt", role: "SASS 의 predicated EXIT 와 uniform register 를 warp 단위 실행으로 읽습니다." },
-      { id: "gpu-register-live-range-pressure", role: "Register allocation 의 결과인 live range·spill 비용은 재사용만 합니다." },
-      { id: "gpu-latency-hiding-occupancy", role: "Register 가 resident warp 를 깎는 경계를 unroll 손익의 기준으로 씁니다." },
-      { id: "hopper-feature-compatibility-gate", role: "compute_90 전용 feature 의 채택 판단은 그 글에 맡기고 fatbin 구성과의 관계만 다룹니다." },
-      { id: "cuda-bottleneck-hypothesis-loop", role: "SASS 차이를 확인한 뒤의 시간 측정은 성능 분석 글의 절차를 따릅니다." },
-    ],
-    introducedHere: [
-      { id: "cuda-compilation-pipeline", role: "cudafe++·cicc·ptxas·fatbinary·host compiler 가 이어지는 nvcc 의 두 단계 컴파일을 정의합니다." },
-      { id: "ptx-virtual-isa", role: "PTX 가 instruction 문법과 무제한 가상 register 를 가진 가상 ISA 라는 것을 예제로 보입니다." },
-      { id: "sass-machine-isa", role: "SASS 가 세대별 기계어이며 물리 register·constant bank·predication 으로 PTX 와 어떻게 다른지 보입니다." },
-      { id: "fatbin-jit-compute-capability", role: "Fatbinary 안에서 runtime 이 cubin 을 고르거나 PTX 를 JIT 하는 규칙과 compute capability 호환을 정의합니다." },
-      { id: "ptxas-register-allocation-scheduling", role: "ptxas 의 register allocation 과 instruction scheduling 이 서로를 밀어내는 관계를 설명합니다." },
-      { id: "loop-unrolling-tradeoff", role: "Unroll U 가 instruction 을 o/U 만큼 줄이고 register 를 (U−1)ℓ 만큼 늘리는 손익을 수치 예로 보입니다." },
-      { id: "classic-compiler-optimizations-cuda", role: "CSE·DCE·constant folding·strength reduction·instruction selection 이 cicc 와 ptxas 어느 쪽에서 일어나는지 배치합니다." },
-      { id: "ptx-sass-gap-isa-analysis", role: "PTX 와 SASS 의 수가 다른 이유와 cuobjdump·nvdisasm 으로 SASS 를 읽는 절차를 정의합니다." },
-    ],
-    conceptExplanations: [
-      { id: "cuda-compilation-pipeline", sectionId: "pipeline", intuition: "번역서를 낼 때 원고를 먼저 공용 초벌 번역으로 옮기고, 그다음 나라별 인쇄소가 자기 활자로 조판하는 두 단계와 같습니다.", workedExample: "kernel.cu 하나가 cudafe++ 를 지나 host .cpp 와 device .gpu 로 갈리고, cicc 가 .ptx 를, ptxas 가 .cubin 을 내며, fatbinary 가 둘을 묶어 host object 에 byte 배열로 들어갑니다.", boundary: "Pipeline 은 device 코드에만 해당하며 host 코드는 평범한 C++ compiler 가 컴파일합니다. cuda_tile 같은 다른 중간 표현은 이 글의 범위 밖입니다." },
-      { id: "ptx-virtual-isa", sectionId: "ptx-and-sass", intuition: "악보는 어느 악기로도 연주할 수 있지만 악보 자체가 소리를 내지는 않듯, PTX 는 어느 GPU 로도 번역되지만 직접 실행되지 않습니다.", workedExample: "a[i]=b[i]*c+d 의 PTX 는 %r·%f·%rd·%p 가상 register 19개를 선언하고 ld.global·fma.rn.f32·st.global 로 소스 순서대로 적힙니다.", boundary: "PTX 의 register 수와 instruction 수는 최종 수가 아닙니다. .version 이 driver 가 아는 것보다 높으면 JIT 이 실패하므로 세대 무관성도 driver 버전에 묶입니다." },
-      { id: "sass-machine-isa", sectionId: "ptx-and-sass", intuition: "같은 악보라도 피아노와 기타의 운지법은 다르듯, 같은 PTX 라도 sm_80 과 sm_90 의 SASS 는 다른 instruction 입니다.", workedExample: "cuobjdump -sass 로 연 예제는 S2R·IMAD·ISETP·@P0 EXIT·LDG.E·FFMA·STG.E 열여섯 줄이고 register 는 R0–R9, 주소는 R2.64 같은 32-bit 쌍입니다.", boundary: "SASS 문서는 opcode 이름과 한 줄 설명만 제공하며 latency 와 issue 규칙은 공개되지 않으므로 SASS 로 cycle 을 계산할 수 없습니다." },
-      { id: "fatbin-jit-compute-capability", sectionId: "fatbin-and-jit", intuition: "여행 가방에 목적지별 어댑터와 만능 어댑터를 함께 넣어 두고, 현지에 맞는 것이 있으면 그것을, 없으면 만능 어댑터를 꺼내 쓰는 것과 같습니다.", workedExample: "sm_80 cubin + compute_90 PTX 를 H100(9.0) 에서 돌리면 sm_80 은 major 가 달라 탈락하고 compute_90 PTX 가 JIT 되어 ~/.nv/ComputeCache 에 저장됩니다. A100(8.0) 에서는 sm_80 cubin 이 바로 올라갑니다.", boundary: "cubin 은 같은 major 안에서 minor 가 같거나 큰 GPU 에서만 돌고, PTX 는 자기 compute_XX 이상에서만 JIT 됩니다. 둘 다 없으면 cudaErrorNoKernelImageForDevice 입니다." },
-      { id: "ptxas-register-allocation-scheduling", sectionId: "ptxas-optimizations", intuition: "책상 위에 서류를 미리 꺼내 두면 찾는 시간은 줄지만 책상이 좁아지듯, load 를 앞당기면 latency 는 줄고 register 는 늘어납니다.", workedExample: "예제 SASS 에서 LDG 는 주소 계산 직후로 올라와 FFMA 까지 두 instruction 이 latency 를 가리고, 그 사이 R2 가 살아 있어 register 하나가 그만큼 오래 점유됩니다.", boundary: "-maxrregcount 나 __launch_bounds__ 로 상한을 주면 allocator 가 spill 을 택하고 scheduler 는 load 를 덜 앞당깁니다. 정확한 배정은 -Xptxas -v 와 SASS 로만 확인됩니다." },
-      { id: "loop-unrolling-tradeoff", sectionId: "ptxas-optimizations", intuition: "심부름을 네 개씩 묶어 한 번에 다녀오면 왕복은 줄지만 한 번에 들고 있어야 할 물건은 늘어납니다.", workedExample: "본문 4 + 제어 3 인 loop 를 unroll 4 하면 element 당 7 에서 4.75 instruction 으로 32% 줄고, 값 4개와 주소 4쌍이 함께 살아 register 는 10개에서 16개 안팎으로 늘어납니다.", boundary: "이 산수는 크기 관계이며 ptxas 가 실제로 load 를 묶어 앞당길 때만 성립합니다. Register 가 resident warp 를 한 단계 깎는 경계를 넘으면 unroll 은 손해입니다." },
-      { id: "classic-compiler-optimizations-cuda", sectionId: "classic-optimizations", intuition: "원고 교정은 번역가가 하고 활자 선택은 인쇄소가 하듯, 값의 의미만 보는 최적화와 기계 instruction 을 고르는 최적화는 다른 도구가 합니다.", workedExample: "b[i]*c 를 두 식이 공유하면 PTX 에 mul 이 한 줄만 남고(CSE), store 가 없는 kernel 은 ret 만 남으며(DCE), mul.f32+add.f32 는 SASS 에서 FFMA 하나가 됩니다(instruction selection).", boundary: "-fmad=false 는 FFMA 합침을 막아 결과 bit 를 바꾸고, blockDim 은 launch 값이라 접히지 않으며, -G 로 만든 SASS 는 배포 binary 와 다른 코드입니다." },
-      { id: "ptx-sass-gap-isa-analysis", sectionId: "isa-analysis", intuition: "설계도를 보고 건물 무게를 재지 않듯 PTX 를 보고 성능을 말하지 않고, 실제 올라가는 SASS 를 열어 확인합니다.", workedExample: "cuobjdump -lelf 로 sm_XX cubin 이 fatbin 에 있는지 보고, nvdisasm -plr -g 로 register liveness 열과 소스 줄을 붙인 뒤, LDG·FFMA·CALL 수와 최대 동시 생존 register 를 두 빌드에서 비교합니다.", boundary: "ISA 분석은 무엇이 바뀌었는지까지만 말하고 몇 ms 인지는 말하지 않습니다. 분석한 cubin 이 실제 GPU 에 올라가는 것과 같은 sm_XX 인지 매번 확인해야 합니다." },
-    ],
-    conceptStages: [
-      { label: "00 경로", relation: "nvcc 가 소스를 어떤 단계로 내리는지 봅니다.", concepts: ["cuda-compilation-pipeline"] },
-      { label: "01 두 ISA", relation: "PTX 와 SASS 가 무엇이고 어디서 갈리는지 예제로 봅니다.", concepts: ["ptx-virtual-isa", "sass-machine-isa"] },
-      { label: "02 선택", relation: "Fatbinary 안에서 runtime 이 무엇을 올리는지 봅니다.", concepts: ["fatbin-jit-compute-capability"] },
-      { label: "03 최적화", relation: "ptxas 와 cicc 의 최적화가 PTX–SASS 차이를 만드는 이유를 봅니다.", concepts: ["ptxas-register-allocation-scheduling", "loop-unrolling-tradeoff", "classic-compiler-optimizations-cuda"] },
-      { label: "04 분석", relation: "그 차이를 도구로 읽는 절차를 봅니다.", concepts: ["ptx-sass-gap-isa-analysis"] },
-    ],
-    exercises: [
-      { level: "basic", question: "nvcc 가 .cu 하나를 처리할 때 부르는 도구 네 개를 순서대로 쓰고 각각의 출력 파일을 적으세요.", answerChecklist: ["cudafe++ → host/device 분리", "cicc → .ptx", "ptxas → .cubin", "fatbinary → .fatbin", "host compiler 가 object 생성"], requiredConcepts: ["cuda-compilation-pipeline"], sectionId: "pipeline" },
-      { level: "basic", question: "PTX 의 .reg .f32 %f<5> 선언이 실제 register 5개를 쓴다는 뜻이 아닌 이유를 설명하세요.", answerChecklist: ["가상 register", "수에 제한 없음", "allocation 은 ptxas", "SASS 에서 물리 번호로 바뀜"], requiredConcepts: ["ptx-virtual-isa"], sectionId: "ptx-and-sass" },
-      { level: "basic", question: "예제의 PTX 와 SASS 를 비교해 kernel parameter 읽기와 분기가 각각 어떻게 바뀌었는지 쓰세요.", answerChecklist: ["ld.param → constant bank c[0x0][...]", "@%p1 bra → @P0 EXIT", "mul·add → FFMA", "64-bit 주소는 register 쌍"], requiredConcepts: ["sass-machine-isa", "ptx-virtual-isa"], sectionId: "ptx-and-sass" },
-      { level: "basic", question: "-gencode arch=compute_80,code=sm_80 만으로 빌드한 binary 를 H100 에서 돌리면 어떤 일이 일어나는지 설명하세요.", answerChecklist: ["sm_80 cubin 은 major 가 달라 탈락", "compute_80 PTX 없음", "cudaErrorNoKernelImageForDevice", "-arch=sm_80 축약이면 PTX 가 있어 JIT"], requiredConcepts: ["fatbin-jit-compute-capability"], sectionId: "fatbin-and-jit" },
-      { level: "basic", question: "Compute capability 8.0 과 9.0 에서 같은 값과 다른 값을 하나씩 들고, 9.0 에만 있는 instruction 을 두 개 쓰세요.", answerChecklist: ["register 64K/SM·255/thread 는 같음", "shared memory 164 KB vs 228 KB", "cluster·DSM·TMA·wgmma", "compute_80 PTX 를 JIT 하면 쓰지 못함"], requiredConcepts: ["fatbin-jit-compute-capability"], sectionId: "fatbin-and-jit" },
-      { level: "basic", question: "CSE·DCE·constant folding 을 확인하려면 PTX 와 SASS 중 어느 쪽을 열어야 하고, instruction selection 은 어느 쪽인지 이유와 함께 쓰세요.", answerChecklist: ["CSE·DCE·folding 은 cicc → PTX 에서 확인", "instruction selection 은 ptxas → SASS", "FFMA 합침은 SASS 에서만", "ptxas 도 다시 최적화함"], requiredConcepts: ["classic-compiler-optimizations-cuda"], sectionId: "classic-optimizations" },
-      { level: "advanced", question: "본문 b=4, 제어 o=3, ℓ=3, R0=10 인 loop 를 U=2·4·8 로 unroll 했을 때 element 당 instruction 과 register 를 계산하고, 어느 U 부터 손해가 될 수 있는지 조건을 쓰세요.", answerChecklist: ["U=2: 5.5, R=13", "U=4: 4.75, R=19", "U=8: 4.375, R=31", "이득은 o/U 로 수렴", "register 가 resident warp 경계를 넘는 U"], requiredConcepts: ["loop-unrolling-tradeoff", "ptxas-register-allocation-scheduling"], sectionId: "ptxas-optimizations" },
-      { level: "advanced", question: "-maxrregcount 32 를 주었을 때 ptxas 의 scheduling 과 allocation 이 각각 어떻게 반응하는지, 그 결과가 SASS 에서 어떻게 보이는지 설명하세요.", answerChecklist: ["load 를 덜 앞당김", "spill 로 local load/store 추가", "-Xptxas -v 의 spill bytes", "nvdisasm -plr 의 동시 생존 register 감소"], requiredConcepts: ["ptxas-register-allocation-scheduling", "ptx-sass-gap-isa-analysis"], sectionId: "ptxas-optimizations" },
-      { level: "advanced", question: "sm_80 cubin + compute_90 PTX 로 빌드한 binary 가 H100 에서 첫 launch 만 느린 이유와, 두 번째 실행부터 빠른 이유, 그리고 driver 를 바꾸면 무엇이 달라지는지 쓰세요.", answerChecklist: ["첫 launch 에 driver ptxas 가 JIT", "ComputeCache 에 저장", "cache hit 로 재사용", "driver 의 ptxas 버전이 바뀌어 다른 SASS·cache 무효"], requiredConcepts: ["fatbin-jit-compute-capability", "sass-machine-isa"], sectionId: "fatbin-and-jit" },
-      { level: "advanced", question: "소스를 바꿨는데 측정 시간이 2% 빨라졌습니다. ISA 분석으로 이것이 최적화 효과인지 noise 인지 가리는 절차를 쓰세요.", answerChecklist: ["-lineinfo 로 두 빌드", "cuobjdump -lelf 로 같은 sm_XX 확인", "nvdisasm 으로 SASS diff", "SASS 가 같으면 noise", "다르면 profiler 로 시간 측정"], requiredConcepts: ["ptx-sass-gap-isa-analysis", "classic-compiler-optimizations-cuda"], sectionId: "isa-analysis" },
-    ],
-    papers: [
+    "entryNote": "여덟 원소 중 3번의 7+5=12를 따라 실제 함수와 문서의 PTX·SASS를 읽습니다. 같은 사례를 각 자료에 대입하며 서로 다른 자료를 동일 컴파일 결과로 주장하지 않습니다.",
+    "coreIdea": "NVCC의 공개 단계는 소스와 대상 기능을 받아 PTX와 장치 이미지를 만듭니다. 실제 실행에서는 호환되는 이미지를 선택하며, 중간 표현의 이름 수와 최종 배정량·실행 시간은 다릅니다. 같은 값의 경로와 자원·측정을 함께 읽어 최적화의 의미와 비용을 구분합니다.",
+    "assumedKnowledge": [
       {
-        title: "CUDA Compiler Driver NVCC — GPU Compilation",
-        href: "https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html",
-        problem: "nvcc 가 어떤 도구를 어떤 순서로 부르고 -gencode 의 virtual·real architecture 가 무엇을 뜻하는지 소스만 봐서는 알 수 없습니다.",
-        contribution: "cudafe++·cicc·ptxas·fatbinary 단계, compute_XX 와 sm_XX 의 두 단계 compile, 임베드된 PTX 의 runtime JIT 규칙, cubin 의 같은 major 안 forward compatibility 를 정의합니다.",
-        assumptions: "CUDA 13.x 문서 기준이며 도구 이름과 기본 -arch 값(sm_75) 은 CUDA 버전에 따라 바뀝니다.",
-        evidenceScope: "공식 문서의 규칙 서술이며 성능 수치는 없습니다. 2026년 8월에 읽었습니다.",
-        notClaim: "JIT 결과가 빌드 때의 ptxas 결과와 같은 SASS 를 낸다는 보장은 문서에 없습니다.",
-        sectionId: "doc-nvcc-gpu-compilation",
+        "id": "cuda-host-device-kernel-lifecycle",
+        "role": "Host 가 kernel 을 launch 하는 실행 경로를 출발점으로 삼습니다."
       },
       {
-        title: "Parallel Thread Execution ISA",
-        href: "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html",
-        problem: "GPU 세대마다 기계어가 다르면 compiler 와 배포 binary 가 세대마다 갈라져야 합니다.",
-        contribution: "세대를 넘어 안정된 가상 machine·ISA 를 정의하고, register 수가 사실상 무제한이며 allocation 은 ptxas 가 한다는 register model 과 @p opcode.type 문법을 규정합니다.",
-        assumptions: "PTX ISA 9.x 문서이며 sm_80 은 ISA 7.0, sm_90 은 7.8 에서 들어왔습니다.",
-        evidenceScope: "공식 규격 문서이며 본문 PTX 예제는 이 문법에 따라 nvcc 가 내는 전형적 형태를 옮긴 것입니다.",
-        notClaim: "PTX 의 instruction·register 수가 SASS 의 수와 같다는 뜻은 아닙니다.",
-        sectionId: "doc-ptx-isa",
+        "id": "cuda-warp-simt",
+        "role": "SASS 의 predicated EXIT 와 uniform register 를 warp 단위 실행으로 읽습니다."
       },
       {
-        title: "CUDA Binary Utilities (cuobjdump, nvdisasm)",
-        href: "https://docs.nvidia.com/cuda/cuda-binary-utilities/index.html",
-        problem: "Fatbin 안에 무엇이 들었는지와 실제 실행되는 SASS 가 어떤 모양인지 실행 파일만 봐서는 알 수 없습니다.",
-        contribution: "cuobjdump 의 -sass·-ptx·-lelf·-xelf·-res-usage 와 nvdisasm 의 -cfg·-plr·-g 옵션, 두 도구의 입력 차이, 세대별 instruction set 표를 제공합니다.",
-        assumptions: "CUDA 13.x 문서 기준이며 SASS 예제의 opcode 와 operand 표기는 세대와 버전에 따라 다릅니다.",
-        evidenceScope: "공식 도구 문서이며 본문 SASS 예제는 이 문서의 cuobjdump 출력 예에서 가져왔습니다.",
-        notClaim: "Instruction set 표는 opcode 이름과 한 줄 설명만 제공하므로 latency 나 throughput 을 이 문서로 계산할 수 없습니다.",
-        sectionId: "doc-cuda-binary-utilities",
+        "id": "gpu-register-live-range-pressure",
+        "role": "Register allocation 의 결과인 live range·spill 비용은 재사용만 합니다."
       },
       {
-        title: "CUDA C++ Programming Guide — Compute Capabilities",
-        href: "https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#compute-capabilities",
-        problem: "어떤 GPU 가 어떤 번호이고 세대별로 SM 자원과 instruction 이 어떻게 다른지 한 곳에서 봐야 fatbin 구성을 정할 수 있습니다.",
-        contribution: "major.minor 의 의미, GPU 별 번호, 세대별 register file·shared memory·resident 한도 표, 9.0 의 cluster·DSM·TMA·wgmma 를 제공합니다.",
-        assumptions: "공식 표의 값이며 특정 제품의 실측이 아닙니다. 8.0 과 9.0 만 본문에 옮겼습니다.",
-        evidenceScope: "공식 문서의 spec 표이며 2026년 8월 기준입니다.",
-        notClaim: "표의 한도가 같다고 두 세대의 ptxas 배정 결과가 같다는 뜻은 아닙니다.",
-        sectionId: "doc-compute-capabilities",
+        "id": "gpu-latency-hiding-occupancy",
+        "role": "Register 가 resident warp 를 깎는 경계를 unroll 손익의 기준으로 씁니다."
       },
+      {
+        "id": "hopper-feature-compatibility-gate",
+        "role": "compute_90 전용 feature 의 채택 판단은 그 글에 맡기고 fatbin 구성과의 관계만 다룹니다."
+      },
+      {
+        "id": "cuda-bottleneck-hypothesis-loop",
+        "role": "SASS 차이를 확인한 뒤의 시간 측정은 성능 분석 글의 절차를 따릅니다."
+      }
     ],
+    "introducedHere": [
+      {
+        "id": "cuda-compilation-pipeline",
+        "role": "소스와 실행 대상을 받아 host와 device 결과를 만들고 배포 이미지에 담습니다."
+      },
+      {
+        "id": "ptx-virtual-isa",
+        "role": "PTX는 계산을 가상 이름과 연산으로 적은 중간 표현입니다."
+      },
+      {
+        "id": "sass-machine-isa",
+        "role": "SASS에서는 target이 실행하는 명령과 물리 저장 자리로 같은 계산을 읽습니다."
+      },
+      {
+        "id": "fatbin-jit-compute-capability",
+        "role": "배포 파일에서 현재 GPU가 사용할 이미지가 있는지 고릅니다."
+      },
+      {
+        "id": "ptxas-register-allocation-scheduling",
+        "role": "마지막으로 사용한 값의 자리를 다음 값이 재사용하며, 미리 읽은 값은 더 오래 머뭅니다."
+      },
+      {
+        "id": "loop-unrolling-tradeoff",
+        "role": "반복을 묶으면 제어 비용을 나누지만 동시에 살아 있는 값이 늘 수 있습니다."
+      },
+      {
+        "id": "classic-compiler-optimizations-cuda",
+        "role": "중복 계산과 쓰이지 않는 값을 줄이고 target에 맞는 연산을 고릅니다."
+      },
+      {
+        "id": "ptx-sass-gap-isa-analysis",
+        "role": "실제 배포 이미지와 최종 명령을 확인하고 시간이 달라진 원인을 측정합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "cuda-compilation-pipeline",
+        "sectionId": "pipeline",
+        "intuition": "소스와 실행 대상을 받아 host와 device 결과를 만들고 배포 이미지에 담습니다.",
+        "workedExample": "실제 vectorAdd의 i=0×4+3=3에 원소 수 8을 넣으면 7+5+0=12를 씁니다. 문서의 공개 단계로 PTX·cubin 생성과 host 결합을 읽습니다.",
+        "boundary": "내부 cudafe++·cicc 호출 순서는 안정된 빌드 인터페이스가 아닙니다. 문서 add.o는 별도 자료입니다."
+      },
+      {
+        "id": "ptx-virtual-isa",
+        "sectionId": "ptx-and-sass",
+        "intuition": "PTX는 계산을 가상 이름과 연산으로 적은 중간 표현입니다.",
+        "workedExample": "문서의 mad.lo.s32는 %r4=3, mul.wide.s32는 %rd7=12바이트, add.f32는 %f3=7+5=12를 만듭니다.",
+        "boundary": "r<5>·f<4>·rd<11>은 폭이 다른 가상 이름 묶음입니다. 선언 수는 최종 물리 배정량이 아니며 PTX 버전과 target 조건도 확인합니다."
+      },
+      {
+        "id": "sass-machine-isa",
+        "sectionId": "sass-trace",
+        "intuition": "SASS에서는 target이 실행하는 명령과 물리 저장 자리로 같은 계산을 읽습니다.",
+        "workedExample": "sm_100 문서 예시에서 IMAD가 R9=3을 만들고 LDG.E가 R2=7·R5=5를 읽으며 FADD가 R9=12를 만들어 STG.E가 씁니다.",
+        "boundary": "문서 출력이며 직접 컴파일하거나 실행한 결과가 아닙니다. FFMA와 길이 검사 분기가 없고 명령 간격은 latency가 아닙니다."
+      },
+      {
+        "id": "fatbin-jit-compute-capability",
+        "sectionId": "fatbin-and-jit",
+        "intuition": "배포 파일에서 현재 GPU가 사용할 이미지가 있는지 고릅니다.",
+        "workedExample": "sm_80 cubin+compute_90 PTX라면 A100은 cubin, H100은 지원 driver에서 PTX JIT 경로를 사용할 수 있습니다. PTX를 빼면 H100용 이미지가 없습니다.",
+        "boundary": "일반 숫자 대상의 호환과 a·f 제한을 구별합니다. Driver의 PTX 지원, 강제 JIT 환경, cache 상태가 경로와 비용에 영향을 줍니다."
+      },
+      {
+        "id": "ptxas-register-allocation-scheduling",
+        "sectionId": "ptxas-optimizations",
+        "intuition": "마지막으로 사용한 값의 자리를 다음 값이 재사용하며, 미리 읽은 값은 더 오래 머뭅니다.",
+        "workedExample": "R2.64의 A[3] 주소를 LDG.E가 소비하고 같은 R2에 값 7을 놓습니다. 일찍 읽으면 기다릴 시간을 벌지만 생존 구간이 길어질 수 있습니다.",
+        "boundary": "Register 제한은 재배치·재계산·spill을 유도할 수 있으며 spill이 항상 같은 방식으로 생기지는 않습니다. ABI 최소치와 실제 보고를 확인합니다."
+      },
+      {
+        "id": "loop-unrolling-tradeoff",
+        "sectionId": "unrolling",
+        "intuition": "반복을 묶으면 제어 비용을 나누지만 동시에 살아 있는 값이 늘 수 있습니다.",
+        "workedExample": "b=4,o=3,R₀=10,ℓ=3이면 U=2·4·8에서 원소당 5.5·4.75·4.375명령과 register 모델값 13·19·31개를 얻습니다.",
+        "boundary": "입력 n이 U로 나뉘는 명령 수 모형이며 꼬리 반복은 별도입니다. 동시 생존·자원 배정과 실제 성능은 compiler 출력과 측정으로 확인합니다."
+      },
+      {
+        "id": "classic-compiler-optimizations-cuda",
+        "sectionId": "classic-optimizations",
+        "intuition": "중복 계산과 쓰이지 않는 값을 줄이고 target에 맞는 연산을 고릅니다.",
+        "workedExample": "같은 부분식을 재사용하는 CSE, 부작용 없는 미사용 계산을 없애는 DCE, sizeof(float)×4=16의 상수 계산을 구별합니다.",
+        "boundary": "PTX와 SASS 양쪽을 봅니다. 부동소수 반올림·overflow와 메모리 변경 조건을 보존해야 하며 특정 내부 도구가 모든 최적화를 독점하지 않습니다."
+      },
+      {
+        "id": "ptx-sass-gap-isa-analysis",
+        "sectionId": "isa-analysis",
+        "intuition": "실제 배포 이미지와 최종 명령을 확인하고 시간이 달라진 원인을 측정합니다.",
+        "workedExample": "이미지 목록을 확인한 뒤 nvdisasm -plr -g로 생존 구간과 소스 대응을 읽습니다. 문서 calculate의 REG:24를 별도 add 함수에 옮기지 않습니다.",
+        "boundary": "Opcode 몇 개의 개수나 SASS 일치만으로 실행 시간 차이를 설명할 수 없습니다. Host·launch·메모리 배치·cache·반복 측정을 함께 봅니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 변환",
+        "relation": "입력의 같은 계산을 소스·가상 명령·장치 명령으로 읽습니다.",
+        "concepts": [
+          "cuda-compilation-pipeline",
+          "ptx-virtual-isa",
+          "sass-machine-isa"
+        ]
+      },
+      {
+        "label": "02 선택과 배정",
+        "relation": "실행 이미지를 고르고 값의 저장 자리와 순서를 배정합니다.",
+        "concepts": [
+          "fatbin-jit-compute-capability",
+          "ptxas-register-allocation-scheduling"
+        ]
+      },
+      {
+        "label": "03 최적화 확인",
+        "relation": "반복과 계산 변환의 비용을 최종 명령·측정에 연결합니다.",
+        "concepts": [
+          "loop-unrolling-tradeoff",
+          "classic-compiler-optimizations-cuda",
+          "ptx-sass-gap-isa-analysis"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "공개 컴파일 단계에서 PTX·cubin·host 결과가 맡는 역할과 내부 호출 순서를 구별할 수 있나요?",
+        "answerChecklist": [
+          "Device 계산을 PTX로 표현합니다.",
+          "Ptxas가 지정 대상의 장치 코드를 만듭니다.",
+          "Host compiler가 host 코드를 처리하고 필요한 장치 이미지가 포함됩니다.",
+          "공개 phase와 내부 cudafe++·cicc 실행 순서를 구별하며 후자를 고정 인터페이스로 쓰지 않습니다."
+        ],
+        "requiredConcepts": [
+          "cuda-compilation-pipeline"
+        ],
+        "sectionId": "pipeline"
+      },
+      {
+        "level": "basic",
+        "question": "PTX의 r<5>·f<4>·rd<11>을 물리 register 개수로 더하면 안 되는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "가상 이름과 물리 자리는 다릅니다.",
+          "자료형과 폭이 다르고 사용하지 않는 이름도 있을 수 있습니다.",
+          "생존 구간과 target 배정 단위를 확인합니다.",
+          "최종 자원 보고를 별도로 읽습니다."
+        ],
+        "requiredConcepts": [
+          "ptx-virtual-isa"
+        ],
+        "sectionId": "ptx-and-sass"
+      },
+      {
+        "level": "basic",
+        "question": "문서의 실제 PTX와 SASS에서 위치 3·바이트 차이 12·값 12를 각각 찾을 수 있나요?",
+        "answerChecklist": [
+          "PTX %r4=3, %rd7=12, %f3=12입니다.",
+          "SASS IMAD는 R9=3을 만들고 LDG.E는 R2=7·R5=5를 읽습니다.",
+          "FADD가 R9=12를 만들고 STG.E가 C[3]에 씁니다.",
+          "인자 읽기는 ld.param과 해당 LDC 계열을 비교합니다.",
+          "길이 검사 분기와 FFMA는 이 실제 예시에 없습니다."
+        ],
+        "requiredConcepts": [
+          "sass-machine-isa",
+          "ptx-virtual-isa"
+        ],
+        "sectionId": "sass-trace"
+      },
+      {
+        "level": "basic",
+        "question": "sm_80 cubin만 넣는 -gencode와 -arch=sm_80 축약은 H100에서 어떻게 다른가요?",
+        "answerChecklist": [
+          "sm_80 cubin은 major가 달라 H100에 맞지 않습니다.",
+          "PTX도 없으면 장치 이미지가 없습니다.",
+          "축약은 compute_80 PTX도 넣습니다.",
+          "지원 driver와 일반 대상 조건에서 JIT 경로를 사용할 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "fatbin-jit-compute-capability"
+        ],
+        "sectionId": "fatbin-and-jit"
+      },
+      {
+        "level": "basic",
+        "question": "Compute capability 8.0과 9.0의 저장 한도와 Hopper의 명령 지원 범위를 구별할 수 있나요?",
+        "answerChecklist": [
+          "둘 다 SM당 32비트 register 64K개·thread당 최대255개입니다.",
+          "Shared memory는 SM당164·228 KB, block opt-in163·227 KB입니다.",
+          "Cluster·distributed shared memory·TMA의 기능을 구별합니다.",
+          "Wgmma의 sm_90a 등 명령별 target 조건을 확인하며 모든 기능을 compute_90 일반 대상으로 묶지 않습니다."
+        ],
+        "requiredConcepts": [
+          "fatbin-jit-compute-capability"
+        ],
+        "sectionId": "capabilities"
+      },
+      {
+        "level": "basic",
+        "question": "CSE·DCE·상수 계산과 명령 선택을 PTX와 SASS에서 어떻게 확인하나요?",
+        "answerChecklist": [
+          "PTX는 중간 계산의 변화, SASS는 최종 기계 명령을 보여 줍니다.",
+          "뒤 단계가 계산을 더 없애거나 바꿀 수 있습니다.",
+          "Store가 없다는 사실만으로 kernel이 사라지거나 0ms가 되지는 않습니다.",
+          "같은 opcode 개수만으로 바이너리 동일성을 판단하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "classic-compiler-optimizations-cuda"
+        ],
+        "sectionId": "classic-optimizations"
+      },
+      {
+        "level": "advanced",
+        "question": "b=4,o=3,ℓ=3,R₀=10일 때 U=2·4·8의 모델값과 손해가 생길 조건을 설명할 수 있나요?",
+        "answerChecklist": [
+          "U=2: 5.5명령/원소, R=13입니다.",
+          "U=4: 4.75명령/원소, R=19입니다.",
+          "U=8: 4.375명령/원소, R=31입니다.",
+          "n이 U의 배수라는 조건과 꼬리 반복을 구별합니다.",
+          "Register 증가가 resident block을 줄이거나 spill을 만들 수 있으며 실제 성능은 측정합니다."
+        ],
+        "requiredConcepts": [
+          "loop-unrolling-tradeoff",
+          "ptxas-register-allocation-scheduling"
+        ],
+        "sectionId": "unrolling"
+      },
+      {
+        "level": "advanced",
+        "question": "-maxrregcount 32가 최종 코드에 미칠 수 있는 영향과 확인 방법은 무엇인가요?",
+        "answerChecklist": [
+          "Compiler가 읽기 순서나 계산을 바꿀 수 있습니다.",
+          "값이 넘치면 spill이 생길 수 있지만 항상 필수 결과는 아닙니다.",
+          "ABI 최소치와 자원 한도를 확인합니다.",
+          "-Xptxas -v·SASS·liveness로 실제 배정과 spill을 읽습니다."
+        ],
+        "requiredConcepts": [
+          "ptxas-register-allocation-scheduling",
+          "ptx-sass-gap-isa-analysis"
+        ],
+        "sectionId": "ptxas-optimizations"
+      },
+      {
+        "level": "advanced",
+        "question": "H100에서 compute_90 PTX를 JIT할 때 첫 실행과 재실행·driver 변경의 비용을 설명할 수 있나요?",
+        "answerChecklist": [
+          "지원 driver가 해당 PTX를 장치 코드로 만듭니다.",
+          "Cache가 켜져 있고 유효한 결과가 있으면 재사용할 수 있습니다.",
+          "Cache가 없거나 비활성·무효라면 다시 변환할 수 있습니다.",
+          "Driver 변경은 cache와 생성 코드에 영향을 줄 수 있어 항상 두 번째가 빠르다는 보장은 없습니다."
+        ],
+        "requiredConcepts": [
+          "fatbin-jit-compute-capability",
+          "sass-machine-isa"
+        ],
+        "sectionId": "fatbin-and-jit"
+      },
+      {
+        "level": "advanced",
+        "question": "측정이 2% 빨라진 두 빌드에서 ISA 분석과 시간 측정을 어떻게 연결하나요?",
+        "answerChecklist": [
+          "배포 target과 실제 선택 이미지를 확인합니다.",
+          "같은 설정의 PTX·SASS·자원·생존 구간을 비교합니다.",
+          "Opcode 개수만으로 바이너리가 같다고 단정하지 않습니다.",
+          "SASS가 같아도 host·launch·메모리·cache 조건을 확인합니다.",
+          "동일 입력과 측정 범위에서 반복해 변동과 원인을 확인합니다."
+        ],
+        "requiredConcepts": [
+          "ptx-sass-gap-isa-analysis",
+          "classic-compiler-optimizations-cuda"
+        ],
+        "sectionId": "isa-analysis"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CUDA Compiler Driver NVCC — GPU Compilation",
+        "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-compiler-driver-nvcc/index.html",
+        "problem": "소스와 실행 대상이 어떻게 배포 이미지로 이어지는지 확인합니다.",
+        "contribution": "공개 compilation phase와 내부 단계의 경계, 대상 옵션·호환·JIT 경로를 제공합니다.",
+        "assumptions": "고정한 CUDA 13.0.2 문서이며 본문의 수치는 명시한 가정과 공식 조건을 구별합니다.",
+        "evidenceScope": "공식 규격과 문서 출력에 사례를 대입한 대조이며 실제 GPU 실행이나 성능 측정은 하지 않았습니다.",
+        "notClaim": "JIT 결과가 빌드 때의 ptxas 결과와 같은 SASS 를 낸다는 보장은 문서에 없습니다.",
+        "sectionId": "doc-nvcc-gpu-compilation"
+      },
+      {
+        "title": "Parallel Thread Execution ISA",
+        "href": "https://docs.nvidia.com/cuda/archive/13.0.2/parallel-thread-execution/index.html",
+        "problem": "GPU 세대마다 기계어가 다르면 compiler 와 배포 binary 가 세대마다 갈라져야 합니다.",
+        "contribution": "가상 register와 instruction·target 조건을 정의합니다.",
+        "assumptions": "고정한 CUDA 13.0.2 문서이며 본문의 수치는 명시한 가정과 공식 조건을 구별합니다.",
+        "evidenceScope": "공식 규격과 문서 출력에 사례를 대입한 대조이며 실제 GPU 실행이나 성능 측정은 하지 않았습니다.",
+        "notClaim": "가상 이름의 수가 실제 배정량이거나 target 번호만으로 모든 PTX 버전·a·f 대상이 호환된다는 뜻은 아닙니다.",
+        "sectionId": "doc-ptx-isa"
+      },
+      {
+        "title": "CUDA Binary Utilities (cuobjdump, nvdisasm)",
+        "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-binary-utilities/index.html",
+        "problem": "Fatbin 안에 무엇이 들었는지와 실제 실행되는 SASS 가 어떤 모양인지 실행 파일만 봐서는 알 수 없습니다.",
+        "contribution": "§2.1의 실제 add PTX·SASS와 별도 test.cubin 자원 출력, 분석 옵션을 제공합니다.",
+        "assumptions": "고정한 CUDA 13.0.2 문서이며 본문의 수치는 명시한 가정과 공식 조건을 구별합니다.",
+        "evidenceScope": "공식 규격과 문서 출력에 사례를 대입한 대조이며 실제 GPU 실행이나 성능 측정은 하지 않았습니다.",
+        "notClaim": "Instruction set 표는 opcode 이름과 한 줄 설명만 제공하므로 latency 나 throughput 을 이 문서로 계산할 수 없습니다.",
+        "sectionId": "doc-cuda-binary-utilities"
+      },
+      {
+        "title": "CUDA C++ Programming Guide — Compute Capabilities",
+        "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-programming-guide/index.html#compute-capabilities",
+        "problem": "어떤 GPU 가 어떤 번호이고 세대별로 SM 자원과 instruction 이 어떻게 다른지 한 곳에서 봐야 fatbin 구성을 정할 수 있습니다.",
+        "contribution": "8.0·9.0의 register와 shared memory 한도를 제공합니다. 명령별 target은 PTX 규격을 함께 확인합니다.",
+        "assumptions": "고정한 CUDA 13.0.2 문서이며 본문의 수치는 명시한 가정과 공식 조건을 구별합니다.",
+        "evidenceScope": "공식 규격과 문서 출력에 사례를 대입한 대조이며 실제 GPU 실행이나 성능 측정은 하지 않았습니다.",
+        "notClaim": "표의 한도가 같다고 두 세대의 ptxas 배정 결과가 같다는 뜻은 아닙니다.",
+        "sectionId": "doc-compute-capabilities"
+      },
+      {
+        "title": "Floating Point and IEEE 754 · §2.3",
+        "href": "https://docs.nvidia.com/cuda/floating-point/index.html#the-fused-multiply-add-fma",
+        "problem": "수학적으로 같은 식의 반올림 경로가 결과를 바꾸는 이유를 확인합니다.",
+        "contribution": "원문의 이진 A=1+2⁻²³,B=−(1+2⁻²²)에 대해 FMA의2⁻⁴⁶과 분리 연산의0을 대조합니다.",
+        "assumptions": "단정도·가장 가까운 값 반올림의 문서 예시입니다.",
+        "evidenceScope": "공식 수치 예시와 정확한 유리수 계산입니다.",
+        "notClaim": "문서의 역사적 하드웨어 설명을 모든 현재 제품의 상태로 확대하지 않습니다.",
+        "sectionId": "doc-floating-point"
+      }
+    ]
   },
   "gpu/triton-kernel-programming-and-compiler": {
     entryNote: "CUDA 의 grid·block·thread 계층과 warp, coalescing, shared memory 를 알고, Triton 이 block 단위 DSL 이라는 한 줄을 들은 상태에서 그 DSL 이 무엇을 프로그래머에게 남기고 무엇을 compiler 에 넘기는지로 들어갑니다.",
@@ -86652,95 +88053,271 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/math-high-dimensional-geometry": {
-    entryNote: "벡터·norm 정본의 Euclidean norm과 SVD 정본의 rank·low-rank approximation을 이미 아는 독자를 대상으로 합니다.",
-    coreIdea:
-      "차원이 늘수록 무작위 점들의 Euclidean distance는 서로 비슷한 값으로 몰려 거리 하나로 가까움을 구분하기 어려워집니다. Johnson–Lindenstrauss lemma는 점 개수의 로그에만 비례하는 훨씬 낮은 차원으로 무작위 사영해도 이 거리를 (1±ε) 안에서 보존할 수 있다고 보장합니다. 이 보장이 통하는 이유는 실제 데이터의 intrinsic dimension이 저장에 쓰인 ambient dimension보다 훨씬 작기 때문이며, latent·bottleneck·low-rank representation은 그 낮은 자유도를 명시적인 저차원 좌표로 만드는 방법들입니다.",
-    assumedKnowledge: [
-      { id: "euclidean-norm", role: "두 점 차이 vector의 길이로 거리를 정의하는 데 사용합니다." },
-      { id: "matrix-multiplication", role: "JL lemma의 무작위 사영이 실제로는 행렬-벡터 곱이라는 것을 이해하는 데 사용합니다." },
-      { id: "matrix-rank", role: "Intrinsic dimension을 선형 부분공간 자유도의 비선형 일반화로 대조하는 데 사용합니다." },
-      { id: "low-rank-approximation", role: "Low-rank representation의 구체적인 계산 방법(rank-k 근사)으로 사용합니다." },
-    ],
-    introducedHere: [
-      { id: "high-dimensional-geometry-and-distance", role: "Euclidean distance를 정의하고 차원이 늘수록 거리가 집중되는 고차원 기하 현상을 확인합니다." },
-      { id: "johnson-lindenstrauss-lemma", role: "점 개수의 로그에만 비례하는 차원으로 사영해도 거리가 보존된다는 보장을 수식으로 고정합니다." },
-      { id: "intrinsic-dimension", role: "ambient dimension과 구분되는, 데이터가 실제로 쓰는 자유도를 정의합니다." },
-      { id: "latent-and-bottleneck-representation", role: "낮은 intrinsic dimension을 명시적 저차원 좌표로 바꾸는 low-rank·latent·bottleneck representation을 하나로 묶습니다." },
-    ],
-    conceptExplanations: [
+    "entryNote": "네 칸에 같은 값을 넣은 네 점을 한 칸으로 줄여 여섯 거리를 비교합니다. 같은 사례를 일반 거리 보존 조건과 실제 코드에 대입한 뒤 내재 차원 추정과 학습된 압축의 한계를 구별합니다.",
+    "coreIdea": "차원 수만으로 거리 집중이나 압축 품질을 결정할 수 없습니다. 독립 좌표의 제곱거리가 집중되는 조건, 유한 점 집합에 대한 JL의 충분조건, 연속적인 데이터 모양의 내재 차원, 학습 모델의 중간 폭은 각각 다른 주장입니다. 같은 네 점의 정확한 사영과 실패 사영을 비교해 무엇을 보존했는지 확인합니다.",
+    "assumedKnowledge": [
       {
-        id: "high-dimensional-geometry-and-distance",
-        sectionId: "distance",
-        intuition: "차원이 늘수록 좌표 차이의 제곱합이 평균 주변으로 몰려, 무작위 점들의 거리가 서로 비슷해집니다.",
-        workedExample: "d=2에서 최근접·최원접 거리는 1.2 대 8.7(비율 7.3배)이지만 d=1,000에서는 31.1 대 33.4(비율 1.07배)로 좁아집니다.",
-        boundary: "이 집중은 좌표별 분산이 비슷한 무작위 점을 가정한 것이며, 실제 데이터가 특정 방향으로 몰려 있으면 정도가 달라집니다.",
+        "id": "euclidean-norm",
+        "role": "두 점 차이 vector의 길이로 거리를 정의하는 데 사용합니다."
       },
       {
-        id: "johnson-lindenstrauss-lemma",
-        sectionId: "jl-lemma",
-        intuition: "점이 몇 개인지만 알면, 데이터 구조를 몰라도 무작위 사영 하나로 거리를 거의 보존하는 낮은 차원을 찾을 수 있습니다.",
-        workedExample: "n=1,000,000·ε=0.1이면 Dasgupta–Gupta 하한으로 k≥17,763이면 충분하고, n을 1,000배 줄여도 k는 8,882로 절반 정도만 줄어듭니다.",
-        boundary: "이 k는 특정 증명이 제시하는 충분조건이며 실전에서 필요한 최소 차원이 아니고, data-specific한 구조를 이용하는 축소보다 나을 것이라는 보장도 아닙니다.",
-        proofIdea:
-          "무작위 방향에 점을 사영한 길이는 원래 길이 주변에 집중한다는 사실을 각 점 쌍에 적용한 뒤, 실패 확률을 점 쌍 수(약 n²/2)로 나눠도 여전히 작아지도록 k를 크게 잡아 union bound로 모든 쌍에서 동시에 성립하게 만듭니다.",
-        counterexample:
-          "k를 이 하한보다 훨씬 작게 잡으면 union bound가 보장하는 성공 확률이 0 이하로 떨어져, 일부 점 쌍에서는 거리가 (1±ε) 범위를 벗어날 수 있습니다.",
+        "id": "matrix-multiplication",
+        "role": "JL lemma의 무작위 사영이 실제로는 행렬-벡터 곱이라는 것을 이해하는 데 사용합니다."
       },
       {
-        id: "intrinsic-dimension",
-        sectionId: "intrinsic-dimension",
-        intuition: "저장된 좌표 수가 아무리 많아도 데이터가 실제로 움직이는 자유도는 그보다 훨씬 작을 수 있습니다.",
-        workedExample: "ImageNet 이미지는 150,528 ambient 차원(224×224×3)이지만 추정된 intrinsic dimension은 26~43에 불과합니다.",
-        boundary: "이 추정치는 특정 MLE 기반 추정 도구와 데이터셋 조건에서 나온 값이며, 모든 데이터셋의 intrinsic dimension이 이만큼 작다고 일반화하지 않습니다.",
+        "id": "matrix-rank",
+        "role": "Intrinsic dimension을 선형 부분공간 자유도의 비선형 일반화로 대조하는 데 사용합니다."
       },
       {
-        id: "latent-and-bottleneck-representation",
-        sectionId: "latent-representation",
-        intuition: "실제 자유도가 작다는 사실이 있어야, 좁은 통로로 강제해도 정보를 거의 잃지 않고 압축할 수 있습니다.",
-        workedExample: "784차원 MNIST pixel을 32차원 bottleneck으로 압축하는 autoencoder는 intrinsic dimension 추정치(약 7~13)보다 여유 있는 크기를 씁니다.",
-        boundary: "Bottleneck이 intrinsic dimension보다 좁으면 서로 다른 입력이 같은 좌표로 뭉개져 복원이 불가능해지고, 너무 넓으면 identity mapping으로 새는 위험이 커집니다.",
-      },
+        "id": "low-rank-approximation",
+        "role": "Low-rank representation의 구체적인 계산 방법(rank-k 근사)으로 사용합니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 거리 정의·집중", relation: "Euclidean distance를 정의하고 차원이 늘수록 거리가 서로 비슷해지는 현상을 확인합니다.", concepts: ["high-dimensional-geometry-and-distance"] },
-      { label: "01 JL 사영", relation: "무작위 선형 사영 하나로 점 개수의 로그 차원만으로 거리를 거의 보존합니다.", concepts: ["johnson-lindenstrauss-lemma"] },
-      { label: "02 intrinsic dimension", relation: "실제 데이터의 자유도가 ambient dimension보다 훨씬 작다는 사실을 확인합니다.", concepts: ["intrinsic-dimension"] },
-      { label: "03 latent·bottleneck", relation: "낮은 자유도를 명시적 저차원 좌표로 강제하는 low-rank·latent·bottleneck representation으로 마무리합니다.", concepts: ["latent-and-bottleneck-representation"] },
-    ],
-    exercises: [
-      { level: "basic", question: "Euclidean distance 공식에서 제곱을 취했다가 다시 제곱근을 취하는 이유를 설명하세요.", answerChecklist: ["부호 제거", "원래 좌표와 같은 단위로 되돌림"], requiredConcepts: ["high-dimensional-geometry-and-distance"], sectionId: "distance" },
-      { level: "basic", question: "d=2와 d=1,000에서 최근접·최원접 거리 비율이 왜 다른지 이 글의 수치로 설명하세요.", answerChecklist: ["d=2: 7.3배", "d=1,000: 1.07배", "독립 항 수 증가"], requiredConcepts: ["high-dimensional-geometry-and-distance"], sectionId: "distance" },
-      { level: "basic", question: "JL lemma가 보장하는 것은 무엇이고, k는 무엇에 비례하나요?", answerChecklist: ["pairwise distance (1±ε) 보존", "점 개수 n의 로그에 비례"], requiredConcepts: ["johnson-lindenstrauss-lemma"], sectionId: "jl-lemma" },
-      { level: "basic", question: "ImageNet의 ambient dimension과 intrinsic dimension 추정치를 비교해 설명하세요.", answerChecklist: ["150,528", "26~43"], requiredConcepts: ["intrinsic-dimension"], sectionId: "intrinsic-dimension" },
-      { level: "basic", question: "Low-rank representation, latent representation, bottleneck representation이 각각 가리키는 대상을 구분하세요.", answerChecklist: ["low-rank: 계산 방법", "latent: 학습된 좌표", "bottleneck: 구조적 제약"], requiredConcepts: ["latent-and-bottleneck-representation"], sectionId: "latent-representation" },
-      { level: "basic", question: "Bottleneck이 intrinsic dimension보다 좁으면 어떤 문제가 생기나요?", answerChecklist: ["서로 다른 입력이 같은 좌표로 압축", "복원 불가능"], requiredConcepts: ["latent-and-bottleneck-representation"], sectionId: "latent-representation" },
-      { level: "advanced", question: "ε을 절반으로 줄이면 JL lemma의 k는 대략 몇 배가 되고 왜 그런가요?", answerChecklist: ["약 4배", "분모가 ε²에 비례"], requiredConcepts: ["johnson-lindenstrauss-lemma"], sectionId: "jl-lemma" },
-      { level: "advanced", question: "JL lemma의 목표 차원 k와 intrinsic dimension이 서로 다른 축인 이유를 설명하세요.", answerChecklist: ["k는 n에만 의존", "intrinsic dimension은 데이터 구조에 의존"], requiredConcepts: ["johnson-lindenstrauss-lemma", "intrinsic-dimension"], sectionId: "jl-lemma" },
-      { level: "advanced", question: "Matrix rank와 intrinsic dimension의 관계를 선형·비선형 관점에서 설명하세요.", answerChecklist: ["rank: 선형 부분공간 자유도", "intrinsic dimension: manifold로 일반화"], requiredConcepts: ["intrinsic-dimension"], sectionId: "intrinsic-dimension" },
-      { level: "advanced", question: "SVD의 low-rank approximation이 low-rank representation의 한 사례인 이유를 설명하세요.", answerChecklist: ["rank-k factor 곱", "저장량 mn→k(m+n) 감소"], requiredConcepts: ["latent-and-bottleneck-representation"], sectionId: "latent-representation" },
-    ],
-    papers: [
+    "introducedHere": [
       {
-        title: "Dasgupta & Gupta — An Elementary Proof of a Theorem of Johnson and Lindenstrauss",
-        href: "https://doi.org/10.1002/rsa.10073",
-        problem: "Johnson–Lindenstrauss 1984 정리의 원 증명이 복잡해, 더 단순한 확률론적 증명과 명시적 차원 하한이 필요했습니다.",
-        contribution: "무작위 방향 사영의 길이 집중만으로 정리를 재증명하고 k≥4ln(n)/(ε²/2−ε³/3)이라는 명시적 충분조건을 제시했습니다.",
-        assumptions: "점들이 Euclidean 공간에 있고 사영이 Gaussian 무작위 행렬로 만들어진다는 논문의 조건입니다.",
-        evidenceScope: "Random Structures & Algorithms 2003에 발표된 이론적 증명(저자 자기보고)이며 특정 데이터셋 실험은 아닙니다.",
-        notClaim: "이 k가 실전에서 필요한 최소 차원이라거나 모든 random-projection 구현이 이 상수를 그대로 쓴다는 뜻은 아닙니다.",
-        sectionId: "paper-jl-lemma",
+        "id": "high-dimensional-geometry-and-distance",
+        "role": "같은 네 점의 정확한 거리를 계산하고 독립 이진 좌표의 제곱거리 분산과 복사된 좌표의 반례를 구별합니다."
       },
       {
-        title: "Pope, Zhu, Abdelkader, Goldblum & Goldstein — The Intrinsic Dimension of Images and Its Impact on Learning",
-        href: "https://arxiv.org/abs/2104.08894",
-        problem: "자연 이미지 데이터셋이 실제로 얼마나 낮은 차원 구조를 갖는지, 그리고 그 차원이 학습에 어떤 영향을 주는지가 불명확했습니다.",
-        contribution: "MLE 기반 dimension 추정 도구를 GAN 생성 데이터로 먼저 검증한 뒤 MNIST·CIFAR·ImageNet 등에 적용해 intrinsic dimension을 측정하고 학습 sample 수·일반화와의 상관관계를 보였습니다.",
-        assumptions: "논문이 쓴 k-nearest-neighbor 기반 MLE 추정기와 실험에 사용한 특정 데이터셋·모델 조건입니다.",
-        evidenceScope: "ICLR 2021에 발표된 저자 자기보고 실험 결과이며 독립 재현 평가는 별도로 확인해야 합니다.",
-        notClaim: "모든 데이터셋의 intrinsic dimension이 26~43 범위라거나, 이 추정치가 downstream task의 최적 latent 차원과 같다는 뜻은 아닙니다.",
-        sectionId: "paper-intrinsic-dimension",
+        "id": "johnson-lindenstrauss-lemma",
+        "role": "고정한 모든 쌍의 제곱거리 보존과 충분 차원, 무작위 성공 확률을 구별하고 실제 코드의 배율과 정수 선택을 읽습니다."
       },
+      {
+        "id": "intrinsic-dimension",
+        "role": "연속 직선과 원의 자유도를 선형 rank와 대조하고 이미지의 이웃 수별 추정값을 조건과 함께 읽습니다."
+      },
+      {
+        "id": "latent-and-bottleneck-representation",
+        "role": "표현 자체와 중간 폭 제약, 두 작은 행렬로 표현하는 방법을 구별하고 복원·과제 성능을 각각 평가합니다."
+      }
     ],
+    "conceptExplanations": [
+      {
+        "id": "high-dimensional-geometry-and-distance",
+        "sectionId": "concentration",
+        "intuition": "서로 독립인 작은 차이를 더하면 합의 평균에 비한 요동이 줄 수 있습니다. 같은 값을 복사한 좌표는 이 독립 조건을 만족하지 않습니다.",
+        "workedExample": "독립적인 0·1 좌표의 제곱거리 H는 평균 D/2, 분산 D/4라 상대 표준편차가 1/√D입니다. D=4에서 50%, D=1000에서 약 3.162%입니다.",
+        "boundary": "정확한 상대 표준편차는 H에 대한 값입니다. 일반 거리 √H나 점 수가 커지는 집합의 최근접·최원접에 그대로 대입하지 않습니다."
+      },
+      {
+        "id": "johnson-lindenstrauss-lemma",
+        "sectionId": "jl-lemma",
+        "intuition": "한정된 점들의 관계를 남기는 충분 크기는 원래 좌표 수와 별도로 구할 수 있습니다. 특정 구조를 알면 그보다 더 작게 줄일 수도 있습니다.",
+        "workedExample": "n=4, ε=0.2의 4ln(n)/(ε²/2−ε³/3)을 올림하면 320입니다. 하지만 p(t)=(t,t,t,t)의 t=0,1,2,3은 f(p)=2t인 한 칸에서 모든 거리를 정확히 보존합니다.",
+        "boundary": "충분조건이 최소 필요 크기는 아닙니다. 식은 제곱거리에 관한 것이며 4 계수의 존재 증명 성공 하한 1/n과 6 계수의 더 강한 확률 보장을 구별합니다.",
+        "proofIdea": "고정한 한 쌍의 실패 확률 2exp(−kc/2)을 n(n−1)/2쌍에 대해 더합니다. 전체 실패를 δ 이하로 제한하려면 k≥2ln(n(n−1)/δ)/c이면 충분합니다.",
+        "counterexample": "첫째와 둘째 좌표의 차이로 만든 한 칸은 같은 네 점을 전부 0으로 보냅니다. 출력 크기가 같아도 사영 방향이 다르면 모든 거리를 잃습니다."
+      },
+      {
+        "id": "intrinsic-dimension",
+        "sectionId": "intrinsic-dimension",
+        "intuition": "좌표의 칸 수와 데이터 모양이 국소적으로 움직이는 자유도는 다릅니다.",
+        "workedExample": "네 좌표에 같은 t를 넣은 연속 직선은 주변 차원 4와 내재 차원 1을 가집니다. 원 (cosθ,sinθ)은 내재 차원 1이지만 두 선형 방향을 펼칩니다.",
+        "boundary": "ImageNet 150,528좌표에 대한 26·38·43·43은 이웃 수 3·5·10·20의 MLE 추정값입니다. 확정된 자유도나 최적 압축 폭을 보장하지 않습니다."
+      },
+      {
+        "id": "latent-and-bottleneck-representation",
+        "sectionId": "latent-representation",
+        "intuition": "중간 통로를 좁히는 것은 무엇이 남아야 하는지 정하는 문제를 만들며 좋은 표현을 저절로 보장하지 않습니다.",
+        "workedExample": "z=2t로 줄인 뒤 네 칸에 z/2를 복사하면 원래 직선을 되찾습니다. 같은 폭으로 첫째와 둘째 칸의 차이를 남기면 모두 0이 되어 복원에 실패합니다.",
+        "boundary": "연속적인 데이터의 매끄러운 부호화·복원과 유한 표본의 번호 암기는 다른 문제입니다. 국소 자유도보다 넓은 통로라도 전체 모양과 학습 과정 때문에 실패할 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1 거리와 분포 조건",
+        "relation": "같은 네 점의 정확한 거리를 계산하고 독립 이진 좌표의 제곱거리 분산과 복사된 좌표의 반례를 구별합니다.",
+        "concepts": [
+          "high-dimensional-geometry-and-distance"
+        ]
+      },
+      {
+        "label": "2 일반 충분조건과 실제 코드",
+        "relation": "고정한 모든 쌍의 제곱거리 보존과 충분 차원, 무작위 성공 확률을 구별하고 실제 코드의 배율과 정수 선택을 읽습니다.",
+        "concepts": [
+          "johnson-lindenstrauss-lemma"
+        ]
+      },
+      {
+        "label": "3 모양의 자유도와 추정",
+        "relation": "연속 직선과 원의 자유도를 선형 rank와 대조하고 이미지의 이웃 수별 추정값을 조건과 함께 읽습니다.",
+        "concepts": [
+          "intrinsic-dimension"
+        ]
+      },
+      {
+        "label": "4 표현의 폭과 보존할 정보",
+        "relation": "표현 자체와 중간 폭 제약, 두 작은 행렬로 표현하는 방법을 구별하고 복원·과제 성능을 각각 평가합니다.",
+        "concepts": [
+          "latent-and-bottleneck-representation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "거리에서 차이를 제곱한 뒤 제곱근을 취하는 이유를 같은 네 칸의 두 점으로 설명할 수 있나요?",
+        "answerChecklist": [
+          "좌표 차이의 부호가 합에서 상쇄되지 않게 제곱합니다.",
+          "제곱합의 제곱근은 원래 좌표의 단위로 돌아옵니다.",
+          "(0,0,0,0)과 (1,1,1,1)의 제곱합은 4이고 거리는 2입니다."
+        ],
+        "requiredConcepts": [
+          "high-dimensional-geometry-and-distance"
+        ],
+        "sectionId": "distance"
+      },
+      {
+        "level": "basic",
+        "question": "독립 이진 좌표의 D=4와 D=1000에서 무엇의 상대 표준편차가 줄며, 복사된 좌표에는 왜 그대로 적용할 수 없나요?",
+        "answerChecklist": [
+          "제곱거리 H의 평균은 D/2, 분산은 D/4입니다.",
+          "상대 표준편차 1/√D는 각각 50%와 약 3.162%입니다.",
+          "이 정확한 식을 거리 √H의 상대 표준편차로 읽지 않습니다.",
+          "같은 값을 복사하면 항들이 독립이 아니며 먼 거리와 가까운 거리의 비 3이 유지됩니다."
+        ],
+        "requiredConcepts": [
+          "high-dimensional-geometry-and-distance"
+        ],
+        "sectionId": "concentration"
+      },
+      {
+        "level": "basic",
+        "question": "JL 정리의 보존 대상과 충분 차원을 바꾸는 설정을 설명할 수 있나요?",
+        "answerChecklist": [
+          "고정한 유한 점 집합의 모든 쌍의 제곱거리를 (1±ε) 안에 둡니다.",
+          "일반 길이에는 √(1±ε)가 대응합니다.",
+          "ε를 고정하면 충분 크기는 점 수 n의 로그에 비례합니다.",
+          "확률 목표 δ를 별도로 정하면 그 조건도 크기에 들어갑니다.",
+          "원래 차원보다 작은 값이나 최소 차원을 반드시 얻는 것은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "johnson-lindenstrauss-lemma"
+        ],
+        "sectionId": "jl-lemma"
+      },
+      {
+        "level": "basic",
+        "question": "ImageNet의 150,528과 26–43은 무엇을 세며 어떤 조건이 붙나요?",
+        "answerChecklist": [
+          "224×224×3=150,528은 색상 좌표 수입니다.",
+          "26,38,43,43은 이웃 수 3,5,10,20에서 얻은 추정치입니다.",
+          "이웃 수는 JL의 출력 차원과 다릅니다.",
+          "자료와 MLE의 분포 조건에 묶인 값으로 보편적인 압축 보장이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "intrinsic-dimension"
+        ],
+        "sectionId": "intrinsic-dimension"
+      },
+      {
+        "level": "basic",
+        "question": "낮은 계수 표현과 잠재 표현, 병목을 같은 한 칸 사례에 연결해 구별할 수 있나요?",
+        "answerChecklist": [
+          "낮은 계수 표현은 작은 행렬들의 곱으로 표현하는 방법입니다.",
+          "잠재 표현은 모델 내부에서 얻은 표현이며 반드시 저차원은 아닙니다.",
+          "병목은 중간 폭 같은 구조적 제약입니다.",
+          "한 칸 z=2t는 복원되지만 한 칸 x1−x2는 전부 0이므로 폭만으로 품질을 정하지 못합니다."
+        ],
+        "requiredConcepts": [
+          "latent-and-bottleneck-representation"
+        ],
+        "sectionId": "latent-representation"
+      },
+      {
+        "level": "basic",
+        "question": "데이터 자유도보다 좁은 통로의 한계를 말할 때 어떤 조건과 예외를 구분해야 하나요?",
+        "answerChecklist": [
+          "연속적인 데이터 모양 전체의 매끄러운 정확 부호화·복원을 다룬다고 명시합니다.",
+          "중간 폭 r은 합성 미분의 rank를 r 이하로 제한하므로 더 많은 독립 방향을 보존하지 못합니다.",
+          "유한 표본은 서로 다른 실수 번호로 암기할 수 있어 같은 주장으로 다루지 않습니다.",
+          "통로가 넓다는 것만으로 좋은 학습 결과가 보장되지도 않습니다."
+        ],
+        "requiredConcepts": [
+          "latent-and-bottleneck-representation"
+        ],
+        "sectionId": "latent-representation"
+      },
+      {
+        "level": "advanced",
+        "question": "JL 조건에서 ε를 반으로 줄였을 때 약 네 배라는 말의 근거와 한계를 계산할 수 있나요?",
+        "answerChecklist": [
+          "작은 ε에서 분모 ε²/2가 주된 항입니다.",
+          "고정한 n과 확률 목표에서 ε가 반이면 대략 네 배입니다.",
+          "ε=0.1에서 0.05의 올림 전 비는 112/29≈3.862입니다.",
+          "세제곱 항과 정수 올림 때문에 정확히 네 배는 아닙니다."
+        ],
+        "requiredConcepts": [
+          "johnson-lindenstrauss-lemma"
+        ],
+        "sectionId": "jl-lemma"
+      },
+      {
+        "level": "advanced",
+        "question": "JL의 목표 차원과 내재 차원은 왜 서로 다르며 네 점 사례가 무엇을 보여 주나요?",
+        "answerChecklist": [
+          "JL은 고정한 점 수와 ε, 필요한 경우 δ를 이용한 일반 충분조건입니다.",
+          "내재 차원은 배후 데이터 모양의 국소 자유도입니다.",
+          "낮은 내재 차원은 JL의 전제가 아닙니다.",
+          "네 칸 직선의 구조를 이용하면 충분 크기 320보다 작은 한 칸으로 모든 거리를 보존합니다."
+        ],
+        "requiredConcepts": [
+          "johnson-lindenstrauss-lemma",
+          "intrinsic-dimension"
+        ],
+        "sectionId": "intrinsic-dimension"
+      },
+      {
+        "level": "advanced",
+        "question": "직선과 원에서 행렬 rank와 내재 차원이 어떻게 다른가요?",
+        "answerChecklist": [
+          "직선 p(t)는 내재 차원 1이며 서로 다른 표본의 중심화 행렬 rank도 1입니다.",
+          "중심화는 위치 이동과 변하는 방향을 구별합니다.",
+          "원은 국소 자유도 1이지만 충분히 여러 방향의 표본은 선형 rank 2를 가집니다."
+        ],
+        "requiredConcepts": [
+          "intrinsic-dimension"
+        ],
+        "sectionId": "intrinsic-dimension"
+      },
+      {
+        "level": "advanced",
+        "question": "SVD의 낮은 rank 표현은 언제 저장량을 줄이고 무엇을 보장하지 않나요?",
+        "answerChecklist": [
+          "rank≤r의 표를 두 인자의 곱으로 적으면 r(m+n)개를 저장합니다.",
+          "r(m+n)<mn이어야 실제 감소입니다.",
+          "1000×1000과 r=10은 백만 개에서 2만 개로 줄어듭니다.",
+          "2×2와 r=1은 4개에서 4개로 저장 이득이 없습니다.",
+          "작은 복원 오차가 과제에 필요한 차이의 보존을 보장하지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "latent-and-bottleneck-representation"
+        ],
+        "sectionId": "latent-representation"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Dasgupta & Gupta — An Elementary Proof of a Theorem of Johnson and Lindenstrauss",
+        "href": "https://doi.org/10.1002/rsa.10073",
+        "problem": "Johnson–Lindenstrauss 1984 정리의 원 증명이 복잡해, 더 단순한 확률론적 증명과 명시적 차원 하한이 필요했습니다.",
+        "contribution": "4ln(n)/(ε²/2−ε³/3)이라는 충분 크기에서 거리 보존 변환의 존재를 증명합니다. 모든 쌍의 실패 확률을 합친 뒤 한 번의 성공 하한 1/n을 얻습니다.",
+        "assumptions": "고정한 유한 유클리드 점 집합과 0<ε<1입니다. 본 증명은 무작위 부분공간의 직교 사영을 √(D/k)로 정규화합니다. 독립 Gaussian 행렬 구현은 본문에서 별도로 유도합니다.",
+        "evidenceScope": "Random Structures & Algorithms 2003에 발표된 이론적 증명(저자 자기보고)이며 특정 데이터셋 실험은 아닙니다.",
+        "notClaim": "최소 필요 차원이나 임의 사영의 성공을 보장하지 않습니다. 이 4 계수의 증명을 성공 확률 1−1/n이라고 읽지 않습니다.",
+        "sectionId": "paper-jl-lemma"
+      },
+      {
+        "title": "Pope, Zhu, Abdelkader, Goldblum & Goldstein — The Intrinsic Dimension of Images and Its Impact on Learning",
+        "href": "https://arxiv.org/abs/2104.08894",
+        "problem": "자연 이미지 데이터셋이 실제로 얼마나 낮은 차원 구조를 갖는지, 그리고 그 차원이 학습에 어떤 영향을 주는지가 불명확했습니다.",
+        "contribution": "MLE 기반 dimension 추정 도구를 GAN 생성 데이터로 먼저 검증한 뒤 MNIST·CIFAR·ImageNet 등에 적용해 intrinsic dimension을 측정하고 학습 sample 수·일반화와의 상관관계를 보였습니다.",
+        "assumptions": "가까운 이웃의 거리 비를 쓰는 식 (2)의 추정기입니다. 국소 밀도와 매끄러운 생성 조건, 표본 및 이웃 수에 의존합니다.",
+        "evidenceScope": "ICLR 2021에 발표된 저자 자기보고 실험 결과이며 독립 재현 평가는 별도로 확인해야 합니다.",
+        "notClaim": "모든 데이터셋의 intrinsic dimension이 26~43 범위라거나, 이 추정치가 downstream task의 최적 latent 차원과 같다는 뜻은 아닙니다.",
+        "sectionId": "paper-intrinsic-dimension"
+      }
+    ]
   },
   "ai/math-numerical-precision-stability": {
     entryNote: "벡터·내적 정본의 합산 연산과 행렬 정본의 shape 계약을 이미 아는 독자를 대상으로 합니다.",

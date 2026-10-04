@@ -1,0 +1,9 @@
+import type { CodeRef, FileNode } from "@/components/code/types";
+import source from "./codebase/transpose.cu?raw";
+export const codeRefs: Record<string, CodeRef> = {
+"naive": { code: source, "highlight": [124, 135], "desc": "읽은 thread가 그대로 쓸 때 열 사이로 흩어지는 주소입니다. 본문의 width=height=64는 함수에 대입한 학습 가정입니다.", "annotations": [{"lines": [129, 133], "color": "sky", "note": "block(0,1)·thread(3,5)·i=0에서 입력 2371과 출력 229입니다. 같은 warp의 출력 간격은 64원소입니다."}], "path": "cuda/transpose.cu", "lang": "c"},
+"coalesced": { code: source, "highlight": [139, 162], "desc": "32×32 tile을 32×16 threads가 두 번에 나눠 읽고 씁니다. 쓰기를 맡을 thread를 바꾸되 tile의 열 읽기에는 bank 충돌이 남습니다.", "annotations": [{"lines": [153, 157], "color": "sky", "note": "thread(3,5)가 tile[5][3]에 넣은 뒤 block 전체가 cg::sync(cta)에서 기다립니다."}, {"lines": [159, 160], "color": "emerald", "note": "thread(5,3)가 같은 tile[5][3]을 읽어 출력 229에 씁니다. 같은 warp의 다른 lane은 옆 출력 칸을 맡습니다."}], "path": "cuda/transpose.cu", "lang": "c"},
+"padded": { code: source, "highlight": [166, 189], "desc": "원문 변경점은 tile의 두 번째 차원을 32에서 33으로 늘린 것입니다. 실제 데이터는 여전히 32×32개이며 같은 교환 경로를 따릅니다.", "annotations": [{"lines": [170, 170], "color": "amber", "note": "각 행에 한 칸을 더해 열 방향 word 간격을 33으로 만듭니다. 32×4=128바이트가 추가됩니다."}, {"lines": [180, 187], "color": "emerald", "note": "입력 2371→tile[5][3]→출력 229 경로와 block 대기는 그대로입니다."}], "path": "cuda/transpose.cu", "lang": "c"},
+"host": { code: source, "highlight": [410, 433], "desc": "크기 초기값은 1024×1024이고 실제 크기는 장치와 인자로 정합니다. Host는 정사각형과 32의 배수 조건을 확인합니다. block 크기는 TILE_DIM=32, BLOCK_ROWS=16입니다.", "annotations": [{"lines": [421, 433], "color": "sky", "note": "64×64 학습 입력이면 grid(2,2), block(32,16)입니다. 32의 배수가 아닌 경계 처리를 이 원본의 기능으로 주장하지 않습니다."}], "path": "cuda/transpose.cu", "lang": "c"},
+};
+export const fileTrees: Record<string, FileNode> = {cuda:{name:"NVIDIA cuda-samples · v13.0",type:"dir",children:[{name:"transpose.cu",type:"file",path:"cuda/transpose.cu",codeKey:"coalesced"}]}};

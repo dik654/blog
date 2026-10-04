@@ -1,0 +1,11 @@
+$ cuobjdump test.cubin -res-usage
+
+Resource usage:
+ Common:
+  GLOBAL:56 CONSTANT[3]:28
+ Function calculate:
+  REG:24 STACK:8 SHARED:0 LOCAL:0 CONSTANT[0]:472 CONSTANT[2]:24 TEXTURE:0 SURFACE:0 SAMPLER:0
+ Function mysurf_func:
+  REG:38 STACK:8 SHARED:4 LOCAL:0 CONSTANT[0]:532 TEXTURE:8 SURFACE:7 SAMPLER:0
+ Function mytexsampler_func:
+  REG:42 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:472 TEXTURE:4 SURFACE:0 SAMPLER:1

@@ -1,0 +1,28 @@
+{
+  "release": "GNU MP 6.3.0",
+  "archive": "https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz",
+  "archiveSha256": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898",
+  "files": [
+    {
+      "file": "toom22_mul.c",
+      "upstreamPath": "mpn/generic/toom22_mul.c",
+      "sha256": "810ae3b9ddb2af85e4fd96bb54dcc0b04aa5fbed9dabbae0eac56e477315c598"
+    },
+    {
+      "file": "COPYING.LESSERv3",
+      "upstreamPath": "COPYING.LESSERv3",
+      "sha256": "a853c2ffec17057872340eee242ae4d96cbf2b520ae27d903e1b2fef1a5f9d1c"
+    },
+    {
+      "file": "COPYINGv2",
+      "upstreamPath": "COPYINGv2",
+      "sha256": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643"
+    },
+    {
+      "file": "COPYINGv3",
+      "upstreamPath": "COPYINGv3",
+      "sha256": "e6037104443f9a7829b2aa7c5370d0789a7bda3ca65a0b904cdc0c2e285d9195"
+    }
+  ],
+  "review": "Full source read; actual native compilation/execution not performed."
+}

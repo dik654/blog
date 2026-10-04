@@ -467,21 +467,99 @@ export const vllmServingArticles: Article[] = [
     title: "KV admission은 watermark 아래서만 받고 부족하면 recompute·swap으로 비웁니다",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "problem", title: "지금 받을지와 누구를 내보낼지" },
-      { id: "footprint", title: "요청 memory footprint 계산" },
-      { id: "watermark-admission", title: "Watermark와 admission 판정" },
-      { id: "preemption-modes", title: "Recompute와 swap preemption" },
-      { id: "hybrid-fixed-state", title: "Hybrid model의 고정 state 할당" },
-      {
-        id: "paper-vllm",
-        title: "근거: vLLM 논문과 engine 문서",
-        subsections: [
-          { id: "paper-vllm-docs", title: "vLLM preemption 문서" },
-          { id: "paper-sglang-scheduler", title: "SGLang scheduler 인자" },
-          { id: "paper-trtllm-kvcache", title: "TensorRT-LLM KV cache 설정" },
-        ],
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 처음 들어갔던 요청도 나중에는 자리를 잃을 수 있습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 들어갈 공간을 확인하고 성장한 만큼 다시 확인합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 40칸 중 14칸이 비어 있고 C가 9칸을 원합니다"
+  },
+  {
+    "id": "inside-admission",
+    "title": "4. 공간 장부와 대기 목록이 서로 다른 일을 합니다"
+  },
+  {
+    "id": "why-headroom",
+    "title": "5. 남겨 둔 3칸은 다음 성장을 위한 여유입니다"
+  },
+  {
+    "id": "memory-terms",
+    "title": "6. 보관 공간과 수용 판정에 이름을 붙입니다"
+  },
+  {
+    "id": "watermark-admission",
+    "title": "7. C를 받으면 빈 공간이 14에서 5로 줄어듭니다"
+  },
+  {
+    "id": "growth-pressure",
+    "title": "8. 16번 더 이어 쓰면 다음 한 칸이 부족합니다"
+  },
+  {
+    "id": "resume-trace",
+    "title": "9. C는 10칸을 돌려줬지만 11칸이 있어야 돌아옵니다"
+  },
+  {
+    "id": "footprint",
+    "title": "10. 한 block의 2MiB는 모델의 저장 모양에서 나옵니다"
+  },
+  {
+    "id": "source-v0-admission",
+    "title": "11. 과거 코드의 세 판정에 C를 넣어 봅니다"
+  },
+  {
+    "id": "pool-budget",
+    "title": "12. 54GiB를 block 수로 바꾼 뒤 같은 판정을 합니다"
+  },
+  {
+    "id": "source-v1-admission",
+    "title": "13. 현재 코드는 전체 입력 검사와 조각 할당을 나눕니다"
+  },
+  {
+    "id": "preemption-modes",
+    "title": "14. 버리고 다시 계산할지 복사해 둘지 선택합니다"
+  },
+  {
+    "id": "source-v1-preemption",
+    "title": "15. C의 진행 상태를 0으로 되돌리는 코드를 읽습니다"
+  },
+  {
+    "id": "source-v0-swap",
+    "title": "16. CPU 공간 실패를 다른 방식으로 바꿔 읽지 않습니다"
+  },
+  {
+    "id": "recovery-cost",
+    "title": "17. 계산 시간과 왕복 전송 시간을 같은 요청으로 비교합니다"
+  },
+  {
+    "id": "hybrid-fixed-state",
+    "title": "18. 길이가 짧아도 처음부터 필요한 상태가 있습니다"
+  },
+  {
+    "id": "paper-vllm",
+    "title": "19. 논문의 복구 정책은 그 실험과 함께 읽습니다"
+  },
+  {
+    "id": "engine-settings",
+    "title": "20. SGLang은 수용의 보수성을 따로 조절합니다"
+  },
+  {
+    "id": "engine-pool-sizing",
+    "title": "21. 메모리 비율의 분모가 다르면 용량도 달라집니다"
+  },
+  {
+    "id": "boundary",
+    "title": "22. 수용에 성공해도 끝까지의 여유를 보장하지 않습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "23. 조건을 바꾸면 다음 판정은 어떻게 될까요"
+  }
+],
     component: () => import("@/pages/articles/ai/serving-memory-admission-and-preemption"),
   },
   {
@@ -609,21 +687,103 @@ export const vllmServingArticles: Article[] = [
     title: "KV Cache 기초: Query · Key · Value와 GQA memory shape",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "overview", title: "왜 과거 K/V만 보존하는가" },
-      {
-        id: "kv-shape",
-        title: "MHA·GQA와 토큰당 KV byte 계산",
-        subsections: [
-          { id: "kv-shape-sharing", title: "MHA·GQA·MQA의 head 공유" },
-          { id: "paper-mqa", title: "MQA 논문의 문제와 핵심 아이디어" },
-          { id: "paper-gqa", title: "GQA 논문의 문제와 핵심 아이디어" },
-          { id: "kv-shape-formula", title: "토큰당 KV byte 공식" },
-          { id: "kv-shape-runtime", title: "Gemma config와 TP 보정" },
-          { id: "cache-representation-design", title: "Cache representation design 축" },
-          { id: "mla-vs-gqa", title: "MLA vs GQA와 capacity·bandwidth saving" },
-        ],
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 앞에서 계산한 결과를 남겨 답변을 이어 씁니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 새 위치 하나와 과거 기록을 받아 다음 계산으로 넘깁니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 세 위치의 기록 48byte에 한 위치를 더합니다"
+  },
+  {
+    "id": "inside-cache",
+    "title": "4. 현재 질문과 남길 기록의 수명을 나눕니다"
+  },
+  {
+    "id": "why-cache",
+    "title": "5. 과거 질문은 다음 위치에서 다시 쓰지 않습니다"
+  },
+  {
+    "id": "kv-shape",
+    "title": "6. 조회와 기록에 Q·K·V라는 이름을 붙입니다"
+  },
+  {
+    "id": "request-trace",
+    "title": "7. 새 K와 V를 먼저 붙이고 네 위치를 읽습니다"
+  },
+  {
+    "id": "attention-read",
+    "title": "8. 같은 네 기록에서 출력 (2.5, 5)를 얻습니다"
+  },
+  {
+    "id": "kv-shape-sharing",
+    "title": "9. Q 4개를 유지하며 기록을 4·2·1벌로 나눕니다"
+  },
+  {
+    "id": "shape-layout",
+    "title": "10. 현재 Q의 길이 1과 저장 K/V의 길이 4를 구분합니다"
+  },
+  {
+    "id": "source-repeat-kv",
+    "title": "11. 실제 repeat_kv는 0·0·1·1 순서로 짝지웁니다"
+  },
+  {
+    "id": "source-cache-update",
+    "title": "12. 실제 DynamicLayer는 위치 축에 새 기록을 잇습니다"
+  },
+  {
+    "id": "paper-mqa",
+    "title": "13. MQA 원문은 K/V의 head 축을 없앱니다"
+  },
+  {
+    "id": "paper-gqa",
+    "title": "14. GQA 원문은 묶음별 평균 뒤 다시 학습합니다"
+  },
+  {
+    "id": "kv-shape-formula",
+    "title": "15. 같은 셈을 모든 층에 더해 토큰당 byte를 구합니다"
+  },
+  {
+    "id": "model-configs",
+    "title": "16. 실제 설정에서 KV를 남기는 층을 셉니다"
+  },
+  {
+    "id": "kv-shape-runtime",
+    "title": "17. Gemma는 local과 global의 폭을 따로 셉니다"
+  },
+  {
+    "id": "cache-representation-design",
+    "title": "18. 같은 기록을 더 작은 공통 숫자로 나타낼 수 있습니다"
+  },
+  {
+    "id": "mla-vs-gqa",
+    "title": "19. MLA는 매번 전체 K/V를 펼치지 않아도 됩니다"
+  },
+  {
+    "id": "position-key",
+    "title": "20. 위치 회전용 기록은 별도 경로에 남습니다"
+  },
+  {
+    "id": "parallel-budget",
+    "title": "21. GPU 한 장의 저장량과 모델 전체를 구분합니다"
+  },
+  {
+    "id": "capacity-bandwidth",
+    "title": "22. 저장량이 4분의 1이어도 전체 시간은 따로 계산합니다"
+  },
+  {
+    "id": "boundary",
+    "title": "23. 재사용 조건과 실제 할당을 확인합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "24. 값을 바꾸기 전에 다음 결과를 예상해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/kv-cache-fundamentals"),
   },
   {

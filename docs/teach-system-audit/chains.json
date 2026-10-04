@@ -6904,7 +6904,7 @@
     {
       "route": "crypto/extension-field-theory",
       "title": "Extension field: minimal polynomial·tower·Frobenius",
-      "status": "unreviewed",
+      "status": "reviewed-needs-rewrite",
       "publicEntry": "src/pages/articles/blockchain/extension-field-theory.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/extension-field-theory.tsx",
@@ -6923,19 +6923,22 @@
           "Release gate"
         ]
       },
-      "issues": [],
-      "fixture": null,
+      "issues": [
+        "Actual public ModernArticle is five short sections: numeric F3 appears but jargon/root/irreducible precedes any calculation; generic malformed formula annotation does not explain operations.",
+        "No continuous multiplication or inverse calculation, no actual source application, no predictive questions. Original correct minimal polynomial/tower/Frobenius statements must be preserved with proofs and boundaries.",
+        "Need distinguish no-root test for degree2/3 from higherdegree, field generator from multiplicative generator, coordinate basis from raw byte meaning, and Frobenius period divides degree rather than always equals it."
+      ],
+      "fixture": {
+        "case": "F3 with u²=2: (1+u)(2+u)=1, inverse and Frobenius a+bu→a+2bu; polynomial quotient and minimal degree, same coordinates through pinned ark-ff Fp2 experiment planned.",
+        "assumption": "Small F9 educational configuration; distinguish own config from library default profile and cryptographic-size deployment."
+      },
       "stageEvidence": {},
       "sourceEvidence": [],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "Actual public entry and complete ModernArticle read; frozen baseline public text reviewed. Unused historical visualization tree not counted as public content."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "Substantive rewrite, primary source reading, exact arithmetic and actual configured code run, humanize, metadata and browser"
       ]
     },
     {
@@ -6979,18 +6982,12 @@
     },
     {
       "route": "crypto/fft",
-      "title": "FFT / NTT — 다항식 곱셈 가속",
-      "status": "reviewed-needs-rewrite",
+      "title": "NTT: 네 계수를 빠르게 계산하고 되돌리기",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/fft/index.tsx",
       "bodyFiles": [
-        "src/pages/articles/blockchain/fft/Butterfly.tsx",
-        "src/pages/articles/blockchain/fft/DFT.tsx",
-        "src/pages/articles/blockchain/fft/INTT.tsx",
-        "src/pages/articles/blockchain/fft/Overview.tsx",
-        "src/pages/articles/blockchain/fft/UnitRoot.tsx",
-        "src/pages/articles/blockchain/fft/ZKUsage.tsx",
         "src/pages/articles/blockchain/fft/index.tsx",
-        "src/pages/articles/blockchain/math-viz-primitives.tsx"
+        "src/pages/articles/blockchain/fft/ModernArticle.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -7012,32 +7009,54 @@
         "The length3 wraparound example omits that F17 has no order3 root; must distinguish a quotient-ring identity from an executable F17 transform.",
         "Need actual original-source application, inverse numerical proof, ordering and polynomial multiplication boundaries."
       ],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "All previous bodies, diagrams and learning metadata read; original paper research in progress.",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "F17, root4, coefficients [1,2,3,4] to [10,7,15,6]; E[4,15], O[6,15]; inverse root13 gives [4,8,12,16], length inverse13 recovers input. Same-source A1[[4,6],[15,15]], Pollard dPrime4 and negative dPrime13. Product A=1+x²,B=1+x yields [1,1,1,1] at length4 and [2,2] at length2.",
+        "assumption": "Educational exact finite-field computation; no production-library/GPU benchmark. F17 has no order3 root."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: repeated evaluation of same rule",
+        "B": "black-box: coefficients and ordered positions to ordered values and inverse",
+        "0": "case: four coefficients and direct evaluation at 1,4,16,13",
+        "1": "picture: split, small calculations, merge into same four values",
+        "2": "need: opposite positions share even contributions and negate odd contributions",
+        "3": "names: roots/order/field/NTT versus fast algorithm/butterfly after case",
+        "4": "dft and butterfly: exact transform and numeric two-output combination",
+        "5": "trace: full four-coefficient split/merge, paired output order and work count",
+        "6": "source: Pollard original(1)–(3) same d4/r4/coefficient and signed inverse; CooleyTukey(3)/(6)/(7) same A1 rows and output",
+        "7": "unit-root/intt/zk-usage/release: domain existence, inverse proof and same numerical roundtrip, bit order, product/padding/wraparound, unsupported length3, integer range and actual performance boundary; predictions11/12/13"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Pollard1971 original scan downloaded from university mirror, /tmp/teach-all/pollard-original.pdf 1227360bytes; pp365–368 text read and p365 image visually checked for signed dPrime normalization. AMS fetch403; Crossref confirms correct DOI10.1090/S0025-5718-1971-0301966-0.",
+          "application": "d4,r4,GF17,n-extension1,dPrime4,negative dPrime13 mapped to same input. Existing DOI10.1007/BF01934338 is an unrelated Fermat-curves paper and replacement proposed."
+        },
+        {
+          "source": "CooleyTukey1965 original scan university mirror downloaded363726bytes; /tmp/teach-all/cooley-tukey-original.pdf. OCR empty, actual pp297–298 rendered and read.",
+          "application": "N4=r1*r2=2*2, parity k0, original A1 rows [[4,6],[15,15]], outer merge gives same output. Original complex arithmetic and operation counts not claimed as finite-field runtime."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "All six old body components, three diagrams and 6+4 metadata read. All14newsections plus formula/algorithm props read. Preserved correct transform/inverse/complexity/domain/product/implementation limits; replaced generic annotations and clarified unsupported length3.",
+        "arithmetic": "/tmp/teach-all/chains-fft-arithmetic.py/json: all83521length4vectors direct/fast/inverse, 400additional length1/2/8/16 cases,320product comparisons, source coefficient/sign/array mappings and wraparound verified. Educational Python arithmetic only.",
+        "humanize": "/tmp/teach-all/humanize-chains-fft/fft: actual extraction/roundtrip/prepare,4650chars unchanged; full/chunk1 math-footnote WARN independently approved by /root/teach_ai_systems in independent-finalize.md; chunk2gate0. Summary corrected to additional edits0. Formula layout change manually reviewed.",
+        "browser390": "output/playwright/teach-chains-fft/summary.json full-page pass. Six detail sections and actual KaTeX .base bounds in chains-fft-math-bounds.json passed after inverse sum split. DFT,INTT,product screenshots visually read.",
+        "browser1440": "Same complete page and six detail sections pass; source mapping screenshot visually read. Actual .base bounds show no clipping in either width.",
+        "static": "/tmp/teach-all/chains-fft-tsc.log: actual npx tsc -p tsconfig.app.json --noEmit exit0.",
+        "prose": "/tmp/teach-all/chains-fft-prose.log strict exit0.",
+        "learning": "Parent merged batch13 and strict registration passed in /tmp/teach-all/batch13-svd-ntt-learning.log, 2026-10-04. Wrong Pollard DOI evidence replaced."
+      },
+      "remaining": [],
+      "reviewDisposition": "substantive-rewrite"
     },
     {
       "route": "crypto/field-arithmetic",
-      "title": "유한체 구현: representation·Montgomery·release",
-      "status": "unreviewed",
+      "title": "유한체 구현: 7×5를 저장하고 계산하는 방법",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/field-arithmetic.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/field-arithmetic.tsx",
-        "src/pages/articles/blockchain/field-arithmetic/FrScalar.tsx",
-        "src/pages/articles/blockchain/field-arithmetic/Montgomery.tsx",
-        "src/pages/articles/blockchain/field-arithmetic/OperatorOverload.tsx",
-        "src/pages/articles/blockchain/field-arithmetic/Overview.tsx",
-        "src/pages/articles/blockchain/field-arithmetic/PrimeRepr.tsx"
+        "src/pages/articles/blockchain/field-arithmetic/ModernArticle.tsx",
+        "src/pages/articles/blockchain/field-arithmetic/codeRefs.ts"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -7052,20 +7071,55 @@
           "\n        Canonical bytes와 내부 limb를 같은 값으로 연결한다\n      "
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "Abstract representation/API jargon precedes a continuous small numerical case; generic formula annotations do not explain actual operations.",
+        "Existing cross-field rejection requirement is false for untagged canonical bytes: small integer5 is valid in two different fields. Need typed protocol context and explicit format expectations.",
+        "Educational Rust snippets use invented APIs and CtOption, whereas actual ark-ff source and return types need pinned verification.",
+        "Preserve REDC proof, carry handling, canonical decoding and Fp/Fr distinction while applying same7×5mod17 to actual source; distinguish educational radix32 from actual64-bit limbs."
+      ],
+      "fixture": {
+        "case": "p17/R32 input7,5→stored3,7→T21→m27→internal15→output1. Actual default MontConfig with R2^64 has residue1: stored7,5→1; INV1085102592571150095, k1085102592571150093. Cross-field byte5 valid in F17 and F19.",
+        "assumption": "Teaching radix32 and actual64-bit implementation deliberately separated; actual pinned host execution but no timing/side-channel/GPU claim."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview:7×5 mod17 same answer through changed storage",
+        "B": "black-box:input bytes and modulus to checked internal calculation and output bytes",
+        "0": "case:7→3,5→7,answer1→15 under R32",
+        "1": "picture:input/operation/output path for same request",
+        "2": "need:two R factors need one removal and power-of-two cancellation",
+        "3": "names:field/canonical/Montgomery/REDC/limb/serialization after example",
+        "4": "representation and montgomery-form:positional reconstruction,endian,samecase scaling",
+        "5": "redc and trace:low-bit cancellation,range proof,entire R2-entry/multiply/exit with original paper",
+        "6": "source:actual pinned from_bigint/mul_assign/into_bigint and same7×5 at64-bit radix; explicit manual MontConfig selects default methods instead of derive-generated path",
+        "7": "api/fp-fr/carry/release:actual None/panic/reject/reduce/trailingreader,byte5 crossfield counterexample,EIP roles/endian,carry and execution limits; three predictions"
+      },
+      "sourceEvidence": [
+        {
+          "source": "GitHub official v0.5.0 tag API resolves directly to commit7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c. Four full raw files saved with SHA256 manifest and MIT/Apache licenses. Cargo git dependency uses same revision.",
+          "application": "Actual default MontConfig source entered with7,5 at N1,p17. Explicit manual config avoids separate derive-generated mul_assign. API boundaries executed; verification/main.rs and Cargo.lock retained."
+        },
+        {
+          "source": "Montgomery1985 original PDF226295bytes from UCSD university scan; actual page519/520 images read because OCR empty.",
+          "application": "N17,R32,Nprime15,T21,m27,t15; R2entry and exit, proof0≤T<pR→u<2p applied to same case."
+        },
+        {
+          "source": "Official EIP197 freshly read Definition of groups and Encoding.",
+          "application": "p versus q=r, generator(1,2),32-byte big-endian and inputrange distinguished from ark little-endian; no pairing execution claim."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "All5 old public components,4data modules,5diagrams and oldlearning read. New15sections+formula/algorithm props+code notes reviewed; correct derivation preserved and false universal crossfield rejection removed.",
+        "arithmetic": "/tmp/teach-all/chains-field-arithmetic-check.json:544REDC inputs,289toy products,17roundtrips; actual pinned Rust289products/289sums plus inverse0/canonical17/modorder17/crossfield5/trailing99. rustc1.93.0 andCargo.lock SHA recorded.",
+        "humanize": "Latest /tmp/teach-all/humanize-chains-field-arithmetic/field-arithmetic:7307chars actualextract/roundtrip/prepare,fullgate0 and3727/3579chunk gates0,latest0changes. Initial13connectivecommas removed with numbers/markers preserved.",
+        "browser390": "Final output/playwright/teach-chains-field-arithmetic/summary.json: ten source/experiment panels opened, zero page overflow, narrow paragraphs, KaTeX errors, broken anchors or runtime errors. Six detailed sections and actual .base bounds pass; latest source/config screenshot visually read.",
+        "browser1440": "Same final report: ten source/experiment panels opened and all checks passed. /tmp/teach-all/chains-field-arithmetic-details.json verifies six sections at both widths; Fp/Fr screenshot visually inspected.",
+        "independentMath": "/tmp/teach-all/field-arithmetic-independent-theory.json:theory read9–11/13 and independently verified544inputs,values,range proof,64-bit constants andcrossfield boundary; Rust run separately author evidence.",
+        "static": "Actual npx tsc -p tsconfig.app.json --noEmit exit 0 confirmed by parent session 44132, /tmp/teach-all/root-compiler-tsc-final.log.",
+        "prose": "/tmp/teach-all/chains-field-arithmetic-prose.log strict0 after main rewrite; latest configparagraph checker complete0.",
+        "learning": "Parent batch14 merged learning/TOC/canonical/evidence/topology; /tmp/teach-all/chains14-learning.log and /tmp/teach-all/chains-field-arithmetic-learning.log strict exit 0."
+      },
+      "remaining": [],
+      "reviewDisposition": "substantive-rewrite"
     },
     {
       "route": "crypto/finite-field-theory",
@@ -7452,12 +7506,13 @@
     },
     {
       "route": "crypto/karatsuba",
-      "title": "Karatsuba: 세 곱 재결합·재귀·cutoff",
-      "status": "unreviewed",
+      "title": "Karatsuba: 네 번의 작은 곱을 세 번으로 줄이기",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/karatsuba.tsx",
       "bodyFiles": [
-        "src/pages/articles/blockchain/karatsuba.tsx",
-        "src/pages/articles/blockchain/karatsuba/ModernArticle.tsx"
+        "src/pages/articles/blockchain/karatsuba/ModernArticle.tsx",
+        "src/pages/articles/blockchain/karatsuba/viz/ModernKaratsubaViz.tsx",
+        "src/pages/articles/blockchain/karatsuba/codeRefs.ts"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -7472,20 +7527,52 @@
           "Cutoff는 정리가 아니라 target의 측정값이다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "Actual public ModernArticle and ModernKaratsubaViz plus prior learning read. Old unused bodies are not public and are excluded from the current assessment.",
+        "Correct 1234×5678 fixture appears after formulas; same case is not introduced and traced before terminology.",
+        "Formula operation annotations are generic and recurrence formula has unrelated normalization explanation. Existing old raw TeX includes doubled backslashes.",
+        "Need original-source sign convention applied to same fixture, exact carry boundary, asymptotic recurrence with sum growth, and prediction pointers."
+      ],
+      "fixture": {
+        "case": "1234×5678: 12·34 and56·78, z2=672,z0=2652,sum6164,cross2840,result7006652. Difference product484; lost carry yields6546652. Real source case reuses blocks at radix2^64 as [34,12]×[78,56], output[2652,2840,672,0].",
+        "assumption": "DecimalB100 versus actual64-bit limb radix explicitly changes input integer; Python exact calculation and source walk only, no native GMP execution or timing."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: same1234×5678 answer with fewer small products",
+        "B": "black-box: exact nonnegative integer pair→split→small products→recombined exact result",
+        "0": "case: four exact products and positions before terminology",
+        "1": "picture: three numerical products with explicit cross2840 and result",
+        "2": "need: quadratic pair count vs linear sums, costs and size caveat",
+        "3": "names: schoolbook/Karatsuba/cross/B/highlow/recursion/limb/cutoff after case",
+        "4": "naive-mul: exact distributed terms and positions, numeric annotation replaces old generic template",
+        "5": "karatsuba-trick/trace: three products, proof, base100carry and overflowcounterexample",
+        "6": "source/limbs: official GMP formula and full licensed release C file, actual branch/array lines with same blocks and radix distinction",
+        "7": "recursive/cost-comparison/boundaries/release: complete tree costs, assumedcrossing16, odd/unbalanced/square/fieldring conditions and three predictions"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Official GMP6.3.0 manual freshly read and official GNU2,094,196bytearchive downloaded; SHA a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898, fulltoom22_mul.c + LGPLv3/GPLv2/GPLv3 retained.",
+          "application": "B100 formula with d484; actual64-bit array symbolic trace s=n=t1, sign0,threeproducts,3324−484middle and resultdigits."
+        },
+        {
+          "source": "MathNet1962 author/title/volume145issue2/pages293–294 checked. OriginalfullPDFHTTP403.",
+          "application": "Bibliography only, no false full-paper proof validation claim; own derivation and actual read GMP sources supply explanation."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Full actual public ModernArticle+ModernKaratsubaViz read. Correct three products preserved, generic formula explanations replaced, complete new15sections and source file read.",
+        "arithmetic": "/tmp/teach-all/chains-karatsuba-check.json:65536 recursive pairs,300randomodd/unbalancedpairs,10000fourblockidentities; numericcarry/sign/cost/sourcearraycases exact.",
+        "humanize": "Latest /tmp/teach-all/humanize-chains-karatsuba/karatsuba:6051chars actualextract→roundtrip→prepare→apply; full0/chunks3820,2230gate0. One connective comma removed initially. AdditionalASTprops2324/code745/viz42gate0; two prediction connective commas removed.",
+        "static": "Actual npx tsc -p tsconfig.app.json --noEmit session72775 exited0; /tmp/teach-all/chains-karatsuba-tsc.log.",
+        "prose": "/tmp/teach-all/chains-karatsuba-prose.log strict exit0.",
+        "browser390": "output/playwright/teach-chains-karatsuba/summary.json: five code panels opened, no overflow/narrow/KaTeX/runtime/brokenanchors. Actual.basebounds0. Source andrecursive screenshots visuallyread.",
+        "browser1440": "Same fivepanels andallmetrics0; /tmp/teach-all/chains-karatsuba-details.json sixsections×two widths.",
+        "independentMath": "/tmp/teach-all/karatsuba-independent-theory.json: theory read10–13 and fulltoom22_mul.c, independently verified484/2840,negative484/3324,overwriting188/191/194/199 andcy0, complete-tree27 with actualcutoff distinction; no math errors found.",
+        "learning": "/tmp/teach-all/chains15-learning-final.log parent strict PASS and own /tmp/teach-all/chains-karatsuba-learning.log exit0; title/TOC/concepts/evidence/topology integrated.",
+        "metadata": "Read three graph definition bodies and ownership. Corrected sum extra-digit/recurrence-model boundary, 1962 bibliography-only source and no native GMP execution scope; parent merged conceptDefinitions/editorialOwnershipChanges."
+      },
+      "remaining": [],
+      "reviewDisposition": "substantive-rewrite"
     },
     {
       "route": "crypto/lagrange",

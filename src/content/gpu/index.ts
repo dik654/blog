@@ -217,26 +217,86 @@ const gpu: Category = {
     },
     {
       slug: "cuda-compilation-and-isa-analysis",
-      title: "CUDA 컴파일 경로: PTX 는 가상 ISA 이고 SASS 가 실제로 돕니다",
+      title: "CUDA 컴파일: 덧셈 하나가 GPU 명령이 되는 과정",
       subcategory: "gpu-fundamentals",
       sections: [
-        { id: "pipeline", title: "nvcc 의 두 단계 컴파일" },
-        { id: "ptx-and-sass", title: "PTX 가상 ISA 와 SASS 기계어" },
-        { id: "fatbin-and-jit", title: "Fatbin·compute capability·JIT 선택" },
-        { id: "ptxas-optimizations", title: "ptxas allocation·scheduling·unrolling" },
-        { id: "classic-optimizations", title: "CSE·DCE·folding·selection 의 단계 배치" },
-        { id: "isa-analysis", title: "PTX–SASS gap 과 cuobjdump·nvdisasm" },
-        {
-          id: "evidence",
-          title: "NVIDIA 공식 문서 근거",
-          subsections: [
-            { id: "doc-nvcc-gpu-compilation", title: "NVCC GPU Compilation" },
-            { id: "doc-ptx-isa", title: "PTX ISA" },
-            { id: "doc-cuda-binary-utilities", title: "CUDA Binary Utilities" },
-            { id: "doc-compute-capabilities", title: "Compute Capabilities" },
-          ],
-        },
-      ],
+  {
+    "id": "overview",
+    "title": "1 · 같은 계산도 실행할 장치에 맞는 명령으로 바꿔야 합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 계산 방법과 실행 대상을 받아 배포 파일을 만듭니다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 여덟 자리 중 3번에서 7과 5를 더합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 번역 표현이 바뀌어도 값의 이동은 유지됩니다"
+  },
+  {
+    "id": "why",
+    "title": "5 · 중간 표현과 장치용 결과를 함께 두는 이유가 있습니다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 계산을 옮기는 단계와 결과물에 이름을 붙입니다"
+  },
+  {
+    "id": "trace",
+    "title": "7 · 0번 block의 3번 thread가 같은 12를 기록합니다"
+  },
+  {
+    "id": "pipeline",
+    "title": "8 · 실제 소스에서 역할을 확인하고 공개된 컴파일 단계로 읽습니다"
+  },
+  {
+    "id": "ptx-and-sass",
+    "title": "9 · 공식 PTX 출력에서 위치 3과 합 12를 찾습니다"
+  },
+  {
+    "id": "sass-trace",
+    "title": "10 · 같은 문서의 SASS에서 FADD의 입력과 출력을 따라갑니다"
+  },
+  {
+    "id": "ptxas-optimizations",
+    "title": "11 · 다 쓴 주소 자리를 값이 다시 쓰면 저장 공간을 아낍니다"
+  },
+  {
+    "id": "fatbin-and-jit",
+    "title": "12 · A100과 H100은 같은 묶음에서 다른 이미지를 고릅니다"
+  },
+  {
+    "id": "capabilities",
+    "title": "13 · 대상의 저장 한도와 명령 지원을 따로 확인합니다"
+  },
+  {
+    "id": "unrolling",
+    "title": "14 · 반복을 네 개씩 묶으면 제어는 줄고 동시에 든 값은 늘 수 있습니다"
+  },
+  {
+    "id": "classic-optimizations",
+    "title": "15 · 반복 계산과 쓰이지 않는 값을 줄이는 원리도 적용됩니다"
+  },
+  {
+    "id": "floating-options",
+    "title": "16 · 수학적으로 같은 식도 반올림 횟수가 바뀌면 결과가 달라집니다"
+  },
+  {
+    "id": "isa-analysis",
+    "title": "17 · 배포 이미지와 자원 보고를 확인한 뒤 시간을 잽니다"
+  },
+  {
+    "id": "evidence",
+    "title": "18 · 고정 문서의 역할을 나눠 원문과 사례를 대조합니다"
+  },
+  {
+    "id": "limits",
+    "title": "19 · 번역 결과와 실행 결과를 구별하며 다시 예측합니다"
+  }
+],
       component: () => import("@/pages/articles/gpu/cuda-compilation-and-isa-analysis"),
     },
     {
@@ -305,23 +365,74 @@ const gpu: Category = {
     },
     {
       slug: "sm-warp-scheduling-and-issue",
-      title: "SM 내부: subpartition, warp scheduler, scoreboard, divergence",
+      title: "GPU 명령 발행: 배치된 일과 지금 시작할 수 있는 일",
       subcategory: "gpu-fundamentals",
       sections: [
-        { id: "sm-structure", title: "SM 과 subpartition 4개의 issue 상한" },
-        { id: "issue-scoreboard", title: "Scoreboard 와 issue·dispatch" },
-        { id: "latency-hiding", title: "Dependency latency 와 TLP·ILP·MLP" },
-        { id: "divergence", title: "Divergence 와 reconvergence" },
-        {
-          id: "evidence",
-          title: "Programming Guide·Nsight Compute 근거",
-          subsections: [
-            { id: "paper-cuda-simt-multithreading", title: "CUDA Programming Guide 의 SIMT·multithreading" },
-            { id: "paper-nsight-compute-scheduler", title: "Nsight Compute 의 scheduler·stall metric" },
-            { id: "paper-hopper-sm-diagram", title: "Hopper SM diagram" },
-          ],
-        },
-      ],
+  {
+    "id": "overview",
+    "title": "1 · 일이 많이 남아 있어도 지금 시작할 수 있는 일은 없을 수 있습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 맡은 일 중 준비된 명령을 하나 골라 내보냅니다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 네 묶음 중 한 묶음의 첫 결과가 더 늦게 도착합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 먼저 보낸 결과를 기다리는 동안 다른 묶음을 선택합니다"
+  },
+  {
+    "id": "why",
+    "title": "5 · 기다리는 값과 선택할 일을 따로 관리해야 합니다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 작업 묶음과 세 상태를 이름으로 구별합니다"
+  },
+  {
+    "id": "trace",
+    "title": "7 · 여섯째 clock에는 네 warp가 모두 다음 결과를 기다립니다"
+  },
+  {
+    "id": "sm-structure",
+    "title": "8 · 실제 배치 단위와 발행 상한을 연결합니다"
+  },
+  {
+    "id": "issue-scoreboard",
+    "title": "9 · 공식 후보 조건에 같은 여섯째 clock을 넣습니다"
+  },
+  {
+    "id": "profiler-states",
+    "title": "10 · 어디에서 기다리는지와 후보에서 밀렸는지를 구별합니다"
+  },
+  {
+    "id": "latency-hiding",
+    "title": "11 · 매 순간 네 후보보다 네 개의 독립된 일이 필요합니다"
+  },
+  {
+    "id": "memory-and-bubbles",
+    "title": "12 · 긴 읽기 지연은 요청 수와 실제 수용량을 함께 봅니다"
+  },
+  {
+    "id": "divergence",
+    "title": "13 · 조건이 갈리면 같은 명령의 참여 자리도 줄어듭니다"
+  },
+  {
+    "id": "thread-scheduling",
+    "title": "14 · Lane별 진행 상태가 있어도 동기화 규칙은 필요합니다"
+  },
+  {
+    "id": "evidence",
+    "title": "15 · 원문의 정의와 모형의 가정값을 구별합니다"
+  },
+  {
+    "id": "limits",
+    "title": "16 · 명령을 더 낼 수 있는 이유와 유효한 일을 구별합니다"
+  }
+],
       component: () => import("@/pages/articles/gpu/sm-warp-scheduling-and-issue"),
     },
     {
@@ -342,11 +453,71 @@ const gpu: Category = {
       title: "CUDA 공유 메모리: 뱅크 충돌, Coalescing",
       subcategory: "gpu-fundamentals",
       sections: [
-        { id: "overview", title: "공유 메모리란?" },
-        { id: "bank-conflict", title: "뱅크 충돌" },
-        { id: "coalescing", title: "Coalescing" },
-        { id: "aos-soa", title: "AoS vs SoA" },
-      ],
+  {
+    "id": "overview",
+    "title": "1. 가까운 곳에 잠시 놓으면 쓰는 순서를 바꿀 수 있습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 입력 표를 읽어 행과 열이 바뀐 출력 표를 만듭니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 64칸짜리 행에서 2371번 값은 229번으로 갑니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 읽을 때는 옆 칸끼리, 쓸 때도 옆 칸끼리 모읍니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 함께 놓는 공간과 기다리는 지점이 모두 필요합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 역할마다 shared memory와 coalescing이라는 이름을 붙입니다"
+  },
+  {
+    "id": "trace",
+    "title": "7. 읽는 thread와 쓰는 thread가 같은 칸을 넘겨줍니다"
+  },
+  {
+    "id": "source-naive",
+    "title": "8. 직접 전치하는 원문은 쓰기 주소를 64칸씩 띄웁니다"
+  },
+  {
+    "id": "source-exchange",
+    "title": "9. 실제 공동 공간 코드에 같은 두 thread를 넣습니다"
+  },
+  {
+    "id": "coalescing",
+    "title": "10. 주소가 덮는 sector 수와 실제 메모리 전송량을 구별합니다"
+  },
+  {
+    "id": "bank-conflict",
+    "title": "11. 같은 열을 읽으면 서로 다른 값이 같은 bank에 몰립니다"
+  },
+  {
+    "id": "padding",
+    "title": "12. 원본은 행마다 한 칸을 더해 충돌을 풀어 줍니다"
+  },
+  {
+    "id": "reuse",
+    "title": "13. 같은 값을 여덟 번 쓰는 경우에는 읽기 반복도 줄일 수 있습니다"
+  },
+  {
+    "id": "boundary",
+    "title": "14. 경계 검사는 접근을 막고 대기는 참여 범위를 지킵니다"
+  },
+  {
+    "id": "aos-soa",
+    "title": "15. 필요한 항목끼리 붙여 놓아도 주소 간격이 달라집니다"
+  },
+  {
+    "id": "limits",
+    "title": "16. 요청 수를 줄였는지와 전체 시간이 줄었는지를 함께 봅니다"
+  }
+],
       component: () => import("@/pages/articles/gpu/cuda-shared-memory"),
     },
     {

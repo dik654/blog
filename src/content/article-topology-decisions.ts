@@ -1613,6 +1613,83 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "열 개의 덧셈을 네 자리씩 나누는 한 요청에서 논리적 작업표와 실제 실행 묶음을 구별합니다. 같은 번호의 경계 검사와 주소를 실제 원본으로 확인한 다음 2D 및 자원 제약으로 확장하는 연속 설명이므로 유지합니다.",
     "sharedGate": "10개·4 threads·3 blocks에서 후보 12개 중 접근 10개와 건너뜀 2개, 9번의 36바이트 주소와 결과 99, block별 부분 warp 3개를 본문·도식·학습·원문에 함께 대조합니다. 2D의 13번·52바이트 및 N=0 등 경계도 정수 검산합니다."
   },
+  "ai/math-matrices-svd": {
+    "action": "keep",
+    "rationale": "두 입력 (4,2)를 섞는 같은 규칙에서 행렬·합성·rank·SVD·근사를 함께 추적합니다. 출력 평균과 차이의 서로 다른 배율을 보아야 표의 크기와 독립 방향 수, 압축의 오차와 잃는 정보를 구분할 수 있습니다. 모든 후보에 대한 정리 증명은 펼침 영역으로 보존해 주 흐름과 연결합니다.",
+    "sharedGate": "A의 (10,8), 큰 방향만 남긴 (9,9), 표 노름 오차 1과 같은 입력 출력 오차 √2를 각각 검산합니다. Reduced의 3×2 rank 1 입력에서 S 길이 2, PyTorch 코드의 행 입력·weight 전치·bias·펼침 경로, 실제 MIT 문제의 동일 행렬까지 확인합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "crypto/fft": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 네 계수를 직접 평가·버터플라이·원문 보조 배열·역변환까지 추적한 뒤 곱의 길이와 구현 순서가 깨지는 경우를 이어 보기 위해 한 글로 유지합니다.",
+    "sharedGate": "F17 길이 4의 모든 83521개 계수 목록에서 직접 변환과 빠른 변환, 역변환 원복을 대조했습니다. 추가 길이 400건과 다항식 곱 320건, 원문의 역배율과 보조 배열을 정수로 검산했습니다. GPU 커널이나 실제 암호 라이브러리는 실행하지 않았습니다."
+  },
+  "gpu/cuda-shared-memory": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 전치 값의 입력과 출력 경로에서 global 주소 모으기, shared bank 충돌, padding과 추가 비용을 연결해야 공동 공간을 사용하는 이유를 이해할 수 있어 한 글로 유지합니다. 재사용과 저장 배치는 이 주소 계산의 확장으로 설명합니다.",
+    "sharedGate": "64×64의4096개 원소를 실제 원본의32×16 threads·i0/16 식으로 재현하고 값7의2371→tile[5][3]→229, sector32→4와bank stride32/33,추가128B를본문·도식·학습·원문에대조합니다. 실제 GPU 성능은 측정하지 않았습니다."
+  },
+  "ai/serving-memory-admission-and-preemption": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "C 한 요청의 수용·성장·중단·복원이 같은 공간 장부를 사용하므로 한 글에서 끝까지 추적합니다. allocator와 cache group의 세부 구현은 연결 글이 소유합니다.",
+    "sharedGate": "40block에서 A14·B12·C9→A15·B13·C10→A16·B14·C0→B14·C11과 free14·5·2·10·15를 본문·Viz·문제에서 일치시킵니다. V1 full input63 대 free50, V0 CPU 실패 RuntimeError, 복구161token·11block과 두 비용 식을 실제 원문·독립 산술로 검증합니다."
+  },
+  "ai/math-exponents-logarithms": {
+    "action": "keep",
+    "rationale": "세 번의 절반 줄이기에서 남은 양 1/8과 횟수 3을 대응해 거듭제곱·역관계·곱의 합 변환·밑 변환을 한 계산으로 연결합니다. 이 네 관계를 함께 보아야 로그의 음수 출력, 확률의 곱 조건, 단위 변경과 수치 표현의 한계를 구별할 수 있습니다.",
+    "sharedGate": "같은 1/8의 log₂=−3, 밑 1/2에서 3, 자연로그 −3ln2를 교재와 CPython 분기에 대입합니다. 직접 2000번 곱은 0, 로그 합은 유한하다는 실제 실행과 exp의 재언더플로, 복합 비용 최소 위치 1/2 대 1/(1+ln2)를 확인합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "gpu/cuda-compilation-and-isa-analysis": {
+    "action": "keep",
+    "rationale": "같은 덧셈의 소스·PTX·SASS를 실제 문서에서 추적하고 배포 이미지 선택·배정·최적화 확인을 이어 갑니다. 자원에 따른 동시 실행 한도와 성능 측정의 상세는 각 정본으로 연결합니다.",
+    "sharedGate": "0×4+3=3, 주소+12바이트, 7+5=12를 실제 함수와 별도 문서 출력에 대입합니다. U2/4/8의13/19/31, FMA2^-46 대0, sm80 cubin+compute90 PTX의선택을 검산하며 모든 실제 실행·성능 주장을 구별합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "crypto/field-arithmetic": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 7×5 요청이 입력 표현·REDC·실제 원문·외부 바이트 경계를 통과하는 흐름을 유지합니다. 타입 혼용과 실패 조건은 그 흐름이 깨지는 지점으로 이어집니다.",
+    "sharedGate": "학습용 p=17, R=32의 544개 REDC 입력과 289개 곱, 실제 고정 ark-ff의 289개 곱·합과 실패 조건을 검산했습니다. 원문과 Cargo.lock을 고정한 호스트 한 limb 실험이며 GPU·어셈블리·상수 시간·성능 검증은 아닙니다. 일반 derive 매크로의 생성 코드와 기본 메서드를 구분하고 실험은 후자를 명시적으로 선택했습니다."
+  },
+  "gpu/sm-warp-scheduling-and-issue": {
+    "action": "keep",
+    "rationale": "같은 네 warp의6clock으로 배치·후보·발행과 기다림을 연결합니다. 경로별 활성 lane과 동기화 범위는 명령발행이 유효한 일로 이어지는 조건입니다.",
+    "sharedGate": "B지연8이면clock6의준비시점A9/B10/C7/D8·active4 eligible0 issued0, B지연4이면eligible1 issued1입니다. Little의resident하한과eligible,500warp-load의모형/큐한도,40slots·26.5625%와실행시간을 구별합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "ai/math-high-dimensional-geometry": {
+    "action": "keep",
+    "rationale": "같은 네 칸 직선을 한 칸으로 옮겨 여섯 거리와 복원을 확인한 뒤, 일반적인 거리 보존 정리와 데이터의 자유도, 학습 통로의 폭을 구별합니다. 이 세 크기를 함께 대조해야 낮은 차원이라는 공통 표현에서 잘못된 압축 보장을 끌어내지 않습니다.",
+    "sharedGate": "p(t)→2t의 여섯 거리와 x1−x2의 충돌, 독립 이진 제곱거리의 상대SD, JL 4/6 계수의 확률·수치, scikit-learn의319와 올림320을 각 근거의 범위에 맞춰 검산합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "ai/kv-cache-fundamentals": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 요청의 현재 질문과 보존할 기록을 작은 배열부터 실제 코드·모델 설정까지 이어 추적합니다. head 공유·저장 표현·시간 비용을 같은 기록의 수명과 연결하므로 한 글에 유지하고 allocator 세부 구현은 별도 글이 소유합니다.",
+    "sharedGate": "3→4위치48→64byte/Q16byte,head0·0·1·1과출력(2.5,5)를본문·원문·Viz·문제에서일치시킵니다. MLA흡수동치·Gemma800+320=1120MiB와대용3840MiB·총전송200→125MB를 독립 검산하고 전체원문pin·3수식·390/1440·9패널·5장면을 검사합니다."
+  },
+  "crypto/karatsuba": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 네 조각으로 합의 곱·차의 곱·실제 limb 배열을 추적하고 재귀 비용과 구현 경계를 이어 보기 위해 한 글로 유지합니다.",
+    "sharedGate": "Python 정수로 재귀 곱 65536쌍과 홀수·불균형 무작위 300쌍, 네 조각 공식 10000건을 대조했습니다. 실제 C 원문에는 같은 조각을 64비트 자리 두 개로 옮겨 적용했으며 네이티브 실행이나 성능 측정은 하지 않았습니다."
+  },
 };
 
 /**
@@ -1620,6 +1697,17 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/kv-cache-fundamentals": "489a4b6ceb2047c8",
+  "ai/math-exponents-logarithms": "85bb89442054fb35",
+  "ai/math-high-dimensional-geometry": "e8b6cd657ce57ef8",
+  "ai/math-matrices-svd": "a0a373f5e7b381af",
+  "ai/serving-memory-admission-and-preemption": "13f411a93493046f",
+  "crypto/fft": "6fb9c0f51c62c5ea",
+  "crypto/field-arithmetic": "cf8cd8590d9faf12",
+  "crypto/karatsuba": "88bf647bd63498c0",
+  "gpu/cuda-compilation-and-isa-analysis": "7176747457f03790",
+  "gpu/cuda-shared-memory": "5c94a7374b6a22a6",
+  "gpu/sm-warp-scheduling-and-issue": "049edeecb9dfbcbb",
   "ai/continuous-batching-step-anatomy": "f6d631f09b82218c",
   "ai/math-vectors-inner-products": "f710b7d099e734d2",
   "ai/serving-latency-metrics-and-slo": "78cb5743248b70d4",
