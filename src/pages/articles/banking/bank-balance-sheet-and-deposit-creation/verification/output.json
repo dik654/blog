@@ -1,0 +1,138 @@
+{
+  "kind": "authored arithmetic model",
+  "unit": "KRW 100 million",
+  "b_initial_balance_is_auxiliary": true,
+  "states": {
+    "initial": [
+      {
+        "reserves": 20,
+        "loans": 80,
+        "bonds": 0,
+        "deposits": 92,
+        "borrowing": 0,
+        "equity": 8
+      },
+      {
+        "reserves": 30,
+        "loans": 70,
+        "bonds": 0,
+        "deposits": 92,
+        "borrowing": 0,
+        "equity": 8
+      }
+    ],
+    "loan": [
+      {
+        "reserves": 20,
+        "loans": 90,
+        "bonds": 0,
+        "deposits": 102,
+        "borrowing": 0,
+        "equity": 8
+      },
+      {
+        "reserves": 30,
+        "loans": 70,
+        "bonds": 0,
+        "deposits": 92,
+        "borrowing": 0,
+        "equity": 8
+      }
+    ],
+    "transfer": [
+      {
+        "reserves": 14,
+        "loans": 90,
+        "bonds": 0,
+        "deposits": 96,
+        "borrowing": 0,
+        "equity": 8
+      },
+      {
+        "reserves": 36,
+        "loans": 70,
+        "bonds": 0,
+        "deposits": 98,
+        "borrowing": 0,
+        "equity": 8
+      }
+    ],
+    "principal_repaid": [
+      {
+        "reserves": 14,
+        "loans": 86,
+        "bonds": 0,
+        "deposits": 92,
+        "borrowing": 0,
+        "equity": 8
+      },
+      {
+        "reserves": 36,
+        "loans": 70,
+        "bonds": 0,
+        "deposits": 98,
+        "borrowing": 0,
+        "equity": 8
+      }
+    ]
+  },
+  "branches_restart_after_principal_repayment": {
+    "additional_unrecognised_loss": {
+      "reserves": 14,
+      "loans": 83,
+      "bonds": 0,
+      "deposits": 92,
+      "borrowing": 0,
+      "equity": 5
+    },
+    "cash_basis_interest": {
+      "reserves": 14,
+      "loans": 86,
+      "bonds": 0,
+      "deposits": 91,
+      "borrowing": 0,
+      "equity": 9
+    },
+    "sale_before_payout": {
+      "reserves": 20,
+      "loans": 76,
+      "bonds": 0,
+      "deposits": 92,
+      "borrowing": 0,
+      "equity": 4
+    },
+    "sale_after_payout": {
+      "reserves": 0,
+      "loans": 76,
+      "bonds": 0,
+      "deposits": 72,
+      "borrowing": 0,
+      "equity": 4
+    },
+    "borrowing_after_payout": {
+      "reserves": 0,
+      "loans": 86,
+      "bonds": 0,
+      "deposits": 72,
+      "borrowing": 6,
+      "equity": 8
+    },
+    "buy_nonbank_bond": {
+      "reserves": 14,
+      "loans": 86,
+      "bonds": 6,
+      "deposits": 98,
+      "borrowing": 0,
+      "equity": 8
+    },
+    "customer_buys_bank_debt": {
+      "reserves": 14,
+      "loans": 86,
+      "bonds": 0,
+      "deposits": 86,
+      "borrowing": 6,
+      "equity": 8
+    }
+  },
+  "checks": "balanced journals; two-bank conservation; separate loss/interest/funding; allowance write-off; ratio and insurance arithmetic"
+}

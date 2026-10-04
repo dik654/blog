@@ -6865,15 +6865,13 @@
     {
       "route": "crypto/elliptic-curves",
       "title": "타원곡선군 구현: point·subgroup·BN254",
-      "status": "unreviewed",
+      "status": "reviewed-needs-rewrite",
       "publicEntry": "src/pages/articles/blockchain/elliptic-curves.tsx",
       "bodyFiles": [
-        "src/pages/articles/blockchain/crypto-foundations-viz.tsx",
         "src/pages/articles/blockchain/elliptic-curves.tsx",
-        "src/pages/articles/blockchain/elliptic-curves/G1Curve.tsx",
-        "src/pages/articles/blockchain/elliptic-curves/G1G2BN254.tsx",
         "src/pages/articles/blockchain/elliptic-curves/Overview.tsx",
-        "src/pages/articles/blockchain/math-viz-primitives.tsx"
+        "src/pages/articles/blockchain/elliptic-curves/G1Curve.tsx",
+        "src/pages/articles/blockchain/elliptic-curves/G1G2BN254.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -6886,19 +6884,22 @@
           "타원곡선 암호는 곡선의 모양이 아니라 점들의 유한군을 사용한다"
         ]
       },
-      "issues": [],
-      "fixture": null,
+      "issues": [
+        "Read actual3components and rendered sharedCryptoFoundationsViz jacobian/pairing modes, all6+4learning/sevendefinitions/ownership. Abstractfinitegroup andDLP precedes smallpointcase; genericformula annotations; noactualrawsource input trace orpredictions.",
+        "Preserve distinctaddition/doubling/inverse/identity exceptions,nonsingularity,Jacobiannormalization,bilinearity andsubgroup boundaries. Keep sameP5,1 through2P6,3→3P10,6→7P0,6 andJacobian3,8,2. Existing coordinate-only20,40,2→5,5,1 doesnotlie onthetoycurve andmustnotbeusedasitsvalidpoint.",
+        "Generic exact-length inputreject conflictswithEIP196 explicitshortzeropadding/surplusignore; EIP197 insteadmultiples192. SEC1 publickeyrejectsidentity whileEIPallowsinfinity/emptychecks. Mustapplysource-specificcontracts ratherthanuniversalparserrule."
+      ],
+      "fixture": {
+        "case": "F17 E:y²=x³+2x+2,P(5,1),2P(6,3),3P(10,6),7P(0,6),19P=O; sameJacobian(3,8,2) affine5,1. SeparateE2:y²=x³+2x has20points,order5G(9,4),wrongsubgroupT(0,0) order2,5T=T and4T=O.",
+        "assumption": "Smallcurveillustrationnotcryptosecurity; actualpinnedark ownconfig separatelylabelled fromrealBN254."
+      },
       "stageEvidence": {},
       "sourceEvidence": [],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "Actualpublic3componentbody/renderedsharedViz and7conceptdefinitions/6+4read. OfficialSEC1§2.2.1/3.2.2.1 andEIP196/197freshlyread. Ownsmallintegerarithmetic /tmp/teach-all/ec-toy-arithmetic.json 19pointenum361pairs6859triples."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "Substantive rewrite, source/nativeexecution, metadata, humanize, math/browser/TS."
       ]
     },
     {
@@ -8854,12 +8855,14 @@
     },
     {
       "route": "crypto/sparse-multiplication",
-      "title": "Sparse multiplication: support·Fp¹²·Miller 비용",
-      "status": "reviewed-needs-rewrite",
+      "title": "희소 곱셈: 빈 칸을 생략하고 같은 결과를 얻기",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/sparse-multiplication.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/sparse-multiplication.tsx",
-        "src/pages/articles/blockchain/sparse-multiplication/ModernArticle.tsx"
+        "src/pages/articles/blockchain/sparse-multiplication/ModernArticle.tsx",
+        "src/pages/articles/blockchain/sparse-multiplication/viz/ModernSparseViz.tsx",
+        "src/pages/articles/blockchain/sparse-multiplication/codeRefs.ts"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -8883,14 +8886,45 @@
         "case": "Preserve original A=1+2w+3w²+4w³,B=5+7w²→[5,10,22,34,21,28] in powerbasis. Map same actual BN field value to tower slots[1,3,0,2,4,0], B014[5,7,0,0,0,0]. Add c4=11 only in separate labelled variation to triggerw6=9+u. Compare034differentmeaning and actualgeneratorpreparedDline.",
         "assumption": "Small displayedcoefficients embedded in fixed BN254field; own inputs are not assertedto bevalidMillerlinecoefficients."
       },
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "Actual publicModernArticle5sections/renderedViz/frozenbaseline and fullmetadata read; unusedhistoricalfiles notclaimedreviewed. Official2012/408PDF §3.1 Algorithms5/6 freshlyread."
+      "stageEvidence": {
+        "S": "overview: same fourcoefficients multiplied by B withtwozerocolumns",
+        "B": "black-box: inputcoefficientsandposition, expectedgeneralproduct;omittedpositioncontract",
+        "0": "concrete: eightproducts→[5,10,22,34,21,28] explicitassumedinputs",
+        "1": "picture: fourrealinteractive scenes ofsameA andtwo productrows",
+        "2": "need: repeatedfixedpattern andcostofruntimezerosearch",
+        "3": "names: coefficient,support,dense/sparse,convolution andquotientrelation",
+        "4": "why-sparse: samepositionpairsand8vs6,cancellationcounterexample",
+        "5": "how-sparse: samepolynomial→towerlayout[1,3,0,2,4,0], B014[5,7,0,0,0,0]",
+        "6": "source: actual014(5,7,0) aa/bb/sum tracing, rawsource buttons andnativecompare",
+        "7": "reduction/twist/in-miller/paper-comparison/cost-saving/boundaries/release: c4=11wrap44xi;034distinctoperand;actualBN254Ddispatch;87lineMillercompare;Grewalalg5/6applied;13/18callsandconditional100→80time;3predictionanswers"
       },
-      "remaining": [
-        "Rewrite with same case→source, independent arithmetic/source nativeverification,humanize,metadata,390/1440checks."
-      ]
+      "sourceEvidence": [
+        {
+          "source": "arkworks algebra7ad88c46 ff/ec0.5.0 and bn2540.5.0-alpha.0",
+          "local": "src/pages/articles/blockchain/sparse-multiplication/codebase",
+          "mapping": "fp12model01493–112/03470–91;fp6model01 111–152/1 83–109;vshift26–36;BNell183–201;BN254TWIST_TYPEline35;Miller51–102",
+          "execution": "Unique teach-sparse-check --locked actualexit0 /tmp/teach-all/ark-sparse-locked-run.log, 36basis+32dense+4zeroone+2negative, sameprepared87lines genericpolynomialMillerequalslibrary; finalexp/fullpairing/timingexcluded"
+        },
+        {
+          "source": "Grewal,Azarderakhsh,Longa,Hu,Jao eprint2012/408 officialPDF §3.1 Algorithms5/6",
+          "mapping": "Same034inputs5/7/11 andA givea[5,15,0],b[14,50,44],e[36,117,77];helper14/44/108→50",
+          "boundary": "PDFtextread17pages, screenshot403. OriginalAranhaauthorattributionwrong;exactsourcecosts/timingnotassumedidentical."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Actual publicModernArticle5sections/renderedViz/frozenbaseline and fullmetadata read; unusedhistoricalfiles notclaimedreviewed. Official2012/408PDF §3.1 Algorithms5/6 freshlyread.",
+        "arithmetic": "/tmp/teach-all/sparse-independent-theory.json independentpolynomialproductandw6reduction all3cases/intermediatevaluesPASS; nativeexecutionauthorseparate.",
+        "sourceBytes": "/tmp/teach-all/chains-sparse-source-check.json 12rawsourcefilesmatchactualCargo;main/lockSHA retained",
+        "humanize": "/tmp/teach-all/humanize-chains-sparse-multiplication/sparse-multiplication 39p6042chars,actualroundtrip/2chunks/0edits,peer theory independent-finalize math11)falsefootnoteapproved; apply39unchanged0missing. ASTpropsfinal/code/viz allgate0.",
+        "browser": "output/playwright/teach-chains-sparse-multiplication/summary.json390/1440,16sections,9panelsopenedboth,0pageerrors/overflow/KaTeX/brokenanchors;seven detailedsections bothwidths;mobile reduction/costformulas visuallyread.",
+        "mathLayout": "/tmp/teach-all/chains-sparse-multiplication-math-bounds.json actualinnerKaTeXbase[]bothwidths after splittingAmdahlassumptionandresultrows; generalformulasvisiblewithcases.",
+        "visualization": "/tmp/teach-all/chains-sparse-multiplication-viz.json final4states/Enter/reducedmotion390/1440; eachwidthsameheightandbottomcontrolposition, nooverflow. Original4pxnoteshiftfixedinownViz only.",
+        "typescript": "Actual npx tsc -p tsconfig.app.json --noEmit exit0 /tmp/teach-all/chains-sparse-tsc-final.log (session22497 complete).",
+        "prose": "Actualglobalprose strict exit0 /tmp/teach-all/chains-sparse-prose.log",
+        "registration": "Parent merged batch19 full evidence/ownership/definitions4/catalog/title/learning; final strict /tmp/teach-all/ready149-learning.log PASS.",
+        "integratedBrowser": "/tmp/teach-all/chains-sparse-integrated.json 390/1440 finaltitle/16sections/anchors/generalformula innerbases/pageerrors/overflow PASS."
+      },
+      "remaining": []
     },
     {
       "route": "crypto/stark-theory",

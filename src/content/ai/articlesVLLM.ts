@@ -733,36 +733,98 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "prefix-caching-radix-attention",
-    title: "Prefix caching: radix tree 매칭과 cache-aware scheduling",
+    title: "프리픽스 캐시: 같은 입력의 기록을 찾고 공유하는 과정",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "problem", title: "매칭 구조와 실행 순서가 hit 을 정한다" },
-      { id: "radix-tree", title: "Radix tree 가 공유 prefix 를 node 로 가르는 방법" },
-      {
-        id: "matching",
-        title: "match_prefix 와 block hash 의 매칭 단위",
-        subsections: [{ id: "hybrid-manager", title: "Hybrid cache manager 의 group 간 hit 합의" }],
-      },
-      { id: "eviction", title: "Ref counter 와 leaf-first LRU eviction" },
-      { id: "scheduling", title: "Cache-aware scheduling 의 hit rate 와 fairness" },
-      {
-        id: "attention-metadata",
-        title: "Attention metadata: slot mapping 과 block table lookup",
-        subsections: [
-          { id: "slot-mapping", title: "Slot mapping · KV 쓰기 경로" },
-          { id: "block-table-lookup", title: "Block table lookup · KV 읽기 경로" },
-        ],
-      },
-      {
-        id: "evidence",
-        title: "SGLang 논문·vLLM 설계 문서·V1 소스",
-        subsections: [
-          { id: "paper-sglang-radixattention", title: "SGLang RadixAttention 논문" },
-          { id: "source-vllm-prefix-caching", title: "vLLM automatic prefix caching 설계" },
-          { id: "source-vllm-v1-attention", title: "vLLM V1 attention metadata·coordinator 소스" },
-        ],
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 앞부분을 이미 읽었다면 어디서 이어 계산할까요?"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 입력 번호와 저장된 기록을 연결합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 여덟 자리 중 앞 여섯 자리가 같습니다"
+  },
+  {
+    "id": "inside-tree",
+    "title": "4. 공통 여섯 자리와 서로 다른 끝을 나눕니다"
+  },
+  {
+    "id": "why-split",
+    "title": "5. 누가 읽는지 모르면 안전하게 지울 수 없습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 공통 앞부분과 기록을 찾는 구조에 이름을 붙입니다"
+  },
+  {
+    "id": "request-trace",
+    "title": "7. R2의 여섯 자리를 찾아 계산으로 넘깁니다"
+  },
+  {
+    "id": "radix-source",
+    "title": "8. 실제 match와 split에 같은 여덟 자리를 넣습니다"
+  },
+  {
+    "id": "matching",
+    "title": "9. radix도 페이지와 재사용 영역의 조건을 따릅니다"
+  },
+  {
+    "id": "block-hash",
+    "title": "10. 네 자리 묶음이면 R2는 앞 네 자리만 재사용합니다"
+  },
+  {
+    "id": "full-hit-boundary",
+    "title": "11. 입력 전체가 남아 있어도 마지막 계산은 남을 수 있습니다"
+  },
+  {
+    "id": "cache-accounting",
+    "title": "12. 재사용 비율과 저장한 위치 수를 따로 셉니다"
+  },
+  {
+    "id": "eviction",
+    "title": "13. 사용 잠금이 있는 길은 반환 후보에서 빠집니다"
+  },
+  {
+    "id": "free-queue",
+    "title": "14. vLLM은 tree 대신 참조 수와 free queue를 갱신합니다"
+  },
+  {
+    "id": "scheduling",
+    "title": "15. 순서를 바꾸려면 실행 뒤의 기록을 다시 보아야 합니다"
+  },
+  {
+    "id": "schedule-source",
+    "title": "16. 현재 LPM은 길이만으로 항상 정렬하지 않습니다"
+  },
+  {
+    "id": "paper-sglang-radixattention",
+    "title": "17. 논문의 offline 정리를 같은 작은 구조에 적용합니다"
+  },
+  {
+    "id": "attention-metadata",
+    "title": "18. 찾은 기록과 새 기록의 주소를 kernel에 넘깁니다"
+  },
+  {
+    "id": "kernel-and-hybrid",
+    "title": "19. 공유 길이 외에 backend와 group 조건을 확인합니다"
+  },
+  {
+    "id": "fairness",
+    "title": "20. 재사용 우선은 오래 기다린 요청의 목표와 충돌할 수 있습니다"
+  },
+  {
+    "id": "boundary",
+    "title": "21. 입력의 같음과 기록의 유효함을 함께 확인합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "22. 같은 입력에서 다음 경계를 예상해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/prefix-caching-radix-attention"),
   },
   {

@@ -1755,6 +1755,34 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "같은 1+u를 직접 세제곱하고 기저와 표를 바꾼 뒤 노름 1을 만드는 흐름이 큰 BN254의 마지막 지수를 설명합니다. 증명과 실제 원문 및 잘못된 후보의 반례를 같은 사례로 연결합니다.",
     "sharedGate": "고정 Rust 실행으로 작은 아홉 값·81쌍·기저 변경·비체 반례와 큰 지수 분해를 대조했습니다. 원복·연산 보존 검사만으로 틀린 표를 검출하지 못하는 경우를 명시합니다. 전체 페어링·최적 chain·성능은 실행하지 않았습니다."
   },
+  "ai/math-numerical-precision-stability": {
+    "action": "keep",
+    "rationale": "같은 δ의 저장 자리·괄호 배치·실제 반올림 분기를 한 흐름에서 읽어야 입력 정밀도와 중간 저장의 차이를 확인할 수 있습니다. 같은 확인법을 지수 항·모멘트 차에 적용하고 정확한 정수의 축 반례로 계산 의미의 독립 경계를 마무리합니다. 개별 GPU 커널과 혼합 정밀도 학습 루프의 상세 정책은 연결 글로 넘깁니다.",
+    "sharedGate": "δ=2^-11의 양방향 tie와 3c00/01/02, FP32 분산 0/1, 최대값 이동 뒤 exp(0)=1, log 비중 −1000, 같은 아홉 정수 합을 본문·그림·실행·원문에서 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "crypto/sparse-multiplication": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 A·B의 여덟 곱을 실제 탑의 계수·014 함수로 옮기고 빈 칸의 변화와 034의 다른 뜻을 비교합니다. 실제 D형 Miller와 비용 모형까지 이어야 계산 생략의 조건과 한계를 함께 이해할 수 있습니다.",
+    "sharedGate": "같은 입력의 직접 다항식·일반 곱·전용 곱과 생성원 Miller 누적을 비교했습니다. 잘못된 위치 두 경우를 검출하며 시간·전체 페어링·선 생성 독립 검증은 실행 범위에 넣지 않습니다."
+  },
+  "banking/bank-balance-sheet-and-deposit-creation": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "대출로 생긴 지급 의무를 송금·상환하고 이후 지급 부족·손실을 다루는 한 은행의 연속 사례입니다. 별도 분기를 명시해 손실과 상환, 보험과 유동성 공급을 구분합니다.",
+    "sharedGate": "같은 장부의 네 상태와 급매·차입 두 분기, 6+4 답 경로 및 공식 PDF 그림을 대조합니다. 시점·대상·제도 조건을 생략하지 않습니다."
+  },
+  "ai/prefix-caching-radix-attention": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 요청의 앞 기록이 어디서 일치하고 어떤 저장 위치를 공유하며 언제 반환되는지 하나의 경로로 설명합니다. 탐색·수명·순서·kernel 주소는 같은 재사용의 정확성을 결정하므로 R 사례를 이어가고 KV shape와 일반 block 배정의 정본은 연결해 재사용합니다.",
+    "sharedGate": "R의 8자리·공유 6·hit 0/6/6과 12자리 저장, B=4의 0/4/4와 16자리, 보호 8·요구 5·반환 4를 본문·Viz·6+4에 맞춥니다. 실제 원문 11개·15패널·4장면·2수식과 390/1440을 확인하고 마지막 입력·namespace·hybrid·offline 경계 및 수치를 독립 검산합니다."
+  },
 };
 
 /**
@@ -1762,6 +1790,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/math-numerical-precision-stability": "9b9a8b90f50ded78",
+  "ai/prefix-caching-radix-attention": "28ef371cafdc6aa0",
+  "banking/bank-balance-sheet-and-deposit-creation": "05598a4b186734fa",
+  "crypto/sparse-multiplication": "654e9f0cc5bb6ace",
   "ai/disaggregated-prefill-decode-serving": "b4965f72e312bd85",
   "ai/math-complex-numbers-oscillations": "58bea8a0233a0c54",
   "ai/math-differential-equations-numerical-solvers": "39de3be7f1eb97c0",

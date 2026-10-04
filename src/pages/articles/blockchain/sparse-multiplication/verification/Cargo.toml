@@ -1,0 +1,11 @@
+[package]
+name = "teach-sparse-check"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+ark-bn254 = { git = "https://github.com/arkworks-rs/algebra", rev = "7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c", default-features = false, features = ["curve", "std"] }
+ark-ff = { git = "https://github.com/arkworks-rs/algebra", rev = "7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c", default-features = false, features = ["std"] }
+ark-ec = { git = "https://github.com/arkworks-rs/algebra", rev = "7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c", default-features = false, features = ["std"] }
+[[bin]]
+name = "teach-sparse-check"
+path = "main.rs"

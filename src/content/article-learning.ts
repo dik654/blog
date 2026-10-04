@@ -64326,47 +64326,317 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "crypto/sparse-multiplication": {
-    entryNote: "0이 아닌 coefficient의 위치라는 support에서 시작해 polynomial 곱과 Fp12 Miller lowering까지 이어 갑니다.",
-    coreIdea: "한 operand의 nonzero support가 고정돼 있으면 해당 slot과의 partial product만 만들 수 있지만, 절약은 tower profile·reduction·memory·전체 실행 비율을 포함해 검증해야 합니다.",
-    assumedKnowledge: [
-      { id: "polynomial-coefficient-evaluation-form", role: "Polynomial을 coefficient index와 값으로 읽습니다." },
-      { id: "extension-tower-implementation-layout", role: "Fp12 slot 이름이 tower profile에 종속됨을 읽습니다." },
+    "entryLevel": false,
+    "entryNote": "A=1+2w+3w²+4w³와 B=5+7w²의 여덟 곱부터 계산합니다. 같은 값을 실제 계수 배열과 원문에 옮깁니다.",
+    "coreIdea": "0인 위치가 고정되면 그 위치의 곱을 생략할 수 있습니다. 같은 입력·기저·계수 순서를 맞춘 뒤 일반 곱과 대조해야 하며 호출 수와 실제 시간은 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "polynomial-coefficient-evaluation-form",
+        "role": "계수와 지수의 관계 및 같은 출력 위치의 합을 읽습니다."
+      },
+      {
+        "id": "extension-tower-implementation-layout",
+        "role": "실제 BN254의 여섯 Fq2 계수와 u·v·w 관계를 재사용합니다."
+      }
     ],
-    introducedHere: [
-      { id: "sparse-coefficient-support", role: "Dense 길이와 nonzero index 집합을 구분합니다." },
-      { id: "support-aware-convolution", role: "Support pair만 곱해 output index로 누적합니다." },
-      { id: "pairing-line-sparse-lowering", role: "Miller line의 pinned slots를 전용 Fp12 helper로 내립니다." },
-      { id: "sparse-multiplication-cost-release", role: "Generic parity 뒤 실제 전체 비용을 비교합니다." },
+    "introducedHere": [
+      {
+        "id": "sparse-coefficient-support",
+        "role": "배열 길이·최고 지수와 0 아닌 위치 집합을 구분합니다."
+      },
+      {
+        "id": "support-aware-convolution",
+        "role": "같은 여덟 부분 곱을 출력 칸에 모으고 높은 항을 되돌립니다."
+      },
+      {
+        "id": "pairing-line-sparse-lowering",
+        "role": "014·034가 뜻하는 값과 실제 D형 Miller 호출을 연결합니다."
+      },
+      {
+        "id": "sparse-multiplication-cost-release",
+        "role": "부분 곱·원문 호출·전체 실행 시간의 세 장부를 구분합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "sparse-coefficient-support", sectionId: "why-sparse", intuition: "긴 서랍 중 물건이 든 칸 번호만 적은 목록이 support입니다.", workedExample: "B(x)=5+7x^2의 dense 배열 [5,0,7,0]과 support {0,2}를 구분합니다.", boundary: "Runtime index·secret sparsity는 branch와 indirection 비용 또는 leakage를 만들며 compile-time 고정 pattern과 다릅니다." },
-      { id: "support-aware-convolution", sectionId: "why-sparse", intuition: "0을 곱해 더할 항은 만들지 않고 nonzero index의 합이 같은 output bucket에만 누적합니다.", workedExample: "4항 dense A와 support 2개인 B는 8개 product로 5+10x+22x2+34x3+21x4+28x5를 만듭니다.", boundary: "Product 후보 count는 output nonzero 수·reduction cost·latency와 같지 않습니다.", counterexample: "서로 다른 support pair가 같은 k에서 상쇄되면 output support는 더 작아질 수 있습니다." },
-      { id: "pairing-line-sparse-lowering", sectionId: "in-miller", intuition: "Miller accumulator는 dense지만 line operand의 고정된 빈 slot을 알고 있어 그 열을 생략한 전용 product를 씁니다.", workedExample: "Pinned arkworks Fp12 source는 coefficient pattern별 mul_by_034와 mul_by_014를 구분합니다.", boundary: "Slot 숫자는 curve·twist·tower·coefficient order에 종속되며 다른 profile로 복사할 수 없습니다." },
-      { id: "sparse-multiplication-cost-release", sectionId: "cost-saving", intuition: "곱셈 수 절감이 전체 속도에 얼마나 반영되는지 profile과 wall time을 함께 채점합니다.", workedExample: "Line multiply가 시간의 40%이고 그 부분이 2배 빨라지면 전체 상한은 1.25배입니다.", boundary: "Amdahl 식은 correctness·side channel을 보장하지 않고 cache interaction이 없는 근사입니다." },
+    "conceptExplanations": [
+      {
+        "id": "sparse-coefficient-support",
+        "sectionId": "names",
+        "intuition": "B의 0인 두 열을 미리 알면 값이 있는 0·2번 열만 곱할 수 있습니다.",
+        "workedExample": "B=5+7w²의 네 칸은 [5,0,7,0], support는 {0,2}, 차수는 2입니다.",
+        "boundary": "공개된 고정 위치와 비밀 값마다 0을 찾아 분기하는 처리는 다릅니다. 전용 함수는 생략된 칸에 값이 있는지 자동 검사하지 않습니다."
+      },
+      {
+        "id": "support-aware-convolution",
+        "sectionId": "why-sparse",
+        "intuition": "두 지수를 더해 출력 위치를 정하고 같은 위치에 온 곱들을 더합니다.",
+        "workedExample": "여덟 곱에서 [5,10,22,34,21,28]을 얻습니다. B에 11w³을 더하면 44w⁶=396+44u가 첫 계수로 돌아옵니다.",
+        "boundary": "쌍의 수는 출력 support 크기와 다릅니다. 축약과 상쇄 뒤에 0 여부를 판단합니다.",
+        "counterexample": "(1+w)(1−w)의 네 부분 곱에서 가운데 두 항은 지워지고 1−w²만 남습니다."
+      },
+      {
+        "id": "pairing-line-sparse-lowering",
+        "sectionId": "in-miller",
+        "intuition": "전용 함수의 숫자는 고정 기저의 칸 번호입니다. 실제 선을 표현하는 방식과 그 칸 번호를 함께 맞춥니다.",
+        "workedExample": "같은 5·7·11이 014에서는 5+7v+11vw, 034에서는 5+7w+11vw입니다. 고정 BN254는 D형이라 실제 Miller가 034를 선택합니다.",
+        "boundary": "BN254 체에서 014 산술이 가능하다는 사실은 그 곡선의 Miller가 014를 쓴다는 뜻이 아닙니다. 같은 타입의 세 인자라도 의미가 다릅니다."
+      },
+      {
+        "id": "sparse-multiplication-cost-release",
+        "sectionId": "cost-saving",
+        "intuition": "계산이 줄어든 구간만 빨라지므로 나머지 시간이 전체 개선을 제한합니다.",
+        "workedExample": "014의 일반 Fq2 곱은 5+3+5=13회이며 일반 Fq12는 18회입니다. 기준 100 중 40만 두 배 빨라지는 가정에서는 60+20=80, 전체 1.25배입니다.",
+        "boundary": "8개 다항식 부분 곱과 13회 함수 호출은 다른 장부입니다. 가정한 Amdahl 모형은 실측이 아니며 이 글은 속도나 상수 시간을 측정하지 않았습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 선수 개념", relation: "Coefficient와 tower slot을 먼저 고정합니다.", concepts: ["polynomial-coefficient-evaluation-form", "extension-tower-implementation-layout"] },
-      { label: "01 표현", relation: "Nonzero index 집합을 만듭니다.", concepts: ["sparse-coefficient-support"] },
-      { label: "02 계산", relation: "Support pair convolution을 실행합니다.", concepts: ["support-aware-convolution"] },
-      { label: "03 Pairing lowering", relation: "Miller line pattern에 구체화합니다.", concepts: ["pairing-line-sparse-lowering"] },
-      { label: "04 Release", relation: "Parity와 전체 비용을 검증합니다.", concepts: ["sparse-multiplication-cost-release"] },
+    "conceptStages": [
+      {
+        "label": "01 같은 여덟 곱",
+        "relation": "계수와 빈 위치를 출력의 여섯 칸에 연결합니다.",
+        "concepts": [
+          "sparse-coefficient-support",
+          "support-aware-convolution"
+        ]
+      },
+      {
+        "label": "02 실제 배열과 코드",
+        "relation": "같은 값을 014의 두 아래 묶음으로 옮깁니다.",
+        "concepts": [
+          "extension-tower-implementation-layout",
+          "support-aware-convolution"
+        ]
+      },
+      {
+        "label": "03 바뀐 위치와 선",
+        "relation": "11이 생긴 경우와 034의 다른 의미를 대조합니다.",
+        "concepts": [
+          "pairing-line-sparse-lowering",
+          "support-aware-convolution"
+        ]
+      },
+      {
+        "label": "04 전체 결과와 비용",
+        "relation": "Miller 누적의 정확성과 조건부 시간 모형을 구분합니다.",
+        "concepts": [
+          "sparse-multiplication-cost-release",
+          "pairing-line-sparse-lowering"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "B(x)=5+7x²를 dense 배열과 support로 각각 표현하세요.", answerChecklist: ["[5,0,7,0]", "support {0,2}", "values 5,7", "degree vs stored terms", "zero slots"], requiredConcepts: ["sparse-coefficient-support"], sectionId: "why-sparse" },
-      { level: "basic", question: "A=1+2x+3x²+4x³와 B=5+7x²의 product를 8개 partial product로 계산하세요.", answerChecklist: ["8 support pairs", "5", "10x", "22x2", "34x3", "21x4", "28x5"], requiredConcepts: ["support-aware-convolution"], sectionId: "why-sparse" },
-      { level: "basic", question: "|SA|=4, |SB|=2일 때 candidate multiplication 수와 dense 4×4 기준선을 비교하세요.", answerChecklist: ["4·2=8", "dense 16", "2x candidate reduction", "add/reduction excluded", "not 2x latency"], requiredConcepts: ["support-aware-convolution"], sectionId: "why-sparse" },
-      { level: "basic", question: "Support pair 수와 output nonzero 수가 같지 않을 수 있는 두 이유를 설명하세요.", answerChecklist: ["same index collision", "addition", "cancellation", "quotient reduction", "support count not output count"], requiredConcepts: ["support-aware-convolution"], sectionId: "why-sparse" },
-      { level: "basic", question: "mul_by_034 같은 이름을 다른 Fp12 tower에 그대로 옮기면 안 되는 이유를 설명하세요.", answerChecklist: ["coefficient order", "basis", "nonresidue", "twist/line embedding", "type shape insufficient", "basis parity"], requiredConcepts: ["pairing-line-sparse-lowering", "extension-tower-implementation-layout"], sectionId: "how-sparse" },
-      { level: "basic", question: "f=0.4,s=2인 sparse line optimization의 end-to-end speedup 상한을 계산하세요.", answerChecklist: ["1/(0.6+0.2)", "1.25x", "60% unchanged", "local 2x not total 2x"], requiredConcepts: ["sparse-multiplication-cost-release"], sectionId: "cost-saving" },
-      { level: "advanced", question: "Secret-dependent runtime sparsity를 branch로 건너뛰는 구현 반례와 대안을 설명하세요.", answerChecklist: ["support leaks secret", "timing/branch trace", "fixed schedule", "public pattern only", "constant-time review", "correctness unchanged"], requiredConcepts: ["sparse-coefficient-support", "sparse-multiplication-cost-release"], sectionId: "why-sparse" },
-      { level: "advanced", question: "Quotient relation에서 높은 degree 항이 섞이는 support-aware reduction schedule과 검산을 설계하세요.", answerChecklist: ["partial exponent sums", "defining relation", "nonresidue reduction", "collisions", "generic product parity", "random and basis vectors"], requiredConcepts: ["support-aware-convolution", "extension-tower-implementation-layout"], sectionId: "how-sparse" },
-      { level: "advanced", question: "같은 세 coefficient지만 014와 034 order를 바꾼 negative fixture가 필요한 이유를 설명하세요.", answerChecklist: ["same type shape", "different basis element", "wrong semantic product", "generic parity fails", "profile ID", "reject before benchmark"], requiredConcepts: ["pairing-line-sparse-lowering"], sectionId: "in-miller" },
-      { level: "advanced", question: "Sparse Fp12 helper의 source pin·negative fixture·Miller parity·비용 release matrix를 작성하세요.", answerChecklist: ["curve/tower/SHA", "declared support", "wrong nonzero slot", "basis/random generic parity", "Miller trace", "pairing vector", "operation ledger", "p50/p95", "rollback"], requiredConcepts: ["pairing-line-sparse-lowering", "sparse-multiplication-cost-release"], sectionId: "in-miller" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "B의 배열 길이·차수·support와 실제 값을 구분하세요.",
+        "answerChecklist": [
+          "B=5+7w²",
+          "배열 [5,0,7,0]",
+          "저장 길이 4",
+          "차수 2",
+          "support {0,2}",
+          "그 위치의 값 5와 7"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "sparse-coefficient-support"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 A·B를 두 행의 네 곱으로 나누고 출력 여섯 계수를 계산하세요.",
+        "answerChecklist": [
+          "A×5=[5,10,15,20]",
+          "A×7w²=[0,0,7,14,21,28]",
+          "w² 계수 15+7=22",
+          "w³ 계수 20+14=34",
+          "출력 [5,10,22,34,21,28]",
+          "총 8개 곱할 쌍"
+        ],
+        "sectionId": "concrete",
+        "requiredConcepts": [
+          "support-aware-convolution"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "16쌍·8쌍과 출력 support의 차이를 상쇄 예와 함께 설명하세요.",
+        "answerChecklist": [
+          "네 칸씩 전부 순회하면 16쌍",
+          "0 아닌 4×2 위치는 8쌍",
+          "같은 지수 합은 같은 출력에 더함",
+          "출력 칸은 여섯 개",
+          "(1+w)(1−w)의 가운데 항 상쇄",
+          "부분 곱 개수가 속도 비율을 보장하지 않음"
+        ],
+        "sectionId": "why-sparse",
+        "requiredConcepts": [
+          "sparse-coefficient-support",
+          "support-aware-convolution"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 A·B와 결과를 원본 여섯 칸 순서로 옮기세요.",
+        "answerChecklist": [
+          "기저 1,v,v²,w,vw,v²w",
+          "w²=v",
+          "w 지수 순서 0·2·4·1·3·5",
+          "A=[1,3,0,2,4,0]",
+          "B=[5,7,0,0,0,0]",
+          "014 인자는 5·7·0",
+          "출력 [5,22,21,10,34,28]",
+          "이번 최고 항 w⁵는 아직 축약하지 않음"
+        ],
+        "sectionId": "how-sparse",
+        "requiredConcepts": [
+          "support-aware-convolution",
+          "extension-tower-implementation-layout"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 5·7·11의 014와 034 의미 및 실제 BN254 선택을 설명하세요.",
+        "answerChecklist": [
+          "014는 0·1·4번 칸",
+          "5+7v+11vw",
+          "034는 0·3·4번 칸",
+          "5+7w+11vw",
+          "같은 타입 인자여도 다른 값",
+          "BN 원문 M형은 014·D형은 034",
+          "고정 BN254는 D형",
+          "실제 선 호출은 034"
+        ],
+        "sectionId": "in-miller",
+        "requiredConcepts": [
+          "pairing-line-sparse-lowering"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "기준 100 중 대상 40이 두 배 빨라지는 가정의 전체 시간을 계산하세요.",
+        "answerChecklist": [
+          "변하지 않는 구간 60",
+          "대상 새 시간 40/2=20",
+          "총 80",
+          "전체 100/80=1.25배",
+          "추가 비용 없는 고정 작업량 모형",
+          "추가 비용만 있다면 1.25는 상한",
+          "부분 곱 개수만으로 대상 속도 s를 알 수 없음",
+          "본문은 실제 시간 측정 아님"
+        ],
+        "sectionId": "cost-saving",
+        "requiredConcepts": [
+          "sparse-multiplication-cost-release"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "014의 c4를 0에서 11로 바꾸었을 때 원문과 직접 다항식의 결과를 대조하세요.",
+        "answerChecklist": [
+          "새 부분 곱 11w³+22w⁴+33w⁵+44w⁶",
+          "w⁶=ξ=9+u",
+          "5+44ξ=401+44u",
+          "aa=[5,22,21]",
+          "bb=[0,22,44]",
+          "합의 곱 [15,89,126]",
+          "위 출력은 합에서 aa와 bb를 뺀 [10,45,61]",
+          "v·bb=[44ξ,0,22]",
+          "아래 출력 [401+44u,22,43]",
+          "전체 [401+44u,22,43,10,45,61]"
+        ],
+        "sectionId": "reduction",
+        "requiredConcepts": [
+          "support-aware-convolution",
+          "pairing-line-sparse-lowering"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "034의 중간값을 원문과 논문의 Algorithm 5·6에 대응하세요.",
+        "answerChecklist": [
+          "a=[5,15,0]",
+          "b=[14,50,44]",
+          "e=[36,117,77]",
+          "위 묶음 e−a−b=[17,52,33]",
+          "아래 묶음 a+vb=[401+44u,29,50]",
+          "아래 곱 (7+11v)(2+4v)의 직접 항 14·44",
+          "합의 곱 108에서 14·44를 빼 50",
+          "Algorithm 5의 세 위치는 034",
+          "Grewal 등 원문 저자와 Aranha 등 선행연구를 구분",
+          "논문의 축약 순서·시간을 현재 구현과 동일시하지 않음"
+        ],
+        "sectionId": "paper-comparison",
+        "requiredConcepts": [
+          "pairing-line-sparse-lowering",
+          "support-aware-convolution"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "원본 호출 장부와 비밀 support의 실패 조건을 구분하세요.",
+        "answerChecklist": [
+          "mul_by_01은 일반 Fq2 곱 5회",
+          "mul_by_1은 3회",
+          "014는 5+3+5=13",
+          "034는 3+5+5=13",
+          "일반 Fq12는 3×6=18",
+          "단순 여섯 칸 전체 곱 36쌍과도 다른 알고리즘",
+          "특별히 0인 인자를 호출 장부에서 임의 제거하지 않음",
+          "상수 곱·덧셈·메모리 비용 별도",
+          "비밀 0 여부로 분기하면 실행 경로가 위치를 드러낼 수 있음",
+          "정해진 호출 순서만으로 전체 상수 시간을 증명하지 못함"
+        ],
+        "sectionId": "boundaries",
+        "requiredConcepts": [
+          "sparse-coefficient-support",
+          "sparse-multiplication-cost-release"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "틀린 위치를 검출하고 실제 Miller 비교의 범위와 한계를 설명하세요.",
+        "answerChecklist": [
+          "014·034 같은 인자의 서로 다른 출력",
+          "014의 생략된 2번 칸에 1 추가 시 불일치",
+          "두 패턴 합계 36개 기저 곱",
+          "32개 결정적 밀집 입력",
+          "0·1 입력 네 경우",
+          "w⁶=9+u의 직접 다항식 곱으로 대조",
+          "G1 생성원 (1,2)와 G2 사용",
+          "같이 준비된 선 87개",
+          "희소 곱 대신 직접 다항식 곱으로 Miller 누적",
+          "원본 multi_miller_loop와 일치",
+          "선 생성 공식은 공통 원문이므로 독립 검증 아님",
+          "마지막 지수·전체 페어링·성능은 실행하지 않음"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "pairing-line-sparse-lowering",
+          "sparse-multiplication-cost-release",
+          "support-aware-convolution"
+        ]
+      }
     ],
-    papers: [
-      { title: "arkworks algebra 0.5.0 · Fp12 sparse multiplication", href: "https://github.com/arkworks-rs/algebra/blob/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/fp12_2over3over2.rs", problem: "Known sparse Fp12 operand와 dense accumulator product를 낮춥니다.", contribution: "mul_by_034·mul_by_014의 pinned slot·helper schedule을 제공합니다.", assumptions: "ark-ff 0.5.0 API, commit과 tower profile을 고정합니다.", evidenceScope: "Pinned generic Fp12 model source입니다.", notClaim: "모든 curve slot·constant-time·speedup을 일반화하지 않습니다.", sectionId: "paper-arkworks-sparse-source" },
-      { title: "Aranha et al. · Efficient Implementation of Bilinear Pairings", href: "https://eprint.iacr.org/2012/408", problem: "BN curve optimal-Ate pairing의 extension arithmetic 비용을 줄입니다.", contribution: "Degree-12 sparse multiplication·reduction과 platform 측정을 제시합니다.", assumptions: "논문 curve·tower·coordinate·platform을 고정합니다.", evidenceScope: "해당 구현과 benchmark 범위입니다.", notClaim: "다른 curve·CPU의 동일 count·speedup을 보장하지 않습니다.", sectionId: "paper-efficient-bilinear-pairings" },
-    ],
+    "papers": [
+      {
+        "title": "arkworks algebra · 고정 희소 곱과 BN Miller 호출",
+        "href": "https://github.com/arkworks-rs/algebra/blob/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/fp12_2over3over2.rs",
+        "problem": "같은 계수 값을 고정된 빈 칸을 이용해 곱하고 실제 선 호출에 연결합니다.",
+        "contribution": "014·034와 아래 01·1 함수, D/M 분기와 BN254 D형 설정 및 누적 반복을 제공합니다.",
+        "assumptions": "같은 commit의 ff·ec 0.5.0과 별도 curves workspace의 bn254 0.5.0-alpha.0을 고정합니다.",
+        "evidenceScope": "실제 --locked Rust에서 36개 기저 곱·32개 추가 입력·0과 1 및 틀린 위치를 대조했습니다. 생성원의 같은 준비된 선 87개를 직접 다항식으로 곱한 Miller 누적이 원본과 일치했습니다.",
+        "notClaim": "선 생성의 독립 검증·마지막 지수·전체 페어링·성능·상수 시간 검증을 뜻하지 않습니다.",
+        "sectionId": "paper-arkworks-sparse-source"
+      },
+      {
+        "title": "Grewal et al. · Efficient Implementation of Bilinear Pairings on ARM Processors",
+        "href": "https://eprint.iacr.org/2012/408",
+        "problem": "BN 페어링의 확장체 산술과 선 곱을 ARM 환경에서 줄입니다.",
+        "contribution": "3.1절 Algorithms 5·6의 D형 세 위치 및 아래 희소 곱 계산을 제시합니다.",
+        "assumptions": "논문의 계수체·탑·축약·곡선·기기 조건에 속하는 분석입니다.",
+        "evidenceScope": "공식 PDF 3.1절 Algorithms 5·6을 읽고 5·7·11과 같은 A를 넣어 세 중간 묶음 및 아래 14·50·44를 대조했습니다.",
+        "notClaim": "논문의 기기별 시간 측정이나 축약 순서를 현재 원문과 동일하게 재현한 것은 아닙니다.",
+        "sectionId": "paper-efficient-bilinear-pairings"
+      }
+    ]
   },
   "crypto/frobenius-optimization": {
     "entryLevel": false,
@@ -83613,90 +83883,348 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/prefix-caching-radix-attention": {
-    entryNote: "Block 단위 prefix sharing 과 token hit rate 가 무엇인지 아는 상태에서, 같은 prefix 를 어떤 자료구조로 찾고 무엇을 먼저 지우며 누구를 먼저 돌리는지로 들어갑니다.",
-    coreIdea: "Radix tree 는 공유 prefix 를 node 로 갈라 token 단위로 match 하고, vLLM 의 block hash 는 같은 길이를 16-token block 으로 내림하며, 둘 다 ref 가 0 인 tail 부터 LRU 로 지웁니다. Hit rate 를 정하는 것은 자료구조보다 실행 순서라서 cache-aware scheduling 은 match 길이 순으로 세워 thrashing 을 막는 대신 hit 이 없는 요청을 미루고, 확정된 hit 은 slot mapping(쓰기)과 block table lookup(읽기)으로 kernel 에 전달됩니다.",
-    assumedKnowledge: [
-      { id: "kv-prefix-block-sharing", role: "여러 요청이 같은 physical block 을 가리키는 상태를 출발점으로 삼습니다." },
-      { id: "prefix-cache-hit-rate", role: "Token 단위 hit rate 정의를 그대로 가져와 두 자료구조의 hit 수를 비교합니다." },
-      { id: "kv-block-address-translation", role: "Logical 위치를 block table 로 physical 에 잇는 규칙을 slot mapping 과 lookup 의 전제로 씁니다." },
-      { id: "chained-prefix-block-hash", role: "vLLM 의 block hash 가 parent hash 로 이어진다는 사실을 재사용합니다." },
-      { id: "kv-free-queue-eviction", role: "vLLM free queue 의 재활성화·hash 제거 lifecycle 은 정본을 링크하고 순서만 비교합니다." },
-      { id: "hybrid-cache-group-coordination", role: "Layer 를 cache group 으로 나누고 allocation 을 조율하는 쪽은 정본에 맡깁니다." },
-      { id: "scheduler-closed-loop-transition", role: "Scheduler 가 낸 결과가 worker 로 가고 output 이 다시 돌아오는 loop 를 전제로 그 사이의 metadata 변환만 다룹니다." },
-      { id: "scheduler-priority-order", role: "FCFS·priority 정렬을 cache-aware 정렬의 비교 대상으로 씁니다." },
-      { id: "scheduler-policy-starvation", role: "Cache-aware 정렬이 만드는 무기한 대기를 이 개념으로 부릅니다." },
-    ],
-    introducedHere: [
-      { id: "radix-tree-kv-cache", role: "Edge 에 token 열, node 에 KV 와 ref counter 를 두고 갈라지는 지점에서 쪼개지는 tree 를 수치 예로 보입니다." },
-      { id: "prefix-cache-matching", role: "Token 단위 match_prefix 와 full block 단위 hash 조회가 같은 longest-prefix 문제를 다른 경계로 푸는 것을 설명합니다." },
-      { id: "hybrid-kv-cache-manager", role: "Group 마다 다른 hit 길이를 고정점 반복으로 합의하는 vLLM V1 coordinator 를 설명합니다." },
-      { id: "radix-lru-leaf-eviction", role: "Ref 0 인 leaf 부터 LRU 로 지우는 규칙과 vLLM 의 역순 반환이 같은 순서를 만드는 이유를 보입니다." },
-      { id: "cache-aware-scheduling", role: "Match 길이 순 정렬이 thrashing 을 막아 hit rate 를 올리고 FCFS 공정성을 잃는 맞바꿈을 수치로 보입니다." },
-      { id: "attention-metadata", role: "확정된 hit 과 block 배정이 kernel 용 tensor 묶음으로 바뀌는 지점을 정의합니다." },
-      { id: "slot-mapping", role: "새 token 의 K·V 쓰기 위치를 physical slot 번호로 적는 쓰기 경로를 계산합니다." },
-      { id: "block-table-lookup", role: "Kernel 이 읽기 시점에 block table 을 조회해 physical block 을 얻는 읽기 경로를 설명합니다." },
-    ],
-    conceptExplanations: [
-      { id: "radix-tree-kv-cache", sectionId: "radix-tree", intuition: "같은 서문을 가진 책들을 서문 한 벌에서 가지가 갈라지는 나무로 꽂아 두면 어느 책이 어디까지 같은지가 모양으로 보입니다.", workedExample: "R1(2,600) 뒤에 R2 가 2,500 까지 같으면 edge 가 그 자리에서 공유 node(2,500)와 leaf 둘(100, 100)로 쪼개지고 R2 의 hit 은 2,500 입니다.", boundary: "Node 의 ref counter 가 0 이 아니면 지울 수 없고, cache 와 running 이 한 pool 을 쓰므로 waiting 이 많으면 cache 가 밀려납니다." },
-      { id: "prefix-cache-matching", sectionId: "matching", intuition: "두 문장을 앞에서부터 한 글자씩 대조하다 처음 다른 글자에서 멈추는 것과 같고, 뒤쪽이 우연히 같아도 세지 않습니다.", workedExample: "공유 2,500 token 은 radix 에서 2,500 hit 이지만 B=16 hash 에서는 full block 156 개인 2,496 에서 끊기고, 2,000 은 정확히 125 block 이라 손실이 없습니다.", boundary: "Causal attention 에서만 성립하며, prompt 전체가 hit 이면 vLLM 은 마지막 token 하나를 남겨 logit 을 계산합니다." },
-      { id: "hybrid-kv-cache-manager", sectionId: "hybrid-manager", intuition: "여러 부서가 각자 기억하는 회의록 길이가 다를 때 모두가 동의하는 가장 긴 지점까지만 이어서 쓰는 합의입니다.", workedExample: "Full attention 이 2,496 을 내고 window 1,024 group 의 block 130 이 없으면 후보가 2,080 으로 줄고, 모든 group 이 2,080 을 받아들여 hit 이 확정됩니다.", boundary: "Group 이 하나면 UnitaryKVCacheCoordinator 가 맡고, 줄이는 group 이 있을 때마다 처음부터 다시 검사하므로 group 수만큼 반복 비용이 듭니다." },
-      { id: "radix-lru-leaf-eviction", sectionId: "eviction", intuition: "나무를 다듬을 때 잎부터 떼고 가지는 잎이 다 떨어진 뒤에 자르는 순서라, 여러 가지가 매달린 줄기는 마지막까지 남습니다.", workedExample: "R1~R3 이 끝난 뒤 250 token 이 필요하면 q1·q2·q3 을 LRU 순으로 지워 300 을 확보하고, R3 이 running 이면 q1·q2 의 200 뿐이라 부족합니다.", boundary: "vLLM 은 tree 가 없어 block 역순 반환으로 같은 순서를 얻으며, SGLang 은 lru 외에 lfu·slru·priority 정책도 옵션으로 둡니다." },
-      { id: "cache-aware-scheduling", sectionId: "scheduling", intuition: "같은 재료를 쓰는 주문을 몰아서 하면 재료를 꺼냈다 넣었다 하지 않아도 되지만, 특이한 주문은 계속 뒤로 밀립니다.", workedExample: "X1·Y1·X2·Y2·X3·Y3 을 FCFS 로 돌리면 hit 0 이지만 match 길이 순으로 X·X·X·Y·Y·Y 로 세우면 10,000/15,600 = 64% 를 hit 합니다.", boundary: "Hit 없는 3,000 token 요청은 hit 요청 8 개가 step 마다 800 을 쓰는 동안 3,200 상한에 들어가지 못해 무기한 밀릴 수 있어 fairness 장치가 따로 필요합니다." },
-      { id: "attention-metadata", sectionId: "attention-metadata", intuition: "주방장이 정한 주문 목록을 조리대 위 각 자리에 어떤 재료를 놓고 어디서 꺼낼지 적은 작업표로 옮긴 것입니다.", workedExample: "CommonAttentionMetadata 는 query_start_loc·seq_lens·num_actual_tokens·block_table_tensor·slot_mapping 을 담고 FlashAttentionMetadata 가 use_cascade·common_prefix_len 을 더합니다.", boundary: "Field 이름은 2026년 8월 main branch 기준이며 backend 마다 다르므로 쓰기·읽기 경로의 분리라는 구조만 믿어야 합니다." },
-      { id: "slot-mapping", sectionId: "slot-mapping", intuition: "새로 들어온 편지마다 우편함 번호를 미리 적어 두면 배달원이 지도를 다시 보지 않고 바로 넣을 수 있습니다.", workedExample: "R2 의 위치 2,500 은 logical block 156 의 offset 4 이고 physical block 이 913 이면 slot 은 913×16+4 = 14,612 입니다.", boundary: "Hit 한 2,496 token 은 slot mapping 에 없습니다. 이미 있는 block 을 block table 이 가리킬 뿐 쓰기가 일어나지 않습니다." },
-      { id: "block-table-lookup", sectionId: "block-table-lookup", intuition: "편지를 읽을 때는 주소록에서 몇 번째 우편함인지 찾아가는 것이고, 공유 우편함이든 방금 만든 우편함이든 같은 주소록으로 찾습니다.", workedExample: "위치 2,500 의 query 는 block table 항목 0~156 을 따라 157 block 을 읽고, 그중 0~155 는 R1 이 채운 공유 block, 156 은 방금 slot mapping 으로 쓴 block 입니다.", boundary: "Cascade attention 은 공유 prefix 를 한 번만 읽도록 순서를 바꾸지만 block table 자체는 바꾸지 않습니다." },
-    ],
-    conceptStages: [
-      { label: "00 구조", relation: "공유 prefix 를 tree 로 보관하는 자료구조를 봅니다.", concepts: ["radix-tree-kv-cache"] },
-      { label: "01 매칭", relation: "Match 길이가 어떤 단위로 정해지고 group 이 여럿이면 어떻게 합의되는지 봅니다.", concepts: ["prefix-cache-matching", "hybrid-kv-cache-manager"] },
-      { label: "02 회수", relation: "Memory 가 모자랄 때 무엇을 먼저 지우는지 봅니다.", concepts: ["radix-lru-leaf-eviction"] },
-      { label: "03 순서", relation: "실행 순서가 hit rate 와 fairness 를 어떻게 맞바꾸는지 봅니다.", concepts: ["cache-aware-scheduling"] },
-      { label: "04 전달", relation: "확정된 hit 이 kernel 의 쓰기·읽기 경로로 넘어가는 모습을 봅니다.", concepts: ["attention-metadata", "slot-mapping", "block-table-lookup"] },
-    ],
-    exercises: [
-      { level: "basic", question: "R1(2,600) 뒤에 같은 2,500 token 을 공유하는 R2 가 오면 radix tree 가 어떻게 바뀌는지 node 와 token 수로 설명하세요.", answerChecklist: ["match 2,500 에서 멈춤", "edge split", "공유 node 2,500", "leaf 100 둘", "R2 hit 2,500"], requiredConcepts: ["radix-tree-kv-cache"], sectionId: "radix-tree" },
-      { level: "basic", question: "공유 prefix 2,500 token 을 B=16 block hash 로 매칭하면 hit 이 몇 token 이고 왜 그런지 쓰세요.", answerChecklist: ["156 full block", "2,496", "partial block 은 cache 안 함", "손실 최대 15"], requiredConcepts: ["prefix-cache-matching"], sectionId: "matching" },
-      { level: "basic", question: "Prompt 전체가 cache hit 인 요청에 대해 vLLM 의 get_computed_blocks 가 hit 길이를 어떻게 조정하고 이유가 무엇인지 쓰세요.", answerChecklist: ["prompt 길이 − 1", "마지막 token 계산", "첫 output logit"], requiredConcepts: ["prefix-cache-matching"], sectionId: "matching" },
-      { level: "basic", question: "R1~R3 이 모두 끝난 뒤 250 token 을 비워야 할 때 radix LRU 가 무엇을 어떤 순서로 지우는지 쓰세요.", answerChecklist: ["ref 0 인 leaf", "q1 → q2 → q3", "300 확보", "공유 node 는 leaf 가 된 뒤"], requiredConcepts: ["radix-lru-leaf-eviction"], sectionId: "eviction" },
-      { level: "basic", question: "X1·Y1·X2·Y2·X3·Y3 이 FCFS 로 한 step 에 하나씩 들어갈 때와 match 길이 순으로 들어갈 때의 hit token 을 각각 계산하세요.", answerChecklist: ["FCFS hit 0", "thrashing", "X·X·X·Y·Y·Y", "10,000 / 15,600", "64%"], requiredConcepts: ["cache-aware-scheduling"], sectionId: "scheduling" },
-      { level: "basic", question: "R2 의 위치 2,500 token 이 physical block 913 에 들어갈 때 slot 번호를 계산하고, hit 한 2,496 token 이 slot mapping 에 없는 이유를 쓰세요.", answerChecklist: ["logical block 156", "offset 4", "913×16+4 = 14,612", "hit 은 쓰기 없음"], requiredConcepts: ["slot-mapping", "attention-metadata"], sectionId: "slot-mapping" },
-      { level: "advanced", question: "Full attention group 이 2,496 을 내고 window 1,024 group 의 block 130 이 지워져 있을 때 hybrid coordinator 의 고정점 반복을 단계별로 쓰고 최종 hit 을 구하세요.", answerChecklist: ["후보 2,496", "window 가 2,080 으로 축소", "재검사", "full attention 수락", "[1,056, 2,080) 확인", "2,080"], requiredConcepts: ["hybrid-kv-cache-manager", "prefix-cache-matching"], sectionId: "hybrid-manager" },
-      { level: "advanced", question: "Hit 없는 3,000 token 요청과 매 step 도착하는 100-token hit 요청 8 개, 새 prefill 상한 3,200 인 상황에서 longest-prefix-first 와 FCFS 가 각각 만드는 TTFT 차이를 설명하고 완화책을 제안하세요.", answerChecklist: ["800 + 3,000 > 3,200", "무기한 대기", "FCFS 는 r1 먼저", "6 개가 한 step 지연", "queue age 상한 또는 priority"], requiredConcepts: ["cache-aware-scheduling", "scheduler-policy-starvation"], sectionId: "scheduling" },
-      { level: "advanced", question: "SGLang Theorem 3.1 의 전제(cache 크기)와 증명 아이디어를 쓰고, online 에서 그 상한이 왜 깨지는지 설명하세요.", answerChecklist: ["cache ≥ 가장 긴 요청", "edge 마다 한 번 계산", "DFS 로 subtree 완료", "도착이 순서를 끊음", "output 길이 미지"], requiredConcepts: ["cache-aware-scheduling", "radix-tree-kv-cache"], sectionId: "scheduling" },
-      { level: "advanced", question: "R1·R2·R3 이 앞 156 block 을 공유하는 batch 에서 cascade attention 이 읽기 경로를 어떻게 바꾸고 무엇은 바꾸지 않는지 block table 과 metadata field 로 설명하세요.", answerChecklist: ["common_prefix_len 2,496", "prefix 를 한 번 읽음", "suffix 결과와 합침", "block table 불변", "use_cascade"], requiredConcepts: ["block-table-lookup", "attention-metadata"], sectionId: "block-table-lookup" },
-    ],
-    papers: [
+    "entryNote": "여덟 자리 입력 세 개가 앞 여섯 자리를 공유하는 가정에서 시작합니다. 입력 번호와 계산 기록을 구분한 뒤 실제 저장량 12자리, 재사용 12/24와 사용 중인 경로 보호를 따라갑니다.",
+    "coreIdea": "같은 입력을 찾은 길이와 실제 재사용 길이 및 저장 공간은 다른 장부입니다. R2가 공유 기록을 찾고 새 위치를 쓰며 끝난 뒤 자리를 반환하는 경로를 고정한 SGLang·vLLM 코드와 연결합니다. 순서·페이지·마지막 출력 계산·group 조건의 경계를 함께 확인합니다.",
+    "assumedKnowledge": [
       {
-        title: "SGLang: Efficient Execution of Structured Language Model Programs",
-        href: "https://arxiv.org/abs/2312.07104",
-        problem: "Multi-call LLM program 과 공통 system prompt 가 만드는 prefix 반복을 기존 engine 이 요청마다 다시 계산하거나 수동 설정으로만 재사용했습니다.",
-        contribution: "Radix tree 에 token 열과 KV 를 두는 RadixAttention, ref counter 를 가진 leaf-first LRU eviction, matched prefix 길이 순 cache-aware scheduling 을 제안하고 DFS 순서의 hit rate 최적성을 증명했습니다.",
-        assumptions: "Llama-2 7B 를 A10G 한 장에서, 큰 model 은 tensor parallel 로 돌렸고 비교 대상은 vLLM v0.2.5·Guidance·LMQL 이었습니다.",
-        evidenceScope: "처리량 최대 6.4×, hit rate 50~99%, 상한 대비 평균 96% 는 저자 자기보고이며 Chatbot Arena 배포의 52.4%·74.1% hit rate 도 저자 관측입니다.",
-        notClaim: "vLLM 이 radix tree 를 쓴다는 뜻이 아니며, 같은 배수가 다른 workload 나 최신 vLLM 대비 재현된다는 뜻도 아닙니다.",
-        sectionId: "paper-sglang-radixattention",
+        "id": "kv-prefix-block-sharing",
+        "role": "여러 요청이 같은 physical block 을 가리키는 상태를 출발점으로 삼습니다."
       },
       {
-        title: "vLLM design docs — Automatic Prefix Caching",
-        href: "https://docs.vllm.ai/en/latest/design/prefix_caching.html",
-        problem: "Tree 없이 block pool 위에서 prefix 재사용을 찾으려면 block 의 identity 에 앞선 prefix 전체를 담아야 합니다.",
-        contribution: "Parent hash·block token·extra key 를 이어 hash 하는 chained block hash, full block 만 cache 하는 규칙, free queue 의 LRU 순서와 역순 반환을 B=4 예제로 설명합니다.",
-        assumptions: "vLLM V1 의 KVCacheManager·BlockPool 구조를 전제로 하며 hash 함수와 세부 순서는 version 에 따라 바뀝니다.",
-        evidenceScope: "공식 설계 문서의 mechanism 설명이며 성능 수치는 포함하지 않습니다.",
-        notClaim: "Hash 방식이 radix tree 보다 낫다거나 hit rate 차이가 자료구조에서 온다는 주장은 아닙니다.",
-        sectionId: "source-vllm-prefix-caching",
+        "id": "prefix-cache-hit-rate",
+        "role": "Token 단위 hit rate 정의를 그대로 가져와 두 자료구조의 hit 수를 비교합니다."
       },
       {
-        title: "vLLM V1 attention metadata · KV cache coordinator source",
-        href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/attention/backends/utils.py",
-        problem: "문서만으로는 확정된 hit 과 block 배정이 kernel 에 어떤 tensor 로 전달되는지와 hybrid model 의 hit 합의 절차를 알 수 없습니다.",
-        contribution: "CommonAttentionMetadata 의 field, FlashAttentionMetadataBuilder.build 가 더하는 cascade field, HybridKVCacheCoordinator.find_longest_cache_hit 의 고정점 반복을 확인했습니다.",
-        assumptions: "2026년 8월 기준 main branch 를 읽었으며 field 이름과 class 구조는 backend 와 version 에 따라 바뀝니다.",
-        evidenceScope: "공식 구현의 코드 경로이며 성능 수치는 포함하지 않습니다.",
-        notClaim: "여기서 읽은 field 가 모든 backend 에 같은 이름으로 있다는 뜻은 아닙니다.",
-        sectionId: "source-vllm-v1-attention",
+        "id": "kv-block-address-translation",
+        "role": "Logical 위치를 block table 로 physical 에 잇는 규칙을 slot mapping 과 lookup 의 전제로 씁니다."
       },
+      {
+        "id": "chained-prefix-block-hash",
+        "role": "vLLM 의 block hash 가 parent hash 로 이어진다는 사실을 재사용합니다."
+      },
+      {
+        "id": "kv-free-queue-eviction",
+        "role": "vLLM free queue 의 재활성화·hash 제거 lifecycle 은 정본을 링크하고 순서만 비교합니다."
+      },
+      {
+        "id": "hybrid-cache-group-coordination",
+        "role": "Layer 를 cache group 으로 나누고 allocation 을 조율하는 쪽은 정본에 맡깁니다."
+      },
+      {
+        "id": "scheduler-closed-loop-transition",
+        "role": "Scheduler 가 낸 결과가 worker 로 가고 output 이 다시 돌아오는 loop 를 전제로 그 사이의 metadata 변환만 다룹니다."
+      },
+      {
+        "id": "scheduler-priority-order",
+        "role": "FCFS·priority 정렬을 cache-aware 정렬의 비교 대상으로 씁니다."
+      },
+      {
+        "id": "scheduler-policy-starvation",
+        "role": "선택 순서 때문에 요청이 오래 기다리는 현상을 구분하고 도착 부하·chunk·정책 전환 조건을 확인합니다."
+      }
     ],
+    "introducedHere": [
+      {
+        "id": "radix-tree-kv-cache",
+        "role": "같은 앞 구간의 입력 번호와 저장 위치 목록을 공유하고 달라지는 지점에서 경로를 나눕니다."
+      },
+      {
+        "id": "prefix-cache-matching",
+        "role": "입력의 처음부터 이어지는 같은 구간을 찾은 뒤 모델 조건과 저장·hash 경계에 맞춰 재사용 길이를 정합니다."
+      },
+      {
+        "id": "hybrid-kv-cache-manager",
+        "role": "여러 cache group이 모두 재사용할 수 있는 입력 길이를 맞추고 각 group의 저장 목록을 그 길이에 맞춥니다."
+      },
+      {
+        "id": "radix-lru-leaf-eviction",
+        "role": "사용 중인 경로를 보호하고 반환 가능한 끝 구간부터 선택한 정책 순서로 돌려줍니다."
+      },
+      {
+        "id": "cache-aware-scheduling",
+        "role": "현재 재사용할 기록과 실행 뒤 새로 남을 기록을 보고 요청 순서를 정하는 정책입니다."
+      },
+      {
+        "id": "attention-metadata",
+        "role": "새 query 범위와 전체 길이 및 기록의 읽기·쓰기 주소를 attention 구현에 전달합니다."
+      },
+      {
+        "id": "slot-mapping",
+        "role": "이번에 계산하는 위치의 K·V를 어느 물리 슬롯에 쓸지 나타내는 주소 목록입니다."
+      },
+      {
+        "id": "block-table-lookup",
+        "role": "입력 위치의 논리 block을 요청의 table로 물리 block에 연결해 읽을 기록을 찾습니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "radix-tree-kv-cache",
+        "sectionId": "radix-source",
+        "intuition": "같은 앞 구간의 입력 번호와 저장 위치 목록을 공유하고 달라지는 지점에서 경로를 나눕니다.",
+        "workedExample": "R1의 8자리 구간은 R2가 앞 6을 공유할 때 6+2로 나뉩니다. R3까지 넣으면 6+2+2+2=12자리를 저장합니다.",
+        "boundary": "고정 SGLang의 node.value는 KV 값 자체가 아닌 위치 index입니다. index clone과 GPU의 모든 KV 복사를 구분하고 page·모델·namespace 조건을 확인합니다."
+      },
+      {
+        "id": "prefix-cache-matching",
+        "sectionId": "matching",
+        "intuition": "입력의 처음부터 이어지는 같은 구간을 찾은 뒤 모델 조건과 저장·hash 경계에 맞춰 재사용 길이를 정합니다.",
+        "workedExample": "같은 R2의 일치 길이 6은 page 크기 1에서 6, page 크기 4에서 4입니다. 전체 8이 같아도 마지막 계산을 남기면 최대 7이며 full block B=4에서는 4입니다.",
+        "boundary": "radix는 항상 한 자리 단위이고 vLLM은 항상 full block이라는 구분은 정확하지 않습니다. 부분 hash·hybrid·출력 점수 재계산의 실제 경계를 고정합니다."
+      },
+      {
+        "id": "hybrid-kv-cache-manager",
+        "sectionId": "kernel-and-hybrid",
+        "intuition": "여러 cache group이 모두 재사용할 수 있는 입력 길이를 맞추고 각 group의 저장 목록을 그 길이에 맞춥니다.",
+        "workedExample": "B=16, full hit 2496, window 1024이며 block 130이 없는 가정에서 연속 64개 block 66~129가 남아 hit 2080입니다. full 목록도 130개로 줄입니다.",
+        "boundary": "group마다 요구하는 상태가 다릅니다. full group은 기존 결과를 잘라 쓰며 단순 두 group 조합에는 한 번 처리하는 최적화가 있어 항상 모든 group을 재조회하지 않습니다."
+      },
+      {
+        "id": "radix-lru-leaf-eviction",
+        "sectionId": "eviction",
+        "intuition": "사용 중인 경로를 보호하고 반환 가능한 끝 구간부터 선택한 정책 순서로 돌려줍니다.",
+        "workedExample": "공통 6과 R3 끝 2를 잠그면 8자리가 보호됩니다. 나머지 끝 2+2만 지울 수 있으므로 5자리 요구에 실제 반환량은 4입니다.",
+        "boundary": "LRU는 선택한 정책의 가정입니다. leaf 단위 반환은 요구량을 넘거나 못 채울 수 있고 vLLM의 참조 수·hash별 free queue와 동일한 규칙은 아닙니다."
+      },
+      {
+        "id": "cache-aware-scheduling",
+        "sectionId": "scheduling",
+        "intuition": "현재 재사용할 기록과 실행 뒤 새로 남을 기록을 보고 요청 순서를 정하는 정책입니다.",
+        "workedExample": "8자리 용량·단일 실행·출력 기록 제외의 X/Y 가정에서 교대는 hit 0/48, 같은 계열을 묶으면 24/48=50%입니다. 처음 모두 cold인 정적 정렬만으로는 이 순서가 나오지 않습니다.",
+        "boundary": "원문 LPM은 임시 지연과 대기 129개 이상의 FCFS 전환을 포함합니다. offline DFS 상한은 online 지연 최적성이나 모든 설정의 starvation을 증명하지 않습니다."
+      },
+      {
+        "id": "attention-metadata",
+        "sectionId": "attention-metadata",
+        "intuition": "새 query 범위와 전체 길이 및 기록의 읽기·쓰기 주소를 attention 구현에 전달합니다.",
+        "workedExample": "R2가 앞 4를 재사용하고 새 4를 계산하면 query_start_loc=[0,4], seq_lens=[8], block table=[5,9], slot=[36,37,38,39]입니다.",
+        "boundary": "고정 CommonAttentionMetadata 정의는 backend.py에 있습니다. backend·padding·graph 실행에 따라 필드와 갱신 방식이 다르며 공통 prefix만으로 cascade가 선택되지 않습니다."
+      },
+      {
+        "id": "slot-mapping",
+        "sectionId": "attention-metadata",
+        "intuition": "이번에 계산하는 위치의 K·V를 어느 물리 슬롯에 쓸지 나타내는 주소 목록입니다.",
+        "workedExample": "B=4와 table=[5,9]에서 새 위치 4~7은 36·37·38·39에 씁니다. 위치 6은 9×4+2=38이며 이미 hit한 0~3은 새 쓰기 목록에 없습니다.",
+        "boundary": "이 주소식은 가정한 block 저장 구조입니다. 실제 graph padding·무효 슬롯·cache group 구성을 확인하며 목록 길이를 항상 유효 token 수와 동일시하지 않습니다."
+      },
+      {
+        "id": "block-table-lookup",
+        "sectionId": "attention-metadata",
+        "intuition": "입력 위치의 논리 block을 요청의 table로 물리 block에 연결해 읽을 기록을 찾습니다.",
+        "workedExample": "B=4, table=[5,9]의 query 위치 6은 앞 기록과 물리 block 9의 유효 앞부분을 읽습니다. causal 조건이 미래 위치 7을 제외합니다.",
+        "boundary": "큰 사례의 157개 table 항목은 157회 실제 메모리 거래를 뜻하지 않습니다. kernel의 tile·mask·읽기 재사용을 구분합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 같은 앞 기록 찾기",
+        "relation": "공유 구간을 나누고 실제 허용 경계를 적용합니다.",
+        "concepts": [
+          "radix-tree-kv-cache",
+          "prefix-cache-matching"
+        ]
+      },
+      {
+        "label": "02 기록의 수명과 순서",
+        "relation": "사용 중인 경로를 보호하며 실행 뒤 남은 기록을 다음 순서에 반영합니다.",
+        "concepts": [
+          "radix-lru-leaf-eviction",
+          "cache-aware-scheduling"
+        ]
+      },
+      {
+        "label": "03 계산에 주소 넘기기",
+        "relation": "group의 허용 길이를 맞춘 뒤 같은 요청의 읽기·쓰기를 연결합니다.",
+        "concepts": [
+          "hybrid-kv-cache-manager",
+          "attention-metadata",
+          "slot-mapping",
+          "block-table-lookup"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "같은 모델·namespace에서 R1=[1,2,3,4,5,6,7,8]을 저장한 뒤 R2=[1,2,3,4,5,6,9,10]을 처리합니다. page 크기 1, 순차 실행, 생성 기록 제외의 가정에서 재사용·새 계산 길이와 분기를 구하세요.",
+        "answerChecklist": [
+          "hit 6",
+          "새 계산 2",
+          "공유 6과 서로 다른 끝 2·2",
+          "입력 번호와 실제 KV 값은 다름"
+        ],
+        "sectionId": "request-trace",
+        "requiredConcepts": [
+          "radix-tree-kv-cache",
+          "prefix-cache-matching"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 가정에 R3=[1,2,3,4,5,6,11,12]까지 순차 처리합니다. 재사용률과 저장된 서로 다른 위치 수를 구하세요.",
+        "answerChecklist": [
+          "hit 0+6+6=12",
+          "입력 8×3=24",
+          "H=12/24=50%",
+          "저장 6+2+2+2=12"
+        ],
+        "sectionId": "cache-accounting",
+        "requiredConcepts": [
+          "radix-tree-kv-cache",
+          "prefix-cache-matching"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "위 세 요청의 저장 block과 hash 단위를 모두 B=4로 두면 각 hit·새 계산 길이와 저장 block 수는 얼마인가요?",
+        "answerChecklist": [
+          "hit 0,4,4",
+          "새 계산 8,4,4",
+          "공통 1+전용 3=4 blocks=16 positions",
+          "앞 4 뒤의 같은 2개도 재계산"
+        ],
+        "sectionId": "block-hash",
+        "requiredConcepts": [
+          "prefix-cache-matching"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "입력 8자리 전체가 저장되어 있어도 마지막 위치의 출력 점수를 다시 계산해야 합니다. 일반 page 크기 1과 저장·hash 단위 모두 B=4인 full block 경로의 재사용 길이를 비교하세요.",
+        "answerChecklist": [
+          "후보 상한 8−1=7",
+          "page 크기 1은 hit 7",
+          "B=4는 hit 4",
+          "새 계산 1 또는 4"
+        ],
+        "sectionId": "full-hit-boundary",
+        "requiredConcepts": [
+          "prefix-cache-matching"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "공통 6과 끝 2자리 leaf 세 개가 있고 사용 잠금은 모두 0입니다. LRU 순서 q1,q2,q3에서 3자리를 요구하면 얼마를 반환하나요? 별도로 초기 상태의 R3 경로 8을 잠근 뒤 5자리를 요구하면요?",
+        "answerChecklist": [
+          "처음에는 leaf 두 개를 지워 4 반환",
+          "별도 상태에서 공통 6+q3의 2=8 보호",
+          "q1+q2의 4만 반환",
+          "5자리 요구는 충족하지 못함"
+        ],
+        "sectionId": "eviction",
+        "requiredConcepts": [
+          "radix-lru-leaf-eviction"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "B=4이고 R2의 block table은 [5,9]입니다. 새 위치 4~7의 slot mapping과 위치 6의 slot을 구하고 읽기 시 미래 위치의 처리도 설명하세요.",
+        "answerChecklist": [
+          "[36,37,38,39]",
+          "9×4+2=38",
+          "기존 0~3은 새 slot 목록에 없음",
+          "query 위치 6은 causal mask로 미래 7을 계산에서 제외"
+        ],
+        "sectionId": "attention-metadata",
+        "requiredConcepts": [
+          "attention-metadata",
+          "slot-mapping",
+          "block-table-lookup"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "cache와 실행 중 기록을 합쳐 한 요청 8자리만 담고 동시에 하나만 실행하며 생성 기록은 제외합니다. 서로 다른 공통 앞 6과 고유한 끝 2를 가진 X1,Y1,X2,Y2,X3,Y3를 교대 실행할 때와 XXXYYY 순서의 hit을 비교하세요. cold 정렬만으로 묶을 수 있나요?",
+        "answerChecklist": [
+          "교대 0/48",
+          "묶음 24/48=50%",
+          "실행 뒤 기록을 갱신하고 다시 조회해야 함",
+          "처음 모두 0인 정적 정렬만으로 그룹화되지 않음"
+        ],
+        "sectionId": "scheduling",
+        "requiredConcepts": [
+          "cache-aware-scheduling"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "공유 2500·전체 입력 2600인 세 순차 요청의 별도 큰 사례를 page 크기 1과 저장·hash 단위 모두 B=16에서 비교하세요. 차이를 항상 1% 이내라 할 수 있나요?",
+        "answerChecklist": [
+          "5000/7800≈64.102564%",
+          "4992/7800=64%",
+          "차이 약 0.102564 percentage points",
+          "짧은 사례 50%와 33.333…%는 약 16.67 points 차이",
+          "마지막 입력 재계산과 page·hash 경계 조건을 고정"
+        ],
+        "sectionId": "cache-accounting",
+        "requiredConcepts": [
+          "prefix-cache-matching"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "긴 hit을 먼저 고르는 정책에서 miss 3000자리 요청이 기다리고 매 step hit 2500·새 100자리 요청 8개가 먼저 옵니다. 새 prefill 상한 3200·chunk 미허용의 가정에서 대기 이유와 현재 엔진에 일반화할 수 없는 경계를 설명하세요.",
+        "answerChecklist": [
+          "800 소비 뒤 2400<3000",
+          "FCFS는 3000+100+100을 받음",
+          "chunk 허용이면 일부 진행 가능",
+          "SGLang LPM의 대기 129개 FCFS 전환·임시 지연·다른 정책 확인",
+          "step의 ms는 이 계산에서 측정하지 않음"
+        ],
+        "sectionId": "fairness",
+        "requiredConcepts": [
+          "cache-aware-scheduling"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "세 R 요청이 공통 prefix 4를 갖거나 큰 사례 세 요청이 2496을 공유하면 vLLM v0.27.1 FlashAttention cascade가 켜지나요? B=16 hybrid 사례에서 window group의 허용 길이가 2080이라면 full group도 어떻게 맞추나요?",
+        "answerChecklist": [
+          "4는 256 미만이라 false",
+          "2496이어도 3요청은 8 미만이라 false",
+          "나머지 backend 조건과 비용 휴리스틱도 확인",
+          "공통 허용 길이 2080으로 맞추고 full 목록을 130 blocks로 줄임",
+          "단순 full+다른 group에는 한 번 처리하는 최적화 존재"
+        ],
+        "sectionId": "kernel-and-hybrid",
+        "requiredConcepts": [
+          "attention-metadata",
+          "hybrid-kv-cache-manager"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "SGLang v2 — RadixAttention and offline scheduling",
+        "href": "https://arxiv.org/html/2312.07104v2",
+        "problem": "공통 입력을 여러 번 계산하고 실행 순서 때문에 재사용 기록을 일찍 지우는 문제를 다룹니다.",
+        "contribution": "공유 구간의 radix 구조·참조 보호·leaf 반환과 cache-aware 순서 및 offline DFS의 재사용 상한을 제시합니다.",
+        "assumptions": "Theorem 3.1은 요청을 미리 알고 가장 긴 요청을 담는 cache를 가정합니다. 생성 변화와 online 도착은 별도 경계입니다.",
+        "evidenceScope": "작은 R 사례의 서로 다른 12자리와 입력 24자리에 C≥12, H=1−C/24를 적용해 50% 상한을 설명합니다.",
+        "notClaim": "논문의 최대 6.4배는 복수 최적화의 당시 workload 평가입니다. KV hit만의 배수나 현재 엔진의 online 지연 최적성으로 해석하지 않습니다.",
+        "sectionId": "paper-sglang-radixattention"
+      },
+      {
+        "title": "SGLang 35f3c96 — radix cache and active scheduling",
+        "href": "https://github.com/sgl-project/sglang/blob/35f3c96ff4794a4de15daf12caad371084a037ee/python/sglang/srt/mem_cache/radix_cache.py",
+        "problem": "논문의 구조를 현재 구현의 index·page·namespace·잠금과 활성 정책에 맞춰 읽으려는 문제입니다.",
+        "contribution": "고정한 실제 match·split·leaf 반환 및 대기열 정렬을 같은 R1·R2·R3의 입력에 연결합니다.",
+        "assumptions": "2026-10-04 확인한 commit 35f3c96의 일반 token 경로입니다. CPU 검사는 index·allocator·요청 객체 대역을 사용합니다.",
+        "evidenceScope": "실제 함수에서 hit 0·6·6, 저장 12, 잠금 8, 요구 5에 반환 4 및 임시 지연 정렬의 결과를 확인합니다.",
+        "notClaim": "전체 SGLang GPU 엔진이나 서버 지연을 측정한 결과가 아니며 모든 page·EAGLE·정책에 같은 hit을 보장하지 않습니다.",
+        "sectionId": "radix-source"
+      },
+      {
+        "title": "vLLM v0.27.1 — prefix cache and backend metadata",
+        "href": "https://docs.vllm.ai/en/v0.27.1/design/prefix_caching/",
+        "problem": "같은 입력 기록이 저장 block·hash·group의 조건을 지나 실제 attention 읽기와 쓰기에 전달되는 과정을 다룹니다.",
+        "contribution": "마지막 입력의 재계산, 부분 hash 경계, free queue, 공통 metadata 및 cascade 선택 조건을 고정 원문으로 연결합니다.",
+        "assumptions": "v0.27.1 commit 6e448d0이며 작은 비교 모형은 저장·hash 단위 모두 4, 일반 full attention과 순차 요청을 가정합니다.",
+        "evidenceScope": "R2 hit 4와 새 slot 36~39, full-hit 상한 7의 block 내림, 세 요청 cascade false와 hybrid 길이 2080을 설명합니다.",
+        "notClaim": "B=4가 모든 backend의 지원 설정이라는 주장이나 hash hit 비율로 GPU 메모리 거래 수·응답 시간을 확정하는 주장은 아닙니다.",
+        "sectionId": "block-hash"
+      }
+    ]
   },
   "ai/speculative-decoding-variants": {
     entryNote: "Draft–verify cycle, 수락률 α 와 speculation 길이 K, speedup 식의 비용 계수 c, rejection sampling, EAGLE 과 native MTP 의 제안 방식, decode 가 memory-bound 인 이유를 알고 들어옵니다.",
@@ -90106,80 +90634,263 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/math-numerical-precision-stability": {
-    entryNote: "벡터·내적 정본의 합산 연산과 행렬 정본의 shape 계약을 이미 아는 독자를 대상으로 합니다.",
-    coreIdea:
-      "컴퓨터는 실수를 IEEE 754 형식의 유한 bit로 저장하며 mantissa bit 수만큼만 유효숫자를 남기고 나머지는 반올림합니다. 이 floating-point error는 계산 단계마다 누적되는데, 같은 수식이라도 계산 순서에 따라 오차가 폭발하거나(예: softmax의 naive 계산) 사라질(max-subtraction) 수 있다는 것이 numerical stability입니다. Tensor shape가 어긋나는 문제도 같은 층위의 조용한 실패이며, broadcasting 규칙이 우연히 성립하면 예외 없이 의도와 다른 축으로 계산이 진행됩니다.",
-    assumedKnowledge: [
-      { id: "dot-product", role: "여러 항을 더하는 합산 연산에서 오차가 누적되는 상황을 만드는 데 사용합니다." },
-      { id: "linear-map-matrix", role: "행렬의 m×n shape 계약을 tensor broadcasting 규칙으로 확장하는 데 사용합니다." },
-    ],
-    introducedHere: [
-      { id: "floating-point-precision-and-error", role: "IEEE 754가 남기는 유효숫자 자릿수와 그로 인한 반올림 오차를 정의합니다." },
-      { id: "numerical-stability", role: "같은 수식도 계산 순서에 따라 오차 증폭 정도가 달라진다는 성질을 softmax 사례로 고정합니다." },
-      { id: "tensor-shape-contract", role: "Shape가 어긋나도 broadcasting이 예외 없이 다른 축으로 진행될 수 있다는 계약을 정의합니다." },
-    ],
-    conceptExplanations: [
+    "entryNote": "1에 δ=1/2048을 두 번 더합니다. 매번 저장할 때와 작은 항을 먼저 모을 때의 차이를 그림과 실제 CPython 코드에서 같은 숫자로 확인합니다.",
+    "coreIdea": "표현 가능한 자리와 반올림 시점이 계산 결과를 바꿉니다. 저장 소수부 bit와 숨은 1을 포함한 정밀도, 입력과 누산의 형식을 나눕니다. 수학적으로 같은 식을 안정한 순서로 계산해도 모든 오차가 없어지지는 않으며, 정확한 정수 연산도 잘못된 축의 짝짓기는 고치지 못합니다.",
+    "assumedKnowledge": [
       {
-        id: "floating-point-precision-and-error",
-        sectionId: "precision",
-        intuition: "실수를 유한 자릿수로 저장하면 그 자릿수보다 정밀한 값은 가장 가까운 표현 가능값으로 반올림됩니다.",
-        workedExample: "FP16(mantissa 10bit)은 유효숫자 약 3.3자리만 남겨, 1.0에 2^-11을 더해도 반올림돼 다시 1.0이 됩니다.",
-        boundary: "이 근사는 1.0 근처 normal number 기준이며, subnormal 값이나 overflow 경계 근처에서는 간격이 달라집니다.",
+        "id": "dot-product",
+        "role": "여러 항을 더하는 합산 연산에서 오차가 누적되는 상황을 만드는 데 사용합니다."
       },
       {
-        id: "numerical-stability",
-        sectionId: "stability",
-        intuition: "수학적으로 같은 식이라도 부동소수점 계산 순서에 따라 오차가 폭발하거나 사라질 수 있습니다.",
-        workedExample: "Logit [1000,1001,1002]를 그대로 exp에 넣으면 FP32에서 inf·NaN이 되지만, 최댓값 1002를 먼저 빼면 [-2,-1,0]이 되어 안전합니다.",
-        boundary: "이 안정화는 overflow에 대한 것이며, 모든 logit이 매우 작은 음수로 몰려 exp가 전부 0에 가까워지는 underflow는 별도로 다뤄야 합니다.",
+        "id": "linear-map-matrix",
+        "role": "행렬의 m×n shape 계약을 tensor broadcasting 규칙으로 확장하는 데 사용합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "floating-point-precision-and-error",
+        "role": "표현 가능한 자리와 최근접 짝수 반올림을 같은 작은 덧셈으로 추적합니다."
       },
       {
-        id: "tensor-shape-contract",
-        sectionId: "shape",
-        intuition: "Shape가 우연히 broadcasting 규칙에 들어맞으면, 의도와 다른 축으로도 예외 없이 계산이 진행됩니다.",
-        workedExample: "Shape (3,1)인 a와 (3,)인 b를 더하면 원소별 합 3개가 아니라 (3,3) 조합 9개가 조용히 나옵니다.",
-        boundary: "축 크기가 서로 다르고 둘 다 1이 아니면(예: (3,4)+(5,)) broadcasting 자체가 성립하지 않아 runtime에서 즉시 예외가 납니다.",
-      },
-    ],
-    conceptStages: [
-      { label: "00 precision", relation: "IEEE 754가 남기는 유효숫자 자릿수와 반올림 오차를 정의합니다.", concepts: ["floating-point-precision-and-error"] },
-      { label: "01 stability", relation: "같은 수식도 계산 순서에 따라 오차 증폭 정도가 달라짐을 softmax로 확인합니다.", concepts: ["numerical-stability"] },
-      { label: "02 shape", relation: "Shape 계약이 어긋나도 broadcasting이 예외 없이 다른 축으로 진행될 수 있음을 확인합니다.", concepts: ["tensor-shape-contract"] },
-    ],
-    exercises: [
-      { level: "basic", question: "Mantissa bit 수가 늘면 유효숫자 자릿수와 machine epsilon은 각각 어떻게 바뀌나요?", answerChecklist: ["유효숫자 증가", "epsilon=2^-p 감소"], requiredConcepts: ["floating-point-precision-and-error"], sectionId: "precision" },
-      { level: "basic", question: "FP16과 BF16이 유효숫자·표현 범위에서 어떻게 다른지 설명하세요.", answerChecklist: ["FP16: mantissa 10bit·좁은 범위", "BF16: mantissa 7bit·FP32와 같은 범위"], requiredConcepts: ["floating-point-precision-and-error"], sectionId: "precision" },
-      { level: "basic", question: "Softmax를 naive하게 계산하면 왜 inf·NaN이 나올 수 있나요?", answerChecklist: ["exp(큰 값)이 FP32 범위 초과", "inf/inf=NaN"], requiredConcepts: ["numerical-stability"], sectionId: "stability" },
-      { level: "basic", question: "Softmax에서 최댓값을 빼는 재정렬이 결과를 바꾸지 않는 이유를 설명하세요.", answerChecklist: ["분자·분모의 exp(c) 약분", "수학적으로 동일한 값"], requiredConcepts: ["numerical-stability"], sectionId: "stability" },
-      { level: "basic", question: "Shape (3,1)과 (3,)을 더하면 왜 (3,3)이 되나요?", answerChecklist: ["broadcasting 규칙", "각 행이 b 전체와 짝지어짐"], requiredConcepts: ["tensor-shape-contract"], sectionId: "shape" },
-      { level: "basic", question: "Shape (3,4)와 (5,)를 더하면 broadcasting이 되지 않는 이유는 무엇인가요?", answerChecklist: ["마지막 축 4와 5가 다름", "둘 다 1이 아님"], requiredConcepts: ["tensor-shape-contract"], sectionId: "shape" },
-      { level: "advanced", question: "1.0에 2^-11을 더했을 때 FP16에서 결과가 다시 1.0이 되는 이유를 machine epsilon으로 설명하세요.", answerChecklist: ["FP16 epsilon≈2^-10", "2^-11 < 절반 간격이라 반올림 흡수"], requiredConcepts: ["floating-point-precision-and-error"], sectionId: "precision" },
-      { level: "advanced", question: "Catastrophic cancellation이 분산 계산 E[X²]-E[X]²에서 왜 발생하는지 설명하세요.", answerChecklist: ["크기가 비슷한 두 큰 수의 뺄셈", "앞자리 상쇄로 반올림 오차만 남음"], requiredConcepts: ["numerical-stability"], sectionId: "stability" },
-      { level: "advanced", question: "Precision 계약과 shape 계약이 서로 다른 축의 정확성인 이유를 설명하세요.", answerChecklist: ["precision: 표현 가능한 값의 정밀도", "shape: 축 정합성"], requiredConcepts: ["floating-point-precision-and-error", "tensor-shape-contract"], sectionId: "shape" },
-      { level: "advanced", question: "AMP(automatic mixed-precision)가 연산별로 dtype을 다르게 고르는 근거를 FP16·BF16 트레이드오프로 설명하세요.", answerChecklist: ["FP16: 좁은 범위·많은 유효숫자", "BF16: 넓은 범위·적은 유효숫자"], requiredConcepts: ["floating-point-precision-and-error"], sectionId: "precision" },
-    ],
-    papers: [
-      {
-        title: "Goldberg — What Every Computer Scientist Should Know About Floating-Point Arithmetic",
-        href: "https://doi.org/10.1145/103162.103163",
-        problem: "IEEE 754 부동소수점의 반올림·오차 전파를 프로그래머가 흔히 오해하거나 무시하는 문제를 다룹니다.",
-        contribution: "Sign·exponent·mantissa 구조, machine epsilon, catastrophic cancellation을 표준 사례로 정리한 survey입니다.",
-        assumptions: "IEEE 754 표준을 따르는 부동소수점 구현을 전제합니다.",
-        evidenceScope: "ACM Computing Surveys 1991에 발표된 survey(저자 정리)이며 특정 하드웨어 벤치마크는 아닙니다.",
-        notClaim: "특정 GPU·CPU의 실제 명령어 지연시간이나 처리량까지 보장하는 논문은 아닙니다.",
-        sectionId: "paper-fp-arithmetic",
+        "id": "numerical-stability",
+        "role": "같은 수학적 식의 중간 크기·저장 순서와 실패 조건을 구별합니다."
       },
       {
-        title: "Goodfellow, Bengio & Courville — Deep Learning, Chapter 4 Numerical Computation",
-        href: "https://www.deeplearningbook.org/contents/numerical.html",
-        problem: "Overflow·underflow가 딥러닝 구현에서 어떻게 나타나고 어떻게 피하는지가 불명확했습니다.",
-        contribution: "Softmax의 max-subtraction(log-sum-exp) 안정화 기법을 포함해 수치 계산 실패 패턴을 정리했습니다.",
-        assumptions: "표준 IEEE 754 부동소수점 연산을 전제한 설명입니다.",
-        evidenceScope: "공개 교재(저자 정리)이며 특정 논문의 실험 결과는 아닙니다.",
-        notClaim: "모든 수치 불안정 문제가 max-subtraction 하나로 해결된다는 뜻은 아닙니다.",
-        sectionId: "paper-numerical-stability",
-      },
+        "id": "tensor-shape-contract",
+        "role": "축 크기에 따른 허용된 짝짓기와 사용자가 의도한 짝짓기를 구별합니다."
+      }
     ],
+    "conceptExplanations": [
+      {
+        "id": "floating-point-precision-and-error",
+        "sectionId": "precision",
+        "intuition": "정확한 계산값이 저장 가능한 두 자리 사이에 오면 정한 반올림 규칙으로 한 자리를 고릅니다.",
+        "workedExample": "FP16의 [1,2) 간격은 2^-10입니다. δ=2^-11은 정확히 반 간격이라 1+δ는 짝수 쪽인 1, 옆의 1+3δ는 1+4δ로 저장됩니다.",
+        "boundary": "저장 소수부 f=10과 정규수 정밀도 p=11을 구별합니다. ε=2^-f와 최근접 단위 반올림 오차 u=ε/2는 다르며 정규수 상대 오차 모형을 subnormal에 그대로 적용하지 않습니다."
+      },
+      {
+        "id": "numerical-stability",
+        "sectionId": "stability",
+        "intuition": "같은 수학적 답을 구해도 중간에 어떤 크기의 값을 만들고 언제 반올림하는지에 따라 오차와 실패가 달라집니다.",
+        "workedExample": "[1000,1001,1002]에서 1002를 빼면 [-2,-1,0]이 되어 비중은 약 [0.0900306,0.2447285,0.6652410]입니다. FP32 [10000,10002]의 큰 모멘트 차는 0이지만 중심화한 분산은 1입니다.",
+        "boundary": "비어 있지 않은 유한 입력의 max-shift는 분모에 exp(0)=1을 남깁니다. 작은 분자 underflow, 많은 항의 합산, NaN·무한대는 별도입니다. 수학적 항등식이 구현의 bit 단위 동일성을 보장하지 않습니다."
+      },
+      {
+        "id": "tensor-shape-contract",
+        "sectionId": "shape",
+        "intuition": "축의 크기는 어느 값끼리 짝지어 연산하는지 결정합니다. 허용되는 짝짓기가 의도한 짝짓기인지는 따로 확인합니다.",
+        "workedExample": "a=[1,2,3]을 (3,1), b=[10,20,30]을 (3,)로 두면 결과는 [[11,21,31],[12,22,32],[13,23,33]]인 (3,3)입니다.",
+        "boundary": "모든 정수와 합이 정확히 표현되어도 세 쌍 대신 아홉 쌍을 만든 문제는 남습니다. 끝 축 4와 5가 다르고 둘 다 1이 아닌 (3,4)+(5,)는 broadcasting할 수 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "저장과 반올림",
+        "relation": "같은 δ가 중간 저장에서 사라지는 순서와 실제 코드의 tie 조건을 연결합니다.",
+        "concepts": [
+          "floating-point-precision-and-error"
+        ]
+      },
+      {
+        "label": "안정한 계산 순서",
+        "relation": "지수 항과 큰 모멘트의 위험한 중간값을 바꾸고 남는 실패 조건을 확인합니다.",
+        "concepts": [
+          "numerical-stability"
+        ]
+      },
+      {
+        "label": "축의 짝짓기",
+        "relation": "정확한 정수 계산을 사용해 정밀도와 축 계약의 실패를 분리합니다.",
+        "concepts": [
+          "tensor-shape-contract"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "7·11절에서 저장 소수부 bit 수가 늘면 정규수 정밀도와 machine epsilon은 각각 어떻게 바뀌나요?",
+        "answerChecklist": [
+          "저장 소수부 f와 숨은 1을 포함한 정규수 정밀도 p=f+1을 구별합니다.",
+          "f가 늘면 정밀도는 높아지고 ε=2^-f는 작아집니다.",
+          "최근접 단위 반올림 오차 u=ε/2는 한 번의 정규 범위 연산에 쓰며 전체 계산 오차가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "floating-point-precision-and-error"
+        ],
+        "sectionId": "precision"
+      },
+      {
+        "level": "basic",
+        "question": "11절에서 FP16과 BF16의 정밀도·표현 범위를 비교하세요.",
+        "answerChecklist": [
+          "FP16은 소수부 10 bit와 정밀도 11 bit, BF16은 소수부 7 bit와 정밀도 8 bit입니다.",
+          "BF16은 FP16보다 지수 범위가 넓지만 같은 크기에서 간격이 더 큽니다.",
+          "BF16과 FP32의 최소 양의 정규수는 같지만 최대 유한값은 다릅니다. 작은 값의 실제 처리도 장치 계약을 확인합니다."
+        ],
+        "requiredConcepts": [
+          "floating-point-precision-and-error"
+        ],
+        "sectionId": "formats"
+      },
+      {
+        "level": "basic",
+        "question": "12절에서 softmax를 큰 입력 그대로 계산하면 어떤 실패가 가능한가요?",
+        "answerChecklist": [
+          "exp(1000)은 FP32와 binary64 범위를 넘습니다.",
+          "무한대를 반환하는 연산에서는 inf/inf가 NaN으로 이어질 수 있습니다.",
+          "실제 Python math.exp(1000)은 OverflowError를 내므로 API의 실패 방식도 구별합니다."
+        ],
+        "requiredConcepts": [
+          "numerical-stability"
+        ],
+        "sectionId": "stability"
+      },
+      {
+        "level": "basic",
+        "question": "12·13절에서 softmax의 최댓값을 빼도 수학적 결과가 같은 이유와 남는 한계를 설명하세요.",
+        "answerChecklist": [
+          "분자와 분모에 공통인 exp(m)을 약분합니다.",
+          "비어 있지 않은 유한 입력에는 exp(0)=1인 항이 적어도 하나 있어 분모 전체 underflow를 막습니다.",
+          "작은 분자와 합산 문제까지 없애지는 않으며 구현 결과의 bit 단위 동일성을 보장하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "numerical-stability"
+        ],
+        "sectionId": "stability"
+      },
+      {
+        "level": "basic",
+        "question": "15절에서 shape (3,1)과 (3,)의 합이 (3,3)이 되는 과정을 설명하세요.",
+        "answerChecklist": [
+          "오른쪽부터 비교할 때 (3,)는 (1,3)처럼 취급됩니다.",
+          "두 축에서 한쪽 크기가 1이므로 각각 3으로 맞춰집니다.",
+          "세로의 각 값이 가로의 세 값 모두와 짝지어 아홉 합을 만듭니다."
+        ],
+        "requiredConcepts": [
+          "tensor-shape-contract"
+        ],
+        "sectionId": "shape"
+      },
+      {
+        "level": "basic",
+        "question": "15절에서 (3,4)+(5,)가 broadcasting되지 않는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "끝 축의 크기 4와 5가 다릅니다.",
+          "어느 쪽도 1이 아니므로 해당 규칙으로 짝지을 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "tensor-shape-contract"
+        ],
+        "sectionId": "shape"
+      },
+      {
+        "level": "advanced",
+        "question": "8·10절에서 1+2^-11이 FP16으로 저장되면 1이 되는 정확한 경계를 코드와 연결해 설명하세요.",
+        "answerChecklist": [
+          "2^-11은 ε=2^-10의 정확히 절반이며 절반보다 작은 값이 아닙니다.",
+          "최근접 짝수 규칙이 저장 소수부의 낮은 bit가 짝수인 1을 고릅니다.",
+          "원문의 소수부×1024는 0.5, bits는 0이라 올리지 않습니다. 옆의 1+3δ에서는 1.5와 홀수 bits=1이어서 2로 올립니다."
+        ],
+        "requiredConcepts": [
+          "floating-point-precision-and-error"
+        ],
+        "sectionId": "rounding-trace"
+      },
+      {
+        "level": "advanced",
+        "question": "14절의 [10000,10002]에서 E[X²]−E[X]²와 중심화한 분산 계산의 차이를 설명하세요.",
+        "answerChecklist": [
+          "두 큰 모멘트가 FP32로 각각 100020000에 저장되어 그 차가 0이 됩니다.",
+          "평균 10001을 먼저 빼면 −1과 1이고 제곱의 평균은 1입니다.",
+          "중심화도 뺄셈을 하지만 큰 제곱들의 차를 피합니다. 모든 가까운 수의 뺄셈이 새 오차를 만드는 것은 아니며 이미 사라진 입력 정보는 복구하지 못합니다."
+        ],
+        "requiredConcepts": [
+          "numerical-stability"
+        ],
+        "sectionId": "cancellation"
+      },
+      {
+        "level": "advanced",
+        "question": "15절의 정수 표로 precision 계약과 shape 계약이 서로 다른 이유를 설명하세요.",
+        "answerChecklist": [
+          "예제의 입력과 아홉 합은 FP16에도 정확히 표현됩니다.",
+          "숫자 저장 오차가 없어도 의도한 세 쌍 대신 아홉 쌍을 더했습니다.",
+          "더 높은 정밀도로 바꾸는 일과 의도한 축 배치를 맞추는 일은 별개입니다."
+        ],
+        "requiredConcepts": [
+          "floating-point-precision-and-error",
+          "tensor-shape-contract"
+        ],
+        "sectionId": "shape"
+      },
+      {
+        "level": "advanced",
+        "question": "16절에서 자동 혼합 정밀도의 선택을 FP16·BF16 특성과 연결하고 추가로 확인할 조건을 설명하세요.",
+        "answerChecklist": [
+          "FP16은 같은 크기에서 더 촘촘하고 BF16은 지수 범위가 더 넓습니다.",
+          "입력 저장·실제 연산·누산·출력 저장의 형식을 따로 확인합니다.",
+          "연산·장치·프레임워크 버전에 따른 autocast 정책과 실제 구현을 확인합니다.",
+          "손실 스케일링은 작은 값의 범위를 바꾸지만 이미 저장하면서 잃은 가중치 차이를 복구하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "floating-point-precision-and-error"
+        ],
+        "sectionId": "applications"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Goldberg 1991 · 형식과 정확한 반올림",
+        "href": "https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html",
+        "sectionId": "paper-fp-arithmetic",
+        "problem": "유한 자리의 표현과 가운데 반올림을 구별해야 합니다.",
+        "contribution": "정밀도에 선행 1을 포함하고 p=11에 같은 δ와 두 tie를 적용합니다.",
+        "assumptions": "정규화된 이진 형식과 최근접 짝수 반올림입니다.",
+        "evidenceScope": "원문의 형식·반올림 원리와 이 글의 직접 대입입니다.",
+        "notClaim": "현대의 모든 장치 동작이나 GPU 성능을 검증한 자료는 아닙니다."
+      },
+      {
+        "title": "CPython v3.9.6 · binary16 저장 원문",
+        "href": "https://github.com/python/cpython/blob/db3ff76da19004f266b62e98a81bdfd322861436/Objects/floatobject.c#L2021-L2122",
+        "sectionId": "code-rounding",
+        "problem": "같은 두 tie가 실제 저장 코드에서 왜 다른 방향으로 가는지 확인합니다.",
+        "contribution": "소수부×1024와 bits의 홀짝에 0.5·1.5를 대입해 3c00·3c02를 추적합니다.",
+        "assumptions": "고정 CPython v3.9.6과 양의 정규수 경로입니다.",
+        "evidenceScope": "전체 원문·라이선스·SHA 및 Python 3.9.6 struct 저장 변환의 실제 실행입니다.",
+        "notClaim": "CPython 자체 재빌드나 네이티브 GPU FP16 덧셈을 실행하지 않았습니다."
+      },
+      {
+        "title": "Deep Learning §4.1 · softmax와 작은 분자",
+        "href": "https://www.deeplearningbook.org/contents/numerical.html",
+        "sectionId": "paper-numerical-stability",
+        "problem": "큰 지수 항과 작은 비중의 저장 실패를 구별해야 합니다.",
+        "contribution": "최대값 이동으로 분모에 1이 남는 조건과 직접 log-softmax가 필요한 작은 분자를 같은 숫자로 계산합니다.",
+        "assumptions": "입력은 비어 있지 않고 모든 점수가 유한합니다. exp와 합산의 실제 형식 및 작은 분자의 underflow 조건을 별도로 확인합니다.",
+        "evidenceScope": "식 (4.1)과 원문의 underflow 구별, stdlib 수치 검산입니다.",
+        "notClaim": "합산 오차·모든 overflow·NaN을 하나의 이동으로 막는다는 뜻은 아닙니다."
+      },
+      {
+        "title": "Kalamkar 외 · BFLOAT16 Table 1과 Figure 1",
+        "href": "https://arxiv.org/html/1905.12322v3#S3",
+        "sectionId": "formats",
+        "problem": "저장 bit 배치와 누산 형식을 혼동하기 쉽습니다.",
+        "contribution": "표의 소수부·지수 bit로 간격과 유한 최대값을 직접 계산하고 입력 BF16·누산 FP32를 구별합니다.",
+        "assumptions": "2019년 원문의 형식 표와 데이터 흐름입니다.",
+        "evidenceScope": "Table 1과 Figure 1에 한정하며 논문의 정확도 실험을 새로 재현하지 않았습니다.",
+        "notClaim": "모든 BF16 장치가 같은 subnormal 동작이나 학습 정확도를 보장하지 않습니다."
+      },
+      {
+        "title": "NumPy 2.0 · broadcasting 규칙",
+        "href": "https://numpy.org/doc/2.0/user/basics.broadcasting.html",
+        "sectionId": "shape",
+        "problem": "허용된 축 짝짓기가 의도한 연산과 다를 수 있습니다.",
+        "contribution": "오른쪽 정렬과 같은 크기 또는 1이라는 조건을 (3,1)+(3,)와 (3,4)+(5,)에 적용합니다.",
+        "assumptions": "NumPy 2.0 문서의 배열 축 비교 규칙입니다.",
+        "evidenceScope": "원문 규칙 대입과 정수 표의 Python 검산이며 NumPy 실행은 아닙니다.",
+        "notClaim": "입력 배열의 물리적 복사가 반드시 생긴다고 주장하지 않습니다."
+      }
+    ]
   },
   "ai/quantization-formats-and-granularity": {
     entryNote: "affine quantizer의 scale·zero-point·round·clip 규약(/ai/quantization)과 scale 공유 범위(/ai/ptq-calibration#scale-granularity), method·format 경계(/ai/weight-only-quantization#artifact-boundary)를 안다고 가정합니다.",
@@ -95494,277 +96205,352 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "banking/bank-balance-sheet-and-deposit-creation": {
-    entryNote:
-      "예금이 은행의 빚이라는 것까지만 알고 들어오면 됩니다. 회계를 배운 적이 없어도 되도록 자산과 부채의 자리부터 세우고, 대출 한 건의 분개를 한 줄씩 따라갑니다.",
-    coreIdea:
-      "은행은 맡아 둔 예금을 빌려주는 것이 아니라 대출을 실행하면서 자산과 부채를 같은 금액으로 동시에 늘립니다. 그래서 통화량은 대출 잔액을 따라 움직이고, 그 구조가 남기는 만기 불일치가 뱅크런과 안전장치의 이유가 됩니다.",
-    assumedKnowledge: [
+    "entryNote": "10을 빌리고 6을 다른 은행에 보낸 뒤 4를 갚는 공장 사례부터 시작합니다. 이름을 외우기 전에 같은 네 칸이 어떻게 바뀌는지 따라갑니다.",
+    "coreIdea": "대출은 받을 권리와 예금 지급 의무를 함께 만듭니다. 이후 송금·원금 상환·이자·손실은 다른 칸을 바꾸므로 개별 은행과 전체 은행 부문, 오늘의 지급과 최종 회수액을 나눠 추적합니다.",
+    "assumedKnowledge": [
       {
-        id: "credit-money",
-        role: "예금이 은행의 채무라는 정의가 장부의 오른쪽을 읽는 출발점이 됩니다.",
+        "id": "credit-money",
+        "role": "고객에게는 받을 권리인 예금이 은행에는 지급 의무라는 관계를 재사용합니다."
       },
       {
-        id: "monetary-aggregate",
-        role: "대출로 생긴 예금이 통화지표의 어느 칸에 들어가는지 연결하는 데 씁니다.",
+        "id": "monetary-aggregate",
+        "role": "거래로 바뀐 예금과 통화지표에 포함되는 범위를 구분합니다."
       },
       {
-        id: "discount-factor",
-        role: "긴 자산을 오늘 현금으로 바꿀 때 값이 깎이는 이유를 시점 환산으로 이해하는 데 씁니다.",
-      },
+        "id": "discount-factor",
+        "role": "긴 자산의 회수 시점과 오늘 거래 가격이 다를 수 있음을 연결합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "bank-balance-sheet",
-        role: "이 글 전체를 읽는 도구로, 자산·부채·자기자본의 자리를 확정합니다.",
+        "id": "bank-balance-sheet",
+        "role": "은행이 받을 자산과 갚을 부채를 같은 시점에 적고 차이를 자본으로 읽습니다."
       },
       {
-        id: "deposit-creation",
-        role: "대출이 예금을 만든다는 회계 사실로 이 글의 중심 질문에 답합니다.",
+        "id": "deposit-creation",
+        "role": "새 대출과 함께 은행의 지급 의무인 고객 예금을 적습니다."
       },
       {
-        id: "money-multiplier-ceiling",
-        role: "교과서의 배수 설명이 상한일 뿐 절차가 아니라는 경계를 세웁니다.",
+        "id": "money-multiplier-ceiling",
+        "role": "고정 준비금과 양의 동일 준비율이라는 모형에서 필요한 준비금이 보유량을 넘지 않아야 합니다."
       },
       {
-        id: "maturity-transformation",
-        role: "창조된 장부가 남기는 구조적 불일치를 드러냅니다.",
+        "id": "maturity-transformation",
+        "role": "빨리 지급할 수 있는 부채와 더 늦게 돌아오는 자산의 시점을 연결합니다."
       },
       {
-        id: "self-fulfilling-bank-run",
-        role: "그 불일치가 부실 없이도 터지는 경로를 설명합니다.",
+        "id": "self-fulfilling-bank-run",
+        "role": "다른 사람의 인출이 내 회수 가능성을 낮출 것이라는 예상이 인출을 더 부를 수 있습니다."
       },
       {
-        id: "deposit-insurance",
-        role: "예금자의 유인을 바꿔 조정 실패를 푸는 장치입니다.",
+        "id": "deposit-insurance",
+        "role": "보호 약속을 신뢰하는 예금자의 손실 불안과 먼저 인출할 유인을 줄입니다."
       },
       {
-        id: "lender-of-last-resort",
-        role: "은행의 현금 부족을 메워 급매 연쇄를 끊는 별도 장치입니다.",
-      },
+        "id": "lender-of-last-resort",
+        "role": "중앙은행이 조건을 갖춘 금융기관에 유동성을 제공해 지급 시차를 연결합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "bank-balance-sheet",
-        sectionId: "balance-sheet",
-        intuition:
-          "왼쪽은 은행이 받을 것, 오른쪽은 갚을 것이고 그 차이가 주주 몫입니다.",
-        workedExample:
-          "자산 100, 부채 92면 자기자본은 8이고 자산 가치가 8% 떨어지면 자본이 전부 사라집니다.",
-        boundary:
-          "자기자본은 금고에 쌓아 둔 현금이 아니라 장부상의 차액이므로, 자본을 쌓으라는 규제가 특정 자산을 보유하라는 뜻은 아닙니다.",
+        "id": "bank-balance-sheet",
+        "sectionId": "balance-sheet",
+        "intuition": "은행이 받을 자산과 갚을 부채를 같은 시점에 적고 차이를 자본으로 읽습니다.",
+        "workedExample": "준비금 20+대출 80=예금 92+자본 8입니다.",
+        "boundary": "장부 자본 8은 별도 현금이 아닙니다. 규제자본의 공제·종류와 순자산·총자산을 구분합니다."
       },
       {
-        id: "deposit-creation",
-        sectionId: "deposit-creation",
-        intuition:
-          "대출을 실행하면 받을 권리와 갚을 의무가 같은 순간에 한 줄씩 적힙니다.",
-        workedExample:
-          "1억 원 대출이면 자산 대출채권 1억과 부채 예금 1억이 함께 늘고, 기존 예금은 한 푼도 줄지 않습니다.",
-        boundary:
-          "예금이 늘어도 자산과 부채가 같은 금액으로 커지므로 자기자본은 변하지 않으며, 대출 자체가 은행을 부유하게 만들지는 않습니다.",
+        "id": "deposit-creation",
+        "sectionId": "deposit-creation",
+        "intuition": "새 대출과 함께 은행의 지급 의무인 고객 예금을 적습니다.",
+        "workedExample": "대출 10 뒤 20+90=102+8, 송금 6과 원금 4 상환 뒤 14+86=92+8이며 B의 새 예금 6은 남습니다.",
+        "boundary": "은행 자금 조달이 불필요하다는 뜻이 아닙니다. 원금 상환·이자·손실 인식·비은행 자산 매입을 따로 계산합니다."
       },
       {
-        id: "money-multiplier-ceiling",
-        sectionId: "money-multiplier",
-        intuition:
-          "예금이 생길 때마다 일부를 떼어 둬야 한다면 남는 몫이 줄어들며 반복되고, 그 합에 한계가 있습니다.",
-        workedExample:
-          "지급준비율이 0.1이면 배수의 상한은 1/0.1 = 10배입니다.",
-        boundary:
-          "준비금이 먼저 늘어야 대출이 생긴다는 절차로 읽으면 안 됩니다. 대출 수요와 자본·유동성 제약이 없으면 이 상한은 실현되지 않습니다.",
+        "id": "money-multiplier-ceiling",
+        "sectionId": "money-multiplier",
+        "intuition": "고정 준비금과 양의 동일 준비율이라는 모형에서 필요한 준비금이 보유량을 넘지 않아야 합니다.",
+        "workedExample": "R=20, r=0.2이면 rD≤R에서 D≤100, D/R≤5입니다.",
+        "boundary": "특정 준비율이 모든 나라에 적용되거나 예금이 상한까지 자동 증가한다는 뜻이 아닙니다. r=0으로 나눌 수 없고 다른 대출 제약도 남습니다."
       },
       {
-        id: "maturity-transformation",
-        sectionId: "maturity-transformation",
-        intuition:
-          "오늘 찾을 수 있는 돈으로 몇 년 뒤 돌아오는 대출을 떠받치고 있습니다.",
-        workedExample:
-          "예금 92는 오늘 전부 청구 가능하지만 자산 100은 만기 수년짜리 대출입니다.",
-        boundary:
-          "이것은 결함이 아니라 은행의 본업이며, 예금자가 동시에 찾지 않는다는 전제 위에서만 성립합니다.",
+        "id": "maturity-transformation",
+        "sectionId": "maturity-transformation",
+        "intuition": "빨리 지급할 수 있는 부채와 더 늦게 돌아오는 자산의 시점을 연결합니다.",
+        "workedExample": "준비금 14와 대출 86을 가진 은행도 예금 20 지급에는 오늘 쓸 돈 6이 부족합니다.",
+        "boundary": "예금별 인출 조건과 조달 만기가 다릅니다. 동시에 인출하지 않을 것이라는 기대만으로 충분한 관리는 되지 않습니다."
       },
       {
-        id: "self-fulfilling-bank-run",
-        sectionId: "bank-run",
-        intuition:
-          "늦게 찾으면 덜 받는다는 사실을 모두가 알면, 남들이 찾을 것 같을 때 나도 먼저 찾는 것이 합리적이 됩니다.",
-        workedExample:
-          "자산 100을 30% 손실로 급매하면 70만 회수되어 예금 92를 전부 액면대로 돌려줄 수 없습니다.",
-        boundary:
-          "원인이 자산 부실이 아니라 조정 실패이므로, 건전한 은행에서도 일어날 수 있고 반대로 부실 은행의 파산과 같은 사건이 아닙니다.",
+        "id": "self-fulfilling-bank-run",
+        "sectionId": "bank-run",
+        "intuition": "다른 사람의 인출이 내 회수 가능성을 낮출 것이라는 예상이 인출을 더 부를 수 있습니다.",
+        "workedExample": "장부가 10의 대출을 6에 팔아 20을 지급하면 준비금 0+대출 76=예금 72+자본 4입니다.",
+        "boundary": "실제 자산 손실과 조정 문제가 함께 작동할 수 있습니다. 예금자별 잔액과 지급 절차 없이 인출 순서별 회수액을 계산할 수 없습니다."
       },
       {
-        id: "deposit-insurance",
-        sectionId: "safety-net",
-        intuition:
-          "한도까지는 순서와 무관하게 돌려받는다고 미리 약속하면 줄을 설 이유가 없어집니다.",
-        workedExample:
-          "한도 안 예금자는 남들이 인출해도 서두르지 않으므로 인출이 애초에 몰리지 않습니다.",
-        boundary:
-          "한도 밖 예금과 은행의 다른 채권자에게는 효력이 없어, 대규모 법인 예금 비중이 높은 은행에서는 효과가 약합니다.",
+        "id": "deposit-insurance",
+        "sectionId": "safety-net",
+        "intuition": "보호 약속을 신뢰하는 예금자의 손실 불안과 먼저 인출할 유인을 줄입니다.",
+        "workedExample": "한국 일반 보호 예금 0.6억과 0.5억을 같은 금융기관에 보유하면 이자 생략 시 합계 1.1억 중 1억이 한도 안입니다.",
+        "boundary": "보호 대상·기관 단위·소정의 이자·별도 보호 규정을 확인합니다. 한도 밖 금액과 지급 지연 우려가 남아 모든 인출 유인이 없어지지는 않습니다."
       },
       {
-        id: "lender-of-last-resort",
-        sectionId: "safety-net",
-        intuition:
-          "자산은 멀쩡한데 오늘 쓸 현금만 없는 은행에 담보를 받고 빌려주는 일입니다.",
-        workedExample:
-          "우량 대출채권을 담보로 단기 자금을 받으면 자산을 팔지 않고도 인출에 응할 수 있습니다.",
-        boundary:
-          "지급 능력이 없는 은행을 살리는 장치가 아니며, 유동성 부족과 지급 불능을 실시간으로 구분하기 어렵다는 점이 남은 난점입니다.",
-      },
+        "id": "lender-of-last-resort",
+        "sectionId": "safety-net",
+        "intuition": "중앙은행이 조건을 갖춘 금융기관에 유동성을 제공해 지급 시차를 연결합니다.",
+        "workedExample": "원래 A은행이 손실 없이 준비금 6을 빌려 예금 20을 지급하면 대출 86=예금 72+차입 6+자본 8입니다.",
+        "boundary": "담보·할인율·금리·상환 능력 조건은 제도별로 다릅니다. 유동성 차입은 기존 손실을 없애지 않으며 차입금 상환 의무도 남습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "00 도구",
-        relation: "장부의 네 칸을 먼저 확정합니다.",
-        concepts: ["bank-balance-sheet"],
+        "label": "01 같은 세 거래",
+        "relation": "이름 없는 네 칸에서 빌리고 보내고 갚는 흐름을 그립니다.",
+        "concepts": [
+          "bank-balance-sheet",
+          "deposit-creation"
+        ]
       },
       {
-        label: "01 답",
-        relation: "대출 한 건의 분개가 중심 질문에 답합니다.",
-        concepts: ["bank-balance-sheet", "deposit-creation"],
+        "label": "02 장부와 행동의 제약",
+        "relation": "고정 준비금 모형과 실제 자금 조달·자본·대출 수요를 구분합니다.",
+        "concepts": [
+          "money-multiplier-ceiling"
+        ]
       },
       {
-        label: "02 제약",
-        relation: "만들 수 있다는 것과 무한정 만든다는 것을 가릅니다.",
-        concepts: ["deposit-creation", "money-multiplier-ceiling"],
+        "label": "03 지급 시점과 손실",
+        "relation": "같은 6의 부족을 급매와 차입이라는 두 분기로 계산합니다.",
+        "concepts": [
+          "maturity-transformation",
+          "self-fulfilling-bank-run"
+        ]
       },
       {
-        label: "03 잔여 구조",
-        relation: "창조가 끝난 장부에 만기 불일치가 남습니다.",
-        concepts: ["maturity-transformation"],
-      },
-      {
-        label: "04 파열",
-        relation: "불일치가 부실 없이도 터지는 경로를 봅니다.",
-        concepts: ["maturity-transformation", "self-fulfilling-bank-run"],
-      },
-      {
-        label: "05 장치",
-        relation: "유인을 바꾸는 쪽과 현금을 메우는 쪽을 나눠 답합니다.",
-        concepts: ["deposit-insurance", "lender-of-last-resort"],
-      },
+        "label": "04 보호의 범위",
+        "relation": "예금 손실 보호와 중앙은행 유동성을 각각의 조건으로 적용합니다.",
+        "concepts": [
+          "deposit-insurance",
+          "lender-of-last-resort"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "은행 장부에서 예금과 대출이 각각 어느 쪽에 적히는지 쓰고, 그 이유를 앞 글의 정의로 설명하세요.",
-        answerChecklist: ["예금은 부채", "대출은 자산", "예금은 은행이 진 빚", "대출은 받을 권리"],
-        requiredConcepts: ["bank-balance-sheet"],
-        sectionId: "balance-sheet",
-      },
-      {
-        level: "basic",
-        question:
-          "은행이 1억 원을 대출할 때 장부에 적히는 두 줄을 쓰고, 자기자본이 왜 변하지 않는지 설명하세요.",
-        answerChecklist: ["자산 대출채권 +1억", "부채 예금 +1억", "같은 금액 동시 증가", "차액인 자본 불변"],
-        requiredConcepts: ["deposit-creation", "bank-balance-sheet"],
-        sectionId: "deposit-creation",
-      },
-      {
-        level: "basic",
-        question:
-          "지급준비율이 0.2일 때 통화승수의 상한을 구하고, 그 숫자를 절차로 읽으면 안 되는 이유를 한 문장으로 쓰세요.",
-        answerChecklist: ["1/0.2 = 5배", "산술적 상한", "준비금이 대출을 낳는 순서 아님", "수요·자본 제약 필요"],
-        requiredConcepts: ["money-multiplier-ceiling"],
-        sectionId: "money-multiplier",
-      },
-      {
-        level: "basic",
-        question:
-          "만기 변환이 무엇인지 정의하고, 그것이 결함이 아니라 본업인 이유를 쓰세요.",
-        answerChecklist: ["짧은 부채와 긴 자산", "예금자는 유동성", "차주는 장기 자금", "동시에 찾지 않는다는 전제"],
-        requiredConcepts: ["maturity-transformation"],
-        sectionId: "maturity-transformation",
-      },
-      {
-        level: "basic",
-        question:
-          "뱅크런이 일반적인 파산과 어떻게 다른지, 원인을 기준으로 구분해 설명하세요.",
-        answerChecklist: ["자산 부실이 아님", "조정 실패", "예상이 결과를 만듦", "건전한 은행에서도 가능"],
-        requiredConcepts: ["self-fulfilling-bank-run"],
-        sectionId: "bank-run",
-      },
-      {
-        level: "basic",
-        question:
-          "예금보험과 최종대부자가 각각 무엇을 막는지 한 문장씩으로 구분하세요.",
-        answerChecklist: ["예금보험은 먼저 찾을 유인 제거", "최종대부자는 현금 부족 보전", "담보 필요", "지급 불능 은행은 대상 아님"],
-        requiredConcepts: ["deposit-insurance", "lender-of-last-resort"],
-        sectionId: "safety-net",
-      },
-      {
-        level: "advanced",
-        question:
-          "은행이 중개자라는 설명이 맞다면 대출 실행 후 총예금이 어떻게 되어야 하는지 예측을 쓰고, 실제 분개와 어긋나는 지점을 짚으세요.",
-        answerChecklist: [
-          "중개자 예측: 총예금 불변",
-          "기존 예금 감소가 있어야 함",
-          "실제로는 기존 예금 불변",
-          "총예금과 통화량 증가",
+        "level": "basic",
+        "sectionId": "balance-sheet",
+        "requiredConcepts": [
+          "bank-balance-sheet"
         ],
-        requiredConcepts: ["deposit-creation", "bank-balance-sheet"],
-        sectionId: "intermediary-myth",
+        "question": "A은행의 20+80=92+8에서 네 수가 가리키는 것을 쓰고, 예금자의 자산이 은행에는 왜 부채인지 설명하세요.",
+        "answerChecklist": [
+          "20은 은행 간 지급에 쓸 준비금이고 80은 받을 대출입니다.",
+          "92는 고객에게 갚을 예금이고 8은 장부 자본입니다.",
+          "같은 청구권을 예금자는 받을 권리로, 은행은 갚을 의무로 기록합니다."
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "중앙은행이 준비금을 크게 늘렸는데도 대출과 통화량이 늘지 않는 상황이 통화승수 식과 모순되지 않는 이유를 설명하세요.",
-        answerChecklist: [
-          "식은 상한만 말함",
-          "대출 수요 부족",
-          "자본·유동성 제약",
-          "인과 방향이 반대에 가까움",
+        "level": "basic",
+        "sectionId": "deposit-creation",
+        "requiredConcepts": [
+          "deposit-creation",
+          "bank-balance-sheet"
         ],
-        requiredConcepts: ["money-multiplier-ceiling", "deposit-creation"],
-        sectionId: "money-multiplier",
+        "question": "10억 원 대출 직후 A은행과 차주의 장부를 쓰세요. 무엇이 늘었고 무엇이 그대로인가요?",
+        "answerChecklist": [
+          "대출은 80→90, 예금은 92→102로 늘어납니다.",
+          "준비금 20과 장부 자본 8은 모형에서 그대로입니다.",
+          "차주에게 예금 10과 갚을 빚 10이 함께 생깁니다."
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "자산 100을 30% 손실로 급매해야 하고 예금이 92일 때, 인출 순서에 따라 누가 얼마를 받게 되는지 계산하고 그 결과가 왜 조기 인출 유인을 만드는지 설명하세요.",
-        answerChecklist: [
-          "회수액 70",
-          "70 < 92",
-          "늦은 순서일수록 덜 받음",
-          "먼저 찾는 것이 개별적으로 합리적",
+        "level": "basic",
+        "sectionId": "transfer-repayment",
+        "requiredConcepts": [
+          "deposit-creation",
+          "bank-balance-sheet"
         ],
-        requiredConcepts: ["self-fulfilling-bank-run", "maturity-transformation"],
-        sectionId: "bank-run",
+        "question": "차주가 B은행으로 6을 보낸 뒤 A은행에서 원금 4를 갚습니다. 두 은행의 예금 증감 합과 A은행의 최종 네 칸을 구하세요.",
+        "answerChecklist": [
+          "송금만으로 전체 예금은 줄지 않고 새 예금 10이 4와 6으로 나뉩니다.",
+          "원금 상환 뒤 전체 예금의 순증가는 6입니다.",
+          "A은행은 준비금 14, 대출 86, 예금 92, 자본 8입니다."
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "예금보험이 만드는 도덕적 해이가 무엇이며, 그래서 어떤 종류의 규제가 함께 필요해지는지 설명하세요.",
-        answerChecklist: [
-          "예금자가 건전성을 살피지 않음",
-          "조달 비용이 위험을 반영하지 않음",
-          "이익은 주주 손실은 보험",
-          "자본·유동성 규제와 위험연동 보험료",
+        "level": "basic",
+        "sectionId": "money-multiplier",
+        "requiredConcepts": [
+          "money-multiplier-ceiling"
         ],
-        requiredConcepts: ["deposit-insurance", "bank-balance-sheet"],
-        sectionId: "safety-net",
+        "question": "고정 준비금 20, 준비율 0.2의 별도 모형에서 예금 상한을 구하고, 준비율 0이면 같은 나눗셈을 할 수 있는지 설명하세요.",
+        "answerChecklist": [
+          "0.2D≤20이므로 D≤100이며 D/R≤5입니다.",
+          "양의 준비율과 고정 준비금 등 가정이 필요합니다.",
+          "준비율 0에서는 이 식으로 유한 상한을 정하지 못하며 무한 대출을 뜻하지 않습니다."
+        ]
       },
+      {
+        "level": "basic",
+        "sectionId": "maturity-transformation",
+        "requiredConcepts": [
+          "maturity-transformation",
+          "self-fulfilling-bank-run"
+        ],
+        "question": "상환까지 끝난 A은행이 예금 20의 인출 요구를 받으면 무엇이 6만큼 부족한가요? 자본 8이 이 빈칸을 바로 채우나요?",
+        "answerChecklist": [
+          "오늘 쓸 준비금 14에 비해 지급 요구가 20이어서 6이 부족합니다.",
+          "장부 자본은 자산과 부채의 차액이며 따로 보관한 현금이 아닙니다.",
+          "나중에 받을 대출과 오늘 지급할 예금 사이의 시차가 유동성 위험을 만듭니다."
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "safety-net",
+        "requiredConcepts": [
+          "deposit-insurance",
+          "lender-of-last-resort"
+        ],
+        "question": "예금보험과 중앙은행의 유동성 대출이 각각 어떤 문제를 줄이는지 같은 은행 사례로 설명하세요.",
+        "answerChecklist": [
+          "보험은 보호 대상 예금자가 최종 손실을 걱정하며 먼저 인출할 유인을 줄입니다.",
+          "유동성 대출은 조건을 갖춘 은행에 오늘 지급할 준비금 6을 빌려줄 수 있습니다.",
+          "한도·지급 시점·담보·상환 능력 조건이 남으며 둘 다 모든 손실을 없애지 않습니다."
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "loss-interest",
+        "requiredConcepts": [
+          "bank-balance-sheet",
+          "deposit-creation"
+        ],
+        "question": "11절의 원금 상환·추가 손실 3 인식·이자 1 수취를 각각 별도 분기로 계산하세요. 대출 잔액 감소가 항상 예금 감소와 같은가요?",
+        "answerChecklist": [
+          "원금 4 상환은 대출과 예금을 함께 4 줄입니다.",
+          "미반영 손실 3을 인식하면 순대출 86→83, 자본 8→5이며 예금 92는 그대로입니다.",
+          "미수이자 없는 단순 현금 기준의 이자 1은 예금 92→91, 이익 누적 자본 8→9이고 원금은 그대로입니다.",
+          "이미 충당금을 쌓은 부분의 제각과 추가 비용 인식을 중복 계산하지 않습니다."
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "bank-run",
+        "requiredConcepts": [
+          "self-fulfilling-bank-run",
+          "maturity-transformation",
+          "bank-balance-sheet"
+        ],
+        "question": "16절처럼 장부가 10인 대출을 6에 팔고 예금 20을 지급한 뒤 장부를 구하세요. 급매를 피하는 6의 담보 차입 분기와 비교하세요.",
+        "answerChecklist": [
+          "매각 손실 4를 반영한 뒤 자산은 준비금 20과 대출 76, 예금 92와 자본 4입니다.",
+          "인출 뒤 준비금 0, 대출 76, 예금 72, 자본 4로 맞습니다.",
+          "손실 없이 6을 차입해 지급하면 준비금 0, 대출 86, 예금 72, 차입금 6, 자본 8입니다.",
+          "불안에 따른 인출과 실제 자산 손실은 함께 작동할 수 있습니다."
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "other-creation",
+        "requiredConcepts": [
+          "deposit-creation",
+          "money-multiplier-ceiling"
+        ],
+        "question": "12·14절을 이용해 대출이 늘지 않아도 예금이 늘 수 있는 거래와, 준비금이 늘어도 예금이 자동으로 늘지 않는 거래를 각각 쓰세요.",
+        "answerChecklist": [
+          "은행이 비은행 고객의 채권 6을 사고 그 계좌에 지급하면 채권과 예금이 함께 6 늘 수 있습니다.",
+          "중앙은행이 은행 보유 채권을 매입하면 은행의 채권과 준비금이 교환되고 고객 예금은 직접 바뀌지 않습니다.",
+          "상대방과 거래 대상을 확인해야 하며 준비금만으로 대출 수요·위험·수익성이 결정되지는 않습니다."
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "korea",
+        "requiredConcepts": [
+          "deposit-insurance",
+          "bank-balance-sheet"
+        ],
+        "question": "18절의 일반 보호 예금 0.6억과 0.5억이 같은 은행에 있을 때와 서로 다른 은행에 있을 때 한도를 적용하세요. 보험이 위험 심사를 약하게 할 수도 있는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "소정의 이자를 제외한 계산에서 같은 은행이면 합계 1.1억 중 1억이 한도 안입니다.",
+          "서로 다른 금융기관이면 각각 0.6억과 0.5억이 각 한도 안입니다.",
+          "법적 금융기관 단위와 보호 상품 여부를 확인하며 계좌 수만 세지 않습니다.",
+          "손실을 덜 걱정하면 예금자의 위험 감시가 약해질 수 있어 자본·유동성 감독과 보험료·정리 제도가 함께 필요합니다."
+        ]
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "Money creation in the modern economy (Bank of England Quarterly Bulletin 2014 Q1)",
-        href: "https://www.bankofengland.co.uk/quarterly-bulletin/2014/q1/money-creation-in-the-modern-economy",
-        problem:
-          "교과서가 설명하는 은행상, 곧 예금을 중개하고 중앙은행 화폐를 배수로 부풀린다는 설명이 실제 회계와 맞지 않는다는 문제를 다룹니다.",
-        contribution:
-          "대출이 예금을 만든다는 회계 사실에서 출발해 중개자 설명과 통화승수 설명을 함께 반박하고, 통화 창조에 실제로 걸리는 제약을 정리했습니다.",
-        assumptions:
-          "영국의 은행·중앙은행 제도를 기준으로 하며, 개별 은행 수준이 아니라 은행 부문 전체의 대차대조표 관계로 서술합니다.",
-        evidenceScope:
-          "중앙은행이 2014년 3월에 직접 발간한 공보 자료로, 제도 서술과 회계 관계에 한정됩니다.",
-        notClaim:
-          "은행이 제약 없이 통화를 늘릴 수 있다는 뜻이 아닙니다. 같은 자료가 창조된 통화의 총량이 결국 중앙은행의 정책에 달려 있다고 함께 적고 있으므로, 앞부분만 떼어 인용하면 결론이 뒤집힙니다.",
-        sectionId: "intermediary-myth",
+        "title": "Money creation in the modern economy · Figures 1–2",
+        "href": "https://www.bankofengland.co.uk/-/media/boe/files/quarterly-bulletin/2014/money-creation-in-the-modern-economy.pdf",
+        "sectionId": "intermediary-myth",
+        "problem": "대출 직후 장부와 다른 은행으로 지급한 뒤 장부를 연결하는 문제",
+        "contribution": "인쇄 16·19쪽의 부문별 장부를 같은 10·6의 거래에 적용합니다.",
+        "assumptions": "영국의 2014년 설명 자료이며 막대는 실제 통계가 아닌 개념도입니다.",
+        "evidenceScope": "원문 Figure 1·2의 세 부문과 두 은행을 실제 PDF 화면에서 읽었습니다. 숫자와 이후 상환 4는 이 글의 가정입니다.",
+        "notClaim": "예금 창조가 은행 자금 조달과 위험 관리를 없애거나 모든 국가의 결제 시점을 정하지 않습니다."
       },
-    ],
+      {
+        "title": "BIS · Unpacking international banks’ deposit funding",
+        "href": "https://www.bis.org/publications/qr-202309/unpacking-international-banks-deposit-funding",
+        "sectionId": "other-creation",
+        "problem": "대출 변화만으로 예금과 국제 은행 자금 변화를 해석하는 오류",
+        "contribution": "거래 상대방·중앙은행 매입·자산 매입과 부채 상품 교체를 장부로 구분합니다.",
+        "assumptions": "은행·비금융·비은행 금융·중앙은행의 닫힌 부문 모형과 통계 정의를 확인합니다.",
+        "evidenceScope": "공식 본문 Graph 1과 넓은 deposit funding의 정의를 본문의 별도 6 거래에 적용합니다.",
+        "notClaim": "그 자료의 repo·은행 간 자금까지 포함한 통계를 고객 통장 잔액과 같게 취급하지 않습니다."
+      },
+      {
+        "title": "Bank of England · Bank capital and liquidity",
+        "href": "https://www.bankofengland.co.uk/quarterly-bulletin/2013/q3/bank-capital-and-liquidity",
+        "sectionId": "safety-net",
+        "problem": "오늘 지급할 자산과 손실을 흡수하는 자본을 구분하는 문제",
+        "contribution": "자본·유동성 위험과 공적 안전장치의 유인 문제를 설명합니다.",
+        "assumptions": "실제 자산 평가·조달·규제 조건과 장부 자본을 구분합니다.",
+        "evidenceScope": "공식 2013년 설명의 범위를 같은 A은행의 급매·차입 분기로 계산합니다.",
+        "notClaim": "보험과 유동성 공급이 모든 인출이나 자산 손실을 없애지는 않습니다."
+      },
+      {
+        "title": "IFRS Interpretations Committee · November 2018",
+        "href": "https://www.ifrs.org/news-and-events/updates/ifric/2018/ifric-update-november-2018/",
+        "sectionId": "loss-interest",
+        "problem": "대출 회수와 손실충당금 조정을 중복 계산하는 문제",
+        "contribution": "IFRS 9 5.5.8의 손익 반영과 총장부가·손실충당금 정의를 적용합니다.",
+        "assumptions": "추가 미반영 손실과 이미 반영한 충당금을 구분합니다.",
+        "evidenceScope": "공식 공개 해석 자료와 ITG의 제각 논의에 따라 손실 3과 상환 4를 별도로 계산합니다.",
+        "notClaim": "이 글의 현금 기준 이자 모형이 실제 은행의 발생주의 원장 전체는 아닙니다."
+      },
+      {
+        "title": "BCBS · Report on the 2023 banking turmoil",
+        "href": "https://www.bis.org/publications/report-2023-banking-turmoil.pdf",
+        "sectionId": "bank-run",
+        "problem": "인출과 실제 은행 취약성이 함께 신뢰 위기로 이어지는 문제",
+        "contribution": "다른 원인의 은행 사건과 감독·공적 대응을 검토합니다.",
+        "assumptions": "2023년 사건 분석과 본문의 가정 할인율을 분리합니다.",
+        "evidenceScope": "사건의 복합 원인이라는 범위를 사용하며 40% 할인은 본문 계산용입니다.",
+        "notClaim": "모든 뱅크런이 건전한 은행에 대한 오해이거나 특정 고객의 회수액이 정해졌다고 주장하지 않습니다."
+      },
+      {
+        "title": "Federal Reserve · Reserve Requirements",
+        "href": "https://www.federalreserve.gov/monetarypolicy/reservereq.htm",
+        "sectionId": "money-multiplier",
+        "problem": "1/r을 모든 제도의 대출 배수로 적용하는 문제",
+        "contribution": "2020년 3월 26일부터 0%인 지급준비율을 공식 표로 확인합니다.",
+        "assumptions": "2026년 10월 4일 공식 안내를 확인했고 본문의 r=0.2는 별도 가정입니다.",
+        "evidenceScope": "0으로 나눌 수 없다는 산술과 제도 경계를 연결합니다.",
+        "notClaim": "법정 비율이 0이어도 지급용 준비금·자본·유동성 관리가 필요합니다."
+      },
+      {
+        "title": "금융위원회 · 예금보호한도 상향 주요 QA",
+        "href": "https://www.fsc.go.kr/po020201/84975",
+        "sectionId": "korea",
+        "problem": "계좌별 잔액과 법적 금융기관별 보호 한도를 혼동하는 문제",
+        "contribution": "대상 상품·기관 단위·원금과 소정의 이자 및 별도 한도를 구분합니다.",
+        "assumptions": "2025년 9월 1일 시행과 2026년 10월 4일 확인 시점을 명시합니다.",
+        "evidenceScope": "공식 QA의 일반 예금 조건을 0.6억과 0.5억의 가정에 적용합니다.",
+        "notClaim": "모든 금융상품을 보호하거나 한도 밖 금액이 반드시 전액 손실이라는 뜻은 아닙니다."
+      }
+    ]
   },
   "banking/central-bank-and-policy-transmission": {
     entryNote:

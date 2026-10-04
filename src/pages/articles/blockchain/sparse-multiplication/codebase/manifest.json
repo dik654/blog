@@ -1,0 +1,82 @@
+{
+  "pin": "7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c",
+  "versions": {
+    "ark-ff": "0.5.0",
+    "ark-ec": "0.5.0",
+    "ark-bn254": "0.5.0-alpha.0"
+  },
+  "files": [
+    {
+      "file": "fp12_2over3over2.rs",
+      "upstream": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/fp12_2over3over2.rs",
+      "sha256": "2bed5c4f699a6624d00eef36364408ffdedea9296f0af031f39f443713ca6aca",
+      "bytes": 7821
+    },
+    {
+      "file": "fp6_3over2.rs",
+      "upstream": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/fp6_3over2.rs",
+      "sha256": "8d6c8a3031ea013188182ce288aa19bb0bcc25a52f39a29d32e3948d249c782d",
+      "bytes": 4548
+    },
+    {
+      "file": "quadratic_extension.rs",
+      "upstream": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/quadratic_extension.rs",
+      "sha256": "3be7611a5416776baca2ee491c2def1172e096bc86efa44b9352afe28eed184d",
+      "bytes": 27650
+    },
+    {
+      "file": "cubic_extension.rs",
+      "upstream": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/cubic_extension.rs",
+      "sha256": "a768e392cef35e746cfb786afbeec5a88b8266175c1a7df63bb521f363f56af8",
+      "bytes": 24968
+    },
+    {
+      "file": "bn.rs",
+      "upstream": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ec/src/models/bn/mod.rs",
+      "sha256": "0d3c32710e1129a2413033a58a272f478ec4d7ff1e56a06a349da3c07f35aa28",
+      "bytes": 7534
+    },
+    {
+      "file": "bn-g2.rs",
+      "upstream": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ec/src/models/bn/g2.rs",
+      "sha256": "3b3080ad44be4f8106396ae2595d66f5477452ca4929db641231ba800584a5fd",
+      "bytes": 5019
+    },
+    {
+      "file": "bn254.rs",
+      "upstream": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/curves/bn254/src/curves/mod.rs",
+      "sha256": "274aeb949f0a8660e5dbbbba3f23172ebcdd38805acb9408f21de27de439d4a1",
+      "bytes": 1532
+    },
+    {
+      "file": "fq2.rs",
+      "upstream": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/curves/bn254/src/fields/fq2.rs",
+      "sha256": "9716b0b50dd2a9e1b498a417bf6f978e9c37944af4f1d071f9096fffff22eee7",
+      "bytes": 588
+    },
+    {
+      "file": "fq6.rs",
+      "upstream": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/curves/bn254/src/fields/fq6.rs",
+      "sha256": "e41425906891a632b132bda0a635d241de03a30849e38aa0e75c603fc6b4c549",
+      "bytes": 3683
+    },
+    {
+      "file": "fq12.rs",
+      "upstream": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/curves/bn254/src/fields/fq12.rs",
+      "sha256": "16e5643f3fcfabe2c1c8b6478f4e8c341d1eba1ca8bc4eb3f2413a9cf7f61cbd",
+      "bytes": 3190
+    },
+    {
+      "file": "LICENSE-MIT",
+      "upstream": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/LICENSE-MIT",
+      "sha256": "8f71659370c5268d9a1dc962a46232540e8fca63462586d8efaa95aab492a208",
+      "bytes": 1046
+    },
+    {
+      "file": "LICENSE-APACHE",
+      "upstream": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/LICENSE-APACHE",
+      "sha256": "e8d77d4bbe96e1b46ec0f40d1f12e19825e718c764bb3e9a695633ade9289f9e",
+      "bytes": 10846
+    }
+  ]
+}

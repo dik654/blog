@@ -3,47 +3,90 @@ import type { Article } from "../types";
 export const bankingArticles: Article[] = [
   {
     slug: "bank-balance-sheet-and-deposit-creation",
-    title: "은행은 맡아 둔 돈을 빌려주는 것이 아니라 대출로 예금을 만듭니다",
+    title: "은행 장부: 대출·송금·상환이 돈과 위험을 바꾸는 과정",
     subcategory: "banking-deposit",
     sections: [
-      {
-        id: "overview",
-        title: "은행에 관한 거의 모든 질문이 장부 한 장에서 갈립니다",
-      },
-      {
-        id: "balance-sheet",
-        title: "부품 1. 장부의 왼쪽은 받을 것, 오른쪽은 갚을 것입니다",
-      },
-      {
-        id: "deposit-creation",
-        title: "부품 2. 대출 한 건은 장부의 양쪽을 동시에 늘립니다",
-        subsections: [
-          { id: "intermediary-myth", title: "중개자 그림은 장부의 어느 줄에서 어긋나는가" },
-        ],
-      },
-      {
-        id: "limits",
-        title: "부품 3. 만들 수 있다는 것이 무한정 만든다는 뜻은 아닙니다",
-        subsections: [
-          { id: "money-multiplier", title: "교과서의 통화승수는 상한이지 작동 방식이 아닙니다" },
-        ],
-      },
-      {
-        id: "maturity-transformation",
-        title: "부품 4. 짧은 빚으로 긴 자산을 떠받치는 구조가 남습니다",
-      },
-      {
-        id: "bank-run",
-        title: "부품 5. 그래서 인출은 스스로를 실현시키는 예언이 됩니다",
-        subsections: [
-          { id: "safety-net", title: "두 안전장치는 서로 다른 실패를 막습니다" },
-        ],
-      },
-      {
-        id: "boundary",
-        title: "장부를 다 읽었으니 남는 질문은 그 장부 밖에 있습니다",
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 통장 숫자를 바꾸면 누가 누구에게 갚아야 할까요?"
+  },
+  {
+    "id": "why-care",
+    "title": "2. 오늘 지급할 돈과 나중에 받을 돈은 쓸 수 있는 때가 다릅니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 20과 80을 가진 A은행에서 10을 빌립니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 같은 네 칸을 넘기며 어느 숫자가 움직이는지 봅니다"
+  },
+  {
+    "id": "why-two-records",
+    "title": "5. 새 통장 잔액의 반대편에는 새 약속이 있습니다"
+  },
+  {
+    "id": "balance-sheet",
+    "title": "6. 네 칸의 이름은 준비금·대출·예금·자본입니다"
+  },
+  {
+    "id": "deposit-creation",
+    "title": "7. 대출 10을 기록하면 예금도 10 늘어납니다"
+  },
+  {
+    "id": "transfer-repayment",
+    "title": "8. 송금은 은행을 바꾸고 원금 상환은 두 기록을 줄입니다"
+  },
+  {
+    "id": "intermediary-myth",
+    "title": "9. 영란은행 원문의 두 그림을 같은 사례에 적용합니다"
+  },
+  {
+    "id": "journal",
+    "title": "10. 실제 회계의 차변·대변으로 다시 적어도 같은 결과입니다"
+  },
+  {
+    "id": "loss-interest",
+    "title": "11. 못 받은 원금과 갚은 원금은 다른 칸을 줄입니다"
+  },
+  {
+    "id": "other-creation",
+    "title": "12. 예금이 늘어나는 경로에는 자산 매입도 있습니다"
+  },
+  {
+    "id": "limits",
+    "title": "13. 은행은 오늘의 지급과 미래의 손실을 함께 감당해야 합니다"
+  },
+  {
+    "id": "money-multiplier",
+    "title": "14. 1을 준비율로 나눈 배수에는 강한 가정이 붙습니다"
+  },
+  {
+    "id": "maturity-transformation",
+    "title": "15. 100의 자산을 가진 은행에도 오늘 6이 부족할 수 있습니다"
+  },
+  {
+    "id": "bank-run",
+    "title": "16. 오늘의 6을 급매로 메우면 자본 4를 잃을 수 있습니다"
+  },
+  {
+    "id": "safety-net",
+    "title": "17. 보험은 손실 불안을 줄이고 유동성 대출은 지급 시점을 연결합니다"
+  },
+  {
+    "id": "korea",
+    "title": "18. 한국 예금보호는 계좌 개수보다 금융기관과 상품을 봅니다"
+  },
+  {
+    "id": "boundaries",
+    "title": "19. 장부가 맞는다는 사실과 경제의 결과는 구분합니다"
+  },
+  {
+    "id": "predict",
+    "title": "20. 한 조건을 바꾸고 장부를 먼저 예상해 보세요"
+  }
+],
     component: () =>
       import("@/pages/articles/banking/bank-balance-sheet-and-deposit-creation"),
   },
