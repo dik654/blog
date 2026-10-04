@@ -2722,62 +2722,246 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/math-functions-composition": {
-    entryLevel: true,
-    entryNote:
-      "수식이나 미분을 모른다고 가정합니다. 입력 하나와 출력 하나를 연결하는 규칙부터 시작해 domain·codomain shape를 확인한 뒤 두 함수를 합성합니다.",
-    coreIdea:
-      "Function은 허용 input 하나마다 output 하나를 정하는 mapping입니다. Composition은 앞 output을 다음 input으로 넘기는 실행이며, 순서와 domain·codomain compatibility가 전체 계산을 제한합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "function-mapping", role: "Input 하나에 output 하나를 정하는 규칙으로 식과 layer를 읽습니다." },
-      { id: "function-domain-codomain", role: "허용 input 집합과 선언 output 집합으로 값·dtype·shape 계약을 고정합니다." },
-      { id: "function-composition", role: "앞 함수의 output을 다음 함수의 input으로 연결합니다." },
-    ],
-    conceptExplanations: [
+    "entryLevel": true,
+    "entryNote": "곱셈과 덧셈만으로 시작합니다. 2→7→49를 직접 계산한 뒤, 같은 두 규칙을 반대로 연결하면 13이 되는 이유와 연결할 값의 범위를 설명합니다.",
+    "coreIdea": "함수는 허용된 입력마다 출력 하나를 정합니다. 합성은 앞 출력이 다음 입력이 되는 연결이며, 중간값이 다음 정의역에 속하는지 확인해야 합니다. 같은 g(x)=3x+1과 f(u)=u²도 순서에 따라 입력 2를 49 또는 13으로 보냅니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "function-mapping",
-        sectionId: "overview",
-        intuition: "자판기 버튼 하나를 누르면 약속된 음료 하나가 나오는 입력→출력 규칙입니다.",
-        workedExample: "g(x)=3x+1에서 x=2를 넣으면 output은 7입니다.",
-        boundary: "여러 input이 같은 output으로 모여도 되지만 같은 input이 임의로 두 output을 내면 deterministic function이 아닙니다.",
+        "id": "function-mapping",
+        "role": "Input 하나에 output 하나를 정하는 규칙으로 식과 layer를 읽습니다."
       },
       {
-        id: "function-domain-codomain",
-        sectionId: "shape",
-        intuition: "함수의 inlet과 outlet에 허용 값·shape label을 붙이는 계약입니다.",
-        workedExample: "Image tensor→10 score 함수는 image shape를 domain으로, 길이 10 vector를 codomain으로 선언합니다.",
-        boundary: "실제 output이 모인 range와 선언된 codomain을 같은 집합으로 단정하지 않습니다.",
+        "id": "function-domain-codomain",
+        "role": "허용 input 집합과 선언 output 집합으로 값·dtype·shape 계약을 고정합니다."
       },
       {
-        id: "function-composition",
-        sectionId: "composition",
-        intuition: "앞 규칙의 output을 다음 규칙의 input으로 그대로 넘기는 pipeline입니다.",
-        workedExample: "g(2)=7 뒤 f(7)=49이므로 (f∘g)(2)=49입니다.",
-        boundary: "f∘g와 g∘f는 일반적으로 다르고 중간 output이 다음 domain에 들어가야 합니다.",
+        "id": "function-composition",
+        "role": "앞 함수의 output을 다음 함수의 input으로 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "function-mapping",
+        "sectionId": "names",
+        "intuition": "받은 수를 세 배 하고 1을 더하는 규칙은 입력 2를 출력 7로 보냅니다.",
+        "workedExample": "g(x)=3x+1에서 x=2를 넣으면 output은 7입니다.",
+        "boundary": "여러 input이 같은 output으로 모여도 되지만 같은 input이 임의로 두 output을 내면 deterministic function이 아닙니다."
       },
+      {
+        "id": "function-domain-codomain",
+        "sectionId": "shape",
+        "intuition": "계산이 받는 값과 돌려주는 값의 허용 범위를 각각 정합니다.",
+        "workedExample": "실수에서 실수로 가는 f(u)=u²는 공역이 실수 전체여도 치역은 0 이상입니다. g(2)=7은 f의 정의역에 들어가므로 연결할 수 있습니다.",
+        "boundary": "실제 output이 모인 range와 선언된 codomain을 같은 집합으로 단정하지 않습니다."
+      },
+      {
+        "id": "function-composition",
+        "sectionId": "composition",
+        "intuition": "g의 결과 7을 f의 입력으로 넘겨 49를 얻습니다.",
+        "workedExample": "g(2)=7 뒤 f(7)=49이므로 (f∘g)(2)=49입니다.",
+        "boundary": "f∘g와 g∘f는 일반적으로 다르고 중간 output이 다음 domain에 들어가야 합니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 Mapping", relation: "입력 하나가 출력 하나를 정합니다.", concepts: ["function-mapping"] },
-      { label: "01 Shape", relation: "허용 input과 선언 output의 경계를 고정합니다.", concepts: ["function-domain-codomain"] },
-      { label: "02 Compose", relation: "앞 output을 다음 input으로 연결합니다.", concepts: ["function-mapping", "function-domain-codomain", "function-composition"] },
-      { label: "03 Boundary", relation: "순서·shape·정의역 실패를 반례로 확인합니다.", concepts: ["function-composition"] },
+    "conceptStages": [
+      {
+        "label": "00 Mapping",
+        "relation": "입력 하나가 출력 하나를 정합니다.",
+        "concepts": [
+          "function-mapping"
+        ]
+      },
+      {
+        "label": "01 Shape",
+        "relation": "허용 input과 선언 output의 경계를 고정합니다.",
+        "concepts": [
+          "function-domain-codomain"
+        ]
+      },
+      {
+        "label": "02 Compose",
+        "relation": "앞 output을 다음 input으로 연결합니다.",
+        "concepts": [
+          "function-mapping",
+          "function-domain-codomain",
+          "function-composition"
+        ]
+      },
+      {
+        "label": "03 Boundary",
+        "relation": "순서·shape·정의역 실패를 반례로 확인합니다.",
+        "concepts": [
+          "function-composition"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "g(x)=3x+1에서 g(2)를 계산하고 input과 output을 구분하세요.", answerChecklist: ["input 2", "rule 3x+1", "output 7", "one output"], requiredConcepts: ["function-mapping"], sectionId: "overview" },
-      { level: "basic", question: "여러 input이 같은 output으로 모이는 mapping이 함수일 수 있는 이유를 설명하세요.", answerChecklist: ["one output per input", "many-to-one allowed", "not one-to-one requirement"], requiredConcepts: ["function-mapping"], sectionId: "overview" },
-      { level: "basic", question: "√x를 real-valued function으로 볼 때 domain 경계를 설명하세요.", answerChecklist: ["x>=0", "real output", "negative excluded", "formula typing"], requiredConcepts: ["function-domain-codomain"], sectionId: "shape" },
-      { level: "basic", question: "Image→10 scores 함수의 domain과 codomain shape를 말하세요.", answerChecklist: ["image tensor", "declared axes", "length 10", "range differs"], requiredConcepts: ["function-domain-codomain"], sectionId: "shape" },
-      { level: "basic", question: "g(x)=3x+1, f(u)=u²에서 f(g(2))를 실행 순서대로 계산하세요.", answerChecklist: ["g first", "middle 7", "f second", "49"], requiredConcepts: ["function-composition"], sectionId: "composition" },
-      { level: "basic", question: "같은 함수로 g(f(2))를 계산하고 f(g(2))와 비교하세요.", answerChecklist: ["f first 4", "g second 13", "49 differs", "order matters"], requiredConcepts: ["function-composition"], sectionId: "boundaries" },
-      { level: "advanced", question: "길이 3 vector를 내는 g와 scalar만 받는 f를 합성할 수 없는 이유와 adapter를 설계하세요.", answerChecklist: ["codomain/domain mismatch", "shape contract", "explicit reduction or projection", "new semantics"], requiredConcepts: ["function-domain-codomain", "function-composition"], sectionId: "boundaries" },
-      { level: "advanced", question: "Partial function의 undefined input을 전체 함수의 실패와 구분해 설명하세요.", answerChecklist: ["declared domain", "outside domain", "not arbitrary output", "caller validation"], requiredConcepts: ["function-mapping", "function-domain-codomain"], sectionId: "boundaries" },
-      { level: "advanced", question: "f∘(g∘h)와 (f∘g)∘h의 실행 순서는 같지만 f∘g와 g∘f는 다른 이유를 설명하세요.", answerChecklist: ["associative grouping", "same h g f order", "not commutative", "counterexample 49/13"], requiredConcepts: ["function-composition"], sectionId: "boundaries" },
-      { level: "advanced", question: "Stateful random program을 순수 deterministic function처럼 기록하면 빠지는 실행 상태를 열거하세요.", answerChecklist: ["random seed", "mutable state", "time or external input", "same x may differ", "expanded input contract"], requiredConcepts: ["function-mapping", "function-domain-codomain"], sectionId: "boundaries" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "g(x)=3x+1에서 g(2)를 계산하고 input과 output을 구분하세요.",
+        "answerChecklist": [
+          "input 2",
+          "rule 3x+1",
+          "output 7",
+          "one output"
+        ],
+        "requiredConcepts": [
+          "function-mapping"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "여러 input이 같은 output으로 모이는 mapping이 함수일 수 있는 이유를 설명하세요.",
+        "answerChecklist": [
+          "one output per input",
+          "many-to-one allowed",
+          "not one-to-one requirement"
+        ],
+        "requiredConcepts": [
+          "function-mapping"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "√x를 real-valued function으로 볼 때 domain 경계를 설명하세요.",
+        "answerChecklist": [
+          "x>=0",
+          "real output",
+          "negative excluded",
+          "formula typing"
+        ],
+        "requiredConcepts": [
+          "function-domain-codomain"
+        ],
+        "sectionId": "shape"
+      },
+      {
+        "level": "basic",
+        "question": "Image→10 scores 함수의 domain과 codomain shape를 말하세요.",
+        "answerChecklist": [
+          "image tensor",
+          "declared axes",
+          "length 10",
+          "range differs"
+        ],
+        "requiredConcepts": [
+          "function-domain-codomain"
+        ],
+        "sectionId": "shape"
+      },
+      {
+        "level": "basic",
+        "question": "g(x)=3x+1, f(u)=u²에서 f(g(2))를 실행 순서대로 계산하세요.",
+        "answerChecklist": [
+          "g first",
+          "middle 7",
+          "f second",
+          "49"
+        ],
+        "requiredConcepts": [
+          "function-composition"
+        ],
+        "sectionId": "composition"
+      },
+      {
+        "level": "basic",
+        "question": "같은 함수로 g(f(2))를 계산하고 f(g(2))와 비교하세요.",
+        "answerChecklist": [
+          "f first 4",
+          "g second 13",
+          "49 differs",
+          "order matters"
+        ],
+        "requiredConcepts": [
+          "function-composition"
+        ],
+        "sectionId": "boundaries"
+      },
+      {
+        "level": "advanced",
+        "question": "길이 3 vector를 내는 g와 scalar만 받는 f를 합성할 수 없는 이유와 adapter를 설계하세요.",
+        "answerChecklist": [
+          "codomain/domain mismatch",
+          "shape contract",
+          "explicit reduction or projection",
+          "new semantics"
+        ],
+        "requiredConcepts": [
+          "function-domain-codomain",
+          "function-composition"
+        ],
+        "sectionId": "boundaries"
+      },
+      {
+        "level": "advanced",
+        "question": "Partial function의 undefined input을 전체 함수의 실패와 구분해 설명하세요.",
+        "answerChecklist": [
+          "declared domain",
+          "outside domain",
+          "not arbitrary output",
+          "caller validation"
+        ],
+        "requiredConcepts": [
+          "function-mapping",
+          "function-domain-codomain"
+        ],
+        "sectionId": "shape"
+      },
+      {
+        "level": "advanced",
+        "question": "f∘(g∘h)와 (f∘g)∘h의 실행 순서는 같지만 f∘g와 g∘f는 다른 이유를 설명하세요.",
+        "answerChecklist": [
+          "associative grouping",
+          "same h g f order",
+          "not commutative",
+          "counterexample 49/13"
+        ],
+        "requiredConcepts": [
+          "function-composition"
+        ],
+        "sectionId": "boundaries"
+      },
+      {
+        "level": "advanced",
+        "question": "Stateful random program을 순수 deterministic function처럼 기록하면 빠지는 실행 상태를 열거하세요.",
+        "answerChecklist": [
+          "random seed",
+          "mutable state",
+          "time or external input",
+          "same x may differ",
+          "expanded input contract"
+        ],
+        "requiredConcepts": [
+          "function-mapping",
+          "function-domain-codomain"
+        ],
+        "sectionId": "boundaries"
+      }
     ],
-    papers: [
-      { title: "OpenStax Precalculus 2e · Composition of Functions", href: "https://openstax.org/books/precalculus-2e/pages/1-4-composition-of-functions", problem: "여러 function의 input·output을 연결해 새 function을 계산합니다.", contribution: "Composition 표기, 평가 순서와 domain 제약을 worked example로 설명합니다.", assumptions: "교재가 선언한 real-valued function과 domain 조건입니다.", evidenceScope: "Precalculus 수준 function composition입니다.", notClaim: "Neural network의 학습 가능성이나 모든 tensor shape를 보장하지 않습니다.", sectionId: "paper-function-composition" },
-      { title: "Deep Learning Book · Deep Feedforward Networks", href: "https://www.deeplearningbook.org/contents/mlp.html", problem: "여러 parameterized function을 연결해 prediction을 만드는 구조를 설명합니다.", contribution: "Feedforward network를 function composition과 computational graph 관점으로 정리합니다.", assumptions: "교재의 model·objective·differentiability 조건입니다.", evidenceScope: "Feedforward network의 구조적 설명입니다.", notClaim: "깊은 모든 model의 optimization·generalization 우월성을 보장하지 않습니다.", sectionId: "paper-network-composition" },
-    ],
+    "papers": [
+      {
+        "title": "OpenStax Precalculus 2e · Composition of Functions",
+        "href": "https://openstax.org/books/precalculus-2e/pages/1-4-composition-of-functions",
+        "problem": "여러 function의 input·output을 연결해 새 function을 계산합니다.",
+        "contribution": "Composition 표기, 평가 순서와 domain 제약을 worked example로 설명합니다.",
+        "assumptions": "교재가 선언한 real-valued function과 domain 조건입니다.",
+        "evidenceScope": "Precalculus 수준 function composition입니다.",
+        "notClaim": "Neural network의 학습 가능성이나 모든 tensor shape를 보장하지 않습니다.",
+        "sectionId": "paper-function-composition"
+      },
+      {
+        "title": "Deep Learning Book · Deep Feedforward Networks",
+        "href": "https://www.deeplearningbook.org/contents/mlp.html",
+        "problem": "여러 parameterized function을 연결해 prediction을 만드는 구조를 설명합니다.",
+        "contribution": "Feedforward network를 function composition과 computational graph 관점으로 정리합니다.",
+        "assumptions": "교재의 model·objective·differentiability 조건입니다.",
+        "evidenceScope": "Feedforward network의 구조적 설명입니다.",
+        "notClaim": "깊은 모든 model의 optimization·generalization 우월성을 보장하지 않습니다.",
+        "sectionId": "paper-network-composition"
+      }
+    ]
   },
   "ai/math-gradients-jacobians": {
     coreIdea:
@@ -23543,32 +23727,215 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [],
   },
   "ai/model-selection-bias": {
-    coreIdea: "Model-selection bias는 true score에 finite-validation noise가 더해진 여러 observed scores에서 maximum을 고를 때 양의 noise까지 선택해 관측 최고점이 낙관적으로 보일 수 있는 현상입니다.",
-    assumedKnowledge: [
-      { id: "expectation", role: "Noise와 selected score의 반복 평균을 읽습니다." },
-      { id: "competition-evaluation-contract", role: "같은 metric·validation data에서 candidates를 비교합니다." },
+    "coreIdea": "최고 관측값을 선택하면 실력과 함께 유한 평가의 흔들림도 선택합니다. 고정 후보와 평균 0 잡음의 기대값 부등식을 한 시행·적응 탐색·새 분포의 보장과 구분하고 독립된 평가로 이어갑니다.",
+    "assumedKnowledge": [
+      {
+        "id": "expectation",
+        "role": "Noise와 selected score의 반복 평균을 읽습니다."
+      },
+      {
+        "id": "competition-evaluation-contract",
+        "role": "같은 metric·validation data에서 candidates를 비교합니다."
+      }
     ],
-    introducedHere: [{ id: "model-selection-maximum-optimism", role: "Noisy validation candidates의 maximum이 만드는 선택 낙관을 설명합니다." }],
-    conceptExplanations: [{ id: "model-selection-maximum-optimism", sectionId: "maximum", intuition: "실력이 같은 사람도 시험을 여러 번 보고 가장 높은 점수만 남기면 평소보다 좋아 보입니다.", workedExample: "True .70인 A·B·C가 .69·.74·.71이면 B를 고르고 관측 낙관은 .04입니다.", boundary: "모든 시행의 maximum이 반드시 낙관적이거나 같은 크기로 편향된다는 뜻은 아닙니다.", proofIdea: "Maximum은 convex이므로 E[max X]≥max E[X]입니다.", counterexample: "후보가 하나뿐이면 maximum 선택이 없어 unbiased noise의 기대는 true mean입니다." }],
-    conceptStages: [
-      {label:"Truth",relation:"후보별 population mean을 구분",concepts:["expectation","model-selection-maximum-optimism"]},
-      {label:"Noise",relation:"Finite validation의 observed score를 생성",concepts:["competition-evaluation-contract","model-selection-maximum-optimism"]},
-      {label:"Argmax",relation:"관측 최고점의 quality와 noise를 함께 선택",concepts:["model-selection-maximum-optimism"]},
-      {label:"Fresh test",relation:"Frozen candidate를 unused data에서 재평가",concepts:["train-validation-test","model-selection-maximum-optimism"]},
+    "introducedHere": [
+      {
+        "id": "model-selection-maximum-optimism",
+        "role": "Noisy validation candidates의 maximum이 만드는 선택 낙관을 설명합니다."
+      }
     ],
-    exercises: [
-      {level:"basic",question:"True score·validation noise·observed score를 구분하세요.",answerChecklist:["mu","epsilon","X","sum","population","finite sample"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"overview"},
-      {level:"basic",question:"True .70 후보들의 .69·.74·.71에서 선택과 낙관을 계산하세요.",answerChecklist:["choose B",".74",".70",".04","positive noise","fresh test"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"maximum"},
-      {level:"basic",question:"후보가 하나일 때 maximum-selection 효과가 사라지는 이유를 쓰세요.",answerChecklist:["one candidate","no comparison","no argmax search","unbiased noise","expected X=mu","counterexample"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"maximum"},
-      {level:"basic",question:"Candidate 수가 늘면 우연한 고점 기회가 늘어나는 이유를 설명하세요.",answerChecklist:["more draws","noise extremes","maximum","same validation","selection pressure","not quality"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"budget"},
-      {level:"basic",question:"Validation sample이 작을 때 selection bias 위험이 커지는 이유를 쓰세요.",answerChecklist:["higher variance","noisier score","argmax","unstable ranks","more optimism","fresh data"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"budget"},
-      {level:"basic",question:"Independent final evaluation의 candidate freeze 조건을 설명하세요.",answerChecklist:["selection complete","recipe frozen","unused data","one evaluation","no retuning","report"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"boundary"},
-      {level:"advanced",question:"Maximum inequality의 score 합성·argmax·expectation 의도를 설명하세요.",answerChecklist:["mu plus epsilon","observed X","argmax","convex max","expectation inequality","optimism"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"maximum"},
-      {level:"advanced",question:"Correlated candidate noise가 independent 후보 intuition을 바꾸는 이유를 설명하세요.",answerChecklist:["shared folds","correlated errors","fewer effective draws","still adaptive","unknown magnitude","record family"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"budget"},
-      {level:"advanced",question:"Adaptive search history를 포함한 selection audit를 설계하세요.",answerChecklist:["candidate lineage","observed scores","next proposal","decision changes","budget","final holdout"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"budget"},
-      {level:"advanced",question:"Nested evaluation이 필요한 model-selection workflow를 설계하세요.",answerChecklist:["inner selection","outer evaluation","fold separation","full procedure","aggregate outer","final report"],requiredConcepts:["model-selection-maximum-optimism"],sectionId:"boundary"},
+    "conceptExplanations": [
+      {
+        "id": "model-selection-maximum-optimism",
+        "sectionId": "maximum",
+        "intuition": "후보별 평가가 평균적으로 공정해도 최고값만 남긴 평균은 더 낙관적일 수 있습니다.",
+        "workedExample": "A·B·C의 평균 0.70에서 관측 0.69·0.74·0.71이면 B를 고르고 차이는 0.04입니다. 독립 두 후보±0.04 모형의 평균 최고값은 0.72입니다.",
+        "boundary": "고정 후보·적분가능성·μ=E[X] 전제입니다. Jensen 부등식에는 후보 독립성이 필요 없고 매 시행의 과대평가도 보장하지 않습니다.",
+        "proofIdea": "Maximum은 convex이므로 E[max X]≥max E[X]입니다.",
+        "counterexample": "후보가 하나뿐이면 maximum 선택이 없어 unbiased noise의 기대는 true mean입니다."
+      }
     ],
-    papers: [{title:"On Over-fitting in Model Selection and Subsequent Selection Bias in Performance Evaluation",href:"https://www.jmlr.org/papers/v11/cawley10a.html",problem:"Finite validation criterion을 최적화하는 model selection의 overfit과 evaluation bias",contribution:"Selection criterion variance의 중요성과 empirical bias 사례 분석",assumptions:"논문의 algorithms·datasets·CV protocols와 finite-sample setting",evidenceScope:"JMLR 분석·experiments와 일반 mechanism",notClaim:"모든 K-fold·maximum이 같은 크기로 편향된다는 뜻은 아님",sectionId:"paper-model-selection-bias"}],
+    "conceptStages": [
+      {
+        "label": "Truth",
+        "relation": "후보별 population mean을 구분",
+        "concepts": [
+          "expectation",
+          "model-selection-maximum-optimism"
+        ]
+      },
+      {
+        "label": "Noise",
+        "relation": "Finite validation의 observed score를 생성",
+        "concepts": [
+          "competition-evaluation-contract",
+          "model-selection-maximum-optimism"
+        ]
+      },
+      {
+        "label": "Argmax",
+        "relation": "관측 최고점의 quality와 noise를 함께 선택",
+        "concepts": [
+          "model-selection-maximum-optimism"
+        ]
+      },
+      {
+        "label": "Fresh test",
+        "relation": "Frozen candidate를 unused data에서 재평가",
+        "concepts": [
+          "train-validation-test",
+          "model-selection-maximum-optimism"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "A·B·C가 0.69·0.74·0.71이면 어떤 후보를 고르나요?",
+        "answerChecklist": [
+          "B",
+          "관측 최고값 0.74"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "model-selection-maximum-optimism"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "B의 실제 평균 0.70을 아는 가정에서 관측 낙관 차이는 얼마인가요?",
+        "answerChecklist": [
+          "0.04",
+          "한 시행",
+          "실무에서는 평균 미지"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "model-selection-maximum-optimism"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "가정한 세 후보의 실제 점수는 모두 0.70이고 관측값은 0.69·0.74·0.71입니다. A·B·C 각각의 관측 잡음을 계산하세요.",
+        "answerChecklist": [
+          "−0.01",
+          "+0.04",
+          "+0.01",
+          "평균과 관측 차이"
+        ],
+        "sectionId": "inside-selection",
+        "requiredConcepts": [
+          "model-selection-maximum-optimism"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "독립 두 후보가 0.66 또는 0.74이면 네 경우의 최고값을 적으세요.",
+        "answerChecklist": [
+          "0.66",
+          "0.74",
+          "0.74",
+          "0.74"
+        ],
+        "sectionId": "maximum",
+        "requiredConcepts": [
+          "model-selection-maximum-optimism"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "앞 네 경우의 최고값 평균과 실제 평균의 차이는 얼마인가요?",
+        "answerChecklist": [
+          "0.72",
+          "0.70",
+          "0.02"
+        ],
+        "sectionId": "maximum",
+        "requiredConcepts": [
+          "model-selection-maximum-optimism"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 자료에서 B의 0.74를 재현하면 새로운 독립 평가인가요?",
+        "answerChecklist": [
+          "아님",
+          "재현과 독립 검증",
+          "선택 자료 재사용"
+        ],
+        "sectionId": "why-fresh",
+        "requiredConcepts": [
+          "model-selection-maximum-optimism"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "기대값 부등식이 성립해도 한 시행에서 과소평가할 수 있는 사례를 드세요.",
+        "answerChecklist": [
+          "둘다 0.66",
+          "평균 0.70보다 낮음",
+          "기대값과 시행 구분"
+        ],
+        "sectionId": "maximum",
+        "requiredConcepts": [
+          "model-selection-maximum-optimism"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "후보가 완전히 같은 잡음으로 움직이면 최고값 편향이 반드시 양수인가요?",
+        "answerChecklist": [
+          "0일 수 있음",
+          "후보 상관",
+          "독립성 불필요한 부등식"
+        ],
+        "sectionId": "maximum",
+        "requiredConcepts": [
+          "model-selection-maximum-optimism"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "매 평가 후 새 후보를 설계하면 처음 고정 후보의 분석과 무엇이 달라지나요?",
+        "answerChecklist": [
+          "adaptive search",
+          "시도 이력",
+          "선택 절차 확대",
+          "고정 전제 재검토"
+        ],
+        "sectionId": "paper-model-selection-bias",
+        "requiredConcepts": [
+          "model-selection-maximum-optimism"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "B를 동결한 새 평가 점수도 반드시 0.70은 아닌 이유와 추가 분포 문제를 설명하세요.",
+        "answerChecklist": [
+          "표본 변동",
+          "실제 평균 미지",
+          "새 국가·시점",
+          "선택편향과 분포변화 구분"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "model-selection-maximum-optimism"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "On Over-fitting in Model Selection and Subsequent Selection Bias in Performance Evaluation",
+        "href": "https://www.jmlr.org/papers/v11/cawley10a.html",
+        "problem": "Finite validation criterion을 최적화하는 model selection의 overfit과 evaluation bias",
+        "contribution": "Selection criterion variance의 중요성과 empirical bias 사례 분석",
+        "assumptions": "논문의 algorithms·datasets·CV protocols와 finite-sample setting",
+        "evidenceScope": "JMLR 분석·experiments와 일반 mechanism",
+        "notClaim": "모든 K-fold·maximum이 같은 크기로 편향된다는 뜻은 아님",
+        "sectionId": "paper-model-selection-bias"
+      }
+    ],
+    "entryNote": "실제 평균 0.70인 후보 A·B·C가 0.69·0.74·0.71로 관측된 작은 비교에서 시작합니다."
   },
   "ai/prediction-time-feature-availability": {
     coreIdea: "Prediction-time feature availability는 feature가 참조한 모든 source record의 실제 system arrival이 해당 row cutoff보다 이른지 lineage로 검사해 과거에 발생했지만 당시 알 수 없던 정보를 제거하는 경계입니다.",
@@ -23599,73 +23966,460 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [],
   },
   "ai/competition-baseline": {
-    coreIdea: "Competition baseline은 data snapshot·split manifest·OOF/test prediction·metric report·submission checksum을 같은 command와 revision에서 재생성하는 첫 end-to-end artifact chain입니다.",
-    assumedKnowledge: [
-      {id:"competition-evaluation-contract",role:"Row·cutoff·target·metric을 고정합니다."},
-      {id:"pooled-oof-risk-estimate",role:"OOF predictions에서 risk를 계산합니다."},
-      {id:"run-artifact-provenance",role:"Run과 generated artifacts를 연결합니다."},
+    "coreIdea": "고정 입력·분할·행별 OOF·지표·제출을 같은 실행에 묶습니다. 표준 partition에서는 coverage1을 검사하지만 group·시간 누수와 지표 집계·제출 ID 대응은 별도 조건입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "competition-evaluation-contract",
+        "role": "Row·cutoff·target·metric을 고정합니다."
+      },
+      {
+        "id": "pooled-oof-risk-estimate",
+        "role": "OOF predictions에서 risk를 계산합니다."
+      },
+      {
+        "id": "run-artifact-provenance",
+        "role": "Run과 generated artifacts를 연결합니다."
+      }
     ],
-    introducedHere: [
-      {id:"competition-oof-coverage",role:"각 train row의 unseen prediction이 standard K-fold에서 정확히 한 번 존재하는지 검사합니다."},
-      {id:"competition-baseline-artifact",role:"Input에서 submission까지 재현 가능한 첫 기준 artifact chain을 만듭니다."},
+    "introducedHere": [
+      {
+        "id": "competition-oof-coverage",
+        "role": "각 train row의 unseen prediction이 standard K-fold에서 정확히 한 번 존재하는지 검사합니다."
+      },
+      {
+        "id": "competition-baseline-artifact",
+        "role": "Input에서 submission까지 재현 가능한 첫 기준 artifact chain을 만듭니다."
+      }
     ],
-    conceptExplanations: [
-      {id:"competition-oof-coverage",sectionId:"coverage",intuition:"각 학생이 자신을 가르치지 않은 선생에게 정확히 한 번 시험받았는지 출석표로 셉니다.",workedExample:"[1,1,0,2,1]이면 세 번째는 누락, 네 번째는 중복입니다.",boundary:"Repeated CV는 expected count가 다르며 group/time leakage는 coverage만으로 증명되지 않습니다."},
-      {id:"competition-baseline-artifact",sectionId:"artifact",intuition:"첫 기준점은 작은 부품이 아니라 재료를 넣어 완제품과 검사표가 나오는 최소 생산 라인입니다.",workedExample:"Data d1·split f2·config c3·code g4에서 OOF/test parquet, metric JSON, submission SHA를 만듭니다.",boundary:"재현 가능한 score가 높은 품질이나 올바른 evaluation contract를 자동 보장하지 않습니다."},
+    "conceptExplanations": [
+      {
+        "id": "competition-oof-coverage",
+        "sectionId": "coverage",
+        "intuition": "표준 partition에서 각 학습 행의 평가 예측 횟수를 하나씩 셉니다.",
+        "workedExample": "[1,2,4]와[4,5]는 coverage[1,1,0,2,1]이며 [1,2,3]과[4,5]로 고치면 모두 1입니다.",
+        "boundary": "반복CV·미래평가에는 다른 기대 횟수가 필요하고 coverage만으로 누수를 판정하지 않습니다."
+      },
+      {
+        "id": "competition-baseline-artifact",
+        "sectionId": "artifact",
+        "intuition": "입력부터 예측·지표·제출까지 같은 실행의 결과물 관계를 보존합니다.",
+        "workedExample": "정답[0,1,0,1,0]과 확률[0.1,0.8,0.4,0.7,0.2]의 행 평균 Brier는 0.068이며 제출 순서[t2,t1]도 유지합니다.",
+        "boundary": "재현 가능한 실행이 높은 품질을 보장하지 않으며 두 fold 평균 0.0675와 행 평균 0.068도 다를 수 있습니다."
+      }
     ],
-    conceptStages: [
-      {label:"Input",relation:"Data snapshot과 split manifest를 고정",concepts:["competition-evaluation-contract","run-artifact-provenance"]},
-      {label:"OOF",relation:"각 train row에 unseen prediction 한 개를 생성",concepts:["competition-oof-coverage","pooled-oof-risk-estimate"]},
-      {label:"Measure",relation:"OOF에서 global·fold·slice report를 생성",concepts:["competition-baseline-artifact"]},
-      {label:"Submit",relation:"Test row order·range·checksum을 봉인",concepts:["competition-baseline-artifact","run-artifact-provenance"]},
+    "conceptStages": [
+      {
+        "label": "Input",
+        "relation": "Data snapshot과 split manifest를 고정",
+        "concepts": [
+          "competition-evaluation-contract",
+          "run-artifact-provenance"
+        ]
+      },
+      {
+        "label": "OOF",
+        "relation": "각 train row에 unseen prediction 한 개를 생성",
+        "concepts": [
+          "competition-oof-coverage",
+          "pooled-oof-risk-estimate"
+        ]
+      },
+      {
+        "label": "Measure",
+        "relation": "OOF에서 global·fold·slice report를 생성",
+        "concepts": [
+          "competition-baseline-artifact"
+        ]
+      },
+      {
+        "label": "Submit",
+        "relation": "Test row order·range·checksum을 봉인",
+        "concepts": [
+          "competition-baseline-artifact",
+          "run-artifact-provenance"
+        ]
+      }
     ],
-    exercises: [
-      {level:"basic",question:"Small model과 complete baseline artifact를 구분하세요.",answerChecklist:["model only","end-to-end chain","data","split","predictions","submission"],requiredConcepts:["competition-baseline-artifact"],sectionId:"overview"},
-      {level:"basic",question:"Coverage [1,1,0,2,1]의 누락과 중복 row를 찾으세요.",answerChecklist:["third missing","fourth duplicate","zero","two","stop metric","repair"],requiredConcepts:["competition-oof-coverage"],sectionId:"coverage"},
-      {level:"basic",question:"Standard K-fold OOF coverage가 1이어야 하는 이유를 설명하세요.",answerChecklist:["one validation fold","unseen prediction","all rows","no duplicate","metric denominator","partition"],requiredConcepts:["competition-oof-coverage"],sectionId:"coverage"},
-      {level:"basic",question:"Baseline input artifact 두 개를 쓰세요.",answerChecklist:["data snapshot","schema hash","split manifest","row IDs","group time","version"],requiredConcepts:["competition-baseline-artifact"],sectionId:"overview"},
-      {level:"basic",question:"OOF와 test prediction artifact의 row identity 차이를 설명하세요.",answerChecklist:["train rows","fold IDs","unseen target","test rows","submission order","stable IDs"],requiredConcepts:["competition-baseline-artifact"],sectionId:"artifact"},
-      {level:"basic",question:"Submission checksum이 필요한 이유를 설명하세요.",answerChecklist:["file identity","row order","postprocess","upload trace","reproduce","compare"],requiredConcepts:["competition-baseline-artifact"],sectionId:"artifact"},
-      {level:"advanced",question:"Coverage indicator→sum→global invariant 식을 설명하세요.",answerChecklist:["membership","indicator","sum folds","row count","forall rows","approve"],requiredConcepts:["competition-oof-coverage"],sectionId:"coverage"},
-      {level:"advanced",question:"Raw input에서 submission까지 baseline manifest를 설계하세요.",answerChecklist:["data hash","split","code config env","OOF","test","metric","row order","checksum"],requiredConcepts:["competition-baseline-artifact","competition-oof-coverage"],sectionId:"artifact"},
-      {level:"advanced",question:"Repeated CV의 coverage rule을 일반화하세요.",answerChecklist:["repeat count","expected R","one per repeat","aggregate policy","provenance","not standard one"],requiredConcepts:["competition-oof-coverage"],sectionId:"boundary"},
-      {level:"advanced",question:"재현 가능하지만 잘못된 baseline 반례를 설명하세요.",answerChecklist:["wrong target","leakage","fully reproducible","bad contract","quality not guaranteed","fix question"],requiredConcepts:["competition-baseline-artifact"],sectionId:"boundary"},
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "coverage[1,1,0,2,1]의 누락과 중복은 어느 행인가요?",
+        "answerChecklist": [
+          "3번누락",
+          "4번중복",
+          "총 5개검사만으로부족"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "competition-oof-coverage"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "올바른 첫 평가[1,2,3]을 예측할 모델의 학습 행은 무엇인가요?",
+        "answerChecklist": [
+          "[4,5]",
+          "평가행 미포함"
+        ],
+        "sectionId": "coverage",
+        "requiredConcepts": [
+          "competition-oof-coverage"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 평가[4,5]와 전체 coverage를 적으세요.",
+        "answerChecklist": [
+          "학습[1,2,3]",
+          "coverage[1,1,1,1,1]"
+        ],
+        "sectionId": "coverage",
+        "requiredConcepts": [
+          "competition-oof-coverage"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "제곱오차 합 0.34와 행 5개의 평균 손실은 얼마인가요?",
+        "answerChecklist": [
+          "0.068",
+          "작을수록좋음",
+          "행 평균"
+        ],
+        "sectionId": "coverage",
+        "requiredConcepts": [
+          "competition-oof-coverage",
+          "competition-baseline-artifact"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "ID[1,2,3]의 0-based API 인덱스는 무엇인가요?",
+        "answerChecklist": [
+          "[0,1,2]",
+          "ID와위치구분"
+        ],
+        "sectionId": "baseline-source",
+        "requiredConcepts": [
+          "competition-oof-coverage"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "제출 요구순서[t2,t1]에서 ID만 정렬하면 어떤 문제가 생기나요?",
+        "answerChecklist": [
+          "값대응변경",
+          "순서계약",
+          "ID와값함께검사"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "competition-baseline-artifact"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "fold 크기 3·2와 손실 0.07·0.065에서 행 평균과 fold평균을 구하세요.",
+        "answerChecklist": [
+          "0.068",
+          "0.0675",
+          "가중치차이",
+          "metric정의"
+        ],
+        "sectionId": "coverage",
+        "requiredConcepts": [
+          "competition-oof-coverage",
+          "competition-baseline-artifact"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "coverage가 모두 1이지만 같은 환자 또는 미래정보가 학습에 있으면 무엇을 추가로 검사하나요?",
+        "answerChecklist": [
+          "group격리",
+          "시간방향",
+          "전처리fit범위",
+          "누수"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "competition-oof-coverage"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "반복CV나 미래기간 평가에서 coverage1 조건을 무조건 요구하면 왜 틀릴 수 있나요?",
+        "answerChecklist": [
+          "분할설계에따른기대 횟수",
+          "반복예측",
+          "평가대상범위"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "competition-oof-coverage"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "모델·입력·제출이 같은 실행인지 재현할 최소 연결 정보를 설계하세요.",
+        "answerChecklist": [
+          "입력hash",
+          "분할manifest",
+          "설정·환경·code",
+          "행별예측",
+          "metric",
+          "제출checksum"
+        ],
+        "sectionId": "artifact",
+        "requiredConcepts": [
+          "competition-baseline-artifact"
+        ]
+      }
     ],
-    papers: [{title:"Hidden Technical Debt in Machine Learning Systems",href:"https://papers.nips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html",problem:"Model code 밖의 data·config·feedback·consumer dependency가 만드는 ML system risk",contribution:"ML-specific technical debt taxonomy와 system anti-pattern 분류",assumptions:"Production ML system 사례와 2015 tooling context",evidenceScope:"Boundary erosion·hidden feedback·data/config dependency taxonomy",notClaim:"특정 manifest schema가 reliability를 자동 보장한다는 뜻은 아님",sectionId:"paper-baseline-debt"}],
+    "papers": [
+      {
+        "title": "Hidden Technical Debt in Machine Learning Systems",
+        "href": "https://papers.nips.cc/paper_files/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html",
+        "problem": "Model code 밖의 data·config·feedback·consumer dependency가 만드는 ML system risk",
+        "contribution": "ML-specific technical debt taxonomy와 system anti-pattern 분류",
+        "assumptions": "Production ML system 사례와 2015 tooling context",
+        "evidenceScope": "Boundary erosion·hidden feedback·data/config dependency taxonomy",
+        "notClaim": "특정 manifest schema가 reliability를 자동 보장한다는 뜻은 아님",
+        "sectionId": "paper-baseline-debt"
+      },
+      {
+        "title": "scikit-learn 1.7.2 — cross_val_predict",
+        "href": "https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.cross_val_predict.html",
+        "problem": "각 표본에 학습에서 제외한 모델의 예측을 대응하는 문제",
+        "contribution": "partition 조건·cv 인자·metric 집계 경계",
+        "assumptions": "각 sample이 정확히 하나의 평가 set에 속함",
+        "evidenceScope": "공식 API 계약과 metric 해석 경고",
+        "notClaim": "coverage1만으로 group/time 누수와 평가품질이 보장되지 않음",
+        "sectionId": "paper-baseline-sklearn"
+      }
+    ],
+    "entryNote": "다섯 예측의 coverage[1,1,0,2,1]에서 누락·중복을 찾고 올바른 분할과 제출 순서를 잇습니다."
   },
   "ai/paired-experiment-design": {
-    coreIdea: "Paired experiment는 failure slice·원인 가설·한 축의 변경·예상 결과·quality/cost gate를 실행 전에 고정하고 같은 fold에서 baseline과 candidate를 빼 change effect를 판단하는 실험입니다.",
-    assumedKnowledge: [
-      {id:"competition-baseline-artifact",role:"Candidate가 바꿀 재현 가능한 기준점을 제공합니다."},
-      {id:"variance",role:"Fold별 delta의 흔들림을 읽습니다."},
+    "coreIdea": "오류 집단에 대한 가설과 변경 한 축, 같은 평가 행·지표·가중치를 연결합니다. Paired difference의 평균과 fold·집단별 방향, 비용을 함께 판정하고 독립성이나 통계적 유의성을 자동으로 가정하지 않습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "competition-baseline-artifact",
+        "role": "Candidate가 바꿀 재현 가능한 기준점을 제공합니다."
+      },
+      {
+        "id": "variance",
+        "role": "Fold별 delta의 흔들림을 읽습니다."
+      }
     ],
-    introducedHere: [
-      {id:"one-hypothesis-experiment-contract",role:"관찰·가설·한 변경·예상 결과·gate를 한 receipt로 고정합니다."},
-      {id:"paired-fold-experiment-delta",role:"같은 held-out rows에서 candidate와 baseline score를 빼 비교합니다."},
+    "introducedHere": [
+      {
+        "id": "one-hypothesis-experiment-contract",
+        "role": "관찰·가설·한 변경·예상 결과·gate를 한 receipt로 고정합니다."
+      },
+      {
+        "id": "paired-fold-experiment-delta",
+        "role": "같은 held-out rows에서 candidate와 baseline score를 빼 비교합니다."
+      }
     ],
-    conceptExplanations: [
-      {id:"one-hypothesis-experiment-contract",sectionId:"overview",intuition:"한 번에 레버 하나만 바꾸고 어느 계기판이 얼마나 움직이면 성공인지 먼저 씁니다.",workedExample:"Rare-category encoding만 바꾸고 Group C recall +.02·global noninferior·p95 +3ms 이하를 gate로 둡니다.",boundary:"상호작용을 연구하면 factorial design과 interaction question을 명시합니다."},
-      {id:"paired-fold-experiment-delta",sectionId:"paired-delta",intuition:"서로 다른 시험 점수가 아니라 같은 시험에서 두 방법의 차이를 봅니다.",workedExample:".006,.004,-.001,.005,.003의 평균은 .0034이며 fold별 방향도 함께 봅니다.",boundary:"K-fold training sets가 겹치므로 단순 SE를 독립 표본 p-value처럼 읽지 않습니다."},
+    "conceptExplanations": [
+      {
+        "id": "one-hypothesis-experiment-contract",
+        "sectionId": "experiment-terms",
+        "intuition": "반복되는 오류의 원인 가설과 변경 한 축, 사전 채택 기준을 묶습니다.",
+        "workedExample": "드문 범주 표현만 바꾸고 전체 평균 개선·집단C 비악화·지연 증가 10% 이하를 미리 정합니다.",
+        "boundary": "여러 변경의 상호작용이 질문이면 조합 설계를 명시하고 결과를 본 뒤 기준을 바꾸지 않습니다."
+      },
+      {
+        "id": "paired-fold-experiment-delta",
+        "sectionId": "paired-delta",
+        "intuition": "같은 fold의 새 점수에서 기존 점수를 빼 변경의 관측 차이를 구합니다.",
+        "workedExample": "차이 0.006·0.004·−0.001·0.005·0.003의 평균은 0.0034지만 지연 18% 증가는 상한 10%를 넘습니다.",
+        "boundary": "동일fold가 모든 교란을 없애지는 않으며 겹친 학습 자료 때문에 fold 차이를 독립 반복으로 과신하지 않습니다."
+      }
     ],
-    conceptStages: [
-      {label:"Observe",relation:"Global 평균 안의 failure slice를 특정",concepts:["competition-baseline-artifact","one-hypothesis-experiment-contract"]},
-      {label:"Hypothesize",relation:"Testable cause와 예상 결과를 기록",concepts:["one-hypothesis-experiment-contract"]},
-      {label:"Pair",relation:"같은 fold에서 baseline과 candidate를 비교",concepts:["paired-fold-experiment-delta"]},
-      {label:"Decide",relation:"Quality·slice·cost gate로 accept/reject",concepts:["one-hypothesis-experiment-contract","paired-fold-experiment-delta"]},
+    "conceptStages": [
+      {
+        "label": "Observe",
+        "relation": "Global 평균 안의 failure slice를 특정",
+        "concepts": [
+          "competition-baseline-artifact",
+          "one-hypothesis-experiment-contract"
+        ]
+      },
+      {
+        "label": "Hypothesize",
+        "relation": "Testable cause와 예상 결과를 기록",
+        "concepts": [
+          "one-hypothesis-experiment-contract"
+        ]
+      },
+      {
+        "label": "Pair",
+        "relation": "같은 fold에서 baseline과 candidate를 비교",
+        "concepts": [
+          "paired-fold-experiment-delta"
+        ]
+      },
+      {
+        "label": "Decide",
+        "relation": "Quality·slice·cost gate로 accept/reject",
+        "concepts": [
+          "one-hypothesis-experiment-contract",
+          "paired-fold-experiment-delta"
+        ]
+      }
     ],
-    exercises: [
-      {level:"basic",question:"Failure slice와 causal hypothesis를 구분하세요.",answerChecklist:["observed subset","error evidence","proposed cause","testable","not same","expected result"],requiredConcepts:["one-hypothesis-experiment-contract"],sectionId:"overview"},
-      {level:"basic",question:"Single-axis change가 필요한 이유를 설명하세요.",answerChecklist:["attribute effect","one variable","same protocol","interaction caveat","artifact diff","next question"],requiredConcepts:["one-hypothesis-experiment-contract"],sectionId:"change"},
-      {level:"basic",question:"Adoption gate에 넣을 네 목적을 쓰세요.",answerChecklist:["global quality","slice quality","latency","memory","thresholds","predeclare"],requiredConcepts:["one-hypothesis-experiment-contract"],sectionId:"change"},
-      {level:"basic",question:"Fold delta .006,.004,-.001,.005,.003의 평균을 계산하세요.",answerChecklist:["sum .017","divide five",".0034","one negative","paired folds","inspect spread"],requiredConcepts:["paired-fold-experiment-delta"],sectionId:"paired-delta"},
-      {level:"basic",question:"서로 다른 folds의 score를 빼면 안 되는 이유를 쓰세요.",answerChecklist:["different rows","difficulty confounded","unpaired","same fold needed","same metric","same weights"],requiredConcepts:["paired-fold-experiment-delta"],sectionId:"paired-delta"},
-      {level:"basic",question:"Reject 결과도 artifact로 남길 이유를 설명하세요.",answerChecklist:["avoid repeat","narrow hypothesis","negative evidence","cost","decision trace","next experiment"],requiredConcepts:["one-hypothesis-experiment-contract"],sectionId:"change"},
-      {level:"advanced",question:"Failure→hypothesis→one change→gate receipt를 설계하세요.",answerChecklist:["slice","cause","single axis","expected result","same protocol","quality gate","cost gate","decision"],requiredConcepts:["one-hypothesis-experiment-contract"],sectionId:"overview"},
-      {level:"advanced",question:"Paired delta의 subtraction·average·deviation 연산을 설명하세요.",answerChecklist:["same fold subtraction","effect","sum deltas","divide K","deviation","stability"],requiredConcepts:["paired-fold-experiment-delta"],sectionId:"paired-delta"},
-      {level:"advanced",question:"두 축 interaction을 factorial question으로 설계하세요.",answerChecklist:["factor A","factor B","four cells","main effects","interaction","same folds"],requiredConcepts:["one-hypothesis-experiment-contract"],sectionId:"boundary"},
-      {level:"advanced",question:"Mean delta가 양수지만 한 critical slice가 악화된 채택 판단을 설계하세요.",answerChecklist:["global gain","slice regression","predeclared gate","reject or exception","cost","document"],requiredConcepts:["paired-fold-experiment-delta"],sectionId:"boundary"},
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "첫 fold의 새 0.706과 기존 0.700의 차이는 얼마인가요?",
+        "answerChecklist": [
+          "0.006",
+          "같은 평가행",
+          "higher-is-better"
+        ],
+        "sectionId": "paired-delta",
+        "requiredConcepts": [
+          "paired-fold-experiment-delta"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "다섯 차이의 합 0.017을 평균내면 얼마인가요?",
+        "answerChecklist": [
+          "0.0034",
+          "5로 나눔"
+        ],
+        "sectionId": "paired-delta",
+        "requiredConcepts": [
+          "paired-fold-experiment-delta"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "세 번째 차이−0.001은 무엇을 뜻하나요?",
+        "answerChecklist": [
+          "해당fold 악화",
+          "전체평균과 구분",
+          "집단원인 자동확정불가"
+        ],
+        "sectionId": "paired-delta",
+        "requiredConcepts": [
+          "paired-fold-experiment-delta"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "지연 100→118ms의 증가율과 상한 10% 통과 여부를 구하세요.",
+        "answerChecklist": [
+          "18%",
+          "상한초과",
+          "채택거절"
+        ],
+        "sectionId": "paired-delta",
+        "requiredConcepts": [
+          "one-hypothesis-experiment-contract",
+          "paired-fold-experiment-delta"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "표현과 모델을 동시에 바꾸면 어떤 단일 기여를 분리하기 어려운가요?",
+        "answerChecklist": [
+          "표현 효과",
+          "모델 효과",
+          "동시 변경",
+          "한 축 비교"
+        ],
+        "sectionId": "why-one-change",
+        "requiredConcepts": [
+          "one-hypothesis-experiment-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "두 score 배열의 순서가 다르면 무엇으로 맞춘 뒤 빼나요?",
+        "answerChecklist": [
+          "fold ID",
+          "평가 행",
+          "지표·가중치"
+        ],
+        "sectionId": "paired-source",
+        "requiredConcepts": [
+          "paired-fold-experiment-delta"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "세 번째 차이와 평균의 편차를 계산하고 무엇을 확정할 수 없는지 설명하세요.",
+        "answerChecklist": [
+          "−0.0044",
+          "집단C 원인 아님",
+          "세부 입력 확인"
+        ],
+        "sectionId": "paired-delta",
+        "requiredConcepts": [
+          "paired-fold-experiment-delta"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 fold로 비교해도 독립 표본의 검정을 그대로 쓰기 어려운 이유는 무엇인가요?",
+        "answerChecklist": [
+          "겹친 학습 자료",
+          "상관",
+          "분산 과소추정",
+          "조건에 맞는 보정"
+        ],
+        "sectionId": "paired-source",
+        "requiredConcepts": [
+          "paired-fold-experiment-delta"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "여러 축의 상호작용이 질문이면 실험과 기록을 어떻게 바꾸나요?",
+        "answerChecklist": [
+          "factorial 조합",
+          "축 명시",
+          "상호작용",
+          "사전 기준"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "one-hypothesis-experiment-contract"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "평균 0.0034를 반복 탐색의 최고 결과로 골랐다면 최종 보고에 어떤 문제가 남나요?",
+        "answerChecklist": [
+          "선택 효과",
+          "탐색 이력",
+          "독립 평가",
+          "유의성과 관측 차이 구분"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "one-hypothesis-experiment-contract",
+          "paired-fold-experiment-delta"
+        ]
+      }
     ],
-    papers: [],
+    "papers": [
+      {
+        "title": "scikit-learn 1.7.2 — Statistical comparison of models",
+        "href": "https://scikit-learn.org/1.7/auto_examples/model_selection/plot_grid_search_stats.html",
+        "problem": "같은 CV 자료에서 비교한 model score의 차이와 의존성을 해석하는 문제",
+        "contribution": "동일 분할 score 배열의 차이와 분산 보정 예제",
+        "assumptions": "정해진 분할·metric·학습 크기와 검정 모형",
+        "evidenceScope": "실제 differences 코드와 독립성 경고",
+        "notClaim": "평균 0.0034가 유의하거나 지연 18% 증가를 허용한다는 뜻이 아님",
+        "sectionId": "paper-paired-sklearn"
+      }
+    ],
+    "entryNote": "같은 5개 fold에서 두 score를 빼 평균 0.0034를 구하고 지연 100→118ms를 사전 상한과 비교합니다."
   },
   "ai/competition-submission-control": {
     coreIdea: "Submission control은 upload 횟수와 external score가 후속 선택을 바꾼 adaptive feedback 횟수를 구분해 사전 budget에서 candidate를 동결하고, run·retrain·inference·row order·checksum·rollback을 final manifest로 봉인하는 절차입니다.",
@@ -27315,31 +28069,209 @@ export const ARTICLE_LEARNING: Readonly<
     "papers": []
   },
   "ai/harness-failure-ablation": {
-    entryLevel: true,
-    entryNote: "실패를 재현한 뒤 context·schema·capability·verifier 층을 하나씩 분리해 비교합니다.",
-    coreIdea: "Failure-layer ablation은 같은 fixture에서 한 장치만 바꾸고 target recovery와 기존 success regression을 함께 측정해 실제 순기여가 있는 변경만 배포합니다.",
-    assumedKnowledge: [],
-    introducedHere: [{ id: "harness-failure-layer-ablation", role: "실패 계층과 장치의 순기여를 paired 비교합니다." }],
-    conceptExplanations: [{ id: "harness-failure-layer-ablation", sectionId: "overview", intuition: "고장 난 층을 찾고 부품 하나만 바꿔 같은 시험을 반복합니다.", workedExample: "문서 miss에서는 reviewer가 아니라 context index만 바꿔 hit·quality·cost를 비교합니다.", boundary: "Model·prompt·tool·dataset을 동시에 바꾸면 원인을 귀속할 수 없습니다." }],
-    conceptStages: [
-      { label: "00 reproduce", relation: "실패와 기존 성공 fixture를 고정합니다.", concepts: ["harness-failure-layer-ablation"] },
-      { label: "01 classify", relation: "Context·schema·capability·verifier 층을 찾습니다.", concepts: ["harness-failure-layer-ablation"] },
-      { label: "02 ablate", relation: "후보 하나만 바꿔 baseline과 비교합니다.", concepts: ["harness-failure-layer-ablation"] },
-      { label: "03 release", relation: "순개선과 회귀 한도를 함께 통과시킵니다.", concepts: ["harness-failure-layer-ablation"] },
+    "entryLevel": true,
+    "entryNote": "문서 찾기의 성공 3/12→9/12와 기존 성공의 새 실패 1/20을 따로 비교합니다.",
+    "coreIdea": "같은 입력·모델·도구·환경에서 변경 하나의 개선과 기존 성공의 회귀를 함께 검사하고, 사전 기준과 비용·권한 경계를 지켜 채택합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "harness-failure-layer-ablation",
+        "role": "실패 계층과 장치의 순기여를 paired 비교합니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Ablation fixture의 네 구성물을 쓰세요.", answerChecklist: ["replay input", "baseline", "single candidate", "paired metrics"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "overview" },
-      { level: "basic", question: "문서 miss를 올바른 failure layer로 분류하세요.", answerChecklist: ["context", "index", "freshness", "not reviewer"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "classify" },
-      { level: "basic", question: "잘못된 argument 반복을 고칠 층을 고르세요.", answerChecklist: ["schema", "actionable error", "fixture", "same model"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "classify" },
-      { level: "basic", question: "Permission denial과 prompt failure를 구분하세요.", answerChecklist: ["identity", "scope", "approval", "runtime"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "classify" },
-      { level: "basic", question: "같은 fixture의 candidate와 baseline에서 순변화 Delta를 계산하세요.", answerChecklist: ["candidate metric", "baseline metric", "subtract", "same fixture"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "ablation" },
-      { level: "basic", question: "기존 success regression을 따로 측정하는 이유를 설명하세요.", answerChecklist: ["over-rejection", "regression set", "tolerance", "release gate"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "ablation" },
-      { level: "advanced", question: "Model과 context index를 동시에 바꾼 실험을 교정하세요.", answerChecklist: ["confounder", "one variable", "fixed runtime", "paired rerun"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "ablation" },
-      { level: "advanced", question: "Target 개선과 latency 악화를 함께 판정하세요.", answerChecklist: ["quality delta", "latency delta", "predefined budget", "reject or accept"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "ablation" },
-      { level: "advanced", question: "한 trace의 개선을 다른 workload에 일반화하지 않도록 설계하세요.", answerChecklist: ["failure slices", "representative set", "confidence", "canary"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "paper-harness-ablation" },
-      { level: "advanced", question: "Ablation 결과의 rollback receipt를 설계하세요.", answerChecklist: ["candidate version", "baseline version", "metrics", "decision", "rollback trigger"], requiredConcepts: ["harness-failure-layer-ablation"], sectionId: "paper-harness-ablation" },
+    "conceptExplanations": [
+      {
+        "id": "harness-failure-layer-ablation",
+        "sectionId": "ablation",
+        "intuition": "실패 경로의 구성 요소 하나를 바꾸고 같은 작업의 전후 결과를 비교합니다.",
+        "workedExample": "대상 12개의 성공이 3→9이면 50%p 개선이지만 기존 20개 중 1개 회귀는 5%여서 허용 0%를 넘습니다.",
+        "boundary": "한 번의 결과나 여러 동시 변경으로 안정적인 단일 기여를 확정하지 않으며 권한 거부는 정상 기대 결과일 수 있습니다."
+      }
     ],
-    papers: [{ title: "Anthropic — Harness design for long-running apps", href: "https://www.anthropic.com/engineering/harness-design-long-running-apps", problem: "긴 horizon에서 plan 손실·조기 완료·회귀를 줄이는 harness component를 식별하는 문제", contribution: "Planner·generator·evaluator·persistent state 구성과 component ablation을 공개", assumptions: "문서의 model·application-building task·evaluation setup", evidenceScope: "해당 experiment의 architecture와 ablation", notClaim: "모든 model과 workload에 같은 component가 항상 필요하다는 주장", sectionId: "paper-harness-ablation" }],
+    "conceptStages": [
+      {
+        "label": "00 reproduce",
+        "relation": "실패와 기존 성공 fixture를 고정합니다.",
+        "concepts": [
+          "harness-failure-layer-ablation"
+        ]
+      },
+      {
+        "label": "01 classify",
+        "relation": "Context·schema·capability·verifier 층을 찾습니다.",
+        "concepts": [
+          "harness-failure-layer-ablation"
+        ]
+      },
+      {
+        "label": "02 ablate",
+        "relation": "후보 하나만 바꿔 baseline과 비교합니다.",
+        "concepts": [
+          "harness-failure-layer-ablation"
+        ]
+      },
+      {
+        "label": "03 release",
+        "relation": "순개선과 회귀 한도를 함께 통과시킵니다.",
+        "concepts": [
+          "harness-failure-layer-ablation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "대상 12개 성공이 3개에서 9개로 늘면 이전·새 성공률과 차이는 얼마인가요?",
+        "answerChecklist": [
+          "25%",
+          "75%",
+          "50%p",
+          "상대 50%와 구분"
+        ],
+        "sectionId": "ablation",
+        "requiredConcepts": [
+          "harness-failure-layer-ablation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "기존 성공 20개 중 1개가 실패하면 회귀율은 얼마인가요?",
+        "answerChecklist": [
+          "1/20",
+          "5%",
+          "대상 12와 다른 분모"
+        ],
+        "sectionId": "ablation",
+        "requiredConcepts": [
+          "harness-failure-layer-ablation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "회귀 허용 0%라면 개선이 양수여도 G는 무엇인가요?",
+        "answerChecklist": [
+          "G=0",
+          "두 조건 AND",
+          "기존 성공 보호"
+        ],
+        "sectionId": "ablation",
+        "requiredConcepts": [
+          "harness-failure-layer-ablation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "오래된 문서 안내와 권한 거부에 각각 어떤 수정이 필요한가요?",
+        "answerChecklist": [
+          "위치·최신성",
+          "권한·대상·승인",
+          "프롬프트로 권한 생성 불가"
+        ],
+        "sectionId": "classify",
+        "requiredConcepts": [
+          "harness-failure-layer-ablation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "두 실행을 비교할 때 변경 하나 외에 고정할 조건을 적으세요.",
+        "answerChecklist": [
+          "입력",
+          "모델",
+          "도구 응답",
+          "환경",
+          "기대 결과"
+        ],
+        "sectionId": "inside-experiment",
+        "requiredConcepts": [
+          "harness-failure-layer-ablation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "실패 결과를 성공으로 판정했다면 어느 책임을 검토하나요?",
+        "answerChecklist": [
+          "완료 검사",
+          "기대 상태",
+          "판정 규칙",
+          "실제 실행"
+        ],
+        "sectionId": "classify",
+        "requiredConcepts": [
+          "harness-failure-layer-ablation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "모델·안내·도구를 함께 바꾸어 추가 6개가 성공했습니다. 어떤 인과 주장이 불가능한가요?",
+        "answerChecklist": [
+          "안내 단독 효과",
+          "동시 변경",
+          "분리 비교",
+          "상호작용"
+        ],
+        "sectionId": "paper-harness-ablation",
+        "requiredConcepts": [
+          "harness-failure-layer-ablation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "한 번의 3→9 결과를 안정적 개선으로 보고하기 전에 어떤 변동을 확인하나요?",
+        "answerChecklist": [
+          "반복",
+          "무작위성",
+          "외부서비스",
+          "작업별 결과",
+          "새 fixture"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "harness-failure-layer-ablation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "권한 거부를 회귀로 집계했다면 기대 결과와 실험 범위를 어떻게 검토하나요?",
+        "answerChecklist": [
+          "허용 범위",
+          "정상 거부",
+          "기대 결과 사전정의",
+          "우회 금지"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "harness-failure-layer-ablation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "G 두 조건을 통과해도 전체 배포에 추가로 필요한 근거를 제시하세요.",
+        "answerChecklist": [
+          "지연",
+          "token 비용",
+          "외부 영향",
+          "권한",
+          "실제 배포범위"
+        ],
+        "sectionId": "ablation",
+        "requiredConcepts": [
+          "harness-failure-layer-ablation"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Anthropic — Harness design for long-running apps",
+        "href": "https://www.anthropic.com/engineering/harness-design-long-running-apps",
+        "problem": "긴 horizon에서 plan 손실·조기 완료·회귀를 줄이는 harness component를 식별하는 문제",
+        "contribution": "Planner·generator·evaluator·persistent state 구성과 component ablation을 공개",
+        "assumptions": "문서의 model·application-building task·evaluation setup",
+        "evidenceScope": "해당 experiment의 architecture와 ablation",
+        "notClaim": "모든 model과 workload에 같은 component가 항상 필요하다는 주장",
+        "sectionId": "paper-harness-ablation"
+      }
+    ]
   },
   "ai/agent-control-boundaries": {
     "entryLevel": true,
@@ -60370,23 +61302,216 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [{ title: "Reth blob-store source", href: "https://github.com/paradigmxyz/reth/tree/main/crates/transaction-pool", problem: "Sidecar를 reorg·restart·cleanup에 안전하게 보관", contribution: "Blob store abstraction과 lifecycle 구현", assumptions: "SHA·backend·schema·durability 고정", evidenceScope: "선택 snapshot의 read/write/delete", notClaim: "Local retention을 영구 availability로 확대하지 않음", sectionId: "paper-reth-blobstore" }],
   },
   "blockchain/eip4844-blob-fee": {
-    entryLevel: true, entryNote: "Blob gas와 execution gas를 같은 단위로 가정하지 않고 E·U·T를 하나씩 정의합니다.", coreIdea: "EIP-4844 fee feedback은 parent excess와 usage에서 active target을 차감하고 0에서 포화한 state를 integer price 계산에 넘깁니다.", assumedKnowledge: [],
-    introducedHere: [{ id: "eip4844-excess-blob-gas-feedback", role: "초과 수요와 다음 blob base fee를 계산합니다." }],
-    conceptExplanations: [{ id: "eip4844-excess-blob-gas-feedback", sectionId: "overview", intuition: "목표보다 많이 쓴 양을 다음 가격에 누적하고 적게 쓰면 0까지 줄입니다.", workedExample: "E=2,U=5,T=3이면 next excess=max(0,2+5-3)=4입니다.", boundary: "Blob gas와 execution gas를 더하지 않고 fee 하나를 rollup 총비용으로 읽지 않습니다." }],
-    conceptStages: [{ label: "01 price", relation: "Blob demand feedback을 정의합니다.", concepts: ["eip4844-excess-blob-gas-feedback"] }],
-    exercises: [
-      { level: "basic", question: "Blob gas와 execution gas의 원장을 구분하세요.", answerChecklist: ["data usage", "EVM execution", "separate units", "separate base fee", "same block possible", "do not add"], requiredConcepts: ["eip4844-excess-blob-gas-feedback"], sectionId: "overview" },
-      { level: "basic", question: "Parent excess E의 의미를 설명하세요.", answerChecklist: ["accumulated demand", "target excess", "parent header", "next input", "nonnegative", "blob gas units"], requiredConcepts: ["eip4844-excess-blob-gas-feedback"], sectionId: "overview" },
-      { level: "basic", question: "Usage U와 active target T를 구분하세요.", answerChecklist: ["actual parent usage", "fork parameter", "parent timestamp", "same units", "not fixed forever", "capacity"], requiredConcepts: ["eip4844-excess-blob-gas-feedback"], sectionId: "overview" },
-      { level: "basic", question: "E=2,U=5,T=3의 next excess를 계산하세요.", answerChecklist: ["add E+U=7", "subtract T", "4", "max lower bound", "same units", "next state"], requiredConcepts: ["eip4844-excess-blob-gas-feedback"], sectionId: "excess-update" },
-      { level: "basic", question: "E=2,U=0,T=3의 next excess가 0인 이유를 설명하세요.", answerChecklist: ["2+0-3=-1", "max", "0", "no negative debt", "saturating", "next state"], requiredConcepts: ["eip4844-excess-blob-gas-feedback"], sectionId: "excess-update" },
-      { level: "basic", question: "Integer fake-exponential의 목적을 설명하세요.", answerChecklist: ["price increases with excess", "integer arithmetic", "deterministic", "same client result", "rounding fixed", "not fake market"], requiredConcepts: ["eip4844-excess-blob-gas-feedback"], sectionId: "integer-fee" },
-      { level: "advanced", question: "Fork 경계에서 target이 바뀌는 fee fixture를 설계하세요.", answerChecklist: ["parent timestamp", "active fork", "old/new target", "parameter provenance", "boundary blocks", "header parity", "no hardcoded one value", "expected outcome"], requiredConcepts: ["eip4844-excess-blob-gas-feedback"], sectionId: "excess-update" },
-      { level: "advanced", question: "Floating-point 구현이 consensus에 위험한 이유를 설명하세요.", answerChecklist: ["rounding", "platform difference", "header divergence", "integer recurrence", "ordered terms", "overflow", "test vectors", "determinism"], requiredConcepts: ["eip4844-excess-blob-gas-feedback"], sectionId: "integer-fee" },
-      { level: "advanced", question: "Large excess에서 overflow-safe 계산을 설계하세요.", answerChecklist: ["integer width", "checked arithmetic", "term termination", "protocol rounding", "large fixture", "cross client", "fail closed", "no float fallback"], requiredConcepts: ["eip4844-excess-blob-gas-feedback"], sectionId: "integer-fee" },
-      { level: "advanced", question: "Blob base fee와 rollup 총비용 claim의 경계를 작성하세요.", answerChecklist: ["protocol minimum", "blob gas", "compression", "execution", "proving", "posting", "no fixed multiplier", "measurement context"], requiredConcepts: ["eip4844-excess-blob-gas-feedback"], sectionId: "paper-eip4844-fee" },
+    "entryLevel": true,
+    "entryNote": "이전 초과분 2·사용량 5·목표 3의 사례에서 출발해 실제 단위와 정수 가격, 적용 버전의 분기를 읽습니다.",
+    "coreIdea": "이전 사용량은 다음 초과분을 거쳐 정수 가격에 반영되며, 현재 설정에서는 실행 가격에 연결된 추가 분기와 새 블록 시각을 함께 확인해야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "eip4844-excess-blob-gas-feedback",
+        "role": "초과 수요와 다음 blob base fee를 계산합니다."
+      }
     ],
-    papers: [{ title: "EIP-4844 blob gas update", href: "https://eips.ethereum.org/EIPS/eip-4844", problem: "Blob demand를 독립 fee market으로 조정", contribution: "Excess update와 integer fee 정의", assumptions: "활성 fork parameters와 integer rules 고정", evidenceScope: "Protocol blob gas state와 minimum fee", notClaim: "User policy나 rollup 총비용을 규정하지 않음", sectionId: "paper-eip4844-fee" }],
+    "conceptExplanations": [
+      {
+        "id": "eip4844-excess-blob-gas-feedback",
+        "sectionId": "excess-update",
+        "intuition": "많이 쓴 양을 가격용 기록으로 넘기고 다음 가격 계산의 입력으로 사용합니다.",
+        "workedExample": "2+5−3=4묶음 상당이며 524,288 blob gas입니다. 옛 설정의 가격은 1 wei/blob gas이고 별도의 작은 설정 f=1, n=4, d=2에서는 6이 나옵니다.",
+        "boundary": "목표 3은 초기 규칙의 사례입니다. EIP-7918과 BPO2에서는 추가 분기와 새 블록 시각의 설정을 확인합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 price",
+        "relation": "Blob demand feedback을 정의합니다.",
+        "concepts": [
+          "eip4844-excess-blob-gas-feedback"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Blob gas와 실행 gas가 각각 무엇을 세는지 설명하세요.",
+        "answerChecklist": [
+          "자료 사용량",
+          "프로그램 실행",
+          "별도 가격",
+          "blob 하나는 131,072 blob gas",
+          "서로 다른 단위를 더하지 않음"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "eip4844-excess-blob-gas-feedback"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "사례의 초과분 4가 미처리 파일 네 개와 다른 이유를 설명하세요.",
+        "answerChecklist": [
+          "가격 계산용 기록",
+          "실제 대기열이 아님",
+          "이전 기록에서 다음 가격으로 전달",
+          "하한은 0"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "eip4844-excess-blob-gas-feedback"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "목표 3·최대 6에서 사용량 5인 블록을 판정하세요.",
+        "answerChecklist": [
+          "목표보다 2 많음",
+          "최대 이내",
+          "사용량만으로 무효인 블록은 아님",
+          "현재 목표는 적용 버전별로 확인"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "eip4844-excess-blob-gas-feedback"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "2·5·3을 실제 blob gas로 바꿔 다음 기록을 계산하세요.",
+        "answerChecklist": [
+          "262,144",
+          "655,360",
+          "393,216",
+          "524,288",
+          "최솟값은 0"
+        ],
+        "sectionId": "excess-update",
+        "requiredConcepts": [
+          "eip4844-excess-blob-gas-feedback"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "초과분 4 이후 사용량이 두 번 0이면 기록을 계산하세요.",
+        "answerChecklist": [
+          "4+0−3=1",
+          "1+0−3=−2",
+          "최종값은 0",
+          "음수 할인을 저장하지 않음"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "eip4844-excess-blob-gas-feedback"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "f=1, n=4, d=2의 정수 가격을 손으로 계산하세요.",
+        "answerChecklist": [
+          "항은 2, 4, 4, 2, 1, 0",
+          "합계는 13",
+          "최종값은 6",
+          "e²를 내림한 7과 다름"
+        ],
+        "sectionId": "integer-fee",
+        "requiredConcepts": [
+          "eip4844-excess-blob-gas-feedback"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "BPO2의 초과분 2·사용 18·목표 14·최대 21에서 두 가격 분기를 비교하세요.",
+        "answerChecklist": [
+          "보통 분기는 6",
+          "추가 분기는 8",
+          "E+U<target을 먼저 검사",
+          "8192×실행 가격과 131072×blob 가격 비교",
+          "실제 blob gas 단위로 정수 계산"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "eip4844-excess-blob-gas-feedback"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "업그레이드 첫 블록의 설정을 이전 헤더 시각으로 읽으면 왜 문제가 되나요?",
+        "answerChecklist": [
+          "이전 헤더는 E와 U의 출처",
+          "새 블록의 headTimestamp로 설정 선택",
+          "목표·최대·update fraction 확인",
+          "헤더에 기록한 값과 재계산 결과 비교"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "eip4844-excess-blob-gas-feedback"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "정수 가격 함수를 다른 언어로 옮길 때 보존할 조건을 설명하세요.",
+        "answerChecklist": [
+          "음수가 아닌 정수",
+          "양수 분모",
+          "항의 계산 순서",
+          "각 단계의 내림",
+          "큰 정수 또는 넘침을 검사하는 곱셈",
+          "실수 계산으로 대체하지 않음",
+          "최대값과 업그레이드 경계 비교"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "eip4844-excess-blob-gas-feedback"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "기본 가격 1에서 blob 하나의 비용과 실행 실패 후 처리를 설명하세요.",
+        "answerChecklist": [
+          "131,072 wei",
+          "실행 비용은 별도",
+          "blob 비용은 실행 전에 차감하고 소각",
+          "실행 실패로 환급하지 않음",
+          "rollup 총비용이 아님",
+          "max_fee는 지불 상한"
+        ],
+        "sectionId": "paper-eip4844-fee",
+        "requiredConcepts": [
+          "eip4844-excess-blob-gas-feedback"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "EIP-4844 blob gas accounting",
+        "href": "https://eips.ethereum.org/EIPS/eip-4844",
+        "problem": "자료 수요를 실행 자원과 별도로 가격에 반영",
+        "contribution": "이전 초과분과 사용량에서 목표를 빼는 상태 갱신 및 정수 항을 반복해 더하는 기본 가격 계산을 정의합니다.",
+        "assumptions": "초기 EIP-4844 설정을 사용하는 사례이며 blob gas 단위와 각 단계의 정수 내림 규칙을 고정합니다.",
+        "evidenceScope": "이전 초과분 2·사용량 5·목표 3에서 다음 기록 4와 실제 단위 524,288을 얻는 계산, blob 기본 요금의 차감과 소각을 확인합니다.",
+        "notClaim": "현재 모든 fork에 하나의 설정을 적용하지 않습니다.",
+        "sectionId": "paper-eip4844-fee"
+      },
+      {
+        "title": "EIP-7918 reserve-price branch",
+        "href": "https://eips.ethereum.org/EIPS/eip-7918",
+        "problem": "실행 비용이 자료 가격의 신호를 압도하는 상황을 다룹니다.",
+        "contribution": "실행 가격 조건에 따라 초과분 계산을 나눕니다.",
+        "assumptions": "새 블록의 설정과 이전 헤더의 가격을 사용합니다.",
+        "evidenceScope": "BPO2 사례에서 다음 초과분 6과 8이 나오는 조건을 비교합니다.",
+        "notClaim": "실제 수요나 미래 가격을 예측하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "go-ethereum c9a2bc7 eip4844.go",
+        "href": "https://github.com/ethereum/go-ethereum/blob/c9a2bc73c847319a8faa57de59e42c0efc420682/consensus/misc/eip4844/eip4844.go",
+        "problem": "노드마다 같은 가격과 헤더 유효성 판정을 내려야 합니다.",
+        "contribution": "설정 선택·초과분 세 분기·정수 반복·헤더 검산의 원본 코드입니다.",
+        "assumptions": "고정한 커밋과 적용 설정을 사용합니다.",
+        "evidenceScope": "원본 fakeExponential 함수를 여섯 입력으로 로컬에서 실행했습니다.",
+        "notClaim": "전체 노드나 메인넷 실행 검증은 아닙니다.",
+        "sectionId": "source"
+      }
+    ]
   },
   "blockchain/reth-blob-reorg-release": {
     entryLevel: true, entryNote: "Reorg·retention·release gate를 모른다고 가정하고 body와 sidecar 상태부터 나눕니다.", coreIdea: "Reth blob reorg path는 orphaned body와 reusable sidecar receipt를 결합하고 miss·cleanup·restart failure parity 뒤에만 최적화를 승인합니다.", assumedKnowledge: [],
@@ -60733,55 +61858,361 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "blockchain/aa-fundamentals": {
-    entryLevel: true,
-    entryNote: "EOA·smart contract·nonce를 안다고 가정하지 않고 Alice의 approve+swap, 30분 session key와 paymaster 사례로 시작합니다.",
-    coreIdea: "Account Abstraction은 요청 생성·validation·admission·gas payment·execution을 분리하고 계정 code가 signer·capability·recovery policy를 검증하게 합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "aa-programmable-validation-boundary", role: "고정 EOA 규칙과 smart-account policy의 owner를 구분합니다." },
-      { id: "erc4337-useroperation-identity", role: "UserOperation을 chain·EntryPoint·nonce에 결속합니다." },
-      { id: "erc4337-bundler-validation-lifecycle", role: "Admission·second simulation·on-chain outcome을 분리합니다." },
-      { id: "erc4337-gas-payer-settlement", role: "Account/paymaster prefund와 actual charge를 계산합니다." },
-      { id: "eip7702-delegation-authorization", role: "Final type-4 delegation과 withdrawn proposal을 구분합니다." },
-      { id: "aa-capability-policy", role: "Session key를 target·selector·expiry·budget으로 제한합니다." },
-      { id: "aa-recovery-governance", role: "Threshold·delay·veto·rotation recovery를 설계합니다." },
-      { id: "aa-release-gate", role: "Authorization·settlement parity 뒤 gas·latency를 비교합니다." },
+    "entryLevel": true,
+    "entryNote": "30분 동안 100개까지만 보낼 수 있는 열쇠로 40개를 보내며 권한·송금·대납 장부를 따라갑니다.",
+    "coreIdea": "계정의 프로그램이 누가 무엇을 얼마나 할 수 있는지 판단하고, 요청 전달·비용 확보·실행·정산을 각각 검사합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "aa-programmable-validation-boundary",
+        "role": "고정 EOA 규칙과 smart-account policy의 owner를 구분합니다."
+      },
+      {
+        "id": "erc4337-useroperation-identity",
+        "role": "UserOperation을 chain·EntryPoint·nonce에 결속합니다."
+      },
+      {
+        "id": "erc4337-bundler-validation-lifecycle",
+        "role": "Admission·second simulation·on-chain outcome을 분리합니다."
+      },
+      {
+        "id": "erc4337-gas-payer-settlement",
+        "role": "Account/paymaster prefund와 actual charge를 계산합니다."
+      },
+      {
+        "id": "eip7702-delegation-authorization",
+        "role": "Final type-4 delegation과 withdrawn proposal을 구분합니다."
+      },
+      {
+        "id": "aa-capability-policy",
+        "role": "Session key를 target·selector·expiry·budget으로 제한합니다."
+      },
+      {
+        "id": "aa-recovery-governance",
+        "role": "Threshold·delay·veto·rotation recovery를 설계합니다."
+      },
+      {
+        "id": "aa-release-gate",
+        "role": "Authorization·settlement parity 뒤 gas·latency를 비교합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "aa-programmable-validation-boundary", sectionId: "overview", intuition: "출입문이 고정 열쇠 하나만 받던 상태에서 방문자·시간·방을 policy로 검사하는 경비실로 바뀌는 것과 같습니다.", workedExample: "Alice account가 Passkey signer와 30분 Router-only session key를 서로 다른 조건으로 검증합니다.", boundary: "Programmable하다는 이유로 validation·nonce·gas·execution receipt를 생략하거나 자동 보안으로 부르지 않습니다." },
-      { id: "erc4337-useroperation-identity", sectionId: "erc4337", intuition: "같은 주문 문장도 매장·주문 번호·결제 창구가 다르면 다른 주문입니다.", workedExample: "Sender S, nonce 7, chain 1, EntryPoint E와 callData digest를 userOpHash domain에 결속합니다.", boundary: "SDK object나 callData 하나를 canonical identity로 사용하지 않고 EntryPoint version을 고정합니다." },
-      { id: "erc4337-bundler-validation-lifecycle", sectionId: "erc4337", intuition: "예약을 받을 때와 실제 좌석을 배정하기 직전에 조건을 두 번 확인합니다.", workedExample: "첫 simulation 뒤 다른 state change가 validation storage를 바꾸면 bundle 직전 second validation에서 reject합니다.", boundary: "Simulation pass는 inclusion·execution success·finality가 아닙니다." },
-      { id: "erc4337-gas-payer-settlement", sectionId: "erc4337", intuition: "최대 비용을 먼저 보증하고 실제 사용 영수증으로 차액을 정산합니다.", workedExample: "150,000 gas×20 gwei=0.003 ETH reserve를 account 또는 paymaster가 확보합니다.", boundary: "Prefund와 sponsorship은 무료 gas·고정 actual cost·execution success를 뜻하지 않습니다." },
-      { id: "eip7702-delegation-authorization", sectionId: "native-aa", intuition: "주소는 유지하되 검증된 대리 코드에게 지속적으로 행동을 맡기는 위임장입니다.", workedExample: "Chain·delegate·nonce tuple에 서명해 0xef0100||address indicator를 설정합니다.", boundary: "EIP-7702 Final을 withdrawn EIP-7701이나 deployed native AA와 같은 상태로 부르지 않습니다." },
-      { id: "aa-capability-policy", sectionId: "use-cases", intuition: "임시 출입증에 건물 전체가 아니라 방·시간·금액을 적습니다.", workedExample: "30분 동안 Router.swap selector, 누적 100 USDC만 허용하고 upgrade·ETH transfer를 거절합니다.", boundary: "Session signature 유효성만으로 target·selector·budget authorization을 대신하지 않습니다." },
-      { id: "aa-recovery-governance", sectionId: "use-cases", intuition: "비상 열쇠 여러 개뿐 아니라 대기 시간과 취소권까지 함께 정합니다.", workedExample: "3 guardian 중 2명 제안, 48시간 delay, 기존 owner veto 뒤 signer·module·session을 rotation합니다.", boundary: "수학상 조합 수를 guardian 독립성·social engineering 안전성으로 확대하지 않습니다." },
-      { id: "aa-release-gate", sectionId: "use-cases", intuition: "더 싼 wallet보다 실패 상황에서 같은 요청만 허용하고 같은 비용을 정산하는지 먼저 봅니다.", workedExample: "Wrong chain·replay·expired session·budget exhaustion·timeout·guardian conflict·delegate upgrade를 paired replay합니다.", boundary: "Happy-path gas나 p50 latency만으로 authorization·recovery·settlement correctness를 입증하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "aa-programmable-validation-boundary",
+        "sectionId": "names",
+        "intuition": "승인·전달·비용·실행을 서로 다른 역할로 봅니다.",
+        "workedExample": "Alice의 USDC 200→160, Bob의 0→40과 대납자의 ETH 0.01→0.009를 분리합니다.",
+        "boundary": "계정 코드에 임시 열쇠 정책이 자동으로 생기지 않습니다."
+      },
+      {
+        "id": "erc4337-useroperation-identity",
+        "sectionId": "erc4337",
+        "intuition": "서명은 어느 처리 문맥의 어떤 요청인지 정합니다.",
+        "workedExample": "계정·nonce 7·Bob에게 40을 보내는 호출·비용 조건을 체인과 EntryPoint에 연결합니다.",
+        "boundary": "EIP-7702 코드 위임 승인은 별도의 nonce와 서명 문맥입니다."
+      },
+      {
+        "id": "erc4337-bundler-validation-lifecycle",
+        "sectionId": "erc4337",
+        "intuition": "요청 수용과 실제 포함·실행은 다른 사건입니다.",
+        "workedExample": "처음 모의할 때 한도 100이 남아도 다른 요청이 80을 쓰면 40은 실행할 수 없습니다.",
+        "boundary": "ERC-7562 검증 규칙은 송금 권한을 대신 설계하지 않습니다."
+      },
+      {
+        "id": "erc4337-gas-payer-settlement",
+        "sectionId": "prefund",
+        "intuition": "최대 비용을 먼저 확보하고 실제 비용 외에는 돌려줍니다.",
+        "workedExample": "다섯 항을 더한 150,000 gas×20 Gwei=0.003 ETH이며 실제 비용이 0.001이면 예치금은 0.009입니다.",
+        "boundary": "Gas는 실측값이 아닌 가정입니다. 대납자 전용 두 항을 빼면 안 됩니다."
+      },
+      {
+        "id": "eip7702-delegation-authorization",
+        "sectionId": "native-aa",
+        "intuition": "기존 주소가 실행할 프로그램을 지속적으로 연결합니다.",
+        "workedExample": "코드 연결 후 USDC 40개 송금이 실패해도 처리된 위임 표시는 남습니다.",
+        "boundary": "Final인 EIP-7702와 Withdrawn인 EIP-7701, 후속 EIP-8141의 상태를 구분합니다."
+      },
+      {
+        "id": "aa-capability-policy",
+        "sectionId": "source",
+        "intuition": "임시 열쇠는 제한 조건을 모두 지켜야 합니다.",
+        "workedExample": "40을 쓴 상태에서 70을 더 보내면 110>100입니다. USDC 계약·transfer 동작·수신자 Bob·ETH value 0도 검사합니다.",
+        "boundary": "원본 SimpleAccount에는 이 정책이 없으며 별도의 교육용 절차입니다."
+      },
+      {
+        "id": "aa-recovery-governance",
+        "sectionId": "recovery",
+        "intuition": "잃은 키를 교체할 권한과 이전 권한의 정리를 함께 정합니다.",
+        "workedExample": "보호자 3명 중 2명은 AB·AC·BC입니다. 복구 후 임시 열쇠에 남은 60개 권한을 취소할지 확인합니다.",
+        "boundary": "키가 같은 서버에 있으면 서로 독립적인 보호자가 아닐 수 있습니다."
+      },
+      {
+        "id": "aa-release-gate",
+        "sectionId": "limits",
+        "intuition": "응답이 끊겨도 요청 결과와 비용을 조회한 뒤 판단합니다.",
+        "workedExample": "7번 요청의 hash·대납 ID·이벤트·예치금 변화를 맞춰 중복 대납을 막습니다.",
+        "boundary": "성공 사례의 속도만으로 잘못된 체인·만료·업그레이드 권한을 검증하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 boundary", relation: "Account request와 validation owner를 나눕니다.", concepts: ["aa-programmable-validation-boundary"] },
-      { label: "02 identify", relation: "ERC-4337 request identity와 admission을 고정합니다.", concepts: ["erc4337-useroperation-identity", "erc4337-bundler-validation-lifecycle"] },
-      { label: "03 settle", relation: "Gas payer와 actual outcome을 정산합니다.", concepts: ["erc4337-gas-payer-settlement"] },
-      { label: "04 extend", relation: "Delegation·session·recovery policy를 적용합니다.", concepts: ["eip7702-delegation-authorization", "aa-capability-policy", "aa-recovery-governance"] },
-      { label: "05 release", relation: "Failure parity 뒤 성능을 비교합니다.", concepts: ["aa-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "01 boundary",
+        "relation": "Account request와 validation owner를 나눕니다.",
+        "concepts": [
+          "aa-programmable-validation-boundary"
+        ]
+      },
+      {
+        "label": "02 identify",
+        "relation": "ERC-4337 request identity와 admission을 고정합니다.",
+        "concepts": [
+          "erc4337-useroperation-identity",
+          "erc4337-bundler-validation-lifecycle"
+        ]
+      },
+      {
+        "label": "03 settle",
+        "relation": "Gas payer와 actual outcome을 정산합니다.",
+        "concepts": [
+          "erc4337-gas-payer-settlement"
+        ]
+      },
+      {
+        "label": "04 extend",
+        "relation": "Delegation·session·recovery policy를 적용합니다.",
+        "concepts": [
+          "eip7702-delegation-authorization",
+          "aa-capability-policy",
+          "aa-recovery-governance"
+        ]
+      },
+      {
+        "label": "05 release",
+        "relation": "Failure parity 뒤 성능을 비교합니다.",
+        "concepts": [
+          "aa-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "EOA 고정 validation과 smart-account programmable validation에서 authorization·admission·gas·execution owner를 구분하세요.", answerChecklist: ["EOA protocol signer/nonce", "account code policy", "admission separate", "payer separate", "execution effect", "receipt", "not automatic security"], requiredConcepts: ["aa-programmable-validation-boundary"], sectionId: "overview" },
-      { level: "basic", question: "Alice의 approve+swap UserOperation을 sender·nonce·chain·EntryPoint·callData로 식별하세요.", answerChecklist: ["sender", "nonce", "callData", "gas/paymaster fields", "chain ID", "EntryPoint/version", "signature domain"], requiredConcepts: ["erc4337-useroperation-identity"], sectionId: "erc4337" },
-      { level: "basic", question: "UserOperation 생성부터 Bundler·EntryPoint·Account execution과 event까지 순서대로 설명하세요.", answerChecklist: ["signed UserOperation", "first simulation", "mempool", "second validation", "handleOps", "account/paymaster validation", "execution", "settlement/event"], requiredConcepts: ["erc4337-bundler-validation-lifecycle"], sectionId: "erc4337" },
-      { level: "basic", question: "Gverify=50k, Gcall=80k, Gpre=20k, Fmax=20 gwei의 최대 reserve를 계산하세요.", answerChecklist: ["150k gas", "multiply 20 gwei", "3,000,000 gwei", "0.003 ETH", "worst-case reserve", "actual differs", "paymaster fields omitted"], requiredConcepts: ["erc4337-gas-payer-settlement"], sectionId: "erc4337" },
-      { level: "basic", question: "EIP-7702 authorization tuple과 delegation indicator를 적고 EIP-7701의 현재 상태와 구분하세요.", answerChecklist: ["chain ID", "delegate address", "nonce", "signature", "0xef0100 pointer", "persistent", "7702 Final", "7701 Withdrawn"], requiredConcepts: ["eip7702-delegation-authorization"], sectionId: "native-aa" },
-      { level: "basic", question: "30분 Router-only 100 USDC session key policy를 실행 가능한 field로 작성하세요.", answerChecklist: ["signer", "validAfter/Until", "target Router", "swap selector", "100 USDC cumulative budget", "nonce domain", "deny upgrade/ETH", "receipt"], requiredConcepts: ["aa-capability-policy"], sectionId: "use-cases" },
-      { level: "advanced", question: "첫 simulation 뒤 unrelated state change로 validation이 무효가 되는 mass-invalidation 반례를 처리하세요.", answerChecklist: ["mutable dependency", "ERC-7562 scope", "first admission", "second simulation", "reason-coded reject", "entity reputation/stake", "no bundle effect", "retry policy"], requiredConcepts: ["erc4337-bundler-validation-lifecycle"], sectionId: "erc4337" },
-      { level: "advanced", question: "Paymaster submission timeout 뒤 on-chain outcome이 unknown이고 budget이 거의 소진된 경우를 reconcile하세요.", answerChecklist: ["stable sponsorship/userOp ID", "max budget", "receipt/event lookup", "pending/unknown state", "no blind resubmit", "deposit balance", "postOp outcome", "terminal settlement"], requiredConcepts: ["erc4337-gas-payer-settlement"], sectionId: "erc4337" },
-      { level: "advanced", question: "3명 중 2명 recovery의 3가지 조합을 계산하고 compromised guardian와 lost owner 상황을 설계하세요.", answerChecklist: ["3 choose 2=3", "AB/AC/BC", "independent failure domains", "timelock", "owner veto/freeze", "guardian rotation", "session/module revoke", "audit receipt"], requiredConcepts: ["aa-recovery-governance"], sectionId: "use-cases" },
-      { level: "advanced", question: "Wrong chain·replay·mutable state·expired session·paymaster exhaustion·timeout·guardian conflict·delegate upgrade의 paired release gate를 설계하세요.", answerChecklist: ["same chain/EntryPoint/wallet versions", "all eight failures", "authorization outcome", "admission outcome", "execution/event", "settlement", "recovery/delegation state", "gas/p95 after parity", "canary/rollback"], requiredConcepts: ["aa-release-gate"], sectionId: "use-cases" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Alice 송금의 계정·전달자·공통 창구·대납자 역할을 구분하세요.",
+        "answerChecklist": [
+          "Smart account는 규칙과 자산을 관리",
+          "Bundler는 바깥 거래를 제출",
+          "EntryPoint는 공통 처리를 담당",
+          "Paymaster는 비용을 대납",
+          "USDC와 ETH는 별도 장부"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "aa-programmable-validation-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "40개를 보내는 7번 요청의 서명이 묶어야 할 내용을 설명하세요.",
+        "answerChecklist": [
+          "계정 주소",
+          "nonce 7",
+          "Bob에게 40개를 보내는 호출",
+          "비용 조건",
+          "체인 ID",
+          "EntryPoint 주소"
+        ],
+        "sectionId": "erc4337",
+        "requiredConcepts": [
+          "erc4337-useroperation-identity"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "접수부터 송금과 정산까지 7번 요청을 추적하세요.",
+        "answerChecklist": [
+          "모의 검증",
+          "대기 목록",
+          "제출 직전 재검증",
+          "handleOps",
+          "계정·nonce·대납 검증",
+          "USDC 잔액 160과 40",
+          "실제 비용과 성공 결과"
+        ],
+        "sectionId": "erc4337",
+        "requiredConcepts": [
+          "erc4337-bundler-validation-lifecycle"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "대납의 다섯 gas 항 20k·40k·20k·20k·50k와 20 Gwei의 예약액을 계산하세요.",
+        "answerChecklist": [
+          "150,000 gas",
+          "0.003 ETH 예약",
+          "실제 비용은 0.001이라는 가정",
+          "0.002 환급",
+          "최종 예치금 0.009",
+          "다른 토큰으로 받는 사용료와 별도"
+        ],
+        "sectionId": "prefund",
+        "requiredConcepts": [
+          "erc4337-gas-payer-settlement"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "EIP-7702 위임 표시와 송금 실패의 관계를 설명하세요.",
+        "answerChecklist": [
+          "0xef0100 || address",
+          "지속되는 위임",
+          "실행 실패로 위임이 자동 복구되지 않음",
+          "원래 owner의 권한이 남음",
+          "EIP-7701은 Withdrawn이며 EIP-8141이 후속"
+        ],
+        "sectionId": "native-aa",
+        "requiredConcepts": [
+          "eip7702-delegation-authorization"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "임시 열쇠의 40개 전송과 추가 70개 요청을 판정하세요.",
+        "answerChecklist": [
+          "USDC 계약",
+          "transfer 동작",
+          "수신자 Bob",
+          "ETH value 0",
+          "30분 만료",
+          "40+70=110이므로 거절",
+          "원본 SimpleAccount에 자동 제공되는 정책이 아님"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "aa-capability-policy"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "첫 모의 검증 후 다른 요청이 80개를 사용했다면 40개 송금을 어떻게 처리하나요?",
+        "answerChecklist": [
+          "남은 한도 20",
+          "40은 한도를 초과",
+          "제출 전 재검증",
+          "실행 시 누적 상태 확인",
+          "ERC-7562는 검증 단계의 규칙"
+        ],
+        "sectionId": "erc4337",
+        "requiredConcepts": [
+          "erc4337-bundler-validation-lifecycle",
+          "aa-capability-policy"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "제출 응답이 끊기고 대납 예산이 거의 소진됐다면 어떤 정보로 정산하나요?",
+        "answerChecklist": [
+          "새 요청을 성급하게 만들지 않음",
+          "UserOperation hash",
+          "대납 식별자",
+          "이벤트와 결과 조회",
+          "결과를 모르는 상태를 유지",
+          "예치금 변화",
+          "실제 청구액"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "erc4337-gas-payer-settlement",
+          "aa-release-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "보호자 3명 중 2명 복구와 복구 후 남은 60개 권한을 설명하세요.",
+        "answerChecklist": [
+          "AB·AC·BC",
+          "3×2÷2=3",
+          "대기 시간과 취소",
+          "owner 분실과 공격자의 취소 악용을 함께 검토",
+          "키를 같은 곳에 보관하는 위험",
+          "임시 열쇠·모듈·승인 정리",
+          "보호자 교체 권한"
+        ],
+        "sectionId": "recovery",
+        "requiredConcepts": [
+          "aa-recovery-governance"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "계정 업데이트 전에 실패 사례와 호출 권한을 어떻게 비교하나요?",
+        "answerChecklist": [
+          "같은 7번 요청 사용",
+          "잘못된 체인·재사용·만료",
+          "다른 수신자·한도 초과",
+          "대납금 부족·응답 중단",
+          "코드 위임과 업그레이드 권한",
+          "저장소 배치",
+          "성공 속도만으로 판정하지 않음"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "aa-release-gate",
+          "aa-capability-policy"
+        ]
+      }
     ],
-    papers: [
-      { title: "ERC-4337 · Account Abstraction Using Alt Mempool", href: "https://eips.ethereum.org/EIPS/eip-4337", problem: "Consensus 변경 없이 contract account validation·gas abstraction 제공", contribution: "UserOperation·Bundler·EntryPoint·Paymaster contract", assumptions: "Target EntryPoint version·chain·mempool profile 고정", evidenceScope: "ERC-4337 protocol lifecycle", notClaim: "Wallet 보안·고정 gas·inclusion을 보장하지 않음", sectionId: "paper-erc4337-spec" },
-      { title: "ERC-7562 · Validation Scope Rules", href: "https://eips.ethereum.org/EIPS/eip-7562", problem: "Mutable validation이 만드는 mass invalidation과 mempool DoS", contribution: "Opcode·storage·entity·reputation·second validation rules", assumptions: "Declared mempool profile·bundler policy 고정", evidenceScope: "Off-chain admission safety", notClaim: "Execution 전체 sandbox·malicious code 교정을 보장하지 않음", sectionId: "paper-erc7562-validation" },
-      { title: "EIP-7702 · Set Code for EOAs", href: "https://eips.ethereum.org/EIPS/eip-7702", problem: "기존 EOA 주소에 programmable functionality 부여", contribution: "Type-4 authorization과 persistent delegation indicator", assumptions: "Final spec·fork·delegate code 고정", evidenceScope: "Protocol delegation semantics", notClaim: "Delegate contract 안전·완전한 key abstraction을 보장하지 않음", sectionId: "paper-eip7702-delegation" },
-      { title: "EIP-7701 · Native Account Abstraction", href: "https://eips.ethereum.org/EIPS/eip-7701", problem: "Validation/execution/paymaster phase의 protocol-level 설계 탐색", contribution: "Role별 frame·gas proposal", assumptions: "Withdrawn status를 함께 표시", evidenceScope: "Withdrawn proposal의 validation·execution·paymaster frame을 ERC-4337·EIP-7702와 비교하는 설계 범위", notClaim: "Ethereum L1 배포·확정 roadmap·ERC-4337 대체를 뜻하지 않음", sectionId: "paper-eip7701-native-status" },
-    ],
+    "papers": [
+      {
+        "title": "ERC-4337 · Account Abstraction Using Alt Mempool",
+        "href": "https://eips.ethereum.org/EIPS/eip-4337",
+        "problem": "Consensus 변경 없이 contract account validation·gas abstraction 제공",
+        "contribution": "UserOperation·Bundler·EntryPoint·Paymaster contract",
+        "assumptions": "Target EntryPoint version·chain·mempool profile 고정",
+        "evidenceScope": "ERC-4337 protocol lifecycle",
+        "notClaim": "Wallet 보안·고정 gas·inclusion을 보장하지 않음",
+        "sectionId": "paper-erc4337-spec"
+      },
+      {
+        "title": "ERC-7562 · Validation Scope Rules",
+        "href": "https://eips.ethereum.org/EIPS/eip-7562",
+        "problem": "Mutable validation이 만드는 mass invalidation과 mempool DoS",
+        "contribution": "Opcode·storage·entity·reputation·second validation rules",
+        "assumptions": "Declared mempool profile·bundler policy 고정",
+        "evidenceScope": "Off-chain admission safety",
+        "notClaim": "Execution 전체 sandbox·malicious code 교정을 보장하지 않음",
+        "sectionId": "paper-erc7562-validation"
+      },
+      {
+        "title": "EIP-7702 · Set Code for EOAs",
+        "href": "https://eips.ethereum.org/EIPS/eip-7702",
+        "problem": "기존 EOA 주소에 programmable functionality 부여",
+        "contribution": "Type-4 authorization과 persistent delegation indicator",
+        "assumptions": "Final spec·fork·delegate code 고정",
+        "evidenceScope": "Protocol delegation semantics",
+        "notClaim": "Delegate contract 안전·완전한 key abstraction을 보장하지 않음",
+        "sectionId": "paper-eip7702-delegation"
+      },
+      {
+        "title": "EIP-7701 · Native Account Abstraction",
+        "href": "https://eips.ethereum.org/EIPS/eip-7701",
+        "problem": "Validation/execution/paymaster phase의 protocol-level 설계 탐색",
+        "contribution": "Role별 frame·gas proposal",
+        "assumptions": "Withdrawn status를 함께 표시",
+        "evidenceScope": "Withdrawn proposal의 validation·execution·paymaster frame을 ERC-4337·EIP-7702와 비교하는 설계 범위",
+        "notClaim": "Ethereum L1 배포·확정 roadmap·ERC-4337 대체를 뜻하지 않음",
+        "sectionId": "paper-eip7701-native-status"
+      },
+      {
+        "title": "Account abstraction original contracts 1c6b669",
+        "href": "https://github.com/eth-infinitism/account-abstraction/tree/1c6b669d0eea734e09a87e095ba15e076151718a/contracts",
+        "problem": "요청 검증·실행·대납 비용 정산을 연결합니다.",
+        "contribution": "EntryPoint·BaseAccount·NonceManager의 원본 구현입니다.",
+        "assumptions": "고정한 커밋을 읽으며 임시 열쇠 정책은 별도입니다.",
+        "evidenceScope": "40개를 보내는 7번 요청과 0.003 ETH 예약을 원문 코드에 대응합니다.",
+        "notClaim": "임시 열쇠 계약을 배포하거나 실제 송금을 검증한 결과는 아닙니다.",
+        "sectionId": "source"
+      }
+    ]
   },
   "blockchain/erasure-coding": {
     entryLevel: true,
@@ -75301,7 +76732,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/fast-weight-memory-and-chunkwise-recurrence": {
     "coreIdea": "두 쌍을 기억하겠습니다. key k₁=(1,0)의 값은 (2,0), k₂=(0.6,0.8)의 값은 (0,3)입니다. 네 숫자짜리 행렬에 둘을 넣으면 첫 key를 읽을 때 원래 없던 1.8이 함께 나옵니다. 이 글은 그 간섭을 확인하고 같은 key의 값을 (5,0)으로 고칩니다. 수정 규칙을 이해한 뒤, 토큰을 하나씩 처리하는 계산을 여러 개씩 병렬로 바꾸는 방법과 2026년 Gated DeltaNet-2의 독립 erase/write를 연결합니다.",
-    "entryNote": "본문의 작은 숫자는 원리를 검산하기 위한 가정입니다. 공식 논문과 코드의 버전을 고정하고, 저자 실험과 이 글의 산술 검산을 구분합니다.",
+    "entryNote": "두 주소가 겹치면 첫 주소의 읽기에 1.8이 섞이는 가정 사례를 계산합니다. 같은 기억을 고친 뒤 다른 주소가 (3,1.92)로 바뀌는 경로와 고정 원문의 TRANSPOSE_STATE 배치를 직접 대조합니다.",
     "assumedKnowledge": [
       {
         "id": "linear-attention-kernel-feature-map",
@@ -75406,7 +76837,7 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "chunkwise-parallel-form",
         "sectionId": "mechanism",
         "intuition": "한 묶음 안의 correction을 삼각 계산으로 만들고 묶음 사이에 상태를 넘깁니다.",
-        "workedExample": "4096개 token을 64개씩 묶으면 chunk 간 상태 전달은 64회입니다. 식은 (I+L)U=diag(β)V입니다.",
+        "workedExample": "4096개 token을 64개씩 묶으면 64개 chunk와 63개 내부 경계가 있습니다. 식은 (I+L)U=diag(β)V입니다 (가정).",
         "boundary": "chunk 내부 연산과 동기화도 남습니다. 전달 횟수가 줄었다고 실행시간이 같은 배율로 줄지는 않습니다."
       },
       {
@@ -75528,14 +76959,14 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "4096개 token을 64개씩 묶으면 chunk 사이 상태 전달은 몇 번인가요?",
+        "question": "4096개 token을 64개씩 묶을 때 chunk 수와 chunk 사이 내부 경계 수는 각각 얼마인가요?",
         "answerChecklist": [
-          "묶음 수는 4096/64=64개입니다.",
-          "chunk 내부 계산과 동기화가 남으므로 이것만으로 64배 가속을 주장할 수 없습니다."
+          "4096/64=64개 chunk",
+          "chunk 끝 상태 64개, 다음 chunk로 넘기는 내부 경계 63개",
+          "내부 연산·동기화가 남아 64배 가속을 보장하지 않음"
         ],
         "requiredConcepts": [
-          "delta-rule-error-correction",
-          "memory-gate-decay"
+          "chunkwise-parallel-form"
         ],
         "sectionId": "mechanism"
       },
@@ -75547,8 +76978,8 @@ export const ARTICLE_LEARNING: Readonly<
           "양의 lower 항을 L로 정의하면 (I+L)U=diag(β)V이며 L의 정의와 부호를 함께 고정해야 합니다."
         ],
         "requiredConcepts": [
-          "delta-rule-error-correction",
-          "memory-gate-decay"
+          "recurrent-parallel-duality",
+          "chunkwise-parallel-form"
         ],
         "sectionId": "mechanism"
       },
@@ -75572,7 +77003,7 @@ export const ARTICLE_LEARNING: Readonly<
           "기존 읽기와 합쳐 (7,1.8)이 되며 옛 값과 간섭이 남습니다."
         ],
         "requiredConcepts": [
-          "associative-memory-outer-product"
+          "independent-memory-erase-write"
         ],
         "sectionId": "source"
       },
@@ -78050,7 +79481,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/reward-design-for-verifiable-rl": {
     "coreIdea": "정답 여부를 별도로 확인한 답 100개가 있습니다. 실제 정답 40개 중 채점기는 38개를 통과시켰고 오답 60개 중에서도 12개를 통과시켰습니다. 점수 1인 답은 50개이지만 모두 정답은 아닙니다. 이 글은 이 채점 결과가 학습 신호로 바뀌는 길을 추적합니다. 최종 답과 중간 과정을 어디서 확인하는지, 보상을 자주 주는 선택이 왜 도움이 되거나 실패하는지, 2026년 과정 검증 논문이 어떤 범위에서 성립하는지 살펴봅니다.",
-    "entryNote": "본문의 작은 숫자는 원리를 검산하기 위한 가정입니다. 공식 논문과 코드의 버전을 고정하고, 저자 실험과 이 글의 산술 검산을 구분합니다.",
+    "entryNote": "정답 40·오답 60개 중 38+12가 통과하는 가정 표에서 시작합니다. 50% 통과와 40% 정답을 나눈 뒤 같은 오답이 학습 신호와 실제 형식 검사를 통과하는 이유를 추적합니다.",
     "assumedKnowledge": [
       {
         "id": "rl-mdp-and-return",
@@ -78145,7 +79576,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "id": "reward-calibration",
         "sectionId": "names",
-        "intuition": "합산할 reward의 척도를 맞추고 점수가 실제 성공을 반영하는지도 별도로 검사합니다.",
+        "intuition": "점수와 관측 성공률의 관계를 독립 표본에서 확인합니다. 여러 보상 척도를 맞추는 조정은 별도로 수행합니다.",
         "workedExample": "형식 10점·정답 1점이면 형식만 맞는 오답이 형식을 어긴 정답보다 높은 점수를 받습니다. 통과 답의 정답 비율 38/50=76%도 별도로 검수합니다.",
         "boundary": "척도 조정만으로 verifier 오류가 사라지지 않습니다. 100개 표본의 관측 비율도 모든 분포의 고정 상수로 쓰지 않습니다."
       }
@@ -78228,9 +79659,10 @@ export const ARTICLE_LEARNING: Readonly<
           "형식 검사는 내용의 올바름을 확인하지 않으므로 검사 대상과 규칙을 따로 명시해야 합니다."
         ],
         "requiredConcepts": [
-          "reward-calibration"
+          "sparse-vs-dense-reward",
+          "outcome-vs-process-reward"
         ],
-        "sectionId": "names"
+        "sectionId": "source"
       },
       {
         "level": "basic",
@@ -100559,7 +101991,7 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "embedded/mcu-memory-map-and-registers": {
-    "coreIdea": "RP2040 SIO 기준 주소 0xD0000000에 오프셋을 더한 OUT_SET 0xD0000014 등과 GPIO5 마스크 0x20을 구분하고, 기능 선택·출력 허용·래치·물리 핀을 한 순서로 추적합니다.",
+    "coreIdea": "5번 출력만 높이는 값 0x20과 동작을 정하는 주소를 구분합니다. 실제 Pico SDK 초기화에서 출력 금지·낮은 값 준비·기능 선택을 따라간 뒤 같은 핀 번호가 0xD0000024와 0xD0000014의 쓰기로 이어지는 과정을 확인합니다.",
     "assumedKnowledge": [
       {
         "id": "conditional-package-survival",
@@ -100595,7 +102027,7 @@ export const ARTICLE_LEARNING: Readonly<
     "conceptExplanations": [
       {
         "id": "mcu-memory-mapped-io",
-        "sectionId": "overview",
+        "sectionId": "names",
         "intuition": "CPU는 버스를 따라 주소를 보내고 해당 장치가 반응합니다.",
         "workedExample": "GPIO5 출력 SET 주소에 0x20을 쓰면 핀 5 출력 래치가 1이 됩니다.",
         "boundary": "다른 MCU의 주소를 그대로 쓸 수 없습니다."
@@ -100610,7 +102042,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "id": "gpio-bit-mask-five",
         "sectionId": "mask",
-        "intuition": "여러 핀 중 다섯 번째 비트 하나만 표시합니다.",
+        "intuition": "0부터 세는 번호 5에 해당하는 비트 하나만 표시합니다.",
         "workedExample": "OUT_SET·OUT_CLR·OE_SET 각 주소에 0x20을 씁니다.",
         "boundary": "0x20은 주소가 아니라 쓰는 값입니다."
       },
@@ -100619,20 +102051,20 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "mux",
         "intuition": "선을 하드웨어에 연결하는 스위치와 출력 문이 모두 열려야 합니다.",
         "workedExample": "래치를 낮게 준비하고 SIO를 선택한 뒤 OE_SET에 0x20을 써 출력 허용을 켭니다.",
-        "boundary": "전체 CTRL 레지스터를 임의 값으로 덮기보다 SDK 설정 함수를 사용합니다."
+        "boundary": "SDK 기능 선택 함수도 CTRL의 override 필드를 0으로 씁니다. 기존 제어 비트 전체를 보존한다고 가정하지 않습니다."
       },
       {
         "id": "gpio-atomic-set-clear",
-        "sectionId": "mask",
+        "sectionId": "race",
         "intuition": "나머지 비트에는 0을 써 그대로 둡니다.",
-        "workedExample": "0x20을 OUT_SET에 쓰면 GPIO5만 1, OUT_CLR에 쓰면 GPIO5만 0입니다.",
+        "workedExample": "초기 0x01을 두 코어가 읽고 0x21·0x41로 덮으면 변경 하나가 사라질 수 있습니다. SET에 0x20·0x40을 각각 쓰면 0x61이 됩니다.",
         "boundary": "여러 코어가 동일 핀의 소유권을 다투면 상위 동기화가 여전히 필요합니다."
       },
       {
         "id": "gpio-latch-versus-pin-read",
         "sectionId": "readback",
         "intuition": "원하는 값과 실제 관찰한 값을 따로 확인합니다.",
-        "workedExample": "GPIO_OUT=1인데 OE가 0이면 핀은 출력으로 구동되지 않습니다.",
+        "workedExample": "GPIO_OUT의 비트 5가 1이어도 GPIO_OE의 비트 5가 0이면 SIO가 핀 5를 직접 구동하지 않습니다.",
         "boundary": "보드의 전압·전류·연결 상태는 별도 측정이 필요합니다."
       }
     ],
@@ -100748,16 +102180,19 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "gpio-atomic-set-clear"
         ],
-        "sectionId": "readback"
+        "sectionId": "race"
       },
       {
         "level": "advanced",
         "question": "시작 시 불필요한 높은 펄스를 피하려면 GPIO5를 어떤 순서로 준비합니까?",
         "answerChecklist": [
+          "리셋 뒤 다른 기능이 핀을 구동하지 않는 시작 조건",
+          "출력 허용부터 끄기",
           "낮은 래치 미리 설정",
           "SIO 기능 선택",
           "출력 허용",
-          "필요할 때 SET"
+          "필요할 때 SET",
+          "gpio_set_function은 기존 CTRL override를 모두 보존하지 않음"
         ],
         "requiredConcepts": [
           "gpio-function-and-direction",
@@ -100798,7 +102233,7 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "Raspberry Pi, RP2040 Datasheet, address map and SIO registers",
         "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
         "problem": "CPU 주소 공간에서 GPIO 출력·방향·기능을 제어합니다.",
-        "contribution": "원본 26·43·46·245쪽의 SIO·IO_BANK0 주소, 출력 설정·해제·방향 및 GPIO5 기능 선택 위치입니다.",
+        "contribution": "build 3184e62-clean의 §2.2 주소 맵, §2.3.1 SIO 및 §2.19 IO_BANK0 표에서 주소와 동작을 대조합니다.",
         "assumptions": "RP2040 칩과 그 GPIO0–29 비트 대응에 한정됩니다.",
         "evidenceScope": "라즈베리 파이 공식 데이터시트의 해당 표를 확인했습니다. 외부 LED 연결은 가정입니다.",
         "notClaim": "다른 MCU에서 같은 주소를 쓰거나 래치 1이 LED 점등을 보장한다는 뜻은 아닙니다.",
@@ -100813,8 +102248,19 @@ export const ARTICLE_LEARNING: Readonly<
         "evidenceScope": "라즈베리 파이 공식 SDK 문서의 하드웨어 GPIO API를 확인했습니다.",
         "notClaim": "본문의 개별 주소 쓰기 예가 모든 핀·보드 초기화를 대신한다는 뜻은 아닙니다.",
         "sectionId": "mux"
+      },
+      {
+        "title": "Pico SDK 2.2.0 · 고정 commit a1438dff",
+        "href": "https://github.com/raspberrypi/pico-sdk/blob/a1438dff1d38bd9c65dbd693f0e5db4b9ae91779/src/rp2_common/hardware_gpio/gpio.c",
+        "problem": "핀 번호 5가 초기화와 출력 쓰기에서 어떤 실제 분기를 통과하는지 확인합니다.",
+        "contribution": "gpio_init의 입력 방향→래치 낮음→SIO 선택과 gpio.h의 mask 계산·OE_SET·OUT_SET 쓰기를 연결합니다.",
+        "assumptions": "RP2040 빌드 분기와 리셋 뒤의 시작 조건을 사용합니다.",
+        "evidenceScope": "gpio.c와 gpio.h 전체 원문 및 LICENSE.TXT를 보존하고 줄 번호와 SHA256을 기록했습니다.",
+        "notClaim": "실제 보드에서 실행하거나 외부 전압을 측정한 결과가 아닙니다.",
+        "sectionId": "source-init"
       }
-    ]
+    ],
+    "entryNote": "칩의 GPIO5와 보드의 물리적인 다섯 번째 핀을 구분합니다. 리셋 뒤 다른 기능이 해당 핀을 구동하지 않는 가정에서 시작하며 실제 주소·비트는 RP2040 문서와 고정 SDK 원문으로 확인합니다."
   },
   "embedded/interrupts-and-latency-budget": {
     "coreIdea": "가상 GPIO2 상승 에지 뒤 검출 5·대기 40·NVIC 진입 8·ISR 20·작업 깨우기 40·I²C 300·계산 80 µs를 합해 493 µs, 1 ms 마감 여유 507 µs를 계산하고 대기 600 µs에서 53 µs 초과를 확인합니다.",
@@ -100855,7 +102301,7 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "gpio-edge-event-latch",
         "sectionId": "route",
         "intuition": "스위치가 눌린 사실을 먼저 장치가 기억합니다.",
-        "workedExample": "GPIO2 상승 에지가 왔을 때 에지 종류를 확인하고 해당 상태를 소거합니다.",
+        "workedExample": "GPIO2 상승 에지는 네 비트 묶음의 3번 자리이므로 INTR[0] 비트 11, 마스크 0x800입니다. 기본 SDK 처리기는 이 비트를 먼저 지우고 사용자 콜백을 부릅니다.",
         "boundary": "상태 비트는 여러 에지의 정확한 횟수 카운터가 아닙니다."
       },
       {
@@ -100870,7 +102316,7 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "handler",
         "intuition": "급한 알림만 접수하고 오래 걸리는 처리는 일감으로 넘깁니다.",
         "workedExample": "예제는 ISR 20 µs, 작업 깨우기 40 µs, I²C 읽기 300 µs입니다.",
-        "boundary": "ISR에서 블로킹 통신을 하면 다른 인터럽트의 대기 시간을 늘릴 수 있습니다."
+        "boundary": "기본 콜백에서 에지를 다시 소거하면 그 사이의 새 기록을 잃을 수 있습니다. 원시 처리기는 자신의 소거 책임을 가집니다."
       },
       {
         "id": "interrupt-path-budget",
@@ -100888,10 +102334,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "id": "interrupt-measurement-boundary",
-        "sectionId": "stress",
+        "sectionId": "limits",
         "intuition": "멈춘 구간의 앞뒤 시각을 재서 어디서 늦는지 찾습니다.",
         "workedExample": "가상 493 µs를 RP2040 보장 지연으로 제시하지 않습니다.",
-        "boundary": "센서 실제 거래 시간과 버스 충돌을 측정하지 않으면 보장을 할 수 없습니다."
+        "boundary": "유한한 시험의 측정 최댓값은 모든 부하에서의 상한을 자동으로 보증하지 않습니다."
       }
     ],
     "conceptStages": [
@@ -100931,7 +102377,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "gpio-edge-event-latch"
         ],
-        "sectionId": "overview"
+        "sectionId": "names"
       },
       {
         "level": "basic",
@@ -101025,15 +102471,15 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "pending 비트가 1일 때 그동안 GPIO2 에지가 몇 번 왔는지 알 수 있습니까?",
         "answerChecklist": [
-          "알 수 없음",
-          "비트는 카운터 아님",
-          "별도 카운터·타임스탬프 필요"
+          "횟수를 알 수 없음: 비트는 카운터가 아님",
+          "ISR 카운터로도 이미 합쳐진 에지를 복원할 수 없음",
+          "모든 사건이 필요하면 센서 순번·FIFO 또는 하드웨어 계수·캡처 검토"
         ],
         "requiredConcepts": [
           "gpio-edge-event-latch",
           "interrupt-measurement-boundary"
         ],
-        "sectionId": "route"
+        "sectionId": "limits"
       },
       {
         "level": "advanced",
@@ -101041,7 +102487,8 @@ export const ARTICLE_LEARNING: Readonly<
         "answerChecklist": [
           "사건·ISR 진입/종료·작업 시작/끝",
           "다른 인터럽트·마스킹",
-          "I²C 실제 거래 시간"
+          "I²C 실제 거래 시간",
+          "측정 최댓값은 시험한 조건의 결과이며 보장 상한에는 별도 실행 조건 분석 필요"
         ],
         "requiredConcepts": [
           "interrupt-measurement-boundary"
@@ -101054,7 +102501,7 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "Raspberry Pi, RP2040 Datasheet, GPIO and interrupt chapters",
         "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
         "problem": "GPIO 에지를 각 코어의 인터럽트 경로에 전달합니다.",
-        "contribution": "원본 60·79–80·239·243–244쪽의 IO_IRQ_BANK0, 코어별 허용, 에지 래치·소거와 SDK 콜백 예입니다.",
+        "contribution": "build 3184e62-clean §2.3.2·§2.19.3·§2.19.5의 IO_IRQ_BANK0, 코어별 허용, 에지 래치·소거를 대조합니다.",
         "assumptions": "RP2040 GPIO 구조이고 GPIO2 센서 연결은 가정입니다.",
         "evidenceScope": "라즈베리 파이 공식 데이터시트 해당 표와 설명을 확인했습니다. 본문 시간은 실측이 아닙니다.",
         "notClaim": "5·8·20 µs 등의 값이 RP2040의 규격 또는 보장값이라는 뜻은 아닙니다.",
@@ -101064,13 +102511,24 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "Arm, Cortex-M0+ Devices Generic User Guide",
         "href": "https://documentation-service.arm.com/static/5f04aadfdbdee951c1cdc957",
         "problem": "인터럽트 요청의 pending·허용·우선순위와 처리 함수 진입을 설명합니다.",
-        "contribution": "원본 87–90쪽의 NVIC pending, priority, 주변 장치 요청 유지 시 재진입 조건입니다.",
+        "contribution": "DUI 0662A §4.2.6·§4.2.7, 인쇄 4-6·4-7쪽에서 주변 장치 요청 유지와 비활성 상태에서도 가능한 pending을 구분합니다.",
         "assumptions": "Arm Cortex-M0+ 공통 동작이며 칩별 배선·지연은 별도입니다.",
         "evidenceScope": "Arm 공식 사용자 안내서의 해당 쪽을 확인했습니다.",
         "notClaim": "본문 가상 마감이나 ISR 실행 시간을 Arm이 보증한다는 뜻은 아닙니다.",
-        "sectionId": "handler"
+        "sectionId": "limits"
+      },
+      {
+        "title": "Pico SDK 2.2.0 · GPIO 사건 등록과 기본 처리기",
+        "href": "https://github.com/raspberrypi/pico-sdk/blob/a1438dff1d38bd9c65dbd693f0e5db4b9ae91779/src/rp2_common/hardware_gpio/gpio.c#L153-L203",
+        "problem": "사건 비트를 언제 지우며 사용자의 콜백은 어떤 상태를 받는지 확인합니다.",
+        "contribution": "콜백 등록→사건 허용→IRQ 허용과 기본 처리기의 상태 읽기→소거→콜백 호출을 GPIO2·event 8에 적용합니다.",
+        "assumptions": "기본 콜백 경로이며 원시 처리기는 직접 소거 책임을 가집니다.",
+        "evidenceScope": "고정 commit의 gpio.c 153–203행과 gpio.h 573–576행을 실제 원문 전체에서 대조합니다.",
+        "notClaim": "콜백 등록 성공이 본문의 가상 1 ms 마감을 보장하지 않습니다.",
+        "sectionId": "source-dispatch"
       }
-    ]
+    ],
+    "entryNote": "GPIO2의 한 상승 에지를 가정하고 5·40·8·20·40·300·80 µs의 겹치지 않는 구간을 따라갑니다. 시간 상한은 설명용 가정이고 사건 비트와 SDK 호출 순서는 원문에서 확인합니다."
   },
   "embedded/timers-and-sampling": {
     "coreIdea": "RP2040 1 µs 타이머에서 10000칸마다 GPIO26/ADC0를 읽는 가상 주기를 잡아 100 Hz 샘플·50 Hz 절반 경계를 구하고, 70 Hz 코사인이 30 Hz와 같은 이산 값을 남기는 원인 및 알람·변환 시각의 차이를 설명합니다.",
@@ -113671,7 +115129,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/world-model-latent-planning": {
     "coreIdea": "물체가 위치 0에 있고 목표는 2라고 합시다. 왼쪽 −1 또는 오른쪽 +1의 두 번 이동을 미리 비교하면 [+1,+1]이 목표에 닿습니다. 그러나 실제로는 한 번에 0.8만 움직였다면 계획을 새 관측에서 다시 계산해야 합니다. 월드모델은 행동에 따른 다음 상태를 예측하는 도구입니다. 예측을 만드는 모델, 후보를 고르는 계획기, 실제 행동을 실행하는 환경을 나누어 보면 이미지 생성과 로봇 행동 사이에 필요한 조건이 드러납니다. 이 숫자는 물리 단위를 생략한 설명용 1차원 가정입니다.",
-    "entryNote": "본문의 작은 숫자는 원리를 검산하기 위한 가정입니다. 공식 논문과 코드의 버전을 고정하고, 저자 실험과 이 글의 산술 검산을 구분합니다.",
+    "entryNote": "위치 0에서 목표 2로 가는 네 후보를 계산하고 첫 실행의 실제 관측 0.8에서 다시 계획합니다. 같은 숫자를 고정 LeWM의 rollout·cost와 CEM 후보 갱신 역할에 대입합니다.",
     "assumedKnowledge": [
       {
         "id": "image-to-world-transition-boundary",
@@ -113717,7 +115175,7 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "mechanism",
         "intuition": "여러 행동 후보를 예측해 고르고 일부를 실행한 뒤 새 관측에서 다시 계획합니다.",
         "workedExample": "목표 2에 대해 네 후보 비용은 16·4·4·0입니다. 첫 +1 뒤 실제 관측이 0.8이면 그 지점에서 다시 후보를 계산합니다.",
-        "boundary": "이 글의 H=2·K=1은 가정입니다. LeWM 부록 F.1의 H=5 전체 실행 설정과 동일하다고 주장하지 않습니다."
+        "boundary": "가정 H=2·K=1과 원문 부록 D의 H=5개 block 전체 실행은 다릅니다. 원문은 block당 환경 행동 5개로 총 25환경 timestep입니다."
       },
       {
         "id": "latent-collapse-prevention",
@@ -113799,7 +115257,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "world-model-receding-horizon-planning"
         ],
-        "sectionId": "mechanism"
+        "sectionId": "picture"
       },
       {
         "level": "basic",
@@ -113835,19 +115293,21 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "action-conditioned-latent-dynamics"
         ],
-        "sectionId": "source"
+        "sectionId": "mechanism"
       },
       {
         "level": "advanced",
-        "question": "이 글의 H=2·K=1과 LeWM 부록 F.1의 H=5 전체 실행 설정은 어떻게 다른가요?",
+        "question": "가정 H=2·K=1과 LeWM 부록 D의 H=5개 block 전체 실행 설정은 어떻게 다른가요?",
         "answerChecklist": [
-          "여기서는 두 행동을 예측하고 첫 행동 하나 뒤 새 관측으로 다시 계획합니다.",
-          "부록의 해당 설정은 다섯 행동을 실행한 뒤 재계획하므로 관측과 보정 간격이 다릅니다."
+          "이번 가정은 두 행동 예측 뒤 하나 실행 후 재관측",
+          "원문 부록 D는 5개 block 전체 실행",
+          "block당 환경 행동 5개여서 총 25환경 timestep",
+          "같은 숫자 H여도 단위와 실행 간격을 함께 확인"
         ],
         "requiredConcepts": [
           "world-model-receding-horizon-planning"
         ],
-        "sectionId": "mechanism"
+        "sectionId": "paper-lewm"
       },
       {
         "level": "advanced",
@@ -113871,7 +115331,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "world-model-planning-evaluation"
         ],
-        "sectionId": "limits"
+        "sectionId": "picture"
       },
       {
         "level": "advanced",
@@ -113904,7 +115364,7 @@ export const ARTICLE_LEARNING: Readonly<
         "contribution": "prediction loss와 Gaussian 분포 regularizer의 결합",
         "assumptions": "offline 데이터가 담은 상태·행동과 표현 차원·정규화 조건",
         "evidenceScope": "Two-Room·Reacher·Push-T·OGBench-Cube, 단일 L40S의 저자 실험",
-        "notClaim": "본문은 일부 행동 후 재계획을 일반적으로 설명하지만 부록 F.1의 설정은 H=5 전체를 실행한다. 이 글의 H=2·K=1 가정과 다르다.",
+        "notClaim": "본문 §3.2는 일부 K행동 뒤 재관측을 설명하지만 부록 D의 Planning solver는 H=5개 block 전체를 실행합니다. 각 block은 환경 행동 5개여서 25환경 timestep입니다. 이번 H=2·K=1 가정과 다릅니다.",
         "sectionId": "paper-lewm"
       },
       {

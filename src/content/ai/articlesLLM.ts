@@ -518,46 +518,46 @@ export const llmArticles: Article[] = [
     title: "Fast weight memory 는 delta rule 로 쓰고 chunkwise scan 으로 병렬화합니다",
     subcategory: "ai-llm-theory",
     sections: [
-      {
-            "id": "overview",
-            "title": "1 · 작은 행렬 하나에 기억을 쓰면 서로 섞일 수 있다"
-      },
-      {
-            "id": "black-box",
-            "title": "2 · 현재 기억과 새 key·값을 받아 기억을 고친다"
-      },
-      {
-            "id": "case",
-            "title": "3 · 첫 key를 읽으면 (2, 1.8)이 나온다"
-      },
-      {
-            "id": "picture",
-            "title": "4 · 읽기·차이·쓰기의 순서로 기억을 고친다"
-      },
-      {
-            "id": "need",
-            "title": "5 · 새 값을 그냥 더하면 옛 값이 남는다"
-      },
-      {
-            "id": "names",
-            "title": "6 · Fast weight는 매 문맥에서 바뀌는 기억 행렬이다"
-      },
-      {
-            "id": "mechanism",
-            "title": "7 · 의존성을 작은 삼각 연립방정식으로 묶는다"
-      },
-      {
-            "id": "source",
-            "title": "8 · 공식 kernel은 decay·지우기·쓰기를 나눠 실행한다"
-      },
-      {
-            "id": "comparison",
-            "title": "9 · GDN2는 지울 성분과 쓸 성분을 다른 축에서 조절한다"
-      },
-      {
-            "id": "limits",
-            "title": "10 · 같은 key의 수정과 전체 기억 보존은 다른 조건이다"
-      }
+  {
+    "id": "overview",
+    "title": "1 · 작은 행렬 하나에 기억을 쓰면 서로 섞일 수 있다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 현재 기억과 새 주소·값을 받아 기억을 고친다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 첫 주소를 읽으면 (2, 1.8)이 나온다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 현재 읽기와 목표의 차이만 다시 쓴다"
+  },
+  {
+    "id": "need",
+    "title": "5 · 새 값을 그냥 더하면 옛 값이 남는다"
+  },
+  {
+    "id": "names",
+    "title": "6 · Fast weight는 매 문맥에서 바뀌는 기억 행렬이다"
+  },
+  {
+    "id": "mechanism",
+    "title": "7 · 의존성을 작은 삼각 연립방정식으로 묶는다"
+  },
+  {
+    "id": "source",
+    "title": "8 · 공식 kernel에서 기존 읽기를 빼고 새 목표를 쓴다"
+  },
+  {
+    "id": "comparison",
+    "title": "9 · GDN2는 지울 성분과 쓸 성분을 다른 축에서 조절한다"
+  },
+  {
+    "id": "limits",
+    "title": "10 · 같은 key의 수정과 전체 기억 보존은 다른 조건이다"
+  }
 ],
     component: () => import("@/pages/articles/ai/fast-weight-memory-and-chunkwise-recurrence"),
   },
@@ -834,46 +834,46 @@ export const llmArticles: Article[] = [
     title: "Reward는 검증 가능성과 밀도로 설계되며 잘못 설계하면 hacking을 부릅니다",
     subcategory: "ai-llm-theory",
     sections: [
-      {
-            "id": "overview",
-            "title": "1 · 채점기가 통과시킨 답과 실제 정답을 나눠 센다"
-      },
-      {
-            "id": "black-box",
-            "title": "2 · 문제·응답·환경 증거를 받아 점수를 만든다"
-      },
-      {
-            "id": "case",
-            "title": "3 · 통과 50개 중 정답은 38개다"
-      },
-      {
-            "id": "picture",
-            "title": "4 · 보상 오류도 최적화 경로를 따라 확대될 수 있다"
-      },
-      {
-            "id": "need",
-            "title": "5 · 마지막 0점만으로 어느 행동이 틀렸는지 알기 어렵다"
-      },
-      {
-            "id": "names",
-            "title": "6 · 언제 점수를 주는지와 무엇을 채점하는지는 다른 축이다"
-      },
-      {
-            "id": "mechanism",
-            "title": "7 · 그룹의 점수가 모두 같으면 상대 신호가 사라진다"
-      },
-      {
-            "id": "source",
-            "title": "8 · 공식 코드도 정답 검사와 형식 검사를 따로 둔다"
-      },
-      {
-            "id": "comparison",
-            "title": "9 · 과정 oracle과 learned judge는 다른 증거를 준다"
-      },
-      {
-            "id": "limits",
-            "title": "10 · 좋은 점수가 실제 성공을 뜻하는지 계속 검증한다"
-      }
+  {
+    "id": "overview",
+    "title": "1 · 채점기가 통과시킨 답과 실제 정답을 나눠 센다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 문제·응답·환경 증거를 받아 점수를 만든다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 통과 50개 중 정답은 38개다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 보상 오류도 최적화 경로를 따라 확대될 수 있다"
+  },
+  {
+    "id": "need",
+    "title": "5 · 마지막 0점만으로 어느 행동이 틀렸는지 알기 어렵다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 언제 점수를 주는지와 무엇을 채점하는지는 다른 축이다"
+  },
+  {
+    "id": "mechanism",
+    "title": "7 · 그룹의 점수가 모두 같으면 상대 신호가 사라진다"
+  },
+  {
+    "id": "source",
+    "title": "8 · 공식 코드도 정답 검사와 형식 검사를 따로 둔다"
+  },
+  {
+    "id": "comparison",
+    "title": "9 · 과정 oracle과 learned judge는 다른 증거를 준다"
+  },
+  {
+    "id": "limits",
+    "title": "10 · 좋은 점수가 실제 성공을 뜻하는지 계속 검증한다"
+  }
 ],
     component: () => import("@/pages/articles/ai/reward-design-for-verifiable-rl"),
   },

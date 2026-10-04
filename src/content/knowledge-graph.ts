@@ -4748,13 +4748,12 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/agent-verification#trajectory-effect",
   },
   "harness-failure-layer-ablation": {
-    id: "harness-failure-layer-ablation",
-    kind: "method",
-    domain: "computer-science",
-    label: "Harness failure-layer ablation",
-    definition:
-      "재현 trace를 objective·context·tool schema·capability·verifier·recovery 실패로 분류하고 후보 장치를 하나씩 바꾸거나 제거해 실제 기여와 회귀를 측정하는 개선 방법입니다.",
-    canonicalHref: "/cs/ai/harness-failure-ablation#failure-layer",
+    "id": "harness-failure-layer-ablation",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Harness failure-layer ablation",
+    "definition": "재현 trace를 objective·context·tool schema·capability·verifier·recovery 실패로 분류하고 후보 장치를 하나씩 바꾸거나 제거해 실제 기여와 회귀를 측정하는 개선 방법입니다.",
+    "canonicalHref": "/cs/ai/harness-failure-ablation#ablation"
   },
   "workflow-agent-checkpoint-boundary": {
     id: "workflow-agent-checkpoint-boundary",
@@ -7781,13 +7780,12 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/competition-workflow#overview",
   },
   "model-selection-maximum-optimism": {
-    id: "model-selection-maximum-optimism",
-    kind: "theorem",
-    domain: "statistics",
-    label: "Maximum-selection optimism",
-    definition:
-      "여러 noisy validation estimate의 최댓값으로 후보를 고르면 maximum의 convexity 때문에 선택된 관측 성능의 기대값이 후보 true mean의 최댓값보다 작지 않아 낙관적 선택이 생길 수 있다는 결과입니다.",
-    canonicalHref: "/cs/ai/model-selection-bias#maximum",
+    "id": "model-selection-maximum-optimism",
+    "kind": "theorem",
+    "domain": "statistics",
+    "label": "Maximum-selection optimism",
+    "definition": "고정한 유한 후보의 관측 점수 X_j에서 최고값을 선택할 때 E[max X_j]가 max E[X_j]보다 작지 않은 성질입니다. μ_j=E[X_j]로 두면 평균0 잡음을 포함한 최고값 보고가 낙관적일 수 있습니다. 후보 사이 독립성은 부등식에 필요 없으며 매 시행의 과대평가나 일정한 편향 크기를 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/model-selection-bias#maximum"
   },
   "prediction-time-feature-availability": {
     id: "prediction-time-feature-availability",
@@ -7798,38 +7796,34 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/prediction-time-feature-availability#overview",
   },
   "competition-oof-coverage": {
-    id: "competition-oof-coverage",
-    kind: "metric",
-    domain: "statistics",
-    label: "Out-of-fold row coverage",
-    definition:
-      "표준 partition형 K-fold에서 각 train row가 자신을 학습에 사용하지 않은 fold model의 validation prediction을 정확히 한 번 받았는지 세는 무결성 검사입니다.",
-    canonicalHref: "/cs/ai/competition-baseline#coverage",
+    "id": "competition-oof-coverage",
+    "kind": "metric",
+    "domain": "statistics",
+    "label": "Out-of-fold row coverage",
+    "definition": "표준 partition형 K-fold에서 각 train row가 자신을 학습에 사용하지 않은 fold model의 validation prediction을 정확히 한 번 받았는지 세는 무결성 검사입니다.",
+    "canonicalHref": "/cs/ai/competition-baseline#coverage"
   },
   "competition-baseline-artifact": {
-    id: "competition-baseline-artifact",
-    domain: "machine-learning",
-    label: "Competition baseline artifact",
-    definition:
-      "Data snapshot·split manifest·resolved run·OOF/test prediction·metric report·submission checksum을 한 revision에서 재생성할 수 있게 연결한 첫 end-to-end 기준점입니다.",
-    canonicalHref: "/cs/ai/competition-baseline#artifact",
+    "id": "competition-baseline-artifact",
+    "domain": "machine-learning",
+    "label": "Competition baseline artifact",
+    "definition": "Data snapshot·split manifest·resolved run·OOF/test prediction·metric report·submission checksum을 한 revision에서 재생성할 수 있게 연결한 첫 end-to-end 기준점입니다.",
+    "canonicalHref": "/cs/ai/competition-baseline#artifact"
   },
   "one-hypothesis-experiment-contract": {
-    id: "one-hypothesis-experiment-contract",
-    domain: "machine-learning",
-    label: "One-hypothesis experiment contract",
-    definition:
-      "관찰한 failure slice·원인 가설·한 축의 변경·예상 결과·비용·채택 기준을 실행 전에 기록하고 동일 protocol의 baseline과 비교하는 실험 규칙입니다.",
-    canonicalHref: "/cs/ai/paired-experiment-design#overview",
+    "id": "one-hypothesis-experiment-contract",
+    "domain": "machine-learning",
+    "label": "One-hypothesis experiment contract",
+    "definition": "관찰한 failure slice·원인 가설·한 축의 변경·예상 결과·비용·채택 기준을 실행 전에 기록하고 동일 protocol의 baseline과 비교하는 실험 규칙입니다.",
+    "canonicalHref": "/cs/ai/paired-experiment-design#experiment-terms"
   },
   "paired-fold-experiment-delta": {
-    id: "paired-fold-experiment-delta",
-    kind: "metric",
-    domain: "statistics",
-    label: "Paired fold experiment delta",
-    definition:
-      "같은 fold·행·metric에서 candidate score와 baseline score를 빼 fold별 개선을 만들고 평균·흔들림·slice 방향을 함께 보는 비교 통계입니다.",
-    canonicalHref: "/cs/ai/paired-experiment-design#paired-delta",
+    "id": "paired-fold-experiment-delta",
+    "kind": "metric",
+    "domain": "statistics",
+    "label": "Paired fold experiment delta",
+    "definition": "동일한 평가 fold와 metric·가중치에서 candidate score와 baseline score를 뺀 관측 차이입니다. 평가 조건을 짝지어 비교하되 모든 교란을 제거하는 것은 아니며 겹친 학습 자료의 의존성을 고려해야 합니다. 평균 양수만으로 통계적 유의성이나 비용 조건 통과를 확정하지 않습니다.",
+    "canonicalHref": "/cs/ai/paired-experiment-design#paired-delta"
   },
   "leaderboard-adaptive-feedback-budget": {
     id: "leaderboard-adaptive-feedback-budget",
@@ -12444,12 +12438,12 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/blockchain/reth-blob-storage#overview",
   },
   "eip4844-excess-blob-gas-feedback": {
-    id: "eip4844-excess-blob-gas-feedback",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "EIP-4844 excess blob-gas feedback",
-    definition: "Parent excess와 사용량을 더하고 fork target을 saturating subtraction한 값으로 다음 excess를 만들며 정수 fake-exponential로 다음 blob base fee를 정하는 피드백입니다.",
-    canonicalHref: "/cs/blockchain/eip4844-blob-fee#overview",
+    "id": "eip4844-excess-blob-gas-feedback",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "EIP-4844 excess blob-gas feedback",
+    "definition": "Parent excess와 사용량을 더하고 fork target을 saturating subtraction한 값으로 다음 excess를 만들며 정수 fake-exponential로 다음 blob base fee를 정하는 피드백입니다.",
+    "canonicalHref": "/cs/blockchain/eip4844-blob-fee#excess-update"
   },
   "blob-demand-average-target-peak-split": {
     "id": "blob-demand-average-target-peak-split",
@@ -13152,52 +13146,68 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/crypto/reed-solomon#reed-solomon-release-gate",
   },
   "aa-programmable-validation-boundary": {
-    id: "aa-programmable-validation-boundary", kind: "concept", domain: "computer-science",
-    label: "Programmable account validation boundary",
-    definition: "Protocol에 고정된 signer·nonce 판정 대신 smart-account code가 signer·capability·recovery를 검증하되 admission·gas·execution authority와 결과를 분리하는 Account Abstraction의 핵심 경계입니다.",
-    canonicalHref: "/cs/blockchain/aa-fundamentals#overview",
+    "id": "aa-programmable-validation-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Programmable account validation boundary",
+    "definition": "Protocol에 고정된 signer·nonce 판정 대신 smart-account code가 signer·capability·recovery를 검증하되 admission·gas·execution authority와 결과를 분리하는 Account Abstraction의 핵심 경계입니다.",
+    "canonicalHref": "/cs/blockchain/aa-fundamentals#names"
   },
   "erc4337-useroperation-identity": {
-    id: "erc4337-useroperation-identity", kind: "concept", domain: "distributed-systems",
-    label: "ERC-4337 UserOperation identity",
-    definition: "Sender·nonce·call·gas·paymaster data를 chain ID와 EntryPoint version/domain에 결속해 replay와 다른 deployment의 요청 혼동을 막는 operation identity입니다.",
-    canonicalHref: "/cs/blockchain/aa-fundamentals#erc4337",
+    "id": "erc4337-useroperation-identity",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "ERC-4337 UserOperation identity",
+    "definition": "Sender·nonce·call·gas·paymaster data를 chain ID와 EntryPoint version/domain에 결속해 replay와 다른 deployment의 요청 혼동을 막는 operation identity입니다.",
+    "canonicalHref": "/cs/blockchain/aa-fundamentals#erc4337"
   },
   "erc4337-bundler-validation-lifecycle": {
-    id: "erc4337-bundler-validation-lifecycle", kind: "method", domain: "distributed-systems",
-    label: "ERC-4337 bundler validation lifecycle",
-    definition: "UserOperation을 admission 전에 simulation하고 bundle 직전 mutable state에서 다시 검증한 뒤 EntryPoint transaction으로 제출해 validation reject·execution revert·inclusion을 구분하는 흐름입니다.",
-    canonicalHref: "/cs/blockchain/aa-fundamentals#erc4337",
+    "id": "erc4337-bundler-validation-lifecycle",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "ERC-4337 bundler validation lifecycle",
+    "definition": "UserOperation을 admission 전에 simulation하고 bundle 직전 mutable state에서 다시 검증한 뒤 EntryPoint transaction으로 제출해 validation reject·execution revert·inclusion을 구분하는 흐름입니다.",
+    "canonicalHref": "/cs/blockchain/aa-fundamentals#erc4337"
   },
   "erc4337-gas-payer-settlement": {
-    id: "erc4337-gas-payer-settlement", kind: "method", domain: "computer-science",
-    label: "ERC-4337 gas payer settlement",
-    definition: "Account 또는 paymaster가 validation·execution·pre-verification 최대 비용을 prefund하고 실제 사용량·effective fee·postOp outcome으로 bundler와 정산하는 비용 장부입니다.",
-    canonicalHref: "/cs/blockchain/aa-fundamentals#erc4337",
+    "id": "erc4337-gas-payer-settlement",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "ERC-4337 gas payer settlement",
+    "definition": "Account 또는 paymaster가 validation·execution·pre-verification 최대 비용을 prefund하고 실제 사용량·effective fee·postOp outcome으로 bundler와 정산하는 비용 장부입니다.",
+    "canonicalHref": "/cs/blockchain/aa-fundamentals#prefund"
   },
   "eip7702-delegation-authorization": {
-    id: "eip7702-delegation-authorization", kind: "concept", domain: "distributed-systems",
-    label: "EIP-7702 delegation authorization",
-    definition: "EOA가 chain·delegate address·nonce에 서명해 persistent delegation indicator를 설정하고 해당 code를 자신의 account context에서 실행하도록 허가하는 type-4 authorization입니다.",
-    canonicalHref: "/cs/blockchain/aa-fundamentals#native-aa",
+    "id": "eip7702-delegation-authorization",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "EIP-7702 delegation authorization",
+    "definition": "EOA가 chain·delegate address·nonce에 서명해 persistent delegation indicator를 설정하고 해당 code를 자신의 account context에서 실행하도록 허가하는 type-4 authorization입니다.",
+    "canonicalHref": "/cs/blockchain/aa-fundamentals#native-aa"
   },
   "aa-capability-policy": {
-    id: "aa-capability-policy", kind: "method", domain: "computer-science",
-    label: "Smart-account capability policy",
-    definition: "Session signer에게 target·function selector·value·expiry·nonce domain·budget을 명시해 편의 기능을 최소 권한의 실행 가능한 authorization으로 바꾸는 정책입니다.",
-    canonicalHref: "/cs/blockchain/aa-fundamentals#use-cases",
+    "id": "aa-capability-policy",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Smart-account capability policy",
+    "definition": "Session signer에게 target·function selector·value·expiry·nonce domain·budget을 명시해 편의 기능을 최소 권한의 실행 가능한 authorization으로 바꾸는 정책입니다.",
+    "canonicalHref": "/cs/blockchain/aa-fundamentals#source"
   },
   "aa-recovery-governance": {
-    id: "aa-recovery-governance", kind: "method", domain: "distributed-systems",
-    label: "Smart-account recovery governance",
-    definition: "Guardian threshold·timelock·기존 owner veto·key/module rotation을 함께 정의해 lost key와 malicious recovery를 구분하는 계정 복구 절차입니다.",
-    canonicalHref: "/cs/blockchain/aa-fundamentals#use-cases",
+    "id": "aa-recovery-governance",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Smart-account recovery governance",
+    "definition": "Guardian threshold·timelock·기존 owner veto·key/module rotation을 함께 정의해 lost key와 malicious recovery를 구분하는 계정 복구 절차입니다.",
+    "canonicalHref": "/cs/blockchain/aa-fundamentals#recovery"
   },
   "aa-release-gate": {
-    id: "aa-release-gate", kind: "method", domain: "computer-science",
-    label: "Account Abstraction release gate",
-    definition: "Wrong chain·replay·mutable-state invalidation·session overreach·paymaster budget·timeout·recovery conflict·delegate upgrade를 재생해 authorization과 settlement parity 뒤 gas·latency를 비교하는 채택 절차입니다.",
-    canonicalHref: "/cs/blockchain/aa-fundamentals#use-cases",
+    "id": "aa-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Account Abstraction release gate",
+    "definition": "Wrong chain·replay·mutable-state invalidation·session overreach·paymaster budget·timeout·recovery conflict·delegate upgrade를 재생해 authorization과 settlement parity 뒤 gas·latency를 비교하는 채택 절차입니다.",
+    "canonicalHref": "/cs/blockchain/aa-fundamentals#limits"
   },
   "isms-scope-dependency-boundary": {
     id: "isms-scope-dependency-boundary", kind: "concept", domain: "computer-science",
@@ -26140,7 +26150,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "mcu memory mapped io"
     ],
     "definition": "RP2040은 SIO를 0xD0000000 주소에 배치하고 CPU의 메모리 쓰기를 장치 동작으로 해석합니다. 같은 값도 주소에 따라 출력 설정 또는 해제가 됩니다.",
-    "canonicalHref": "/electronics/embedded/mcu-memory-map-and-registers#overview"
+    "canonicalHref": "/electronics/embedded/mcu-memory-map-and-registers#names"
   },
   "sio-base-register-offset": {
     "id": "sio-base-register-offset",
@@ -26180,7 +26190,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "gpio atomic set clear"
     ],
     "definition": "OUT_SET에 1을 쓴 비트만 세우고 OUT_CLR에 1을 쓴 비트만 내립니다. 같은 출력 레지스터를 읽고 고쳐 쓰는 충돌을 피하는 데 도움이 됩니다.",
-    "canonicalHref": "/electronics/embedded/mcu-memory-map-and-registers#mask"
+    "canonicalHref": "/electronics/embedded/mcu-memory-map-and-registers#race"
   },
   "gpio-latch-versus-pin-read": {
     "id": "gpio-latch-versus-pin-read",
@@ -26249,8 +26259,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "aliases": [
       "interrupt measurement boundary"
     ],
-    "definition": "타임스탬프 또는 테스트 핀으로 사건, ISR 진입·종료, 작업 시작·끝을 측정하고 높은 부하·다른 인터럽트와 겹친 상황을 봅니다. 플래그 하나는 손실 에지의 개수를 보여 주지 않습니다.",
-    "canonicalHref": "/electronics/embedded/interrupts-and-latency-budget#stress"
+    "definition": "사건·ISR·작업 시각을 높은 부하와 겹친 조건에서 측정하고 각 구간의 상한 근거를 분석합니다. 관측 최댓값은 시험하지 않은 모든 상황의 보장을 뜻하지 않으며 비트 하나로 잃은 사건 수를 복원할 수 없습니다.",
+    "canonicalHref": "/electronics/embedded/interrupts-and-latency-budget#limits"
   },
   "rp2040-microsecond-timer": {
     "id": "rp2040-microsecond-timer",

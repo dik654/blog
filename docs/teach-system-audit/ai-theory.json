@@ -1917,7 +1917,7 @@
         "src/pages/articles/world-systems/SourceApplication.tsx",
         "src/pages/articles/ai/fast-weight-memory-and-chunkwise-recurrence/codeRefs.ts"
       ],
-      "status": "existing-teach-targeted-repair-awaiting-integration",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 3,
@@ -1982,13 +1982,15 @@
         "learningAnswers": "30문항정답과본문대조 /tmp/teach-all/ai-theory-learning-answer-review-batch5.json",
         "primarySources": "GDN2v1식29,VPRv1식2,ReasoningArena그룹분산,LeWMv1식3·부록D,PlanningLimitsv1범위를웹1차원문에서재확인. 로컬raw4파일의고정revision원격과byte동일 /tmp/teach-all/ai-theory-research-source-hashes.json",
         "numericTrace": "행렬읽기·독립gate·erase0·4후보비용·형식점수실제함수검산PASS /tmp/teach-all/ai-theory-arithmetic-batch5.json. 모델학습/GPUkernel실행재현주장없음.",
-        "humanize": "extract→동일apply roundtrip→prepare→gate→apply. Reward/world exit0;fast-weight exit1수식쉼표WARN. 수치·마커·가정보존. /tmp/teach-all/humanize-ai-theory-batch5/summary.json",
+        "humanize": "실제 extract→roundtrip→prepare→gate→apply 및 숫자·마커 대조. reward/world gate OK. fast-weight의 튜플 숫자 각주 오인 28건은 root가 전체 문자열 동일함을 확인하고 independent-finalize.md에 수동 승인했습니다.",
         "mobile390": "3route390px pageoverflow·narrow·KaTeX·console·깨진anchor0,예측3각각. codebuttons2/3/4열기닫기,first1/5역할먼저 PASS. output/playwright/teach-ai-theory-batch5/summary.json",
         "desktop1440": "동일검사PASS;WorldPlanningViz실제관측버튼후비용10.24/1.44/1.44/.64과reset확인. 전체screenshots중390입구·코드및1440세계모형표를직접확인.",
-        "typecheck": "전체 npx tsc -b PASS /tmp/teach-all/ai-theory-tsc-batch5-final.log"
+        "typecheck": "전체 npx tsc -b PASS /tmp/teach-all/ai-theory-tsc-batch5-final.log",
+        "prose": "긴 원문조건과수치계산문단분리,열거제목을한질문으로수정. 전역799편 prose재검토0 PASS /tmp/teach-all/ai-theory-prose-batch5.log",
+        "learning": "root 병합 후 strict --require-registration 개별 검사 PASS. 6+4 문제의 실제 본문 답은 batch5 answer-review에 대조했습니다."
       },
       "remaining": [
-        "root metadata·topology병합 및 전역 build·게시검증"
+        "root 전역 build와 게시 검증"
       ],
       "preservedEvidence": {
         "case": [
@@ -3550,7 +3552,7 @@
         "src/pages/articles/ai/math-functions-composition/FunctionCompositionViz.tsx",
         "src/pages/articles/ai/math-functions-composition/ModernArticle.tsx"
       ],
-      "status": "unreviewed",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3558,19 +3560,56 @@
         "hasSourceSurface": true,
         "characters": 12398
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "용어 카드가 2→7→49의 전체 역할과 연결 이유보다 먼저 등장했습니다.",
+        "기존 수식과 인용은 있었으나 원문 정의식에 같은 사례를 대입하지 않았습니다. 결합법칙·상태 입력 문제의 답이 본문에서 충분히 설명되지 않았고 예측 질문이 없었습니다.",
+        "기존 Viz는 여러 색과 큰 세로 카드에 의존했습니다. 같은 입력을 양쪽 순서로 계산하는 간결한 장면으로 바꾸고 모든 표시 값을 수식으로 검산했습니다."
+      ],
+      "fixture": "교재와 같은 g(x)=3x+1, f(u)=u²에 선택 입력 x=2 (가정): 2→7→49; 역순 2→4→13. 공역 ℝ와 제곱의 치역 [0,∞), 길이 3 벡터와 실수 하나의 연결 실패를 구별합니다.",
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "picture",
+        "2": "need",
+        "3": "names",
+        "4": [
+          "shape",
+          "composition"
+        ],
+        "5-6": "source",
+        "7": "boundaries"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "OpenStax Precalculus 2e §1.4 정의 상자",
+          "expression": "(f∘g)(x)=f(g(x))",
+          "application": "x=2, g(2)=7, f(7)=49; 각 입력이 다음 정의역에 들어가는지 확인했습니다."
+        },
+        {
+          "source": "OpenStax Calculus Volume 1 §1.1 합성 도입과 식 (1.1)",
+          "expression": "f(g(x))=(3x+1)², g(f(x))=3x²+1",
+          "application": "같은 2로 49와 13을 비교하고 식 (1.1)은 g∘f 순서임을 밝혔습니다."
+        },
+        {
+          "source": "Deep Learning Book 6장 164쪽 번호 없는 연결식",
+          "expression": "f(x)=f⁽³⁾(f⁽²⁾(f⁽¹⁾(x)))",
+          "application": "세 번째 규칙을 항등으로 둔 가정에서 2→7→49→49를 대입했습니다. 신경망 학습 결과라는 주장은 하지 않습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "원문 TSX·고정 baseline 전체·교재 원문 정의와 사례·6+4 문제를 실제로 대조했습니다. 기존 ExplainedFormula와 두 CitationBlock anchor를 보존했습니다.",
+        "learning": "root batch6 병합 후 strict --require-registration PASS. /tmp/teach-all/ai-theory-learning-answer-review-composition.json에 10개 답 위치 대조 기록.",
+        "humanize": "원문 extract→roundtrip→prepare→gate→apply 2회. 연결 쉼표 총 7곳 수정, 숫자·가정·마커 보존. P3 PASS/P1 지표 WARN은 root가 두 패스 전문을 읽고 independent-finalize.md 승인했습니다. Viz 동적 문자열은 별도 literal 추출하여 gate OK와 source 동일 검사를 했습니다.",
+        "numericTrace": "/tmp/teach-all/ai-theory-arithmetic-composition.json: x=1,2,3의 두 순서 결과 및 49/13 검산. 결합법칙의 실제 적용 순서는 본문에 전개했습니다.",
+        "mobile390": "output/playwright/teach-ai-theory-composition/composition.json: first-fifth PASS, overflow·narrow·KaTeX·console·깨진 anchor 0, 예측 질문 3개. source 390 화면 직접 확인.",
+        "desktop1440": "같은 DOM 검사 PASS. /tmp/teach-all/ai-theory-composition-controls.json에 4장면 frame/control 위치 변화 0, 전체 frame 80~944px 내, 키보드와 재생 전환 PASS.",
+        "viz": "수정한 FunctionCompositionViz.tsx strict 검사 PASS. 표와 설명이 작은 수를 실제로 전달하며 역순도 계산합니다.",
+        "prose": "전역 공개 799편 prose strict 재검토 0.",
+        "typecheck": "실제 npx tsc -b에서 소유 파일 오류 없음. 당시 다른 팀 작업 중 fileTrees 오류 2건은 root에 전달했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "root 전역 build와 게시 검증"
       ]
     },
     {
@@ -3583,7 +3622,7 @@
         "src/pages/articles/ai/math-functions-derivatives-gradients/viz/ChainRateViz.tsx",
         "src/pages/articles/ai/math-functions-derivatives-gradients/viz/SecantTangentViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-awaiting-integration",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3591,19 +3630,59 @@
         "hasSourceSurface": true,
         "characters": 12246
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "difference quotient·limit·derivative 용어 카드가 값의 비교와 전체 구조보다 먼저 등장했습니다.",
+        "기존 네 수식과 원문 인용은 있었으나 정의식에 같은 수치를 넣는 본문과 예측 질문이 없었습니다.",
+        "극한 예제 (x²−1)/(x−1), 유한 간격 1의 오차, 연쇄법칙의 Δu=0 증명 조건, 분기의 기여 합산은 6+4 문제에 비해 본문 설명이 부족했습니다.",
+        "할선 Viz가 실제 제곱 좌표가 아닌 수동 곡선을 사용했고 primary 색상을 hsl로 감싸 현재 oklch 변수에서 선이 보이지 않았습니다. 실제 좌표로 다시 계산하고 색상 구문을 교정했습니다."
+      ],
+      "fixture": "제곱 함수 x=3의 간격 1/.1/.01 및 −.1/−.01에서 차분몫 7/6.1/6.01 및 5.9/5.99. 앞 합성의 2→7→49에 Δx=.01을 넣어 실제 변화 .4209와 예측 .42를 비교합니다 (가정).",
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "picture",
+        "2": "need",
+        "3": "names",
+        "4": [
+          "derivative",
+          "local-linearity",
+          "chain-rule"
+        ],
+        "5-6": "source",
+        "7": "nonsmooth"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "OpenStax Calculus Volume 1 §3.1 식 (3.2), (3.4), Example 3.2",
+          "expression": "Q=[f(a+h)−f(a)]/h",
+          "application": "a=3, h=.1이면 6.1이며, 같은 원문 예제의 극한은 6입니다."
+        },
+        {
+          "source": "OpenStax §3.6 식 (3.17)",
+          "expression": "h′(x)=f′(g(x))g′(x)",
+          "application": "g(2)=7에서 바깥 미분 14, 안쪽 미분 3을 곱해 42를 얻습니다. 여기서 원문 h는 간격이 아닌 합성 함수의 이름입니다."
+        },
+        {
+          "source": "PyTorch 2.8 Autograd mechanics 비미분 가능 함수 규칙 2",
+          "application": "아래에서 지지하는 ReLU 기울기 집합 [0,1]을 유도하고 최소 크기 선택 0을 적용합니다. 실제 runtime 재현 주장은 없습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "원문 TSX 전체·고정 baseline·OpenStax 두 절·MIT 강의 목차·Parr와 Howard 저자 본문·PyTorch 버전 문서를 읽었습니다. 기존 네 ExplainedFormula와 두 paper anchor를 보존했습니다. 중복된 ReLU 수식은 명시적 예고와 함께 펼침 영역에 남겼고 핵심 조건은 본문에 있습니다.",
+        "learningAnswers": "작성 전 기존 6+4 문제를 읽고 실제 본문 답을 대조했습니다. 극한 anchor와 서브그라디언트의 구현 범위를 갱신했습니다. /tmp/teach-all/ai-theory-learning-answer-review-derivatives.json",
+        "humanize": "실제 roundtrip과 두 패스 수행. 두 번째 패스에서 연결 쉼표 10개 수정, P1 z+2.87→−.52. (x−1)을 각주로 오인한 P3 5건은 root가 전체 전후 문자열과 수치를 대조해 independent-finalize.md에 승인했습니다. 두 Viz 문자열은 별도 추출로 gate OK, 코드·식에 변경 없음.",
+        "numericTrace": "/tmp/teach-all/ai-theory-arithmetic-derivatives.json: 양쪽 차분몫, 오차 h², 연쇄 예측 .42와 실제 .4209, 중앙 차분 42, 분기 기여 7의 독립 검산 PASS.",
+        "mobile390": "output/playwright/teach-ai-theory-derivatives/derivatives.json: first-fifth PASS, 페이지 overflow·narrow·KaTeX·console·깨진 anchor 0, 예측 3개. 수정한 SVG 선의 실제 화면 직접 확인.",
+        "desktop1440": "동일 검사 PASS. 두 Viz 각 4장면의 frame/control 위치 변화 0, 전체 frame 화면 내, 키보드·재생 전환 PASS. /tmp/teach-all/ai-theory-derivative-chain-controls.json 및 derivative-secant-controls.json",
+        "viz": "수정 Viz 2개 strict 위반 0, SVG text의 5개 수동 검토 항목은 390/1440 렌더로 확인. 실제 선의 computed stroke가 none에서 oklch 색상으로 바뀜을 확인했습니다.",
+        "typecheck": "수정 뒤 실제 npx tsc -b exit0.",
+        "prose": "전역 공개 799편 strict prose 재검토 0 PASS."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "root batch7 learning·TOC·evidence·topology 병합",
+        "병합 후 개별 learning strict",
+        "root 전역 build와 게시 검증"
       ]
     },
     {
@@ -3615,7 +3694,7 @@
         "src/pages/articles/ai/math-gradient-descent-convergence/DescentDynamicsViz.tsx",
         "src/pages/articles/ai/math-gradient-descent-convergence/ModernArticle.tsx"
       ],
-      "status": "unreviewed",
+      "status": "body-reviewed-needs-rewrite",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3623,19 +3702,24 @@
         "hasSourceSurface": true,
         "characters": 15414
       },
-      "originalProblems": [],
+      "originalProblems": [
+        "Gradient·algorithm·direction·step·stopping규칙이작은반복앞에나옵니다.",
+        "f=x²/2,x04,η.5/2/3의수축·진동·발산과정상점minimum/maximum/saddle경계는보존합니다. 강볼록수렴bound에같은숫자를대입하고원문정리의전제를추적하는부분과예측질문이없습니다."
+      ],
       "fixture": null,
       "stageAnchors": {},
       "primarySourceApplication": [],
       "verification": {
-        "contentReview": "pending",
+        "contentReview": "고정 baseline의 본문 전체 paragraph·heading·links를 읽고 설명 흐름을 대조했습니다. 기존 CitationBlock은 보존하며, 원문 정의식에 같은 사례를 대입하는 본문을 추가해야 합니다. 원문과 TSX 전체의 정밀 대조는 각 재작성에서 진행합니다.",
         "humanize": "pending",
         "numericTrace": "pending",
         "mobile390": "pending",
         "desktop1440": "pending"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "고유수치사례중심본문재구성",
+        "실제1차원문확인및사례적용",
+        "6+4답위치대조·humanize·수치·390/1440검수"
       ]
     },
     {
@@ -3647,7 +3731,7 @@
         "src/pages/articles/ai/math-gradients-jacobians/ModernArticle.tsx",
         "src/pages/articles/ai/math-gradients-jacobians/SensitivityShapeViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "body-reviewed-needs-rewrite",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3655,19 +3739,24 @@
         "hasSourceSurface": true,
         "characters": 15485
       },
-      "originalProblems": [],
+      "originalProblems": [
+        "첫문단부터Loss·weight·partial derivative가한꺼번에나와입출력역할을숫자로잡기어렵습니다.",
+        "f=x²+3y의(2,−1)와F=(x+y,xy)의(2,3)사례연결을명시해야합니다. 방향미분24/5와JVP(−.01,−.01),VJPshape설명은보존대상입니다.원문실물과예측질문은없습니다."
+      ],
       "fixture": null,
       "stageAnchors": {},
       "primarySourceApplication": [],
       "verification": {
-        "contentReview": "pending",
+        "contentReview": "고정 baseline의 본문 전체 paragraph·heading·links를 읽고 설명 흐름을 대조했습니다. 기존 CitationBlock은 보존하며, 원문 정의식에 같은 사례를 대입하는 본문을 추가해야 합니다. 원문과 TSX 전체의 정밀 대조는 각 재작성에서 진행합니다.",
         "humanize": "pending",
         "numericTrace": "pending",
         "mobile390": "pending",
         "desktop1440": "pending"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "고유수치사례중심본문재구성",
+        "실제1차원문확인및사례적용",
+        "6+4답위치대조·humanize·수치·390/1440검수"
       ]
     },
     {
@@ -3782,7 +3871,7 @@
         "src/pages/articles/ai/math-optimization-convexity/CurvatureShapeViz.tsx",
         "src/pages/articles/ai/math-optimization-convexity/ModernArticle.tsx"
       ],
-      "status": "unreviewed",
+      "status": "body-reviewed-needs-rewrite",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3790,19 +3879,24 @@
         "hasSourceSurface": true,
         "characters": 13118
       },
-      "originalProblems": [],
+      "originalProblems": [
+        "Convexity·smoothness·conditionnumber카드가숫자전에나오며한절새용어가많습니다.",
+        "x²현위직선차이,descentlemma의1/2적분유도,비매끄러운|x|반례는보존대상입니다. L100μ1의수치가동일주사례에서유도되지않고실제원문수식적용·예측문제가없습니다."
+      ],
       "fixture": null,
       "stageAnchors": {},
       "primarySourceApplication": [],
       "verification": {
-        "contentReview": "pending",
+        "contentReview": "고정 baseline의 본문 전체 paragraph·heading·links를 읽고 설명 흐름을 대조했습니다. 기존 CitationBlock은 보존하며, 원문 정의식에 같은 사례를 대입하는 본문을 추가해야 합니다. 원문과 TSX 전체의 정밀 대조는 각 재작성에서 진행합니다.",
         "humanize": "pending",
         "numericTrace": "pending",
         "mobile390": "pending",
         "desktop1440": "pending"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "고유수치사례중심본문재구성",
+        "실제1차원문확인및사례적용",
+        "6+4답위치대조·humanize·수치·390/1440검수"
       ]
     },
     {
@@ -3814,7 +3908,7 @@
         "src/pages/articles/ai/math-optimization-objectives/ModernArticle.tsx",
         "src/pages/articles/ai/math-optimization-objectives/OptimizationProblemViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "body-reviewed-needs-rewrite",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3822,19 +3916,24 @@
         "hasSourceSurface": true,
         "characters": 11513
       },
-      "originalProblems": [],
+      "originalProblems": [
+        "학습률·gradient·decision variable·objective정의부터시작하며공통작은문제가앞에없습니다.",
+        "(x−3)²+2에서무제약위치3/값2와제약[0,2]위치2/값3은정확하므로보존합니다. 원문문제정의에같은값을대입하는절과예측질문이빠졌습니다."
+      ],
       "fixture": null,
       "stageAnchors": {},
       "primarySourceApplication": [],
       "verification": {
-        "contentReview": "pending",
+        "contentReview": "고정 baseline의 본문 전체 paragraph·heading·links를 읽고 설명 흐름을 대조했습니다. 기존 CitationBlock은 보존하며, 원문 정의식에 같은 사례를 대입하는 본문을 추가해야 합니다. 원문과 TSX 전체의 정밀 대조는 각 재작성에서 진행합니다.",
         "humanize": "pending",
         "numericTrace": "pending",
         "mobile390": "pending",
         "desktop1440": "pending"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "고유수치사례중심본문재구성",
+        "실제1차원문확인및사례적용",
+        "6+4답위치대조·humanize·수치·390/1440검수"
       ]
     },
     {
@@ -5253,7 +5352,7 @@
         "src/pages/articles/world-systems/SourceApplication.tsx",
         "src/pages/articles/ai/reward-design-for-verifiable-rl/codeRefs.ts"
       ],
-      "status": "existing-teach-targeted-repair-awaiting-integration",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 3,
@@ -5326,13 +5425,15 @@
         "learningAnswers": "30문항정답과본문대조 /tmp/teach-all/ai-theory-learning-answer-review-batch5.json",
         "primarySources": "GDN2v1식29,VPRv1식2,ReasoningArena그룹분산,LeWMv1식3·부록D,PlanningLimitsv1범위를웹1차원문에서재확인. 로컬raw4파일의고정revision원격과byte동일 /tmp/teach-all/ai-theory-research-source-hashes.json",
         "numericTrace": "행렬읽기·독립gate·erase0·4후보비용·형식점수실제함수검산PASS /tmp/teach-all/ai-theory-arithmetic-batch5.json. 모델학습/GPUkernel실행재현주장없음.",
-        "humanize": "extract→동일apply roundtrip→prepare→gate→apply. Reward/world exit0;fast-weight exit1수식쉼표WARN. 수치·마커·가정보존. /tmp/teach-all/humanize-ai-theory-batch5/summary.json",
+        "humanize": "실제 extract→roundtrip→prepare→gate→apply 및 숫자·마커 대조. reward/world gate OK. fast-weight의 튜플 숫자 각주 오인 28건은 root가 전체 문자열 동일함을 확인하고 independent-finalize.md에 수동 승인했습니다.",
         "mobile390": "3route390px pageoverflow·narrow·KaTeX·console·깨진anchor0,예측3각각. codebuttons2/3/4열기닫기,first1/5역할먼저 PASS. output/playwright/teach-ai-theory-batch5/summary.json",
         "desktop1440": "동일검사PASS;WorldPlanningViz실제관측버튼후비용10.24/1.44/1.44/.64과reset확인. 전체screenshots중390입구·코드및1440세계모형표를직접확인.",
-        "typecheck": "전체 npx tsc -b PASS /tmp/teach-all/ai-theory-tsc-batch5-final.log"
+        "typecheck": "전체 npx tsc -b PASS /tmp/teach-all/ai-theory-tsc-batch5-final.log",
+        "prose": "긴 원문조건과수치계산문단분리,열거제목을한질문으로수정. 전역799편 prose재검토0 PASS /tmp/teach-all/ai-theory-prose-batch5.log",
+        "learning": "root 병합 후 strict --require-registration 개별 검사 PASS. 6+4 문제의 실제 본문 답은 batch5 answer-review에 대조했습니다."
       },
       "remaining": [
-        "root metadata·topology병합 및 전역 build·게시검증"
+        "root 전역 build와 게시 검증"
       ],
       "preservedEvidence": {
         "case": [
@@ -7143,7 +7244,7 @@
         "src/pages/articles/world-systems/SourceApplication.tsx",
         "src/pages/articles/ai/world-model-latent-planning/codeRefs.ts"
       ],
-      "status": "existing-teach-targeted-repair-awaiting-integration",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 3,
@@ -7218,13 +7319,15 @@
         "learningAnswers": "30문항정답과본문대조 /tmp/teach-all/ai-theory-learning-answer-review-batch5.json",
         "primarySources": "GDN2v1식29,VPRv1식2,ReasoningArena그룹분산,LeWMv1식3·부록D,PlanningLimitsv1범위를웹1차원문에서재확인. 로컬raw4파일의고정revision원격과byte동일 /tmp/teach-all/ai-theory-research-source-hashes.json",
         "numericTrace": "행렬읽기·독립gate·erase0·4후보비용·형식점수실제함수검산PASS /tmp/teach-all/ai-theory-arithmetic-batch5.json. 모델학습/GPUkernel실행재현주장없음.",
-        "humanize": "extract→동일apply roundtrip→prepare→gate→apply. Reward/world exit0;fast-weight exit1수식쉼표WARN. 수치·마커·가정보존. /tmp/teach-all/humanize-ai-theory-batch5/summary.json",
+        "humanize": "실제 extract→roundtrip→prepare→gate→apply 및 숫자·마커 대조. reward/world gate OK. fast-weight의 튜플 숫자 각주 오인 28건은 root가 전체 문자열 동일함을 확인하고 independent-finalize.md에 수동 승인했습니다.",
         "mobile390": "3route390px pageoverflow·narrow·KaTeX·console·깨진anchor0,예측3각각. codebuttons2/3/4열기닫기,first1/5역할먼저 PASS. output/playwright/teach-ai-theory-batch5/summary.json",
         "desktop1440": "동일검사PASS;WorldPlanningViz실제관측버튼후비용10.24/1.44/1.44/.64과reset확인. 전체screenshots중390입구·코드및1440세계모형표를직접확인.",
-        "typecheck": "전체 npx tsc -b PASS /tmp/teach-all/ai-theory-tsc-batch5-final.log"
+        "typecheck": "전체 npx tsc -b PASS /tmp/teach-all/ai-theory-tsc-batch5-final.log",
+        "prose": "긴 원문조건과수치계산문단분리,열거제목을한질문으로수정. 전역799편 prose재검토0 PASS /tmp/teach-all/ai-theory-prose-batch5.log",
+        "learning": "root 병합 후 strict --require-registration 개별 검사 PASS. 6+4 문제의 실제 본문 답은 batch5 answer-review에 대조했습니다."
       },
       "remaining": [
-        "root metadata·topology병합 및 전역 build·게시검증"
+        "root 전역 build와 게시 검증"
       ],
       "preservedEvidence": {
         "case": [
@@ -7287,12 +7390,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 12,
+    "rewritten": 14,
     "existingTeachTargetedRepairs": 3,
-    "reviewedAndImproved": 15,
-    "localVerified": 12,
-    "awaitingIntegration": 3,
-    "pending": 174,
-    "complete": 0
+    "reviewedAndImproved": 17,
+    "localVerified": 16,
+    "awaitingIntegration": 1,
+    "pending": 172,
+    "complete": 0,
+    "bodyReviewedNeedsRewrite": 4,
+    "bodyReviewedTotal": 21
   }
 }

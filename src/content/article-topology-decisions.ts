@@ -485,17 +485,17 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "embedded/mcu-memory-map-and-registers": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-03",
-    "rationale": "GPIO5 하나를 통해 주소→오프셋→비트 마스크→핀 기능·방향→물리 핀 확인 순서로 추적합니다. 인터럽트 시점과 타이머는 후속 글에 남깁니다.",
-    "sharedGate": "SIO 0xD0000000+0x014/0x018/0x024=0xD0000014/18/24, GPIO5 1<<5=0x20, IO_BANK0+0x02C=0x4001402C가 본문·Viz·문제에서 일치하는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "주소와 값의 역할, 값 준비·핀 기능·출력 허용의 독립 조건을 먼저 그린 뒤 실제 SDK 함수에 gpio5를 대입합니다. CTRL override를 모두 보존한다는 오해를 고치고 SET/CLR의 한계와 SIO 원자 별칭 예외를 설명했습니다.",
+    "sharedGate": "0x20 및 세 SIO 주소·CTRL주소를 검산하고 두 SET 쓰기의0x61과 전체 덮어쓰기 손실을 비교했습니다."
   },
   "embedded/interrupts-and-latency-budget": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-03",
-    "rationale": "GPIO2 사건→주변 장치와 NVIC→짧은 ISR→작업→1 ms 마감까지 한 경로를 추적합니다. 10 ms 주기 샘플링은 다음 글에서 따로 다룹니다.",
-    "sharedGate": "검출5+대기40+진입8+ISR20=73 µs, 작업40+I²C300+계산80을 더한 전체493 µs, 여유507 µs, 대기600이면1053 µs·53 µs 초과가 본문·Viz·문제에서 일치해야 합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "핀 쪽 사건과 NVIC pending을 별도로 그리고 같은 사건을 소거→콜백→일반 작업으로 추적합니다. SDK가 콜백 전에 소거하는 사실과 이중 소거의 새 에지 손실 가능성을 교정했습니다. ISR 카운터로 합쳐진 사건을 복원할 수 없는 한계와 관측 최댓값/보장 상한도 구별했습니다.",
+    "sharedGate": "정수몫2/8=0,8<<(4*2)=0x800; ISR73·읽기113·완료493·여유507, 대기600에서1053·초과53을 검산했습니다."
   },
   "embedded/timers-and-sampling": {
     "action": "keep",
@@ -967,11 +967,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "sharedGate": "본문 사례를 같은 단위와 축으로 재계산하고, 공식 원문과 코드의 버전·가정·측정 범위를 일치시켜야 합니다."
   },
   "ai/fast-weight-memory-and-chunkwise-recurrence": {
-    "action": "keep",
-    "status": "reviewed",
+    "rationale": "두 주소가 같은 2×2 기억을 공유해 간섭하는 사례가 차이 갱신, 그 순서 의존성과 chunk 병렬화, 독립 erase/write를 차례로 요구합니다. 서로 다른 기억 체계의 개론으로 넓히지 않고 같은 행렬의 쓰기·다시 읽기를 원문 끝까지 보존합니다.",
+    "sharedGate": "M [[2,0],[1.8,2.4]], k1 (1,0), k2 (.6,.8) → 읽기 (2,1.8)/(1.2,3); 목표 (5,0) 수정 후 k2 (3,1.92); b (.25,1), w (.5,1) → (4,1.35); erase 0 → (7,1.8). 원문 TRANSPOSE_STATE=True와 정규화/scale 조건 고정.",
+    "status": "implemented",
     "reviewedAt": "2026-10-04",
-    "rationale": "같은 숫자 사례의 입력·상태·계산·공식 구현·실패 조건이 하나의 질문을 이룹니다. 최신 결과는 해당 원리를 확장하는 비교 절에 연결했습니다.",
-    "sharedGate": "본문 사례를 같은 단위와 축으로 재계산하고, 공식 원문과 코드의 버전·가정·측정 범위를 일치시켜야 합니다."
+    "action": "keep"
   },
   "ai/expert-parallelism-moe-systems": {
     "action": "keep",
@@ -981,18 +981,18 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "sharedGate": "본문 사례를 같은 단위와 축으로 재계산하고, 공식 원문과 코드의 버전·가정·측정 범위를 일치시켜야 합니다."
   },
   "ai/reward-design-for-verifiable-rl": {
-    "action": "keep",
-    "status": "reviewed",
+    "rationale": "정답 40·오답 60개의 고정 표가 자동 보상의 오류, 검사 빈도와 대상, 실제 학습 신호와 평가 분모를 묶습니다. 작은 원문 형식 함수에 오답 3을 넣어 통과 1을 확인하고 과정 oracle의 적용 범위까지 따져 하나의 보상 설계 질문으로 유지합니다.",
+    "sharedGate": "TP 38, FP 12, FN 2, TN 48 → 통과 50%, 정답 40%, precision 76%, recall 95%; [0,0,1,1] 중심화 ±.5; potential 차이 합 0; 고정 format_reward에 형식 준수 오답 3 → 1, 태그 없는 3 → 0.",
+    "status": "implemented",
     "reviewedAt": "2026-10-04",
-    "rationale": "같은 숫자 사례의 입력·상태·계산·공식 구현·실패 조건이 하나의 질문을 이룹니다. 최신 결과는 해당 원리를 확장하는 비교 절에 연결했습니다.",
-    "sharedGate": "본문 사례를 같은 단위와 축으로 재계산하고, 공식 원문과 코드의 버전·가정·측정 범위를 일치시켜야 합니다."
+    "action": "keep"
   },
   "ai/world-model-latent-planning": {
-    "action": "keep",
-    "status": "reviewed",
+    "rationale": "하나의 이동 사례에서 예측·후보 선택·실행·재관측을 분리해야 잠재 표현 오차와 목표 도달을 혼동하지 않습니다. encoder 붕괴와 먼 목표의 한계도 같은 후보의 비교 가능성을 묻는 경계라 같은 글에 유지합니다.",
+    "sharedGate": "가정 x 0, 목표 2, H 2, K 1의 4후보 비용 16/4/4/0; 실제 .8 재관측 후 10.24/1.44/1.44/.64, 눈감고 2행동은 1.6으로 예측 2와 .4 차이. LeWM 원문 sum 축·CEM 평균 (1,0)·부록 D의 H 5block/25환경 timestep 전체 실행 조건과 대조.",
+    "status": "implemented",
     "reviewedAt": "2026-10-04",
-    "rationale": "같은 숫자 사례의 입력·상태·계산·공식 구현·실패 조건이 하나의 질문을 이룹니다. 최신 결과는 해당 원리를 확장하는 비교 절에 연결했습니다.",
-    "sharedGate": "본문 사례를 같은 단위와 축으로 재계산하고, 공식 원문과 코드의 버전·가정·측정 범위를 일치시켜야 합니다."
+    "action": "keep"
   },
   "crypto/snark-overview": {
     "action": "keep",
@@ -1340,6 +1340,55 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "기록12개손실사건에서한개행동규칙을추출하고적용범위·삭제예외·검사를같은네경우로확인합니다. 사건보고와앞으로따를규칙의구별이재사용판단에필요하므로같은글에둡니다.",
     "sharedGate": "0/5/12/명시삭제0의검사4개와사건postmortem021·run1842를연결하여잠정규칙의승격/재검토조건과비난없는원문postmortem원칙을대조합니다."
   },
+  "ai/math-functions-composition": {
+    "rationale": "입력 하나가 두 규칙을 지나 결과를 만드는 한 경로에서 함수의 대응, 정의역과 공역, 합성을 차례로 설명합니다. 같은 2→7→49 사례의 연결 가능성과 역순 13을 함께 판단해야 순서와 허용 범위가 결합된다는 질문에 답할 수 있어 한 글로 유지합니다.",
+    "sharedGate": "g(x)=3x+1, f(u)=u²에서 2→7→49와 역순 2→4→13을 계산합니다. 공역 ℝ와 치역 [0,∞)를 구별하고, 같은 교재 정의에 x=2를 대입합니다. 결합법칙의 h→g→f 순서, 길이 3 벡터와 실수 하나의 불일치, 외부 상태를 포함하지 않은 입력의 한계를 함께 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "action": "keep"
+  },
+  "blockchain/aa-fundamentals": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "USDC 40개를 보내는 한 요청에서 임시 열쇠 권한, 요청 전달, 공통 검증, 대납 비용, 실제 실행을 함께 따라가야 각 역할의 차이가 드러납니다. ERC-4337과 EIP-7702 비교도 같은 요청의 처리 경로와 코드 연결을 구분하는 데 필요한 범위로 유지합니다. 양자내성 서명 구현의 별도 심화는 pq-account 글로 연결합니다.",
+    "sharedGate": "Alice의 USDC 200→160, Bob의 0→40, 한도 100→남은 60, nonce 7→8, 대납 예치금 0.01→0.009를 본문·그림·의사코드·문제에서 대조합니다. 다섯 gas 항 합계 150,000과 예약 0.003·청구 0.001·환급 0.002를 산술 검산했습니다. 고정한 실제 Solidity에서 검증·nonce·실행·환급 위치를 대조하되 session 정책은 원본 구현에 포함되지 않은 가정이며 실제 배포·송금 검증은 아닙니다."
+  },
+  "blockchain/eip4844-blob-fee": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "사용량을 다음 초과분으로 바꾸고 그 기록을 정수 가격에 넣는 두 계산은 한 경로입니다. 이를 분리하면 초과분을 요금이나 대기 파일 수로 오해하기 쉬우므로 한 글에서 이어 설명합니다. 기존 2·5·3 사례와 현재 설정의 추가 분기 비교를 유지하면서 체인별 실제 수요 분석은 별도 글로 연결합니다.",
+    "sharedGate": "역사적 E=2,U=5,T=3의 결과 4와 실제 단위 524,288을 본문·식·그림·문제에서 대조합니다. 별도 작은 가격 설정 f=1,n=4,d=2의 결과 6, BPO2 E=2,U=18,target=14,max=21의 두 결과 6·8을 검산했습니다. 고정한 Go 원본 fakeExponential 함수는 여섯 입력으로 실제 로컬 실행했으며 전체 노드·메인넷 블록 또는 수요 측정으로 확대하지 않습니다."
+  },
+  "ai/harness-failure-ablation": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "문서 안내 변경 하나의 전후 효과와 기존 성공 회귀를 함께 판정하는 하나의 실험입니다. 실패 분류·전후 비교·원문 ablation·한계를 나누면 개선과 채택 조건을 연결하기 어렵습니다. 용어와 식은 이 한 실험에 필요한 역할만 설명합니다.",
+    "sharedGate": "대상 12개 성공 3→9, Δ=0.50=50%p와 기존 성공 20개 중 회귀 1개=5%, 허용 τ=0, G=0이 본문·식·문제에서 같아야 합니다."
+  },
+  "ai/model-selection-bias": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "세 후보 중 관측 최고값을 고르는 한 동작을 직관·기대값 유도·한계로 올리는 글입니다. 독립 두 후보 모형은 같은 최고값 선택이 반복에서 만드는 효과를 계산하는 심화이며 별개 기법 소개가 아닙니다.",
+    "sharedGate": "A/B/C 실제 평균 0.70, 관측 0.69/0.74/0.71, B 선택과 차이 0.04를 고정합니다. 독립 두 후보 ±0.04 심화의 네 최고값 0.66/0.74/0.74/0.74, 평균 0.72와 편향 0.02를 한 시행 보장으로 바꾸지 않습니다."
+  },
+  "ai/paired-experiment-design": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 다섯 fold에서 표현 변경 한 축의 차이를 구하고 사전 비용 조건으로 채택하는 하나의 비교입니다. 가설·paired 차이·공식 코드·의존성 경계가 그 판단에 함께 필요합니다.",
+    "sharedGate": "기존 [0.700,0.720,0.680,0.710,0.690], 새 [0.706,0.724,0.679,0.715,0.693], 차이 합 0.017·평균 0.0034를 맞춥니다. 지연 100→118ms=18%가 상한10%를 넘어 거절함을 유지합니다."
+  },
+  "ai/competition-baseline": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "다섯 행의 분할에서 OOF 예측·집계·제출을 연결하는 하나의 실행 경로입니다. 예측 개수만으로 누락과 중복을 못 찾는 문제에서 시작해 같은 행 ID와 결과 파일을 끝까지 검증하므로 함께 유지합니다.",
+    "sharedGate": "잘못된 coverage [1,1,0,2,1]과 교정 [1,1,1,1,1], Brier 합0.34/5=0.068, fold평균0.0675의 차이, 제출순서[t2,t1]을 본문·식·문제에서 일치시킵니다."
+  },
 };
 
 /**
@@ -1347,6 +1396,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/competition-baseline": "895a83c1f192f791",
+  "ai/harness-failure-ablation": "a2eafca200b3faef",
+  "ai/math-functions-composition": "4b3257821a3f8e35",
+  "ai/model-selection-bias": "b5325f8612b2f7ce",
+  "ai/paired-experiment-design": "f4cdaa22f07a80a0",
+  "blockchain/aa-fundamentals": "bee9a48ed669a020",
+  "blockchain/eip4844-blob-fee": "49df0187376d0539",
   "ai/agent-changelog-evidence": "d836245b317bf83d",
   "ai/architecture-decision-records": "af6ac91ddada1812",
   "ai/engineering-lessons-ledger": "a47f67e2b082967e",
@@ -1423,8 +1479,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "embedded/scheduling-and-real-time": "854c44f36c3d7c77",
   "embedded/serial-buses-and-tradeoffs": "1b52a6c0969c064e",
   "embedded/timers-and-sampling": "d65d89abe395b450",
-  "embedded/interrupts-and-latency-budget": "c4b9955ab55f378b",
-  "embedded/mcu-memory-map-and-registers": "21fe616f12dd3bdb",
+  "embedded/interrupts-and-latency-budget": "cfdf6ea3645856a7",
+  "embedded/mcu-memory-map-and-registers": "eb97b92a0a3e5249",
   "semiconductors/yield-defect-and-packaging": "e2a487c102874573",
   "semiconductors/interconnect-and-rc-delay": "3996b172fe38d57e",
   "semiconductors/doping-and-thermal-budget": "5bfbe9faf76c12fd",
@@ -1528,17 +1584,17 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 
 "ai/agent-memory-lifecycle":"e3bb408c931ea9af",
 "ai/expert-parallelism-moe-systems":"1025d7f9fa6ef1a6",
-"ai/fast-weight-memory-and-chunkwise-recurrence":"4e73bd16767bf7dc",
+"ai/fast-weight-memory-and-chunkwise-recurrence":"7a7c39371c676228",
 "ai/flash-attention-io-aware-kernel":"4bc6b3022c566c1f",
-"ai/reward-design-for-verifiable-rl":"b82b3190faa642aa",
-"ai/world-model-latent-planning":"2c02ff942e6eb395",
+"ai/reward-design-for-verifiable-rl":"9945c9823b138b96",
+"ai/world-model-latent-planning":"ad27657439f3c92a",
 "banking/repo-and-collateral-funding":"ef687e7557d1a2b0",
-"blockchain/ethereum-future-roadmap":"1f2bb0357f878321",
-"blockchain/glamsterdam-block-execution":"e611a92accbeb7da",
+"blockchain/ethereum-future-roadmap":"5a7d76a6c5c062c7",
+"blockchain/glamsterdam-block-execution":"31ca197e74a5e91a",
 "blockchain/hyperliquid":"19e22f5f577fc95f",
-"blockchain/pq-account":"652971c258adb08e",
-"blockchain/robinhood-chain-blob-demand":"30c5c236fea938b8",
-"blockchain/robinhood-chain-settlement":"2bc832f4a623a363",
+"blockchain/pq-account":"f7e365500a6f43eb",
+"blockchain/robinhood-chain-blob-demand":"02cf5430aa729ef9",
+"blockchain/robinhood-chain-settlement":"a7a8664a0bcb7d32",
 "blockchain/rwa-composition":"d7b3622726d50ca4",
 "business/shop-daily-operations":"c37c9c2b3a26c9f3",
 "crypto/constraint-systems":"180451df5e454382",

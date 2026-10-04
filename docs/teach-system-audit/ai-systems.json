@@ -7,14 +7,17 @@
       "route": "ai/adaptive-hyperparameter-search",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/adaptive-hyperparameter-search.tsx",
       "publicPath": "cs/ai/adaptive-hyperparameter-search",
-      "status": "unreviewed",
+      "status": "reviewed-rewrite-required",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
+      "beforeDefects": [
+        "고정 기준점의 실제 공개 본문 전체 읽음: 작은 수치 사례 전에 정의가 선행",
+        "동일 사례의 구성 이유·원문 적용·예측 질문 흐름이 없음"
+      ],
       "fixture": null,
       "stageAnchors": {},
       "sourceEvidence": [],
@@ -26,7 +29,12 @@
       },
       "remaining": [
         "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      ],
+      "reviewEvidence": {
+        "baseline": "/tmp/teach-all/baseline/ai--adaptive-hyperparameter-search.json",
+        "actualBody": "src/pages/articles/ai/adaptive-hyperparameter-search/ModernArticle.tsx",
+        "fullBodyRead": true
+      }
     },
     {
       "route": "ai/agent-changelog-evidence",
@@ -1670,6 +1678,148 @@
       "route": "ai/competition-baseline",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/competition-baseline.tsx",
       "publicPath": "cs/ai/competition-baseline",
+      "status": "rewritten-local-verified",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [
+        "첫 절에서 용어 카드와 정의가 수치 사례보다 선행",
+        "정확한 수식이 있지만 같은 작은 사례를 구조·필요성·결과·원문까지 추적하지 않음",
+        "실제 원문 규칙 적용과 답 절이 있는 예측 질문 부재"
+      ],
+      "fixture": {
+        "assumed": true,
+        "rows": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "badValidation": [
+          [
+            1,
+            2,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "badCoverage": [
+          1,
+          1,
+          0,
+          2,
+          1
+        ],
+        "goodValidation": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "goodCoverage": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "y": [
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "prediction": [
+          0.1,
+          0.8,
+          0.4,
+          0.7,
+          0.2
+        ],
+        "brier": 0.068,
+        "foldMean": 0.0675,
+        "submissionOrder": [
+          "t2",
+          "t1"
+        ]
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "small-case",
+        "1": "inside-baseline",
+        "2": "why-coverage",
+        "3": "baseline-terms",
+        "4": "coverage",
+        "5-6": "baseline-source",
+        "7": "boundary",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.cross_val_predict.html",
+          "location": "1.7.2 cross_val_predict sample partition / metric warning / cv API",
+          "application": "5행 coverage 검사와 0-based train/test 인자, 행 평균0.068과 fold 평균0.0675 구분"
+        },
+        {
+          "href": "https://papers.nips.cc/paper_files/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html",
+          "location": "Abstract: configuration and data dependencies",
+          "application": "입력·설정·분할·출력·제출의 run lineage 한계"
+        }
+      ],
+      "validation": {
+        "semanticReview": "기존 식 보존·가정 보완·숫자 추적·공식 원문 실제 적용·한계·예측 질문 검토",
+        "humanize": {
+          "route": "ai/competition-baseline",
+          "roundTrip": true,
+          "chars": 3666,
+          "edits": 0,
+          "changeRate": 0.00013640703860318126,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "narrowText": 0,
+        "learning": "strict require-registration 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
+      },
+      "remaining": [
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "reviewEvidence": "/tmp/teach-all/baseline/ai--competition-baseline.json",
+      "bodyFiles": [
+        "src/pages/articles/ai/competition-baseline/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/competition-baseline/ModernArticle.tsx",
+      "contentHash": "b00f81b97076d5b7351a01595ef330ddf338aee759a8a5c5feac70d9c9992f70",
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-experiments07-summary.json",
+        "/tmp/teach-all/ai-systems-screens-07/summary.json",
+        "/tmp/teach-all/ai-systems-numeric-07.json",
+        "/tmp/teach-all/ai-systems-learning-audit-07.log",
+        "/tmp/teach-all/ai-systems-tsc-07.log"
+      ]
+    },
+    {
+      "route": "ai/competition-submission-control",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/competition-submission-control.tsx",
+      "publicPath": "cs/ai/competition-submission-control",
       "status": "reviewed-rewrite-required",
       "screeningSignals": {
         "explicitAssumption": false,
@@ -1678,36 +1828,9 @@
         "sectionCount": 4
       },
       "beforeDefects": [
-        "baseline·artifact chain 정의로 시작하며 [1,1,0,2,1] 실패 사례는 수식 뒤에 등장",
-        "OOF coverage 식과 누락·중복 경계는 보존 가치가 있으나 한 row를 manifest→prediction→검증으로 끝까지 추적하지 않음"
+        "고정 기준점의 실제 공개 본문 전체 읽음: 작은 수치 사례 전에 정의가 선행",
+        "동일 사례의 구성 이유·원문 적용·예측 질문 흐름이 없음"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "실제 baseline plainText 전체를 읽고 사례·순서·추적·근거 적용·한계 위치를 판정; 자동 신호만으로 통과시키지 않음",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
-      },
-      "remaining": [
-        "보존할 기존 설명·수식을 작은 사례와 실제 원문 적용에 연결하여 본문 재작성",
-        "학습 metadata·humanize·화면·문제 수량 검증"
-      ],
-      "reviewEvidence": "/tmp/teach-all/baseline/ai--competition-baseline.json"
-    },
-    {
-      "route": "ai/competition-submission-control",
-      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/competition-submission-control.tsx",
-      "publicPath": "cs/ai/competition-submission-control",
-      "status": "unreviewed",
-      "screeningSignals": {
-        "explicitAssumption": false,
-        "answerPointers": 0,
-        "levelMarkers": 0,
-        "sectionCount": 4
-      },
-      "beforeDefects": [],
       "fixture": null,
       "stageAnchors": {},
       "sourceEvidence": [],
@@ -1719,7 +1842,12 @@
       },
       "remaining": [
         "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      ],
+      "reviewEvidence": {
+        "baseline": "/tmp/teach-all/baseline/ai--competition-submission-control.json",
+        "actualBody": "src/pages/articles/ai/competition-submission-control/ModernArticle.tsx",
+        "fullBodyRead": true
+      }
     },
     {
       "route": "ai/competition-workflow",
@@ -1733,8 +1861,9 @@
         "sectionCount": 4
       },
       "beforeDefects": [
-        "prediction row·cutoff·horizon·metric 정의가 첫 등장하며 10시24h예는 뒤쪽수식해석",
-        "target window 식은 정확하나 하나의 행에서 가용입력·label·metric·평가역할을 끝까지 추적하는 단계 부재"
+        "실제 공개 본문을 끝까지 읽었으나 정의 카드가 작은 사례보다 앞섬",
+        "수식은 있으나 하나의 수치 사례를 전체 구조에서 원문 적용까지 잇지 않음",
+        "원문 규칙의 실제 적용과 답 절 있는 예측 질문 부족"
       ],
       "fixture": null,
       "stageAnchors": {},
@@ -1749,7 +1878,11 @@
         "보존할 기존 설명·수식을 작은 사례와 실제 원문 적용에 연결하여 본문 재작성",
         "학습 metadata·humanize·화면·문제 수량 검증"
       ],
-      "reviewEvidence": "/tmp/teach-all/baseline/ai--competition-workflow.json"
+      "reviewEvidence": {
+        "baseline": "/tmp/teach-all/baseline/ai--competition-workflow.json",
+        "actualBody": "src/pages/articles/ai/competition-workflow/FoundationArticle.tsx",
+        "fullBodyRead": true
+      }
     },
     {
       "route": "ai/context-engineering",
@@ -2039,9 +2172,9 @@
         "sectionCount": 4
       },
       "beforeDefects": [
-        "deploy unit·distribution·loss·estimand 카드가 작은 사례보다 선행",
-        "환자와patch 설명은 있으나 실제 환자 수와행수로 분할·평균량 차이를 계산하지 않음",
-        "risk 수식은 보존하되 공식 splitter 호출/원문 규칙과 같은 작은 사례 적용 필요"
+        "실제 공개 본문을 끝까지 읽었으나 정의 카드가 작은 사례보다 앞섬",
+        "수식은 있으나 하나의 수치 사례를 전체 구조에서 원문 적용까지 잇지 않음",
+        "원문 규칙의 실제 적용과 답 절 있는 예측 질문 부족"
       ],
       "fixture": null,
       "stageAnchors": {},
@@ -2056,7 +2189,11 @@
         "보존할 기존 설명·수식을 작은 사례와 실제 원문 적용에 연결하여 본문 재작성",
         "학습 metadata·humanize·화면·문제 수량 검증"
       ],
-      "reviewEvidence": "/tmp/teach-all/baseline/ai--cross-validation.json"
+      "reviewEvidence": {
+        "baseline": "/tmp/teach-all/baseline/ai--cross-validation.json",
+        "actualBody": "src/pages/articles/ai/cross-validation/FoundationArticle.tsx",
+        "fullBodyRead": true
+      }
     },
     {
       "route": "ai/cuda-graph-capture",
@@ -2431,14 +2568,17 @@
       "route": "ai/experiment-tracking",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/experiment-tracking.tsx",
       "publicPath": "cs/ai/experiment-tracking",
-      "status": "unreviewed",
+      "status": "reviewed-rewrite-required",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
+      "beforeDefects": [
+        "고정 기준점의 실제 공개 본문 전체 읽음: 작은 수치 사례 전에 정의가 선행",
+        "동일 사례의 구성 이유·원문 적용·예측 질문 흐름이 없음"
+      ],
       "fixture": null,
       "stageAnchors": {},
       "sourceEvidence": [],
@@ -2450,7 +2590,12 @@
       },
       "remaining": [
         "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      ],
+      "reviewEvidence": {
+        "baseline": "/tmp/teach-all/baseline/ai--experiment-tracking.json",
+        "actualBody": "src/pages/articles/ai/experiment-tracking/ModernArticle.tsx",
+        "fullBodyRead": true
+      }
     },
     {
       "route": "ai/expert-parallelism-moe-systems",
@@ -2556,14 +2701,18 @@
       "route": "ai/fold-local-validation",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/fold-local-validation.tsx",
       "publicPath": "cs/ai/fold-local-validation",
-      "status": "unreviewed",
+      "status": "reviewed-rewrite-required",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
+      "beforeDefects": [
+        "실제 공개 본문을 끝까지 읽었으나 정의 카드가 작은 사례보다 앞섬",
+        "수식은 있으나 하나의 수치 사례를 전체 구조에서 원문 적용까지 잇지 않음",
+        "원문 규칙의 실제 적용과 답 절 있는 예측 질문 부족"
+      ],
       "fixture": null,
       "stageAnchors": {},
       "sourceEvidence": [],
@@ -2575,7 +2724,12 @@
       },
       "remaining": [
         "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      ],
+      "reviewEvidence": {
+        "baseline": "/tmp/teach-all/baseline/ai--fold-local-validation.json",
+        "actualBody": "src/pages/articles/ai/fold-local-validation/ModernArticle.tsx",
+        "fullBodyRead": true
+      }
     },
     {
       "route": "ai/gradient-boosting",
@@ -2631,14 +2785,18 @@
       "route": "ai/grouped-validation",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/grouped-validation.tsx",
       "publicPath": "cs/ai/grouped-validation",
-      "status": "unreviewed",
+      "status": "reviewed-rewrite-required",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
+      "beforeDefects": [
+        "실제 공개 본문을 끝까지 읽었으나 정의 카드가 작은 사례보다 앞섬",
+        "수식은 있으나 하나의 수치 사례를 전체 구조에서 원문 적용까지 잇지 않음",
+        "원문 규칙의 실제 적용과 답 절 있는 예측 질문 부족"
+      ],
       "fixture": null,
       "stageAnchors": {},
       "sourceEvidence": [],
@@ -2650,13 +2808,18 @@
       },
       "remaining": [
         "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      ],
+      "reviewEvidence": {
+        "baseline": "/tmp/teach-all/baseline/ai--grouped-validation.json",
+        "actualBody": "src/pages/articles/ai/grouped-validation/ModernArticle.tsx",
+        "fullBodyRead": true
+      }
     },
     {
       "route": "ai/harness-failure-ablation",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/harness-failure-ablation.tsx",
       "publicPath": "cs/ai/harness-failure-ablation",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2664,24 +2827,76 @@
         "sectionCount": 4
       },
       "beforeDefects": [
-        "첫 절의 contract layer·ablation 정의와 네 용어가 작은 수치 사례보다 먼저 등장",
-        "정확한 개선·회귀 AND 수식은 있으나 실제 성공 수·회귀 수를 넣은 같은 fixture 추적 부재",
-        "연결된 Anthropic 원문 규칙을 실제 사례에 적용하는 본문과 예측 질문 부재"
+        "첫 절에서 용어 카드와 정의가 수치 사례보다 선행",
+        "정확한 수식이 있지만 같은 작은 사례를 구조·필요성·결과·원문까지 추적하지 않음",
+        "실제 원문 규칙 적용과 답 절이 있는 예측 질문 부재"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "assumed": true,
+        "target": 12,
+        "baselinePass": 3,
+        "candidatePass": 9,
+        "oldSuccess": 20,
+        "regressions": 1,
+        "tolerance": 0,
+        "delta": 0.5,
+        "regressionRate": 0.05,
+        "gate": 0
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "small-case",
+        "1": "inside-experiment",
+        "2": "classify",
+        "3": "ablation-terms",
+        "4": "ablation",
+        "5-6": "paper-harness-ablation",
+        "7": "boundary",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://www.anthropic.com/engineering/harness-design-long-running-apps",
+          "location": "Iterating on the harness, 2026-03-24",
+          "application": "같은 fixture에서 문서 안내 변경 하나의 기여와 회귀를 비교"
+        }
+      ],
       "validation": {
-        "semanticReview": "실제 baseline plainText 전체를 읽고 사례·순서·추적·근거 적용·한계 위치를 판정; 자동 신호만으로 통과시키지 않음",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "기존 식 보존·가정 보완·숫자 추적·공식 원문 실제 적용·한계·예측 질문 검토",
+        "humanize": {
+          "route": "ai/harness-failure-ablation",
+          "roundTrip": true,
+          "chars": 3035,
+          "edits": 1,
+          "changeRate": 0.0028011204481792618,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "narrowText": 0,
+        "learning": "strict require-registration 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
       "remaining": [
-        "보존할 기존 설명·수식을 작은 사례와 실제 원문 적용에 연결하여 본문 재작성",
-        "학습 metadata·humanize·화면·문제 수량 검증"
+        "root 통합 검토·전역 build·배포 검증"
       ],
-      "reviewEvidence": "/tmp/teach-all/baseline/ai--harness-failure-ablation.json"
+      "reviewEvidence": "/tmp/teach-all/baseline/ai--harness-failure-ablation.json",
+      "bodyFiles": [
+        "src/pages/articles/ai/harness-failure-ablation/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/harness-failure-ablation/ModernArticle.tsx",
+      "contentHash": "231f9d4b30a426ae7d21429e8a7e07a9e660a9f60031933ce51733213394250b",
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-experiments07-summary.json",
+        "/tmp/teach-all/ai-systems-screens-07/summary.json",
+        "/tmp/teach-all/ai-systems-numeric-07.json",
+        "/tmp/teach-all/ai-systems-learning-audit-07.log",
+        "/tmp/teach-all/ai-systems-tsc-07.log"
+      ]
     },
     {
       "route": "ai/hybrid-kv-cache-allocation",
@@ -3685,7 +3900,7 @@
       "route": "ai/model-selection-bias",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/model-selection-bias.tsx",
       "publicPath": "cs/ai/model-selection-bias",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -3693,23 +3908,84 @@
         "sectionCount": 4
       },
       "beforeDefects": [
-        "true score·noise 정의와 네 카드로 시작하며 .70/.69/.74/.71 수치는 수식 해석에서 뒤늦게 등장",
-        "Jensen 근거와 식은 정확하나 작은 사례→필요성→동결후독립평가 추적 및 실제 논문 적용 단계 부재"
+        "첫 절에서 용어 카드와 정의가 수치 사례보다 선행",
+        "정확한 수식이 있지만 같은 작은 사례를 구조·필요성·결과·원문까지 추적하지 않음",
+        "실제 원문 규칙 적용과 답 절이 있는 예측 질문 부재"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "assumed": true,
+        "true": [
+          0.7,
+          0.7,
+          0.7
+        ],
+        "observed": [
+          0.69,
+          0.74,
+          0.71
+        ],
+        "winner": "B",
+        "oneTrialOptimism": 0.04,
+        "twoIndependentNoise": [
+          -0.04,
+          0.04
+        ],
+        "expectedMaximum": 0.72
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "small-case",
+        "1": "inside-selection",
+        "2": "why-fresh",
+        "3": "selection-terms",
+        "4": "maximum",
+        "5-6": "paper-model-selection-bias",
+        "7": "boundary",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://jmlr.org/papers/v11/cawley10a.html",
+          "location": "Abstract: variance and over-fitting in model selection",
+          "application": "평균0.70 후보의 관측0.74 선택과 별도평가, 고정집합 부등식 한계"
+        }
+      ],
       "validation": {
-        "semanticReview": "실제 baseline plainText 전체를 읽고 사례·순서·추적·근거 적용·한계 위치를 판정; 자동 신호만으로 통과시키지 않음",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "기존 식 보존·가정 보완·숫자 추적·공식 원문 실제 적용·한계·예측 질문 검토",
+        "humanize": {
+          "route": "ai/model-selection-bias",
+          "roundTrip": true,
+          "chars": 3035,
+          "edits": 1,
+          "changeRate": 0.0019762845849802257,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "narrowText": 0,
+        "learning": "strict require-registration 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
       "remaining": [
-        "보존할 기존 설명·수식을 작은 사례와 실제 원문 적용에 연결하여 본문 재작성",
-        "학습 metadata·humanize·화면·문제 수량 검증"
+        "root 통합 검토·전역 build·배포 검증"
       ],
-      "reviewEvidence": "/tmp/teach-all/baseline/ai--model-selection-bias.json"
+      "reviewEvidence": "/tmp/teach-all/baseline/ai--model-selection-bias.json",
+      "bodyFiles": [
+        "src/pages/articles/ai/model-selection-bias/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/model-selection-bias/ModernArticle.tsx",
+      "contentHash": "9b0248bb2bbab4f2fd7a2711ddbe86e70edeba126dadb1a55215f18a041daf49",
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-experiments07-summary.json",
+        "/tmp/teach-all/ai-systems-screens-07/summary.json",
+        "/tmp/teach-all/ai-systems-numeric-07.json",
+        "/tmp/teach-all/ai-systems-learning-audit-07.log",
+        "/tmp/teach-all/ai-systems-tsc-07.log"
+      ]
     },
     {
       "route": "ai/model-vram-budgeting",
@@ -3865,14 +4141,17 @@
       "route": "ai/oof-risk-estimation",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/oof-risk-estimation.tsx",
       "publicPath": "cs/ai/oof-risk-estimation",
-      "status": "unreviewed",
+      "status": "reviewed-rewrite-required",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
+      "beforeDefects": [
+        "고정 기준점의 실제 공개 본문 전체 읽음: 작은 수치 사례 전에 정의가 선행",
+        "동일 사례의 구성 이유·원문 적용·예측 질문 흐름이 없음"
+      ],
       "fixture": null,
       "stageAnchors": {},
       "sourceEvidence": [],
@@ -3884,7 +4163,12 @@
       },
       "remaining": [
         "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      ],
+      "reviewEvidence": {
+        "baseline": "/tmp/teach-all/baseline/ai--oof-risk-estimation.json",
+        "actualBody": "src/pages/articles/ai/oof-risk-estimation/ModernArticle.tsx",
+        "fullBodyRead": true
+      }
     },
     {
       "route": "ai/open-r1",
@@ -3965,7 +4249,7 @@
       "route": "ai/paired-experiment-design",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/paired-experiment-design.tsx",
       "publicPath": "cs/ai/paired-experiment-design",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -3973,23 +4257,94 @@
         "sectionCount": 4
       },
       "beforeDefects": [
-        "failure slice·원인가설과 네 개념으로 시작하고 .006/.004/−.001/.005/.003은 수식 뒤 해석에서만 등장",
-        "paired delta 유도와 fold 비독립성은 정확하나 같은 실험의 사전조건→수치결과→채택 판정 추적 부재"
+        "첫 절에서 용어 카드와 정의가 수치 사례보다 선행",
+        "정확한 수식이 있지만 같은 작은 사례를 구조·필요성·결과·원문까지 추적하지 않음",
+        "실제 원문 규칙 적용과 답 절이 있는 예측 질문 부재"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "assumed": true,
+        "baseline": [
+          0.7,
+          0.72,
+          0.68,
+          0.71,
+          0.69
+        ],
+        "candidate": [
+          0.706,
+          0.724,
+          0.679,
+          0.715,
+          0.693
+        ],
+        "deltas": [
+          0.006,
+          0.004,
+          -0.001,
+          0.005,
+          0.003
+        ],
+        "meanDelta": 0.0034,
+        "latencyMs": [
+          100,
+          118
+        ],
+        "latencyGrowthCap": 0.1
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "small-case",
+        "1": "inside-pair",
+        "2": "why-one-change",
+        "3": "experiment-terms",
+        "4": "paired-delta",
+        "5-6": "paired-source",
+        "7": "boundary",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://scikit-learn.org/1.7/auto_examples/model_selection/plot_grid_search_stats.html",
+          "location": "differences array and dependence correction in official 1.7.2 example",
+          "application": "5개 같은 fold 차이와 평균0.0034, 독립성·유의성 경계"
+        }
+      ],
       "validation": {
-        "semanticReview": "실제 baseline plainText 전체를 읽고 사례·순서·추적·근거 적용·한계 위치를 판정; 자동 신호만으로 통과시키지 않음",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "기존 식 보존·가정 보완·숫자 추적·공식 원문 실제 적용·한계·예측 질문 검토",
+        "humanize": {
+          "route": "ai/paired-experiment-design",
+          "roundTrip": true,
+          "chars": 3088,
+          "edits": 1,
+          "changeRate": 0.0009724473257698429,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "narrowText": 0,
+        "learning": "strict require-registration 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
       "remaining": [
-        "보존할 기존 설명·수식을 작은 사례와 실제 원문 적용에 연결하여 본문 재작성",
-        "학습 metadata·humanize·화면·문제 수량 검증"
+        "root 통합 검토·전역 build·배포 검증"
       ],
-      "reviewEvidence": "/tmp/teach-all/baseline/ai--paired-experiment-design.json"
+      "reviewEvidence": "/tmp/teach-all/baseline/ai--paired-experiment-design.json",
+      "bodyFiles": [
+        "src/pages/articles/ai/paired-experiment-design/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/paired-experiment-design/ModernArticle.tsx",
+      "contentHash": "c05d8b78f28fdf7a5ebc2ec4a6e16fe53f9afc8781ad126def8adbb56fd6cf4e",
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-experiments07-summary.json",
+        "/tmp/teach-all/ai-systems-screens-07/summary.json",
+        "/tmp/teach-all/ai-systems-numeric-07.json",
+        "/tmp/teach-all/ai-systems-learning-audit-07.log",
+        "/tmp/teach-all/ai-systems-tsc-07.log"
+      ]
     },
     {
       "route": "ai/parallelism-strategy-and-placement",
@@ -5223,14 +5578,17 @@
       "route": "ai/validation-feedback-audit",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/validation-feedback-audit.tsx",
       "publicPath": "cs/ai/validation-feedback-audit",
-      "status": "unreviewed",
+      "status": "reviewed-rewrite-required",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
+      "beforeDefects": [
+        "고정 기준점의 실제 공개 본문 전체 읽음: 작은 수치 사례 전에 정의가 선행",
+        "동일 사례의 구성 이유·원문 적용·예측 질문 흐름이 없음"
+      ],
       "fixture": null,
       "stageAnchors": {},
       "sourceEvidence": [],
@@ -5242,7 +5600,12 @@
       },
       "remaining": [
         "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      ],
+      "reviewEvidence": {
+        "baseline": "/tmp/teach-all/baseline/ai--validation-feedback-audit.json",
+        "actualBody": "src/pages/articles/ai/validation-feedback-audit/ModernArticle.tsx",
+        "fullBodyRead": true
+      }
     },
     {
       "route": "ai/vllm-paged-attention",
@@ -5685,14 +6048,18 @@
       "route": "ai/walk-forward-validation",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/walk-forward-validation.tsx",
       "publicPath": "cs/ai/walk-forward-validation",
-      "status": "unreviewed",
+      "status": "reviewed-rewrite-required",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
+      "beforeDefects": [
+        "실제 공개 본문을 끝까지 읽었으나 정의 카드가 작은 사례보다 앞섬",
+        "수식은 있으나 하나의 수치 사례를 전체 구조에서 원문 적용까지 잇지 않음",
+        "원문 규칙의 실제 적용과 답 절 있는 예측 질문 부족"
+      ],
       "fixture": null,
       "stageAnchors": {},
       "sourceEvidence": [],
@@ -5704,7 +6071,12 @@
       },
       "remaining": [
         "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      ],
+      "reviewEvidence": {
+        "baseline": "/tmp/teach-all/baseline/ai--walk-forward-validation.json",
+        "actualBody": "src/pages/articles/ai/walk-forward-validation/ModernArticle.tsx",
+        "fullBodyRead": true
+      }
     },
     {
       "route": "ai/warmup-scheduling",
@@ -5808,20 +6180,20 @@
     }
   ],
   "counts": {
-    "unreviewed": 163,
-    "rewritten-local-verified": 16,
-    "reviewed-rewrite-required": 7
+    "reviewed-rewrite-required": 11,
+    "rewritten-local-verified": 20,
+    "unreviewed": 155
   },
   "localValidationSummary": {
-    "rewritten": 16,
-    "remainingUnreviewed": 163,
+    "rewritten": 20,
+    "remainingUnreviewed": 155,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
-    "learningStrict": "/tmp/teach-all/ai-systems-learning-audit-10.log",
-    "formulaStrict": "/tmp/teach-all/ai-systems-formula-audit-02.log",
-    "typescript": "/tmp/teach-all/ai-systems-tsc-app.log (진행 중)",
-    "note": "자동 screening은 검토 완료가 아니며 현재 10편만 실제 본문 개선과 로컬 검증을 완료했습니다.",
-    "reviewedRewriteRequired": 7
+    "learningStrict": "/tmp/teach-all/ai-systems-learning-audit-07.log — batch07 4편 통과",
+    "formulaStrict": "/tmp/teach-all/ai-systems-formula-audit-07.log — strict require-explicit 통과",
+    "typescript": "/tmp/teach-all/ai-systems-tsc-07.log — npx tsc -p tsconfig.app.json --noEmit exit0",
+    "note": "현재 20편 본문 개선·개별 로컬 검증 완료. 미검토 155편과 검토 후 재작성 필요 11편은 완료에 포함하지 않습니다.",
+    "reviewedRewriteRequired": 11
   }
 }

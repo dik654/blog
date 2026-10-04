@@ -721,11 +721,47 @@ export const agentArticles: Article[] = [
     title: "Harness failure ablation: 고장 난 layer 찾기",
     subcategory: "ai-agents",
     sections: [
-      { id: "failure-layer", title: "Replay fixture와 failure layer" },
-      { id: "classify", title: "실패 원인 분류" },
-      { id: "ablation", title: "Single-change paired test" },
-      { id: "paper-harness-ablation", title: "Long-running harness 근거" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 잘못된 자료를 읽는 문제에 무엇을 바꿔야 할까요"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 같은 작업을 다시 실행해 달라진 부분을 비교합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 성공은 3개에서 9개로 늘었지만 새 실패가 생겼습니다"
+  },
+  {
+    "id": "inside-experiment",
+    "title": "4. 입력과 변경점과 판정 결과를 별도로 보관합니다"
+  },
+  {
+    "id": "classify",
+    "title": "5. 자료 없음과 접근 거부에는 다른 수정이 필요합니다"
+  },
+  {
+    "id": "ablation-terms",
+    "title": "6. 변경 하나의 기여를 확인하는 이름을 붙입니다"
+  },
+  {
+    "id": "ablation",
+    "title": "7. 50%p 개선과 5% 회귀를 각각 계산합니다"
+  },
+  {
+    "id": "paper-harness-ablation",
+    "title": "8. 원문의 한 요소씩 제거하는 절차를 적용합니다"
+  },
+  {
+    "id": "boundary",
+    "title": "9. 한 번의 재생이 모든 부하의 기여를 증명하지는 않습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "10. 개선과 채택을 따로 판정할 수 있나요"
+  }
+],
     component: () => import("@/pages/articles/ai/harness-failure-ablation"),
   },
   {

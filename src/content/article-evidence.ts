@@ -823,7 +823,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://www.deeplearningbook.org/contents/mlp.html",
       note: "Feedforward network를 parameterized function composition으로 연결",
     },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "OpenStax Calculus Volume 1 §1.1의 같은 합성 사례",
+      "href": "https://openstax.org/books/calculus-volume-1/pages/1-1-review-of-functions",
+      "note": "같은 f(x)=x², g(x)=3x+1을 원문에서 확인하고 입력 2로 49와 13을 대조합니다. 식 (1.1)은 g∘f 순서라는 조건까지 본문 9절에 적었습니다."
+    },
+],
   "ai/math-functions-derivatives-gradients": [
     {
       kind: "공개 강의",
@@ -1809,12 +1815,37 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/competition-workflow": [],
   "ai/model-selection-bias": [
     { kind: "핵심 논문", label: "On Over-fitting in Model Selection and Subsequent Selection Bias", href: "https://www.jmlr.org/papers/v11/cawley10a.html", note: "Finite validation criterion의 variance와 반복 selection이 만드는 편향" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "model-selection-bias — Abstract: variance and over-fitting in model selection",
+      "href": "https://jmlr.org/papers/v11/cawley10a.html",
+      "note": "2026-10-04 원문 확인. 평균0.70 후보의 관측0.74 선택과 별도평가, 고정집합 부등식 한계"
+    },
+],
   "ai/prediction-time-feature-availability": [],
   "ai/competition-baseline": [
     { kind: "핵심 논문", label: "Hidden Technical Debt in Machine Learning Systems", href: "https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems", note: "Data·configuration·feedback dependency를 포함한 ML system risk taxonomy" },
-  ],
-  "ai/paired-experiment-design": [],
+    {
+      "kind": "보충 읽기",
+      "label": "competition-baseline — 1.7.2 cross_val_predict sample partition / metric warning / cv API",
+      "href": "https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.cross_val_predict.html",
+      "note": "2026-10-04 원문 확인. 5행 coverage 검사와 0-based train/test 인자, 행 평균0.068과 fold 평균0.0675 구분"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "competition-baseline — Abstract: configuration and data dependencies",
+      "href": "https://papers.nips.cc/paper_files/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html",
+      "note": "2026-10-04 원문 확인. 입력·설정·분할·출력·제출의 run lineage 한계"
+    },
+],
+  "ai/paired-experiment-design": [
+    {
+      "kind": "보충 읽기",
+      "label": "paired-experiment-design — differences array and dependence correction in official 1.7.2 example",
+      "href": "https://scikit-learn.org/1.7/auto_examples/model_selection/plot_grid_search_stats.html",
+      "note": "2026-10-04 원문 확인. 5개 같은 fold 차이와 평균0.0034, 독립성·유의성 경계"
+    },
+],
   "ai/competition-submission-control": [
     { kind: "핵심 논문", label: "The Ladder: A Reliable Leaderboard for Machine Learning Competitions", href: "https://proceedings.mlr.press/v37/blum15.html", note: "적응적 submission과 leaderboard holdout overfitting 문제" },
   ],
@@ -4023,7 +4054,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://www.anthropic.com/engineering/harness-design-long-running-apps",
       note: "planner·generator·evaluator 구조와 구성 요소 ablation",
     },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "harness-failure-ablation — Iterating on the harness, 2026-03-24",
+      "href": "https://www.anthropic.com/engineering/harness-design-long-running-apps",
+      "note": "2026-10-04 원문 확인. 같은 fixture에서 문서 안내 변경 하나의 기여와 회귀를 비교"
+    },
+],
   "ai/agent-control-boundaries": [
     {
       kind: "공식 문서",
@@ -5619,7 +5656,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://eips.ethereum.org/EIPS/eip-7701",
       note: "Withdrawn proposal의 validation/execution role 설계와 현재 상태",
     },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "EIP-7701 · Native Account Abstraction",
+      "href": "https://eips.ethereum.org/EIPS/eip-7701",
+      "note": "Withdrawn proposal의 validation·execution·paymaster frame을 ERC-4337·EIP-7702와 비교하는 설계 범위"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Account abstraction original contracts 1c6b669",
+      "href": "https://github.com/eth-infinitism/account-abstraction/tree/1c6b669d0eea734e09a87e095ba15e076151718a/contracts",
+      "note": "40개를 보내는 7번 요청과 0.003 ETH 예약을 원문 코드에 대응합니다."
+    },
+],
   "isms-aml/isms-overview": [
     {
       kind: "공식 규격",
@@ -8449,29 +8498,41 @@ export const ARTICLE_EVIDENCE: Readonly<
   "embedded/mcu-memory-map-and-registers": [
     {
       "kind": "공식 문서",
-      "label": "Raspberry Pi RP2040 Datasheet, 원본 26·43·46·245쪽",
+      "label": "Raspberry Pi, RP2040 Datasheet, address map and SIO registers",
       "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
-      "note": "SIO 기준 주소, 세 오프셋, GPIO5_CTRL 위치, 래치와 입력 차이를 확인했다."
+      "note": "build 3184e62-clean의 §2.2 주소 맵, §2.3.1 SIO 및 §2.19 IO_BANK0 표에서 주소와 동작을 대조합니다."
     },
     {
       "kind": "공식 문서",
-      "label": "Raspberry Pi Pico SDK Hardware APIs",
+      "label": "Raspberry Pi Pico SDK Hardware GPIO API",
       "href": "https://www.raspberrypi.com/documentation/pico-sdk/hardware.html",
-      "note": "핀 기능·출력 방향 설정 API를 확인했다."
+      "note": "gpio_set_function과 gpio_set_dir 등의 공식 API 사용 경로를 제시합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Pico SDK 2.2.0 · 고정 commit a1438dff",
+      "href": "https://github.com/raspberrypi/pico-sdk/blob/a1438dff1d38bd9c65dbd693f0e5db4b9ae91779/src/rp2_common/hardware_gpio/gpio.c",
+      "note": "gpio_init의 입력 방향→래치 낮음→SIO 선택과 gpio.h의 mask 계산·OE_SET·OUT_SET 쓰기를 연결합니다."
     }
   ],
   "embedded/interrupts-and-latency-budget": [
     {
       "kind": "공식 문서",
-      "label": "Raspberry Pi RP2040 Datasheet, 원본 60·79–80·239·243–244쪽",
+      "label": "Raspberry Pi, RP2040 Datasheet, GPIO and interrupt chapters",
       "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
-      "note": "GPIO 에지 상태·소거, 코어별 허용, IO_IRQ_BANK0 경로를 확인했다."
+      "note": "build 3184e62-clean §2.3.2·§2.19.3·§2.19.5의 IO_IRQ_BANK0, 코어별 허용, 에지 래치·소거를 대조합니다."
     },
     {
       "kind": "공식 문서",
-      "label": "Arm Cortex-M0+ Devices Generic User Guide, 원본 87–90쪽",
+      "label": "Arm, Cortex-M0+ Devices Generic User Guide",
       "href": "https://documentation-service.arm.com/static/5f04aadfdbdee951c1cdc957",
-      "note": "NVIC pending·priority와 재진입 조건을 확인했다."
+      "note": "DUI 0662A §4.2.6·§4.2.7, 인쇄 4-6·4-7쪽에서 주변 장치 요청 유지와 비활성 상태에서도 가능한 pending을 구분합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Pico SDK 2.2.0 · GPIO 사건 등록과 기본 처리기",
+      "href": "https://github.com/raspberrypi/pico-sdk/blob/a1438dff1d38bd9c65dbd693f0e5db4b9ae91779/src/rp2_common/hardware_gpio/gpio.c#L153-L203",
+      "note": "콜백 등록→사건 허용→IRQ 허용과 기본 처리기의 상태 읽기→소거→콜백 호출을 GPIO2·event 8에 적용합니다."
     }
   ],
   "embedded/timers-and-sampling": [
@@ -9832,6 +9893,26 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "NSA QKD and Quantum Cryptography",
       "href": "https://www.nsa.gov/Cybersecurity/Quantum-Key-Distribution-QKD-and-Quantum-Cryptography-QC/",
       "note": "NSS 관할 권고·장치·중계·가용성 범위로만 사용했습니다. 페이지의 오래된 NIST 표준화 진행 설명은 현재 상태 근거로 사용하지 않았습니다. 확인일 2026-10-04."
+    }
+  ],
+  "blockchain/eip4844-blob-fee": [
+    {
+      "kind": "공식 문서",
+      "label": "EIP-4844 blob gas accounting",
+      "href": "https://eips.ethereum.org/EIPS/eip-4844",
+      "note": "초과분과 정수 가격 함수"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-7918 reserve-price branch",
+      "href": "https://eips.ethereum.org/EIPS/eip-7918",
+      "note": "BPO2 사례에서 다음 초과분 6과 8이 나오는 조건을 비교합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "go-ethereum c9a2bc7 eip4844.go",
+      "href": "https://github.com/ethereum/go-ethereum/blob/c9a2bc73c847319a8faa57de59e42c0efc420682/consensus/misc/eip4844/eip4844.go",
+      "note": "원본 fakeExponential 함수를 여섯 입력으로 로컬에서 실행했습니다."
     }
   ],
 };
