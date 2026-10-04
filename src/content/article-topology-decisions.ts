@@ -79,13 +79,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "sharedGate": "block16에서3→3→4개,position37은block2/offset5,공유앞32·tailCoW와ref2→1→0을실제v0.27.1코드의partial-hit확장및해제경계와대조합니다."
   },
   "ai/vllm-spec-decode": {
-    action: "keep",
-    status: "reviewed",
-    reviewedAt: "2026-08-29",
-    rationale:
-      "Serial baseline→draft/verify→distribution invariance→acceptance rate·speculation length·rejection point→speedup model→break-even이 하나의 speculative execution contract입니다. 2026-08-29 보강으로 cost model 절이 추가됐지만 변형(self-speculative·MTP·tree·suffix)은 speculative-decoding-variants로 분리합니다.",
-    sharedGate:
-      "같은 draft/target·α·K·batch fixture에서 accepted length·forward 수·wall-clock을 함께 재어 break-even을 판정합니다.",
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 네 후보가 확률 보정·점수 index·출력과 유효 KV·시간 비용을 통과하는 한 generation cycle을 설명합니다. MTP·EAGLE 구조의 상세는 변형 정본으로 이어가며 이 글은 동일 검증 계약에 필요한 차이를 설명합니다.",
+    "sharedGate": "p(.7,.3)/q(.4,.6),후보ABBA·비교값.6/.4/.8/.2·결과ABA와A2/Y 3,history 4→7·computed 3→8→6 및E[Y]2.7731·시간비 1.848733/.840333을 6+4·본문·5장면에 맞춥니다. pinned 전체 5소스와 11패널,5식,390/1440 및 actual TS와 source byte 동일성을 확인합니다."
   },
   "ai/retrieval-ranking-funnel": {
     action: "keep",
@@ -1783,6 +1781,55 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "한 요청의 앞 기록이 어디서 일치하고 어떤 저장 위치를 공유하며 언제 반환되는지 하나의 경로로 설명합니다. 탐색·수명·순서·kernel 주소는 같은 재사용의 정확성을 결정하므로 R 사례를 이어가고 KV shape와 일반 block 배정의 정본은 연결해 재사용합니다.",
     "sharedGate": "R의 8자리·공유 6·hit 0/6/6과 12자리 저장, B=4의 0/4/4와 16자리, 보호 8·요구 5·반환 4를 본문·Viz·6+4에 맞춥니다. 실제 원문 11개·15패널·4장면·2수식과 390/1440을 확인하고 마지막 입력·namespace·hybrid·offline 경계 및 수치를 독립 검산합니다."
   },
+  "ai/math-probability-expectation-variance": {
+    "action": "keep",
+    "rationale": "같은 네 순서 기록에서 질문·정보·곱 관계를 바꾸어야 조건부확률과 연쇄법칙 및 독립의 차이를 한 표로 검산할 수 있습니다. 결과를 숫자로 바꾸는 확률변수와 표본 평균의 흔들림은 기존 두 연결 글에서 이어가며 여기서는 사건과 비중의 계약을 마무리합니다.",
+    "sharedGate": "네 기록의 1/4, 정보 B의 1/2과 C의 2/3, HT의 곱 복원, 주변 확률은 반반이나 HH=3/8인 반례, 세 쌍 1/4 대 세 확률의 곱 1/8을 같은 본문·그림·원문에서 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "crypto/elliptic-curves": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 P의 덧셈·비트 반복·좌표 변환을 실제 원문까지 이어야 저장 형태와 점의 유효성을 구분할 수 있습니다. 별도 cofactor 반례와 BN254 적용은 주 사례와 명확히 구별해 같은 글의 입력 경계를 설명합니다.",
+    "sharedGate": "19점의 361쌍·20스칼라와 원본 중간값을 정수 계산에 대조했습니다. 실제 G1·G2 반례와 전체 페어링 관계는 실행했으며 EIP 파서 모형·실제 EVM·독립 페어링·상수 시간 검증 범위를 구분했습니다."
+  },
+  "banking/central-bank-and-policy-transmission": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 은행의 지급 부족에서 자금 조달 조건을 바꾸고 그 의미를 공장의 장기 계약과 지출까지 이어야 현재 금리·미래 기대·장부의 관계를 구분할 수 있습니다. 국가별 틀은 이 연결의 조건을 비교합니다.",
+    "sharedGate": "6억의 하루 이자와 거래 상대별 장부, 4.3→4.05%의 기대 경로, 6+4 답 경로와 실제 운영 문서의 조건을 대조합니다."
+  },
+  "ai/math-random-variables-expectation": {
+    "action": "keep",
+    "rationale": "같은 네 기록에서 함수·유도분포·기댓값을 차례로 만들고 같은 행의 점수·뒷면 수·제곱을 비교해야 선형성과 비선형 경계가 구체적 계산으로 연결됩니다. 표본평균의 분산과 추정 정확도는 다음 글로 넘기고 여기서는 어떤 평균을 정의했는지와 존재 조건을 마무리합니다.",
+    "sharedGate": "X의 2·1·1·0에서 분포 1/4·1/2·1/4와 E[X]=1, 점수 평균 5, E[XY]=1/2 대 평균 곱 1, 제곱 평균 3/2 및 상수일 때 등호를 본문·그림·실제 MIT 식에서 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "banking/payment-clearing-settlement": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 여섯 지시를 접수·대조·이행·실패와 두 통화 교환으로 이어야 지급량·유동성·신용노출·최종성을 구분할 수 있습니다. 분리 대신 같은 수치의 변화를 유지합니다.",
+    "sharedGate": "260·10·120/100·원자적10을 독립 검산하고 실제 문서의 최종성·반환/PvP 조건 및 기초6·심화4를 대조합니다."
+  },
+  "ai/math-variance-sampling": {
+    "action": "keep",
+    "rationale": "같은 네 점수에서 원래 퍼짐과 평균의 퍼짐을 비교해야 n−1 교정과 1/B의 서로 다른 분모가 연결됩니다. 그 점수를 같은 위치의 기울기로 재사용하며 표집 방식이 중심과 흔들림, 한 번의 감소에 미치는 차이를 계산하는 하나의 질문입니다. 장기 최적화 정리와 옵티마이저 상태는 연결 정본으로 남깁니다.",
+    "sharedGate": "점수 3·2·2·1의 평균 2와 분산 1/2, 관측 1·2·3의 2/3 대 1, 독립 B=2의 분산 1/4와 큰 오차 확률 5/8, B=16의 상한 1/8을 대조합니다. 이어 복사의 분산 1/2, 비복원 분산 1/6, q 보정 평균 2, 손실 3/8→321/800을 본문과 그림, 원문 식, 복습 답에서 확인합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "crypto/pairing": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은P와Q의 점 이동·선 값·최종72승을 이어야 원시 값과 마지막 출력의 차이를 이해할 수 있습니다. 실제BN은 별도 곡선·정규화로 명시해 같은 역할에 대응합니다.",
+    "sharedGate": "작은 정수 연산16쌍과360개 원소, 실제 고정 Rust의cE 비교와87개 선·두 쌍의 곱을 확인했습니다. 일반정리 증명·독립 페어링 구현·EVM·시간 측정과 검산 범위를 구분합니다."
+  },
 };
 
 /**
@@ -1790,6 +1837,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/math-probability-expectation-variance": "ecfd3995b1373409",
+  "ai/math-random-variables-expectation": "2085777462bfb2ff",
+  "ai/math-variance-sampling": "e5ce5d929d86a3b6",
+  "banking/central-bank-and-policy-transmission": "7f2732e5a01757b9",
+  "banking/payment-clearing-settlement": "502add20e5d3e638",
+  "crypto/elliptic-curves": "536a045b49354879",
+  "crypto/pairing": "4cfa530fa12276cb",
   "ai/math-numerical-precision-stability": "9b9a8b90f50ded78",
   "ai/prefix-caching-radix-attention": "28ef371cafdc6aa0",
   "banking/bank-balance-sheet-and-deposit-creation": "05598a4b186734fa",
@@ -1987,7 +2041,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/tokenizer": "87660ba663da6629",
   "ai/vae": "147d459b37db9ccd",
   "ai/vllm-paged-attention": "ea303e6227016d05",
-  "ai/vllm-spec-decode": "4ae6d26832c9fab4",
+  "ai/vllm-spec-decode": "d4e161bdd3651539",
   "ai/vllm-scheduler": "2bde960d9b11b3a0",
   "ai/retrieval-ranking-funnel": "a90156ebba994926",
   "ai/model-vram-budgeting": "c4fcc7f16d877504",
@@ -2037,7 +2091,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "ai/flash-attention-io-aware-kernel":"4bc6b3022c566c1f",
 "ai/reward-design-for-verifiable-rl":"9945c9823b138b96",
 "ai/world-model-latent-planning":"ad27657439f3c92a",
-"banking/repo-and-collateral-funding":"ef687e7557d1a2b0",
+"banking/repo-and-collateral-funding":"8b5c5b3336427561",
 "blockchain/ethereum-future-roadmap":"5a7d76a6c5c062c7",
 "blockchain/glamsterdam-block-execution":"31ca197e74a5e91a",
 "blockchain/hyperliquid":"19e22f5f577fc95f",

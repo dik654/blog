@@ -2710,20 +2710,18 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/ai/math-exponents-logarithms#log-bases"
   },
   "sample-space": {
-    id: "sample-space",
-    domain: "statistics",
-    label: "Sample space · outcome",
-    definition:
-      "무작위 실험에서 가능한 outcome 전체의 집합과 실제로 관측된 결과 하나를 구분하는 probability model의 출발점입니다.",
-    canonicalHref: "/cs/ai/math-probability-expectation-variance#outcomes",
+    "id": "sample-space",
+    "domain": "statistics",
+    "label": "Sample space · outcome",
+    "definition": "정한 무작위 실험에서 구별하기로 한 가능한 기록 전체의 집합입니다. 결과는 그중 하나이며 순서 기록과 개수 기록처럼 기록 규칙에 따라 표본공간과 남는 정보가 달라집니다.",
+    "canonicalHref": "/cs/ai/math-probability-expectation-variance#names"
   },
   "probability-distribution": {
-    id: "probability-distribution",
-    domain: "statistics",
-    label: "Probability distribution",
-    definition:
-      "가능한 outcome 또는 random variable의 값에 0 이상의 probability를 배정하고 전체 mass를 1로 만드는 규칙입니다.",
-    canonicalHref: "/cs/ai/math-probability-expectation-variance#outcomes",
+    "id": "probability-distribution",
+    "domain": "statistics",
+    "label": "Probability distribution",
+    "definition": "확률법칙은 정한 사건들에 음수가 아닌 확률을 배정하고 전체 확률을 1로 맞춥니다. 유한·가산 이산 모형은 각 기록의 점확률을 합해 사건의 확률을 구하지만 일반 연속 모형은 개별 점의 확률만으로 설명하지 않습니다.",
+    "canonicalHref": "/cs/ai/math-probability-expectation-variance#outcomes"
   },
   "softmax-normalization": {
     id: "softmax-normalization",
@@ -2758,116 +2756,98 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/softmax#output-boundary",
   },
   "probability-event": {
-    id: "probability-event",
-    domain: "statistics",
-    label: "Event · 사건",
-    definition:
-      "Sample space에서 관심 있는 outcome을 하나 이상 묶은 부분집합이며, event의 probability는 그 안에 포함된 outcome mass의 합입니다.",
-    canonicalHref:
-      "/cs/ai/math-probability-expectation-variance#outcomes",
+    "id": "probability-event",
+    "domain": "statistics",
+    "label": "Event · 사건",
+    "definition": "관심 있는 조건에 맞는 결과들의 묶음입니다. 이 글의 유한 표본공간에서는 빈 집합을 포함한 모든 부분집합이 사건이며 확률은 포함된 기록의 비중 합입니다. 일반 확률모형에서는 확률을 정의한 측정 가능한 집합을 사용합니다.",
+    "canonicalHref": "/cs/ai/math-probability-expectation-variance#outcomes"
   },
   "conditional-probability": {
-    id: "conditional-probability",
-    domain: "statistics",
-    label: "Conditional probability · 조건부확률",
-    definition:
-      "Event B가 일어났다는 정보를 받은 뒤 가능한 범위를 B 안으로 좁혀 event A의 probability를 다시 정규화한 값입니다.",
-    canonicalHref:
-      "/cs/ai/math-probability-expectation-variance#conditional-probability",
+    "id": "conditional-probability",
+    "domain": "statistics",
+    "label": "Conditional probability · 조건부확률",
+    "definition": "사건 B의 확률이 양수일 때 P(A∩B)를 P(B)로 나누어 B라는 정보 안에서 A가 차지하는 비율을 정합니다. P(B)=0에는 이 사건 비율 정의를 그대로 쓰지 않으며 정보에 따른 조건과 원인에 대한 개입을 구별합니다.",
+    "canonicalHref": "/cs/ai/math-probability-expectation-variance#conditional-probability"
   },
   "probability-chain-rule": {
-    id: "probability-chain-rule",
-    kind: "theorem",
-    domain: "statistics",
-    label: "Probability chain rule · 확률의 연쇄법칙",
-    definition:
-      "여러 변수가 함께 나타날 joint probability를 정해진 순서의 conditional probability product로 정확히 분해하는 항등식입니다.",
-    canonicalHref:
-      "/cs/ai/math-probability-expectation-variance#chain-rule",
+    "id": "probability-chain-rule",
+    "kind": "theorem",
+    "domain": "statistics",
+    "label": "Probability chain rule · 확률의 연쇄법칙",
+    "definition": "여러 결과의 결합확률을 앞 기록을 조건으로 한 다음 결과의 확률들의 곱으로 복원하는 항등식입니다. 사용하는 조건부 비율의 이전 기록 확률은 양수여야 하며 그 조건을 지우려면 별도의 독립 가정이 필요합니다.",
+    "canonicalHref": "/cs/ai/math-probability-expectation-variance#chain-rule"
   },
   "probability-independence": {
-    id: "probability-independence",
-    domain: "statistics",
-    label: "Probabilistic independence",
-    definition:
-      "한 event를 알게 되어도 다른 event의 probability가 바뀌지 않아 joint mass가 marginal mass의 곱으로 분해되는 관계입니다.",
-    canonicalHref:
-      "/cs/ai/math-probability-expectation-variance#independence-boundary",
+    "id": "probability-independence",
+    "domain": "statistics",
+    "label": "Probabilistic independence",
+    "definition": "두 사건의 결합확률이 각 확률의 곱과 같은 관계입니다. 조건 사건의 확률이 양수이면 한 사건의 정보를 받아도 다른 확률이 바뀌지 않는다는 식과 같습니다. 배타성·쌍별 독립·새 조건 아래의 독립은 각각 구별합니다.",
+    "canonicalHref": "/cs/ai/math-probability-expectation-variance#independence-boundary"
   },
   "random-variable": {
-    id: "random-variable",
-    domain: "statistics",
-    label: "Random variable",
-    definition:
-      "Sample space의 outcome을 계산 가능한 실수값으로 보내는 함수이며, 그 값의 불확실성은 induced distribution으로 표현합니다.",
-    canonicalHref: "/cs/ai/math-random-variables-expectation#overview",
+    "id": "random-variable",
+    "domain": "statistics",
+    "label": "Random variable",
+    "definition": "가능한 실험 결과를 정한 숫자로 보내는 측정 가능한 함수입니다. 같은 입력에는 같은 값을 주며 그 값의 불확실성은 입력의 확률법칙에서 따라옵니다. 같은 숫자로 간 여러 결과의 순서는 출력값만으로 구별하지 못할 수 있습니다.",
+    "canonicalHref": "/cs/ai/math-random-variables-expectation#mapping"
   },
-  expectation: {
-    id: "expectation",
-    domain: "statistics",
-    label: "Expectation",
-    definition:
-      "Random variable의 가능한 값을 probability로 가중해 더한 distribution의 중심이며, 한 번의 관측값을 예언하는 값은 아닙니다.",
-    canonicalHref: "/cs/ai/math-random-variables-expectation#expectation",
+  "expectation": {
+    "id": "expectation",
+    "domain": "statistics",
+    "label": "Expectation",
+    "definition": "확률변수의 값을 그 분포에 따라 가중하여 평균한 양입니다. 유한·가산 이산 변수는 값과 점확률의 곱을 합하며 유한한 기댓값에는 절댓값의 가중합이 유한해야 합니다. 최빈값·다음 관측값·반드시 가능한 실현값과 구별하고 반복 평균 해석의 조건을 따로 확인합니다.",
+    "canonicalHref": "/cs/ai/math-random-variables-expectation#expectation"
   },
   "expectation-linearity": {
-    id: "expectation-linearity",
-    kind: "theorem",
-    domain: "statistics",
-    label: "Linearity of expectation",
-    definition:
-      "Random variables의 dependence와 무관하게 finite expectation의 합과 fixed scalar를 expectation 밖으로 분배할 수 있는 항등식입니다.",
-    canonicalHref:
-      "/cs/ai/math-random-variables-expectation#transform-boundary",
+    "id": "expectation-linearity",
+    "kind": "theorem",
+    "domain": "statistics",
+    "label": "Linearity of expectation",
+    "definition": "적분 가능한 확률변수와 고정 상수에 대해 E[aX+bY]=aE[X]+bE[Y]가 성립하는 성질입니다. 독립은 필요하지 않으며 같은 확률로 가중한 합의 분배법칙을 사용합니다. 결과에 따라 바뀌는 계수나 비선형 변환을 같은 규칙으로 밖으로 꺼내지 않습니다.",
+    "canonicalHref": "/cs/ai/math-random-variables-expectation#transform-boundary"
   },
-  variance: {
-    id: "variance",
-    domain: "statistics",
-    label: "Variance · standard deviation",
-    definition:
-      "Random variable이 expectation에서 떨어진 편차의 제곱을 평균내 distribution의 흩어짐을 측정합니다.",
-    canonicalHref: "/cs/ai/math-variance-sampling#variance",
+  "variance": {
+    "id": "variance",
+    "domain": "statistics",
+    "label": "Variance · standard deviation",
+    "definition": "원래 평균에서 떨어진 거리를 제곱해 양쪽 차이가 지워지지 않게 합니다. 유한한 분산에는 유한한 두 번째 모멘트가 필요합니다. 평균의 분산과 한 관측의 분산을 구별합니다.",
+    "canonicalHref": "/cs/ai/math-variance-sampling#variance"
   },
   "standard-deviation": {
-    id: "standard-deviation",
-    domain: "statistics",
-    label: "Standard deviation",
-    definition:
-      "Variance의 square root를 취해 random variable과 같은 measurement unit으로 되돌린 spread scale입니다.",
-    canonicalHref: "/cs/ai/math-variance-sampling#variance",
+    "id": "standard-deviation",
+    "domain": "statistics",
+    "label": "Standard deviation",
+    "definition": "제곱된 단위에 제곱근을 취해 원래 단위로 읽습니다. 각 값이 평균에서 언제나 이 거리만큼 떨어진다는 뜻은 아닙니다.",
+    "canonicalHref": "/cs/ai/math-variance-sampling#variance"
   },
   "sample-mean": {
-    id: "sample-mean",
-    domain: "statistics",
-    label: "Sample mean",
-    definition:
-      "관측한 sample들의 산술평균으로 population expectation을 추정하며, 독립·동일분포 조건에서 variance가 sample 수에 반비례합니다.",
-    canonicalHref: "/cs/ai/math-variance-sampling#sample-estimation",
+    "id": "sample-mean",
+    "domain": "statistics",
+    "label": "Sample mean",
+    "definition": "관측한 여러 값에 같은 비중을 주어 원래 평균을 추정합니다. 같은 한 값을 복사해도 평균은 불편할 수 있지만 분산이 줄지 않습니다. 독립·분산·목표 비중을 따로 확인합니다.",
+    "canonicalHref": "/cs/ai/math-variance-sampling#sample-estimation"
   },
   "sample-variance-estimator": {
-    id: "sample-variance-estimator",
-    domain: "statistics",
-    label: "Sample variance estimator",
-    definition:
-      "같은 sample에서 추정한 mean 주변 square-deviation 합을 n−1로 나눠 i.i.d. population variance를 unbiased하게 추정하는 통계량입니다.",
-    canonicalHref: "/cs/ai/math-variance-sampling#sample-estimation",
+    "id": "sample-variance-estimator",
+    "domain": "statistics",
+    "label": "Sample variance estimator",
+    "definition": "같은 자료로 평균을 먼저 맞추며 덜 센 제곱 거리의 기댓값을 보정합니다. n>1인 i.i.d.와 유한 분산을 전제합니다. 관측값 자체의 분산 2/3과 질문이 다르고 매 표본에서 더 정확하다는 뜻도 아닙니다.",
+    "canonicalHref": "/cs/ai/math-variance-sampling#sample-correction"
   },
   "law-of-large-numbers": {
-    id: "law-of-large-numbers",
-    kind: "theorem",
-    domain: "statistics",
-    label: "Law of large numbers",
-    definition:
-      "적절한 조건에서 독립 반복 sample의 평균이 sample 수가 커질수록 population expectation에 가까워진다는 정리입니다.",
-    canonicalHref: "/cs/ai/math-variance-sampling#law-of-large-numbers",
+    "id": "law-of-large-numbers",
+    "kind": "theorem",
+    "domain": "statistics",
+    "label": "Law of large numbers",
+    "definition": "평균이 목표에서 정해 둔 폭 이상 벗어날 확률이 반복 수와 함께 줄어듭니다. 본문 증명은 i.i.d. 유한 분산의 충분조건입니다. 분산이 무한해도 유한한 절댓값 기댓값 아래 더 넓은 정리가 있으며 유한 B의 정확한 일치를 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/math-variance-sampling#law-of-large-numbers"
   },
   "stochastic-gradient-estimator": {
-    id: "stochastic-gradient-estimator",
-    domain: "machine-learning",
-    label: "Stochastic gradient estimator",
-    definition:
-      "무작위로 뽑은 sample 또는 mini-batch의 loss gradient를 평균해 전체 empirical gradient를 추정하는 random vector입니다.",
-    canonicalHref: "/cs/ai/math-variance-sampling#gradient-estimator",
+    "id": "stochastic-gradient-estimator",
+    "domain": "machine-learning",
+    "label": "Stochastic gradient estimator",
+    "definition": "일부 자료의 기울기를 같은 현재 위치에서 평균해 전체 목표의 기울기를 추정합니다. 조건부 균등 주변분포는 불편성을 주지만 분산 감소와 매번의 손실 감소는 별도입니다. θ=−1.5에서 선택 a=1, 학습률 0.1이면 손실이 0.375에서 0.40125로 늘어납니다.",
+    "canonicalHref": "/cs/ai/math-variance-sampling#gradient-estimator"
   },
   "optimization-objective": {
     id: "optimization-objective",
@@ -3809,88 +3789,91 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/llm-serving-capacity#capacity-logs",
   },
   "speculative-draft-verify-cycle": {
-    id: "speculative-draft-verify-cycle",
-    kind: "method",
-    domain: "computer-science",
-    label: "Speculative draft–verify cycle",
-    aliases: ["Speculative Decoding", "Draft Model", "Target Model", "Draft Token"],
-    definition:
-      "빠른 proposer가 현재 확정 prefix의 미래 token 후보를 만들고 target model이 여러 위치를 함께 평가한 뒤, 연속으로 수락된 prefix와 correction 또는 bonus만 runtime state에 commit하는 generation cycle입니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#overview",
+    "id": "speculative-draft-verify-cycle",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Speculative draft–verify cycle",
+    "aliases": [
+      "Speculative Decoding",
+      "Draft Model",
+      "Target Model",
+      "Draft Token"
+    ],
+    "definition": "여러 후보를 먼저 만든 뒤 기준 모델로 확인하고 확정 출력과 계산 기록을 함께 갱신합니다. 확정 출력 전체의 KV가 이미 계산된 것은 아닙니다. 새 correction 또는 bonus는 다음 실행의 입력이며 가정한 동기 경로의 상태를 따릅니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#request-trace"
   },
   "speculative-acceptance-length": {
-    id: "speculative-acceptance-length",
-    kind: "metric",
-    domain: "statistics",
-    label: "Speculative acceptance · committed length",
-    aliases: ["Accepted Length", "Acceptance length", "Committed length"],
-    definition:
-      "Verification cycle에서 첫 거부 전까지 수락된 draft prefix A와 correction·bonus까지 포함해 실제 sequence에 반영한 token 수 Y를 구분해 세는 efficiency metric입니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#acceptance-length",
+    "id": "speculative-acceptance-length",
+    "kind": "metric",
+    "domain": "statistics",
+    "label": "Speculative acceptance · committed length",
+    "aliases": [
+      "Accepted Length",
+      "Acceptance length",
+      "Committed length"
+    ],
+    "definition": "그대로 받아들인 후보 길이 A와 교체 또는 bonus를 포함한 검증 출력 길이 Y를 따로 셉니다. Y=A+1은 단일 chain에서 EOS·최대 출력 길이로 잘리기 전의 관계입니다. 사용자에게 전달한 길이나 다른 검증 방식의 metric과 구분합니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#acceptance-length"
   },
   "speculative-rejection-sampling": {
-    id: "speculative-rejection-sampling",
-    kind: "method",
-    domain: "statistics",
-    label: "Speculative rejection sampling",
-    aliases: ["Token Acceptance", "Modified rejection sampling"],
-    definition:
-      "Draft token x를 min(1,p(x)/q(x)) 확률로 수락하고 거부되면 normalized positive residual (p−q)+에서 correction을 뽑아 target probability mass를 복원하는 sampling 방법입니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#draft-verify",
+    "id": "speculative-rejection-sampling",
+    "kind": "method",
+    "domain": "statistics",
+    "label": "Speculative rejection sampling",
+    "aliases": [
+      "Token Acceptance",
+      "Modified rejection sampling"
+    ],
+    "definition": "제안의 공통 확률 비중을 받아들이고 거부된 경우 부족한 비중에서 새 출력을 고릅니다. 같은 prefix의 정규화된 분포와 실제 q에서 뽑은 후보가 필요합니다. q(x)=0 사건과 거부 비중 0의 경로는 비율을 무조건 계산하지 않습니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#distribution-proof"
   },
   "speculative-target-distribution-invariance": {
-    id: "speculative-target-distribution-invariance",
-    kind: "theorem",
-    domain: "statistics",
-    label: "Speculative target-distribution invariance",
-    definition:
-      "동일한 committed prefix의 normalized target p와 draft q에 올바른 acceptance·residual correction을 적용하면 최종 token probability가 모든 token에서 p와 같아진다는 분포 보존 성질입니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#paper-speculative-decoding",
+    "id": "speculative-target-distribution-invariance",
+    "kind": "theorem",
+    "domain": "statistics",
+    "label": "Speculative target-distribution invariance",
+    "definition": "수락과 교체의 두 확률 비중을 합하면 기준 모델의 선택 비중으로 돌아옵니다. 실제로 확정된 같은 prefix마다 보존을 적용합니다. 같은 난수 seed의 문자열 일치나 유한 정밀도 구현의 무오류를 뜻하지 않습니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#distribution-proof"
   },
   "speculative-suffix-causality": {
-    id: "speculative-suffix-causality",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Speculative suffix causality",
-    definition:
-      "첫 거부 뒤의 draft token은 교체되기 전 후보 prefix를 조건으로 생성됐으므로, correction으로 prefix가 달라지면 후속 후보를 확정 대상에서 제외하고 다시 계산해야 한다는 causal 조건입니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#draft-verify",
+    "id": "speculative-suffix-causality",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Speculative suffix causality",
+    "definition": "앞 후보를 바꾸면 뒤 후보가 가정했던 앞 글도 달라져 이어 확정할 수 없습니다. 같은 conditional 분포를 올바른 실제 앞 글에서 적용하는 계약입니다. 단순 개별 수락 flag의 합으로 연속 prefix 길이를 대신하지 않습니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#request-trace"
   },
   "eagle-feature-level-proposal": {
-    id: "eagle-feature-level-proposal",
-    kind: "method",
-    domain: "machine-learning",
-    label: "EAGLE feature-level proposal",
-    definition:
-      "Target model의 feature와 token sequence를 조건으로 다음 feature를 autoregressive하게 예측해 speculative token 후보를 만드는 lightweight drafting 방법입니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#paper-eagle",
+    "id": "eagle-feature-level-proposal",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "EAGLE feature-level proposal",
+    "definition": "기준 모델의 중간 표현과 이미 선택한 다음 token을 함께 사용해 이후 표현과 후보를 예측합니다. 같은 완전한 입력의 feature 자체가 무작위라는 뜻이 아닙니다. 호환 학습 weight가 필요하고 세대별 feature·tree 구성을 구별합니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#paper-eagle"
   },
   "native-mtp-proposal": {
-    id: "native-mtp-proposal",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Native Multi-Token Prediction proposal",
-    definition:
-      "Target architecture가 학습 시 포함한 future-token auxiliary module을 serving의 proposer로 사용하되, target verification과 KV-state commit으로 실제 확정 token을 결정하는 방법입니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#paper-mtp",
+    "id": "native-mtp-proposal",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Native Multi-Token Prediction proposal",
+    "definition": "미래 token 예측을 학습한 모델 내부 모듈을 후보 제안에 사용하고 실제 확정은 기준 모델 검증으로 결정합니다. 공유 trunk 위 병렬 head라는 원 논문 구조가 모든 native MTP architecture와 같지는 않습니다. 모델별 checkpoint·실행 경로를 확인합니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#paper-mtp"
   },
   "speculative-serving-break-even": {
-    id: "speculative-serving-break-even",
-    kind: "metric",
-    domain: "distributed-systems",
-    label: "Speculative serving break-even",
-    definition:
-      "Cycle당 committed token을 target-only로 생성할 기준 시간과 proposal·verification·scheduler·sampling·cache-commit 시간을 비교해 speculative decoding이 실제로 이득인 workload 구간을 판정하는 조건입니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#serving-break-even",
+    "id": "speculative-serving-break-even",
+    "kind": "metric",
+    "domain": "distributed-systems",
+    "label": "Speculative serving break-even",
+    "definition": "같은 출력량의 단독 생성 기준 시간과 후보 준비·검증·나머지 처리의 전체 시간을 비교합니다. 직렬 비용의 합이며 겹치는 실행은 실제 임계 경로로 바꿉니다. 같은 부하·모델·sampler 조건의 평균 비가 대기·tail·처리량을 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#serving-break-even"
   },
   "dynamic-speculation-policy": {
-    id: "dynamic-speculation-policy",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Dynamic speculation policy",
-    definition:
-      "Recent acceptance·request 특성·serving load 같은 관측값에 따라 speculation depth를 바꾸거나 target-only decoding으로 돌아가는 runtime decision policy입니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#dynamic-policy",
+    "id": "dynamic-speculation-policy",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Dynamic speculation policy",
+    "definition": "현재 실행 조건을 입력으로 후보 깊이를 바꾸거나 후보 생성을 끄는 정책입니다. 이 구현은 batch 크기 조회표이며 최근 수락률을 학습해 최적 K를 자동 산출하는 분기가 아닙니다. 빈 구간·마지막 이후·전체 깊이 상한도 적용합니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#dynamic-policy"
   },
   "llm-online-request-lifecycle": {
     id: "llm-online-request-lifecycle",
@@ -12837,46 +12820,60 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/crypto/discrete-log#applications",
   },
   "elliptic-curve-point-group": {
-    id: "elliptic-curve-point-group", kind: "concept", domain: "mathematics",
-    label: "Elliptic-curve point group",
-    definition: "Nonsingular curve equation을 만족하는 finite-field points와 point at infinity가 chord/tangent addition으로 이루는 유한 아벨군입니다.",
-    canonicalHref: "/cs/crypto/elliptic-curves#overview",
+    "id": "elliptic-curve-point-group",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "Elliptic-curve point group",
+    "definition": "소수 p>3에서 4a³+27b²≠0인 y²=x³+ax+b의 점과 항등원 O가 정해진 덧셈으로 이루는 유한 아벨군입니다. 좌표 체의 크기와 점 또는 부분군의 위수는 구분합니다.",
+    "canonicalHref": "/cs/crypto/elliptic-curves#names"
   },
   "ec-scalar-multiplication": {
-    id: "ec-scalar-multiplication", kind: "method", domain: "computer-science",
-    label: "Elliptic-curve scalar multiplication",
-    definition: "Double-and-add 또는 constant-time window method로 point P를 scalar bits에 따라 반복 더해 [k]P를 계산하며 secret-dependent branch·table access를 통제하는 연산입니다.",
-    canonicalHref: "/cs/crypto/elliptic-curves#g1-curve",
+    "id": "ec-scalar-multiplication",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Elliptic-curve scalar multiplication",
+    "definition": "정수 k번 점 P를 더한 [k]P를 계산하는 연산입니다. 두 배·더하기나 윈도 등으로 계산할 수 있지만 비밀 비트의 분기·표 접근을 통제한다는 보장은 연산 정의만으로 따라오지 않습니다.",
+    "canonicalHref": "/cs/crypto/elliptic-curves#scalar"
   },
   "ec-subgroup-validation": {
-    id: "ec-subgroup-validation", kind: "method", domain: "computer-science",
-    label: "Elliptic-curve subgroup validation",
-    definition: "Canonical decode·coordinate range·curve equation·identity policy를 확인하고 [q]P=O 또는 규격별 검사를 적용해 untrusted point가 기대한 prime-order subgroup에 속하는지 판정하는 절차입니다.",
-    canonicalHref: "/cs/crypto/elliptic-curves#g1-curve",
+    "id": "ec-subgroup-validation",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Elliptic-curve subgroup validation",
+    "definition": "먼저 입력 규격의 바이트·좌표 범위와 곡선 조건을 확인하고 선택한 부분군의 구조에 맞는 위수 또는 동치 판정을 적용하는 절차입니다. 곡선 위라는 가정만 둔 보조 함수와 전체 검사는 다르며 항등원 허용과 cofactor 변환은 별도 정책입니다.",
+    "canonicalHref": "/cs/crypto/elliptic-curves#validation"
   },
   "affine-jacobian-equivalence": {
-    id: "affine-jacobian-equivalence", kind: "method", domain: "mathematics",
-    label: "Affine · Jacobian point equivalence",
-    definition: "Affine (x,y)를 projective (X/Z²,Y/Z³)로 나타내 여러 tuples가 같은 point를 표현하게 하고 반복 addition의 field inversion을 최종 normalization까지 미루는 좌표 방법입니다.",
-    canonicalHref: "/cs/crypto/elliptic-curves#g1-curve",
+    "id": "affine-jacobian-equivalence",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Affine · Jacobian point equivalence",
+    "definition": "Z≠0인 세 수 (X,Y,Z)를 x=X/Z²,y=Y/Z³로 읽어 같은 affine 점을 여러 방식으로 표현하는 좌표 방법입니다. 0 아닌 μ에 대해 (μ²X,μ³Y,μZ)도 같은 점이며 원시 세 수의 일치가 점 일치 조건은 아닙니다. Z=0의 항등원 규칙은 따로 처리합니다.",
+    "canonicalHref": "/cs/crypto/elliptic-curves#jacobian"
   },
   "bn254-g1-g2-twist": {
-    id: "bn254-g1-g2-twist", kind: "concept", domain: "mathematics",
-    label: "BN254 G1 · G2 twist representation",
-    definition: "같은 prime order q의 G1을 Fp 위 point로, pairing의 두 번째 subgroup G2를 sextic twist를 통해 Fp² coordinates로 표현하되 encoding·subgroup 검사를 분리하는 구조입니다.",
-    canonicalHref: "/cs/crypto/elliptic-curves#g1-g2-bn254",
+    "id": "bn254-g1-g2-twist",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "BN254 G1 · G2 twist representation",
+    "definition": "BN254 페어링의 위수 r인 두 입력 부분군을 G1의 Fₚ 좌표와 G2의 Fₚ² twist 좌표로 표현하는 구조입니다. G1은 cofactor 1이지만 G2의 전체 twist에는 부분군 밖 점이 있으므로 검사·바이트 계수 순서를 분리해야 합니다.",
+    "canonicalHref": "/cs/crypto/elliptic-curves#g1-g2-bn254"
   },
   "pairing-bilinearity-boundary": {
-    id: "pairing-bilinearity-boundary", kind: "concept", domain: "mathematics",
-    label: "Pairing bilinearity boundary",
-    definition: "Order-q source groups G1·G2의 scalar multiplication을 target group GT의 exponent multiplication으로 보존해 product equation을 검사하지만 statement provenance까지 보장하지 않는 관계입니다.",
-    canonicalHref: "/cs/crypto/elliptic-curves#g1-g2-bn254",
+    "id": "pairing-bilinearity-boundary",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "Pairing bilinearity boundary",
+    "definition": "유효한 부분군 점 P·Q의 배수를 e([a]P,[b]Q)=e(P,Q)^(ab)로 결과 곱셈군에 옮기는 쌍선형 관계입니다. 여러 결과의 곱을 검사해도 응용의 명제·설정·공개 입력 연결과 권한은 별도로 검증해야 합니다.",
+    "canonicalHref": "/cs/crypto/elliptic-curves#pairing"
   },
   "elliptic-curve-release-gate": {
-    id: "elliptic-curve-release-gate", kind: "method", domain: "computer-science",
-    label: "Elliptic-curve implementation release gate",
-    definition: "Curve/field/order/cofactor/twist/encoding/library를 고정하고 identity·noncanonical·wrong-curve/subgroup·vector/parity·side-channel을 검사한 뒤 coordinate·window 최적화를 비교하는 절차입니다.",
-    canonicalHref: "/cs/crypto/elliptic-curves#g1-g2-bn254",
+    "id": "elliptic-curve-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Elliptic-curve implementation release gate",
+    "definition": "곡선·필드·위수·좌표 표현·입력 규격·구현 버전을 고정하고 유효·비정상 입력과 산술을 기준에 대조하는 검토입니다. 길이 처리와 항등원 규칙은 함수마다 다르며 산술 일치만으로 독립 검증·상수 시간·상호운용이나 성능을 보장하지 않습니다.",
+    "canonicalHref": "/cs/crypto/elliptic-curves#verification"
   },
   "field-limb-canonical-representation": {
     "id": "field-limb-canonical-representation",
@@ -14714,9 +14711,30 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "기약식·계수 순서·상수를 고정하고 역원, 직접 p제곱과 Frobenius 표, 직렬화의 의미를 대조하는 검증입니다. 같은 원소 수나 원복 검사만으로 바이트 호환성과 표의 정확성을 보장할 수 없습니다.",
     "canonicalHref": "/cs/crypto/extension-field-theory#release"
   },
-  "miller-function-loop-invariant": { id: "miller-function-loop-invariant", kind: "theorem", domain: "mathematics", label: "Miller function loop invariant", definition: "Scalar bits를 따라 point를 double/add하면서 line functions의 divisor를 누적해 f_n,P(Q)를 logarithmic group steps로 계산하는 Miller loop invariant입니다.", canonicalHref: "/cs/crypto/pairing#miller-loop" },
-  "pairing-final-subgroup-projection": { id: "pairing-final-subgroup-projection", kind: "method", domain: "mathematics", label: "Pairing final exponent · target subgroup projection", definition: "Miller output을 (p^k−1)/r 거듭제곱해 embedding-field multiplicative group에서 order-r target subgroup GT로 보내 pairing의 canonical value를 얻는 단계입니다.", canonicalHref: "/cs/crypto/pairing#final-exponent" },
-  "pairing-input-subgroup-release-gate": { id: "pairing-input-subgroup-release-gate", kind: "method", domain: "computer-science", label: "Pairing input · subgroup release gate", definition: "Curve/profile·G1/G2 encoding·on-curve·subgroup·identity policy와 Miller/final-exponent vectors를 고정하고 bilinearity·invalid-point rejection 뒤 비용을 비교하는 절차입니다.", canonicalHref: "/cs/crypto/pairing#release" },
+  "miller-function-loop-invariant": {
+    "id": "miller-function-loop-invariant",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Miller 함수의 점·누적값 불변식",
+    "definition": "점 R=nP와 누적 함수의 div fₙ=n(P)−(nP)−(n−1)(O)를 함께 유지하며 두 배·더하기마다 선과 수직선의 비를 곱하는 계산입니다. 기록은 함수의 상수배를 구별하지 못하므로 정규화·평가 위치를 고정해야 하며 실제 Ate의 반복 매개변수와 분모 제거 조건은 구현별로 대조합니다.",
+    "canonicalHref": "/cs/crypto/pairing#miller-loop"
+  },
+  "pairing-final-subgroup-projection": {
+    "id": "pairing-final-subgroup-projection",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "페어링 최종 지수와 출력 정규화",
+    "definition": "0 아닌 확장체 원소를 (pᵏ−1)/r 거듭제곱해 r제곱하면 1인 출력 부분군으로 보내는 단계입니다. 멱등 사영이나 구현 사이 동일한 값·바이트를 뜻하지 않습니다. 고정 BN 구현은 일반 지수의 c배를 쓰며 gcd(c,r)=1일 때 쌍선형성·비퇴화·곱1판정을 유지하지만 값 자체는 달라질 수 있습니다.",
+    "canonicalHref": "/cs/crypto/pairing#final-exponent"
+  },
+  "pairing-input-subgroup-release-gate": {
+    "id": "pairing-input-subgroup-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "페어링 입력·결과 타입의 검증 범위",
+    "definition": "입력의 곡선·부분군·바이트 규칙과 응용의 항등원 정책을 구분하고 원시 Miller 값·최종 출력·항등원 판정의 검증 범위를 정하는 절차입니다. 고정Ark는 항등원 입력쌍을 건너뛰며 결과 군의 zero는 내부체의 one이고,0인 Miller의 최종 계산은 None입니다. 같은 라이브러리 비교는 독립 구현 검증을 대신하지 않습니다.",
+    "canonicalHref": "/cs/crypto/pairing#release"
+  },
   "vdf-sequential-evaluation-fast-verification": { id: "vdf-sequential-evaluation-fast-verification", kind: "concept", domain: "computer-science", label: "VDF sequential evaluation · fast verification", definition: "지정 delay T만큼 본질적으로 순차적인 evaluation을 요구하면서 결과와 짧은 proof는 훨씬 적은 work로 public verification하는 verifiable delay contract입니다.", canonicalHref: "/cs/blockchain/vdf#contract" },
   "wesolowski-quotient-proof": { id: "wesolowski-quotient-proof", kind: "method", domain: "mathematics", label: "Wesolowski quotient proof", definition: "Unknown-order group에서 y=x^(2^T), challenge prime l, q=floor(2^T/l), r=2^T mod l에 대해 pi=x^q를 보내 y=pi^l x^r로 빠르게 검사하는 VDF proof입니다.", canonicalHref: "/cs/blockchain/vdf#wesolowski" },
   "vdf-parameter-timing-release-gate": { id: "vdf-parameter-timing-release-gate", kind: "method", domain: "computer-science", label: "VDF parameter · timing release gate", definition: "Group/modulus generation·T·challenge/hash/domain·proof encoding을 pin하고 wrong output/proof/T/domain과 evaluator parallelism을 검사한 뒤 target hardware wall time·verify cost·rollback을 결정하는 절차입니다.", canonicalHref: "/cs/blockchain/vdf#release" },
@@ -16074,54 +16092,69 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/ai/continuous-batching-step-anatomy#batch-shape"
   },
   "speculation-length": {
-    id: "speculation-length",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Speculation length · K",
-    aliases: ["Speculation Length", "Speculation depth", "num_speculative_tokens", "γ (Leviathan et al.)"],
-    definition:
-      "한 verification cycle에서 draft가 target 검증 없이 연속으로 제안하는 token 수 K입니다. 한 cycle이 확정할 수 있는 최대 길이는 K+1이고, α와 c가 정해지면 speedup을 최대로 하는 값으로 고릅니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#speculation-length",
+    "id": "speculation-length",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Speculation length · K",
+    "aliases": [
+      "Speculation Length",
+      "Speculation depth",
+      "num_speculative_tokens",
+      "γ (Leviathan et al.)"
+    ],
+    "definition": "한 검증 바퀴에 제안하는 후보 수 K입니다. 단일 chain의 종료 처리 전 검증 출력은 최대 K+1입니다. 깊이 선택은 실제 검증 시간·후보 비용·메모리와 부하에 따릅니다. 제한된 K 1~8 표의 최댓값을 전체 가능한 깊이의 최적값으로 확대하지 않습니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#cost-model"
   },
   "speculative-verification-pass": {
-    id: "speculative-verification-pass",
-    kind: "method",
-    domain: "computer-science",
-    label: "Speculative verification pass",
-    aliases: ["Verification Pass", "Verification Overhead", "Conditional scoring"],
-    definition:
-      "Target model이 확정 prefix와 K개 draft token을 한 번의 forward로 처리해 K+1개 위치의 next-token 분포를 동시에 얻는 단계입니다. 낮은 batch에서 weight read에 묶인 target은 이 pass에 한 token step과 비슷한 시간이 듭니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#verification-pass",
+    "id": "speculative-verification-pass",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Speculative verification pass",
+    "aliases": [
+      "Verification Pass",
+      "Verification Overhead",
+      "Conditional scoring"
+    ],
+    "definition": "마지막 확정 입력과 후보를 함께 계산해 각 후보와 그 다음 위치의 점수를 얻습니다. 같은 KV를 사용하므로 확정 prefix 전체를 재계산할 필요는 없습니다. 여러 위치의 실행 시간이 단일 token 시간과 같다는 주장은 별도 장치·부하 조건이 필요합니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#verification-pass"
   },
   "speculative-rejection-point": {
-    id: "speculative-rejection-point",
-    kind: "concept",
-    domain: "statistics",
-    label: "Speculative rejection point",
-    aliases: ["Rejection Point", "First rejection position"],
-    definition:
-      "왼쪽부터 r_i ≤ p_i/q_i 판정을 하다가 처음 실패한 draft 위치 n입니다. 이 위치에서는 residual (p−q)+에서 correction을 뽑고 n 이후의 draft는 버리며, 실패가 없으면 K+1번째 분포에서 bonus token을 뽑습니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#rejection-point",
+    "id": "speculative-rejection-point",
+    "kind": "concept",
+    "domain": "statistics",
+    "label": "Speculative rejection point",
+    "aliases": [
+      "Rejection Point",
+      "First rejection position"
+    ],
+    "definition": "앞에서부터 확인하다 처음 거부된 위치이며 그 자리의 교체만 추가하고 뒤 후보를 제외합니다. 고정 standard random 분기는 등호를 포함하며 q>0과 패딩을 별도로 확인합니다. synthetic의 비교나 greedy ID 일치와 혼동하지 않습니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#source-accept"
   },
   "speculative-acceptance-rate": {
-    id: "speculative-acceptance-rate",
-    kind: "metric",
-    domain: "statistics",
-    label: "Speculative acceptance rate · α",
-    aliases: ["Acceptance Rate", "Per-token acceptance probability"],
-    definition:
-      "한 위치에서 draft token이 수락될 확률의 기댓값 α=Σ_x min(p(x),q(x))=1−D_LK(p,q)입니다. 위치별 수락이 i.i.d. α라고 두면 기대 확정 길이가 (1−α^{K+1})/(1−α)로 닫힙니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#acceptance-rate",
+    "id": "speculative-acceptance-rate",
+    "kind": "metric",
+    "domain": "statistics",
+    "label": "Speculative acceptance rate · α",
+    "aliases": [
+      "Acceptance Rate",
+      "Per-token acceptance probability"
+    ],
+    "definition": "같은 위치의 두 선택 분포가 공유하는 비중 α=Σmin(p,q)입니다. 현실의 모든 위치가 독립·동일하다는 뜻은 아닙니다. 일반 tail 합은 독립 없이 성립하며 α=1은 분수가 아닌 K+1 경계로 계산합니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#cost-model"
   },
   "speculative-speedup-model": {
-    id: "speculative-speedup-model",
-    kind: "theorem",
-    domain: "computer-science",
-    label: "Speculative speedup model",
-    aliases: ["Speculative Speedup", "Draft Overhead", "Speculative Decoding Overhead", "Cost coefficient c"],
-    definition:
-      "Draft 한 step의 상대 비용 c=t_draft/t_target 아래에서 기대 wall-clock 개선 배수가 S(K)=(1−α^{K+1})/((1−α)(Kc+1))이라는 Leviathan et al.의 결과입니다. α>c이면 이득이 있는 K가 존재하고, memory-bound 가정이 깨지면 분모의 verification 항이 커집니다.",
-    canonicalHref: "/cs/ai/vllm-spec-decode#speedup-model",
+    "id": "speculative-speedup-model",
+    "kind": "theorem",
+    "domain": "computer-science",
+    "label": "Speculative speedup model",
+    "aliases": [
+      "Speculative Speedup",
+      "Draft Overhead",
+      "Speculative Decoding Overhead",
+      "Cost coefficient c"
+    ],
+    "definition": "검증 비용을 단독 생성 1,후보 한 step 비용을 c로 둔 모형에서 S(K)=Σαⁱ/(1+Kc)로 시간 비를 구합니다. α>c는 고정 verify 1·runtime 0·직렬 후보 모형에서 이득인 어떤 K가 존재할 조건입니다. 모든 고정 K를 보장하지 않으며 실제 비용은 일반 시간 장부로 확인합니다.",
+    "canonicalHref": "/cs/ai/vllm-spec-decode#speedup-model"
   },
   "request-memory-footprint": {
     "id": "request-memory-footprint",
@@ -23595,134 +23628,166 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/finance/banking/bank-balance-sheet-and-deposit-creation#safety-net"
   },
   "central-bank-balance-sheet": {
-    id: "central-bank-balance-sheet",
-    kind: "concept",
-    domain: "economics",
-    label: "Central bank balance sheet · 중앙은행 대차대조표",
-    aliases: ["본원통화", "monetary base"],
-    definition:
-      "자산에 국채·금융기관 대출을, 부채에 발행 화폐와 지급준비금을 두는 장부입니다. 이 부채가 은행 사이의 최종 결제 수단이라는 점이 상업은행 장부와 결정적으로 다르며, 그래서 중앙은행은 자기 부채를 직접 만들어 낼 수 있습니다.",
-    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#cb-balance-sheet",
+    "id": "central-bank-balance-sheet",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "Central bank balance sheet · 중앙은행 대차대조표",
+    "aliases": [
+      "본원통화",
+      "monetary base"
+    ],
+    "definition": "중앙은행의 자산과 부채를 거래 상대의 장부에 대응시켜 전체 준비금 변화를 확인합니다. 은행 간 대출은 준비금 위치만 바꿉니다. 자기 통화 발행 권한이 손실·담보·법·물가의 제약을 없애지는 않습니다.",
+    "canonicalHref": "/finance/banking/central-bank-and-policy-transmission#cb-balance-sheet"
   },
   "policy-rate": {
-    id: "policy-rate",
-    kind: "concept",
-    domain: "economics",
-    label: "Policy rate · 정책금리",
-    aliases: ["기준금리", "정책 목표금리"],
-    definition:
-      "중앙은행이 은행 간 초단기 금리를 이 부근에 두겠다고 공표하는 목표값입니다. 명령이 아니라 목표이므로 공표값과 실제 시장금리는 다를 수 있고, 그 차이를 좁히는 일이 일상 운영입니다.",
-    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#rate-setting",
+    "id": "policy-rate",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "Policy rate · 정책금리",
+    "aliases": [
+      "기준금리",
+      "정책 목표금리"
+    ],
+    "definition": "정책 목표, 중앙은행이 제시하는 관리금리, 실제 시장금리를 나눠 읽습니다. 국가별로 목표 시장금리·목표 범위·관리금리의 관계가 다릅니다. 발표 숫자가 모든 대출 계약의 금리는 아닙니다.",
+    "canonicalHref": "/finance/banking/central-bank-and-policy-transmission#rate-setting"
   },
   "rate-corridor": {
-    id: "rate-corridor",
-    kind: "method",
-    domain: "economics",
-    label: "Rate corridor · 금리 상하한 구간",
-    aliases: ["코리도어", "지급준비금 부리", "대출창구", "바닥 방식"],
-    definition:
-      "준비금에 이자를 붙여 바닥을, 담보부 대출창구로 천장을 만들어 은행 간 금리를 좁은 구간에 가두는 방식입니다. 중앙은행이 가격을 직접 부르는 것이 아니라 선택지를 제한해 가격을 몰아넣는 구조이며, 접근이 제한된 참가자가 많으면 바닥이 샙니다.",
-    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#rate-setting",
+    "id": "rate-corridor",
+    "kind": "method",
+    "domain": "economics",
+    "label": "Rate corridor · 금리 상하한 구간",
+    "aliases": [
+      "코리도어",
+      "지급준비금 부리",
+      "대출창구",
+      "바닥 방식"
+    ],
+    "definition": "돈을 맡기거나 빌릴 다른 선택의 조건이 협상 범위에 영향을 줍니다. 비은행은 4%에 접근하지 못할 수 있고 은행 비용이 0.15%포인트라면 3.83% 거래도 가능합니다. 담보·이용 시간·낙인 때문에 엄격한 상하한이 아닐 수 있습니다.",
+    "canonicalHref": "/finance/banking/central-bank-and-policy-transmission#rate-setting"
   },
   "open-market-operation": {
-    id: "open-market-operation",
-    kind: "method",
-    domain: "economics",
-    label: "Open market operation · 공개시장운영",
-    aliases: ["RP 매매", "환매조건부매매", "공개시장조작"],
-    definition:
-      "중앙은행이 증권을 사고팔아 지급준비금의 양을 조절하는 수단입니다. 되사거나 되파는 조건이 붙은 환매조건부매매가 중심이며, 만기에 자동으로 원위치하므로 항구적 매입과 지속 기간이 다릅니다.",
-    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#operation-procedure",
+    "id": "open-market-operation",
+    "kind": "method",
+    "domain": "economics",
+    "label": "Open market operation · 공개시장운영",
+    "aliases": [
+      "RP 매매",
+      "환매조건부매매",
+      "공개시장조작"
+    ],
+    "definition": "증권 거래 등으로 준비금과 시장 여건을 조절하며 공급·흡수 방향과 만기를 함께 읽습니다. 충분한 준비금 체계에서는 부리 금리 등이 중요합니다. 준비금이 많다는 사실만으로 매일 모두 흡수해야 하거나 정책 기조가 완화라고 결론 내리지 않습니다.",
+    "canonicalHref": "/finance/banking/central-bank-and-policy-transmission#operation-procedure"
   },
   "expectations-hypothesis-of-rates": {
-    id: "expectations-hypothesis-of-rates",
-    kind: "theorem",
-    domain: "economics",
-    label: "만기별 금리의 기대 가설",
-    aliases: ["기대가설", "기간 프리미엄", "term premium"],
-    definition:
-      "n기간 금리를 앞으로의 단기금리 기대 평균에 기간 프리미엄을 더한 값으로 보는 관계입니다. 긴 자금을 한 번 묶는 선택과 짧은 자금을 이어 굴리는 선택이 경쟁하기 때문에 성립하며, 프리미엄이 관측값이 아니라 추정값이라는 점이 해석의 한계를 만듭니다.",
-    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#transmission",
+    "id": "expectations-hypothesis-of-rates",
+    "kind": "theorem",
+    "domain": "economics",
+    "label": "만기별 금리의 기대 가설",
+    "aliases": [
+      "기대가설",
+      "기간 프리미엄",
+      "term premium"
+    ],
+    "definition": "현재 하루 금리보다 미래 단기금리 경로 전체와 장기 보유에 대한 프리미엄을 함께 봅니다. 선형 근사와 확정 복리 계산을 구별합니다. 불확실한 차환의 기대 수익 차이는 무위험 차익이 아니며 기간 프리미엄은 음수일 수도 있는 모형 추정값입니다.",
+    "canonicalHref": "/finance/banking/central-bank-and-policy-transmission#transmission"
   },
   "monetary-transmission": {
-    id: "monetary-transmission",
-    kind: "concept",
-    domain: "economics",
-    label: "Monetary transmission · 통화정책 파급경로",
-    aliases: ["파급경로", "정책 시차"],
-    definition:
-      "정책금리 변화가 은행 대출금리·자산가격·환율·기대라는 서로 다른 경로로 퍼져 실물에 닿는 과정입니다. 경로마다 전제와 속도가 달라 효과가 한꺼번에 오지 않으며, 그 시차 때문에 정책은 도착 시점의 상태를 겨냥하는 예측 위에서 이루어집니다.",
-    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#transmission-lag",
+    "id": "monetary-transmission",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "Monetary transmission · 통화정책 파급경로",
+    "aliases": [
+      "파급경로",
+      "정책 시차"
+    ],
+    "definition": "거래 조건이 미래 예상·자산가격·계약·지출·물가에 닿는 경로를 각각 추적합니다. 기대와 환율은 뉴스에 빠르게 움직일 수 있고 실제 생산·가격 조정은 계약과 경제 상태에 달립니다. 모든 국가에 고정된 시차·크기·환율 방향을 적용하지 않습니다.",
+    "canonicalHref": "/finance/banking/central-bank-and-policy-transmission#transmission-lag"
   },
   "quantitative-easing": {
-    id: "quantitative-easing",
-    kind: "method",
-    domain: "economics",
-    label: "Quantitative easing · 양적완화",
-    aliases: ["QE", "대차대조표 정책"],
-    definition:
-      "정책금리를 더 내릴 수 없을 때 장기 자산을 대량 매입해 기대 경로와 기간 프리미엄을 눌러 내리는 수단입니다. 준비금을 늘리는 것 자체가 목적이 아니며, 준비금이 늘어도 대출 수요가 없으면 예금은 늘지 않습니다.",
-    canonicalHref: "/finance/banking/central-bank-and-policy-transmission#balance-sheet-policy",
+    "id": "quantitative-easing",
+    "kind": "method",
+    "domain": "economics",
+    "label": "Quantitative easing · 양적완화",
+    "aliases": [
+      "QE",
+      "대차대조표 정책"
+    ],
+    "definition": "장기 자산 매입 등을 통해 위험의 보유 주체·기대·시장 기능과 금융 조건에 영향을 줍니다. 신규 대출 수요 없이도 예금이 직접 생길 수 있습니다. 준비금 증가를 대출·지출·순재산 증가로 환산하지 않으며 모든 자산 매입이 같은 목적의 QE인 것은 아닙니다.",
+    "canonicalHref": "/finance/banking/central-bank-and-policy-transmission#balance-sheet-policy"
   },
   "payment-clearing-settlement-layers": {
-    id: "payment-clearing-settlement-layers",
-    kind: "concept",
-    domain: "economics",
-    label: "지급·청산·결제의 층 분리",
-    aliases: ["지급결제", "clearing and settlement"],
-    definition:
-      "송금 한 건을 지시 전달(지급), 기관 간 주고받을 금액 확정(청산), 실제 자금 이동(결제)의 세 층으로 나눠 처리하는 구조입니다. 고객 통장에 반영된 시점과 기관 사이 자금이 옮겨진 시점이 다르므로, 완료의 의미가 층마다 갈립니다.",
-    canonicalHref: "/finance/banking/payment-clearing-settlement#three-layers",
+    "id": "payment-clearing-settlement-layers",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "지급·청산·결제의 층 분리",
+    "aliases": [
+      "지급결제",
+      "clearing and settlement"
+    ],
+    "definition": "지시의 확인·대조와 실제 의무 이행을 나누어 추적합니다. 청산은 필요하면 상계를 포함합니다. 고객 가용 잔액과 기관 간 최종성의 순서는 서비스별로 확인합니다. 결제는 중앙은행 화폐뿐 아니라 다른 장부나 유효한 상계로도 이루어질 수 있습니다.",
+    "canonicalHref": "/finance/banking/payment-clearing-settlement#three-layers"
   },
   "gross-versus-net-settlement": {
-    id: "gross-versus-net-settlement",
-    kind: "concept",
-    domain: "economics",
-    label: "총액 결제와 차액 결제",
-    aliases: ["RTGS", "실시간총액결제", "이연차액결제", "DNS"],
-    definition:
-      "건마다 즉시 전액을 넘기는 방식과 하루치를 모아 차액만 정해진 시각에 넘기는 방식의 선택입니다. 앞은 필요한 자금이 크고 미결제 위험이 거의 없으며, 뒤는 자금이 적게 드는 대신 정산 시각까지 익스포저가 쌓입니다.",
-    canonicalHref: "/finance/banking/payment-clearing-settlement#rtgs-vs-dns",
+    "id": "gross-versus-net-settlement",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "총액 결제와 차액 결제",
+    "aliases": [
+      "RTGS",
+      "실시간총액결제",
+      "이연차액결제",
+      "DNS"
+    ],
+    "definition": "개별 지시를 처리할지 순포지션을 처리할지와 언제 처리할지를 구분합니다. 받은 돈은 다음 지급에 재사용할 수 있습니다. 무신용·분할 불가 조건의 모형입니다. RTGS도 대기·유동성·운영 위험이 남고 소액 거래도 RTGS로 처리할 수 있습니다.",
+    "canonicalHref": "/finance/banking/payment-clearing-settlement#rtgs-vs-dns"
   },
   "netting-efficiency": {
-    id: "netting-efficiency",
-    kind: "metric",
-    domain: "economics",
-    label: "Netting efficiency · 상계 효율",
-    aliases: ["다자간 상계", "netting ratio"],
-    definition:
-      "총 지급액 가운데 서로 지워져 실제 자금 이동이 필요 없어진 비율입니다. 참가자 간 흐름이 균형 잡힐수록 1에 가까워지며, 효율이 높을수록 자금 부담은 줄지만 정산 전까지 남는 미결제 익스포저는 커집니다.",
-    canonicalHref: "/finance/banking/payment-clearing-settlement#rtgs-vs-dns",
+    "id": "netting-efficiency",
+    "kind": "metric",
+    "domain": "economics",
+    "label": "Netting efficiency · 상계 효율",
+    "aliases": [
+      "다자간 상계",
+      "netting ratio"
+    ],
+    "definition": "같은 지시 집합의 총액G와 순지급액N을 비교해1−N/G를 계산합니다. G0일 때 정의하지 않습니다. 같은 이동을 지급·수취 양쪽에서 중복 집계하지 않습니다. 줄어든250은 신용노출이나 최초 필요한 유동성을 뜻하지 않습니다.",
+    "canonicalHref": "/finance/banking/payment-clearing-settlement#netting-efficiency"
   },
   "settlement-finality": {
-    id: "settlement-finality",
-    kind: "concept",
-    domain: "economics",
-    label: "Settlement finality · 결제 최종성",
-    aliases: ["최종성", "결제완결성"],
-    definition:
-      "시스템의 규칙과 법이 정한 시점 이후로는 이루어진 이체를 취소하거나 되돌릴 수 없다고 보장하는 성질입니다. 처리 속도가 아니라 도산 절차의 소급 취소로부터 보호하는 법적 선 긋기가 그 근거입니다.",
-    canonicalHref: "/finance/banking/payment-clearing-settlement#finality",
+    "id": "settlement-finality",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "Settlement finality · 결제 최종성",
+    "aliases": [
+      "최종성",
+      "결제완결성"
+    ],
+    "definition": "규칙과 법적 근거가 정한 최종 이전·의무 이행의 완료를 확인합니다. 반환 청구·별도 반환 지급과 원이체 기록을 구분합니다. 프로토콜 최종성과 법적 최종성은 함께 검토할 수 있으며 모든 시스템에 같은 시점을 적용하지 않습니다.",
+    "canonicalHref": "/finance/banking/payment-clearing-settlement#finality"
   },
   "cross-currency-settlement-risk": {
-    id: "cross-currency-settlement-risk",
-    kind: "concept",
-    domain: "economics",
-    label: "시차 결제 위험",
-    aliases: ["Herstatt risk", "외환결제위험"],
-    definition:
-      "서로 다른 통화의 결제가 각 통화의 시스템에서 따로 이루어지는 사이에 상대가 파산하면 이미 넘긴 원금 전액을 잃는 위험입니다. 가격 변동이 아니라 원금 전액이 걸린 신용 위험이며, 영업시간대가 어긋날수록 노출 시간이 길어집니다.",
-    canonicalHref: "/finance/banking/payment-clearing-settlement#cross-currency",
+    "id": "cross-currency-settlement-risk",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "시차 결제 위험",
+    "aliases": [
+      "Herstatt risk",
+      "외환결제위험"
+    ],
+    "definition": "두 통화를 교환할 때 한쪽 지급만 최종 완료되면 이미 보낸 원금이 위험에 노출됩니다. 원금 위험액은 확정 손실과 다릅니다. 회수율·담보·법적 청구와 유동성·대체 비용을 별도로 봅니다. 시차만이 유일한 원인은 아닙니다.",
+    "canonicalHref": "/finance/banking/payment-clearing-settlement#cross-currency"
   },
   "payment-versus-payment": {
-    id: "payment-versus-payment",
-    kind: "method",
-    domain: "economics",
-    label: "Payment versus payment · 동시결제",
-    aliases: ["PvP", "동시이행 결제"],
-    definition:
-      "두 통화의 이체가 모두 성립하거나 모두 성립하지 않도록 하나의 조건으로 묶는 방식입니다. 한쪽만 넘어간 상태를 만들지 않아 원금 손실 위험을 지우지만, 가격 변동이나 유동성 부족 위험까지 없애지는 않습니다.",
-    canonicalHref: "/finance/banking/payment-clearing-settlement#cross-currency",
+    "id": "payment-versus-payment",
+    "kind": "method",
+    "domain": "economics",
+    "label": "Payment versus payment · 동시결제",
+    "aliases": [
+      "PvP",
+      "동시이행 결제"
+    ],
+    "definition": "한 통화의 최종 지급을 다른 통화의 최종 지급과 조건으로 연결합니다. 물리적 전송 시각 일치나 단일 중앙은행 장부를 뜻하지 않습니다. 준수되는 교환의 원금 결제 위험을 없애도 유동성·재거래 가격·운영 위험은 남습니다.",
+    "canonicalHref": "/finance/banking/payment-clearing-settlement#pvp"
   },
   "bond-cashflow-pricing": {
     id: "bond-cashflow-pricing",
@@ -28439,6 +28504,36 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "label": "QKD의 인증과 장치 신뢰 조건",
     "definition": "공개 대화의 인증과 광원·검출기·중계소의 신뢰 가정을 구분합니다.",
     "canonicalHref": "/cs/crypto/quantum-key-distribution#limits"
+  },
+  "unbiased-estimator": {
+    "id": "unbiased-estimator",
+    "kind": "concept",
+    "domain": "statistics",
+    "label": "불편 추정량",
+    "definition": "정한 표집 법칙에서 추정량의 기댓값이 목표량과 같은 성질입니다. 반복 평균에서의 중심을 말하며 특정 표본의 오차, 작은 분산, 일관성 또는 매번의 손실 감소를 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/math-variance-sampling#sample-correction"
+  },
+  "chebyshev-inequality": {
+    "id": "chebyshev-inequality",
+    "kind": "theorem",
+    "domain": "statistics",
+    "label": "체비쇼프 부등식",
+    "aliases": [
+      "Chebyshev inequality"
+    ],
+    "definition": "유한한 평균 μ와 분산 σ²를 가진 값에서 P(|X−μ|≥ε)≤σ²/ε²라는 상한입니다. 양수 ε 이상인 편차는 제곱 오차에 적어도 ε²만큼 기여한다는 계산에서 나오며, 정확한 꼬리 확률이나 유한 표본의 확정 보장이 아닙니다.",
+    "canonicalHref": "/cs/ai/math-variance-sampling#law-of-large-numbers"
+  },
+  "importance-weighted-estimator": {
+    "id": "importance-weighted-estimator",
+    "kind": "method",
+    "domain": "statistics",
+    "label": "유한 표집의 중요도 보정",
+    "aliases": [
+      "importance correction"
+    ],
+    "definition": "선택 확률 qᵢ로 뽑은 값에 목표 비중을 qᵢ로 나눈 배수를 곱해 기대 기여를 목표와 맞추는 방법입니다. 균등 자료 목표에서는 기울기를 Nqᵢ로 나누며, 목표에 기여하는 모든 자료를 양수 확률로 뽑아야 합니다. 불편성이 작은 분산을 보장하지는 않습니다.",
+    "canonicalHref": "/cs/ai/math-variance-sampling#sampling-weights"
   },
 };
 
@@ -52113,6 +52208,36 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "descent-lemma",
     "relation": "prerequisite",
     "reason": "경로 적분에서 기울기 차이와 이동의 내적을 두 길이의 곱으로 제한하여 L‖d‖²/2를 유도합니다."
+  },
+  {
+    "from": "expectation",
+    "to": "unbiased-estimator",
+    "relation": "prerequisite",
+    "reason": "추정량의 반복 기댓값을 목표량과 비교합니다."
+  },
+  {
+    "from": "variance",
+    "to": "chebyshev-inequality",
+    "relation": "prerequisite",
+    "reason": "제곱 편차 평균으로 큰 편차 사건의 확률을 제한합니다."
+  },
+  {
+    "from": "chebyshev-inequality",
+    "to": "law-of-large-numbers",
+    "relation": "produces",
+    "reason": "독립 평균의 분산 σ²/B를 넣으면 모든 고정 오차폭의 확률 상한이 0으로 갑니다."
+  },
+  {
+    "from": "expectation-linearity",
+    "to": "importance-weighted-estimator",
+    "relation": "prerequisite",
+    "reason": "실제 선택 확률과 보정배수의 곱으로 목표 가중합을 복원합니다."
+  },
+  {
+    "from": "importance-weighted-estimator",
+    "to": "stochastic-gradient-estimator",
+    "relation": "constrains",
+    "reason": "균등하지 않은 선택에서도 원하는 전체 목표의 기대 기울기를 맞춥니다."
   },
 ];
 

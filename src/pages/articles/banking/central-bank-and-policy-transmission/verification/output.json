@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "scope": "Authored model, no forecast, EFFR quote, live policy or production system execution",
+  "daily_interest_won": 75616.43835616438,
+  "daily_change_won": 4109.58904109589,
+  "daily_after_won": 79726.02739726027,
+  "three_year_before_percent": 4.3,
+  "three_year_after_percent": 4.05,
+  "known_path_geometric_percent": 3.999198711775054,
+  "annual_factory_change_won": 2500000,
+  "reserve_changes_100_million_krw": {
+    "interbank": 0.0,
+    "central_bank_loan": 6.0,
+    "central_bank_bank_bond_purchase": 6.0,
+    "central_bank_nonbank_bond_purchase": 6.0
+  },
+  "deposit_changes_100_million_krw": {
+    "interbank": 0,
+    "central_bank_loan": 0,
+    "central_bank_bank_bond_purchase": 0,
+    "central_bank_nonbank_bond_purchase": 6
+  }
+}

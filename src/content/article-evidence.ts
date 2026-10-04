@@ -954,45 +954,69 @@ export const ARTICLE_EVIDENCE: Readonly<
 ],
   "ai/math-probability-expectation-variance": [
     {
-      kind: "공개 강의",
-      label: "MIT 6.041SC — Probability Models",
-      href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#probability-model",
-      note: "Experiment·sample space·outcome·event·probability mass를 하나의 discrete model로 확장",
+      "kind": "공식 문서",
+      "label": "MIT 6.041SC Lecture 1 · PDF 2쪽 확률 공리",
+      "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/ff296575da32c406c2e56131e1e38997_MIT6_041SCF13_L01.pdf#page=2",
+      "note": "P(Ω)=1과 배타적 사건의 합을 HT·TH에 대입해 1/2을 복원합니다."
     },
     {
-      kind: "공개 강의",
-      label: "MIT 6.041SC — Conditioning and Independence",
-      href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#conditioning",
-      note: "Conditioning·multiplication rule·independence를 서로 다른 질문으로 분리",
+      "kind": "공식 문서",
+      "label": "MIT 6.041SC Lecture 2 · PDF 1–2쪽 조건부확률과 곱",
+      "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/a1462fa23de9d08c0dfd233a57278fed_MIT6_041SCF13_L02.pdf#page=1",
+      "note": "P(A|B)의 실제 분모 조건을 읽고 같은 HT에 세 사건 곱을 적용합니다."
     },
+    {
+      "kind": "공식 문서",
+      "label": "MIT 6.041SC Lecture 3 · PDF 1–2쪽 독립과 쌍별 독립",
+      "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/a2015627268f4846eb3b1368623ce46f_MIT6_041SCF13_L03.pdf#page=2",
+      "note": "첫 H·둘째 H·같은 결과를 원문의 같은 네 칸에 놓아 쌍의 1/4과 세 사건의 1/4을 계산합니다."
+    }
   ],
   "ai/math-random-variables-expectation": [
     {
-      kind: "공개 강의",
-      label: "MIT 6.041SC — Discrete Random Variables",
-      href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#random-variables",
-      note: "Outcome을 scalar value와 induced distribution으로 보내는 random-variable 관점을 확장",
+      "kind": "공식 문서",
+      "label": "MIT 6.041SC Lecture 5 · PDF 1쪽 함수와 PMF",
+      "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/e49cdbaf3129125869700c46aa661fa1_MIT6_041SCF13_L05.pdf#page=1",
+      "note": "실제 원문의 역상 사건에 x=1을 넣어 HT와 TH의 비중을 합합니다."
     },
     {
-      kind: "공개 강의",
-      label: "MIT 6.041SC — Expectation",
-      href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#expectation",
-      note: "Probability-weighted center·linearity와 nonlinear transform 경계를 확장",
+      "kind": "공식 문서",
+      "label": "MIT 6.041SC Lecture 5 · PDF 2쪽 함수의 기댓값",
+      "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/e49cdbaf3129125869700c46aa661fa1_MIT6_041SCF13_L05.pdf#page=2",
+      "note": "같은 pₓ에 g(x)=2x+3과 x²를 넣어 5와 3/2를 계산합니다."
     },
+    {
+      "kind": "공식 문서",
+      "label": "MIT 6.041SC Lecture 7 · PDF 1쪽 합과 곱의 조건",
+      "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/c0a406b218730ddb16326d695a895c57_MIT6_041SCF13_L07.pdf#page=1",
+      "note": "원문의 두 변수 가중합에 (X,Y)=(2,0),(1,1),(0,2)를 넣어 선형 조합 5를 구합니다."
+    }
   ],
   "ai/math-variance-sampling": [
     {
-      kind: "공개 강의",
-      label: "MIT 6.041SC — Variance and Laws of Large Numbers",
-      href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#variance-and-lln",
-      note: "Population spread·sample estimator·sample-average concentration의 조건을 확장",
+      "kind": "공식 문서",
+      "label": "MIT 6.041SC Lecture 19 · PDF 1–2쪽",
+      "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/d569abb143b22f469a09ff218cb3383c_MIT6_041SCF13_L19.pdf#page=2",
+      "note": "원문의 Mₙ 식에 분산 1/2, 오차 폭 1/2, n=2와 n=16을 넣어 상한 1과 1/8을 계산합니다."
     },
     {
-      kind: "핵심 논문",
-      label: "Robbins–Monro — A Stochastic Approximation Method",
-      href: "https://doi.org/10.1214/aoms/1177729586",
-      note: "Noise observation으로 expectation-defined target에 접근하는 stochastic approximation의 원형",
+      "kind": "공식 문서",
+      "label": "NumPy 2.0 · numpy.var",
+      "href": "https://numpy.org/doc/2.0/reference/generated/numpy.var.html",
+      "note": "원문의 기본 ddof=0과 N−ddof를 [1,2,3]에 대입해 2/3과 ddof=1의 1을 비교합니다."
     },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.14 · torch.var",
+      "href": "https://docs.pytorch.org/docs/2.14/generated/torch.var.html",
+      "note": "실제 correction=1 기본값으로 같은 세 값의 분산 추정값 1을 구합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Robbins & Monro (1951), A Stochastic Approximation Method",
+      "href": "https://www.columbia.edu/~ww2040/8100F16/RM51.pdf#page=3",
+      "note": "원문 식 (7)과 (50)에 같은 위치 −1.5와 뽑은 기울기를 넣어 −1.45와 −1.55를 계산합니다."
+    }
   ],
   "ai/math-optimization-objectives": [
     {
@@ -4265,55 +4289,66 @@ export const ARTICLE_EVIDENCE: Readonly<
 ],
   "ai/vllm-spec-decode": [
     {
-      kind: "핵심 논문",
-      label: "Fast Inference from Transformers via Speculative Decoding",
-      href: "https://arxiv.org/abs/2211.17192",
-      note: "target 분포를 보존하는 draft·verification·rejection sampling",
+      "kind": "공식 코드",
+      "label": "vLLM v0.27.1 vllm/v1/sample/rejection_sampler.py original",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/sample/rejection_sampler.py",
+      "note": "commit 6e448d0의 전체 원문과 행 범위를 고정합니다. 본문 가정과 실제 CPU 대역 실행의 범위는 구별합니다."
     },
     {
-      kind: "핵심 논문",
-      label:
-        "EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty",
-      href: "https://arxiv.org/abs/2401.15077",
-      note: "target hidden state를 이용한 feature-level speculation",
+      "kind": "공식 코드",
+      "label": "vLLM v0.27.1 vllm/v1/core/sched/scheduler.py original",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py",
+      "note": "commit 6e448d0의 전체 원문과 행 범위를 고정합니다. 본문 가정과 실제 CPU 대역 실행의 범위는 구별합니다."
     },
     {
-      kind: "핵심 논문",
-      label: "Better & Faster Large Language Models via Multi-token Prediction",
-      href: "https://arxiv.org/abs/2404.19737",
-      note: "shared trunk의 여러 future-token head를 함께 학습하는 MTP objective와 inference 활용",
+      "kind": "공식 코드",
+      "label": "vLLM v0.27.1 vllm/config/speculative.py original",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/config/speculative.py",
+      "note": "commit 6e448d0의 전체 원문과 행 범위를 고정합니다. 본문 가정과 실제 CPU 대역 실행의 범위는 구별합니다."
     },
     {
-      kind: "선행·비교 논문",
-      label: "SpecInfer: Accelerating LLM Serving with Speculative Inference",
-      href: "https://arxiv.org/abs/2305.09781",
-      note: "tree 기반 후보 생성과 verification을 서빙 관점에서 확장",
+      "kind": "공식 코드",
+      "label": "vLLM v0.27.1 vllm/v1/worker/gpu_model_runner.py original",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/worker/gpu_model_runner.py",
+      "note": "commit 6e448d0의 전체 원문과 행 범위를 고정합니다. 본문 가정과 실제 CPU 대역 실행의 범위는 구별합니다."
     },
     {
-      kind: "공식 문서",
-      label: "vLLM — Speculative Decoding",
-      href: "https://docs.vllm.ai/en/stable/features/speculative_decoding/",
-      note: "EAGLE·MTP·draft·n-gram 등 현재 지원 방식과 적용 조건",
+      "kind": "공식 코드",
+      "label": "vLLM v0.27.1 vllm/v1/spec_decode/dynamic/utils.py original",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/spec_decode/dynamic/utils.py",
+      "note": "commit 6e448d0의 전체 원문과 행 범위를 고정합니다. 본문 가정과 실제 CPU 대역 실행의 범위는 구별합니다."
     },
     {
-      kind: "공식 문서",
-      label: "vLLM — Dynamic Speculative Decoding",
-      href: "https://docs.vllm.ai/en/latest/features/speculative_decoding/dynamic_speculative_decoding/",
-      note: "동시성 구간에 따라 speculation depth를 조절하는 현재 기능",
+      "kind": "핵심 논문",
+      "label": "Fast Inference from Transformers via Speculative Decoding",
+      "href": "https://proceedings.mlr.press/v202/leviathan23a/leviathan23a.pdf",
+      "note": "작은 (.7,.3)/(.4,.6) 계산과 E[Y]=2.7731을 적용합니다. Table4의 예상 3.2·실험 3.4는 ENDE T5-small 행의 결과입니다."
     },
     {
-      kind: "공식 문서",
-      label: "vLLM — MTP speculative decoding",
-      href: "https://docs.vllm.ai/en/latest/features/speculative_decoding/mtp/",
-      note: "native MTP family 지원 조건과 num_speculative_tokens 설정의 현재 경계",
+      "kind": "핵심 논문",
+      "label": "Accelerating Large Language Model Decoding with Speculative Sampling",
+      "href": "https://arxiv.org/html/2302.01318v1",
+      "note": "XSum·HumanEval 조건의 약 2~2.5배 저자 보고를 작은 가정 시간과 구분하고 실제 prefix마다 보정하는 계산을 연결합니다."
     },
     {
-      kind: "핵심 논문",
-      label: "Accelerating Large Language Model Decoding with Speculative Sampling",
-      href: "https://arxiv.org/abs/2302.01318",
-      note: "K token 병렬 scoring이 한 step과 비슷하다는 memory-bound 근거와 modified rejection sampling 알고리즘",
+      "kind": "핵심 논문",
+      "label": "EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty (v3)",
+      "href": "https://arxiv.org/html/2401.15077v3",
+      "note": "같은 현재 표현에서 A를 선택한 경우와 B를 선택한 경우의 다음 표현이 달라지는 원문 Figure3를 작은 두 token에 대응합니다."
     },
-],
+    {
+      "kind": "핵심 논문",
+      "label": "Better & Faster Large Language Models via Multi-token Prediction v1",
+      "href": "https://arxiv.org/abs/2404.19737v1",
+      "note": "여러 미래를 학습한 부품이 같은 네 후보를 제안해도 검증 결과에 따라 세 개만 확정하는 serving 계약을 적용합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "SpecInfer: Accelerating Generative Large Language Model Serving with Tree-based Speculative Inference and Verification (v4)",
+      "href": "https://arxiv.org/html/2305.09781v4",
+      "note": "본문의 직선 K 4와 tree의 여러 가지를 비교해 폭·임시 KV·경로 선택이 추가됨을 설명하고 세부 비교 글로 연결합니다."
+    }
+  ],
   "ai/llm-harness": [
     {
       kind: "공식 문서",
@@ -5787,9 +5822,30 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "NIST SP 800-56A Rev. 3", href: "https://doi.org/10.6028/NIST.SP.800-56Ar3", note: "Discrete-log key establishment의 domain/key validation·derivation·confirmation 범위; 2026 update planning note와 함께 확인" },
   ],
   "crypto/elliptic-curves": [
-    { kind: "공식 규격", label: "SECG SEC 1 v2.0 · Elliptic Curve Cryptography", href: "https://www.secg.org/sec1-v2.pdf", note: "Curve domain·point encoding·public-key validation·ECC primitive 기준" },
-    { kind: "공식 규격", label: "EIP-196 · alt_bn128 add and scalar multiplication", href: "https://eips.ethereum.org/EIPS/eip-196", note: "BN254 G1 input·infinity·invalid-point·operation contract" },
-    { kind: "공식 규격", label: "EIP-197 · alt_bn128 pairing check", href: "https://eips.ethereum.org/EIPS/eip-197", note: "BN254 G1/G2/GT·Fp² encoding·subgroup·product pairing contract" },
+    {
+      "kind": "공식 문서",
+      "label": "SEC 1 v2.0 · 덧셈·점 변환·공개키 검사",
+      "href": "https://www.secg.org/sec1-v2.pdf",
+      "note": "원문 규칙에 (5,1)과 (6,3), 03 05 및 04 05 01을 대입하고 점 변환과 공개키 항등원 거부를 구분했습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "arkworks algebra · 같은 점의 고정 원문 실행",
+      "href": "https://github.com/arkworks-rs/algebra/tree/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c",
+      "note": "361쌍·20스칼라와 원시 두 배 값을 정수 계산에 대조하고 잘못된 G1·G2, 검사 유무와 두 전체 페어링 관계를 실제 실행했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-196 · G1 덧셈·스칼라 입력 규칙",
+      "href": "https://eips.ethereum.org/EIPS/eip-196",
+      "note": "직접 작성한 ECADD 모형에 빈 입력·64바이트·초과 바이트·p 좌표를 넣고, 라이브러리 G1의 r+1배를 확인했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-197 · 페어링 입력과 결과",
+      "href": "https://eips.ethereum.org/EIPS/eip-197",
+      "note": "규격을 읽어 64바이트가 유효한 ECADD 예와 페어링의 길이 실패를 대조했습니다. 두 전체 페어링 수학 관계는 별도 Ark 실행으로 확인했습니다."
+    }
   ],
   "crypto/field-arithmetic": [
     {
@@ -6358,7 +6414,32 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "동일 commit 의존성과 자체 F₃/β2 설정으로 81개 곱, 여덟 역원과 아홉 Frobenius를 실제 Rust에서 확인했습니다. β1과 잘못된 표도 별도로 실행했습니다."
     }
   ],
-  "crypto/pairing": [{ kind:"핵심 논문", label:"Miller · Weil Pairing", href:"https://crypto.stanford.edu/miller/miller.pdf", note:"Miller function recurrence 원 연구" },{ kind:"핵심 논문", label:"Hess et al. · Eta Pairing Revisited", href:"https://eprint.iacr.org/2006/110.pdf", note:"Ate-family pairing construction" }],
+  "crypto/pairing": [
+    {
+      "kind": "핵심 논문",
+      "label": "Miller (1986) · Short Programs for functions on Curves",
+      "href": "https://crypto.stanford.edu/miller/miller.pdf",
+      "note": "저자 공개 7쪽 PDF의 실제 제목·날짜와2절을 읽었습니다. 현대 BN의 세부 지수를 이 문서에 귀속하지 않습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Ben Lynn (2007) · Tate 반복과 거듭제곱 정규화",
+      "href": "https://crypto.stanford.edu/pbc/thesis.pdf",
+      "note": "PDF 51–52쪽에 자체 F₁₉의101을 대입했습니다. PDF 113쪽의 서로소 거듭제곱 성질을 고정 BN의c와 연결했습니다. 원문 수치 예제 F₅₉와 구별합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "arkworks algebra · 고정 BN 구현과 실제 CPU 검산",
+      "href": "https://github.com/arkworks-rs/algebra/tree/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c",
+      "note": "실제 --locked 실행에서 63회 제곱/87개 선, 같은 계수의 밀집 곱, M^(cE) 일치와 M^E 불일치, c의 역수 복원, 두 쌍의 곱과0/항등원 경계를 확인했습니다."
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Hess·Smart·Vercauteren (2006) · The Eta Pairing Revisited",
+      "href": "https://eprint.iacr.org/2006/110",
+      "note": "공식 landing의 제목·저자·2006년 서지와 abstract만 확인했습니다. PDF 전문은 접근 오류로 읽지 못했으며 이 글의 수치·BN 구현 근거로 사용하지 않습니다."
+    }
+  ],
   "blockchain/vdf": [{ kind:"핵심 논문", label:"Boneh et al. · VDF", href:"https://eprint.iacr.org/2018/601.pdf", note:"VDF definitions and constructions" },{ kind:"핵심 논문", label:"Wesolowski · Efficient VDF", href:"https://eprint.iacr.org/2018/623.pdf", note:"Quotient proof construction" }],
   "blockchain/drand": [{ kind:"공식 문서", label:"drand specification", href:"https://docs.drand.love/docs/specification/", note:"Threshold beacon protocol specification" },{ kind:"공식 코드", label:"drand @ 2363f3b", href:"https://github.com/drand/drand/tree/2363f3b9ba5fd6f14e0b84a096b248479790d75d", note:"Pinned official source" }],
   "crypto/hash-theory": [
@@ -8806,37 +8887,115 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "banking/central-bank-and-policy-transmission": [
     {
-      kind: "공식 문서",
-      label: "한국은행 · 공개시장운영 (통화정책수단)",
-      href: "https://www.bok.or.kr/portal/main/contents.do?menuNo=200294",
-      note: "7일물 RP 중심 운영과 기준금리를 입찰금리로 쓰는 방식의 근거. 제도 설명이며 특정 시점의 조절 규모·금리 수준의 근거는 아님",
+      "kind": "공식 문서",
+      "label": "한국은행 · 공개시장운영",
+      "href": "https://www.bok.or.kr/portal/main/contents.do?menuNo=200294",
+      "note": "공식 운영 설명의 수단과 방향을 적용했습니다. 가정한 4%·5%나 6억 원이 실제 거래 금리·규모라는 근거가 아닙니다."
     },
     {
-      kind: "공식 문서",
-      label: "한국은행 · 통화정책 목표",
-      href: "https://www.bok.or.kr/portal/main/contents.do?menuNo=200288",
-      note: "한국은행법이 정한 최우선 목표가 물가안정이라는 본문 서술의 근거",
+      "kind": "공식 문서",
+      "label": "한국은행 · 통화신용정책보고서 2026년 3월",
+      "href": "https://www.bok.or.kr/portal/bbs/B0000156/view.do?menuNo=200754&nttId=10096935",
+      "note": "실제 보고서의 운영 방향과 개편 날짜를 대조했습니다. 모든 은행의 부족분을 같은 수단으로 언제든 메운다는 뜻은 아닙니다."
     },
     {
-      kind: "공식 문서",
-      label: "한국은행 · 한국은행 기준금리 추이",
-      href: "https://www.bok.or.kr/portal/singl/baseRate/progress.do?dataSeCd=01&menuNo=200656",
-      note: "기준금리가 금융통화위원회 본회의에서 결정된다는 절차의 근거. 특정 시점 금리 수치는 본문에 인용하지 않음",
+      "kind": "공식 문서",
+      "label": "Federal Reserve · IORB FAQ",
+      "href": "https://www.federalreserve.gov/monetarypolicy/iorb-faqs.htm",
+      "note": "공식 운영 문서의 접근 조건과 목표 관계를 읽었습니다. IORB가 모든 참가자에 대해 비용 없는 절대 하한이라는 뜻은 아닙니다."
     },
+    {
+      "kind": "공식 문서",
+      "label": "Federal Reserve FEDS Notes · Monitoring Reserve Scarcity Through Nonbank Cash Lenders (2025)",
+      "href": "https://www.federalreserve.gov/econres/notes/feds-notes/monitoring-reserve-scarcity-through-nonbank-cash-lenders-20250328.html",
+      "note": "본문의 거래 동기·비용 논의를 실제 공식 연구에 대조했습니다. 0.15%포인트는 본문 가정이며 연구의 추정값이나 현재 부족 상태가 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Bank of England · About a rate of (general) interest (2024), Figure 1",
+      "href": "https://www.bankofengland.co.uk/-/media/boe/files/quarterly-bulletin/2024/about-a-rate-of-general-interest-how-monetary-policy-transmits.pdf#page=8",
+      "note": "실제 PDF 그림 이미지를 읽고 같은 공장의 이자·설비·원가에 연결했습니다. 모든 경로가 같은 순서로 움직이거나 본문의 250만원이 거시경제 효과 추정치라는 뜻은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Federal Reserve · Three-factor nominal term structure model",
+      "href": "https://www.federalreserve.gov/data/three-factor-nominal-term-structure-model.htm",
+      "note": "공식 모형 설명의 정의와 추정 경계를 확인했습니다. 관측 금리 하나로 미래 경로나 프리미엄을 유일하게 알 수는 없습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "New York Fed · Treasury Term Premia, 1961–Present (2014)",
+      "href": "https://libertystreeteconomics.newyorkfed.org/2014/05/treasury-term-premia-1961-present/",
+      "note": "부호를 고정하지 않는 경계에만 사용합니다. 프리미엄의 모든 모형과 모든 시점이 같은 값을 준다는 뜻은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Bank of England · Money creation in the modern economy (2014)",
+      "href": "https://www.bankofengland.co.uk/quarterly-bulletin/2014/q1/money-creation-in-the-modern-economy",
+      "note": "은행 장부 글에서 확인한 부문별 기록 원리를 재사용합니다. 새 대출 수요가 없으면 예금도 절대로 생기지 않는다는 주장이 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "MAS · Monetary Policy Framework",
+      "href": "https://www.mas.gov.sg/monetary-policy/Singapores-Monetary-Policy-Framework",
+      "note": "공식 운영 틀과 중심 변수를 확인했습니다. 환율과 금리를 독립적으로 아무 수준에나 고정할 수 있다는 뜻은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ECB · 2024년 운영체계 개편",
+      "href": "https://www.ecb.europa.eu/press/pr/date/2024/html/ecb.pr240313~807e240020.en.html",
+      "note": "2024년 결정의 예금금리 중심과 적격담보 아래 고정금리 전액 배정을 설명합니다. 이후 매개변수의 현재 값으로 일반화하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Bank of Japan · Monetary policy operating tools",
+      "href": "https://www.boj.or.jp/en/about/education/oshiete/seisaku/b42.htm",
+      "note": "2024년 3월 정책 틀 변경 이후 단기금리 목표 설명을 읽습니다. 과거 YCC와 현재 운영을 섞지 않습니다."
+    }
   ],
   "banking/payment-clearing-settlement": [
     {
-      kind: "공식 규격",
-      label: "CPMI·IOSCO · Principles for financial market infrastructures (BIS, 2012)",
-      href: "https://www.bis.org/cpmi/publ/d101.htm",
-      note: "층 구분과 미결제 익스포저 관리의 국제 기준선. 기준 문서이며 특정 국가 시스템의 설명이 아님",
+      "kind": "공식 문서",
+      "label": "CPSS-IOSCO · Principles for financial market infrastructures (2012)",
+      "href": "https://www.bis.org/publications/principles-financial-market-infrastructures.pdf",
+      "note": "실제PDF 인쇄쪽64·76 이미지를 읽고3.8.1·원칙9각주96·원칙12각주112/113을 확인했습니다. 한국·미국 서비스의 실제 최종성 시각이나 교육용260·10을 이 문서에서 가져온 것은 아닙니다."
     },
     {
-      kind: "공식 문서",
-      label: "한국은행 · 우리나라의 지급결제제도",
-      href: "https://www.bok.or.kr/portal/main/contents.do?menuNo=200347",
-      note: "거액·소액 시스템 구성과 한은금융망에서의 최종 해소 구조에 대한 근거. 특정 시점의 결제 규모는 인용하지 않음",
+      "kind": "공식 문서",
+      "label": "한국은행 · 우리나라의 지급결제제도",
+      "href": "https://www.bok.or.kr/portal/main/contents.do?menuNo=200347",
+      "note": "공식 본문 및 그림의 소액·거액 시스템 연결을 직접 확인했습니다. 운영 규모·현재 한도·세부 마감 시각이나 미국 제도를 증명하는 자료가 아닙니다."
     },
+    {
+      "kind": "공식 문서",
+      "label": "한국은행 · 한은금융망 운영",
+      "href": "https://www.bok.or.kr/portal/main/contents.do?menuNo=200727",
+      "note": "설명용 묶음 계산의 설계 동기를 실제 운영 설명과 비교했습니다. 본문의 Python을 한은금융망이나 FedNow의 실제 알고리즘이라고 주장하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국은행 · 결제완결성 보장대상 지정",
+      "href": "https://www.bok.or.kr/portal/main/contents.do?menuNo=200721",
+      "note": "법적 근거의 범위와 지정 시스템에 한정된 설명을 직접 읽었습니다. 모든 앱의 완료 표시가 같은 보호를 받거나 착오송금의 반환이 언제나 불가능하다는 뜻은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Federal Reserve Banks · Operating Circular8 (2026-04-01)",
+      "href": "https://www.frbservices.org/wp-content/uploads/040126-operating-circular-8.pdf",
+      "note": "실제PDF 조문을 읽고 A의10 완료와 별도 반환에 적용했습니다. 반환 요청을 보냈다고 항상 반환이 보장되거나 원이체 기록이 자동 소멸한다는 뜻은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Federal Reserve Banks · FedNow Operating Proceduresv3.6 (2026-04-28)",
+      "href": "https://www.frbservices.org/wp-content/uploads/042826-fednow-service-operating-procedures.pdf",
+      "note": "실제PDF91~96쪽 반환 과정과 서론을 읽었습니다. 모든 메시지·유동성 관리 송금에 동일한 시간 창이나 고객 자금 가용성 규칙을 적용하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CLS · CLSSettlement 공식 서비스 설명",
+      "href": "https://www.cls-group.com/products/settlement/clssettlement/",
+      "note": "공식 서비스의 연결 지급 및 자금 효율 설명을 확인했습니다. 모든 통화쌍에 자동 적용되거나 환율·유동성·운영 위험 전체를 없앤다는 뜻은 아닙니다."
+    }
   ],
   "markets/bond-pricing-and-yield-curve": [
     {

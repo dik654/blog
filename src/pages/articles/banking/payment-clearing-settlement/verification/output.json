@@ -1,0 +1,132 @@
+{
+  "origin": "authored educational arithmetic; no production system execution",
+  "units": "KRW100million; same currency",
+  "assumptions": [
+    "all instructions valid/accepted",
+    "no credit or fees",
+    "each instruction indivisible",
+    "received balances reused",
+    "atomic group depends on separate legal and technical conditions"
+  ],
+  "gross": 260,
+  "net": {
+    "A": -10,
+    "B": 0,
+    "C": 10
+  },
+  "netTransfer": 10,
+  "reductionFraction": "25/26",
+  "firstTwoReductionFraction": "18/19",
+  "fixed": [
+    {
+      "instruction": 1,
+      "balances": {
+        "A": 0,
+        "B": 120,
+        "C": 0
+      }
+    },
+    {
+      "instruction": 2,
+      "balances": {
+        "A": 90,
+        "B": 30,
+        "C": 0
+      }
+    },
+    {
+      "instruction": 3,
+      "balances": {
+        "A": 90,
+        "B": 0,
+        "C": 30
+      }
+    },
+    {
+      "instruction": 4,
+      "balances": {
+        "A": 90,
+        "B": 20,
+        "C": 10
+      }
+    },
+    {
+      "instruction": 5,
+      "balances": {
+        "A": 80,
+        "B": 20,
+        "C": 20
+      }
+    },
+    {
+      "instruction": 6,
+      "balances": {
+        "A": 90,
+        "B": 20,
+        "C": 10
+      }
+    }
+  ],
+  "reordered": [
+    {
+      "instruction": 1,
+      "balances": {
+        "A": 0,
+        "B": 100,
+        "C": 0
+      }
+    },
+    {
+      "instruction": 3,
+      "balances": {
+        "A": 0,
+        "B": 70,
+        "C": 30
+      }
+    },
+    {
+      "instruction": 4,
+      "balances": {
+        "A": 0,
+        "B": 90,
+        "C": 10
+      }
+    },
+    {
+      "instruction": 2,
+      "balances": {
+        "A": 90,
+        "B": 0,
+        "C": 10
+      }
+    },
+    {
+      "instruction": 5,
+      "balances": {
+        "A": 80,
+        "B": 0,
+        "C": 20
+      }
+    },
+    {
+      "instruction": 6,
+      "balances": {
+        "A": 90,
+        "B": 0,
+        "C": 10
+      }
+    }
+  ],
+  "allPermutations": 720,
+  "minimumInitialSum": 100,
+  "atomicGroupFinal": {
+    "A": 0,
+    "B": 0,
+    "C": 10
+  },
+  "hypotheticalRemoveA": {
+    "B": -10,
+    "C": 10
+  },
+  "fxKRW": 1400000000
+}

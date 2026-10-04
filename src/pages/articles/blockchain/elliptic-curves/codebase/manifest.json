@@ -1,0 +1,71 @@
+{
+  "repo": "https://github.com/arkworks-rs/algebra",
+  "commit": "7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c",
+  "versions": {
+    "ark-ec": "0.5.0",
+    "ark-ff": "0.5.0",
+    "ark-bn254": "0.5.0-alpha.0"
+  },
+  "files": [
+    {
+      "file": "affine.rs",
+      "source": "ec/src/models/short_weierstrass/affine.rs",
+      "sha256": "225252ec363498d45685d5c3a2c3fa438947eb1944f059a32e4cf448d637e099"
+    },
+    {
+      "file": "group.rs",
+      "source": "ec/src/models/short_weierstrass/group.rs",
+      "sha256": "efe8d54024f5a1cddedfe4dd7280d4db2495f9b2e4b40d0424a1d919a8f5aa54"
+    },
+    {
+      "file": "sw.rs",
+      "source": "ec/src/models/short_weierstrass/mod.rs",
+      "sha256": "c7c37abf4a4c00feb4a105105e338d483e25cdb336dffc119a0c8e2650ade55b"
+    },
+    {
+      "file": "scalar_mul.rs",
+      "source": "ec/src/scalar_mul/mod.rs",
+      "sha256": "d4388406e9fe166dda57bee48b4bc384fde940e46c8b991b74fe20e43f4c18ff"
+    },
+    {
+      "file": "g1.rs",
+      "source": "curves/bn254/src/curves/g1.rs",
+      "sha256": "d524540d74248d7fa6cfe7e141959b1b6ba04eda7c1265b32f981bed636e5e95"
+    },
+    {
+      "file": "g2.rs",
+      "source": "curves/bn254/src/curves/g2.rs",
+      "sha256": "199e048b5cf199be9b053e41879e2e2cd61e04eaffe54852f4fbf27aff85eb9b"
+    },
+    {
+      "file": "bn254.rs",
+      "source": "curves/bn254/src/curves/mod.rs",
+      "sha256": "274aeb949f0a8660e5dbbbba3f23172ebcdd38805acb9408f21de27de439d4a1"
+    },
+    {
+      "file": "fq.rs",
+      "source": "curves/bn254/src/fields/fq.rs",
+      "sha256": "7c65f9d074c6f807fb95b17b339487bc69a952d4741fc119a70436b3338c5ddb"
+    },
+    {
+      "file": "fr.rs",
+      "source": "curves/bn254/src/fields/fr.rs",
+      "sha256": "05bd67486b5fc6ed6ed5e70e2e6673794797502e671aaf0e9108e8ebb7f18fbf"
+    },
+    {
+      "file": "LICENSE-APACHE",
+      "source": "LICENSE-APACHE",
+      "sha256": "e8d77d4bbe96e1b46ec0f40d1f12e19825e718c764bb3e9a695633ade9289f9e"
+    },
+    {
+      "file": "LICENSE-MIT",
+      "source": "LICENSE-MIT",
+      "sha256": "8f71659370c5268d9a1dc962a46232540e8fca63462586d8efaa95aab492a208"
+    },
+    {
+      "file": "pairing.rs",
+      "source": "ec/src/pairing.rs",
+      "sha256": "d3e3fad4190bd077c56c022c9fd058f821e35f6260612f8bbb333a144eb67df3"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "repo": "https://github.com/arkworks-rs/algebra",
+  "commit": "7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c",
+  "versions": {
+    "ark-ec": "0.5.0",
+    "ark-ff": "0.5.0",
+    "ark-bn254": "0.5.0-alpha.0"
+  },
+  "files": [
+    {
+      "file": "bn.rs",
+      "source": "ec/src/models/bn/mod.rs",
+      "sha256": "0d3c32710e1129a2413033a58a272f478ec4d7ff1e56a06a349da3c07f35aa28"
+    },
+    {
+      "file": "g2_prepared.rs",
+      "source": "ec/src/models/bn/g2.rs",
+      "sha256": "3b3080ad44be4f8106396ae2595d66f5477452ca4929db641231ba800584a5fd"
+    },
+    {
+      "file": "bn254.rs",
+      "source": "curves/bn254/src/curves/mod.rs",
+      "sha256": "274aeb949f0a8660e5dbbbba3f23172ebcdd38805acb9408f21de27de439d4a1"
+    },
+    {
+      "file": "fq.rs",
+      "source": "curves/bn254/src/fields/fq.rs",
+      "sha256": "7c65f9d074c6f807fb95b17b339487bc69a952d4741fc119a70436b3338c5ddb"
+    },
+    {
+      "file": "fr.rs",
+      "source": "curves/bn254/src/fields/fr.rs",
+      "sha256": "05bd67486b5fc6ed6ed5e70e2e6673794797502e671aaf0e9108e8ebb7f18fbf"
+    },
+    {
+      "file": "pairing.rs",
+      "source": "ec/src/pairing.rs",
+      "sha256": "d3e3fad4190bd077c56c022c9fd058f821e35f6260612f8bbb333a144eb67df3"
+    },
+    {
+      "file": "LICENSE-APACHE",
+      "source": "LICENSE-APACHE",
+      "sha256": "e8d77d4bbe96e1b46ec0f40d1f12e19825e718c764bb3e9a695633ade9289f9e"
+    },
+    {
+      "file": "LICENSE-MIT",
+      "source": "LICENSE-MIT",
+      "sha256": "8f71659370c5268d9a1dc962a46232540e8fca63462586d8efaa95aab492a208"
+    }
+  ]
+}

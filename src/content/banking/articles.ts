@@ -92,83 +92,211 @@ export const bankingArticles: Article[] = [
   },
   {
     slug: "central-bank-and-policy-transmission",
-    title: "중앙은행은 돈을 찍는 곳이 아니라 하나의 가격을 고정하는 곳입니다",
+    title: "중앙은행: 오늘의 거래 조건이 미래 금리와 지출에 닿는 과정",
     subcategory: "banking-policy",
     sections: [
-      {
-        id: "overview",
-        title: "한 점의 가격을 못 박아 두면 나머지 금리가 그 점에 매달립니다",
-      },
-      {
-        id: "cb-balance-sheet",
-        title: "부품 1. 중앙은행의 부채가 곧 은행들이 쓰는 결제 수단입니다",
-      },
-      {
-        id: "rate-setting",
-        title: "부품 2. 목표는 금리이고 수단은 준비금 시장의 수급과 이자입니다",
-        subsections: [
-          { id: "operation-procedure", title: "공표한 금리를 실제 시장금리로 만드는 하루" },
-        ],
-      },
-      {
-        id: "transmission",
-        title: "부품 3. 한 점이 곡선 전체를 끌고 가는 것은 기대 때문입니다",
-        subsections: [
-          { id: "transmission-lag", title: "같은 인상도 경로마다 도착 시각이 다릅니다" },
-        ],
-      },
-      {
-        id: "balance-sheet-policy",
-        title: "부품 4. 점을 더 내릴 수 없으면 장부의 크기로 넘어갑니다",
-      },
-      {
-        id: "boundary",
-        title: "가격은 정해졌고, 이제 그 가격으로 오간 돈이 실제로 옮겨져야 합니다",
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 오늘 6억 원이 부족한 은행은 누구에게 얼마를 내고 빌릴까요?"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 거래 조건을 바꾸면 빌리는 비용과 앞으로의 선택이 달라집니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 같은 6억 원에 세 가지 거래 조건을 놓습니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 다른 선택이 남아 있을 때 협상이 어떻게 달라지는지 봅니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 오늘의 비용과 앞으로의 예상은 따로 움직일 수 있습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 이미 본 거래와 비용에 이름을 붙입니다"
+  },
+  {
+    "id": "cb-balance-sheet",
+    "title": "7. 중앙은행 대출과 은행 간 대출은 전체 장부에서 다릅니다"
+  },
+  {
+    "id": "rate-setting",
+    "title": "8. 목표·거래 조건·실제 시장금리를 나눠 읽습니다"
+  },
+  {
+    "id": "source-operations",
+    "title": "9. 실제 운영 문서에서 같은 6의 방향을 대조합니다"
+  },
+  {
+    "id": "corridor-boundary",
+    "title": "10. 접근할 수 없는 거래는 그 사람의 하한이 아닙니다"
+  },
+  {
+    "id": "operation-procedure",
+    "title": "11. 부족분을 메울 때와 넉넉한 상태를 유지할 때의 수단"
+  },
+  {
+    "id": "transmission",
+    "title": "12. 미래 경로를 바꾸면 오늘 인상해도 장기금리가 내릴 수 있습니다"
+  },
+  {
+    "id": "no-arbitrage",
+    "title": "13. 미래에 다시 빌릴 금리를 모르면 확정 수익 비교가 아닙니다"
+  },
+  {
+    "id": "transmission-lag",
+    "title": "14. 같은 공장의 이자·수주·설비 주문을 따라갑니다"
+  },
+  {
+    "id": "balance-sheet-policy",
+    "title": "15. 채권을 누구에게 사는지에 따라 예금의 직접 변화가 다릅니다"
+  },
+  {
+    "id": "countries",
+    "title": "16. 국가별로 정책을 전달하는 거래 조건이 다릅니다"
+  },
+  {
+    "id": "limits",
+    "title": "17. 결정문과 시장 반응을 읽을 때 남겨 둘 불확실성"
+  },
+  {
+    "id": "review",
+    "title": "18. 조건을 바꾼 뒤 금리와 장부를 먼저 예측해 봅니다"
+  }
+],
     component: () =>
       import("@/pages/articles/banking/central-bank-and-policy-transmission"),
   },
   {
     slug: "payment-clearing-settlement",
-    title: "송금은 통장 숫자가 바뀐 뒤에도 아직 끝나지 않았을 수 있습니다",
+    title: "지급·청산·결제: 같은 여섯 거래를 끝내는 돈과 규칙",
     subcategory: "banking-settlement",
     sections: [
-      {
-        id: "overview",
-        title: "한 번의 송금이 서로 다른 세 층에서 따로 처리됩니다",
-      },
-      {
-        id: "three-layers",
-        title: "부품 1. 지시를 전달하는 일과 돈을 넘기는 일은 다른 일입니다",
-      },
-      {
-        id: "rtgs-vs-dns",
-        title: "부품 2. 모아서 정산할수록 자금은 덜 들고 위험은 더 쌓입니다",
-        subsections: [
-          { id: "hybrid-design", title: "그래서 실제 시스템은 두 극단 사이에 자리를 잡습니다" },
-        ],
-      },
-      {
-        id: "finality",
-        title: "부품 3. 되돌릴 수 없다는 판정은 기술이 아니라 규칙이 만듭니다",
-      },
-      {
-        id: "cross-currency",
-        title: "부품 4. 통화가 다르면 결제가 둘로 갈라지고 그 틈이 위험이 됩니다",
-      },
-      {
-        id: "boundary",
-        title: "한국에서는 작은 지급들이 결국 한 곳에서 해소됩니다",
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 고객 화면이 바뀐 뒤 은행끼리는 무엇을 끝내야 할까요?"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 보낼 지시를 받고 서로 대조한 뒤 의무를 이행합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 세 은행의 같은 지급 여섯 건을 적습니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 260의 지시에서 누가 최종적으로 10을 보내는지 봅니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 받은 돈을 다시 쓸 수 있지만 기다리는 시간도 생깁니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 이미 본 절차와 완료 상태에 이름을 붙입니다"
+  },
+  {
+    "id": "three-layers",
+    "title": "7. 지시 처리와 기관 간 의무 이행은 다른 기록입니다"
+  },
+  {
+    "id": "netting-efficiency",
+    "title": "8. 총액과 순액의 차이를 같은 여섯 건으로 계산합니다"
+  },
+  {
+    "id": "source-finality",
+    "title": "9. 원문의 최종 이전 조건을 A의 10에 적용합니다"
+  },
+  {
+    "id": "rtgs-vs-dns",
+    "title": "10. 총 지급량 260과 최초 필요한 돈 120·100은 다릅니다"
+  },
+  {
+    "id": "hybrid-design",
+    "title": "11. 대기 지시를 묶어 처리할 조건을 실제 계산으로 봅니다"
+  },
+  {
+    "id": "exposure",
+    "title": "12. 줄어든 지급량 250이 곧바로 위험액은 아닙니다"
+  },
+  {
+    "id": "finality",
+    "title": "13. 원이체의 최종 처리와 별도 반환 청구를 구분합니다"
+  },
+  {
+    "id": "cross-currency",
+    "title": "14. 두 통화의 교환에서는 먼저 보낸 원금이 노출됩니다"
+  },
+  {
+    "id": "pvp",
+    "title": "15. 한쪽 최종 이전을 다른 쪽 이전에 묶습니다"
+  },
+  {
+    "id": "boundary",
+    "title": "16. 한국의 차액 결제와 해외 즉시 결제를 비교합니다"
+  },
+  {
+    "id": "limits",
+    "title": "17. 화면·계정·법적 완료를 구분해 한 거래를 읽습니다"
+  },
+  {
+    "id": "review",
+    "title": "18. 순서와 부도 조건을 바꾸기 전에 결과를 예상해 봅니다"
+  }
+],
     component: () => import("@/pages/articles/banking/payment-clearing-settlement"),
   },
   {
     slug: "repo-and-collateral-funding",
     title: "레포는 증권을 맡겨 짧은 돈을 구하고 만기마다 다시 연결한다",
     subcategory: "banking-funding",
-    sections: [{"id": "overview", "title": "1. 오래 보유할 자산도 오늘 결제할 돈이 필요합니다"}, {"id": "black-box", "title": "2. 증권과 돈은 반대 방향으로 움직이고 만기에 되돌아갑니다"}, {"id": "case", "title": "3. 100억 원 자산에서 5%를 남기면 현금은 95억 원입니다"}, {"id": "picture", "title": "4. 현금액·증권가치·되살 값을 따로 기록합니다"}, {"id": "need", "title": "5. 증권을 팔기 전의 가격 변화와 만기 공백을 감당합니다"}, {"id": "names", "title": "6. 레포·역레포·헤어컷은 관점과 금액을 가리킵니다"}, {"id": "mechanism", "title": "7. 가격 하락과 공제율 상승을 동시에 계산합니다"}, {"id": "source", "title": "8. 원문 공제 정의에 100과 95를 대입합니다"}, {"id": "comparison", "title": "9. 중앙은행이 사는지 파는지에 따라 준비금 방향이 달라집니다"}, {"id": "limits", "title": "10. 담보가 있어도 만기 연장과 처분 가격은 보장되지 않습니다"}],
+    sections: [
+  {
+    "id": "overview",
+    "title": "1. 오래 보유할 자산도 오늘 결제할 돈이 필요합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 증권과 돈은 반대 방향으로 움직이고 만기에 되돌아갑니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 100억 원 자산에서 5%를 남기면 현금은 95억 원입니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 현금액·증권가치·되살 값을 따로 기록합니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 증권을 팔기 전의 가격 변화와 만기 공백을 감당합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 레포·역레포·헤어컷은 관점과 금액을 가리킵니다"
+  },
+  {
+    "id": "mechanism",
+    "title": "7. 가격 하락과 공제율 상승을 동시에 계산합니다"
+  },
+  {
+    "id": "source",
+    "title": "8. 원문 공제 정의에 100과 95를 대입합니다"
+  },
+  {
+    "id": "comparison",
+    "title": "9. 중앙은행이 사는지 파는지에 따라 준비금 방향이 달라집니다"
+  },
+  {
+    "id": "limits",
+    "title": "10. 담보가 있어도 만기 연장과 처분 가격은 보장되지 않습니다"
+  }
+],
     component: () => import("@/pages/articles/banking/repo-and-collateral-funding"),
   },
 ];
