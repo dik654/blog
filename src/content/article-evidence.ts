@@ -584,11 +584,41 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/word2vec-prediction-objectives": [
     {
-      kind: "핵심 논문",
-      label: "Efficient Estimation of Word Representations in Vector Space",
-      href: "https://arxiv.org/abs/1301.3781#page=3",
-      note: "CBOW·Skip-gram prediction direction과 hierarchical softmax 비교",
+      "kind": "핵심 논문",
+      "label": "Efficient Estimation of Word Representations in Vector Space",
+      "href": "https://arxiv.org/abs/1301.3781#page=3",
+      "note": "CBOW·Skip-gram prediction direction과 hierarchical softmax 비교"
     },
+    {
+      "kind": "핵심 논문",
+      "label": "Efficient Estimation of Word Representations in Vector Space",
+      "href": "https://arxiv.org/abs/1301.3781v3",
+      "note": "4–5쪽 그림 1에 같은 cat과 두 saw를 넣어 두 예측 방향을 비교합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Distributed Representations of Words and Phrases and their Compositionality",
+      "href": "https://arxiv.org/abs/1310.4546v1",
+      "note": "식 (1)의 공통 분모 T와 이웃 합, 식 (3)의 부호와 L(w)−1을 같은 두 saw 및 cat 주소 001에 적용합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "A Method for the Construction of Minimum-Redundancy Codes",
+      "href": "https://www.cse.iitd.ac.in/~pkalra/siv864/huffman_1952.pdf",
+      "note": "1098쪽 식 (2)의 L_av=ΣP(i)L(i)에 [8,4,2,1,1]/16과 [1,2,3,4,4]를 넣고 1099쪽의 작은 둘 병합을 증명합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Corrected CBOW Performs as well as Skip-gram",
+      "href": "https://arxiv.org/abs/2012.15332v2",
+      "note": "2쪽 식 (2)의 1/C에 C=2를 넣어 각 saw 출현의 기울기가 절반임을 확인합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "저자 word2vec.c · commit 20c129af",
+      "href": "https://github.com/tmikolov/word2vec/blob/20c129af10659f7c50e86e3be406df663beff438/word2vec.c",
+      "note": "전체 C와 라이선스를 바이트 그대로 보존했습니다. 제한된 한 중심 호출로 평균·근사표·갱신·정렬 경계의 관찰 범위를 구별합니다."
+    }
   ],
   "ai/word2vec-negative-sampling": [
     {
@@ -6450,7 +6480,24 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
 ],
   "crypto/paillier-cryptosystem": [
-    { kind: "핵심 논문", label: "Paillier · Public-Key Cryptosystems Based on Composite Degree Residuosity Classes", href: "https://link.springer.com/chapter/10.1007/3-540-48910-X_16", note: "Probabilistic additive-homomorphic encryption의 primary paper" },
+    {
+      "kind": "핵심 논문",
+      "label": "Paillier 1999 · Public-Key Cryptosystems Based on Composite Degree Residuosity Classes",
+      "href": "https://www.cs.tau.ac.il/~fiat/crypt07/papers/Pai99pai.pdf",
+      "note": "저자 논문 사본의 2–4절, 7절 CRT, 8절 동형 항등식을 읽고 7·12쪽을 화면으로 확인했습니다. 출판사 DOI의 제목·저자를 대조했습니다. 선택 구현 전체의 보안 감사나 현재 장비 성능을 검증한 것이 아닙니다. 논문의 성능 표는 저자의 연산 비용 추정입니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "CSIRO Data61 python-paillier · 7d9911eb 고정 원문",
+      "href": "https://github.com/data61/python-paillier/tree/7d9911eb03c3c2d64399bc15405feb5e628379d1",
+      "note": "실제 120개 정상 메시지·난수 조합과 독립 정수 모형, 합산·재사용·재무작위화·raw 입력·signed 넘침·별도 n=323 고정소수점·n=21의 252개 CRT 복호를 실행했습니다. 전체 upstream 테스트·큰 키 생성·실제 RNG의 엔트로피·상수 시간·성능·CCA·threshold·범위 증명·보안 감사를 실행한 결과가 아닙니다."
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Shor · 양자 인수분해 알고리즘의 공식 초록",
+      "href": "https://arxiv.org/abs/quant-ph/9508027",
+      "note": "공식 arXiv v2 초록과 서지 정보를 확인했습니다. 이 글에서 논문 전문·양자 회로·현실적 자원 추정이나 공격 실행을 검증하지 않았습니다."
+    }
   ],
   "crypto/scroll-zkevm": [
     { kind: "공식 문서", label: "Scroll zkEVM Overview", href: "https://docs.scroll.io/en/technology/zkevm/zkevm-overview/", note: "EVM state-transition validity proof의 official architecture boundary" },
@@ -7400,8 +7447,48 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 프로젝트 기록", label: "SecureDrop · WEBCAT alpha", href: "https://securedrop.org/news/webcat-alpha/", note: "2026 Firefox extension alpha와 실행 전 enforcement 공개 범위이며 표준 채택·production 완성은 아님" },
   ],
   "crypto/binary-field-proving": [
-    { kind: "핵심 논문", label: "Binius · Succinct Arguments over Towers of Binary Fields", href: "https://eprint.iacr.org/2023/1784.pdf", note: "Binary tower argument construction 근거이며 임의 workload 우위·production audit를 뜻하지 않음" },
-    { kind: "핵심 논문", label: "Flock · Fast batched proofs for Boolean computations", href: "https://arxiv.org/abs/2607.27491", note: "Boolean batch proof와 conventional-hash prototype benchmark 근거이며 hardware·batch 조건 밖의 보편 throughput은 아님" },
+    {
+      "kind": "공식 코드",
+      "label": "binius-models · 7ac5ad72 고정 원문",
+      "href": "https://github.com/IrreducibleOSS/binius-models/tree/7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf",
+      "note": "CPython 3.12.13으로 선택 정의를 실제 실행했습니다. 독립 256개 체 곱·256개 정직한 질문 조합·역원·반례·인코딩을 대조했습니다. 전체 의존성 묶음·PCS·Fiat–Shamir·SNARK·보안·성능을 실행한 결과가 아닙니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Diamond·Posen · Binius 최종 출판판",
+      "href": "https://eprint.iacr.org/2023/1784",
+      "note": "공식 초록과 PDF 도입부·기술 개요를 읽었습니다. 전체 보안 증명을 다시 검증하지 않았습니다. 선택 Python sumcheck 실행을 논문의 전체 프로토콜 구현으로 확대하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Binius64 · 6a179536 고정 README",
+      "href": "https://github.com/binius-zk/binius64/tree/6a179536d90fcc76eeca0cee4e059f5e17efb459",
+      "note": "고정 README와 원래 저장소의 보관·후속 안내를 확인했습니다. 전체 Binius64를 실행하거나 성능·보안을 검증하지 않았습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Flock · arXiv 2607.27491v1",
+      "href": "https://arxiv.org/html/2607.27491v1",
+      "note": "실제 PDF 1.1·2·3·4.1·4.6·5절을 읽고 9쪽 sumcheck·zerocheck 수식을 화면으로 확인했습니다. 표는 저자 보고이며 압축함수/초입니다. 현재 저장소나 9월 수정판의 재현 결과로 해석하지 않습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Flock · b684b125 원문의 R1CS 검사",
+      "href": "https://github.com/succinctlabs/flock/blob/b684b1258e4b1f202bec24afd660ace851b09e5e/crates/flock-core/src/r1cs.rs",
+      "note": "구조체·배치 적용·두 제약 검사 경로를 실제 읽고 같은 네 기록에 대응했습니다. 전체 Flock 회로 생성·증명·검증·실행 시간은 실행하지 않았습니다."
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Flock · 수정 ePrint 2026/1329",
+      "href": "https://eprint.iacr.org/2026/1329",
+      "note": "공식 초록·수정일 확인, PDF는 접근 오류로 미열람입니다. 수정판 본문에 대한 상세 검증을 주장하지 않습니다."
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Poseidon(2)b · 수정 ePrint 2025/1893",
+      "href": "https://eprint.iacr.org/2025/1893",
+      "note": "공식 초록과 수정 안내를 확인했습니다. PDF 전문·공격 분석·실제 이진체 해시 구현은 미검증입니다."
+    }
   ],
   "blockchain/ethereum-future-roadmap": [
     {
@@ -7872,11 +7959,78 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "보충 읽기", label: "Harchol-Balter · Performance Modeling and Design of Computer Systems", href: "https://doi.org/10.1017/CBO9781139226424", note: "Little's law 와 M/M/1 의 W = 1/(μ−λ) 유도, open·closed system 차이의 근거" },
   ],
   "ai/cuda-graph-capture": [
-    { kind: "공식 문서", label: "CUDA C++ Programming Guide — CUDA Graphs", href: "https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html", note: "node·edge 정의, 정의·instantiate·실행 세 단계, stream capture 규칙, cudaGraphExecUpdate 제약의 근거" },
-    { kind: "공식 문서", label: "Getting Started with CUDA Graphs (NVIDIA Technical Blog)", href: "https://developer.nvidia.com/blog/cuda-graphs/", note: "V100에서 kernel당 9.6·3.8·3.4 µs와 instantiate 약 400 µs라는 저자 자기보고 수치의 출처" },
-    { kind: "공식 문서", label: "PyTorch CUDA semantics — CUDA Graphs", href: "https://docs.pytorch.org/docs/stable/notes/cuda.html", note: "capture 전 warmup, CPU 동기화·dynamic control flow 금지, private memory pool과 graph_pool_handle 공유 조건의 근거" },
-    { kind: "공식 구현", label: "vLLM vllm/config/compilation.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/config/compilation.py", note: "cudagraph_capture_sizes 기본 생성 규칙과 상한 512·1024, cudagraph_num_of_warmups docstring의 근거" },
-    { kind: "공식 구현", label: "vLLM vllm/compilation/cuda_graph.py CUDAGraphWrapper", href: "https://github.com/vllm-project/vllm/blob/main/vllm/compilation/cuda_graph.py", note: "batch_descriptor를 key로 capture·replay를 분기하는 실제 구현" },
+    {
+      "kind": "공식 문서",
+      "label": "CUDA Programming Guide · CUDA Graphs",
+      "href": "https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html",
+      "note": "읽은 공식 문서의 API·node 종류·context 제약을 따르며 일반 replay와 명시적 갱신을 구별합니다. 공식 API 의미와 제약의 근거입니다. 가정한 네 작업의 14·10 μs는 이 문서의 측정값이 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.14 · CUDA semantics — CUDA Graphs",
+      "href": "https://docs.pytorch.org/docs/2.14/notes/cuda.html#cuda-graphs",
+      "note": "문서 버전 2.14와 원문 v2.14.0을 고정하고 사용 backend의 지원 조건과 일반 정적 replay를 구별합니다. PyTorch의 문서화된 동작과 보존한 원문에 대한 근거입니다. CPU 관찰은 GPU 실행 실험이 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Getting Started with CUDA Graphs · NVIDIA 2019",
+      "href": "https://developer.nvidia.com/blog/cuda-graphs/",
+      "note": "V100·CUDA 10.1·500,000 원소·block 512의 실험이며 3.4 μs 평균에는 초기 약 400 μs가 나누어 포함됩니다. 2.9 μs는 장치 kernel 시간이고 9.6·3.8·3.4 μs는 원문 조건의 총시간을 kernel 수로 나눈 값입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Constant Time Launch for Straight-Line CUDA Graphs · NVIDIA 2024",
+      "href": "https://developer.nvidia.com/blog/constant-time-launch-for-straight-line-cuda-graphs-and-other-performance-enhancements/",
+      "note": "RTX 3060·Xeon Silver 4208·CUDA 12.6의 실험이며 graph 구조와 장치 세대·업로드 상태를 지정합니다. CPU 호출 진입부터 반환까지의 구간을 최종 장치 완료 시간과 구별한 저자 측정의 근거입니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "PyGraph: Robust Compiler Support for CUDA Graphs in PyTorch · 2503.19779v1",
+      "href": "https://arxiv.org/html/2503.19779v1",
+      "note": "PyTorch 2.4·CUDA 12.1·RTX A6000 조건에서 183개 후보 가운데 선택한 20개 과제를 평가한 범위입니다. 원문 §5.3–6의 설계와 실험 범위를 읽었습니다. 주소표 A의 3·B의 5는 방법을 설명하는 별도 가정입니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Foundry: Template-Based CUDA Graph Context Materialization for Fast LLM Serving Cold Start · 2604.06664v1",
+      "href": "https://arxiv.org/html/2604.06664v1",
+      "note": "주 실험은 H200·CUDA 13.1·vLLM 0.11.2·PyTorch 2.9·512개 크기와 고정 KV 크기를 사용합니다. Qwen3-235B-A22B EP8 BF16의 650→3.9초는 환경 초기화와 가중치 적재를 제외한 원문 §6의 결과입니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vllm/vllm/compilation/cuda_graph.py · 6e448d0 전체 원문",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/compilation/cuda_graph.py",
+      "note": "고정 원격 원문의 SHA-256과 로컬 원문을 대조했습니다. 본문의 원문 패널은 이 파일에서 읽은 실제 API·분기와 줄 범위를 표시합니다. GPU 실행은 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vllm/vllm/config/compilation.py · 6e448d0 전체 원문",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/config/compilation.py",
+      "note": "고정 원격 원문의 SHA-256과 로컬 원문을 대조했습니다. 본문의 원문 패널은 이 파일에서 읽은 실제 API·분기와 줄 범위를 표시합니다. GPU 실행은 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vllm/vllm/forward_context.py · 6e448d0 전체 원문",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/forward_context.py",
+      "note": "고정 원격 원문의 SHA-256과 로컬 원문을 대조했습니다. 본문의 원문 패널은 이 파일에서 읽은 실제 API·분기와 줄 범위를 표시합니다. GPU 실행은 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "pytorch/torch/cuda/graphs.py · 2b3ec34 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/cuda/graphs.py",
+      "note": "고정 원격 원문의 SHA-256과 로컬 원문을 대조했습니다. 본문의 원문 패널은 이 파일에서 읽은 실제 API·분기와 줄 범위를 표시합니다. GPU 실행은 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vllm/vllm/v1/cudagraph_dispatcher.py · 6e448d0 전체 원문",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/cudagraph_dispatcher.py",
+      "note": "고정 원격 원문의 SHA-256과 로컬 원문을 대조했습니다. 본문의 원문 패널은 이 파일에서 읽은 실제 API·분기와 줄 범위를 표시합니다. GPU 실행은 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "pytorch/docs/source/notes/cuda.md · 2b3ec34 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/docs/source/notes/cuda.md",
+      "note": "고정 원격 원문의 SHA-256과 로컬 원문을 대조했습니다. 본문의 원문 패널은 이 파일에서 읽은 실제 API·분기와 줄 범위를 표시합니다. GPU 실행은 재현하지 않았습니다."
+    }
   ],
   "ai/disaggregated-prefill-decode-serving": [
     {
@@ -9746,12 +9900,17 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "firms/why-firms-exist": [
     {
-      kind: "핵심 논문",
-      label:
-        "R. H. Coase, “The Nature of the Firm”, Economica, New Series, Vol. 4, No. 16 (Nov. 1937), pp. 386–405",
-      href: "https://www.jstor.org/stable/2626876",
-      note: "값 기구를 쓰는 데 값이 든다는 출발점, 약속이 하나로 대체된다는 정리, 안팎의 한계값이 같아지는 경계 조건의 출처. JSTOR 스캔본 OCR 본문을 직접 읽어 인용을 대조했고 쪽 번호가 복원되지 않아 문장별 쪽수는 적지 않았음",
+      "kind": "핵심 논문",
+      "label": "R. H. Coase · The Nature of the Firm (1937)",
+      "href": "https://msuweb.montclair.edu/~lebelp/coasenatfirmec1937.pdf",
+      "note": "대학이 공개한 21쪽 스캔의 인쇄390~397쪽을 실제 이미지와 OCR로 확인했습니다.390쪽과395쪽의 짧은 인용을 이미지로 대조했습니다. 1·2·3·4·5·6/4가 실측값이거나 모든 기업이 계약 개수 때문에 존재하거나 모든 최적점에서 정확한 등식이 성립한다고 주장하지 않습니다."
     },
+    {
+      "kind": "공식 문서",
+      "label": "R. H. Coase · Nobel lecture (1991)",
+      "href": "https://www.nobelprize.org/prizes/economic-sciences/1991/coase/lecture/",
+      "note": "거래 활동의 비용 및 실제 자료가 더 필요하다는 단락을 공식 검색 본문에서 확인했습니다. 전체 문서를 직접 내려받았거나 본문의 수치가 강연의 실증 결과라고 주장하지 않습니다."
+    }
   ],
   "firms/scale-and-cost-structure": [
     {
@@ -10459,83 +10618,71 @@ export const ARTICLE_EVIDENCE: Readonly<
   "property/shop-closure-and-restoration": [
     {
       "kind": "공식 문서",
-      "label": "한국 대법원 2002년 건물명도 판례",
-      "href": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=194367",
-      "note": "특정 사실관계에서 복구비 공제와 실제 복구 의사를 다룬 판례입니다. 일반 규칙으로 확대하지 않습니다."
-    },
-    {
-      "kind": "공식 문서",
-      "label": "국세청 폐업 부가가치세 안내",
-      "href": "https://nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2448&nttSn=1393",
-      "note": "폐업일이 속한 달 다음 달 25일 신고와 잔존 재화 관련 안내입니다."
-    },
-    {
-      "kind": "공식 문서",
-      "label": "NSW Retail Tenancy Guide",
-      "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide",
-      "note": "호주 NSW의 임대차 종료 make good와 인도 준비 안내입니다."
-    },
-    {
-      "kind": "공식 문서",
       "label": "국세청 · 사업을 폐업하는 경우의 신고 안내",
       "href": "https://nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2448&nttSn=1393",
-      "note": "2026-10-04 원문 확인. 사례의 3천만 원 보증금 정산과 별도로 폐업일까지의 거래와 남은 재화를 확인합니다. 2026-10-04 확인 기준 위 기한을 세무 달력에 적고, 폐업 신고만으로 부가세·소득세·원천세 등이 모두 끝났다고 처리하지 않습니다."
+      "note": "실제 본문의 폐업 신고, 부가가치세 다음 달 25일 기한, 소득세 안내를 읽었습니다. 개별 사업자의 세액·예외·세목별 전체 의무를 계산하거나 2026년에 새로 작성된 FAQ라고 주장하지 않습니다."
     },
     {
       "kind": "공식 문서",
-      "label": "대법원 2002다52657 · 판결요지 [2]",
+      "label": "대법원 2002다52657",
       "href": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=194367",
-      "note": "2026-10-04 원문 확인. 600만 원 견적을 자동으로 공제하지 않고 실제 반환 합의와 시설 사용을 확인합니다. 이 판결은 특정 사실관계에서 공제를 부정했으므로 모든 복구 의무가 없어진다는 결론으로 확대할 수 없습니다."
+      "note": "판결요지와 실제 이유에서 시설을 그대로 이용해 재임대하려는 사정 및 공제 판단을 읽었습니다. 모든 복구 의무가 없어지거나 모든 공제에 같은 결론이 적용된다고 주장하지 않습니다."
     },
     {
       "kind": "공식 문서",
       "label": "한국 근로기준법 제36조",
-      "href": "https://law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0036&lsiSeq=283457&urlMode=lsScJoRltInfoR",
-      "note": "2026-10-04 확인. 퇴직 시 금품 청산 기한과 당사자 합의의 예외입니다."
+      "href": "https://law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029728519",
+      "note": "조문 전체의 사유 발생부터 14일과 특별한 사정·당사자 합의에 따른 기일 연장을 읽었습니다. 모든 해고·퇴직 절차나 개별 분쟁의 결론을 이 조문만으로 판정하지 않습니다."
     },
     {
       "kind": "공식 문서",
       "label": "한국 개인정보 보호법 제21조",
       "href": "https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335625",
-      "note": "2026-09-11 시행 조문을 2026-10-04 확인. 불필요한 정보 파기와 법정 보존 자료의 분리 관리를 구분합니다."
+      "note": "실제 제1~4항의 파기·다른 법령 보존 예외·복구 불가능 조치·분리 보관을 읽었습니다. 모든 자료의 보존 기간을 하나로 정하거나 단순 계정 삭제만으로 의무를 충족한다고 주장하지 않습니다."
     },
     {
-      "kind": "공개 강의",
+      "kind": "공식 문서",
+      "label": "NSW · What to do at the end of the lease",
+      "href": "https://www.smallbusiness.nsw.gov.au/help/common-questions/what-to-do-at-the-end-of-the-lease",
+      "note": "실제 Make good 부분에서 시작 상태·반환 약정·금전 정산 가능성을 읽었습니다. NSW 안내로 한국의 공제 가능성이나 판결 결과를 정하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
       "label": "중소벤처기업부 · 2025 소상공인 지원사업 영상",
       "href": "https://www.youtube.com/watch?v=T6KNxj3hawQ&t=230s",
-      "note": "2025-01-23 공개 영상의 03:50 화면에서 250만 원→400만 원을 확인했습니다. 아래 게시기관 전사와 대조했으며 당시 발표의 근거로 씁니다."
+      "note": "공식 영상 파일에서 확보한 해당 프레임의 250만→400만 원을 다시 보고 게시기관 전사를 대조했습니다. 영상 전체 청취나 현재 신청의 지급액 확정을 주장하지 않습니다."
     },
     {
       "kind": "공식 문서",
       "label": "중소벤처기업부 · 1월 영상 공식 자막",
       "href": "https://www.mss.go.kr/site/smba/brdcststnVod/brdcststnVodView.do?ctgr_code=C03&searchSeq=ST_000000001222422",
-      "note": "희망리턴패키지의 점포 철거비 설명을 읽었습니다. 게시기관의 영상 등록일은 2025-01-24입니다."
+      "note": "실제 공식 HTML 자막의 관련 지원 설명을 읽었습니다. 전사가 개별 신청 자격과 최종 정산 심사를 대신하지 않습니다."
     },
     {
-      "kind": "공개 강의",
+      "kind": "공식 문서",
       "label": "중소벤처기업부 · 2차 추경 요약 영상",
       "href": "https://www.youtube.com/watch?v=A55z8XrEEdM&t=113s",
-      "note": "2025-07-11 공개 영상의 01:53 화면에서 400만 원→600만 원을 확인했습니다. 영상 설명의 경영회복 장은 00:58부터 시작합니다."
+      "note": "공식 영상 파일에서 확보한 해당 프레임의 400만→600만 원을 다시 보고 공식 전사와 대조했습니다. 영상 전체 청취나 모든 폐업에 600만 원이 지급된다는 주장이 아닙니다."
     },
     {
       "kind": "공식 문서",
       "label": "중소벤처기업부 · 7월 영상 공식 자막",
       "href": "https://www.mss.go.kr/site/smba/brdcststnVod/brdcststnVodView.do?ctgr_code=C03&searchSeq=ST_000000001231716",
-      "note": "지원 확대 설명과 추후 세부 공고 안내를 대조했습니다. 영상 발표만으로 개별 신청의 지급액을 확정하지 않습니다."
+      "note": "실제 HTML 자막의 지원 확대 및 추후 공고 안내를 읽었습니다. 자막만으로 현재 예산 잔액이나 신청 결과를 확인했다고 주장하지 않습니다."
     },
     {
       "kind": "공식 문서",
       "label": "중소벤처기업부 · 2025-07-30 점포철거비 확대 보도자료",
       "href": "https://www.mss.go.kr/site/smba/ex/bbs/View.do?bcIdx=1060542&cbIdx=86&parentSeq=1060542",
-      "note": "영상 뒤에 나온 서면 자료로 적용 폐업일과 변경 공고 일정을 확인했습니다."
+      "note": "실제 HTML의 적용 폐업일과 7월 31일 변경 공고 안내를 읽었습니다. 후속 공고의 전체 조건이나 2026년 현재 신청 결과를 대체하지 않습니다."
     },
     {
       "kind": "공식 문서",
       "label": "소상공인시장진흥공단 · 2026-01-19 원스톱폐업지원 공고",
       "href": "https://ssrf.or.kr/site/kr/html/sub04/0401.html?category=sc04&file_id=3953&mode=D&no=abaae44719e649e9f32b348bdd1d35f0",
-      "note": "서천군지속가능지역재단이 게시한 공단 공고 PDF의 3~4쪽입니다. 33㎡ 사례는 이 날짜의 공고에만 적용한 계산이며 이후 변경 여부는 신청할 때 확인합니다."
-    },
-],
+      "note": "PDF 표지와 인쇄면 3~5쪽의 한도·제외·정산 서류를 읽고 표가 있는 PDF 두 페이지를 실제 화면으로 확인했습니다. 200만 원 지급 보장, 임대인 공제액의 자동 지원, 이후 공고 변경이나 남은 예산 확인을 주장하지 않습니다."
+    }
+  ],
   "business/franchise-incentives": [
     {
       "kind": "공식 문서",
@@ -10568,30 +10715,38 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "EUR-Lex 원문 165~168항에서 기능상 필요성·면제·개별 평가의 구분을 읽었습니다. EU 전체의 FDD 의무나 모든 가격·판매지역 제한의 적법성을 주장하지 않습니다."
     }
   ],
-  "property/land-development-residual": [{"kind": "공식 문서", "label": "RICS Valuation of development property", "href": "https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf", "note": "잔여법과 개발 부동산의 현금흐름·민감도를 설명하는 전문 기준입니다."},             {
+  "property/land-development-residual": [
+    {
       "kind": "공식 문서",
-      "label": "한국 국토의 계획 및 이용에 관한 법률",
-      "href": "https://www.law.go.kr/LSW/lsInfoP.do?efYd=20260701&lsiSeq=284013",
-      "note": "2026-10-03 기준 개발행위허가·건폐율·용적률 조문의 출발점입니다."
-    },             {
+      "label": "RICS · Valuation of development property (2019)",
+      "href": "https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf",
+      "note": "실제 PDF의 용어집,6.1~6.3,7.1,B1.2.8~9,B3을 읽고 인쇄24쪽 식을 화면으로 확인했습니다. 개별 감정평가·시장 거래가격·적정 할인율을 확정하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 국토계획법 제56~58조",
+      "href": "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1016204783",
+      "note": "실제 제56조의 허가·예외,57조의 절차·조건부 허가,58조의 규모·계획·환경·기반시설 기준을 읽었습니다. 특정 필지의 허가 가능성이나 모든 지역의 면적 상한을 판정하지 않습니다."
+    },
+    {
       "kind": "공식 문서",
       "label": "한국 건축법 제11조",
-      "href": "https://law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1032199815",
-      "note": "건축허가의 법적 출발점입니다."
+      "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=273437&joNo=0011&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+      "note": "현재 본문에서 lsiSeq273437을 확인한 뒤 제11조 전체 HTML을 읽었습니다.3항 서류,5항3호 개발행위허가 의제,6항 사전협의를 확인했습니다. 연결 조례·하위 규정·개별 허가의 모든 요건이 충족됐다고 주장하지 않습니다."
     },
     {
       "kind": "공식 문서",
-      "label": "RICS Valuation of development property · 6.1.1, p.24",
-      "href": "https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf",
-      "note": "2026-10-04 원문 확인. 100−(70+15)=15억 원입니다. 원문의 total development costs에는 개발업자 이익도 들어가므로 이 글처럼 70억 원과 15억 원을 따로 표시했을 때 둘을 모두 한 번씩 뺍니다. 이익을 두 번 차감하지 않습니다."
+      "label": "GOV.UK · Planning permission",
+      "href": "https://www.gov.uk/planning-permission-england-wales",
+      "note": "실제 본문의 필요 행위와 관할 계획기관 확인,허가 없이 시행한 경우의 설명을 읽었습니다. 영국 모든 지역에서 동일한 절차나 모든 공사에 동일한 허가가 필요하다고 주장하지 않습니다."
     },
     {
       "kind": "공식 문서",
-      "label": "한국 국토계획법 제56조 제1항 제2호",
-      "href": "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1016204783",
-      "note": "2026-10-04 원문 확인. 100억 원 매각을 기대하며 15억 원을 토지와 취득에 배정해도 땅을 깎고 메우는 행위의 허가 여부를 먼저 확인합니다. 허가 조건 때문에 도로·배수 비용이 10억 원 더 필요하면 다른 가정이 같을 때 잔여는 5억 원으로 줄어듭니다."
-    },
-],
+      "label": "GOV.UK · Building regulations approval",
+      "href": "https://www.gov.uk/building-regulations-approval",
+      "note": "실제 안내의 계획 허가와 별개이며 둘 다 필요할 수 있다는 본문을 읽었습니다. 이 글에서 개별 건물의 안전 승인·부담금·면제 여부를 확정하지 않습니다."
+    }
+  ],
   "business/supply-chain-bargaining": [
     {
       "kind": "공식 문서",

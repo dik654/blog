@@ -2832,41 +2832,313 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/word2vec-prediction-objectives": {
-    entryLevel: true,
-    entryNote: "Softmax를 안다고 가정하지 않습니다. 같은 local window를 주변→center와 center→주변이라는 두 prediction 모양으로 바꾸는 데서 시작합니다.",
-    coreIdea: "CBOW와 Skip-gram은 같은 word–context 관측을 반대 방향의 prediction examples로 만들고, hierarchical softmax는 target 확률을 binary-tree path probability로 다시 구성합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "cbow-objective", role: "Context rows를 모아 center word 하나를 예측합니다." },
-      { id: "skipgram-objective", role: "Center row에서 context마다 별도 target을 예측합니다." },
-      { id: "hierarchical-softmax", role: "Vocabulary leaf 확률을 root-to-leaf decisions의 곱으로 계산합니다." },
+    "entryLevel": false,
+    "entryNote": "단어 ID로 입력·출력 행을 읽는 앞 글을 바탕으로 합니다. 다섯 단어의 같은 표에서 예측 방향을 먼저 설명하고 확률·평균의 기울기·실제 나무 코드를 차례로 따라갑니다.",
+    "coreIdea": "같은 두 saw를 모아 cat을 한 번 예측할지, cat에서 saw를 두 번 예측할지 구별합니다. 전체 후보 확률과 경로 확률을 각각 계산하고 평균의 기울기, Huffman의 보장과 고정 C 구현의 차이를 같은 사례로 확인합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "word-embedding-lookup",
+        "role": "번호가 지정한 행을 읽어 같은 단어의 여러 출현이 값을 공유하게 합니다."
+      },
+      {
+        "id": "softmax-normalization",
+        "role": "다섯 후보의 점수를 전체 합이 1인 확률로 바꿉니다."
+      },
+      {
+        "id": "cross-entropy-nll",
+        "role": "정답 확률의 음의 로그를 줄이는 손실로 씁니다."
+      },
+      {
+        "id": "chain-rule",
+        "role": "평균 입력으로 돌아온 기울기에 출현별 계수 1/C를 적용합니다."
+      },
+      {
+        "id": "expectation",
+        "role": "나무 길이를 정한 요청 빈도로 가중 평균합니다."
+      },
+      {
+        "id": "sigmoid-activation",
+        "role": "한 갈림길의 점수에서 두 방향의 합이 1인 확률을 만듭니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "cbow-objective", sectionId: "cbow", intuition: "가운데 빈칸을 주변 단어 묶음으로 맞히는 문제입니다.", workedExample: "세 context rows를 평균한 h를 output table의 모든 center 후보와 비교합니다.", boundary: "Context order와 개별 contribution을 잃으며 sum·mean·position weighting은 같은 계산이 아닙니다." },
-      { id: "skipgram-objective", sectionId: "skipgram", intuition: "가운데 단어를 보고 주변 각 단어를 별도의 정답으로 맞힙니다.", workedExample: "Radius 2에서 유효 context가 네 개면 center 하나가 네 categorical examples를 만듭니다.", boundary: "Rare-word 이점은 corpus와 budget에 따른 경향이며 CBOW보다 항상 우수하다는 법칙이 아닙니다." },
-      { id: "hierarchical-softmax", sectionId: "hierarchical", intuition: "10만 후보를 한꺼번에 비교하지 않고 target 주소를 찾는 binary questions를 차례로 답합니다.", workedExample: "Balanced tree에서 65,536 leaves의 target은 약 16 node decisions으로 도달합니다.", boundary: "Tree가 parameter sharing과 error pattern을 바꾸므로 flat softmax의 동일 distribution을 단순히 캐시한 것이 아닙니다." },
+    "introducedHere": [
+      {
+        "id": "cbow-objective",
+        "role": "여러 이웃의 입력 행을 평균내 중심 단어 하나를 맞힙니다."
+      },
+      {
+        "id": "skipgram-objective",
+        "role": "중심의 한 입력 행을 공유해 실제 이웃 위치마다 별도 정답을 맞힙니다."
+      },
+      {
+        "id": "hierarchical-softmax",
+        "role": "많은 단어를 한꺼번에 비교하는 대신 정답 잎으로 가는 선택 확률을 곱합니다."
+      },
+      {
+        "id": "huffman-coding",
+        "role": "자주 요청되는 단어가 짧은 길을 쓰도록 가장 작은 두 빈도를 반복해서 합칩니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 Window", relation: "같은 center와 context 관측을 고정합니다.", concepts: ["cbow-objective", "skipgram-objective"] },
-      { label: "01 CBOW", relation: "여러 context를 모아 center 하나를 예측합니다.", concepts: ["cbow-objective"] },
-      { label: "02 Skip-gram", relation: "Center에서 context별 example을 펼칩니다.", concepts: ["skipgram-objective"] },
-      { label: "03 Tree", relation: "Target 확률을 binary path로 다시 parameterize합니다.", concepts: ["skipgram-objective", "hierarchical-softmax"] },
+    "conceptExplanations": [
+      {
+        "id": "cbow-objective",
+        "sectionId": "cbow",
+        "intuition": "여러 이웃의 입력 행을 평균내 중심 단어 하나를 맞힙니다.",
+        "workedExample": "두 saw의 h=[0,1,1]에서 점수 [0,1,1,3,1], cat 확률 약 0.0929633을 계산합니다. 평균의 기울기는 출현마다 1/C를 거쳐 같은 행에 누적됩니다.",
+        "boundary": "평균은 위치 순서를 보존하지 않지만 보관한 계산 경로로 각 입력의 기울기를 구할 수 있습니다. C=0을 제외하고 sum/mean·반복 출현·원본 C의 /cw 생략을 구별합니다."
+      },
+      {
+        "id": "skipgram-objective",
+        "sectionId": "skipgram",
+        "intuition": "중심의 한 입력 행을 공유해 실제 이웃 위치마다 별도 정답을 맞힙니다.",
+        "workedExample": "cat에서 saw 두 위치를 예측하면 확률은 각각 약 0.191516입니다. 평균 손실 1.652784와 합 3.305568을 나눠 계산합니다.",
+        "boundary": "중심별 평균과 전체 쌍의 합은 이웃 수가 달라지면 상대 가중치도 다릅니다. 논문 방향과 이웃→중심인 고정 C 분기를 구별하며 희귀 단어의 보편적 우위를 주장하지 않습니다."
+      },
+      {
+        "id": "hierarchical-softmax",
+        "sectionId": "hierarchical",
+        "intuition": "많은 단어를 한꺼번에 비교하는 대신 정답 잎으로 가는 선택 확률을 곱합니다.",
+        "workedExample": "cat 주소 001에서 내부 노드 [3,2,1]의 점수 [0,1,1]을 써 확률 약 0.098306을 얻습니다. 각 분기의 질량 보존으로 모든 잎의 합은 1입니다.",
+        "boundary": "내부 노드의 별도 벡터와 나무가 분포를 정의합니다. flat softmax와 같은 분포의 캐시가 아니며 모든 후보를 출력하는 비용까지 한 경로 길이로 줄지는 않습니다."
+      },
+      {
+        "id": "huffman-coding",
+        "sectionId": "huffman",
+        "intuition": "자주 요청되는 단어가 짧은 길을 쓰도록 가장 작은 두 빈도를 반복해서 합칩니다.",
+        "workedExample": "빈도 [8,4,2,1,1]과 길이 [1,2,3,4,4]의 가중합은 30, 같은 비율로 요청하는 평균은 1.875입니다. 비교 나무 [2,2,2,3,3]은 34/16입니다.",
+        "boundary": "주어진 빈도와 이진 접두 부호에서 평균 길이가 최소입니다. 실제 C는 문장 끝을 정답으로 쓰지 않으므로 원 빈도와 실제 실행 빈도는 다르며, 정렬 전제가 깨진 [1,8,4,2,1]의 원본 관찰은 41입니다.",
+        "proofIdea": "작은 빈도를 가장 깊은 형제 잎으로 옮겨도 비용이 늘지 않습니다. 두 잎을 합친 문제의 최적해에 고정 비용 f_a+f_b를 더하면 원래 문제의 최적해를 얻습니다.",
+        "counterexample": "[1,8,4,2,1]을 전체 정렬 없이 원본 두 목록 구현에 넣으면 가중합 41입니다. 최소 둘을 고른다는 추상 절차의 전제가 깨졌으므로 최적값 30을 보장하지 않습니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "다섯-token window에서 CBOW의 input과 target을 구분하세요.", answerChecklist: ["center excluded", "context rows", "aggregate", "one center target"], requiredConcepts: ["cbow-objective"], sectionId: "cbow" },
-      { level: "basic", question: "Context rows 세 개를 sum 대신 mean으로 모으는 이유를 설명하세요.", answerChecklist: ["sum first", "divide by count", "window-size normalization", "order still absent"], requiredConcepts: ["cbow-objective"], sectionId: "cbow" },
-      { level: "basic", question: "Radius 2 Skip-gram에서 center 하나가 만드는 examples를 나열하세요.", answerChecklist: ["center condition", "each context target", "up to four pairs", "boundary exclusion"], requiredConcepts: ["skipgram-objective"], sectionId: "skipgram" },
-      { level: "basic", question: "CBOW와 Skip-gram의 prediction arrow를 반대로 그리세요.", answerChecklist: ["contexts to center", "center to contexts", "same observation", "different examples"], requiredConcepts: ["cbow-objective", "skipgram-objective"], sectionId: "overview" },
-      { level: "basic", question: "Balanced tree의 vocabulary 1024개에서 target path 길이를 계산하세요.", answerChecklist: ["2^10", "about 10 decisions", "root to leaf", "not 1024 logits"], requiredConcepts: ["hierarchical-softmax"], sectionId: "hierarchical" },
-      { level: "basic", question: "Hierarchical softmax의 leaf probability가 어떻게 만들어지는지 설명하세요.", answerChecklist: ["path nodes", "left right probabilities", "multiply decisions", "target leaf"], requiredConcepts: ["hierarchical-softmax"], sectionId: "hierarchical" },
-      { level: "advanced", question: "Context가 2개와 6개인 CBOW examples의 sum·mean logits 차이를 분석하세요.", answerChecklist: ["sum magnitude differs", "mean normalizes count", "direction may differ", "recipe fixed"], requiredConcepts: ["cbow-objective"], sectionId: "cbow" },
-      { level: "advanced", question: "같은 corpus budget에서 CBOW와 Skip-gram example 수·gradient path를 비교하세요.", answerChecklist: ["one vs many examples", "shared center", "context-specific errors", "throughput tradeoff"], requiredConcepts: ["cbow-objective", "skipgram-objective"], sectionId: "skipgram" },
-      { level: "advanced", question: "빈도가 치우친 tree와 balanced tree가 rare word의 path와 update sharing을 어떻게 바꾸는지 설명하세요.", answerChecklist: ["path length", "internal parameters", "frequency-dependent sharing", "not same model"], requiredConcepts: ["hierarchical-softmax"], sectionId: "hierarchical" },
-      { level: "advanced", question: "Flat softmax와 hierarchical softmax를 공정하게 비교할 benchmark를 설계하세요.", answerChecklist: ["same corpus pairs", "same dimension budget", "likelihood and latency", "tree artifact"], requiredConcepts: ["cbow-objective", "skipgram-objective", "hierarchical-softmax"], sectionId: "hierarchical" },
+    "conceptStages": [
+      {
+        "label": "같은 두 이웃",
+        "relation": "어떤 행을 입력으로 모으고 어느 위치를 정답으로 둘지 정합니다.",
+        "concepts": [
+          "cbow-objective",
+          "skipgram-objective"
+        ]
+      },
+      {
+        "label": "확률과 변화량",
+        "relation": "정답 확률을 계산한 뒤 평균과 반복 출현의 기울기를 원래 행에 돌려줍니다.",
+        "concepts": [
+          "cbow-objective",
+          "skipgram-objective"
+        ]
+      },
+      {
+        "label": "하나의 정답 경로",
+        "relation": "내부 노드에서 확률을 나누어 잎의 정규화된 확률을 만듭니다.",
+        "concepts": [
+          "hierarchical-softmax"
+        ]
+      },
+      {
+        "label": "나무와 실제 전제",
+        "relation": "빈도로 길이를 줄이는 증명과 원본 코드의 정렬·갱신 조건을 대조합니다.",
+        "concepts": [
+          "huffman-coding",
+          "hierarchical-softmax"
+        ]
+      }
     ],
-    papers: [
-      { title: "Efficient Estimation of Word Representations in Vector Space", href: "https://arxiv.org/abs/1301.3781#page=3", problem: "큰 vocabulary에서 prediction-based word representation을 효율적으로 학습합니다.", contribution: "CBOW·Skip-gram 방향과 hierarchical softmax를 비교합니다.", assumptions: "논문의 corpus·window·tree·analogy setting을 전제로 합니다.", evidenceScope: "세 objective 구조와 논문에 보고된 계산·평가 범위입니다.", notClaim: "한 objective가 모든 언어·빈도 구간에서 항상 우수하다는 뜻은 아닙니다.", sectionId: "paper-word2vec-objectives" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "반경 1인 두 saw로 cat을 맞힐 때 입력과 정답을 구분하고 7절의 확률을 구하세요.",
+        "answerChecklist": [
+          "중심 cat을 입력 묶음에서 제외하고 두 위치의 W[3]을 읽습니다.",
+          "[0,1,1] 두 개를 평균해 같은 h를 얻습니다.",
+          "출력 점수 [0,1,1,3,1]에서 정답 cat의 확률은 약 0.0929633입니다.",
+          "한 중심 위치에 정답 cat 하나를 둡니다."
+        ],
+        "requiredConcepts": [
+          "cbow-objective"
+        ],
+        "sectionId": "cbow"
+      },
+      {
+        "level": "basic",
+        "question": "입력 행 세 개를 평균하는 순서를 설명하고 순서 정보를 보존하는지 판단하세요.",
+        "answerChecklist": [
+          "세 행을 더한 다음 3으로 나눕니다.",
+          "같은 구성 비율을 반복해도 평균은 같습니다.",
+          "평균은 개수의 배율을 없애지만 구성 차이까지 없애지는 않습니다.",
+          "세 행의 순서를 바꿔도 합과 평균은 같습니다."
+        ],
+        "requiredConcepts": [
+          "cbow-objective"
+        ],
+        "sectionId": "mean-gradient"
+      },
+      {
+        "level": "basic",
+        "question": "반경 2에서 cat이 예측할 이웃을 나열하고 반경 1의 평균 손실을 구하세요.",
+        "answerChecklist": [
+          "red, saw, saw, dog의 네 위치를 각각 정답으로 둡니다.",
+          "문장 바깥은 제외하고 같은 단어의 두 출현은 따로 셉니다.",
+          "반경 1에서는 cat 입력을 공유한 saw 정답 두 건입니다.",
+          "각 saw의 확률은 약 0.191516이고 평균 손실은 약 1.652784입니다."
+        ],
+        "requiredConcepts": [
+          "skipgram-objective"
+        ],
+        "sectionId": "skipgram"
+      },
+      {
+        "level": "basic",
+        "question": "6·7·9절을 보고 두 방식의 예측 화살표를 그리세요.",
+        "answerChecklist": [
+          "CBOW는 주변 행을 합쳐 중심 단어 하나를 예측합니다.",
+          "Skip-gram은 중심 행에서 주변 각 위치를 예측합니다.",
+          "같은 관측 문장에서도 입력과 정답 구성이 달라집니다.",
+          "두 saw는 CBOW에서는 평균의 두 항이고 Skip-gram에서는 두 정답 관측입니다."
+        ],
+        "requiredConcepts": [
+          "cbow-objective",
+          "skipgram-objective"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "완전한 균형 이진 나무에 1024개 또는 65536개 단어를 두면 길이는 얼마인가요?",
+        "answerChecklist": [
+          "1024=2^10이므로 각 경로는 10번의 선택입니다.",
+          "65536=2^16이면 16번의 선택입니다.",
+          "한 정답을 계산할 때 그 경로의 내부 노드만 읽습니다.",
+          "단어 수가 2의 거듭제곱이 아니면 모든 잎의 길이가 같을 필요는 없습니다."
+        ],
+        "requiredConcepts": [
+          "hierarchical-softmax"
+        ],
+        "sectionId": "hierarchical"
+      },
+      {
+        "level": "basic",
+        "question": "cat의 주소 001에서 확률을 구하고 모든 단어 확률의 합이 1인 이유를 설명하세요.",
+        "answerChecklist": [
+          "내부 노드 3, 2, 1의 점수는 0, 1, 1입니다.",
+          "0 방향은 sigmoid(score), 1 방향은 1−sigmoid(score)입니다.",
+          "cat 확률은 0.5×sigmoid(1)×(1−sigmoid(1))로 약 0.098306입니다.",
+          "각 분기에서 들어온 확률을 두 자식으로 남김없이 나누므로 잎의 총합도 1입니다."
+        ],
+        "requiredConcepts": [
+          "hierarchical-softmax"
+        ],
+        "sectionId": "path-probability"
+      },
+      {
+        "level": "advanced",
+        "question": "8·17·18절을 함께 보고 평균 입력의 기울기와 원본 C 갱신의 차이를 설명하세요.",
+        "answerChecklist": [
+          "같은 두 행을 세 번씩 반복해 입력 수를 2에서 6으로 바꾸면 평균은 같고 합은 세 배입니다.",
+          "서로 다른 구성의 6개 행이면 평균의 방향도 달라질 수 있습니다.",
+          "정확한 평균의 각 출현 기울기는 h의 기울기를 출현 수 C로 나눈 값입니다.",
+          "중복 saw 두 개는 같은 행에 누적되며 원본 C는 각 출현에 neu1e를 나누지 않고 더합니다.",
+          "이 사례의 원본 행 변화는 2×neu1e이며 출력 노드 갱신은 같은 배율로 늘지 않습니다."
+        ],
+        "requiredConcepts": [
+          "cbow-objective"
+        ],
+        "sectionId": "source-update"
+      },
+      {
+        "level": "advanced",
+        "question": "10·15절을 보고 예측 건수와 손실 합·평균을 구별한 뒤 원문 C의 화살표를 판단하세요.",
+        "answerChecklist": [
+          "CBOW는 중심당 한 정답, Skip-gram은 유효 이웃 위치마다 한 정답을 만듭니다.",
+          "중심별 평균은 이웃이 많은 중심의 상대 가중치를 줄이며 전체 쌍의 합과 일반적으로 같지 않습니다.",
+          "논문 식 (1)은 중심 수 T로 나눈 뒤 이웃 손실을 합합니다.",
+          "원본 C의 Skip-gram 분기는 이웃 입력으로 중심을 예측하므로 논문의 중심→이웃 화살표와 구별합니다.",
+          "건수만으로 속도나 품질을 보장하지 않으며 차원·출력 방식·실제 갱신 비용을 함께 봅니다."
+        ],
+        "requiredConcepts": [
+          "cbow-objective",
+          "skipgram-objective"
+        ],
+        "sectionId": "reduction"
+      },
+      {
+        "level": "advanced",
+        "question": "13·14·19절에서 가정한 요청 빈도의 Huffman 이득과 실제 C의 적용 전제를 설명하세요.",
+        "answerChecklist": [
+          "가정한 빈도 [8,4,2,1,1]의 길이 [1,2,3,4,4]는 가중합 30이며, 같은 비율로 정답을 요청하는 모형의 평균은 30/16입니다.",
+          "비교하는 균형 나무 [2,2,2,3,3]의 가중합은 34이고 희귀 단어는 더 짧은 길이 3을 갖습니다.",
+          "가장 작은 두 빈도를 깊은 형제에 놓고 묶으면 합친 문제의 최적해로 줄어듭니다.",
+          "내부 노드 공유 구조가 달라지므로 같은 flat softmax의 확률을 재사용하는 것은 아닙니다.",
+          "원본의 정렬 전제가 깨진 [1,8,4,2,1] 관찰에서는 41이며 추상 알고리즘의 최적값 30과 구별합니다.",
+          "실제 C는 문장 끝을 중심 정답으로 선택하지 않으므로 이 평균을 실행의 평균 비용과 같다고 주장하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "huffman-coding",
+          "hierarchical-softmax"
+        ],
+        "sectionId": "huffman-proof"
+      },
+      {
+        "level": "advanced",
+        "question": "20절의 조건에 따라 두 예측 방식과 두 출력 방식을 비교하는 실험을 설계하세요.",
+        "answerChecklist": [
+          "같은 자료 분할·단어 번호표·이웃 선택과 방향을 고정합니다.",
+          "차원·처리한 위치 수·예측 건수·실제 시간 예산을 따로 기록합니다.",
+          "sum/mean, 원본 또는 교정한 입력 기울기, 출력 나무와 빈도를 저장합니다.",
+          "검증 자료의 확률 손실과 과제별 품질, 지연·처리량을 같은 환경에서 비교합니다.",
+          "희귀 단어와 문맥 개수별 결과를 나누며 한 논문 결과를 모든 언어의 우열로 확대하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "cbow-objective",
+          "skipgram-objective",
+          "hierarchical-softmax",
+          "huffman-coding"
+        ],
+        "sectionId": "limits"
+      }
     ],
+    "papers": [
+      {
+        "title": "Efficient Estimation of Word Representations in Vector Space",
+        "href": "https://arxiv.org/abs/1301.3781v3",
+        "problem": "많은 문장의 이웃 관측으로 단어 표현을 학습하는 계산 비용을 줄입니다.",
+        "contribution": "4–5쪽 그림 1에 같은 cat과 두 saw를 넣어 두 예측 방향을 비교합니다.",
+        "assumptions": "논문의 합산 구조와 주변 선택을 사용하며 표의 값은 본문 가정입니다.",
+        "evidenceScope": "작은 문장에서 입력·정답 방향을 적용했습니다. 당시 성능은 저자 실험 범위입니다.",
+        "notClaim": "방향 하나가 모든 언어와 예산에서 항상 우수하다는 뜻은 아닙니다.",
+        "sectionId": "paper-word2vec-objectives"
+      },
+      {
+        "title": "Distributed Representations of Words and Phrases and their Compositionality",
+        "href": "https://arxiv.org/abs/1310.4546v1",
+        "problem": "큰 단어 목록에서 주변 예측 확률을 효율적으로 계산합니다.",
+        "contribution": "식 (1)의 공통 분모 T와 이웃 합, 식 (3)의 부호와 L(w)−1을 같은 두 saw 및 cat 주소 001에 적용합니다.",
+        "assumptions": "원문 방향과 원본 C의 반대 입력 방향을 구별하며 내부 노드는 단어별 출력 표와 다릅니다.",
+        "evidenceScope": "원문 식에 같은 가정한 표를 대입해 합 손실 3.305568과 세 번의 경로 확률을 계산했습니다.",
+        "notClaim": "전체 논문 학습을 재현하거나 flat 분포가 나무에서 그대로 보존된다고 주장하지 않습니다.",
+        "sectionId": "paper-word2vec-objectives"
+      },
+      {
+        "title": "A Method for the Construction of Minimum-Redundancy Codes",
+        "href": "https://www.cse.iitd.ac.in/~pkalra/siv864/huffman_1952.pdf",
+        "problem": "주어진 기호 확률에서 평균 길이가 짧은 접두 부호를 만듭니다.",
+        "contribution": "1098쪽 식 (2)의 L_av=ΣP(i)L(i)에 [8,4,2,1,1]/16과 [1,2,3,4,4]를 넣고 1099쪽의 작은 둘 병합을 증명합니다.",
+        "assumptions": "양의 빈도와 이진 접두 부호, 같은 빈도 비율로 요청하는 비용 모형입니다.",
+        "evidenceScope": "평균 길이 1.875와 비교 나무의 2.125를 계산했습니다.",
+        "notClaim": "실제 C의 문장 끝 선택이나 모든 구현의 정렬 전제를 보장하며 예측 품질까지 최적화한다는 뜻은 아닙니다.",
+        "sectionId": "source-tree"
+      },
+      {
+        "title": "Corrected CBOW Performs as well as Skip-gram",
+        "href": "https://arxiv.org/abs/2012.15332v2",
+        "problem": "평균을 쓰는 CBOW의 실제 입력 갱신이 그 손실 기울기와 맞는지 확인합니다.",
+        "contribution": "2쪽 식 (2)의 1/C에 C=2를 넣어 각 saw 출현의 기울기가 절반임을 확인합니다.",
+        "assumptions": "논문은 음의 표본 목적을 분석합니다. 이 글의 HS 분기도 같은 평균을 거슬러 가므로 연쇄법칙을 따로 적용합니다.",
+        "evidenceScope": "가정한 한 중심의 실제 C 갱신에서 누락된 /cw와 출력 갱신의 차이를 관찰했습니다.",
+        "notClaim": "논문 과제별 성능을 모든 언어의 순위나 모든 최신 라이브러리의 동작으로 확대하지 않습니다.",
+        "sectionId": "source-update"
+      }
+    ]
   },
   "ai/word2vec-negative-sampling": {
     entryLevel: true,
@@ -62069,12 +62341,309 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "crypto/paillier-cryptosystem": {
-    entryLevel:false, entryNote:"Toy p=3,q=5에서 keygen·encrypt·homomorphic add·decrypt를 직접 계산합니다.", coreIdea:"Paillier는 n² unit group에서 fresh randomizer로 probabilistic ciphertext를 만들고 ciphertext multiplication을 plaintext mod-n addition으로 옮기지만, 이 malleability는 integrity·range·active MPC proof가 아닙니다.", assumedKnowledge:[{id:"modular-congruence-residue-class",role:"Z_n과 modulo wraparound를 사용합니다."},{id:"csprng-computational-unpredictability",role:"Fresh unit randomizer를 생성합니다."}],
-    introducedHere:[{id:"paillier-additive-homomorphic-boundary",role:"Ciphertext multiplication과 plaintext addition의 계산·전제를 소유합니다."},{id:"paillier-key-generation-contract",role:"n,g,lambda,mu의 validity 조건을 고정합니다."},{id:"paillier-randomized-encryption",role:"Fresh r∈Z*n으로 ciphertext를 만듭니다."},{id:"paillier-decryption-l-function",role:"L 함수와 mu로 residue를 복원합니다."},{id:"paillier-ciphertext-security-boundary",role:"Homomorphic malleability와 integrity·proof 경계를 구분합니다."}],
-    conceptExplanations:[{id:"paillier-additive-homomorphic-boundary",sectionId:"homomorphism",intuition:"Ciphertext 곱에서 message exponent는 더해집니다.",workedExample:"Enc(m1;r1)Enc(m2;r2)=Enc(m1+m2;r1r2)입니다.",boundary:"Addition은 mod n이며 authenticity를 주지 않습니다."},{id:"paillier-key-generation-contract",sectionId:"key-generation",intuition:"Decryption에 필요한 inverse가 존재하도록 key tuple을 만듭니다.",workedExample:"n=15,g=16,lambda=4,mu=4입니다.",boundary:"Toy key는 security parameter가 아닙니다."},{id:"paillier-randomized-encryption",sectionId:"encryption",intuition:"같은 m도 fresh unit r로 다른 c를 만듭니다.",workedExample:"n=15,g=16,m=4,r=2이면 c=173입니다.",boundary:"gcd(r,n)=1이고 reuse를 금지합니다."},{id:"paillier-decryption-l-function",sectionId:"decryption",intuition:"lambda power 뒤 linear term을 L 함수로 꺼냅니다.",workedExample:"173^4 mod225=16,L=1,1·mu=4 mod15입니다.",boundary:"Key·ciphertext validity가 필요합니다."},{id:"paillier-ciphertext-security-boundary",sectionId:"security-boundary",intuition:"누구나 ciphertext를 바꿀 수 있는 기능은 integrity 부재이기도 합니다.",workedExample:"Attacker가 Enc(delta)를 곱하면 plaintext가 delta만큼 바뀝니다.",boundary:"Range/relation proof·CCA protection·threshold proof는 별도 protocol입니다."}],
-    conceptStages:[{label:"00 key",relation:"Valid modulus와 decryption inverse를 만듭니다.",concepts:["paillier-key-generation-contract"]},{label:"01 encrypt",relation:"Fresh unit randomizer로 암호화합니다.",concepts:["csprng-computational-unpredictability","paillier-randomized-encryption"]},{label:"02 add",relation:"Ciphertext 곱의 modular addition을 유도합니다.",concepts:["paillier-additive-homomorphic-boundary"]},{label:"03 decrypt",relation:"L 함수로 residue를 복원합니다.",concepts:["paillier-decryption-l-function"]},{label:"04 security",relation:"Malleability와 release 경계를 검사합니다.",concepts:["paillier-ciphertext-security-boundary"]}],
-    exercises:[{level:"basic",question:"Toy n과 lambda를 계산하세요.",answerChecklist:["p=3,q=5","n=15","lcm(2,4)","lambda=4"],requiredConcepts:["paillier-key-generation-contract"],sectionId:"key-generation"},{level:"basic",question:"m=4,r=2의 ciphertext를 계산하세요.",answerChecklist:["g=16","n²=225","16^4","2^15","173"],requiredConcepts:["paillier-randomized-encryption"],sectionId:"encryption"},{level:"basic",question:"r이 unit이어야 하는 이유를 쓰세요.",answerChecklist:["gcd(r,n)=1","Z*n","valid distribution","r=0 reject"],requiredConcepts:["paillier-randomized-encryption"],sectionId:"encryption"},{level:"basic",question:"두 ciphertext 곱의 plaintext 의미를 쓰세요.",answerChecklist:["m1+m2","mod n","r1r2","same key"],requiredConcepts:["paillier-additive-homomorphic-boundary"],sectionId:"homomorphism"},{level:"basic",question:"c=173을 toy key로 복호하세요.",answerChecklist:["c^4=16","L=1","mu=4","m=4"],requiredConcepts:["paillier-decryption-l-function"],sectionId:"decryption"},{level:"basic",question:"Homomorphism과 integrity를 구분하세요.",answerChecklist:["intentional malleability","predictable mutation","no authenticity","separate proof"],requiredConcepts:["paillier-ciphertext-security-boundary"],sectionId:"security-boundary"},{level:"advanced",question:"Homomorphic identity를 exponent law로 유도하세요.",answerChecklist:["multiply","exponents add","randomizers multiply","mod n","mod n²"],requiredConcepts:["paillier-additive-homomorphic-boundary"],sectionId:"homomorphism"},{level:"advanced",question:"L 함수 decryption correctness의 profile 전제를 설명하세요.",answerChecklist:["lambda","u congruent 1 mod n","inverse mu","valid g","residue"],requiredConcepts:["paillier-key-generation-contract","paillier-decryption-l-function"],sectionId:"decryption"},{level:"advanced",question:"Randomizer reuse·malformed ciphertext fixture를 설계하세요.",answerChecklist:["same r","relation leakage","gcd failure","invalid c","typed reject"],requiredConcepts:["paillier-randomized-encryption","paillier-ciphertext-security-boundary"],sectionId:"security-boundary"},{level:"advanced",question:"Paillier release profile을 작성하세요.",answerChecklist:["key size/g","encoding","RNG","validation","wraparound","negative vectors","timings/bytes","rollback"],requiredConcepts:["paillier-ciphertext-security-boundary"],sectionId:"release"}],
-    papers:[{title:"Paillier · Public-Key Cryptosystems Based on Composite Degree Residuosity Classes",href:"https://link.springer.com/chapter/10.1007/3-540-48910-X_16",problem:"Composite residuosity 기반 probabilistic encryption",contribution:"Additively homomorphic public-key cryptosystem",assumptions:"Valid key·unit randomizer·논문 security setting",evidenceScope:"Encryption·decryption·homomorphic identity",notClaim:"Malicious MPC·CCA integrity를 자동 보장하지 않음",sectionId:"paper-paillier"}]
+    "entryLevel": false,
+    "entryNote": "나머지 연산과 예측하기 어려운 난수의 뜻을 짧게 되짚고 같은 4와 3을 수식·원문·API 경계까지 추적합니다.",
+    "coreIdea": "같은 두 건수의 암호문 곱이 평문 합으로 바뀌는 이유를 계산합니다. 수학적 나머지, 실제 CRT 복호, signed 표현과 입력 검사의 조건을 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "modular-congruence-residue-class",
+        "role": "0부터 n−1까지의 나머지와 합이 n에서 감기는 뜻을 사용합니다."
+      },
+      {
+        "id": "csprng-computational-unpredictability",
+        "role": "고정한 검산용 난수와 실제로 독립 생성하는 unit 난수를 구분합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "paillier-additive-homomorphic-boundary",
+        "role": "암호문 곱과 평문 합·공개 스칼라곱의 범위를 설명합니다."
+      },
+      {
+        "id": "paillier-key-generation-contract",
+        "role": "복호 역원과 키 생성 조건을 설명합니다."
+      },
+      {
+        "id": "paillier-randomized-encryption",
+        "role": "같은 평문을 새 난수로 가리고 재사용 시 누출을 계산합니다."
+      },
+      {
+        "id": "paillier-decryption-l-function",
+        "role": "L 함수 유도와 원문 CRT 경로를 연결합니다."
+      },
+      {
+        "id": "paillier-ciphertext-security-boundary",
+        "role": "변조·범위·복호 권한과 보안 가정의 경계를 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "paillier-additive-homomorphic-boundary",
+        "sectionId": "homomorphism",
+        "intuition": "암호문 곱에서 같은 바탕의 지수가 더해집니다.",
+        "workedExample": "173×154 mod 225=92이고 복호하면 4+3=7입니다. 공개 스칼라 3을 곱한 결과는 12입니다.",
+        "boundary": "같은 키의 g=n+1 설정이며 평문의 합은 mod n입니다. 일반 g의 감긴 지수에는 난수 보정도 필요합니다.",
+        "counterexample": "13+4는 17이 아니라 2로 복호됩니다. 암호화한 두 평문의 일반 곱을 지원하는 것은 아닙니다.",
+        "proofIdea": "지수 법칙으로 g^(m₁+m₂)(r₁r₂)^n을 얻습니다. g=n+1이면 g^n≡1 mod n²이므로 평문 합을 mod n으로 줄일 수 있습니다."
+      },
+      {
+        "id": "paillier-key-generation-contract",
+        "sectionId": "key-generation",
+        "intuition": "가려진 수를 되돌릴 역원이 있는 키를 만듭니다.",
+        "workedExample": "p=3, q=5, n=15, g=16, λ=4, μ=4입니다.",
+        "boundary": "일반 g에서는 L(g^λ mod n²)의 역원이 필요합니다. g=n+1의 λ 복호는 gcd(λ,n)=1을 확인합니다.",
+        "counterexample": "p=3, q=7이면 λ의 역원은 없지만 선택 원문의 CRT는 252개 조합을 복호합니다. 왕복 성공이 선택한 전단사·보안 설정의 검증은 아닙니다."
+      },
+      {
+        "id": "paillier-randomized-encryption",
+        "sectionId": "encryption",
+        "intuition": "메시지 성분에 새 unit 난수의 n제곱을 곱합니다.",
+        "workedExample": "같은 4에 r=2를 쓰면 173이고 r=7을 쓰면 223이며 둘 다 4로 복호됩니다.",
+        "boundary": "허용 난수는 n과 서로소인 정규 원소이며 실제 사용에서는 신선하고 균등하게 독립 생성합니다.",
+        "counterexample": "같은 r=2를 재사용한 173과 53의 비율은 16이어서 평문 차이 1 mod 15가 드러납니다. 새 난수도 우연히 같아질 확률은 0이 아닙니다."
+      },
+      {
+        "id": "paillier-decryption-l-function",
+        "sectionId": "decryption",
+        "intuition": "비밀 거듭제곱 뒤 남은 n의 계수를 읽고 배율을 되돌립니다.",
+        "workedExample": "92⁴ mod 225=196, L(196)=13, 13×4 mod 15=7입니다. 실제 원문은 두 소수의 나머지 1과 2를 CRT로 합칩니다.",
+        "boundary": "L의 입력은 1 mod n 형태여야 하고 키·unit 암호문 조건이 필요합니다.",
+        "counterexample": "원문 raw_decrypt(0)은 오류 대신 2를 반환합니다. 임의 입력의 정수 반환은 복호 정확성의 증거가 아닙니다.",
+        "proofIdea": "정상 unit r에서 p²와 q² 각각 r^(nλ)=1입니다. CRT로 n²에서도 같고 c^λ≡1+nmλ이므로 L 값에 λ의 역원을 곱해 복원합니다."
+      },
+      {
+        "id": "paillier-ciphertext-security-boundary",
+        "sectionId": "security",
+        "intuition": "공개 연산으로 평문을 바꿀 수 있으므로 결과의 진위는 따로 확인합니다.",
+        "workedExample": "173에 공개 g=16을 곱한 68은 5로 복호됩니다.",
+        "boundary": "DCRA 가정의 의미론적 보안과 임의 변조 암호문 복호를 허용하는 공격 모델을 구분합니다.",
+        "counterexample": "비밀키 소유자가 개별 암호문을 받으면 개별 값을 읽습니다. 암호화만으로 범위·참여자·집계 진위·threshold 복호를 보장하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 같은 두 건수",
+        "relation": "4와 3을 가릴 키와 난수를 정합니다.",
+        "concepts": [
+          "paillier-key-generation-contract",
+          "paillier-randomized-encryption"
+        ]
+      },
+      {
+        "label": "02 암호문 합산",
+        "relation": "173과 154의 곱이 평문 합으로 이어지는 이유를 계산합니다.",
+        "concepts": [
+          "paillier-additive-homomorphic-boundary",
+          "paillier-randomized-encryption"
+        ]
+      },
+      {
+        "label": "03 복호와 실제 원문",
+        "relation": "같은 92를 λ 식과 원문 CRT 경로로 복호합니다.",
+        "concepts": [
+          "paillier-key-generation-contract",
+          "paillier-decryption-l-function"
+        ]
+      },
+      {
+        "label": "04 표현과 안전성",
+        "relation": "정수 표현·입력 조건·변조와 공개 결과의 범위를 확인합니다.",
+        "concepts": [
+          "paillier-additive-homomorphic-boundary",
+          "paillier-randomized-encryption",
+          "paillier-ciphertext-security-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "4와 3을 각각 암호화하고 합을 복호하세요.",
+        "answerChecklist": [
+          "n=15, g=16, n²=225와 재현용 r=2, r=4를 사용",
+          "암호문은 173과 154이고 곱의 나머지는 92",
+          "92⁴ mod 225=196, L 값은 13, 13×4 mod 15=7"
+        ],
+        "sectionId": "decryption",
+        "requiredConcepts": [
+          "paillier-key-generation-contract",
+          "paillier-randomized-encryption",
+          "paillier-decryption-l-function",
+          "paillier-additive-homomorphic-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 4에서 난수만 바꾸면 어떻게 되나요?",
+        "answerChecklist": [
+          "r=2이면 173, r=7이면 223",
+          "두 암호문 모두 4로 복호",
+          "재현용 고정값과 실제 독립·균등한 unit 난수를 구분",
+          "신선한 난수가 우연히 같아질 확률 자체가 0은 아님"
+        ],
+        "sectionId": "encryption",
+        "requiredConcepts": [
+          "paillier-randomized-encryption"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "왜 g=n+1의 거듭제곱이 간단한 식으로 줄어드나요?",
+        "answerChecklist": [
+          "이항 전개의 n² 이상 항은 mod n²에서 0",
+          "(1+n)^m≡1+nm mod n²",
+          "n=15, m=4이면 61이므로 난수 없이 보내면 4를 읽을 수 있음"
+        ],
+        "sectionId": "why",
+        "requiredConcepts": [
+          "paillier-key-generation-contract",
+          "paillier-randomized-encryption"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "선택한 원문은 합산 암호문 92를 어떻게 복호하나요?",
+        "answerChecklist": [
+          "p=3, q=5의 제곱 9와 25에서 따로 계산",
+          "mp=1, mq=2이고 p의 mod q 역원은 2",
+          "u=(2−1)×2 mod 5=2",
+          "CRT 결과는 1+2×3=7"
+        ],
+        "sectionId": "source-decrypt",
+        "requiredConcepts": [
+          "paillier-decryption-l-function",
+          "paillier-key-generation-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "encrypt(4)+encrypt(3)의 signed decode가 왜 실패하나요?",
+        "answerChecklist": [
+          "max_int=n//3−1=4",
+          "raw 복호 결과 7은 정상적인 mod 15 값",
+          "signed 표현에서 5부터 10은 넘침 구간이므로 OverflowError",
+          "4를 네 번 더한 정수 16은 나머지 1로 돌아가 오류 없이 1을 반환"
+        ],
+        "sectionId": "encoding",
+        "requiredConcepts": [
+          "paillier-additive-homomorphic-boundary",
+          "paillier-decryption-l-function"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "암호문을 바꿀 수 있다는 사실과 집계 결과의 진위를 구분하세요.",
+        "answerChecklist": [
+          "173×16 mod 225=68이며 복호 결과는 5",
+          "누구나 공개 g를 곱해 평문에 1을 더할 수 있음",
+          "참여자·허용 범위·집계 진위와 비밀키 소유자의 접근은 별도 조건"
+        ],
+        "sectionId": "security",
+        "requiredConcepts": [
+          "paillier-ciphertext-security-boundary",
+          "paillier-additive-homomorphic-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "λ 복호식에서 난수 성분이 사라지는 이유를 유도하세요.",
+        "answerChecklist": [
+          "정상 unit r이면 p²와 q²에서 r^(nλ)=1이고 CRT로 n²에서도 같음",
+          "(1+n)^(mλ)≡1+nmλ mod n²",
+          "L 값은 mλ mod n이며 μ=λ⁻¹을 곱해 m을 복원",
+          "gcd(λ,n)=1과 정상 키·unit 암호문 조건을 사용"
+        ],
+        "sectionId": "correctness",
+        "requiredConcepts": [
+          "paillier-key-generation-contract",
+          "paillier-decryption-l-function",
+          "paillier-randomized-encryption"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 난수를 두 메시지에 쓰면 관찰자가 무엇을 계산하나요?",
+        "answerChecklist": [
+          "같은 r=2에서 m=4는 173, m=3은 53",
+          "173×53⁻¹ mod 225=16",
+          "L(16)=1이므로 평문 차이 1 mod 15가 드러남",
+          "하나의 평문을 알면 다른 나머지도 알 수 있으므로 새 독립 unit 난수가 필요"
+        ],
+        "sectionId": "randomness",
+        "requiredConcepts": [
+          "paillier-randomized-encryption",
+          "paillier-ciphertext-security-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "raw API의 실제 검사와 정상 암호화의 입력 조건을 비교하세요.",
+        "answerChecklist": [
+          "raw_encrypt의 r=3은 27을 반환하고 gcd(27,15)=3으로 인수가 드러남",
+          "r=0은 falsy 값이라 getter를 호출하고 raw_decrypt(0)은 2를 반환",
+          "별도 정규 범위·unit 검사는 이미 정상이라고 정한 키에 대한 검사",
+          "n=21은 λ 역원이 없지만 원문 CRT 252개 왕복은 성공하며 Enc(0)의 12개 난수가 네 출력으로 합쳐짐"
+        ],
+        "sectionId": "validation",
+        "requiredConcepts": [
+          "paillier-key-generation-contract",
+          "paillier-randomized-encryption",
+          "paillier-decryption-l-function",
+          "paillier-ciphertext-security-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "합산·공개 스칼라곱·재무작위화와 실제 적용 범위를 설명하세요.",
+        "answerChecklist": [
+          "합산 암호문 92는 7, 공개 3배의 암호문 17은 12로 복호",
+          "암호화한 평문끼리의 일반 곱은 지원하지 않음",
+          "고정된 유효 입력 92에 신선하고 균등한 unit 7의 성분을 곱한 예는 56이며 결과는 여전히 7",
+          "13+4는 mod 15에서 2이며 signed·고정소수점·전체 합의 범위를 별도로 정해야 함",
+          "DCRA를 인수분해와의 동치·임의 변조 복호의 안전성·threshold·양자 내성 보장으로 확대하지 않음"
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "paillier-additive-homomorphic-boundary",
+          "paillier-key-generation-contract",
+          "paillier-randomized-encryption",
+          "paillier-decryption-l-function",
+          "paillier-ciphertext-security-boundary"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Paillier 1999 · Public-Key Cryptosystems Based on Composite Degree Residuosity Classes",
+        "href": "https://www.cs.tau.ac.il/~fiat/crypt07/papers/Pai99pai.pdf",
+        "problem": "개별 메시지를 열지 않고 암호문 계산을 평문 덧셈에 연결합니다.",
+        "contribution": "합성 잉여류를 사용한 확률적 공개키 암호와 복호·동형 항등식을 제시합니다.",
+        "assumptions": "논문의 정상 키와 unit 난수, 계산·판정 잉여류 가정의 서로 다른 역할을 구분합니다.",
+        "evidenceScope": "저자 논문 사본의 2–4절, 7절 CRT, 8절 동형 항등식을 읽고 7·12쪽을 화면으로 확인했습니다. 출판사 DOI의 제목·저자를 대조했습니다.",
+        "notClaim": "선택 구현 전체의 보안 감사나 현재 장비 성능을 검증한 것이 아닙니다. 논문의 성능 표는 저자의 연산 비용 추정입니다.",
+        "sectionId": "correctness"
+      },
+      {
+        "title": "CSIRO Data61 python-paillier · 7d9911eb 고정 원문",
+        "href": "https://github.com/data61/python-paillier/tree/7d9911eb03c3c2d64399bc15405feb5e628379d1",
+        "problem": "수학식의 입력 조건과 실제 인코딩·복호·API 동작을 연결합니다.",
+        "contribution": "phe 1.5.0의 공개키 암호화·CRT 복호·signed 인코딩·동형 계산을 제공합니다.",
+        "assumptions": "보존한 원문 핵심 모듈을 CPython 3.12.13의 기본 Python 연산 경로에서 불러왔고 GMP·Crypto 선택 의존성은 없습니다.",
+        "evidenceScope": "실제 120개 정상 메시지·난수 조합과 독립 정수 모형, 합산·재사용·재무작위화·raw 입력·signed 넘침·별도 n=323 고정소수점·n=21의 252개 CRT 복호를 실행했습니다.",
+        "notClaim": "전체 upstream 테스트·큰 키 생성·실제 RNG의 엔트로피·상수 시간·성능·CCA·threshold·범위 증명·보안 감사를 실행한 결과가 아닙니다.",
+        "sectionId": "verification"
+      },
+      {
+        "title": "Shor · 양자 인수분해 알고리즘의 공식 초록",
+        "href": "https://arxiv.org/abs/quant-ph/9508027",
+        "problem": "인수분해를 기반으로 한 구조의 양자 내성 여부를 구분합니다.",
+        "contribution": "가정한 양자 계산 모형에서 정수 인수분해와 이산로그를 다항 시간에 푸는 알고리즘을 제시합니다.",
+        "assumptions": "알고리즘의 계산 모형과 실제 오류 보정 장비의 규모·일정을 구분합니다.",
+        "evidenceScope": "공식 arXiv v2 초록과 서지 정보를 확인했습니다.",
+        "notClaim": "이 글에서 논문 전문·양자 회로·현실적 자원 추정이나 공격 실행을 검증하지 않았습니다.",
+        "sectionId": "security"
+      }
+    ]
   },
   "crypto/scroll-zkevm": {
     entryLevel:true, entryNote:"EVM이 stack의 3과 4를 ADD해 7을 만드는 한 step에서 시작해 trace·table·Halo2 proof·rollup receipt까지 올라갑니다.", coreIdea:"Scroll zkEVM은 Ethereum state transition을 opcode execution trace와 RW·bytecode·transaction·block tables에 펼친 뒤 Halo2 gates·copy·lookups로 연결하고, pre/post state roots·data·circuit/key/version이 결속된 validity-proof artifact를 L1 verifier에 넘깁니다.", assumedKnowledge:[],
@@ -80957,48 +81526,348 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "crypto/binary-field-proving": {
-    entryLevel: true,
-    entryNote: "Bit·XOR와 field를 모른다고 가정하고 F₂ addition부터 primitive/prover 선택까지 진행합니다.",
-    coreIdea: "Binary-field proving은 conventional hash를 Poseidon으로 바꾸지 않고 Boolean workload와 proof representation의 impedance mismatch를 줄이는 반대 설계 방향입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "binary-tower-field-representation", role: "F₂·F₂ᵏ 표현을 정의합니다." },
-      { id: "boolean-arithmetization-fit", role: "Bit workload와 proof representation 비용을 연결합니다." },
-      { id: "binius-binary-tower-argument", role: "Binius argument stack을 설명합니다." },
-      { id: "conventional-hash-friendly-proving", role: "기존 hash를 유지하는 방향을 정의합니다." },
-      { id: "flock-batched-boolean-proof", role: "조건부 batch prototype을 설명합니다." },
-      { id: "primitive-proof-layer-selection-gate", role: "두 설계 방향을 비교합니다." },
+    "entryLevel": true,
+    "entryNote": "1011과 0110의 XOR·AND부터 시작해 같은 네 기록으로 체·다항식·sumcheck·원문을 연결합니다.",
+    "coreIdea": "작은 비트 기록과 큰 체의 질문을 구분하고 마지막 한 점이 처음 기록에 연결되어야 하는 이유를 계산과 코드로 설명합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "binary-tower-field-representation",
+        "role": "같은 네 비트의 XOR와 확장체 곱을 구분합니다."
+      },
+      {
+        "id": "boolean-arithmetization-fit",
+        "role": "같은 계산표를 주소 순서와 다항식으로 표현합니다."
+      },
+      {
+        "id": "binius-binary-tower-argument",
+        "role": "두 질문의 합 확인과 전체 증명 계열을 구분합니다."
+      },
+      {
+        "id": "conventional-hash-friendly-proving",
+        "role": "해시 출력을 유지하면서 검증하는 조건을 설명합니다."
+      },
+      {
+        "id": "flock-batched-boolean-proof",
+        "role": "반복 회로·입출력 연결과 논문 판의 범위를 구분합니다."
+      },
+      {
+        "id": "primitive-proof-layer-selection-gate",
+        "role": "보안 기능과 성능의 단위를 맞춰 선택합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "binary-tower-field-representation", sectionId: "binary-field", intuition: "F₂ addition은 carry 없는 XOR이고 extension multiplication은 irreducible polynomial profile에 묶입니다.", workedExample: "1011 XOR 0110 = 1101입니다.", boundary: "Integer multiplication과 같지 않으며 basis를 고정합니다." },
-      { id: "boolean-arithmetization-fit", sectionId: "binary-field", intuition: "SHA의 XOR·AND·rotate를 proof system의 기본 표현과 가깝게 둡니다.", workedExample: "XOR addition은 F₂ coordinates에 바로 대응하지만 AND·lookup·rotate 비용은 별도입니다.", boundary: "Field choice만으로 전체 prover 우위가 결정되지 않습니다." },
-      { id: "binius-binary-tower-argument", sectionId: "binius", intuition: "Binary tower·multilinear polynomial·commitment·sumcheck를 한 argument로 결합합니다.", workedExample: "Boolean execution table을 random challenges로 축약 검사합니다.", boundary: "논문의 exact construction과 implementation을 구분합니다." },
-      { id: "conventional-hash-friendly-proving", sectionId: "overview", intuition: "검증된 hash semantics는 두고 prover를 workload-friendly하게 바꿉니다.", workedExample: "SHA/BLAKE를 Poseidon으로 교체하는 경로와 binary proof 경로를 같은 요구에서 비교합니다.", boundary: "기존 hash 유지가 proof system 전체의 PQ·soundness를 자동 보장하지 않습니다." },
-      { id: "flock-batched-boolean-proof", sectionId: "flock-selection", intuition: "여러 Boolean instances를 batch해 fixed overhead를 나눕니다.", workedExample: "논문 hash throughput은 M4 Max·core·batch 조건과 함께 읽습니다.", boundary: "Prototype benchmark를 Ethereum 채택이나 보편 성능으로 일반화하지 않습니다." },
-      { id: "primitive-proof-layer-selection-gate", sectionId: "flock-selection", intuition: "보안 역사와 compatibility 이득을 proof 비용·성숙도와 함께 비교합니다.", workedExample: "Toy R=80, attacks 30→55는 gap 50→25지만 full-round break가 아닙니다.", boundary: "Round gap은 security bits와 다릅니다." },
+    "conceptExplanations": [
+      {
+        "id": "binary-tower-field-representation",
+        "sectionId": "tower",
+        "intuition": "비트들을 한 원소로 묶되 곱셈에는 정한 환원 규칙을 씁니다.",
+        "workedExample": "Fan–Paar F₁₆의 1011×0110=1111이며 기저는 1,u,v,uv입니다.",
+        "boundary": "같은 크기의 체라도 기저가 다르면 비트열의 곱이 달라질 수 있습니다.",
+        "counterexample": "비트별 AND 0010을 확장체 곱 1111로 대신하면 틀립니다.",
+        "proofIdea": "u²+u+1은 F₂의 두 점에서 1이고 X²+uX+1은 F₄의 네 점에서 1,u,1,u입니다. 근 없는 이차식이므로 각 확장은 체이며 1,u,v,uv가 기저가 됩니다."
+      },
+      {
+        "id": "boolean-arithmetization-fit",
+        "sectionId": "multilinear",
+        "intuition": "비트 계산표를 질문할 수 있는 다항식으로 바꿉니다.",
+        "workedExample": "A=[1,1,0,1]은 1+y+xy, B=[0,1,1,0]은 x+y입니다.",
+        "boundary": "비트 주소 순서와 차수를 고정합니다. 합은 정수 개수가 아니라 체의 합입니다.",
+        "counterexample": "AND 결과표의 MLE는 (u,v)에서 10이지만 두 MLE의 곱은 5입니다."
+      },
+      {
+        "id": "binius-binary-tower-argument",
+        "sectionId": "sumcheck",
+        "intuition": "작은 체의 기록을 큰 체의 질문과 약속에 연결합니다.",
+        "workedExample": "같은 네 기록에서 g₁=t², r₁=u로 3을 얻고 r₂=v로 5를 얻습니다.",
+        "boundary": "원래 Binius의 Brakedown, FRI-Binius 모델, 후속 Binius64는 서로 다른 판과 구현입니다.",
+        "counterexample": "고정 질문 u,v의 정직한 실행만으로 PCS·Fiat–Shamir·악의적 증명자에 대한 안전성이 증명되지 않습니다.",
+        "proofIdea": "각 라운드에서 차수 d 이하의 메시지와 올바른 식의 차이가 비영이면 근은 최대 d개입니다. 메시지 뒤 균등 질문과 마지막 올바른 평가를 조건으로 m번의 합 확인 오류 상한은 md/|F|입니다."
+      },
+      {
+        "id": "conventional-hash-friendly-proving",
+        "sectionId": "commitment",
+        "intuition": "정해진 해시의 출력을 유지하면서 계산 기록을 확인하는 방식을 바꿉니다.",
+        "workedExample": "이번 네 AND 결과를 묶어 확인하되 마지막 13×6=5를 처음 고정한 표에 연결해야 합니다.",
+        "boundary": "해시의 안전성과 증명 관계·기록 약속·공개 입력 검증은 별도입니다.",
+        "counterexample": "마지막 곱 5만 맞춘 임의 두 수를 받아들이면 처음 기록과 다를 수 있습니다."
+      },
+      {
+        "id": "flock-batched-boolean-proof",
+        "sectionId": "flock",
+        "intuition": "같은 회로의 여러 실행과 실행 사이 연결을 함께 확인합니다.",
+        "workedExample": "원문의 비트별 ai & bi == ci와 packed lo/hi AND를 읽고 작은 표의 0010에 대응합니다.",
+        "boundary": "읽은 7월 arXiv v1은 영지식 미지원이며 9월 수정판·현재 저장소 성능과 구별합니다.",
+        "counterexample": "각 해시가 맞아도 앞 출력과 다음 입력이 연결되지 않으면 올바른 해시 체인이 아닙니다."
+      },
+      {
+        "id": "primitive-proof-layer-selection-gate",
+        "sectionId": "selection",
+        "intuition": "호환성·보안 기능·비용 조건을 함께 보고 해시와 증명 방식을 정합니다.",
+        "workedExample": "같은 1011/0110의 표현과 원문 실행을 확인한 뒤 Flock의 압축함수/초 단위를 구분합니다.",
+        "boundary": "해시 변경·증명 방식 변경뿐 아니라 이진체 해시와 증명의 공동 설계도 가능합니다.",
+        "counterexample": "설명용 80−30=50에서 80−55=25로 줄어든 간격을 보안 비트 수나 전체 라운드 해독으로 읽으면 안 됩니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 representation", relation: "Binary field와 Boolean fit을 잡습니다.", concepts: ["binary-tower-field-representation", "boolean-arithmetization-fit"] },
-      { label: "01 argument", relation: "Binius protocol stack을 연결합니다.", concepts: ["binius-binary-tower-argument"] },
-      { label: "02 workload", relation: "기존 hash 유지 방향을 적용합니다.", concepts: ["conventional-hash-friendly-proving", "flock-batched-boolean-proof"] },
-      { label: "03 choose", relation: "Security와 비용을 함께 비교합니다.", concepts: ["primitive-proof-layer-selection-gate"] },
+    "conceptStages": [
+      {
+        "label": "01 네 비트",
+        "relation": "정수·XOR·AND·확장체 곱을 구분합니다.",
+        "concepts": [
+          "binary-tower-field-representation",
+          "boolean-arithmetization-fit"
+        ]
+      },
+      {
+        "label": "02 같은 기록의 두 질문",
+        "relation": "다항식 확장과 합 확인을 원문 실행에 대입합니다.",
+        "concepts": [
+          "boolean-arithmetization-fit",
+          "binius-binary-tower-argument"
+        ]
+      },
+      {
+        "label": "03 남는 연결 조건",
+        "relation": "차수·약속·공개 결과·반복 간 연결을 확인합니다.",
+        "concepts": [
+          "binius-binary-tower-argument",
+          "conventional-hash-friendly-proving",
+          "flock-batched-boolean-proof"
+        ]
+      },
+      {
+        "label": "04 구현 선택",
+        "relation": "실제 실행 범위와 논문 판·기능·성능 조건을 구분합니다.",
+        "concepts": [
+          "flock-batched-boolean-proof",
+          "primitive-proof-layer-selection-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "F₂ addition과 XOR의 관계를 설명하세요.", answerChecklist: ["0/1", "1+1=0", "coordinate-wise", "no carry"], requiredConcepts: ["binary-tower-field-representation"], sectionId: "binary-field" },
-      { level: "basic", question: "1011+0110을 binary field addition으로 계산하세요.", answerChecklist: ["XOR", "1101", "same basis", "not integer addition"], requiredConcepts: ["binary-tower-field-representation"], sectionId: "binary-field" },
-      { level: "basic", question: "Prime-field SHA circuit의 mismatch를 설명하세요.", answerChecklist: ["XOR", "AND", "rotate", "translation cost"], requiredConcepts: ["boolean-arithmetization-fit"], sectionId: "binary-field" },
-      { level: "basic", question: "Poseidon 경로와 binary prover 경로가 각각 바꾸는 층을 쓰세요.", answerChecklist: ["primitive", "proof representation", "same requirement", "different tradeoff"], requiredConcepts: ["conventional-hash-friendly-proving"], sectionId: "overview" },
-      { level: "basic", question: "Binius의 네 구성 요소를 쓰세요.", answerChecklist: ["binary tower", "multilinear", "commitment", "sumcheck"], requiredConcepts: ["binius-binary-tower-argument"], sectionId: "binius" },
-      { level: "basic", question: "Flock benchmark를 읽을 때 함께 기록할 조건은?", answerChecklist: ["hardware", "cores", "batch", "implementation", "hash"], requiredConcepts: ["flock-batched-boolean-proof"], sectionId: "flock-selection" },
-      { level: "advanced", question: "Binary field가 자동으로 모든 Boolean proof를 싸게 만들지 않는 이유를 설명하세요.", answerChecklist: ["AND", "rotate", "basis conversion", "commitment", "verifier", "memory"], requiredConcepts: ["boolean-arithmetization-fit", "binius-binary-tower-argument"], sectionId: "binius" },
-      { level: "advanced", question: "Toy security margin 80,30,55를 올바르게 해석하세요.", answerChecklist: ["50 to 25", "illustrative", "not security bits", "not full-round break", "exact profile"], requiredConcepts: ["primitive-proof-layer-selection-gate"], sectionId: "flock-selection" },
-      { level: "advanced", question: "Conventional hash 유지의 장점과 남는 proof 위험을 비교하세요.", answerChecklist: ["cryptanalysis history", "ecosystem", "prover soundness", "implementation maturity", "cost"], requiredConcepts: ["conventional-hash-friendly-proving"], sectionId: "flock-selection" },
-      { level: "advanced", question: "Primitive/proof-layer 선택 release matrix를 작성하세요.", answerChecklist: ["security profile", "compatibility", "prover time", "memory", "proof size", "verifier", "hardware", "audit"], requiredConcepts: ["primitive-proof-layer-selection-gate"], sectionId: "flock-selection" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "1011과 0110의 XOR·AND 및 정수 덧셈을 구분하세요.",
+        "answerChecklist": [
+          "XOR 1101, AND 0010",
+          "정수 11+6=17=10001은 carry가 있어 다름",
+          "지금 네 비트는 작은 회로 예이며 SHA 전체를 증명하지 않음"
+        ],
+        "sectionId": "bits",
+        "requiredConcepts": [
+          "binary-tower-field-representation",
+          "boolean-arithmetization-fit"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 네 비트의 확장체 곱을 bitwise AND와 비교하세요.",
+        "answerChecklist": [
+          "Fan–Paar F₁₆의 1011×0110=1111",
+          "비트 계수 (3,2),(2,1)과 u²=u+1, v²=uv+1을 사용",
+          "비트별 AND는 0010이므로 확장체 곱으로 바꿔 쓰면 틀림"
+        ],
+        "sectionId": "tower",
+        "requiredConcepts": [
+          "binary-tower-field-representation",
+          "boolean-arithmetization-fit"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "네 기록 A와 B를 주소 x,y의 다항식으로 쓰세요.",
+        "answerChecklist": [
+          "낮은 주소 비트 x, 높은 주소 비트 y",
+          "A=[1,1,0,1]→1+y+xy",
+          "B=[0,1,1,0]→x+y",
+          "Boolean 네 점에서는 원래 표와 같음",
+          "AND 결과표 MLE는 x(1+y)이며 두 MLE의 곱과 꼭짓점 밖에서 다름"
+        ],
+        "sectionId": "multilinear",
+        "requiredConcepts": [
+          "boolean-arithmetization-fit"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 AND 사례의 첫 합 확인 메시지와 challenge를 계산하세요.",
+        "answerChecklist": [
+          "g=A·B의 Boolean 합은 1",
+          "g1(t)=t², g1(0)+g1(1)=1",
+          "challenge u=2이면 다음 주장 u²=u+1=3"
+        ],
+        "sectionId": "sumcheck",
+        "requiredConcepts": [
+          "boolean-arithmetization-fit",
+          "binius-binary-tower-argument"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "둘째 메시지와 최종 한 점을 확인하세요.",
+        "answerChecklist": [
+          "g₂(t)=u+(u+1)t²",
+          "g₂(0)+g₂(1)=u+1",
+          "질문 v에서 g₂(v)=1+v, 비트 표기 5",
+          "a(u,v)의 비트 표기는 13, b(u,v)는 6이고 확장체 곱은 5"
+        ],
+        "sectionId": "second",
+        "requiredConcepts": [
+          "boolean-arithmetization-fit",
+          "binius-binary-tower-argument"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "이 글에서 실제 실행한 것과 Flock 성능 표의 단위를 구분하세요.",
+        "answerChecklist": [
+          "고정 binius-models의 선택한 Fan–Paar·Sumcheck 정의를 CPython 3.12.13으로 실행",
+          "전체 Binius/Flock·PCS·Fiat–Shamir 미실행",
+          "Flock v1의 SHA-256 표는 압축함수/초이며 임의 길이 파일/초가 아님",
+          "7월 v1은 영지식 미지원이고 9월 수정 ePrint는 별도"
+        ],
+        "sectionId": "verification",
+        "requiredConcepts": [
+          "binius-binary-tower-argument",
+          "flock-batched-boolean-proof",
+          "primitive-proof-layer-selection-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "F₂의 challenge만으로 차수2 메시지를 확인하면 무엇이 빠지나요?",
+        "answerChecklist": [
+          "차이 t²+t는 비영 다항식이지만 0과 1에서 모두 0",
+          "고정 오류와 균등 질문이면 F₁₆에서 두 근의 확률 2/16=1/8",
+          "u에서 차이 1이 검출됨",
+          "전체 sumcheck는 메시지 차수·질문 순서·최종 평가 연결 조건에서 md/|F| 상한을 따로 계산"
+        ],
+        "sectionId": "soundness",
+        "requiredConcepts": [
+          "binary-tower-field-representation",
+          "binius-binary-tower-argument"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "오류 표 [1,1,0,0]의 단순 합이0이면 모든 제약이 맞나요?",
+        "answerChecklist": [
+          "특성 2에서 두 오류가 상쇄되어 단순 합은 0",
+          "오류표의 MLE는 1+y",
+          "y=v이면 비트 표기 5로 비영",
+          "무작위 가중 검사와 차수 제한 및 고정한 표와의 연결 필요"
+        ],
+        "sectionId": "zerocheck",
+        "requiredConcepts": [
+          "boolean-arithmetization-fit",
+          "binius-binary-tower-argument",
+          "conventional-hash-friendly-proving"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "F₂⊂F₄⊂F₁₆의 기약성과 기저를 확인하세요.",
+        "answerChecklist": [
+          "u²+u+1은 0과 1에서 근이 없음",
+          "X²+uX+1은 F₄의 네 원소에서 1,u,1,u로 근이 없음",
+          "기저 1,u,v,uv와 낮은 부분체의 비트를 그대로 포함",
+          "임의 네 비트 패킹의 곱은 네 개의 독립 AND가 아님"
+        ],
+        "sectionId": "tower-proof",
+        "requiredConcepts": [
+          "binary-tower-field-representation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "원문 모델의 정직한 sumcheck 대조가 실제 서비스의 안전성을 입증하지 않는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "마지막 query는 여기서 가진 전체 표를 접은 값과 비교",
+          "실제 PCS에 고정한 표와 마지막 값을 연결해야 함",
+          "반복 간 입력·출력 관계와 공개 결과, 질문 transcript와 차수 제한 필요",
+          "Binius·FRI-Binius·Binius64·Flock의 판과 영지식 기능을 구분",
+          "성능 표는 장비·batch·스레드·최고값 선택과 비교 기능을 함께 읽음"
+        ],
+        "sectionId": "boundaries",
+        "requiredConcepts": [
+          "binius-binary-tower-argument",
+          "conventional-hash-friendly-proving",
+          "flock-batched-boolean-proof",
+          "primitive-proof-layer-selection-gate"
+        ]
+      }
     ],
-    papers: [
-      { title: "Binius · Succinct Arguments over Towers of Binary Fields", href: "https://eprint.iacr.org/2023/1784.pdf", problem: "Boolean computation의 prime-field overhead", contribution: "Binary tower succinct argument construction", assumptions: "논문의 field·commitment·security model", evidenceScope: "논문이 명시한 binary tower argument construction, security reduction과 asymptotic·concrete analysis 범위입니다.", notClaim: "모든 workload·implementation 우위 아님", sectionId: "paper-binius" },
-      { title: "Flock · Fast batched proofs for Boolean computations", href: "https://arxiv.org/abs/2607.27491", problem: "Standard hash Boolean proof throughput", contribution: "Batched prototype와 evaluation", assumptions: "논문의 hardware·batch·implementation", evidenceScope: "해당 prototype benchmark", notClaim: "Ethereum 채택·production audit 아님", sectionId: "paper-flock" },
-    ],
+    "papers": [
+      {
+        "title": "binius-models · 7ac5ad72 고정 원문",
+        "href": "https://github.com/IrreducibleOSS/binius-models/tree/7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf",
+        "problem": "비트 기록의 체 연산과 합 확인을 실제 코드에 대입합니다.",
+        "contribution": "Fan–Paar 체와 다중선형 표의 Sumcheck 모델을 제공합니다.",
+        "assumptions": "패키지 0.1.0에서 선택한 AST 정의와 전체 패키지 실행을 구분합니다.",
+        "evidenceScope": "CPython 3.12.13으로 선택 정의를 실제 실행했습니다. 독립 256개 체 곱·256개 정직한 질문 조합·역원·반례·인코딩을 대조했습니다.",
+        "notClaim": "전체 의존성 묶음·PCS·Fiat–Shamir·SNARK·보안·성능을 실행한 결과가 아닙니다.",
+        "sectionId": "verification"
+      },
+      {
+        "title": "Diamond·Posen · Binius 최종 출판판",
+        "href": "https://eprint.iacr.org/2023/1784",
+        "problem": "작은 체 기록을 큰 체에 넣으며 생기는 저장·처리 비용을 줄입니다.",
+        "contribution": "Brakedown을 바탕으로 작은 체에 맞는 다항식 약속을 구성합니다.",
+        "assumptions": "2025-04-27 최종 출판판과 후속 FRI-Binius·Binius64를 구분합니다.",
+        "evidenceScope": "공식 초록과 PDF 도입부·기술 개요를 읽었습니다. 전체 보안 증명을 다시 검증하지 않았습니다.",
+        "notClaim": "선택 Python sumcheck 실행을 논문의 전체 프로토콜 구현으로 확대하지 않습니다.",
+        "sectionId": "binius"
+      },
+      {
+        "title": "Binius64 · 6a179536 고정 README",
+        "href": "https://github.com/binius-zk/binius64/tree/6a179536d90fcc76eeca0cee4e059f5e17efb459",
+        "problem": "후속 64비트 단어 회로와 구현의 목표를 구분합니다.",
+        "contribution": "비결정적 64비트 회로와 CPU 구현 중심의 후속 시스템을 설명합니다.",
+        "assumptions": "보관된 원래 Binius와 Python 모델은 같은 전체 구현이 아닙니다.",
+        "evidenceScope": "고정 README와 원래 저장소의 보관·후속 안내를 확인했습니다.",
+        "notClaim": "전체 Binius64를 실행하거나 성능·보안을 검증하지 않았습니다.",
+        "sectionId": "binius"
+      },
+      {
+        "title": "Flock · arXiv 2607.27491v1",
+        "href": "https://arxiv.org/html/2607.27491v1",
+        "problem": "같은 Boolean 회로의 여러 실행을 묶어 확인합니다.",
+        "contribution": "반복 구조와 계산 간 입력·출력 연결을 처리합니다.",
+        "assumptions": "2026년 7월 v1은 영지식 미지원이며 비교 기능과 장비·batch를 맞춰야 합니다.",
+        "evidenceScope": "실제 PDF 1.1·2·3·4.1·4.6·5절을 읽고 9쪽 sumcheck·zerocheck 수식을 화면으로 확인했습니다. 표는 저자 보고이며 압축함수/초입니다.",
+        "notClaim": "현재 저장소나 9월 수정판의 재현 결과로 해석하지 않습니다.",
+        "sectionId": "flock"
+      },
+      {
+        "title": "Flock · b684b125 원문의 R1CS 검사",
+        "href": "https://github.com/succinctlabs/flock/blob/b684b1258e4b1f202bec24afd660ace851b09e5e/crates/flock-core/src/r1cs.rs",
+        "problem": "비트 패킹을 확장체 곱과 혼동하지 않아야 합니다.",
+        "contribution": "satisfies와 packed 경로의 비트별 AND 검사 및 반복 구조를 보여 줍니다.",
+        "assumptions": "프로토콜의 C=I 형태와 일반 행렬 유틸리티를 구분합니다.",
+        "evidenceScope": "구조체·배치 적용·두 제약 검사 경로를 실제 읽고 같은 네 기록에 대응했습니다.",
+        "notClaim": "전체 Flock 회로 생성·증명·검증·실행 시간은 실행하지 않았습니다.",
+        "sectionId": "flock"
+      },
+      {
+        "title": "Flock · 수정 ePrint 2026/1329",
+        "href": "https://eprint.iacr.org/2026/1329",
+        "problem": "후속 판을 읽은 arXiv v1과 구분해야 합니다.",
+        "contribution": "공식 페이지가 수정 이력과 현재 초록을 제공합니다.",
+        "assumptions": "2026-09-19 수정판 PDF와 7월 v1은 다른 읽기 범위입니다.",
+        "evidenceScope": "공식 초록·수정일 확인, PDF는 접근 오류로 미열람입니다.",
+        "notClaim": "수정판 본문에 대한 상세 검증을 주장하지 않습니다.",
+        "sectionId": "measurements"
+      },
+      {
+        "title": "Poseidon(2)b · 수정 ePrint 2025/1893",
+        "href": "https://eprint.iacr.org/2025/1893",
+        "problem": "이진체 증명에 맞춰 해시까지 함께 설계할 수 있습니다.",
+        "contribution": "이진 확장체용 Poseidonb·Poseidon2b를 제안합니다.",
+        "assumptions": "출판본과 2026-02-06의 128비트 Binius 구현 수정 안내를 구분합니다.",
+        "evidenceScope": "공식 초록과 수정 안내를 확인했습니다.",
+        "notClaim": "PDF 전문·공격 분석·실제 이진체 해시 구현은 미검증입니다.",
+        "sectionId": "selection"
+      }
+    ]
   },
   "blockchain/ethereum-future-roadmap": {
     "entryLevel": true,
@@ -82334,102 +83203,373 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/cuda-graph-capture": {
-    coreIdea: "CUDA graph는 kernel launch 시퀀스를 node와 edge로 한 번 기록하고 instantiate로 executable graph에 굳힌 뒤, step마다 CPU launch 하나로 replay해 launch overhead를 상각하는 실행 모델입니다. Replay는 capture 때의 주소·shape·경로만 재생하므로 capture 안에는 CPU 동기화와 값에 따른 분기가 없어야 하고 tensor는 graph pool 안에서 주소를 유지해야 하며, step마다 batch가 달라지는 decode는 capture size 목록으로 padding해 그 graph를 replay합니다.",
-    assumedKnowledge: [
-      { id: "cuda-stream-ordering", role: "Graph capture는 특정 stream에 issue된 kernel 시퀀스를 기록하는 것이므로, stream이 순서를 보장하는 asynchronous execution contract를 그대로 전제합니다." },
-      { id: "cuda-event-dependency", role: "다른 stream이 event로 capture 중인 stream을 기다리면 그 의존이 graph edge가 되는 규칙의 배경입니다." },
-      { id: "decode-memory-bound-regime", role: "Padded 행의 실제 시간 비용이 행 비율보다 작은 이유를 설명할 때 전제합니다." },
-],
-    introducedHere: [
-      { id: "cuda-graph-capture-replay", role: "Kernel launch 시퀀스를 한 번 기록하고 이후 그대로 재생해 launch overhead를 상각하는 실행 모델을 도입합니다." },
-      { id: "cuda-graph-static-address-constraint", role: "Replay가 capture 시점에 고정된 GPU 메모리 주소만 읽고 쓴다는 제약을 도입합니다." },
-      { id: "cuda-graph-batch-shape-dispatch", role: "batch shape를 key로 capture된 그래프를 캐시하고 처음 보는 shape는 capture, 이미 본 shape는 replay하는 실전 serving 패턴을 도입합니다." },
-      { id: "cuda-graph-node", role: "Graph를 이루는 node 종류와 edge의 의존 의미를 정의하고 knowledge graph의 node와 구분합니다." },
-      { id: "cuda-graph-stream-capture", role: "기존 stream 코드를 돌리면서 node·edge를 기록하는 capture API와 cross-stream join 규칙을 설명합니다." },
-      { id: "cuda-graph-instantiation", role: "정의·instantiate·실행 세 단계와 instantiate 비용의 손익분기, topology가 같을 때만 되는 exec update를 설명합니다." },
-      { id: "cuda-graph-compatible-execution", role: "Capture 안에서 지켜야 하는 동기화 금지·분기 금지·graph pool 주소 보존 조건을 설명합니다." },
-      { id: "cuda-graph-shape-padding", role: "Dynamic shape 문제를 capture size 목록과 padding으로 푸는 방법과 행 기준 낭비 비율을 계산합니다." },
-],
-    conceptExplanations: [
-      { id: "cuda-graph-capture-replay", sectionId: "overview", intuition: "매번 새로 부르는 대신 한 번 녹음해 둔 안내방송을 그대로 재생하는 것과 같습니다 — 안내 내용을 다시 읽는 비용은 없고, 방송 자체가 걸리는 시간만 남습니다.", workedExample: "`with torch.cuda.graph(g): output = model(x)`로 감싸면 그 안의 forward가 즉시 실행되는 대신 kernel 시퀀스로 기록되고, 이후 `g.replay()`가 그 시퀀스를 그대로 재생합니다.", boundary: "Capture 구간 안의 실행 결과 자체는 신뢰할 수 없습니다 — 실제로 유효한 결과를 얻으려면 반드시 replay를 호출해야 합니다." },
-      { id: "cuda-graph-static-address-constraint", sectionId: "mechanics", intuition: "녹음된 안내방송이 특정 스피커 위치를 향해 나가듯, replay도 capture 때 정해진 바로 그 메모리 자리만 읽고 씁니다 — 다른 스피커(새 tensor)로 바꿔 틀 수 없습니다.", workedExample: "`new_x.copy_(x)` 처럼 capture 때 쓰인 `x`라는 같은 buffer에 새 데이터를 in-place로 덮어써야 `g.replay()`가 새 입력을 반영합니다. `x = new_tensor`로 참조만 바꾸면 replay는 여전히 옛 데이터를 읽습니다.", boundary: "이 제약 때문에 batch size나 sequence 길이가 매 step 달라지는 완전한 dynamic shape는 하나의 capture로 다룰 수 없습니다." },
-      { id: "cuda-graph-batch-shape-dispatch", sectionId: "implementation", intuition: "사이즈가 다른 손님마다 미리 만들어 둔 옷을 매칭해 입히는 기성복 매장과 같습니다 — 정확히 맞는 사이즈가 없으면 가장 가까운 큰 사이즈를 입혀 남는 부분을 감수합니다.", workedExample: "vLLM의 `CUDAGraphWrapper.__call__`은 `batch_descriptor`가 dict에 없으면 새 entry를 만들고 capture하며, 이미 있으면 저장된 `torch.cuda.CUDAGraph`를 replay합니다.", boundary: "Batch size를 몇 개의 고정 크기로 패딩해 capture 개수를 제한하므로, 실제 batch가 패딩 크기보다 작으면 남는 자리만큼 연산을 낭비합니다." },
+    "coreIdea": "입력 3을 네 번 계산하면 답은 22입니다. 네 작업을 하나씩 전달하는 대신 준비해 둔 실행 기록을 한 번 제출하면 계산을 기다리던 시간을 줄일 수 있습니다. 가정한 시간표의 완료는 14→10 μs지만 주소·크기·결과 수명을 유지하는 비용과 최초 준비 비용을 함께 비교해야 합니다.",
+    "assumedKnowledge": [
       {
-        id: "cuda-graph-node",
-        sectionId: "graph-anatomy",
-        intuition: "공장 작업 지시서의 한 줄이 node이고 어느 줄이 어느 줄 뒤에 와야 하는지 그린 화살표가 edge입니다. 화살표가 없는 두 줄은 어느 쪽이 먼저 돼도 됩니다.",
-        workedExample: "decode forward 한 step을 capture하면 layer마다 GEMM·attention·norm kernel이 node가 되고, 같은 stream에 넣은 순서가 300개 남짓의 node를 한 줄로 잇는 edge가 됩니다. memcpy나 event record도 별도 node로 들어갑니다.",
-        boundary: "이 node·edge는 CUDA graph의 용어이며 knowledge graph의 개념 node와 무관합니다. edge가 없는 node 사이의 순서는 driver가 보장하지 않으므로 stream 밖에서 손으로 그릴 때는 의존을 빠뜨리면 안 됩니다.",
+        "id": "cuda-stream-ordering",
+        "role": "같은 stream의 작업 순서가 네 결과의 의존성을 보존합니다. 비동기 제출이 반환한 시각과 계산 완료 시각은 구분합니다."
       },
       {
-        id: "cuda-graph-stream-capture",
-        sectionId: "stream-capture",
-        intuition: "작업자가 평소처럼 일하는 척하면서 실제로는 아무것도 만들지 않고 동작만 받아 적는 리허설입니다. 받아 적은 순서가 그대로 지시서가 됩니다.",
-        workedExample: "side stream s에서 cudaStreamBeginCapture(s) 뒤 forward를 한 번 부르고 cudaStreamEndCapture(s)로 닫으면 그 사이의 launch 300개가 실행되지 않고 template g가 됩니다. torch.cuda.graph(g) context가 이 두 호출을 감쌉니다.",
-        boundary: "Capture 구간의 결과값은 신뢰할 수 없고, 다른 stream이 event로 합류했다면 EndCapture 전에 원래 stream으로 join해야 하며 그렇지 않으면 capture가 실패합니다.",
-      },
-      {
-        id: "cuda-graph-instantiation",
-        sectionId: "graph-anatomy",
-        intuition: "받아 적은 지시서를 검토해 도장을 찍고 작업장에 걸어 두는 일입니다. 도장 찍는 데는 시간이 들지만 그 뒤로는 종을 한 번 울리면 전체가 돌아갑니다.",
-        workedExample: "NVIDIA blog의 V100 예시에서 kernel 20개 graph의 instantiate는 약 400 µs, 이후 replay는 kernel당 3.4 µs로 stream launch 3.8 µs보다 0.4 µs 쌉니다. launch 한 번당 8 µs 절감이므로 50번 넘게 replay해야 회수됩니다.",
-        boundary: "cudaGraphExecUpdate는 node 수·종류·edge가 완전히 같을 때만 되고 kernel context나 memcpy device 위치는 바꿀 수 없습니다. batch가 바뀌어 kernel 수나 shape가 달라지면 update가 아니라 새 capture입니다.",
-      },
-      {
-        id: "cuda-graph-compatible-execution",
-        sectionId: "graph-compatibility",
-        intuition: "녹화된 안내방송 안에 '지금 손님 수를 세어 보고 결정하세요' 같은 말이 들어 있으면 재생할 때마다 같은 말만 나옵니다. 녹화 안에는 상황을 보고 판단하는 대목이 없어야 합니다.",
-        workedExample: "sampler에 if logits.max().item() > t: 같은 판정이 있으면 capture 중 .item()이 오지 않을 값을 기다려 실패합니다. 그 판정을 capture 밖으로 빼고 graph pool을 공유하면 size 35개의 scratch 200 MB가 7 GB 대신 200 MB 남짓으로 줄어듭니다.",
-        boundary: "공유 pool의 graph는 capture한 순서대로만 replay해야 중간 buffer가 겹치지 않고, cascade attention처럼 요청 구성에 따라 경로가 갈리는 backend는 piecewise로 eager에 남겨야 합니다.",
-      },
-      {
-        id: "cuda-graph-shape-padding",
-        sectionId: "shape-padding",
-        intuition: "기성복 매장에서 정확한 치수가 없으면 한 치수 큰 옷을 입히는 것과 같습니다. 남는 부분은 그냥 버리고 대신 옷을 모든 치수로 만들어 둘 필요가 없습니다.",
-        workedExample: "목록 [1,2,4,8,16,32]에서 batch 5는 8로 올라가 dummy 3행, 낭비 37.5%입니다. vLLM 기본 목록(8 단위)에서는 9→16의 43.75%가 최악이고 65→72는 9.7%입니다.",
-        boundary: "행 기준 비율이며 decode가 memory-bound인 구간에서는 padded 행이 weight read를 나눠 써 시간 손실이 훨씬 작습니다. 목록 상한을 넘는 batch는 graph 없이 실행되고 목록이 촘촘할수록 기동 시간과 pool 메모리가 늘어납니다.",
-      },
-],
-    conceptStages: [
-      { label: "00 Capture/Replay", relation: "Node·edge로 이루어진 graph를 stream capture로 기록하고 그대로 재생하는 기본 실행 모델을 정의합니다.", concepts: ["cuda-graph-capture-replay", "cuda-graph-node", "cuda-graph-stream-capture"] },
-      { label: "01 Instantiate", relation: "Template을 executable graph로 굳히는 비용과 replay 손익분기, topology가 같을 때의 update를 계산합니다.", concepts: ["cuda-graph-instantiation"] },
-      { label: "02 Constraint", relation: "Replay가 지켜야 하는 static-address 제약과 동기화·분기 금지·graph pool 조건을 도입합니다.", concepts: ["cuda-graph-static-address-constraint", "cuda-graph-compatible-execution"] },
-      { label: "03 Serve", relation: "이 제약 아래에서 serving engine이 batch를 capture size로 padding하고 graph를 dispatch하는 방식을 구체화합니다.", concepts: ["cuda-graph-shape-padding", "cuda-graph-batch-shape-dispatch"] },
+        "id": "cuda-event-dependency",
+        "role": "다른 stream의 앞 결과를 기다리는 관계를 표현합니다. 캡처에 합류한 stream은 종료 전에 원래 stream으로 다시 연결합니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Eager 실행과 비교해 CUDA graph capture/replay가 줄이는 비용이 정확히 무엇이고, 무엇은 그대로 남는지 설명하세요.", answerChecklist: ["launch overhead 감소", "kernel exec 시간은 그대로", "N개 launch가 graph launch 하나로 상각", "batch가 크면 효과 작음"], requiredConcepts: ["cuda-graph-capture-replay"], sectionId: "overview" },
-      { level: "basic", question: "CUDA graph의 node와 edge가 각각 무엇이고, edge가 없는 두 node의 실행 순서는 어떻게 되는지 설명하세요.", answerChecklist: ["node는 kernel·memcpy·memset·event 등 작업 하나", "edge는 의존 관계", "edge 없으면 순서 보장 없음", "stream capture에서는 stream 순서가 edge"], requiredConcepts: ["cuda-graph-node"], sectionId: "graph-anatomy" },
-      { level: "basic", question: "Stream capture가 cudaStreamBeginCapture와 EndCapture 사이에서 하는 일과, 다른 stream이 합류할 때 지켜야 하는 규칙을 설명하세요.", answerChecklist: ["launch가 실행되지 않고 node로 기록", "stream 순서가 edge", "event wait로 합류", "EndCapture 전에 원래 stream으로 join"], requiredConcepts: ["cuda-graph-stream-capture"], sectionId: "stream-capture" },
-      { level: "basic", question: "Static-address 제약이 무엇인지, 그리고 replay 이후 새 입력을 반영하려면 어떻게 해야 하는지 설명하세요.", answerChecklist: ["capture 시점 GPU 주소 고정", "새 tensor 참조로는 반영 안 됨", "in-place copy 필요", "같은 buffer 재사용"], requiredConcepts: ["cuda-graph-static-address-constraint"], sectionId: "mechanics" },
-      { level: "basic", question: "Capture 구간 안에서 .item() 호출과 값에 따른 if 분기가 왜 허용되지 않는지 각각의 실패 방식으로 설명하세요.", answerChecklist: ["capture 중 GPU는 실행하지 않음", ".item()은 오지 않을 값을 기다림", "분기는 한 경로만 기록", "replay는 기록된 경로만 재생"], requiredConcepts: ["cuda-graph-compatible-execution"], sectionId: "graph-compatibility" },
-      { level: "basic", question: "Capture size 목록이 [1,2,4,8,16,32]일 때 batch 5와 batch 17이 각각 어느 size로 padding되고 행 기준 낭비 비율이 얼마인지 계산하세요.", answerChecklist: ["5→8", "3/8=37.5%", "17→32", "15/32≈46.9%", "b 이상인 가장 작은 size"], requiredConcepts: ["cuda-graph-shape-padding"], sectionId: "shape-padding" },
-      { level: "advanced", question: "V100 blog 예시(instantiate 400 µs, kernel 20개, stream launch 3.8 µs, graph 3.4 µs)에서 손익분기 replay 횟수를 계산하고, decode step에 kernel 300개·τ_L 5 µs인 경우 결론이 어떻게 달라지는지 설명하세요.", answerChecklist: ["kernel당 0.4 µs 절감", "launch당 8 µs 절감", "400/8=50회", "300×5 µs=1.5 ms 절감이면 몇 step 안에 회수", "hardware별 재측정"], requiredConcepts: ["cuda-graph-instantiation", "cuda-graph-capture-replay"], sectionId: "graph-anatomy" },
-      { level: "advanced", question: "cudaGraphExecUpdate로 갱신할 수 있는 변경과 새 capture가 필요한 변경을 구분하고, serving에서 batch size 변화가 어느 쪽에 해당하는지 근거를 대세요.", answerChecklist: ["topology 동일 조건", "node parameter만 변경 가능", "kernel context·memcpy device 위치 불가", "batch 변화는 kernel 수·shape 변화", "shape별 capture로 감"], requiredConcepts: ["cuda-graph-instantiation", "cuda-graph-batch-shape-dispatch"], sectionId: "graph-update" },
-      { level: "advanced", question: "여러 capture size의 graph가 graph pool 하나를 공유할 때 절약되는 메모리를 수치 예로 계산하고, 공유가 안전하기 위한 replay 순서 조건과 그 이유를 설명하세요.", answerChecklist: ["size 35개×200 MB=7 GB", "공유 시 최대 size 하나 분", "capture 순서대로 replay", "중간 buffer 주소 겹침 방지", "private pool이 virtual address 보존"], requiredConcepts: ["cuda-graph-compatible-execution", "cuda-graph-static-address-constraint"], sectionId: "graph-compatibility" },
-      { level: "advanced", question: "vLLM 기본 capture size 목록에서 최악 낭비 비율이 나오는 batch를 찾고, 행 기준 낭비가 step 시간 증가로 그대로 이어지지 않는 이유와 이어지는 조건을 설명하세요.", answerChecklist: ["9→16의 43.75%", "size 커질수록 비율 감소", "memory-bound에서 padded 행은 weight read 공유", "KV read 길이 0", "compute-bound로 넘어가면 시간 손실 그대로", "목록 촘촘할수록 기동 시간 증가"], requiredConcepts: ["cuda-graph-shape-padding", "decode-memory-bound-regime"], sectionId: "shape-padding" },
+    "introducedHere": [
+      {
+        "id": "cuda-graph-capture-replay",
+        "role": "같은 작업과 의존성을 기록하고 준비한 실행 객체를 반복 제출해 CPU의 매회 제출 작업을 줄이는 방법입니다."
+      },
+      {
+        "id": "cuda-graph-static-address-constraint",
+        "role": "일반 정적 replay는 기록된 메모리 인수를 사용하므로 새 데이터를 같은 입력 공간에 준비하고 그 공간의 수명을 유지해야 합니다."
+      },
+      {
+        "id": "cuda-graph-batch-shape-dispatch",
+        "role": "준비된 실행 모드와 크기·요청 구성의 키를 대조해 사용할 graph를 선택하고 그 키의 실행 기록을 재사용하는 과정입니다."
+      },
+      {
+        "id": "cuda-graph-node",
+        "role": "CUDA graph의 node는 kernel·메모리 복사·host 함수 등 작업을 나타내고 edge는 작업 사이의 실행 의존성을 표현합니다."
+      },
+      {
+        "id": "cuda-graph-stream-capture",
+        "role": "stream에 제출한 GPU 작업과 의존성을 graph 정의로 기록하는 API 경로이며 그 구간의 일반 Python 실행까지 replay하는 것은 아닙니다."
+      },
+      {
+        "id": "cuda-graph-instantiation",
+        "role": "graph 정의를 반복 실행할 객체로 준비하는 단계입니다. 일반 실행보다 추가로 드는 준비 비용은 동일한 완료 경계의 반복 절감으로 회수합니다."
+      },
+      {
+        "id": "cuda-graph-compatible-execution",
+        "role": "일반 정적 캡처·재생은 지원되는 작업, 주소와 크기, 입력·출력 수명을 요구합니다. pool 공유에는 비동시 실행과 데이터 의존성을 지키는 추가 조건이 있습니다."
+      },
+      {
+        "id": "cuda-graph-shape-padding",
+        "role": "실제 토큰 수 이상인 준비된 크기 중 가장 작은 것을 선택하고 추가 자리를 처리해 그 크기의 graph를 쓰는 방법입니다."
+      },
+      {
+        "id": "cuda-graph-parameter-indirection",
+        "role": "큰 입력을 고정 자리로 복사하는 대신 kernel이 주소표를 통해 입력을 읽게 바꾸고 작은 주소표를 갱신하는 설계입니다."
+      },
+      {
+        "id": "cuda-graph-context-materialization",
+        "role": "프로세스 재시작 때 graph 연결뿐 아니라 필요한 가상 주소·할당 상태·kernel 코드를 복원하고 호환되는 실행 객체를 준비하는 설계입니다."
+      }
     ],
-    papers: [
+    "conceptExplanations": [
       {
-        title: "CUDA C++ Programming Guide — CUDA Graphs",
-        href: "https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html",
-        problem: "Stream에 kernel을 하나씩 제출하면 launch마다 CPU 쪽 setup 비용이 반복되고 driver가 의존 관계를 미리 알 수 없어 최적화할 여지가 없는 문제",
-        contribution: "작업을 node, 의존을 edge로 둔 graph를 정의·instantiate·실행 세 단계로 나누고, stream capture로 기존 코드에서 graph를 얻으며, topology가 같을 때 cudaGraphExecUpdate로 재instantiate 없이 갱신하는 API 명세",
-        assumptions: "Graph 안의 node가 반복 실행 사이에 같은 구조를 유지하고, capture 중 합류한 stream이 EndCapture 전에 원래 stream으로 join한다는 사용 규칙",
-        evidenceScope: "API 의미론과 제약 조건의 명세이며 launch overhead를 µs 수치로 적지는 않음. CUDA 13 문서 기준",
-        notClaim: "특정 workload에서 얼마나 빨라지는지, instantiate 비용이 얼마인지는 문서가 주장하지 않으며 수치는 별도 측정이 필요함",
-        sectionId: "graph-anatomy",
+        "id": "cuda-graph-capture-replay",
+        "sectionId": "trace",
+        "intuition": "네 작업을 매번 설명하는 대신 같은 목록을 가리킵니다. 계산 자체와 앞 결과를 기다리는 관계는 남습니다.",
+        "workedExample": "가정한 3→4→8→11→22의 네 계산은 그대로이고 제출 모형의 완료가 14→10 μs로 바뀝니다.",
+        "boundary": "CPU 제출의 감소가 최종 지연의 감소를 항상 뜻하지 않습니다. 장치가 바쁘면 14→14 μs인 반례가 있습니다."
       },
       {
-        title: "Getting Started with CUDA Graphs (NVIDIA Technical Blog)",
-        href: "https://developer.nvidia.com/blog/cuda-graphs/",
-        problem: "짧은 kernel을 많이 반복하는 코드에서 kernel 실행 시간보다 launch와 동기화 비용이 커져 GPU가 노는 문제",
-        contribution: "V100에서 2.9 µs kernel 20개 반복을 stream launch·overlap·graph 세 방식으로 재 kernel당 9.6·3.8·3.4 µs를 보이고, instantiate 약 400 µs가 반복 사용으로 상각됨을 예시로 보임",
-        assumptions: "Tesla V100과 당시 CUDA 10 driver, 20개 kernel을 1000회 반복하는 단순 loop라는 저자 실험 조건",
-        evidenceScope: "저자 자기보고 단일 hardware 측정이며 첫 graph launch가 이후보다 약 33% 느리다는 관찰 포함",
-        notClaim: "다른 GPU 세대·driver·kernel 크기에서 같은 절감 폭이 나온다거나 graph가 GPU exec 시간을 줄인다는 뜻은 아님",
-        sectionId: "graph-anatomy",
+        "id": "cuda-graph-static-address-constraint",
+        "sectionId": "mechanics",
+        "intuition": "목록에 적힌 자리 A는 프로그램 변수를 B로 바꿔도 달라지지 않습니다.",
+        "workedExample": "A에 3이 있으면 B의 5로 재바인딩해도 22이고 A.copy_(B)로 값을 옮긴 뒤 재생하면 30입니다.",
+        "boundary": "명시적 CUDA node 업데이트나 주소표를 읽도록 바꾼 kernel은 다른 계약입니다. 모든 CUDA 실행에서 주소 변경이 금지된다는 뜻은 아닙니다."
       },
-],
+      {
+        "id": "cuda-graph-batch-shape-dispatch",
+        "sectionId": "implementation",
+        "intuition": "같은 토큰 수라도 입력 처리와 균일한 생성 요청은 다른 실행 조건을 요구합니다.",
+        "workedExample": "원문 CPU 관찰에서 mixed5는 PIECEWISE(8,None,false,false,0), uniform decode5는 FULL(8,8,true,false,0)을 선택합니다.",
+        "boundary": "크기 33은 상한 32를 넘어 NONE이지만 mixed5에 FULL만 허용하면 assertion입니다. 모든 미일치가 자동으로 일반 실행이 되지는 않습니다."
+      },
+      {
+        "id": "cuda-graph-node",
+        "sectionId": "graph-anatomy",
+        "intuition": "네 연산을 저장하려면 각 작업이 읽는 자리와 어느 앞 결과를 기다리는지를 함께 적어야 합니다.",
+        "workedExample": "+1→×2→+3→×2의 네 node를 세 의존 관계로 연결하면 입력 3의 답 22를 보존합니다.",
+        "boundary": "네 연산을 합친 kernel 하나라는 뜻이 아닙니다. 의존 edge가 없더라도 실제 동시 실행이 보장되지는 않습니다."
+      },
+      {
+        "id": "cuda-graph-stream-capture",
+        "sectionId": "stream-capture",
+        "intuition": "기록하는 동안 호출한 CPU 함수와 이후 장치에서 재생하는 작업을 구별합니다.",
+        "workedExample": "네 작업을 기록할 때 증가시킨 CPU 카운터는 replay 두 번으로 자동 두 번 더 증가하지 않습니다. 관찰 wrapper도 최초 callable 한 번과 replay 두 번을 구별합니다.",
+        "boundary": "초기화는 캡처 전에 마치며 다른 stream이 합류하면 종료 전에 원래 stream으로 join합니다. 캡처된 GPU 작업의 결과가 이미 계산되었다고 읽지 않습니다."
+      },
+      {
+        "id": "cuda-graph-instantiation",
+        "sectionId": "graph-anatomy",
+        "intuition": "작업 목록을 적는 일과 그 목록을 실제로 실행할 형태로 준비하는 일은 구별됩니다.",
+        "workedExample": "가정한 추가 준비 40 μs, 반복 14 대 10 μs이면 10회는 총 140 μs로 같고 11회부터 순이득입니다.",
+        "boundary": "평균 측정에 이미 들어간 준비 비용을 다시 더하면 손익분기가 틀립니다. 명시적 업데이트는 허용된 node·context·topology 제약을 별도로 확인합니다."
+      },
+      {
+        "id": "cuda-graph-compatible-execution",
+        "sectionId": "graph-compatibility",
+        "intuition": "앞 실행이 읽을 입력을 미리 덮거나 다음 실행이 지울 출력을 그대로 보관하면 같은 답의 보존이 깨집니다.",
+        "workedExample": "scratch 16·24·32 KiB를 완전히 재사용하는 가정은 72→32 KiB입니다. 앞 답 22를 보존하려면 다른 재생 전에 별도 복사본이 필요할 수 있습니다.",
+        "boundary": "모든 tensor가 graph private pool에 있어야 하는 것은 아닙니다. torch.cond와 CUDA conditional node는 지원 조건을 가진 별도 기능이며 모든 분기를 금지하는 규칙으로 일반화하지 않습니다."
+      },
+      {
+        "id": "cuda-graph-shape-padding",
+        "sectionId": "shape-padding",
+        "intuition": "서로 다른 입력 수마다 새 기록을 만들지 않도록 준비한 크기에 맞추되 실제 값과 추가 자리를 구별합니다.",
+        "workedExample": "목록 [1,2,4,8,16,24,32]에서 5→8은 추가 3/할당 8=37.5%, 실제 5 대비 증가량은 60%입니다. 33에는 선택할 크기가 없습니다.",
+        "boundary": "자리 비율은 시간 손실의 상한이나 보장이 아닙니다. 실제 재생 조건과 추가 자리의 무해한 처리를 별도로 검증합니다."
+      },
+      {
+        "id": "cuda-graph-parameter-indirection",
+        "sectionId": "research",
+        "intuition": "데이터를 A로 옮기는 비용이 크면 데이터가 있는 B를 알려 주는 표를 둘 수 있습니다.",
+        "workedExample": "같은 네 연산에서 주소표가 A의 3을 가리키면 22, B의 5를 가리키면 30이라는 가정으로 간접 참조의 역할을 비교합니다.",
+        "boundary": "PyGraph의 해당 kernel 변환과 주소표 갱신이 함께 필요합니다. 작은 입력에서는 표 전송 비용이 더 클 수 있으며 일반 replay가 자동으로 지원하는 기능이 아닙니다."
+      },
+      {
+        "id": "cuda-graph-context-materialization",
+        "sectionId": "research",
+        "intuition": "작업 목록만 남겨도 다음 프로세스에 그 작업이 읽을 자리와 코드가 없으면 실행할 수 없습니다.",
+        "workedExample": "새 실행에서 A의 공간과 네 연산을 복원하고 A에 5를 준비해야 답 30을 기대할 수 있습니다. Foundry는 주소와 코드 복원을 함께 다룹니다.",
+        "boundary": "Foundry의 650→3.9초는 정한 H200·EP8·BF16 설정에서 환경 초기화와 가중치 적재를 제외한 값입니다. 일반 서버 전체 기동 시간이나 구현 재현 결과로 확대하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 같은 네 계산을 다시 제출",
+        "relation": "입력 3의 네 연산을 node와 의존성으로 기록하고 실행 객체를 준비해 같은 답 22를 반복해서 얻습니다.",
+        "concepts": [
+          "cuda-graph-node",
+          "cuda-graph-stream-capture",
+          "cuda-graph-instantiation",
+          "cuda-graph-capture-replay"
+        ]
+      },
+      {
+        "label": "02 같은 자리와 다른 크기",
+        "relation": "A의 3을 5로 바꾸는 일과 실제 토큰 5를 준비된 크기 8에 맞추는 일을 구별하고 실제 선택기의 키를 대조합니다.",
+        "concepts": [
+          "cuda-graph-static-address-constraint",
+          "cuda-graph-shape-padding",
+          "cuda-graph-batch-shape-dispatch"
+        ]
+      },
+      {
+        "label": "03 수명과 지원 조건",
+        "relation": "앞 결과 22를 보관할 수 있는지, 공유 공간과 동기화·조건부 실행이 현재 API에서 지원되는지를 확인합니다.",
+        "concepts": [
+          "cuda-graph-compatible-execution"
+        ]
+      },
+      {
+        "label": "04 복사와 재시작의 비용",
+        "relation": "A로 데이터를 옮기는 비용과 다음 프로세스에서 A를 다시 확보하는 비용을 나누어 두 연구 설계의 조건을 읽습니다.",
+        "concepts": [
+          "cuda-graph-parameter-indirection",
+          "cuda-graph-context-materialization"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "가정한 입력 3을 +1, ×2, +3, ×2로 추적하고 재생 뒤 결과와 남아 있는 계산 횟수를 구하세요.",
+        "answerChecklist": [
+          "3→4→8→11→22로 바뀝니다.",
+          "재생 제출은 한 번이어도 네 계산과 그 의존 순서는 유지됩니다."
+        ],
+        "sectionId": "trace",
+        "requiredConcepts": [
+          "cuda-graph-capture-replay"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "처음 빈 단일 실행열에서 N=4, 제출 L=3 μs, 계산 E=2 μs일 때 비동기 완료와 매 작업 동기화 완료를 비교하세요.",
+        "answerChecklist": [
+          "준비 완료는 3·6·9·12 μs입니다.",
+          "계산 완료는 5·8·11·14 μs이며 겹침을 단순 합산하지 않습니다.",
+          "매 작업 동기화는 5·10·15·20 μs입니다."
+        ],
+        "sectionId": "timing",
+        "requiredConcepts": [
+          "cuda-graph-capture-replay"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "A의 3을 읽는 정적 재생에서 변수를 새 주소 B의 5로 바꿀 때와 A에 5를 복사할 때 결과를 비교하세요.",
+        "answerChecklist": [
+          "재바인딩만 하면 기록된 A의 3을 읽어 22입니다.",
+          "A.copy_(B)로 같은 자리에 5를 준비하면 30입니다.",
+          "같은 입력 크기와 A·출력의 수명을 유지하고 앞 실행의 읽기와 충돌하지 않아야 합니다."
+        ],
+        "sectionId": "mechanics",
+        "requiredConcepts": [
+          "cuda-graph-static-address-constraint"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "네 작업의 정의·실행 준비·재생을 구별하고 캡처 본문에서 올린 CPU 카운터가 재생 때 반복되는지 설명하세요.",
+        "answerChecklist": [
+          "정의는 네 node와 결과 의존성이고 실행 준비는 executable graph를 만드는 단계입니다.",
+          "replay는 저장된 GPU 작업을 제출하며 원래 Python 본문 전체를 재호출하지 않습니다.",
+          "CPU 카운터는 replay 횟수만큼 자동으로 증가하지 않습니다."
+        ],
+        "sectionId": "stream-capture",
+        "requiredConcepts": [
+          "cuda-graph-node",
+          "cuda-graph-instantiation",
+          "cuda-graph-stream-capture"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "캡처 목록 [1,2,4,8,16,24,32]에서 5토큰과 33토큰의 선택을 구하고 37.5%의 분모를 설명하세요.",
+        "answerChecklist": [
+          "5는 8로 맞추며 추가 자리는 3개입니다.",
+          "3/8=37.5%의 분모는 할당 자리이고 실제 5 대비 추가량은 60%입니다.",
+          "33은 최대 32보다 커 선택할 graph가 없고 관찰 선택기는 NONE을 반환합니다.",
+          "패딩의 자리 비율만으로 실행 시간이나 무해한 추가 자리 처리가 보장되지는 않습니다."
+        ],
+        "sectionId": "shape-padding",
+        "requiredConcepts": [
+          "cuda-graph-shape-padding",
+          "cuda-graph-batch-shape-dispatch"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "추가 준비 40 μs, 일반 반복 14 μs, 재생 반복 10 μs의 가정에서 언제 처음 순이득인지 구하세요.",
+        "answerChecklist": [
+          "40+10R<14R이므로 정수 R은 10보다 커야 합니다.",
+          "10회는 총 140 μs로 동률이고 11회는 154 대 150 μs입니다.",
+          "실제 판단에서는 입력 복사·패딩·출력 보존을 같은 측정 경계에 포함합니다."
+        ],
+        "sectionId": "tradeoffs",
+        "requiredConcepts": [
+          "cuda-graph-instantiation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "N=4, L=2 μs, E=3 μs, graph 제출 2 μs의 가정에서 CPU 제출은 8→2 μs인데 완료는 왜 14→14 μs인가요?",
+        "answerChecklist": [
+          "양쪽 첫 계산은 2 μs에 시작합니다.",
+          "연속한 네 계산은 12 μs이고 마지막 완료는 14 μs입니다.",
+          "GPU가 기다리지 않는 이 조건에서 CPU 작업 감소는 최종 완료 감소를 보장하지 않습니다."
+        ],
+        "sectionId": "timing",
+        "requiredConcepts": [
+          "cuda-graph-capture-replay"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "FULL_AND_PIECEWISE·요청당 새 토큰 1·최대 요청 32·추가 어댑터 없음의 원문 관찰에서 mixed5와 uniform decode5, FULL 제외와 33토큰을 비교하세요.",
+        "answerChecklist": [
+          "mixed5는 PIECEWISE(8,None,false,false,0), uniform decode5는 FULL(8,8,true,false,0)입니다.",
+          "FULL을 제외하면 요청 수와 균일 조건을 완화한 PIECEWISE 키를 선택합니다.",
+          "33은 상한 검사에서 NONE이며 mixed5에 FULL만 허용하면 키가 없어 assertion입니다.",
+          "원문 Python 분기를 CPU에서 관찰했으며 GPU 캡처 성공이나 kernel 지원을 실행 검증한 것은 아닙니다."
+        ],
+        "sectionId": "implementation",
+        "requiredConcepts": [
+          "cuda-graph-batch-shape-dispatch"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "일반 정적 재생·명시적 CUDA 갱신·PyGraph 주소표가 입력 A의 3을 B의 5로 바꾸는 문제를 어떻게 다르게 처리하는지 설명하세요.",
+        "answerChecklist": [
+          "일반 replay의 주소·크기·제출 구조 고정과 명시적 node 인수 업데이트는 다른 경로입니다.",
+          "CUDA conditional 하위 graph는 미리 정의하며 PyTorch 2.14의 torch.cond 지원도 backend별로 확인합니다.",
+          "일반 Python if의 재실행과 미리 정의한 조건부 하위 graph를 구별합니다.",
+          "주소표를 읽도록 바꾼 kernel에서는 표가 A를 가리키면 22, B를 가리키면 30인 사례입니다.",
+          "표를 갱신하는 구현과 전송 비용이 필요하며 작은 입력에서도 항상 이득인 것은 아닙니다."
+        ],
+        "sectionId": "research",
+        "requiredConcepts": [
+          "cuda-graph-compatible-execution",
+          "cuda-graph-static-address-constraint",
+          "cuda-graph-parameter-indirection"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "scratch 16·24·32 KiB의 재사용과 새 프로세스의 실행 문맥 복원을 비교하세요. 각각 공간·출력 수명·측정 범위에서 무엇을 보장해야 하나요?",
+        "answerChecklist": [
+          "비동시 실행과 필요한 데이터 수명·순서를 지키며 임시 공간을 완전히 재사용한다는 가정입니다.",
+          "서로의 출력에 의존하지 않는 비동시 graph의 별도 공유 조건도 구별합니다.",
+          "앞 출력은 다른 재생으로 덮일 수 있어 필요하면 덮기 전에 clone 등 별도 복사본을 만듭니다.",
+          "실제 allocator 예약량·살아 있는 출력은 단순 max 계산과 다릅니다.",
+          "새 프로세스에서는 A의 주소·입력 5·네 연산 코드를 복원해야 답 30을 기대할 수 있습니다.",
+          "Foundry의 650→3.9초는 해당 장치·모델에서 환경 초기화와 가중치 적재를 제외한 결과입니다."
+        ],
+        "sectionId": "research",
+        "requiredConcepts": [
+          "cuda-graph-compatible-execution",
+          "cuda-graph-context-materialization"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "CUDA Programming Guide · CUDA Graphs",
+        "href": "https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html",
+        "problem": "반복할 작업과 실행 의존성을 제출마다 다시 준비하는 부담을 줄이면서 실행 계약을 보존하는 문제입니다.",
+        "contribution": "graph 정의·실행 준비·실행과 stream capture, 명시적 node 업데이트·conditional node의 사용 규칙을 설명합니다.",
+        "assumptions": "읽은 공식 문서의 API·node 종류·context 제약을 따르며 일반 replay와 명시적 갱신을 구별합니다.",
+        "evidenceScope": "공식 API 의미와 제약의 근거입니다. 가정한 네 작업의 14·10 μs는 이 문서의 측정값이 아닙니다.",
+        "notClaim": "모든 graph나 모든 장치에서 동일한 지연이나 무조건 일정한 제출 비용을 보장하는 자료가 아닙니다.",
+        "sectionId": "graph-anatomy"
+      },
+      {
+        "title": "PyTorch 2.14 · CUDA semantics — CUDA Graphs",
+        "href": "https://docs.pytorch.org/docs/2.14/notes/cuda.html#cuda-graphs",
+        "problem": "새 입력·출력 수명을 관리하면서 Python 코드의 일부 GPU 작업을 안전하게 반복 재생하는 문제입니다.",
+        "contribution": "고정 입력 공간·캡처 중 CPU 코드·메모리 pool 공유와 출력 덮어쓰기, torch.cond의 제한된 지원을 설명합니다.",
+        "assumptions": "문서 버전 2.14와 원문 v2.14.0을 고정하고 사용 backend의 지원 조건과 일반 정적 replay를 구별합니다.",
+        "evidenceScope": "PyTorch의 문서화된 동작과 보존한 원문에 대한 근거입니다. CPU 관찰은 GPU 실행 실험이 아닙니다.",
+        "notClaim": "모든 tensor가 전용 pool에 있어야 한다거나 모든 GPU 내부 분기가 금지된다는 주장을 뒷받침하지 않습니다.",
+        "sectionId": "graph-compatibility"
+      },
+      {
+        "title": "Getting Started with CUDA Graphs · NVIDIA 2019",
+        "href": "https://developer.nvidia.com/blog/cuda-graphs/",
+        "problem": "짧은 kernel의 반복에서 작업마다 기다릴 때와 반복 끝에서 기다릴 때 생기는 비용 차이를 측정합니다.",
+        "contribution": "V100의 20 kernel·1,000 반복에서 동기화 위치와 graph 사용의 벽시계 비용을 비교하고 초기 준비 비용을 밝힙니다.",
+        "assumptions": "V100·CUDA 10.1·500,000 원소·block 512의 실험이며 3.4 μs 평균에는 초기 약 400 μs가 나누어 포함됩니다.",
+        "evidenceScope": "2.9 μs는 장치 kernel 시간이고 9.6·3.8·3.4 μs는 원문 조건의 총시간을 kernel 수로 나눈 값입니다.",
+        "notClaim": "3.4−2.9를 순수 CPU 호출 시간으로 단정하거나 400을 평균에 다시 더해 정확한 손익분기를 주장하지 않습니다.",
+        "sectionId": "measurements"
+      },
+      {
+        "title": "Constant Time Launch for Straight-Line CUDA Graphs · NVIDIA 2024",
+        "href": "https://developer.nvidia.com/blog/constant-time-launch-for-straight-line-cuda-graphs-and-other-performance-enhancements/",
+        "problem": "graph 길이가 길어질 때 반복 CPU 호출 비용과 첫 업로드 비용을 구별해 측정하는 문제입니다.",
+        "contribution": "이미 업로드한 직선형 kernel graph에서 10개 이상 node의 반복 호출이 약 2.5 μs+node당 1 ns인 결과를 제시합니다.",
+        "assumptions": "RTX 3060·Xeon Silver 4208·CUDA 12.6의 실험이며 graph 구조와 장치 세대·업로드 상태를 지정합니다.",
+        "evidenceScope": "CPU 호출 진입부터 반환까지의 구간을 최종 장치 완료 시간과 구별한 저자 측정의 근거입니다.",
+        "notClaim": "첫 제출이나 모든 GPU 세대·모든 node 종류에서도 상수 시간이라는 일반 법칙을 주장하지 않습니다.",
+        "sectionId": "measurements"
+      },
+      {
+        "title": "PyGraph: Robust Compiler Support for CUDA Graphs in PyTorch · 2503.19779v1",
+        "href": "https://arxiv.org/html/2503.19779v1",
+        "problem": "고정 입력 주소에 큰 데이터를 복사하는 비용과 graph 관리 비용이 반복 제출의 이득을 줄이는 문제입니다.",
+        "contribution": "주소표를 읽는 kernel 변환과 선택적 graph 사용으로 데이터 복사·호출·관리 비용을 함께 고려하는 방법을 제안합니다.",
+        "assumptions": "PyTorch 2.4·CUDA 12.1·RTX A6000 조건에서 183개 후보 가운데 선택한 20개 과제를 평가한 범위입니다.",
+        "evidenceScope": "원문 §5.3–6의 설계와 실험 범위를 읽었습니다. 주소표 A의 3·B의 5는 방법을 설명하는 별도 가정입니다.",
+        "notClaim": "모든 PyTorch 호출의 기본 동작이나 모든 과제의 성능 향상을 보장하지 않으며 해당 컴파일러를 재실행하지 않았습니다.",
+        "sectionId": "research"
+      },
+      {
+        "title": "Foundry: Template-Based CUDA Graph Context Materialization for Fast LLM Serving Cold Start · 2604.06664v1",
+        "href": "https://arxiv.org/html/2604.06664v1",
+        "problem": "프로세스가 다시 시작될 때 같은 graph를 재캡처하는 시간과 메모리 주소·kernel 코드의 복원 문제를 다룹니다.",
+        "contribution": "가상 주소·캡처 구간 할당 상태·실행 바이너리를 복원하고 같은 topology의 인수를 갱신해 실행 문맥을 준비합니다.",
+        "assumptions": "주 실험은 H200·CUDA 13.1·vLLM 0.11.2·PyTorch 2.9·512개 크기와 고정 KV 크기를 사용합니다.",
+        "evidenceScope": "Qwen3-235B-A22B EP8 BF16의 650→3.9초는 환경 초기화와 가중치 적재를 제외한 원문 §6의 결과입니다.",
+        "notClaim": "일반 서버의 전체 시작 시간이나 vLLM 0.27.1의 기본 동작을 뜻하지 않습니다. 연구 구현·성능을 재현하지 않았습니다.",
+        "sectionId": "research"
+      }
+    ]
   },
   "ai/visual-representation-tokenizers": {
     entryNote: "Image를 줄인 결과를 모두 visual token이라고 부르지 않고, 먼저 어떤 objective와 consumer가 정보를 보존하도록 요구했는지 구분합니다.",
@@ -110280,269 +111420,246 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "firms/why-firms-exist": {
-    entryNote:
-      "1단계 아홉 편에서는 값이 조정을 맡았습니다. 여기서는 그 값을 알아내는 일이 공짜라는 전제를 빼고, 조직이 왜 생기고 왜 멈추는지를 봅니다.",
-    coreIdea:
-      "값으로 조정하려면 상대를 찾고 관련된 값을 알아내고 약속을 묶어야 하므로 조정 방식 자체에 값이 듭니다. 조직은 짝마다 맺던 약속을 가운데 하나와 맺는 것으로 바꿔 그 몫을 줄이지만, 안으로 들일수록 무엇을 어디에 둘지 틀리는 몫이 커지므로 경계는 안에서 하나 더 다루는 값이 밖에서 사 오는 값과 같아지는 자리에서 멈춥니다.",
-    assumedKnowledge: [
+    "entryNote": "같은 여섯 일을 밖에 맡기거나 안에서 처리하는 비용부터 비교합니다. 24·21·18의 계산을 계약의 범위와 원문에 연결하고 동률·설립비·비용 변화의 조건을 확인합니다.",
+    "coreIdea": "상대 탐색·협상·이행 확인과 내부 배정·감독 모두 비용이 듭니다. 같은 일을 끝내는 전체 비용을 비교해 기업의 경계를 고르며 정수 작업에서는 동률이나 정확한 등식 없는 최저도 생깁니다. 계약 수만으로 기업 존재를 증명할 수 없습니다.",
+    "assumedKnowledge": [
       {
-        id: "transaction-cost",
-        role: "상대를 찾고 재고 강제하는 데 드는 값이라는 정의를 그대로 가져와, 이번에는 그 몫이 조정 방식을 바꾸는 쪽에 쓰이는 것을 봅니다.",
+        "id": "transaction-cost",
+        "role": "교환 상대를 찾고 계약을 이행하는 비용을 같은 작업의 방식 선택에 적용합니다."
       },
       {
-        id: "price-as-sufficient-signal",
-        role: "값 하나면 조정에 충분하다는 설명을 출발점으로 두고 그 전제의 값을 셉니다.",
+        "id": "price-as-sufficient-signal",
+        "role": "가격이 정보를 전달해도 그 가격을 알아보고 거래하는 활동은 비용이 든다는 점을 연결합니다."
       },
       {
-        id: "marginal-decision-rule",
-        role: "하나 더 할 때의 값으로 멈출 자리를 찾는 셈을 경계 조건에 그대로 씁니다.",
-      },
+        "id": "marginal-decision-rule",
+        "role": "추가 변화의 부호를 비교하되 정수 선택의 동률과 설립비의 예외를 구분합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "cost-of-using-the-market",
-        role: "값으로 조정하는 일 자체에 드는 값을 정의하고 다른 비용과 가릅니다.",
+        "id": "cost-of-using-the-market",
+        "role": "상대와 가격을 알아보고 조건을 협상하며 계약 이행을 확인하는 데 자원이 듭니다."
       },
       {
-        id: "contracts-collapsed-into-one",
-        role: "조직이 약속의 수를 줄이는 방식과 그 대신 비워 두는 자리를 정의합니다.",
+        "id": "contracts-collapsed-into-one",
+        "role": "보수·업무 범위 등을 미리 정하고 허용된 범위의 세부 작업을 나중에 배정하면 반복 협상의 일부를 줄일 수 있습니다."
       },
       {
-        id: "diminishing-returns-to-organising",
-        role: "안쪽 값이 거래 수와 함께 오르는 이유를 정의합니다.",
+        "id": "diminishing-returns-to-organising",
+        "role": "다루는 일이 늘거나 장소·작업 종류가 달라지면 내부 배정과 감독의 추가 부담이 커질 수 있습니다."
       },
       {
-        id: "firm-boundary-at-equal-margin",
-        role: "조직이 멈추는 자리를 두 값이 만나는 조건으로 적습니다.",
-      },
+        "id": "firm-boundary-at-equal-margin",
+        "role": "같은 여섯 일을 끝낼 때 안의 합계와 남은 밖의 비용을 더해 전체 비용을 최소화합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "cost-of-using-the-market",
-        sectionId: "cost-of-market",
-        intuition:
-          "값을 보고 정하면 된다고 할 때, 그 값이 얼마인지 알아내는 데 든 수고는 아무도 세지 않았습니다. 상대를 찾고 조건을 따지고 약속을 지키게 할 방법을 마련하는 일이 전부 여기 들어갑니다.",
-        workedExample:
-          "생산이 여섯 단계를 거치고 단계마다 밖에서 사 오는 데 4가 든다고 하면, 조정 방식에만 24가 듭니다. 물건을 만드는 값과 별개로 나가는 몫입니다.",
-        boundary:
-          "생산 자체에 드는 값과 섞으면 안 됩니다. 여기서 세는 것은 같은 물건을 어떤 방식으로 조정하느냐에만 걸리는 값이고, 이 몫이 0이면 조직을 세울 이유도 사라집니다.",
+        "id": "cost-of-using-the-market",
+        "sectionId": "cost-of-market",
+        "intuition": "상대와 가격을 알아보고 조건을 협상하며 계약 이행을 확인하는 데 자원이 듭니다.",
+        "workedExample": "밖의 4를 탐색 1·협상 1·검사와 이행 확인 2로 둡니다. 넷째 일을 들이면 밖의 4가 빠지고 안의 4가 추가되어 합계 18이 유지됩니다.",
+        "boundary": "생산비·품질·수량이 같다는 가정 아래 조정 비용을 비교합니다. 실제로 다르면 두 경로의 전체 비용을 같은 범위로 맞춥니다."
       },
       {
-        id: "contracts-collapsed-into-one",
-        sectionId: "one-contract",
-        intuition:
-          "여섯이 서로 맞추려면 짝마다 약속이 필요해 열다섯이 되는데, 가운데를 하나 두면 여섯이면 됩니다. 줄어든 아홉이 조직을 세울 이유입니다.",
-        workedExample:
-          "고용 계약에는 내일 무엇을 할지가 적혀 있지 않습니다. 적힌 것은 지시를 받는 범위이고, 할 일은 그날 지시로 정해집니다.",
-        boundary:
-          "약속의 수가 줄어든 만큼 적히지 않은 자리가 생깁니다. 그 자리를 채우는 판단이 틀릴 수 있다는 것이 안쪽 값이 오르는 이유이므로, 이 절약은 공짜가 아닙니다.",
+        "id": "contracts-collapsed-into-one",
+        "sectionId": "one-contract",
+        "intuition": "보수·업무 범위 등을 미리 정하고 허용된 범위의 세부 작업을 나중에 배정하면 반복 협상의 일부를 줄일 수 있습니다.",
+        "workedExample": "여섯 작업을 매번 협상하는 가정과 기본 약정 뒤에 여섯 작업을 배정하는 가정을 비교합니다. 감독과 이행 확인은 남습니다.",
+        "boundary": "고용 계약은 내용이 완전히 비어 있지 않으며 지시 권한에는 약정과 법의 제한이 있습니다. 장기 외주 계약도 가능하므로 계약서 수만으로 기업 내부를 판정하지 않습니다."
       },
       {
-        id: "diminishing-returns-to-organising",
-        sectionId: "what-moves",
-        intuition:
-          "한 사람이 챙길 수 있는 일에는 한계가 있습니다. 맡은 것이 늘수록 어디에 무엇을 둘지 틀리기 쉬워지고, 그 틀림이 값입니다.",
-        workedExample:
-          "흩어진 곳의 서로 다른 일을 함께 맡으면 같은 수의 거래라도 조직하는 값이 더 가파르게 오릅니다. 떨어진 것을 가까이 모으는 발명은 그 값을 낮춥니다.",
-        boundary:
-          "체감이 없다면 경계도 없습니다. 세상이 하나의 조직이 아니라는 사실이 이 체감이 실재한다는 증거이지, 체감의 크기를 재어 본 것은 아닙니다.",
+        "id": "diminishing-returns-to-organising",
+        "sectionId": "what-moves",
+        "intuition": "다루는 일이 늘거나 장소·작업 종류가 달라지면 내부 배정과 감독의 추가 부담이 커질 수 있습니다.",
+        "workedExample": "안쪽 비용 1·2·3·4·5·6을 고정하고 밖의 비용을 5로 바꾸면 최저가 4·5개, 2로 바꾸면 1·2개입니다. 동률이면 더 들이는 약속을 명시합니다.",
+        "boundary": "비용 상승은 상황에 대한 가정이지 모든 기업의 법칙이 아닙니다. 안이 항상 5이고 밖이 4이면 내부 비용이 증가하지 않아도 전부 밖에 둡니다. 기술은 양쪽 비용을 바꿀 수 있습니다."
       },
       {
-        id: "firm-boundary-at-equal-margin",
-        sectionId: "boundary",
-        intuition:
-          "안으로 들일수록 값이 오르고 밖의 값은 그대로이면, 두 선이 만나는 곳이 있습니다. 조직은 거기서 멈춥니다.",
-        workedExample:
-          "안쪽 값이 1·2·3·4·5·6이고 밖이 4이면 네 단계까지 안으로 들입니다. 합계가 24에서 18로 줄고, 다섯째를 더 들이면 5를 쓰는데 밖에서는 4면 되므로 손해입니다.",
-        proofIdea:
-          "n단계를 안으로 들였을 때의 총값을 안쪽 값의 합과 남은 단계의 바깥쪽 값의 합으로 적으면, 한 단계를 더 들일 때 총값의 변화는 그 단계의 안쪽 값에서 바깥쪽 값을 뺀 것입니다. 이 값이 음수인 동안은 들이는 편이 싸고 양수가 되면 들이지 않는 편이 싸므로, 더 이상 음수가 아닌 첫 단계 앞에서 멈추면 총값이 가장 작은 자리에 닿습니다. 멈춘 자리에서는 안쪽 값과 바깥쪽 값의 차이가 0에 가장 가까우므로 두 값이 같아지는 자리라는 말과 같은 것이 됩니다.",
-        counterexample:
-          "안쪽 값이 거래 수와 무관하게 늘 밖보다 싸면 차이가 계속 음수여서 멈추는 단계가 생기지 않고, 조직은 모든 거래를 삼킵니다. 경계가 실제로 존재한다는 것은 이 경우가 아니라는 뜻입니다.",
-        boundary:
-          "비교 대상이 시장만은 아닙니다. 같은 일을 더 싸게 다루는 다른 조직이 있으면 그쪽이 기준이 되고, 식의 오른쪽 항이 바뀝니다.",
-      },
+        "id": "firm-boundary-at-equal-margin",
+        "sectionId": "boundary",
+        "intuition": "같은 여섯 일을 끝낼 때 안의 합계와 남은 밖의 비용을 더해 전체 비용을 최소화합니다.",
+        "workedExample": "안이 1·2·3·4·5·6이고 밖이 4이면 세 개와 네 개가 모두 18로 최저입니다. 밖이 3.5이면 세 개에서 16.5가 유일한 최저이며 정확한 비용 등식은 없습니다.",
+        "boundary": "순서대로 들이고 다른 작업에 영향이 없으며 생산비·품질·수량이 같고 설립·전환 비용이 0인 모형입니다. 추가 비용이 감소하지 않는 조건에서 부호 비교가 전체 최저로 이어집니다.",
+        "proofIdea": "C(n)=안쪽 n개 비용의 합+(6−n)b에서 C(n+1)−C(n)=aₙ₊₁−b입니다. a가 감소하지 않으면 변화가 음수인 동안 비용이 줄고 0인 구간에서는 동률이며 양수 이후에는 늘어납니다. 경계의 동률 개수를 모두 포함해 최저를 고릅니다. 음수나 양수만 있는 경우에는 6개 또는 0개의 끝점도 허용합니다.",
+        "counterexample": "하나라도 들일 때 설립비 5를 내면 밖이 4인 합계는 24·26·24·23·23·24·26입니다. 첫 변화가 +2라도 세 개나 네 개를 함께 들이면 최저 23입니다. 설립비가 없는 경우의 단순 부호 규칙을 그대로 쓸 수 없습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "00 전제를 빼기",
-        relation: "값으로 조정하는 일 자체의 값을 셉니다.",
-        concepts: ["cost-of-using-the-market"],
+        "label": "00 같은 작업의 비용",
+        "relation": "밖의 4를 탐색 1·협상 1·검사와 이행 확인 2로 둡니다. 넷째 일을 들이면 밖의 4가 빠지고 안의 4가 추가되어 합계 18이 유지됩니다.",
+        "concepts": [
+          "cost-of-using-the-market"
+        ]
       },
       {
-        label: "01 조직이 줄이는 것",
-        relation: "약속의 수가 줄고 내용이 비워집니다.",
-        concepts: ["contracts-collapsed-into-one"],
+        "label": "01 계약과 지시의 범위",
+        "relation": "여섯 작업을 매번 협상하는 가정과 기본 약정 뒤에 여섯 작업을 배정하는 가정을 비교합니다. 감독과 이행 확인은 남습니다.",
+        "concepts": [
+          "contracts-collapsed-into-one"
+        ]
       },
       {
-        label: "02 멈추는 자리",
-        relation: "안쪽 값이 오르므로 두 값이 만나는 자리가 생깁니다.",
-        concepts: [
+        "label": "02 최저와 조건 변화",
+        "relation": "동률·등식 없는 최저·고정 설립비를 구분한 뒤 양쪽 비용의 변화를 비교합니다.",
+        "concepts": [
           "diminishing-returns-to-organising",
-          "firm-boundary-at-equal-margin",
-        ],
-      },
+          "firm-boundary-at-equal-margin"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "1단계 아홉 편에서 조정을 맡았던 것은 무엇이고, 이 글이 그 설명에서 빼는 전제는 무엇인지 쓰세요.",
-        answerChecklist: [
-          "조정을 맡은 것은 값",
-          "빠지는 전제는 그 값을 알아내는 일이 공짜라는 것",
-          "약속을 묶는 일도 공짜가 아님",
-          "그래서 조정 방식 자체를 고르는 문제가 생김",
+        "level": "basic",
+        "question": "같은 여섯 일을 전부 밖에 둘 때, 전부 안에 둘 때, 앞의 세 개만 들일 때의 합계를 비교하세요.",
+        "answerChecklist": [
+          "밖은 4×6=24, 안은 1+2+3+4+5+6=21입니다.",
+          "세 개만 들이면 1+2+3+4+4+4=18입니다. 생산비·품질·수량은 같고 설립·전환 비용은 0이라는 가정입니다."
         ],
-        requiredConcepts: ["cost-of-using-the-market"],
-        sectionId: "overview",
+        "sectionId": "case",
+        "requiredConcepts": [
+          "firm-boundary-at-equal-margin"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "시장에서 거래 하나를 할 때 드는 값으로 이 글이 든 것 네 가지를 쓰세요.",
-        answerChecklist: [
-          "상대를 찾는 일",
-          "관련된 값이 얼마인지 알아내는 일",
-          "물건이 약속대로인지 따지는 일",
-          "약속을 지키게 할 방법을 마련하는 일",
+        "level": "basic",
+        "question": "밖의 비용이 4일 때 네 개만이 정답이라고 하면 왜 틀리나요?",
+        "answerChecklist": [
+          "세 개와 네 개의 합계가 모두 18입니다. 넷째의 안과 밖 비용이 모두 4이므로 바꿔도 전체 변화는 0입니다.",
+          "그림은 동률이면 더 들이는 약속으로 네 개를 골랐습니다. 유일한 최저라는 뜻은 아닙니다."
         ],
-        requiredConcepts: ["cost-of-using-the-market"],
-        sectionId: "cost-of-market",
+        "sectionId": "case",
+        "requiredConcepts": [
+          "firm-boundary-at-equal-margin"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "여섯 사람이 짝마다 약속을 맺으면 몇 개이고 가운데를 하나 두면 몇 개인지, 그 차이가 무엇을 뜻하는지 쓰세요.",
-        answerChecklist: [
-          "짝마다 맺으면 열다섯 개",
-          "가운데를 두면 여섯 개",
-          "줄어든 아홉이 조직을 세울 이유",
-          "사람이 늘면 짝이 더 빠르게 늘어 차이가 커짐",
+        "level": "basic",
+        "question": "밖의 비용 4와 생산비를 어떻게 구분했나요?",
+        "answerChecklist": [
+          "탐색 1·협상 1·검사와 이행 확인 2의 합계 4는 가정한 조정 비용입니다.",
+          "생산비·품질·수량은 두 방식에서 같다고 생략했습니다. 실제 생산비 등이 다르면 두 경로의 비용 범위를 맞춰 다시 비교합니다."
         ],
-        requiredConcepts: ["contracts-collapsed-into-one"],
-        sectionId: "one-contract",
+        "sectionId": "cost-of-market",
+        "requiredConcepts": [
+          "cost-of-using-the-market"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "조직 안에서 맺는 약속에 무엇을 할지가 적히지 않는 이유와, 적히지 않은 자리를 무엇이 채우는지 쓰세요.",
-        answerChecklist: [
-          "기간이 길수록 할 일을 미리 적어 둘 수 없음",
-          "적히는 것은 지시를 받는 범위",
-          "비워 둔 자리는 나중에 지시가 채움",
-          "지시가 값을 대신하는 범위가 조직",
+        "level": "basic",
+        "question": "기본 약정 후 세부 작업을 배정하면 무엇이 줄고 무엇이 남나요?",
+        "answerChecklist": [
+          "반복 협상의 일부를 줄일 수 있지만 여섯 작업 지시와 감독·이행 확인은 남습니다.",
+          "보수·업무 범위 등을 미리 정하며 지시 권한은 약정과 법의 제한을 받습니다. 계약 내용이 전부 비어 있다는 뜻이 아닙니다."
         ],
-        requiredConcepts: ["contracts-collapsed-into-one"],
-        sectionId: "one-contract",
+        "sectionId": "one-contract",
+        "requiredConcepts": [
+          "contracts-collapsed-into-one"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "안쪽 값이 1·2·3·4·5·6이고 밖에서 사 오는 값이 4일 때 몇 단계까지 안으로 들이는지, 합계가 얼마나 줄어드는지 계산하세요.",
-        answerChecklist: [
-          "네 단계까지 안으로",
-          "다섯째는 안에서 5인데 밖은 4이므로 들이지 않음",
-          "전부 밖에 두면 24",
-          "네 단계를 들이면 18이고 6이 줄어듦",
+        "level": "basic",
+        "question": "밖의 비용이 3.5이면 정확히 같은 안쪽 비용이 없어도 선택할 수 있나요?",
+        "answerChecklist": [
+          "0~6개의 합계는 21·18.5·17·16.5·17·18.5·21로 세 개가 유일한 최저입니다.",
+          "넷째를 들이면 4−3.5=0.5만큼 전체 비용이 늘어납니다. 정확한 등식은 정수 작업 선택의 필수조건이 아닙니다."
         ],
-        requiredConcepts: ["firm-boundary-at-equal-margin"],
-        sectionId: "boundary",
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "firm-boundary-at-equal-margin"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "조직이 커지는 것을 보고 그 조직이 잘한다고 읽으면 안 되는 이유를 쓰세요.",
-        answerChecklist: [
-          "경계는 두 값의 차이로 정해짐",
-          "안쪽 값이 내려가도 밀림",
-          "바깥쪽 값이 올라가도 같은 방향으로 밀림",
-          "상대를 찾기 어렵거나 약속을 강제하기 힘든 곳에서는 안이 좋아지지 않아도 커짐",
+        "level": "basic",
+        "question": "계약서 여섯 개를 하나로 줄인다는 사실만으로 기업 내부라고 판정할 수 있나요?",
+        "answerChecklist": [
+          "외부 공급자와도 기본 계약 하나 아래 여러 주문을 넣을 수 있습니다.",
+          "실제 권한·업무 범위·이행 책임을 확인해야 합니다. 모든 사람 쌍이 계약한다는 가정의 15개와 관리자를 더 둔 6개 비교도 기업 존재의 증명이 아닙니다."
         ],
-        requiredConcepts: [
-          "firm-boundary-at-equal-margin",
-          "cost-of-using-the-market",
-        ],
-        sectionId: "what-moves",
+        "sectionId": "source",
+        "requiredConcepts": [
+          "contracts-collapsed-into-one"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "한 단계를 더 들일 때의 값 비교에서 출발해 경계가 총값이 가장 작은 자리임을 유도하세요.",
-        answerChecklist: [
-          "총값은 안쪽 값의 합과 남은 단계의 바깥쪽 값의 합",
-          "한 단계 더 들일 때의 변화는 그 단계의 안쪽 값에서 바깥쪽 값을 뺀 것",
-          "음수인 동안은 들이는 편이 쌈",
-          "더 이상 음수가 아닌 첫 단계 앞이 총값 최소",
+        "level": "advanced",
+        "question": "한 일을 더 들일 때의 비용 차이를 유도하고 전체 최저로 이어지는 조건을 쓰세요.",
+        "answerChecklist": [
+          "C(n)은 안쪽 n개 비용의 합과 (6−n)b의 합입니다. C(n+1)−C(n)=aₙ₊₁−b입니다.",
+          "순서대로 들이고 다른 작업에 영향이 없으며 생산비·품질·수량이 같고 설립·전환 비용은 0입니다.",
+          "a가 감소하지 않으면 음수 구간에서 비용이 줄고 0에서 동률이며 양수 이후 늘어납니다. 동률과 0개·6개 끝점도 포함합니다."
         ],
-        requiredConcepts: ["firm-boundary-at-equal-margin"],
-        sectionId: "boundary",
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "firm-boundary-at-equal-margin"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "조직하는 일에 수확 체감이 없다면 경계가 어떻게 되는지, 그리고 세상이 하나의 조직이 아니라는 사실에서 무엇까지 읽을 수 있는지 쓰세요.",
-        answerChecklist: [
-          "안쪽 값이 오르지 않으면 두 값이 만나지 않음",
-          "조직은 멈출 이유가 없어 계속 커짐",
-          "실제로 멈추므로 체감이 실재함",
-          "존재는 읽히지만 크기를 잰 것은 아님",
+        "level": "advanced",
+        "question": "하나라도 들일 때 설립비 5를 내면 첫 변화만 보는 선택이 왜 실패하나요?",
+        "answerChecklist": [
+          "밖이 4일 때 0~6개의 합계는 24·26·24·23·23·24·26입니다.",
+          "첫 하나는 +2로 비싸지만 세 개나 네 개를 함께 들이면 23으로 전부 밖의 24보다 쌉니다.",
+          "고정 설립비가 있으면 비용 차이가 감소하지 않는 조건이 깨질 수 있으므로 전체 선택을 다시 비교합니다."
         ],
-        requiredConcepts: [
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "firm-boundary-at-equal-margin"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "안쪽 비용은 고정하고 밖의 비용만 5 또는 2로 바꾸면 무엇이 달라지나요?",
+        "answerChecklist": [
+          "밖이 5이면 네 개와 다섯 개가 20으로 최저이고 밖이 2이면 한 개와 두 개가 11로 최저입니다.",
+          "동률이면 더 들이는 약속에서는 각각 다섯 개와 두 개를 고릅니다. 내부 능력 개선 없이도 경계가 바뀝니다.",
+          "통신 같은 기술이 양쪽 비용을 함께 바꾸면 상대적 변화를 확인해야 합니다."
+        ],
+        "sectionId": "what-moves",
+        "requiredConcepts": [
           "diminishing-returns-to-organising",
-          "firm-boundary-at-equal-margin",
-        ],
-        sectionId: "boundary",
+          "firm-boundary-at-equal-margin"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "통신과 운송이 싸지면 조직이 커진다는 말을 이 글의 경계 조건으로 검토하세요.",
-        answerChecklist: [
-          "가까이 모으는 발명은 안쪽 값을 내림",
-          "같은 발명이 상대를 찾고 조건을 맞추는 바깥쪽 값도 내림",
-          "경계는 두 값의 차이로 정해짐",
-          "어느 쪽이 더 내려갔는지에 따라 방향이 갈려 미리 말할 수 없음",
+        "level": "advanced",
+        "question": "내부 추가 비용이 증가하지 않으면 기업이 무한히 커진다는 주장을 반례로 검토하세요.",
+        "answerChecklist": [
+          "안이 항상 5이고 밖이 항상 4이면 전부 밖에 두는 0개가 최저입니다.",
+          "안이 항상 3이면 이 가정의 여섯 일은 전부 안에 두지만 세상의 모든 거래를 검증한 것은 아닙니다.",
+          "실제 생산비·권한·작업 연결·변경 비용과 자료가 필요하며 내부 이전가격의 존재나 수준도 이 식 하나로 확정할 수 없습니다."
         ],
-        requiredConcepts: [
-          "firm-boundary-at-equal-margin",
+        "sectionId": "limits",
+        "requiredConcepts": [
           "diminishing-returns-to-organising",
-        ],
-        sectionId: "what-moves",
+          "firm-boundary-at-equal-margin"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "R. H. Coase · The Nature of the Firm (1937)",
+        "href": "https://msuweb.montclair.edu/~lebelp/coasenatfirmec1937.pdf",
+        "sectionId": "source",
+        "problem": "가격만으로 조정된다고 가정할 때 기업 내부의 배정과 그 범위를 설명하기 어렵습니다.",
+        "contribution": "시장을 이용하는 비용과 내부 조직 비용을 비교하고 제한된 지시 권한의 계약 및 기업 확장의 조건을 설명합니다.",
+        "assumptions": "여섯 일의 수치는 본문의 가정입니다. 순서·생산비·고정비·단조 조건을 명시한 이산 모형과 원문의 논의를 구분합니다.",
+        "evidenceScope": "대학이 공개한 21쪽 스캔의 인쇄390~397쪽을 실제 이미지와 OCR로 확인했습니다.390쪽과395쪽의 짧은 인용을 이미지로 대조했습니다.",
+        "notClaim": "1·2·3·4·5·6/4가 실측값이거나 모든 기업이 계약 개수 때문에 존재하거나 모든 최적점에서 정확한 등식이 성립한다고 주장하지 않습니다."
       },
       {
-        level: "advanced",
-        question:
-          "큰 조직이 사업부 사이에 내부 이전가격을 두는 일을 이 글의 경계 조건으로 설명하세요.",
-        answerChecklist: [
-          "같은 식이 조직 안에서도 성립",
-          "안에서 지시로 조정하는 값이 충분히 오른 자리가 생김",
-          "거기서는 값으로 조정하는 쪽이 쌈",
-          "경계는 조직과 시장 사이에만 그어지지 않고 조직 안에도 다시 그어짐",
-        ],
-        requiredConcepts: [
-          "firm-boundary-at-equal-margin",
-          "contracts-collapsed-into-one",
-        ],
-        sectionId: "what-moves",
-      },
-    ],
-    papers: [
-      {
-        title: "R. H. Coase, “The Nature of the Firm” (1937)",
-        href: "https://www.jstor.org/stable/2626876",
-        problem:
-          "값이 생산을 조정한다는 설명과 달리 현실의 생산 대부분은 조직 안에서 지시로 조정되는데, 왜 조직이 생기는지와 왜 조직이 세상 전체로 커지지 않는지가 같은 틀에서 설명되지 않았습니다.",
-        contribution:
-          "조직이 생기는 이유를 값 기구를 쓰는 데 값이 든다는 데 두고, 그 값 중 가장 뚜렷한 것으로 관련된 값이 얼마인지 알아내는 일을 들었습니다. 짝마다 맺던 약속이 하나로 대체되고 남은 약속은 지시의 범위만 적는다고 정리한 뒤, 조직이 안에서 거래 하나를 더 다루는 값이 같은 거래를 시장에서 하는 값이나 다른 조직이 다루는 값과 같아질 때까지 커진다는 경계 조건을 적었습니다.",
-        assumptions:
-          "조정 방식에 드는 값을 생산 자체에 드는 값과 따로 셀 수 있다고 보며, 안에서 거래를 더 다룰 때의 값이 거래 수와 함께 오른다고 둡니다.",
-        evidenceScope:
-          "JSTOR 스캔본을 내려받아 OCR 본문을 직접 읽고 인용 문장을 대조했습니다. 서지는 Economica, New Series, Vol. 4, No. 16(1937년 11월), 386–405쪽이고, OCR에 원문 쪽 번호가 남아 있지 않아 문장 단위 쪽수는 특정하지 않았습니다.",
-        notClaim:
-          "조정 방식에 드는 값을 실제로 재는 방법을 준 것은 아닙니다. 경계 조건은 어디서 멈추는지의 형식을 적은 것이고, 안쪽 값과 바깥쪽 값을 숫자로 견주는 절차는 이 논문에 없습니다. 이 글에 실린 여섯 단계 숫자 예시도 논문에 있는 것이 아니라 같은 비교를 보이기 위해 만든 것입니다.",
-        sectionId: "boundary",
-      },
-    ],
+        "title": "R. H. Coase · Nobel lecture (1991)",
+        "href": "https://www.nobelprize.org/prizes/economic-sciences/1991/coase/lecture/",
+        "sectionId": "limits",
+        "problem": "방식별 비용의 개념만으로 실제 기업의 경계를 정량 판정하기 어렵습니다.",
+        "contribution": "계약 활동과 실제 기업 자료를 조사할 필요를 연결합니다.",
+        "assumptions": "공식 강연의 검색으로 반환된 공개 본문을 읽었습니다. 직접 페이지 열기는 차단되었습니다.",
+        "evidenceScope": "거래 활동의 비용 및 실제 자료가 더 필요하다는 단락을 공식 검색 본문에서 확인했습니다.",
+        "notClaim": "전체 문서를 직접 내려받았거나 본문의 수치가 강연의 실증 결과라고 주장하지 않습니다."
+      }
+    ]
   },
   "firms/scale-and-cost-structure": {
     entryNote:
@@ -122160,7 +123277,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "property/shop-closure-and-restoration": {
     "coreIdea": "점포 폐업은 영업 중단, 직원·고객·공급자·세금 채무, 임대차 종료, 시설 철거와 원상복구, 보증금 반환을 서로 다른 상대방과 순서대로 정산하는 과정입니다.",
-    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "entryNote": "보증금 3천만 원에서 미납 월세 400만 원과 복구비 600만 원을 정산하는 같은 가게를 따라갑니다. 복구비를 누가 지급하는지, 다른 채무의 기한과 지원금의 지급 조건은 무엇인지 나눠 확인합니다.",
     "assumedKnowledge": [
       {
         "id": "lease-right-and-deposit",
@@ -122186,42 +123303,42 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "closure-settlement-order",
         "sectionId": "mechanism",
         "intuition": "문을 닫아도 돈을 줄 상대방이 남습니다.",
-        "workedExample": "3천만 원 보증금에서 실제 채무와 복구액을 확인한 뒤 잔액을 받습니다.",
-        "boundary": "사업자 신고 완료가 민사상 채무 소멸을 뜻하지 않습니다."
+        "workedExample": "보증금이 돌아오기 전 임금·환불 300만 원을 지급해야 하고 통장에 100만 원이 있다면 그날 200만 원이 부족합니다.",
+        "boundary": "금액과 지급 순서는 가정입니다. 나중의 보증금 반환이나 사업자 폐업 신고가 앞선 지급 기한과 민사상 채무를 없애지는 않습니다."
       },
       {
         "id": "restoration-scope-evidence",
         "sectionId": "comparison",
         "intuition": "철거할 범위를 기억에만 맡기면 보증금 다툼이 납니다.",
-        "workedExample": "600만 원 견적의 공제 가능성을 입주사진·합의와 실제 재임대 사실관계에 대조합니다.",
-        "boundary": "판례의 사실관계와 관할권이 다르면 같은 결론이 아닙니다."
+        "workedExample": "600만 원 견적과 계약상 반환 상태·입주 사진·후속 합의를 대조하고, 누가 공사를 하며 비용을 지급할지 정합니다.",
+        "boundary": "견적이 곧 확정 채무는 아닙니다. 한국 판례의 계약과 재임대 사실관계, NSW 안내의 관할 범위가 다르면 같은 결론을 적용할 수 없습니다."
       },
       {
         "id": "deposit-closeout",
-        "sectionId": "limits",
+        "sectionId": "case",
         "intuition": "3천만 원을 냈어도 마지막에 같은 액수가 돌아오는 것은 아닙니다.",
-        "workedExample": "미납 400만 원·복구 600만 원을 공제할 수 있다면 2천만 원이 남습니다.",
-        "boundary": "공제 가능성과 실제 복구비는 협의·판결에 따라 다를 수 있습니다."
+        "workedExample": "임대인이 복구비 600만 원을 처리해 공제하는 가정에서는 3천만 − 400만 − 600만 = 2천만 원을 반환합니다. 점주가 직접 지급하면 반환액 2천600만 원에서 직접 지출 600만 원을 반영해 순유입액 2천만 원입니다.",
+        "boundary": "다른 공제가 없고 같은 복구비를 두 번 빼지 않는 가정입니다. 고객 환불·임금·세금·대출을 제외한 계산이며 지원금은 심사와 지급이 확정되기 전에 차감하지 않습니다."
       }
     ],
     "conceptStages": [
       {
         "label": "01 · 폐업의 정산 순서",
-        "relation": "3천만 원 보증금에서 실제 채무와 복구액을 확인한 뒤 잔액을 받습니다.",
+        "relation": "보증금이 돌아오기 전 임금·환불 300만 원을 지급해야 하고 통장에 100만 원이 있다면 그날 200만 원이 부족합니다.",
         "concepts": [
           "closure-settlement-order"
         ]
       },
       {
         "label": "02 · 원상복구 범위의 증거",
-        "relation": "600만 원 견적의 공제 가능성을 입주사진·합의와 실제 재임대 사실관계에 대조합니다.",
+        "relation": "600만 원 견적과 계약상 반환 상태·입주 사진·후속 합의를 대조하고, 누가 공사를 하며 비용을 지급할지 정합니다.",
         "concepts": [
           "restoration-scope-evidence"
         ]
       },
       {
         "label": "03 · 보증금 최종 정산",
-        "relation": "미납 400만 원·복구 600만 원을 공제할 수 있다면 2천만 원이 남습니다.",
+        "relation": "임대인이 복구비 600만 원을 처리해 공제하는 가정에서는 3천만 − 400만 − 600만 = 2천만 원을 반환합니다. 점주가 직접 지급하면 반환액 2천600만 원에서 직접 지출 600만 원을 반영해 순유입액 2천만 원입니다.",
         "concepts": [
           "deposit-closeout"
         ]
@@ -122230,10 +123347,10 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "보증금3천만에서400만·600만을 빼면 얼마인가요?",
+        "question": "임대인이 복구비를 처리해 공제하는 가정에서 보증금 반환액을 계산하세요.",
         "answerChecklist": [
-          "2천만 원",
-          "두 공제액이 유효하게 확정된 조건"
+          "3천만 − 미납 월세 400만 − 복구비 600만 = 2천만 원입니다.",
+          "두 공제가 유효하게 확정됐고 점주가 같은 복구비를 이미 따로 지급하지 않았다는 조건입니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -122242,10 +123359,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "600만 원 견적이 곧 공제 가능한 채무인가요?",
+        "question": "점주가 업체에 복구비 600만 원을 직접 냈다면 반환액과 순유입액은 각각 얼마인가요?",
         "answerChecklist": [
-          "계약·인도 상태·합의와 실제 사실 확인",
-          "견적과 확정 정산액 구분"
+          "약정 복구를 마쳤고 다른 공제가 없으면 미납 월세 400만 원만 뺀 2천600만 원을 반환받습니다.",
+          "직접 낸 600만 원을 반영한 순유입액은 2천만 원입니다. 같은 복구비를 보증금에서 다시 빼면 중복 계산입니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -122255,10 +123372,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "마지막 주문과 마지막 입금을 따로 관리하는 이유는 무엇인가요?",
+        "question": "마지막 주문일과 마지막 입금일을 따로 관리하는 이유는 무엇인가요?",
         "answerChecklist": [
-          "카드·배달 정산이 폐점 후 가능",
-          "환불·선불권과 거래 자료 보관"
+          "카드·배달 정산이 폐점 뒤에 들어올 수 있고 환불도 남을 수 있습니다.",
+          "계정을 닫기 전에 거래 자료를 확보합니다. 정산을 마친 뒤에도 법령상 필요한 기간에는 관련 자료를 보관합니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -122267,10 +123384,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "한국 퇴직 금품의 원칙적 지급 기한은 무엇인가요?",
+        "question": "한국 근로기준법 제36조의 지급 기한과 연장 조건을 구분하세요.",
         "answerChecklist": [
-          "사유 발생일부터14일 이내",
-          "특별한 사정과 당사자 합의에 따른 연장 예외"
+          "원칙적으로 지급 사유가 발생한 때부터 14일 이내에 금품을 청산합니다.",
+          "특별한 사정이 있으면 당사자 합의로 기일을 연장할 수 있습니다. 이후 보증금 반환 예정만으로 자동 연장되지는 않습니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -122279,10 +123396,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "한국 폐업 부가세의 일반 신고기한을 적으세요.",
+        "question": "국세청 안내에서 폐업 신고와 따로 확인할 부가세 신고기한은 무엇인가요?",
         "answerChecklist": [
-          "폐업일 속한달 다음달25일",
-          "거래와 잔존 재화 확인, 폐업신고와 별도"
+          "폐업일이 속한 달의 다음 달 25일 이내입니다.",
+          "폐업일까지의 거래와 남은 재화를 확인하며 소득세·원천세 등의 일정도 별도로 봅니다."
         ],
         "sectionId": "source",
         "requiredConcepts": [
@@ -122291,10 +123408,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "복구를 하지 않고 시설을 재사용한 판례를 모든 사건에 적용할 수 있나요?",
+        "question": "600만 원 견적만 있거나 시설을 재사용한다면 복구비 공제를 바로 확정할 수 있나요?",
         "answerChecklist": [
-          "특정 사실관계의 판단",
-          "계약·실제 사용·인도 상태 대조 필요"
+          "견적과 확정 채무를 구분하고 계약·인도 상태·복구 합의·실제 사용을 확인합니다.",
+          "2002다52657은 특정 계약과 재임대 사실관계의 판단이므로 모든 복구 의무가 사라진다는 뜻은 아닙니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -122303,12 +123420,12 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "보증금2천만 반환액이 최종 폐업순현금이 아닐 수 있는 이유는 무엇인가요?",
+        "question": "보증금이 돌아오기 전 300만 원을 지급해야 하고 통장에 100만 원이 있다면 얼마가 부족한가요?",
         "answerChecklist": [
-          "환불·임금·세금·대출·장비 정산 제외",
-          "각 책임자와 기한을 따로 계산"
+          "그날 200만 원이 부족합니다. 금액과 지급 순서는 가정입니다.",
+          "나중에 받을 2천만 원과 앞선 지급 기한을 나눠 적습니다. 이 보증금 정산액에는 다른 환불·임금·세금·대출 등이 모두 반영된 것이 아닙니다."
         ],
-        "sectionId": "case",
+        "sectionId": "mechanism",
         "requiredConcepts": [
           "closure-settlement-order",
           "deposit-closeout"
@@ -122316,10 +123433,11 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "철거 시작 전 시설과 업체에 무엇을 확인할지 제안하세요.",
+        "question": "철거 전에 시설과 업체에 확인할 사항을 정리하세요.",
         "answerChecklist": [
-          "리스 장비 소유·반납과 남길/철거할 시설 서면합의",
-          "안전 차단·반출·폐기물 적법처리 증빙"
+          "임대인과 남길 시설·제거할 시설을 서면으로 맞추고 리스 장비의 소유자·반납 조건을 확인합니다.",
+          "견적의 수량·단가, 전기·가스 차단, 배관·간판·반출·폐기물 처리와 증빙을 확인합니다.",
+          "점주 직접 지급과 임대인 정산 중 어느 경로인지 적어 같은 복구비가 이중 반영되지 않게 합니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -122329,10 +123447,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "고객정보를 폐업 즉시 모두 지우거나 모두 보관하는 방식이 각각 왜 문제인가요?",
+        "question": "고객정보를 폐업 즉시 전부 지우거나 전부 남겨 두면 각각 어떤 문제가 생기나요?",
         "answerChecklist": [
-          "불필요한 정보는 파기",
-          "다른 법령상 보존자료는 분리보관·접근제한"
+          "불필요해진 개인정보는 지체 없이 복구·재생되지 않도록 파기해야 합니다.",
+          "다른 법령에 따라 보존할 자료는 예외이므로 다른 개인정보와 분리해 저장·관리하고 접근을 제한합니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -122341,10 +123459,11 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "새 점주가 시설을 원할 때 복구를 생략하려면 어떤 약속이 필요할까요?",
+        "question": "2026년 1월 공고의 인정 면적이 33㎡인 가게에서 600만 원 견적과 지원금을 어떻게 비교하나요?",
         "answerChecklist": [
-          "임대인·기존점주·새점주 인수조건 일치",
-          "미납과 고객채무·기존 임대차 책임이 자동 소멸하지 않음"
+          "면적 기준 한도는 33 ÷ 3.3 × 20만 = 200만 원입니다. 이 계산만으로 지급이 확정되지는 않습니다.",
+          "부가세 제외·지원 대상·업체 시공·공사내역·지급 증빙·전후 사진 등을 확인합니다. 임대인의 보증금 공제 정산서만으로 모든 조건을 충족했다고 볼 수 없습니다.",
+          "영상의 최대 600만 원을 견적에서 바로 빼지 않습니다. 신청 시점 공고와 심사 결과·지급일을 확인하며 이 예는 2026년 1월 공고의 면적 계산입니다."
         ],
         "sectionId": "limits",
         "requiredConcepts": [
@@ -122352,6 +123471,118 @@ export const ARTICLE_LEARNING: Readonly<
           "restoration-scope-evidence",
           "deposit-closeout"
         ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "국세청 · 사업을 폐업하는 경우의 신고 안내",
+        "href": "https://nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2448&nttSn=1393",
+        "sectionId": "source",
+        "problem": "폐업 신고 수리를 모든 세무 의무의 종료로 읽는 문제입니다.",
+        "contribution": "같은 가게의 보증금 정산과 거래·잔존 재화·신고 달력을 따로 기록합니다.",
+        "assumptions": "2020-11-11 게시된 공식 FAQ의 일반 안내를 2026-10-04 확인했습니다.",
+        "evidenceScope": "실제 본문의 폐업 신고, 부가가치세 다음 달 25일 기한, 소득세 안내를 읽었습니다.",
+        "notClaim": "개별 사업자의 세액·예외·세목별 전체 의무를 계산하거나 2026년에 새로 작성된 FAQ라고 주장하지 않습니다."
+      },
+      {
+        "title": "대법원 2002다52657",
+        "href": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=194367",
+        "sectionId": "comparison",
+        "problem": "견적이나 판결 한 문장만으로 모든 복구비 공제를 확정하는 문제입니다.",
+        "contribution": "600만 원을 확정 채무로 적기 전에 계약·인도 상태·복구 의사·시설 재사용을 대조합니다.",
+        "assumptions": "2002-12-10 판결은 별도 복구 약정과 보증금 관련 권리 이전을 포함한 특정 사실관계입니다.",
+        "evidenceScope": "판결요지와 실제 이유에서 시설을 그대로 이용해 재임대하려는 사정 및 공제 판단을 읽었습니다.",
+        "notClaim": "모든 복구 의무가 없어지거나 모든 공제에 같은 결론이 적용된다고 주장하지 않습니다."
+      },
+      {
+        "title": "한국 근로기준법 제36조",
+        "href": "https://law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029728519",
+        "sectionId": "mechanism",
+        "problem": "보증금이 아직 돌아오지 않았다는 이유로 퇴직 정산 기한도 자동 연장된다고 읽는 문제입니다.",
+        "contribution": "임금·환불 300만 원과 통장 100만 원의 가정에서 지급일의 200만 원 부족을 별도로 계산합니다.",
+        "assumptions": "2026-10-02 시행 조문을 2026-10-04 확인했습니다.",
+        "evidenceScope": "조문 전체의 사유 발생부터 14일과 특별한 사정·당사자 합의에 따른 기일 연장을 읽었습니다.",
+        "notClaim": "모든 해고·퇴직 절차나 개별 분쟁의 결론을 이 조문만으로 판정하지 않습니다."
+      },
+      {
+        "title": "한국 개인정보 보호법 제21조",
+        "href": "https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335625",
+        "sectionId": "mechanism",
+        "problem": "폐업 뒤 고객정보를 모두 삭제하거나 무기한 남기는 문제입니다.",
+        "contribution": "거래 정산과 법정 보존 자료를 확인하고 불필요한 정보의 파기와 남길 자료의 분리 관리를 나눕니다.",
+        "assumptions": "2026-09-11 시행 조문을 2026-10-04 확인했습니다.",
+        "evidenceScope": "실제 제1~4항의 파기·다른 법령 보존 예외·복구 불가능 조치·분리 보관을 읽었습니다.",
+        "notClaim": "모든 자료의 보존 기간을 하나로 정하거나 단순 계정 삭제만으로 의무를 충족한다고 주장하지 않습니다."
+      },
+      {
+        "title": "NSW · What to do at the end of the lease",
+        "href": "https://www.smallbusiness.nsw.gov.au/help/common-questions/what-to-do-at-the-end-of-the-lease",
+        "sectionId": "comparison",
+        "problem": "반환할 상태와 공사 대신 금전 정산하는 약속을 따로 확인하지 않는 문제입니다.",
+        "contribution": "입주 때 상태·계약·사진과 반환 합의를 같은 가게의 복구 견적에 대조합니다.",
+        "assumptions": "호주 NSW 임대차 안내의 관할과 해당 계약을 전제로 읽습니다.",
+        "evidenceScope": "실제 Make good 부분에서 시작 상태·반환 약정·금전 정산 가능성을 읽었습니다.",
+        "notClaim": "NSW 안내로 한국의 공제 가능성이나 판결 결과를 정하지 않습니다."
+      },
+      {
+        "title": "중소벤처기업부 · 2025 소상공인 지원사업 영상",
+        "href": "https://www.youtube.com/watch?v=T6KNxj3hawQ&t=230s",
+        "sectionId": "limits",
+        "problem": "영상의 최대 금액을 시점과 조건 없이 현재 반환액에 더하는 문제입니다.",
+        "contribution": "2025년 1월 발표의 최대 400만 원을 같은 해 7월 발표와 비교합니다.",
+        "assumptions": "2025-01-23 공개 영상의 03:50 화면입니다.",
+        "evidenceScope": "공식 영상 파일에서 확보한 해당 프레임의 250만→400만 원을 다시 보고 게시기관 전사를 대조했습니다.",
+        "notClaim": "영상 전체 청취나 현재 신청의 지급액 확정을 주장하지 않습니다."
+      },
+      {
+        "title": "중소벤처기업부 · 1월 영상 공식 자막",
+        "href": "https://www.mss.go.kr/site/smba/brdcststnVod/brdcststnVodView.do?ctgr_code=C03&searchSeq=ST_000000001222422",
+        "sectionId": "limits",
+        "problem": "짧은 영상 화면의 제도명과 발표 문맥을 놓치는 문제입니다.",
+        "contribution": "희망리턴패키지 점포 철거비 확대 설명을 1월 화면과 대조합니다.",
+        "assumptions": "게시기관 등록일은 2025-01-24입니다.",
+        "evidenceScope": "실제 공식 HTML 자막의 관련 지원 설명을 읽었습니다.",
+        "notClaim": "전사가 개별 신청 자격과 최종 정산 심사를 대신하지 않습니다."
+      },
+      {
+        "title": "중소벤처기업부 · 2차 추경 요약 영상",
+        "href": "https://www.youtube.com/watch?v=A55z8XrEEdM&t=113s",
+        "sectionId": "limits",
+        "problem": "한도 확대 발표가 모든 철거에 최대 지원을 약속했다고 읽는 문제입니다.",
+        "contribution": "2025년 7월 발표를 1월 화면 및 뒤의 서면 공고와 이어 읽습니다.",
+        "assumptions": "2025-07-11 공개 영상의 01:53 화면입니다.",
+        "evidenceScope": "공식 영상 파일에서 확보한 해당 프레임의 400만→600만 원을 다시 보고 공식 전사와 대조했습니다.",
+        "notClaim": "영상 전체 청취나 모든 폐업에 600만 원이 지급된다는 주장이 아닙니다."
+      },
+      {
+        "title": "중소벤처기업부 · 7월 영상 공식 자막",
+        "href": "https://www.mss.go.kr/site/smba/brdcststnVod/brdcststnVodView.do?ctgr_code=C03&searchSeq=ST_000000001231716",
+        "sectionId": "limits",
+        "problem": "추경 발표와 세부 공고의 역할을 혼동하는 문제입니다.",
+        "contribution": "지원 확대 설명 뒤에 공고의 적용 날짜와 정산 조건을 확인합니다.",
+        "assumptions": "2025년 7월 발표에 관한 게시기관 전사입니다.",
+        "evidenceScope": "실제 HTML 자막의 지원 확대 및 추후 공고 안내를 읽었습니다.",
+        "notClaim": "자막만으로 현재 예산 잔액이나 신청 결과를 확인했다고 주장하지 않습니다."
+      },
+      {
+        "title": "중소벤처기업부 · 2025-07-30 점포철거비 확대 보도자료",
+        "href": "https://www.mss.go.kr/site/smba/ex/bbs/View.do?bcIdx=1060542&cbIdx=86&parentSeq=1060542",
+        "sectionId": "limits",
+        "problem": "발표 날짜와 확대 한도가 적용되는 폐업일을 같은 날짜로 보는 문제입니다.",
+        "contribution": "최대 600만 원 적용을 2025-07-11 이후 폐업 조건과 연결합니다.",
+        "assumptions": "2025-07-30 서면 자료와 후속 변경 공고 일정입니다.",
+        "evidenceScope": "실제 HTML의 적용 폐업일과 7월 31일 변경 공고 안내를 읽었습니다.",
+        "notClaim": "후속 공고의 전체 조건이나 2026년 현재 신청 결과를 대체하지 않습니다."
+      },
+      {
+        "title": "소상공인시장진흥공단 · 2026-01-19 원스톱폐업지원 공고",
+        "href": "https://ssrf.or.kr/site/kr/html/sub04/0401.html?category=sc04&file_id=3953&mode=D&no=abaae44719e649e9f32b348bdd1d35f0",
+        "sectionId": "limits",
+        "problem": "견적에서 영상의 최대 지원금 전액을 빼거나 임대인 정산서만으로 지급을 확정하는 문제입니다.",
+        "contribution": "인정 면적 33㎡를 3.3㎡당 20만 원에 대입해 200만 원의 면적 한도를 계산하고 업체 지출 증빙을 별도로 확인합니다.",
+        "assumptions": "서천군지속가능지역재단 게시 공단 공고의 날짜·인정 면적·공급가액·대상 조건을 전제로 합니다.",
+        "evidenceScope": "PDF 표지와 인쇄면 3~5쪽의 한도·제외·정산 서류를 읽고 표가 있는 PDF 두 페이지를 실제 화면으로 확인했습니다.",
+        "notClaim": "200만 원 지급 보장, 임대인 공제액의 자동 지원, 이후 공고 변경이나 남은 예산 확인을 주장하지 않습니다."
       }
     ]
   },
@@ -122604,8 +123835,8 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "property/land-development-residual": {
-    "coreIdea": "개발 가능성은 등기상의 소유와 다르며 허가·용적·기반시설·분양가격·금융비용의 조건을 거꾸로 계산한 잔여액이 토지에 지불할 수 있는 값의 상한을 만듭니다.",
-    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "coreIdea": "완공한 상태의 가치에서 개발비와 목표 이익을 빼 토지·취득 예산을 거꾸로 구합니다. 이미 토지를 샀다면 실제 이익을 다시 계산하며, 허가·권리·지급 시점이 맞는지도 확인합니다.",
+    "entryNote": "완공 가치 100억 원, 토지 외 비용 70억 원, 목표 이익 15억 원인 같은 개발사업을 따라갑니다. 취득 부대비용 2억 원과 6개월 지연을 넣어 예산과 실제 이익이 바뀌는 경로를 구분합니다.",
     "assumedKnowledge": [
       {
         "id": "discount-factor",
@@ -122623,7 +123854,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "id": "development-time-risk",
-        "role": "같은 매각액이어도 2년 늦으면 남는 돈이 줄어듭니다."
+        "role": "회수가 늦어지면 같은 매각액에서도 추가 지출이 생깁니다."
       }
     ],
     "conceptExplanations": [
@@ -122631,42 +123862,42 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "development-residual-land-value",
         "sectionId": "mechanism",
         "intuition": "건물 매각액 가운데 땅에 돌아갈 몫만 남깁니다.",
-        "workedExample": "100억 원에서 비용 70억 원과 요구 이익 15억 원을 빼면 15억 원입니다.",
-        "boundary": "분양가·허가·시간과 비용이 가정이므로 확정된 시장가격이 아닙니다."
+        "workedExample": "100 − 70 − 15 = 15억 원의 토지·취득 예산에서 가정한 취득 부대비용 2억 원을 빼면 매도자 예산은 13억 원입니다.",
+        "boundary": "가격·비용 가정에 따른 단순 예산입니다. 시점별 할인과 시장 비교를 끝낸 토지 평가액이나 확정 거래가격이 아닙니다."
       },
       {
         "id": "land-permit-stack",
         "sectionId": "comparison",
         "intuition": "땅을 소유해도 원하는 건물을 바로 지을 수는 없습니다.",
-        "workedExample": "한국에서 개발행위허가와 건축허가의 법적 근거를 나누되 의제·협의로 연결되는 요건을 확인합니다.",
-        "boundary": "구체적 요건은 지역·용도·사업 규모·시점에 달립니다."
+        "workedExample": "한국 건축법 제11조의 구비서류·개발행위허가 의제·관계기관 협의를 함께 확인합니다. 허가 조건으로 도로·배수 비용 10억 원이 늘면 토지·취득 예산은 5억 원입니다.",
+        "boundary": "지역·용도·규모·시점의 요건을 확인해야 합니다. 잉글랜드의 계획 허가와 건축 규정 승인에 한국의 의제 절차를 그대로 적용하지 않습니다."
       },
       {
         "id": "development-time-risk",
-        "sectionId": "limits",
-        "intuition": "같은 매각액이어도 2년 늦으면 남는 돈이 줄어듭니다.",
-        "workedExample": "공사비가 70억 원에서 80억 원으로 오르면 가정상 잔여 땅값은 15억 원에서 5억 원으로 줄어듭니다.",
-        "boundary": "단순 잔여법은 현금 시점 차이를 생략하므로 할인 현금흐름으로 교차검증합니다."
+        "sectionId": "mechanism",
+        "intuition": "회수가 늦어지면 같은 매각액에서도 추가 지출이 생깁니다.",
+        "workedExample": "잔액 50억 원을 연 8% 단리로 6개월 더 빌리면 이자 2억 원입니다. 비용 72억 원에서 목표 이익을 고정하면 토지·취득 예산 13억 원, 이미 취득에 15억 원을 썼다면 실제 이익 13억 원입니다.",
+        "boundary": "고정 대출 잔액·단리·추가 관리비와 수수료 제외의 가정입니다. 사업 현금과 자기자본 현금은 차입·상환·이자 및 할인율의 기준을 구분합니다."
       }
     ],
     "conceptStages": [
       {
         "label": "01 · 개발 잔여 토지가치",
-        "relation": "100억 원에서 비용 70억 원과 요구 이익 15억 원을 빼면 15억 원입니다.",
+        "relation": "100 − 70 − 15 = 15억 원의 토지·취득 예산에서 가정한 취득 부대비용 2억 원을 빼면 매도자 예산은 13억 원입니다.",
         "concepts": [
           "development-residual-land-value"
         ]
       },
       {
         "label": "02 · 토지 개발 허가의 층",
-        "relation": "한국에서 개발행위허가와 건축허가의 법적 근거를 나누되 의제·협의로 연결되는 요건을 확인합니다.",
+        "relation": "한국 건축법 제11조의 구비서류·개발행위허가 의제·관계기관 협의를 함께 확인합니다. 허가 조건으로 도로·배수 비용 10억 원이 늘면 토지·취득 예산은 5억 원입니다.",
         "concepts": [
           "land-permit-stack"
         ]
       },
       {
         "label": "03 · 개발의 시간 위험",
-        "relation": "공사비가 70억 원에서 80억 원으로 오르면 가정상 잔여 땅값은 15억 원에서 5억 원으로 줄어듭니다.",
+        "relation": "잔액 50억 원을 연 8% 단리로 6개월 더 빌리면 이자 2억 원입니다. 비용 72억 원에서 목표 이익을 고정하면 토지·취득 예산 13억 원, 이미 취득에 15억 원을 썼다면 실제 이익 13억 원입니다.",
         "concepts": [
           "development-time-risk"
         ]
@@ -122675,10 +123906,10 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "100억 완공가치에서70억 비용과15억 요구이익을 빼세요.",
+        "question": "100억 원에서 비용 70억 원과 목표 이익 15억 원을 빼면 무엇이 남나요?",
         "answerChecklist": [
-          "15억 원",
-          "토지와 취득에 배정할 잔여액"
+          "토지와 취득에 배정할 단순 예산 15억 원입니다.",
+          "목표 이익 15억 원은 외부 청구서나 확정 수입이 아닙니다. 가정이 맞아야 실제로 남습니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -122687,10 +123918,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "토지 매도자에게15억 원을 전부 줄 수 있다고 단정할 수 있나요?",
+        "question": "취득 부대비용이 별도로 2억 원이면 매도자에게 배정할 예산은 얼마인가요?",
         "answerChecklist": [
-          "취득 부대비용도 검토",
-          "가정에 따른 잔여이지 확정 거래가 아님"
+          "15억 − 2억 = 13억 원입니다.",
+          "2억 원은 세금·법률·중개 비용 합계의 가정이며 특정 국가의 세율로 계산한 값이 아닙니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -122699,10 +123930,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "공사등 비용이80억으로 오르면 잔여는 얼마인가요?",
+        "question": "토지 외 비용만 80억 원으로 오르면 예산은 어떻게 바뀌나요?",
         "answerChecklist": [
-          "100−80−15=5억",
-          "비용10억 증가가 잔여10억 감소"
+          "100 − 80 − 15 = 5억 원입니다.",
+          "70억 원과 80억 원은 공사비 하나가 아니라 금융·판매 등 토지 외 비용의 합계입니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -122712,10 +123943,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "토지·취득에 배정할 잔여액 15억 원을 계산한 뒤 땅을 샀습니다. 이것만으로 계획한 건물을 지을 수 없는 이유와 추가 확인 대상을 설명하세요.",
+        "question": "토지 예산이 양수이고 소유권을 얻었어도 바로 지을 수 없는 이유는 무엇인가요?",
         "answerChecklist": [
-          "15억 원은 완공가치와 비용을 가정해 계산한 금액이며 토지 소유권을 얻어도 원하는 용도·규모의 개발이 자동 허용되지 않습니다.",
-          "용도지역과 계획 제한, 도로·기반시설, 토질·오염·점유권 및 개발행위·건축허가 조건을 별도로 확인해야 합니다."
+          "계산은 가정한 용도와 규모를 지을 수 있다는 조건에 달려 있습니다.",
+          "계획·도로·기반시설과 토질·오염·점유·담보 등 권리 및 허가 요건을 확인합니다."
         ],
         "sectionId": "names",
         "requiredConcepts": [
@@ -122724,10 +123955,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "RICS 원문의 비용에 개발업자 이익이 포함되나요?",
+        "question": "RICS 원문의 식과 용어집에서 비용의 포함 범위를 왜 따로 읽어야 하나요?",
         "answerChecklist": [
-          "including profit 명시",
-          "70억과15억을 한 번씩 차감, 이익 중복차감 금지"
+          "6.1.1절 식은 이익을 포함한다고 명시하므로 사례의 70억 원과 15억 원을 각각 한 번 차감합니다.",
+          "같은 지침의 용어집은 total development cost에서 토지와 이익을 제외합니다. 이름이 같아 보여도 항목 범위를 확인해야 합니다."
         ],
         "sectionId": "source",
         "requiredConcepts": [
@@ -122736,10 +123967,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "한국 개발행위허가와 건축허가를 항상 두 번 순차 신청하나요?",
+        "question": "한국 개발행위허가와 건축허가는 항상 별도 순차 신청인가요?",
         "answerChecklist": [
-          "법적 근거는 다름",
-          "요건에 따라 의제·협의로 연결 가능"
+          "법적 근거와 요건을 나눠 확인하되 건축법 제11조에는 관련 허가를 받은 것으로 보는 규정이 있습니다.",
+          "구비서류와 관계기관 사전 협의 등을 함께 확인합니다. 잉글랜드에서도 계획 허가와 건축 규정 승인에 어떤 절차가 필요한지 각각 확인합니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -122748,10 +123979,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "매각액만90억으로 내려가면 잔여가 어떻게 되나요?",
+        "question": "매각액만 90억 원으로 낮아질 때와 비용도 80억 원으로 오를 때를 비교하세요.",
         "answerChecklist": [
-          "90−70−15=5억",
-          "다른 조건이 같다는 가정 필요"
+          "매각액만 바뀌면 90 − 70 − 15 = 5억 원입니다.",
+          "비용도 바뀌면 90 − 80 − 15 = −5억 원입니다. 목표 이익을 유지하면서 양의 토지대금을 낼 예산이 없다는 뜻이지 토지 실제 가격이 음수라는 판정이 아닙니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -122761,35 +123992,36 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "같은100억 매각인데 완공이 늦으면 가치는 왜 변하나요?",
+        "question": "6개월 지연 이자와 토지 취득 전후의 서로 다른 계산을 설명하세요.",
         "answerChecklist": [
-          "추가 이자·관리비와 늦은 회수",
-          "월별 자금 부족 가능"
-        ],
-        "sectionId": "need",
-        "requiredConcepts": [
-          "development-time-risk"
-        ]
-      },
-      {
-        "level": "advanced",
-        "question": "토지계약 전에 실패 시 돈을 돌려받는 조건을 설계하세요.",
-        "answerChecklist": [
-          "허가·금융·토질조사 조건과 기한",
-          "불성립 시 계약금 반환·비용 부담을 명시"
+          "고정 대출 50억 × 연 0.08 × 6/12 = 추가 이자 2억 원입니다. 단리이며 수수료·추가 관리비·복리는 제외합니다.",
+          "취득 전에는 목표 이익 15억 원을 고정하므로 100 − 72 − 15 = 토지·취득 예산 13억 원입니다.",
+          "이미 취득에 15억 원을 썼다면 그 지출을 고정하므로 100 − 72 − 15 = 실제 이익 13억 원입니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
-          "land-permit-stack",
           "development-time-risk"
         ]
       },
       {
         "level": "advanced",
-        "question": "숫자가 맞아도 실행할 수 없는 토지계획의 반례를 제시하세요.",
+        "question": "이 글의 금융비 포함 예산에 할인율만 추가하면 완성된 현재가치 평가인가요?",
         "answerChecklist": [
-          "경계·오염·점유권·담보·도로 또는 허가 불충족",
-          "해당 권리와 계획조건을 조사해 판별"
+          "시점별 현금과 포함 항목부터 다시 정해야 합니다. 사업 현금은 차입·이자를 제외하고 사업 위험에 맞는 목표 수익률로 보는 방식이 있습니다.",
+          "자기자본 현금은 차입·상환·이자와 자기자본 위험에 맞는 수익률을 함께 봅니다. 정액 목표 이익과 수익률을 임의로 겹치지 않습니다."
+        ],
+        "sectionId": "mechanism",
+        "requiredConcepts": [
+          "development-time-risk",
+          "development-residual-land-value"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "숫자가 맞아도 실행할 수 없는 계획의 반례와 계약에서 정할 조건을 쓰세요.",
+        "answerChecklist": [
+          "계획한 면적의 허가가 나지 않거나 도로·권리·오염·담보 문제가 해결되지 않을 수 있습니다.",
+          "허가·금융 조달·토질 조사 조건과 기한, 불성립 시 해제·계약금 반환·비용 부담을 정합니다. 숫자만으로 반환 권리가 자동 생기지 않습니다."
         ],
         "sectionId": "limits",
         "requiredConcepts": [
@@ -122797,6 +124029,58 @@ export const ARTICLE_LEARNING: Readonly<
           "land-permit-stack",
           "development-time-risk"
         ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "RICS · Valuation of development property (2019)",
+        "href": "https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf",
+        "sectionId": "source",
+        "problem": "잔여 예산을 현재 토지 가격으로 읽거나 비용·이익을 중복 차감하는 문제입니다.",
+        "contribution": "같은 100·70·15 사례에서 포함 항목과 시점 조정을 구분하고 토지 취득 전후에 고정하는 값을 바꿉니다.",
+        "assumptions": "2019년 지침의 설명이며 2026년 최신 전문기준 전체를 대신하지 않습니다.",
+        "evidenceScope": "실제 PDF의 용어집,6.1~6.3,7.1,B1.2.8~9,B3을 읽고 인쇄24쪽 식을 화면으로 확인했습니다.",
+        "notClaim": "개별 감정평가·시장 거래가격·적정 할인율을 확정하지 않습니다."
+      },
+      {
+        "title": "한국 국토계획법 제56~58조",
+        "href": "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1016204783",
+        "sectionId": "comparison",
+        "problem": "땅을 샀다는 이유로 형질 변경과 계획한 규모의 건축이 허용된다고 읽는 문제입니다.",
+        "contribution": "도로·배수 조건 비용 10억 원을 같은 예산에 반영해 15억 원이 5억 원으로 줄어드는 경로를 보입니다.",
+        "assumptions": "2026-07-01 시행 조문의 행위 범위·예외·지역 조건을 구분합니다.",
+        "evidenceScope": "실제 제56조의 허가·예외,57조의 절차·조건부 허가,58조의 규모·계획·환경·기반시설 기준을 읽었습니다.",
+        "notClaim": "특정 필지의 허가 가능성이나 모든 지역의 면적 상한을 판정하지 않습니다."
+      },
+      {
+        "title": "한국 건축법 제11조",
+        "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=273437&joNo=0011&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+        "sectionId": "comparison",
+        "problem": "두 법의 허가를 무조건 독립된 순차 신청으로 읽거나 건축허가가 모든 요건을 없앤다고 읽는 문제입니다.",
+        "contribution": "같은 계획의 구비서류·관련 허가 의제·관계기관 협의 조건을 대조합니다.",
+        "assumptions": "2026-02-27 시행 법률 제21035호의 실제 조문입니다.",
+        "evidenceScope": "현재 본문에서 lsiSeq273437을 확인한 뒤 제11조 전체 HTML을 읽었습니다.3항 서류,5항3호 개발행위허가 의제,6항 사전협의를 확인했습니다.",
+        "notClaim": "연결 조례·하위 규정·개별 허가의 모든 요건이 충족됐다고 주장하지 않습니다."
+      },
+      {
+        "title": "GOV.UK · Planning permission",
+        "href": "https://www.gov.uk/planning-permission-england-wales",
+        "sectionId": "comparison",
+        "problem": "한국의 허가 절차를 다른 나라의 같은 면적 계획에 그대로 옮기는 문제입니다.",
+        "contribution": "잉글랜드에서 신축·주요 변경·용도 변경의 계획 허가 필요 여부를 현지 계획기관에 확인합니다.",
+        "assumptions": "해당 안내는 영국 내 다른 지역의 제도를 별도 링크로 안내합니다.",
+        "evidenceScope": "실제 본문의 필요 행위와 관할 계획기관 확인,허가 없이 시행한 경우의 설명을 읽었습니다.",
+        "notClaim": "영국 모든 지역에서 동일한 절차나 모든 공사에 동일한 허가가 필요하다고 주장하지 않습니다."
+      },
+      {
+        "title": "GOV.UK · Building regulations approval",
+        "href": "https://www.gov.uk/building-regulations-approval",
+        "sectionId": "comparison",
+        "problem": "계획 허가를 받았으면 건축 규정 관련 확인도 끝났다고 읽는 문제입니다.",
+        "contribution": "같은 개발 계획에서 두 절차가 모두 필요한지 구분합니다.",
+        "assumptions": "공사 유형과 적용 지역에 따른 승인·예외를 별도로 확인해야 합니다.",
+        "evidenceScope": "실제 안내의 계획 허가와 별개이며 둘 다 필요할 수 있다는 본문을 읽었습니다.",
+        "notClaim": "이 글에서 개별 건물의 안전 승인·부담금·면제 여부를 확정하지 않습니다."
       }
     ]
   },

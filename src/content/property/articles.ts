@@ -101,14 +101,96 @@ export const propertyArticles: Article[] = [
     slug: "shop-closure-and-restoration",
     title: "폐업은 문을 닫는 날이 아니라 보증금과 채무를 정산하는 과정이다",
     subcategory: "property-lease",
-    sections: [{"id": "overview", "title": "문을 닫은 뒤에도 남는 약속을 끝내는 법"}, {"id": "black-box", "title": "마지막 주문, 마지막 근무, 공간 반환, 신고가 따로 끝난다"}, {"id": "case", "title": "맡긴 3천만 원에서 400만 원과 600만 원을 정산한다"}, {"id": "picture", "title": "점포 반환과 보증금 정산을 같은 날짜표에 놓는다"}, {"id": "need", "title": "미정산 항목마다 책임자와 기한이 필요한 이유"}, {"id": "names", "title": "돈의 정리와 공간의 정리를 구분하는 말"}, {"id": "mechanism", "title": "폐업 장부는 고객·직원·공급자·임대인·관청별로 닫습니다"}, {"id": "source", "title": "폐업 신고 뒤에도 세금 신고 일정이 남는다"}, {"id": "comparison", "title": "원상복구 범위는 계약·인도 상태·관할 판례를 함께 봅니다"}, {"id": "limits", "title": "철거보다 양도가 유리한지는 세 당사자의 동의로 결정됩니다"}],
+    sections: [
+  {
+    "id": "overview",
+    "title": "1. 문을 닫은 뒤에도 남는 약속을 끝내는 법"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 마지막 주문, 마지막 근무, 공간 반환, 신고가 따로 끝난다"
+  },
+  {
+    "id": "case",
+    "title": "3. 맡긴 3천만 원에서 400만 원과 600만 원을 정산한다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 점포 반환과 보증금 정산을 같은 날짜표에 놓는다"
+  },
+  {
+    "id": "need",
+    "title": "5. 미정산 항목마다 책임자와 기한이 필요한 이유"
+  },
+  {
+    "id": "names",
+    "title": "6. 돈의 정리와 공간의 정리를 구분하는 말"
+  },
+  {
+    "id": "mechanism",
+    "title": "7. 폐업 장부는 고객·직원·공급자·임대인·관청별로 닫습니다"
+  },
+  {
+    "id": "source",
+    "title": "8. 폐업 신고 뒤에도 세금 신고 일정이 남는다"
+  },
+  {
+    "id": "comparison",
+    "title": "9. 원상복구 범위는 계약·인도 상태·관할 판례를 함께 봅니다"
+  },
+  {
+    "id": "limits",
+    "title": "10. 양도와 지원금도 확정 조건과 지급 날짜를 따진다"
+  }
+],
     component: () => import("@/pages/articles/property/shop-closure-and-restoration"),
   },
   {
     slug: "land-development-residual",
     title: "땅값은 허가 뒤 팔 수 있는 것에서 공사비와 시간을 거꾸로 뺀다",
     subcategory: "property-development",
-    sections: [{"id": "overview", "title": "완공 뒤 받을 돈에서 땅에 줄 돈을 거꾸로 구한다"}, {"id": "black-box", "title": "지을 권리, 만드는 비용, 팔아서 회수하는 순서다"}, {"id": "case", "title": "100억 원에서 70억 원과 15억 원을 뺀다"}, {"id": "picture", "title": "나중의 수입과 먼저 확정할 비용을 연결한다"}, {"id": "need", "title": "허가와 시간은 숫자 밖의 조건이 아니라 숫자를 바꾼다"}, {"id": "names", "title": "완공 가치에서 땅값을 구하는 계산의 이름"}, {"id": "mechanism", "title": "소유권·허가·인프라·시간을 각각 확인합니다"}, {"id": "source", "title": "RICS 원문의 빼기 순서에 같은 숫자를 넣는다"}, {"id": "comparison", "title": "나라별 계획권은 다르지만 먼저 허가와 현금의 순서를 봅니다"}, {"id": "limits", "title": "개발 호재라는 말에는 확률과 비용이 빠져 있습니다"}],
+    sections: [
+  {
+    "id": "overview",
+    "title": "1. 완공 뒤 받을 돈에서 땅에 줄 돈을 거꾸로 구한다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 지을 권리, 만드는 비용, 팔아서 회수하는 순서다"
+  },
+  {
+    "id": "case",
+    "title": "3. 100억 원에서 70억 원과 15억 원을 뺀다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 나중의 수입과 먼저 확정할 비용을 연결한다"
+  },
+  {
+    "id": "need",
+    "title": "5. 허가와 시간은 숫자 밖의 조건이 아니라 숫자를 바꾼다"
+  },
+  {
+    "id": "names",
+    "title": "6. 완공 가치에서 땅값을 구하는 계산의 이름"
+  },
+  {
+    "id": "mechanism",
+    "title": "7. 소유권·허가·인프라·시간을 각각 확인합니다"
+  },
+  {
+    "id": "source",
+    "title": "8. RICS 원문의 빼기 순서에 같은 숫자를 넣는다"
+  },
+  {
+    "id": "comparison",
+    "title": "9. 나라별 계획권은 다르지만 먼저 허가와 현금의 순서를 봅니다"
+  },
+  {
+    "id": "limits",
+    "title": "10. 개발 호재라는 말에는 확률과 비용이 빠져 있습니다"
+  }
+],
     component: () => import("@/pages/articles/property/land-development-residual"),
   },
 ];

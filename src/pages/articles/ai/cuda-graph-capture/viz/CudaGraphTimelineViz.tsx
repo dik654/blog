@@ -1,130 +1,29 @@
-import type { ReactNode } from "react";
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
-import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
+import {useAnimatedScenes} from "@/components/viz/useAnimatedScenes";
+import {AnimatedSceneControls} from "@/components/viz/AnimatedSceneControls";
 import VizFrame from "@/components/viz/VizFrame";
-
-const SCENES = ["eager", "capture", "replay"] as const;
-
-const STEPS = 5;
-
-export default function CudaGraphTimelineViz() {
-  const scenes = useAnimatedScenes(SCENES.length);
-  const a = scenes.active;
-  return (
-    <VizFrame
-      eyebrow="Kernel launch timeline"
-      title="같은 decode step을 매번 새로 launch할지, 한 번 녹화해 재생할지"
-      description="Eager 실행은 매 step마다 CPU가 커널을 하나씩 다시 launch합니다. Capture는 그 launch 시퀀스를 한 번 녹화하고, replay는 녹화된 시퀀스를 그대로 재생해 launch overhead를 지웁니다."
-      note="Replay가 건너뛰는 것은 GPU 연산이 아니라 CPU의 커널 launch 호출입니다 — 실제 kernel 실행 시간(파란 구간)은 그대로 남습니다."
-    >
-      <div
-        data-viz-canvas
-        tabIndex={0}
-        role="group"
-        aria-label="CUDA graph capture/replay 타임라인 애니메이션"
-        onKeyDown={scenes.onKeyDown}
-        className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-      >
-        <div className="space-y-3">
-          <Row
-            label="Eager"
-            active={a === 0}
-            detail="Step마다 CPU가 커널을 하나씩 launch — 매 step 오버헤드 발생"
-          >
-            {Array.from({ length: STEPS }, (_, i) => (
-              <Segment key={i}>
-                <span className="block h-6 w-3 shrink-0 bg-amber-400/70 dark:bg-amber-500/60" />
-                <span className="block h-6 flex-1 bg-primary/40" />
-              </Segment>
-            ))}
-          </Row>
-          <Row
-            label="Capture"
-            active={a === 1}
-            detail="처음 한 번, launch 시퀀스 전체를 녹화 — static input/output 주소를 이 시점에 고정"
-          >
-            <span
-              className={`flex h-6 w-full items-center justify-center border ${a === 1 ? "border-primary" : "border-border"} border-dashed`}
-            >
-              <span className="text-[10px] font-bold text-muted-foreground">
-                recording…
-              </span>
-            </span>
-          </Row>
-          <Row
-            label="Replay"
-            active={a === 2}
-            detail="이후 같은 shape는 녹화된 시퀀스를 그대로 재생 — launch overhead(주황) 없음"
-          >
-            <span className="block h-6 w-full bg-primary/40" />
-          </Row>
-        </div>
-        <div className="mt-4 grid gap-3 md:grid-cols-3">
-          <Ledger
-            label="launch overhead"
-            value="CPU가 커널마다 새로 issue하는 고정 비용"
-            active={a === 0}
-          />
-          <Ledger
-            label="static address"
-            value="capture 때 기록한 input/output GPU 주소"
-            active={a === 1}
-          />
-          <Ledger
-            label="kernel exec"
-            value="capture·replay 모두에서 그대로 남는 실제 연산 시간"
-            active={a === 0 || a === 2}
-          />
-        </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
-      </div>
-    </VizFrame>
-  );
-}
-
-function Row({
-  label,
-  detail,
-  active,
-  children,
-}: {
-  label: string;
-  detail: string;
-  active: boolean;
-  children: ReactNode;
-}) {
-  return (
-    <div
-      className={`border px-4 py-3 ${active ? "border-primary bg-primary/5" : "border-border bg-background"}`}
-    >
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-xs font-black">{label}</p>
-      </div>
-      <div className="mt-2 flex items-center gap-1">{children}</div>
-      <p className="mt-2 text-xs leading-5 text-muted-foreground">{detail}</p>
-    </div>
-  );
-}
-
-function Segment({ children }: { children: ReactNode }) {
-  return <span className="flex flex-1 items-center gap-0.5">{children}</span>;
-}
-
-function Ledger({
-  label,
-  value,
-  active,
-}: {
-  label: string;
-  value: string;
-  active: boolean;
-}) {
-  return (
-    <div
-      className={`border-l pl-4 ${active ? "border-primary" : "border-border"}`}
-    >
-      <p className="text-xs font-black">{label}</p>
-      <p className="mt-1 text-xs leading-5 text-muted-foreground">{value}</p>
-    </div>
-  );
+const labels=["하나씩 전달","목록 한 번 전달","매번 완료 기다림"] as const;
+const notes=[
+"전달은 0–3·3–6·6–9·9–12 μs, 계산 완료는 5·8·11·14 μs입니다. 준비와 계산이 겹칩니다.",
+"목록 전달 2 μs 뒤 계산 네 개가 이어집니다. 같은 답 22를 10 μs에 얻습니다. 계산 시간의 합은 여전히 8 μs입니다.",
+"다음 전달을 앞 계산이 끝난 뒤 시작합니다. 계산 완료가 5·10·15·20 μs로 늦어집니다."
+];
+const cpu=[[[0,3],[3,6],[6,9],[9,12]],[[0,2]],[[0,3],[5,8],[10,13],[15,18]]];
+const gpu=[[[3,5],[6,8],[9,11],[12,14]],[[2,4],[4,6],[6,8],[8,10]],[[3,5],[8,10],[13,15],[18,20]]];
+const values=[4,8,11,22];const x=(t:number)=>55+t*13;
+export default function CudaGraphTimelineViz(){
+ const scenes=useAnimatedScenes(3,6000);const s=scenes.active;
+ return <VizFrame eyebrow="같은 네 작업 · 가정" title="답은 22로 같고 끝나는 시각이 달라집니다" description="입력 3에 +1, ×2, +3, ×2를 차례로 적용합니다. 전달하는 쪽과 계산하는 쪽은 동시에 일할 수 있습니다." note="단일 실행열의 설명용 시간표입니다. 실제 CPU·GPU 호출을 측정한 결과가 아닙니다.">
+ <div data-viz-canvas role="group" tabIndex={0} onKeyDown={scenes.onKeyDown} aria-label="네 작업의 전달과 완료 시간표" className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+ <div className="flex flex-none flex-col py-1"><h4 className="font-bold">{labels[s]}</h4>
+ <svg viewBox="0 0 340 245" role="img" aria-label={labels[s]+"의 시간축과 결과"} className="mt-1 h-auto max-h-72 w-full">
+ <defs><marker id="graph-time-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L8 4L0 8" className="fill-foreground"/></marker></defs>
+ <text x="170" y="23" textAnchor="middle" className="fill-foreground text-[14px]">입력 3 → 4 → 8 → 11 → 22</text>
+ {[0,5,10,15,20].map(t=><g key={t}><path d={"M"+x(t)+" 40V174"} className="stroke-border" strokeDasharray="3 3"/><text x={x(t)} y="194" textAnchor="middle" className="fill-foreground text-[14px]">{t}</text></g>)}
+ <text x="8" y="75" className="fill-foreground text-[14px]">전달</text><text x="8" y="144" className="fill-foreground text-[14px]">계산</text>
+ {cpu[s].map(([a,b],i)=><g key={i}><rect x={x(a)} y="51" width={x(b)-x(a)} height="34" rx="3" className="fill-muted stroke-border"/><text x={(x(a)+x(b))/2} y="73" textAnchor="middle" className="fill-foreground text-[14px]">{i+1}</text></g>)}
+ {gpu[s].map(([a,b],i)=><g key={i}><rect x={x(a)} y="120" width={x(b)-x(a)} height="34" rx="3" className="fill-primary/20 stroke-primary"/><text x={(x(a)+x(b))/2} y="143" textAnchor="middle" className="fill-foreground text-[14px]">{values[i]}</text></g>)}
+ <path d={"M"+x(cpu[s][0][1])+" 88V116"} className="stroke-foreground" markerEnd="url(#graph-time-arrow)"/>
+ <text x="170" y="222" textAnchor="middle" className="fill-foreground text-[15px]">완료 {s===0?14:s===1?10:20} μs · 가로축 단위 μs</text>
+ </svg><p className="mt-1 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{notes[s]}</p></div>
+ <AnimatedSceneControls {...scenes} labels={labels}/></div></VizFrame>;
 }

@@ -1,0 +1,55 @@
+{
+  "repository": "data61/python-paillier",
+  "commit": "7d9911eb03c3c2d64399bc15405feb5e628379d1",
+  "observedAt": "2026-10-04",
+  "files": [
+    {
+      "path": "phe/paillier.py",
+      "gitBlobSha1": "55b73943bd9d44d0c61210716c0f58db8d25c500",
+      "sha256": "6ff010d6c26d1616dca28c4096dacf0bda7d353ec7ef92b5859897909545f76b",
+      "url": "https://raw.githubusercontent.com/data61/python-paillier/7d9911eb03c3c2d64399bc15405feb5e628379d1/phe/paillier.py"
+    },
+    {
+      "path": "phe/encoding.py",
+      "gitBlobSha1": "785b11cd13c1f865d1790d51ddb5cf2d6058d41f",
+      "sha256": "6c8db8c1062f5b79548c956947f5f11bf92a4c33d081cc3c3b5164bf83c6b1c3",
+      "url": "https://raw.githubusercontent.com/data61/python-paillier/7d9911eb03c3c2d64399bc15405feb5e628379d1/phe/encoding.py"
+    },
+    {
+      "path": "phe/util.py",
+      "gitBlobSha1": "3851580a64316a68dbf01c902e49892b09236b48",
+      "sha256": "031be0882c41295726f8679d3a84db5b78105a6e3a1e7d33219ec849a060d219",
+      "url": "https://raw.githubusercontent.com/data61/python-paillier/7d9911eb03c3c2d64399bc15405feb5e628379d1/phe/util.py"
+    },
+    {
+      "path": "phe/__init__.py",
+      "gitBlobSha1": "3e89277427e8a25e279457300996ff5c81add845",
+      "sha256": "bff7135532b71df9484c008614ad87776d1209fe935dc5db2c15ad996b639291",
+      "url": "https://raw.githubusercontent.com/data61/python-paillier/7d9911eb03c3c2d64399bc15405feb5e628379d1/phe/__init__.py"
+    },
+    {
+      "path": "phe/__about__.py",
+      "gitBlobSha1": "51a7b327f5c03e6ab5012b7f8ad49cf77a6f9b5a",
+      "sha256": "709afaf8518b5c2821d0e8a26345d7e0a72594be52d353df15264c3d0c64ef7a",
+      "url": "https://raw.githubusercontent.com/data61/python-paillier/7d9911eb03c3c2d64399bc15405feb5e628379d1/phe/__about__.py"
+    },
+    {
+      "path": "setup.py",
+      "gitBlobSha1": "6a76187853be3763106ac0b45a4f8662a26097d4",
+      "sha256": "bb938253b6acb1ad7730a7b48625467d3b44d91519f235ed74647871fbd56d3d",
+      "url": "https://raw.githubusercontent.com/data61/python-paillier/7d9911eb03c3c2d64399bc15405feb5e628379d1/setup.py"
+    },
+    {
+      "path": "README.rst",
+      "gitBlobSha1": "0b6e9e8cbd1868fd97673f5410438f5a99afd754",
+      "sha256": "6eb0620ba9fe23d97d93d687d6f6ec978c18866cea0214383525e97140f9078b",
+      "url": "https://raw.githubusercontent.com/data61/python-paillier/7d9911eb03c3c2d64399bc15405feb5e628379d1/README.rst"
+    },
+    {
+      "path": "LICENSE.txt",
+      "gitBlobSha1": "82df7a74839607988efea6d31b7907099dc0bd7a",
+      "sha256": "762d7eb7121b720dadc4e9d080d82c33858b772060607add1e78101ea4a52116",
+      "url": "https://raw.githubusercontent.com/data61/python-paillier/7d9911eb03c3c2d64399bc15405feb5e628379d1/LICENSE.txt"
+    }
+  ]
+}

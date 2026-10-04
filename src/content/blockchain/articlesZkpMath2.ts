@@ -177,17 +177,98 @@ export const zkpMath2Articles: Article[] = [
   },
   {
     slug: "paillier-cryptosystem",
-    title: "Paillier Cryptosystem: Randomized Encryption·Additive Homomorphism",
+    title: "Paillier: 암호문으로 4와 3의 합을 계산하기",
     subcategory: "mpc",
     sections: [
-      { id: "overview", title: "Paillier의 보장과 경계" },
-      { id: "key-generation", title: "Key generation과 inverse 조건" },
-      { id: "encryption", title: "Unit randomizer encryption" },
-      { id: "homomorphism", title: "Ciphertext 곱과 plaintext 덧셈" },
-      { id: "decryption", title: "L 함수 복호" },
-      { id: "security-boundary", title: "Malleability·integrity 경계" },
-      { id: "release", title: "Profile·encoding·negative vectors" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 개별 수를 열어 보지 않고 4와 3을 합칩니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 서버는 곱하고 비밀키 담당자는 합을 읽습니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 이번 두 숫자는 173과 154로 바뀝니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 같은 두 건수가 지나가는 네 단계를 봅니다"
+  },
+  {
+    "id": "why",
+    "title": "5. n+1의 거듭제곱에는 숫자를 읽어 낼 자리가 남습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 평문·암호문·난수·동형성의 역할을 연결합니다"
+  },
+  {
+    "id": "key-generation",
+    "title": "7. 비밀 지수 4와 되돌리는 계수 4를 만듭니다"
+  },
+  {
+    "id": "encryption",
+    "title": "8. 난수의 n제곱을 곱해 같은 4를 다르게 보냅니다"
+  },
+  {
+    "id": "decryption",
+    "title": "9. 173에서 4를, 92에서 7을 꺼냅니다"
+  },
+  {
+    "id": "correctness",
+    "title": "10. 왜 난수만 없어지고 메시지는 남나요"
+  },
+  {
+    "id": "homomorphism",
+    "title": "11. 암호문 173과 154의 곱이 평문 4와 3의 합을 만듭니다"
+  },
+  {
+    "id": "rerandomization",
+    "title": "12. 같은 합을 유지하면서 암호문을 다시 가릴 수 있습니다"
+  },
+  {
+    "id": "source-encrypt",
+    "title": "13. 원문 raw_encrypt에 같은 4와 난수 2를 넣습니다"
+  },
+  {
+    "id": "source-decrypt",
+    "title": "14. 원문은 9와 25에서 나눠 복호한 뒤 합칩니다"
+  },
+  {
+    "id": "source-operations",
+    "title": "15. 원문에서 더하기 기호는 암호문 곱셈으로 내려갑니다"
+  },
+  {
+    "id": "encoding",
+    "title": "16. 수학적 나머지 7과 signed 정수 7의 허용 범위는 다릅니다"
+  },
+  {
+    "id": "randomness",
+    "title": "17. 난수를 재사용하면 두 평문의 차이가 드러납니다"
+  },
+  {
+    "id": "validation",
+    "title": "18. 낮은 수준 API가 조건을 자동으로 검사하지는 않습니다"
+  },
+  {
+    "id": "key-boundary",
+    "title": "19. 왕복 복호 성공만으로 키 설정을 검증할 수 없습니다"
+  },
+  {
+    "id": "security",
+    "title": "20. 더할 수 있다는 기능은 변조를 막아 주지 않습니다"
+  },
+  {
+    "id": "verification",
+    "title": "21. 실제로 실행한 범위와 남은 범위를 나눕니다"
+  },
+  {
+    "id": "limits",
+    "title": "22. 같은 두 값에서 달라질 결과를 예측합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/paillier-cryptosystem"),
   },
 ];

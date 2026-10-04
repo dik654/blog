@@ -1567,23 +1567,101 @@
     },
     {
       "route": "firms/scale-and-cost-structure",
-      "status": "unreviewed",
+      "status": "reviewed-rewrite-required",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-05",
+        "actualBodyRead": true,
+        "twoVizAndLearningRead": true,
+        "defects": [
+          "F/N+c falls within unchanged technology, contradicting blanket same-method neverdecreases",
+          "N*=10/80 equality ties calledwaste/minimumambiguous integerstrict needs11/81",
+          "sequentialhigherthreshold universalfalse; full lowerenvelope skips possible; thirdsetup300 alternative not60+300",
+          "N*greaterthanentiremarket impliessinglefirmcheap isfalse; Q8alllinear samecost; needsubadditivity atgivenoutput",
+          "buyingpowerfeedback conditional demand/tradebalance/adjustmenttime omitted",
+          "printedhistorysimplifiedintoallprintersmadeallinputs, unsupported",
+          "originalJSTOR2224835 linksdifferentpaper Welfare Propositions; publisherYoungactualDOI2224097",
+          "quotes>25words and current claimfullscanread mustrefresh evidence",
+          "smallconsistentcase beforeterms missing, source→caseapplication, graphs8pxandhorizontalmin480"
+        ],
+        "next": "A=10N B=60+4N C=300+N sameparts;10/80ties,20/100sameBavg7/4.6,fullenvelope,3shops30aggregate90cost540→390, actualYoung527530533534537–539 andspecificlimits; preserve5conceptsproof and6+4"
+      }
     },
     {
       "route": "firms/why-firms-exist",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-05",
+        "actualBodyRead": true,
+        "reason": "실제13절·2Viz·4개념 정의/관계·6+4를 같은 여섯 작업으로 재작성하고 검증했습니다.",
+        "defects": [
+          "공장에가격없다는절대화와값/가격/비용혼동",
+          "6명완전그래프15→별도관리자추가6관계를시장→기업법칙처럼서술",
+          "고용계약내용이전부비어있다는단정",
+          "이산1..6,외부4에서n3/n4모두18인데n4유일·항상등식",
+          "체감없으면기업무한/기업여럿존재가체감증거라는잘못된역추론",
+          "기업내부이전가격을조정비용한가지로단정",
+          "비단조비용/추가고정비/전환비용없는가정누락",
+          "예측부품절모호,첫숫자단계미흡,원문장인용과실제출처범위갱신필요"
+        ],
+        "publicFiles": [
+          "src/pages/articles/firms/why-firms-exist.tsx",
+          "src/pages/articles/firms/why-firms-exist/model.ts",
+          "src/pages/articles/firms/why-firms-exist/viz/BoundaryViz.tsx",
+          "src/pages/articles/firms/why-firms-exist/viz/ContractWebViz.tsx"
+        ],
+        "fixture": "동일여섯 작업,안1..6/밖4;3개와4개18동률.밖3.5에서3개16.5;밖5최저4/5개20;밖2최저1/2개11;설립5에서는3/4개23. 실제측정이 아닌가정.",
+        "sourceApplication": "Coase1937 인쇄390~397쪽 실제원문/OCR와390/395인용이미지대조,직접인용총18단어.1991공식강연의검색으로반환된본문에서실제자료필요성확인. 권한제한·다른기업간거래비용·상대적기술변화보존.",
+        "preservedDepth": "기존4개념/조건부정리/증명과기초6심화4를교정. 5개 비용시나리오35합계와단조차분/고정비반례·끝점·동률을명시. 3개문단수열을n대응표로변경하고표시수식에일반식+0/.5숫자식추가.",
+        "independentReport": "/tmp/teach-all/root-firms-independent-theory.json",
+        "humanize": {
+          "wholeAndChunks": "48문단6902자및최종6821자 각각2묶음게이트0",
+          "reports": [
+            "/tmp/teach-all/humanize-root-firms/summary.json",
+            "/tmp/teach-all/humanize-root-firms-final/summary.json"
+          ],
+          "visibleProps": "FlowRail/SourceApplication/수식용어와조건/2Viz전체문자열/출처/6+4답을실제읽고수치대조",
+          "proseReview": "길어진합계목록3개를표로개선. 짧은동일1..6배열4개는독립검수승인후route한곳fingerprint만기록;전역strict0"
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "sections": 13,
+          "predictionQuestions": 3,
+          "firstNamesFraction": [
+            0.30925,
+            0.30913
+          ],
+          "scenes": [
+            5,
+            4
+          ],
+          "citations": 2,
+          "answers": 10,
+          "keyboard": true,
+          "playback": true,
+          "reducedMotion": true,
+          "overflow": 0,
+          "errors": 0,
+          "report": "/tmp/teach-all/root-firms-screens/summary.json",
+          "generic": "/tmp/world-browser-audit/teach-checkpoint184-first-summary.json",
+          "stability": "초기검사3회는다른글수정으로ViteHMR이화면을재생성해재생상태소실. 개발용WebSocket만연결대역으로고정한마지막전체검사는실제exit0;제품코드/타이머/데이터는변경없음.",
+          "formulaFinal": "실제390PNG에서aligned수식이잘리는문제를발견해gathered로변경. 4표시식의KaTeX .base를390/1440에서검사해모두내부범위PASS(actualexit0),최종PNG에서일반합/차분/0/.5모두보임. /tmp/teach-all/root-firms-bounds.log"
+        },
+        "verification": "strict학습0,실제appTS0,2Vizstyle0,같은모형Node실행+독립검산PASS. 최종표시수식변경후actualTS/build는고정184묶음에서검증예정.",
+        "numericReport": "src/pages/articles/firms/why-firms-exist/verification/output.json"
+      }
     },
     {
       "route": "governance/bureaucracy-and-implementation",
@@ -3900,7 +3978,7 @@
     },
     {
       "route": "property/land-development-residual",
-      "status": "unreviewed",
+      "status": "retained-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [
           "S",
@@ -3917,11 +3995,56 @@
         "numericAnswerPointers": 2,
         "caseMarkers": 2
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "actualBodyRead": true,
+        "publicFiles": [
+          "src/pages/articles/property/land-development-residual.tsx",
+          "src/pages/articles/world-systems/FlowRail.tsx"
+        ],
+        "reason": "기존10절의 잔여법 흐름을 유지하며 단순예산·현재지가·취득후이익을 구분했습니다.",
+        "changes": "100/70/15 숫자와 실제취득13+2→개발70→매각100/잔액15 경로. 비용80/매각90 각각5·동시−5 의미.6개월50억8%단리 추가이자2→비용72. 취득전예산13과 취득후이익13의 고정값 차이. RICS GDV 평가일완공가정,용어집/식 이익범위 차이, B3시점조정/취득비, B1.2.8–9사업현금/자기자본현금 일관성. 실제한국56~58/건축11및잉글랜드 두허가 구분.3개단일절예측.",
+        "numericCase": "100−70−15=15;15−2=13;100−80−15=5;90−70−15=5;90−80−15=−5;50×0.08×6/12=2;100−72−15=13, 고정항 다름. 전부 설명용가정이며가격평가 아님.",
+        "sourceApplication": "RICS2019 PDF 실제용어집·6.1~6.3·7.1·B1.2.8~9·B3읽기와 인쇄24쪽화면대조. 국토계획56/57/58 current2026-07-01 full.건축11current2026-02-27 실제HTML273437;구276925는header만 있어쓰지않음. GOV.UKplanning/buildingapproval actual본문.",
+        "learning": "기초6·심화4 전체교정, papers/EVIDENCE5·TOC·3개정의 동기화;시간위험canonicalmechanism으로정정. strict actualexit0.",
+        "humanize": {
+          "report": "/tmp/teach-all/humanize-root-land/summary.json",
+          "chars": 4764,
+          "paragraphs": 36,
+          "chunks": 2,
+          "edits": 10,
+          "gate": 0,
+          "chunkGates": [
+            0,
+            0
+          ],
+          "roundTrip": true,
+          "manual": "초기ending-commaWARN 실제수정후전체/묶음0, final.md전문실제읽기. FlowRail/SourceApplication/5인용/예측/10정답 DOM실제읽기."
+        },
+        "independentReview": "/tmp/teach-all/root-land-independent-theory.json PASS:8산술·고정입력/출력·RICS실제원문금융설명;법·화면은root별도",
+        "browser": {
+          "report": "/tmp/teach-all/root-land-screens/summary.json",
+          "widths": [
+            390,
+            1440
+          ],
+          "sections": 10,
+          "namesFraction": 0.3544718,
+          "predictions": 3,
+          "citationsPerWidth": 5,
+          "answersPerWidth": 10,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "actualScreens": "390지급그림과1440RICS인용/적용/시점한계실제봄. 모든5인용/10정답개방."
+        },
+        "validation": "strictlearning/prose/browser actualexit0. 다음고정snapshot actualapp TS/build대기.",
+        "remaining": "전체799편검토·고정index빌드·배포·운영확인"
+      }
     },
     {
       "route": "property/shop-closure-and-restoration",
-      "status": "unreviewed",
+      "status": "retained-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [
           "S",
@@ -3938,7 +4061,50 @@
         "numericAnswerPointers": 2,
         "caseMarkers": 2
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "actualBodyRead": true,
+        "publicFiles": [
+          "src/pages/articles/property/shop-closure-and-restoration.tsx",
+          "src/pages/articles/world-systems/FlowRail.tsx"
+        ],
+        "reason": "기존10절의 폐업 정산 설명을 보존하며 같은 복구비의 지급 주체와 기한·지원금 증빙을 구체화했습니다.",
+        "changes": "임대인 처리·공제와 점주 업체 직접 지급을 두 경로로 비교해 중복 공제 방지. 사진/합의/인도와 정산의 숫자 경로, 반환 전 유동성200 부족. 현행 노동36·개인정보21과 판결의 사실관계, NSW 관할 구분. 기관 영상의 실제 프레임/전사와2026년1월 공고 표/정산 증빙을 대조. 3개 단일절 예측.",
+        "numericCase": "3000−400−600=2000;직접 지급600이면 반환2600−직접지출600=2000;지급300−현금100=부족200;33㎡÷3.3×20만원=면적한도200만원. 다른채무·심사·현재공고변경/예산은별도.",
+        "sourceApplication": "국세청 실제FAQ와 대법원2002다52657 판결요지/이유를 같은사례에 적용. 노동36(2026-10-02)·개인정보21(2026-09-11)실제조문. 기관 공식영상의03:50/01:53프레임 재열람+새로 읽은공식전사/보도자료.2026-01-19공고 인쇄면3~5 실제표 화면읽기.",
+        "learning": "기초6·심화4의 지급경로·기한·지원금 정답을 본문과맞춤.11papers/EVIDENCE/TOC/3개정의 동기화,deposit-closeout canonicalcase로정정. strict 실제exit0.",
+        "humanize": {
+          "report": "/tmp/teach-all/humanize-root-closure/summary.json",
+          "chars": 5145,
+          "paragraphs": 38,
+          "chunks": 2,
+          "gate": 0,
+          "chunkGates": [
+            0,
+            0
+          ],
+          "roundTrip": true,
+          "manual": "6문단 실제수정 후 전체읽기, final-read에서 법정기록보관/보험범위2문단 개선·gate0·왕복동일. FlowRail/SourceApplication/인용/예측/공유6+4 실제읽기."
+        },
+        "browser": {
+          "report": "/tmp/teach-all/root-closure-screens/summary.json",
+          "widths": [
+            390,
+            1440
+          ],
+          "sections": 10,
+          "namesFraction": 0.3352099,
+          "predictions": 3,
+          "citationsPerWidth": 11,
+          "answersPerWidth": 10,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "actualScreens": "390지급그림·1440판례원문과사례적용을실제로봄. 각폭모든11인용토글/10정답개방·본문읽기."
+        },
+        "validation": "strictlearning/prose/bothwidthbrowser actualexit0. 다음 고정 checkpoint에서 actual app TS·전체build검증예정.",
+        "remaining": "전체799편검토·다음고정index빌드·배포·운영확인"
+      }
     },
     {
       "route": "property/shop-transfer-and-goodwill",
@@ -4546,8 +4712,9 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 31,
-    "retained-local-verified": 14,
-    "unreviewed": 180
+    "rewritten-local-verified": 32,
+    "retained-local-verified": 16,
+    "unreviewed": 176,
+    "reviewed-rewrite-required": 1
   }
 }

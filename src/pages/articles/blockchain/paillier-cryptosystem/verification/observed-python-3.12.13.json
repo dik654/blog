@@ -1,0 +1,183 @@
+{
+  "python": "3.12.13",
+  "phe": "1.5.0",
+  "optionalGmp": false,
+  "optionalCrypto": false,
+  "smallKey": {
+    "p": 3,
+    "q": 5,
+    "n": 15,
+    "g": 16,
+    "lambda": 4,
+    "mu": 4,
+    "hp": 1,
+    "hq": 3,
+    "pInverse": 2
+  },
+  "case": {
+    "ciphertexts": [
+      173,
+      154
+    ],
+    "aggregate": 92,
+    "lambdaPower": 196,
+    "L": 13,
+    "rawSum": 7,
+    "decodeSum": {
+      "error": "OverflowError",
+      "message": "Overflow detected in decrypted number"
+    },
+    "rerandomizedWithControlled7": 56,
+    "sameRandomizerSecondCiphertext": 53,
+    "ratio": 16,
+    "difference": 1,
+    "scalar3Ciphertext": 17,
+    "scalar3Plaintext": 12,
+    "alteredByPublicG": 68,
+    "alteredPlaintext": 5
+  },
+  "rawInputs": {
+    "r3": 27,
+    "rawDecrypt27": 14,
+    "r0ControlledGetter7": 223,
+    "rawDecrypt0": 2,
+    "m15": 143
+  },
+  "checks": {
+    "allValidMessageRandomizerPairs": 120,
+    "distinctCiphertexts": 120,
+    "canonicalRejections": [
+      {
+        "inputKind": "m",
+        "input": [
+          -1,
+          2
+        ],
+        "result": {
+          "error": "ValueError",
+          "message": "message must be a canonical residue"
+        }
+      },
+      {
+        "inputKind": "m",
+        "input": [
+          15,
+          2
+        ],
+        "result": {
+          "error": "ValueError",
+          "message": "message must be a canonical residue"
+        }
+      },
+      {
+        "inputKind": "m",
+        "input": [
+          true,
+          2
+        ],
+        "result": {
+          "error": "ValueError",
+          "message": "message must be a canonical residue"
+        }
+      },
+      {
+        "inputKind": "r",
+        "input": [
+          4,
+          0
+        ],
+        "result": {
+          "error": "ValueError",
+          "message": "randomizer must be a canonical unit"
+        }
+      },
+      {
+        "inputKind": "r",
+        "input": [
+          4,
+          3
+        ],
+        "result": {
+          "error": "ValueError",
+          "message": "randomizer must be a canonical unit"
+        }
+      },
+      {
+        "inputKind": "r",
+        "input": [
+          4,
+          15
+        ],
+        "result": {
+          "error": "ValueError",
+          "message": "randomizer must be a canonical unit"
+        }
+      },
+      {
+        "ciphertext": 0,
+        "result": {
+          "error": "ValueError",
+          "message": "ciphertext must be a canonical unit"
+        }
+      },
+      {
+        "ciphertext": 27,
+        "result": {
+          "error": "ValueError",
+          "message": "ciphertext must be a canonical unit"
+        }
+      },
+      {
+        "ciphertext": 225,
+        "result": {
+          "error": "ValueError",
+          "message": "ciphertext must be a canonical unit"
+        }
+      },
+      {
+        "ciphertext": 226,
+        "result": {
+          "error": "ValueError",
+          "message": "ciphertext must be a canonical unit"
+        }
+      }
+    ],
+    "signed16WrapsTo": 1
+  },
+  "counterexampleKey": {
+    "n": 21,
+    "lambda": 6,
+    "gcdLambdaN": 3,
+    "lambdaInverse": {
+      "error": "ValueError",
+      "message": "base is not invertible for the given modulus"
+    },
+    "acceptedByConstructor": true,
+    "allCrtRoundtrips": 252,
+    "randomizers": 12,
+    "distinctEncZero": 4
+  },
+  "fixedPointSeparateKey": {
+    "n": 323,
+    "maxInt": 106,
+    "base": 16,
+    "exponents": [
+      -1,
+      -1
+    ],
+    "integerCoefficients": [
+      24,
+      4
+    ],
+    "sumCoefficient": 28,
+    "decodedSum": 1.75
+  },
+  "scope": "Imported retained original core modules; own deterministic call harness and independent integer model.",
+  "notExecuted": [
+    "upstream complete test suite",
+    "large random key generation",
+    "production RNG/constant time/entropy/security assessment",
+    "CCA/threshold/range proof protocol",
+    "benchmark"
+  ]
+}

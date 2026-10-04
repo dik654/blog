@@ -1274,6 +1274,12 @@
     "p2p/iroh": {
       "fingerprint": "7138fb15dcf78525",
       "score": 6
+    },
+    "firms/why-firms-exist": {
+      "fingerprint": "5c8786c9a34a527d",
+      "score": 8,
+      "reviewedAt": "2026-10-05",
+      "note": "Actualbody and independentreview:4 short repeated1..6 insidecost arrays are onecase with explicit assumptions.3 dense totalcost arrays movedton0..6 tables; no longparagraphs/headings/editorialjargon. Independent report /tmp/teach-all/root-firms-independent-theory.json PASS."
     }
   }
 }

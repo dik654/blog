@@ -1,0 +1,202 @@
+{
+  "scope": "Execute retained original Python decisions on CPU; all CUDA objects are mocks.\nNo CUDA graph was captured or launched. Arithmetic below is a separate toy model.\n",
+  "source": [
+    {
+      "file": "vllm/vllm/config/compilation.py",
+      "symbol": "CUDAGraphMode",
+      "lines": [
+        53,
+        103
+      ],
+      "sourceSha256": "31e1ebbf69af2b5f0c46d4b92caad47c4f87e594df339ba25038309f0836e0a5"
+    },
+    {
+      "file": "vllm/vllm/forward_context.py",
+      "symbol": "BatchDescriptor",
+      "lines": [
+        30,
+        58
+      ],
+      "sourceSha256": "985adacc9e7ed2a7695819ac2e2ad9cb264a7d886806d3091ad75bfda7392242"
+    },
+    {
+      "file": "vllm/vllm/v1/cudagraph_dispatcher.py",
+      "symbol": "CudagraphDispatcher",
+      "lines": [
+        15,
+        350
+      ],
+      "sourceSha256": "51f632753af729aeee6ce4a802d9d74b64f22eef02a524f36e2a24b07ef0cf63"
+    },
+    {
+      "file": "vllm/vllm/compilation/cuda_graph.py",
+      "symbol": "CUDAGraphEntry",
+      "lines": [
+        128,
+        135
+      ],
+      "sourceSha256": "cbc474f9098386d2eef2e3ff61364c611fbc1338d9c259ad5a24439aa7f06412"
+    },
+    {
+      "file": "vllm/vllm/compilation/cuda_graph.py",
+      "symbol": "CUDAGraphOptions",
+      "lines": [
+        139,
+        142
+      ],
+      "sourceSha256": "cbc474f9098386d2eef2e3ff61364c611fbc1338d9c259ad5a24439aa7f06412"
+    },
+    {
+      "file": "vllm/vllm/compilation/cuda_graph.py",
+      "symbol": "CUDAGraphWrapper.__call__",
+      "lines": [
+        233,
+        361
+      ],
+      "sourceSha256": "cbc474f9098386d2eef2e3ff61364c611fbc1338d9c259ad5a24439aa7f06412"
+    }
+  ],
+  "dispatch": {
+    "5": {
+      "mode": "PIECEWISE",
+      "descriptor": {
+        "num_tokens": 8,
+        "num_reqs": null,
+        "uniform": false,
+        "has_lora": false,
+        "num_active_loras": 0
+      }
+    },
+    "9": {
+      "mode": "PIECEWISE",
+      "descriptor": {
+        "num_tokens": 16,
+        "num_reqs": null,
+        "uniform": false,
+        "has_lora": false,
+        "num_active_loras": 0
+      }
+    },
+    "17": {
+      "mode": "PIECEWISE",
+      "descriptor": {
+        "num_tokens": 24,
+        "num_reqs": null,
+        "uniform": false,
+        "has_lora": false,
+        "num_active_loras": 0
+      }
+    },
+    "32": {
+      "mode": "PIECEWISE",
+      "descriptor": {
+        "num_tokens": 32,
+        "num_reqs": null,
+        "uniform": false,
+        "has_lora": false,
+        "num_active_loras": 0
+      }
+    },
+    "33": {
+      "mode": "NONE",
+      "descriptor": {
+        "num_tokens": 33,
+        "num_reqs": null,
+        "uniform": false,
+        "has_lora": false,
+        "num_active_loras": 0
+      }
+    },
+    "5_uniform": {
+      "mode": "FULL",
+      "descriptor": {
+        "num_tokens": 8,
+        "num_reqs": 8,
+        "uniform": true,
+        "has_lora": false,
+        "num_active_loras": 0
+      }
+    },
+    "5_full_excluded": {
+      "mode": "PIECEWISE",
+      "descriptor": {
+        "num_tokens": 8,
+        "num_reqs": null,
+        "uniform": false,
+        "has_lora": false,
+        "num_active_loras": 0
+      }
+    },
+    "only_full_mixed": "AssertionError: no matching graph and NONE disallowed"
+  },
+  "wrapper": {
+    "capture_count": 1,
+    "original_runnable_calls_after_capture_and_three_replays": 1,
+    "replay_count": 3,
+    "debug_new_address": "rejected",
+    "nondebug_new_address": "not checked by Python wrapper",
+    "NONE_calls_underlying": true,
+    "cuda": "all tensor/graph/stream/offloader operations mocked; no GPU correctness/performance verified"
+  },
+  "timing_model": [
+    {
+      "ready": [
+        3,
+        6,
+        9,
+        12
+      ],
+      "done": [
+        5,
+        8,
+        11,
+        14
+      ],
+      "graph_done": [
+        4,
+        6,
+        8,
+        10
+      ],
+      "synchronized": 20
+    },
+    {
+      "ready": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "done": [
+        5,
+        8,
+        11,
+        14
+      ],
+      "graph_done": [
+        5,
+        8,
+        11,
+        14
+      ],
+      "synchronized": 20
+    }
+  ],
+  "value_model": {
+    "input3": [
+      3,
+      4,
+      8,
+      11,
+      22
+    ],
+    "input5": [
+      5,
+      6,
+      12,
+      15,
+      30
+    ]
+  },
+  "status": "PASS"
+}

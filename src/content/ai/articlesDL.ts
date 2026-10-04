@@ -1984,14 +1984,94 @@ export const dlFoundationArticles: Article[] = [
   },
   {
     slug: "word2vec-prediction-objectives",
-    title: "Word2Vec Objectives: CBOW·Skip-gram·Hierarchical Softmax",
+    title: "같은 다섯 단어로 배우는 CBOW·Skip-gram과 확률 나무",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "예측 방향 먼저 고르기" },
-      { id: "cbow", title: "Context에서 center로" },
-      { id: "skipgram", title: "Center에서 context로" },
-      { id: "hierarchical", title: "Vocabulary를 tree path로" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 왜 같은 문장이 다른 예측 문제가 될까요?"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 문장을 고른 뒤 두 갈래로 바꿉니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 다섯 단어와 두 개의 수 표를 고정합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 두 saw를 합치거나 따로 맞힙니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 무엇을 묶고 무엇을 나눌지 정하는 이유"
+  },
+  {
+    "id": "names",
+    "title": "6. 이제 역할에 이름을 붙입니다"
+  },
+  {
+    "id": "cbow",
+    "title": "7. 두 이웃의 평균으로 cat의 확률을 구합니다"
+  },
+  {
+    "id": "mean-gradient",
+    "title": "8. 평균으로 들어간 오차는 나누어 돌아갑니다"
+  },
+  {
+    "id": "skipgram",
+    "title": "9. 같은 cat으로 이웃 두 번을 예측합니다"
+  },
+  {
+    "id": "reduction",
+    "title": "10. 합과 평균은 어떤 사례를 더 크게 셀까요?"
+  },
+  {
+    "id": "hierarchical",
+    "title": "11. 단어 하나를 찾는 길에 확률을 붙입니다"
+  },
+  {
+    "id": "path-probability",
+    "title": "12. cat까지 세 번의 선택을 곱합니다"
+  },
+  {
+    "id": "huffman",
+    "title": "13. 자주 맞힐 단어의 길을 짧게 만듭니다"
+  },
+  {
+    "id": "huffman-proof",
+    "title": "14. 작은 빈도 두 개부터 합쳐도 되는 이유"
+  },
+  {
+    "id": "paper-word2vec-objectives",
+    "title": "15. 논문의 방향과 식에 같은 문장을 넣습니다"
+  },
+  {
+    "id": "source-tree",
+    "title": "16. 실제 C 코드가 만든 cat의 주소는 001입니다"
+  },
+  {
+    "id": "source-cbow",
+    "title": "17. 평균과 경로 오차를 실제 코드로 따라갑니다"
+  },
+  {
+    "id": "source-update",
+    "title": "18. 원본의 입력 갱신에는 나눗셈 하나가 없습니다"
+  },
+  {
+    "id": "source-tree-boundary",
+    "title": "19. 코드의 정렬 전제까지 확인해야 합니다"
+  },
+  {
+    "id": "limits",
+    "title": "20. 품질과 속도는 같은 조건에서 비교합니다"
+  },
+  {
+    "id": "review",
+    "title": "21. 다음 결과를 예측해 보세요"
+  }
+],
     component: () =>
       import("@/pages/articles/ai/word2vec-prediction-objectives"),
   },

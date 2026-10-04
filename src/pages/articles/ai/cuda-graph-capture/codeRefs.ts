@@ -1,19 +1,23 @@
-import type { CodeRef } from "@/components/code/types";
-import cudaGraphPy from "./codebase/vllm/vllm/compilation/cuda_graph.py?raw";
-
-export const codeRefs: Record<string, CodeRef> = {
-  "cudagraph-wrapper-call": {
-    path: "vllm/vllm/compilation/cuda_graph.py",
-    code: cudaGraphPy,
-    lang: "python",
-    highlight: [57, 213],
-    desc: "문제: \"capture는 shape별로 첫 호출에서 한 번, 이후 같은 shape는 replay\"라는 주장이 실제 production serving engine에서 어떻게 구현되는지 확인해야 합니다.\n\n해결: vLLM의 CUDAGraphWrapper.__call__이 batch_descriptor(패딩된 배치 shape)를 key로 하는 dict에서 entry.cudagraph가 None이면 capture하고, 이미 있으면 replay합니다. Static input address 검증도 실제로 여기서 이뤄집니다.",
-    annotations: [
-      { lines: [122, 130], color: "sky", note: "shape(batch_descriptor)마다 별도 entry — 처음 보는 shape면 새로 만듦" },
-      { lines: [137, 144], color: "amber", note: "capture 시점 input tensor 주소를 기록 — static address 제약의 근거" },
-      { lines: [166, 181], color: "emerald", note: "torch.cuda.graph(...) 안의 실행은 GPU에서 즉시 실행되지 않고 커널 launch 시퀀스만 녹화됨" },
-      { lines: [193, 205], color: "rose", note: "replay 직전 실제 주소와 capture 때 주소를 비교 — 다르면 즉시 assert 실패" },
-      { lines: [207, 213], color: "violet", note: "replay 경로 — runnable을 다시 실행하지 않고 녹화된 커널 시퀀스만 재생. launch overhead가 없는 이유" },
-    ],
-  },
+import type {CodeRef,FileNode,ProjectMeta} from "@/components/code/types";
+import torch from "./codebase/pytorch/torch/cuda/graphs.py?raw";
+import wrapper from "./codebase/vllm/vllm/compilation/cuda_graph.py?raw";
+import config from "./codebase/vllm/vllm/config/compilation.py?raw";
+import context from "./codebase/vllm/vllm/forward_context.py?raw";
+import dispatch from "./codebase/vllm/vllm/v1/cudagraph_dispatcher.py?raw";
+import observation from "./verification/observe.py?raw";
+export const codeRefs:Record<string,CodeRef>={
+"torch-replay":{path:"pytorch/torch/cuda/graphs.py",code:torch,lang:"python",highlight:[691,716],desc:"일반 재생은 저장된 실행 객체를 호출합니다. 입력 이름을 B로 재바인딩해도 A를 읽는 기록이 자동 변경되지 않습니다."},
+"torch-end":{path:"pytorch/torch/cuda/graphs.py",code:torch,lang:"python",highlight:[640,677],desc:"keep_graph=False이면 캡처 종료에서 실행 준비를 합니다. True이면 명시적 준비 또는 첫 재생의 준비 경로를 사용합니다."},
+"torch-context":{path:"pytorch/torch/cuda/graphs.py",code:torch,lang:"python",highlight:[1125,1218],desc:"기본 캡처용 stream과 명시한 stream을 선택한 뒤 준비·capture_begin·capture_end를 수행합니다."},
+"wrapper-capture":{path:"vllm/vllm/compilation/cuda_graph.py",code:wrapper,lang:"python",highlight:[256,282],desc:"실행 조건의 entry가 없으면 만들고 첫 캡처에 입력 주소를 기록합니다."},
+"wrapper-replay":{path:"vllm/vllm/compilation/cuda_graph.py",code:wrapper,lang:"python",highlight:[344,361],desc:"주소 비교는 is_debugging_mode에서만 수행합니다. 재생에는 원래 runnable 호출이 없습니다."},
+"wrapper-bypass":{path:"vllm/vllm/compilation/cuda_graph.py",code:wrapper,lang:"python",highlight:[233,254],desc:"forward context가 없거나 실행 모드가 NONE 또는 wrapper 모드와 다르면 원래 함수를 호출합니다."},
+"observation":{path:"verification/observe.py",code:observation,lang:"python",highlight:[1,94],desc:"원문 AST를 CPU에서 실행한 제어 분기 관찰입니다. Tensor와 CUDA graph는 대역 객체이고 GPU를 실행하지 않습니다."},
+"capture-config":{path:"vllm/vllm/config/compilation.py",code:config,lang:"python",highlight:[692,707],desc:"이 버전 docstring의 크기 생성 패턴과 미지정 상한 설명입니다. 관찰에서는 크기 목록과 상한 32를 직접 설정했습니다."},
+"padding-map":{path:"vllm/vllm/v1/cudagraph_dispatcher.py",code:dispatch,lang:"python",highlight:[70,101],desc:"준비된 크기 사이의 입력을 다음 크기에 대응합니다. 5는 8, 17은 24가 됩니다."},
+"descriptor":{path:"vllm/vllm/forward_context.py",code:context,lang:"python",highlight:[30,58],desc:"토큰 수만으로 고르지 않고 요청 수·균일함·추가 어댑터 조건을 키로 묶습니다."},
+"dispatch-keys":{path:"vllm/vllm/v1/cudagraph_dispatcher.py",code:dispatch,lang:"python",highlight:[161,224],desc:"mixed의 PIECEWISE 키는 요청 수를 완화하고 균일 decode의 FULL 키는 별도로 등록합니다."},
+"dispatch":{path:"vllm/vllm/v1/cudagraph_dispatcher.py",code:dispatch,lang:"python",highlight:[251,325],desc:"상한 초과는 앞에서 NONE을 돌려줍니다. 허용한 FULL·PIECEWISE의 키를 찾고 NONE조차 허용하지 않으면 실패할 수 있습니다."},
 };
+export const fileTrees:Record<string,FileNode>={"pytorch": {"name": "pytorch", "type": "dir", "children": [{"name": "graphs.py", "type": "file", "path": "pytorch/torch/cuda/graphs.py", "codeKey": "torch-replay"}, {"name": "graphs.py", "type": "file", "path": "pytorch/torch/cuda/graphs.py", "codeKey": "torch-end"}, {"name": "graphs.py", "type": "file", "path": "pytorch/torch/cuda/graphs.py", "codeKey": "torch-context"}]}, "vllm": {"name": "vllm", "type": "dir", "children": [{"name": "cuda_graph.py", "type": "file", "path": "vllm/vllm/compilation/cuda_graph.py", "codeKey": "wrapper-capture"}, {"name": "cuda_graph.py", "type": "file", "path": "vllm/vllm/compilation/cuda_graph.py", "codeKey": "wrapper-replay"}, {"name": "cuda_graph.py", "type": "file", "path": "vllm/vllm/compilation/cuda_graph.py", "codeKey": "wrapper-bypass"}, {"name": "compilation.py", "type": "file", "path": "vllm/vllm/config/compilation.py", "codeKey": "capture-config"}, {"name": "cudagraph_dispatcher.py", "type": "file", "path": "vllm/vllm/v1/cudagraph_dispatcher.py", "codeKey": "padding-map"}, {"name": "forward_context.py", "type": "file", "path": "vllm/vllm/forward_context.py", "codeKey": "descriptor"}, {"name": "cudagraph_dispatcher.py", "type": "file", "path": "vllm/vllm/v1/cudagraph_dispatcher.py", "codeKey": "dispatch-keys"}, {"name": "cudagraph_dispatcher.py", "type": "file", "path": "vllm/vllm/v1/cudagraph_dispatcher.py", "codeKey": "dispatch"}]}, "verification": {"name": "verification", "type": "dir", "children": [{"name": "observe.py", "type": "file", "path": "verification/observe.py", "codeKey": "observation"}]}};
+export const projectMetas:Record<string,ProjectMeta>={"pytorch": {"id": "pytorch", "label": "PyTorch · v2.14.0", "badgeClass": "bg-primary/10 text-primary"}, "vllm": {"id": "vllm", "label": "vLLM · v0.27.1", "badgeClass": "bg-primary/10 text-primary"}, "verification": {"id": "verification", "label": "원문 분기 CPU 관찰", "badgeClass": "bg-primary/10 text-primary"}};

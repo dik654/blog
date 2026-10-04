@@ -366,13 +366,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
       "실패한 것은 이 세 방법이며 수치는 한 장비·네 얼굴 표본의 실측임을 밝힌다.",
   },
   "firms/why-firms-exist": {
-    action: "keep" as const,
-    status: "reviewed" as const,
-    reviewedAt: "2026-10-03",
-    rationale:
-      "시장을 쓰는 값에서 출발해 약속의 대체·경계 조건·경계를 옮기는 조건까지가 조직은 왜 생기고 왜 멈추는가라는 하나의 질문을 푸는 한 묶음이다. 쪼개면 경계 조건이 자기 근거를 잃는다.",
-    sharedGate:
-      "같은 여섯 단계 예시에서 안쪽 값과 바깥쪽 값을 같은 단위로 세고, 두 값이 만나는 단계 수와 합계가 본문·Viz·연습문제에서 일치하는지로 판정한다.",
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-05",
+    "rationale": "같은 여섯 작업의 전체 비용 비교에서 계약의 범위·원문·한계비용 증명·설립비 반례까지 이어지는 13절의 단일 설명입니다.",
+    "sharedGate": "본문·두 Viz·6+4 문제에서 최저 동률3/4개=18,등식 없는3개=16.5,설립비5의23 및 조건이 일치해야 합니다. 원문 해석과 설명용 숫자를 구분합니다."
   },
   "firms/scale-and-cost-structure": {
     action: "keep" as const,
@@ -1886,6 +1884,34 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "같은 두 수를 작은 라운드·역변환·혼합·출력·실제 원문·제약 실패에 반복 대입해 구성요소의 성질과 프로토콜의 보장 조건을 연결합니다. 스펀지 일반론은 기존 해시 정본으로 이어집니다.",
     "sharedGate": "289개 작은 입력의 전수 대조와 선택 Rust 원문 5입력·두 변형·최적화 전후·압축 및 독립 모형을 확인합니다. 실제 회로·증명·성능·보안과 후속 PDF 미열람 범위를 명시합니다."
   },
+  "ai/word2vec-prediction-objectives": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 다섯 단어에서 입력을 모으는 규칙과 정답을 세는 규칙을 먼저 구분해야 두 출력 확률을 비교할 수 있습니다. CBOW의 평균 기울기와 나무 경로를 같은 C 분기에서 대조하므로 한 글로 유지하며, 행 조회와 음의 표본 목적은 별도 정본에 남깁니다. Huffman의 길이 최적성은 이 글의 나무 선택을 이해하는 데 필요한 독립 증명으로 설명합니다.",
+    "sharedGate": "동일 W/U의 확률 .0929633/.191516, cat 주소001의 .098306, 평균의 1/C와 실제2×neu1e, 요청 빈도 모형30/16 대34/16 및 정렬 경계41을 본문·두Viz·실제원문·6+4에서 같은 조건으로 확인합니다."
+  },
+  "crypto/binary-field-proving": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 1011/0110을 비트 계산·체 곱·계산표·두 질문·고정 원문에 반복 대입해 작은 기록과 큰 질문의 역할을 한 글에서 연결합니다. 일반 확장체와 Poseidon 선택은 정본으로 이어집니다.",
+    "sharedGate": "256개 체 곱·15개 역원·256개 정직한 질문 조합과 반례를 확인합니다. 차수·확률·최종 기록 연결 및 실제 실행 범위를 구분하고 두 너비의 수식·11개 원문 패널·6+4를 검토합니다."
+  },
+  "ai/cuda-graph-capture": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "입력 3의 네 연산을 한 번 준비하고 다시 실행하는 한 계약을 주소·크기 선택·수명·비용까지 추적합니다. 연구 두 편은 같은 A/B 자리와 재시작 조건의 확장으로 연결하고 상세 컴파일러·실행 엔진 전반은 소유하지 않습니다.",
+    "sharedGate": "3→4→8→11→22와 새 입력5→30, 완료14/20/10 μs 및 GPU가 바쁜14/14 반례, 5→8의37.5%와33→NONE, 원문 mixed/uniform 키,40 μs 준비의10회동률·11회순이득을 본문·수식·2도식·원문12패널·기초6/심화4에서 대조합니다."
+  },
+  "crypto/paillier-cryptosystem": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "같은 4와 3을 수식·암호문 합산·복호·고정 원문에 반복 대입하고 그 결과가 정수 표현과 API 조건에서 달라지는 이유를 연결합니다. 일반 CRT와 난수 생성은 정본을 재사용합니다.",
+    "sharedGate": "n=15의 120개 조합과 n=21의 252개 CRT 왕복, 표현·재사용·변조·정규 검사 및 실행 한계를 검토합니다. 390/1440 수식·네 장면·10개 원문 패널과 6+4를 확인합니다."
+  },
 };
 
 /**
@@ -1893,6 +1919,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/cuda-graph-capture": "d0ab85923d9ad4ae",
+  "ai/word2vec-prediction-objectives": "16f9c34ef7e7fd8b",
+  "crypto/binary-field-proving": "97e459fcf7d8e433",
+  "crypto/paillier-cryptosystem": "eb97ea187d036bd9",
   "ai/attention-kernel-anatomy-and-backends": "e7b8a70c42ffff14",
   "ai/word2vec": "512dc5c5ab18c0ae",
   "crypto/poseidon-hash": "223b2a56fc42e440",
@@ -2032,8 +2062,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "markets/options-and-asymmetric-payoffs": "e7ea53156ed34514",
   "markets/swaps-and-credit-risk": "c1add7c3c5db9fb9",
   "property/commercial-lease-and-rent": "6920decfee0e31b4",
-  "property/land-development-residual": "53cae6351af0bb2b",
-  "property/shop-closure-and-restoration": "245f0e685b2d2555",
+  "property/land-development-residual": "74a08dc9f34cf1dd",
+  "property/shop-closure-and-restoration": "3b7f410ec9ccf97a",
   "property/shop-transfer-and-goodwill": "3a14db592c004de0",
   "risk/margin-collateral-and-leverage": "9e95bb842afc2ebf",
   "macro/what-ricardo-assumed": "6566e07f66c31f32",
@@ -2135,7 +2165,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "saas/anycast-delivery-continuity": "aff159589f1c6bbb",
   "saas/private-access-inbound-closure": "4ce0f54f2ee45937",
   "ai/onprem-k8s-inference-platform": "acd23d8e4dc14592",
-  "firms/why-firms-exist": "63891a70391f81d0",
+  "firms/why-firms-exist": "663c6174003a6728",
   "firms/scale-and-cost-structure": "81801244a44eeece",
   "firms/market-power-and-markup": "bd7e2fcb297b90d2",
   "circuits/lumped-circuit-and-conservation": "1dc30f31646ad464",
