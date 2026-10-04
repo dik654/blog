@@ -6520,7 +6520,7 @@
     {
       "route": "crypto/crt",
       "title": "CRT: 나머지 조건의 조립·유일성·RSA 경계",
-      "status": "reviewed-needs-rewrite",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/crt.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/crt.tsx",
@@ -6538,22 +6538,43 @@
         ]
       },
       "issues": [
-        "실제 본문 전체와 수식·숫자 사례를 읽었습니다. 구성 및 유일성 증명은 맞지만 일반 용어·식이 사례보다 앞에 옵니다.",
-        "수식 연산 주석이 다른 의미의 일반 문장으로 표시됩니다. 원문 RSA 단계에 같은 수를 대입하고 오류 시 인수 노출을 수치로 추적해야 합니다."
+        "원문은 용어와 정리부터 시작해 같은 사례가 RSA 원문 계산까지 이어지지 않았습니다.",
+        "CRT 합의 수식 주석이 기준량당 비율이라는 무관한 문장으로 되어 있어 실제 선택자 작동으로 고쳤습니다.",
+        "일반화 조건과 오류 경계에 실제14+18j·RSA9→인수7의 계산을 보강했습니다."
       ],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "Read full ModernArticle actual rendered source; constructive proof and compatibility boundaries preserved for rewrite.",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "residues2,3,2 mod3,5,7 ->selectors70,21,15 ->233 ->23mod105. RSAp5q7e5d5 c18 ->m1=3,m2=2,h3,result23; faulty m1=4 ->h1,result9, public4,gcd(4-18,35)=7.",
+        "assumption": "Small educational RSA integers, not production crypto; exact integer reconstruction of original RFC algorithm, not original library execution."
       },
-      "remaining": [
-        "substantive rewrite from23case,source numeric RSA application,gates"
-      ]
+      "stageEvidence": {
+        "S": "overview: objectcount threepackingremainders and23/128",
+        "B": "black-box: separate-smallcompute-recombine-verify andrangecontract",
+        "0": "case: same23 divided3/5/7 yields2/3/2,128repeat",
+        "1": "picture: FlowRail same23threepaths",
+        "2": "need: isolateonecondition withoutdisturbingothers35->70",
+        "3": "names: remainder/congruence/coprime/inverse/selector aftercase",
+        "4": "numerical:105/35,21,15/2,1,1/70,21,15 ->233->23 plusactualselector meanings",
+        "5": "uniqueness: constructiveexistence and difference-productproof",
+        "6": "crypto-usage: RFC8017§5.1.2 input18,params5/7/1/5/3 ->3/2/3/23; inputrange+educationalexecutionexplicit",
+        "7": "compatibility/fault-boundary/release: impossibleparity,14+18j derived; fault9reveals7; constanttime/blinding/verification scope andcontrolledspeedcomparison; predictions8/10/11"
+      },
+      "sourceEvidence": [
+        {
+          "source": "RFC8017 official freshweb §5.1.2 Step1 and2.b.i/iii/iv; original source link anchor",
+          "application": "Original m1,m2,h,m math algorithm concretelyapplied toc18 andsame reconstructed23; maps parameters andnormal/fault paths; multi-prime andproductionsecurity not claimed."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read previous full ModernArticle+viz; preserved all correct theorem/existence/uniqueness/noncoprime/RSA/failureconditions, replaced unrelatedgenericformulaannotation withactualselector meaning.",
+        "arithmetic": "/tmp/teach-all/chains-crt-arithmetic.json 19independentintegerchecks, including exhaustive35RSA inputs direct/CRT agreement andfaultfactor7.",
+        "humanize": "/tmp/teach-all/humanize-chains-crt/crt/gate.txt WARN from(p-1)(q-1) false1)footnote; fullplaintext unchanged; /root/teach_ai_systems independentlyread30paragraphs/diff/numbers/markers andmath, independent-finalize.md approved.",
+        "browser390": "output/playwright/teach-chains-crt/summary.json errors0; detailsjson formulaoverflow0; personallyread complete numerical andRFC screenshots.",
+        "browser1440": "Same fullpagegate andnumerical/RFC/fault detailsscreenshots1440 noerrors.",
+        "static": "/tmp/teach-all/chains-shamir-crt-tsc.log passed",
+        "learning": "Parentmergedbatch9. Strict require-registration crypto/crt passed2026-10-04."
+      },
+      "remaining": [],
+      "reviewDisposition": "substantive-rewrite"
     },
     {
       "route": "crypto/crypto-primitives",
@@ -6603,7 +6624,7 @@
     {
       "route": "crypto/csprng",
       "title": "CSPRNG: entropy·state·reseed lifecycle",
-      "status": "rewritten-awaiting-integration-and-browser",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/csprng.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/csprng.tsx",
@@ -6650,15 +6671,12 @@
         "substantiveReading": "Read all previous3actual components then full rewrite preserving source and failure conditions while fixing two mathematical claim errors.",
         "arithmetic": "/tmp/teach-all/chains-csprng-demo.json: all8seed sequences and clones; exact EC point order19,3G(10,6),signatures12/1,recovered3/7. This executes educational reimplementation, not original official implementation.",
         "humanize": "/tmp/teach-all/humanize-chains-csprng/csprng/gate.txt gate0; protected numbers/markers and exact roundtrip preserved.",
-        "browser390": "output/playwright/teach-chains-csprng/summary.json no overflow,narrow,KaTeX,broken anchors,runtimeerrors; detail review pending",
-        "browser1440": "same report",
-        "learning": "/tmp/teach-all/chains-registration-batch7.json ready for integration and strict gate",
+        "browser390": "summary and detailed entropy/source/ECDSA screenshots read; no page overflow/narrow prose/KaTeX/anchor/runtime errors. chains-formula-widths.json verifies every annotated formula fits 390 and1440 after multiline layout correction.",
+        "browser1440": "Same complete detail and formula checks at1440.",
+        "learning": "Parent integrated batch7; strict require-registration crypto/csprng passed 2026-10-04.",
         "static": "/tmp/teach-all/chains-csprng-tsc.log passed"
       },
-      "remaining": [
-        "metadata integration and strict learning",
-        "detailed formula/source screenshot review"
-      ],
+      "remaining": [],
       "reviewDisposition": "substantive-rewrite"
     },
     {
@@ -6714,7 +6732,8 @@
         "browser390": "output/playwright/teach-chains-dh-elgamal/summary.json and /tmp/teach-all/chains-batch6-final-metrics.json: no overflow, narrow prose, KaTeX errors, broken anchors or runtime errors. /tmp/teach-all/chains-dh-elgamal-details.json: DH all five states selected, active state matched, controls shift0px at both widths; detailed source/formula screenshots visually read.",
         "browser1440": "output/playwright/teach-chains-dh-elgamal/summary.json and /tmp/teach-all/chains-batch6-final-metrics.json: no overflow, narrow prose, KaTeX errors, broken anchors or runtime errors. /tmp/teach-all/chains-dh-elgamal-details.json: DH all five states selected, active state matched, controls shift0px at both widths; detailed source/formula screenshots visually read.",
         "learning": "/tmp/teach-all/chains-learning-batch6.log: strict require-registration passed both articles after metadata/canonical/TOC/topology integration.",
-        "static": "/tmp/teach-all/chains-dh-elgamal-tsc.log tsc passed; DHFlowViz strict passed."
+        "static": "/tmp/teach-all/chains-dh-elgamal-tsc.log tsc passed; DHFlowViz strict passed.",
+        "formulaLayout": "Final DH annotated identity split into three equivalent lines. chains-formula-widths.json verifies every formula fits390/1440; no content or numeric changes."
       },
       "remaining": [],
       "reviewDisposition": "substantive-rewrite"
@@ -7438,15 +7457,12 @@
     {
       "route": "crypto/lagrange",
       "title": "Lagrange 보간",
-      "status": "unreviewed",
+      "status": "rewritten-awaiting-integration-and-browser",
       "publicEntry": "src/pages/articles/blockchain/lagrange.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/lagrange.tsx",
-        "src/pages/articles/blockchain/lagrange/Formula.tsx",
-        "src/pages/articles/blockchain/lagrange/Overview.tsx",
-        "src/pages/articles/blockchain/lagrange/Usage.tsx",
-        "src/pages/articles/blockchain/lagrange/Vanishing.tsx",
-        "src/pages/articles/blockchain/math-viz-primitives.tsx"
+        "src/pages/articles/blockchain/lagrange/ModernArticle.tsx",
+        "src/pages/articles/blockchain/lagrange/viz/LagrangeFormulaViz.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -7460,7 +7476,11 @@
           "\n        Vanishing polynomial로 도메인 전체를 묶기\n      "
         ]
       },
-      "issues": [],
+      "issues": [
+        "기존4본문과3그림을 모두 읽었습니다. 용어·정리부터 시작하고 세 표본은 수식 설명 뒤에 나옵니다.",
+        "일반식에 기준량당 비율이라는 무관한 수식 주석이 붙어 있으며 같은 표본을 DLMF와 barycentric 원문에 적용하지 않았습니다.",
+        "유일성·소멸다항식·중복입력·실수와유한체경계는 보존하며 같은 작은 사례로 연결해야 합니다."
+      ],
       "fixture": null,
       "stageEvidence": {},
       "sourceEvidence": [],
@@ -7472,7 +7492,7 @@
         "browser1440": "pending"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "arithmetic/humanize/source review; metadata registration and browser"
       ]
     },
     {
@@ -8396,7 +8416,7 @@
     {
       "route": "crypto/shamir-secret-sharing",
       "title": "Shamir Secret Sharing: Polynomial Share·복원·Privacy 경계",
-      "status": "rewritten-awaiting-integration-and-browser",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/shamir-secret-sharing.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/shamir-secret-sharing.tsx",
@@ -8420,19 +8440,39 @@
         "기존 본문은 다항식·차수부터 시작하며 원문 q(i)에 같은 수를 대입하지 않았습니다.",
         "조각 변조·회차 혼합·계수0금지의 실제 반례를 추가해야 이해와 경계가 연결됩니다."
       ],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "F17 secret5, coefficient3 chosen uniformly0..16; shares(1,8),(2,11),(3,14); weights2,-1 recover5; indices1,3 weights10,8 recover5; tamper2nd to12 recovers4; refresh+4x ->12,2,9; mixedold/new ->14.",
+        "assumption": "Educational finite field, exact arithmetic. Coefficients include0; polynomial degree at mostt. No deployed sharing or VSS implementation claimed."
       },
-      "remaining": [
-        "new body written; arithmetic/humanize/source verification registration and browser pending"
-      ]
+      "stageEvidence": {
+        "S": "overview: three custodians, anytwo recover, stolenone discloses no additional info",
+        "B": "black-box: dealer/custodian/reconstructor roles",
+        "0": "case: same5,3 ->8,11,14 then2*8-11=5",
+        "1": "picture: FlowRail samecase distribution/reconstruction",
+        "2": "need: fixedcoefficient3 reveals5 and why finite uniform space",
+        "3": "names: share/threshold/field/interpolation; t randomcoefficients,degree≤t,k=t+1",
+        "4": "share-generation: exact5thvalue3 andzero coefficientsallowed",
+        "5": "reconstruction: actualweights,1&3 inverse9,192mod17=5; uniquenessrootproof",
+        "6": "source: Shamir1979§2 D5,q(x)5+3x,n3,k2,p17; original[0,p) includes0",
+        "7": "privacy-boundary/active-boundary/release: sameconditionaldistribution,priorunchanged,exclude0counterexample,reuseleak,tamper4,refresh5,mixed14,actualfailuretests; predictions10/11/8"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Shamir1979 original2page PDF MITarchive freshwebfullread; originalDOI10.1145/359168.359176 retained",
+          "application": "§2 q(i),D,n,k,p anduniform[0,p) directlymappedto same numerical example; reconstructq(0)=5; source doesnotclaimVSS."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read full previous publicbody and rewritten12sections; preserved interpolation/proof/privacy/VSSfailureconditions, improved same-case trace and precise degree convention.",
+        "arithmetic": "/tmp/teach-all/chains-shamir-arithmetic.json 14exactinteger checks including all17possible secrets andconditionaldistributions, weights, tamper, reuse, refreshmixed.",
+        "humanize": "/tmp/teach-all/humanize-chains-shamir/shamir-secret-sharing/gate.txt WARN from coordinate12) falsefootnote; two connective commas only; /root/teach_ai_theory readfull/diff/numbers/markers andindependentmath, independent-finalize.md approved.",
+        "browser390": "output/playwright/teach-chains-shamir/summary.json allzeroerrors; /tmp/teach-all/chains-shamir-crt-details.json verifies fullformula fit; personallyread reconstruction/source/active screenshots.",
+        "browser1440": "Same pagechecks anddetailed4sections at1440, noerrors.",
+        "learning": "Parentmergedbatch8. Strict require-registration crypto/shamir-secret-sharing passed2026-10-04.",
+        "static": "/tmp/teach-all/chains-shamir-crt-tsc.log tsc passed."
+      },
+      "remaining": [],
+      "reviewDisposition": "substantive-rewrite"
     },
     {
       "route": "crypto/snark-overview",

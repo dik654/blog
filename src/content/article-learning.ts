@@ -4491,92 +4491,571 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "점수 2를 내는 선택 3이 허용 범위 [0,2] 밖이라 제외되는 가정 사례를 추적합니다. 남은 답인 위치 2와 점수 3을 구별하고 실제 교재의 식에 같은 문제를 대입합니다."
   },
   "ai/math-optimization-convexity": {
-    coreIdea: "Convexity는 chord geometry를, L-smoothness는 gradient 변화 상한을, strong convexity는 최소 curvature를 정하고 condition number L/μ가 불균형을 요약합니다.",
-    assumedKnowledge: [
-      { id: "optimization-objective", role: "구조를 검사할 scalar objective를 읽습니다." },
-      { id: "minimizer", role: "함수 구조가 local과 global 정답을 연결하는 조건을 봅니다." },
-      { id: "gradient", role: "두 위치의 slope 차이를 읽습니다." },
-      { id: "local-linear-approximation", role: "현재 slope의 first-order prediction을 읽습니다." },
-      { id: "euclidean-norm", role: "Gradient 변화와 이동 거리를 비교합니다." },
+    "coreIdea": "두 점을 이은 선과 곡선의 관계, 이동 중 바뀌는 기울기의 크기를 따로 확인합니다. 같은 제곱 함수에서 현과 곡선의 차이, 직선 예측의 오차, 위아래 굽음을 계산하면 어느 조건이 보폭과 반복의 보장에 필요한지 구별할 수 있습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "optimization-objective",
+        "role": "성질을 확인할 점수 함수를 고정합니다."
+      },
+      {
+        "id": "minimizer",
+        "role": "주변의 최소와 전체의 최소를 구별합니다."
+      },
+      {
+        "id": "gradient",
+        "role": "한 위치의 입력별 변화율과 두 위치의 차이를 읽습니다."
+      },
+      {
+        "id": "local-linear-approximation",
+        "role": "출발점의 기울기로 다음 값의 변화를 예측합니다."
+      },
+      {
+        "id": "euclidean-norm",
+        "role": "기울기 변화와 이동 거리를 같은 기준으로 잽니다."
+      },
+      {
+        "id": "cauchy-schwarz",
+        "role": "적분 유도에서 기울기 차이와 이동의 내적을 두 길이의 곱으로 제한합니다. 펼침 설명과 정본 링크를 제공합니다."
+      }
     ],
-    introducedHere: [
-      { id: "convex-function", role: "Chord inequality로 global geometry를 판별합니다." },
-      { id: "l-smoothness", role: "Gradient 변화 upper bound를 정의합니다." },
-      { id: "descent-lemma", role: "Linear prediction error를 quadratic allowance로 제한합니다." },
-      { id: "strong-convexity", role: "Minimizer 주변 최소 curvature를 정합니다." },
-      { id: "condition-number", role: "Curvature 불균형을 L/μ로 읽습니다." },
+    "introducedHere": [
+      {
+        "id": "convex-function",
+        "role": "모든 두 입력과 섞는 비율에서 곡선과 현을 비교합니다."
+      },
+      {
+        "id": "l-smoothness",
+        "role": "이동 거리에 비해 기울기가 바뀌는 비율의 상한을 정합니다."
+      },
+      {
+        "id": "descent-lemma",
+        "role": "기울기의 직선 예측에 최대 오차를 더해 다음 값의 상한을 얻습니다."
+      },
+      {
+        "id": "strong-convexity",
+        "role": "접선 위에 반드시 남는 양수의 제곱 여유를 정합니다."
+      },
+      {
+        "id": "condition-number",
+        "role": "위쪽과 아래쪽 변화 규모의 비율을 좌표 기준과 함께 읽습니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "convex-function", sectionId: "convexity", intuition: "두 graph point를 이은 줄 위로 함수가 솟지 않습니다.", workedExample: "x^2의 chord gap은 λ(1−λ)(x−y)^2≥0입니다.", boundary: "모든 두 점과 λ∈[0,1]에서 확인합니다." },
-      { id: "l-smoothness", sectionId: "smoothness", intuition: "이동할 때 slope가 얼마나 급히 바뀔지 상한을 둡니다.", workedExample: "f(x)=ax^2/2이면 gradient는 ax입니다. 두 점 x,y에서 gradient 차이는 |ax−ay|=a|x−y|이므로 거리 한 단위당 slope 변화의 가장 작은 상한은 L=a입니다.", boundary: "Smoothness와 convexity는 서로 다른 조건입니다." },
-      { id: "descent-lemma", sectionId: "smoothness", intuition: "Tangent prediction에 curvature 최대 오차를 더한 upper envelope입니다.", workedExample: "f(x+d)≤f(x)+∇f(x)ᵀd+L‖d‖^2/2입니다. 첫 변화 항은 현재 slope가 예측한 이동이고 마지막 항은 slope가 이동 중 바뀔 수 있는 최대 오차입니다.", boundary: "L-smooth domain 밖에는 적용하지 않습니다.", proofIdea: "x에서 x+d까지 직선을 따라 움직이며 gradient를 적분합니다. 출발 gradient가 만드는 선형 변화와 실제 gradient의 차이는 이동 거리 s마다 최대 Ls이므로, 0부터 ‖d‖까지 적분하면 L‖d‖^2/2의 이차 여유가 생깁니다.", counterexample: "f(x)=|x|는 convex이지만 원점에서 gradient가 정의되지 않고 slope가 −1에서 1로 갑자기 뜁니다. 따라서 유한한 L의 smooth gradient를 전제로 한 descent lemma를 원점을 가로질러 그대로 적용할 수 없습니다." },
-      { id: "strong-convexity", sectionId: "curvature-range", intuition: "바닥이 너무 평평하지 않도록 최소 굽음을 요구합니다.", workedExample: "μx^2/2는 μ-strongly convex입니다.", boundary: "일반 deep loss에는 전역 strong convexity가 없습니다." },
-      { id: "condition-number", sectionId: "curvature-range", intuition: "가장 급한 방향과 평평한 방향의 curvature 비입니다.", workedExample: "L=100, μ=1이면 κ=100입니다.", boundary: "Parameter scaling에 따라 달라지며 wall-clock 자체가 아닙니다." },
+    "conceptExplanations": [
+      {
+        "id": "convex-function",
+        "sectionId": "convexity",
+        "intuition": "곡선이 두 점을 이은 선 위로 솟지 않습니다.",
+        "workedExample": "x²의 0과 2를 반씩 섞으면 실제 높이는 1, 현의 높이는 2입니다. 임의의 두 점의 차이는 λ(1−λ)(x−y)²≥0입니다.",
+        "boundary": "정의역도 볼록해야 하며 모든 두 점과 섞는 비율에서 확인합니다."
+      },
+      {
+        "id": "l-smoothness",
+        "sectionId": "smoothness",
+        "intuition": "입력을 같은 길이만큼 움직였을 때 기울기가 바뀌는 크기에 상한을 둡니다.",
+        "workedExample": "x²의 기울기 차이는 2|x−y|이므로 가장 작은 L=2입니다. ax²/2는 L=|a|이고 a≥0일 때 L=a입니다. 3x²/2의 L=3입니다.",
+        "boundary": "−x²도 L=2이므로 매끄러움이 볼록성을 뜻하지 않습니다."
+      },
+      {
+        "id": "descent-lemma",
+        "sectionId": "smoothness",
+        "intuition": "출발 기울기로 예측한 값에 이동 중 변화의 최대 여유를 더합니다.",
+        "workedExample": "f=x², x=1, d=.1, L=2이면 1+2×.1+(2/2)×.1²=1.21이며 실제 값과 같습니다.",
+        "boundary": "전체 이동 경로가 같은 L을 적용할 수 있는 영역 안에 있어야 합니다.",
+        "proofIdea": "경로 x+td의 기울기 차이는 Lt‖d‖ 이하입니다. 내적을 Cauchy–Schwarz로 제한한 뒤 t를 0부터 1까지 적분하면 L‖d‖²/2가 됩니다.",
+        "counterexample": "|x|는 볼록하지만 원점의 기울기가 없어 그곳을 가로지르는 매끄러운 기울기 가정을 충족하지 못합니다."
+      },
+      {
+        "id": "strong-convexity",
+        "sectionId": "curvature-range",
+        "intuition": "함수가 접선 위에서 최소한 μ‖d‖²/2만큼 높아야 하는 조건입니다.",
+        "workedExample": "x²의 정확한 접선 오차는 d²라 가장 큰 μ=2입니다. (x²+100y²)/2의 가장 큰 μ=1입니다.",
+        "boundary": "μ는 양수여야 합니다. x⁴는 엄격히 볼록해도 원점 근처에서 양수 μ의 조건을 만족하지 못합니다."
+      },
+      {
+        "id": "condition-number",
+        "sectionId": "curvature-range",
+        "intuition": "같은 보폭을 쓸 때 급한 방향과 평평한 방향이 얼마나 다른지 나타냅니다.",
+        "workedExample": "(x²+100y²)/2에서 L=100, μ=1이라 κ=100입니다. 간격 .01로 (1,1)→(.99,0)이 되어 두 방향의 진전이 다릅니다.",
+        "boundary": "상수의 촘촘함과 좌표 기준에 따라 달라지는 비율이며 실행 시간 자체가 아닙니다."
+      }
     ],
-    conceptStages: [
-      { label: "Chord", relation: "두 점 사이 global shape 판별", concepts: ["optimization-objective", "convex-function"] },
-      { label: "Upper", relation: "Gradient 변화와 tangent error 제한", concepts: ["gradient", "local-linear-approximation", "l-smoothness", "descent-lemma"] },
-      { label: "Lower", relation: "평평함 하한과 minimizer geometry", concepts: ["convex-function", "minimizer", "strong-convexity"] },
-      { label: "Ratio", relation: "Curvature 불균형 요약", concepts: ["l-smoothness", "strong-convexity", "condition-number"] },
+    "conceptStages": [
+      {
+        "label": "두 점 사이",
+        "relation": "현과 곡선의 관계를 모든 위치에서 확인합니다.",
+        "concepts": [
+          "optimization-objective",
+          "convex-function"
+        ]
+      },
+      {
+        "label": "위쪽 경계",
+        "relation": "기울기 변화와 직선 예측의 오차를 제한합니다.",
+        "concepts": [
+          "gradient",
+          "local-linear-approximation",
+          "l-smoothness",
+          "descent-lemma"
+        ]
+      },
+      {
+        "label": "아래쪽 경계",
+        "relation": "최소한의 굽음이 있는지 확인합니다.",
+        "concepts": [
+          "convex-function",
+          "minimizer",
+          "strong-convexity"
+        ]
+      },
+      {
+        "label": "비율",
+        "relation": "방향별 굽음의 차이를 같은 좌표에서 비교합니다.",
+        "concepts": [
+          "l-smoothness",
+          "strong-convexity",
+          "condition-number"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Convexity inequality의 mixed input과 chord를 식별할 수 있을까요?", answerChecklist: ["z=λx+(1−λ)y를 적는다.", "Weighted function values를 chord라 한다.", "f(z)가 chord 이하여야 한다."], requiredConcepts: ["convex-function"], sectionId: "convexity" },
-      { level: "basic", question: "x^2 convexity를 square gap으로 확인할 수 있을까요?", answerChecklist: ["Chord에서 mixed square를 뺀다.", "λ(1−λ)(x−y)^2를 얻는다.", "모든 항이 0 이상이다."], requiredConcepts: ["convex-function"], sectionId: "convexity" },
-      { level: "basic", question: "f=3x^2/2의 L을 구할 수 있을까요?", answerChecklist: ["Gradient 3x를 구한다.", "차이가 3|x−y|이다.", "L=3이다."], requiredConcepts: ["l-smoothness", "gradient"], sectionId: "smoothness" },
-      { level: "basic", question: "Descent lemma의 두 변화 항을 구분할 수 있을까요?", answerChecklist: ["Gradient dot move는 linear prediction이다.", "L norm-square/2는 curvature allowance다.", "전체는 upper bound다."], requiredConcepts: ["descent-lemma", "l-smoothness"], sectionId: "smoothness" },
-      { level: "basic", question: "Strong convexity가 추가하는 조건은 무엇일까요?", answerChecklist: ["Convexity를 먼저 말한다.", "μ>0 최소 curvature를 추가한다.", "바닥이 arbitrarily flat하지 않다."], requiredConcepts: ["convex-function", "strong-convexity"], sectionId: "curvature-range" },
-      { level: "basic", question: "L=12, μ=3의 κ를 계산할 수 있을까요?", answerChecklist: ["κ=4를 계산한다.", "Curvature scale 비라고 한다.", "Runtime seconds가 아니다."], requiredConcepts: ["l-smoothness", "strong-convexity", "condition-number"], sectionId: "curvature-range" },
-      { level: "advanced", question: "Convex nonsmooth와 smooth nonconvex 예를 들 수 있을까요?", answerChecklist: ["|x|를 든다.", "Sinusoid를 든다.", "두 조건은 독립이라고 한다."], requiredConcepts: ["convex-function", "l-smoothness"], sectionId: "smoothness" },
-      { level: "advanced", question: "d=−∇f/L를 descent lemma에 대입할 수 있을까요?", answerChecklist: ["Linear term은 −norm-square/L이다.", "Allowance는 norm-square/(2L)이다.", "합은 −norm-square/(2L)이다."], requiredConcepts: ["descent-lemma", "l-smoothness", "euclidean-norm"], sectionId: "smoothness" },
-      { level: "advanced", question: "κ가 큰 quadratic에서 scalar step이 어려운 이유는 무엇일까요?", answerChecklist: ["큰 L이 step을 제한한다.", "작은 μ 방향의 progress가 느리다.", "한 step으로 두 scale을 맞추기 어렵다."], requiredConcepts: ["condition-number", "l-smoothness", "strong-convexity"], sectionId: "curvature-range" },
-      { level: "advanced", question: "Deep loss에 strong-convex theorem을 그대로 적용하면 안 되는 이유는 무엇일까요?", answerChecklist: ["전역 strong convexity가 없다.", "Symmetry·basin·saddle이 있다.", "조건부 기준선으로만 사용한다."], requiredConcepts: ["convex-function", "strong-convexity"], sectionId: "curvature-range" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "입력을 섞는 것과 두 점의 함수값을 섞는 것은 어떻게 다른가요?",
+        "answerChecklist": [
+          "z=λx+(1−λ)y는 두 입력 사이의 위치입니다.",
+          "λf(x)+(1−λ)f(y)는 현의 높이입니다.",
+          "볼록 함수는 f(z)가 그 높이보다 크지 않습니다."
+        ],
+        "requiredConcepts": [
+          "convex-function"
+        ],
+        "sectionId": "convexity"
+      },
+      {
+        "level": "basic",
+        "question": "x²의 곡선이 현 아래에 놓이는 이유를 임의의 두 입력으로 설명할 수 있나요?",
+        "answerChecklist": [
+          "현에서 섞은 입력의 제곱을 뺍니다.",
+          "차이는 λ(1−λ)(x−y)²입니다.",
+          "0≤λ≤1이므로 모든 인수가 0 이상입니다."
+        ],
+        "requiredConcepts": [
+          "convex-function"
+        ],
+        "sectionId": "convexity"
+      },
+      {
+        "level": "basic",
+        "question": "f=3x²/2의 가장 작은 L은 얼마인가요?",
+        "answerChecklist": [
+          "기울기는 3x입니다.",
+          "두 기울기의 차이는 3|x−y|입니다.",
+          "가장 작은 L=3입니다."
+        ],
+        "requiredConcepts": [
+          "l-smoothness",
+          "gradient"
+        ],
+        "sectionId": "smoothness"
+      },
+      {
+        "level": "basic",
+        "question": "하강 보조정리의 선형 항과 제곱 항은 각각 무엇을 계산하나요?",
+        "answerChecklist": [
+          "∇f(x)ᵀd는 출발 기울기의 직선 예측입니다.",
+          "L‖d‖²/2는 이동 중 기울기가 달라지는 최대 여유입니다.",
+          "두 항을 현재 값에 더한 값은 다음 함수값의 상한입니다."
+        ],
+        "requiredConcepts": [
+          "descent-lemma",
+          "l-smoothness"
+        ],
+        "sectionId": "smoothness"
+      },
+      {
+        "level": "basic",
+        "question": "강한 볼록성이 보통의 볼록성에 추가하는 조건은 무엇인가요?",
+        "answerChecklist": [
+          "접선이 함수 아래에 놓인다는 관계를 더 강화합니다.",
+          "μ>0을 두고 접선 위에 μ‖d‖²/2만큼의 여유를 요구합니다.",
+          "x²는 μ=2이지만 x⁴는 원점 근처에서 양수 μ를 쓸 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "convex-function",
+          "strong-convexity"
+        ],
+        "sectionId": "curvature-range"
+      },
+      {
+        "level": "basic",
+        "question": "L=12, μ=3의 κ는 무엇이며 어떤 단위인가요?",
+        "answerChecklist": [
+          "κ=L/μ=4입니다.",
+          "같은 좌표에서의 변화 규모 비율입니다.",
+          "실행 시간을 초로 나타낸 수치가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "l-smoothness",
+          "strong-convexity",
+          "condition-number"
+        ],
+        "sectionId": "curvature-range"
+      },
+      {
+        "level": "advanced",
+        "question": "볼록하지만 매끄럽지 않은 함수와 매끄럽지만 볼록하지 않은 함수를 들 수 있나요?",
+        "answerChecklist": [
+          "|x|는 볼록하지만 원점에서 기울기가 없습니다.",
+          "sin x는 전체 실수에서 L=1이지만 볼록하지 않습니다.",
+          "−x²도 L=2이면서 볼록하지 않습니다.",
+          "두 조건은 서로 다릅니다."
+        ],
+        "requiredConcepts": [
+          "convex-function",
+          "l-smoothness"
+        ],
+        "sectionId": "smoothness"
+      },
+      {
+        "level": "advanced",
+        "question": "d=−∇f/L을 하강 보조정리에 넣으면 어떤 감소량을 얻나요?",
+        "answerChecklist": [
+          "L>0이고 경로 전체에 조건을 적용할 수 있어야 합니다.",
+          "선형 항은 −‖∇f‖²/L입니다.",
+          "제곱 여유는 ‖∇f‖²/(2L)입니다.",
+          "합하면 다음 값이 적어도 ‖∇f‖²/(2L)만큼 줄어듭니다."
+        ],
+        "requiredConcepts": [
+          "descent-lemma",
+          "l-smoothness",
+          "euclidean-norm"
+        ],
+        "sectionId": "smoothness"
+      },
+      {
+        "level": "advanced",
+        "question": "κ가 큰 이차 함수에서 하나의 보폭으로 두 방향을 맞추기 어려운 이유는 무엇인가요?",
+        "answerChecklist": [
+          "급한 방향의 L이 보폭을 제한합니다.",
+          "작은 μ 방향은 같은 보폭에서 적게 움직입니다.",
+          "q=(x²+100y²)/2에서 간격 .01은 (1,1)을 (.99,0)으로 보냅니다."
+        ],
+        "requiredConcepts": [
+          "condition-number",
+          "l-smoothness",
+          "strong-convexity"
+        ],
+        "sectionId": "curvature-range"
+      },
+      {
+        "level": "advanced",
+        "question": "신경망 손실에 강한 볼록성의 보장을 적용하기 전에 무엇을 확인해야 하나요?",
+        "answerChecklist": [
+          "해당 영역에서 양수 μ의 전제가 실제로 성립하는지 확인합니다.",
+          "같은 출력을 내는 여러 가중치와 여러 최소점은 전역 강한 볼록성 주장에 문제가 됩니다.",
+          "(a,b)와 (ca,b/c)는 곱 모형에서 같은 출력을 냅니다.",
+          "확인되지 않은 전역 보장 대신 조건이 성립하는 범위를 명시합니다."
+        ],
+        "requiredConcepts": [
+          "convex-function",
+          "strong-convexity"
+        ],
+        "sectionId": "boundaries"
+      }
     ],
+    "entryNote": "입력 0과 2의 중간 점수 1을 현의 높이 2와 비교합니다. 같은 함수의 1→1.1 이동에서 예측 1.2와 실제 1.21의 차이를 구한 뒤 원문의 위아래 경계에 대입합니다."
   },
   "ai/math-gradient-descent-convergence": {
-    coreIdea: "Gradient descent는 negative gradient와 learning rate로 iterate를 만들며 convergence theorem과 runtime stopping signal을 각각의 전제·결론으로 분리합니다.",
-    assumedKnowledge: [
-      { id: "optimization-objective", role: "반복해서 줄일 scalar 기준을 읽습니다." },
-      { id: "minimizer", role: "Objective gap 기준을 읽습니다." },
-      { id: "gradient", role: "Local increase direction을 읽습니다." },
-      { id: "local-linear-approximation", role: "Negative gradient가 local descent인 이유를 읽습니다." },
-      { id: "convex-function", role: "Local progress를 global optimum과 연결합니다." },
-      { id: "l-smoothness", role: "Safe step curvature bound를 재사용합니다." },
-      { id: "descent-lemma", role: "한 step 감소 부등식을 재사용합니다." },
-      { id: "strong-convexity", role: "Gradient와 objective gap을 연결합니다." },
-      { id: "euclidean-norm", role: "Gradient와 update 크기를 측정합니다." },
+    "coreIdea": "현재 기울기에 보폭을 곱해 위치를 갱신하고 새 위치의 기울기를 다시 구합니다. 같은 함수와 시작점에서도 보폭에 따라 거리와 점수가 다르게 변합니다. 한 번의 감소, 반복 뒤의 오차 경계, 계산을 멈춘 이유를 각 전제와 함께 읽어야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "optimization-objective",
+        "role": "반복해서 낮출 점수 함수를 고정합니다."
+      },
+      {
+        "id": "minimizer",
+        "role": "현재 함수값과 최솟값의 차이를 읽습니다."
+      },
+      {
+        "id": "gradient",
+        "role": "현재 위치에서의 증가 방향과 크기를 구합니다."
+      },
+      {
+        "id": "local-linear-approximation",
+        "role": "기울기 반대 방향의 작은 이동이 만드는 변화를 예측합니다."
+      },
+      {
+        "id": "convex-function",
+        "role": "정지점과 전역 최소점을 연결할 수 있는 조건을 구별합니다."
+      },
+      {
+        "id": "l-smoothness",
+        "role": "이동 중 기울기가 달라지는 상한을 적용합니다."
+      },
+      {
+        "id": "descent-lemma",
+        "role": "이동의 선형 감소와 제곱 오차를 비교합니다."
+      },
+      {
+        "id": "strong-convexity",
+        "role": "기울기의 크기와 현재 점수 오차를 연결합니다."
+      },
+      {
+        "id": "euclidean-norm",
+        "role": "같은 거리 기준으로 기울기와 이동량을 잽니다."
+      }
     ],
-    introducedHere: [
-      { id: "gradient-descent", role: "Negative gradient를 반복 update로 만듭니다." },
-      { id: "learning-rate", role: "Direction을 correction 크기로 바꿉니다." },
-      { id: "optimization-convergence", role: "Iteration별 objective-gap bound를 읽습니다." },
-      { id: "stationary-point", role: "Minimum·maximum·saddle을 구분합니다." },
-      { id: "optimization-stopping-signal", role: "Stop reason과 release evidence를 분리합니다." },
+    "introducedHere": [
+      {
+        "id": "gradient-descent",
+        "role": "새 위치에서 기울기를 다시 평가하는 반복 규칙을 만듭니다."
+      },
+      {
+        "id": "learning-rate",
+        "role": "기울기에 곱해 실제 이동량을 정하는 계수입니다."
+      },
+      {
+        "id": "optimization-convergence",
+        "role": "함수와 보폭의 조건 아래 반복 뒤 오차의 상한을 읽습니다."
+      },
+      {
+        "id": "stationary-point",
+        "role": "기울기가 0인 위치를 최소·최대·안장점과 구별합니다."
+      },
+      {
+        "id": "optimization-stopping-signal",
+        "role": "기울기·이동량·계산 한도 중 무엇 때문에 끝났는지 구별합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "gradient-descent", sectionId: "overview", intuition: "가장 가파른 오르막의 반대로 발걸음을 반복합니다.", workedExample: "f=x²/2, η=.5면 4→2→1입니다.", boundary: "Constraint·nonsmoothness·noise는 추가 처리가 필요합니다." },
-      { id: "learning-rate", sectionId: "overview", intuition: "Direction에 곱하는 보폭입니다.", workedExample: "η=.5는 수축, 2는 진동, 3은 발산합니다.", boundary: "Scale·parameterization·optimizer state에 의존합니다." },
-      { id: "optimization-convergence", sectionId: "convergence", intuition: "몇 step 뒤 gap을 전제와 함께 제한합니다.", workedExample: "Strong convex·smooth에서 gap≤(1−μ/L)^t gap0입니다.", boundary: "Actual equality나 nonconvex global guarantee가 아닙니다.", proofIdea: "Descent lemma와 strong convexity를 이어 contraction을 얻습니다.", counterexample: "f=x²/2도 η=2이면 진동합니다." },
-      { id: "stationary-point", sectionId: "stopping-boundary", intuition: "First-order slope가 0인 지점이지만 바닥이라는 뜻은 아닙니다.", workedExample: "원점은 x²의 minimum, −x²의 maximum, x²−y²의 saddle입니다.", boundary: "Small gradient는 global optimum을 보장하지 않습니다." },
-      { id: "optimization-stopping-signal", sectionId: "stopping-boundary", intuition: "Gradient·update·budget으로 반복 종료 이유를 기록합니다.", workedExample: "어느 tolerance나 budget이 발동했는지 receipt에 남깁니다.", boundary: "Training stop과 model release는 다른 결정입니다." },
+    "conceptExplanations": [
+      {
+        "id": "gradient-descent",
+        "sectionId": "update",
+        "intuition": "지금 위치의 기울기를 계산하고 그 반대로 이동한 뒤 새 위치에서 다시 평가합니다.",
+        "workedExample": "f=x²/2, η=.5이면 4→2→1→.5이고 점수는 8→2→.5→.125입니다.",
+        "boundary": "처음 기울기 4를 고정하면 4→2→0→−2로 달라집니다. 제약·비미분·일부 데이터의 기울기는 별도 처리가 필요합니다."
+      },
+      {
+        "id": "learning-rate",
+        "sectionId": "step-size",
+        "intuition": "기울기에 곱하는 수가 실제 이동량을 정하므로 방향이 같아도 경로가 달라집니다.",
+        "workedExample": "같은 시작값 4에서 η=.5는 절반씩 수축하고 η=2는 ±4를 왕복하며 η=3은 4→−8→16→−32로 갑니다.",
+        "boundary": "이동 거리는 η 자체가 아니라 η‖∇f‖입니다. 함수의 크기와 좌표 단위도 함께 확인합니다."
+      },
+      {
+        "id": "optimization-convergence",
+        "sectionId": "convergence",
+        "intuition": "확인한 함수 조건과 보폭을 사용했을 때 몇 번 뒤 오차가 얼마나 남을지 제한합니다.",
+        "workedExample": "μ=2,L=8,η=1/L이면 네 번 뒤 오차는 초기의 81/256 이하입니다. 실제 q=x²+4y²의 (1,0)에서는 6561/65536이 남습니다.",
+        "boundary": "상한은 실제 값과 같을 필요가 없습니다. 정확한 기울기·강한 볼록성·매끄러움·고정 η=1/L을 확인합니다.",
+        "proofIdea": "매끄러움의 감소 ‖g‖²/(2L)에 강한 볼록성의 ‖g‖²≥2μΔ를 넣어 한 번의 오차 상한 (1−μ/L)Δ를 얻습니다.",
+        "counterexample": "같은 f=x²/2도 η=2이면 4와 −4를 왕복하므로 함수의 좋은 조건만으로 임의의 보폭을 정당화하지 못합니다."
+      },
+      {
+        "id": "stationary-point",
+        "sectionId": "stopping-boundary",
+        "intuition": "기울기가 0이라는 정보는 1차 변화가 보이지 않는다는 뜻이며 주변의 높낮이까지 말하지 않습니다.",
+        "workedExample": "원점은 x²의 최소점, −x²의 최대점, x²−y²의 안장점입니다.",
+        "boundary": "볼록성 등의 전제 없이 정지점을 전역 최소점으로 해석하지 않습니다."
+      },
+      {
+        "id": "optimization-stopping-signal",
+        "sectionId": "stopping-boundary",
+        "intuition": "계산을 끝낸 이유를 기울기 크기, 실제 이동량, 허용한 반복 횟수로 나누어 기록합니다.",
+        "workedExample": "기울기 4와 η=.000001의 이동 .000004는 작지만 최적점에 가깝다는 뜻이 아닙니다. η=.5에서 기울기 허용오차 .6이면 세 번 뒤 x=.5에서 멈출 수 있습니다.",
+        "boundary": "반복 종료와 새 데이터에서의 품질 및 실제 사용 조건은 별도로 검증합니다."
+      }
     ],
-    conceptStages: [
-      { label: "방향", relation: "Gradient 부호를 바꿔 descent direction 선택", concepts: ["gradient", "local-linear-approximation", "gradient-descent"] },
-      { label: "보폭", relation: "Direction을 correction으로 변환", concepts: ["learning-rate", "gradient-descent", "l-smoothness", "descent-lemma"] },
-      { label: "보장", relation: "함수 구조와 update에서 gap bound 유도", concepts: ["convex-function", "strong-convexity", "gradient-descent", "optimization-convergence"] },
-      { label: "멈춤", relation: "Stationary proximity와 operational stop 분리", concepts: ["stationary-point", "optimization-stopping-signal"] },
+    "conceptStages": [
+      {
+        "label": "방향",
+        "relation": "현재 기울기 반대쪽의 작은 이동을 계산합니다.",
+        "concepts": [
+          "gradient",
+          "local-linear-approximation",
+          "gradient-descent"
+        ]
+      },
+      {
+        "label": "보폭",
+        "relation": "기울기에 계수를 곱하고 실제 감소의 조건을 확인합니다.",
+        "concepts": [
+          "learning-rate",
+          "gradient-descent",
+          "l-smoothness",
+          "descent-lemma"
+        ]
+      },
+      {
+        "label": "보장",
+        "relation": "현재 오차와 한 번의 감소를 이어 반복 뒤 상한을 얻습니다.",
+        "concepts": [
+          "convex-function",
+          "strong-convexity",
+          "gradient-descent",
+          "optimization-convergence"
+        ]
+      },
+      {
+        "label": "종료",
+        "relation": "정지점의 의미와 계산을 끝내는 조건을 구별합니다.",
+        "concepts": [
+          "stationary-point",
+          "optimization-stopping-signal"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "f=x²/2 update를 (1−η)x_t로 정리할 수 있을까요?", answerChecklist: ["Gradient는 x_t다.", "x_t−ηx_t를 쓴다.", "(1−η)x_t로 묶는다."], requiredConcepts: ["gradient-descent", "learning-rate", "gradient"], sectionId: "update" },
-      { level: "basic", question: "x0=4, η=.5의 첫 세 update는 무엇일까요?", answerChecklist: ["Factor .5를 구한다.", "4→2→1→.5다.", "0으로 수축한다."], requiredConcepts: ["gradient-descent", "learning-rate"], sectionId: "step-size" },
-      { level: "basic", question: "η=2가 수렴하지 않는 이유는 무엇일까요?", answerChecklist: ["Factor는 −1이다.", "Distance가 줄지 않는다.", "4와 −4를 진동한다."], requiredConcepts: ["gradient-descent", "learning-rate"], sectionId: "step-size" },
-      { level: "basic", question: "η=3의 첫 세 위치를 계산할 수 있을까요?", answerChecklist: ["Factor는 −2다.", "4→−8→16이다.", "Magnitude가 커진다."], requiredConcepts: ["gradient-descent", "learning-rate"], sectionId: "step-size" },
-      { level: "basic", question: "Gradient 0인 세 원점을 분류할 수 있을까요?", answerChecklist: ["x²는 minimum이다.", "−x²는 maximum이다.", "x²−y²는 saddle이다."], requiredConcepts: ["stationary-point", "gradient"], sectionId: "stopping-boundary" },
-      { level: "basic", question: "Gradient·update·budget stop의 차이는 무엇일까요?", answerChecklist: ["Gradient는 slope다.", "Update는 actual move다.", "Budget은 resource limit이다."], requiredConcepts: ["optimization-stopping-signal", "learning-rate"], sectionId: "stopping-boundary" },
-      { level: "advanced", question: "μ=2,L=8의 four-step gap bound를 계산할 수 있을까요?", answerChecklist: ["Factor는 3/4다.", "Four-step은 81/256이다.", "Strong convex·smooth·exact gradient 전제를 적는다."], requiredConcepts: ["optimization-convergence", "strong-convexity", "l-smoothness"], sectionId: "convergence" },
-      { level: "advanced", question: "Convergence proof의 두 부등식 역할은 무엇일까요?", answerChecklist: ["Descent lemma가 한 step 감소를 준다.", "Strong convexity가 gradient와 gap을 잇는다.", "둘을 이어 contraction을 얻는다."], requiredConcepts: ["optimization-convergence", "descent-lemma", "strong-convexity"], sectionId: "convergence" },
-      { level: "advanced", question: "Tiny learning rate 때문에 stationary를 오판하지 않는 방법은 무엇일까요?", answerChecklist: ["Update norm은 η 영향도 받는다.", "Gradient norm을 별도로 본다.", "η와 trigger를 receipt에 기록한다."], requiredConcepts: ["learning-rate", "stationary-point", "optimization-stopping-signal"], sectionId: "stopping-boundary" },
-      { level: "advanced", question: "Training stop과 release를 분리한 gate를 설계할 수 있을까요?", answerChecklist: ["Stop reason을 기록한다.", "Held-out quality·safety를 별도 평가한다.", "Resource와 rollback artifact를 남긴다."], requiredConcepts: ["optimization-stopping-signal", "optimization-convergence"], sectionId: "stopping-boundary" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "f=x²/2의 다음 위치가 왜 (1−η)xₜ인가요?",
+        "answerChecklist": [
+          "현재 기울기는 xₜ입니다.",
+          "다음 위치는 xₜ−ηxₜ입니다.",
+          "xₜ를 묶으면 (1−η)xₜ입니다."
+        ],
+        "requiredConcepts": [
+          "gradient-descent",
+          "learning-rate",
+          "gradient"
+        ],
+        "sectionId": "update"
+      },
+      {
+        "level": "basic",
+        "question": "x₀=4, η=.5의 첫 세 번 이동을 계산할 수 있나요?",
+        "answerChecklist": [
+          "반복 배율은 .5입니다.",
+          "위치는 4→2→1→.5입니다.",
+          "0까지의 거리가 매번 절반으로 줄어듭니다."
+        ],
+        "requiredConcepts": [
+          "gradient-descent",
+          "learning-rate"
+        ],
+        "sectionId": "step-size"
+      },
+      {
+        "level": "basic",
+        "question": "같은 시작점에서 η=2가 0으로 가지 않는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "반복 배율은 −1입니다.",
+          "4와 −4를 번갈아 방문합니다.",
+          "거리는 4, 점수는 8로 줄어들지 않습니다."
+        ],
+        "requiredConcepts": [
+          "gradient-descent",
+          "learning-rate"
+        ],
+        "sectionId": "step-size"
+      },
+      {
+        "level": "basic",
+        "question": "η=3의 처음 세 위치와 세 번 뒤 위치는 무엇인가요?",
+        "answerChecklist": [
+          "반복 배율은 −2입니다.",
+          "처음 세 위치는 4, −8, 16입니다.",
+          "세 번 뒤에는 −32이고 거리와 점수가 커집니다."
+        ],
+        "requiredConcepts": [
+          "gradient-descent",
+          "learning-rate"
+        ],
+        "sectionId": "step-size"
+      },
+      {
+        "level": "basic",
+        "question": "기울기 0인 x²·−x²·x²−y²의 원점은 어떻게 다른가요?",
+        "answerChecklist": [
+          "x²에서는 주변보다 낮은 최소점입니다.",
+          "−x²에서는 주변보다 높은 최대점입니다.",
+          "x²−y²에서는 이동 방향에 따라 높아지거나 낮아지는 안장점입니다."
+        ],
+        "requiredConcepts": [
+          "stationary-point",
+          "gradient"
+        ],
+        "sectionId": "stopping-boundary"
+      },
+      {
+        "level": "basic",
+        "question": "기울기·이동량·반복 한도에 따른 종료는 무엇이 다른가요?",
+        "answerChecklist": [
+          "기울기는 현재 함수의 변화율입니다.",
+          "이동량은 학습률까지 반영한 실제 위치 변화입니다.",
+          "반복 한도는 계산 자원을 다 썼다는 뜻입니다.",
+          "어떤 조건이 성립했는지 기록합니다."
+        ],
+        "requiredConcepts": [
+          "optimization-stopping-signal",
+          "learning-rate"
+        ],
+        "sectionId": "stopping-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "μ=2, L=8, η=1/L일 때 네 번 뒤 오차의 상한은 얼마인가요?",
+        "answerChecklist": [
+          "한 번의 비율은 1−2/8=3/4입니다.",
+          "네 번 뒤 상한은 초기 오차의 81/256입니다.",
+          "전역 강한 볼록성·매끄러움·정확한 기울기·최소점 존재를 확인합니다.",
+          "실제 오차는 이 상한보다 작을 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "optimization-convergence",
+          "strong-convexity",
+          "l-smoothness"
+        ],
+        "sectionId": "convergence"
+      },
+      {
+        "level": "advanced",
+        "question": "수렴 증명에서 두 부등식은 각각 무엇을 하나요?",
+        "answerChecklist": [
+          "매끄러움은 한 번의 감소가 ‖g‖²/(2L) 이상임을 줍니다.",
+          "강한 볼록성은 ‖g‖²≥2μΔ를 줍니다.",
+          "이를 이어 다음 오차가 (1−μ/L)Δ 이하임을 얻습니다."
+        ],
+        "requiredConcepts": [
+          "optimization-convergence",
+          "descent-lemma",
+          "strong-convexity"
+        ],
+        "sectionId": "convergence"
+      },
+      {
+        "level": "advanced",
+        "question": "아주 작은 학습률 때문에 작은 이동을 최적점의 증거로 오해하지 않으려면 무엇을 봐야 하나요?",
+        "answerChecklist": [
+          "이동량은 η‖∇f‖라 η만 작아도 작아집니다.",
+          "기울기 크기를 별도로 봅니다.",
+          "기울기 4와 η=.000001의 이동 .000004를 계산합니다.",
+          "학습률과 실제 종료 조건을 함께 기록합니다."
+        ],
+        "requiredConcepts": [
+          "learning-rate",
+          "stationary-point",
+          "optimization-stopping-signal"
+        ],
+        "sectionId": "stopping-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "학습 종료 뒤 모델의 사용 여부를 결정하려면 무엇을 더 확인해야 하나요?",
+        "answerChecklist": [
+          "계산이 멈춘 이유를 남깁니다.",
+          "보지 않은 데이터의 품질과 필요한 안전 조건을 평가합니다.",
+          "실제 장치의 시간과 메모리를 확인합니다.",
+          "모델 버전·설정과 문제가 생길 때 돌아갈 모델을 정합니다."
+        ],
+        "requiredConcepts": [
+          "optimization-stopping-signal",
+          "optimization-convergence"
+        ],
+        "sectionId": "stopping-boundary"
+      }
     ],
+    "entryNote": "f=x²/2의 시작값 4에서 0.5·2·3을 기울기에 곱해 빼는 세 경로를 비교합니다. 같은 수치에 실제 교재의 감소식을 대입하고 보폭을 고르는 원문의 규칙과 글의 고정 보폭을 구별합니다."
   },
   "ai/perceptron": {
     coreIdea:
@@ -26606,38 +27085,207 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "후보 다섯 개의 두 점수표에서 값의 차이와 8/10 방향 일치를 따로 계산합니다."
   },
   "ai/hyperparameter-tuning": {
-    entryLevel: true,
-    entryNote: "Parameter와 hyperparameter를 처음 구분하는 데서 시작해 trial·study·validation·outer evaluation을 한 단계씩 쌓습니다.",
-    coreIdea: "튜닝은 동일한 실험 계약에서 configuration을 비교하고 validation으로 선택한 뒤, 선택에 쓰지 않은 outer data에서 고정된 절차를 평가하는 과정입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "hpo-selection-evaluation-contract", role: "Trial 비교·validation 선택·outer evaluation의 data 역할을 분리합니다." },
-      { id: "random-search-hit-probability", role: "Sampling distribution의 유망 영역과 trial budget을 성공 확률로 연결합니다." },
+    "entryLevel": true,
+    "entryNote": "세 후보의 비용30과 선택 점수0.20, 독립 평가0.23을 한 경로로 추적합니다.",
+    "coreIdea": "튜닝은 동일한 실험 계약에서 configuration을 비교하고 validation으로 선택한 뒤, 선택에 쓰지 않은 outer data에서 고정된 절차를 평가하는 과정입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "hpo-selection-evaluation-contract",
+        "role": "Trial 비교·validation 선택·outer evaluation의 data 역할을 분리합니다."
+      },
+      {
+        "id": "random-search-hit-probability",
+        "role": "Sampling distribution의 유망 영역과 trial budget을 성공 확률로 연결합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "hpo-selection-evaluation-contract", sectionId: "selection-contract", intuition: "같은 시험으로 여러 학습 설정을 고른 뒤 아직 열지 않은 시험으로 선택이 끝난 절차를 평가합니다.", workedExample: "같은 folds·20k updates·metric으로 40 configurations를 비교하고 선택된 설정을 outer fold에서 세 seeds로 평가합니다.", boundary: "Outer 결과를 본 뒤 설정을 바꾸면 그 data도 selection에 사용된 것입니다." },
-      { id: "random-search-hit-probability", sectionId: "trial-budget", intuition: "당첨 영역의 크기와 추첨 횟수로 적어도 한 번 만날 가능성을 계산합니다.", workedExample: "p=.05일 때 20회 hit 확률은 약 .64, 60회는 약 .95입니다.", boundary: "p를 실제로 안다는 뜻이 아니며 invalid trials와 dependent proposals에는 그대로 적용하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "hpo-selection-evaluation-contract",
+        "sectionId": "selection-contract",
+        "intuition": "같은 조건의 후보 중 하나를 고르되 선택을 보고할 새 시험은 따로 남깁니다.",
+        "workedExample": "A/B/C 각10 GPU분을 더해30을 쓴 뒤 손실0.24·0.20·0.22에서B를 고르고 별도 평가0.23을 보고합니다.",
+        "boundary": "총 예산은 개별 비용이 아니라 시도 전체의 합이며 독립 평가를 본 뒤 고치면 새 평가 경계가 필요합니다."
+      },
+      {
+        "id": "random-search-hit-probability",
+        "sectionId": "trial-budget",
+        "intuition": "모두 놓치는 사건을 전체에서 빼면 한 번 이상 좋은 영역을 만나는 확률이 됩니다.",
+        "workedExample": "고정 p=0.05의 독립3회에서1−0.95³=0.142625,20회약64.15%,60회약95.39%입니다.",
+        "boundary": "실제 좋은 영역의 크기를 아는 것은 아니며 적응형 제안의 의존성에 고정 p 독립 모형을 그대로 적용하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "계약", relation: "configuration·trial·study와 공정한 비교 조건을 고정", concepts: ["hpo-selection-evaluation-contract"] },
-      { label: "예산", relation: "sampling mass와 trial 수로 탐색 가능성을 계산", concepts: ["random-search-hit-probability"] },
-      { label: "평가", relation: "validation 선택 뒤 untouched outer data에서 절차 보고", concepts: ["hpo-selection-evaluation-contract"] },
+    "conceptStages": [
+      {
+        "label": "계약",
+        "relation": "configuration·trial·study와 공정한 비교 조건을 고정",
+        "concepts": [
+          "hpo-selection-evaluation-contract"
+        ]
+      },
+      {
+        "label": "예산",
+        "relation": "sampling mass와 trial 수로 탐색 가능성을 계산",
+        "concepts": [
+          "random-search-hit-probability"
+        ]
+      },
+      {
+        "label": "평가",
+        "relation": "validation 선택 뒤 untouched outer data에서 절차 보고",
+        "concepts": [
+          "hpo-selection-evaluation-contract"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Parameter와 hyperparameter를 예와 함께 구분하세요.", answerChecklist: ["weight", "training updates weight", "learning rate", "fixed before trial", "configuration", "not interchangeable"], requiredConcepts: ["hpo-selection-evaluation-contract"], sectionId: "overview" },
-      { level: "basic", question: "Configuration·trial·study를 순서대로 정의하세요.", answerChecklist: ["setting bundle", "one execution", "shared objective", "history", "resource", "revision"], requiredConcepts: ["hpo-selection-evaluation-contract"], sectionId: "overview" },
-      { level: "basic", question: "모든 trials에서 같아야 할 네 조건을 쓰세요.", answerChecklist: ["split", "metric", "training resource", "seed policy", "configuration only changes", "comparison"], requiredConcepts: ["hpo-selection-evaluation-contract"], sectionId: "selection-contract" },
-      { level: "basic", question: "Validation과 outer data의 역할을 구분하세요.", answerChecklist: ["validation selects", "outer unused", "fixed procedure", "one report", "change consumes outer", "new data"], requiredConcepts: ["hpo-selection-evaluation-contract"], sectionId: "selection-contract" },
-      { level: "basic", question: "p=.05, N=20의 hit probability를 계산하세요.", answerChecklist: ["miss .95", "power 20", "subtract from one", "about .64", "independence", "promising mass"], requiredConcepts: ["random-search-hit-probability"], sectionId: "trial-budget" },
-      { level: "basic", question: "Trial budget에 기록할 항목을 쓰세요.", answerChecklist: ["max trials", "wall clock", "per-trial resource", "failure rule", "candidate families", "stop tolerance"], requiredConcepts: ["random-search-hit-probability"], sectionId: "trial-budget" },
-      { level: "advanced", question: "Selection 식의 feasible set·argmin·outer 연산 의도를 설명하세요.", answerChecklist: ["budget filter", "same validation", "returns configuration", "outer unused", "procedure fixed", "risk report"], requiredConcepts: ["hpo-selection-evaluation-contract"], sectionId: "selection-contract" },
-      { level: "advanced", question: "Hit probability 식을 complement event에서 유도하세요.", answerChecklist: ["one miss", "independent misses", "all miss power", "complement", "at least one", "assumption"], requiredConcepts: ["random-search-hit-probability"], sectionId: "trial-budget" },
-      { level: "advanced", question: "Outer 결과를 본 뒤 space를 바꾼 경우 다음 절차를 설계하세요.", answerChecklist: ["outer consumed", "record adaptation", "new study revision", "new independent data", "freeze", "report both"], requiredConcepts: ["hpo-selection-evaluation-contract"], sectionId: "outer-evaluation" },
-      { level: "advanced", question: "공정한 tuning receipt를 설계하세요.", answerChecklist: ["split digest", "metric revision", "search space", "budget", "trial states", "selected config", "outer result", "stop rule"], requiredConcepts: ["hpo-selection-evaluation-contract", "random-search-hit-probability"], sectionId: "outer-evaluation" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "A/B/C의 같은 조건 손실이 0.24·0.20·0.22이면 어느 설정을 고르나요?",
+        "answerChecklist": [
+          "B",
+          "0.20",
+          "선택용 평가"
+        ],
+        "sectionId": "selection-contract",
+        "requiredConcepts": [
+          "hpo-selection-evaluation-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "한 후보가 10 GPU분이고 총 탐색 예산이 30 GPU분이면 세 완료 뒤 잔액은 얼마인가요?",
+        "answerChecklist": [
+          "0",
+          "10+10+10=30",
+          "넷째 추가 불가"
+        ],
+        "sectionId": "selection-contract",
+        "requiredConcepts": [
+          "hpo-selection-evaluation-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "학습하며 바뀌는 가중치와 시험 전에 정한 학습률은 각각 무엇인가요?",
+        "answerChecklist": [
+          "parameter",
+          "hyperparameter",
+          "역할 구분"
+        ],
+        "sectionId": "tuning-terms",
+        "requiredConcepts": [
+          "hpo-selection-evaluation-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "B의 선택용 점수 0.20과 독립 평가 0.23은 각각 어떤 역할인가요?",
+        "answerChecklist": [
+          "0.20 선택",
+          "0.23 고정 절차 보고",
+          "독립 자료"
+        ],
+        "sectionId": "outer-evaluation",
+        "requiredConcepts": [
+          "hpo-selection-evaluation-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "독립 추첨 p=0.05를 세 번 할 때 한 번 이상 좋은 영역에 들어갈 확률은 얼마인가요?",
+        "answerChecklist": [
+          "1−0.95³",
+          "0.142625",
+          "고정 분포 가정"
+        ],
+        "sectionId": "trial-budget",
+        "requiredConcepts": [
+          "random-search-hit-probability"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 p=0.05에서 20회와 60회의 성공 확률은 대략 얼마인가요?",
+        "answerChecklist": [
+          "약 64.15%",
+          "약 95.39%",
+          "최적 보장 아님"
+        ],
+        "sectionId": "trial-budget",
+        "requiredConcepts": [
+          "random-search-hit-probability"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "모든 개별 비용이 30보다 작으면 총 예산 30을 지킨 것인가요?",
+        "answerChecklist": [
+          "아님",
+          "합계 필요",
+          "실패 비용 포함",
+          "GPU분과 벽시계 구분"
+        ],
+        "sectionId": "selection-contract",
+        "requiredConcepts": [
+          "hpo-selection-evaluation-contract"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "성공 확률 식을 모두 실패하는 사건에서 유도하고 적응형 제안의 한계를 쓰세요.",
+        "answerChecklist": [
+          "한번 0.95",
+          "독립곱",
+          "여사건",
+          "고정 p",
+          "의존 제안에 그대로 불가"
+        ],
+        "sectionId": "trial-budget",
+        "requiredConcepts": [
+          "random-search-hit-probability"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "독립 평가 0.23을 본 뒤 학습률을 바꾸었다면 어떤 경계를 다시 만들어야 하나요?",
+        "answerChecklist": [
+          "기존 평가 선택에 사용",
+          "변경 이력",
+          "새 독립 자료",
+          "재동결"
+        ],
+        "sectionId": "outer-evaluation",
+        "requiredConcepts": [
+          "hpo-selection-evaluation-contract"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "논문 식(4)의 후보 집합에 A/B/C를 넣을 때 무엇을 얻고 무엇을 보장하지 못하나요?",
+        "answerChecklist": [
+          "관측 후보 중 B",
+          "전체 공간 최적 아님",
+          "일반화 오차 실제값 아님"
+        ],
+        "sectionId": "paper-random-search",
+        "requiredConcepts": [
+          "hpo-selection-evaluation-contract"
+        ]
+      }
     ],
-    papers: [
-      { title: "Random Search for Hyper-Parameter Optimization", href: "https://www.jmlr.org/papers/v13/bergstra12a.html", problem: "Grid가 중요하지 않은 axes를 반복하는 문제", contribution: "Random search가 중요한 axes에서 더 다양한 값을 보는 분석과 실험", assumptions: "논문의 fixed domains·tasks·budgets", evidenceScope: "JMLR 2012 experiments와 GP analysis", notClaim: "모든 objective에서 random이 항상 최적이라는 뜻은 아님", sectionId: "paper-random-search" },
-    ],
+    "papers": [
+      {
+        "title": "Random Search for Hyper-Parameter Optimization",
+        "href": "https://jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf",
+        "problem": "동일 예산에서 설정을 선택하고 평가할 때 실제 후보 집합과 이상적 최적을 구분하는 문제",
+        "contribution": "유한 후보의 선택식과 validation/test 평가 구분을 제시하고 무작위 탐색을 분석합니다.",
+        "assumptions": "원 논문의 학습 과제와 고정된 탐색 공간·예산·자료 평가 조건에 따릅니다.",
+        "evidenceScope": "282쪽 식(4)와285쪽 §2.2의 선택용·시험용 평가 함수 정의를 직접 적용합니다.",
+        "notClaim": "세 후보 중B를 선택하는 일이 전체 공간의 최적이나 정확한 미래 위험을 증명한다는 주장이 아닙니다.",
+        "sectionId": "paper-random-search"
+      }
+    ]
   },
   "ai/adaptive-hyperparameter-search": {
     "entryLevel": true,
@@ -26860,110 +27508,660 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/search-space-design": {
-    entryLevel: true,
-    entryNote: "값의 type부터 시작해 log scale·conditional branch·resource constraint를 한 단계씩 추가합니다.",
-    coreIdea: "Search space는 parameter의 type·scale·bounds·conditional existence와 hard feasibility를 함께 정해 configuration을 생성하는 versioned 규칙입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "log-uniform-parameter-sampling", role: "Positive parameter의 orders of magnitude에 같은 확률을 줍니다." },
-      { id: "typed-conditional-search-space", role: "Type·scale·bounds와 parent-child 존재 조건을 정의합니다." },
-      { id: "feasible-search-space-constraint", role: "Resource·compatibility hard constraint를 통과한 후보만 남깁니다." },
+    "entryLevel": true,
+    "entryNote": "중간 위치0.5를 로그 좌표로 옮겨0.001을 만들고 분기와20GB 사전 조건을 적용합니다.",
+    "coreIdea": "Search space는 parameter의 type·scale·bounds·conditional existence와 hard feasibility를 함께 정해 configuration을 생성하는 versioned 규칙입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "log-uniform-parameter-sampling",
+        "role": "Positive parameter의 orders of magnitude에 같은 확률을 줍니다."
+      },
+      {
+        "id": "typed-conditional-search-space",
+        "role": "Type·scale·bounds와 parent-child 존재 조건을 정의합니다."
+      },
+      {
+        "id": "feasible-search-space-constraint",
+        "role": "Resource·compatibility hard constraint를 통과한 후보만 남깁니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "log-uniform-parameter-sampling", sectionId: "scale", intuition: "자릿수가 같은 구간마다 같은 수의 표를 줍니다.", workedExample: "1e-5~1e-1 네 decades가 각각 25% 확률을 가집니다.", boundary: "0·음수 또는 additive scale에는 그대로 쓰지 않습니다." },
-      { id: "typed-conditional-search-space", sectionId: "conditional-space", intuition: "본체를 고른 뒤 그 본체에 존재하는 옵션만 엽니다.", workedExample: "SGD branch에서만 momentum을 생성합니다.", boundary: "없는 child를 0으로 채우면 실제 0과 의미가 중복됩니다." },
-      { id: "feasible-search-space-constraint", sectionId: "conditional-space", intuition: "경기 전에 규격을 통과할 수 없는 조합을 제외합니다.", workedExample: "예상 22GB 후보를 20GB hard limit에서 제안하지 않습니다.", boundary: "Estimator error의 실제 OOM은 FAIL evidence로 남깁니다." },
+    "conceptExplanations": [
+      {
+        "id": "log-uniform-parameter-sampling",
+        "sectionId": "scale",
+        "intuition": "곱셈 비율이 같은 구간마다 같은 비중을 주려면 로그 좌표에서 균등하게 고릅니다.",
+        "workedExample": "1e-5~1e-1에서u=0.5는1e-3이며 네 자릿수 구간은 각각25%입니다.",
+        "boundary": "양의 범위와 균등 로그 추첨 조건이며 log=True만으로 모든 적응형 제안의 분포가 균등해지는 것은 아닙니다."
+      },
+      {
+        "id": "typed-conditional-search-space",
+        "sectionId": "conditional-space",
+        "intuition": "상위 방법을 정한 뒤 그 방법에 실제로 존재하는 선택 사항만 생성합니다.",
+        "workedExample": "SGD 후보P에는momentum0.9를 만들고 다른 분기에는 같은 이름의 가짜0을 채우지 않습니다.",
+        "boundary": "공식 SVC 분기의 svc_c처럼 존재 조건을 보존하며 라이브러리 전체 인자와 이번 탐색 변수는 다를 수 있습니다."
+      },
+      {
+        "id": "feasible-search-space-constraint",
+        "sectionId": "conditional-space",
+        "intuition": "조합 조건과 예상 자원 조건을 모두 통과한 후보를 다음 단계로 보냅니다.",
+        "workedExample": "20GB 상한에서 유효P의 예상18GB는1×1=1, 유효Q의22GB는1×0=0입니다.",
+        "boundary": "예상 통과가 실제 메모리 보장이 아니며 무효 후보 제거와 재추첨은 실효 분포를 바꿀 수 있습니다."
+      }
     ],
-    conceptStages: [
-      { label: "형태", relation: "Parameter type·scale·bounds를 고정", concepts: ["log-uniform-parameter-sampling", "typed-conditional-search-space"] },
-      { label: "분기", relation: "Parent 선택에 맞는 child만 생성", concepts: ["typed-conditional-search-space"] },
-      { label: "실행", relation: "Hard constraints를 통과한 후보만 제안", concepts: ["feasible-search-space-constraint"] },
+    "conceptStages": [
+      {
+        "label": "형태",
+        "relation": "Parameter type·scale·bounds를 고정",
+        "concepts": [
+          "log-uniform-parameter-sampling",
+          "typed-conditional-search-space"
+        ]
+      },
+      {
+        "label": "분기",
+        "relation": "Parent 선택에 맞는 child만 생성",
+        "concepts": [
+          "typed-conditional-search-space"
+        ]
+      },
+      {
+        "label": "실행",
+        "relation": "Hard constraints를 통과한 후보만 제안",
+        "concepts": [
+          "feasible-search-space-constraint"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Type·scale·condition·constraint를 구분하세요.", answerChecklist: ["continuous/integer/category", "linear/log", "parent-child", "hard limit", "generation rule", "version"], requiredConcepts: ["typed-conditional-search-space"], sectionId: "overview" },
-      { level: "basic", question: "Learning rate에 log sampling이 자연스러운 이유를 설명하세요.", answerChecklist: ["positive", "multiplicative", "orders magnitude", "equal decades", "not guarantee", "bounds"], requiredConcepts: ["log-uniform-parameter-sampling"], sectionId: "scale" },
-      { level: "basic", question: "1e-5~1e-1의 각 decade probability를 계산하세요.", answerChecklist: ["four decades", "equal log length", "one fourth", "25 percent", "uniform log", "restore exp"], requiredConcepts: ["log-uniform-parameter-sampling"], sectionId: "scale" },
-      { level: "basic", question: "SGD와 AdamW의 conditional children을 설계하세요.", answerChecklist: ["parent optimizer", "SGD momentum", "Adam betas", "only active branch", "no dummy zero", "typed"], requiredConcepts: ["typed-conditional-search-space"], sectionId: "conditional-space" },
-      { level: "basic", question: "Feasible constraint와 FAIL을 구분하세요.", answerChecklist: ["precheck", "estimate", "hard bound", "unexpected runtime", "record fail", "do not rank"], requiredConcepts: ["feasible-search-space-constraint"], sectionId: "conditional-space" },
-      { level: "basic", question: "Boundary가 반복 선택될 때 할 일을 쓰세요.", answerChecklist: ["diagnose", "pilot", "failure distribution", "new revision", "new study", "do not mutate silently"], requiredConcepts: ["typed-conditional-search-space"], sectionId: "versioning" },
-      { level: "advanced", question: "Log-uniform 식의 uniform·affine map·exp 의도를 설명하세요.", answerChecklist: ["sample position", "log interval width", "shift lower", "log coordinate", "exp restore", "positive bounds"], requiredConcepts: ["log-uniform-parameter-sampling"], sectionId: "scale" },
-      { level: "advanced", question: "Branch·resource gates의 곱 의도를 설명하세요.", answerChecklist: ["branch indicator", "resource indicator", "binary", "multiply AND", "feasible set", "hard before objective"], requiredConcepts: ["typed-conditional-search-space", "feasible-search-space-constraint"], sectionId: "conditional-space" },
-      { level: "advanced", question: "너무 넓은 space가 fixed budget에서 불리한 이유를 분석하세요.", answerChecklist: ["probability mass", "same trials", "promising region smaller", "invalid combinations", "pilot prior", "revision"], requiredConcepts: ["log-uniform-parameter-sampling", "feasible-search-space-constraint"], sectionId: "versioning" },
-      { level: "advanced", question: "Search-space manifest를 설계하세요.", answerChecklist: ["types", "scales", "bounds", "conditions", "constraints", "units", "revision", "rationale"], requiredConcepts: ["typed-conditional-search-space", "feasible-search-space-constraint"], sectionId: "versioning" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "1e-5부터 1e-1 사이를 로그 균등으로 뽑을 때 u=0.5는 어떤 값을 만드나요?",
+        "answerChecklist": [
+          "1e-3",
+          "지수 중간",
+          "기하 평균"
+        ],
+        "sectionId": "scale",
+        "requiredConcepts": [
+          "log-uniform-parameter-sampling"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "위 네 자릿수 구간 중 1e-5~1e-4의 확률은 얼마인가요?",
+        "answerChecklist": [
+          "25%",
+          "로그 길이 동일",
+          "균등 추첨 가정"
+        ],
+        "sectionId": "scale",
+        "requiredConcepts": [
+          "log-uniform-parameter-sampling"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "일반 균등의 중간값과 로그 균등 중간값이 다른 이유를 설명하세요.",
+        "answerChecklist": [
+          "0.050005",
+          "0.001",
+          "덧셈 간격과 곱셈 비율"
+        ],
+        "sectionId": "scale",
+        "requiredConcepts": [
+          "log-uniform-parameter-sampling"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "SGD를 고르면 momentum을 생성하지만 AdamW를 고르면 무엇을 기록하나요?",
+        "answerChecklist": [
+          "활성 분기의 값만",
+          "없는 momentum을 0으로 채우지 않음",
+          "조건 명세"
+        ],
+        "sectionId": "conditional-space",
+        "requiredConcepts": [
+          "typed-conditional-search-space",
+          "feasible-search-space-constraint"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "분기는 유효하고 예상 메모리가 22GB이며 상한 20GB이면 실행 전 gate는 얼마인가요?",
+        "answerChecklist": [
+          "0",
+          "1×0",
+          "제외"
+        ],
+        "sectionId": "conditional-space",
+        "requiredConcepts": [
+          "typed-conditional-search-space",
+          "feasible-search-space-constraint"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "예상 18GB로 통과한 후보가 실제 21GB를 써 실패했다면 어떻게 남기나요?",
+        "answerChecklist": [
+          "예측 오차",
+          "FAIL",
+          "측정 근거 보존",
+          "실행 가능 보장 아님"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "typed-conditional-search-space",
+          "feasible-search-space-constraint"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "Optuna log=True만으로 적응형 sampler도 매 자릿수에 25%를 준다고 할 수 있나요?",
+        "answerChecklist": [
+          "아님",
+          "RandomSampler 균등 가정",
+          "TPE 이력 의존",
+          "log 공간과 확률 구별"
+        ],
+        "sectionId": "paper-optuna-space",
+        "requiredConcepts": [
+          "log-uniform-parameter-sampling"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "일반적 양의 a,b에 대해 로그 좌표와 exp 복원의 역할을 유도하세요.",
+        "answerChecklist": [
+          "log a+u(log b−log a)",
+          "exp",
+          "0<a<b",
+          "같은 비율 구간 같은 길이"
+        ],
+        "sectionId": "scale",
+        "requiredConcepts": [
+          "log-uniform-parameter-sampling"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "공식 예제의 상한 1e-2와 이 글의 1e-1은 같은 확률 공간인가요?",
+        "answerChecklist": [
+          "아님",
+          "3구간 대 4구간",
+          "각 1/3 대 1/4",
+          "범위 개정"
+        ],
+        "sectionId": "paper-optuna-space",
+        "requiredConcepts": [
+          "log-uniform-parameter-sampling"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "무효 조합을 제거한 뒤 재추첨하면 원래의 분기 확률이 항상 유지되나요?",
+        "answerChecklist": [
+          "아님",
+          "조건부 분포",
+          "분기별 탈락률",
+          "실효 분포와 revision 기록"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "typed-conditional-search-space",
+          "feasible-search-space-constraint"
+        ]
+      }
     ],
-    papers: [
-      { title: "Optuna: A Next-generation Hyperparameter Optimization Framework", href: "https://arxiv.org/abs/1907.10902", problem: "Static space에서 conditional branches를 표현하기 어려운 문제", contribution: "Define-by-run search-space interface", assumptions: "논문의 Optuna version과 tasks", evidenceScope: "논문이 제시한 define-by-run architecture와 conditional-space usage 범위", notClaim: "API가 좋은 bounds를 자동 설계한다는 뜻은 아님", sectionId: "paper-optuna-space" },
-    ],
+    "papers": [
+      {
+        "title": "Optuna: A Next-generation Hyperparameter Optimization Framework",
+        "href": "https://arxiv.org/abs/1907.10902",
+        "problem": "Static space에서 conditional branches를 표현하기 어려운 문제",
+        "contribution": "Define-by-run search-space interface",
+        "assumptions": "2019논문의 define-by-run 설계와 본문의4.5.0 고정 구현 예제를 구분합니다.",
+        "evidenceScope": "논문이 제시한 define-by-run architecture와 conditional-space usage 범위",
+        "notClaim": "API가 좋은 bounds를 자동 설계한다는 뜻은 아님",
+        "sectionId": "paper-optuna-design"
+      },
+      {
+        "title": "Optuna 4.5.0 — Pythonic Search Space and RandomSampler",
+        "href": "https://optuna.readthedocs.io/en/v4.5.0/tutorial/10_key_features/002_configurations.html",
+        "problem": "범위·로그 좌표·제안 분포·활성 분기의 서로 다른 역할을 혼동하는 문제입니다.",
+        "contribution": "공식 실수 로그 예제와 조건부 분기 코드를 통해 입력 규칙을 구분합니다.",
+        "assumptions": "Optuna4.5.0 고정 예제이며25% 계산에는 별도로 균등 로그 추첨을 가정합니다.",
+        "evidenceScope": "Floating point parameter(log)와Branches 코드 및 RandomSampler 공식 설명을 적용합니다.",
+        "notClaim": "log=True 하나가 모든 적응형 탐색에서 균등 확률과 실제 실행 가능성을 보장하지 않습니다.",
+        "sectionId": "paper-optuna-space"
+      }
+    ]
   },
   "ai/multi-fidelity-pruning": {
-    entryLevel: true,
-    entryNote: "Resource coordinate와 rung부터 정의한 뒤 successive halving·false-prune audit·full-budget 재평가로 진행합니다.",
-    coreIdea: "Multi-fidelity pruning은 같은 중간 resource에서 후보를 비교해 일부에 더 많은 자원을 주되, late bloomer를 잃는 비용을 별도로 감사하는 자원 배분 정책입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "comparable-fidelity-resource", role: "Trial 사이에서 같은 학습 진척을 뜻하는 resource coordinate를 정합니다." },
-      { id: "successive-halving-resource-allocation", role: "Rung마다 후보 수를 줄이고 survivor resource를 늘립니다." },
-      { id: "pruning-false-negative-audit", role: "중단했을 late bloomer가 full budget에서는 finalist인지 감사합니다." },
+    "entryLevel": true,
+    "entryNote": "후보9→3→1의 누적 깊이1→3→9와 재개 비용21을 따로 계산하고 놓침4/20을 확인합니다.",
+    "coreIdea": "Multi-fidelity pruning은 같은 중간 resource에서 후보를 비교해 일부에 더 많은 자원을 주되, late bloomer를 잃는 비용을 별도로 감사하는 자원 배분 정책입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "comparable-fidelity-resource",
+        "role": "Trial 사이에서 같은 학습 진척을 뜻하는 resource coordinate를 정합니다."
+      },
+      {
+        "id": "successive-halving-resource-allocation",
+        "role": "Rung마다 후보 수를 줄이고 survivor resource를 늘립니다."
+      },
+      {
+        "id": "pruning-false-negative-audit",
+        "role": "중단했을 late bloomer가 full budget에서는 finalist인지 감사합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "comparable-fidelity-resource", sectionId: "overview", intuition: "한 선수의 한 바퀴와 다른 선수의 한 걸음을 같은 단계로 부르지 않습니다.", workedExample: "Batch가 달라도 2k optimizer updates에서 같은 validation을 계산합니다.", boundary: "같은 updates도 compute·warmup이 완전히 같다는 뜻은 아닙니다." },
-      { id: "successive-halving-resource-allocation", sectionId: "successive-halving", intuition: "많은 후보를 짧게 예선하고 상위 일부만 긴 본선으로 보냅니다.", workedExample: "27@r에서 9@3r, 3@9r로 줄입니다.", boundary: "초기 순위가 최종 순위와 무관하면 좋은 후보를 버릴 수 있습니다." },
-      { id: "pruning-false-negative-audit", sectionId: "false-prune-audit", intuition: "일찍 탈락한 선수 일부를 끝까지 달리게 해 놓친 우승 후보를 셉니다.", workedExample: "중단 대상 shadow runs 20개 중 4개가 finalist이면 관측 miss rate는 20%입니다.", boundary: "Counterfactual을 관측할 cohort와 finalist 기준을 사전에 정합니다." },
+    "conceptExplanations": [
+      {
+        "id": "comparable-fidelity-resource",
+        "sectionId": "why-coordinate",
+        "intuition": "서로 다른 실행의 같은 단계가 무엇을 의미할지 비교 목적에 맞춰 정합니다.",
+        "workedExample": "이 예는1단위를1000갱신으로 두며 같은 epoch의batch32와128은 갱신 수가 다를 수 있습니다.",
+        "boundary": "같은 갱신 수가 처리 토큰·계산 비용까지 같다는 보장은 없으므로 목표에 맞는 좌표가 필요합니다."
+      },
+      {
+        "id": "successive-halving-resource-allocation",
+        "sectionId": "successive-halving",
+        "intuition": "같은 진척의 결과로 후보 수를 줄이며 남은 후보의 평가 깊이를 늘립니다.",
+        "workedExample": "9@1→3@3→1@9이며 재개 추가량9+6+6=21, 매번 재시작27, 전원끝까지81입니다.",
+        "boundary": "n_jr_j는 누적 목표량 합이며 재개 때 추가 비용과 다릅니다. 초기 순위가 최종 순위를 보장하지 않습니다."
+      },
+      {
+        "id": "pruning-false-negative-audit",
+        "sectionId": "false-prune-audit",
+        "intuition": "멈췄을 후보 일부를 끝까지 확인해 채택 가능 후보를 얼마나 놓쳤는지 봅니다.",
+        "workedExample": "중단100개 중 무작위20개의 최종 결과에서4개가 채택 가능하면 관측4/20=20%입니다.",
+        "boundary": "감사 cohort와 추출 방식을 명시하고 분모가0이면 정의되지 않습니다. 일반FNR의 분모와 다른 운영 비율입니다."
+      }
     ],
-    conceptStages: [
-      { label: "좌표", relation: "같은 resource에서 intermediate score를 비교", concepts: ["comparable-fidelity-resource"] },
-      { label: "배분", relation: "Survivor 수를 줄이고 resource를 확대", concepts: ["successive-halving-resource-allocation"] },
-      { label: "감사", relation: "절약과 false-prune 비용을 함께 측정", concepts: ["pruning-false-negative-audit"] },
+    "conceptStages": [
+      {
+        "label": "좌표",
+        "relation": "같은 resource에서 intermediate score를 비교",
+        "concepts": [
+          "comparable-fidelity-resource"
+        ]
+      },
+      {
+        "label": "배분",
+        "relation": "Survivor 수를 줄이고 resource를 확대",
+        "concepts": [
+          "successive-halving-resource-allocation"
+        ]
+      },
+      {
+        "label": "감사",
+        "relation": "절약과 false-prune 비용을 함께 측정",
+        "concepts": [
+          "pruning-false-negative-audit"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Epoch와 comparable resource를 구분하세요.", answerChecklist: ["batch differs", "updates", "tokens", "same progress", "validation fixture", "epoch insufficient"], requiredConcepts: ["comparable-fidelity-resource"], sectionId: "overview" },
-      { level: "basic", question: "Rung와 survivor를 정의하세요.", answerChecklist: ["resource checkpoint", "same step", "rank", "policy", "advance subset", "not permanent truth"], requiredConcepts: ["successive-halving-resource-allocation"], sectionId: "overview" },
-      { level: "basic", question: "27@r, eta=3의 다음 두 rungs를 계산하세요.", answerChecklist: ["9 at 3r", "3 at 9r", "divide candidates", "multiply resource", "same rung", "budget"], requiredConcepts: ["successive-halving-resource-allocation"], sectionId: "successive-halving" },
-      { level: "basic", question: "Slow starter가 false prune되는 이유를 설명하세요.", answerChecklist: ["low early rank", "warmup", "high final rank", "policy bias", "grace period", "audit"], requiredConcepts: ["pruning-false-negative-audit"], sectionId: "false-prune-audit" },
-      { level: "basic", question: "Shadow cohort의 역할을 설명하세요.", answerChecklist: ["would prune", "continue subset", "observe counterfactual", "finalist", "miss rate", "cost"], requiredConcepts: ["pruning-false-negative-audit"], sectionId: "false-prune-audit" },
-      { level: "basic", question: "Finalists를 다시 실행하는 조건을 쓰세요.", answerChecklist: ["pruning off", "full budget", "multiple seeds", "outer data", "hard constraints", "receipt"], requiredConcepts: ["successive-halving-resource-allocation"], sectionId: "release" },
-      { level: "advanced", question: "Successive-halving 식의 나눗셈·곱셈 의도를 설명하세요.", answerChecklist: ["candidate reduction", "resource increase", "rung index", "total budget", "floor", "survivors"], requiredConcepts: ["successive-halving-resource-allocation"], sectionId: "successive-halving" },
-      { level: "advanced", question: "False-prune 식의 indicators·product·ratio 의도를 설명하세요.", answerChecklist: ["policy decision", "finalist outcome", "AND product", "count misses", "divide pruned", "rate"], requiredConcepts: ["pruning-false-negative-audit"], sectionId: "false-prune-audit" },
-      { level: "advanced", question: "Pruning policy의 family bias audit를 설계하세요.", answerChecklist: ["cohorts", "model family", "schedule", "same resource", "shadow runs", "miss rate", "uncertainty"], requiredConcepts: ["comparable-fidelity-resource", "pruning-false-negative-audit"], sectionId: "false-prune-audit" },
-      { level: "advanced", question: "Pruning release receipt를 설계하세요.", answerChecklist: ["coordinate", "rungs", "eta", "grace", "states", "saved resource", "false prune", "full rerun"], requiredConcepts: ["successive-halving-resource-allocation", "pruning-false-negative-audit"], sectionId: "release" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "후보 9개를 1단위에서 시작해 매번 1/3만 남기면 후보 수는 어떻게 변하나요?",
+        "answerChecklist": [
+          "9→3→1",
+          "η3"
+        ],
+        "sectionId": "successive-halving",
+        "requiredConcepts": [
+          "successive-halving-resource-allocation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 단계들의 후보당 누적 자원은 얼마인가요?",
+        "answerChecklist": [
+          "1→3→9",
+          "1000업데이트 단위",
+          "누적 목표"
+        ],
+        "sectionId": "successive-halving",
+        "requiredConcepts": [
+          "comparable-fidelity-resource",
+          "successive-halving-resource-allocation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "이어서 학습하면 추가 자원 합은 왜 21단위인가요?",
+        "answerChecklist": [
+          "9×1",
+          "3×2",
+          "1×6",
+          "21"
+        ],
+        "sectionId": "resource-accounting",
+        "requiredConcepts": [
+          "successive-halving-resource-allocation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "매 단계 처음부터 다시 학습하면 총 27단위인 이유를 쓰세요.",
+        "answerChecklist": [
+          "9×1+3×3+1×9",
+          "누적 목표 재계산",
+          "재개와 구별"
+        ],
+        "sectionId": "resource-accounting",
+        "requiredConcepts": [
+          "successive-halving-resource-allocation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "중단 100개 중 무작위 20개를 끝까지 실행해 4개가 채택 가능하면 관측 비율은 얼마인가요?",
+        "answerChecklist": [
+          "4/20",
+          "20%",
+          "4/100 아님"
+        ],
+        "sectionId": "false-prune-audit",
+        "requiredConcepts": [
+          "pruning-false-negative-audit"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Hyperband의 한 bracket과 전체 알고리즘은 어떻게 다른가요?",
+        "answerChecklist": [
+          "한 successive halving 경로",
+          "여러 초기 후보/자원 조합",
+          "전체는 복수 bracket"
+        ],
+        "sectionId": "paper-hyperband",
+        "requiredConcepts": [
+          "successive-halving-resource-allocation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 epoch에서 batch32와 128을 비교하면 업데이트 수와 본 샘플 수가 어떻게 달라질 수 있나요?",
+        "answerChecklist": [
+          "전체통과샘플수동일 가능",
+          "업데이트수 다름",
+          "비교목적별 좌표 선택",
+          "어느축도 모든비용동일 보장X"
+        ],
+        "sectionId": "why-coordinate",
+        "requiredConcepts": [
+          "comparable-fidelity-resource"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "중단된 20개를 유망해 보이는 것만 골라 조사했다면 20%를 전체 100개로 확장해도 되나요?",
+        "answerChecklist": [
+          "아님",
+          "표본 선택 편향",
+          "추출 확률/가중치",
+          "불확실성"
+        ],
+        "sectionId": "false-prune-audit",
+        "requiredConcepts": [
+          "pruning-false-negative-audit"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "B가 초반에는 0.60 미만이지만 끝에서 0.85가 된다면 어떤 정책 위험을 보여 주나요?",
+        "answerChecklist": [
+          "늦게 좋아짐",
+          "초기순위 최종순위다름",
+          "false prune",
+          "유예기간과 감사"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "pruning-false-negative-audit"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "중단 후보 중 채택 가능 비율을 일반적인 false negative rate와 구분하세요.",
+        "answerChecklist": [
+          "분모 중단 수",
+          "일반 FNR 실제양성수",
+          "감사코호트명시",
+          "분모 0미정의"
+        ],
+        "sectionId": "false-prune-audit",
+        "requiredConcepts": [
+          "pruning-false-negative-audit"
+        ]
+      }
     ],
-    papers: [
-      { title: "Hyperband: A Novel Bandit-Based Approach to Hyperparameter Optimization", href: "https://www.jmlr.org/papers/v18/16-558.html", problem: "Finite training resource의 configuration별 배분 문제", contribution: "Brackets와 successive halving의 결합", assumptions: "Resource가 fidelity를 높이는 논문 setting과 tasks", evidenceScope: "Theory와 benchmark speedup", notClaim: "모든 early-to-final curve에서 같은 speedup을 보장하지 않음", sectionId: "paper-hyperband" },
-    ],
+    "papers": [
+      {
+        "title": "Hyperband: A Novel Bandit-Based Approach to Hyperparameter Optimization",
+        "href": "https://jmlr.org/papers/volume18/16-558/16-558.pdf",
+        "problem": "한정된 학습 자원을 많은 얕은 평가와 적은 깊은 평가에 어떻게 나눌지의 문제입니다.",
+        "contribution": "Successive halving을 여러 초기 후보 수와 자원의 bracket으로 결합합니다.",
+        "assumptions": "자원에 따른 관측과 최종값의 관계 및 논문이 둔 평가 과제의 조건을 전제로 합니다.",
+        "evidenceScope": "알고리즘1의5–6행과 §3.1·3.2의 구별 가능성 및 bracket 역할을 직접 읽습니다.",
+        "notClaim": "모든 과제에서 같은 속도 향상이나 본문의 표본 감사20%를 논문이 보장한다는 뜻은 아닙니다.",
+        "sectionId": "paper-hyperband"
+      }
+    ]
   },
   "ai/multi-objective-hpo": {
-    entryLevel: true,
-    entryNote: "Objective·hard constraint를 구분한 뒤 dominance·frontier·반복 안정성·최종 selection receipt로 진행합니다.",
-    coreIdea: "Multi-objective HPO는 hard constraints를 통과한 후보 중 다른 후보에 지배당하지 않은 trade-offs를 남기고, 반복 측정과 outer evaluation 뒤 정책 책임자가 하나를 선택하는 절차입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "hpo-pareto-dominance", role: "모든 목적에서 나쁘지 않고 하나에서 더 좋은 후보 관계를 정의합니다." },
-      { id: "hpo-pareto-selection-receipt", role: "Frontier와 최종 선택·rollback 이유를 evidence로 보존합니다." },
+    "entryLevel": true,
+    "entryNote": "A/B/C/D를16GB와100ms로 걸러 A와C를 남기고80ms 내 최소 손실 정책으로C를 고릅니다.",
+    "coreIdea": "Multi-objective HPO는 hard constraints를 통과한 후보 중 다른 후보에 지배당하지 않은 trade-offs를 남기고, 반복 측정과 outer evaluation 뒤 정책 책임자가 하나를 선택하는 절차입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "hpo-pareto-dominance",
+        "role": "모든 목적에서 나쁘지 않고 하나에서 더 좋은 후보 관계를 정의합니다."
+      },
+      {
+        "id": "hpo-pareto-selection-receipt",
+        "role": "Frontier와 최종 선택·rollback 이유를 evidence로 보존합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "hpo-pareto-dominance", sectionId: "dominance", intuition: "모든 경기에서 나쁘지 않고 적어도 하나에서 더 좋은 후보만 상대를 탈락시킵니다.", workedExample: "A(.20,10ms,4GB)는 B(.22,12ms,5GB)를 지배하지만 C(.18,15ms,3GB)와는 trade-off입니다.", boundary: "Hard constraints와 measurement tolerance를 먼저 적용합니다." },
-      { id: "hpo-pareto-selection-receipt", sectionId: "selection-receipt", intuition: "남은 후보 중 하나를 고른 이유와 되돌아갈 후보를 영수증처럼 남깁니다.", workedExample: "100ms SLA 안에서 outer loss가 가장 낮은 C를 승인하고 A를 rollback으로 기록합니다.", boundary: "Frontier 계산은 business preference나 책임자를 대신하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "hpo-pareto-dominance",
+        "sectionId": "dominance",
+        "intuition": "모든 목표가 나쁘지 않고 적어도 하나가 엄격히 좋을 때만 상대를 지배합니다.",
+        "workedExample": "A(.20,10,4)는B(.22,12,5)를 지배하지만 C(.18,15,3)와는 상충해 함께 남습니다.",
+        "boundary": "표준 지배식에 δ허용폭을 섞지 않습니다. 완화 비교는X→Y→Z→X 순환을 만들 수 있어 별도 해석이 필요합니다."
+      },
+      {
+        "id": "hpo-pareto-selection-receipt",
+        "sectionId": "selection-receipt",
+        "intuition": "남은 상충 후보 중 무엇을 골랐는지 사전 선호와 측정 근거를 연결합니다.",
+        "workedExample": "80ms 안에서 손실 최소라는 정책이면 A10ms/.20보다 C15ms/.18을 고릅니다.",
+        "boundary": "반복10회 중6회 지배는 관측0.6이며 확정 미래확률이 아닙니다. 경계가 제품 선호와 책임을 대신하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "통과", relation: "Hard constraints를 통과한 candidates만 비교", concepts: ["hpo-pareto-dominance"] },
-      { label: "경계", relation: "Tolerance-aware non-dominated frontier 계산", concepts: ["hpo-pareto-dominance"] },
-      { label: "선택", relation: "반복·outer evidence와 최종 이유를 receipt로 보존", concepts: ["hpo-pareto-selection-receipt"] },
+    "conceptStages": [
+      {
+        "label": "통과",
+        "relation": "Hard constraints를 통과한 candidates만 비교",
+        "concepts": [
+          "hpo-pareto-dominance"
+        ]
+      },
+      {
+        "label": "경계",
+        "relation": "Tolerance-aware non-dominated frontier 계산",
+        "concepts": [
+          "hpo-pareto-dominance"
+        ]
+      },
+      {
+        "label": "선택",
+        "relation": "반복·outer evidence와 최종 이유를 receipt로 보존",
+        "concepts": [
+          "hpo-pareto-selection-receipt"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Objective와 hard constraint를 구분하세요.", answerChecklist: ["optimize direction", "continuous preference", "must pass", "reject", "unit", "predeclare"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "overview" },
-      { level: "basic", question: "Pareto dominance를 말로 정의하세요.", answerChecklist: ["all no worse", "one strictly better", "same directions", "feasible", "tolerance", "not weighted sum"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "dominance" },
-      { level: "basic", question: "A·B·C 예에서 지배 관계를 판정하세요.", answerChecklist: ["A dominates B", "A vs C tradeoff", "loss", "latency", "memory", "frontier"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "dominance" },
-      { level: "basic", question: "Tolerance가 필요한 이유를 설명하세요.", answerChecklist: ["measurement noise", "practical difference", "avoid unstable dominance", "per objective", "predeclare", "repeat"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "dominance" },
-      { level: "basic", question: "Dominance stability를 계산하는 자료를 쓰세요.", answerChecklist: ["repeats", "same fixture", "indicator", "count", "divide R", "uncertainty"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "uncertainty" },
-      { level: "basic", question: "Selection receipt의 최소 fields를 쓰세요.", answerChecklist: ["objectives", "directions", "constraints", "tolerances", "frontier", "winner", "reason", "rollback"], requiredConcepts: ["hpo-pareto-selection-receipt"], sectionId: "selection-receipt" },
-      { level: "advanced", question: "Dominance 식의 gates·product·sum 의도를 설명하세요.", answerChecklist: ["objective comparison", "tolerance", "all AND", "strict wins count", "at least one", "dominance"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "dominance" },
-      { level: "advanced", question: "Stability proportion 식의 indicator·sum·division 의도를 설명하세요.", answerChecklist: ["repeat event", "binary", "count", "total repeats", "proportion", "not certainty"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "uncertainty" },
-      { level: "advanced", question: "Weighted sum 하나로 합칠 때 숨는 결정을 분석하세요.", answerChecklist: ["units", "weights", "compensation", "hard constraint", "nonconvex frontier", "stakeholder"], requiredConcepts: ["hpo-pareto-dominance"], sectionId: "selection-receipt" },
-      { level: "advanced", question: "Pareto 후보의 final selection protocol을 설계하세요.", answerChecklist: ["feasible first", "repeat", "outer data", "SLA", "responsible owner", "receipt", "rollback", "monitor"], requiredConcepts: ["hpo-pareto-dominance", "hpo-pareto-selection-receipt"], sectionId: "selection-receipt" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "A(.20,10ms,4GB)와B(.22,12ms,5GB)에서는 누가 다른 후보를 지배하나요?",
+        "answerChecklist": [
+          "A",
+          "세 축 모두 작음",
+          "같은 측정 조건"
+        ],
+        "sectionId": "dominance",
+        "requiredConcepts": [
+          "hpo-pareto-dominance"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "C(.18,15ms,3GB)가 A보다 정확하고 메모리도 적게 쓰는데 왜 둘 다 남나요?",
+        "answerChecklist": [
+          "C 지연 더 큼",
+          "A 정확도 나쁨",
+          "trade-off"
+        ],
+        "sectionId": "dominance",
+        "requiredConcepts": [
+          "hpo-pareto-dominance"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "D(.16,9ms,18GB)를 16GB 상한 아래에서 제외하는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "메모리 hard constraint",
+          "품질로 상쇄 불가"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "hpo-pareto-dominance"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "A가B를 반복 10회 중 6회 지배했다면 관측 유지율은 얼마인가요?",
+        "answerChecklist": [
+          "6/10",
+          "0.6",
+          "모집단확률 확정 아님"
+        ],
+        "sectionId": "uncertainty",
+        "requiredConcepts": [
+          "hpo-pareto-selection-receipt"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "모든 목표를 최소화하는 수식에 최대화 목표를 넣을 때 무엇을 맞춰야 하나요?",
+        "answerChecklist": [
+          "방향변환",
+          "부호 또는 비교 반전",
+          "단위"
+        ],
+        "sectionId": "dominance",
+        "requiredConcepts": [
+          "hpo-pareto-dominance"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "80ms 이내에서 손실이 가장 작은 후보를 고르는 사전 정책은 A와C 중 누구를 고르나요?",
+        "answerChecklist": [
+          "C",
+          "15ms≤80ms",
+          "0.18<0.20"
+        ],
+        "sectionId": "selection-receipt",
+        "requiredConcepts": [
+          "hpo-pareto-selection-receipt"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "작은 차이를 허용하는 비교를 표준 파레토 지배에 바로 넣으면 어떤 문제가 생기나요?",
+        "answerChecklist": [
+          "비추이성",
+          "순환 가능",
+          "정확 지배와 별도",
+          "자동 삭제 금지"
+        ],
+        "sectionId": "tolerance-boundary",
+        "requiredConcepts": [
+          "hpo-pareto-dominance"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "X(0,1,2),Y(2,0,1),Z(1,2,0)와허용폭 1에서 완화 관계의 순환을 확인하세요.",
+        "answerChecklist": [
+          "X→Y",
+          "Y→Z",
+          "Z→X",
+          "모두 제거 오류"
+        ],
+        "sectionId": "tolerance-boundary",
+        "requiredConcepts": [
+          "hpo-pareto-dominance"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "최적 경계에 남았다는 사실만으로 실서비스 후보를 정할 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "선호정책 필요",
+          "측정흔들림",
+          "운영조건",
+          "승인근거"
+        ],
+        "sectionId": "selection-receipt",
+        "requiredConcepts": [
+          "hpo-pareto-selection-receipt"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "공식 Optuna의 directions 순서를 반환값과 다르게 쓰면 무엇이 바뀌나요?",
+        "answerChecklist": [
+          "다른 최적화 문제",
+          "FLOPS최소 정확도최대",
+          "우리손실·지연은 모두최소"
+        ],
+        "sectionId": "paper-multiobjective-optuna",
+        "requiredConcepts": [
+          "hpo-pareto-dominance"
+        ]
+      }
     ],
-    papers: [
-      { title: "Optuna multi-objective optimization documentation", href: "https://optuna.readthedocs.io/en/stable/tutorial/20_recipes/002_multi_objective.html", problem: "여러 objective directions와 Pareto trials를 API에서 다루는 문제", contribution: "Current multi-objective study example", assumptions: "설치한 Optuna version과 objective code", evidenceScope: "공식 문서가 설명하는 multi-objective study와 Pareto-trial API usage 범위", notClaim: "Business preference나 safety constraint를 자동 결정하지 않음", sectionId: "paper-multiobjective-optuna" },
-    ],
+    "papers": [
+      {
+        "title": "Optuna multi-objective optimization documentation",
+        "href": "https://optuna.readthedocs.io/en/v4.5.0/tutorial/20_recipes/002_multi_objective.html",
+        "problem": "여러 objective directions와 Pareto trials를 API에서 다루는 문제",
+        "contribution": "Current multi-objective study example",
+        "assumptions": "Optuna4.5.0의 고정 튜토리얼에서 반환값과 directions의 순서를 함께 확인합니다.",
+        "evidenceScope": "FLOPS/정확도의 최소·최대 방향 코드와 Study.best_trials의all/any 지배 정의입니다.",
+        "notClaim": "모든 작은 차이를 자동으로 유의하다고 판단하거나 제품 선택과 필수 한도를 대신하지 않습니다.",
+        "sectionId": "paper-multiobjective-optuna"
+      },
+      {
+        "title": "Optuna 4.5.0 — Study.best_trials",
+        "href": "https://optuna.readthedocs.io/en/v4.5.0/reference/generated/optuna.study.Study.html#optuna.study.Study.best_trials",
+        "problem": "다목적 관측에서 다른 후보에 지배되지 않은 실행을 식별하는 문제입니다.",
+        "contribution": "모든 축에서 나쁘지 않음과 한 축의 엄격한 개선을 함께 요구합니다.",
+        "assumptions": "값의 비교 방향을 맞추고 같은 평가 조건에서 얻은 후보를 비교합니다.",
+        "evidenceScope": "best_trials 공식 속성 설명의 all/any 원문에A/B/C 값을 대입합니다.",
+        "notClaim": "허용폭을 더한 비교가 표준 지배와 같은 추이성을 갖는다는 주장은 아닙니다.",
+        "sectionId": "source-pareto-all-any"
+      }
+    ]
   },
   "ai/ensemble-methods": {
     coreIdea:
@@ -28049,33 +29247,196 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "실패 A1과 성공 A2, 같은 평균 0.50인 서로 다른 두 예측 파일을 구별합니다."
   },
   "ai/learning-curve-tracking": {
-    coreIdea: "Metric을 불분명한 step이 아니라 optimizer update·processed units·wall time 좌표에 놓고 같은 자원 지점과 같은 evaluation contract에서 비교합니다.",
-    assumedKnowledge: [],
-    introducedHere: [{ id: "metric-progress-coordinate", role: "Learning curve 관측마다 update·처리량·시간을 보존합니다." }],
-    conceptExplanations: [
-      { id: "metric-progress-coordinate", sectionId: "progress-coordinate", intuition: "두 주자를 걸음 수로만 비교하지 않고 거리와 시간도 같은 축으로 맞춥니다.", workedExample: "A의 update 1000과 B의 update 250이 모두 1M token이면 그 두 관측을 비교합니다.", boundary: "같은 token 수라도 evaluation fixture·data order·hardware가 다르면 해석을 분리합니다." },
+    "coreIdea": "Metric을 불분명한 step이 아니라 optimizer update·processed units·wall time 좌표에 놓고 같은 자원 지점과 같은 evaluation contract에서 비교합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "metric-progress-coordinate",
+        "role": "Learning curve 관측마다 update·처리량·시간을 보존합니다."
+      }
     ],
-    conceptStages: [
-      { label: "Observation", relation: "Metric에 update·processed-unit·time 좌표를 결합", concepts: ["metric-progress-coordinate"] },
-      { label: "Alignment", relation: "두 run에서 같은 자원 budget에 가장 가까운 관측을 선택", concepts: ["metric-progress-coordinate"] },
-      { label: "Receipt", relation: "Checkpoint·evaluation fixture·metric definition을 point에 연결", concepts: ["metric-progress-coordinate"] },
+    "conceptExplanations": [
+      {
+        "id": "metric-progress-coordinate",
+        "sectionId": "progress-coordinate",
+        "intuition": "한 점에 갱신 수·처리량·시간·평가 정의를 붙여 무엇을 비교했는지 남깁니다.",
+        "workedExample": "A1020갱신/102만토큰/120초/.42와B245갱신/98만토큰/150초/.39는 목표에서각2만 떨어져 차이.03입니다.",
+        "boundary": "가까운 관측은 정확히 같은 자원량이 아닙니다. 복구 분기와 실제 소비량을 구별하고 같은 축만으로 인과 효과를 증명하지 않습니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Metric observation tuple의 네 필드를 쓰라.", answerChecklist: ["update", "processed units", "wall time", "metric", "definition", "unit"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "progress-coordinate" },
-      { level: "basic", question: "Logging call과 optimizer update가 다른 예를 설명하라.", answerChecklist: ["microbatch", "accumulation", "one step", "logging independent", "counter", "policy"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "overview" },
-      { level: "basic", question: "A update1000=1M, B update1000=4M일 때 1M 비교 좌표를 계산하라.", answerChecklist: ["A 1000", "B 250", "same tokens", "not same update", "metric definition", "hardware"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "comparison-boundary" },
-      { level: "basic", question: "Processed units를 budget으로 나누는 이유를 설명하라.", answerChecklist: ["normalization", "different budgets", "ratio", "same unit", "zero to one", "not quality"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "progress-coordinate" },
-      { level: "basic", question: "Curve point의 evaluation receipt 필드를 열거하라.", answerChecklist: ["checkpoint digest", "dataset", "slice", "metric version", "reducer", "hardware"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "logging-receipt" },
-      { level: "basic", question: "같은 metric 이름을 바로 비교할 수 없는 반례를 들라.", answerChecklist: ["different reducer", "different slice", "same name", "definition ID", "direction", "reject"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "logging-receipt" },
-      { level: "advanced", question: "목표 token 지점의 nearest observation 선택식을 적용하라.", answerChecklist: ["target", "absolute distance", "argmin A", "argmin B", "tolerance", "delta"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "comparison-boundary" },
-      { level: "advanced", question: "Logging 간격이 너무 큰 경우 interpolation policy를 설계하라.", answerChecklist: ["max gap", "nearest", "interpolation", "flag", "no extrapolation", "failure"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "comparison-boundary" },
-      { level: "advanced", question: "Quality와 system speed 차이를 분리하는 비교표를 설계하라.", answerChecklist: ["tokens", "updates", "wall time", "hardware", "quality", "throughput"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "comparison-boundary" },
-      { level: "advanced", question: "Resume 뒤 curve가 되감기는 오류의 원인과 guard를 설계하라.", answerChecklist: ["counter reset", "global offset", "checkpoint cursor", "monotonicity", "duplicate", "receipt"], requiredConcepts: ["metric-progress-coordinate"], sectionId: "logging-receipt" },
+    "conceptStages": [
+      {
+        "label": "Observation",
+        "relation": "Metric에 update·processed-unit·time 좌표를 결합",
+        "concepts": [
+          "metric-progress-coordinate"
+        ]
+      },
+      {
+        "label": "Alignment",
+        "relation": "두 run에서 같은 자원 budget에 가장 가까운 관측을 선택",
+        "concepts": [
+          "metric-progress-coordinate"
+        ]
+      },
+      {
+        "label": "Receipt",
+        "relation": "Checkpoint·evaluation fixture·metric definition을 point에 연결",
+        "concepts": [
+          "metric-progress-coordinate"
+        ]
+      }
     ],
-    papers: [
-      { title: "Weights & Biases: Log data with experiments", href: "https://docs.wandb.ai/guides/track/log/", problem: "Run의 metric·media·custom step을 일관되게 기록해야 함", contribution: "Logging history와 step metric의 공식 interface 설명", assumptions: "설치 SDK와 service version에 따른 동작 차이", evidenceScope: "현재 공식 logging semantics", notClaim: "Metric 정의와 공정한 비교가 자동 보장된다는 뜻은 아님", sectionId: "standard-wandb-tracking" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "A는업데이트당 1000토큰이고B는 4000토큰일 때 100만토큰까지 업데이트 수는 얼마인가요?",
+        "answerChecklist": [
+          "A1000",
+          "B250",
+          "4배"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "metric-progress-coordinate"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "목표 100만토큰 근처에서 관측한 A의loss0.42와B의loss0.39의 A−B는 얼마인가요?",
+        "answerChecklist": [
+          "0.03",
+          "B낮음",
+          "학습조건통제 별도"
+        ],
+        "sectionId": "progress-coordinate",
+        "requiredConcepts": [
+          "metric-progress-coordinate"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "전체예산 200만토큰 중 100만을 처리했을 때 진행률은 얼마인가요?",
+        "answerChecklist": [
+          "0.5",
+          "같은단위",
+          "원본좌표보존"
+        ],
+        "sectionId": "progress-coordinate",
+        "requiredConcepts": [
+          "metric-progress-coordinate"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "목표 100만에서A102만과B98만의 관측은 각각 얼마나 떨어져 있나요?",
+        "answerChecklist": [
+          "각 2만",
+          "허용 3만이내",
+          "정확히같은지점아님"
+        ],
+        "sectionId": "comparison-boundary",
+        "requiredConcepts": [
+          "metric-progress-coordinate"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "가까운 관측이 목표에서 10만 떨어지고 허용폭이 3만이면 어떻게 처리하나요?",
+        "answerChecklist": [
+          "비교보류",
+          "추가평가",
+          "임의보간사실로취급금지"
+        ],
+        "sectionId": "comparison-boundary",
+        "requiredConcepts": [
+          "metric-progress-coordinate"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "W&B의 step_metric을 processed_tokens로 지정하면 어떤 숫자의 역할이 바뀌나요?",
+        "answerChecklist": [
+          "차트가로축",
+          "기록호출번호와구분",
+          "토큰계산자동아님"
+        ],
+        "sectionId": "standard-wandb-tracking",
+        "requiredConcepts": [
+          "metric-progress-coordinate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은진행률 0.5인 100만과 1000만토큰 실행이 같은자원을 썼다고 볼 수 있나요?",
+        "answerChecklist": [
+          "아님",
+          "총예산다름",
+          "정규화축대절대량",
+          "원래좌표확인"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "metric-progress-coordinate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "체크포인트복구로같은업데이트를 다시 실행할 때 모든관측을 하나의 증가곡선으로 덮어써도 되나요?",
+        "answerChecklist": [
+          "아님",
+          "새attempt/분기",
+          "실제소비량과모델진척구분",
+          "중복학습기록"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "metric-progress-coordinate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "가장가까운관측을고르는식에서동점·미래관측·평가간격 정책은 왜 필요하나요?",
+        "answerChecklist": [
+          "선택모호함",
+          "동점이른점규칙",
+          "하드예산초과금지별도",
+          "간격잔차보고"
+        ],
+        "sectionId": "comparison-boundary",
+        "requiredConcepts": [
+          "metric-progress-coordinate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 100만토큰의 두loss만으로batch설정의 인과 효과를 증명할 수 있나요?",
+        "answerChecklist": [
+          "아님",
+          "학습률등조건",
+          "seed/자료/reducer",
+          "시스템시간별도"
+        ],
+        "sectionId": "logging-receipt",
+        "requiredConcepts": [
+          "metric-progress-coordinate"
+        ]
+      }
     ],
-    entryLevel: true,
+    "papers": [
+      {
+        "title": "W&B SDK v0.19.11 — Run.define_metric",
+        "href": "https://github.com/wandb/wandb/blob/2a058902a2425bf79e5add34b30d0e9ea5e39951/wandb/sdk/wandb_run.py#L2860-L2878",
+        "problem": "기록 호출 번호와 실제 학습 진행 좌표가 달라 그래프를 잘못 비교하는 문제입니다.",
+        "contribution": "step_metric으로 차트의 가로축을 지정하고 step_sync로 좌표의 재사용을 제어합니다.",
+        "assumptions": "공식 SDK v0.19.11의 고정 원문이며 다른 설치 버전은 별도로 확인해야 합니다.",
+        "evidenceScope": "wandb_run.py2860–2878의 실제 필드와 docstring을102만/98만 사례에 적용합니다.",
+        "notClaim": "API가 실제 토큰을 자동 계산하거나 평가 자료·집계 방식의 공정성을 보장하지 않습니다.",
+        "sectionId": "standard-wandb-tracking"
+      }
+    ],
+    "entryLevel": true,
+    "entryNote": "100만 목표 근처의 A102만·B98만 관측을 허용3만 안에서 비교하며 실제 위치 차이를 보존합니다."
   },
   "ai/model-artifact-registry": {
     coreIdea: "Metadata backend와 artifact store를 함께 검증하고 mutable alias를 immutable version으로 resolve한 promotion receipt를 실제 endpoint와 대조합니다.",
@@ -58967,12 +60328,286 @@ export const ARTICLE_LEARNING: Readonly<
     papers:[{title:"bnb-chain/tss-lib pinned source 3f677ff",href:"https://github.com/bnb-chain/tss-lib/tree/3f677ff761fcf692edb0243a5d812930844d879a",problem:"Threshold-signature DKG/MtA/VSS의 concrete implementation seam을 고정",contribution:"Official Go source·tests의 pinned snapshot",assumptions:"Commit 3f677ff와 protocol/toolchain/dependency profile 고정",evidenceScope:"선택 source의 round/artifact behavior",notClaim:"Generic MPC 정의·모든 threshold schemes·moving main의 security를 대신하지 않음",sectionId:"paper-tsslib-source"}]
   },
   "crypto/shamir-secret-sharing": {
-    entryLevel:false, entryNote:"F17의 f(x)=5+3x를 직접 계산하며 field·threshold·interpolation을 모른다고 가정합니다.", coreIdea:"Shamir sharing은 secret을 random degree-t polynomial의 상수항으로 두어 t+1 points로 복원하고 t개 이하의 view 분포를 secret과 독립으로 만들지만, plain scheme은 bad share·dealer equivocation·refresh를 검증하지 않습니다.", assumedKnowledge:[{id:"prime-field-modular-arithmetic",role:"F17 산술과 inverse를 사용합니다."},{id:"lagrange-interpolation-basis",role:"Points에서 f(0)를 복원합니다."}],
-    introducedHere:[{id:"shamir-threshold-polynomial-sharing",role:"t+1 복원과 t-share privacy의 핵심 construction입니다."},{id:"shamir-share-generation",role:"Random coefficients와 nonzero distinct indices로 shares를 만듭니다."},{id:"shamir-reconstruction-at-zero",role:"Lagrange basis를 x=0에서 평가합니다."},{id:"shamir-threshold-privacy-boundary",role:"Uniform coefficient 아래 t-share view의 동일 분포를 설명합니다."},{id:"shamir-active-security-boundary",role:"Plain sharing과 VSS·refresh·complaint를 구분합니다."}],
-    conceptExplanations:[{id:"shamir-threshold-polynomial-sharing",sectionId:"overview",intuition:"Secret을 y-intercept로 숨긴 random curve의 points를 나눕니다.",workedExample:"F17에서 f=5+3x의 shares는 8,11,14입니다.",boundary:"이 글은 degree t 표기를 사용해 t+1개가 복원합니다."},{id:"shamir-share-generation",sectionId:"share-generation",intuition:"Random coefficients가 같은 observed point에 여러 secret 후보를 가능하게 합니다.",workedExample:"s=5,a1=3이면 P1은 f(1)=8입니다.",boundary:"Index 0·duplicate index·biased RNG는 금지합니다."},{id:"shamir-reconstruction-at-zero",sectionId:"reconstruction",intuition:"각 share가 x=0의 값에 기여하는 field weight를 구합니다.",workedExample:"(1,8),(2,11)은 8·2−11=5 mod17입니다.",boundary:"Integer division이 아니라 field inverse입니다."},{id:"shamir-threshold-privacy-boundary",sectionId:"privacy-boundary",intuition:"t개 view의 분포가 secret마다 동일해야 합니다.",workedExample:"(1,8)에 대해 각 s마다 유일한 slope가 있습니다.",boundary:"Coefficient reuse·bias는 privacy proof를 깨뜨립니다."},{id:"shamir-active-security-boundary",sectionId:"active-boundary",intuition:"Interpolation은 잘못된 point의 정직성을 검사하지 않습니다.",workedExample:"한 party가 y를 바꾸면 다른 secret을 복원할 수 있습니다.",boundary:"VSS commitment·complaint·authenticated identity가 별도 필요합니다."}],
-    conceptStages:[{label:"00 field",relation:"Field와 threshold 표기를 고정합니다.",concepts:["prime-field-modular-arithmetic","shamir-threshold-polynomial-sharing"]},{label:"01 share",relation:"Random polynomial points를 배포합니다.",concepts:["shamir-share-generation"]},{label:"02 reconstruct",relation:"x=0에서 secret을 복원합니다.",concepts:["lagrange-interpolation-basis","shamir-reconstruction-at-zero"]},{label:"03 privacy",relation:"t-share view의 분포를 비교합니다.",concepts:["shamir-threshold-privacy-boundary"]},{label:"04 active",relation:"VSS·refresh 경계를 둡니다.",concepts:["shamir-active-security-boundary"]}],
-    exercises:[{level:"basic",question:"F17의 f=5+3x에서 x=1,2,3 shares를 계산하세요.",answerChecklist:["8","11","14","mod17"],requiredConcepts:["shamir-share-generation"],sectionId:"share-generation"},{level:"basic",question:"Index 0을 금지하는 이유를 쓰세요.",answerChecklist:["f(0)","secret","direct leak","nonzero"],requiredConcepts:["shamir-share-generation"],sectionId:"share-generation"},{level:"basic",question:"(1,8),(2,11)로 secret을 복원하세요.",answerChecklist:["basis 2 and −1","16−11","5 mod17","field"],requiredConcepts:["shamir-reconstruction-at-zero"],sectionId:"reconstruction"},{level:"basic",question:"Degree t와 최소 복원 share 수를 연결하세요.",answerChecklist:["degree t","t+1 points","t private","API convention"],requiredConcepts:["shamir-threshold-polynomial-sharing"],sectionId:"overview"},{level:"basic",question:"한 share가 secret을 결정하지 못하는 이유를 쓰세요.",answerChecklist:["each secret compatible","different slope","uniform coefficient","same distribution"],requiredConcepts:["shamir-threshold-privacy-boundary"],sectionId:"privacy-boundary"},{level:"basic",question:"Plain Shamir과 VSS를 구분하세요.",answerChecklist:["sharing correctness","dealer equivocation","commitment","complaint"],requiredConcepts:["shamir-active-security-boundary"],sectionId:"active-boundary"},{level:"advanced",question:"t+1 reconstruction proof idea를 쓰세요.",answerChecklist:["degree t uniqueness","Lagrange basis","field inverse","evaluate zero"],requiredConcepts:["shamir-reconstruction-at-zero"],sectionId:"reconstruction"},{level:"advanced",question:"t-share perfect privacy proof idea를 설명하세요.",answerChecklist:["free coefficient","bijection","uniform","view independent of secret"],requiredConcepts:["shamir-threshold-privacy-boundary"],sectionId:"privacy-boundary"},{level:"advanced",question:"Zero-constant refresh protocol의 경계를 설계하세요.",answerChecklist:["constant zero","new randomness","secret unchanged","verify contributions","session"],requiredConcepts:["shamir-active-security-boundary"],sectionId:"active-boundary"},{level:"advanced",question:"Shamir release matrix를 작성하세요.",answerChecklist:["field","threshold convention","indices","RNG","bad share","insufficient","bytes/latency","rollback"],requiredConcepts:["shamir-share-generation","shamir-active-security-boundary"],sectionId:"release"}],
-    papers:[{title:"Shamir · How to Share a Secret",href:"https://doi.org/10.1145/359168.359176",problem:"Threshold shares와 적은-share privacy",contribution:"Random polynomial evaluation과 interpolation construction",assumptions:"Finite field·distinct points·uniform coefficients",evidenceScope:"Correctness와 perfect privacy",notClaim:"VSS·malicious DKG·fairness를 보장하지 않음",sectionId:"paper-shamir"}]
+    "entryLevel": false,
+    "entryNote": "비밀 5에서 기록 8·11·14를 만들고 두 기록으로 5를 되찾으며 조각·복원·비밀성의 이름을 붙입니다.",
+    "coreIdea": "비밀을 상수항에 넣고 계수를 균등하게 고르면 충분한 조각으로 복원하면서 적은 조각의 관찰 분포는 비밀과 독립으로 만들 수 있습니다. 거짓 조각과 갱신 검증은 별도로 필요합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "prime-field-modular-arithmetic",
+        "role": "17로 나눈 나머지와 역원으로 정확히 계산합니다."
+      },
+      {
+        "id": "lagrange-interpolation-basis",
+        "role": "서로 다른 번호의 기록에서 번호 0의 값을 구합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "shamir-threshold-polynomial-sharing",
+        "role": "복원에 필요한 조각 수와 무작위 다항식의 관계를 설명합니다."
+      },
+      {
+        "id": "shamir-share-generation",
+        "role": "균등한 계수와 서로 다른 0 아닌 번호로 조각을 만듭니다."
+      },
+      {
+        "id": "shamir-reconstruction-at-zero",
+        "role": "가중치로 번호 0의 비밀을 복원합니다."
+      },
+      {
+        "id": "shamir-threshold-privacy-boundary",
+        "role": "적은 조각의 관찰 분포가 비밀과 독립인 조건을 설명합니다."
+      },
+      {
+        "id": "shamir-active-security-boundary",
+        "role": "거짓 조각·갱신·회차 혼합과 기본 분산의 한계를 구분합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "shamir-threshold-polynomial-sharing",
+        "sectionId": "names",
+        "intuition": "같은 규칙의 서로 다른 기록을 모아 번호 0의 값을 복원합니다.",
+        "workedExample": "F17에서 비밀 5와 계수 3으로 (1,8)·(2,11)·(3,14)를 만들고 두 개로 5를 얻습니다.",
+        "boundary": "t는 무작위 계수 개수이며 차수는 t 이하입니다. 최소 복원 수는 t+1이고 원문 k와 같습니다."
+      },
+      {
+        "id": "shamir-share-generation",
+        "sectionId": "share-generation",
+        "intuition": "새 비밀마다 유한체 전체에서 독립적이고 균등한 계수를 뽑습니다.",
+        "workedExample": "f(x)=5+3x에서 5번 값은 20 mod17=3입니다.",
+        "boundary": "번호 0은 비밀을 드러내며 중복 번호는 독립적인 조각이 아닙니다. 계수 0을 금지하면 완전한 비밀성이 깨질 수 있습니다."
+      },
+      {
+        "id": "shamir-reconstruction-at-zero",
+        "sectionId": "reconstruction",
+        "intuition": "가중치를 골라 비밀 항 하나만 남기고 무작위 계수의 효과를 지웁니다.",
+        "workedExample": "1·2번 가중치 2·−1로 2×8−11=5, 1·3번 가중치 10·8로 192 mod17=5입니다.",
+        "boundary": "나눗셈은 같은 유한체의 역원 곱셈입니다. 보간만으로 제출된 값의 진위를 확인하지 못합니다."
+      },
+      {
+        "id": "shamir-threshold-privacy-boundary",
+        "sectionId": "privacy-boundary",
+        "intuition": "어느 비밀을 고정해도 적은 조각을 관찰할 확률이 같아야 합니다.",
+        "workedExample": "(1,8)에 비밀 0·5·10은 계수 8·3·15로 대응하며 각각의 관찰 확률은 1/17입니다.",
+        "boundary": "비밀의 사전 정보를 지워 주는 것은 아닙니다. 계수 0 금지·편향·여러 비밀 사이의 계수 재사용은 전제를 깨뜨립니다."
+      },
+      {
+        "id": "shamir-active-security-boundary",
+        "sectionId": "active-boundary",
+        "intuition": "거짓 조각 검출과 조각 갱신은 기본 복원 규칙에 없는 별도 절차입니다.",
+        "workedExample": "2번을 12로 바꾸면 4가 복원됩니다. 4x를 더한 새 조각은 12·2·9이고 새 두 조각은 5, 옛 1번과 새 2번은 14를 복원합니다.",
+        "boundary": "VSS의 약속·증명·이의 제기, 신원·비밀 전달, 회차 구분과 옛 조각 폐기가 필요합니다. 이미 노출된 비밀은 갱신으로 되돌리지 못합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 field",
+        "relation": "같은 유한체에서 계수 개수와 최소 복원 수를 구분합니다.",
+        "concepts": [
+          "prime-field-modular-arithmetic",
+          "shamir-threshold-polynomial-sharing"
+        ]
+      },
+      {
+        "label": "01 share",
+        "relation": "새 무작위 규칙으로 서로 다른 번호의 조각을 만듭니다.",
+        "concepts": [
+          "shamir-share-generation"
+        ]
+      },
+      {
+        "label": "02 reconstruct",
+        "relation": "번호 0의 값을 가중합으로 복원합니다.",
+        "concepts": [
+          "lagrange-interpolation-basis",
+          "shamir-reconstruction-at-zero"
+        ]
+      },
+      {
+        "label": "03 privacy",
+        "relation": "비밀별 관찰 분포가 같은지 비교합니다.",
+        "concepts": [
+          "shamir-threshold-privacy-boundary"
+        ]
+      },
+      {
+        "label": "04 active",
+        "relation": "거짓 조각과 갱신을 별도로 검증합니다.",
+        "concepts": [
+          "shamir-active-security-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "비밀 5와 계수 3으로 1·2·3·5번 조각을 계산하세요.",
+        "answerChecklist": [
+          "(1,8)",
+          "(2,11)",
+          "(3,14)",
+          "5번은20 mod17=3",
+          "번호와 값 함께 보관"
+        ],
+        "sectionId": "share-generation",
+        "requiredConcepts": [
+          "shamir-share-generation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "번호 0과 중복 번호를 배포하지 않는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "f(0)=비밀",
+          "0은 직접 노출",
+          "중복 번호는 같은 점",
+          "복원에 서로 다른 점 필요"
+        ],
+        "sectionId": "share-generation",
+        "requiredConcepts": [
+          "shamir-share-generation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "1·2번 조각으로 비밀 5를 복원하세요.",
+        "answerChecklist": [
+          "가중치2와−1",
+          "2×8−11=5",
+          "−1은 mod17에서16",
+          "계수 항 상쇄"
+        ],
+        "sectionId": "reconstruction",
+        "requiredConcepts": [
+          "shamir-reconstruction-at-zero"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "t=1일 때 원문의 k와 최소 복원 수를 연결하세요.",
+        "answerChecklist": [
+          "무작위 계수1개",
+          "차수1이하",
+          "t+1=2",
+          "k=2",
+          "계수0 허용"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "shamir-threshold-polynomial-sharing"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "한 조각 (1,8)이 비밀 0·5·10과 각각 어떻게 양립하나요?",
+        "answerChecklist": [
+          "계수8·3·15",
+          "각 관찰 확률1/17",
+          "균등한 계수",
+          "사전 정보는 그대로"
+        ],
+        "sectionId": "privacy-boundary",
+        "requiredConcepts": [
+          "shamir-threshold-privacy-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "2번 조각을 11에서 12로 바꾸면 무엇이 복원되며 기본 방식이 거짓을 탐지하나요?",
+        "answerChecklist": [
+          "2×8−12=4",
+          "4+4x가 두 점을 지남",
+          "단순 보간은 탐지 못함",
+          "VSS 검증·이의 제기 별도"
+        ],
+        "sectionId": "active-boundary",
+        "requiredConcepts": [
+          "shamir-active-security-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "1번과 3번으로 비밀을 복원하고 t+1개 점의 유일성을 설명하세요.",
+        "answerChecklist": [
+          "2의 역원9",
+          "가중치10과8",
+          "8×10+14×8=192",
+          "나머지5",
+          "두 다항식 차이의 차수t이하",
+          "t+1개의 근이면 영다항식"
+        ],
+        "sectionId": "reconstruction",
+        "requiredConcepts": [
+          "shamir-reconstruction-at-zero"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "계수 0을 금지하거나 두 비밀에 계수를 재사용하면 왜 비밀성 논리가 깨지나요?",
+        "answerChecklist": [
+          "(1,8)에서 비밀8은 계수0 필요",
+          "금지하면 후보 배제",
+          "비밀5·9에 같은 계수3",
+          "조각8·12의 차이4가 비밀 차이",
+          "각 비밀의 같은 관찰 분포 필요"
+        ],
+        "sectionId": "privacy-boundary",
+        "requiredConcepts": [
+          "shamir-threshold-privacy-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "4x로 조각을 갱신한 뒤 새 두 조각과 서로 다른 세대의 두 조각을 비교하세요.",
+        "answerChecklist": [
+          "새 식5+7x",
+          "조각12·2·9",
+          "2×12−2=22 mod17=5",
+          "옛1번8과 새2번2는14",
+          "상수항0 검증",
+          "회차 구분",
+          "옛 조각 폐기",
+          "이미 노출된 비밀 회복 불가"
+        ],
+        "sectionId": "active-boundary",
+        "requiredConcepts": [
+          "shamir-active-security-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "분산·복원 구현에서 어떤 실패 입력과 기록을 확인하나요?",
+        "answerChecklist": [
+          "유한체·threshold 표기",
+          "번호0·중복·부족한 조각",
+          "값 범위·바이트 인코딩",
+          "계수 난수",
+          "변조·잘못된 신원",
+          "회차 혼합·계수 재사용",
+          "로그·메모리 비밀 폐기",
+          "기본 방식과 VSS 검사 범위",
+          "시간·크기는 조건 고정 후 비교"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "shamir-share-generation",
+          "shamir-active-security-boundary"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Shamir · How to Share a Secret",
+        "href": "https://web.mit.edu/6.857/OldStuff/Fall03/ref/Shamir-HowToShareASecret.pdf",
+        "problem": "일정 수 이상의 조각은 비밀을 복원하고 그보다 적은 조각은 새 정보를 주지 않게 합니다.",
+        "contribution": "비밀을 상수항에 넣고 균등 계수의 다항식을 평가·보간하는 구성을 제시합니다.",
+        "assumptions": "같은 유한체, 서로 다른 0 아닌 번호, 0을 포함한 균등 독립 계수를 사용합니다.",
+        "evidenceScope": "§2의 D=5,n=3,k=2,p=17,q(x)=5+3x를 조각 8·11·14와 복원식에 직접 대응합니다.",
+        "notClaim": "거짓 조각 탐지·검증 가능한 분산·악의적 분산 키 생성·공정성·임계 서명을 자동 보장하지 않습니다.",
+        "sectionId": "paper-shamir"
+      }
+    ]
   },
   "crypto/paillier-cryptosystem": {
     entryLevel:false, entryNote:"Toy p=3,q=5에서 keygen·encrypt·homomorphic add·decrypt를 직접 계산합니다.", coreIdea:"Paillier는 n² unit group에서 fresh randomizer로 probabilistic ciphertext를 만들고 ciphertext multiplication을 plaintext mod-n addition으로 옮기지만, 이 malleability는 integrity·range·active MPC proof가 아닙니다.", assumedKnowledge:[{id:"modular-congruence-residue-class",role:"Z_n과 modulo wraparound를 사용합니다."},{id:"csprng-computational-unpredictability",role:"Fresh unit randomizer를 생성합니다."}],
@@ -61372,43 +63007,268 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "crypto/crt": {
-    entryLevel: true,
-    entryNote: "정수 나눗셈의 quotient·remainder에서 시작해 congruence를 정의하므로 number theory를 미리 알지 않아도 됩니다.",
-    coreIdea: "Pairwise-coprime modulus마다 자기 조건에서만 1인 selector를 만들면 여러 residue를 한 정수로 조립할 수 있고, 모든 해는 modulus 곱만큼 떨어져 있습니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "modular-congruence-residue-class", role: "같은 나머지 조건을 정수 차이의 배수 관계로 읽습니다." },
-      { id: "crt-pairwise-coprime-theorem", role: "해의 존재와 modulo-product 유일성을 분리해 증명합니다." },
-      { id: "crt-selector-recombination", role: "부분 곱과 inverse로 해를 직접 구성합니다." },
-      { id: "rsa-crt-recombination-boundary", role: "RSA 적용에서 정확성·fault·timing과 speed claim을 분리합니다." },
+    "entryLevel": true,
+    "entryNote": "물건을 3·5·7개씩 묶을 때 남는 2·3·2에서 시작해 23을 조립하고 같은 23의 RSA 복원으로 연결합니다.",
+    "coreIdea": "각 나머지 조건에만 영향을 주는 값을 만들면 서로소 기준들의 기록을 한 수로 합칠 수 있습니다. 해는 기준들의 곱마다 반복되며 RSA 구현의 오류 검출과 성능은 별도로 확인합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "modular-congruence-residue-class",
+        "role": "같은 나머지를 정수 차이의 배수 관계로 읽습니다."
+      },
+      {
+        "id": "crt-pairwise-coprime-theorem",
+        "role": "존재와 기준 곱을 주기로 한 유일성을 따로 증명합니다."
+      },
+      {
+        "id": "crt-selector-recombination",
+        "role": "부분 곱과 역원으로 해를 직접 만듭니다."
+      },
+      {
+        "id": "rsa-crt-recombination-boundary",
+        "role": "RSA 재결합의 정확성·오류 누출·부채널·성능 조건을 구분합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "modular-congruence-residue-class", sectionId: "overview", intuition: "시계에서 2시와 14시는 12시간 차이이므로 같은 위치입니다. 두 수의 차가 modulus의 배수이면 같은 residue class입니다.", workedExample: "23=7·3+2이므로 23≡2 (mod 3)이고, 23−2=21로도 확인합니다.", boundary: "Congruence는 정수 equality가 아니라 고정 modulus에서의 equivalence입니다. Modulus 0이나 서로 다른 modulus를 섞어 읽지 않습니다." },
-      { id: "crt-pairwise-coprime-theorem", sectionId: "numerical", intuition: "서로 겹치는 주기가 없는 여러 시계 눈금은 전체 주기 M 안에서 정확히 한 번 같은 조합으로 만납니다.", workedExample: "mod 3·5·7의 residue 2·3·2는 x=23에서 만나고 다음은 128=23+105입니다.", boundary: "Modulus가 pairwise coprime이 아니면 임의 residue에 해가 생기지 않으며 해의 주기도 단순 곱이 아닙니다.", proofIdea: "구성식으로 존재를 보이고 두 해의 차가 모든 coprime m_i로 나뉘므로 곱 M으로도 나뉨을 보여 유일성을 증명합니다.", counterexample: "x≡0 (mod 2)와 x≡1 (mod 4)는 parity가 충돌해 해가 없습니다." },
-      { id: "crt-selector-recombination", sectionId: "numerical", intuition: "M_i는 자기 modulus를 뺀 나머지 modulus에서 모두 0이고 inverse를 곱하면 자기 modulus에서 1이 됩니다.", workedExample: "M=105에서 35·2, 21·1, 15·1을 selector로 써 2·70+3·21+2·15=233≡23을 얻습니다.", boundary: "Inverse는 gcd(M_i,m_i)=1일 때만 존재하며 큰 입력에서는 합의 overflow·canonical reduction·점진 재결합 비용을 관리해야 합니다." },
-      { id: "rsa-crt-recombination-boundary", sectionId: "crypto-usage", intuition: "RSA 결과를 p와 q의 작은 시계에서 따로 계산하고 한쪽 차이만 보정해 n=pq 시계로 합칩니다.", workedExample: "p=5,q=11,qInv=1,m1=4,m2=7이면 h=2이고 m=7+11·2=29로 두 residue를 모두 만족합니다.", boundary: "CRT의 대수는 constant-time·blinding·fault resistance나 고정 4배 speedup을 자동 보장하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "modular-congruence-residue-class",
+        "sectionId": "names",
+        "intuition": "같은 기준으로 나누었을 때 같은 나머지를 갖는 수들을 함께 다룹니다.",
+        "workedExample": "23=3×7+2이며 128도 3으로 나누면 2가 남습니다.",
+        "boundary": "합동은 정수 자체가 같다는 뜻이 아닙니다. 기준과 나머지를 함께 기록하고 양의 기준을 사용합니다."
+      },
+      {
+        "id": "crt-pairwise-coprime-theorem",
+        "sectionId": "uniqueness",
+        "intuition": "선택자 합으로 답을 만들고 두 답의 차이가 곱의 배수임을 보여 반복 주기를 정합니다.",
+        "workedExample": "2·3·2를 남기는 답은 23+105k이며 0~104 안에서는 23뿐입니다.",
+        "boundary": "기준들이 서로소가 아니면 기록이 최대공약수 기준에서 양립하는지 확인하고 최소공배수 주기를 사용합니다.",
+        "proofIdea": "각 기준으로 합을 줄이면 자기 항만 남아 존재가 성립합니다. 두 해의 차이는 모든 기준의 배수이고 서로소이므로 곱의 배수여서 주기 안에서 유일합니다.",
+        "counterexample": "2로 나눈 나머지0과 4로 나눈 나머지1은 짝수·홀수 요구가 충돌합니다."
+      },
+      {
+        "id": "crt-selector-recombination",
+        "sectionId": "numerical",
+        "intuition": "다른 기준에서는 0이고 자기 기준에서만 1인 값을 만든 뒤 원하는 나머지를 곱합니다.",
+        "workedExample": "선택자 70·21·15로 2×70+3×21+2×15=233, 나머지23을 얻습니다.",
+        "boundary": "역원이 존재하는 서로소 조건과 정확한 중간 정수 계산이 필요합니다. 넘침과 음수 나머지의 정규화를 확인합니다."
+      },
+      {
+        "id": "rsa-crt-recombination-boundary",
+        "sectionId": "crypto-usage",
+        "intuition": "작은 기준 두 개에서 계산한 결과를 한쪽 나머지가 유지되도록 보정해 합칩니다.",
+        "workedExample": "p5·q7·e5·d5에서 입력18은 m1=3,m2=2,h=3을 거쳐23이 됩니다.",
+        "boundary": "한쪽 오류로 결과9를 유출하면 gcd(9^5 mod35−18,35)=7을 얻습니다. 부채널·오류 방어와 속도는 정리에서 자동 보장되지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 나머지 언어", relation: "정수 조건을 congruence로 읽습니다.", concepts: ["modular-congruence-residue-class"] },
-      { label: "02 정리", relation: "서로소 조건에서 존재와 유일성을 증명합니다.", concepts: ["crt-pairwise-coprime-theorem"] },
-      { label: "03 구성", relation: "Selector로 수치 해를 만듭니다.", concepts: ["crt-selector-recombination"] },
-      { label: "04 구현", relation: "RSA 재결합과 검증 경계를 적용합니다.", concepts: ["rsa-crt-recombination-boundary"] },
+    "conceptStages": [
+      {
+        "label": "01 나머지 언어",
+        "relation": "같은 나머지라는 기록에 합동 기호를 붙입니다.",
+        "concepts": [
+          "modular-congruence-residue-class"
+        ]
+      },
+      {
+        "label": "02 정리",
+        "relation": "서로소 조건에서 존재와 유일성을 확인합니다.",
+        "concepts": [
+          "crt-pairwise-coprime-theorem"
+        ]
+      },
+      {
+        "label": "03 구성",
+        "relation": "선택자에 원하는 나머지를 곱해 더합니다.",
+        "concepts": [
+          "crt-selector-recombination"
+        ]
+      },
+      {
+        "label": "04 구현",
+        "relation": "RSA 원문 절차와 변조 반례를 검산합니다.",
+        "concepts": [
+          "rsa-crt-recombination-boundary"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "23≡2 (mod 3)을 quotient·remainder와 차이의 배수 두 방식으로 확인하세요.", answerChecklist: ["23=7·3+2", "remainder 2", "23-2=21", "21 divisible by 3", "congruence not equality"], requiredConcepts: ["modular-congruence-residue-class"], sectionId: "overview" },
-      { level: "basic", question: "x≡2 mod3, x≡3 mod5, x≡2 mod7을 M_i와 inverse selector로 계산하세요.", answerChecklist: ["M=105", "M1=35 y1=2", "M2=21 y2=1", "M3=15 y3=1", "sum 233", "x=23 mod105", "three residue checks"], requiredConcepts: ["crt-selector-recombination"], sectionId: "numerical" },
-      { level: "basic", question: "두 해 x,x'가 있을 때 modulo 105에서 하나뿐인 이유를 설명하세요.", answerChecklist: ["difference divisible by 3", "by 5", "by 7", "pairwise coprime", "product 105 divides difference", "unique modulo 105"], requiredConcepts: ["crt-pairwise-coprime-theorem"], sectionId: "numerical" },
-      { level: "basic", question: "x≡0 mod2와 x≡1 mod4가 양립하지 않는 이유와 일반 compatibility 조건을 쓰세요.", answerChecklist: ["even requirement", "odd residue", "gcd 2", "residues unequal mod gcd", "no solution", "lcm when compatible"], requiredConcepts: ["crt-pairwise-coprime-theorem"], sectionId: "numerical" },
-      { level: "basic", question: "p=5,q=11,qInv=1,m1=4,m2=7을 RSA-CRT 식으로 재결합하고 검산하세요.", answerChecklist: ["h=(-3) mod5=2", "m=29", "29 mod5=4", "29 mod11=7", "canonical mod55"], requiredConcepts: ["rsa-crt-recombination-boundary"], sectionId: "crypto-usage" },
-      { level: "basic", question: "RSA-CRT가 operand를 줄여도 정확히 4배라고 단정할 수 없는 이유와 post verification의 역할을 설명하세요.", answerChecklist: ["half-size exponentiations", "backend/window", "memory and blinding", "fault can corrupt one residue", "public/direct parity", "measured speedup"], requiredConcepts: ["rsa-crt-recombination-boundary"], sectionId: "crypto-usage" },
-      { level: "advanced", question: "x≡2 mod6, x≡5 mod9의 compatibility를 검사하고 일반화 CRT 해와 주기를 구하세요.", answerChecklist: ["gcd=3", "2 mod3 equals 5 mod3", "compatible", "x=14", "lcm=18", "not product 54"], requiredConcepts: ["crt-pairwise-coprime-theorem"], sectionId: "numerical" },
-      { level: "advanced", question: "일반 selector 식의 존재성과 modulo-product 유일성을 각각 증명하세요.", answerChecklist: ["Mi zero on other moduli", "Mi yi one on own modulus", "sum gives ai", "two-solution difference", "coprime product divides difference", "existence distinct from uniqueness"], requiredConcepts: ["crt-pairwise-coprime-theorem", "crt-selector-recombination"], sectionId: "numerical" },
-      { level: "advanced", question: "RSA-CRT 한 residue에 fault를 주입하는 test와 결과 유출을 막는 gate를 설계하세요.", answerChecklist: ["p-side or q-side fault", "recombine", "public exponent/direct parity", "reject before release", "blinding", "constant-time", "fault receipt"], requiredConcepts: ["rsa-crt-recombination-boundary"], sectionId: "crypto-usage" },
-      { level: "advanced", question: "Direct RSA와 CRT 후보를 정확성·보안·성능 순서로 비교하는 benchmark matrix를 작성하세요.", answerChecklist: ["same key/backend", "boundary and random parity", "fault/timing gate", "warmup", "p50/p95", "blinding included", "no universal speedup", "rollback"], requiredConcepts: ["rsa-crt-recombination-boundary"], sectionId: "crypto-usage" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "23≡2 (mod3)을 나눗셈과 차이의 배수로 설명하세요.",
+        "answerChecklist": [
+          "23=3×7+2",
+          "23−2=21",
+          "3의 배수",
+          "23=2라는 뜻 아님",
+          "기준3을 함께 보관"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "modular-congruence-residue-class"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "3·5·7의 나머지 2·3·2를 선택자로 조립하세요.",
+        "answerChecklist": [
+          "M105",
+          "부분 곱35·21·15",
+          "역원2·1·1",
+          "선택자70·21·15",
+          "합233",
+          "나머지23",
+          "세 기준으로 검산"
+        ],
+        "sectionId": "numerical",
+        "requiredConcepts": [
+          "crt-selector-recombination"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "23과128이 모두 답인데 유일하다는 뜻은 무엇인가요?",
+        "answerChecklist": [
+          "차이105",
+          "모든 답23+105k",
+          "0~104에서23만",
+          "두 해 차이는3·5·7의 배수",
+          "서로소라 곱105의 배수"
+        ],
+        "sectionId": "uniqueness",
+        "requiredConcepts": [
+          "crt-pairwise-coprime-theorem"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "나머지0 mod2와1 mod4가 왜 양립하지 않나요?",
+        "answerChecklist": [
+          "짝수 요구",
+          "홀수 요구",
+          "최대공약수2에서 기록 불일치",
+          "해 없음"
+        ],
+        "sectionId": "compatibility",
+        "requiredConcepts": [
+          "crt-pairwise-coprime-theorem"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "RFC의 입력18과 p5·q7·dP1·dQ5·qInv3에서 결과를 복원하세요.",
+        "answerChecklist": [
+          "m1=18^1 mod5=3",
+          "m2=18^5 mod7=2",
+          "h=(3−2)×3 mod5=3",
+          "m=2+7×3=23",
+          "직접18^5 mod35=23"
+        ],
+        "sectionId": "crypto-usage",
+        "requiredConcepts": [
+          "rsa-crt-recombination-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "작은 정수 두 개로 계산해도 정확히 네 배 빠르다고 할 수 없는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "큰 정수 알고리즘",
+          "거듭제곱 방법",
+          "메모리 접근",
+          "blinding 비용",
+          "오류 검산 비용",
+          "같은 조건의 실측 필요"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "rsa-crt-recombination-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "6·9에서 나머지2·5를 갖는 해와 주기를 구하세요.",
+        "answerChecklist": [
+          "최대공약수3",
+          "2·5는 mod3에서2",
+          "x=2+6k",
+          "6k≡3 mod9",
+          "2k≡1 mod3",
+          "k≡2 mod3",
+          "x=14+18j",
+          "주기lcm18"
+        ],
+        "sectionId": "compatibility",
+        "requiredConcepts": [
+          "crt-pairwise-coprime-theorem"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "일반 선택자 식이 답을 만들며 곱을 주기로 유일함을 각각 증명하세요.",
+        "answerChecklist": [
+          "M_i는 다른 기준에서0",
+          "역원 곱하면 자기 기준에서1",
+          "가중합에서a_i 남음",
+          "두 해 차이는모든 기준의 배수",
+          "서로소라곱의 배수",
+          "존재와 유일성 구분"
+        ],
+        "sectionId": "uniqueness",
+        "requiredConcepts": [
+          "crt-pairwise-coprime-theorem",
+          "crt-selector-recombination"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "RSA 첫 나머지를3에서4로 바꾸면 어떤 값과 인수가 나오는지 계산하세요.",
+        "answerChecklist": [
+          "m2=2 유지",
+          "h=(4−2)×3 mod5=1",
+          "합친결과9",
+          "9^5 mod35=4",
+          "입력18과 불일치",
+          "gcd(4−18,35)=7",
+          "실패한 결과 공개 금지",
+          "검사 자체 오류도 검토"
+        ],
+        "sectionId": "fault-boundary",
+        "requiredConcepts": [
+          "rsa-crt-recombination-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "직접 계산과 CRT 구현의 정확성·보안·성능을 어떤 조건으로 비교하나요?",
+        "answerChecklist": [
+          "같은 키·라이브러리·하드웨어",
+          "입력 범위·중간 넘침·음수 정규화",
+          "직접 계산과 결과 일치",
+          "한쪽 오류 주입과 공개 전 거절",
+          "비밀에 따른 시간·메모리 접근",
+          "blinding과 검사 비용 포함",
+          "워밍업",
+          "중앙값·느린 구간",
+          "보편적4배 주장 금지"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "rsa-crt-recombination-boundary"
+        ]
+      }
     ],
-    papers: [
-      { title: "RFC 8017 · PKCS #1 v2.2", href: "https://www.rfc-editor.org/rfc/rfc8017.html", problem: "RSA key representation과 primitive를 interoperable하게 정의합니다.", contribution: "p·q·dP·dQ·qInv CRT parameter와 RSADP/RSASP1 범위를 규정합니다.", assumptions: "Two-prime RSA key와 RFC input/error semantics를 고정합니다.", evidenceScope: "PKCS #1 v2.2의 key·primitive contract입니다.", notClaim: "Library constant-time·fault resistance·fixed speedup을 보장하지 않습니다.", sectionId: "paper-rfc8017-crt" },
-    ],
+    "papers": [
+      {
+        "title": "RFC 8017 · PKCS #1 v2.2",
+        "href": "https://www.rfc-editor.org/rfc/rfc8017.html",
+        "problem": "RSA 키와 기본 정수 연산을 상호운용할 수 있도록 정의합니다.",
+        "contribution": "CRT 비밀키 매개변수와 복호·서명 기본 연산의 계산 순서 및 입력 범위를 규정합니다.",
+        "assumptions": "유효한 RSA 키와 원문의 입력 범위를 전제로 하며 본문은 두 소수 분기만 계산합니다.",
+        "evidenceScope": "§5.1.2 Step2.b의 m1·m2·h·m에 입력18을 넣어3·2·3·23을 재현했습니다.",
+        "notClaim": "교육용 정수 재현은 특정 라이브러리의 실행·상수시간·오류 저항성·고정 속도 향상 검증이 아닙니다.",
+        "sectionId": "paper-rfc8017-crt"
+      }
+    ]
   },
   "crypto/karatsuba": {
     entryNote: "십진수 자리 나누기와 분배법칙에서 시작해 recurrence와 cutoff까지 연결합니다.",
@@ -62760,52 +64620,345 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "crypto/csprng": {
-    entryLevel: true,
-    entryNote: "동전의 앞뒤 확률과 bit부터 시작해 entropy source·seed·state·output·reseed를 하나의 lifecycle로 설명합니다.",
-    coreIdea: "CSPRNG는 검증한 source의 min-entropy로 secret state를 만들고 계산적으로 예측 불가능한 output을 확장하며, state compromise·fork/clone·reseed를 수명주기로 통제합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "csprng-entropy-drbg-pipeline", role: "Noise에서 stateful DRBG output까지 lifecycle을 연결합니다." },
-      { id: "csprng-computational-unpredictability", role: "Statistical appearance와 next-output security를 구분합니다." },
-      { id: "min-entropy-guessing-bound", role: "가장 쉬운 guess 기준으로 seed strength를 계산합니다." },
-      { id: "drbg-state-compromise-resistance", role: "과거 보호와 reseed 후 미래 recovery를 나눕니다." },
-      { id: "drbg-reseed-lifecycle", role: "Boot·fork·clone·rollback에서 state 중복을 막습니다." },
-      { id: "nonce-uniqueness-secrecy-contract", role: "Key·signature·AEAD별 random value 요구를 구분합니다." },
-      { id: "csprng-release-gate", role: "실패·복제·reseed fixture parity 뒤 성능을 봅니다." },
+    "entryLevel": true,
+    "entryNote": "시작값 0~7에서 32바이트를 만드는 잘못된 사례를 따라가며 비밀량·출력 길이·상태 보호를 구분합니다.",
+    "coreIdea": "생성기는 충분한 비밀 재료를 긴 출력으로 펼치지만 새 비밀을 저절로 만들지 않으며 상태 복제·유출·임시값 재사용은 별도로 막아야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "csprng-entropy-drbg-pipeline",
+        "role": "비밀 재료에서 상태와 출력으로 이어지는 생명주기를 설명합니다."
+      },
+      {
+        "id": "csprng-computational-unpredictability",
+        "role": "통계적인 외양과 다음 출력 예측의 차이를 설명합니다."
+      },
+      {
+        "id": "min-entropy-guessing-bound",
+        "role": "가장 쉬운 단일 추측의 확률과 후보 수를 구분합니다."
+      },
+      {
+        "id": "drbg-state-compromise-resistance",
+        "role": "현재 상태 유출 뒤 과거 보호와 미래 회복을 구분합니다."
+      },
+      {
+        "id": "drbg-reseed-lifecycle",
+        "role": "부팅·복제·복구의 상태 중복과 재시드 필요성을 설명합니다."
+      },
+      {
+        "id": "nonce-uniqueness-secrecy-contract",
+        "role": "사용처별 비밀·중복 금지 조건과 서명 임시값 재사용을 설명합니다."
+      },
+      {
+        "id": "csprng-release-gate",
+        "role": "실패·복제·재시드 검사와 실제 보안 주장 범위를 설명합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "csprng-entropy-drbg-pipeline", sectionId: "overview", intuition: "적은 예측 불가능한 seed를 비밀 상태로 간직해 필요한 만큼 빠른 random bits로 확장합니다.", workedExample: "Raw noise를 health test·conditioning한 뒤 Instantiate하고 매 Generate에서 output과 state를 함께 갱신합니다.", boundary: "DRBG algorithm이 좋아도 seed entropy가 작거나 clone state가 같으면 output 후보 공간도 작습니다." },
-      { id: "csprng-computational-unpredictability", sectionId: "overview", intuition: "0과 1이 반반 보이는지가 아니라 이전 출력을 본 공격자가 다음 값을 더 잘 맞히는지를 봅니다.", workedExample: "Next-bit predictor 성공률 1/2에서의 advantage가 non-negligible하면 CSPRNG 목표가 깨집니다.", boundary: "Statistical suite 합격은 secret state·seed·prediction resistance의 증거가 아닙니다." },
-      { id: "min-entropy-guessing-bound", sectionId: "entropy-source", intuition: "평균이 아니라 공격자가 가장 먼저 찍을 값의 확률로 보수적인 uncertainty를 셉니다.", workedExample: "가장 흔한 outcome 확률이 1/8이면 H∞=3 bits이고 128-byte output으로 늘려도 entropy는 늘지 않습니다.", boundary: "환경·side information·correlation을 무시한 sample별 entropy 단순 합산은 허용하지 않습니다." },
-      { id: "drbg-state-compromise-resistance", sectionId: "overview", intuition: "현재 일기장을 빼앗겨도 과거 페이지는 지우고 새 비밀 재료를 받은 뒤 미래 일기를 다시 안전하게 씁니다.", workedExample: "State update가 one-way이면 backtracking을 막고 새 미관측 entropy reseed 뒤 future recovery를 목표로 합니다.", boundary: "새 entropy가 없이 deterministic update만 계속하면 state를 읽은 공격자에게서 미래가 자동 회복되지 않습니다." },
-      { id: "drbg-reseed-lifecycle", sectionId: "applications", intuition: "VM이나 process를 복제하면 난수 상태도 복제될 수 있으므로 identity 변화에서 state를 갈라야 합니다.", workedExample: "Snapshot restore·fork child는 OS reseed semantics를 확인하고 실패 시 secret 생성을 중단합니다.", boundary: "시간·PID·container ID를 섞는 것은 공격자 미관측 entropy를 대신하지 않습니다." },
-      { id: "nonce-uniqueness-secrecy-contract", sectionId: "applications", intuition: "모든 nonce가 비밀 난수인 것은 아니며 scheme마다 반복 금지와 secrecy 조건이 다릅니다.", workedExample: "ECDSA nonce k를 재사용하면 공개 두 서명으로 k와 private key d를 복원할 수 있습니다.", boundary: "AEAD counter nonce의 공개 uniqueness 정책과 signature secret nonce 요구를 같은 규칙으로 뭉치지 않습니다." },
-      { id: "csprng-release-gate", sectionId: "applications", intuition: "평상시 random sample 대신 난수가 자주 실패하는 부팅·복제·복구 경계를 의도적으로 재생합니다.", workedExample: "Early boot·fork·clone·snapshot·short read·state disclosure·reseed failure에서 duplicate와 typed error를 비교합니다.", boundary: "Output이 몇 번 달랐다는 smoke test나 throughput 개선만으로 cryptographic security를 입증하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "csprng-entropy-drbg-pipeline",
+        "sectionId": "names",
+        "intuition": "비밀 재료를 받아 내부 상태를 만들고 요청마다 출력과 상태를 갱신합니다.",
+        "workedExample": "0~7 중 3을 한 바이트로 넣는 교육용 생성기에서 첫 출력은 323e…, 두 번째는 dbf1…입니다.",
+        "boundary": "이 짧은 입력은 NIST 초기화 조건을 충족하지 않습니다. 실제 운영체제나 인증된 DRBG 시험이 아닙니다."
+      },
+      {
+        "id": "csprng-computational-unpredictability",
+        "sectionId": "predictability",
+        "intuition": "이전 출력을 본 공격자가 다음 비트를 얼마나 더 잘 맞히는지 봅니다.",
+        "workedExample": "성공 확률 0.60의 반복 가능한 공격이라면 공정 비트 기준 0.50과의 차이는 0.10입니다.",
+        "boundary": "열 번 중 여섯 번의 관측과 실제 공격 확률을 구별합니다. 비트 비율이 절반이어도 0101…은 예측됩니다."
+      },
+      {
+        "id": "min-entropy-guessing-bound",
+        "sectionId": "entropy-source",
+        "intuition": "가장 쉬운 한 번의 추측 성공률을 공정 비트 수로 표현합니다.",
+        "workedExample": "같은 확률의 여덟 후보는 pmax=1/8, 최소 엔트로피 3비트이며 256비트 출력으로 늘려도 후보는 여덟 개입니다.",
+        "boundary": "pmax=1/8만으로 전체 후보 수가 여덟 개라고 결론낼 수 없습니다. 분포·공격자 정보·의존성을 확인합니다."
+      },
+      {
+        "id": "drbg-state-compromise-resistance",
+        "sectionId": "state-lifecycle",
+        "intuition": "현재 상태에서 과거를 되찾기 어려운 것과 유출 후 미래 회복은 다른 성질입니다.",
+        "workedExample": "첫 출력 뒤 K·V를 복사한 두 객체는 다음 dbf1… 출력을 똑같이 만들었습니다.",
+        "boundary": "공격자가 상태를 알면 결정적인 갱신을 계속 따라갑니다. 새로 모르는 비밀 재료가 필요합니다."
+      },
+      {
+        "id": "drbg-reseed-lifecycle",
+        "sectionId": "state-lifecycle",
+        "intuition": "부팅·복제·복구 때 난수 상태가 함께 복제되는지 확인합니다.",
+        "workedExample": "이미지·스냅샷·프로세스 복제 뒤 운영체제의 재시드 처리를 확인하고 실패하면 비밀 생성을 중단합니다.",
+        "boundary": "공개 시각이나 프로세스 번호는 상태를 아는 공격자에게 새 비밀을 제공하지 않습니다."
+      },
+      {
+        "id": "nonce-uniqueness-secrecy-contract",
+        "sectionId": "applications",
+        "intuition": "개인키·서명 임시값·인증 암호 nonce·복구 표는 각각 다른 조건이 필요합니다.",
+        "workedExample": "작은 ECDSA의 n=19,r=10,h=4·9,s=12·1에서 같은 임시값 3과 개인키 7을 복원합니다.",
+        "boundary": "좌표 mod17과 서명 차수 mod19를 구분하고 실제 low-s·해시·부호 규칙을 따릅니다."
+      },
+      {
+        "id": "csprng-release-gate",
+        "sectionId": "release",
+        "intuition": "평상시 출력보다 실패와 복제 경계에서 어떤 결과를 내는지 먼저 검사합니다.",
+        "workedExample": "부팅·fork·복제·복구·짧은 반환·상태 유출·재시드 실패를 버전과 API별로 비교합니다.",
+        "boundary": "출력이 몇 번 달랐다는 관측이나 빠른 속도만으로 보안이 증명되지는 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 source", relation: "가장 쉬운 guess로 raw entropy를 평가합니다.", concepts: ["min-entropy-guessing-bound", "csprng-entropy-drbg-pipeline"] },
-      { label: "02 generator", relation: "Secret state의 예측 불가능성과 compromise 경계를 구분합니다.", concepts: ["csprng-computational-unpredictability", "drbg-state-compromise-resistance"] },
-      { label: "03 consumer lifecycle", relation: "Reseed와 scheme별 nonce 계약을 운영에 연결합니다.", concepts: ["drbg-reseed-lifecycle", "nonce-uniqueness-secrecy-contract"] },
-      { label: "04 release", relation: "Adversarial lifecycle fixture 뒤 성능을 비교합니다.", concepts: ["csprng-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "01 source",
+        "relation": "가장 쉬운 guess로 raw entropy를 평가합니다.",
+        "concepts": [
+          "min-entropy-guessing-bound",
+          "csprng-entropy-drbg-pipeline"
+        ]
+      },
+      {
+        "label": "02 generator",
+        "relation": "Secret 상태의 예측 불가능성과 compromise 경계를 구분합니다.",
+        "concepts": [
+          "csprng-computational-unpredictability",
+          "drbg-state-compromise-resistance"
+        ]
+      },
+      {
+        "label": "03 consumer lifecycle",
+        "relation": "Reseed와 scheme별 nonce 계약을 운영에 연결합니다.",
+        "concepts": [
+          "drbg-reseed-lifecycle",
+          "nonce-uniqueness-secrecy-contract"
+        ]
+      },
+      {
+        "label": "04 release",
+        "relation": "Adversarial lifecycle fixture 뒤 성능을 비교합니다.",
+        "concepts": [
+          "csprng-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Entropy source·conditioning·DRBG instantiate·generate·state update·reseed의 순서와 역할을 설명하세요.", answerChecklist: ["raw noise", "health/model", "conditioning", "seed", "secret state", "generate output", "state update", "reseed"], requiredConcepts: ["csprng-entropy-drbg-pipeline"], sectionId: "overview" },
-      { level: "basic", question: "Next-bit advantage 식에서 1/2 기준과 non-negligible advantage가 뜻하는 바를 통계 검사와 구분하세요.", answerChecklist: ["observed prefix", "predict next bit", "random baseline 1/2", "advantage difference", "bounded attacker", "statistical balance insufficient"], requiredConcepts: ["csprng-computational-unpredictability"], sectionId: "overview" },
-      { level: "basic", question: "가장 가능성 높은 outcome 확률이 1/8인 source의 min-entropy를 계산하고 256-bit output과 구분하세요.", answerChecklist: ["pmax 1/8", "negative log2", "3 bits", "output length 256", "no entropy creation", "seed enumeration"], requiredConcepts: ["min-entropy-guessing-bound"], sectionId: "entropy-source" },
-      { level: "basic", question: "Backtracking resistance와 state disclosure 뒤 reseed recovery의 차이 및 새 entropy 필요성을 설명하세요.", answerChecklist: ["current state leak", "past output", "one-way update", "future compromised", "fresh unseen entropy", "reseed", "recovery not automatic"], requiredConcepts: ["drbg-state-compromise-resistance"], sectionId: "overview" },
-      { level: "basic", question: "Private key·signature nonce·AEAD nonce·reset token의 secrecy·uniqueness·lifecycle 요구를 구분하세요.", answerChecklist: ["key entropy/secrecy", "signature nonce secret/no bias", "AEAD scheme uniqueness", "token guess budget", "expiry/single use", "domain separation"], requiredConcepts: ["nonce-uniqueness-secrecy-contract"], sectionId: "applications" },
-      { level: "basic", question: "8-bit seed로 256-bit key를 만들 때 effective strength 상한과 공격자의 key 후보 수를 계산하세요.", answerChecklist: ["H infinity 8", "256 seeds", "not 2^256", "DRBG output length irrelevant", "key strength min bound", "no statistical rescue"], requiredConcepts: ["min-entropy-guessing-bound", "csprng-entropy-drbg-pipeline"], sectionId: "entropy-source" },
-      { level: "advanced", question: "같은 ECDSA nonce의 두 서명에서 k와 private key d 복원식을 유도하고 inverse 조건을 쓰세요.", answerChecklist: ["same r", "two s equations", "subtract", "k formula", "d formula", "inverse mod n", "same key/nonce", "bias also risky"], requiredConcepts: ["nonce-uniqueness-secrecy-contract"], sectionId: "applications" },
-      { level: "advanced", question: "VM image clone·process fork·snapshot restore에서 DRBG state 중복을 막는 fail-closed lifecycle을 설계하세요.", answerChecklist: ["clone identity", "fork hook", "snapshot rollback", "OS API semantics", "fresh entropy", "reseed", "no time/PID fallback", "typed failure"], requiredConcepts: ["drbg-reseed-lifecycle", "drbg-state-compromise-resistance"], sectionId: "applications" },
-      { level: "advanced", question: "Correlated noise samples의 min-entropy를 단순 합산하면 안 되는 이유와 conditioning·health test의 한계를 설명하세요.", answerChecklist: ["dependency", "attacker side information", "joint pmax", "source model", "conditioning no new entropy", "health detects failure", "stat tests not proof"], requiredConcepts: ["min-entropy-guessing-bound", "csprng-entropy-drbg-pipeline"], sectionId: "entropy-source" },
-      { level: "advanced", question: "Early boot·fork·clone·short read·state leak·reseed failure를 포함한 CSPRNG release matrix를 설계하세요.", answerChecklist: ["version/API receipt", "all lifecycle cases", "known-answer/state transition", "duplicate detection", "consumer negative tests", "no fallback", "secret logging ban", "performance after gates"], requiredConcepts: ["csprng-release-gate", "drbg-reseed-lifecycle", "nonce-uniqueness-secrecy-contract"], sectionId: "applications" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "비밀 재료 수집부터 출력과 재시드까지 순서를 설명하세요.",
+        "answerChecklist": [
+          "원천과 고장 검사",
+          "conditioning",
+          "seed",
+          "비밀 상태 초기화",
+          "출력 생성",
+          "상태 갱신",
+          "새 재료로 재시드"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "csprng-entropy-drbg-pipeline"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "공격 성공 확률 0.60의 이득과 열 번 중 여섯 번 관측의 차이를 설명하세요.",
+        "answerChecklist": [
+          "기준 0.50",
+          "이득 0.10",
+          "공격 시간·메모리 제한",
+          "관측 빈도와 실제 확률 구분",
+          "0101도 비율은 절반"
+        ],
+        "sectionId": "predictability",
+        "requiredConcepts": [
+          "csprng-computational-unpredictability"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 확률의 여덟 입력에서 최소 엔트로피와 출력 길이를 비교하세요.",
+        "answerChecklist": [
+          "pmax=1/8",
+          "−log2(1/8)=3",
+          "출력32바이트=256비트",
+          "후보 많아야8",
+          "새 비밀 생성 없음"
+        ],
+        "sectionId": "entropy-source",
+        "requiredConcepts": [
+          "min-entropy-guessing-bound"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "현재 상태 유출 뒤 과거 보호와 미래 회복을 구분하세요.",
+        "answerChecklist": [
+          "이전 상태 폐기",
+          "역산 어려움",
+          "미래는 결정적 계산 추적 가능",
+          "새 미관측 재료",
+          "안전한 재시드",
+          "자동 회복 아님"
+        ],
+        "sectionId": "state-lifecycle",
+        "requiredConcepts": [
+          "drbg-state-compromise-resistance"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "키·서명 임시값·AEAD nonce·복구 표의 요구를 비교하세요.",
+        "answerChecklist": [
+          "개인키 비밀량과 장기 보호",
+          "서명 임시값 비밀·비재사용",
+          "AEAD 규격별 중복 금지",
+          "표의 추측 제한·만료·한 번 사용",
+          "재시작 뒤 중복 검사"
+        ],
+        "sectionId": "applications",
+        "requiredConcepts": [
+          "nonce-uniqueness-secrecy-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "정확히 256개 균등 seed로 256비트 출력을 만들 때 후보를 몇 번 시험하나요?",
+        "answerChecklist": [
+          "최대256개",
+          "입력8비트",
+          "출력256비트와 별도",
+          "pmax만으로 일반 후보 수 확정 불가",
+          "전체 후보 집합을 지정한 사례"
+        ],
+        "sectionId": "entropy-source",
+        "requiredConcepts": [
+          "csprng-entropy-drbg-pipeline",
+          "min-entropy-guessing-bound"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "h₁=4,h₂=9,s₁=12,s₂=1,r=10,n=19에서 같은 k와 개인키 d를 복원하세요.",
+        "answerChecklist": [
+          "rd 항이 차분에서 사라짐",
+          "s차이11의 역원7",
+          "k=(−5)×7 mod19=3",
+          "r 역원2",
+          "d=(12×3−4)×2 mod19=7",
+          "좌표17과 차수19 구분",
+          "low-s와 부호 처리"
+        ],
+        "sectionId": "applications",
+        "requiredConcepts": [
+          "nonce-uniqueness-secrecy-contract"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "VM·프로세스·스냅샷 복제 뒤 비밀 생성을 어떻게 재개하나요?",
+        "answerChecklist": [
+          "복제된 상태 확인",
+          "OS API의 fork·복구 처리",
+          "공격자가 모르는 새 재료",
+          "재시드",
+          "실패 시 생성 중단",
+          "시각·PID로 대체 금지"
+        ],
+        "sectionId": "state-lifecycle",
+        "requiredConcepts": [
+          "drbg-state-compromise-resistance",
+          "drbg-reseed-lifecycle"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "pmax=1/8과 후보가 여덟 개라는 주장이 왜 다르며 표본 비트 수를 언제 더할 수 없는지 설명하세요.",
+        "answerChecklist": [
+          "한 값1/8·나머지 많은 값 가능",
+          "최소 엔트로피는 단일 추측 기준",
+          "전체 후보 수·평균 탐색과 다름",
+          "상관관계",
+          "공격자 추가 정보",
+          "conditioning 새 비밀 없음",
+          "고장 검사는 전체 보안 증명 아님"
+        ],
+        "sectionId": "entropy-source",
+        "requiredConcepts": [
+          "csprng-entropy-drbg-pipeline",
+          "min-entropy-guessing-bound"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "생성기 교체에서 부팅·복제·짧은 반환·상태 유출을 어떤 기록으로 검증하나요?",
+        "answerChecklist": [
+          "OS·런타임·라이브러리·API",
+          "요청·반환 길이",
+          "공식 시험값",
+          "상태 전이",
+          "복제·재시드 실패",
+          "사용처의 중복·재전송 검사",
+          "약한 대체 경로 금지",
+          "비밀 로그 금지",
+          "성능은 이후"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "drbg-reseed-lifecycle",
+          "nonce-uniqueness-secrecy-contract",
+          "csprng-release-gate"
+        ]
+      }
     ],
-    papers: [
-      { title: "NIST SP 800-90A Rev.1 · Deterministic Random Bit Generators", href: "https://csrc.nist.gov/pubs/sp/800/90/a/r1/final", problem: "DRBG instantiate·generate·reseed state transition의 상호운용 가능한 정의", contribution: "Hash/HMAC/CTR_DRBG mechanism·state·request limit와 testable algorithm 제공", assumptions: "승인 entropy input·security strength·정확한 mechanism implementation 고정", evidenceScope: "표준에 정의된 deterministic generator mechanism과 state transition", notClaim: "Entropy source 품질·OS lifecycle·application nonce policy를 자동 보장하지 않음", sectionId: "paper-nist-drbg" },
-      { title: "RFC 4086 · Randomness Requirements for Security", href: "https://www.rfc-editor.org/rfc/rfc4086.html", problem: "통계적 난수와 공격자가 추측하기 어려운 secret randomness의 혼동", contribution: "Entropy source·mixing·seed·guessing space의 실무 지침과 반례 제공", assumptions: "공격자가 아는 환경 정보와 source 조작 가능성을 threat model에 포함", evidenceScope: "보안 randomness를 만들 때의 설계 지침과 실패 패턴", notClaim: "특정 현대 OS RNG 구현·인증·현재 algorithm을 규정하지 않음", sectionId: "paper-rfc4086-randomness" },
-      { title: "NIST SP 800-90B · Entropy Sources", href: "https://csrc.nist.gov/pubs/sp/800/90/b/final", problem: "Noise source entropy estimation과 고장 검출을 검증 가능한 절차로 정의", contribution: "IID/non-IID estimator·conditioning·startup/continuous health tests 요구 제공", assumptions: "Raw collection·operating condition·source model을 고정하고 문서화", evidenceScope: "Entropy-source validation과 min-entropy assessment 범위", notClaim: "DRBG generate security·application key lifecycle을 대신하지 않음", sectionId: "paper-nist-entropy-source" },
-      { title: "Mining Your Ps and Qs: Detection of Widespread Weak Keys", href: "https://www.usenix.org/conference/usenixsecurity12/technical-sessions/presentation/heninger", problem: "Faulty random generation이 실세계 TLS·SSH public keys에 나타나는 규모", contribution: "Internet-scale corpus에서 shared RSA factors와 DSA nonce failure를 실증", assumptions: "2012년 관측 corpus·device population·protocol과 분석 방법에 한정", evidenceScope: "약한 randomness가 private-key compromise로 이어진 실측 사례", notClaim: "현재 모든 OS RNG의 실패율이나 source 품질을 일반화하지 않음", sectionId: "paper-heninger-weak-keys" },
-    ],
+    "papers": [
+      {
+        "title": "NIST SP 800-90A Rev.1 · Deterministic Random Bit Generators",
+        "href": "https://csrc.nist.gov/pubs/sp/800/90/a/r1/final",
+        "problem": "DRBG instantiate·generate·reseed state transition의 상호운용 가능한 정의",
+        "contribution": "Hash/HMAC/CTR_DRBG mechanism·state·request limit와 testable algorithm 제공",
+        "assumptions": "승인 entropy input·security strength·정확한 mechanism implementation 고정",
+        "evidenceScope": "Rev.1 §§10.1.2.2–10.1.2.5의 K·V 갱신을 한 바이트 입력에 적용해 두 출력을 재현했습니다.",
+        "notClaim": "교육용의 약한 seed는 표준 초기화 조건을 충족하지 않으며 승인된 DRBG나 실제 운영체제 인증 시험이 아닙니다.",
+        "sectionId": "paper-nist-drbg"
+      },
+      {
+        "title": "RFC 4086 · Randomness Requirements for Security",
+        "href": "https://www.rfc-editor.org/rfc/rfc4086.html",
+        "problem": "통계적 난수와 공격자가 추측하기 어려운 secret randomness의 혼동",
+        "contribution": "Entropy source·mixing·seed·guessing space의 실무 지침과 반례 제공",
+        "assumptions": "공격자가 아는 환경 정보와 source 조작 가능성을 threat model에 포함",
+        "evidenceScope": "보안 randomness를 만들 때의 설계 지침과 실패 패턴",
+        "notClaim": "특정 현대 OS RNG 구현·인증·현재 algorithm을 규정하지 않음",
+        "sectionId": "paper-rfc4086-randomness"
+      },
+      {
+        "title": "NIST SP 800-90B · Entropy Sources",
+        "href": "https://csrc.nist.gov/pubs/sp/800/90/b/final",
+        "problem": "Noise source entropy estimation과 고장 검출을 검증 가능한 절차로 정의",
+        "contribution": "IID/non-IID estimator·conditioning·startup/continuous health tests 요구 제공",
+        "assumptions": "Raw collection·operating condition·source model을 고정하고 문서화",
+        "evidenceScope": "Entropy-source validation과 min-entropy assessment 범위",
+        "notClaim": "DRBG generate security·application key lifecycle을 대신하지 않음",
+        "sectionId": "paper-nist-entropy-source"
+      },
+      {
+        "title": "Mining Your Ps and Qs: Detection of Widespread Weak Keys",
+        "href": "https://www.usenix.org/conference/usenixsecurity12/technical-sessions/presentation/heninger",
+        "problem": "Faulty random generation이 실세계 TLS·SSH public keys에 나타나는 규모",
+        "contribution": "Internet-scale corpus에서 shared RSA factors와 DSA nonce failure를 실증",
+        "assumptions": "2012년 관측 corpus·device population·protocol과 분석 방법에 한정",
+        "evidenceScope": "약한 randomness가 private-key compromise로 이어진 실측 사례",
+        "notClaim": "현재 모든 OS RNG의 실패율이나 source 품질을 일반화하지 않음",
+        "sectionId": "paper-heninger-weak-keys"
+      },
+      {
+        "title": "RFC 6979 · Deterministic DSA/ECDSA",
+        "href": "https://www.rfc-editor.org/rfc/rfc6979.html",
+        "problem": "서명마다 필요한 비밀 임시값을 안전하게 생성하는 방법을 명시합니다.",
+        "contribution": "개인키와 메시지에서 임시값을 생성하며 기존 DSA·ECDSA 검증과 호환되는 절차를 제공합니다.",
+        "assumptions": "정확한 곡선·차수·해시·정수 변환과 서명 규칙을 따릅니다.",
+        "evidenceScope": "§2.4의 서명식에 작은 곡선의 두 서명을 적용해 같은 k=3과 d=7 복원을 검산합니다.",
+        "notClaim": "작은 곡선 예가 실전 보안 설정이거나 임시값 일부 누출에도 자동 안전하다는 뜻은 아닙니다.",
+        "sectionId": "applications"
+      }
+    ]
   },
   "crypto/discrete-log": {
     "coreIdea": "Order q의 cyclic subgroup에서 scalar exponentiation은 binary method로 빠르지만 exponent 복원은 group과 공격 모델에 따라 비싸며, BSGS·Pollard rho의 square-root attack과 exact DLP/CDH/DDH 가정을 기준으로 parameter를 고릅니다.",
@@ -105933,7 +108086,7 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "주소·위치·결과와 4바이트 연속 읽기 지원은 가정입니다. 157.5 µs는 정상 I²C 거래의 순수 클록 시간이며 실패·시간 제한·상대 응답과 실제 완료를 따로 확인합니다."
   },
   "embedded/scheduling-and-real-time": {
-    "coreIdea": "가상 한 코어의 제어 P5/C1, 센서 P10/C2/D4, 로그 P50/C3에서 평균 CPU 점유율 46%를 구하고, 자원 대기 없을 때 센서 3ms 완료·1ms 여유와 로그 뮤텍스 2ms 잔여 때 5ms 완료·1ms 초과를 비교합니다.",
+    "coreIdea": "같은 세 작업의 CPU 사용량은 46%이지만 센서는 자원 대기에 따라 3 ms 또는 5 ms에 끝납니다. 실제 FreeRTOS의 준비 목록·지난 목표 시각·우선순위 상속에 숫자를 넣고 CPU 실행 시간 C와 준비부터 완료까지의 응답 R을 구분합니다.",
     "assumedKnowledge": [
       {
         "id": "serial-bus-comparison-boundary",
@@ -105987,10 +108140,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "id": "periodic-absolute-wake",
-        "sectionId": "tasks",
+        "sectionId": "source-wake",
         "intuition": "늦게 끝났다고 다음 주기의 원래 시각이 바뀌지 않습니다.",
-        "workedExample": "센서 목표 0,10,20ms를 실행 시간 변화에도 기준으로 둡니다.",
-        "boundary": "RTOS tick 분해능과 놓친 주기에 대한 정책은 따로 정합니다."
+        "workedExample": "지난 목표 0+주기 10은 다음 목표 10입니다. 현재 3이면 7 tick 대기하고 현재 12이면 대기하지 않고 지난 목표를 10으로 갱신합니다.",
+        "boundary": "준비 시각과 실제 실행은 다릅니다. 놓친 실행을 즉시 반복·건너뛰기·합치기 중 무엇으로 처리할지는 앱 정책입니다."
       },
       {
         "id": "periodic-cpu-utilization",
@@ -106003,14 +108156,14 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "mutex-blocking-priority-inheritance",
         "sectionId": "blocking",
         "intuition": "센서가 먼저 달리고 싶어도 잠긴 자원은 로그가 풀어야 합니다.",
-        "workedExample": "뮤텍스 보유 2ms 뒤 센서 완료5ms, 마감 초과1ms입니다.",
+        "workedExample": "우선순위 1인 로그가 센서 2를 상속해도 남은 2 ms는 필요합니다. 제어 0–1·로그 1–3·센서 3–5로 마감 4 ms보다 1 ms 늦습니다.",
         "boundary": "ISR은 기다리는 뮤텍스를 가져서는 안 됩니다."
       },
       {
         "id": "response-time-validation",
         "sectionId": "limits",
         "intuition": "평균 그래프보다 늦게 끝난 한 번의 경로를 조사합니다.",
-        "workedExample": "가상 U=46%와 3/5ms 완료를 RP2040 실측 수치로 보고하지 않습니다.",
+        "workedExample": "가상 C=2 ms와 대기를 포함한 R=3/5 ms를 구분합니다. 50 ms의 CPU 23 ms와 개별 마감 4 ms는 서로 다른 조건입니다.",
         "boundary": "최악 실행·버스 대기·임계 구간 상한 없이는 마감 보장을 주장할 수 없습니다."
       }
     ],
@@ -106202,11 +108355,22 @@ export const ARTICLE_LEARNING: Readonly<
         "evidenceScope": "FreeRTOS 공식 뮤텍스 문서의 상속·ISR 경계를 확인했습니다.",
         "notClaim": "상속이 임계 구간 자체의 실행 시간을 없애거나 모든 마감을 보장한다는 뜻은 아닙니다.",
         "sectionId": "blocking"
+      },
+      {
+        "title": "FreeRTOS Kernel V11.2.0 · tasks.c 원문",
+        "href": "https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/0adc196d4bd52a2d91102b525b0aafc1e14a2386/tasks.c",
+        "problem": "준비된 작업 선택과 원래 주기 유지, 자원 보유자의 상속이 실제로 어떤 분기로 이루어지는지 확인합니다.",
+        "contribution": "일반 한 코어 준비 목록·xTaskDelayUntil·xTaskPriorityInherit에 동일 우선순위와 시각을 대입합니다.",
+        "assumptions": "일반 작업 선택·한 코어·선점·뮤텍스 사용 설정이며 tick 1 ms와 실행 시간은 가정입니다.",
+        "evidenceScope": "commit 0adc196d의 tasks.c 194–209·2366–2450·6639–6710과 헤더 원본 및 MIT 라이선스를 보존했습니다.",
+        "notClaim": "특정 RP2040 포트의 기본 설정이나 실제 측정 지연, 모든 실행의 마감 충족을 주장하지 않습니다.",
+        "sectionId": "source-selection"
       }
-    ]
+    ],
+    "entryNote": "한 코어·고정 우선순위·1 ms tick의 수치는 교육용 가정입니다. FreeRTOS V11.2.0 고정 원문에 대입한 경로이며 RP2040 보드 측정이나 마감 보장은 아닙니다."
   },
   "embedded/firmware-update-and-recovery": {
-    "coreIdea": "가상 4 MiB 플래시에 256+1536+1536+768 KiB를 배치하고 v1을 보존한 채 v2를 완전히 받아 서명 검증한 뒤 TEST swap합니다. 자가 검사 후 image OK면 v2를 유지하고 미확정 재부팅이면 v1로 복귀합니다.",
+    "coreIdea": "가정한 4 MiB 제품에서 v1을 보존하고 v2를 시험한 뒤 기능 검사 후 확정합니다. MCUboot v2.2.0 scratch swap의 실제 상태 표와 API에 TEST·REVERT·NONE을 대입하고 조각 복사와 비휘발성 진행 기록을 따라갑니다.",
     "assumedKnowledge": [
       {
         "id": "response-time-validation",
@@ -106252,27 +108416,27 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "verify",
         "intuition": "받은 파일과 믿을 수 있는 제작자의 파일인지 따로 묻습니다.",
         "workedExample": "다운로드 중 전원이 끊기거나 서명이 틀리면 v1을 계속 실행합니다.",
-        "boundary": "신뢰 키 저장·회수와 다운그레이드 정책은 제품이 설계해야 합니다."
+        "boundary": "기대 해시의 신뢰와 공개 키·부트로더 보호가 필요합니다. 신뢰 경로와 다운그레이드·카운터 갱신 정책도 제품에서 정합니다."
       },
       {
         "id": "test-swap-candidate",
-        "sectionId": "trial",
+        "sectionId": "source-state",
         "intuition": "새 앱을 한 번 써 보되 돌아갈 수 있게 옛 앱을 보관합니다.",
-        "workedExample": "v2를 시험 실행하는 동안 보조 슬롯에는 복귀용 v1이 있습니다.",
+        "workedExample": "보조 v2의 magic GOOD·image_ok UNSET을 실제 상태 표에 넣으면 TEST입니다. boot_set_pending_multi(0,0)의 두 0은 이미지 묶음과 비영구 요청입니다.",
         "boundary": "덮어쓰기나 직접 XIP 등 모든 MCUboot 모드에 같은 복귀 동작을 적용하지 않습니다."
       },
       {
         "id": "image-confirmation-revert",
-        "sectionId": "trial",
+        "sectionId": "source-state",
         "intuition": "CPU가 시작한 것만으로 센서가 정상이라는 뜻은 아닙니다.",
-        "workedExample": "센서 읽기 실패 뒤 리셋되고 image OK가 없으면 v1로 돌아갑니다.",
-        "boundary": "검사의 범위와 확정 시점은 제품별로 정해야 합니다."
+        "workedExample": "교체 완료 뒤 주 v2의 copy_done SET·image_ok UNSET, 보조 magic UNSET이면 REVERT입니다. 정상 v2가 확정하면 NONE으로 유지합니다.",
+        "boundary": "기능 검사와 재시작·감시 타이머는 제품이 정합니다. 서명 검증과 확정 호출은 서로 다른 동작입니다."
       },
       {
         "id": "power-fail-swap-resume",
-        "sectionId": "power",
+        "sectionId": "source-copy",
         "intuition": "같은 전원 차단도 파일 받는 중과 슬롯을 바꾸는 중에는 결과가 다릅니다.",
-        "workedExample": "시험 v2의 확정 전 재시작은 REVERT, 확정 후 재시작은 v2 유지입니다.",
+        "workedExample": "한 조각을 보조→scratch, 주→보조, scratch→주로 옮긴 뒤 각 진행을 기록합니다. 재시작은 저장된 위치에서 조각·단계를 복원합니다.",
         "boundary": "손상된 부트 코드나 외부 플래시 하드웨어 고장은 별도 복구가 필요합니다."
       },
       {
@@ -106445,8 +108609,8 @@ export const ARTICLE_LEARNING: Readonly<
         "href": "https://docs.mcuboot.com/design.html",
         "problem": "교체 중 전원 차단과 시험 이미지 실패에도 이전 이미지를 보존해야 합니다.",
         "contribution": "지원되는 swap의 TEST·REVERT·PERM, image OK와 중단된 swap 재개, 서명·무결성 검사를 설명합니다.",
-        "assumptions": "본문은 MCUboot 시험 swap에 해당하는 가상 RP2040 제품 부트로더를 가정합니다.",
-        "evidenceScope": "MCUboot 공식 설계 문서의 swap·trailer·image validation 설명을 확인했습니다.",
+        "assumptions": "MCUboot v2.2.0의 scratch swap에 해당하는 가상 RP2040 제품 부트로더를 가정합니다.",
+        "evidenceScope": "고정 commit 2d61c318의 docs/design.md 원본에서 scratch 공간·부트 상태 표·시험·확정·복구 설명을 대조했습니다.",
         "notClaim": "모든 MCUboot 업데이트 모드나 RP2040 ROM에 자동 되돌리기가 있다는 뜻은 아닙니다.",
         "sectionId": "trial"
       },
@@ -106459,8 +108623,19 @@ export const ARTICLE_LEARNING: Readonly<
         "evidenceScope": "공식 데이터시트 원본 123·129–132·145쪽을 확인했습니다.",
         "notClaim": "RP2040 부트 ROM이 MCUboot A/B rollback을 제공한다는 뜻은 아닙니다.",
         "sectionId": "layout"
+      },
+      {
+        "title": "MCUboot v2.2.0 · bootutil_public.c·swap_scratch.c 원문",
+        "href": "https://github.com/mcu-tools/mcuboot/tree/2d61c318933819a0f4954fb2a5a957a62c6128ce/boot/bootutil/src",
+        "problem": "시험 요청·정상 확정·미확정 복귀와 중단된 복사의 다음 동작을 실제 구현에서 확인합니다.",
+        "contribution": "boot_swap_tables와 pending/confirmed API, 세 복사 및 swap_read_status_bytes의 진행 복원을 대조합니다.",
+        "assumptions": "scratch swap을 선택하고 정상 플래시 맵·슬롯 기록·이미지 검증과 제품별 검사·재시작을 전제로 합니다.",
+        "evidenceScope": "고정 C 원본 두 파일·헤더·설계문서 전체와 Apache 2.0 라이선스를 보존하고 같은 v1/v2 상태를 분기에 대입했습니다.",
+        "notClaim": "원문 대조만으로 RP2040 이식·실제 전원 차단 복구·신뢰 키 보호가 검증되었다고 주장하지 않습니다.",
+        "sectionId": "source-copy"
       }
-    ]
+    ],
+    "entryNote": "가정한 RP2040 제품 설계입니다. 실제 보드 이식·서명 검증·전원 차단 시험을 수행한 결과는 아니며 고정 원본의 상태와 분기를 대조합니다."
   },
   "labor/wage-floor-natural-experiment": {
     entryNote:

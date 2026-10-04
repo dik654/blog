@@ -3693,7 +3693,7 @@
         "src/pages/articles/ai/math-gradient-descent-convergence/DescentDynamicsViz.tsx",
         "src/pages/articles/ai/math-gradient-descent-convergence/ModernArticle.tsx"
       ],
-      "status": "body-reviewed-needs-rewrite",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3702,23 +3702,55 @@
         "characters": 15414
       },
       "originalProblems": [
-        "Gradient·algorithm·direction·step·stopping규칙이작은반복앞에나옵니다.",
-        "f=x²/2,x04,η.5/2/3의수축·진동·발산과정상점minimum/maximum/saddle경계는보존합니다. 강볼록수렴bound에같은숫자를대입하고원문정리의전제를추적하는부분과예측질문이없습니다."
+        "기울기·학습률 등 새 이름이 입출력과 실제 경로보다 먼저 나왔습니다.",
+        "실제 교재 인용은 있지만 원문의 감소식과 보폭 선택 규칙에 동일 사례를 대조하는 본문 및 예측 질문이 없었습니다.",
+        "6+4 질문의 네 번 오차 상한, 두 부등식의 실제 연결, 작은 학습률의 종료 반례가 부족했습니다.",
+        "기존 Viz는 수동 곡선 위에 함수와 일치하지 않는 점을 놓고 큰 값을 화면 범위로 잘라 발산의 실제 위치를 숨겼습니다. 동일 가로축과 실제 위치 기록으로 바꾸고 −32까지 자르지 않고 표시했습니다.",
+        "종료 수식의 편집 작업 용어 receipt/release gate를 실제 모델 사용 판단 문장으로 바꾸었습니다. 네 기존 수식은 수학 내용을 보존했습니다."
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "fixture": "f=x²/2, x₀=4를 고정하고 η=.5/1/1.5/2/3의 세 번 이동을 비교합니다. η=.5는 4→2→1→.5, η=2는 ±4, η=3은 4→−8→16→−32입니다. μ2·L8의 네 번 오차 상한81/256과 실제6561/65536, 작은 이동 .000004와 잔여 기울기4를 계산합니다 (가정).",
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "picture",
+        "2": "need",
+        "3": "names",
+        "4": [
+          "update",
+          "step-size",
+          "convergence"
+        ],
+        "5-6": "source",
+        "7": "stopping-boundary"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "MIT 18.065 Lecture 22 공식 요약의 X=x−s(∂F/∂x)",
+          "application": "원문 s=.5, x=4, F=x²/2에서 X=2, 새 x=2에서 X=1을 계산합니다."
+        },
+        {
+          "source": "Boyd·Vandenberghe 인쇄 466쪽 식 (9.17), Algorithm 9.3 및 467쪽 식 (9.18)",
+          "application": "M=1, x=4, g=4, 원문 보폭 t=.5를 대입해 다음 값 상한 2를 구하고 t=3에서32를 확인합니다. 원문 t는 글의 반복 횟수가 아닌 보폭입니다. 원문의 선 탐색과 글의 고정 보폭 및 두 오차 경계의 전제를 구별했습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "고정 baseline의 본문 전체 paragraph·heading·links를 읽고 설명 흐름을 대조했습니다. 기존 CitationBlock은 보존하며, 원문 정의식에 같은 사례를 대입하는 본문을 추가해야 합니다. 원문과 TSX 전체의 정밀 대조는 각 재작성에서 진행합니다.",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "원문 TSX 전체·고정 baseline·6+4 문항과 Boyd §9.2–9.3.1의 원문, MIT 공식 요약을 읽었습니다. 기존 네 ExplainedFormula와 두 paper anchor를 보존했습니다. 종료 수식은 핵심 세 조건을 본문에 먼저 설명하고 펼침 영역에 남겼습니다.",
+        "learningAnswers": "기존 10문항을 실제 본문과 대조해 현재 위치 재평가, 보폭별 경로, 두 부등식, 네 번 상한과 종료 반례 및 사용 조건을 갱신했습니다. /tmp/teach-all/ai-theory-learning-answer-review-gd.json",
+        "humanize": "실제 extract→roundtrip→prepare→gate→apply. 최종 본문 6156자는 3913/2244자 두 묶음으로도 검토했고 두 gate OK입니다. 전문 수식 각주 오탐1건은 chains가 전문·diff·숫자·마커·유리수 검산을 독립 확인하여 independent-finalize.md에 승인했습니다. Viz 별도 문자열 검토도 gate OK입니다.",
+        "numericTrace": "/tmp/teach-all/ai-theory-arithmetic-gd.json: 다섯 보폭 경로와 제곱 점수, 원문9.17의 상한2/32, 네 번 오차 상한/실제, 작은 이동과 종료 시점별 점수 및 좌표 범위 검산 PASS.",
+        "mobile390": "output/playwright/teach-ai-theory-gd/gd.json: first-fifth PASS, overflow·narrow·KaTeX·console·깨진 anchor 0, 예측3개. 반복 위치와 축 숫자, 기울기와 점수의 역할을 화면으로 확인했습니다.",
+        "desktop1440": "동일 검사 PASS. /tmp/teach-all/ai-theory-gd-controls.json: 세 장면 frame/control 변화0, 전체 frame 화면 내, 키보드·재생 PASS, SVG label 바깥 이탈0.",
+        "proofDetail": "/tmp/teach-all/ai-theory-gd-detail.json: 390/1440에서 종료 수식을 실제 펼친 뒤 KaTeX 오류·페이지 overflow0, 종료 기준 설명 노출 확인.",
+        "viz": "strict 위반0, SVG text 세 곳은 실제 렌더와 경계 좌표로 확인했습니다.",
+        "formula": "전역 strict1423/1423 통과.",
+        "typecheck": "실제 npx tsc -b exit0. 후속 문단·펼침 배치 변경 뒤 양쪽 폭 브라우저 오류0.",
+        "prose": "이 글의 prose 재검토0. 전역의 타팀 pruning 작업 중 경고는 소유자에게 이미 전달했습니다. /tmp/teach-all/ai-theory-prose-gd.log",
+        "learning": "root batch11 병합 후 strict --require-registration 개별 검사 PASS.",
+        "reactKeys": "root 통합 검수에서 보폭 표의 같은 0.5 셀 key가 충돌해 열 번호로 교정했습니다. 별도 browser helper에 console.error 수집도 추가했습니다. 수정 후 390/1440 재검으로 확인합니다."
       },
       "remaining": [
-        "고유수치사례중심본문재구성",
-        "실제1차원문확인및사례적용",
-        "6+4답위치대조·humanize·수치·390/1440검수"
+        "root 전역 build와 게시 검증"
       ]
     },
     {
@@ -3899,7 +3931,7 @@
         "src/pages/articles/ai/math-optimization-convexity/CurvatureShapeViz.tsx",
         "src/pages/articles/ai/math-optimization-convexity/ModernArticle.tsx"
       ],
-      "status": "body-reviewed-needs-rewrite",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3908,23 +3940,54 @@
         "characters": 13118
       },
       "originalProblems": [
-        "Convexity·smoothness·conditionnumber카드가숫자전에나오며한절새용어가많습니다.",
-        "x²현위직선차이,descentlemma의1/2적분유도,비매끄러운|x|반례는보존대상입니다. L100μ1의수치가동일주사례에서유도되지않고실제원문수식적용·예측문제가없습니다."
+        "입출력 역할과 작은 사례보다 convex·smooth·curvature 용어가 먼저 등장했습니다.",
+        "기존 핵심 부등식과 적분의 삼각형 설명은 있었으나 같은 사례를 실제 원문에 대입하는 절 및 예측 질문이 없었습니다.",
+        "ax²/2의 L=a는 a≥0 조건이 빠졌습니다. L=|a|를 먼저 명시하고 양수·음수 경우를 나눴습니다.",
+        "6+4 문항의 sin x 반례와 역수 보폭 대입, 12/3 계산, 좌표 재표기 및 신경망의 전역 조건에 대한 실제 설명을 보완했습니다.",
+        "Viz의 수동 곡선과 접선은 실제 함수·접점 관계를 보장하지 않았습니다. x², 현 2x, 접선 2x−1과 같은 이동 1→1.1의 좌표로 다시 계산했습니다."
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "fixture": "같은 f=x²의 0/2 중간에서 실제 점수 1과 현 2를 비교합니다. 1→1.1의 직선 예측 1.2와 실제 1.21의 오차 .01에 L=μ=2를 대입합니다. q=(x²+100y²)/2로 확장해 κ=100과 간격 .01의 (1,1)→(.99,0), z=10y 좌표의 κ=1을 확인합니다 (가정).",
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "picture",
+        "2": "need",
+        "3": "names",
+        "4": [
+          "convexity",
+          "smoothness",
+          "curvature-range"
+        ],
+        "5-6": "source",
+        "7": "boundaries"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "Boyd·Vandenberghe 인쇄 67·69쪽 식 (3.1), (3.2)",
+          "application": "원문 θ를 λ에 대응해 x=0,y=2,θ=.5의 1≤2를 계산합니다. 접선 식에 x=1,y=1.1을 넣으면 1.21≥1.2입니다."
+        },
+        {
+          "source": "같은 교재 §9.1.2, 인쇄 459·461쪽 식 (9.8), (9.13) 및 (9.15) 설명",
+          "application": "원문 m=M=2를 이 글의 μ=L=2에 대응하고 .1 이동의 아래/위 경계가 모두 1.21임을 확인합니다. 원문의 두 번 미분 가능성과 관심 집합 조건, M/m이 조건수의 상한이라는 범위를 명시했습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "고정 baseline의 본문 전체 paragraph·heading·links를 읽고 설명 흐름을 대조했습니다. 기존 CitationBlock은 보존하며, 원문 정의식에 같은 사례를 대입하는 본문을 추가해야 합니다. 원문과 TSX 전체의 정밀 대조는 각 재작성에서 진행합니다.",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "원문 TSX 전체·고정 baseline·6+4 문제와 Boyd PDF의 해당 네 식 및 앞뒤 설명을 읽었습니다. 기존 세 ExplainedFormula, 적분의 1/2 설명 및 두 paper anchor를 보존했습니다. 전체 경로 적분 유도와 동일 원문 경계 대입 수식을 추가했습니다.",
+        "learningAnswers": "기존 10문항의 답을 실제 본문과 대조하고 L의 부호 조건, 역수 보폭, sin 반례, 조건수의 수치와 신경망 적용 조건을 갱신했습니다. /tmp/teach-all/ai-theory-learning-answer-review-convexity.json",
+        "humanize": "실제 extract→roundtrip→prepare→gate→apply, 본문 전문과 5,000자 이하 두 묶음 3893/2149자를 각각 검토했습니다. 본문 및 두 묶음 모두 gate OK, 변경 0. Viz의 실제 문자열 별도 추출도 gate OK입니다.",
+        "numericTrace": "/tmp/teach-all/ai-theory-arithmetic-convexity.json: 임의 입력의 현 차이 항등식, 접선 오차 d², 위/아래 경계, 역수 보폭, 두 방향의 이동·좌표 재표기 및 Viz 81개 좌표 검산 PASS.",
+        "mobile390": "output/playwright/teach-ai-theory-convexity/convexity.json: first-fifth PASS, overflow·narrow·KaTeX·console·깨진 anchor 0, 예측 3개. 실제 곡선과 접선 및 작은 이동 점을 화면으로 직접 확인했습니다.",
+        "desktop1440": "동일 검사 PASS. /tmp/teach-all/ai-theory-convexity-controls.json: 4장면 frame/control 변화 0, 전체 frame 화면 내, 키보드·재생 PASS.",
+        "proofDetail": "/tmp/teach-all/ai-theory-convexity-detail.json: 390/1440에서 적분 유도를 실제 펼친 뒤 KaTeX 오류·페이지 overflow 0, Cauchy–Schwarz 설명 노출 확인.",
+        "viz": "strict 위반 0, SVG text 네 곳은 실제 렌더로 읽었습니다.",
+        "formula": "전역 strict 1422/1422 통과.",
+        "typecheck": "실제 npx tsc -b exit0.",
+        "prose": "이 글의 prose 재검토 0. 전역 결과는 /tmp/teach-all/ai-theory-prose-convexity.log에 보존했습니다.",
+        "learning": "root batch10 및 intuition 보완 병합 후 strict --require-registration 검사 PASS. Cauchy–Schwarz→하강 보조정리 연결도 병합했습니다."
       },
       "remaining": [
-        "고유수치사례중심본문재구성",
-        "실제1차원문확인및사례적용",
-        "6+4답위치대조·humanize·수치·390/1440검수"
+        "root 전역 build와 게시 검증"
       ]
     },
     {
@@ -4104,7 +4167,7 @@
         "src/pages/articles/ai/math-vectors-inner-products/viz/ProjectionViz.tsx",
         "src/pages/articles/ai/math-vectors-inner-products/viz/VectorMeasurementViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "body-reviewed-needs-rewrite",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -4112,19 +4175,26 @@
         "hasSourceSurface": false,
         "characters": 19710
       },
-      "originalProblems": [],
-      "fixture": null,
+      "originalProblems": [
+        "숫자 묶음의 사례는 있으나 처음부터 scalar·vector·norm·dot product·projection을 한꺼번에 소개하며 역할을 붙잡을 도입이 부족합니다.",
+        "기존 (3,4)와 직각 (4,−3), 같은 직선 (6,8), 투영 (3,0)과 Cauchy–Schwarz 및 퍼셉트론 실수 상한의 정확한 유도는 보존 대상입니다. 실제 교재 식에 같은 사례를 대입하는 절과 예측 질문이 없습니다.",
+        "벡터 덧셈 수식에 역슬래시가 빠진 quad/qquad가 실제 화면에 문자로 노출됩니다. 각 수식의 연산 설명도 공통 자동 문구와 잘린 문장이라 구체적으로 고쳐야 합니다.",
+        "normalize와 cosine_similarity가 eps를 분모에 더한다는 설명을 버전 문서와 대조해야 합니다. 퍼셉트론 상한의 w₀=0 및 Cauchy 증명의 영벡터 조건을 명시해야 합니다."
+      ],
+      "fixture": "(3,4)의 길이5, 직각 (4,−3)의 내적0, 같은 직선 (6,8)의 내적50, (1,0) 방향 투영 (3,0)을 연결합니다. 거리 p(1,2)→q(4,6) 및 비단위 기준 (2,0)의 동일 투영을 보강할 계획입니다.",
       "stageAnchors": {},
       "primarySourceApplication": [],
       "verification": {
-        "contentReview": "pending",
+        "contentReview": "고정 baseline 전문·entry·7개 본문 모듈·Viz3개·기존6+4문항을 읽었습니다. 수식/실패조건 보존 및 원문 적용을 위한 재작성 전 검토입니다.",
         "humanize": "pending",
         "numericTrace": "pending",
         "mobile390": "pending",
         "desktop1440": "pending"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "실제1차원문과 PyTorch2.8 epsilon 조건 대조",
+        "고유사례 중심 흐름 및 연산별 수식 설명 재작성",
+        "6+4 답·humanize·수치·390/1440 검수"
       ]
     },
     {
@@ -7445,14 +7515,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 16,
+    "rewritten": 18,
     "existingTeachTargetedRepairs": 3,
-    "reviewedAndImproved": 19,
-    "localVerified": 19,
+    "reviewedAndImproved": 21,
+    "localVerified": 21,
     "awaitingIntegration": 0,
-    "pending": 170,
+    "pending": 168,
     "complete": 0,
-    "bodyReviewedNeedsRewrite": 2,
-    "bodyReviewedTotal": 21
+    "bodyReviewedNeedsRewrite": 1,
+    "bodyReviewedTotal": 22
   }
 }

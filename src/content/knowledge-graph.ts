@@ -7899,21 +7899,19 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/ai/validation-feedback-audit#adaptation"
   },
   "hpo-selection-evaluation-contract": {
-    id: "hpo-selection-evaluation-contract",
-    domain: "machine-learning",
-    label: "Hyperparameter search–selection–evaluation contract",
-    definition:
-      "동일 split·metric·training resource·seed policy에서 configuration을 비교해 validation으로 하나를 선택하고, 선택에 사용하지 않은 outer data에서 그 절차를 다시 평가하는 계약입니다.",
-    canonicalHref: "/cs/ai/hyperparameter-tuning#selection-contract",
+    "id": "hpo-selection-evaluation-contract",
+    "domain": "machine-learning",
+    "label": "Hyperparameter search–selection–evaluation contract",
+    "definition": "동일 split·metric·training resource·seed policy에서 configuration을 비교해 validation으로 하나를 선택하고, 선택에 사용하지 않은 outer data에서 그 절차를 다시 평가하는 계약입니다.",
+    "canonicalHref": "/cs/ai/hyperparameter-tuning#selection-contract"
   },
   "random-search-hit-probability": {
-    id: "random-search-hit-probability",
-    kind: "metric",
-    domain: "statistics",
-    label: "Random-search hit probability",
-    definition:
-      "Sampling distribution에서 promising region의 확률 질량이 p일 때 N번의 독립 trial이 그 영역을 적어도 한 번 만날 확률 1−(1−p)^N입니다.",
-    canonicalHref: "/cs/ai/hyperparameter-tuning#trial-budget",
+    "id": "random-search-hit-probability",
+    "kind": "metric",
+    "domain": "statistics",
+    "label": "Random-search hit probability",
+    "definition": "Sampling distribution에서 promising region의 확률 질량이 p일 때 N번의 독립 trial이 그 영역을 적어도 한 번 만날 확률 1−(1−p)^N입니다.",
+    "canonicalHref": "/cs/ai/hyperparameter-tuning#trial-budget"
   },
   "adaptive-trial-proposal-history": {
     "id": "adaptive-trial-proposal-history",
@@ -7932,72 +7930,64 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/ai/adaptive-hyperparameter-search#tpe"
   },
   "log-uniform-parameter-sampling": {
-    id: "log-uniform-parameter-sampling",
-    kind: "method",
-    domain: "statistics",
-    label: "Log-uniform parameter sampling",
-    definition:
-      "양의 parameter를 log 좌표에서 균등하게 뽑아 orders of magnitude마다 같은 확률을 주는 sampling distribution입니다.",
-    canonicalHref: "/cs/ai/search-space-design#scale",
+    "id": "log-uniform-parameter-sampling",
+    "kind": "method",
+    "domain": "statistics",
+    "label": "Log-uniform parameter sampling",
+    "definition": "양의 parameter를 log 좌표에서 균등하게 뽑아 orders of magnitude마다 같은 확률을 주는 sampling distribution입니다.",
+    "canonicalHref": "/cs/ai/search-space-design#scale"
   },
   "typed-conditional-search-space": {
-    id: "typed-conditional-search-space",
-    domain: "computer-science",
-    label: "Typed conditional search space",
-    definition:
-      "각 hyperparameter의 continuous·integer·categorical type, sampling scale, bounds와 parent choice에 따른 child parameter 존재 조건을 명시한 configuration 공간입니다.",
-    canonicalHref: "/cs/ai/search-space-design#conditional-space",
+    "id": "typed-conditional-search-space",
+    "domain": "computer-science",
+    "label": "Typed conditional search space",
+    "definition": "각 hyperparameter의 continuous·integer·categorical type, sampling scale, bounds와 parent choice에 따른 child parameter 존재 조건을 명시한 configuration 공간입니다.",
+    "canonicalHref": "/cs/ai/search-space-design#conditional-space"
   },
   "feasible-search-space-constraint": {
-    id: "feasible-search-space-constraint",
-    domain: "machine-learning",
-    label: "Feasible search-space constraint",
-    definition:
-      "Branch validity와 memory·latency·compatibility 같은 hard constraint를 만족해 실제 실행 가능한 configuration만 전체 공간에서 남기는 경계입니다.",
-    canonicalHref: "/cs/ai/search-space-design#conditional-space",
+    "id": "feasible-search-space-constraint",
+    "domain": "machine-learning",
+    "label": "Feasible search-space constraint",
+    "definition": "분기 의미와 자원·호환성 조건을 통과한 후보를 제안 단계에서 남기는 경계입니다. 추정 메모리의 통과가 실제 peak를 보장하지는 않으며 런타임 제한·실패 기록·추정 오차를 별도로 다룹니다.",
+    "canonicalHref": "/cs/ai/search-space-design#conditional-space"
   },
   "comparable-fidelity-resource": {
-    id: "comparable-fidelity-resource",
-    domain: "machine-learning",
-    label: "Comparable fidelity resource",
-    definition:
-      "Trial 사이에서 같은 양의 학습 진척을 뜻하도록 정의한 optimizer update·processed token·sample·data fraction 같은 중간 평가 단위입니다.",
-    canonicalHref: "/cs/ai/multi-fidelity-pruning#overview",
+    "id": "comparable-fidelity-resource",
+    "domain": "machine-learning",
+    "label": "Comparable fidelity resource",
+    "definition": "Trial 사이에서 같은 양의 학습 진척을 뜻하도록 정의한 optimizer update·processed token·sample·data fraction 같은 중간 평가 단위입니다.",
+    "canonicalHref": "/cs/ai/multi-fidelity-pruning#why-coordinate"
   },
   "successive-halving-resource-allocation": {
-    id: "successive-halving-resource-allocation",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Successive-halving resource allocation",
-    definition:
-      "같은 fidelity에서 비교한 configuration 중 상위 일부만 유지하고 살아남은 후보의 resource를 일정 비율로 늘리는 multi-fidelity 자원 배분 방법입니다.",
-    canonicalHref: "/cs/ai/multi-fidelity-pruning#successive-halving",
+    "id": "successive-halving-resource-allocation",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Successive-halving resource allocation",
+    "definition": "같은 fidelity에서 비교한 configuration 중 상위 일부만 유지하고 살아남은 후보의 resource를 일정 비율로 늘리는 multi-fidelity 자원 배분 방법입니다.",
+    "canonicalHref": "/cs/ai/multi-fidelity-pruning#successive-halving"
   },
   "hpo-pareto-dominance": {
-    id: "hpo-pareto-dominance",
-    kind: "metric",
-    domain: "statistics",
-    label: "Hyperparameter-study Pareto dominance",
-    definition:
-      "Hard constraint를 통과한 두 trial에서 한 후보가 quality·latency·memory 등 모든 목적에 나쁘지 않고 적어도 하나에서 더 좋으면 다른 후보를 지배한다고 판정하는 다목적 선택 기준입니다.",
-    canonicalHref: "/cs/ai/multi-objective-hpo#dominance",
+    "id": "hpo-pareto-dominance",
+    "kind": "metric",
+    "domain": "statistics",
+    "label": "Hyperparameter-study Pareto dominance",
+    "definition": "필수 조건을 통과한 후보에서 모든 목표가 나쁘지 않고 하나 이상이 엄격히 좋을 때 성립하는 표준 지배 관계입니다. 목표의 방향과 단위를 맞추며 허용폭을 넣은 완화 비교는 순환할 수 있으므로 표준 정의와 별도로 해석합니다.",
+    "canonicalHref": "/cs/ai/multi-objective-hpo#dominance"
   },
   "pruning-false-negative-audit": {
-    id: "pruning-false-negative-audit",
-    kind: "metric",
-    domain: "machine-learning",
-    label: "Pruning false-negative audit",
-    definition:
-      "Pruning policy가 중단했을 후보 중 full-budget counterfactual에서 feasible finalist가 되는 late bloomer의 비율과 cohort 분포를 측정하는 정책 감사입니다.",
-    canonicalHref: "/cs/ai/multi-fidelity-pruning#false-prune-audit",
+    "id": "pruning-false-negative-audit",
+    "kind": "metric",
+    "domain": "machine-learning",
+    "label": "Pruning false-negative audit",
+    "definition": "정해진 중단 정책이 멈췄을 후보 중 최종 예산에서 품질과 필수 조건을 통과하는 비율을 확인하는 감사입니다. 끝까지 관측한 cohort의 중단 수를 분모로 삼고 표본 추출·불확실성을 보고하며 일반 false negative rate의 실제 양성 분모와 구별합니다.",
+    "canonicalHref": "/cs/ai/multi-fidelity-pruning#false-prune-audit"
   },
   "hpo-pareto-selection-receipt": {
-    id: "hpo-pareto-selection-receipt",
-    domain: "machine-learning",
-    label: "Pareto selection receipt",
-    definition:
-      "Objective 방향·단위, hard constraints, tolerance, repetitions, frontier revision과 최종 후보·rollback 선택 이유를 묶어 보존하는 다목적 선택 기록입니다.",
-    canonicalHref: "/cs/ai/multi-objective-hpo#selection-receipt",
+    "id": "hpo-pareto-selection-receipt",
+    "domain": "machine-learning",
+    "label": "Pareto selection receipt",
+    "definition": "Objective 방향·단위, hard constraints, tolerance, repetitions, frontier revision과 최종 후보·rollback 선택 이유를 묶어 보존하는 다목적 선택 기록입니다.",
+    "canonicalHref": "/cs/ai/multi-objective-hpo#selection-receipt"
   },
   "oof-error-covariance": {
     id: "oof-error-covariance",
@@ -8208,13 +8198,12 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/ai/experiment-tracking#artifact-reference"
   },
   "metric-progress-coordinate": {
-    id: "metric-progress-coordinate",
-    kind: "metric",
-    domain: "machine-learning",
-    label: "Metric progress coordinate",
-    definition:
-      "Learning curve의 각 관측에 optimizer update·processed sample/token·wall time을 함께 기록해 서로 다른 batch·accumulation·hardware run을 같은 학습 자원 축에서 비교하는 좌표 계약입니다.",
-    canonicalHref: "/cs/ai/learning-curve-tracking#progress-coordinate",
+    "id": "metric-progress-coordinate",
+    "kind": "metric",
+    "domain": "machine-learning",
+    "label": "Metric progress coordinate",
+    "definition": "학습 관측마다 갱신 수·처리 표본/토큰·시간·평가 정의를 보존해 같은 목표 자원량 근처의 관측을 대응시키는 좌표 계약입니다. 실제 위치 잔차와 허용폭을 보고하고 복구 분기·모델 진척·누적 소비량을 구분합니다.",
+    "canonicalHref": "/cs/ai/learning-curve-tracking#progress-coordinate"
   },
   "mutable-alias-resolution-receipt": {
     id: "mutable-alias-resolution-receipt",
@@ -12824,46 +12813,60 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/crypto/crypto-primitives#abelian-group",
   },
   "csprng-entropy-drbg-pipeline": {
-    id: "csprng-entropy-drbg-pipeline", kind: "method", domain: "computer-science",
-    label: "Entropy source · DRBG pipeline",
-    definition: "Raw noise를 source model·health test·conditioning으로 검증한 seed로 만들고 stateful DRBG가 output·state update·reseed를 수행하게 하는 random-bit generation 수명주기입니다.",
-    canonicalHref: "/cs/crypto/csprng#overview",
+    "id": "csprng-entropy-drbg-pipeline",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Entropy source · DRBG pipeline",
+    "definition": "Raw noise를 source model·health test·conditioning으로 검증한 seed로 만들고 stateful DRBG가 output·state update·reseed를 수행하게 하는 random-bit generation 수명주기입니다.",
+    "canonicalHref": "/cs/crypto/csprng#names"
   },
   "csprng-computational-unpredictability": {
-    id: "csprng-computational-unpredictability", kind: "concept", domain: "computer-science",
-    label: "CSPRNG computational unpredictability",
-    definition: "출력 prefix를 본 제한된 공격자가 다음 bit를 동전 추측보다 non-negligible하게 잘 맞히거나 generator 출력을 uniform random과 구분할 수 없어야 한다는 계산적 보안 목표입니다.",
-    canonicalHref: "/cs/crypto/csprng#overview",
+    "id": "csprng-computational-unpredictability",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CSPRNG computational unpredictability",
+    "definition": "출력 prefix를 본 제한된 공격자가 다음 bit를 동전 추측보다 non-negligible하게 잘 맞히거나 generator 출력을 uniform random과 구분할 수 없어야 한다는 계산적 보안 목표입니다.",
+    "canonicalHref": "/cs/crypto/csprng#predictability"
   },
   "min-entropy-guessing-bound": {
-    id: "min-entropy-guessing-bound", kind: "metric", domain: "statistics",
-    label: "Min-entropy guessing bound",
-    definition: "가장 가능성 높은 outcome의 확률 pmax에 −log2를 취해 공격자의 최선 단일 guess 관점에서 source가 제공하는 보수적 uncertainty bits를 세는 지표입니다.",
-    canonicalHref: "/cs/crypto/csprng#entropy-source",
+    "id": "min-entropy-guessing-bound",
+    "kind": "metric",
+    "domain": "statistics",
+    "label": "Min-entropy guessing bound",
+    "definition": "가장 가능성 높은 outcome의 확률 pmax에 −log2를 취해 공격자의 최선 단일 guess 관점에서 source가 제공하는 보수적 uncertainty bits를 세는 지표입니다.",
+    "canonicalHref": "/cs/crypto/csprng#entropy-source"
   },
   "drbg-state-compromise-resistance": {
-    id: "drbg-state-compromise-resistance", kind: "concept", domain: "computer-science",
-    label: "DRBG state-compromise resistance",
-    definition: "현재 state 노출에서 과거 output을 되돌리기 어렵게 하는 backtracking resistance와 새 공격자-미관측 entropy를 reseed한 뒤 미래 output을 회복하는 성질을 분리한 계약입니다.",
-    canonicalHref: "/cs/crypto/csprng#overview",
+    "id": "drbg-state-compromise-resistance",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "DRBG state-compromise resistance",
+    "definition": "현재 state 노출에서 과거 output을 되돌리기 어렵게 하는 backtracking resistance와 새 공격자-미관측 entropy를 reseed한 뒤 미래 output을 회복하는 성질을 분리한 계약입니다.",
+    "canonicalHref": "/cs/crypto/csprng#state-lifecycle"
   },
   "drbg-reseed-lifecycle": {
-    id: "drbg-reseed-lifecycle", kind: "method", domain: "computer-science",
-    label: "DRBG reseed · clone lifecycle",
-    definition: "Boot·fork·VM clone·snapshot restore·request limit·state disclosure에서 동일 state와 output 재사용을 막고 새 entropy를 섞거나 fail closed하는 운영 절차입니다.",
-    canonicalHref: "/cs/crypto/csprng#applications",
+    "id": "drbg-reseed-lifecycle",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "DRBG reseed · clone lifecycle",
+    "definition": "Boot·fork·VM clone·snapshot restore·request limit·state disclosure에서 동일 state와 output 재사용을 막고 새 entropy를 섞거나 fail closed하는 운영 절차입니다.",
+    "canonicalHref": "/cs/crypto/csprng#state-lifecycle"
   },
   "nonce-uniqueness-secrecy-contract": {
-    id: "nonce-uniqueness-secrecy-contract", kind: "concept", domain: "computer-science",
-    label: "Nonce uniqueness · secrecy contract",
-    definition: "AEAD·signature·challenge에서 nonce가 비밀이어야 하는지, 같은 key/domain에서 반복되면 안 되는지, bias·rollback까지 막아야 하는지를 scheme별로 구분하는 사용 계약입니다.",
-    canonicalHref: "/cs/crypto/csprng#applications",
+    "id": "nonce-uniqueness-secrecy-contract",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Nonce uniqueness · secrecy contract",
+    "definition": "AEAD·signature·challenge에서 nonce가 비밀이어야 하는지, 같은 key/domain에서 반복되면 안 되는지, bias·rollback까지 막아야 하는지를 scheme별로 구분하는 사용 계약입니다.",
+    "canonicalHref": "/cs/crypto/csprng#applications"
   },
   "csprng-release-gate": {
-    id: "csprng-release-gate", kind: "method", domain: "computer-science",
-    label: "CSPRNG lifecycle release gate",
-    definition: "Early boot·fork/clone·snapshot·short read·state disclosure·reseed failure를 재생해 versioned state transition·duplicate·typed failure parity 뒤 성능을 비교하는 채택 절차입니다.",
-    canonicalHref: "/cs/crypto/csprng#applications",
+    "id": "csprng-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "CSPRNG lifecycle release gate",
+    "definition": "Early boot·fork/clone·snapshot·short read·state disclosure·reseed failure를 재생해 versioned state transition·duplicate·typed failure parity 뒤 성능을 비교하는 채택 절차입니다.",
+    "canonicalHref": "/cs/crypto/csprng#release"
   },
   "cyclic-subgroup-dlp": {
     id: "cyclic-subgroup-dlp", kind: "concept", domain: "mathematics",
@@ -13923,28 +13926,36 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/claw-policy-engine#green-contract",
   },
   "modular-congruence-residue-class": {
-    id: "modular-congruence-residue-class", kind: "concept", domain: "mathematics",
-    label: "Modular congruence · residue class",
-    definition: "두 정수의 차가 양의 modulus m의 배수일 때 같은 나머지 class에 있다고 보고 a≡b (mod m)로 적는 정수 관계입니다.",
-    canonicalHref: "/cs/crypto/crt#overview",
+    "id": "modular-congruence-residue-class",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "Modular congruence · residue class",
+    "definition": "두 정수의 차가 양의 modulus m의 배수일 때 같은 나머지 class에 있다고 보고 a≡b (mod m)로 적는 정수 관계입니다.",
+    "canonicalHref": "/cs/crypto/crt#names"
   },
   "crt-pairwise-coprime-theorem": {
-    id: "crt-pairwise-coprime-theorem", kind: "theorem", domain: "mathematics",
-    label: "Chinese Remainder Theorem · pairwise-coprime form",
-    definition: "두 개씩 서로소인 양의 modulus m_i와 임의 residue a_i에 대해 모든 congruence를 만족하는 정수가 존재하고 전체 곱 M modulo에서 하나뿐이라는 정리입니다.",
-    canonicalHref: "/cs/crypto/crt#numerical",
+    "id": "crt-pairwise-coprime-theorem",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Chinese Remainder Theorem · pairwise-coprime form",
+    "definition": "두 개씩 서로소인 양의 modulus m_i와 임의 residue a_i에 대해 모든 congruence를 만족하는 정수가 존재하고 전체 곱 M modulo에서 하나뿐이라는 정리입니다.",
+    "canonicalHref": "/cs/crypto/crt#uniqueness"
   },
   "crt-selector-recombination": {
-    id: "crt-selector-recombination", kind: "method", domain: "mathematics",
-    label: "CRT selector recombination",
-    definition: "M_i=M/m_i와 inverse y_i=M_i^{-1} mod m_i로 자기 modulus에서만 1이고 나머지에서는 0인 selector를 만들어 residue들을 합치는 구성적 계산입니다.",
-    canonicalHref: "/cs/crypto/crt#numerical",
+    "id": "crt-selector-recombination",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "CRT selector recombination",
+    "definition": "M_i=M/m_i와 inverse y_i=M_i^{-1} mod m_i로 자기 modulus에서만 1이고 나머지에서는 0인 selector를 만들어 residue들을 합치는 구성적 계산입니다.",
+    "canonicalHref": "/cs/crypto/crt#numerical"
   },
   "rsa-crt-recombination-boundary": {
-    id: "rsa-crt-recombination-boundary", kind: "method", domain: "computer-science",
-    label: "RSA-CRT recombination · fault boundary",
-    definition: "RSA private operation을 p·q residue에서 각각 계산해 CRT parameter로 합치고 direct/public parity, blinding, constant-time과 fault countermeasure를 별도 검증하는 구현 경계입니다.",
-    canonicalHref: "/cs/crypto/crt#crypto-usage",
+    "id": "rsa-crt-recombination-boundary",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "RSA-CRT recombination · fault boundary",
+    "definition": "RSA private operation을 p·q residue에서 각각 계산해 CRT parameter로 합치고 direct/public parity, blinding, constant-time과 fault countermeasure를 별도 검증하는 구현 경계입니다.",
+    "canonicalHref": "/cs/crypto/crt#crypto-usage"
   },
   "karatsuba-two-way-recombination": {
     id: "karatsuba-two-way-recombination", kind: "method", domain: "computer-science",
@@ -14613,11 +14624,46 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/crypto/elgamal#release"
   },
   "mpc-real-ideal-adversary-boundary": { id:"mpc-real-ideal-adversary-boundary", kind:"concept", domain:"computer-science", label:"MPC real–ideal · adversary boundary", definition:"실제 parties·messages·corruptions의 view가 trusted ideal functionality의 input/output·allowed leakage로 simulation되는지를 semi-honest·malicious, static·adaptive, abort·fairness 조건별로 나눈 secure-computation 정의입니다.", canonicalHref:"/cs/crypto/mpc#security-model" },
-  "shamir-threshold-polynomial-sharing": { id:"shamir-threshold-polynomial-sharing", kind:"method", domain:"mathematics", label:"Shamir threshold polynomial sharing", definition:"Field에서 secret s를 degree t polynomial f의 상수항으로 두고 nonzero points f(i)를 shares로 배포해 t+1개 points로는 interpolation하고 t개 이하로는 s에 대한 정보를 숨기는 방법입니다.", canonicalHref:"/cs/crypto/shamir-secret-sharing#overview" },
-  "shamir-share-generation": { id:"shamir-share-generation", kind:"method", domain:"mathematics", label:"Shamir share generation", definition:"Uniform random nonconstant coefficients와 distinct nonzero field indices로 polynomial evaluations을 생성해 parties에 배포하는 단계입니다.", canonicalHref:"/cs/crypto/shamir-secret-sharing#share-generation" },
-  "shamir-reconstruction-at-zero": { id:"shamir-reconstruction-at-zero", kind:"method", domain:"mathematics", label:"Shamir reconstruction at zero", definition:"t+1 shares의 Lagrange basis를 x=0에서 평가해 field-linear combination으로 secret f(0)를 복원하는 계산입니다.", canonicalHref:"/cs/crypto/shamir-secret-sharing#reconstruction" },
-  "shamir-threshold-privacy-boundary": { id:"shamir-threshold-privacy-boundary", kind:"concept", domain:"mathematics", label:"Shamir threshold privacy boundary", definition:"Uniform coefficients 아래 t개 이하 share view의 분포가 secret 후보와 독립이라는 information-theoretic privacy와 RNG·index 전제를 묶는 경계입니다.", canonicalHref:"/cs/crypto/shamir-secret-sharing#privacy-boundary" },
-  "shamir-active-security-boundary": { id:"shamir-active-security-boundary", kind:"concept", domain:"computer-science", label:"Shamir active-security boundary", definition:"Plain interpolation이 dealer equivocation·bad share를 탐지하지 못하므로 VSS commitments·complaints·refresh verification을 별도 protocol로 두는 경계입니다.", canonicalHref:"/cs/crypto/shamir-secret-sharing#active-boundary" },
+  "shamir-threshold-polynomial-sharing": {
+    "id": "shamir-threshold-polynomial-sharing",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Shamir threshold polynomial sharing",
+    "definition": "Field에서 secret s를 degree t polynomial f의 상수항으로 두고 nonzero points f(i)를 shares로 배포해 t+1개 points로는 interpolation하고 t개 이하로는 s에 대한 정보를 숨기는 방법입니다.",
+    "canonicalHref": "/cs/crypto/shamir-secret-sharing#names"
+  },
+  "shamir-share-generation": {
+    "id": "shamir-share-generation",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Shamir share generation",
+    "definition": "Uniform random nonconstant coefficients와 distinct nonzero field indices로 polynomial evaluations을 생성해 parties에 배포하는 단계입니다.",
+    "canonicalHref": "/cs/crypto/shamir-secret-sharing#share-generation"
+  },
+  "shamir-reconstruction-at-zero": {
+    "id": "shamir-reconstruction-at-zero",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Shamir reconstruction at zero",
+    "definition": "t+1 shares의 Lagrange basis를 x=0에서 평가해 field-linear combination으로 secret f(0)를 복원하는 계산입니다.",
+    "canonicalHref": "/cs/crypto/shamir-secret-sharing#reconstruction"
+  },
+  "shamir-threshold-privacy-boundary": {
+    "id": "shamir-threshold-privacy-boundary",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "Shamir threshold privacy boundary",
+    "definition": "Uniform coefficients 아래 t개 이하 share view의 분포가 secret 후보와 독립이라는 information-theoretic privacy와 RNG·index 전제를 묶는 경계입니다.",
+    "canonicalHref": "/cs/crypto/shamir-secret-sharing#privacy-boundary"
+  },
+  "shamir-active-security-boundary": {
+    "id": "shamir-active-security-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Shamir active-security boundary",
+    "definition": "Plain interpolation이 dealer equivocation·bad share를 탐지하지 못하므로 VSS commitments·complaints·refresh verification을 별도 protocol로 두는 경계입니다.",
+    "canonicalHref": "/cs/crypto/shamir-secret-sharing#active-boundary"
+  },
   "paillier-additive-homomorphic-boundary": { id:"paillier-additive-homomorphic-boundary", kind:"method", domain:"computer-science", label:"Paillier additive-homomorphic boundary", definition:"n² modulus에서 Enc(m;r)=g^m r^n으로 암호화해 ciphertext 곱을 plaintext mod n 덧셈으로 옮기되, composite-residuosity·unit-randomizer·ciphertext validation 전제와 active-security proof를 별도로 두는 경계입니다.", canonicalHref:"/cs/crypto/paillier-cryptosystem#homomorphism" },
   "paillier-key-generation-contract": { id:"paillier-key-generation-contract", kind:"concept", domain:"computer-science", label:"Paillier key-generation contract", definition:"n=pq, λ=lcm(p−1,q−1), valid g와 μ=L(g^λ mod n²)⁻¹ mod n의 존재 조건을 하나의 cryptosystem profile로 고정합니다.", canonicalHref:"/cs/crypto/paillier-cryptosystem#key-generation" },
   "paillier-randomized-encryption": { id:"paillier-randomized-encryption", kind:"method", domain:"computer-science", label:"Paillier randomized encryption", definition:"Fresh unit r∈Z*n을 사용해 c=g^m r^n mod n²를 만들고 같은 message의 ciphertext linkability를 줄이는 probabilistic encryption 단계입니다.", canonicalHref:"/cs/crypto/paillier-cryptosystem#encryption" },
@@ -26434,7 +26480,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "periodic absolute wake"
     ],
     "definition": "FreeRTOS의 vTaskDelayUntil은 앞 목표를 기준으로 주기적인 준비 시각을 유지하는 데 사용됩니다. 처리 종료 시각에서 상대 지연을 시작하면 위상이 누적해서 밀릴 수 있습니다.",
-    "canonicalHref": "/electronics/embedded/scheduling-and-real-time#tasks"
+    "canonicalHref": "/electronics/embedded/scheduling-and-real-time#source-wake"
   },
   "periodic-cpu-utilization": {
     "id": "periodic-cpu-utilization",
@@ -26494,7 +26540,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "test swap candidate"
     ],
     "definition": "MCUboot의 지원되는 swap 모드에서 후보를 TEST로 표시하면 다음 부팅에 v2가 주 슬롯으로 교체되고 v1은 복귀할 수 있도록 남습니다.",
-    "canonicalHref": "/electronics/embedded/firmware-update-and-recovery#trial"
+    "canonicalHref": "/electronics/embedded/firmware-update-and-recovery#source-state"
   },
   "image-confirmation-revert": {
     "id": "image-confirmation-revert",
@@ -26504,7 +26550,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "image confirmation revert"
     ],
     "definition": "MCUboot 시험 swap에서 v2가 건강 검사 뒤 image OK를 기록하면 확정되어 다음 부팅에도 v2가 남습니다. 확정하지 않은 시험 이미지는 다음 재부팅에서 REVERT됩니다.",
-    "canonicalHref": "/electronics/embedded/firmware-update-and-recovery#trial"
+    "canonicalHref": "/electronics/embedded/firmware-update-and-recovery#source-state"
   },
   "power-fail-swap-resume": {
     "id": "power-fail-swap-resume",
@@ -26514,7 +26560,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "power fail swap resume"
     ],
     "definition": "다운로드 중단은 v1 유지, 지원되는 MCUboot swap 도중 전원 차단은 기록된 교체 상태에서 재개, 시험 v2가 확정 전 꺼지면 다음 부팅에 v1로 복귀합니다.",
-    "canonicalHref": "/electronics/embedded/firmware-update-and-recovery#power"
+    "canonicalHref": "/electronics/embedded/firmware-update-and-recovery#source-copy"
   },
   "rp2040-recovery-boundary": {
     "id": "rp2040-recovery-boundary",
@@ -51748,6 +51794,12 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "directional-derivative",
     "relation": "prerequisite",
     "reason": "단위 방향의 내적 상한으로 가장 큰 방향미분이 기울기의 유클리드 길이임을 설명합니다."
+  },
+  {
+    "from": "cauchy-schwarz",
+    "to": "descent-lemma",
+    "relation": "prerequisite",
+    "reason": "경로 적분에서 기울기 차이와 이동의 내적을 두 길이의 곱으로 제한하여 L‖d‖²/2를 유도합니다."
   },
 ];
 

@@ -258,13 +258,63 @@ export const embeddedArticles: Article[] = [
     title: "CPU가 한가해도 작업 마감을 놓치는 이유",
     subcategory: "embedded-software",
     sections: [
-      { id: "overview", title: "CPU가 절반 이상 비어도 센서의 마감은 깨질 수 있습니다" },
-      { id: "tasks", title: "세 작업의 주기와 마감은 서로 다릅니다" },
-      { id: "timeline", title: "모두 0 ms에 준비되면 센서는 3 ms에 끝납니다" },
-      { id: "utilization", title: "46%는 평균 CPU 몫이지 마감 보증이 아닙니다" },
-      { id: "blocking", title: "낮은 우선순위 작업이 자원을 쥐면 센서가 기다립니다" },
-      { id: "limits", title: "실제 보장은 최악 실행·대기와 시각 기록으로 확인합니다" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. CPU가 한가한 시간에도 센서 결과는 늦게 나올 수 있습니다"
+  },
+  {
+    "id": "outside",
+    "title": "2. 준비된 일과 끝낼 시각을 넣으면 실행 순서가 나옵니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 제어 1 ms 뒤 센서 2 ms를 실행하면 3 ms에 끝납니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 준비된 작업 중 앞선 일을 고르고 잠든 일은 기다립니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 전체 일의 양과 특정 결과가 필요한 시각을 따로 셉니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 반복 간격·실행량·마감과 준비 상태에 이름을 붙입니다"
+  },
+  {
+    "id": "tasks",
+    "title": "7. 세 작업의 주기와 마감은 서로 다릅니다"
+  },
+  {
+    "id": "timeline",
+    "title": "8. 모두 0 ms에 준비되면 센서는 3 ms에 끝납니다"
+  },
+  {
+    "id": "utilization",
+    "title": "9. 46%는 평균 CPU 몫이지 마감 보증이 아닙니다"
+  },
+  {
+    "id": "blocking",
+    "title": "10. 로그가 자원을 2 ms 더 잡고 있으면 센서는 5 ms에 끝납니다"
+  },
+  {
+    "id": "source-selection",
+    "title": "11. 실제 커널은 비어 있지 않은 가장 높은 우선순위 목록을 고릅니다"
+  },
+  {
+    "id": "source-wake",
+    "title": "12. 다음 목표는 현재 완료 시각에 10을 더하지 않습니다"
+  },
+  {
+    "id": "source-inherit",
+    "title": "13. 로그의 우선순위를 1에서 2로 올려도 남은 2 ms는 필요합니다"
+  },
+  {
+    "id": "limits",
+    "title": "14. 실제 보장은 실행 시간과 대기 시간을 구별해 확인합니다"
+  }
+],
     component: () => import("@/pages/articles/embedded/scheduling-and-real-time"),
   },
   {
@@ -272,13 +322,67 @@ export const embeddedArticles: Article[] = [
     title: "새 펌웨어가 실패해도 이전 버전으로 돌아오는 방법",
     subcategory: "embedded-software",
     sections: [
-      { id: "overview", title: "새 펌웨어가 시작되지 않아도 옛 버전으로 돌아오려면" },
-      { id: "layout", title: "4 MiB 안에 두 이미지와 복구 공간을 함께 잡습니다" },
-      { id: "verify", title: "v2를 다 받은 뒤 무결성과 출처를 확인합니다" },
-      { id: "trial", title: "v2는 한 번 시험하고 실제 기능을 본 뒤 확정합니다" },
-      { id: "power", title: "전원이 끊기는 위치마다 돌아오는 경로가 다릅니다" },
-      { id: "limits", title: "이 설계는 제품의 플래시·부팅·보안 조건에 맞춰야 합니다" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 새 프로그램이 고장 나도 이전 프로그램으로 돌아오려면"
+  },
+  {
+    "id": "outside",
+    "title": "2. 새 파일과 현재 상태를 보고 다음에 실행할 버전을 고릅니다"
+  },
+  {
+    "id": "case",
+    "title": "3. v2가 센서를 못 읽으면 확정하지 않고 v1로 돌아갑니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 옛 파일을 지키는 자리와 새 파일을 시험하는 순서를 나눕니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 두 자리가 있어도 검사와 진행 기록이 없으면 복구할 수 없습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 보관 자리·시험·확정·되돌리기에 이름을 붙입니다"
+  },
+  {
+    "id": "layout",
+    "title": "7. 4 MiB 안에 두 이미지와 복구 공간을 함께 잡습니다"
+  },
+  {
+    "id": "verify",
+    "title": "8. v2를 다 받은 뒤 무결성과 출처를 확인합니다"
+  },
+  {
+    "id": "trial",
+    "title": "9. v2는 한 번 시험하고 실제 기능을 본 뒤 확정합니다"
+  },
+  {
+    "id": "power",
+    "title": "10. 전원이 끊기는 위치마다 돌아오는 경로가 다릅니다"
+  },
+  {
+    "id": "source-state",
+    "title": "11. 실제 상태 표에 v2 시험과 미확정 재시작을 넣습니다"
+  },
+  {
+    "id": "source-api",
+    "title": "12. 이미지 묶음 0을 시험 표시한 뒤 정상 앱에서 확정합니다"
+  },
+  {
+    "id": "source-copy",
+    "title": "13. 한 조각도 새 내용 보관·옛 내용 이동·새 내용 배치 순으로 바꿉니다"
+  },
+  {
+    "id": "security-policy",
+    "title": "14. 정상 복귀와 오래된 취약 버전 차단을 함께 정합니다"
+  },
+  {
+    "id": "limits",
+    "title": "15. 이 설계는 제품의 플래시·부팅·보안 조건에 맞춰야 합니다"
+  }
+],
     component: () => import("@/pages/articles/embedded/firmware-update-and-recovery"),
   },
 ];

@@ -513,17 +513,17 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "embedded/scheduling-and-real-time": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-03",
-    "rationale": "주기·실행·마감→기본 고정 우선순위 시간표→46% 평균→뮤텍스 대기로 센서가 늦는 한 사례를 추적합니다. 펌웨어 갱신 실패의 복구는 다음 글이 소유합니다.",
-    "sharedGate": "제어1/5=20%, 센서2/10=20%, 로그3/50=6%, U46%; 기본 센서0–3ms 완료·마감4ms 여유1ms, 로그 뮤텍스2ms 뒤 센서5ms 완료·초과1ms가 본문·Viz·문제에서 일치해야 합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "작업 준비·실행·완료를 먼저 그리고 실제 준비 목록 선택과 절대 목표 계산에 대입했습니다. CPU 실행C와 대기 포함 응답R을 구분하고 우선순위 상속이 남은2ms를 없애지 않는 이유를 설명했습니다.",
+    "sharedGate": "한 코어 제어C1/P5/prio3·센서C2/P10/D4/prio2·로그C3/P50/prio1. CPU46%,센서완료3/5ms. 이전목표0/현재3 또는12/증분10. FreeRTOSV11.2.0 commit0adc196d tasks.c194–209·2385–2428·6652–6690, 헤더·MIT라이선스 원본3개 SHA 동일. 실보드 벤치마크/전원차단 실행아님."
   },
   "embedded/firmware-update-and-recovery": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-03",
-    "rationale": "v1 작동 중인 보드에서 플래시 배치→v2 검증→시험 swap→확정 또는 복귀→전원 차단 지점별 결과를 추적합니다. 칩 내장 BOOTSEL과 사용자 부트로더 책임을 구분합니다.",
-    "sharedGate": "4096=256+1536+1536+768 KiB, 미완성·서명 실패 후보는 v1 유지, TEST 미확정 재부팅은 v1 복귀, image OK 뒤는 v2 유지가 본문·Viz·문제에서 일치해야 합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "시험 요청·실제 기능 검사·확정·재시작을 분리했습니다. 실제 MCUboot 상태 표와 pending/confirmed·boot_set_next 및 진행 복원에 같은 v1/v2를 대입했습니다. 기대 해시 신뢰,키 보호,보안 카운터와 복귀 충돌을 보강했습니다.",
+    "sharedGate": "가정4MiB4096KiB=256+1536+1536+768. v1보존·v2TEST·미확정REVERT/확정NONE. scratch조각 v2보관→v1이동→v2배치. MCUbootv2.2.0 commit2d61c318 bootutil_public.c105–150·523–570·684–698·729–743,swap_scratch.c50–122·618–778;헤더·설계문서·Apache라이선스 원본5개 SHA 동일. 실보드 벤치마크/전원차단 실행아님."
   },
   "labor/wage-floor-natural-experiment": {
     action: "keep" as const,
@@ -1494,6 +1494,76 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "reviewedAt": "2026-10-04",
     "action": "keep"
   },
+  "crypto/csprng": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "여덟 시작값에서 긴 출력으로 이어지는 한 사례를 원천·생성·상태·사용처까지 따라가며 각 단계의 다른 실패를 이해하도록 한 글로 유지합니다.",
+    "sharedGate": "여덟 seed의 두 출력과 상태 복제 뒤 중복을 실제 교육용 구현으로 확인합니다. 최소 엔트로피는 단일 추측 확률로 제한해 설명하고 ECDSA 차분에서 개인키 항이 상쇄됨을 n19 사례로 검산합니다. 실제 운영체제·공식 인증 시험을 수행했다고 주장하지 않습니다."
+  },
+  "ai/math-optimization-convexity": {
+    "rationale": "현재 위치의 정보로 다른 위치의 함수값을 어디까지 예측할 수 있는지를 묻는 하나의 경로입니다. 현과 접선의 방향, 기울기 변화의 상한, 접선 위에 남는 최소 여유를 같은 제곱 함수로 확인하고 두 방향의 차이로 확장해야 볼록성·매끄러움·강한 볼록성을 혼동하지 않아 한 글로 유지합니다.",
+    "sharedGate": "x²의 현 높이 2와 곡선 1, 1→1.1의 예측 1.2/실제 1.21/오차 .01을 계산합니다. 원문의 m=M=2 경계와 적분 계수 1/2을 대조하고 (x²+100y²)/2의 (1,1)→(.99,0), z=10y의 κ=1을 검산합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "action": "keep"
+  },
+  "crypto/shamir-secret-sharing": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 비밀 5의 조각을 생성·복원·변조·갱신까지 추적해야 정확성과 비밀성, 검증의 차이를 볼 수 있어 한 글로 유지합니다.",
+    "sharedGate": "14개의 정확한 정수 계산으로 복원·균등 관찰·계수0 금지 반례·재사용·변조·갱신·회차 혼합을 확인합니다. 원문 §2의 기호를 같은 수에 대응하며 실제 VSS나 분산 시스템을 실행했다고 주장하지 않습니다."
+  },
+  "crypto/crt": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "3·5·7의 나머지에서 같은 수23을 조립한 뒤 RSA의5·7 계산으로 이어져 정리의 구성과 원문 적용을 한 흐름으로 읽도록 유지합니다.",
+    "sharedGate": "19개의 정확한 정수 검산으로 선택자·유일성·비서로소 반례·14+18j·RFC 재결합·모든35개 입력의 직접 계산 일치·오류 결과9의 인수 누출을 확인합니다. 실제 라이브러리 부채널·결함 주입·속도 측정은 수행하지 않았습니다."
+  },
+  "ai/hyperparameter-tuning": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 번의 후보 선택에서 누적 탐색 비용과 선택용 평가·독립 보고가 연결됩니다. 확률식도 같은 탐색 횟수의 의미를 설명하므로 후보 생성 알고리즘의 상세는 별도 글에 맡기고 이 계약을 한 글로 유지합니다.",
+    "sharedGate": "세 후보의 비용30과 선택 점수0.20, 독립 평가0.23을 한 경로로 추적합니다. 본문·수식·문제에서 같은 가정을 유지하고 원문 수치와 별도 설명 사례를 구분합니다."
+  },
+  "ai/search-space-design": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "후보 하나를 생성하는 규칙의 형태·좌표·활성 항목·자원 검사가 하나의 경로입니다. 같은0.001과18/22GB 후보가 생성에서 사전 판정까지 이어져 조건을 쪼개면 실효 분포의 경계가 끊깁니다.",
+    "sharedGate": "중간 위치0.5를 로그 좌표로 옮겨0.001을 만들고 분기와20GB 사전 조건을 적용합니다. 본문·수식·문제에서 같은 가정을 유지하고 원문 수치와 별도 설명 사례를 구분합니다."
+  },
+  "ai/multi-fidelity-pruning": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "후보를 줄여 얻은 자원 절약과 놓친 후보의 감사를 함께 보아야 정책을 판단할 수 있습니다. 9→3→1 배분에서 비용21과 표본4/20으로 이어지는 하나의 의사결정을 유지합니다.",
+    "sharedGate": "후보9→3→1의 누적 깊이1→3→9와 재개 비용21을 따로 계산하고 놓침4/20을 확인합니다. 본문·수식·문제에서 같은 가정을 유지하고 원문 수치와 별도 설명 사례를 구분합니다."
+  },
+  "ai/multi-objective-hpo": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "필수 한도·정확한 지배·반복 흔들림·제품의 선택은 A/B/C/D의 한 승인 과정입니다. 완화 비교의 순환 반례는 같은 정의를 오용하지 않기 위한 경계로 묶습니다.",
+    "sharedGate": "A/B/C/D를16GB와100ms로 걸러 A와C를 남기고80ms 내 최소 손실 정책으로C를 고릅니다. 본문·수식·문제에서 같은 가정을 유지하고 원문 수치와 별도 설명 사례를 구분합니다."
+  },
+  "ai/learning-curve-tracking": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "곡선의 한 점에서 진행 좌표를 보존하고 두 실행을 대응시키는 하나의 추적입니다. API의 가로축과 복구 경계까지 연결해야102만과98만을 정확히 같은 자원량으로 오해하지 않습니다.",
+    "sharedGate": "100만 목표 근처의 A102만·B98만 관측을 허용3만 안에서 비교하며 실제 위치 차이를 보존합니다. 본문·수식·문제에서 같은 가정을 유지하고 원문 수치와 별도 설명 사례를 구분합니다."
+  },
+  "ai/math-gradient-descent-convergence": {
+    "rationale": "현재 기울기로 다음 위치를 정하는 같은 반복을 보폭·오차·종료라는 세 관점으로 읽습니다. 같은 4에서 출발한 경로가 수축·왕복·발산하는 이유와 보장의 전제, 작은 이동으로 멈춘 반례를 함께 보아야 반복 종료를 최적점의 증명으로 오해하지 않아 한 글로 유지합니다.",
+    "sharedGate": "f=x²/2의 4→2→1→.5, η2의 ±4, η3의 4→−8→16→−32와 점수를 검산합니다. 원문 식 9.17의 상한 2/32, μ2·L8의 네 번 상한81/256과 실제6561/65536, 작은 이동 .000004 및 종료 이유별 잔여 오차를 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "action": "keep"
+  },
 };
 
 /**
@@ -1501,6 +1571,16 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/hyperparameter-tuning": "8b86ec3131edeec2",
+  "ai/learning-curve-tracking": "43b2d91519960b02",
+  "ai/math-gradient-descent-convergence": "f4eee2384a7fa044",
+  "ai/math-optimization-convexity": "86024239d24a2046",
+  "ai/multi-fidelity-pruning": "ab4455c3e04ecee2",
+  "ai/multi-objective-hpo": "8e60977063f7ce3a",
+  "ai/search-space-design": "f98ddf63d1ca8923",
+  "crypto/crt": "e967e493ce50e904",
+  "crypto/csprng": "8b37dc43d4fb5416",
+  "crypto/shamir-secret-sharing": "69f9d4cdb8cd7d6b",
   "ai/adaptive-hyperparameter-search": "c7600c0a051a1182",
   "ai/competition-submission-control": "f4a5a60d8694bccf",
   "ai/competition-workflow": "4562393852c386c2",
@@ -1595,8 +1675,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "macro/why-per-head-stalls": "288664818602d036",
   "labor/measuring-the-spread": "9c6d52345e9d0a9c",
   "labor/wage-floor-natural-experiment": "24f8973f6bfad249",
-  "embedded/firmware-update-and-recovery": "11af404968f4feda",
-  "embedded/scheduling-and-real-time": "854c44f36c3d7c77",
+  "embedded/firmware-update-and-recovery": "b54e482e0b1c8341",
+  "embedded/scheduling-and-real-time": "a2fdefd3408002c7",
   "embedded/serial-buses-and-tradeoffs": "b77cf44426bedb4f",
   "embedded/timers-and-sampling": "e0eaaa84f836f4d3",
   "embedded/interrupts-and-latency-budget": "cfdf6ea3645856a7",

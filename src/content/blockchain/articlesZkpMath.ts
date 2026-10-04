@@ -69,10 +69,55 @@ export const zkpMathArticles: Article[] = [
     title: "CRT: 나머지 조건의 조립·유일성·RSA 경계",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "나머지 조건에서 시작하기" },
-      { id: "numerical", title: "Selector 구성·23 예제·유일성" },
-      { id: "crypto-usage", title: "RSA-CRT·fault·benchmark" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 원래 수를 모르고 세 나머지만 알 때"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 계산을 나누는 기준과 합치는 규칙이 필요합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 23을 세 번 나누어 기록을 확인합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 작은 기록 세 개가 같은 수를 가리킵니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 한 기록을 맞추며 다른 두 기록을 건드리지 않으려면"
+  },
+  {
+    "id": "names",
+    "title": "6. 같은 나머지를 합동이라 부릅니다"
+  },
+  {
+    "id": "numerical",
+    "title": "7. 세 선택자 70·21·15로 23을 조립합니다"
+  },
+  {
+    "id": "uniqueness",
+    "title": "8. 답은 왜 105마다 하나씩 반복되나요?"
+  },
+  {
+    "id": "crypto-usage",
+    "title": "9. RFC 8017은 같은 23을 두 작은 계산으로 복원합니다"
+  },
+  {
+    "id": "compatibility",
+    "title": "10. 기준이 서로소가 아니면 답이 없을 수도 있습니다"
+  },
+  {
+    "id": "fault-boundary",
+    "title": "11. 한쪽 결과가 3에서 4로 바뀌면 인수 7이 드러납니다"
+  },
+  {
+    "id": "release",
+    "title": "12. 같은 답·오류 검출·속도는 따로 비교합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/crt"),
   },
   {
@@ -80,10 +125,55 @@ export const zkpMathArticles: Article[] = [
     title: "CSPRNG: entropy·state·reseed lifecycle",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "Entropy에서 예측 불가능한 출력까지" },
-      { id: "entropy-source", title: "Min-entropy와 source validation" },
-      { id: "applications", title: "Key·nonce·clone 운영 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 길고 복잡한 문자열도 시작값을 알면 예측할 수 있습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 비밀 재료를 얻는 곳과 출력을 만드는 곳을 나눕니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 시작값이 0부터 7까지면 긴 결과도 여덟 후보입니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 출력은 늘어나도 새 비밀이 저절로 생기지는 않습니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 다음 값 예측과 상태 복제는 서로 다른 실패입니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 비밀의 불확실성과 출력 생성에 이름을 붙입니다"
+  },
+  {
+    "id": "entropy-source",
+    "title": "7. 가장 잘 맞힐 수 있는 한 번의 추측을 셉니다"
+  },
+  {
+    "id": "predictability",
+    "title": "8. 다음 비트를 60% 맞히면 절반보다 10%p 유리합니다"
+  },
+  {
+    "id": "source",
+    "title": "9. 실제 규격의 상태 갱신에 시작값 3을 넣습니다"
+  },
+  {
+    "id": "state-lifecycle",
+    "title": "10. 상태를 읽힌 뒤에는 새로 모르는 재료가 필요합니다"
+  },
+  {
+    "id": "applications",
+    "title": "11. 서명 비밀을 재사용하면 개인키 7까지 드러납니다"
+  },
+  {
+    "id": "release",
+    "title": "12. 부팅·복제·실패를 통과한 뒤 생성 속도를 봅니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/csprng"),
   },
   {

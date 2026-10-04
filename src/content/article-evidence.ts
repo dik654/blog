@@ -953,7 +953,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://web.stanford.edu/~boyd/cvxbook/",
       note: "Convex set·function·optimality·gradient method의 전제와 보장을 연결하는 공개 교재",
     },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "Boyd·Vandenberghe 식 (3.1), (3.2), (9.8), (9.13)",
+      "href": "https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf",
+      "note": "인쇄 67·69쪽의 현과 접선 부등식, 459·461쪽의 실제 위아래 이차 경계에 같은 x²의 0/2 및 1→1.1 사례를 대입합니다. 원문 θ·m·M을 λ·μ·L에 대응하고 원문이 둔 두 번 미분 가능성과 관심 집합 조건을 구별합니다."
+    },
+],
   "ai/math-gradient-descent-convergence": [
     {
       kind: "공개 강의",
@@ -967,7 +973,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://web.stanford.edu/~boyd/cvxbook/",
       note: "Convex·smooth objective에서 first-order method의 전제와 convergence bound를 연결하는 공개 교재",
     },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "Boyd·Vandenberghe §9.3 식 (9.17), Algorithm 9.3 및 식 (9.18)",
+      "href": "https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf#page=480",
+      "note": "인쇄 466쪽의 실제 보폭별 상한에 x=4,g=4,M=1,t=.5를 넣어 점수 2를 얻고 t=3의 32도 확인합니다. 원문의 선 탐색과 글의 고정 보폭을 구별하며 467쪽 식 (9.18)을 고정 보폭 정리로 잘못 인용하지 않습니다."
+    },
+],
   "ai/perceptron": [
     {
       kind: "핵심 논문",
@@ -1977,7 +1989,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://www.jmlr.org/papers/v13/bergstra12a.html",
       note: "일부 축만 중요한 공간에서 grid보다 서로 다른 중요 값들을 더 많이 시험하는 random search 분석",
     },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "hyperparameter-tuning — p.282 equation(4), §2.2 p.285 validation/test definitions",
+      "href": "https://jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf",
+      "note": "2026-10-04 원문 확인. A/B/C 중B 선택과0.20/0.23 역할 분리"
+    },
+],
   "ai/adaptive-hyperparameter-search": [
     { kind: "핵심 논문", label: "Optuna: A Next-generation Hyperparameter Optimization Framework", href: "https://arxiv.org/abs/1907.10902", note: "define-by-run·study·trial·sampler·pruner·storage architecture" },
     { kind: "핵심 논문", label: "Algorithms for Hyper-Parameter Optimization", href: "https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization", note: "TPE의 good/other configuration density model" },
@@ -2002,13 +2020,49 @@ export const ARTICLE_EVIDENCE: Readonly<
 ],
   "ai/search-space-design": [
     { kind: "핵심 논문", label: "Optuna: A Next-generation Hyperparameter Optimization Framework", href: "https://arxiv.org/abs/1907.10902", note: "Conditional search space를 코드에서 구성하는 define-by-run 설계" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "search-space-design — 4.5.0 floating log example and Branches",
+      "href": "https://optuna.readthedocs.io/en/v4.5.0/tutorial/10_key_features/002_configurations.html",
+      "note": "2026-10-04 원문 확인. 범위3구간 대4구간과 조건부 child 생성"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "search-space-design — 4.5.0 RandomSampler description",
+      "href": "https://optuna.readthedocs.io/en/v4.5.0/reference/samplers/generated/optuna.samplers.RandomSampler.html",
+      "note": "2026-10-04 원문 확인. 균등 로그 계산의 sampler 조건"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "search-space-design — 2019 abstract define-by-run",
+      "href": "https://arxiv.org/abs/1907.10902",
+      "note": "2026-10-04 원문 확인. 원 설계와4.5고정 세부 예제 구분"
+    },
+],
   "ai/multi-fidelity-pruning": [
     { kind: "핵심 논문", label: "Hyperband: A Novel Bandit-Based Approach to Hyperparameter Optimization", href: "https://www.jmlr.org/papers/v18/16-558.html", note: "Successive halving과 bracket을 통한 resource allocation" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "multi-fidelity-pruning — Algorithm1 lines5–6 PDF p.8, §3.2 brackets",
+      "href": "https://jmlr.org/papers/volume18/16-558/16-558.pdf",
+      "note": "2026-10-04 원문 확인. 9→3→1과1→3→9, 한bracket과전체차이"
+    },
+],
   "ai/multi-objective-hpo": [
     { kind: "공식 문서", label: "Optuna — Multi-objective optimization", href: "https://optuna.readthedocs.io/en/stable/tutorial/20_recipes/002_multi_objective.html", note: "Multiple directions와 Pareto trials의 current API example" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "multi-objective-hpo — 4.5.0 Study.best_trials exact all/any definition",
+      "href": "https://optuna.readthedocs.io/en/v4.5.0/reference/generated/optuna.study.Study.html#optuna.study.Study.best_trials",
+      "note": "2026-10-04 원문 확인. A/B지배와A/C상충"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "multi-objective-hpo — 4.5.0 directions example",
+      "href": "https://optuna.readthedocs.io/en/v4.5.0/tutorial/20_recipes/002_multi_objective.html",
+      "note": "2026-10-04 원문 확인. 원문FLOPS/정확도와본문손실/지연/메모리의방향구분"
+    },
+],
   "ai/ensemble-methods": [
     {
       kind: "핵심 논문",
@@ -2102,7 +2156,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://docs.wandb.ai/guides/track/log/",
       note: "metric history·step·custom progress axis를 기록하는 현재 공식 semantics",
     },
-  ],
+    {
+      "kind": "공식 코드",
+      "label": "learning-curve-tracking — v0.19.11 wandb_run.py define_metric:L2860–2878",
+      "href": "https://github.com/wandb/wandb/blob/2a058902a2425bf79e5add34b30d0e9ea5e39951/wandb/sdk/wandb_run.py#L2860-L2878",
+      "note": "2026-10-04 원문 확인. step_metric과step_sync에102만/98만 관측 대응"
+    },
+],
   "ai/model-artifact-registry": [
     {
       kind: "공식 문서",
@@ -5536,7 +5596,19 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "NIST SP 800-90A Rev.1 · DRBG", href: "https://csrc.nist.gov/pubs/sp/800/90/a/r1/final", note: "Hash/HMAC/CTR_DRBG instantiate·generate·reseed state-transition 정본" },
     { kind: "공식 규격", label: "NIST SP 800-90B · Entropy Sources", href: "https://csrc.nist.gov/pubs/sp/800/90/b/final", note: "Noise-source min-entropy·conditioning·health-test validation 정본" },
     { kind: "핵심 논문", label: "Mining Your Ps and Qs · USENIX Security 2012", href: "https://www.usenix.org/conference/usenixsecurity12/technical-sessions/presentation/heninger", note: "낮은 entropy가 실제 TLS·SSH key compromise로 이어진 관측 범위" },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "NIST SP 800-90A Rev.1 · Deterministic Random Bit Generators",
+      "href": "https://csrc.nist.gov/pubs/sp/800/90/a/r1/final",
+      "note": "Rev.1 §§10.1.2.2–10.1.2.5의 K·V 갱신을 한 바이트 입력에 적용해 두 출력을 재현했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "RFC 6979 · Deterministic DSA/ECDSA",
+      "href": "https://www.rfc-editor.org/rfc/rfc6979.html",
+      "note": "§2.4의 서명식에 작은 곡선의 두 서명을 적용해 같은 k=3과 d=7 복원을 검산합니다."
+    },
+],
   "crypto/discrete-log": [
     { kind: "핵심 논문", label: "Pollard · Monte Carlo Methods for Index Computation", href: "https://doi.org/10.1090/S0025-5718-1978-0491431-9", note: "Collision walk로 작은 memory와 expected O(√q)를 만드는 rho 원문" },
     { kind: "핵심 논문", label: "Shanks · Class number, a theory of factorization, and genera", href: "https://www.ams.org/books/pspum/020/", note: "Baby-step/giant-step meet-in-the-middle의 고전적 출처와 범위" },
@@ -6003,7 +6075,13 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "crypto/shamir-secret-sharing": [
     { kind: "핵심 논문", label: "Shamir · How to Share a Secret", href: "https://doi.org/10.1145/359168.359176", note: "Threshold polynomial sharing의 primary paper" },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "Shamir (1979) · How to Share a Secret, §2",
+      "href": "https://web.mit.edu/6.857/OldStuff/Fall03/ref/Shamir-HowToShareASecret.pdf",
+      "note": "§2의 D=5,n=3,k=2,p=17,q(x)=5+3x를 조각 8·11·14와 복원식에 직접 대응합니다."
+    },
+],
   "crypto/paillier-cryptosystem": [
     { kind: "핵심 논문", label: "Paillier · Public-Key Cryptosystems Based on Composite Degree Residuosity Classes", href: "https://link.springer.com/chapter/10.1007/3-540-48910-X_16", note: "Probabilistic additive-homomorphic encryption의 primary paper" },
   ],
@@ -6208,7 +6286,13 @@ export const ARTICLE_EVIDENCE: Readonly<
   "crypto/crt": [
     { kind: "공식 규격", label: "RFC 8017 · PKCS #1 v2.2", href: "https://www.rfc-editor.org/rfc/rfc8017.html", note: "Two-prime RSA private key의 p·q·dP·dQ·qInv와 RSA primitive 입력·오류 계약" },
     { kind: "보충 읽기", label: "NIST DLMF §27.15 · Chinese Remainder Theorem", href: "https://dlmf.nist.gov/27.15", note: "Pairwise-coprime congruence system의 구성·유일성 표기 reference" },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "RFC 8017 §5.1.2 · 두 소수 RSADP",
+      "href": "https://www.rfc-editor.org/rfc/rfc8017.html#section-5.1.2",
+      "note": "§5.1.2 Step2.b의 m1·m2·h·m에 입력18을 넣어3·2·3·23을 재현했습니다."
+    },
+],
   "crypto/karatsuba": [
     { kind: "핵심 논문", label: "Karatsuba & Ofman · Multiplication of many-digital numbers", href: "https://www.mathnet.ru/eng/dan26729", note: "Operand 분할로 quadratic보다 낮은 multiplication complexity를 구성한 1962 원문" },
     { kind: "공식 문서", label: "GNU MP 6.3.0 · Karatsuba Multiplication", href: "https://gmplib.org/manual/Karatsuba-Multiplication.html", note: "세 곱 공식·odd-size split·carry/addition·target threshold의 production 구현 설명" },
@@ -8738,35 +8822,53 @@ export const ARTICLE_EVIDENCE: Readonly<
   "embedded/scheduling-and-real-time": [
     {
       "kind": "공식 문서",
-      "label": "FreeRTOS RTOS Fundamentals·Task Priorities",
+      "label": "FreeRTOS, RTOS Fundamentals and Task Priorities",
       "href": "https://www.freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals",
-      "note": "준비된 최고 우선순위 작업과 마감 목적을 확인했다."
+      "note": "공식 가이드는 준비된 최고 우선순위 작업의 실행과 실시간 마감의 의미를 설명합니다."
     },
     {
       "kind": "공식 문서",
-      "label": "FreeRTOS Reference Manual v10, vTaskDelayUntil",
+      "label": "FreeRTOS Reference Manual v10, vTaskDelayUntil()",
       "href": "https://www.freertos.org/media/2018/FreeRTOS_Reference_Manual_V10.0.0.pdf",
-      "note": "절대 주기 대기 API와 상대 지연의 차이를 확인했다."
+      "note": "절대 시각까지 블록하는 vTaskDelayUntil과 상대 vTaskDelay의 차이를 설명합니다."
     },
     {
       "kind": "공식 문서",
-      "label": "FreeRTOS FreeRTOS mutexes",
+      "label": "FreeRTOS, FreeRTOS mutexes",
       "href": "https://freertos.org/Real-time-embedded-RTOS-mutexes.html",
-      "note": "뮤텍스 우선순위 상속과 ISR 사용 제한을 확인했다."
+      "note": "뮤텍스의 기본 우선순위 상속과 ISR에서 뮤텍스를 기다리지 않는 이유를 설명합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "FreeRTOS Kernel V11.2.0 · tasks.c 원문",
+      "href": "https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/0adc196d4bd52a2d91102b525b0aafc1e14a2386/tasks.c",
+      "note": "일반 한 코어 준비 목록·xTaskDelayUntil·xTaskPriorityInherit에 동일 우선순위와 시각을 대입합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "FreeRTOS Kernel V11.2.0 · tasks.c 원문",
+      "href": "https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/0adc196d4bd52a2d91102b525b0aafc1e14a2386/tasks.c",
+      "note": "일반 한 코어 준비 목록·xTaskDelayUntil·xTaskPriorityInherit에 동일 우선순위와 시각을 대입합니다."
     }
   ],
   "embedded/firmware-update-and-recovery": [
     {
       "kind": "공식 문서",
-      "label": "MCUboot Bootloader design",
+      "label": "MCUboot, Bootloader design",
       "href": "https://docs.mcuboot.com/design.html",
-      "note": "시험 swap의 이미지 상태·검증·중단 재개 범위를 확인했다."
+      "note": "지원되는 swap의 TEST·REVERT·PERM, image OK와 중단된 swap 재개, 서명·무결성 검사를 설명합니다."
     },
     {
       "kind": "공식 문서",
-      "label": "Raspberry Pi RP2040 Datasheet, 원본 123·129–132·145쪽",
+      "label": "Raspberry Pi, RP2040 Datasheet, XIP flash and Bootrom",
       "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
-      "note": "외부 플래시 XIP와 BOOTSEL 복구 경로를 확인했다."
+      "note": "외부 QSPI 플래시 XIP와 bootrom의 다음 단계 부팅, USB BOOTSEL 경로를 설명합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "MCUboot v2.2.0 · bootutil_public.c·swap_scratch.c 원문",
+      "href": "https://github.com/mcu-tools/mcuboot/tree/2d61c318933819a0f4954fb2a5a957a62c6128ce/boot/bootutil/src",
+      "note": "boot_swap_tables와 pending/confirmed API, 세 복사 및 swap_read_status_bytes의 진행 복원을 대조합니다."
     }
   ],
   "labor/wage-floor-natural-experiment": [

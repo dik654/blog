@@ -3,38 +3,71 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import SchedulingDeadlineViz from "./scheduling-and-real-time/viz/SchedulingDeadlineViz";
 
-/** Invented one-core fixed-priority schedule, milliseconds; not measured FreeRTOS/RP2040 timing. */
+import NumericPath from "../world-systems/NumericPath";
+import TeachCode from "./scheduling-and-real-time/TeachCode";
+
 export default function SchedulingAndRealTimeArticle(){
- return <div className="space-y-16">
-  <section id="overview" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">CPU가 절반 이상 비어도 센서의 마감은 깨질 수 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
-   <p className="text-lg leading-8">앞 글에서 센서 버스를 읽는 시간은 클록만으로 끝나지 않았습니다. 이제 한 RP2040 코어에서 세 작업이 시간을 나눠 쓴다고 가정합니다. 제어는 5 ms마다 1 ms, 센서 처리는 10 ms마다 2 ms, 로그는 50 ms마다 3 ms의 CPU 시간이 필요합니다. 평균 점유율은 46%입니다. 그런데 센서가 공유 자원을 기다리면 자기 4 ms 마감은 넘길 수 있습니다.</p>
-   <p className="leading-7">여기서 센서 작업의 4 ms 마감은 앞 글의 GPIO2 사건 후 1 ms 마감과 다른 요구입니다. 세 실행 시간도 실제 FreeRTOS나 RP2040의 측정치가 아닙니다. 숫자를 고정해 <strong>평균 사용량</strong>과 <strong>개별 작업의 완료 시각</strong>을 분리합니다.</p>
-   <p className="leading-7"><em>실시간이라는 말은 CPU가 바쁘냐보다 정해진 시각 전에 결과가 나오느냐에 달려 있습니다.</em></p>
-  </div></section>
-  <section id="tasks" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">세 작업의 주기와 마감은 서로 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+return <div className="space-y-16">
+<section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. CPU가 한가한 시간에도 센서 결과는 늦게 나올 수 있습니다</h2><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">장치 하나가 제어 신호를 만들고 센서를 읽으며 기록을 저장합니다. 평균적으로 일하는 시간이 절반보다 적어도 센서 결과가 필요한 시각을 넘길 수 있습니다. 일이 몰린 순간에 누가 먼저 실행되는지와 무엇을 기다리는지가 다르기 때문입니다.</p><p className="leading-7">
+            세 작업의 한 번 실행을 같은 시간표에 놓겠습니다. 그 시간표를 실제 커널의 작업 선택과 다음 실행 시각 계산에 연결하겠습니다.
+          </p></div></section>
+
+<section id="outside" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 준비된 일과 끝낼 시각을 넣으면 실행 순서가 나옵니다</h2><NumericPath title="한 코어의 시간 나누기" steps={[{"label": "입력", "value": "일할 준비가 된 작업들", "detail": "각 작업의 실행 시간과 마감을 함께 정합니다."}, {"label": "시간 배정", "value": "지금 실행할 작업 하나", "detail": "더 먼저 처리할 작업이나 공유 자원 대기가 순서를 바꿉니다."}, {"label": "결과", "value": "각 작업의 완료 시각", "detail": "준비된 시각부터 얼마나 걸렸는지 마감과 비교합니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">센서가 일을 시작했는지와 결과를 완성했는지를 구분합니다. 결과가 필요했던 시각보다 늦으면 CPU가 나중에 쉬더라도 그 마감을 지킨 것이 아닙니다.</p></div></section>
+
+<section id="case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 제어 1 ms 뒤 센서 2 ms를 실행하면 3 ms에 끝납니다</h2><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">한 코어에서 세 작업만 실행하는 가정입니다. 제어는 5 ms마다 1 ms, 센서는 10 ms마다 2 ms, 로그는 50 ms마다 3 ms의 CPU 시간이 필요합니다. 실행 순서는 제어·센서·로그 순으로 먼저 처리하도록 정합니다. 센서 결과는 준비된 뒤 4 ms 안에 필요합니다.</p><p className="leading-7">
+            셋이 0 ms에 함께 준비되고 자원 대기가 없으면 제어가 0–1 ms를 씁니다. 센서는 1–3 ms에 일해 3 ms에 끝나므로 마감까지 1 ms가 남습니다. 세 실행 시간은
+            실제 FreeRTOS나 RP2040의 측정값이 아닙니다.
+          </p><p className="leading-7">앞 글의 GPIO 사건 후 1 ms 마감과 이번 센서 작업의 4 ms 마감은 별도 요구입니다. 비교할 기준 시각부터 정해 두겠습니다.</p></div></section>
+
+<section id="picture" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 준비된 작업 중 앞선 일을 고르고 잠든 일은 기다립니다</h2><NumericPath title="0 ms부터 센서 결과까지" steps={[{"label": "동시에 준비", "value": "제어·센서·로그", "detail": "아직 어느 작업도 이번 일을 끝내지 않았습니다."}, {"label": "먼저 실행", "value": "제어 0–1 ms", "detail": "센서와 로그는 준비된 채 자기 차례를 기다립니다."}, {"label": "다음 실행", "value": "센서 1–3 ms", "detail": "CPU를 2 ms 써 결과를 만듭니다."}, {"label": "완료 비교", "value": "3 ms ≤ 마감 4 ms", "detail": "일한 2 ms와 준비 뒤 걸린 3 ms는 다릅니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">자원을 기다려 잠든 작업은 지금 실행할 후보에서 빠집니다. 자원을 가진 작업이 끝내 줘야 다시 후보가 될 수 있습니다. 이 차이가 뒤에서 센서를 5 ms까지 늦춥니다.</p></div></section>
+
+<section id="why" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 전체 일의 양과 특정 결과가 필요한 시각을 따로 셉니다</h2><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">50 ms 동안 제어는 10회, 센서는 5회, 로그는 1회 실행합니다. CPU가 할 일은 10+10+3=23 ms이므로 27 ms가 남습니다. 그러나 센서가 매번 쓸 수 있는 시간은 준비 뒤 4 ms뿐입니다. 남은 27 ms가 그 순간에 모여 있다는 뜻은 아닙니다.</p><p className="leading-7">더 먼저 실행할 제어가 있고 센서가 필요한 자원을 로그가 잡고 있다면 센서는 둘을 기다립니다. 평균 사용량을 줄였다는 사실만으로 그 대기가 사라지지는 않습니다.</p><p className="leading-7">매번 일을 끝낸 뒤 일정 시간 쉬면 처리 시간이 다음 시작 시각에 더해집니다. 원래 시간 눈금을 따라 반복하려면 지난 목표에서 다음 목표를 계산해야 합니다. 목표 시각에 실제로 실행될 수 있는지는 그때의 실행 순서로 다시 확인합니다.</p></div></section>
+
+<section id="names" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 반복 간격·실행량·마감과 준비 상태에 이름을 붙입니다</h2><div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr><th className="p-3">앞에서 본 역할</th><th className="p-3">이름과 이번 값</th></tr></thead><tbody><tr><td className="p-3">얼마마다 새 일이 준비되는가</td><td className="p-3">주기 P: 센서는 10 ms</td></tr><tr><td className="p-3">한 번에 CPU를 얼마나 쓰는가</td><td className="p-3">실행 시간 C: 센서는 2 ms</td></tr><tr><td className="p-3">준비된 뒤 언제까지 끝낼 것인가</td><td className="p-3">상대 마감 D: 센서는 4 ms</td></tr><tr><td className="p-3">준비에서 완료까지 걸린 시간</td><td className="p-3">응답 시간 R: 대기가 없던 센서는 3 ms</td></tr><tr><td className="p-3">준비된 일 중 먼저 실행할 순서</td><td className="p-3">우선순위: 제어 3·센서 2·로그 1</td></tr><tr><td className="p-3">더 앞선 일이 실행을 잠시 가져감</td><td className="p-3">선점</td></tr><tr><td className="p-3">공유 자원을 한 작업만 잡도록 함</td><td className="p-3">뮤텍스</td></tr><tr><td className="p-3">커널이 시간을 세는 눈금</td><td className="p-3">tick</td></tr></tbody></table></div><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">이제 커널을 FreeRTOS로 부르겠습니다. 다음 원문 대조는 한 코어에서 선점하는 설정입니다. 숫자가 큰 우선순위가 먼저이며 커널의 시간 눈금은 1 ms로 가정합니다. 다른 코어나 같은 우선순위 작업의 복잡한 경쟁은 이 사례에 넣지 않았습니다.</p></div></section>
+
+<section id="tasks" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 세 작업의 주기와 마감은 서로 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
    <p className="leading-7">가상 제어 작업은 주기 5 ms·실행 1 ms·상대 마감 5 ms이고 가장 높은 우선순위를 갖습니다. 센서 작업은 주기 10 ms·실행 2 ms·상대 마감 4 ms로 그다음입니다. 로그 작업은 주기 50 ms·실행 3 ms·상대 마감 50 ms로 가장 낮습니다. 상대 마감은 해당 작업이 준비된 순간부터 잰 시간입니다.</p>
-   <p className="leading-7">FreeRTOS처럼 높은 우선순위의 준비된 작업을 실행하는 선점형 일정에서는 제어가 깨어나면 로그가 잠시 멈춥니다. 주기 작업은 이전 목표 시각을 기준으로 잠드는 <code>vTaskDelayUntil</code> 같은 방법을 쓰면 처리 시간이 조금 달라도 원래 주기 눈금에 맞출 수 있습니다. 실제 시간 해상도는 RTOS tick 설정과 별도 타이머 방식에 좌우됩니다.</p>
+   <p className="leading-7">FreeRTOS처럼 높은 우선순위의 준비된 작업을 실행하는 선점형 일정에서는 제어가 깨어나면 로그가 잠시 멈춥니다. 주기 작업은 이전 목표 시각을 기준으로 잠드는 <code>xTaskDelayUntil</code> 같은 방법을 쓰면 처리 시간이 조금 달라도 원래 주기 눈금에 맞출 수 있습니다. 실제 시간 해상도는 RTOS tick 설정과 별도 타이머 방식에 좌우됩니다.</p>
    <p className="leading-7"><em>한 작업에는 얼마나 자주 나오는지, CPU를 얼마나 쓰는지, 언제까지 끝나야 하는지를 각각 적습니다.</em></p>
   </div><CitationBlock source="FreeRTOS, RTOS Fundamentals·Task Priorities·Reference Manual v10, vTaskDelayUntil()" citeKey={1} href="https://www.freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals">FreeRTOS 공식 설명은 가장 높은 우선순위의 준비된 작업 선택과 절대 주기 기반 대기의 목적을 설명합니다. 세 작업의 실행 시간·마감은 본문의 가정입니다.</CitationBlock></section>
-  <section id="timeline" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">모두 0 ms에 준비되면 센서는 3 ms에 끝납니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+
+<section id="timeline" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 모두 0 ms에 준비되면 센서는 3 ms에 끝납니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
    <p className="leading-7">공유 자원 대기와 RTOS 오버헤드가 없고 셋이 0 ms에 함께 준비된다고 둡니다. 제어가 0–1 ms, 센서가 1–3 ms에 실행됩니다. 센서는 준비 뒤 3 ms에 완료되어 4 ms 마감보다 1 ms 앞섭니다. 로그가 3–5 ms에 2 ms 일한 뒤 5 ms에 다시 준비된 제어에 밀리고, 제어 5–6 ms가 끝난 다음 남은 로그 1 ms를 6–7 ms에 실행합니다.</p>
    <p className="leading-7">이 한 구간에서는 센서가 제어 때문에 1 ms 늦어도 마감을 지킵니다. 그러나 작업들의 시작 위상과 오래 잡는 자원이 달라지면 같은 평균 점유율에서도 센서의 대기는 더 길어집니다.</p>
    <p className="leading-7"><em>작업 하나의 완료 시각은 준비 시각부터 앞선 작업과 자원 대기를 따라가야 나옵니다.</em></p>
   </div><SchedulingDeadlineViz /></section>
-  <section id="utilization" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">46%는 평균 CPU 몫이지 마감 보증이 아닙니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+
+<section id="utilization" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. 46%는 평균 CPU 몫이지 마감 보증이 아닙니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
    <p className="leading-7">주기 작업의 단순 점유율은 실행 시간 C를 주기 P로 나눠 더합니다. 제어 1/5=20%, 센서 2/10=20%, 로그 3/50=6%, 총 46%입니다. 공통 50 ms 구간에서는 제어 10회×1 ms=10 ms, 센서 5회×2 ms=10 ms, 로그 1회×3 ms=3 ms로 CPU 일은 23 ms입니다.</p>
    <p className="leading-7">남은 27 ms가 한 곳에 연속으로 비어 있는 것은 아닙니다. 센서에는 매번 준비 뒤 4 ms 안에 끝내야 하는 더 좁은 조건이 있습니다. 높은 우선순위 간섭, 공유 자원 대기, 인터럽트, 버스 거래, tick과 문맥 전환 비용을 더하면 실제 완료가 달라집니다.</p>
    <p className="leading-7"><em>총량 23/50 ms와 센서 한 번의 4 ms 마감은 다른 계산입니다.</em></p>
   </div><ExplainedFormula question="가상 세 작업이 한 코어의 시간을 평균 얼마나 씁니까?" idea="각 작업의 실행 시간 몫을 자기 주기로 나눠 더합니다." formula={String.raw`U=\sum_i C_i/P_i`} annotatedFormula={String.raw`\underbrace{U}_{\text{CPU 점유율}}=\sum_i C_i/P_i`} operations={[{expression:String.raw`U_c=1/5=0.20`,annotation:"제어 작업의 몫입니다."},{expression:String.raw`U_s=2/10=0.20`,annotation:"센서 작업의 몫입니다."},{expression:String.raw`U_l=3/50=0.06`,annotation:"로그 작업의 몫입니다."},{expression:String.raw`U=0.46=46\%`,annotation:"세 몫을 더합니다."}]} terms={[{symbol:"C",name:"한 번의 실행 시간",description:"이 예제의 가정값입니다."},{symbol:"P",name:"반복 주기",description:"각 작업의 준비 간격입니다."},{symbol:"U",name:"평균 CPU 점유율",description:"개별 마감 충족 여부는 포함하지 않습니다."}]} assumptions={["한 코어에서 각 작업의 가상 CPU 시간을 고정합니다.","자원 대기·RTOS·IRQ 오버헤드는 이 평균 계산에서 제외합니다."]} interpretation="평균 CPU 점유율은 46%입니다. 이 수치만으로 센서의 4 ms 마감은 보장되지 않습니다." /></section>
-  <section id="blocking" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">낮은 우선순위 작업이 자원을 쥐면 센서가 기다립니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
-   <p className="leading-7">이번에는 앞 주기에 시작한 로그 작업이 공유 버스 보호용 뮤텍스를 갖고 있고, 0 ms 시점에 임계 구간이 2 ms 남았다고 가정합니다. 제어는 0–1 ms에 실행되고 센서는 1 ms에 뮤텍스를 요청하지만 기다립니다. 로그가 1–3 ms에 남은 임계 구간을 끝낸 뒤에야 센서가 3–5 ms에 2 ms 일합니다. 센서의 4 ms 마감을 1 ms 넘겼습니다.</p>
-   <p className="leading-7">FreeRTOS 뮤텍스의 우선순위 상속은 이때 로그의 우선순위를 잠시 올려 중간 우선순위 작업이 로그를 계속 밀어내는 문제를 줄입니다. 이미 남아 있는 2 ms 임계 구간을 없애지는 못합니다. 이 사례에서는 센서와 로그가 공유하는 자원을 짧게 잡고, 센서의 실제 응답 시간을 계측해야 합니다. ISR에서는 기다리는 뮤텍스를 잡지 않습니다.</p>
+
+<section id="blocking" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 로그가 자원을 2 ms 더 잡고 있으면 센서는 5 ms에 끝납니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+   <p className="leading-7">이번에는 작업들의 시작 시점을 달리해 앞서 시작한 로그 작업이 공유 버스 보호용 뮤텍스를 갖고 있고, 0 ms 시점에 임계 구간이 2 ms 남았다고 가정합니다. 제어는 0–1 ms에 실행되고 센서는 1 ms에 뮤텍스를 요청하지만 기다립니다. 로그가 1–3 ms에 남은 임계 구간을 끝낸 뒤에야 센서가 3–5 ms에 2 ms 일합니다. 센서의 4 ms 마감을 1 ms 넘겼습니다.</p>
+   <p className="leading-7">
+            FreeRTOS 뮤텍스의 우선순위 상속은 이때 로그의 우선순위를 잠시 올려 중간 우선순위 작업이 로그를 계속 밀어내는 문제를 줄입니다. 이미 남아 있는 2 ms 임계 구간을
+            없애지는 못합니다. 이 사례에서는 센서와 로그가 공유하는 자원을 짧게 잡고 센서의 실제 응답 시간을 계측해야 합니다. ISR에서는 기다리는 뮤텍스를 잡지 않습니다.
+          </p>
    <p className="leading-7"><em>우선순위는 실행 순서를 바꾸지만 공유 자원을 가진 시간이 사라지지는 않습니다.</em></p>
   </div><CitationBlock source="FreeRTOS, ‘FreeRTOS mutexes’ (2026)" citeKey={2} href="https://freertos.org/Real-time-embedded-RTOS-mutexes.html">FreeRTOS 공식 문서는 뮤텍스의 우선순위 상속과 ISR에서 기다리는 뮤텍스를 사용하지 않는 이유를 설명합니다. 2 ms 임계 구간과 마감 초과는 본문 가정입니다.</CitationBlock></section>
-  <section id="limits" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">실제 보장은 최악 실행·대기와 시각 기록으로 확인합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
-   <p className="leading-7">실제 I²C 거래는 다른 장치의 버스 점유와 클록 스트레칭으로 길어질 수 있습니다. 센서의 2 ms를 측정할 때 CPU 실행뿐 아니라 버스 대기·큐·인터럽트 지연도 완성 결과까지 포함해야 합니다. RTOS tick 해상도와 타이머 시각, 작업 준비·시작·완료의 로그를 함께 비교하고 가장 불리한 겹침 조건을 시험합니다.</p>
-   <p className="leading-7"><strong>읽고 나서 예측해 보세요.</strong> 세 작업의 점유율 합은? (답: 4절) 대기가 없을 때 센서는 몇 ms에 끝납니까? (답: 3절) 뮤텍스가 2 ms 남았다면 마감을 얼마나 넘습니까? (답: 5절)</p>
+
+<section id="source-selection" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 실제 커널은 비어 있지 않은 가장 높은 우선순위 목록을 고릅니다</h2><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">FreeRTOS Kernel V11.2.0 commit 0adc196d의 tasks.c를 봅니다. 아래는 configNUMBER_OF_CORES=1, configUSE_PORT_OPTIMISED_TASK_SELECTION=0인 일반 선택 경로입니다. 특정 RP2040 포트가 기본으로 이 설정을 쓴다고 가정하지는 않습니다.</p><p className="leading-7">0 ms에 우선순위 3·2·1의 작업이 모두 준비됐으므로 가장 높은 3의 목록에서 제어를 고릅니다. 제어가 일을 끝내고 다음 시각까지 기다리면 준비 목록에서 빠집니다. 다음 선택에서는 센서가 있는 2를 고릅니다.</p></div><TeachCode codeKey="select" label="준비 목록에서 작업을 고르는 실제 원문" /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
+            센서가 뮤텍스를 기다리며 잠들면 원래 우선순위가 높아도 준비 목록에는 없습니다. 이때 로그가 계속 일을 해야 자원을 돌려주고 센서가 다시 준비됩니다. 원문의 목록 선택은 앞의
+            0–1·1–3 ms 시간표와 순서가 같습니다.
+          </p></div></section>
+
+<section id="source-wake" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 다음 목표는 현재 완료 시각에 10을 더하지 않습니다</h2><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">같은 파일의 xTaskDelayUntil에 센서의 지난 목표 0 tick과 주기 10 tick을 넣겠습니다. tick 하나가 1 ms이고 이 구간에 카운터 넘침이 없다고 둡니다. 원문은 xTimeToWake = *pxPreviousWakeTime + xTimeIncrement로 다음 목표 10을 계산합니다.</p><p className="leading-7">현재가 3 tick이면 10까지 7 tick을 기다리도록 목록에 넣고 지난 목표를 10으로 바꿉니다. 깨어날 때 준비 상태가 되는 것이므로 더 높은 우선순위 일이 있으면 실제 실행은 늦을 수 있습니다.</p></div><TeachCode codeKey="wake" label="지난 목표에서 다음 목표를 만드는 원문" /><div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr><th className="p-3">호출 때 현재 tick</th><th className="p-3">지난 목표 + 주기</th><th className="p-3">원문의 결과</th></tr></thead><tbody><tr><td className="p-3">3</td><td className="p-3">0 + 10 = 10</td><td className="p-3">7 tick 대기, 지난 목표는 10</td></tr><tr><td className="p-3">12</td><td className="p-3">0 + 10 = 10</td><td className="p-3">대기하지 않음, 지난 목표는 10</td></tr><tr><td className="p-3">다음 호출이 14</td><td className="p-3">10 + 10 = 20</td><td className="p-3">6 tick 대기, 지난 목표는 20</td></tr></tbody></table></div><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">두 번째 줄에서는 목표가 이미 지났습니다. 함수가 대기하지 않고 돌아와도 놓친 10 tick의 센서 측정을 과거로 되돌려 실행할 수는 없습니다. 세 번째 줄은 늦은 작업이 12–14 tick 동안 2 tick을 사용한 뒤 다시 부르는 가정입니다.</p><p className="leading-7">반환값 pdFALSE는 이번 호출에서 미래 시각까지 기다리지 않았다는 뜻입니다. 놓친 일을 즉시 반복할지, 건너뛸지, 최신 요청 하나로 합칠지는 앱에서 정해야 합니다. 원문에는 카운터 넘침을 다루는 별도 분기도 있으며 이 표는 넘침 없는 구간만 대입했습니다.</p></div></section>
+
+<section id="source-inherit" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">13. 로그의 우선순위를 1에서 2로 올려도 남은 2 ms는 필요합니다</h2><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">센서가 뮤텍스를 요청할 때 가진 쪽은 로그입니다. xTaskPriorityInherit는 보유자의 우선순위가 요청자의 우선순위보다 작은지 검사합니다. 이번 값은 1&lt;2이므로 보유자의 우선순위를 2로 올립니다. 보유자가 준비 목록에 있으면 바뀐 우선순위 목록으로 옮깁니다.</p></div><TeachCode codeKey="inherit" label="자원을 가진 작업의 우선순위를 올리는 원문" /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
+            이 변경은 중간 순위 작업이 로그를 계속 밀어내는 문제를 줄입니다. 로그가 자원을 돌려주기까지 필요한 CPU 2 ms를 줄이는 코드는 아닙니다. 제어 1 ms와 로그의 남은 2
+            ms 뒤 센서가 2 ms를 쓰므로 완료 시각은 5 ms입니다.
+          </p><p className="leading-7">우선순위 3인 제어는 상속받은 2보다 높습니다. 더 오래 겹치면 제어가 다시 개입할 수도 있습니다. 여러 뮤텍스와 중첩 보유를 포함한 모든 실행의 상한을 이 한 분기만으로 보장할 수는 없습니다.</p></div><CitationBlock source="FreeRTOS Kernel V11.2.0 · commit 0adc196d · tasks.c" citeKey={3} href="https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/0adc196d4bd52a2d91102b525b0aafc1e14a2386/tasks.c">고정 원문 전체의 준비 작업 선택·절대 목표 계산·우선순위 상속에 본문의 3·2·1과 0·3·10·12 tick을 적용했습니다. 실제 보드의 시간 측정이나 최악 응답 상한을 검증한 결과는 아닙니다.</CitationBlock></section>
+
+<section id="limits" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">14. 실제 보장은 실행 시간과 대기 시간을 구별해 확인합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+   <p className="leading-7">실제 I²C 거래는 다른 장치의 버스 점유와 클록 스트레칭으로 길어질 수 있습니다. 앞에서 C=2 ms는 CPU를 실제 사용한 시간입니다. 준비부터 결과 완료까지의 응답 R에는 버스 대기·큐·인터럽트 지연도 포함됩니다. CPU 실행량을 셀 때 대기를 섞거나 응답 상한을 셀 때 대기를 빼지 않아야 합니다. RTOS tick 해상도와 타이머 시각, 작업 준비·시작·완료의 로그를 함께 비교하고 가장 불리한 겹침 조건을 시험합니다.</p>
+   <p className="leading-7"><strong>읽고 나서 예측해 보세요.</strong> 세 작업의 점유율 합은? (답: 9절) 대기가 없을 때 센서는 몇 ms에 끝납니까? (답: 8절) 뮤텍스가 2 ms 남았다면 마감을 얼마나 넘습니까? (답: 10·13절)</p>
    <p className="leading-7"><Link to="/electronics/embedded/serial-buses-and-tradeoffs#choice">앞 글의 버스 하한 시간</Link>은 여기의 실제 작업 경로에 더 검토해야 합니다. 다음에는 갱신 중 전원이 끊겨도 옛 펌웨어로 되돌아갈 수 있는 저장·부팅 순서를 봅니다.</p>
-  </div></section>
- </div>;
+  </div><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">작업 준비·시작·완료 시각을 기록하고 빠진 주기의 처리도 함께 확인합니다. 실제로 본 가장 긴 시간이 앞으로의 모든 최악 조건을 덮는다는 뜻은 아닙니다. 보장이 필요하면 실행과 대기 구간의 상한을 정당화하고 그 상한이 겹치는 경우까지 따져야 합니다.</p></div></section>
+</div>;
 }
