@@ -205,70 +205,78 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "cuda-sync-streams": {
-    title: "CUDA synchronization·streams 글이 소유하는 범위",
-    owns: [
-      "Warp·block·stream·device synchronization scope와 visibility·atomicity 경계",
-      "Stream in-order queue·pinned transfer·hardware overlap과 pipeline 하한",
-      "Event dependency·timing semantics와 multi-GPU resource ownership·P2P capability",
+    "title": "CUDA 작업 순서와 buffer 수명 글이 소유하는 범위",
+    "owns": [
+      "두 작업의2·5·2ms 시간표와 stream의 겹침 조건",
+      "Event 기록 세대·재사용·다중 stream 완료 계측",
+      "Block·warp 참여와 fence·named/async barrier의 서로 다른 보장",
+      "장치별 API 제약·교차event 대기와 P2P 접근 방향"
     ],
-    reuses: [
+    "reuses": [
       {
-        label: "Thread block과 warp execution",
-        href: "/cs/gpu/cuda-thread-hierarchy",
+        "label": "중간값 보존과 배치 한도",
+        "href": "/cs/gpu/cuda-register-pressure"
       },
       {
-        label: "Shared-memory staging과 bank conflict",
-        href: "/cs/gpu/cuda-shared-memory",
-      },
-      {
-        label: "GPU–HCA·collective topology",
-        href: "/cs/gpu/rdma-roce#gpudirect-topology",
-      },
+        "label": "메모리 계층과 접근",
+        "href": "/cs/gpu/gpu-memory-hierarchy-and-roofline"
+      }
     ],
-    evidence: [
+    "evidence": [
       {
-        kind: "standard",
-        rule: "Default stream·event·multi-GPU API semantics는 CUDA version·creation flag·owning device와 함께 기록한다.",
+        "kind": "primary-source",
+        "rule": "CUDA13.0.2/PTX9.0과 고정 cuda-samples 전체 원문에서 보장·대상·기본 모드를 확인합니다."
       },
       {
-        kind: "project-measurement",
-        rule: "Overlap과 scale-out은 Nsight timeline·copy/compute/idle time·link counter·correctness reference로 실측한다.",
+        "kind": "standard",
+        "rule": "같은 값의 생산·소비·재사용 순서와 API별 장치 조건을 구별합니다. Fence와 barrier, shuffle과 syncwarp를 섞지 않습니다."
       },
-    ],
+      {
+        "kind": "project-measurement",
+        "rule": "CPU 계산은 가정 시간표와7→8만 검산합니다. 실제GPU·CUDA sample 실행이나 특정장치 성능은 주장하지 않습니다."
+      }
+    ]
   },
   "math-differential-equations-numerical-solvers": {
-    title: "미분방정식·수치적분 글이 소유하는 범위",
-    owns: [
-      "초기값 문제·vector field·trajectory의 구분",
-      "Euler·Heun method의 update와 local/global discretization error",
-      "Linear test equation에서 step size가 만드는 numerical stability 조건",
-      "ODE와 Itô SDE의 경계·Brownian increment·Euler–Maruyama의 최소 해석",
+    "title": "미분방정식·수치적분 글이 소유하는 범위",
+    "owns": [
+      "초기값·변화율·경로와 존재·유일성의 경계",
+      "같은 감소 사례의 Euler·Heun 갱신, 오차 정의와 안정성",
+      "고정 원문의 변화량·상태 갱신, 내부 간격·출력 보간·적응 허용오차",
+      "Itô SDE의 Brownian 증가량, Euler–Maruyama와 상태 분산의 차이"
     ],
-    reuses: [
+    "reuses": [
       {
-        label: "함수·미분·local linearity",
-        href: "/cs/ai/math-functions-derivatives-gradients",
+        "label": "함수·미분·local linearity",
+        "href": "/cs/ai/math-functions-derivatives-gradients"
       },
       {
-        label: "Variance·standard deviation",
-        href: "/cs/ai/math-variance-sampling",
+        "label": "Variance·standard deviation",
+        "href": "/cs/ai/math-variance-sampling"
       },
-      { label: "지수함수", href: "/cs/ai/math-exponents-logarithms" },
       {
-        label: "Diffusion·score·flow의 적용",
-        href: "/cs/ai/diffusion-continuous-time",
+        "label": "지수함수",
+        "href": "/cs/ai/math-exponents-logarithms"
       },
+      {
+        "label": "Diffusion·score·flow의 적용",
+        "href": "/cs/ai/diffusion-continuous-time"
+      }
     ],
-    evidence: [
+    "evidence": [
       {
-        kind: "standard",
-        rule: "수치해석의 order와 stability는 method·regularity·norm·step-size 조건을 함께 적고 보편적 정확도 보장으로 확대하지 않는다.",
+        "kind": "standard",
+        "rule": "차수와 안정성은 방법·매끄러움·오차 전파·시간 구간의 조건을 명시하고 국소 오차의 정규화 정의를 확인합니다."
       },
       {
-        kind: "standard",
-        rule: "ODE·Itô SDE·discretization의 시간·state 단위와 deterministic/stochastic trajectory를 구분한다.",
+        "kind": "standard",
+        "rule": "고정 원문의 버전·전체 파일·호출 경로에 같은 사례를 적용하며 수동 추적과 실제 라이브러리 실행을 구분합니다."
       },
-    ],
+      {
+        "kind": "standard",
+        "rule": "Itô 해석의 시간·상태 단위와 g²h 또는 hGGᵀ를 확인하고 Brownian 증가량 합과 최종 상태의 분산을 구분합니다."
+      }
+    ]
   },
   "agent-loop-foundations": {
     title: "Agent loop 기초 글이 소유하는 범위",
@@ -6751,24 +6759,41 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "extension-fields": {
-    title: "확장체 tower 구현 글이 소유하는 범위",
-    owns: [
-      "Fp→Fp²→Fp⁶→Fp¹² coefficient layout과 pinned non-residue/tower identity",
-      "Quadratic Karatsuba·denominator inversion과 cubic reduction schedule",
-      "Tower-basis Frobenius coefficient table과 비용 장부",
-      "Irreducibility·basis·cycle·serialization·G2/pairing parity release gate",
+    "title": "같은 확장체 곱의 구현과 표현이 소유하는 범위",
+    "owns": [
+      "A·B의 같은 곱을 2×3×2 계수와 실제 곱셈 분기에서 추적",
+      "일반 Karatsuba·노름 역원과 실제 Fq2 합산 분기의 구별",
+      "Fq6 축약·전용 상수 곱·Frobenius 표와 직접 거듭제곱 비교",
+      "계수 순서·바이트 형식 및 산술과 G2·GT 검증의 경계"
     ],
-    reuses: [
-      { label: "Irreducible quotient extension field", href: "/cs/crypto/finite-field-theory#extension-field" },
-      { label: "BN254 G2 twist·subgroup", href: "/cs/crypto/elliptic-curves#g1-g2-bn254" },
-      { label: "Miller loop·final exponentiation", href: "/cs/crypto/pairing" },
+    "reuses": [
+      {
+        "label": "기약식·확장 차수와 역원",
+        "href": "/cs/crypto/extension-field-theory"
+      },
+      {
+        "label": "BN254의 G2와 부분군",
+        "href": "/cs/crypto/elliptic-curves#g1-g2-bn254"
+      },
+      {
+        "label": "Miller loop와 final exponentiation",
+        "href": "/cs/crypto/pairing#final-exp"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "Concrete coefficient order·non-residue·Frobenius table은 ark-bn254 0.5.0과 curves SHA e2d16a27… snapshot에 귀속한다." },
-      { kind: "standard", rule: "EIP-197은 G2/Fp² wire와 pairing contract 근거이며 내부 Fp⁶/Fp¹² layout 표준으로 확대하지 않는다." },
-      { kind: "project-claim", rule: "Subfield multiplication count를 end-to-end speedup·constant-time·모든 BN254 implementation의 보편 비용으로 표현하지 않는다." },
-      { kind: "project-measurement", rule: "Wrong basis/non-residue/order·Frobenius cycle·independent pairing parity 뒤 mul/square/map 비용을 비교한다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "algebra commit 7ad88c46의 ark-ff 0.5.0과 curves workspace의 ark-bn254 0.5.0-alpha.0을 같은 Cargo.lock으로 실행했습니다. 이전 curves/e2d16a27은 0.4.0이므로 0.5.0 근거로 섞지 않습니다."
+      },
+      {
+        "kind": "standard",
+        "rule": "EIP-197은 Fₚ² 좌표 순서와 G2·페어링 판정 입력의 근거입니다. 내부 Fq12의 384바이트 표현을 표준화하지 않습니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "실제 Rust 검증은144개 기저 곱·16개 추가 곱·15개 Frobenius 대조·역원·기약성 상수·직렬화입니다. 전체 페어링이나 EVM을 실행하지 않았고 속도·부채널을 측정하지 않았습니다."
+      }
+    ]
   },
   "finite-field-theory": {
     title: "유한체 이론 글이 소유하는 범위",
@@ -7893,22 +7918,42 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "frobenius-optimization": {
-    title: "Frobenius 최적화 글이 소유하는 범위",
-    owns: [
-      "Characteristic-p Frobenius automorphism의 직관·증명과 Fp^k cycle",
-      "Embedding-degree 12 final exponent의 easy/hard factorization과 적용 전제",
-      "무료라는 표현을 coefficient transform의 상대 비용으로 제한하는 경계",
+    "title": "같은 p제곱과 기저 변경에서 큰 지수로 이어지는 범위",
+    "owns": [
+      "작은 1+u의 직접 세제곱과 소수 특성의 자기동형 증명",
+      "원복·기저 변경·잘못 복사한 표와 직접 지수 대조",
+      "같은 값의 노름 1 변환과 차수 12 마지막 지수의 인수분해",
+      "실제 원문 pow 호출 수와 성능 측정의 경계",
+      "체가 아닌 두 몫에서 서로 다른 단사성 결과"
     ],
-    reuses: [
-      { label: "Irreducible quotient extension field", href: "/cs/crypto/finite-field-theory#extension-field" },
-      { label: "Tower-basis Frobenius coefficient table", href: "/cs/crypto/extension-fields#frobenius-optimization" },
-      { label: "Pairing final exponentiation 전체 경로", href: "/cs/crypto/pairing#final-exp" },
+    "reuses": [
+      {
+        "label": "기약 다항식과 확장체의 역원",
+        "href": "/cs/crypto/extension-field-theory"
+      },
+      {
+        "label": "실제 BN254 탑과 층별 배율",
+        "href": "/cs/crypto/extension-fields#frobenius-optimization"
+      },
+      {
+        "label": "Miller loop와 전체 페어링",
+        "href": "/cs/crypto/pairing#final-exp"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "Final exponent 최적화는 Scott et al.의 curve·factorization 범위에 귀속한다." },
-      { kind: "primary-source", rule: "Degree·table dispatch 주장은 ark-ff 0.5.0 commit 7ad88c46… source에 고정한다." },
-      { kind: "project-measurement", rule: "Basis·cycle·independent exponent parity 뒤 constant mul·load·cycle과 end-to-end final-exp를 측정한다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "algebra commit 7ad88c46의 ff 0.5.0과 curves workspace의 bn254 0.5.0-alpha.0을 같은 lock으로 실행합니다. 원문 pow는 첫 1비트도 처리하므로 호출 장부에 이를 포함합니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "Scott 등의 공식 PDF 3·5절의 인수분해·노름 조건·BN λ 다항식을 사용합니다. 최적 addition chain과 속도 개선율은 재현 범위에 넣지 않습니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "실제 실행은 작은 아홉 원소·81쌍·기저 변경·비체 반례와 큰 BN254의 직접 지수 비교입니다. 전체 페어링·성능·부채널 검증은 실행하지 않았습니다."
+      }
+    ]
   },
   "claw-worker-boot": {
     title: "Claw worker boot·trust·prompt delivery 글이 소유하는 범위",
@@ -8035,27 +8080,50 @@ export const EDITORIAL_BOUNDARIES = {
 ],
   },
   "cuda-register-pressure": {
-    title: "CUDA register live range·residency·spill 글이 소유하는 범위",
-    owns: [
-      "Thread-local value의 live range overlap과 compiler register allocation",
-      "Thread·warp·SM register 예산에서 resident warp 상한으로 가는 계산",
-      "Residency 감소 뒤 local-address spill·cache·device-memory로 이어지는 경로",
-      "SM register file 예산과 warp 단위 256개 반올림·4의 배수 내림이라는 allocation granularity 계산",
-      "Register reuse와 rematerialization이 spill보다 싼 조건",
-      "Theoretical(resource-limited) occupancy와 achieved occupancy의 정의, tail effect·warp 불균형이 만드는 차이",
-],
-    reuses: [
-      { label: "GPU occupancy 정본", href: "/cs/gpu/gpu-architecture#gpu-latency-hiding-occupancy" },
-      { label: "GPU memory hierarchy", href: "/cs/gpu/gpu-architecture#gpu-memory-traffic-hierarchy" },
-      { label: "Warp·SM 실행 정본", href: "/cs/gpu/cuda-thread-hierarchy#overview" },
-      { label: "CUDA measurement protocol", href: "/cs/gpu/cuda-perf-analysis#measurement-protocol" },
-      { label: "ptxas register allocation 정본", href: "/cs/gpu/cuda-compilation-and-isa-analysis#ptxas-optimizations" },
-],
-    evidence: [
-      { kind: "standard", rule: "Register·local memory·residency 표현은 CUDA Programming Guide 12.8.1과 target compute capability·compiler report에 고정한다." },
-      { kind: "primary-source", rule: "Profiler resource·scheduler·memory metric은 Nsight Compute 2025.1 semantics에 귀속한다." },
-      { kind: "project-measurement", rule: "Registers/thread·spill·resident/eligible warps와 kernel·end-to-end elapsed를 같은 candidate receipt에서 비교한다." },
+    "title": "Register 배치와 spill 글이 소유하는 범위",
+    "owns": [
+      "값의 생존 구간과 register 재사용·재계산",
+      "CC 7.0의 warp 단위 예약과 block 수 계산 및 다른 대상의 한계",
+      "Theoretical·achieved·eligible와 마지막 일감 및 metric 분모의 차이",
+      "Local과 opt-in shared spill의 범위 및 실제 계층별 전송량",
+      "고정 simpleOccupancy 원문에 조건부 숫자를 대입하고 실제 측정과 비교하는 과정"
     ],
+    "reuses": [
+      {
+        "label": "GPU occupancy 정본",
+        "href": "/cs/gpu/gpu-architecture#gpu-latency-hiding-occupancy"
+      },
+      {
+        "label": "GPU memory hierarchy",
+        "href": "/cs/gpu/gpu-architecture#gpu-memory-traffic-hierarchy"
+      },
+      {
+        "label": "Warp·SM 실행 정본",
+        "href": "/cs/gpu/cuda-thread-hierarchy#overview"
+      },
+      {
+        "label": "CUDA measurement protocol",
+        "href": "/cs/gpu/cuda-perf-analysis#measurement-protocol"
+      },
+      {
+        "label": "ptxas register allocation 정본",
+        "href": "/cs/gpu/cuda-compilation-and-isa-analysis#ptxas-optimizations"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "CUDA 13.0.2 Guide·PTX 9.0과 고정 cuda-samples의 조건을 보존합니다. CC 7.0 주사례와 sm75+의 새 기능 대상을 구별합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "CPU에서 standalone calculator에 입력한 가정 속성의 자원 숫자만 실행했습니다. GPU 컴파일이나 실행 시간을 측정한 결과로 부르지 않습니다."
+      },
+      {
+        "kind": "standard",
+        "rule": "논리 local 요청량과 계층별 전송량 및 처리 시간을 구별합니다. Register 수나 occupancy가 곧 성능은 아닙니다."
+      }
+    ]
   },
   "cuda-kernel-fusion": {
     title: "CUDA small fusion·Megakernel 글이 소유하는 범위",
@@ -9828,27 +9896,59 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "prefill-decode-phase-dynamics": {
-    title: "Prefill 은 compute-bound, decode 는 memory-bound 글이 소유하는 범위",
-    owns: [
-      "Prefill 과 decode 의 arithmetic intensity 계산과 ridge point 비교",
-      "섞인 batch 의 step 시간을 memory 항과 compute 항의 max 로 모델링한 간섭 mechanism",
-      "Decode 우선의 roofline 근거와 TPOT 상한에서 chunk 크기를 역산하는 절차",
-      "n* = P/(d·N) 를 넘는 long-context prefill 의 n² 지배 구간과 chunk 재읽기 비용",
-      "Prefill 최적화를 kernel·chunking·scheduling·분리 배치 층으로 나누는 지도",
+    "title": "Prefill·decode의 작업 장부와 간섭 글이 소유하는 범위",
+    "owns": [
+      "같은 작업의 연산·전송 범위와 연산 집약도·ridge 비교, 단계 이름만으로 병목을 정할 수 없는 경계",
+      "max(F/R,M/D) 시간 하한과 실제 측정·client 지연의 구분",
+      "Sarathi의 decode 우선과 고정 vLLM V1의 running 순회·waiting chunking의 실제 차이",
+      "측정한 별도 배포에서 조각 크기 후보를 계산한 뒤 tail 지연과 TTFT로 검증하는 절차",
+      "긴 문맥의 causal 유효 연산 n(n+1)과 n² 주도항 및 조각별 이전 KV 재읽기 비용",
+      "실행 경로·배정량과 순서·분리 배치의 다른 비용과 측정 대상"
     ],
-    reuses: [
-      { label: "Prefill·decode phase 구분", href: "/cs/ai/vllm-serving#prefill-decode" },
-      { label: "Chunked prefill interleaving 과 scheduler 정책", href: "/cs/ai/vllm-scheduler#prefill-decode" },
-      { label: "Roofline 측정 장부", href: "/cs/gpu/cuda-perf-analysis#throughput-ledger" },
-      { label: "KV cache shape 와 VRAM budget", href: "/cs/ai/model-vram-budgeting#kv-state" },
-      { label: "Scheduling step 조립", href: "/cs/ai/continuous-batching-step-anatomy" },
-      { label: "TTFT·TPOT 지표와 SLO", href: "/cs/ai/serving-latency-metrics-and-slo" },
+    "reuses": [
+      {
+        "label": "입력과 출력 생성의 실행 단계",
+        "href": "/cs/ai/vllm-serving#prefill-decode"
+      },
+      {
+        "label": "고정 scheduler의 진행 장부와 정책",
+        "href": "/cs/ai/vllm-scheduler"
+      },
+      {
+        "label": "같은 GPU 작업의 Roofline 장부",
+        "href": "/cs/gpu/cuda-perf-analysis#throughput-ledger"
+      },
+      {
+        "label": "층별 KV shape와 byte",
+        "href": "/cs/ai/kv-cache-fundamentals#kv-shape-formula"
+      },
+      {
+        "label": "한 scheduling step의 배정",
+        "href": "/cs/ai/continuous-batching-step-anatomy"
+      },
+      {
+        "label": "관측 사건·지표와 SLO",
+        "href": "/cs/ai/serving-latency-metrics-and-slo"
+      }
     ],
-    evidence: [
-      { kind: "standard", rule: "모든 수치는 7B dense FP16·H100 급 가정의 roofline 하한 계산이며 특정 장비 실측으로 적지 않는다." },
-      { kind: "primary-source", rule: "Sarathi-Serve·DistServe 의 배수는 저자 자기보고로 표기하고 해당 model·hardware·workload 범위로 한정한다." },
-      { kind: "project-claim", rule: "미공개 model 의 long-context prefill 체감치는 사실로 쓰지 않고 n* 와 F_eff 조건식으로만 설명한다." },
-    ],
+    "evidence": [
+      {
+        "kind": "standard",
+        "rule": "작은 전체 작업 모형과 별도7B dense 장부는 가정이다. HBM 경계·byte 단위·연산 범위를 맞추고 peak 속도의 시간 하한을 실제 응답이나 상한으로 바꾸지 않는다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "vLLM v0.27.1 commit6e448d0와 Transformers v5.15.0 commit5eddc12의 전체 원문에 작은 사례를 넣는다. 문서 요약과 실제 running 순서·추가 제약을 구분한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "14.2 ms는 MHA14.4357 ms 하한과 다른 배포의 가정 관측이다.448은 별도16배수 탐색 후보이며 실제 측정이나 보증된 최적값으로 부르지 않는다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "Roofline의 속도 상한과 Sarathi·DistServe의 알고리즘·배수는 각 원문의 범위로 제한한다. KV 전달·반복 읽기·부하 분포·평가 SLO를 유지한다."
+      }
+    ]
   },
   "sm-warp-scheduling-and-issue": {
     "title": "SM 내부 warp scheduling 글이 소유하는 범위",
@@ -10083,27 +10183,55 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "disaggregated-prefill-decode-serving": {
-    title: "Prefill·decode 분리 serving 글이 소유하는 범위",
-    owns: [
-      "같은 model의 replica 사이에서 요청 목적지를 고르는 replica routing과 cache-aware load balancing의 hit·load 맞바꿈",
-      "Prefill–decode disaggregation의 정의, 이득과 비용, prefill worker와 decode worker의 역할 구분",
-      "KV cache transfer의 절차와 요청당 전송 시간·초당 byte 흐름을 link 대역폭과 비교하는 판정식",
-      "요청률과 phase별 GPU 시간으로 두 풀의 GPU 수를 정하는 식과 heterogeneous serving의 근거",
+    "title": "분리 서빙에서 한 요청의 KV 인계와 비용",
+    "owns": [
+      "고정한 proxy의 P·D 요청 변환과 첫 출력 전달 사건 및 마지막 입력 재계산",
+      "KV의 목적지 배정·READ·완료 통지·원본 보관 기한과 로컬 cache 재사용 경로",
+      "캐시 예상과 실제 hit, load와 남은 작업량을 구분한 replica routing",
+      "층별 전송의 준비·통로 대기와 직렬 전송 시간표 및 실제 NIXL pull과의 경계",
+      "논리 payload·실제 byte·한 요청 지연·초당 용량을 분리한 전송 장부",
+      "단계별 GPU 시간과 복사본 단위 용량 후보·이종 배치의 동일조건 비교"
     ],
-    reuses: [
-      { label: "Prefill compute-bound·decode memory-bound와 phase 간섭", href: "/cs/ai/prefill-decode-phase-dynamics" },
-      { label: "한 replica 안의 scheduler와 chunked prefill", href: "/cs/ai/vllm-scheduler" },
-      { label: "Token당 KV byte", href: "/cs/ai/kv-cache-fundamentals" },
-      { label: "Capability-first routing과 Little's law", href: "/cs/ai/llm-serving-ops" },
-      { label: "DP·TP·PP replica layout", href: "/cs/ai/vllm-serving" },
-      { label: "Automatic prefix cache의 hit 범위", href: "/cs/ai/vllm-paged-attention" },
-      { label: "Replica 수와 context·concurrency admission", href: "/cs/ai/llm-serving-capacity" },
+    "reuses": [
+      {
+        "label": "단계별 계산·전송 조건과 간섭",
+        "href": "/cs/ai/prefill-decode-phase-dynamics"
+      },
+      {
+        "label": "층별 KV shape와 논리 byte",
+        "href": "/cs/ai/kv-cache-fundamentals#kv-shape-formula"
+      },
+      {
+        "label": "실제 메모리 배정과 회수",
+        "href": "/cs/ai/serving-memory-admission-and-preemption"
+      },
+      {
+        "label": "관측 사건과 지연 목표",
+        "href": "/cs/ai/serving-latency-metrics-and-slo"
+      },
+      {
+        "label": "로컬 prefix cache의 실제 hit 범위",
+        "href": "/cs/ai/vllm-paged-attention"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "논문의 throughput·SLO 배수는 각 논문의 model·cluster 범위 안의 저자 자기보고로만 인용하고 서로 비교하지 않는다." },
-      { kind: "project-claim", rule: "512 MiB·0.9 ms·12 GPU 같은 수치는 본문이 명시한 예시 구성으로 직접 계산한 값임을 밝히고 논문 값과 섞지 않는다." },
-      { kind: "standard", rule: "kv_role·disaggregation-mode·balance threshold 같은 설정 이름과 기본값은 공식 문서·README에서만 가져오고 version 의존성을 적는다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "vLLM v0.27.1 commit6e448d0과 SGLang commit35f3c96의 전체 원문을 고정하고 proxy·connector·scheduler·routing의 실제 분기를 읽는다."
+      },
+      {
+        "kind": "standard",
+        "rule": "기본값과 주석 요약은 실제 실행 코드·배포 설정과 대조한다. 비동기와 층별 전송, 입력 ID와 생성 출력을 구분한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "R의128B·4/6/8ms와 pool12:8 및16GPU는 설명용 가정이다. 평균 용량과 payload 하한을 실제 SLO 보장이나 성능 측정으로 바꾸지 않는다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "Splitwise·DistServe의 평가 조건과 Mooncake FAST2025/arXiv v4의 서로 다른 모델·지표·배수를 보존한다. 과거 비교를 현재 엔진의 보편적 성능으로 확대하지 않는다."
+      }
+    ]
   },
   "tensor-and-pipeline-parallel-inference": {
     title: "Tensor·pipeline·data·context parallel 추론 글이 소유하는 범위",
@@ -14683,6 +14811,38 @@ export const EDITORIAL_BOUNDARIES = {
       {
         "kind": "project-measurement",
         "rule": "신호표·패리티·압축값은 교육용 가정입니다. 상용 장치의 거리·키율·보안 인증을 측정하지 않았습니다."
+      }
+    ]
+  },
+  "extension-field-theory": {
+    "title": "작은 확장체의 구성 조건과 실제 표현이 소유하는 범위",
+    "owns": [
+      "기약식·최소다항식과 유일한 기저 표현, 모든 0 아닌 값의 역원",
+      "확장 차수의 곱과 Frobenius의 원복·직접 거듭제곱 대조",
+      "같은 체의 다른 기저와 실제 바이트 해석, 잘못된 구성의 실패"
+    ],
+    "reuses": [
+      {
+        "label": "유한체와 다항식의 기초",
+        "href": "/cs/crypto/finite-field-theory"
+      },
+      {
+        "label": "실제 곡선의 확장체 구성",
+        "href": "/cs/crypto/extension-fields"
+      },
+      {
+        "label": "Frobenius의 최적화와 큰 체",
+        "href": "/cs/crypto/frobenius-optimization"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "HAC의 실제 열람한 정리·역원 절차와 고정 ark-ff 원문을 작은 F₉ 사례에 적용합니다. 열람하지 못한 교재 전체를 직접 검증한 정본으로 표시하지 않습니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "실제 Rust 실행은 자체 F₃/β2 설정의 81개 곱·여덟 역원·아홉 Frobenius와 잘못된 구성입니다. F₈₁ 산술과 기저는 별도 Python 정수 계산이며 큰 곡선의 실행 시간·부채널 검증과 구분합니다."
       }
     ]
   },

@@ -151,53 +151,47 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/ai/math-matrices-svd#low-rank"
   },
   "radian-measure": {
-    id: "radian-measure",
-    domain: "mathematics",
-    label: "Radian measure",
-    definition:
-      "중심각이 잘라낸 호의 길이를 반지름으로 나누어 회전량을 나타내는 각도 단위이며, 한 바퀴는 2π radian입니다.",
-    canonicalHref: "/cs/ai/math-complex-numbers-oscillations#radians",
+    "id": "radian-measure",
+    "domain": "mathematics",
+    "label": "Radian measure",
+    "definition": "같은 단위의 방향 있는 호 길이를 양의 반지름으로 나눈 각도 단위입니다. 한 바퀴는 2π rad이며 누적 각도는 현재 방향을 넘어 회전 횟수까지 나타낼 수 있습니다.",
+    "canonicalHref": "/cs/ai/math-complex-numbers-oscillations#radians"
   },
   "unit-circle-trigonometry": {
-    id: "unit-circle-trigonometry",
-    domain: "mathematics",
-    label: "Unit-circle sine · cosine",
-    definition:
-      "단위원에서 양의 가로축으로부터 θ만큼 회전한 점의 가로 좌표를 cos θ, 세로 좌표를 sin θ로 정의하는 표현입니다.",
-    canonicalHref: "/cs/ai/math-complex-numbers-oscillations#unit-circle",
+    "id": "unit-circle-trigonometry",
+    "domain": "mathematics",
+    "label": "Unit-circle sine · cosine",
+    "definition": "양의 가로축에서 실수 라디안 θ만큼 반시계로 회전한 단위원 점의 가로·세로 좌표를 각각 cos θ와 sin θ로 정의합니다. 제곱합은 1이며 θ에 2π의 정수배를 더하면 같은 점입니다.",
+    "canonicalHref": "/cs/ai/math-complex-numbers-oscillations#unit-circle"
   },
   "complex-number": {
-    id: "complex-number",
-    domain: "mathematics",
-    label: "Complex number · complex plane",
-    definition:
-      "a+bi와 i²=−1의 곱셈 규칙으로 평면 좌표·magnitude·phase를 한 수처럼 계산하는 수 체계입니다.",
-    canonicalHref: "/cs/ai/math-complex-numbers-oscillations#complex-plane",
+    "id": "complex-number",
+    "domain": "mathematics",
+    "label": "Complex number · complex plane",
+    "definition": "실수 a,b의 좌표를 a+bi로 쓰고 i²=−1의 곱셈을 사용하는 수 체계입니다. 곱셈은 크기 변화와 회전을 합성하며 i는 반시계 1/4바퀴 회전입니다. 0의 위상은 유일하게 정의되지 않습니다.",
+    "canonicalHref": "/cs/ai/math-complex-numbers-oscillations#complex-plane"
   },
   "convergent-power-series": {
-    id: "convergent-power-series",
-    domain: "mathematics",
-    label: "Convergent power series",
-    definition:
-      "변수의 거듭제곱 항을 계수와 함께 더하고, 유한 부분합의 극한으로 함수 값을 정의하는 급수 표현입니다.",
-    canonicalHref: "/cs/ai/math-complex-numbers-oscillations#euler-formula",
+    "id": "convergent-power-series",
+    "domain": "mathematics",
+    "label": "Convergent power series",
+    "definition": "거듭제곱 항을 계수와 함께 더한 유한 부분합이 극한에 수렴하는 급수입니다. 입력에 따라 수렴 여부를 확인해야 하며 지수·사인·코사인의 급수는 모든 유한한 복소수 입력에서 절대수렴합니다.",
+    "canonicalHref": "/cs/ai/math-complex-numbers-oscillations#series"
   },
   "euler-formula": {
-    id: "euler-formula",
-    kind: "theorem",
-    domain: "mathematics",
-    label: "Euler formula",
-    definition:
-      "복소 지수 e^{iθ}가 단위원 위 θ 회전의 좌표 cos θ+i sin θ와 같다는 항등식입니다.",
-    canonicalHref: "/cs/ai/math-complex-numbers-oscillations#euler-formula",
+    "id": "euler-formula",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Euler formula",
+    "definition": "실수 라디안 θ에 대해 e^(iθ)=cos θ+i sin θ로 단위원의 좌표를 나타내는 항등식입니다. 지수 급수의 절대수렴과 짝수·홀수 항의 분리로 유도하며 현재 위상은 2π의 정수배 차이를 구별하지 않습니다.",
+    "canonicalHref": "/cs/ai/math-complex-numbers-oscillations#euler-formula"
   },
   "roots-of-unity": {
-    id: "roots-of-unity",
-    domain: "mathematics",
-    label: "Roots of unity",
-    definition:
-      "N번 곱하면 1이 되는 복소수들로, 단위원을 N등분한 회전점이며 DFT basis와 FFT의 주기·대칭을 만듭니다.",
-    canonicalHref: "/cs/ai/math-complex-numbers-oscillations#roots-of-unity",
+    "id": "roots-of-unity",
+    "domain": "mathematics",
+    "label": "Roots of unity",
+    "definition": "양의 정수 N에 대해 z^N=1을 만족하는 N개의 복소수입니다. 서로 다른 정수 회전 번호를 N으로 나눈 나머지가 다르면 관련 N개 항의 합이 지워집니다. DFT의 부호와 정규화는 별도로 정합니다.",
+    "canonicalHref": "/cs/ai/math-complex-numbers-oscillations#roots-of-unity"
   },
   "bit-byte": {
     id: "bit-byte",
@@ -1923,80 +1917,64 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/denoising-masked-autoencoders#masking",
   },
   "initial-value-problem": {
-    id: "initial-value-problem",
-    domain: "mathematics",
-    label: "Initial-value problem",
-    definition:
-      "State의 순간 변화율을 정하는 differential equation과 특정 시점의 시작값을 함께 주어 하나의 trajectory를 결정하는 문제입니다.",
-    canonicalHref:
-      "/cs/ai/math-differential-equations-numerical-solvers#initial-value",
+    "id": "initial-value-problem",
+    "domain": "mathematics",
+    "label": "Initial-value problem",
+    "definition": "미분방정식과 특정 시각의 시작값을 함께 주어 경로를 구하는 문제입니다. 해의 존재·유일성과 원하는 시간까지의 연장은 별도 조건을 확인해야 합니다.",
+    "canonicalHref": "/cs/ai/math-differential-equations-numerical-solvers#initial-value"
   },
   "vector-field-trajectory": {
-    id: "vector-field-trajectory",
-    domain: "mathematics",
-    label: "Vector field and trajectory",
-    definition:
-      "Vector field는 state-space 각 위치의 이동 방향을 정하는 함수이고, trajectory는 한 initial state에서 그 방향을 따라 시간에 따라 움직인 경로입니다.",
-    canonicalHref:
-      "/cs/ai/math-differential-equations-numerical-solvers#initial-value",
+    "id": "vector-field-trajectory",
+    "domain": "mathematics",
+    "label": "Vector field and trajectory",
+    "definition": "벡터장은 시각·상태에서의 변화율을 정하는 함수이며 궤적은 특정 시작값에서 그 규칙을 따라간 경로입니다. 하나의 변화율 출력과 전체 경로를 구별합니다.",
+    "canonicalHref": "/cs/ai/math-differential-equations-numerical-solvers#initial-value"
   },
   "explicit-euler-method": {
-    id: "explicit-euler-method",
-    kind: "method",
-    domain: "mathematics",
-    label: "Explicit Euler method",
-    definition:
-      "현재 state의 derivative를 한 번 평가하고 step size를 곱해 다음 state로 이동하는 1차 numerical integration method입니다.",
-    canonicalHref:
-      "/cs/ai/math-differential-equations-numerical-solvers#euler-method",
+    "id": "explicit-euler-method",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Explicit Euler method",
+    "definition": "현재 시각·상태의 변화율에 간격 h를 곱해 현재 상태에 더하는 명시적 수치해법입니다. 필요한 매끄러움과 오차 전파 조건 아래 고정 시간의 전체 오차가 O(h)입니다.",
+    "canonicalHref": "/cs/ai/math-differential-equations-numerical-solvers#euler-method"
   },
   "numerical-discretization-error": {
-    id: "numerical-discretization-error",
-    domain: "mathematics",
-    label: "Numerical discretization error",
-    definition:
-      "연속 경로를 유한한 step으로 근사하면서 생기는 local truncation error와 그것이 여러 step에 누적된 global error입니다.",
-    canonicalHref:
-      "/cs/ai/math-differential-equations-numerical-solvers#euler-method",
+    "id": "numerical-discretization-error",
+    "domain": "mathematics",
+    "label": "Numerical discretization error",
+    "definition": "연속 경로를 유한 단계로 근사하며 생기는 오차입니다. 정확한 값에서 출발한 한 단계 결손과 누적된 전체 오차를 나누고, 국소 절단 오차를 h로 나누는 정의인지 확인합니다.",
+    "canonicalHref": "/cs/ai/math-differential-equations-numerical-solvers#error"
   },
   "euler-stability-condition": {
-    id: "euler-stability-condition",
-    kind: "theorem",
-    domain: "mathematics",
-    label: "Euler stability condition",
-    definition:
-      "Decay test equation x′=−λx에 explicit Euler를 적용할 때 amplification factor |1−hλ|가 1보다 작아야 numerical state가 줄어든다는 조건입니다.",
-    canonicalHref:
-      "/cs/ai/math-differential-equations-numerical-solvers#stability",
+    "id": "euler-stability-condition",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Euler stability condition",
+    "definition": "h>0, λ>0인 x′=−λx의 Euler 반복에서 비영 시작값의 크기가 0으로 가는 조건은 |1−hλ|<1, 즉 0<hλ<2입니다. 안정성은 정확도와 구별하며 x₀=0은 별도입니다.",
+    "canonicalHref": "/cs/ai/math-differential-equations-numerical-solvers#stability"
   },
   "heun-second-order-method": {
-    id: "heun-second-order-method",
-    kind: "method",
-    domain: "mathematics",
-    label: "Heun second-order method",
-    definition:
-      "출발점 slope로 끝점을 예측한 뒤 예상 끝점 slope를 다시 계산해 두 기울기의 평균으로 update하는 2차 Runge–Kutta method입니다.",
-    canonicalHref:
-      "/cs/ai/math-differential-equations-numerical-solvers#heun-runge-kutta",
+    "id": "heun-second-order-method",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Heun second-order method",
+    "definition": "현재 기울기로 예상 끝점을 만든 뒤 그곳의 기울기와 평균해 갱신하는 명시적 2단계 Runge–Kutta 방법입니다. 적절한 매끄러움 아래 2차이며 추가 평가와 안정성 조건은 별도입니다.",
+    "canonicalHref": "/cs/ai/math-differential-equations-numerical-solvers#heun-runge-kutta"
   },
   "stochastic-differential-equation": {
-    id: "stochastic-differential-equation",
-    domain: "mathematics",
-    label: "Stochastic differential equation",
-    definition:
-      "Deterministic drift에 Brownian-motion increment가 더해져 같은 initial state에서도 여러 random sample path를 만드는 연속시간 변화 모델입니다.",
-    canonicalHref:
-      "/cs/ai/math-differential-equations-numerical-solvers#ode-sde-boundary",
+    "id": "stochastic-differential-equation",
+    "domain": "mathematics",
+    "label": "Stochastic differential equation",
+    "definition": "이 글에서는 평균 변화 f dt와 Brownian 증가량에 의한 g dW를 결합하는 Itô SDE를 다룹니다. 스칼라 Euler–Maruyama 한 단계의 조건부 잡음 분산은 g²h이고 상태의 누적 분산과 다릅니다.",
+    "canonicalHref": "/cs/ai/math-differential-equations-numerical-solvers#ode-sde-boundary"
   },
   "brownian-increment-scaling": {
-    id: "brownian-increment-scaling",
-    kind: "theorem",
-    domain: "mathematics",
-    label: "Brownian increment scaling",
-    definition:
-      "시간 간격 Δt의 Brownian increment가 평균 0, 분산 Δt인 Gaussian이므로 표준편차와 typical magnitude가 √Δt에 비례하는 성질입니다.",
-    canonicalHref:
-      "/cs/ai/math-differential-equations-numerical-solvers#ode-sde-boundary",
+    "id": "brownian-increment-scaling",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Brownian increment scaling",
+    "definition": "길이 h인 Brownian 증가량은 평균 0, 분산 h이므로 √h에 표준 정규 난수를 곱해 만듭니다. 겹치지 않는 구간의 증가량은 독립이며 √h는 표준편차이지 모든 표본의 절댓값은 아닙니다.",
+    "canonicalHref": "/cs/ai/math-differential-equations-numerical-solvers#ode-sde-boundary"
   },
   "gaussian-forward-diffusion": {
     id: "gaussian-forward-diffusion",
@@ -9244,40 +9222,36 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/gpu/cuda-shared-memory#aos-soa"
   },
   "cuda-synchronization-scope": {
-    id: "cuda-synchronization-scope",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA synchronization scope·visibility",
-    definition:
-      "Producer write와 consumer read 사이 ordering·visibility를 warp·block·cluster·stream·device 중 필요한 최소 participant 범위에서 보장하는 계약입니다. Barrier는 같은 address의 concurrent update를 atomic하게 만들지 않습니다.",
-    canonicalHref: "/cs/gpu/cuda-sync-streams#overview",
+    "id": "cuda-synchronization-scope",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA synchronization scope·visibility",
+    "definition": "같은 값을 주고받는 참여자들이 쓰기 뒤에 읽도록 범위를 정합니다. Block barrier는 다른 block이나 x++의 원자성을 보장하지 않으며 참여·분기 조건을 지켜야 합니다.",
+    "canonicalHref": "/cs/gpu/cuda-sync-streams#block-sync"
   },
   "cuda-stream-ordering": {
-    id: "cuda-stream-ordering",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA stream ordering·overlap",
-    definition:
-      "같은 stream에 enqueue한 operations는 순서를 지키고 다른 streams는 독립성을 표현하며, 실제 copy·compute overlap은 pinned memory·hardware engines·resources·dependency가 허용할 때만 생기는 asynchronous execution contract입니다.",
-    canonicalHref: "/cs/gpu/cuda-sync-streams#streams",
+    "id": "cuda-stream-ordering",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA stream ordering·overlap",
+    "definition": "한 줄 안의 순서를 지키면서 서로 독립된 줄의 작업을 겹칠 기회를 만듭니다. Stream 수와 실제 동시 실행 자원은 다릅니다. Pageable host memory, 기본 줄 모드, 복사 통로와 경합을 확인합니다.",
+    "canonicalHref": "/cs/gpu/cuda-sync-streams#streams"
   },
   "cuda-event-dependency": {
-    id: "cuda-event-dependency",
-    kind: "method",
-    domain: "computer-science",
-    label: "CUDA event dependency·timing",
-    definition:
-      "Stream timeline의 특정 producer 이후에 marker를 record하고 다른 stream이 그 marker를 기다리게 해 cross-stream edge를 만들거나, 두 timing markers 사이 device elapsed time을 재는 방법입니다.",
-    canonicalHref: "/cs/gpu/cuda-sync-streams#events",
+    "id": "cuda-event-dependency",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "CUDA event dependency·timing",
+    "definition": "특정 지점까지 제출한 작업을 표식에 기록해 소비자가 그 생산만 기다리게 합니다. 미기록 event는 빈 작업이며 미래 생산을 예약하지 않습니다. Host 제출 순서와 buffer 세대도 맞춰야 합니다.",
+    "canonicalHref": "/cs/gpu/cuda-sync-streams#events"
   },
   "cuda-multigpu-resource-ownership": {
-    id: "cuda-multigpu-resource-ownership",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA multi-GPU resource ownership",
-    definition:
-      "Host thread의 current device에 allocation·stream·event·kernel launch가 연결됨을 추적하고, 방향별 peer capability와 physical topology를 확인해 device 간 data path를 구성하는 ownership 계약입니다.",
-    canonicalHref: "/cs/gpu/cuda-sync-streams#multi-gpu",
+    "id": "cuda-multigpu-resource-ownership",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA multi-GPU resource ownership",
+    "definition": "자원이 속한 장치를 기록하고 API별로 허용되는 연결을 확인합니다. Record·elapsedTime의 같은 장치 조건과 cross-device wait·query의 허용을 구별합니다. P2P 접근도 방향별 조건입니다.",
+    "canonicalHref": "/cs/gpu/cuda-sync-streams#multi-gpu"
   },
   "tls13-secure-channel": {
     id: "tls13-secure-channel",
@@ -12945,34 +12919,44 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/crypto/field-arithmetic#release"
   },
   "extension-tower-implementation-layout": {
-    id: "extension-tower-implementation-layout", kind: "concept", domain: "computer-science",
-    label: "Extension-tower implementation layout",
-    definition: "Fp¹²를 Fp→Fp²→Fp⁶→Fp¹²의 coefficient tuples와 versioned defining polynomials·non-residues·coefficient order로 표현해 하위 field 연산을 재사용하는 구현 구조입니다.",
-    canonicalHref: "/cs/crypto/extension-fields#overview",
+    "id": "extension-tower-implementation-layout",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Extension-tower implementation layout",
+    "definition": "Fₚ¹²의 값을 두 Fₚ⁶ 계수, 각각 세 Fₚ² 계수, 각각 두 Fₚ 계수로 표현하는 구조입니다. 기약식·상수·계수 순서와 구현 버전을 함께 고정해야 같은 배열이 같은 값을 뜻합니다.",
+    "canonicalHref": "/cs/crypto/extension-fields#layout"
   },
   "quadratic-extension-karatsuba-inversion": {
-    id: "quadratic-extension-karatsuba-inversion", kind: "method", domain: "computer-science",
-    label: "Quadratic-extension Karatsuba · inversion",
-    definition: "a₀+a₁u 곱의 교차항을 합의 곱으로 공유해 base-field multiplication을 줄이고 conjugate와 a₀²−βa₁² denominator로 inverse를 한 층 아래 field에 내리는 계산 schedule입니다.",
-    canonicalHref: "/cs/crypto/extension-fields#fp2",
+    "id": "quadratic-extension-karatsuba-inversion",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Quadratic-extension Karatsuba · inversion",
+    "definition": "u²=β에서 합의 곱을 이용한 세 곱 계산과 켤레·노름 a₀²−βa₁²을 이용한 역원 유도입니다. 실제 구현의 선택은 별도이며 고정 ark Fq2는 sum_of_products, Fq12는 Karatsuba 분기를 사용합니다.",
+    "canonicalHref": "/cs/crypto/extension-fields#fp2"
   },
   "cubic-extension-nonresidue-reduction": {
-    id: "cubic-extension-nonresidue-reduction", kind: "method", domain: "computer-science",
-    label: "Cubic-extension non-residue reduction",
-    definition: "Fp² coefficient 세 개의 product에서 v³ 이상 항을 pinned relation v³=ξ로 줄이고 교차항 multiplication과 ξ multiplication을 별도 비용으로 세는 Fp⁶ 구현 경로입니다.",
-    canonicalHref: "/cs/crypto/extension-fields#fp6",
+    "id": "cubic-extension-nonresidue-reduction",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Cubic-extension non-residue reduction",
+    "definition": "v³=ξ에 따라 세 계수 곱의 v³·v⁴ 항을 각각 ξ 배의 상수항·v항으로 되돌리는 계산입니다. 여섯 아래층 곱의 식과 ξ 전용 연산·덧셈 비용을 구분합니다.",
+    "canonicalHref": "/cs/crypto/extension-fields#fp6"
   },
   "extension-field-frobenius-table": {
-    id: "extension-field-frobenius-table", kind: "method", domain: "computer-science",
-    label: "Extension-field Frobenius coefficient table",
-    definition: "선택한 p와 tower basis에서 x↦x^p가 coefficient에 작용하는 permutation·sign·상수를 period별로 사전 계산해 일반 exponentiation 대신 적용하는 최적화입니다.",
-    canonicalHref: "/cs/crypto/extension-fields#frobenius-optimization",
+    "id": "extension-field-frobenius-table",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Extension-field Frobenius coefficient table",
+    "definition": "같은 p와 탑 기저에서 아래층 p제곱과 위층 배율 표를 조합하는 계산입니다. 직접 xᵖ와 비교해야 하며 확장 차수만큼 원복된다는 검사만으로 잘못된 표를 검출할 수는 없습니다.",
+    "canonicalHref": "/cs/crypto/extension-fields#frobenius-optimization"
   },
   "extension-field-implementation-release-gate": {
-    id: "extension-field-implementation-release-gate", kind: "method", domain: "computer-science",
-    label: "Extension-field implementation release gate",
-    definition: "Tower polynomial·non-residue·coefficient order·Frobenius table·source version을 고정하고 irreducibility·basis·inverse·cycle·serialization·G2/pairing parity를 확인한 뒤 연산 비용을 비교하는 절차입니다.",
-    canonicalHref: "/cs/crypto/extension-fields#extension-release-gate",
+    "id": "extension-field-implementation-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Extension-field implementation release gate",
+    "definition": "기약식·상수·계수 순서·표·버전을 고정하고 독립 산술·역원·직접 p제곱·직렬화를 비교하는 검증입니다. 실제 페어링 연결에는 G2 입력·부분군·전체 결과 검사가 추가로 필요하며 산술 통과가 속도나 부채널 안전을 보장하지 않습니다.",
+    "canonicalHref": "/cs/crypto/extension-fields#extension-release-gate"
   },
   "diffie-hellman-key-agreement-flow": {
     "id": "diffie-hellman-key-agreement-flow",
@@ -13980,28 +13964,36 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/crypto/sparse-multiplication#cost-saving",
   },
   "characteristic-p-frobenius-automorphism": {
-    id: "characteristic-p-frobenius-automorphism", kind: "theorem", domain: "mathematics",
-    label: "Characteristic-p Frobenius automorphism",
-    definition: "Characteristic p finite field에서 binomial 가운데 항이 사라져 x↦x^p가 덧셈과 곱셈을 보존하고 finite-set injectivity로 bijection이 되는 자기동형사상입니다.",
-    canonicalHref: "/cs/crypto/frobenius-optimization#coeff-rearrange",
+    "id": "characteristic-p-frobenius-automorphism",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Characteristic-p Frobenius automorphism",
+    "definition": "소수 특성 p인 유한체에서 x↦xᵖ가 덧셈·곱셈을 보존하고 단사성이 유한성에 의해 전사성으로 이어지는 자기동형입니다. 체가 아닌 경우도 사상의 성질을 따로 봐야 하며 가약 몫이라는 사실만으로 비단사라고 결론 내리지 않습니다.",
+    "canonicalHref": "/cs/crypto/frobenius-optimization#coeff-rearrange"
   },
   "finite-field-frobenius-cycle": {
-    id: "finite-field-frobenius-cycle", kind: "theorem", domain: "mathematics",
-    label: "Finite-field Frobenius cycle",
-    definition: "Fp^k에서 j회 Frobenius가 x를 x^(p^j)로 보내고 k회 적용하면 모든 원소가 원래 값으로 돌아오며 subfield 원소는 더 짧은 주기를 가질 수 있다는 성질입니다.",
-    canonicalHref: "/cs/crypto/frobenius-optimization#coeff-rearrange",
+    "id": "finite-field-frobenius-cycle",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Finite-field Frobenius cycle",
+    "definition": "Fₚᵏ에서 j번의 Frobenius는 x^(pʲ)이고 k번 뒤 모든 원소가 돌아옵니다. 개별 원소의 최소 주기는 더 작을 수 있으며 원복 검사만으로 기저와 표의 정확성을 확인할 수 없습니다.",
+    "canonicalHref": "/cs/crypto/frobenius-optimization#cycle"
   },
   "pairing-final-exponent-decomposition": {
-    id: "pairing-final-exponent-decomposition", kind: "method", domain: "mathematics",
-    label: "Pairing final-exponent easy · hard decomposition",
-    definition: "Embedding-degree와 subgroup-order factorization에 맞춰 (p^k-1)/r exponent를 Frobenius·inverse가 유리한 easy part와 curve-specific addition chain이 필요한 hard part로 나누는 방법입니다.",
-    canonicalHref: "/cs/crypto/frobenius-optimization#in-final-exp",
+    "id": "pairing-final-exponent-decomposition",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Pairing final-exponent easy · hard decomposition",
+    "definition": "0 아닌 입력과 부분군 위수의 나눗셈 조건을 확인한 뒤 마지막 지수를 Frobenius·역원으로 처리할 인수와 남은 정수 지수로 나누는 방법입니다. 차수 12의 해당 구성은 (p⁶−1)(p²+1)H이며 노름 1을 만든 뒤에 켤레를 역원으로 사용할 수 있습니다.",
+    "canonicalHref": "/cs/crypto/frobenius-optimization#in-final-exp"
   },
   "frobenius-relative-cost-boundary": {
-    id: "frobenius-relative-cost-boundary", kind: "concept", domain: "computer-science",
-    label: "Frobenius relative-cost boundary",
-    definition: "Frobenius를 무료라고 부르는 표현을 generic exponentiation 대비 coefficient permutation·conjugation·constant multiplication의 상대 비용으로 제한하고 target별 load·cycle을 측정하는 경계입니다.",
-    canonicalHref: "/cs/crypto/frobenius-optimization#why-free",
+    "id": "frobenius-relative-cost-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Frobenius relative-cost boundary",
+    "definition": "일반 p제곱을 기저의 사상과 상수 곱으로 바꿀 때 남는 계산과 표 접근을 구분하는 비용 설명입니다. 고정 원문의 호출 수, 기계어 명령 수, 실제 실행 시간을 서로 같은 값으로 취급하지 않습니다.",
+    "canonicalHref": "/cs/crypto/frobenius-optimization#why-free"
   },
   "hardware-security-threat-model-boundary": {
     id: "hardware-security-threat-model-boundary", kind: "concept", domain: "computer-science",
@@ -14690,9 +14682,30 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "plonky3-generic-config-type-stack": { id:"plonky3-generic-config-type-stack", kind:"concept", domain:"computer-science", label:"Plonky3 generic config · type stack", definition:"Field, extension, challenger, permutation/hash, MMCS, DFT, FRI와 PCS types를 Rust generic configuration으로 조립해 AIR/prover/verifier가 같은 profile을 공유하게 하는 경계입니다.", canonicalHref:"/cs/crypto/plonky3#config" },
   "plonky3-proof-config-artifact-binding": { id:"plonky3-proof-config-artifact-binding", kind:"concept", domain:"computer-science", label:"Plonky3 proof · config artifact binding", definition:"AIR/program hash, trace shape, public values, config/version, domain/query/PoW options와 serialized proof를 verifier receipt에 결속하는 artifact 계약입니다.", canonicalHref:"/cs/crypto/plonky3#pipeline" },
   "plonky3-release-gate": { id:"plonky3-release-gate", kind:"method", domain:"computer-science", label:"Plonky3 stack release gate", definition:"Pinned commit에서 native/AIR parity와 wrong trace/public/config/domain/MMCS/FRI/transcript/proof failures를 확인한 뒤 stage timings·proof bytes·RSS를 비교하는 절차입니다.", canonicalHref:"/cs/crypto/plonky3#release" },
-  "extension-minimal-polynomial-degree": { id: "extension-minimal-polynomial-degree", kind: "theorem", domain: "mathematics", label: "Minimal polynomial · extension degree", definition: "Base field F 위 algebraic element α의 monic irreducible minimal polynomial mα가 α를 root로 가지며 F(α)의 power basis와 extension degree d=deg mα를 정한다는 정리입니다.", canonicalHref: "/cs/crypto/extension-field-theory#minimal-polynomial" },
-  "extension-tower-degree-product": { id: "extension-tower-degree-product", kind: "theorem", domain: "mathematics", label: "Tower law · degree product", definition: "K⊂L⊂M인 finite extensions에서 [M:K]=[M:L][L:K]이며 tower basis products가 전체 extension basis를 이룬다는 정리입니다.", canonicalHref: "/cs/crypto/extension-field-theory#tower" },
-  "extension-theory-selection-gate": { id: "extension-theory-selection-gate", kind: "method", domain: "mathematics", label: "Extension-field theorem · profile release gate", definition: "Irreducible polynomial·non-residue·tower degrees·basis order를 고정하고 degree·Frobenius cycle·inverse·pairing target compatibility를 확인한 뒤 theory profile을 채택하는 절차입니다.", canonicalHref: "/cs/crypto/extension-field-theory#release" },
+  "extension-minimal-polynomial-degree": {
+    "id": "extension-minimal-polynomial-degree",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Minimal polynomial · extension degree",
+    "definition": "F 위 대수적 원소 u의 최소다항식은 u를 넣으면 0이 되는 가장 낮은 차수의 monic 다항식이며 기약입니다. 그 차수 d는 1,u,…,u^(d−1)의 기저 길이와 확장 차수를 정합니다.",
+    "canonicalHref": "/cs/crypto/extension-field-theory#minimal-polynomial"
+  },
+  "extension-tower-degree-product": {
+    "id": "extension-tower-degree-product",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Tower law · degree product",
+    "definition": "K⊂L⊂M이 유한 차수의 체 확장이면 두 층의 기저 곱이 전체 기저가 되어 [M:K]=[M:L][L:K]입니다. 각 층이 실제 체여야 합니다.",
+    "canonicalHref": "/cs/crypto/extension-field-theory#tower"
+  },
+  "extension-theory-selection-gate": {
+    "id": "extension-theory-selection-gate",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Extension-field theorem · profile release gate",
+    "definition": "기약식·계수 순서·상수를 고정하고 역원, 직접 p제곱과 Frobenius 표, 직렬화의 의미를 대조하는 검증입니다. 같은 원소 수나 원복 검사만으로 바이트 호환성과 표의 정확성을 보장할 수 없습니다.",
+    "canonicalHref": "/cs/crypto/extension-field-theory#release"
+  },
   "miller-function-loop-invariant": { id: "miller-function-loop-invariant", kind: "theorem", domain: "mathematics", label: "Miller function loop invariant", definition: "Scalar bits를 따라 point를 double/add하면서 line functions의 divisor를 누적해 f_n,P(Q)를 logarithmic group steps로 계산하는 Miller loop invariant입니다.", canonicalHref: "/cs/crypto/pairing#miller-loop" },
   "pairing-final-subgroup-projection": { id: "pairing-final-subgroup-projection", kind: "method", domain: "mathematics", label: "Pairing final exponent · target subgroup projection", definition: "Miller output을 (p^k−1)/r 거듭제곱해 embedding-field multiplicative group에서 order-r target subgroup GT로 보내 pairing의 canonical value를 얻는 단계입니다.", canonicalHref: "/cs/crypto/pairing#final-exponent" },
   "pairing-input-subgroup-release-gate": { id: "pairing-input-subgroup-release-gate", kind: "method", domain: "computer-science", label: "Pairing input · subgroup release gate", definition: "Curve/profile·G1/G2 encoding·on-curve·subgroup·identity policy와 Miller/final-exponent vectors를 고정하고 bilinearity·invalid-point rejection 뒤 비용을 비교하는 절차입니다.", canonicalHref: "/cs/crypto/pairing#release" },
@@ -15068,36 +15081,45 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/gpu/cuda-perf-analysis#amdahl",
   },
   "gpu-register-live-range-pressure": {
-    id: "gpu-register-live-range-pressure", kind: "concept", domain: "computer-science",
-    label: "GPU register live range · spill pressure",
-    definition: "Compiler가 동시에 살아 있는 thread-local 값의 live range를 32-bit registers에 배정하고, thread당 요구량이 SM residency를 먼저 제한하며 부족한 값은 device-memory-backed local address space로 spill될 수 있는 자원 경계입니다.",
-    canonicalHref: "/cs/gpu/cuda-register-pressure#live-range",
+    "id": "gpu-register-live-range-pressure",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "GPU register live range · spill pressure",
+    "definition": "계산값을 만든 뒤 마지막으로 사용할 때까지의 구간이 겹치면서 생기는 register 수요입니다. 소스 변수 수나 여러 kernel의 register 수를 합한 값으로 실제 compiler의 물리 배정을 정할 수 없습니다.",
+    "canonicalHref": "/cs/gpu/cuda-register-pressure#live-range"
   },
   "gpu-register-residency-budget": {
-    id: "gpu-register-residency-budget",
-    kind: "concept",
-    domain: "computer-science",
-    label: "GPU register-limited residency budget",
-    aliases: ["Register per Thread", "Registers per Thread"],
-    definition:
-      "Thread당 32-bit register 배정을 warp 요구량으로 환산하고 SM register file·allocation granularity·hardware limits와 함께 resident blocks·warps 상한을 정하는 resource budget입니다.",
-    canonicalHref: "/cs/gpu/cuda-register-pressure#residency",
+    "id": "gpu-register-residency-budget",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "GPU register-limited residency budget",
+    "aliases": [
+      "Register per Thread",
+      "Registers per Thread"
+    ],
+    "definition": "Thread별 register 배정을 warp·block의 예약량으로 바꾸어 같은 SM에 배치할 수 있는 수를 계산합니다. 배정 단위와 block 경계 및 다른 자원 한도를 함께 적용하며 spill이 없어도 배치 수가 줄 수 있습니다.",
+    "canonicalHref": "/cs/gpu/cuda-register-pressure#register-file"
   },
   "gpu-register-spill-memory-path": {
-    id: "gpu-register-spill-memory-path",
-    kind: "concept",
-    domain: "computer-science",
-    label: "GPU register spill · local-memory path",
-    aliases: ["Spill Load", "Spill Store", "Local memory spill"],
-    definition:
-      "Physical register에 배정하지 못한 thread-local 값을 CUDA local address space로 내리고 cache와 device-memory backing을 거치는 load/store·traffic 경로입니다.",
-    canonicalHref: "/cs/gpu/cuda-register-pressure#spill-path",
+    "id": "gpu-register-spill-memory-path",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "GPU register spill · local-memory path",
+    "aliases": [
+      "Spill Load",
+      "Spill Store",
+      "Local memory spill"
+    ],
+    "definition": "Register 밖에 보존한 값을 읽고 쓰는 spill의 저장 경로입니다. Local 주소 공간과 실제 cache·device-memory 전송을 구별하며, PTX 9.0의 sm75+ opt-in 경로는 shared 공간을 먼저 쓰고 부족한 양을 local로 보냅니다.",
+    "canonicalHref": "/cs/gpu/cuda-register-pressure#spill-path"
   },
   "gpu-register-resource-release-gate": {
-    id: "gpu-register-resource-release-gate", kind: "method", domain: "computer-science",
-    label: "GPU register resource release gate",
-    definition: "Registers/thread·local bytes·resident/eligible warps·traffic과 kernel/end-to-end elapsed를 같은 candidate receipt에서 비교해 resource tuning을 채택하거나 rollback하는 gate입니다.",
-    canonicalHref: "/cs/gpu/cuda-register-pressure#release-gate",
+    "id": "gpu-register-resource-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "GPU register resource release gate",
+    "definition": "Register 조정 전후에 계산 결과와 실제 자원·계층별 전송량·시간 분포를 같은 조건에서 비교하는 절차입니다. 더 높은 occupancy나 더 낮은 local spill 보고만으로 속도 개선을 보장하지 않습니다.",
+    "canonicalHref": "/cs/gpu/cuda-register-pressure#release-gate"
   },
   "gpu-kernel-fusion-io-boundary": {
     id: "gpu-kernel-fusion-io-boundary",
@@ -16474,84 +16496,99 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#slo"
   },
   "prefill-compute-bound-regime": {
-    id: "prefill-compute-bound-regime",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Prefill compute-bound regime",
-    aliases: ["Prefill Compute-Bound Behavior", "Compute-Bound Prefill", "Prefill Bottleneck"],
-    definition:
-      "Prompt 의 n 개 token 이 한 번 읽은 weight 로 2P·n FLOP 을 계산해 arithmetic intensity 가 ridge point 를 넘고, step 시간이 bandwidth 가 아니라 연산기의 FLOP/s 로 정해지는 prefill 의 성질입니다.",
-    canonicalHref: "/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity",
+    "id": "prefill-compute-bound-regime",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Prefill compute-bound regime",
+    "aliases": [
+      "Prefill Compute-Bound Behavior",
+      "Compute-Bound Prefill",
+      "Prefill Bottleneck"
+    ],
+    "definition": "입력을 함께 처리해 가중치를 재사용하면 전송량보다 계산량이 더 빠르게 늘 수 있습니다. 이 사례는 계산 하한이 더 크다는 뜻입니다. 짧은 prefill·다른 kernel은 달라지며 실제 달성 시간을 확정하지 않습니다.",
+    "canonicalHref": "/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity"
   },
   "decode-memory-bound-regime": {
-    id: "decode-memory-bound-regime",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Decode memory-bound regime",
-    aliases: ["Decode Memory-Bound Behavior", "Decode Bottleneck", "Memory-Bandwidth Bottleneck"],
-    definition:
-      "Token 하나마다 weight 전체와 request 별 KV cache 를 다시 읽어 arithmetic intensity 가 1 근처에 머물고, batch 를 키워도 attention 의 KV 읽기 때문에 step 시간이 memory bandwidth 로 정해지는 decode 의 성질입니다.",
-    canonicalHref: "/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity",
+    "id": "decode-memory-bound-regime",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Decode memory-bound regime",
+    "aliases": [
+      "Decode Memory-Bound Behavior",
+      "Decode Bottleneck",
+      "Memory-Bandwidth Bottleneck"
+    ],
+    "definition": "몇 위치를 계산하기 위해 많은 가중치와 요청별 과거 기록을 가져오면 전송 한도가 더 큰 제약이 됩니다. decode의 비율이 항상 1인 것은 아닙니다. batch·KV 길이·head 공유·cache·kernel에 따라 실제 연산과 전송을 다시 셉니다.",
+    "canonicalHref": "/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity"
   },
   "prefill-decode-interference": {
-    id: "prefill-decode-interference",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Prefill–decode interference",
-    aliases: ["Prefill-Decode Interference", "Phase interference"],
-    definition:
-      "같은 iteration batch 에 탄 prefill 의 compute 시간이 memory 만 기다리던 decode request 의 step 시간을 늘려, 자기 일이 늘지 않은 decode 의 token 간격이 prefill 크기에 비례해 길어지는 현상입니다.",
-    canonicalHref: "/cs/ai/prefill-decode-phase-dynamics#interference",
+    "id": "prefill-decode-interference",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Prefill–decode interference",
+    "aliases": [
+      "Prefill-Decode Interference",
+      "Phase interference"
+    ],
+    "definition": "기존 답변과 새 입력이 같은 실행을 기다리거나 자원을 함께 쓰면 서로의 지연이 바뀝니다. 한 실행의 시간과 client의 ITL·TTFT는 대기·전달 조건이 다릅니다. 새 입력 길이에 정확히 비례하는 지연 법칙은 아닙니다.",
+    "canonicalHref": "/cs/ai/prefill-decode-phase-dynamics#request-trace"
   },
   "mixed-batch-step-time-model": {
-    id: "mixed-batch-step-time-model",
-    kind: "metric",
-    domain: "computer-science",
-    label: "Mixed prefill/decode batch step-time model",
-    aliases: ["Mixed Prefill/Decode Batch"],
-    definition:
-      "Decode B 개와 prefill chunk c token 을 섞은 step 의 시간을 weight 와 KV 읽기의 memory 항과 linear·attention FLOP 의 compute 항 중 큰 쪽으로 하한 잡고, 두 항이 교차하는 chunk 크기를 임계점으로 읽는 roofline 계산입니다.",
-    canonicalHref: "/cs/ai/prefill-decode-phase-dynamics#interference",
+    "id": "mixed-batch-step-time-model",
+    "kind": "metric",
+    "domain": "computer-science",
+    "label": "Mixed prefill/decode batch step-time model",
+    "aliases": [
+      "Mixed Prefill/Decode Batch"
+    ],
+    "definition": "같은 작업의 계산과 전송을 각각 가능한 최대 속도로 나누면 두 시간 하한을 얻습니다. max(F/R,M/D)는 유효한 속도 상한을 쓸 때의 하한입니다. 실제 시간이 두 항의 합 이하라는 보장은 없으며 하한만으로 SLO를 통과시키지 않습니다.",
+    "canonicalHref": "/cs/ai/prefill-decode-phase-dynamics#mixed-model"
   },
   "decode-priority-token-budget": {
-    id: "decode-priority-token-budget",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Decode priority in token budget",
-    aliases: ["Decode Priority"],
-    definition:
-      "Decode 는 bandwidth 가 정하는 step 바닥 시간을 채우는 일이므로 대기 중인 decode 를 먼저 batch 에 넣고, 남은 token budget 에만 prefill chunk 를 채워 decode 의 token 간격을 지키는 scheduling 우선순위입니다.",
-    canonicalHref: "/cs/ai/prefill-decode-phase-dynamics#interference",
+    "id": "decode-priority-token-budget",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Decode priority in token budget",
+    "aliases": [
+      "Decode Priority"
+    ],
+    "definition": "진행 중인 출력을 먼저 담고 남은 위치 한도를 새 입력에 줄 수 있으나 실제 순회 정책을 확인해야 합니다. Sarathi Algorithm3의 decode 우선과 vLLM v0.27.1의 running 순회는 같은 절대 규칙이 아닙니다. 공간과 다른 분기도 확인합니다.",
+    "canonicalHref": "/cs/ai/prefill-decode-phase-dynamics#source-priority"
   },
   "prefill-chunk-size-budget": {
-    id: "prefill-chunk-size-budget",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Prefill chunk size budget",
-    aliases: ["Prefill Chunk Size", "Chunk token budget"],
-    definition:
-      "허용할 TPOT 에서 decode 만의 step 바닥 시간을 뺀 연산 여유를 token 당 FLOP 으로 나눠 chunk token 수를 정하고, 그 결과가 만드는 TTFT 와 chunk 당 weight·prefix KV 재읽기 비용으로 검산하는 절차입니다.",
-    canonicalHref: "/cs/ai/prefill-decode-phase-dynamics#chunk-size",
+    "id": "prefill-chunk-size-budget",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Prefill chunk size budget",
+    "aliases": [
+      "Prefill Chunk Size",
+      "Chunk token budget"
+    ],
+    "definition": "측정한 기존 실행과 추가 작업의 비용으로 후보를 고른 뒤 실제 두 지연 목표에서 다시 검증합니다. 앞의 MHA 읽기 하한14.4357 ms와 다른 조건입니다. 후보24.653 ms는 단순 예측이며 4096/448의 열 조각이 실제 TTFT250 ms를 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/prefill-decode-phase-dynamics#chunk-size"
   },
   "long-context-prefill-quadratic-regime": {
-    id: "long-context-prefill-quadratic-regime",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Long-context prefill quadratic regime",
-    aliases: ["64K+ Long-Context Prefill", "Prefill Degradation at Long Context"],
-    definition:
-      "Prompt 길이 n 이 linear 항 2P·n 과 attention 항 2n²·d·N 이 같아지는 n* = P/(d·N) 을 넘어, 길이를 두 배로 늘리면 prefill 시간이 세 배 가까이 늘고 chunk 당 KV 재읽기도 n²/c 로 커지는 구간입니다.",
-    canonicalHref: "/cs/ai/prefill-decode-phase-dynamics#long-context",
+    "id": "long-context-prefill-quadratic-regime",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Long-context prefill quadratic regime",
+    "aliases": [
+      "64K+ Long-Context Prefill",
+      "Prefill Degradation at Long Context"
+    ],
+    "definition": "모든 앞 위치를 보는 attention은 위치 쌍이 늘면서 linear 연산보다 더 빠르게 커집니다. causal 정확식은 n(n+1)이며 n²은 주도항입니다. local·linear 층 비용은 남고 실제 시간 증가 배율은 kernel·IO·통신도 좌우합니다.",
+    "canonicalHref": "/cs/ai/prefill-decode-phase-dynamics#long-context"
   },
   "prefill-optimization-layers": {
-    id: "prefill-optimization-layers",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Prefill optimization layers",
-    aliases: ["Prefill Optimization"],
-    definition:
-      "Prefill 을 빠르게 하는 수단을 attention 의 memory traffic 을 줄이는 kernel 층, 시간을 나누는 chunking 층, 순서를 정하는 scheduling 층, 간섭을 다른 GPU 로 보내는 분리 배치 층으로 나누고 병목에 따라 고르는 분류입니다.",
-    canonicalHref: "/cs/ai/prefill-decode-phase-dynamics#prefill-optimization",
+    "id": "prefill-optimization-layers",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Prefill optimization layers",
+    "aliases": [
+      "Prefill Optimization"
+    ],
+    "definition": "실행 경로, 한 번의 배정량·순서, 단계별 장치 배치가 서로 다른 비용을 바꿉니다. 작은 chunk나 분리 배치가 항상 좋은 것은 아닙니다. 누적 대기·재읽기·전송·두 pool 부하와 실제 tail SLO를 함께 비교합니다.",
+    "canonicalHref": "/cs/ai/prefill-decode-phase-dynamics#prefill-optimization"
   },
   "cuda-programming-model-hardware-mapping": {
     "id": "cuda-programming-model-hardware-mapping",
@@ -17300,84 +17337,110 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/cuda-graph-capture#shape-padding",
   },
   "replica-routing-load-balancing": {
-    id: "replica-routing-load-balancing",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Replica routing · load balancer",
-    aliases: ["Replica Routing", "Load Balancer", "shortest queue routing", "round-robin routing"],
-    definition:
-      "같은 model을 서빙하는 여러 replica 가운데 요청 하나를 어느 replica로 보낼지 정하는 규칙과 그 규칙을 실행하는 구성 요소로, round-robin은 상태를 보지 않고 shortest queue는 실행·대기 요청 수가 가장 적은 replica를 고르며 capability filter를 통과한 같은 model의 replica 사이에서만 작동합니다.",
-    canonicalHref: "/cs/ai/disaggregated-prefill-decode-serving#routing",
+    "id": "replica-routing-load-balancing",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Replica routing · load balancer",
+    "aliases": [
+      "Replica Routing",
+      "Load Balancer",
+      "shortest queue routing",
+      "round-robin routing"
+    ],
+    "definition": "같은 모델을 실행하는 여러 복사본 중 어느 곳에 요청을 보낼지 정합니다. 요청 수가 가장 적은 곳이 남은 작업량도 가장 적다는 보장은 없습니다. 모델·기능 호환과 실제 load 정의를 확인합니다.",
+    "canonicalHref": "/cs/ai/disaggregated-prefill-decode-serving#routing-source"
   },
   "cache-aware-load-balancing": {
-    id: "cache-aware-load-balancing",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Cache-aware load balancing",
-    aliases: ["Request Affinity", "session affinity routing", "prefix-aware routing"],
-    definition:
-      "요청의 prefix가 이미 KV cache로 남아 있는 replica로 보내 prefill을 건너뛰되, replica 사이 load 차이가 절대·상대 threshold를 넘으면 cache를 무시하고 shortest queue로 떨어지는 routing으로, prefix hit rate와 load 균형을 한 저울에 올린 규칙입니다.",
-    canonicalHref: "/cs/ai/disaggregated-prefill-decode-serving#routing",
+    "id": "cache-aware-load-balancing",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Cache-aware load balancing",
+    "aliases": [
+      "Request Affinity",
+      "session affinity routing",
+      "prefix-aware routing"
+    ],
+    "definition": "앞 기록을 재사용할 이득과 그곳에서 기다릴 시간을 함께 보는 목적지 선택입니다. 기본값·근사 일치 단위·낮은 hit 분기를 고정합니다. 문자 tree의 예상은 token KV의 실제 hit 보장이 아닙니다.",
+    "canonicalHref": "/cs/ai/disaggregated-prefill-decode-serving#routing-source"
   },
   "prefill-decode-disaggregation": {
-    id: "prefill-decode-disaggregation",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Prefill–decode disaggregation",
-    aliases: ["Disaggregated Serving", "disaggregated prefill", "PD disaggregation", "phase splitting"],
-    definition:
-      "한 요청의 prefill과 decode를 서로 다른 GPU 풀에서 실행해 decode step에서 prefill 간섭을 없애고 phase별 parallelism과 batch를 따로 정하는 배치로, 대가로 요청마다 KV cache를 풀 사이로 옮기는 전송과 GPU를 두 풀로 나누는 올림 낭비를 냅니다.",
-    canonicalHref: "/cs/ai/disaggregated-prefill-decode-serving#disaggregation",
+    "id": "prefill-decode-disaggregation",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Prefill–decode disaggregation",
+    "aliases": [
+      "Disaggregated Serving",
+      "disaggregated prefill",
+      "PD disaggregation",
+      "phase splitting"
+    ],
+    "definition": "입력 읽기와 출력 생성을 별도 GPU 묶음에 두고 그 사이에 필요한 상태를 전달합니다. 같은 실행에 끼는 간섭을 줄여도 전송·대기·메모리·풀 불균형이 남습니다. throughput이나 지연 개선을 배치 이름으로 확정하지 않습니다.",
+    "canonicalHref": "/cs/ai/disaggregated-prefill-decode-serving#names"
   },
   "prefill-decode-worker-roles": {
-    id: "prefill-decode-worker-roles",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Prefill worker · decode worker",
-    aliases: ["Prefill Worker", "Decode Worker", "kv_producer", "kv_consumer", "prompt machine · token machine"],
-    definition:
-      "Disaggregated serving에서 prompt 전체를 한 번 계산해 KV cache와 첫 token을 만들고 block을 즉시 비우는 prefill worker와, 그 KV와 token id를 받아 자기 batch에서 token을 하나씩 생성하는 decode worker의 역할 구분으로, vLLM은 kv_producer·kv_consumer, SGLang은 disaggregation-mode로 지정합니다.",
-    canonicalHref: "/cs/ai/disaggregated-prefill-decode-serving#disaggregation",
+    "id": "prefill-decode-worker-roles",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Prefill worker · decode worker",
+    "aliases": [
+      "Prefill Worker",
+      "Decode Worker",
+      "kv_producer",
+      "kv_consumer",
+      "prompt machine · token machine"
+    ],
+    "definition": "P는 입력 상태를 만들고 D는 그 상태에서 출력을 계산합니다. 원본 보관과 사용자 전달의 책임도 프로토콜로 정합니다. P의 전체 입력 단일 실행·즉시 free·생성 토큰 전달을 보편 규칙으로 두지 않습니다. chunking과 재계산 및 수신자 완료 조건을 읽습니다.",
+    "canonicalHref": "/cs/ai/disaggregated-prefill-decode-serving#source-finish"
   },
   "kv-cache-transfer": {
-    id: "kv-cache-transfer",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "KV cache transfer",
-    aliases: ["KV Transfer", "KV connector", "layer-wise KV transfer"],
-    definition:
-      "Prefill worker의 KV block을 decode worker의 KV pool로 복사하는 절차로, connector가 NVLink·RDMA·공유 저장소 같은 경로를 추상화하고 layer마다 완성된 KV를 즉시 보내는 layer-wise 전송으로 대부분의 시간을 뒤 layer의 계산 아래에 숨깁니다.",
-    canonicalHref: "/cs/ai/disaggregated-prefill-decode-serving#kv-transfer",
+    "id": "kv-cache-transfer",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "KV cache transfer",
+    "aliases": [
+      "KV Transfer",
+      "KV connector",
+      "layer-wise KV transfer"
+    ],
+    "definition": "받을 곳을 배정하고 원본을 읽어온 뒤 완료를 확인해 이후 계산과 원본 반환을 잇습니다. v0.27.1 NixlConnector는 pull이며 layer hook이 비어 있습니다. 다른 층별 전송 방식과 같다고 설명하지 않습니다.",
+    "canonicalHref": "/cs/ai/disaggregated-prefill-decode-serving#source-allocation"
   },
   "kv-transfer-bandwidth-budget": {
-    id: "kv-transfer-bandwidth-budget",
-    kind: "metric",
-    domain: "distributed-systems",
-    label: "KV transfer bandwidth budget",
-    aliases: ["KV Transfer Bandwidth", "KV transfer time"],
-    definition:
-      "요청 하나의 KV byte를 link 대역폭으로 나눈 전송 시간이 decode step보다 짧아야 한다는 latency 조건과, 초당 요청 수에 요청당 KV byte를 곱한 흐름이 link 대역폭 아래여야 한다는 throughput 조건을 합친 판정으로, 둘째 조건이 disaggregation의 요청률 상한을 정합니다.",
-    canonicalHref: "/cs/ai/disaggregated-prefill-decode-serving#kv-transfer",
+    "id": "kv-transfer-bandwidth-budget",
+    "kind": "metric",
+    "domain": "distributed-systems",
+    "label": "KV transfer bandwidth budget",
+    "aliases": [
+      "KV Transfer Bandwidth",
+      "KV transfer time"
+    ],
+    "definition": "한 요청의 byte/속도와 초당 평균 유입 byte를 별도로 계산하고 실제 의존 경로에서 지연을 확인합니다. peak 기준 byte/속도는 하한입니다. 평균 유입이 실효 용량 아래여도 tail 지연이나 성공을 보장하지 않으며 decode step과의 단순 비교는 충분조건이 아닙니다.",
+    "canonicalHref": "/cs/ai/disaggregated-prefill-decode-serving#transfer-budget"
   },
   "phase-pool-ratio-provisioning": {
-    id: "phase-pool-ratio-provisioning",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Prefill·decode pool ratio provisioning",
-    aliases: ["prefill:decode ratio", "phase pool sizing"],
-    definition:
-      "초당 요청 수에 요청 하나가 각 phase에서 쓰는 GPU 시간을 곱하고 목표 이용률로 나눠 올림해 prefill 풀과 decode 풀의 GPU 수를 따로 정하는 계산으로, decode의 요청당 GPU 시간은 생성 token 수에 step 시간을 곱해 batch 크기로 나눈 몫이며 비율은 prompt와 생성 길이 분포가 정합니다.",
-    canonicalHref: "/cs/ai/disaggregated-prefill-decode-serving#provisioning",
+    "id": "phase-pool-ratio-provisioning",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Prefill·decode pool ratio provisioning",
+    "aliases": [
+      "prefill:decode ratio",
+      "phase pool sizing"
+    ],
+    "definition": "단계별 요청당 GPU 시간을 자원 수요로 바꾸고 한 모델 복사본 단위로 후보 수를 올림합니다. 같은 batch와 서비스 시간이 유지되는 평균 용량 근사입니다. 실제 길이·도착 분포·메모리·링크·SLO를 비교해 검증합니다.",
+    "canonicalHref": "/cs/ai/disaggregated-prefill-decode-serving#provisioning"
   },
   "heterogeneous-phase-serving": {
-    id: "heterogeneous-phase-serving",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Heterogeneous phase serving",
-    aliases: ["Heterogeneous Serving", "Resource Heterogeneity", "heterogeneous GPU pools"],
-    definition:
-      "Prefill 풀과 decode 풀에 세대나 종류가 다른 GPU를 두는 배치로, compute-bound인 prefill에는 FLOP/s가 큰 GPU를, memory-bound인 decode에는 bandwidth 대비 비용이 싼 GPU를 배정해 같은 비용에서 더 많은 요청을 받으며 두 풀의 자원 차이 자체를 resource heterogeneity라고 부릅니다.",
-    canonicalHref: "/cs/ai/disaggregated-prefill-decode-serving#provisioning",
+    "id": "heterogeneous-phase-serving",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Heterogeneous phase serving",
+    "aliases": [
+      "Heterogeneous Serving",
+      "Resource Heterogeneity",
+      "heterogeneous GPU pools"
+    ],
+    "definition": "두 단계의 실제 비용과 목표가 다를 때 서로 다른 GPU 종류와 병렬 구성을 후보로 비교합니다. peak FLOP/s·대역폭 비율만으로 이득을 확정하지 않습니다. 같은 모델·부하·총비용·목표에서 KV 호환과 실제 유효 처리량을 측정합니다.",
+    "canonicalHref": "/cs/ai/disaggregated-prefill-decode-serving#heterogeneous"
   },
   "tensor-parallel-linear-sharding": {
     id: "tensor-parallel-linear-sharding",
@@ -17949,44 +18012,52 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#capture-failure",
   },
   "gpu-sm-register-file": {
-    id: "gpu-sm-register-file",
-    kind: "concept",
-    domain: "computer-science",
-    label: "SM register file",
-    aliases: ["Register File"],
-    definition:
-      "SM 하나가 가진 32-bit register 전체로, compute capability 7.0 이후 65,536개(256 KB)를 subpartition 4개에 나눠 갖고 resident한 모든 warp가 함께 나눠 쓰는 on-chip 예산입니다. Thread 하나는 최대 255개까지만 받습니다.",
-    canonicalHref: "/cs/gpu/cuda-register-pressure#register-file",
+    "id": "gpu-sm-register-file",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "SM register file",
+    "aliases": [
+      "Register File"
+    ],
+    "definition": "SM 안에서 실행 중인 thread들의 값을 보관하는 32-bit register 저장 공간입니다. CC 7.0 사례는 전체 65,536개와 thread당 최대 255개를 구별하며, 다른 대상의 용량과 배정 규칙은 따로 확인합니다.",
+    "canonicalHref": "/cs/gpu/cuda-register-pressure#register-file"
   },
   "gpu-register-allocation-granularity": {
-    id: "gpu-register-allocation-granularity",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Register allocation granularity",
-    aliases: ["Warp register allocation unit"],
-    definition:
-      "Hardware가 thread당 register 요구량을 warp 단위로 묶어 256개씩 반올림해 배정하고 warp 수를 subpartition 수(4)의 배수로 내리는 규칙으로, 37 registers면 warp당 1,184개 대신 1,280개를 차지해 같은 register 수에서도 block 크기에 따라 occupancy가 달라지는 원인입니다.",
-    canonicalHref: "/cs/gpu/cuda-register-pressure#register-file",
+    "id": "gpu-register-allocation-granularity",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Register allocation granularity",
+    "aliases": [
+      "Warp register allocation unit"
+    ],
+    "definition": "요구한 register 수를 대상이 정한 배정 단위로 올리는 규칙입니다. CC 7.0은 warp당 256개 단위이므로 37개/thread의 1,184개 요구를 1,280개로 예약하며, 구역과 block 경계까지 적용해야 배치 수를 구합니다.",
+    "canonicalHref": "/cs/gpu/cuda-register-pressure#trace"
   },
   "gpu-register-reuse-rematerialization": {
-    id: "gpu-register-reuse-rematerialization",
-    kind: "method",
-    domain: "computer-science",
-    label: "Register reuse · rematerialization",
-    aliases: ["Register Reuse", "Rematerialization", "Remat"],
-    definition:
-      "Live range가 끝난 physical register를 다음 값이 곧바로 이어받는 reuse와, 입력이 아직 register에 있고 명령 한두 개로 다시 만들 수 있는 값을 붙잡거나 spill하는 대신 사용 지점에서 재계산하는 rematerialization으로, 둘 다 동시에 살아 있는 값의 최댓값을 낮춰 spill을 피하는 compiler 선택입니다.",
-    canonicalHref: "/cs/gpu/cuda-register-pressure#live-range",
+    "id": "gpu-register-reuse-rematerialization",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Register reuse · rematerialization",
+    "aliases": [
+      "Register Reuse",
+      "Rematerialization",
+      "Remat"
+    ],
+    "definition": "마지막 사용이 끝난 register 자리를 다음 값에 주는 reuse와, 값 보관 대신 필요한 자리에서 다시 계산하는 rematerialization입니다. 입력의 생존과 추가 명령·의존·수치 의미에 따라 비용이 달라집니다.",
+    "canonicalHref": "/cs/gpu/cuda-register-pressure#live-range"
   },
   "gpu-theoretical-achieved-occupancy": {
-    id: "gpu-theoretical-achieved-occupancy",
-    kind: "metric",
-    domain: "computer-science",
-    label: "Theoretical · achieved occupancy",
-    aliases: ["Theoretical Occupancy", "Achieved Occupancy", "Resource-Limited Occupancy"],
-    definition:
-      "Theoretical occupancy는 register·shared memory·thread·block 네 한도 중 가장 먼저 막히는 자원이 허용하는 resident warp 수를 최대 warp 수로 나눈 launch 전 상한(resource-limited occupancy)이고, achieved occupancy는 실행 중 sampling한 active warp 평균을 같은 최대값으로 나눈 측정값이며, 둘의 차이는 tail effect와 block 안팎의 일 불균형에서 나옵니다.",
-    canonicalHref: "/cs/gpu/cuda-register-pressure#residency",
+    "id": "gpu-theoretical-achieved-occupancy",
+    "kind": "metric",
+    "domain": "computer-science",
+    "label": "Theoretical · achieved occupancy",
+    "aliases": [
+      "Theoretical Occupancy",
+      "Achieved Occupancy",
+      "Resource-Limited Occupancy"
+    ],
+    "definition": "Theoretical occupancy는 자원 한도가 허용하는 warp 수를 하드웨어 최대치로 나눈 비율입니다. Achieved occupancy는 실행 중 active warp를 관측한 값으로 metric의 cycle 분모를 확인합니다. 둘 모두 현재 명령을 낼 수 있는 eligible 수와 구별합니다.",
+    "canonicalHref": "/cs/gpu/cuda-register-pressure#residency"
   },
   "hardware-performance-counter-sampling": {
     id: "hardware-performance-counter-sampling",
@@ -21746,44 +21817,55 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/model-vram-budgeting#moe-vram-serving-tradeoff",
   },
   "cuda-warp-level-synchronization": {
-    id: "cuda-warp-level-synchronization",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA warp-level synchronization",
-    aliases: ["Warp-Level Synchronization", "Warp Shuffle", "Warp Vote"],
-    definition:
-      "__shfl_sync·__ballot_sync·__any_sync 같은 warp shuffle·vote 명령과 __syncwarp(mask)로, block 전체가 아니라 mask로 지정한 32-lane warp 내부 participant만 register 값을 교환하고 도달을 확인하는, block barrier보다 좁은 scope의 동기화입니다.",
-    canonicalHref: "/cs/gpu/cuda-sync-streams#warp-sync",
+    "id": "cuda-warp-level-synchronization",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA warp-level synchronization",
+    "aliases": [
+      "Warp-Level Synchronization",
+      "Warp Shuffle",
+      "Warp Vote"
+    ],
+    "definition": "같은 warp의 값 교환과 공유 메모리를 주고받는 순서를 따로 정합니다. Shuffle·vote는 memory ordering을 보장하지 않습니다. 지정된 non-exited lanes의 참여와 대상별 제약을 확인합니다.",
+    "canonicalHref": "/cs/gpu/cuda-sync-streams#warp-sync"
   },
   "cuda-named-and-async-barrier": {
-    id: "cuda-named-and-async-barrier",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA named barrier · asynchronous barrier",
-    aliases: ["Named Barrier", "Asynchronous Barrier", "cuda::barrier"],
-    definition:
-      "PTX bar.sync가 barrier resource id(0~15)를 받아 한 thread block 안에 여러 개의 독립된 barrier를 동시에 두는 named barrier와, cuda::barrier가 도착(arrive)과 대기(wait)를 분리해 완료 확인 전에 다른 작업을 겹치게 하는 asynchronous barrier를 함께 묶은, __syncthreads() 단일 barrier 모델을 확장하는 계약입니다.",
-    canonicalHref: "/cs/gpu/cuda-sync-streams#named-async-barrier",
+    "id": "cuda-named-and-async-barrier",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA named barrier · asynchronous barrier",
+    "aliases": [
+      "Named Barrier",
+      "Asynchronous Barrier",
+      "cuda::barrier"
+    ],
+    "definition": "도착만 알린 뒤 독립된 일을 하다가 공유값이 필요할 때 기다립니다. PTX named id 0–15와 C++ phase/token은 같은 표현이 아닙니다. 명시한 PTX thread 수는 warp 크기의 배수입니다.",
+    "canonicalHref": "/cs/gpu/cuda-sync-streams#named-async-barrier"
   },
   "cuda-memory-fence-vs-barrier": {
-    id: "cuda-memory-fence-vs-barrier",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA memory fence vs. barrier",
-    aliases: ["Memory Fence", "__threadfence", "Memory Fence Functions"],
-    definition:
-      "__threadfence_block·__threadfence·__threadfence_system처럼 다른 thread의 도착을 기다리지 않고 자신이 쓴 값이 block·device·system 범위에서 보이는 순서만 보장하는, barrier의 rendezvous(도착 대기)보다 가벼운 동기화 명령입니다.",
-    canonicalHref: "/cs/gpu/cuda-sync-streams#memory-fence",
+    "id": "cuda-memory-fence-vs-barrier",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA memory fence vs. barrier",
+    "aliases": [
+      "Memory Fence",
+      "__threadfence",
+      "Memory Fence Functions"
+    ],
+    "definition": "호출 thread의 메모리 접근 순서와 상대방의 도착을 구별합니다. Fence만으로 visibility·atomicity·재사용을 모두 보장하지 않으며 일반 flag의 data race를 해결하지 못합니다.",
+    "canonicalHref": "/cs/gpu/cuda-sync-streams#memory-fence"
   },
   "cuda-sync-overhead-and-divergence": {
-    id: "cuda-sync-overhead-and-divergence",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA synchronization overhead · barrier divergence",
-    aliases: ["Synchronization Overhead", "Barrier Divergence"],
-    definition:
-      "Barrier가 가장 늦게 도착하는 participant를 기다리며 만드는 대기 비용(synchronization overhead)과, 조건 분기 때문에 warp·block의 일부만 barrier에 도달해 나머지가 무한정 기다리거나 정의되지 않은 동작이 되는 위험(barrier divergence)을 함께 다루는 계약입니다.",
-    canonicalHref: "/cs/gpu/cuda-sync-streams#sync-overhead-divergence",
+    "id": "cuda-sync-overhead-and-divergence",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA synchronization overhead · barrier divergence",
+    "aliases": [
+      "Synchronization Overhead",
+      "Barrier Divergence"
+    ],
+    "definition": "정상 참여자의 도착 시간 차이와 필요한 참여자가 오지 않는 오류를 구분합니다. 불균형 대기와 명령 자체 비용은 다르며 non-exited 참여자의 분기·회차·도착 수가 틀리면 undefined behavior입니다.",
+    "canonicalHref": "/cs/gpu/cuda-sync-streams#sync-overhead-divergence"
   },
   "parameter-credit-assignment-problem": {
     "id": "parameter-credit-assignment-problem",
@@ -44509,7 +44591,12 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "prefill-decode-disaggregation", to: "prefill-decode-worker-roles", relation: "produces", reason: "두 풀로 나누면 KV를 만드는 쪽과 받는 쪽의 역할이 갈립니다." },
   { from: "prefill-decode-worker-roles", to: "kv-cache-transfer", relation: "produces", reason: "Prefill worker가 만든 KV를 decode worker가 써야 하므로 풀 사이 복사가 필요합니다." },
   { from: "per-token-kv-byte", to: "kv-transfer-bandwidth-budget", relation: "prerequisite", reason: "Token당 KV byte에 요청 길이를 곱해야 옮길 byte가 나옵니다." },
-  { from: "kv-cache-transfer", to: "kv-transfer-bandwidth-budget", relation: "evaluates", reason: "전송 시간과 초당 byte 흐름을 link 대역폭과 비교해 전송이 숨겨지는지 판정합니다." },
+  {
+    "to": "kv-transfer-bandwidth-budget",
+    "relation": "evaluates",
+    "reason": "한 요청의 byte·초당 유입과 실제 의존 경로를 분리해 전송 비용과 용량 조건을 검증합니다.",
+    "from": "kv-cache-transfer"
+  },
   { from: "kv-transfer-bandwidth-budget", to: "prefill-decode-disaggregation", relation: "constrains", reason: "초당 KV 흐름이 link 대역폭을 넘으면 disaggregation의 요청률 상한이 됩니다." },
   { from: "nvlink-device-fabric-boundary", to: "kv-transfer-bandwidth-budget", relation: "constrains", reason: "두 worker가 같은 node 안인지 밖인지가 link 대역폭의 자릿수를 정합니다." },
   { from: "little-law-stable-system", to: "phase-pool-ratio-provisioning", relation: "prerequisite", reason: "요청률에 체류 시간을 곱해 필요한 GPU 시간을 세는 계산이 안정 system의 Little's law입니다." },

@@ -570,14 +570,98 @@ const gpu: Category = {
     },
     {
       slug: "cuda-sync-streams",
-      title: "CUDA 동기화 & 스트림",
+      title: "CUDA 동기화와 스트림: 같은 값을 안전하게 넘기며 작업 겹치기",
       subcategory: "gpu-fundamentals",
       sections: [
-        { id: "overview", title: "동기화 메커니즘" },
-        { id: "streams", title: "CUDA 스트림" },
-        { id: "events", title: "CUDA 이벤트" },
-        { id: "multi-gpu", title: "다중 GPU" },
-      ],
+  {
+    "id": "overview",
+    "title": "1. 기다려야 할 일만 기다리면 다른 일을 함께 진행할 수 있습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 값을 보내고 바꾼 뒤 돌아온 결과를 확인합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 두 묶음이 각각 2·5·2ms를 쓰는 경우를 놓습니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 같은 시간축에서 비어 있는 곳을 채웁니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 작업 순서와 저장 공간의 사용 시간을 함께 정해야 합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 순서 있는 줄은 stream이고 완료 표식은 event입니다"
+  },
+  {
+    "id": "streams",
+    "title": "7. A의 7이 돌아와 8이 될 때까지 같은 줄을 따라갑니다"
+  },
+  {
+    "id": "source-pipeline",
+    "title": "8. 공식 예제의 배열과 반복문에 같은 값을 넣습니다"
+  },
+  {
+    "id": "host-memory",
+    "title": "9. Async 호출이 돌아왔어도 입력과 출력의 사용자는 남아 있습니다"
+  },
+  {
+    "id": "default-stream",
+    "title": "10. 이름을 쓰지 않은 줄도 다른 줄과 연결될 수 있습니다"
+  },
+  {
+    "id": "events",
+    "title": "11. Event가 붙잡는 것은 기록 당시까지의 작업입니다"
+  },
+  {
+    "id": "event-time",
+    "title": "12. 명령을 제출한 시간과 장치에서 끝난 시간을 따로 잽니다"
+  },
+  {
+    "id": "block-sync",
+    "title": "13. 한 계산 안에서도 쓰는 사람과 읽는 사람의 순서가 필요합니다"
+  },
+  {
+    "id": "warp-sync",
+    "title": "14. 같은 32명 안의 값 교환과 메모리 전달도 구별합니다"
+  },
+  {
+    "id": "memory-fence",
+    "title": "15. Fence는 순서를 정하지만 상대방을 도착시키지는 않습니다"
+  },
+  {
+    "id": "named-async-barrier",
+    "title": "16. 도착을 알리는 일과 기다리는 일을 나눌 수 있습니다"
+  },
+  {
+    "id": "sync-overhead-divergence",
+    "title": "17. 늦은 참여자를 기다리는 비용과 잘못된 참여를 구별합니다"
+  },
+  {
+    "id": "multi-gpu",
+    "title": "18. 다른 GPU의 표식을 기다릴 수 있지만 모든 handle을 섞을 수는 없습니다"
+  },
+  {
+    "id": "peer-copy",
+    "title": "19. 접근 허용 방향과 데이터를 옮기는 방향을 따로 적습니다"
+  },
+  {
+    "id": "limits",
+    "title": "20. 겹침이 없을 때는 순서·메모리·자원을 차례로 확인합니다"
+  },
+  {
+    "id": "evidence",
+    "title": "21. 원문의 규칙이 같은 사례에 어떻게 적용되는지 확인합니다"
+  },
+  {
+    "id": "review",
+    "title": "22. 같은 작업에서 기다림의 위치를 바꿔 봅니다"
+  }
+],
       component: () => import("@/pages/articles/gpu/cuda-sync-streams"),
     },
     {
@@ -684,15 +768,78 @@ const gpu: Category = {
     },
     {
       slug: "cuda-register-pressure",
-      title: "CUDA register pressure: live range, occupancy, spill",
+      title: "GPU 레지스터: 보존할 값이 실행 자리와 시간을 바꾸는 과정",
       subcategory: "gpu-fundamentals",
       sections: [
-        { id: "overview", title: "Register와 live range" },
-        { id: "live-range", title: "겹치는 value lifetime" },
-        { id: "residency", title: "Residency와 occupancy" },
-        { id: "spill-path", title: "Local-memory spill 경로" },
-        { id: "release-gate", title: "Resource release gate" },
-      ],
+  {
+    "id": "overview",
+    "title": "1 · 동시에 붙잡는 값이 많아지면 함께 일할 자리도 줄어듭니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 필요한 저장량을 세고 작업 묶음이 들어갈 수 있는지 확인합니다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 한 사람당 37칸을 쓰는 같은 일을 128명 또는 320명씩 묶습니다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 작은 묶음은 빈자리에 들어가지만 큰 묶음은 통째로 기다립니다"
+  },
+  {
+    "id": "why",
+    "title": "5 · 같이 실행할 사람들의 값도 함께 보관해야 합니다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 저장칸과 작업 묶음에 이름을 붙입니다"
+  },
+  {
+    "id": "trace",
+    "title": "7 · 같은 37개에서 묶음 크기만 바꿔 끝까지 계산합니다"
+  },
+  {
+    "id": "register-file",
+    "title": "8 · 배정 단위와 다른 자원 한도를 차례로 적용합니다"
+  },
+  {
+    "id": "live-range",
+    "title": "9 · 값을 언제까지 보존하느냐가 자리 재사용을 바꿉니다"
+  },
+  {
+    "id": "residency",
+    "title": "10 · 배치 가능한 상한과 실제 활동량을 구별합니다"
+  },
+  {
+    "id": "occupancy-wave",
+    "title": "11 · 마지막 일감이 적으면 자리가 남아도 채울 수 없습니다"
+  },
+  {
+    "id": "spill-path",
+    "title": "12 · 내려놓은 값의 읽기량과 실제 외부 전송량은 다릅니다"
+  },
+  {
+    "id": "shared-spill",
+    "title": "13 · 지원되는 새 컴파일러는 공유 공간에 값을 내릴 수도 있습니다"
+  },
+  {
+    "id": "implementation",
+    "title": "14 · 실제 원문 함수에 같은 배치 숫자를 넣습니다"
+  },
+  {
+    "id": "release-gate",
+    "title": "15 · 자리 수를 늘린 뒤 처리 시간이 어떻게 바뀌었는지 확인합니다"
+  },
+  {
+    "id": "evidence",
+    "title": "16 · 문서 예제와 직접 실행한 계산의 범위를 구별합니다"
+  },
+  {
+    "id": "review",
+    "title": "17 · 입력 조건을 바꾸고 결과를 예측합니다"
+  }
+],
       component: () => import("@/pages/articles/gpu/cuda-register-pressure"),
     },
     {

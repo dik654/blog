@@ -1,0 +1,9 @@
+import type { CodeRef, FileNode } from "@/components/code/types";
+import source from "./codebase/simpleMultiCopy.cu?raw";
+export const codeRefs:Record<string,CodeRef>={
+ kernel:{code:source,path:"cuda/simpleMultiCopy.cu",lang:"c",highlight:[58,67],desc:"cuda-samples v13.0 고정 원문 전체입니다. 반복마다 입력+1을 출력에 다시 쓰므로 입력 7이면 inner_reps=5에서도 8입니다. 실제 기본 입력은0이며 출력 1을 검증합니다.",annotations:[{lines:[62,65],color:"sky",note:"g_out += 1이 아닙니다. g_in[idx]=7을 읽는 각 반복이 같은 8을 씁니다."}]},
+ buffers:{code:source,path:"cuda/simpleMultiCopy.cu",lang:"c",highlight:[172,184],desc:"네 slot 각각에 고정 host 메모리, device 입력·출력, stream, cycleDone을 만듭니다. CPU가 만질 수 있는 시점은 비동기 복사의 완료와 함께 확인해야 합니다.",annotations:[{lines:[172,183],color:"sky",note:"입력과 출력 host 메모리는 cudaHostAlloc으로 확보합니다. 이것만으로 모든 작업이 겹친다는 보장은 없습니다."}]},
+ pipeline:{code:source,path:"cuda/simpleMultiCopy.cu",lang:"c",highlight:[286,342],desc:"processWithStreams의 전체 루프입니다. 다음 slot의 이전 회차가 끝난 뒤 새 입력을 보내고 현재 slot의 결과 뒤 cycleDone을 기록합니다. SIMULATE_IO는 고정 원문에서 꺼져 있습니다.",annotations:[{lines:[311,330],color:"emerald",note:"streams_used=2, current=0이면 next=1입니다. 다음 반복에서 current=1,next=0으로 바뀌므로 같은 slot의 결과 복사가 끝나기 전에 다시 사용하지 않도록 기다립니다."},{lines:[304,309],color:"amber",note:"선택적 host memcpy는 완료 대기보다 앞에 있습니다. SIMULATE_IO를 켜는 응용은 host 접근도 완료 확인 뒤로 옮겨 수명을 다시 검토해야 합니다."}]},
+ timing:{code:source,path:"cuda/simpleMultiCopy.cu",lang:"c",highlight:[330,339],desc:"원문은 기본 stream의 stop event와 device 전체 대기를 사용합니다. 다른 stream까지 stop 앞에 모이는지는 legacy default stream과 일반 stream의 동기화 규칙에 의존합니다.",annotations:[{lines:[330,339],color:"amber",note:"per-thread default 또는 non-blocking stream으로 바꾸면 deviceSynchronize가 나중에 끝나더라도 이미 기록된 stop 시각이 전체 작업 종료로 바뀌지는 않습니다."}]},
+};
+export const fileTrees:Record<string,FileNode>={cuda:{name:"NVIDIA cuda-samples · v13.0",type:"dir",children:[{name:"simpleMultiCopy.cu",type:"file",path:"cuda/simpleMultiCopy.cu",codeKey:"pipeline"}]}};

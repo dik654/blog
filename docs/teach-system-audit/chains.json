@@ -6903,12 +6903,14 @@
     },
     {
       "route": "crypto/extension-field-theory",
-      "title": "Extension field: minimal polynomial·tower·Frobenius",
-      "status": "reviewed-needs-rewrite",
+      "title": "확장체: 세 숫자에서 아홉 원소로 계산 넓히기",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/extension-field-theory.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/extension-field-theory.tsx",
-        "src/pages/articles/blockchain/extension-field-theory/ModernArticle.tsx"
+        "src/pages/articles/blockchain/extension-field-theory/ModernArticle.tsx",
+        "src/pages/articles/blockchain/extension-field-theory/codeRefs.ts",
+        "src/pages/articles/blockchain/extension-field-theory/verification/main.rs"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -6929,29 +6931,59 @@
         "Need distinguish no-root test for degree2/3 from higherdegree, field generator from multiplicative generator, coordinate basis from raw byte meaning, and Frobenius period divides degree rather than always equals it."
       ],
       "fixture": {
-        "case": "F3 with u²=2: (1+u)(2+u)=1, inverse and Frobenius a+bu→a+2bu; polynomial quotient and minimal degree, same coordinates through pinned ark-ff Fp2 experiment planned.",
-        "assumption": "Small F9 educational configuration; distinguish own config from library default profile and cryptographic-size deployment."
+        "case": "F3, u²=2: [1,1]×[2,1]=[1,0]; inverse [2,1], Frobenius [1,1]→[1,2]→[1,1]. Same v=1+u constructs F81 via w²=v and changes basis from [1,1] to [0,1].",
+        "assumption": "Own educational F9 configuration at pinned ark-ff 0.5.0; actual Rust execution covers small configuration, not deployed cryptographic curves, native timing or side-channel resistance."
       },
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "stageEvidence": {
+        "S": "overview: add a new value so same multiplication has an inverse",
+        "B": "black-box: two coefficients and explicit reduction rule enter and leave the same interface",
+        "0": "case: expand (1+u)(2+u)=2+3u+u²=1 before names",
+        "1": "picture: visible expand, replace u², reduce coefficients and return two cells",
+        "2": "need: adding elements must preserve division by every nonzero value",
+        "3": "names: base field, extension, irreducible, basis, degree after calculation",
+        "4": "quotient: same polynomial division becomes two coefficient cells",
+        "5": "minimal-polynomial/inverse: lowest relation, span/independence and EEA; HAC2.226 applied to g=X+1 and m=X²+1",
+        "6": "source: actual configured Fp2 source, sum_of_products branch, norm inverse, Frobenius table and real retained Rust run of same values",
+        "7": "frobenius/tower/basis/boundaries/release: period divides degree, F81 basis proof, coordinate change, generator distinctions, reducible and wrong-table counterexamples; three predictions"
+      },
+      "sourceEvidence": [
+        {
+          "source": "HAC official chapter2 PDF, actual §§2.5–2.6, Facts2.198/2.207/2.211/2.224 and Algorithm2.226 read.",
+          "application": "Same g=X+1,m=X²+1 yields (X+2)g+2m=1, inverse2+u. Quotient field condition, tower and Frobenius applied to same F9/F81 examples."
+        },
+        {
+          "source": "ark-ff0.5.0 pinned commit7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c, full quadratic_extension.rs/fp2.rs with SHA manifest and MIT/Apache licenses; byte comparison to actual Cargo checkout.",
+          "application": "Manual own p3 config, beta2; Fp2 branch uses sum_of_products, actual multiply/inverse/frobenius/serialize and two wrong configurations executed. Unique retained package teach-extension-check with Cargo.lock and separate target prevents prior binary collision."
+        }
+      ],
       "verification": {
-        "substantiveReading": "Actual public entry and complete ModernArticle read; frozen baseline public text reviewed. Unused historical visualization tree not counted as public content."
+        "substantiveReading": "Original actual public ModernArticle and frozen baseline fully read. New15 sections preserve minimal polynomial proof, degree-product proof and Frobenius while replacing disconnected jargon and generic formula props. All new code notes, formula annotations and final source files reviewed.",
+        "arithmetic": "/tmp/teach-all/chains-extension-check.json: F9 all729 triples associativity/distributivity,8 inverses,9 Frobenius/basis transforms; F81 all80 nonzero elements have exactly one inverse, plus squares/EEA/minimal polynomial/orders.",
+        "actualExecution": "/tmp/teach-all/ark-extension-retained-final.log: cargo run --locked --manifest-path retained verification/Cargo.toml using isolated ark-extension-retained-target exited0; all81 products,8 inverses,9 Frobenius,canonical bytes,orders,bad beta1 and wrong Frobenius table. /tmp/teach-all/retained-rust-independent-targets.json records separated outputs and main SHA.",
+        "independentMath": "/tmp/teach-all/extension-field-independent-theory.json: independent read8–14 and exact F9/F81/EEA/Frobenius/minimal polynomial/order/bad config checks pass; source execution is separately author evidence.",
+        "humanize": "/tmp/teach-all/humanize-chains-extension-field-theory/extension-field-theory: 6374 chars, actual extract/roundtrip/prepare/apply,41 paragraphs. One connective comma removed; full/first chunk preserve mathematical false-footnote WARN, second chunk gate0. Independent theory approvals in full/chunk1/chunk2 and extension-humanize-independent-theory.json. Additional AST props2612/code1030 gate0.",
+        "static": "Actual global npx tsc -p tsconfig.app.json --noEmit exited0 after prefill imports completed, confirmed by systems; /tmp/teach-all/ai-systems-tsc-15.log. Own previous final run had only that other in-progress draft error, not counted as pass.",
+        "prose": "/tmp/teach-all/chains-extension-theory-prose-final.log strict exit0, session1559.",
+        "browser390": "output/playwright/teach-chains-extension-field-theory/summary.json:7 source panels opened,zero overflow/narrow/KaTeX/runtime/broken anchors. Actual .katex-html .base bounds zero in chains-extension-field-theory-math-bounds.json. Latest quotient/tower screenshot visually read.",
+        "browser1440": "Same final seven panels and zero errors; chains-extension-field-theory-details.json checks7 sections at both widths, source1440 screenshot visually read.",
+        "metadata": "Prepared actual learning6+4,15TOC,3canonical definitions,new ownership,HAC/ark evidence,keep topology; old unverifiable full-book claim downgraded in proposal.",
+        "learning": "Parent batch16 integrated title/15TOC/learning6+4/canonical3/definition3/newownership/evidence/topology; entryLevel corrected false to match reused prerequisites. Own strict actual exit0 /tmp/teach-all/chains-extension-theory-learning-pass2.log; final integrated390 title/15headings/anchors/overflow checked in chains-extension-theory-integrated.json.",
+        "formulaVisibility": "Follow-up: four annotated cards now visibly include general multiplication, minimal-polynomial degree/isomorphism, Frobenius and tower degree equations together with the original numeric cases. Both390/1440actual.basebounds[] and7sections×2screenshots regenerated; /tmp/teach-all/chains-extension-theory-formula-visible-final.log. No paragraph or numeric fixture changed."
       },
-      "remaining": [
-        "Substantive rewrite, primary source reading, exact arithmetic and actual configured code run, humanize, metadata and browser"
-      ]
+      "remaining": [],
+      "reviewDisposition": "substantive-rewrite"
     },
     {
       "route": "crypto/extension-fields",
-      "title": "확장체 구현: Fp²→Fp¹² tower",
-      "status": "unreviewed",
+      "title": "확장체 구현: 같은 곱을 열두 계수와 코드로 추적하기",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/extension-fields.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/extension-fields.tsx",
-        "src/pages/articles/blockchain/extension-fields/Fp12.tsx",
-        "src/pages/articles/blockchain/extension-fields/Fp2.tsx",
-        "src/pages/articles/blockchain/extension-fields/Fp6.tsx",
-        "src/pages/articles/blockchain/extension-fields/Overview.tsx"
+        "src/pages/articles/blockchain/extension-fields/ModernArticle.tsx",
+        "src/pages/articles/blockchain/extension-fields/viz/TowerCaseViz.tsx",
+        "src/pages/articles/blockchain/extension-fields/codeRefs.ts",
+        "src/pages/articles/blockchain/extension-fields/verification/main.rs"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -6965,20 +6997,53 @@
           "\n        확장체 tower는 같은 Fp¹² 연산을 재사용 가능한 층으로 분해한다\n      "
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "Read all four actual public components, both visualizations, frozen baseline and full learning/definition/ownership. Abstract tower and implementation jargon precede numeric case; disconnected F3 example does not trace an actual BN254 operation.",
+        "Pinned curves e2d16a27 bn254 Cargo.toml is0.4.0, contradicting repeated0.5.0 claims. Need consistent algebra pin for both configurations and ff methods.",
+        "Actual Fp2 degree2 branch uses sum_of_products, unlike old implied Karatsuba execution. Need preserve correct algebraic Karatsuba derivation but distinguish actual backend schedule.",
+        "Generic tower/Frobenius formula annotations, no predictions and no numerical wire-order counterexample. Preserve inverse/reducible/embedding-degree/GT conditions."
+      ],
+      "fixture": {
+        "case": "Actual BN254: A=(1+u)v²w, B=(2+u)v²w with u²=−1,v³=9+u,w²=v gives (6+28u)v², flattened output slots4/5.",
+        "assumption": "Use large pinned BN254 modulus and actual library configuration, not toyF3; timing, side channels and full EVM pairing remain separate."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: same A·B to (6+28u)v² before names",
+        "B": "black-box: two inputs,modulus and three reduction rules to twelve coefficient cells",
+        "0": "case: inner1+3u, v⁴w²→(9+u)v², output6+28u, distinguish hugep fromtoyF3",
+        "1": "picture: four interactive scenes of same numbers and twelve numbered cells",
+        "2": "need: nested reuse and lower-level operation count",
+        "3": "names: Fp2/Fp6/Fp12,degree,nonresidue only after workedcase",
+        "4": "layout: sameA/B/output through nested c1.c2 vs c0.c2,2×3×2 and orderedbasis",
+        "5": "fp2/inverse/fp6/fp12: algebraic Karatsuba/norm proof,F5zero divisor,cubic6 products and ξ/v helpers with samecase",
+        "6": "source: exact package/workspace versions,actual Fq2 sum_of_products and Fq12 else,Cubic/source lines,actual isolated locked Rust execution",
+        "7": "frobenius/wire/target/cost/boundaries/extension-release-gate: sameA6/12cycle+pow,EIP28·6vsinternal6·28,GT/embedding degree,actualcount scope,irreducibility andwrong-table/order counterexamples,3predictions"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Same algebra commit7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c.15 full files/manifests/licenses bytecompared with actualCargo checkout. ffworkspace0.5.0,curvesworkspacebn2540.5.0-alpha.0; oldcurves/e2d16a27 is0.4.0 and mismatched claim removed.",
+          "application": "ActualA/B,subproducts,nonresidue helpers,144basisproducts16densepairs,15Frobeniusvsdirectpow,inverse,serialization,irreducibility/embeddingdegree; --locked retainedpackage unique name/target."
+        },
+        {
+          "source": "Official EIP197 freshly read groups/encoding; p,r,u²−1 and (a,b) big-endian order.",
+          "application": "6+28u mapped to28then6 withbyte31/63, compared internal6then28 andfullFq12offsets128/160; explicitly notG2point/EVMexecution."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Allold4publiccomponents+2viz,oldlearning6+4,5definitions+ownership+baseline read. New18sections preservecorrectKaratsuba/inverse/cubic/degree/Frobenius/GT boundaries,replacejargonfirst+version mismatch+genericannotations.",
+        "actualExecution": "/tmp/teach-all/ark-tower-locked-run.log actual isolated retained Cargo --locked exit0.144basisproducts16denseproducts15Frobenius,inverse,bytes384,xi cubenonresidue/topnonsquare/embeddingdegree; no pairing/timing execution.",
+        "sourceIntegrity": "/tmp/teach-all/chains-extension-fields-source-check.json:15rawfiles identicalCargo checkout,lock/programSHA,precise2workspaceversions.",
+        "independentMath": "/tmp/teach-all/bn254-independent-theory.json: separatePython Fp2[w]/(w6−ξ) arithmetic confirmsproduct,cubic,actualp6/p12powers andwrong-conjugationcounterexample.",
+        "humanize": "Actual8155chars49paragraphsextract/roundtrip/prepare/apply,oneconnectivecomma; full/chunks3823/3824/506 preservefalsefootnoteWARN withsystems independent-finalize approvals. AdditionalASTprops2749 initiallyP1→threecommasremovedgate0,finaladded s explanation2779 chars gate0;code1297/viz262gate0.",
+        "static": "Actual npx tsc -p tsconfig.app.json --noEmit sessions70404/36898 exit0; /tmp/teach-all/chains-extension-fields-tsc-final.log. Subsequent scalar TeX display strings were checked through both live renders.",
+        "prose": "/tmp/teach-all/chains-extension-fields-prose-final.log strict exit0,session55908.",
+        "browser390": "output/playwright/teach-chains-extension-fields/summary.json:10sourcepanels opened,0overflow/narrow/KaTeX/runtime/brokenanchors. Finalgeneric+exampleactual.basebounds[] in chains-extension-fields-math-bounds.json; fp2/Frobeniusscreenshots visuallyread.",
+        "browser1440": "Same10panelsandzeroerrors. Seven detailedsections×two widths. Final fourVizscenes+keyboard Enter in chains-extension-fields-viz.json; stableheight/controls at bothwidths, nooverflow.",
+        "metadata": "Batch17 proposes18TOC,6+4learning,5canonical/definitions,ownership,evidence and topology with exactversion/source scope. Existingmismatched0.5.0/e2d16a27evidence mustreplace.",
+        "learning": "Parent batch17 merged18TOC/learning6+4/canonical5/definitions5/ownership/evidence/topology; actual strict exit0 /tmp/teach-all/agents17-learning-final.log. Complete question/checklist versus body anchors read. Integrated390/1440 show18sections,zero brokenanchors/overflow/KaTeX in chains-extension-fields-integrated.json. Proposed title is being changed separately by parent; existing title already matches topic."
+      },
+      "remaining": [],
+      "reviewDisposition": "substantive-rewrite"
     },
     {
       "route": "crypto/fft",
@@ -7116,7 +7181,8 @@
         "independentMath": "/tmp/teach-all/field-arithmetic-independent-theory.json:theory read9–11/13 and independently verified544inputs,values,range proof,64-bit constants andcrossfield boundary; Rust run separately author evidence.",
         "static": "Actual npx tsc -p tsconfig.app.json --noEmit exit 0 confirmed by parent session 44132, /tmp/teach-all/root-compiler-tsc-final.log.",
         "prose": "/tmp/teach-all/chains-field-arithmetic-prose.log strict0 after main rewrite; latest configparagraph checker complete0.",
-        "learning": "Parent batch14 merged learning/TOC/canonical/evidence/topology; /tmp/teach-all/chains14-learning.log and /tmp/teach-all/chains-field-arithmetic-learning.log strict exit 0."
+        "learning": "Parent batch14 merged learning/TOC/canonical/evidence/topology; /tmp/teach-all/chains14-learning.log and /tmp/teach-all/chains-field-arithmetic-learning.log strict exit 0.",
+        "retainedExecution": "Corrected shared binary/target collision: actual retained Cargo.toml --locked execution with isolated /tmp/teach-all/ark-field-retained-target exited 0 and produced p17, 289 products/289 sums. /tmp/teach-all/ark-field-retained-final.log and retained-rust-independent-targets.json retain verified output and main SHA. Earlier ark-field-retained-run.log had wrong F9 binary and is superseded, not evidence."
       },
       "remaining": [],
       "reviewDisposition": "substantive-rewrite"
@@ -7256,12 +7322,14 @@
     },
     {
       "route": "crypto/frobenius-optimization",
-      "title": "Frobenius: p제곱 자기동형·table·final exp",
-      "status": "unreviewed",
+      "title": "Frobenius: 같은 세제곱을 표로 바꾸고 큰 지수를 나누기",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/frobenius-optimization.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/frobenius-optimization.tsx",
-        "src/pages/articles/blockchain/frobenius-optimization/ModernArticle.tsx"
+        "src/pages/articles/blockchain/frobenius-optimization/ModernArticle.tsx",
+        "src/pages/articles/blockchain/frobenius-optimization/viz/ModernFrobeniusViz.tsx",
+        "src/pages/articles/blockchain/frobenius-optimization/codeRefs.ts"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -7276,20 +7344,53 @@
           "F3²에서는 conjugation을 손으로 검산할 수 있다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "Read actual five-section ModernArticle, only rendered ModernFrobeniusViz, frozen baseline, full learning6+4/fourdefinitions/ownership. Abstract automorphism/tower jargon precedes small case, formula operations are generic templates and no actual source input trace or predictions.",
+        "Rendered visualization labels Fp12 but treats higher-layer c0 as fixed: a coefficient in Fp2/Fp6 itself needs Frobenius; only Fp coefficients are fixed. Need explicit coefficient-field distinction.",
+        "Preserve binomial/injectivity/cycle proof and exact final exponent factorization, replace false normalization explanation with exponent decomposition. Clarify reducible quotient need not make Frobenius nonbijective: F5[u]/(u²+1) is not a field but its p-power map is identity; use nilpotents for genuine noninjective counterexample."
+      ],
+      "fixture": {
+        "case": "F9 u²=2, x=1+u: φx=1+2u,φ²x=x. Change basis v=1+u: old[1,1]→[1,2],new[0,1]→[2,2] with matrix[[1,2],[0,2]], copieddiagonal giveswrong[0,2]yetcycles. Samex y=φx/x=2u hasnorm1 andconjugateinverse.",
+        "assumption": "Small F9 fixture applied to actual pinned ownconfig; separately label BN254 fullsize Frobenius/easyfactor demonstration if executed."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: same 1+u cube changes second coefficient",
+        "B": "black-box: input [1,1] expected same-basis cube output",
+        "0": "concrete: x²=2u then x³=1+2u with mod3/u²2 explicit",
+        "1": "picture: four scenes same mathematical input, old/new/copy-wrong table",
+        "2": "need: large p exponent and reusable basis action",
+        "3": "names: characteristic, Frobenius, basis and automorphism after case",
+        "4": "coeff-rearrange: binomial/additive/multiplicative proof and finite injectivity",
+        "5": "cycle/basis: same x repeated and new basis [0,1]→[2,2], wrong[0,2] yet cycles",
+        "6": "source: actual nine-element/81pair Rust run on own F9 pinned config and original lower coefficient calls",
+        "7": "why-free/unitary/in-final-exp/large-case/boundaries/release: actual source-call counts, same x norm1 transformation, genuine BN polynomial exponents, contrasting nonfield examples and3prediction answers"
+      },
+      "sourceEvidence": [
+        {
+          "source": "arkworks algebra7ad88c46 ff0.5.0 and nestedcurves bn2540.5.0-alpha.0",
+          "local": "src/pages/articles/blockchain/frobenius-optimization/codebase",
+          "mapping": "quadratic353–357 lowercalls;fp321primeidentity;fp288–95index; cubic326–332 lowerFq2;fp12model40–59index;field319–330 first-bit pow;fq12table15–88",
+          "native": "verification/main.rs unique teach-frobenius-check --locked actualexit0 /tmp/teach-all/ark-frobenius-locked-run.log"
+        },
+        {
+          "source": "Scott et al. eprint2008/490 officialPDF §§3,5",
+          "mapping": "easy factors, normone and positiveBN z lambda coefficient polynomial equals761bitH; native genericpow fourterms comparison",
+          "boundary": "Official PDF text read; screenshot403. Optimizedchain/Miller/fullpairing/timing not executed."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Actual body/ModernViz/full metadata read; unused historical files are not counted as public content. Scott2008/490 original §3 and§5 freshly read from official PDF11pages.",
+        "humanize": "/tmp/teach-all/humanize-chains-frobenius-optimization/frobenius-optimization;42paragraphs6771chars, two realchunks,0edits; peer systems independent-finalize approved mathfootnoteWARN; actualapply42unchanged0missing. ASTprops4318/code1369/viz463 allgate0.",
+        "arithmetic": "/tmp/teach-all/frobenius-independent-theory.json smallfield/basis/norm/nonfield andBNindependentpolynomial. Original plan253/110 normalizedmodel supersededbyactualsource first-bit-inclusive254/111 calls. ActualRust unique package log cited separately.",
+        "sourceBytes": "/tmp/teach-all/chains-frobenius-source-check.json nine rawfiles exactmatchactualCargo checkout, main/lockhashes retained",
+        "browser": "output/playwright/teach-chains-frobenius-optimization/summary.json:390/1440,16sections,8panelsopen each,0pageerror/overflow/KaTeX/brokenanchors. /tmp/teach-all/chains-frobenius-details.json sevensections bothwidths. Actualmobilebasis/unitary screenshots visuallyread.",
+        "mathLayout": "/tmp/teach-all/chains-frobenius-optimization-math-bounds.json actual KaTeX internalbaseoverflow[] eachwidth; generalformulas visible alongside numericalcases.",
+        "visualization": "/tmp/teach-all/chains-frobenius-optimization-viz.json fouractualstates/Enter/reducedmotion390/1440, stationaryheightcontrols; noautoplayoffered.",
+        "typescript": "Parent actual app tsc exit0 /tmp/teach-all/checkpoint145-working-tsc.log; prior shared VLLM TOC errors corrected by owner.",
+        "registration": "Parent merged batch18 all16TOC/6+4learning/fourdefinitions/ownership/topology/title/evidence replacement; strict actual0 /tmp/teach-all/root-streams-chains18-learning.log; integrated390/1440 title/16H2/anchors/KaTeX/overflow0 /tmp/teach-all/chains-frobenius-integrated.json",
+        "prose": "Actual global prose strict exit0 /tmp/teach-all/chains-frobenius-prose.log"
+      },
+      "remaining": []
     },
     {
       "route": "crypto/groth16",
@@ -8754,7 +8855,7 @@
     {
       "route": "crypto/sparse-multiplication",
       "title": "Sparse multiplication: support·Fp¹²·Miller 비용",
-      "status": "unreviewed",
+      "status": "reviewed-needs-rewrite",
       "publicEntry": "src/pages/articles/blockchain/sparse-multiplication.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/sparse-multiplication.tsx",
@@ -8773,19 +8874,22 @@
           "반복되는 line shape를 전용 schedule에 묶는다"
         ]
       },
-      "issues": [],
-      "fixture": null,
+      "issues": [
+        "Read actual5section ModernArticle, rendered ModernSparseViz and metadata6+4/fourdefinitions/ownership. Abstract support/tower jargon precedes numeric4×2case; generic misleading formula operation annotations; no actual source intermediate trace, no reader predictions.",
+        "Current paper2012/408 attributed to Aranha etal incorrectly. Official17pagePDF title/authors are Grewal,Azarderakhsh,Longa,Hu,Jao, Efficient Implementation of Bilinear Pairings on ARM Processors; §3.1 Algorithms5/6 actual D-type034 sparse scheme read.",
+        "Must distinguish generic014validfieldexample from actual pinned BN254Miller dispatch D→034. Actual degree12source branches cost13Fp2 mulvs18 generic, not naïve36 or eight toy partialproducts. Amdahl original <= phrasing needs exact conditional model and extraoverhead qualifications."
+      ],
+      "fixture": {
+        "case": "Preserve original A=1+2w+3w²+4w³,B=5+7w²→[5,10,22,34,21,28] in powerbasis. Map same actual BN field value to tower slots[1,3,0,2,4,0], B014[5,7,0,0,0,0]. Add c4=11 only in separate labelled variation to triggerw6=9+u. Compare034differentmeaning and actualgeneratorpreparedDline.",
+        "assumption": "Small displayedcoefficients embedded in fixed BN254field; own inputs are not assertedto bevalidMillerlinecoefficients."
+      },
       "stageEvidence": {},
       "sourceEvidence": [],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "Actual publicModernArticle5sections/renderedViz/frozenbaseline and fullmetadata read; unusedhistoricalfiles notclaimedreviewed. Official2012/408PDF §3.1 Algorithms5/6 freshlyread."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "Rewrite with same case→source, independent arithmetic/source nativeverification,humanize,metadata,390/1440checks."
       ]
     },
     {

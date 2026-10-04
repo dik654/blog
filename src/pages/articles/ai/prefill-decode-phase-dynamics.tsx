@@ -1,367 +1,61 @@
-import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ProgressiveDetail from "@/components/articles/progressive-detail";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./prefill-decode-phase-dynamics/codeRefs";
+import { prefillDecodeTree } from "./prefill-decode-phase-dynamics/fileTree";
 import PrefillDecodePhaseDynamicsViz from "./prefill-decode-phase-dynamics/viz/PrefillDecodePhaseDynamicsViz";
 
-/**
- * Prefill 은 compute-bound, decode 는 memory-bound: 간섭과 chunk 크기
- *
- * 작성 규칙은 docs/coverage-batch-playbook.md 를 따른다.
- * 수치 예는 모두 "7B dense · FP16 · H100 급(989 TFLOP/s dense, 3.35 TB/s)" 가정이며
- * 특정 장비의 실측이 아니라 roofline 하한 계산이다.
- */
-export default function PrefillDecodePhaseDynamicsArticle() {
-  return (
-    <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          같은 weight 를 읽어도 prefill 은 연산기가, decode 는 memory 가 먼저 막힙니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            Prefill 은 prompt 의 모든 token 을 한 번에 밀어 넣으니 한 번 읽은 weight 로 수천 token 분의 곱셈을 합니다. decode 는 token 하나를
-            만들기 위해 같은 weight 전체를 다시 읽습니다. 연산량 대비 memory 읽기 비율이 수천 배 차이 나므로 두 phase 는 같은 GPU 에서 서로 다른 자원에 먼저
-            부딪힙니다.
-          </p>
-          <p>
-            이 차이는 <Link to="/cs/ai/vllm-serving#prefill-decode">prefill 과 decode 를 나누는 이유</Link>를
-            hardware 쪽에서 다시 설명합니다. 문제는 continuous batching 이 두 phase 를 한
-            step 에 섞는다는 점입니다. Compute 를 다 쓰는 prefill 이 들어오면 memory 만 기다리던
-            decode 가 그 시간만큼 늦어지고, 사용자는 token 이 끊기는 것으로 느낍니다.
-          </p>
-          <p>
-            이 글은 arithmetic intensity 로 두 phase 의 위치를 계산하고, 섞인 batch 의 step
-            시간이 어떻게 결정되는지, 그리고 decode 지연 상한에서 거꾸로 prefill chunk 크기를
-            정하는 절차를 다룹니다. Step 조립 규칙 자체는{" "}
-            <Link to="/cs/ai/continuous-batching-step-anatomy">scheduling step 해부</Link>가, TTFT 와
-            TPOT 지표의 정의는 <Link to="/cs/ai/serving-latency-metrics-and-slo">latency 지표 글</Link>이
-            맡습니다.
-          </p>
-        </div>
-        <PrefillDecodePhaseDynamicsViz />
-        <ContentBoundary article="prefill-decode-phase-dynamics" />
-      </section>
+export default function Article() {
+  const sidebar = useCodeSidebar();
+  return <><div className="space-y-16">
+<section id="overview" data-teach-level="S" className="scroll-mt-20"><span id="problem" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">1. 긴 새 입력이 기존 답변을 얼마나 늦출지 따져 봅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>두 사람이 답변을 한 조각씩 받고 있는데 긴 문서를 넣은 새 요청이 들어왔다고 합시다. 새 문서를 전부 읽고 나서 기존 답변을 이어 쓰면 두 사람은 그동안 기다립니다. 반대로 새 요청을 계속 미루면 새 사용자가 첫 답을 받지 못합니다.</p><p>이 글에서는 새 입력을 조금씩 나누어 기존 작업과 함께 처리합니다. 한 번에 얼마나 넣을지는 계산할 일과 옮길 데이터를 함께 세어 정합니다. 마지막 결정에는 실제로 잰 시간도 필요합니다. 같은 세 요청을 작은 장부에서 시작해 고정한 서빙 코드와 논문까지 따라갑니다.</p></div></section>
 
-      <section id="arithmetic-intensity" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Intensity 가 ridge point 의 어느 쪽인지가 phase 의 병목을 정합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Arithmetic intensity 는 한 kernel 이 memory 에서 읽고 쓴 byte 당 수행한 FLOP 수입니다.
-            GPU 의 peak FLOP/s 를 memory bandwidth 로 나눈 값이 ridge point 이고, intensity 가
-            그보다 낮으면 bandwidth 가, 높으면 연산기가 시간을 정합니다. 이것이{" "}
-            <Link to="/cs/gpu/cuda-perf-analysis#throughput-ledger">roofline model</Link>의 전부입니다.
-          </p>
-          <p>
-            수치를 넣어 보겠습니다. H100 급 GPU 를 dense FP16 989 TFLOP/s, HBM 3.35 TB/s 로
-            가정하면 ridge point 는 약 295 FLOP/byte 입니다. 7B dense model 은 FP16 weight 가
-            14 GB 이고 token 하나를 linear layer 에 통과시키는 데 parameter 당 2 FLOP, 곧 14 GFLOP
-            이 듭니다.
-          </p>
-          <p>
-            Batch 1 decode 는 step 마다 14 GB 를 읽고 14 GFLOP 을 계산하니 intensity 가 약 1 FLOP/byte 입니다. Ridge 의 300 분의
-            1 이므로 시간은 14 GB ÷ 3.35 TB/s ≈ 4.2 ms 라는 bandwidth 하한이 정합니다. 연산 시간 0.014 ms 는 그 안에 숨습니다. 이것이 decode
-            의 memory-bound 성질입니다.
-          </p>
-          <p>
-            같은 model 에 4,096-token prompt 를 prefill 하면 weight 는 여전히 한 번만 읽는데 연산은
-            4,096 배가 되어 intensity 가 약 4,000 FLOP/byte 로 뜁니다. Ridge 를 훌쩍 넘으니 시간은
-            57 TFLOP ÷ 989 TFLOP/s ≈ 58 ms 라는 연산 하한이 정합니다. 이것이 prefill 의
-            compute-bound 성질입니다.
-          </p>
-          <p>
-            Decode 를 batch 로 묶으면 weight 는 한 번 읽고 B 개 token 을 계산하니 linear layer 의
-            intensity 는 B 까지 오릅니다. 하지만 attention 은 request 마다 자기 KV cache 를 따로
-            읽어야 해서 batch 를 키워도 intensity 가 1 근처에 머뭅니다. GQA 로 query head g 개가
-            KV 를 공유하면 g 배가 될 뿐입니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="한 phase 가 bandwidth 와 연산기 중 어느 쪽에 먼저 막히는지 어떻게 계산하나요?"
-          idea="한 step 의 FLOP 을 그 step 이 움직인 byte 로 나눈 intensity 를 hardware 의 ridge point 와 비교합니다. Decode 는 weight 를 token 하나마다 다시 읽어 intensity 가 1 근처이고, prefill 은 같은 weight 로 n 개 token 을 계산해 n 근처입니다."
-          formula={String.raw`I=\frac{\text{FLOPs}}{\text{Bytes}},\qquad I^{\ast}=\frac{F_{\text{peak}}}{BW},\qquad I_{\text{decode}}\approx\frac{2P\cdot B}{W+B\cdot L\cdot k},\quad I_{\text{prefill}}\approx\frac{2P\cdot n}{W}`}
-          annotatedFormula={String.raw`\underbrace{I^{\ast}=\frac{F_{\text{peak}}}{BW}}_{\text{ridge point}},\qquad \underbrace{I_{\text{decode}}\approx\frac{2P\cdot B}{W+B\cdot L\cdot k}}_{\text{weight 와 KV 를 다시 읽는 decode}},\qquad \underbrace{I_{\text{prefill}}\approx\frac{2P\cdot n}{W}}_{\text{weight 한 번에 n token 을 계산하는 prefill}}`}
-          operations={[
-            { expression: String.raw`\frac{F_{\text{peak}}}{BW}`, annotation: ["Peak FLOP/s 를 bandwidth 로 나눠", "두 roof 가 만나는 intensity 를 구함"] },
-            { expression: String.raw`\frac{2P\cdot B}{W+B\cdot L\cdot k}`, annotation: ["Batch B 의 linear FLOP 을 weight 와 KV byte 로 나눠", "batch 가 커져도 KV 항이 intensity 를 누름"] },
-            { expression: String.raw`\frac{2P\cdot n}{W}`, annotation: ["Prompt n token 의 FLOP 을 한 번 읽은 weight 로 나눠", "n 에 비례해 ridge 를 넘음"] },
-          ]}
-          terms={[
-            { symbol: "P", name: "Parameter 수", description: "Dense model 의 parameter 수입니다. Token 하나의 linear 연산은 약 2P FLOP 입니다." },
-            { symbol: "W", name: "Weight byte", description: "한 forward 가 읽어야 하는 weight 크기로 7B FP16 이면 14 GB 입니다." },
-            { symbol: "k", name: "Token 당 KV byte", description: "Layer 수 × 2 × KV head 차원 × dtype byte 로 7B MHA FP16 이면 0.5 MB 입니다." },
-            { symbol: "B, L, n", name: "Batch·context·prompt 길이", description: "Decode batch 크기, 각 request 의 현재 context 길이, prefill 할 prompt token 수입니다." },
-          ]}
-          assumptions={["Activation 과 workspace 읽기는 weight 와 KV 에 비해 작다고 보고 생략했습니다.", "F_peak 는 dense FP16 값이며 sparsity·FP8 수치를 쓰면 ridge point 가 달라집니다.", "Attention 의 FLOP 은 prefill 에서는 n² 항으로 따로 더하며, 긴 context 절에서 다룹니다."]}
-          interpretation="Intensity 는 kernel 이 어느 roof 에 먼저 닿는지를 말할 뿐 실제 도달 성능을 말하지 않습니다. 실측은 언제나 roof 아래에 있고, 그 간격이 kernel 최적화의 몫입니다."
-        />
-      </section>
+<section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 이번에 할 양을 고르고 함께 실행한 뒤 진행을 기록합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>입력은 요청별로 이미 처리한 위치와 아직 남은 위치, 이번 실행의 한도입니다. 배정 담당자가 각 요청에서 처리할 양을 고릅니다. 실행 담당자는 그 묶음을 계산하고 결과와 새 진행 위치를 돌려줍니다.</p><p>배정량은 시간과 다른 값입니다. 여섯 위치를 고르는 데 성공했어도 그 계산이 약속한 시간 안에 끝난다는 뜻은 아닙니다. 어떤 일을 넣었는지와 실제로 얼마나 걸렸는지를 두 장부에 남깁니다.</p></div><ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2"><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">1</span><span>남은 위치를 확인한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">2</span><span>이번 묶음의 양을 정한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">3</span><span>연산과 전송을 수행한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">4</span><span>진행과 시간을 따로 기록한다</span></li></ol></section>
 
-      <section id="interference" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          섞인 batch 에서는 decode 가 prefill chunk 의 연산 시간을 떠안습니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            한 step 의 시간은 그 step 이 움직인 byte 를 bandwidth 로 나눈 memory 항과 FLOP 을 연산 성능으로 나눈 compute 항 중 큰 쪽이
-            하한입니다. Decode 만 있는 step 은 memory 항이 큽니다. prefill chunk 를 얹으면 compute 항만 자랍니다. 두 항이 교차하기 전까지는 chunk
-            가 공짜처럼 보이고 넘어서면 step 시간이 chunk 크기에 비례해 늘어납니다.
-          </p>
-          <p>
-            예를 들어 64 개 decode request 가 각각 1,024 token 의 context 를 갖고 있으면 KV 읽기는 64 × 1,024 × 0.5 MB ≈ 33.5 GB
-            입니다. Weight 14 GB 를 더한 47.5 GB 를 3.35 TB/s 로 나누면 memory 항은 14.2 ms 입니다. compute 항은 0.9 TFLOP ÷ 989
-            TFLOP/s ≈ 0.9 ms 에 불과합니다.
-          </p>
-          <p>
-            여기에 512-token prefill chunk 를 얹으면 compute 항이 7.2 TFLOP 만큼 늘어 8.2 ms 가 되지만 아직 memory 항 14.2 ms 아래라
-            roofline 하한은 그대로입니다. Chunk 를 2,048 로 키우면 compute 항이 30 ms 로 memory 항을 넘어섭니다. 64 개 decode 모두의 다음
-            token 이 14 ms 가 아니라 30 ms 뒤에 나옵니다.
-          </p>
-          <p>
-            이것이 prefill-decode interference 의 mechanism 입니다. Decode request 는 자기 일이
-            늘어난 게 아닌데 같은 step 에 탄 prefill 의 연산이 끝날 때까지 기다립니다. Step 시간이
-            곧 그 step 에 있던 모든 request 의 token 간격이므로 한 개의 긴 prompt 가 batch 전체의
-            TPOT 를 밀어 올립니다.
-          </p>
-          <p>
-            Roofline 의 최댓값 모델은 하한입니다. 실제 kernel 은 memory 읽기와 연산을 완전히 겹치지 못하므로 측정값은 max 와 두 항의 합 사이에 놓입니다.
-            Sarathi-Serve 는 chunk 가 ridge 아래여도 decode 의 token 간격이 눈에 띄게 늘어나는 것을 관찰했습니다. 그래서 chunk 크기는 하한 계산보다
-            보수적으로 잡습니다.
-          </p>
-          <p>
-            Decode priority 는 이 구조에서 나옵니다. Decode 는 bandwidth 로 정해지는 step 의
-            바닥 시간을 채우는 일이고, prefill 은 그 바닥 위에 남은 연산 여유를 채우는 일입니다.
-            vLLM V1 scheduler 가 대기 중인 decode 를 모두 먼저 넣고 남은 token budget 에만 prefill 을
-            채우는 이유가 여기에 있습니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="Decode B 개와 prefill chunk c token 을 한 step 에 섞으면 step 시간은 어떻게 되나요?"
-          idea="Memory 항은 weight 와 모든 decode 의 KV 읽기가 정하고, compute 항은 decode 와 chunk 의 linear FLOP 에 chunk 의 attention FLOP 을 더한 값이 정합니다. Roofline 은 그중 큰 쪽을 하한으로 줍니다."
-          formula={String.raw`T_{\text{step}}\;\ge\;\max\!\left(\frac{W+B\cdot L\cdot k}{BW},\;\frac{2P\,(B+c)+A(c,\ell)}{F_{\text{eff}}}\right)`}
-          annotatedFormula={String.raw`T_{\text{step}}\ge\max\!\Bigl(\underbrace{\frac{W+B\cdot L\cdot k}{BW}}_{\text{decode 가 정하는 memory 항}},\;\underbrace{\frac{2P\,(B+c)+A(c,\ell)}{F_{\text{eff}}}}_{\text{chunk 가 키우는 compute 항}}\Bigr)`}
-          operations={[
-            { expression: String.raw`\frac{W+B\cdot L\cdot k}{BW}`, annotation: ["Weight 와 B 개 request 의 KV byte 를 bandwidth 로 나눠", "decode 만 있을 때의 step 바닥 시간"] },
-            { expression: String.raw`2P\,(B+c)`, annotation: ["Decode token B 개와 chunk token c 개의 linear FLOP 을 합쳐", "chunk 가 커질수록 선형으로 증가"] },
-            { expression: String.raw`A(c,\ell)`, annotation: ["Chunk c 가 이미 처리된 prefix ℓ 에 attention 하는 FLOP 을 더해", "긴 prompt 뒤쪽 chunk 일수록 증가"] },
-            { expression: String.raw`\max(\cdot,\cdot)`, annotation: ["두 항 중 큰 쪽을 골라", "겹침이 완전할 때의 하한 결정"] },
-          ]}
-          terms={[
-            { symbol: "c", name: "Prefill chunk token 수", description: "이번 step 에 함께 넣는 prompt token 수입니다." },
-            { symbol: String.raw`A(c,\ell)`, name: "Chunk attention FLOP", description: "약 4·c·ℓ·d·N 으로, chunk 가 prefix ℓ 의 KV 를 읽고 곱하는 양입니다." },
-            { symbol: String.raw`F_{\text{eff}}`, name: "실효 연산 성능", description: "Peak 가 아니라 해당 kernel 이 실제로 내는 FLOP/s 로, 측정해서 넣습니다." },
-            { symbol: "BW", name: "Memory bandwidth", description: "HBM 의 실효 bandwidth 입니다." },
-          ]}
-          assumptions={["Memory 읽기와 연산이 완전히 겹친다는 이상적 가정이라 실측은 max 와 합 사이에 놓입니다.", "Chunk 의 KV 쓰기와 activation 은 decode 의 KV 읽기에 비해 작다고 보고 memory 항에서 생략했습니다.", "Kernel launch 와 scheduler overhead 는 포함하지 않았습니다."]}
-          interpretation="Compute 항이 memory 항을 넘는 chunk 크기가 그 batch 의 임계점입니다. 그 아래에서는 chunk 가 decode 의 남는 연산기를 쓰고, 그 위에서는 모든 decode 가 chunk 의 연산 시간을 기다립니다."
-        />
-      </section>
+<section id="small-case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. A와 B에 한 칸씩 주고 C에 네 칸을 줍니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>A와 B는 이미 답변을 이어 쓰고 있으며 이번에 각각 한 위치를 처리해야 합니다. 새 요청 C의 입력은 20위치입니다. 한 번에 계산할 한도는 6위치이며 A와 B를 먼저 넣기로 정합니다. 모든 숫자는 설명용 가정입니다. (가정)</p><p>6에서 A의 1과 B의 1을 빼면 4가 남습니다. C는 그 네 위치만 처리하고 16위치를 남깁니다. A와 B의 다음 토큰도 같은 묶음 실행이 끝난 뒤에 나온다고 가정합니다. 이 글의 시작은 A1+B1+C4=6입니다.</p><p>C를 전부 넣으면 1+1+20=22위치가 되어 이 한도를 넘습니다. C를 아예 넣지 않으면 두 위치만 처리하고 네 자리의 여유를 쓰지 않습니다. 다만 빈 자리를 모두 채워야 가장 좋은 시간 결과가 나온다는 보장은 없습니다.</p></div></section>
 
-      <section id="chunk-size" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Chunk 크기는 decode 지연 상한에서 거꾸로 계산하고 TTFT 로 검산합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Chunk 크기는 decode 의 token 간격 상한을 지키기 위해 고릅니다. throughput 을 위해 고르는 값이 아닙니다. 허용할 step 시간에서 decode 만의
-            바닥 시간을 빼면 prefill 에 쓸 수 있는 연산 시간이 나옵니다. 그 시간을 token 하나의 연산 시간으로 나누면 chunk 의 token 수가 나옵니다.
-          </p>
-          <p>
-            앞의 예로 계산하면 이렇습니다. TPOT 목표가 25 ms 이고 decode 64 개의 바닥이 14.2 ms 이면 남는 시간은 10.8 ms 입니다. 실효 성능을 peak 의
-            60% 인 600 TFLOP/s 로 잡으면 그 시간에 6.5 TFLOP 을 계산할 수 있고 token 당 14 GFLOP 으로 나누면 약 460 token 이라 block
-            배수인 448 로 내립니다.
-          </p>
-          <p>
-            이 값은 TTFT 를 늘립니다. 4,096-token prompt 는 한 번에 prefill 하면 약 100 ms 안팎이지만 448 씩 나누면 10 step 이 필요하고 각
-            step 이 25 ms 근처이므로 첫 token 까지 250 ms 가까이 걸립니다. TTFT 목표가 그보다 빡빡하면 chunk 를 키우고 TPOT 를 내주거나 decode
-            batch 를 줄여 바닥 시간을 낮춰야 합니다.
-          </p>
-          <p>
-            너무 작은 chunk 에도 비용이 있습니다. Chunk 마다 weight 14 GB 를 다시 읽고 prefix 의 KV 를
-            다시 읽으므로 chunk 수에 비례한 고정 비용이 붙습니다. vLLM 문서가 큰 GPU 의 작은 model 에는
-            8,192 이상을, ITL 이 중요하면 2,048 정도를 권하는 것은 이 두 방향의 절충입니다.
-          </p>
-        </div>
-        <AlgorithmBlock
-          title="Decode SLO 에서 prefill chunk 크기를 정하는 절차"
-          input={["TPOT 목표 T_slo (예: 25 ms)", "TTFT 목표 T_ttft (예: 300 ms)", "최대 decode batch B_max 와 대표 context 길이 L", "측정한 BW_eff, F_eff, weight byte W, token 당 KV byte k", "대표 prompt 길이 n"]}
-          steps={[
-            { code: "T_dec ← (W + B_max·L·k) / BW_eff", note: "Decode 만 있을 때의 step 바닥 시간입니다. Chunk 가 없어도 이 시간은 걸립니다." },
-            { code: "if T_dec > T_slo: B_max 를 줄이거나 KV 를 줄이고 1 로", note: "Prefill 을 넣기 전에 decode 만으로 SLO 를 넘으면 chunk 로 해결할 수 없습니다." },
-            { code: "budget ← T_slo − T_dec", note: "Prefill 연산에 내줄 수 있는 시간입니다." },
-            { code: "c ← floor(budget · F_eff / (2P + a(ℓ)))", note: "Token 당 linear 2P FLOP 에 prefix ℓ 에 대한 attention 몫 a(ℓ) 을 더해 나눕니다. 긴 prompt 는 뒤쪽 chunk 에서 a(ℓ) 이 커지므로 대표 ℓ 을 n/2 로 잡습니다." },
-            { code: "c ← round_down(c, block_size)", note: "KV block 경계에 맞춰 내립니다." },
-            { code: "T_first ← ceil(n / c) · T_slo", note: "Prompt 를 chunk 수만큼의 step 으로 처리할 때 첫 token 까지의 시간입니다." },
-            { code: "if T_first > T_ttft: c 를 키우고 T_slo 를 다시 협상하거나 B_max 를 줄임", note: "TPOT 와 TTFT 는 같은 step 시간을 나눠 갖습니다. 둘 다 만족할 수 없으면 batch 를 줄여 바닥을 낮춥니다." },
-            { code: "max_num_batched_tokens ← B_max + c", note: "Decode 는 token 하나씩 budget 을 쓰므로 decode 몫을 더한 값이 scheduler 의 token budget 입니다." },
-          ]}
-          repeatUntil="측정한 p50 TPOT 와 TTFT 가 목표 안에 들 때까지 B_max 와 c 를 조정합니다."
-          output="Prefill chunk 크기 c 와 scheduler 의 token budget"
-        />
-      </section>
+<section id="inside-step" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 계산할 횟수와 가져올 데이터는 다른 장부입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>처리할 위치가 늘면 같은 모델의 곱셈과 덧셈을 더 수행합니다. 그와 함께 모델 가중치와 앞 문장의 저장 기록을 메모리에서 가져옵니다. 여러 위치가 같은 가중치를 재사용할 수 있지만 각 요청이 참고할 과거 기록은 다릅니다.</p><p>작은 모형에서 A와 B만 처리하면 200백만 번의 연산과 140 MB 전송이 필요하다고 둡니다. C를 한 위치 추가할 때마다 연산은 100백만 번, 전송은 2 MB씩 늘어납니다. 140 MB는 공통 가중치 100 MB와 A·B의 기록 20 MB씩으로 구성합니다. (가정)</p><p>C를 네 위치 넣은 실행은 600백만 번과 148 MB입니다. 16위치면 1800백만 번과 172 MB입니다. 이 값은 실제 언어 모델을 측정한 결과가 아니라 계산과 전송의 차이를 드러내도록 정한 전체 작업 장부입니다.</p></div></section>
 
-      <section id="long-context" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          64K 를 넘는 prompt 에서는 attention 의 n² 항이 prefill 시간을 지배합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Prefill 의 연산은 linear layer 의 n 에 비례하는 항과 attention 의 n² 에 비례하는 항의 합입니다. 짧은 prompt 에서는 linear 항이
-            크지만 두 항이 같아지는 길이를 넘으면 prompt 길이를 두 배로 늘릴 때 시간이 세 배 가까이 늘어납니다. 7B 급에서 그 교차점은 5만 token 근처입니다.
-          </p>
-          <p>
-            계산해 보면 causal mask 로 절반을 건너뛴 attention FLOP 은 약 2n²dN 이고, linear FLOP 은 2Pn 입니다. 둘이 같아지는 n 은
-            P/(dN) 이고 7B 에서 d = 4,096, N = 32 를 넣으면 약 53K 입니다. 64K prompt 에서는 attention 이 이미 linear 보다 크고 128K
-            에서는 2.4 배, 256K 에서는 4.8 배입니다.
-          </p>
-          <p>
-            시간으로 옮기면 64K prefill 은 linear 917 TFLOP 과 attention 약 1,100 TFLOP 을 합쳐 989 TFLOP/s 기준 2 초, 실효 60%
-            면 3.4 초입니다. 128K 는 6.3 PFLOP 으로 peak 기준 6.4 초가 됩니다. 이것이 long-context prefill 이 길이에 비해 더 나빠지는
-            이유입니다. kernel 이 느려서가 아니라 일이 n² 으로 늘어서입니다.
-          </p>
-          <p>
-            Chunking 은 이 시간을 줄이지 못하고 나눌 뿐입니다. 오히려 chunk 마다 prefix 의 KV 를
-            다시 읽으므로 KV 재읽기 byte 가 k·n² ÷ (2c) 로 늘어납니다. 64K prompt 를 2,048 씩 나누면
-            재읽기가 약 520 GB 로 0.16 초, 512 씩 나누면 2 TB 를 넘어 0.6 초가 넘습니다. 긴
-            prompt 일수록 chunk 를 작게 잡는 비용이 커집니다.
-          </p>
-          <p>
-            Memory 도 같이 봐야 합니다. MHA 7B 는 token 당 0.5 MB 이므로 64K context 한 request 가
-            32 GB 의 KV 를 차지하고, GQA 8 group 이면 4 GB 로 줄어듭니다. 이 예산은{" "}
-            <Link to="/cs/ai/model-vram-budgeting#kv-state">VRAM budgeting 글</Link>이 다루며, 여기서는
-            긴 context 가 prefill 의 연산과 decode 의 bandwidth 를 동시에 키운다는 점만 기억하면
-            됩니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="Prompt 길이 n 에 따라 prefill 시간이 어떻게 자라나요?"
-          idea="Linear layer 는 token 마다 같은 일을 하니 n 에 비례하고, attention 은 각 token 이 앞선 모든 token 을 보니 n² 에 비례합니다. 두 항이 같아지는 길이가 prefill 이 quadratic regime 으로 넘어가는 문턱입니다."
-          formula={String.raw`T_{\text{prefill}}(n)\approx\frac{2P\,n+2\,n^{2}\,d\,N}{F_{\text{eff}}},\qquad n^{\ast}=\frac{P}{d\,N}`}
-          annotatedFormula={String.raw`T_{\text{prefill}}(n)\approx\frac{\overbrace{2P\,n}^{\text{linear 항 (n 에 비례)}}+\overbrace{2\,n^{2}\,d\,N}^{\text{causal attention 항 (n² 에 비례)}}}{F_{\text{eff}}},\qquad \underbrace{n^{\ast}=\frac{P}{d\,N}}_{\text{두 항이 같아지는 길이}}`}
-          operations={[
-            { expression: String.raw`2P\,n`, annotation: ["Token 마다 2P FLOP 의 linear 연산을 n 번 더해", "길이에 비례하는 몫"] },
-            { expression: String.raw`2\,n^{2}\,d\,N`, annotation: ["QKᵀ 와 PV 두 곱셈을 layer N 개에서 causal 절반만 세어", "길이 제곱에 비례하는 몫"] },
-            { expression: String.raw`\frac{P}{d\,N}`, annotation: ["두 항을 같다고 놓고 n 으로 풀어", "quadratic regime 의 문턱을 구함"] },
-          ]}
-          terms={[
-            { symbol: "d", name: "Model 차원", description: "Hidden size 로 7B 급이면 4,096 입니다." },
-            { symbol: "N", name: "Layer 수", description: "Attention layer 수로 7B 급이면 32 입니다." },
-            { symbol: String.raw`n^{\ast}`, name: "교차 길이", description: "Linear 항과 attention 항이 같아지는 prompt 길이로 7B 에서 약 53K token 입니다." },
-          ]}
-          assumptions={["FlashAttention 처럼 causal 로 가려진 block 을 건너뛰는 kernel 을 가정해 4·n²·d·N 의 절반만 세었습니다.", "MoE 는 활성 parameter 로 P 를 바꿔 넣어야 하고, sliding-window 나 linear attention 층은 n² 항에서 빠집니다.", "F_eff 는 linear 와 attention kernel 이 다를 수 있어 하나의 값으로 근사했습니다."]}
-          interpretation="n 이 n* 보다 짧으면 prefill 은 linear 항의 세계라 chunk 나눔이 자유롭고, n* 를 넘으면 attention 항의 세계라 kernel 과 attention 구조가 시간을 정합니다."
-        />
-      </section>
+<section id="why-two-resources" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 더 빨리 계산해도 기다리는 데이터가 남을 수 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>장치가 초당 1조 번 계산하고 초당 100 GB를 옮길 수 있다고 합시다. C가 네 위치이면 계산만 해도 0.6 ms, 전송만 해도 1.48 ms가 필요합니다. 둘을 잘 겹쳐도 이 두 하한 중 큰 1.48 ms보다 빨리 끝낼 수 없습니다. (가정)</p><p>C를 16위치 넣으면 계산 하한은 1.8 ms, 전송 하한은 1.72 ms로 바뀝니다. 이번에는 계산 쪽이 더 큰 제약입니다. 입력을 더 넣으면서 전송도 148에서 172 MB로 늘었으므로 추가 계산이 항상 공짜라고 말할 수 없습니다.</p><p>처음의 한도 6은 이 두 속도를 저절로 알려 주지 않습니다. A와 B의 다음 응답 간격을 줄이려면 배정한 위치 수뿐 아니라 실제 연산 경로와 데이터 이동을 확인해야 합니다. 이제 이 역할에 쓰는 이름을 붙입니다.</p></div></section>
 
-      <section id="prefill-optimization" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Prefill 최적화는 네 층에서 서로 다른 항을 줄입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Prefill 을 빠르게 하는 방법은 한 가지가 아니고 각 층이 다른 항을 줄입니다. Kernel 층은 attention 의 n² 항이 memory 를 오가는 횟수를 줄입니다.
-            chunking 층은 시간을 나눠 decode 와 공존하게 합니다. scheduling 층은 어느 request 의 chunk 를 먼저 넣을지 정합니다. 분리 배치는 간섭
-            자체를 다른 GPU 로 보냅니다.
-          </p>
-          <p>
-            어느 층을 먼저 만질지는 병목이 어디인지에 달려 있습니다. Prompt 가 짧고 decode batch 가 큰 workload 에서는 chunk 크기와 decode
-            priority 가 TPOT 를 정합니다. 64K 를 넘는 prompt 가 흔한 workload 에서는 attention kernel 과 attention 구조가 TTFT 를
-            정합니다. 두 지표를 동시에 빡빡하게 요구하면 한 GPU 안의 절충으로는 부족해 분리 배치로 넘어갑니다.
-          </p>
-        </div>
-        <TermBreakdown
-          title="Prefill 최적화의 네 층과 각 층이 줄이는 항"
-          description="같은 이름의 최적화라도 어느 항을 줄이는지가 다르므로 병목을 먼저 재고 층을 고릅니다."
-          items={[
-            { term: "Kernel 층", description: "FlashAttention 계열은 attention 행렬을 HBM 에 쓰지 않아 n² 항의 memory traffic 을 줄이고 causal block 을 건너뜁니다.", example: "64K prefill 에서 attention 항 1,100 TFLOP 을 연산기 가까이에서 처리합니다.", boundary: "FLOP 자체는 줄지 않으므로 n² 성장은 그대로이며, 자세한 mechanism 은 FlashAttention 글이 맡습니다." },
-            { term: "Chunking 층", description: "Prompt 를 c token 씩 나눠 decode 와 같은 step 에 넣어 token 간격 상한을 지킵니다.", example: "4,096 prompt 를 448 씩 10 step 으로 나누면 TPOT 25 ms 를 지키고 TTFT 는 250 ms 가 됩니다.", boundary: "총 연산은 줄지 않고 chunk 수만큼 weight 와 prefix KV 재읽기가 늘어납니다." },
-            { term: "Scheduling 층", description: "Decode 를 먼저 채우고 남은 token budget 에 prefill 을 넣으며, 긴 prompt 가 짧은 prompt 를 굶기지 않게 순서를 정합니다.", example: "vLLM V1 은 대기 중 decode 를 모두 넣은 뒤 남는 budget 만큼 prefill 을 자동으로 chunk 합니다.", boundary: "Step 조립 규칙과 starvation 은 scheduler 글이 소유합니다." },
-            { term: "분리 배치 층", description: "Prefill 과 decode 를 다른 GPU 에 두어 간섭을 없애고 각 phase 의 parallelism 을 따로 고릅니다.", example: "DistServe 는 자기 실험에서 같은 SLO 로 7.4 배 많은 request 를 처리했다고 보고했습니다.", boundary: "KV 를 GPU 사이로 옮기는 비용과 두 pool 의 비율 조정이 새 문제가 되며, 이 글의 범위 밖입니다." },
-          ]}
-        />
-        <ProgressiveDetail
-          title="특정 model 이 64K 에서 prefill 이 몇 배 느려졌다는 수치를 어떻게 읽어야 하나요?"
-          preview="그 수치는 그 model 의 d·N·attention 구조와 그 장비의 F_eff 에서만 성립하므로 다른 model 에 옮기지 말고 n* 와 F_eff 를 다시 계산합니다."
-        >
-          <p>
-            같은 64K 라도 GQA group 수, sliding-window 나 linear attention 층의 비율, MoE 의 활성
-            parameter 수가 다르면 n* 가 수 배씩 달라집니다. 예를 들어 attention 층의 4 분의 1 만
-            full attention 이면 n² 항이 4 분의 1 이 되어 교차점이 200K 근처로 밀립니다.
-          </p>
-          <p>
-            그래서 이 글은 특정 model 의 체감치를 사실로 적지 않고 조건식으로만 말합니다. 어떤 model 의 long-context prefill 이 느리다는 보고를 읽으면 순서는
-            이렇습니다. 그 model 의 P, d, N, attention 구조를 식에 넣어 n* 를 구하고 측정 장비의 F_eff 로 T_prefill 을 다시 계산해 보고와 맞는지
-            확인합니다.
-          </p>
-        </ProgressiveDetail>
-      </section>
+<section id="phase-terms" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 입력 읽기와 답변 이어 쓰기에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>C처럼 입력의 여러 위치를 처리하는 단계가 prefill입니다. A·B처럼 앞서 고른 출력 토큰을 넣어 다음 토큰을 만드는 단계가 decode입니다. 입력을 몇 조각으로 나누어 처리하는 방식이 chunked prefill입니다.</p><p>두 종류를 한 실행에 넣으면 기존 답변도 새 입력 작업의 영향을 받습니다. 앞 사례의 A·B와 C가 같은 실행을 기다리는 관계를 먼저 떠올리면 됩니다. 각 단계가 언제나 특정 자원에 묶인다는 뜻은 아닙니다.</p></div><TermBreakdown title="역할을 이해한 뒤 이름을 붙입니다" items={[{"term": "Mixed batch", "description": "decode 위치와 prefill 위치를 함께 처리하는 묶음입니다. 지금은 A1·B1·C4입니다.", "boundary": "실제 실행의 비동기성·여러 GPU·stream 전달은 별도 조건입니다."}, {"term": "Token budget", "description": "한 실행에 배정할 위치 수의 한도입니다. 사례에서는 6입니다.", "boundary": "메모리 공간이나 실행 시간 한도를 대신하지 않습니다."}, {"term": "Chunk", "description": "C의 입력 중 이번에 처리하는 조각입니다. 첫 조각 길이는 4입니다.", "boundary": "어느 조각인지와 앞 문맥 길이도 비용을 바꿉니다."}, {"term": "FLOP", "description": "부동소수점 연산 한 번을 세는 단위입니다. 여기서는 곱셈과 덧셈을 각각 하나로 셉니다.", "boundary": "숫자의 정밀도와 명령 종류를 맞춰 장치 속도와 비교합니다."}, {"term": "Byte", "description": "옮기는 데이터 양의 단위입니다. 작은 사례는 MB=10⁶ byte입니다.", "boundary": "MiB=2²⁰ byte와 구분합니다."}, {"term": "Prefill–decode interference", "description": "새 입력 작업과 진행 중인 생성이 자원을 함께 쓰며 서로의 지연을 바꾸는 현상입니다.", "boundary": "모든 간섭이 같은 kernel의 계산 한 항으로 설명되지는 않습니다."}]} /></section>
 
-      <section id="evidence" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          근거는 roofline 원 논문과 두 serving 논문, vLLM 공식 문서입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            이 글의 수치는 모두 roofline 하한 계산이고 특정 장비의 실측이 아닙니다. Sarathi-Serve 와
-            DistServe 의 배수는 저자 자기보고이며 각자의 model 과 hardware, workload 에서만 성립합니다.
-            vLLM 문서의 권장값은 공식 문서이지만 model 크기와 GPU 에 따라 다시 재라는 전제가 붙어
-            있습니다.
-          </p>
-        </div>
-        <div id="paper-roofline" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Williams, Waterman, Patterson · Roofline: An Insightful Visual Performance Model for Multicore Architectures (CACM 2009)"
-            citeKey={1}
-            href="https://doi.org/10.1145/1498765.1498785"
-          >
-            Operational intensity 를 가로축, 도달 가능한 FLOP/s 를 세로축에 두고 bandwidth roof 와
-            compute roof 가 만나는 ridge point 로 kernel 의 병목을 판단하는 model 을 제안했습니다.
-            원 논문은 multicore CPU 를 대상으로 했고 GPU 와 LLM 은 같은 논리의 적용입니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-sarathi-serve" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Agrawal et al. · Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve (OSDI 2024)"
-            citeKey={2}
-            href="https://arxiv.org/abs/2403.02310"
-          >
-            Prefill 은 연산기를 채우고 decode 는 채우지 못한다는 관찰에서 출발해, prompt 를 비슷한
-            크기의 chunk 로 나누고 진행 중인 decode 를 멈추지 않는 stall-free scheduling 을 제안했습니다.
-            Mistral-7B 2.6 배, Falcon-180B 5.6 배의 capacity 향상은 저자 실험 범위입니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-distserve" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Zhong et al. · DistServe: Disaggregating Prefill and Decoding for Goodput-optimized LLM Serving (OSDI 2024)"
-            citeKey={3}
-            href="https://arxiv.org/abs/2401.09670"
-          >
-            같은 GPU 에 두 phase 를 두면 강한 간섭이 생기고 두 phase 의 자원 배분이 묶인다는 점을
-            정량화한 뒤 phase 를 다른 GPU 로 분리했습니다. 7.4 배 request, 12.6 배 빡빡한 SLO 는
-            저자 자기보고이며, 이 글은 간섭의 정량화만 가져오고 분리 서빙 자체는 다루지 않습니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-vllm-chunked-prefill" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="vLLM · Optimization and Tuning: Chunked Prefill"
-            citeKey={4}
-            href="https://docs.vllm.ai/en/latest/configuration/optimization.html"
-            type="code"
-          >
-            V1 에서 chunked prefill 이 기본으로 켜지며 scheduler 가 decode 를 먼저 채우고 남은
-            token budget 에 prefill 을 자동 chunk 한다는 점, 작은 budget 은 ITL 을 큰 budget 은 TTFT 를
-            개선한다는 절충을 공식 문서로 적고 있습니다.
-          </CitationBlock>
-        </div>
-        <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글: <Link to="/cs/ai/serving-latency-metrics-and-slo">TTFT·TPOT·ITL 과 SLO</Link>
-        </p>
-      </section>
-    </div>
-  );
+<section id="request-trace" data-teach-level="4" className="scroll-mt-20"><span id="interference" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">7. C의 20위치를 다섯 번에 걸쳐 읽습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>A와 B가 끝나지 않고 매번 한 위치씩 필요하다고 합시다. 매번 같은 한도 6과 같은 순서를 적용하면 C는 4→8→12→16→20위치까지 진행합니다. 남은 입력은 16→12→8→4→0입니다. (가정)</p><p>첫 네 번은 C의 입력 중간이므로 C의 첫 출력 토큰을 아직 고르지 않습니다. 다섯 번째에서 입력을 끝까지 계산하면 첫 출력을 고를 수 있습니다. 그다음 실행에는 C도 새 한 위치를 처리하는 경로로 들어갑니다.</p><p>실행마다 A·B는 다음 출력을 받지만 C의 첫 출력은 다섯 실행과 그 사이 대기 뒤에 도착합니다. 각 실행이 같은 위치 수를 처리해도 앞 문맥이 길어지고 다른 작업이 끼면 시간이 달라집니다. 배정 기록만으로 다섯 번의 시간을 같게 둘 수 없습니다.</p></div></section>
+
+<section id="mixed-model" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 조각 크기에 따라 두 시간을 비교합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>이번 비교에서는 C의 길이에 맞춰 전체 한도도 바꿉니다. 처음의 한도 6은 C4 장면입니다. 앞 장부를 식으로 적으면 C의 조각 길이 c에 대해 F=100(2+c) MFLOP, M=(140+2c) MB입니다. 장치는 1 TFLOP/s·100 GB/s라는 가정을 유지합니다. 여기서 F는 이 작은 모형의 전체 연산, M은 같은 범위의 전체 전송입니다.</p><p>표에서 두 시간 항을 나란히 비교합니다. c=4에서는 전송 항이 더 크고 c=16에서는 계산 항이 더 큽니다. 아래 장면도 같은 식에서 직접 계산하며 특정 장비의 측정값으로 표시하지 않습니다.</p><table><thead><tr><th>C의 조각</th><th>계산 하한</th><th>전송 하한</th></tr></thead><tbody><tr><td>0위치</td><td>0.2 ms</td><td>1.40 ms</td></tr><tr><td>4위치</td><td>0.6 ms</td><td>1.48 ms</td></tr><tr><td>8위치</td><td>1.0 ms</td><td>1.56 ms</td></tr><tr><td>16위치</td><td>1.8 ms</td><td>1.72 ms</td></tr><tr><td>20위치</td><td>2.2 ms</td><td>1.80 ms</td></tr></tbody></table></div><PrefillDecodePhaseDynamicsViz /><ExplainedFormula title="같은 작업량의 두 시간 하한" question="계산과 전송을 모두 끝내려면 최소 얼마가 걸릴까요?" idea="필요한 연산 수를 가능한 초당 연산 수로, 필요한 byte를 초당 전송량으로 나눕니다. 두 일을 모두 해야 하므로 더 큰 하한보다 빨리 끝날 수 없습니다." formula={String.raw`T\ge\max\!\left(\frac{F}{R},\frac{M}{D}\right)`} annotatedFormula={String.raw`T\ge\max\!\left(\underbrace{\frac{F}{R}}_{\text{계산 시간의 하한}},\underbrace{\frac{M}{D}}_{\text{전송 시간의 하한}}\right)`} operations={[{expression:"F/R",annotation:["600 MFLOP를 1 TFLOP/s로 나누면","0.6 ms입니다."]},{expression:"M/D",annotation:["148 MB를 100 GB/s로 나누면","1.48 ms입니다."]},{expression:String.raw`\max(0.6,1.48)`,annotation:["두 제약을 함께 만족해야 하므로","전체 시간은 최소 1.48 ms입니다."]}]} terms={[{symbol:"F",name:"같은 실행의 연산량",description:"부동소수점 연산 수입니다. 작은 사례는 100(2+c) MFLOP로 가정합니다."},{symbol:"M",name:"같은 실행의 전송량",description:"지정한 메모리 경계를 오가는 byte입니다. 작은 사례는 (140+2c) MB입니다."},{symbol:"R",name:"연산율의 상한",description:"사례는 1 TFLOP/s입니다. 단위·정밀도와 명령 종류를 맞춰야 합니다."},{symbol:"D",name:"전송률의 상한",description:"사례는 100 GB/s입니다. 여기서는 모든 단위 접두사가 10의 거듭제곱입니다."},{symbol:"T",name:"실제 실행 시간",description:"계산으로 얻은 하한과 별도로 관측하는 값입니다."}]} assumptions={["F와 M은 같은 작업 범위이며 R과 D는 그 작업에 적용되는 유효한 상한입니다.","작은 사례는 전체 작업 장부를 가정한 모형입니다. 특정 모델의 실제 FLOP·HBM byte 측정값이 아닙니다.","실제 달성 성능의 평균을 R·D에 넣으면 예측 모형이 될 수 있지만 보편적인 엄밀 하한으로 취급하지 않습니다."]} interpretation="c=16의 하한 1.8 ms와 관측 2.3 ms는 양립합니다. 하한만으로 2 ms 목표를 충족했다고 판정할 수 없습니다." /></section>
+
+<section id="arithmetic-intensity" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. byte마다 필요한 연산 수로 두 한도를 비교합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>작업의 FLOP을 같은 작업의 byte로 나눈 값을 연산 집약도라고 부릅니다. 작은 장치의 두 속도 비율은 1조/1000억=10 FLOP/byte입니다. 두 자원의 한도가 만나는 이 지점을 ridge point라고 합니다.</p><p>C가 네 위치이면 600/148≈4.054이고 16위치이면 1800/172≈10.465입니다. 앞서는 전송 시간 항이 더 크고 뒤에서는 계산 시간 항이 더 큽니다. 이처럼 memory-bound와 compute-bound는 분석한 작업과 장치 조건의 관계입니다.</p><p>짧은 prefill은 가중치를 충분히 재사용하지 못해 전송 항이 클 수 있습니다. 반대로 decode도 batch와 문맥 길이·KV 구조를 바꾸면 비율이 바뀝니다. 단계 이름만 보고 병목을 확정하지 않습니다.</p></div><ExplainedFormula question="어느 자원의 이상적 한도가 먼저 걸리나요?" idea="옮기는 byte마다 필요한 계산 수와 장치의 두 최대 속도 비율을 비교합니다. 같은 범위로 센 분자와 분모만 비교합니다." formula={String.raw`I=F/M,\qquad I^*=R/D,\qquad \text{performance}\le\min(R,D I)`} annotatedFormula={String.raw`\underbrace{I=F/M}_{\text{작업의 FLOP/byte}},\qquad\underbrace{I^*=R/D}_{\text{두 한도가 만나는 지점}}`} operations={[{expression:"600/148",annotation:["c=4의 작업 비율은","약 4.054 FLOP/byte입니다."]},{expression:"1800/172",annotation:["c=16의 작업 비율은","약 10.465 FLOP/byte입니다."]},{expression:"R/D=10",annotation:["작은 장치 가정에서는 10을 기준으로","더 큰 시간 하한을 주는 자원이 바뀝니다."]}]} terms={[{symbol:"I",name:"작업의 연산 집약도",description:"같은 작업이 수행할 FLOP을 지정한 메모리 경계의 byte로 나눈 값입니다."},{symbol:"I^*",name:"Ridge point",description:"장치의 두 속도 한도가 만나는 비율입니다."},{symbol:"R,D",name:"연산·전송 속도 한도",description:"앞 절에서 고정한 1 TFLOP/s와 100 GB/s입니다."}]} assumptions={["캐시와 HBM 사이를 분석한다면 M에도 그 경계의 읽기와 쓰기를 셉니다.","일부 linear FLOP만 세고 전체 모델 byte로 나눈 proxy를 정확한 전체 작업 intensity로 부르지 않습니다.","상한 아래로 성능이 떨어지는 원인은 실행 의존성·점유율·통신·준비 비용 등으로 별도 확인합니다."]} interpretation="c=4는 전송 항이, c=16은 계산 항이 더 큽니다. prefill·decode라는 단계 이름만으로 이 위치가 정해지지는 않습니다." /></section>
+
+<section id="bound-not-measurement" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 하한 1.8 ms는 2 ms 목표의 통과 증거가 아닙니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>C의 조각 길이가 16이고 목표가 2 ms라고 합시다. 하한 1.8 ms보다 목표가 크므로 이 계산만으로 후보를 배제하지는 못합니다. 실제 관측이 2.3 ms라면 목표는 실패하며 하한과 모순도 없습니다. 반대로 c=20은 하한부터 2.2 ms라서 이 가정 아래 2 ms에 끝날 수 없습니다. (가정)</p><p>계산과 전송이 완전히 겹치지 않거나 여러 kernel 사이에 의존성이 있으면 시간이 더 듭니다. 실행 준비·동기화·통신·낮은 달성 성능도 추가됩니다. 실제 시간이 두 하한의 최댓값과 합 사이에 반드시 놓인다는 상한은 없습니다.</p><p>여기서 구한 것은 실행 시간의 하한입니다. 사용자가 관측하는 토큰 간격에는 실행 사이 대기와 전달도 들어갑니다. 묶음 응답이나 비동기 실행에서는 한 실행 시간이 곧 모든 요청의 ITL이라는 등식도 성립하지 않습니다.</p></div></section>
+
+<section id="paper-roofline" data-teach-level="5" className="scroll-mt-20"><span id="evidence" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">11. 원 논문의 roof는 속도의 상한입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Roofline 원 보고서 §3은 실제 성능이 연산 속도 상한과 메모리 속도에 집약도를 곱한 값 중 작은 쪽을 넘지 못한다고 설명합니다. 작업량을 이 속도로 나누면 앞 절의 시간 하한이 됩니다.</p><p>같은 절은 캐시가 걸러 낸 뒤 DRAM으로 오간 byte를 셉니다. 가중치 텐서의 논리적 크기와 실제 HBM 전송량은 같다고 보장되지 않습니다. 타일 사이 재읽기와 cache 재사용을 확인해야 합니다.</p></div><div id="roofline-original" className="mt-8 scroll-mt-20"><CitationBlock source="Williams·Waterman·Patterson · EECS-2008-134 §3" citeKey={1} href="https://www2.eecs.berkeley.edu/Pubs/TechRpts/2008/EECS-2008-134.pdf"><q>upper bound on performance</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>우리 c=4의 4.054 FLOP/byte는 10보다 작습니다. 전송 한도 100 GB/s를 곱하면 성능 상한은 약 405.4 GFLOP/s이고 600 MFLOP를 처리하는 시간 하한은 다시 1.48 ms입니다.</p></div></div></section>
+
+<section id="source-progress" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 실제 scheduler는 남은 위치 수에서 출발합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>코드 패널은 vLLM v0.27.1 commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac의 전체 파일입니다. scheduler.py L440~450은 단계 이름 대신 이미 처리한 위치와 처리할 총위치의 차이를 따라잡는 구조를 설명합니다.</p><p>A의 총위치를 101, 계산 완료 위치를 100으로 두면 차이는 1입니다. B도 같은 차이 1이고 C는 입력 20, 완료 0이라 차이가 20입니다. 추측 토큰과 비동기 placeholder가 없다는 조건에서 앞의 작은 사례와 같습니다. (가정)</p><p>L516~523은 이 차이를 요청별 조각 상한과 남은 token budget으로 자릅니다. 이 사례에서 A1을 배정하면 잔액 5, B1 뒤에는 4입니다. C의 아직 필요한 20을 남은 4에 맞추어 자르는 연산으로 이어집니다.</p></div><CodeViewButton label="원문: 완료 위치와 필요한 위치의 차이" onClick={() => sidebar.navigate("progress-fields", codeRefs["progress-fields"])} /><CodeViewButton label="원문: 진행 요청의 조각 상한과 잔액" onClick={() => sidebar.navigate("running-budget", codeRefs["running-budget"])} /></section>
+
+<section id="source-priority" data-teach-level="5" className="scroll-mt-20"><span id="paper-vllm-chunked-prefill" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">13. 진행 목록 먼저가 모든 decode 먼저라는 뜻은 아닙니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>L483부터 원문은 self.running의 순서로 요청을 살핍니다. 이미 일부 입력을 처리한 C도 다음에는 이 목록에 들어갑니다. 따라서 목록 앞에 있는 요청이 늘 decode라는 보장은 없습니다.</p><p>반례로 아직 입력을 읽는 P가 A·B보다 앞서 있고 이번에 6위치가 필요하다고 합시다. 해당 조건을 통과한 P가 6을 쓰면 잔액은 0이라 뒤의 A·B는 이번 실행에 들어가지 못합니다. 진행 요청 우선이라는 말만으로 A·B의 한 위치를 항상 예약했다고 볼 수 없습니다. (가정)</p><p>같은 버전의 최적화 문서는 decode 우선이라는 요약을 제공합니다. 실제 분기를 확인할 때는 이 요약과 원문의 순회 조건을 구분합니다. 특정 분산 실행의 prefill 지연 조건도 있으므로 여기서는 동기식·단일 장치·추가 지연 정책 없음으로 제한합니다.</p></div><CodeViewButton label="원문: running 순회와 prefill 지연 조건" onClick={() => sidebar.navigate("running-order", codeRefs["running-order"])} /><div id="vllm-policy-doc" className="mt-8 scroll-mt-20"><CitationBlock source="vLLM v0.27.1 · Chunked Prefill" citeKey={1} href="https://docs.vllm.ai/en/v0.27.1/configuration/optimization/"><q>prioritizes decode requests</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>우리 A·B가 목록 앞에 있는 사례는 요약과 같은 배정이 나옵니다. P가 앞에서 잔액을 쓰는 반례는 그 요약을 모든 상태의 절대 우선 규칙으로 읽을 수 없는 이유입니다.</p></div></div></section>
+
+<section id="source-admission" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">14. 대기 중인 C도 조각과 저장 조건을 함께 통과합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>처음 대기 중인 C는 scheduler.py L879에서 필요한 20위치를 셉니다. L899~914는 별도 양수 상한을 적용하고 chunking 허용 여부를 확인한 뒤 잔액과 작은 쪽을 고릅니다. chunking이 켜지고 잔액이 4이면 C4가 됩니다.</p><p>config의 long_prefill_token_threshold=0은 요청별 추가 조각 상한을 끈다는 뜻입니다. 모든 조각을 16의 배수로 자르라는 규칙은 이 분기에 없습니다. 총 배정 한도도 max_num_scheduled_tokens를 따로 설정하면 max_num_batched_tokens와 다를 수 있습니다.</p><p>이후 KV 공간 할당과 요청 자리 등의 조건도 통과해야 합니다. 전체 입력이 들어갈 공간을 먼저 확인하는 설정에서는 C4의 공간만 있다는 사실로 C를 받아들이지 못할 수 있습니다. 이 글의 작은 배정은 공간과 다른 조건이 충분하다고 가정했습니다.</p></div><CodeViewButton label="원문: 대기 요청의 chunking 허용과 잔액" onClick={() => sidebar.navigate("waiting-chunk", codeRefs["waiting-chunk"])} /><CodeViewButton label="원문: 조각 상한 0과 실제 배정 한도" onClick={() => sidebar.navigate("scheduler-config", codeRefs["scheduler-config"])} /></section>
+
+<section id="paper-sarathi" data-teach-level="5" className="scroll-mt-20"><span id="paper-sarathi-serve" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">15. Sarathi는 A와 B를 먼저 담는 절차를 명시합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Sarathi-Serve Algorithm 3의 6~8행은 진행 중인 decode를 먼저 담고 9~12행은 진행 중인 입력 조각을 넣습니다. 13~20행은 남은 예산 안에서 새 요청을 받습니다. 우리 A1·B1 뒤에 C4를 넣는 장면은 이 정책을 작은 숫자로 적용한 것입니다.</p><p>§4.3은 여러 token 수의 실제 실행을 프로파일링해 목표를 넘지 않는 예산을 고르는 절차를 설명합니다. 작은 조각은 반복 KV 접근과 실행 준비 비용을 늘릴 수 있습니다. 논문의 이전 vLLM 비교 정책을 현재 고정 commit의 모든 분기와 동일시하지 않습니다.</p><p>저자들은 해당 평가에서 Mistral-7B·단일 A100의 최대 2.6배와 Falcon-180B·A100 8개·2-way pipeline 및 4-way tensor 구성의 최대 5.6배 처리 용량을 보고했습니다. 이는 논문 부하와 tail 지연 조건의 비교값이며 이 글의 1.48 ms나 현재 배포의 배수가 아닙니다.</p></div><div id="sarathi-algorithm" className="mt-8 scroll-mt-20"><CitationBlock source="Sarathi-Serve v3 · Algorithm 3, §4.3" citeKey={1} href="https://arxiv.org/html/2403.02310v3#S4"><q>repeated KV-cache access</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>C를 4씩 나누면 다음 조각이 이전 조각의 기록도 읽습니다. 이 추가 읽기를 포함해 A·B의 간격과 C의 첫 응답을 함께 측정해야 합니다.</p></div></div></section>
+
+<section id="large-case" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">16. 큰 dense 사례에서도 byte 단위를 먼저 맞춥니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>이제 별도 가정으로 dense linear parameter 근사 P=70억, FP16 가중치 14 GB, query 폭 4096, full-attention 32층을 둡니다. MHA라 KV 폭도 4096이며 원소당 2byte입니다. 실제 특정 7B 모델의 정확한 모든 연산을 뜻하지 않습니다. (가정)</p><p>토큰당 KV는 2×32×4096×2=524288byte, 즉 0.5 MiB입니다. 64요청이 각각 1024위치 기록을 읽으면 34359738368byte=32 GiB입니다. 가중치 14 GB까지 더한 기본 읽기는 48359738368byte이며 3.35 TB/s로 나누면 하한 약 14.4357 ms입니다.</p><p>연산 속도는 약 989 TFLOP/s, 대역폭은 3.35 TB/s인 H100 SXM급 참조 모형으로 둡니다. NVIDIA 공식 표의 FP16 수치 1979 TFLOP/s에는 sparsity 각주가 붙습니다. 여기서는 그 값과 dense 근사 989를 혼동하지 않습니다.</p><p>같은 가중치의 linear 연산과 한 번의 가중치 읽기만 보는 proxy에서는 decode batch 1의 비율은 약 1, 입력 4096위치는 약 4096 FLOP/byte입니다. 하지만 이것은 전체 attention·activation·쓰기를 포함한 실제 HBM 집약도가 아닙니다. 두 작업을 같은 범위로 센 뒤 ridge 약 295.2와 비교해야 합니다.</p></div><div id="h100-spec" className="mt-8 scroll-mt-20"><CitationBlock source="NVIDIA H100 · SXM specifications" citeKey={1} href="https://www.nvidia.com/en-us/data-center/h100/"><q>With sparsity.</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>이 글의 989 TFLOP/s는 dense 값의 반올림 참조 가정입니다. 지원 정밀도와 실제 달성 속도는 별도이며 공식 최대 속도를 실제 실행 속도로 쓰지 않습니다.</p></div></div></section>
+
+<section id="chunk-attention" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">17. 조각의 뒤쪽일수록 더 많은 앞 기록을 봅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>C의 첫 네 위치는 각각 1·2·3·4위치를 참고하므로 유효한 쌍이 10개입니다. 두 번째 네 위치는 기존 네 위치와의 쌍 16개까지 더해 26개입니다. 새 조각 안의 삼각 영역을 빼고 c×앞문맥만 세면 첫 조각의 attention을 0으로 잘못 계산합니다.</p><p>실제 Transformers eager attention의 두 matmul은 Q와 K로 점수를 만들고 그 비율로 V를 합칩니다. 같은 query 폭 d에서 유효한 쌍마다 두 계산을 4d FLOP로 세고 층 수를 곱하면 아래 식입니다. 원문은 더 넓은 행렬을 계산한 뒤 mask를 적용할 수 있어 유효 연산 수와 실제 실행 명령 수는 다릅니다.</p><p>16절의 B=64·L=1024에서 C512·이전 C 문맥 0을 넣으면 linear 약 8.064 TFLOP, decode attention 약 0.03436 TFLOP, C attention 약 0.06885 TFLOP입니다. 합계의 계산 하한은 약 8.258 ms입니다. 새 KV 쓰기까지 최소 장부에 더한 전송 항은 약 14.526 ms입니다.</p><p>C2048에서는 같은 방식의 계산 하한이 약 31.044 ms이고 전송 항은 약 14.766 ms입니다. 이 모형에서 최소 시간이 더 커진다는 것은 알지만 실제 토큰이 정확히 31.044 ms 뒤에 도착한다고 결론내리지는 않습니다. activation·통신·추가 읽기와 실제 kernel 비용은 더 확인해야 합니다.</p></div><CodeViewButton label="원문: QK와 PV의 두 matmul" onClick={() => sidebar.navigate("attention-products", codeRefs["attention-products"])} /><ExplainedFormula question="앞 문맥이 있는 c개 입력 위치의 attention 연산은 얼마나 되나요?" idea="새 위치마다 이미 있는 ℓ개와 자신까지의 새 위치를 봅니다. 쌍마다 점수와 내용 합산의 두 내적을 세고 모든 층을 더합니다." formula={String.raw`A(c,\ell)=4dN\!\left(c\ell+\frac{c(c+1)}2\right)`} annotatedFormula={String.raw`A(c,\ell)=\underbrace{4dN}_{\text{QK·PV와 모든 층}}\left(\underbrace{c\ell}_{\text{이전 문맥 쌍}}+\underbrace{\frac{c(c+1)}2}_{\text{새 위치끼리의 causal 쌍}}\right)`} operations={[{expression:"c=4, ℓ=0",annotation:["새 위치가 보는 쌍은 1+2+3+4라서","10쌍입니다."]},{expression:"c=4, ℓ=4",annotation:["기존 네 위치와의 16쌍을 더하면","26쌍이 됩니다."]},{expression:"4dN",annotation:["각 쌍의 QK와 PV를 각각 2d FLOP로 세고","층 수 N을 곱합니다."]}]} terms={[{symbol:"c",name:"이번 조각의 위치 수",description:"C의 첫 조각에서는 4입니다."},{symbol:String.raw`\ell`,name:"앞서 처리한 입력 길이",description:"첫 조각은 0이고 두 번째 조각은 4입니다."},{symbol:"d",name:"모든 query head 폭의 합",description:"큰 dense 사례에서는 4096입니다. KV head 수와 구분합니다."},{symbol:"N",name:"full-attention 층 수",description:"큰 사례에서는 32개 층이 같은 계산을 한다고 가정합니다."}]} assumptions={["multiply-add를 2 FLOP로 세는 수학적 유효 연산량이며 softmax·projection·정규화는 별도입니다.","causal attention의 유효한 삼각 쌍을 셉니다. 실제 kernel의 tile·padding·마스킹 구현은 추가 연산을 할 수 있습니다.","GQA로 KV head를 줄여도 query head가 그대로면 이 QK·PV 연산을 같은 비율로 나누지 않습니다."]} interpretation="같은 c=4라도 뒤쪽 조각은 더 긴 앞부분을 읽습니다. token 수만 고정하면 모든 실행 시간이 같아진다는 결론은 나오지 않습니다." /></section>
+
+<section id="chunk-size" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">18. 448은 다시 측정할 후보로 고릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>다음은 앞의 MHA 읽기 장부와 다른 배포 조건에서 측정했다고 가정하는 별도 예입니다. decode 실행 14.2 ms, 시간 목표 25 ms, 추가 linear 계산율 600 TFLOP/s, 위치당 14 GFLOP로 둡니다. 앞의 14.4357 ms 하한과 같은 조건의 측정값으로 14.2 ms를 놓으면 모순입니다. (가정)</p><p>단순 합산 예측의 여유는 25−14.2=10.8 ms입니다. 10.8 ms×600 TFLOP/s를 14 GFLOP로 나누면 462.857위치입니다. 후보를 16의 배수로만 시험하기로 따로 정하면 448을 고릅니다. 16배수는 이 탐색의 가정이며 vLLM의 보편적 요구가 아닙니다.</p><p>448의 추가 linear 시간은 약 10.453 ms이고 합산 예측은 24.653 ms입니다. 여기에는 추가 attention·전송·달성률 변화·실행 준비가 없으므로 통과 보증이 아닙니다.</p><p>실제 모델·문맥·동시 요청 분포에서 같은 지연 지표의 tail을 재어 후보를 조정합니다.</p><p>4096위치를 448씩 나누면 앞의 아홉 조각은 4032위치이고 마지막은 64위치라 총 열 번입니다. 열 실행이 모두 25 ms 이내이고 사이 대기와 앞뒤 전달이 없다는 조건이면 실행 합은 250 ms 이내입니다. 실제 TTFT는 대기와 전달 및 첫 출력 사건을 포함해 따로 잽니다.</p></div></section>
+
+<section id="long-context" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">19. 긴 문맥에서는 앞 위치 쌍의 계산이 커집니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>같은 dense 모형의 linear 주도항은 2Pn이고 full causal attention의 유효 연산은 2dN·n(n+1)입니다. 흔히 쓰는 2dNn²은 n이 클 때의 주도항입니다. 둘을 같게 두는 근사 교차 길이는 70억/(4096×32)≈53405.76입니다.</p><p>64K=65536위치를 넣으면 두 주도항의 합은 약 2.0434 PFLOP이고 989 TFLOP/s의 계산 하한은 약 2.066초입니다. 128K=131072에서는 약 6.3386 PFLOP, 6.409초입니다. 순수 실행 측정이나 대기까지 포함한 TTFT 값이 아닙니다.</p><p>모든 조건을 유지하고 full-attention 층만 1/4로 줄이면 이 두 항의 교차 근사는 약 213623위치로 옮겨 갑니다. 나머지 local·linear 층의 비용은 남습니다. FlashAttention 같은 IO 개선도 저장·이동을 줄이는 방식과 수학적인 쌍의 수를 구별해 읽어야 합니다.</p><p>KV 용량도 따로 셉니다. 이 MHA 사례의 한 요청 64K는 32 GiB입니다. query head 32를 유지하고 KV head를 8로 줄이면 비율은 1/4이라 8 GiB입니다. 이를 이유로 QK·PV 연산까지 자동으로 1/4이 된다고 계산하지 않습니다.</p></div><ExplainedFormula question="문맥이 길어질 때 두 주요 연산 항은 어디서 같아지나요?" idea="dense linear 층은 위치 수에 비례하고 full causal attention은 모든 앞쪽 위치 쌍을 셉니다. 긴 문맥에서 두 주도항을 같게 둡니다." formula={String.raw`F_{\rm linear}\approx2Pn,\quad F_{\rm attention}=2dNn(n+1)\sim2dNn^2,\quad n^*\approx\frac{P}{dN}`} annotatedFormula={String.raw`\underbrace{2Pn}_{\text{위치마다 가중치 계산}}\approx\underbrace{2dNn^2}_{\text{앞 위치 쌍의 주도항}}\quad\Longrightarrow\quad n^*\approx\frac P{dN}`} operations={[{expression:"2Pn",annotation:["P=7×10⁹인 linear 근사에서","위치 수가 두 배면 이 항도 두 배입니다."]},{expression:"2dNn(n+1)",annotation:["causal 쌍을 정확히 세면 n(n+1)이 남고","n²은 긴 문맥의 주도항입니다."]},{expression:"P/(dN)",annotation:["7×10⁹/(4096×32)는","약 53405.76 위치입니다."]}]} terms={[{symbol:"P",name:"linear 연산용 parameter 근사",description:"이 글의 dense 사례는 7×10⁹로 가정합니다. 임의의 모델 total parameter에 자동 적용하지 않습니다."},{symbol:"n",name:"입력 위치 수",description:"64K를 쓸 때는 65536으로 명시합니다."},{symbol:"d,N",name:"query 폭과 full 층 수",description:"큰 사례는 4096과 32입니다."}]} assumptions={["전 층이 같은 dense full causal attention이며 projection·FFN은 2Pn 근사에 포함합니다.","통신·softmax·비선형·padding 등의 비용은 이 두 항에 없습니다.","실제 kernel의 IO 최적화와 수학적으로 남는 위치 쌍의 연산량을 구분합니다."]} interpretation="전체 full 층만 1/4로 줄인 가정에서는 교차 길이가 약 213623으로 늘지만 나머지 local·linear 층의 자체 비용은 남습니다." /></section>
+
+<section id="prefix-rereads" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">20. 작게 나누면 같은 앞 기록을 다시 읽습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>처음 C20을 4씩 나눈 사례로 돌아옵니다. 각 조각이 앞 기록을 한 번씩 읽는다면 누적 길이는 0+4+8+12+16=40위치입니다. 전체 입력이 20위치라는 것과 누적 전송으로 40위치를 읽었다는 것은 다른 양입니다. (가정)</p><p>큰 MHA 가정에서 n=65536, 위치당 524288byte를 사용합니다. c=2048이면 32조각의 이전 prefix 재읽기가 532575944704byte=496 GiB입니다. c=512이면 128조각에 2181843386368byte=2032 GiB입니다. 전송률 3.35 TB/s로 나눈 값은 각각 약 0.159초와 0.651초입니다.</p><p>이 계산은 각 조각이 앞부분을 HBM에서 정확히 한 번 읽는 가정입니다. 실제로 L2에 남거나 query tile마다 다시 가져오면 달라집니다. Sarathi §5.4.1의 Yi-34B·TP2 실험도 512 조각에서 최대 약 25%의 prefill 추가 시간을 보고하지만 우리 64K 모형의 측정 결과로 옮기지는 않습니다.</p></div><ExplainedFormula question="각 조각이 앞의 KV를 한 번씩 다시 가져온다면 얼마나 읽나요?" idea="첫 조각은 앞 기록이 없고 두 번째는 c개, 세 번째는 2c개를 읽습니다. 이 누적 길이를 등차수열로 더합니다." formula={String.raw`m=n/c,\qquad M_{\rm reread}=kc\sum_{j=0}^{m-1}j=kc\frac{m(m-1)}2`} annotatedFormula={String.raw`\underbrace{k}_{\text{위치당 KV byte}}\underbrace{c}_{\text{조각 길이}}\underbrace{\frac{m(m-1)}2}_{\text{앞 조각 개수의 합}}`} operations={[{expression:"0+4+8+12+16",annotation:["C의 20위치를 4씩 나누면","이전 위치를 누적 40개 읽습니다."]},{expression:"m=32",annotation:["65536/2048이면 앞부분 재읽기는","496 GiB입니다."]},{expression:"m=128",annotation:["65536/512이면 같은 모형에서","2032 GiB입니다."]}]} terms={[{symbol:"n,c,m",name:"전체 길이·조각 길이·조각 수",description:"여기서는 c가 n을 나누어떨어지게 합니다."},{symbol:"k",name:"위치당 KV byte",description:"큰 MHA 가정은 524288 byte입니다."},{symbol:String.raw`M_{\rm reread}`,name:"이전 조각의 누적 읽기",description:"새 조각 내부의 읽기·쓰기와 가중치·activation 전송은 포함하지 않습니다."}]} assumptions={["각 조각이 이전 prefix 전체를 HBM에서 정확히 한 번 읽는 모형입니다.","실제 HBM traffic은 L2 재사용·query tile·kernel 경로·공유에 따라 달라집니다.","이 값은 저장할 KV 용량이 아니라 여러 실행에 걸친 누적 전송량입니다."]} interpretation="작게 나누면 한 번에 추가하는 계산을 줄이지만 실행 횟수와 prefix 재읽기가 늘 수 있습니다. 두 지연 목표를 함께 재야 합니다." /></section>
+
+<section id="paper-distserve" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">21. 두 단계를 다른 장치로 보내면 KV 전달이 생깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>DistServe는 입력 처리와 출력 이어 쓰기를 다른 GPU 묶음에 배치하고 단계마다 자원과 병렬 구성을 고릅니다. 우리 사례에 적용하면 C의 입력을 읽는 일이 A·B의 같은 실행 묶음에 직접 들어오지 않습니다. 대신 C의 기록을 생성 담당 장치로 전달해야 합니다.</p><p>논문 §3.3은 OPT-66B의 512-token KV 약 1.13 GB를 예로 듭니다. 초당 10요청이라면 초당 약 11.3 GB, 약 90 Gbit 전송이 필요하다고 설명합니다. 같은 배치의 간섭을 줄였더라도 이 연결과 두 장치 묶음의 대기열은 남습니다.</p><p>논문의 최대 7.4배 요청률 또는 12.6배 엄격한 SLO는 OPT 13B~175B와 해당 응용·부하 및 90% 이상 충족 목표의 평가입니다. 이 숫자를 현재 vLLM 대비 모든 배포의 효과로 일반화하지 않습니다. 배치·전송·부하 분담을 실제 조건에서 비교해야 합니다.</p></div><div id="distserve-original" className="mt-8 scroll-mt-20"><CitationBlock source="DistServe v3 · §3.3, §4, §6" citeKey={1} href="https://arxiv.org/html/2401.09670v3#S3.SS3"><q>Communication overhead</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>C의 첫 응답 경로에는 입력 처리 뒤 KV 전송과 생성 쪽 수용이 추가됩니다. A·B의 간격만 재면 새로 늘어난 이 비용을 놓칠 수 있습니다.</p></div></div></section>
+
+<section id="prefill-optimization" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">22. 바꿀 대상을 실행·배정·배치 위치로 나눕니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>같은 C4라도 실제 kernel이 옮긴 byte와 달성 FLOP/s가 낮다면 계산 경로부터 확인합니다. Attention kernel의 IO, 가중치 정밀도, tile, 통신과 실제 GPU 작업을 확인하는 단계입니다. 논리 장부만 바꾸어 측정값이 개선됐다고 보고하지 않습니다.</p><p>그다음 이번에 배정할 C의 길이와 A·B의 순서를 조정합니다. 조각별 실행 시간, 누적 대기, C의 첫 도착과 A·B의 이후 간격을 같은 요청 기록으로 잇습니다. 작은 조각으로 한 번의 시간을 줄여도 C의 전체 기다림이 늘 수 있습니다.</p><p>마지막으로 단계를 다른 장치에 둘지와 각 장치 수를 정합니다. KV 전송과 두 대기열, 불균형, 요청 길이 분포를 함께 봅니다. 고정한 SLO의 표본과 기간에서 측정해 앞의 후보 계산을 검증합니다.</p></div></section>
+
+<section id="boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">23. 이 모형의 숫자로 말할 수 있는 범위를 확인합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>작은 A1·B1·C4는 공간이 충분하고 비동기·추측·다중 장치 조건을 뺀 배정입니다. 실제 코드는 다른 조건을 통과한 뒤 실행을 예약합니다. 진행 위치를 예약한 시점과 GPU가 실제로 끝낸 시점도 구분해야 합니다.</p><p>두 시간 항은 같은 범위로 센 작업의 하한입니다. 일부만 센 proxy나 별도 배포의 14.2 ms를 같은 조건의 확정 시간으로 합치지 않습니다. 특정 장치 최대 속도와 현재 달성 속도, 저장 용량과 누적 전송량을 끝까지 구분합니다.</p></div><ContentBoundary article="prefill-decode-phase-dynamics" /></section>
+
+<section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">24. 조건을 바꿔 다음 결과를 예상해 보세요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>C16의 계산 하한은 1.8 ms이고 목표는 2 ms입니다. 실제 2.3 ms가 나왔다면 계산이 틀렸을까요? C20의 하한 2.2 ms에서는 어떤 결정을 할 수 있나요? (답: 10절)</p><p>입력을 아직 읽는 P가 running 목록에서 A·B보다 먼저 6위치를 모두 배정받았습니다. A·B가 decode라는 이유로 이번에 꼭 들어갈까요? (답: 13절)</p><p>C20을 4씩 나눌 때 앞 기록을 누적 40위치 읽었다면 저장 공간에도 40위치의 서로 다른 KV가 생겼을까요? 더 작은 조각을 택할 때 무엇을 함께 재야 할까요? (답: 20절)</p></div></section>
+</div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{vllm:prefillDecodeTree}} projectMetas={{vllm:{id:"vllm",label:"고정 vLLM V1 · Transformers attention",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;
 }

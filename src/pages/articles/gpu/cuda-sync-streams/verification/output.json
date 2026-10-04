@@ -1,0 +1,96 @@
+{
+  "scope": "Authored CPU model, not CUDA execution or measured GPU performance.",
+  "schedules": [
+    [
+      [
+        0,
+        2,
+        7,
+        9
+      ],
+      [
+        9,
+        11,
+        16,
+        18
+      ]
+    ],
+    [
+      [
+        0,
+        2,
+        7,
+        9
+      ],
+      [
+        2,
+        4,
+        12,
+        14
+      ]
+    ],
+    [
+      [
+        0,
+        2,
+        7,
+        9
+      ],
+      [
+        2,
+        4,
+        12,
+        14
+      ],
+      [
+        9,
+        11,
+        17,
+        19
+      ],
+      [
+        14,
+        16,
+        22,
+        24
+      ]
+    ]
+  ],
+  "kernel_substitution": {
+    "input": 7,
+    "iterations": 5,
+    "output": 8
+  },
+  "event_model": {
+    "unrecorded_wait": null,
+    "existing_wait": 1,
+    "latest_record": 2
+  },
+  "same_work_multi_gpu_ms": 22,
+  "checked_N": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

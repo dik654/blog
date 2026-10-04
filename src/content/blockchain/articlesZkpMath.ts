@@ -464,15 +464,70 @@ export const zkpMathArticles: Article[] = [
   },
   {
     slug: "extension-field-theory",
-    title: "Extension field: minimal polynomial·tower·Frobenius",
+    title: "확장체: 세 숫자에서 아홉 원소로 계산 넓히기",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "새 root를 붙이는 입구" },
-      { id: "minimal-polynomial", title: "Minimal polynomial과 degree" },
-      { id: "tower", title: "Tower law" },
-      { id: "frobenius", title: "Frobenius cycle" },
-      { id: "release", title: "Extension profile release" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 세 숫자로 안 되는 계산에 새 원소를 붙입니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 숫자 두 칸을 받아 같은 두 칸으로 계산합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 1+u와 2+u를 곱하면 1이 남습니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 항을 펼치고 새 규칙으로 두 칸에 돌려놓습니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 원소 수를 늘려도 0 아닌 값으로 나눌 수 있어야 합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 원래 체와 확장체, 기약 다항식을 구분합니다"
+  },
+  {
+    "id": "quotient",
+    "title": "7. 높은 차수는 다항식으로 나눈 나머지에 모읍니다"
+  },
+  {
+    "id": "minimal-polynomial",
+    "title": "8. 최소다항식의 차수가 필요한 계수 수를 정합니다"
+  },
+  {
+    "id": "inverse",
+    "title": "9. 같은 1+u의 역원을 원문의 절차로 구합니다"
+  },
+  {
+    "id": "source",
+    "title": "10. 실제 Rust 코드에도 같은 두 칸을 넣습니다"
+  },
+  {
+    "id": "frobenius",
+    "title": "11. 세제곱은 둘째 계수의 부호를 바꿉니다"
+  },
+  {
+    "id": "tower",
+    "title": "12. 두 계수 위에 다시 두 계수를 두면 네 계수가 됩니다"
+  },
+  {
+    "id": "basis",
+    "title": "13. 같은 체라도 두 칸의 의미는 달라질 수 있습니다"
+  },
+  {
+    "id": "boundaries",
+    "title": "14. 타입 이름만으로 올바른 체 구성이 보장되지는 않습니다"
+  },
+  {
+    "id": "release",
+    "title": "15. 규칙·표현·실행 결과를 같은 사례로 확인합니다"
+  }
+],
     component: () =>
       import("@/pages/articles/blockchain/extension-field-theory"),
   },
@@ -562,14 +617,82 @@ export const zkpMathArticles: Article[] = [
   },
   {
     slug: "extension-fields",
-    title: "확장체 구현: Fp²→Fp¹² tower",
+    title: "확장체 구현: 같은 곱을 열두 계수와 코드로 추적하기",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "Tower profile과 source" },
-      { id: "fp2", title: "Fp² product·inverse" },
-      { id: "fp6", title: "Fp⁶ layout·reduction" },
-      { id: "fp12", title: "Fp¹²·Frobenius·release" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 문자 세 개가 붙은 곱을 숫자 열두 칸에 담습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 두 입력과 세 규칙을 받아 같은 모양으로 돌려줍니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 같은 두 입력의 곱에서 6과 28이 나옵니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 높은 항을 줄일 때 값이 다른 칸으로 이동합니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 큰 계산을 작은 계산의 조합으로 다룹니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 층별 계수와 확장 차수에 이름을 붙입니다"
+  },
+  {
+    "id": "layout",
+    "title": "7. 두 묶음 안의 세 묶음 안에 숫자 두 개를 둡니다"
+  },
+  {
+    "id": "fp2",
+    "title": "8. 안쪽의 두 계수는 네 항을 두 항으로 모읍니다"
+  },
+  {
+    "id": "inverse",
+    "title": "9. 역원은 켤레에 남은 배율까지 나누어 만듭니다"
+  },
+  {
+    "id": "fp6",
+    "title": "10. 가운데 곱에서는 v⁴가 v 자리로 돌아옵니다"
+  },
+  {
+    "id": "fp12",
+    "title": "11. 마지막 w²가 v를 한 번 더 곱하게 합니다"
+  },
+  {
+    "id": "source",
+    "title": "12. 실제 설정과 분기에 같은 입력을 넣습니다"
+  },
+  {
+    "id": "frobenius-optimization",
+    "title": "13. 큰 p제곱을 층별 계수와 미리 구한 배율로 바꿉니다"
+  },
+  {
+    "id": "wire",
+    "title": "14. 같은 6+28u도 전송 규칙에 따라 순서가 달라집니다"
+  },
+  {
+    "id": "target",
+    "title": "15. 열두 계수 타입이 곧 페어링의 목표 군은 아닙니다"
+  },
+  {
+    "id": "cost",
+    "title": "16. 연산 횟수에는 어느 층의 곱인지 적습니다"
+  },
+  {
+    "id": "boundaries",
+    "title": "17. 같은 크기의 배열도 다른 계산 공간일 수 있습니다"
+  },
+  {
+    "id": "extension-release-gate",
+    "title": "18. 같은 곱의 값·저장·전송을 각각 확인합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/extension-fields"),
   },
   {

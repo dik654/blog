@@ -1,0 +1,9 @@
+{
+  "repository": "NVIDIA/cuda-samples",
+  "revision": "3f1c50965017932fc81e6d94a3fc9e04c105b312",
+  "release": "v13.0",
+  "source": "https://raw.githubusercontent.com/NVIDIA/cuda-samples/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/simpleMultiCopy/simpleMultiCopy.cu",
+  "sha256": "b3b6d8d2f204f5871e8bc278e7a9de924a7dc9850e026934b954bdfa9d4103b0",
+  "license": "BSD-3-Clause notice retained in full source",
+  "scope": "Full unchanged official example. CPU model verifies arithmetic/time assumptions; no GPU benchmark or CUDA execution claimed. SIMULATE_IO disabled in pinned source."
+}

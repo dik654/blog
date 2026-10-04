@@ -1,409 +1,117 @@
-import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ProgressiveDetail from "@/components/articles/progressive-detail";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./disaggregated-prefill-decode-serving/codeRefs";
+import { disaggregationTree } from "./disaggregated-prefill-decode-serving/fileTree";
 import DisaggregatedPrefillDecodeServingViz from "./disaggregated-prefill-decode-serving/viz/DisaggregatedPrefillDecodeServingViz";
+export default function Article() {const sidebar=useCodeSidebar();return <><div className="space-y-16">
+<section id="overview" data-teach-level="S" className="scroll-mt-20"><span id="problem" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">1. 읽는 일과 이어 쓰는 일을 다른 장치에 맡깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>답변이 조금씩 나오던 화면에 긴 새 문서가 들어왔다고 합시다. 같은 장치가 그 문서를 읽는 동안 기존 답변의 다음 조각이 늦어질 수 있습니다. 입력을 읽는 장치와 답을 이어 쓰는 장치를 나누면 같은 실행에 일을 끼워 넣는 간섭을 줄일 수 있습니다.</p><p>대신 다음 장치는 앞 장치가 읽어 둔 기록을 받아야 합니다. 계산이 끝난 순간과 기록의 복사가 끝난 순간이 다릅니다. 누구에게 요청을 보낼지, 언제 다음 계산을 시작할지, 언제 원래 자리를 돌려줄지를 한 요청으로 따라가겠습니다.</p><p>나누었다는 사실만으로 더 빠르거나 싸지는 것은 아닙니다. 전달을 기다리는 시간과 한쪽에 남는 빈자리도 비용입니다. 이 글의 판단 기준은 같은 요청을 약속한 시간 안에 끝내는 데 필요한 전체 자원입니다.</p></div></section>
 
-/**
- * Prefill과 decode를 분리 배치하면 KV transfer 비용만큼 간섭이 사라집니다
- *
- * 작성 규칙은 docs/coverage-batch-playbook.md 를 따른다.
- * 이 글은 "요청을 어느 replica로 보내고, prefill과 decode를 다른 GPU 풀에 두었을 때 KV를 어떻게 옮기며,
- * 두 풀의 크기를 어떻게 정하는가" 하나만 소유한다. 두 phase가 왜 다른 자원에 막히는지는
- * prefill-decode-phase-dynamics 가, 한 replica 안의 scheduler 는 vllm-scheduler 가 맡는다.
- */
-export default function DisaggregatedPrefillDecodeServingArticle() {
-  return (
-    <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Prefill과 decode를 같은 GPU에 섞으면 한쪽의 latency를 다른 쪽이 정합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            Prefill은 연산기가, decode는 memory bandwidth가 시간을 정하는 phase입니다. 두
-            phase를 한 replica의 같은 step에 섞으면 큰 prompt 하나가 들어올 때마다 이미
-            돌던 decode 요청 전부의 token 간격이 늘어납니다. 이 간섭을 chunk 크기로
-            달래는 대신 두 phase를 다른 GPU 풀에 두는 것이 disaggregated serving입니다.
-          </p>
-          <p>
-            분리에는 값이 붙습니다. Prefill이 만든 KV cache를 decode GPU로 옮겨야 하고 그 전송이 decode step보다 오래 걸리면 간섭 대신 대기가 생깁니다.
-            그래서 이 글은 요청을 어느 replica로 보낼지 정하는 routing에서 출발해 prefill worker와 decode worker의 역할, KV transfer의
-            byte와 시간, 두 풀의 크기 비율 순서로 갑니다.
-          </p>
-          <p>
-            두 phase가 왜 다른 자원에 막히는지는{" "}
-            <Link to="/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity">phase dynamics 글</Link>이,
-            한 replica 안에서 step마다 요청을 고르는 규칙은{" "}
-            <Link to="/cs/ai/vllm-scheduler#running-waiting-order">scheduler 글</Link>이 설명합니다.
-            이 글은 replica 바깥, 요청이 GPU에 닿기 전과 phase 사이의 이동만 다룹니다.
-          </p>
-        </div>
-        <DisaggregatedPrefillDecodeServingViz />
-        <ContentBoundary article="disaggregated-prefill-decode-serving" />
-      </section>
+<section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 목적지를 고르고 기록을 넘긴 뒤 출력을 보냅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>입구에서는 같은 모델을 실행할 수 있는 장치 가운데 요청을 받을 곳을 고릅니다. 앞부분은 입력을 읽고 이후 계산에 필요한 기록을 만듭니다. 연결 담당자는 그 기록을 다음 장치로 옮기고 읽어도 되는 상태인지 알립니다. 뒷부분은 그 상태에서 답을 이어 만듭니다.</p><p>사용자에게 출력을 보내는 길과 계산 기록을 옮기는 길은 서로 다릅니다. 앞 장치가 첫 답을 이미 계산했어도 입구의 프로그램이 그 답을 보내지 않으면 사용자는 아직 아무것도 받지 못합니다. 이후의 시간 계산에서는 이 전달 규칙을 먼저 고정합니다.</p><p>같은 입력 번호만 다음 장치에 보내는 방법도 생각할 수 있습니다. 그러나 입력 번호에는 이전 계산의 중간 결과가 없습니다. 다음 장치가 입력을 다시 계산하거나, 이미 만든 기록을 전달받아야 이어 쓸 수 있습니다.</p><p>두 장치는 기록의 뜻에도 동의해야 합니다. 네 자리의 기록을 받았는데 받는 쪽이 두 층의 순서를 반대로 해석하면 크기는 그대로여도 계산은 틀립니다. 같은 모델이라는 이름 외에도 숫자의 표현과 어느 입력 위치의 기록인지가 맞아야 합니다. 이 조건을 만족한 뒤에야 복사 속도를 비교할 수 있습니다.</p><p>앞 장치와 뒤 장치가 모두 모델을 가지고 있다는 가정도 이유가 있습니다. 이번에 넘기는 128바이트는 요청 하나를 읽으며 생긴 기록입니다. 모델 전체를 매 요청마다 복사하는 사례가 아닙니다. 새 장치를 처음 띄우며 모델을 준비하는 시간은 별도의 준비 비용입니다.</p></div></section>
 
-      <section id="routing" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Replica routing은 prefix hit과 queue 길이를 함께 저울질합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            같은 model을 여러 replica가 서빙하면 요청마다 어느 replica로 보낼지 정해야 합니다. 그 결정을 내리는 구성 요소가 load balancer이고 결정 규칙이
-            replica routing입니다. 가장 단순한 round-robin은 replica의 상태를 보지 않아 긴 요청이 몰린 replica와 비어 있는 replica를 똑같이
-            대합니다.
-          </p>
-          <p>
-            상태를 보는 첫 단계는 shortest queue입니다. 실행 중이거나 대기 중인 요청 수가
-            가장 적은 replica로 보내면 load는 고르게 퍼집니다. 그런데 LLM serving에는
-            load 말고 한 가지가 더 있습니다. 같은 system prompt나 같은 대화를 이어 가는
-            요청은 이전 요청의 KV cache를 가진 replica로 가야 prefill을 건너뜁니다.
-          </p>
-          <p>
-            이 성질을 쓰는 규칙이 request affinity입니다. 같은 session이나 같은 prefix를 가진
-            요청을 같은 replica에 붙여 두면{" "}
-            <Link to="/cs/ai/vllm-paged-attention#full-block-boundary">automatic prefix cache</Link>가
-            hit합니다. 대신 인기 있는 prefix를 가진 replica에 요청이 쏠려 load 균형이
-            깨집니다. Hit rate와 load 균형은 한쪽을 얻으면 다른 쪽을 잃는 관계입니다.
-          </p>
-          <p>
-            둘을 함께 보는 것이 cache-aware load balancing입니다. SGLang router는 replica마다 보낸 prompt의 근사 radix tree를 들고
-            있다가 load가 균형 안에 있으면 prefix가 가장 길게 맞는 replica로, 균형이 깨지면 tree를 무시하고 shortest queue로 보냅니다. 균형의 기준은 절대
-            차이와 상대 비율 두 threshold입니다.
-          </p>
-          <p>
-            수치로 보면 이렇습니다. Replica A에 40개, B에 8개가 돌고 있고 새 요청의 prefix 3,000 token이 A에 cache되어 있다고 합시다. 절대
-            threshold가 32이면 40 − 8 = 32는 32를 넘지 않으므로 균형 상태이고 요청은 A로 갑니다. A가 41개였다면 균형이 깨져 B로 가고 3,000 token의
-            prefill을 다시 계산합니다.
-          </p>
-          <p>
-            Routing의 앞 단계인 model 선택, 즉 context 길이나 tool 지원 같은 hard
-            compatibility로 backend를 거르는 일은{" "}
-            <Link to="/cs/ai/llm-serving-ops#litellm-gateway">serving ops 글의 capability-first routing</Link>이
-            맡습니다. 이 절의 replica routing은 그 필터를 통과한 같은 model의 replica
-            사이에서만 고릅니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="Cache-aware routing은 어떤 값을 비교해 replica를 고르나요?"
-          idea="요청이 replica r에서 첫 token을 받기까지의 시간은 그 replica의 queue 대기에, prefix hit으로 줄어든 prefill 시간을 더한 값입니다. 이 추정치가 가장 작은 replica를 고르면 hit rate와 load를 한 저울에 올린 셈입니다."
-          formula={String.raw`\hat{T}_{r}=W_{r}+\left(L-H_{r}\right)c_{tok},\qquad r^{*}=\arg\min_{r}\hat{T}_{r}`}
-          annotatedFormula={String.raw`\hat{T}_{r}=\underbrace{W_{r}}_{\text{replica } r \text{의 queue 대기}}+\underbrace{\left(L-H_{r}\right)}_{\text{hit을 뺀 prefill token}}\cdot\underbrace{c_{tok}}_{\text{token당 prefill 시간}}`}
-          operations={[
-            { expression: String.raw`L-H_{r}`, annotation: ["prompt 길이에서 replica r에 이미 있는 prefix 길이를 빼", "실제로 계산해야 할 token 수 계산"] },
-            { expression: String.raw`\left(L-H_{r}\right)c_{tok}`, annotation: ["남은 token에 token당 prefill 시간을 곱해", "이 replica에서의 prefill 시간 추정"] },
-            { expression: String.raw`W_{r}+\left(L-H_{r}\right)c_{tok}`, annotation: ["queue 대기를 더해", "첫 token까지의 시간 추정치 완성"] },
-            { expression: String.raw`\arg\min_{r}\hat{T}_{r}`, annotation: ["replica마다 추정치를 비교해", "가장 빨리 첫 token을 줄 replica 선택"] },
-          ]}
-          terms={[
-            { symbol: String.raw`\hat{T}_{r}`, name: "Replica r의 TTFT 추정치", description: "Router가 요청을 보내기 전에 계산하는 값이며 실측이 아닙니다." },
-            { symbol: "W_r", name: "Queue 대기", description: "Replica r에 이미 쌓인 요청이 prefill을 끝내기까지의 시간입니다. 대기 요청 수에 평균 prefill 시간을 곱해 근사합니다." },
-            { symbol: "L", name: "Prompt 길이", description: "새 요청의 token 수입니다." },
-            { symbol: "H_r", name: "Prefix hit 길이", description: "Replica r의 cache와 앞부분이 일치하는 token 수입니다. SGLang은 근사 radix tree로 셉니다." },
-            { symbol: String.raw`c_{tok}`, name: "Token당 prefill 시간", description: "Model과 GPU가 정하는 상수입니다. 7B FP16을 600 TFLOP/s로 돌리면 약 23 µs입니다." },
-          ]}
-          assumptions={["Prefill 시간이 token 수에 비례한다고 봅니다. 수만 token 이상에서는 attention의 n² 항 때문에 어긋납니다.", "Threshold 방식의 router는 이 식을 직접 계산하지 않고 load 균형 판정 뒤 hit 길이만 비교하는 근사를 씁니다."]}
-          interpretation="Hit 길이 H_r이 커서 얻는 이득은 (L − H_r)c_tok의 감소이고, 그 replica에 몰려서 잃는 것은 W_r의 증가입니다. 둘의 크기가 비슷해지는 지점이 affinity를 포기해야 하는 경계입니다."
-        />
-        <ProgressiveDetail
-          title="SGLang router의 균형 판정과 기본값"
-          preview="Load가 max − min > 절대 threshold 이고 동시에 max > 상대 threshold × min 일 때만 불균형으로 보고 shortest queue로 떨어집니다. 두 조건을 함께 두는 이유는 작은 절대 차이와 작은 상대 차이를 각각 무시하기 위해서입니다."
-        >
-          <p>
-            sgl-router README가 적은 기본값은 cache_threshold 0.5, balance_abs_threshold 32,
-            balance_rel_threshold 1.0001, eviction_interval 60초, max_tree_size 2²⁴입니다.
-            Prefix 일치율이 cache_threshold보다 낮으면 어느 replica에도 cache가 없다고 보고
-            tree가 가장 작은 replica로 보내 새 prefix를 심습니다.
-          </p>
-          <p>
-            Tree는 실제 KV cache가 아니라 router가 본 prompt의 근사이므로 replica가 그 block을 이미 evict했을 수 있습니다.
-            eviction_interval마다 tree를 비워 router의 추정과 replica의 실제 cache가 너무 멀어지지 않게 합니다. 기본값은 version마다 바뀔 수
-            있으므로 배포 시점의 README를 확인해야 합니다.
-          </p>
-        </ProgressiveDetail>
-      </section>
+<section id="small-case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 네 자리의 기록 128바이트를 옮기는 요청입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>입력을 네 자리로 만든 작은 요청 R을 보겠습니다. 입력 담당 장치는 4 ms에 네 자리를 모두 읽고 기록을 완성합니다. 다음 장치가 그 기록을 받은 뒤 첫 출력을 계산하는 데 2 ms가 걸립니다. 시간과 크기는 설명용 가정이며 실제 모델의 성능 측정이 아닙니다. (가정)</p><p>각 입력 자리는 두 층에 기록을 남깁니다. 층마다 두 종류의 기록이 있고 각 종류에는 두 묶음이 있습니다. 한 묶음의 숫자는 두 개이고 숫자 하나는 2바이트입니다. 따라서 한 자리의 크기는 2×2×2×2×2=32바이트이며 네 자리는 128바이트입니다.</p><p>복사 통로는 1 ms마다 64바이트를 옮깁니다. 기록을 모두 만든 뒤 복사를 시작하므로 4 ms부터 6 ms까지 128바이트를 옮깁니다. 다음 장치의 2 ms 계산까지 끝나면 8 ms입니다. 이 사례에서는 다음 장치의 출력만 사용자에게 보냅니다.</p><p>두 장치의 모델은 이미 메모리에 있고 새 요청을 기다리고 있다고 가정합니다. 연결 준비, 장치 사이의 메시지 지연, 공간 배정과 대기 시간은 0으로 둡니다. 이 가정을 지우면 8 ms도 다시 계산해야 합니다. 지금은 시간 순서와 기록의 소유 위치만 잡습니다.</p><p>입력 네 자리에 붙인 숫자 1·2·3·4는 위치를 구별하려는 번호입니다. 각 위치의 실제 기록 값이 같은 숫자라는 뜻은 아닙니다. 어떤 숫자를 저장하더라도 한 숫자를 2바이트로 표현한다는 가정이 같으면 크기는 같습니다. 앞의 32바이트 계산은 값이 아니라 자리 수를 센 것입니다.</p><p>또한 한 위치의 두 층 기록이 만들어지는 순간은 같지 않을 수 있습니다. 지금의 직렬 사례는 네 위치의 모든 층이 준비된 4 ms까지 기다려 묶어서 보냅니다. 뒤에서 층별로 먼저 보내는 다른 방법을 비교할 때에도 기록 크기 128바이트 자체는 그대로 유지합니다.</p></div></section>
 
-      <section id="disaggregation" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Disaggregation은 prefill worker의 KV를 decode worker가 이어받습니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Prefill–decode disaggregation은 한 요청의 두 phase를 서로 다른 GPU 풀에서 실행하는 배치입니다. Prefill worker는 prompt 전체를
-            한 번에 계산해 KV cache를 만듭니다. Decode worker는 그 KV를 받아 token을 하나씩 생성합니다. 한 요청이 두 worker를 차례로 거치므로 요청은
-            GPU 사이를 한 번 이동합니다.
-          </p>
-          <p>
-            이렇게 나누면 얻는 것은 두 가지입니다. 첫째, decode worker의 step에는 prefill이
-            끼어들지 않으므로{" "}
-            <Link to="/cs/ai/prefill-decode-phase-dynamics#interference">phase 간섭</Link>이
-            사라지고 token 간격의 tail이 안정됩니다. 둘째, 두 풀의 parallelism과 batch를
-            따로 정할 수 있습니다. Prefill은 512 token 하나로도 A100을 채우므로 batch를
-            키울 이유가 없고, decode는 batch를 키워야 bandwidth를 활용합니다.
-          </p>
-          <p>
-            잃는 것도 분명합니다. 같은 GPU 수로 두 풀을 나누면 한 풀이 놀 때 다른 풀이 그 GPU를 쓰지 못합니다. vLLM 문서는 disaggregated prefill이
-            throughput을 높이지 않는다고 적어 두었고 목적을 TTFT와 ITL을 따로 조정하는 것과 tail ITL을 통제하는 것으로 한정합니다.
-          </p>
-          <p>
-            구현에서 두 worker는 같은 engine의 다른 역할입니다. vLLM은 kv_transfer_config의 kv_role로 prefill instance를
-            kv_producer, decode instance를 kv_consumer로 지정하고 SGLang은 disaggregation-mode를 prefill 또는 decode로
-            띄웁니다. 앞에 선 proxy나 router가 요청을 prefill로 보낸 뒤 같은 요청을 decode로 넘깁니다.
-          </p>
-          <p>
-            Decode worker는 prefill이 만든 token id도 함께 받습니다. Tokenization을 다시 하지 않기 위해서입니다. vLLM은
-            kv_transfer_params의 prompt_token_ids로 이를 전달합니다. Decode worker의 첫 step은 KV가 도착한 뒤에야 시작되므로 이 시점이
-            TTFT에 더해지는 transfer 비용의 자리입니다.
-          </p>
-        </div>
-        <AlgorithmBlock
-          title="요청 하나가 router에서 decode worker까지 가는 절차"
-          input={["요청 (prompt token L개, 생성 상한 L_out)", "prefill worker 풀 P, decode worker 풀 D", "router의 replica 상태 (queue 길이, 근사 prefix tree)", "KV connector (transfer 경로)"]}
-          steps={[
-            { code: "p ← argmin_{r∈P} Ŵ_r + (L − H_r)·c_tok", note: "Prefill 풀 안에서 cache-aware routing으로 prefill worker를 고릅니다. Decode 풀에는 prefix cache가 의미 없으므로 load만 봅니다." },
-            { code: "d ← argmin_{r∈D} running(r) subject to KV_free(d) ≥ blocks(L + L_out)", note: "Decode worker는 이 요청의 최종 KV footprint를 받을 수 있는 곳 가운데 가장 한가한 곳입니다. Mooncake는 이 선택을 prefill 전에 미리 하고 끝난 뒤 다시 확인합니다." },
-            { code: "p.prefill(prompt) → KV[layer 0..n−1], first_token", note: "Prefill worker가 prompt 전체를 한 번에 계산합니다. 첫 token은 여기서 나오므로 TTFT는 prefill 시간과 transfer 시간을 더한 값입니다." },
-            { code: "for l in layers: connector.send(KV[l] → d)   # layer-wise, 계산과 겹침", note: "Layer l의 KV가 완성되는 즉시 보내면 전송 대부분이 뒤 layer의 계산 아래에 숨습니다. 마지막 layer의 KV만 계산 뒤에 남습니다." },
-            { code: "d.recv(KV, prompt_token_ids, first_token)", note: "Decode worker는 KV block을 자기 pool에 쓰고 token id를 이어 붙입니다. Tokenization을 다시 하지 않습니다." },
-            { code: "p.free(KV); d.decode_loop()", note: "Prefill worker는 block을 즉시 돌려주어 다음 prompt를 받고, decode worker는 자기 batch에 이 요청을 넣고 step을 돕니다." },
-          ]}
-          output="Decode worker d의 batch에 들어간 요청과 client로 흐르는 token stream"
-        />
-        <TermBreakdown
-          title="두 worker가 각각 무엇을 갖고 무엇을 넘기는지"
-          items={[
-            { term: "Prefill worker", description: "Prompt 전체를 한 번 계산해 KV cache와 첫 token을 만드는 GPU입니다. Compute-bound이므로 batch를 키울 이득이 작습니다.", example: "7B FP16에 4,096 token prompt는 약 57 TFLOP이고 600 TFLOP/s에서 약 95 ms입니다.", boundary: "KV를 넘긴 뒤 block을 즉시 비워야 하므로 prefix cache를 오래 들고 있으려면 별도의 cache 층이 필요합니다." },
-            { term: "Decode worker", description: "받은 KV로 token을 하나씩 생성하는 GPU입니다. Memory-bound이므로 batch를 키워야 bandwidth를 씁니다.", example: "7B FP16 batch 64에 KV 33.5 GB면 step당 약 14 ms이고 요청 하나가 256 token을 만들 때 GPU 시간은 약 57 ms입니다.", boundary: "KV가 도착해야 첫 step을 시작하므로 transfer 시간이 TTFT에 더해집니다." },
-            { term: "KV connector", description: "두 worker 사이에서 KV block을 옮기는 계층입니다. vLLM은 NixlConnector·LMCacheConnector·MooncakeConnector 등을 kv_connector로 고릅니다.", example: "NIXL은 비동기 send·recv를 제공해 layer-wise 전송을 계산과 겹칩니다.", boundary: "Connector는 경로를 추상화할 뿐 대역폭을 만들지 않습니다. 시간은 아래 절의 link 계산이 정합니다." },
-          ]}
-        />
-      </section>
+<section id="handoff-map" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 복사 중에는 양쪽 자리가 함께 필요합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>0~4 ms에는 앞 장치가 계산하며 자기 공간에 기록을 씁니다. 4~6 ms에는 앞 장치의 원본이 남아 있고 뒤 장치의 목적지 공간도 확보되어 있습니다. 복사를 시작했다는 말은 목적지의 모든 내용이 준비됐다는 말과 다릅니다.</p><p>6 ms에 완료를 확인하면 뒤 장치는 자기 기록을 읽을 수 있습니다. 앞 장치는 자기 원본을 더 이상 전송용으로 잡아 둘 필요가 없어집니다. 다만 공간을 반환하는 일과 저장된 값을 즉시 지우는 일은 같은 동작이 아닙니다. 반환한 자리를 다른 요청이 덮어쓸 수 있게 되는 것입니다.</p><p>뒤 장치가 답을 하나 만들었다고 해서 네 자리의 과거 기록이 필요 없어지는 것도 아닙니다. 다음 답을 계산할 때 과거를 다시 참고합니다. 앞 장치의 전송용 보관 기간과 뒤 장치의 생성용 보관 기간을 따로 추적합니다.</p><p>복사하는 동안 두 장치에 요청당 128바이트씩 자리가 있다면 합쳐 256바이트의 자리를 확보합니다. 복사가 끝난 뒤 앞쪽 자리를 반환하면 뒤쪽의 128바이트가 생성용으로 남습니다. 연결로 옮긴 양은 한 번의 128바이트인데 동시에 필요한 저장 자리는 더 클 수 있는 것입니다. 다른 기록이나 작업 공간은 제외한 가정입니다. (가정)</p><p>8 ms에 새 출력 번호 하나를 골랐다고 그 번호의 중간 기록까지 이미 생긴 것은 아닙니다. 뒤 장치는 입력의 마지막 위치를 계산해 다음 번호를 고릅니다. 고른 번호를 다음 계산의 입력으로 처리할 때 그 위치의 기록을 추가합니다. 출력 번호의 개수와 이미 계산해 저장한 위치의 개수를 구분합니다.</p></div><DisaggregatedPrefillDecodeServingViz /></section>
 
-      <section id="kv-transfer" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          KV transfer 시간은 KV byte를 link 대역폭으로 나눈 값입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            KV transfer는 prefill worker의 KV block을 decode worker의 KV pool로 복사하는
-            일입니다. 옮길 byte는 요청 길이에 비례하므로{" "}
-            <Link to="/cs/ai/kv-cache-fundamentals#kv-shape">token당 KV byte</Link>에 token
-            수를 곱하면 됩니다. 시간은 그 byte를 두 GPU 사이 link의 대역폭으로 나눈 값이고,
-            link가 무엇인지가 전부를 정합니다.
-          </p>
-          <p>
-            수치로 보겠습니다. 32 layer, KV head 8, head dim 128, FP16 model은 token당 128 KiB입니다. 4,096 token 요청이면 KV는
-            512 MiB가 됩니다. 같은 node 안의 NVLink를 600 GB/s로 잡으면 0.9 ms, 400 Gb/s InfiniBand는 50 GB/s이므로 10.7 ms,
-            PCIe Gen4 x16을 실효 25 GB/s로 잡으면 21 ms, 25 Gb/s Ethernet이면 172 ms입니다.
-          </p>
-          <p>
-            이 시간을 비교할 기준은 decode worker의 step 시간입니다. 같은 model의 batch 1 decode step은 weight 14 GB를 3.35 TB/s로
-            읽는 4.2 ms이고 batch 64면 약 14 ms입니다. NVLink의 0.9 ms는 step 하나에 묻힙니다. InfiniBand의 10.7 ms는 step 하나에 가깝고
-            Ethernet의 172 ms는 step 수십 개 분량이라 TTFT에 그대로 드러납니다.
-          </p>
-          <p>
-            전송을 계산과 겹치면 드러나는 시간이 줄어듭니다. Splitwise는 layer마다 KV가
-            완성되는 즉시 보내는 layer-wise 전송으로, Llama-70B의 1,500 token prompt에서
-            직렬 전송이 두 번째 token에 더하던 64%의 지연을 16.5%로 줄였고 end-to-end
-            영향은 0.8%였다고 보고했습니다. 마지막 layer의 KV만 계산 뒤에 남기 때문입니다.
-          </p>
-          <p>
-            KV transfer bandwidth는 요청 하나가 아니라 초당 요청 수로 세어야 합니다. 초당 10개의 4,096 token 요청이 오면 link는 초당 5 GiB, 약
-            43 Gb/s를 계속 흘려야 합니다. DistServe는 OPT-66B의 512 token 요청 1.13 GB를 초당 10개 옮기려면 90 Gbps가 필요하다고 계산했고 이
-            값이 node 사이 link를 넘으면 두 worker를 같은 node에 두는 배치를 택했습니다.
-          </p>
-          <p>
-            Mooncake는 이 전송을 GPU 사이 직접 복사에 묶지 않고 CPU DRAM과 SSD에 paged block으로 둔 분산 KV cache를 거치게 했습니다. Prefill이
-            끝난 KV를 DRAM에 내려놓고 decode가 RDMA로 가져가므로 prefill worker는 즉시 비고 같은 prefix를 다른 prefill worker가 다시 쓸 수
-            있습니다. 대신 link는 node당 800 Gbps급 RDMA를 전제합니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="KV transfer가 TTFT에 드러나지 않으려면 어떤 부등식이 성립해야 하나요?"
-          idea="요청 하나의 KV byte를 link 대역폭으로 나눈 시간이 decode step보다 짧아야 하고, 초당 요청 수가 만드는 byte 흐름이 link 대역폭 아래여야 합니다. 앞의 것은 latency, 뒤의 것은 throughput 조건입니다."
-          formula={String.raw`\begin{aligned}S_{kv}&=L\cdot 2\,n_{layer}\,n_{kv}\,d_h\,s\\t_{xfer}&=\frac{S_{kv}}{B_{link}}\le t_{step}\\\lambda\,S_{kv}&\le B_{link}\end{aligned}`}
-          annotatedFormula={String.raw`\underbrace{\frac{\overbrace{L\cdot 2\,n_{layer}\,n_{kv}\,d_h\,s}^{\text{요청 하나의 KV byte } S_{kv}}}{B_{link}}}_{\text{전송 시간 } t_{xfer}}\le\underbrace{t_{step}}_{\text{decode step 시간}},\qquad\underbrace{\lambda\,S_{kv}}_{\text{초당 흘려야 할 byte}}\le\underbrace{B_{link}}_{\text{link 대역폭}}`}
-          operations={[
-            { expression: String.raw`L\cdot 2\,n_{layer}\,n_{kv}\,d_h\,s`, annotation: ["token당 KV byte에 요청 길이를 곱해", "옮겨야 할 byte 계산"] },
-            { expression: String.raw`\frac{S_{kv}}{B_{link}}`, annotation: ["byte를 link 대역폭으로 나눠", "요청 하나의 전송 시간 계산"] },
-            { expression: String.raw`t_{xfer}\le t_{step}`, annotation: ["전송 시간을 decode step과 비교해", "layer-wise 겹침으로 숨길 수 있는지 판정"] },
-            { expression: String.raw`\lambda\,S_{kv}\le B_{link}`, annotation: ["초당 요청 수에 요청당 byte를 곱해", "link가 지속적으로 감당할 수 있는지 판정"] },
-          ]}
-          terms={[
-            { symbol: String.raw`S_{kv}`, name: "요청 하나의 KV byte", description: "4,096 token, 32 layer, KV head 8, head dim 128, FP16이면 512 MiB입니다." },
-            { symbol: String.raw`B_{link}`, name: "Link 대역폭", description: "NVLink 600 GB/s, 400 Gb/s InfiniBand 50 GB/s, PCIe Gen4 x16 실효 25 GB/s처럼 두 GPU 사이 실제 경로의 값입니다." },
-            { symbol: String.raw`t_{step}`, name: "Decode step 시간", description: "Decode worker가 batch 하나를 한 token 진행시키는 시간입니다. 7B FP16 batch 1은 약 4.2 ms입니다." },
-            { symbol: String.raw`\lambda`, name: "초당 요청 수", description: "Prefill을 끝내고 decode로 넘어가는 요청의 도착률입니다." },
-          ]}
-          assumptions={["Link 대역폭을 전부 KV에 쓸 수 있다고 봅니다. Tensor parallel의 all-reduce가 같은 link를 쓰면 몫이 줄어듭니다.", "Full attention layer만 셉니다. MLA·sliding-window·quantized KV는 token당 byte가 달라집니다."]}
-          interpretation="첫 부등식이 깨지면 요청마다 TTFT가 늘고, 둘째가 깨지면 전송 queue가 쌓여 시간이 갈수록 TTFT가 늘어납니다. 둘째는 요청률이 오르면 반드시 먼저 깨지므로 disaggregation의 상한은 link가 정합니다."
-        />
-      </section>
+<section id="why-hold" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 끝났다는 신호가 없으면 안전하게 자리를 돌려줄 수 없습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>앞 장치가 4 ms에 계산을 마치자마자 원본 자리를 다른 요청에 주면 어떤 일이 생길까요? 뒤 장치가 5 ms에 그 자리를 읽는 동안 새 요청의 값이 섞일 수 있습니다. 같은 크기 128바이트를 받았어도 요청 R의 기록이 아닐 수 있습니다.</p><p>그래서 완료 신호가 필요합니다. 한 수신자가 전부 읽었다는 신호와 여러 수신자 중 하나만 읽었다는 신호도 구분해야 합니다. 실제로 다음 모델을 여러 장치에 나누어 실행하면 원본 하나를 여러 수신자가 읽는 경우가 있습니다.</p><p>반대로 뒤 장치가 사라지면 완료 신호가 영원히 오지 않을 수 있습니다. 앞 장치가 끝없이 붙잡고 있으면 새 요청의 공간이 줄어듭니다. 보관 기한을 두되 정상적으로 기다리는 요청은 기한을 연장하는 방식이 필요합니다.</p><p>어느 장치가 더 빨리 준비되는지도 선택의 문제입니다. 입력 앞 두 자리를 가진 장치가 3 ms 기다려야 하고, 아무 기록도 없는 장치는 0.5 ms만 기다린다고 합시다. 새 자리당 계산을 1 ms로 가정하면 앞쪽은 3+2=5 ms, 뒤쪽은 0.5+4=4.5 ms입니다. 기록을 더 많이 가진 곳이 항상 빠르지는 않습니다. (가정)</p><p>뒤 장치의 자리 확보가 늦어지는 경우도 있습니다. R의 앞 계산은 4 ms에 끝났는데 뒤쪽 공간을 7 ms에야 받는다고 합시다. 같은 2 ms 복사는 7~9 ms로 밀리고 그 뒤 2 ms 계산을 거쳐 11 ms에 첫 출력을 만듭니다. 통로 속도가 그대로여도 전체 응답은 늦어집니다. (가정)</p><p>이때 앞 장치가 더 빨리 읽어 두기만 하면 문제가 해결될까요? 준비된 기록이 전달을 기다리며 앞쪽 공간을 계속 차지합니다. 이미 128바이트가 남아 있는 동안 다음 요청의 기록도 만들어야 하므로 앞쪽의 빈자리까지 줄어듭니다. 한쪽의 대기가 다른 쪽의 새 요청 수용에도 영향을 줍니다.</p><p>이제 필요한 부품이 드러났습니다. 요청의 목적지를 고르는 부품, 기록을 옮기는 부품, 읽기 완료와 공간 반환을 연결하는 부품입니다. 다음 절부터 이 역할에 실제 이름을 붙입니다.</p></div></section>
 
-      <section id="provisioning" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          두 풀의 GPU 수는 요청률에 phase별 GPU 시간을 곱해 따로 정합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Prefill 풀과 decode 풀의 크기는 같은 식으로 따로 계산합니다. 초당 요청 수에 요청 하나가 그 phase에서 쓰는 GPU 시간을 곱하면 초당 필요한 GPU 시간이
-            나옵니다. 이를 목표 이용률로 나눠 올림하면 GPU 수입니다. 두 phase의 GPU 시간이 다르므로 비율은 1:1이 아니라 workload가 정합니다.
-          </p>
-          <p>
-            수치로 보겠습니다. 초당 100개의 요청이 오고 prompt는 4,096 token, 생성은 256 token, 목표 이용률은 0.8이라고 합시다. Prefill은 요청당 95
-            ms이므로 100 × 0.095 ÷ 0.8 = 11.9, 즉 12 GPU입니다. Decode는 batch 64에서 step 14.2 ms이므로 요청당 256 × 14.2 ÷
-            64 = 57 ms입니다. 100 × 0.057 ÷ 0.8 = 7.1, 즉 8 GPU입니다.
-          </p>
-          <p>
-            Prompt가 1,024 token으로 짧아지면 prefill은 요청당 24 ms로 줄어 3 GPU면 되고 decode는 그대로 8 GPU입니다. 12:8이던 비율이 3:8로
-            뒤집힙니다. 같은 model, 같은 요청률에서도 prompt와 생성 길이의 분포가 비율을 정합니다. 고정해 둘 설정이 아니라 trace를 볼 때마다 다시 계산하는 값입니다.
-          </p>
-          <p>
-            DistServe는 이 계산을 simulator로 바꿔 각 phase의 parallelism 후보를 전부 시험해 GPU당 goodput이 가장 높은 구성을 찾은 뒤 요청률에
-            맞춰 복제합니다. 그 결과가 같은 SLO에서 7.4배의 요청 또는 12.6배 엄격한 SLO를 감당한다는 저자 자기보고입니다. Chatbot SLO는 TTFT 0.25초와
-            TPOT 0.1초였습니다.
-          </p>
-          <p>
-            두 풀이 다른 자원에 막히니 두 풀에 서로 다른 GPU를 써도 됩니다. 이것이 heterogeneous serving이고 두 풀의 GPU가 세대나 종류에서 다른 상태를
-            resource heterogeneity라고 부릅니다. Prefill은 FLOP/s가 큰 GPU에, decode는 bandwidth 대비 값이 싼 GPU에 두면 같은 비용으로
-            더 많은 요청을 받습니다.
-          </p>
-          <p>
-            A100은 312 TFLOP/s에 2.0 TB/s, H100 SXM은 989 TFLOP/s에 3.35 TB/s입니다. FLOP/s는 3.2배 차이지만 bandwidth는
-            1.7배 차이이므로 decode를 A100에 두면 잃는 것이 prefill을 A100에 두는 것보다 작습니다. Splitwise는 이 배치로 같은 비용에서 1.4배
-            throughput, 또는 같은 전력과 비용에서 2.35배 throughput을 보고했습니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="Prefill 풀과 decode 풀에 GPU를 몇 개씩 두어야 하나요?"
-          idea="각 풀은 초당 도착하는 요청이 그 phase에서 쓰는 GPU 시간의 합을 감당해야 합니다. Decode는 batch로 GPU 시간을 나눠 쓰므로 step 시간을 batch 크기로 나눈 몫만 요청 하나의 몫입니다."
-          formula={String.raw`N_{p}=\left\lceil\frac{\lambda\,t_{p}}{u}\right\rceil,\qquad N_{d}=\left\lceil\frac{\lambda\,L_{out}\,t_{step}(b)}{b\,u}\right\rceil`}
-          annotatedFormula={String.raw`N_{p}=\left\lceil\frac{\overbrace{\lambda\,t_{p}}^{\text{초당 prefill GPU 시간}}}{\underbrace{u}_{\text{목표 이용률}}}\right\rceil,\qquad N_{d}=\left\lceil\frac{\lambda\,\overbrace{L_{out}\,t_{step}(b)/b}^{\text{요청 하나의 decode GPU 시간}}}{u}\right\rceil`}
-          operations={[
-            { expression: String.raw`\lambda\,t_{p}`, annotation: ["초당 요청 수에 요청당 prefill 시간을 곱해", "prefill 풀이 초당 써야 할 GPU 시간 계산"] },
-            { expression: String.raw`L_{out}\,t_{step}(b)/b`, annotation: ["생성 token 수에 step 시간을 곱하고 batch로 나눠", "요청 하나가 decode GPU를 점유하는 시간 계산"] },
-            { expression: String.raw`\frac{\lambda\,t_{p}}{u}`, annotation: ["필요한 GPU 시간을 목표 이용률로 나눠", "여유를 둔 GPU 수로 환산"] },
-            { expression: String.raw`\left\lceil\cdot\right\rceil`, annotation: ["GPU는 정수이므로 올림해", "각 풀의 최소 GPU 수 확정"] },
-          ]}
-          terms={[
-            { symbol: String.raw`\lambda`, name: "초당 요청 수", description: "예시에서는 100입니다." },
-            { symbol: "t_p", name: "요청당 prefill 시간", description: "4,096 token 7B FP16을 600 TFLOP/s로 계산하면 약 95 ms입니다." },
-            { symbol: String.raw`L_{out}`, name: "요청당 생성 token 수", description: "예시에서는 256입니다." },
-            { symbol: String.raw`t_{step}(b)`, name: "Batch b의 decode step 시간", description: "Batch 64에 KV 33.5 GB면 약 14.2 ms입니다. Batch가 커지면 KV 읽기 때문에 함께 커집니다." },
-            { symbol: "u", name: "목표 이용률", description: "Queue가 무한히 자라지 않도록 1보다 작게 둡니다. 예시에서는 0.8입니다." },
-          ]}
-          assumptions={["요청률이 정상 상태이고 Little's law가 성립하는 안정 system을 가정합니다. Burst가 있으면 u를 더 낮춰야 합니다.", "Prefill worker는 batch 이득이 없다고 보고 요청을 하나씩 처리한다고 가정합니다."]}
-          interpretation="비율 N_p : N_d는 t_p와 L_out t_step/b의 비율이므로 prompt 길이가 길수록 prefill 쪽으로, 생성이 길수록 decode 쪽으로 기웁니다. 한 GPU를 두 풀이 나눠 쓰지 못하므로 올림에서 생기는 낭비가 disaggregation의 고정 비용입니다."
-        />
-        <ProgressiveDetail
-          title="Chunked prefill과 disaggregation은 서로를 대체하지 않습니다"
-          preview="Chunked prefill은 한 GPU 안에서 간섭의 크기를 줄이고, disaggregation은 간섭을 없애는 대신 link와 풀 분할 비용을 냅니다. Link가 느리거나 GPU가 적으면 chunking이, tail ITL이 SLO를 정하면 disaggregation이 맞습니다."
-        >
-          <p>
-            Chunked prefill은 prefill을 잘게 나눠 decode step에 얹으므로 총 연산은 그대로이고 TTFT가 늘어납니다. Disaggregation은 TTFT에
-            transfer 시간을 더하는 대신 decode step에는 아무것도 얹지 않습니다. DistServe는 자기 구현에 chunking을 넣지 않았다고 밝혔고 vLLM은 두
-            기능을 함께 켤 수 있게 두었습니다.
-          </p>
-          <p>
-            GPU가 두 개뿐인 배포에서 하나를 prefill, 하나를 decode로 나누면 prefill GPU가
-            비는 시간이 그대로 손실입니다. 이 경우 chunked prefill 한 replica 두 개가 더 많은
-            요청을 받습니다. Disaggregation은 GPU가 충분해 올림 낭비가 작아지는 규모에서
-            이득이 커집니다.
-          </p>
-        </ProgressiveDetail>
-      </section>
+<section id="names" data-teach-level="3" className="scroll-mt-20"><span id="disaggregation" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">6. 서로 다른 GPU에서 두 단계를 실행하는 것이 분리 서빙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Prefill과 decode를 별도 GPU 묶음에서 실행하는 배치를 prefill–decode disaggregation이라고 합니다. 묶음 안의 한 모델 복사본은 여러 GPU에 걸칠 수 있습니다. 입력을 받는 복사본과 생성을 맡는 복사본은 각자 모델 가중치를 유지합니다.</p><p>첫 출력까지의 시간은 TTFT, 이후 출력 사이의 간격은 ITL이라고 부릅니다. 모두 어떤 사건에서 시계를 시작하고 멈추는지 정해야 합니다. 계산 완료가 아니라 사용자가 첫 출력을 받은 시점을 고르면 프록시의 전달 규칙도 시간에 포함됩니다.</p></div><TermBreakdown title="앞에서 본 역할의 표준 이름" items={[{"term": "입력을 읽는 담당 → prefill worker", "description": "입력 여러 위치를 계산해 K와 V라는 중간 기록을 만듭니다. 긴 입력은 여러 조각으로 나눌 수도 있습니다.", "example": "R의 네 자리를 4 ms에 준비하는 P입니다.", "boundary": "항상 한 번에 전체 입력을 처리하거나 항상 연산 속도만이 시간을 정하는 것은 아닙니다."}, {"term": "답을 이어 쓰는 담당 → decode worker", "description": "과거 기록을 참고하며 다음 출력을 만드는 D입니다.", "example": "이 글의 경로에서는 마지막 입력 위치를 계산해 사용자에게 첫 출력을 냅니다.", "boundary": "첫 토큰의 계산 담당과 전달 담당은 프록시 규칙에 따라 달라집니다."}, {"term": "과거 계산 기록 → KV cache", "description": "Key와 Value의 머리글자입니다. 같은 모델의 뒤 계산에 재사용하는 상태입니다.", "example": "두 층·네 위치의 논리 크기는 128B입니다.", "boundary": "입력 token ID나 모델 가중치 자체가 아닙니다."}, {"term": "목적지 선택 → replica routing", "description": "같은 모델 복사본 가운데 요청을 처리할 곳을 고르는 규칙입니다.", "example": "대기와 남은 계산을 함께 보고 A의 5 ms와 B의 4.5 ms를 비교합니다.", "boundary": "요청 수가 같아도 남은 작업량은 다를 수 있습니다."}, {"term": "출력과 요청을 중계 → proxy", "description": "P의 응답을 받아 D 요청을 만들고 선택한 출력 스트림을 사용자에게 전달합니다.", "example": "이 글의 실제 예제는 P 출력 대신 D 출력만 전달합니다.", "boundary": "테스트 예제의 정책을 모든 서비스의 규칙으로 일반화하지 않습니다."}, {"term": "기록 이동 → KV connector", "description": "전송할 원본과 목적지 및 완료 상태를 엔진에 연결합니다.", "example": "기본 NIXL 경로는 D가 P의 기록을 읽어옵니다.", "boundary": "비동기 전송과 층별 전송은 서로 다른 성질입니다."}, {"term": "보관 기한 → lease", "description": "다른 곳에서 읽는 동안 원본을 보관할 기한이며 heartbeat 신호로 연장합니다.", "example": "R의 정상 경로에서는 읽기 완료 뒤 반환합니다.", "boundary": "기한 만료 뒤 늦게 읽은 데이터는 유효하다고 가정할 수 없습니다."}]} /></section>
 
-      <section id="evidence" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          근거는 DistServe, Splitwise, Mooncake 논문과 engine 문서입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            세 논문은 같은 분리를 다른 자리에서 봤습니다. DistServe는 phase별 parallelism
-            최적화와 배치 알고리즘을, Splitwise는 이종 GPU와 layer-wise transfer를,
-            Mooncake는 분산 KV cache와 cache-aware scheduler를 기여로 내세웁니다. 성능
-            수치는 모두 저자 자기보고이며 각자의 model과 cluster 범위 안의 값입니다.
-          </p>
-          <p>
-            이 글의 512 MiB, 0.9 ms, 12 GPU 같은 수치는 논문 값이 아니라 위 예시 구성으로
-            직접 계산한 것입니다. 설정 이름과 기본값은 vLLM과 SGLang 문서에서 가져왔고
-            version마다 바뀔 수 있습니다.
-          </p>
-        </div>
-        <div id="paper-distserve" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Zhong et al. · DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving (OSDI 2024)"
-            citeKey={1}
-            href="https://arxiv.org/abs/2401.09670"
-          >
-            Prefill과 decode를 다른 GPU에 두고 phase별 parallelism과 replica 수를 simulator로
-            정합니다. OPT-66B 512 token 요청의 KV 1.13 GB, 초당 10개에 90 Gbps, A100 NVLink
-            600 GB/s, 25 Gbps cross-node에서도 95%의 요청이 30 ms 미만 지연이라는 수치와
-            7.4배 요청·12.6배 SLO 결과가 이 논문의 것입니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-splitwise" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Patel et al. · Splitwise: Efficient Generative LLM Inference Using Phase Splitting (ISCA 2024)"
-            citeKey={2}
-            href="https://arxiv.org/abs/2311.18677"
-          >
-            Prompt machine과 token machine을 나누고 InfiniBand 위 layer-wise KV 전송을
-            prefill 계산과 겹칩니다. Llama-70B 1,500 token에서 직렬 64%, layer-wise 16.5%,
-            end-to-end 0.8%의 전송 overhead, H100 400 Gbps와 A100 200 Gbps의 GPU 쌍 대역폭,
-            1.4배 throughput·20% 비용 절감과 2.35배 throughput이 이 논문의 자기보고입니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-mooncake" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Qin et al. · Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving (FAST 2025)"
-            citeKey={3}
-            href="https://arxiv.org/abs/2407.00079"
-          >
-            Prefill 풀과 decode 풀 사이에 CPU DRAM과 SSD의 분산 KV cache를 두고 Conductor가
-            prefix hit 길이와 queue 시간, transfer 시간을 합쳐 prefill instance를 고릅니다.
-            Decode node는 TBT SLO를 지킬 load 기준으로 미리 고르고 prefill 뒤 다시 확인하며,
-            simulation에서 최대 525%, Kimi 운영에서 75% 더 많은 요청이 저자 보고입니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-vllm-disagg" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="vLLM 문서 · Disaggregated Prefilling"
-            citeKey={4}
-            href="https://docs.vllm.ai/en/latest/features/disagg_prefill.html"
-            type="code"
-          >
-            목적을 TTFT와 ITL의 독립 조정, tail ITL 통제로 두고 throughput은 높이지 않는다고
-            적습니다. kv_transfer_config의 kv_connector, kv_role(kv_producer·kv_consumer),
-            kv_buffer_device와 NixlConnector·LMCacheConnectorV1·MooncakeConnector 등 connector
-            목록, prompt_token_ids 전달이 이 문서의 내용입니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-sglang-router" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="SGLang 문서 · PD Disaggregation 및 sgl-router README"
-            citeKey={5}
-            href="https://docs.sglang.io/advanced_features/pd_disaggregation.html"
-            type="code"
-          >
-            disaggregation-mode prefill·decode, Mooncake와 NIXL transfer backend,
-            disaggregation-bootstrap-port, router의 pd-disaggregation·prefill·decode 인자를
-            정의합니다. Cache-aware policy의 근사 radix tree와 balance_abs_threshold·
-            balance_rel_threshold 판정, cache_threshold는 sgl-router README가 설명합니다.
-          </CitationBlock>
-        </div>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            다음 읽기는 한 replica 안에서 tensor·pipeline·data parallel을 어떻게 나누는지
-            다루는 <Link to="/cs/ai/vllm-serving#parallel-layout">vLLM serving 글의 parallel layout</Link>과,
-            요청률에서 replica 수와 admission을 정하는{" "}
-            <Link to="/cs/ai/llm-serving-capacity#capacity-admission">serving capacity 글</Link>입니다.
-          </p>
-        </div>
-      </section>
-    </div>
-  );
-}
+<section id="request-trace" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 요청 R은 4·6·8밀리초의 서로 다른 완료를 지납니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>R의 입력 네 위치가 P에 도착합니다. P가 4 ms에 KV 128B와 시험용 첫 출력을 만들지만 프록시는 그 출력을 사용자에게 보내지 않습니다. 프록시는 원본을 찾는 정보만 받아 D에 같은 입력의 요청을 보냅니다.</p><p>D는 자기 공간을 배정하고 P의 기록을 읽어옵니다. 가정한 속도 64B/ms에서는 6 ms에 완료됩니다. 이때까지 P의 원본은 보관되어야 합니다. D의 입력 네 위치에 대한 KV가 모두 왔더라도 다음 출력의 점수를 얻는 마지막 입력 계산은 남을 수 있습니다.</p><p>이 경로에서는 완료 위치를 4에서 3으로 조정해 마지막 입력 위치를 다시 계산합니다. 그 작업이 가정한 2 ms를 쓰고 8 ms에 D의 첫 출력을 만듭니다. 프록시가 그 출력을 전달하므로 전달 지연을 뺀 TTFT는 8 ms입니다.</p><p>다른 프로토콜이 P의 첫 출력을 4 ms에 바로 보낸 뒤 D에서 이어 쓰도록 설계되었다면 TTFT는 달라집니다. 그때 전송 대기는 첫 출력 다음 간격에 나타날 수 있습니다. 두 프로토콜을 같은 시간표로 보고하면 전송 비용의 위치를 잘못 읽게 됩니다.</p></div></section>
+
+<section id="proxy-request" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 실제 프록시는 P에 한 토큰만 요청합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>이제 vLLM v0.27.1의 테스트용 toy_proxy_server.py를 읽습니다. 운영 중인 우리 배포 설정이나 성능 로그는 없습니다. 이 글은 공개 예제의 요청 변환을 추적하며 실제 GPU 서비스를 실행한 결과로 표시하지 않습니다.</p><p>send_request_to_service는 받은 요청을 복사하고 P 요청의 max_tokens를 1로 바꿉니다. stream은 false입니다. do_remote_decode를 true로 두어 이후 다른 장치가 기록을 읽을 수 있는 응답을 요청합니다.</p><p>R의 원래 생성 상한이 8이어도 P 쪽 복사본만 1이 됩니다. 원래 요청 객체는 D로 보내는 데 사용됩니다. P가 만든 한 토큰을 D 입력에 단순히 붙이는 코드라고 추정하지 말고 다음 응답 처리까지 읽어야 합니다.</p></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("proxy-prefill",codeRefs["proxy-prefill"]) } label="P 요청의 복사·한 토큰·비스트리밍 설정" /></div></section>
+
+<section id="proxy-output" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. 첫 출력의 주인은 응답을 보내는 코드에서 확인합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>_handle_completions는 P 응답에서 kv_transfer_params를 꺼내 원래 요청에 붙입니다. P의 출력 문자열을 yield하지 않습니다. 이후 stream_service_response가 받은 D의 바이트만 클라이언트로 내보냅니다.</p><p>R의 4 ms 결과가 사용자에게 전달되지 않는 이유가 이 줄들에 있습니다. 같은 요청 ID를 사용하지만 엔진 내부 요청 식별과 원격 블록 위치는 전달된 필드로 연결합니다. 원본 엔진, 요청 ID, 블록 번호와 접속 정보는 실제 P 응답에서 받아야 합니다.</p><p>공식 문서의 prompt_token_ids 재사용은 별도 최적화입니다. P 요청에 return_token_ids를 켜고 반환된 입력 ID를 D의 전송 필드에 넣으면 채팅 템플릿과 토큰화를 건너뛸 수 있습니다. 이는 입력 ID 전달이며 P의 생성 출력을 자동으로 이어 붙인다는 뜻은 아닙니다. 고정한 toy proxy는 이 추가 절차를 구현하지 않습니다.</p></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("proxy-forward",codeRefs["proxy-forward"]) } label="P의 전달 정보와 D 출력 스트림" /></div><div className="mt-6"><CitationBlock source="vLLM v0.27.1 · 입력 ID 재사용" citeKey={1} href="https://docs.vllm.ai/en/v0.27.1/features/disagg_prefill/#reusing-prefill-token-ids-on-decode"><q>Reusing prefill token ids on decode</q></CitationBlock></div></section>
+
+<section id="source-allocation" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 받을 공간을 잡고 비동기 읽기가 끝나기를 기다립니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>NixlPullConnectorScheduler는 원격에 있는 입력 위치 수에서 이미 로컬에 있는 위치 수를 뺍니다. R의 일반 attention 모델에서 로컬 계산 0, 원격 입력 4이면 외부에서 받을 수 있는 위치는 4입니다. recurrent 상태를 가진 모델에는 별도 마지막 위치 처리가 있으므로 이 사례와 섞지 않습니다.</p><p>공간 배정 뒤 update_state_after_alloc이 원격 정보와 로컬 블록을 연결합니다. Worker의 _read_blocks는 READ 전송을 시작하고 handle을 완료 확인 목록에 남깁니다. 함수를 호출해 돌아왔다는 사실만으로 D의 값이 준비된 것은 아닙니다.</p><p>V1 scheduler는 원격 KV가 준비되면 사용할 블록을 기록합니다. 입력 전체가 맞은 경우 num_computed_tokens를 num_tokens−1로 조정합니다. R의 4가 3이 되어 마지막 한 위치에서 출력 점수를 다시 얻습니다. 앞서 계산한 8 ms 경로가 이 조건에 대응합니다.</p></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("remote-count",codeRefs["remote-count"]) } label="원격 위치 수 4에서 로컬 계산을 뺍니다" /></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("pull-read",codeRefs["pull-read"]) } label="실제 NIXL READ와 완료 handle" /></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("last-token",codeRefs["last-token"]) } label="완전한 입력 hit에서 마지막 위치 재계산" /></div></section>
+
+<section id="source-finish" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. P의 계산 완료와 원본 반환은 다른 사건입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>P의 request_finished는 전송할 블록이 있으면 delay_free_blocks를 true로 반환합니다. 원본을 바로 재사용하지 않고 보관 기한과 원격 블록 정보를 남깁니다. R은 4 ms에 계산을 마쳤지만 읽기 완료를 확인할 때까지 전송용 기록을 유지합니다.</p><p>P worker는 완료 통지를 세어 필요한 모든 consumer가 읽었는지 확인합니다. 한 P를 두 D rank가 읽어야 하는 배치라면 첫 통지 하나로 반환하지 않습니다. R의 단일 수신자 사례는 완료 통지 하나면 충분한 경우입니다.</p><p>고정한 버전의 기본 lease는 30초이고 heartbeat 주기는 5초입니다. 기한 연장은 기존 기한과 현재 시각+20초 중 큰 값을 사용합니다. 예를 들어 기한 30초에서 현재 25초의 신호를 받으면 45초가 됩니다. 5초에 신호를 받으면 max(30,25)=30초라 기존 기한을 줄이지 않습니다. (가정)</p><p>정상적으로 대기하는 D도 heartbeat를 보내지만 전송 성공을 뜻하지는 않습니다. 엔진의 긴 실행 때문에 신호 처리가 늦을 수 있고 기한이 지나면 원본이 회수될 수 있습니다. 완료·만료·취소를 같은 성공 응답으로 취급해서는 안 됩니다.</p></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("pin-source",codeRefs["pin-source"]) } label="request_finished의 반환 지연과 원격 정보" /></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("consumer-notification",codeRefs["consumer-notification"]) } label="모든 consumer의 완료를 센 뒤 반환" /></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("lease-renewal",codeRefs["lease-renewal"]) } label="기존 기한을 줄이지 않는 heartbeat 갱신" /></div></section>
+
+<section id="cache-reuse" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. D의 캐시도 재사용할 수 있고 층별 전송은 별도입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>R의 필요한 기록이 D에 이미 모두 있다면 P에서 같은 128B를 다시 읽을 필요가 없습니다. 고정한 pull worker는 로컬 블록 목록이 비어 있는 완전한 prefix hit 경로에서 데이터 전송 대신 P에 완료 통지를 보냅니다. 그러면 P도 불필요한 보관을 끝낼 수 있습니다.</p><p>prefix cache는 입력 앞부분의 기존 KV를 재사용하는 기능입니다. Router의 예상 일치와 엔진의 실제 hit는 다릅니다. 블록이 이미 회수됐거나 모델·토큰화·입력 문맥이 다르면 예상만으로 재사용할 수 없습니다. 같은 서버에 보냈다는 사실도 hit를 보장하지 않습니다.</p><p>NixlConnector는 이 버전에서 pull 구현의 별칭입니다. wait_for_layer_load와 save_kv_layer는 pass이므로 층마다 완성 즉시 전송하는 코드가 아닙니다. 비동기는 다른 작업과 겹칠 가능성을 뜻하고 층별 전송 여부를 뜻하지 않습니다.</p><p>별도의 NixlPushConnector는 D가 미리 등록한 메모리에 P가 WRITE하는 경로입니다. push라는 이름만으로 각 층 계산 직후 전송한다고 결론내릴 수 없습니다. 고정한 설계는 완성 블록과 목적지 등록을 맞춘 뒤 전송합니다. 이후의 층별 시간표는 다른 프로토콜의 가정으로 비교합니다.</p></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("local-hit",codeRefs["local-hit"]) } label="완전한 로컬 hit에서는 데이터 없이 완료 알림" /></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("layer-hooks",codeRefs["layer-hooks"]) } label="NIXL layer hook의 실제 빈 구현" /></div></section>
+
+<span id="paper-sglang-router" /><section id="routing-source" data-teach-level="6" className="scroll-mt-20"><span id="routing" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">13. SGLang의 균형 판정은 두 조건을 함께 봅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>같은 모델 복사본 둘의 load가 40과 8이라고 합시다. 고정한 SGLang 소스의 절대 기준 32에서는 차이 32가 기준을 넘지 않습니다. 41과 8이면 차이 33이고 41&gt;1.1×8이므로 두 조건을 모두 만족합니다. 이 경우 가장 작은 load를 고릅니다. (가정)</p><p>1000과 967은 차이 33이지만 1000&gt;1.1×967은 거짓입니다. 따라서 절대 차이만 보고 불균형이라고 판정할 수 없습니다. 가장 긴 prefix를 가진 서버로 가는 경로에도 실제 일치율과 건강 상태 조건이 남습니다.</p><p>소스는 sgl-model-gateway의 commit 35f3c96으로 고정했습니다. 이 CacheAwareConfig 기본값은 일치율 0.5, 절대 차이 32, 상대 비율 1.1, 정리 주기 30초, 최대 크기 10000입니다. 실제 배포의 인자는 이 기본값을 덮어쓸 수 있습니다.</p><p>이 구현은 입력 원문의 문자 일치율을 근사 tree에서 셉니다. token KV를 직접 조회한 길이가 아닙니다. 낮은 일치율 분기의 실제 코드는 최소 load를 선택합니다. 파일 머리말의 최소 tree 크기 설명과 다르므로 실행 분기를 기준으로 읽습니다.</p><p>정리 작업도 tree 전체를 주기적으로 비우지 않습니다. 최대 크기를 넘는 tenant의 오래된 leaf를 제거합니다. 크기를 검사하는 실제 값은 tenant_char_count입니다. 원문 주석의 node 수 표현만으로 문자 수와 저장된 KV byte를 같은 양으로 계산하면 안 됩니다.</p></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("routing-threshold",codeRefs["routing-threshold"]) } label="절대·상대 AND와 cache 일치율 분기" /></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("routing-low-hit",codeRefs["routing-low-hit"]) } label="낮은 일치율은 최소 load 선택" /></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("routing-config",codeRefs["routing-config"]) } label="고정한 CacheAwareConfig 기본값" /></div><div className="my-6"><CodeViewButton onClick={() => sidebar.open("routing-eviction",codeRefs["routing-eviction"]) } label="전체 초기화 대신 크기 초과 부분 정리" /></div></section>
+
+<section id="routing-estimate" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">14. 캐시 이득보다 대기가 크면 다른 서버가 빠릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>앞에서 본 네 자리 요청의 A와 B를 다시 비교합니다. A는 두 자리를 재사용하지만 3 ms 기다려 5 ms에 준비합니다. B는 네 자리를 새로 계산해도 0.5 ms만 기다려 4.5 ms에 준비합니다. 이 값은 후보 비교용 입력 처리 예상이며 뒤의 KV 전송과 사용자 전달을 이미 포함한 TTFT 측정이 아닙니다.</p><p>새 위치당 1 ms라는 선형 가정은 작은 예를 계산하기 위한 것입니다. 실제 prefill은 전체 길이와 hit 길이, batch, attention 계산과 GPU 상태에 따라 달라집니다. cached prefix를 참고하는 새 위치의 attention 비용도 남습니다.</p><p>Mooncake FAST 2025의 Algorithm 1은 전송 예상, 대기 예상, prefill 예상을 더해 후보를 비교합니다. 논문의 T_transfer는 여기서 재사용할 prefix를 후보 P로 가져오는 비용입니다. 모든 항을 P→D의 마지막 전송으로 읽으면 경로가 바뀝니다.</p></div><div className="mt-6"><CitationBlock source="Mooncake FAST 2025 · p.162 Algorithm 1, lines 14–16" citeKey={1} href="https://www.usenix.org/system/files/fast25-qin.pdf#page=9"><q>TTFT ← Ttransfer + Tqueue + Tprefill</q></CitationBlock></div><div className="prose prose-neutral max-w-none dark:prose-invert"><p>같은 R에서 B가 A의 두 자리 기록 64B를 가져오는 선택을 추가합시다. prefix 전송 예상 1 ms, B 대기 0.5 ms, 남은 계산 2 ms라면 원문의 합은 3.5 ms입니다. 두 자리를 가져오는 비용이 3 ms라면 5.5 ms라서 B에서 네 자리를 새로 계산하는 4.5 ms보다 늦습니다. (가정)</p></div></section>
+
+<section id="transfer-bytes" data-teach-level="6" className="scroll-mt-20"><span id="kv-transfer" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">15. 논리 기록 크기와 실제 전송량을 먼저 구분합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>R의 한 자리 KV는 두 종류×두 층×두 head×폭 2×숫자당 2B=32B입니다. 입력 네 자리에 128B입니다. 이 크기는 연속된 논리 payload이며 allocator의 블록 여백, 통신 헤더와 중복 전송은 제외합니다.</p><p>일반 full-attention 모델에서 같은 shape를 모든 층에 쓴다면 S=2N·H_KV·d_h·b·L입니다. 실제로 sliding window, hybrid 상태, 양자화 scale, 공유된 저장소, 서로 다른 TP 크기가 있으면 각 층과 전송 경로를 따로 세어야 합니다.</p><p>별도의 큰 가정으로 32층·KV head 8·폭 128·숫자당 2B·입력 4096을 넣으면 536870912B=512MiB입니다. 이 장부는 MHA의 다른 KV head 수나 가중치 읽기량과 섞지 않습니다. 연결이 한 방향으로 얼마를 실제 옮기는지 확인한 뒤 시간으로 바꿉니다.</p></div><ExplainedFormula question="같은 크기의 모든 층을 옮길 때 논리 payload는 얼마인가요?" idea="한 위치의 K와 V에 들어가는 숫자를 센 뒤 숫자당 byte와 입력 위치 수를 곱합니다." formula={String.raw`S=2NH_{KV}d_hbL`} annotatedFormula={String.raw`S=\underbrace{2}_{K,V}\underbrace{NH_{KV}d_h}_{\text{종류당 숫자 수}}\underbrace{b}_{\text{숫자당 byte}}\underbrace{L}_{\text{입력 위치 수}}`} operations={[{expression:"2",annotation:["K와 V 두 종류를","모두 옮기는 조건입니다."]},{expression:"NH_{KV}d_h",annotation:["작은 사례는 2×2×2로","종류당 위치마다 숫자 여덟 개입니다."]},{expression:"bL",annotation:["숫자당 2B와 네 위치를 곱하면","전체는 128B입니다."]}]} terms={[{symbol:"N",name:"옮기는 층 수",description:"작은 사례는 2입니다."},{symbol:"H_{KV},d_h",name:"KV head 수와 폭",description:"작은 사례는 각각 2입니다. query head 수와 구분합니다."},{symbol:"b,L",name:"숫자당 byte와 입력 길이",description:"2B·4위치의 가정입니다."},{symbol:"S",name:"논리 payload byte",description:"padding과 통신 부가 정보는 포함하지 않습니다."}]} assumptions={["모든 층의 full-attention KV가 같은 shape와 dtype이며 K·V를 각각 저장합니다.","실제 전송은 블록 배치·재사용·rank 분할과 복제에 따라 달라집니다."]} interpretation="같은 식에 32·8·128·2·4096을 넣으면 512MiB입니다. 이 byte 수가 실제 wire 전송량과 같은지는 따로 확인합니다." /></section>
+
+<section id="layer-overlap" data-teach-level="6" className="scroll-mt-20"><span id="paper-splitwise" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">16. 앞 층을 먼저 보내도 전송 대기열은 남습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>층별 전송을 지원하는 별도 프로토콜을 가정합시다. 같은 R의 첫 층 64B가 2 ms, 둘째 층 64B가 4 ms에 준비됩니다. 전용 링크 64B/ms로 바로 보내면 첫 층은 3 ms, 둘째는 5 ms에 전송 완료됩니다. 모든 층을 만든 뒤 보내는 6 ms보다 1 ms 빠릅니다. (가정)</p><p>이때도 마지막 1 ms는 계산 완료 뒤에 남습니다. 링크를 16B/ms로 낮추면 첫 층의 전송은 2~6 ms, 둘째는 6~10 ms입니다. 계산이 끝난 4 ms 뒤에 6 ms가 남으므로 마지막 층의 전송 시간 4 ms만 남는다는 설명은 틀립니다. 앞 층이 통로를 사용한 시간이 누적되기 때문입니다.</p><p>Splitwise §IV-C의 실제 방식은 각 층의 KV를 비동기로 보내고 완료 동기화를 둡니다. 이를 R에 적용하려면 목적지와 층별 버퍼가 미리 준비되고 계산·전송의 공유 자원 간섭을 무시할 수 있어야 합니다. 이 가정은 앞의 NIXL pull 소스 동작과 구분합니다.</p></div><ExplainedFormula question="층별 전송의 완료 시점을 어떻게 계산하나요?" idea="층이 준비되어야 보낼 수 있고 앞 층의 전송도 끝나야 같은 링크를 사용할 수 있습니다. 두 시점 중 늦은 것에서 이번 payload 시간을 더합니다." formula={String.raw`e_i=\max(r_i,e_{i-1})+s_i/B,\qquad e_0=0`} annotatedFormula={String.raw`e_i=\underbrace{\max(r_i,e_{i-1})}_{\text{데이터와 링크가 모두 준비}}+\underbrace{s_i/B}_{\text{이번 층의 복사 시간}},\quad e_0=0`} operations={[{expression:String.raw`\max(r_i,e_{i-1})`,annotation:["둘째 층은 준비 시점과 첫 전송 완료 중","늦은 때에 시작합니다."]},{expression:"s_i/B",annotation:["64B를 64B/ms로 보내면","층마다 1ms입니다."]}]} terms={[{symbol:"r_i,e_i",name:"준비·전송 완료 시점",description:"R의 준비는 2ms·4ms입니다."},{symbol:"s_i,B",name:"층 payload와 일정한 실효 속도",description:"각 층 64B, 기본 64B/ms로 가정합니다."}]} assumptions={["한 전용 링크가 층을 순서대로 보내며 준비·대기·복사를 이 식으로 모델링합니다.","연결 준비·통신 지연·다른 traffic·계산과의 자원 간섭은 제외합니다."]} interpretation="64B/ms에서는 완료 3·5ms, 16B/ms에서는 6·10ms입니다. 전송량만 비교하지 말고 준비와 의존 경로를 시간축에 놓습니다." /><div className="mt-6"><CitationBlock source="Splitwise v2 · §IV-C, §V-A, Fig.11" citeKey={1} href="https://arxiv.org/html/2311.18677v2#S4.SS3"><q>asynchronous transfer</q></CitationBlock></div><div className="prose prose-neutral max-w-none dark:prose-invert"><p>논문 §VI-A의 두 장치·배치 없는 coding trace 비교에서는 직렬 전송의 두 번째 토큰 추가 지연 64%가 최적화 후 16.5%, E2E 영향은 0.8%로 보고됩니다. P의 첫 토큰을 먼저 내보내는 경로이며 우리 테스트 프록시의 TTFT 결과가 아닙니다. 작은 prompt에서는 층별 동기화 비용 때문에 직렬 전송을 선택했습니다.</p></div></section>
+
+<section id="transfer-budget" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">17. 한 요청의 시간과 초당 옮길 양은 다른 조건입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>512MiB를 한 방향으로 한 번 옮길 때 50GB/s를 지속해서 쓸 수 있다면 payload 시간은 10.73741824 ms입니다. 400Gbit/s를 8로 나눈 50GB/s에는 프로토콜·공유·혼잡에 따른 감소가 없습니다. 이 값을 실제 측정 전송 시간이라고 부르지 않습니다.</p><p>다른 속도 가정도 같은 방식으로 비교할 수 있습니다. 연결 제품의 양방향 합산 대역폭이나 여러 포트의 합을 한 요청의 단방향 속도로 넣으면 안 됩니다. 다음 표는 오직 표시한 가용 속도를 넣은 payload 계산입니다.</p><p>복사를 기다리는 지연과 초당 처리할 양도 다릅니다. 초당 10요청이 각각 512MiB를 옮기면 5.36870912GB/s, 즉 42.94967296Gbit/s가 필요합니다. 25Gbit/s 통로로는 이 흐름을 계속 처리할 수 없습니다. 반대로 평균 흐름이 통로 아래여도 한꺼번에 몰린 요청의 지연은 길어질 수 있습니다.</p></div><div className="my-6 overflow-x-auto"><table className="w-full min-w-[640px] text-left text-sm"><thead><tr><th className="border-b p-3">한 방향 속도 가정</th><th className="border-b p-3">512MiB payload 시간</th><th className="border-b p-3">해석</th></tr></thead><tbody><tr><td className="border-b p-3 align-top">600GB/s</td><td className="border-b p-3 align-top">0.8948ms</td><td className="border-b p-3 align-top">특정 NVLink 쌍의 달성 속도로 확인된 값은 아닙니다.</td></tr><tr><td className="border-b p-3 align-top">50GB/s</td><td className="border-b p-3 align-top">10.7374ms</td><td className="border-b p-3 align-top">400Gbit/s를 8로 나눈 이상화 값입니다.</td></tr><tr><td className="border-b p-3 align-top">25GB/s</td><td className="border-b p-3 align-top">21.4748ms</td><td className="border-b p-3 align-top">이 속도를 실제 사용할 수 있다는 가정입니다.</td></tr><tr><td className="border-b p-3 align-top">3.125GB/s</td><td className="border-b p-3 align-top">171.7987ms</td><td className="border-b p-3 align-top">25Gbit/s를 8로 나눈 이상화 값입니다.</td></tr></tbody></table></div><ExplainedFormula question="링크 용량과 요청 지연에서 각각 무엇을 확인하나요?" idea="한 요청은 payload를 속도로 나누고, 장기 흐름은 요청률과 평균 payload를 곱합니다. 서로 다른 질문이므로 별도로 검사합니다." formula={String.raw`T_{payload}=S/B_{eff},\qquad \lambda\mathbb E[S]<B_{eff}`} annotatedFormula={String.raw`\underbrace{S/B_{eff}}_{\text{한 요청의 일정속도 payload 모형}},\qquad\underbrace{\lambda\mathbb E[S]}_{\text{초당 평균 유입 byte}}<\underbrace{B_{eff}}_{\text{이 흐름에 가용한 byte/s}}`} operations={[{expression:"S/B_{eff}",annotation:["536870912B를 50×10⁹B/s로 나누면","10.7374ms입니다."]},{expression:String.raw`\lambda\mathbb E[S]`,annotation:["10요청/s에 512MiB씩이면","약 42.95Gbit/s가 필요합니다."]}]} terms={[{symbol:"S",name:"요청 payload byte",description:"큰 가정에서 536870912B입니다."},{symbol:"B_{eff}",name:"같은 경로에 가용한 속도",description:"일정 실효 속도 모형입니다. peak를 넣으면 실제 시간이 아니라 payload 하한입니다."},{symbol:String.raw`\lambda`,name:"같은 흐름의 도착률",description:"초당 요청 수입니다. 재시도와 복제도 유입량에 반영합니다."}]} assumptions={["동일 링크 경계를 사용하며 다른 작업과 공유한 뒤의 가용 속도를 확인합니다.","엄격한 부등식은 지속 부하의 용량 여유를 위한 필요 조건입니다. burst와 지연 목표 충족을 보장하지 않습니다."]} interpretation="S/B가 decode 한 step보다 짧다는 사실만으로 전송이 숨겨지지 않습니다. R의 직렬 경로는 2ms가 뒤 계산 2ms와 같아도 TTFT에 2ms가 그대로 추가됩니다." /></section>
+
+<section id="provisioning" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">18. GPU 시간의 평균 장부에서 후보 풀 크기를 구합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>풀 크기는 요청당 실제 서비스 비용부터 셉니다. 별도 배포에서 P가 요청당 0.095 GPU·초를 쓰고 초당 100요청을 받는다고 가정합시다. 초마다 9.5 GPU·초가 필요합니다. 목표 평균 이용률 0.8로 나누면 11.875이므로 1GPU 복사본 12개가 용량 후보입니다. (가정)</p><p>D는 1GPU에서 64요청을 함께 처리하며 각 요청이 256step을 쓰고 step은 14.2 ms라고 가정합니다. 같은 batch 상태가 유지된다면 요청당 GPU 시간은 256×0.0142/64=0.0568 GPU·초입니다. 100×0.0568/0.8=7.1이므로 8GPU 후보입니다.</p><p>여기서 256은 D에서 실제 실행한 step 수입니다. P의 첫 출력을 이미 사용자에게 보낸 프로토콜에서 전체 출력이 256이면 보통 이후 생성 step은 255입니다. 가정한 batch와 step 시간도 길이 분포에 따라 바뀌므로 최대 출력 상한을 평균 서비스 시간처럼 넣지 않습니다.</p><p>D 복사본 하나가 2GPU를 쓰면서 같은 batch 시간이라고 새로 가정하면 요청당 비용은 0.1136 GPU·초입니다. GPU 수만 올림한 15개는 완전한 2GPU 복사본으로 나눌 수 없습니다. 7.1복사본을 8로 올려 16GPU를 잡아야 합니다.</p><p>
+            P의 비용을 별도 측정으로 0.024 GPU·초라고 바꾸면 P 후보는 3GPU가 됩니다. prompt 길이가 1/4이라는 이유만으로 0.095를 자동으로 1/4로 만들지
+            않습니다. attention·cache·batch 조건에서 시간의 비례가 달라질 수 있습니다.
+          </p></div><ExplainedFormula question="여러 GPU가 한 복사본을 이룰 때 몇 개를 배치하나요?" idea="요청당 GPU 시간을 초당 자원 수요로 바꾼 뒤 복사본 하나가 제공할 목표 용량으로 나눕니다. 올림은 복사본 단위로 합니다." formula={String.raw`n_j=\left\lceil\frac{\lambda d_j}{u_jg_j}\right\rceil,\qquad G_j=g_jn_j`} annotatedFormula={String.raw`n_j=\left\lceil\frac{\underbrace{\lambda d_j}_{\text{초당 GPU·초 수요}}}{\underbrace{u_jg_j}_{\text{복사본의 목표 사용 용량}}}\right\rceil,\quad G_j=g_jn_j`} operations={[{expression:String.raw`\lambda d_j`,annotation:["D의 2GPU 가정은 100×.1136으로","11.36GPU의 평균 일을 요구합니다."]},{expression:"u_jg_j",annotation:["이용률 .8과 2GPU를 곱하면","복사본당 목표 용량 1.6입니다."]},{expression:"G_j=g_jn_j",annotation:["ceil(11.36/1.6)=8 복사본이므로","16GPU가 후보입니다."]}]} terms={[{symbol:"d_j",name:"요청당 단계별 GPU·초",description:"복사본의 모든 GPU 시간을 합친 비용입니다."},{symbol:"g_j,n_j,G_j",name:"복사본당 GPU·복사본 수·전체 GPU",description:"장치 수와 모델 복사본 수를 구분합니다."},{symbol:"u_j",name:"목표 평균 이용률",description:"예에서는 0.8이며 지연 목표에서 자동으로 도출한 값이 아닙니다."}]} assumptions={["대상 부하에서 얻은 서비스 비용이 후보 배치에서도 유지된다는 평균 용량 근사입니다.","batch·입출력 분포·도착 변동·통신·메모리 제약을 별도로 검증해야 합니다."]} interpretation="12:8은 주어진 가정의 용량 후보입니다. 두 지연 목표를 만족하는 최소 GPU 조합이라고 확정하지 않습니다." /></section>
+
+<section id="paper-distserve" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">19. DistServe는 평균 계산 뒤 배치 후보를 실제 부하 모형으로 비교합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>DistServe Algorithm 1은 후보 병렬 구성을 평가하고 각 단계의 goodput으로 요청률을 나누어 복사본 수를 올림합니다. goodput은 정한 지연 목표를 만족하는 처리 능력입니다. R을 옮기는 링크와 두 단계의 메모리가 후보 조건에 포함되어야 합니다.</p><p>
+            예를 들어 별도 프로파일에서 P가 복사본당 목표 충족 5요청/s, D가 4요청/s를 처리하고 목표가 10요청/s라면 원문의 n,m은 2,3입니다. 이것은 앞의 이용률 산술
+            12:8과 다른 입력을 사용하는 계산입니다. (가정)
+          </p><p>
+            논문은 장치가 포화되는 prompt 길이를 미리 측정하도록 요구합니다. 512token 사례는 13B 모델과 A100의 해당 실험입니다. 모든 모델의 prefill에서
+            batch를 키울 이유가 없다는 법칙이 아닙니다.
+          </p><p>
+            통신이 느린 환경에서는 대응하는 층을 같은 노드에 두는 배치도 탐색합니다. 최대 7.4배 요청률·12.6배 엄격한 SLO는 OPT13B~175B, 해당 workload와 90%
+            이상 목표 충족 조건의 저자 평가입니다. 현재 vLLM v0.27.1의 모든 배포에 같은 배수를 적용하지 않습니다.
+          </p></div><div className="mt-6"><CitationBlock source="DistServe v3 · Algorithm 1, §3.1, §4, §6" citeKey={1} href="https://arxiv.org/html/2401.09670v3#S4.SS1"><q>simu_prefill</q></CitationBlock></div></section>
+
+<section id="paper-mooncake" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">20. Mooncake의 저장 계층과 평가 버전을 나누어 읽습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            Mooncake FAST2025의 요청 경로에서는 필요한 prefix를 CPU 메모리의 분산 저장소에서 가져오고 새 KV를 층별로 저장·이동합니다. 긴 입력은 조각으로 나눌 수
+            있습니다. R의 128B도 어느 GPU와 CPU에 복사본이 존재하는지에 따라 보관·전송 장부가 달라집니다.
+          </p><p>
+            이 논문의 재현 실험은 LLaMA3-70B 구조의 dummy 모델, 노드당 A800 8개와 200Gbit/s NIC4개를 사용합니다. 비교 vLLM은 v0.5.1이며
+            TTFT30초와 여러 TBT 기준으로 유효 요청 비율을 비교합니다. TBT는 각 요청의 가장 긴 10% 토큰 간격의 평균이므로 전체 간격의 단순 평균과도 다릅니다.
+          </p><p>
+            FAST판의 59~498% 유효 요청 용량 증가와 운영 A800·H800의 115%·107% 요청 증가는 각각 실험과 운영 이력 보고입니다. arXiv v4에 남은
+            525%·75%와 FAST판의 LLaMA3·평가 지표를 섞지 않습니다. v4의 33줄과 FAST판 Algorithm1의 22줄도 다릅니다.
+          </p><p>
+            R의 cache 선택에 적용한 3.5ms는 우리가 넣은 작은 가정입니다. 논문이 이 모델을 실측한 결과가 아닙니다. 빠른 저장소라도 가져오는 시간이 재계산보다 길면 원격
+            reuse가 손해일 수 있습니다.
+          </p></div><div className="mt-6"><CitationBlock source="Mooncake FAST2025 · §3–5, pp.158–164" citeKey={1} href="https://www.usenix.org/system/files/fast25-qin.pdf"><q>TTFT and TBT</q></CitationBlock></div><div className="prose prose-neutral max-w-none dark:prose-invert"><p>출판본과 preprint의 범위는 <a href="https://arxiv.org/html/2407.00079v4" target="_blank" rel="noreferrer">arXiv v4 원문</a>과 <a href="https://www.usenix.org/conference/fast25/presentation/qin" target="_blank" rel="noreferrer">FAST2025 출판 정보</a>에서 각각 확인할 수 있습니다.</p></div></section>
+
+<section id="heterogeneous" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">21. GPU 종류와 두 대뿐인 배포도 같은 조건으로 비교합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            두 풀이 다른 GPU를 사용하는 구성을 heterogeneous phase serving이라고 합니다. 어떤 phase가 계산·메모리·통신 중 무엇에 막히는지는 실제 프로파일로
+            확인합니다. FLOP/s와 대역폭의 제품표 비율만으로 요청당 비용이나 지연을 확정할 수 없습니다.
+          </p><p>
+            Splitwise의 이종 배치는 DGX-H100과 DGX-A100, 논문의 비용·전력·부하 추적 및 아홉 지연 목표를 사용한 비교입니다. 예를 들어 coding과
+            conversation에서는 선택한 두 풀 비율이 다릅니다. 특정 비용의 배수를 현재 임대 가격이나 우리 R의 2ms에 대입하지 않습니다.
+          </p><p>
+            GPU가 두 개일 때에도 항상 같은 정답은 없습니다. P1개·D1개와 혼합 replica2개를 같은 요청 흐름에서 비교합니다. 혼합 방식의 조각 크기를 바꾸며 첫 출력과 이후
+            간격을 함께 재고 분리 방식에서는 링크·두 대기열·각 장치의 유휴 시간을 포함합니다.
+          </p><p>
+            두 pool의 TP 크기가 다르면 KV를 읽는 rank 대응과 메모리 배치가 달라질 수 있습니다. 지원 여부와 변환 비용을 고정 버전의 호환표에서 확인합니다. GPU
+            가중치·KV·작업 공간이 실제로 들어가는지도 비용 비교의 전제입니다.
+          </p></div></section>
+
+<section id="failures" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">22. 전송 실패 뒤의 재시도도 한 요청의 일부입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            R의 128B 중 일부만 받았는데 성공으로 처리하면 답이 잘못됩니다. 실패한 블록의 범위를 표시하고 재계산하거나 요청을 실패시켜야 합니다. vLLM의 고정된 NIXL 문서는
+            KV 로드 실패 시 기본 fail 정책과 선택적 recompute를 구분합니다. 재계산을 허용하면 D에 prefill 계산이 다시 생길 수 있습니다.
+          </p><p>
+            사용자가 P 계산 뒤 취소했거나 D가 요청을 받지 못한 경우에도 P의 보관이 끝나야 합니다. 반대로 재시도가 끝났다는 이유로 원래 읽기가 계속되는 메모리를 재사용하면 안
+            됩니다. 요청 식별자, 원본 유효기간, 실제 완료 이벤트를 함께 확인합니다.
+          </p><p>
+            첫 출력을 이미 보낸 프로토콜에서는 재시도로 같은 출력을 두 번 보내지 않는지도 검사합니다. 생성 난수 상태와 제약 조건을 어떻게 이어가는지에 따라 동일 입력의 재실행도 다른
+            출력이 될 수 있습니다. 이 글의 테스트 proxy를 운영용 장애 복구 설계로 보지는 않습니다.
+          </p><p>앞에서 D의 자리 확인을 강조했지만 모든 구현이 최대 출력 길이의 KV를 처음부터 예약하는 것은 아닙니다. 실제 admission이 현재 입력·다음 step·watermark 중 무엇을 검사하는지 구분하고 장기 용량 계획과 분리합니다. 자세한 배정은 <a href="/cs/ai/serving-memory-admission-and-preemption">메모리 수용과 회수 글</a>로 이어집니다.</p></div></section>
+
+<section id="boundary" data-teach-level="7" className="scroll-mt-20"><span id="paper-vllm-disagg" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">23. 실제 코드의 범위와 가정한 시간을 구분합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            이 글의 vLLM 원문은 v0.27.1의 commit6e448d0으로 고정했습니다. 프록시의 출력 경로와 READ·블록 보관·마지막 입력 재계산을 따라갔습니다. R의 128B와
+            4·6·8ms는 설명용이며 GPU 클러스터를 실행해 측정한 수치가 아닙니다.
+          </p><p>
+            SGLang 원문은 2026-10-04에 확인한 commit35f3c96입니다. 코드의 AND 판정·낮은 hit 분기·기본값·tree 정리를 대조했습니다. 댓글이나
+            README의 요약이 실제 분기와 다르면 둘을 구분해 설명했습니다.
+          </p><p>
+            vLLM의 실험적 분리 prefill 문서는 목적을 TTFT·ITL의 독립 조정과 tail ITL 제어로 설명하며 throughput 개선 기능이 아니라고 경고합니다. 이것을
+            모든 연구 시스템의 goodput이 절대로 증가하지 않는다는 명제로 확대하지 않습니다. 비교 버전·지표·부하·같은 자원 예산을 먼저 맞춥니다.
+          </p></div><ContentBoundary article="disaggregated-prefill-decode-serving" /></section>
+
+<section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">24. 조건을 바꾸어 다음 결과를 예상해 보세요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+            P가 4ms에 첫 출력을 계산했는데 프록시가 D 출력만 보냅니다. 복사 2ms와 D 계산 2ms라면 사용자가 첫 출력을 받는 시점은 언제인가요? (답: 7절)
+          </p><p>
+            64B씩인 두 층이 2ms·4ms에 준비되고 링크가 16B/ms입니다. 계산이 끝난 뒤 마지막 층의 4ms만 남을까요? (답: 16절)
+          </p><p>
+            P 한 곳을 읽어야 할 D 수신자가 둘인데 완료 통지는 하나만 왔습니다. P 계산은 이미 끝났으므로 원본을 돌려줘도 될까요? (답: 11절)
+          </p></div></section>
+</div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{vllm:disaggregationTree}} projectMetas={{vllm:{id:"vllm",label:"고정 vLLM·SGLang 원문",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;}

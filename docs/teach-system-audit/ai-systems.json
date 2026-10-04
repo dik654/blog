@@ -2656,25 +2656,224 @@
       "route": "ai/disaggregated-prefill-decode-serving",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/disaggregated-prefill-decode-serving.tsx",
       "publicPath": "cs/ai/disaggregated-prefill-decode-serving",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "phase 병목과 batch 이득의 무조건 단정",
+        "affinity만으로 hit 보장, cache/load 상충 항상 주장",
+        "SGLang 두 threshold AND 조건의 상대 비율 예시 누락, eviction을 전체 tree 비우기로 단정",
+        "prefill이 모든 입력을 한 번에 처리해야 한다는 단정",
+        "TTFT에 전송이 항상 더해진다는 설명과 첫 token 전달 사건의 혼동",
+        "decode prefix cache는 의미 없다는 단정",
+        "최대 출력 footprint 예약을 보편적 admission으로 서술",
+        "완료 확인 없이 producer 즉시 free",
+        "NIXL layer-wise 보편화, 마지막 layer만 노출된다는 단정",
+        "S/B를 실제 전송 시간으로 표기하고 t_transfer≤t_step을 TTFT 숨김 충분조건으로 사용",
+        "GQA 전송512MiB와 MHA decode33.5GB 장부 혼합",
+        "lambda*S≤bandwidth만으로 안정과 지연 충족, link가 항상 먼저 한계라는 주장",
+        "이용률 산술을 SLO 충족과 최소 GPU 확정으로 서술, multi-GPU factor와 첫 출력 이후 step 수 경계 누락",
+        "2GPU 분리 항상 불리, 논문 수치와 현재 버전 혼합, 실제 원문 코드 없음"
+      ],
+      "fixture": {
+        "inputPositions": 4,
+        "layers": 2,
+        "kvHeads": 2,
+        "headWidth": 2,
+        "bytesPerScalar": 2,
+        "bytesPerPosition": 32,
+        "bytesTotal": 128,
+        "producerReadyMs": 4,
+        "payloadRateBytesPerMs": 64,
+        "consumerLastPositionMs": 2,
+        "protocol": "P response is consumed by proxy; D pulls full prompt KV and recomputes final input position; only D output is forwarded",
+        "assumptions": "Toy full-attention single-rank case; zero handshake/queue/network overhead; no prefix hit or block padding; numeric byte accounting only, not a runnable GPU model."
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "small-case",
+        "1": "handoff-map",
+        "2": "why-hold",
+        "3": "names",
+        "4": "request-trace",
+        "5-6": [
+          "proxy-request",
+          "proxy-output",
+          "source-allocation",
+          "source-finish",
+          "cache-reuse",
+          "routing-source",
+          "routing-estimate",
+          "transfer-bytes",
+          "layer-overlap"
+        ],
+        "7": [
+          "transfer-budget",
+          "provisioning",
+          "paper-distserve",
+          "paper-mooncake",
+          "heterogeneous",
+          "failures",
+          "boundary"
+        ],
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/tests/v1/kv_connector/nixl_integration/toy_proxy_server.py",
+          "location": "Disaggregation — vllm-project/vllm tests/v1/kv_connector/nixl_integration/toy_proxy_server.py",
+          "application": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+        },
+        {
+          "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/connector.py",
+          "location": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/connector.py",
+          "application": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+        },
+        {
+          "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/pull_scheduler.py",
+          "location": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/pull_scheduler.py",
+          "application": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+        },
+        {
+          "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/pull_worker.py",
+          "location": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/pull_worker.py",
+          "application": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+        },
+        {
+          "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/base_scheduler.py",
+          "location": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/base_scheduler.py",
+          "application": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+        },
+        {
+          "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/base_worker.py",
+          "location": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/base_worker.py",
+          "application": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+        },
+        {
+          "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/push_scheduler.py",
+          "location": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/push_scheduler.py",
+          "application": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+        },
+        {
+          "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/push_worker.py",
+          "location": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/push_worker.py",
+          "application": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+        },
+        {
+          "href": "https://raw.githubusercontent.com/sgl-project/sglang/35f3c96ff4794a4de15daf12caad371084a037ee/sgl-model-gateway/src/policies/cache_aware.rs",
+          "location": "Disaggregation — sgl-project/sglang sgl-model-gateway/src/policies/cache_aware.rs",
+          "application": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+        },
+        {
+          "href": "https://github.com/sgl-project/sglang/blob/35f3c96ff4794a4de15daf12caad371084a037ee/sgl-model-gateway/src/policies/mod.rs",
+          "location": "Disaggregation — SGLang CacheAwareConfig",
+          "application": "고정 원문에서 기본값과 크기 기반 정리의 실제 조건을 확인했습니다."
+        },
+        {
+          "href": "https://github.com/sgl-project/sglang/blob/35f3c96ff4794a4de15daf12caad371084a037ee/sgl-model-gateway/src/policies/tree.rs",
+          "location": "Disaggregation — SGLang tree eviction",
+          "application": "고정 원문에서 기본값과 크기 기반 정리의 실제 조건을 확인했습니다."
+        },
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py#L2671-L2674",
+          "location": "Disaggregation — vLLM scheduler full-prompt recompute",
+          "application": "입력 전체 hit에서 마지막 입력 위치를 다시 계산하는 경로입니다."
+        },
+        {
+          "href": "https://docs.vllm.ai/en/v0.27.1/features/disagg_prefill/",
+          "location": "Disaggregation — vLLM v0.27.1 — NIXL pull and toy proxy",
+          "application": "R의 입력4위치·128B와 P4ms·전송2ms·D2ms 가정을 실제 제어 흐름에 대응합니다."
+        },
+        {
+          "href": "https://github.com/sgl-project/sglang/blob/35f3c96ff4794a4de15daf12caad371084a037ee/sgl-model-gateway/src/policies/cache_aware.rs",
+          "location": "Disaggregation — SGLang 35f3c96 — cache-aware implementation",
+          "application": "load40/8·41/8·1000/967을 절대32·상대1.1에 넣어 false·true·false를 확인합니다."
+        },
+        {
+          "href": "https://arxiv.org/html/2311.18677v2",
+          "location": "Disaggregation — Splitwise v2 — transfer and provisioning",
+          "application": "Fig.11의 의존 경로에 R의 층별64B·준비2/4ms를 넣고 §VI-A의 두번째토큰64%→16.5%와 E2E0.8%를 원조건으로 한정합니다."
+        },
+        {
+          "href": "https://arxiv.org/html/2401.09670v3",
+          "location": "Disaggregation — DistServe v3 — placement algorithms",
+          "application": "Algorithm1의 올림식에 가정10RPS·P5RPS·D4RPS를 넣어2·3복사본을 구합니다."
+        },
+        {
+          "href": "https://www.usenix.org/system/files/fast25-qin.pdf",
+          "location": "Disaggregation — Mooncake FAST 2025 — published version",
+          "application": "p.162 Algorithm1 lines14–16에 R의 prefix 복사1ms·대기0.5ms·계산2ms를 넣어3.5ms를 얻습니다."
+        },
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/docs/design/nixl_kv_cache_lease.md",
+          "location": "Disaggregation — NIXL lease renewal v0.27.1",
+          "application": "완료·heartbeat·만료를 나누고 장기 대기와 실패의 보관 기한을 설명합니다."
+        },
+        {
+          "href": "https://arxiv.org/html/2407.00079v4",
+          "location": "Disaggregation — Mooncake arXiv v4 version boundary",
+          "application": "2025-09-03 v4의 모델·평가·Algorithm1을 FAST2025 출판본과 구분합니다."
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "요청 R의 입력4·128B·P 준비4ms·전송완료6ms·첫D출력8ms를 고정한 실제 proxy·pull connector·scheduler의 분기에 적용했습니다. 실제 proxy 함수 AST를 가짜 HTTP 응답과 실행하여 P첫출력 비전달 및 D스트림만 전달을 확인했고 scheduler 원문 if의4→3과 Rust 원문 AND의 false/true/false를 실행했습니다. full engine/GPU 성능 측정은 아닙니다.",
+        "sourceVerification": "라이선스2와 원문9파일을 고정 commit의 원격 bytes 및 SHA256과 대조했습니다. 전체 원문을 가진 14패널에서 해당 줄을 읽었습니다. Mooncake FAST2025와 arXiv v4의 서로 다른 모델·지표·실험값을 분리했습니다.",
+        "originalPreservation": "기존 phase 분리·cache routing·층별 전송·풀 용량·이종 GPU 비교와 세 논문의 범위를 보존했습니다. SGLang 기본값과 AND·eviction, D cache 무의미 단정, 즉시free, NIXL 층별hook, 첫출력 사건, 가정byte/실제시간 혼동 및 용량산술의 보증 주장을 교정했습니다.",
+        "humanize": {
+          "roundTrip": true,
+          "paragraphs": 94,
+          "chars": 16086,
+          "gateExit": 0,
+          "finalEdits": 0,
+          "chunks": 5,
+          "chunkMaxChars": 3980,
+          "numbersMarkersPointersPreserved": true,
+          "manualReview": "초기86문단에서21문단의 공백 및 연결쉼표1개 교정 후 새8문단을 보충했습니다. 최종94문단 전문을 읽고 extract→roundtrip→5묶음 prepare/gate→apply를 수행했으며 마지막패스 추가교정0입니다. 링크 포함2문단은 TSX에서 별도 읽었습니다."
+        },
+        "humanizeProps": "수식 설명·역할 정의·표·제목·Viz·원문패널의 실제201문자열 AST 추출과 동일 재삽입. 원문패널24문자열 및 후속수식/표/Viz15문자열 공백만 교정. theory가 두패스 전문·숫자·마커를 독립 검토하여 수학튜플 각주 오탐 승인.",
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "codePanels3901440": 28,
+        "narrowText": 0,
+        "vizInternalScroll": "5장면×2폭을 실제 선택해 time·record 위치·완료 상태를 확인하고 모든 PNG를 육안검토했습니다. frame/button delta0, 설명이 controls 위에 표시, 바깥 overflow0. 최종 공통등록후 두폭 재검사0오류.",
+        "firstFifth": "level3 이름 설명 전 사례는 실제 렌더 본문 기준390에서20.2197%,1440에서20.2159%입니다. 새8문단은 같은 R의 위치값/저장크기/동시256B/뒤공간대기11ms를 설명합니다.",
+        "learning": "최종공유등록24절·6기초+4심화문제·논문/원문5해설 strict PASS. advanced대역폭 질문 문구와8workedExample공백 보완후 root재검사PASS.",
+        "formula": "해당4개 수식 모두 일반식이 annotatedFormula에 실제 표시됩니다. 재귀식e0=0도 표시. 전역strict1434개PASS 및양폭DOM4개오류0.",
+        "prose": "최종 전역strict 재검토0. 설명용숫자와버전제약 유지.",
+        "graphAndOwnership": "8definition/canonicalHref·edge 이유1·editorial owns6/evidence4를 실제 교정본문과 대조한 제안을 root가 병합했고 같은 값임을 확인했습니다.",
+        "numeric": "theory 독립 검산에서128B/2ms,layer3·5/6·10,42.94967296Gbit/s,10.73741824ms,pool12:8 및2GPU복사본16GPU 확인. 후속동시256B·D대기7ms일때첫11ms도 재계산.",
+        "typescript": "등록 전 app tsc exit0. 등록TOC label/title 오류24개를 root가 교정한뒤 실제 app tsc checkpoint145-working-tsc.log exit0을 확인했습니다."
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "reviewEvidence": "/tmp/teach-all/disagg16-research-notes.json",
+      "bodyFiles": [
+        "src/pages/articles/ai/disaggregated-prefill-decode-serving.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/disaggregated-prefill-decode-serving.tsx",
+      "contentHash": "6d13a4176c763463e994c5916b98fefcbdfe26dc50e12d5033edbd96bc3a6919",
+      "evidenceFiles": [
+        "/tmp/teach-all/ai-systems-registration-16.json",
+        "/tmp/teach-all/ai-systems-numeric-16.json",
+        "/tmp/teach-all/disagg16-independent-theory.json",
+        "/tmp/teach-all/ai-systems16-learning-final.log",
+        "/tmp/teach-all/checkpoint145-working-tsc.log",
+        "/tmp/teach-all/ai-systems-formula-16.log",
+        "/tmp/teach-all/ai-systems-prose-16-verified.log",
+        "/tmp/teach-all/ai-systems-screens-16/panels.json",
+        "/tmp/teach-all/ai-systems-screens-16/scenes.json",
+        "/tmp/teach-all/ai-systems-screens-16/layout.json",
+        "/tmp/world-browser-audit/teach-ai-systems-disagg16-learning-final-summary.json",
+        "/tmp/teach-all/humanize-ai-systems-16-final/gate.txt",
+        "/tmp/teach-all/humanize-ai-systems-16-final/chunk-review.json",
+        "/tmp/teach-all/humanize-ai-systems-16-props-final/independent-finalize.md"
       ]
     },
     {
@@ -5670,6 +5869,173 @@
       "route": "ai/prefill-decode-phase-dynamics",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prefill-decode-phase-dynamics.tsx",
       "publicPath": "cs/ai/prefill-decode-phase-dynamics",
+      "status": "rewritten-local-verified",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [
+        "phase 이름만으로 compute/memory-bound 단정",
+        "roofline 하한을 실제 30 ms 출력과 max~sum 상한으로 서술",
+        "linear FLOP/전체 byte proxy를 정확한 intensity로 표시",
+        "KV 0.5 MB/MiB 혼동과 14.2 ms 산술 오류",
+        "V1의 running 먼저를 모든 decode 먼저로 단정",
+        "추가 chunk의 전송과 causal 내부 attention 누락",
+        "16배수 및 ceil(n/c)×SLO의 TTFT 보증 일반화",
+        "GQA head·group 배율과 64K 저장 용량 혼동",
+        "Viz 하드코딩 수치 불일치와 9px 축소"
+      ],
+      "fixture": {
+        "assumed": true,
+        "requests": {
+          "A": 1,
+          "B": 1,
+          "C": 20
+        },
+        "budget": 6,
+        "assignment": [
+          1,
+          1,
+          4
+        ],
+        "remainingC": 16,
+        "smallLedger": {
+          "F_MFLOP": "100*(2+c)",
+          "M_MB": "140+2*c",
+          "R_TFLOPS": 1,
+          "D_GBps": 100
+        },
+        "separate448Case": "14.2 ms is a hypothetical observation in a different deployment, not the 14.4357 ms MHA read-bound scenario"
+      },
+      "stageAnchors": {
+        "1-S": "overview",
+        "2-B": "black-box",
+        "3-0": "small-case",
+        "4-1": "inside-step",
+        "5-2": "why-two-resources",
+        "6-3": "phase-terms",
+        "7-4": "request-trace",
+        "8-4": "mixed-model",
+        "9-4": "arithmetic-intensity",
+        "10-4": "bound-not-measurement",
+        "11-5": "paper-roofline",
+        "12-5": "source-progress",
+        "13-5": "source-priority",
+        "14-5": "source-admission",
+        "15-5": "paper-sarathi",
+        "16-6": "large-case",
+        "17-6": "chunk-attention",
+        "18-6": "chunk-size",
+        "19-6": "long-context",
+        "20-6": "prefix-rereads",
+        "21-6": "paper-distserve",
+        "22-7": "prefill-optimization",
+        "23-7": "boundary",
+        "24-review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py",
+          "location": "vllm/v1/core/sched/scheduler.py",
+          "application": "전체 원문 SHA256과 행 범위를 확인하고 같은 A·B·C 사례를 해당 연산에 대입합니다."
+        },
+        {
+          "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/config/scheduler.py",
+          "location": "vllm/config/scheduler.py",
+          "application": "전체 원문 SHA256과 행 범위를 확인하고 같은 A·B·C 사례를 해당 연산에 대입합니다."
+        },
+        {
+          "href": "https://raw.githubusercontent.com/huggingface/transformers/5eddc12edfaf8cafde8c9bae4ccb12f8a139b4f9/src/transformers/models/mixtral/modeling_mixtral.py",
+          "location": "transformers/models/mixtral/modeling_mixtral.py",
+          "application": "전체 원문 SHA256과 행 범위를 확인하고 같은 A·B·C 사례를 해당 연산에 대입합니다."
+        },
+        {
+          "href": "https://www2.eecs.berkeley.edu/Pubs/TechRpts/2008/EECS-2008-134.pdf",
+          "location": "Roofline — EECS-2008-134 §3",
+          "application": "§3의 byte 경계와 성능 상한 식에 c4의 600 MFLOP·148 MB를 넣어 시간 하한1.48 ms로 바꿉니다."
+        },
+        {
+          "href": "https://arxiv.org/html/2403.02310v3",
+          "location": "Sarathi-Serve — Algorithm 3 and §4.3",
+          "application": "Algorithm3에 A1·B1·C4를 넣고 §4.3의 반복 KV 읽기를 C20의 다섯 조각으로 계산합니다."
+        },
+        {
+          "href": "https://arxiv.org/html/2401.09670v3",
+          "location": "DistServe — phase placement and communication",
+          "application": "§3.3의 1.13 GB·10요청/s 전송 사례와 §4 배치를 C의 입력 처리 뒤 기록 전달에 연결합니다."
+        },
+        {
+          "href": "https://docs.vllm.ai/en/v0.27.1/configuration/optimization/",
+          "location": "vLLM v0.27.1 — chunked prefill documentation and source",
+          "application": "L483~523에 running 앞 P가 budget6을 쓰는 반례를 넣어 모든 decode 우선이라는 일반화를 검증합니다."
+        },
+        {
+          "href": "https://www.nvidia.com/en-us/data-center/h100/",
+          "location": "NVIDIA H100 SXM specifications",
+          "application": "FP16 표의 sparsity 각주와 3.35 TB/s를 확인하며 dense989는 반올림 참조 가정입니다."
+        }
+      ],
+      "validation": {
+        "semanticReview": "같은 A1·B1·C20 사례의6위치 배정과 작은 작업 장부를 실제 고정 scheduler의 AST식에 대입했습니다. 전체 원문3개는 원격byte와 SHA256 일치. 하한1.48/1.8/2.2 ms, 실제2.3 ms 반례, 큰MHA14.4357 ms와 별도448후보, causal유효연산 및496/2032 GiB를 theory 독립 검산과 대조했습니다. 전체 vLLM/GPU 실행이나 실제 모델 latency 측정은 아닙니다.",
+        "humanize": {
+          "roundTrip": true,
+          "chars": 12207,
+          "paragraphs": 76,
+          "edits": 0,
+          "changeRate": 0,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true,
+          "manualReview": "quick-rules 전문과 가정·인용·수치·마커를 검토했으며 의미 없는 재서술을 하지 않았습니다. 초기와 최종 모두 input/final 동일."
+        },
+        "humanizeProps": "184개 visible 문자열 10357자 actual AST 추출·동일 재삽입. 수식 설명·표·용어·코드 annotation·Viz를 별도로 검토, 변경0과 gate OK.",
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "codePanels3901440": 12,
+        "narrowText": 0,
+        "vizInternalScroll": "작은 식에서 다섯 장면의 값을 직접 계산합니다. 원문 패널12회와 장면10회 확인, 모든 설명 표시, frame/control delta0. 모바일 마지막 긴 설명만 내부17px 이동으로 전체를 볼 수 있습니다.",
+        "learning": "strict require-registration PASS;24절·6+4문제·8개념·논문4해설",
+        "formula": "전역1432개 strict PASS, 해당5개 DOM 순서와 KaTeX 오류0",
+        "prose": "전역 재검토0. 수치 나열은 같은 축의 표로 옮기고 긴 제목과 조건 문단을 정리했습니다.",
+        "graphAndOwnership": "canonicalHref·definition8개와 editorial owns/evidence를 본문의 하한·측정·정책·모델 범위에 대조하고 root가 병합했습니다. 제목의 무조건 병목 단정도 교정했습니다.",
+        "originalPreservation": "기존 dense2Pn·장문attention·chunk 후보448·KV재읽기·논문 비교의 설명 범위를 유지하고 잘못된 단위·단정·가정 누락을 교정했습니다.",
+        "hmrRetest": "공유 등록 HMR로 한 번 aside timeout. 이후12패널을 모두 attempt0으로 열고 실제 필드를 확인하여 재검사 exit0.",
+        "typescript": "npx tsc -p tsconfig.app.json --noEmit 최종 exit0"
+      },
+      "remaining": [
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "readEvidence": "/tmp/teach-all/read-prefill-decode-phase-dynamics.txt",
+      "bodyFiles": [
+        "src/pages/articles/ai/prefill-decode-phase-dynamics.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/prefill-decode-phase-dynamics.tsx",
+      "contentHash": "f0cd611d1dd56501750853253da25096b717b968d76de52f2b379586fed2e824",
+      "evidenceFiles": [
+        "/tmp/teach-all/ai-systems-learning-15.log",
+        "/tmp/teach-all/ai-systems-tsc-15-final.log",
+        "/tmp/teach-all/ai-systems-formula-15-final.log",
+        "/tmp/teach-all/ai-systems-prose-15-final.log",
+        "/tmp/teach-all/ai-systems-viz-15.log",
+        "/tmp/teach-all/ai-systems-numeric-15.json",
+        "/tmp/teach-all/prefill15-independent-theory.json",
+        "/tmp/teach-all/prefill15-ledger-independent-theory.json",
+        "/tmp/world-browser-audit/teach-ai-systems-prefill15-final-summary.json",
+        "/tmp/teach-all/ai-systems-browser-15-final-retry.log",
+        "/tmp/teach-all/ai-systems-screens-15/panels.json",
+        "/tmp/teach-all/ai-systems-screens-15/scenes.json",
+        "/tmp/teach-all/ai-systems-screens-15/scroll-notes.json",
+        "/tmp/teach-all/ai-systems-readability-15.log",
+        "/tmp/teach-all/humanize-ai-systems-15-final/prefill-decode-phase-dynamics/gate.txt",
+        "/tmp/teach-all/humanize-ai-systems-15-props-verified/gate.txt"
+      ]
+    },
+    {
+      "route": "ai/prefix-caching-radix-attention",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prefix-caching-radix-attention.tsx",
+      "publicPath": "cs/ai/prefix-caching-radix-attention",
       "status": "reviewed-rewrite-required",
       "screeningSignals": {
         "explicitAssumption": false,
@@ -5678,9 +6044,18 @@
         "sectionCount": 7
       },
       "beforeDefects": [
-        "연산집약도 용어가 사례보다 먼저 등장하고 마지막 예측 질문이 없음",
-        "Roofline max 하한과 두 항의 합을 실제 시간의 보편 상하한처럼 표현",
-        "V1이 decode 전체를 언제나 먼저 처리한다는 주장과 chunk 계산의 경험 가정을 고정 구현으로 한정해야 함"
+        "첫 문단부터 radix·hash·LRU 용어가 먼저 나와 작은 입력 사례가 없음",
+        "최신 SGLang page_size>1을 제외하고 radix는 항상 token 단위라고 단정",
+        "block 크기 16을 보편 기본값으로 단정하며 full-hit에서 마지막 위치 재계산에 따른 block 정렬 경계를 수식에서 누락",
+        "hit 차이 1% 이내라는 보편 주장에 짧은 요청 반례가 있음",
+        "한 번의 cold-cache 정렬만으로 X 요청끼리 묶인다는 설명은 동적 재조회와 실행 순서 가정 누락",
+        "cache 2500 용량으로 실제 2600 요청을 처리하는 순서 예는 전체 running storage 가정 누락",
+        "leaf eviction Viz는 q4 600이 unlocked로 남는데 필요250 중200만 지우고 멈춰 실제 조건과 불일치",
+        "현 SGLang LPM은 대기열>128에서 FCFS로 전환하고 in-batch 중복 prefix 지연도 있어 항상 긴 hit 순이라고 할 수 없음",
+        "match 조회시 split해도 GPU KV를 복사한다는 뜻은 아니며 value는 위치 index라는 설명 필요",
+        "실제 pinned 원문 없이 의사코드와 2026년8월 main 이름만 제시",
+        "cascade는 같은 prefix 길이만으로 켜지지 않으며 실제 backend 비용 휴리스틱·조건 대조 필요",
+        "소제목 번호·예측 답 절과 actual source application 부재"
       ],
       "fixture": null,
       "stageAnchors": {},
@@ -5692,35 +6067,10 @@
         "browser1440": "pending"
       },
       "remaining": [
-        "실제 본문 재작성과 원문·수치 검증",
-        "학습 등록·humanize·390/1440 검수"
+        "작은 R1/R2/R3 사례와 기존2500 큰 사례를 연결해 실질 재작성",
+        "SGLang·vLLM actual source와 논문 경계 및 수치·humanize·화면 검수"
       ],
-      "readEvidence": "/tmp/teach-all/read-prefill-decode-phase-dynamics.txt"
-    },
-    {
-      "route": "ai/prefix-caching-radix-attention",
-      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prefix-caching-radix-attention.tsx",
-      "publicPath": "cs/ai/prefix-caching-radix-attention",
-      "status": "unreviewed",
-      "screeningSignals": {
-        "explicitAssumption": false,
-        "answerPointers": 0,
-        "levelMarkers": 0,
-        "sectionCount": 7
-      },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
-      },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "readEvidence": "src/pages/articles/ai/prefix-caching-radix-attention.tsx 전체 459행과 전용 Viz 전체; pinned radix_cache/schedule_policy 확인"
     },
     {
       "route": "ai/prompt-engineering",
@@ -7951,21 +8301,21 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 39,
-    "unreviewed": 145,
+    "rewritten-local-verified": 41,
+    "unreviewed": 143,
     "reviewed-rewrite-required": 2
   },
   "localValidationSummary": {
-    "rewritten": 36,
-    "remainingUnreviewed": 145,
+    "rewritten": 41,
+    "remainingUnreviewed": 143,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
-    "learningStrict": "/tmp/teach-all/ai-systems-learning-audit-11.log — batch11 1편 통과",
-    "formulaStrict": "/tmp/teach-all/ai-systems-formula-audit-11.log — strict require-explicit 통과",
-    "typescript": "최근 batch14 실제 app tsc --noEmit exit0; root 전역 production build는 통합 단계",
-    "note": "담당186편 중39편을 실제 본문·고정 사례·원문 적용·humanize·두 폭 화면으로 개선 검수했습니다. 나머지147편은 미완료이며 자동 screening은 검수 판정이 아닙니다.",
+    "learningStrict": "/tmp/teach-all/ai-systems16-learning-final.log — batch16 1편 통과",
+    "formulaStrict": "/tmp/teach-all/ai-systems-formula-16.log — 1434개 strict 통과",
+    "typescript": "분리16 TOC수정후 root 실제 app tsc exit0 — /tmp/teach-all/checkpoint145-working-tsc.log; 전역production build는 root 통합 단계",
+    "note": "담당186편 중41편을 실제본문·고정사례·원문적용·humanize·두폭화면으로 개선 검수했습니다. 나머지145편은 미완료이며 자동screening은 검수판정이 아닙니다.",
     "reviewedRewriteRequired": 2,
-    "verifiedRewrites": 39
+    "verifiedRewrites": 41
   }
 }

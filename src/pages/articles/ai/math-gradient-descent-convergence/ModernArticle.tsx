@@ -113,7 +113,7 @@ export default function GradientDescentConvergenceArticle() {
       <ExplainedFormula question="원문 식 (9.17)은 4에서 보폭 0.5로 이동한 점수를 어디까지 제한하나요?"
         idea={<>원문 M은 기울기 변화의 상한에 해당합니다. 이동의 선형 감소와 제곱 오차 여유를 같은 기울기 크기로 계산합니다.</>}
         formula={String.raw`\widetilde f(t)\le f(x)-t\lVert\nabla f(x)\rVert_2^2+\frac{Mt^2}{2}\lVert\nabla f(x)\rVert_2^2`}
-        annotatedFormula={String.raw`\widetilde f(0.5)\le\underbrace{8}_{f(4)}-\underbrace{0.5\times16}_{t\lVert\nabla f\rVert^2}+\underbrace{\frac{1\times0.5^2}{2}\times16}_{\text{오차 여유 }2}=2`}
+        annotatedFormula={String.raw`\begin{gathered}\widetilde f(t)\le f(x)-t\lVert\nabla f(x)\rVert_2^2+\frac{Mt^2}{2}\lVert\nabla f(x)\rVert_2^2\\[8pt]\widetilde f(0.5)\le\underbrace{8}_{f(4)}-\underbrace{0.5\times16}_{t\lVert\nabla f\rVert^2}+\underbrace{\frac{1\times0.5^2}{2}\times16}_{\text{오차 여유 }2}=2\end{gathered}`}
         operations={[{expression:String.raw`\lVert\nabla f(4)\rVert^2=4^2=16`,annotation:['같은 시작점의 기울기를 제곱해','두 변화 항에 공통으로 사용']},{expression:'8-8+2=2',annotation:['선형 감소와 오차 여유를 더해','다음 점수의 상한을 계산']}]}
         terms={[{symbol:'t',name:'원문의 보폭',description:'이 대입에서는 0.5이며 반복 횟수가 아닙니다.'},{symbol:'M=1',name:'원문의 굽음 상한',description:'f=x²/2의 L=1과 같습니다.'},{symbol:String.raw`\widetilde f(t)`,name:'보폭에 따른 점수',description:'원문은 f(x−t∇f(x))를 이 기호로 줄여 씁니다.'}]}
         assumptions={['원문은 관심 집합에서 두 번 미분 가능한 강한 볼록 함수의 굽음 상한을 사용합니다.','제곱 함수 사례는 모든 실수에서 해당 조건을 만족합니다.']}

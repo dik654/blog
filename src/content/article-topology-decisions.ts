@@ -143,7 +143,16 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "gpu/gpu-arch-hopper": KEEP("TMA·cluster·precision feature를 같은 Hopper compatibility gate 아래 비교하는 generation overview입니다."),
   "gpu/cuda-persistent-kernels": KEEP("Persistent thread 정의→work queue 계약→static/dynamic 배분→release gate가 하나의 device-side scheduling 학습 단위입니다. CUTLASS tile scheduler는 이 정의의 구체 사례로만 링크하며 별도 prerequisite로 만들지 않아 순환을 피합니다."),
-  "gpu/cuda-register-pressure": KEEP("Register file 예산→allocation granularity→spill/rematerialization→theoretical/achieved occupancy가 하나의 register 자원 판정 arc입니다."),
+  "gpu/cuda-register-pressure": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "보존할값의수요가배치상한과spill경로및실제시간으로이어지는하나의질문입니다.",
+    "sharedGate": "같은37/128·320의1280예약·12/4blocks·75/62.5%를본문·Viz·원문대입·문제에서맞추고,96/256·spill바이트·tail분모를독립계산합니다.",
+    "targetRoutes": [
+      "gpu/cuda-register-pressure"
+    ]
+  },
   "isms-aml/isms-security-infra": {
     action: "rename",
     status: "implemented",
@@ -1690,6 +1699,62 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "같은 네 조각으로 합의 곱·차의 곱·실제 limb 배열을 추적하고 재귀 비용과 구현 경계를 이어 보기 위해 한 글로 유지합니다.",
     "sharedGate": "Python 정수로 재귀 곱 65536쌍과 홀수·불균형 무작위 300쌍, 네 조각 공식 10000건을 대조했습니다. 실제 C 원문에는 같은 조각을 64비트 자리 두 개로 옮겨 적용했으며 네이티브 실행이나 성능 측정은 하지 않았습니다."
   },
+  "ai/math-complex-numbers-oscillations": {
+    "action": "keep",
+    "rationale": "(3,4)를 네 번 돌리는 같은 작업으로 각도 단위, 두 좌표, 회전 곱셈, 절대수렴 급수의 연결을 확인합니다. 이어 같은 네 점의 푸리에 계수를 계산해야 위상과 누적 회전, 계수와 진폭의 차이를 한 흐름에서 검산할 수 있습니다. 전체 FFT 구현과 수치 형식 설계는 연결 글로 넘깁니다.",
+    "sharedGate": "네 좌표의 길이 5와 역회전·점 간 제곱거리 50, 실제 _Py_c_prod의 −4/3, M4/M8의 오차와 상한, 복소 DFT의 20/4와 실수 DFT의 2×10/4를 수학과 실행 로그에서 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "crypto/extension-field-theory": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 두 칸 [1,1]과 [2,1]을 곱셈·역원·원문 실행·Frobenius와 기저 변경까지 추적해, 새 규칙의 조건과 실제 표현 경계를 한 흐름으로 이해하도록 유지합니다.",
+    "sharedGate": "Python으로 F₉의 729개 세 값 조합에서 결합·분배를 확인하고 F₈₁의 80개 역원 유일성을 검사했습니다. 고정 ark-ff 실제 실행은 F₉ 81개 곱·8개 역원·9개 Frobenius와 두 잘못된 설정을 포함합니다. 원복만으로 잘못된 표를 검출할 수 없다는 반례를 보존합니다."
+  },
+  "ai/prefill-decode-phase-dynamics": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "새 입력이 기존 답변 지연을 어떻게 바꾸는지 A·B·C의 한 배정에서 시작해 장부·하한·실제 코드·긴 문맥으로 이어집니다. 각 항을 분리한 채 동일 비용 질문을 추적하므로 한 글에 유지하고 scheduler 전체·roofline 정본·분리 배치 구현은 기존 글을 재사용합니다.",
+    "sharedGate": "A1+B1+C4=6과 C의20→0 다섯 조각, 하한1.48/1.8/2.2 ms, 실제2.3 ms 반례를 본문·Viz·6+4에서 일치시킵니다. MHA32 GiB·14.4357 ms와 별도448 후보를 분리하고496/2032 GiB를 독립 검산합니다. 전체원문3개·6패널·5장면·5수식·390/1440을 검수합니다."
+  },
+  "ai/math-differential-equations-numerical-solvers": {
+    "action": "keep",
+    "rationale": "남은 양 1의 같은 감소 경로를 연속 식·Euler·Heun·원문 반복문에서 대조해야 현재 변화율과 변화량, 내부 단계와 출력 시각을 연결할 수 있습니다. 같은 drift에 작은 잡음을 더해 시간의 h와 √h 및 상태 분산의 차이까지 검산합니다. 전체 SDE 이론과 개별 생성 모델의 변환식은 연결 글로 넘깁니다.",
+    "sharedGate": "1→.5→.25와 1→.625→.390625, h=.25 네 단계, |1−hλ| 조건과 Heun 배율, 실제 dy와 y1, .011 오차 기준, .015625 상태 분산을 수식·원문·그림에서 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "crypto/extension-fields": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 A·B의 곱을 열두 계수·실제 층별 연산·Frobenius·바이트 형식까지 연결해 계산과 표현의 관계를 한 흐름에서 설명합니다.",
+    "sharedGate": "고정 원문의 실제 Rust 실행과 직접 다항식 전개를 비교했습니다. 144개 기저 곱·16개 추가 곱·15개 직접 p제곱 대조 및 두 잘못된 해석을 검사했습니다. 전체 페어링·EVM·성능은 실행 범위에서 제외합니다."
+  },
+  "gpu/cuda-sync-streams": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은값의 생산·소비·재사용 순서를 kernel 사이와 안, 장치 사이에 확장하는 하나의 질문입니다. 실행 범위마다 바뀌는 보장을 비교해야 같은 buffer를 안전하게 넘길 수 있습니다.",
+    "sharedGate": "가정한 두 작업18/14ms·네작업24ms, event기록세대, 같은7→8의원문대입과 자원별수명을 문제·본문·그림에서 대조합니다."
+  },
+  "ai/disaggregated-prefill-decode-serving": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "하나의 요청 R이 두 단계 사이에서 상태를 안전하게 넘기고 사용자 출력을 내기까지의 경로를 유지합니다. 목적지·완료·원본 수명·링크·풀 용량은 같은 인계의 정확성과 비용을 결정하므로 한 설명으로 잇고 KV shape·로컬 배정·단계 병목의 정본은 연결해 재사용합니다.",
+    "sharedGate": "R의 입력4·두 층·위치당32B·전체128B, 준비4ms·복사2ms·D계산2ms·첫출력8ms를 본문·Viz·6+4에 일치시킵니다. 층별3/5 및6/10ms 반례와512MiB 전송·12:8·2GPU복사본16GPU를 독립 검산합니다. 고정 원문9개·14패널·5장면·4수식·390/1440에서 정확성과 읽기 순서를 검증합니다."
+  },
+  "crypto/frobenius-optimization": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 1+u를 직접 세제곱하고 기저와 표를 바꾼 뒤 노름 1을 만드는 흐름이 큰 BN254의 마지막 지수를 설명합니다. 증명과 실제 원문 및 잘못된 후보의 반례를 같은 사례로 연결합니다.",
+    "sharedGate": "고정 Rust 실행으로 작은 아홉 값·81쌍·기저 변경·비체 반례와 큰 지수 분해를 대조했습니다. 원복·연산 보존 검사만으로 틀린 표를 검출하지 못하는 경우를 명시합니다. 전체 페어링·최적 chain·성능은 실행하지 않았습니다."
+  },
 };
 
 /**
@@ -1697,6 +1762,14 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/disaggregated-prefill-decode-serving": "b4965f72e312bd85",
+  "ai/math-complex-numbers-oscillations": "58bea8a0233a0c54",
+  "ai/math-differential-equations-numerical-solvers": "39de3be7f1eb97c0",
+  "ai/prefill-decode-phase-dynamics": "fe382c9e222d9238",
+  "crypto/extension-field-theory": "f9aa83b6e0fca423",
+  "crypto/extension-fields": "5af7ff4c6c338153",
+  "crypto/frobenius-optimization": "05f920aec7cb1ef0",
+  "gpu/cuda-sync-streams": "1e3dd40cdf06c5ba",
   "ai/kv-cache-fundamentals": "489a4b6ceb2047c8",
   "ai/math-exponents-logarithms": "85bb89442054fb35",
   "ai/math-high-dimensional-geometry": "e8b6cd657ce57ef8",
@@ -1709,7 +1782,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/cuda-shared-memory": "5c94a7374b6a22a6",
   "gpu/sm-warp-scheduling-and-issue": "049edeecb9dfbcbb",
   "ai/continuous-batching-step-anatomy": "f6d631f09b82218c",
-  "ai/math-vectors-inner-products": "f710b7d099e734d2",
+  "ai/math-vectors-inner-products": "d035efeae985768b",
   "ai/serving-latency-metrics-and-slo": "78cb5743248b70d4",
   "crypto/finite-field-theory": "307ba9c3fc691586",
   "crypto/lagrange": "03472f07b9810658",
@@ -1905,7 +1978,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/cuda-basics": "41615071ec176bec",
   "gpu/gpu-arch-hopper": "036cadb2e337870a",
   "gpu/cuda-persistent-kernels": "9a0d1ef64c90bed2",
-  "gpu/cuda-register-pressure": "de34dcf7cffc5752",
+  "gpu/cuda-register-pressure": "9fbbf7aee0398c74",
   "isms-aml/isms-security-infra": "3c313e4c01bcc569",
   "ai/lora-finetuning": "7a5496963b41f228",
   "saas/edge-request-defense-pipeline": "7cbe4e65093e80a9",

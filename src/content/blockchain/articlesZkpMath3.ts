@@ -86,15 +86,74 @@ export const zkpMath3Articles: Article[] = [
   },
   {
     slug: "frobenius-optimization",
-    title: "Frobenius: p제곱 자기동형·table·final exp",
+    title: "Frobenius: 같은 세제곱을 표로 바꾸고 큰 지수를 나누기",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "Characteristic p에서 시작" },
-      { id: "coeff-rearrange", title: "Automorphism·cycle 증명" },
-      { id: "why-free", title: "Basis table과 비용 경계" },
-      { id: "in-final-exp", title: "Final exponent 분해" },
-      { id: "concrete", title: "F3² 예제·release gate" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 세 번 곱할 일을 둘째 숫자 하나의 변경으로 바꿉니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 같은 두 칸의 값을 받아 세제곱한 두 칸을 돌려줍니다"
+  },
+  {
+    "id": "concrete",
+    "title": "3. 1+u를 직접 곱해 1+2u를 얻습니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 같은 입력을 어떤 기저의 두 숫자로 읽는지 표시합니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 큰 지수를 반복 계산하는 대신 기저의 변화를 재사용합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. p제곱 사상과 특성, 기저에 이름을 붙입니다"
+  },
+  {
+    "id": "coeff-rearrange",
+    "title": "7. 가운데 이항계수가 사라져 합을 항별로 세제곱합니다"
+  },
+  {
+    "id": "cycle",
+    "title": "8. 두 번 돌아오는 이유와 먼저 고정되는 값을 구분합니다"
+  },
+  {
+    "id": "basis",
+    "title": "9. 기저를 바꾸면 첫째 계수도 움직일 수 있습니다"
+  },
+  {
+    "id": "source",
+    "title": "10. 실제 코드도 아래 계수를 먼저 처리하고 배율을 곱합니다"
+  },
+  {
+    "id": "why-free",
+    "title": "11. 줄어든 것은 일반 거듭제곱이며 남은 일도 있습니다"
+  },
+  {
+    "id": "unitary",
+    "title": "12. 같은 값에서 노름 1인 값을 만들면 켤레가 역원이 됩니다"
+  },
+  {
+    "id": "in-final-exp",
+    "title": "13. 마지막 큰 지수를 두 쉬운 인수와 남은 인수로 나눕니다"
+  },
+  {
+    "id": "large-case",
+    "title": "14. 큰 BN254에서도 같은 절차를 직접 지수와 대조합니다"
+  },
+  {
+    "id": "boundaries",
+    "title": "15. 체가 아닌 예의 실패 원인도 나누어 봅니다"
+  },
+  {
+    "id": "release",
+    "title": "16. 빠른 표는 같은 값의 직접 계산을 통과해야 합니다"
+  }
+],
     component: () =>
       import("@/pages/articles/blockchain/frobenius-optimization"),
   },
