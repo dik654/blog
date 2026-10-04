@@ -3622,7 +3622,7 @@
         "src/pages/articles/ai/math-functions-derivatives-gradients/viz/ChainRateViz.tsx",
         "src/pages/articles/ai/math-functions-derivatives-gradients/viz/SecantTangentViz.tsx"
       ],
-      "status": "rewritten-awaiting-integration",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3677,11 +3677,10 @@
         "desktop1440": "동일 검사 PASS. 두 Viz 각 4장면의 frame/control 위치 변화 0, 전체 frame 화면 내, 키보드·재생 전환 PASS. /tmp/teach-all/ai-theory-derivative-chain-controls.json 및 derivative-secant-controls.json",
         "viz": "수정 Viz 2개 strict 위반 0, SVG text의 5개 수동 검토 항목은 390/1440 렌더로 확인. 실제 선의 computed stroke가 none에서 oklch 색상으로 바뀜을 확인했습니다.",
         "typecheck": "수정 뒤 실제 npx tsc -b exit0.",
-        "prose": "전역 공개 799편 strict prose 재검토 0 PASS."
+        "prose": "전역 공개 799편 strict prose 재검토 0 PASS.",
+        "learning": "root 병합 후 strict --require-registration 개별 검사 PASS. 기존 6+4 답과 실제 본문의 대응은 answer-review에 기록했습니다."
       },
       "remaining": [
-        "root batch7 learning·TOC·evidence·topology 병합",
-        "병합 후 개별 learning strict",
         "root 전역 build와 게시 검증"
       ]
     },
@@ -3731,7 +3730,7 @@
         "src/pages/articles/ai/math-gradients-jacobians/ModernArticle.tsx",
         "src/pages/articles/ai/math-gradients-jacobians/SensitivityShapeViz.tsx"
       ],
-      "status": "body-reviewed-needs-rewrite",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3740,23 +3739,52 @@
         "characters": 15485
       },
       "originalProblems": [
-        "첫문단부터Loss·weight·partial derivative가한꺼번에나와입출력역할을숫자로잡기어렵습니다.",
-        "f=x²+3y의(2,−1)와F=(x+y,xy)의(2,3)사례연결을명시해야합니다. 방향미분24/5와JVP(−.01,−.01),VJPshape설명은보존대상입니다.원문실물과예측질문은없습니다."
+        "첫 문단과 용어 카드에서 역할과 수치보다 이름이 먼저 등장했습니다.",
+        "기존 방향미분·야코비안의 식과 원문 인용은 있으나 동일 사례의 실제 원문 대입, 예측 질문, 부분 미분 존재 반례가 부족했습니다.",
+        "그림의 타원은 본문 함수 x²+3y의 등고선이 아니며 중심의 0이 아닌 화살표도 본문과 맞지 않았습니다. 실제 y=(c−x²)/3 곡선과 동일 단위 축의 방향을 계산해 고쳤습니다.",
+        "최대 방향의 Cauchy–Schwarz 근거, 100배 좌표 재표기의 수치, VJP의 실제 값과 원문의 행·열 방향을 보충했습니다."
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "fixture": "f=x²+3y의 (2,−1)에서 x만 .01 이동하면 1→1.0401, y만 .01 이동하면 1→1.03입니다. 이 비율 4와 3으로 단위 방향 (.6,.8)의 변화율 4.8과 최대 5를 계산합니다. F=(x+y,xy)의 (2,3)에 (.01,−.02)를 넣으면 Jv=(−.01,−.01), 실제 둘째 변화 −.0102입니다 (가정).",
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "picture",
+        "2": "need",
+        "3": "names",
+        "4": [
+          "partials",
+          "gradient-direction",
+          "jacobian"
+        ],
+        "5-6": "source",
+        "7": "boundaries"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "OpenStax Calculus Volume 3 §4.6 식 (4.38), 정리 4.13",
+          "application": "∇f=(4,3), u=(3/5,4/5)를 대입해 방향미분 24/5를 얻고 최대·최소 ±5를 계산합니다."
+        },
+        {
+          "source": "Parr·Howard arXiv 1802.01528v3 §4.1, 인쇄 7쪽",
+          "application": "원문의 행 기울기 적층에 f1=x+y, f2=xy, 입력 (2,3)을 대입해 J=[[1,1],[3,2]]를 구합니다. 원문의 행 기울기와 본문의 열 기울기 관례를 구별하고 같은 이동을 곱합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "고정 baseline의 본문 전체 paragraph·heading·links를 읽고 설명 흐름을 대조했습니다. 기존 CitationBlock은 보존하며, 원문 정의식에 같은 사례를 대입하는 본문을 추가해야 합니다. 원문과 TSX 전체의 정밀 대조는 각 재작성에서 진행합니다.",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "원문 TSX 전체·고정 baseline·기존 6+4 문제·OpenStax 본문·Parr와 Howard PDF v3 §4.1과 저자 HTML·MIT 강의 목차를 읽었습니다. 원래 세 ExplainedFormula와 두 paper anchor를 보존했고 실제 원문 행렬을 추가했습니다.",
+        "learningAnswers": "기존 10문항을 본문과 대조하고 편미분·반례 anchor 및 VJP·단위 답을 보완했습니다. /tmp/teach-all/ai-theory-learning-answer-review-jacobian.json",
+        "humanize": "실제 roundtrip 두 패스, 본문 연결 쉼표 9개 수정으로 P1 +2.90→−.52. 수학 튜플 각주 오탐 6건은 systems가 전체 diff·수치·마커와 문단을 읽고 independent-finalize.md에 승인했습니다. Viz는 문자열 별도 추출 및 연결 쉼표 1개 수정으로 gate OK입니다.",
+        "numericTrace": "/tmp/teach-all/ai-theory-arithmetic-jacobian.json: 중앙 차분 4/3, 방향 4.8·5, JVP 오차 −.0002, VJP (−1,0), 내적 쌍대성, 단위 재표기, 축별 미분 반례 및 실제 곡선 좌표식 검산 PASS.",
+        "mobile390": "output/playwright/teach-ai-theory-jacobian/jacobian.json: first-fifth PASS, 페이지 overflow·narrow·KaTeX·console·깨진 anchor 0, 예측 질문 3개. 실제 곡선과 화살표 화면 직접 확인.",
+        "desktop1440": "동일 검사 PASS. /tmp/teach-all/ai-theory-jacobian-controls.json: 4장면의 frame/control 위치 변화 0, 전체 frame 화면 내, 키보드와 재생 전환 PASS.",
+        "viz": "strict 위반 0, SVG text 수동 검토 5개는 390/1440 렌더로 확인했습니다. 실제 등고선과 같은 길이 방향 화살표를 좌표식으로 계산합니다.",
+        "typecheck": "수정 뒤 실제 npx tsc -b exit0.",
+        "prose": "전역 공개 799편 strict prose 재검토 0 PASS.",
+        "formula": "실제 원문 행렬의 annotatedFormula를 보완한 뒤 전역 formula strict 1421/1421 통과했습니다.",
+        "learning": "root 병합 후 strict --require-registration 검사 PASS. 기존 Cauchy–Schwarz→방향미분 개념 연결도 root가 병합했습니다."
       },
       "remaining": [
-        "고유수치사례중심본문재구성",
-        "실제1차원문확인및사례적용",
-        "6+4답위치대조·humanize·수치·390/1440검수"
+        "root 전역 build와 게시 검증"
       ]
     },
     {
@@ -3908,7 +3936,7 @@
         "src/pages/articles/ai/math-optimization-objectives/ModernArticle.tsx",
         "src/pages/articles/ai/math-optimization-objectives/OptimizationProblemViz.tsx"
       ],
-      "status": "body-reviewed-needs-rewrite",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3917,23 +3945,50 @@
         "characters": 11513
       },
       "originalProblems": [
-        "학습률·gradient·decision variable·objective정의부터시작하며공통작은문제가앞에없습니다.",
-        "(x−3)²+2에서무제약위치3/값2와제약[0,2]위치2/값3은정확하므로보존합니다. 원문문제정의에같은값을대입하는절과예측질문이빠졌습니다."
+        "처음부터 decision variable·objective 용어 카드가 나와 수치 사례와 입출력 역할보다 이름이 먼저 등장했습니다.",
+        "실제 교재 인용은 있으나 표준 형태에 같은 함수와 제약을 대입하는 본문 및 예측 질문이 없었습니다.",
+        "기존 6+4 문제 중 강제 제약과 벌점, 빈 집합, 여러 최소점, 대리 점수와 제품 가치, 좌표별 clipping 반례에 대한 구체적 답이 부족했습니다.",
+        "기존 Viz의 수동 Bezier 곡선은 실제 제곱 함수가 아니었고 두 최소점을 가로축에 함께 놓아 점수 높이를 구별하지 못했습니다. 실제 곡선 101개 좌표와 (3,2)/(2,3) 점으로 다시 그렸습니다."
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "fixture": "같은 f(x)=(x−3)²+2에서 제약 없는 답은 위치 3/점수 2, [0,2]의 답은 위치 2/점수 3입니다. 제곱 벌점으로 바꾸면 위반 위치 2.5의 총점 2.5가 최소입니다. [0,2)에서는 하한 3을 달성할 수 없습니다 (가정).",
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "picture",
+        "2": "need",
+        "3": "names",
+        "4": [
+          "feasible-set",
+          "minimizer"
+        ],
+        "5-6": "source",
+        "7": "boundaries"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "Boyd·Vandenberghe Convex Optimization §4.1.1, 인쇄 127쪽 식 (4.1)",
+          "application": "f₀=(x−3)²+2, f₁=−x, f₂=x−2, m=2, p=0을 대입합니다. x=2에서는 제약 값 −2/0과 점수 3, x=3에서는 상한 위반 1과 점수 2를 계산합니다."
+        },
+        {
+          "source": "같은 교재 인쇄 127–129쪽, 최적값 inf·최적점 정의·Example 4.2",
+          "application": "[0,2]에서는 하한 3을 달성하므로 min이며 [0,2)에서는 inf만 3입니다. 구간 제약 l−x≤0, x−u≤0에 l=0,u=2를 넣어 동일 조건을 확인합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "고정 baseline의 본문 전체 paragraph·heading·links를 읽고 설명 흐름을 대조했습니다. 기존 CitationBlock은 보존하며, 원문 정의식에 같은 사례를 대입하는 본문을 추가해야 합니다. 원문과 TSX 전체의 정밀 대조는 각 재작성에서 진행합니다.",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "원문 TSX 전체·고정 baseline·기존 6+4 문제를 읽었습니다. Boyd 공식 PDF를 실제 내려받아 §4.1.1–4.1.2 전문을 읽고 127쪽 화면을 확인했습니다. MIT 공식 강의 요약도 확인했습니다. 기존 두 ExplainedFormula와 두 paper anchor를 보존했습니다.",
+        "learningAnswers": "기존 10문항의 답을 실제 본문과 대조했고 이름·메모리 규칙·최소점의 anchor와 수치 답을 갱신했습니다. /tmp/teach-all/ai-theory-learning-answer-review-objectives.json",
+        "humanize": "본문 extract→roundtrip→prepare→gate 전문 검토 후 변경 0, 수식 각주 오탐 2건은 systems가 본문 32문단과 수치를 독립 대조해 승인했습니다. Viz 실제 문자열도 별도 추출해 변경 0, 좌표 각주 오탐 1건은 systems가 전문과 좌표를 읽고 independent-finalize.md에 승인했습니다.",
+        "numericTrace": "/tmp/teach-all/ai-theory-arithmetic-objectives.json: 표의 11/6/3/2, 두 최소점, 제곱 벌점의 2.5, 열린 상한 3.21/3.0201, 국소·전역 반례와 실제 곡선 101좌표 검산 PASS.",
+        "mobile390": "output/playwright/teach-ai-theory-objectives/objectives.json: first-fifth PASS, overflow·narrow·KaTeX·console·깨진 anchor 0, 예측 3개. 실제 곡선과 두 점, 축 label을 화면으로 확인했습니다.",
+        "desktop1440": "동일 검사 PASS. /tmp/teach-all/ai-theory-objectives-controls.json: 네 장면 frame/control 변화 0, 전체 frame 화면 안, 키보드·재생 PASS. 원문 수식의 연산 주석 화면도 직접 읽었습니다.",
+        "viz": "strict 위반 0. SVG text 검토 4곳은 390/1440 화면에서 확인했습니다.",
+        "typecheck": "실제 npx tsc -b exit0.",
+        "prose": "전역 검사에서 이 글의 재검토 항목 0. 타팀 ElGamal 1건은 해당 소유자에게 문단 신호를 전달했습니다.",
+        "learning": "root batch9 병합 후 strict --require-registration 개별 검사 PASS. 6+4 답은 answer-review에 대조했습니다."
       },
       "remaining": [
-        "고유수치사례중심본문재구성",
-        "실제1차원문확인및사례적용",
-        "6+4답위치대조·humanize·수치·390/1440검수"
+        "root 전역 build와 게시 검증"
       ]
     },
     {
@@ -7390,14 +7445,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 14,
+    "rewritten": 16,
     "existingTeachTargetedRepairs": 3,
-    "reviewedAndImproved": 17,
-    "localVerified": 16,
-    "awaitingIntegration": 1,
-    "pending": 172,
+    "reviewedAndImproved": 19,
+    "localVerified": 19,
+    "awaitingIntegration": 0,
+    "pending": 170,
     "complete": 0,
-    "bodyReviewedNeedsRewrite": 4,
+    "bodyReviewedNeedsRewrite": 2,
     "bodyReviewedTotal": 21
   }
 }

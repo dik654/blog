@@ -1122,11 +1122,55 @@ const strategyArticles: Article[] = [
     title: "평가 계약: 예측 한 행과 점수의 역할 고정하기",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Prediction row와 cutoff" },
-      { id: "target", title: "Target horizon과 label" },
-      { id: "metric", title: "Metric unit·reducer·direction" },
-      { id: "roles", title: "Local·public·private 역할" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 무엇을 언제 맞힌다는 것인지 먼저 정합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 한 행의 입력과 미래 결과를 연결합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 10시에 예측하고 다음 날 10시까지 관찰합니다"
+  },
+  {
+    "id": "inside-contract",
+    "title": "4. 방문 식별자와 시간 경계와 결과를 함께 보관합니다"
+  },
+  {
+    "id": "why-complete",
+    "title": "5. 아직 사건을 못 봤다는 것과 사건이 없었다는 것은 다릅니다"
+  },
+  {
+    "id": "evaluation-terms",
+    "title": "6. 예측 행과 입력 경계와 관찰 길이에 이름을 붙입니다"
+  },
+  {
+    "id": "target",
+    "title": "7. 열린 시작점과 닫힌 끝점에 사건을 넣어 봅니다"
+  },
+  {
+    "id": "source-availability",
+    "title": "8. 공식 누수 정의를 늦게 도착한 입력에 적용합니다"
+  },
+  {
+    "id": "metric",
+    "title": "9. 점수의 평균 단위를 행의 의미와 맞춥니다"
+  },
+  {
+    "id": "roles",
+    "title": "10. 점수를 본 뒤 바꿀 수 있는 결정을 미리 나눕니다"
+  },
+  {
+    "id": "boundary",
+    "title": "11. 같은 시각의 도착과 지연된 정답까지 규칙에 남깁니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "12. 같은 시험을 재현할 수 있나요"
+  }
+],
     component: () => import("@/pages/articles/ai/competition-workflow"),
   },
   {
@@ -1291,11 +1335,51 @@ const strategyArticles: Article[] = [
     title: "Submission control: feedback budget과 최종 manifest",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Submission과 adaptive feedback 구분" },
-      { id: "feedback", title: "Decision-changing feedback budget" },
-      { id: "manifest", title: "Final submission manifest" },
-      { id: "boundary", title: "Freeze·rollback·새 holdout" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 파일을 보낸 횟수와 선택에 쓴 피드백을 나눠 기록합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 전송과 관측과 후속 선택을 차례로 잇습니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 네 번 보내고 두 번 선택을 바꿉니다"
+  },
+  {
+    "id": "inside-submission",
+    "title": "4. 파일 내용과 외부 결과와 결정 이유를 연결합니다"
+  },
+  {
+    "id": "why-log",
+    "title": "5. 형식 수정이라는 이름만으로 무변경이라 세지 않습니다"
+  },
+  {
+    "id": "submission-terms",
+    "title": "6. 전송과 관측과 동결에 이름을 붙입니다"
+  },
+  {
+    "id": "feedback",
+    "title": "7. 0과 1을 더하되 모든 정보 사용량이라고 해석하지 않습니다"
+  },
+  {
+    "id": "paper-submission-control",
+    "title": "8. Ladder는 평가자가 공개하는 숫자를 제한합니다"
+  },
+  {
+    "id": "manifest",
+    "title": "9. 최종 B에서 실행과 입력과 파일을 거슬러 갑니다"
+  },
+  {
+    "id": "boundary",
+    "title": "10. 동결과 기록은 좋은 일반화를 보장하지 않습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "11. 동결한 내용과 실제 파일이 같은가요"
+  }
+],
     component: () =>
       import("@/pages/articles/ai/competition-submission-control"),
   },
@@ -1304,11 +1388,51 @@ const strategyArticles: Article[] = [
     title: "교차검증: 배포 질문을 먼저 정하는 법",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "배포 질문과 평가 단위" },
-      { id: "risk", title: "Validation risk의 형태" },
-      { id: "split-family", title: "질문에서 split family 고르기" },
-      { id: "boundary", title: "분포 변화와 재검증 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 새 대상을 잘 맞히는지부터 물어야 합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 사용할 장면을 정하고 작은 예행연습을 만듭니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 기록 4개와 사람 2명은 다른 평균을 만듭니다"
+  },
+  {
+    "id": "inside-evaluation",
+    "title": "4. 학습 대상과 평가 대상과 평균의 단위를 연결합니다"
+  },
+  {
+    "id": "why-unit",
+    "title": "5. 좋아 보이는 평균을 나중에 고르면 질문이 바뀝니다"
+  },
+  {
+    "id": "validation-terms",
+    "title": "6. 예행연습의 대상과 목표에 이름을 붙입니다"
+  },
+  {
+    "id": "risk",
+    "title": "7. C와 D를 평균내는 계산을 학습 절차의 식으로 씁니다"
+  },
+  {
+    "id": "paper-cv-foundation",
+    "title": "8. 공식 문서의 보지 못한 그룹 조건을 적용합니다"
+  },
+  {
+    "id": "split-family",
+    "title": "9. 다음 달과 새 병원은 다른 예행연습이 필요합니다"
+  },
+  {
+    "id": "boundary",
+    "title": "10. 과거에 맞춘 질문도 새 환경에서는 다시 확인합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "11. 평균을 바꾸면 어떤 질문이 바뀌나요"
+  }
+],
     component: () => import("@/pages/articles/ai/cross-validation"),
   },
   {
@@ -1316,11 +1440,51 @@ const strategyArticles: Article[] = [
     title: "Fold-local validation: 전처리가 시험을 보지 못하게 하기",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Fold와 fitted state" },
-      { id: "pipeline", title: "Fit과 transform의 분리" },
-      { id: "manifest", title: "Fold manifest와 재학습" },
-      { id: "boundary", title: "외부 transform과 누출 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 평균을 미리 구하는 일도 학습에 포함됩니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 배울 값과 적용할 값을 먼저 나눕니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 2와 4에서 배운 평균을 8과 10에 적용합니다"
+  },
+  {
+    "id": "inside-state",
+    "title": "4. 행 배정과 저장한 계산 상태를 연결합니다"
+  },
+  {
+    "id": "why-fit",
+    "title": "5. 정답 없이도 평가 분포를 미리 읽을 수 있습니다"
+  },
+  {
+    "id": "fold-terms",
+    "title": "6. 상태를 배우는 fit과 적용하는 transform을 나눕니다"
+  },
+  {
+    "id": "pipeline",
+    "title": "7. 평균 3과 크기 1을 고정한 계산을 추적합니다"
+  },
+  {
+    "id": "paper-fold-local",
+    "title": "8. 공식 예제의 학습과 적용 호출을 구분합니다"
+  },
+  {
+    "id": "manifest",
+    "title": "9. 예측마다 실제 행 배정과 저장 상태를 연결합니다"
+  },
+  {
+    "id": "boundary",
+    "title": "10. 선택 뒤 전체 학습 자료를 다시 쓰는 단계는 구별합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "11. 어떤 자료에서 배운 상태인가요"
+  }
+],
     component: () => import("@/pages/articles/ai/fold-local-validation"),
   },
   {
@@ -1328,11 +1492,51 @@ const strategyArticles: Article[] = [
     title: "OOF prediction: 교차검증 점수가 뜻하는 것",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "행마다 unseen prediction 만들기" },
-      { id: "pooling", title: "Pooled OOF risk" },
-      { id: "estimand", title: "Model이 아니라 procedure 평가" },
-      { id: "boundary", title: "Metric과 uncertainty 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 배우지 않은 행의 답을 모아 평가합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 한 묶음을 빼고 예측한 뒤 자리를 바꿉니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 20행과 80행의 실패를 합칩니다"
+  },
+  {
+    "id": "inside-oof",
+    "title": "4. 예측마다 어느 행과 어느 학습 모델인지 남깁니다"
+  },
+  {
+    "id": "why-weight",
+    "title": "5. 묶음 평균을 같은 무게로 세면 작은 묶음이 커집니다"
+  },
+  {
+    "id": "oof-terms",
+    "title": "6. 자신을 배우지 않은 답에 이름을 붙입니다"
+  },
+  {
+    "id": "pooling",
+    "title": "7. 손실 합 4와 32를 원래 분모 100으로 나눕니다"
+  },
+  {
+    "id": "paper-cv-estimand",
+    "title": "8. 논문의 행별 평균 식에 같은 손실을 넣습니다"
+  },
+  {
+    "id": "estimand",
+    "title": "9. 전체 자료로 다시 배운 모델 하나와는 구별합니다"
+  },
+  {
+    "id": "boundary",
+    "title": "10. 순위 지표에는 행 평균식을 그대로 쓰지 않습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "11. 어느 평균과 어느 모델의 점수인가요"
+  }
+],
     component: () => import("@/pages/articles/ai/oof-risk-estimation"),
   },
   {
@@ -1340,11 +1544,51 @@ const strategyArticles: Article[] = [
     title: "Group split: 같은 원인의 표본을 함께 묶기",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Row와 entity 구분" },
-      { id: "disjoint", title: "Group 교집합을 비우기" },
-      { id: "evidence", title: "독립 평가 단위 세기" },
-      { id: "boundary", title: "중첩 group과 site 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 한 사람의 기록을 처음 보는 사람처럼 평가하지 않습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 같은 대상의 기록을 함께 옮깁니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. C의 세 기록은 모두 평가 쪽에 둡니다"
+  },
+  {
+    "id": "inside-groups",
+    "title": "4. 행 번호와 원래 대상의 번호를 별도로 보존합니다"
+  },
+  {
+    "id": "why-groups",
+    "title": "5. 비슷한 기록을 기억한 성과가 섞이는 것을 막습니다"
+  },
+  {
+    "id": "group-terms",
+    "title": "6. 기록을 묶는 키와 평가 단위에 이름을 붙입니다"
+  },
+  {
+    "id": "disjoint",
+    "title": "7. 집합의 교집합으로 C가 섞였는지 확인합니다"
+  },
+  {
+    "id": "evidence",
+    "title": "8. 평가 행 4개를 독립된 사람 4명처럼 세지 않습니다"
+  },
+  {
+    "id": "paper-group-split",
+    "title": "9. 공식 API는 그룹을 한 번씩 평가에 넣습니다"
+  },
+  {
+    "id": "boundary",
+    "title": "10. 같은 병원이라는 더 큰 공유 원인이 남을 수 있습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "11. 행 수와 대상 수를 구별할 수 있나요"
+  }
+],
     component: () => import("@/pages/articles/ai/grouped-validation"),
   },
   {
@@ -1352,11 +1596,51 @@ const strategyArticles: Article[] = [
     title: "Walk-forward validation: 미래 정보를 차단하는 시간 분할",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Forecast origin과 available time" },
-      { id: "labels", title: "Label 확정 시각" },
-      { id: "gap-purge", title: "Gap·purge·rolling origin" },
-      { id: "boundary", title: "Expanding·rolling 정책 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 과거에 생긴 사건도 아직 알 수 없을 수 있습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 시계를 고정하고 도착한 기록만 학습합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 10월 25일 사건의 정답은 12월 1일에 도착합니다"
+  },
+  {
+    "id": "inside-time",
+    "title": "4. 사건과 입력과 정답의 시각을 나누어 기록합니다"
+  },
+  {
+    "id": "why-arrival",
+    "title": "5. 정답이 일찍 들어오면 미래의 답안을 본 셈입니다"
+  },
+  {
+    "id": "time-terms",
+    "title": "6. 발생과 가용성과 예측 시작점에 이름을 붙입니다"
+  },
+  {
+    "id": "labels",
+    "title": "7. 30일과 7일을 더하고 엄격한 이전 조건을 적용합니다"
+  },
+  {
+    "id": "paper-walk-forward",
+    "title": "8. 공식 gap 인자는 달력의 날짜를 세지 않습니다"
+  },
+  {
+    "id": "gap-purge",
+    "title": "9. 거리와 정보 구간의 겹침은 다른 검사입니다"
+  },
+  {
+    "id": "boundary",
+    "title": "10. 실제 재학습 범위와 정답 확정 정책을 재현합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "11. 그 시점에 정말 알 수 있었나요"
+  }
+],
     component: () => import("@/pages/articles/ai/walk-forward-validation"),
   },
   {
@@ -1364,11 +1648,51 @@ const strategyArticles: Article[] = [
     title: "검증 피드백 감사: CV와 leaderboard가 어긋날 때",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Score 차이와 순위 차이" },
-      { id: "agreement", title: "후보 쌍 방향 일치" },
-      { id: "adaptation", title: "Protocol 변경 기록" },
-      { id: "boundary", title: "Frozen holdout과 종료 조건" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 점수가 낮아진 것과 후보 순서가 바뀐 것은 다릅니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 같은 후보를 맞추고 차이의 원인을 검사합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 다섯 후보 중 두 쌍의 순서만 바뀝니다"
+  },
+  {
+    "id": "inside-comparison",
+    "title": "4. 값의 비교와 방향의 비교를 따로 보관합니다"
+  },
+  {
+    "id": "why-parity",
+    "title": "5. 행이 어긋난 점수를 분포 변화로 설명하지 않습니다"
+  },
+  {
+    "id": "feedback-terms",
+    "title": "6. 점수 차이와 순위 일치와 적응을 나눕니다"
+  },
+  {
+    "id": "agreement",
+    "title": "7. 10쌍에서 동점을 제외하고 8개의 방향 일치를 셉니다"
+  },
+  {
+    "id": "paper-validation-feedback",
+    "title": "8. 원문의 점수 공개 규칙에 같은 후보를 넣습니다"
+  },
+  {
+    "id": "adaptation",
+    "title": "9. 오류 수정도 어떤 피드백 뒤에 했는지 남깁니다"
+  },
+  {
+    "id": "boundary",
+    "title": "10. 좋은 일치율도 마지막 순서를 보장하지 않습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "11. 동점과 적응을 숨기지 않았나요"
+  }
+],
     component: () => import("@/pages/articles/ai/validation-feedback-audit"),
   },
   {
@@ -1388,11 +1712,55 @@ const strategyArticles: Article[] = [
     title: "적응형 하이퍼파라미터 탐색: History에서 다음 Trial까지",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "History · surrogate · acquisition" },
-      { id: "proposal-loop", title: "다음 configuration 제안" },
-      { id: "tpe", title: "TPE density ratio" },
-      { id: "parallel-boundary", title: "병렬·실패 history 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 앞서 해 본 결과로 다음 시도를 고릅니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 이력을 읽고 후보를 골라 실제 결과를 되돌립니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 손실 네 개를 나눈 뒤 두 후보를 비교합니다"
+  },
+  {
+    "id": "inside-history",
+    "title": "4. 설정과 점수와 점수가 생긴 상태를 함께 남깁니다"
+  },
+  {
+    "id": "why-state",
+    "title": "5. 실패한 실행에 가짜 나쁜 점수를 붙이지 않습니다"
+  },
+  {
+    "id": "search-terms",
+    "title": "6. 관측 이력과 근사 모델과 다음 실행 가치에 이름을 붙입니다"
+  },
+  {
+    "id": "proposal-loop",
+    "title": "7. 네 완료 관측을 읽은 시점의 제안을 추적합니다"
+  },
+  {
+    "id": "tpe",
+    "title": "8. 좋은 관측에서의 밀도를 나머지 밀도로 나눕니다"
+  },
+  {
+    "id": "paper-tpe",
+    "title": "9. 원문의 개선 기대값 식에 비율 6과 2를 넣습니다"
+  },
+  {
+    "id": "paper-optuna",
+    "title": "10. 공식 구현의 초기 관측과 제약 처리까지 확인합니다"
+  },
+  {
+    "id": "parallel-boundary",
+    "title": "11. 제안의 제약과 실제 실행 가능성을 따로 검사합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "12. 제안 값과 실제 성능을 구분할 수 있나요"
+  }
+],
     component: () =>
       import("@/pages/articles/ai/adaptive-hyperparameter-search"),
   },
@@ -1510,11 +1878,55 @@ const strategyArticles: Article[] = [
     title: "실험 Provenance: Spec에서 Artifact까지",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "결과를 다시 만드는 provenance" },
-      { id: "spec-attempt", title: "Spec과 attempt의 분리" },
-      { id: "artifact-reference", title: "Artifact reference" },
-      { id: "provenance-receipt", title: "실패까지 남기는 receipt" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 점수에서 실제 입력과 실행까지 돌아갈 수 있어야 합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 조건과 실행과 결과를 화살표로 연결합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 실패 A1과 성공 A2를 덮어쓰지 않습니다"
+  },
+  {
+    "id": "inside-provenance",
+    "title": "4. 실험 조건과 실제 실행은 서로 다른 대상을 가리킵니다"
+  },
+  {
+    "id": "why-identity",
+    "title": "5. 같은 이름과 크기와 평균도 같은 내용을 보장하지 않습니다"
+  },
+  {
+    "id": "tracking-terms",
+    "title": "6. 조건과 실행과 결과물에 이름을 붙입니다"
+  },
+  {
+    "id": "spec-attempt",
+    "title": "7. 같은 실행 좌표가 반복돼도 ID는 새로 만듭니다"
+  },
+  {
+    "id": "artifact-reference",
+    "title": "8. 9바이트의 내용이 바뀌었는지 직접 확인합니다"
+  },
+  {
+    "id": "paper-mlflow-lifecycle",
+    "title": "9. 공식 run_id 항목을 실제 실행에 대응시킵니다"
+  },
+  {
+    "id": "provenance-receipt",
+    "title": "10. 실패 기록도 다음 선택의 근거입니다"
+  },
+  {
+    "id": "boundary",
+    "title": "11. 기록이 있어도 파일과 실행 환경이 사라지면 재생할 수 없습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "12. 결과에서 입력까지 실제로 돌아갈 수 있나요"
+  }
+],
     component: () => import("@/pages/articles/ai/experiment-tracking"),
   },
   {

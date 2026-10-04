@@ -6520,7 +6520,7 @@
     {
       "route": "crypto/crt",
       "title": "CRT: 나머지 조건의 조립·유일성·RSA 경계",
-      "status": "unreviewed",
+      "status": "reviewed-needs-rewrite",
       "publicEntry": "src/pages/articles/blockchain/crt.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/crt.tsx",
@@ -6537,19 +6537,22 @@
           "RSA-CRT는 결과가 아니라 계산 경로를 바꾼다"
         ]
       },
-      "issues": [],
+      "issues": [
+        "실제 본문 전체와 수식·숫자 사례를 읽었습니다. 구성 및 유일성 증명은 맞지만 일반 용어·식이 사례보다 앞에 옵니다.",
+        "수식 연산 주석이 다른 의미의 일반 문장으로 표시됩니다. 원문 RSA 단계에 같은 수를 대입하고 오류 시 인수 노출을 수치로 추적해야 합니다."
+      ],
       "fixture": null,
       "stageEvidence": {},
       "sourceEvidence": [],
       "verification": {
-        "substantiveReading": "pending",
+        "substantiveReading": "Read full ModernArticle actual rendered source; constructive proof and compatibility boundaries preserved for rewrite.",
         "arithmetic": "pending",
         "humanize": "pending",
         "browser390": "pending",
         "browser1440": "pending"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "substantive rewrite from23case,source numeric RSA application,gates"
       ]
     },
     {
@@ -6600,15 +6603,11 @@
     {
       "route": "crypto/csprng",
       "title": "CSPRNG: entropy·state·reseed lifecycle",
-      "status": "unreviewed",
+      "status": "rewritten-awaiting-integration-and-browser",
       "publicEntry": "src/pages/articles/blockchain/csprng.tsx",
       "bodyFiles": [
-        "src/pages/articles/blockchain/crypto-foundations-viz.tsx",
         "src/pages/articles/blockchain/csprng.tsx",
-        "src/pages/articles/blockchain/csprng/Applications.tsx",
-        "src/pages/articles/blockchain/csprng/EntropySource.tsx",
-        "src/pages/articles/blockchain/csprng/Overview.tsx",
-        "src/pages/articles/blockchain/math-viz-primitives.tsx"
+        "src/pages/articles/blockchain/csprng/ModernArticle.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -6621,31 +6620,56 @@
           "CSPRNG는 작은 비밀 상태로 예측 불가능한 긴 출력을 만든다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 설명은 용어와 일반식이 먼저여서 하나의 요청을 따라가기 어려웠습니다.",
+        "기존 ECDSA 차분 설명은 개인키 항이 사라지지 않는다고 잘못 적었습니다. 실제로 같은 rd 항이 상쇄됩니다.",
+        "최소 엔트로피를 일반 분포의 후보 수·평균 열거 비용 상한처럼 읽게 하는 식을 단일 추측 기준과 명시적 균등 후보 사례로 교정했습니다."
+      ],
+      "fixture": {
+        "case": "uniform seed0..7 encoded one byte; seed3 outputs323e…afe5 then dbf1…ea03; cloned state duplicates second; ECDSA toy curveF17 order19 G(5,1),d7,k3,r10,h4/9,s12/1 ->recoverk3,d7",
+        "assumption": "Deliberately weak educational seed, NOT compliant HMAC_DRBG instantiation, OS RNG test or certified KAT."
+      },
+      "stageEvidence": {
+        "S": "overview: reset token unpredictability",
+        "B": "black-box: entropy supplier/state generator/application roles",
+        "0": "case: eight seed candidates produce32byte outputs",
+        "1": "picture: same seed3 to state to output",
+        "2": "need: weak seed,state theft,clone failures",
+        "3": "names: seed/state/entropy/DRBG/instantiate/generate/reseed",
+        "4": "entropy-source/predictability: pmax1/8 ->3 bits versus candidate support; probability.60-.50=.10 not finite sample claim",
+        "5/6": "source: actual NIST90Ar1 §10.1.2 K/V update and generate applied to weak0x03, two calculated outputs and state values; local educational reimplementation executed",
+        "7": "state-lifecycle/applications/release: compromise and unseen fresh entropy, ECDSA reuse exact derivation, boot/clone/errors; predictions3/7/11"
+      },
+      "sourceEvidence": [
+        {
+          "source": "NIST90Ar1 official PDF §§10.1.2.2–.5; 90A official status distinguishes Rev1Final and Rev2Draft; NIST90B; RFC4086; RFC6979§2.4 fresh original formula read",
+          "application": "source: actual NIST90Ar1 §10.1.2 K/V update and generate applied to weak0x03, two calculated outputs and state values; local educational reimplementation executed; ECDSA original s=(h+xr)/k mapped to same toy curve/signatures."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "Read all previous3actual components then full rewrite preserving source and failure conditions while fixing two mathematical claim errors.",
+        "arithmetic": "/tmp/teach-all/chains-csprng-demo.json: all8seed sequences and clones; exact EC point order19,3G(10,6),signatures12/1,recovered3/7. This executes educational reimplementation, not original official implementation.",
+        "humanize": "/tmp/teach-all/humanize-chains-csprng/csprng/gate.txt gate0; protected numbers/markers and exact roundtrip preserved.",
+        "browser390": "output/playwright/teach-chains-csprng/summary.json no overflow,narrow,KaTeX,broken anchors,runtimeerrors; detail review pending",
+        "browser1440": "same report",
+        "learning": "/tmp/teach-all/chains-registration-batch7.json ready for integration and strict gate",
+        "static": "/tmp/teach-all/chains-csprng-tsc.log passed"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "metadata integration and strict learning",
+        "detailed formula/source screenshot review"
+      ],
+      "reviewDisposition": "substantive-rewrite"
     },
     {
       "route": "crypto/diffie-hellman",
       "title": "Diffie–Hellman: 인증·KDF·forward secrecy",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/crypto/diffie-hellman.tsx",
       "bodyFiles": [
         "src/pages/articles/crypto/diffie-hellman.tsx",
-        "src/pages/articles/crypto/diffie-hellman/Overview.tsx",
-        "src/pages/articles/crypto/diffie-hellman/Protocol.tsx",
-        "src/pages/articles/crypto/diffie-hellman/Security.tsx"
+        "src/pages/articles/crypto/diffie-hellman/ModernArticle.tsx",
+        "src/pages/articles/crypto/diffie-hellman/viz/DHFlowViz.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -6658,20 +6682,42 @@
           "\n        배포 경계: validate → authenticate → derive → confirm → erase\n      "
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 본문은 용어와 수식부터 시작해 사례와 역할을 먼저 그리기 어려웠습니다.",
+        "수식 주석이 전체 식을 한 번에 가리키며 실제 입력·원문 단계 연결과 예측 답절이 부족했습니다."
+      ],
+      "fixture": {
+        "case": "p23,g5,a6,b15,A8,B19,Z2; MITM m3/m7 yields 6/15; RFC7748 and RFC5869 vectors executed; directional toy HKDF differs",
+        "assumption": "Small modulo 23 values and educational KDF encoding explicitly hypothetical and insecure, not deployment parameters."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: purpose before mechanics",
+        "B": "black-box: actors and public/secret input roles before names",
+        "0": "case: numeric fixture first",
+        "1": "picture: same values through three roles",
+        "2": "need: concrete failure creates need for authentication/fresh secrecy",
+        "3": "names: symbols and technical names attached to previously understood roles",
+        "4": "protocol: same case, exponent derivation",
+        "5/6": "source: DH1976p649 equation7–12 mapped to 6/15 and shared2; public-validation: RFC7748 byte vectors actually reproduced; kdf-key-schedule RFC5869A.1 reproduced",
+        "7": "authenticated-transcript/kdf-key-schedule/ephemeral-lifecycle/dh-release-gate: MITM6/15, weak toy entropy, snapshots, predictions10/11/12"
+      },
+      "sourceEvidence": [
+        {
+          "source": "DH1976 author official PDF p649; RFC7748 §§5,6.1,7; RFC5869 §§2–3,A.1; NIST80056Ar3 planning 2026-01-06",
+          "application": "source: DH1976p649 equation7–12 mapped to 6/15 and shared2; public-validation: RFC7748 byte vectors actually reproduced; kdf-key-schedule RFC5869A.1 reproduced"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Entire prior actual baseline and all rendered source components read; cases/security preserved and rewritten from numerical roles to actual original formulas.",
+        "arithmetic": "/tmp/teach-all/chains-dh-elgamal-arithmetic.json 24 independent integer checks passed. DH additionally /tmp/teach-all/chains-dh-original-check.json 8 checks in Node24.13.0/OpenSSL3.5.4: RFC7748 public/shared4,allzero1,HKDF PRK/OKM2,label separation1.",
+        "humanize": "/tmp/teach-all/humanize-chains-dh-elgamal-final/diffie-hellman/gate.txt: gate0, final text unchanged and exact roundtrip.",
+        "browser390": "output/playwright/teach-chains-dh-elgamal/summary.json and /tmp/teach-all/chains-batch6-final-metrics.json: no overflow, narrow prose, KaTeX errors, broken anchors or runtime errors. /tmp/teach-all/chains-dh-elgamal-details.json: DH all five states selected, active state matched, controls shift0px at both widths; detailed source/formula screenshots visually read.",
+        "browser1440": "output/playwright/teach-chains-dh-elgamal/summary.json and /tmp/teach-all/chains-batch6-final-metrics.json: no overflow, narrow prose, KaTeX errors, broken anchors or runtime errors. /tmp/teach-all/chains-dh-elgamal-details.json: DH all five states selected, active state matched, controls shift0px at both widths; detailed source/formula screenshots visually read.",
+        "learning": "/tmp/teach-all/chains-learning-batch6.log: strict require-registration passed both articles after metadata/canonical/TOC/topology integration.",
+        "static": "/tmp/teach-all/chains-dh-elgamal-tsc.log tsc passed; DHFlowViz strict passed."
+      },
+      "remaining": [],
+      "reviewDisposition": "substantive-rewrite"
     },
     {
       "route": "crypto/discrete-log",
@@ -6741,7 +6787,7 @@
     {
       "route": "crypto/elgamal",
       "title": "ElGamal: fresh DH mask·IND-CPA와 malleability 경계",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/crypto/elgamal.tsx",
       "bodyFiles": [
         "src/pages/articles/crypto/elgamal.tsx",
@@ -6759,20 +6805,43 @@
           "Hybrid profile은 정확성·active integrity를 통과한 뒤 배포한다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 본문은 용어와 수식부터 시작해 사례와 역할을 먼저 그리기 어려웠습니다.",
+        "수식 주석이 전체 식을 한 번에 가리키며 실제 입력·원문 단계 연결과 예측 답절이 부족했습니다.",
+        "작은 전체 군 사례와 안전한 DDH 메시지 공간을 구별하는 수치 반례가 없었습니다."
+      ],
+      "fixture": {
+        "case": "p23,g5,x6,y8,M10,r7 -> (17,5) ->10; r3->(10,14); tamper->20; reuse ratio5 recovers4; product(9,5)->17; square classes leak 10/4",
+        "assumption": "Small modulo 23 values and educational KDF encoding explicitly hypothetical and insecure, not deployment parameters."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: purpose before mechanics",
+        "B": "black-box: actors and public/secret input roles before names",
+        "0": "case: numeric fixture first",
+        "1": "picture: same values through three roles",
+        "2": "need: concrete failure creates need for authentication/fresh secrecy",
+        "3": "names: symbols and technical names attached to previously understood roles",
+        "4": "encrypt-decrypt: same case, exponent derivation and inverse computation",
+        "5/6": "source: HAC8.18 γ17 δ5 a6 p23 -> γ^(p−1−a)=17^16=2 ->10; security BonehShoup Ex11.5–11.6 DDH and larger message space",
+        "7": "security/malleability/release: square class leak, tamper20, reused r recovers4, arbitrary hybrid not CCA proof; predictions10/9/8"
+      },
+      "sourceEvidence": [
+        {
+          "source": "HAC author official chapter8 Algorithms8.17–8.18,8.26; BonehShoup official v0.6 Exercise11.5–11.6; ElGamal1985 DOI unavailable, bibliography only no fresh fulltext claim",
+          "application": "source: HAC8.18 γ17 δ5 a6 p23 -> γ^(p−1−a)=17^16=2 ->10; security BonehShoup Ex11.5–11.6 DDH and larger message space"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Entire prior actual baseline and all rendered source components read; cases/security preserved and rewritten from numerical roles to actual original formulas.",
+        "arithmetic": "/tmp/teach-all/chains-dh-elgamal-arithmetic.json 24 independent integer checks passed. DH additionally /tmp/teach-all/chains-dh-original-check.json 8 checks in Node24.13.0/OpenSSL3.5.4: RFC7748 public/shared4,allzero1,HKDF PRK/OKM2,label separation1.",
+        "humanize": "/tmp/teach-all/humanize-chains-dh-elgamal-final/elgamal/independent-finalize.md: systems independently approved final unchanged text; (9,5) false footnote warning retained as WARN, exact numbers/markers and modular calculation reviewed.",
+        "browser390": "output/playwright/teach-chains-dh-elgamal/summary.json and /tmp/teach-all/chains-batch6-final-metrics.json: no overflow, narrow prose, KaTeX errors, broken anchors or runtime errors. /tmp/teach-all/chains-dh-elgamal-details.json: DH all five states selected, active state matched, controls shift0px at both widths; detailed source/formula screenshots visually read.",
+        "browser1440": "output/playwright/teach-chains-dh-elgamal/summary.json and /tmp/teach-all/chains-batch6-final-metrics.json: no overflow, narrow prose, KaTeX errors, broken anchors or runtime errors. /tmp/teach-all/chains-dh-elgamal-details.json: DH all five states selected, active state matched, controls shift0px at both widths; detailed source/formula screenshots visually read.",
+        "learning": "/tmp/teach-all/chains-learning-batch6.log: strict require-registration passed both articles after metadata/canonical/TOC/topology integration.",
+        "static": "/tmp/teach-all/chains-dh-elgamal-tsc.log tsc passed; DHFlowViz strict passed."
+      },
+      "remaining": [],
+      "reviewDisposition": "substantive-rewrite"
     },
     {
       "route": "crypto/elliptic-curves",
@@ -8327,10 +8396,11 @@
     {
       "route": "crypto/shamir-secret-sharing",
       "title": "Shamir Secret Sharing: Polynomial Share·복원·Privacy 경계",
-      "status": "unreviewed",
+      "status": "rewritten-awaiting-integration-and-browser",
       "publicEntry": "src/pages/articles/blockchain/shamir-secret-sharing.tsx",
       "bodyFiles": [
-        "src/pages/articles/blockchain/shamir-secret-sharing.tsx"
+        "src/pages/articles/blockchain/shamir-secret-sharing.tsx",
+        "src/pages/articles/blockchain/shamir-secret-sharing/ModernArticle.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -8346,7 +8416,10 @@
           "Field·index·RNG·malformed share를 release contract로 고정한다"
         ]
       },
-      "issues": [],
+      "issues": [
+        "기존 본문은 다항식·차수부터 시작하며 원문 q(i)에 같은 수를 대입하지 않았습니다.",
+        "조각 변조·회차 혼합·계수0금지의 실제 반례를 추가해야 이해와 경계가 연결됩니다."
+      ],
       "fixture": null,
       "stageEvidence": {},
       "sourceEvidence": [],
@@ -8358,7 +8431,7 @@
         "browser1440": "pending"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "new body written; arithmetic/humanize/source verification registration and browser pending"
       ]
     },
     {

@@ -499,17 +499,17 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "embedded/timers-and-sampling": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-03",
-    "rationale": "10 ms 타이머 목표→실제 ADC 시각→100 Hz 저장→70 Hz가 30 Hz로 겹침→ADC 전 필터 순서로 한 신호를 추적합니다. I²C 버스 거래는 다음 글에서 다룹니다.",
-    "sharedGate": "10ms=10000 timer ticks, fs=100Hz, half=50Hz, |100−70|=30Hz, 처리10.4ms 뒤 다음 절대 목표20ms가 본문·Viz·문제에서 일치하는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "정한 목표 시각과 실제 변환 시각을 나누고 aliasing의 두 입력을 같은 샘플에 대응했습니다. 실제 time.c의 부호 분기와 adc_read의 START_ONCE→READY→result에 같은 사례를 넣었습니다.",
+    "sharedGate": "10 ms 간격, 중심1.65 V·진폭1 V의30/70 Hz가 같은 이상 샘플을 만듭니다. 목표10000 µs·시작10400·종료10420에서 다음 목표20000/20420을 비교합니다. PicoSDK2.2.0 a1438dff time.c500–509·171–191, adc.h175–182와 RP2040§4.6·4.9; 고정 원문3파일 및 LICENSE 동일. cos12값·전압6값·시각9계산·원문SHA4 동일 가정 수치와 실제 보드 실행은 구분합니다."
   },
   "embedded/serial-buses-and-tradeoffs": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-03",
-    "rationale": "외부 센서 네 바이트라는 사례에서 I²C 주소·ACK→63클록→SPI·UART 대안→실제 완료 시간 경계로 흐릅니다. 여러 작업의 우선순위 배분은 다음 글에서 다룹니다.",
-    "sharedGate": "I²C 7×9=63클록·400kHz 157.5µs·100kHz 630µs, SPI 5×8/1MHz=40µs, UART 4×10/115200≈347.2µs가 본문·Viz·문제에서 일치해야 합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "요청·응답 역할을 먼저 그리고 실제 i2c_write/read의 nostop·restart_on_next·STOP·반환 길이1/4를 따라갑니다. 측정 주기 안의 상승 시간을 중복 가산하던 경계를 바로잡았습니다.",
+    "sharedGate": "7비트 센서0x48의 위치0x10에서12/34/56/78을 받는 가정. 주소W90/R91,7묶음63클록,400kHz157.5us,추가스트레칭200→357.5us. NXP UM10204Rev7§3.1.6·3.1.10그림13과 PicoSDK a1438dff i2c.c133–164·218–246·287–315·338–345. 고정원문2파일+LICENSE 동일. 주소비트·클록시간·SPI40us·UART347.2us·쓰기/읽기분기검산 가정 수치와 실제 보드 실행은 구분합니다."
   },
   "embedded/scheduling-and-real-time": {
     "action": "keep",
@@ -1389,6 +1389,111 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "다섯 행의 분할에서 OOF 예측·집계·제출을 연결하는 하나의 실행 경로입니다. 예측 개수만으로 누락과 중복을 못 찾는 문제에서 시작해 같은 행 ID와 결과 파일을 끝까지 검증하므로 함께 유지합니다.",
     "sharedGate": "잘못된 coverage [1,1,0,2,1]과 교정 [1,1,1,1,1], Brier 합0.34/5=0.068, fold평균0.0675의 차이, 제출순서[t2,t1]을 본문·식·문제에서 일치시킵니다."
   },
+  "ai/cross-validation": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "배포의 새 대상과 평균 단위를 정하는 한 평가 질문입니다. 환자 분리 자체의 구현은 후속 grouped 글로 연결하고 여기서는 같은 C/D 예측을 어떻게 집계하는지와 위험의 의미를 잇습니다.",
+    "sharedGate": "A/B/C/D 행수2/2/3/1, 학습 A/B·평가 C/D, 평가 손실[0,0,0,1], 행평균0.25와 환자평균0.50을 본문·식·문제에서 유지합니다."
+  },
+  "ai/grouped-validation": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "대상을 통째로 분리하는 단일 메커니즘에서 집합 검사와 독립에 가까운 근거 수를 함께 설명합니다. 분리 조건의 검증과 결과의 근거 크기를 떼면 행수만으로 평가 강도를 과신할 수 있어 함께 유지합니다.",
+    "sharedGate": "A/B 학습과 C/D 평가의 교집합 공집합, C 한 행 이동 시 교집합{C}, 평가4행·고유2명, 별도 규모20×5000=100000행·20명을 구별합니다."
+  },
+  "ai/walk-forward-validation": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 사건의 정답이 관찰 종료와 보고를 거쳐 학습 가능해지는 시간 경로입니다. gap/purge/창 정책은 이 경로를 실제 분할기에 적용할 때의 경계를 설명하며 독립 주제를 나열하지 않습니다.",
+    "sharedGate": "UTC 2026-10-25+30일=11-24, +7일=12-01, 엄격한 이전 조건에서11-01·12-01동률 제외·12-02통과를 고정합니다. gap37표본과37일을 혼동하지 않습니다."
+  },
+  "ai/fold-local-validation": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "네 숫자에서 평균을 배우고 평가에 적용하는 단일 전처리 경계입니다. 저장상태·원문 API·행 배정·최종 refit의 경계를 나누면 같은 평균이 언제 누수인지 설명이 끊기므로 함께 유지합니다.",
+    "sharedGate": "학습[2,4] 평균3·ddof0분산1·평가[8,10]→[5,7], 잘못된 전체fit평균6·분산10·변환[0.63246,1.26491]을 맞춥니다. 선택뒤 독립평가를닫은 refit은 다른 단계임을 유지합니다."
+  },
+  "ai/competition-workflow": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 방문의 예측 행과 입력 시각·미래 정답·지표·평가 역할을 고정하는 하나의 정의입니다. 개별 metric이나 split 기법은 후속 글 소유로 두고 여기서는 무엇을 평가할지의 전제만 연결합니다.",
+    "sharedGate": "UTC2026-04-16 10:00부터 열린시작·닫힌끝24시간창, 다음날09:00사건 y1, 09:00측정·10:05도착값 입력제외, 다음날08:00미완결을 음성으로 확정하지 않는 조건을 맞춥니다."
+  },
+  "ai/math-functions-derivatives-gradients": {
+    "rationale": "하나의 실수 입력 변화가 계산 결과로 전달되는 비율을 구하는 질문입니다. 제곱 함수의 같은 변화 기록에서 평균 비율, 한 점의 극한, 직선 예측을 차례로 만들고 그 제곱을 앞 글의 연결에 넣어 연쇄법칙을 확장합니다. 마지막 모서리 사례는 이 비율이 존재하지 않을 때의 경계이며, 다변수와 최적화의 독립 문제는 다음 정본 글로 넘깁니다.",
+    "sharedGate": "제곱 함수의 x=3에서 h=1/.1/.01 및 음수 간격의 차분몫을 계산해 6으로 모이는지 확인합니다. 2→7→49에 Δx=.01을 넣어 예측 .42와 실제 .4209의 오차 .0009를 검산합니다. Δu=0에서도 나눗셈 없는 증명을 유지하고, 분기 합산 7과 ReLU 부분기울기 [0,1]의 PyTorch 선택 0을 구별합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "action": "keep"
+  },
+  "crypto/diffie-hellman": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 8·19 교환에서 공유값 2를 얻는 정확성과 상대 인증·입력 검사·KDF·비밀 폐기의 필요성을 차례로 연결하므로 한 글로 유지합니다.",
+    "sharedGate": "p=23의 6·15→8·19→2와 중간자 공유값 6·15를 검산합니다. 원문 식과 RFC 벡터를 대조하고 Node24.13.0/OpenSSL3.5.4에서 X25519·HKDF 시험값을 실행했으며 실제 통신 인증·비밀 폐기 검증으로 확대하지 않습니다."
+  },
+  "crypto/elgamal": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "메시지 10을 (17,5)로 가리고 복원하는 같은 사례에 원문 역원 계산과 변조·난수 재사용·메시지 공간 반례를 적용하므로 한 글로 유지합니다.",
+    "sharedGate": "17⁶=12, 역원2, 복호10, 변조20, 재사용 비율5로 메시지4 복원, 암호문 곱(9,5)의 복호17을 mod23으로 검산합니다. 제곱 값 목록으로10·4가 구별됨을 확인하며 안전한 매개변수나 실제 배포의 증명으로 읽지 않습니다."
+  },
+  "ai/math-gradients-jacobians": {
+    "rationale": "여러 입력의 작은 변화가 결과로 얼마나 전달되는지를 묻는 하나의 학습 경로입니다. 결과 하나의 좌표별 비율을 모아 방향을 비교한 뒤, 결과가 둘일 때 같은 관계를 행으로 쌓습니다. 좌표 단위, JVP와 VJP의 방향, 축별 미분만으로 부족한 반례를 함께 확인해야 이 변화 표를 올바르게 사용할 수 있어 한 글로 유지합니다.",
+    "sharedGate": "f=x²+3y의 (2,−1)에서 비율 4와 3, 단위 방향 변화율 4.8과 최대 5를 계산합니다. F=(x+y,xy)의 (2,3)에서 Jv=(−.01,−.01), 실제 둘째 변화 −.0102, w=(2,−1)의 VJP=(−1,0)을 검산합니다. 실제 등고선 식과 원문 행 방향, 좌표 100배 재표기의 .04, 축별 미분 반례를 함께 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "action": "keep"
+  },
+  "ai/oof-risk-estimation": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "평가에서 제외한 행의 예측을 모아 집계하고 그 점수가 어떤 모델을 평가하는지까지 잇는 하나의 경로입니다. 분할 기법 자체는 선행 글에 맡기고 집계와 추정 대상의 연결을 유지합니다.",
+    "sharedGate": "20행과 80행의 평균을 다시 모아 0.36을 구하고 최종 모델과 지표의 경계를 구별합니다. 본문·수식·문제는 등록 fixture와 일치해야 하며 원문 또는 구현의 별도 전제도 유지합니다."
+  },
+  "ai/validation-feedback-audit": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "다섯 후보의 두 점수표를 비교해 어떤 변경을 했는지 추적하는 한 감사 과정입니다. 지표 구현 검사와 방향 비교, 적응 기록을 함께 두어 값 차이를 곧바로 분포 차이로 단정하지 않게 합니다.",
+    "sharedGate": "후보 다섯 개의 두 점수표에서 값의 차이와 8/10 방향 일치를 따로 계산합니다. 본문·수식·문제는 등록 fixture와 일치해야 하며 원문 또는 구현의 별도 전제도 유지합니다."
+  },
+  "ai/competition-submission-control": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 후보 선택에서 전송·관측·변경·동결·최종 파일을 연결하는 한 운영 과정입니다. 통계적 보장과 구별하면서 끝까지 같은 B 후보를 추적합니다.",
+    "sharedGate": "전송 네 번과 선택 변경 두 번을 나누고 동결된 B의 최종 제출 경로를 보존합니다. 본문·수식·문제는 등록 fixture와 일치해야 하며 원문 또는 구현의 별도 전제도 유지합니다."
+  },
+  "ai/experiment-tracking": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "결과에서 입력까지 역추적하는 한 경로에서 실행 정체와 파일 정체가 모두 필요합니다. 반복 실행을 분리하지 않거나 바이트를 구별하지 않으면 같은 경로가 끊기므로 함께 유지합니다.",
+    "sharedGate": "실패 A1과 성공 A2, 같은 평균 0.50인 서로 다른 두 예측 파일을 구별합니다. 본문·수식·문제는 등록 fixture와 일치해야 하며 원문 또는 구현의 별도 전제도 유지합니다."
+  },
+  "ai/adaptive-hyperparameter-search": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "과거 관측을 다음 제안으로 바꾸는 단일 반복을 일반 구조에서 TPE 수치와 원문·고정 버전 구현으로 올립니다. 다른 탐색 기법의 비교는 이 글의 범위 밖입니다.",
+    "sharedGate": "손실 네 개를 좋은 두 개와 나머지로 나누어 후보 P/Q의 밀도비 6과 2를 비교합니다. 본문·수식·문제는 등록 fixture와 일치해야 하며 원문 또는 구현의 별도 전제도 유지합니다."
+  },
+  "ai/math-optimization-objectives": {
+    "rationale": "무엇을 바꿔 어떤 점수를 낮추고 어떤 조건을 지킬지 정하는 하나의 질문입니다. 같은 제곱 점수에서 허용 범위만 바꾸어 위치와 점수가 달라지는 과정을 보이고, 벌점·빈 집합·달성하지 못한 하한을 함께 확인해야 탐색 알고리즘보다 앞선 문제 정의를 이해할 수 있어 한 글로 유지합니다.",
+    "sharedGate": "모든 실수의 답 (3,2)와 [0,2]의 답 (2,3), 제곱 벌점의 위반 최소점 2.5와 총점 2.5를 계산합니다. 같은 사례를 실제 식 (4.1)의 f₀·f₁·f₂에 넣고 열린 상한에서 점수 3을 달성할 수 없는 이유와 좌표별 clipping의 결합 제약 반례를 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "action": "keep"
+  },
 };
 
 /**
@@ -1396,6 +1501,21 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/adaptive-hyperparameter-search": "c7600c0a051a1182",
+  "ai/competition-submission-control": "f4a5a60d8694bccf",
+  "ai/competition-workflow": "4562393852c386c2",
+  "ai/cross-validation": "7ff394a94b7466c2",
+  "ai/experiment-tracking": "2caa2c528a37ec23",
+  "ai/fold-local-validation": "81c7a08d18185317",
+  "ai/grouped-validation": "a28b15a149db340a",
+  "ai/math-functions-derivatives-gradients": "b4db0777a94d0663",
+  "ai/math-gradients-jacobians": "71df877c644fa3a3",
+  "ai/math-optimization-objectives": "9de4f8a7e1859097",
+  "ai/oof-risk-estimation": "5de974971729d88e",
+  "ai/validation-feedback-audit": "cdf24bb889cba283",
+  "ai/walk-forward-validation": "f3dfdc9ae216aea0",
+  "crypto/diffie-hellman": "342dd5ed101377c5",
+  "crypto/elgamal": "b90c151ef678caf1",
   "ai/competition-baseline": "895a83c1f192f791",
   "ai/harness-failure-ablation": "a2eafca200b3faef",
   "ai/math-functions-composition": "4b3257821a3f8e35",
@@ -1477,8 +1597,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "labor/wage-floor-natural-experiment": "24f8973f6bfad249",
   "embedded/firmware-update-and-recovery": "11af404968f4feda",
   "embedded/scheduling-and-real-time": "854c44f36c3d7c77",
-  "embedded/serial-buses-and-tradeoffs": "1b52a6c0969c064e",
-  "embedded/timers-and-sampling": "d65d89abe395b450",
+  "embedded/serial-buses-and-tradeoffs": "b77cf44426bedb4f",
+  "embedded/timers-and-sampling": "e0eaaa84f836f4d3",
   "embedded/interrupts-and-latency-budget": "cfdf6ea3645856a7",
   "embedded/mcu-memory-map-and-registers": "eb97b92a0a3e5249",
   "semiconductors/yield-defect-and-packaging": "e2a487c102874573",

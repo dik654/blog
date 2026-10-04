@@ -2,37 +2,32 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-const SCENES = ["x 입력", "inner rate", "outer rate", "전체 rate"] as const;
+const SCENES = ["입력 변화", "첫 배율 3", "둘째 배율 14", "전체 배율 42"] as const;
+const COLUMNS = [
+  { label: "x=2", delta: "Δx=0.01", rule: "입력" },
+  { label: "u=7", delta: "Δu=0.03", rule: "×3" },
+  { label: "y=49", delta: "Δy≈0.42", rule: "×14" },
+] as const;
+const CAPTIONS = [
+  "입력을 2에서 2.01로 바꿉니다. 변화량은 0.01입니다.",
+  "u=3x+1은 변화량에도 정확히 3을 곱합니다. 0.01이 0.03이 됩니다.",
+  "u=7에서 제곱의 미분계수는 14입니다. 0.03의 변화가 약 0.42로 전달됩니다.",
+  "전체 배율은 14×3=42입니다. 실제 변화 0.4209와 예측 0.42의 차이는 0.0009입니다.",
+] as const;
 
 export default function ChainRateViz() {
   const scenes = useAnimatedScenes(SCENES.length);
   return (
-    <VizFrame
-      eyebrow="Animated chain rule"
-      title="변화가 두 변환을 연속 통과하면 각 구간의 배율이 곱해진다"
-      description="x=2에서 x→u는 3배, u=7에서 u→y는 14배입니다. 작은 x 변화가 두 배율을 차례로 통과합니다."
-      note="곱셈은 기호 약분 장식이 아니라 같은 작은 변화가 첫 구간과 둘째 구간에서 연속 확대되는 실행 의미를 가집니다."
-    >
-      <div data-viz-canvas tabIndex={0} role="group" aria-label="chain rule 변화 배율 애니메이션" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
-        <div className="grid gap-4 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:items-center">
-          <Node label="input" value="x=2" delta="Δx=0.01" active={scenes.active >= 0} color="sky" />
-          <Rate value="×3" label="du/dx" active={scenes.active >= 1} />
-          <Node label="middle" value="u=7" delta="Δu≈0.03" active={scenes.active >= 1} color="violet" />
-          <Rate value="×14" label="dy/du" active={scenes.active >= 2} />
-          <Node label="output" value="y=49" delta="Δy≈0.42" active={scenes.active >= 2} color="emerald" />
+    <VizFrame eyebrow="연결된 변화" title="작은 변화가 두 구간의 배율을 차례로 거칩니다" description="가정 사례의 2→7→49에서 현재 위치와 작은 변화량을 함께 추적합니다." note="첫 구간은 정확한 3배이고 둘째 구간의 14배는 u=7 근처에서의 근사입니다.">
+      <div data-viz-canvas tabIndex={0} role="group" aria-label="연쇄법칙 변화 배율 애니메이션" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+        <div className="grid grid-cols-3 gap-4 sm:gap-6">
+          {COLUMNS.map((c,i) => <div key={c.label} className={`min-w-0 border-y py-4 text-center transition-opacity ${scenes.active >= i ? "border-primary opacity-100" : "border-border opacity-35"}`}>
+            <p className="text-xs font-bold text-primary">{c.rule}</p><p className="mt-3 font-mono font-bold">{c.label}</p><p className="mt-3 font-mono text-[11px]">{c.delta}</p>
+          </div>)}
         </div>
-        <div className={`mt-6 border-l pl-4 transition-opacity ${scenes.active === 3 ? "border-primary opacity-100" : "border-border opacity-40"}`}>
-          <p className="text-xs font-bold text-muted-foreground">전체 전달 배율</p>
-          <p className="mt-2 font-mono text-xl font-black">Δy ≈ 14 × 3 × Δx = 42Δx</p>
-        </div>
+        <div className="flex h-36 items-center py-5" aria-live="polite"><p className="text-sm leading-6">{CAPTIONS[scenes.active]}</p></div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>
   );
 }
-
-function Node({ label, value, delta, active, color }: { label: string; value: string; delta: string; active: boolean; color: "sky" | "violet" | "emerald" }) {
-  const styles = { sky: "border-sky-500 bg-sky-500/10", violet: "border-violet-500 bg-violet-500/10", emerald: "border-emerald-500 bg-emerald-500/10" } as const;
-  return <div className={`border p-5 text-center transition-opacity duration-500 ${styles[color]} ${active ? "opacity-100" : "opacity-35"}`}><p className="font-mono text-[10px] font-bold uppercase text-muted-foreground">{label}</p><p className="mt-2 font-mono text-xl font-black">{value}</p><p className="mt-2 text-xs text-muted-foreground">{delta}</p></div>;
-}
-function Rate({ value, label, active }: { value: string; label: string; active: boolean }) { return <div className={`flex items-center justify-center gap-2 transition-colors ${active ? "text-primary" : "text-border"}`}><div className="text-center"><p className="font-mono text-base font-black">{value}</p><p className="text-[10px]">{label}</p></div><span aria-hidden>→</span></div>; }

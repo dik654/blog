@@ -130,13 +130,63 @@ export const embeddedArticles: Article[] = [
     title: "10 ms마다 읽은 값이 원래 신호와 다를 수 있는 이유",
     subcategory: "embedded-hardware",
     sections: [
-      { id: "overview", title: "10 ms마다 읽으면 빠른 변화가 느리게 보일 수 있습니다" },
-      { id: "timer", title: "RP2040 타이머의 1 µs 눈금에서 10 ms는 10000칸입니다" },
-      { id: "adc", title: "알람이 울린 뒤에도 ADC가 값을 잡는 시간이 필요합니다" },
-      { id: "rate", title: "10 ms 간격은 초당 100개, 절반 경계는 50 Hz입니다" },
-      { id: "alias", title: "70 Hz 코사인은 100 Hz 눈금에서 30 Hz와 같은 값을 남깁니다" },
-      { id: "limits", title: "주기, 변환 시각, 입력 대역을 함께 확인합니다" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 시간표대로 남긴 값이 원래 움직임을 모두 알려 주지는 않습니다"
+  },
+  {
+    "id": "outside",
+    "title": "2. 계속 바뀌는 전압이 시각과 숫자의 목록으로 바뀝니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 10 ms 간격에서 두 신호는 2.65·1.341·0.841 V를 함께 남깁니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 목표 시각·실제 읽기·저장된 값을 나눠 봅니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 다음 약속을 늦은 처리 시각에 붙이면 시간표가 밀립니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 시간표·한 번 읽기·겹침에 이름을 붙입니다"
+  },
+  {
+    "id": "timer",
+    "title": "7. RP2040 타이머의 1 µs 눈금에서 10 ms는 10000칸입니다"
+  },
+  {
+    "id": "adc",
+    "title": "8. 알람이 울린 뒤에도 ADC가 값을 잡는 시간이 필요합니다"
+  },
+  {
+    "id": "rate",
+    "title": "9. 10 ms 간격은 초당 100개, 절반 경계는 50 Hz입니다"
+  },
+  {
+    "id": "alias",
+    "title": "10. 70 Hz 코사인은 100 Hz 눈금에서 30 Hz와 같은 값을 남깁니다"
+  },
+  {
+    "id": "source-clock",
+    "title": "11. 실제 반복 함수는 지연의 부호로 다음 목표의 기준을 고릅니다"
+  },
+  {
+    "id": "source-sample",
+    "title": "12. 같은 입력을 읽는 adc_read는 시작 비트를 쓰고 완료를 기다립니다"
+  },
+  {
+    "id": "source-model",
+    "title": "13. 원문의 복원 조건에 같은 100·30·70 Hz를 넣습니다"
+  },
+  {
+    "id": "limits",
+    "title": "14. 주기, 변환 시각, 입력 대역을 함께 확인합니다"
+  }
+],
     component: () => import("@/pages/articles/embedded/timers-and-sampling"),
   },
   {
@@ -144,13 +194,63 @@ export const embeddedArticles: Article[] = [
     title: "센서 네 바이트를 읽는 세 버스의 실제 비용",
     subcategory: "embedded-hardware",
     sections: [
-      { id: "overview", title: "같은 네 바이트라도 선 위에 놓이는 비트 수가 다릅니다" },
-      { id: "i2c", title: "I²C는 두 선을 공유하고 주소·응답을 매 거래에 넣습니다" },
-      { id: "count", title: "I²C 400 kHz에서 일곱 묶음은 최소 157.5 µs입니다" },
-      { id: "spi", title: "SPI는 선택 선과 클록 모드를 맞추고 더 적은 클록을 씁니다" },
-      { id: "uart", title: "UART 8N1은 네 바이트를 보내도 40비트가 흐릅니다" },
-      { id: "choice", title: "가장 짧은 클록 시간만으로 버스를 고르지 않습니다" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 네 바이트를 얻으려면 그 앞뒤의 거래도 끝나야 합니다"
+  },
+  {
+    "id": "outside",
+    "title": "2. 센서와 위치를 고르면 결과 네 바이트나 실패가 돌아옵니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 네 결과 앞에 세 묶음을 보내 총 63칸을 씁니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 같은 장치를 고른 채 방향만 바꿔 읽습니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 장치 선택과 수신 확인을 빼면 같은 거래가 되지 않습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 공유 선·방향 변경·응답에 이름을 붙입니다"
+  },
+  {
+    "id": "i2c",
+    "title": "7. I²C는 두 선을 공유하고 주소·응답을 매 거래에 넣습니다"
+  },
+  {
+    "id": "count",
+    "title": "8. I²C 400 kHz에서 일곱 묶음은 최소 157.5 µs입니다"
+  },
+  {
+    "id": "source-spec",
+    "title": "9. 규격의 방향 비트와 응답 역할에 같은 일곱 묶음을 넣습니다"
+  },
+  {
+    "id": "source-write",
+    "title": "10. 실제 SDK에 위치 한 바이트를 보내고 거래를 이어 두라고 지정합니다"
+  },
+  {
+    "id": "source-read",
+    "title": "11. 같은 주소에서 네 번 읽기를 요청하고 마지막에 끝냅니다"
+  },
+  {
+    "id": "spi",
+    "title": "12. SPI는 선택 선과 클록 모드를 맞추고 더 적은 클록을 씁니다"
+  },
+  {
+    "id": "uart",
+    "title": "13. UART 8N1은 네 바이트를 보내도 40비트가 흐릅니다"
+  },
+  {
+    "id": "choice",
+    "title": "14. 가장 짧은 클록 시간만으로 버스를 고르지 않습니다"
+  }
+],
     component: () => import("@/pages/articles/embedded/serial-buses-and-tradeoffs"),
   },
   {

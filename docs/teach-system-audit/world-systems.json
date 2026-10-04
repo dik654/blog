@@ -805,23 +805,87 @@
     },
     {
       "route": "embedded/serial-buses-and-tradeoffs",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 3,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "작은 사례는 있으나 이름 전 구조·구성 이유·동일 사례의 실제 원문 적용 부족",
+          "요청 시각/완료 시각 및 가정/실제 코드 경계 보완 필요"
+        ],
+        "fixture": "7비트 센서0x48의 위치0x10에서12/34/56/78을 받는 가정. 주소W90/R91,7묶음63클록,400kHz157.5us,추가스트레칭200→357.5us.",
+        "changes": "요청·응답 역할을 먼저 그리고 실제 i2c_write/read의 nostop·restart_on_next·STOP·반환 길이1/4를 따라갑니다. 측정 주기 안의 상승 시간을 중복 가산하던 경계를 바로잡았습니다.",
+        "answerCoverage": "기초6·심화4를 먼저 읽고 기존 개념·선수조건·공식·인용과 답 위치를 보존·대조했습니다.",
+        "sourceApplication": "NXP UM10204Rev7§3.1.6·3.1.10그림13과 PicoSDK a1438dff i2c.c133–164·218–246·287–315·338–345. 고정원문2파일+LICENSE 동일.",
+        "verification": "주소비트·클록시간·SPI40us·UART347.2us·쓰기/읽기분기검산",
+        "humanize": {
+          "roundTrip": true,
+          "finalGate": "2회 실제 추출·동일성검사·prepare·문장수정·수치/마커 보존·gate. 마지막 gate0. 추출 제외 props·표·코드 주석 별도 대조."
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "numberedSections": 14,
+          "predictionQuestions": 3,
+          "codePanelsPerViewport": 4,
+          "interactiveStatesPerViewport": 4,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "frameShift": 0,
+          "report": "/tmp/world-browser-audit/teach-root-serial-summary.json",
+          "screens": "/tmp/teach-all/root-serial-screens/"
+        },
+        "remaining": "전체799글 개선 후 전역 빌드·배포·운영 확인."
+      }
     },
     {
       "route": "embedded/timers-and-sampling",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 3,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "작은 사례는 있으나 이름 전 구조·구성 이유·동일 사례의 실제 원문 적용 부족",
+          "요청 시각/완료 시각 및 가정/실제 코드 경계 보완 필요"
+        ],
+        "fixture": "10 ms 간격, 중심1.65 V·진폭1 V의30/70 Hz가 같은 이상 샘플을 만듭니다. 목표10000 µs·시작10400·종료10420에서 다음 목표20000/20420을 비교합니다.",
+        "changes": "정한 목표 시각과 실제 변환 시각을 나누고 aliasing의 두 입력을 같은 샘플에 대응했습니다. 실제 time.c의 부호 분기와 adc_read의 START_ONCE→READY→result에 같은 사례를 넣었습니다.",
+        "answerCoverage": "기초6·심화4를 먼저 읽고 기존 개념·선수조건·공식·인용과 답 위치를 보존·대조했습니다.",
+        "sourceApplication": "PicoSDK2.2.0 a1438dff time.c500–509·171–191, adc.h175–182와 RP2040§4.6·4.9; 고정 원문3파일 및 LICENSE 동일.",
+        "verification": "cos12값·전압6값·시각9계산·원문SHA4 동일",
+        "humanize": {
+          "roundTrip": true,
+          "finalGate": "P3 코사인 분모100)을 각주로 오인한 WARN. chains가 문단 전체와 수치·마커를 독립 대조 후 승인."
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "numberedSections": 14,
+          "predictionQuestions": 3,
+          "codePanelsPerViewport": 3,
+          "interactiveStatesPerViewport": 2,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "frameShift": 0,
+          "report": "/tmp/world-browser-audit/teach-root-timer-summary.json",
+          "screens": "/tmp/teach-all/root-timer-screens/"
+        },
+        "remaining": "전체799글 개선 후 전역 빌드·배포·운영 확인."
+      }
     },
     {
       "route": "firms/market-power-and-markup",
@@ -3156,7 +3220,7 @@
     }
   ],
   "counts": {
-    "unreviewed": 207,
-    "rewritten-local-verified": 18
+    "unreviewed": 205,
+    "rewritten-local-verified": 20
   }
 }

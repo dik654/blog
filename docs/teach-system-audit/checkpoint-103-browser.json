@@ -1,0 +1,1248 @@
+{
+  "date": "2026-10-04",
+  "scope": 103,
+  "views": 206,
+  "viewports": [
+    390,
+    1440
+  ],
+  "failed": 0,
+  "results": [
+    {
+      "route": "ai/activation-functions",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/activation-functions",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-control-boundaries",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-control-boundaries",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/adam-optimizer",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/adam-optimizer",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-delegation-contracts",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-delegation-contracts",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-failure-modes-and-recovery",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-failure-modes-and-recovery",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-loop-foundations",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-loop-foundations",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-plan-replanning",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-plan-replanning",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/backprop-optimization",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/backprop-optimization",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-run-contract",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-run-contract",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-verification",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-verification",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/gated-activations",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/gated-activations",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/context-instruction-boundaries",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/context-instruction-boundaries",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/deep-learning-overview",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/deep-learning-overview",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/llm-harness",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/llm-harness",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/rectifier-activations",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/momentum-optimizer",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/momentum-optimizer",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/rectifier-activations",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/optimizers",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/optimizers",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/reverse-mode-autodiff",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/reverse-mode-autodiff",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/softmax",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/softmax",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/supervised-learning-loop",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/supervised-learning-loop",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/tool-calling-lifecycle-and-costs",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/tool-calling-lifecycle-and-costs",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/train-validation-test",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/train-validation-test",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/vllm-serving",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/vllm-serving",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/vllm-scheduler",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/aave-v3",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/aave-v3",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/vllm-scheduler",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/vllm-paged-attention",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/vllm-paged-attention",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/bft-theory",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/bft-theory",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/consensus-mechanisms",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/consensus-mechanisms",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/crypto-theory",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/crypto-theory",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/evm-fundamentals",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/evm-fundamentals",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/node-architecture",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/node-architecture",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/rollup-fundamentals",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/rollup-fundamentals",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/stablecoin-overview",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/stablecoin-overview",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/uniswap-v2",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/uniswap-v2",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "circuits/feedback-gain-and-stability",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "circuits/feedback-gain-and-stability",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "circuits/frequency-shaping-and-bode",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "circuits/lumped-circuit-and-conservation",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "circuits/frequency-shaping-and-bode",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "circuits/lumped-circuit-and-conservation",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "circuits/resistance-and-power-dissipation",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "circuits/resistance-and-power-dissipation",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "circuits/steady-state-and-impedance",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "circuits/storage-elements-and-transients",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "circuits/steady-state-and-impedance",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "circuits/storage-elements-and-transients",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/constraint-systems",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/constraint-systems",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/discrete-log",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/fri",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/discrete-log",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/fri",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/jolt",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/jolt",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/ml-kem-and-noisy-equations",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/ml-kem-and-noisy-equations",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/nova",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/nova",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/polycommit",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/polycommit",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/prover-memory-and-verifier-cost",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/prover-memory-and-verifier-cost",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/post-quantum-signatures",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/post-quantum-signatures",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/quantum-computing-and-cryptographic-risk",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/quantum-computing-and-cryptographic-risk",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/snark-overview",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/snark-overview",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/quantum-key-distribution",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/quantum-key-distribution",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/stark-theory",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/stark-theory",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/zk-theory",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/zk-theory",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "devices/mos-capacitor-and-inversion",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "devices/mos-capacitor-and-inversion",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "devices/mosfet-regions-and-transfer",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "devices/mosfet-regions-and-transfer",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "devices/pn-junction-and-rectification",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "devices/pn-junction-and-rectification",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "devices/switching-energy-and-leakage",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "devices/switching-energy-and-leakage",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "semiconductors/bands-and-doping",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "semiconductors/bands-and-doping",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "semiconductors/doping-and-thermal-budget",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "semiconductors/doping-and-thermal-budget",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "semiconductors/interconnect-and-rc-delay",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "semiconductors/interconnect-and-rc-delay",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "semiconductors/lithography-and-resolution",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "semiconductors/wafer-and-planar-process",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "semiconductors/wafer-and-planar-process",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "semiconductors/lithography-and-resolution",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "semiconductors/yield-defect-and-packaging",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "semiconductors/yield-defect-and-packaging",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-changelog-evidence",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/engineering-lessons-ledger",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/architecture-decision-records",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/engineering-lessons-ledger",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/agent-changelog-evidence",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/architecture-decision-records",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/fast-weight-memory-and-chunkwise-recurrence",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/fast-weight-memory-and-chunkwise-recurrence",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/competition-baseline",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/competition-baseline",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/harness-failure-ablation",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/harness-failure-ablation",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/math-functions-composition",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/math-functions-composition",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/reward-design-for-verifiable-rl",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/reward-design-for-verifiable-rl",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/model-selection-bias",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/model-selection-bias",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/paired-experiment-design",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/paired-experiment-design",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/world-model-latent-planning",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/world-model-latent-planning",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/aa-fundamentals",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/aa-fundamentals",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/ethereum-future-roadmap",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/ethereum-future-roadmap",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/glamsterdam-block-execution",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/glamsterdam-block-execution",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/hyperliquid",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/hyperliquid",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/pq-account",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/pq-account",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/robinhood-chain-blob-demand",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/robinhood-chain-blob-demand",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/robinhood-chain-settlement",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/rwa-composition",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/rwa-composition",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/robinhood-chain-settlement",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "embedded/interrupts-and-latency-budget",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "embedded/interrupts-and-latency-budget",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "embedded/mcu-memory-map-and-registers",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "embedded/mcu-memory-map-and-registers",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/eip4844-blob-fee",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "blockchain/eip4844-blob-fee",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/competition-workflow",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/competition-workflow",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/competition-submission-control",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/adaptive-hyperparameter-search",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/adaptive-hyperparameter-search",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/competition-submission-control",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/cross-validation",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/fold-local-validation",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/experiment-tracking",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/fold-local-validation",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/experiment-tracking",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/cross-validation",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/math-gradients-jacobians",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/grouped-validation",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/grouped-validation",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/math-gradients-jacobians",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/math-functions-derivatives-gradients",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/math-functions-derivatives-gradients",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/math-optimization-objectives",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/math-optimization-objectives",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/oof-risk-estimation",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/oof-risk-estimation",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/validation-feedback-audit",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/validation-feedback-audit",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/diffie-hellman",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/diffie-hellman",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/elgamal",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/walk-forward-validation",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "crypto/elgamal",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "embedded/serial-buses-and-tradeoffs",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "embedded/serial-buses-and-tradeoffs",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "ai/walk-forward-validation",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "embedded/timers-and-sampling",
+      "width": 390,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "route": "embedded/timers-and-sampling",
+      "width": 1440,
+      "ok": true,
+      "issues": []
+    }
+  ]
+}

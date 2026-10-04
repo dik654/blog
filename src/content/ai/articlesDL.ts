@@ -293,12 +293,51 @@ export const dlFoundationArticles: Article[] = [
     title: "Derivative와 chain rule: local rate를 연결하는 법",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "Difference quotient와 limit" },
-      { id: "derivative", title: "Derivative의 세 연산" },
-      { id: "local-linearity", title: "Local linear approximation" },
-      { id: "chain-rule", title: "연결된 rate를 곱하는 이유" },
-      { id: "nonsmooth", title: "Subgradient와 구현 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 값을 조금 바꾸면 결과는 얼마나 달라질까"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 입력 차이와 결과 차이를 함께 본다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 간격을 줄이면 7, 6.1, 6.01이 6으로 모인다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 두 결과를 비교한 뒤 간격을 줄인다"
+  },
+  {
+    "id": "need",
+    "title": "5 · 값 자체와 변화에 대한 비율은 다른 정보다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 작은 변화의 비율을 미분계수라고 부른다"
+  },
+  {
+    "id": "derivative",
+    "title": "7 · 같은 제곱 계산을 끝까지 정리하면 6+h가 남는다"
+  },
+  {
+    "id": "local-linearity",
+    "title": "8 · 9.6이라는 예측과 실제 9.61 사이에는 오차가 남는다"
+  },
+  {
+    "id": "chain-rule",
+    "title": "9 · 변화가 두 단계를 지나면 배율을 곱한다"
+  },
+  {
+    "id": "source",
+    "title": "10 · 원문 식의 기준점과 중간값에 각각 3과 7을 넣는다"
+  },
+  {
+    "id": "nonsmooth",
+    "title": "11 · 모서리에서 코드가 고른 값은 유일한 미분값이 아니다"
+  }
+],
     component: () =>
       import("@/pages/articles/ai/math-functions-derivatives-gradients"),
   },
@@ -307,11 +346,51 @@ export const dlFoundationArticles: Article[] = [
     title: "Gradient와 Jacobian: 여러 입력의 민감도를 묶는 법",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "손잡이 하나씩 움직이기" },
-      { id: "gradient-direction", title: "Gradient와 방향 변화율" },
-      { id: "jacobian", title: "Jacobian과 JVP" },
-      { id: "boundaries", title: "Gradient·JVP·VJP 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 바꿀 입력이 여러 개이면 변화의 원인을 어떻게 나눌까"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 두 수를 받아 한 수를 돌려주는 계산을 살펴본다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 같은 0.01 이동이 0.0401과 0.03을 만든다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 입력별 기여를 모아 결과별로 합친다"
+  },
+  {
+    "id": "need",
+    "title": "5 · 순서와 이동 길이를 맞춰야 방향을 비교할 수 있다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 편미분을 모으면 기울기와 야코비안이 된다"
+  },
+  {
+    "id": "partials",
+    "title": "7 · 다른 좌표를 고정하면 4와 3이 남는다"
+  },
+  {
+    "id": "gradient-direction",
+    "title": "8 · 방향의 두 성분에 4와 3을 곱해 더한다"
+  },
+  {
+    "id": "jacobian",
+    "title": "9 · 합과 곱의 변화는 서로 다른 행에서 계산한다"
+  },
+  {
+    "id": "source",
+    "title": "10 · 원문의 방향미분 식과 야코비안에 같은 수를 넣는다"
+  },
+  {
+    "id": "boundaries",
+    "title": "11 · 좌표별 비율만 있거나 단위를 바꾸면 무엇이 달라질까"
+  }
+],
     component: () => import("@/pages/articles/ai/math-gradients-jacobians"),
   },
   {
@@ -392,11 +471,47 @@ export const dlFoundationArticles: Article[] = [
     title: "Optimization objective와 feasible set: 문제를 먼저 정의하는 법",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "선택·점수·허용 범위" },
-      { id: "feasible-set", title: "Constraint와 feasible set" },
-      { id: "minimizer", title: "Argmin과 minimum value" },
-      { id: "boundaries", title: "Constrained 문제 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 가장 낮은 점수를 찾아도 쓸 수 없는 답일 수 있다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 선택을 받아 허용 여부와 점수를 돌려준다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 점수 2인 선택을 제외하면 점수 3인 선택이 남는다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 허용된 선택끼리 비교한 뒤 위치와 점수를 기록한다"
+  },
+  {
+    "id": "need",
+    "title": "5 · 비교 기준과 필수 규칙은 서로 다른 질문에 답한다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 선택·평가·허용 범위에 이름을 붙인다"
+  },
+  {
+    "id": "feasible-set",
+    "title": "7 · 제약을 벌점으로 바꾸면 허용되지 않은 값이 다시 후보가 된다"
+  },
+  {
+    "id": "minimizer",
+    "title": "8 · 같은 함수를 두 범위에서 풀면 위치와 점수가 함께 바뀐다"
+  },
+  {
+    "id": "source",
+    "title": "9 · 실제 교재의 식에 같은 점수와 두 제약을 대입한다"
+  },
+  {
+    "id": "boundaries",
+    "title": "10 · 최솟값의 존재와 실제 목표까지 따로 확인한다"
+  }
+],
     component: () => import("@/pages/articles/ai/math-optimization-objectives"),
   },
   {

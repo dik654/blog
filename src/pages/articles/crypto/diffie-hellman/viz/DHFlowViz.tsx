@@ -1,11 +1,11 @@
 import StepViz from "@/components/ui/step-viz";
 
 const STEPS = [
-  { label: "Domain", body: "장난감 F₂₃*, generator g=5와 encoding/order를 양쪽이 합의합니다." },
-  { label: "Ephemeral", body: "Alice a=6→A=8, Bob b=15→B=19를 계산합니다." },
-  { label: "Exchange", body: "A와 B는 공개되며 실제 protocol은 이 값과 role을 인증 transcript에 넣습니다." },
-  { label: "Shared", body: "Alice Bᵃ=2, Bob Aᵇ=2로 같은 raw DH output에 도달합니다." },
-  { label: "Derive", body: "Public-key validation 뒤 transcript-bound KDF로 용도별 key를 만들고 ephemeral secret을 지웁니다." },
+  { label: "공개 설정", body: "양쪽이 5를 반복해서 곱하고 23으로 나눈 나머지를 쓰기로 합니다. 작은 교육용 설정입니다." },
+  { label: "각자 준비", body: "Alice는 비밀 6으로 공개값 8, Bob은 비밀 15로 공개값 19를 만듭니다." },
+  { label: "공개값 교환", body: "8과 19는 관찰자도 봅니다. 실제 통신에서는 이 값과 양쪽 역할을 인증할 기록에 포함합니다." },
+  { label: "같은 결과", body: "Alice는 19⁶, Bob은 8¹⁵을 계산해 나머지 2를 얻습니다." },
+  { label: "열쇠 생성", body: "상대의 입력과 신원을 확인한 뒤 용도별 열쇠를 만듭니다. 필요가 끝난 임시 비밀은 지웁니다." },
 ];
 
 function Party({ name, secret, publicValue, active }: { name: string; secret: string; publicValue: string; active: boolean }) {
@@ -13,8 +13,8 @@ function Party({ name, secret, publicValue, active }: { name: string; secret: st
     <div className={`min-w-0 rounded-lg border p-4 ${active ? "border-primary/60 bg-primary/5" : "border-border/70 bg-card"}`}>
       <p className="text-xs font-bold text-primary">{name}</p>
       <dl className="mt-3 grid grid-cols-[4.5rem_minmax(0,1fr)] gap-2 text-xs leading-5">
-        <dt className="text-muted-foreground">secret</dt><dd className="break-all font-mono">{secret}</dd>
-        <dt className="text-muted-foreground">public</dt><dd className="break-all font-mono">{publicValue}</dd>
+        <dt className="text-muted-foreground">비밀</dt><dd className="break-all font-mono">{secret}</dd>
+        <dt className="text-muted-foreground">공개값</dt><dd className="break-all font-mono">{publicValue}</dd>
       </dl>
     </div>
   );
@@ -22,7 +22,7 @@ function Party({ name, secret, publicValue, active }: { name: string; secret: st
 
 export default function DHFlowViz() {
   return (
-    <StepViz steps={STEPS}>
+    <StepViz steps={STEPS.map(({ label, body }) => ({ label, body: <span className="block min-h-[68px] sm:min-h-[45px]">{body}</span> }))}>
       {(step) => (
         <div className="w-full min-w-0 space-y-3">
           <div className="grid gap-3 md:grid-cols-[1fr_auto_1fr] md:items-center">
@@ -32,7 +32,7 @@ export default function DHFlowViz() {
           </div>
           <div className={`rounded-lg border p-4 text-center ${step >= 3 ? "border-emerald-500/50 bg-emerald-500/5" : "border-border/70 bg-card"}`}>
             <p className="font-mono text-sm font-bold">Bᵃ = 19⁶ = 2 = 8¹⁵ = Aᵇ (mod 23)</p>
-            <p className="mt-2 text-xs leading-5 text-muted-foreground">{step === 4 ? "Z=2는 바로 cipher key가 아니라 authenticated transcript를 포함한 KDF 입력입니다." : "같은 값은 계산했지만 아직 peer identity와 key purpose는 정해지지 않았습니다."}</p>
+            <p className="mt-2 min-h-[68px] text-xs leading-5 text-muted-foreground sm:min-h-[45px]">{step === 4 ? "공유값 2는 인증한 대화 기록과 함께 KDF에 넣을 재료입니다. 작은 2 자체에는 실제 보안이 없습니다." : "양쪽 결과는 같지만 상대의 신원과 열쇠의 용도는 아직 확인하지 않았습니다."}</p>
           </div>
         </div>
       )}

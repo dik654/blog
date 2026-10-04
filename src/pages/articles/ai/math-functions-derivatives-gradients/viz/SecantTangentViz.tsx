@@ -2,45 +2,38 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-const SCENES = ["두 점", "h=1", "h=0.25", "접선"] as const;
-const rows = [
-  { h: "2", slope: "8", x2: 286, y2: 44, line: "M114 194 L286 44" },
-  { h: "1", slope: "7", x2: 228, y2: 101, line: "M114 194 L228 101" },
-  { h: "0.25", slope: "6.25", x2: 176, y2: 154, line: "M114 194 L176 154" },
-  { h: "→0", slope: "6", x2: 144, y2: 175, line: "M66 224 L250 108" },
-] as const;
+const SCENES = ["h=1", "h=0.1", "h=0.01", "접선"] as const;
+const STEPS = [1, 0.1, 0.01, 0] as const;
+const sx = (x: number) => 36 + 52 * x;
+const sy = (y: number) => 212 - 6 * y;
+const curve = Array.from({length: 109}, (_,i) => { const x=i/20; return `${i===0?"M":"L"}${sx(x)} ${sy(x*x)}`; }).join(" ");
 
 export default function SecantTangentViz() {
   const scenes = useAnimatedScenes(SCENES.length);
-  const row = rows[scenes.active];
+  const h = STEPS[scenes.active];
+  const slope = 6+h;
+  const tangent = h === 0;
+  const line = `M${sx(1.8)} ${sy(9+slope*(1.8-3))} L${sx(5.2)} ${sy(9+slope*(5.2-3))}`;
   return (
-    <VizFrame
-      eyebrow="Animated local change"
-      title="두 점의 평균 기울기에서 간격 h를 줄이면 한 점의 local slope가 드러난다"
-      description="고정한 x=3과 움직이는 x+h를 잇는 선이 접선으로 가까워지는 과정을 봅니다."
-      note="그림은 f(x)=x²의 좌표를 설명용으로 투영했습니다. 기울기 수치는 exact difference quotient 6+h를 사용합니다."
-    >
+    <VizFrame eyebrow="간격과 변화율" title="두 점을 잇는 선이 한 점의 접선에 가까워집니다" description="제곱 함수의 실제 좌표 (3,9)를 고정하고 옆 점을 움직입니다. 입력 간격은 가정 사례의 1, 0.1, 0.01입니다." note="가로축은 x, 세로축은 x²입니다. 두 축의 화면 배율은 다르므로 화면에서 보이는 각도로 수학적 기울기를 읽지 않습니다.">
       <div data-viz-canvas tabIndex={0} role="group" aria-label="할선에서 접선으로 가는 미분 애니메이션" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
-        <div className="grid gap-5 md:grid-cols-[1.4fr_0.6fr] md:items-center">
-          <svg viewBox="0 0 360 250" className="h-auto w-full" aria-label="x 제곱 곡선과 움직이는 할선">
-            <path d="M42 220H334M58 232V22" fill="none" stroke="currentColor" strokeWidth="1" opacity=".35" />
-            <path d="M76 226 C104 210 130 184 158 151 C188 116 222 76 302 26" fill="none" stroke="currentColor" strokeWidth="1.25" />
-            <path d={row.line} fill="none" stroke="hsl(var(--primary))" strokeWidth="1.25" className="transition-all duration-700" />
-            <circle cx="114" cy="194" r="5" fill="hsl(var(--background))" stroke="hsl(var(--primary))" strokeWidth="1.25" />
-            <circle cx={row.x2} cy={row.y2} r="5" fill="hsl(var(--primary))" className="transition-all duration-700" />
-            <text x="101" y="215" fontSize="11" fill="currentColor">x=3</text>
-            <text x={Math.min(row.x2 + 8, 310)} y={Math.max(row.y2 - 8, 18)} fontSize="11" fill="currentColor">x+h</text>
-          </svg>
-          <div className="space-y-4">
-            <Metric label="입력 간격" value={`h = ${row.h}`} active />
-            <Metric label="평균 기울기" value={`6 + h = ${row.slope}`} active={scenes.active >= 1} />
-            <Metric label="local slope" value="f′(3) = 6" active={scenes.active === 3} />
-          </div>
+        <svg viewBox="0 0 360 250" className="mx-auto h-auto w-full max-w-[430px]" role="img" aria-label="실제 좌표로 그린 x 제곱 곡선과 할선 또는 접선">
+          <path d="M36 22V212H336" fill="none" stroke="currentColor" strokeWidth="1" opacity=".4" />
+          {[1,2,3,4,5].map(x=><text key={x} x={sx(x)} y="229" textAnchor="middle" fontSize="11" fill="currentColor">{x}</text>)}
+          {[0,10,20,30].map(y=><text key={y} x="28" y={sy(y)+4} textAnchor="end" fontSize="11" fill="currentColor">{y}</text>)}
+          <text x="340" y="216" fontSize="11" fill="currentColor">x</text><text x="30" y="18" fontSize="11" fill="currentColor">x²</text>
+          <path d={curve} fill="none" stroke="currentColor" strokeWidth="1.25" opacity=".45" />
+          <path d={line} fill="none" stroke="var(--primary)" strokeWidth="1.25" />
+          <circle cx={sx(3)} cy={sy(9)} r="4" fill="var(--background)" stroke="var(--primary)" strokeWidth="1.25" />
+          {!tangent && <circle cx={sx(3+h)} cy={sy((3+h)**2)} r="3" fill="var(--primary)" />}
+          <text x={sx(3)-14} y={sy(9)+19} fontSize="11" textAnchor="middle" fill="currentColor">(3,9)</text>
+        </svg>
+        <div className="flex h-32 flex-col justify-center gap-2 border-t border-border py-4" aria-live="polite">
+          <p className="font-mono text-lg font-bold">{tangent ? "f′(3)=6" : `h=${h} → 차분몫 ${slope}`}</p>
+          <p className="text-sm leading-6">{tangent ? "간격을 0으로 나누지 않습니다. 극한으로 얻은 기울기 6의 접선 y=6x−9를 그렸습니다." : `옆 점은 (${3+h}, ${((3+h)**2).toFixed(h===1?0:h===0.1?2:4)})입니다. 두 출력의 차이를 ${h}로 나눕니다.`}</p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>
   );
 }
-
-function Metric({ label, value, active }: { label: string; value: string; active: boolean }) { return <div className={`border-l pl-4 transition-opacity ${active ? "border-primary opacity-100" : "border-border opacity-40"}`}><p className="text-xs font-bold text-muted-foreground">{label}</p><p className="mt-1 font-mono text-lg font-black">{value}</p></div>; }
