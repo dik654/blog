@@ -4960,49 +4960,55 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "vllm-spec-decode": {
-    title: "Speculative decoding 정본 글이 소유하는 범위",
-    owns: [
-      "Draft·target verification·acceptance·KV/state commit으로 이어지는 speculative cycle",
-      "Rejection sampling의 target-distribution 보존 조건과 첫 거부 이후 suffix causality",
-      "Acceptance length·committed length·target weight-read amortization의 측정 정의",
-      "Draft model·EAGLE·native MTP·N-gram proposer와 production serving 손익분기점",
-      "Speculation length K·acceptance rate α·cost coefficient c로 닫히는 기대 확정 길이와 speculative speedup 모델, 그리고 memory-bound 가정이 깨져 항상 빨라지지 않는 조건",
-      "Verification pass가 K+1 분포를 한 forward로 내는 단계와 rejection point에서 residual resample·suffix 폐기·bonus로 이어지는 절차",
-],
-    reuses: [
-      { label: "Autoregressive decoding", href: "/cs/ai/seq2seq#decoder" },
-      {
-        label: "확률분포·조건부확률",
-        href: "/cs/ai/math-probability-expectation-variance",
-      },
-      { label: "기댓값", href: "/cs/ai/math-random-variables-expectation" },
-      {
-        label: "KV cache와 serving capacity",
-        href: "/cs/ai/llm-serving-capacity#capacity",
-      },
-      {
-        label: "GLM-5.2·B300의 MTP 적용과 프로젝트 실측",
-        href: "/cs/ai/sionic-glm-b300#mtp",
-      },
+    "title": "추측 디코딩의 확률·출력·기록·시간 계약",
+    "owns": [
+      "동일 네 후보의 제안·확인·첫 거부·부족분 교체와 출력 확정",
+      "실제 normalized p·q의 분포 보존과 suffix가 가정한 조건의 변경",
+      "수락 후보·검증 출력·종료 처리 뒤 길이 및 계산된 KV의 구별",
+      "원문 kernel의 index·비교 연산·교체 표집과 scheduler 롤백",
+      "tail 합·iid 경계·전체 시간 및 원 논문의 단순 비용 모형과 실제 동적 설정표",
+      "EAGLE과 native MTP의 제안 역할 및 모델별 구조·검증의 경계"
     ],
-    evidence: [
+    "reuses": [
       {
-        kind: "primary-source",
-        rule: "분포 보존·EAGLE feature proposal·tree verification claim은 각 원 논문의 algorithm·model·workload 조건으로 제한한다.",
+        "label": "Autoregressive decoding",
+        "href": "/cs/ai/seq2seq#decoder"
       },
       {
-        kind: "standard",
-        rule: "vLLM의 지원 방식과 dynamic policy는 문서 version·target/draft artifact·sampler·K·runtime trace를 함께 고정한다.",
+        "label": "확률분포·조건부확률",
+        "href": "/cs/ai/math-probability-expectation-variance"
       },
       {
-        kind: "project-measurement",
-        rule: "GLM/B300 acceptance·throughput·kernel 수치는 적용 사례 글이 소유하며 일반 이론의 보편적 speedup으로 확대하지 않는다.",
+        "label": "기댓값",
+        "href": "/cs/ai/math-random-variables-expectation"
       },
       {
-        kind: "primary-source",
-        rule: "Speedup 식과 표의 수치는 Leviathan et al.의 i.i.d. α·cost coefficient c 가정 아래 이론값이며, 저자 보고 speedup은 논문의 model·hardware·batch 조건으로 제한하고 실측 speedup으로 승격하지 않는다.",
+        "label": "KV cache와 serving capacity",
+        "href": "/cs/ai/llm-serving-capacity#capacity"
       },
-],
+      {
+        "label": "GLM-5.2·B300의 MTP 적용과 프로젝트 실측",
+        "href": "/cs/ai/sionic-glm-b300#mtp"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "vLLM v0.27.1 commit 6e448d0의 전체 파일과 LICENSE를 고정하고 포인터·분기·index·동적 설정표를 직접 읽는다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "Leviathan·Chen의 분포 보존과 비용식, EAGLE·MTP·SpecInfer의 구조는 각 논문 버전과 전제·평가 조건으로 한정한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "두 token의 확률·수락 2/출력 3·KV6·가정시간은 교육용 수치다. 원문 AST의 CPU 포인터 대역과 dynamic utils Python3.12 실행은 GPU 엔진 또는 처리량 측정이 아니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "GLM·B300 적용 사례와 논문 자체 보고 성능은 해당 장치·model·sampler·batch 조건의 결과로 읽으며 보편 speedup으로 확대하지 않는다."
+      }
+    ]
   },
   "distributed-systems": {
     title: "분산 시스템 기초 글이 소유하는 범위",
@@ -6720,23 +6726,46 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "elliptic-curves": {
-    title: "타원곡선군·BN254 구현 글이 소유하는 범위",
-    owns: [
-      "Nonsingular finite-field curve point group과 scalar multiplication",
-      "Canonical decode·on-curve·identity·prime-subgroup validation",
-      "Affine/Jacobian equivalence와 inversion 비용 trade-off",
-      "BN254 G1·G2 twist·GT pairing boundary와 implementation release gate",
+    "title": "같은 타원곡선 점의 계산·표현·입력 조건",
+    "owns": [
+      "F₁₇의 P=(5,1)부터 7P=(0,6)까지 같은 점의 덧셈",
+      "Jacobian 표현과 고정 원본 두 배·정규화의 실제 중간값",
+      "곡선·부분군·항등원·검사 생략 API의 차이",
+      "BN254 G1·G2·결과 군과 2·3의 페어링 관계",
+      "SEC 1·Ark·EIP-196/197의 서로 다른 입력 계약"
     ],
-    reuses: [
-      { label: "Prime-field inverse와 extension-field quotient", href: "/cs/crypto/finite-field-theory" },
-      { label: "DLP·generic square-root attack", href: "/cs/crypto/discrete-log" },
-      { label: "Miller loop·final exponentiation", href: "/cs/crypto/pairing" },
+    "reuses": [
+      {
+        "label": "유한체의 역원과 나머지",
+        "href": "/cs/crypto/finite-field-theory"
+      },
+      {
+        "label": "반복 주기와 이산로그",
+        "href": "/cs/crypto/discrete-log"
+      },
+      {
+        "label": "확장체의 계수",
+        "href": "/cs/crypto/extension-fields"
+      },
+      {
+        "label": "Miller와 최종 지수화",
+        "href": "/cs/crypto/pairing"
+      }
     ],
-    evidence: [
-      { kind: "standard", rule: "Point encoding·validation은 SEC 1 또는 EIP-196/197의 구체 curve·fork·input contract에 귀속한다." },
-      { kind: "project-measurement", rule: "Coordinate/window 최적화는 malformed point·subgroup·official vector·independent parity·constant-time gate 뒤 비교한다." },
-      { kind: "project-claim", rule: "Pairing equation 성공을 proof statement provenance·trusted setup·application authorization 전체로 확대하지 않는다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "SEC 1 및 EIP-196/197의 구체 입력 규칙을 읽습니다. 짧은 입력이 항상 실패한다는 공통 규칙을 만들지 않습니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "algebra commit 7ad88c46의 ec·ff 0.5.0과 bn254 0.5.0-alpha.0을 같은 lock으로 실행합니다. 작은 곡선과 BN254의 서로 다른 경로를 명시합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "작은 곡선 361쌍·20스칼라를 독립 정수 산술과 대조했고 G2 반례와 두 전체 페어링 관계를 실제 실행했습니다. EIP-196은 자체 입력 모형이며 실제 EVM·EIP-197 파서·독립 페어링 구현·상수 시간·성능은 검증하지 않았습니다."
+      }
+    ]
   },
   "field-arithmetic": {
     title: "유한체 산술 구현 글이 소유하는 범위",
@@ -9573,58 +9602,115 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "math-probability-expectation-variance": {
-    title: "Probability experiment·event·conditioning 글이 소유하는 범위",
-    owns: [
-      "Experiment·sample space·outcome·probability distribution의 서로 다른 역할",
-      "Event를 outcome 부분집합으로 만들고 mass를 합산하는 계산",
-      "Conditional probability의 재정규화와 probability chain rule",
-      "Independence와 mutually exclusive의 구분 및 zero-mass condition 경계",
+    "title": "Probability experiment·event·conditioning 글이 소유하는 범위",
+    "owns": [
+      "두 던짐의 같은 네 기록에서 절차·표본공간·사건·확률법칙의 역할",
+      "조건 안의 비중 재계산과 같은 HT 경로의 연쇄법칙 복원",
+      "독립·배타·쌍별 독립·조건을 붙인 뒤 관계의 경계",
+      "실제 MIT 강의 식과 동일 확률·양수 분모 조건의 직접 대입"
     ],
-    reuses: [
-      { label: "Random variable·expectation", href: "/cs/ai/math-random-variables-expectation" },
-      { label: "Variance·sampling", href: "/cs/ai/math-variance-sampling" },
-      { label: "Logarithm과 likelihood", href: "/cs/ai/math-exponents-logarithms" },
+    "reuses": [
+      {
+        "label": "Random variable·expectation",
+        "href": "/cs/ai/math-random-variables-expectation"
+      },
+      {
+        "label": "Variance·sampling",
+        "href": "/cs/ai/math-variance-sampling"
+      },
+      {
+        "label": "Logarithm과 likelihood",
+        "href": "/cs/ai/math-exponents-logarithms"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "Probability model·conditioning·independence claim은 MIT 6.041SC의 stated sample space와 positive conditioning-mass 조건에 귀속한다." },
-      { kind: "standard", rule: "Equally likely·independent·causal 관계를 관측이나 문제 선언 없이 자동 가정하지 않는다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "MIT 6.041SC의 실제 PDF 쪽과 식에 같은 네 기록을 대입하며 ≠0 기호를 원문 이미지와 대조한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "동일 확률·독립을 명시된 가정으로 두고 빈 사건·확률 0·연속 모형의 경계를 구별한다."
+      }
+    ]
   },
   "math-random-variables-expectation": {
-    title: "Random variable·expectation 글이 소유하는 범위",
-    owns: [
-      "Outcome을 scalar value로 보내는 deterministic random-variable mapping",
-      "같은 value로 간 outcome mass를 합치는 induced distribution",
-      "Expectation의 probability-weighted center와 unit",
-      "Expectation linearity와 nonlinear transform 교환 실패 경계",
+    "title": "Random variable·expectation 글이 소유하는 범위",
+    "owns": [
+      "같은 네 동전 기록에서 숫자를 만드는 함수와 값별 확률 모으기",
+      "기댓값의 값×확률 계산·단위 및 최빈값·실현값과의 차이",
+      "종속 변수의 선형성 증명과 실제 MIT 가중합 식의 직접 대입",
+      "곱·제곱의 교환 경계, 유한 평균의 존재와 반복 방식 조건"
     ],
-    reuses: [
-      { label: "Sample space·probability event", href: "/cs/ai/math-probability-expectation-variance" },
-      { label: "Variance·sample estimator", href: "/cs/ai/math-variance-sampling" },
-      { label: "Function mapping", href: "/cs/ai/math-functions-composition" },
+    "reuses": [
+      {
+        "label": "Sample space·probability event",
+        "href": "/cs/ai/math-probability-expectation-variance"
+      },
+      {
+        "label": "Variance·sample estimator",
+        "href": "/cs/ai/math-variance-sampling"
+      },
+      {
+        "label": "Function mapping",
+        "href": "/cs/ai/math-functions-composition"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "Random-variable mapping·PMF·expectation claim은 MIT 6.041SC의 discrete model과 integrability 범위에 귀속한다." },
-      { kind: "standard", rule: "Expectation을 next observation·mode·반드시 가능한 outcome value와 동일시하지 않는다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "MIT 5·7강 실제 PDF의 함수·PMF·기댓값 식에 같은 네 기록과 X,Y를 대입한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "선형성의 고정 상수·적분 가능성, 제곱의 등호 조건, 독립의 충분조건과 그 역을 구별한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "기댓값을 최빈값이나 다음 관측값으로 읽지 않고 장기 평균에는 반복 방식 조건을 명시한다."
+      }
+    ]
   },
   "math-variance-sampling": {
-    title: "Variance·sample estimator·mini-batch 글이 소유하는 범위",
-    owns: [
-      "Variance와 standard deviation의 square-unit·original-unit 구분",
-      "Sample mean과 n−1 sample-variance estimator의 서로 다른 target",
-      "Large-number concentration과 independence·moment 조건",
-      "Mini-batch stochastic-gradient estimator의 unbiasedness·variance·sampling boundary",
+    "title": "Variance·sample estimator·mini-batch 글이 소유하는 범위",
+    "owns": [
+      "같은 네 기록의 분산·표준편차와 원래 단위",
+      "관측값 기술과 n−1 분산 추정의 목표 및 불편성 유도",
+      "평균 분산·체비쇼프 상한·유한 분산 큰 수의 법칙과 정확 확률 비교",
+      "같은 θ의 기울기 추정, 복사·비복원·중요도 보정과 손실 증가 반례"
     ],
-    reuses: [
-      { label: "Random variable·expectation linearity", href: "/cs/ai/math-random-variables-expectation" },
-      { label: "Gradient vector", href: "/cs/ai/math-gradients-jacobians" },
-      { label: "Optimizer update", href: "/cs/ai/optimizers" },
+    "reuses": [
+      {
+        "label": "Random variable·expectation linearity",
+        "href": "/cs/ai/math-random-variables-expectation"
+      },
+      {
+        "label": "Gradient vector",
+        "href": "/cs/ai/math-gradients-jacobians"
+      },
+      {
+        "label": "Optimizer update",
+        "href": "/cs/ai/optimizers"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "Variance·LLN claim은 MIT 6.041SC의 independence·finite-moment 조건에, stochastic approximation claim은 Robbins–Monro 원문의 범위에 귀속한다." },
-      { kind: "standard", rule: "Unbiasedness·variance 감소·finite-step descent·nonconvex global convergence를 서로 다른 보장으로 기록한다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "MIT 19강 PDF의 Mₙ 부등식에 같은 분산 1/2과 허용 폭 1/2을 넣고 직접 계산한 확률 5/8과 구별합니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "NumPy 2.0의 ddof와 PyTorch 2.14의 correction 기본 분모를 같은 관측 [1,2,3]에 수동 대입합니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "Robbins–Monro의 1951년 식 (7)과 (50) 대입을 전역 유계 정리 2의 적용과 분리합니다."
+      },
+      {
+        "kind": "standard",
+        "rule": "불편성, 분산 감소, 매번의 손실 감소, 장기 수렴을 서로 다른 보장으로 계산합니다."
+      }
+    ]
   },
   optimizers: {
     title: "SGD와 effective-batch 글이 소유하는 범위",
@@ -12309,63 +12395,74 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "central-bank-and-policy-transmission": {
-    title: "중앙은행은 하나의 가격을 고정합니다 글이 소유하는 범위",
-    owns: [
-      "중앙은행 대차대조표의 네 칸과 그 부채가 결제 수단이 되는 지위",
-      "정책금리가 명령이 아니라 목표라는 구분과 공표값·실현값의 차이",
-      "준비금 부리와 대출창구로 만드는 상하한 구간의 성립 조건과 새는 조건",
-      "공개시장운영으로 목표에 붙이는 일상 운영 절차",
-      "만기별 금리를 기대 평균과 기간 프리미엄으로 분해하는 관계와 그 해석의 한계",
-      "파급경로의 종류와 경로별 전제·시차",
-      "양적완화가 겨냥하는 두 항과 수량으로 읽으면 안 되는 경계",
+    "title": "같은 지급 부족에서 거래 조건·미래 예상·실물 선택으로 이어지는 통화정책",
+    "owns": [
+      "6억 원의 부족과 은행 간·중앙은행 대출의 전체 준비금 차이",
+      "정책 목표·관리금리·시장금리와 접근·비용에 따른 회랑의 경계",
+      "공개시장운영의 공급·흡수·만기 및 한국 2025년 개편",
+      "같은 인상 뒤 3년 기대 경로·기간 프리미엄·복리와 차환 위험",
+      "공장의 10억 원 대출·설비·수주·원가에 닿는 조건부 파급",
+      "은행/비은행 QE 장부와 목적 및 국가별 운영 틀의 차이"
     ],
-    reuses: [
+    "reuses": [
       {
-        label: "은행 장부와 예금 창조의 제약",
-        href: "/finance/banking/bank-balance-sheet-and-deposit-creation#limits",
+        "label": "은행의 자산·부채와 예금 창조",
+        "href": "/finance/banking/bank-balance-sheet-and-deposit-creation"
       },
       {
-        label: "미래 현금흐름을 오늘 값으로 되돌리는 계산",
-        href: "/finance/money/time-value-and-discounting#discounting",
-      },
+        "label": "미래 현금흐름의 현재가치",
+        "href": "/finance/money/time-value-and-discounting"
+      }
     ],
-    evidence: [
+    "evidence": [
       {
-        kind: "primary-source",
-        rule: "운영 방식은 한국은행이 공개한 제도 설명에만 귀속하고, 특정 시점의 정책금리·조절 규모나 파급 크기의 추정치는 본문에 사실로 싣지 않는다",
+        "kind": "primary-source",
+        "rule": "BOK2026·Fed2025·BoE2024 실제 운영과 그림을 확인하고 발표 시점·대상·모형 추정 범위를 구별합니다."
       },
-    ],
+      {
+        "kind": "standard",
+        "rule": "상대방별 자산·부채와 기간·단위를 맞추며 확정 복리와 불확실한 차환의 기대값을 구별합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "6억·4%·5%·기대 경로는 작성한 가정이며 중앙은행 내부 코드·시장 실측·예측을 주장하지 않습니다."
+      }
+    ]
   },
   "payment-clearing-settlement": {
-    title: "송금은 통장 숫자가 바뀐 뒤에도 아직 끝나지 않았을 수 있습니다 글이 소유하는 범위",
-    owns: [
-      "지급·청산·결제 세 층의 분리와 층마다 다른 완료의 의미",
-      "총액 결제와 차액 결제의 자금·위험 맞바꿈",
-      "상계 효율의 정의와 효율이 높을수록 익스포저가 커지는 관계",
-      "대기열 상쇄 조합을 동시에 처리하는 혼합 설계의 성립 조건",
-      "결제 최종성이 속도가 아니라 규칙과 법에서 나온다는 근거",
-      "통화가 다를 때 생기는 시차 결제 위험과 동시결제가 지우는 범위",
+    "title": "같은 여섯 지시의 금액·유동성·최종성·외환 연결",
+    "owns": [
+      "동일 여섯 건260·순포지션−10/0/+10·지시와 의무 이행의 구별",
+      "받은 돈의 재사용과 순서별 최초 자금120/100·무신용 하한 증명",
+      "원자적 묶음 후보10과 실제 운영 조건 및 설명용 알고리즘의 경계",
+      "상계 지급량250과 신용노출·부도 재계산 유동성의 차이",
+      "PFMI와 FedNow2026 실제 최종성·반환 절차 및 한국 법적 범위",
+      "두 통화 원금 위험과 PvP·CLS 적용 조건"
     ],
-    reuses: [
+    "reuses": [
       {
-        label: "중앙은행 계정이 기관 간 결제 수단이 되는 구조",
-        href: "/finance/banking/central-bank-and-policy-transmission#cb-balance-sheet",
+        "label": "은행의 자산·부채와 예금",
+        "href": "/finance/banking/bank-balance-sheet-and-deposit-creation"
       },
       {
-        label: "은행 장부에서 예금 잔액이 움직이는 자리",
-        href: "/finance/banking/bank-balance-sheet-and-deposit-creation#balance-sheet",
-      },
-      {
-        label: "작업증명의 확률적 최종성",
-        href: "/cs/blockchain/consensus-mechanisms#pow",
-      },
+        "label": "중앙은행 계정과 거래 조건",
+        "href": "/finance/banking/central-bank-and-policy-transmission"
+      }
     ],
-    evidence: [
+    "evidence": [
       {
-        kind: "primary-source",
-        rule: "제도 서술은 국제 기준 문서와 한국은행 공개 자료에만 귀속하고, 특정 시점의 결제 규모·참가기관 수는 본문에 사실로 싣지 않는다",
+        "kind": "primary-source",
+        "rule": "PFMI 실제PDF·BOK 공식본문·FedNow2026 시행규칙을 직접 읽고 적용 범위를 구분합니다."
       },
-    ],
+      {
+        "kind": "project-measurement",
+        "rule": "720순열·잔액·묶음 계산은 작성한 가정 모형입니다. 실제 결제 엔진이나 운영 안전성·처리량 측정이 아닙니다."
+      },
+      {
+        "kind": "standard",
+        "rule": "같은 지시·통화·단위·최종 의무와 부도 처리규칙을 맞추며 법적 최종성과 프로토콜 조건을 혼동하지 않습니다."
+      }
+    ]
   },
   "bond-pricing-and-yield-curve": {
     title: "채권 가격과 수익률은 같은 정보의 두 표현입니다 글이 소유하는 범위",
@@ -14925,6 +15022,48 @@ export const EDITORIAL_BOUNDARIES = {
       {
         "kind": "project-measurement",
         "rule": "실제 Rust 실행은 자체 F₃/β2 설정의 81개 곱·여덟 역원·아홉 Frobenius와 잘못된 구성입니다. F₈₁ 산술과 기저는 별도 Python 정수 계산이며 큰 곡선의 실행 시간·부채널 검증과 구분합니다."
+      }
+    ]
+  },
+  "pairing": {
+    "title": "작은 Tate 반복과 실제 BN 페어링의 값·조건",
+    "owns": [
+      "F₁₉의 P=(5,4), Q=(14,4u)로101 반복과 선의 비를 직접 계산",
+      "divisor 불변식과 함수 정규화 및 중간 영점·극점 경계",
+      "72승과 마지막 9의 소거, 출력 재적용의 비멱등성",
+      "고정 BN의6z+2 반복·D형034·63회 제곱/87개 선 경로",
+      "실제 cE 정규화와 두 페어링 곱 및 타입·항등원 정책"
+    ],
+    "reuses": [
+      {
+        "label": "같은 곡선 점을 더하기",
+        "href": "/cs/crypto/elliptic-curves"
+      },
+      {
+        "label": "확장체의 두 계수",
+        "href": "/cs/crypto/extension-field-theory"
+      },
+      {
+        "label": "Frobenius와 일반 끝 지수",
+        "href": "/cs/crypto/frobenius"
+      },
+      {
+        "label": "희소 선 곱의 계수 위치",
+        "href": "/cs/crypto/sparse-multiplication"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Miller 1986 공개PDF의 실제 제목과Lynn 2007 Algorithm3·영점/극점·powered pairings를 읽어 자체 F₁₉ 예에 적용합니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "algebra 7ad88c46의 BN·준비 계수·결과 타입을 읽습니다. 실제 cH를 일반 H와 같다고 단정하지 않습니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "정수 작은예16쌍과360개 원소를 전수검산하고 고정Rust --locked에서 같은 계수의 밀집 곱·cE·두 쌍의 곱·0/항등원을 실행했습니다. 원문 CPU 실행과 독립적인 선 생성·EVM·성능·상수 시간 검증을 구분합니다."
       }
     ]
   },

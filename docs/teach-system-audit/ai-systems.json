@@ -7519,14 +7519,25 @@
       "route": "ai/speculative-decoding-variants",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants.tsx",
       "publicPath": "cs/ai/speculative-decoding-variants",
-      "status": "unreviewed",
+      "status": "reviewed-rewrite-required",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
+      "beforeDefects": [
+        "작은 사례 전에 draft·verify·tree·MTP·suffix 등 여러 용어가 먼저 나옴",
+        "층 수의 비율 E/L·1/L을 실제 시간 c로 등치하고 별도 메모리0·verify0.75를 보편적으로 단정",
+        "MTP 이득 경계 v<1+α−c와 어긋나는 ridge의 절반에서 즉시 꺼야 한다는 결론 및 α>1.03 수치 오류",
+        "6개 후보의 ancestor+self mask는10인데 본문12로 쓰고 도식은10으로 표기",
+        "일반 tree 검증에 마지막 확정 root의 입력·한 칸 다음 점수와 선택 경로 KV gather를 생략",
+        "bonus를 포함한 확정 path 전체 KV commit 및 block table만 정리하면 된다는 단정",
+        "조건부 생존 확률의 곱에 불필요한 독립 가정과 tree 시간이 반드시 특정 비례라는 주장",
+        "suffix 조회·삽입·전송 비용을 빼고 cache miss이면 속도비가1보다 작아지지 않는다고 단정",
+        "SuffixDecoding 최신 v3(2025-10-07)의 EAGLE2/3 결과를2024논문으로 묶음",
+        "원문 파일·실제 함수 적용 없이 의사코드만 제시하며 번호 절과 예측 답 절 부재"
+      ],
       "fixture": null,
       "stageAnchors": {},
       "sourceEvidence": [],
@@ -7538,7 +7549,12 @@
       },
       "remaining": [
         "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      ],
+      "reviewEvidence": {
+        "read": "전체 본문 1~384행과 Viz 전체를 실제 읽고 기존 정확한 tree node 합·계산 사례·논문·링크를 보존할 항목으로 분류했습니다.",
+        "nextAction": "같은6후보·ancestor mask·greedy 경로·KV 위치를 고정한 작성 전6+4와 실제 source 검증을 준비합니다.",
+        "sourceCheck": "공식 arXiv abs에서 SuffixDecoding v3, LayerSkip v4, DeepSeek-V3 v2, Medusa의 버전·title을 확인했습니다. 원문 상세와 코드는 다음 연구 단계입니다."
+      }
     },
     {
       "route": "ai/tabular-data-synthesis",
@@ -8325,7 +8341,7 @@
       "route": "ai/vllm-spec-decode",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/vllm-spec-decode.tsx",
       "publicPath": "cs/ai/vllm-spec-decode",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -8342,19 +8358,176 @@
         "EAGLE feature uncertainty와 검증 한 forward의 입력/KV 상태를 실제 원문으로 검증해야 함",
         "예측 질문·절 번호·실제 코드 단계 anchor가 없음"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "targetProbabilities": [
+          "7/10",
+          "3/10"
+        ],
+        "draftProbabilities": [
+          "4/10",
+          "6/10"
+        ],
+        "proposal": [
+          "A",
+          "B",
+          "B",
+          "A"
+        ],
+        "uniform": [
+          ".6",
+          ".4",
+          ".8",
+          ".2"
+        ],
+        "K": 4,
+        "output": [
+          "A",
+          "B",
+          "A"
+        ],
+        "acceptedDraft": 2,
+        "committedBeforeStop": 3,
+        "historyBefore": 4,
+        "computedBefore": 3,
+        "computedAfterVerify": 8,
+        "historyAfter": 7,
+        "computedAfterAccept": 6,
+        "conditions": "설명용 일반 causal 모델, normalized 같은 vocabulary, standard rejection, full stochastic q가 제공되는 경로, EOS/최대길이 없음. 첫 세 분포만 위 값이고 네 번째 이후는 실제 prefix에 따라 달라짐. 성능 측정 아님."
+      },
+      "stageAnchors": {
+        "strategy": "overview",
+        "blackBox": "black-box",
+        "smallCase": "small-case",
+        "structure": "cycle-map",
+        "necessity": "why-components",
+        "names": "names",
+        "trace": "request-trace",
+        "realSource": [
+          "distribution-proof",
+          "source-accept",
+          "source-residual",
+          "acceptance-length",
+          "verification-pass",
+          "kv-commit"
+        ],
+        "depth": [
+          "acceptance-tail",
+          "cost-model",
+          "serving-break-even",
+          "speedup-model",
+          "weight-traffic",
+          "paper-measurements",
+          "paper-eagle",
+          "paper-mtp",
+          "dynamic-policy"
+        ],
+        "limits": "boundary",
+        "prediction": "prediction-questions"
+      },
+      "sourceEvidence": {
+        "project": "vllm-project/vllm",
+        "release": "v0.27.1",
+        "commit": "6e448d0ea9bf3d88d898b65449ca6dc2aec170ac",
+        "scope": "Whole unmodified source files, including original license comments. CPU pointer doubles are separate validation and are not these source files.",
+        "files": [
+          {
+            "path": "vllm/v1/sample/rejection_sampler.py",
+            "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/sample/rejection_sampler.py",
+            "sha256": "4bb87d7984d967be9c7e5b6a6b489c02571ef2f2913211cb3f1eea74b2e1f32f",
+            "bytes": 36276
+          },
+          {
+            "path": "vllm/v1/core/sched/scheduler.py",
+            "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py",
+            "sha256": "c67bda2886b52865ddafabaae7d797c359e930752f374421a33e537d94a5f45a",
+            "bytes": 137118
+          },
+          {
+            "path": "vllm/config/speculative.py",
+            "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/config/speculative.py",
+            "sha256": "83cbb26932b9ec0633753b58e8fe666f55c779580b32fba750cf569cde67c40c",
+            "bytes": 64455
+          },
+          {
+            "path": "vllm/v1/worker/gpu_model_runner.py",
+            "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/worker/gpu_model_runner.py",
+            "sha256": "993f2c926012241bcb8cc7f568c8e82968e4d81ca125641c831ecf501aac02ac",
+            "bytes": 351795
+          },
+          {
+            "path": "LICENSE",
+            "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/LICENSE",
+            "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+            "bytes": 11357
+          },
+          {
+            "path": "vllm/v1/spec_decode/dynamic/utils.py",
+            "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/spec_decode/dynamic/utils.py",
+            "sha256": "7179869a6d8e97634efe8bd3a9b07608c6393cfc50acdbc4cf11594872c087c1",
+            "bytes": 5676
+          }
+        ]
+      },
       "validation": {
-        "semanticReview": "기존 공개 렌더와 Overview/DraftVerify/CostModel/EagleMtp·원문 패널·수락 Viz를 실제 읽음. 고정 원문과 같은 6+4 사례를 준비하는 중",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "가정 p=(.7,.3), q=(.4,.6)의 네 후보 ABBA에서 앞 두 후보 수락·셋째 거부·A 보충으로 ABA를 확정하는 하나의 경로를 실제 원문 확률 비교, residual, score index, valid KV 길이까지 추적했습니다. p=q 및 서로 겹치지 않는 지지집합의 작은 경계 사례를 용어 앞에 포함했습니다.",
+        "sourceVerification": "vLLM v0.27.1@6e448d0의 전체 코드 다섯 파일과 LICENSE의 원격 byte·SHA256을 대조했습니다. 11개 원문 패널을 두 폭에서 실제 열었습니다. 원본 random kernel AST를 CPU 포인터·Triton 연산 대역으로 실행하고, scheduler 직선 코드와 Python3.12의 dynamic lookup 원문을 실행했습니다. recovery kernel·Torch·GPU·전체 엔진 실행이나 성능 측정은 주장하지 않습니다.",
+        "originalPreservation": "기존 K1–8·α.6/.8/.9의 속도 표와 정확한 iid 식을 보존했습니다. 제안 분포와 기준 분포의 역할, 거부 뒤 잔여 분포, 실제 >= 비교, bonus와 EOS의 길이, valid KV와 history 차이, α>c의 존재 조건, 고정 검증 비용의 가정을 교정했습니다. 논문별 측정 조건과 pinned config의 기본값을 구별했습니다.",
+        "humanize": {
+          "roundTrip": true,
+          "paragraphs": 100,
+          "chars": 16417,
+          "gateExit": 1,
+          "finalEdits": 0,
+          "chunks": 5,
+          "chunkMaxChars": 3992,
+          "numbersMarkersPointersPreserved": true,
+          "manualReview": "처음 98문단에서 연결 쉼표 8개를 제거하고 실제 apply했습니다. 이후 경계 사례 두 문단과 수락 꼬리확률 표현을 보완한 최신 100문단을 extract→동일 재삽입 byte 비교→5묶음 prepare/gate→apply했습니다. 최종 교정0이며 theory가 전체 전문·의미 변경·숫자·마커를 읽고 main 및 다섯 묶음의 확률 튜플 각주 오탐을 독립 승인했습니다. 중첩 링크 세 문단은 실제 TSX로 별도 읽었습니다."
+        },
+        "humanizeProps": "최종 수식·제목·Viz·표·원문 패널의 실제 182문자열 10,790자를 AST로 추출하고 동일 재삽입을 확인했습니다. 3묶음 3928/3937/2921자 prepare/gate 및 전문 검토, 최신 input/final 동일. chains가 모든 문자열과 추가 버튼 5개·확정 글 표시를 독립 대조하고 네 경로에 승인했습니다. 남은 WARN은 (1,0)의 좌표를 각주로 보는 오탐입니다.",
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "codePanels3901440": 22,
+        "narrowText": 0,
+        "vizInternalScroll": "5장면×2폭의 PNG를 실제 읽고, 마지막 단계의 짧은 버튼·확정 글 배치를 확인했습니다. 내부 스크롤 끝에서 설명이 controls 위에 들어오고 단계 변경 시 스크롤이 처음으로 돌아옵니다. 통합 world의 frame delta0·button delta0·외부 overflow0, SVG bbox 오류0입니다.",
+        "firstFifth": "통합 후 이름을 붙이는6절 앞의 사례는 실제 본문 기준 390에서20.5857%, 1440에서20.5817%입니다.",
+        "learning": "병합 후24절·기초6+심화4·논문5/공식코드1 해설 strict exit0. 두 정리의 proofIdea/counterexample을 분포 복원 증명과 동일 수락률의 비용 반례로 보충했습니다. 공유 learning과 최종 제안 JSON의 전체 문자열이 일치합니다.",
+        "formula": "다섯 수식의 일반식을 annotatedFormula에도 표시하고 두 폭 DOM에서 확인했습니다. 전역1438개 strict PASS, 최종 통합 KaTeX 오류0.",
+        "prose": "최종 전역 strict 재검토0. 정확한 확률·가정·논문 측정 조건과 고정 소스 버전을 보존했습니다.",
+        "graphAndOwnership": "14개 definition/canonicalHref 및 ownership owns/evidence를 실제 본문과 대조해 교정했고 공유 등록과 최종 제안 문자열이 모두 일치합니다.",
+        "numeric": "theory와 chains의 독립 검산 및 원본 AST 실행으로 수락 질량(.4,.3)·보충(.3,0), 잘못된 재추출(.61,.39), 2.7731 평균·1.848733/.840333 시간 비, dependent2 vs iid1.75, KV8→6/history7, dynamic lookup [0,3,3,3,1,1,1,1]을 확인했습니다.",
+        "typescript": "최종 통합 actual app tsc -p tsconfig.app.json --noEmit exit0, /tmp/teach-all/spec18/tsc-merged-final.log. 소유 경로 git diff --check 통과. root 고정 snapshot 전체 build는 별도 pending.",
+        "keyboard": "두 폭에서 실제 focus 가능한 Viz 내부 group에 포커스해 ArrowRight로 수락, ArrowLeft로 제안 복귀를 확인했습니다. 처음 figure에 포커스한 검사 실패는 검사 대상 오류였으며 실제 group 재검사는 통과했습니다."
       },
       "remaining": [
-        "실제 고정 vLLM 원문과 논문 확인",
-        "같은 작은 p/q·K 사례와 6+4 고정",
-        "본문·Viz·원문 패널 재작성 및 humanize·390/1440·공유 등록"
+        "root 고정 snapshot 전역 build·배포 검증"
+      ],
+      "bodyFiles": [
+        "src/pages/articles/ai/vllm-spec-decode/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/vllm-spec-decode/ModernArticle.tsx",
+      "contentHash": "393ae63263845d687348074bf3adf27e363329feb92a409ced88e1e0853ca39d",
+      "evidenceFiles": [
+        "/tmp/teach-all/ai-systems-registration-18.json",
+        "/tmp/teach-all/spec18/plan-before-body.json",
+        "/tmp/teach-all/spec18-independent-theory.json",
+        "/tmp/teach-all/spec18-props-independent-chains.json",
+        "/tmp/teach-all/spec18/source-execution.json",
+        "/tmp/teach-all/spec18/dynamic-execution.json",
+        "/tmp/teach-all/spec18/source-byte-verification.json",
+        "/tmp/teach-all/spec18/shared-verification.json",
+        "/tmp/teach-all/spec18-integrated-learning-final.log",
+        "/tmp/teach-all/spec18/tsc-merged-final.log",
+        "/tmp/teach-all/spec18/formula-final.log",
+        "/tmp/teach-all/spec18/prose-final.log",
+        "/tmp/teach-all/spec18/viz-final.log",
+        "/tmp/teach-all/ai-systems-screens-18/panels.json",
+        "/tmp/teach-all/ai-systems-screens-18/scenes.json",
+        "/tmp/teach-all/ai-systems-screens-18/layout.json",
+        "/tmp/world-browser-audit/teach-ai-systems-spec18-merged-final-summary.json",
+        "/tmp/teach-all/humanize-ai-systems-18-final/independent-finalize.md",
+        "/tmp/teach-all/humanize-ai-systems-18-props-final/independent-finalize.md",
+        "/tmp/teach-all/spec18/keyboard.json"
       ]
     },
     {
@@ -8544,21 +8717,21 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 42,
-    "unreviewed": 142,
+    "rewritten-local-verified": 43,
+    "unreviewed": 141,
     "reviewed-rewrite-required": 2
   },
   "localValidationSummary": {
-    "rewritten": 42,
-    "remainingUnreviewed": 142,
+    "rewritten": 43,
+    "remainingUnreviewed": 141,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
-    "learningStrict": "/tmp/teach-all/ai-systems17-learning-final.log — prefix17 strict 통과",
-    "formulaStrict": "/tmp/teach-all/ai-systems-formula-17-draft.log — 1439개 strict 통과",
-    "typescript": "prefix17 등록 전 app tsc exit0. 최종공유수정후 prefix오류0·타팀확률초안1개 남음. root checkpoint150 고정snapshot build pending.",
-    "note": "담당186편 중42편을 실제본문·고정사례·원문적용·humanize·두폭화면으로 개선 검수했습니다. 나머지144편은 미완료이며142편미검토·2편재작성필요입니다. 자동screening은 검수판정이 아닙니다.",
+    "learningStrict": "/tmp/teach-all/spec18-integrated-learning-final.log — Spec18 strict 통과",
+    "formulaStrict": "/tmp/teach-all/spec18/formula-final.log — 1438개 strict 통과",
+    "typescript": "/tmp/teach-all/spec18/tsc-merged-final.log — 최종 통합 actual app tsc exit0. root 고정 snapshot build pending.",
+    "note": "담당186편 중43편을 실제 본문·고정 사례·원문 적용·humanize·두 폭 화면으로 개선 검수했습니다. 나머지143편은 미완료이며141편 미검토·2편 재작성 필요입니다. 자동 screening은 검수 판정이 아닙니다.",
     "reviewedRewriteRequired": 2,
-    "verifiedRewrites": 42
+    "verifiedRewrites": 43
   }
 }

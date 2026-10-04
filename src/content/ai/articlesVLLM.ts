@@ -829,54 +829,106 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "vllm-spec-decode",
-    title: "vLLM Speculative Decoding: Draft · Verify · Acceptance",
+    title: "추측 디코딩: 네 후보를 확인하고 세 출력을 확정하는 과정",
     subcategory: "ai-llm-serving",
     sections: [
-      {
-        id: "overview",
-        title: "Target 실행 한 번을 여러 token이 나눠 쓰는 원리",
-        subsections: [
-          { id: "acceptance-length", title: "Acceptance length의 정확한 정의" },
-        ],
-      },
-      {
-        id: "draft-verify",
-        title: "Target 분포를 보존하는 rejection sampling",
-        subsections: [
-          {
-            id: "paper-speculative-decoding",
-            title: "Speculative Decoding 원 논문의 핵심 아이디어",
-          },
-          { id: "verification-pass", title: "Verification pass: K+1 분포를 한 forward로" },
-          { id: "rejection-point", title: "Rejection point에서의 resample과 suffix 폐기" },
-        ],
-      },
-      {
-        id: "cost-model",
-        title: "α·K·c로 닫히는 speedup 모델",
-        subsections: [
-          { id: "speculation-length", title: "Speculation length K" },
-          { id: "acceptance-rate", title: "Acceptance rate α와 기대 확정 길이" },
-          { id: "speedup-model", title: "Speculative speedup 식과 표" },
-          { id: "not-always-faster", title: "항상 빨라지지 않는 조건" },
-        ],
-      },
-      {
-        id: "eagle-mtp",
-        title: "EAGLE·native MTP·Draft proposer 선택",
-        subsections: [
-          { id: "paper-eagle", title: "EAGLE 논문의 feature-level proposal" },
-          { id: "paper-mtp", title: "Multi-Token Prediction 원 논문의 핵심" },
-          { id: "native-mtp", title: "Native MTP의 serving 경계" },
-          {
-            id: "paper-specinfer",
-            title: "SpecInfer의 token-tree verification",
-          },
-          { id: "serving-break-even", title: "Production 손익분기점" },
-          { id: "dynamic-policy", title: "Dynamic speculation 정책" },
-        ],
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 후보 네 개를 한 번에 확인하고 세 개를 확정합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 제안과 확인과 기록 갱신이 한 바퀴를 이룹니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. A는 일곱 몫, B는 세 몫이어야 합니다"
+  },
+  {
+    "id": "cycle-map",
+    "title": "4. 같은 후보를 준비부터 확정까지 따라갑니다"
+  },
+  {
+    "id": "why-components",
+    "title": "5. 거부 뒤에는 고르는 규칙과 기록의 길이를 함께 바꿉니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 빠른 제안과 기준 모델에 이름을 붙입니다"
+  },
+  {
+    "id": "request-trace",
+    "title": "7. 셋째 B에서 멈추어 A·B·A를 확정합니다"
+  },
+  {
+    "id": "distribution-proof",
+    "title": "8. 두 선택 경로를 더하면 원래 확률로 돌아옵니다"
+  },
+  {
+    "id": "source-accept",
+    "title": "9. 실제 kernel은 같은 token의 두 확률을 읽습니다"
+  },
+  {
+    "id": "source-residual",
+    "title": "10. 부족분에 같은 배율을 곱해도 선택 비중은 같습니다"
+  },
+  {
+    "id": "acceptance-length",
+    "title": "11. 버퍼 길이와 확정 길이와 사용자 출력 길이를 나눕니다"
+  },
+  {
+    "id": "verification-pass",
+    "title": "12. 마지막 확정 입력과 네 후보가 다섯 점수를 만듭니다"
+  },
+  {
+    "id": "kv-commit",
+    "title": "13. 확정 글은 일곱 자리지만 계산된 기록은 여섯 자리입니다"
+  },
+  {
+    "id": "acceptance-tail",
+    "title": "14. 평균은 각 위치까지 모두 수락될 확률을 더합니다"
+  },
+  {
+    "id": "cost-model",
+    "title": "15. 독립·동일 확률 모형에서만 등비 합으로 줄입니다"
+  },
+  {
+    "id": "serving-break-even",
+    "title": "16. 확정 길이를 한 바퀴의 전체 시간과 비교합니다"
+  },
+  {
+    "id": "speedup-model",
+    "title": "17. 검증 비용을 1로 둔 원 논문의 식을 읽습니다"
+  },
+  {
+    "id": "weight-traffic",
+    "title": "18. 읽은 가중치를 나누는 장부는 실제 시간과 다릅니다"
+  },
+  {
+    "id": "paper-measurements",
+    "title": "19. 논문의 측정 조건을 가정한 숫자와 구분합니다"
+  },
+  {
+    "id": "paper-eagle",
+    "title": "20. 다음 token이 바뀌면 그 뒤 feature도 달라집니다"
+  },
+  {
+    "id": "paper-mtp",
+    "title": "21. 여러 미래를 학습한 head도 검증을 거칩니다"
+  },
+  {
+    "id": "dynamic-policy",
+    "title": "22. 고정 구현은 현재 batch 크기로 설정표를 조회합니다"
+  },
+  {
+    "id": "boundary",
+    "title": "23. 정확성의 전제와 실행한 검사의 범위를 확인합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "24. 같은 후보에서 다음 결과를 예상해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/vllm-spec-decode"),
   },
   {

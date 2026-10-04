@@ -697,25 +697,170 @@ export const zkpMathArticles: Article[] = [
   },
   {
     slug: "elliptic-curves",
-    title: "타원곡선군 구현: point·subgroup·BN254",
+    title: "타원곡선: 같은 점을 더하고 표현하고 검사하기",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "Finite-field point group" },
-      { id: "g1-curve", title: "G1 연산·Jacobian·subgroup" },
-      { id: "g1-g2-bn254", title: "BN254 G1·G2·GT 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 점 (5,1)을 일곱 번 더하면 어디에 도착할까요?"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 점과 횟수를 받아 같은 규칙의 점을 돌려줍니다"
+  },
+  {
+    "id": "concrete",
+    "title": "3. 17로 나눈 값에서 같은 조건을 만족하는 점을 고릅니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 같은 시작점을 더하며 현재 점을 옮깁니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 반복 덧셈을 묶으면 큰 횟수도 짧게 계산할 수 있습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 점의 집합과 덧셈 규칙에 이름을 붙입니다"
+  },
+  {
+    "id": "g1-curve",
+    "title": "7. 같은 점과 서로 다른 점의 덧셈을 직접 계산합니다"
+  },
+  {
+    "id": "scalar",
+    "title": "8. 7의 세 비트를 실제 반복문에 넣습니다"
+  },
+  {
+    "id": "jacobian",
+    "title": "9. (3,8,2)는 같은 (5,1)을 다른 방식으로 저장합니다"
+  },
+  {
+    "id": "source",
+    "title": "10. 원본 두 배 함수의 중간값도 같은 2P로 돌아옵니다"
+  },
+  {
+    "id": "validation",
+    "title": "11. 좌표를 저장했다는 사실만으로 유효한 점이 되지는 않습니다"
+  },
+  {
+    "id": "subgroup",
+    "title": "12. 곡선 위여도 원하는 반복 주기에 속하지 않을 수 있습니다"
+  },
+  {
+    "id": "g1-g2-bn254",
+    "title": "13. BN254의 두 입력은 좌표 체와 검사가 다릅니다"
+  },
+  {
+    "id": "pairing",
+    "title": "14. 두 점에 붙인 2와 3이 결과의 6제곱으로 연결됩니다"
+  },
+  {
+    "id": "encoding",
+    "title": "15. 같은 점도 전송 규칙에 따라 다른 바이트가 됩니다"
+  },
+  {
+    "id": "precompile",
+    "title": "16. Ethereum의 짧은 입력은 함수마다 다르게 처리합니다"
+  },
+  {
+    "id": "verification",
+    "title": "17. 실행한 범위와 아직 보장하지 않는 범위를 구분합니다"
+  },
+  {
+    "id": "release",
+    "title": "18. 한 조건을 바꾼 뒤 같은 결론이 남는지 예상합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/elliptic-curves"),
   },
   {
     slug: "pairing",
-    title: "Pairing: Miller loop·final exponent·subgroup boundary",
+    title: "페어링: 두 점의 관계를 곱셈으로 옮기기",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "Bilinearity 전체 지도" },
-      { id: "miller-loop", title: "Miller function invariant" },
-      { id: "final-exponent", title: "GT subgroup projection" },
-      { id: "release", title: "Input/subgroup release" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 두 점 사이의 곱셈 관계를 작은 값으로 확인합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 점 두 개가 들어와 체의 원소 하나가 나옵니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 19로 나누는 곡선과 다섯 번 더하면 돌아오는 점"
+  },
+  {
+    "id": "picture",
+    "title": "4. 같은 점과 누적값이 함께 바뀌는 네 장면"
+  },
+  {
+    "id": "why",
+    "title": "5. 함수를 통째로 전개하지 않고 필요한 값만 계산합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 지금 본 점·함수·출력에 이름을 붙입니다"
+  },
+  {
+    "id": "miller-loop",
+    "title": "7. 101의 두 배와 더하기를 모두 계산합니다"
+  },
+  {
+    "id": "line-values",
+    "title": "8. 선과 수직선의 비가 실제로 두 값을 만듭니다"
+  },
+  {
+    "id": "divisor",
+    "title": "9. 점의 이동과 함수의 영점·극점이 같은 식을 유지합니다"
+  },
+  {
+    "id": "paper-miller",
+    "title": "10. 원문의 반복식에 같은 101과 두 누적값을 넣습니다"
+  },
+  {
+    "id": "final-exponent",
+    "title": "11. 72제곱으로 다섯제곱하면 1인 값에 들어갑니다"
+  },
+  {
+    "id": "bilinearity",
+    "title": "12. 두 배와 세 배는 출력의 여섯제곱으로 옮겨집니다"
+  },
+  {
+    "id": "denominators",
+    "title": "13. 마지막 9를 빼도 최종값이 같은 이유를 설명합니다"
+  },
+  {
+    "id": "source-structure",
+    "title": "14. 실제 BN254는 준비된 선 계수와 반복을 나눕니다"
+  },
+  {
+    "id": "source-loop",
+    "title": "15. 큰 r 대신 6z+2의 부호 있는 표현을 반복합니다"
+  },
+  {
+    "id": "source-final",
+    "title": "16. 이 버전의 마지막 지수는 일반식에 배수가 더 붙습니다"
+  },
+  {
+    "id": "verification",
+    "title": "17. 실제 실행에서 다른 값과 같은 판정을 각각 확인합니다"
+  },
+  {
+    "id": "multi-pairing",
+    "title": "18. 여러 관계는 값을 곱한 뒤 한 번에 마무리합니다"
+  },
+  {
+    "id": "release",
+    "title": "19. 입력 검사와 항등원 정책은 함수 바깥까지 확인합니다"
+  },
+  {
+    "id": "review",
+    "title": "20. 한 조건을 바꾼 뒤 다음 값을 먼저 예상해 봅니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/pairing"),
   },
 ];

@@ -809,44 +809,220 @@ export const dlFoundationArticles: Article[] = [
   {
     slug: "math-probability-expectation-variance",
     title:
-      "Probability experiment와 conditional probability: 경우를 먼저 세는 법",
+      "같은 기록에서 질문을 바꾸기: 확률·조건부확률·독립",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "실험·sample space·outcome" },
-      { id: "outcomes", title: "Distribution과 event" },
-      { id: "conditional-probability", title: "조건 뒤에 다시 정규화" },
-      { id: "chain-rule", title: "Joint probability를 곱으로 분해" },
-      { id: "independence-boundary", title: "독립과 상호배타 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 같은 두 번의 던짐에도 질문에 따라 남길 기록이 다르다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 절차를 정하고 경우를 나눈 뒤 질문에 맞게 모은다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 네 기록에 같은 비중을 주고 두 질문을 겹친다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 지운 기록과 새 전체 안의 비중을 함께 본다"
+  },
+  {
+    "id": "why",
+    "title": "5 · 경우의 목록만으로는 비율을 정할 수 없다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 절차·기록·질문·비중에 이름을 붙인다"
+  },
+  {
+    "id": "outcomes",
+    "title": "7 · 같은 네 기록에서 확률의 합과 중복을 검사한다"
+  },
+  {
+    "id": "conditional-probability",
+    "title": "8 · 새 전체의 비중으로 나누면 남은 합이 다시 1이 된다"
+  },
+  {
+    "id": "chain-rule",
+    "title": "9 · 조건부 비율에 이전 전체를 곱해 한 경로를 복원한다"
+  },
+  {
+    "id": "source-formulas",
+    "title": "10 · 원문에서 조건과 곱의 범위를 같은 기록에 적용한다"
+  },
+  {
+    "id": "independence-boundary",
+    "title": "11 · 서로 정보를 주지 않는 것과 함께 일어날 수 없는 것은 다르다"
+  },
+  {
+    "id": "conditional-independence",
+    "title": "12 · 같은 네 기록에서 조건을 붙이면 독립도 달라질 수 있다"
+  },
+  {
+    "id": "limits",
+    "title": "13 · 정한 모형의 답과 현실에서 확인한 비율을 나눈다"
+  },
+  {
+    "id": "review",
+    "title": "14 · 정보를 바꾸기 전에 남을 기록을 고른다"
+  }
+],
     component: () =>
       import("@/pages/articles/ai/math-probability-expectation-variance"),
   },
   {
     slug: "math-random-variables-expectation",
-    title: "Random variable과 expectation: outcome을 숫자로 요약하는 법",
+    title: "기록을 숫자로 바꾸고 평균내기: 확률변수·기댓값",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "Outcome에서 숫자로" },
-      { id: "mapping", title: "Random variable의 함수 형태" },
-      { id: "distribution", title: "값별 probability mass" },
-      { id: "expectation", title: "가중 무게중심" },
-      { id: "transform-boundary", title: "선형성과 비선형 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 두 번의 기록을 앞면 개수 하나로 바꾸면 무엇이 남을까"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 기록·숫자 규칙·비중을 함께 넣어야 평균이 나온다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 네 기록을 세 숫자로 모으고 비중을 따라 더한다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 같은 숫자로 모여도 비중은 사라지지 않는다"
+  },
+  {
+    "id": "why",
+    "title": "5 · 필요한 질문을 보존하는 만큼만 기록을 줄인다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 숫자로 바꾸는 규칙과 그 평균에 이름을 붙인다"
+  },
+  {
+    "id": "mapping",
+    "title": "7 · 같은 입력에는 같은 숫자를 주는 함수를 고정한다"
+  },
+  {
+    "id": "distribution",
+    "title": "8 · 숫자의 확률은 그 숫자로 가는 기록의 확률을 모은다"
+  },
+  {
+    "id": "expectation",
+    "title": "9 · 같은 네 행으로 계산해도 같은 세 값으로 계산해도 평균은 1이다"
+  },
+  {
+    "id": "source-formulas",
+    "title": "10 · 원문의 같은 값 모으기와 함수의 평균 식에 직접 넣는다"
+  },
+  {
+    "id": "transform-boundary",
+    "title": "11 · 서로 묶인 두 숫자도 합의 기댓값은 나누어 계산한다"
+  },
+  {
+    "id": "product-boundary",
+    "title": "12 · 곱에서는 같은 행의 짝이 결과에 남는다"
+  },
+  {
+    "id": "square-boundary",
+    "title": "13 · 먼저 제곱한 평균에는 원래 값의 흔들림이 남는다"
+  },
+  {
+    "id": "limits",
+    "title": "14 · 평균의 존재와 반복의 조건까지 확인한다"
+  },
+  {
+    "id": "review",
+    "title": "15 · 숫자로 줄이거나 계산 순서를 바꾸기 전에 예측한다"
+  }
+],
     component: () =>
       import("@/pages/articles/ai/math-random-variables-expectation"),
   },
   {
     slug: "math-variance-sampling",
-    title: "Variance·sample mean·mini-batch: 흔들림을 추정하는 법",
+    title: "평균의 흔들림을 계산하기: 분산·표본·학습 방향",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "중심과 흔들림 분리" },
-      { id: "variance", title: "Variance와 standard deviation" },
-      { id: "sample-estimation", title: "Sample mean·sample variance" },
-      { id: "law-of-large-numbers", title: "큰 수의 법칙과 1/B" },
-      { id: "gradient-estimator", title: "Mini-batch gradient" },
-      { id: "boundaries", title: "상관·편향·heavy-tail 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 평균은 같은데 이번에 얻을 값은 얼마나 다를까"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 뽑는 규칙과 모으는 규칙이 결과의 흔들림을 정한다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 점수가 다른 네 장을 같은 기회로 뽑는다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 한 장의 값과 두 장의 평균을 같은 중심에 놓는다"
+  },
+  {
+    "id": "why",
+    "title": "5 · 중심에서 잰 거리와 반복 방법을 따로 적는다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 세 종류의 퍼짐 계산에 이름을 붙인다"
+  },
+  {
+    "id": "variance",
+    "title": "7 · 원래 점수의 분산 1/2와 표준편차를 계산한다"
+  },
+  {
+    "id": "sample-estimation",
+    "title": "8 · 관측한 세 값의 분모 3과 2는 다른 질문이다"
+  },
+  {
+    "id": "sample-correction",
+    "title": "9 · 평균을 먼저 맞추면 제곱 거리 하나 분량을 덜 센다"
+  },
+  {
+    "id": "mean-noise",
+    "title": "10 · 평균의 분산은 왜 B가 아니라 B²로 나누나"
+  },
+  {
+    "id": "law-of-large-numbers",
+    "title": "11 · 오차가 클 확률의 상한과 실제 확률을 구별한다"
+  },
+  {
+    "id": "gradient-estimator",
+    "title": "12 · 같은 네 값을 일부 자료의 학습 방향으로 읽는다"
+  },
+  {
+    "id": "paper-variance-sampling",
+    "title": "13 · MIT 원문의 평균과 확률 상한에 같은 값을 넣는다"
+  },
+  {
+    "id": "library-normalization",
+    "title": "14 · 실제 라이브러리의 분모를 같은 세 값에 적용한다"
+  },
+  {
+    "id": "paper-robbins-monro",
+    "title": "15 · Robbins–Monro의 한 번 갱신과 수렴 정리를 분리한다"
+  },
+  {
+    "id": "boundaries",
+    "title": "16 · 복사와 비복원 추출에서는 1/B가 어떻게 바뀌나"
+  },
+  {
+    "id": "sampling-weights",
+    "title": "17 · 뽑는 비중이 틀어지거나 한 걸음이 반대로 갈 수 있다"
+  },
+  {
+    "id": "limits",
+    "title": "18 · 어떤 평균을 추정할지 정한 뒤 조건을 확인한다"
+  },
+  {
+    "id": "review",
+    "title": "19 · 뽑는 방법을 바꾸고 결과를 예측해 본다"
+  }
+],
     component: () => import("@/pages/articles/ai/math-variance-sampling"),
   },
   {

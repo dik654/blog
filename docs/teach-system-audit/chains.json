@@ -6579,7 +6579,7 @@
     {
       "route": "crypto/crypto-primitives",
       "title": "ZK 암호 프리미티브: 보장·조합·실패 조건",
-      "status": "unreviewed",
+      "status": "reviewed-needs-rewrite",
       "publicEntry": "src/pages/articles/blockchain/crypto-primitives.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/crypto-foundations-viz.tsx",
@@ -6606,19 +6606,25 @@
           "Schnorr: 지식 증명 transcript를 메시지 서명으로 묶는다"
         ]
       },
-      "issues": [],
-      "fixture": null,
+      "issues": [
+        "Read all six public body components plus shared actual6visualization modes and7concept/6+4/source/ownership metadata. Starts with names/framework; one later F7 inverse example does not form a shared case through hashing, root opening and signature.",
+        "Generic formula operations do not explain inputs; capacity annotatedFormula is visibly corrupted as sssim. Need replace generic annotations with samecase arithmetic and preserve round/capacity/nonce/encoding bounds.",
+        "Retain binding/hiding, nonmembership/defaults, Schnorrnonce extraction, deterministicEd25519 variants, group-vs-field boundaries; distinguish approval by a trusted registered key from bare mathematical signature validity. RFC variant and cofactor policies need primary-source exactness.",
+        "No actual input applied to primary code or source equations, no prediction questions. ModernArticle rewrite needed; preserve historical component files as unused until newentry verified."
+      ],
+      "fixture": {
+        "plan": "/tmp/teach-all/primitives-rewrite-plan.json written beforebody rewrite",
+        "case": "Four tagged SHA256 receipts A40,B70,C20,D90; openCindex2 with lowbits0,1 and two32byte siblings; same47byte batch/domain/root message signed. ToyF23 order11 Schnorr andF17 oneSPNround are explicitly separate teaching models."
+      },
       "stageEvidence": {},
       "sourceEvidence": [],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "All6actualbodyfiles,6sharedmodes,7concepts and6+4metadata read; source updates and native execution pending"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "원문·코드와 수치 계획 검증",
+        "동일 영수증 사례의 실제 teach-system 본문 재작성",
+        "윤문·학습 등록·화면 검수"
       ]
     },
     {
@@ -6864,14 +6870,14 @@
     },
     {
       "route": "crypto/elliptic-curves",
-      "title": "타원곡선군 구현: point·subgroup·BN254",
-      "status": "reviewed-needs-rewrite",
+      "title": "타원곡선: 같은 점을 더하고 표현하고 검사하기",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/elliptic-curves.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/elliptic-curves.tsx",
-        "src/pages/articles/blockchain/elliptic-curves/Overview.tsx",
-        "src/pages/articles/blockchain/elliptic-curves/G1Curve.tsx",
-        "src/pages/articles/blockchain/elliptic-curves/G1G2BN254.tsx"
+        "src/pages/articles/blockchain/elliptic-curves/ModernArticle.tsx",
+        "src/pages/articles/blockchain/elliptic-curves/viz/ModernCurveViz.tsx",
+        "src/pages/articles/blockchain/elliptic-curves/codeRefs.ts"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -6893,14 +6899,47 @@
         "case": "F17 E:y²=x³+2x+2,P(5,1),2P(6,3),3P(10,6),7P(0,6),19P=O; sameJacobian(3,8,2) affine5,1. SeparateE2:y²=x³+2x has20points,order5G(9,4),wrongsubgroupT(0,0) order2,5T=T and4T=O.",
         "assumption": "Smallcurveillustrationnotcryptosecurity; actualpinnedark ownconfig separatelylabelled fromrealBN254."
       },
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "Actualpublic3componentbody/renderedsharedViz and7conceptdefinitions/6+4read. OfficialSEC1§2.2.1/3.2.2.1 andEIP196/197freshlyread. Ownsmallintegerarithmetic /tmp/teach-all/ec-toy-arithmetic.json 19pointenum361pairs6859triples."
+      "stageEvidence": {
+        "S": "overview: P=(5,1) seven additions to (0,6)",
+        "B": "black-box: curve, point, k as input; result and O; small curve not secure",
+        "0": "concrete: equation F17 y²=x³+2x+2, same P and 2/3/6/7 chain",
+        "1": "picture: actual 18 finite points, five states and same highlighted point",
+        "2": "need: group repeated additions and postpone inversions",
+        "3": "names: field, nonsingular curve, group/O/inverse, order19 distinct from p17",
+        "4": "g1-curve: doubling13→(6,3), slope2→(10,6), zero denominator cases",
+        "5": "scalar/jacobian: actual111 loop and same P as(3,8,2)",
+        "6": "source/validation/subgroup/g1-g2-bn254/pairing: raw(7,7,2), actual incomplete G1 helper, 20-point counterexample, actual wrong G2, two full pairing relations",
+        "7": "encoding/precompile/verification/release: same toy SEC1 bytes, Ark validation, EIP196 padding vs197 length, 3 answered predictions"
       },
-      "remaining": [
-        "Substantive rewrite, source/nativeexecution, metadata, humanize, math/browser/TS."
-      ]
+      "sourceEvidence": [
+        {
+          "source": "algebra7ad88c46 ec/ff0.5.0 bn2540.5.0-alpha.0",
+          "mapping": "affine constructors63–89, normalize330–351, check371–380; group general double226–267; scalar_mul28–44; G1/G2configs; PairingOutput181–210",
+          "execution": "Actual retained unique teach-ec-check --locked exit0; 361pairs/20scalars, wrong G2 x=(1,0), serialization reject vs unchecked accept, EIP196 educational parser, two full pairing relations. No EVM/EIP197parser/independentpairing/CT/timing."
+        },
+        {
+          "source": "SEC1v2 official PDF §2.2.1/2.3.3–4/3.2.2.1",
+          "mapping": "same P/Q additions, SEC1 toy0305/040501, identity differs between representation and public-key policy",
+          "boundary": "Read actual PDFtext v2header; webmetadata v1.9 is not actualheader."
+        },
+        {
+          "source": "EIP196/197 official webpages",
+          "mapping": "196 short rightpadding/surplus ignored, coordinates<p vs scalar full256bit;197 multiple192/empty1/Fp2imagthenreal; EVM notexecuted"
+        }
+      ],
+      "verification": {
+        "arithmetic": "/tmp/teach-all/ec-independent-theory.json peer exact primary/secondary curves; retained independent.py actual19points/361closurepairs/6859associationtriples; /tmp/teach-all/ec-independent-retained-run.json",
+        "sourceBytes": "/tmp/teach-all/chains-ec-source-check.json 12rawfiles allbyteequal; main/lock retained and hashed",
+        "humanize": "50paragraphs9149chars actualroundtrip/0edits/3chunks; systems independent-finalize approved coordinatefalsefootnotes, apply50unchanged0missing; ASTprops/viz/code actualsame and independentlyapproved. Predictionpointer simplified9–10→10 inprops afterapproval; noanswercontentchange. Systems approved final props answerpointer10 supplement; no unresolved style pass.",
+        "browser": "output/playwright/teach-chains-elliptic-curves/summary.json 10panelsopen at390/1440; first run caught g1 TeX delimiter corrected; final /tmp/teach-all/chains-ec-final-screen.json all0formulaerrors/innerbounds/overflow/SVGclip/pageerrors; 7sections/screens eachwidth.",
+        "mathLayout": "/tmp/teach-all/chains-elliptic-curves-math-bounds.json actual KaTeX innerbase0problems390/1440, generalformula and casebothvisible.",
+        "visualization": "/tmp/teach-all/chains-elliptic-curves-viz.json five states plus Enter,reducedmotion; finalheight951.28125mobile/836.28125desktop withfixedbottom, nooverflow. OwnSVGminWidth0 overrides sharedminimum tofitfinitepointplot.",
+        "typescript": "Actual npx tsc -p tsconfig.app.json --noEmit exit0, final2 session32244 complete, /tmp/teach-all/chains-ec-tsc-final2.log.",
+        "prose": "/tmp/teach-all/chains-ec-prose.log actual strict exit0",
+        "registration": "Parent batch20 full metadata merged; /tmp/teach-all/elliptic-integrated-learning-final.log strict PASS.",
+        "integratedBrowser": "/tmp/teach-all/chains-ec-integrated.json 390/1440 finaltitle/18sections/anchors/innerformulas/errors/overflow PASS; /tmp/teach-all/chains-ec-learning.json opened all10answers eachwidth and checked raw arithmetic, G2 failure, EIP196 padding, nooverflow."
+      },
+      "remaining": []
     },
     {
       "route": "crypto/extension-field-theory",
@@ -7997,12 +8036,14 @@
     },
     {
       "route": "crypto/pairing",
-      "title": "Pairing: Miller loop·final exponent·subgroup boundary",
-      "status": "unreviewed",
+      "title": "페어링: 두 점의 관계를 곱셈으로 옮기기",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/pairing.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/pairing.tsx",
-        "src/pages/articles/blockchain/pairing/ModernArticle.tsx"
+        "src/pages/articles/blockchain/pairing/ModernArticle.tsx",
+        "src/pages/articles/blockchain/pairing/viz/PairingTraceViz.tsx",
+        "src/pages/articles/blockchain/pairing/codeRefs.ts"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -8016,20 +8057,57 @@
           "Input/subgroup release gate"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "Actually read public four-section ModernArticle, inline static Flow, frozen rendered baseline and full3concept/6+4metadata. Abstract names before numeric case; generic formula annotations; no real samecase source trace or predictions. Unused old components not counted as public.",
+        "Actual Stanford miller.pdf title is Short Programs for functions on Curves (1986), not The Weil Pairing, and Its Efficient Calculation.",
+        "Actual pinned BN final_exponentiation applies cE with c=2z(6z²+3z+1); generic E equality/canonicalvalue claim needs correction. gcd(c,r)=1 preserves identity predicate but rawvalues maydiffer.",
+        "Miller function and divisor normalization, intermediatezero/pole, finalexponent many-to-one, and line omissionconditions need same numericcase. Identity policy must not be unconditional rejection."
+      ],
+      "fixture": {
+        "case": "F19 y²=x³+x, P=(5,4), Q=(14,4u),u²=−1,r5,k2. 101Miller f2=(3,16),f4=(8,10),f5=(15,14);72power=(7,3). Explicitly differentcurve/profile from BN actual signedloop.",
+        "plan": "/tmp/teach-all/pairing-rewrite-plan.json written before body rewrite; 6basic+4advanced planned",
+        "independentMath": "Peer theory plan+body supplement PASS; systems independently recalculated final/powers and360fibers"
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: two repeated-addition inputs and same F19 toy output7+3u",
+        "B": "black-box: pointR and functionf are different; final result is field element",
+        "0": "small-case: actual20-point E/F19,P5,4,Q14,4u,r5,k2",
+        "1": "picture: four stable scenes P→2P→4P→O and1→3+16u→8+10u→15+14u",
+        "2": "why: evaluate small line ratios without expanding whole functions; final72 maps360nonzero elements to5roots",
+        "3": "names: Miller, final exponent, r,p,k, reducedTate/distortion distinguished from actualBN optimalAte",
+        "4": "miller-loop/line-values: all101 intermediate values, slopes0/17, vertical5/9, inverse4/17",
+        "5": "paper-miller/source-structure/source-loop/source-final: actual Algorithm3, pinned prepared lines/D034/signed65digit6z+2,63squares/87lines, cE normalization",
+        "6": "divisor/final-exponent/bilinearity/denominators/verification/multi-pairing: constants/poles, nonidempotent72,16pairs, factor9 cancellation, actual generic Evs cE, fusedproduct",
+        "7": "release/review: subgroup vs identity policy, Miller0 None vs outputone, actualCPU-only scope and3single-section predictions"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Miller1986 authorPDF, Short Programs for functions on Curves",
+          "mapping": "actualtitle/date andsection2 functioncomposition; notmodernBN profile"
+        },
+        {
+          "source": "BenLynn2007 official thesis PDF",
+          "mapping": "Algorithm3§3.9.2PDF51, intermediatepoles§3.9.3PDF52; poweredpairings§6.15PDF113. OwnF19 toy distinguished from sourceF59 fixture."
+        },
+        {
+          "source": "algebra7ad88c46 ec/ff0.5.0 bn2540.5.0-alpha.0",
+          "mapping": "bn.rs51–108loop/111–135easy/137–175cH/191–213ell;g2prepared108–163;config17–43;pairing81–119/181–210",
+          "execution": "Retained unique teach-pairing-check --locked final log exit0;actual M^cE equals source,M^E differs,c inverse restores,63squares/21adds/87lines,dense sharedcoefficients match,fusedtwo pairs/zeroNone/identityone. NoEVM/independentlinegeneration/timing."
+        }
+      ],
+      "verification": {
+        "arithmetic": "retained verification/independent.py actual16nonzero scalarpairs,360nonzeroF19² elements→5roots each72,20points; /tmp/teach-all/pairing-independent-retained-run.json; peers theory/systems independent math",
+        "sourceBytes": "/tmp/teach-all/chains-pairing-source-check.json 8rawfiles byteequal pinnedCargo checkout and manifestSHA",
+        "native": "/tmp/teach-all/ark-pairing-locked-final.log actual --locked final exit0; source/lock/owncheck preserved",
+        "humanize": "59paragraphs10369chars, actualextract/roundtrip/11commas removed/threechunks; systems independent-finalize all4; apply11changed48unchanged0missing. Additional AST113strings actualslice roundtrip6351chars whole+twochunks gate0. No sharedsourcecode edited.",
+        "browser": "output/playwright/teach-chains-pairing/summary.json actual10panels at390/1440,zeroerrors/overflow/brokenanchors",
+        "mathAndViz": "/tmp/teach-all/chains-pairing-detail.json all innerKaTeXbounds0; generalformulasvisible; four stable sceneheights/controls,arrows,space/autoplay,reducedmotion PASS390/1440. First autoplay check lacked media-event wait; corrected wait then actualplaypassed.",
+        "typescript": "Actual npx tsc -p tsconfig.app.json --noEmit final session8366 exit0; /tmp/teach-all/chains-pairing-tsc-final.log",
+        "prose": "/tmp/teach-all/chains-pairing-prose.log strict exit0; no pairing signal",
+        "registration": "Parent integratedbatch21 title/20TOC/learning6+4/definitions3+labels3/newownership/full evidence/topology; /tmp/teach-all/pairing-integrated-learning.log strict PASS; actual integrated metadata readback3concepts1ownership.",
+        "integratedBrowser": "/tmp/teach-all/chains-pairing-integrated.json and chains-pairing-learning.json:390/1440 finaltitle,20sections,0brokenanchors/innerformulabounds/pageerrors/overflow; all10answers opened and f5,reapply72,cE-vsE,87lines,zeroNone text confirmed."
+      },
+      "remaining": []
     },
     {
       "route": "crypto/plonk",

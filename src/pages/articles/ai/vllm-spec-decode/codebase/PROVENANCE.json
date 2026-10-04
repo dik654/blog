@@ -1,0 +1,44 @@
+{
+  "project": "vllm-project/vllm",
+  "release": "v0.27.1",
+  "commit": "6e448d0ea9bf3d88d898b65449ca6dc2aec170ac",
+  "scope": "Whole unmodified source files, including original license comments. CPU pointer doubles are separate validation and are not these source files.",
+  "files": [
+    {
+      "path": "vllm/v1/sample/rejection_sampler.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/sample/rejection_sampler.py",
+      "sha256": "4bb87d7984d967be9c7e5b6a6b489c02571ef2f2913211cb3f1eea74b2e1f32f",
+      "bytes": 36276
+    },
+    {
+      "path": "vllm/v1/core/sched/scheduler.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py",
+      "sha256": "c67bda2886b52865ddafabaae7d797c359e930752f374421a33e537d94a5f45a",
+      "bytes": 137118
+    },
+    {
+      "path": "vllm/config/speculative.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/config/speculative.py",
+      "sha256": "83cbb26932b9ec0633753b58e8fe666f55c779580b32fba750cf569cde67c40c",
+      "bytes": 64455
+    },
+    {
+      "path": "vllm/v1/worker/gpu_model_runner.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/worker/gpu_model_runner.py",
+      "sha256": "993f2c926012241bcb8cc7f568c8e82968e4d81ca125641c831ecf501aac02ac",
+      "bytes": 351795
+    },
+    {
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357
+    },
+    {
+      "path": "vllm/v1/spec_decode/dynamic/utils.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/spec_decode/dynamic/utils.py",
+      "sha256": "7179869a6d8e97634efe8bd3a9b07608c6393cfc50acdbc4cf11594872c087c1",
+      "bytes": 5676
+    }
+  ]
+}

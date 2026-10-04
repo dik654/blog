@@ -3823,138 +3823,932 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "세 번의 공정한 동전에서 모두 앞면일 확률 1/8과 절반으로 줄인 횟수 3을 먼저 비교합니다. 같은 양을 지수와 로그로 읽고 실제 교재식·CPython 밑 변환·2000번의 수치 계산까지 이어 갑니다."
   },
   "ai/math-probability-expectation-variance": {
-    coreIdea: "Probability model은 experiment·sample space·outcome을 고정하고 distribution mass로 event를 평가합니다. Conditioning은 남은 mass를 다시 정규화하고 chain rule은 joint mass를 conditional product로 복원합니다.",
-    assumedKnowledge: [
-      { id: "scalar-quantity", role: "Probability mass와 event 비율을 scalar로 계산합니다." },
+    "coreIdea": "두 번 던진 네 기록에서 질문에 맞는 기록의 비중을 더하고, 받은 정보에 맞는 전체로 다시 나눕니다. 그 나눗셈을 거꾸로 읽으면 연쇄법칙이 되고, 독립은 별도의 곱 관계로 검사합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "scalar-quantity",
+        "role": "비중을 분수로 더하고 전체의 비중으로 나눕니다."
+      }
     ],
-    introducedHere: [
-      { id: "sample-space", role: "실험의 가능한 outcome 전체와 관측 하나를 분리합니다." },
-      { id: "probability-distribution", role: "Outcome에 nonnegative mass를 배정하고 합을 1로 만듭니다." },
-      { id: "probability-event", role: "질문에 해당하는 outcome을 부분집합으로 묶습니다." },
-      { id: "conditional-probability", role: "조건 안의 mass를 새 전체로 다시 정규화합니다." },
-      { id: "probability-chain-rule", role: "Joint probability를 prefix별 conditional product로 분해합니다." },
-      { id: "probability-independence", role: "Conditioning 뒤 probability가 바뀌지 않는 관계를 판정합니다." },
+    "introducedHere": [
+      {
+        "id": "sample-space",
+        "role": "가능한 기록의 목록과 실제로 나온 기록 하나를 구별합니다."
+      },
+      {
+        "id": "probability-distribution",
+        "role": "음수가 아닌 비중의 전체 합을 1로 정하고 동일 비중 가정을 따로 확인합니다."
+      },
+      {
+        "id": "probability-event",
+        "role": "현재 질문에 맞는 기록을 모으며 빈 묶음도 허용합니다."
+      },
+      {
+        "id": "conditional-probability",
+        "role": "받은 정보로 비교할 전체를 좁히고 그 안의 비율을 계산합니다."
+      },
+      {
+        "id": "probability-chain-rule",
+        "role": "앞 기록의 확률에 다음 조건부 비율을 곱해 전체 경로를 복원합니다."
+      },
+      {
+        "id": "probability-independence",
+        "role": "결합확률과 각 확률의 곱을 대조하고 배타성·새 조건과 구별합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "sample-space", sectionId: "overview", intuition: "가능한 답안 전체와 실제로 나온 답 하나를 구분하는 실험의 출발점입니다.", workedExample: "두 coin toss의 Ω는 {HH,HT,TH,TT}이고 HT는 outcome 하나입니다.", boundary: "앞면 수만 기록하면 {0,1,2}라는 다른 granularity의 sample space가 됩니다." },
-      { id: "probability-distribution", sectionId: "outcomes", intuition: "가능한 outcome들이 전체 1을 나누어 갖는 mass 배정 규칙입니다.", workedExample: "공정하고 독립인 두 toss의 네 ordered outcome은 각각 probability 1/4입니다.", boundary: "Equal mass와 independence는 model assumption이며 관측 없이 자동으로 주어지지 않습니다." },
-      { id: "probability-event", sectionId: "outcomes", intuition: "현재 질문에 답하는 outcome들을 하나의 부분집합으로 묶은 것입니다.", workedExample: "앞면이 정확히 한 번인 event A={HT,TH}이고 P(A)=1/2입니다.", boundary: "겹치는 event를 더할 때 intersection을 두 번 세지 않으며 event와 outcome 하나를 항상 같다고 보지 않습니다." },
-      { id: "conditional-probability", sectionId: "conditional-probability", intuition: "조건 밖의 경우를 제외하고 남은 mass 합이 다시 1이 되도록 target 비율을 계산합니다.", workedExample: "A={HT,TH}, B={HH,HT}이면 P(A|B)=(1/4)/(1/2)=1/2입니다.", boundary: "P(B)=0이면 비율로 정의할 수 없고 conditional association은 causality를 자동으로 뜻하지 않습니다." },
-      { id: "probability-chain-rule", sectionId: "chain-rule", intuition: "긴 joint 결과를 지금까지 본 prefix 뒤의 다음 결과 비율로 한 단계씩 나눕니다.", workedExample: "P(y1,y2,y3)=P(y1)P(y2|y1)P(y3|y1,y2)입니다.", boundary: "Chain rule 자체는 independence를 가정하지 않습니다.", proofIdea: "P(A|B)=P(A∩B)/P(B)를 P(A∩B)=P(A|B)P(B)로 정리하고 prefix joint에 반복 적용해 product를 얻습니다.", counterexample: "비복원 추출에서 conditional term을 marginal로 바꾸면 앞 선택이 뒤 확률을 바꾼다는 dependence를 잃습니다." },
-      { id: "probability-independence", sectionId: "independence-boundary", intuition: "한 event를 알아도 다른 event의 probability가 바뀌지 않는 관계입니다.", workedExample: "서로 독립인 두 fair coin toss의 첫 결과와 둘째 결과는 joint mass가 marginal product와 같습니다.", boundary: "Positive-mass mutually exclusive event는 intersection 0이지만 marginal product는 양수라 independent가 아닙니다." },
+    "conceptExplanations": [
+      {
+        "id": "sample-space",
+        "sectionId": "names",
+        "intuition": "절차·전체 기록·실제 기록을 구별하면 무엇을 세는지 분명해집니다.",
+        "workedExample": "두 번 던지고 순서를 적으면 Ω={HH,HT,TH,TT}이고 HT는 기록 하나입니다.",
+        "boundary": "앞면 개수만 저장하면 HT와 TH가 모두 1이 되어 첫 결과를 구별할 정보가 사라집니다."
+      },
+      {
+        "id": "probability-distribution",
+        "sectionId": "outcomes",
+        "intuition": "가능한 기록의 목록에 비중을 배정하는 단계입니다.",
+        "workedExample": "공정하고 독립인 두 던짐의 네 기록은 각각 1/4이고 합은 1입니다.",
+        "boundary": "같은 네 기록이라도 각 앞면 확률이 0.7이면 비중은 0.49·0.21·0.21·0.09입니다. 일반 연속 모형의 확률은 점확률의 단순 합으로 설명하지 않습니다."
+      },
+      {
+        "id": "probability-event",
+        "sectionId": "outcomes",
+        "intuition": "현재 질문에 맞는 기록들을 모아 하나의 묶음으로 다룹니다.",
+        "workedExample": "정확히 한 번 앞면인 A={HT,TH}의 확률은 1/2입니다. 빈 묶음 ∅도 사건입니다.",
+        "boundary": "겹치는 사건을 합할 때 교집합을 한 번 빼야 하며 빈 사건과 확률 0인 사건을 일반적으로 동일시하지 않습니다."
+      },
+      {
+        "id": "conditional-probability",
+        "sectionId": "conditional-probability",
+        "intuition": "정보와 맞지 않는 기록을 지우고 남은 전체를 1로 맞춥니다.",
+        "workedExample": "A={HT,TH}, B={HH,HT}이면 (1/4)/(1/2)=1/2이고 적어도 한 번 앞면 조건에서는 (1/2)/(3/4)=2/3입니다.",
+        "boundary": "조건 사건의 확률이 양수여야 비율 정의를 사용하며 정보를 받는 일과 원인에 개입하는 일을 구별합니다."
+      },
+      {
+        "id": "probability-chain-rule",
+        "sectionId": "chain-rule",
+        "intuition": "앞 기록이 차지하는 몫에 다음 기록의 조건부 비율을 곱합니다.",
+        "workedExample": "HT는 (1/2)(1/2)=1/4이고 비복원 빨강 두 번은 (2/3)(1/2)=1/3입니다.",
+        "boundary": "연쇄법칙 자체는 독립을 가정하지 않습니다. 사용하는 조건부 비율의 이전 기록 확률은 양수여야 합니다.",
+        "proofIdea": "P(A|B)=P(A∩B)/P(B)의 양쪽에 P(B)를 곱하고 같은 복원을 앞 기록에 반복합니다.",
+        "counterexample": "빨강 2개와 파랑 1개의 비복원 추출에서 조건을 지우면 1/3 대신 4/9가 됩니다."
+      },
+      {
+        "id": "probability-independence",
+        "sectionId": "independence-boundary",
+        "intuition": "함께 일어날 확률이 각 비율의 곱과 같은지 검사합니다.",
+        "workedExample": "처음 두 던짐의 첫 H와 둘째 H는 1/4=(1/2)(1/2)이지만 같은 첫 던짐의 H와 T는 교집합이 0입니다.",
+        "boundary": "반반인 주변 확률만으로 독립을 보장하지 않습니다. 새 조건 아래의 독립과 여러 사건의 전체 독립도 별도 확인합니다."
+      }
     ],
-    conceptStages: [
-      { label: "Model", relation: "가능한 경우와 mass 배정", concepts: ["sample-space", "probability-distribution"] },
-      { label: "Question", relation: "질문에 맞는 outcome 부분집합", concepts: ["sample-space", "probability-distribution", "probability-event"] },
-      { label: "Condition", relation: "새 전체 안에서 target mass 재정규화", concepts: ["probability-event", "conditional-probability"] },
-      { label: "Compose", relation: "Joint mass를 conditional product로 복원", concepts: ["conditional-probability", "probability-chain-rule"] },
-      { label: "Boundary", relation: "정보 불변과 동시 불가능 구분", concepts: ["probability-event", "conditional-probability", "probability-independence"] },
+    "conceptStages": [
+      {
+        "label": "목록과 비중",
+        "relation": "가능한 기록을 나누고 각 비중을 정합니다.",
+        "concepts": [
+          "sample-space",
+          "probability-distribution"
+        ]
+      },
+      {
+        "label": "질문",
+        "relation": "관심 있는 기록을 같은 목록에서 고릅니다.",
+        "concepts": [
+          "sample-space",
+          "probability-distribution",
+          "probability-event"
+        ]
+      },
+      {
+        "label": "받은 정보",
+        "relation": "남은 전체의 비중으로 다시 나눕니다.",
+        "concepts": [
+          "probability-event",
+          "conditional-probability"
+        ]
+      },
+      {
+        "label": "경로 복원",
+        "relation": "조건부 비율에 앞 기록의 비중을 곱합니다.",
+        "concepts": [
+          "conditional-probability",
+          "probability-chain-rule"
+        ]
+      },
+      {
+        "label": "관계의 경계",
+        "relation": "독립·배타·조건 뒤 관계를 비교합니다.",
+        "concepts": [
+          "probability-event",
+          "conditional-probability",
+          "probability-independence"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "두 coin toss에서 experiment·sample space·outcome 하나를 구분할 수 있을까요?", answerChecklist: ["Experiment는 두 번 던지는 절차다.", "Ω={HH,HT,TH,TT}다.", "HT는 outcome 하나다."], requiredConcepts: ["sample-space"], sectionId: "overview" },
-      { level: "basic", question: "공정하고 독립인 두 toss outcome mass가 probability law인지 검산할 수 있을까요?", answerChecklist: ["각 mass는 1/4이다.", "모두 nonnegative다.", "네 mass 합은 1이다."], requiredConcepts: ["sample-space", "probability-distribution"], sectionId: "outcomes" },
-      { level: "basic", question: "앞면이 정확히 한 번인 event와 probability를 계산할 수 있을까요?", answerChecklist: ["A={HT,TH}다.", "Outcome 두 개를 묶은 event다.", "P(A)=1/2다."], requiredConcepts: ["probability-event", "probability-distribution"], sectionId: "outcomes" },
-      { level: "basic", question: "첫 toss가 H라는 조건에서 정확히 한 번 H일 probability를 계산할 수 있을까요?", answerChecklist: ["B={HH,HT}다.", "A∩B={HT}다.", "(1/4)/(1/2)=1/2다."], requiredConcepts: ["probability-event", "conditional-probability"], sectionId: "conditional-probability" },
-      { level: "basic", question: "세 token joint probability를 chain rule로 분해할 수 있을까요?", answerChecklist: ["첫 marginal을 쓴다.", "둘째는 첫 token을 조건으로 둔다.", "셋째는 두-token prefix를 조건으로 둔다."], requiredConcepts: ["conditional-probability", "probability-chain-rule"], sectionId: "chain-rule" },
-      { level: "basic", question: "Independent와 mutually exclusive를 한 식씩 구분할 수 있을까요?", answerChecklist: ["Independent는 joint=product다.", "Mutually exclusive는 intersection empty다.", "둘 다 positive면 동시에 성립하지 않는다."], requiredConcepts: ["probability-event", "probability-independence"], sectionId: "independence-boundary" },
-      { level: "advanced", question: "첫 toss H probability가 0.7인 independent biased coin의 네 outcome distribution을 만들 수 있을까요?", answerChecklist: ["HH=.49다.", "HT와 TH=.21씩이다.", "TT=.09이며 합은 1이다."], requiredConcepts: ["probability-distribution", "probability-independence"], sectionId: "outcomes" },
-      { level: "advanced", question: "P(B)=0일 때 event-ratio conditional probability를 쓸 수 없는 이유는 무엇일까요?", answerChecklist: ["분모 mass가 0이다.", "0으로 나눌 수 없다.", "새 전체로 재정규화할 outcome mass가 없다."], requiredConcepts: ["conditional-probability"], sectionId: "conditional-probability" },
-      { level: "advanced", question: "Chain rule과 independence assumption의 차이를 비복원 추출로 설명할 수 있을까요?", answerChecklist: ["Chain rule은 conditional을 유지한다.", "첫 추출 뒤 구성비가 바뀐다.", "Conditional을 marginal로 바꾸면 오답이다."], requiredConcepts: ["probability-chain-rule", "probability-independence"], sectionId: "chain-rule" },
-      { level: "advanced", question: "Positive-mass mutually exclusive event가 independent일 수 없음을 증명할 수 있을까요?", answerChecklist: ["Intersection probability는 0이다.", "Marginal product는 positive다.", "Independent equality와 모순이다."], requiredConcepts: ["probability-event", "probability-independence"], sectionId: "independence-boundary" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "6·7절의 두 번 던짐에서 실험·표본공간·결과 하나를 구별하세요.",
+        "answerChecklist": [
+          "실험은 두 번 던지고 순서를 적는 절차입니다.",
+          "Ω={HH,HT,TH,TT}이고 HT는 결과 하나입니다.",
+          "앞면 개수만 저장하면 순서 정보를 잃습니다."
+        ],
+        "requiredConcepts": [
+          "sample-space"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "7절에서 공정하고 독립인 두 던짐의 네 확률이 확률법칙인지 검사하세요.",
+        "answerChecklist": [
+          "각 비중은 1/4이며 모두 음수가 아닙니다.",
+          "네 비중의 합은 1입니다.",
+          "공정함과 독립은 이 계산의 명시된 가정입니다."
+        ],
+        "requiredConcepts": [
+          "sample-space",
+          "probability-distribution"
+        ],
+        "sectionId": "outcomes"
+      },
+      {
+        "level": "basic",
+        "question": "7절에서 정확히 한 번 앞면인 사건과 확률을 구하세요.",
+        "answerChecklist": [
+          "A={HT,TH}로 두 기록을 모읍니다.",
+          "P(A)=1/4+1/4=1/2입니다."
+        ],
+        "requiredConcepts": [
+          "probability-event",
+          "probability-distribution"
+        ],
+        "sectionId": "outcomes"
+      },
+      {
+        "level": "basic",
+        "question": "8절에서 첫 결과가 H일 때 정확히 한 번 H인 조건부확률을 구하세요.",
+        "answerChecklist": [
+          "B={HH,HT}이고 A∩B={HT}입니다.",
+          "새 전체의 비중은 1/2, 관심 비중은 1/4입니다.",
+          "(1/4)/(1/2)=1/2입니다."
+        ],
+        "requiredConcepts": [
+          "probability-event",
+          "conditional-probability"
+        ],
+        "sectionId": "conditional-probability"
+      },
+      {
+        "level": "basic",
+        "question": "9절에서 세 token의 결합확률을 연쇄법칙으로 분해하세요.",
+        "answerChecklist": [
+          "P(y1)P(y2|y1)P(y3|y1,y2)입니다.",
+          "앞에서 관측한 기록의 범위가 한 단계씩 늘어납니다.",
+          "이 식 자체는 독립 가정이 아니며 사용하는 이전 기록 확률은 양수여야 합니다."
+        ],
+        "requiredConcepts": [
+          "conditional-probability",
+          "probability-chain-rule"
+        ],
+        "sectionId": "chain-rule"
+      },
+      {
+        "level": "basic",
+        "question": "11절에서 독립과 상호배타를 각각 식으로 쓰고 구별하세요.",
+        "answerChecklist": [
+          "독립은 P(A∩B)=P(A)P(B)입니다.",
+          "상호배타는 A∩B=∅입니다.",
+          "두 확률이 모두 양수인 배타적 사건은 독립일 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "probability-event",
+          "probability-independence"
+        ],
+        "sectionId": "independence-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "7절처럼 각 던짐의 앞면 확률이 0.7이고 서로 독립일 때 네 기록의 확률을 구하세요.",
+        "answerChecklist": [
+          "HH는 0.49, HT와 TH는 각각 0.21, TT는 0.09입니다.",
+          "네 값의 합은 1이고 정확히 한 번 앞면인 확률은 0.42입니다.",
+          "첫 던짐의 확률만으로는 이 표를 결정할 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "probability-distribution",
+          "probability-independence"
+        ],
+        "sectionId": "outcomes"
+      },
+      {
+        "level": "advanced",
+        "question": "8절에서 P(B)=0이면 사건 비율 정의로 조건부확률을 정할 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "분모가 0이어서 나눌 수 없습니다.",
+          "0/0은 유일한 비율을 정하지 못합니다.",
+          "연속값의 조건을 다루는 다른 정의와 이 사건 비율 정의를 구별합니다."
+        ],
+        "requiredConcepts": [
+          "conditional-probability"
+        ],
+        "sectionId": "conditional-probability"
+      },
+      {
+        "level": "advanced",
+        "question": "9절의 빨강 2개·파랑 1개 비복원 추출로 연쇄법칙과 독립 가정의 차이를 설명하세요.",
+        "answerChecklist": [
+          "첫 빨강 확률은 2/3이고 그 뒤 빨강 확률은 1/2입니다.",
+          "두 번 빨강은 (2/3)(1/2)=1/3입니다.",
+          "조건을 지우고 (2/3)²=4/9로 계산하면 달라진 구성을 놓칩니다."
+        ],
+        "requiredConcepts": [
+          "probability-chain-rule",
+          "probability-independence"
+        ],
+        "sectionId": "chain-rule"
+      },
+      {
+        "level": "advanced",
+        "question": "11절에서 확률이 양수인 두 배타적 사건이 독립일 수 없음을 증명하세요.",
+        "answerChecklist": [
+          "배타성이므로 교집합의 확률은 0입니다.",
+          "두 확률의 곱은 양수입니다.",
+          "교집합 확률과 곱이 다르므로 독립의 등식이 성립하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "probability-event",
+          "probability-independence"
+        ],
+        "sectionId": "independence-boundary"
+      }
     ],
-    papers: [
-      { title: "MIT 6.041SC — Probability models", href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#probability-model", problem: "실험·경우·event·mass를 구분하는 문제", contribution: "Discrete probability model과 axioms를 체계화", assumptions: "명시된 sample space와 probability law", evidenceScope: "Probability model·event 계산", notClaim: "현실 outcome이 자동으로 equally likely하다는 주장이 아님", sectionId: "paper-probability-model" },
-      { title: "MIT 6.041SC — Conditioning and independence", href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#conditioning", problem: "새 정보 뒤 probability와 joint mass를 계산하는 문제", contribution: "Conditioning·multiplication rule·independence를 분리", assumptions: "Positive conditioning mass와 stated model", evidenceScope: "Conditional probability·chain rule", notClaim: "Association가 causality라는 주장이 아님", sectionId: "paper-conditional-chain" },
-    ],
+    "papers": [
+      {
+        "title": "MIT 6.041SC Lecture 1 · PDF 2쪽 확률 공리",
+        "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/ff296575da32c406c2e56131e1e38997_MIT6_041SCF13_L01.pdf#page=2",
+        "sectionId": "paper-probability-model",
+        "problem": "기록의 목록과 각 기록에 배정한 비중을 구별합니다.",
+        "contribution": "P(Ω)=1과 배타적 사건의 합을 HT·TH에 대입해 1/2을 복원합니다.",
+        "assumptions": "유한한 네 기록과 동일 비중 가정을 명시합니다. 단순 경우의 수 비율은 모든 기록이 같은 확률일 때 사용합니다.",
+        "evidenceScope": "공리·이산 동일 확률 규칙의 원문과 본문의 직접 대입입니다.",
+        "notClaim": "현실의 던짐이 자동으로 공정하거나 독립이라는 증거가 아닙니다."
+      },
+      {
+        "title": "MIT 6.041SC Lecture 2 · PDF 1–2쪽 조건부확률과 곱",
+        "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/a1462fa23de9d08c0dfd233a57278fed_MIT6_041SCF13_L02.pdf#page=1",
+        "sectionId": "paper-conditional-chain",
+        "problem": "남은 전체로 나누는 조건과 경로를 복원하는 곱의 범위를 확인합니다.",
+        "contribution": "P(A|B)의 실제 분모 조건을 읽고 같은 HT에 세 사건 곱을 적용합니다.",
+        "assumptions": "비율에 쓰는 조건 사건의 확률은 양수입니다. 세 사건 식의 마지막 C는 Ω로 두어 조건부 비율을 1로 만듭니다.",
+        "evidenceScope": "PDF의 실제 ≠0 기호를 이미지로 확인하고 원문 식에 같은 네 기록을 대입했습니다.",
+        "notClaim": "새로 세 번째 동전을 던지거나 강의 실험을 재현했다는 뜻은 아닙니다."
+      },
+      {
+        "title": "MIT 6.041SC Lecture 3 · PDF 1–2쪽 독립과 쌍별 독립",
+        "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/a2015627268f4846eb3b1368623ce46f_MIT6_041SCF13_L03.pdf#page=2",
+        "sectionId": "conditional-independence",
+        "problem": "각 쌍의 독립과 여러 사건의 전체 독립을 구별합니다.",
+        "contribution": "첫 H·둘째 H·같은 결과를 원문의 같은 네 칸에 놓아 쌍의 1/4과 세 사건의 1/4을 계산합니다.",
+        "assumptions": "원래 네 기록의 확률은 각각 1/4입니다. 새 조건 D를 받으면 남은 전체의 비중을 다시 계산합니다.",
+        "evidenceScope": "실제 강의의 세 사건 예와 교집합·곱의 직접 검산입니다.",
+        "notClaim": "쌍별 독립이 전체 독립을 보장하거나 독립이 조건을 붙여도 보존된다는 주장이 아닙니다."
+      }
+    ]
   },
   "ai/math-random-variables-expectation": {
-    coreIdea: "Random variable은 outcome을 질문에 필요한 숫자로 보내고 induced distribution은 같은 값으로 간 mass를 합칩니다. Expectation은 그 값들의 probability-weighted center이며 linearity와 nonlinear transform 경계를 구분해야 합니다.",
-    assumedKnowledge: [
-      { id: "sample-space", role: "Random variable의 input outcome을 읽습니다." },
-      { id: "probability-distribution", role: "Outcome과 value에 배정된 mass를 읽습니다." },
-      { id: "probability-event", role: "{X=x}를 outcome event로 읽습니다." },
+    "coreIdea": "같은 순서 기록을 숫자로 바꾸고 같은 값으로 간 비중을 합합니다. 기댓값은 그 값과 비중의 가중합이며 고정 배수와 합을 보존합니다. 곱·제곱·반복 평균에는 각각 남는 조건을 확인합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "sample-space",
+        "role": "가능한 네 순서 기록과 그중 실제 기록을 구별합니다."
+      },
+      {
+        "id": "probability-distribution",
+        "role": "각 기록에 배정한 비중을 그대로 사용합니다."
+      },
+      {
+        "id": "probability-event",
+        "role": "같은 숫자로 가는 기록들을 하나의 사건으로 모읍니다."
+      }
     ],
-    introducedHere: [
-      { id: "random-variable", role: "Outcome을 계산 가능한 scalar로 보내는 함수를 정의합니다." },
-      { id: "expectation", role: "값과 probability mass의 weighted center를 계산합니다." },
-      { id: "expectation-linearity", role: "합과 fixed scalar를 expectation 밖으로 분배합니다." },
+    "introducedHere": [
+      {
+        "id": "random-variable",
+        "role": "정한 입력 기록을 같은 숫자로 보내는 함수와 그 값의 분포를 구별합니다."
+      },
+      {
+        "id": "expectation",
+        "role": "값에 확률을 곱해 더하고 실제 한 번의 값·최빈값과 비교합니다."
+      },
+      {
+        "id": "expectation-linearity",
+        "role": "합과 고정 배수를 분배하면서 독립이 필요 없는 이유를 같은 행으로 증명합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "random-variable", sectionId: "overview", intuition: "Outcome 전체에서 질문에 필요한 숫자 좌표 하나만 꺼내는 function입니다.", workedExample: "앞면 수 X는 HH→2, HT·TH→1, TT→0으로 보냅니다.", boundary: "같은 값으로 간 outcome의 원래 순서 정보는 random variable 값만으로 복구할 수 없습니다." },
-      { id: "expectation", sectionId: "expectation", intuition: "가능한 값이 나타날 probability만큼 center를 끌어당기는 무게중심입니다.", workedExample: "0·1/4+1·1/2+2·1/4=1입니다.", boundary: "다음 sample·mode·반드시 가능한 값과 동의어가 아니며 expectation이 존재하지 않는 heavy tail도 있습니다." },
-      { id: "expectation-linearity", sectionId: "transform-boundary", intuition: "Probability-weighted sum의 distributivity 때문에 합과 scalar를 각 expectation으로 나눌 수 있습니다.", workedExample: "E[2X+3Y]=2E[X]+3E[Y]이며 X,Y independence는 필요하지 않습니다.", boundary: "Nonlinear square에는 E[X^2]=(E[X])^2가 일반적으로 성립하지 않습니다.", proofIdea: "Outcome별 aX+bY에 probability를 곱한 sum을 분배하고 fixed scalar를 밖으로 꺼내 두 weighted sum으로 나눕니다.", counterexample: "앞면 수 X는 E[X^2]=3/2지만 (E[X])^2=1이라 nonlinear transform과 expectation을 교환할 수 없습니다." },
+    "conceptExplanations": [
+      {
+        "id": "random-variable",
+        "sectionId": "mapping",
+        "intuition": "같은 기록에 늘 같은 숫자를 주도록 정한 규칙입니다.",
+        "workedExample": "X(HH)=2, X(HT)=X(TH)=1, X(TT)=0이고 값 1의 확률은 1/2입니다.",
+        "boundary": "출력 1만으로 HT와 TH를 구별할 수 없습니다. 일반 모형에서는 측정 가능성을 요구합니다."
+      },
+      {
+        "id": "expectation",
+        "sectionId": "expectation",
+        "intuition": "가능한 값과 그 비중의 곱을 더한 평균입니다.",
+        "workedExample": "공정한 두 던짐의 앞면 수는 0×1/4+1×1/2+2×1/4=1입니다. 각 앞면 확률 0.7이면 평균 1.4와 최빈값 2가 다릅니다.",
+        "boundary": "기댓값이 가능한 실현값이거나 다음 관측값일 필요는 없습니다. 유한한 기댓값에는 절댓값의 가중합이 유한해야 하며 반복 평균 해석의 조건도 별도입니다."
+      },
+      {
+        "id": "expectation-linearity",
+        "sectionId": "transform-boundary",
+        "intuition": "같은 행의 비중을 곱한 합에 분배법칙을 적용합니다.",
+        "workedExample": "뒷면 수 Y=2−X는 X와 종속이지만 E[2X+3Y]=2×1+3×1=5입니다. 실제 네 행의 4·5·5·6을 평균해도 5입니다.",
+        "boundary": "고정 상수와 유한 기댓값의 선형성입니다. 곱은 같은 행의 관계가 남고 제곱의 교환에는 상수인지에 따른 등호 경계가 있습니다.",
+        "proofIdea": "각 기록의 aX+bY에 그 기록의 확률을 곱한 합을 두 합으로 분배합니다. 확률을 독립한 두 확률의 곱으로 바꾸는 단계는 없습니다.",
+        "counterexample": "같은 X와 Y의 XY는 0·1·1·0이라 평균 1/2이지만 E[X]E[Y]=1입니다. X²의 평균 3/2과 평균의 제곱 1도 다릅니다."
+      }
     ],
-    conceptStages: [
-      { label: "Map", relation: "Outcome을 scalar value로 변환", concepts: ["sample-space", "random-variable"] },
-      { label: "Mass", relation: "같은 값으로 간 outcome mass 합산", concepts: ["probability-event", "probability-distribution", "random-variable"] },
-      { label: "Center", relation: "값과 mass의 weighted sum", concepts: ["random-variable", "expectation"] },
-      { label: "Algebra", relation: "Linear combination과 nonlinear 경계", concepts: ["expectation", "expectation-linearity"] },
+    "conceptStages": [
+      {
+        "label": "숫자 규칙",
+        "relation": "가능한 기록마다 질문에 필요한 숫자를 배정합니다.",
+        "concepts": [
+          "sample-space",
+          "random-variable"
+        ]
+      },
+      {
+        "label": "같은 값 모으기",
+        "relation": "같은 숫자로 간 기록의 비중을 합합니다.",
+        "concepts": [
+          "probability-event",
+          "probability-distribution",
+          "random-variable"
+        ]
+      },
+      {
+        "label": "가중 평균",
+        "relation": "각 값에 그 비중을 곱해 더합니다.",
+        "concepts": [
+          "random-variable",
+          "expectation"
+        ]
+      },
+      {
+        "label": "계산 순서",
+        "relation": "합의 선형성과 곱·제곱의 경계를 비교합니다.",
+        "concepts": [
+          "expectation",
+          "expectation-linearity"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "두 toss outcome을 앞면 수 X로 매핑할 수 있을까요?", answerChecklist: ["HH는 2다.", "HT와 TH는 1이다.", "TT는 0이다."], requiredConcepts: ["sample-space", "random-variable"], sectionId: "mapping" },
-      { level: "basic", question: "Random variable이 random function이 아니라는 뜻은 무엇일까요?", answerChecklist: ["같은 outcome에는 같은 값을 준다.", "Outcome이 random하다.", "X는 deterministic mapping이다."], requiredConcepts: ["random-variable"], sectionId: "overview" },
-      { level: "basic", question: "P(X=0),P(X=1),P(X=2)를 계산할 수 있을까요?", answerChecklist: ["0은 1/4이다.", "1은 HT와 TH를 합쳐 1/2다.", "2는 1/4이다."], requiredConcepts: ["probability-distribution", "random-variable"], sectionId: "distribution" },
-      { level: "basic", question: "앞면 수 expectation을 weighted sum으로 계산할 수 있을까요?", answerChecklist: ["값에 mass를 곱한다.", "0+1/2+1/2를 더한다.", "E[X]=1이다."], requiredConcepts: ["random-variable", "expectation"], sectionId: "expectation" },
-      { level: "basic", question: "Expectation과 mode를 구분할 수 있을까요?", answerChecklist: ["Expectation은 weighted center다.", "Mode는 가장 큰 mass의 값이다.", "둘은 같지 않을 수 있다."], requiredConcepts: ["expectation"], sectionId: "expectation" },
-      { level: "basic", question: "E[2X+3]을 E[X]로 계산할 수 있을까요?", answerChecklist: ["2를 밖으로 꺼낸다.", "상수 expectation은 3이다.", "E[X]=1이면 결과 5다."], requiredConcepts: ["expectation", "expectation-linearity"], sectionId: "transform-boundary" },
-      { level: "advanced", question: "서로 다른 outcome이 같은 X 값으로 갈 때 잃는 정보는 무엇일까요?", answerChecklist: ["HT와 TH를 구분 못한다.", "Value distribution에는 합친 mass만 남는다.", "질문에 따라 다른 random variable이 필요하다."], requiredConcepts: ["random-variable"], sectionId: "mapping" },
-      { level: "advanced", question: "E[X^2]와 (E[X])^2를 계산해 nonlinear 경계를 보일 수 있을까요?", answerChecklist: ["E[X^2]=3/2다.", "E[X]=1이라 square는 1이다.", "Spread 때문에 다르다."], requiredConcepts: ["expectation", "expectation-linearity"], sectionId: "transform-boundary" },
-      { level: "advanced", question: "Dependent X,Y에도 expectation linearity가 성립하는 이유는 무엇일까요?", answerChecklist: ["Joint outcome별 weighted sum을 쓴다.", "Addition distributivity를 사용한다.", "Independence factorization이 필요 없다."], requiredConcepts: ["expectation-linearity"], sectionId: "transform-boundary" },
-      { level: "advanced", question: "Expectation이 sample space의 가능한 값이 아닐 수 있는 예를 만들 수 있을까요?", answerChecklist: ["Fair coin indicator 0/1을 든다.", "Expectation은 1/2다.", "한 toss outcome value는 1/2가 아니다."], requiredConcepts: ["random-variable", "expectation"], sectionId: "expectation" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "7절의 두 던짐 기록을 앞면 수 X로 바꾸세요.",
+        "answerChecklist": [
+          "HH는 2, HT와 TH는 1, TT는 0입니다.",
+          "같은 입력에는 같은 출력이 정해져 있습니다."
+        ],
+        "requiredConcepts": [
+          "sample-space",
+          "random-variable"
+        ],
+        "sectionId": "mapping"
+      },
+      {
+        "level": "basic",
+        "question": "2·7절에서 확률변수라는 함수의 규칙 자체가 임의로 바뀌는 것이 아니라는 설명은 무슨 뜻인가요?",
+        "answerChecklist": [
+          "함수 X는 같은 기록에 늘 같은 숫자를 줍니다.",
+          "무엇이 나올지 모르는 입력 결과의 불확실성이 X의 값에 전달됩니다.",
+          "X라는 함수와 X(HT)=1이라는 실현값을 구별합니다."
+        ],
+        "requiredConcepts": [
+          "random-variable"
+        ],
+        "sectionId": "mapping"
+      },
+      {
+        "level": "basic",
+        "question": "8절에서 P(X=0), P(X=1), P(X=2)를 구하고 합을 확인하세요.",
+        "answerChecklist": [
+          "각각 1/4, 1/2, 1/4입니다.",
+          "값 1로 간 HT와 TH의 비중을 합칩니다.",
+          "전체 확률의 합은 1입니다."
+        ],
+        "requiredConcepts": [
+          "probability-distribution",
+          "random-variable"
+        ],
+        "sectionId": "distribution"
+      },
+      {
+        "level": "basic",
+        "question": "9절에서 앞면 수의 기댓값을 가중합으로 계산하세요.",
+        "answerChecklist": [
+          "각 값에 그 값의 확률을 곱합니다.",
+          "0×1/4+1×1/2+2×1/4=1입니다.",
+          "네 기록을 따로 평균해도 같은 결과입니다."
+        ],
+        "requiredConcepts": [
+          "random-variable",
+          "expectation"
+        ],
+        "sectionId": "expectation"
+      },
+      {
+        "level": "basic",
+        "question": "9절의 각 앞면 확률 0.7인 독립 던짐에서 기댓값과 최빈값을 구별하세요.",
+        "answerChecklist": [
+          "X의 0·1·2 확률은 0.09·0.42·0.49입니다.",
+          "기댓값은 1.4이며 모든 값의 가중합입니다.",
+          "최빈값은 가장 큰 확률 0.49를 가진 2입니다."
+        ],
+        "requiredConcepts": [
+          "expectation"
+        ],
+        "sectionId": "expectation"
+      },
+      {
+        "level": "basic",
+        "question": "11절에서 E[X]=1일 때 E[2X+3]을 구하고 상수 3의 기댓값을 설명하세요.",
+        "answerChecklist": [
+          "고정된 배수 2를 합 밖으로 꺼냅니다.",
+          "상수 3은 모든 기록에서 같고 확률의 합이 1이므로 기댓값도 3입니다.",
+          "2×1+3=5입니다."
+        ],
+        "requiredConcepts": [
+          "expectation",
+          "expectation-linearity"
+        ],
+        "sectionId": "transform-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "7·8절에서 서로 다른 기록이 같은 X 값으로 갈 때 남는 정보와 사라지는 구별을 설명하세요.",
+        "answerChecklist": [
+          "HT와 TH는 출력 1만으로 구별할 수 없습니다.",
+          "분포에는 두 기록의 합친 비중 1/2이 남습니다.",
+          "순서 질문이 필요하면 원래 기록이나 다른 숫자 규칙을 함께 보관해야 합니다."
+        ],
+        "requiredConcepts": [
+          "random-variable"
+        ],
+        "sectionId": "mapping"
+      },
+      {
+        "level": "advanced",
+        "question": "13절에서 E[X²]와 (E[X])²를 계산하고 언제 같아지는지도 설명하세요.",
+        "answerChecklist": [
+          "E[X²]=3/2이고 (E[X])²=1입니다.",
+          "차이 1/2은 평균에서의 제곱 거리의 평균입니다.",
+          "두 번째 모멘트가 유한하면 차이는 음수가 아니며 X가 확률 1로 상수일 때 등호입니다."
+        ],
+        "requiredConcepts": [
+          "expectation",
+          "expectation-linearity"
+        ],
+        "sectionId": "square-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "11절의 Y=2−X 사례로 종속 변수에도 기댓값의 선형성이 성립하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "네 행의 2X+3Y는 4·5·5·6이고 가중 평균은 5입니다.",
+          "같은 기록의 확률을 곱한 합을 두 합으로 분배합니다.",
+          "독립을 이용해 결합확률을 분해할 필요가 없으며 고정 상수와 유한 기댓값 조건을 유지합니다."
+        ],
+        "requiredConcepts": [
+          "expectation-linearity"
+        ],
+        "sectionId": "transform-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "9절에서 기댓값이 실제 가능한 값이 아닐 수 있는 예를 제시하세요.",
+        "answerChecklist": [
+          "첫 결과가 H이면 1, T이면 0인 U를 정의합니다.",
+          "공정한 던짐에서 E[U]=1/2입니다.",
+          "한 실행의 U는 0 또는 1이어서 1/2는 가능한 실현값이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "random-variable",
+          "expectation"
+        ],
+        "sectionId": "expectation"
+      }
     ],
-    papers: [
-      { title: "MIT 6.041SC — Discrete random variables", href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#random-variables", problem: "Outcome을 값과 induced distribution으로 바꾸는 문제", contribution: "Random variable과 PMF를 function 관점으로 체계화", assumptions: "Discrete sample space와 probability law", evidenceScope: "Discrete random variable·PMF", notClaim: "Value가 outcome 정보를 모두 보존한다는 주장이 아님", sectionId: "paper-random-variable" },
-      { title: "MIT 6.041SC — Expectation", href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#expectation", problem: "Distribution center와 sum의 expectation을 계산하는 문제", contribution: "Weighted sum과 linearity를 설명", assumptions: "Relevant finite expectation", evidenceScope: "Discrete expectation·linearity", notClaim: "Expectation이 다음 sample을 예측한다는 주장이 아님", sectionId: "paper-expectation" },
-    ],
+    "papers": [
+      {
+        "title": "MIT 6.041SC Lecture 5 · PDF 1쪽 함수와 PMF",
+        "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/e49cdbaf3129125869700c46aa661fa1_MIT6_041SCF13_L05.pdf#page=1",
+        "sectionId": "paper-random-variable",
+        "problem": "순서 기록을 숫자로 바꾸며 같은 값의 확률을 구합니다.",
+        "contribution": "실제 원문의 역상 사건에 x=1을 넣어 HT와 TH의 비중을 합합니다.",
+        "assumptions": "두 공정·독립 던짐의 유한한 기록 모형입니다. 주사위 그림을 그대로 재현했다는 주장이 아니라 원문 절차에 동전 사례를 대입합니다.",
+        "evidenceScope": "PDF의 함수 정의·값별 비중 모으기 식과 같은 기록의 직접 계산입니다.",
+        "notClaim": "숫자 하나가 원래 기록의 순서를 모두 보존한다는 뜻은 아닙니다."
+      },
+      {
+        "title": "MIT 6.041SC Lecture 5 · PDF 2쪽 함수의 기댓값",
+        "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/e49cdbaf3129125869700c46aa661fa1_MIT6_041SCF13_L05.pdf#page=2",
+        "sectionId": "paper-expectation",
+        "problem": "평균을 구한 뒤 변환하는 일과 변환한 값의 평균을 구하는 일을 구별합니다.",
+        "contribution": "같은 pₓ에 g(x)=2x+3과 x²를 넣어 5와 3/2를 계산합니다.",
+        "assumptions": "유한한 분포와 고정된 숫자 변환입니다. 일반 유한 기댓값을 다룰 때는 절댓값의 적분 가능성도 확인합니다.",
+        "evidenceScope": "E[X]와 E[g(X)]의 원문 식 및 동일 사례 대입입니다.",
+        "notClaim": "모든 비선형 변환이 모든 분포에서 반드시 다른 값을 만든다는 뜻은 아닙니다."
+      },
+      {
+        "title": "MIT 6.041SC Lecture 7 · PDF 1쪽 합과 곱의 조건",
+        "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/c0a406b218730ddb16326d695a895c57_MIT6_041SCF13_L07.pdf#page=1",
+        "sectionId": "transform-boundary",
+        "problem": "종속 변수의 합과 곱에서 서로 다른 계산 조건을 확인합니다.",
+        "contribution": "원문의 두 변수 가중합에 (X,Y)=(2,0),(1,1),(0,2)를 넣어 선형 조합 5를 구합니다.",
+        "assumptions": "관련 절댓값 기댓값은 유한합니다. 원문이 곱에 붙인 독립 조건을 합의 선형성과 구별합니다.",
+        "evidenceScope": "실제 결합확률 가중합·합의 식·독립일 때 곱의 식입니다.",
+        "notClaim": "평균의 곱이 같다는 등식 하나가 독립의 충분조건이라는 주장이 아닙니다."
+      }
+    ]
   },
   "ai/math-variance-sampling": {
-    coreIdea: "Variance와 standard deviation은 population spread를 서로 다른 단위로 표현하고 sample mean·sample variance는 관측 일부로 center와 spread를 추정합니다. Independence·sampling weights·moment 조건을 확인해야 1/B와 stochastic-gradient 보장을 사용할 수 있습니다.",
-    assumedKnowledge: [
-      { id: "random-variable", role: "관측값을 random value로 읽습니다." },
-      { id: "expectation", role: "Variance와 estimator의 population center를 읽습니다." },
-      { id: "expectation-linearity", role: "Mini-batch average의 expectation을 분배합니다." },
-      { id: "gradient", role: "Example별 loss sensitivity를 random vector sample로 읽습니다." },
-      { id: "coordinate-vector", role: "Gradient estimator의 shape를 parameter vector와 맞춥니다." },
+    "coreIdea": "같은 네 기록의 점수로 원래 분산, 표본평균의 분산, 원래 분산의 추정량을 구별합니다. n−1과 1/B를 유도하고 실제 표집 방식·목표 가중치·손실 감소의 서로 다른 조건을 확인합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "random-variable",
+        "role": "기록을 점수로 바꾸는 고정 함수를 사용합니다."
+      },
+      {
+        "id": "expectation",
+        "role": "원래 평균과 반복 추정값의 평균을 구합니다."
+      },
+      {
+        "id": "expectation-linearity",
+        "role": "같은 비중의 합에서 평균을 분배합니다."
+      },
+      {
+        "id": "gradient",
+        "role": "같은 조절값에서 자료별 손실의 변화율을 구합니다."
+      },
+      {
+        "id": "coordinate-vector",
+        "role": "조절값이 여러 개이면 기울기를 같은 크기의 벡터로 읽습니다."
+      }
     ],
-    introducedHere: [
-      { id: "variance", role: "Center 주변 squared deviation의 population average를 계산합니다." },
-      { id: "standard-deviation", role: "Spread를 original measurement unit으로 되돌립니다." },
-      { id: "sample-mean", role: "Finite sample average로 population expectation을 추정합니다." },
-      { id: "sample-variance-estimator", role: "n−1 correction으로 population variance를 추정합니다." },
-      { id: "law-of-large-numbers", role: "Sample mean의 asymptotic concentration 조건을 설명합니다." },
-      { id: "stochastic-gradient-estimator", role: "Mini-batch average를 full empirical gradient estimate로 읽습니다." },
+    "introducedHere": [
+      {
+        "id": "variance",
+        "role": "원래 평균에서 떨어진 거리를 제곱해 양쪽 차이가 지워지지 않게 합니다."
+      },
+      {
+        "id": "standard-deviation",
+        "role": "제곱된 단위에 제곱근을 취해 원래 단위로 읽습니다."
+      },
+      {
+        "id": "sample-mean",
+        "role": "관측한 여러 값에 같은 비중을 주어 원래 평균을 추정합니다."
+      },
+      {
+        "id": "sample-variance-estimator",
+        "role": "같은 자료로 평균을 먼저 맞추며 덜 센 제곱 거리의 기댓값을 보정합니다."
+      },
+      {
+        "id": "law-of-large-numbers",
+        "role": "평균이 목표에서 정해 둔 폭 이상 벗어날 확률이 반복 수와 함께 줄어듭니다."
+      },
+      {
+        "id": "stochastic-gradient-estimator",
+        "role": "일부 자료의 기울기를 같은 현재 위치에서 평균해 전체 목표의 기울기를 추정합니다."
+      },
+      {
+        "id": "unbiased-estimator",
+        "role": "한 번의 정답 근접도 대신 같은 절차를 반복한 추정값들의 중심을 봅니다."
+      },
+      {
+        "id": "chebyshev-inequality",
+        "role": "큰 편차가 차지하는 최소 제곱 오차만 세어 그 사건의 확률을 제한합니다."
+      },
+      {
+        "id": "importance-weighted-estimator",
+        "role": "뽑힐 기회가 달라진 만큼 각 값의 기여 배수를 반대로 바꿉니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "variance", sectionId: "variance", intuition: "Center에서의 signed deviation을 square해 direction을 없애고 큰 deviation을 강조한 spread입니다.", workedExample: "앞면 수 0,1,2의 mean 1 주변 squared-deviation average는 1/2입니다.", boundary: "Variance unit은 X unit의 square이고 infinite second moment에는 finite variance가 없습니다." },
-      { id: "standard-deviation", sectionId: "variance", intuition: "Variance에 root를 취해 X와 같은 unit으로 돌아온 spread scale입니다.", workedExample: "Variance 1/2 앞면^2이면 standard deviation은 약 0.707 앞면입니다.", boundary: "각 sample이 mean에서 항상 standard deviation만큼 떨어진다는 뜻은 아닙니다." },
-      { id: "sample-mean", sectionId: "sample-estimation", intuition: "Population 전체 대신 관측한 B개 값에 같은 비중을 주어 center를 추정합니다.", workedExample: "1,2,3의 sample mean은 2입니다.", boundary: "Biased sampling과 dependence가 있으면 target center나 1/B variance law가 깨질 수 있습니다." },
-      { id: "sample-variance-estimator", sectionId: "sample-estimation", intuition: "같은 sample로 mean을 추정해 잃은 자유도 하나를 반영해 population spread를 추정합니다.", workedExample: "1,2,3의 square-deviation sum 2를 n−1=2로 나눠 s^2=1을 얻습니다.", boundary: "세 값 자체의 descriptive population variance 2/3과 unknown population estimator 1은 질문이 다릅니다." },
-      { id: "law-of-large-numbers", sectionId: "law-of-large-numbers", intuition: "Independent repeated average가 population mean에서 크게 벗어날 probability가 sample 수와 함께 작아지는 정리입니다.", workedExample: "Finite variance Chebyshev bound σ^2/(Bε^2)는 B가 커지면 0으로 갑니다.", boundary: "Finite B exact equality나 arbitrary dependent·heavy-tail sequence를 보장하지 않습니다.", proofIdea: "Expectation linearity로 sample mean center는 μ이고 independence로 variance는 σ^2/B입니다. Chebyshev inequality를 적용해 fixed ε 밖의 probability upper bound가 0으로 감을 보입니다.", counterexample: "모든 sample이 같은 random Z의 복제면 average도 Z라 variance가 줄지 않고, Cauchy sample에는 finite mean 조건도 없습니다." },
-      { id: "stochastic-gradient-estimator", sectionId: "gradient-estimator", intuition: "Random example gradient를 평균해 dataset 전체 empirical gradient direction을 추정합니다.", workedExample: "Uniform indices의 batch mean gradient expectation은 N개 full gradient average와 같습니다.", boundary: "Unbiasedness는 low variance·한 step loss 감소·nonconvex global convergence와 다른 성질입니다." },
+    "conceptExplanations": [
+      {
+        "id": "variance",
+        "sectionId": "variance",
+        "intuition": "원래 평균에서 떨어진 거리를 제곱해 양쪽 차이가 지워지지 않게 합니다.",
+        "workedExample": "네 점수 3·2·2·1의 평균 2에서 제곱 편차의 평균은 1/2점²입니다. 앞면 수 X도 같은 분산 1/2입니다.",
+        "boundary": "유한한 분산에는 유한한 두 번째 모멘트가 필요합니다. 평균의 분산과 한 관측의 분산을 구별합니다."
+      },
+      {
+        "id": "standard-deviation",
+        "sectionId": "variance",
+        "intuition": "제곱된 단위에 제곱근을 취해 원래 단위로 읽습니다.",
+        "workedExample": "분산 1/2점²의 표준편차는 약 0.7071점입니다. 앞면 수이면 단위도 개수입니다.",
+        "boundary": "각 값이 평균에서 언제나 이 거리만큼 떨어진다는 뜻은 아닙니다."
+      },
+      {
+        "id": "sample-mean",
+        "sectionId": "sample-estimation",
+        "intuition": "관측한 여러 값에 같은 비중을 주어 원래 평균을 추정합니다.",
+        "workedExample": "관측한 1·2·3의 평균은 2입니다. 독립 두 점수 평균의 분산은 1/4입니다.",
+        "boundary": "같은 한 값을 복사해도 평균은 불편할 수 있지만 분산이 줄지 않습니다. 독립·분산·목표 비중을 따로 확인합니다."
+      },
+      {
+        "id": "sample-variance-estimator",
+        "sectionId": "sample-correction",
+        "intuition": "같은 자료로 평균을 먼저 맞추며 덜 센 제곱 거리의 기댓값을 보정합니다.",
+        "workedExample": "1·2·3의 거리 합 2를 n−1=2로 나누면 1입니다. 같은 네 기록에서 세 번 뽑는 64개 묶음의 추정값 평균은 원래 분산 1/2입니다.",
+        "boundary": "n>1인 i.i.d.와 유한 분산을 전제합니다. 관측값 자체의 분산 2/3과 질문이 다르고 매 표본에서 더 정확하다는 뜻도 아닙니다."
+      },
+      {
+        "id": "law-of-large-numbers",
+        "sectionId": "law-of-large-numbers",
+        "intuition": "평균이 목표에서 정해 둔 폭 이상 벗어날 확률이 반복 수와 함께 줄어듭니다.",
+        "workedExample": "분산 1/2, 허용 오차 1/2이면 상한은 2/B입니다. B=16에서 상한 1/8이며 정확한 동전 확률 약 0.0070과 다릅니다.",
+        "boundary": "본문 증명은 i.i.d. 유한 분산의 충분조건입니다. 분산이 무한해도 유한한 절댓값 기댓값 아래 더 넓은 정리가 있으며 유한 B의 정확한 일치를 보장하지 않습니다.",
+        "proofIdea": "평균의 기댓값은 μ이고 독립 유한 분산에서 평균의 분산은 σ²/B입니다. 큰 오차 사건의 제곱 오차 기여를 하한으로 잡아 σ²/(Bε²)를 얻으며 모든 고정 ε>0에서 B→∞이면 0으로 갑니다.",
+        "counterexample": "한 번 뽑은 Z를 모든 자리에 복사하면 평균도 Z여서 분산 1/2가 남습니다. B=2에서는 실제 큰 오차 확률 5/8이므로 유한 표본의 오차 0도 보장하지 않습니다."
+      },
+      {
+        "id": "stochastic-gradient-estimator",
+        "sectionId": "gradient-estimator",
+        "intuition": "일부 자료의 기울기를 같은 현재 위치에서 평균해 전체 목표의 기울기를 추정합니다.",
+        "workedExample": "a=[3,2,2,1], 손실 (θ+aᵢ)²/2에서 균등 표집의 평균 기울기는 θ+2입니다. θ=0의 분산은 독립 표집에서 1/(2B)입니다.",
+        "boundary": "조건부 균등 주변분포는 불편성을 주지만 분산 감소와 매번의 손실 감소는 별도입니다. θ=−1.5에서 선택 a=1, 학습률 0.1이면 손실이 0.375에서 0.40125로 늘어납니다."
+      },
+      {
+        "id": "unbiased-estimator",
+        "sectionId": "sample-correction",
+        "intuition": "한 번의 정답 근접도 대신 같은 절차를 반복한 추정값들의 중심을 봅니다.",
+        "workedExample": "세 번 표집한 64개 묶음에서 n−1 분모 추정량의 평균은 1/2입니다. 관측 1·2·3의 추정값 1은 이번에 2/3보다 정답 1/2에서 더 멀어도 이 성질과 모순되지 않습니다.",
+        "boundary": "표집 법칙과 목표량을 고정해야 합니다. 분산 감소나 일관성·매번의 손실 감소와 다릅니다."
+      },
+      {
+        "id": "chebyshev-inequality",
+        "sectionId": "law-of-large-numbers",
+        "intuition": "큰 편차가 차지하는 최소 제곱 오차만 세어 그 사건의 확률을 제한합니다.",
+        "workedExample": "두 점수 평균의 분산 1/4과 오차 폭 1/2에서 상한 1을 얻고 실제 확률 5/8과 비교합니다. 16개 평균은 상한 1/8입니다.",
+        "boundary": "유한 분산과 양수 오차 폭이 필요하며 실제 확률을 정확히 계산한 값은 아닙니다.",
+        "proofIdea": "오차 절댓값이 ε 이상인 사건에서는 제곱 오차가 ε² 이상입니다. 전체 제곱 오차 평균은 ε²에 그 사건의 확률을 곱한 값 이상이므로 나누면 상한이 됩니다.",
+        "counterexample": "같은 B=2 사례의 실제 확률 5/8은 상한 1과 다릅니다. 분산이 무한하면 이 유한한 상한을 쓸 수 없습니다."
+      },
+      {
+        "id": "importance-weighted-estimator",
+        "sectionId": "sampling-weights",
+        "intuition": "뽑힐 기회가 달라진 만큼 각 값의 기여 배수를 반대로 바꿉니다.",
+        "workedExample": "q=(1/2,1/6,1/6,1/6)에서 값 3·2·2·1을 4qᵢ로 나누면 1.5·3·3·1.5이고 실제 q의 비중으로 평균하면 2입니다.",
+        "boundary": "목표에 필요한 자료를 qᵢ=0으로 전혀 뽑지 않으면 이 나눗셈으로 복원할 수 없습니다. 작은 q의 큰 배수는 분산을 키울 수 있습니다."
+      }
     ],
-    conceptStages: [
-      { label: "Spread", relation: "Center 주변 deviation의 scale 측정", concepts: ["random-variable", "expectation", "variance", "standard-deviation"] },
-      { label: "Estimate", relation: "Finite observations로 center와 spread 추정", concepts: ["sample-mean", "sample-variance-estimator", "variance"] },
-      { label: "Concentrate", relation: "Independent average의 1/B noise와 asymptotic limit", concepts: ["sample-mean", "variance", "law-of-large-numbers"] },
-      { label: "Train", relation: "Example gradient 평균을 full direction estimate로 사용", concepts: ["gradient", "expectation-linearity", "sample-mean", "stochastic-gradient-estimator"] },
-      { label: "Boundary", relation: "Correlation·bias·moment failure 분리", concepts: ["variance", "sample-mean", "law-of-large-numbers", "stochastic-gradient-estimator"] },
+    "conceptStages": [
+      {
+        "label": "원래 퍼짐",
+        "relation": "네 기록에서 제곱 거리와 원래 단위를 계산합니다.",
+        "concepts": [
+          "random-variable",
+          "expectation",
+          "variance",
+          "standard-deviation"
+        ]
+      },
+      {
+        "label": "관측값으로 추정",
+        "relation": "같은 세 관측값의 분모 n과 n−1이 답하는 질문을 구별합니다.",
+        "concepts": [
+          "sample-mean",
+          "sample-variance-estimator",
+          "variance",
+          "unbiased-estimator"
+        ]
+      },
+      {
+        "label": "평균 오차",
+        "relation": "독립 평균의 분산을 확률 상한으로 연결합니다.",
+        "concepts": [
+          "sample-mean",
+          "variance",
+          "law-of-large-numbers",
+          "chebyshev-inequality"
+        ]
+      },
+      {
+        "label": "학습 방향",
+        "relation": "같은 θ에서 뽑은 자료의 기울기를 평균합니다.",
+        "concepts": [
+          "gradient",
+          "expectation-linearity",
+          "sample-mean",
+          "stochastic-gradient-estimator"
+        ]
+      },
+      {
+        "label": "표집 경계",
+        "relation": "복사·비복원·다른 비중에서 남는 조건을 확인합니다.",
+        "concepts": [
+          "variance",
+          "sample-mean",
+          "law-of-large-numbers",
+          "stochastic-gradient-estimator",
+          "importance-weighted-estimator"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "앞면 수 X의 variance를 계산할 수 있을까요?", answerChecklist: ["Mean은 1이다.", "Squared deviations는 1,0,1이다.", "Probability average는 1/2다."], requiredConcepts: ["variance", "expectation"], sectionId: "variance" },
-      { level: "basic", question: "Variance 1/2 앞면^2에서 standard deviation과 단위를 구할 수 있을까요?", answerChecklist: ["Square root를 취한다.", "약 .707이다.", "Unit은 앞면이다."], requiredConcepts: ["variance", "standard-deviation"], sectionId: "variance" },
-      { level: "basic", question: "1,2,3의 sample mean을 계산할 수 있을까요?", answerChecklist: ["합은 6이다.", "n=3으로 나눈다.", "Mean은 2다."], requiredConcepts: ["sample-mean"], sectionId: "sample-estimation" },
-      { level: "basic", question: "1,2,3의 sample variance estimator를 계산할 수 있을까요?", answerChecklist: ["Square-deviation sum은 2다.", "n−1은 2다.", "s^2=1이다."], requiredConcepts: ["sample-mean", "sample-variance-estimator"], sectionId: "sample-estimation" },
-      { level: "basic", question: "Batch size 1에서 16으로 늘 때 mean variance와 standard deviation은 어떻게 바뀔까요?", answerChecklist: ["Variance는 σ^2/16이다.", "Standard deviation은 σ/4다.", "Independence를 명시한다."], requiredConcepts: ["sample-mean", "variance", "standard-deviation"], sectionId: "law-of-large-numbers" },
-      { level: "basic", question: "Uniform mini-batch gradient가 무엇을 추정할까요?", answerChecklist: ["Example gradient를 평균한다.", "Full empirical gradient를 target으로 한다.", "Estimator는 random vector다."], requiredConcepts: ["sample-mean", "stochastic-gradient-estimator", "gradient"], sectionId: "gradient-estimator" },
-      { level: "advanced", question: "왜 sample variance에서 n−1 correction이 필요한지 expectation으로 설명할 수 있을까요?", answerChecklist: ["Sample mean 추정으로 자유도 하나를 쓴다.", "Square sum expectation은 (n−1)σ^2다.", "n−1로 나누면 unbiased다."], requiredConcepts: ["sample-variance-estimator", "variance"], sectionId: "sample-estimation" },
-      { level: "advanced", question: "큰 수의 법칙 proof idea를 variance와 Chebyshev로 설명할 수 있을까요?", answerChecklist: ["Mean center는 μ다.", "Variance는 σ^2/B다.", "Error probability bound가 0으로 간다."], requiredConcepts: ["sample-mean", "variance", "law-of-large-numbers"], sectionId: "law-of-large-numbers" },
-      { level: "advanced", question: "같은 index를 batch 전체에 복제하면 왜 1/B variance 감소가 사라질까요?", answerChecklist: ["모든 I_j가 같은 J다.", "Batch mean은 한 sample gradient와 같다.", "Unbiased여도 variance는 그대로다."], requiredConcepts: ["sample-mean", "variance", "stochastic-gradient-estimator"], sectionId: "boundaries" },
-      { level: "advanced", question: "Sampling probability가 objective weight와 다를 때 estimator를 어떻게 진단할까요?", answerChecklist: ["Expected contribution weight를 계산한다.", "Full empirical weight 1/N과 비교한다.", "Importance correction 또는 sampler 변경을 제안한다."], requiredConcepts: ["expectation-linearity", "stochastic-gradient-estimator"], sectionId: "boundaries" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "7절에서 앞면 수 X와 점수 Z=X+1의 분산을 구하세요.",
+        "answerChecklist": [
+          "X의 평균은 1이고 Z의 평균은 2입니다.",
+          "네 기록의 편차 제곱은 두 변수 모두 1·0·0·1입니다.",
+          "각 기록의 비중 1/4로 평균하면 분산은 1/2입니다."
+        ],
+        "requiredConcepts": [
+          "variance",
+          "expectation"
+        ],
+        "sectionId": "variance"
+      },
+      {
+        "level": "basic",
+        "question": "7절에서 앞면 수의 분산 1/2로 표준편차와 단위를 구하세요.",
+        "answerChecklist": [
+          "분산의 제곱근을 취합니다.",
+          "√(1/2)≈0.7071입니다.",
+          "단위는 앞면 개수이며 제곱 개수가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "variance",
+          "standard-deviation"
+        ],
+        "sectionId": "variance"
+      },
+      {
+        "level": "basic",
+        "question": "8절에서 관측 1·2·3의 표본평균을 계산하세요.",
+        "answerChecklist": [
+          "세 값의 합은 6입니다.",
+          "관측 수 3으로 나눕니다.",
+          "평균은 2입니다."
+        ],
+        "requiredConcepts": [
+          "sample-mean"
+        ],
+        "sectionId": "sample-estimation"
+      },
+      {
+        "level": "basic",
+        "question": "8절에서 관측 1·2·3의 분산 추정량과 관측값 자체의 분산을 구별하세요.",
+        "answerChecklist": [
+          "표본평균 2에서 제곱 거리 합은 2입니다.",
+          "원래 분산의 불편 추정량은 n−1=2로 나누어 1입니다.",
+          "주어진 세 값 자체의 분산은 3으로 나눈 2/3입니다."
+        ],
+        "requiredConcepts": [
+          "sample-mean",
+          "sample-variance-estimator"
+        ],
+        "sectionId": "sample-estimation"
+      },
+      {
+        "level": "basic",
+        "question": "10절에서 독립 표집 묶음을 1개에서 16개로 늘리면 평균의 분산과 표준편차는 어떻게 바뀌나요?",
+        "answerChecklist": [
+          "독립이고 같은 유한 분산을 가진 값을 같은 비중으로 평균합니다.",
+          "평균의 분산은 σ²에서 σ²/16으로 줄어듭니다.",
+          "표준편차는 σ에서 σ/4로 줄어듭니다."
+        ],
+        "requiredConcepts": [
+          "sample-mean",
+          "variance",
+          "standard-deviation"
+        ],
+        "sectionId": "mean-noise"
+      },
+      {
+        "level": "basic",
+        "question": "12절에서 균등 미니배치 기울기는 무엇을 추정하나요?",
+        "answerChecklist": [
+          "모든 자료 기울기를 같은 현재 θ에서 계산한 평균이 전체 목표입니다.",
+          "표집한 자료 기울기를 평균한 확률적 벡터이며 작은 사례는 스칼라입니다.",
+          "각 자리의 조건부 선택 확률이 1/N이면 기댓값이 전체 기울기이고 작은 사례에서는 θ+2입니다."
+        ],
+        "requiredConcepts": [
+          "sample-mean",
+          "stochastic-gradient-estimator",
+          "gradient"
+        ],
+        "sectionId": "gradient-estimator"
+      },
+      {
+        "level": "advanced",
+        "question": "9·10절의 항등식으로 왜 n−1로 나누면 불편한지 설명하세요.",
+        "answerChecklist": [
+          "표본평균 기준 거리 합은 모집단 평균 기준 거리 합에서 n(Z̄ₙ−μ)²를 뺀 값입니다.",
+          "i.i.d. 유한 분산에서 이 합의 기댓값은 nσ²−n(σ²/n)=(n−1)σ²입니다.",
+          "n−1로 나누면 기댓값이 σ²이며 매 표본에서 더 가까움을 뜻하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "sample-variance-estimator",
+          "variance"
+        ],
+        "sectionId": "sample-correction"
+      },
+      {
+        "level": "advanced",
+        "question": "10·11절에서 분산과 체비쇼프 부등식으로 큰 수의 법칙을 설명하세요.",
+        "answerChecklist": [
+          "표본평균의 중심은 μ이고 분산은 σ²/B입니다.",
+          "고정 ε>0에 대한 오차 확률 상한은 σ²/(Bε²)입니다.",
+          "B→∞이면 상한이 0으로 갑니다. B=2에서 상한1과 실제5/8이 다르듯 정확한 확률이나 유한 표본의 보장이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "sample-mean",
+          "variance",
+          "law-of-large-numbers"
+        ],
+        "sectionId": "law-of-large-numbers"
+      },
+      {
+        "level": "advanced",
+        "question": "16절에서 같은 자료 번호를 묶음 전체에 복사하면 무엇이 유지되고 무엇이 사라지나요?",
+        "answerChecklist": [
+          "모든 Iⱼ가 같은 J이므로 묶음 평균은 한 자료의 기울기와 같습니다.",
+          "J가 조건부 균등이면 불편성은 유지될 수 있습니다.",
+          "같은 편차의 공분산 항이 남아 1/B 분산 감소가 사라집니다."
+        ],
+        "requiredConcepts": [
+          "sample-mean",
+          "variance",
+          "stochastic-gradient-estimator"
+        ],
+        "sectionId": "boundaries"
+      },
+      {
+        "level": "advanced",
+        "question": "17절의 선택 비중 q=(1/2,1/6,1/6,1/6)을 사용하면 무엇을 보정해야 하나요?",
+        "answerChecklist": [
+          "θ=0에서 원래 기울기의 기댓값은 7/3으로 균등 목표 2와 다릅니다.",
+          "목표 비중 1/4을 실제 qᵢ로 나누어 각 기울기에 곱합니다.",
+          "보정 값 1.5·3·3·1.5를 실제 q로 평균하면 2입니다. 목표에 기여하는 자료의 양수 선택 확률이 필요합니다."
+        ],
+        "requiredConcepts": [
+          "expectation-linearity",
+          "stochastic-gradient-estimator"
+        ],
+        "sectionId": "sampling-weights"
+      }
     ],
-    papers: [
-      { title: "MIT 6.041SC — Variance and laws of large numbers", href: "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/#variance-and-lln", problem: "Population spread와 sample-average reliability를 구분하는 문제", contribution: "Variance·sample mean·large-number behavior를 연결", assumptions: "Stated independence·moment conditions", evidenceScope: "Discrete variance·sampling average·LLN", notClaim: "모든 dependent data에 1/B가 성립한다는 주장이 아님", sectionId: "paper-variance-sampling" },
-      { title: "A Stochastic Approximation Method", href: "https://doi.org/10.1214/aoms/1177729586", problem: "Noise observation으로 expectation-defined target에 접근하는 문제", contribution: "Recursive stochastic approximation 수렴 틀 제시", assumptions: "Original conditional expectation·variance·step-size conditions", evidenceScope: "1951 one-dimensional stochastic root finding", notClaim: "Arbitrary nonconvex SGD global convergence 주장이 아님", sectionId: "paper-robbins-monro" },
-    ],
+    "papers": [
+      {
+        "title": "MIT 6.041SC Lecture 19 · PDF 1–2쪽",
+        "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/d569abb143b22f469a09ff218cb3383c_MIT6_041SCF13_L19.pdf#page=2",
+        "sectionId": "paper-variance-sampling",
+        "problem": "평균의 분산으로 큰 오차 확률을 제한합니다.",
+        "contribution": "원문의 Mₙ 식에 분산 1/2, 오차 폭 1/2, n=2와 n=16을 넣어 상한 1과 1/8을 계산합니다.",
+        "assumptions": "i.i.d.와 유한 평균·분산, 고정 양수 오차폭입니다.",
+        "evidenceScope": "실제 PDF의 부등식과 같은 16쌍의 확률 5/8을 직접 비교합니다.",
+        "notClaim": "상한을 정확한 확률이나 유한 표본의 확정 보장으로 쓰지 않습니다."
+      },
+      {
+        "title": "NumPy 2.0 · numpy.var",
+        "href": "https://numpy.org/doc/2.0/reference/generated/numpy.var.html",
+        "sectionId": "library-normalization",
+        "problem": "관측값의 분산과 모집단 분산 추정의 분모를 구별합니다.",
+        "contribution": "원문의 기본 ddof=0과 N−ddof를 [1,2,3]에 대입해 2/3과 ddof=1의 1을 비교합니다.",
+        "assumptions": "문서 버전 2.0, 실수 세 값, 유효한 분모의 직접 계산입니다.",
+        "evidenceScope": "실제 공식 API 설명에 대한 수동 대입입니다.",
+        "notClaim": "라이브러리 실행이나 모든 자료형의 수치 정확도 검증이 아닙니다."
+      },
+      {
+        "title": "PyTorch 2.14 · torch.var",
+        "href": "https://docs.pytorch.org/docs/2.14/generated/torch.var.html",
+        "sectionId": "library-normalization",
+        "problem": "기본값이 다른 두 함수의 결과를 구별합니다.",
+        "contribution": "실제 correction=1 기본값으로 같은 세 값의 분산 추정값 1을 구합니다.",
+        "assumptions": "문서 버전 2.14이며 N=3입니다. 이전 unbiased 인자의 변경과 현재 correction 이름을 구별합니다.",
+        "evidenceScope": "공식 문서의 기본 인자와 수동 분모 계산입니다.",
+        "notClaim": "PyTorch에 ddof라는 인자를 주었다거나 실행 성능을 측정했다고 주장하지 않습니다."
+      },
+      {
+        "title": "Robbins & Monro (1951), A Stochastic Approximation Method",
+        "href": "https://www.columbia.edu/~ww2040/8100F16/RM51.pdf#page=3",
+        "sectionId": "paper-robbins-monro",
+        "problem": "잡음이 있는 응답으로 기대 응답의 목표 위치를 찾습니다.",
+        "contribution": "원문 식 (7)과 (50)에 같은 위치 −1.5와 뽑은 기울기를 넣어 −1.45와 −1.55를 계산합니다.",
+        "assumptions": "한 번의 대수 대입이며 원문 정리 2의 전역 유계, 보폭 수열, 평균 응답 조건은 별도로 확인합니다.",
+        "evidenceScope": "종이 401·405·406쪽 실제 스캔에서 식 (7)과 (50)에 숫자를 대입합니다.",
+        "notClaim": "전역 유계가 아닌 우리 선형 기울기에 1951년 정리를 직접 적용하거나 임의의 SGD 수렴을 보장하지 않습니다."
+      }
+    ]
   },
   "ai/math-differential-equations-numerical-solvers": {
     "entryNote": "남은 양 1이 줄어드는 같은 1초를 두 번과 네 번으로 나눕니다. 그림에서 차이를 확인한 뒤 실제 torchdiffeq 원문의 변화량과 상태 갱신을 같은 숫자로 읽습니다.",
@@ -46161,433 +46955,467 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "16칸짜리 공간에 35개 기록을 담고 38개, 49개로 늘리며 순서표·공유·재사용을 따라갑니다."
   },
   "ai/vllm-spec-decode": {
-    coreIdea: "Speculative decoding은 작은 proposer의 출력을 정답으로 대신 쓰는 기법이 아닙니다. 현재 prefix에서 만든 K개 후보를 target이 한 verification pass로 채점하고, rejection point까지의 prefix와 correction 하나만 commit해 target distribution을 보존합니다. 이득은 acceptance rate α·speculation length K·draft 비용 c로 닫히는 speedup 식이 1을 넘는, 즉 memory-bound에 가까운 workload에서만 생깁니다.",
-    assumedKnowledge: [
+    "coreIdea": "A·B·B·A를 제안한 한 요청에서 확률 보정·첫 거부·점수 index·유효 KV 길이를 따라간 뒤 같은 출력량의 전체 시간을 비교합니다.",
+    "assumedKnowledge": [
       {
-        id: "autoregressive-decoding",
-        role: "확정한 token이 다음 step의 조건이 되는 serial generation loop를 출발점으로 사용합니다.",
+        "id": "autoregressive-decoding",
+        "role": "확정한 token이 다음 step의 조건이 되는 serial generation loop를 출발점으로 사용합니다."
       },
       {
-        id: "probability-distribution",
-        role: "Draft q와 target p가 vocabulary 전체에 나누어 준 확률 질량을 읽습니다.",
+        "id": "probability-distribution",
+        "role": "Draft q와 target p가 vocabulary 전체에 나누어 준 확률 질량을 읽습니다."
       },
       {
-        id: "conditional-probability",
-        role: "각 위치의 next-token probability가 동일한 확정 prefix를 조건으로 한다는 전제를 확인합니다.",
+        "id": "conditional-probability",
+        "role": "각 위치의 next-token probability가 동일한 확정 prefix를 조건으로 한다는 전제를 확인합니다."
       },
       {
-        id: "expectation",
-        role: "Workload 전체의 acceptance length와 committed length 평균을 확률변수의 기댓값으로 해석합니다.",
+        "id": "expectation",
+        "role": "Workload 전체의 acceptance length와 committed length 평균을 확률변수의 기댓값으로 해석합니다."
       },
       {
-        id: "kv-cache-decode-state",
-        role: "수락·거부 뒤 어느 token 위치까지 runtime state를 확정할지 추적합니다.",
-      },
+        "id": "kv-cache-decode-state",
+        "role": "출력 ID를 고른 사건과 그 ID의 KV를 계산한 사건의 한 칸 차이를 추적합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "speculative-draft-verify-cycle",
-        role: "Proposal·target verification·acceptance·state commit의 한 cycle을 연결합니다.",
+        "id": "speculative-draft-verify-cycle",
+        "role": "여러 후보를 먼저 만든 뒤 기준 모델로 확인하고 확정 출력과 계산 기록을 함께 갱신합니다."
       },
       {
-        id: "speculative-acceptance-length",
-        role: "수락된 draft prefix A와 실제 committed token Y를 구분해 측정합니다.",
+        "id": "speculative-acceptance-length",
+        "role": "그대로 받아들인 후보 길이 A와 교체 또는 bonus를 포함한 검증 출력 길이 Y를 따로 셉니다."
       },
       {
-        id: "speculative-rejection-sampling",
-        role: "Draft가 제안한 확률 질량과 target residual에서 최종 token을 sampling합니다.",
+        "id": "speculative-rejection-sampling",
+        "role": "제안의 공통 확률 비중을 받아들이고 거부된 경우 부족한 비중에서 새 출력을 고릅니다."
       },
       {
-        id: "speculative-target-distribution-invariance",
-        role: "Acceptance와 correction 두 경로를 합친 출력 확률이 target p와 같음을 설명합니다.",
+        "id": "speculative-target-distribution-invariance",
+        "role": "수락과 교체의 두 확률 비중을 합하면 기준 모델의 선택 비중으로 돌아옵니다."
       },
       {
-        id: "speculative-suffix-causality",
-        role: "첫 거부 뒤 후보가 바뀐 prefix를 조건으로 하지 않았으므로 다시 계산해야 함을 설명합니다.",
+        "id": "speculative-suffix-causality",
+        "role": "앞 후보를 바꾸면 뒤 후보가 가정했던 앞 글도 달라져 이어 확정할 수 없습니다."
       },
       {
-        id: "eagle-feature-level-proposal",
-        role: "EAGLE이 target feature와 token을 조건으로 feature-level draft를 만드는 경로를 구분합니다.",
+        "id": "eagle-feature-level-proposal",
+        "role": "기준 모델의 중간 표현과 이미 선택한 다음 token을 함께 사용해 이후 표현과 후보를 예측합니다."
       },
       {
-        id: "native-mtp-proposal",
-        role: "학습된 future-token module과 runtime speculative verification을 서로 다른 계약으로 구분합니다.",
+        "id": "native-mtp-proposal",
+        "role": "미래 token 예측을 학습한 모델 내부 모듈을 후보 제안에 사용하고 실제 확정은 기준 모델 검증으로 결정합니다."
       },
       {
-        id: "speculative-serving-break-even",
-        role: "Committed-token 기준 target-only 시간과 proposal·verify·runtime cycle 비용을 비교합니다.",
+        "id": "speculative-serving-break-even",
+        "role": "같은 출력량의 단독 생성 기준 시간과 후보 준비·검증·나머지 처리의 전체 시간을 비교합니다."
       },
       {
-        id: "dynamic-speculation-policy",
-        role: "Workload와 runtime 상태에 따라 speculation depth를 조절하거나 target-only로 돌아갑니다.",
-      },
-      { id: "speculation-length", role: "한 cycle에 draft가 제안하는 token 수 K와 그 상한 K+1, 최적 K의 선택 기준을 정의합니다." },
-      { id: "speculative-verification-pass", role: "Target이 K+1 위치를 한 forward로 채점하는 단계와 그 비용이 한 step과 비슷한 이유를 설명합니다." },
-      { id: "speculative-rejection-point", role: "첫 거부 위치에서 residual로 resample하고 뒤 후보를 버리는 절차를 AlgorithmBlock으로 고정합니다." },
-      { id: "speculative-acceptance-rate", role: "위치별 수락 확률 α를 공유 질량으로 정의하고 기대 확정 길이의 닫힌 식을 유도합니다." },
-      { id: "speculative-speedup-model", role: "α·K·c로 speedup을 계산하고 항상 빨라지지 않는 조건을 판정합니다." },
-],
-    conceptExplanations: [
-      {
-        id: "speculative-draft-verify-cycle",
-        sectionId: "overview",
-        intuition:
-          "빠른 조수가 다음 문장을 미리 적어도 원고에 바로 넣지 않고, 책임 편집자가 여러 단어를 한 번에 대조한 뒤 통과한 앞부분만 확정하는 과정입니다.",
-        workedExample:
-          "Draft가 K=4 후보를 만들고 앞의 두 token만 통과하면 target은 correction token까지 세 token을 확정하고 바뀐 prefix에서 다음 cycle을 시작합니다.",
-        boundary:
-          "Proposer가 빠르거나 정확하다는 사실만으로 이득이 보장되지 않으며 target verification과 scheduler·cache commit이 같은 acceptance를 사용해야 합니다.",
+        "id": "dynamic-speculation-policy",
+        "role": "현재 실행 조건을 입력으로 후보 깊이를 바꾸거나 후보 생성을 끄는 정책입니다."
       },
       {
-        id: "speculative-acceptance-length",
-        sectionId: "acceptance-length",
-        intuition:
-          "미리 쓴 단어 중 연속으로 맞은 수와, correction 또는 bonus까지 포함해 실제 원고에 추가된 단어 수를 따로 세는 장부입니다.",
-        workedExample:
-          "Draft 세 개가 모두 수락되고 target bonus 하나가 추가되면 A=3, Y=4이며 100 cycle에서는 각각의 합을 100으로 나누어 평균을 냅니다.",
-        boundary:
-          "문서마다 acceptance length가 A 또는 Y를 가리킬 수 있으므로 정의 없는 3.5라는 숫자는 서로 비교할 수 없습니다.",
+        "id": "speculation-length",
+        "role": "한 검증 바퀴에 제안하는 후보 수 K입니다. 단일 chain의 종료 처리 전 검증 출력은 최대 K+1입니다."
       },
       {
-        id: "speculative-rejection-sampling",
-        sectionId: "draft-verify",
-        intuition:
-          "두 확률표가 공통으로 가진 부분은 draft 제안으로 먼저 쓰고, target에만 남은 부분은 거부 뒤 correction lottery로 보충합니다.",
-        workedExample:
-          "한 token에 p=.3, q=.5이면 draft 제안 시 .6 확률로 수락해 .3의 질량만 남기며, q가 p보다 작은 token은 항상 수락하되 부족한 target 질량은 correction에서 보충합니다.",
-        boundary:
-          "p와 q가 같은 vocabulary·같은 확정 prefix의 normalized distribution이어야 하며 top-1 일치 규칙은 sampling distribution을 보존하지 않습니다.",
+        "id": "speculative-verification-pass",
+        "role": "마지막 확정 입력과 후보를 함께 계산해 각 후보와 그 다음 위치의 점수를 얻습니다."
       },
       {
-        id: "speculative-target-distribution-invariance",
-        sectionId: "paper-speculative-decoding",
-        intuition:
-          "Draft를 통해 먼저 나온 target 질량과 correction으로 보충한 target 질량을 더하면 각 token이 원래 받아야 할 확률로 정확히 돌아옵니다.",
-        workedExample:
-          "p=(.7,.3), q=(.4,.6)이면 accepted mass는 (.4,.3), correction residual은 (.3,0)이므로 최종 mass는 (.7,.3)입니다.",
-        boundary:
-          "분포 동일성은 bitwise output·kernel 결정성·structured mask 구현까지 자동 보장하지 않고, sequential 적용에서는 매 위치가 같은 committed prefix를 조건으로 해야 합니다.",
-        proofIdea:
-          "Draft를 통해 x가 출력될 질량은 q(x)min(1,p(x)/q(x))=min(p(x),q(x))입니다. 거부 전체 질량은 Σ(q-p)+이고 target에 부족한 normalized residual (p-q)+에서 correction을 뽑으므로 x에 (p(x)-q(x))+가 더해집니다. 두 항의 합은 모든 x에서 p(x)입니다.",
-        counterexample:
-          "Draft sample을 항상 수락하면 최종 분포는 q가 됩니다. 거부 뒤 residual이 아니라 target p 전체에서 다시 sampling해도 이미 accepted mass와 p가 중복되어 최종 분포가 p와 달라집니다.",
+        "id": "speculative-rejection-point",
+        "role": "앞에서부터 확인하다 처음 거부된 위치이며 그 자리의 교체만 추가하고 뒤 후보를 제외합니다."
       },
       {
-        id: "speculative-suffix-causality",
-        sectionId: "draft-verify",
-        intuition:
-          "세 번째 단어를 고치면 그 단어가 들어갔다고 보고 미리 쓴 네 번째 문장도 더 이상 현재 문장의 연속이 아닙니다.",
-        workedExample:
-          "Draft prefix (A,B,C,D)에서 C가 X로 correction되면 D는 P(·|A,B,C)에서 만든 후보이고 필요한 분포는 P(·|A,B,X)이므로 D를 확정 대상에서 제외합니다.",
-        boundary:
-          "뒤 token이 우연히 target argmax와 같아 보여도 잘못된 prefix를 조건으로 계산했다면 분포 보존 증명에 사용할 수 없습니다.",
+        "id": "speculative-acceptance-rate",
+        "role": "같은 위치의 두 선택 분포가 공유하는 비중 α=Σmin(p,q)입니다."
       },
       {
-        id: "eagle-feature-level-proposal",
-        sectionId: "paper-eagle",
-        intuition:
-          "완성된 다음 단어만 흉내 내기보다 target 내부의 문맥 feature가 어떻게 이어질지 먼저 예측해 target에 가까운 후보를 만듭니다.",
-        workedExample:
-          "EAGLE drafter는 target의 feature와 token sequence를 조건으로 다음 feature를 autoregressive하게 예측하고 LM head를 통해 draft token을 얻습니다.",
-        boundary:
-          "Feature는 token만으로 완전히 결정되지 않으며 target architecture와 호환되는 trained drafter·runtime support가 필요합니다.",
+        "id": "speculative-speedup-model",
+        "role": "검증 비용을 단독 생성 1,후보 한 step 비용을 c로 둔 모형에서 S(K)=Σαⁱ/(1+Kc)로 시간 비를 구합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "speculative-draft-verify-cycle",
+        "sectionId": "request-trace",
+        "intuition": "여러 후보를 먼저 만든 뒤 기준 모델로 확인하고 확정 출력과 계산 기록을 함께 갱신합니다.",
+        "workedExample": "A·B·B·A에서 앞 두 후보를 유지하고 셋째를 A로 바꾸어 A·B·A를 확정합니다. history 4→7과 유효 KV 3→8→6을 구분합니다.",
+        "boundary": "확정 출력 전체의 KV가 이미 계산된 것은 아닙니다. 새 correction 또는 bonus는 다음 실행의 입력이며 가정한 동기 경로의 상태를 따릅니다."
       },
       {
-        id: "native-mtp-proposal",
-        sectionId: "native-mtp",
-        intuition:
-          "Model이 학습할 때부터 다음 칸 너머의 미래도 맞히는 보조 출구를 달아 두고, serving에서 그 출구의 답을 검증용 후보로 사용합니다.",
-        workedExample:
-          "Native MTP module이 depth 4의 후보를 만들고 target verifier가 앞의 세 후보를 수락한 뒤 bonus를 내면 Y=4가 됩니다.",
-        boundary:
-          "MTP training objective나 weight 존재만으로 runtime speedup이 생기지 않으며 architecture integration·acceptance·KV commit과 numerical drift 검사가 필요합니다.",
+        "id": "speculative-acceptance-length",
+        "sectionId": "acceptance-length",
+        "intuition": "그대로 받아들인 후보 길이 A와 교체 또는 bonus를 포함한 검증 출력 길이 Y를 따로 셉니다.",
+        "workedExample": "작은 요청은 A=2,Y=3이고 모두 수락하면 A=4,Y=5입니다. 세 cycle의 A=0,2,4이면 평균 A=2,Y=3입니다.",
+        "boundary": "Y=A+1은 단일 chain에서 EOS·최대 출력 길이로 잘리기 전의 관계입니다. 사용자에게 전달한 길이나 다른 검증 방식의 metric과 구분합니다."
       },
       {
-        id: "speculative-serving-break-even",
-        sectionId: "serving-break-even",
-        intuition:
-          "미리 써서 아낀 target 작업 시간보다 초안 작성·대조·장부 정리에 든 시간이 적을 때만 전체 작업이 빨라집니다.",
-        workedExample:
-          "E[Y]=3, target-only 10ms/token, proposal 5ms, verify 12ms, runtime 2ms이면 기준 30ms보다 cycle 19ms가 작아 근사 speedup은 1.58배입니다.",
-        boundary:
-          "높은 QPS에서 target-only continuous batch가 이미 효율적이면 같은 formula의 tT(1)이 작아지고 latency tail·draft memory까지 포함한 결과가 1 아래로 갈 수 있습니다.",
+        "id": "speculative-rejection-sampling",
+        "sectionId": "distribution-proof",
+        "intuition": "제안의 공통 확률 비중을 받아들이고 거부된 경우 부족한 비중에서 새 출력을 고릅니다.",
+        "workedExample": "p=(.7,.3),q=(.4,.6)에서 A 수락 1,B수락.5로 (.4,.3)을 얻고 거부 .3은 residual (1,0)에서 A를 골라 채웁니다.",
+        "boundary": "같은 prefix의 정규화된 분포와 실제 q에서 뽑은 후보가 필요합니다. q(x)=0 사건과 거부 비중 0의 경로는 비율을 무조건 계산하지 않습니다."
       },
       {
-        id: "dynamic-speculation-policy",
-        sectionId: "dynamic-policy",
-        intuition:
-          "항상 같은 길이의 초안을 쓰지 않고, 최근 수락 결과와 시스템 혼잡을 보고 depth를 줄이거나 speculation을 쉽니다.",
-        workedExample:
-          "코드 workload에서 acceptance tail이 유지될 때 K를 늘리고, 높은 temperature 구간이나 queue 증가 시 K를 낮춰 target-only로 돌아갑니다.",
-        boundary:
-          "Dynamic policy 자체도 versioned decision program이며 선택 이유와 counterfactual baseline을 기록하지 않으면 회귀 원인을 분리할 수 없습니다.",
+        "id": "speculative-target-distribution-invariance",
+        "sectionId": "distribution-proof",
+        "intuition": "수락과 교체의 두 확률 비중을 합하면 기준 모델의 선택 비중으로 돌아옵니다.",
+        "workedExample": "수락 (.4,.3)+보충(.3,0)=(.7,.3)입니다. 거부 뒤 p 전체로 다시 뽑으면 (.61,.39)여서 원래 분포와 다릅니다.",
+        "boundary": "실제로 확정된 같은 prefix마다 보존을 적용합니다. 같은 난수 seed의 문자열 일치나 유한 정밀도 구현의 무오류를 뜻하지 않습니다.",
+        "proofIdea": "각 글자에서 후보를 수락해 남는 확률은 min(p,q)입니다. 거부된 전체 확률을 부족한 양 max(p−q,0)에 비례해 다시 나누면, 두 경로의 합이 min(p,q)+max(p−q,0)=p가 됩니다. 같은 계산을 실제로 확정된 prefix마다 반복합니다.",
+        "counterexample": "p=(.7,.3), q=(.4,.6)에서 거부 확률은 .3입니다. 이때 부족한 A에 전부 보충하면 원래 p를 복원하지만, p 전체에서 다시 뽑으면 최종 비중이 (.61,.39)가 되어 B를 지나치게 많이 냅니다."
       },
       {
-        id: "speculation-length",
-        sectionId: "speculation-length",
-        intuition:
-          "조수가 편집자 확인 없이 미리 써 두는 단어 수입니다. 많이 써 둘수록 한 번의 확인으로 확정할 수 있는 최대치는 늘지만 뒤쪽 단어는 앞이 다 맞아야만 쓸모가 있습니다.",
-        workedExample:
-          "K=4이면 draft가 네 token을 쓰고 target이 다섯 위치를 채점하므로 한 cycle의 최대 확정 길이는 5입니다. α=0.6이면 K=4에서 S가 1.92로 최대이고 K=8에서는 1.77로 줄어듭니다.",
-        boundary:
-          "K는 α와 c가 정해진 뒤 speedup 식을 최대로 하는 값이며, batch가 커져 유효 token B(K+1)이 compute-bound 경계를 넘으면 같은 K라도 손해가 됩니다.",
+        "id": "speculative-suffix-causality",
+        "sectionId": "request-trace",
+        "intuition": "앞 후보를 바꾸면 뒤 후보가 가정했던 앞 글도 달라져 이어 확정할 수 없습니다.",
+        "workedExample": "셋째 B를 A로 고친 뒤 넷째 A의 조건 A·B·B는 실제 A·B·A와 다릅니다. 넷째 비교값 .2가 작아도 제외합니다.",
+        "boundary": "같은 conditional 분포를 올바른 실제 앞 글에서 적용하는 계약입니다. 단순 개별 수락 flag의 합으로 연속 prefix 길이를 대신하지 않습니다."
       },
       {
-        id: "speculative-verification-pass",
-        sectionId: "verification-pass",
-        intuition:
-          "편집자가 조수가 써 둔 네 단어를 하나씩 읽지 않고 원고 전체를 한 번 훑으며 각 자리에 자기라면 무엇을 썼을지 동시에 표시하는 과정입니다.",
-        workedExample:
-          "Prefix 길이 100에 draft 4개를 붙여 104 token을 한 forward로 넣으면 위치 101부터 105까지 다섯 개의 next-token 분포가 한 번에 나옵니다. 낮은 batch에서는 이 forward가 token 하나짜리 step과 거의 같은 시간이 듭니다.",
-        boundary:
-          "시간이 비슷한 이유는 weight read가 지배하기 때문이며, batch가 크거나 context가 길어 compute·KV read가 지배하면 K+1 위치의 pass는 한 step보다 뚜렷이 느려집니다.",
+        "id": "eagle-feature-level-proposal",
+        "sectionId": "paper-eagle",
+        "intuition": "기준 모델의 중간 표현과 이미 선택한 다음 token을 함께 사용해 이후 표현과 후보를 예측합니다.",
+        "workedExample": "현재 표현이 같아도 다음에 A를 고른 경우와 B를 고른 경우의 다음 표현은 달라집니다. EAGLE은 선택한 token 정보를 입력에 함께 줍니다.",
+        "boundary": "같은 완전한 입력의 feature 자체가 무작위라는 뜻이 아닙니다. 호환 학습 weight가 필요하고 세대별 feature·tree 구성을 구별합니다."
       },
       {
-        id: "speculative-rejection-point",
-        sectionId: "rejection-point",
-        intuition:
-          "미리 쓴 단어를 왼쪽부터 확인하다 처음 틀린 자리입니다. 그 자리는 편집자가 남은 후보 중에서 다시 고르고, 그 뒤에 써 둔 단어는 전제가 바뀌었으니 모두 지웁니다.",
-        workedExample:
-          "K=4에서 p/q가 (1, 0.9, 0.3, 1)이고 난수 r이 (0.61, 0.55, 0.73, 0.20)이면 위치 3에서 r>p/q가 처음 성립하므로 n=3입니다. 위치 3은 (p−q)+에서 뽑고 t₄는 버려 Y=3이 됩니다.",
-        boundary:
-          "거부 위치에서 target p 전체가 아니라 residual (p−q)+에서 뽑아야 분포가 보존되며, 거부가 없을 때만 K+1번째 분포에서 bonus를 뽑습니다.",
+        "id": "native-mtp-proposal",
+        "sectionId": "paper-mtp",
+        "intuition": "미래 token 예측을 학습한 모델 내부 모듈을 후보 제안에 사용하고 실제 확정은 기준 모델 검증으로 결정합니다.",
+        "workedExample": "학습된 모듈이 A·B·B·A 네 후보를 제안해도 같은 확인 결과이면 세 token만 확정하고 유효 KV는 여섯 자리입니다.",
+        "boundary": "공유 trunk 위 병렬 head라는 원 논문 구조가 모든 native MTP architecture와 같지는 않습니다. 모델별 checkpoint·실행 경로를 확인합니다."
       },
       {
-        id: "speculative-acceptance-rate",
-        sectionId: "acceptance-rate",
-        intuition:
-          "조수와 편집자가 같은 자리에서 같은 단어를 고를 확률입니다. 두 사람의 확률표에서 겹치는 부분의 넓이와 같습니다.",
-        workedExample:
-          "p=(0.7,0.3), q=(0.4,0.6)이면 공유 질량 0.4+0.3=0.7이 α입니다. 이 α를 모든 위치에 가정하면 K=3의 기대 확정 길이는 (1−0.7⁴)/0.3=2.53입니다.",
-        boundary:
-          "α는 위치·prompt마다 다른 β의 평균이므로 i.i.d. 가정은 근사이며, 실제 E[A]는 tail probability를 직접 재야 합니다. temperature 0에서는 argmax 일치율이 됩니다.",
+        "id": "speculative-serving-break-even",
+        "sectionId": "serving-break-even",
+        "intuition": "같은 출력량의 단독 생성 기준 시간과 후보 준비·검증·나머지 처리의 전체 시간을 비교합니다.",
+        "workedExample": "가정한 E[Y]=2.7731, 단독 10ms, 후보 2ms, 검증 12ms, 나머지 1ms이면 S=27.731/15≈1.848733입니다. 검증 30ms면 S≈.840333입니다.",
+        "boundary": "직렬 비용의 합이며 겹치는 실행은 실제 임계 경로로 바꿉니다. 같은 부하·모델·sampler 조건의 평균 비가 대기·tail·처리량을 보장하지 않습니다."
       },
       {
-        id: "speculative-speedup-model",
-        sectionId: "speedup-model",
-        intuition:
-          "한 번의 확인으로 평균 몇 단어를 확정하는지와 그 한 번에 조수 비용이 얼마나 붙는지를 나눈 값입니다. 조수가 편집자보다 훨씬 싸고 자주 맞을 때만 전체가 빨라집니다.",
-        workedExample:
-          "α=0.8, c=0.05, K=5이면 S=(1−0.8⁶)/(0.2×1.25)=2.95배입니다. c가 0.5로 오르면 같은 K에서 1.05배로 떨어집니다.",
-        boundary:
-          "Verification을 target 한 step으로 두는 memory-bound 가정과 runtime 비용 0 가정 아래의 기댓값이며, 총 연산량은 (1−α)(Kĉ+K+1)/(1−α^{K+1})배로 항상 늘어납니다.",
-        proofIdea:
-          "한 cycle의 비용은 draft K번의 Kc·T와 target 한 번의 T이고, 산출은 Eq.1의 (1−α^{K+1})/(1−α) token입니다. Token당 비용 (Kc+1)T/E[Y]를 target-only의 T로 나누면 S(K)가 나옵니다.",
-        counterexample:
-          "α=0.3, c=0.4이면 S(1)=1.3/1.4<1이고 K를 늘려도 분자는 1/(1−α)=1.43에 갇히는데 분모는 계속 커져 어떤 K에서도 이득이 없습니다.",
-      },
-],
-    conceptStages: [
-      {
-        label: "Serial baseline",
-        relation: "Autoregressive target step과 KV state에서 줄일 비용을 확인",
-        concepts: ["autoregressive-decoding", "kv-cache-decode-state"],
+        "id": "dynamic-speculation-policy",
+        "sectionId": "dynamic-policy",
+        "intuition": "현재 실행 조건을 입력으로 후보 깊이를 바꾸거나 후보 생성을 끄는 정책입니다.",
+        "workedExample": "고정 vLLM의 사용자 설정표 [1,64,3],[65,128,1],[129,512,0]은 scheduled 요청 수 64·65·129에 각각 K 3·1·0을 적용합니다.",
+        "boundary": "이 구현은 batch 크기 조회표이며 최근 수락률을 학습해 최적 K를 자동 산출하는 분기가 아닙니다. 빈 구간·마지막 이후·전체 깊이 상한도 적용합니다."
       },
       {
-        label: "Draft and verify",
-        relation: "K개 후보를 만들고 target이 한 pass에 채점해 A·Y를 측정",
-        concepts: [
+        "id": "speculation-length",
+        "sectionId": "cost-model",
+        "intuition": "한 검증 바퀴에 제안하는 후보 수 K입니다. 단일 chain의 종료 처리 전 검증 출력은 최대 K+1입니다.",
+        "workedExample": "K=4에서 둘만 수락하면 출력 3이며 전부 수락하면 bonus를 포함해 5입니다. iid α=.7 모형의 평균 길이는 2.7731입니다.",
+        "boundary": "깊이 선택은 실제 검증 시간·후보 비용·메모리와 부하에 따릅니다. 제한된 K 1~8 표의 최댓값을 전체 가능한 깊이의 최적값으로 확대하지 않습니다."
+      },
+      {
+        "id": "speculative-verification-pass",
+        "sectionId": "verification-pass",
+        "intuition": "마지막 확정 입력과 후보를 함께 계산해 각 후보와 그 다음 위치의 점수를 얻습니다.",
+        "workedExample": "history 4·computed 3에서 마지막 입력 1과 후보 4의 다섯 점수 index 0..4를 만듭니다. 후보 확인은 0..3,bonus는 4이며 후보 ID는 입력에서 한 칸 뒤입니다.",
+        "boundary": "같은 KV를 사용하므로 확정 prefix 전체를 재계산할 필요는 없습니다. 여러 위치의 실행 시간이 단일 token 시간과 같다는 주장은 별도 장치·부하 조건이 필요합니다."
+      },
+      {
+        "id": "speculative-rejection-point",
+        "sectionId": "source-accept",
+        "intuition": "앞에서부터 확인하다 처음 거부된 위치이며 그 자리의 교체만 추가하고 뒤 후보를 제외합니다.",
+        "workedExample": "실제 kernel은 셋째 B에서 .3/.6>=.8이 false여서 recovered ID0을 씁니다. 출력 버퍼는 [0,1,0,-1,-1]입니다.",
+        "boundary": "고정 standard random 분기는 등호를 포함하며 q>0과 패딩을 별도로 확인합니다. synthetic의 비교나 greedy ID 일치와 혼동하지 않습니다."
+      },
+      {
+        "id": "speculative-acceptance-rate",
+        "sectionId": "cost-model",
+        "intuition": "같은 위치의 두 선택 분포가 공유하는 비중 α=Σmin(p,q)입니다.",
+        "workedExample": "p=(.7,.3),q=(.4,.6)의 공통 비중은 .7이며 D_LK=.3입니다. 독립·동일 α를 K 4에 적용하면 E[Y]=1+.7+.49+.343+.2401=2.7731입니다.",
+        "boundary": "현실의 모든 위치가 독립·동일하다는 뜻은 아닙니다. 일반 tail 합은 독립 없이 성립하며 α=1은 분수가 아닌 K+1 경계로 계산합니다."
+      },
+      {
+        "id": "speculative-speedup-model",
+        "sectionId": "speedup-model",
+        "intuition": "검증 비용을 단독 생성 1,후보 한 step 비용을 c로 둔 모형에서 S(K)=Σαⁱ/(1+Kc)로 시간 비를 구합니다.",
+        "workedExample": "iid α=.8,c=.05,K 5이면 3.68928/1.25=2.951424입니다. c=.5이면 약 1.05408로 줄어듭니다.",
+        "boundary": "α>c는 고정 verify 1·runtime 0·직렬 후보 모형에서 이득인 어떤 K가 존재할 조건입니다. 모든 고정 K를 보장하지 않으며 실제 비용은 일반 시간 장부로 확인합니다.",
+        "proofIdea": "한 회차에서 후보를 i개 이상 수락할 확률을 더하면 평균 출력 길이가 됩니다. 매 위치가 독립이며 수락률이 같은 α라면 그 합은 1+α+⋯+αᴷ입니다. 이를 후보 K개의 비용 Kc와 검증 비용 1의 합으로 나누면, 단독 생성 시간에 대한 속도 비를 얻습니다.",
+        "counterexample": "α=.8, K=5일 때 평균 출력은 3.68928개로 같습니다. 후보 비용 c=.05이면 속도 비는 2.951424이지만 c=.5이면 약 1.05408로 줄어듭니다. 수락률만 같다고 같은 속도를 얻지는 않으며, 실제 검증 비용이 1보다 크면 이 모형의 예측도 달라집니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Serial baseline",
+        "relation": "Autoregressive target step과 KV state에서 줄일 비용을 확인",
+        "concepts": [
+          "autoregressive-decoding",
+          "kv-cache-decode-state"
+        ]
+      },
+      {
+        "label": "Draft and verify",
+        "relation": "K개 후보를 만들고 target이 한 pass에 채점해 A·Y를 측정",
+        "concepts": [
           "speculative-draft-verify-cycle",
           "speculation-length",
           "speculative-verification-pass",
-          "speculative-acceptance-length",
-        ],
+          "speculative-acceptance-length"
+        ]
       },
       {
-        label: "Distribution contract",
-        relation: "Acceptance·rejection point의 resample·causal prefix로 target probability 복원",
-        concepts: [
+        "label": "Distribution contract",
+        "relation": "Acceptance·rejection point의 resample·causal prefix로 target probability 복원",
+        "concepts": [
           "speculative-rejection-sampling",
           "speculative-rejection-point",
           "speculative-target-distribution-invariance",
+          "speculative-suffix-causality"
+        ]
+      },
+      {
+        "label": "Cost model",
+        "relation": "α·K·c로 기대 확정 길이와 speedup을 닫고 깨지는 조건을 판정",
+        "concepts": [
+          "speculative-acceptance-rate",
+          "speculative-speedup-model"
+        ]
+      },
+      {
+        "label": "Proposal design",
+        "relation": "Token model·feature draft·native future head의 비용과 호환성 비교",
+        "concepts": [
+          "eagle-feature-level-proposal",
+          "native-mtp-proposal"
+        ]
+      },
+      {
+        "label": "Serving decision",
+        "relation": "전체 cycle 손익과 workload별 depth policy를 load test",
+        "concepts": [
+          "speculative-serving-break-even",
+          "dynamic-speculation-policy"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "두 후보 A·B의 target 확률이 .7·.3, draft 확률이 .4·.6입니다. 각 후보의 조건부 수락 확률과 전체 수락·거부 비중을 구하세요.",
+        "answerChecklist": [
+          "A는 min(1,.7/.4)=1입니다.",
+          "B는 .3/.6=.5입니다.",
+          "수락 .4+.3=.7입니다.",
+          "거부 .3입니다."
+        ],
+        "sectionId": "distribution-proof",
+        "requiredConcepts": [
+          "speculative-rejection-sampling",
+          "speculative-acceptance-rate"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "위 분포에서 거부 뒤 residual과 target 전체 분포로 다시 뽑는 방법의 결과를 비교하세요.",
+        "answerChecklist": [
+          "residual (.3,0)의 정규화는 (1,0)",
+          "정상 출력 (.4+.3,.3)=(.7,.3)",
+          "target 전체에서 다시 뽑으면 (.4+.3*.7,.3+.3*.3)=(.61,.39)",
+          "q=p이면 거부 비중이 0이어서 residual 정규화는 도달하지 않음"
+        ],
+        "sectionId": "distribution-proof",
+        "requiredConcepts": [
+          "speculative-rejection-sampling",
+          "speculative-target-distribution-invariance"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "K=4, 후보 [A,B,B,A], 처음 세 위치의 위 p·q, uniform [.6,.4,.8,.2]일 때 첫 거부와 확정 출력·A·Y를 구하세요.",
+        "answerChecklist": [
+          "첫 A는 수락",
+          "둘째 B는 .4≤.5로 수락",
+          "셋째 B는 .8>.5로 거부",
+          "residual A로 교체, 넷째 후보와 bonus 제외",
+          "출력 [A,B,A], A=2,Y=3"
+        ],
+        "sectionId": "request-trace",
+        "requiredConcepts": [
+          "speculative-draft-verify-cycle",
+          "speculative-acceptance-length",
           "speculative-suffix-causality",
+          "speculative-rejection-point"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 K=4에서 모든 후보가 수락되고 bonus가 B면 A·Y를 구하세요. 이후 두 번째 위치의 B에서 EOS로 잘리는 경우 실제 사용자 출력 길이도 항상 5인가요?",
+        "answerChecklist": [
+          "검증 결과 A=4,Y=5",
+          "bonus 포함 [A,B,B,A,B]",
+          "EOS 후 잘린 실제 길이는 2",
+          "Y=A+1은 EOS·최대 출력 길이 처리 전 검증 cycle의 계약"
         ],
+        "sectionId": "acceptance-length",
+        "requiredConcepts": [
+          "speculative-acceptance-length",
+          "speculation-length"
+        ]
       },
       {
-        label: "Cost model",
-        relation: "α·K·c로 기대 확정 길이와 speedup을 닫고 깨지는 조건을 판정",
-        concepts: ["speculative-acceptance-rate", "speculative-speedup-model"],
-      },
-      {
-        label: "Proposal design",
-        relation: "Token model·feature draft·native future head의 비용과 호환성 비교",
-        concepts: ["eagle-feature-level-proposal", "native-mtp-proposal"],
-      },
-      {
-        label: "Serving decision",
-        relation: "전체 cycle 손익과 workload별 depth policy를 load test",
-        concepts: ["speculative-serving-break-even", "dynamic-speculation-policy"],
-      },
-    ],
-    exercises: [
-      {
-        level: "basic",
-        question:
-          "Target-only autoregressive decoding과 speculative cycle을 target forward 횟수·proposer 역할·최종 품질 소유자 관점에서 비교하라.",
-        answerChecklist: [
-          "one target step per token baseline",
-          "K proposals",
-          "parallel target verify",
-          "proposal is not final",
-          "target owns distribution",
-          "commit accepted prefix",
+        "level": "basic",
+        "question": "확정 입력 길이 4, 계산된 KV 길이 3에서 마지막 입력과 후보 4개를 검증해 computed=8이 됩니다. 후보 2개 수락과 correction 하나 뒤 history·computed·다음 입력을 구하세요.",
+        "answerChecklist": [
+          "history는 4+2+1=7",
+          "거부된 후보 수 4−2=2",
+          "computed는 8−2=6",
+          "새 correction의 위치 6은 아직 KV가 없고 다음 실행의 입력",
+          "배정 공간과 유효 KV 길이는 다름"
         ],
-        requiredConcepts: ["speculative-draft-verify-cycle", "speculation-length"],
-        sectionId: "overview",
+        "sectionId": "kv-commit",
+        "requiredConcepts": [
+          "speculative-draft-verify-cycle",
+          "speculative-verification-pass"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "K=4에서 draft 두 개가 수락되고 세 번째 위치에 correction token 하나가 확정됐다. A와 Y를 계산하고 metric 정의가 필요한 이유를 설명하라.",
-        answerChecklist: ["A=2", "Y=3", "correction included in Y", "definition must be pinned"],
-        requiredConcepts: ["speculative-acceptance-length"],
-        sectionId: "acceptance-length",
+        "level": "basic",
+        "question": "잘림 없는 세 cycle의 A가 0,2,4이면 평균 A·Y와 네 위치까지의 연속 수락 확률을 구하세요.",
+        "answerChecklist": [
+          "Y=1,3,5",
+          "평균 A=2,평균 Y=3",
+          "tail 확률 2/3,2/3,1/3,1/3",
+          "tail 합 2에 correction 또는 bonus 1을 더함"
+        ],
+        "sectionId": "acceptance-tail",
+        "requiredConcepts": [
+          "speculative-acceptance-length"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "Prefix 길이 100에 K=4 draft를 붙인 verification pass가 낮은 batch에서 token 하나짜리 target step과 시간이 비슷한 이유와, 그 pass가 내는 출력의 개수를 설명하라.",
-        answerChecklist: ["single forward", "K+1 distributions", "weight read dominates", "memory-bound", "compute grows with K+1"],
-        requiredConcepts: ["speculative-verification-pass"],
-        sectionId: "verification-pass",
+        "level": "advanced",
+        "question": "위 .7 수락이 각 위치에서 독립·동일하다는 별도 모형입니다. K=4, target 한 token 10ms, draft 4개 2ms, verify 12ms, runtime 1ms의 예상 속도비를 구하세요. verify가 30ms가 되면요? 고정 vLLM의 batch 크기 설정표로 깊이를 줄이는 경우, 이 구현이 최근 수락률을 자동 학습하는지도 설명하세요.",
+        "answerChecklist": [
+          "E[Y]=1+.7+.49+.343+.2401=2.7731",
+          "cycle 15ms, S=2.7731*10/15≈1.848733",
+          "cycle 33ms, S≈.840333",
+          "가정 시간이며 throughput·tail 지연 보장이 아님",
+          "동일 부하에서 K를 줄이거나 0으로 비교하고 실제 cycle 시간을 다시 측정합니다.",
+          "고정 scheduler는 현재 scheduled 요청 수의 사용자 설정표를 조회하며 최근 수락률 학습은 이 분기에 없습니다."
+        ],
+        "sectionId": "serving-break-even",
+        "requiredConcepts": [
+          "speculative-speedup-model",
+          "speculative-serving-break-even",
+          "dynamic-speculation-policy"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "K=4에서 p/q가 (1, 0.9, 0.3, 1)이고 난수 r이 (0.61, 0.55, 0.73, 0.20)일 때 rejection point n을 구하고, 위치 n과 n 이후의 draft를 각각 어떻게 처리하는지 적으라.",
-        answerChecklist: ["n=3", "accept positions 1 and 2", "resample from (p−q)+", "discard t4", "Y=3", "bonus only when no rejection"],
-        requiredConcepts: ["speculative-rejection-point", "speculative-suffix-causality"],
-        sectionId: "rejection-point",
+        "level": "advanced",
+        "question": "동일·독립 α 모형의 α=1, α=0 경계와 c=.05,K=4 비용을 설명하세요. α=.8,K=5의 큰 예도 계산하세요. 이 모형에서 α>c가 모든 고정 K의 이득을 보장하나요?",
+        "answerChecklist": [
+          "α=1은 등비 분수 대신 합으로 Y=K+1=5",
+          "α=0은 Y=1이고 양의 draft 비용이면 손해",
+          "α=.8,K=5는 E[Y]=3.68928",
+          "S=3.68928/1.25=2.951424",
+          "α>c는 verify 1·runtime 0·직렬 draft 모형 안에서 이득인 어떤 K가 존재할 조건이며 모든 K의 보장이 아닙니다."
+        ],
+        "sectionId": "speedup-model",
+        "requiredConcepts": [
+          "speculative-speedup-model",
+          "speculative-acceptance-rate"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "p=(0.7,0.3), q=(0.4,0.6)에서 acceptance rate α를 구하고, i.i.d. 가정 아래 K=3의 기대 확정 길이 E[Y]와 E[A]를 계산하라.",
-        answerChecklist: ["shared mass 0.4+0.3", "alpha=0.7", "(1−0.7^4)/0.3", "E[Y]≈2.53", "E[A]=E[Y]−1"],
-        requiredConcepts: ["speculative-acceptance-rate", "expectation"],
-        sectionId: "acceptance-rate",
+        "level": "advanced",
+        "question": "K=2에서 두 위치 수락 사건의 주변 확률이 각각 .5입니다. 독립일 때와 두 사건이 항상 함께 수락 또는 거부될 때 E[Y]는 같나요?",
+        "answerChecklist": [
+          "독립은 tail .5,.25여서 1.75",
+          "완전 동반은 tail .5,.5여서 2",
+          "E[A]의 tail 합은 독립 가정 없이 성립",
+          "평균 수락 하나를 모든 위치 독립 확률처럼 넣으면 틀릴 수 있음"
+        ],
+        "sectionId": "acceptance-tail",
+        "requiredConcepts": [
+          "speculative-acceptance-length",
+          "speculative-acceptance-rate"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "K=3이고 P(A≥1)=.9, P(A≥2)=.6, P(A≥3)=.3일 때 E[A]를 구하고, 이 값이 i.i.d. α 등비 합과 어떻게 다른지 설명하라.",
-        answerChecklist: ["tail sum", ".9+.6+.3=1.8", "prefix event", "no independence assumption", "alpha^i would be geometric"],
-        requiredConcepts: ["speculative-acceptance-length", "speculative-acceptance-rate"],
-        sectionId: "draft-verify",
-      },
-      {
-        level: "advanced",
-        question:
-          "p=(0.7,0.3), q=(0.4,0.6)에서 token별 accepted mass와 correction residual을 계산해 최종 분포가 p임을 보이라.",
-        answerChecklist: ["accepted min(p,q)=(.4,.3)", "positive residual=(.3,0)", "rejection mass .3", "sum=(.7,.3)", "normalized correction"],
-        requiredConcepts: ["speculative-rejection-sampling", "speculative-target-distribution-invariance"],
-        sectionId: "draft-verify",
-      },
-      {
-        level: "advanced",
-        question:
-          "Draft token을 항상 수락하는 방식과 거부 뒤 target p 전체에서 다시 뽑는 방식이 왜 target distribution을 보존하지 않는지 반례를 구성하라.",
-        answerChecklist: ["always accept gives q", "accepted mass already counted", "full-p correction double counts", "use positive residual", "same prefix assumption"],
-        requiredConcepts: ["speculative-target-distribution-invariance", "speculative-rejection-point"],
-        sectionId: "paper-speculative-decoding",
-      },
-      {
-        level: "advanced",
-        question:
-          "α=0.8, c=0.05에서 K=2·5·8의 S(K)를 계산해 최적 K를 고르고, 같은 α에서 c=0.5일 때와 α=0.3·c=0.4일 때 결론이 어떻게 바뀌는지 설명하라.",
-        answerChecklist: ["S(2)≈2.22", "S(5)≈2.95", "S(8)≈3.09", "c=0.5 collapses gain", "alpha<c no K helps", "1/(1−α) ceiling"],
-        requiredConcepts: ["speculative-speedup-model", "speculation-length"],
-        sectionId: "speedup-model",
-      },
-      {
-        level: "advanced",
-        question:
-          "Batch 64·K=3 서빙에서 verification이 compute-bound로 넘어가 TPOT이 나빠졌다. Speedup 식의 어느 항이 깨졌는지 짚고, 동시성 구간별 K 정책과 재현 가능한 benchmark ledger를 설계하라.",
-        answerChecklist: ["effective tokens B(K+1)", "verification term 1→K+1", "K per concurrency range", "K=0 at high load", "A and Y definitions", "draft/verify/runtime time", "TTFT/ITL/E2E", "quality vs target-only"],
-        requiredConcepts: ["speculative-speedup-model", "dynamic-speculation-policy", "speculative-serving-break-even"],
-        sectionId: "not-always-faster",
-      },
+        "level": "advanced",
+        "question": "target은 (.7,.3)으로 sampling하지만 proposer가 A를 결정적으로 냅니다. q=(1,0)일 때 판정·correction은 무엇이며 target도 greedy인 경우와 어떻게 다른가요?",
+        "answerChecklist": [
+          "sampling target이면 A 수락 .7",
+          "거부 .3은 B로 correction",
+          "최종 (.7,.3) 유지",
+          "target greedy이면 argmax A 일치로 항상 수락",
+          "합성 acceptance 모드와 확률 sampling·greedy 기본값은 고정 소스 분기를 구별"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "speculative-rejection-sampling",
+          "speculative-target-distribution-invariance"
+        ]
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "Fast Inference from Transformers via Speculative Decoding",
-        href: "https://arxiv.org/abs/2211.17192",
-        problem:
-          "큰 autoregressive Transformer가 한 target step마다 token 하나만 확정해 낮은 batch generation latency가 weight-read와 serial dependency에 제한되는 문제",
-        contribution:
-          "작은 approximation model의 γ개 proposal을 target이 병렬 평가하고 rejection sampling으로 target distribution을 보존하는 speculative decoding과, acceptance rate α·cost coefficient c로 닫히는 기대 token 수 (1−α^{γ+1})/(1−α)와 speedup (1−α^{γ+1})/((1−α)(γc+1)) 분석 제안",
-        assumptions:
-          "같은 vocabulary와 committed prefix의 normalized p·q, 위치별 수락이 i.i.d. α라는 단순화, γ+1 위치의 병렬 평가를 지원할 만큼의 compute 여유, 논문의 T5·TPU-v4·batch 1 설정",
-        evidenceScope:
-          "분포 보존 알고리즘의 증명과 T5-XXL translation·summarization에서 저자가 측정한 2.6~3.4배 speedup, 10K token으로 잰 empirical α 값",
-        notClaim:
-          "모든 runtime·sampler·batch·QPS에서 bitwise 동일하거나 speedup이 보장된다는 뜻은 아니며, 총 연산량은 항상 늘어나므로 throughput 개선을 주장하지 않음",
-        sectionId: "paper-speculative-decoding",
+        "title": "Fast Inference from Transformers via Speculative Decoding",
+        "href": "https://proceedings.mlr.press/v202/leviathan23a/leviathan23a.pdf",
+        "sectionId": "distribution-proof",
+        "problem": "큰 모델을 한 조각씩 실행하는 지연을 줄이면서 그 모델의 sampling 분포를 유지하려는 문제입니다.",
+        "contribution": "수락과 부족분 교체의 알고리즘, 분포 보존 증명 및 후보 비용을 포함한 단순 시간 모형을 제시합니다.",
+        "assumptions": "같은 prefix의 실제 p·q를 사용하며 시간식은 iid α·직렬 draft·검증 1·runtime 0와 충분히 긴 생성을 가정합니다.",
+        "evidenceScope": "작은 (.7,.3)/(.4,.6) 계산과 E[Y]=2.7731을 적용합니다. Table4의 예상 3.2·실험 3.4는 ENDE T5-small 행의 결과입니다.",
+        "notClaim": "확률 보존이 같은 seed의 문자열 일치나 모든 runtime의 성능 개선을 보장하지 않습니다. α>c도 해당 비용 모형의 존재 조건입니다."
       },
       {
-        title:
-          "EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty",
-        href: "https://arxiv.org/abs/2401.15077",
-        problem:
-          "Token-level drafter의 accuracy와 latency를 개선하기 위해 target feature를 예측할 때 다음 token만으로 결정되지 않는 feature uncertainty를 다루는 문제",
-        contribution:
-          "Target feature와 token sequence를 조건으로 다음 feature를 autoregressive하게 예측하는 lightweight EAGLE drafter 제안",
-        assumptions:
-          "논문의 target/drafter architecture·training data·tree setting·hardware와 benchmark protocol",
-        evidenceScope:
-          "보고된 acceptance·latency·quality와 feature-level drafting 분석 범위",
-        notClaim:
-          "임의 target에 checkpoint 없이 적용되거나 모든 workload에서 다른 proposer보다 우월하다는 뜻은 아님",
-        sectionId: "paper-eagle",
+        "title": "Accelerating Large Language Model Decoding with Speculative Sampling",
+        "href": "https://arxiv.org/html/2302.01318v1",
+        "sectionId": "paper-measurements",
+        "problem": "더 작은 제안 모델로 여러 token을 준비해 기준 모델의 직렬 decoding 시간을 줄이려는 문제입니다.",
+        "contribution": "부족분을 재정규화하는 sampling과 병렬 확인을 제시하고 70B/4B 조합의 실제 장치 조건에서 시간을 평가합니다.",
+        "assumptions": "원문의 target 기호 q와 draft 기호 p를 본문 표기와 역할로 맞춥니다. 측정은 16 TPU v4·batch1·K 4 등의 조건입니다.",
+        "evidenceScope": "XSum·HumanEval 조건의 약 2~2.5배 저자 보고를 작은 가정 시간과 구분하고 실제 prefix마다 보정하는 계산을 연결합니다.",
+        "notClaim": "당시 장치의 작은 묶음 확인 시간이 모든 GPU·큰 batch·긴 문맥에서 단독 한 token 시간과 같다는 주장은 아닙니다."
       },
       {
-        title:
-          "Better & Faster Large Language Models via Multi-token Prediction",
-        href: "https://arxiv.org/abs/2404.19737",
-        problem:
-          "Next-token objective가 각 training position에서 바로 다음 token 하나의 supervision만 사용하고 더 먼 local future structure를 직접 학습 신호로 쓰지 않는 문제",
-        contribution:
-          "Shared model trunk 위의 여러 independent output head로 다음 n개 token을 동시에 예측하는 auxiliary MTP objective와 inference 활용을 제안",
-        assumptions:
-          "논문의 head architecture·loss weighting·model scale·training data·code/natural-language benchmark와 decoding 구현",
-        evidenceScope:
-          "보고된 sample efficiency·downstream quality·inference speed와 분석 실험 범위",
-        notClaim:
-          "모든 native MTP model이 같은 head 구조·quality gain·acceptance length·serving speedup을 자동 갖는다는 뜻은 아님",
-        sectionId: "paper-mtp",
+        "title": "EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty (v3)",
+        "href": "https://arxiv.org/html/2401.15077v3",
+        "sectionId": "paper-eagle",
+        "problem": "현재 표현만으로 다음 표현을 예측하면 중간의 다음 token 선택에 따라 목표 표현이 달라지는 문제입니다.",
+        "contribution": "기준 모델의 feature와 한 시점 앞선 token 정보를 함께 사용해 어느 다음 표현을 예측하는지 지정합니다.",
+        "assumptions": "이 문헌의 feature 수준 proposer와 호환 학습 weight를 전제로 하며 다른 세대의 입력 표현과 tree 구조는 별도로 확인합니다.",
+        "evidenceScope": "같은 현재 표현에서 A를 선택한 경우와 B를 선택한 경우의 다음 표현이 달라지는 원문 Figure3를 작은 두 token에 대응합니다.",
+        "notClaim": "같은 완전한 입력의 feature가 본질적으로 여러 무작위 값이라는 주장이나 임의 target에 학습 없이 붙일 수 있다는 뜻은 아닙니다."
       },
       {
-        title:
-          "SpecInfer: Accelerating Generative Large Language Model Serving with Speculative Inference and Token Tree Verification",
-        href: "https://arxiv.org/abs/2305.09781",
-        problem:
-          "한 개 draft chain의 후보 다양성과 낮은 batch LLM serving latency를 함께 개선하는 문제",
-        contribution:
-          "여러 speculative model이 만든 token tree와 tree-based parallel verification을 사용하는 serving system 제안",
-        assumptions:
-          "논문의 distributed serving architecture·tree configuration·models·GPU와 workloads",
-        evidenceScope:
-          "논문이 보고한 end-to-end latency·throughput·acceptance와 system ablation 범위",
-        notClaim:
-          "Tree 폭을 늘리면 memory·compute 비용 없이 속도가 단조 증가하거나 최신 vLLM이 같은 구현이라는 뜻은 아님",
-        sectionId: "paper-specinfer",
+        "title": "Better & Faster Large Language Models via Multi-token Prediction v1",
+        "href": "https://arxiv.org/abs/2404.19737v1",
+        "sectionId": "paper-mtp",
+        "problem": "다음 token 하나만 학습하는 대신 여러 미래 위치의 예측으로 표현 학습과 추론 효율을 함께 살펴봅니다.",
+        "contribution": "공유 trunk 위 미래 위치별 output head를 학습하며 학습 목적의 효과와 추론에서의 후보 활용을 구분합니다.",
+        "assumptions": "원 논문의 head 구조와 실제 배포 모델의 native MTP 모듈 구조가 같다고 가정하지 않으며 checkpoint 호환성을 확인합니다.",
+        "evidenceScope": "여러 미래를 학습한 부품이 같은 네 후보를 제안해도 검증 결과에 따라 세 개만 확정하는 serving 계약을 적용합니다.",
+        "notClaim": "MTP 학습만으로 모든 미래 후보를 확정하거나 모든 모델의 module 배치·KV 갱신 방식이 같다는 주장은 아닙니다."
       },
       {
-        title: "Accelerating Large Language Model Decoding with Speculative Sampling",
-        href: "https://arxiv.org/abs/2302.01318",
-        problem:
-          "수백억 parameter의 분산 서빙 target에서 memory bandwidth에 묶인 autoregressive sampling의 token당 latency를 model 수정 없이 줄이는 문제",
-        contribution:
-          "Draft K token을 target이 한 번의 parallel scoring으로 채점하고 modified rejection sampling으로 target 분포를 hardware numerics 범위에서 보존하는 speculative sampling과, 소규모 K에서 scoring 시간이 한 token sampling과 비슷하다는 memory-bound 분석 제시",
-        assumptions:
-          "Megatron 방식으로 shard된 큰 Transformer, 작은 batch에서 linear layer·attention·all-reduce가 memory 또는 latency bound라는 조건, 논문의 Chinchilla 70B·4B draft·TPU 설정",
-        evidenceScope:
-          "저자 자기보고로 XSum·HumanEval에서 Chinchilla 70B 기준 2~2.5배 decoding speedup과 sample quality 유지",
-        notClaim:
-          "큰 batch나 compute-bound 조건에서도 scoring이 한 step과 같은 시간이 든다거나, 임의 hardware에서 같은 speedup이 나온다는 뜻은 아님",
-        sectionId: "verification-pass",
+        "title": "SpecInfer: Accelerating Generative Large Language Model Serving with Tree-based Speculative Inference and Verification (v4)",
+        "href": "https://arxiv.org/html/2305.09781v4",
+        "sectionId": "paper-mtp",
+        "problem": "직선 후보만 확인하는 경우와 달리 여러 가능한 후속 경로를 함께 준비하고 검증하는 문제입니다.",
+        "contribution": "후보 tree의 점수 계산과 경로 검증을 결합하며 깊이 외에 폭과 중간 기록의 비용을 다룹니다.",
+        "assumptions": "원 논문의 tree 검증을 단일 chain의 첫 거부 규칙으로 동일시하지 않으며 실제 구현·모델·부하 조건을 함께 읽습니다.",
+        "evidenceScope": "본문의 직선 K 4와 tree의 여러 가지를 비교해 폭·임시 KV·경로 선택이 추가됨을 설명하고 세부 비교 글로 연결합니다.",
+        "notClaim": "원 논문의 tree 성능을 현재 vLLM standard chain의 처리량이나 K+1 시간식에 그대로 대입하지 않습니다."
       },
-],
+      {
+        "title": "vLLM v0.27.1 — original rejection sampler and scheduler",
+        "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/sample/rejection_sampler.py",
+        "sectionId": "source-accept",
+        "problem": "확률 알고리즘의 수락과 교체가 실제 배열 index·출력 길이·계산 기록 갱신에 어떻게 연결되는지 확인합니다.",
+        "contribution": "전체 pinned 원문의 random kernel·교체 표집·metadata·scheduler를 같은 A·B·B·A와 history 4에 적용합니다.",
+        "assumptions": "commit 6e448d0의 standard random 경로와 같은 어휘를 고정합니다. CPU 포인터 대역은 Triton 컴파일이나 GPU 실행이 아닙니다.",
+        "evidenceScope": "선택한 함수의 출력[0,1,0,-1,-1], 원문 롤백 8→6과 Python3.12의 동적 설정 조회표를 확인합니다.",
+        "notClaim": "일부 원문 함수 적용은 전체 엔진·모든 모델·정밀도에서의 분포 보존이나 실제 latency 측정의 증거가 아닙니다."
+      }
+    ]
   },
   "ai/open-r1": {
     coreIdea:
@@ -61675,12 +62503,305 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "crypto/pairing": {
-    entryLevel:true, entryNote:"Pairing을 모른다고 가정하고 e(aP,bQ)=e(P,Q)^(ab)라는 검증 목표부터 시작합니다.", coreIdea:"Pairing은 G1×G2 scalar relation을 GT로 옮기고 Miller loop로 rational function을 계산한 뒤 final exponent로 order-r subgroup에 투영합니다.", assumedKnowledge:[],
-    introducedHere:[{id:"miller-function-loop-invariant",role:"Double/add line accumulator를 설명합니다."},{id:"pairing-final-subgroup-projection",role:"Miller output을 GT로 보냅니다."},{id:"pairing-input-subgroup-release-gate",role:"Input/subgroup/vector 실패를 검증합니다."}],
-    conceptExplanations:[{id:"miller-function-loop-invariant",sectionId:"miller-loop",intuition:"Scalar multiplication의 double-and-add와 함께 line function을 제곱·곱합니다.",workedExample:"n=5 binary101이면 double, double+add 경로로 O(log n) loop steps를 밟습니다.",boundary:"Line numerator/denominator cancellation과 twist profile은 curve별로 고정됩니다.",proofIdea:"Divisor identity f_{m+n}=f_m f_n l_{mP,nP}/v_{(m+n)P}를 반복합니다.",counterexample:"Add bit를 빠뜨리면 point와 function divisor가 다른 scalar를 나타냅니다."},{id:"pairing-final-subgroup-projection",sectionId:"final-exponent",intuition:"Miller output의 unwanted cofactor component를 제거합니다.",workedExample:"Embedding degree k에서 exponent (p^k−1)/r을 적용합니다.",boundary:"0에는 적용하지 않고 curve r|p^k−1과 valid inputs를 전제로 합니다."},{id:"pairing-input-subgroup-release-gate",sectionId:"release",intuition:"Equation 전에 points의 group membership을 확인합니다.",workedExample:"Identity, off-curve, wrong subgroup, swapped G1/G2와 Miller-only output을 거절합니다.",boundary:"Bilinearity vector 한 개는 subgroup validation을 대체하지 않습니다."}],
-    conceptStages:[{label:"00 groups",relation:"Curve subgroups와 extension target을 준비합니다.",concepts:["bn254-g1-g2-twist","extension-tower-implementation-layout"]},{label:"01 property",relation:"Bilinearity의 증거 범위를 정합니다.",concepts:["pairing-bilinearity-boundary"]},{label:"02 Miller",relation:"Function accumulator를 계산합니다.",concepts:["miller-function-loop-invariant","pairing-line-sparse-lowering"]},{label:"03 final",relation:"GT subgroup으로 투영합니다.",concepts:["pairing-final-exponent-decomposition","pairing-final-subgroup-projection"]},{label:"04 release",relation:"Invalid inputs와 vectors를 검사합니다.",concepts:["pairing-input-subgroup-release-gate"]}],
-    exercises:[{level:"basic",question:"Bilinearity 식을 a=2,b=3으로 쓰세요.",answerChecklist:["e(2P,3Q)","e(P,Q)^6","source groups","GT"],requiredConcepts:["pairing-bilinearity-boundary"],sectionId:"overview"},{level:"basic",question:"Miller n=5의 binary path를 설명하세요.",answerChecklist:["101","double","add","log steps","line accumulator"],requiredConcepts:["miller-function-loop-invariant"],sectionId:"miller-loop"},{level:"basic",question:"Miller output과 pairing output을 구분하세요.",answerChecklist:["unprojected","final exponent","GT","order r"],requiredConcepts:["pairing-final-subgroup-projection"],sectionId:"final-exponent"},{level:"basic",question:"Final exponent를 쓰세요.",answerChecklist:["(p^k-1)/r","embedding degree","subgroup projection"],requiredConcepts:["pairing-final-subgroup-projection"],sectionId:"final-exponent"},{level:"basic",question:"G1/G2 input 검사를 나열하세요.",answerChecklist:["canonical","on curve","subgroup","identity policy","correct group"],requiredConcepts:["pairing-input-subgroup-release-gate"],sectionId:"release"},{level:"basic",question:"Sparse line multiplication의 전제를 쓰세요.",answerChecklist:["fixed tower","nonzero slots","generic parity","profile"],requiredConcepts:["pairing-line-sparse-lowering"],sectionId:"miller-loop"},{level:"advanced",question:"Miller divisor recurrence proof idea를 설명하세요.",answerChecklist:["f_m+n","line","vertical","divisors","double/add invariant"],requiredConcepts:["miller-function-loop-invariant"],sectionId:"miller-loop"},{level:"advanced",question:"Final exponent가 cofactor를 제거하는 이유를 설명하세요.",answerChecklist:["Fp^k star order","r divides","raise cofactor","order r","nonzero"],requiredConcepts:["pairing-final-subgroup-projection"],sectionId:"final-exponent"},{level:"advanced",question:"Wrong-subgroup pairing 반례를 설계하세요.",answerChecklist:["on curve not subgroup","equation risk","subgroup check","negative fixture"],requiredConcepts:["pairing-input-subgroup-release-gate"],sectionId:"release"},{level:"advanced",question:"Pairing release matrix를 작성하세요.",answerChecklist:["curve/profile","encoding","subgroup","vectors","bilinearity","Miller/final split","time","rollback"],requiredConcepts:["pairing-input-subgroup-release-gate"],sectionId:"release"}],
-    papers:[{title:"Miller · The Weil Pairing, and Its Efficient Calculation",href:"https://crypto.stanford.edu/miller/miller.pdf",problem:"Pairing rational functions을 효율적으로 계산",contribution:"Double-and-add function recurrence인 Miller algorithm 제시",assumptions:"논문의 curve/divisor/pairing hypotheses 사용",evidenceScope:"Miller loop의 수학적 construction",notClaim:"Optimal Ate parameter나 특정 implementation layout을 규정하지 않음",sectionId:"paper-miller"},{title:"Hess et al. · Eta Pairing Revisited",href:"https://eprint.iacr.org/2006/110.pdf",problem:"Pairing loop와 embedding-degree 비용 개선",contribution:"Ate pairing 계열의 loop parameter와 security/cost 분석 기반 제공",assumptions:"선택 pairing-friendly curve와 subgroup 조건",evidenceScope:"Ate-family construction 범위",notClaim:"모든 curve에서 같은 loop/vector를 사용하지 않음",sectionId:"paper-ate"}],
+    "entryLevel": false,
+    "entryNote": "19로 나눈 곡선의 P=(5,4)에서 5=101의 두 배·더하기를 시작합니다. 같은 누적값을 원문의 반복식과 실제 BN254 코드에 대응합니다.",
+    "coreIdea": "현재 점과 함수 값을 함께 갱신한 뒤 출력 군으로 거듭제곱합니다. 원시 값·마지막 값·항등원 판정을 구분해야 분모 생략과 실제 c배 정규화의 의미를 읽을 수 있습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "prime-field-modular-arithmetic",
+        "role": "19로 나눈 곱셈과 역원으로 선의 비를 계산합니다."
+      },
+      {
+        "id": "elliptic-curve-point-group",
+        "role": "같은 곡선의 점을 두 배 하거나 더합니다."
+      },
+      {
+        "id": "extension-field-quotient",
+        "role": "a+bu와 u²=−1의 두 계수 곱을 사용합니다."
+      },
+      {
+        "id": "pairing-bilinearity-boundary",
+        "role": "점의 배수와 출력의 지수 관계를 계산과 입력 조건으로 확장합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "miller-function-loop-invariant",
+        "role": "현재 점과 누적 함수의 영점·극점 기록을 같은 101 사례로 설명합니다."
+      },
+      {
+        "id": "pairing-final-subgroup-projection",
+        "role": "일반 지수와 실제 구현의 추가 배수 및 판정 보존을 구분합니다."
+      },
+      {
+        "id": "pairing-input-subgroup-release-gate",
+        "role": "항등원·0·부분군·원시 출력의 서로 다른 조건과 실행 범위를 정합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "miller-function-loop-invariant",
+        "sectionId": "miller-loop",
+        "intuition": "두 배나 점 더하기에서 생기는 선의 비를 같은 누적값에 곱합니다.",
+        "workedExample": "P→2P→4P→O와 함께 f=1→3+16u→8+10u→15+14u를 얻습니다. 각 계수는 19로 나눕니다.",
+        "boundary": "영점·극점이 겹치는 평가를 피하고 선의 정규화를 고정합니다. 실제 BN의 부호 있는 6z+2 반복은 작은 Tate의 r=5 반복과 다릅니다.",
+        "proofIdea": "div fₙ=n(P)−(nP)−(n−1)(O)에 선과 수직선의 비를 더하면 중간 두 점 항이 상쇄됩니다.",
+        "counterexample": "마지막 9를 빼면 원시 값과 점 경로는 달라도 9⁷²=1이므로 이번 최종 출력은 같습니다."
+      },
+      {
+        "id": "pairing-final-subgroup-projection",
+        "sectionId": "final-exponent",
+        "intuition": "0 아닌 체 원소를 거듭제곱해 r제곱하면 1인 출력 군 안으로 보냅니다.",
+        "workedExample": "(19²−1)/5=72이고 (15+14u)⁷²=7+3u입니다. 다시72승하면2+4u로 달라집니다. 실제 고정 BN 코드의 끝 지수는 일반 E의 c배입니다.",
+        "boundary": "두 번 적용해도 같다는 사영이나 구현 간 동일 바이트를 보장하지 않습니다. 고정 BN에서는 gcd(c,r)=1이므로 거듭제곱을 되돌리고 곱=1 판정을 유지합니다."
+      },
+      {
+        "id": "pairing-input-subgroup-release-gate",
+        "sectionId": "release",
+        "intuition": "외부 점의 조건과 결과 타입의 의미를 확인한 뒤 검증 범위를 나눕니다.",
+        "workedExample": "실제 0인 Miller 값은 final_exponentiation에서 None이고 항등원 입력의 페어링은 체의1입니다. PairingOutput의 is_zero는 체의 is_one입니다.",
+        "boundary": "곡선과 부분군 검사는 별개이며 항등원 금지는 프로토콜 정책입니다. 같은 준비 계수를 공유한 밀집 비교는 독립 페어링 구현 검증이 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 같은 작은 반복",
+        "relation": "점의 이동과 함수 값을 두 줄로 추적합니다.",
+        "concepts": [
+          "miller-function-loop-invariant"
+        ]
+      },
+      {
+        "label": "02 끝의 거듭제곱",
+        "relation": "72승과 마지막 9의 소거를 같은 값으로 계산합니다.",
+        "concepts": [
+          "miller-function-loop-invariant",
+          "pairing-final-subgroup-projection"
+        ]
+      },
+      {
+        "label": "03 실제 구현과 조건",
+        "relation": "cE 정규화, 여러 출력의 곱, 입력과 결과 타입을 구분합니다.",
+        "concepts": [
+          "pairing-final-subgroup-projection",
+          "pairing-input-subgroup-release-gate"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "같은 P와 Q의 역할과 두 배·더하기의 점 경로를 설명하세요.",
+        "answerChecklist": [
+          "F₁₉의 y²=x³+x",
+          "P=(5,4)",
+          "Q=(14,4u),u²=−1",
+          "5=101",
+          "R=P→2P=(9,15)→4P=(5,15)→O",
+          "R과 f는 다른 상태",
+          "출력은 새 곡선점이 아닌 확장체 원소"
+        ],
+        "sectionId": "miller-loop",
+        "requiredConcepts": [
+          "miller-function-loop-invariant"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "첫 두 배에서 선의 비 3+16u가 나오는 나눗셈을 계산하세요.",
+        "answerChecklist": [
+          "기울기76/8≡0",
+          "선의 값15+4u",
+          "수직선14−9=5",
+          "5의 역원4",
+          "(15+4u)·4=3+16u",
+          "분모가0인 입력에는 같은 나눗셈 불가"
+        ],
+        "sectionId": "line-values",
+        "requiredConcepts": [
+          "miller-function-loop-invariant",
+          "prime-field-modular-arithmetic"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 누적값의 두 번째 두 배와 마지막 더하기를 계산하세요.",
+        "answerChecklist": [
+          "(3+16u)²=u",
+          "두 번째 선의 비10+11u",
+          "u(10+11u)=8+10u",
+          "마지막 수직선14−5=9",
+          "9(8+10u)=15+14u",
+          "O에 도착해도 f는0이 아님"
+        ],
+        "sectionId": "miller-loop",
+        "requiredConcepts": [
+          "miller-function-loop-invariant"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "일반 지수72와 최종 출력의 다섯제곱을 설명하세요.",
+        "answerChecklist": [
+          "확장체 크기361",
+          "0 아닌 곱셈 군 크기360",
+          "r=5,k=2",
+          "E=360/5=72",
+          "g=7+3u",
+          "g⁵=f³⁶⁰=1",
+          "f=0은 곱셈 군에서 제외"
+        ],
+        "sectionId": "final-exponent",
+        "requiredConcepts": [
+          "pairing-final-subgroup-projection"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "e(2P,3Q)가 이 작은 예에서 e(P,Q)와 같은 이유를 설명하세요.",
+        "answerChecklist": [
+          "일반 관계e(aP,bQ)=e(P,Q)^(ab)",
+          "2·3=6",
+          "g⁵=1이므로 g⁶=g",
+          "입력 점이 같다는 뜻은 아님",
+          "항상 1만 출력하는 함수와 구분할 비퇴화 조건",
+          "16쌍 검산은 일반 정리 증명과 다름"
+        ],
+        "sectionId": "bilinearity",
+        "requiredConcepts": [
+          "pairing-final-subgroup-projection",
+          "pairing-bilinearity-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "고정 BN254 반복의 65·64·63·21·87이 각각 무엇인지 설명하세요.",
+        "answerChecklist": [
+          "65개 부호 있는 숫자는6z+2의 표현",
+          "맨 앞 숫자를 제외한 두 배 선 64개",
+          "초기1의 제곱을 생략해square 호출  63회",
+          "0 아닌 나머지 숫자의 추가 선 21개",
+          "끝의 Frobenius 관련 선 2개",
+          "총64+21+2=87개",
+          "D형은 y·x를 계수에 곱해034 호출",
+          "단일 입력쌍의 코드 경로 수이며 시간 측정 아님"
+        ],
+        "sectionId": "source-loop",
+        "requiredConcepts": [
+          "miller-function-loop-invariant",
+          "pairing-input-subgroup-release-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "divisor 불변식에서 fₘfₙ에 선의 비를 곱하는 이유와 상수 경계를 유도하세요.",
+        "answerChecklist": [
+          "div fₙ=n(P)−(nP)−(n−1)(O)",
+          "선의 비 기록은(mP)+(nP)−((m+n)P)−(O)",
+          "두 중간점 항 상쇄",
+          "O의 계수는−(m+n−1)",
+          "두 배는m=n이므로제곱",
+          "divisor는0 아닌 상수배를 구별하지 못함",
+          "반복 선의 정규화를 추가로 고정",
+          "영점·극점 평가 조건 유지"
+        ],
+        "sectionId": "divisor",
+        "requiredConcepts": [
+          "miller-function-loop-invariant"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "마지막 9를 생략한 두 값과 출력에72승을 다시 하는 경우를 비교하세요.",
+        "answerChecklist": [
+          "원시f₄=8+10u와f₅=15+14u는 다름",
+          "9는F₁₉*의 원소",
+          "9¹⁸=1이고72는18의 배수",
+          "두 최종72승은7+3u로 같음",
+          "점 경로와divisor 불변식까지 같아진 것은 아님",
+          "이미 출력한g에 72승은g²=2+4u",
+          "부분군으로 보내는 함수가 항상 멱등 사영은 아님"
+        ],
+        "sectionId": "denominators",
+        "requiredConcepts": [
+          "miller-function-loop-invariant",
+          "pairing-final-subgroup-projection"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "실제 고정 BN 코드가 일반 E승과 달라도 판정을 유지하는 이유를 실행 결과와 연결하세요.",
+        "answerChecklist": [
+          "E=(p¹²−1)/r",
+          "쉬운 부분(p⁶−1)(p²+1)",
+          "원문의 어려운 부분은cH",
+          "c=2z(6z²+3z+1)",
+          "같은M에서 실제 = M^(cE),실제 ≠ M^E",
+          "gcd(c,r)=1",
+          "c 역수 거듭제곱으로 일반 E승 복원",
+          "출력 값이나 바이트 동일은 보장하지 않음",
+          "곱1 판정은가역성으로동치"
+        ],
+        "sectionId": "verification",
+        "requiredConcepts": [
+          "pairing-final-subgroup-projection",
+          "pairing-input-subgroup-release-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "두 페어링을 합쳐 검사할 때 성립하는 식과 입력·검증 범위를 구분하세요.",
+        "answerChecklist": [
+          "e(2P,3Q)e(−6P,Q)=1",
+          "원시 Miller 값 곱 뒤 마지막 계산 한 번",
+          "실제 fused raw와 separate raw product가 같음",
+          "최종값은 체1",
+          "0인 Miller는None",
+          "항등원 점은 원문에서 제외되어 체1에 기여",
+          "항등원 금지는 응용 정책",
+          "같은 준비 계수 밀집 비교는 독립적인 선 생성 검증이 아님",
+          "EVM·성능·상수 시간 미검증"
+        ],
+        "sectionId": "multi-pairing",
+        "requiredConcepts": [
+          "miller-function-loop-invariant",
+          "pairing-final-subgroup-projection",
+          "pairing-input-subgroup-release-gate"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Miller (1986) · Short Programs for functions on Curves",
+        "href": "https://crypto.stanford.edu/miller/miller.pdf",
+        "problem": "큰 함수를 한꺼번에 전개하지 않고 필요한 함수 값을 계산합니다.",
+        "contribution": "2절은 작은 함수의 조합과 덧셈 경로로 필요한 함수를 만드는 절차를 설명합니다.",
+        "assumptions": "곡선·함수의 영점과 극점 및 일관된 평가 조건을 둡니다.",
+        "evidenceScope": "저자 공개 7쪽 PDF의 실제 제목·날짜와2절을 읽었습니다. 현대 BN의 세부 지수를 이 문서에 귀속하지 않습니다.",
+        "notClaim": "이 링크는 기존에 적힌 The Weil Pairing, and Its Efficient Calculation이라는 다른 제목의 파일이 아닙니다. BN 매개변수·성능은 별도입니다.",
+        "sectionId": "paper-miller"
+      },
+      {
+        "title": "Ben Lynn (2007) · Tate 반복과 거듭제곱 정규화",
+        "href": "https://crypto.stanford.edu/pbc/thesis.pdf",
+        "problem": "점의 함수 계산을 실제 Tate 반복과 출력 군의 성질로 연결합니다.",
+        "contribution": "3.9.2 Algorithm3과3.9.3의 평가 조건,6.15의 서로소 배수 거듭제곱을 설명합니다.",
+        "assumptions": "사용하는 군·곡선·평가 위치와 정의를 유지합니다.",
+        "evidenceScope": "PDF 51–52쪽에 자체 F₁₉의101을 대입했습니다. PDF 113쪽의 서로소 거듭제곱 성질을 고정 BN의c와 연결했습니다. 원문 수치 예제 F₅₉와 구별합니다.",
+        "notClaim": "작은 예의16쌍 계산은 일반 정리 전체의 증명이 아니며 논문의 예를 그대로 실행했다고 주장하지 않습니다.",
+        "sectionId": "paper-miller"
+      },
+      {
+        "title": "arkworks algebra · 고정 BN 구현과 실제 CPU 검산",
+        "href": "https://github.com/arkworks-rs/algebra/tree/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c",
+        "problem": "선 준비·부호 있는 반복·희소 곱·끝 지수가 같은 타입과 설정으로 이어지는지 확인합니다.",
+        "contribution": "G2Prepared의 계수와 D형034, 6z+2 반복, cH 최종 지수 및 결과 군 인터페이스를 제공합니다.",
+        "assumptions": "ec·ff 0.5.0과bn254 0.5.0-alpha.0의 같은 commit과Cargo.lock을 고정합니다.",
+        "evidenceScope": "실제 --locked 실행에서 63회 제곱/87개 선, 같은 계수의 밀집 곱, M^(cE) 일치와 M^E 불일치, c의 역수 복원, 두 쌍의 곱과0/항등원 경계를 확인했습니다.",
+        "notClaim": "독립 페어링 구현·EVM·전체 비정상 입력·상수 시간·현재 보안 수준·성능 검증이 아닙니다.",
+        "sectionId": "source-final"
+      }
+    ]
   },
   "blockchain/vdf": {
     entryLevel:true, entryNote:"반복 제곱부터 시작해 delay와 verification을 분리합니다.", coreIdea:"VDF는 T회의 sequential squaring으로 y를 만들고 Wesolowski quotient proof로 verifier가 훨씬 적은 work로 결과를 확인하게 합니다.", assumedKnowledge:[],
@@ -67436,53 +68557,363 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "3을 반복해 곱하고 17로 나눈 나머지를 계산하면서 공개 값 5에서 숨은 횟수 5를 찾는 문제를 따라갑니다."
   },
   "crypto/elliptic-curves": {
-    coreIdea: "Finite-field curve points가 이루는 group에서 scalar multiplication과 subgroup validation을 정확히 구현하고, affine/Jacobian 및 BN254 G1/G2/GT 타입 경계를 보존한 뒤 pairing 관계를 검사합니다.",
-    assumedKnowledge: [
-      { id: "prime-field-modular-arithmetic", role: "Curve coordinates·slope·inverse의 base-field 계산을 재사용합니다." },
-      { id: "cyclic-subgroup-dlp", role: "Public point에서 secret scalar를 복원하는 ECDLP 문제를 재사용합니다." },
-      { id: "extension-field-quotient", role: "BN254 G2의 Fp² coordinate arithmetic을 재사용합니다." },
+    "entryLevel": false,
+    "entryNote": "F₁₇의 점 (5,1)을 일곱 번 더해 (0,6)을 얻는 사례부터 시작합니다. 같은 점을 원본 좌표와 입력 검사에 옮깁니다.",
+    "coreIdea": "같은 곡선의 점을 정해진 법칙으로 더하고, 좌표 표현을 바꾸어도 같은 점을 유지합니다. 바이트 해석·곡선·부분군·항등원 정책을 나누어 검사한 뒤 페어링 관계의 범위를 판단합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "prime-field-modular-arithmetic",
+        "role": "17로 나눈 덧셈·곱셈과 0 아닌 값의 역원을 사용합니다."
+      },
+      {
+        "id": "cyclic-subgroup-dlp",
+        "role": "반복 덧셈의 주기와 공개점에서 반복 횟수를 찾는 문제를 재사용합니다."
+      },
+      {
+        "id": "extension-field-quotient",
+        "role": "BN254 G2 좌표의 u²=−1과 Fₚ² 표현을 읽습니다."
+      }
     ],
-    introducedHere: [
-      { id: "elliptic-curve-point-group", role: "Nonsingular curve point와 infinity의 group law를 정의합니다." },
-      { id: "ec-scalar-multiplication", role: "Point double/add의 반복과 constant-time 경계를 설명합니다." },
-      { id: "ec-subgroup-validation", role: "Decode·on-curve·order-q membership을 순서대로 검사합니다." },
-      { id: "affine-jacobian-equivalence", role: "같은 point의 여러 projective 표현으로 inversion을 미룹니다." },
-      { id: "bn254-g1-g2-twist", role: "G1 Fp와 G2 Fp² twist representation을 분리합니다." },
-      { id: "pairing-bilinearity-boundary", role: "G1×G2 scalar relation을 GT product equation으로 옮깁니다." },
-      { id: "elliptic-curve-release-gate", role: "Malformed point·subgroup·vector·side-channel parity 뒤 최적화합니다." },
+    "introducedHere": [
+      {
+        "id": "elliptic-curve-point-group",
+        "role": "같은 곡선의 점과 O에 적용하는 덧셈 및 위수를 설명합니다."
+      },
+      {
+        "id": "ec-scalar-multiplication",
+        "role": "7의 세 비트를 두 배·더하기의 실제 반복문에 대입합니다."
+      },
+      {
+        "id": "ec-subgroup-validation",
+        "role": "곡선 검사와 부분군 검사에 붙은 가정 및 항등원 정책을 구분합니다."
+      },
+      {
+        "id": "affine-jacobian-equivalence",
+        "role": "같은 (5,1)의 세 수 표현과 원본 정규화를 연결합니다."
+      },
+      {
+        "id": "bn254-g1-g2-twist",
+        "role": "G1·G2의 좌표 체·위수·twist와 검사 차이를 설명합니다."
+      },
+      {
+        "id": "pairing-bilinearity-boundary",
+        "role": "2배·3배 점의 관계를 결과의 6제곱과 항등원으로 확인합니다."
+      },
+      {
+        "id": "elliptic-curve-release-gate",
+        "role": "실제 산술 비교와 EIP 입력 모형의 검증 범위를 제한합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "elliptic-curve-point-group", sectionId: "overview", intuition: "유한체 격자의 curve points에 일관된 덧셈 규칙과 infinity identity를 추가한 유한 시계입니다.", workedExample: "F17의 y²=x³+2x+2에서 (5,1)+(6,3)=(10,6)이고 inverse는 y 부호를 뒤집습니다.", boundary: "Discriminant가 0인 singular curve나 서로 다른 curve points에는 같은 group law를 적용하지 않습니다." },
-      { id: "ec-scalar-multiplication", sectionId: "g1-curve", intuition: "정수 k를 binary로 읽어 point를 double하고 선택적으로 add해 [k]P를 만듭니다.", workedExample: "254-bit scalar는 bit당 doubling과 window별 addition을 수행하며 precomputation memory와 연산 수를 맞바꿉니다.", boundary: "Secret bit에 따른 branch·table access는 side channel이므로 공개 subgroup check와 다른 constant-time 정책이 필요합니다." },
-      { id: "ec-subgroup-validation", sectionId: "g1-curve", intuition: "격자 위 curve point인지뿐 아니라 protocol이 쓰는 작은 prime-order 원 안에 있는지 확인합니다.", workedExample: "Canonical decode·x,y<p·curve equation 뒤 [q]P=O를 확인하고 identity 허용 여부를 적용합니다.", boundary: "G1의 cofactor 조건을 G2나 다른 curve에 일반화하거나 on-curve check만으로 끝내지 않습니다." },
-      { id: "affine-jacobian-equivalence", sectionId: "g1-curve", intuition: "분수를 매번 계산하지 않고 분모 Z를 들고 다니다 마지막에 한 번 나눕니다.", workedExample: "x=X/Z²,y=Y/Z³이고 μ≠0의 (μ²X,μ³Y,μZ)는 같은 affine point를 나타냅니다.", boundary: "Raw tuple equality는 point equality가 아니며 Z=0 identity convention과 normalization을 고정합니다." },
-      { id: "bn254-g1-g2-twist", sectionId: "g1-g2-bn254", intuition: "Pairing의 두 번째 큰 extension-field point를 twist로 Fp² 좌표에 내려 더 싸게 계산합니다.", workedExample: "EIP-197 G1은 Fp의 P1=(1,2), G2는 Fp²의 P2이고 둘 다 order q를 가집니다.", boundary: "같은 order q는 point encoding·coordinate field·subgroup check가 같다는 뜻이 아닙니다." },
-      { id: "pairing-bilinearity-boundary", sectionId: "g1-g2-bn254", intuition: "두 입력 point에 숨은 배수를 결과 group의 exponent 곱으로 옮겨 product가 identity인지 확인합니다.", workedExample: "e([a]P,[b]Q)=e(P,Q)^ab이고 verifier는 여러 e(Pi,Qi)의 곱이 1인지 검사합니다.", boundary: "Pairing equation 성공은 proof statement provenance·trusted setup·input authorization 전체를 보장하지 않습니다." },
-      { id: "elliptic-curve-release-gate", sectionId: "g1-g2-bn254", intuition: "빠른 좌표 공식을 넣기 전에 잘못된 점과 모든 group 관계가 reference와 같은지 확인합니다.", workedExample: "Identity·noncanonical·wrong curve/subgroup·truncated Fp²와 EIP vectors를 independent implementation과 비교합니다.", boundary: "Nominal curve 이름·microbenchmark·on-curve success만으로 security와 interoperability를 입증하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "elliptic-curve-point-group",
+        "sectionId": "names",
+        "intuition": "P를 반복해서 더해 같은 점 집합 안에서 이동하고 O로 돌아옵니다.",
+        "workedExample": "F₁₇의 y²=x³+2x+2에서 P=(5,1), 2P=(6,3), 3P=(10,6), 19P=O입니다.",
+        "boundary": "4a³+27b²≠0 및 같은 곡선 입력이 필요합니다. 좌표 소수 17과 점의 위수 19는 다릅니다."
+      },
+      {
+        "id": "ec-scalar-multiplication",
+        "sectionId": "scalar",
+        "intuition": "현재 횟수를 두 배한 뒤 비트가 1이면 시작점을 한 번 더합니다.",
+        "workedExample": "111을 처리한 누적값은 P, 3P, 7P이며 최종 (0,6)입니다. 원문은 처음 O의 두 배도 호출해 세 번 두 배·세 번 더하기를 실행합니다.",
+        "boundary": "비밀 비트의 분기·표 접근은 별도 문제입니다. 작은 예의 일반 경로를 BN254의 모든 최적화 경로와 같다고 보지 않습니다."
+      },
+      {
+        "id": "ec-subgroup-validation",
+        "sectionId": "validation",
+        "intuition": "좌표를 담은 타입과 검사를 통과한 점을 구분합니다.",
+        "workedExample": "BN254의 (1,1)은 곡선 밖인데 부분군 보조 함수만 호출하면 true입니다. 전체 check는 거부하며 O는 허용합니다.",
+        "boundary": "assuming_on_curve의 전제를 먼저 확인해야 합니다. 응용의 항등원 금지와 cofactor 변환은 별도 정책입니다."
+      },
+      {
+        "id": "affine-jacobian-equivalence",
+        "sectionId": "jacobian",
+        "intuition": "나눗셈을 뒤로 미루려고 같은 점을 세 숫자로 저장합니다.",
+        "workedExample": "(5,1,1)과 (3,8,2)는 같은 점입니다. 원본 두 배 출력 (7,7,2)를 정규화하면 (6,3)입니다.",
+        "boundary": "Z≠0에서 x=X/Z², y=Y/Z³이며 원시 세 수 비교는 점 비교가 아닙니다. Z=0은 구현의 항등원 규칙을 확인합니다."
+      },
+      {
+        "id": "bn254-g1-g2-twist",
+        "sectionId": "g1-g2-bn254",
+        "intuition": "페어링의 두 입력은 같은 반복 주기를 가지지만 좌표와 곡선이 다릅니다.",
+        "workedExample": "G1은 Fₚ의 y²=x³+3, G2는 Fₚ²의 y²=x³+3/(9+u) 부분군입니다. x=(1,0)으로 찾은 실제 G2 곡선점은 부분군 검사에서 실패합니다.",
+        "boundary": "G1의 cofactor 1을 G2로 옮기지 않습니다. p와 r 및 Fₚ² 내부·전송 계수 순서도 구분합니다."
+      },
+      {
+        "id": "pairing-bilinearity-boundary",
+        "sectionId": "pairing",
+        "intuition": "점에 곱한 두 횟수가 결과 군의 지수 곱으로 모입니다.",
+        "workedExample": "실제 BN254 생성점에 e([2]P,[3]Q)=e(P,Q)^6과 e([2]P,[3]Q)e([−6]P,Q)=1을 확인했습니다.",
+        "boundary": "유효한 부분군 입력의 대수 관계입니다. 명제의 출처·설정·공개 입력의 연결과 권한까지 보장하지 않습니다."
+      },
+      {
+        "id": "elliptic-curve-release-gate",
+        "sectionId": "verification",
+        "intuition": "같은 입력을 기준 계산과 비교하고 아직 검사하지 않은 범위를 남깁니다.",
+        "workedExample": "19점의 361쌍·20스칼라를 정수 계산과 대조했습니다. EIP-196 모형에서는 64바이트 G1만 주면 뒤 O가 채워져 같은 점이 됩니다.",
+        "boundary": "실제 EVM·EIP-197 파서·독립 페어링 구현·상수 시간·성능을 검증한 것은 아닙니다. 함수별 길이 계약을 따릅니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 point group", relation: "Base-field curve와 ECDLP domain을 만듭니다.", concepts: ["prime-field-modular-arithmetic", "elliptic-curve-point-group", "cyclic-subgroup-dlp"] },
-      { label: "02 implementation", relation: "Validation 뒤 scalar multiplication과 projective optimization을 적용합니다.", concepts: ["ec-subgroup-validation", "ec-scalar-multiplication", "affine-jacobian-equivalence"] },
-      { label: "03 pairing groups", relation: "Extension-field twist에서 G1·G2·GT relation으로 확장합니다.", concepts: ["extension-field-quotient", "bn254-g1-g2-twist", "pairing-bilinearity-boundary"] },
-      { label: "04 release", relation: "Adversarial point/vector parity 뒤 성능을 비교합니다.", concepts: ["elliptic-curve-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "01 같은 점의 덧셈",
+        "relation": "나머지 좌표와 반복 횟수를 작은 사례로 구분합니다.",
+        "concepts": [
+          "elliptic-curve-point-group",
+          "ec-scalar-multiplication"
+        ]
+      },
+      {
+        "label": "02 같은 점의 다른 저장",
+        "relation": "손으로 구한 2P를 원문의 세 수와 정규화에 대입합니다.",
+        "concepts": [
+          "affine-jacobian-equivalence",
+          "elliptic-curve-point-group"
+        ]
+      },
+      {
+        "label": "03 입력의 조건",
+        "relation": "타입 생성과 곡선·부분군·항등원 검사를 나누어 읽습니다.",
+        "concepts": [
+          "ec-subgroup-validation",
+          "bn254-g1-g2-twist"
+        ]
+      },
+      {
+        "label": "04 관계와 적용 범위",
+        "relation": "페어링 관계와 함수별 바이트 계약의 검증 범위를 정합니다.",
+        "concepts": [
+          "pairing-bilinearity-boundary",
+          "elliptic-curve-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Short-Weierstrass curve의 nonsingularity 조건과 point at infinity가 group law에서 맡는 역할을 설명하세요.", answerChecklist: ["y2=x3+ax+b", "finite field", "discriminant nonzero", "no cusp/self intersection", "O identity", "P plus negative P"], requiredConcepts: ["elliptic-curve-point-group"], sectionId: "overview" },
-      { level: "basic", question: "F17 curve에서 P=(5,1), Q=(6,3)의 affine slope와 P+Q=(10,6)을 계산하세요.", answerChecklist: ["lambda 2", "field inverse", "x3=4-5-6 mod17=10", "y3=2(5-10)-1 mod17=6", "curve check", "not integer division"], requiredConcepts: ["elliptic-curve-point-group", "prime-field-modular-arithmetic"], sectionId: "g1-curve" },
-      { level: "basic", question: "Double-and-add scalar multiplication의 bit 경로와 secret-scalar constant-time 요구를 설명하세요.", answerChecklist: ["binary scalar", "doubling each bit", "conditional addition", "window tradeoff", "secret branch leak", "constant-time table"], requiredConcepts: ["ec-scalar-multiplication"], sectionId: "g1-curve" },
-      { level: "basic", question: "Jacobian (X,Y,Z)에서 affine 변환과 projective scale equivalence, Z=0 처리를 설명하세요.", answerChecklist: ["x=X/Z2", "y=Y/Z3", "mu2 mu3 mu", "many tuples same point", "defer inverse", "Z0 identity convention", "no raw tuple compare"], requiredConcepts: ["affine-jacobian-equivalence"], sectionId: "g1-curve" },
-      { level: "basic", question: "Untrusted elliptic-curve point의 canonical decode부터 subgroup membership까지 검증 순서를 쓰세요.", answerChecklist: ["exact length/encoding", "coordinates below p", "curve equation", "identity policy", "qP=O", "cofactor policy", "typed reject"], requiredConcepts: ["ec-subgroup-validation"], sectionId: "g1-curve" },
-      { level: "basic", question: "BN254 G1·G2·GT의 coordinate field·공통 order·pairing 입출력 역할을 구분하세요.", answerChecklist: ["G1 Fp", "G2 twist Fp2", "same prime order q", "GT Fp12 subgroup", "not same point type", "pairing G1xG2"], requiredConcepts: ["bn254-g1-g2-twist", "pairing-bilinearity-boundary"], sectionId: "g1-g2-bn254" },
-      { level: "advanced", question: "P=Q·P=−Q·y=0 doubling을 포함해 incomplete affine addition formula의 예외 matrix를 설계하세요.", answerChecklist: ["distinct addition", "doubling slope", "P=-Q gives O", "y0 tangent vertical", "identity inputs", "same curve", "complete formula or branches", "reference parity"], requiredConcepts: ["elliptic-curve-point-group"], sectionId: "g1-curve" },
-      { level: "advanced", question: "Wrong-subgroup G2 point가 on-curve check를 통과할 수 있는 이유와 pairing protocol 위험을 설명하세요.", answerChecklist: ["twist full group", "cofactor component", "on curve insufficient", "qP=O/order test", "pairing relation altered", "reject or clear policy", "EIP encoding"], requiredConcepts: ["ec-subgroup-validation", "bn254-g1-g2-twist"], sectionId: "g1-g2-bn254" },
-      { level: "advanced", question: "Pairing bilinearity 식을 전개하고 product check 성공에서 결론 내릴 수 없는 항목들을 구분하세요.", answerChecklist: ["e(aP,bQ)=e(P,Q)^ab", "product identity", "validated subgroups", "nondegenerate", "does not prove statement source", "does not prove setup", "does not authorize input"], requiredConcepts: ["pairing-bilinearity-boundary"], sectionId: "g1-g2-bn254" },
-      { level: "advanced", question: "G1/G2 malformed input·official vectors·independent parity·side-channel을 포함한 구현 release gate를 설계하세요.", answerChecklist: ["parameter/SHA receipt", "identity/noncanonical", "wrong curve/subgroup", "Fp2 order", "add/double/scalar/pairing vectors", "independent parity", "constant time", "bounded failure", "performance after gates"], requiredConcepts: ["elliptic-curve-release-gate", "ec-subgroup-validation"], sectionId: "g1-g2-bn254" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "이번 곡선의 조건과 P의 위수를 계산하고 17과 19의 역할을 구분하세요.",
+        "answerChecklist": [
+          "y²=x³+2x+2 mod 17",
+          "P의 양변은 1과 137≡1",
+          "4a³+27b²=140≡4≠0",
+          "O까지 점 19개",
+          "19P=O",
+          "17은 좌표의 소수이고 19는 P의 주기"
+        ],
+        "sectionId": "names",
+        "requiredConcepts": [
+          "elliptic-curve-point-group"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "P=(5,1)의 두 배와 P+(6,3)을 차례로 계산하세요.",
+        "answerChecklist": [
+          "두 배 분모 2의 역원 9",
+          "λ=(3·25+2)·9≡13",
+          "2P의 x=169−10≡6",
+          "y=13(5−6)−1≡3",
+          "다른 점 덧셈 λ=2",
+          "x=4−5−6≡10",
+          "y=2(5−10)−1≡6"
+        ],
+        "sectionId": "g1-curve",
+        "requiredConcepts": [
+          "elliptic-curve-point-group",
+          "prime-field-modular-arithmetic"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "원문 반복문에 7=111을 넣고 비트별 누적점과 호출 수를 설명하세요.",
+        "answerChecklist": [
+          "O에서 시작",
+          "첫 1:2O+P=P",
+          "둘째 1:2P+P=3P",
+          "셋째 1:2·3P+P=7P",
+          "누적 좌표 (5,1),(10,6),(0,6)",
+          "초기 O 포함 double 세 번과 add 세 번",
+          "비밀 비트 분기의 보안은 별도"
+        ],
+        "sectionId": "scalar",
+        "requiredConcepts": [
+          "ec-scalar-multiplication"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "(3,8,2)를 복원하고 실제 원본 두 배 출력 (7,7,2)도 같은 방식으로 읽으세요.",
+        "answerChecklist": [
+          "2의 역원 9",
+          "제곱 13과 세제곱 15",
+          "3·13≡5,8·15≡1",
+          "(3,8,2)와 (5,1,1)은 같은 점",
+          "원본 XX=8,S=3,M=9",
+          "원시 (7,7,2)는 x=6,y=3",
+          "Z=0은 나눗셈 없이 O 처리"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "affine-jacobian-equivalence"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "BN254 (1,1)이 부분군 보조 함수와 전체 check에서 서로 다른 결과를 내는 이유를 설명하세요.",
+        "answerChecklist": [
+          "1²≠1³+3",
+          "곡선 밖 입력",
+          "new_unchecked는 검사 생략",
+          "G1 cofactor 1의 true는 곡선 위라는 전제",
+          "전체 check는 곡선도 검사해 거부",
+          "O는 군 검사에서 유효",
+          "공개키의 O 금지는 별도 정책"
+        ],
+        "sectionId": "validation",
+        "requiredConcepts": [
+          "ec-subgroup-validation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "BN254 G1·G2·Gₜ와 2·3의 페어링 사례를 구분하세요.",
+        "answerChecklist": [
+          "G1은 Fₚ 좌표",
+          "G2는 Fₚ² twist 부분군",
+          "공통 위수 r과 좌표 소수 p는 다름",
+          "Gₜ는 Fₚ¹²의 곱셈 부분군",
+          "e(2P,3Q)=e(P,Q)^6",
+          "결과는 점이 아닌 Gₜ 원소",
+          "PairingOutput의 is_zero는 필드 one 검사"
+        ],
+        "sectionId": "pairing",
+        "requiredConcepts": [
+          "bn254-g1-g2-twist",
+          "pairing-bilinearity-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "0인 분모가 생기는 덧셈과 다른 곡선의 T=(0,0)을 비교하세요.",
+        "answerChecklist": [
+          "P=Q이면 y≠0에서 두 배 공식",
+          "P=−Q이면 O",
+          "y=0인 점의 두 배도 O",
+          "O를 더하면 같은 점",
+          "다른 곡선 y²=x³+2x의 G는 위수 5",
+          "T는 위수 2여서 [5]T=T≠O",
+          "[4]T=O로 변환하면 원래 점과 달라짐",
+          "변환 뒤 O 금지 정책은 여전히 필요"
+        ],
+        "sectionId": "subgroup",
+        "requiredConcepts": [
+          "elliptic-curve-point-group",
+          "ec-subgroup-validation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "실제 G2 반례가 각 검사에서 어떻게 달라지는지 실행 범위와 함께 설명하세요.",
+        "answerChecklist": [
+          "x=(1,0)에서 구한 y는 곡선 식을 만족",
+          "부분군 검사 실패",
+          "별도 [r]Q도 O가 아님",
+          "cofactor 뒤 유효한 점이고 이번에는 O 아님",
+          "Ark 압축 바이트 길이 64",
+          "정상 deserialize는 거부",
+          "unchecked는 같은 점을 복원",
+          "타입과 압축 성공만으로 부분군 유효성을 보장하지 않음"
+        ],
+        "sectionId": "g1-g2-bn254",
+        "requiredConcepts": [
+          "ec-subgroup-validation",
+          "bn254-g1-g2-twist"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "두 페어링의 곱이 1인 이유와 이것으로 증명되지 않는 것을 설명하세요.",
+        "answerChecklist": [
+          "쌍선형 식 e(aP,bQ)=e(P,Q)^ab",
+          "지수 2·3=6",
+          "둘째 지수 −6",
+          "6+(−6)=0으로 항등원",
+          "실제 최종 지수화 포함 라이브러리 실행",
+          "같은 라이브러리 비교는 독립 페어링 구현 검증 아님",
+          "명제 출처·공개 입력 연결·설정·권한은 별도"
+        ],
+        "sectionId": "pairing",
+        "requiredConcepts": [
+          "pairing-bilinearity-boundary",
+          "elliptic-curve-release-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "SEC 1·Ark·EIP 입력의 차이를 같은 점과 짧은 입력으로 설명하세요.",
+        "answerChecklist": [
+          "작은 P의 SEC 1은 03 05 또는 04 05 01",
+          "03 16의 16은 십육진 22로 p=17 범위 밖",
+          "Ark의 flag 직렬화와 SEC 1 접두는 다른 규칙",
+          "EIP-196 ADD 64바이트 점은 뒤 O를 채워 같은 점",
+          "빈 ADD는 O이고 초과 바이트는 무시",
+          "좌표 p 이상은 거부하되 스칼라 r+1은 허용",
+          "EIP-197은 192의 배수가 아니면 실패",
+          "빈 페어링은 빈 곱 1",
+          "Fₚ² a·u+b는 a,b 순서",
+          "실행은 자체 EIP-196 모형이며 EVM과 EIP-197 파서가 아님"
+        ],
+        "sectionId": "precompile",
+        "requiredConcepts": [
+          "elliptic-curve-release-gate",
+          "ec-subgroup-validation",
+          "bn254-g1-g2-twist"
+        ]
+      }
     ],
-    papers: [
-      { title: "SECG SEC 1 v2.0 · Elliptic Curve Cryptography", href: "https://www.secg.org/sec1-v2.pdf", problem: "ECC domain parameter·key·point encoding과 validation의 상호운용 정의", contribution: "Field/curve parameter·octet conversion·public-key validation과 scheme primitives 제공", assumptions: "선택 curve·domain parameter와 validation level·encoding을 고정", evidenceScope: "SEC 1이 규정한 ECC representation·validation·algorithm 범위", notClaim: "BN254 pairing·모든 curve security·library constant-time을 보장하지 않음", sectionId: "paper-sec1-elliptic-curve" },
-      { title: "EIP-197 · alt_bn128 pairing precompile", href: "https://eips.ethereum.org/EIPS/eip-197", problem: "Ethereum contract에서 zkSNARK pairing relation을 exact bytes와 failure로 실행", contribution: "G1/G2 generators·order·Fp/Fp2 encoding·subgroup requirement·product equation 정의", assumptions: "EIP가 고정한 alt_bn128 parameter와 fork semantics 사용", evidenceScope: "Ethereum pairing precompile의 protocol contract", notClaim: "BN254 장기 security·모든 pairing protocol·off-chain API를 일반화하지 않음", sectionId: "paper-eip197-bn254" },
-      { title: "EIP-196 · alt_bn128 addition and scalar multiplication", href: "https://eips.ethereum.org/EIPS/eip-196", problem: "G1 point addition·scalar multiplication을 EVM에서 동일하게 실행", contribution: "Input encoding·infinity·invalid point와 operation semantics 정의", assumptions: "EIP curve와 target client fork·gas schedule 고정", evidenceScope: "G1 precompile의 byte·group operation behavior", notClaim: "G2·pairing subgroup 검증·secret-scalar side-channel을 보장하지 않음", sectionId: "paper-eip196-g1" },
-    ],
+    "papers": [
+      {
+        "title": "SEC 1 v2.0 · 덧셈·점 변환·공개키 검사",
+        "href": "https://www.secg.org/sec1-v2.pdf",
+        "problem": "점의 수학 규칙과 바이트 변환 및 공개키 유효성을 명확히 정합니다.",
+        "contribution": "§2.2.1의 덧셈 예외, §2.3.3–4의 압축·비압축, §3.2.2.1의 공개키 조건을 제공합니다.",
+        "assumptions": "홀수 소수체와 정해진 곡선·기저점·위수·직렬화 규칙을 사용합니다. F₁₇ 사례는 설명용입니다.",
+        "evidenceScope": "원문 규칙에 (5,1)과 (6,3), 03 05 및 04 05 01을 대입하고 점 변환과 공개키 항등원 거부를 구분했습니다.",
+        "notClaim": "작은 예의 암호 안전성, BN254 페어링 구현이나 상수 시간을 보장하지 않습니다.",
+        "sectionId": "paper-sec1-elliptic-curve"
+      },
+      {
+        "title": "arkworks algebra · 같은 점의 고정 원문 실행",
+        "href": "https://github.com/arkworks-rs/algebra/tree/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c",
+        "problem": "좌표 표현과 최적화·검사 함수가 같은 수학 대상을 보존하는지 확인합니다.",
+        "contribution": "Affine·Projective 변환, 두 배·비트 반복문, G1·G2 검사와 결과 군 인터페이스를 제공합니다.",
+        "assumptions": "동일 commit의 ec·ff 0.5.0과 bn254 0.5.0-alpha.0을 고정하고 자체 F₁₇/F₁₉ 설정을 실행했습니다.",
+        "evidenceScope": "361쌍·20스칼라와 원시 두 배 값을 정수 계산에 대조하고 잘못된 G1·G2, 검사 유무와 두 전체 페어링 관계를 실제 실행했습니다.",
+        "notClaim": "독립 페어링 구현 검증, 모든 비정상 입력·상수 시간·성능 측정을 뜻하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "EIP-196 · G1 덧셈·스칼라 입력 규칙",
+        "href": "https://eips.ethereum.org/EIPS/eip-196",
+        "problem": "점과 스칼라 바이트를 G1 연산으로 해석하는 방법을 정합니다.",
+        "contribution": "32바이트 좌표, O 표기, 오른쪽 0 채움과 초과 무시, 서로 다른 좌표·스칼라 범위를 정합니다.",
+        "assumptions": "EIP가 명시한 alt_bn128 매개변수와 호출별 입력 의미를 적용합니다. 실제 포크·가스는 별도입니다.",
+        "evidenceScope": "직접 작성한 ECADD 모형에 빈 입력·64바이트·초과 바이트·p 좌표를 넣고, 라이브러리 G1의 r+1배를 확인했습니다.",
+        "notClaim": "실제 EVM 클라이언트·현재 포크·가스 사용량·공식 벡터 전수 검증이 아닙니다.",
+        "sectionId": "paper-eip196-g1"
+      },
+      {
+        "title": "EIP-197 · 페어링 입력과 결과",
+        "href": "https://eips.ethereum.org/EIPS/eip-197",
+        "problem": "유효한 G1·G2 쌍들의 곱 관계를 동일한 바이트 계약으로 검사합니다.",
+        "contribution": "192바이트 쌍과 G2의 순서·부분군 조건, 빈 곱 및 32바이트 결과를 정합니다.",
+        "assumptions": "명시된 G1·G2·위수와 Fₚ² 계수 전송 순서를 고정하며 G1 덧셈의 길이 규칙을 복사하지 않습니다.",
+        "evidenceScope": "규격을 읽어 64바이트가 유효한 ECADD 예와 페어링의 길이 실패를 대조했습니다. 두 전체 페어링 수학 관계는 별도 Ark 실행으로 확인했습니다.",
+        "notClaim": "EIP-197의 실제 파서·EVM 클라이언트를 실행했거나 모든 증명 응용을 검증한 것은 아닙니다.",
+        "sectionId": "paper-eip197-bn254"
+      }
+    ]
   },
   "crypto/finite-field-theory": {
     "entryLevel": true,
@@ -96553,544 +97984,716 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "banking/central-bank-and-policy-transmission": {
-    entryNote:
-      "은행이 대출로 예금을 만든다는 것까지 확인하고 들어옵니다. 앞 글이 설명하지 않고 남긴 문장, 곧 통화 총량이 결국 중앙은행 정책에 달렸다는 말을 여기서 풉니다.",
-    coreIdea:
-      "중앙은행은 통화량을 정하는 것이 아니라 은행 간 초단기 금리 한 점을 목표에 못 박습니다. 선택지를 바닥과 천장 사이로 제한해 그 점을 고정하고, 앞으로의 경로에 대한 기대를 통해 만기별 금리와 실물까지 그 점에 매답니다.",
-    assumedKnowledge: [
+    "entryNote": "오늘 6억 원이 부족한 A은행과 여유가 있는 B은행에서 시작합니다. 거래 조건을 먼저 비교한 뒤 정책 목표·관리금리·시장금리의 이름을 붙입니다.",
+    "coreIdea": "중앙은행이 제시하는 실제 거래 조건과 자금 공급은 시장의 선택에 영향을 줍니다. 그 결과와 미래 경로에 대한 기대가 장기금리·계약·지출로 이어지며, 각 연결에는 접근 자격·비용·위험·제도 조건이 붙습니다.",
+    "assumedKnowledge": [
       {
-        id: "bank-balance-sheet",
-        role: "중앙은행 장부를 같은 형식으로 읽되 부채의 지위가 다르다는 점을 대조하는 데 씁니다.",
+        "id": "bank-balance-sheet",
+        "role": "같은 자산·부채를 중앙은행과 거래 은행에 대응시킵니다."
       },
       {
-        id: "deposit-creation",
-        role: "준비금이 늘어도 예금이 자동으로 늘지 않는다는 결론이 이 글의 핵심 경계가 됩니다.",
+        "id": "deposit-creation",
+        "role": "은행/비은행의 자산 매입과 대출이 예금에 미치는 직접 변화를 구별합니다."
       },
       {
-        id: "money-multiplier-ceiling",
-        role: "수량이 아니라 가격을 조작 대상으로 삼는 이유를 설명하는 출발점입니다.",
-      },
-      {
-        id: "discount-factor",
-        role: "금리 변화가 자산가격으로 번지는 경로를 할인 계산으로 설명하는 데 씁니다.",
-      },
+        "id": "discount-factor",
+        "role": "차입 비용과 예상 현금흐름이 설비 투자 판단에 닿는 경로를 연결합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "central-bank-balance-sheet",
-        role: "중앙은행이 자기 부채를 만들 수 있는 이유를 장부에서 보입니다.",
+        "id": "central-bank-balance-sheet",
+        "role": "중앙은행의 자산과 부채를 거래 상대의 장부에 대응시켜 전체 준비금 변화를 확인합니다."
       },
       {
-        id: "policy-rate",
-        role: "공표된 목표값과 실현된 시장금리를 구분하는 기준을 세웁니다.",
+        "id": "policy-rate",
+        "role": "정책 목표, 중앙은행이 제시하는 관리금리, 실제 시장금리를 나눠 읽습니다."
       },
       {
-        id: "rate-corridor",
-        role: "가격을 부르지 않고 선택지를 제한해 금리를 가두는 구조를 설명합니다.",
+        "id": "rate-corridor",
+        "role": "돈을 맡기거나 빌릴 다른 선택의 조건이 협상 범위에 영향을 줍니다."
       },
       {
-        id: "open-market-operation",
-        role: "구간 안에서 목표에 붙이는 일상 수단을 절차로 보입니다.",
+        "id": "open-market-operation",
+        "role": "증권 거래 등으로 준비금과 시장 여건을 조절하며 공급·흡수 방향과 만기를 함께 읽습니다."
       },
       {
-        id: "expectations-hypothesis-of-rates",
-        role: "하루짜리 한 점이 만기별 금리를 끌고 가는 통로를 식으로 세웁니다.",
+        "id": "expectations-hypothesis-of-rates",
+        "role": "현재 하루 금리보다 미래 단기금리 경로 전체와 장기 보유에 대한 프리미엄을 함께 봅니다."
       },
       {
-        id: "monetary-transmission",
-        role: "경로별 전제와 시차를 갈라 정책 효과의 불확실성을 드러냅니다.",
+        "id": "monetary-transmission",
+        "role": "거래 조건이 미래 예상·자산가격·계약·지출·물가에 닿는 경로를 각각 추적합니다."
       },
       {
-        id: "quantitative-easing",
-        role: "가격 수단이 막혔을 때 장부로 넘어가는 선택과 그 한계를 정합니다.",
-      },
+        "id": "quantitative-easing",
+        "role": "장기 자산 매입 등을 통해 위험의 보유 주체·기대·시장 기능과 금융 조건에 영향을 줍니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "central-bank-balance-sheet",
-        sectionId: "cb-balance-sheet",
-        intuition:
-          "다른 모두가 결제에 쓰는 돈이 이 기관의 빚이라서, 자기 빚을 스스로 만들어 낼 수 있습니다.",
-        workedExample:
-          "중앙은행이 은행에서 국채를 사면 자산의 국채와 부채의 지급준비금이 같은 금액으로 늘어납니다.",
-        boundary:
-          "준비금은 가계·기업이 쓸 수 없는 계정이므로, 준비금이 늘었다고 시중에 돈이 풀렸다고 읽으면 안 됩니다.",
+        "id": "central-bank-balance-sheet",
+        "sectionId": "cb-balance-sheet",
+        "intuition": "중앙은행의 자산과 부채를 거래 상대의 장부에 대응시켜 전체 준비금 변화를 확인합니다.",
+        "workedExample": "중앙은행 대출 6은 중앙은행의 대출 자산·준비금 부채와 A의 준비금 자산·차입 부채를 각각 6 늘립니다.",
+        "boundary": "은행 간 대출은 준비금 위치만 바꿉니다. 자기 통화 발행 권한이 손실·담보·법·물가의 제약을 없애지는 않습니다."
       },
       {
-        id: "policy-rate",
-        sectionId: "rate-setting",
-        intuition:
-          "정책금리는 명령이 아니라 이 부근에 두겠다고 공표한 목표입니다.",
-        workedExample:
-          "한국은행은 기준금리를 정한 뒤 7일물 환매조건부매매로 준비금을 조절해 초단기 금리를 그 부근에 둡니다.",
-        boundary:
-          "공표값과 실현값은 다를 수 있으므로, 발표된 숫자를 그대로 시장금리로 읽으면 안 됩니다.",
+        "id": "policy-rate",
+        "sectionId": "rate-setting",
+        "intuition": "정책 목표, 중앙은행이 제시하는 관리금리, 실제 시장금리를 나눠 읽습니다.",
+        "workedExample": "가정한 4% 예치·5% 차입 조건 아래 두 은행이 4.6%로 거래하면 6억 원 하루 이자는 약 75,616원입니다.",
+        "boundary": "국가별로 목표 시장금리·목표 범위·관리금리의 관계가 다릅니다. 발표 숫자가 모든 대출 계약의 금리는 아닙니다."
       },
       {
-        id: "rate-corridor",
-        sectionId: "rate-setting",
-        intuition:
-          "맡기면 반드시 받는 이자가 바닥이 되고 언제든 빌릴 수 있는 금리가 천장이 되어 가격이 그 사이에 갇힙니다.",
-        workedExample:
-          "하한 2.75%, 상한 3.25%면 은행은 2.75%보다 싸게 빌려주지도 3.25%보다 비싸게 빌리지도 않습니다.",
-        boundary:
-          "중앙은행 계정과 적격 담보에 접근할 수 없는 참가자가 많으면 바닥이 새어 시장금리가 하한 아래로 내려갈 수 있습니다.",
+        "id": "rate-corridor",
+        "sectionId": "rate-setting",
+        "intuition": "돈을 맡기거나 빌릴 다른 선택의 조건이 협상 범위에 영향을 줍니다.",
+        "workedExample": "같은 접근 자격·기간·비용이면 4% 예치 대안과 5% 차입 대안 사이에서 협상합니다.",
+        "boundary": "비은행은 4%에 접근하지 못할 수 있고 은행 비용이 0.15%포인트라면 3.83% 거래도 가능합니다. 담보·이용 시간·낙인 때문에 엄격한 상하한이 아닐 수 있습니다."
       },
       {
-        id: "open-market-operation",
-        sectionId: "operation-procedure",
-        intuition:
-          "오늘 준비금이 남으면 채권을 팔아 거둬들이고 모자라면 사서 넣어 줍니다.",
-        workedExample:
-          "한국은행은 통상 7일물 환매조건부매매를 쓰며, 기준금리를 매각 시 고정입찰금리이자 매입 시 최저입찰금리로 사용합니다.",
-        boundary:
-          "되사는 조건이 붙은 거래는 만기에 자동으로 원위치하므로, 항구적 매입과 효과의 지속 기간을 같게 보면 안 됩니다.",
+        "id": "open-market-operation",
+        "sectionId": "operation-procedure",
+        "intuition": "증권 거래 등으로 준비금과 시장 여건을 조절하며 공급·흡수 방향과 만기를 함께 읽습니다.",
+        "workedExample": "RP매입은 중앙은행 관점에서 오늘 준비금을 공급하고 만기에 회수하는 방향입니다. 한국은 2025년 7월 양방향 운영으로 개편했습니다.",
+        "boundary": "충분한 준비금 체계에서는 부리 금리 등이 중요합니다. 준비금이 많다는 사실만으로 매일 모두 흡수해야 하거나 정책 기조가 완화라고 결론 내리지 않습니다."
       },
       {
-        id: "expectations-hypothesis-of-rates",
-        sectionId: "transmission",
-        intuition:
-          "긴 자금을 한 번 묶는 선택과 짧은 자금을 이어 굴리는 선택이 경쟁하므로 두 결과가 크게 벌어질 수 없습니다.",
-        workedExample:
-          "앞으로 3년간 단기금리가 2%, 3%, 4%로 예상되면 3년 금리는 평균 3%에 기간 프리미엄을 더한 값 부근이 됩니다.",
-        proofIdea:
-          "두 전략의 만기 수익이 크게 다르면 비싼 쪽을 팔고 싼 쪽을 사는 거래가 이익을 내므로, 그 거래가 사라질 때까지 두 값이 좁혀진다는 무차익 논증입니다.",
-        counterexample:
-          "규제나 시장 분할로 두 전략 사이의 거래가 막히면 차익이 지워지지 않아 기대 평균과 크게 어긋난 장기금리가 유지될 수 있습니다.",
-        boundary:
-          "기간 프리미엄은 관측값이 아니라 모형 추정값이므로, 장기금리 변동을 전부 기대 변화로 해석할 수 없습니다.",
+        "id": "expectations-hypothesis-of-rates",
+        "sectionId": "transmission",
+        "intuition": "현재 하루 금리보다 미래 단기금리 경로 전체와 장기 보유에 대한 프리미엄을 함께 봅니다.",
+        "workedExample": "세 1년 구간의 예상 평균 4.5%·4%·3.5%와 0.3%포인트는 4.3%입니다. 새 경로 4.75%·3.5%·3%는 같은 프리미엄에서 4.05%입니다.",
+        "boundary": "선형 근사와 확정 복리 계산을 구별합니다. 불확실한 차환의 기대 수익 차이는 무위험 차익이 아니며 기간 프리미엄은 음수일 수도 있는 모형 추정값입니다.",
+        "proofIdea": "미래 금리가 확정된 경우 누적액의 곱에서 동일 연복리 수익률을 구합니다. 실제 미래 금리가 불확실하면 차환의 위험과 모형별 프리미엄이 남으므로 단순 기대 평균 등식을 무차익만으로 증명하지 않습니다.",
+        "counterexample": "첫 1년 예상은 4.75%로 높아져도 이후 예상이 3.5%·3%로 내려가면 같은 프리미엄의 장기 근사는 4.3%에서 4.05%로 낮아집니다."
       },
       {
-        id: "monetary-transmission",
-        sectionId: "transmission-lag",
-        intuition:
-          "같은 인상이 대출금리·자산가격·환율·기대라는 여러 문으로 동시에 나가지만 도착 시각은 제각각입니다.",
-        workedExample:
-          "환율은 발표 직후 움직이는 반면 은행 대출금리는 수개월에 걸쳐 반영되고 기대 인플레이션은 더 늦게 따라옵니다.",
-        boundary:
-          "고정금리 대출 비중이 높거나 예금금리를 더 낮출 수 없으면 은행 경로의 전가가 약해지므로, 경로별 전제를 확인하지 않은 일반화는 성립하지 않습니다.",
+        "id": "monetary-transmission",
+        "sectionId": "transmission-lag",
+        "intuition": "거래 조건이 미래 예상·자산가격·계약·지출·물가에 닿는 경로를 각각 추적합니다.",
+        "workedExample": "잔액 10억 원의 전액 재조정 대출에서 6%→6.25%는 연간 이자 250만원 증가입니다. 기존 고정 계약은 즉시 바뀌지 않을 수 있습니다.",
+        "boundary": "기대와 환율은 뉴스에 빠르게 움직일 수 있고 실제 생산·가격 조정은 계약과 경제 상태에 달립니다. 모든 국가에 고정된 시차·크기·환율 방향을 적용하지 않습니다."
       },
       {
-        id: "quantitative-easing",
-        sectionId: "balance-sheet-policy",
-        intuition:
-          "가격을 더 내릴 수 없으면 장기 자산을 사들여 기대와 프리미엄 쪽을 눌러 내립니다.",
-        workedExample:
-          "장기 국채를 대량 매입하면 시장에 남는 만기 위험이 줄어 기간 프리미엄이 낮아집니다.",
-        boundary:
-          "준비금이 크게 늘어도 대출 수요가 없으면 예금은 늘지 않으므로, 매입 규모를 통화량 증가로 환산해 읽으면 안 됩니다.",
-      },
+        "id": "quantitative-easing",
+        "sectionId": "balance-sheet-policy",
+        "intuition": "장기 자산 매입 등을 통해 위험의 보유 주체·기대·시장 기능과 금융 조건에 영향을 줍니다.",
+        "workedExample": "은행 보유 채권 6 매입은 은행 자산을 교체합니다. 비은행 고객에게서 은행을 통해 매입하면 준비금과 고객 예금이 함께 6 늘 수 있습니다.",
+        "boundary": "신규 대출 수요 없이도 예금이 직접 생길 수 있습니다. 준비금 증가를 대출·지출·순재산 증가로 환산하지 않으며 모든 자산 매입이 같은 목적의 QE인 것은 아닙니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "00 장부",
-        relation: "중앙은행의 부채가 왜 특별한지부터 확인합니다.",
-        concepts: ["central-bank-balance-sheet"],
+        "label": "01 같은 부족분",
+        "relation": "6을 누가 빌려주었는지에 따라 전체 준비금 변화를 나눕니다.",
+        "concepts": [
+          "central-bank-balance-sheet"
+        ]
       },
       {
-        label: "01 목표",
-        relation: "정하는 것은 수량이 아니라 공표된 가격입니다.",
-        concepts: ["policy-rate"],
+        "label": "02 다른 거래 선택",
+        "relation": "목표와 관리금리, 실제 협상 결과의 차이를 봅니다.",
+        "concepts": [
+          "policy-rate",
+          "rate-corridor"
+        ]
       },
       {
-        label: "02 고정",
-        relation: "선택지를 제한해 그 가격을 실제로 실현시킵니다.",
-        concepts: ["rate-corridor", "open-market-operation"],
+        "label": "03 운영",
+        "relation": "접근 조건과 준비금 수요에 따라 공급·흡수 방향을 판단합니다.",
+        "concepts": [
+          "open-market-operation",
+          "rate-corridor"
+        ]
       },
       {
-        label: "03 확산",
-        relation: "기대를 통해 한 점이 만기별 금리를 끌고 갑니다.",
-        concepts: ["expectations-hypothesis-of-rates", "monetary-transmission"],
+        "label": "04 미래와 계약",
+        "relation": "같은 인상을 예상 경로와 공장 이자·투자로 이어 갑니다.",
+        "concepts": [
+          "expectations-hypothesis-of-rates",
+          "monetary-transmission"
+        ]
       },
       {
-        label: "04 한계",
-        relation: "가격 수단이 막히면 장부로 넘어가지만 수량으로 읽으면 안 됩니다.",
-        concepts: ["quantitative-easing"],
-      },
+        "label": "05 자산 매입",
+        "relation": "거래 상대에 따른 예금 변화와 정책 목적을 구별합니다.",
+        "concepts": [
+          "quantitative-easing",
+          "central-bank-balance-sheet"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "중앙은행 장부에서 지급준비금이 자산인지 부채인지 쓰고, 그것이 상업은행 장부와 어떻게 대응하는지 설명하세요.",
-        answerChecklist: ["중앙은행의 부채", "은행에게는 자산", "은행 간 최종 결제 수단", "가계·기업은 보유 불가"],
-        requiredConcepts: ["central-bank-balance-sheet"],
-        sectionId: "cb-balance-sheet",
-      },
-      {
-        level: "basic",
-        question:
-          "정책금리가 명령이 아니라 목표라는 말이 무슨 뜻인지, 공표값과 실현값을 구분해 설명하세요.",
-        answerChecklist: ["공표한 목표값", "실제 시장금리는 따로 형성", "개입으로 좁힘", "둘이 다를 수 있음"],
-        requiredConcepts: ["policy-rate"],
-        sectionId: "rate-setting",
-      },
-      {
-        level: "basic",
-        question:
-          "준비금 부리 금리가 시장금리의 바닥이 되는 이유를 은행의 선택으로 설명하세요.",
-        answerChecklist: ["맡기면 확실히 받는 이자", "그보다 싸게 빌려줄 이유 없음", "손해를 감수해야 깨짐", "하한 형성"],
-        requiredConcepts: ["rate-corridor"],
-        sectionId: "rate-setting",
-      },
-      {
-        level: "basic",
-        question:
-          "오늘 준비금이 남는다고 추정될 때 중앙은행이 취하는 조치와 그 이유를 쓰세요.",
-        answerChecklist: ["RP 매각", "준비금 흡수", "금리가 하한으로 눌리는 것을 방지", "만기에 자동 원위치"],
-        requiredConcepts: ["open-market-operation"],
-        sectionId: "operation-procedure",
-      },
-      {
-        level: "basic",
-        question:
-          "앞으로 3년간 단기금리가 각각 2%, 3%, 4%로 예상될 때 기대 가설이 말하는 3년 금리를 구하고, 실제와 달라질 수 있는 이유를 한 가지 쓰세요.",
-        answerChecklist: ["평균 3%", "기간 프리미엄 가산", "프리미엄은 추정값", "시장 분할·규제"],
-        requiredConcepts: ["expectations-hypothesis-of-rates"],
-        sectionId: "transmission",
-      },
-      {
-        level: "basic",
-        question:
-          "양적완화가 준비금을 늘리는 것 자체를 목적으로 하지 않는다면 무엇을 겨냥하는지 두 가지를 쓰세요.",
-        answerChecklist: ["기대 경로 인하", "기간 프리미엄 인하", "장기금리 인하", "준비금 증가는 부산물"],
-        requiredConcepts: ["quantitative-easing"],
-        sectionId: "balance-sheet-policy",
-      },
-      {
-        level: "advanced",
-        question:
-          "중앙은행이 준비금을 아주 많이 공급해 두면 매일의 수급 조절 없이도 금리가 목표 부근에 머무는 이유를 상하한 구조로 설명하세요.",
-        answerChecklist: [
-          "잉여 상태에서 금리가 하한에 붙음",
-          "하한을 목표로 삼으면 일치",
-          "바닥 방식",
-          "수급 조절 필요성 감소",
+        "level": "basic",
+        "sectionId": "cb-balance-sheet",
+        "requiredConcepts": [
+          "central-bank-balance-sheet"
         ],
-        requiredConcepts: ["rate-corridor", "open-market-operation"],
-        sectionId: "rate-setting",
+        "question": "중앙은행이 A은행에 6억 원을 빌려줄 때 두 기관의 자산·부채와 은행 전체 준비금은 어떻게 바뀌나요? B은행이 A은행에 같은 금액을 빌려주는 경우와 비교하세요.",
+        "answerChecklist": [
+          "중앙은행 자산의 대출과 부채의 A은행 준비금이 각각 6 증가합니다.",
+          "A은행은 준비금 자산과 중앙은행 차입 부채가 각각 6 증가합니다.",
+          "은행 사이의 대출은 준비금 소유 은행만 바꾸므로 전체 준비금을 늘리지 않습니다."
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "같은 0.25%포인트 인상인데도 장기금리가 오히려 내릴 수 있는 상황을 기대 가설의 두 항으로 설명하세요.",
-        answerChecklist: [
-          "오늘의 인상보다 앞으로의 경로가 중요",
-          "마지막 인상이라는 신호",
-          "기대 평균 하락",
-          "기간 프리미엄 변화도 가능",
+        "level": "basic",
+        "sectionId": "rate-setting",
+        "requiredConcepts": [
+          "policy-rate",
+          "rate-corridor"
         ],
-        requiredConcepts: ["expectations-hypothesis-of-rates", "monetary-transmission"],
-        sectionId: "transmission",
+        "question": "6억 원을 하루 빌리는 가정에서 맡길 때 4%, 빌릴 때 5%, 시장 거래 4.6%를 구별하고 하루 이자를 구하세요.",
+        "answerChecklist": [
+          "4%·5%는 같은 접근 조건을 둔 중앙은행 거래 조건이고 4.6%는 은행 사이에서 협상한 금리입니다.",
+          "6억×0.046/365는 약 75,616원입니다.",
+          "실제 국가의 현재 금리가 아니며 목표·관리금리·시장금리를 구분합니다."
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "고정금리 대출 비중이 높은 경제에서 정책금리 인상의 은행 경로가 약해지는 이유와, 그럼에도 다른 경로가 작동하는 이유를 함께 설명하세요.",
-        answerChecklist: [
-          "이미 실행된 대출에 닿지 않음",
-          "신규 대출에만 반영",
-          "자산가격·환율 경로는 별도로 작동",
-          "경로별 전제가 다름",
+        "level": "basic",
+        "sectionId": "rate-setting",
+        "requiredConcepts": [
+          "rate-corridor"
         ],
-        requiredConcepts: ["monetary-transmission"],
-        sectionId: "transmission-lag",
+        "question": "B은행이 4%보다 낮게 빌려주지 않고 A은행이 5%보다 높게 빌리지 않을 조건을 쓰세요.",
+        "answerChecklist": [
+          "B가 4% 예치에 접근하고 A가 5% 대출에 필요한 담보와 자격을 갖춥니다.",
+          "거래 기간과 위험·수수료·규제 비용을 같거나 무시할 수 있게 둡니다.",
+          "접근 제한과 비용·낙인이 있으면 엄격한 상하한이 아닙니다."
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "준비금이 크게 늘었는데도 예금과 대출이 그만큼 늘지 않은 상황이 양적완화의 실패를 뜻하지 않는 이유를 앞 글의 결론과 연결해 설명하세요.",
-        answerChecklist: [
-          "통화승수는 상한이지 절차가 아님",
-          "대출 수요가 있어야 예금이 늚",
-          "효과는 금리 경로로 나타남",
-          "수량으로 환산해 읽으면 안 됨",
+        "level": "basic",
+        "sectionId": "operation-procedure",
+        "requiredConcepts": [
+          "open-market-operation",
+          "rate-corridor"
         ],
-        requiredConcepts: ["quantitative-easing", "money-multiplier-ceiling"],
-        sectionId: "balance-sheet-policy",
+        "question": "목표와 운영 방식을 보지 않고 준비금이 많으니 반드시 RP로 흡수해야 한다고 말할 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "희소 준비금 방식에서는 과잉 공급이 시장금리를 목표 아래로 누를 수 있습니다.",
+          "충분한 준비금 방식에서는 부리 금리 등으로 시장금리를 유도할 수 있습니다.",
+          "한국은행은 2025년 7월 흡수·공급 양방향 운영을 도입했으며 매입과 매각의 방향을 나눠 봅니다."
+        ]
       },
+      {
+        "level": "basic",
+        "sectionId": "transmission",
+        "requiredConcepts": [
+          "expectations-hypothesis-of-rates"
+        ],
+        "question": "3년의 각 1년 구간에 예상한 평균 단기금리가 4.5%·4%·3.5%, 기간 프리미엄이 0.3%포인트일 때 장기금리 근삿값을 구하세요.",
+        "answerChecklist": [
+          "평균 4%에 0.3%포인트를 더해 4.3%입니다.",
+          "단위와 기간을 맞춘 근사식이며 위험한 차환을 확정 수익과 동일시하지 않습니다.",
+          "미래 경로와 프리미엄은 관측된 하나의 현재 금리와 다릅니다."
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "balance-sheet-policy",
+        "requiredConcepts": [
+          "quantitative-easing",
+          "central-bank-balance-sheet"
+        ],
+        "question": "중앙은행이 채권 6을 은행에서 살 때와 비은행 고객에게서 살 때 예금이 직접 변하는지 비교하세요.",
+        "answerChecklist": [
+          "은행 보유 채권 매입은 은행 채권을 준비금으로 교체하며 고객 예금을 직접 바꾸지 않습니다.",
+          "비은행 고객의 채권을 은행을 통해 사면 준비금과 고객 예금이 함께 늘 수 있습니다.",
+          "자산 교환과 부의 순증가를 구별하고 매입 총액을 신규 대출액으로 읽지 않습니다."
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "corridor-boundary",
+        "requiredConcepts": [
+          "rate-corridor",
+          "policy-rate"
+        ],
+        "question": "4% 예치에 직접 접근하지 못하는 자금 제공자와 중개 비용 0.15%포인트가 있는 은행 사이에서 3.83% 거래가 가능한지 계산하세요.",
+        "answerChecklist": [
+          "은행의 순수익 차이는 4−3.83−0.15=0.02%포인트입니다.",
+          "제공자의 다른 선택이 3.8%라면 3.83%를 받아들일 수 있습니다.",
+          "모든 참가자에게 4%의 하한을 적용할 수 없고 실제 비용·담보·자격은 따로 확인합니다."
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "transmission",
+        "requiredConcepts": [
+          "expectations-hypothesis-of-rates",
+          "monetary-transmission"
+        ],
+        "question": "첫 구간 예상이 4.5%에서 4.75%로 높아져도 새 예상 경로가 4.75%·3.5%·3%, 프리미엄이 0.3%포인트이면 장기금리는 어떻게 되나요? 무차익 논증의 한계도 쓰세요.",
+        "answerChecklist": [
+          "평균은 3.75%이고 프리미엄을 더하면 4.05%로 기존 4.3%보다 낮습니다.",
+          "현재 인상과 향후 인하 예상은 공존할 수 있습니다.",
+          "미래 단기금리를 모르면 차환 전략은 불확실하므로 기대 수익 차이가 곧 무위험 차익은 아닙니다.",
+          "기간 프리미엄은 음수일 수도 있고 모형으로 추정합니다."
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "transmission-lag",
+        "requiredConcepts": [
+          "monetary-transmission",
+          "policy-rate"
+        ],
+        "question": "10억 원 대출에서 적용 금리가 6%에서 6.25%로 바뀔 때의 연간 이자 차이를 구하고, 고정금리 계약·환율·기대 물가의 반응 시점을 비교하세요.",
+        "answerChecklist": [
+          "전액이 즉시 재조정되고 잔액이 일정하면 250만원 증가합니다.",
+          "기존 고정금리 계약은 당장 변하지 않아도 신규·차환 금리와 자산가격은 달라질 수 있습니다.",
+          "기대는 뉴스에 즉시 바뀔 수 있으며 환율은 외국 금리·위험 선호도에 달려 있습니다.",
+          "물가·생산의 반응 시차와 크기는 경제 상태와 계약 구조에 따라 달라집니다."
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "balance-sheet-policy",
+        "requiredConcepts": [
+          "quantitative-easing",
+          "monetary-transmission",
+          "open-market-operation"
+        ],
+        "question": "준비금이 늘었다는 사실만으로 통화정책 완화와 신규 예금·대출 증가를 모두 결론 낼 수 있나요?",
+        "answerChecklist": [
+          "일상적 결제 유동성 공급과 장기 자산 매입의 정책 목적을 나눕니다.",
+          "매도자가 은행인지 비은행인지에 따라 예금의 직접 변화가 다릅니다.",
+          "QE의 경로는 장기 자산 위험·기대·시장 기능 등에 걸치며 효과는 상황에 따라 달라집니다.",
+          "준비금 수량 하나로 정책 기조·지출·대출의 증가를 추정하지 않습니다."
+        ]
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "한국은행 · 공개시장운영 (통화정책수단)",
-        href: "https://www.bok.or.kr/portal/main/contents.do?menuNo=200294",
-        problem:
-          "정책금리를 공표하는 것만으로는 실제 은행 간 금리가 그 값이 되지 않으므로, 매일 어떤 수단으로 조절하는지가 별도로 필요합니다.",
-        contribution:
-          "증권 매매를 통한 유동성 조절의 종류를 정리하고, 통상 7일물 환매조건부매매를 중심으로 운영하며 기준금리를 그 입찰금리로 사용한다는 운영 방식을 명시합니다.",
-        assumptions:
-          "한국의 현행 통화정책 운영체제와 금융시장 구조를 전제로 한 제도 설명입니다.",
-        evidenceScope:
-          "한국은행이 공개한 제도 설명 페이지로, 수단의 종류와 운영 방식의 범위에 한정됩니다.",
-        notClaim:
-          "특정 시점의 조절 규모나 금리 수준을 이 문서로 인용할 수 없으며, 파급경로의 크기나 시차에 대한 실증 근거도 아닙니다.",
-        sectionId: "operation-procedure",
+        "title": "한국은행 · 공개시장운영",
+        "href": "https://www.bok.or.kr/portal/main/contents.do?menuNo=200294",
+        "sectionId": "source-operations",
+        "problem": "공표된 목표와 실제 단기 거래를 연결하는 운영 수단을 구별합니다.",
+        "contribution": "증권 매매·통화안정증권·통화안정계정과 공급·흡수 방향을 같은 6의 사례에 적용합니다.",
+        "assumptions": "한국의 운영 제도 설명이며 수단별 상대방·만기·담보 조건을 구분합니다.",
+        "evidenceScope": "공식 운영 설명의 수단과 방향을 적용했습니다.",
+        "notClaim": "가정한 4%·5%나 6억 원이 실제 거래 금리·규모라는 근거가 아닙니다."
       },
-    ],
+      {
+        "title": "한국은행 · 통화신용정책보고서 2026년 3월",
+        "href": "https://www.bok.or.kr/portal/bbs/B0000156/view.do?menuNo=200754&nttId=10096935",
+        "sectionId": "source-operations",
+        "problem": "과거 흡수 중심 설명을 현재 운영 전체로 일반화하는 문제입니다.",
+        "contribution": "공개시장운영 본문과 관련 주석의 2025년 7월 양방향 개편을 읽습니다.",
+        "assumptions": "2026년 3월 보고서가 설명하는 기간에 한정하며 실제 정책 금리 수준을 가정 사례와 섞지 않습니다.",
+        "evidenceScope": "실제 보고서의 운영 방향과 개편 날짜를 대조했습니다.",
+        "notClaim": "모든 은행의 부족분을 같은 수단으로 언제든 메운다는 뜻은 아닙니다."
+      },
+      {
+        "title": "Federal Reserve · IORB FAQ",
+        "href": "https://www.federalreserve.gov/monetarypolicy/iorb-faqs.htm",
+        "sectionId": "rate-setting",
+        "problem": "목표 범위와 관리금리 및 참가자의 접근 조건을 구별합니다.",
+        "contribution": "적격 기관의 IORB와 더 넓은 상대에게 열린 ON RRP의 역할을 비교합니다.",
+        "assumptions": "2026년 10월 4일 공식 설명을 확인했고 실제 금리 수준은 이 글에서 가정하지 않습니다.",
+        "evidenceScope": "공식 운영 문서의 접근 조건과 목표 관계를 읽었습니다.",
+        "notClaim": "IORB가 모든 참가자에 대해 비용 없는 절대 하한이라는 뜻은 아닙니다."
+      },
+      {
+        "title": "Federal Reserve FEDS Notes · Monitoring Reserve Scarcity Through Nonbank Cash Lenders (2025)",
+        "href": "https://www.federalreserve.gov/econres/notes/feds-notes/monitoring-reserve-scarcity-through-nonbank-cash-lenders-20250328.html",
+        "sectionId": "corridor-boundary",
+        "problem": "시장 평균만으로 개별 은행의 부족과 거래 동기를 해석하는 문제입니다.",
+        "contribution": "비은행 제공자·차입 은행·비용·유동성 규제의 서로 다른 역할을 구분합니다.",
+        "assumptions": "연구의 기관별 자료와 관측 기간을 본문의 단순 비용 가정과 분리합니다.",
+        "evidenceScope": "본문의 거래 동기·비용 논의를 실제 공식 연구에 대조했습니다.",
+        "notClaim": "0.15%포인트는 본문 가정이며 연구의 추정값이나 현재 부족 상태가 아닙니다."
+      },
+      {
+        "title": "Bank of England · About a rate of (general) interest (2024), Figure 1",
+        "href": "https://www.bankofengland.co.uk/-/media/boe/files/quarterly-bulletin/2024/about-a-rate-of-general-interest-how-monetary-policy-transmits.pdf#page=8",
+        "sectionId": "transmission-lag",
+        "problem": "단계별 화살표를 모든 변수의 고정된 시간 순서로 읽는 문제입니다.",
+        "contribution": "PDF 8쪽의 여섯 경로와 기대·환율의 직접 화살표 및 순서가 뒤바뀔 수 있다는 주석을 적용합니다.",
+        "assumptions": "영국의 제도·연구를 다룬 자료이며 국가·계약·경제 상태에 따라 효과와 시차가 다를 수 있습니다.",
+        "evidenceScope": "실제 PDF 그림 이미지를 읽고 같은 공장의 이자·설비·원가에 연결했습니다.",
+        "notClaim": "모든 경로가 같은 순서로 움직이거나 본문의 250만원이 거시경제 효과 추정치라는 뜻은 아닙니다."
+      },
+      {
+        "title": "Federal Reserve · Three-factor nominal term structure model",
+        "href": "https://www.federalreserve.gov/data/three-factor-nominal-term-structure-model.htm",
+        "sectionId": "transmission",
+        "problem": "관측 장기금리에서 기대 경로와 프리미엄을 분리하는 문제입니다.",
+        "contribution": "모형 기반 분해와 볼록성 프리미엄의 범위를 확인합니다.",
+        "assumptions": "본문의 산술 평균은 단순화한 선형 근사이며 실제 모형 추정과 구분합니다.",
+        "evidenceScope": "공식 모형 설명의 정의와 추정 경계를 확인했습니다.",
+        "notClaim": "관측 금리 하나로 미래 경로나 프리미엄을 유일하게 알 수는 없습니다."
+      },
+      {
+        "title": "New York Fed · Treasury Term Premia, 1961–Present (2014)",
+        "href": "https://libertystreeteconomics.newyorkfed.org/2014/05/treasury-term-premia-1961-present/",
+        "sectionId": "transmission",
+        "problem": "기간 프리미엄을 언제나 양수인 만기 보상으로 고정하는 문제입니다.",
+        "contribution": "역사적 모형 추정의 음수 사례를 읽습니다.",
+        "assumptions": "미국 국채의 역사적 추정과 현재 시점의 관측값을 구별합니다.",
+        "evidenceScope": "부호를 고정하지 않는 경계에만 사용합니다.",
+        "notClaim": "프리미엄의 모든 모형과 모든 시점이 같은 값을 준다는 뜻은 아닙니다."
+      },
+      {
+        "title": "Bank of England · Money creation in the modern economy (2014)",
+        "href": "https://www.bankofengland.co.uk/quarterly-bulletin/2014/q1/money-creation-in-the-modern-economy",
+        "sectionId": "balance-sheet-policy",
+        "problem": "준비금 증가와 예금 창조 및 신규 대출을 혼동하는 문제입니다.",
+        "contribution": "은행과 비은행 매도자의 채권 6 매입을 별도 장부로 계산합니다.",
+        "assumptions": "단순 자산 교환 거래이며 세금·수수료·다른 거래를 생략합니다.",
+        "evidenceScope": "은행 장부 글에서 확인한 부문별 기록 원리를 재사용합니다.",
+        "notClaim": "새 대출 수요가 없으면 예금도 절대로 생기지 않는다는 주장이 아닙니다."
+      },
+      {
+        "title": "MAS · Monetary Policy Framework",
+        "href": "https://www.mas.gov.sg/monetary-policy/Singapores-Monetary-Policy-Framework",
+        "sectionId": "countries",
+        "problem": "모든 중앙은행이 하루 금리 하나를 목표로 삼는다는 일반화입니다.",
+        "contribution": "무역가중 S$NEER의 정책 밴드와 외환시장 개입을 비교합니다.",
+        "assumptions": "2026년 3월 19일 갱신된 공식 제도 설명을 2026년 10월 4일 확인했습니다.",
+        "evidenceScope": "공식 운영 틀과 중심 변수를 확인했습니다.",
+        "notClaim": "환율과 금리를 독립적으로 아무 수준에나 고정할 수 있다는 뜻은 아닙니다."
+      }
+    ]
   },
   "banking/payment-clearing-settlement": {
-    entryNote:
-      "은행이 중앙은행에 지급준비금 계정을 갖고 있다는 것까지 알고 들어옵니다. 앞 글들이 설명 없이 써 온 '은행끼리 주고받는다'는 말을 여기서 풉니다.",
-    coreIdea:
-      "송금은 지시·청산·결제라는 세 층에서 따로 처리되며, 고객 통장이 바뀐 시점과 되돌릴 수 없게 된 시점은 다릅니다. 모아서 정산할수록 필요한 자금은 줄지만 정산 전까지의 미결제 익스포저는 커지고, 최종성은 속도가 아니라 규칙과 법이 만들어 줍니다.",
-    assumedKnowledge: [
+    "entryNote": "휴대전화의 완료 화면과 은행 사이 의무를 나누어 봅니다. 같은 여섯 지급을260·10·최초자금120/100으로 추적한 뒤 용어를 붙입니다.",
+    "coreIdea": "지시의 처리와 청산, 의무의 이행은 구분해야 합니다. 같은 총 지급량에서도 받은 돈의 재사용·순서·묶음 처리 조건에 따라 필요한 자금이 달라집니다. 최종성과 부도 처리 규칙을 확인해야 남은 신용·유동성 위험을 판단할 수 있습니다.",
+    "assumedKnowledge": [
       {
-        id: "central-bank-balance-sheet",
-        role: "기관 간 최종 결제가 일어나는 장부로 쓰입니다.",
+        "id": "central-bank-balance-sheet",
+        "role": "중앙은행 계정에서 결제하는 경우의 자산·부채를 읽습니다."
       },
       {
-        id: "bank-balance-sheet",
-        role: "지급 지시가 고객 예금 잔액을 바꾸는 자리를 확인하는 데 씁니다.",
+        "id": "bank-balance-sheet",
+        "role": "고객 예금과 은행 간 지급 자산을 나눕니다."
       },
       {
-        id: "self-fulfilling-bank-run",
-        role: "미결제 익스포저가 한 참가자의 실패로 번지는 경로를 이해하는 배경이 됩니다.",
-      },
+        "id": "self-fulfilling-bank-run",
+        "role": "한 은행의 지급 실패가 다른 은행의 자금 수요에 이어질 수 있는 배경입니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "payment-clearing-settlement-layers",
-        role: "완료의 의미가 층마다 다르다는 이 글의 출발점을 세웁니다.",
+        "id": "payment-clearing-settlement-layers",
+        "role": "지시의 확인·대조와 실제 의무 이행을 나누어 추적합니다. 청산은 필요하면 상계를 포함합니다."
       },
       {
-        id: "gross-versus-net-settlement",
-        role: "자금과 위험을 맞바꾸는 결제 시점의 선택을 정의합니다.",
+        "id": "gross-versus-net-settlement",
+        "role": "개별 지시를 처리할지 순포지션을 처리할지와 언제 처리할지를 구분합니다. 받은 돈은 다음 지급에 재사용할 수 있습니다."
       },
       {
-        id: "netting-efficiency",
-        role: "그 맞바꿈의 크기를 재는 지표를 제공합니다.",
+        "id": "netting-efficiency",
+        "role": "같은 지시 집합의 총액G와 순지급액N을 비교해1−N/G를 계산합니다."
       },
       {
-        id: "settlement-finality",
-        role: "되돌릴 수 없다는 판정이 어디서 오는지로 중심 질문에 답합니다.",
+        "id": "settlement-finality",
+        "role": "규칙과 법적 근거가 정한 최종 이전·의무 이행의 완료를 확인합니다."
       },
       {
-        id: "cross-currency-settlement-risk",
-        role: "통화가 둘이면 최종성이 둘로 갈라진다는 별도 문제를 드러냅니다.",
+        "id": "cross-currency-settlement-risk",
+        "role": "두 통화를 교환할 때 한쪽 지급만 최종 완료되면 이미 보낸 원금이 위험에 노출됩니다."
       },
       {
-        id: "payment-versus-payment",
-        role: "그 틈을 조건으로 묶어 지우는 해법과 그 한계를 정합니다.",
-      },
+        "id": "payment-versus-payment",
+        "role": "한 통화의 최종 지급을 다른 통화의 최종 지급과 조건으로 연결합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "payment-clearing-settlement-layers",
-        sectionId: "three-layers",
-        intuition:
-          "지시를 전달하는 일, 주고받을 금액을 정하는 일, 실제로 돈을 넘기는 일이 각각 다른 시점에 끝납니다.",
-        workedExample:
-          "송금 앱에서 통장 숫자가 바뀐 뒤에도 두 은행 사이 자금은 정해진 정산 시각에야 움직입니다.",
-        boundary:
-          "고객 통장 반영은 지시가 처리됐다는 뜻이지 은행 사이 자금이 옮겨졌다는 뜻이 아니므로, 둘을 같은 완료로 읽으면 안 됩니다.",
+        "id": "payment-clearing-settlement-layers",
+        "sectionId": "three-layers",
+        "intuition": "지시의 확인·대조와 실제 의무 이행을 나누어 추적합니다. 청산은 필요하면 상계를 포함합니다.",
+        "workedExample": "같은 여섯 지시를 대조해 A−10·B0·C+10을 얻어도 정해진 결제 조건을 충족했는지는 별도로 확인합니다.",
+        "boundary": "고객 가용 잔액과 기관 간 최종성의 순서는 서비스별로 확인합니다. 결제는 중앙은행 화폐뿐 아니라 다른 장부나 유효한 상계로도 이루어질 수 있습니다."
       },
       {
-        id: "gross-versus-net-settlement",
-        sectionId: "rtgs-vs-dns",
-        intuition:
-          "건마다 바로 넘기면 안전하지만 돈이 많이 들고, 모아서 차액만 넘기면 돈은 적게 드는 대신 그사이 위험이 쌓입니다.",
-        workedExample:
-          "거액은 건별 즉시 결제로, 소액은 모아서 차액 결제로 나누는 것이 일반적인 선택입니다.",
-        boundary:
-          "두 방식은 우열이 아니라 자금과 위험의 맞바꿈이므로, 한쪽이 항상 낫다고 말할 수 없습니다.",
+        "id": "gross-versus-net-settlement",
+        "sectionId": "rtgs-vs-dns",
+        "intuition": "개별 지시를 처리할지 순포지션을 처리할지와 언제 처리할지를 구분합니다. 받은 돈은 다음 지급에 재사용할 수 있습니다.",
+        "workedExample": "같은 총액260의 여섯 건에서 고정 순서 최초 자금은 A100·B20 합계120이고 재배열하면 A100 합계100으로 처리됩니다.",
+        "boundary": "무신용·분할 불가 조건의 모형입니다. RTGS도 대기·유동성·운영 위험이 남고 소액 거래도 RTGS로 처리할 수 있습니다."
       },
       {
-        id: "netting-efficiency",
-        sectionId: "rtgs-vs-dns",
-        intuition:
-          "서로 주고받을 것을 먼저 지우면 실제로 옮겨야 할 금액이 총액보다 훨씬 작아집니다.",
-        workedExample:
-          "세 기관 사이 지급 여섯 건의 총액이 260이어도 순포지션의 절댓값 합의 절반이 10이면 실제 이동은 10입니다.",
-        boundary:
-          "효율이 높다고 안전한 것이 아닙니다. 지워진 금액만큼 정산 전까지 미결제 익스포저로 남아 있습니다.",
+        "id": "netting-efficiency",
+        "sectionId": "netting-efficiency",
+        "intuition": "같은 지시 집합의 총액G와 순지급액N을 비교해1−N/G를 계산합니다.",
+        "workedExample": "A−10·B0·C+10이므로 N10, G260에서25/26≈96.15%입니다. 첫 두 건만 보면18/19≈94.74%입니다.",
+        "boundary": "G0일 때 정의하지 않습니다. 같은 이동을 지급·수취 양쪽에서 중복 집계하지 않습니다. 줄어든250은 신용노출이나 최초 필요한 유동성을 뜻하지 않습니다."
       },
       {
-        id: "settlement-finality",
-        sectionId: "finality",
-        intuition:
-          "언제부터 취소할 수 없는지를 규칙이 미리 선언해 주기 때문에 끝났다고 말할 수 있습니다.",
-        workedExample:
-          "중앙은행 계정 잔액이 옮겨지고 규칙이 정한 시점을 지나면 참가자가 파산해도 그 이체는 되돌릴 수 없습니다.",
-        boundary:
-          "시스템이 빨라서 생기는 성질이 아니며, 도산 절차의 소급 취소로부터 보호하는 법적 근거가 없으면 속도와 무관하게 최종성이 없습니다.",
+        "id": "settlement-finality",
+        "sectionId": "finality",
+        "intuition": "규칙과 법적 근거가 정한 최종 이전·의무 이행의 완료를 확인합니다.",
+        "workedExample": "PFMI에서 미결제 지시의 철회 제한과 최종성을 구분하고 FedNow OC8 §7.1의 기록·통지 시점 기준을 읽습니다. §9.6의 반환은 새 자금이체입니다.",
+        "boundary": "반환 청구·별도 반환 지급과 원이체 기록을 구분합니다. 프로토콜 최종성과 법적 최종성은 함께 검토할 수 있으며 모든 시스템에 같은 시점을 적용하지 않습니다."
       },
       {
-        id: "cross-currency-settlement-risk",
-        sectionId: "cross-currency",
-        intuition:
-          "한쪽 통화를 먼저 넘기고 다른 쪽을 받기 전에 상대가 무너지면 보낸 돈 전부를 잃습니다.",
-        workedExample:
-          "원화를 넘긴 뒤 달러를 받기 전에 상대가 폐쇄되면 손실은 환율 변동분이 아니라 넘긴 원금 전액입니다.",
-        boundary:
-          "영업시간대가 겹치는 정도에 따라 노출 시간이 달라지므로, 같은 거래라도 통화 조합에 따라 위험 크기가 다릅니다.",
+        "id": "cross-currency-settlement-risk",
+        "sectionId": "cross-currency",
+        "intuition": "두 통화를 교환할 때 한쪽 지급만 최종 완료되면 이미 보낸 원금이 위험에 노출됩니다.",
+        "workedExample": "가정 환율1,400원에서14억원을 먼저 보냈지만100만달러를 받지 못하면 원금14억원의 회수 문제가 생깁니다.",
+        "boundary": "원금 위험액은 확정 손실과 다릅니다. 회수율·담보·법적 청구와 유동성·대체 비용을 별도로 봅니다. 시차만이 유일한 원인은 아닙니다."
       },
       {
-        id: "payment-versus-payment",
-        sectionId: "cross-currency",
-        intuition:
-          "두 이체가 함께 일어나거나 함께 일어나지 않게 묶으면 한쪽만 넘어간 상태가 아예 생기지 않습니다.",
-        workedExample:
-          "두 통화를 함께 처리하는 기관이 양쪽 자금을 확인한 뒤 동시에 넘겨 줍니다.",
-        boundary:
-          "원금 손실 위험만 지우며 가격 변동이나 유동성 부족 위험은 남고, 참여하지 않는 통화쌍과 참가자에게는 효력이 없습니다.",
-      },
+        "id": "payment-versus-payment",
+        "sectionId": "pvp",
+        "intuition": "한 통화의 최종 지급을 다른 통화의 최종 지급과 조건으로 연결합니다.",
+        "workedExample": "14억원의 최종 이전이100만달러의 최종 이전과 함께 성립하도록 연결하고 CLSSettlement의 실제 적용 범위를 비교합니다.",
+        "boundary": "물리적 전송 시각 일치나 단일 중앙은행 장부를 뜻하지 않습니다. 준수되는 교환의 원금 결제 위험을 없애도 유동성·재거래 가격·운영 위험은 남습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "00 구조",
-        relation: "완료의 의미를 층으로 나눕니다.",
-        concepts: ["payment-clearing-settlement-layers"],
+        "label": "01 같은 여섯 지시",
+        "relation": "지시의 확인·대조와 기관 간 의무 이행의 기록을 나눕니다.",
+        "concepts": [
+          "payment-clearing-settlement-layers"
+        ]
       },
       {
-        label: "01 선택",
-        relation: "언제 얼마를 넘길지가 자금과 위험을 맞바꿉니다.",
-        concepts: ["gross-versus-net-settlement", "netting-efficiency"],
+        "label": "02 금액과 순서",
+        "relation": "총액260·순액10·최초자금120/100을 서로 다른 수치로 계산합니다.",
+        "concepts": [
+          "gross-versus-net-settlement",
+          "netting-efficiency"
+        ]
       },
       {
-        label: "02 판정",
-        relation: "되돌릴 수 없다는 선을 규칙이 긋습니다.",
-        concepts: ["settlement-finality"],
+        "label": "03 완료와 실패",
+        "relation": "상계로 줄인 지급량 대신 실제 남는 청구권·완료 조건·부도 규칙을 봅니다.",
+        "concepts": [
+          "settlement-finality",
+          "netting-efficiency"
+        ]
       },
       {
-        label: "03 통화 둘",
-        relation: "최종성이 둘로 갈라지면 그 틈이 위험이 됩니다.",
-        concepts: ["cross-currency-settlement-risk", "payment-versus-payment"],
-      },
+        "label": "04 두 통화",
+        "relation": "한쪽 원금만 나가는 위험을 두 의무의 최종 이전 조건으로 연결합니다.",
+        "concepts": [
+          "cross-currency-settlement-risk",
+          "payment-versus-payment"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "지급·청산·결제가 각각 무엇을 끝내는지 한 문장씩 쓰고, 고객이 완료로 보는 시점이 어느 층인지 밝히세요.",
-        answerChecklist: ["지급은 지시 전달", "청산은 금액 확정", "결제는 자금 이동", "고객 완료는 지급 층"],
-        requiredConcepts: ["payment-clearing-settlement-layers"],
-        sectionId: "three-layers",
-      },
-      {
-        level: "basic",
-        question:
-          "총액 결제와 차액 결제가 각각 무엇을 아끼고 무엇을 떠안는지 비교하세요.",
-        answerChecklist: ["총액은 자금 많이 필요", "총액은 위험 거의 없음", "차액은 자금 절약", "차액은 미결제 익스포저"],
-        requiredConcepts: ["gross-versus-net-settlement"],
-        sectionId: "rtgs-vs-dns",
-      },
-      {
-        level: "basic",
-        question:
-          "A가 B에게 100, B가 A에게 90을 보낼 것이 있을 때 실제 이동 금액과 상계 효율을 구하세요.",
-        answerChecklist: ["실제 이동 10", "총액 190", "효율 약 95%", "순포지션으로 계산"],
-        requiredConcepts: ["netting-efficiency"],
-        sectionId: "rtgs-vs-dns",
-      },
-      {
-        level: "basic",
-        question:
-          "결제 최종성이 처리 속도의 문제가 아니라는 말을 파산 상황을 들어 설명하세요.",
-        answerChecklist: ["도산 절차의 소급 취소", "법적 보호 필요", "규칙이 시점을 선언", "빠름과 무관"],
-        requiredConcepts: ["settlement-finality"],
-        sectionId: "finality",
-      },
-      {
-        level: "basic",
-        question:
-          "서로 다른 통화를 주고받을 때 생기는 위험이 왜 가격 변동 위험과 다른지 손실 규모로 설명하세요.",
-        answerChecklist: ["원금 전액 손실", "신용 위험", "시차 동안 노출", "가격 변동분이 아님"],
-        requiredConcepts: ["cross-currency-settlement-risk"],
-        sectionId: "cross-currency",
-      },
-      {
-        level: "basic",
-        question:
-          "동시결제가 무엇을 보장하고 무엇은 보장하지 않는지 각각 쓰세요.",
-        answerChecklist: ["둘 다 성립하거나 둘 다 아님", "원금 손실 제거", "가격 변동 위험은 남음", "미참여 통화쌍에는 무효"],
-        requiredConcepts: ["payment-versus-payment"],
-        sectionId: "cross-currency",
-      },
-      {
-        level: "advanced",
-        question:
-          "상계 효율이 높은 시스템일수록 참가자 하나의 실패가 더 크게 번질 수 있는 이유를 익스포저의 정의로 설명하세요.",
-        answerChecklist: [
-          "지워진 금액은 미결제로 남음",
-          "정산 시각까지 노출",
-          "효율이 높을수록 노출액이 큼",
-          "자금 절약과 위험이 같은 원인",
+        "level": "basic",
+        "sectionId": "three-layers",
+        "requiredConcepts": [
+          "payment-clearing-settlement-layers"
         ],
-        requiredConcepts: ["netting-efficiency", "gross-versus-net-settlement"],
-        sectionId: "rtgs-vs-dns",
+        "question": "같은 여섯 지급 지시에서 전달·대조/계산·의무 이행은 각각 무엇인가요? 고객 화면만으로 은행 사이 완료를 알 수 있나요?",
+        "answerChecklist": [
+          "고객 지시와 은행 간 채무를 나눕니다.",
+          "청산은 지시 전달·대조·확인 등을 포함하며 필요하면 상계합니다.",
+          "결제는 해당 의무를 자산 이전 또는 유효한 상계 등으로 이행합니다.",
+          "고객의 이용 가능 잔액과 기관 간 최종성 시점은 시스템 규칙을 확인합니다."
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "건별 즉시 결제를 유지하면서도 필요한 자금을 줄이는 설계를 하나 들고, 그 설계가 성립하려면 어떤 조건이 필요한지 쓰세요.",
-        answerChecklist: [
-          "대기열에서 상쇄 조합 탐색",
-          "부분집합을 동시에 처리",
-          "모든 참가자 잔액이 음수가 되지 않아야 함",
-          "일부만 처리하면 안 됨",
+        "level": "basic",
+        "sectionId": "rtgs-vs-dns",
+        "requiredConcepts": [
+          "gross-versus-net-settlement"
         ],
-        requiredConcepts: ["gross-versus-net-settlement", "netting-efficiency"],
-        sectionId: "hybrid-design",
+        "question": "여섯 건의 총 지급액 260을 순서대로 옮긴다는 것이 처음부터 260의 돈이 필요하다는 뜻인가요?",
+        "answerChecklist": [
+          "받은 돈을 다음 지급에 재사용할 수 있습니다.",
+          "고정 순서에서는 A100·B20·C0 합계120으로 처리됩니다.",
+          "지시를 1→3→4→2→5→6 순서로 처리하면 A100만으로 됩니다.",
+          "이 수치는 무신용·같은 여섯 건·순서를 둔 모형이며 운영 위험은 남습니다."
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "지급결제 시스템의 최종성과 작업증명 블록체인의 최종성이 어떻게 다른지 보장의 원천을 기준으로 구분하고, 공통으로 필요한 것이 무엇인지 쓰세요.",
-        answerChecklist: [
-          "한쪽은 법과 규칙",
-          "다른 쪽은 되돌릴 비용",
-          "확률적이라 0이 되지 않음",
-          "언제부터 완료로 볼지 사전 합의 필요",
+        "level": "basic",
+        "sectionId": "netting-efficiency",
+        "requiredConcepts": [
+          "netting-efficiency"
         ],
-        requiredConcepts: ["settlement-finality"],
-        sectionId: "finality",
+        "question": "여섯 건의 순포지션과 이동액·상계율을 구하고 첫 두 건만의 결과와 비교하세요.",
+        "answerChecklist": [
+          "전체 순포지션은 A−10·B0·C+10이고 순이동액10입니다.",
+          "1−10/260=25/26≈96.15%입니다.",
+          "첫 두 건의 총액190과 순액10에서는18/19≈94.74%입니다.",
+          "거래가 전혀 없어 총액0이면 이 비율은 정의하지 않습니다."
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "소액지급시스템에서 생긴 금융기관 간 채권·채무가 거액결제시스템에서 해소되는 구조가, 이 글의 층 구분과 어떻게 대응하는지 설명하세요.",
-        answerChecklist: [
-          "소액시스템은 지급·청산 층",
-          "거액시스템이 결제 층",
-          "중앙은행 계정에서 최종 해소",
-          "완료 시점이 층마다 다름",
+        "level": "basic",
+        "sectionId": "finality",
+        "requiredConcepts": [
+          "settlement-finality"
         ],
-        requiredConcepts: ["payment-clearing-settlement-layers", "settlement-finality"],
-        sectionId: "boundary",
+        "question": "최종성이 빠른 화면 갱신과 다른 이유와, 잘못 보낸 돈의 반환 청구와 원이체 취소의 차이를 쓰세요.",
+        "answerChecklist": [
+          "규칙과 법이 정한 취소 불가능·무조건 이전 시점이 필요합니다.",
+          "최종 처리된 이체와 수취인에게 새 반환을 요구하는 법적 관계는 구분합니다.",
+          "상업은행 또는 FMI 장부를 통한 결제도 가능하므로 중앙은행 계정 이동만으로 일반화하지 않습니다."
+        ]
       },
+      {
+        "level": "basic",
+        "sectionId": "cross-currency",
+        "requiredConcepts": [
+          "cross-currency-settlement-risk"
+        ],
+        "question": "가정 환율 1달러=1,400원에서 14억원을 먼저 보냈지만 100만달러를 받지 못했습니다. 무엇이 위험에 노출되며 확정 손실과 어떻게 다른가요?",
+        "answerChecklist": [
+          "가격 차이뿐 아니라 이미 보낸 원금14억원이 위험에 노출됩니다.",
+          "회수율·담보·법적 청구에 따라 실제 손실은 달라집니다.",
+          "결제 유동성과 대체 거래 비용의 위험도 따로 남습니다."
+        ]
+      },
+      {
+        "level": "basic",
+        "sectionId": "pvp",
+        "requiredConcepts": [
+          "payment-versus-payment"
+        ],
+        "question": "PvP의 조건을 쓰고 없애지 못하는 위험을 구별하세요.",
+        "answerChecklist": [
+          "한 통화의 최종 이전이 다른 통화의 최종 이전을 조건으로 합니다.",
+          "두 지급의 논리적 연계를 뜻하며 물리적 전송 시각이나 중앙은행 장부 하나를 뜻하지 않습니다.",
+          "준수되는 교환에서 원금 결제 위험을 없애지만 유동성·대체 비용·운영 위험은 남습니다."
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "exposure",
+        "requiredConcepts": [
+          "netting-efficiency",
+          "gross-versus-net-settlement"
+        ],
+        "question": "상계로 줄어든250을 곧바로 미결제 익스포저라고 할 수 없는 이유와 어떤 자료를 더 봐야 하는지 쓰세요.",
+        "answerChecklist": [
+          "250은 총액260에서 순액10을 뺀 지급량 차이입니다.",
+          "유효한 상계 뒤 남는 청구권·담보·보증·손실배분·부도 처리규칙을 확인합니다.",
+          "합계뿐 아니라 상대방·시간·실패시나리오를 봐야 신용노출을 계산합니다.",
+          "상계효율과 신용손실의 단조 관계는 일반적으로 성립하지 않습니다."
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "hybrid-design",
+        "requiredConcepts": [
+          "gross-versus-net-settlement",
+          "netting-efficiency"
+        ],
+        "question": "A10·B0·C0에서 첫100 지시가 대기할 때 같은 여섯 건을 묶어 처리할 조건을 계산하세요.",
+        "answerChecklist": [
+          "합산 변화는−10·0·+10이라 처리 후0·0·10입니다.",
+          "모든 지시의 유효성·수락과 계정한도·원자적 이행을 확인합니다.",
+          "첫100 지시를 먼저 확정할 수 없습니다. 일부만 실행하면 묶음 전체의 연계 조건을 보장하지 못하므로 선택한 묶음은 전부 처리하거나 보류합니다.",
+          "설명용 알고리즘이며 실제 한은금융망·FedNow 구현이 아닙니다."
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "finality",
+        "requiredConcepts": [
+          "settlement-finality"
+        ],
+        "question": "지급 시스템의 법적 최종성과 블록체인의 프로토콜 최종성을 구분하되 단순한 법 대 기술 이분법을 피하세요.",
+        "answerChecklist": [
+          "프로토콜은 합의 규칙·고장 및 공격 가정 아래 기록의 되돌림을 다룹니다.",
+          "법적 최종성은 지급 의무 이행과 도산시 효력 등 권리 관계를 다룹니다.",
+          "PoW의 확률적 확인과 BFT 계열의 조건부 확정도 구분합니다.",
+          "토큰화 거래에는 두 층의 보장과 운영 조건을 함께 검토해야 합니다."
+        ]
+      },
+      {
+        "level": "advanced",
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "payment-clearing-settlement-layers",
+          "settlement-finality"
+        ],
+        "question": "한국 소액공동망의 차액 결제와 FedNow의 소액 즉시 결제를 비교해 규모만으로 결제 방식을 결정할 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "한국 공동망에서 계산한 기관 간 차액을 한은금융망에서 결제하는 경로를 구분합니다.",
+          "FedNow는 통합 청산 기능을 가진24시간 실시간 총액 결제 사례입니다.",
+          "금액이 작아도 RTGS를 쓸 수 있고 국가별 제도·자격·계정을 확인합니다.",
+          "고객 가용성·기관 간 최종성·자금조달 시점은 별도입니다."
+        ]
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "CPMI · IOSCO · Principles for financial market infrastructures (2012)",
-        href: "https://www.bis.org/cpmi/publ/d101.htm",
-        problem:
-          "지급·청산·결제 시스템과 중앙청산소가 무너지면 참가자 전체로 번지는데, 그 위험 관리 수준이 나라와 시스템마다 달랐습니다.",
-        contribution:
-          "시스템적으로 중요한 지급결제 시스템·증권결제시스템·중앙청산소·거래정보저장소에 공통으로 적용되는 위험 관리 기준을 제시하고 기존 세 개의 기준을 통합했습니다.",
-        assumptions:
-          "시스템적으로 중요한 금융시장 인프라를 대상으로 하며, 각국이 자국 법제 안에서 이 기준을 적용한다고 전제합니다.",
-        evidenceScope:
-          "BIS 산하 CPMI와 IOSCO가 2012년 4월에 공동 발간한 국제 기준 문서로, 요건의 범위에 한정됩니다.",
-        notClaim:
-          "특정 국가 시스템의 운영 방식을 설명하는 자료가 아니므로, 한국의 구체적인 결제 구조나 최종성 시점을 이 문서로 인용할 수 없습니다.",
-        sectionId: "finality",
+        "title": "CPSS-IOSCO · Principles for financial market infrastructures (2012)",
+        "href": "https://www.bis.org/publications/principles-financial-market-infrastructures.pdf",
+        "sectionId": "source-finality",
+        "problem": "지시 철회 제한과 최종 이행, 상계 지급량과 실제 위험을 혼동하는 문제입니다.",
+        "contribution": "원칙8·9·12와3.7.3·용어집을 같은 여섯 지급과 두 통화의 교환에 적용합니다.",
+        "assumptions": "시스템적으로 중요한 금융시장인프라의 원칙이며 각국 법제와 실제 운영 규칙을 따로 확인합니다.",
+        "evidenceScope": "실제PDF 인쇄쪽64·76 이미지를 읽고3.8.1·원칙9각주96·원칙12각주112/113을 확인했습니다.",
+        "notClaim": "한국·미국 서비스의 실제 최종성 시각이나 교육용260·10을 이 문서에서 가져온 것은 아닙니다."
       },
       {
-        title: "한국은행 · 우리나라의 지급결제제도",
-        href: "https://www.bok.or.kr/portal/main/contents.do?menuNo=200347",
-        problem:
-          "개인과 기업의 자금 이체가 최종적으로 어디서 어떻게 정리되는지는 이용자에게 드러나지 않습니다.",
-        contribution:
-          "거액결제시스템과 소액지급시스템의 구성을 정리하고, 소액지급시스템에서 생긴 금융기관 간 채권·채무가 한은금융망을 통해 최종 해소된다는 구조를 명시합니다.",
-        assumptions:
-          "한국의 현행 지급결제 제도와 참가기관 구성을 전제로 한 설명입니다.",
-        evidenceScope:
-          "한국은행이 공개한 제도 설명 페이지로, 시스템 구성과 해소 경로의 범위에 한정됩니다.",
-        notClaim:
-          "특정 시점의 결제 규모나 참가기관 수를 이 문서로 인용할 수 없으며, 국제 비교의 근거도 아닙니다.",
-        sectionId: "boundary",
+        "title": "한국은행 · 우리나라의 지급결제제도",
+        "href": "https://www.bok.or.kr/portal/main/contents.do?menuNo=200347",
+        "sectionId": "boundary",
+        "problem": "고객 송금 처리와 기관 간 의무 이행의 역할이 드러나지 않는 문제입니다.",
+        "contribution": "금융결제원 지시 확인·중계·차액 정산과 한은금융망 결제를 나누어 읽습니다.",
+        "assumptions": "2026년10월4일 확인한 공식 제도 설명이며 모든 개별 송금의 시간 순서를 일반화하지 않습니다.",
+        "evidenceScope": "공식 본문 및 그림의 소액·거액 시스템 연결을 직접 확인했습니다.",
+        "notClaim": "운영 규모·현재 한도·세부 마감 시각이나 미국 제도를 증명하는 자료가 아닙니다."
       },
-    ],
+      {
+        "title": "한국은행 · 한은금융망 운영",
+        "href": "https://www.bok.or.kr/portal/main/contents.do?menuNo=200727",
+        "sectionId": "hybrid-design",
+        "problem": "건별 처리와 유동성 절감 기능을 하나의 단순한 양자택일로 읽는 문제입니다.",
+        "contribution": "실시간총액과 혼합형 기능의 목적 및 참가 자격을 확인합니다.",
+        "assumptions": "공개된 제도 설명의 범위이며 실제 내부 구현 코드는 제공하지 않습니다.",
+        "evidenceScope": "설명용 묶음 계산의 설계 동기를 실제 운영 설명과 비교했습니다.",
+        "notClaim": "본문의 Python을 한은금융망이나 FedNow의 실제 알고리즘이라고 주장하지 않습니다."
+      },
+      {
+        "title": "한국은행 · 결제완결성 보장대상 지정",
+        "href": "https://www.bok.or.kr/portal/main/contents.do?menuNo=200721",
+        "sectionId": "finality",
+        "problem": "빠른 화면 갱신을 법적 최종성과 혼동하는 문제입니다.",
+        "contribution": "지정 시스템과 도산 관련 특칙의 적용 범위를 구별합니다.",
+        "assumptions": "공식 제도 안내이며 개별 반환 권리·소송 결과를 판정하지 않습니다.",
+        "evidenceScope": "법적 근거의 범위와 지정 시스템에 한정된 설명을 직접 읽었습니다.",
+        "notClaim": "모든 앱의 완료 표시가 같은 보호를 받거나 착오송금의 반환이 언제나 불가능하다는 뜻은 아닙니다."
+      },
+      {
+        "title": "Federal Reserve Banks · Operating Circular8 (2026-04-01)",
+        "href": "https://www.frbservices.org/wp-content/uploads/040126-operating-circular-8.pdf",
+        "sectionId": "finality",
+        "problem": "기관 간 최종성·조회 화면·반환 송금의 관계를 실제 규칙으로 구별합니다.",
+        "contribution": "§7.1의 차대변 기록과 입금통지 중 이른 시점, §9.6의 새 반환 이체를 적용합니다.",
+        "assumptions": "2026년4월1일 시행판을 현행 공식 목록에서 확인했습니다. FedNow 및 관련 Regulation J의 범위입니다.",
+        "evidenceScope": "실제PDF 조문을 읽고 A의10 완료와 별도 반환에 적용했습니다.",
+        "notClaim": "반환 요청을 보냈다고 항상 반환이 보장되거나 원이체 기록이 자동 소멸한다는 뜻은 아닙니다."
+      },
+      {
+        "title": "Federal Reserve Banks · FedNow Operating Proceduresv3.6 (2026-04-28)",
+        "href": "https://www.frbservices.org/wp-content/uploads/042826-fednow-service-operating-procedures.pdf",
+        "sectionId": "finality",
+        "problem": "반환 요청과 실제 반환 지급을 같은 이벤트로 읽는 문제입니다.",
+        "contribution": "§2의 통합 청산·24×7 RTGS, §15.2의 camt.056·pacs.004 및 처리 과정을 연결합니다.",
+        "assumptions": "2026년4월28일 시행v3.6을 공식 목록에서 확인했고 운영 회람과 관련 법의 우선 관계를 구분합니다.",
+        "evidenceScope": "실제PDF91~96쪽 반환 과정과 서론을 읽었습니다.",
+        "notClaim": "모든 메시지·유동성 관리 송금에 동일한 시간 창이나 고객 자금 가용성 규칙을 적용하지 않습니다."
+      },
+      {
+        "title": "CLS · CLSSettlement 공식 서비스 설명",
+        "href": "https://www.cls-group.com/products/settlement/clssettlement/",
+        "sectionId": "pvp",
+        "problem": "외환 교환에서 한쪽 원금 지급만 완료되는 위험을 다룹니다.",
+        "contribution": "PvP 연결과 다자간 상계가 실제 서비스에서 수행하는 역할을 구분합니다.",
+        "assumptions": "적격 통화·참가자·서비스 규칙에 한정하며 운영 규모와 절감률을 교육용 수치에 대입하지 않습니다.",
+        "evidenceScope": "공식 서비스의 연결 지급 및 자금 효율 설명을 확인했습니다.",
+        "notClaim": "모든 통화쌍에 자동 적용되거나 환율·유동성·운영 위험 전체를 없앤다는 뜻은 아닙니다."
+      }
+    ]
   },
   "markets/bond-pricing-and-yield-curve": {
     entryNote:
@@ -124352,42 +125955,42 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "repo-repurchase-cashflow",
         "sectionId": "names",
         "intuition": "증권을 현금과 교환한 뒤 약정한 미래 가격에 되사는 계약의 경제적 단기 담보조달 구조입니다.",
-        "workedExample": "100억 원 증권에95억 원을 조달하고 연3.65%·365일 가정에서 하루 뒤95억95만 원을 냅니다.",
+        "workedExample": "100억 원 증권으로 95억 원을 조달하고 연 3.65%·365일 가정에서 하루 뒤 95억95만 원을 냅니다.",
         "boundary": "명칭은 관점에 따라 달라지며 법적 소유권·반환·재사용은 준거법과 계약을 확인합니다."
       },
       {
         "id": "repo-haircut-funding",
         "sectionId": "mechanism",
         "intuition": "담보 시장가치에서 일정 비율을 공제해 현금 조달액을 정하고 가격과 공제율 변화에 따라 부족액을 계산하는 방식입니다.",
-        "workedExample": "100억×95%=95억, 가격90억·헤어컷10%이면 허용81억이 되어95억 차입 대비14억이 부족합니다.",
-        "boundary": "누적 이자·최소이체액·담보 적격성·처분 비용에 따라 실제 요구액은 달라집니다."
+        "workedExample": "100억 × 95% = 95억입니다. 가격 90억·헤어컷 10%이면 허용액 81억이 되어 95억 차입 대비 14억이 부족합니다.",
+        "boundary": "공제율을 다시 정할 계약 조건과 신규 거래 여부를 확인합니다. 누적 이자·최소이체액·담보 적격성·처분 비용에 따라 실제 요구액은 달라집니다."
       },
       {
         "id": "repo-rollover-risk",
         "sectionId": "limits",
         "intuition": "자산의 보유기간보다 짧은 자금계약을 반복할 때 연장 거절로 원금을 즉시 갚아야 하는 위험입니다.",
-        "workedExample": "95억 차입의 연장이 거절되고 증권을90억에만 팔면 원금5억과 별도 이자가 부족합니다.",
+        "workedExample": "95억 차입의 연장이 거절되고 환매와 연계한 매각이나 종료 정산에서 증권 가치가 90억이면 원금 기준 5억과 별도 이자가 부족합니다.",
         "boundary": "담보가 있어도 매각가격이나 새 대출을 보장하지 않으며 동시 부도·법적 상계 위험이 남습니다."
       }
     ],
     "conceptStages": [
       {
-        "label": "01 · 레포의 매도와 환매 현금흐름",
-        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "label": "01 · 두 날짜의 교환",
+        "relation": "같은 증권을 오늘 현금과 바꾸고 만기에 원금과 이자를 지급합니다.",
         "concepts": [
           "repo-repurchase-cashflow"
         ]
       },
       {
-        "label": "02 · 레포 헤어컷과 조달액",
-        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "label": "02 · 인정 가치",
+        "relation": "시장가치에서 공제한 현금액과 가격 하락 뒤 보충액을 계산합니다.",
         "concepts": [
           "repo-haircut-funding"
         ]
       },
       {
-        "label": "03 · 레포의 만기 연장 위험",
-        "relation": "작은 사례의 지급·손실 계산 뒤 공식 원문과 적용 경계를 대조합니다.",
+        "label": "03 · 다음 거래의 불확실성",
+        "relation": "가격이 같아도 상대가 연장하지 않으면 만기 자금을 따로 구해야 합니다.",
         "concepts": [
           "repo-rollover-risk"
         ]
@@ -124420,7 +126023,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "95억·연3.65%·365일의 하루이자는?",
+        "question": "95억·연 3.65%·365일의 하루 이자는?",
         "answerChecklist": [
           "95만원",
           "환매95억95만원"
@@ -124432,7 +126035,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "담보90억·공제5%에서95억 차입 부족액은?",
+        "question": "담보 90억·공제5%에서 95억 차입 부족액은?",
         "answerChecklist": [
           "허용85.5억",
           "현금9.5억"
@@ -124469,7 +126072,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "담보90억·공제10%이면 현금 부족액은?",
+        "question": "담보 90억·공제10%이면 현금 부족액은?",
         "answerChecklist": [
           "허용81억",
           "14억"
@@ -124481,7 +126084,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "5% 헤어컷과105% 담보비율을 비교하세요.",
+        "question": "5% 헤어컷과 105% 담보비율을 비교하세요.",
         "answerChecklist": [
           "100/95=105.26%",
           "분모다름"
@@ -124493,7 +126096,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "95억 차입 연장실패·담보매각90억의 원금공백은?",
+        "question": "95억 차입 연장 실패 후 환매 연계 매각·종료 정산에서 증권 평가액이 90억이라면 원금 공백은 얼마인가요?",
         "answerChecklist": [
           "5억",
           "별도이자",
@@ -124506,7 +126109,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "담보발행자와 차입자의 동시부도에서 남는 위험은?",
+        "question": "담보 발행자와 차입자의 동시 부도에서 남는 위험은?",
         "answerChecklist": [
           "담보가격도 하락",
           "매각손실",
@@ -124516,6 +126119,38 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "repo-rollover-risk"
         ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "ICMA Repo FAQ 21 · What is a haircut?",
+        "href": "https://www.icmagroup.org/market-practice-and-regulatory-policy/repo-and-collateral-markets/icma-ercc-publications/frequently-asked-questions-on-repo/21-what-is-a-haircut/",
+        "sectionId": "source",
+        "problem": "헤어컷과 현금 기준의 초기 마진 비율은 분모가 다릅니다.",
+        "contribution": "100과 95의 차이를 시장가치로 나눈 5%와 현금으로 나눈 105.26%를 비교합니다.",
+        "assumptions": "시장가치와 현금 매입가격을 같은 시점·통화로 놓고 100억·95억은 가정합니다.",
+        "evidenceScope": "공식 FAQ 본문의 정의·처분 비용·법적 지연·동반 신용 위험 범위를 읽었습니다.",
+        "notClaim": "모든 계약이 같은 공제율을 쓰거나 거래 중 임의로 공제율을 바꿀 수 있다는 뜻은 아닙니다."
+      },
+      {
+        "title": "New York Fed · Repo and Reverse Repo Agreements",
+        "href": "https://www.newyorkfed.org/markets/domestic-market-operations/monetary-policy-implementation/repo-reverse-repo-agreements",
+        "sectionId": "comparison",
+        "problem": "레포라는 이름의 관점만으로 준비금 증감을 판단하면 방향을 혼동합니다.",
+        "contribution": "Desk의 매입·재매도와 매도·재매입이 준비금에 미치는 반대 방향을 읽습니다.",
+        "assumptions": "미국 공개시장운영 관행의 명칭과 일반 매도자·매수자 관점을 구별합니다.",
+        "evidenceScope": "공식 운영 문서의 현금과 증권 이동 방향을 같은 95의 사례에 적용했습니다.",
+        "notClaim": "본문의 3.65%가 미국의 실제 운영 금리이거나 모든 기관이 참여할 수 있다는 뜻은 아닙니다."
+      },
+      {
+        "title": "한국은행 · RP매입을 통한 시장안정화 조치 이해하기 (2024-12-16)",
+        "href": "https://www.bok.or.kr/portal/bbs/B0000347/view.do?menuNo=201106&nttId=10088622",
+        "sectionId": "comparison",
+        "problem": "자금 공급과 만기 회수의 두 방향을 같은 거래에서 구별합니다.",
+        "contribution": "2024년 실제 운영 설명에서 RP매입과 반대 거래 및 증거금률의 분모를 읽습니다.",
+        "assumptions": "해당 글의 2024년 사건과 본문의 가정 사례를 분리하며 당시 일정·한도를 현재 제도로 일반화하지 않습니다.",
+        "evidenceScope": "공식 글의 거래 구조와 만기·증거금률 주석을 확인했습니다.",
+        "notClaim": "옛 주간 운영 일정을 현재 체계로 인용하거나 가정 거래를 실제 낙찰로 주장하지 않습니다."
       }
     ]
   },

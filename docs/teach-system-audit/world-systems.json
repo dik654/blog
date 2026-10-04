@@ -76,7 +76,7 @@
           "manualProps": "수식 일반형·연산 주석·기호·가정과 6+4를 따로 읽고 같은 수치·조건에 맞춤"
         },
         "firstFifth": "실제 표시 본문 기준 이름 붙이기 전 21.816%/21.836% (390/1440).",
-        "verification": "strict learning 3편, Viz 실제2파일, prose baseline, 1441개 명시적 수식 PASS. working 실제 app tsc에서 본문 수식 props를 교정했고 이후 오류는 다음 확률 초안 문법 1건. 고정150편 index snapshot의 전체 build와 tsc는 대기.",
+        "verification": "strict learning·Viz실제2파일·prosebaseline·1441개수식PASS. 고정150편index의 실제 app tsc -b·production build·1679정적경로·전역검사 exit0. checkpoint-150.json 및 commit360c3957에 기록.",
         "browser": {
           "viewports": [
             390,
@@ -105,42 +105,206 @@
     },
     {
       "route": "banking/central-bank-and-policy-transmission",
-      "status": "rewrite-required",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
       "review": {
-        "actualBodyRead": true,
-        "publicFiles": [
-          "src/pages/articles/banking/central-bank-and-policy-transmission.tsx",
-          "src/pages/articles/banking/central-bank-and-policy-transmission/viz/PolicyRateViz.tsx",
-          "src/pages/articles/banking/central-bank-and-policy-transmission/viz/TransmissionViz.tsx"
-        ],
-        "findings": [
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
           "No consistent small case before names; opening collapses all central banking into fixing one overnight price.",
           "Administered rates, target ranges and market rates conflated; IORB lower bound leaks under access and intermediary costs.",
           "Two strategies with uncertain reinvestment are not identical-risk arbitrage; arithmetic term-structure relation needs approximation and term premium can be negative.",
           "QE against nonbanks can directly create deposits without new lending; quantity and price presented as mutually exclusive.",
           "Chart mechanically clamps rate path and assigns fixed channel lags without actual mechanism or source.",
           "Country/time-specific BOK operations and current implementation need primary verification; preserve owned concept depth and quantitative exercises."
-        ]
+        ],
+        "actualBodyRead": true,
+        "publicFiles": [
+          "src/pages/articles/banking/central-bank-and-policy-transmission.tsx",
+          "src/pages/articles/banking/central-bank-and-policy-transmission/ModernArticle.tsx",
+          "src/pages/articles/banking/central-bank-and-policy-transmission/viz/FundingChoiceViz.tsx",
+          "src/pages/articles/banking/central-bank-and-policy-transmission/viz/ExpectedPathViz.tsx"
+        ],
+        "fixture": "A의 준비금14·지급20에서 부족6억원. 같은 접근·담보·비용을 가정한 예치4%·차입5%·은행간4.6%, 접근 없는 제공자3.83%와 중개비용0.15%p. 3년 기대 경로4.5/4/3.5→4.75/3.5/3과 프리미엄0.3에서4.3→4.05%. 이후 추가 운전자금으로 공장잔액10인 시점 재조정250만원.",
+        "stageAnchors": {
+          "S": "overview",
+          "B": "black-box",
+          "0": "small-case",
+          "1": "picture",
+          "2": "why",
+          "3": "names",
+          "4": [
+            "cb-balance-sheet",
+            "rate-setting"
+          ],
+          "5": "source-operations",
+          "6": [
+            "corridor-boundary",
+            "operation-procedure",
+            "transmission",
+            "no-arbitrage",
+            "transmission-lag",
+            "balance-sheet-policy",
+            "countries"
+          ],
+          "7": [
+            "limits",
+            "review"
+          ]
+        },
+        "preservedDepth": "기초6·심화4 및 canonical7 보존/교정. 목표·관리금리·시장금리, 접근·비용·담보, 전체준비금·분포, 확정복리·불확실차환·프리미엄, 고정계약·기대·환율, 은행/비은행 QE와 목적·국가 차이.",
+        "sourceApplication": "BoE2024 실제PDF8쪽 Figure1 여섯경로·직접기대/환율화살표·시간순서가 고정되지 않는 주석을 이미지로 읽음. BOK2026 보고서 양방향 개편과 FedIORB/FEDS2025·MAS2026 등 공식문서에 가정사례를 적용.",
+        "numericVerification": "작성 Python의 분수 연산과 장부 방향 모델 실행; 실제 중앙은행 코드/금리/예측 아님.",
+        "numericReport": "src/pages/articles/banking/central-bank-and-policy-transmission/verification/output.json",
+        "independentReport": "/tmp/teach-all/root-central-independent-chains.json",
+        "independentFollowup": "본문/Viz 실질오류없음. 1절 윤문 뒤 비문과 복수절 예측답표시 두 지적을 실제 수정. 공식 국가자료 재확인은 root 범위.",
+        "humanize": {
+          "passes": [
+            "/tmp/teach-all/humanize-root-central/summary.json",
+            "/tmp/teach-all/humanize-root-central-final/summary.json"
+          ],
+          "firstGate": "초기 ending_comma_rate WARN 후 연결어미 쉼표·문장 분리로 gate0 재통과",
+          "finalChars": 11666,
+          "gate": 0,
+          "roundTrip": true,
+          "applied": true,
+          "manualProps": "두 Viz와 수식·용어·표 및 6+4를 별도로 읽고 실제 수치와 조건을 대조"
+        },
+        "firstFifth": "실제 표시 본문 이름 붙이기 이전 약23.3% (390/1440).",
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "sections": 18,
+          "predictionQuestions": 3,
+          "scenesPerViewport": 7,
+          "citationsPerViewport": 9,
+          "formulaViews": 4,
+          "keyboard": true,
+          "playAndReducedMotion": true,
+          "frameAndControlShift": 0,
+          "fitsViewport": true,
+          "overflow": 0,
+          "formulaBaseOutsideCard": 0,
+          "anchors": 0,
+          "console": 0,
+          "actualScreensRead": true,
+          "report": "/tmp/teach-all/root-central-screens/summary.json",
+          "learningReport": "/tmp/teach-all/root-central-repo-learning-browser.json",
+          "genericReport": "/tmp/world-browser-audit/teach-checkpoint155-additions-summary.json"
+        },
+        "verification": "strict learning1·Viz실제2파일·명시수식1438 PASS; central prose signal해소. 전역prose는 진행중Spec18 한편 대기. 실제 app tsc root-central-tsc2.log exit0. 다음 고정index 전체build는 대기.",
+        "remaining": "고정 index build·전체799편 검토·배포·운영 확인."
       }
     },
     {
       "route": "banking/payment-clearing-settlement",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "actualBodyRead": true,
+        "beforeDefects": {
+          "reviewedAt": "2026-10-04",
+          "actualBodyRead": true,
+          "publicFiles": [
+            "src/pages/articles/banking/payment-clearing-settlement.tsx",
+            "src/pages/articles/banking/payment-clearing-settlement/viz/SettlementLayerViz.tsx",
+            "src/pages/articles/banking/payment-clearing-settlement/viz/NettingViz.tsx"
+          ],
+          "findings": [
+            "정의가 앞서 나오고 본문 수치 사례가 뒤에 분리됨; S/B/같은 사례/왜/이름 순서와 예측 질문 보완 필요",
+            "총 지급액 260과 최초 필요 유동성을 혼동; 유입 재사용·결제 순서가 빠짐",
+            "상계로 줄인 250을 미결제 익스포저로 단정하며 높은 상계 효율이 높은 위험이라는 잘못된 등식",
+            "청산을 항상 차액 계산으로 축소하고 모든 결제를 중앙은행 장부로 일반화",
+            "최종 결제 후 오류 정정·환불의 별도 이체와 법적 청구를 구별하지 않음",
+            "외환 결제는 무조건 각국 중앙은행에서만 발생한다고 단정하고 원금 노출액을 확정 손실액으로 혼동",
+            "PvP의 조건부 최종 이전을 반드시 같은 시각·한 기관에서 동시 처리하는 것으로 축소",
+            "두 Viz의 최초 용어·단정 및 작은 SVG·불필요한 가로 스크롤 교정 필요"
+          ],
+          "next": "PFMI 원칙8·9·12 및 정의, BOK 실제 운영, CLS/FedNow 등 실제 제도를 읽고 기존 6+4를 고쳐 같은 6건260 사례부터 재작성"
+        },
+        "planBeforeBody": "/tmp/teach-all/root-payment-plan.json",
+        "fixture": "같은6지시 A→B100/B→A90/B→C30/C→B20/A→C10/C→A10, 총액260·순액10. 고정순서최초120·재배열100·원자적묶음10. A지시제거시 B−10/C+10. 14억원↔100만달러 가정환율1400.",
+        "teachStages": {
+          "S": "overview",
+          "B": "black-box",
+          "0": "case",
+          "1": "picture",
+          "2": "why",
+          "3": "names",
+          "4": [
+            "three-layers",
+            "netting-efficiency"
+          ],
+          "5": "source-finality",
+          "6": [
+            "rtgs-vs-dns",
+            "hybrid-design",
+            "exposure",
+            "finality",
+            "cross-currency",
+            "pvp",
+            "boundary"
+          ],
+          "7": [
+            "limits",
+            "review"
+          ]
+        },
+        "preservedDepth": "canonical6개·기초6심화4 유지/오류교정. 총액과 최초유동성·순액과신용노출·청산/상계·지시철회와최종성·원송금과반환·FX원금위험과실현손실·PvP와물리동시/잔여위험을 구분.",
+        "sourceApplication": "실제PFMI PDF 인쇄64/76쪽 이미지를 읽고3.8.1·원칙9각주96·원칙12각주112/113·3.7.3·용어집을 대조. BOK3본문·FedNow2026 공식현재목록에서 OC8 4월1일판/절차v3.6 4월28일판의7.1/9.6/15.2를 실제읽음. PFMI4단어·OC8새이체6단어 실제인용 뒤 같은A10 적용.",
+        "numericVerification": "src/pages/articles/banking/payment-clearing-settlement/verification/output.json; 실제720순열·고정/재배열·⑤단독가능·원자적·A제거 계산PASS. 직접작성 교육모형이며 운영시스템 코드아님.",
+        "independent": "/tmp/teach-all/root-payment-independent-theory.json 실제본문/Viz/수치/원문조건 PASS; 처음100으로 좁힌묶음조건과 실제원문인용 보완반영.",
+        "humanize": {
+          "report": "/tmp/teach-all/humanize-root-payment/summary.json",
+          "chars": 9909,
+          "paragraphs": 57,
+          "edits": 3,
+          "roundTrip": true,
+          "gate": "WARN 각주0)으로 (0,120,0)을 오인",
+          "independentFinalize": "/tmp/teach-all/humanize-root-payment/payment-clearing-settlement/independent-finalize.json approve-finalize",
+          "applied": "3문단·누락0, 추가띄어쓰기및원문실제인용수정 후 직접검토",
+          "props": "두Viz8장면·수식/용어/출처/예측질문 모두 실제표시문자열을 읽고 수치·조건확인"
+        },
+        "browser": {
+          "report": "/tmp/teach-all/root-payment-screens/summary.json",
+          "details": "/tmp/teach-all/root-payment-detail-browser.json",
+          "generic": "/tmp/world-browser-audit/teach-checkpoint159-additions-summary.json",
+          "widths": [
+            390,
+            1440
+          ],
+          "sections": 18,
+          "namesFraction": 0.233,
+          "predictions": 3,
+          "scenesPerWidth": 8,
+          "answersPerWidth": 10,
+          "citationsPerWidth": 7,
+          "frameAndButtonShift": 0,
+          "overflow": 0,
+          "katex": 0,
+          "formulaBoundary": 0,
+          "keyboard": true,
+          "autoplay": true,
+          "reducedMotion": true,
+          "actualImagesRead": "390목록/묶음/수식일반식과끝·1440순서; 내부스크롤의최종조건까지 실제읽음"
+        },
+        "validation": "학습strict1·Viz실제2파일·전역formula1443·prose0 PASS. app tsc root-payment-tsc-final.log 실제exit0. 고정index전체빌드는다음중간저장대기.",
+        "remaining": "전체799편검토·고정index검사·배포·운영확인"
+      }
     },
     {
       "route": "banking/repo-and-collateral-funding",
-      "status": "unreviewed",
+      "status": "retained-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [
           "S",
@@ -157,7 +321,42 @@
         "numericAnswerPointers": 3,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "actualBodyRead": true,
+        "publicFiles": [
+          "src/pages/articles/banking/repo-and-collateral-funding.tsx"
+        ],
+        "reason": "기존10절이 S/B→100·95·95만원 동일사례→이름 없는 현금/증권 그림→처분여유 필요→용어→가격·헤어컷 변화→ICMA원문분모대입→중앙은행 비교→한계와3예측의 teach흐름을 실제로 갖춤. 전면재작성 대신 계약 조건과 설명 문장을 보완.",
+        "changes": "거래중 헤어컷 변경의 계약·신규거래 조건, 넘긴 담보의 환매 연계 매각/종료정산 조건을 명시. 기존기초6·심화4 유지, 답문장띄어쓰기와3개 conceptStages 관계 교정, 실제 확인한 공식3자료의 papers범위 등록.",
+        "fixture": "100억원×(1−5%)=95억원;연3.65%/365=95만원;90×.95=85.5 부족9.5·추가담보10;90×.9=81 부족14;100/95=105.263%;만기95억95만원·평가90이면원금공백5억원.",
+        "sourceApplication": "ICMA FAQ21 실제정의·가격위험·법적지연·wrong-way위험, NYFed매입/재매도와반대방향, BOK2024 실제RP/만기/증거금주석을 읽음. 옛운영일정을 현재로 주장하지 않음.",
+        "humanize": {
+          "report": "/tmp/teach-all/humanize-root-repo/summary.json",
+          "chars": 3977,
+          "gate": 0,
+          "roundTrip": true,
+          "applied": true,
+          "changes": 3
+        },
+        "firstFifth": "이름 붙이기 이전 실제표시본문38.08% (390/1440).",
+        "browser": {
+          "report": "/tmp/teach-all/root-repo-screens/summary.json",
+          "genericReport": "/tmp/world-browser-audit/teach-checkpoint155-additions-summary.json",
+          "learningReport": "/tmp/teach-all/root-central-repo-learning-browser.json",
+          "sections": 10,
+          "predictions": 3,
+          "citationsPerViewport": 3,
+          "overflow": 0,
+          "console": 0,
+          "viewports": [
+            390,
+            1440
+          ]
+        },
+        "verification": "strict learning1 PASS. 기존그림·모든본문과같은수치 직접검산. 고정index의 전체build는 다음중간저장에 확인.",
+        "remaining": "고정 index build·전체799편 검토·배포·운영 확인."
+      }
     },
     {
       "route": "business/business-model-cashflow",
@@ -3959,9 +4158,8 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 29,
-    "rewrite-required": 1,
-    "unreviewed": 191,
-    "retained-local-verified": 4
+    "rewritten-local-verified": 31,
+    "retained-local-verified": 5,
+    "unreviewed": 189
   }
 }

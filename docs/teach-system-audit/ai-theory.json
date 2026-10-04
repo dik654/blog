@@ -4652,7 +4652,7 @@
         "src/pages/articles/ai/math-probability-expectation-variance/ModernArticle.tsx",
         "src/pages/articles/ai/math-probability-expectation-variance/ProbabilityTreeViz.tsx"
       ],
-      "status": "body-reviewed-needs-rewrite",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -4668,31 +4668,100 @@
         "한 번의 공정함과 독립, 조건 전후 독립 및 쌍별 독립 경계가 충분히 드러나지 않는다. 원문의 유용한 조건부 식·연쇄법칙·배타적 양수 사건의 반증은 보존한다."
       ],
       "fixture": "두 번 던져 순서를 기록한다. 각 번 앞뒤 반반이고 첫 결과가 다음의 기회를 바꾸지 않는다고 정한다(가정). HH/HT/TH/TT 각각1/4. A=정확히한번 H, B=첫 H. P(A)=1/2, P(A|B)=1/2; C=적어도한번H이면 P(A|C)=2/3.",
-      "stageAnchors": {},
-      "primarySourceApplication": [],
-      "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+      "stageAnchors": {
+        "S": [
+          "overview"
+        ],
+        "B": [
+          "black-box"
+        ],
+        "0": [
+          "case"
+        ],
+        "1": [
+          "picture"
+        ],
+        "2": [
+          "why"
+        ],
+        "3": [
+          "names"
+        ],
+        "4": [
+          "outcomes",
+          "conditional-probability",
+          "chain-rule"
+        ],
+        "5": [
+          "source-formulas"
+        ],
+        "6": [
+          "independence-boundary",
+          "conditional-independence"
+        ],
+        "7": [
+          "limits"
+        ],
+        "8": [
+          "review"
+        ]
       },
-      "remaining": [
-        "14절 내외의 실제 본문 재작성",
-        "동일 네 경우의 필터와 재정규화 그림",
-        "원문 수식 대입·6+4·검산·humanize·390/1440·공유 등록"
-      ]
+      "primarySourceApplication": [
+        {
+          "kind": "공식 문서",
+          "label": "MIT 6.041SC Lecture 1 · PDF 2쪽 확률 공리",
+          "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/ff296575da32c406c2e56131e1e38997_MIT6_041SCF13_L01.pdf#page=2",
+          "note": "P(Ω)=1과 배타적 사건의 합을 HT·TH에 대입해 1/2을 복원합니다."
+        },
+        {
+          "kind": "공식 문서",
+          "label": "MIT 6.041SC Lecture 2 · PDF 1–2쪽 조건부확률과 곱",
+          "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/a1462fa23de9d08c0dfd233a57278fed_MIT6_041SCF13_L02.pdf#page=1",
+          "note": "P(A|B)의 실제 분모 조건을 읽고 같은 HT에 세 사건 곱을 적용합니다."
+        },
+        {
+          "kind": "공식 문서",
+          "label": "MIT 6.041SC Lecture 3 · PDF 1–2쪽 독립과 쌍별 독립",
+          "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/a2015627268f4846eb3b1368623ce46f_MIT6_041SCF13_L03.pdf#page=2",
+          "note": "첫 H·둘째 H·같은 결과를 원문의 같은 네 칸에 놓아 쌍의 1/4과 세 사건의 1/4을 계산합니다."
+        }
+      ],
+      "verification": {
+        "contentReview": "기존 실제 렌더 전문·원본 본문/Viz·6+4·정의 6개와 ownership을 읽었습니다. 새 14절에서 같은 네 기록을 정보별로 필터하고 실제 MIT 식에 대입합니다. 명칭은 두 폭에서 실제 최초 1/5 이후에 나옵니다.",
+        "humanize": "실제 extract→동일본문 apply 왕복→prepare→gate→apply. 6876자 42문단에서 연결 쉼표 2개만 제거, 숫자·마커·가정 보존. 전문과 3901/2974자 묶음 모두 gate0. props 52문자열·Viz 19문자열 전체 읽기와 별도 gate0. /tmp/teach-all/humanize-ai-theory-probability-final/summary.json 및 -props/-viz.",
+        "numericTrace": "/tmp/teach-all/probability-arithmetic.json 및 chains 독립 유리수 검산 /tmp/teach-all/probability-independent-chains.json PASS. 1/2·2/3, 쌍별 독립/세 사건 결합, 조건 뒤 종속, 반반인 주변분포 반례와 비복원 RR를 직접 계산했습니다.",
+        "mobile390": "output/playwright/teach-ai-theory-probability/probability.json 및 /tmp/teach-all/ai-theory-probability-controls.json. 14절·3예측, 4장면, 프레임/버튼 안정·SVG 텍스트 범위·키보드 모두 PASS. 실제 그림/수식/원문 화면 확인.",
+        "desktop1440": "동일 본문과 네 장면 PASS. /tmp/teach-all/probability-extra-browser.json에서 출처 3개와 쌍별 독립 확장 본문을 실제 펼쳤으며 넘침·좁은 문단 없음. reduced motion 자동재생 비활성/수동이동 확인.",
+        "formula": "6개 표시 수식의 각 양끝과 실제 일반식+같은 사례를 두 폭에서 확인했습니다. /tmp/teach-all/probability-extra-browser.json; global1440 explicit gate PASS /tmp/teach-all/probability-formula.log.",
+        "prose": "799편 재검토0 /tmp/teach-all/probability-prose.log.",
+        "typecheck": "actual npx tsc -p tsconfig.app.json --noEmit exit0 /tmp/teach-all/probability-tsc2.log.",
+        "learningAnswers": "기존 기초6+심화4 질문의 답을 본문과 직접 대조했습니다. /tmp/teach-all/ai-theory-learning-answer-review-probability.json. 양쪽 .7 조건과 실제 답 절 교정.",
+        "registrationProposal": "/tmp/teach-all/ai-theory-registration-batch19.json",
+        "sourceProvenance": "MIT 실제 PDF 1/2/3 전체 다운로드 SHA /tmp/teach-all/probability-primary/manifest.json. 강의1 PDF2쪽 공리/동일비중, 강의2 1–2쪽 분모 ≠0/곱, 강의3 2쪽 세 사건을 텍스트와 이미지에서 읽었습니다.",
+        "learning": "Parent batch19 integrated all10 reviewed questions and papers; /tmp/teach-all/probability-integrated-learning.log strict exit0. Actual shared learning equals reviewed proposal /tmp/teach-all/probability-integrated-readback.json. Final registered two-width body readback passed."
+      },
+      "remaining": [],
+      "preservedEvidence": [
+        "기존 overview/outcomes/conditional-probability/chain-rule/independence-boundary 및 두 paper anchor 보존.",
+        "기초6+심화4와 조건부 일반식·연쇄법칙·양수 배타 사건의 반증 보존.",
+        "존재하지 않는 course landing fragment를 실제 PDF 쪽 링크로 교체."
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/math-probability-expectation-variance.tsx": "44597532b9eabf208c031aa9f567e0077b6557460b93594d831082c3232b55e3",
+        "src/pages/articles/ai/math-probability-expectation-variance/ModernArticle.tsx": "a6ed2495beb4ddc6cd21d87b826a6b7459bd203b56b9083705601e42eb42b8d0",
+        "src/pages/articles/ai/math-probability-expectation-variance/ProbabilityTreeViz.tsx": "d4abae4c4b5b9ce3e0c996d21ef33029ace5be1b9987e8f23bb067e61b4718cd"
+      }
     },
     {
       "route": "ai/math-random-variables-expectation",
-      "title": "Random variable과 expectation: outcome을 숫자로 요약하는 법",
+      "title": "기록을 숫자로 바꾸고 평균내기: 확률변수·기댓값",
       "subcategory": "ai-foundations",
       "publicFiles": [
         "src/pages/articles/ai/math-random-variables-expectation.tsx",
         "src/pages/articles/ai/math-random-variables-expectation/ModernArticle.tsx",
         "src/pages/articles/ai/math-random-variables-expectation/RandomVariableMapViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -4700,31 +4769,110 @@
         "hasSourceSurface": true,
         "characters": 14171
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
-      "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+      "originalProblems": [
+        "실제 렌더 전문5857자, 본문/Viz 전체와 기존6+4·정의3개·ownership을 읽었다. 최초 문장부터 random variable·outcome·sample space가 나와 같은 작은 절차를 떠올리기 어렵다.",
+        "가중 평균/선형성의 의미를 영어문구로 설명하고 같은 행의 실제 대입이 부족하다. Mode와가능한값이라는기초답에도본문의실제반례가없다.",
+        "원문 MIT course landing의존재하지않는fragment로연결하며실제식/쪽에작은사례를적용하지않는다.",
+        "제곱의평균과평균의제곱을보편적으로≠라고표시하여상수이면같다는조건과충돌한다. 식과기호주석에숫자가아닌설명을등호로연결하는문제가있다.",
+        "장기평균해석의반복조건·유한기댓값의범위·같은자료를복사하는반례를보강한다. 원래함수/유도분포/가중합/선형성증명과6+4는보존한다."
+      ],
+      "fixture": "두 공정·독립 던짐의 HH/HT/TH/TT 비중은 각각1/4(가정). 앞면수 X=[2,1,1,0]→분포0/1/2에1/4,1/2,1/4→평균1. 점수 Z=2X+3은[7,5,5,3]→평균5. 뒷면수 Y=2−X는X와종속이나 E[2X+3Y]=5.",
+      "stageAnchors": {
+        "S": [
+          "overview"
+        ],
+        "B": [
+          "black-box"
+        ],
+        "0": [
+          "case"
+        ],
+        "1": [
+          "picture"
+        ],
+        "2": [
+          "why"
+        ],
+        "3": [
+          "names"
+        ],
+        "4": [
+          "mapping",
+          "distribution",
+          "expectation"
+        ],
+        "5": [
+          "source-formulas"
+        ],
+        "6": [
+          "transform-boundary",
+          "product-boundary",
+          "square-boundary"
+        ],
+        "7": [
+          "limits"
+        ],
+        "8": [
+          "review"
+        ]
       },
-      "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+      "primarySourceApplication": [
+        {
+          "kind": "공식 문서",
+          "label": "MIT 6.041SC Lecture 5 · PDF 1쪽 함수와 PMF",
+          "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/e49cdbaf3129125869700c46aa661fa1_MIT6_041SCF13_L05.pdf#page=1",
+          "note": "실제 원문의 역상 사건에 x=1을 넣어 HT와 TH의 비중을 합합니다."
+        },
+        {
+          "kind": "공식 문서",
+          "label": "MIT 6.041SC Lecture 5 · PDF 2쪽 함수의 기댓값",
+          "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/e49cdbaf3129125869700c46aa661fa1_MIT6_041SCF13_L05.pdf#page=2",
+          "note": "같은 pₓ에 g(x)=2x+3과 x²를 넣어 5와 3/2를 계산합니다."
+        },
+        {
+          "kind": "공식 문서",
+          "label": "MIT 6.041SC Lecture 7 · PDF 1쪽 합과 곱의 조건",
+          "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/c0a406b218730ddb16326d695a895c57_MIT6_041SCF13_L07.pdf#page=1",
+          "note": "원문의 두 변수 가중합에 (X,Y)=(2,0),(1,1),(0,2)를 넣어 선형 조합 5를 구합니다."
+        }
+      ],
+      "verification": {
+        "contentReview": "원문 렌더 전문·본문/Viz·기초6+심화4·정의3/ownership을 읽고 같은 네 기록에서 함수→값 분포→평균→점수→종속/곱/제곱 경계로 15절을 재작성했습니다.",
+        "humanize": "6751자 44문단 fresh extract→동일 삽입 왕복→prepare→gate→apply. 이전 패스와 최신 패스에서 연결 쉼표 각 1개를 제거했습니다. 최신 P3는 (X−1)²의 각주 오탐이며 chains가 전문·3947/2804자 두 묶음 전체와 숫자·마커를 읽고 independent-finalize 승인했습니다. /tmp/teach-all/humanize-ai-theory-expectation-verified/math-random-variables-expectation--ModernArticle. 최종 현재 본문 fresh extraction과 승인본 동일/왕복 SHA불변은 /tmp/teach-all/expectation-final-readback. props63/Viz27문자열 전문 대조·gate0.",
+        "numericTrace": "/tmp/teach-all/expectation-arithmetic.json 유리수 검산 및 /tmp/teach-all/expectation-independent-chains.json. V=(X−1)²의 곱 평균 등식에도 독립 아닌 반례와 무한급수 경계도 peer가 별도 확인했습니다.",
+        "mobile390": "output/playwright/teach-ai-theory-expectation/expectation.json: 15절·3예측, 이름 첫1/5 이후, KaTeX·console·넘침·좁은 문단·깨진 anchor 없음. 실제 그림·수식 화면을 읽었습니다.",
+        "desktop1440": "동일 본문 PASS. /tmp/teach-all/ai-theory-expectation-controls.json 네 장면×두 폭에서 frame범위·안정·키보드·SVG범위 PASS. reduced motion 자동재생 비활성/수동 선택 PASS.",
+        "formula": "/tmp/teach-all/expectation-extra-browser.json의 두 폭 수식10개 양끝 접근과 실제 일반식/예제 보존 PASS. 원문 출처3개와 무한평균 추가 문단도 실제 펼쳐 검사했습니다. global1440/1440 /tmp/teach-all/expectation-formula.log PASS.",
+        "prose": "/tmp/teach-all/expectation-prose.log 전역799 재검토0.",
+        "typecheck": "/tmp/teach-all/spec18/tsc-panels.log actual app TypeScript 종료 0을 실행한 systems가 확인했습니다. 기댓값 자체 오류 없음.",
+        "learningAnswers": "기존6+4의 목적과 답을 새 본문에 대조: /tmp/teach-all/ai-theory-learning-answer-review-expectation.json.",
+        "registrationProposal": "/tmp/teach-all/ai-theory-registration-batch20.json",
+        "sourceProvenance": "MIT5·7강 PDF 전체 SHA /tmp/teach-all/expectation-primary/manifest.json. L5 1·2쪽과 L7 1쪽 식과 ≠기호·독립 조건을 실제 이미지에서 확인했습니다.",
+        "learning": "/tmp/teach-all/expectation-integrated-learning.log strict exit0. 실제 공유 학습10문항이 검토 제안과 완전히 같은 것을 expectation-integrated-readback.json으로 확인하고 등록 후 390/1440 본문 검사도 재실행하여 모두 통과했습니다."
+      },
+      "remaining": [],
+      "preservedEvidence": [
+        "기존 overview/mapping/distribution/expectation/transform-boundary/paper-random-variable/paper-expectation anchor 유지.",
+        "6basic+4advanced와 원래 함수·유도분포·가중합·선형성 유도 유지.",
+        "무조건 ≠ 표시를 분산 항등식의 ≥와 확률1상수의 등호 조건으로 교정."
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/math-random-variables-expectation.tsx": "22cbb87c24deb873c60cb3c7860d2342464c2f6428ade8c078f5acdd6b80c708",
+        "src/pages/articles/ai/math-random-variables-expectation/ModernArticle.tsx": "e590ebd0111b125561cc9cfe9778500a226703f84f55087b7b20fc44a8bd4675",
+        "src/pages/articles/ai/math-random-variables-expectation/RandomVariableMapViz.tsx": "bcc2f9d39723f9c7f92709e3a6c471efe55a755ab0ce15a1631feaa403fc29bb"
+      }
     },
     {
       "route": "ai/math-variance-sampling",
-      "title": "Variance·sample mean·mini-batch: 흔들림을 추정하는 법",
+      "title": "평균의 흔들림을 계산하기: 분산·표본·학습 방향",
       "subcategory": "ai-foundations",
       "publicFiles": [
         "src/pages/articles/ai/math-variance-sampling.tsx",
+        "src/pages/articles/ai/math-variance-sampling/SamplingNoiseViz.tsx",
         "src/pages/articles/ai/math-variance-sampling/ModernArticle.tsx",
-        "src/pages/articles/ai/math-variance-sampling/SamplingNoiseViz.tsx"
+        "src/pages/articles/ai/math-variance-sampling/MeanErrorBoundViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -4732,19 +4880,110 @@
         "hasSourceSurface": true,
         "characters": 18443
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
-      "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+      "originalProblems": [
+        "실제 원문 본문·기존6+4·정의6·ownership과그림을읽었다. 처음부터영어용어와추상설명이밀집하고원문의작은앞면사례를끝까지추적하지않는다.",
+        "분산1/2와[1,2,3]사례가단절되어하나의가능한측정과표집질문으로잇는설명이필요하다.",
+        "n−1교정을자유도문구로만설명하며평균기준변경의정확한항등식·반복표집검산이없다.",
+        "NumPy분모n을보편적으로biased라부르고torch.var기본인자를ddof라고기술한다.실제목표와버전별API를대조해야한다.",
+        "원문MITlanding의없는fragment와RobbinsMonro일반요약만있다.실제원문식에같은사례를대입하고1951정리와장난감gradient의범위를구별해야한다.",
+        "기초/심화답의importanceweight교정을본문에서실제계산하지않고독립·편향·분산감소의구별이약하다.기존분산/표본평균/LLN/gradient식은보존한다."
+      ],
+      "fixture": "공정·독립 두 던짐의 네 기록에서 앞면 수+1인 점수 Z=[3,2,2,1], 각1/4(가정). 평균2·분산1/2에서 관측[1,2,3], 독립B2평균분산1/4, 비복원1/6, 복사1/2, 같은값의 기울기 추정과 손실 증가까지 추적합니다.",
+      "stageAnchors": {
+        "S": [
+          "overview"
+        ],
+        "B": [
+          "black-box"
+        ],
+        "0": [
+          "case"
+        ],
+        "1": [
+          "picture"
+        ],
+        "2": [
+          "why"
+        ],
+        "3": [
+          "names"
+        ],
+        "4": [
+          "variance",
+          "sample-estimation",
+          "sample-correction",
+          "mean-noise",
+          "law-of-large-numbers",
+          "gradient-estimator"
+        ],
+        "5": [
+          "paper-variance-sampling",
+          "library-normalization",
+          "paper-robbins-monro"
+        ],
+        "6": [
+          "boundaries",
+          "sampling-weights"
+        ],
+        "7": [
+          "limits"
+        ],
+        "8": [
+          "review"
+        ]
       },
-      "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+      "primarySourceApplication": [
+        {
+          "kind": "공식 문서",
+          "label": "MIT 6.041SC Lecture 19 · PDF 1–2쪽",
+          "href": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/d569abb143b22f469a09ff218cb3383c_MIT6_041SCF13_L19.pdf#page=2",
+          "note": "원문의 Mₙ 식에 분산 1/2, 오차 폭 1/2, n=2와 n=16을 넣어 상한 1과 1/8을 계산합니다."
+        },
+        {
+          "kind": "공식 문서",
+          "label": "NumPy 2.0 · numpy.var",
+          "href": "https://numpy.org/doc/2.0/reference/generated/numpy.var.html",
+          "note": "원문의 기본 ddof=0과 N−ddof를 [1,2,3]에 대입해 2/3과 ddof=1의 1을 비교합니다."
+        },
+        {
+          "kind": "공식 문서",
+          "label": "PyTorch 2.14 · torch.var",
+          "href": "https://docs.pytorch.org/docs/2.14/generated/torch.var.html",
+          "note": "실제 correction=1 기본값으로 같은 세 값의 분산 추정값 1을 구합니다."
+        },
+        {
+          "kind": "핵심 논문",
+          "label": "Robbins & Monro (1951), A Stochastic Approximation Method",
+          "href": "https://www.columbia.edu/~ww2040/8100F16/RM51.pdf#page=3",
+          "note": "원문 식 (7)과 (50)에 같은 위치 −1.5와 뽑은 기울기를 넣어 −1.45와 −1.55를 계산합니다."
+        }
+      ],
+      "verification": {
+        "contentReview": "원래 렌더 전문·실제 본문과 Viz·6+4·정의6개·ownership을 읽고 같은 네 기록으로19절을 재작성했습니다. /tmp/teach-all/variance-content-independent-chains.json에서8–17절 수학 조건과 경계 독립 PASS.",
+        "humanize": "전문10,568자65문단 실제 extract→동일 apply 왕복→prepare/gate/apply. 변화0이며 전체와3960/3881/2728자3묶음의 수학 괄호 각주 오탐은 chains가 전문·숫자·마커를읽고 독립 승인했습니다. /tmp/teach-all/variance-humanize-independent-chains.json. props125문자열두묶음gate0, Viz23문자열은 연결쉼표1개수정후P1/P3 gate0, 상한곡선7문자열gate0.",
+        "numericTrace": "/tmp/teach-all/variance-arithmetic.json 및 /tmp/teach-all/variance-independent-systems.json. 모든64표본·B16convolution·중요도보정·1회손실증가를 유리수로 검산했습니다.",
+        "typecheck": "actual app TS /tmp/teach-all/variance-tsc-final.log 종료0.",
+        "prose": "/tmp/teach-all/variance-prose-final.log 전역799 재검토0.",
+        "formula": "/tmp/teach-all/variance-formula.log 전역1443/1443 명시주석PASS. /tmp/teach-all/variance-extra-browser.json 양폭20개 표시수식 양끝접근PASS.",
+        "mobile390": "output/playwright/teach-ai-theory-variance/variance.json에서19절·3예측·첫1/5후이름·넘침/console/KaTeX/좁은문단/깨진anchor0. 실제그림·수식스크린샷읽음.",
+        "desktop1440": "동일 본문PASS. /tmp/teach-all/ai-theory-variance-controls.json 네장면에서frame과control안정·viewport범위·키보드·SVG라벨범위PASS. reduced motion자동재생off/수동선택PASS.",
+        "sources": "/tmp/teach-all/variance-primary/manifest.json 전체PDF SHA. 실제MIT19 PDF1/2·RM51 PDF3/7/8을이미지로읽고식7/50및전역유계확인. API공식고정문서원문확인. 두폭에서출처4개와ProgressiveDetail3개를펼쳐검사했습니다.",
+        "learningAnswers": "/tmp/teach-all/ai-theory-learning-answer-review-variance.json 기존6+4질문의답을실제19절과대조했습니다.",
+        "registrationProposal": "/tmp/teach-all/ai-theory-registration-batch21.json",
+        "learning": "/tmp/teach-all/variance-integrated-learning-final.log strict exit0. 실제 공유10문항은 variance-integrated-readback.json에서 제안과완전일치. 통합후390/1440 본문검사도 다시PASS.",
+        "viz": "/tmp/teach-all/variance-viz-final.log 정적FAIL없음. SVG텍스트review는두폭실제라벨범위·스크린샷으로확인했습니다. /tmp/teach-all/variance-bound-browser.json: 상한곡선 두폭 라벨경계PASS, 실제390이미지읽음."
+      },
+      "remaining": [],
+      "bodyHashes": {
+        "src/pages/articles/ai/math-variance-sampling.tsx": "c6c344d09a08939ec8d9d451db60d7f29d117aefbdb16a6b2b7038a55702504f",
+        "src/pages/articles/ai/math-variance-sampling/SamplingNoiseViz.tsx": "5408fdf1ef2b1712c06b9be874efd9cce420ed38840714963037a4f1e24a8c79",
+        "src/pages/articles/ai/math-variance-sampling/ModernArticle.tsx": "1a5d969d15bdf00dcefac24327e002bd941b28006dd9ee26d984fb899a1402b5",
+        "src/pages/articles/ai/math-variance-sampling/MeanErrorBoundViz.tsx": "4befede36167b7a5e9082d01d61510bb6a2861e914fdbad99a362a61ce1c58a5"
+      },
+      "preservedEvidence": [
+        "원래 overview/variance/sample-estimation/law-of-large-numbers/gradient-estimator/boundaries/paper-variance-sampling/paper-robbins-monro anchor 유지.",
+        "기초6+심화4, n−1·1/B·LLN·확률기울기 유도와 실패조건 보존/보강.",
+        "torch ddof라는 기존 설명과 NumPy분모n을 모든질문에 biased라고 부르는 단정을 교정."
       ]
     },
     {
@@ -8176,14 +8415,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 25,
+    "rewritten": 28,
     "existingTeachTargetedRepairs": 3,
-    "reviewedAndImproved": 28,
-    "localVerified": 28,
+    "reviewedAndImproved": 31,
+    "localVerified": 31,
     "awaitingIntegration": 0,
-    "pending": 160,
+    "pending": 158,
     "complete": 0,
-    "bodyReviewedNeedsRewrite": 1,
-    "bodyReviewedTotal": 29
+    "bodyReviewedNeedsRewrite": 0,
+    "bodyReviewedTotal": 31
   }
 }

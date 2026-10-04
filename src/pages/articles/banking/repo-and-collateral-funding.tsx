@@ -10,7 +10,10 @@ export default function Article() {
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 오래 보유할 자산도 오늘 결제할 돈이 필요합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-<p className="leading-8">회사가 국채를 보유하고 있지만 오늘 지급할 현금이 부족할 수 있습니다. 자산을 영구히 팔지 않고 며칠 동안 돈을 얻으려면, 나중에 정한 값으로 다시 사겠다는 약속과 함께 증권을 넘길 수 있습니다.</p>
+<p className="leading-8">
+            회사가 국채를 보유하고 있지만 오늘 지급할 현금이 부족할 수 있습니다. 자산을 영구히 팔지 않고 며칠 동안 돈을 얻으려면 나중에 정한 값으로 다시 사겠다는 약속과 함께 증권을
+            넘길 수 있습니다.
+          </p>
 <p className="leading-8">이 글은 처음 증권과 돈이 바뀌는 순간부터 만기에 되사는 순간까지 따라갑니다. 안전해 보이는 자산을 가지고 있어도 가격 하락이나 계약 연장 실패 때문에 현금이 부족해질 수 있는 이유를 계산합니다.</p>
         </div>
 
@@ -47,7 +50,10 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">5. 증권을 팔기 전의 가격 변화와 만기 공백을 감당합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">돈을 빌린 곳이 못 갚으면 현금 제공자는 증권을 처분해야 합니다. 그 사이에 가격이 내려가거나 매각 비용이 들 수 있으므로 가치 전부를 현금으로 내주지 않습니다.</p>
-<p className="leading-8">짧은 기간이면 금리를 자주 바꿀 수 있지만 자금을 쓰는 쪽은 자주 새 거래를 구해야 합니다. 자산의 만기는 길고 돈을 되돌려줄 날짜는 짧다면, 상대가 연장을 거절하는 날 큰 현금이 필요합니다.</p>
+<p className="leading-8">
+            짧은 기간이면 금리를 자주 바꿀 수 있지만 자금을 쓰는 쪽은 자주 새 거래를 구해야 합니다. 자산의 만기는 길고 돈을 되돌려줄 날짜는 짧다면 상대가 연장을 거절하면 큰 현금이
+            필요합니다.
+          </p>
         </div>
 
         <p data-stage-bridge="need" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">처분 여유와 짧은 만기의 비용을 확인했습니다. 이 구조에 붙은 이름을 정리합니다.</p>
@@ -66,7 +72,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">7. 가격 하락과 공제율 상승을 동시에 계산합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">거래 중 담보 가치가 90억 원으로 내려갔다고 합시다. 현금 채무는 단순히 95억 원이라고 두겠습니다. 5% 헤어컷으로 인정되는 금액은 85.5억 원입니다. 부족한 9.5억 원을 현금으로 갚거나 같은 인정률의 담보를 보충해야 합니다. 실제 계산에는 누적 이자와 계약의 최소 이체액도 들어갑니다.</p>
-<p className="leading-8">담보를 더 주는 방식이면 95÷0.95=100억 원의 총담보가 필요하므로 10억 원을 추가합니다. 여기서 헤어컷까지 10%로 오르면 같은 90억 원 담보에서 허용액은 81억 원이고 현금 부족액은 14억 원입니다.</p>
+<p className="leading-8">담보를 더 주는 방식이면 95÷0.95=100억 원의 총담보가 필요하므로 10억 원을 추가합니다. 계약에 따라 공제율을 다시 정하거나 새 거래를 맺으며 헤어컷까지 10%로 오르면 같은 90억 원 담보에서 허용액은 81억 원이고 현금 부족액은 14억 원입니다.</p>
 <p className="leading-8">가격이 그대로 100억 원이어도 헤어컷이 10%이면 조달액은 90억 원으로 줄어듭니다. 자산 가격 전망을 맞혔다는 사실만으로 95억 원 차입을 계속 유지할 수는 없습니다.</p>
         </div>
 
@@ -96,7 +102,7 @@ export default function Article() {
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10. 담보가 있어도 만기 연장과 처분 가격은 보장되지 않습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-<p className="leading-8">내일도 95억 원을 빌릴 수 있을 것으로 생각했는데 상대가 전액 연장을 거절하면 만기에는 95억95만 원을 구해야 합니다. 증권을 90억 원에밖에 못 판다면 원금만으로도 5억 원이 모자랍니다. 처음의 5% 여유가 실제 가격 하락 10%를 모두 막지 못한 것입니다.</p>
+<p className="leading-8">내일도 95억 원을 빌릴 수 있을 것으로 생각했는데 상대가 전액 연장을 거절하면 만기에는 95억95만 원을 구해야 합니다. 이때 환매와 연계한 매각이나 계약 종료 정산에서 증권을 90억 원으로만 평가받는다면 원금 기준으로 5억 원이 모자랍니다. 담보로 넘긴 증권을 차입자가 아무 조건 없이 먼저 팔 수 있다는 뜻은 아닙니다. 처음의 5% 여유가 실제 가격 하락 10%를 모두 막지 못한 것입니다.</p>
 <p className="leading-8">차입자가 어려워질 때 담보 발행자도 함께 어려워지면 보호가 더 약해질 수 있습니다. 담보 재사용 사슬과 법적 상계가 끊기는 경우도 확인해야 합니다. 장기 자산을 짧은 돈으로 보유할 때는 가격·헤어컷·만기 연장 실패를 따로 스트레스 계산에 넣습니다.</p>
         </div>
 
