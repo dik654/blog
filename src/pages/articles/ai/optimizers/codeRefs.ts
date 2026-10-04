@@ -1,29 +1,10 @@
+import sgdPy from "../momentum-optimizer/codebase/torch/optim/sgd.py?raw";
 import type { CodeRef } from "@/components/code/types";
 import lossUtilsPy from "./codebase/transformers/src/transformers/loss/loss_utils.py?raw";
 import trainerPy from "./codebase/transformers/src/transformers/trainer.py?raw";
-
 export const codeRefs: Record<string, CodeRef> = {
-  "ga-fixed-cross-entropy": {
-    path: "transformers/src/transformers/loss/loss_utils.py",
-    code: lossUtilsPy,
-    lang: "python",
-    highlight: [12, 32],
-    desc: "문제: \"각 micro loss의 reduction scale이 같습니다\"라는 가정이 실전에서 깨지는 실제 사례(2024년 Unsloth가 보고한 gradient accumulation 버그)를 확인해야 합니다.\n\n해결: HuggingFace transformers의 fixed_cross_entropy가 num_items_in_batch 유무로 reduction을 mean/sum으로 나누고, sum일 때만 accumulation window 전체의 유효 토큰 수로 나눕니다 — 이름 자체가 버그 수정을 가리킵니다.",
-    annotations: [
-      { lines: [19, 24], color: "rose", note: "article의 가정이 깨지는 지점 — num_items_in_batch 없이 mean reduction하면 micro-batch마다 자기 토큰 수로만 나눔" },
-      { lines: [28, 31], color: "emerald", note: "실제 fix — 미리 계산해 둔 accumulation window 전체 유효 토큰 수로 나눔" },
-    ],
-  },
-  "ga-num-items-in-batch": {
-    path: "transformers/src/transformers/trainer.py",
-    code: trainerPy,
-    lang: "python",
-    highlight: [10, 64],
-    desc: "문제: fixed_cross_entropy가 나눌 \"accumulation window 전체의 유효 토큰 수\"가 실제로 어디서, 어떻게 계산되는지 확인해야 합니다.\n\n해결: Trainer.get_batch_samples가 K개 micro-batch를 backward 전에 먼저 모으고, _get_num_items_in_batch가 -100이 아닌 label token을 전부 합산해 global 분모 하나를 만듭니다.",
-    annotations: [
-      { lines: [20, 27], color: "sky", note: "article의 K — gradient_accumulation_steps만큼 micro-batch를 backward 없이 먼저 수집" },
-      { lines: [48, 52], color: "emerald", note: "article의 denominator — K개 micro-batch 전체에서 유효 토큰만 합산(micro-batch별로 따로 세지 않음)" },
-      { lines: [58, 62], color: "amber", note: "article에는 없는 실제 세부 — multi-GPU에서는 gather 후 재합산" },
-    ],
-  },
+"sgd-basic": {path:"torch/optim/sgd.py",code:sgdPy,lang:"python",highlight:[369,375],desc:"PyTorch v2.8.0 고정 원문. Momentum·weight decay=0, maximize=False, scalar lr=.1에서 param=3, grad=4를 넣으면 param.add_가 2.6을 저장합니다.",annotations:[{lines:[374,375],color:"emerald",note:"현재 값에 −lr×gradient를 더합니다. backward가 이미 계산한 gradient를 사용합니다."}]},
+"ga-fixed-cross-entropy": {"path": "transformers/src/transformers/loss/loss_utils.py","lang": "python","highlight": [32, 46],"desc": "Transformers @ 469230357aab0f2b303b0d638c1f8d06edb14184 (2026-10-03). fixed_cross_entropy 원문입니다. 유효 token 총수 8을 받으면 각 micro-batch 손실의 합을 공통 분모 8로 나눕니다. 값이 None이면 각 호출이 자체 평균을 구합니다.","annotations": [{"lines": [39, 40], "color": "rose", "note": "공통 분모를 받았을 때 합계 reduction을 선택합니다. 두 묶음의 손실합 2와 18을 먼저 각각 유지합니다."}, {"lines": [41, 46], "color": "emerald", "note": "같은 총수 8로 나누면 .25와 2.25가 됩니다. 두 기여를 더한 전체 평균은 2.5입니다."}],code:lossUtilsPy},
+"ga-num-items-in-batch": {"path": "transformers/src/transformers/trainer.py","lang": "python","highlight": [2297, 2317],"desc": "같은 고정 원문의 _get_num_items_in_batch입니다. shift_labels 제공 여부와 _loss_shifts_labels에 맞춰 실제 정답 위치를 고른 뒤 −100을 제외해 더합니다. 이 예는 단일 장치이며 유효 위치 2개와 6개를 합해 8을 얻습니다.","annotations": [{"lines": [2300, 2310], "color": "sky", "note": "정답을 이동하는 손실인지 확인한 뒤 유효 label을 셉니다. raw label 길이를 그대로 더하는 것과 다를 수 있습니다."}, {"lines": [2314, 2317], "color": "amber", "note": "장치 간 평균 옵션이 켜진 다중 장치에서는 각 장치의 개수를 모읍니다. 아래 추가 분기도 병렬 구성에 따라 분모를 조정합니다."}],code:trainerPy},
+"ga-collect-window": {"path": "transformers/src/transformers/trainer.py","lang": "python","highlight": [2256, 2271],"desc": "get_batch_samples 원문입니다. 최대 num_batches개를 먼저 수집한 뒤 그 묶음들의 공통 분모를 계산합니다. 마지막 불완전 묶음에서는 실제 수집된 자료를 세므로 설정값만 곱해 분모를 정하지 않습니다.","annotations": [{"lines": [2264, 2271], "color": "emerald", "note": "이번 예의 두 묶음을 먼저 모은 다음 유효 label 총수 8을 계산합니다."}],code:trainerPy},
 };

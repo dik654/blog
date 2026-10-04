@@ -157,11 +157,47 @@ export const agentArticles: Article[] = [
     title: "Context 권한 경계: Instruction · Data · Runtime",
     subcategory: "ai-agents",
     sections: [
-      { id: "overview", title: "세 책임 층 정의" },
-      { id: "three-layers", title: "Prompt priority와 capability" },
-      { id: "attack-path", title: "Schema·authorization·policy gate" },
-      { id: "release", title: "Effect path release test" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 읽은 문장이 실행 권한으로 바뀌면 안 됩니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 문서는 분석으로, 행동 제안은 권한 검사로 보냅니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 이메일 한 통과 고객 정보 100건이 있습니다"
+  },
+  {
+    "id": "inside-boundary",
+    "title": "4. 모양·권한·현재 조건을 따로 묻습니다"
+  },
+  {
+    "id": "why-boundary",
+    "title": "5. 문장을 잘 따르는 능력만으로는 전송을 막지 못합니다"
+  },
+  {
+    "id": "three-layers",
+    "title": "6. 지시·외부 자료·실행 검사는 역할이 다릅니다"
+  },
+  {
+    "id": "request-trace",
+    "title": "7. 형식이 맞아도 권한이 없으면 100건은 나가지 않습니다"
+  },
+  {
+    "id": "attack-path",
+    "title": "8. 독립된 세 조건을 모두 통과해야 실행합니다"
+  },
+  {
+    "id": "release",
+    "title": "9. 재시도와 다른 실행 경로도 같은 검사를 거쳐야 합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "10. 어느 값이 실행을 막을까요"
+  }
+],
     component: () =>
       import("@/pages/articles/ai/context-instruction-boundaries"),
   },
@@ -305,24 +341,55 @@ export const agentArticles: Article[] = [
     title: "Tool calling 수명주기: 선택·인자 생성·호출 오류와 context 비용",
     subcategory: "ai-agents",
     sections: [
-      { id: "problem", title: "Tool calling lifecycle" },
-      { id: "selection-and-routing", title: "Tool selection · routing · dynamic loading" },
-      { id: "argument-generation-and-invocation", title: "Argument generation · invocation" },
-      { id: "tool-use-loop", title: "Tool-use loop · multi-step · parallel" },
-      { id: "context-cost", title: "Tool schema · result context cost" },
-      { id: "error-handling-and-retry", title: "Error handling · retry policy" },
-      {
-        id: "sources",
-        title: "근거 문서",
-        subsections: [
-          { id: "paper-openai-function-calling", title: "OpenAI Function calling" },
-          { id: "paper-anthropic-tool-use", title: "Anthropic Tool use" },
-          { id: "paper-anthropic-parallel-tool-use", title: "Anthropic Parallel tool use" },
-          { id: "paper-react", title: "ReAct" },
-          { id: "paper-openai-structured-outputs", title: "OpenAI Structured Outputs" },
-        ],
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 답을 만들기 위해 외부에서 실제 값을 가져옵니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 필요한 조회를 골라 실행하고 결과를 다시 읽습니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 세 도시를 각각 400ms 동안 조회합니다"
+  },
+  {
+    "id": "inside-tool-call",
+    "title": "4. 선택된 이름과 실행 결과를 식별자로 연결합니다"
+  },
+  {
+    "id": "why-tool-call",
+    "title": "5. 맞는 모양과 맞는 대상은 다릅니다"
+  },
+  {
+    "id": "selection-and-routing",
+    "title": "6. 선택·인자·실행·반환의 이름을 붙입니다"
+  },
+  {
+    "id": "tool-use-loop",
+    "title": "7. 세 호출의 결과가 다른 순서로 돌아와도 맞게 붙입니다"
+  },
+  {
+    "id": "argument-generation-and-invocation",
+    "title": "8. 공식 반환 코드에서 호출 ID의 자리를 확인합니다"
+  },
+  {
+    "id": "context-cost",
+    "title": "9. 2,654는 입력의 부분합이며 최종 요금이 아닙니다"
+  },
+  {
+    "id": "error-handling-and-retry",
+    "title": "10. 대기 간격을 늘리기 전에 반복해도 안전한지 봅니다"
+  },
+  {
+    "id": "sources",
+    "title": "11. 형식 보장과 작업 성공은 다릅니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "12. 부분합과 전체 결과를 구분해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/tool-calling-lifecycle-and-costs"),
   },
   {
@@ -458,14 +525,47 @@ export const agentArticles: Article[] = [
     title: "LLM harness: model proposal과 runtime enforcement",
     subcategory: "ai-agents",
     sections: [
-      { id: "overview", title: "모델과 하네스의 책임 경계" },
-      { id: "proposal-runtime", title: "Capability와 authority" },
-      { id: "operation-roles", title: "도구 역할과 권한 경계" },
-      { id: "feedback-loop", title: "Effect receipt와 observation" },
-      { id: "artifact-repair", title: "Typed artifact 교정 loop" },
-      { id: "model-change", title: "모델 교체와 하네스 불변식" },
-      { id: "paper-effective-agents", title: "Workflow·agent 근거 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 답을 잘 만드는 능력과 일을 제대로 끝내는 구조를 나눕니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 목표를 읽고 실행을 통제하며 실제 결과를 확인합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. PING을 정확히 32번 출력합니다"
+  },
+  {
+    "id": "inside-harness",
+    "title": "4. 판단·권한·실행·결과 기록이 서로 다른 자리입니다"
+  },
+  {
+    "id": "why-harness",
+    "title": "5. 계산 성공은 입력 사실의 정확성을 보장하지 않습니다"
+  },
+  {
+    "id": "agent-scaffold",
+    "title": "6. 모델 밖에서 실행을 이어 주는 하네스입니다"
+  },
+  {
+    "id": "proposal-runtime",
+    "title": "7. 32개가 정해졌을 때만 고정된 출력 경로를 고릅니다"
+  },
+  {
+    "id": "artifact-repair",
+    "title": "8. 독립 검사에서 실패한 부분만 고칩니다"
+  },
+  {
+    "id": "model-change",
+    "title": "9. 하나의 측정으로 모델 전체를 평가하지 않습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "10. 어디까지 고정 규칙으로 처리할 수 있을까요"
+  }
+],
     component: () => import("@/pages/articles/ai/llm-harness"),
   },
   {
@@ -569,13 +669,51 @@ export const agentArticles: Article[] = [
     title: "복구는 idempotent 여부로 retry 나 escalation 으로 갈립니다",
     subcategory: "ai-agents",
     sections: [
-      { id: "problem", title: "Agent reliability와 실패 유형 개요" },
-      { id: "failure-taxonomy", title: "Goal·context drift와 tool misuse" },
-      { id: "retry-idempotent", title: "Retry loop와 idempotent action" },
-      { id: "side-effect-control", title: "Dry-run과 confirmation gate" },
-      { id: "recovery-checkpointing", title: "Failure detection과 checkpointing" },
-      { id: "human-in-the-loop-escalation", title: "Human-in-the-loop과 escalation policy" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 응답을 못 받았다고 실행이 없었던 것은 아닙니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 감지하고 확인한 뒤 다시 할지 멈출지 고릅니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 1만 원 청구 뒤 응답이 끊겼습니다"
+  },
+  {
+    "id": "inside-recovery",
+    "title": "4. 요청의 뜻과 실행 결과를 같이 보관합니다"
+  },
+  {
+    "id": "why-recovery",
+    "title": "5. 잘못된 목적과 불확실한 결과는 복구법이 다릅니다"
+  },
+  {
+    "id": "failure-taxonomy",
+    "title": "6. 실패의 모습과 복구 수단에 이름을 붙입니다"
+  },
+  {
+    "id": "retry-idempotent",
+    "title": "7. 같은 pay-42의 실제 결과를 확인합니다"
+  },
+  {
+    "id": "recovery-checkpointing",
+    "title": "8. 서버의 반복 요청 계약을 그대로 확인합니다"
+  },
+  {
+    "id": "side-effect-control",
+    "title": "9. 복원할 수 있는 상태와 없는 효과를 나눕니다"
+  },
+  {
+    "id": "human-in-the-loop-escalation",
+    "title": "10. 확인할 수 없는 결과는 근거와 함께 넘깁니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "11. 재시도 전에 무엇을 알아야 할까요"
+  }
+],
     component: () => import("@/pages/articles/ai/agent-failure-modes-and-recovery"),
   },
   {

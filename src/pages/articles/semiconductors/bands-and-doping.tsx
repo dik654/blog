@@ -3,52 +3,53 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CarrierCountViz from "./bands-and-doping/viz/CarrierCountViz";
 
-/**
- * 반도체 기초 1편. MIT 6.012의 300 K n_i를 기준으로 1 cm³를 센다.
- * 도너·억셉터 10^16 cm^-3는 글에서 선언한 가정값이다.
- */
-export default function BandsAndDopingArticle() {
-  return (
-    <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">같은 실리콘인데 움직일 수 있는 전자가 달라집니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            실리콘을 똑같이 1 cm³씩 두 조각 잘라 300 K에 둡니다. 첫 조각에는
-            움직일 수 있는 전자가 약 10¹⁰개 있습니다. 둘째에는 약 10¹⁶개가
-            있습니다. 백만 배 차이입니다. 두 조각의 모양과 온도를 같게 두고,
-            둘째에 다른 원자를 섞었다고 가정했습니다. 이 작은 차이가 왜
-            움직이는 전하의 수를 바꾸는지가 이 글의 질문입니다.
-          </p>
-          <p className="leading-7">
-            이 숫자의 출처를 먼저 나눕니다. <strong>300 K 순수 실리콘의
-            약 10¹⁰ cm⁻³</strong>는 MIT 6.012 강의 자료의 교육용 기준값입니다.
-            둘째 조각에 10¹⁶ cm⁻³의 다른 원자를 넣어 거의 전부 작동하게 한다는
-            조건은 <strong>이 글의 가정</strong>입니다. 이후의 10¹⁶과 10⁴도
-            그 가정에서 계산한 값입니다.
-          </p>
-          <div className="not-prose my-8 grid gap-3 text-sm sm:grid-cols-2">
-            <div className="rounded-lg border border-border bg-card p-4">
-              <p className="font-bold">조각 A · 기준 상태</p>
-              <p className="mt-2 leading-6">1 cm³ 안의 움직이는 음전하 약 10¹⁰개, 양전하처럼 셀 빈자리 약 10¹⁰개</p>
-            </div>
-            <div className="rounded-lg border border-border bg-card p-4">
-              <p className="font-bold">조각 B · 원자를 섞은 상태 (가정)</p>
-              <p className="mt-2 leading-6">같은 1 cm³에서 움직이는 음전하 약 10¹⁶개, 빈자리 약 10⁴개</p>
-            </div>
-          </div>
-          <p className="leading-7">
-            아직 재료의 내부 그림은 접어 둡니다. 지금은 들어간 것이 원자 소량이고
-            밖에서 보이는 것이 움직이는 전하의 수라는 것만 봅니다. 다음 절에서
-            왜 처음부터 모든 전자가 똑같이 움직일 수 없는지부터 펼치겠습니다.
-          </p>
-          <p className="leading-7"><em>같은 실리콘에서 원자를 조금 바꿨을 뿐인데 움직이는 전하의 수가 백만 배 달라졌습니다. 이제 그 까닭을 보겠습니다.</em></p>
-        </div>
-      </section>
+import NumericPath from "../world-systems/NumericPath";
 
-      <section id="states" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">움직일 수 있는 에너지 자리가 따로 있습니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+export default function BandsAndDopingArticle() {
+return <div className="space-y-16">
+<section id="overview" data-teach-level="S" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">1. 실리콘 안의 전자를 전부 전류로 세면 안 됩니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">같은 크기와 온도의 실리콘도 다른 원자를 조금 섞으면 움직이는 전하 수가 크게 달라집니다. 그런데 실리콘에 원래 있던 모든 전자가 전류를 만드는 것은 아닙니다. 어떤 상태가 움직임에 참여하는지 먼저 나누어야 원자를 섞는 효과를 설명할 수 있습니다.</p><p className="leading-7">
+            두 조각을 같은 부피로 비교하겠습니다. 움직일 수 있는 전자와 빈자리를 세고 새 원자가 전자를 내놓은 자리의 전하도 더합니다. 마지막에는 원문의 평형식에 같은 숫자를 넣어 적은
+            쪽의 전하 수까지 구하겠습니다.
+          </p></div>
+</section>
+
+<section id="outside" data-teach-level="B" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">2. 같은 온도에서 원자 종류를 바꾸고 이동 전하를 셉니다</h2>
+<NumericPath title="실리콘 두 조각을 비교하는 조건" steps={[{"label": "같게 두기", "value": "부피1 cm³ · 온도300 K", "detail": "재료와 온도를 고정합니다."}, {"label": "바꾸기", "value": "섞은 원자의 종류·수", "detail": "한 조각에 전자를 내놓기 쉬운 원자를 넣습니다."}, {"label": "비교하기", "value": "움직이는 전하 수", "detail": "전체 원자 수와 구별해 셉니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
+            이 비교에서는 원자를 섞은 효과를 봅니다. 원자를 섞은 뒤 바깥의 빛이나 주입 없이 안정된 상태를 봅니다. 움직이는 음전하가 늘어도 재료 전체에 그만큼의 음전하가 더해졌다는
+            뜻은 아닙니다. 남아 있는 양전하까지 확인해야 합니다.
+          </p></div>
+</section>
+
+<section id="case" data-teach-level="0" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">3. 1 cm³의 두 조각에서 10¹⁰개와 10¹⁶개를 비교합니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">기준 조각 A는 300 K의 순수 실리콘입니다. 움직이는 전자와 양전하처럼 셀 빈자리가 각각 약 10¹⁰개입니다. 이 농도 10¹⁰ cm⁻³는 MIT 6.012 강의안의 교육용 기준값을 사용합니다. 정확히 모든 온도에 적용되는 재료 상수는 아닙니다.</p><p className="leading-7">조각 B에는 전자를 내놓기 쉬운 원자 10¹⁶개/cm³를 넣고 거의 모두 작동한다고 <strong>가정</strong>합니다. 부피가 1 cm³이므로 총 원자 수도 10¹⁶개입니다. 그러면 움직이는 전자는 약 10¹⁶개, 빈자리는 약 10⁴개로 계산됩니다.</p><p className="leading-7">
+            전자 수는 A보다 백만 배 많습니다. 다만 실리콘 원자 밀도 약 5×10²²개/cm³와 비교하면 넣은 원자는 약 500만 개 중 1개꼴입니다. 적은 원자 변화가 이동 전하
+            수에서는 크게 늘어나는 이유를 살펴보겠습니다.
+          </p></div>
+</section>
+
+<section id="picture" data-teach-level="1" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">4. 움직이는 전자·이동하는 빈자리·고정된 전하를 나눕니다</h2>
+<NumericPath title="조각 B에서 서로 다른 세 역할" steps={[{"label": "움직이는 음전하", "value": "약10¹⁶개", "detail": "전류에 참여할 수 있는 전자입니다."}, {"label": "움직이는 양전하처럼 세기", "value": "빈자리 약10⁴개", "detail": "이웃 전자가 메우면 빈자리가 반대로 움직입니다."}, {"label": "제자리에 남은 양전하", "value": "새 원자 자리 약10¹⁶개", "detail": "전자를 내놓은 원자는 결정에 고정됩니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">빈자리는 결정에 뚫린 작은 구멍이라는 뜻이 아닙니다. 전자가 차지하던 상태가 비었고 주변 전자들이 그 상태를 바꾸며 이동하는 효과를 셉니다. 전자가 있을 수 있는 에너지의 상태와 원자가 놓인 공간의 위치도 구분해야 합니다.</p><p className="leading-7">
+            아래 에너지 구간이 가득 찼다면 작은 전기장으로 옮길 빈 상태가 부족합니다. 위 구간으로 올라간 전자와 아래에 남은 빈자리가 이동에 참여합니다. 새 원자를 섞으면 전하를
+            움직이는 상태로 만드는 데 필요한 에너지와 이동 전하 수가 달라집니다.
+          </p></div>
+</section>
+
+<section id="why" data-teach-level="2" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">5. 이동 전하 수와 전체 전하량은 서로 다른 장부입니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">전체 원자나 전자의 수만 세면 어느 전자가 움직이는 상태에 있는지 알 수 없습니다. 이동 가능한 상태를 먼저 구분해야 합니다. 그다음 전자를 하나 내놓은 원자 자리에 무엇이 남았는지도 세어야 전체 전하를 맞출 수 있습니다.</p><p className="leading-7">
+            조각 B에서 움직이는 전자가 크게 늘어도 그에 대응하는 양전하가 결정에 남습니다. 반대로 순수 조각에서 전자가 올라갈 때는 빈자리도 하나 생깁니다. 두 방식으로 생긴 전하를
+            모두 짝으로 생겼다고 세면 농도를 잘못 예측합니다.
+          </p><p className="leading-7">또 안정된 상태에서는 전자와 빈자리가 생기는 속도와 다시 합쳐지는 속도가 맞습니다. 전자 수를 늘렸는데 빈자리 수를 그대로 두면 이 조건도 달라집니다. 이제 역할마다 이름을 붙이고 두 장부를 함께 계산하겠습니다.</p></div>
+</section>
+
+<section id="states" data-teach-level="3" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">6. 가능한 상태의 묶음에 에너지띠라는 이름을 붙입니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             실리콘 원자 하나의 전자만 그리면 왜 고체 전체가 전류를 흘리는지
             보이지 않습니다. 원자가 규칙적으로 많이 모인 결정에서는 전자가
@@ -79,16 +80,16 @@ export default function BandsAndDopingArticle() {
           citeKey={1}
           href="https://ethw-images.s3.us-east-va.perf.cloud.ovh.us/ieee/b/b4/P3_Proc._R._Soc._Lond._A-1931-Wilson-458-91.pdf"
         >
-          원문 460쪽의 그림은 주기적인 결정에서 전자가 차지할 수 있는 에너지가
+          원문 460쪽의 문장은 주기적인 결정에서 전자가 차지할 수 있는 에너지가
           띠로 갈리고 띠 사이에 유한한 간격이 있다는 설명입니다. 스캔의 해당
           쪽을 직접 읽었습니다. 현대의 실리콘 1.1 eV와 도핑 예제는 이 원문이
           측정한 결과로 적지 않습니다.
         </CitationBlock>
-      </section>
+</section>
 
-      <section id="intrinsic" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">순수한 실리콘에서도 둘이 함께 생깁니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="intrinsic" data-teach-level="4" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">7. 기준 조각 A에서 두 이동 전하를 함께 셉니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             온도가 0 K보다 높으면 일부 전자가 결합 상태를 떠나 움직일 수 있는
             상태로 올라갑니다. 전자가 떠난 결합에는 빈자리가 남습니다. 주변
@@ -123,11 +124,11 @@ export default function BandsAndDopingArticle() {
           실리콘 결합 그림은 실제 전자와 정공이 여러 원자 자리에 퍼지는 모습을
           단순화한다고 경고합니다.
         </CitationBlock>
-      </section>
+</section>
 
-      <section id="dopants" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">한쪽 수를 늘려도 전하 장부는 맞습니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="dopants" data-teach-level="4" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">8. 조각 B에 전자를 내놓는 원자를 넣습니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             이제 둘째 조각 B를 만듭니다. 실리콘 자리 일부에 인처럼 바깥 전자가
             하나 더 있는 원자를 넣습니다. 이 원자의 네 전자는 주변 실리콘과
@@ -162,11 +163,11 @@ export default function BandsAndDopingArticle() {
           실리콘 계산은 MIT 강의 자료의 기준값에 이 글의 도핑 가정을 대입한
           교육용 예입니다.
         </CitationBlock>
-      </section>
+</section>
 
-      <section id="count" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">1 cm³의 양쪽 수를 끝까지 셉니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="count" data-teach-level="5" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">9. 같은 조각의 많은 쪽과 적은 쪽을 계산합니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             조각 B의 전자가 10¹⁶개인 것은 알았습니다. 그렇다면 정공은 순수한
             조각 A처럼 10¹⁰개로 남을까요? 열평형에서 같은 재료·온도라면 전자
@@ -188,7 +189,7 @@ export default function BandsAndDopingArticle() {
           assumptions={["같은 실리콘과 300 K를 비교합니다.", "빛이나 외부 주입이 없는 열평형과 비축퇴 근사를 둡니다.", "도너가 거의 전부 이온화하고 보상 도핑이 없다고 둡니다."]}
           interpretation="조각 B에는 전자가 약 10¹⁶ cm⁻³, 정공이 약 10⁴ cm⁻³입니다. 전자가 10¹²배 많습니다."
         />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             전자가 많은 쪽을 <strong>다수 캐리어</strong>, 정공이 적은 쪽을
             <strong>소수 캐리어</strong>라고 부릅니다. 억셉터 10¹⁶ cm⁻³를
@@ -206,11 +207,16 @@ export default function BandsAndDopingArticle() {
           <p className="leading-7"><em>조각 B의 10¹⁶과 10⁴는 따로 외운 수가 아닙니다. 두 수의 곱이 같은 온도의 평형값 10²⁰이 됩니다.</em></p>
         </div>
         <CarrierCountViz />
-      </section>
+</section>
 
-      <section id="boundaries" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">전하 수만 알면 전류를 다 아는 것은 아닙니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="source" data-teach-level="6" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">10. 원문의 평형식과 중성 조건을 같은 사례에 대입합니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">MIT 강의안 9쪽은 열평형에서 <code>G₀=R₀</code>를 놓고 <code>n₀p₀=nᵢ²</code>로 연결합니다. 14쪽의 도너가 우세한 근사는 <code>n₀≈Nd, p₀≈nᵢ²/Nd</code>입니다. 원문의 예는 Nd=10¹⁷ cm⁻³입니다. 이 글은 같은 관계에 가정한 10¹⁶을 넣어 전자 약 10¹⁶과 정공 약 10⁴ cm⁻³를 얻었습니다.</p><p className="leading-7">중성 조건을 더 정확히 쓰면 완전히 이온화한 도너만 있는 균일한 벌크에서 <code>n=p+Nd</code>입니다. 따라서 n을 Nd와 정확히 같은 값이라고 쓰면 작은 p를 빠뜨립니다. 여기서는 10⁴가 10¹⁶보다 매우 작아 그 차이를 무시한 근사입니다.</p><p className="leading-7">억셉터 2×10¹⁵ cm⁻³도 함께 완전히 이온화했다면 <code>n+Na=p+Nd</code>입니다. 같은 근사에서 n≈Nd−Na=8×10¹⁵이고 p≈10²⁰/(8×10¹⁵)=1.25×10⁴ cm⁻³가 됩니다. 원자 개수를 더하는 대신 양·음 전하가 서로 보상하는 양을 뺍니다.</p><p className="leading-7">Wilson의 1931년 원문 460쪽은 “bands of allowed energies”와 “bands of disallowed energies”를 구분합니다. 그 문장은 가능한 에너지 상태의 구조를 설명합니다. 위의 300 K 농도 계산은 뒤의 강의안과 본문 가정을 연결한 것이며 Wilson 논문의 실리콘 측정값으로 읽지 않습니다.</p></div><CitationBlock source="MIT 6.012 Lecture 2 (2005), 9·13·14·17쪽" citeKey={4} href="https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/e1a94598c1fd641fc15636a9ad14de1a_lec2.pdf">원문의 열평형식과 충분히 이온화한 도너·억셉터 근사를 본문의 두 조각에 적용합니다. 보상 도핑과 가정 수치는 전하 중성 조건을 추가해 계산했습니다.</CitationBlock>
+</section>
+
+<section id="boundaries" data-teach-level="7" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">11. 온도·빛·이동도가 바뀌면 다시 확인할 것이 생깁니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             조각 B의 움직이는 전자가 백만 배라는 계산을 전도도도 정확히 백만
             배라는 말로 옮길 수 있을까요? 전류는 움직일 수 있는 수와, 같은
@@ -233,7 +239,7 @@ export default function BandsAndDopingArticle() {
           assumptions={["낮은 전기장에서 선형 응답을 봅니다.", "같은 온도와 같은 재료의 벌크 영역을 비교합니다.", "S/m를 얻으려면 cm⁻³로 적은 n과 p를 m⁻³로 변환합니다."]}
           interpretation="전자 농도가 같아도 이동도가 절반이면 전자 쪽 전도도 기여도 절반이 됩니다."
         />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             온도를 바꾸면 순수 농도 10¹⁰ cm⁻³부터 달라집니다. 아주 낮은
             온도에는 넣은 원자가 전자를 충분히 풀어 놓지 못할 수 있습니다.
@@ -242,17 +248,16 @@ export default function BandsAndDopingArticle() {
             앞의 평형값으로 고정해서도 안 됩니다.
           </p>
           <p className="leading-7">
-            관측으로 확인할 때는 온도, 넣은 원자의 수, 실제 이동 전하 농도,
-            전도도를 따로 잽니다. 농도가 예상과 다르면 이온화와 보상 도핑을,
-            농도는 맞는데 전도도가 다르면 이동도와 산란을 먼저 봅니다.
+            관측으로 확인할 때는 온도, 넣은 원자의 수, 실제 이동 전하 농도, 전도도를 따로 잽니다. 농도가 예상과 다르면 이온화와 보상 도핑을 농도는 맞는데 전도도가 다르면 이동도와
+            산란을 먼저 봅니다.
           </p>
           <p className="leading-7"><em>농도 계산을 마쳤어도 전류를 알려면 전하가 얼마나 잘 움직이는지와 온도를 더 확인해야 합니다.</em></p>
-        </div>
-      </section>
+        </div><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">다른 온도에서 순수 농도가 10¹³ cm⁻³라고 새로 <strong>가정</strong>해 보겠습니다. 도너가 계속 완전히 이온화하고 n≈10¹⁶인 열평형이라면 p≈(10¹³)²/10¹⁶=10¹⁰ cm⁻³입니다. 어느 실제 온도가 이 값을 주는지는 별도 자료가 필요합니다. 이동도도 같은 값으로 유지된다고 할 수 없습니다.</p><p className="leading-7">빛을 켠 상태에서는 전자·정공의 생성이 바깥 에너지를 받습니다. 시간에 따라 값이 일정하다는 관찰만으로 열평형이라고 할 수 없습니다. 조사 전후의 온도와 n·p를 비교하고 생성·재결합을 함께 확인해야 합니다. 접합의 위치별 농도도 균일한 벌크 한 값과 구분해야 합니다.</p></div>
+</section>
 
-      <section id="handoff" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">두 영역을 붙이면 경계에서 무슨 일이 생길까요</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="handoff" data-teach-level="7" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">12. 전하 수를 예측한 뒤 두 영역의 경계로 갑니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             도너를 넣은 영역에는 움직이는 전자가 많고, 억셉터를 넣은 영역에는
             정공이 많습니다. 다음에는 이 두 영역을 한 결정 안에서 맞닿게 해
@@ -261,12 +266,11 @@ export default function BandsAndDopingArticle() {
             어떻게 바꾸는지가 소자 글의 출발점입니다.
           </p>
           <ol className="space-y-2 leading-7">
-            <li>순수 상태에서 전자 하나가 움직이는 상태로 올라갈 때 함께 생기는 것은 무엇일까요? (답: 순수 상태 절)</li>
-            <li>도너 10¹⁶ cm⁻³를 넣은 조각에 정공이 약 10⁴ cm⁻³인 이유는 무엇일까요? (답: 1 cm³ 세기 절)</li>
-            <li>전자 수가 같아도 두 조각의 전도도가 다를 수 있는 이유는 무엇일까요? (답: 적용 범위 절)</li>
+            <li>순수 상태에서 전자 하나가 움직이는 상태로 올라갈 때 함께 생기는 것은 무엇일까요? (답: 7절)</li>
+            <li>도너 10¹⁶ cm⁻³를 넣은 조각에 정공이 약 10⁴ cm⁻³인 이유는 무엇일까요? (답: 9·10절)</li>
+            <li>전자 수가 같아도 두 조각의 전도도가 다를 수 있는 이유는 무엇일까요? (답: 11절)</li>
           </ol>
         </div>
-      </section>
-    </div>
-  );
+</section>
+</div>;
 }

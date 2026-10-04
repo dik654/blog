@@ -1,40 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ModernV2Viz from "./viz/ModernV2Viz";
-
-export default function FlashSwap() {
-  return (
-    <section id="flash-swap" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Flash callback과 TWAP도 마지막에는 관측 가능한 receipt가 필요하다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p><code>data.length&gt;0</code>인 swap은 output을 먼저 보내고 수신자의 callback을 실행합니다. Callback이 다른 거래·상환을 마치면 Pair가 balance 차이로 input을 계산하고 adjusted product를 검사합니다. 같은 token을 빌렸다 갚을 때 withdrawn amount 대비 유효 수수료는 정확히 0.3%가 아니라 3/997≈0.3009027%입니다.</p>
-      </div>
-      <ModernV2Viz mode="flash" />
-      <ExplainedFormula
-        question="두 cumulative price snapshot으로 5분 TWAP을 어떻게 계산할까요?"
-        idea="Pair는 이전 reserve 비율에 경과 시간을 곱해 누적합니다. 소비자는 서로 다른 두 시점의 누적값 차이를 실제 경과 시간으로 나눕니다."
-        formula={String.raw`P_{TWAP}=\frac{C(t_1)-C(t_0)}{t_1-t_0},\qquad C\leftarrow C+P_{old}\Delta t`}
-        annotatedFormula={String.raw`P_{TWAP}=\underbrace{\frac{C(t_1)-C(t_0)}{t_1-t_0},\qquad C\leftarrow C+P_{old}\Delta t}_{\text{기준량당 비율}}`}
-        operations={[
-          { expression: String.raw`\frac{C(t_1)-C(t_0)}{t_1-t_0},\qquad C\leftarrow C+P_{old}\Delta t`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Pair는 이전 reserve 비율에 경과 시간을 곱해","누적합니다."] },
-        ]}
-        terms={[
-          { symbol: "C", name: "cumulative price", description: "Q112.112 price×seconds 누적값입니다." },
-          { symbol: "P_old", name: "pre-update price", description: "해당 시간 구간 동안 유지됐다고 보는 이전 reserve 비율입니다." },
-          { symbol: "Δt", name: "elapsed seconds", description: "32-bit timestamp modular subtraction으로 구한 시간입니다." },
-        ]}
-        assumptions={["두 snapshot의 token order·Pair·cumulative direction이 같습니다.", "Oracle 소비자는 충분한 window, freshness, liquidity와 overflow-aware subtraction을 검증합니다."]}
-        interpretation="C가 1,200에서 1,800으로 늘고 300초가 지났다면 TWAP은 2입니다. Window가 0이면 나눌 수 없고, 얕은 풀을 짧은 window로 보면 한 block manipulation 비용이 충분하지 않을 수 있습니다."
-      />
-      <div id="uniswap-v2-release-gate" className="scroll-mt-24 prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Release gate</h3>
-        <p>
-            Core tag/SHA·factory/pair init-code hash·router version·token behavior profile을 receipt에 고정합니다.
-            zero liquidity, first mint, imbalanced mint, exact-in/out rounding, reserve edge, protocol fee
-            on/off, fee-on-transfer/rebase, callback underpayment·reentrancy, multi-hop min/max, stale
-            deadline, timestamp wrap과 short-window manipulation을 재생합니다. Candidate와 pinned source의
-            balances·reserves·LP supply·events·revert selector·cumulative price가 같아진 뒤 gas를 비교합니다.
-          </p>
-      </div>
-    </section>
-  );
-}
+import TeachCode from "./TeachCode";
+export default function FlashSwap(){return <div className="space-y-14 [&_section]:space-y-5 [&_h2]:text-2xl [&_h2]:font-bold [&_p]:leading-8">
+<section id="flash-swap" data-teach-level="7"><h2>14. 먼저 받은 토큰도 같은 호출 안에서 대가를 갚아야 합니다</h2><p>앞서 읽은 swap 코드에서 data가 비어 있지 않으면 출력을 먼저 보낸 뒤 수신자의 <code>uniswapV2Call</code>을 호출합니다. 수신자는 이 안에서 다른 거래를 수행하고 필요한 입력을 보냅니다. 이후 Pair가 실제 잔액과 수수료 반영 곱을 검사합니다. 이런 순서를 flash swap이라고 합니다.</p><p>예를 바꿔 같은 토큰100을 받아 같은 토큰으로 갚는 경우를 보겠습니다. 상환량을 q라 하면 수수료를 뺀0.997q가100 이상이어야 하므로 q≥100/0.997≈100.3009027입니다. 받은100 대비 비용 비율은 3/997≈0.3009027%입니다. 토큰 소수6자리라면 부족하지 않게100.300903으로 올려야 합니다.</p><ModernV2Viz mode="flash"/><p>100만 돌려주면 원금은 돌아왔어도 수수료 반영 조건이 부족해 실패합니다. 최상위 거래가 이 실패를 처리하지 않고 전파하면 그 안의 상태 변경도 되돌아갑니다. 호출을 감싼 바깥 계약이 실패를 잡는 구조라면 해당 실패한 호출 범위와 바깥 처리의 구분도 필요합니다. V2 Pair의 lock은 swap·mint 등의 재진입을 제한하지만 임의의 외부 토큰 동작이 모두 안전하다는 뜻은 아닙니다.</p><p>출력 전송·callback·잔액 읽기·조정 곱 검사는9절에서 연 실제 swap 원문159~186행의 순서입니다. 설명용 별도 코드를 실제 구현처럼 제시한 것이 아닙니다.</p></section>
+<section id="twap" data-teach-level="6"><h2>15. 누적 가격의 차이를 경과 시간으로 나눕니다</h2><p>Pair는 reserve를 갱신하기 전에 이전 reserve 비율에 지난 시간을 곱해 가격을 누적합니다. 외부 사용자는 서로 다른 시점의 누적값을 저장하고 그 차이를 시간으로 나누어 평균 가격을 얻습니다. 시간 가중 평균인 TWAP입니다. 현재 거래 한 번의 가격과 구분합니다.</p><ExplainedFormula question="누적값이1200에서1800으로 늘고300초가 지났다면 평균은 얼마인가요?" idea="구간에서 쌓인 가격×초를 초로 나누면 그 구간의 평균 가격이 됩니다." formula={String.raw`P_{TWAP}=\frac{C(t_1)-C(t_0)}{t_1-t_0},\qquad C\leftarrow C+P_{old}\Delta t`} annotatedFormula={String.raw`P_{TWAP}=\frac{\underbrace{C(t_1)-C(t_0)}_{\text{구간 가격 누적}}}{\underbrace{t_1-t_0}_{\text{경과 초}}}`} operations={[{expression:String.raw`P_{old}\Delta t`,annotation:"이전 reserve의 가격이 유지된 시간만큼 가격×초를 더합니다."},{expression:String.raw`C(t_1)-C(t_0)`,annotation:"누적값1800−1200=600에서 관심 구간에 해당하는 몫만 떼어 냅니다."},{expression:String.raw`600/300`,annotation:"300초에 걸친 평균 가격 2를 얻습니다."}]} terms={[{symbol:"C",name:"가격 누적값",description:"실제 구현은 UQ112.112 고정 소수점 가격에 초를 곱해 누적합니다."},{symbol:"P_{old}",name:"갱신 전 가격",description:"이전 두 reserve의 비율입니다."},{symbol:"\\Delta t",name:"경과 초",description:"32비트 시각의 모듈러 뺄셈으로 얻습니다."}]} assumptions={["1200과1800은 고정 소수점 배율을 제거한 설명용 값입니다.","같은 Pair와 가격 방향의 누적값을 비교하고 경과 시간은 양수여야 합니다."]} interpretation="평균은2입니다. 토큰 순서·소수 자릿수와 누적 배율을 맞춰야 하며 현재가가2이거나 어느 주문도2에 체결된다는 뜻은 아닙니다."/><TeachCode codeKey="twap" label="이전 가격·시간 누적 실제 원문"/><p>원문 _update는 이전 reserve로 누적한 다음 새 balance를 reserve에 저장합니다. 사용자는 최신성, 관측 구간, 풀의 자산 규모와 정수 넘침을 고려한 차이 계산을 확인해야 합니다. 구간0이면 나눌 수 없고 작은 풀의 짧은 구간은 가격을 움직이는 공격 비용이 낮을 수 있습니다. 구간을 길게 하면 변화를 늦게 반영하는 대가도 생깁니다.</p></section>
+<section id="uniswap-v2-release-gate" data-teach-level="7"><h2>16. 같은 입력에서 잔액과 실패 조건을 비교합니다</h2><p>다른 구현을 검토할 때는 core와 Router의 정확한 commit, Factory·Pair 주소와 생성 코드 해시, 토큰의 전송 규칙을 기록합니다. 처음 입금과 비율이 어긋난 입금, 원하는 입력·출력의 정수 반올림, 프로토콜 수수료의 켜짐·꺼짐을 나눠 검사합니다.</p><p>callback에서 부족하게 갚거나 재진입하는 경우, 전송 수수료와 잔액 자동 변경, 여러 풀을 거친 최저 수령량, 지난 기한,32비트 시각이 한 바퀴 도는 경계도 넣습니다. 같은 입력에서 실제 잔액과 reserve, LP 공급, 이벤트와 실패 사유, 누적 가격이 같은지 확인한 뒤 가스 사용량을 비교합니다. 이 글은 산술과 원문 대응을 확인했으며 실제 EVM에서 이 검수 목록 전체를 실행한 기록은 아닙니다.</p><p>이미 배포된 V2 core를 임의로 이전 버전으로 되돌릴 수 있다고 가정하지 않습니다. 새 Router나 별도 배포를 채택할 때 사용자의 승인·호출 경로를 확인하고 이전 경로를 유지할지, 사용을 중단할지 구분합니다.</p><ul className="list-disc space-y-3 pl-6"><li>A100을 넣고 B100을 빼 달라고 하면 수수료 반영 검사를 통과할까요? (답: 7절)</li><li>A100·B300을 넣은 추가 공급자는 LP15를 받아야 할까요? (답: 11절)</li><li>Flash swap으로 받은100만 그대로 돌려주면 충분할까요? (답: 14절)</li></ul></section>
+</div>}

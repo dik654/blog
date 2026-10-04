@@ -1,32 +1,3 @@
 import ModernV2Viz from "./viz/ModernV2Viz";
-
-export default function RouterSwap() {
-  return (
-    <section id="router-swap" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Router는 경로를 계산하지만 사용자가 실행 경계를 정한다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>Router는 각 hop의 reserve snapshot으로 <code>getAmountOut</code>을 연쇄 계산하고 토큰을 첫 Pair로 보냅니다. 그러나 block inclusion 전 다른 거래가 reserve를 바꿀 수 있으므로 quote는 서명이 아닙니다. 사용자는 path·recipient·<code>amountOutMin</code> 또는 <code>amountInMax</code>·deadline을 transaction에 넣어야 합니다.</p>
-      </div>
-      <ModernV2Viz mode="router" />
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[42rem] border-collapse text-sm">
-          <thead><tr className="border-b"><th className="p-3 text-left">경계</th><th className="p-3 text-left">막는 실패</th><th className="p-3 text-left">막지 못하는 것</th></tr></thead>
-          <tbody>
-            <tr className="border-b"><td className="p-3 font-semibold">amountOutMin</td><td className="p-3">허용치보다 나쁜 최종 output</td><td className="p-3">허용 범위 안의 MEV·gas 낭비</td></tr>
-            <tr className="border-b"><td className="p-3 font-semibold">deadline</td><td className="p-3">오래된 주문의 늦은 실행</td><td className="p-3">deadline 전 reserve 변화</td></tr>
-            <tr><td className="p-3 font-semibold">path·recipient</td><td className="p-3">다른 pair·수신자로의 의도 변경</td><td className="p-3">악성·fee-on-transfer·rebasing token 의미</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Token behavior는 invariant 바깥의 입력 계약이다</h3>
-        <p>
-            Pair는 callback 뒤 실제 balance로 입력을 관측하지만 Router가 중간 hop의 nominal amount를 다음 Pair에 그대로 전달한다고 가정하면
-            transfer fee가 있는 token에서 경로 계산이 어긋날 수 있습니다. “supportingFeeOnTransferTokens” 계열도 모든
-            rebasing·callback·blacklist token을 일반적으로 안전하게 만드는 보증이 아닙니다. Release fixture에는 nominal sent,
-            received balance delta, final recipient delta를 따로 기록합니다.
-          </p>
-      </div>
-    </section>
-  );
-}
+import TeachCode from "./TeachCode";
+export default function RouterSwap(){return <section id="router-swap" data-teach-level="7" className="mb-16 space-y-5 [&_p]:leading-8"><h2 className="text-2xl font-bold">13. 견적을 본 시점과 실행 시점의 잔액은 다를 수 있습니다</h2><p>7절의100 A 입력은 견적 시점에90.661089 B를 줍니다. 다른 거래가 먼저 실행되면 reserve가 바뀌어 받을 B도 달라집니다. Router는 실행 시점의 경로를 계산하고 사용자가 정한 <code>amountOutMin</code>보다 최종 출력이 작으면 거절합니다.</p><p>최저 수령량의 단순 예로 견적이100이고1% 하락까지만 허용한다면99입니다(가정). 실제90.661089 견적에 적용하는 경우에는 그 견적과 토큰 정수 단위로 다시 계산해야 합니다. 기한인 deadline은 너무 늦은 실행을 거절하고 path와 recipient는 교환 경로와 받을 주소를 정합니다. 출력 수량을 정한 거래는 최대 입력인 amountInMax를 사용합니다.</p><ModernV2Viz mode="router"/><TeachCode codeKey="router" label="실행 시점 최저 수령량 검사 실제 원문"/><p>코드의 실행 순서는 경로 수량 계산, 최저 수령량 검사, 첫 Pair로 입력 전달, 각 Pair의 swap입니다. 여러 풀을 거치면 한 풀의 출력이 다음 풀의 입력이 됩니다. 반환되는 견적 배열의 모든 값이 실제 수신량과 같다는 가정을 토큰별로 확인해야 합니다.</p><p>가령 사용자가100을 보내도 전송 수수료 때문에 첫 Pair에99만 도착하고 다음 수신자에게도 추가 차감이 있을 수 있습니다(가정). 사용자 전송량, Pair 잔액 증가, 최종 수신자 증가를 각각 기록합니다. SupportingFeeOnTransferTokens 계열도 자동 잔액 변경인 rebasing이나 임의의 callback·거래 차단 동작을 모두 안전하게 처리한다는 보장은 아닙니다.</p><p>최저 수령량은 허용 범위 안에서 앞뒤에 끼어드는 거래를 제거하지 않습니다. 기한도 그 전에 발생한 가격 변화를 막지 않습니다. 허용 조건과 보호하지 못하는 상황을 구분한 뒤 다음의 먼저 받고 나중에 갚는 경로를 보겠습니다.</p></section>}

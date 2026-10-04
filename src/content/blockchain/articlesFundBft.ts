@@ -19,11 +19,47 @@ export const fundamentalsArticles: Article[] = [
     title: "합의 알고리즘 비교",
     subcategory: "fundamentals",
     sections: [
-      { id: "overview", title: "개요" },
-      { id: "pow", title: "Proof of Work" },
-      { id: "pos", title: "Proof of Stake" },
-      { id: "comparison", title: "비교 분석" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 누가 보냈는지 알아도 어느 송금이 먼저인지는 남습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 참여 비용, 내용 검사, 기록 선택을 차례로 봅니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 네 참여자의 자원을 합하면 100입니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 후보를 만드는 사람과 그 후보를 확인하는 사람이 있습니다"
+  },
+  {
+    "id": "why-parts",
+    "title": "5. 이름 수로 투표하면 같은 사람이 표를 계속 늘립니다"
+  },
+  {
+    "id": "names",
+    "title": "6. PoW와 PoS는 영향력의 근거를 달리 정합니다"
+  },
+  {
+    "id": "trace",
+    "title": "7. 같은 X를 만들고 검사한 뒤 선택 근거를 모읍니다"
+  },
+  {
+    "id": "pow",
+    "title": "8. A의 이름이 100개여도 계산 몫 10%는 그대로입니다"
+  },
+  {
+    "id": "pos",
+    "title": "9. 지분 40은 매번 당첨된다는 뜻이 아닙니다"
+  },
+  {
+    "id": "comparison",
+    "title": "10. 자원 비용만으로 안전성과 속도를 함께 결론내릴 수 없습니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/consensus-mechanisms"),
   },
   {
@@ -99,11 +135,47 @@ export const bftArticles: Article[] = [
     title: "비잔틴 장애 모델 & 안전성 증명",
     subcategory: "bft-consensus",
     sections: [
-      { id: "overview", title: "비잔틴 장군 문제" },
-      { id: "byzantine-model", title: "비잔틴 장애 모델" },
-      { id: "safety-liveness", title: "안전성 vs 활성" },
-      { id: "faulty-threshold", title: "f < n/3 한계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 같은 사람이 양쪽에 다른 답을 보내도 기록은 하나여야 합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 제안을 받고, 서명을 확인하고, 충분한 동의를 모읍니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 네 명 중 한 명은 두 후보에 모두 동의할 수 있습니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 서명에는 사람뿐 아니라 주문과 단계가 함께 들어갑니다"
+  },
+  {
+    "id": "why-parts",
+    "title": "5. 기다리는 시간이 끝났다는 사실은 새 결정을 허용하는 증거가 아닙니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 비잔틴 장애 허용은 임의 행동의 범위를 먼저 정합니다"
+  },
+  {
+    "id": "byzantine-model",
+    "title": "7. 주문 7의 표를 발신자와 대상에 맞춰 셉니다"
+  },
+  {
+    "id": "faulty-threshold",
+    "title": "8. 두 묶음의 겹침에 정직한 사람이 남아야 합니다"
+  },
+  {
+    "id": "timing-source",
+    "title": "9. 통신이 늦어져도 안전성 조건은 지워지지 않습니다"
+  },
+  {
+    "id": "safety-liveness",
+    "title": "10. 대표를 바꿀 때도 이전 결정 근거를 이어받습니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/bft-theory"),
   },
   {

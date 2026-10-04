@@ -302,12 +302,12 @@ export function MomentumMemoryViz() {
     "같은 부호가 이어진 축은 velocity가 커지고 번갈아 나온 축은 서로 상쇄됩니다.",
     "β와 learning rate가 너무 크면 state가 늦게 꺾여 minimum을 지나칠 수 있어 trajectory를 측정해야 합니다.",
   ] as const;
-  const bars = [1, 0.72, 0.52, 0.37, 0.27];
+  const bars = Array.from({ length: 5 }, (_, age) => 0.9 ** age);
   return (
     <LessonScene
       id="momentum-memory-viz"
-      title="Noisy gradient를 velocity state로 압축"
-      description="현재 signal·EMA memory·방향 강화·overshoot 경계를 한 trajectory로 연결합니다."
+      title="β=.9인 과거 기여의 상대 크기 (가정)"
+      description="막대는 현재부터 네 단계 전까지의 상대 가중치 .9^j이며, 곡선과 화살표는 방향 변화의 개념도입니다."
       labels={labels}
       notes={notes}
     >
@@ -423,14 +423,14 @@ export function AdamStateViz() {
   const notes = [
     "Adam은 gradient의 방향 장부 m과 squared magnitude 장부 v를 서로 다른 decay로 갱신합니다.",
     "0에서 시작한 EMA는 초기에 작으므로 각각 1−β₁ᵗ와 1−β₂ᵗ로 나눕니다.",
-    "m̂을 √v̂+ε로 나누어 큰-history 좌표의 step은 줄이고 작은-history 좌표는 상대적으로 키웁니다.",
+    "m̂를 같게 두었을 때 v̂가 클수록 분모가 커져 이동량이 작아집니다. m̂도 함께 달라지는 경우는 따로 계산합니다.",
     "Moment dtype·step index·epsilon placement·skipped update를 고정해야 resume와 reference parity를 검사할 수 있습니다.",
   ] as const;
   return (
     <LessonScene
       id="adam-state-viz"
       title="Adam의 두 state와 coordinate-wise update"
-      description="Moment 생성에서 bias correction·preconditioning·release receipt까지 흐름을 봅니다."
+      description="두 장부와 초기 보정의 흐름을 봅니다. 아래 세 막대는 같은 m̂에서 분모가 달라지는 관계를 그린 개념도이며 측정값은 아닙니다."
       labels={labels}
       notes={notes}
     >

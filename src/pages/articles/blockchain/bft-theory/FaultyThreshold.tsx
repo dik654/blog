@@ -1,63 +1,11 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation-block";
 import FaultyThresholdViz from "./viz/FaultyThresholdViz";
-
-export default function FaultyThreshold() {
-  return (
-    <section id="faulty-threshold" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        3f+1과 2f+1은 honest signer가 겹치게 하는 산술이다
-      </h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          Equal-weight partial-synchrony BFT의 대표 설정은 전체 replica 수 <code>n=3f+1</code>,
-          Byzantine fault bound <code>f</code>, quorum size <code>q=2f+1</code>입니다. 두 quorum의
-          최소 교집합은 <code>2q-n=f+1</code>이고 Byzantine은 최대 f명이므로 교집합에 honest
-          replica가 적어도 한 명 있습니다.
-        </p>
-      </div>
-      <FaultyThresholdViz />
-      <ExplainedFormula
-        question="두 quorum이 왜 honest signer 한 명 이상을 공유할까?"
-        idea="두 집합의 크기 합에서 전체 membership을 빼면 최소 교집합이 나옵니다. 이 값이 fault bound보다 커야 겹친 signer를 전부 Byzantine으로 채울 수 없습니다."
-        formula={String.raw`\begin{aligned}
-          n&=3f+1,\qquad q=2f+1\\
-          |Q_1\cap Q_2|&\ge 2q-n=f+1>f
-        \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-          n&=\underbrace{3f+1,\qquad q=2f+1}_{\text{replicas 계산}}\\
-          |Q_1\cap Q_2|&\ge 2q-n=\underbrace{f+1>f}_{\text{허용 경계 판정}}
-        \end{aligned}`}
-        operations={[
-          { expression: String.raw`3f+1,\qquad q=2f+1`, annotation: ["replicas이(가) 식의 결과에 기여하는 방식을","계산합니다.","두 집합의 크기 합에서 전체 membership을 빼면 최소","교집합이 나옵니다."] },
-          { expression: String.raw`f+1>f`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","두 집합의 크기 합에서 전체 membership을 빼면 최소","교집합이 나옵니다."] },
-        ]}
-        terms={[
-          { symbol: "n", name: "replicas", description: "Equal-weight fixed membership의 전체 replica 수입니다." },
-          { symbol: "f", name: "fault bound", description: "Protocol이 허용하는 최대 Byzantine replica 수입니다." },
-          { symbol: "q", name: "quorum", description: "해당 phase certificate를 만드는 distinct valid signer 수입니다." },
-          { symbol: String.raw`Q_1,Q_2`, name: "certificates", description: "서로 충돌할 수 있는 두 phase certificate의 signer set입니다." },
-        ]}
-        assumptions={[
-          "모든 replica weight가 같고 membership과 f가 해당 instance에서 고정돼 있습니다.",
-          "Honest replica는 protocol이 금지한 conflicting phase·lock vote에 서명하지 않습니다.",
-        ]}
-        interpretation="f=1이면 n=4, q=3이고 두 quorum은 최소 2명 겹칩니다. Fault는 한 명뿐이므로 겹친 두 signer 중 적어도 한 명은 honest합니다."
-      />
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>산술은 protocol rule과 결합될 때 safety proof가 됩니다</h3>
-        <p>
-          Honest overlap이 있어도 honest replica가 phase·height를 구분하지 않거나 lock 없이 conflicting vote를 허용하면 두
-          certificate가 생길 수 있습니다. Signature set은 signer uniqueness, membership, message domain,
-          phase·view·height, value digest를 검증해야 합니다. Duplicate signature는 weight 한 번으로만 셉니다.
-        </p>
-        <h3>Weighted stake는 사람 수 대신 weight 합을 계산합니다</h3>
-        <p>
-          Stake-weighted protocol은 signer count가 아니라 total voting weight와 fault-weight bound를 사용합니다. 100개 key
-          중 한 운영자가 40% weight를 갖는다면 key 수가 분산돼 보여도 fault concentration은 40%입니다. 서로 다른 node가 threshold를 다르게
-          계산하지 않으려면 rounding·membership update·epoch boundary와 quorum certificate의 weight snapshot을 versioned
-          receipt로 고정해야 합니다.
-        </p>
-      </div>
-    </section>
-  );
-}
+export default function FaultyThreshold(){return <section id="faulty-threshold" data-teach-level="5" className="space-y-5 [&_p]:leading-8"><h2 className="text-2xl font-bold">8. 두 묶음의 겹침에 정직한 사람이 남아야 합니다</h2>
+<p>전체 n명 중 임의 행동을 하는 사람이 최대 f명이고 한 판정에 q명의 동의가 필요하다고 놓습니다. q명씩 두 묶음이 있으면 합계 2q에서 전체 인원 n을 뺀 만큼은 반드시 중복됩니다. 그 수가 f보다 커야 겹친 사람을 모두 거짓말하는 사람으로 채울 수 없습니다.</p>
+<FaultyThresholdViz />
+<ExplainedFormula question="두 결정의 서명자 중 정직한 사람이 반드시 겹치려면 몇 명이 필요할까요?" idea="두 집합의 합집합은 전체 n명을 넘지 않으므로 교집합은 최소 2q−n명입니다. 이 최소값이 장애 허용 수 f를 넘어야 합니다." formula={String.raw`|Q_1\cap Q_2|\ge 2q-n>f`} annotatedFormula={String.raw`|Q_1\cap Q_2|\ge\underbrace{2q-n}_{\text{두 묶음에서 반드시 겹치는 수}}>\underbrace{f}_{\text{모두 악의적일 수 있는 최대 수}}`} operations={[{expression:String.raw`2q-n`,annotation:["서명자 수 두 묶음을 더한 뒤 전체 명단 크기를 뺍니다."]},{expression:String.raw`f`,annotation:["겹친 집합의 전부를 장애 참여자로 채울 수 없는지 비교합니다."]}]} terms={[{symbol:"n",name:"전체 참여자",description:"같은 표 무게를 갖는 고정 명단의 크기입니다."},{symbol:"f",name:"장애 허용 수",description:"임의 행동을 하는 참여자의 최대 수입니다."},{symbol:"q",name:"필요 동의 수",description:"해당 판정에 필요한 서로 다른 유효 서명자 수입니다."}]} assumptions={["같은 명단·주문·단계의 서명을 비교합니다.","정직한 사람은 프로토콜이 금지한 모순된 서명이나 잠금 위반을 하지 않습니다."]} interpretation="n=4, f=1, q=3이면 6−4=2>1입니다. A·B·D와 B·C·D에는 B와 D가 겹칩니다. q=2면 최소 겹침은 0이라 정직한 겹침을 보장하지 못합니다." />
+<p>진행하려면 f명이 모두 침묵해도 나머지 n−f명만으로 필요한 q를 채울 수 있어야 하므로 q≤n−f입니다. 안전 조건 2q&gt;n+f와 함께 쓰면 2(n−f)&gt;n+f, 따라서 n&gt;3f가 됩니다. 최소 정수 설정은 n=3f+1, q=2f+1입니다. f=1에서는 네 명 중 세 명이라는 원래 사례로 돌아옵니다.</p>
+<div id="paper-dls-bft"><CitationBlock source="Dwork–Lynch–Stockmeyer (1988), Table I, p.291" citeKey={2} href="https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf"><p>원문 표의 인증된 Byzantine 장애와 부분 동기 통신 조건에는 최소 참여자 수 3t+1이 적혀 있습니다. 원문의 장애 수 t를 사례의 1로 놓으면 4입니다. 같은 표의 다른 동기성 조건에서는 결과가 달라지므로 3f+1을 모든 인증된 합의 모델에 적용하지 않습니다.</p></CitationBlock></div>
+<p>지분이 다른 참여자는 인원 대신 무게를 계산해야 합니다. 100개 키 중 한 운영자가 표 무게 40%를 통제하면 키 수의 분산으로 그 위험을 없앨 수 없습니다. 명단 변경 시점과 표 무게의 기준 상태, 경계에서의 반올림도 모두 같은 규칙으로 정해야 합니다.</p>
+<p>이 산술은 정직한 겹침의 필요 역할을 보여 줍니다. 서로 다른 진행 차수까지 안전하게 연결하는 방법은 다음 절의 원문과 실패 사례에서 확인합니다.</p></section>}

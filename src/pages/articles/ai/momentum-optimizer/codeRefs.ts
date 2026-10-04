@@ -1,27 +1,6 @@
 import type { CodeRef } from "@/components/code/types";
 import sgdPy from "./codebase/torch/optim/sgd.py?raw";
-
 export const codeRefs: Record<string, CodeRef> = {
-  "velocity-update": {
-    path: "torch/optim/sgd.py",
-    code: sgdPy,
-    lang: "python",
-    highlight: [8, 35],
-    desc: "문제: v_t=β v_{t-1}+g_t와 θ_{t+1}=θ_t-η v_t가 실제 tensor 연산으로 어떻게 계산되는지 확인해야 합니다.\n\n해결: PyTorch SGD의 _single_tensor_sgd가 momentum buffer를 mul_+add_로 갱신한 뒤 param에서 뺍니다.",
-    annotations: [
-      { lines: [20, 21], color: "sky", note: "article의 v_t=β v_{t-1}+g_t" },
-      { lines: [30, 35], color: "emerald", note: "article의 θ_{t+1}=θ_t-η v_t" },
-    ],
-  },
-  "nesterov-formulation": {
-    path: "torch/optim/sgd.py",
-    code: sgdPy,
-    lang: "python",
-    highlight: [23, 29],
-    desc: "문제: article이 이미 \"구현마다 look-ahead 적용 순서가 다르다\"고 경고한 대로, PyTorch의 nesterov=True가 실제로 classic 식과 어떻게 다른지 확인해야 합니다.\n\n해결: 실제 PyTorch는 θ_{t-1}-β v_{t-1} 지점에서 gradient를 다시 계산하지 않고, 방금 만든 v_t를 momentum 배율로 현재 gradient에 더하는 Sutskever formulation을 씁니다.",
-    annotations: [
-      { lines: [24, 28], color: "amber", note: "article의 classic Nesterov(θ_{t-1}-β v_{t-1}에서 gradient 재계산)와 다른 실제 구현 — 대수적으로 동등한 재구성" },
-      { lines: [29, 29], color: "violet", note: "grad + momentum·v_t — look-ahead gradient를 다시 구하지 않고 같은 효과를 냄" },
-    ],
-  },
+"velocity-update": {"path": "torch/optim/sgd.py","lang": "python","highlight": [354, 375],"desc": "PyTorch v2.8.0 @ ba56102387ef21a3b04b357e5b183d48f0afefc7. _single_tensor_sgd의 실제 원문입니다. momentum=.9, dampening=0, weight_decay=0, nesterov=False인 경우 buffer를 .9배 남기고 현재 gradient를 더한 뒤 parameter에서 lr배를 뺍니다.","annotations": [{"lines": [357, 361], "color": "sky", "note": "첫 호출은 현재 gradient의 복사본으로 buffer를 만듭니다. 다음부터 이전 buffer에 .9를 곱하고 새 gradient를 더합니다."}, {"lines": [365, 375], "color": "emerald", "note": "Nesterov가 꺼져 있으면 buffer를 갱신 방향으로 사용하며, scalar lr 경로에서 param.add_(grad, alpha=-lr)로 적용합니다."}],code:sgdPy},
+"nesterov-formulation": {"path": "torch/optim/sgd.py","lang": "python","highlight": [354, 369],"desc": "같은 고정 원문의 nesterov 분기입니다. 새 buffer를 .9배 해 현재 gradient에 추가합니다. 별도의 forward/backward를 다시 실행하는 코드가 아닙니다. 변수 정의와 시작 상태가 다른 수식을 비교할 때는 각 구현의 갱신 규칙을 그대로 따라야 합니다.","annotations": [{"lines": [360, 366], "color": "amber", "note": "g=−1, 새 buffer=.71이면 Nesterov 방향은 −1+.9×.71=−.361입니다. 일반 momentum 방향 .71과 부호도 달라집니다."}],code:sgdPy},
 };

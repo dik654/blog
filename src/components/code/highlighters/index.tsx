@@ -5,6 +5,7 @@ import PythonLine from "./PythonLine";
 import TypeScriptLine from "./TypeScriptLine";
 import CLine from "./CLine";
 import ScalaLine from "./ScalaLine";
+import SolidityLine from "./SolidityLine";
 
 const highlighters: Record<Lang, React.FC<{ text: string }>> = {
   rust: RustLine,
@@ -13,6 +14,7 @@ const highlighters: Record<Lang, React.FC<{ text: string }>> = {
   typescript: TypeScriptLine,
   c: CLine,
   scala: ScalaLine,
+  solidity: SolidityLine,
 };
 
 export default function CodeLine({ text, lang }: { text: string; lang: Lang }) {

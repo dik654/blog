@@ -103,12 +103,51 @@ export const ethereum2Articles: Article[] = [
     title: "롤업 기초: Optimistic vs ZK Rollup",
     subcategory: "eth-scaling",
     sections: [
-      { id: "glossary", title: "핵심 용어 & 배경 지식" },
-      { id: "overview", title: "개요 & L1 vs L2" },
-      { id: "optimistic", title: "Optimistic Rollup (사기 증명)" },
-      { id: "zk-rollup", title: "ZK Rollup (유효성 증명)" },
-      { id: "comparison", title: "Optimistic vs ZK 비교" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 계산을 나누되 다른 사람도 결과를 확인하게 합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 요청 수신·입력 공개·재계산·결과 채택으로 나눕니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 100에서 10을 보내고 5를 돌려받으면 95입니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 빠르게 답하는 사람과 검증할 자료를 남기는 사람을 나눕니다"
+  },
+  {
+    "id": "why-parts",
+    "title": "5. 계산 증명만 있어도 숨겨진 거래를 읽을 수는 없습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. L2 실행·데이터 가용성·L1 정산은 다른 책임입니다"
+  },
+  {
+    "id": "derivation",
+    "title": "7. 공개된 두 거래를 같은 순서로 복원합니다"
+  },
+  {
+    "id": "derivation-source",
+    "title": "8. 조각 번호가 이어지고 마지막 조각이 있어야 읽습니다"
+  },
+  {
+    "id": "optimistic",
+    "title": "9. 96이라는 주장을 두고 틀린 계산 지점을 좁힙니다"
+  },
+  {
+    "id": "validity",
+    "title": "10. 95로 이어지는 계산의 증명을 먼저 확인할 수도 있습니다"
+  },
+  {
+    "id": "comparison",
+    "title": "11. 누락·틀린 결과·기반 체인의 변경을 따로 검수합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/rollup-fundamentals"),
   },
   {

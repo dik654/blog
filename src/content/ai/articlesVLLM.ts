@@ -6,35 +6,55 @@ export const vllmServingArticles: Article[] = [
     title: "vLLM 입문: Continuous Batching부터 GPU 실행까지",
     subcategory: "ai-llm-serving",
     sections: [
-      {
-        id: "overview",
-        title: "온라인 request lifecycle과 latency 분해",
-        subsections: [
-          { id: "prefill-decode", title: "Prefill·decode 실행 단계" },
-        ],
-      },
-      {
-        id: "engine-loop",
-        title: "Iteration-level continuous batching",
-        subsections: [
-          { id: "paper-orca", title: "Orca의 iteration-level scheduling" },
-          {
-            id: "resource-feasibility",
-            title: "Token·sequence·KV hard budget",
-          },
-          { id: "paper-vllm", title: "vLLM·PagedAttention 원 논문의 핵심" },
-        ],
-      },
-      {
-        id: "serving-architecture",
-        title: "Engine 책임 경계와 GPU 확장",
-        subsections: [
-          { id: "v1-boundary", title: "vLLM V1의 state ownership" },
-          { id: "parallel-layout", title: "DP·TP·PP worker layout" },
-          { id: "serving-goodput", title: "SLO goodput 승인 기준" },
-        ],
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 짧은 답이 먼저 끝나면 다음 요청을 시작해야 합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 받고 고르고 계산하고 결과를 돌려줍니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 한 번에 4조각, 요청은 최대 2개를 처리합니다"
+  },
+  {
+    "id": "inside-engine",
+    "title": "4. 각 요청은 읽은 위치와 남겨 둔 기록이 다릅니다"
+  },
+  {
+    "id": "why-engine",
+    "title": "5. 처리할 양과 저장할 공간을 따로 제한해야 합니다"
+  },
+  {
+    "id": "engine-loop",
+    "title": "6. 요청 교체와 기록 저장을 서로 다른 역할로 봅니다"
+  },
+  {
+    "id": "request-trace",
+    "title": "7. B가 끝난 자리에 C가 들어옵니다"
+  },
+  {
+    "id": "scheduler-source",
+    "title": "8. 원문에서 남은 양을 자르고 저장 공간을 확인합니다"
+  },
+  {
+    "id": "latency-accounting",
+    "title": "9. A의 첫 출력 45ms와 전체 65ms를 나눠 읽습니다"
+  },
+  {
+    "id": "serving-architecture",
+    "title": "10. GPU 배치와 조건을 지킨 처리량을 따로 계산합니다"
+  },
+  {
+    "id": "serving-limits",
+    "title": "11. 가능한 배치가 좋은 지연을 보장하지는 않습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "12. 상한과 관측값을 바꾸면 무엇이 달라질까요"
+  }
+],
     component: () => import("@/pages/articles/ai/vllm-serving"),
   },
   {
@@ -124,48 +144,67 @@ export const vllmServingArticles: Article[] = [
     title: "vLLM Scheduler: Token Budget · Chunked Prefill · Preemption",
     subcategory: "ai-llm-serving",
     sections: [
-      {
-        id: "overview",
-        title: "Scheduler의 입력·출력 계약",
-        subsections: [{ id: "scheduler-boundary", title: "Policy와 memory의 책임 경계" }],
-      },
-      {
-        id: "queue-batching",
-        title: "Batching 세대·queue 정책·fairness·HOL·overhead",
-        subsections: [
-          { id: "batching-generations", title: "Static·dynamic·iteration-level batching" },
-          { id: "request-queue", title: "Request queue 와 queue discipline" },
-          { id: "scheduler-fairness", title: "Token 단위 fairness 와 VTC" },
-          { id: "hol-blocking", title: "Head-of-line blocking 의 두 자리" },
-          { id: "scheduler-overhead", title: "Scheduler overhead 와 async scheduling" },
-        ],
-      },
-      {
-        id: "schedule-method",
-        title: "Request progress와 한 GPU step",
-        subsections: [
-          { id: "running-waiting-order", title: "RUNNING·WAITING admission 순서" },
-          { id: "closed-loop-update", title: "Output update와 closed-loop" },
-        ],
-      },
-      {
-        id: "prefill-decode",
-        title: "Chunked prefill과 decode latency",
-        subsections: [
-          { id: "paper-sarathi", title: "Sarathi-Serve 원 논문의 핵심" },
-          { id: "scheduler-knobs", title: "Scheduler knob·metric ledger" },
-          { id: "workload-replay", title: "분포를 보존한 workload replay" },
-        ],
-      },
-      {
-        id: "preemption",
-        title: "KV pressure와 recomputation",
-        subsections: [
-          { id: "paper-fastserve", title: "FastServe의 preemption 설계 공간" },
-          { id: "preemption-diagnosis", title: "Preemption 원인 진단" },
-        ],
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 긴 입력을 받더라도 이미 쓰던 답을 이어 가야 합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 진행 상태와 예산을 받아 이번 계산 목록을 만듭니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 기존 요청에 1개씩 주면 새 입력에는 3개가 남습니다"
+  },
+  {
+    "id": "inside-scheduler",
+    "title": "4. 순서와 배정량, 저장 위치를 함께 기록합니다"
+  },
+  {
+    "id": "why-scheduler",
+    "title": "5. 처리 순서만 정해도 긴 작업의 독점은 남습니다"
+  },
+  {
+    "id": "queue-batching",
+    "title": "6. 언제 묶음을 바꾸는지와 누구를 먼저 보는지는 다릅니다"
+  },
+  {
+    "id": "schedule-method",
+    "title": "7. 5개 예산을 1·1·3으로 쓰고 결과로 위치를 바꿉니다"
+  },
+  {
+    "id": "scheduler-source",
+    "title": "8. 원문에서 12를 4로, 다시 3으로 줄이는 자리를 찾습니다"
+  },
+  {
+    "id": "prefill-decode",
+    "title": "9. 상한 4여도 12개 입력에 실제로 네 번이 필요합니다"
+  },
+  {
+    "id": "priority-order",
+    "title": "10. 작은 priority가 앞서도 공간 검사는 남습니다"
+  },
+  {
+    "id": "scheduler-fairness",
+    "title": "11. 요청 두 개와 입력 세 개가 같은 서비스를 뜻하지는 않습니다"
+  },
+  {
+    "id": "preemption",
+    "title": "12. 기록을 비운 뒤에는 실제 재사용한 양만 빼고 다시 계산합니다"
+  },
+  {
+    "id": "scheduler-overhead",
+    "title": "13. 겹친 5ms도 CPU 자원은 사용합니다"
+  },
+  {
+    "id": "scheduler-limits",
+    "title": "14. 평균 길이와 선점 횟수만으로 설정을 고르지 않습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "15. 남은 양과 시간의 의미를 먼저 예상해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/vllm-scheduler"),
   },
   {

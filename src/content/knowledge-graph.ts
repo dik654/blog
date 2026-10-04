@@ -3961,7 +3961,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "LLM serving latency decomposition",
     definition:
       "End-to-end generation latency를 frontend·queue·prefill에서 첫 token까지의 TTFT와 이후 token 사이의 ITL·TPOT로 나누어 병목 계층을 찾는 측정 계약입니다.",
-    canonicalHref: "/cs/ai/vllm-serving#prefill-decode",
+    canonicalHref: "/cs/ai/vllm-serving#latency-accounting",
   },
   "iteration-level-continuous-batching": {
     id: "iteration-level-continuous-batching",
@@ -4045,13 +4045,12 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/vllm-scheduler#closed-loop-update",
   },
   "chunked-prefill-interleaving": {
-    id: "chunked-prefill-interleaving",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Chunked prefill interleaving",
-    definition:
-      "긴 prompt prefill을 여러 token chunk로 나누고 ongoing decode token과 같은 iteration batch에 섞어 generation stall과 throughput·latency tradeoff를 조절하는 방법입니다.",
-    canonicalHref: "/cs/ai/vllm-scheduler#prefill-decode",
+    "id": "chunked-prefill-interleaving",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Chunked prefill interleaving",
+    "definition": "긴 입력을 여러 실행에 나눠 처리해 기존 decode를 사이에 배정할 수 있게 하는 방식입니다. 남은 입력 P와 조각 상한 c에서 ceil(P/c)는 조각 수의 하한이며, 전체 잔여 예산·블록 정렬 등으로 실제 배정량이 더 작으면 조각 수가 늘어납니다.",
+    "canonicalHref": "/cs/ai/vllm-scheduler#prefill-decode"
   },
   "scheduler-policy-starvation": {
     id: "scheduler-policy-starvation",
@@ -17619,24 +17618,30 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/vllm-scheduler#batching-generations",
   },
   "request-queue-discipline": {
-    id: "request-queue-discipline",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Request queue · queue discipline",
-    aliases: ["Request Queue", "Queue Discipline", "Waiting Queue Policy"],
-    definition:
-      "아직 자리를 받지 못한 요청이 기다리는 자료구조와 그 안의 검토 순서를 정하는 규칙으로, vLLM V1 은 FCFS 면 도착 순 deque 를, priority 면 (priority, arrival) heap 을 쓰며 preempt 된 요청도 같은 규칙으로 다시 꽂고, 실제 admission 은 세 예산이 따로 정합니다.",
-    canonicalHref: "/cs/ai/vllm-scheduler#request-queue",
+    "id": "request-queue-discipline",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Request queue · queue discipline",
+    "aliases": [
+      "Request Queue",
+      "Queue Discipline",
+      "Waiting Queue Policy"
+    ],
+    "definition": "대기 요청의 삽입·선택·재삽입 순서를 정하는 규칙입니다. 고정 vLLM 버전에서 FCFS의 새 요청은 뒤에, 선점 prepend는 앞에 들어가고 priority queue의 prepend는 우선순위 정렬로 다시 들어갑니다. 검토 순서와 실제 자원 수용 여부는 별개입니다.",
+    "canonicalHref": "/cs/ai/vllm-scheduler#request-queue"
   },
   "scheduler-fairness": {
-    id: "scheduler-fairness",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Scheduler fairness · per-client token share",
-    aliases: ["Scheduler Fairness", "Serving Fairness", "Virtual Token Counter"],
-    definition:
-      "여러 client 가 같은 engine 을 쓸 때 각 client 가 받는 service 의 몫을 요청 수가 아니라 처리한 input·output token 으로 재는 성질로, VTC 는 token counter 가 가장 작은 client 부터 admission 해 backlogged client 사이의 service 차이를 2× 안에 묶으면서 GPU 를 놀리지 않습니다.",
-    canonicalHref: "/cs/ai/vllm-scheduler#scheduler-fairness",
+    "id": "scheduler-fairness",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Scheduler fairness · per-client token share",
+    "aliases": [
+      "Scheduler Fairness",
+      "Serving Fairness",
+      "Virtual Token Counter"
+    ],
+    "definition": "사용자별로 받은 서비스의 몫을 명시한 단위·비용 함수·시간 구간에서 비교하는 성질입니다. 요청 수·가중 token·실제 GPU 시간은 서로 다른 지표입니다. VTC의 2×는 특정 조건의 서비스 절대 차이 상한과 이론 하한의 관계이며 사용자 간 서비스 비율의 보장이 아닙니다.",
+    "canonicalHref": "/cs/ai/vllm-scheduler#scheduler-fairness"
   },
   "scheduler-head-of-line-blocking": {
     id: "scheduler-head-of-line-blocking",
@@ -17649,14 +17654,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/vllm-scheduler#hol-blocking",
   },
   "scheduler-overhead": {
-    id: "scheduler-overhead",
-    kind: "metric",
-    domain: "distributed-systems",
-    label: "Scheduler overhead · CPU time per step",
-    aliases: ["Scheduler Overhead", "Scheduling Overhead"],
-    definition:
-      "Iteration 마다 running 순회·admission·SchedulerOutput 직렬화에 scheduler 가 CPU 에서 쓰는 시간으로, forward 와 직렬이면 step 주기에 더해지고 다음 step 의 scheduling 을 이번 forward 와 겹치면 둘 중 큰 쪽만 남으므로 CPU 시간이 GPU step 을 넘는 순간부터 CPU 가 주기를 정합니다.",
-    canonicalHref: "/cs/ai/vllm-scheduler#scheduler-overhead",
+    "id": "scheduler-overhead",
+    "kind": "metric",
+    "domain": "distributed-systems",
+    "label": "Scheduler overhead · CPU time per step",
+    "aliases": [
+      "Scheduler Overhead",
+      "Scheduling Overhead"
+    ],
+    "definition": "요청 선택·예산 계산·기록 조회·할당·실행 전달에 드는 CPU와 통신 비용입니다. GPU 계산과 완전히 겹치는 이상적인 정상 상태의 주기는 두 단계 시간의 최댓값이지만 실제 의존성·동기화·시작과 종료 비용이 더해질 수 있습니다.",
+    "canonicalHref": "/cs/ai/vllm-scheduler#scheduler-overhead"
   },
   "host-launch-overhead": {
     id: "host-launch-overhead",
@@ -19828,14 +19835,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/code-mode-runtime-contracts#execution-loop",
   },
   "tool-calling-lifecycle": {
-    id: "tool-calling-lifecycle",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Tool calling lifecycle",
-    aliases: ["Tool Calling", "Function Calling"],
-    definition:
-      "Model이 다음에 할 일을 자유 텍스트 대신 등록된 tool 하나를 골라 그 schema에 맞는 인자를 생성해 실행을 요청한 뒤, 그 결과를 검증해 다음 단계의 입력으로 되돌리는 select→generate→invoke→validate 순환이며, OpenAI는 function calling, Anthropic 등은 tool use라 부릅니다.",
-    canonicalHref: "/cs/ai/tool-calling-lifecycle-and-costs#problem",
+    "id": "tool-calling-lifecycle",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Tool calling lifecycle",
+    "aliases": [
+      "Tool Calling",
+      "Function Calling"
+    ],
+    "definition": "모델이 도구와 인자를 제안하고 실행 환경이 형식·권한을 확인한 뒤 기능을 실행해, 원 호출 식별자에 연결한 결과를 다음 판단으로 돌려주는 과정입니다. 사용자 애플리케이션에서 실행하는 client tool과 제공자 환경에서 실행하는 server tool을 구분합니다.",
+    "canonicalHref": "/cs/ai/tool-calling-lifecycle-and-costs#problem"
   },
   "tool-selection-and-routing": {
     id: "tool-selection-and-routing",
@@ -19848,14 +19857,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/tool-calling-lifecycle-and-costs#selection-and-routing",
   },
   "tool-argument-generation-and-invocation": {
-    id: "tool-argument-generation-and-invocation",
-    kind: "method",
-    domain: "computer-science",
-    label: "Tool argument generation · invocation",
-    aliases: ["Tool Argument Generation", "Tool Invocation"],
-    definition:
-      "선택된 tool의 JSON schema에 맞춰 model이 인자 값을 채우는 argument generation과, 그 인자를 실제 함수·API·서버 호출로 전달해 실행하는 invocation을 잇는 단계이며, 두 단계 모두 model이 아니라 host application이 마지막 실행을 담당합니다.",
-    canonicalHref: "/cs/ai/tool-calling-lifecycle-and-costs#argument-generation-and-invocation",
+    "id": "tool-argument-generation-and-invocation",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Tool argument generation · invocation",
+    "aliases": [
+      "Tool Argument Generation",
+      "Tool Invocation"
+    ],
+    "definition": "모델이 도구의 입력 형식에 맞춰 인자를 제안하는 단계와, 허용된 요청을 실제 함수·서비스에 적용하는 단계를 구분합니다. 형식 준수는 입력 값의 사실성·사용자 의도·권한을 보장하지 않으며, 실제 실행 위치는 client tool과 server tool에 따라 다릅니다.",
+    "canonicalHref": "/cs/ai/tool-calling-lifecycle-and-costs#argument-generation-and-invocation"
   },
   "tool-use-loop": {
     id: "tool-use-loop",
@@ -19868,14 +19879,17 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/tool-calling-lifecycle-and-costs#tool-use-loop",
   },
   "tool-context-cost": {
-    id: "tool-context-cost",
-    kind: "metric",
-    domain: "computer-science",
-    label: "Tool schema · result context cost",
-    aliases: ["Tool Schema Context Cost", "Tool Result Context Cost", "Tool Description"],
-    definition:
-      "등록된 tool의 이름·description·parameter schema가 매 요청마다 차지하는 tool schema context cost와, 실행 결과가 다음 요청에 다시 들어가며 차지하는 tool result context cost를 합친 token 비용이며, tool description은 이 schema cost를 구성하는 자연어 설명 부분입니다.",
-    canonicalHref: "/cs/ai/tool-calling-lifecycle-and-costs#context-cost",
+    "id": "tool-context-cost",
+    "kind": "metric",
+    "domain": "computer-science",
+    "label": "Tool schema · result context cost",
+    "aliases": [
+      "Tool Schema Context Cost",
+      "Tool Result Context Cost",
+      "Tool Description"
+    ],
+    "definition": "이번 모델 입력에 실제 포함한 도구 정의·설명·이전 호출과 결과가 차지하는 token 양입니다. 제공자의 별도 안내 입력이 더해질 수 있으며, 입력 부분합과 출력 token·캐시 단가·서버 도구 사용료를 포함한 최종 비용은 구분합니다.",
+    "canonicalHref": "/cs/ai/tool-calling-lifecycle-and-costs#context-cost"
   },
   "tool-error-handling-and-retry": {
     id: "tool-error-handling-and-retry",
@@ -20156,20 +20170,19 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/synthetic-data-and-data-flywheel#flywheel-loop",
   },
   "agent-reliability": {
-    id: "agent-reliability",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Agent reliability",
-    definition:
-      "한 번의 정답률이 아니라 여러 번 실행했을 때 실패가 나더라도 그 실패를 감지·분류하고 retry·checkpoint·human escalation으로 안전하게 마무리하는 비율로 agent 실행을 평가하는 관점입니다.",
-    canonicalHref: "/cs/ai/agent-failure-modes-and-recovery#problem",
+    "id": "agent-reliability",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Agent reliability",
+    "definition": "여러 조건과 반복 실행에서 작업을 요구한 범위 안에서 얼마나 일관되게 수행하는지 평가하는 관점입니다. 완료·실패 감지·복구·안전한 인계를 어떻게 세는지 먼저 명시해야 하며 하나의 보편적 비율로 고정하지 않습니다.",
+    "canonicalHref": "/cs/ai/agent-failure-modes-and-recovery#problem"
   },
   "agent-failure-mode-taxonomy": {
-    id: "agent-failure-mode-taxonomy",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Agent failure mode",
-    aliases: [
+    "id": "agent-failure-mode-taxonomy",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Agent failure mode",
+    "aliases": [
       "Compounding Error",
       "Long-Horizon Drift",
       "Goal Drift",
@@ -20177,38 +20190,34 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Tool Misuse",
       "Invalid Tool Call",
       "Tool Hallucination",
-      "Premature Termination",
+      "Premature Termination"
     ],
-    definition:
-      "Agent 실행 로그에서 반복해 관찰되는 실패를 목표 자체가 밀리는 goal drift, 앞선 근거를 잊는 context drift, tool을 스키마·상태에 맞지 않게 부르는 tool misuse(invalid tool call·tool hallucination이 대표 mechanism), verifier 통과 없이 스스로 완료를 선언하는 premature termination으로 나눈 분류입니다. Compounding error와 long-horizon drift는 goal·context drift가 실제로 관찰되는 두 축을 가리키는 이름입니다.",
-    canonicalHref: "/cs/ai/agent-failure-modes-and-recovery#failure-taxonomy",
+    "definition": "목표 이탈·근거와 제약 상실·도구 오용·확인하지 않은 결과 생성·검사 전 종료처럼 관측 가능한 실패의 모습을 구분합니다. 초기 오류가 뒤로 전파되는 현상과 긴 작업의 이탈은 여러 실패 유형에서 생길 수 있으며, 논문별 taxonomy 이름과 운영 분류를 동일시하지 않습니다.",
+    "canonicalHref": "/cs/ai/agent-failure-modes-and-recovery#failure-taxonomy"
   },
   "retry-loop": {
-    id: "retry-loop",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Retry loop",
-    definition:
-      "실패로 보이는 action을 감지한 뒤 같은 action을 다시 시도하는 절차로, action이 idempotent하지 않으면 재시도가 부작용을 중복시켜 infra 성격 실패에만 안전하게 적용해야 하는 복구 경로입니다.",
-    canonicalHref: "/cs/ai/agent-failure-modes-and-recovery#retry-idempotent",
+    "id": "retry-loop",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Retry loop",
+    "definition": "실패 조건·안전한 반복 가능성·횟수와 시간 상한을 확인하고 작업을 다시 시도하는 절차입니다. 외부 실행 여부가 불명확하면 조회가 비었다는 사실만으로 미실행이라 단정하지 않으며, 서버의 중복 방지 계약 없이 새 업무 키로 반복하지 않습니다.",
+    "canonicalHref": "/cs/ai/agent-failure-modes-and-recovery#retry-idempotent"
   },
   "idempotent-action": {
-    id: "idempotent-action",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Idempotent action",
-    definition:
-      "같은 요청을 몇 번 다시 보내도 실제 효과가 한 번 실행한 것과 정확히 같이 남는 action의 성질로, idempotency key로 첫 요청의 결과를 저장해 후속 재시도에 그대로 돌려주는 방식으로 인위적으로 만들 수도 있습니다.",
-    canonicalHref: "/cs/ai/agent-failure-modes-and-recovery#retry-idempotent",
+    "id": "idempotent-action",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Idempotent action",
+    "definition": "동일한 요청을 반복했을 때 의도한 효과가 한 번 실행한 경우와 같다는 성질입니다. 로그 횟수와 응답까지 같아야 하는 것은 아니며, 키에 의한 중복 방지는 서버가 보장하는 범위·동일 인자·키 보존 조건에서 성립합니다.",
+    "canonicalHref": "/cs/ai/agent-failure-modes-and-recovery#retry-idempotent"
   },
   "side-effect-control": {
-    id: "side-effect-control",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Side-effect control",
-    definition:
-      "되돌리기 어려운 action이 검토 없이 실행되지 않도록 dry-run으로 변경 예상 결과를 먼저 보여주고 confirmation gate로 사람 승인을 받은 뒤에만 실제 실행을 진행하는 사전 통제입니다.",
-    canonicalHref: "/cs/ai/agent-failure-modes-and-recovery#side-effect-control",
+    "id": "side-effect-control",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Side-effect control",
+    "definition": "외부 상태 변경 전에 대상·범위·권한·현재 조건을 확인하고 필요한 승인과 실행 기록을 연결하는 통제입니다. Dry-run은 예상 효과를 보여 주지만 실행 시점의 상태 확인이나 실제 복구를 대신하지 않습니다.",
+    "canonicalHref": "/cs/ai/agent-failure-modes-and-recovery#side-effect-control"
   },
   "recovery-and-checkpointing": {
     id: "recovery-and-checkpointing",

@@ -21,10 +21,13 @@ export const transformersTree: FileNode = d("transformers", [
     ),
   ]),
   d("src/transformers", [
+    f("trainer.py — 누적 창 수집", "transformers/src/transformers/trainer.py", "ga-collect-window"),
     f(
-      "trainer.py — get_batch_samples",
+      "trainer.py — 유효 위치 수 집계",
       "transformers/src/transformers/trainer.py",
       "ga-num-items-in-batch",
     ),
   ]),
 ]);
+
+export const sgdTree: FileNode = d("torch", [d("optim", [f("sgd.py — scalar SGD", "torch/optim/sgd.py", "sgd-basic")])]);

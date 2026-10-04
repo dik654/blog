@@ -1,40 +1,9 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { CitationBlock } from "@/components/ui/citation";
+import { CitationBlock } from "@/components/ui/citation-block";
 import ModernV2Viz from "./viz/ModernV2Viz";
-
-export default function PairContract() {
-  return (
-    <section id="pair-contract" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Pair는 reserve와 LP share를 별도 회계로 보존한다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>Factory는 정렬된 token0/token1로 Pair를 하나만 만들고, Pair는 reserve·cumulative price·LP totalSupply를 관리합니다. LP가 토큰을 먼저 전송한 뒤 <code>mint</code>를 호출하면 balance−reserve가 입금량이 됩니다. 초기에는 기하평균에서 <code>MINIMUM_LIQUIDITY</code>를 영구 잠그고, 이후에는 두 reserve 비율 중 작은 share만 발행합니다.</p>
-      </div>
-      <ModernV2Viz mode="pair" />
-      <ExplainedFormula
-        question="기존 LP를 희석하지 않으면서 새 LP share를 몇 개 발행해야 할까요?"
-        idea="입금이 기존 reserve 비율보다 한쪽으로 치우치면 부족한 쪽이 실제로 더해진 유동성을 제한합니다. 그래서 두 비례 몫의 최솟값을 사용합니다."
-        formula={String.raw`S_{mint}=\min\!\left(\frac{\Delta xS}{x},\frac{\Delta yS}{y}\right),\qquad S_{initial}=\sqrt{\Delta x\Delta y}-S_{min}`}
-        annotatedFormula={String.raw`S_{mint}=\underbrace{\min\!\left(\frac{\Delta xS}{x},\frac{\Delta yS}{y}\right),\qquad S_{initial}=\sqrt{\Delta x\Delta y}-S_{min}}_{\text{기준량당 비율}}`}
-        operations={[
-          { expression: String.raw`\min\!\left(\frac{\Delta xS}{x},\frac{\Delta yS}{y}\right),\qquad S_{initial}=\sqrt{\Delta x\Delta y}-S_{min}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","입금이 기존 reserve 비율보다"] },
-        ]}
-        terms={[
-          { symbol: "S", name: "existing total supply", description: "Mint 직전 발행된 LP token 총량입니다." },
-          { symbol: "S_min", name: "locked minimum liquidity", description: "초기 가격 조작과 division edge를 줄이려고 zero address에 영구 잠근 양입니다." },
-          { symbol: "Δx,Δy", name: "deposited balances", description: "실제 token balances와 이전 reserves의 차이입니다." },
-        ]}
-        assumptions={["입금 전 reserve와 totalSupply가 같은 Pair snapshot에 속합니다.", "Fee-on-transfer·rebasing token은 balance delta와 사용자 의도가 달라질 수 있어 별도 adapter 검증이 필요합니다."]}
-        interpretation="x=1,000,y=2,000,S=100이고 Δx=100,Δy=300이면 두 몫은 10과 15라 10 share만 발행됩니다. 15를 발행하면 기존 LP를 희석합니다. 최초 1,000×4,000 입금은 √4,000,000=2,000에서 S_min을 뺍니다."
-      />
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Protocol fee는 swap마다 0.05%를 전송하지 않는다</h3>
-        <p>V2 tag v1.0.1에서 <code>feeTo</code>가 켜졌을 때만 mint/burn 시점의 √k 증가분으로 LP token을 feeTo에 mint합니다. 식은 <code>S·(√k−√kLast)/(5√k+√kLast)</code>입니다. 꺼져 있으면 trader의 0.3%가 reserve에 남아 기존 LP에게 귀속되고 <code>kLast</code>가 0으로 정리됩니다. 따라서 “항상 0.25% LP + 0.05% 직접 송금”이라는 구현 설명은 틀립니다.</p>
-      </div>
-      <div id="paper-uniswap-v2-core-source" className="scroll-mt-24">
-        <CitationBlock source="Uniswap v2-core v1.0.1 · UniswapV2Pair.sol" href="https://github.com/Uniswap/v2-core/blob/d2bfbb3649b265559bec74a7dd878dc1cf01c63c/contracts/UniswapV2Pair.sol" citeKey={2}>
-          문제: Pair reserve·mint/burn·swap·fee·accumulator를 EVM에서 실행합니다. 기여: balance-delta input, adjusted K check, minimum liquidity와 fee-on LP mint의 정확한 source seam을 제공합니다. 전제: v1.0.1 tag commit d2bfbb3649b2와 Solidity 0.5.16 의미를 고정합니다. 근거 범위: 이 snapshot의 Pair 구현입니다. 비주장: 주변 Router·토큰별 transfer semantics·현재 배포 주소를 자동으로 고정하지 않습니다.
-        </CitationBlock>
-      </div>
-    </section>
-  );
-}
+import TeachCode from "./TeachCode";
+export default function PairContract(){return <div className="mb-16 space-y-14 [&_section]:space-y-5 [&_h2]:text-2xl [&_h2]:font-bold [&_p]:leading-8">
+<section id="pair-contract" data-teach-level="6"><h2>11. 새 지분은 두 입금 비율 중 작은 쪽으로 정합니다</h2><p>교환과 달리 자산을 맡기는 사람은 LP 지분을 받습니다. 예를 바꿔 reserve가 A1000·B2000이고 기존 LP 공급을100이라고 합시다(가정). A100·B300을 직접 넣으면 A 기준 입금 비율은 10%, B 기준은15%입니다. 더 적게 넣은 A가 지분을 제한하므로 새 LP는10입니다. 초과한 B100까지 자동으로 돌려주는 mint 경로가 아니므로 일반 Router는 먼저 맞는 입금 비율을 계산합니다.</p><ModernV2Viz mode="pair"/><ExplainedFormula question="한쪽만 많이 넣고 지분을 과하게 받지 않으려면 어떻게 할까요?" idea="각 자산의 입금 비율에 기존 LP 공급을 곱한 뒤 작은 쪽을 새 지분으로 택합니다." formula={String.raw`S_{mint}=\min(\Delta xS/x,\Delta yS/y)`} annotatedFormula={String.raw`S_{mint}=\min(\underbrace{\Delta xS/x}_{\text{A가 뒷받침하는 지분}},\underbrace{\Delta yS/y}_{\text{B가 뒷받침하는 지분}})`} operations={[{expression:String.raw`\Delta xS/x`,annotation:"기존 A의10%를 추가했으면 기존 공급 100의10%인10 지분을 계산합니다."},{expression:String.raw`\Delta yS/y`,annotation:"기존 B의15%를 추가했으면15 지분을 계산합니다."},{expression:String.raw`\min(10,15)`,annotation:"부족한 자산이 뒷받침하는10만 발행해 기존 지분을 과도하게 희석하지 않습니다."}]} terms={[{symbol:"S",name:"기존 LP 공급",description:"프로토콜 수수료 지분 발행을 처리한 뒤의 총공급입니다."},{symbol:"\\Delta x,\\Delta y",name:"실제 입금",description:"현재 토큰 잔액과 이전 reserve의 차이입니다."}]} assumptions={["각 잔액과 LP 공급은 같은 시점에 속하며 예제는 읽기 쉽게 단위를 정규화했습니다.","프로토콜 수수료 추가 발행이 없는 예이며 정수 구현은 내림합니다."]} interpretation="두 계산 결과가10과15이면10을 택합니다. 사용자가 전송했다고 주장하는 양이 아니라 실제 balance 차이를 사용합니다."/>
+<p>최초 입금에는 기존 지분 비율이 없습니다. 코드는 <code>sqrt(amount0×amount1)−MINIMUM_LIQUIDITY</code>를 입금자에게 발행하고 최소량 1000 raw LP를 영구 잠급니다. A1000·B4000의 기하평균은2000입니다. 두 토큰을 소수6자리로 표시하고 LP도 여기서만 1000000 raw를 한 표시 단위로 정하면 입금자 몫은2000−0.001=1999.999입니다. 실제 LP 메타데이터의 소수 자릿수와 이 설명용 표시 단위를 혼동하면 안 됩니다.</p><TeachCode codeKey="mint" label="최초·추가 지분 발행 실제 원문"/><p>위 예의 S=100은100 raw LP라는 뜻이 아닙니다. 최소 잠금량보다 작은 실제 총공급을 가정하지 않도록 표시 단위를 구분했습니다. 지분을 태워 자산을 빼는 burn은 현재 실제 잔액에서 자기 지분 비율만큼 두 자산을 돌려줍니다.</p></section>
+<section id="protocol-fee" data-teach-level="6"><h2>12. 프로토콜 수수료는 지분 발행으로 반영합니다</h2><p>V2의 선택적 프로토콜 수수료는 매 교환마다0.05%를 별도 주소로 전송하는 방식이 아닙니다. Factory의 feeTo가 설정돼 있으면 mint·burn 시점에 이전 기록보다 증가한 √k를 바탕으로 feeTo에 새 LP 지분을 발행합니다.</p><ExplainedFormula question="늘어난 풀 가치 중 프로토콜 몫을 얼마의 지분으로 나타낼까요?" idea="현재 유동성 척도√k와 지난 기록√kLast의 차이를 구하고 새로 발행할 지분이 포함된 비율에 맞춰 나눕니다." formula={String.raw`S_{fee}=\frac{S(\sqrt{k}-\sqrt{k_{last}})}{5\sqrt{k}+\sqrt{k_{last}}}`} annotatedFormula={String.raw`S_{fee}=\frac{S\underbrace{(\sqrt{k}-\sqrt{k_{last}})}_{\text{유동성 척도 증가}}}{\underbrace{5\sqrt{k}+\sqrt{k_{last}}}_{\text{새 지분을 반영한 분모}}}`} operations={[{expression:String.raw`\sqrt{k}-\sqrt{k_{last}}`,annotation:"같은 기준에서 현재 풀과 마지막 유동성 변경 직후의 성장분을 구합니다."},{expression:String.raw`S(\sqrt{k}-\sqrt{k_{last}})`,annotation:"성장분을 기존 LP 공급 단위로 환산할 분자를 만듭니다."},{expression:String.raw`5\sqrt{k}+\sqrt{k_{last}}`,annotation:"성장분의1/6 몫을 새 지분 발행으로 배분하도록 조정한 분모입니다."}]} terms={[{symbol:"k",name:"현재 reserve의 곱",description:"두 자산 잔액의 곱입니다."},{symbol:"k_{last}",name:"이전 유동성 변경 기준",description:"수수료가 켜진 상태의 mint·burn 뒤 기록입니다."},{symbol:"S",name:"기존 LP 공급",description:"프로토콜 지분 발행 직전 총공급입니다."}]} assumptions={["feeTo가0이 아니고 kLast가0이 아니며 현재 √k가 이전보다 클 때 계산합니다.","예제는 각 단위를 일관되게 정규화하며 실제 정수 나눗셈은 내림합니다."]} interpretation="S1000,√k1100,√kLast1000이면1000×100/(5500+1000)≈15.384615 LP입니다. 이 수는 교환량의0.05%를 직접 송금한 값이 아닙니다."/><TeachCode codeKey="protocolFee" label="프로토콜 지분 계산 실제 원문"/><p>수수료가 꺼져 있고 kLast가 남아 있으면 해당 함수는 kLast를0으로 정리합니다. 다음 수수료 계산에서 꺼져 있던 기간의 기록을 잘못 이어 쓰지 않도록 구분합니다.</p><div id="paper-uniswap-v2-core-source"><CitationBlock source="Uniswap v2-core v1.0.1 · commit 4dd5906, UniswapV2Pair.sol" citeKey={2} href="https://github.com/Uniswap/v2-core/blob/4dd59067c76dea4a0e8e4bfdda41877a6b16dedc/contracts/UniswapV2Pair.sol"><p>원문 _mintFee와 mint·burn의 호출 순서를 확인합니다. v1.0.1의 tag 객체 d2bfbb3은 이 commit을 가리킵니다. Solidity0.5.16 의미와 라이선스를 포함해 원본을 보존했으며 현재 배포의 feeTo 설정은 별도로 확인해야 합니다.</p></CitationBlock></div></section>
+</div>}

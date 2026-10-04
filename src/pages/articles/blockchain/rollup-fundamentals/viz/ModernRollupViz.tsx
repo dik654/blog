@@ -1,58 +1,15 @@
-const steps = [
-  { n: "01", title: "사용자 요청", detail: "L2 트랜잭션·L1 deposit" },
-  { n: "02", title: "L1 데이터", detail: "batch·blob·inbox event" },
-  { n: "03", title: "결정적 derivation", detail: "같은 입력 → 같은 payload" },
-  { n: "04", title: "L2 실행", detail: "state root·receipt 계산" },
-  { n: "05", title: "정산", detail: "fault 또는 validity proof" },
-] as const;
-
-export function RollupPipelineViz() {
-  return (
-    <figure data-viz="rollup-derivation-flow" className="not-prose my-8 min-w-0 rounded-xl border border-border/70 bg-card p-4 sm:p-6">
-      <figcaption className="mb-5">
-        <p className="text-sm font-semibold text-foreground">Rollup의 세 경계를 한 흐름으로 보기</p>
-        <p className="mt-1 text-xs leading-5 text-muted-foreground">데이터를 올리는 일, 그 데이터로 L2를 재현하는 일, 결과를 정산하는 일은 서로 다른 책임입니다.</p>
-      </figcaption>
-      <div className="grid min-w-0 gap-3 md:grid-cols-5">
-        {steps.map((step, index) => (
-          <div key={step.n} className="relative min-w-0 rounded-lg border border-border bg-background p-4">
-            <span className="text-[11px] font-semibold tracking-[0.12em] text-primary">{step.n}</span>
-            <p className="mt-2 break-keep text-sm font-semibold text-foreground">{step.title}</p>
-            <p className="mt-1 break-words text-xs leading-5 text-muted-foreground">{step.detail}</p>
-            {index < steps.length - 1 && <span aria-hidden className="absolute -bottom-3 left-1/2 -translate-x-1/2 text-muted-foreground md:-right-3 md:bottom-auto md:left-auto md:top-1/2 md:translate-x-0 md:-translate-y-1/2">→</span>}
-          </div>
-        ))}
-      </div>
-    </figure>
-  );
-}
-
-const rows = [
-  ["기본 가정", "출력은 일단 유효", "출력은 proof가 검증되면 유효"],
-  ["오류를 막는 장치", "challenge + fault proof", "validity proof verifier"],
-  ["결과 확정 지연", "challenge window 영향", "proof 생성·L1 포함 영향"],
-  ["반드시 별도로 필요한 것", "입력 데이터의 availability", "입력 데이터의 availability"],
-] as const;
-
-export function ProofComparisonViz() {
-  return (
-    <figure data-viz="rollup-proof-comparison" className="not-prose my-8 min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card">
-      <figcaption className="border-b border-border/70 p-4 sm:p-6">
-        <p className="text-sm font-semibold text-foreground">Optimistic와 validity rollup을 같은 축에서 비교</p>
-        <p className="mt-1 text-xs leading-5 text-muted-foreground">둘의 차이는 실행 위치가 아니라 잘못된 state transition을 L1이 배제하는 증거 방식입니다.</p>
-      </figcaption>
-      <div className="overflow-x-auto p-4 sm:p-6">
-        <div className="min-w-[660px] overflow-hidden rounded-lg border border-border">
-          <div className="grid grid-cols-[1.1fr_1fr_1fr] bg-muted/50 text-xs font-semibold text-foreground">
-            <div className="p-3">비교 축</div><div className="border-l border-border p-3">Optimistic</div><div className="border-l border-border p-3">Validity</div>
-          </div>
-          {rows.map(([axis, optimistic, validity]) => (
-            <div key={axis} className="grid grid-cols-[1.1fr_1fr_1fr] border-t border-border text-xs leading-5">
-              <div className="p-3 font-medium text-foreground">{axis}</div><div className="border-l border-border p-3 text-muted-foreground">{optimistic}</div><div className="border-l border-border p-3 text-muted-foreground">{validity}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </figure>
-  );
-}
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+const scenes=[
+ {label:"송금 접수",input:"T1: A → B 10 / T2: B → A 5",state:"A: 100 → 90 → 95",result:"처리자의 빠른 응답",detail:"아직 다른 참여자가 L1 데이터에서 재현했다고 확인한 상태는 아닙니다."},
+ {label:"자료 누락",input:"조각 1 도착, 마지막 표시 있음",state:"조각 0이 빠짐",result:"전체 입력을 읽지 못함",detail:"끝 번호를 안다는 사실과 그 앞의 자료를 모두 갖고 있다는 사실은 다릅니다."},
+ {label:"입력 복원",input:"같은 채널의 조각 0과 1",state:"번호순 연결 → T1, T2",result:"A=95, B=5 재계산",detail:"같은 앞선 상태와 규칙으로 실행해 결과를 대조합니다. 조각의 도착 순서로 송금 순서를 바꾸지 않습니다."},
+ {label:"결과 검증",input:"발표한 결과 A=96",state:"재계산한 A=95와 다름",result:"잘못된 주장을 거절",detail:"어떤 계약이 어떤 증거로 거절할지는 fault proof 또는 validity proof의 규칙으로 정합니다."},
+]as const;
+export function RollupPipelineViz(){const state=useAnimatedScenes(scenes.length),s=scenes[state.active];return <div data-viz="rollup-case" data-viz-keyboard tabIndex={0} onKeyDown={state.onKeyDown} className="not-prose min-w-0 rounded-lg border border-border p-4 sm:p-6"><p className="mb-4 font-semibold">두 송금의 입력과 결과를 따라가기</p><div data-viz-canvas className="h-[29rem] min-w-0 overflow-auto sm:h-[25rem]"><p className="text-xs text-muted-foreground">받은 입력</p><p className="mt-2 break-words text-sm leading-7">{s.input}</p><svg aria-hidden="true" className="mx-auto my-4 h-6 w-8" viewBox="0 0 32 24"><path d="M16 1V22M10 16L16 22L22 16" fill="none" stroke="currentColor" strokeWidth="1"/></svg><div className="border border-border p-4"><p className="text-xs text-muted-foreground">확인할 상태</p><p className="mt-3 break-words font-semibold">{s.state}</p></div><div className="mt-4 border border-primary/40 p-4"><p className="break-words font-semibold">{s.result}</p><p className="mt-3 text-sm leading-7" aria-live="polite">{s.detail}</p></div></div><AnimatedSceneControls labels={scenes.map(x=>x.label)} {...state}/></div>}
+const rows=[
+ {axis:"잘못된 96을 배제하는 방식",optimistic:"95를 재현한 참여자가 이의를 제기하고 정해진 게임으로 오류를 판정합니다.",validity:"지정된 계산이 95로 이어진다는 증명을 계약이 확인합니다."},
+ {axis:"정산까지 기다리는 요인",optimistic:"주장과 이의 제기 기간, 분쟁 응답과 L1 포함 시간을 확인합니다.",validity:"증명 생성과 L1 포함, 계약의 추가 정산 조건을 확인합니다."},
+ {axis:"별도로 확인할 조건",optimistic:"검증 자료에 접근할 수 있고 필요한 참여자가 기간 안에 이의를 제기할 수 있어야 합니다.",validity:"검증 프로그램과 공개 입력이 올바르게 연결되고 상태를 복원할 자료를 얻을 수 있어야 합니다."},
+]as const;
+export function ProofComparisonViz(){return <figure className="not-prose rounded-lg border border-border p-4 sm:p-6"><figcaption className="mb-5 font-semibold">같은 95 결과에 도달하는 두 검증 방식</figcaption><dl className="space-y-6">{rows.map(r=><div key={r.axis} className="border-t border-border pt-4"><dt className="font-semibold">{r.axis}</dt><dd className="mt-3 text-sm leading-7"><strong>Optimistic:</strong> {r.optimistic}</dd><dd className="mt-3 text-sm leading-7"><strong>Validity:</strong> {r.validity}</dd></div>)}</dl></figure>}

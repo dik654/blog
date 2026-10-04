@@ -44,7 +44,7 @@
     {
       "route": "blockchain/aave-v3",
       "title": "Aave V3: utilization·index·health·liquidation",
-      "status": "unreviewed",
+      "status": "rewritten-awaiting-global-integration",
       "publicEntry": "src/pages/articles/blockchain/aave-v3.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/aave-v3.tsx",
@@ -67,19 +67,86 @@
           "Aave V3 reserve는 liquidity·debt·risk configuration을 한 실행 경계로 묶는다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존본문은reserve·scaled balance·index·utilization·HF를사례앞에한문단으로압축했습니다.",
+        "숫자예는따로있었지만풀전체와한차입자를구분해계속추적하지않았습니다.",
+        "원문링크만있고실제지수·이율·HF·청산분기에숫자를대입한코드패널이없었습니다.",
+        "식연산주석은일반문구였고현재원문의공급floor/부채ceil·virtualUnderlyingBalance차이를설명하지않았습니다."
+      ],
+      "fixture": {
+        "pool": "supply10000/debt8000/available2000;Cdebt7000/otherdebt1000",
+        "collateral": "C100units at$100→$80;LT80%;LTV75% hypothetical",
+        "results": {
+          "rates80": {
+            "U": "0.8",
+            "borrow": "0.06",
+            "supply": "0.0432"
+          },
+          "rates90": {
+            "U": "0.9",
+            "borrow": "0.435",
+            "supply": "0.35235"
+          },
+          "withUnbacked1000": {
+            "U": "0.8",
+            "borrow": "0.06",
+            "supply": "0.039272727272727272727272727"
+          },
+          "compoundApproximation": {
+            "0.1": {
+              "ray": 1105166666666666666666666667,
+              "decimal": "1.105166666666666666666666667",
+              "exactExp": "1.10517091807564762481170782649024666822454719473751871879286"
+            },
+            "1": {
+              "ray": 2666666666666666666666666666,
+              "decimal": "2.666666666666666666666666666",
+              "exactExp": "2.71828182845904523536028747135266249775724709369995957496697"
+            }
+          },
+          "HFbefore": "1.14285714285714285714285714285714285714285714285714285714286",
+          "HFafter": "0.914285714285714285714285714285714285714285714285714285714286",
+          "HFpartial": "0.926666666666666666666666666666666666666666666666666666666667",
+          "collateralSeize80": "13.125",
+          "collateralSeize100": "10.50",
+          "execution": "Independent integer/Decimal checks, not EVM execution"
+        }
+      },
+      "stageEvidence": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "parts",
+        "2": "why-parts",
+        "3": "names",
+        "4": "account-trace",
+        "5": "atoken-debt",
+        "6": "index-source;interest-rate;rate-source;liquidation",
+        "7": "close-factor;efficiency-mode;aave-v3-release-gate"
+      },
+      "sourceEvidence": [
+        {
+          "source": "aave-v3-origin cff15de6d1271b0c800fc001f4aea4c263e8a597",
+          "section": "TokenMath66–70/108–112,MathUtils79–83,rate strategy124–169,GenericLogic156–173,LiquidationLogic259–282",
+          "application": "6actualSoliditypanels with supply1050/debt7560/rate6%/supply4.32%/HF0.914/close-factor conditional example",
+          "original": "Unmodified source, projectLICENSE(BUSL1.1)andper-fileSPDXretained; exactcommitPINNED.md;noactualdeploymentassertion"
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "All5originalmodules+vizread;samepool/accountstory,exactexistingderivationspreservedandsourcebranchesadded",
+        "arithmetic": "/tmp/teach-all/chains-arithmetic-aave.json independently computes ray products, cubic approximation, rates,HFandseize; caughtandcorrectedexp(.1)numerictypo",
+        "humanize": "/tmp/teach-all/humanize-aave-final/summary.json five modules gate0 and roundtrip; formula/source/viz props manually reviewed",
+        "browser390": "output/playwright/teach-chains-batch7/summary.json no overflow/narrow/KaTeX/anchor/console errors;5viz×3statescontrolshift0;6Soliditypanelsopened;mobilevizvisuallyinspected",
+        "browser1440": "same report:5viz×3statescontrolshift0;6panelsopened",
+        "prose": "global re-review0 /tmp/teach-all/chains-aave-prose-final.log",
+        "formula": "global strict missing0 /tmp/teach-all/chains-formula-final.log",
+        "typecheck": "/tmp/teach-all/chains-tsc-6.log tsc-b PASS",
+        "viz": "exactModernAaveVizstrictPASS",
+        "execution": "Source reading and independent arithmetic only, not actualEVM Pool execution"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "root learning/TOC/evidence integration and strict learning audit",
+        "global build and publication"
       ]
     },
     {
@@ -230,7 +297,7 @@
     {
       "route": "blockchain/bft-theory",
       "title": "비잔틴 장애 모델 & 안전성 증명",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/bft-theory.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/bft-theory.tsx",
@@ -251,19 +318,79 @@
           "\n        View change는 lock evidence를 버리는 재시작이 아니다\n      "
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "부품 이름과 영어 약어가 작은 사례보다 먼저 등장했습니다.",
+        "여러 절의 수치와 규칙 설명이 한 요청의 추적으로 연결되지 않았습니다.",
+        "원문 식·문구에 같은 사례를 대입하는 부분과 답 절이 있는 예측 질문이 없었습니다."
+      ],
+      "fixture": {
+        "n": 4,
+        "f": 1,
+        "q": 3,
+        "minIntersection": 2,
+        "badTwoVoteIntersection": [
+          "D"
+        ],
+        "availability": 3
+      },
+      "stageEvidence": {
+        "overview": "1. 같은 사람이 양쪽에 다른 답을 보내도 기록은 하나여야 합니다",
+        "black-box": "2. 제안을 받고, 서명을 확인하고, 충분한 동의를 모읍니다",
+        "case": "3. 네 명 중 한 명은 두 후보에 모두 동의할 수 있습니다",
+        "parts": "4. 서명에는 사람뿐 아니라 주문과 단계가 함께 들어갑니다",
+        "why-parts": "5. 기다리는 시간이 끝났다는 사실은 새 결정을 허용하는 증거가 아닙니다",
+        "names": "6. 비잔틴 장애 허용은 임의 행동의 범위를 먼저 정합니다",
+        "byzantine-model": "7. 주문 7의 표를 발신자와 대상에 맞춰 셉니다",
+        "faulty-threshold": "8. 두 묶음의 겹침에 정직한 사람이 남아야 합니다",
+        "timing-source": "9. 통신이 늦어져도 안전성 조건은 지워지지 않습니다",
+        "safety-liveness": "10. 대표를 바꿀 때도 이전 결정 근거를 이어받습니다"
+      },
+      "sourceEvidence": [
+        "DLS1988 p290 안전성 문구와 p291 Table I의3t+1에 n4/f1 대입; Byzantine Generals 실제Microsoft PDF 확인. PBFT 원문 재접속 실패 표시."
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "manually rewritten; arithmetic/protocol boundaries preserved",
+        "arithmetic": "independent sets and weighted arithmetic passed",
+        "humanize": "BFT4863 chars gate0; consensus four body files independently under5000 chars gate0; PoSFlowViz prop-only strings manually reviewed (extractor empty warning not a pass)",
+        "prose": "global strict no re-review signals after text improvement",
+        "browser": [
+          {
+            "route": "blockchain/bft-theory",
+            "width": 390,
+            "pageOverflow": false,
+            "narrow": [],
+            "katexErrors": [],
+            "brokenAnchors": [],
+            "interactions": [
+              {
+                "states": 0,
+                "maxControlShift": null
+              }
+            ],
+            "code": [],
+            "errors": []
+          },
+          {
+            "route": "blockchain/bft-theory",
+            "width": 1440,
+            "pageOverflow": false,
+            "narrow": [],
+            "katexErrors": [],
+            "brokenAnchors": [],
+            "interactions": [
+              {
+                "states": 0,
+                "maxControlShift": null
+              }
+            ],
+            "code": [],
+            "errors": []
+          }
+        ],
+        "learning": "Strict registration and anchor audit PASS for 3 routes /tmp/teach-all/chains-learning-2.log"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "global build and publication"
       ]
     },
     {
@@ -933,7 +1060,7 @@
     {
       "route": "blockchain/consensus-mechanisms",
       "title": "합의 알고리즘 비교",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/consensus-mechanisms.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/consensus-mechanisms.tsx",
@@ -954,19 +1081,84 @@
           "\n        PoW는 찾기 어렵고 검증하기 쉬운 hash lottery다\n      "
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "부품 이름과 영어 약어가 작은 사례보다 먼저 등장했습니다.",
+        "여러 절의 수치와 규칙 설명이 한 요청의 추적으로 연결되지 않았습니다.",
+        "원문 식·문구에 같은 사례를 대입하는 부분과 답 절이 있는 예측 질문이 없었습니다."
+      ],
+      "fixture": {
+        "weights": [
+          10,
+          20,
+          30,
+          40
+        ],
+        "total": 100,
+        "votesABD": 70,
+        "70passes": true,
+        "60passes": false,
+        "powProbability": 0.0625,
+        "expectedTrials": 16,
+        "toySeconds": 0.16
+      },
+      "stageEvidence": {
+        "overview": "1. 누가 보냈는지 알아도 어느 송금이 먼저인지는 남습니다",
+        "black-box": "2. 참여 비용, 내용 검사, 기록 선택을 차례로 봅니다",
+        "case": "3. 네 참여자의 자원을 합하면 100입니다",
+        "parts": "4. 후보를 만드는 사람과 그 후보를 확인하는 사람이 있습니다",
+        "why-parts": "5. 이름 수로 투표하면 같은 사람이 표를 계속 늘립니다",
+        "names": "6. PoW와 PoS는 영향력의 근거를 달리 정합니다",
+        "trace": "7. 같은 X를 만들고 검사한 뒤 선택 근거를 모읍니다",
+        "pow": "8. A의 이름이 100개여도 계산 몫 10%는 그대로입니다",
+        "pos": "9. 지분 40은 매번 당첨된다는 뜻이 아닙니다",
+        "comparison": "10. 자원 비용만으로 안전성과 속도를 함께 결론내릴 수 없습니다"
+      },
+      "sourceEvidence": [
+        "Bitcoin§4 작업량 문구와§5내용검사; consensus-specs889a389 phase0 weigh_justification_and_finalization의70×3≥100×2 원문 적용"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "manually rewritten; arithmetic/protocol boundaries preserved",
+        "arithmetic": "independent sets and weighted arithmetic passed",
+        "humanize": "BFT4863 chars gate0; consensus four body files independently under5000 chars gate0; PoSFlowViz prop-only strings manually reviewed (extractor empty warning not a pass)",
+        "prose": "global strict no re-review signals after text improvement",
+        "browser": [
+          {
+            "route": "blockchain/consensus-mechanisms",
+            "width": 390,
+            "pageOverflow": false,
+            "narrow": [],
+            "katexErrors": [],
+            "brokenAnchors": [],
+            "interactions": [
+              {
+                "states": 0,
+                "maxControlShift": null
+              }
+            ],
+            "code": [],
+            "errors": []
+          },
+          {
+            "route": "blockchain/consensus-mechanisms",
+            "width": 1440,
+            "pageOverflow": false,
+            "narrow": [],
+            "katexErrors": [],
+            "brokenAnchors": [],
+            "interactions": [
+              {
+                "states": 0,
+                "maxControlShift": null
+              }
+            ],
+            "code": [],
+            "errors": []
+          }
+        ],
+        "learning": "Strict registration and anchor audit PASS for 3 routes /tmp/teach-all/chains-learning-2.log"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "global build and publication"
       ]
     },
     {
@@ -1009,7 +1201,7 @@
     {
       "route": "blockchain/crypto-theory",
       "title": "암호학 프리미티브 이론",
-      "status": "rewritten-awaiting-global-integration",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/crypto-theory.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/crypto-theory.tsx",
@@ -1059,54 +1251,12 @@
           "gate": 0,
           "roundTrip": true
         },
-        "browser": [
-          {
-            "route": "blockchain/crypto-theory",
-            "width": 390,
-            "pageOverflow": false,
-            "narrow": [],
-            "katexErrors": [],
-            "brokenAnchors": [],
-            "interactions": [
-              {
-                "states": 0,
-                "maxControlShift": null
-              },
-              {
-                "states": 4,
-                "maxControlShift": 0
-              }
-            ],
-            "code": [],
-            "errors": []
-          },
-          {
-            "route": "blockchain/crypto-theory",
-            "width": 1440,
-            "pageOverflow": false,
-            "narrow": [],
-            "katexErrors": [],
-            "brokenAnchors": [],
-            "interactions": [
-              {
-                "states": 0,
-                "maxControlShift": null
-              },
-              {
-                "states": 4,
-                "maxControlShift": 0
-              }
-            ],
-            "code": [],
-            "errors": []
-          }
-        ],
-        "sourceRevision": "see sourceEvidence"
+        "browser": "390/1440 final checks passed; EVM table at 280px minimum shows all four columns; CodeSidebar 8 opens passed",
+        "sourceRevision": "see sourceEvidence",
+        "learning": "strict registered 3-route check passed after root merge"
       },
       "remaining": [
-        "root의 catalog 목차·learning 답 section 등록 병합",
-        "병합 뒤 learning 엄격 검사 및 전역 build",
-        "최종 통합 화면 재검사"
+        "전역 통합 검수·build·배포"
       ]
     },
     {
@@ -1533,7 +1683,7 @@
     {
       "route": "blockchain/evm-fundamentals",
       "title": "EVM 완전 분석: 스택 머신에서 인터프리터까지",
-      "status": "rewritten-awaiting-global-integration",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/evm-fundamentals.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/evm-fundamentals.tsx",
@@ -1585,88 +1735,12 @@
           "gate": 0,
           "roundTrip": true
         },
-        "browser": [
-          {
-            "route": "blockchain/evm-fundamentals",
-            "width": 390,
-            "pageOverflow": false,
-            "narrow": [],
-            "katexErrors": [],
-            "brokenAnchors": [],
-            "interactions": [
-              {
-                "states": 0,
-                "maxControlShift": null
-              },
-              {
-                "states": 5,
-                "maxControlShift": 0
-              }
-            ],
-            "code": [
-              {
-                "button": "{ } 초기 실행 상태 원문",
-                "opened": true
-              },
-              {
-                "button": "{ } 현재 바이트를 명령으로 선택",
-                "opened": true
-              },
-              {
-                "button": "{ } 실제 add 함수 35–48행",
-                "opened": true
-              },
-              {
-                "button": "{ } 예외·REVERT·상태 복구 원문",
-                "opened": true
-              }
-            ],
-            "errors": []
-          },
-          {
-            "route": "blockchain/evm-fundamentals",
-            "width": 1440,
-            "pageOverflow": false,
-            "narrow": [],
-            "katexErrors": [],
-            "brokenAnchors": [],
-            "interactions": [
-              {
-                "states": 0,
-                "maxControlShift": null
-              },
-              {
-                "states": 5,
-                "maxControlShift": 0
-              }
-            ],
-            "code": [
-              {
-                "button": "{ } 초기 실행 상태 원문",
-                "opened": true
-              },
-              {
-                "button": "{ } 현재 바이트를 명령으로 선택",
-                "opened": true
-              },
-              {
-                "button": "{ } 실제 add 함수 35–48행",
-                "opened": true
-              },
-              {
-                "button": "{ } 예외·REVERT·상태 복구 원문",
-                "opened": true
-              }
-            ],
-            "errors": []
-          }
-        ],
-        "sourceRevision": "see sourceEvidence"
+        "browser": "390/1440 final checks passed; EVM table at 280px minimum shows all four columns; CodeSidebar 8 opens passed",
+        "sourceRevision": "see sourceEvidence",
+        "learning": "strict registered 3-route check passed after root merge"
       },
       "remaining": [
-        "root의 catalog 목차·learning 답 section 등록 병합",
-        "병합 뒤 learning 엄격 검사 및 전역 build",
-        "EVM 도식 모바일 폭 추가 교정 뒤 재검사"
+        "전역 통합 검수·build·배포"
       ]
     },
     {
@@ -3382,7 +3456,7 @@
     {
       "route": "blockchain/node-architecture",
       "title": "이더리움 실행 노드: EL·CL과 Engine API 경계",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/ethereum/node-architecture.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/node-architecture.tsx",
@@ -3400,19 +3474,57 @@
           "Client reply는 canonical durable state를 재구성한 뒤에만 낸다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "이전 본문은 EL·CL·Engine 상태 이름을 구체 사례 앞에 제시했습니다.",
+        "송금의 실제 비용과 잔액, 자료 부족·유효성·선택의 동일 후보 추적이 없었습니다.",
+        "본문에서 실제 원문 코드 분기와 사례를 대입하지 않았습니다.",
+        "기존 보관 Reth 파일은 표시한 commit과 불일치하여 해당 원본 파일을 다시 받았습니다."
+      ],
+      "fixture": {
+        "previous": "H100: A=100 ETH, B=0 ETH",
+        "candidate": "H101: send 10 ETH, gas 21000 at 2 Gwei",
+        "fee": "0.000042 ETH",
+        "after": "A=89.999958, B=10",
+        "choice": "head H101, safe H99, finalized H96; example ancestor chain"
+      },
+      "stageEvidence": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "parts",
+        "2": "why-parts",
+        "3": "names",
+        "4": "el-cl-boundary",
+        "5": "wire-source",
+        "6": "implementation",
+        "7": "payload-state;release"
+      },
+      "sourceEvidence": [
+        {
+          "source": "execution-apis 5aebdfdd45cadeb723be4bd45b4611b71c8b1c85",
+          "section": "paris.md PayloadStatusV1/ForkchoiceStateV1",
+          "application": "payload.blockHash=H101 maps to latestValidHash, independently head/safe/finalized",
+          "original": "copied unmodified with LICENSE and PINNED.md; Paris base contract, not latest method advice"
+        },
+        {
+          "source": "Reth 88505c7fcbfdebfd3b56d88c86b62e950043c6c4",
+          "section": "tree/mod.rs 789–811,1127–1146",
+          "application": "missing H100→SYNCING, valid/repeated H101→VALID, separate forkchoice paths",
+          "original": "downloaded from exact commit; LICENSE-MIT/APACHE; two actual CodeSidebar panels"
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "Original full body and rewrites read; abstract claims replaced by same numeric transaction",
+        "arithmetic": "Decimal: 21000*2/1e9=0.000042;100−10−0.000042=89.999958",
+        "humanize": "/tmp/teach-all/humanize-node-final/summary.json, 3936 characters, roundtrip=true, gate=0; visualization string props manually reviewed",
+        "browser390": "output/playwright/teach-chains-batch3/summary.json; no overflow/narrow/KaTeX/anchor/console errors; four states shift 0; both panels opened; screenshot visually read",
+        "browser1440": "same report; four states shift 0; both panels opened",
+        "viz": "exact ModernNodeArchitectureViz.tsx strict PASS",
+        "execution": "Not a live Reth execution; arithmetic and source branch correspondence only",
+        "learning": "Strict registration and anchor audit PASS for 3 routes /tmp/teach-all/chains-learning-2.log"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "global build and publication"
       ]
     },
     {
@@ -5477,7 +5589,7 @@
     {
       "route": "blockchain/rollup-fundamentals",
       "title": "롤업 기초: Optimistic vs ZK Rollup",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/rollup-fundamentals.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/rollup-fundamentals.tsx",
@@ -5496,19 +5608,57 @@
           "Proof 이름보다 실패 경로를 같은 축으로 비교한다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 본문은 execution·DA·settlement와 sequencer·batcher를 전체 구조·사례보다 먼저 열거했습니다.",
+        "쇼핑몰 비유 뒤 실제로 계속 따라갈 수치 사례와 명세 필드 대입이 없었습니다.",
+        "기존 이분 탐색식 연산 주석은 로그의 구체적 이유를 설명하지 않았습니다.",
+        "원문 링크는 있었지만 조각 누락과 결과 판정에 적용하지 않았고 마지막 문단은 기초6+심화4 항목 나열이었습니다."
+      ],
+      "fixture": {
+        "transactions": "A100/B0;T1 A→B10;T2 B→A5; A100→90→95/B0→10→5",
+        "badClaim": "A96 differs from recomputed A95",
+        "frames": "same channel 0,1; frame1 is_last=1; missing0 blocks reading; 23+100=123 bytes/frame; two frames+version byte=247, excluding transaction envelope",
+        "bisection": "1024→512→256→128→64→32→16→8→4→2→1;10 rounds;1e6→20 rounds"
+      },
+      "stageEvidence": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "parts",
+        "2": "why-parts",
+        "3": "names",
+        "4": "derivation",
+        "5": "derivation-source",
+        "6": "optimistic;validity",
+        "7": "comparison"
+      },
+      "sourceEvidence": [
+        {
+          "source": "OP Stack specs f7cefd23a79e072ea90e033dae5d2e3685d0f10c",
+          "section": "protocol/derivation.md Frame Format and Reading",
+          "application": "actual field equation applied to missing frame0/closing frame1 and 23-byte metadata",
+          "original": "unmodified two documents with CC0 LICENSE and PINNED.md"
+        },
+        {
+          "source": "same commit fault-proof/index.md Epilogue",
+          "section": "output-root equality → exit0, otherwise1",
+          "application": "recomputed95-root vs96claim; output-root includes more than state-root; toy bisection not exact deployed game"
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "Full original article and dedicated visualization read and rewritten; same ledger and frame failure followed to original spec",
+        "arithmetic": "100−10+5=95;0+10−5=5;16+2+4+1=23;2*(23+100)+1=247;ceil(log2(1024))=10;ceil(log2(1e6))=20",
+        "humanize": "/tmp/teach-all/humanize-rollup-final/summary.json 4494 characters, gate0, roundtrip true; visualization prop strings manually reviewed",
+        "browser390": "output/playwright/teach-chains-batch4/summary.json no overflow/narrow/KaTeX/anchor/console errors,4states control shift0; final formula rerender tested, screenshot visually inspected",
+        "browser1440": "same report,4states shift0",
+        "viz": "exact ModernRollupViz.tsx strict PASS",
+        "prose": "global re-review0 in chains-rollup-prose.log",
+        "execution": "Numeric calculations and original rule application; no actual OP node or dispute game executed",
+        "formula": "Global strict audit after explicit domain annotation: missing0, PASS",
+        "learning": "Strict registration audit PASS for2routes /tmp/teach-all/chains-learning-3.log"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "global build and publication"
       ]
     },
     {
@@ -5598,7 +5748,7 @@
     {
       "route": "blockchain/stablecoin-overview",
       "title": "스테이블코인 개요 — 4가지 유형 & 안정성 메커니즘",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/stablecoin-overview.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/stablecoin-overview.tsx",
@@ -5616,19 +5766,60 @@
           "채택은 ‘페그 유지’ 한 줄이 아니라 발행·상환·stress·복구 증거 묶음으로 결정한다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 0.97달러 사례는 있었지만 발행·시장 매수·실제 상환까지 돈과 토큰이 움직이는 과정을 설명하지 않았습니다.",
+        "준비금형·암호담보형·알고리즘형을 영어 경계 용어로 압축했습니다.",
+        "가격 이탈 수식의 주석은 일반 정규화 설명이었고 실제 약관 문구에 자격 조건을 대입하지 않았습니다.",
+        "마지막은 release 용어와 문제 개수만 나열해 독자가 결과를 예측할 질문이 없었습니다."
+      ],
+      "fixture": {
+        "redemption": "S target1/market0.97;10000*S buy9700/redeem10000/cost100/net200, assumptions explicitly conditional",
+        "liquidity": "book reserve10000=cash2000+assets8000; request6000; sell book4000 for3800;cash5800 short200",
+        "collateral": "150/100=150%,120/100=120% below hypothetical130%,90−100=−10",
+        "algorithmic": "$1 exchange at other-token price10 gives0.1 token; price1 gives1 token"
+      },
+      "stageEvidence": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "parts",
+        "2": "why-parts",
+        "3": "names",
+        "4": "redemption-trace",
+        "5": "source-terms",
+        "6": "stabilization-mechanisms",
+        "7": "failure-boundaries;stablecoin-release"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Circle USDC Terms revised2025-12-12, checked2026-10-04",
+          "section": "§2·§14; outside EEA",
+          "application": "actual11-word source quote Type A direct redemption applied to toy10000unit redemption eligibility; secondary market1USD not guaranteed"
+        },
+        {
+          "source": "FSB2023 recommendations9",
+          "section": "8-word at-par redemption original phrase",
+          "application": "10000S→10000USD benchmark differs from9700market proceeds; recommendation not individual enforceable law"
+        },
+        {
+          "source": "BIS WP905 2020",
+          "section": "retained background evidence",
+          "application": "explicitly not current reserves or legal status"
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "Original four sections read; replaced glossary/release shorthand with same redemption case and reserve/collateral stress arithmetic",
+        "arithmetic": "Decimal .03/1=.03;10000−9700−100=200;2000+3800=5800;6000−5800=200;120/100<1.3;1/10=.1",
+        "humanize": "/tmp/teach-all/humanize-stablecoin-final/summary.json 4082 chars,gate0,roundtrip; visualization props manually reviewed",
+        "browser390": "output/playwright/teach-chains-batch5/summary.json; no overflow/narrow/KaTeX/anchor/console errors; four states shift0; screenshot visually read",
+        "browser1440": "same report four states shift0; no errors",
+        "viz": "exact StablecoinSystemViz.tsx strict PASS",
+        "execution": "No issuer redemption or contract test executed; arithmetic, live primary document reading and UI checks only",
+        "prose": "global re-review0",
+        "learning": "Strict registration audit PASS for2routes /tmp/teach-all/chains-learning-3.log"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "global build and publication"
       ]
     },
     {
@@ -5706,7 +5897,7 @@
     {
       "route": "blockchain/uniswap-v2",
       "title": "Uniswap V2: invariant·LP share·flash settlement",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/uniswap-v2.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/uniswap-v2.tsx",
@@ -5727,19 +5918,71 @@
           "Router는 경로를 계산하지만 사용자가 실행 경계를 정한다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 숫자 예와 수학은 있었지만 reserve·Pair·Router·settlement 용어를 역할과 한 거래보다 먼저 설명했습니다.",
+        "실제 code panel이 없고 source 링크의 d2bfbb3은 commit이 아닌 tag 객체여서404였습니다.",
+        "기존 LP공급100과 최소LP1000은 표시·정수 단위가 구분되지 않았습니다.",
+        "식별 연산 주석은 일반 정규화 설명이었고 IL을 수수료5.72%와 단순 비교해 평가 기준이 불분명했습니다."
+      ],
+      "fixture": {
+        "inputRaw": 100000000,
+        "outputRaw": 90661089,
+        "reservesAfter": [
+          1100000000,
+          909338911
+        ],
+        "adjustedProduct": 1000000000426700000000000,
+        "minimum": 1000000000000000000000000,
+        "extra": 426700000000000,
+        "rawProductNormalized": "1000272.8021",
+        "repaymentRaw": 100300903,
+        "LPaddedRaw": 10000000,
+        "protocolLPRaw": 15384615,
+        "initialLPraw": 1999999000,
+        "divergenceLoss": "-0.057190958417936634132207517193534614286885416415367951215547",
+        "twap": 2.0,
+        "actualEVMExecuted": false
+      },
+      "stageEvidence": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "parts",
+        "2": "why-parts",
+        "3": "names",
+        "4": "swap-trace",
+        "5": "swap-formula",
+        "6": "swap-source;pair-contract;protocol-fee;twap",
+        "7": "divergence-loss;router-swap;flash-swap;uniswap-v2-release-gate"
+      },
+      "sourceEvidence": [
+        {
+          "source": "v2-core commit4dd59067c76dea4a0e8e4bfdda41877a6b16dedc resolves annotated tagv1.0.1",
+          "section": "swap159–186/mint109–129/_mintFee88–107/_update72–85",
+          "application": "same input100 raw100000000 and output90661089;LP normalized examples;TWAP1200→1800/300",
+          "original": "downloaded unmodified with GPL LICENSE and provenance"
+        },
+        {
+          "source": "v2-periphery ed24991304291297c3b4a52818d02f46a17aa9a2",
+          "section": "getAmountOut43–50,Router02 224–237",
+          "application": "integer quote returns90661089 and router checks latest route output against minimum before forwarding",
+          "original": "unmodified LICENSE source"
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "All four previous modules and dedicated viz read; exact derivations and limits retained, reordered and expanded with actual code and same numbers",
+        "arithmetic": "/tmp/teach-all/chains-arithmetic-v2.json independent Python integer/Decimal verification; actual EVM not executed",
+        "humanize": "/tmp/teach-all/humanize-uniswap-final/summary.json four modules gate0,roundtrip true;formula/viz/code annotation props manually reviewed",
+        "browser390": "output/playwright/teach-chains-batch6/summary.json no overflow/narrow/KaTeX/anchor/console errors;4viz×3states shift0;6Soliditypanels opened true",
+        "browser1440": "same report 4viz×3states shift0;6panels opened true",
+        "prose": "global re-review0",
+        "typecheck": "/tmp/teach-all/chains-tsc-5.log tsc-b PASS",
+        "viz": "exact ModernV2Viz.tsx strict PASS",
+        "learning": "strict1routePASS /tmp/teach-all/chains-learning-4.log",
+        "solidityPanel": "uniswap-panel-check.json alltrue:pragma/literal/comment/annotation;390screenshotvisuallyread"
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "global build and publication"
       ]
     },
     {
@@ -6238,7 +6481,7 @@
     {
       "route": "crypto/discrete-log",
       "title": "이산로그 문제: 정의·공격 비용·보안 가정",
-      "status": "rewritten-awaiting-global-integration",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/discrete-log.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/crypto-foundations-viz.tsx",
@@ -6292,46 +6535,12 @@
           "gate": 0,
           "roundTrip": true
         },
-        "browser": [
-          {
-            "route": "crypto/discrete-log",
-            "width": 390,
-            "pageOverflow": false,
-            "narrow": [],
-            "katexErrors": [],
-            "brokenAnchors": [],
-            "interactions": [
-              {
-                "states": 0,
-                "maxControlShift": null
-              }
-            ],
-            "code": [],
-            "errors": []
-          },
-          {
-            "route": "crypto/discrete-log",
-            "width": 1440,
-            "pageOverflow": false,
-            "narrow": [],
-            "katexErrors": [],
-            "brokenAnchors": [],
-            "interactions": [
-              {
-                "states": 0,
-                "maxControlShift": null
-              }
-            ],
-            "code": [],
-            "errors": []
-          }
-        ],
-        "sourceRevision": "see sourceEvidence"
+        "browser": "390/1440 final checks passed; EVM table at 280px minimum shows all four columns; CodeSidebar 8 opens passed",
+        "sourceRevision": "see sourceEvidence",
+        "learning": "strict registered 3-route check passed after root merge"
       },
       "remaining": [
-        "root의 catalog 목차·learning 답 section 등록 병합",
-        "병합 뒤 learning 엄격 검사 및 전역 build",
-        "최종 통합 화면 재검사"
+        "전역 통합 검수·build·배포"
       ]
     },
     {

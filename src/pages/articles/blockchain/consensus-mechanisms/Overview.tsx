@@ -1,52 +1,13 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ContextViz from "./viz/ContextViz";
-import ConsensusOverviewViz from "./viz/ConsensusOverviewViz";
-
-export default function Overview() {
-  return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        PoW와 PoS는 ‘합의 방식’ 한 칸짜리 옵션이 아니라 영향력의 비용을 정하는 장치다
-      </h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="text-lg leading-8">
-          공개 네트워크에서는 한 사람이 node identity를 천 개 만들 수 있습니다. 따라서 “node 한 개에 표 한 장”을 그대로 주면 Sybil 공격으로 투표를 장악할 수
-          있습니다. Proof of Work(PoW)는 영향력을 hash work에 연결하고 Proof of Stake(PoS)는 protocol에 잠긴 stake와 서명 책임에
-          연결합니다. 출발점은 둘 다 같습니다. 정체성 수가 아니라 희소 자원으로 proposal·vote weight를 제한하는 것입니다.
-        </p>
-        <p>
-          하지만 Sybil resistance만으로 consensus가 완성되지는 않습니다. Valid block을 판정할 state-transition rule이 있어야 하고 동시에 생긴
-          branch 중 어느 쪽을 head로 볼지 고르는 fork choice가 필요합니다. history를 더는 뒤집지 않겠다고 선을 긋는 finality rule, 참여자가
-          protocol을 어겼을 때의 penalty와 recovery도 마찬가지입니다.
-        </p>
-        <p>
-          Process·timing·failure와 safety/liveness는{" "}
-          <Link to="/cs/blockchain/distributed-systems">분산 시스템 기초</Link>, 고정 membership
-          의 log agreement는 <Link to="/cs/blockchain/smr-theory">SMR</Link>, Byzantine quorum
-          proof는 <Link to="/cs/blockchain/bft-theory">BFT 이론</Link>에서 가져옵니다. 이 글은
-          permissionless membership에서 PoW·PoS가 그 원리를 어떻게 조합하는지를 다룹니다.
-        </p>
-      </div>
-
-      <ContentBoundary article="consensus-mechanisms" />
-      <ContextViz />
-      <ConsensusOverviewViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>Fork choice와 finality를 먼저 분리합니다</h3>
-        <p>
-          Fork choice는 온라인 rule입니다. 지금까지 관찰한 valid message만 보고 어느 block을 head로 볼지 정합니다. 새 block이나 vote가 오면
-          head가 바뀔 수 있습니다. Finality는 그보다 강한 판단입니다. 특정 checkpoint보다 앞선 history는 protocol 가정 아래 되돌아가지 않는다고 봅니다.
-          PoW의 confirmation depth는 reorg 위험이 낮아지는 probabilistic 정책이고 PoS protocol은 충분한 stake vote로 explicit
-          finality를 제공할 수 있습니다.
-        </p>
-        <p>
-          같은 “확정”이라는 말을 쓰더라도 근거가 되는 evidence는 다릅니다. 그래서 receipt에 head root와 finalized root, 관찰 시점, client/spec
-          version을 따로 남깁니다. Head가 바뀐 것을 conflicting finality로 오인해서는 안 됩니다. finality가 없다는 이유로 valid head 선택까지
-          실패했다고 판단해서도 안 됩니다.
-        </p>
-      </div>
-    </section>
-  );
-}
+export default function Overview(){return <div className="space-y-12 [&_section]:space-y-5 [&_p]:leading-8 [&_h2]:text-2xl [&_h2]:font-bold">
+<section id="overview" data-teach-level="S"><h2>1. 누가 보냈는지 알아도 어느 송금이 먼저인지는 남습니다</h2><p>같은 돈을 두 사람에게 보내려는 지시가 거의 동시에 도착했다고 생각해 봅니다. 서명이 모두 본인 것이라도 두 송금을 모두 받아들일 수는 없습니다. 여러 컴퓨터가 지시를 다른 순서로 받더라도 결국 하나의 일관된 기록을 선택해야 합니다.</p><p>
+            누구나 참여하는 네트워크에서는 계정이나 컴퓨터 이름의 수를 곧 사람 수로 셀 수 없습니다. 한 사람이 이름을 계속 만들 수 있기 때문입니다. 그래서 발언권에 비용을 붙이고,
+            받아들일 수 있는 기록인지 확인하고 경쟁하는 기록 중 어느 것을 따를지 정합니다. 이 세 판단을 구분해야 합의 방식을 제대로 비교할 수 있습니다.
+          </p><p>이 글은 기록을 제안할 기회와 기록을 확정하는 규칙이 어떻게 연결되는지 설명합니다. 먼저 큰 일을 나눈 뒤 같은 네 참여자의 사례로 두 방식을 비교합니다.</p></section>
+<section id="black-box" data-teach-level="B"><h2>2. 참여 비용, 내용 검사, 기록 선택을 차례로 봅니다</h2><ol className="list-decimal space-y-3 pl-6"><li>발언권에 어떤 비용이 드는가 → 이름을 늘리는 것만으로 지배하지 못하게 합니다.</li><li>내용이 규칙을 지키는가 → 잔액과 서명, 앞선 기록을 확인합니다.</li><li>지금 어떤 기록을 따르는가 → 동시에 생긴 후보 중 현재 기준을 정합니다.</li><li>어디까지 되돌리지 않는가 → 추가 계산이나 충분한 서명을 근거로 판단합니다.</li></ol><p>비용이 많이 들었다는 사실이 잘못된 송금을 올바르게 만들지는 않습니다. 네 참여자에게 각각 어느 정도의 영향력이 있는지 숫자로 놓고 이 구분을 확인하겠습니다.</p></section>
+<section id="case" data-teach-level="0"><h2>3. 네 참여자의 자원을 합하면 100입니다</h2><p>참여자 A, B, C, D의 자원을 각각 10·20·30·40으로 놓습니다. 합은 100입니다. 가상의 장부에서 잔액 100을 가진 사람이 10을 보내는 기록 X를 제안해 잔액을 90으로 바꾸려 합니다(가정). 수수료 등은 생략한 설명용 장부이며 특정 체인의 거래 형식은 아닙니다.</p><p>A가 네트워크 이름을 100개로 나누더라도 가진 자원 10이 저절로 늘지는 않습니다. 계산 능력에 영향력을 연결하는 방식에서는 전체 계산 중 A의 몫이 10입니다. 담보로 묶은 자원에 연결하는 방식에서는 A의 표 무게가 10입니다. 단위가 다른 자원을 같은 수치로 놓아 비율만 비교하는 가정입니다.</p><p>X가 계산상 맞더라도 서로 다른 후보 X와 Y가 동시에 보일 수 있습니다. 어느 후보가 현재 선택되는지와 언제 더 강한 확정 근거를 얻는지가 다음 질문입니다.</p></section>
+<section id="parts" data-teach-level="1"><h2>4. 후보를 만드는 사람과 그 후보를 확인하는 사람이 있습니다</h2><p>제안자는 송금들을 묶어 이전 기록에 붙일 후보를 만듭니다. 다른 참여자는 송금의 권한과 잔액 계산을 다시 확인합니다. 이후 각자의 눈에 보인 계산 증거 또는 서명을 비교해 따를 후보를 고릅니다. 늦게 도착한 정보가 현재 선택을 바꿀 수 있습니다.</p><p>사례에서 100−10=90을 검사하는 일은 선택 규칙보다 먼저입니다. D의 자원이 40이라고 해도 잔액을 120으로 늘린 거짓 후보가 유효해지지 않습니다. 경쟁 후보를 비교하는 규칙은 이미 유효하다고 판정한 후보들의 순서를 다룹니다.</p><p>누가 큰 목소리를 갖는지와 무엇이 올바른 계산인지를 분리했습니다. 여러 이름을 만드는 공격과 네트워크 지연이 왜 별도 장치를 요구하는지도 확인하겠습니다.</p></section>
+<section id="why-parts" data-teach-level="2"><h2>5. 이름 수로 투표하면 같은 사람이 표를 계속 늘립니다</h2><p>A가 이름 100개를 만들고 나머지 세 사람이 하나씩 쓰면 이름 수로는 100 대 3이 됩니다. 자원 비율로는 여전히 10 대 90입니다. 이 때문에 공개 네트워크의 영향력을 이름과 일대일로 대응시키지 않습니다.</p><p>그렇다고 자원의 비용만 정하면 끝나지는 않습니다. A와 B가 X를 먼저 받고 C와 D가 Y를 먼저 받으면 임시 선택은 다를 수 있습니다. 새로운 정보가 합쳐질 때 어떤 규칙으로 수렴하는지, 통신이 끊겨도 서로 모순된 기록을 확정하지 않는지 따로 설명해야 합니다.</p><p>이 차이를 다루는 <Link to="/cs/blockchain/distributed-systems">분산 시스템</Link>은 메시지 지연과 실패 모델을 설명합니다. <Link to="/cs/blockchain/bft-theory">BFT 이론</Link>에서는 모순된 표가 있어도 겹치는 정직한 표를 확보하는 조건을 계산합니다. 다음 이름들은 지금 나눈 역할에 대응합니다.</p></section>
+<section id="names" data-teach-level="3"><h2>6. PoW와 PoS는 영향력의 근거를 달리 정합니다</h2><dl className="space-y-4"><div><dt className="font-semibold">계산을 했다는 증거로 영향력을 제한 → Proof of Work, PoW</dt><dd>조건에 맞는 계산 결과를 찾아 후보와 함께 보냅니다. 검증은 찾는 과정보다 훨씬 간단하도록 만듭니다.</dd></div><div><dt className="font-semibold">묶어 둔 자원과 서명 책임에 영향력을 연결 → Proof of Stake, PoS</dt><dd>참여자가 등록한 지분에 따라 제안 기회와 표의 무게를 정합니다. 구체적인 선택·처벌·확정 규칙은 프로토콜마다 다릅니다.</dd></div><div><dt className="font-semibold">이름을 늘려 영향력을 부풀리는 공격 → Sybil 공격</dt><dd>PoW와 PoS는 이 공격의 비용을 제한하는 역할을 맡습니다.</dd></div><div><dt className="font-semibold">현재 따를 유효한 가지를 선택 → fork choice</dt><dd>지금까지 본 블록과 표를 사용해 현재 head를 고릅니다. 추가 정보에 따라 바뀔 수 있습니다.</dd></div><div><dt className="font-semibold">과거를 되돌리지 않을 근거 → finality</dt><dd>확률적인 재조직 위험 또는 규칙상 모순된 확정에 필요한 위반 비용을 구분해서 읽습니다.</dd></div></dl><ContentBoundary article="consensus-mechanisms"/><p>이름을 붙였으니 같은 10·20·30·40이 PoW에서는 시도 횟수에, PoS에서는 선택 확률과 표 무게에 어떻게 들어가는지 계산하겠습니다.</p></section>
+<section id="trace" data-teach-level="4"><h2>7. 같은 X를 만들고 검사한 뒤 선택 근거를 모읍니다</h2><p>A가 X를 만들든 D가 X를 만들든 내용 검사는 100−10=90을 얻어야 합니다. 다른 참여자는 X의 부모와 서명을 확인하고 같은 계산을 합니다. 이 검사를 통과한 X와 별도의 유효한 Y가 경쟁할 때에만 다음 선택 규칙을 적용합니다.</p><p>계산 증거 방식에서는 X와 Y에 이어 붙인 작업량을 각각 누적합니다. 지분 표 방식에서는 같은 시점·대상을 지지하는 표의 무게를 합합니다. A·B·D가 같은 대상을 지지하면 10+20+40=70입니다. 서명이 보인다는 이유로 다른 시점의 표를 합하거나 같은 A의 서명을 여러 번 세지 않습니다.</p><p>다음 두 절에서는 이 추적의 작업량과 표 무게를 각각 원문 판정에 대입합니다. 두 방식의 숫자는 비교를 위한 가정이며 서로 다른 물리 단위의 가격을 비교한 결과가 아닙니다.</p></section></div>}

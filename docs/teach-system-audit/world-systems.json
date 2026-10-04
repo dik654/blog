@@ -495,43 +495,167 @@
     },
     {
       "route": "devices/mos-capacitor-and-inversion",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 3,
         "caseMarkers": 1
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "사례 이전의 전략·입출력·이름 없는 구조와 구성 이유가 충분히 전개되지 않음",
+          "역사 원문의 단위 또는 정적 공급 조건과 가상 수치 연결이 불명확",
+          "일부 연습문제의 수치 답이 본문에 없음"
+        ],
+        "fixture": "10 nm·100 µm²·εr3.9·VG1.0 V·VT0.5 V, 바탕과 같은 전위의 전자 공급 영역과 충분한 대기",
+        "changes": "절연된 전극의 전기장과 실리콘의 전자 공급 경로를 분리해 한 표면의 상태와 전하 수를 구합니다. 소자의 명칭은 구조의 역할을 이해한 뒤 붙입니다.",
+        "answerCoverage": "기초6·심화4를 먼저 읽고 기존 앵커와 도출을 보존했습니다. 전류비·5 nm 용량·5 pF 전력의 실제 답을 보충하고 답 section을 이동했습니다.",
+        "verification": "C0.3453 pF,Q−0.17265 pC,N1.0776×10⁶,5 nm에서0.6906 pF를 계산하고 정적 반전 전하의 공급 조건을 확인합니다.",
+        "sourceApplication": "MIT2009 Lecture9의4쪽 n+ 공급 주석과23/30쪽 면적당 식, Kahng 특허의 실제 다접합 구조를 확인했습니다.",
+        "humanize": {
+          "roundTrip": true,
+          "passes": 2,
+          "finalGate": "PASS",
+          "numbersPreserved": true,
+          "report": "/tmp/teach-all/humanize-root-devices-pass2/summary.json"
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "predictionQuestions": 3,
+          "report": "/tmp/world-browser-audit/teach-root-devices-summary.json",
+          "screens": "/tmp/teach-all/root-devices-screens/"
+        },
+        "remaining": "다른 글의 개선과 함께 전역 빌드·배포·운영 확인을 수행합니다."
+      }
     },
     {
       "route": "devices/mosfet-regions-and-transfer",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 3,
         "caseMarkers": 1
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "사례 이전의 전략·입출력·이름 없는 구조와 구성 이유가 충분히 전개되지 않음",
+          "역사 원문의 단위 또는 정적 공급 조건과 가상 수치 연결이 불명확",
+          "일부 연습문제의 수치 답이 본문에 없음"
+        ],
+        "fixture": "VGS1.5 V·VT0.5 V·k1 mA/V², VDS0.2/0.8/1.0/1.5 V와게이트2.0 V비교",
+        "changes": "한 채널의 입구·출구 전하가 달라지는 이유에서 시작해 선형식과 포화식의 연결 및 근사 한계까지 따라갑니다. 같은 소자의 영역 비교이므로 하나의 글로 유지합니다.",
+        "answerCoverage": "기초6·심화4를 먼저 읽고 기존 앵커와 도출을 보존했습니다. 전류비·5 nm 용량·5 pF 전력의 실제 답을 보충하고 답 section을 이동했습니다.",
+        "verification": "0.18/.48/.5/.5 mA,0.8Vov에서96%,게이트2 V의1.125 mA를 검산하고 포화 경계의 고전계 근사 한계를 설명합니다.",
+        "sourceApplication": "MIT6.720J Lecture25 p10/p13, Lecture26 p3–5/p7/p8의 원문 식과 전자 이동 설명을 적용했습니다.",
+        "humanize": {
+          "roundTrip": true,
+          "passes": 2,
+          "finalGate": "PASS",
+          "numbersPreserved": true,
+          "report": "/tmp/teach-all/humanize-root-devices-pass2/summary.json"
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "predictionQuestions": 3,
+          "report": "/tmp/world-browser-audit/teach-root-devices-summary.json",
+          "screens": "/tmp/teach-all/root-devices-screens/"
+        },
+        "remaining": "다른 글의 개선과 함께 전역 빌드·배포·운영 확인을 수행합니다."
+      }
     },
     {
       "route": "devices/pn-junction-and-rectification",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 3,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "사례 이전의 전략·입출력·이름 없는 구조와 구성 이유가 충분히 전개되지 않음",
+          "역사 원문의 단위 또는 정적 공급 조건과 가상 수치 연결이 불명확",
+          "일부 연습문제의 수치 답이 본문에 없음"
+        ],
+        "fixture": "300 K·양쪽 도핑 10¹⁶ cm⁻³·총 Is1 pA, 전압0/+0.5/+0.6/−0.5 V",
+        "changes": "한 접합에서 확산과 고정 이온의 전기장이 평형을 만든 뒤 같은 장벽에 세 전압을 거는 단일 경로입니다. 전류식과 방향 비대칭은 이 경로의 계산입니다.",
+        "answerCoverage": "기초6·심화4를 먼저 읽고 기존 앵커와 도출을 보존했습니다. 전류비·5 nm 용량·5 pF 전력의 실제 답을 보충하고 답 section을 이동했습니다.",
+        "verification": "0/.251 mA/12.03 mA/−1 pA와 47.869배를 검산하고 Shockley의 면적당 성분을 총 단자 전류로 옮기는 면적 조건을 확인합니다.",
+        "sourceApplication": "Shockley1949 스캔461쪽 식4.18–4.22와454쪽 current density 정의를 직접 대조했습니다.",
+        "humanize": {
+          "roundTrip": true,
+          "passes": 2,
+          "finalGate": "PASS",
+          "numbersPreserved": true,
+          "report": "/tmp/teach-all/humanize-root-devices-pass2/summary.json"
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "predictionQuestions": 3,
+          "report": "/tmp/world-browser-audit/teach-root-devices-summary.json",
+          "screens": "/tmp/teach-all/root-devices-screens/"
+        },
+        "remaining": "다른 글의 개선과 함께 전역 빌드·배포·운영 확인을 수행합니다."
+      }
     },
     {
       "route": "devices/switching-energy-and-leakage",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 3,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "사례 이전의 전략·입출력·이름 없는 구조와 구성 이유가 충분히 전개되지 않음",
+          "역사 원문의 단위 또는 정적 공급 조건과 가상 수치 연결이 불명확",
+          "일부 연습문제의 수치 답이 본문에 없음"
+        ],
+        "fixture": "3.3 V·10 pF·1 MHz·활동률0.1·대기전류1 µA, 비교5 pF와1.8 V",
+        "changes": "한 출력의 충전·방전 왕복에서 공급·저장·발열을 맞추고 같은 왕복의 초당 횟수로 평균 전력을 구합니다. 누설은 같은 공급선에서 별도 원인의 항으로 더합니다.",
+        "answerCoverage": "기초6·심화4를 먼저 읽고 기존 앵커와 도출을 보존했습니다. 전류비·5 nm 용량·5 pF 전력의 실제 답을 보충하고 답 section을 이동했습니다.",
+        "verification": "Q33 pC,공급108.9 pJ,충전·방전 각각54.45 pJ,동적10.89 µW·합14.19 µW,5 pF의5.445 µW를 검산합니다.",
+        "sourceApplication": "MIT6.0122005 Lecture14 p22–24의 ES/EC/EP/EN/ED식을 같은 수치에 적용하고 활동률의 분모를 구분합니다.",
+        "humanize": {
+          "roundTrip": true,
+          "passes": 2,
+          "finalGate": "PASS",
+          "numbersPreserved": true,
+          "report": "/tmp/teach-all/humanize-root-devices-pass2/summary.json"
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "predictionQuestions": 3,
+          "report": "/tmp/world-browser-audit/teach-root-devices-summary.json",
+          "screens": "/tmp/teach-all/root-devices-screens/"
+        },
+        "remaining": "다른 글의 개선과 함께 전역 빌드·배포·운영 확인을 수행합니다."
+      }
     },
     {
       "route": "dispute-resolution/settlement-and-access",
@@ -2548,13 +2672,44 @@
     },
     {
       "route": "semiconductors/bands-and-doping",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 1,
         "caseMarkers": 6
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "사례는 있으나 구조의 역할과 구성 이유가 이름보다 먼저 충분히 펼쳐지지 않음",
+          "원문 문장·식에 같은 사례를 실제로 대입하는 단계가 부족",
+          "연습문제의 온도·확산거리·접촉폭 변경 수치 답 누락"
+        ],
+        "fixture": "300 K,1 cm³,ni10¹⁰,ND10¹⁶,보상 NA2×10¹⁵ cm⁻³",
+        "changes": "같은 두 조각에서 움직이는 전하와 고정 이온을 나누고 열평형식·중성 조건으로 수를 맞춥니다. 전도도 한계는 같은 농도에서 이동 능력까지 알아야 하는 이유를 설명하므로 이 계산과 함께 유지합니다.",
+        "answerCoverage": "기초6·심화4 선독 후 본문 대조. 온도에 따른 ni 변경과 접촉 기하 변경의 수치 답을 보충하고 답 앵커를 옮겼습니다.",
+        "verification": "n≈10¹⁶,p≈10⁴와 보상 도핑 n≈8×10¹⁵,p≈1.25×10⁴,새 ni10¹³의 p≈10¹⁰을 단위와 근사 조건을 포함해 검산합니다.",
+        "sourceApplication": "Wilson1931 p460은 그림 아닌 실제 문장임을 스캔에서 교정. MIT6.0122005Lecture2 p9/11/13/14/17식과300 K 값을 대조.",
+        "humanize": {
+          "passes": 2,
+          "roundTrip": true,
+          "numbersPreserved": true,
+          "finalGate": "PASS",
+          "report": "/tmp/teach-all/humanize-root-semiconductors-pass2/summary.json"
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "predictionQuestions": 3,
+          "report": "/tmp/world-browser-audit/teach-root-semiconductors-summary.json",
+          "screens": "/tmp/teach-all/root-semiconductors-screens/"
+        },
+        "remaining": "전역 빌드·배포·운영 확인은 전체 개선 완료 뒤 진행합니다."
+      }
     },
     {
       "route": "semiconductors/doping-and-thermal-budget",
@@ -2588,13 +2743,44 @@
     },
     {
       "route": "semiconductors/wafer-and-planar-process",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 3,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "사례는 있으나 구조의 역할과 구성 이유가 이름보다 먼저 충분히 펼쳐지지 않음",
+          "원문 문장·식에 같은 사례를 실제로 대입하는 단계가 부족",
+          "연습문제의 온도·확산거리·접촉폭 변경 수치 답 누락"
+        ],
+        "fixture": "창100µm,옆확산2µm,접촉80µm,대안옆확산5µm와접촉100µm·정렬3µm",
+        "changes": "같은 단면을 만드는 두 개방 단계가 각각 원자 입구와 전극 자리를 맡는 이유를 추적합니다. 원문 보호 조건과 거리 계산을 같은 단면에서 연결하기 위해 단일 글로 유지합니다.",
+        "answerCoverage": "기초6·심화4 선독 후 본문 대조. 온도에 따른 ni 변경과 접촉 기하 변경의 수치 답을 보충하고 답 앵커를 옮겼습니다.",
+        "verification": "104µm·12µm,대안110µm·15µm,큰 접촉창2µm에서정렬3µm를뺀−1µm를검산하고 원문 청구항1(e)의 덮개 보존과 대조합니다.",
+        "sourceApplication": "HoerniUS3025589 PDF3–5쪽 원문의 다이오드·트랜지스터 경로와청구항1(e)을 구별. 청구항5의 잘못된 PDF쪽수도 교정.",
+        "humanize": {
+          "passes": 2,
+          "roundTrip": true,
+          "numbersPreserved": true,
+          "finalGate": "WARN: (104−80)/2와(110−80)/2의80)을 각주로 오인. 두 식·수치·원문 링크·문단 순서가 유지됨을 직접 대조. P1 달성. 사용자 고지 완료.",
+          "report": "/tmp/teach-all/humanize-root-semiconductors-pass2/summary.json"
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "predictionQuestions": 3,
+          "report": "/tmp/world-browser-audit/teach-root-semiconductors-summary.json",
+          "screens": "/tmp/teach-all/root-semiconductors-screens/"
+        },
+        "remaining": "전역 빌드·배포·운영 확인은 전체 개선 완료 뒤 진행합니다."
+      }
     },
     {
       "route": "semiconductors/yield-defect-and-packaging",
@@ -2786,5 +2972,9 @@
       },
       "review": null
     }
-  ]
+  ],
+  "counts": {
+    "unreviewed": 213,
+    "rewritten-local-verified": 12
+  }
 }

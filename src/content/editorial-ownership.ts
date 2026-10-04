@@ -6614,7 +6614,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "MEV ordering·private path 일반 경계", href: "/cs/blockchain/reth-mev" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Invariant·fee·LP·flash·TWAP claim은 Uniswap V2 whitepaper와 v2-core v1.0.1 commit d2bfbb3649b2에 귀속한다." },
+      { kind: "primary-source", rule: "Invariant·fee·LP·flash·TWAP claim은 Uniswap V2 whitepaper와 v2-core v1.0.1 commit 4dd59067c76d에 귀속한다." },
       { kind: "project-measurement", rule: "Quote·gas·slippage·TWAP 안정성은 factory/pair/router·token behavior·block range를 고정한 replay에만 귀속한다." },
     ],
   },

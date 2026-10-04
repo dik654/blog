@@ -1011,7 +1011,25 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://proceedings.mlr.press/v9/glorot10a.html",
       note: "Sigmoid·tanh saturation과 initialization scale의 상호작용",
     },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "NumPy heaviside 실제 구간 정의",
+      "href": "https://numpy.org/doc/stable/reference/generated/numpy.heaviside.html",
+      "note": "2026-10-04 확인. 입력2와 경계값 선택을 실제 정의에 대입합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.14 Sigmoid 실제 정의",
+      "href": "https://docs.pytorch.org/docs/2.14/generated/torch.nn.Sigmoid.html",
+      "note": "입력2의 forward와 도함수 계산에 대입합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.14 Tanh 실제 정의",
+      "href": "https://docs.pytorch.org/docs/2.14/generated/torch.nn.Tanh.html",
+      "note": "입력2의 실제 지수식과 뒤 변화율3을 연결합니다."
+    },
+],
   "ai/rectifier-activations": [
     {
       kind: "핵심 논문",
@@ -1037,7 +1055,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/1706.02515",
       note: "SELU의 fixed point와 자기정규화가 성립하는 조건",
     },
-  ],
+    {
+      "kind": "핵심 논문",
+      "label": "PReLU v1 식(1)·(3)",
+      "href": "https://arxiv.org/pdf/1502.01852v1",
+      "note": "원문의 부호별 함수와 slope gradient를 입력−2에 적용합니다. 임의 학습 a와0<a<1의 max표현을 구분합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "SELU v5 식(2)",
+      "href": "https://arxiv.org/pdf/1706.02515v5",
+      "note": "원문 상수에(−2,3)을 대입해 출력·기울기·표본 평균을 계산합니다."
+    },
+],
   "ai/gated-activations": [
     {
       kind: "핵심 논문",
@@ -1057,7 +1087,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/2002.05202",
       note: "SwiGLU를 scalar activation이 아닌 gated FFN으로 비교하는 기준",
     },
-  ],
+    {
+      "kind": "핵심 논문",
+      "label": "GLU Variants v1 §2 식(6)",
+      "href": "https://arxiv.org/pdf/2002.05202v1",
+      "note": "원문 W,V,W2를 Wg,Wv,Wo에 연결하고 입력(1,−1)을 직접 대입합니다. 중간 폭2/3 조건도 대조합니다."
+    },
+],
   "ai/optimizers": [
     {
       kind: "핵심 논문",
@@ -1065,7 +1101,25 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://doi.org/10.1214/aoms/1177729586",
       note: "Noisy observation과 반복 step을 연결한 stochastic approximation 출발점",
     },
-  ],
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch v2.8.0 scalar SGD 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/ba56102387ef21a3b04b357e5b183d48f0afefc7/torch/optim/sgd.py#L369-L375",
+      "note": "실제 parameter.add_에3,4,.1을 대입합니다. 보존 원문의 SHA256와 LICENSE를 기록했습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Transformers 고정 loss 합계·공통 분모",
+      "href": "https://github.com/huggingface/transformers/blob/469230357aab0f2b303b0d638c1f8d06edb14184/src/transformers/loss/loss_utils.py#L32-L46",
+      "note": "2026-10-03 revision. 손실합2·18과 공통 분모8을 대입합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Transformers 고정 누적 창·유효 위치 집계",
+      "href": "https://github.com/huggingface/transformers/blob/469230357aab0f2b303b0d638c1f8d06edb14184/src/transformers/trainer.py#L2256-L2317",
+      "note": "수집 후 label 이동 조건과−100 제외 집계를 확인합니다."
+    },
+],
   "ai/momentum-optimizer": [
     {
       kind: "핵심 논문",
@@ -1073,7 +1127,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://doi.org/10.1016/0041-5553(64)90137-5",
       note: "이전 iterate를 사용하는 multi-step acceleration의 고전 분석",
     },
-  ],
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch v2.8.0 momentum·Nesterov 실제 분기",
+      "href": "https://github.com/pytorch/pytorch/blob/ba56102387ef21a3b04b357e5b183d48f0afefc7/torch/optim/sgd.py#L354-L375",
+      "note": "g=[1,1,−1]의 buffer와 같은 마지막 진입 상태의 두 분기를 직접 계산합니다."
+    },
+],
   "ai/adam-optimizer": [
     {
       kind: "핵심 논문",
@@ -1087,7 +1147,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/1904.09237",
       note: "Adaptive history가 만드는 convergence failure example과 경계",
     },
-  ],
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch v2.8.0 Adam 두 장부 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/ba56102387ef21a3b04b357e5b183d48f0afefc7/torch/optim/adam.py#L446-L464",
+      "note": "lerp_와addcmul_에g=2,−2를 대입합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch v2.8.0 Adam 보정·분모·갱신",
+      "href": "https://github.com/pytorch/pytorch/blob/ba56102387ef21a3b04b357e5b183d48f0afefc7/torch/optim/adam.py#L517-L535",
+      "note": "둘째 m=−.02,v=.007996,t=2로 .005263 증가량을 복원합니다."
+    },
+],
   "ai/cross-entropy": [
     {
       kind: "핵심 논문",
@@ -2633,7 +2705,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html",
       note: "Instruction·external data separation, least privilege, approval와 output monitoring의 defense-in-depth 경계",
     },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "Agent-Specific Defenses",
+      "href": "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html#agent-specific-defenses",
+      "note": "2026-10-04 원문 확인. 요약 전용 주체의 고객100건 전송 거부"
+    },
+],
   "ai/context-provenance-freshness": [
     {
       kind: "공식 규격",
@@ -3605,7 +3683,25 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/engine/core.py",
       note: "scheduler와 model executor를 연결하는 현재 engine loop",
     },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "v0.27.1 Scheduler.schedule, L459–692",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py",
+      "note": "2026-10-04 원문 확인. A의 남은 token 6−4와 예산 4, KV 할당 및 정책별 preemption"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Orca iteration-level scheduling",
+      "href": "https://www.usenix.org/conference/osdi22/presentation/yu",
+      "note": "2026-10-04 원문 확인. 완료한 B의 자리에 다음 계산부터 C 수용"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "PagedAttention §4",
+      "href": "https://arxiv.org/abs/2309.06180",
+      "note": "2026-10-04 원문 확인. 가변 길이 A·B·C의 KV 저장 공간을 블록으로 할당"
+    },
+],
   "ai/vllm-scheduler": [
     {
       kind: "선행·비교 논문",
@@ -3649,6 +3745,24 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "vLLM Engine Arguments — --async-scheduling · --scheduling-policy", href: "https://docs.vllm.ai/en/latest/configuration/engine_args.html", note: "Async scheduling 이 GPU 점유의 빈틈을 없앤다는 설명과 fcfs·priority 정책의 계약" },
     { kind: "공식 문서", label: "vLLM Optimization and Performance — engine core CPU starvation", href: "https://docs.vllm.ai/en/latest/configuration/optimization.html", note: "Engine core 가 busy loop 라 CPU 를 빼앗기면 크게 느려진다는 경고와 max_num_batched_tokens 의 ITL 안내" },
     { kind: "공식 코드", label: "vLLM V1 request queue: vllm/v1/core/sched/request_queue.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/core/sched/request_queue.py", note: "FCFS deque 와 priority heap 두 queue discipline 과 preempt 된 요청의 재삽입 규칙" },
+    {
+      "kind": "보충 읽기",
+      "label": "schedule L516–523 / _preempt_request L1274–1314",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py",
+      "note": "2026-10-04 고정 원문 확인. 5개 예산 중 1·1·3 배정과 선점·재삽입 조건"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "FCFS prepend L92–94 / Priority prepend L160–165",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/request_queue.py",
+      "note": "2026-10-04 고정 원문 확인. 선점 요청이 정책에 따라 다른 위치로 복귀"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "VTC Theorem 4.4 / 4.8",
+      "href": "https://arxiv.org/pdf/2401.00588",
+      "note": "2026-10-04 고정 원문 확인. 2×를 서비스의 절대 차이 상한과 이론 하한의 관계로 교정"
+    },
 ],
   "ai/vllm-paged-attention": [
     {
@@ -3777,7 +3891,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://github.com/dik654/ojs-agents/blob/c6b0fb756aa66a33e9f0b1cd4a53c2ee1202a618/products/office-secretary/experiments/MODEL_SIZE_DECISION.md",
       note: "Raw model strict-count와 deterministic agent contract를 분리한 2026-08-21 controlled fixture",
     },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "Feature list, passes:false",
+      "href": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+      "note": "2026-10-04 원문 확인. 32개·문자열·구분자검사전완료표시금지"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "S027 + H017 summary",
+      "href": "https://github.com/dik654/ojs-agents/blob/c6b0fb756aa66a33e9f0b1cd4a53c2ee1202a618/products/office-secretary/experiments/MODEL_SIZE_DECISION.md",
+      "note": "2026-10-04 원문 확인. 원문인증열람확인,32PING측정과일반성능한계"
+    },
+],
   "ai/agent-run-contract": [
     {
       kind: "공식 문서",
@@ -5101,9 +5227,27 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ],
   "blockchain/uniswap-v2": [
-    { kind: "핵심 논문", label: "Uniswap v2 Core whitepaper", href: "https://docs.uniswap.org/whitepaper.pdf", note: "Constant product·price accumulator·flash swap·optional protocol fee의 공식 설계" },
-    { kind: "공식 코드", label: "Uniswap v2-core v1.0.1 @ d2bfbb3649b2", href: "https://github.com/Uniswap/v2-core/tree/d2bfbb3649b265559bec74a7dd878dc1cf01c63c", note: "Pair mint/burn/swap·adjusted K·sqrt(k) fee mint를 고정한 source snapshot" },
-  ],
+    { kind: "핵심 논문", label: "Uniswap v2 Core whitepaper", href: "https://app.uniswap.org/whitepaper.pdf", note: "Constant product·price accumulator·flash swap·optional protocol fee의 공식 설계" },
+    { kind: "공식 코드", label: "Uniswap v2-core v1.0.1 @ 4dd59067c76d", href: "https://github.com/Uniswap/v2-core/tree/4dd59067c76dea4a0e8e4bfdda41877a6b16dedc", note: "Pair mint/burn/swap·adjusted K·sqrt(k) fee mint를 고정한 source snapshot" },
+    {
+      "kind": "보충 읽기",
+      "label": "Uniswap v2-core v1.0.1 · resolved commit",
+      "href": "https://github.com/Uniswap/v2-core/blob/4dd59067c76dea4a0e8e4bfdda41877a6b16dedc/contracts/UniswapV2Pair.sol",
+      "note": "annotated tag object d2bfbb3의 실제 commit은4dd5906입니다. swap·mint·_mintFee·_update를 실제 패널로 대조합니다."
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Uniswap v2-periphery · pinned quote and Router",
+      "href": "https://github.com/Uniswap/v2-periphery/tree/ed24991304291297c3b4a52818d02f46a17aa9a2",
+      "note": "getAmountOut과 Router02의 입력 전달·최저수령량 검사 경로를 고정했습니다."
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Uniswap v2 Core whitepaper · official PDF",
+      "href": "https://app.uniswap.org/whitepaper.pdf",
+      "note": "기존 docs.uniswap.org/whitepaper.pdf는404여서 실제 열리는 공식 PDF로 정정합니다."
+    },
+],
   "blockchain/uniswap-v3": [
     { kind: "핵심 논문", label: "Uniswap v3 Core whitepaper", href: "https://uniswap.org/whitepaper-v3.pdf", note: "Concentrated liquidity·ticks·fee growth·oracle의 공식 설계" },
     { kind: "공식 코드", label: "Uniswap v3-core v1.0.0 @ ef64f51d0f0d", href: "https://github.com/Uniswap/v3-core/tree/ef64f51d0f0dca5346c903484f3e6a771dd69d59/contracts", note: "Pool·TickMath·SqrtPriceMath·SwapMath의 exact rounding·transition snapshot" },
@@ -6209,7 +6353,13 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/stablecoin-overview": [
     { kind: "공식 문서", label: "FSB · Global Stablecoin Recommendations", href: "https://www.fsb.org/2023/07/high-level-recommendations-for-the-regulation-supervision-and-oversight-of-global-stablecoin-arrangements-final-report/", note: "발행·상환·안정화·transfer·governance 기능을 arrangement로 읽는 2023 공식 권고이며 특정 token safety 보장은 아님" },
     { kind: "핵심 연구", label: "BIS Working Paper 905 · Stablecoins", href: "https://www.bis.org/publ/work905.htm", note: "Backing·governance·settlement·liquidity risk 비교 근거이며 2026 issuer 상태·regulatory approval을 뜻하지 않음" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "Circle USDC Terms · direct redemption eligibility",
+      "href": "https://www.circle.com/legal/usdc-terms",
+      "note": "2025-12-12 개정, 2026-10-04 확인. §2·§14 Type A/B와 상환 자격을 같은 숫자 사례에 적용합니다. EEA 별도 약관."
+    },
+],
   "blockchain/usdc-circle": [
     { kind: "공식 문서", label: "Circle · Transparency & Stability", href: "https://www.circle.com/transparency", note: "Reserve disclosure·assurance cadence와 issuer redeemability claim의 확인 진입점이며 real-time proof·즉시 상환 보장은 아님" },
     { kind: "공식 문서", label: "Circle Mint · How minting works", href: "https://developers.circle.com/circle-mint/concepts/how-minting-works", note: "Eligible account의 fiat funding·mint·redemption lifecycle이며 모든 holder의 직접 상환 자격을 뜻하지 않음" },
@@ -6819,7 +6969,19 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Anthropic · Parallel tool use (API 공식 문서)", href: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/parallel-tool-use", note: "병렬 tool 호출의 실행 순서·결과 매칭 계약의 근거" },
     { kind: "핵심 논문", label: "Yao et al. · ReAct (2022)", href: "https://arxiv.org/abs/2210.03629", note: "Tool-use loop이 되먹임 구조여야 하는 이유의 근거" },
     { kind: "핵심 논문", label: "OpenAI · Introducing Structured Outputs (2024)", href: "https://openai.com/index/introducing-structured-outputs-in-the-api/", note: "JSON schema 준수 실패율(40% 미만 vs 100%) 수치의 근거" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "How tool use works + Pricing",
+      "href": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview",
+      "note": "2026-10-04 원문 확인. 원호출ID c1·c2·c3과2,654입력부분합"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Function calling flow",
+      "href": "https://developers.openai.com/api/docs/guides/function-calling",
+      "note": "2026-10-04 원문 확인. 모델제안·외부실행·결과재입력분리"
+    },
+],
   "ai/multimodal-retrieval-and-visual-grounding": [
     { kind: "핵심 논문", label: "Radford et al. · CLIP (ICML 2021)", href: "https://arxiv.org/abs/2103.00020", note: "Image-text 대조학습과 공유 embedding 공간 수치의 근거" },
     { kind: "핵심 논문", label: "Faysse et al. · ColPali (ICLR 2025)", href: "https://arxiv.org/abs/2407.01449", note: "Screenshot retrieval 인덱싱 속도·ViDoRe 성능 수치의 근거" },
@@ -6851,7 +7013,19 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Stripe · Idempotent requests", href: "https://docs.stripe.com/api/idempotent_requests", note: "Idempotent action·retry loop 안전성의 실제 mechanism." },
     { kind: "공식 문서", label: "Anthropic · Effective harnesses for long-running agents", href: "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents", note: "Premature termination 관찰과 checkpoint 기반 recovery strategy 근거." },
     { kind: "공식 문서", label: "LangChain · Human-in-the-loop", href: "https://docs.langchain.com/oss/python/langchain/human-in-the-loop", note: "HITL 승인 결정 mechanism과 checkpoint 연계 근거." },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "Idempotent requests, storage and pruning conditions",
+      "href": "https://docs.stripe.com/api/idempotent_requests",
+      "note": "2026-10-04 원문 확인. 같은pay-42 유지와 결과미확인 새키재시도 금지"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "§9.2.2",
+      "href": "https://www.rfc-editor.org/rfc/rfc9110.html#name-idempotent-methods",
+      "note": "2026-10-04 원문 확인. 의도한효과의반복동일성과비멱등재시도조건"
+    },
+],
   "ai/rl-foundations-for-llm-post-training": [
     { kind: "핵심 논문", label: "Policy Gradient Methods for Reinforcement Learning with Function Approximation", href: "https://proceedings.neurips.cc/paper/1999/hash/464d828b85b0bed98e80ade0a5c43b0f-Abstract.html", note: "Policy gradient theorem의 형식적 정의와 증명의 출처" },
     { kind: "공식 문서", label: "Reinforcement Learning: An Introduction (2nd ed.)", href: "https://mitpress.mit.edu/9780262039246/reinforcement-learning/", note: "Return·MDP·REINFORCE 정의의 표준 교과서 출처" },

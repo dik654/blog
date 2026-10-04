@@ -1,55 +1,18 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { CitationBlock } from "@/components/ui/citation";
+import { CitationBlock } from "@/components/ui/citation-block";
 import ModernV2Viz from "./viz/ModernV2Viz";
-
-export default function Overview() {
-  return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">V2 swap은 quote가 아니라 수수료 반영 뒤의 reserve 불변식으로 끝난다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="text-lg leading-8">두 reserve x,y를 가진 Pair는 거래자가 token0을 넣으면 token1을 내보냅니다. 가격표를 저장하는 대신 거래 전 reserve와 거래 뒤 실제 balance를 비교해 0.3% 수수료를 반영한 곱이 줄지 않았는지 확인합니다. Router의 quote는 이 settlement를 미리 계산한 값일 뿐 실행 보장이 아닙니다.</p>
-        <p>이 글은 AMM 정의를 다른 글에 중복시키지 않고 V2 Pair의 invariant → LP share → Router bound → flash callback·TWAP → release 흐름을 소유합니다. V3의 범위 유동성은 <Link to="/cs/blockchain/uniswap-v3">다음 글</Link>에서 이 invariant를 재사용해 확장합니다.</p>
-      </div>
-      <ContentBoundary article="uniswap-v2" />
-      <ModernV2Viz mode="swap" />
-      <ExplainedFormula
-        question="x=1,000, y=1,000인 풀에 token0 100개를 넣으면 token1을 얼마나 받을까요?"
-        idea="입력 전체는 reserve에 들어오지만 가격 이동에는 0.3%를 뺀 유효 입력만 사용합니다. 새 유효 reserve product가 이전 product와 같도록 출력량을 풀면 됩니다."
-        formula={String.raw`\Delta y=\frac{y\cdot997\Delta x}{1000x+997\Delta x},\qquad (1000x+997\Delta x)(y-\Delta y)\ge1000xy`}
-        annotatedFormula={String.raw`\Delta y=\underbrace{\frac{y\cdot997\Delta x}{1000x+997\Delta x},\qquad (1000x+997\Delta x)(y-\Delta y)\ge1000xy}_{\text{기준량당 비율}}`}
-        operations={[
-          { expression: String.raw`\frac{y\cdot997\Delta x}{1000x+997\Delta x},\qquad (1000x+997\Delta x)(y-\Delta y)\ge1000xy`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","입력 전체는 reserve에 들어오지만 가격 이동에는","0.3%를 뺀 유효 입력만 사용합니다."] },
-        ]}
-        terms={[
-          { symbol: "x,y", name: "pre-swap reserves", description: "Pair에 기록된 token0·token1 reserve입니다." },
-          { symbol: "Δx", name: "observed input", description: "Transfer 뒤 balance 차이로 확인한 token0 입력입니다." },
-          { symbol: "997/1000", name: "trader fee factor", description: "V2의 30-bp input fee를 가격 계산에 반영합니다." },
-        ]}
-        assumptions={["일반 ERC-20처럼 Pair가 관측한 input과 사용자가 보낸 양의 관계가 명확해야 합니다.", "정수 구현은 출력·입력 방향에 맞는 rounding과 reserve overflow 경계를 따릅니다."]}
-        interpretation="유효 입력은 99.7이고 출력은 약 90.661 token1입니다. 실제 새 balance는 1,100과 약 909.339라 raw k는 수수료만큼 증가합니다. Δy=100이라고 선형 비율로 내보내면 adjusted product가 작아져 revert됩니다."
-      />
-      <ExplainedFormula
-        question="가격이 두 배가 되면 constant-product LP가 단순 보유보다 얼마나 뒤처질까요?"
-        idea="차익거래가 reserve 비율을 새 외부 가격에 맞추면 LP는 오른 자산을 일부 팔고 내린 자산을 일부 산 상태가 됩니다. 초기 50/50 포트폴리오와 같은 자산을 그대로 보유한 가치를 비교합니다."
-        formula={String.raw`\operatorname{IL}(r)=\frac{2\sqrt r}{1+r}-1`}
-        annotatedFormula={String.raw`\operatorname{IL}(r)=\underbrace{\frac{2\sqrt r}{1+r}-1}_{\text{기준량당 비율}}`}
-        operations={[
-          { expression: String.raw`\frac{2\sqrt r}{1+r}-1`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","차익거래가 reserve 비율을 새 외부 가격에 맞추면 LP는","오른 자산을 일부 팔고 내린 자산을 일부 산 상태가 됩니다."] },
-        ]}
-        terms={[
-          { symbol: "r", name: "relative price ratio", description: "초기 대비 token0/token1 외부 가격 변화 비율입니다." },
-          { symbol: "IL", name: "divergence loss", description: "수수료를 제외한 LP 가치 / HODL 가치 − 1입니다." },
-        ]}
-        assumptions={["초기 50/50 constant-product position과 frictionless arbitrage를 가정합니다.", "수수료 수익·gas·세금·oracle 지연은 이 비교에 포함하지 않습니다."]}
-        interpretation="r=2이면 2√2/3−1≈−5.72%입니다. 이는 LP 잔고 자체가 손실이라는 뜻이 아니라 같은 초기 자산을 보유한 대안보다 뒤처진다는 뜻입니다. 누적 수수료가 5.72%를 넘으면 총 결과는 달라질 수 있습니다."
-      />
-      <div id="paper-uniswap-v2-whitepaper" className="scroll-mt-24">
-        <CitationBlock source="Adams et al. · Uniswap v2 Core whitepaper" href="https://docs.uniswap.org/whitepaper.pdf" citeKey={1}>
-          문제: 상시 유동성·ERC-20 pair·price accumulator·flash settlement를 최소 core로 제공합니다. 기여: constant-product invariant, 30-bp trader fee, optional protocol fee와 TWAP accumulator 설계를 설명합니다. 전제: V2 core·EVM transaction atomicity와 문서가 정한 token accounting을 사용합니다. 근거 범위: V2의 수학과 core 설계입니다. 비주장: Router quote가 체결을 보장하거나 모든 ERC-20·oracle 소비자가 안전하다는 뜻은 아닙니다.
-        </CitationBlock>
-      </div>
-    </section>
-  );
-}
+import TeachCode from "./TeachCode";
+export default function Overview(){return <div className="mb-16 space-y-14 [&_section]:space-y-5 [&_h2]:text-2xl [&_h2]:font-bold [&_p]:leading-8">
+<section id="overview" data-teach-level="S"><h2>1. 두 자산을 미리 모아 두고 교환하게 합니다</h2><p>토큰 A를 가진 사람이 B를 받고 싶을 때마다 반대 주문을 가진 사람을 기다리면 거래가 늦어집니다. 두 토큰을 미리 모아 둔 계약이 일정한 규칙에 따라 교환해 주면 상대 주문이 동시에 없어도 거래할 수 있습니다. 대신 많이 가져가는 자산일수록 다음 교환에서 비싸지도록 해야 한쪽이 쉽게 바닥나지 않습니다.</p><p>Uniswap V2는 두 자산의 잔액을 이용해 이 규칙을 구현합니다. 입력을 보내고 출력을 받는 한 거래를 먼저 따라간 뒤 자산을 맡긴 사람의 지분과 수수료를 연결하겠습니다. 범위별로 자산을 공급하는 방식은 <Link to="/cs/blockchain/uniswap-v3">Uniswap V3</Link>에서 이어집니다.</p></section>
+<section id="black-box" data-teach-level="B"><h2>2. 입력 준비·출력 전송·실제 잔액 검사로 나눕니다</h2><ol className="list-decimal space-y-3 pl-6"><li>입력 준비 → 사용자가 보낼 토큰과 받을 최소 수량을 정합니다.</li><li>교환 → 계약에 입력이 들어가고 정한 출력이 수신자에게 나갑니다.</li><li>검사 → 계약이 실제 남은 토큰을 세어 허용된 교환인지 확인합니다.</li><li>기록 → 검사를 통과하면 새 잔액을 저장하고 실패하면 이 거래를 되돌립니다.</li></ol><p>미리 계산한 견적과 실제 남은 잔액의 검사는 다른 일입니다. 이 구분을 위해 예제의 숫자를 끝까지 그대로 쓰겠습니다.</p></section>
+<section id="case" data-teach-level="0"><h2>3. 1000개씩 있는 풀에 A 100개를 넣습니다</h2><p>처음 계약에 A와 B가 각각 1000개 있습니다. 사용자가 A 100개를 넣어 B를 받습니다(가정). V2의 입력 수수료 0.3%를 반영하면 가격 계산에 쓰는 A는 99.7개입니다. 이 조건에서 받을 B는 약 90.661개입니다. 실제 계약의 A는 1100개, B는 약 909.339개가 됩니다.</p><p>A와 B를 1대1로 보고 B 100개를 빼면 안 됩니다. 거래 자체가 자산 비율을 바꾸며 계약은 수수료를 반영한 잔액의 곱을 검사합니다. 아래에서는 두 토큰을 각각 소수 여섯 자리로 나눌 수 있다고 가정합니다. 실제 정수 입력은 A 100000000 단위이고 B 출력은 90661089 단위, 즉 90.661089개입니다.</p><p>수수료가 빠진 99.7은 계산용 값입니다. 계약에 실제로 들어온 A 100 중 0.3을 즉시 다른 주소로 보냈다는 뜻은 아닙니다. 이 사례는 산술 검산이며 실제 체인에서 실행한 거래는 아닙니다.</p></section>
+<section id="parts" data-teach-level="1"><h2>4. 거래 안내와 자산 보관 계약을 나눕니다</h2><p>사용자는 보낼 양과 받는 주소, 허용할 최저 수량을 정합니다. 안내 계약은 교환 경로와 예상 수량을 계산하고 필요한 토큰을 전달합니다. 두 자산을 보관하는 계약은 거래 뒤 실제 잔액이 규칙을 만족하는지 확인합니다. 자산을 맡긴 참여자는 전체 풀에 대한 지분을 받습니다.</p><p>보관 계약이 기억하는 이전 잔액과 현재 토큰 계약에서 읽은 실제 잔액도 구분합니다. A의 이전 값이 1000이고 실제 잔액이 1100이면 이번 입력 100을 찾아낼 수 있습니다. 이 구분을 없앴을 때의 문제를 보겠습니다.</p></section>
+<section id="why-parts" data-teach-level="2"><h2>5. 사용자가 보냈다고 말한 양을 그대로 믿지 않습니다</h2><p>전송 과정에서 수수료를 떼는 토큰이라면 사용자가 100을 보냈어도 풀에는 99만 들어올 수 있습니다. 100을 모두 받았다고 계산하면 너무 많은 B를 내보냅니다. 계약은 남은 잔액에서 입력량을 확인해야 합니다.</p><p>미리 본 견적만 믿어도 문제가 생깁니다. 앞선 거래가 잔액을 바꾸면 내 거래가 실행될 때 받을 양이 달라집니다. 최저 수령량과 시간 제한은 사용자가 허용할 실행 조건을 표현합니다. 이제 이 역할의 실제 이름을 붙이겠습니다.</p></section>
+<section id="names" data-teach-level="3"><h2>6. Pair는 자산을 보관하고 Router는 교환을 연결합니다</h2><dl className="space-y-4"><div><dt className="font-semibold">두 자산의 보관·검사 계약 → Pair</dt><dd>토큰을 정렬해 token0·token1로 구분하고 이전 reserve와 현재 balance를 비교합니다. 여기서는 A가 token0입니다.</dd></div><div><dt className="font-semibold">경로와 사용자 조건을 처리하는 계약 → Router</dt><dd>한 개 또는 여러 Pair를 거치는 교환 수량을 계산하고 입력을 전달합니다.</dd></div><div><dt className="font-semibold">Pair 생성 담당 → Factory</dt><dd>같은 두 토큰 조합에 대응하는 Pair를 생성하고 찾습니다.</dd></div><div><dt className="font-semibold">자산 공급자와 지분 → LP·LP token</dt><dd>Liquidity Provider가 자산을 맡기고 풀의 일부를 돌려받을 지분을 보유합니다.</dd></div><div><dt className="font-semibold">항상 검사할 관계 → invariant</dt><dd>V2에서는 수수료를 반영한 잔액의 곱이 거래 전 기준보다 줄지 않아야 합니다.</dd></div></dl><ContentBoundary article="uniswap-v2"/><ModernV2Viz mode="swap"/></section>
+<section id="swap-trace" data-teach-level="4"><h2>7. 같은 100개 입력을 견적과 실제 잔액에서 확인합니다</h2><p>Router는 1000·1000의 reserve로 출력 90.661089 B를 계산합니다. 사용자가 허용한 최저 수령량보다 작으면 진행하지 않습니다. 조건을 통과하면 A 100개를 Pair로 보내고 Pair에 B 출력을 요청합니다.</p><p>Pair는 B를 보낸 뒤 실제 balance를 읽습니다. A는 1100이므로 입력은 1100−1000=100입니다. B는 909.338911이며 이번 예에서 B 입력은 없습니다. 수수료를 반영한 두 잔액을 곱해 기준을 만족하면 reserve를 이 값으로 갱신합니다. 그렇지 않으면 해당 호출이 실패합니다.</p><p>Router가 B 100개를 출력하라고 잘못 요청했다면 조정 곱은 1099.7×900=989730이 됩니다. 이전 곱 1000000보다 작으므로 검사에 실패합니다. 다음 식은 최대 출력이 90.661개 근처가 되는 이유를 보여줍니다.</p></section>
+<section id="swap-formula" data-teach-level="5"><h2>8. 출력량을 풀면 입력이 분모에도 들어갑니다</h2><p>입력 전 A·B 잔액을 x·y, 입력을 Δx, 출력을 Δy라고 하겠습니다. 가격 계산용 A 잔액은 x+0.997Δx이고 남은 B는 y−Δy입니다. 경계에서 둘의 곱을 xy와 같게 둡니다. 전개하면 0.997Δx·y=(x+0.997Δx)Δy가 되어 출력량을 구할 수 있습니다.</p><ExplainedFormula question="입력 100을 늘릴 때 출력도 똑같이 100 늘어날까요?" idea="입력이 커질수록 풀의 자산 비율도 바뀌므로 출력 계산의 분모에 입력이 함께 들어갑니다." formula={String.raw`\Delta y=\frac{997\Delta x\,y}{1000x+997\Delta x}`} annotatedFormula={String.raw`\Delta y=\frac{\underbrace{997\Delta x}_{\text{수수료 반영 입력}}\,y}{\underbrace{1000x+997\Delta x}_{\text{교환 뒤 유효 입력쪽 잔액}}}`} operations={[{expression:String.raw`997\Delta x`,annotation:"1000배 정수 스케일에서 입력의0.3%를 제외한997 몫을 가격에 반영합니다."},{expression:String.raw`1000x+997\Delta x`,annotation:"기존 A와 이번 유효 입력을 더해 거래가 만든 잔액 변화를 반영합니다."},{expression:String.raw`997\Delta x\,y/(1000x+997\Delta x)`,annotation:"유효 입력이 차지하는 비율만큼 기존 B에서 꺼낼 수 있는 최대량을 구합니다."}]} terms={[{symbol:"x,y",name:"거래 전 reserve",description:"각 토큰의 동일 시점 잔액이며 순서를 고정합니다."},{symbol:"\\Delta x",name:"실제 입력",description:"현재 balance에서 관측한 입력량입니다."},{symbol:"\\Delta y",name:"출력량",description:"수수료 반영 검사에서 허용하는 B의 양입니다."}]} assumptions={["이 예에서는 한쪽 토큰만 입력하고 일반적인 전송 동작을 가정합니다.","토큰 소수 자릿수를 반영한 정수로 계산하며 exact-input 출력은 내림합니다."]} interpretation="유효 입력 99.7, 출력≈90.661이고 실제 A는1100이므로 수수료가 남아 조정 전 잔액의 곱은 증가합니다. 코드에서는 소수 계산 대신1000과997을 사용합니다."/></section>
+<section id="swap-source" data-teach-level="6"><h2>9. 실제 코드에 100000000 정수 입력을 넣어 봅니다</h2><p><code>getAmountOut</code>은 입력에 997을 곱하고 이를 reserveOut과 곱해 분자를 만듭니다. 분모는 reserveIn×1000에 수수료 반영 입력을 더한 값입니다. A·B 1000개가 각각 정수 1000000000이고 입력이 100000000이면 나눗셈 결과는 90661089입니다.</p><TeachCode codeKey="quote" label="getAmountOut 실제 원문"/><p>Pair의 <code>swap</code>은 이 공식을 그대로 다시 호출하지 않습니다. 출력 뒤 balance를 읽고 입력량을 역산한 다음 <code>balance0×1000−amount0In×3</code>과 다른 쪽 조정값의 곱을 검사합니다. 7절의 A 1100과 입력 100을 대응시키면 같은 조건이 나옵니다. 코드 패널의 모든 실제 값에는 토큰의 정수 스케일을 적용합니다.</p><TeachCode codeKey="swap" label="입력 관측·조정 곱 실제 원문"/><div id="paper-uniswap-v2-whitepaper"><CitationBlock source="Adams, Zinsmeister, Robinson · Uniswap v2 Core, 2020, §3.2" citeKey={1} href="https://app.uniswap.org/whitepaper.pdf"><p>백서는 core가 거래가 유효한지 검사하고 주변 계약이 구체적인 거래 방법을 정하도록 역할을 나눕니다. 이 사례에서도 Router의 출력 계산과 Pair의 실제 잔액 검사를 별도로 읽습니다.</p></CitationBlock></div><p>이 글은 core v1.0.1이 가리키는 commit 4dd5906과 periphery ed24991의 실제 원본을 보존했습니다. 배포 주소의 코드를 확인하거나 EVM에서 교환을 실행한 시험은 별도입니다. 여기서 확인한 것은 원본 분기와 정수 산술의 대응입니다.</p></section>
+<section id="divergence-loss" data-teach-level="7"><h2>10. 자산을 맡기는 결과는 그대로 보유한 결과와 다릅니다</h2><p>거래 사례와 구분해 처음 A·B가 1000개씩인 풀로 돌아가겠습니다. 수수료를 제외하고 A의 외부 가격만 B 기준 두 배가 됐다고 가정합니다. 가격을 맞추는 거래 뒤 xy=1000000과 y/x=2가 함께 성립하므로 A는 약 707.107, B는 약 1414.214입니다. A를 B로 평가하면 풀 가치는 약 2828.427 B입니다. 처음 자산을 그대로 보유했다면 3000 B입니다.</p><ExplainedFormula question="그대로 보유한 대안과 비교하면 얼마나 뒤처지나요?" idea="외부 가격 변화에 맞춰 조정된 풀의 가치2√r을 같은 초기 자산을 보유한 가치1+r로 나눕니다." formula={String.raw`IL(r)=\frac{2\sqrt r}{1+r}-1`} annotatedFormula={String.raw`IL(r)=\frac{\underbrace{2\sqrt r}_{\text{조정된 풀 가치}}}{\underbrace{1+r}_{\text{그대로 보유한 가치}}}-1`} operations={[{expression:String.raw`2\sqrt r`,annotation:"잔액의 곱이 일정하고 새 가격비가r인 조건에서 두 자산의 합산 가치를 구합니다."},{expression:String.raw`1+r`,annotation:"초기 자산을 그대로 보유했을 때의 비교 가치를 구합니다."},{expression:String.raw`2\sqrt r/(1+r)-1`,annotation:"풀 가치가 비교 대안의 몇 배인지 구한 뒤1을 빼 상대 차이로 나타냅니다."}]} terms={[{symbol:"r",name:"가격 변화 비율",description:"A의 B 기준 가격이 초기의 몇 배인지 나타냅니다."},{symbol:"IL",name:"보유 대안 대비 차이",description:"같은 초기 자산을 그대로 보유한 가치와 LP 가치를 비교합니다."}]} assumptions={["초기 가치가50:50이고 수수료와 거래 마찰을 제외하며 가격비가 새 외부 가격에 맞춰졌다고 가정합니다."]} interpretation="r=2이면2√2/3−1≈−5.72%입니다. 초기 2000 B보다 풀 가치가 커졌어도 그대로 보유한3000 B에는 못 미칩니다. 실제 수수료와 비용은 같은 평가 시점·기준으로 추가해야 합니다."/><p>교환과 보유 가치의 차이를 확인했습니다. 다음은 새 참여자에게 얼마의 지분을 주어야 기존 참여자의 몫을 부당하게 줄이지 않는지 살펴봅니다.</p></section>
+</div>}
