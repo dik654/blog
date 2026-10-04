@@ -1,11 +1,11 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { Link } from "react-router-dom";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import { CitationBlock } from "@/components/ui/citation";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import ProgressGapViz from "./viz/ProgressGapViz";
 import SchedulerLoopViz from "./viz/SchedulerLoopViz";
-
 const GAP_TERMS = [
   {
     symbol: "n_r^{target}",
@@ -17,7 +17,7 @@ const GAP_TERMS = [
     symbol: "n_r^{computed}",
     name: "이미 계산한 token 수",
     description:
-      "현재 request state가 model forward를 완료했다고 기록한 token 수입니다.",
+      "스케줄러가 관리하는 계산 진행 위치입니다. 비동기 실행이나 계획 단계의 갱신에서는 실제 GPU 완료 시점과 구분해야 합니다.",
   },
   {
     symbol: "n_r^{need}",
@@ -48,7 +48,8 @@ const PRIORITY_TERMS = [
   {
     symbol: "a_r",
     name: "Arrival time",
-    description: "Priority가 같을 때 먼저 도착한 요청을 앞세우는 tie-break 값입니다.",
+    description:
+      "Priority가 같을 때 먼저 도착한 요청을 앞세우는 tie-break 값입니다.",
   },
 ] as const;
 
@@ -58,125 +59,126 @@ export default function ScheduleMethod({
   onCodeRef: (key: string, ref: CodeRef) => void;
 }) {
   return (
-    <section id="schedule-method" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        진행률을 token 차이로 바꾸면 prefill과 decode가 같은 budget에 섭니다
-      </h2>
-
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">
-          Prompt를 처음 읽는 prefill은 한 번에 수백 token이 남을 수 있지만 일반적인 decode는 다음 token 하나만 필요합니다. Speculative
-          decoding에서는 검증할 후보가 여러 개 생길 수 있습니다. V1 scheduler는 이 서로 다른 일을 “현재 목표 위치까지 아직 계산하지 않은 token 수”로 바꾸어 같은
-          token budget에서 비교합니다.
-        </p>
-      </div>
-
-      <ProgressGapViz />
-
-      <ExplainedFormula
-        question="Prompt·decode·speculative verification을 한 scheduler가 같은 단위로 배정하려면 어떻게 표현해야 할까요?"
-        idea={
-          <>
-            요청마다 목표 위치와 이미 계산한 위치의 차이를 구한 뒤, 남은 budget과
-            다른 hard constraint 안에서 이번 배정량을 자릅니다. 아래 식은 개념
-            모델이며 실제 V1 코드는 model length·encoder budget·KV block alignment와
-            speculative token 수를 추가로 조정합니다.
-          </>
-        }
-        formula={String.raw`\begin{aligned}
+    <div className="space-y-16">
+      <section
+        id="schedule-method"
+        data-teach-level="4"
+        className="scroll-mt-20"
+      >
+        <span id="running-waiting-order" className="scroll-mt-20" />
+        <span id="closed-loop-update" className="scroll-mt-20" />
+        <h2 className="mb-6 text-2xl font-bold">
+          7. 5개 예산을 1·1·3으로 쓰고 결과로 위치를 바꿉니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            R1의 남은 양은 9−8=1입니다. R2도 1을 배정받아 전체 예산 5 중 3이
+            남습니다. P는 남은 입력 12, 요청별 상한 4, 전체 잔여 3의 조건을 받아
+            3을 배정받습니다. 합계 1+1+3=5이고 요청 수는 3입니다. (가정)
+          </p>
+          <p>
+            계산이 끝나 R1·R2가 각각 다음 출력을 얻고 P는 입력 3개를 처리했다고
+            합시다. P의 위치는 3, 남은 입력은 9입니다. 같은 조건이 이어지면 P의
+            위치는 3→6→9→12로 바뀝니다. 마지막 입력까지 처리한 뒤 첫 출력을
+            고릅니다. (가정)
+          </p>
+          <p>
+            기본 흐름은 RUNNING을 먼저 검토한 뒤 선점이 없고 예산과 요청 자리가
+            남으면 WAITING을 검토합니다. 이 순서 자체가 모든 RUNNING의 실행이나
+            모든 WAITING의 공정한 대기를 보장하지는 않습니다.
+          </p>
+        </div>
+        <ExplainedFormula
+          question="Prompt·decode·speculative verification을 한 scheduler가 같은 단위로 배정하려면 어떻게 표현해야 할까요?"
+          idea={
+            <>
+              요청마다 목표 위치와 이미 계산한 위치의 차이를 구한 뒤, 남은
+              budget과 다른 hard constraint 안에서 이번 배정량을 자릅니다. 아래
+              식은 개념 모델이며 실제 V1 코드는 model length·encoder budget·KV
+              block alignment와 speculative token 수를 추가로 조정합니다.
+            </>
+          }
+          formula={String.raw`\begin{aligned}
 n_r^{need} &= \max\!\left(0,\;n_r^{target}-n_r^{computed}\right) \\
 0 \le n_r^{sched} &\le n_r^{need} \\
 \sum_{r\in\mathcal S} n_r^{sched} &\le B_{tok}
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
+          annotatedFormula={String.raw`\begin{aligned}
 \underbrace{n_r^{need}}_{\text{허용 경계 판정}} &= \underbrace{\max\!\left(0,\;n_r^{target}-n_r^{computed}\right)}_{\text{경계 후보 선택}} \\
 0 \le n_r^{sched} &\le n_r^{need} \\
 \sum_{r\in\mathcal S} n_r^{sched} &\le \underbrace{B_{tok}}_{\text{오른쪽 항으로 결과 계산}}
 \end{aligned}`}
-        operations={[
-          { expression: String.raw`\max\!\left(0,\;n_r^{target}-n_r^{computed}\right)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","요청마다"] },
-          { expression: String.raw`n_r^{need}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","요청마다"] },
-          { expression: String.raw`B_{tok}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","요청마다"] },
-        ]}
-        terms={GAP_TERMS}
-        assumptions={[
-          "각 request의 target·computed counter가 같은 tokenizer와 position 기준을 사용합니다.",
-          "집합 S에는 이번 iteration에서 token을 하나 이상 배정받은 request만 포함합니다.",
-          "이 부등식은 token budget만 나타냅니다. sequence cap과 KV·encoder memory가 부족하면 더 줄어듭니다.",
-        ]}
-        interpretation="2,000-token prefill이 남은 A와 decode 1 token이 필요한 B가 있을 때 B=1,024라면 둘을 합쳐 2,001 token을 그대로 넣을 수 없습니다. B에 1 token을 주고 A를 최대 1,023-token chunk로 자르는 식의 정책 결정이 필요합니다."
-        title="Request progress gap과 token-budget 보존"
-      />
-
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3 id="running-waiting-order" className="scroll-mt-20">
-          현재 V1은 RUNNING을 검토한 뒤 남은 자리로 WAITING을 받습니다
-        </h3>
-        <p className="leading-8">
-          이미 답을 stream하는 RUNNING 요청을 오래 멈추면 token 사이의 간격인 ITL이 바로 나빠집니다. 현재 V1의 기본 흐름은 RUNNING queue를 먼저 순회하며
-          token과 KV slot을 배정하고 preemption이 발생하지 않았으며 request slot과 budget이 남아 있을 때 WAITING queue의 요청을 받습니다.
-        </p>
-        <p className="leading-8">
-          RUNNING이라고 언제나 실행되는 것은 아닙니다. Budget·KV·model length 같은 조건을 통과하는 요청부터 진행합니다.
-        </p>
-      </div>
-
-      <SchedulerLoopViz />
-
-      <ExplainedFormula
-        question="Priority scheduling에서 두 요청의 우선순위가 같다면 무엇으로 순서를 정할까요?"
-        idea={
-          <>
-            현재 공식 설정은 작은 priority 값을 먼저 보고, 같은 값이면 arrival
-            time이 이른 요청을 먼저 보는 lexicographic order를 사용합니다. FCFS는
-            arrival time만으로 정렬합니다.
-          </>
-        }
-        formula={String.raw`r_i \prec r_j
-\quad\Longleftrightarrow\quad
-(p_i,a_i)<_{\mathrm{lex}}(p_j,a_j)`}
-        annotatedFormula={String.raw`r_i \prec r_j
-\quad\Longleftrightarrow\quad
-(p_i,a_i)<\underbrace{_{\mathrm{lex}}(p_j,a_j)}_{\text{오른쪽 항으로 결과 계산}}`}
-        operations={[
-          { expression: String.raw`_{\mathrm{lex}}(p_j,a_j)`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","현재 공식 설정은 작은 priority 값을 먼저 보고, 같은","값이면 arrival time이 이른 요청을 먼저 보는","lexicographic order를 사용합니다."] },
-        ]}
-        terms={PRIORITY_TERMS}
-        assumptions={[
-          "priority policy가 활성화되어 있고 client가 의미가 일관된 priority 값을 보냅니다.",
-          "작은 priority 숫자가 더 높은 우선순위라는 vLLM 계약을 따릅니다.",
-          "우선순위는 admission 순서를 조절할 뿐 token·KV hard constraint를 무시하지 못합니다.",
-        ]}
-        interpretation="priority=0 요청은 priority=5 요청보다 나중에 들어와도 먼저 고려될 수 있습니다. 높은 우선순위 요청이 계속 도착하면 낮은 우선순위 요청이 오래 기다릴 수 있으므로 queue age와 starvation을 별도 SLO로 둬야 합니다."
-        title="Priority policy의 정렬 기준"
-      />
-      <CodeViewButton
-        onClick={() =>
-          onCodeRef("priority-ordering", codeRefs["priority-ordering"])
-        }
-      />
-
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3 id="closed-loop-update" className="scroll-mt-20">
-          Scheduler는 output이 다음 입력이 되는 closed-loop입니다
-        </h3>
-        <p className="leading-8">
-          Worker가 model forward를 마치면 실제로 계산한 token, sampling 결과,
-          speculative acceptance, stop·cancel 상태를 engine에 돌려줍니다. Engine은
-          <code>num_computed_tokens</code>와 output state를 갱신하고 완료 요청의
-          resource를 반환합니다.
-        </p>
-        <p className="leading-8">
-          갱신 없이 다음 schedule을 만들면 이미 처리한 token을 다시 넣거나 끝난 요청이 KV block을 계속 점유할 수 있습니다. Schedule과 output update는
-          두 함수가 아니라 하나의 상태 전이 루프로 이해해야 합니다.
-        </p>
-        <p className="leading-8">
-          전체 engine 경계와 timestamp는 <Link to="/cs/ai/vllm-serving#v1-boundary">vLLM
-          serving architecture</Link>, speculative acceptance가 state commit에 미치는
-          영향은 <Link to="/cs/ai/vllm-spec-decode#draft-verify">Speculative Decoding</Link>에서
-          이어집니다.
-        </p>
-      </div>
-    </section>
+          operations={[
+            {
+              expression: String.raw`\max\!\left(0,\;n_r^{target}-n_r^{computed}\right)`,
+              annotation: [
+                "목표 위치에서 계산한 위치를 빼고 음수이면 0으로 제한합니다.",
+                "이번 사례에서 R1과 R2는 각각 1이고 P는 3입니다.",
+              ],
+            },
+            {
+              expression: String.raw`n_r^{need}`,
+              annotation: [
+                "선택한 모든 요청의 배정량 합이 예산을 넘지 않아야 합니다.",
+                "이번 사례에서 R1과 R2는 각각 1이고 P는 3입니다.",
+              ],
+            },
+            {
+              expression: String.raw`B_{tok}`,
+              annotation: [
+                "선택한 모든 요청의 배정량 합이 예산을 넘지 않아야 합니다.",
+                "이번 사례에서 R1과 R2는 각각 1이고 P는 3입니다.",
+              ],
+            },
+          ]}
+          terms={GAP_TERMS}
+          assumptions={[
+            "각 request의 target·computed counter가 같은 tokenizer와 position 기준을 사용합니다.",
+            "집합 S에는 이번 iteration에서 token을 하나 이상 배정받은 request만 포함합니다.",
+            "이 부등식은 token budget만 나타냅니다. sequence cap과 KV·encoder memory가 부족하면 더 줄어듭니다.",
+          ]}
+          interpretation="R1과 R2에 각 1 token을 배정하면 예산 5 중 3이 남습니다. P의 남은 12를 chunk 상한 4로 줄여도 실제 배정은 남은 예산 3을 넘을 수 없습니다. 합계 1+1+3=5입니다. (가정)"
+          title="Request progress gap과 token-budget 보존"
+        />
+        <ProgressGapViz />
+        <SchedulerLoopViz />
+      </section>
+      <section
+        id="scheduler-source"
+        data-teach-level="5"
+        className="scroll-mt-20"
+      >
+        <h2 className="mb-6 text-2xl font-bold">
+          8. 원문에서 12를 4로, 다시 3으로 줄이는 자리를 찾습니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            코드 패널의 세 파일은 v0.27.1 commit
+            6e448d0ea9bf3d88d898b65449ca6dc2aec170ac의 원문입니다. scheduler.py
+            516–523행은 남은 양과 요청별 상한, 전체 잔여 예산을 순서대로
+            적용합니다. P가 다음 실행부터 RUNNING에 있다면 9를 상한 4로, 잔여
+            3으로 줄입니다. 처음 WAITING 수용도 별도 경로에서 잔여 예산을
+            검사합니다.
+          </p>
+          <p>
+            계획한 양은 631–638행에서 num_scheduled_tokens에 기록되고 전체
+            예산에서 빠집니다. 요청이 나중에 선점되면 이미 배정한 양을 되돌리는
+            분기도 있습니다. 결과 반영과 비동기 진행을 포함하면 counter가 언제
+            앞서 갱신되는지도 함께 확인해야 하므로 num_computed_tokens를 항상
+            GPU 완료의 증명으로 쓰지 않습니다.
+          </p>
+          <p>
+            실제 상태에는 후보 token·출력 placeholder·인코더 입력·최대 길이·블록
+            정렬이 추가됩니다. 이 사례는 해당 추가 조건이 작동하지 않는 설정을
+            가정했습니다. 계산식과 코드의 차이를 숨기지 않고 이 경계에서 확장해
+            읽습니다.
+          </p>
+        </div>
+        <CodeViewButton
+          label="실제 token 배정 조건"
+          onClick={() => onCodeRef("preempt-chunk", codeRefs["preempt-chunk"])}
+        />
+      </section>
+    </div>
   );
 }

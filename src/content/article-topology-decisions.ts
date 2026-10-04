@@ -108,13 +108,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
       "같은 base model·rank 설정에서 trainable parameter ratio·메모리 절감·adapter 서빙 처리량을 한 receipt로 비교합니다.",
   },
   "ai/vllm-scheduler": {
-    action: "keep",
-    status: "reviewed",
-    reviewedAt: "2026-08-29",
-    rationale:
-      "Static·dynamic·iteration-level batching 세대→request queue 정책·fairness·HOL blocking→scheduler overhead가 하나의 큐 정책 학습 단위입니다. 2026-08-29 보강으로 concept가 14개로 늘었지만 step 내부 token budget 배분은 continuous-batching-step-anatomy, admission·preemption은 serving-memory-admission-and-preemption으로 이미 분리돼 있어 이 글은 queue 자체의 정책·세대·비용만 소유합니다.",
-    sharedGate:
-      "같은 request-rate·길이 분포 fixture에서 batching 세대별 idle율·HOL 지연·scheduler overhead를 한 receipt로 비교합니다.",
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 번의 GPU 실행에 들어갈 후보를 같은 예산5 안에서 고르고 부족한 자원을 되돌리는 경로를 따라갑니다. 공정성과 CPU/GPU 중첩은 이 반복을 여러 번 운영할 때의 별도 측정 조건으로 붙어 있으므로 하나의 스케줄링 문제로 유지합니다.",
+    "sharedGate": "실행중출력1·1 뒤남은3을입력12에배정하여상한4라도실제4조각이되는것을검산하고선점재계산·큐재삽입·VTC절대차이한계의 단위를 구분합니다."
   },
   "ai/xml-prompting": KEEP("Role framing→serialization→parser/schema/security validation→format evaluation이 한 XML prompt contract입니다."),
   "blockchain/cometbft-abci": KEEP("PrepareProposal→ProcessProposal→FinalizeBlock→Commit이 ABCI state transition 순서와 일치합니다."),
@@ -389,10 +387,34 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "같은 수요와 한계비용에서 멈추는 수량·읽히는 값·틈의 비율·사라지는 삼각형이 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
   },
-  "devices/pn-junction-and-rectification": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "붙인 직후 확산부터 내장 전기장, 외부 바이어스, 이상 전류와 모델 한계까지가 한 접합의 작동 질문을 이룹니다. 도핑의 정본 정의는 앞 글에 남기고 다음 게이트 소자는 분리합니다.", sharedGate: "300 K, Is=1 pA, VT=25.85 mV라는 같은 가정에서 −0.5·0·+0.5·+0.6 V의 본문·식·Viz·문제 수치가 일치하는지 확인합니다." },
-  "devices/mos-capacitor-and-inversion": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "절연 전극 구조에서 표면 상태, 전압 기준, 반전 전하 계산, 산화막 경계까지가 하나의 MOS 축전기 질문을 풉니다. 양단자 전류를 조절하는 MOSFET은 다음 글로 분리합니다.", sharedGate: "10 nm·100 µm²·평탄띠 0 V·문턱 0.5 V·전극 1.0 V의 가정에서 0.345 pF·0.173 pC·전자 약 108만 개가 본문·식·Viz·연습문제에서 일치하는지 확인합니다." },
-  "devices/mosfet-regions-and-transfer": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "한 긴 채널 소자의 네 단자와 채널에서 세 전류 영역·실제 모델 경계까지를 같은 전압 가정으로 추적합니다. 축전기의 표면 전하 정의는 앞 글, 스위칭 에너지는 다음 글이 소유합니다.", sharedGate: "Vth=0.5 V·k=1 mA/V²·VGS=1.5 V의 가정에서 VDS=0.2/1.0/1.5 V의 0.18/0.5/0.5 mA가 본문·식·Viz·연습문제에 일치하는지 확인합니다." },
-  "devices/switching-energy-and-leakage": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "가상 CMOS 출력 하나에서 충전·방전 장부, 활동률, 누설, 전압 변경의 경계까지 같은 10 pF·3.3 V 사례로 따라갑니다. MOSFET 영역은 앞 글, 제조는 다음 글이 소유합니다.", sharedGate: "0→1→0 한 쌍당 108.9 pJ, 10%·1 MHz의 10.89 µW, 누설 3.3 µW와 합 14.19 µW가 본문·식·Viz·연습문제에 일치하는지 확인합니다." },
+  "devices/pn-junction-and-rectification": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 접합에서 확산과 고정 이온의 전기장이 평형을 만든 뒤 같은 장벽에 세 전압을 거는 단일 경로입니다. 전류식과 방향 비대칭은 이 경로의 계산입니다.",
+    "sharedGate": "0/.251 mA/12.03 mA/−1 pA와 47.869배를 검산하고 Shockley의 면적당 성분을 총 단자 전류로 옮기는 면적 조건을 확인합니다."
+  },
+  "devices/mos-capacitor-and-inversion": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "절연된 전극의 전기장과 실리콘의 전자 공급 경로를 분리해 한 표면의 상태와 전하 수를 구합니다. 소자의 명칭은 구조의 역할을 이해한 뒤 붙입니다.",
+    "sharedGate": "C0.3453 pF,Q−0.17265 pC,N1.0776×10⁶,5 nm에서0.6906 pF를 계산하고 정적 반전 전하의 공급 조건을 확인합니다."
+  },
+  "devices/mosfet-regions-and-transfer": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 채널의 입구·출구 전하가 달라지는 이유에서 시작해 선형식과 포화식의 연결 및 근사 한계까지 따라갑니다. 같은 소자의 영역 비교이므로 하나의 글로 유지합니다.",
+    "sharedGate": "0.18/.48/.5/.5 mA,0.8Vov에서96%,게이트2 V의1.125 mA를 검산하고 포화 경계의 고전계 근사 한계를 설명합니다."
+  },
+  "devices/switching-energy-and-leakage": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 출력의 충전·방전 왕복에서 공급·저장·발열을 맞추고 같은 왕복의 초당 횟수로 평균 전력을 구합니다. 누설은 같은 공급선에서 별도 원인의 항으로 더합니다.",
+    "sharedGate": "Q33 pC,공급108.9 pJ,충전·방전 각각54.45 pJ,동적10.89 µW·합14.19 µW,5 pF의5.445 µW를 검산합니다."
+  },
   "circuits/resistance-and-power-dissipation": {
     "action": "keep",
     "status": "implemented",
@@ -430,10 +452,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "semiconductors/wafer-and-planar-process": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-03",
-    "rationale": "선택 확산과 접합 보호라는 하나의 평면 공정 질문을 웨이퍼→막 창→확산→접촉 순서로 풉니다. 노광 해상도·정렬과 도핑 열 예산은 다음 글이 소유합니다.",
-    "sharedGate": "가상 창100 µm·옆 확산 각2 µm·접촉 창80 µm에서 p형 폭104 µm·한쪽 명목 거리12 µm가 본문·Viz·문제에 일치하고 특허 실측과 구분되는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 단면을 만드는 두 개방 단계가 각각 원자 입구와 전극 자리를 맡는 이유를 추적합니다. 원문 보호 조건과 거리 계산을 같은 단면에서 연결하기 위해 단일 글로 유지합니다.",
+    "sharedGate": "104µm·12µm,대안110µm·15µm,큰 접촉창2µm에서정렬3µm를뺀−1µm를검산하고 원문 청구항1(e)의 덮개 보존과 대조합니다."
   },
   "semiconductors/lithography-and-resolution": {
     "action": "keep",
@@ -1152,6 +1174,132 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "하나의 짧은 바이트코드를 읽고 스택·프로그램 위치·남은 비용을 실제 실행 함수까지 따라갑니다.",
     "sharedGate": "60 02 60 03 01 00이 pc0→2→4→5, gas20→17→14→11, 스택 결과5로 이어지는지 고정 execution-specs 원문과 대조합니다."
   },
+  "ai/context-instruction-boundaries": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 이메일의 내용이 고객 정보 전송 제안으로 바뀌는 순간에 문서·권한·현재 조건이 담당하는 검사를 따라갑니다.",
+    "sharedGate": "문서1통과 고객100건에서 schema1·authorization0이 전송0건으로 이어지는 경로를 공식 OWASP 방어 항목과 대조합니다."
+  },
+  "ai/agent-failure-modes-and-recovery": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "결제 한 번의 응답 유실을 같은 업무 키로 확인·재시도·인계하는 경로입니다. 일반 실패 분류는 그 결제 복구에 필요한 판단 근거로 연결됩니다.",
+    "sharedGate": "order42·10,000원·pay-42에서 응답없음과 미실행을 구분하고 서버의 키 보존 조건을 지켜 중복20,000원 효과를 방지합니다."
+  },
+  "ai/tool-calling-lifecycle-and-costs": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "세 도시 조회의 제안·권한 확인·실행·결과 반환을 같은 요청으로 추적하며 시간과 토큰 비용을 각 경계에서 셉니다.",
+    "sharedGate": "도시3개·조회각400 ms에서 순차1200/병렬실행400 ms와 입력 부분합2654토큰을 검산하고 전체 지연·최종 요금과 구분합니다."
+  },
+  "ai/llm-harness": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "PING32개를 만드는 한 요구에서 모델 제안과 결정적 생성·검사·완료 기록의 역할을 연결합니다. 실험 결과는 같은 계약을 어떤 구성으로 달성했는지 설명합니다.",
+    "sharedGate": "PING32개·공백31개·총159자를 검사하고 27/27·0/27·135/135의 측정 범위와 인증이 필요한 원문 접근 한계를 구분합니다."
+  },
+  "blockchain/consensus-mechanisms": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 송금 후보를 만들고 유효성을 검사한 뒤 선택·확정하는 과정에서 공개 참여의 영향력 근거를 비교합니다.",
+    "sharedGate": "자원10/20/30/40에서70표의정당화와최종확정을구분하고 PoW 성공확률1/16·기대16회를 별도로 검산합니다."
+  },
+  "blockchain/bft-theory": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 주문의 상충하는 두 표 묶음이 겹치는지를 세어 안전한 결정과 늦은 통신에서의 진행을 연결합니다.",
+    "sharedGate": "n4/f1/q3의정직한교집합과q2반례,2q>n+f및q≤n−f를 대조하고 시간 초과가 안전성 증거를 지우지 않는 이유를 설명합니다."
+  },
+  "blockchain/node-architecture": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "송금이 든 같은 후보 블록의 자료 확보·실행 검증·체인 선택을 두 클라이언트의 원문 경계까지 따라갑니다.",
+    "sharedGate": "100−10−0.000042=89.999958 ETH에서 H101검증과 headH101/safeH99/finalizedH96을구분하며 exact Reth 원문의 SYNCING·VALID 분기를 대조합니다."
+  },
+  "ai/activation-functions": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "출력의 높이와 뒤로 곱할 기울기를 구별하는 것이 중심 질문입니다. Step·sigmoid·tanh를 입력2와 뒤 변화율3으로 비교해야 불연속·포화·부호를 한 기준으로 판단할 수 있으므로 세 곡선의 기초는 한 글로 유지합니다. 음수 경로와 학습하는 조절 구조는 후속 두 글이 소유합니다.",
+    "sharedGate": "입력2·뒤 변화율3에서 sigmoid 출력 .880797·기울기 .104994·앞 변화율 .314981을 구하고 step·tanh와 대조합니다 (가정)."
+  },
+  "ai/rectifier-activations": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "음수 입력−2의 경로를 닫을지, 작은 고정 기울기를 남길지, 기울기 자체를 학습할지를 이어서 비교합니다. ReLU·Leaky·PReLU의 국소 변화율 문제와 SELU의 조건부 분포 문제를 같은 입력으로 구별해야 함수 이름만 보고 대체하지 않으므로 한 비교 글을 유지합니다.",
+    "sharedGate": "입력 (−2,3)·뒤 변화율 (4,4)에서 ReLU, 음수 기울기 .01, SELU의 출력과 변화율을 비교합니다. PReLU에서 입력 gradient .04와 a의 gradient −8을 구별합니다 (가정)."
+  },
+  "ai/gated-activations": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "조절 비율과 원래 값의 곱, 두 projection 경로의 곱, 마지막 출력 행렬까지 입력(1,−1)이 이어집니다. SiLU 하나를 SwiGLU 전체 구조와 혼동하지 않으려면 scalar 곡선·행렬 shape·3개 행렬의 예산을 함께 읽어야 하므로 이 범위를 한 글로 유지합니다.",
+    "sharedGate": "입력 (1,−1), Wg=I, Wv=diag(2,3), Wo=[[1,0],[1,0]]에서 SwiGLU 출력 (2.268941,0)을 같은 원문 식에 대입합니다. 폭2와3의 가중치 수12도 계산합니다 (가정)."
+  },
+  "ai/optimizers": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 갱신에 어떤 자료의 평균을 넣는지가 중심 질문입니다. 유효 개수2·6을 모으는 과정과 θ3→2.6의 실제 이동을 분리하면 잘못된 분모를 잡아내기 어려워, gradient 추정·누적·SGD 적용·갱신 횟수를 하나의 추적으로 유지합니다. 추가 기억 상태는 후속 optimizer 글이 소유합니다.",
+    "sharedGate": "유효 개수2·6, 손실합2·18, gradient합4·28을 공통 분모8로 나눠 loss2.5·gradient4, θ3→2.6을 얻습니다. 각 묶음 평균을 반씩 섞는 잘못된 목표와 대조합니다 (가정)."
+  },
+  "ai/momentum-optimizer": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "방향이 반전돼도 과거 buffer가 이동을 지속시키는 이유를 세 신호1,1,−1로 설명합니다. 정규화한 EMA와 unnormalized velocity의 계수 차이, Nesterov가 같은 buffer에서 최종 방향을 바꾸는 분기를 함께 확인해야 상태의 단위를 섞지 않으므로 한 글로 유지합니다.",
+    "sharedGate": "g=[1,1,−1], β=.9, η=.1, θ0=3, v0=0에서 v=[1,1.9,.71], θ=[2.9,2.71,2.639]를 실제 SGD 원문에 대입합니다 (가정)."
+  },
+  "ai/adam-optimizer": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "두 신호2,−2가 방향 장부에서 상쇄되고 제곱 장부에는 모두 남는 계산이 전체 질문입니다. 두 raw moment·초기 비중 보정·좌표별 분모를 따로 떼면 작은 역방향 이동 .005263의 원인을 잃으므로 실제 Adam 원문까지 한 글로 유지합니다. 별도 weight decay는 연결 글에서 다룹니다.",
+    "sharedGate": "g=[2,−2], β1=.9·β2=.999·η=.1·ε=10⁻⁸에서 첫 m=.2,v=.004와 둘째 m=−.02,v=.007996을 만들고 θ≈2.9→2.9052631584까지 실제 원문과 대조합니다 (가정)."
+  },
+  "semiconductors/bands-and-doping": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 두 조각에서 움직이는 전하와 고정 이온을 나누고 열평형식·중성 조건으로 수를 맞춥니다. 전도도 한계는 같은 농도에서 이동 능력까지 알아야 하는 이유를 설명하므로 이 계산과 함께 유지합니다.",
+    "sharedGate": "n≈10¹⁶,p≈10⁴와 보상 도핑 n≈8×10¹⁵,p≈1.25×10⁴,새 ni10¹³의 p≈10¹⁰을 단위와 근사 조건을 포함해 검산합니다."
+  },
+  "blockchain/rollup-fundamentals": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "두 송금의 자료 공개·재실행·결과 주장 검사를 같은 상태 변화에서 추적합니다. 묶음 프레임과 결과 루트는 서로 다른 검증 단계이므로 함께 읽어 공개된 자료와 옳은 결과를 혼동하지 않게 합니다.",
+    "sharedGate": "A100/B0→90/10→95/5,잘못된A96을 비교하고 프레임0누락·1종료·23+100바이트 및 두 프레임247바이트를 실제 OP specs 조건과 대조합니다."
+  },
+  "blockchain/stablecoin-overview": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "1달러를 목표로 한 같은 토큰의 시장 매수·직접 상환·준비자산 현금화를 하나의 청구 경로로 연결합니다. 담보형과 알고리즘형 비교는 그 청구가 무엇에 기대는지를 구별하는 한계를 맡습니다.",
+    "sharedGate": "1만개를9700에사서1만상환·비용100이면조건부200,장부1만에서현금2000+자산매각3800은상환6000에200부족임을 검산하고 Circle의 직접 상환 자격을 적용합니다."
+  },
+  "ai/vllm-serving": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "세 생성 요청이 한 실행 예산을 나누며 출력이 끝난 자리를 다음 요청에 내주는 과정을 따라갑니다. 입력 처리·다음 출력·메모리·시간 측정은 이 동일 요청의 서로 다른 경계입니다.",
+    "sharedGate": "A/B/C의 입력6/2/3·출력3/2/1,예산4·상한2를 원문 scheduler 필드에 넣고 TTFT45ms·E2E65ms·TPOT10ms와 GPU2×4×1=8을 검산합니다."
+  },
+  "blockchain/uniswap-v2": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 풀의 입력100이 실제 잔액·수수료 조정·불변식 검사를 통과하는 경로에서 지분·일시 인출·누적 가격까지 같은 저장 상태가 담당하는 역할을 나눕니다. 파생 기능을 별도 소개 없이 섞지 않고 원문 함수의 진입점마다 이 풀의 수치를 적용하므로 구현 단위를 유지합니다.",
+    "sharedGate": "정수출력90661089와조정곱을고정core4dd5906·periphery원문으로대조하고 선택적 프로토콜 지분발행 및 동일자산 일시인출의상환올림·시간가중누적의단위를검산합니다."
+  },
 };
 
 /**
@@ -1159,9 +1307,27 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "blockchain/uniswap-v2": "6ca624f8fa914913",
+  "ai/activation-functions": "c6f9a3b966843092",
+  "ai/adam-optimizer": "b246a49a4f20c77b",
+  "ai/gated-activations": "a86f55c09db0d506",
+  "ai/momentum-optimizer": "a4569d55fe8e3fb5",
+  "ai/optimizers": "b505625de383d39c",
+  "ai/rectifier-activations": "e34376d48f9d220e",
+  "ai/vllm-serving": "b96090c59bb5b806",
+  "blockchain/rollup-fundamentals": "eb9ef0170efde5b7",
+  "blockchain/stablecoin-overview": "c2364153df3233b8",
+  "semiconductors/bands-and-doping": "f75aa1683e9970ef",
+  "ai/agent-failure-modes-and-recovery": "9e9140ad3ac52646",
+  "ai/context-instruction-boundaries": "77fed74fd97f4a8d",
+  "ai/llm-harness": "66b6a35cf8234076",
+  "ai/tool-calling-lifecycle-and-costs": "a07de9803a7bd5eb",
+  "blockchain/bft-theory": "d16a5a5ade30b630",
+  "blockchain/consensus-mechanisms": "05fc4f3747778112",
+  "blockchain/node-architecture": "2face4a74c90cef2",
   "ai/agent-control-boundaries": "09ac3cdb6f297b06",
   "ai/agent-delegation-contracts": "872b22c7db72ecbb",
-  "ai/agent-loop-foundations": "1a044aaefe48abc1",
+  "ai/agent-loop-foundations": "1e9173ac2df460c4",
   "ai/agent-plan-replanning": "066b27b1cff27452",
   "ai/agent-run-contract": "c039f76838539f06",
   "ai/agent-verification": "b9bdcdbbf2efdd95",
@@ -1217,16 +1383,16 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "semiconductors/interconnect-and-rc-delay": "9fe870634104880b",
   "semiconductors/doping-and-thermal-budget": "77caf87831e26635",
   "semiconductors/lithography-and-resolution": "45e896d39b860a36",
-  "semiconductors/wafer-and-planar-process": "20fd73be7dfc606d",
+  "semiconductors/wafer-and-planar-process": "8ef30e6f8c1d03e3",
   "circuits/feedback-gain-and-stability": "2bbfa8da24590edd",
   "circuits/frequency-shaping-and-bode": "57bed2f731a22ee4",
   "circuits/steady-state-and-impedance": "a477754ef165a51d",
   "circuits/storage-elements-and-transients": "2c0ad5c1225fe820",
   "circuits/resistance-and-power-dissipation": "661e59ead0e416e7",
-  "devices/switching-energy-and-leakage": "ceb9d7570a210e44",
-  "devices/mosfet-regions-and-transfer": "1879d22ab7ea8d40",
-  "devices/mos-capacitor-and-inversion": "8cc6ce4600003dae",
-  "devices/pn-junction-and-rectification": "4d8acd6a58093d10",
+  "devices/switching-energy-and-leakage": "1a7b2d6776e60076",
+  "devices/mosfet-regions-and-transfer": "1146b8b2b4c5befe",
+  "devices/mos-capacitor-and-inversion": "1e5d35dbab253534",
+  "devices/pn-junction-and-rectification": "c083be4ff15f1154",
   "ai/negative-result-3d-face-control": "6b146f6ac0e0984c",
   "ai/generative-identity-diversity": "261a9b984c0aa841",
   "ai/reference-identity-pose-separation": "7b3b4e75c366dbf4",
@@ -1271,7 +1437,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/vae": "147d459b37db9ccd",
   "ai/vllm-paged-attention": "7150bf99c717624c",
   "ai/vllm-spec-decode": "4ae6d26832c9fab4",
-  "ai/vllm-scheduler": "4721c6f860114ef2",
+  "ai/vllm-scheduler": "2bde960d9b11b3a0",
   "ai/retrieval-ranking-funnel": "a90156ebba994926",
   "ai/model-vram-budgeting": "c4fcc7f16d877504",
   "ai/xml-prompting": "10c4804cd901a1a7",

@@ -2,52 +2,101 @@ import type { CodeRef } from "@/components/code/types";
 import schedulerPy from "./codebase/vllm/v1/core/sched/scheduler.py?raw";
 import requestPy from "./codebase/vllm/v1/request.py?raw";
 import requestQueuePy from "./codebase/vllm/v1/core/sched/request_queue.py?raw";
-
 export const codeRefs: Record<string, CodeRef> = {
   "priority-ordering": {
     path: "vllm/v1/request.py",
     code: requestPy,
     lang: "python",
-    highlight: [4, 20],
-    desc: "문제: Priority scheduling에서 두 요청 중 어느 쪽을 먼저 볼지 결정적으로 정해야 합니다.\n\n해결: Request.__lt__가 (priority, arrival_time, request_id, object id) 순서로 비교 규칙을 정의합니다. 이 규칙 그대로 PriorityRequestQueue가 Python heapq에 위임합니다.",
+    highlight: [334, 345],
+    desc: "v0.27.1 고정 원문입니다. 작은 priority, 도착 시각, request_id, 객체 id 순서로 비교합니다.",
     annotations: [
-      { lines: [10, 12], color: "sky", note: "priority 값이 작을수록 우선 — article의 p_i < p_j" },
-      { lines: [13, 15], color: "emerald", note: "priority가 같으면 arrival_time으로 tie-break — article의 a_i < a_j" },
-      { lines: [16, 20], color: "amber", note: "article 식에는 없는 실제 구현의 추가 tie-break(request_id → object id)로 완전한 전순서를 보장" },
+      {
+        lines: [339, 340],
+        color: "sky",
+        note: "작은 priority 값이 먼저입니다.",
+      },
+      {
+        lines: [341, 342],
+        color: "emerald",
+        note: "priority가 같으면 먼저 도착한 요청을 앞세웁니다.",
+      },
+      {
+        lines: [343, 345],
+        color: "amber",
+        note: "같은 두 값 뒤에도 요청 식별자와 객체 id로 동률을 구분합니다.",
+      },
     ],
   },
   "priority-queue": {
     path: "vllm/v1/core/sched/request_queue.py",
     code: requestQueuePy,
     lang: "python",
-    highlight: [4, 34],
-    desc: "문제: 위에서 정의한 비교 규칙을 실제 queue 자료구조에 어떻게 반영할지 정해야 합니다.\n\n해결: PriorityRequestQueue는 자체 비교 로직을 새로 짜지 않고, Request.__lt__가 지원하는 Python heapq(min-heap)에 그대로 위임합니다.",
+    highlight: [131, 165],
+    desc: "같은 prepend 호출이어도 FCFS는 앞에 넣고 priority queue는 기존 비교 규칙으로 heap에 넣습니다. 전체 원문의 줄 번호를 보존했습니다.",
     annotations: [
-      { lines: [17, 19], color: "sky", note: "heapq.heappush가 Request.__lt__ 순서를 그대로 사용해 삽입" },
-      { lines: [27, 34], color: "emerald", note: "Preemption으로 되돌아온 request도 앞이 아니라 같은 priority 규칙으로 재삽입" },
+      {
+        lines: [78, 94],
+        color: "sky",
+        note: "FCFS는 새 요청을 뒤에, prepend 요청을 앞에 넣습니다.",
+      },
+      {
+        lines: [144, 152],
+        color: "emerald",
+        note: "Priority queue는 Request.__lt__를 사용하는 heap으로 삽입·추출합니다.",
+      },
+      {
+        lines: [160, 165],
+        color: "amber",
+        note: "Priority의 prepend는 맨 앞 삽입이 아니라 add_request 재사용입니다.",
+      },
     ],
   },
   "preempt-chunk": {
     path: "vllm/v1/core/sched/scheduler.py",
     code: schedulerPy,
     lang: "python",
-    highlight: [19, 24],
-    desc: "문제: 긴 prefill 하나가 token budget을 통째로 차지하면 그 사이 decode 요청이 계속 밀립니다.\n\n해결: schedule() 안에서 이번 request가 쓸 token 수를 long_prefill_token_threshold로 먼저 자르고, 남은 token_budget으로 한 번 더 clip합니다.",
+    highlight: [516, 523],
+    desc: "진행 요청의 남은 양을 요청별 상한과 전체 잔여 예산으로 제한합니다. 새 대기 요청 수용 경로와 추가 조건도 원문에 남아 있습니다.",
     annotations: [
-      { lines: [19, 22], color: "sky", note: "C=⌈P/c⌉의 c — 긴 prefill을 threshold 이하 조각으로 자름" },
-      { lines: [23, 24], color: "emerald", note: "chunk를 자른 뒤에도 남은 전체 token_budget으로 다시 상한 적용" },
+      {
+        lines: [516, 520],
+        color: "sky",
+        note: "목표 위치와 이미 계산한 위치의 차이를 구합니다. 비동기 placeholder도 반영됩니다.",
+      },
+      {
+        lines: [521, 523],
+        color: "emerald",
+        note: "P의 남은 9를 상한 4로 줄이고 전체 잔여 3으로 다시 제한합니다.",
+      },
+      {
+        lines: [631, 638],
+        color: "amber",
+        note: "요청별 배정량을 기록하고 전체 예산에서 차감합니다.",
+      },
     ],
   },
   "preempt-request": {
     path: "vllm/v1/core/sched/scheduler.py",
     code: schedulerPy,
     lang: "python",
-    highlight: [27, 55],
-    desc: "문제: KV block이 모자라 실행할 수 없는 request를 어떻게 안전하게 되돌릴지 정해야 합니다.\n\n해결: KV·encoder cache를 모두 반환하고 상태를 PREEMPTED로 바꾼 뒤 진행 counter를 0으로 재설정하고, WAITING queue의 policy 규칙 그대로 다시 넣습니다.",
+    highlight: [1274, 1315],
+    desc: "전체 원문에서 블록 해제·상태 변경·진행 값 초기화·진행 중 결과 관리·재삽입을 확인합니다. 서버 응답과 실행 counter의 시점을 구분합니다.",
     annotations: [
-      { lines: [38, 41], color: "sky", note: "KV block과 encoder cache 반환 — article의 n_r^hit이 재개 시 다시 채워야 할 부분" },
-      { lines: [43, 49], color: "emerald", note: "상태 전이(RUNNING→PREEMPTED)와 num_computed_tokens=0 재설정 — article의 n_r^before가 0으로 리셋되는 지점" },
-      { lines: [54, 55], color: "amber", note: "WAITING queue에 재삽입 — FCFS/PRIORITY policy를 그대로 재사용" },
+      {
+        lines: [1287, 1296],
+        color: "sky",
+        note: "RUNNING인지 검사한 뒤 KV·인코더 기록을 해제하고 PREEMPTED와 계산 위치 0을 설정합니다.",
+      },
+      {
+        lines: [1297, 1309],
+        color: "emerald",
+        note: "비동기 실행에서 뒤늦게 돌아오는 결과가 초기화한 counter를 잘못 바꾸지 않도록 상태를 남깁니다.",
+      },
+      {
+        lines: [1313, 1315],
+        color: "amber",
+        note: "실제 재삽입 위치는 waiting queue의 FCFS 또는 priority 구현이 결정합니다.",
+      },
     ],
   },
 };

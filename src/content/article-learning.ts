@@ -4654,185 +4654,789 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/activation-functions": {
-    entryLevel: true,
-    entryNote: "함수·미분을 이미 안다고 가정하지 않고 숫자 하나의 forward 값과 local slope부터 설명합니다.",
-    coreIdea:
-      "Activation function은 affine layer 사이에 비선형성을 넣어 표현의 collapse를 막는 동시에 backward에서 곱해지는 local derivative를 정합니다. 각 선택지는 같은 계보의 최신 버전이 아니라 포화, dead unit, signal scale, smooth gating, gated FFN이라는 서로 다른 문제와 비용을 다룹니다.",
-    assumedKnowledge: [],
-    introducedHere: [
+    "entryLevel": true,
+    "entryNote": "입력2·뒤 변화율3에서 sigmoid 출력 .880797·기울기 .104994·앞 변화율 .314981을 구하고 step·tanh와 대조합니다 (가정).",
+    "coreIdea": "Activation function은 affine layer 사이에 비선형성을 넣어 표현의 collapse를 막는 동시에 backward에서 곱해지는 local derivative를 정합니다. 각 선택지는 같은 계보의 최신 버전이 아니라 포화, dead unit, signal scale, smooth gating, gated FFN이라는 서로 다른 문제와 비용을 다룹니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "nonlinear-activation",
-        role: "Affine transform 사이에서 표현 공간을 비선형으로 바꾸고 local derivative를 정합니다.",
+        "id": "nonlinear-activation",
+        "role": "Affine transform 사이에서 표현 공간을 비선형으로 바꾸고 local derivative를 정합니다."
       },
       {
-        id: "step-activation",
-        role: "Hard decision은 만들지만 gradient 학습 경로에는 맞지 않는 초기 threshold를 설명합니다.",
+        "id": "step-activation",
+        "role": "Hard decision은 만들지만 gradient 학습 경로에는 맞지 않는 초기 threshold를 설명합니다."
       },
       {
-        id: "sigmoid-activation",
-        role: "Logit을 0–1 probability 또는 gate로 바꾸는 부드러운 mapping을 설명합니다.",
+        "id": "sigmoid-activation",
+        "role": "Logit을 0–1 probability 또는 gate로 바꾸는 부드러운 mapping을 설명합니다."
       },
       {
-        id: "activation-saturation",
-        role: "출력이 상·하한에 붙으며 local derivative가 0에 접근하는 실패 구간을 진단합니다.",
+        "id": "activation-saturation",
+        "role": "출력이 상·하한에 붙으며 local derivative가 0에 접근하는 실패 구간을 진단합니다."
       },
       {
-        id: "tanh-activation",
-        role: "0 중심의 signed bounded activation과 recurrent candidate 역할을 구분합니다.",
-      },
+        "id": "tanh-activation",
+        "role": "0 중심의 signed bounded activation과 recurrent candidate 역할을 구분합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "nonlinear-activation",
-        sectionId: "overview",
-        intuition:
-          "직선 변환 사이에서 좌표를 꺾거나 눌러 여러 affine layer가 하나로 합쳐지지 않게 하는 함수입니다.",
-        workedExample:
-          "z₁=xW₁+b₁에 ReLU를 적용하면 negative coordinate가 0이 되어 다음 affine layer가 input 영역별로 다른 linear map을 사용하게 됩니다.",
-        boundary:
-          "Nonlinear하다는 사실만으로 학습이 쉽거나 일반화가 좋다는 뜻은 아닙니다. Local derivative와 signal distribution을 함께 봐야 합니다.",
+        "id": "nonlinear-activation",
+        "sectionId": "trace",
+        "intuition": "직선 변환 사이에서 좌표를 꺾거나 눌러 여러 affine layer가 하나로 합쳐지지 않게 하는 함수입니다.",
+        "workedExample": "입력 x=2,W=1,b=0에서 z=2, sigmoid 출력 .880797, 뒤 변화율3에서 dz=.314981,dW=.629962,db=.314981을 계산합니다 (가정).",
+        "boundary": "Nonlinear하다는 사실만으로 학습이 쉽거나 일반화가 좋다는 뜻은 아닙니다. Local derivative와 signal distribution을 함께 봐야 합니다."
       },
       {
-        id: "step-activation",
-        sectionId: "step-function",
-        intuition:
-          "Score가 threshold를 넘었는지를 0 또는 1로 즉시 바꾸는 hard decision 함수입니다.",
-        workedExample:
-          "Score −0.01은 0, +0.01은 1이지만 각 구간 안에서 score가 조금 움직여도 output은 변하지 않습니다.",
-        boundary:
-          "Threshold에서는 불연속이고 그 밖의 derivative는 0이어서 표준 backpropagation용 hidden activation으로 쓰기 어렵습니다.",
+        "id": "step-activation",
+        "sectionId": "step-function",
+        "intuition": "Score가 threshold를 넘었는지를 0 또는 1로 즉시 바꾸는 hard decision 함수입니다.",
+        "workedExample": "입력2와2.001은 둘 다1이므로 이 구간의 기울기는0입니다. 원문 heaviside의 경계값 두 번째 인수를1로 고른 경우와 대조합니다 (가정).",
+        "boundary": "Threshold에서는 불연속이고 그 밖의 derivative는 0이어서 표준 backpropagation용 hidden activation으로 쓰기 어렵습니다."
       },
       {
-        id: "sigmoid-activation",
-        sectionId: "sigmoid",
-        intuition:
-          "범위가 없는 logit을 부드러운 S자 곡선으로 0과 1 사이에 압축해 probability나 gate 비율로 읽게 합니다.",
-        workedExample:
-          "x=0이면 σ(x)=0.5이고 derivative는 0.25이며, x=10이면 output이 거의 1이고 derivative는 거의 0입니다.",
-        boundary:
-          "Output을 probability로 읽으려면 Bernoulli target·loss 계약이 맞아야 하며, hidden layer에서는 양 끝의 saturation을 주의합니다.",
+        "id": "sigmoid-activation",
+        "sectionId": "sigmoid",
+        "intuition": "범위가 없는 logit을 부드러운 S자 곡선으로 0과 1 사이에 압축해 probability나 gate 비율로 읽게 합니다.",
+        "workedExample": "실제 정의 1/(1+exp(−z))에 z=2를 넣어 .880797, 도함수 p(1−p)에 같은 p를 넣어 .104994를 얻습니다 (가정).",
+        "boundary": "Output을 probability로 읽으려면 Bernoulli target·loss 계약이 맞아야 하며, hidden layer에서는 양 끝의 saturation을 주의합니다."
       },
       {
-        id: "activation-saturation",
-        sectionId: "sigmoid",
-        intuition:
-          "입력이 커질수록 output이 상한이나 하한에 붙어 입력을 더 움직여도 output이 거의 변하지 않는 평평한 구간입니다.",
-        workedExample:
-          "Sigmoid derivative는 σ(x)(1−σ(x))이므로 σ(x)가 0.999에 가까우면 local derivative는 약 0.001로 작아집니다.",
-        boundary:
-          "한 activation의 derivative만으로 전체 gradient 크기를 예측할 수 없습니다. Weight Jacobian·normalization·residual path도 함께 곱해집니다.",
+        "id": "activation-saturation",
+        "sectionId": "sigmoid",
+        "intuition": "입력이 커질수록 output이 상한이나 하한에 붙어 입력을 더 움직여도 output이 거의 변하지 않는 평평한 구간입니다.",
+        "workedExample": "입력0의 출력 .5·기울기 .25와 입력10의 출력 .999955·기울기 .000045를 비교해 높이와 기울기를 구분합니다 (가정).",
+        "boundary": "한 activation의 derivative만으로 전체 gradient 크기를 예측할 수 없습니다. Weight Jacobian·normalization·residual path도 함께 곱해집니다."
       },
       {
-        id: "tanh-activation",
-        sectionId: "tanh",
-        intuition:
-          "Sigmoid를 이동·scale해 음수와 양수 방향을 보존하는 −1과 1 사이의 output을 만듭니다.",
-        workedExample:
-          "x=0이면 tanh output은 0이고 derivative는 1이라 0 근처의 signed signal을 그대로 전달합니다.",
-        boundary:
-          "0 중심이라는 장점이 saturation을 없애지는 않습니다. 큰 |x|에서는 derivative 1−tanh²(x)가 0에 접근합니다.",
-      },
+        "id": "tanh-activation",
+        "sectionId": "tanh",
+        "intuition": "Sigmoid를 이동·scale해 음수와 양수 방향을 보존하는 −1과 1 사이의 output을 만듭니다.",
+        "workedExample": "tanh(2)=.964028, 도함수1−h²=.070651, 뒤 변화율3을 곱하면 .211952입니다 (가정).",
+        "boundary": "0 중심이라는 장점이 saturation을 없애지는 않습니다. 큰 |x|에서는 derivative 1−tanh²(x)가 0에 접근합니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 response", relation: "Affine score와 nonlinear output을 구분합니다.", concepts: ["nonlinear-activation"] },
-      { label: "01 threshold", relation: "Hard decision과 gradient 경계를 봅니다.", concepts: ["step-activation"] },
-      { label: "02 bounded curves", relation: "0–1과 signed output의 saturation을 비교합니다.", concepts: ["sigmoid-activation", "activation-saturation", "tanh-activation"] },
+    "conceptStages": [
+      {
+        "label": "00 response",
+        "relation": "Affine score와 nonlinear output을 구분합니다.",
+        "concepts": [
+          "nonlinear-activation"
+        ]
+      },
+      {
+        "label": "01 threshold",
+        "relation": "Hard decision과 gradient 경계를 봅니다.",
+        "concepts": [
+          "step-activation"
+        ]
+      },
+      {
+        "label": "02 bounded curves",
+        "relation": "0–1과 signed output의 saturation을 비교합니다.",
+        "concepts": [
+          "sigmoid-activation",
+          "activation-saturation",
+          "tanh-activation"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Activation이 affine score와 다음 layer의 값을 어떻게 구분하는지 설명하세요.", answerChecklist: ["z=xW+b", "a=f(z)", "forward value", "local slope"], requiredConcepts: ["nonlinear-activation"], sectionId: "overview" },
-      { level: "basic", question: "Activation이 없을 때 깊은 affine chain의 표현력이 제한되는 이유를 설명하세요.", answerChecklist: ["affine composition", "effective weight", "region-dependent mapping", "nonlinearity boundary"], requiredConcepts: ["nonlinear-activation"], sectionId: "overview" },
-      { level: "basic", question: "Step function의 output과 threshold 밖 derivative를 설명하세요.", answerChecklist: ["0 or 1", "threshold", "flat region", "derivative zero"], requiredConcepts: ["step-activation"], sectionId: "step-function" },
-      { level: "basic", question: "Step function을 hidden backprop activation으로 바로 쓰기 어려운 이유를 설명하세요.", answerChecklist: ["discontinuity", "zero slope", "gradient path", "surrogate is separate"], requiredConcepts: ["step-activation"], sectionId: "step-function" },
-      { level: "basic", question: "Sigmoid가 logit을 0–1 비율로 바꾸는 계산을 설명하세요.", answerChecklist: ["exponential", "normalization", "range", "probability or gate"], requiredConcepts: ["sigmoid-activation"], sectionId: "sigmoid" },
-      { level: "basic", question: "Tanh가 sigmoid와 다른 output 의미를 갖는 이유를 설명하세요.", answerChecklist: ["minus one to one", "signed state", "zero centered", "still saturates"], requiredConcepts: ["tanh-activation", "activation-saturation"], sectionId: "tanh" },
-      { level: "advanced", question: "z=0과 z=10에서 sigmoid output과 local slope를 비교하세요.", answerChecklist: ["0.5", "0.25", "near one", "near zero slope", "saturation"], requiredConcepts: ["sigmoid-activation", "activation-saturation"], sectionId: "sigmoid" },
-      { level: "advanced", question: "h=tanh(z)의 derivative 1-h²가 saturation을 드러내는 방식을 설명하세요.", answerChecklist: ["h zero gives slope one", "h near plus or minus one", "square", "slope near zero"], requiredConcepts: ["tanh-activation", "activation-saturation"], sectionId: "tanh" },
-      { level: "advanced", question: "Sigmoid를 probability로 읽을 때 필요한 target·loss 경계를 설명하세요.", answerChecklist: ["Bernoulli", "logit", "matching loss", "hidden activation differs"], requiredConcepts: ["sigmoid-activation"], sectionId: "sigmoid" },
-      { level: "advanced", question: "Step·sigmoid·tanh를 output 의미와 실패 구간 기준으로 선택하세요.", answerChecklist: ["hard decision", "zero-one ratio", "signed state", "saturation", "architecture validation"], requiredConcepts: ["step-activation", "sigmoid-activation", "tanh-activation", "activation-saturation"], sectionId: "comparison" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Activation이 affine score와 다음 layer의 값을 어떻게 구분하는지 설명하세요.",
+        "answerChecklist": [
+          "z=xW+b",
+          "a=f(z)",
+          "forward value",
+          "local slope"
+        ],
+        "requiredConcepts": [
+          "nonlinear-activation"
+        ],
+        "sectionId": "trace"
+      },
+      {
+        "level": "basic",
+        "question": "Activation이 없을 때 깊은 affine chain의 표현력이 제한되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "affine composition",
+          "effective weight",
+          "region-dependent mapping",
+          "nonlinearity boundary"
+        ],
+        "requiredConcepts": [
+          "nonlinear-activation"
+        ],
+        "sectionId": "why-curve"
+      },
+      {
+        "level": "basic",
+        "question": "Step function의 output과 threshold 밖 derivative를 설명하세요.",
+        "answerChecklist": [
+          "0 or 1",
+          "threshold",
+          "flat region",
+          "derivative zero"
+        ],
+        "requiredConcepts": [
+          "step-activation"
+        ],
+        "sectionId": "step-function"
+      },
+      {
+        "level": "basic",
+        "question": "Step function을 hidden backprop activation으로 바로 쓰기 어려운 이유를 설명하세요.",
+        "answerChecklist": [
+          "discontinuity",
+          "zero slope",
+          "gradient path",
+          "surrogate is separate"
+        ],
+        "requiredConcepts": [
+          "step-activation"
+        ],
+        "sectionId": "step-function"
+      },
+      {
+        "level": "basic",
+        "question": "Sigmoid가 logit을 0–1 비율로 바꾸는 계산을 설명하세요.",
+        "answerChecklist": [
+          "exponential",
+          "normalization",
+          "range",
+          "probability or gate"
+        ],
+        "requiredConcepts": [
+          "sigmoid-activation"
+        ],
+        "sectionId": "sigmoid"
+      },
+      {
+        "level": "basic",
+        "question": "Tanh가 sigmoid와 다른 output 의미를 갖는 이유를 설명하세요.",
+        "answerChecklist": [
+          "minus one to one",
+          "signed state",
+          "zero centered",
+          "still saturates"
+        ],
+        "requiredConcepts": [
+          "tanh-activation",
+          "activation-saturation"
+        ],
+        "sectionId": "tanh"
+      },
+      {
+        "level": "advanced",
+        "question": "z=0과 z=10에서 sigmoid output과 local slope를 비교하세요.",
+        "answerChecklist": [
+          "0.5",
+          "0.25",
+          "near one",
+          "near zero slope",
+          "saturation"
+        ],
+        "requiredConcepts": [
+          "sigmoid-activation",
+          "activation-saturation"
+        ],
+        "sectionId": "sigmoid"
+      },
+      {
+        "level": "advanced",
+        "question": "h=tanh(z)의 derivative 1-h²가 saturation을 드러내는 방식을 설명하세요.",
+        "answerChecklist": [
+          "h zero gives slope one",
+          "h near plus or minus one",
+          "square",
+          "slope near zero"
+        ],
+        "requiredConcepts": [
+          "tanh-activation",
+          "activation-saturation"
+        ],
+        "sectionId": "tanh"
+      },
+      {
+        "level": "advanced",
+        "question": "Sigmoid를 probability로 읽을 때 필요한 target·loss 경계를 설명하세요.",
+        "answerChecklist": [
+          "Bernoulli",
+          "logit",
+          "matching loss",
+          "hidden activation differs"
+        ],
+        "requiredConcepts": [
+          "sigmoid-activation"
+        ],
+        "sectionId": "sigmoid"
+      },
+      {
+        "level": "advanced",
+        "question": "Step·sigmoid·tanh를 output 의미와 실패 구간 기준으로 선택하세요.",
+        "answerChecklist": [
+          "hard decision",
+          "zero-one ratio",
+          "signed state",
+          "saturation",
+          "architecture validation"
+        ],
+        "requiredConcepts": [
+          "step-activation",
+          "sigmoid-activation",
+          "tanh-activation",
+          "activation-saturation"
+        ],
+        "sectionId": "comparison"
+      }
     ],
-    papers: [
-      { title: "Efficient BackProp", href: "http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf", problem: "Gradient network의 input·activation scaling을 안정화합니다.", contribution: "Centering·normalization·sigmoid family의 실용 원칙을 연결합니다.", assumptions: "당시 feed-forward architecture와 분석 조건입니다.", evidenceScope: "Sigmoid·tanh scale과 saturation의 기반입니다.", notClaim: "현대 모든 architecture의 최적 activation을 정하지 않습니다.", sectionId: "paper-efficient-backprop" },
-      { title: "Understanding the Difficulty of Training Deep Feedforward Neural Networks", href: "https://proceedings.mlr.press/v9/glorot10a.html", problem: "깊은 network의 saturation과 signal scale 붕괴를 분석합니다.", contribution: "Activation statistics와 fan-in·fan-out initialization을 연결합니다.", assumptions: "논문의 sigmoid·tanh network와 실험 조건입니다.", evidenceScope: "Saturation과 initialization의 상호작용입니다.", notClaim: "Xavier 하나가 모든 구조에 최적이라는 뜻은 아닙니다.", sectionId: "paper-glorot-saturation" },
-    ],
+    "papers": [
+      {
+        "title": "Efficient BackProp",
+        "href": "http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf",
+        "problem": "Gradient network의 input·activation scaling을 안정화합니다.",
+        "contribution": "Centering·normalization·sigmoid family의 실용 원칙을 연결합니다.",
+        "assumptions": "당시 feed-forward architecture와 분석 조건입니다.",
+        "evidenceScope": "Sigmoid·tanh scale과 saturation의 기반입니다.",
+        "notClaim": "현대 모든 architecture의 최적 activation을 정하지 않습니다.",
+        "sectionId": "paper-efficient-backprop"
+      },
+      {
+        "title": "Understanding the Difficulty of Training Deep Feedforward Neural Networks",
+        "href": "https://proceedings.mlr.press/v9/glorot10a.html",
+        "problem": "깊은 network의 saturation과 signal scale 붕괴를 분석합니다.",
+        "contribution": "Activation statistics와 fan-in·fan-out initialization을 연결합니다.",
+        "assumptions": "논문의 sigmoid·tanh network와 실험 조건입니다.",
+        "evidenceScope": "Saturation과 initialization의 상호작용입니다.",
+        "notClaim": "Xavier 하나가 모든 구조에 최적이라는 뜻은 아닙니다.",
+        "sectionId": "paper-glorot-saturation"
+      }
+    ]
   },
   "ai/rectifier-activations": {
-    coreIdea: "ReLU의 hinge와 backward mask를 먼저 이해한 뒤, 계속 닫힌 unit·음수 slope·self-normalizing recipe를 서로 다른 해결책으로 구분합니다.",
-    assumedKnowledge: [
-      { id: "nonlinear-activation", role: "Activation이 forward 값과 local slope를 함께 정한다는 기초입니다." },
-      { id: "activation-saturation", role: "평평한 response 구간과 약한 gradient를 비교하는 기준입니다." },
+    "coreIdea": "ReLU의 hinge와 backward mask를 먼저 이해한 뒤, 계속 닫힌 unit·음수 slope·self-normalizing recipe를 서로 다른 해결책으로 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "nonlinear-activation",
+        "role": "Activation이 forward 값과 local slope를 함께 정한다는 기초입니다."
+      },
+      {
+        "id": "activation-saturation",
+        "role": "평평한 response 구간과 약한 gradient를 비교하는 기준입니다."
+      }
     ],
-    introducedHere: [
-      { id: "relu-activation", role: "0에서 꺾이는 forward 값과 양수·음수 backward mask를 설명합니다." },
-      { id: "dying-relu", role: "여러 batch에서 계속 닫힌 unit의 관측 가능한 실패 상태를 정의합니다." },
-      { id: "negative-slope-rectifier", role: "음수 구간에 고정·학습 slope를 남기는 설계를 구분합니다." },
-      { id: "self-normalizing-activation", role: "SELU 함수와 초기화·dropout·architecture 조건을 한 recipe로 묶습니다." },
+    "introducedHere": [
+      {
+        "id": "relu-activation",
+        "role": "0에서 꺾이는 forward 값과 양수·음수 backward mask를 설명합니다."
+      },
+      {
+        "id": "dying-relu",
+        "role": "여러 batch에서 계속 닫힌 unit의 관측 가능한 실패 상태를 정의합니다."
+      },
+      {
+        "id": "negative-slope-rectifier",
+        "role": "음수 구간에 고정·학습 slope를 남기는 설계를 구분합니다."
+      },
+      {
+        "id": "self-normalizing-activation",
+        "role": "SELU 함수와 초기화·dropout·architecture 조건을 한 recipe로 묶습니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "relu-activation", sectionId: "relu", intuition: "음수는 0으로 자르고 양수는 그대로 통과시키는 hinge입니다.", workedExample: "z=-2이면 output·mask가 0이고 z=3이면 output 3·mask 1입니다.", boundary: "0의 derivative convention과 전체 network gradient는 별도입니다." },
-      { id: "dying-relu", sectionId: "dying-relu", intuition: "한 번 0이 아니라 여러 batch에서 pre-activation과 update 경로가 계속 닫힌 상태입니다.", workedExample: "K개 batch의 최대 z도 0 이하이고 update norm도 0이면 dead 후보입니다.", boundary: "관측 window와 이후 회복 여부를 함께 기록합니다." },
-      { id: "negative-slope-rectifier", sectionId: "negative-slope", intuition: "음수 branch에 작은 직선 slope를 남겨 gradient가 완전히 끊기지 않게 합니다.", workedExample: "z=-2, a=.01이면 output -.02와 local slope .01입니다.", boundary: "Leaky는 a를 고정하고 PReLU는 scope별 parameter로 학습합니다." },
-      { id: "self-normalizing-activation", sectionId: "self-normalization", intuition: "SELU 상수·초기화·dropout 조건으로 mean·variance fixed point를 겨냥합니다.", workedExample: "α≈1.6733, λ≈1.0507, LeCun normal과 AlphaDropout을 함께 둡니다.", boundary: "함수 하나만 임의의 residual·convolution 구조에 넣은 주장이 아닙니다." },
+    "conceptExplanations": [
+      {
+        "id": "relu-activation",
+        "sectionId": "trace",
+        "intuition": "음수는 0으로 자르고 양수는 그대로 통과시키는 hinge입니다.",
+        "workedExample": "입력(−2,3)의 출력은(0,3), 국소 기울기는(0,1), 뒤 변화율(4,4)을 받으면 앞 변화율은(0,4)입니다 (가정).",
+        "boundary": "0의 derivative convention과 전체 network gradient는 별도입니다."
+      },
+      {
+        "id": "dying-relu",
+        "sectionId": "dying-relu",
+        "intuition": "한 번 0이 아니라 여러 batch에서 pre-activation과 update 경로가 계속 닫힌 상태입니다.",
+        "workedExample": "공유 가중치1에 입력−2와3을 넣으면 음수 경로 기여는0이어도 양수 경로가 gradient12를 만들 수 있습니다. 한 자료의 출력0과 지속적으로 닫힌 단위를 구분합니다 (가정).",
+        "boundary": "관측 window와 이후 회복 여부를 함께 기록합니다."
+      },
+      {
+        "id": "negative-slope-rectifier",
+        "sectionId": "negative-slope",
+        "intuition": "음수 branch에 작은 직선 slope를 남겨 gradient가 완전히 끊기지 않게 합니다.",
+        "workedExample": "입력−2, 뒤 변화율4, a=.01에서 출력−.02·입력 gradient.04이지만 학습 a의 gradient는4×(−2)=−8입니다 (가정).",
+        "boundary": "Leaky는 a를 고정하고 PReLU는 scope별 parameter로 학습합니다."
+      },
+      {
+        "id": "self-normalizing-activation",
+        "sectionId": "self-normalization",
+        "intuition": "SELU 상수·초기화·dropout 조건으로 mean·variance fixed point를 겨냥합니다.",
+        "workedExample": "원문 SELU 상수에 −2와3을 대입하면 약−1.520166과3.152103입니다. 두 값의 평균 .815968이0이 아님을 통해 자동 표본 표준화와 조건부 분포 수축을 구분합니다 (가정).",
+        "boundary": "함수 하나만 임의의 residual·convolution 구조에 넣은 주장이 아닙니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 hinge", relation: "ReLU forward와 backward mask를 고정합니다.", concepts: ["nonlinear-activation", "relu-activation"] },
-      { label: "01 failure", relation: "계속 닫힌 update path를 관측합니다.", concepts: ["relu-activation", "dying-relu"] },
-      { label: "02 repair", relation: "음수 slope와 distribution recipe를 구분합니다.", concepts: ["negative-slope-rectifier", "self-normalizing-activation"] },
+    "conceptStages": [
+      {
+        "label": "00 hinge",
+        "relation": "ReLU forward와 backward mask를 고정합니다.",
+        "concepts": [
+          "nonlinear-activation",
+          "relu-activation"
+        ]
+      },
+      {
+        "label": "01 failure",
+        "relation": "계속 닫힌 update path를 관측합니다.",
+        "concepts": [
+          "relu-activation",
+          "dying-relu"
+        ]
+      },
+      {
+        "label": "02 repair",
+        "relation": "음수 slope와 distribution recipe를 구분합니다.",
+        "concepts": [
+          "negative-slope-rectifier",
+          "self-normalizing-activation"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "ReLU의 양수·음수 forward와 backward mask를 설명하세요.", answerChecklist: ["negative zero", "positive identity", "mask zero or one", "zero convention"], requiredConcepts: ["relu-activation"], sectionId: "relu" },
-      { level: "basic", question: "한 sample의 0 activation과 dying ReLU를 구분하세요.", answerChecklist: ["multiple batches", "pre-activation", "mask", "update norm"], requiredConcepts: ["dying-relu"], sectionId: "dying-relu" },
-      { level: "basic", question: "Leaky ReLU에서 음수 slope가 필요한 이유를 설명하세요.", answerChecklist: ["negative branch", "small slope", "gradient path", "not full cure"], requiredConcepts: ["negative-slope-rectifier"], sectionId: "negative-slope" },
-      { level: "basic", question: "Leaky ReLU와 PReLU의 slope 소유권을 구분하세요.", answerChecklist: ["fixed hyperparameter", "learned parameter", "scope", "extra freedom"], requiredConcepts: ["negative-slope-rectifier"], sectionId: "negative-slope" },
-      { level: "basic", question: "SELU의 α와 λ가 각각 무엇을 조절하는지 설명하세요.", answerChecklist: ["negative saturation", "output scale", "mean variance", "fixed constants"], requiredConcepts: ["self-normalizing-activation"], sectionId: "self-normalization" },
-      { level: "basic", question: "SELU를 함수 하나가 아닌 recipe로 읽어야 하는 이유를 설명하세요.", answerChecklist: ["LeCun normal", "feed-forward assumptions", "AlphaDropout", "architecture boundary"], requiredConcepts: ["self-normalizing-activation"], sectionId: "self-normalization" },
-      { level: "advanced", question: "z=-2, a=.01에서 ReLU와 Leaky ReLU의 output·slope를 계산하세요.", answerChecklist: ["ReLU zero", "ReLU slope zero", "Leaky -.02", "Leaky slope .01"], requiredConcepts: ["relu-activation", "negative-slope-rectifier"], sectionId: "negative-slope" },
-      { level: "advanced", question: "Dead-unit monitor의 window와 release condition을 설계하세요.", answerChecklist: ["K batches", "activation rate", "update norm", "recovery", "threshold version"], requiredConcepts: ["dying-relu"], sectionId: "dying-relu" },
-      { level: "advanced", question: "Negative slope와 SELU가 해결하는 문제를 비교하세요.", answerChecklist: ["local gradient path", "distribution fixed point", "different assumptions", "contrasts"], requiredConcepts: ["negative-slope-rectifier", "self-normalizing-activation"], sectionId: "comparison" },
-      { level: "advanced", question: "Activation 후보를 공정하게 비교할 측정 artifact를 설계하세요.", answerChecklist: ["same seed", "initialization", "optimizer", "histogram", "dead rate", "latency"], requiredConcepts: ["relu-activation", "dying-relu", "negative-slope-rectifier"], sectionId: "comparison" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "ReLU의 양수·음수 forward와 backward mask를 설명하세요.",
+        "answerChecklist": [
+          "negative zero",
+          "positive identity",
+          "mask zero or one",
+          "zero convention"
+        ],
+        "requiredConcepts": [
+          "relu-activation"
+        ],
+        "sectionId": "relu"
+      },
+      {
+        "level": "basic",
+        "question": "한 sample의 0 activation과 dying ReLU를 구분하세요.",
+        "answerChecklist": [
+          "multiple batches",
+          "pre-activation",
+          "mask",
+          "update norm"
+        ],
+        "requiredConcepts": [
+          "dying-relu"
+        ],
+        "sectionId": "dying-relu"
+      },
+      {
+        "level": "basic",
+        "question": "Leaky ReLU에서 음수 slope가 필요한 이유를 설명하세요.",
+        "answerChecklist": [
+          "negative branch",
+          "small slope",
+          "gradient path",
+          "not full cure"
+        ],
+        "requiredConcepts": [
+          "negative-slope-rectifier"
+        ],
+        "sectionId": "negative-slope"
+      },
+      {
+        "level": "basic",
+        "question": "Leaky ReLU와 PReLU의 slope 소유권을 구분하세요.",
+        "answerChecklist": [
+          "fixed hyperparameter",
+          "learned parameter",
+          "scope",
+          "extra freedom"
+        ],
+        "requiredConcepts": [
+          "negative-slope-rectifier"
+        ],
+        "sectionId": "negative-slope"
+      },
+      {
+        "level": "basic",
+        "question": "SELU의 α와 λ가 각각 무엇을 조절하는지 설명하세요.",
+        "answerChecklist": [
+          "negative saturation",
+          "output scale",
+          "mean variance",
+          "fixed constants"
+        ],
+        "requiredConcepts": [
+          "self-normalizing-activation"
+        ],
+        "sectionId": "self-normalization"
+      },
+      {
+        "level": "basic",
+        "question": "SELU를 함수 하나가 아닌 recipe로 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "LeCun normal",
+          "feed-forward assumptions",
+          "AlphaDropout",
+          "architecture boundary"
+        ],
+        "requiredConcepts": [
+          "self-normalizing-activation"
+        ],
+        "sectionId": "self-normalization"
+      },
+      {
+        "level": "advanced",
+        "question": "z=-2, a=.01에서 ReLU와 Leaky ReLU의 output·slope를 계산하세요.",
+        "answerChecklist": [
+          "ReLU zero",
+          "ReLU slope zero",
+          "Leaky -.02",
+          "Leaky slope .01"
+        ],
+        "requiredConcepts": [
+          "relu-activation",
+          "negative-slope-rectifier"
+        ],
+        "sectionId": "negative-slope"
+      },
+      {
+        "level": "advanced",
+        "question": "Dead-unit monitor의 window와 release condition을 설계하세요.",
+        "answerChecklist": [
+          "K batches",
+          "activation rate",
+          "update norm",
+          "recovery",
+          "threshold version"
+        ],
+        "requiredConcepts": [
+          "dying-relu"
+        ],
+        "sectionId": "dying-relu"
+      },
+      {
+        "level": "advanced",
+        "question": "Negative slope와 SELU가 해결하는 문제를 비교하세요.",
+        "answerChecklist": [
+          "local gradient path",
+          "distribution fixed point",
+          "different assumptions",
+          "contrasts"
+        ],
+        "requiredConcepts": [
+          "negative-slope-rectifier",
+          "self-normalizing-activation"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "Activation 후보를 공정하게 비교할 측정 artifact를 설계하세요.",
+        "answerChecklist": [
+          "same seed",
+          "initialization",
+          "optimizer",
+          "histogram",
+          "dead rate",
+          "latency"
+        ],
+        "requiredConcepts": [
+          "relu-activation",
+          "dying-relu",
+          "negative-slope-rectifier"
+        ],
+        "sectionId": "comparison"
+      }
     ],
-    papers: [
-      { title: "Rectified Linear Units Improve Restricted Boltzmann Machines", href: "https://www.cs.toronto.edu/~fritz/absps/reluICML.pdf", problem: "학습 가능한 rectified representation을 만듭니다.", contribution: "Rectified unit의 초기 해석과 실험을 제공합니다.", assumptions: "논문의 RBM·training·dataset 조건입니다.", evidenceScope: "2010년 초기 rectifier 결과입니다.", notClaim: "모든 deep architecture의 보편적 우월성은 아닙니다.", sectionId: "paper-relu" },
-      { title: "Delving Deep into Rectifiers", href: "https://arxiv.org/abs/1502.01852", problem: "음수 구간과 초기 signal scale을 개선합니다.", contribution: "PReLU와 rectifier-aware initialization을 제안합니다.", assumptions: "논문의 CNN·ImageNet 조건입니다.", evidenceScope: "PReLU와 초기화의 vision 실험입니다.", notClaim: "Slope 하나가 모든 optimization 실패를 해결하지 않습니다.", sectionId: "paper-prelu" },
-      { title: "Fast and Accurate Deep Network Learning by ELUs", href: "https://arxiv.org/abs/1511.07289", problem: "Positive mean shift와 학습 속도를 개선합니다.", contribution: "음수 포화 구간을 가진 ELU를 제안하고 ReLU 계열과 당시 vision benchmark에서 비교합니다.", assumptions: "논문의 architecture·optimizer 조건입니다.", evidenceScope: "ELU의 당시 benchmark입니다.", notClaim: "모든 vanishing gradient를 막지 않습니다.", sectionId: "paper-elu" },
-      { title: "Self-Normalizing Neural Networks", href: "https://arxiv.org/abs/1706.02515", problem: "층별 mean·variance를 안정화합니다.", contribution: "SELU fixed point와 AlphaDropout recipe를 제안합니다.", assumptions: "독립 입력·LeCun initialization·논문 구조입니다.", evidenceScope: "Self-normalization 조건과 benchmark입니다.", notClaim: "함수만 교체한 임의 구조에 자동 적용되지 않습니다.", sectionId: "paper-selu" },
+    "papers": [
+      {
+        "title": "Rectified Linear Units Improve Restricted Boltzmann Machines",
+        "href": "https://www.cs.toronto.edu/~fritz/absps/reluICML.pdf",
+        "problem": "학습 가능한 rectified representation을 만듭니다.",
+        "contribution": "Rectified unit의 초기 해석과 실험을 제공합니다.",
+        "assumptions": "논문의 RBM·training·dataset 조건입니다.",
+        "evidenceScope": "2010년 초기 rectifier 결과입니다.",
+        "notClaim": "모든 deep architecture의 보편적 우월성은 아닙니다.",
+        "sectionId": "paper-relu"
+      },
+      {
+        "title": "Delving Deep into Rectifiers",
+        "href": "https://arxiv.org/abs/1502.01852",
+        "problem": "음수 구간과 초기 signal scale을 개선합니다.",
+        "contribution": "PReLU와 rectifier-aware initialization을 제안합니다.",
+        "assumptions": "논문의 CNN·ImageNet 조건입니다.",
+        "evidenceScope": "PReLU와 초기화의 vision 실험입니다.",
+        "notClaim": "Slope 하나가 모든 optimization 실패를 해결하지 않습니다.",
+        "sectionId": "paper-prelu"
+      },
+      {
+        "title": "Fast and Accurate Deep Network Learning by ELUs",
+        "href": "https://arxiv.org/abs/1511.07289",
+        "problem": "Positive mean shift와 학습 속도를 개선합니다.",
+        "contribution": "음수 포화 구간을 가진 ELU를 제안하고 ReLU 계열과 당시 vision benchmark에서 비교합니다.",
+        "assumptions": "논문의 architecture·optimizer 조건입니다.",
+        "evidenceScope": "ELU의 당시 benchmark입니다.",
+        "notClaim": "모든 vanishing gradient를 막지 않습니다.",
+        "sectionId": "paper-elu"
+      },
+      {
+        "title": "Self-Normalizing Neural Networks",
+        "href": "https://arxiv.org/abs/1706.02515",
+        "problem": "층별 mean·variance를 안정화합니다.",
+        "contribution": "SELU fixed point와 AlphaDropout recipe를 제안합니다.",
+        "assumptions": "독립 입력·LeCun initialization·논문 구조입니다.",
+        "evidenceScope": "Self-normalization 조건과 benchmark입니다.",
+        "notClaim": "함수만 교체한 임의 구조에 자동 적용되지 않습니다.",
+        "sectionId": "paper-selu"
+      }
     ],
+    "entryNote": "입력 (−2,3)·뒤 변화율 (4,4)에서 ReLU, 음수 기울기 .01, SELU의 출력과 변화율을 비교합니다. PReLU에서 입력 gradient .04와 a의 gradient −8을 구별합니다 (가정)."
   },
   "ai/gated-activations": {
-    coreIdea: "GELU·SiLU의 scalar self-gate에서 출발해 gate와 value를 별도 projection으로 만드는 SwiGLU로 확장하고, 곱셈 의도와 parameter parity를 함께 계산합니다.",
-    assumedKnowledge: [
-      { id: "nonlinear-activation", role: "Scalar response가 값과 local slope를 정한다는 기초입니다." },
-      { id: "sigmoid-activation", role: "0–1 통과 비율을 만드는 gate의 출발점입니다." },
+    "coreIdea": "GELU·SiLU의 scalar self-gate에서 출발해 gate와 value를 별도 projection으로 만드는 SwiGLU로 확장하고, 곱셈 의도와 parameter parity를 함께 계산합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "nonlinear-activation",
+        "role": "Scalar response가 값과 local slope를 정한다는 기초입니다."
+      },
+      {
+        "id": "sigmoid-activation",
+        "role": "0–1 통과 비율을 만드는 gate의 출발점입니다."
+      }
     ],
-    introducedHere: [
-      { id: "smooth-self-gating", role: "GELU·SiLU에서 input-dependent 통과 비율을 원래 값에 곱하는 의도를 설명합니다." },
-      { id: "gated-ffn", role: "SwiGLU의 gate·value·output projection과 공정한 parameter budget을 설명합니다." },
+    "introducedHere": [
+      {
+        "id": "smooth-self-gating",
+        "role": "GELU·SiLU에서 input-dependent 통과 비율을 원래 값에 곱하는 의도를 설명합니다."
+      },
+      {
+        "id": "gated-ffn",
+        "role": "SwiGLU의 gate·value·output projection과 공정한 parameter budget을 설명합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "smooth-self-gating", sectionId: "gelu-silu", intuition: "Input이 자기 통과 비율을 만들고 그 비율을 원래 signed value에 곱합니다.", workedExample: "GELU는 xΦ(x), SiLU는 xσ(x)로 큰 양수는 거의 통과하고 큰 음수는 억제합니다.", boundary: "Smooth하다는 이유만으로 모든 task·kernel에서 우위가 보장되지 않습니다." },
-      { id: "gated-ffn", sectionId: "gated-ffn", intuition: "Gate와 value를 서로 다른 projection으로 만든 뒤 같은 coordinate끼리 곱는 FFN 구조입니다.", workedExample: "SiLU(xWg)⊙(xWv)를 Wo로 model dimension에 되돌립니다.", boundary: "Projection이 세 개이므로 같은 width 비교는 parameter·FLOP가 공정하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "smooth-self-gating",
+        "sectionId": "gelu-silu",
+        "intuition": "Input이 자기 통과 비율을 만들고 그 비율을 원래 signed value에 곱합니다.",
+        "workedExample": "입력−1의 sigmoid 비율 .268941에 원래 값−1을 곱한 SiLU 출력은−.268941입니다. 비율과 최종 출력의 범위를 구분합니다 (가정).",
+        "boundary": "Smooth하다는 이유만으로 모든 task·kernel에서 우위가 보장되지 않습니다."
+      },
+      {
+        "id": "gated-ffn",
+        "sectionId": "gated-ffn",
+        "intuition": "Gate와 value를 서로 다른 projection으로 만든 뒤 같은 coordinate끼리 곱는 FFN 구조입니다.",
+        "workedExample": "(1,−1)을 조절 경로 (.731059,−.268941)와 내용 경로(2,−3)로 나누어 곱한 뒤 Wo에 적용하면(2.268941,0)입니다 (가정).",
+        "boundary": "Projection이 세 개이므로 같은 width 비교는 parameter·FLOP가 공정하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 self gate", relation: "Scalar value와 pass ratio를 분리합니다.", concepts: ["sigmoid-activation", "smooth-self-gating"] },
-      { label: "01 branches", relation: "Gate·value projection을 곱해 조건부 feature를 만듭니다.", concepts: ["smooth-self-gating", "gated-ffn"] },
-      { label: "02 budget", relation: "세 projection의 parameter와 kernel 비용을 맞춥니다.", concepts: ["gated-ffn"] },
+    "conceptStages": [
+      {
+        "label": "00 self gate",
+        "relation": "Scalar value와 pass ratio를 분리합니다.",
+        "concepts": [
+          "sigmoid-activation",
+          "smooth-self-gating"
+        ]
+      },
+      {
+        "label": "01 branches",
+        "relation": "Gate·value projection을 곱해 조건부 feature를 만듭니다.",
+        "concepts": [
+          "smooth-self-gating",
+          "gated-ffn"
+        ]
+      },
+      {
+        "label": "02 budget",
+        "relation": "세 projection의 parameter와 kernel 비용을 맞춥니다.",
+        "concepts": [
+          "gated-ffn"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "GELU의 Φ(x)가 무엇을 정하는지 설명하세요.", answerChecklist: ["Gaussian CDF", "pass ratio", "multiply x", "smooth gate"], requiredConcepts: ["smooth-self-gating"], sectionId: "gelu-silu" },
-      { level: "basic", question: "SiLU에서 xσ(x)의 곱셈 의도를 설명하세요.", answerChecklist: ["sigmoid ratio", "original signed value", "multiplication", "continuous response"], requiredConcepts: ["smooth-self-gating"], sectionId: "gelu-silu" },
-      { level: "basic", question: "GELU와 SiLU gate의 차이를 설명하세요.", answerChecklist: ["Phi", "sigmoid", "same self-gate pattern", "implementation"], requiredConcepts: ["smooth-self-gating"], sectionId: "gelu-silu" },
-      { level: "basic", question: "SwiGLU의 Wg와 Wv가 서로 다른 이유를 설명하세요.", answerChecklist: ["gate basis", "value basis", "separate projections", "element-wise product"], requiredConcepts: ["gated-ffn"], sectionId: "gated-ffn" },
-      { level: "basic", question: "SwiGLU의 element-wise 곱과 Wo의 역할을 설명하세요.", answerChecklist: ["same coordinates", "conditional feature", "output projection", "residual dimension"], requiredConcepts: ["gated-ffn"], sectionId: "gated-ffn" },
-      { level: "basic", question: "Scalar activation과 gated FFN을 같은 것으로 부르면 안 되는 이유를 설명하세요.", answerChecklist: ["one projection", "two branches", "multiplication", "architecture boundary"], requiredConcepts: ["smooth-self-gating", "gated-ffn"], sectionId: "comparison" },
-      { level: "advanced", question: "Plain FFN과 gated FFN의 parameter 식을 유도하세요.", answerChecklist: ["2dm", "3dm_g", "three matrices", "bias excluded"], requiredConcepts: ["gated-ffn"], sectionId: "parameter-budget" },
-      { level: "advanced", question: "d=512, m=2048에서 plain·same-width gated parameter와 parity width를 계산하세요.", answerChecklist: ["2097152", "3145728", "two thirds", "about 1365"], requiredConcepts: ["gated-ffn"], sectionId: "parameter-budget" },
-      { level: "advanced", question: "Parameter parity가 latency parity를 보장하지 않는 이유를 설명하세요.", answerChecklist: ["FLOP", "memory traffic", "fusion", "dtype", "hardware"], requiredConcepts: ["gated-ffn"], sectionId: "parameter-budget" },
-      { level: "advanced", question: "GELU·SiLU·SwiGLU 비교 실험의 release gate를 설계하세요.", answerChecklist: ["scalar versus structure", "same budget", "training tokens", "kernel", "quality", "latency"], requiredConcepts: ["smooth-self-gating", "gated-ffn"], sectionId: "comparison" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "GELU의 Φ(x)가 무엇을 정하는지 설명하세요.",
+        "answerChecklist": [
+          "Gaussian CDF",
+          "pass ratio",
+          "multiply x",
+          "smooth gate"
+        ],
+        "requiredConcepts": [
+          "smooth-self-gating"
+        ],
+        "sectionId": "gelu-silu"
+      },
+      {
+        "level": "basic",
+        "question": "SiLU에서 xσ(x)의 곱셈 의도를 설명하세요.",
+        "answerChecklist": [
+          "sigmoid ratio",
+          "original signed value",
+          "multiplication",
+          "continuous response"
+        ],
+        "requiredConcepts": [
+          "smooth-self-gating"
+        ],
+        "sectionId": "gelu-silu"
+      },
+      {
+        "level": "basic",
+        "question": "GELU와 SiLU gate의 차이를 설명하세요.",
+        "answerChecklist": [
+          "Phi",
+          "sigmoid",
+          "same self-gate pattern",
+          "implementation"
+        ],
+        "requiredConcepts": [
+          "smooth-self-gating"
+        ],
+        "sectionId": "gelu-silu"
+      },
+      {
+        "level": "basic",
+        "question": "SwiGLU의 Wg와 Wv가 서로 다른 이유를 설명하세요.",
+        "answerChecklist": [
+          "gate basis",
+          "value basis",
+          "separate projections",
+          "element-wise product"
+        ],
+        "requiredConcepts": [
+          "gated-ffn"
+        ],
+        "sectionId": "gated-ffn"
+      },
+      {
+        "level": "basic",
+        "question": "SwiGLU의 element-wise 곱과 Wo의 역할을 설명하세요.",
+        "answerChecklist": [
+          "same coordinates",
+          "conditional feature",
+          "output projection",
+          "residual dimension"
+        ],
+        "requiredConcepts": [
+          "gated-ffn"
+        ],
+        "sectionId": "gated-ffn"
+      },
+      {
+        "level": "basic",
+        "question": "Scalar activation과 gated FFN을 같은 것으로 부르면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "one projection",
+          "two branches",
+          "multiplication",
+          "architecture boundary"
+        ],
+        "requiredConcepts": [
+          "smooth-self-gating",
+          "gated-ffn"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "Plain FFN과 gated FFN의 parameter 식을 유도하세요.",
+        "answerChecklist": [
+          "2dm",
+          "3dm_g",
+          "three matrices",
+          "bias excluded"
+        ],
+        "requiredConcepts": [
+          "gated-ffn"
+        ],
+        "sectionId": "parameter-budget"
+      },
+      {
+        "level": "advanced",
+        "question": "d=512, m=2048에서 plain·same-width gated parameter와 parity width를 계산하세요.",
+        "answerChecklist": [
+          "2097152",
+          "3145728",
+          "two thirds",
+          "about 1365"
+        ],
+        "requiredConcepts": [
+          "gated-ffn"
+        ],
+        "sectionId": "parameter-budget"
+      },
+      {
+        "level": "advanced",
+        "question": "Parameter parity가 latency parity를 보장하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "FLOP",
+          "memory traffic",
+          "fusion",
+          "dtype",
+          "hardware"
+        ],
+        "requiredConcepts": [
+          "gated-ffn"
+        ],
+        "sectionId": "parameter-budget"
+      },
+      {
+        "level": "advanced",
+        "question": "GELU·SiLU·SwiGLU 비교 실험의 release gate를 설계하세요.",
+        "answerChecklist": [
+          "scalar versus structure",
+          "same budget",
+          "training tokens",
+          "kernel",
+          "quality",
+          "latency"
+        ],
+        "requiredConcepts": [
+          "smooth-self-gating",
+          "gated-ffn"
+        ],
+        "sectionId": "comparison"
+      }
     ],
-    papers: [
-      { title: "Gaussian Error Linear Units", href: "https://arxiv.org/abs/1606.08415", problem: "Input을 hard threshold 대신 크기에 따라 연속적으로 gate합니다.", contribution: "xΦ(x) 형태의 GELU와 stochastic regularization 관점을 제안하고 여러 task에서 평가합니다.", assumptions: "Gaussian CDF 또는 명시된 근사 구현과 논문의 architecture·training 조건을 전제로 합니다.", evidenceScope: "GELU의 정의·확률적 해석과 2016년 논문이 보고한 benchmark 결과 범위입니다.", notClaim: "모든 모델에서 ReLU보다 낫다는 증명은 아닙니다.", sectionId: "paper-gelu" },
-      { title: "Searching for Activation Functions", href: "https://arxiv.org/abs/1710.05941", problem: "Activation search space에서 유용한 함수를 찾습니다.", contribution: "Swish 계열을 발견하고 비교합니다.", assumptions: "Search·proxy task·compute 조건입니다.", evidenceScope: "Activation search와 vision benchmark입니다.", notClaim: "모든 domain의 자동 최적점은 아닙니다.", sectionId: "paper-swish" },
-      { title: "GLU Variants Improve Transformer", href: "https://arxiv.org/abs/2002.05202", problem: "Gated FFN을 공정한 budget으로 비교합니다.", contribution: "ReGLU·GEGLU·SwiGLU를 비교합니다.", assumptions: "Width-matched T5 pretraining 조건입니다.", evidenceScope: "Transformer FFN controlled experiment입니다.", notClaim: "SwiGLU가 scalar activation 하나라는 뜻은 아닙니다.", sectionId: "paper-swiglu" },
+    "papers": [
+      {
+        "title": "Gaussian Error Linear Units",
+        "href": "https://arxiv.org/abs/1606.08415",
+        "problem": "Input을 hard threshold 대신 크기에 따라 연속적으로 gate합니다.",
+        "contribution": "xΦ(x) 형태의 GELU와 stochastic regularization 관점을 제안하고 여러 task에서 평가합니다.",
+        "assumptions": "Gaussian CDF 또는 명시된 근사 구현과 논문의 architecture·training 조건을 전제로 합니다.",
+        "evidenceScope": "GELU의 정의·확률적 해석과 2016년 논문이 보고한 benchmark 결과 범위입니다.",
+        "notClaim": "모든 모델에서 ReLU보다 낫다는 증명은 아닙니다.",
+        "sectionId": "paper-gelu"
+      },
+      {
+        "title": "Searching for Activation Functions",
+        "href": "https://arxiv.org/abs/1710.05941",
+        "problem": "Activation search space에서 유용한 함수를 찾습니다.",
+        "contribution": "Swish 계열을 발견하고 비교합니다.",
+        "assumptions": "Search·proxy task·compute 조건입니다.",
+        "evidenceScope": "Activation search와 vision benchmark입니다.",
+        "notClaim": "모든 domain의 자동 최적점은 아닙니다.",
+        "sectionId": "paper-swish"
+      },
+      {
+        "title": "GLU Variants Improve Transformer",
+        "href": "https://arxiv.org/abs/2002.05202",
+        "problem": "Gated FFN을 공정한 budget으로 비교합니다.",
+        "contribution": "ReGLU·GEGLU·SwiGLU를 비교합니다.",
+        "assumptions": "Width-matched T5 pretraining 조건입니다.",
+        "evidenceScope": "Transformer FFN controlled experiment입니다.",
+        "notClaim": "SwiGLU가 scalar activation 하나라는 뜻은 아닙니다.",
+        "sectionId": "paper-swiglu"
+      }
     ],
+    "entryNote": "입력 (1,−1), Wg=I, Wv=diag(2,3), Wo=[[1,0],[1,0]]에서 SwiGLU 출력 (2.268941,0)을 같은 원문 식에 대입합니다. 폭2와3의 가중치 수12도 계산합니다 (가정)."
   },
   "ai/reverse-mode-autodiff": {
     coreIdea: "Reverse-mode autodiff는 forward computational graph와 saved tape를 기준으로 scalar loss의 책임을 역순 VJP로 보내고, 여러 branch에서 돌아온 contribution을 합쳐 input gradient를 계산합니다.",
@@ -5171,120 +5775,690 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/optimizers": {
-    entryLevel: true,
-    entryNote: "Gradient와 parameter를 처음 보는 독자도 scalar update와 micro-batch 장부에서 시작합니다.",
-    coreIdea: "SGD의 출발점은 backward가 만든 noisy gradient estimate와 optimizer가 소유하는 parameter displacement를 분리하고, 여러 micro-batch를 한 update clock에 정확히 묶는 것입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "optimizer-update", role: "Gradient와 optimizer state를 실제 parameter displacement로 바꾸는 책임을 정의합니다." },
-      { id: "sgd-update", role: "현재 mini-batch gradient의 반대 방향에 global learning rate를 곱합니다." },
-      { id: "gradient-accumulation", role: "여러 micro-batch gradient를 parameter update 하나로 합칩니다." },
+    "entryLevel": true,
+    "entryNote": "유효 개수2·6, 손실합2·18, gradient합4·28을 공통 분모8로 나눠 loss2.5·gradient4, θ3→2.6을 얻습니다. 각 묶음 평균을 반씩 섞는 잘못된 목표와 대조합니다 (가정).",
+    "coreIdea": "SGD의 출발점은 backward가 만든 noisy gradient estimate와 optimizer가 소유하는 parameter displacement를 분리하고, 여러 micro-batch를 한 update clock에 정확히 묶는 것입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "optimizer-update",
+        "role": "Gradient와 optimizer state를 실제 parameter displacement로 바꾸는 책임을 정의합니다."
+      },
+      {
+        "id": "sgd-update",
+        "role": "현재 mini-batch gradient의 반대 방향에 global learning rate를 곱합니다."
+      },
+      {
+        "id": "gradient-accumulation",
+        "role": "여러 micro-batch gradient를 parameter update 하나로 합칩니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "optimizer-update", sectionId: "update-contract", intuition: "Backward가 방향을 알려 주면 optimizer가 실제 보폭과 다음 위치를 정합니다.", workedExample: "Gradient g=4를 받은 SGD는 η=.1에서 displacement −.4를 만들지만 Adam은 history scale을 추가로 사용합니다.", boundary: "Optimizer는 gradient 자체를 계산하거나 global optimum·generalization을 보장하지 않습니다." },
-      { id: "sgd-update", sectionId: "sgd-update", intuition: "현재 batch가 가리킨 uphill 방향을 뒤집고 learning rate만큼 걷습니다.", workedExample: "θ=3,g=4,η=.1이면 Δ=−.4, θ+=2.6입니다.", boundary: "Noisy estimate와 curvature 때문에 한 step loss가 항상 감소하지는 않습니다." },
-      { id: "gradient-accumulation", sectionId: "effective-batch", intuition: "Memory에 못 넣는 큰 batch를 여러 조각으로 계산해 같은 gradient 장부에 모읍니다.", workedExample: "Micro-batch 4를 8번 평균하고 한 번 update하면 effective batch는 32입니다.", boundary: "Loss scale과 update 경계를 맞춰도 BatchNorm·dropout·data order까지 단일 batch와 완전히 같지는 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "optimizer-update",
+        "sectionId": "update-contract",
+        "intuition": "Backward가 방향을 알려 주면 optimizer가 실제 보폭과 다음 위치를 정합니다.",
+        "workedExample": "공통 gradient4를 입력받은 실제 param.add_(grad,alpha=−lr)에 param3·lr.1을 넣어 다음 값2.6을 계산합니다 (가정).",
+        "boundary": "Optimizer는 gradient 자체를 계산하거나 global optimum·generalization을 보장하지 않습니다."
+      },
+      {
+        "id": "sgd-update",
+        "sectionId": "sgd-update",
+        "intuition": "현재 batch가 가리킨 uphill 방향을 뒤집고 learning rate만큼 걷습니다.",
+        "workedExample": "θ3,g4,η.1의 이동량은−.4이고 다음 값은2.6입니다. 오차 평균2.5를 parameter에서 직접 빼는 계산과 구분합니다 (가정).",
+        "boundary": "Noisy estimate와 curvature 때문에 한 step loss가 항상 감소하지는 않습니다."
+      },
+      {
+        "id": "gradient-accumulation",
+        "sectionId": "effective-batch",
+        "intuition": "Memory에 못 넣는 큰 batch를 여러 조각으로 계산해 같은 gradient 장부에 모읍니다.",
+        "workedExample": "유효 위치2·6의 손실합2·18을 공통 분모8로 나누면 .25+2.25=2.5입니다. 같은 분모의 미분은(4+28)/8=4입니다 (가정).",
+        "boundary": "같은 개수·가중치를 가진 묶음의 평균에만 단순1/K 평균을 쓸 수 있습니다. 공통 분모를 맞춰도 BatchNorm·dropout·자료 순서까지 같은 실행인지는 별도 검증합니다."
+      }
     ],
-    conceptStages: [
-      { label: "책임 분리", relation: "Backward gradient와 optimizer displacement를 구분", concepts: ["optimizer-update"] },
-      { label: "기준 이동", relation: "Gradient 부호를 뒤집고 learning rate를 적용", concepts: ["sgd-update"] },
-      { label: "Update clock", relation: "Micro-batch gradient를 평균한 뒤 한 번만 parameter 변경", concepts: ["gradient-accumulation", "optimizer-update"] },
+    "conceptStages": [
+      {
+        "label": "책임 분리",
+        "relation": "Backward gradient와 optimizer displacement를 구분",
+        "concepts": [
+          "optimizer-update"
+        ]
+      },
+      {
+        "label": "기준 이동",
+        "relation": "Gradient 부호를 뒤집고 learning rate를 적용",
+        "concepts": [
+          "sgd-update"
+        ]
+      },
+      {
+        "label": "Update clock",
+        "relation": "Micro-batch gradient를 평균한 뒤 한 번만 parameter 변경",
+        "concepts": [
+          "gradient-accumulation",
+          "optimizer-update"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Backpropagation과 optimizer가 각각 만드는 값을 구분하세요.", answerChecklist: ["gradient", "optimizer state", "displacement", "next parameter"], requiredConcepts: ["optimizer-update"], sectionId: "update-contract" },
-      { level: "basic", question: "θ=3,g=4,η=.1인 scalar SGD의 다음 θ를 계산하세요.", answerChecklist: ["negative gradient", "delta -.4", "theta 2.6"], requiredConcepts: ["sgd-update"], sectionId: "sgd-update" },
-      { level: "basic", question: "θ=(1,3),g=(4,-2),η=.1의 다음 parameter를 계산하세요.", answerChecklist: ["delta (-.4,.2)", "theta (.6,3.2)", "coordinate-wise"], requiredConcepts: ["sgd-update"], sectionId: "sgd-update" },
-      { level: "basic", question: "Micro-batch 4를 8회 accumulation할 때 effective batch를 계산하세요.", answerChecklist: ["4 times 8", "32", "one update"], requiredConcepts: ["gradient-accumulation"], sectionId: "effective-batch" },
-      { level: "basic", question: "Accumulation 중 optimizer.step을 호출하면 안 되는 이유를 설명하세요.", answerChecklist: ["parameter snapshot changes", "not one mean", "eight updates"], requiredConcepts: ["gradient-accumulation", "optimizer-update"], sectionId: "effective-batch" },
-      { level: "basic", question: "Mean-loss convention에서 K개 micro gradient를 어떻게 scale해야 하나요?", answerChecklist: ["sum", "divide by K", "same objective scale"], requiredConcepts: ["gradient-accumulation"], sectionId: "effective-batch" },
-      { level: "advanced", question: "Data-parallel world size 4, micro-batch 2, accumulation 8의 effective batch와 update clock을 설계하세요.", answerChecklist: ["2 times 8 times 4", "64", "all-reduce convention", "one optimizer step"], requiredConcepts: ["gradient-accumulation", "optimizer-update"], sectionId: "effective-batch" },
-      { level: "advanced", question: "SGD 한 step에서 loss가 증가할 수 있는 반례와 진단을 설명하세요.", answerChecklist: ["noisy batch", "large LR or curvature", "full or validation metric", "trajectory"], requiredConcepts: ["sgd-update"], sectionId: "sgd-update" },
-      { level: "advanced", question: "Accumulation과 true large batch가 다른 실행을 만드는 조건을 분석하세요.", answerChecklist: ["BatchNorm", "dropout masks", "data order", "loss reduction", "paired test"], requiredConcepts: ["gradient-accumulation"], sectionId: "release-boundary" },
-      { level: "advanced", question: "SGD update release receipt와 resume test를 설계하세요.", answerChecklist: ["parameter revision", "gradient reduction", "micro and accumulation", "LR", "update index", "skip state", "rollback"], requiredConcepts: ["optimizer-update", "sgd-update", "gradient-accumulation"], sectionId: "release-boundary" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Backpropagation과 optimizer가 각각 만드는 값을 구분하세요.",
+        "answerChecklist": [
+          "gradient",
+          "optimizer state",
+          "displacement",
+          "next parameter"
+        ],
+        "requiredConcepts": [
+          "optimizer-update"
+        ],
+        "sectionId": "update-contract"
+      },
+      {
+        "level": "basic",
+        "question": "θ=3,g=4,η=.1인 scalar SGD의 다음 θ를 계산하세요.",
+        "answerChecklist": [
+          "negative gradient",
+          "delta -.4",
+          "theta 2.6"
+        ],
+        "requiredConcepts": [
+          "sgd-update"
+        ],
+        "sectionId": "sgd-update"
+      },
+      {
+        "level": "basic",
+        "question": "θ=(1,3),g=(4,-2),η=.1의 다음 parameter를 계산하세요.",
+        "answerChecklist": [
+          "delta (-.4,.2)",
+          "theta (.6,3.2)",
+          "coordinate-wise"
+        ],
+        "requiredConcepts": [
+          "sgd-update"
+        ],
+        "sectionId": "sgd-update"
+      },
+      {
+        "level": "basic",
+        "question": "Micro-batch 4를 8회 accumulation할 때 effective batch를 계산하세요.",
+        "answerChecklist": [
+          "4 times 8",
+          "32",
+          "one update"
+        ],
+        "requiredConcepts": [
+          "gradient-accumulation"
+        ],
+        "sectionId": "effective-batch"
+      },
+      {
+        "level": "basic",
+        "question": "Accumulation 중 optimizer.step을 호출하면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "parameter snapshot changes",
+          "not one mean",
+          "eight updates"
+        ],
+        "requiredConcepts": [
+          "gradient-accumulation",
+          "optimizer-update"
+        ],
+        "sectionId": "effective-batch"
+      },
+      {
+        "level": "basic",
+        "question": "같은 개수·같은 가중치인 K개 묶음의 mean gradient를 합칠 때의 계산과, 개수가2·6으로 다를 때의 계산을 구분하세요.",
+        "answerChecklist": [
+          "같은 개수면 gradient합/K",
+          "개수가 다르면 개수 비례 가중 또는 공통 분모",
+          "첫 사례 gradient합32/8=4",
+          "parameter는 누적 동안 고정"
+        ],
+        "requiredConcepts": [
+          "gradient-accumulation"
+        ],
+        "sectionId": "release-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "Data-parallel world size 4, micro-batch 2, accumulation 8의 effective batch와 update clock을 설계하세요.",
+        "answerChecklist": [
+          "2 times 8 times 4",
+          "64",
+          "all-reduce convention",
+          "one optimizer step"
+        ],
+        "requiredConcepts": [
+          "gradient-accumulation",
+          "optimizer-update"
+        ],
+        "sectionId": "release-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "SGD 한 step에서 loss가 증가할 수 있는 반례와 진단을 설명하세요.",
+        "answerChecklist": [
+          "noisy batch",
+          "large LR or curvature",
+          "full or validation metric",
+          "trajectory"
+        ],
+        "requiredConcepts": [
+          "sgd-update"
+        ],
+        "sectionId": "sgd-update"
+      },
+      {
+        "level": "advanced",
+        "question": "Accumulation과 true large batch가 다른 실행을 만드는 조건을 분석하세요.",
+        "answerChecklist": [
+          "BatchNorm",
+          "dropout masks",
+          "data order",
+          "loss reduction",
+          "paired test"
+        ],
+        "requiredConcepts": [
+          "gradient-accumulation"
+        ],
+        "sectionId": "release-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "SGD update release receipt와 resume test를 설계하세요.",
+        "answerChecklist": [
+          "parameter revision",
+          "gradient reduction",
+          "micro and accumulation",
+          "LR",
+          "update index",
+          "skip state",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "optimizer-update",
+          "sgd-update",
+          "gradient-accumulation"
+        ],
+        "sectionId": "release-boundary"
+      }
     ],
-    papers: [
-      { title: "A Stochastic Approximation Method", href: "https://doi.org/10.1214/aoms/1177729586", problem: "Noisy observation으로 미지의 root를 반복 추정하는 문제", contribution: "감소 step을 쓰는 stochastic approximation의 출발점을 제시", assumptions: "논문의 regression function·noise·step-size 조건", evidenceScope: "원 논문의 scalar stochastic-approximation 이론", notClaim: "현대 mini-batch SGD의 모든 nonconvex convergence나 generalization을 자동 보장한다는 뜻은 아님", sectionId: "paper-robbins-monro" },
-    ],
+    "papers": [
+      {
+        "title": "A Stochastic Approximation Method",
+        "href": "https://doi.org/10.1214/aoms/1177729586",
+        "problem": "Noisy observation으로 미지의 root를 반복 추정하는 문제",
+        "contribution": "감소 step을 쓰는 stochastic approximation의 출발점을 제시",
+        "assumptions": "논문의 regression function·noise·step-size 조건",
+        "evidenceScope": "원 논문의 scalar stochastic-approximation 이론",
+        "notClaim": "현대 mini-batch SGD의 모든 nonconvex convergence나 generalization을 자동 보장한다는 뜻은 아님",
+        "sectionId": "paper-robbins-monro"
+      }
+    ]
   },
   "ai/momentum-optimizer": {
-    entryLevel: true,
-    entryNote: "과거 전체를 저장하지 않는 재귀 평균과 velocity의 차이부터 시작합니다.",
-    coreIdea: "Momentum은 gradient history를 exponential state 하나로 압축해 일관된 방향을 강화하지만, decay convention·learning rate·curvature가 만든 overshoot를 함께 검증해야 합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "exponential-moving-average", role: "오래된 signal에 β의 거듭제곱 weight를 주어 history를 state 하나로 요약합니다." },
-      { id: "momentum-state", role: "감쇠된 과거 gradient와 현재 gradient를 합쳐 parameter update direction을 만듭니다." },
+    "entryLevel": true,
+    "entryNote": "g=[1,1,−1], β=.9, η=.1, θ0=3, v0=0에서 v=[1,1.9,.71], θ=[2.9,2.71,2.639]를 실제 SGD 원문에 대입합니다 (가정).",
+    "coreIdea": "Momentum은 gradient history를 exponential state 하나로 압축해 일관된 방향을 강화하지만, decay convention·learning rate·curvature가 만든 overshoot를 함께 검증해야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "exponential-moving-average",
+        "role": "오래된 signal에 β의 거듭제곱 weight를 주어 history를 state 하나로 요약합니다."
+      },
+      {
+        "id": "momentum-state",
+        "role": "감쇠된 과거 gradient와 현재 gradient를 합쳐 parameter update direction을 만듭니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "exponential-moving-average", sectionId: "ema", intuition: "오래된 메모일수록 투명하게 만들어 한 장의 현재 메모에 겹칩니다.", workedExample: "β=.9이면 10 step 전 signal의 상대 weight는 .9¹⁰≈.35입니다.", boundary: "최근 10개 hard-window 평균이 아니며 normalized·unnormalized convention을 구분합니다." },
-      { id: "momentum-state", sectionId: "velocity", intuition: "계속 같은 방향은 관성처럼 커지고 좌우로 번갈아 나온 방향은 상쇄됩니다.", workedExample: "v₀=0,β=.9,g=1,1,1이면 velocity는 1,1.9,2.71입니다.", boundary: "큰 β와 η는 minimum을 지나칠 수 있으며 saddle 탈출이나 convergence를 자동 보장하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "exponential-moving-average",
+        "sectionId": "ema",
+        "intuition": "오래된 메모일수록 투명하게 만들어 한 장의 현재 메모에 겹칩니다.",
+        "workedExample": "β=.9,g=[1,1,−1]이면 normalized m=[.1,.19,.071]로 unnormalized v의 .1배입니다. 같은 η로 혼용하면 이동도10분의1입니다 (가정).",
+        "boundary": "최근 10개 hard-window 평균이 아니며 normalized·unnormalized convention을 구분합니다."
+      },
+      {
+        "id": "momentum-state",
+        "sectionId": "velocity",
+        "intuition": "계속 같은 방향은 관성처럼 커지고 좌우로 번갈아 나온 방향은 상쇄됩니다.",
+        "workedExample": "실제 buffer는 g=[1,1,−1]에서 [1,1.9,.71]이 되어 마지막 θ도2.71→2.639로 감소합니다 (가정).",
+        "boundary": "큰 β와 η는 minimum을 지나칠 수 있으며 saddle 탈출이나 convergence를 자동 보장하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "History", relation: "과거 gradient를 time-decayed state로 요약", concepts: ["exponential-moving-average"] },
-      { label: "Velocity", relation: "EMA 계열 state를 optimizer direction으로 사용", concepts: ["momentum-state"] },
-      { label: "Boundary", relation: "Oscillation 감소와 overshoot·stale direction을 함께 측정", concepts: ["exponential-moving-average", "momentum-state"] },
+    "conceptStages": [
+      {
+        "label": "History",
+        "relation": "과거 gradient를 time-decayed state로 요약",
+        "concepts": [
+          "exponential-moving-average"
+        ]
+      },
+      {
+        "label": "Velocity",
+        "relation": "EMA 계열 state를 optimizer direction으로 사용",
+        "concepts": [
+          "momentum-state"
+        ]
+      },
+      {
+        "label": "Boundary",
+        "relation": "Oscillation 감소와 overshoot·stale direction을 함께 측정",
+        "concepts": [
+          "exponential-moving-average",
+          "momentum-state"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "β=.9일 때 10 step 전 signal의 상대 weight를 계산하세요.", answerChecklist: [".9 power 10", "about .349", "exponential decay"], requiredConcepts: ["exponential-moving-average"], sectionId: "ema" },
-      { level: "basic", question: "Normalized EMA에서 과거 보존분과 현재 신규분을 쓰세요.", answerChecklist: ["beta m previous", "one minus beta times g", "sum"], requiredConcepts: ["exponential-moving-average"], sectionId: "ema" },
-      { level: "basic", question: "β=.9,g=1,1,1인 unnormalized velocity 세 값을 계산하세요.", answerChecklist: ["1", "1.9", "2.71"], requiredConcepts: ["momentum-state"], sectionId: "velocity" },
-      { level: "basic", question: "Alternating gradient +1,-1,+1에서 상쇄가 일어나는 이유를 설명하세요.", answerChecklist: ["decayed prior", "opposite sign", "partial cancellation"], requiredConcepts: ["momentum-state"], sectionId: "velocity" },
-      { level: "basic", question: "EMA와 최근 K개 단순 평균의 차이를 설명하세요.", answerChecklist: ["no hard cutoff", "geometric weights", "one state"], requiredConcepts: ["exponential-moving-average"], sectionId: "ema" },
-      { level: "basic", question: "Velocity를 parameter update로 바꾸는 η의 역할을 설명하세요.", answerChecklist: ["global scale", "subtract velocity", "displacement"], requiredConcepts: ["momentum-state"], sectionId: "velocity" },
-      { level: "advanced", question: "Normalized EMA와 unnormalized momentum 값을 혼용하면 생기는 scale 오류를 계산하세요.", answerChecklist: ["one minus beta factor", "different steady state", "LR interaction", "convention receipt"], requiredConcepts: ["exponential-moving-average", "momentum-state"], sectionId: "velocity" },
-      { level: "advanced", question: "Sharp quadratic에서 momentum overshoot가 생기는 경로를 설명하세요.", answerChecklist: ["stored velocity", "minimum crossing", "late reversal", "beta LR curvature"], requiredConcepts: ["momentum-state"], sectionId: "damping-boundary" },
-      { level: "advanced", question: "SGD와 momentum을 공정하게 비교하는 trajectory 실험을 설계하세요.", answerChecklist: ["same init", "same data order", "same effective batch", "same budget", "loss update norm validation"], requiredConcepts: ["momentum-state"], sectionId: "damping-boundary" },
-      { level: "advanced", question: "Momentum checkpoint와 release gate를 설계하세요.", answerChecklist: ["parameter identity", "velocity", "beta", "LR schedule", "update index", "resume parity", "rollback"], requiredConcepts: ["exponential-moving-average", "momentum-state"], sectionId: "damping-boundary" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "β=.9일 때 10 step 전 signal의 상대 weight를 계산하세요.",
+        "answerChecklist": [
+          ".9 power 10",
+          "about .349",
+          "exponential decay"
+        ],
+        "requiredConcepts": [
+          "exponential-moving-average"
+        ],
+        "sectionId": "ema"
+      },
+      {
+        "level": "basic",
+        "question": "Normalized EMA에서 과거 보존분과 현재 신규분을 쓰세요.",
+        "answerChecklist": [
+          "beta m previous",
+          "one minus beta times g",
+          "sum"
+        ],
+        "requiredConcepts": [
+          "exponential-moving-average"
+        ],
+        "sectionId": "ema"
+      },
+      {
+        "level": "basic",
+        "question": "β=.9,초기 v=0,g=[1,1,−1]에서 velocity 세 값과 마지막 이동 방향을 계산하세요.",
+        "answerChecklist": [
+          "1",
+          "1.9",
+          ".71",
+          "새 gradient음수여도 θ는감소"
+        ],
+        "requiredConcepts": [
+          "momentum-state"
+        ],
+        "sectionId": "trace"
+      },
+      {
+        "level": "basic",
+        "question": "Alternating gradient +1,-1,+1에서 상쇄가 일어나는 이유를 설명하세요.",
+        "answerChecklist": [
+          "decayed prior",
+          "opposite sign",
+          "partial cancellation"
+        ],
+        "requiredConcepts": [
+          "momentum-state"
+        ],
+        "sectionId": "velocity"
+      },
+      {
+        "level": "basic",
+        "question": "EMA와 최근 K개 단순 평균의 차이를 설명하세요.",
+        "answerChecklist": [
+          "no hard cutoff",
+          "geometric weights",
+          "one state"
+        ],
+        "requiredConcepts": [
+          "exponential-moving-average"
+        ],
+        "sectionId": "ema"
+      },
+      {
+        "level": "basic",
+        "question": "Velocity를 parameter update로 바꾸는 η의 역할을 설명하세요.",
+        "answerChecklist": [
+          "global scale",
+          "subtract velocity",
+          "displacement"
+        ],
+        "requiredConcepts": [
+          "momentum-state"
+        ],
+        "sectionId": "velocity"
+      },
+      {
+        "level": "advanced",
+        "question": "Normalized EMA와 unnormalized momentum 값을 혼용하면 생기는 scale 오류를 계산하세요.",
+        "answerChecklist": [
+          "one minus beta factor",
+          "different steady state",
+          "LR interaction",
+          "convention receipt"
+        ],
+        "requiredConcepts": [
+          "exponential-moving-average",
+          "momentum-state"
+        ],
+        "sectionId": "velocity"
+      },
+      {
+        "level": "advanced",
+        "question": "Sharp quadratic에서 momentum overshoot가 생기는 경로를 설명하세요.",
+        "answerChecklist": [
+          "stored velocity",
+          "minimum crossing",
+          "late reversal",
+          "beta LR curvature"
+        ],
+        "requiredConcepts": [
+          "momentum-state"
+        ],
+        "sectionId": "damping-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "SGD와 momentum을 공정하게 비교하는 trajectory 실험을 설계하세요.",
+        "answerChecklist": [
+          "same init",
+          "same data order",
+          "same effective batch",
+          "same budget",
+          "loss update norm validation"
+        ],
+        "requiredConcepts": [
+          "momentum-state"
+        ],
+        "sectionId": "damping-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "Momentum checkpoint와 release gate를 설계하세요.",
+        "answerChecklist": [
+          "parameter identity",
+          "velocity",
+          "beta",
+          "LR schedule",
+          "update index",
+          "resume parity",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "exponential-moving-average",
+          "momentum-state"
+        ],
+        "sectionId": "damping-boundary"
+      }
     ],
-    papers: [
-      { title: "Some Methods of Speeding Up the Convergence of Iteration Methods", href: "https://doi.org/10.1016/0041-5553(64)90137-5", problem: "현재 iterate 하나만 사용하는 반복법이 narrow curvature에서 느리게 전진하고 방향을 번갈아 바꾸는 수렴 문제", contribution: "이전 iterate를 사용하는 multi-step acceleration 계열을 분석", assumptions: "논문의 objective·iteration·parameter 조건", evidenceScope: "원문의 deterministic iteration 분석", notClaim: "현대 stochastic deep network에서 β=.9가 보편 최적이거나 overshoot가 사라진다는 뜻은 아님", sectionId: "paper-polyak" },
-    ],
+    "papers": [
+      {
+        "title": "Some Methods of Speeding Up the Convergence of Iteration Methods",
+        "href": "https://doi.org/10.1016/0041-5553(64)90137-5",
+        "problem": "현재 iterate 하나만 사용하는 반복법이 narrow curvature에서 느리게 전진하고 방향을 번갈아 바꾸는 수렴 문제",
+        "contribution": "이전 iterate를 사용하는 multi-step acceleration 계열을 분석",
+        "assumptions": "논문의 objective·iteration·parameter 조건",
+        "evidenceScope": "원문의 deterministic iteration 분석",
+        "notClaim": "현대 stochastic deep network에서 β=.9가 보편 최적이거나 overshoot가 사라진다는 뜻은 아님",
+        "sectionId": "paper-polyak"
+      }
+    ]
   },
   "ai/adam-optimizer": {
-    entryLevel: true,
-    entryNote: "Signed gradient·squared gradient 두 숫자 장부에서 시작해 bias correction과 coordinate scale을 쌓습니다.",
-    coreIdea: "Adam은 gradient의 first·second raw-moment EMA를 따로 추적하고 초기 0 bias를 보정한 뒤 coordinate별 history scale로 나누지만, centered variance·full curvature·보편 convergence와 동일시하면 안 됩니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "raw-gradient-moments", role: "Gradient와 gradient 제곱의 EMA를 first·second raw moment로 추적합니다." },
-      { id: "ema-bias-correction", role: "0 initialization 때문에 초기 EMA가 작아지는 scale을 1−βᵗ로 보정합니다." },
-      { id: "adaptive-preconditioning", role: "Squared-gradient history로 coordinate별 effective step을 조절합니다." },
-      { id: "adam-optimizer", role: "Signed·squared moment EMA, bias correction, coordinate별 preconditioning을 하나의 optimizer update로 묶습니다." },
-],
-    conceptExplanations: [
-      { id: "raw-gradient-moments", sectionId: "moments", intuition: "Signed 방향 장부와 부호 없는 squared magnitude 장부를 따로 유지합니다.", workedExample: "β₁=.9,β₂=.999,g=2이면 첫 m=.2, v=.004입니다.", boundary: "v는 E[g²] 계열이며 centered variance E[(g−E[g])²]가 아닙니다." },
-      { id: "ema-bias-correction", sectionId: "bias-correction", intuition: "빈 장부 0에서 시작해 초기에 작아진 EMA를 지금까지 들어온 coefficient mass로 나눕니다.", workedExample: "m₁=.2를 1−.9=.1로 나누면 m̂₁=2입니다.", boundary: "Dataset sampling bias나 model bias를 교정하는 장치가 아닙니다." },
-      { id: "adaptive-preconditioning", sectionId: "preconditioning", intuition: "최근 gradient가 컸던 좌표는 짧게, 작았던 좌표는 상대적으로 길게 걷습니다.", workedExample: "같은 m̂에서 v̂=1은 1로, v̂=100은 10으로 나눕니다.", boundary: "Diagonal history scale이지 full Hessian inverse가 아니며 ε·dtype·trajectory에 의존합니다." },
+    "entryLevel": true,
+    "entryNote": "g=[2,−2], β1=.9·β2=.999·η=.1·ε=10⁻⁸에서 첫 m=.2,v=.004와 둘째 m=−.02,v=.007996을 만들고 θ≈2.9→2.9052631584까지 실제 원문과 대조합니다 (가정).",
+    "coreIdea": "Adam은 gradient의 first·second raw-moment EMA를 따로 추적하고 초기 0 bias를 보정한 뒤 coordinate별 history scale로 나누지만, centered variance·full curvature·보편 convergence와 동일시하면 안 됩니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "adam-optimizer",
-        sectionId: "overview",
-        intuition: "방향을 기억하는 momentum에 더해, 각 좌표가 최근 얼마나 크게 흔들렸는지도 함께 기억해 그만큼 step을 줄입니다.",
-        workedExample: "β₁=.9,β₂=.999,g=2인 첫 step에서 m=.2,v=.004이며, bias correction 뒤 m̂=2,v̂=4로 update 크기를 정합니다.",
-        boundary: "v는 centered variance가 아니고 diagonal preconditioner는 Hessian inverse가 아니며, 이 조합이 모든 문제에서 SGD·momentum보다 낫다는 보장은 아닙니다.",
+        "id": "raw-gradient-moments",
+        "role": "Gradient와 gradient 제곱의 EMA를 first·second raw moment로 추적합니다."
       },
-],
-    conceptStages: [
-      { label: "Moment state", relation: "Signed gradient와 squared scale을 별도 EMA로 저장", concepts: ["raw-gradient-moments"] },
-      { label: "Initialization", relation: "두 state의 누적 coefficient mass를 보정", concepts: ["ema-bias-correction"] },
-      { label: "Adaptive step", relation: "Corrected direction을 coordinate scale로 나눔", concepts: ["adaptive-preconditioning"] },
-      { label: "Adam", relation: "세 요소를 하나의 optimizer update로 통합", concepts: ["adam-optimizer"] },
+      {
+        "id": "ema-bias-correction",
+        "role": "0 initialization 때문에 초기 EMA가 작아지는 scale을 1−βᵗ로 보정합니다."
+      },
+      {
+        "id": "adaptive-preconditioning",
+        "role": "Squared-gradient history로 coordinate별 effective step을 조절합니다."
+      },
+      {
+        "id": "adam-optimizer",
+        "role": "Signed·squared moment EMA, bias correction, coordinate별 preconditioning을 하나의 optimizer update로 묶습니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "β₁=.9,β₂=.999,g=2,m₀=v₀=0의 m₁과 v₁을 계산하세요.", answerChecklist: ["m .2", "g squared 4", "v .004"], requiredConcepts: ["raw-gradient-moments"], sectionId: "moments" },
-      { level: "basic", question: "v가 centered gradient variance가 아닌 이유를 설명하세요.", answerChecklist: ["EMA of g squared", "no mean subtraction", "raw second moment"], requiredConcepts: ["raw-gradient-moments"], sectionId: "moments" },
-      { level: "basic", question: "첫 step의 m̂₁과 v̂₁을 계산하세요.", answerChecklist: ["divide by .1", "divide by .001", "m hat 2", "v hat 4"], requiredConcepts: ["ema-bias-correction"], sectionId: "bias-correction" },
-      { level: "basic", question: "Bias correction의 t가 무엇을 세는지 설명하세요.", answerChecklist: ["optimizer updates", "not micro batches", "skip convention"], requiredConcepts: ["ema-bias-correction"], sectionId: "bias-correction" },
-      { level: "basic", question: "같은 m̂에서 v̂=1과 100의 denominator를 비교하세요.", answerChecklist: ["1", "10", "second step one tenth"], requiredConcepts: ["adaptive-preconditioning"], sectionId: "preconditioning" },
-      { level: "basic", question: "ε가 denominator에 필요한 이유를 설명하세요.", answerChecklist: ["zero division", "tiny scale", "precision convention"], requiredConcepts: ["adaptive-preconditioning"], sectionId: "preconditioning" },
-      { level: "advanced", question: "m과 v가 서로 다른 decay를 쓸 때 variance처럼 m²를 빼면 안 되는 이유를 설명하세요.", answerChecklist: ["different weighting", "different time scale", "not matched moments", "centered definition absent"], requiredConcepts: ["raw-gradient-moments"], sectionId: "moments" },
-      { level: "advanced", question: "Adam state가 특정 convex sequence에서 convergence를 방해할 수 있는 경로를 설명하세요.", answerChecklist: ["history-dependent denominator", "effective step", "counterexample scope", "not universal divergence"], requiredConcepts: ["adaptive-preconditioning"], sectionId: "release-boundary" },
-      { level: "advanced", question: "Adam과 SGD를 공정하게 비교하는 실험을 설계하세요.", answerChecklist: ["same init and data", "same update budget", "tuned LR", "training and validation", "memory and wall time"], requiredConcepts: ["raw-gradient-moments", "adaptive-preconditioning"], sectionId: "release-boundary" },
-      { level: "advanced", question: "Adam checkpoint·resume release gate를 설계하세요.", answerChecklist: ["parameter identity", "m v step", "beta epsilon dtype", "LR schedule", "skip order", "resume parity", "rollback"], requiredConcepts: ["raw-gradient-moments", "ema-bias-correction", "adaptive-preconditioning"], sectionId: "release-boundary" },
+    "conceptExplanations": [
+      {
+        "id": "raw-gradient-moments",
+        "sectionId": "moments",
+        "intuition": "Signed 방향 장부와 부호 없는 squared magnitude 장부를 따로 유지합니다.",
+        "workedExample": "g=2 다음−2에서 m은 .2→−.02, v는 .004→.007996입니다. 부호는 상쇄돼도 제곱은 상쇄되지 않습니다 (가정).",
+        "boundary": "v는 E[g²] 계열이며 centered variance E[(g−E[g])²]가 아닙니다."
+      },
+      {
+        "id": "ema-bias-correction",
+        "sectionId": "bias-correction",
+        "intuition": "빈 장부 0에서 시작해 초기에 작아진 EMA를 지금까지 들어온 coefficient mass로 나눕니다.",
+        "workedExample": "둘째 갱신의 m̂=−.02/.19≈−.105263, v̂=.007996/.001999=4입니다. 두 묶음을 한 번 누적한 경우 t를2로 세지 않습니다 (가정).",
+        "boundary": "Dataset sampling bias나 model bias를 교정하는 장치가 아닙니다."
+      },
+      {
+        "id": "adaptive-preconditioning",
+        "sectionId": "preconditioning",
+        "intuition": "보정 방향 m̂를 같게 두면 제곱 기록 v̂가 큰 좌표는 더 큰 분모로 나뉘어 이동량이 작아집니다. m̂도 달라지면 두 값을 함께 계산해야 합니다.",
+        "workedExample": "두 번째 실제 코드의 step_size=.1/.19와 분모2+10⁻⁸에 m=−.02를 넣으면 θ가약 .005263 증가합니다 (가정).",
+        "boundary": "Diagonal history scale이지 full Hessian inverse가 아니며 ε·dtype·trajectory에 의존합니다."
+      },
+      {
+        "id": "adam-optimizer",
+        "sectionId": "trace",
+        "intuition": "부호를 가진 평균과 제곱 평균을 따로 기억하고 초기 비중을 보정한 뒤 두 크기의 비율로 이동을 정합니다.",
+        "workedExample": "g=[2,−2]의 같은 두 장부를 추적하면 첫 이동 약−.1 뒤 둘째 이동은약+.005263이며 θ≈2.905263입니다 (가정).",
+        "boundary": "v는 centered variance가 아니고 diagonal preconditioner는 Hessian inverse가 아니며, 이 조합이 모든 문제에서 SGD·momentum보다 낫다는 보장은 아닙니다."
+      }
     ],
-    papers: [
-      { title: "Adam: A Method for Stochastic Optimization", href: "https://arxiv.org/abs/1412.6980", problem: "Noisy·sparse gradient의 coordinate scale 차이", contribution: "First·second raw-moment EMA와 initialization bias correction을 결합한 adaptive update", assumptions: "논문의 stochastic objective·bounded-gradient·online convex analysis와 실험 조건", evidenceScope: "원문의 regret analysis와 공개 benchmark", notClaim: "모든 nonconvex model에서 기본 hyperparameter가 최선이거나 SGD보다 항상 우월하다는 뜻은 아님", sectionId: "paper-adam" },
-      { title: "On the Convergence of Adam and Beyond", href: "https://arxiv.org/abs/1904.09237", problem: "Adaptive history가 특정 convex example에서 convergence를 깨뜨릴 수 있는 문제", contribution: "Failure example과 장기 memory 조건을 분석", assumptions: "논문의 convex online optimization construction", evidenceScope: "Adam convergence claim의 경계와 제안 variant", notClaim: "모든 실제 Adam training이 발산한다는 뜻은 아님", sectionId: "paper-adam-convergence" },
+    "conceptStages": [
+      {
+        "label": "Moment state",
+        "relation": "Signed gradient와 squared scale을 별도 EMA로 저장",
+        "concepts": [
+          "raw-gradient-moments"
+        ]
+      },
+      {
+        "label": "Initialization",
+        "relation": "두 state의 누적 coefficient mass를 보정",
+        "concepts": [
+          "ema-bias-correction"
+        ]
+      },
+      {
+        "label": "Adaptive step",
+        "relation": "Corrected direction을 coordinate scale로 나눔",
+        "concepts": [
+          "adaptive-preconditioning"
+        ]
+      },
+      {
+        "label": "Adam",
+        "relation": "세 요소를 하나의 optimizer update로 통합",
+        "concepts": [
+          "adam-optimizer"
+        ]
+      }
     ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "β₁=.9,β₂=.999,g=2,m₀=v₀=0의 m₁과 v₁을 계산하세요.",
+        "answerChecklist": [
+          "m .2",
+          "g squared 4",
+          "v .004"
+        ],
+        "requiredConcepts": [
+          "raw-gradient-moments"
+        ],
+        "sectionId": "moments"
+      },
+      {
+        "level": "basic",
+        "question": "v가 centered gradient variance가 아닌 이유를 설명하세요.",
+        "answerChecklist": [
+          "EMA of g squared",
+          "no mean subtraction",
+          "raw second moment"
+        ],
+        "requiredConcepts": [
+          "raw-gradient-moments"
+        ],
+        "sectionId": "moments"
+      },
+      {
+        "level": "basic",
+        "question": "첫 step의 m̂₁과 v̂₁을 계산하세요.",
+        "answerChecklist": [
+          "divide by .1",
+          "divide by .001",
+          "m hat 2",
+          "v hat 4"
+        ],
+        "requiredConcepts": [
+          "ema-bias-correction"
+        ],
+        "sectionId": "bias-correction"
+      },
+      {
+        "level": "basic",
+        "question": "Bias correction의 t가 무엇을 세는지 설명하세요.",
+        "answerChecklist": [
+          "optimizer updates",
+          "not micro batches",
+          "skip convention"
+        ],
+        "requiredConcepts": [
+          "ema-bias-correction"
+        ],
+        "sectionId": "bias-correction"
+      },
+      {
+        "level": "basic",
+        "question": "같은 m̂에서 v̂=1과 100의 denominator를 비교하세요.",
+        "answerChecklist": [
+          "1",
+          "10",
+          "second step one tenth"
+        ],
+        "requiredConcepts": [
+          "adaptive-preconditioning"
+        ],
+        "sectionId": "preconditioning"
+      },
+      {
+        "level": "basic",
+        "question": "ε가 denominator에 필요한 이유를 설명하세요.",
+        "answerChecklist": [
+          "zero division",
+          "tiny scale",
+          "precision convention"
+        ],
+        "requiredConcepts": [
+          "adaptive-preconditioning"
+        ],
+        "sectionId": "preconditioning"
+      },
+      {
+        "level": "advanced",
+        "question": "m과 v가 서로 다른 decay를 쓸 때 variance처럼 m²를 빼면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "different weighting",
+          "different time scale",
+          "not matched moments",
+          "centered definition absent"
+        ],
+        "requiredConcepts": [
+          "raw-gradient-moments"
+        ],
+        "sectionId": "moments"
+      },
+      {
+        "level": "advanced",
+        "question": "Adam state가 특정 convex sequence에서 convergence를 방해할 수 있는 경로를 설명하세요.",
+        "answerChecklist": [
+          "history-dependent denominator",
+          "effective step",
+          "counterexample scope",
+          "not universal divergence"
+        ],
+        "requiredConcepts": [
+          "adaptive-preconditioning"
+        ],
+        "sectionId": "release-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "Adam과 SGD를 공정하게 비교하는 실험을 설계하세요.",
+        "answerChecklist": [
+          "same init and data",
+          "same update budget",
+          "tuned LR",
+          "training and validation",
+          "memory and wall time"
+        ],
+        "requiredConcepts": [
+          "raw-gradient-moments",
+          "adaptive-preconditioning"
+        ],
+        "sectionId": "release-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "Adam checkpoint·resume release gate를 설계하세요.",
+        "answerChecklist": [
+          "parameter identity",
+          "m v step",
+          "beta epsilon dtype",
+          "LR schedule",
+          "skip order",
+          "resume parity",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "raw-gradient-moments",
+          "ema-bias-correction",
+          "adaptive-preconditioning"
+        ],
+        "sectionId": "release-boundary"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Adam: A Method for Stochastic Optimization",
+        "href": "https://arxiv.org/abs/1412.6980",
+        "problem": "Noisy·sparse gradient의 coordinate scale 차이",
+        "contribution": "First·second raw-moment EMA와 initialization bias correction을 결합한 adaptive update",
+        "assumptions": "논문의 stochastic objective·bounded-gradient·online convex analysis와 실험 조건",
+        "evidenceScope": "원문의 갱신 알고리즘과 공개 실험입니다. 원래 수렴 증명의 문제점은 후속 Reddi 등의 논문을 함께 확인하며 그 분석을 일반 수렴 보장으로 사용하지 않습니다.",
+        "notClaim": "모든 nonconvex model에서 기본 hyperparameter가 최선이거나 SGD보다 항상 우월하다는 뜻은 아님",
+        "sectionId": "paper-adam"
+      },
+      {
+        "title": "On the Convergence of Adam and Beyond",
+        "href": "https://arxiv.org/abs/1904.09237",
+        "problem": "Adaptive history가 특정 convex example에서 convergence를 깨뜨릴 수 있는 문제",
+        "contribution": "Failure example과 장기 memory 조건을 분석",
+        "assumptions": "논문의 convex online optimization construction",
+        "evidenceScope": "Adam convergence claim의 경계와 제안 variant",
+        "notClaim": "모든 실제 Adam training이 발산한다는 뜻은 아님",
+        "sectionId": "paper-adam-convergence"
+      }
+    ]
   },
   "ai/rnn": {
     entryLevel: true,
@@ -24977,121 +26151,260 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/llm-harness": {
-    entryLevel: true,
-    entryNote:
-      "Agent framework나 분산 시스템 용어를 알고 있다고 가정하지 않습니다. Model이 행동을 제안하는 일과 runtime이 실제 실행을 통제하는 일을 나누는 데서 시작합니다.",
-    coreIdea:
-      "LLM 하네스는 model이 낸 제안을 실제 action과 검증된 artifact로 바꾸는 runtime입니다. Model proposal, 역할별 operation 권한, executor, typed observation과 독립 교정 loop의 책임을 분리해야 model이 바뀌어도 외부 effect의 안전성과 완료 판정을 유지할 수 있습니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "llm-harness-system-boundary", role: "Model proposal과 runtime enforcement의 책임을 먼저 나눕니다." },
-      { id: "agent-operation-role-boundary", role: "관찰·결정적 변환·창작 산출물·상태 변경의 권한과 실패 처리를 나눕니다." },
-      { id: "typed-artifact-repair-loop", role: "산출물을 구조화한 뒤 독립 검사에서 실패한 부분만 고치고 재검사합니다." },
-      { id: "agent-scaffold-runtime-structure", role: "어떤 task든 재사용하는 harness의 기본 loop·상태 관리 구조를 정의합니다." },
-      { id: "harness-quality-model-invariance", role: "같은 model이라도 harness 설계에 따라 성능이 크게 갈린다는 관점을 고정합니다." },
-],
-    conceptExplanations: [
+    "entryLevel": true,
+    "entryNote": "PING 32개를 출력하는 작은 요청으로 실행 환경이 맡는 일을 배웁니다.",
+    "coreIdea": "모델이 제안한 행동을 분류·검사·실행하고 실제 결과를 확인하는 환경이 필요합니다. 고정된 계산을 분리한 효과와 모델 자체의 능력을 구분합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "llm-harness-system-boundary",
-        sectionId: "overview",
-        intuition: "Model은 다음 행동을 제안하는 두뇌이고, 하네스는 출입문·작업대·검사대·작업 기록을 제공하는 실행 환경입니다.",
-        workedExample: "Model이 deploy 명령을 제안해도 runtime은 target project·identity·approval·canary 상태를 검사한 뒤 실행하고 결과 receipt를 돌려줍니다.",
-        boundary: "하네스는 특정 SDK 이름이나 model의 추론 능력을 뜻하지 않으며, 규칙을 많이 넣는 것 자체가 좋은 하네스는 아닙니다.",
+        "id": "llm-harness-system-boundary",
+        "role": "Model proposal과 runtime enforcement의 책임을 먼저 나눕니다."
       },
       {
-        id: "agent-operation-role-boundary",
-        sectionId: "operation-roles",
-        intuition: "같은 사무실 장비라도 문서를 읽는 스캐너, 숫자를 계산하는 계산기, 문서를 쓰는 편집기, 실제 계약을 체결하는 결재 도장은 서로 다른 권한을 가져야 합니다.",
-        workedExample: "계산기는 문서에서 검증된 금액과 세율만 계산하고, creative writer는 그 결과를 문장으로 만들며, 파일 변경은 one-use 승인·backup·journal이 있는 state-mutation 경로만 사용합니다.",
-        boundary: "Tool 이름이나 자연어 설명만으로 역할을 정하지 않고 현재 operation의 input source·effect·failure semantics를 기준으로 분류합니다.",
+        "id": "agent-operation-role-boundary",
+        "role": "관찰·결정적 변환·창작 산출물·상태 변경의 권한과 실패 처리를 나눕니다."
       },
       {
-        id: "typed-artifact-repair-loop",
-        sectionId: "artifact-repair",
-        intuition: "보고서 전체를 매번 다시 쓰지 않고, 맞춤법 검사나 schema validator가 표시한 위반 구간만 고친 뒤 같은 검사를 다시 돌리는 방식입니다.",
-        workedExample: "DOCX를 저장한 뒤 package validator와 PDF render를 실행하고, 누락된 표 caption만 patch한 다음 기존 통과 항목의 회귀까지 재검사합니다.",
-        boundary: "Model self-critique만 독립 검사로 세지 않으며, validator가 판정할 수 없는 의미 품질은 fresh reader·rubric·사람 검토 범위를 따로 기록합니다.",
+        "id": "typed-artifact-repair-loop",
+        "role": "산출물을 구조화한 뒤 독립 검사에서 실패한 부분만 고치고 재검사합니다."
       },
       {
-        id: "agent-scaffold-runtime-structure",
-        sectionId: "agent-scaffold",
-        intuition: "요약 agent와 배포 agent는 산출물이 다르지만 propose→authorize→execute→observe라는 같은 뼈대 위에서 돌아갑니다.",
-        workedExample: "두 agent 모두 같은 4단계 loop와 state 형식을 쓰고, 바뀌는 부분은 여기에 꽂히는 tool 목록과 verifier뿐입니다.",
-        boundary: "Scaffold 자체는 business logic이 아니며, scaffold가 좋아도 tool·verifier 설계가 나쁘면 결과는 나쁩니다.",
+        "id": "agent-scaffold-runtime-structure",
+        "role": "어떤 task든 재사용하는 harness의 기본 loop·상태 관리 구조를 정의합니다."
       },
       {
-        id: "harness-quality-model-invariance",
-        sectionId: "harness-quality",
-        intuition: "같은 요리사라도 부엌 도구가 좋으면 같은 요리를 더 안정적으로 냅니다. Model도 tool 설명·에러 메시지·재시도 로직이 좋을수록 안정적으로 성공합니다.",
-        workedExample: "같은 9B model이 cardinality 검사를 deterministic renderer로 옮긴 뒤 strict-count 요구를 0/27에서 27/27로 통과시켰습니다.",
-        boundary: "Harness quality를 높였다고 model 자체의 일반 추론 능력이 좋아진 것은 아니며, 다른 task class로 일반화되는지는 별도로 확인해야 합니다.",
-      },
-],
-    conceptStages: [
-      { label: "00 System boundary", relation: "제안·권한·실행·관측 owner를 먼저 나눕니다.", concepts: ["llm-harness-system-boundary"] },
-      { label: "01 Scaffold", relation: "재사용하는 기본 loop·상태 관리 구조를 정의합니다.", concepts: ["agent-scaffold-runtime-structure"] },
-      { label: "02 Operation roles", relation: "각 operation이 관찰·변환·창작·상태 변경 중 무엇을 소유하는지 제한합니다.", concepts: ["agent-operation-role-boundary"] },
-      { label: "03 Artifact repair", relation: "Typed artifact와 독립 validator를 targeted patch·recheck loop로 묶습니다.", concepts: ["typed-artifact-repair-loop"] },
-      { label: "04 Harness quality", relation: "Model quality를 고정한 채 harness 설계만으로 성능이 갈리는 지점을 확인합니다.", concepts: ["harness-quality-model-invariance"] },
+        "id": "harness-quality-model-invariance",
+        "role": "같은 model이라도 harness 설계에 따라 성능이 크게 갈린다는 관점을 고정합니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Model proposal과 runtime execution을 구분하세요.", answerChecklist: ["untrusted proposal", "runtime authority", "executor", "typed observation"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "overview" },
-      { level: "basic", question: "Agent scaffold가 요약 agent와 배포 agent에서 같은 이유를 설명하세요.", answerChecklist: ["propose", "authorize", "execute", "observe", "재사용 loop"], requiredConcepts: ["agent-scaffold-runtime-structure"], sectionId: "agent-scaffold" },
-      { level: "basic", question: "Tool schema와 capability가 다른 이유를 설명하세요.", answerChecklist: ["argument shape", "not authority", "resource scope", "current identity"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "proposal-runtime" },
-      { level: "basic", question: "Observation selector·deterministic transform·creative artifact·state mutation의 권한 차이를 예로 설명하세요.", answerChecklist: ["관찰만", "검증된 입력만 계산", "writer는 사실 확정 불가", "승인·backup·journal"], requiredConcepts: ["agent-operation-role-boundary"], sectionId: "operation-roles" },
-      { level: "basic", question: "Typed artifact 교정 loop의 contract→observe→write→validate→patch→recheck 순서를 설명하세요.", answerChecklist: ["acceptance", "current evidence", "typed fields", "independent validator", "targeted patch", "regression recheck"], requiredConcepts: ["typed-artifact-repair-loop"], sectionId: "artifact-repair" },
-      { level: "basic", question: "Harness quality를 이루는 세 요소를 쓰세요.", answerChecklist: ["tool 설명", "에러 메시지 형식", "재시도 로직"], requiredConcepts: ["harness-quality-model-invariance"], sectionId: "model-change" },
-      { level: "advanced", question: "Timeout 뒤 effect가 unknown인 action의 runtime 경계를 설계하세요.", answerChecklist: ["unknown outcome", "operation key", "receipt lookup", "no blind retry"], requiredConcepts: ["llm-harness-system-boundary"], sectionId: "feedback-loop" },
-      { level: "advanced", question: "새 model이 strict 형식 지시를 잘 따르게 됐을 때 제거할 보정과 유지할 runtime 불변식을 ablation으로 나누세요.", answerChecklist: ["frozen fixture", "model-specific prompt/shim 후보", "identity·approval·idempotency 유지", "correctness·cost·new failure"], requiredConcepts: ["llm-harness-system-boundary", "agent-operation-role-boundary"], sectionId: "model-change" },
-      { level: "advanced", question: "자동 evaluator가 20/20을 냈지만 artifact가 잘린 사례에서 검증 stack을 교정하세요.", answerChecklist: ["top-line score 한계", "raw transcript", "artifact render/schema", "fresh reader 또는 human audit", "held-out regression"], requiredConcepts: ["typed-artifact-repair-loop"], sectionId: "artifact-repair" },
-      { level: "advanced", question: "9B·27B 실측에서 model scale 우위와 harness quality 기여를 분리하세요.", answerChecklist: ["같은 model 비교", "cardinality를 runtime으로 이동", "model call 0", "harness quality가 원인"], requiredConcepts: ["harness-quality-model-invariance"], sectionId: "model-change" },
+    "conceptExplanations": [
+      {
+        "id": "llm-harness-system-boundary",
+        "sectionId": "agent-scaffold",
+        "intuition": "요청 분류·실행·검사를 이어 모델의 제안이 실제 결과로 바뀌게 합니다.",
+        "workedExample": "PING 32개의 완전히 고정된 요청을 확인한 뒤 반복 생성기로 처리하고 32개·공백 31개·전체 159자를 검사합니다.",
+        "boundary": "고정 반복 경로가 안전한 조건을 확인해야 하며 사실 32개를 조사하는 요청에는 적용할 수 없습니다."
+      },
+      {
+        "id": "agent-operation-role-boundary",
+        "sectionId": "operation-roles",
+        "intuition": "자료에서 알아내는 일, 정해진 값으로 계산하는 일, 새 내용을 쓰는 일, 외부를 바꾸는 일을 구분합니다.",
+        "workedExample": "PING 32개는 값이 정해진 반복 계산이지만 사실 32개 조사는 자료 관측과 내용 판단이 필요합니다. 결과 저장은 별도의 상태 변경입니다.",
+        "boundary": "계산이 정확해도 입력 사실이 참이라고 증명되지는 않으며 외부 변경에는 별도 권한이 필요합니다."
+      },
+      {
+        "id": "typed-artifact-repair-loop",
+        "sectionId": "artifact-repair",
+        "intuition": "독립 검사가 지적한 위반을 고친 뒤 이미 통과한 조건도 다시 확인합니다.",
+        "workedExample": "PING이 31개라면 개수를 수정하고 32개·공백 31개·전체 159자·추가 설명 없음 조건을 다시 검사합니다.",
+        "boundary": "개수 검사는 문장의 사실성이나 허가받은 변경인지까지 보장하지 않습니다."
+      },
+      {
+        "id": "agent-scaffold-runtime-structure",
+        "sectionId": "agent-scaffold",
+        "intuition": "행동 제안·권한 확인·실행·관측이 이어지는 공통 흐름입니다.",
+        "workedExample": "모델 제안을 검사해 실행하고 결과를 관측합니다. PING 고정 반복 분기는 모델 호출 없이 같은 입출력 계약과 독립 검사를 따릅니다.",
+        "boundary": "모든 요청이 반드시 모델을 거치는 것은 아니며 외부 상태를 바꾸면 해당 권한과 결과 검사가 추가됩니다."
+      },
+      {
+        "id": "harness-quality-model-invariance",
+        "sectionId": "harness-quality",
+        "intuition": "모델을 바꾸지 않고도 실행 경로와 검사 방식을 고쳐 결과를 달리할 수 있습니다.",
+        "workedExample": "기존 측정에서 9B 구성의 고정 개수 요청은 0/27에서 반복 생성 경로를 적용한 뒤 27/27로 바뀌었습니다. 해당 경로는 모델 호출을 우회했습니다.",
+        "boundary": "특정 형식의 통과율이 일반 추론 능력이나 다른 작업의 우위를 뜻하지 않습니다. 기존 측정은 이번 작업에서 재실행하지 않았습니다."
+      }
     ],
-    papers: [
+    "conceptStages": [
       {
-        title: "Anthropic — Building effective agents",
-        href: "https://www.anthropic.com/engineering/building-effective-agents",
-        problem:
-          "LLM application에서 복잡한 agent architecture를 언제 도입하고 workflow와 agent를 어떻게 구분할지 판단하는 문제",
-        contribution:
-          "Predefined workflow와 model-directed agent를 구분하고 routing·parallelization·orchestrator-worker·evaluator 패턴과 단순성 원칙을 공개",
-        assumptions:
-          "Anthropic이 설명한 model/tool 환경·task pattern과 production 경험",
-        evidenceScope: "Workflow·agent 용어와 관측된 복잡성 선택 원칙",
-        notClaim:
-          "모든 task가 단일 agent로 해결되거나 제시된 pattern이 표준 계층·성능 보장이 된다는 뜻은 아님",
-        sectionId: "paper-effective-agents",
+        "label": "00 System boundary",
+        "relation": "제안·권한·실행·관측 owner를 먼저 나눕니다.",
+        "concepts": [
+          "llm-harness-system-boundary"
+        ]
       },
       {
-        title: "Anthropic — Writing effective tools for AI agents",
-        href: "https://www.anthropic.com/engineering/writing-tools-for-agents",
-        problem:
-          "Agent가 많은 tool 가운데 올바른 operation과 parameter를 선택하고 high-signal result를 사용하는지 실제 workload에서 개선하는 문제",
-        contribution:
-          "현실적인 held-out task·verifiable outcome·raw transcript와 call/token/latency metric으로 tool boundary와 response를 반복 개선하는 방법을 공개합니다.",
-        assumptions:
-          "Anthropic이 공개한 tool-use evaluation loop와 model·tool environment입니다.",
-        evidenceScope:
-          "Tool naming·schema·response design과 programmatic agent eval을 함께 개선하는 실전 지침입니다.",
-        notClaim:
-          "제시한 tool layout이 모든 domain에 최적이거나 reasoning transcript가 정답이라는 뜻은 아닙니다.",
-        sectionId: "paper-effective-agents",
+        "label": "01 Scaffold",
+        "relation": "재사용하는 기본 loop·상태 관리 구조를 정의합니다.",
+        "concepts": [
+          "agent-scaffold-runtime-structure"
+        ]
       },
       {
-        title: "Anthropic — Demystifying evals for AI agents",
-        href: "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
-        problem:
-          "비결정적이고 multi-turn인 agent를 final answer 한 개가 아니라 안정된 환경과 trajectory까지 포함해 평가하는 문제",
-        contribution:
-          "Task·trial·grader·transcript·tool-call·token·latency를 구분하고 stable eval harness를 설계하는 절차를 제시합니다.",
-        assumptions:
-          "재실행 가능한 environment와 verifiable outcome 또는 calibrated grader를 구성할 수 있는 agent task입니다.",
-        evidenceScope:
-          "Agent eval dataset·grader·harness·metric을 설계하고 transcript로 failure를 분석하는 범위입니다.",
-        notClaim:
-          "자동 grader 점수 하나가 side effect correctness나 모든 production risk를 보장한다는 뜻은 아닙니다.",
-        sectionId: "paper-effective-agents",
+        "label": "02 Operation roles",
+        "relation": "각 operation이 관찰·변환·창작·상태 변경 중 무엇을 소유하는지 제한합니다.",
+        "concepts": [
+          "agent-operation-role-boundary"
+        ]
       },
+      {
+        "label": "03 Artifact repair",
+        "relation": "Typed artifact와 독립 validator를 targeted patch·recheck loop로 묶습니다.",
+        "concepts": [
+          "typed-artifact-repair-loop"
+        ]
+      },
+      {
+        "label": "04 Harness quality",
+        "relation": "Model quality를 고정한 채 harness 설계만으로 성능이 갈리는 지점을 확인합니다.",
+        "concepts": [
+          "harness-quality-model-invariance"
+        ]
+      }
     ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "PING 32개를 공백 하나로 연결할 때 공백 수와 전체 길이를 계산하세요.",
+        "answerChecklist": [
+          "공백 31개",
+          "글자 128개",
+          "전체 159자"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "agent-operation-role-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Model의 제안과 runtime의 권한 검사, executor의 실행을 구분하세요.",
+        "answerChecklist": [
+          "행동 제안",
+          "주체·대상 검사",
+          "실제 실행"
+        ],
+        "sectionId": "agent-scaffold",
+        "requiredConcepts": [
+          "llm-harness-system-boundary",
+          "agent-scaffold-runtime-structure"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "관측과 계산이 입력 사실의 정확성을 똑같이 보장하지 않는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "관측 근거",
+          "계산 입력",
+          "계산 성공과 사실 증명의 차이"
+        ],
+        "sectionId": "why-harness",
+        "requiredConcepts": [
+          "agent-operation-role-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "반복 출력 경로를 고르기 전에 요청 전체를 확인하는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "부분 일치에 따른 오판",
+          "다른 요구 보존",
+          "출력이 완전히 고정된 조건"
+        ],
+        "sectionId": "proposal-runtime",
+        "requiredConcepts": [
+          "llm-harness-system-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "독립 검사에서 31개가 나왔다면 무엇을 고치고 다시 검사하나요?",
+        "answerChecklist": [
+          "개수",
+          "문자열",
+          "구분자",
+          "추가 설명",
+          "회귀 검사"
+        ],
+        "sectionId": "artifact-repair",
+        "requiredConcepts": [
+          "typed-artifact-repair-loop"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "하네스의 품질과 모델 자체의 능력을 구분하는 사례를 설명하세요.",
+        "answerChecklist": [
+          "같은 모델",
+          "실행 구조의 변화",
+          "고정 형식 처리",
+          "결과 차이"
+        ],
+        "sectionId": "model-change",
+        "requiredConcepts": [
+          "harness-quality-model-invariance"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "사실 32개를 조사해 쓰라는 요청을 반복 출력 규칙으로 처리하면 왜 틀리나요?",
+        "answerChecklist": [
+          "아직 정하지 않은 내용",
+          "사실 검증 필요",
+          "개수만으로 불충분"
+        ],
+        "sectionId": "why-harness",
+        "requiredConcepts": [
+          "agent-operation-role-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "9B 구성의 27/27 통과가 일반 추론 우위를 뜻하지 않는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "해당 경로에서 모델 우회",
+          "한 가지 출력 형식",
+          "세대·정밀도 차이",
+          "일반화 제한"
+        ],
+        "sectionId": "model-change",
+        "requiredConcepts": [
+          "harness-quality-model-invariance"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "더 좋은 모델로 바꿔도 권한과 실제 변경 확인을 유지하는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "언어 능력과 권한 구분",
+          "실제 효과 관측",
+          "독립 검사"
+        ],
+        "sectionId": "model-change",
+        "requiredConcepts": [
+          "llm-harness-system-boundary",
+          "agent-scaffold-runtime-structure"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "하네스 장치를 제거해도 되는지 공정하게 비교하려면 어떻게 실험하나요?",
+        "answerChecklist": [
+          "같은 입력",
+          "한 장치만 변경",
+          "정확성",
+          "호출 수",
+          "시간",
+          "새로운 실패"
+        ],
+        "sectionId": "model-change",
+        "requiredConcepts": [
+          "typed-artifact-repair-loop",
+          "harness-quality-model-invariance"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Anthropic — Effective harnesses for long-running agents",
+        "href": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+        "problem": "여러 실행에 걸친 작업의 진행과 완료 상태를 보존하는 문제입니다.",
+        "contribution": "기능 목록·진행 기록·저장 지점·실제 테스트를 결합한 하네스 사례입니다.",
+        "assumptions": "공개 글의 코딩 작업과 모델·환경 조건에서 보고한 경험입니다.",
+        "evidenceScope": "원문 feature list의 steps와 passes, 실행 사이 진행 확인 원칙입니다.",
+        "notClaim": "모든 하네스의 표준 구조나 모든 요청의 정확성을 보장하지 않습니다.",
+        "sectionId": "paper-effective-agents"
+      }
+    ]
   },
   "ai/agent-run-contract": {
     "entryLevel": true,
@@ -25121,28 +26434,28 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "agent-run-contract",
         "sectionId": "contract",
         "intuition": "작업 전에 완료의 뜻과 실패 시 행동까지 적는 접수증입니다.",
-        "workedExample": "UI run은 route·390/1440 acceptance·write scope·screenshot·rollback을 고정합니다.",
+        "workedExample": "/repo/page.css 한 파일을 바꾸고 390px·1440px 화면의 조건을 검사합니다. 수정 뒤 390px 화면의 문서 폭이 410px이면 20px가 남아 미완료입니다.",
         "boundary": "자연어 지시가 존재하는 것과 runtime admission은 다릅니다."
       },
       {
         "id": "agent-context-discovery-path",
         "sectionId": "context-capability",
         "intuition": "모든 문서를 외우지 않고 목차에서 필요한 정본만 찾습니다.",
-        "workedExample": "짧은 진입 문서가 design에는 Viz 규칙, 배포에는 runbook을 연결합니다.",
+        "workedExample": "390px·1440px 검사 기준의 정본을 진입 문서에서 찾아 소유자와 최신성을 확인합니다. 자료가 없거나 오래됐을 때의 확인 경로도 남깁니다.",
         "boundary": "Ownership·freshness·fallback이 없으면 분할 문서도 stale합니다."
       },
       {
         "id": "agent-capability-runtime-boundary",
         "sectionId": "context-capability",
         "intuition": "열쇠 이름을 아는 것과 실제 열쇠를 가진 것은 다릅니다.",
-        "workedExample": "Delete schema가 보여도 read-only identity는 runtime에서 거부됩니다.",
+        "workedExample": "/repo/page.css만 쓰도록 허용된 실행은 다른 파일의 쓰기 제안이 형식상 맞아도 거부합니다. 파일 경로를 아는 것과 쓸 권한은 다릅니다.",
         "boundary": "Schema validation은 authorization이 아닙니다."
       },
       {
         "id": "agent-artifact-state-continuity",
         "sectionId": "artifact-continuity",
         "intuition": "기억 대신 version·checksum·검증 결과가 있는 작업물을 넘깁니다.",
-        "workedExample": "새 session이 commit과 screenshot receipt를 다시 검사합니다.",
+        "workedExample": "v2의 폭 410px와 v3의 재측정 결과를 버전별로 남깁니다. 새 실행은 현재 파일 버전과 검사 기록이 같은 제출물을 가리키는지 확인합니다.",
         "boundary": "대화 요약만으로 외부 상태를 재현할 수 없습니다."
       }
     ],
@@ -25353,35 +26666,35 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "layered-agent-verification",
         "sectionId": "layers",
         "intuition": "계산기로 확인할 일부터 검사하고 애매한 품질에만 judge와 사람을 씁니다.",
-        "workedExample": "Typecheck→Playwright→blind design rubric→production approval 순으로 올립니다.",
+        "workedExample": "27개 고정 검사 중 26개만 통과한 상태에서 설명 평가 평균이 0.7이어도 빠진 필수 검사를 덮어쓸 수 없습니다.",
         "boundary": "Judge는 deterministic oracle을 대체하지 않습니다."
       },
       {
         "id": "agent-trajectory-effect-evaluation",
         "sectionId": "trajectory-effect",
         "intuition": "목적지뿐 아니라 길·외부 변화·비용도 따로 채점합니다.",
-        "workedExample": "코드가 맞아도 secret 전송이나 중복 deploy가 있으면 reject합니다.",
+        "workedExample": "26/27 검사 결과와 별개로 허용된 파일만 바꿨는지, 실제 제출물이 무엇인지, 호출 예산을 지켰는지를 따로 기록합니다.",
         "boundary": "Private reasoning이 아니라 observable call·artifact·receipt를 평가합니다."
       },
       {
         "id": "external-ground-truth-vs-semantic-verifier",
         "sectionId": "verifier-truth-source",
         "intuition": "모델의 자기 보고 밖에서 확인한 사실과 의미 해석에 따른 평가를 구분합니다.",
-        "workedExample": "고정한 한 실행은 26/27 통과로 관측됐고 설명 평가는 0.6·0.7·0.8입니다. 환경·난수·검사가 바뀌면 실행 결과도 달라질 수 있습니다.",
+        "workedExample": "고정한 한 실행은 26/27 통과로 관측됐고 설명 평가는 0.6·0.7·0.8로 평균 0.7입니다. 환경·난수·검사가 바뀌면 실행 결과도 달라질 수 있습니다.",
         "boundary": "직접 검사도 범위와 환경의 한계가 있으므로 전체정확성으로 확대하지 않습니다."
       },
       {
         "id": "generator-critic-verifier-architecture",
         "sectionId": "critic-architecture",
         "intuition": "생성 역할과 평가 역할을 누가 맡는지, 두 역할의 오류가 얼마나 겹치는지 따로 확인합니다.",
-        "workedExample": "같은 모델을 다시 호출해도 계산과 시간이 추가됩니다. 다른 모델의 우위는 같은 오류 표본에서 측정합니다.",
+        "workedExample": "같은 모델을 다시 불러 설명을 평가해도 호출 비용이 생깁니다. 0.6·0.7·0.8의 평가와 실패한 한 검사를 같은 정답 기준으로 합치지 않습니다.",
         "boundary": "Generator·critic·verifier라는 이름만으로 같은 모델인지 다른 모델인지 단정하지 않습니다."
       },
       {
         "id": "plan-execute-verify-loop",
         "sectionId": "plan-execute-verify",
         "intuition": "계획→실행→확인을 매번 거쳐야 다음 계획이 틀린 전제 위에 서지 않습니다.",
-        "workedExample": "propose_next_action→execute→verify→update state를 A_a∧A_t∧A_e∧A_b가 모두 통과할 때까지 반복합니다.",
+        "workedExample": "계획한 수정을 실행한 뒤 26/27에서 실패한 항목을 확인하고 다시 수정합니다. 산출물·권한·실제 효과·예산의 필수 조건이 모두 통과해야 완료합니다.",
         "boundary": "Verify 단계를 생략하면 한 action의 부분 실패가 다음 plan에 그대로 전제로 들어갑니다."
       }
     ],
@@ -25623,21 +26936,21 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "workflow-agent-checkpoint-boundary",
         "sectionId": "workflow-agent",
         "intuition": "정해진 철도·현장 탐색·국경 검문소를 같은 운행 방식으로 다루지 않습니다.",
-        "workedExample": "Source 탐색은 agent, build는 workflow, production deploy는 approval checkpoint가 맡습니다.",
+        "workedExample": "20개 파일 중 원인을 찾는 경로는 모델이 고르고 정해진 검사 2개는 고정된 순서로 실행합니다. 허용한 test-1 밖의 prod-1 변경은 권한 검사에서 막습니다.",
         "boundary": "Agent나 graph가 workflow보다 높은 성숙도라는 뜻이 아닙니다."
       },
       {
         "id": "loop-timescale-authority-separation",
         "sectionId": "loop-authority",
         "intuition": "한 경기의 작전과 시즌 규칙 변경을 같은 선수가 즉시 결정하지 않습니다.",
-        "workedExample": "Run loop는 bounded tool action을, 개선 loop는 여러 trace·review·canary를 다룹니다.",
+        "workedExample": "한 실행에서는 6회 읽기 예산 중 2회를 사용해 4회가 남습니다. 그 실행이 실패했다는 이유만으로 전체 시스템의 읽기 권한이나 정책을 바꾸지 않습니다.",
         "boundary": "Judge feedback 하나가 global harness를 즉시 바꾸면 안 됩니다."
       },
       {
         "id": "blast-radius-least-privilege-boundary",
         "sectionId": "blast-radius",
         "intuition": "한 action이 잘못됐을 때 번질 수 있는 최대 범위를 먼저 정하고, least privilege로 그 범위 자체를 좁혀 둡니다.",
-        "workedExample": "Project 전체 write 권한 대신 이번 release의 target·revision만 write 가능한 scoped credential을 주면 실수의 반경이 release 1건으로 줄어듭니다.",
+        "workedExample": "test-1 변경만 허용하면 잘못된 제안도 prod-1에 적용되지 않습니다. 허용된 test-1 안의 잘못된 변경은 별도의 검사·복구가 필요합니다.",
         "boundary": "Least privilege가 blast radius를 0으로 만들지는 않으며, 좁은 권한 안의 effect도 receipt·rollback 경로가 없으면 되돌릴 수 없습니다."
       }
     ],
@@ -25880,49 +27193,49 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "agent-observation-action-loop",
         "sectionId": "agent-definition",
         "intuition": "현재 작업판을 보고 행동을 제안하고 실제 결과로 작업판을 갱신합니다.",
-        "workedExample": "File read proposal을 runtime이 허가해 실행하고 content checksum observation을 다음 state에 넣습니다.",
+        "workedExample": "390px 화면에서 문서 폭 430px를 관측하고 파일 읽기·수정·재측정 결과로 상태를 바꿉니다. 재측정 값이 390px여야 해당 넘침 조건이 해결됩니다.",
         "boundary": "Model proposal은 외부 effect 권한이 아닙니다."
       },
       {
         "id": "typed-tool-observation-contract",
         "sectionId": "observation-contract",
         "intuition": "빈 결과와 실행하지 못한 결과에 서로 다른 표찰을 붙입니다.",
-        "workedExample": "status=timeout, retryable=true, callId, payloadHandle, truncated=false를 남깁니다.",
+        "workedExample": "폭 측정이 timeout이면 width=0이라고 쓰지 않고 status=timeout과 호출 식별자를 남깁니다. 재측정에 성공한 뒤에만 새 폭을 다음 판단에 사용합니다.",
         "boundary": "Schema가 payload의 사실성이나 freshness를 자동 보장하지 않습니다."
       },
       {
         "id": "agent-exit-state-machine",
         "sectionId": "exit-states",
         "intuition": "끝났다는 말 대신 여러 종착역을 둡니다.",
-        "workedExample": "Verifier pass는 completed, 반복 action은 stalled, 승인 부재는 awaiting_approval입니다.",
+        "workedExample": "폭 390px와 나머지 검사를 통과하면 completed, 6회 행동 예산이 끝났으면 budget_exhausted입니다. 폭을 확인하지 못한 상태를 완료로 표시하지 않습니다.",
         "boundary": "Model final text만으로 completed가 되지 않습니다."
       },
       {
         "id": "ai-agent-definition-taxonomy",
         "sectionId": "agent-definition",
         "intuition": "다음 action을 model이 매 반복 스스로 정하는지, 코드가 미리 정한 순서를 따르는지로 agent와 workflow를 가릅니다.",
-        "workedExample": "요약→분류→저장처럼 순서가 코드에 고정된 pipeline은 agentic workflow이고, 다음 tool을 model이 매번 고르면 AI agent입니다.",
+        "workedExample": "읽기→수정→측정 순서를 코드가 고정하면 workflow입니다. 430px라는 관측을 보고 모델이 다음 읽기 대상이나 수정을 고르면 agent 방식입니다.",
         "boundary": "각 단계에서 LLM을 쓴다는 사실만으로 그 pipeline 전체가 agent가 되지는 않습니다."
       },
       {
         "id": "agent-step-and-horizon",
         "sectionId": "agent-step-and-horizon",
         "intuition": "한 바퀴 반복을 step으로 세고, 그 작업이 버텨야 하는 step·시간·budget 범위를 horizon으로 봅니다.",
-        "workedExample": "파일 여러 개를 고치고 test를 반복하는 작업은 horizon이 수십 step으로 늘어납니다.",
+        "workedExample": "행동 예산을 6회로 정하고 읽기·수정·측정에 각각 1회를 쓰면 3회가 남습니다. 실제 시스템에서 무엇을 한 step으로 세는지도 정해야 합니다.",
         "boundary": "Step 상한을 크게 잡는 것만으로는 long-horizon agent가 되지 않고 checkpoint·재검증이 함께 필요합니다."
       },
       {
         "id": "agent-policy",
         "sectionId": "transition",
         "intuition": "State 하나를 넣으면 다음 action의 확률 분포를 내놓는 함수가 policy입니다.",
-        "workedExample": "s_t를 넣은 π_θ가 file read·grep·응답 종료 중 하나를 더 높은 확률로 제안합니다.",
+        "workedExample": "430px라는 현재 상태에서 다음 행동 후보인 파일 읽기·수정·종료에 대한 제안이 달라집니다. 제안 뒤에는 실제 실행 권한을 따로 검사합니다.",
         "boundary": "Policy가 제안한 action이 실행 권한을 갖는 것은 아니며, 그다음 authorization gate가 별도로 판정합니다."
       },
       {
         "id": "react-and-tool-augmented-llm",
         "sectionId": "react-and-tool-augmented-llm",
         "intuition": "Tool을 부를 수 있는 LLM 위에서, ReAct는 이유를 적은 reasoning과 실제 action을 번갈아 만듭니다.",
-        "workedExample": "\"파일을 먼저 확인해야 한다\"는 reasoning 뒤 read_file action을 내고, 그 결과로 다음 reasoning을 갱신합니다.",
+        "workedExample": "430px라는 관측을 다음 판단에 포함하고 파일 확인 행동을 제안합니다. 읽은 내용과 수정 뒤 측정 결과가 이후 행동 선택의 근거가 됩니다.",
         "boundary": "논문의 task 결과를 production authorization이나 exactly-once effect 보장으로 확대하지 않습니다."
       }
     ],
@@ -26163,49 +27476,49 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "executable-plan-state",
         "sectionId": "executable-plan",
         "intuition": "문장 목록을 제출물과 검사 결과가 있는 작업 보드로 바꿉니다.",
-        "workedExample": "Task B는 schema:v3에 의존하고 output URI·checksum·validator를 가집니다.",
+        "workedExample": "B는 A의 schema:v3을 입력으로 쓰고 client:r1과 검사 결과를 제출합니다. C는 그 client:r1을 사용하므로 단순한 완료 표시 외에 버전 연결이 필요합니다.",
         "boundary": "Output과 evidence가 없는 동사는 완료를 판정할 수 없습니다."
       },
       {
         "id": "evidence-driven-replanning",
         "sectionId": "replanning",
         "intuition": "새 사실이 깨뜨린 가지와 downstream만 다시 엽니다.",
-        "workedExample": "Schema v4는 client와 integration test를 invalidation하지만 unrelated screenshot은 보존합니다.",
+        "workedExample": "schema:v3이 v4로 바뀌면 B와 그 출력에 의존하는 C를 다시 엽니다. 독립된 D의 완료 결과는 보존합니다.",
         "boundary": "전체 plan 재생성과 무한 retry가 아닙니다."
       },
       {
         "id": "feedback-grounded-reflection",
         "sectionId": "reflection",
         "intuition": "실패 관측을 다음 수정과 같은 재검증 command로 연결합니다.",
-        "workedExample": "Missing import→module path 수정→동일 compile·regression test 재실행을 기록합니다.",
+        "workedExample": "schema:v4 때문에 B의 검사에 실패했다면 실패 입력과 수정한 client:r2를 기록하고 같은 검사를 다시 실행합니다. 그 뒤 C도 새 client:r2를 검사합니다.",
         "boundary": "근거 없는 self-review는 feedback source가 아닙니다."
       },
       {
         "id": "planning-and-plan-mode",
         "sectionId": "planning-and-plan-mode",
         "intuition": "매번 다음 action만 보는 대신 실행 전에 순서 전체를 먼저 만들고, 그 초안을 사람이 검토하게 둘 수 있습니다.",
-        "workedExample": "파일을 고치기 전에 \"A를 바꾸고 B test를 돌린다\"는 초안만 보여주는 상태가 plan mode입니다.",
+        "workedExample": "A→B→C와 독립된 D의 순서·제출물·검사를 실행 전에 검토할 수 있습니다. 모드에서 실제 실행을 허용하는지는 제품 설정에 따라 확인합니다.",
         "boundary": "계획 검토 모드의 실제 도구 권한과 승인 조건은 제품·설정에서 확인하며, 모드 이름이 계획의 정확성을 보장하지 않습니다."
       },
       {
         "id": "task-decomposition-and-subgoal",
         "sectionId": "task-decomposition-and-subgoal",
         "intuition": "완료를 판정할 수 없을 만큼 큰 목표를 독립적으로 검증 가능한 작은 단위로 나눕니다.",
-        "workedExample": "\"API를 만든다\"를 schema 정의·구현·통합 test라는 세 subgoal로 나눕니다.",
+        "workedExample": "전체 작업을 A의 스키마, B의 클라이언트, C의 통합 검사, D의 독립 작업으로 나누고 각 제출물을 정합니다.",
         "boundary": "Decomposition은 경계만 정하고, 각 subgoal의 완료 근거는 executable plan의 artifact receipt가 채웁니다."
       },
       {
         "id": "hierarchical-planning",
         "sectionId": "hierarchical-planning",
         "intuition": "한 subgoal이 여전히 크면 그 안에서 다시 decomposition해 층을 늘립니다.",
-        "workedExample": "구현이라는 subgoal 아래 client 코드·에러 처리라는 더 작은 subgoal을 둡니다.",
+        "workedExample": "B가 너무 크면 입력 읽기·코드 생성·오류 처리 검사로 더 나눕니다. 이 하위 결과가 모두 충족돼야 B의 완료를 판단합니다.",
         "boundary": "층마다 완료 조건과 dependency를 명시하지 않으면 어느 layer가 막혔는지 추적할 수 없습니다."
       },
       {
         "id": "plan-validation",
         "sectionId": "plan-validation",
         "intuition": "실행을 시작하기 전에 계획 구조 자체에 순환이나 누락이 없는지 확인합니다.",
-        "workedExample": "Task C가 존재하지 않는 artifact를 참조하면 실행 전에 이 참조 오류를 잡습니다.",
+        "workedExample": "A→B→C에 순환이 없는지, C가 참조한 client:r1의 생산자가 B인지 실행 전에 확인합니다. 이후 v4가 생겼을 때 영향 범위를 다시 여는 작업과 구분합니다.",
         "boundary": "실행 뒤 새 evidence로 영향 범위를 다시 여는 replanning과는 검사 시점이 다릅니다."
       }
     ],
@@ -26430,14 +27743,14 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "agent-delegation-artifact-ownership",
         "sectionId": "delegation-contract",
         "intuition": "일을 나누기 전에 각자 읽고 쓸 서류와 제출 형식·검사자를 정합니다.",
-        "workedExample": "Researcher는 evidence JSON만 쓰고 implementer만 source writer가 되며 coordinator가 checksum을 검증합니다.",
+        "workedExample": "A는 x·y·z, B는 z·w를 찾아 제출물 A1·B1로 냅니다. 담당자는 원본과 식별자를 검사한 뒤 중복 z를 합쳐 고유 항목 4개를 얻습니다.",
         "boundary": "Agent 수가 지능을 자동 합산하지 않습니다."
       },
       {
         "id": "manager-handoff-state-ownership",
         "sectionId": "manager-handoff",
         "intuition": "전문가에게 자문을 받는 것과 고객 자체를 다음 담당자에게 넘기는 것을 구분합니다.",
-        "workedExample": "Manager call은 중앙이 final state를 유지하고 handoff는 specialist가 pending turn을 인수합니다.",
+        "workedExample": "중앙 담당자가 A1·B1을 받아 4개 결과를 합치면 manager 방식입니다. 현재 작업을 넘기면 새 담당자에게 미완료 항목과 권한, 반환 조건도 함께 전달합니다.",
         "boundary": "Identity·history·pending effect·return condition 없는 handoff는 state를 잃습니다."
       }
     ],
@@ -32765,35 +34078,203 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/context-instruction-boundaries": {
-    entryLevel: true,
-    entryNote: "System prompt·prompt injection·tool permission을 모른다고 가정하고 instruction·data·runtime을 한 층씩 정의합니다.",
-    coreIdea: "Instruction은 행동을 설명하고 external content는 분석할 untrusted data이며 schema·authorization·policy는 runtime이 effect를 강제하는 gate입니다. Prompt priority를 capability boundary로 오인하지 않습니다.",
-    assumedKnowledge: [],
-    introducedHere: [{ id: "instruction-data-enforcement-boundary", role: "Instruction·untrusted data·runtime enforcement의 책임과 실패를 분리합니다." }],
-    conceptExplanations: [
-      { id: "instruction-data-enforcement-boundary", sectionId: "overview", intuition: "업무 지시서, 읽을 고객 문서, 잠긴 출입문은 모두 중요하지만 같은 통제가 아닙니다.", workedExample: "System은 개인정보 반출 금지를 설명하고 email의 명령문은 data로 인용하며 runtime은 export schema·caller capability·destination policy를 검사합니다.", boundary: "Prompt priority는 model input의 해석 순서이지 filesystem·network capability나 deterministic security boundary가 아닙니다." },
+    "entryLevel": true,
+    "entryNote": "이메일 한 통의 요약 요청에서 자료와 권한을 구분하며 시작합니다.",
+    "coreIdea": "외부 자료의 문장은 실행 권한이 아닙니다. 형식·주체의 권한·현재 실행 조건을 실제 실행 경로에서 모두 검사합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "instruction-data-enforcement-boundary",
+        "role": "Instruction·untrusted data·runtime enforcement의 책임과 실패를 분리합니다."
+      }
     ],
-    conceptStages: [
-      { label: "Name", relation: "Instruction·untrusted data·runtime enforcement 정의", concepts: ["instruction-data-enforcement-boundary"] },
-      { label: "Separate", relation: "Retrieved command를 data lane에 유지", concepts: ["instruction-data-enforcement-boundary"] },
-      { label: "Gate", relation: "Schema·authorization·policy AND로 effect 허용", concepts: ["instruction-data-enforcement-boundary"] },
-      { label: "Audit", relation: "Effect receipt와 bypass path로 release 판정", concepts: ["instruction-data-enforcement-boundary"] },
+    "conceptExplanations": [
+      {
+        "id": "instruction-data-enforcement-boundary",
+        "sectionId": "three-layers",
+        "intuition": "요약 대상 이메일은 읽을 자료이며, 그 안의 명령이 실행 권한을 만들지는 않습니다.",
+        "workedExample": "고객 100건 전송 제안의 형식 검사 값은 1이지만 요약 전용 주체의 권한 값은 0입니다. AND 조건이 거짓이므로 전송은 0건입니다.",
+        "boundary": "권한은 외부 문장의 승인 주장으로 바꾸지 않으며 위임·재시도 경로도 같은 실행 검사를 거쳐야 합니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Instruction·untrusted data·runtime enforcement를 각각 정의하라.", answerChecklist: ["behavior guidance", "analysis target", "application control", "different owners", "different failures"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "overview" },
-      { level: "basic", question: "Retrieved email의 명령문을 왜 system instruction으로 승격하지 않는지 설명하라.", answerChecklist: ["external source", "untrusted data", "prompt injection", "provenance label", "no authority transfer"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "three-layers" },
-      { level: "basic", question: "Prompt의 금지 문구와 outbound deny policy의 차이를 쓰라.", answerChecklist: ["probabilistic guidance", "deterministic gate", "capability", "destination", "failure mode"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "three-layers" },
-      { level: "basic", question: "Tool proposal이 통과해야 할 schema·authorization·policy gate를 설명하라.", answerChecklist: ["input type", "caller identity", "capability", "runtime state", "all gates", "explicit rejection"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "attack-path" },
-      { level: "basic", question: "Effect receipt에 남길 다섯 필드를 쓰라.", answerChecklist: ["operation ID", "action", "destination", "redaction", "approval", "result"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "overview" },
-      { level: "basic", question: "Model이 tool call을 제안했지만 caller capability가 없을 때 state transition을 쓰라.", answerChecklist: ["proposal only", "authorization false", "no effect", "typed reject", "next observation"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "attack-path" },
-      { level: "advanced", question: "Direct tool·plugin·sub-agent·retry가 같은 export policy를 통과하는지 시험하라.", answerChecklist: ["all effect paths", "same policy", "nested delegation", "cached approval", "retry", "receipt", "bypass fixture"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "release" },
-      { level: "advanced", question: "Confused-deputy 공격에서 caller와 resource owner를 분리해 authorization rule을 설계하라.", answerChecklist: ["caller identity", "resource owner", "delegated scope", "purpose", "least privilege", "deny default"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "release" },
-      { level: "advanced", question: "Schema는 통과하지만 policy가 거부하는 외부 전송 예시를 만들라.", answerChecklist: ["valid shape", "forbidden destination", "sensitive field", "redaction", "approval", "no write"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "attack-path" },
-      { level: "advanced", question: "Prompt injection 문자열 corpus와 runtime bypass test가 왜 둘 다 필요한지 설명하라.", answerChecklist: ["model behavior", "execution path", "defense layers", "false confidence", "effect owner", "release gate"], requiredConcepts: ["instruction-data-enforcement-boundary"], sectionId: "release" },
+    "conceptStages": [
+      {
+        "label": "Name",
+        "relation": "Instruction·untrusted data·runtime enforcement 정의",
+        "concepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      },
+      {
+        "label": "Separate",
+        "relation": "Retrieved command를 data lane에 유지",
+        "concepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      },
+      {
+        "label": "Gate",
+        "relation": "Schema·authorization·policy AND로 effect 허용",
+        "concepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      },
+      {
+        "label": "Audit",
+        "relation": "Effect receipt와 bypass path로 release 판정",
+        "concepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      }
     ],
-    papers: [
-      { title: "OWASP — LLM Prompt Injection Prevention Cheat Sheet", href: "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html", problem: "External content가 model instruction처럼 작동해 data exfiltration·unauthorized action을 유도하는 문제", contribution: "Instruction/data separation·least privilege·approval·output monitoring을 defense-in-depth로 정리", assumptions: "OWASP community guidance와 application별 threat model·tool capability", evidenceScope: "Prompt injection 방어의 설계·검토 checklist", notClaim: "Cheat sheet 적용만으로 모든 injection과 runtime bypass가 제거된다는 뜻은 아님", sectionId: "paper-owasp-prompt-injection" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "이메일 요약 요청에서 자료 속 고객 100건 전송 문장을 어떻게 취급하나요?",
+        "answerChecklist": [
+          "외부 자료",
+          "사용자 권한이 아님",
+          "요약 목표 유지"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "형식이 맞는 전송 요청에도 실행 권한 검사가 별도로 필요한 이유는 무엇인가요?",
+        "answerChecklist": [
+          "형식과 권한의 차이",
+          "주체 확인",
+          "대상 확인"
+        ],
+        "sectionId": "inside-boundary",
+        "requiredConcepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "세 검사 값이 1·0·1이면 실행 여부와 전송 건수는 얼마인가요?",
+        "answerChecklist": [
+          "AND 조건",
+          "allow=0",
+          "전송 0건"
+        ],
+        "sectionId": "attack-path",
+        "requiredConcepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Instruction과 untrusted data, runtime enforcement의 역할을 구분하세요.",
+        "answerChecklist": [
+          "행동 원칙",
+          "분석 자료",
+          "실제 권한 강제"
+        ],
+        "sectionId": "three-layers",
+        "requiredConcepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "전송이 거부됐을 때 다음 판단에 어떤 상태를 돌려주나요?",
+        "answerChecklist": [
+          "status=denied",
+          "sent=0",
+          "거부 이유",
+          "성공으로 꾸미지 않음"
+        ],
+        "sectionId": "request-trace",
+        "requiredConcepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Effect receipt에는 행동 제안과 다르게 무엇을 기록하나요?",
+        "answerChecklist": [
+          "실제 행동",
+          "대상",
+          "식별자",
+          "결과"
+        ],
+        "sectionId": "three-layers",
+        "requiredConcepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "직접 호출은 검사하지만 다른 작업자의 호출은 검사하지 않으면 어떤 실패가 생기나요?",
+        "answerChecklist": [
+          "위임을 통한 우회",
+          "모든 실행 경로",
+          "현재 권한 재확인"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "이메일에 관리자 승인 문장이 있어도 권한 값을 바꿀 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "외부 자료",
+          "권한의 출처가 아님",
+          "실행 환경의 정책 조회"
+        ],
+        "sectionId": "attack-path",
+        "requiredConcepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "유효했던 승인 기록을 다른 수신 주소에 재사용할 때 무엇을 검사하나요?",
+        "answerChecklist": [
+          "승인 대상과 연결",
+          "변경 내용",
+          "현재 승인 조건",
+          "재사용 범위"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "공격 문구 차단율만으로 정보 유출 방어를 평가할 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "실행 경로",
+          "실제 유출 관측",
+          "넓게 부여한 권한",
+          "민감 정보가 담긴 로그"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "instruction-data-enforcement-boundary"
+        ]
+      }
     ],
+    "papers": [
+      {
+        "title": "OWASP — LLM Prompt Injection Prevention Cheat Sheet",
+        "href": "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html",
+        "problem": "External content가 model instruction처럼 작동해 data exfiltration·unauthorized action을 유도하는 문제",
+        "contribution": "Instruction/data separation·least privilege·approval·output monitoring을 defense-in-depth로 정리",
+        "assumptions": "OWASP community guidance와 application별 threat model·tool capability",
+        "evidenceScope": "Prompt injection 방어의 설계·검토 checklist",
+        "notClaim": "Cheat sheet 적용만으로 모든 injection과 runtime bypass가 제거된다는 뜻은 아님",
+        "sectionId": "paper-owasp-prompt-injection"
+      }
+    ]
   },
   "ai/context-provenance-freshness": {
     entryLevel: true,
@@ -38347,706 +39828,751 @@ export const ARTICLE_LEARNING: Readonly<
 ],
   },
   "ai/vllm-serving": {
-    coreIdea:
-      "온라인 LLM serving은 model forward 한 번이 아니라, 서로 다른 시점과 길이의 request를 iteration마다 다시 조립하고 token·sequence·KV budget 안에서 실행한 뒤 결과를 stream하는 state machine입니다. 성능은 TTFT·ITL·E2E로 원인을 나누고, API·engine·executor·worker 경계와 DP·TP·PP topology를 고정한 뒤 SLO goodput으로 승인해야 합니다.",
-    assumedKnowledge: [
+    "coreIdea": "한 번의 계산마다 다음 요청 묶음을 고르고 token 수·요청 수·KV 공간을 함께 검사합니다. 같은 요청의 진행 상태를 실제 코드 필드와 연결한 뒤 첫 출력·전체 지연·조건을 지킨 처리량을 따로 계산합니다.",
+    "assumedKnowledge": [
       {
-        id: "autoregressive-decoding",
-        role: "확정 token이 다음 step의 prefix가 되는 반복 generation을 request lifecycle의 출발점으로 사용합니다.",
+        "id": "autoregressive-decoding",
+        "role": "확정 token이 다음 step의 prefix가 되는 반복 generation을 request lifecycle의 출발점으로 사용합니다."
       },
       {
-        id: "kv-cache-decode-state",
-        role: "과거 token의 layer state가 active request마다 memory를 계속 소유하는 이유를 읽습니다.",
+        "id": "kv-cache-decode-state",
+        "role": "과거 token의 layer state가 active request마다 memory를 계속 소유하는 이유를 읽습니다."
       },
       {
-        id: "tensor-batch",
-        role: "서로 다른 request의 token을 한 model execution의 batch 축으로 묶는 기본 shape를 읽습니다.",
-      },
+        "id": "tensor-batch",
+        "role": "서로 다른 request의 token을 한 model execution의 batch 축으로 묶는 기본 shape를 읽습니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "llm-online-request-lifecycle",
-        role: "Request 수신부터 반복 scheduling·execution·stream·completion까지 state 변화를 추적합니다.",
+        "id": "llm-online-request-lifecycle",
+        "role": "Request 수신부터 반복 scheduling·execution·stream·completion까지 state 변화를 추적합니다."
       },
       {
-        id: "prefill-decode-execution-phase",
-        role: "Prompt 처리와 반복 next-token 생성의 계산 shape·memory·latency 차이를 설명합니다.",
+        "id": "prefill-decode-execution-phase",
+        "role": "Prompt 처리와 반복 next-token 생성의 계산 shape·memory·latency 차이를 설명합니다."
       },
       {
-        id: "serving-latency-decomposition",
-        role: "Queue·TTFT·ITL·TPOT·E2E를 같은 request timestamp에서 계산합니다.",
+        "id": "serving-latency-decomposition",
+        "role": "Queue·TTFT·ITL·TPOT·E2E를 같은 request timestamp에서 계산합니다."
       },
       {
-        id: "iteration-level-continuous-batching",
-        role: "완료된 request 자리를 다음 GPU iteration에서 새 작업으로 채웁니다.",
+        "id": "iteration-level-continuous-batching",
+        "role": "완료된 request 자리를 다음 GPU iteration에서 새 작업으로 채웁니다."
       },
       {
-        id: "serving-iteration-resource-feasibility",
-        role: "Token budget·sequence cap·KV block을 모두 만족하는 schedule만 실행합니다.",
+        "id": "serving-iteration-resource-feasibility",
+        "role": "Token budget·sequence cap·KV block을 모두 만족하는 schedule만 실행합니다."
       },
       {
-        id: "vllm-engine-responsibility-boundary",
-        role: "Frontend·engine core·executor·worker의 state와 latency 소유권을 나눕니다.",
+        "id": "vllm-engine-responsibility-boundary",
+        "role": "Frontend·engine core·executor·worker의 state와 latency 소유권을 나눕니다."
       },
       {
-        id: "model-parallel-replica-layout",
-        role: "DP·TP·PP가 각각 무엇을 나누고 어떤 communication·routing 비용을 만드는지 구분합니다.",
+        "id": "model-parallel-replica-layout",
+        "role": "DP·TP·PP가 각각 무엇을 나누고 어떤 communication·routing 비용을 만드는지 구분합니다."
       },
       {
-        id: "slo-serving-goodput",
-        role: "Latency와 오류 기준을 통과한 결과만 유효 처리량으로 셉니다.",
-      },
+        "id": "slo-serving-goodput",
+        "role": "Latency와 오류 기준을 통과한 결과만 유효 처리량으로 셉니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "llm-online-request-lifecycle",
-        sectionId: "overview",
-        intuition:
-          "식당 주문 하나가 접수·대기·조리·부분 전달·완료를 거치듯, 생성 요청도 여러 GPU 차례를 통과하며 상태가 바뀝니다.",
-        workedExample:
-          "Prompt 1,000 token과 output 100 token 요청은 prefill scheduling 뒤 약 100번의 decode iteration을 거치며 각 token을 stream하고 EOS에서 완료됩니다.",
-        boundary:
-          "한 request가 iteration마다 반드시 실행되는 것은 아니며 queue·priority·KV pressure·chunking·preemption으로 기다릴 수 있습니다.",
+        "id": "llm-online-request-lifecycle",
+        "sectionId": "request-trace",
+        "intuition": "요청마다 읽은 위치와 출력 개수가 다르므로 계산이 끝날 때마다 자기 기록을 갱신합니다.",
+        "workedExample": "A는 입력 6개를 4+2로 읽고 첫 출력을 얻은 뒤 두 번 더 계산해 출력 3개를 완료합니다.",
+        "boundary": "각 요청이 모든 계산 차례에 들어가거나 원하는 출력 길이를 항상 생성한다는 보장은 없습니다."
       },
       {
-        id: "prefill-decode-execution-phase",
-        sectionId: "prefill-decode",
-        intuition:
-          "Prefill은 책 전체에 색인을 처음 만드는 작업이고 decode는 그 색인을 읽어 다음 한 단어를 추가하는 작업입니다.",
-        workedExample:
-          "2,048-token prompt prefill은 많은 token을 한 번에 처리해 KV를 만들지만 이후 decode는 active request마다 보통 한 token의 새 state를 추가합니다.",
-        boundary:
-          "Prefill은 항상 compute-bound, decode는 항상 memory-bound라고 단정할 수 없으며 batch·model·kernel·hardware·context 길이에서 측정해야 합니다.",
+        "id": "prefill-decode-execution-phase",
+        "sectionId": "prefill-decode",
+        "intuition": "입력을 처음 읽는 일과 그 기록을 재사용해 출력을 이어 가는 일은 계산 모양이 다릅니다.",
+        "workedExample": "A의 prefill은 4+2 token이고 이후 두 decode가 출력 2·3번째 token을 만듭니다.",
+        "boundary": "병목은 모델·묶음 크기·장비·연산 구현에 따라 측정해야 합니다."
       },
       {
-        id: "serving-latency-decomposition",
-        sectionId: "prefill-decode",
-        intuition:
-          "첫 답을 기다린 시간과 답이 나오기 시작한 뒤 단어 사이의 간격을 분리하면 대기열 문제와 생성 속도 문제를 구분할 수 있습니다.",
-        workedExample:
-          "TTFT 500ms, 11 output token의 E2E 1,500ms이면 평균 TPOT=(1500−500)/10=100ms지만 p95 ITL은 별도로 봅니다.",
-        boundary:
-          "Timestamp 기준·network buffering·tokenizer·Nout=1 처리를 고정하지 않으면 서로 다른 dashboard 수치를 직접 비교할 수 없습니다.",
+        "id": "serving-latency-decomposition",
+        "sectionId": "latency-accounting",
+        "intuition": "첫 출력까지 기다린 시간과 그 뒤 출력 사이 간격을 나눕니다.",
+        "workedExample": "A의 10+30+5=45ms TTFT와 8·12ms 간격으로 E2E는 65ms, TPOT는 10ms입니다.",
+        "boundary": "출력이 하나면 평균낼 간격이 없으며 시계·전송 지연·집계 규칙을 고정해야 비교할 수 있습니다."
       },
       {
-        id: "iteration-level-continuous-batching",
-        sectionId: "engine-loop",
-        intuition:
-          "긴 주문 하나 때문에 빈 조리대를 계속 비워 두지 않고 조리 한 단계가 끝날 때마다 새 주문을 빈 자리에 넣습니다.",
-        workedExample:
-          "Iteration N에서 A·B가 decode되고 B가 끝나면 N+1에서 A의 다음 token과 waiting C의 prefill chunk를 함께 schedule할 수 있습니다.",
-        boundary:
-          "재조립 자체가 latency·throughput 최적을 보장하지 않으며 prefill/decode priority와 세 resource budget이 결정에 개입합니다.",
+        "id": "iteration-level-continuous-batching",
+        "sectionId": "request-trace",
+        "intuition": "짧은 요청이 끝나면 긴 요청의 완료를 기다리지 않고 다음 계산에 새 요청을 넣을 수 있습니다.",
+        "workedExample": "세 번째 계산에서 B가 끝나고 네 번째에 A의 decode 1과 C의 prefill 3을 함께 처리합니다.",
+        "boundary": "세 자원 조건과 실제 결과를 확인해야 하며 항상 최대 묶음 크기가 되는 것은 아닙니다."
       },
       {
-        id: "serving-iteration-resource-feasibility",
-        sectionId: "resource-feasibility",
-        intuition:
-          "버스에 사람 수·짐 무게·좌석이라는 세 제한이 있듯, batch도 token·sequence·KV memory를 모두 통과해야 출발합니다.",
-        workedExample:
-          "Token budget 2,048과 sequence cap 64를 만족해도 선택 token에 필요한 KV block이 free pool보다 크면 schedule을 줄이거나 preemption해야 합니다.",
-        boundary:
-          "Hard constraint를 통과했다는 것은 실행 가능하다는 뜻일 뿐 p95 TTFT·ITL·OOM headroom이 운영 기준을 통과했다는 뜻은 아닙니다.",
+        "id": "serving-iteration-resource-feasibility",
+        "sectionId": "resource-feasibility",
+        "intuition": "계산 양과 요청 수, 기록 공간은 서로 대신할 수 없는 상한입니다.",
+        "workedExample": "두 번째 실행은 token 2+2=4≤4, 요청 수 2≤2이고 새 KV 공간도 확보해야 합니다.",
+        "boundary": "가능한 배치라는 사실만으로 지연이나 처리량이 좋다는 보장은 없습니다."
       },
       {
-        id: "vllm-engine-responsibility-boundary",
-        sectionId: "serving-architecture",
-        intuition:
-          "접수 창구·배차 관제·차량 배정·운전자가 같은 주문 번호를 보더라도 각자 소유한 상태와 문제는 다릅니다.",
-        workedExample:
-          "HTTP stream stall은 frontend, queue growth는 engine core, NCCL stall은 executor/worker, kernel regression은 GPU span에서 request ID로 연결합니다.",
-        boundary:
-          "구체적인 process/class topology는 vLLM version과 deployment mode에 따라 바뀌므로 runtime revision과 message/state contract를 함께 기록합니다.",
+        "id": "vllm-engine-responsibility-boundary",
+        "sectionId": "serving-architecture",
+        "intuition": "접수·요청 관리·실행 조정·실제 계산은 같은 요청 번호를 따라가도 다른 책임입니다.",
+        "workedExample": "A의 대기 10ms와 prefill 30ms, 나머지 전달 5ms를 각각의 관측 위치에서 중복 없이 연결합니다.",
+        "boundary": "실제 프로세스와 클래스 배치는 버전·설정에 따라 달라집니다."
       },
       {
-        id: "model-parallel-replica-layout",
-        sectionId: "parallel-layout",
-        intuition:
-          "가게 전체를 복제하는 DP, 한 조리 단계를 여러 명이 나누는 TP, 조리 순서를 stage별로 나누는 PP는 사람 수가 같아도 운영 방식이 다릅니다.",
-        workedExample:
-          "DP=2·TP=4·PP=1이면 네 GPU짜리 model replica가 두 개이고 총 8 GPU이며 각 replica는 독립 queue와 KV pool을 가집니다.",
-        boundary:
-          "G=DP×TP×PP는 homogeneous layout 근사이며 expert/context parallel·disaggregation·standby rank와 network topology는 별도입니다.",
+        "id": "model-parallel-replica-layout",
+        "sectionId": "parallel-layout",
+        "intuition": "복제본을 늘리는 일과 한 모델을 여러 장치로 나누는 일은 다릅니다.",
+        "workedExample": "DP=2, TP=4, PP=1이면 전체 8 GPU이며 A·B·C를 보낸 복제본마다 대기열과 KV 공간이 달라집니다.",
+        "boundary": "균일한 배치에서 쓴 계산이며 추가 병렬화 축이나 대기 장치는 별도로 셉니다."
       },
       {
-        id: "slo-serving-goodput",
-        sectionId: "serving-goodput",
-        intuition:
-          "정해진 시간 안에 고객에게 도착하지 못한 결과는 많이 만들었더라도 유효 처리량에서 제외합니다.",
-        workedExample:
-          "10초 동안 1,000 token을 만들었지만 TTFT·ITL SLO를 통과한 요청의 token이 700개면 raw throughput 100 tok/s, SLO goodput 70 tok/s입니다.",
-        boundary:
-          "SLO threshold를 결과를 본 뒤 바꾸면 selection bias가 생기고, goodput도 model quality·cost·safety를 대신하지 않습니다.",
-      },
+        "id": "slo-serving-goodput",
+        "sectionId": "serving-goodput",
+        "intuition": "미리 정한 지연 조건을 지킨 결과만 유효 처리량으로 셉니다.",
+        "workedExample": "1초에 A·B·C가 3·2·1 token을 만들고 B만 조건을 어기면 총 6 token/s 중 token goodput은 4 token/s입니다.",
+        "boundary": "요청별 조건과 집단의 p95 목표, token/s와 요청/s 정의를 구분하며 결과를 본 뒤 조건을 바꾸지 않습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "Request",
-        relation: "Autoregressive generation을 online request state로 확장",
-        concepts: ["autoregressive-decoding", "llm-online-request-lifecycle"],
+        "label": "Request",
+        "relation": "Autoregressive generation을 online request state로 확장",
+        "concepts": [
+          "autoregressive-decoding",
+          "llm-online-request-lifecycle"
+        ]
       },
       {
-        label: "Execution phases",
-        relation: "Prompt processing과 cached generation의 병목·latency 분리",
-        concepts: [
+        "label": "Execution phases",
+        "relation": "Prompt processing과 cached generation의 병목·latency 분리",
+        "concepts": [
           "prefill-decode-execution-phase",
           "serving-latency-decomposition",
-          "kv-cache-decode-state",
-        ],
+          "kv-cache-decode-state"
+        ]
       },
       {
-        label: "Iteration scheduling",
-        relation: "매 step batch를 재조립하고 세 resource gate 검사",
-        concepts: [
+        "label": "Iteration scheduling",
+        "relation": "매 step batch를 재조립하고 세 resource gate 검사",
+        "concepts": [
           "iteration-level-continuous-batching",
-          "serving-iteration-resource-feasibility",
-        ],
+          "serving-iteration-resource-feasibility"
+        ]
       },
       {
-        label: "Engine and topology",
-        relation: "State ownership을 process와 DP·TP·PP worker layout에 배치",
-        concepts: [
+        "label": "Engine and topology",
+        "relation": "State ownership을 process와 DP·TP·PP worker layout에 배치",
+        "concepts": [
           "vllm-engine-responsibility-boundary",
-          "model-parallel-replica-layout",
-        ],
+          "model-parallel-replica-layout"
+        ]
       },
       {
-        label: "Approval",
-        relation: "Production trace에서 latency SLO를 통과한 유효 처리량 비교",
-        concepts: ["serving-latency-decomposition", "slo-serving-goodput"],
-      },
-    ],
-    exercises: [
-      {
-        level: "basic",
-        question:
-          "Prompt 1,000 token·output 100 token인 요청이 request 수신부터 완료까지 거치는 state와 반복 경계를 순서대로 설명하라.",
-        answerChecklist: [
-          "validation/tokenization",
-          "waiting",
-          "prefill",
-          "KV state",
-          "repeated decode scheduling",
-          "sampling/stream",
-          "EOS completion",
-        ],
-        requiredConcepts: ["llm-online-request-lifecycle"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Prefill과 decode의 input shape·남기는 KV state·먼저 확인할 latency metric을 비교하라.",
-        answerChecklist: [
-          "many prompt tokens",
-          "one token per active sequence",
-          "KV creation versus extension",
-          "TTFT",
-          "ITL/TPOT",
-          "measurement caveat",
-        ],
-        requiredConcepts: ["prefill-decode-execution-phase"],
-        sectionId: "prefill-decode",
-      },
-      {
-        level: "basic",
-        question:
-          "TTFT 500ms, E2E 1,500ms, output 11 token일 때 TPOT를 계산하고 이 평균이 숨길 수 있는 현상을 적어라.",
-        answerChecklist: [
-          "1000ms decode span",
-          "10 intervals",
-          "100ms TPOT",
-          "p95 spike",
-          "burst buffering",
-        ],
-        requiredConcepts: ["serving-latency-decomposition"],
-        sectionId: "prefill-decode",
-      },
-      {
-        level: "advanced",
-        question:
-          "TTFT만 악화된 run과 TTFT는 같지만 ITL p95만 악화된 run에서 각각 조사할 계층·metric·trace를 설계하라.",
-        answerChecklist: [
-          "frontend/queue/prefill",
-          "scheduler queue time",
-          "prompt length",
-          "decode iteration",
-          "KV pressure",
-          "collective/kernel",
-          "request ID spans",
-        ],
-        requiredConcepts: [
+        "label": "Approval",
+        "relation": "Production trace에서 latency SLO를 통과한 유효 처리량 비교",
+        "concepts": [
           "serving-latency-decomposition",
-          "vllm-engine-responsibility-boundary",
+          "slo-serving-goodput"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "A의 입력 6 token을 첫 실행에 4개 읽었다면 다음 실행에 남은 입력은 몇 개인가요?",
+        "answerChecklist": [
+          "2 token",
+          "6−4",
+          "첫 출력 전 입력 완료 필요"
         ],
-        sectionId: "prefill-decode",
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "llm-online-request-lifecycle",
+          "prefill-decode-execution-phase"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "A·B decode batch에서 B가 끝나고 C가 waiting일 때 static batching과 continuous batching의 다음 iteration을 비교하라.",
-        answerChecklist: [
-          "static idle slot",
-          "iteration boundary",
-          "remove B",
-          "admit C",
-          "A continues",
-          "budget still applies",
+        "level": "basic",
+        "question": "두 번째 실행의 A 2개·B 2개가 통과해야 할 자원 조건 세 가지는 무엇인가요?",
+        "answerChecklist": [
+          "token 4≤4",
+          "요청 2≤2",
+          "추가 KV 할당 성공"
         ],
-        requiredConcepts: ["iteration-level-continuous-batching"],
-        sectionId: "engine-loop",
+        "sectionId": "resource-feasibility",
+        "requiredConcepts": [
+          "serving-iteration-resource-feasibility"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "Token budget 2,048·sequence cap 64에서 60 decode token과 2,000-token prefill chunk가 선택됐고 KV block이 부족하다. 세 gate를 판정하고 가능한 조정을 제시하라.",
-        answerChecklist: [
-          "2060 exceeds token budget",
-          "sequence count assumption",
-          "KV fails",
-          "reduce/chunk prefill",
-          "wait admission",
-          "preemption tradeoff",
-          "retest latency",
+        "level": "basic",
+        "question": "B가 세 번째 실행에서 완료되면 네 번째 실행은 어떻게 구성하나요?",
+        "answerChecklist": [
+          "A decode 1",
+          "C prefill 3",
+          "합계 4",
+          "요청 2"
         ],
-        requiredConcepts: ["serving-iteration-resource-feasibility"],
-        sectionId: "resource-feasibility",
+        "sectionId": "request-trace",
+        "requiredConcepts": [
+          "iteration-level-continuous-batching"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "PagedAttention이 continuous batching capacity를 늘릴 수 있는 이유를 fragmentation·logical/physical block·sharing 관점에서 설명하고 보장하지 않는 것을 적어라.",
-        answerChecklist: [
-          "no max contiguous preallocation",
-          "block table",
-          "on-demand allocation",
-          "reference sharing",
-          "more resident sequences",
-          "not universal throughput",
-          "version/workload",
+        "level": "basic",
+        "question": "A의 TTFT=45ms와 뒤 간격 8·12ms로 E2E와 TPOT를 계산하세요.",
+        "answerChecklist": [
+          "65ms",
+          "출력 3개",
+          "간격 2개",
+          "평균 10ms"
         ],
-        requiredConcepts: [
-          "iteration-level-continuous-batching",
-          "kv-cache-decode-state",
-        ],
-        sectionId: "paper-vllm",
+        "sectionId": "latency-accounting",
+        "requiredConcepts": [
+          "serving-latency-decomposition"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "HTTP stream stall·engine queue growth·NCCL stall·attention kernel slowdown을 어느 responsibility boundary에 배치할지 설명하라.",
-        answerChecklist: [
-          "frontend",
-          "engine core",
-          "executor/worker",
-          "GPU worker",
-          "shared request ID",
+        "level": "basic",
+        "question": "DP=2·TP=4·PP=1의 GPU 수와 독립된 저장 공간을 설명하세요.",
+        "answerChecklist": [
+          "8 GPU",
+          "복제본 2개",
+          "각각 4 GPU",
+          "복제본별 KV 공간"
         ],
-        requiredConcepts: ["vllm-engine-responsibility-boundary"],
-        sectionId: "serving-architecture",
+        "sectionId": "parallel-layout",
+        "requiredConcepts": [
+          "model-parallel-replica-layout"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "DP=2·TP=4·PP=1인 8-GPU layout과 DP=1·TP=8·PP=1을 request capacity·KV pool·collective·routing 관점에서 비교하라.",
-        answerChecklist: [
-          "both 8 GPUs",
-          "two replicas versus one",
-          "independent KV pools",
-          "TP collective width",
-          "routing/load balance",
-          "model-fit condition",
-          "network benchmark",
+        "level": "basic",
+        "question": "1초에 A·B·C가 3·2·1 token을 만들고 B만 조건을 어기면 총 처리량과 token goodput은 얼마인가요?",
+        "answerChecklist": [
+          "6 token/s",
+          "4 token/s",
+          "B 제외",
+          "사전 정의한 조건"
         ],
-        requiredConcepts: ["model-parallel-replica-layout"],
-        sectionId: "parallel-layout",
+        "sectionId": "serving-goodput",
+        "requiredConcepts": [
+          "slo-serving-goodput"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "10초에 1,000 output token을 만들었지만 SLO 통과 요청의 token이 700개인 run의 raw throughput과 goodput을 계산하고 두 값이 다른 이유를 설명하라.",
-        answerChecklist: [
-          "100 tok/s raw",
-          "70 tok/s goodput",
-          "fixed TTFT/ITL/E2E SLO",
-          "error/cancel rule",
-          "quality",
-          "cost",
-          "workload revision",
-          "Pareto comparison",
+        "level": "advanced",
+        "question": "원문에서 A의 num_tokens_with_spec=6, num_computed_tokens=4, placeholders=0을 따라 예산 차감까지 설명하세요.",
+        "answerChecklist": [
+          "남은 2",
+          "예산과 min",
+          "추가 조건",
+          "allocate_slots",
+          "637행에서 2 차감"
         ],
-        requiredConcepts: [
-          "slo-serving-goodput",
+        "sectionId": "scheduler-source",
+        "requiredConcepts": [
+          "llm-online-request-lifecycle",
+          "serving-iteration-resource-feasibility"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "KV 할당에 실패하면 항상 running의 마지막 요청을 뺀다는 설명이 틀리는 경우는 무엇인가요?",
+        "answerChecklist": [
+          "우선순위 정책",
+          "priority와 도착 시각",
+          "이미 예약한 예산 복원",
+          "정책별 구분"
+        ],
+        "sectionId": "scheduler-source",
+        "requiredConcepts": [
+          "serving-iteration-resource-feasibility"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "Token budget을 늘렸는데 첫 출력이나 이후 간격이 나빠질 수 있는 이유를 설명하세요.",
+        "answerChecklist": [
+          "긴 prefill의 간섭",
+          "묶음 크기",
+          "KV 압박",
+          "재계산",
+          "같은 부하의 분포 비교"
+        ],
+        "sectionId": "serving-limits",
+        "requiredConcepts": [
           "serving-latency-decomposition",
+          "serving-iteration-resource-feasibility"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "첫 출력이 하나뿐인 요청에 TPOT=0을 표시하는 도구와 실제 간격 평균을 어떻게 구분하나요?",
+        "answerChecklist": [
+          "간격 0개",
+          "평균 정의 불가",
+          "도구의 집계 규칙",
+          "다른 요청과 비교 주의"
         ],
-        sectionId: "serving-goodput",
-      },
+        "sectionId": "latency-accounting",
+        "requiredConcepts": [
+          "serving-latency-decomposition"
+        ]
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title:
-          "Orca: A Distributed Serving System for Transformer-Based Generative Models",
-        href: "https://www.usenix.org/conference/osdi22/presentation/yu",
-        problem:
-          "길이가 다른 generative request를 request 단위 static batch로 묶을 때 먼저 끝난 slot이 놀고 request별 연산 shape 차이가 batching을 제한하는 문제",
-        contribution:
-          "Model iteration마다 batch를 다시 구성하는 iteration-level scheduling과 연산 특성에 따른 selective batching을 제안",
-        assumptions:
-          "논문의 distributed serving architecture·models·hardware·workload·scheduler와 evaluation protocol",
-        evidenceScope:
-          "Orca system의 iteration scheduling·selective batching 설계와 보고된 latency·throughput 범위",
-        notClaim:
-          "현재 vLLM V1 scheduler가 Orca 구현과 같거나 모든 workload에서 iteration-level scheduling만으로 최적이라는 뜻은 아님",
-        sectionId: "paper-orca",
+        "title": "Orca: A Distributed Serving System for Transformer-Based Generative Models",
+        "href": "https://www.usenix.org/conference/osdi22/presentation/yu",
+        "problem": "길이가 다른 generative request를 request 단위 static batch로 묶을 때 먼저 끝난 slot이 놀고 request별 연산 shape 차이가 batching을 제한하는 문제",
+        "contribution": "Model iteration마다 batch를 다시 구성하는 iteration-level scheduling과 연산 특성에 따른 selective batching을 제안",
+        "assumptions": "논문의 distributed serving architecture·models·hardware·workload·scheduler와 evaluation protocol",
+        "evidenceScope": "Orca system의 iteration scheduling·selective batching 설계와 보고된 latency·throughput 범위",
+        "notClaim": "현재 vLLM V1 scheduler가 Orca 구현과 같거나 모든 workload에서 iteration-level scheduling만으로 최적이라는 뜻은 아님",
+        "sectionId": "paper-orca"
       },
       {
-        title:
-          "Efficient Memory Management for Large Language Model Serving with PagedAttention",
-        href: "https://arxiv.org/abs/2309.06180",
-        problem:
-          "동적으로 길어지는 request마다 연속 KV memory를 예약할 때 fragmentation·over-reservation·duplicate storage가 batch capacity를 낮추는 문제",
-        contribution:
-          "Logical block table과 non-contiguous physical KV blocks를 사용하는 PagedAttention 및 vLLM serving system 제안",
-        assumptions:
-          "논문의 vLLM version·models·GPU·block manager·scheduler·workload와 baseline 설정",
-        evidenceScope:
-          "보고된 memory waste·throughput·latency·sharing과 system ablation 범위",
-        notClaim:
-          "논문의 배수 개선이 최신 vLLM·임의 model·hardware·SLO에서 그대로 재현되거나 PagedAttention만으로 optimal scheduling이 보장된다는 뜻은 아님",
-        sectionId: "paper-vllm",
-      },
+        "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention",
+        "href": "https://arxiv.org/abs/2309.06180",
+        "problem": "동적으로 길어지는 request마다 연속 KV memory를 예약할 때 fragmentation·over-reservation·duplicate storage가 batch capacity를 낮추는 문제",
+        "contribution": "Logical block table과 non-contiguous physical KV blocks를 사용하는 PagedAttention 및 vLLM serving system 제안",
+        "assumptions": "논문의 vLLM version·models·GPU·block manager·scheduler·workload와 baseline 설정",
+        "evidenceScope": "보고된 memory waste·throughput·latency·sharing과 system ablation 범위",
+        "notClaim": "논문의 배수 개선이 최신 vLLM·임의 model·hardware·SLO에서 그대로 재현되거나 PagedAttention만으로 optimal scheduling이 보장된다는 뜻은 아님",
+        "sectionId": "paper-vllm"
+      }
     ],
+    "entryNote": "입력과 출력 길이가 다른 A·B·C를 한 번에 4 token, 최대 2개 요청으로 처리하는 사례에서 시작합니다."
   },
   "ai/vllm-scheduler": {
-    coreIdea: "vLLM scheduler 는 request 를 통째로 순서화하는 queue 가 아니라, 각 요청의 target·computed progress gap 을 token 단위로 바꾸고 RUNNING·WAITING 후보에 token·sequence·KV budget 을 배정한 뒤 model output 으로 state 를 갱신하는 closed-loop 입니다. Batch 를 끝까지 고정하는 static·dynamic batching 은 길이 편차를 idle slot 으로 남기고 iteration-level scheduling 이 그 slot 을 경계마다 채우며, queue discipline 은 검토 순서만 정하므로 fairness 는 token 단위로 따로 재야 하고 head-of-line blocking 은 admission 과 batch 두 자리에서 생깁니다. Chunked prefill 은 긴 prompt 와 decode latency 의 충돌을 조절하고, KV pressure 의 preemption 은 memory 를 즉시 회수하는 대신 requeue 와 recomputation 비용을 만들며, scheduler 가 step 마다 쓰는 CPU 시간은 GPU step 뒤에 숨을 때만 공짜입니다.",
-    assumedKnowledge: [
+    "coreIdea": "검토 순서·요청별 배정량·KV 공간을 함께 정하고 실제 실행 결과를 다음 계획에 연결합니다. Chunk 상한과 실제 조각 수, 선점 정책과 재계산 비용, 서비스 공정성과 GPU 시간은 각각 구분해 검증합니다.",
+    "assumedKnowledge": [
       {
-        id: "llm-online-request-lifecycle",
-        role: "요청이 waiting·prefill·decode·stream·completion을 여러 iteration에 걸쳐 이동하는 상태를 출발점으로 사용합니다.",
+        "id": "llm-online-request-lifecycle",
+        "role": "요청이 waiting·prefill·decode·stream·completion을 여러 iteration에 걸쳐 이동하는 상태를 출발점으로 사용합니다."
       },
       {
-        id: "prefill-decode-execution-phase",
-        role: "Prompt 여러 token을 처리하는 prefill과 cached state에서 한 token씩 늘리는 decode의 계산 차이를 읽습니다.",
+        "id": "prefill-decode-execution-phase",
+        "role": "Prompt 여러 token을 처리하는 prefill과 cached state에서 한 token씩 늘리는 decode의 계산 차이를 읽습니다."
       },
       {
-        id: "serving-iteration-resource-feasibility",
-        role: "Token·sequence·KV라는 세 hard constraint를 통과해야 한 iteration을 실행할 수 있음을 전제로 합니다.",
+        "id": "serving-iteration-resource-feasibility",
+        "role": "Token·sequence·KV라는 세 hard constraint를 통과해야 한 iteration을 실행할 수 있음을 전제로 합니다."
       },
       {
-        id: "kv-cache-decode-state",
-        role: "새 token마다 layer KV state가 늘고 active request가 memory를 계속 소유하는 이유를 읽습니다.",
+        "id": "kv-cache-decode-state",
+        "role": "새 token마다 layer KV state가 늘고 active request가 memory를 계속 소유하는 이유를 읽습니다."
       },
       {
-        id: "serving-latency-decomposition",
-        role: "Scheduler policy의 영향을 TTFT·ITL·TPOT·E2E로 나누어 진단합니다.",
-      },
-      { id: "iteration-level-continuous-batching", role: "Iteration 경계마다 batch 를 다시 고른다는 원리를 static·dynamic batching 의 비교 대상으로 씁니다." },
-],
-    introducedHere: [
-      {
-        id: "scheduler-request-progress-gap",
-        role: "Prompt·decode·speculative verification의 남은 계산을 target−computed token 차이로 통일합니다.",
+        "id": "serving-latency-decomposition",
+        "role": "Scheduler policy의 영향을 TTFT·ITL·TPOT·E2E로 나누어 진단합니다."
       },
       {
-        id: "scheduler-running-waiting-order",
-        role: "현재 V1이 RUNNING을 검토한 뒤 남은 budget·slot으로 WAITING을 admission하는 순서를 추적합니다.",
+        "id": "iteration-level-continuous-batching",
+        "role": "Iteration 경계마다 batch 를 다시 고른다는 원리를 static·dynamic batching 의 비교 대상으로 씁니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "scheduler-request-progress-gap",
+        "role": "Prompt·decode·speculative verification의 남은 계산을 target−computed token 차이로 통일합니다."
       },
       {
-        id: "scheduler-priority-order",
-        role: "FCFS와 priority·arrival-time lexicographic order의 동작과 경계를 설명합니다.",
+        "id": "scheduler-running-waiting-order",
+        "role": "현재 V1이 RUNNING을 검토한 뒤 남은 budget·slot으로 WAITING을 admission하는 순서를 추적합니다."
       },
       {
-        id: "scheduler-closed-loop-transition",
-        role: "Model output이 request counter·queue·cache ownership을 갱신해 다음 schedule 입력이 되는 loop를 추적합니다.",
+        "id": "scheduler-priority-order",
+        "role": "FCFS와 priority·arrival-time lexicographic order의 동작과 경계를 설명합니다."
       },
       {
-        id: "chunked-prefill-interleaving",
-        role: "긴 prompt를 여러 iteration으로 나누어 ongoing decode와 같은 token budget에 섞습니다.",
+        "id": "scheduler-closed-loop-transition",
+        "role": "Model output이 request counter·queue·cache ownership을 갱신해 다음 schedule 입력이 되는 loop를 추적합니다."
       },
       {
-        id: "scheduler-policy-starvation",
-        role: "우선순위 요청이 계속 들어올 때 낮은 priority 요청의 queue age가 무한히 늘 수 있는 policy failure를 구분합니다.",
+        "id": "chunked-prefill-interleaving",
+        "role": "긴 prompt를 여러 iteration으로 나누어 ongoing decode와 같은 token budget에 섞습니다."
       },
       {
-        id: "kv-pressure-preemption",
-        role: "KV block 할당 실패가 victim 선택·cache free·PREEMPTED·WAITING state transition으로 바뀌는 경로를 설명합니다.",
+        "id": "scheduler-policy-starvation",
+        "role": "우선순위 요청이 계속 들어올 때 낮은 priority 요청의 queue age가 무한히 늘 수 있는 policy failure를 구분합니다."
       },
       {
-        id: "recomputation-preemption-cost",
-        role: "중단 전 계산량에서 재사용 prefix를 뺀 반복 token과 requeue·restore 시간을 측정합니다.",
-      },
-      { id: "static-batching", role: "고정 batch 에서 output 길이 편차가 idle slot-iteration 으로 남는 비율을 수치 예로 계산합니다." },
-      { id: "dynamic-batching", role: "도착 window 가 첫 admission 대기만 줄이고 길이 편차의 idle 은 남기는 이유를 구분합니다." },
-      { id: "request-queue-discipline", role: "FCFS deque·priority heap 이라는 queue 자료구조가 검토 순서만 정하고 admission 은 정하지 않음을 설명합니다." },
-      { id: "scheduler-fairness", role: "요청 수가 아니라 token 으로 share 를 재야 하는 이유와 VTC 의 counter·2× 상한을 소개합니다." },
-      { id: "scheduler-head-of-line-blocking", role: "Admission HOL(KV 배정 실패로 순회 중단)과 batch HOL(긴 prefill 이 TPOT 를 미룸)을 수치 예로 구분합니다." },
-      { id: "scheduler-overhead", role: "Step 당 scheduling CPU 시간이 동기·비동기 구조에서 주기와 GPU 점유율에 어떻게 남는지 계산합니다." },
-],
-    conceptExplanations: [
-      {
-        id: "scheduler-request-progress-gap",
-        sectionId: "schedule-method",
-        intuition:
-          "달리기 종목이 달라도 결승선까지 남은 거리를 m로 바꾸면 한 트랙의 순서를 정할 수 있듯, scheduler는 서로 다른 phase의 일을 남은 token 수로 바꿉니다.",
-        workedExample:
-          "A의 prefill 2,000 token, B의 decode 1 token, C의 speculative 검증 5 token이 남았다면 공통 token budget에서 2,006 token의 수요로 표현합니다.",
-        boundary:
-          "Target−computed 차이만으로 실제 배정이 결정되지는 않으며 model length·encoder budget·block alignment·KV availability가 추가로 제한합니다.",
+        "id": "kv-pressure-preemption",
+        "role": "KV block 할당 실패가 victim 선택·cache free·PREEMPTED·WAITING state transition으로 바뀌는 경로를 설명합니다."
       },
       {
-        id: "scheduler-running-waiting-order",
-        sectionId: "running-waiting-order",
-        intuition:
-          "이미 통화 중인 사람의 음성이 오래 끊기지 않도록 진행 중 연결을 먼저 확인한 뒤 새 전화를 받는 것과 비슷합니다.",
-        workedExample:
-          "RUNNING decode 60개에 각 1 token을 배정한 뒤 token budget과 request slot이 남으면 WAITING의 prefill chunk를 admission합니다.",
-        boundary:
-          "RUNNING 우선 검토는 실행 보장이 아니며 KV 할당 실패·length cap·encoder constraint로 skip되거나 preempt될 수 있습니다.",
+        "id": "recomputation-preemption-cost",
+        "role": "중단 전 계산량에서 재사용 prefix를 뺀 반복 token과 requeue·restore 시간을 측정합니다."
       },
       {
-        id: "scheduler-priority-order",
-        sectionId: "running-waiting-order",
-        intuition:
-          "응급도 번호를 먼저 보고 같은 응급도라면 먼저 접수한 환자를 보는 두 단계 정렬입니다.",
-        workedExample:
-          "(priority, arrival)=(0,10:02)인 A는 (5,10:00)인 B보다 먼저 고려되고, priority가 모두 0이면 먼저 도착한 요청이 앞섭니다.",
-        boundary:
-          "Priority는 hard resource limit를 무시하지 못하며 client가 의미 없는 값이나 tenant별 다른 scale을 보내면 공정한 비교가 아닙니다.",
+        "id": "static-batching",
+        "role": "고정 batch 에서 output 길이 편차가 idle slot-iteration 으로 남는 비율을 수치 예로 계산합니다."
       },
       {
-        id: "scheduler-closed-loop-transition",
-        sectionId: "closed-loop-update",
-        intuition:
-          "오늘의 재고를 차감하지 않으면 내일 같은 물건을 다시 팔게 되듯, model 결과로 request state를 갱신해야 다음 schedule이 맞습니다.",
-        workedExample:
-          "B가 EOS를 냈다면 output update가 B를 완료 처리하고 KV block을 반환하며, 다음 iteration은 B를 RUNNING 후보에서 제외합니다.",
-        boundary:
-          "비동기 scheduling에서는 schedule과 output update가 겹칠 수 있으므로 구체적인 snapshot·ownership 계약은 version source로 확인해야 합니다.",
+        "id": "dynamic-batching",
+        "role": "도착 window 가 첫 admission 대기만 줄이고 길이 편차의 idle 은 남기는 이유를 구분합니다."
       },
       {
-        id: "chunked-prefill-interleaving",
-        sectionId: "prefill-decode",
-        intuition:
-          "긴 작업 하나가 기계를 계속 점유하지 않도록 작은 조각으로 나누고 조각 사이에 짧은 작업을 넣습니다.",
-        workedExample:
-          "4,096-token prompt를 512-token 상한으로 나누면 최소 8개 prefill chunk가 생기고 각 iteration에서 decode token과 함께 batch를 구성할 기회가 생깁니다.",
-        boundary:
-          "Chunk를 작게 해도 decode admission이 자동 보장되지는 않으며 chunk 수 증가로 scheduling·launch overhead와 TTFT가 나빠질 수 있습니다.",
+        "id": "request-queue-discipline",
+        "role": "FCFS deque·priority heap 이라는 queue 자료구조가 검토 순서만 정하고 admission 은 정하지 않음을 설명합니다."
       },
       {
-        id: "scheduler-policy-starvation",
-        sectionId: "workload-replay",
-        intuition:
-          "새 응급 요청이 계속 오면 일반 대기자는 자리가 있어도 계속 뒤로 밀릴 수 있습니다.",
-        workedExample:
-          "priority 0 traffic이 service rate와 같거나 더 빠르게 들어오면 priority 10 요청의 queue age가 계속 증가할 수 있으므로 tenant별 p99 wait 상한을 둡니다.",
-        boundary:
-          "긴 대기가 모두 starvation은 아니며 token·KV capacity 자체가 부족한 overload와 policy ordering 문제를 분리해야 합니다.",
+        "id": "scheduler-fairness",
+        "role": "요청 수가 아니라 token 으로 share 를 재야 하는 이유와 VTC 의 counter·2× 상한을 소개합니다."
       },
       {
-        id: "kv-pressure-preemption",
-        sectionId: "preemption",
-        intuition:
-          "새 손님의 짐을 둘 자리가 없을 때 한 사람의 보관함을 비우고 대기열로 돌려보내 즉시 공간을 확보합니다.",
-        workedExample:
-          "새 KV block allocation이 실패하면 victim request의 block을 free하고 computed counter를 reset한 뒤 PREEMPTED 상태로 WAITING queue 앞에 넣습니다.",
-        boundary:
-          "이 설명은 확인한 vLLM V1 recomputation 경로이며 과거 V0 swap mode나 FastServe의 host offload와 같은 구현이라고 보면 안 됩니다.",
+        "id": "scheduler-head-of-line-blocking",
+        "role": "Admission HOL(KV 배정 실패로 순회 중단)과 batch HOL(긴 prefill 이 TPOT 를 미룸)을 수치 예로 구분합니다."
       },
       {
-        id: "recomputation-preemption-cost",
-        sectionId: "preemption",
-        intuition:
-          "중간 저장이 남아 있지 않은 작업을 다시 시작하면 이미 끝낸 부분 가운데 복구하지 못한 만큼 다시 해야 합니다.",
-        workedExample:
-          "8,000 token 계산 뒤 preempt됐고 재개 시 3,000-token prefix가 hit하면 최소 5,000 token의 model compute가 반복됩니다.",
-        boundary:
-          "반복 token 수와 시간은 선형이 아닐 수 있고 queue·cache lookup·batch composition까지 포함한 request trace로 비용을 검증해야 합니다.",
-      },
-      { id: "static-batching", sectionId: "batching-generations", intuition: "단체 손님을 한 테이블에 앉히고 가장 늦게 먹는 사람이 끝날 때까지 아무도 일어나지 못하게 하는 식당입니다.", workedExample: "Output 40·120·200·400 token 요청 넷을 함께 돌리면 400 iteration 동안 slot-iteration 1,600 중 760 만 쓰고 52.5% 가 빕니다.", boundary: "길이가 비슷하고 도착이 한꺼번에인 offline 평가에서는 손실이 작아 여전히 쓰입니다." },
-      { id: "dynamic-batching", sectionId: "batching-generations", intuition: "손님이 올 때까지 잠깐 문 앞에서 기다렸다가 모인 만큼 한 테이블에 앉히지만, 앉힌 뒤에는 역시 함께 일어나야 합니다.", workedExample: "10 ms window 로 흩어진 도착 넷을 한 batch 에 넣어도 idle 52.5% 는 같고 시작이 window 만큼 늦어집니다.", boundary: "Window 는 도착 편차만 줄이며 output 길이 편차는 batch 를 경계마다 다시 골라야 사라집니다." },
-      { id: "request-queue-discipline", sectionId: "request-queue", intuition: "번호표 기계가 번호를 나눠 주는 규칙일 뿐, 창구가 그 손님을 받을 수 있는지는 창구 사정이 정합니다.", workedExample: "FCFS 면 도착 순 deque, priority 면 (priority, arrival) heap 이며 preempt 된 요청도 같은 규칙으로 다시 꽂힙니다.", boundary: "Queue 는 검토 순서만 정하고 running 승격은 token·sequence·KV 세 예산이 정하므로 queue 길이보다 queue age 를 봐야 합니다." },
-      { id: "scheduler-fairness", sectionId: "scheduler-fairness", intuition: "손님 수를 똑같이 받아도 한 손님이 열 접시를 시키면 주방 시간은 그쪽으로 쏠립니다.", workedExample: "Client A 가 4,000 token 요청 100 개, B 가 200 token 요청 100 개를 보내면 FCFS 로 번갈아 받아도 GPU 시간의 95% 는 A 에게 갑니다.", boundary: "VTC 의 2× 상한은 논문의 cost 정의와 batch 병렬성을 전제로 한 이론값이며 vLLM V1 에 client 단위 fairness 정책이 내장돼 있지는 않습니다." },
-      { id: "scheduler-head-of-line-blocking", sectionId: "hol-blocking", intuition: "계산대 맨 앞 손님의 카드가 안 읽혀서 뒤의 껌 하나 사려는 손님까지 같이 서 있는 상황입니다.", workedExample: "맨 앞 요청이 KV block 500 개를 원하는데 200 개뿐이면 V1 은 순회를 멈추고, 뒤의 20 block 요청도 이번 step 에 못 들어옵니다. 8,000-token prefill 을 통째로 넣으면 decode 60 개의 TPOT 가 25 ms 에서 425 ms 로 한 번 튑니다.", boundary: "Chunked prefill 은 batch HOL 을 없애지 않고 잘게 나눠 최악을 425 ms 에서 50 ms 로 옮기며, 뒤를 건너뛰는 admission 은 FCFS 보장을 깨뜨립니다." },
-      { id: "scheduler-overhead", sectionId: "scheduler-overhead", intuition: "주방장이 다음 판을 짜는 동안 화구가 꺼져 있으면 그 시간이 요리 시간에 더해지고, 조리 중에 짜면 숨습니다.", workedExample: "Scheduling 5 ms 와 GPU step 20 ms 는 동기면 주기 25 ms 에 점유율 80%, 겹치면 20 ms 에 100% 입니다. GPU step 이 8 ms 로 줄면 동기 점유율은 62% 입니다.", boundary: "겹치기는 출력을 보기 전에 다음 step 을 짜므로 stop 판정 같은 결정이 한 step 늦고, CPU 시간이 GPU 시간을 넘으면 CPU 가 주기를 정합니다." },
-],
-    conceptStages: [
+        "id": "scheduler-overhead",
+        "role": "Step 당 scheduling CPU 시간이 동기·비동기 구조에서 주기와 GPU 점유율에 어떻게 남는지 계산합니다."
+      }
+    ],
+    "conceptExplanations": [
       {
-        label: "Input state",
-        relation: "Batching 세대와 queue discipline 을 거쳐 target·computed progress 와 검토 순서를 추출",
-        concepts: [
+        "id": "scheduler-request-progress-gap",
+        "sectionId": "schedule-method",
+        "intuition": "요청의 목표 위치에서 현재 진행 위치를 빼면 이번에 필요한 양을 얻습니다.",
+        "workedExample": "R1은 9−8=1, R2도 1이며 전체 예산 5에서 남은 3을 P에 배정합니다.",
+        "boundary": "실제 counter 갱신 시점은 비동기 실행·계획 갱신과 구분해야 하며 counter 자체가 항상 GPU 완료 증명은 아닙니다."
+      },
+      {
+        "id": "scheduler-running-waiting-order",
+        "sectionId": "running-waiting-order",
+        "intuition": "진행 중인 답을 검토한 뒤 남는 양으로 새 요청을 받습니다.",
+        "workedExample": "R1·R2에 각각 1을 배정하고 빈 요청 자리와 예산이 남아 P의 입력 3을 받습니다.",
+        "boundary": "진행 중이어도 자원 조건을 통과해야 하며 선점과 추가 상태 조건에 따라 대기 요청을 받지 않을 수 있습니다."
+      },
+      {
+        "id": "scheduler-priority-order",
+        "sectionId": "priority-order",
+        "intuition": "우선순위 숫자와 도착 시각을 차례로 비교합니다.",
+        "workedExample": "P의 priority=1, Q=2이면 P가 늦게 와도 먼저 검토합니다. 두 값이 모두 같으면 원문은 추가 식별자로 동률을 구분합니다.",
+        "boundary": "우선순위가 앞서도 token·요청 수·KV 조건을 무시하지 못합니다."
+      },
+      {
+        "id": "scheduler-closed-loop-transition",
+        "sectionId": "closed-loop-update",
+        "intuition": "배정한 계획과 돌아온 결과를 연결해야 다음 위치를 정확히 잡을 수 있습니다.",
+        "workedExample": "P에 3을 배정하고 실제 처리 결과를 확인한 뒤 다음 실행에서 남은 9를 검토합니다.",
+        "boundary": "선점·취소·후보 거부·뒤늦은 출력이 counter에 반영되는 순서를 확인해야 합니다."
+      },
+      {
+        "id": "chunked-prefill-interleaving",
+        "sectionId": "prefill-decode",
+        "intuition": "긴 입력을 나눠 읽으면 진행 중인 답이 사이에 계산될 기회가 생깁니다.",
+        "workedExample": "입력 12와 상한 4의 최소 조각 수는 3이지만 실제 배정이 매번 3이면 조각은 4개입니다.",
+        "boundary": "작은 조각은 준비 비용을 반복시키며 실제 대기와 다른 요청의 간섭은 별도로 측정합니다."
+      },
+      {
+        "id": "scheduler-policy-starvation",
+        "sectionId": "scheduler-limits",
+        "intuition": "더 높은 요청이 계속 들어오면 처리 가능한 요청도 오래 선택되지 않을 수 있습니다.",
+        "workedExample": "P보다 우선하는 요청이 지속해서 오면 P의 요청 나이와 사용자별 지연 분포를 관측합니다.",
+        "boundary": "평균 대기나 맨 앞 요청만 보면 뒤에 밀린 요청의 기아를 놓칠 수 있습니다."
+      },
+      {
+        "id": "kv-pressure-preemption",
+        "sectionId": "preemption",
+        "intuition": "저장 공간을 확보하려고 진행 요청을 잠시 빼고 나중에 재개합니다.",
+        "workedExample": "P의 계산 기록을 해제하고 PREEMPTED로 전환한 뒤 waiting에 재삽입합니다.",
+        "boundary": "FCFS는 앞에 넣지만 priority queue는 기존 비교 순서로 넣으며 원문 버전과 정책을 확인합니다."
+      },
+      {
+        "id": "recomputation-preemption-cost",
+        "sectionId": "preemption",
+        "intuition": "이전에 계산한 양에서 재개 시 실제로 재사용한 기록을 빼면 반복량을 셀 수 있습니다.",
+        "workedExample": "P가 8 token을 계산한 뒤 중단되고 3 token을 재사용하면 이전 계산 5 token을 반복합니다.",
+        "boundary": "새로 처리할 입력·재대기·복원 시간은 별도이며 비용이 token 수에 완전히 비례하지 않을 수 있습니다."
+      },
+      {
+        "id": "static-batching",
+        "sectionId": "scheduler-overhead",
+        "intuition": "함께 시작한 묶음의 완료를 기다리는 동안 먼저 끝난 자리가 비어 있을 수 있습니다.",
+        "workedExample": "출력 길이 40·120·200·400이면 동일한 자리 비용의 모형에서 1,600자리 중 760을 사용해 빈 비중은 52.5%입니다.",
+        "boundary": "자리 수의 비율을 실제 GPU 이용률과 같다고 해석하지 않습니다."
+      },
+      {
+        "id": "dynamic-batching",
+        "sectionId": "scheduler-overhead",
+        "intuition": "짧은 도착 대기 구간에 요청을 모아 한 묶음을 만들 수 있습니다.",
+        "workedExample": "도착을 모아도 생성 중 묶음을 바꾸지 않는 구현이면 40·120·200·400의 길이 차이에 따른 빈 자리는 남습니다.",
+        "boundary": "Dynamic batching이라는 이름만으로 생성 중 교체 여부를 단정하지 않고 구현을 확인합니다."
+      },
+      {
+        "id": "request-queue-discipline",
+        "sectionId": "priority-order",
+        "intuition": "대기 자료구조의 삽입·선택 규칙이 요청의 검토 순서를 만듭니다.",
+        "workedExample": "선점한 P를 FCFS prepend는 앞에 넣고 priority prepend는 heap에 다시 정렬해 넣습니다.",
+        "boundary": "대기 순서가 실제 수용 성공을 보장하지 않으며 자원 검사는 별도입니다."
+      },
+      {
+        "id": "scheduler-fairness",
+        "sectionId": "scheduler-fairness",
+        "intuition": "받은 서비스의 단위와 시간 구간을 정한 뒤 사용자 몫을 비교합니다.",
+        "workedExample": "입력 비용 1·출력 비용 2일 때 X의 출력 2개는 4단위, Y의 입력 3개는 3단위입니다.",
+        "boundary": "VTC의 2×는 서비스 절대 차이 상한과 이론 하한의 관계이며 GPU 시간이나 사용자 서비스 비율의 상한이 아닙니다."
+      },
+      {
+        "id": "scheduler-head-of-line-blocking",
+        "sectionId": "hol-blocking",
+        "intuition": "앞 요청이 진행하지 못해 실행 가능한 뒤 요청도 기다리는 경우입니다.",
+        "workedExample": "KV 여유 200에 앞 요청은 500, 뒤 요청은 20이 필요하면 앞 할당 실패에서 멈추는 경로에서는 둘 다 기다립니다.",
+        "boundary": "모든 상태가 같은 break 경로를 쓰는 것은 아니며 건너뛰기는 큰 요청의 기아와 함께 검토합니다."
+      },
+      {
+        "id": "scheduler-overhead",
+        "sectionId": "scheduler-overhead",
+        "intuition": "배정과 준비에 쓴 CPU 시간이 실행 주기에 남는 양을 봅니다.",
+        "workedExample": "CPU 5ms와 GPU 20ms의 직렬 주기는 25ms이고 완전한 이상적 겹침 주기는 20ms입니다.",
+        "boundary": "겹쳐도 CPU 비용이 없어지는 것은 아니며 전달·동기화·결과 의존성 때문에 실제 주기가 더 길 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Input state",
+        "relation": "Batching 세대와 queue discipline 을 거쳐 target·computed progress 와 검토 순서를 추출",
+        "concepts": [
           "llm-online-request-lifecycle",
           "static-batching",
           "dynamic-batching",
           "iteration-level-continuous-batching",
           "request-queue-discipline",
           "scheduler-request-progress-gap",
-          "scheduler-priority-order",
-        ],
+          "scheduler-priority-order"
+        ]
       },
       {
-        label: "Admission",
-        relation: "RUNNING·WAITING 후보에 hard budget 을 적용해 한 iteration 을 구성하고 HOL 이 생기는 자리를 확인",
-        concepts: [
+        "label": "Admission",
+        "relation": "RUNNING·WAITING 후보에 hard budget 을 적용해 한 iteration 을 구성하고 HOL 이 생기는 자리를 확인",
+        "concepts": [
           "scheduler-running-waiting-order",
           "serving-iteration-resource-feasibility",
-          "scheduler-head-of-line-blocking",
-        ],
+          "scheduler-head-of-line-blocking"
+        ]
       },
       {
-        label: "Interleaving",
-        relation: "긴 prefill 을 chunk 로 나누어 decode 와 같은 budget 에서 조정하고 fairness·starvation 을 구분",
-        concepts: [
+        "label": "Interleaving",
+        "relation": "긴 prefill 을 chunk 로 나누어 decode 와 같은 budget 에서 조정하고 fairness·starvation 을 구분",
+        "concepts": [
           "prefill-decode-execution-phase",
           "chunked-prefill-interleaving",
           "scheduler-fairness",
-          "scheduler-policy-starvation",
-        ],
+          "scheduler-policy-starvation"
+        ]
       },
       {
-        label: "Memory pressure",
-        relation: "KV allocation 실패를 preemption 과 recomputation 비용으로 전환",
-        concepts: [
+        "label": "Memory pressure",
+        "relation": "KV allocation 실패를 preemption 과 recomputation 비용으로 전환",
+        "concepts": [
           "kv-cache-decode-state",
           "kv-pressure-preemption",
-          "recomputation-preemption-cost",
-        ],
+          "recomputation-preemption-cost"
+        ]
       },
       {
-        label: "Next iteration",
-        relation: "Model output 으로 state 를 갱신하고 scheduler 자체 시간이 주기와 latency 에 남는 정도를 평가",
-        concepts: [
+        "label": "Next iteration",
+        "relation": "Model output 으로 state 를 갱신하고 scheduler 자체 시간이 주기와 latency 에 남는 정도를 평가",
+        "concepts": [
           "scheduler-closed-loop-transition",
           "scheduler-overhead",
-          "serving-latency-decomposition",
+          "serving-latency-decomposition"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "R1·R2가 각각 1 token을 쓰면 전체 예산 5 중 P에 얼마를 배정하나요?",
+        "answerChecklist": [
+          "3 token",
+          "5−1−1",
+          "요청별 상한 4도 적용",
+          "합계 5"
         ],
+        "sectionId": "schedule-method",
+        "requiredConcepts": [
+          "scheduler-request-progress-gap",
+          "scheduler-running-waiting-order"
+        ]
       },
+      {
+        "level": "basic",
+        "question": "P의 입력 12와 chunk 상한 4에서 최소 횟수와 매번 3을 받을 때 실제 횟수를 구하세요.",
+        "answerChecklist": [
+          "최소 3",
+          "실제 4",
+          "상한과 배정량 구분"
+        ],
+        "sectionId": "prefill-decode",
+        "requiredConcepts": [
+          "chunked-prefill-interleaving"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Priority가 1인 늦은 P와 2인 이른 Q 중 누구를 먼저 검토하나요?",
+        "answerChecklist": [
+          "P",
+          "작은 값 우선",
+          "자원 검사 별도"
+        ],
+        "sectionId": "priority-order",
+        "requiredConcepts": [
+          "scheduler-priority-order",
+          "request-queue-discipline"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "선점한 P를 FCFS와 priority queue의 prepend가 각각 어디에 넣나요?",
+        "answerChecklist": [
+          "FCFS 앞",
+          "priority 기존 정렬",
+          "같은 함수명과 다른 정책"
+        ],
+        "sectionId": "priority-order",
+        "requiredConcepts": [
+          "kv-pressure-preemption",
+          "request-queue-discipline"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "P가 8 token을 계산한 뒤 3 token만 재사용하면 이전 계산 중 얼마를 반복하나요?",
+        "answerChecklist": [
+          "5 token",
+          "실제 재사용량",
+          "새 입력과 구분"
+        ],
+        "sectionId": "preemption",
+        "requiredConcepts": [
+          "recomputation-preemption-cost"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "CPU 5ms와 GPU 20ms의 직렬 주기와 GPU 작업 시간 비율을 계산하세요.",
+        "answerChecklist": [
+          "25ms",
+          "20/25",
+          "80%",
+          "이상적 겹침은 20ms"
+        ],
+        "sectionId": "scheduler-overhead",
+        "requiredConcepts": [
+          "scheduler-overhead"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "P에 3 token을 배정했는데 결과 확인 없이 계산 위치를 확정할 때 어떤 문제가 생기나요?",
+        "answerChecklist": [
+          "계획과 결과 구분",
+          "취소·선점",
+          "비동기 counter",
+          "다음 실행의 잘못된 입력"
+        ],
+        "sectionId": "scheduler-source",
+        "requiredConcepts": [
+          "scheduler-request-progress-gap",
+          "scheduler-closed-loop-transition"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "동일한 자리 비용에서 길이 40·120·200·400의 빈 비중을 구하고 도착을 모으는 것만으로 해결되지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "760/1600 사용",
+          "빈 비중 52.5%",
+          "고정 묶음",
+          "GPU 시간과 구분"
+        ],
+        "sectionId": "scheduler-overhead",
+        "requiredConcepts": [
+          "static-batching",
+          "dynamic-batching"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "KV 여유 200에서 앞 요청 500·뒤 요청 20이면 어떤 대기가 생기며 건너뛰기에는 어떤 한계가 있나요?",
+        "answerChecklist": [
+          "앞 할당 실패 경로",
+          "뒤 요청도 대기",
+          "큰 요청의 기아",
+          "오래된 요청 분포"
+        ],
+        "sectionId": "priority-order",
+        "requiredConcepts": [
+          "scheduler-policy-starvation",
+          "scheduler-head-of-line-blocking"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "VTC에서 입력 비용 1·출력 비용 2·최대 입력 12·용량 20이면 차이 상한은 얼마이며 무엇을 보장하지 않나요?",
+        "answerChecklist": [
+          "80 서비스 단위",
+          "2×max(12,40)",
+          "backlogged 조건",
+          "서비스 비율이 아님",
+          "GPU 시간 비율이 아님"
+        ],
+        "sectionId": "scheduler-fairness",
+        "requiredConcepts": [
+          "scheduler-fairness"
+        ]
+      }
     ],
-    exercises: [
+    "papers": [
       {
-        level: "basic",
-        question: "vLLM scheduler의 입력과 출력이 단순 request ID queue와 어떻게 다른지 request state·token·KV 관점에서 설명하라.",
-        answerChecklist: ["RUNNING/WAITING snapshot", "target/computed progress", "priority", "token counts", "KV blocks", "worker metadata", "output update"],
-        requiredConcepts: ["scheduler-request-progress-gap", "scheduler-closed-loop-transition"],
-        sectionId: "overview",
+        "title": "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve",
+        "href": "https://arxiv.org/abs/2403.02310",
+        "problem": "긴 full prefill이 ongoing decode batch를 멈춰 time-between-token tail을 악화시키고 pipeline iteration 불균형을 만드는 문제",
+        "contribution": "Prompt를 near-equal chunk로 나누고 decode를 먼저 유지한 채 남은 token budget에 prefill을 넣는 stall-free scheduling 제안",
+        "assumptions": "논문의 Sarathi-Serve implementation·models·A100 GPU·single/pipeline parallel·workload와 latency constraint",
+        "evidenceScope": "Chunked prefill·stall-free batching의 설계와 논문이 보고한 serving capacity·tail latency·pipeline bubble 범위",
+        "notClaim": "현재 vLLM의 chunked-prefill implementation이 논문과 동일하거나 보고된 2.6×·3.7×·5.6× 개선이 임의 배포에서 재현된다는 뜻은 아님",
+        "sectionId": "paper-sarathi"
       },
       {
-        level: "basic",
-        question: "Output 길이 40·120·200·400 token 요청 넷을 static batching 으로 돌릴 때 idle slot-iteration 비율을 계산하고, dynamic batching 의 window 가 이 비율을 바꾸지 못하는 이유를 쓰라.",
-        answerChecklist: ["1,600 slot-iteration", "760 사용", "52.5% idle", "batch 고정", "window 는 도착 편차만"],
-        requiredConcepts: ["static-batching", "dynamic-batching"],
-        sectionId: "batching-generations",
+        "title": "Fast Distributed Inference Serving for Large Language Models",
+        "href": "https://arxiv.org/abs/2305.05920",
+        "problem": "Run-to-completion serving에서 긴 generation job이 짧은 job을 막아 response-time tail을 악화시키는 head-of-line blocking",
+        "contribution": "Output-token 경계 preemption, input length를 이용한 skip-join MLFQ, GPU-host state offload·reload를 결합한 FastServe 제안",
+        "assumptions": "논문의 FastServe distributed architecture·MLFQ·memory offloading·models·hardware·arrival/workload와 latency metric",
+        "evidenceScope": "Preemptive LLM scheduling과 state offload 설계 및 논문에 보고된 average·tail latency constraint 범위",
+        "notClaim": "현재 vLLM V1이 FastServe MLFQ나 host offload를 사용하거나 논문의 throughput 배수가 vLLM recomputation path에 적용된다는 뜻은 아님",
+        "sectionId": "paper-fastserve"
       },
       {
-        level: "basic",
-        question: "A의 target=3,024·computed=1,024, B의 target=641·computed=640일 때 need를 계산하고 B_tok=1,024에서 가능한 배정 예를 하나 제시하라.",
-        answerChecklist: ["A need 2000", "B need 1", "sum cap 1024", "B 1", "A at most 1023", "other constraints"],
-        requiredConcepts: ["scheduler-request-progress-gap"],
-        sectionId: "schedule-method",
+        "title": "Orca: A Distributed Serving System for Transformer-Based Generative Models",
+        "href": "https://www.usenix.org/conference/osdi22/presentation/yu",
+        "problem": "Request 단위로 batch 를 고정하면 먼저 끝난 요청의 결과가 batch 종료까지 client 에게 돌아가지 못하고 늦게 온 요청은 batch 종료까지 들어오지 못합니다.",
+        "contribution": "Iteration 이 끝날 때마다 batch 를 다시 고르는 iteration-level scheduling 과 phase 가 다른 요청을 함께 실행하는 selective batching 을 제안했습니다.",
+        "assumptions": "OSDI 2022 당시의 GPT-3 175B·GPU·workload 와 저자 구현을 기준으로 합니다.",
+        "evidenceScope": "같은 지연 조건에서 FasterTransformer 대비 36.9× 처리량은 저자 자기보고 system 결과이며 이 글은 batch 고정이 만드는 두 대기와 그 해법이라는 원리만 가져옵니다.",
+        "notClaim": "vLLM 의 continuous batching 이 Orca 구현과 같다거나 같은 배수가 다른 model·workload 에서 재현된다는 뜻은 아닙니다.",
+        "sectionId": "paper-orca"
       },
       {
-        level: "basic",
-        question: "RUNNING 요청을 먼저 검토하는 이유와 그래도 해당 요청이 이번 iteration에서 실행되지 않을 수 있는 조건을 설명하라.",
-        answerChecklist: ["protect ITL", "token budget", "KV allocation", "model length", "encoder constraint", "not guarantee"],
-        requiredConcepts: ["scheduler-running-waiting-order"],
-        sectionId: "running-waiting-order",
-      },
-      {
-        level: "basic",
-        question: "Waiting 맨 앞 요청이 KV block 500 개를 원하는데 free block 이 200 개뿐이고 바로 뒤에 20 block 요청이 있을 때 V1 이 어떻게 동작하는지와 그것이 head-of-line blocking 인 이유를 설명하라.",
-        answerChecklist: ["allocate_slots 실패", "waiting 순회 break", "뒤 요청도 대기", "FCFS 보장", "건너뛰면 starvation"],
-        requiredConcepts: ["scheduler-head-of-line-blocking", "request-queue-discipline"],
-        sectionId: "hol-blocking",
-      },
-      {
-        level: "basic",
-        question: "현재 V1 recomputation preemption에서 allocation 실패부터 WAITING 재진입까지 state와 resource 변화를 순서대로 설명하라.",
-        answerChecklist: ["allocation failure", "victim", "free KV/encoder cache", "PREEMPTED", "computed reset", "clear spec", "prepend waiting"],
-        requiredConcepts: ["kv-pressure-preemption"],
-        sectionId: "preemption",
-      },
-      {
-        level: "advanced",
-        question: "(priority, arrival)이 A=(0,10:02), B=(5,10:00), C=(0,10:01)일 때 순서를 정하고, client 별 token share 까지 포함해 낮은 priority tenant 의 starvation 을 관측할 metric 을 설계하라.",
-        answerChecklist: ["C before A", "A before B", "lexicographic", "queue age", "tenant p95/p99", "token 단위 share", "capacity versus policy"],
-        requiredConcepts: ["scheduler-priority-order", "scheduler-policy-starvation", "scheduler-fairness"],
-        sectionId: "running-waiting-order",
-      },
-      {
-        level: "advanced",
-        question: "Sarathi-Serve의 problem·contribution·evaluation boundary를 설명하고 논문 성능 배수를 최신 vLLM 배포에 그대로 옮길 수 없는 이유를 적어라.",
-        answerChecklist: ["generation stall", "chunked prefill", "decode-maximal/stall-free batch", "pipeline bubble", "model/GPU/workload", "latency constraint", "implementation version"],
-        requiredConcepts: ["chunked-prefill-interleaving", "serving-latency-decomposition"],
-        sectionId: "paper-sarathi",
-      },
-      {
-        level: "advanced",
-        question: "Scheduling 5 ms·GPU step 20 ms 에서 동기·비동기 주기와 GPU 점유율을 계산하고, GPU step 이 8 ms 로 줄거나 running 을 늘려 scheduling 이 12 ms 가 될 때 각각 무엇이 주기를 정하는지 설명하라.",
-        answerChecklist: ["동기 25 ms · 80%", "비동기 20 ms", "8 ms 면 62%", "CPU 가 GPU 를 넘으면 CPU 가 주기", "output 한 step 지연"],
-        requiredConcepts: ["scheduler-overhead", "scheduler-closed-loop-transition"],
-        sectionId: "scheduler-overhead",
-      },
-      {
-        level: "advanced",
-        question: "8,000 token 뒤 preempt되고 prefix hit 3,000 token으로 재개한 요청의 recompute waste를 계산한 뒤 FastServe offload와 현재 V1 recompute를 비교하는 실험을 설계하라.",
-        answerChecklist: ["5000 tokens", "queue/requeue time", "restore/offload cost", "GPU memory", "TTFT/ITL/E2E", "same workload", "not same implementation", "tail latency"],
-        requiredConcepts: ["recomputation-preemption-cost", "kv-pressure-preemption"],
-        sectionId: "paper-fastserve",
-      },
+        "title": "Fairness in Serving Large Language Models",
+        "href": "https://arxiv.org/abs/2401.00588",
+        "problem": "Rate limit 은 한 client 가 queue 를 독점하는 것을 막지만 여유가 있을 때도 그 client 를 막아 자원을 놀리고, 요청 길이를 미리 알 수 없는 LLM 에서는 요청 수 기준 공정성이 token 기준으로는 크게 기웁니다.",
+        "contribution": "Client 마다 처리한 input·output token 을 counter 로 누적하고 가장 작은 client 부터 admission 하는 Virtual Token Counter 를 continuous batching 위에 제안하고 backlogged client 사이 service 차이의 2× 상한을 증명했습니다.",
+        "assumptions": "논문의 token cost 정의, batch 안의 병렬 실행, 저자 구현과 실험 workload 를 전제로 합니다.",
+        "evidenceScope": "정리 4.4의 지속 대기 사용자 간 서비스 절대 차이 상한과 정리 4.8의 관련 하한입니다.",
+        "notClaim": "두 사용자의 서비스 비율이나 GPU 시간 비율이 2배 이내라는 뜻이 아니며 임의의 선점 정책에 그대로 적용하지 않습니다.",
+        "sectionId": "paper-vtc"
+      }
     ],
-    papers: [
-      {
-        title:
-          "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve",
-        href: "https://arxiv.org/abs/2403.02310",
-        problem:
-          "긴 full prefill이 ongoing decode batch를 멈춰 time-between-token tail을 악화시키고 pipeline iteration 불균형을 만드는 문제",
-        contribution:
-          "Prompt를 near-equal chunk로 나누고 decode를 먼저 유지한 채 남은 token budget에 prefill을 넣는 stall-free scheduling 제안",
-        assumptions:
-          "논문의 Sarathi-Serve implementation·models·A100 GPU·single/pipeline parallel·workload와 latency constraint",
-        evidenceScope:
-          "Chunked prefill·stall-free batching의 설계와 논문이 보고한 serving capacity·tail latency·pipeline bubble 범위",
-        notClaim:
-          "현재 vLLM의 chunked-prefill implementation이 논문과 동일하거나 보고된 2.6×·3.7×·5.6× 개선이 임의 배포에서 재현된다는 뜻은 아님",
-        sectionId: "paper-sarathi",
-      },
-      {
-        title: "Fast Distributed Inference Serving for Large Language Models",
-        href: "https://arxiv.org/abs/2305.05920",
-        problem:
-          "Run-to-completion serving에서 긴 generation job이 짧은 job을 막아 response-time tail을 악화시키는 head-of-line blocking",
-        contribution:
-          "Output-token 경계 preemption, input length를 이용한 skip-join MLFQ, GPU-host state offload·reload를 결합한 FastServe 제안",
-        assumptions:
-          "논문의 FastServe distributed architecture·MLFQ·memory offloading·models·hardware·arrival/workload와 latency metric",
-        evidenceScope:
-          "Preemptive LLM scheduling과 state offload 설계 및 논문에 보고된 average·tail latency constraint 범위",
-        notClaim:
-          "현재 vLLM V1이 FastServe MLFQ나 host offload를 사용하거나 논문의 throughput 배수가 vLLM recomputation path에 적용된다는 뜻은 아님",
-        sectionId: "paper-fastserve",
-      },
-      {
-        title: "Orca: A Distributed Serving System for Transformer-Based Generative Models",
-        href: "https://www.usenix.org/conference/osdi22/presentation/yu",
-        problem: "Request 단위로 batch 를 고정하면 먼저 끝난 요청의 결과가 batch 종료까지 client 에게 돌아가지 못하고 늦게 온 요청은 batch 종료까지 들어오지 못합니다.",
-        contribution: "Iteration 이 끝날 때마다 batch 를 다시 고르는 iteration-level scheduling 과 phase 가 다른 요청을 함께 실행하는 selective batching 을 제안했습니다.",
-        assumptions: "OSDI 2022 당시의 GPT-3 175B·GPU·workload 와 저자 구현을 기준으로 합니다.",
-        evidenceScope: "같은 지연 조건에서 FasterTransformer 대비 36.9× 처리량은 저자 자기보고 system 결과이며 이 글은 batch 고정이 만드는 두 대기와 그 해법이라는 원리만 가져옵니다.",
-        notClaim: "vLLM 의 continuous batching 이 Orca 구현과 같다거나 같은 배수가 다른 model·workload 에서 재현된다는 뜻은 아닙니다.",
-        sectionId: "batching-generations",
-      },
-      {
-        title: "Fairness in Serving Large Language Models",
-        href: "https://arxiv.org/abs/2401.00588",
-        problem: "Rate limit 은 한 client 가 queue 를 독점하는 것을 막지만 여유가 있을 때도 그 client 를 막아 자원을 놀리고, 요청 길이를 미리 알 수 없는 LLM 에서는 요청 수 기준 공정성이 token 기준으로는 크게 기웁니다.",
-        contribution: "Client 마다 처리한 input·output token 을 counter 로 누적하고 가장 작은 client 부터 admission 하는 Virtual Token Counter 를 continuous batching 위에 제안하고 backlogged client 사이 service 차이의 2× 상한을 증명했습니다.",
-        assumptions: "논문의 token cost 정의, batch 안의 병렬 실행, 저자 구현과 실험 workload 를 전제로 합니다.",
-        evidenceScope: "2× 상한은 이론 결과이고 실험 비교는 저자 자기보고이며 이 글은 문제 정의·counter 규칙·상한만 가져옵니다.",
-        notClaim: "vLLM V1 에 VTC 가 내장돼 있다거나 priority 정책이 token 단위 fairness 를 보장한다는 뜻은 아닙니다.",
-        sectionId: "scheduler-fairness",
-      },
-],
+    "entryNote": "기존 답 두 개와 긴 입력 하나를 전체 예산 5 안에서 1·1·3으로 배정하는 사례에서 시작합니다."
   },
   "ai/vllm-paged-attention": {
     coreIdea: "PagedAttention은 길이를 미리 모르는 request KV state를 fixed-size logical block으로 나누고 request block table이 non-contiguous physical block을 가리키게 하는 memory indirection입니다. 이 indirection이 internal fragmentation을 마지막 block 하나로 묶고 external fragmentation을 없애며, reference count와 copy-on-write로 fork·beam·prefix 공유를 block 단위로 만듭니다. BlockPool은 allocate·free·cached lifecycle을 소유하고 KVCacheManager는 scheduler의 token 계획을 block demand로 바꾸며, Automatic Prefix Caching은 full-block hash가 같은 causal prefix의 prefill만 재사용합니다.",
@@ -48997,379 +50523,355 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "blockchain/consensus-mechanisms": {
-    entryLevel: true,
-    entryNote:
-      "Toy 8-bit hash와 stake 10·20·30·40에서 시작합니다. 체인 이름이나 고정 TPS를 외우지 않고 membership→proposal→fork choice→finality→release gate를 추적합니다.",
-    coreIdea:
-      "PoW와 PoS는 공개 membership의 영향력을 희소 자원에 연결하며, valid block rule·fork choice·finality·accountability를 별도 계약으로 조합합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
+    "entryLevel": true,
+    "entryNote": "네 참여자의 자원 10·20·30·40과 잔액 100에서 10을 보내는 같은 장부를 사용해 영향력·유효성·선택·확정을 구분합니다.",
+    "coreIdea": "PoW와 PoS는 공개 membership의 영향력을 희소 자원에 연결하며, valid block rule·fork choice·finality·accountability를 별도 계약으로 조합합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "permissionless-sybil-resource-weight",
-        role: "Identity 수 대신 work·stake에 influence를 연결합니다.",
+        "id": "permissionless-sybil-resource-weight",
+        "role": "Identity 수 대신 work·stake에 influence를 연결합니다."
       },
       {
-        id: "pow-hash-target-lottery",
-        role: "Target 성공 확률과 기대 hash 수를 계산합니다.",
+        "id": "pow-hash-target-lottery",
+        "role": "Target 성공 확률과 기대 hash 수를 계산합니다."
       },
       {
-        id: "pow-chainwork-probabilistic-finality",
-        role: "Chainwork fork choice와 confirmation risk를 구분합니다.",
+        "id": "pow-chainwork-probabilistic-finality",
+        "role": "Chainwork fork choice와 confirmation risk를 구분합니다."
       },
       {
-        id: "pos-stake-weighted-selection",
-        role: "Stake 비율과 선택 확률의 경계를 계산합니다.",
+        "id": "pos-stake-weighted-selection",
+        "role": "Stake 비율과 선택 확률의 경계를 계산합니다."
       },
       {
-        id: "pos-attestation-slashing-evidence",
-        role: "Signed vote와 slashable evidence를 분류합니다.",
+        "id": "pos-attestation-slashing-evidence",
+        "role": "Signed vote와 slashable evidence를 분류합니다."
       },
       {
-        id: "fork-choice-finality-separation",
-        role: "Head와 finalized checkpoint를 별도 state로 기록합니다.",
+        "id": "fork-choice-finality-separation",
+        "role": "Head와 finalized checkpoint를 별도 state로 기록합니다."
       },
       {
-        id: "consensus-resource-security-ledger",
-        role: "자원 비용·집중도·failure surface를 같은 축으로 비교합니다.",
+        "id": "consensus-resource-security-ledger",
+        "role": "자원 비용·집중도·failure surface를 같은 축으로 비교합니다."
       },
       {
-        id: "permissionless-consensus-release-gate",
-        role: "동일 fault trace의 paired 채택 검사를 설계합니다.",
-      },
+        "id": "permissionless-consensus-release-gate",
+        "role": "동일 fault trace의 paired 채택 검사를 설계합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "permissionless-sybil-resource-weight",
-        sectionId: "overview",
-        intuition:
-          "누구나 이름표를 만들 수 있으므로 이름표가 아니라 얻기 비싼 영수증에 표를 연결합니다.",
-        workedExample:
-          "한 운영자가 node key 1,000개를 만들어도 hash work나 effective stake가 늘지 않으면 자원 weight는 그대로입니다.",
-        boundary:
-          "자원 비용은 state-transition validity·network availability·honesty 자체를 보장하지 않습니다.",
+        "id": "permissionless-sybil-resource-weight",
+        "sectionId": "names",
+        "intuition": "누구나 이름표를 만들 수 있으므로 이름표가 아니라 얻기 비싼 영수증에 표를 연결합니다.",
+        "workedExample": "한 운영자가 node key 1,000개를 만들어도 hash work나 effective stake가 늘지 않으면 자원 weight는 그대로입니다.",
+        "boundary": "자원 비용은 state-transition validity·network availability·honesty 자체를 보장하지 않습니다."
       },
       {
-        id: "pow-hash-target-lottery",
-        sectionId: "pow",
-        intuition:
-          "정답 범위가 작은 복권을 header를 바꾸며 반복해서 뽑고, 당첨표는 누구나 싸게 확인합니다.",
-        workedExample:
-          "8-bit hash에서 T=16이면 p=1/16, 기대 16회이고 T=8이면 기대 32회입니다.",
-        boundary:
-          "균등·독립 hash 근사 식이 hardware efficiency·propagation·difficulty adjustment까지 설명하지는 않습니다.",
+        "id": "pow-hash-target-lottery",
+        "sectionId": "pow",
+        "intuition": "정답 범위가 작은 복권을 header를 바꾸며 반복해서 뽑고, 당첨표는 누구나 싸게 확인합니다.",
+        "workedExample": "8-bit hash에서 T=16이면 p=1/16, 기대 16회이고 T=8이면 기대 32회입니다.",
+        "boundary": "균등·독립 hash 근사 식이 hardware efficiency·propagation·difficulty adjustment까지 설명하지는 않습니다."
       },
       {
-        id: "pow-chainwork-probabilistic-finality",
-        sectionId: "pow",
-        intuition:
-          "더 많은 계산 영수증이 누적된 valid 장부를 따르되, 뒤집힐 위험은 깊이에 따라 작아질 뿐 일반적으로 0은 아닙니다.",
-        workedExample:
-          "같은 높이의 두 valid block 뒤 한 branch에 후속 work가 더 붙으면 node가 그 branch를 head로 선택합니다.",
-        boundary:
-          "Block 개수와 chainwork는 다르고, work가 invalid transaction을 valid하게 만들지 않습니다.",
+        "id": "pow-chainwork-probabilistic-finality",
+        "sectionId": "pow",
+        "intuition": "더 많은 계산 영수증이 누적된 valid 장부를 따르되, 뒤집힐 위험은 깊이에 따라 작아질 뿐 일반적으로 0은 아닙니다.",
+        "workedExample": "같은 높이의 두 valid block 뒤 한 branch에 후속 work가 더 붙으면 node가 그 branch를 head로 선택합니다.",
+        "boundary": "Block 개수와 chainwork는 다르고, work가 invalid transaction을 valid하게 만들지 않습니다."
       },
       {
-        id: "pos-stake-weighted-selection",
-        sectionId: "pos",
-        intuition: "잠긴 stake 비율을 장기 추첨 확률·vote weight로 사용합니다.",
-        workedExample:
-          "Stake 합 100에서 10·20·30·40의 toy selection 확률은 0.1·0.2·0.3·0.4입니다.",
-        boundary:
-          "40% validator가 다음 slot에 반드시 선택되거나 key 수만큼 influence를 갖는다는 뜻은 아닙니다.",
+        "id": "pos-stake-weighted-selection",
+        "sectionId": "pos",
+        "intuition": "잠긴 stake 비율을 장기 추첨 확률·vote weight로 사용합니다.",
+        "workedExample": "Stake 합 100에서 10·20·30·40의 toy selection 확률은 0.1·0.2·0.3·0.4입니다.",
+        "boundary": "40% validator가 다음 slot에 반드시 선택되거나 key 수만큼 influence를 갖는다는 뜻은 아닙니다."
       },
       {
-        id: "pos-attestation-slashing-evidence",
-        sectionId: "pos",
-        intuition:
-          "Validator의 서명 투표를 head·checkpoint 판단에 쓰고 서로 모순된 서명을 처벌 증거로 남깁니다.",
-        workedExample:
-          "같은 slashable scope에서 서로 충돌하는 두 attestation signature는 signer와 message를 재현할 evidence가 됩니다.",
-        boundary:
-          "Offline penalty·일반 버그·모든 나쁜 결과가 곧 slashing condition인 것은 아닙니다.",
+        "id": "pos-attestation-slashing-evidence",
+        "sectionId": "pos",
+        "intuition": "Validator의 서명 투표를 head·checkpoint 판단에 쓰고 서로 모순된 서명을 처벌 증거로 남깁니다.",
+        "workedExample": "같은 slashable scope에서 서로 충돌하는 두 attestation signature는 signer와 message를 재현할 evidence가 됩니다.",
+        "boundary": "Offline penalty·일반 버그·모든 나쁜 결과가 곧 slashing condition인 것은 아닙니다."
       },
       {
-        id: "fork-choice-finality-separation",
-        sectionId: "overview",
-        intuition:
-          "현재 읽을 장부의 끝과 다시 쓰지 않기로 잠근 과거 페이지를 따로 표시합니다.",
-        workedExample:
-          "새 vote로 head가 B에서 C로 바뀌어도 finalized checkpoint F와 충돌하지 않으면 safety violation은 아닙니다.",
-        boundary:
-          "Head 변화·reorg·conflicting finality는 서로 다른 oracle이 필요합니다.",
+        "id": "fork-choice-finality-separation",
+        "sectionId": "names",
+        "intuition": "현재 읽을 장부의 끝과 다시 쓰지 않기로 잠근 과거 페이지를 따로 표시합니다.",
+        "workedExample": "새 vote로 head가 B에서 C로 바뀌어도 finalized checkpoint F와 충돌하지 않으면 safety violation은 아닙니다.",
+        "boundary": "Head 변화·reorg·conflicting finality는 서로 다른 oracle이 필요합니다."
       },
       {
-        id: "consensus-resource-security-ledger",
-        sectionId: "comparison",
-        intuition:
-          "속도 한 줄 대신 누가 어떤 자원을 얼마만큼 통제하고 어떤 실패에 노출되는지 같은 표에 적습니다.",
-        workedExample:
-          "PoW에는 hash concentration·energy·propagation, PoS에는 stake concentration·custody·client correlation을 기록합니다.",
-        boundary:
-          "서로 다른 chain·layer·workload의 TPS 숫자는 protocol family 비교 근거가 아닙니다.",
+        "id": "consensus-resource-security-ledger",
+        "sectionId": "comparison",
+        "intuition": "속도 한 줄 대신 누가 어떤 자원을 얼마만큼 통제하고 어떤 실패에 노출되는지 같은 표에 적습니다.",
+        "workedExample": "PoW에는 hash concentration·energy·propagation, PoS에는 stake concentration·custody·client correlation을 기록합니다.",
+        "boundary": "서로 다른 chain·layer·workload의 TPS 숫자는 protocol family 비교 근거가 아닙니다."
       },
       {
-        id: "permissionless-consensus-release-gate",
-        sectionId: "comparison",
-        intuition:
-          "후보 둘을 같은 시험장과 같은 방해 조건에서 실행해 안전성과 회복·비용을 함께 봅니다.",
-        workedExample:
-          "동일 partition·delay·equivocation trace에서 conflicting finality 0, reorg depth, recovery p95와 concentration을 비교합니다.",
-        boundary:
-          "짧은 정상 benchmark 통과는 adversarial safety나 장기 decentralization 보장이 아닙니다.",
-      },
+        "id": "permissionless-consensus-release-gate",
+        "sectionId": "comparison",
+        "intuition": "후보 둘을 같은 시험장과 같은 방해 조건에서 실행해 안전성과 회복·비용을 함께 봅니다.",
+        "workedExample": "동일 partition·delay·equivocation trace에서 conflicting finality 0, reorg depth, recovery p95와 concentration을 비교합니다.",
+        "boundary": "짧은 정상 benchmark 통과는 adversarial safety나 장기 decentralization 보장이 아닙니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "00 선수",
-        relation: "Execution·failure·safety/liveness를 고정합니다.",
-        concepts: [
+        "label": "00 선수",
+        "relation": "Execution·failure·safety/liveness를 고정합니다.",
+        "concepts": [
           "distributed-process-message-execution",
           "distributed-failure-model",
-          "consensus-safety-liveness",
-        ],
+          "consensus-safety-liveness"
+        ]
       },
       {
-        label: "01 membership",
-        relation: "Sybil influence를 희소 자원에 연결합니다.",
-        concepts: ["permissionless-sybil-resource-weight"],
+        "label": "01 membership",
+        "relation": "Sybil influence를 희소 자원에 연결합니다.",
+        "concepts": [
+          "permissionless-sybil-resource-weight"
+        ]
       },
       {
-        label: "02 PoW",
-        relation: "Hash lottery에서 chainwork·confirmation으로 확장합니다.",
-        concepts: [
+        "label": "02 PoW",
+        "relation": "Hash lottery에서 chainwork·confirmation으로 확장합니다.",
+        "concepts": [
           "pow-hash-target-lottery",
-          "pow-chainwork-probabilistic-finality",
-        ],
+          "pow-chainwork-probabilistic-finality"
+        ]
       },
       {
-        label: "03 PoS",
-        relation: "Stake selection에서 signed accountability로 확장합니다.",
-        concepts: [
+        "label": "03 PoS",
+        "relation": "Stake selection에서 signed accountability로 확장합니다.",
+        "concepts": [
           "pos-stake-weighted-selection",
-          "pos-attestation-slashing-evidence",
-        ],
+          "pos-attestation-slashing-evidence"
+        ]
       },
       {
-        label: "04 상태",
-        relation: "Head와 finalized history를 분리합니다.",
-        concepts: ["fork-choice-finality-separation"],
+        "label": "04 상태",
+        "relation": "Head와 finalized history를 분리합니다.",
+        "concepts": [
+          "fork-choice-finality-separation"
+        ]
       },
       {
-        label: "05 채택",
-        relation: "자원 ledger와 paired failure gate로 평가합니다.",
-        concepts: [
+        "label": "05 채택",
+        "relation": "자원 ledger와 paired failure gate로 평가합니다.",
+        "concepts": [
           "consensus-resource-security-ledger",
-          "permissionless-consensus-release-gate",
-        ],
-      },
+          "permissionless-consensus-release-gate"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "한 운영자가 node key를 1개에서 1,000개로 늘렸지만 hash work·stake는 그대로인 경우 왜 표 1,000개가 되지 않는지 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "한 운영자가 node key를 1개에서 1,000개로 늘렸지만 hash work·stake는 그대로인 경우 왜 표 1,000개가 되지 않는지 설명하세요.",
+        "answerChecklist": [
           "permissionless identity",
           "Sybil risk",
           "resource weighting",
           "work/stake unchanged",
-          "validity 비보장",
+          "validity 비보장"
         ],
-        requiredConcepts: ["permissionless-sybil-resource-weight"],
-        sectionId: "overview",
+        "requiredConcepts": [
+          "permissionless-sybil-resource-weight"
+        ],
+        "sectionId": "names"
       },
       {
-        level: "basic",
-        question:
-          "8-bit hash에서 T=16과 T=8의 한 번 성공 확률과 기대 시도 수를 각각 계산하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "8-bit hash에서 T=16과 T=8의 한 번 성공 확률과 기대 시도 수를 각각 계산하세요.",
+        "answerChecklist": [
           "16/256=1/16",
           "E=16",
           "8/256=1/32",
           "E=32",
-          "uniform·independent 전제",
+          "uniform·independent 전제"
         ],
-        requiredConcepts: ["pow-hash-target-lottery"],
-        sectionId: "pow",
+        "requiredConcepts": [
+          "pow-hash-target-lottery"
+        ],
+        "sectionId": "pow"
       },
       {
-        level: "basic",
-        question:
-          "같은 parent의 valid PoW block A·B가 보인 뒤 B branch에 더 많은 work가 붙는 trace에서 validation·fork choice·confirmation을 구분하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "같은 parent의 valid PoW block A·B가 보인 뒤 B branch에 더 많은 work가 붙는 trace에서 validation·fork choice·confirmation을 구분하세요.",
+        "answerChecklist": [
           "full validity",
           "cumulative work",
           "head B",
           "reorg risk",
-          "probability≠zero",
+          "probability≠zero"
         ],
-        requiredConcepts: ["pow-chainwork-probabilistic-finality"],
-        sectionId: "pow",
+        "requiredConcepts": [
+          "pow-chainwork-probabilistic-finality"
+        ],
+        "sectionId": "pow"
       },
       {
-        level: "basic",
-        question:
-          "Stake 10·20·30·40인 toy validator 집합의 선택 확률을 계산하고 40%의 의미를 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Stake 10·20·30·40인 toy validator 집합의 선택 확률을 계산하고 40%의 의미를 설명하세요.",
+        "answerChecklist": [
           "total 100",
           "0.1·0.2·0.3·0.4",
           "long-run expectation",
           "single-slot 비보장",
-          "effective stake",
+          "effective stake"
         ],
-        requiredConcepts: ["pos-stake-weighted-selection"],
-        sectionId: "pos",
+        "requiredConcepts": [
+          "pos-stake-weighted-selection"
+        ],
+        "sectionId": "pos"
       },
       {
-        level: "basic",
-        question:
-          "PoS에서 proposal·attestation·fork choice·finality·slashing evidence를 실행 순서와 역할로 분류하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "PoS에서 proposal·attestation·fork choice·finality·slashing evidence를 실행 순서와 역할로 분류하세요.",
+        "answerChecklist": [
           "candidate",
           "signed vote",
           "head",
           "checkpoint",
           "objective conflicting signature",
-          "offline penalty 경계",
+          "offline penalty 경계"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "pos-attestation-slashing-evidence",
-          "fork-choice-finality-separation",
+          "fork-choice-finality-separation"
         ],
-        sectionId: "pos",
+        "sectionId": "pos"
       },
       {
-        level: "basic",
-        question:
-          "Head가 B에서 C로 바뀌지만 둘 다 finalized checkpoint F의 descendant인 trace가 왜 conflicting finality가 아닌지 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Head가 B에서 C로 바뀌지만 둘 다 finalized checkpoint F의 descendant인 trace가 왜 conflicting finality가 아닌지 설명하세요.",
+        "answerChecklist": [
           "head mutable",
           "F unchanged",
           "descendant check",
           "reorg vs finality",
-          "별도 receipt",
+          "별도 receipt"
         ],
-        requiredConcepts: ["fork-choice-finality-separation"],
-        sectionId: "overview",
+        "requiredConcepts": [
+          "fork-choice-finality-separation"
+        ],
+        "sectionId": "names"
       },
       {
-        level: "advanced",
-        question:
-          "PoW target 식을 유도하고 target을 절반으로 줄였을 때 기대 work가 두 배가 되는 이유와 식 밖의 변수를 설명하세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "PoW target 식을 유도하고 target을 절반으로 줄였을 때 기대 work가 두 배가 되는 이유와 식 밖의 변수를 설명하세요.",
+        "answerChecklist": [
           "success region T",
           "p=T/2^b",
           "geometric expectation",
           "2^b/T",
-          "hardware·network·adjustment boundary",
+          "hardware·network·adjustment boundary"
         ],
-        requiredConcepts: ["pow-hash-target-lottery"],
-        sectionId: "pow",
+        "requiredConcepts": [
+          "pow-hash-target-lottery"
+        ],
+        "sectionId": "pow"
       },
       {
-        level: "advanced",
-        question:
-          "PoW confirmation과 PoS explicit finality의 evidence·failure mode·client receipt를 비교하세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "PoW confirmation과 PoS explicit finality의 evidence·failure mode·client receipt를 비교하세요.",
+        "answerChecklist": [
           "chainwork",
           "probabilistic reorg",
           "stake checkpoint",
           "honesty/timing assumptions",
           "head/finalized root",
-          "version/time",
+          "version/time"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "pow-chainwork-probabilistic-finality",
           "fork-choice-finality-separation",
-          "pos-attestation-slashing-evidence",
+          "pos-attestation-slashing-evidence"
         ],
-        sectionId: "comparison",
+        "sectionId": "comparison"
       },
       {
-        level: "advanced",
-        question:
-          "PoW·PoS를 TPS 숫자 없이 비교하는 resource·security ledger를 설계하고 concentration 반례를 넣으세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "PoW·PoS를 TPS 숫자 없이 비교하는 resource·security ledger를 설계하고 concentration 반례를 넣으세요.",
+        "answerChecklist": [
           "cost asset",
           "influence concentration",
           "propagation/custody",
           "client correlation",
           "fork choice/finality",
-          "same workload",
+          "same workload"
         ],
-        requiredConcepts: ["consensus-resource-security-ledger"],
-        sectionId: "comparison",
+        "requiredConcepts": [
+          "consensus-resource-security-ledger"
+        ],
+        "sectionId": "comparison"
       },
       {
-        level: "advanced",
-        question:
-          "Partition·delayed block/vote·equivocation·outage·restart를 포함한 PoW/PoS paired release matrix와 hard gate를 설계하세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "Partition·delayed block/vote·equivocation·outage·restart를 포함한 PoW/PoS paired release matrix와 hard gate를 설계하세요.",
+        "answerChecklist": [
           "same binary/config/membership",
           "same transaction/fault trace",
           "conflicting finality=0",
           "reorg depth",
           "recovery p95",
           "resource/concentration",
-          "rollback receipt",
+          "rollback receipt"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "permissionless-consensus-release-gate",
           "fork-choice-finality-separation",
-          "consensus-resource-security-ledger",
+          "consensus-resource-security-ledger"
         ],
-        sectionId: "comparison",
-      },
+        "sectionId": "comparison"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "Bitcoin: A Peer-to-Peer Electronic Cash System",
-        href: "https://bitcoin.org/bitcoin.pdf",
-        problem:
-          "중앙 기관 없이 transaction ordering과 double-spend를 저지하는 문제",
-        contribution:
-          "Hash-based PoW·cumulative-work chain·attacker catch-up probability를 결합",
-        assumptions:
-          "Hash power·network propagation·valid block verification model",
-        evidenceScope: "Bitcoin paper의 protocol과 확률 분석",
-        notClaim: "모든 hash·network·confirmation 수의 보편 안전성은 아님",
-        sectionId: "paper-bitcoin-pow",
+        "title": "Bitcoin: A Peer-to-Peer Electronic Cash System",
+        "href": "https://bitcoin.org/bitcoin.pdf",
+        "problem": "중앙 기관 없이 transaction ordering과 double-spend를 저지하는 문제",
+        "contribution": "Hash-based PoW·cumulative-work chain·attacker catch-up probability를 결합",
+        "assumptions": "Hash power·network propagation·valid block verification model",
+        "evidenceScope": "Bitcoin paper의 protocol과 확률 분석",
+        "notClaim": "모든 hash·network·confirmation 수의 보편 안전성은 아님",
+        "sectionId": "paper-bitcoin-pow"
       },
       {
-        title: "Combining GHOST and Casper",
-        href: "https://arxiv.org/abs/2003.03052",
-        problem: "Block-tree fork choice와 accountable finality의 결합",
-        contribution:
-          "GHOST 계열 head rule과 Casper finality gadget의 성질 분석",
-        assumptions:
-          "논문의 honest stake·network timing·validator message model",
-        evidenceScope: "해당 Gasper protocol snapshot의 이론 분석",
-        notClaim: "현재 모든 Ethereum upgrade 규칙의 대체 정본은 아님",
-        sectionId: "paper-gasper",
+        "title": "Combining GHOST and Casper",
+        "href": "https://arxiv.org/abs/2003.03052",
+        "problem": "Block-tree fork choice와 accountable finality의 결합",
+        "contribution": "GHOST 계열 head rule과 Casper finality gadget의 성질 분석",
+        "assumptions": "논문의 honest stake·network timing·validator message model",
+        "evidenceScope": "해당 Gasper protocol snapshot의 이론 분석",
+        "notClaim": "현재 모든 Ethereum upgrade 규칙의 대체 정본은 아님",
+        "sectionId": "paper-gasper"
       },
       {
-        title: "Ethereum Proof-of-Stake Consensus Specifications",
-        href: "https://ethereum.github.io/consensus-specs/",
-        problem:
-          "PoS client가 같은 state transition·fork choice를 구현하는 규격",
-        contribution: "Fork별 stable specification과 reference tests",
-        assumptions: "배포한 fork·client version과 외부 execution/API 규격",
-        evidenceScope: "현재 versioned Ethereum consensus behavior",
-        notClaim: "모든 PoS protocol의 일반 이론이나 성능 benchmark가 아님",
-        sectionId: "paper-ethereum-pos-spec",
+        "title": "Ethereum Proof-of-Stake Consensus Specifications",
+        "href": "https://ethereum.github.io/consensus-specs/",
+        "problem": "PoS client가 같은 state transition·fork choice를 구현하는 규격",
+        "contribution": "Fork별 stable specification과 reference tests",
+        "assumptions": "배포한 fork·client version과 외부 execution/API 규격",
+        "evidenceScope": "현재 versioned Ethereum consensus behavior",
+        "notClaim": "모든 PoS protocol의 일반 이론이나 성능 benchmark가 아님",
+        "sectionId": "paper-ethereum-pos-spec"
       },
       {
-        title: "EIP-3675: Upgrade consensus to Proof-of-Stake",
-        href: "https://eips.ethereum.org/EIPS/eip-3675",
-        problem: "Ethereum Mainnet execution layer의 PoW→PoS 전환",
-        contribution:
-          "Terminal PoW block과 이후 validity·fork-choice 연결 규칙",
-        assumptions: "Merge transition의 execution·consensus interface",
-        evidenceScope: "해당 network upgrade specification",
-        notClaim: "PoW·PoS family 전체의 TPS·보안 비교가 아님",
-        sectionId: "paper-eip-3675",
-      },
-    ],
+        "title": "EIP-3675: Upgrade consensus to Proof-of-Stake",
+        "href": "https://eips.ethereum.org/EIPS/eip-3675",
+        "problem": "Ethereum Mainnet execution layer의 PoW→PoS 전환",
+        "contribution": "Terminal PoW block과 이후 validity·fork-choice 연결 규칙",
+        "assumptions": "Merge transition의 execution·consensus interface",
+        "evidenceScope": "해당 network upgrade specification",
+        "notClaim": "PoW·PoS family 전체의 TPS·보안 비교가 아님",
+        "sectionId": "paper-eip-3675"
+      }
+    ]
   },
   "p2p/libp2p": {
     coreIdea:
@@ -50227,390 +51729,367 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "blockchain/bft-theory": {
-    entryLevel: true,
-    entryNote:
-      "Replica 네 개와 Byzantine 한 개의 conflicting vote에서 시작합니다. Protocol 이름보다 message→certificate→lock→view change→commit evidence를 먼저 추적합니다.",
-    coreIdea:
-      "BFT는 fault model에 맞는 quorum overlap과 honest signing rule을 certificate·lock·view change에 연결해 safety를 항상 지키고 partial synchrony가 회복되면 progress를 얻습니다.",
-    assumedKnowledge: [],
-    introducedHere: [
+    "entryLevel": true,
+    "entryNote": "A·B·C·D 네 명 중 D 한 명이 주문 7의 승인과 취소에 모두 서명하는 사례에서 필요한 표 수와 잠금 이유를 계산합니다.",
+    "coreIdea": "BFT는 fault model에 맞는 quorum overlap과 honest signing rule을 certificate·lock·view change에 연결해 safety를 항상 지키고 partial synchrony가 회복되면 progress를 얻습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "bft-authenticated-equivocation",
-        role: "Signature와 honesty·equivocation evidence의 경계를 설명합니다.",
+        "id": "bft-authenticated-equivocation",
+        "role": "Signature와 honesty·equivocation evidence의 경계를 설명합니다."
       },
       {
-        id: "bft-quorum-certificate",
-        role: "같은 phase·value에 대한 typed signer evidence를 정의합니다.",
+        "id": "bft-quorum-certificate",
+        "role": "같은 phase·value에 대한 typed signer evidence를 정의합니다."
       },
       {
-        id: "bft-honest-quorum-intersection",
-        role: "3f+1·2f+1의 honest overlap을 계산합니다.",
+        "id": "bft-honest-quorum-intersection",
+        "role": "3f+1·2f+1의 honest overlap을 계산합니다."
       },
       {
-        id: "bft-lock-certificate-safety",
-        role: "Overlap을 conflicting commit 방지 규칙에 연결합니다.",
+        "id": "bft-lock-certificate-safety",
+        "role": "Overlap을 conflicting commit 방지 규칙에 연결합니다."
       },
       {
-        id: "bft-view-change-evidence",
-        role: "Leader 교체 때 safe evidence를 인계합니다.",
+        "id": "bft-view-change-evidence",
+        "role": "Leader 교체 때 safe evidence를 인계합니다."
       },
       {
-        id: "bft-partial-synchrony-progress",
-        role: "GST 전 safety와 GST 뒤 liveness를 나눕니다.",
+        "id": "bft-partial-synchrony-progress",
+        "role": "GST 전 safety와 GST 뒤 liveness를 나눕니다."
       },
       {
-        id: "bft-weight-membership-snapshot",
-        role: "Signer count와 weighted stake threshold를 분리합니다.",
+        "id": "bft-weight-membership-snapshot",
+        "role": "Signer count와 weighted stake threshold를 분리합니다."
       },
       {
-        id: "bft-failure-injection-release-gate",
-        role: "Adversarial schedule의 paired 채택 검사를 설계합니다.",
-      },
+        "id": "bft-failure-injection-release-gate",
+        "role": "Adversarial schedule의 paired 채택 검사를 설계합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "bft-authenticated-equivocation",
-        sectionId: "byzantine-model",
-        intuition:
-          "서명된 편지는 누가 썼는지는 알 수 있지만 그 사람이 서로 다른 사람에게 다른 지시를 보내는 것을 막지는 못합니다.",
-        workedExample:
-          "F가 A에게 signed vote(x), B에게 signed vote(y)를 보내면 두 signature 모두 valid해도 함께 equivocation evidence가 됩니다.",
-        boundary:
-          "Valid signature는 value validity·membership authorization·honesty의 증명이 아닙니다.",
+        "id": "bft-authenticated-equivocation",
+        "sectionId": "byzantine-model",
+        "intuition": "서명된 편지는 누가 썼는지는 알 수 있지만 그 사람이 서로 다른 사람에게 다른 지시를 보내는 것을 막지는 못합니다.",
+        "workedExample": "F가 A에게 signed vote(x), B에게 signed vote(y)를 보내면 두 signature 모두 valid해도 함께 equivocation evidence가 됩니다.",
+        "boundary": "Valid signature는 value validity·membership authorization·honesty의 증명이 아닙니다."
       },
       {
-        id: "bft-quorum-certificate",
-        sectionId: "overview",
-        intuition:
-          "같은 사건·단계·값에 동의한 서로 다른 참여자의 서명 묶음입니다.",
-        workedExample:
-          "View 7, height 10, prepare, digest x에 A·B·C의 distinct valid signature를 묶어 certificate를 만듭니다.",
-        boundary:
-          "Phase·view·height·domain이 다른 vote나 duplicate signer를 한 certificate로 세면 안 됩니다.",
+        "id": "bft-quorum-certificate",
+        "sectionId": "names",
+        "intuition": "같은 사건·단계·값에 동의한 서로 다른 참여자의 서명 묶음입니다.",
+        "workedExample": "View 7, height 10, prepare, digest x에 A·B·C의 distinct valid signature를 묶어 certificate를 만듭니다.",
+        "boundary": "Phase·view·height·domain이 다른 vote나 duplicate signer를 한 certificate로 세면 안 됩니다."
       },
       {
-        id: "bft-honest-quorum-intersection",
-        sectionId: "faulty-threshold",
-        intuition:
-          "두 큰 모임이 공유하는 사람이 fault 수보다 많으면 적어도 한 명은 honest입니다.",
-        workedExample:
-          "n=4,f=1,q=3이면 두 quorum은 최소 2=f+1명이 겹치므로 모두 faulty일 수 없습니다.",
-        boundary:
-          "Equal-weight fixed membership 계산이며 overlap만으로 honest signing rule을 대신하지 않습니다.",
-        proofIdea: "|Q1∩Q2|≥2q−n에 n=3f+1,q=2f+1을 대입합니다.",
-        counterexample:
-          "q=2이면 {A,B}와 {C,D}가 겹치지 않아 conflicting certificate를 만들 수 있습니다.",
+        "id": "bft-honest-quorum-intersection",
+        "sectionId": "faulty-threshold",
+        "intuition": "두 큰 모임이 공유하는 사람이 fault 수보다 많으면 적어도 한 명은 honest입니다.",
+        "workedExample": "n=4,f=1,q=3이면 두 quorum은 최소 2=f+1명이 겹치므로 모두 faulty일 수 없습니다.",
+        "boundary": "Equal-weight fixed membership 계산이며 overlap만으로 honest signing rule을 대신하지 않습니다.",
+        "proofIdea": "|Q1∩Q2|≥2q−n에 n=3f+1,q=2f+1을 대입합니다.",
+        "counterexample": "q=2이면 {A,B}와 {C,D}가 겹치지 않아 conflicting certificate를 만들 수 있습니다."
       },
       {
-        id: "bft-lock-certificate-safety",
-        sectionId: "safety-liveness",
-        intuition:
-          "한 번 강한 증거를 보고 잠근 honest replica는 더 강한 안전 증거 없이 반대편에 서명하지 않습니다.",
-        workedExample:
-          "x certificate로 lock한 B가 stale y proposal을 거절해 Qx·Qy의 honest overlap이 두 commit을 막습니다.",
-        boundary:
-          "Protocol별 phase·unlock·commit rule은 다르므로 2f+1 vote만 보고 임의 phase에서 commit하면 안 됩니다.",
+        "id": "bft-lock-certificate-safety",
+        "sectionId": "safety-liveness",
+        "intuition": "한 번 강한 증거를 보고 잠근 honest replica는 더 강한 안전 증거 없이 반대편에 서명하지 않습니다.",
+        "workedExample": "x certificate로 lock한 B가 stale y proposal을 거절해 Qx·Qy의 honest overlap이 두 commit을 막습니다.",
+        "boundary": "Protocol별 phase·unlock·commit rule은 다르므로 2f+1 vote만 보고 임의 phase에서 commit하면 안 됩니다."
       },
       {
-        id: "bft-view-change-evidence",
-        sectionId: "safety-liveness",
-        intuition:
-          "반장을 바꾸더라도 이전 장부의 가장 강한 영수증을 새 반장에게 넘깁니다.",
-        workedExample:
-          "Timeout quorum의 highest certificate가 x이면 새 leader가 그 evidence와 양립하는 x 또는 descendant를 제안합니다.",
-        boundary:
-          "Timeout은 old leader가 Byzantine이라는 완전한 증명도, lock을 지우는 권한도 아닙니다.",
+        "id": "bft-view-change-evidence",
+        "sectionId": "safety-liveness",
+        "intuition": "반장을 바꾸더라도 이전 장부의 가장 강한 영수증을 새 반장에게 넘깁니다.",
+        "workedExample": "Timeout quorum의 highest certificate가 x이면 새 leader가 그 evidence와 양립하는 x 또는 descendant를 제안합니다.",
+        "boundary": "Timeout은 old leader가 Byzantine이라는 완전한 증명도, lock을 지우는 권한도 아닙니다."
       },
       {
-        id: "bft-partial-synchrony-progress",
-        sectionId: "byzantine-model",
-        intuition:
-          "Network가 불안정할 때는 멈출 수 있지만 모순을 만들지 않고, 안정된 뒤 정직 leader를 만나면 다시 갑니다.",
-        workedExample:
-          "GST 전 세 view가 timeout돼도 conflicting commit 0을 지키고 GST 뒤 view 4에서 certificate·commit이 전진합니다.",
-        boundary:
-          "GST 이전 latency 상한이나 모든 순간의 liveness를 보장하지 않습니다.",
+        "id": "bft-partial-synchrony-progress",
+        "sectionId": "byzantine-model",
+        "intuition": "Network가 불안정할 때는 멈출 수 있지만 모순을 만들지 않고, 안정된 뒤 정직 leader를 만나면 다시 갑니다.",
+        "workedExample": "GST 전 세 view가 timeout돼도 conflicting commit 0을 지키고 GST 뒤 view 4에서 certificate·commit이 전진합니다.",
+        "boundary": "GST 이전 latency 상한이나 모든 순간의 liveness를 보장하지 않습니다."
       },
       {
-        id: "bft-weight-membership-snapshot",
-        sectionId: "faulty-threshold",
-        intuition:
-          "표를 셀 때 어느 명부와 어느 weight 표를 썼는지 영수증에 고정합니다.",
-        workedExample:
-          "Epoch e의 total weight 100과 threshold 67을 certificate에 묶으면 key 40개가 아니라 signed weight 합을 검증합니다.",
-        boundary:
-          "Equal signer count와 stake weight, current epoch와 next epoch를 섞으면 threshold 계산이 달라집니다.",
+        "id": "bft-weight-membership-snapshot",
+        "sectionId": "faulty-threshold",
+        "intuition": "표를 셀 때 어느 명부와 어느 weight 표를 썼는지 영수증에 고정합니다.",
+        "workedExample": "Epoch e의 total weight 100과 threshold 67을 certificate에 묶으면 key 40개가 아니라 signed weight 합을 검증합니다.",
+        "boundary": "Equal signer count와 stake weight, current epoch와 next epoch를 섞으면 threshold 계산이 달라집니다."
       },
       {
-        id: "bft-failure-injection-release-gate",
-        sectionId: "safety-liveness",
-        intuition:
-          "거짓말·침묵·지연·재시작을 같은 순서로 후보 둘에 넣고 모순 0과 회복 시간을 따로 봅니다.",
-        workedExample:
-          "같은 seed에서 equivocation·partition·stale replay를 주입하고 committed digest conflict=0, GST 뒤 recovery p95를 비교합니다.",
-        boundary:
-          "정상 happy-path throughput만으로 Byzantine safety나 partition recovery를 입증하지 않습니다.",
-      },
+        "id": "bft-failure-injection-release-gate",
+        "sectionId": "safety-liveness",
+        "intuition": "거짓말·침묵·지연·재시작을 같은 순서로 후보 둘에 넣고 모순 0과 회복 시간을 따로 봅니다.",
+        "workedExample": "같은 seed에서 equivocation·partition·stale replay를 주입하고 committed digest conflict=0, GST 뒤 recovery p95를 비교합니다.",
+        "boundary": "정상 happy-path throughput만으로 Byzantine safety나 partition recovery를 입증하지 않습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "00 선수",
-        relation: "Failure·timing·safety/liveness와 signature를 재사용합니다.",
-        concepts: [
+        "label": "00 선수",
+        "relation": "Failure·timing·safety/liveness와 signature를 재사용합니다.",
+        "concepts": [
           "distributed-failure-model",
           "partial-synchrony-gst",
-          "consensus-safety-liveness",
-        ],
+          "consensus-safety-liveness"
+        ]
       },
       {
-        label: "01 message",
-        relation: "Signed origin과 conflicting behavior를 분리합니다.",
-        concepts: ["bft-authenticated-equivocation"],
+        "label": "01 message",
+        "relation": "Signed origin과 conflicting behavior를 분리합니다.",
+        "concepts": [
+          "bft-authenticated-equivocation"
+        ]
       },
       {
-        label: "02 certificate",
-        relation: "Quorum overlap으로 typed evidence를 제한합니다.",
-        concepts: ["bft-honest-quorum-intersection", "bft-quorum-certificate"],
+        "label": "02 certificate",
+        "relation": "Quorum overlap으로 typed evidence를 제한합니다.",
+        "concepts": [
+          "bft-honest-quorum-intersection",
+          "bft-quorum-certificate"
+        ]
       },
       {
-        label: "03 safety",
-        relation: "Honest overlap을 lock rule과 view evidence에 연결합니다.",
-        concepts: ["bft-lock-certificate-safety", "bft-view-change-evidence"],
+        "label": "03 safety",
+        "relation": "Honest overlap을 lock rule과 view evidence에 연결합니다.",
+        "concepts": [
+          "bft-lock-certificate-safety",
+          "bft-view-change-evidence"
+        ]
       },
       {
-        label: "04 progress",
-        relation: "GST 뒤 조건부 liveness를 얻습니다.",
-        concepts: ["bft-partial-synchrony-progress"],
+        "label": "04 progress",
+        "relation": "GST 뒤 조건부 liveness를 얻습니다.",
+        "concepts": [
+          "bft-partial-synchrony-progress"
+        ]
       },
       {
-        label: "05 deployment",
-        relation: "Weight snapshot과 failure gate로 배포를 검증합니다.",
-        concepts: [
+        "label": "05 deployment",
+        "relation": "Weight snapshot과 failure gate로 배포를 검증합니다.",
+        "concepts": [
           "bft-weight-membership-snapshot",
-          "bft-failure-injection-release-gate",
-        ],
-      },
+          "bft-failure-injection-release-gate"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "Crash·partition·Byzantine equivocation과 valid signature의 의미를 A←x, B←y trace로 분류하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "Crash·partition·Byzantine equivocation과 valid signature의 의미를 A←x, B←y trace로 분류하세요.",
+        "answerChecklist": [
           "crash silence",
           "partition channel",
           "equivocation",
           "signature origin/integrity",
           "honesty 비보장",
-          "conflict evidence",
+          "conflict evidence"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "bft-authenticated-equivocation",
-          "distributed-failure-model",
+          "distributed-failure-model"
         ],
-        sectionId: "byzantine-model",
+        "sectionId": "byzantine-model"
       },
       {
-        level: "basic",
-        question:
-          "View 7 height 10의 A·B·C vote로 quorum certificate를 만들 때 검증할 필드를 적으세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "View 7 height 10의 A·B·C vote로 quorum certificate를 만들 때 검증할 필드를 적으세요.",
+        "answerChecklist": [
           "distinct signer",
           "membership",
           "domain",
           "phase",
           "view/height",
           "value digest",
-          "signature validity",
+          "signature validity"
         ],
-        requiredConcepts: ["bft-quorum-certificate"],
-        sectionId: "overview",
+        "requiredConcepts": [
+          "bft-quorum-certificate"
+        ],
+        "sectionId": "names"
       },
       {
-        level: "basic",
-        question:
-          "n=4,f=1,q=3에서 Qx={A,B,C}, Qy={B,C,D}의 교집합과 honest 최소 수를 계산하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "n=4,f=1,q=3에서 Qx={A,B,C}, Qy={B,C,D}의 교집합과 honest 최소 수를 계산하세요.",
+        "answerChecklist": [
           "intersection {B,C}",
           "size 2",
           "f+1",
           "at most one faulty",
-          "at least one honest",
+          "at least one honest"
         ],
-        requiredConcepts: ["bft-honest-quorum-intersection"],
-        sectionId: "faulty-threshold",
+        "requiredConcepts": [
+          "bft-honest-quorum-intersection"
+        ],
+        "sectionId": "faulty-threshold"
       },
       {
-        level: "basic",
-        question:
-          "x certificate로 lock한 replica가 stale y proposal을 받는 trace에서 lock과 certificate의 역할을 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "x certificate로 lock한 replica가 stale y proposal을 받는 trace에서 lock과 certificate의 역할을 설명하세요.",
+        "answerChecklist": [
           "local lock",
           "safe proposal rule",
           "y rejection",
           "honest overlap",
-          "conflicting commit prevention",
+          "conflicting commit prevention"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "bft-lock-certificate-safety",
-          "bft-quorum-certificate",
+          "bft-quorum-certificate"
         ],
-        sectionId: "safety-liveness",
+        "sectionId": "timing-source"
       },
       {
-        level: "basic",
-        question:
-          "GST 전 view 1~3 timeout, GST 뒤 view 4 commit trace에서 safety와 liveness 판정을 나누세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "GST 전 view 1~3 timeout, GST 뒤 view 4 commit trace에서 safety와 liveness 판정을 나누세요.",
+        "answerChecklist": [
           "GST 전 halt allowed",
           "conflict 0",
           "timeout≠fault proof",
           "honest leader",
           "bounded delay",
-          "GST 뒤 commit",
+          "GST 뒤 commit"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "bft-partial-synchrony-progress",
-          "consensus-safety-liveness",
+          "consensus-safety-liveness"
         ],
-        sectionId: "byzantine-model",
+        "sectionId": "byzantine-model"
       },
       {
-        level: "basic",
-        question:
-          "같은 100개 key라도 한 운영자가 40 weight를 가진 경우 count quorum과 weighted quorum이 왜 다른지 설명하세요.",
-        answerChecklist: [
+        "level": "basic",
+        "question": "같은 100개 key라도 한 운영자가 40 weight를 가진 경우 count quorum과 weighted quorum이 왜 다른지 설명하세요.",
+        "answerChecklist": [
           "key count≠weight",
           "epoch membership",
           "total weight",
           "threshold",
           "operator concentration",
-          "snapshot receipt",
+          "snapshot receipt"
         ],
-        requiredConcepts: ["bft-weight-membership-snapshot"],
-        sectionId: "faulty-threshold",
+        "requiredConcepts": [
+          "bft-weight-membership-snapshot"
+        ],
+        "sectionId": "faulty-threshold"
       },
       {
-        level: "advanced",
-        question:
-          "n=3f+1,q=2f+1의 honest-overlap 식을 유도하고 q를 낮춘 disjoint quorum 반례를 만드세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "n=3f+1,q=2f+1의 honest-overlap 식을 유도하고 q를 낮춘 disjoint quorum 반례를 만드세요.",
+        "answerChecklist": [
           "set lower bound",
           "2q−n",
           "f+1",
           "greater than f",
           "honest signer",
           "disjoint/small-q counterexample",
-          "lock assumption",
+          "lock assumption"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "bft-honest-quorum-intersection",
-          "bft-lock-certificate-safety",
+          "bft-lock-certificate-safety"
         ],
-        sectionId: "faulty-threshold",
+        "sectionId": "faulty-threshold"
       },
       {
-        level: "advanced",
-        question:
-          "Byzantine leader timeout 뒤 새 leader가 안전하게 proposal을 고르는 view-change protocol과 stale evidence 반례를 설명하세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "Byzantine leader timeout 뒤 새 leader가 안전하게 proposal을 고르는 view-change protocol과 stale evidence 반례를 설명하세요.",
+        "answerChecklist": [
           "timeout quorum",
           "highest/strongest certificate",
           "lock handoff",
           "safe proposal",
           "stale view rejection",
-          "timeout non-bypass",
+          "timeout non-bypass"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "bft-view-change-evidence",
-          "bft-lock-certificate-safety",
+          "bft-lock-certificate-safety"
         ],
-        sectionId: "safety-liveness",
+        "sectionId": "safety-liveness"
       },
       {
-        level: "advanced",
-        question:
-          "PBFT식 phase certificate와 HotStuff chained certificate를 공통 state machine 축으로 비교하되 근거 범위를 제한하세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "PBFT식 phase certificate와 HotStuff chained certificate를 공통 state machine 축으로 비교하되 근거 범위를 제한하세요.",
+        "answerChecklist": [
           "proposal/vote",
           "typed phase",
           "certificate",
           "lock/commit",
           "view/pacemaker",
           "protocol-specific rule",
-          "performance non-generalization",
+          "performance non-generalization"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "bft-quorum-certificate",
-          "bft-view-change-evidence",
+          "bft-view-change-evidence"
         ],
-        sectionId: "safety-liveness",
+        "sectionId": "safety-liveness"
       },
       {
-        level: "advanced",
-        question:
-          "Equivocation·omission·partition·timeout race·restart·stale replay의 paired release matrix를 설계하세요.",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "Equivocation·omission·partition·timeout race·restart·stale replay의 paired release matrix를 설계하세요.",
+        "answerChecklist": [
           "same binary/config/membership",
           "same seed/schedule",
           "conflicting committed digest=0",
           "GST marker",
           "recovery p95/views/messages",
           "certificate/weight receipt",
-          "rollback gate",
+          "rollback gate"
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "bft-failure-injection-release-gate",
           "bft-weight-membership-snapshot",
-          "bft-partial-synchrony-progress",
+          "bft-partial-synchrony-progress"
         ],
-        sectionId: "safety-liveness",
-      },
+        "sectionId": "safety-liveness"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "The Byzantine Generals Problem",
-        href: "https://lamport.azurewebsites.net/pubs/byz.pdf",
-        problem: "Traitor가 임의 message를 보낼 때 interactive consistency",
-        contribution: "Oral·signed message model의 algorithm과 조건",
-        assumptions: "논문이 구분한 communication·authentication model",
-        evidenceScope: "Byzantine problem formulation과 해당 model 결과",
-        notClaim:
-          "모든 partial-synchrony signed protocol의 threshold를 하나로 고정하지 않음",
-        sectionId: "paper-byzantine-generals",
+        "title": "The Byzantine Generals Problem",
+        "href": "https://lamport.azurewebsites.net/pubs/byz.pdf",
+        "problem": "Traitor가 임의 message를 보낼 때 interactive consistency",
+        "contribution": "Oral·signed message model의 algorithm과 조건",
+        "assumptions": "논문이 구분한 communication·authentication model",
+        "evidenceScope": "Byzantine problem formulation과 해당 model 결과",
+        "notClaim": "모든 partial-synchrony signed protocol의 threshold를 하나로 고정하지 않음",
+        "sectionId": "paper-byzantine-generals"
       },
       {
-        title: "Consensus in the Presence of Partial Synchrony",
-        href: "https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf",
-        problem: "동기·비동기 사이 timing model의 consensus",
-        contribution: "Unknown bound/GST model과 resilience bounds",
-        assumptions: "Process·authentication·fault·timing model",
-        evidenceScope: "Partial-synchrony consensus의 이론 조건",
-        notClaim:
-          "실제 Internet delay·timeout 값이나 구현 성능을 제공하지 않음",
-        sectionId: "paper-dls-bft",
+        "title": "Consensus in the Presence of Partial Synchrony",
+        "href": "https://groups.csail.mit.edu/tds/papers/Lynch/jacm88.pdf",
+        "problem": "동기·비동기 사이 timing model의 consensus",
+        "contribution": "Unknown bound/GST model과 resilience bounds",
+        "assumptions": "Process·authentication·fault·timing model",
+        "evidenceScope": "Partial-synchrony consensus의 이론 조건",
+        "notClaim": "실제 Internet delay·timeout 값이나 구현 성능을 제공하지 않음",
+        "sectionId": "paper-dls-bft"
       },
       {
-        title: "Practical Byzantine Fault Tolerance",
-        href: "https://pmg.csail.mit.edu/papers/osdi99.pdf",
-        problem: "Byzantine SMR의 practical algorithm과 implementation",
-        contribution: "Normal phases·checkpoint·view change·evaluation",
-        assumptions: "논문의 system·workload·fault setup",
-        evidenceScope: "PBFT protocol과 당시 evaluation",
-        notClaim: "현대 WAN·weighted membership의 고정 성능 아님",
-        sectionId: "paper-pbft",
+        "title": "Practical Byzantine Fault Tolerance",
+        "href": "https://pmg.csail.mit.edu/papers/osdi99.pdf",
+        "problem": "Byzantine SMR의 practical algorithm과 implementation",
+        "contribution": "Normal phases·checkpoint·view change·evaluation",
+        "assumptions": "논문의 system·workload·fault setup",
+        "evidenceScope": "PBFT protocol과 당시 evaluation",
+        "notClaim": "현대 WAN·weighted membership의 고정 성능 아님",
+        "sectionId": "paper-pbft"
       },
       {
-        title: "HotStuff: BFT Consensus with Linearity and Responsiveness",
-        href: "https://arxiv.org/abs/1803.05069",
-        problem: "Leader replacement가 단순한 responsive partial-synchrony BFT",
-        contribution: "Chained QC와 pacemaker separation",
-        assumptions: "논문의 authenticated fixed-membership model",
-        evidenceScope: "HotStuff protocol proof와 evaluation",
-        notClaim: "모든 implementation의 total bytes·latency 보장 아님",
-        sectionId: "paper-hotstuff",
-      },
-    ],
+        "title": "HotStuff: BFT Consensus with Linearity and Responsiveness",
+        "href": "https://arxiv.org/abs/1803.05069",
+        "problem": "Leader replacement가 단순한 responsive partial-synchrony BFT",
+        "contribution": "Chained QC와 pacemaker separation",
+        "assumptions": "논문의 authenticated fixed-membership model",
+        "evidenceScope": "HotStuff protocol proof와 evaluation",
+        "notClaim": "모든 implementation의 total bytes·latency 보장 아님",
+        "sectionId": "paper-hotstuff"
+      }
+    ]
   },
   "blockchain/pos-theory": {
     entryLevel: true,
@@ -56215,50 +57694,328 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "blockchain/uniswap-v2": {
-    entryLevel: true,
-    entryNote: "오더북이나 Solidity를 안다고 가정하지 않습니다. 두 reserve에서 quote·settlement·LP share·flash/TWAP을 순서대로 연결합니다.",
-    coreIdea: "Uniswap V2 Pair는 두 token balance의 constant-product 관계를 30-bp input fee로 보정해 settlement하고, LP share·Router bound·flash callback·cumulative price를 같은 reserve state에서 파생합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "constant-product-amm-invariant", role: "두 reserve의 곱과 price impact를 연결합니다." },
-      { id: "v2-fee-adjusted-swap-settlement", role: "실제 balance input과 adjusted K 검사를 계산합니다." },
-      { id: "constant-product-lp-divergence-loss", role: "LP 가치와 same-asset HODL의 기회비용을 비교합니다." },
-      { id: "v2-lp-share-accounting", role: "초기·후속 LP mint와 optional protocol fee share를 구분합니다." },
-      { id: "v2-router-execution-boundary", role: "Quote와 min/max·deadline·actual settlement를 분리합니다." },
-      { id: "v2-flash-swap-atomic-settlement", role: "Optimistic output·callback·repayment 검사를 연결합니다." },
-      { id: "v2-cumulative-price-twap", role: "Cumulative snapshot에서 time-weighted price를 구합니다." },
+    "entryLevel": true,
+    "entryNote": "두 토큰1000개씩 있는 풀에100개를 넣는 사례에서 실제 잔액과 출력 수량을 먼저 확인합니다.",
+    "coreIdea": "V2는 거래 뒤 실제 잔액에서 입력을 찾아 수수료를 반영한 곱을 검사하며 Router 견적·LP 지분·시간 평균 가격은 서로 다른 계산입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "constant-product-amm-invariant",
+        "role": "두 reserve의 곱과 price impact를 연결합니다."
+      },
+      {
+        "id": "v2-fee-adjusted-swap-settlement",
+        "role": "실제 balance input과 adjusted K 검사를 계산합니다."
+      },
+      {
+        "id": "constant-product-lp-divergence-loss",
+        "role": "LP 가치와 same-asset HODL의 기회비용을 비교합니다."
+      },
+      {
+        "id": "v2-lp-share-accounting",
+        "role": "초기·후속 LP mint와 optional protocol fee share를 구분합니다."
+      },
+      {
+        "id": "v2-router-execution-boundary",
+        "role": "Quote와 min/max·deadline·actual settlement를 분리합니다."
+      },
+      {
+        "id": "v2-flash-swap-atomic-settlement",
+        "role": "Optimistic output·callback·repayment 검사를 연결합니다."
+      },
+      {
+        "id": "v2-cumulative-price-twap",
+        "role": "Cumulative snapshot에서 time-weighted price를 구합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "constant-product-amm-invariant", sectionId: "overview", intuition: "두 물통 중 하나를 채우면 다른 하나가 곡선을 따라 줄어들어 별도 주문표 없이 가격이 움직입니다.", workedExample: "x=y=1,000에서 token0 100 입력은 fee 전 선형 100이 아니라 약 90.66 token1 output을 만듭니다.", boundary: "곱 식만으로 token callback·rounding·악성 ERC-20·slippage를 해결하지 않습니다." },
-      { id: "v2-fee-adjusted-swap-settlement", sectionId: "overview", intuition: "보낸다고 주장한 양이 아니라 callback 뒤 Pair 통장 balance를 보고 수수료가 반영된 곱을 채점합니다.", workedExample: "100 입력의 effective amount는 99.7이고 새 raw product는 fee 때문에 이전 product보다 커집니다.", boundary: "Quote·transfer nominal amount가 실제 balance delta와 같다는 보장은 token behavior에 달렸습니다." },
-      { id: "constant-product-lp-divergence-loss", sectionId: "overview", intuition: "AMM이 오른 자산을 팔아 비율을 맞추므로 같은 자산을 가만히 보유한 대안과 차이가 납니다.", workedExample: "가격비 r=2이면 fee 전 LP/HODL−1은 약 −5.72%입니다.", boundary: "LP 잔고의 절대 손실이나 fee 포함 최종 수익을 뜻하지 않습니다." },
-      { id: "v2-lp-share-accounting", sectionId: "pair-contract", intuition: "새 LP는 두 reserve에 모두 더한 비율 중 작은 몫만 ownership으로 받습니다.", workedExample: "x=1,000,y=2,000,S=100에 100·300을 넣으면 min(10,15)=10 shares입니다.", boundary: "Protocol fee는 항상 직접 5 bp 전송이 아니라 feeOn mint/burn 시 sqrt(k) share mint입니다." },
-      { id: "v2-router-execution-boundary", sectionId: "router-swap", intuition: "길찾기 예상값과 실제 통과 가능한 최저 도착량을 따로 적습니다.", workedExample: "Quote 100에서 1% bound면 amountOutMin=99이고 그 아래 settlement는 revert합니다.", boundary: "Min output은 허용 범위 안 MEV·gas 낭비·악성 token을 막지 않습니다." },
-      { id: "v2-flash-swap-atomic-settlement", sectionId: "flash-swap", intuition: "먼저 물건을 건네도 계산대 transaction을 나가기 전 갚지 않으면 모든 행동이 취소됩니다.", workedExample: "같은 token 상환의 withdrawn amount 기준 fee는 3/997≈0.3009027%입니다.", boundary: "Atomic revert는 callback code·external market·oracle 조작의 경제적 안전성을 보장하지 않습니다." },
-      { id: "v2-cumulative-price-twap", sectionId: "flash-swap", intuition: "속도계 누적 주행거리처럼 price×seconds를 두 번 읽어 평균을 냅니다.", workedExample: "C가 1,200→1,800이고 300초면 TWAP=2입니다.", boundary: "Zero/short window·얕은 liquidity·stale snapshot에서는 manipulation resistance가 부족합니다." },
+    "conceptExplanations": [
+      {
+        "id": "constant-product-amm-invariant",
+        "sectionId": "swap-formula",
+        "intuition": "두 물통 중 하나를 채우면 다른 하나가 곡선을 따라 줄어들어 별도 주문표 없이 가격이 움직입니다.",
+        "workedExample": "A·B1000개,입력A100의 유효입력99.7과 출력90.661089를 정수 원본식에 대입하고 실제 잔액1100·909.338911로 조정 곱을 확인합니다.",
+        "boundary": "곱 식만으로 token callback·rounding·악성 ERC-20·slippage를 해결하지 않습니다."
+      },
+      {
+        "id": "v2-fee-adjusted-swap-settlement",
+        "sectionId": "swap-formula",
+        "intuition": "보낸다고 주장한 양이 아니라 callback 뒤 Pair 통장 balance를 보고 수수료가 반영된 곱을 채점합니다.",
+        "workedExample": "A·B1000개,입력A100의 유효입력99.7과 출력90.661089를 정수 원본식에 대입하고 실제 잔액1100·909.338911로 조정 곱을 확인합니다.",
+        "boundary": "Quote·transfer nominal amount가 실제 balance delta와 같다는 보장은 token behavior에 달렸습니다."
+      },
+      {
+        "id": "constant-product-lp-divergence-loss",
+        "sectionId": "divergence-loss",
+        "intuition": "AMM이 오른 자산을 팔아 비율을 맞추므로 같은 자산을 가만히 보유한 대안과 차이가 납니다.",
+        "workedExample": "가격 두 배·수수료 제외 시 풀2828.427 B와 보유3000 B를 비교해 약−5.72%입니다.",
+        "boundary": "LP 잔고의 절대 손실이나 fee 포함 최종 수익을 뜻하지 않습니다."
+      },
+      {
+        "id": "v2-lp-share-accounting",
+        "sectionId": "pair-contract",
+        "intuition": "새 LP는 두 reserve에 모두 더한 비율 중 작은 몫만 ownership으로 받습니다.",
+        "workedExample": "x=1,000,y=2,000,S=100에 100·300을 넣으면 min(10,15)=10 shares입니다.",
+        "boundary": "Protocol fee는 항상 직접 5 bp 전송이 아니라 feeOn mint/burn 시 sqrt(k) share mint입니다."
+      },
+      {
+        "id": "v2-router-execution-boundary",
+        "sectionId": "router-swap",
+        "intuition": "길찾기 예상값과 실제 통과 가능한 최저 도착량을 따로 적습니다.",
+        "workedExample": "Quote 100에서 1% bound면 amountOutMin=99이고 그 아래 settlement는 revert합니다.",
+        "boundary": "Min output은 허용 범위 안 MEV·gas 낭비·악성 token을 막지 않습니다."
+      },
+      {
+        "id": "v2-flash-swap-atomic-settlement",
+        "sectionId": "flash-swap",
+        "intuition": "먼저 물건을 건네도 계산대 transaction을 나가기 전 갚지 않으면 모든 행동이 취소됩니다.",
+        "workedExample": "같은 token 상환의 withdrawn amount 기준 fee는 3/997≈0.3009027%입니다.",
+        "boundary": "Atomic revert는 callback code·external market·oracle 조작의 경제적 안전성을 보장하지 않습니다."
+      },
+      {
+        "id": "v2-cumulative-price-twap",
+        "sectionId": "twap",
+        "intuition": "속도계 누적 주행거리처럼 price×seconds를 두 번 읽어 평균을 냅니다.",
+        "workedExample": "C가 1,200→1,800이고 300초면 TWAP=2입니다.",
+        "boundary": "Zero/short window·얕은 liquidity·stale snapshot에서는 manipulation resistance가 부족합니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 invariant", relation: "Reserve product와 fee-adjusted output을 계산합니다.", concepts: ["constant-product-amm-invariant", "v2-fee-adjusted-swap-settlement"] },
-      { label: "01 LP", relation: "Share·fee·HODL 기회비용을 분리합니다.", concepts: ["v2-lp-share-accounting", "constant-product-lp-divergence-loss"] },
-      { label: "02 route", relation: "Quote와 transaction bound를 구분합니다.", concepts: ["v2-router-execution-boundary"] },
-      { label: "03 callback·oracle", relation: "Atomic settlement와 cumulative snapshots를 연결합니다.", concepts: ["v2-flash-swap-atomic-settlement", "v2-cumulative-price-twap"] },
+    "conceptStages": [
+      {
+        "label": "00 invariant",
+        "relation": "Reserve product와 fee-adjusted output을 계산합니다.",
+        "concepts": [
+          "constant-product-amm-invariant",
+          "v2-fee-adjusted-swap-settlement"
+        ]
+      },
+      {
+        "label": "01 LP",
+        "relation": "Share·fee·HODL 기회비용을 분리합니다.",
+        "concepts": [
+          "v2-lp-share-accounting",
+          "constant-product-lp-divergence-loss"
+        ]
+      },
+      {
+        "label": "02 route",
+        "relation": "Quote와 transaction bound를 구분합니다.",
+        "concepts": [
+          "v2-router-execution-boundary"
+        ]
+      },
+      {
+        "label": "03 callback·oracle",
+        "relation": "Atomic settlement와 cumulative snapshots를 연결합니다.",
+        "concepts": [
+          "v2-flash-swap-atomic-settlement",
+          "v2-cumulative-price-twap"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "x=y=1,000인 Pair에 token0 100을 넣을 때 effective input·output·새 raw k 방향을 계산하세요.", answerChecklist: ["effective 99.7", "output about 90.661", "actual x 1100", "y about 909.339", "raw k increases", "30 bp input fee", "rounding"], requiredConcepts: ["constant-product-amm-invariant", "v2-fee-adjusted-swap-settlement"], sectionId: "overview" },
-      { level: "basic", question: "가격비 r=2에서 fee 전 divergence loss를 계산하고 절대 손실과 다른 이유를 설명하세요.", answerChecklist: ["2sqrt2/3-1", "about -5.72%", "same initial assets", "HODL benchmark", "not absolute loss", "fees excluded"], requiredConcepts: ["constant-product-lp-divergence-loss"], sectionId: "overview" },
-      { level: "basic", question: "x=1,000,y=2,000,S=100에 100·300을 넣을 때 LP mint 수와 초기 mint 식을 구분하세요.", answerChecklist: ["10", "15", "minimum 10", "no dilution", "initial geometric mean", "minimum liquidity locked"], requiredConcepts: ["v2-lp-share-accounting"], sectionId: "pair-contract" },
-      { level: "basic", question: "Quote 100에서 1% slippage를 허용할 때 amountOutMin과 deadline·path·recipient의 역할을 쓰세요.", answerChecklist: ["99", "quote snapshot", "min output", "stale execution", "path bound", "recipient bound", "MEV not eliminated"], requiredConcepts: ["v2-router-execution-boundary"], sectionId: "router-swap" },
-      { level: "basic", question: "Flash swap의 optimistic transfer→callback→balance input→adjusted K→revert 흐름과 같은-token fee를 설명하세요.", answerChecklist: ["output first", "callback", "actual balance delta", "adjusted product", "atomic revert", "3/997", "not free loan"], requiredConcepts: ["v2-flash-swap-atomic-settlement", "v2-fee-adjusted-swap-settlement"], sectionId: "flash-swap" },
-      { level: "basic", question: "Cumulative price 1,200→1,800, 300초 snapshot의 TWAP과 사용할 수 없는 window 반례를 계산하세요.", answerChecklist: ["difference 600", "elapsed 300", "TWAP 2", "same pair/direction", "zero window invalid", "short shallow manipulation"], requiredConcepts: ["v2-cumulative-price-twap"], sectionId: "flash-swap" },
-      { level: "advanced", question: "Fee-adjusted invariant에서 exact-input output 공식을 유도하고 linear output이 실패하는 반례를 보이세요.", answerChecklist: ["effective 997/1000", "new reserve equation", "solve delta y", "denominator 1000x+997dx", "linear output", "adjusted K decrease", "integer rounding"], requiredConcepts: ["constant-product-amm-invariant", "v2-fee-adjusted-swap-settlement"], sectionId: "overview" },
-      { level: "advanced", question: "feeOn일 때 sqrt(k) 증가분으로 protocol LP share를 mint하는 식과 feeOff 상태를 설명하세요.", answerChecklist: ["feeTo configured", "mint/burn time", "rootK-rootKLast", "denominator 5rootK+rootKLast", "LP token mint", "not per-swap transfer", "kLast cleared off"], requiredConcepts: ["v2-lp-share-accounting"], sectionId: "pair-contract" },
-      { level: "advanced", question: "Fee-on-transfer·rebasing token에서 nominal amount·Pair balance delta·recipient delta가 갈라지는 fixture를 설계하세요.", answerChecklist: ["token behavior profile", "nominal sent", "pair received", "router hop assumption", "recipient delta", "rebasing", "typed failure/adapter", "no universal support"], requiredConcepts: ["v2-router-execution-boundary", "v2-fee-adjusted-swap-settlement"], sectionId: "router-swap" },
-      { level: "advanced", question: "Core/Router 교체를 위한 version·fee·LP·callback·TWAP·token-behavior release matrix를 작성하세요.", answerChecklist: ["tag/SHA", "factory/pair/router", "init hash", "mint/burn parity", "exact in/out", "fee on/off", "callback underpay/reentry", "token behaviors", "timestamp wrap", "events/reverts", "gas last", "rollback"], requiredConcepts: ["v2-fee-adjusted-swap-settlement", "v2-lp-share-accounting", "v2-flash-swap-atomic-settlement", "v2-cumulative-price-twap"], sectionId: "uniswap-v2-release-gate" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "x=y=1,000인 Pair에 token0 100을 넣을 때 effective input·output·새 raw k 방향을 계산하세요.",
+        "answerChecklist": [
+          "effective 99.7",
+          "output about 90.661",
+          "actual x 1100",
+          "y about 909.339",
+          "raw k increases",
+          "30 bp input fee",
+          "rounding"
+        ],
+        "requiredConcepts": [
+          "constant-product-amm-invariant",
+          "v2-fee-adjusted-swap-settlement"
+        ],
+        "sectionId": "swap-formula"
+      },
+      {
+        "level": "basic",
+        "question": "가격비 r=2에서 fee 전 divergence loss를 계산하고 절대 손실과 다른 이유를 설명하세요.",
+        "answerChecklist": [
+          "2sqrt2/3-1",
+          "about -5.72%",
+          "same initial assets",
+          "HODL benchmark",
+          "not absolute loss",
+          "fees excluded"
+        ],
+        "requiredConcepts": [
+          "constant-product-lp-divergence-loss"
+        ],
+        "sectionId": "divergence-loss"
+      },
+      {
+        "level": "basic",
+        "question": "표시 단위 x1000·y2000·LP공급100에서100·300을 입금할 때의 지분과 최초 입금의 최소 잠금량을 구분하세요.",
+        "answerChecklist": [
+          "10",
+          "15",
+          "minimum 10",
+          "no dilution",
+          "initial geometric mean",
+          "minimum liquidity locked"
+        ],
+        "requiredConcepts": [
+          "v2-lp-share-accounting"
+        ],
+        "sectionId": "pair-contract"
+      },
+      {
+        "level": "basic",
+        "question": "별도 예시 견적100에서1% 하락을 허용하면 최저 수령량은 얼마이며 실제 견적90.661089에는 어떻게 적용하나요?",
+        "answerChecklist": [
+          "99",
+          "quote snapshot",
+          "min output",
+          "stale execution",
+          "path bound",
+          "recipient bound",
+          "MEV not eliminated"
+        ],
+        "requiredConcepts": [
+          "v2-router-execution-boundary"
+        ],
+        "sectionId": "router-swap"
+      },
+      {
+        "level": "basic",
+        "question": "Flash swap의 optimistic transfer→callback→balance input→adjusted K→revert 흐름과 같은-token fee를 설명하세요.",
+        "answerChecklist": [
+          "output first",
+          "callback",
+          "actual balance delta",
+          "adjusted product",
+          "atomic revert",
+          "3/997",
+          "not free loan"
+        ],
+        "requiredConcepts": [
+          "v2-flash-swap-atomic-settlement",
+          "v2-fee-adjusted-swap-settlement"
+        ],
+        "sectionId": "flash-swap"
+      },
+      {
+        "level": "basic",
+        "question": "Cumulative price 1,200→1,800, 300초 snapshot의 TWAP과 사용할 수 없는 window 반례를 계산하세요.",
+        "answerChecklist": [
+          "difference 600",
+          "elapsed 300",
+          "TWAP 2",
+          "same pair/direction",
+          "zero window invalid",
+          "short shallow manipulation"
+        ],
+        "requiredConcepts": [
+          "v2-cumulative-price-twap"
+        ],
+        "sectionId": "twap"
+      },
+      {
+        "level": "advanced",
+        "question": "Fee-adjusted invariant에서 exact-input output 공식을 유도하고 linear output이 실패하는 반례를 보이세요.",
+        "answerChecklist": [
+          "effective 997/1000",
+          "new reserve equation",
+          "solve delta y",
+          "denominator 1000x+997dx",
+          "linear output",
+          "adjusted K decrease",
+          "integer rounding"
+        ],
+        "requiredConcepts": [
+          "constant-product-amm-invariant",
+          "v2-fee-adjusted-swap-settlement"
+        ],
+        "sectionId": "swap-formula"
+      },
+      {
+        "level": "advanced",
+        "question": "feeOn일 때 sqrt(k) 증가분으로 protocol LP share를 mint하는 식과 feeOff 상태를 설명하세요.",
+        "answerChecklist": [
+          "feeTo configured",
+          "mint/burn time",
+          "rootK-rootKLast",
+          "denominator 5rootK+rootKLast",
+          "LP token mint",
+          "not per-swap transfer",
+          "kLast cleared off"
+        ],
+        "requiredConcepts": [
+          "v2-lp-share-accounting"
+        ],
+        "sectionId": "protocol-fee"
+      },
+      {
+        "level": "advanced",
+        "question": "Fee-on-transfer·rebasing token에서 nominal amount·Pair balance delta·recipient delta가 갈라지는 fixture를 설계하세요.",
+        "answerChecklist": [
+          "token behavior profile",
+          "nominal sent",
+          "pair received",
+          "router hop assumption",
+          "recipient delta",
+          "rebasing",
+          "typed failure/adapter",
+          "no universal support"
+        ],
+        "requiredConcepts": [
+          "v2-router-execution-boundary",
+          "v2-fee-adjusted-swap-settlement"
+        ],
+        "sectionId": "router-swap"
+      },
+      {
+        "level": "advanced",
+        "question": "고정한 core와 Router에 대해 지분·수수료·callback·TWAP·토큰 동작을 검수하고 새 배포의 사용 경로를 정하세요.",
+        "answerChecklist": [
+          "tag/SHA",
+          "factory/pair/router",
+          "init hash",
+          "mint/burn parity",
+          "exact in/out",
+          "fee on/off",
+          "callback underpay/reentry",
+          "token behaviors",
+          "timestamp wrap",
+          "events/reverts",
+          "gas last",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "v2-fee-adjusted-swap-settlement",
+          "v2-lp-share-accounting",
+          "v2-flash-swap-atomic-settlement",
+          "v2-cumulative-price-twap"
+        ],
+        "sectionId": "uniswap-v2-release-gate"
+      }
     ],
-    papers: [
-      { title: "Uniswap v2 Core whitepaper", href: "https://docs.uniswap.org/whitepaper.pdf", problem: "Always-on ERC-20 liquidity·oracle·flash settlement를 단순한 core로 설계하는 문제", contribution: "Constant product·trader fee·price accumulator·optional protocol fee construction을 제시", assumptions: "Uniswap V2 core와 EVM transaction atomicity를 사용하는 execution model", evidenceScope: "Uniswap V2의 mathematical invariant와 core architecture 설계 범위", notClaim: "Router quote·임의 token behavior·oracle consumer safety 전체를 보장하지 않음", sectionId: "paper-uniswap-v2-whitepaper" },
-      { title: "Uniswap v2-core v1.0.1 source", href: "https://github.com/Uniswap/v2-core/tree/d2bfbb3649b265559bec74a7dd878dc1cf01c63c", problem: "Pair reserve·LP share·swap·flash callback state transition을 EVM에서 실행하는 문제", contribution: "Actual balance·fee-adjusted K·mint/burn·accumulator의 executable source seam을 제공", assumptions: "v1.0.1 tag commit d2bfbb3649b2와 Solidity 0.5.16 semantics를 고정", evidenceScope: "Pinned UniswapV2Pair implementation의 state·math·failure 동작 범위", notClaim: "Moving source·periphery Router·현재 deployment와 token별 의미를 규정하지 않음", sectionId: "paper-uniswap-v2-core-source" },
-    ],
+    "papers": [
+      {
+        "title": "Uniswap v2 Core whitepaper",
+        "href": "https://app.uniswap.org/whitepaper.pdf",
+        "problem": "Always-on ERC-20 liquidity·oracle·flash settlement를 단순한 core로 설계하는 문제",
+        "contribution": "Constant product·trader fee·price accumulator·optional protocol fee construction을 제시",
+        "assumptions": "Uniswap V2 core와 EVM transaction atomicity를 사용하는 execution model",
+        "evidenceScope": "Uniswap V2의 mathematical invariant와 core architecture 설계 범위",
+        "notClaim": "Router quote·임의 token behavior·oracle consumer safety 전체를 보장하지 않음",
+        "sectionId": "paper-uniswap-v2-whitepaper"
+      },
+      {
+        "title": "Uniswap v2-core v1.0.1 source",
+        "href": "https://github.com/Uniswap/v2-core/tree/4dd59067c76dea4a0e8e4bfdda41877a6b16dedc",
+        "problem": "Pair reserve·LP share·swap·flash callback state transition을 EVM에서 실행하는 문제",
+        "contribution": "Actual balance·fee-adjusted K·mint/burn·accumulator의 executable source seam을 제공",
+        "assumptions": "v1.0.1 annotated tag d2bfbb3이 가리키는 실제 commit4dd59067c76dea4a0e8e4bfdda41877a6b16dedc와 Solidity0.5.16 의미를 고정합니다.",
+        "evidenceScope": "Pinned UniswapV2Pair implementation의 state·math·failure 동작 범위",
+        "notClaim": "Moving source·periphery Router·현재 deployment와 token별 의미를 규정하지 않음",
+        "sectionId": "paper-uniswap-v2-core-source"
+      }
+    ]
   },
   "blockchain/uniswap-v3": {
     coreIdea: "Uniswap V3는 V2 constant-product를 LP별 [lower,upper] shifted curve로 분할하고 tick·sqrtPriceX96·inside fee growth·initialized tick crossing으로 active liquidity만 swap에 사용합니다.",
@@ -58812,45 +60569,304 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "blockchain/rollup-fundamentals": {
-    entryLevel: true,
-    entryNote: "Blockchain·proof·sequencer를 안다고 가정하지 않고 쇼핑 주문을 L2에서 처리하고 L1 data로 다시 만드는 예에서 시작합니다.",
-    coreIdea: "Rollup은 L2 execution, 검증 입력의 data availability, L1 settlement를 분리하고 deterministic derivation과 fault 또는 validity proof로 결과를 재현·정산합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "rollup-execution-da-settlement-separation", role: "실행·데이터·정산의 owner와 실패를 분리합니다." },
-      { id: "rollup-deterministic-derivation-pipeline", role: "L1 input에서 같은 L2 payload를 재현하고 reorg를 되감습니다." },
-      { id: "optimistic-fault-proof-boundary", role: "Challenge와 bisection으로 잘못된 output claim을 배제합니다." },
-      { id: "validity-proof-verification-boundary", role: "Public input과 proof가 보장하는 범위를 고정합니다." },
+    "entryLevel": true,
+    "entryNote": "100에서 10을 보내고 5를 돌려받는 두 송금의 입력 공개와 재계산부터 시작합니다.",
+    "coreIdea": "별도 공간의 빠른 계산을 기반 체인에 연결하려면 입력을 구할 수 있어야 하고 같은 계산을 재현하며 잘못된 결과를 거절할 규칙이 있어야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "rollup-execution-da-settlement-separation",
+        "role": "실행·데이터·정산의 owner와 실패를 분리합니다."
+      },
+      {
+        "id": "rollup-deterministic-derivation-pipeline",
+        "role": "L1 input에서 같은 L2 payload를 재현하고 reorg를 되감습니다."
+      },
+      {
+        "id": "optimistic-fault-proof-boundary",
+        "role": "Challenge와 bisection으로 잘못된 output claim을 배제합니다."
+      },
+      {
+        "id": "validity-proof-verification-boundary",
+        "role": "Public input과 proof가 보장하는 범위를 고정합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "rollup-execution-da-settlement-separation", sectionId: "overview", intuition: "주문 계산, 주문장 보관, 최종 결제 승인을 서로 다른 창구로 나누는 것과 같습니다.", workedExample: "Sequencer가 주문을 실행하고 batcher가 blob에 입력을 올리며 L1 contract가 output claim 또는 validity proof를 정산합니다.", boundary: "빠른 L2 receipt를 L1 finality·withdrawal settlement나 data availability의 증거로 확대하지 않습니다." },
-      { id: "rollup-deterministic-derivation-pipeline", sectionId: "derivation", intuition: "같은 원재료와 조리법 버전이면 어느 주방에서도 같은 요리 순서가 나와야 하는 재현 절차입니다.", workedExample: "L1 receipt의 deposit, batch frames와 system config를 고정하고 unsafe payload를 safe head로 재현하며 L1 reorg 때 origin까지 rewind합니다.", boundary: "Batch 하나를 찾았다는 사실만으로 frame ordering·timeout·fork activation과 L2 block 전체가 자동 결정되지는 않습니다." },
-      { id: "optimistic-fault-proof-boundary", sectionId: "optimistic", intuition: "긴 계산의 양 끝에서 의견이 다르면 절반씩 범위를 줄여 처음 틀린 한 줄만 심판하는 방식입니다.", workedExample: "1,024-step trace는 최대 10 bisection rounds 뒤 one-step verifier로 좁히고 challenge timeout과 L1 inclusion은 별도 시간으로 셉니다.", boundary: "Challenge 참여자와 input availability가 없으면 fraud를 탐지할 수 없으며 모든 optimistic rollup이 같은 game을 쓰지 않습니다." },
-      { id: "validity-proof-verification-boundary", sectionId: "validity", intuition: "계산표 전체 대신 고정된 계산 규칙과 입력에서 답이 나왔다는 짧은 검증서를 확인하는 것과 같습니다.", workedExample: "L1 verifier가 이전 root·새 root·batch commitment를 public inputs로 둔 proof를 확인하고 invalid transition을 거부합니다.", boundary: "Validity proof는 zero knowledge·data availability·sequencer censorship resistance를 자동 제공하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "rollup-execution-da-settlement-separation",
+        "sectionId": "names",
+        "intuition": "계산, 입력 공개와 결과 채택은 서로 다른 일입니다.",
+        "workedExample": "T1과 T2를 실행한 A=95를 L1 데이터에서 재현하고 틀린 A=96 주장은 정산 규칙으로 거절합니다.",
+        "boundary": "빠른 L2 receipt를 L1 finality·withdrawal settlement나 data availability의 증거로 확대하지 않습니다."
+      },
+      {
+        "id": "rollup-deterministic-derivation-pipeline",
+        "sectionId": "derivation",
+        "intuition": "거래 조각을 복원하고 앞선 상태와 같은 규칙으로 실행 입력을 만드는 절차입니다.",
+        "workedExample": "마지막 조각 1만 있으면 실행하지 못하고 조각 0이 도착하면 번호순 연결해 T1,T2를 재현합니다.",
+        "boundary": "Batch 하나를 찾았다는 사실만으로 frame ordering·timeout·fork activation과 L2 block 전체가 자동 결정되지는 않습니다."
+      },
+      {
+        "id": "optimistic-fault-proof-boundary",
+        "sectionId": "optimistic",
+        "intuition": "긴 계산의 양 끝에서 의견이 다르면 절반씩 범위를 줄여 처음 틀린 한 줄만 심판하는 방식입니다.",
+        "workedExample": "1024개 후보 명령을 매번 절반으로 줄이면 10회 뒤 한 단계가 남지만 실제 분쟁의 시간과 메시지 수는 별도입니다.",
+        "boundary": "Challenge 참여자와 input availability가 없으면 fraud를 탐지할 수 없으며 모든 optimistic rollup이 같은 game을 쓰지 않습니다."
+      },
+      {
+        "id": "validity-proof-verification-boundary",
+        "sectionId": "validity",
+        "intuition": "계산표 전체 대신 고정된 계산 규칙과 입력에서 답이 나왔다는 짧은 검증서를 확인하는 것과 같습니다.",
+        "workedExample": "앞선 상태와 T1,T2의 입력에서 R95로 이어진다는 증명을 지정된 공개 입력과 프로그램에 맞춰 확인합니다.",
+        "boundary": "Validity proof는 zero knowledge·data availability·sequencer censorship resistance를 자동 제공하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 separate", relation: "실행·DA·정산 경계를 먼저 나눕니다.", concepts: ["rollup-execution-da-settlement-separation", "fork-choice-finality-separation"] },
-      { label: "02 derive", relation: "L1 input에서 L2를 결정적으로 재현합니다.", concepts: ["distributed-failure-model", "rollup-deterministic-derivation-pipeline"] },
-      { label: "03 challenge", relation: "Available trace로 optimistic claim을 검증합니다.", concepts: ["data-availability-sampling-boundary", "optimistic-fault-proof-boundary"] },
-      { label: "04 prove", relation: "Validity proof의 공개 검증 범위를 고정합니다.", concepts: ["validity-proof-verification-boundary"] },
+    "conceptStages": [
+      {
+        "label": "01 separate",
+        "relation": "실행·DA·정산 경계를 먼저 나눕니다.",
+        "concepts": [
+          "rollup-execution-da-settlement-separation",
+          "fork-choice-finality-separation"
+        ]
+      },
+      {
+        "label": "02 derive",
+        "relation": "L1 input에서 L2를 결정적으로 재현합니다.",
+        "concepts": [
+          "distributed-failure-model",
+          "rollup-deterministic-derivation-pipeline"
+        ]
+      },
+      {
+        "label": "03 challenge",
+        "relation": "Available trace로 optimistic claim을 검증합니다.",
+        "concepts": [
+          "data-availability-sampling-boundary",
+          "optimistic-fault-proof-boundary"
+        ]
+      },
+      {
+        "label": "04 prove",
+        "relation": "Validity proof의 공개 검증 범위를 고정합니다.",
+        "concepts": [
+          "validity-proof-verification-boundary"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Rollup 주문 예에서 L2 execution·L1 data availability·settlement owner와 산출물을 각각 구분하세요.", answerChecklist: ["sequencer/L2 node", "state root/receipt", "batcher/blob", "reconstruction input", "L1 contract", "claim/proof", "서로 다른 finality"], requiredConcepts: ["rollup-execution-da-settlement-separation"], sectionId: "overview" },
-      { level: "basic", question: "L1 block·deposit·batch frame·system config에서 L2 payload를 만드는 derivation 순서와 batch의 차이를 설명하세요.", answerChecklist: ["L1 origin", "deposit order", "frame/channel", "decompression", "batch validity", "payload attributes", "deterministic replay"], requiredConcepts: ["rollup-deterministic-derivation-pipeline"], sectionId: "derivation" },
-      { level: "basic", question: "Unsafe·safe·finalized L2 head와 output challenge가 끝난 withdrawal settlement를 구분하세요.", answerChecklist: ["sequencer response", "L1 data inclusion", "derivable safe", "L1 consensus finality", "claim challenge window", "finality name collision"], requiredConcepts: ["fork-choice-finality-separation", "rollup-execution-da-settlement-separation"], sectionId: "derivation" },
-      { level: "basic", question: "Optimistic output claim이 challenge·bisection·one-step verification을 거쳐 판정되는 흐름을 설명하세요.", answerChecklist: ["claim", "challenge window", "same available input", "trace disagreement", "bisection", "one-step verifier", "resolution"], requiredConcepts: ["optimistic-fault-proof-boundary"], sectionId: "optimistic" },
-      { level: "basic", question: "1,024-step 실행 trace를 한 step으로 좁히는 최대 bisection round를 계산하고 실제 지연과 구분하세요.", answerChecklist: ["ceil log2 N", "10 rounds", "half each round", "one-step remains", "L1 inclusion", "timeout", "not instant finality"], requiredConcepts: ["optimistic-fault-proof-boundary"], sectionId: "optimistic" },
-      { level: "basic", question: "Validity proof의 public input·witness·verifier 결과와 privacy·DA가 자동으로 따라오지 않는 이유를 설명하세요.", answerChecklist: ["previous root", "new root", "batch commitment", "private witness", "pinned program", "not automatic ZK", "not automatic DA"], requiredConcepts: ["validity-proof-verification-boundary"], sectionId: "validity" },
-      { level: "advanced", question: "Sequencer censorship·blob withholding·invalid state root·L1 reorg를 서로 다른 경계와 대응 runbook에 매핑하세요.", answerChecklist: ["liveness/censorship", "forced path", "DA", "provider/reconstruction", "execution validity", "fault/validity proof", "origin rewind", "deterministic replay"], requiredConcepts: ["rollup-execution-da-settlement-separation", "rollup-deterministic-derivation-pipeline"], sectionId: "comparison" },
-      { level: "advanced", question: "Optimistic와 validity rollup을 latency·L1 verification·prover/challenger·DA·failure mode의 같은 축으로 비교하세요.", answerChecklist: ["same offchain execution", "challenge delay", "proof generation", "L1 verifier cost", "challenger assumption", "prover assumption", "DA both", "privacy separate"], requiredConcepts: ["optimistic-fault-proof-boundary", "validity-proof-verification-boundary"], sectionId: "comparison" },
-      { level: "advanced", question: "Safe head의 L1 origin이 reorg될 때 channel purge·rewind·replay를 검증하는 deterministic fixture를 설계하세요.", answerChecklist: ["pinned fork/version", "old/new L1 branches", "origin identification", "unsafe/safe states", "channel purge", "rewind", "replay", "root/receipt parity"], requiredConcepts: ["rollup-deterministic-derivation-pipeline"], sectionId: "comparison" },
-      { level: "advanced", question: "정상·누락 frame·중복 batch·sequencer halt·invalid claim/proof·challenge timeout의 paired release gate를 설계하세요.", answerChecklist: ["same L1/L2 versions", "same fixtures", "all failure classes", "derived payload", "typed outcome", "root/receipt parity", "p95 after parity", "canary", "rollback"], requiredConcepts: ["rollup-deterministic-derivation-pipeline", "optimistic-fault-proof-boundary", "validity-proof-verification-boundary"], sectionId: "comparison" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "두 송금의 L2 실행·L1 입력 공개·결과 정산 담당자와 산출물을 구분하세요.",
+        "answerChecklist": [
+          "sequencer/L2 node",
+          "state root/receipt",
+          "batcher/blob",
+          "reconstruction input",
+          "L1 contract",
+          "claim/proof",
+          "서로 다른 finality"
+        ],
+        "requiredConcepts": [
+          "rollup-execution-da-settlement-separation"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "L1 block·deposit·batch frame·system config에서 L2 payload를 만드는 derivation 순서와 batch의 차이를 설명하세요.",
+        "answerChecklist": [
+          "L1 origin",
+          "deposit order",
+          "frame/channel",
+          "decompression",
+          "batch validity",
+          "payload attributes",
+          "deterministic replay"
+        ],
+        "requiredConcepts": [
+          "rollup-deterministic-derivation-pipeline"
+        ],
+        "sectionId": "derivation"
+      },
+      {
+        "level": "basic",
+        "question": "Unsafe·safe·finalized L2 head와 output challenge가 끝난 withdrawal settlement를 구분하세요.",
+        "answerChecklist": [
+          "sequencer response",
+          "L1 data inclusion",
+          "derivable safe",
+          "L1 consensus finality",
+          "claim challenge window",
+          "finality name collision"
+        ],
+        "requiredConcepts": [
+          "fork-choice-finality-separation",
+          "rollup-execution-da-settlement-separation"
+        ],
+        "sectionId": "derivation"
+      },
+      {
+        "level": "basic",
+        "question": "Optimistic output claim이 challenge·bisection·one-step verification을 거쳐 판정되는 흐름을 설명하세요.",
+        "answerChecklist": [
+          "claim",
+          "challenge window",
+          "same available input",
+          "trace disagreement",
+          "bisection",
+          "one-step verifier",
+          "resolution"
+        ],
+        "requiredConcepts": [
+          "optimistic-fault-proof-boundary"
+        ],
+        "sectionId": "optimistic"
+      },
+      {
+        "level": "basic",
+        "question": "1,024-step 실행 trace를 한 step으로 좁히는 최대 bisection round를 계산하고 실제 지연과 구분하세요.",
+        "answerChecklist": [
+          "ceil log2 N",
+          "10 rounds",
+          "half each round",
+          "one-step remains",
+          "L1 inclusion",
+          "timeout",
+          "not instant finality"
+        ],
+        "requiredConcepts": [
+          "optimistic-fault-proof-boundary"
+        ],
+        "sectionId": "optimistic"
+      },
+      {
+        "level": "basic",
+        "question": "Validity proof의 public input·witness·verifier 결과와 privacy·DA가 자동으로 따라오지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "previous root",
+          "new root",
+          "batch commitment",
+          "private witness",
+          "pinned program",
+          "not automatic ZK",
+          "not automatic DA"
+        ],
+        "requiredConcepts": [
+          "validity-proof-verification-boundary"
+        ],
+        "sectionId": "validity"
+      },
+      {
+        "level": "advanced",
+        "question": "Sequencer censorship·blob withholding·invalid state root·L1 reorg를 서로 다른 경계와 대응 runbook에 매핑하세요.",
+        "answerChecklist": [
+          "liveness/censorship",
+          "forced path",
+          "DA",
+          "provider/reconstruction",
+          "execution validity",
+          "fault/validity proof",
+          "origin rewind",
+          "deterministic replay"
+        ],
+        "requiredConcepts": [
+          "rollup-execution-da-settlement-separation",
+          "rollup-deterministic-derivation-pipeline"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "Optimistic와 validity rollup을 latency·L1 verification·prover/challenger·DA·failure mode의 같은 축으로 비교하세요.",
+        "answerChecklist": [
+          "same offchain execution",
+          "challenge delay",
+          "proof generation",
+          "L1 verifier cost",
+          "challenger assumption",
+          "prover assumption",
+          "DA both",
+          "privacy separate"
+        ],
+        "requiredConcepts": [
+          "optimistic-fault-proof-boundary",
+          "validity-proof-verification-boundary"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "Safe head의 L1 origin이 reorg될 때 channel purge·rewind·replay를 검증하는 deterministic fixture를 설계하세요.",
+        "answerChecklist": [
+          "pinned fork/version",
+          "old/new L1 branches",
+          "origin identification",
+          "unsafe/safe states",
+          "channel purge",
+          "rewind",
+          "replay",
+          "root/receipt parity"
+        ],
+        "requiredConcepts": [
+          "rollup-deterministic-derivation-pipeline"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "정상·누락 frame·중복 batch·sequencer halt·invalid claim/proof·challenge timeout의 paired release gate를 설계하세요.",
+        "answerChecklist": [
+          "same L1/L2 versions",
+          "same fixtures",
+          "all failure classes",
+          "derived payload",
+          "typed outcome",
+          "root/receipt parity",
+          "p95 after parity",
+          "canary",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "rollup-deterministic-derivation-pipeline",
+          "optimistic-fault-proof-boundary",
+          "validity-proof-verification-boundary"
+        ],
+        "sectionId": "comparison"
+      }
     ],
-    papers: [
-      { title: "OP Stack · L2 Chain Derivation", href: "https://specs.optimism.io/protocol/derivation.html", problem: "서로 다른 node가 L1 데이터에서 동일한 L2 chain과 safe head를 재현해야 합니다.", contribution: "Retrieval·frame·channel·batch·payload 단계와 reset 규칙을 공식 규격으로 연결합니다.", assumptions: "대상 OP Stack fork와 L1 canonical view·configuration version을 고정합니다.", evidenceScope: "OP Stack derivation pipeline과 unsafe·safe·finalized state 전이에 한정합니다.", notClaim: "모든 rollup이 같은 pipeline을 쓰거나 sequencer liveness가 보장된다는 뜻은 아닙니다.", sectionId: "paper-op-derivation" },
-      { title: "OP Stack · Fault Proof", href: "https://specs.optimism.io/fault-proof/index.html", problem: "L1이 L2 전체 실행 없이 잘못된 output claim을 판정해야 합니다.", contribution: "Agreed pre-state·L1 data·preimage oracle에서 fault-proof program을 재현하는 경계를 정의합니다.", assumptions: "지정된 VM·game·preimage와 contract version을 함께 고정합니다.", evidenceScope: "OP Stack fault proof program과 dispute 입력의 공식 의미에 한정합니다.", notClaim: "모든 optimistic rollup game·permissionless 참여·경제적 안전성을 보장하지 않습니다.", sectionId: "paper-op-fault-proof" },
-      { title: "Ethereum.org · Optimistic rollups", href: "https://ethereum.org/developers/docs/scaling/optimistic-rollups/", problem: "Off-chain execution을 Ethereum data와 challenge settlement에 연결해 설명해야 합니다.", contribution: "Batch·state commitment·challenge period·fault proof의 일반 흐름을 제공합니다.", assumptions: "일반 overview와 개별 rollup의 현재 protocol spec을 구분해 사용합니다.", evidenceScope: "Optimistic rollup의 공통 개념과 DA 의존성 설명에 사용합니다.", notClaim: "특정 rollup fee·withdrawal time·proof-game 안전성을 고정하지 않습니다.", sectionId: "paper-optimistic-rollup" },
-    ],
+    "papers": [
+      {
+        "title": "OP Stack · L2 Chain Derivation",
+        "href": "https://specs.optimism.io/protocol/derivation.html",
+        "problem": "서로 다른 node가 L1 데이터에서 동일한 L2 chain과 safe head를 재현해야 합니다.",
+        "contribution": "Retrieval·frame·channel·batch·payload 단계와 reset 규칙을 공식 규격으로 연결합니다.",
+        "assumptions": "대상 OP Stack fork와 L1 canonical view·configuration version을 고정합니다.",
+        "evidenceScope": "OP Stack derivation pipeline과 unsafe·safe·finalized state 전이에 한정합니다.",
+        "notClaim": "모든 rollup이 같은 pipeline을 쓰거나 sequencer liveness가 보장된다는 뜻은 아닙니다.",
+        "sectionId": "paper-op-derivation"
+      },
+      {
+        "title": "OP Stack · Fault Proof",
+        "href": "https://specs.optimism.io/fault-proof/index.html",
+        "problem": "L1이 L2 전체 실행 없이 잘못된 output claim을 판정해야 합니다.",
+        "contribution": "Agreed pre-state·L1 data·preimage oracle에서 fault-proof program을 재현하는 경계를 정의합니다.",
+        "assumptions": "지정된 VM·game·preimage와 contract version을 함께 고정합니다.",
+        "evidenceScope": "OP Stack fault proof program과 dispute 입력의 공식 의미에 한정합니다.",
+        "notClaim": "모든 optimistic rollup game·permissionless 참여·경제적 안전성을 보장하지 않습니다.",
+        "sectionId": "paper-op-fault-proof"
+      },
+      {
+        "title": "Ethereum.org · Optimistic rollups",
+        "href": "https://ethereum.org/developers/docs/scaling/optimistic-rollups/",
+        "problem": "Off-chain execution을 Ethereum data와 challenge settlement에 연결해 설명해야 합니다.",
+        "contribution": "Batch·state commitment·challenge period·fault proof의 일반 흐름을 제공합니다.",
+        "assumptions": "일반 overview와 개별 rollup의 현재 protocol spec을 구분해 사용합니다.",
+        "evidenceScope": "Optimistic rollup의 공통 개념과 DA 의존성 설명에 사용합니다.",
+        "notClaim": "특정 rollup fee·withdrawal time·proof-game 안전성을 고정하지 않습니다.",
+        "sectionId": "paper-optimistic-rollup"
+      }
+    ]
   },
   "blockchain/da-theory": {
     entryLevel: true,
@@ -63885,44 +65901,278 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "blockchain/stablecoin-overview": {
-    entryLevel: true,
-    entryNote: "1달러 표시 하나에서 시작해 target·상환 claim·backing·시장 가격·실패 책임을 처음부터 분리합니다.",
-    coreIdea: "Stablecoin은 reference target, issuance/redemption, reserve·collateral·incentive와 market liquidity를 연결한 arrangement이며 가격 이탈 하나로 solvency나 redemption을 추론하지 않습니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "stablecoin-arrangement-function-map", role: "Token 뒤의 발행·상환·안정화·이전 책임을 연결합니다." },
-      { id: "stablecoin-target-redemption-boundary", role: "목표 가격·시장 가격·상환 claim을 분리합니다." },
-      { id: "stablecoin-backing-mechanism-risk", role: "Fiat reserve·crypto collateral·algorithmic incentive의 failure owner를 구분합니다." },
-      { id: "stablecoin-release-gate", role: "Depeg·run·oracle·bridge 실패 뒤 채택·복구 증거를 검사합니다." },
+    "entryLevel": true,
+    "entryNote": "0.97달러에 토큰을 사고 1달러에 상환하는 사례로 목표 가격·시장 가격·실제 지급을 나눕니다.",
+    "coreIdea": "목표 가격을 유지하려면 토큰 발행과 실제 상환, 준비금과 시장 거래가 연결돼야 하며 그 조건은 보유자의 권리와 지급 가능성에 달려 있습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "stablecoin-arrangement-function-map",
+        "role": "Token 뒤의 발행·상환·안정화·이전 책임을 연결합니다."
+      },
+      {
+        "id": "stablecoin-target-redemption-boundary",
+        "role": "목표 가격·시장 가격·상환 claim을 분리합니다."
+      },
+      {
+        "id": "stablecoin-backing-mechanism-risk",
+        "role": "Fiat reserve·crypto collateral·algorithmic incentive의 failure owner를 구분합니다."
+      },
+      {
+        "id": "stablecoin-release-gate",
+        "role": "Depeg·run·oracle·bridge 실패 뒤 채택·복구 증거를 검사합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "stablecoin-arrangement-function-map", sectionId: "overview", intuition: "동전 하나보다 발행자·custodian·chain·market maker가 잇는 지급 시스템을 봅니다.", workedExample: "1달러 토큰의 mint·redeem·transfer·price observation owner를 네 칸에 적습니다.", boundary: "Token contract만으로 법적 claim·reserve·상환 시간을 알 수 없습니다." },
-      { id: "stablecoin-target-redemption-boundary", sectionId: "overview", intuition: "가격표의 목표와 실제 시장 체결가, 발행자에게 돌려줄 권리는 다른 숫자입니다.", workedExample: "Target 1달러, market 0.97달러이면 deviation은 3%지만 reserve 97%라는 결론은 아닙니다.", boundary: "Secondary-market holder가 issuer redemption 자격을 자동으로 갖는다고 가정하지 않습니다.", counterexample: "상환 rail이 닫힌 상태에서 market price가 잠시 1달러인 것은 claim 안전 증거가 아닙니다." },
-      { id: "stablecoin-backing-mechanism-risk", sectionId: "stabilization-mechanisms", intuition: "같은 페그라도 누가 어떤 자산과 절차로 손실을 흡수하는지 다릅니다.", workedExample: "Fiat reserve는 custodian·bank rail, crypto collateral은 oracle·liquidation, algorithmic 구조는 market incentive를 추적합니다.", boundary: "유형 이름은 exhaustive partition이나 위험 등급이 아닙니다." },
-      { id: "stablecoin-release-gate", sectionId: "stablecoin-release", intuition: "정상 가격 한 번보다 실패·복구 때 claim과 queue가 닫히는지 시험합니다.", workedExample: "3% depeg, stale oracle, bridge pause와 redemption delay를 같은 incident ledger로 재생합니다.", boundary: "가격 회복만으로 손실 귀속·상환 완료·future safety를 선언하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "stablecoin-arrangement-function-map",
+        "sectionId": "parts",
+        "intuition": "발행자·보관 기관·지급 은행·거래소가 서로 다른 일을 맡습니다.",
+        "workedExample": "10000 S를 반환하는 기록과 10000달러를 실제로 지급하는 기록을 맞춥니다.",
+        "boundary": "Token contract만으로 법적 claim·reserve·상환 시간을 알 수 없습니다."
+      },
+      {
+        "id": "stablecoin-target-redemption-boundary",
+        "sectionId": "names",
+        "intuition": "가격표의 목표와 실제 시장 체결가, 발행자에게 돌려줄 권리는 다른 숫자입니다.",
+        "workedExample": "목표1달러와 시장0.97달러, 조건을 충족한 사람의 1달러 상환 경로는 서로 다릅니다.",
+        "boundary": "Secondary-market holder가 issuer redemption 자격을 자동으로 갖는다고 가정하지 않습니다.",
+        "counterexample": "상환 rail이 닫힌 상태에서 market price가 잠시 1달러인 것은 claim 안전 증거가 아닙니다."
+      },
+      {
+        "id": "stablecoin-backing-mechanism-risk",
+        "sectionId": "stabilization-mechanisms",
+        "intuition": "같은 페그라도 누가 어떤 자산과 절차로 손실을 흡수하는지 다릅니다.",
+        "workedExample": "현금2000과 급매대금3800은 상환요청6000보다200 부족합니다. 담보150/부채100은 담보120으로 하락하면 가정한130% 조건을 어깁니다.",
+        "boundary": "유형 이름은 exhaustive partition이나 위험 등급이 아닙니다."
+      },
+      {
+        "id": "stablecoin-release-gate",
+        "sectionId": "stablecoin-release",
+        "intuition": "정상 가격 한 번보다 실패·복구 때 claim과 queue가 닫히는지 시험합니다.",
+        "workedExample": "3% depeg, stale oracle, bridge pause와 redemption delay를 같은 incident ledger로 재생합니다.",
+        "boundary": "가격 회복만으로 손실 귀속·상환 완료·future safety를 선언하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 arrangement", relation: "Token 뒤 기능과 책임을 그립니다.", concepts: ["stablecoin-arrangement-function-map"] },
-      { label: "01 target", relation: "Target·market·redemption을 분리합니다.", concepts: ["stablecoin-target-redemption-boundary"] },
-      { label: "02 backing", relation: "Mechanism별 risk owner를 찾습니다.", concepts: ["stablecoin-backing-mechanism-risk"] },
-      { label: "03 release", relation: "Stress·복구·rollback evidence를 검사합니다.", concepts: ["stablecoin-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "00 arrangement",
+        "relation": "Token 뒤 기능과 책임을 그립니다.",
+        "concepts": [
+          "stablecoin-arrangement-function-map"
+        ]
+      },
+      {
+        "label": "01 target",
+        "relation": "Target·market·redemption을 분리합니다.",
+        "concepts": [
+          "stablecoin-target-redemption-boundary"
+        ]
+      },
+      {
+        "label": "02 backing",
+        "relation": "Mechanism별 risk owner를 찾습니다.",
+        "concepts": [
+          "stablecoin-backing-mechanism-risk"
+        ]
+      },
+      {
+        "label": "03 release",
+        "relation": "Stress·복구·rollback evidence를 검사합니다.",
+        "concepts": [
+          "stablecoin-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Stablecoin arrangement의 네 기능과 각 owner를 적으세요.", answerChecklist: ["issuance", "redemption", "stabilization", "transfer/user interface", "owner per function"], requiredConcepts: ["stablecoin-arrangement-function-map"], sectionId: "overview" },
-      { level: "basic", question: "Target 1달러·market 0.97달러의 deviation을 계산하고 무엇을 말하지 않는지 쓰세요.", answerChecklist: ["3%", "same source/time", "not reserve ratio", "not redemption guarantee"], requiredConcepts: ["stablecoin-target-redemption-boundary"], sectionId: "stabilization-mechanisms" },
-      { level: "basic", question: "Target·market price·redemption claim을 한 문장씩 구분하세요.", answerChecklist: ["reference", "venue observation", "issuer/protocol claim", "different evidence"], requiredConcepts: ["stablecoin-target-redemption-boundary"], sectionId: "overview" },
-      { level: "basic", question: "Fiat-backed 구조의 reserve·custodian·redemption risk를 연결하세요.", answerChecklist: ["reserve asset", "custodian", "bank rail", "eligible holder", "liquidity"], requiredConcepts: ["stablecoin-backing-mechanism-risk"], sectionId: "stabilization-mechanisms" },
-      { level: "basic", question: "Crypto-backed 구조에서 oracle과 liquidation의 역할을 설명하세요.", answerChecklist: ["collateral", "oracle value", "threshold", "liquidation", "congestion"], requiredConcepts: ["stablecoin-backing-mechanism-risk"], sectionId: "stabilization-mechanisms" },
-      { level: "basic", question: "Algorithmic·hybrid를 무담보 안전 분류로 보면 안 되는 이유를 쓰세요.", answerChecklist: ["incentive", "reflexive asset", "liquidity", "run", "actual claim map"], requiredConcepts: ["stablecoin-backing-mechanism-risk"], sectionId: "stabilization-mechanisms" },
-      { level: "advanced", question: "0.97달러 depeg의 bank delay·reserve loss·bridge pause를 구분하는 incident ledger를 설계하세요.", answerChecklist: ["price source/time", "supply", "redeemable population", "reserve/collateral", "queue", "bridge", "owner"], requiredConcepts: ["stablecoin-arrangement-function-map", "stablecoin-release-gate"], sectionId: "failure-boundaries" },
-      { level: "advanced", question: "Oracle stale와 liquidation congestion이 동시에 일어나는 crypto-backed 반례를 분석하세요.", answerChecklist: ["stale timestamp", "wrong valuation", "unsafe debt", "keeper/auction", "no price-only verdict"], requiredConcepts: ["stablecoin-backing-mechanism-risk", "stablecoin-release-gate"], sectionId: "failure-boundaries" },
-      { level: "advanced", question: "Canonical token과 bridge-wrapped token의 claim·custody failure를 분리하세요.", answerChecklist: ["issuer contract", "bridge custody", "message/finality", "redemption path", "separate supply"], requiredConcepts: ["stablecoin-arrangement-function-map", "stablecoin-release-gate"], sectionId: "failure-boundaries" },
-      { level: "advanced", question: "발행·상환·depeg·복구를 포함한 stablecoin release matrix를 작성하세요.", answerChecklist: ["version", "mint/redeem", "stress", "oracle/bridge", "queue", "loss owner", "rollback/exit"], requiredConcepts: ["stablecoin-release-gate"], sectionId: "stablecoin-release" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "발행·상환·가격 조정·이전과 사용자 접근을 누가 맡는지 설명하세요.",
+        "answerChecklist": [
+          "issuance",
+          "redemption",
+          "stabilization",
+          "transfer/user interface",
+          "owner per function"
+        ],
+        "requiredConcepts": [
+          "stablecoin-arrangement-function-map"
+        ],
+        "sectionId": "parts"
+      },
+      {
+        "level": "basic",
+        "question": "Target 1달러·market 0.97달러의 deviation을 계산하고 무엇을 말하지 않는지 쓰세요.",
+        "answerChecklist": [
+          "3%",
+          "same source/time",
+          "not reserve ratio",
+          "not redemption guarantee"
+        ],
+        "requiredConcepts": [
+          "stablecoin-target-redemption-boundary"
+        ],
+        "sectionId": "stabilization-mechanisms"
+      },
+      {
+        "level": "basic",
+        "question": "목표 가격·시장 가격·상환 청구권을 구분하세요.",
+        "answerChecklist": [
+          "reference",
+          "venue observation",
+          "issuer/protocol claim",
+          "different evidence"
+        ],
+        "requiredConcepts": [
+          "stablecoin-target-redemption-boundary"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Fiat-backed 구조의 reserve·custodian·redemption risk를 연결하세요.",
+        "answerChecklist": [
+          "reserve asset",
+          "custodian",
+          "bank rail",
+          "eligible holder",
+          "liquidity"
+        ],
+        "requiredConcepts": [
+          "stablecoin-backing-mechanism-risk"
+        ],
+        "sectionId": "stabilization-mechanisms"
+      },
+      {
+        "level": "basic",
+        "question": "Crypto-backed 구조에서 oracle과 liquidation의 역할을 설명하세요.",
+        "answerChecklist": [
+          "collateral",
+          "oracle value",
+          "threshold",
+          "liquidation",
+          "congestion"
+        ],
+        "requiredConcepts": [
+          "stablecoin-backing-mechanism-risk"
+        ],
+        "sectionId": "stabilization-mechanisms"
+      },
+      {
+        "level": "basic",
+        "question": "Algorithmic·hybrid를 무담보 안전 분류로 보면 안 되는 이유를 쓰세요.",
+        "answerChecklist": [
+          "incentive",
+          "reflexive asset",
+          "liquidity",
+          "run",
+          "actual claim map"
+        ],
+        "requiredConcepts": [
+          "stablecoin-backing-mechanism-risk"
+        ],
+        "sectionId": "stabilization-mechanisms"
+      },
+      {
+        "level": "advanced",
+        "question": "0.97달러 depeg의 bank delay·reserve loss·bridge pause를 구분하는 incident ledger를 설계하세요.",
+        "answerChecklist": [
+          "price source/time",
+          "supply",
+          "redeemable population",
+          "reserve/collateral",
+          "queue",
+          "bridge",
+          "owner"
+        ],
+        "requiredConcepts": [
+          "stablecoin-arrangement-function-map",
+          "stablecoin-release-gate"
+        ],
+        "sectionId": "failure-boundaries"
+      },
+      {
+        "level": "advanced",
+        "question": "Oracle stale와 liquidation congestion이 동시에 일어나는 crypto-backed 반례를 분석하세요.",
+        "answerChecklist": [
+          "stale timestamp",
+          "wrong valuation",
+          "unsafe debt",
+          "keeper/auction",
+          "no price-only verdict"
+        ],
+        "requiredConcepts": [
+          "stablecoin-backing-mechanism-risk",
+          "stablecoin-release-gate"
+        ],
+        "sectionId": "failure-boundaries"
+      },
+      {
+        "level": "advanced",
+        "question": "Canonical token과 bridge-wrapped token의 claim·custody failure를 분리하세요.",
+        "answerChecklist": [
+          "issuer contract",
+          "bridge custody",
+          "message/finality",
+          "redemption path",
+          "separate supply"
+        ],
+        "requiredConcepts": [
+          "stablecoin-arrangement-function-map",
+          "stablecoin-release-gate"
+        ],
+        "sectionId": "failure-boundaries"
+      },
+      {
+        "level": "advanced",
+        "question": "발행·상환·depeg·복구를 포함한 stablecoin release matrix를 작성하세요.",
+        "answerChecklist": [
+          "version",
+          "mint/redeem",
+          "stress",
+          "oracle/bridge",
+          "queue",
+          "loss owner",
+          "rollback/exit"
+        ],
+        "requiredConcepts": [
+          "stablecoin-release-gate"
+        ],
+        "sectionId": "stablecoin-release"
+      }
     ],
-    papers: [
-      { title: "FSB · Global Stablecoin Recommendations", href: "https://www.fsb.org/2023/07/high-level-recommendations-for-the-regulation-supervision-and-oversight-of-global-stablecoin-arrangements-final-report/", problem: "여러 주체가 나눈 stablecoin 기능·risk를 일관되게 감독해야 합니다.", contribution: "Governance·risk·recovery·disclosure·redemption·stabilization 권고를 제공합니다.", assumptions: "2023 high-level global regulatory scope를 사용합니다.", evidenceScope: "Arrangement 기능과 책임 분류입니다.", notClaim: "특정 token의 reserve·상환·법적 안전을 보장하지 않습니다.", sectionId: "paper-fsb-stablecoin" },
-      { title: "BIS Working Paper 905 · Stablecoins", href: "https://www.bis.org/publ/work905.htm", problem: "Stablecoin 설계의 지급 효용과 risk를 함께 비교해야 합니다.", contribution: "Backing·governance·settlement·liquidity 위험 축을 분석합니다.", assumptions: "2020 공개 설계와 당시 시장에 대한 정책 연구입니다.", evidenceScope: "유형별 conceptual risk comparison입니다.", notClaim: "현재 개별 issuer의 solvency·규제 상태를 판정하지 않습니다.", sectionId: "paper-bis-stablecoin" },
-    ],
+    "papers": [
+      {
+        "title": "FSB · Global Stablecoin Recommendations",
+        "href": "https://www.fsb.org/2023/07/high-level-recommendations-for-the-regulation-supervision-and-oversight-of-global-stablecoin-arrangements-final-report/",
+        "problem": "여러 주체가 나눈 stablecoin 기능·risk를 일관되게 감독해야 합니다.",
+        "contribution": "Governance·risk·recovery·disclosure·redemption·stabilization 권고를 제공합니다.",
+        "assumptions": "2023 high-level global regulatory scope를 사용합니다.",
+        "evidenceScope": "Arrangement 기능과 책임 분류입니다.",
+        "notClaim": "특정 token의 reserve·상환·법적 안전을 보장하지 않습니다.",
+        "sectionId": "paper-fsb-stablecoin"
+      },
+      {
+        "title": "BIS Working Paper 905 · Stablecoins",
+        "href": "https://www.bis.org/publ/work905.htm",
+        "problem": "Stablecoin 설계의 지급 효용과 risk를 함께 비교해야 합니다.",
+        "contribution": "Backing·governance·settlement·liquidity 위험 축을 분석합니다.",
+        "assumptions": "2020 공개 설계와 당시 시장에 대한 정책 연구입니다.",
+        "evidenceScope": "유형별 conceptual risk comparison입니다.",
+        "notClaim": "현재 개별 issuer의 solvency·규제 상태를 판정하지 않습니다.",
+        "sectionId": "paper-bis-stablecoin"
+      },
+      {
+        "title": "Circle USDC Terms · 2025-12-12 개정",
+        "href": "https://www.circle.com/legal/usdc-terms",
+        "problem": "토큰 보유와 직접 상환 자격이 같은 조건인지 구분해야 합니다.",
+        "contribution": "Type A/B 계정 구분과 상환 조건, EEA 밖 약관의 적용 범위를 제시합니다.",
+        "assumptions": "2026-10-04 조회한 문서이며 EEA는 별도 문서를 사용합니다.",
+        "evidenceScope": "§2·§14의 직접 상환 자격과 제3자 시장 가격의 구분에 한정합니다.",
+        "notClaim": "특정 보유자의 자격, 현재 준비금 건전성이나 상환 성공을 판정하지 않습니다.",
+        "sectionId": "paper-circle-redemption"
+      }
+    ]
   },
   "blockchain/usdc-circle": {
     entryLevel: true,
@@ -65155,44 +67405,260 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "blockchain/node-architecture": {
-    entryLevel: true,
-    entryNote: "EL·CL·Engine API를 안다고 가정하지 않고 Alice transaction 하나가 두 client의 서로 다른 권한을 통과하는 경로부터 시작합니다.",
-    coreIdea: "Ethereum node는 execution client가 payload validity와 state transition을, consensus client가 PoS fork choice와 finality를 소유하며 versioned Engine API로 typed status를 교환하는 결합입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "ethereum-el-cl-engine-authority-boundary", role: "EL execution validity와 CL ordering/finality 권한을 분리합니다." },
-      { id: "ethereum-engine-payload-status-lifecycle", role: "newPayload·forkchoiceUpdated·getPayload와 VALID/INVALID/SYNCING/ACCEPTED 상태를 연결합니다." },
-      { id: "ethereum-execution-node-canonical-state-boundary", role: "Validated payload, head·safe·finalized와 durable execution state cursor를 구분합니다." },
-      { id: "ethereum-node-engine-reorg-release-gate", role: "Version·fork·JWT·crash·reorg trace parity로 compatible node bundle을 채택합니다." },
+    "entryLevel": true,
+    "entryNote": "100 ETH에서 송금 10 ETH와 처리 비용을 뺀 후보를 두 담당자가 검증하고 선택하는 과정부터 시작합니다.",
+    "coreIdea": "잔액 계산이 맞는지 확인하는 실행 클라이언트와 네트워크가 따를 기록을 선택하는 합의 클라이언트가 Engine API로 서로 다른 판단을 교환합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "ethereum-el-cl-engine-authority-boundary",
+        "role": "계산 유효성과 가지 선택의 책임을 구분합니다."
+      },
+      {
+        "id": "ethereum-engine-payload-status-lifecycle",
+        "role": "후보 검증·가지 선택·후보 제작 요청과 응답 상태를 연결합니다."
+      },
+      {
+        "id": "ethereum-execution-node-canonical-state-boundary",
+        "role": "유효한 후보와 현재·안전·확정 지점, 저장 상태를 구분합니다."
+      },
+      {
+        "id": "ethereum-node-engine-reorg-release-gate",
+        "role": "버전 불일치와 재시작·가지 교체 뒤 상태를 검수합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "ethereum-el-cl-engine-authority-boundary", sectionId: "el-cl-boundary", intuition: "계산을 검산하는 EL과 어느 답안 묶음을 채택할지 정하는 CL이 서로 다른 도장을 찍습니다.", workedExample: "EL은 Alice transfer payload를 VALID라 하고 CL은 경쟁 payload 중 다른 valid branch를 head로 고를 수 있습니다.", boundary: "EL VALID는 PoS finality가 아니며 CL 선택은 execution validity를 대신하지 않습니다." },
-      { id: "ethereum-engine-payload-status-lifecycle", sectionId: "payload-state", intuition: "Payload 요청과 판정이 끝났는지, 자료가 부족한지, 틀렸는지를 typed 상태로 돌려주는 대화입니다.", workedExample: "Unknown ancestor면 SYNCING으로 재시도하고 wrong state root면 INVALID와 latest-valid context를 사용합니다.", boundary: "ACCEPTED나 SYNCING을 VALID로 cache하지 않으며 JWT 성공도 correctness 증명이 아닙니다." },
-      { id: "ethereum-execution-node-canonical-state-boundary", sectionId: "payload-state", intuition: "검산된 후보와 현재 선택·안전 checkpoint·최종 checkpoint·disk state를 서로 다른 책갈피로 둡니다.", workedExample: "VALID payload B가 있어도 head가 A이면 B state는 canonical client answer로 내보내지 않습니다.", boundary: "Head·safe·finalized의 정확한 consensus rule은 consensus spec 정본이 소유합니다." },
-      { id: "ethereum-node-engine-reorg-release-gate", sectionId: "release", intuition: "두 client를 같은 chain/version으로 묶고 crash와 branch 교체 뒤 state·receipt가 복구되는지 보는 배포 문입니다.", workedExample: "VALID 직후 crash와 forkchoice 직후 crash를 재생해 restart 후 같은 head·root와 single client effect를 확인합니다.", boundary: "Reth의 crate/storage 내부 구조나 특정 client 성능을 generic Ethereum architecture로 일반화하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "ethereum-el-cl-engine-authority-boundary",
+        "sectionId": "el-cl-boundary",
+        "intuition": "계산을 확인하는 담당자와 어느 기록을 따를지 정하는 담당자의 판단을 나눕니다.",
+        "workedExample": "H101에서 A=89.999958을 재현해도 CL이 다른 유효한 H101b를 현재 기록으로 선택할 수 있습니다.",
+        "boundary": "VALID는 최종 확정이 아니며 CL의 선택도 틀린 계산을 유효하게 만들지 못합니다."
+      },
+      {
+        "id": "ethereum-engine-payload-status-lifecycle",
+        "sectionId": "payload-state",
+        "intuition": "자료 부족, 계산 성공과 계산 실패를 서로 다른 응답으로 돌려줍니다.",
+        "workedExample": "H100이 없으면 SYNCING, H100에서 H101을 검증하면 VALID와 latestValidHash=H101입니다.",
+        "boundary": "허용 상태는 메서드와 버전별로 다르며 인증 성공은 계산의 정확성을 증명하지 않습니다."
+      },
+      {
+        "id": "ethereum-execution-node-canonical-state-boundary",
+        "sectionId": "payload-state",
+        "intuition": "유효성 확인, 현재 선택, 최종 확정과 저장 완료를 나눠 기록합니다.",
+        "workedExample": "H101이 VALID여도 head=H101, safe=H99, finalized=H96은 별도의 선택 상태입니다.",
+        "boundary": "성공 응답과 모든 데이터의 영구 저장이 같은 시점인지는 실제 저장 계약에서 확인합니다."
+      },
+      {
+        "id": "ethereum-node-engine-reorg-release-gate",
+        "sectionId": "release",
+        "intuition": "같은 입력과 버전을 기록하고 중단·재시작 뒤 결과가 유지되는지 확인합니다.",
+        "workedExample": "검증 직후와 가지 선택 전후, 저장 전후에 중단해 같은 H101의 송금을 두 번 적용하지 않는지 검사합니다.",
+        "boundary": "본문은 고정된 Reth 분기를 읽은 결과이며 실제 노드 장애 시험을 실행한 기록은 아닙니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 transaction", relation: "EL이 transaction과 payload execution을 소유합니다.", concepts: ["ethereum-el-cl-engine-authority-boundary"] },
-      { label: "01 engine", relation: "Versioned Engine calls가 payload verdict와 forkchoice를 교환합니다.", concepts: ["ethereum-engine-payload-status-lifecycle"] },
-      { label: "02 canonical", relation: "Validated payload와 head·safe·finalized state를 분리합니다.", concepts: ["ethereum-execution-node-canonical-state-boundary"] },
-      { label: "03 release", relation: "Crash·reorg·version mismatch 뒤 node bundle을 채택합니다.", concepts: ["ethereum-node-engine-reorg-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "00 transaction",
+        "relation": "EL이 transaction과 payload execution을 소유합니다.",
+        "concepts": [
+          "ethereum-el-cl-engine-authority-boundary"
+        ]
+      },
+      {
+        "label": "01 engine",
+        "relation": "Versioned Engine calls가 payload verdict와 forkchoice를 교환합니다.",
+        "concepts": [
+          "ethereum-engine-payload-status-lifecycle"
+        ]
+      },
+      {
+        "label": "02 canonical",
+        "relation": "Validated payload와 head·safe·finalized state를 분리합니다.",
+        "concepts": [
+          "ethereum-execution-node-canonical-state-boundary"
+        ]
+      },
+      {
+        "label": "03 release",
+        "relation": "Crash·reorg·version mismatch 뒤 node bundle을 채택합니다.",
+        "concepts": [
+          "ethereum-node-engine-reorg-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "EL과 CL의 책임을 transaction execution과 fork choice로 구분하세요.", answerChecklist: ["EL EVM/state", "CL PoS", "Engine API", "separate authority"], requiredConcepts: ["ethereum-el-cl-engine-authority-boundary"], sectionId: "overview" },
-      { level: "basic", question: "newPayload·forkchoiceUpdated·getPayload의 방향과 목적을 설명하세요.", answerChecklist: ["validate", "head/safe/finalized", "build attributes", "retrieve candidate"], requiredConcepts: ["ethereum-engine-payload-status-lifecycle"], sectionId: "el-cl-boundary" },
-      { level: "basic", question: "JWT 인증이 보장하지 않는 것을 설명하세요.", answerChecklist: ["endpoint access", "not payload validity", "not peer honesty", "not finality"], requiredConcepts: ["ethereum-el-cl-engine-authority-boundary"], sectionId: "el-cl-boundary" },
-      { level: "basic", question: "VALID·INVALID·SYNCING·ACCEPTED를 비교하세요.", answerChecklist: ["validated", "invalid transition", "missing data", "not fully validated", "typed retry"], requiredConcepts: ["ethereum-engine-payload-status-lifecycle"], sectionId: "payload-state" },
-      { level: "basic", question: "Validated payload와 head·safe·finalized를 구분하세요.", answerChecklist: ["candidate valid", "current choice", "safer checkpoint", "final checkpoint"], requiredConcepts: ["ethereum-execution-node-canonical-state-boundary"], sectionId: "payload-state" },
-      { level: "basic", question: "EL/CL release context C=(genesis,forks,Engine version)의 의미를 설명하세요.", answerChecklist: ["same genesis", "fork schedule", "method/schema version", "trace validity"], requiredConcepts: ["ethereum-node-engine-reorg-release-gate"], sectionId: "el-cl-boundary" },
-      { level: "advanced", question: "Unknown parent SYNCING의 bounded retry와 state acquisition을 설계하세요.", answerChecklist: ["do not mark invalid", "fetch ancestor/state", "retry key", "timeout/resource bound", "eventual verdict"], requiredConcepts: ["ethereum-engine-payload-status-lifecycle"], sectionId: "release" },
-      { level: "advanced", question: "Competing VALID payloads에서 EL과 CL 권한을 보존하는 fixture를 설계하세요.", answerChecklist: ["both executable", "CL fork choice", "one canonical head", "noncanonical state", "no EL preference"], requiredConcepts: ["ethereum-el-cl-engine-authority-boundary", "ethereum-execution-node-canonical-state-boundary"], sectionId: "payload-state" },
-      { level: "advanced", question: "Payload VALID·forkchoice·disk commit 사이 crash/replay matrix를 작성하세요.", answerChecklist: ["three crash windows", "durable cursor", "restart replay", "same root", "single effect"], requiredConcepts: ["ethereum-node-engine-reorg-release-gate", "ethereum-execution-node-canonical-state-boundary"], sectionId: "release" },
-      { level: "advanced", question: "EL/CL version bundle canary와 rollback receipt를 설계하세요.", answerChecklist: ["exact versions", "genesis/forks", "JWT/schema", "Engine trace", "reorg parity", "previous bundle"], requiredConcepts: ["ethereum-node-engine-reorg-release-gate"], sectionId: "release" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "EL과 CL의 책임을 H101의 잔액 계산과 가지 선택으로 구분하세요.",
+        "answerChecklist": [
+          "EL EVM/state",
+          "CL PoS",
+          "Engine API",
+          "separate authority"
+        ],
+        "requiredConcepts": [
+          "ethereum-el-cl-engine-authority-boundary"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "후보 검증·가지 선택·후보 가져오기 요청의 방향과 목적을 설명하세요.",
+        "answerChecklist": [
+          "validate",
+          "head/safe/finalized",
+          "build attributes",
+          "retrieve candidate"
+        ],
+        "requiredConcepts": [
+          "ethereum-engine-payload-status-lifecycle"
+        ],
+        "sectionId": "el-cl-boundary"
+      },
+      {
+        "level": "basic",
+        "question": "JWT 인증이 보장하는 것과 계산 유효성의 차이를 설명하세요.",
+        "answerChecklist": [
+          "endpoint access",
+          "not payload validity",
+          "not peer honesty",
+          "not finality"
+        ],
+        "requiredConcepts": [
+          "ethereum-el-cl-engine-authority-boundary"
+        ],
+        "sectionId": "wire-source"
+      },
+      {
+        "level": "basic",
+        "question": "VALID·INVALID·SYNCING·ACCEPTED를 비교하세요.",
+        "answerChecklist": [
+          "validated",
+          "invalid transition",
+          "missing data",
+          "not fully validated",
+          "typed retry"
+        ],
+        "requiredConcepts": [
+          "ethereum-engine-payload-status-lifecycle"
+        ],
+        "sectionId": "payload-state"
+      },
+      {
+        "level": "basic",
+        "question": "유효한 H101과 head·safe·finalized의 차이를 설명하세요.",
+        "answerChecklist": [
+          "candidate valid",
+          "current choice",
+          "safer checkpoint",
+          "final checkpoint"
+        ],
+        "requiredConcepts": [
+          "ethereum-execution-node-canonical-state-boundary"
+        ],
+        "sectionId": "el-cl-boundary"
+      },
+      {
+        "level": "basic",
+        "question": "시작 블록·fork 일정·Engine 메서드 버전을 맞춰야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "same genesis",
+          "fork schedule",
+          "method/schema version",
+          "trace validity"
+        ],
+        "requiredConcepts": [
+          "ethereum-node-engine-reorg-release-gate"
+        ],
+        "sectionId": "wire-source"
+      },
+      {
+        "level": "advanced",
+        "question": "H100이 없는 H101을 보관하고 재시도하는 절차와 자원 한도를 설계하세요.",
+        "answerChecklist": [
+          "do not mark invalid",
+          "fetch ancestor/state",
+          "retry key",
+          "timeout/resource bound",
+          "eventual verdict"
+        ],
+        "requiredConcepts": [
+          "ethereum-engine-payload-status-lifecycle"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "advanced",
+        "question": "H101과 H101b가 둘 다 VALID일 때 EL·CL의 판단을 구분하는 검수 사례를 설계하세요.",
+        "answerChecklist": [
+          "both executable",
+          "CL fork choice",
+          "one canonical head",
+          "noncanonical state",
+          "no EL preference"
+        ],
+        "requiredConcepts": [
+          "ethereum-el-cl-engine-authority-boundary",
+          "ethereum-execution-node-canonical-state-boundary"
+        ],
+        "sectionId": "payload-state"
+      },
+      {
+        "level": "advanced",
+        "question": "검증 응답·가지 선택·영구 저장 전후에 중단했을 때의 복구 검사를 설계하세요.",
+        "answerChecklist": [
+          "three crash windows",
+          "durable cursor",
+          "restart replay",
+          "same root",
+          "single effect"
+        ],
+        "requiredConcepts": [
+          "ethereum-node-engine-reorg-release-gate",
+          "ethereum-execution-node-canonical-state-boundary"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "advanced",
+        "question": "두 클라이언트의 새 버전을 일부 노드에 적용한 뒤 채택하거나 이전 조합으로 되돌리는 기준을 정하세요.",
+        "answerChecklist": [
+          "exact versions",
+          "genesis/forks",
+          "JWT/schema",
+          "Engine trace",
+          "reorg parity",
+          "previous bundle"
+        ],
+        "requiredConcepts": [
+          "ethereum-node-engine-reorg-release-gate"
+        ],
+        "sectionId": "release"
+      }
     ],
-    papers: [
-      { title: "Ethereum execution-apis · v1.0.0-beta.7", href: "https://github.com/ethereum/execution-apis/tree/5aebdfdd45cadeb723be4bd45b4611b71c8b1c85", problem: "PoS consensus client와 execution client가 payload와 fork-choice state를 호환되게 교환해야 합니다.", contribution: "Engine methods, versioned schemas, payload statuses와 error contract를 정의합니다.", assumptions: "Commit 5aebdfd와 exact fork method version·JWT transport를 고정합니다.", evidenceScope: "해당 snapshot의 Engine API wire contract에 한정합니다.", notClaim: "특정 client 내부 구조, consensus finality나 endpoint 운영 보안을 자동 보장하지 않습니다.", sectionId: "paper-engine-api" },
-      { title: "Reth v2.2.0 · execution-client source", href: "https://github.com/paradigmxyz/reth/tree/88505c7fcbfdebfd3b56d88c86b62e950043c6c4", problem: "Execution node의 network·pool·EVM·canonical state·storage·Engine API를 runtime으로 조립해야 합니다.", contribution: "Rust execution client의 concrete crates, builder와 Engine integration을 제공합니다.", assumptions: "Reth v2.2.0 commit 88505c7, features·chain spec·schema를 고정합니다.", evidenceScope: "Pinned source의 implementation boundary 확인에 한정합니다.", notClaim: "Reth module layout이 Ethereum protocol 자체이거나 모든 client가 같은 구조라는 뜻은 아닙니다.", sectionId: "paper-reth-node" },
-    ],
+    "papers": [
+      {
+        "title": "Ethereum execution-apis · v1.0.0-beta.7",
+        "href": "https://github.com/ethereum/execution-apis/tree/5aebdfdd45cadeb723be4bd45b4611b71c8b1c85",
+        "problem": "PoS consensus client와 execution client가 payload와 fork-choice state를 호환되게 교환해야 합니다.",
+        "contribution": "Engine methods, versioned schemas, payload statuses와 error contract를 정의합니다.",
+        "assumptions": "Commit 5aebdfd와 exact fork method version·JWT transport를 고정합니다.",
+        "evidenceScope": "해당 snapshot의 Engine API wire contract에 한정합니다.",
+        "notClaim": "특정 client 내부 구조, consensus finality나 endpoint 운영 보안을 자동 보장하지 않습니다.",
+        "sectionId": "paper-engine-api"
+      },
+      {
+        "title": "Reth v2.2.0 · execution-client source",
+        "href": "https://github.com/paradigmxyz/reth/tree/88505c7fcbfdebfd3b56d88c86b62e950043c6c4",
+        "problem": "Execution node의 network·pool·EVM·canonical state·storage·Engine API를 runtime으로 조립해야 합니다.",
+        "contribution": "Rust execution client의 concrete crates, builder와 Engine integration을 제공합니다.",
+        "assumptions": "Reth v2.2.0 commit 88505c7, features·chain spec·schema를 고정합니다.",
+        "evidenceScope": "Pinned source의 implementation boundary 확인에 한정합니다.",
+        "notClaim": "Reth module layout이 Ethereum protocol 자체이거나 모든 client가 같은 구조라는 뜻은 아닙니다.",
+        "sectionId": "paper-reth-node"
+      }
+    ]
   },
   "blockchain/curve-stable": {
     entryLevel: true, entryNote: "AMM 수식을 모른다고 가정하고 100/100 pool에서 constant-sum·constant-product 출력부터 비교합니다.", coreIdea: "StableSwap은 정규화 balances와 A로 pegged assets의 균형 부근 slippage를 줄이되 depeg·parameter·token risk를 제거하지 않는 invariant입니다.", assumedKnowledge: [],
@@ -73669,103 +76135,336 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/tool-calling-lifecycle-and-costs": {
-    entryNote: "Agent loop의 observation-action 최소 단위를 안다고 가정하고, 그 proposal이 구체적으로 어떤 tool·인자·재시도로 채워지는지부터 하나씩 정의합니다.",
-    coreIdea: "Tool calling은 tool selection·routing으로 후보를 고르고 실제 handler로 연결한 뒤, argument generation·invocation으로 schema에 맞는 인자를 만들어 실행하며, tool-use loop이 그 결과를 다음 선택에 되먹이고 여러 단계·병렬 호출로 확장되는데, 이 등록·결과가 매 요청마다 tool schema·result context cost를 만들고 실패는 typed error handling과 retry policy로 되돌립니다.",
-    assumedKnowledge: [
-      { id: "agent-observation-action-loop", role: "State→proposal→runtime→observation의 최소 실행 단위 위에서, tool calling은 그 proposal을 구체적인 tool·인자로 채우는 lifecycle이라는 전제로 재사용합니다." },
-      { id: "typed-tool-observation-contract", role: "Empty·denied·timeout·partial 결과 구분을 tool-use loop의 되먹임과 error handling·retry 판단에 재사용합니다." },
-      { id: "tool-discovery-schema-loading", role: "Code Mode의 선택적 schema loading을 dynamic tool loading의 구체적 확장 사례로 링크합니다." },
-      { id: "context-token-budget-allocation", role: "Source별 token 장부 계산을 재사용하며, 이 글은 tool이 그 장부에서 차지하는 몫만 다룹니다." },
-      { id: "claw-permission-policy-evaluation-snapshot", role: "Tool permission model의 실제 정책 평가 순서를 재사용하며, 이 글은 invocation이 그 policy에 걸릴 수 있다는 경계만 다룹니다." },
-    ],
-    introducedHere: [
-      { id: "tool-calling-lifecycle", role: "Tool calling 전체를 select→generate→invoke→validate 순환으로 정의하고 OpenAI·Anthropic의 이름 차이를 정리합니다." },
-      { id: "tool-selection-and-routing", role: "Tool 후보를 고르는 selection, 실제 handler로 잇는 routing, tool이 많을 때의 dynamic loading을 정의합니다." },
-      { id: "tool-argument-generation-and-invocation", role: "JSON schema에 맞춰 인자를 채우는 단계와 그 실행을 정의하고 schema 준수 실패율 수치를 둡니다." },
-      { id: "tool-use-loop", role: "결과를 다음 선택에 되먹이는 loop, multi-step tool use, parallel tool calling의 latency 예시를 정의합니다." },
-      { id: "tool-context-cost", role: "Tool schema·result가 매 요청마다 만드는 token 비용을 수식과 수치 예로 정의합니다." },
-      { id: "tool-error-handling-and-retry", role: "실패 유형 구분과 exponential backoff·최대 횟수를 가진 retry policy를 수식으로 정의합니다." },
-    ],
-    conceptExplanations: [
-      { id: "tool-calling-lifecycle", sectionId: "problem", intuition: "Model이 직접 일하는 대신 등록된 도구 중 하나를 골라 실행을 요청하고 결과를 기다리는 것과 같습니다.", workedExample: "\"서울 날씨\" 요청에서 model은 get_weather를 골라 {location, unit} 인자를 채워 실행을 요청합니다.", boundary: "Model은 tool을 제안할 뿐 실행 권한이 없고, 실행은 항상 host application이 합니다." },
-      { id: "tool-selection-and-routing", sectionId: "selection-and-routing", intuition: "여러 전문가 중 지금 필요한 사람을 이름표만 보고 고르고, 그 사람 자리로 요청서를 보내는 것과 같습니다.", workedExample: "tool 200개 중 이름·설명 index로 3개만 후보로 남기고, 선택된 tool의 schema만 context에 불러옵니다.", boundary: "Description이 모호하면 비슷한 tool 중 잘못된 쪽을 고르고, index 자체가 부정확하면 필요한 후보가 처음부터 빠질 수 있습니다." },
-      { id: "tool-argument-generation-and-invocation", sectionId: "argument-generation-and-invocation", intuition: "신청서 양식의 빈칸을 규정에 맞게 채운 뒤 접수창구에 제출하는 것과 같습니다.", workedExample: "OpenAI가 보고한 복잡 schema 평가에서 gpt-4-0613의 function calling은 40% 미만, strict Structured Outputs를 쓴 gpt-4o-2024-08-06은 100%의 정확도를 보였습니다.", boundary: "인자가 schema를 완벽히 지켜도 permission policy가 deny하면 invocation은 실행되지 않습니다." },
-      { id: "tool-use-loop", sectionId: "tool-use-loop", intuition: "한 번 물어본 답이 다음에 무엇을 다시 물어볼지를 바꾸는 대화와 같습니다.", workedExample: "read_file이 파일 없음 오류를 돌려주면 같은 경로를 재시도하는 대신 list_directory를 먼저 부르며, 독립 tool 3개를 병렬로 부르면 순차 3×RTT≈1,200ms가 1×RTT≈400ms로 줄어듭니다.", boundary: "Side effect가 있거나 순서에 의존하는 tool은 병렬로 돌리면 안전하지 않습니다." },
-      { id: "tool-context-cost", sectionId: "context-cost", intuition: "회의에 자료를 아무리 안 쓰더라도 인쇄해 나눠주면 그 종이값은 이미 든 것과 같습니다.", workedExample: "tool 10개의 schema 합이 약 2,000 token, Claude Sonnet 5의 고정 오버헤드 354 token, 이전 결과 2개(각 150 token)를 더하면 tool 관련 token만 약 2,650 token입니다.", boundary: "고정 오버헤드는 provider 공식 수치이지만 schema·결과 token 추정치는 이 글이 계산한 예시이며 실측값이 아닙니다." },
-      { id: "tool-error-handling-and-retry", sectionId: "error-handling-and-retry", intuition: "같은 실수를 반복하는 시도는 잠깐 쉬었다 다시 해보되, 애초에 안 되는 요청은 그만 접는 것과 같습니다.", workedExample: "재시도 4번이면 대기 시간이 500·1,000·2,000·4,000ms로 늘어나 최악의 경우 약 7.5초를 기다린 뒤 typed error로 확정합니다.", boundary: "잘못된 인자나 permission denied처럼 다시 불러도 결과가 같은 실패는 backoff를 적용해도 소용이 없습니다." },
-    ],
-    conceptStages: [
-      { label: "00 lifecycle", relation: "Tool calling 전체를 select→generate→invoke→validate 순환으로 정의합니다.", concepts: ["tool-calling-lifecycle"] },
-      { label: "01 selection·routing", relation: "Tool 후보를 고르고 실제 handler로 잇습니다.", concepts: ["tool-selection-and-routing"] },
-      { label: "02 argument·invocation", relation: "Schema에 맞춰 인자를 채우고 실행합니다.", concepts: ["tool-argument-generation-and-invocation"] },
-      { label: "03 tool-use loop", relation: "결과를 다음 선택에 되먹이고 병렬로 확장합니다.", concepts: ["tool-use-loop"] },
-      { label: "04 context cost", relation: "Schema·result가 만드는 token 비용을 계산합니다.", concepts: ["tool-context-cost"] },
-      { label: "05 error·retry", relation: "실패를 유형별로 나누고 backoff·최대 횟수로 재시도합니다.", concepts: ["tool-error-handling-and-retry"] },
-    ],
-    exercises: [
-      { level: "basic", question: "Tool calling에서 model과 host application의 역할을 각각 한 문장으로 쓰세요.", answerChecklist: ["model은 tool·인자 제안", "host가 실제 실행", "model에 실행 권한 없음"], requiredConcepts: ["tool-calling-lifecycle"], sectionId: "problem" },
-      { level: "basic", question: "Tool selection과 tool routing의 차이를 예로 설명하세요.", answerChecklist: ["selection은 이름·설명으로 후보 고름", "routing은 실제 handler 연결", "둘은 서로 다른 주체(model vs host)"], requiredConcepts: ["tool-selection-and-routing"], sectionId: "selection-and-routing" },
-      { level: "basic", question: "Dynamic tool loading이 tool 수가 많을 때 왜 필요한지 설명하세요.", answerChecklist: ["전체 schema를 매번 넣으면 비용 큼", "이름·설명 index로 후보 좁힘", "선택된 tool schema만 불러옴"], requiredConcepts: ["tool-selection-and-routing"], sectionId: "selection-and-routing" },
-      { level: "basic", question: "Argument generation과 invocation을 순서대로 구분해 설명하세요.", answerChecklist: ["schema에 맞춰 인자 값 채움", "그 인자로 실제 실행 요청", "실행은 host가 수행"], requiredConcepts: ["tool-argument-generation-and-invocation"], sectionId: "argument-generation-and-invocation" },
-      { level: "basic", question: "Multi-step tool use와 parallel tool calling의 차이를 예로 쓰세요.", answerChecklist: ["multi-step은 순차 의존", "parallel은 독립 tool 동시 호출", "각각의 latency 특성 차이"], requiredConcepts: ["tool-use-loop"], sectionId: "tool-use-loop" },
-      { level: "basic", question: "Tool schema context cost와 tool result context cost가 각각 무엇을 가리키는지 쓰세요.", answerChecklist: ["schema cost는 등록된 정의의 token", "result cost는 이전 실행 결과의 token", "둘 다 사용 여부와 무관하게 누적"], requiredConcepts: ["tool-context-cost"], sectionId: "context-cost" },
-      { level: "advanced", question: "read_file이 파일 없음 오류를 반환한 뒤 agent가 다음에 어떤 tool을 골라야 하는지, 그 판단에 필요한 typed observation 필드를 설계하세요.", answerChecklist: ["오류 코드 구분(ENOENT 등)", "list_directory 같은 대안 tool 선택", "재시도 대신 원인 파악 우선", "typed 필드(status, retryable 등)"], requiredConcepts: ["tool-use-loop"], sectionId: "tool-use-loop" },
-      { level: "advanced", question: "Tool 10개, 이전 결과 2개가 있는 요청에서 tool 관련 총 context token을 이 글의 수식으로 추정하고 어떤 항이 provider 공식 수치이고 어떤 항이 가정인지 구분하세요.", answerChecklist: ["C_sys + Σs_i + Σr_j 구조", "C_sys는 provider 공식 수치", "s_i·r_j는 이 글의 가정 수치", "합산 결과 명시"], requiredConcepts: ["tool-context-cost"], sectionId: "context-cost" },
-      { level: "advanced", question: "schema 오류와 permission denied 두 실패에 각각 retry policy를 어떻게 다르게 적용해야 하는지 설계하세요.", answerChecklist: ["schema 오류는 인자 수정 후 재시도 여지", "permission denied는 재시도해도 결과 동일", "backoff는 일시적 실패에만 의미", "최대 횟수 초과 시 typed error"], requiredConcepts: ["tool-error-handling-and-retry"], sectionId: "error-handling-and-retry" },
-      { level: "advanced", question: "독립된 tool 3개를 순차·병렬로 호출할 때의 latency 차이를 계산하고, 병렬 호출이 안전하지 않은 조건을 함께 쓰세요.", answerChecklist: ["순차는 3×RTT", "병렬은 max(RTT)에 수렴", "side effect·순서 의존 tool은 병렬 위험", "구체적 ms 계산"], requiredConcepts: ["tool-use-loop"], sectionId: "tool-use-loop" },
-    ],
-    papers: [
+    "entryNote": "세 도시의 날씨 조회를 따라 도구 선택·실행·결과 연결·시간과 비용을 계산합니다.",
+    "coreIdea": "도구 호출은 제안·검사·실행·원호출에 연결한 결과의 반복입니다. 독립 실행의 시간과 입력 부분합을 계산하되 전체 지연과 최종 요금은 별도로 봅니다.",
+    "assumedKnowledge": [
       {
-        title: "OpenAI · Function calling (API 공식 문서)",
-        href: "https://developers.openai.com/api/docs/guides/function-calling",
-        problem: "모델이 자유 텍스트 대신 등록된 함수를 구조화된 호출로 요청하게 만드는 문제",
-        contribution: "name·description·parameters(JSON Schema)·strict로 구성된 tool 정의와, 요청→모델의 tool call→애플리케이션 실행→tool 결과 재입력→최종 응답이라는 5단계 왕복 루프, parallel_tool_calls로 한 턴에 여러 함수를 호출하는 방식을 정의합니다.",
-        assumptions: "문서가 설명하는 API 계약과 GPT 계열 모델의 동작 범위라는 전제입니다.",
-        evidenceScope: "OpenAI 공식 API 문서, 2026-08 시점 재확인 기준입니다.",
-        notClaim: "모든 model·모든 schema 복잡도에서 이 계약이 동일한 성공률을 보장한다는 뜻은 아닙니다.",
-        sectionId: "paper-openai-function-calling",
+        "id": "agent-observation-action-loop",
+        "role": "State→proposal→runtime→observation의 최소 실행 단위 위에서, tool calling은 그 proposal을 구체적인 tool·인자로 채우는 lifecycle이라는 전제로 재사용합니다."
       },
       {
-        title: "Anthropic · Tool use overview (API 공식 문서)",
-        href: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview",
-        problem: "모델이 tool을 언제·어떻게 호출하고 그 결과를 다시 대화에 넣어 최종 응답을 만들지 정의하는 문제",
-        contribution: "input_schema로 정의한 tool, tool_use·tool_result 블록으로 이어지는 왕복, strict tool use로 schema 준수를 보장하는 방법을 정의하고 model별 고정 system-prompt token 비용을 포함한 tool 사용 가격표를 제공합니다.",
-        assumptions: "Anthropic Messages API의 tool_choice·모델별 tokenizer 조건이라는 전제입니다.",
-        evidenceScope: "Anthropic 공식 API 문서, 2026-08 시점 재확인 기준입니다.",
-        notClaim: "문서가 제시한 고정 token 수치가 tools 파라미터 자체의 schema 크기까지 포함한다는 뜻은 아니며, 그 부분은 이 글이 별도로 추정합니다.",
-        sectionId: "paper-anthropic-tool-use",
+        "id": "typed-tool-observation-contract",
+        "role": "Empty·denied·timeout·partial 결과 구분을 tool-use loop의 되먹임과 error handling·retry 판단에 재사용합니다."
       },
       {
-        title: "Anthropic · Parallel tool use (API 공식 문서)",
-        href: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/parallel-tool-use",
-        problem: "한 턴에서 여러 tool을 호출했을 때 실행 순서·결과 매칭·부분 실패를 어떻게 처리할지의 문제",
-        contribution: "한 assistant 턴에 여러 tool_use 블록이 담길 수 있고 실행 순서(동시·순차)는 호출자가 정하며, 각 결과를 tool_use_id로 맞춰 한 user 메시지에 모두 돌려주고 실행하지 않은 호출도 is_error tool_result로 채워야 한다는 계약을 정의합니다.",
-        assumptions: "기본값으로 병렬 호출이 켜져 있고 disable_parallel_tool_use로 끌 수 있다는 이 문서 시점의 API 동작이라는 전제입니다.",
-        evidenceScope: "Anthropic 공식 API 문서, 2026-08 시점 재확인 기준입니다.",
-        notClaim: "병렬 요청이 항상 실제 동시 실행이나 지연시간 감소로 이어진다는 보장은 아니며 실행 전략은 호출자 구현에 달려 있습니다.",
-        sectionId: "paper-anthropic-parallel-tool-use",
+        "id": "tool-discovery-schema-loading",
+        "role": "Code Mode의 선택적 schema loading을 dynamic tool loading의 구체적 확장 사례로 링크합니다."
       },
       {
-        title: "Yao et al. · ReAct: Synergizing Reasoning and Acting in Language Models (2022)",
-        href: "https://arxiv.org/abs/2210.03629",
-        problem: "Reasoning과 외부 action(tool 호출)을 분리된 능력으로 다뤄 최신 정보 없이 추론만 하거나 근거 없는 action만 반복하는 문제",
-        contribution: "Reasoning trace와 tool action을 번갈아 생성하는 ReAct 패턴을 제시하고, HotpotQA·Fever에서 hallucination·오류 전파를 줄이며 ALFWorld·WebShop에서 각각 34%p·10%p의 절대 성공률 개선을 소량의 in-context 예시만으로 보고합니다.",
-        assumptions: "논문이 실험한 model·task·환경 조건이라는 전제입니다.",
-        evidenceScope: "저자 자기보고 실험, 2022년 발표 기준입니다.",
-        notClaim: "모든 tool·모든 model에서 같은 폭의 개선이 재현된다는 뜻은 아니며, 이 글은 tool-use loop이 반복·되먹임되어야 하는 이유의 근거로만 인용합니다.",
-        sectionId: "paper-react",
+        "id": "context-token-budget-allocation",
+        "role": "Source별 token 장부 계산을 재사용하며, 이 글은 tool이 그 장부에서 차지하는 몫만 다룹니다."
       },
       {
-        title: "OpenAI · Introducing Structured Outputs in the API (2024)",
-        href: "https://openai.com/index/introducing-structured-outputs-in-the-api/",
-        problem: "Model이 생성한 tool 인자가 JSON schema를 못 맞춰 실행 전에 실패하는 문제",
-        contribution: "복잡한 JSON schema를 따르는 평가에서 기존 function calling(gpt-4-0613)은 40% 미만의 정확도를 보인 반면, strict schema를 강제하는 Structured Outputs(gpt-4o-2024-08-06)는 100%를 기록했다고 보고합니다.",
-        assumptions: "OpenAI가 설계한 복잡 schema 평가셋과 해당 모델 버전이라는 전제입니다.",
-        evidenceScope: "OpenAI 자기보고 평가, 2024-08 발표, 2026-08 시점 재확인 기준입니다.",
-        notClaim: "40%라는 수치가 모든 schema 복잡도·모든 model 세대에 동일하게 적용된다는 뜻은 아니며, strict 옵션이 없는 일반 function calling의 하한 사례로만 인용합니다.",
-        sectionId: "paper-openai-structured-outputs",
-      },
+        "id": "claw-permission-policy-evaluation-snapshot",
+        "role": "Tool permission model의 실제 정책 평가 순서를 재사용하며, 이 글은 invocation이 그 policy에 걸릴 수 있다는 경계만 다룹니다."
+      }
     ],
+    "introducedHere": [
+      {
+        "id": "tool-calling-lifecycle",
+        "role": "Tool calling 전체를 select→generate→invoke→validate 순환으로 정의하고 OpenAI·Anthropic의 이름 차이를 정리합니다."
+      },
+      {
+        "id": "tool-selection-and-routing",
+        "role": "Tool 후보를 고르는 selection, 실제 handler로 잇는 routing, tool이 많을 때의 dynamic loading을 정의합니다."
+      },
+      {
+        "id": "tool-argument-generation-and-invocation",
+        "role": "JSON schema에 맞춰 인자를 채우는 단계와 그 실행을 정의하고 schema 준수 실패율 수치를 둡니다."
+      },
+      {
+        "id": "tool-use-loop",
+        "role": "결과를 다음 선택에 되먹이는 loop, multi-step tool use, parallel tool calling의 latency 예시를 정의합니다."
+      },
+      {
+        "id": "tool-context-cost",
+        "role": "Tool schema·result가 매 요청마다 만드는 token 비용을 수식과 수치 예로 정의합니다."
+      },
+      {
+        "id": "tool-error-handling-and-retry",
+        "role": "실패 유형 구분과 exponential backoff·최대 횟수를 가진 retry policy를 수식으로 정의합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "tool-calling-lifecycle",
+        "sectionId": "selection-and-routing",
+        "intuition": "모델의 행동 제안이 실제 실행과 연결되고 그 결과가 다음 판단으로 돌아옵니다.",
+        "workedExample": "서울·부산·제주 조회 요청 c1·c2·c3을 검사해 실행한 뒤 결과를 원호출 ID에 연결합니다.",
+        "boundary": "사용자 애플리케이션에서 실행하는 client tool과 제공자 환경에서 실행하는 server tool을 구분합니다."
+      },
+      {
+        "id": "tool-selection-and-routing",
+        "sectionId": "selection-and-routing",
+        "intuition": "필요한 기능을 고르는 결정과 그 이름을 실제 구현에 연결하는 결정은 다릅니다.",
+        "workedExample": "모델이 get_weather와 서울을 고르면 실행 환경은 등록된 날씨 구현으로 연결하고 허용된 조회인지 확인합니다.",
+        "boundary": "기능 설명과 연결된 구현이 어긋나면 형식이 맞아도 다른 일을 할 수 있습니다."
+      },
+      {
+        "id": "tool-argument-generation-and-invocation",
+        "sectionId": "argument-generation-and-invocation",
+        "intuition": "입력 칸을 채우는 일과 허용된 입력으로 실제 함수를 실행하는 일을 구분합니다.",
+        "workedExample": "도시 문자열의 형식이 맞아도 사용자가 서울을 요청했는데 부산을 넣으면 잘못된 조회입니다. 결과의 tool_use_id는 해당 원호출을 가리킵니다.",
+        "boundary": "Schema 준수율은 값의 사실성·사용자 의도·권한을 보장하는 지표가 아닙니다."
+      },
+      {
+        "id": "tool-use-loop",
+        "sectionId": "tool-use-loop",
+        "intuition": "각 실행 결과를 다음 판단에 반영하되 서로 독립된 조회는 함께 실행할 수 있습니다.",
+        "workedExample": "세 도시의 조회가 각각 400ms이고 독립적이면 조회 구간은 순차 1,200ms에서 동시 400ms로 줄어듭니다. 결과는 c1·c2·c3으로 연결합니다.",
+        "boundary": "모델 처리·전송 시간은 제외한 가정이며 다른 호출의 결과에 의존하면 동시에 실행할 수 없습니다."
+      },
+      {
+        "id": "tool-context-cost",
+        "sectionId": "context-cost",
+        "intuition": "이번 입력에 넣은 도구 설명과 이전 결과도 모델이 읽는 양에 포함됩니다.",
+        "workedExample": "가정한 도구 정의 10×(40+160)=2,000 token, 이전 결과 2×150=300 token, 해당 모델·설정의 추가 입력 354 token을 합하면 부분합은 2,654 token입니다.",
+        "boundary": "다른 입력·출력 token·캐시 단가·서버 도구 요금을 제외한 부분합이며 354는 모든 모델의 상수가 아닙니다."
+      },
+      {
+        "id": "tool-error-handling-and-retry",
+        "sectionId": "error-handling-and-retry",
+        "intuition": "다시 실행해도 되는 실패인지 먼저 판정하고 대기와 횟수 상한을 적용합니다.",
+        "workedExample": "안전한 일시적 조회 실패의 재시도 4회에서 0.5초부터 두 배씩 늘리되 2초로 제한하면 0.5·1·2·2초로 합계 5.5초입니다.",
+        "boundary": "권한 거부는 기다림으로 풀리지 않으며 외부 변경 후 응답이 끊기면 실행 여부부터 확인해야 합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 lifecycle",
+        "relation": "Tool calling 전체를 select→generate→invoke→validate 순환으로 정의합니다.",
+        "concepts": [
+          "tool-calling-lifecycle"
+        ]
+      },
+      {
+        "label": "01 selection·routing",
+        "relation": "Tool 후보를 고르고 실제 handler로 잇습니다.",
+        "concepts": [
+          "tool-selection-and-routing"
+        ]
+      },
+      {
+        "label": "02 argument·invocation",
+        "relation": "Schema에 맞춰 인자를 채우고 실행합니다.",
+        "concepts": [
+          "tool-argument-generation-and-invocation"
+        ]
+      },
+      {
+        "label": "03 tool-use loop",
+        "relation": "결과를 다음 선택에 되먹이고 병렬로 확장합니다.",
+        "concepts": [
+          "tool-use-loop"
+        ]
+      },
+      {
+        "label": "04 context cost",
+        "relation": "Schema·result가 만드는 token 비용을 계산합니다.",
+        "concepts": [
+          "tool-context-cost"
+        ]
+      },
+      {
+        "label": "05 error·retry",
+        "relation": "실패를 유형별로 나누고 backoff·최대 횟수로 재시도합니다.",
+        "concepts": [
+          "tool-error-handling-and-retry"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "세 도시를 각각 400ms에 조회하면 순차·동시 실행의 조회 구간은 각각 얼마인가요?",
+        "answerChecklist": [
+          "1,200ms",
+          "400ms",
+          "독립 실행 가정",
+          "모델 처리 시간 제외"
+        ],
+        "sectionId": "tool-use-loop",
+        "requiredConcepts": [
+          "tool-use-loop"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Tool selection과 routing은 누가 어떤 결정을 하는지 비교하세요.",
+        "answerChecklist": [
+          "모델이 기능 선택",
+          "실행 환경이 구현 연결",
+          "동일한 이름의 기능 구분"
+        ],
+        "sectionId": "selection-and-routing",
+        "requiredConcepts": [
+          "tool-selection-and-routing"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Schema를 지킨 도시 값도 잘못된 조회가 될 수 있는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "문자열 형식",
+          "사용자가 요청한 도시와 불일치",
+          "별도 의미 검증"
+        ],
+        "sectionId": "why-tool-call",
+        "requiredConcepts": [
+          "tool-argument-generation-and-invocation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Client tool과 server tool은 실제 코드를 어디에서 실행하나요?",
+        "answerChecklist": [
+          "사용자 애플리케이션",
+          "제공자 환경",
+          "모델의 제안과 실행 구분"
+        ],
+        "sectionId": "selection-and-routing",
+        "requiredConcepts": [
+          "tool-calling-lifecycle",
+          "tool-argument-generation-and-invocation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "공식 반환 코드에서 서울 결과를 c1에 연결하는 필드는 무엇인가요?",
+        "answerChecklist": [
+          "tool_use_id",
+          "원호출 ID",
+          "결과 순서와 별개"
+        ],
+        "sectionId": "argument-generation-and-invocation",
+        "requiredConcepts": [
+          "tool-calling-lifecycle",
+          "tool-use-loop"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "354+10×(40+160)+2×150의 입력 부분합을 계산하세요.",
+        "answerChecklist": [
+          "2,654 token",
+          "도구 정의 2,000",
+          "이전 결과 300",
+          "추가 입력 354"
+        ],
+        "sectionId": "context-cost",
+        "requiredConcepts": [
+          "tool-context-cost"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "2,654 token만으로 최종 비용을 계산할 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "출력 token",
+          "호출 이력",
+          "다른 입력",
+          "서버 도구 요금",
+          "캐시 단가"
+        ],
+        "sectionId": "context-cost",
+        "requiredConcepts": [
+          "tool-context-cost"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "0.5초부터 2초 상한의 재시도 4회에서 대기 시간과 합을 계산하세요.",
+        "answerChecklist": [
+          "0.5·1·2·2초",
+          "합 5.5초",
+          "실제 실행 시간 제외"
+        ],
+        "sectionId": "error-handling-and-retry",
+        "requiredConcepts": [
+          "tool-error-handling-and-retry"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "권한 거부와 외부 변경 후 시간 초과에 같은 재시도 정책을 쓰면 안 되는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "권한 우회 금지",
+          "결과 미확인",
+          "중복 효과",
+          "안전한 반복 조건"
+        ],
+        "sectionId": "error-handling-and-retry",
+        "requiredConcepts": [
+          "tool-error-handling-and-retry"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "한 응답에 여러 호출이 있어도 항상 동시에 실행할 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "입력 의존성",
+          "상태 변경 순서",
+          "호출 ID 보존",
+          "실행 환경의 판단"
+        ],
+        "sectionId": "why-tool-call",
+        "requiredConcepts": [
+          "tool-use-loop"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "OpenAI · Function calling (API 공식 문서)",
+        "href": "https://developers.openai.com/api/docs/guides/function-calling",
+        "problem": "모델이 자유 텍스트 대신 등록된 함수를 구조화된 호출로 요청하게 만드는 문제",
+        "contribution": "name·description·parameters(JSON Schema)·strict로 구성된 tool 정의와, 요청→모델의 tool call→애플리케이션 실행→tool 결과 재입력→최종 응답이라는 5단계 왕복 루프, parallel_tool_calls로 한 턴에 여러 함수를 호출하는 방식을 정의합니다.",
+        "assumptions": "문서가 설명하는 API 계약과 GPT 계열 모델의 동작 범위라는 전제입니다.",
+        "evidenceScope": "OpenAI 공식 API 문서, 2026-08 시점 재확인 기준입니다.",
+        "notClaim": "모든 model·모든 schema 복잡도에서 이 계약이 동일한 성공률을 보장한다는 뜻은 아닙니다.",
+        "sectionId": "paper-openai-function-calling"
+      },
+      {
+        "title": "Anthropic · Tool use overview (API 공식 문서)",
+        "href": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview",
+        "problem": "모델이 tool을 언제·어떻게 호출하고 그 결과를 다시 대화에 넣어 최종 응답을 만들지 정의하는 문제",
+        "contribution": "input_schema로 정의한 tool, tool_use·tool_result 블록으로 이어지는 왕복, strict tool use로 schema 준수를 보장하는 방법을 정의하고 model별 고정 system-prompt token 비용을 포함한 tool 사용 가격표를 제공합니다.",
+        "assumptions": "Anthropic Messages API의 tool_choice·모델별 tokenizer 조건이라는 전제입니다.",
+        "evidenceScope": "Anthropic 공식 API 문서, 2026-08 시점 재확인 기준입니다.",
+        "notClaim": "문서가 제시한 고정 token 수치가 tools 파라미터 자체의 schema 크기까지 포함한다는 뜻은 아니며, 그 부분은 이 글이 별도로 추정합니다.",
+        "sectionId": "paper-anthropic-tool-use"
+      },
+      {
+        "title": "Anthropic · Parallel tool use (API 공식 문서)",
+        "href": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/parallel-tool-use",
+        "problem": "한 턴에서 여러 tool을 호출했을 때 실행 순서·결과 매칭·부분 실패를 어떻게 처리할지의 문제",
+        "contribution": "한 assistant 턴에 여러 tool_use 블록이 담길 수 있고 실행 순서(동시·순차)는 호출자가 정하며, 각 결과를 tool_use_id로 맞춰 한 user 메시지에 모두 돌려주고 실행하지 않은 호출도 is_error tool_result로 채워야 한다는 계약을 정의합니다.",
+        "assumptions": "기본값으로 병렬 호출이 켜져 있고 disable_parallel_tool_use로 끌 수 있다는 이 문서 시점의 API 동작이라는 전제입니다.",
+        "evidenceScope": "Anthropic 공식 API 문서, 2026-08 시점 재확인 기준입니다.",
+        "notClaim": "병렬 요청이 항상 실제 동시 실행이나 지연시간 감소로 이어진다는 보장은 아니며 실행 전략은 호출자 구현에 달려 있습니다.",
+        "sectionId": "paper-anthropic-parallel-tool-use"
+      },
+      {
+        "title": "Yao et al. · ReAct: Synergizing Reasoning and Acting in Language Models (2022)",
+        "href": "https://arxiv.org/abs/2210.03629",
+        "problem": "Reasoning과 외부 action(tool 호출)을 분리된 능력으로 다뤄 최신 정보 없이 추론만 하거나 근거 없는 action만 반복하는 문제",
+        "contribution": "Reasoning trace와 tool action을 번갈아 생성하는 ReAct 패턴을 제시하고, HotpotQA·Fever에서 hallucination·오류 전파를 줄이며 ALFWorld·WebShop에서 각각 34%p·10%p의 절대 성공률 개선을 소량의 in-context 예시만으로 보고합니다.",
+        "assumptions": "논문이 실험한 model·task·환경 조건이라는 전제입니다.",
+        "evidenceScope": "저자 자기보고 실험, 2022년 발표 기준입니다.",
+        "notClaim": "모든 tool·모든 model에서 같은 폭의 개선이 재현된다는 뜻은 아니며, 이 글은 tool-use loop이 반복·되먹임되어야 하는 이유의 근거로만 인용합니다.",
+        "sectionId": "paper-react"
+      },
+      {
+        "title": "OpenAI · Introducing Structured Outputs in the API (2024)",
+        "href": "https://openai.com/index/introducing-structured-outputs-in-the-api/",
+        "problem": "Model이 생성한 tool 인자가 JSON schema를 못 맞춰 실행 전에 실패하는 문제",
+        "contribution": "복잡한 JSON schema를 따르는 평가에서 기존 function calling(gpt-4-0613)은 40% 미만의 정확도를 보인 반면, strict schema를 강제하는 Structured Outputs(gpt-4o-2024-08-06)는 100%를 기록했다고 보고합니다.",
+        "assumptions": "OpenAI가 설계한 복잡 schema 평가셋과 해당 모델 버전이라는 전제입니다.",
+        "evidenceScope": "OpenAI 자기보고 평가, 2024-08 발표, 2026-08 시점 재확인 기준입니다.",
+        "notClaim": "40%라는 수치가 모든 schema 복잡도·모든 model 세대에 동일하게 적용된다는 뜻은 아니며, strict 옵션이 없는 일반 function calling의 하한 사례로만 인용합니다.",
+        "sectionId": "paper-openai-structured-outputs"
+      }
+    ]
   },
   "ai/multimodal-retrieval-and-visual-grounding": {
     entryNote:
@@ -74161,142 +76860,351 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/agent-failure-modes-and-recovery": {
-    entryNote:
-      "Agent의 state·action·observation loop와 exit-state machine, run contract의 recovery field를 알고 들어옵니다. 실패를 유형으로 나누는 일과 복구 절차를 정의하는 일은 이 글에서 새로 다룹니다.",
-    coreIdea:
-      "Agent 실패는 goal drift·context drift·tool misuse·premature termination처럼 서로 다른 신호를 남기고, retry loop는 그 action이 idempotent할 때만 안전하며, 되돌릴 수 없는 action은 실행 전 side-effect control로, retry로 해결되지 않는 실패는 checkpoint를 남긴 human-in-the-loop escalation으로 처리합니다.",
-    assumedKnowledge: [
-      { id: "agent-observation-action-loop", role: "실패가 관찰되는 반복 실행 단위의 기준선입니다." },
-      { id: "typed-tool-observation-contract", role: "성공·실패를 구분하는 관찰 계약이 tool misuse 판정의 전제입니다." },
-      { id: "agent-exit-state-machine", role: "Premature termination과 human escalation이 원래 속한 terminal state 목록입니다." },
-      { id: "agent-run-contract", role: "Recovery field가 이미 retry·rollback·escalation을 완료 조건에 넣어 둡니다." },
-      { id: "layered-agent-verification", role: "Verifier 실패가 failure detection의 핵심 신호입니다." },
-      { id: "workflow-agent-checkpoint-boundary", role: "되돌리기 어려운 effect 앞에 checkpoint를 두는 경계입니다." },
-      { id: "checkpoint-replay-boundary", role: "Checkpoint resume과 replay를 구분해야 복구가 side effect를 중복시키지 않습니다." },
-      { id: "harness-failure-layer-ablation", role: "사후 재현 기준의 layer 분류와 이 글의 실시간 유형 분류를 대조합니다." },
+    "entryNote": "10,000원 청구 뒤 응답만 사라진 사례로 감지·재시도·복구·인계를 배웁니다.",
+    "coreIdea": "응답이 없다는 사실과 실행되지 않았다는 사실을 구분해야 합니다. 원요청과 미확인 상태를 보존하고 안전한 재시도 조건이 없으면 새 효과를 멈추고 인계합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "agent-observation-action-loop",
+        "role": "실패가 관찰되는 반복 실행 단위의 기준선입니다."
+      },
+      {
+        "id": "typed-tool-observation-contract",
+        "role": "성공·실패를 구분하는 관찰 계약이 tool misuse 판정의 전제입니다."
+      },
+      {
+        "id": "agent-exit-state-machine",
+        "role": "Premature termination과 human escalation이 원래 속한 terminal state 목록입니다."
+      },
+      {
+        "id": "agent-run-contract",
+        "role": "Recovery field가 이미 retry·rollback·escalation을 완료 조건에 넣어 둡니다."
+      },
+      {
+        "id": "layered-agent-verification",
+        "role": "Verifier 실패가 failure detection의 핵심 신호입니다."
+      },
+      {
+        "id": "workflow-agent-checkpoint-boundary",
+        "role": "되돌리기 어려운 effect 앞에 checkpoint를 두는 경계입니다."
+      },
+      {
+        "id": "checkpoint-replay-boundary",
+        "role": "Checkpoint resume과 replay를 구분해야 복구가 side effect를 중복시키지 않습니다."
+      },
+      {
+        "id": "harness-failure-layer-ablation",
+        "role": "사후 재현 기준의 layer 분류와 이 글의 실시간 유형 분류를 대조합니다."
+      }
     ],
-    introducedHere: [
-      { id: "agent-reliability", role: "정답률이 아니라 실패 뒤 안전한 마무리 비율로 agent 실행을 평가하는 기준을 정의합니다." },
-      { id: "agent-failure-mode-taxonomy", role: "Goal drift·context drift·tool misuse·premature termination을 신호로 구분합니다." },
-      { id: "retry-loop", role: "실패 action을 다시 시도하는 절차와 그 위험 조건을 정의합니다." },
-      { id: "idempotent-action", role: "Retry가 안전한지 가르는 idempotency 성질과 idempotency key mechanism을 설명합니다." },
-      { id: "side-effect-control", role: "Dry-run과 confirmation gate로 되돌릴 수 없는 action을 실행 전에 막는 방법을 설명합니다." },
-      { id: "recovery-and-checkpointing", role: "Failure detection과 checkpointing을 결합한 recovery strategy를 정의합니다." },
-      { id: "human-in-the-loop-escalation", role: "Retry로 해결되지 않는 실패를 사람에게 넘기는 HITL과 escalation policy를 정의합니다." },
+    "introducedHere": [
+      {
+        "id": "agent-reliability",
+        "role": "정답률이 아니라 실패 뒤 안전한 마무리 비율로 agent 실행을 평가하는 기준을 정의합니다."
+      },
+      {
+        "id": "agent-failure-mode-taxonomy",
+        "role": "Goal drift·context drift·tool misuse·premature termination을 신호로 구분합니다."
+      },
+      {
+        "id": "retry-loop",
+        "role": "실패 action을 다시 시도하는 절차와 그 위험 조건을 정의합니다."
+      },
+      {
+        "id": "idempotent-action",
+        "role": "Retry가 안전한지 가르는 idempotency 성질과 idempotency key mechanism을 설명합니다."
+      },
+      {
+        "id": "side-effect-control",
+        "role": "Dry-run과 confirmation gate로 되돌릴 수 없는 action을 실행 전에 막는 방법을 설명합니다."
+      },
+      {
+        "id": "recovery-and-checkpointing",
+        "role": "Failure detection과 checkpointing을 결합한 recovery strategy를 정의합니다."
+      },
+      {
+        "id": "human-in-the-loop-escalation",
+        "role": "Retry로 해결되지 않는 실패를 사람에게 넘기는 HITL과 escalation policy를 정의합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "agent-reliability",
-        sectionId: "problem",
-        intuition: "한 번 성공했는지가 아니라 여러 번 돌렸을 때 실패가 나도 전체 작업이 안전하게 끝나는 비율을 보는 관점입니다.",
-        workedExample: "같은 작업을 100번 돌려 60번은 한 번에 통과하고 35번은 retry로 통과하고 5번만 사람에게 넘어가면 reliability가 높은 편입니다.",
-        boundary: "정답률과 달리 실패가 나더라도 감지·복구가 안전하게 이어지면 reliability는 크게 떨어지지 않습니다.",
+        "id": "agent-reliability",
+        "sectionId": "failure-taxonomy",
+        "intuition": "작업이 요구한 범위에서 끝나는지, 실패와 미확인 상태를 놓치지 않는지 함께 평가합니다.",
+        "workedExample": "주문 42의 응답이 끊겼을 때 unknown을 기록하고 원요청의 실제 청구 결과를 확인합니다. 안전하게 인계한 경우를 성공으로 셀지는 평가 목적에 따라 정합니다.",
+        "boundary": "안전한 인계와 자동 완료는 다른 결과이며 하나의 보편적인 성공 비율로 합치지 않습니다."
       },
       {
-        id: "agent-failure-mode-taxonomy",
-        sectionId: "failure-taxonomy",
-        intuition: "실행 로그에 남는 서로 다른 신호(목표 이탈, 도구 오류, 이른 종료)를 원인별로 나눠 이름 붙인 분류입니다.",
-        workedExample: "8단계 작업에서 4단계부터 요청에 없던 분석을 더하면 goal drift, tool 이름을 지어내 호출하면 tool hallucination으로 분류됩니다.",
-        boundary: "harness failure ablation의 사후·재현 기준 layer 분류와는 축이 다른, 실행 중 실시간 분류입니다.",
+        "id": "agent-failure-mode-taxonomy",
+        "sectionId": "failure-taxonomy",
+        "intuition": "목표가 바뀐 경우와 필요한 제약을 잃은 경우는 다음 조치가 다릅니다.",
+        "workedExample": "주문 42 외의 주문까지 청구하면 목표 이탈이고 10,000원 제약을 잊으면 맥락 이탈입니다. 확인 없이 성공으로 보고하면 조기 종료에 해당합니다.",
+        "boundary": "운영 중 관찰한 분류와 논문이 정의한 분류는 이름·평가 기준을 확인해 대응시킵니다."
       },
       {
-        id: "retry-loop",
-        sectionId: "retry-idempotent",
-        intuition: "실패로 보이는 action을 그대로 다시 시도하는 절차이고 action 성격을 확인하지 않으면 위험해집니다.",
-        workedExample: "카드 청구가 timeout 나서 같은 청구를 다시 호출하면 첫 요청이 이미 처리된 경우 두 번 청구됩니다.",
-        boundary: "Infra 성격의 일시적 실패에만 안전하고 goal drift 같은 실패는 몇 번을 다시 시도해도 고쳐지지 않습니다.",
+        "id": "retry-loop",
+        "sectionId": "retry-idempotent",
+        "intuition": "실패한 응답을 받았다는 이유만으로 실제 행동을 다시 하면 중복 효과가 생길 수 있습니다.",
+        "workedExample": "10,000원 청구 후 응답만 사라졌다면 결과를 unknown으로 둡니다. 원요청 조회와 서버의 중복 방지 조건을 확인하기 전에는 새 키로 청구하지 않습니다.",
+        "boundary": "일시적 장애여도 이미 발생한 외부 효과와 안전한 반복 조건을 별도로 확인해야 합니다."
       },
       {
-        id: "idempotent-action",
-        sectionId: "retry-idempotent",
-        intuition: "같은 요청을 몇 번 다시 보내도 실제 효과가 한 번 실행한 것과 같이 남는 action의 성질입니다.",
-        workedExample: "Idempotency key를 실어 보낸 청구 요청은 같은 key로 다시 보내도 카드가 한 번만 청구됩니다.",
-        boundary: "원래 결과가 같은 GET·삭제 같은 action과, key를 붙여 인위적으로 idempotent하게 만든 action은 구분해야 합니다.",
+        "id": "idempotent-action",
+        "sectionId": "retry-idempotent",
+        "intuition": "같은 요청을 반복해도 의도한 효과가 한 번 실행한 경우와 같다는 성질입니다.",
+        "workedExample": "서버가 유효한 pay-42의 동일 인자를 중복 처리하지 않는다고 보장하면 재시도에도 주문 42의 청구는 10,000원으로 유지됩니다.",
+        "boundary": "키를 붙이는 것만으로 보장이 생기지는 않습니다. 서버의 보장 범위와 같은 인자, 키 보존 기간을 확인합니다."
       },
       {
-        id: "side-effect-control",
-        sectionId: "side-effect-control",
-        intuition: "실행 전에 무엇이 바뀔지 먼저 보여주고 승인을 받아 되돌릴 수 없는 action이 그냥 실행되지 않게 막는 방법입니다.",
-        workedExample: "DELETE 대신 영향받을 행 수를 dry-run으로 먼저 보여주고 승인 뒤에만 실제 삭제를 실행합니다.",
-        boundary: "이미 실행된 뒤의 위험(retry 중복)이 아니라 실행 자체를 막을지 정하는 사전 통제입니다.",
+        "id": "side-effect-control",
+        "sectionId": "side-effect-control",
+        "intuition": "실제로 바꿀 대상과 범위, 권한을 실행 직전에 확인합니다.",
+        "workedExample": "주문 42의 10,000원 청구만 승인했는지 확인하고 예상 결과와 실제 청구 기록을 연결합니다. 대상이나 금액이 바뀌면 기존 승인을 그대로 쓰지 않습니다.",
+        "boundary": "Dry-run 뒤에도 상태가 바뀔 수 있고 코드 복원은 외부 청구를 취소하지 않습니다."
       },
       {
-        id: "recovery-and-checkpointing",
-        sectionId: "recovery-checkpointing",
-        intuition: "실패를 알아채는 감지와 되돌아갈 지점을 미리 저장해 두는 준비가 함께 있어야 실제로 복구할 수 있습니다.",
-        workedExample: "매 단계 git commit과 진행 기록을 checkpoint로 남기고 세션 시작마다 테스트를 돌려 이전 완료 주장을 다시 검사합니다.",
-        boundary: "감지만 있고 checkpoint가 없으면 처음부터 다시 시작해야 하고, checkpoint만 있고 감지가 늦으면 정상 작업까지 함께 버립니다.",
+        "id": "recovery-and-checkpointing",
+        "sectionId": "recovery-checkpointing",
+        "intuition": "다음 실행이 무엇을 확인해야 할지 알 수 있도록 현재 상태를 저장합니다.",
+        "workedExample": "주문 42, pay-42, 10,000원, unknown과 다음 조회 위치를 저장해 재개한 작업이 새 청구부터 하지 않게 합니다.",
+        "boundary": "저장 지점 복원과 외부 상태의 취소는 별개이며 확인 전 완료 표시를 하지 않습니다."
       },
       {
-        id: "human-in-the-loop-escalation",
-        sectionId: "human-in-the-loop-escalation",
-        intuition: "자동 retry로 해결되지 않는 실패나 되돌릴 수 없는 action 앞에서 결정을 사람에게 넘기도록 미리 정해 두는 규칙입니다.",
-        workedExample: "삭제 tool 호출 앞에서 실행을 멈추고 사람이 approve·edit·reject·respond 중 하나로 재개시킵니다.",
-        boundary: "모든 실패를 사람에게 넘기면 자동화 이점이 사라지므로 retry로 안전한 실패는 이 정책 대상에서 뺍니다.",
-      },
+        "id": "human-in-the-loop-escalation",
+        "sectionId": "human-in-the-loop-escalation",
+        "intuition": "자동으로 안전하게 판단할 수 없는 상태와 필요한 결정을 담당자에게 넘깁니다.",
+        "workedExample": "청구 결과가 미확인이고 안전한 재시도 보장도 없으면 원요청·식별자·확인한 사실·미확인 사항·다음 조회를 함께 전달합니다.",
+        "boundary": "사람이 인자를 바꾸어 승인해도 변경한 대상과 키를 다시 검사해야 합니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 신뢰도", relation: "여러 번 실행에서 실패가 나도 전체가 안전하게 끝나는 비율을 정의합니다.", concepts: ["agent-reliability"] },
-      { label: "01 분류", relation: "실행 중 신호를 goal·context drift·tool misuse·premature termination으로 나눕니다.", concepts: ["agent-failure-mode-taxonomy"] },
-      { label: "02 재시도", relation: "Infra 성격 실패만 idempotent 여부를 확인한 뒤 다시 시도합니다.", concepts: ["retry-loop", "idempotent-action"] },
-      { label: "03 사전 통제", relation: "되돌릴 수 없는 action은 dry-run·confirmation gate로 실행 전에 막습니다.", concepts: ["side-effect-control"] },
-      { label: "04 복구", relation: "감지된 실패를 checkpoint 지점으로 되돌리거나 다른 경로로 다시 시도합니다.", concepts: ["recovery-and-checkpointing"] },
-      { label: "05 승격", relation: "Retry로 해결되지 않는 실패는 escalation policy에 따라 사람에게 넘깁니다.", concepts: ["human-in-the-loop-escalation"] },
+    "conceptStages": [
+      {
+        "label": "00 신뢰도",
+        "relation": "여러 번 실행에서 실패가 나도 전체가 안전하게 끝나는 비율을 정의합니다.",
+        "concepts": [
+          "agent-reliability"
+        ]
+      },
+      {
+        "label": "01 분류",
+        "relation": "실행 중 신호를 goal·context drift·tool misuse·premature termination으로 나눕니다.",
+        "concepts": [
+          "agent-failure-mode-taxonomy"
+        ]
+      },
+      {
+        "label": "02 재시도",
+        "relation": "Infra 성격 실패만 idempotent 여부를 확인한 뒤 다시 시도합니다.",
+        "concepts": [
+          "retry-loop",
+          "idempotent-action"
+        ]
+      },
+      {
+        "label": "03 사전 통제",
+        "relation": "되돌릴 수 없는 action은 dry-run·confirmation gate로 실행 전에 막습니다.",
+        "concepts": [
+          "side-effect-control"
+        ]
+      },
+      {
+        "label": "04 복구",
+        "relation": "감지된 실패를 checkpoint 지점으로 되돌리거나 다른 경로로 다시 시도합니다.",
+        "concepts": [
+          "recovery-and-checkpointing"
+        ]
+      },
+      {
+        "label": "05 승격",
+        "relation": "Retry로 해결되지 않는 실패는 escalation policy에 따라 사람에게 넘깁니다.",
+        "concepts": [
+          "human-in-the-loop-escalation"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Goal drift와 context drift를 각각 한 문장으로 구분하세요.", answerChecklist: ["목표 자체 이탈", "근거·제약을 잊음", "국소 판단 누적", "기억 손실"], requiredConcepts: ["agent-failure-mode-taxonomy"], sectionId: "failure-taxonomy" },
-      { level: "basic", question: "Invalid tool call과 tool hallucination의 차이를 설명하세요.", answerChecklist: ["스키마 위반", "존재하는 tool 오용", "존재하지 않는 tool 지어냄"], requiredConcepts: ["agent-failure-mode-taxonomy"], sectionId: "failure-taxonomy" },
-      { level: "basic", question: "Premature termination이 verifier와 어떤 관계인지 설명하세요.", answerChecklist: ["verifier 미통과", "model 자체 완료 선언", "end-to-end 테스트 부재"], requiredConcepts: ["agent-failure-mode-taxonomy"], sectionId: "failure-taxonomy" },
-      { level: "basic", question: "Idempotent action의 정의를 idempotency key 예로 설명하세요.", answerChecklist: ["같은 요청 여러 번", "효과는 한 번과 동일", "idempotency key"], requiredConcepts: ["idempotent-action"], sectionId: "retry-idempotent" },
-      { level: "basic", question: "Retry loop가 idempotent하지 않은 action에서 왜 위험한지 결제 예로 설명하세요.", answerChecklist: ["timeout", "이미 처리된 첫 요청", "중복 청구"], requiredConcepts: ["retry-loop", "idempotent-action"], sectionId: "retry-idempotent" },
-      { level: "basic", question: "Dry-run과 confirmation gate의 역할 차이를 설명하세요.", answerChecklist: ["변경 예상만 계산", "사람 승인 문턱", "실제 실행은 gate 통과 후"], requiredConcepts: ["side-effect-control"], sectionId: "side-effect-control" },
-      { level: "advanced", question: "Failure detection만 있고 checkpoint가 없을 때, 또는 그 반대일 때 각각 무엇이 문제인지 설명하세요.", answerChecklist: ["감지만 있으면 되돌릴 지점 없음", "checkpoint만 있고 감지 늦으면 정상 작업도 버림"], requiredConcepts: ["recovery-and-checkpointing"], sectionId: "recovery-checkpointing" },
-      { level: "advanced", question: "실패 감지→분류→idempotent 확인→retry 또는 escalation 절차를 순서대로 쓰세요.", answerChecklist: ["신호 감지", "유형 분류", "idempotent 확인", "retry 또는 checkpoint 후 escalation"], requiredConcepts: ["retry-loop", "recovery-and-checkpointing"], sectionId: "retry-idempotent" },
-      { level: "advanced", question: "Escalation policy가 어떤 실패 유형 앞에서 발동해야 하는지, 발동 뒤 checkpoint와 어떻게 이어지는지 설명하세요.", answerChecklist: ["retry로 해결 안 되는 실패", "되돌릴 수 없는 action", "approve/edit/reject/respond", "checkpoint로 되돌아감"], requiredConcepts: ["human-in-the-loop-escalation", "recovery-and-checkpointing"], sectionId: "human-in-the-loop-escalation" },
-      { level: "advanced", question: "Agent reliability를 정답률과 다르게 정의해야 하는 이유를 실패-복구 관점에서 설명하세요.", answerChecklist: ["실패 자체보다 복구 성공률", "retry·checkpoint·escalation 포함", "정답률만으로는 놓치는 것"], requiredConcepts: ["agent-reliability", "agent-failure-mode-taxonomy"], sectionId: "problem" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "주문 42에 10,000원을 청구한 뒤 응답이 끊기면 어떤 실행 상태를 기록하나요?",
+        "answerChecklist": [
+          "unknown",
+          "응답 실패와 실행 실패 구분",
+          "원요청 식별자"
+        ],
+        "sectionId": "retry-idempotent",
+        "requiredConcepts": [
+          "agent-reliability",
+          "retry-loop"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Goal drift와 context drift를 주문 42 사례로 비교하세요.",
+        "answerChecklist": [
+          "다른 주문으로 목표 확대",
+          "금액 제약 상실",
+          "원인 구분"
+        ],
+        "sectionId": "failure-taxonomy",
+        "requiredConcepts": [
+          "agent-failure-mode-taxonomy"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 pay-42로 재시도하기 전에 확인할 서버 조건은 무엇인가요?",
+        "answerChecklist": [
+          "중복 방지 보장",
+          "동일한 인자",
+          "키 유효 기간",
+          "횟수 예산"
+        ],
+        "sectionId": "retry-idempotent",
+        "requiredConcepts": [
+          "idempotent-action"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Dry-run과 실행 직전 권한·대상 확인의 역할을 구분하세요.",
+        "answerChecklist": [
+          "변경 예상",
+          "실행 전 상태 변화 가능성",
+          "승인 대상 연결"
+        ],
+        "sectionId": "side-effect-control",
+        "requiredConcepts": [
+          "side-effect-control"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Checkpoint에 원요청과 unknown 상태를 남기는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "재개 위치",
+          "중복 실행 예방",
+          "다음 조회 경로"
+        ],
+        "sectionId": "recovery-checkpointing",
+        "requiredConcepts": [
+          "recovery-and-checkpointing"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "담당자에게 인계할 때 아직 모르는 내용을 어떻게 남기나요?",
+        "answerChecklist": [
+          "원요청",
+          "식별자",
+          "확인한 결과",
+          "미확인 사항",
+          "다음 확인 절차"
+        ],
+        "sectionId": "human-in-the-loop-escalation",
+        "requiredConcepts": [
+          "human-in-the-loop-escalation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "첫 조회가 비면 새 키로 재시도해도 된다는 절차의 문제를 설명하세요.",
+        "answerChecklist": [
+          "조회 지연 가능성",
+          "부분 장애",
+          "미실행의 증거가 아님",
+          "중복 청구 위험"
+        ],
+        "sectionId": "retry-idempotent",
+        "requiredConcepts": [
+          "retry-loop",
+          "idempotent-action"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "Stripe 키가 정리된 뒤 같은 키를 다시 쓰면 무엇이 달라질 수 있나요?",
+        "answerChecklist": [
+          "새 요청으로 취급",
+          "보존 기간",
+          "원실행 확인",
+          "보장 범위"
+        ],
+        "sectionId": "recovery-checkpointing",
+        "requiredConcepts": [
+          "idempotent-action"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "코드 저장 지점으로 돌아가도 외부 청구가 취소되지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "내부 상태와 외부 효과 구분",
+          "별도 취소·보상",
+          "권한 검사"
+        ],
+        "sectionId": "side-effect-control",
+        "requiredConcepts": [
+          "side-effect-control",
+          "recovery-and-checkpointing"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "가정한 이탈량 0.05를 더할 때 0.3을 엄격히 초과하는 첫 단계는 언제인가요?",
+        "answerChecklist": [
+          "6단계는 0.3",
+          "7단계는 0.35",
+          "초과와 이상 구분",
+          "실제 오류율이 아님"
+        ],
+        "sectionId": "side-effect-control",
+        "requiredConcepts": [
+          "agent-failure-mode-taxonomy"
+        ]
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "Xu et al. · Where LLM Agents Fail and How They can Learn From Failures (arXiv 2509.25370, 2025)",
-        href: "https://arxiv.org/abs/2509.25370",
-        problem: "ALFWorld·GAIA·WebShop에서 agent 실패 원인을 일관되게 분류하고 그 분류로 재학습에 쓸 신호를 만드는 문제입니다.",
-        contribution: "Memory·reflection·planning·action·system-level 다섯 층의 AgentErrorTaxonomy와 주석된 실패 trace 데이터셋 AgentErrorBench를 제시합니다.",
-        assumptions: "세 환경의 trace가 실제 배포 agent의 실패 분포를 대표한다고 가정합니다.",
-        evidenceScope: "저자 자기보고 · ALFWorld·GAIA·WebShop 세 benchmark 환경 한정 · 2025년 9월 기준",
-        notClaim: "이 글의 goal drift·context drift·tool misuse 이름은 그 다섯 층을 실행 로그에서 흔한 이름으로 재정리한 것이며 논문 자체의 범주 이름은 아닙니다.",
-        sectionId: "failure-taxonomy",
+        "title": "Xu et al. · Where LLM Agents Fail and How They can Learn From Failures (arXiv 2509.25370, 2025)",
+        "href": "https://arxiv.org/abs/2509.25370",
+        "problem": "ALFWorld·GAIA·WebShop에서 agent 실패 원인을 일관되게 분류하고 그 분류로 재학습에 쓸 신호를 만드는 문제입니다.",
+        "contribution": "Memory·reflection·planning·action·system-level 다섯 층의 AgentErrorTaxonomy와 주석된 실패 trace 데이터셋 AgentErrorBench를 제시합니다.",
+        "assumptions": "세 환경의 trace가 실제 배포 agent의 실패 분포를 대표한다고 가정합니다.",
+        "evidenceScope": "저자 자기보고 · ALFWorld·GAIA·WebShop 세 benchmark 환경 한정 · 2025년 9월 기준",
+        "notClaim": "이 글의 goal drift·context drift·tool misuse 이름은 그 다섯 층을 실행 로그에서 흔한 이름으로 재정리한 것이며 논문 자체의 범주 이름은 아닙니다.",
+        "sectionId": "paper-agent-error-taxonomy"
       },
       {
-        title: "Stripe · Idempotent requests (API Reference)",
-        href: "https://docs.stripe.com/api/idempotent_requests",
-        problem: "네트워크 오류 뒤 안전하게 요청을 재시도하되 같은 side effect가 중복되지 않게 하는 문제입니다.",
-        contribution: "클라이언트가 만든 idempotency key로 첫 요청의 결과를 저장해 두고 같은 key의 후속 요청에는 재실행 없이 같은 결과를 돌려주는 mechanism입니다.",
-        assumptions: "클라이언트가 충분한 엔트로피를 가진 고유 key를 매 논리적 요청마다 새로 만든다고 가정합니다.",
-        evidenceScope: "공식 API 문서 · Stripe 자체 서비스 계약 · 키는 최소 24시간 보관",
-        notClaim: "모든 외부 서비스가 idempotency key를 지원한다는 뜻은 아니며, 지원 없는 API는 이 mechanism을 그대로 쓸 수 없습니다.",
-        sectionId: "retry-idempotent",
+        "title": "Stripe · Idempotent requests (API Reference)",
+        "href": "https://docs.stripe.com/api/idempotent_requests",
+        "problem": "네트워크 오류 뒤 안전하게 요청을 재시도하되 같은 side effect가 중복되지 않게 하는 문제입니다.",
+        "contribution": "클라이언트가 만든 idempotency key로 첫 요청의 결과를 저장해 두고 같은 key의 후속 요청에는 재실행 없이 같은 결과를 돌려주는 mechanism입니다.",
+        "assumptions": "클라이언트가 충분한 엔트로피를 가진 고유 key를 매 논리적 요청마다 새로 만든다고 가정합니다.",
+        "evidenceScope": "공식 API 문서 · Stripe 자체 서비스 계약 · 키는 최소 24시간 보관",
+        "notClaim": "모든 외부 서비스가 idempotency key를 지원한다는 뜻은 아니며, 지원 없는 API는 이 mechanism을 그대로 쓸 수 없습니다.",
+        "sectionId": "paper-stripe-idempotency"
       },
       {
-        title: "Anthropic Engineering · Effective harnesses for long-running agents (2025-11-26)",
-        href: "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
-        problem: "장기 실행 agent harness에서 절반만 구현하고 완료라고 보고하는 premature termination을 어떻게 걸러낼지의 문제입니다.",
-        contribution: "Git commit과 진행 기록 파일을 checkpoint로 남기고 세션 시작마다 end-to-end 테스트를 돌려 이전 완료 주장을 재검증하는 harness 설계를 보고합니다.",
-        assumptions: "코드 변경이 git으로 추적 가능하고 매 세션 개발 서버를 다시 띄울 수 있는 환경을 가정합니다.",
-        evidenceScope: "Anthropic 자체 harness 실험 관찰 · 특정 벤치마크 수치 공개 없음 · 2025년 11월 기준",
-        notClaim: "이 checkpoint 방식이 모든 failure detection 상황에 최적이라는 비교 실험 결과는 아닙니다.",
-        sectionId: "recovery-checkpointing",
+        "title": "Anthropic Engineering · Effective harnesses for long-running agents (2025-11-26)",
+        "href": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+        "problem": "장기 실행 agent harness에서 절반만 구현하고 완료라고 보고하는 premature termination을 어떻게 걸러낼지의 문제입니다.",
+        "contribution": "Git commit과 진행 기록 파일을 checkpoint로 남기고 세션 시작마다 end-to-end 테스트를 돌려 이전 완료 주장을 재검증하는 harness 설계를 보고합니다.",
+        "assumptions": "코드 변경이 git으로 추적 가능하고 매 세션 개발 서버를 다시 띄울 수 있는 환경을 가정합니다.",
+        "evidenceScope": "Anthropic 자체 harness 실험 관찰 · 특정 벤치마크 수치 공개 없음 · 2025년 11월 기준",
+        "notClaim": "이 checkpoint 방식이 모든 failure detection 상황에 최적이라는 비교 실험 결과는 아닙니다.",
+        "sectionId": "paper-long-running-harness"
       },
       {
-        title: "LangChain · Human-in-the-loop (docs.langchain.com)",
-        href: "https://docs.langchain.com/oss/python/langchain/human-in-the-loop",
-        problem: "Tool 실행 직전 사람의 검토를 끼워 넣고, 검토 대기 중 상태를 안전하게 보존하는 문제입니다.",
-        contribution: "Interrupt primitive로 graph를 멈추고 approve·edit·reject·respond 중 허용된 결정만 받아 Command(resume=...)로 재개하는 mechanism을 제공합니다.",
-        assumptions: "실행이 LangGraph의 checkpoint 저장소 위에서 thread id로 식별된다고 가정합니다.",
-        evidenceScope: "공식 구현 문서 · LangGraph API 기준 · escalation 규칙 자체는 운영자가 정의",
-        notClaim: "무엇을 위험한 action으로 볼지 정하는 escalation policy 규칙 자체를 제공하는 문서는 아닙니다.",
-        sectionId: "human-in-the-loop-escalation",
-      },
-    ],
+        "title": "LangChain · Human-in-the-loop (docs.langchain.com)",
+        "href": "https://docs.langchain.com/oss/python/langchain/human-in-the-loop",
+        "problem": "Tool 실행 직전 사람의 검토를 끼워 넣고, 검토 대기 중 상태를 안전하게 보존하는 문제입니다.",
+        "contribution": "Interrupt primitive로 graph를 멈추고 approve·edit·reject·respond 중 허용된 결정만 받아 Command(resume=...)로 재개하는 mechanism을 제공합니다.",
+        "assumptions": "실행이 LangGraph의 checkpoint 저장소 위에서 thread id로 식별된다고 가정합니다.",
+        "evidenceScope": "공식 구현 문서 · LangGraph API 기준 · escalation 규칙 자체는 운영자가 정의",
+        "notClaim": "무엇을 위험한 action으로 볼지 정하는 escalation policy 규칙 자체를 제공하는 문서는 아닙니다.",
+        "sectionId": "paper-human-in-loop"
+      }
+    ]
   },
   "ai/rl-foundations-for-llm-post-training": {
     entryNote: "RLHF의 PPO 절에서 policy가 직접 만든 response를 reward·KL로 평가해 update한다는 것을 이미 안다고 가정하고, 그 update가 정확히 무엇을 미분하고 어느 action에 credit을 돌려주는지를 채웁니다.",
@@ -93134,281 +96042,1706 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "semiconductors/bands-and-doping": {
-    coreIdea: "같은 실리콘이라도 움직일 수 있는 전자와 정공의 수는 에너지띠·온도·도핑에 따라 달라집니다. 300 K에서 순수 실리콘의 양쪽 농도를 기준으로, 도너나 억셉터를 넣었을 때 다수·소수 농도를 계산하고 그 근사의 경계를 확인합니다.",
-    assumedKnowledge: [
-      { id: "electric-current", role: "움직이는 전하가 도선 단면을 지나갈 때의 전류를 이미 알고 있다고 둡니다." },
+    "coreIdea": "같은 실리콘이라도 움직일 수 있는 전자와 정공의 수는 에너지띠·온도·도핑에 따라 달라집니다. 300 K에서 순수 실리콘의 양쪽 농도를 기준으로, 도너나 억셉터를 넣었을 때 다수·소수 농도를 계산하고 그 근사의 경계를 확인합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "electric-current",
+        "role": "움직이는 전하가 도선 단면을 지나갈 때의 전류를 이미 알고 있다고 둡니다."
+      }
     ],
-    introducedHere: [
-      { id: "semiconductor-energy-bands", role: "움직일 수 있는 에너지 상태와 간격을 구분합니다." },
-      { id: "intrinsic-electron-hole-pairs", role: "순수 실리콘에서 전자와 정공이 짝으로 생기는 이유를 설명합니다." },
-      { id: "donor-acceptor-doping", role: "넣는 원자에 따라 많은 쪽 전하가 바뀌는 기작을 설명합니다." },
-      { id: "semiconductor-charge-neutrality", role: "움직이는 전하와 고정 이온의 장부를 맞춥니다." },
-      { id: "carrier-mass-action-equilibrium", role: "열평형에서 전자·정공 농도의 곱으로 적은 쪽을 계산합니다." },
-      { id: "majority-minority-carriers", role: "1 cm³의 다수·소수 캐리어 수를 읽습니다." },
-      { id: "carrier-mobility-conductivity", role: "전하 수만으로 전류 크기를 단정할 수 없는 이유를 설명합니다." },
+    "introducedHere": [
+      {
+        "id": "semiconductor-energy-bands",
+        "role": "움직일 수 있는 에너지 상태와 간격을 구분합니다."
+      },
+      {
+        "id": "intrinsic-electron-hole-pairs",
+        "role": "순수 실리콘에서 전자와 정공이 짝으로 생기는 이유를 설명합니다."
+      },
+      {
+        "id": "donor-acceptor-doping",
+        "role": "넣는 원자에 따라 많은 쪽 전하가 바뀌는 기작을 설명합니다."
+      },
+      {
+        "id": "semiconductor-charge-neutrality",
+        "role": "움직이는 전하와 고정 이온의 장부를 맞춥니다."
+      },
+      {
+        "id": "carrier-mass-action-equilibrium",
+        "role": "열평형에서 전자·정공 농도의 곱으로 적은 쪽을 계산합니다."
+      },
+      {
+        "id": "majority-minority-carriers",
+        "role": "1 cm³의 다수·소수 캐리어 수를 읽습니다."
+      },
+      {
+        "id": "carrier-mobility-conductivity",
+        "role": "전하 수만으로 전류 크기를 단정할 수 없는 이유를 설명합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "semiconductor-energy-bands", sectionId: "states",
-        intuition: "전자가 갈 수 있는 에너지 자리가 빽빽한 구간과 갈 수 없는 간격을 구분합니다. 낮은 구간이 가득 차 있으면 같은 구간 안에서 작은 전기장에 응답할 빈자리가 없습니다.",
-        workedExample: "300 K 실리콘의 띠틈을 약 1.1 eV라고 두고, 열로 위쪽 상태에 올라간 전자 하나와 아래에 남은 빈자리 하나를 셉니다.",
-        boundary: "띠 그림은 결정의 가능한 상태를 요약한 모델이고 원자 하나의 고정 궤도 그림이나 전압에 대한 직접 눈금이 아닙니다.",
-        scientificGrounding: { observable: "광흡수 시작 에너지와 전기 전도도의 온도 의존성을 함께 재어 에너지 간격을 추정합니다.", unitsAndDimensions: "에너지 간격은 전자볼트 eV로 적으며 1 eV는 전하 1 e가 전압 1 V에서 얻는 에너지입니다.", modelAssumptions: "주기적인 결정 구조의 에너지 상태를 띠로 근사하고 결함·표면 상태를 따로 구분합니다.", measurementExample: "실리콘 300 K의 대표 띠틈 약 1.1 eV를 교육용 기준으로 사용합니다.", invalidConditions: "비정질·강한 결함·매우 작은 구조에서는 벌크 단결정 띠 그림만으로 측정이 설명되지 않습니다.", referenceFrame: "결정과 계측기가 정지한 실험실 기준계에서 에너지 기준점을 정합니다." },
+        "id": "semiconductor-energy-bands",
+        "sectionId": "states",
+        "intuition": "전자가 갈 수 있는 에너지 자리가 빽빽한 구간과 갈 수 없는 간격을 구분합니다. 낮은 구간이 가득 차 있으면 같은 구간 안에서 작은 전기장에 응답할 빈자리가 없습니다.",
+        "workedExample": "300 K 실리콘의 띠틈을 약 1.1 eV라고 두고, 열로 위쪽 상태에 올라간 전자 하나와 아래에 남은 빈자리 하나를 셉니다.",
+        "boundary": "띠 그림은 결정의 가능한 상태를 요약한 모델이고 원자 하나의 고정 궤도 그림이나 전압에 대한 직접 눈금이 아닙니다.",
+        "scientificGrounding": {
+          "observable": "광흡수 시작 에너지와 전기 전도도의 온도 의존성을 함께 재어 에너지 간격을 추정합니다.",
+          "unitsAndDimensions": "에너지 간격은 전자볼트 eV로 적으며 1 eV는 전하 1 e가 전압 1 V에서 얻는 에너지입니다.",
+          "modelAssumptions": "주기적인 결정 구조의 에너지 상태를 띠로 근사하고 결함·표면 상태를 따로 구분합니다.",
+          "measurementExample": "실리콘 300 K의 대표 띠틈 약 1.1 eV를 교육용 기준으로 사용합니다.",
+          "invalidConditions": "비정질·강한 결함·매우 작은 구조에서는 벌크 단결정 띠 그림만으로 측정이 설명되지 않습니다.",
+          "referenceFrame": "결정과 계측기가 정지한 실험실 기준계에서 에너지 기준점을 정합니다."
+        }
       },
       {
-        id: "intrinsic-electron-hole-pairs", sectionId: "intrinsic",
-        intuition: "전자가 이동 가능한 상태로 올라가면 결합에 남은 빈자리도 움직이는 양전하처럼 셀 수 있습니다.",
-        workedExample: "실리콘 300 K에서 순수 상태의 전자와 정공을 각각 약 10^10 cm^-3로 둡니다.",
-        boundary: "온도가 달라지면 이 수가 크게 달라지고, 빈자리는 실제 양전하 입자가 새로 생겼다는 뜻이 아닙니다.",
-        scientificGrounding: { observable: "평형 상태에서 측정한 전자와 정공의 부피당 농도 및 온도", unitsAndDimensions: "농도 n과 p의 단위는 세제곱센티미터당 개수 cm^-3입니다.", modelAssumptions: "빛이나 주입 전류가 없는 열평형, 300 K 벌크 실리콘을 기본 사례로 둡니다.", measurementExample: "1 cm³에 움직이는 전자와 정공이 각각 대략 10^10개 있다는 6.012 강의 수치를 사용합니다.", invalidConditions: "빛 조사·외부 주입·온도 변화가 있으면 같은 n_i 숫자를 그대로 쓸 수 없습니다.", referenceFrame: "실리콘 조각과 계측기가 정지한 실험실 기준계의 1 cm³ 부피" },
+        "id": "intrinsic-electron-hole-pairs",
+        "sectionId": "intrinsic",
+        "intuition": "전자가 이동 가능한 상태로 올라가면 결합에 남은 빈자리도 움직이는 양전하처럼 셀 수 있습니다.",
+        "workedExample": "실리콘 300 K에서 순수 상태의 전자와 정공을 각각 약 10^10 cm^-3로 둡니다.",
+        "boundary": "온도가 달라지면 이 수가 크게 달라지고, 빈자리는 실제 양전하 입자가 새로 생겼다는 뜻이 아닙니다.",
+        "scientificGrounding": {
+          "observable": "평형 상태에서 측정한 전자와 정공의 부피당 농도 및 온도",
+          "unitsAndDimensions": "농도 n과 p의 단위는 세제곱센티미터당 개수 cm^-3입니다.",
+          "modelAssumptions": "빛이나 주입 전류가 없는 열평형, 300 K 벌크 실리콘을 기본 사례로 둡니다.",
+          "measurementExample": "1 cm³에 움직이는 전자와 정공이 각각 대략 10^10개 있다는 6.012 강의 수치를 사용합니다.",
+          "invalidConditions": "빛 조사·외부 주입·온도 변화가 있으면 같은 n_i 숫자를 그대로 쓸 수 없습니다.",
+          "referenceFrame": "실리콘 조각과 계측기가 정지한 실험실 기준계의 1 cm³ 부피"
+        }
       },
       {
-        id: "donor-acceptor-doping", sectionId: "dopants",
-        intuition: "실리콘 자리에 전자를 하나 더 내놓기 쉬운 원자를 넣거나 빈자리를 만들기 쉬운 원자를 넣습니다.",
-        workedExample: "1 cm³에 도너 10^16개를 넣고 거의 전부 이온화하면 움직이는 전자가 약 10^16개가 됩니다(가정).",
-        boundary: "상온의 얕은 도핑 원자라는 근사입니다. 낮은 온도·깊은 불순물·보상 도핑에서는 넣은 수와 풀린 수가 다릅니다.",
-        scientificGrounding: { observable: "불순물의 부피당 수와 홀 측정 등으로 추정한 움직이는 전하 농도", unitsAndDimensions: "도너와 억셉터 농도 N_D,N_A는 cm^-3이며 이동 전하 농도와 같은 차원입니다.", modelAssumptions: "300 K 얕은 도핑 원자의 거의 완전한 이온화와 균일한 벌크 영역을 가정합니다.", measurementExample: "도너 10^16 cm^-3의 한쪽 도핑 사례에서 전자 농도 약 10^16 cm^-3로 계산합니다(가정).", invalidConditions: "매우 낮은 온도·강한 보상·고농도 축퇴에서는 N_D와 n을 곧바로 같게 둘 수 없습니다.", referenceFrame: "도핑된 실리콘 조각에 고정한 실험실 기준계의 부피 요소" },
+        "id": "donor-acceptor-doping",
+        "sectionId": "dopants",
+        "intuition": "실리콘 자리에 전자를 하나 더 내놓기 쉬운 원자를 넣거나 빈자리를 만들기 쉬운 원자를 넣습니다.",
+        "workedExample": "1 cm³에 도너 10^16개를 넣고 거의 전부 이온화하면 움직이는 전자가 약 10^16개가 됩니다(가정).",
+        "boundary": "상온의 얕은 도핑 원자라는 근사입니다. 낮은 온도·깊은 불순물·보상 도핑에서는 넣은 수와 풀린 수가 다릅니다.",
+        "scientificGrounding": {
+          "observable": "불순물의 부피당 수와 홀 측정 등으로 추정한 움직이는 전하 농도",
+          "unitsAndDimensions": "도너와 억셉터 농도 N_D,N_A는 cm^-3이며 이동 전하 농도와 같은 차원입니다.",
+          "modelAssumptions": "300 K 얕은 도핑 원자의 거의 완전한 이온화와 균일한 벌크 영역을 가정합니다.",
+          "measurementExample": "도너 10^16 cm^-3의 한쪽 도핑 사례에서 전자 농도 약 10^16 cm^-3로 계산합니다(가정).",
+          "invalidConditions": "매우 낮은 온도·강한 보상·고농도 축퇴에서는 N_D와 n을 곧바로 같게 둘 수 없습니다.",
+          "referenceFrame": "도핑된 실리콘 조각에 고정한 실험실 기준계의 부피 요소"
+        }
       },
       {
-        id: "semiconductor-charge-neutrality", sectionId: "dopants",
-        intuition: "도너가 내놓은 음전하 전자 옆에는 움직이지 않는 양전하 도너 이온이 남습니다.",
-        workedExample: "1 cm³의 전자 10^16개와 고정 도너 이온 약 10^16개가 부호를 달리해 맞습니다(가정).",
-        boundary: "접합의 공핍 영역처럼 전하가 공간적으로 분리된 곳을 국소 중성이라고 둘 수 없습니다.",
-        scientificGrounding: { observable: "도핑 원자 수와 이동 전하 농도, 국소 전기장의 공간 분포", unitsAndDimensions: "수 밀도는 cm^-3이고 전하 밀도는 C/cm³로 바꾸어 더합니다.", modelAssumptions: "접합에서 멀리 떨어진 균일한 벌크 영역의 거의 중성 상태를 셉니다.", measurementExample: "이온화 도너 +10^16 e/cm³와 전자 −10^16 e/cm³가 맞습니다(가정).", invalidConditions: "공핍층·표면·빠른 과도 상태의 공간 전하는 이 근사에서 빠져 있습니다.", referenceFrame: "실리콘 조각에 고정한 실험실 기준계의 동일한 부피 요소" },
+        "id": "semiconductor-charge-neutrality",
+        "sectionId": "dopants",
+        "intuition": "도너가 내놓은 음전하 전자 옆에는 움직이지 않는 양전하 도너 이온이 남습니다.",
+        "workedExample": "1 cm³의 전자 10^16개와 고정 도너 이온 약 10^16개가 부호를 달리해 맞습니다(가정).",
+        "boundary": "접합의 공핍 영역처럼 전하가 공간적으로 분리된 곳을 국소 중성이라고 둘 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "도핑 원자 수와 이동 전하 농도, 국소 전기장의 공간 분포",
+          "unitsAndDimensions": "수 밀도는 cm^-3이고 전하 밀도는 C/cm³로 바꾸어 더합니다.",
+          "modelAssumptions": "접합에서 멀리 떨어진 균일한 벌크 영역의 거의 중성 상태를 셉니다.",
+          "measurementExample": "이온화 도너 +10^16 e/cm³와 전자 −10^16 e/cm³가 맞습니다(가정).",
+          "invalidConditions": "공핍층·표면·빠른 과도 상태의 공간 전하는 이 근사에서 빠져 있습니다.",
+          "referenceFrame": "실리콘 조각에 고정한 실험실 기준계의 동일한 부피 요소"
+        }
       },
       {
-        id: "carrier-mass-action-equilibrium", sectionId: "count",
-        intuition: "전자와 빈자리가 짝으로 생기고 다시 만나 사라지는 평형에서는 한쪽이 늘면 다른 쪽이 줄어들어 곱이 일정합니다.",
-        workedExample: "n_i=10^10 cm^-3, n=10^16 cm^-3이면 p=n_i²/n=10^4 cm^-3입니다(가정한 도핑량).",
-        proofIdea: "같은 온도의 열평형에서는 짝 생성 속도와 재결합 속도가 맞습니다. 생성 기준을 n_i²로 쓰고 재결합이 n·p에 비례하는 단순 모델에서 n·p=n_i²가 나옵니다.",
-        counterexample: "빛을 비추어 전자와 정공을 동시에 추가하면 둘의 곱이 평형값보다 커질 수 있습니다.",
-        boundary: "같은 재료·온도의 열평형과 비축퇴 근사에서 씁니다. 강한 주입·고농도·온도 변화에는 다른 모델이 필요합니다.",
-        scientificGrounding: { observable: "같은 온도에서 잰 전자·정공 농도의 곱과 빛 조사 전후 변화", unitsAndDimensions: "n·p와 n_i²의 단위는 모두 cm^-6이므로 농도 제곱끼리 비교합니다.", modelAssumptions: "빛·주입 전류가 없는 열평형, 비축퇴 통계, 같은 재료와 온도를 가정합니다.", measurementExample: "10^16 cm^-3×10^4 cm^-3=10^20 cm^-6로 순수 상태의 (10^10 cm^-3)²과 같습니다.", invalidConditions: "광여기·강한 전압 주입·고농도 축퇴에서는 평형 곱을 그대로 적용하지 않습니다.", referenceFrame: "시료와 계측기가 정지한 실험실 기준계에서 같은 부피·온도" },
+        "id": "carrier-mass-action-equilibrium",
+        "sectionId": "count",
+        "intuition": "전자와 빈자리가 짝으로 생기고 다시 만나 사라지는 평형에서는 한쪽이 늘면 다른 쪽이 줄어들어 곱이 일정합니다.",
+        "workedExample": "n_i=10^10 cm^-3, n=10^16 cm^-3이면 p=n_i²/n=10^4 cm^-3입니다(가정한 도핑량).",
+        "proofIdea": "같은 온도의 열평형에서는 짝 생성 속도와 재결합 속도가 맞습니다. 생성 기준을 n_i²로 쓰고 재결합이 n·p에 비례하는 단순 모델에서 n·p=n_i²가 나옵니다.",
+        "counterexample": "빛을 비추어 전자와 정공을 동시에 추가하면 둘의 곱이 평형값보다 커질 수 있습니다.",
+        "boundary": "같은 재료·온도의 열평형과 비축퇴 근사에서 씁니다. 강한 주입·고농도·온도 변화에는 다른 모델이 필요합니다.",
+        "scientificGrounding": {
+          "observable": "같은 온도에서 잰 전자·정공 농도의 곱과 빛 조사 전후 변화",
+          "unitsAndDimensions": "n·p와 n_i²의 단위는 모두 cm^-6이므로 농도 제곱끼리 비교합니다.",
+          "modelAssumptions": "빛·주입 전류가 없는 열평형, 비축퇴 통계, 같은 재료와 온도를 가정합니다.",
+          "measurementExample": "10^16 cm^-3×10^4 cm^-3=10^20 cm^-6로 순수 상태의 (10^10 cm^-3)²과 같습니다.",
+          "invalidConditions": "광여기·강한 전압 주입·고농도 축퇴에서는 평형 곱을 그대로 적용하지 않습니다.",
+          "referenceFrame": "시료와 계측기가 정지한 실험실 기준계에서 같은 부피·온도"
+        }
       },
       {
-        id: "majority-minority-carriers", sectionId: "count",
-        intuition: "도핑한 실리콘에서는 전자와 정공 중 많은 쪽을 먼저 정하고 적은 쪽도 수로 남겨 둡니다.",
-        workedExample: "도너 10^16 cm^-3이면 전자 약 10^16, 정공 약 10^4 cm^-3입니다(가정).",
-        boundary: "소수라는 이름이 없다는 뜻은 아닙니다. 접합에서 소수 캐리어 이동이 핵심이 됩니다.",
-        scientificGrounding: { observable: "전자·정공 농도를 따로 추정한 Hall 측정과 접합 응답", unitsAndDimensions: "다수와 소수 모두 부피당 수 cm^-3으로 세어 비율을 비교합니다.", modelAssumptions: "300 K 열평형의 균일한 벌크 영역과 이온화 도핑 근사를 사용합니다.", measurementExample: "1 cm³에 10^16 전자와 10^4 정공을 놓으면 전자가 10^12배 많습니다(가정).", invalidConditions: "접합 공핍층이나 빛 조사로 평형이 깨지면 벌크의 다수·소수 수를 그대로 쓸 수 없습니다.", referenceFrame: "시료와 계측기가 정지한 실험실 기준계의 동일한 1 cm³" },
+        "id": "majority-minority-carriers",
+        "sectionId": "count",
+        "intuition": "도핑한 실리콘에서는 전자와 정공 중 많은 쪽을 먼저 정하고 적은 쪽도 수로 남겨 둡니다.",
+        "workedExample": "도너 10^16 cm^-3이면 전자 약 10^16, 정공 약 10^4 cm^-3입니다(가정).",
+        "boundary": "소수라는 이름이 없다는 뜻은 아닙니다. 접합에서 소수 캐리어 이동이 핵심이 됩니다.",
+        "scientificGrounding": {
+          "observable": "전자·정공 농도를 따로 추정한 Hall 측정과 접합 응답",
+          "unitsAndDimensions": "다수와 소수 모두 부피당 수 cm^-3으로 세어 비율을 비교합니다.",
+          "modelAssumptions": "300 K 열평형의 균일한 벌크 영역과 이온화 도핑 근사를 사용합니다.",
+          "measurementExample": "1 cm³에 10^16 전자와 10^4 정공을 놓으면 전자가 10^12배 많습니다(가정).",
+          "invalidConditions": "접합 공핍층이나 빛 조사로 평형이 깨지면 벌크의 다수·소수 수를 그대로 쓸 수 없습니다.",
+          "referenceFrame": "시료와 계측기가 정지한 실험실 기준계의 동일한 1 cm³"
+        }
       },
       {
-        id: "carrier-mobility-conductivity", sectionId: "boundaries",
-        intuition: "움직일 수 있는 수가 같아도 전기장에 반응해 움직이는 속도가 다르면 전류는 다릅니다.",
-        workedExample: "두 시료의 전자 농도가 같고 한쪽 이동도가 절반이면 정공 기여가 작을 때 전도도도 대략 절반입니다(가정).",
-        boundary: "도핑으로 전하 수가 늘어날 때 불순물 산란으로 이동도도 바뀔 수 있어 농도비를 전도도비로 옮기지 않습니다.",
-        scientificGrounding: { observable: "같은 온도와 전기장에서 잰 전류 밀도, 전하 농도, 전기장 세기", unitsAndDimensions: "전도도 σ는 S/m, 이동도 μ는 m²/(V·s), qnμ의 단위도 S/m입니다.", modelAssumptions: "낮은 전기장에서 선형 이동도와 균일한 재료를 가정합니다.", measurementExample: "n을 고정한 두 시료의 μ가 1 대 0.5면 전자 전도도도 1 대 0.5입니다(가정).", invalidConditions: "고전계 속도 포화·온도 변화·강한 산란에서는 일정 μ의 선형식을 그대로 쓰지 않습니다.", referenceFrame: "시료와 계측기가 정지한 실험실 기준계에서 전기장 방향을 고정합니다." },
-      },
+        "id": "carrier-mobility-conductivity",
+        "sectionId": "boundaries",
+        "intuition": "움직일 수 있는 수가 같아도 전기장에 반응해 움직이는 속도가 다르면 전류는 다릅니다.",
+        "workedExample": "두 시료의 전자 농도가 같고 한쪽 이동도가 절반이면 정공 기여가 작을 때 전도도도 대략 절반입니다(가정).",
+        "boundary": "도핑으로 전하 수가 늘어날 때 불순물 산란으로 이동도도 바뀔 수 있어 농도비를 전도도비로 옮기지 않습니다.",
+        "scientificGrounding": {
+          "observable": "같은 온도와 전기장에서 잰 전류 밀도, 전하 농도, 전기장 세기",
+          "unitsAndDimensions": "전도도 σ는 S/m, 이동도 μ는 m²/(V·s), qnμ의 단위도 S/m입니다.",
+          "modelAssumptions": "낮은 전기장에서 선형 이동도와 균일한 재료를 가정합니다.",
+          "measurementExample": "n을 고정한 두 시료의 μ가 1 대 0.5면 전자 전도도도 1 대 0.5입니다(가정).",
+          "invalidConditions": "고전계 속도 포화·온도 변화·강한 산란에서는 일정 μ의 선형식을 그대로 쓰지 않습니다.",
+          "referenceFrame": "시료와 계측기가 정지한 실험실 기준계에서 전기장 방향을 고정합니다."
+        }
+      }
     ],
-    conceptStages: [
-      { label: "00 가능한 자리", relation: "실리콘 안의 전자 상태와 이동 가능한 전하를 구분합니다.", concepts: ["semiconductor-energy-bands", "intrinsic-electron-hole-pairs"] },
-      { label: "01 원자를 섞기", relation: "도너·억셉터와 고정 이온 전하를 함께 셉니다.", concepts: ["donor-acceptor-doping", "semiconductor-charge-neutrality"] },
-      { label: "02 양쪽 농도", relation: "많은 쪽과 적은 쪽의 농도를 같은 수치에서 구합니다.", concepts: ["carrier-mass-action-equilibrium", "majority-minority-carriers"] },
-      { label: "03 측정 경계", relation: "농도와 전도도의 차이를 이동도로 확인합니다.", concepts: ["carrier-mobility-conductivity"] },
+    "conceptStages": [
+      {
+        "label": "00 가능한 자리",
+        "relation": "실리콘 안의 전자 상태와 이동 가능한 전하를 구분합니다.",
+        "concepts": [
+          "semiconductor-energy-bands",
+          "intrinsic-electron-hole-pairs"
+        ]
+      },
+      {
+        "label": "01 원자를 섞기",
+        "relation": "도너·억셉터와 고정 이온 전하를 함께 셉니다.",
+        "concepts": [
+          "donor-acceptor-doping",
+          "semiconductor-charge-neutrality"
+        ]
+      },
+      {
+        "label": "02 양쪽 농도",
+        "relation": "많은 쪽과 적은 쪽의 농도를 같은 수치에서 구합니다.",
+        "concepts": [
+          "carrier-mass-action-equilibrium",
+          "majority-minority-carriers"
+        ]
+      },
+      {
+        "label": "03 측정 경계",
+        "relation": "농도와 전도도의 차이를 이동도로 확인합니다.",
+        "concepts": [
+          "carrier-mobility-conductivity"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "꽉 찬 낮은 에너지띠에서 작은 전기장만으로 전류가 잘 나지 않는 이유를 설명하세요.", answerChecklist: ["옮길 빈 상태", "위쪽 띠", "에너지 간격", "0 K와 유한 온도 구분"], requiredConcepts: ["semiconductor-energy-bands"], sectionId: "states" },
-      { level: "basic", question: "300 K 순수 실리콘에서 n_i=10^10 cm^-3를 쓰면 전자와 정공은 각각 몇 개입니까?", answerChecklist: ["n=p=10^10 cm^-3", "짝 생성", "1 cm³ 기준"], requiredConcepts: ["intrinsic-electron-hole-pairs"], sectionId: "intrinsic" },
-      { level: "basic", question: "도너 10^16 cm^-3가 충분히 이온화할 때 n과 p의 근사값을 단위와 함께 구하세요.", answerChecklist: ["n≈10^16 cm^-3", "p≈10^4 cm^-3", "n_i²/n", "300 K 열평형"], requiredConcepts: ["donor-acceptor-doping", "carrier-mass-action-equilibrium"], sectionId: "count" },
-      { level: "basic", question: "억셉터 10^16 cm^-3면 전자와 정공 가운데 어느 쪽이 다수입니까?", answerChecklist: ["정공 다수", "p≈10^16", "n≈10^4", "cm^-3"], requiredConcepts: ["donor-acceptor-doping", "majority-minority-carriers"], sectionId: "count" },
-      { level: "basic", question: "도너가 전자를 풀어 놓아도 균일한 벌크 실리콘이 거의 중성인 이유는 무엇입니까?", answerChecklist: ["움직이는 전자 음전하", "고정 도너 이온 양전하", "같은 부피에서 합산"], requiredConcepts: ["semiconductor-charge-neutrality"], sectionId: "dopants" },
-      { level: "basic", question: "전자 수가 백만 배면 전도도도 정확히 백만 배라고 할 수 없는 이유를 설명하세요.", answerChecklist: ["이동도", "불순물 산란", "정공 기여", "온도/전기장 조건"], requiredConcepts: ["carrier-mobility-conductivity"], sectionId: "boundaries" },
-      { level: "advanced", question: "도너 10^16과 억셉터 2×10^15 cm^-3가 모두 이온화하면 순도너 농도와 n,p는 얼마입니까?", answerChecklist: ["순도너 8×10^15", "n≈8×10^15", "p≈1.25×10^4 cm^-3", "보상 도핑"], requiredConcepts: ["donor-acceptor-doping", "semiconductor-charge-neutrality", "carrier-mass-action-equilibrium"], sectionId: "count" },
-      { level: "advanced", question: "다른 온도에서 n_i가 10^13 cm^-3가 되었다면 도너 10^16 cm^-3 사례의 p는 얼마이며 어떤 가정을 다시 확인합니까?", answerChecklist: ["p≈10^10", "n_i²/n", "도너 이온화", "열평형", "온도에 따른 이동도"], requiredConcepts: ["intrinsic-electron-hole-pairs", "carrier-mass-action-equilibrium"], sectionId: "boundaries" },
-      { level: "advanced", question: "전자 농도가 같은 두 시료에서 한쪽 이동도가 절반이면 전도도를 어떻게 비교합니까?", answerChecklist: ["σ=q(nμn+pμp)", "정공 기여가 작을 때 절반", "같은 온도·전기장", "p와 μp 확인"], requiredConcepts: ["carrier-mobility-conductivity"], sectionId: "boundaries" },
-      { level: "advanced", question: "빛을 비춘 접합에서 n·p=n_i²를 그대로 쓰기 전에 확인할 측정과 조건을 제안하세요.", answerChecklist: ["빛 조사 전후 n,p", "열평형 여부", "재결합/생성", "온도", "접합과 균일 벌크 구분"], requiredConcepts: ["carrier-mass-action-equilibrium", "majority-minority-carriers"], sectionId: "boundaries" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "꽉 찬 낮은 에너지띠에서 작은 전기장만으로 전류가 잘 나지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "옮길 빈 상태",
+          "위쪽 띠",
+          "에너지 간격",
+          "0 K와 유한 온도 구분"
+        ],
+        "requiredConcepts": [
+          "semiconductor-energy-bands"
+        ],
+        "sectionId": "states"
+      },
+      {
+        "level": "basic",
+        "question": "300 K 순수 실리콘에서 n_i=10^10 cm^-3를 쓰면 전자와 정공은 각각 몇 개입니까?",
+        "answerChecklist": [
+          "n=p=10^10 cm^-3",
+          "짝 생성",
+          "1 cm³ 기준"
+        ],
+        "requiredConcepts": [
+          "intrinsic-electron-hole-pairs"
+        ],
+        "sectionId": "intrinsic"
+      },
+      {
+        "level": "basic",
+        "question": "도너 10^16 cm^-3가 충분히 이온화할 때 n과 p의 근사값을 단위와 함께 구하세요.",
+        "answerChecklist": [
+          "n≈10^16 cm^-3",
+          "p≈10^4 cm^-3",
+          "n_i²/n",
+          "300 K 열평형"
+        ],
+        "requiredConcepts": [
+          "donor-acceptor-doping",
+          "carrier-mass-action-equilibrium"
+        ],
+        "sectionId": "count"
+      },
+      {
+        "level": "basic",
+        "question": "억셉터 10^16 cm^-3면 전자와 정공 가운데 어느 쪽이 다수입니까?",
+        "answerChecklist": [
+          "정공 다수",
+          "p≈10^16",
+          "n≈10^4",
+          "cm^-3"
+        ],
+        "requiredConcepts": [
+          "donor-acceptor-doping",
+          "majority-minority-carriers"
+        ],
+        "sectionId": "count"
+      },
+      {
+        "level": "basic",
+        "question": "도너가 전자를 풀어 놓아도 균일한 벌크 실리콘이 거의 중성인 이유는 무엇입니까?",
+        "answerChecklist": [
+          "움직이는 전자 음전하",
+          "고정 도너 이온 양전하",
+          "같은 부피에서 합산"
+        ],
+        "requiredConcepts": [
+          "semiconductor-charge-neutrality"
+        ],
+        "sectionId": "dopants"
+      },
+      {
+        "level": "basic",
+        "question": "전자 수가 백만 배면 전도도도 정확히 백만 배라고 할 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "이동도",
+          "불순물 산란",
+          "정공 기여",
+          "온도/전기장 조건"
+        ],
+        "requiredConcepts": [
+          "carrier-mobility-conductivity"
+        ],
+        "sectionId": "boundaries"
+      },
+      {
+        "level": "advanced",
+        "question": "도너 10^16과 억셉터 2×10^15 cm^-3가 모두 이온화하면 순도너 농도와 n,p는 얼마입니까?",
+        "answerChecklist": [
+          "순도너 8×10^15",
+          "n≈8×10^15",
+          "p≈1.25×10^4 cm^-3",
+          "보상 도핑"
+        ],
+        "requiredConcepts": [
+          "donor-acceptor-doping",
+          "semiconductor-charge-neutrality",
+          "carrier-mass-action-equilibrium"
+        ],
+        "sectionId": "count"
+      },
+      {
+        "level": "advanced",
+        "question": "다른 온도에서 n_i가 10^13 cm^-3가 되었다면 도너 10^16 cm^-3 사례의 p는 얼마이며 어떤 가정을 다시 확인합니까?",
+        "answerChecklist": [
+          "p≈10^10",
+          "n_i²/n",
+          "도너 이온화",
+          "열평형",
+          "온도에 따른 이동도"
+        ],
+        "requiredConcepts": [
+          "intrinsic-electron-hole-pairs",
+          "carrier-mass-action-equilibrium"
+        ],
+        "sectionId": "boundaries"
+      },
+      {
+        "level": "advanced",
+        "question": "전자 농도가 같은 두 시료에서 한쪽 이동도가 절반이면 전도도를 어떻게 비교합니까?",
+        "answerChecklist": [
+          "σ=q(nμn+pμp)",
+          "정공 기여가 작을 때 절반",
+          "같은 온도·전기장",
+          "p와 μp 확인"
+        ],
+        "requiredConcepts": [
+          "carrier-mobility-conductivity"
+        ],
+        "sectionId": "boundaries"
+      },
+      {
+        "level": "advanced",
+        "question": "빛을 비춘 접합에서 n·p=n_i²를 그대로 쓰기 전에 확인할 측정과 조건을 제안하세요.",
+        "answerChecklist": [
+          "빛 조사 전후 n,p",
+          "열평형 여부",
+          "재결합/생성",
+          "온도",
+          "접합과 균일 벌크 구분"
+        ],
+        "requiredConcepts": [
+          "carrier-mass-action-equilibrium",
+          "majority-minority-carriers"
+        ],
+        "sectionId": "boundaries"
+      }
     ],
-    papers: [
-      { title: "A. H. Wilson, ‘The Theory of Electronic Semi-Conductors,’ Proceedings of the Royal Society A 133 (1931), 458–491", href: "https://ethw-images.s3.us-east-va.perf.cloud.ovh.us/ieee/b/b4/P3_Proc._R._Soc._Lond._A-1931-Wilson-458-91.pdf", problem: "고전적인 자유 전자 그림으로는 도체와 절연체·반도체의 차이를 설명하기 어려웠습니다.", contribution: "주기적인 결정의 허용 에너지띠와 그 사이의 금지 구간을 써서 낮은 띠가 가득 찬 상태의 전도 경계를 설명합니다.", assumptions: "완전한 결정의 주기적 퍼텐셜과 에너지띠 근사에서 시작합니다.", evidenceScope: "원문 460쪽의 허용·금지 에너지띠와 완전히 찬 낮은 띠의 논의를 스캔 이미지에서 직접 확인했습니다.", notClaim: "1931년 논문이 이 글의 현대 실리콘 300 K 수치나 도핑 10^16 cm^-3 사례를 측정했다는 뜻이 아닙니다.", sectionId: "states" },
-      { title: "W. Shockley, ‘The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors,’ Bell System Technical Journal 28 (1949), 435–489", href: "https://vtda.org/pubs/BSTJ/vol28-1949/articles/bstj28-3-435.pdf", problem: "한 결정에서 p형과 n형 영역을 이어 놓았을 때 정류와 전위를 설명해야 했습니다.", contribution: "도너와 억셉터 농도에 따라 n형·p형을 구분하고 접합을 설명하는 출발점을 제시합니다.", assumptions: "당시의 게르마늄 접합과 반도체 내 확산 모델을 중심으로 합니다.", evidenceScope: "원문 435쪽 서론의 도너 N_d·억셉터 N_a와 접합 정의를 스캔 이미지에서 확인했습니다.", notClaim: "이 글의 1 cm³ 실리콘 숫자와 np 계산은 Shockley의 1949년 실험 결과가 아닙니다.", sectionId: "dopants" },
-    ],
+    "papers": [
+      {
+        "title": "A. H. Wilson, ‘The Theory of Electronic Semi-Conductors,’ Proceedings of the Royal Society A 133 (1931), 458–491",
+        "href": "https://ethw-images.s3.us-east-va.perf.cloud.ovh.us/ieee/b/b4/P3_Proc._R._Soc._Lond._A-1931-Wilson-458-91.pdf",
+        "problem": "고전적인 자유 전자 그림으로는 도체와 절연체·반도체의 차이를 설명하기 어려웠습니다.",
+        "contribution": "주기적인 결정의 허용 에너지띠와 그 사이의 금지 구간을 써서 낮은 띠가 가득 찬 상태의 전도 경계를 설명합니다.",
+        "assumptions": "완전한 결정의 주기적 퍼텐셜과 에너지띠 근사에서 시작합니다.",
+        "evidenceScope": "원문 스캔 460쪽(PDF4쪽)의 허용·금지 에너지띠와 완전히 찬 낮은 띠의 논의를 확인했습니다. 해당 쪽은 그림이 아니라 문장으로 설명합니다.",
+        "notClaim": "1931년 논문이 이 글의 현대 실리콘 300 K 수치나 도핑 10^16 cm^-3 사례를 측정했다는 뜻이 아닙니다.",
+        "sectionId": "states"
+      },
+      {
+        "title": "W. Shockley, ‘The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors,’ Bell System Technical Journal 28 (1949), 435–489",
+        "href": "https://vtda.org/pubs/BSTJ/vol28-1949/articles/bstj28-3-435.pdf",
+        "problem": "한 결정에서 p형과 n형 영역을 이어 놓았을 때 정류와 전위를 설명해야 했습니다.",
+        "contribution": "도너와 억셉터 농도에 따라 n형·p형을 구분하고 접합을 설명하는 출발점을 제시합니다.",
+        "assumptions": "당시의 게르마늄 접합과 반도체 내 확산 모델을 중심으로 합니다.",
+        "evidenceScope": "원문 435쪽 서론의 도너 N_d·억셉터 N_a와 접합 정의를 스캔 이미지에서 확인했습니다.",
+        "notClaim": "이 글의 1 cm³ 실리콘 숫자와 np 계산은 Shockley의 1949년 실험 결과가 아닙니다.",
+        "sectionId": "dopants"
+      },
+      {
+        "title": "MIT 6.012 Lecture 2, Semiconductor Physics (I), 2005",
+        "href": "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/e1a94598c1fd641fc15636a9ad14de1a_lec2.pdf",
+        "problem": "같은 온도에서 순수·도핑 실리콘의 이동 전하 농도를 서로 모순 없이 세어야 합니다.",
+        "contribution": "9쪽의 열평형 농도 곱과13–14·16–17쪽의 이온화·도핑 우세 근사를 줍니다.",
+        "assumptions": "열평형·비축퇴 근사와 충분한 이온화, 해당 온도의 고유 농도를 사용합니다.",
+        "evidenceScope": "원문9·11·13·14·17쪽의 식과300 K 기준값을 확인했습니다. 도너10¹⁶·보상2×10¹⁵는 본문 가정입니다.",
+        "notClaim": "모든 온도에서10¹⁰ cm⁻³가 고정되거나 빛을 비춘 비평형에서도 같은 농도 곱이 유지된다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      }
+    ]
   },
   "devices/pn-junction-and-rectification": {
-    coreIdea: "서로 다르게 도핑한 실리콘을 붙이면 캐리어 확산 뒤에 고정 이온의 전기장이 생겨 평형을 이룹니다. 외부 전압은 이 장벽을 바꾸며, 이상 조건에서 전류는 전압에 지수적으로 반응합니다. 같은 가상 접합에서 0.5·0.6·−0.5 V를 계산하고 실제 소자의 경계를 확인합니다.",
-    assumedKnowledge: [
-      { id: "donor-acceptor-doping", role: "p형·n형 영역에 어느 전하가 많은지 가져옵니다." },
-      { id: "majority-minority-carriers", role: "경계를 넘어간 전하를 반대편의 소수 캐리어로 셉니다." },
-      { id: "electric-potential-difference", role: "두 단자 전압의 기준과 부호를 정합니다." },
+    "coreIdea": "서로 다르게 도핑한 실리콘을 붙이면 캐리어 확산 뒤에 고정 이온의 전기장이 생겨 평형을 이룹니다. 외부 전압은 이 장벽을 바꾸며, 이상 조건에서 전류는 전압에 지수적으로 반응합니다. 같은 가상 접합에서 0.5·0.6·−0.5 V를 계산하고 실제 소자의 경계를 확인합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "donor-acceptor-doping",
+        "role": "p형·n형 영역에 어느 전하가 많은지 가져옵니다."
+      },
+      {
+        "id": "majority-minority-carriers",
+        "role": "경계를 넘어간 전하를 반대편의 소수 캐리어로 셉니다."
+      },
+      {
+        "id": "electric-potential-difference",
+        "role": "두 단자 전압의 기준과 부호를 정합니다."
+      }
     ],
-    introducedHere: [
-      { id: "pn-carrier-diffusion", role: "농도 차이에서 첫 이동이 시작되는 이유를 설명합니다." },
-      { id: "depletion-space-charge", role: "경계에 남은 고정 이온을 위치별로 셉니다." },
-      { id: "built-in-junction-field", role: "확산에 맞서는 전기장과 열평형을 설명합니다." },
-      { id: "junction-bias-response", role: "외부 전압의 두 방향이 장벽을 바꾸는 방식을 구분합니다." },
-      { id: "ideal-diode-law", role: "같은 가상 접합의 세 전압에서 전류를 계산합니다." },
-      { id: "junction-model-boundary", role: "이상식의 계산과 제품 정격을 구분합니다." },
+    "introducedHere": [
+      {
+        "id": "pn-carrier-diffusion",
+        "role": "농도 차이에서 첫 이동이 시작되는 이유를 설명합니다."
+      },
+      {
+        "id": "depletion-space-charge",
+        "role": "경계에 남은 고정 이온을 위치별로 셉니다."
+      },
+      {
+        "id": "built-in-junction-field",
+        "role": "확산에 맞서는 전기장과 열평형을 설명합니다."
+      },
+      {
+        "id": "junction-bias-response",
+        "role": "외부 전압의 두 방향이 장벽을 바꾸는 방식을 구분합니다."
+      },
+      {
+        "id": "ideal-diode-law",
+        "role": "같은 가상 접합의 세 전압에서 전류를 계산합니다."
+      },
+      {
+        "id": "junction-model-boundary",
+        "role": "이상식의 계산과 제품 정격을 구분합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "pn-carrier-diffusion", sectionId: "diffusion", intuition: "많은 쪽의 전자와 정공이 각각 상대 영역으로 퍼집니다.", workedExample: "각 영역을 10^16 cm^-3로 도핑했다고 가정하고 전자는 n→p, 정공은 p→n으로 표시합니다.", boundary: "전기장이 생긴 뒤에는 농도 차이 하나로 전체 흐름을 결정할 수 없습니다.", scientificGrounding: { observable: "접합 양쪽의 전자·정공 농도와 단자 전류", unitsAndDimensions: "농도는 cm^-3, 전류는 A이며 농도 차이만으로 전류 수치를 계산하지 않습니다.", modelAssumptions: "300 K, 균일한 p·n형 벌크를 맞댄 일차원 접합을 생각합니다.", measurementExample: "양쪽 10^16 cm^-3 도핑은 전자·정공 방향을 정하는 가정 사례입니다.", invalidConditions: "평형 이후의 역방향 이동과 고전계는 확산 하나로 설명되지 않습니다.", referenceFrame: "접합면에 수직인 x축을 왼쪽 p형에서 오른쪽 n형으로 둔 실험실 기준계" } },
-      { id: "depletion-space-charge", sectionId: "depletion", intuition: "움직이는 전하가 경계를 떠나면 그 자리에 붙박이 반대 전하가 드러납니다.", workedExample: "p형 경계에 음전하 억셉터 이온, n형 경계에 양전하 도너 이온을 표시합니다.", boundary: "공핍 근사는 영역에 움직이는 캐리어가 정확히 0이라는 뜻이 아니며, 벌크 전체에 적용하지 않습니다.", scientificGrounding: { observable: "전기장·전위의 위치별 분포와 도핑 농도", unitsAndDimensions: "공간 전하 밀도는 C/m³, 공핍 폭은 m입니다.", modelAssumptions: "일차원 급변 접합과 공핍 영역 내 낮은 이동 전하 농도를 근사합니다.", measurementExample: "10^16 cm^-3 도핑한 가상 접합의 경계에 부호가 반대인 고정 이온을 그립니다.", invalidConditions: "공핍 영역 안의 캐리어·결함이 큰 경우 단순한 균일 고정 전하 모델이 틀립니다.", referenceFrame: "x축 양의 방향을 p형→n형으로 둔 실험실 기준계" } },
-      { id: "built-in-junction-field", sectionId: "depletion", intuition: "드러난 고정 이온의 전기장은 더 건너가려는 확산에 맞섭니다.", workedExample: "전기장 방향을 n형(+)에서 p형(−)으로 그리고 0 V에서 순전류 0을 확인합니다.", boundary: "내장 전위만으로 닫힌 열평형 회로에서 외부 전력을 꺼낼 수 없습니다.", scientificGrounding: { observable: "접합 전위·전기장 프로파일과 0 V 단자 전류", unitsAndDimensions: "전위차는 V, 전기장은 V/m, 전류는 A입니다.", modelAssumptions: "외부 에너지 공급이 없는 열평형과 일정 온도를 가정합니다.", measurementExample: "가상 접합의 단자 전압 0 V에서 계산 전류는 0 A입니다.", invalidConditions: "광조사·외부 주입처럼 비평형인 경우 확산과 drift가 맞지 않습니다.", referenceFrame: "접합에 고정한 실험실 기준계, x축 p형→n형" } },
-      { id: "junction-bias-response", sectionId: "bias", intuition: "바깥 전압이 내부 장벽을 낮추거나 높여 건너가는 전하 수를 바꿉니다.", workedExample: "p형 단자를 +0.5 V로 두면 순방향, −0.5 V로 두면 역방향으로 비교합니다.", boundary: "역방향 흐름이 정확히 0이라는 뜻은 아니고, 큰 역전압은 항복을 부를 수 있습니다.", scientificGrounding: { observable: "p형과 n형 단자의 전압, 단자 전류와 접합 폭", unitsAndDimensions: "전압 V, 전류 A, 폭 m를 구분합니다.", modelAssumptions: "두 단자의 전압 부호를 p형−n형으로 정하고 일정한 300 K를 둡니다.", measurementExample: "가정한 ±0.5 V에서 이상식의 전류는 +0.251 mA와 약 −1 pA입니다.", invalidConditions: "빠른 과도 상태와 항복·강한 누설에서는 정적 바이어스 그림만으로 부족합니다.", referenceFrame: "접합에 고정한 실험실 기준계와 p형−n형 전압 부호" } },
-      { id: "ideal-diode-law", sectionId: "calculation", intuition: "열전압으로 나눈 전압이 지수의 입력이므로 작은 전압 차이가 큰 전류비가 됩니다.", workedExample: "300 K, Is=1 pA, VT=25.85 mV에서 0.5 V≈0.251 mA, 0.6 V≈12.03 mA입니다(가정).", boundary: "Is는 도핑 농도만으로 정해지지 않고 이 식은 직렬 저항·재결합·항복을 빼고 계산합니다.", scientificGrounding: { observable: "온도를 고정한 단자 전압·전류의 I–V 곡선", unitsAndDimensions: "V/VT는 무차원이고 Is와 I는 모두 A입니다.", modelAssumptions: "300 K, 이상 계수 1, 낮은 수준 주입, 일정한 Is=1 pA를 가정합니다.", measurementExample: "가정한 0.5 V와 0.6 V의 이상 전류비는 약 47.9입니다.", invalidConditions: "고전류 직렬 저항, 재결합 지배, 큰 역전압 항복에는 그대로 맞지 않습니다.", referenceFrame: "접합 단자에 고정한 실험실 기준계에서 p형−n형 전압을 양수로 둡니다." } },
-      { id: "junction-model-boundary", sectionId: "limits", intuition: "켜짐의 전압은 고정된 숫자가 아니라 회로에서 요구하는 전류와 소자 조건으로 정해집니다.", workedExample: "0.5 V에도 0.251 mA가 흐르는 가상 접합은 0.6 V 절대 문턱이라는 말의 반례입니다.", boundary: "정격과 온도 조건은 실제 소자의 데이터시트를 따로 읽어야 합니다.", scientificGrounding: { observable: "온도별 I–V 곡선과 역방향 항복 전압", unitsAndDimensions: "전류 A, 전압 V, 온도 K를 함께 기록합니다.", modelAssumptions: "이상식의 300 K 기준 사례와 실제 소자의 측정 곡선을 비교합니다.", measurementExample: "이상식이 −0.5 V에서 약 −1 pA를 주지만 실제 제품의 누설은 다른 값일 수 있습니다.", invalidConditions: "실제 데이터시트의 소자 종류·면적·온도가 다르면 가상 수치를 옮기지 않습니다.", referenceFrame: "소자와 계측기에 고정한 실험실 기준계, 순방향 전압 부호를 명시합니다." } },
+    "conceptExplanations": [
+      {
+        "id": "pn-carrier-diffusion",
+        "sectionId": "diffusion",
+        "intuition": "많은 쪽의 전자와 정공이 각각 상대 영역으로 퍼집니다.",
+        "workedExample": "각 영역을 10^16 cm^-3로 도핑했다고 가정하고 전자는 n→p, 정공은 p→n으로 표시합니다.",
+        "boundary": "전기장이 생긴 뒤에는 농도 차이 하나로 전체 흐름을 결정할 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "접합 양쪽의 전자·정공 농도와 단자 전류",
+          "unitsAndDimensions": "농도는 cm^-3, 전류는 A이며 농도 차이만으로 전류 수치를 계산하지 않습니다.",
+          "modelAssumptions": "300 K, 균일한 p·n형 벌크를 맞댄 일차원 접합을 생각합니다.",
+          "measurementExample": "양쪽 10^16 cm^-3 도핑은 전자·정공 방향을 정하는 가정 사례입니다.",
+          "invalidConditions": "평형 이후의 역방향 이동과 고전계는 확산 하나로 설명되지 않습니다.",
+          "referenceFrame": "접합면에 수직인 x축을 왼쪽 p형에서 오른쪽 n형으로 둔 실험실 기준계"
+        }
+      },
+      {
+        "id": "depletion-space-charge",
+        "sectionId": "depletion",
+        "intuition": "움직이는 전하가 경계를 떠나면 그 자리에 붙박이 반대 전하가 드러납니다.",
+        "workedExample": "p형 경계에 음전하 억셉터 이온, n형 경계에 양전하 도너 이온을 표시합니다.",
+        "boundary": "공핍 근사는 영역에 움직이는 캐리어가 정확히 0이라는 뜻이 아니며, 벌크 전체에 적용하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "전기장·전위의 위치별 분포와 도핑 농도",
+          "unitsAndDimensions": "공간 전하 밀도는 C/m³, 공핍 폭은 m입니다.",
+          "modelAssumptions": "일차원 급변 접합과 공핍 영역 내 낮은 이동 전하 농도를 근사합니다.",
+          "measurementExample": "10^16 cm^-3 도핑한 가상 접합의 경계에 부호가 반대인 고정 이온을 그립니다.",
+          "invalidConditions": "공핍 영역 안의 캐리어·결함이 큰 경우 단순한 균일 고정 전하 모델이 틀립니다.",
+          "referenceFrame": "x축 양의 방향을 p형→n형으로 둔 실험실 기준계"
+        }
+      },
+      {
+        "id": "built-in-junction-field",
+        "sectionId": "depletion",
+        "intuition": "드러난 고정 이온의 전기장은 더 건너가려는 확산에 맞섭니다.",
+        "workedExample": "전기장 방향을 n형(+)에서 p형(−)으로 그리고 0 V에서 순전류 0을 확인합니다.",
+        "boundary": "내장 전위만으로 닫힌 열평형 회로에서 외부 전력을 꺼낼 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "접합 전위·전기장 프로파일과 0 V 단자 전류",
+          "unitsAndDimensions": "전위차는 V, 전기장은 V/m, 전류는 A입니다.",
+          "modelAssumptions": "외부 에너지 공급이 없는 열평형과 일정 온도를 가정합니다.",
+          "measurementExample": "가상 접합의 단자 전압 0 V에서 계산 전류는 0 A입니다.",
+          "invalidConditions": "광조사·외부 주입처럼 비평형인 경우 확산과 drift가 맞지 않습니다.",
+          "referenceFrame": "접합에 고정한 실험실 기준계, x축 p형→n형"
+        }
+      },
+      {
+        "id": "junction-bias-response",
+        "sectionId": "bias",
+        "intuition": "바깥 전압이 내부 장벽을 낮추거나 높여 건너가는 전하 수를 바꿉니다.",
+        "workedExample": "p형 단자를 +0.5 V로 두면 순방향, −0.5 V로 두면 역방향으로 비교합니다.",
+        "boundary": "역방향 흐름이 정확히 0이라는 뜻은 아니고, 큰 역전압은 항복을 부를 수 있습니다.",
+        "scientificGrounding": {
+          "observable": "p형과 n형 단자의 전압, 단자 전류와 접합 폭",
+          "unitsAndDimensions": "전압 V, 전류 A, 폭 m를 구분합니다.",
+          "modelAssumptions": "두 단자의 전압 부호를 p형−n형으로 정하고 일정한 300 K를 둡니다.",
+          "measurementExample": "가정한 ±0.5 V에서 이상식의 전류는 +0.251 mA와 약 −1 pA입니다.",
+          "invalidConditions": "빠른 과도 상태와 항복·강한 누설에서는 정적 바이어스 그림만으로 부족합니다.",
+          "referenceFrame": "접합에 고정한 실험실 기준계와 p형−n형 전압 부호"
+        }
+      },
+      {
+        "id": "ideal-diode-law",
+        "sectionId": "calculation",
+        "intuition": "열전압으로 나눈 전압이 지수의 입력이므로 작은 전압 차이가 큰 전류비가 됩니다.",
+        "workedExample": "300 K, Is=1 pA, VT=25.85 mV에서 0.5 V≈0.251 mA, 0.6 V≈12.03 mA입니다(가정).",
+        "boundary": "Is는 도핑 농도만으로 정해지지 않고 이 식은 직렬 저항·재결합·항복을 빼고 계산합니다.",
+        "scientificGrounding": {
+          "observable": "온도를 고정한 단자 전압·전류의 I–V 곡선",
+          "unitsAndDimensions": "V/VT는 무차원이고 본문의 Is와 I는 전체 단자 전류 A입니다. 원문의 단위 면적 기준 성분에는 균일한 접합 면적을 곱해 대응합니다.",
+          "modelAssumptions": "300 K, 이상 계수 1, 낮은 수준 주입, 일정한 Is=1 pA를 가정합니다.",
+          "measurementExample": "가정한 0.5 V와 0.6 V의 이상 전류비는 약 47.9입니다.",
+          "invalidConditions": "고전류 직렬 저항, 재결합 지배, 큰 역전압 항복에는 그대로 맞지 않습니다.",
+          "referenceFrame": "접합 단자에 고정한 실험실 기준계에서 p형−n형 전압을 양수로 둡니다."
+        }
+      },
+      {
+        "id": "junction-model-boundary",
+        "sectionId": "limits",
+        "intuition": "켜짐의 전압은 고정된 숫자가 아니라 회로에서 요구하는 전류와 소자 조건으로 정해집니다.",
+        "workedExample": "0.5 V에도 0.251 mA가 흐르는 가상 접합은 0.6 V 절대 문턱이라는 말의 반례입니다.",
+        "boundary": "정격과 온도 조건은 실제 소자의 데이터시트를 따로 읽어야 합니다.",
+        "scientificGrounding": {
+          "observable": "온도별 I–V 곡선과 역방향 항복 전압",
+          "unitsAndDimensions": "전류 A, 전압 V, 온도 K를 함께 기록합니다.",
+          "modelAssumptions": "이상식의 300 K 기준 사례와 실제 소자의 측정 곡선을 비교합니다.",
+          "measurementExample": "이상식이 −0.5 V에서 약 −1 pA를 주지만 실제 제품의 누설은 다른 값일 수 있습니다.",
+          "invalidConditions": "실제 데이터시트의 소자 종류·면적·온도가 다르면 가상 수치를 옮기지 않습니다.",
+          "referenceFrame": "소자와 계측기에 고정한 실험실 기준계, 순방향 전압 부호를 명시합니다."
+        }
+      }
     ],
-    conceptStages: [
-      { label: "01 첫 이동", relation: "농도 차이에서 양쪽 전하가 경계를 건넙니다.", concepts: ["pn-carrier-diffusion"] },
-      { label: "02 되돌림", relation: "고정 이온과 그 전기장이 평형 장벽을 만듭니다.", concepts: ["depletion-space-charge", "built-in-junction-field"] },
-      { label: "03 외부 전압", relation: "전압의 부호가 장벽과 단자 전류를 바꿉니다.", concepts: ["junction-bias-response", "ideal-diode-law"] },
-      { label: "04 실제 경계", relation: "이상식이 빠뜨린 조건을 확인합니다.", concepts: ["junction-model-boundary"] },
+    "conceptStages": [
+      {
+        "label": "01 첫 이동",
+        "relation": "농도 차이에서 양쪽 전하가 경계를 건넙니다.",
+        "concepts": [
+          "pn-carrier-diffusion"
+        ]
+      },
+      {
+        "label": "02 되돌림",
+        "relation": "고정 이온과 그 전기장이 평형 장벽을 만듭니다.",
+        "concepts": [
+          "depletion-space-charge",
+          "built-in-junction-field"
+        ]
+      },
+      {
+        "label": "03 외부 전압",
+        "relation": "전압의 부호가 장벽과 단자 전류를 바꿉니다.",
+        "concepts": [
+          "junction-bias-response",
+          "ideal-diode-law"
+        ]
+      },
+      {
+        "label": "04 실제 경계",
+        "relation": "이상식이 빠뜨린 조건을 확인합니다.",
+        "concepts": [
+          "junction-model-boundary"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "p형과 n형을 붙인 직후 전자와 정공은 각각 어느 쪽으로 퍼집니까?", answerChecklist: ["전자 n→p", "정공 p→n", "농도 차이에 따른 확산", "도핑 이온은 움직이지 않음"], requiredConcepts: ["pn-carrier-diffusion"], sectionId: "diffusion" },
-      { level: "basic", question: "접합 경계 양쪽에 남는 고정 이온의 부호를 그려 보세요.", answerChecklist: ["p형에 음전하 억셉터", "n형에 양전하 도너", "경계의 이동 캐리어 감소"], requiredConcepts: ["depletion-space-charge"], sectionId: "depletion" },
-      { level: "basic", question: "0 V 열평형에서도 접합 내부 전기장이 있을 수 있는데 단자 전류는 왜 0입니까?", answerChecklist: ["확산", "전기장에 의한 역방향 이동", "두 흐름 상쇄", "순전류 0"], requiredConcepts: ["built-in-junction-field"], sectionId: "depletion" },
-      { level: "basic", question: "p형 단자를 n형보다 높게·낮게 두면 각각 장벽이 어떻게 됩니까?", answerChecklist: ["p형 높음 순방향", "장벽 낮아짐", "p형 낮음 역방향", "장벽 높아짐"], requiredConcepts: ["junction-bias-response"], sectionId: "bias" },
-      { level: "basic", question: "300 K, Is=1 pA에서 0.5 V와 0.6 V의 이상 전류를 계산하세요.", answerChecklist: ["VT=25.85 mV", "0.251 mA", "12.03 mA", "약 47.9배", "가정값"], requiredConcepts: ["ideal-diode-law"], sectionId: "calculation" },
-      { level: "basic", question: "같은 사례에서 −0.5 V와 0 V의 이상 전류는 얼마입니까?", answerChecklist: ["약 −1 pA", "0 A", "작은 역전압", "항복 제외"], requiredConcepts: ["ideal-diode-law"], sectionId: "calculation" },
-      { level: "advanced", question: "내장 전위만으로 열평형 상태의 외부 저항에서 전력을 꺼낼 수 없는 이유는 무엇입니까?", answerChecklist: ["내부 전기장 존재", "확산과 전기장 흐름 상쇄", "접촉부 포함 닫힌 회로", "순전류 0"], requiredConcepts: ["built-in-junction-field"], sectionId: "depletion" },
-      { level: "advanced", question: "0.5→0.6 V 변화의 전류비를 지수 입력 차이로 구하고 근사 조건을 쓰세요.", answerChecklist: ["0.1/0.02585≈3.87", "exp(3.87)≈47.9", "순방향에서 −1 항 무시", "온도와 Is 고정"], requiredConcepts: ["ideal-diode-law"], sectionId: "calculation" },
-      { level: "advanced", question: "0.6 V가 모든 실리콘 접합의 고정 문턱이라고 할 수 없는 반례와 원인을 쓰세요.", answerChecklist: ["0.5 V에서 0.251 mA", "Is와 온도", "요구 전류 기준", "직렬 저항 또는 재결합"], requiredConcepts: ["ideal-diode-law", "junction-model-boundary"], sectionId: "limits" },
-      { level: "advanced", question: "역전압을 계속 올려도 −Is 근사가 유지되는지 판단하고 확인할 자료를 쓰세요.", answerChecklist: ["항복 가능", "누설과 온도", "최대 역전압 정격", "제품 데이터시트 조건"], requiredConcepts: ["junction-model-boundary"], sectionId: "limits" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "p형과 n형을 붙인 직후 전자와 정공은 각각 어느 쪽으로 퍼집니까?",
+        "answerChecklist": [
+          "전자 n→p",
+          "정공 p→n",
+          "농도 차이에 따른 확산",
+          "도핑 이온은 움직이지 않음"
+        ],
+        "requiredConcepts": [
+          "pn-carrier-diffusion"
+        ],
+        "sectionId": "diffusion"
+      },
+      {
+        "level": "basic",
+        "question": "접합 경계 양쪽에 남는 고정 이온의 부호를 그려 보세요.",
+        "answerChecklist": [
+          "p형에 음전하 억셉터",
+          "n형에 양전하 도너",
+          "경계의 이동 캐리어 감소"
+        ],
+        "requiredConcepts": [
+          "depletion-space-charge"
+        ],
+        "sectionId": "depletion"
+      },
+      {
+        "level": "basic",
+        "question": "0 V 열평형에서도 접합 내부 전기장이 있을 수 있는데 단자 전류는 왜 0입니까?",
+        "answerChecklist": [
+          "확산",
+          "전기장에 의한 역방향 이동",
+          "두 흐름 상쇄",
+          "순전류 0"
+        ],
+        "requiredConcepts": [
+          "built-in-junction-field"
+        ],
+        "sectionId": "depletion"
+      },
+      {
+        "level": "basic",
+        "question": "p형 단자를 n형보다 높게·낮게 두면 각각 장벽이 어떻게 됩니까?",
+        "answerChecklist": [
+          "p형 높음 순방향",
+          "장벽 낮아짐",
+          "p형 낮음 역방향",
+          "장벽 높아짐"
+        ],
+        "requiredConcepts": [
+          "junction-bias-response"
+        ],
+        "sectionId": "bias"
+      },
+      {
+        "level": "basic",
+        "question": "300 K, Is=1 pA에서 0.5 V와 0.6 V의 이상 전류를 계산하세요.",
+        "answerChecklist": [
+          "VT=25.85 mV",
+          "0.251 mA",
+          "12.03 mA",
+          "약 47.9배",
+          "가정값"
+        ],
+        "requiredConcepts": [
+          "ideal-diode-law"
+        ],
+        "sectionId": "calculation"
+      },
+      {
+        "level": "basic",
+        "question": "같은 사례에서 −0.5 V와 0 V의 이상 전류는 얼마입니까?",
+        "answerChecklist": [
+          "약 −1 pA",
+          "0 A",
+          "작은 역전압",
+          "항복 제외"
+        ],
+        "requiredConcepts": [
+          "ideal-diode-law"
+        ],
+        "sectionId": "calculation"
+      },
+      {
+        "level": "advanced",
+        "question": "내장 전위만으로 열평형 상태의 외부 저항에서 전력을 꺼낼 수 없는 이유는 무엇입니까?",
+        "answerChecklist": [
+          "내부 전기장 존재",
+          "확산과 전기장 흐름 상쇄",
+          "접촉부 포함 닫힌 회로",
+          "순전류 0"
+        ],
+        "requiredConcepts": [
+          "built-in-junction-field"
+        ],
+        "sectionId": "depletion"
+      },
+      {
+        "level": "advanced",
+        "question": "0.5→0.6 V 변화의 전류비를 지수 입력 차이로 구하고 근사 조건을 쓰세요.",
+        "answerChecklist": [
+          "0.1/0.02585≈3.87",
+          "exp(3.87)≈47.9",
+          "순방향에서 −1 항 무시",
+          "온도와 Is 고정"
+        ],
+        "requiredConcepts": [
+          "ideal-diode-law"
+        ],
+        "sectionId": "ratio"
+      },
+      {
+        "level": "advanced",
+        "question": "0.6 V가 모든 실리콘 접합의 고정 문턱이라고 할 수 없는 반례와 원인을 쓰세요.",
+        "answerChecklist": [
+          "0.5 V에서 0.251 mA",
+          "Is와 온도",
+          "요구 전류 기준",
+          "직렬 저항 또는 재결합"
+        ],
+        "requiredConcepts": [
+          "ideal-diode-law",
+          "junction-model-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "역전압을 계속 올려도 −Is 근사가 유지되는지 판단하고 확인할 자료를 쓰세요.",
+        "answerChecklist": [
+          "항복 가능",
+          "누설과 온도",
+          "최대 역전압 정격",
+          "제품 데이터시트 조건"
+        ],
+        "requiredConcepts": [
+          "junction-model-boundary"
+        ],
+        "sectionId": "limits"
+      }
     ],
-    papers: [
-      { title: "W. Shockley, ‘The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors,’ Bell System Technical Journal 28 (1949), 435–489", href: "https://vtda.org/pubs/BSTJ/vol28-1949/articles/bstj28-3-435.pdf", problem: "p형과 n형을 이은 접합의 직류 정류 전류를 캐리어별로 설명해야 했습니다.", contribution: "461쪽 식 (4.18)–(4.22)에서 정공·전자 전류의 전압 의존성을 따로 적고 합한 지수형 직류 식을 제시합니다.", assumptions: "당시의 확산 모델과 저수준 주입·정상 상태 조건을 사용합니다.", evidenceScope: "원문 스캔 461쪽을 직접 확인했습니다. 현대 실리콘의 300 K 사례와 Is=1 pA는 이 글의 가정입니다.", notClaim: "이 식이 모든 실제 소자의 0.6 V 전류를 보장하거나 역방향 항복까지 설명한다는 뜻이 아닙니다.", sectionId: "calculation" },
-    ],
+    "papers": [
+      {
+        "title": "W. Shockley, ‘The Theory of p-n Junctions in Semiconductors and p-n Junction Transistors,’ Bell System Technical Journal 28 (1949), 435–489",
+        "href": "https://vtda.org/pubs/BSTJ/vol28-1949/articles/bstj28-3-435.pdf",
+        "problem": "p형과 n형을 이은 접합의 직류 정류 전류를 캐리어별로 설명해야 했습니다.",
+        "contribution": "461쪽 식 (4.18)–(4.22)에서 정공·전자 전류의 전압 의존성을 따로 적고 합한 지수형 직류 식을 제시합니다.",
+        "assumptions": "당시의 확산 모델과 저수준 주입·정상 상태 조건을 사용합니다.",
+        "evidenceScope": "원문 스캔 454쪽의 current density 정의와 461쪽 식 (4.18)–(4.22)를 확인했습니다. 현대 실리콘의 300 K와 면적까지 포함한 총 포화 전류 Is=1 pA는 이 글의 가정입니다.",
+        "notClaim": "이 식이 모든 실제 소자의 0.6 V 전류를 보장하거나 역방향 항복까지 설명한다는 뜻이 아닙니다.",
+        "sectionId": "calculation"
+      }
+    ]
   },
   "devices/mos-capacitor-and-inversion": {
-    coreIdea: "절연층을 사이에 둔 전극의 전기장으로 p형 실리콘 표면을 정공 축적→공핍→전자 반전으로 바꿀 수 있습니다. 가정한 10 nm·100 µm² 구조의 용량과 문턱 이후 전자 수를 계산하되, 실제 문턱과 누설·충전 비용을 별도로 확인합니다.",
-    assumedKnowledge: [
-      { id: "electric-potential-difference", role: "전극과 실리콘 사이의 전압 부호를 정합니다." },
-      { id: "donor-acceptor-doping", role: "p형 실리콘의 정공과 고정 억셉터 이온을 구분합니다." },
-      { id: "depletion-space-charge", role: "접합에서 보았던 이동 전하 감소와 고정 이온을 표면에 다시 씁니다." },
-      { id: "pn-carrier-diffusion", role: "직접 맞닿은 접합과 절연층 너머 전기장의 역할을 비교합니다." },
+    "coreIdea": "절연층을 사이에 둔 전극의 전기장으로 p형 실리콘 표면을 정공 축적→공핍→전자 반전으로 바꿀 수 있습니다. 가정한 10 nm·100 µm² 구조의 용량과 문턱 이후 전자 수를 계산하되, 실제 문턱과 누설·충전 비용을 별도로 확인합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "electric-potential-difference",
+        "role": "전극과 실리콘 사이의 전압 부호를 정합니다."
+      },
+      {
+        "id": "donor-acceptor-doping",
+        "role": "p형 실리콘의 정공과 고정 억셉터 이온을 구분합니다."
+      },
+      {
+        "id": "depletion-space-charge",
+        "role": "접합에서 보았던 이동 전하 감소와 고정 이온을 표면에 다시 씁니다."
+      },
+      {
+        "id": "pn-carrier-diffusion",
+        "role": "직접 맞닿은 접합과 절연층 너머 전기장의 역할을 비교합니다."
+      }
     ],
-    introducedHere: [
-      { id: "insulated-gate-stack", role: "전극·절연층·실리콘의 기능을 나눕니다." },
-      { id: "mos-surface-regimes", role: "세 전압 방향에서 표면 전하의 변화를 따라갑니다." },
-      { id: "flat-band-offset", role: "0 V를 전기장 0이라고 가정할 수 없는 이유를 설명합니다." },
-      { id: "mos-inversion-threshold", role: "표면 반전의 기준을 두고 가정값과 실제값을 구분합니다." },
-      { id: "oxide-capacitance-density", role: "두께와 면적에서 절연층 용량을 계산합니다." },
-      { id: "mos-inversion-charge", role: "문턱 이후의 전하량을 전자 수로 바꿉니다." },
-      { id: "gate-oxide-tradeoff", role: "얇은 절연층의 이득과 비용을 함께 셉니다." },
+    "introducedHere": [
+      {
+        "id": "insulated-gate-stack",
+        "role": "전극·절연층·실리콘의 기능을 나눕니다."
+      },
+      {
+        "id": "mos-surface-regimes",
+        "role": "세 전압 방향에서 표면 전하의 변화를 따라갑니다."
+      },
+      {
+        "id": "flat-band-offset",
+        "role": "0 V를 전기장 0이라고 가정할 수 없는 이유를 설명합니다."
+      },
+      {
+        "id": "mos-inversion-threshold",
+        "role": "표면 반전의 기준을 두고 가정값과 실제값을 구분합니다."
+      },
+      {
+        "id": "oxide-capacitance-density",
+        "role": "두께와 면적에서 절연층 용량을 계산합니다."
+      },
+      {
+        "id": "mos-inversion-charge",
+        "role": "문턱 이후의 전하량을 전자 수로 바꿉니다."
+      },
+      {
+        "id": "gate-oxide-tradeoff",
+        "role": "얇은 절연층의 이득과 비용을 함께 셉니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "insulated-gate-stack", sectionId: "stack", intuition: "닿지 않는 전극도 얇은 절연층 너머로 전기장을 걸 수 있습니다.", workedExample: "가정한 10 nm 산화막 위의 전극 전압을 바꿔 100 µm² 표면을 조절합니다.", boundary: "정상 상태의 직류가 작다는 말이 스위칭 입력 전류와 산화막 누설까지 0이라는 뜻은 아닙니다.", scientificGrounding: { observable: "전극·실리콘 사이의 전압, 정지·과도 입력 전류", unitsAndDimensions: "전압 V, 전류 A, 절연층 두께 m를 구분합니다.", modelAssumptions: "균일한 산화막과 이상적인 금속 전극·p형 실리콘을 가정합니다.", measurementExample: "10 nm·100 µm² 구조의 용량을 뒤에서 약 0.345 pF로 계산합니다.", invalidConditions: "산화막 결함·터널링·높은 전계에서는 직류 누설이 무시되지 않습니다.", referenceFrame: "실리콘 표면에 수직인 축을 고정한 실험실 기준계" } },
-      { id: "mos-surface-regimes", sectionId: "states", intuition: "전극을 낮추면 정공이 모이고, 높이면 정공이 빠진 뒤 전자가 모입니다.", workedExample: "가정한 전압 −1.0 V는 축적, +0.2 V는 공핍, +1.0 V는 반전의 교육용 상태로 둡니다.", boundary: "실제 상태 경계는 평탄띠·문턱 전압과 온도에 따라 달라집니다.", scientificGrounding: { observable: "전압에 따른 표면 전하와 축전기 C–V 곡선", unitsAndDimensions: "전극 전압 V, 면적당 전하 C/m²입니다.", modelAssumptions: "p형 벌크, 가정한 평탄띠 0 V와 문턱 0.5 V를 둡니다.", measurementExample: "세 전압 상태를 Viz에서 정공→고정 이온→전자 순으로 확인합니다.", invalidConditions: "계면 결함·빠른 주파수·다른 기판 도핑에서는 경계와 응답이 바뀝니다.", referenceFrame: "표면에 수직인 x축을 절연층에서 벌크로 둔 실험실 기준계" } },
-      { id: "flat-band-offset", sectionId: "threshold", intuition: "전극 재료와 실리콘의 에너지 기준이 달라 0 V에서도 표면이 기울 수 있습니다.", workedExample: "계산을 단순하게 하려고 평탄띠 전압을 0 V로 둡니다(가정).", boundary: "이 가정을 실제 제품의 속성으로 옮기면 문턱과 표면 전하를 잘못 계산합니다.", scientificGrounding: { observable: "MOS C–V 곡선에서 평탄띠 위치와 계면 전하", unitsAndDimensions: "평탄띠 전압은 V, 계면 전하는 C/m²입니다.", modelAssumptions: "전극·실리콘 일함수 차이와 계면 고정 전하를 예제에서는 0으로 묶습니다.", measurementExample: "가정한 0 V를 평탄띠로 놓아 −1 V·+0.2 V를 양쪽 상태로 비교합니다.", invalidConditions: "다른 금속·산화막·계면 상태에서는 평탄띠가 0 V가 아닙니다.", referenceFrame: "같은 전극과 기판에 연결한 실험실 전압계의 기준계" } },
-      { id: "mos-inversion-threshold", sectionId: "threshold", intuition: "공핍을 지나 표면 전자가 충분히 많아지는 전압을 경계로 둡니다.", workedExample: "Vth=0.5 V를 가정하면 1.0 V에서 문턱을 0.5 V 넘습니다.", boundary: "문턱은 단순한 산화막 두께만으로 결정되지 않고 기판 전압·도핑도 필요합니다.", scientificGrounding: { observable: "표면 전하 분포와 게이트 전압, MOSFET의 전류 시작 구간", unitsAndDimensions: "문턱 전압 V, 전하 농도 cm^-3와 표면 밀도 cm^-2를 구분합니다.", modelAssumptions: "p형 실리콘의 강한 반전 기준과 정적 평형을 사용합니다.", measurementExample: "가정한 0.5 V 문턱에서 1.0 V를 강한 반전 사례로 둡니다.", invalidConditions: "약한 반전에서도 전자는 존재하므로 문턱이 수학적 불연속점은 아닙니다.", referenceFrame: "전극 전위에서 기판 전위를 뺀 부호를 쓰는 실험실 기준계" } },
-      { id: "oxide-capacitance-density", sectionId: "numbers", intuition: "같은 면적에서 절연층이 얇을수록 같은 전압에 더 많은 전하가 모입니다.", workedExample: "εr=3.9, t=10 nm이면 Cox/A≈3.453 mF/m²이고 A=100 µm²면 Cox≈0.345 pF입니다(가정 치수).", boundary: "평행판 용량은 가장자리장과 실제 계면 전하를 생략한 절연층 용량입니다.", scientificGrounding: { observable: "두 단자 전압 변화에 따른 저장 전하 변화와 면적·두께", unitsAndDimensions: "유전율 F/m, 면적 m², 두께 m이므로 εA/t는 F입니다.", modelAssumptions: "균일한 평행판 산화막, 상대 유전율 3.9를 둡니다.", measurementExample: "3.9×8.854×10^-12 F/m×100×10^-12 m²/10^-8 m≈3.453×10^-13 F입니다.", invalidConditions: "극소 면적의 가장자리장·산화막 불균일·주파수 의존성에서는 이 값만으로 C–V 곡선을 예측하지 않습니다.", referenceFrame: "전극 면적과 두께를 실험실 길이 좌표로 측정합니다." } },
-      { id: "mos-inversion-charge", sectionId: "numbers", intuition: "문턱 이후 여분 전압이 절연층 용량에 비례한 표면 전자를 더 모읍니다.", workedExample: "0.345 pF×0.5 V≈0.173 pC, 전자 약 1.08×10^6개입니다(가정).", boundary: "문턱 전까지의 공핍 전하를 포함한 총 전하가 아니라 강한 반전의 추가 전하입니다.", scientificGrounding: { observable: "문턱 이후 전압에 따른 표면 전하와 채널 전도 변화", unitsAndDimensions: "F×V=C이고 C를 기본 전하량 C/개로 나누면 개수입니다.", modelAssumptions: "정적 강한 반전과 Qinv≈−Cox(VG−Vth) 시트 모델을 사용합니다.", measurementExample: "1.7266×10^-13 C를 1.602×10^-19 C/개로 나누면 약 1.078×10^6개입니다.", invalidConditions: "약한 반전·빠른 과도·높은 전계·양자 효과에는 단순 시트식이 맞지 않습니다.", referenceFrame: "실리콘 표면에 고정한 실험실 기준계와 전극−기판 전압 부호" } },
-      { id: "gate-oxide-tradeoff", sectionId: "limits", intuition: "더 얇은 절연층은 전하 조절을 쉽게 하지만 저장 전하와 누설 문제를 함께 키웁니다.", workedExample: "10→5 nm이면 다른 조건 고정에서 용량 0.345→0.691 pF로 두 배입니다(가정).", boundary: "실제 문턱과 누설도 두께에 따라 달라져 전하가 정확히 두 배라는 제품 예측은 아닙니다.", scientificGrounding: { observable: "두께별 C–V, I–V와 절연 파괴 전압", unitsAndDimensions: "두께 nm, 용량 pF, 누설 A와 전계 V/m를 구분합니다.", modelAssumptions: "평행판 근사에서 유전율과 면적을 고정한 두께 비교입니다.", measurementExample: "같은 100 µm²에서 5 nm의 이상 용량은 0.691 pF입니다.", invalidConditions: "터널링·결함·고전계 항복이 나타나면 이상 절연층 근사가 깨집니다.", referenceFrame: "같은 면적·온도·전압을 기준으로 두 소자를 비교하는 실험실 기준계" } },
+    "conceptExplanations": [
+      {
+        "id": "insulated-gate-stack",
+        "sectionId": "stack",
+        "intuition": "닿지 않는 전극도 얇은 절연층 너머로 전기장을 걸 수 있습니다.",
+        "workedExample": "가정한 10 nm 산화막 위의 전극 전압을 바꿔 100 µm² 표면을 조절합니다.",
+        "boundary": "정상 상태의 직류가 작다는 말이 스위칭 입력 전류와 산화막 누설까지 0이라는 뜻은 아닙니다.",
+        "scientificGrounding": {
+          "observable": "전극·실리콘 사이의 전압, 정지·과도 입력 전류",
+          "unitsAndDimensions": "전압 V, 전류 A, 절연층 두께 m를 구분합니다.",
+          "modelAssumptions": "균일한 산화막과 이상적인 금속 전극·p형 실리콘을 가정합니다. 전자 공급 영역을 바탕과 같은 전위에 두고 충분히 기다린 정적 상태를 가정합니다.",
+          "measurementExample": "10 nm·100 µm² 구조의 용량을 뒤에서 약 0.345 pF로 계산합니다.",
+          "invalidConditions": "산화막 결함·터널링·높은 전계에서는 직류 누설이 무시되지 않습니다.",
+          "referenceFrame": "실리콘 표면에 수직인 축을 고정한 실험실 기준계"
+        }
+      },
+      {
+        "id": "mos-surface-regimes",
+        "sectionId": "states",
+        "intuition": "전극을 낮추면 정공이 모이고, 높이면 정공이 빠진 뒤 전자가 모입니다.",
+        "workedExample": "가정한 전압 −1.0 V는 축적, +0.2 V는 공핍, +1.0 V는 반전의 교육용 상태로 둡니다.",
+        "boundary": "실제 상태 경계는 평탄띠·문턱 전압과 온도에 따라 달라집니다.",
+        "scientificGrounding": {
+          "observable": "전압에 따른 표면 전하와 축전기 C–V 곡선",
+          "unitsAndDimensions": "전극 전압 V, 면적당 전하 C/m²입니다.",
+          "modelAssumptions": "p형 벌크, 가정한 평탄띠 0 V와 문턱 0.5 V를 둡니다. 전자 공급 영역을 바탕과 같은 전위에 두고 충분히 기다린 정적 상태를 가정합니다.",
+          "measurementExample": "세 전압 상태를 Viz에서 정공→고정 이온→전자 순으로 확인합니다.",
+          "invalidConditions": "계면 결함·빠른 주파수·다른 기판 도핑에서는 경계와 응답이 바뀝니다.",
+          "referenceFrame": "표면에 수직인 x축을 절연층에서 벌크로 둔 실험실 기준계"
+        }
+      },
+      {
+        "id": "flat-band-offset",
+        "sectionId": "threshold",
+        "intuition": "전극 재료와 실리콘의 에너지 기준이 달라 0 V에서도 표면이 기울 수 있습니다.",
+        "workedExample": "계산을 단순하게 하려고 평탄띠 전압을 0 V로 둡니다(가정).",
+        "boundary": "이 가정을 실제 제품의 속성으로 옮기면 문턱과 표면 전하를 잘못 계산합니다.",
+        "scientificGrounding": {
+          "observable": "MOS C–V 곡선에서 평탄띠 위치와 계면 전하",
+          "unitsAndDimensions": "평탄띠 전압은 V, 계면 전하는 C/m²입니다.",
+          "modelAssumptions": "전극·실리콘 일함수 차이와 계면 고정 전하를 예제에서는 0으로 묶습니다.",
+          "measurementExample": "가정한 0 V를 평탄띠로 놓아 −1 V·+0.2 V를 양쪽 상태로 비교합니다.",
+          "invalidConditions": "다른 금속·산화막·계면 상태에서는 평탄띠가 0 V가 아닙니다.",
+          "referenceFrame": "같은 전극과 기판에 연결한 실험실 전압계의 기준계"
+        }
+      },
+      {
+        "id": "mos-inversion-threshold",
+        "sectionId": "threshold",
+        "intuition": "공핍을 지나 표면 전자가 충분히 많아지는 전압을 경계로 둡니다.",
+        "workedExample": "Vth=0.5 V를 가정하면 1.0 V에서 문턱을 0.5 V 넘습니다.",
+        "boundary": "문턱은 단순한 산화막 두께만으로 결정되지 않고 기판 전압·도핑도 필요합니다.",
+        "scientificGrounding": {
+          "observable": "표면 전하 분포와 게이트 전압, MOSFET의 전류 시작 구간",
+          "unitsAndDimensions": "문턱 전압 V, 전하 농도 cm^-3와 표면 밀도 cm^-2를 구분합니다.",
+          "modelAssumptions": "p형 실리콘의 강한 반전 기준과 정적 평형을 사용합니다.",
+          "measurementExample": "가정한 0.5 V 문턱에서 1.0 V를 강한 반전 사례로 둡니다.",
+          "invalidConditions": "약한 반전에서도 전자는 존재하므로 문턱이 수학적 불연속점은 아닙니다.",
+          "referenceFrame": "전극 전위에서 기판 전위를 뺀 부호를 쓰는 실험실 기준계"
+        }
+      },
+      {
+        "id": "oxide-capacitance-density",
+        "sectionId": "numbers",
+        "intuition": "같은 면적에서 절연층이 얇을수록 같은 전압에 더 많은 전하가 모입니다.",
+        "workedExample": "εr=3.9, t=10 nm이면 Cox/A≈3.453 mF/m²이고 A=100 µm²면 Cox≈0.345 pF입니다(가정 치수).",
+        "boundary": "평행판 용량은 가장자리장과 실제 계면 전하를 생략한 절연층 용량입니다.",
+        "scientificGrounding": {
+          "observable": "두 단자 전압 변화에 따른 저장 전하 변화와 면적·두께",
+          "unitsAndDimensions": "유전율 F/m, 면적 m², 두께 m이므로 εA/t는 F입니다.",
+          "modelAssumptions": "균일한 평행판 산화막, 상대 유전율 3.9를 둡니다.",
+          "measurementExample": "3.9×8.854×10^-12 F/m×100×10^-12 m²/10^-8 m≈3.453×10^-13 F입니다.",
+          "invalidConditions": "극소 면적의 가장자리장·산화막 불균일·주파수 의존성에서는 이 값만으로 C–V 곡선을 예측하지 않습니다.",
+          "referenceFrame": "전극 면적과 두께를 실험실 길이 좌표로 측정합니다."
+        }
+      },
+      {
+        "id": "mos-inversion-charge",
+        "sectionId": "numbers",
+        "intuition": "문턱 이후 여분 전압이 절연층 용량에 비례한 표면 전자를 더 모읍니다.",
+        "workedExample": "0.345 pF×0.5 V≈0.173 pC, 전자 약 1.08×10^6개입니다(가정).",
+        "boundary": "문턱 전까지의 공핍 전하를 포함한 총 전하가 아니라 강한 반전의 추가 전하입니다. 공급 경로가 없거나 응답을 기다리지 않은 경우 같은 전압에서 같은 전자 수를 보장하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "문턱 이후 전압에 따른 표면 전하와 채널 전도 변화",
+          "unitsAndDimensions": "F×V=C이고 C를 기본 전하량 C/개로 나누면 개수입니다.",
+          "modelAssumptions": "정적 강한 반전과 Qinv≈−Cox(VG−Vth) 시트 모델을 사용합니다. 전자 공급 영역을 바탕과 같은 전위에 두고 충분히 기다린 정적 상태를 가정합니다.",
+          "measurementExample": "1.7266×10^-13 C를 1.602×10^-19 C/개로 나누면 약 1.078×10^6개입니다.",
+          "invalidConditions": "약한 반전·빠른 과도·높은 전계·양자 효과에는 단순 시트식이 맞지 않습니다.",
+          "referenceFrame": "실리콘 표면에 고정한 실험실 기준계와 전극−기판 전압 부호"
+        }
+      },
+      {
+        "id": "gate-oxide-tradeoff",
+        "sectionId": "limits",
+        "intuition": "더 얇은 절연층은 전하 조절을 쉽게 하지만 저장 전하와 누설 문제를 함께 키웁니다.",
+        "workedExample": "10→5 nm이면 다른 조건 고정에서 용량 0.345→0.691 pF로 두 배입니다(가정).",
+        "boundary": "실제 문턱과 누설도 두께에 따라 달라져 전하가 정확히 두 배라는 제품 예측은 아닙니다.",
+        "scientificGrounding": {
+          "observable": "두께별 C–V, I–V와 절연 파괴 전압",
+          "unitsAndDimensions": "두께 nm, 용량 pF, 누설 A와 전계 V/m를 구분합니다.",
+          "modelAssumptions": "평행판 근사에서 유전율과 면적을 고정한 두께 비교입니다.",
+          "measurementExample": "같은 100 µm²에서 5 nm의 이상 용량은 0.691 pF입니다.",
+          "invalidConditions": "터널링·결함·고전계 항복이 나타나면 이상 절연층 근사가 깨집니다.",
+          "referenceFrame": "같은 면적·온도·전압을 기준으로 두 소자를 비교하는 실험실 기준계"
+        }
+      }
     ],
-    conceptStages: [
-      { label: "01 닿지 않는 전극", relation: "절연층을 두고 전기장만 표면에 닿게 합니다.", concepts: ["insulated-gate-stack"] },
-      { label: "02 표면의 세 상태", relation: "전극 전압 방향에서 축적·공핍·반전을 따라갑니다.", concepts: ["mos-surface-regimes"] },
-      { label: "03 전압 기준", relation: "평탄띠와 문턱을 구분하고 가정값을 고정합니다.", concepts: ["flat-band-offset", "mos-inversion-threshold"] },
-      { label: "04 전하 계산", relation: "두께에서 용량을 구해 문턱 이후 전하를 셉니다.", concepts: ["oxide-capacitance-density", "mos-inversion-charge"] },
-      { label: "05 실제 경계", relation: "얇은 산화막이 늘리는 누설과 충전량을 확인합니다.", concepts: ["gate-oxide-tradeoff"] },
+    "conceptStages": [
+      {
+        "label": "01 닿지 않는 전극",
+        "relation": "절연층을 두고 전기장만 표면에 닿게 합니다.",
+        "concepts": [
+          "insulated-gate-stack"
+        ]
+      },
+      {
+        "label": "02 표면의 세 상태",
+        "relation": "전극 전압 방향에서 축적·공핍·반전을 따라갑니다.",
+        "concepts": [
+          "mos-surface-regimes"
+        ]
+      },
+      {
+        "label": "03 전압 기준",
+        "relation": "평탄띠와 문턱을 구분하고 가정값을 고정합니다.",
+        "concepts": [
+          "flat-band-offset",
+          "mos-inversion-threshold"
+        ]
+      },
+      {
+        "label": "04 전하 계산",
+        "relation": "두께에서 용량을 구해 문턱 이후 전하를 셉니다.",
+        "concepts": [
+          "oxide-capacitance-density",
+          "mos-inversion-charge"
+        ]
+      },
+      {
+        "label": "05 실제 경계",
+        "relation": "얇은 산화막이 늘리는 누설과 충전량을 확인합니다.",
+        "concepts": [
+          "gate-oxide-tradeoff"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "절연층이 있는데 전극 전압으로 실리콘 표면을 바꿀 수 있는 이유는 무엇입니까?", answerChecklist: ["직류 차단", "전기장 전달", "전하 재배치", "전압 변화 중 충전 전류"], requiredConcepts: ["insulated-gate-stack"], sectionId: "stack" },
-      { level: "basic", question: "p형 실리콘 위 전극을 충분히 낮추면 표면에는 무엇이 모입니까?", answerChecklist: ["정공", "축적", "p형의 다수 캐리어"], requiredConcepts: ["mos-surface-regimes"], sectionId: "states" },
-      { level: "basic", question: "전극을 조금 높여 정공을 밀어내면 무엇이 남고 이 상태를 무엇이라 부릅니까?", answerChecklist: ["고정된 음전하 억셉터 이온", "공핍", "이동 정공 감소"], requiredConcepts: ["mos-surface-regimes"], sectionId: "states" },
-      { level: "basic", question: "전극을 더 높인 뒤 표면에 전자가 많아진 상태와 문턱의 역할을 설명하세요.", answerChecklist: ["표면 반전", "전자는 원래 소수 캐리어", "가정한 문턱 0.5 V", "벌크 전체는 p형"], requiredConcepts: ["mos-surface-regimes", "mos-inversion-threshold"], sectionId: "threshold" },
-      { level: "basic", question: "10 nm, 100 µm², εr=3.9에서 절연층 용량은 얼마입니까?", answerChecklist: ["εA/t", "3.453 mF/m²", "0.345 pF", "단위 F"], requiredConcepts: ["oxide-capacitance-density"], sectionId: "numbers" },
-      { level: "basic", question: "가정한 문턱 0.5 V와 전극 1.0 V에서 추가 전자 수는 얼마입니까?", answerChecklist: ["여분 전압 0.5 V", "0.173 pC", "약 1.08×10^6개", "음수 전자 전하"], requiredConcepts: ["mos-inversion-charge"], sectionId: "numbers" },
-      { level: "advanced", question: "산화막을 10 nm에서 5 nm로 줄일 때 이상 용량은 얼마이며 실제 소자에 그대로 옮길 수 없는 이유는 무엇입니까?", answerChecklist: ["약 0.691 pF", "용량 두 배", "문턱 변화", "누설 또는 항복"], requiredConcepts: ["oxide-capacitance-density", "gate-oxide-tradeoff"], sectionId: "limits" },
-      { level: "advanced", question: "전극 전압 0 V라도 표면 전기장 0이라고 단정할 수 없는 원인을 두 가지 쓰세요.", answerChecklist: ["일함수 차이", "산화막 또는 계면 전하", "평탄띠 전압", "이 글의 0 V는 가정"], requiredConcepts: ["flat-band-offset"], sectionId: "threshold" },
-      { level: "advanced", question: "절연층이 직류를 막는데도 전극을 계속 뒤집을 때 입력 전력이 필요한 이유를 설명하세요.", answerChecklist: ["전압 변화", "전극 양쪽 전하 충전", "스위칭 전류", "정적 누설과 구분"], requiredConcepts: ["insulated-gate-stack", "mos-inversion-charge"], sectionId: "limits" },
-      { level: "advanced", question: "앞 글의 p–n 접합과 이번 MOS 표면에서 전하가 바뀌는 경로를 비교하세요.", answerChecklist: ["접합 농도 차이 확산", "고정 이온 장벽", "MOS 절연층 전기장", "표면 반전", "전극과 실리콘 직류 차단"], requiredConcepts: ["pn-carrier-diffusion", "mos-surface-regimes"], sectionId: "handoff" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "절연층이 있는데 전극 전압으로 실리콘 표면을 바꿀 수 있는 이유는 무엇입니까?",
+        "answerChecklist": [
+          "직류 차단",
+          "전기장 전달",
+          "전하 재배치",
+          "전압 변화 중 충전 전류"
+        ],
+        "requiredConcepts": [
+          "insulated-gate-stack"
+        ],
+        "sectionId": "stack"
+      },
+      {
+        "level": "basic",
+        "question": "p형 실리콘 위 전극을 충분히 낮추면 표면에는 무엇이 모입니까?",
+        "answerChecklist": [
+          "정공",
+          "축적",
+          "p형의 다수 캐리어"
+        ],
+        "requiredConcepts": [
+          "mos-surface-regimes"
+        ],
+        "sectionId": "states"
+      },
+      {
+        "level": "basic",
+        "question": "전극을 조금 높여 정공을 밀어내면 무엇이 남고 이 상태를 무엇이라 부릅니까?",
+        "answerChecklist": [
+          "고정된 음전하 억셉터 이온",
+          "공핍",
+          "이동 정공 감소"
+        ],
+        "requiredConcepts": [
+          "mos-surface-regimes"
+        ],
+        "sectionId": "states"
+      },
+      {
+        "level": "basic",
+        "question": "전극을 더 높인 뒤 표면에 전자가 많아진 상태와 문턱의 역할을 설명하세요.",
+        "answerChecklist": [
+          "표면 반전",
+          "전자는 원래 소수 캐리어",
+          "가정한 문턱 0.5 V",
+          "벌크 전체는 p형"
+        ],
+        "requiredConcepts": [
+          "mos-surface-regimes",
+          "mos-inversion-threshold"
+        ],
+        "sectionId": "threshold"
+      },
+      {
+        "level": "basic",
+        "question": "10 nm, 100 µm², εr=3.9에서 절연층 용량은 얼마입니까?",
+        "answerChecklist": [
+          "εA/t",
+          "3.453 mF/m²",
+          "0.345 pF",
+          "단위 F"
+        ],
+        "requiredConcepts": [
+          "oxide-capacitance-density"
+        ],
+        "sectionId": "numbers"
+      },
+      {
+        "level": "basic",
+        "question": "가정한 문턱 0.5 V와 전극 1.0 V에서 추가 전자 수는 얼마입니까?",
+        "answerChecklist": [
+          "여분 전압 0.5 V",
+          "0.173 pC",
+          "약 1.08×10^6개",
+          "음수 전자 전하"
+        ],
+        "requiredConcepts": [
+          "mos-inversion-charge"
+        ],
+        "sectionId": "numbers"
+      },
+      {
+        "level": "advanced",
+        "question": "산화막을 10 nm에서 5 nm로 줄일 때 이상 용량은 얼마이며 실제 소자에 그대로 옮길 수 없는 이유는 무엇입니까?",
+        "answerChecklist": [
+          "약 0.691 pF",
+          "용량 두 배",
+          "문턱 변화",
+          "누설 또는 항복"
+        ],
+        "requiredConcepts": [
+          "oxide-capacitance-density",
+          "gate-oxide-tradeoff"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "전극 전압 0 V라도 표면 전기장 0이라고 단정할 수 없는 원인을 두 가지 쓰세요.",
+        "answerChecklist": [
+          "일함수 차이",
+          "산화막 또는 계면 전하",
+          "평탄띠 전압",
+          "이 글의 0 V는 가정"
+        ],
+        "requiredConcepts": [
+          "flat-band-offset"
+        ],
+        "sectionId": "threshold"
+      },
+      {
+        "level": "advanced",
+        "question": "절연층이 직류를 막는데도 전극을 계속 뒤집을 때 입력 전력이 필요한 이유를 설명하세요.",
+        "answerChecklist": [
+          "전압 변화",
+          "전극 양쪽 전하 충전",
+          "스위칭 전류",
+          "정적 누설과 구분"
+        ],
+        "requiredConcepts": [
+          "insulated-gate-stack",
+          "mos-inversion-charge"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "앞 글의 p–n 접합과 이번 MOS 표면에서 전하가 바뀌는 경로를 비교하세요.",
+        "answerChecklist": [
+          "접합 농도 차이 확산",
+          "고정 이온 장벽",
+          "MOS 절연층 전기장",
+          "표면 반전",
+          "전극과 실리콘 직류 차단"
+        ],
+        "requiredConcepts": [
+          "pn-carrier-diffusion",
+          "mos-surface-regimes"
+        ],
+        "sectionId": "handoff"
+      }
     ],
-    papers: [
-      { title: "D. Kahng, US Patent 3,102,230, ‘Electric Field Controlled Semiconductor Device’ (filed 1960, granted 1963)", href: "https://patents.google.com/patent/US3102230A/en", problem: "절연막으로 덮인 실리콘 표면을 전극 전압으로 제어해 회로 특성을 바꾸는 방법을 구현해야 했습니다.", contribution: "명세서 1–2쪽과 도 1A에서 산화막 위 전극과 별도 전압원이 산화막을 가로지르는 전기장을 만든다는 실제 장치 구조를 기술합니다.", assumptions: "특허의 실제 실시예는 여러 p–n 접합, 부하와 전압원을 포함한 회로입니다.", evidenceScope: "Google Patents의 원문 명세서와 도면을 대조했습니다. 예시의 약 1000 Å 산화막과 본문의 가정 10 nm를 구분합니다.", notClaim: "특허가 이 글의 두 단자 10 nm·100 µm² MOS 축전기나 108만 전자 계산을 실측했다는 뜻이 아닙니다.", sectionId: "stack" },
-      { title: "MIT OpenCourseWare 6.012, Lecture 9, ‘MOS Capacitors I’ (2009)", href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2009/42c863e2e1e9744ce6b797646a30e463_MIT6_012F09_lec09.pdf", problem: "전극 전압으로 바뀌는 p형 실리콘 표면 상태와 면적당 전하를 계산해야 합니다.", contribution: "23쪽의 반전 전하식과 30쪽의 축적·공핍·반전, 면적당 산화막 용량 및 문턱식의 정리를 제공합니다.", assumptions: "정적 열평형과 공핍 근사, 강한 반전의 면적당 전하 모델입니다.", evidenceScope: "공개 강의안 23·30쪽의 식과 상태 구분을 확인했습니다. 본문 치수·문턱은 별도 가정입니다.", notClaim: "문턱 0.5 V가 모든 MOS 소자에 적용되거나 산화막 두께 하나에서 나온 값이라는 뜻이 아닙니다.", sectionId: "numbers" },
-    ],
+    "papers": [
+      {
+        "title": "D. Kahng, US Patent 3,102,230, ‘Electric Field Controlled Semiconductor Device’ (filed 1960, granted 1963)",
+        "href": "https://patents.google.com/patent/US3102230A/en",
+        "problem": "절연막으로 덮인 실리콘 표면을 전극 전압으로 제어해 회로 특성을 바꾸는 방법을 구현해야 했습니다.",
+        "contribution": "명세서 1–2쪽과 도 1A에서 산화막 위 전극과 별도 전압원이 산화막을 가로지르는 전기장을 만든다는 실제 장치 구조를 기술합니다.",
+        "assumptions": "특허의 실제 실시예는 여러 p–n 접합, 부하와 전압원을 포함한 회로입니다.",
+        "evidenceScope": "Google Patents의 원문 명세서와 도면을 대조했습니다. 예시의 약 1000 Å 산화막과 본문의 가정 10 nm를 구분합니다.",
+        "notClaim": "특허가 이 글의 10 nm·100 µm² 수직 단면 모델이나 108만 전자 계산을 실측했다는 뜻이 아닙니다.",
+        "sectionId": "stack"
+      },
+      {
+        "title": "MIT OpenCourseWare 6.012, Lecture 9, ‘MOS Capacitors I’ (2009)",
+        "href": "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2009/42c863e2e1e9744ce6b797646a30e463_MIT6_012F09_lec09.pdf",
+        "problem": "전극 전압으로 바뀌는 p형 실리콘 표면 상태와 면적당 전하를 계산해야 합니다.",
+        "contribution": "4쪽의 별도 전자 공급 영역, 23쪽의 반전 전하식, 30쪽의 축적·공핍·반전 및 면적당 산화막 용량을 연결합니다.",
+        "assumptions": "바탕과 전자 공급 영역을 같은 전위에 둔 충분히 안정된 상태에서 공핍 근사와 강한 반전의 면적당 전하 모델을 씁니다.",
+        "evidenceScope": "공개 강의안 4·23·30쪽의 구조·주석·식을 확인했습니다. 본문 치수·문턱·108만 전자는 별도 가정으로 계산한 값입니다.",
+        "notClaim": "문턱 0.5 V가 모든 MOS 소자에 적용되거나 산화막 두께 하나에서 나온 값이라는 뜻이 아닙니다.",
+        "sectionId": "numbers"
+      }
+    ]
   },
   "devices/mosfet-regions-and-transfer": {
-    coreIdea: "절연된 게이트가 만든 표면 전자 층을 두 단자에 연결하면, 게이트 여분 전압과 드레인 전압이 전류를 함께 정합니다. 같은 가상 긴 채널 소자에서 차단, 선형, 포화 전류를 계산하고 실제 누설·길이 변조의 경계를 분리합니다.",
-    assumedKnowledge: [
-      { id: "insulated-gate-stack", role: "게이트가 직류 접촉 없이 표면 전하를 조절하는 구조를 가져옵니다." },
-      { id: "mos-inversion-charge", role: "문턱 이후 표면에 쌓인 전자가 채널의 재료가 됩니다." },
-      { id: "mos-inversion-threshold", role: "게이트에서 빼야 할 문턱 전압을 정합니다." },
-      { id: "electric-current", role: "전자 이동과 관습 전류의 방향을 구분합니다." },
+    "coreIdea": "절연된 게이트가 만든 표면 전자 층을 두 단자에 연결하면, 게이트 여분 전압과 드레인 전압이 전류를 함께 정합니다. 같은 가상 긴 채널 소자에서 차단, 선형, 포화 전류를 계산하고 실제 누설·길이 변조의 경계를 분리합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "insulated-gate-stack",
+        "role": "게이트가 직류 접촉 없이 표면 전하를 조절하는 구조를 가져옵니다."
+      },
+      {
+        "id": "mos-inversion-charge",
+        "role": "문턱 이후 표면에 쌓인 전자가 채널의 재료가 됩니다."
+      },
+      {
+        "id": "mos-inversion-threshold",
+        "role": "게이트에서 빼야 할 문턱 전압을 정합니다."
+      },
+      {
+        "id": "electric-current",
+        "role": "전자 이동과 관습 전류의 방향을 구분합니다."
+      }
     ],
-    introducedHere: [
-      { id: "mosfet-four-terminals", role: "게이트·소스·드레인·바디의 서로 다른 일을 나눕니다." },
-      { id: "gate-controlled-channel", role: "표면 전자가 양끝을 잇고 국소 전압으로 달라짐을 설명합니다." },
-      { id: "mosfet-cutoff-regime", role: "문턱 아래 이상 근사와 실제 누설을 구분합니다." },
-      { id: "mosfet-linear-regime", role: "채널이 끝까지 남은 구간의 전류를 계산합니다." },
-      { id: "mosfet-pinch-off-saturation", role: "채널 끝이 잘록해지는 기준과 포화 전류를 계산합니다." },
-      { id: "mosfet-model-boundary", role: "긴 채널 제곱식과 실제 소자의 경계를 확인합니다." },
+    "introducedHere": [
+      {
+        "id": "mosfet-four-terminals",
+        "role": "게이트·소스·드레인·바디의 서로 다른 일을 나눕니다."
+      },
+      {
+        "id": "gate-controlled-channel",
+        "role": "표면 전자가 양끝을 잇고 국소 전압으로 달라짐을 설명합니다."
+      },
+      {
+        "id": "mosfet-cutoff-regime",
+        "role": "문턱 아래 이상 근사와 실제 누설을 구분합니다."
+      },
+      {
+        "id": "mosfet-linear-regime",
+        "role": "채널이 끝까지 남은 구간의 전류를 계산합니다."
+      },
+      {
+        "id": "mosfet-pinch-off-saturation",
+        "role": "채널 끝이 잘록해지는 기준과 포화 전류를 계산합니다."
+      },
+      {
+        "id": "mosfet-model-boundary",
+        "role": "긴 채널 제곱식과 실제 소자의 경계를 확인합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "mosfet-four-terminals", sectionId: "terminals", intuition: "한 전극은 길의 전하를 조절하고 다른 두 단자는 전자를 주고받습니다.", workedExample: "p형 바디를 소스 0 V에 묶고 게이트 1.5 V, 드레인 0.2 V의 가상 nMOS를 놓습니다.", boundary: "전자는 소스→드레인, 양의 관습 전류는 드레인→소스입니다. 실제 네 단자의 전압을 섞으면 안 됩니다.", scientificGrounding: { observable: "게이트·소스·드레인·바디 전위와 각 단자 전류", unitsAndDimensions: "전압 V와 전류 A, 전자 전하량 C를 구분합니다.", modelAssumptions: "n형 소스·드레인과 p형 바디, 바디를 소스에 묶은 긴 채널을 둡니다.", measurementExample: "게이트 1.5 V·드레인 0.2 V에서 이상 전류 0.18 mA의 방향을 드레인→소스로 표시합니다.", invalidConditions: "바디와 소스를 다른 전위에 놓으면 문턱이 달라져 같은 숫자를 쓸 수 없습니다.", referenceFrame: "소스→드레인을 양의 위치 방향, 소스 전위를 0 V로 둔 실험실 기준계" } },
-      { id: "gate-controlled-channel", sectionId: "channel", intuition: "게이트가 표면에 모은 전자가 두 n형 단자를 잇는 길이 됩니다.", workedExample: "VGS=1.5 V와 Vth=0.5 V라 여분 전압은 1.0 V입니다(가정).", boundary: "드레인 쪽으로 전위가 높아지면 표면 전자 수가 줄어 채널의 국소 전하가 일정하지 않습니다.", scientificGrounding: { observable: "게이트 전압에 따른 표면 전하와 드레인 전류", unitsAndDimensions: "여분 전압 V, 면적당 전하 C/m², 전류 A입니다.", modelAssumptions: "강한 반전과 바디=소스, 국소 전하의 점진 채널 근사를 둡니다.", measurementExample: "드레인 0.2 V에서도 끝의 국소 여분 전압은 0.8 V입니다.", invalidConditions: "문턱 아래와 짧은 채널의 큰 횡방향 전기장에서는 단순 국소 시트 모델이 부족합니다.", referenceFrame: "채널의 소스에서 드레인으로 y=0→L을 두는 실험실 기준계" } },
-      { id: "mosfet-cutoff-regime", sectionId: "states", intuition: "게이트가 문턱 아래면 강한 전자 층이 두 단자를 이어 주지 못합니다.", workedExample: "가정한 문턱 0.5 V보다 낮은 0.4 V 게이트는 이상 차단 전류 0 mA입니다.", boundary: "실제 소자의 약한 반전 전류와 접합 누설을 0이라고 주장하지 않습니다.", scientificGrounding: { observable: "문턱 아래 게이트 전압에 따른 드레인 누설 전류", unitsAndDimensions: "게이트 전압 V, 드레인 전류 A입니다.", modelAssumptions: "강한 반전의 이상 스위치 근사만 남기고 약한 반전을 뺍니다.", measurementExample: "0.4 V 게이트를 이상 모델의 0 mA로 표기하고 실제 누설은 별도 측정 대상으로 남깁니다.", invalidConditions: "저전력 설계의 대기 전력 예측에는 약한 반전·온도 의존성을 생략할 수 없습니다.", referenceFrame: "소스 0 V를 전압 기준으로 둔 실험실 기준계" } },
-      { id: "mosfet-linear-regime", sectionId: "current", intuition: "채널이 끝까지 남으면 양끝 전압이 전자를 밀어 전류를 만듭니다.", workedExample: "Vov=1.0 V, VDS=0.2 V, k=1 mA/V²이면 k(0.2−0.02)=0.18 mA입니다.", boundary: "VDS가 Vov에 닿으면 드레인 끝의 강한 반전이 사라져 같은 국소 근사를 그대로 연장할 수 없습니다.", scientificGrounding: { observable: "VGS를 고정하고 VDS를 바꿔 측정한 드레인 I–V 곡선", unitsAndDimensions: "k는 A/V², 괄호는 V²이므로 ID는 A입니다.", modelAssumptions: "긴 채널, 점진 채널·시트 전하 근사, 일정 이동도와 바디=소스입니다.", measurementExample: "가정한 0.2 V의 0.18 mA를 이상식에 넣어 계산합니다.", invalidConditions: "높은 횡방향 전계·짧은 채널·문턱 아래에서는 식이 맞지 않습니다.", referenceFrame: "소스→드레인 y축, V(0)=0이고 V(L)=VDS인 실험실 기준계" } },
-      { id: "mosfet-pinch-off-saturation", sectionId: "current", intuition: "드레인 쪽 전자 층이 줄어든 뒤 추가 전압이 주로 그 부분에 걸립니다.", workedExample: "VDS=Vov=1.0 V에서 ID=0.5 mA이고 1.5 V에서도 긴 채널 이상값 0.5 mA입니다.", boundary: "핀치오프가 모든 전류를 막는 뜻은 아니며 실제 포화 전류도 완전히 평평하지 않습니다.", scientificGrounding: { observable: "VDS≥Vov에서 드레인 전류의 기울기", unitsAndDimensions: "포화 전류 A, 경계 전압 V, k의 단위 A/V²입니다.", modelAssumptions: "긴 채널의 첫 차수 포화 근사와 문턱·이동도 고정을 사용합니다.", measurementExample: "가상 k=1 mA/V²와 Vov=1 V이면 kVov²/2=0.5 mA입니다.", invalidConditions: "채널 길이 변조·속도 포화가 큰 실제 소자는 다른 곡선을 보입니다.", referenceFrame: "소스에서 드레인으로 향하는 y축과 소스 0 V의 실험실 기준계" } },
-      { id: "mosfet-model-boundary", sectionId: "limits", intuition: "이상식의 0과 평평한 0.5 mA는 실제 소자를 비교하는 기준선입니다.", workedExample: "가상 소자는 VDS 1.0과 1.5 V에서 모두 0.5 mA지만 실제 측정에서는 조금 기울 수 있습니다.", boundary: "채널 길이·온도·바디 전압과 공정이 다른 제품의 정격을 이 가상 수치로 대신하지 않습니다.", scientificGrounding: { observable: "문턱 아래 누설과 포화 영역 출력 컨덕턴스, 온도별 I–V", unitsAndDimensions: "누설 A, 출력 기울기 A/V, 온도 K를 함께 기록합니다.", modelAssumptions: "이상 긴 채널 곡선과 실측 곡선을 같은 전압 조건에서 비교합니다.", measurementExample: "이상 모형의 0.4 V 게이트 0 mA와 VDS≥1 V 0.5 mA를 실제 곡선의 기준으로 둡니다.", invalidConditions: "실제 데이터시트의 공정·온도·바디 바이어스가 다르면 같은 문턱과 k를 쓰지 않습니다.", referenceFrame: "소스 0 V·같은 전류 부호를 고정한 실험실 계측 기준계" } },
+    "conceptExplanations": [
+      {
+        "id": "mosfet-four-terminals",
+        "sectionId": "terminals",
+        "intuition": "한 전극은 길의 전하를 조절하고 다른 두 단자는 전자를 주고받습니다.",
+        "workedExample": "p형 바디를 소스 0 V에 묶고 게이트 1.5 V, 드레인 0.2 V의 가상 nMOS를 놓습니다.",
+        "boundary": "전자는 소스→드레인, 양의 관습 전류는 드레인→소스입니다. 실제 네 단자의 전압을 섞으면 안 됩니다.",
+        "scientificGrounding": {
+          "observable": "게이트·소스·드레인·바디 전위와 각 단자 전류",
+          "unitsAndDimensions": "전압 V와 전류 A, 전자 전하량 C를 구분합니다.",
+          "modelAssumptions": "n형 소스·드레인과 p형 바디, 바디를 소스에 묶은 긴 채널을 둡니다.",
+          "measurementExample": "게이트 1.5 V·드레인 0.2 V에서 이상 전류 0.18 mA의 방향을 드레인→소스로 표시합니다.",
+          "invalidConditions": "바디와 소스를 다른 전위에 놓으면 문턱이 달라져 같은 숫자를 쓸 수 없습니다.",
+          "referenceFrame": "소스→드레인을 양의 위치 방향, 소스 전위를 0 V로 둔 실험실 기준계"
+        }
+      },
+      {
+        "id": "gate-controlled-channel",
+        "sectionId": "channel",
+        "intuition": "게이트가 표면에 모은 전자가 두 n형 단자를 잇는 길이 됩니다.",
+        "workedExample": "VGS=1.5 V와 Vth=0.5 V라 여분 전압은 1.0 V입니다(가정).",
+        "boundary": "드레인 쪽으로 전위가 높아지면 표면 전자 수가 줄어 채널의 국소 전하가 일정하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "게이트 전압에 따른 표면 전하와 드레인 전류",
+          "unitsAndDimensions": "여분 전압 V, 면적당 전하 C/m², 전류 A입니다.",
+          "modelAssumptions": "강한 반전과 바디=소스, 국소 전하의 점진 채널 근사를 둡니다.",
+          "measurementExample": "드레인 0.2 V에서도 끝의 국소 여분 전압은 0.8 V입니다.",
+          "invalidConditions": "문턱 아래와 짧은 채널의 큰 횡방향 전기장에서는 단순 국소 시트 모델이 부족합니다.",
+          "referenceFrame": "채널의 소스에서 드레인으로 y=0→L을 두는 실험실 기준계"
+        }
+      },
+      {
+        "id": "mosfet-cutoff-regime",
+        "sectionId": "states",
+        "intuition": "게이트가 문턱 아래면 강한 전자 층이 두 단자를 이어 주지 못합니다.",
+        "workedExample": "가정한 문턱 0.5 V보다 낮은 0.4 V 게이트는 이상 차단 전류 0 mA입니다.",
+        "boundary": "실제 소자의 약한 반전 전류와 접합 누설을 0이라고 주장하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "문턱 아래 게이트 전압에 따른 드레인 누설 전류",
+          "unitsAndDimensions": "게이트 전압 V, 드레인 전류 A입니다.",
+          "modelAssumptions": "강한 반전의 이상 스위치 근사만 남기고 약한 반전을 뺍니다.",
+          "measurementExample": "0.4 V 게이트를 이상 모델의 0 mA로 표기하고 실제 누설은 별도 측정 대상으로 남깁니다.",
+          "invalidConditions": "저전력 설계의 대기 전력 예측에는 약한 반전·온도 의존성을 생략할 수 없습니다.",
+          "referenceFrame": "소스 0 V를 전압 기준으로 둔 실험실 기준계"
+        }
+      },
+      {
+        "id": "mosfet-linear-regime",
+        "sectionId": "current",
+        "intuition": "채널이 끝까지 남으면 양끝 전압이 전자를 밀어 전류를 만듭니다.",
+        "workedExample": "Vov=1.0 V, VDS=0.2 V, k=1 mA/V²이면 k(0.2−0.02)=0.18 mA입니다.",
+        "boundary": "VDS가 Vov에 닿으면 드레인 끝의 강한 반전이 사라져 같은 국소 근사를 그대로 연장할 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "VGS를 고정하고 VDS를 바꿔 측정한 드레인 I–V 곡선",
+          "unitsAndDimensions": "k는 A/V², 괄호는 V²이므로 ID는 A입니다.",
+          "modelAssumptions": "긴 채널, 점진 채널·시트 전하 근사, 일정 이동도와 바디=소스입니다.",
+          "measurementExample": "가정한 0.2 V의 0.18 mA를 이상식에 넣어 계산합니다.",
+          "invalidConditions": "높은 횡방향 전계·짧은 채널·문턱 아래에서는 식이 맞지 않습니다.",
+          "referenceFrame": "소스→드레인 y축, V(0)=0이고 V(L)=VDS인 실험실 기준계"
+        }
+      },
+      {
+        "id": "mosfet-pinch-off-saturation",
+        "sectionId": "current",
+        "intuition": "드레인 쪽 전자 층이 줄어든 뒤 추가 전압이 주로 그 부분에 걸립니다.",
+        "workedExample": "VDS=Vov=1.0 V에서 ID=0.5 mA이고 1.5 V에서도 긴 채널 이상값 0.5 mA입니다.",
+        "boundary": "핀치오프가 모든 전류를 막는 뜻은 아니며 실제 포화 전류도 완전히 평평하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "VDS≥Vov에서 드레인 전류의 기울기",
+          "unitsAndDimensions": "포화 전류 A, 경계 전압 V, k의 단위 A/V²입니다.",
+          "modelAssumptions": "긴 채널의 첫 차수 포화 근사와 문턱·이동도 고정을 사용합니다.",
+          "measurementExample": "가상 k=1 mA/V²와 Vov=1 V이면 kVov²/2=0.5 mA입니다.",
+          "invalidConditions": "채널 길이 변조·속도 포화가 큰 실제 소자는 다른 곡선을 보입니다.",
+          "referenceFrame": "소스에서 드레인으로 향하는 y축과 소스 0 V의 실험실 기준계"
+        }
+      },
+      {
+        "id": "mosfet-model-boundary",
+        "sectionId": "limits",
+        "intuition": "이상식의 0과 평평한 0.5 mA는 실제 소자를 비교하는 기준선입니다.",
+        "workedExample": "가상 소자는 VDS 1.0과 1.5 V에서 모두 0.5 mA지만 실제 측정에서는 조금 기울 수 있습니다.",
+        "boundary": "채널 길이·온도·바디 전압과 공정이 다른 제품의 정격을 이 가상 수치로 대신하지 않습니다.",
+        "scientificGrounding": {
+          "observable": "문턱 아래 누설과 포화 영역 출력 컨덕턴스, 온도별 I–V",
+          "unitsAndDimensions": "누설 A, 출력 기울기 A/V, 온도 K를 함께 기록합니다.",
+          "modelAssumptions": "이상 긴 채널 곡선과 실측 곡선을 같은 전압 조건에서 비교합니다.",
+          "measurementExample": "이상 모형의 0.4 V 게이트 0 mA와 VDS≥1 V 0.5 mA를 실제 곡선의 기준으로 둡니다.",
+          "invalidConditions": "실제 데이터시트의 공정·온도·바디 바이어스가 다르면 같은 문턱과 k를 쓰지 않습니다.",
+          "referenceFrame": "소스 0 V·같은 전류 부호를 고정한 실험실 계측 기준계"
+        }
+      }
     ],
-    conceptStages: [
-      { label: "01 네 단자", relation: "전극의 제어와 양끝의 흐름을 분리합니다.", concepts: ["mosfet-four-terminals"] },
-      { label: "02 전자 길", relation: "게이트가 만든 전하를 양끝에 잇습니다.", concepts: ["gate-controlled-channel"] },
-      { label: "03 세 영역", relation: "차단과 선형, 핀치오프 뒤 포화를 구분합니다.", concepts: ["mosfet-cutoff-regime", "mosfet-linear-regime", "mosfet-pinch-off-saturation"] },
-      { label: "04 소자 경계", relation: "이상식의 0과 평평한 전류를 실제 곡선과 구분합니다.", concepts: ["mosfet-model-boundary"] },
+    "conceptStages": [
+      {
+        "label": "01 네 단자",
+        "relation": "전극의 제어와 양끝의 흐름을 분리합니다.",
+        "concepts": [
+          "mosfet-four-terminals"
+        ]
+      },
+      {
+        "label": "02 전자 길",
+        "relation": "게이트가 만든 전하를 양끝에 잇습니다.",
+        "concepts": [
+          "gate-controlled-channel"
+        ]
+      },
+      {
+        "label": "03 세 영역",
+        "relation": "차단과 선형, 핀치오프 뒤 포화를 구분합니다.",
+        "concepts": [
+          "mosfet-cutoff-regime",
+          "mosfet-linear-regime",
+          "mosfet-pinch-off-saturation"
+        ]
+      },
+      {
+        "label": "04 소자 경계",
+        "relation": "이상식의 0과 평평한 전류를 실제 곡선과 구분합니다.",
+        "concepts": [
+          "mosfet-model-boundary"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "nMOS의 게이트·소스·드레인·바디는 각각 무엇을 하며 전자와 관습 전류의 방향은 어떻게 다릅니까?", answerChecklist: ["게이트 표면 조절", "소스 전자 공급", "드레인 전자 받음", "바디 p형", "전자 S→D·관습 전류 D→S"], requiredConcepts: ["mosfet-four-terminals"], sectionId: "terminals" },
-      { level: "basic", question: "VGS=1.5 V, Vth=0.5 V에서 여분 전압과 드레인 끝 전하의 변화를 설명하세요.", answerChecklist: ["여분 전압 1.0 V", "표면 전자 채널", "드레인 쪽 전위 증가", "국소 전자 감소"], requiredConcepts: ["gate-controlled-channel"], sectionId: "channel" },
-      { level: "basic", question: "게이트 0.4 V의 이상 전류와 실제 전류의 차이를 말하세요.", answerChecklist: ["가정 문턱 0.5 V 아래", "이상 0 mA", "실제 약한 반전 누설", "온도와 소자 조건"], requiredConcepts: ["mosfet-cutoff-regime"], sectionId: "states" },
-      { level: "basic", question: "VDS=0.2 V가 선형 영역인 이유와 전류를 계산하세요.", answerChecklist: ["0.2<1.0 V", "드레인 끝 채널 남음", "k(VovVDS−VDS²/2)", "0.18 mA"], requiredConcepts: ["mosfet-linear-regime"], sectionId: "current" },
-      { level: "basic", question: "VDS=1.0 V와 1.5 V의 이상 드레인 전류는 각각 얼마입니까?", answerChecklist: ["포화 경계 1.0 V", "핀치오프", "둘 다 0.5 mA", "긴 채널 이상 근사"], requiredConcepts: ["mosfet-pinch-off-saturation"], sectionId: "current" },
-      { level: "basic", question: "MOSFET의 포화가 디지털 스위치의 ‘완전히 켜짐’과 같은 말이 아닌 이유는 무엇입니까?", answerChecklist: ["포화는 VDS 증가에 대한 전류 둔화", "핀치오프 뒤에도 전류 흐름", "스위치의 낮은 저항 판단과 구분"], requiredConcepts: ["mosfet-pinch-off-saturation"], sectionId: "states" },
-      { level: "advanced", question: "채널 위치별 표면 전하가 왜 다른지 적고 선형 전류식의 두 항이 나오는 적분을 설명하세요.", answerChecklist: ["Qi(y)≈−C′ox(Vov−V(y))", "V(0)=0, V(L)=VDS", "국소 전하×전기장", "VovVDS−VDS²/2"], requiredConcepts: ["gate-controlled-channel", "mosfet-linear-regime"], sectionId: "current" },
-      { level: "advanced", question: "VDS=Vov=1.0 V를 선형식과 포화식에 각각 넣어 경계에서 맞는지 검산하세요.", answerChecklist: ["선형식 k(1−1/2)", "포화식 k/2", "모두 0.5 mA", "경계 연속"], requiredConcepts: ["mosfet-linear-regime", "mosfet-pinch-off-saturation"], sectionId: "current" },
-      { level: "advanced", question: "게이트를 2.0 V로 올리면 가정한 같은 k·문턱에서 포화 경계와 전류는 어떻게 달라집니까?", answerChecklist: ["여분 전압 1.5 V", "포화 시작 VDS=1.5 V", "ID,sat=1.125 mA", "k·문턱 고정 가정"], requiredConcepts: ["gate-controlled-channel", "mosfet-pinch-off-saturation"], sectionId: "current" },
-      { level: "advanced", question: "짧은 실제 소자가 이상 제곱식과 평평한 포화에서 벗어나는 이유를 제안하세요.", answerChecklist: ["채널 길이 변조", "속도 포화", "문턱 아래 누설", "바디 바이어스 또는 온도", "실측 I–V 확인"], requiredConcepts: ["mosfet-model-boundary"], sectionId: "limits" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "nMOS의 게이트·소스·드레인·바디는 각각 무엇을 하며 전자와 관습 전류의 방향은 어떻게 다릅니까?",
+        "answerChecklist": [
+          "게이트 표면 조절",
+          "소스 전자 공급",
+          "드레인 전자 받음",
+          "바디 p형",
+          "전자 S→D·관습 전류 D→S"
+        ],
+        "requiredConcepts": [
+          "mosfet-four-terminals"
+        ],
+        "sectionId": "terminals"
+      },
+      {
+        "level": "basic",
+        "question": "VGS=1.5 V, Vth=0.5 V에서 여분 전압과 드레인 끝 전하의 변화를 설명하세요.",
+        "answerChecklist": [
+          "여분 전압 1.0 V",
+          "표면 전자 채널",
+          "드레인 쪽 전위 증가",
+          "국소 전자 감소"
+        ],
+        "requiredConcepts": [
+          "gate-controlled-channel"
+        ],
+        "sectionId": "channel"
+      },
+      {
+        "level": "basic",
+        "question": "게이트 0.4 V의 이상 전류와 실제 전류의 차이를 말하세요.",
+        "answerChecklist": [
+          "가정 문턱 0.5 V 아래",
+          "이상 0 mA",
+          "실제 약한 반전 누설",
+          "온도와 소자 조건"
+        ],
+        "requiredConcepts": [
+          "mosfet-cutoff-regime"
+        ],
+        "sectionId": "states"
+      },
+      {
+        "level": "basic",
+        "question": "VDS=0.2 V가 선형 영역인 이유와 전류를 계산하세요.",
+        "answerChecklist": [
+          "0.2<1.0 V",
+          "드레인 끝 채널 남음",
+          "k(VovVDS−VDS²/2)",
+          "0.18 mA"
+        ],
+        "requiredConcepts": [
+          "mosfet-linear-regime"
+        ],
+        "sectionId": "current"
+      },
+      {
+        "level": "basic",
+        "question": "VDS=1.0 V와 1.5 V의 이상 드레인 전류는 각각 얼마입니까?",
+        "answerChecklist": [
+          "포화 경계 1.0 V",
+          "핀치오프",
+          "둘 다 0.5 mA",
+          "긴 채널 이상 근사"
+        ],
+        "requiredConcepts": [
+          "mosfet-pinch-off-saturation"
+        ],
+        "sectionId": "current"
+      },
+      {
+        "level": "basic",
+        "question": "MOSFET의 포화가 디지털 스위치의 ‘완전히 켜짐’과 같은 말이 아닌 이유는 무엇입니까?",
+        "answerChecklist": [
+          "포화는 VDS 증가에 대한 전류 둔화",
+          "핀치오프 뒤에도 전류 흐름",
+          "스위치의 낮은 저항 판단과 구분"
+        ],
+        "requiredConcepts": [
+          "mosfet-pinch-off-saturation"
+        ],
+        "sectionId": "states"
+      },
+      {
+        "level": "advanced",
+        "question": "채널 위치별 표면 전하가 왜 다른지 적고 선형 전류식의 두 항이 나오는 적분을 설명하세요.",
+        "answerChecklist": [
+          "Qi(y)≈−C′ox(Vov−V(y))",
+          "V(0)=0, V(L)=VDS",
+          "국소 전하×전기장",
+          "VovVDS−VDS²/2"
+        ],
+        "requiredConcepts": [
+          "gate-controlled-channel",
+          "mosfet-linear-regime"
+        ],
+        "sectionId": "current"
+      },
+      {
+        "level": "advanced",
+        "question": "VDS=Vov=1.0 V를 선형식과 포화식에 각각 넣어 경계에서 맞는지 검산하세요.",
+        "answerChecklist": [
+          "선형식 k(1−1/2)",
+          "포화식 k/2",
+          "모두 0.5 mA",
+          "경계 연속"
+        ],
+        "requiredConcepts": [
+          "mosfet-linear-regime",
+          "mosfet-pinch-off-saturation"
+        ],
+        "sectionId": "current"
+      },
+      {
+        "level": "advanced",
+        "question": "게이트를 2.0 V로 올리면 가정한 같은 k·문턱에서 포화 경계와 전류는 어떻게 달라집니까?",
+        "answerChecklist": [
+          "여분 전압 1.5 V",
+          "포화 시작 VDS=1.5 V",
+          "ID,sat=1.125 mA",
+          "k·문턱 고정 가정"
+        ],
+        "requiredConcepts": [
+          "gate-controlled-channel",
+          "mosfet-pinch-off-saturation"
+        ],
+        "sectionId": "current"
+      },
+      {
+        "level": "advanced",
+        "question": "짧은 실제 소자가 이상 제곱식과 평평한 포화에서 벗어나는 이유를 제안하세요.",
+        "answerChecklist": [
+          "채널 길이 변조",
+          "속도 포화",
+          "문턱 아래 누설",
+          "바디 바이어스 또는 온도",
+          "실측 I–V 확인"
+        ],
+        "requiredConcepts": [
+          "mosfet-model-boundary"
+        ],
+        "sectionId": "limits"
+      }
     ],
-    papers: [
-      { title: "MIT OpenCourseWare 6.720J, Lecture 25, ‘Long MOSFET’ (2007)", href: "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/8ad0e553fbdaed10f6102b04451e547e_lecture25.pdf", problem: "게이트가 만든 표면 전하가 위치별로 다른데 어떻게 양단자 전류를 구할지 설명해야 합니다.", contribution: "10쪽은 국소 전하 Qi(y)≈−Cox[VGS−V(y)−VT], 13쪽은 이를 채널 방향으로 적분한 선형 영역 전류식을 제시합니다.", assumptions: "긴 채널, 점진 채널·시트 전하 근사, 낮은 전계의 일정 이동도를 씁니다.", evidenceScope: "공식 강의안의 원본 PDF 10·13쪽을 열어 식과 조건을 확인했습니다. 본문 수치는 별도 가정입니다.", notClaim: "이 강의안이 k=1 mA/V² 소자를 측정했다거나 짧은 채널에도 선형식을 그대로 적용한다는 뜻이 아닙니다.", sectionId: "current" },
-      { title: "MIT OpenCourseWare 6.720J, Lecture 26, ‘Long MOSFET’ (2007)", href: "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/59850a07f95e9f50d32185eb46503460_lecture26.pdf", problem: "드레인 전압이 높아져 채널 끝의 반전 전하가 줄 때 전류를 어떻게 이어야 하는지 설명해야 합니다.", contribution: "5쪽의 핀치오프 그림, 7쪽의 VDS,sat=VGS−VT와 포화식, 8쪽의 제곱 의존성을 제시합니다.", assumptions: "긴 채널 이상 모형과 첫 차수 포화 근사입니다.", evidenceScope: "공식 PDF 5·7·8쪽 이미지를 대조했습니다. 0.5 mA는 본문 가정에서 계산했습니다.", notClaim: "실제 MOSFET의 포화 전류가 드레인 전압과 무관하게 완전히 평평하거나 문턱 아래 전류가 정확히 0이라는 뜻이 아닙니다.", sectionId: "current" },
-    ],
+    "papers": [
+      {
+        "title": "MIT OpenCourseWare 6.720J, Lecture 25, ‘Long MOSFET’ (2007)",
+        "href": "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/8ad0e553fbdaed10f6102b04451e547e_lecture25.pdf",
+        "problem": "게이트가 만든 표면 전하가 위치별로 다른데 어떻게 양단자 전류를 구할지 설명해야 합니다.",
+        "contribution": "10쪽은 국소 전하 Qi(y)≈−Cox[VGS−V(y)−VT], 13쪽은 이를 채널 방향으로 적분한 선형 영역 전류식을 제시합니다.",
+        "assumptions": "긴 채널, 점진 채널·시트 전하 근사, 낮은 전계의 일정 이동도를 씁니다.",
+        "evidenceScope": "공식 강의안의 원본 PDF 10·13쪽을 열어 식과 조건을 확인했습니다. 본문 수치는 별도 가정입니다.",
+        "notClaim": "이 강의안이 k=1 mA/V² 소자를 측정했다거나 짧은 채널에도 선형식을 그대로 적용한다는 뜻이 아닙니다.",
+        "sectionId": "current"
+      },
+      {
+        "title": "MIT OpenCourseWare 6.720J, Lecture 26, ‘Long MOSFET’ (2007)",
+        "href": "https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/59850a07f95e9f50d32185eb46503460_lecture26.pdf",
+        "problem": "드레인 전압이 높아져 채널 끝의 반전 전하가 줄 때 전류를 어떻게 이어야 하는지 설명해야 합니다.",
+        "contribution": "3쪽은 포화 경계 부근의 근사 한계, 4쪽은 VDS=0.8Vov에서 이상 포화 전류의 96%, 5쪽은 핀치오프 뒤 전자의 이동, 7쪽은 포화식을 제시합니다.",
+        "assumptions": "긴 채널 이상 모형과 첫 차수 포화 근사입니다.",
+        "evidenceScope": "공식 PDF 3–5·7·8쪽을 대조했습니다. 0.48/0.5 mA는 본문 가정으로 계산한 값이며 경계의 고전계 문제까지 정확히 푼 결과가 아닙니다.",
+        "notClaim": "실제 MOSFET의 포화 전류가 드레인 전압과 무관하게 완전히 평평하거나 문턱 아래 전류가 정확히 0이라는 뜻이 아닙니다.",
+        "sectionId": "current"
+      }
+    ]
   },
   "devices/switching-energy-and-leakage": {
-    coreIdea: "같은 가상 CMOS 출력의 10 pF·3.3 V 충전과 방전에서 완전 주기당 108.9 pJ를 추적하고, 활동률 10%의 동적 전력 10.89 µW와 가정한 1 µA 누설의 대기 전력 3.3 µW를 분리합니다.",
-    assumedKnowledge: [
-      { id: "mosfet-four-terminals", role: "게이트가 소스·드레인 사이 흐름을 제어합니다." },
-      { id: "mosfet-cutoff-regime", role: "꺼진 이상 소자와 실제 누설을 구분합니다." },
-      { id: "electric-current", role: "전류를 초당 전하로 읽어 공급 에너지를 셉니다." },
+    "coreIdea": "같은 가상 CMOS 출력의 10 pF·3.3 V 충전과 방전에서 완전 주기당 108.9 pJ를 추적하고, 활동률 10%의 동적 전력 10.89 µW와 가정한 1 µA 누설의 대기 전력 3.3 µW를 분리합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "mosfet-four-terminals",
+        "role": "게이트가 소스·드레인 사이 흐름을 제어합니다."
+      },
+      {
+        "id": "mosfet-cutoff-regime",
+        "role": "꺼진 이상 소자와 실제 누설을 구분합니다."
+      },
+      {
+        "id": "electric-current",
+        "role": "전류를 초당 전하로 읽어 공급 에너지를 셉니다."
+      }
     ],
-    introducedHere: [
-      { id: "cmos-complementary-inverter", role: "두 소자가 번갈아 부하를 충전·방전하는 구조를 밝힙니다." },
-      { id: "cmos-load-capacitance", role: "출력이 충전할 전하와 저장 에너지를 계산합니다." },
-      { id: "cmos-cycle-energy", role: "공급·저장·소자 발열을 한 완전 주기로 맞춥니다." },
-      { id: "cmos-activity-dynamic-power", role: "활동률의 분모와 초당 전환 횟수를 분명히 합니다." },
-      { id: "cmos-leakage-power", role: "움직이지 않을 때 실제 대기 전력을 더합니다." },
-      { id: "cmos-voltage-power-tradeoff", role: "전압 변화가 전력 외 다른 수치도 바꿈을 구분합니다." },
+    "introducedHere": [
+      {
+        "id": "cmos-complementary-inverter",
+        "role": "두 소자가 번갈아 부하를 충전·방전하는 구조를 밝힙니다."
+      },
+      {
+        "id": "cmos-load-capacitance",
+        "role": "출력이 충전할 전하와 저장 에너지를 계산합니다."
+      },
+      {
+        "id": "cmos-cycle-energy",
+        "role": "공급·저장·소자 발열을 한 완전 주기로 맞춥니다."
+      },
+      {
+        "id": "cmos-activity-dynamic-power",
+        "role": "활동률의 분모와 초당 전환 횟수를 분명히 합니다."
+      },
+      {
+        "id": "cmos-leakage-power",
+        "role": "움직이지 않을 때 실제 대기 전력을 더합니다."
+      },
+      {
+        "id": "cmos-voltage-power-tradeoff",
+        "role": "전압 변화가 전력 외 다른 수치도 바꿈을 구분합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "cmos-complementary-inverter", sectionId: "two-paths", intuition: "위쪽 길은 출력을 채우고 아래쪽 길은 비웁니다.", workedExample: "입력이 0이면 3.3 V 출력, 입력이 3.3 V이면 0 V 출력인 가상 회로입니다.", boundary: "전환 중 두 소자가 잠시 함께 켜지는 현상은 이상 안정 상태 설명에 포함되지 않습니다.", scientificGrounding: { observable: "각 입력 상태에서 출력 노드의 전위와 공급선·접지선으로 흐르는 전류", unitsAndDimensions: "전위 차이는 V, 각 소자를 지나는 전하의 시간당 흐름은 A로 기록합니다.", modelAssumptions: "상보형 pMOS·nMOS와 0/3.3 V 이상 논리 상태를 둡니다.", measurementExample: "입력 0과 3.3 V에서 출력 3.3과 0 V를 번갈아 기록합니다.", invalidConditions: "전환 중 단락 전류, 유한한 출력 저항, 누설을 0으로 둘 수 없습니다.", referenceFrame: "접지 0 V를 공통 전위 기준으로 둔 정지 회로" } },
-      { id: "cmos-load-capacitance", sectionId: "two-paths", intuition: "출력선과 다음 입력은 충전해야 할 전하를 담습니다.", workedExample: "10 pF×3.3 V=33 pC이고 저장 에너지는 54.45 pJ입니다.", boundary: "10 pF는 이 글의 가정값이며 앞 글의 개별 전극 용량 0.345 pF와 다릅니다.", scientificGrounding: { observable: "출력 전압 변화에 필요한 총 전하와 등가 용량", unitsAndDimensions: "C=Q/V의 단위 F, 전하 C, 에너지 J입니다.", modelAssumptions: "10 pF를 전압에 무관한 집중 용량으로 둡니다.", measurementExample: "0→3.3 V 충전에서 33 pC와 54.45 pJ를 계산합니다.", invalidConditions: "전압 의존 용량·큰 배선 분포 지연이 있으면 한 고정 용량으로 충분하지 않습니다.", referenceFrame: "공급선 3.3 V와 접지 0 V를 고정하고 출력 노드 전압은 접지를 기준으로 셉니다." } },
-      { id: "cmos-cycle-energy", sectionId: "energy-ledger", intuition: "공급원이 낸 에너지 절반은 잠시 저장되고 나머지와 함께 결국 열이 됩니다.", workedExample: "10 pF·3.3 V에서 0→1→0의 공급 에너지는 108.9 pJ입니다.", boundary: "단락 전류와 내부 노드 손실을 뺀 이상적인 한 출력의 계산입니다.", scientificGrounding: { observable: "충전 중 공급선 전류의 시간 적분과 부하 전압", unitsAndDimensions: "전압 V와 전하 C의 곱은 J이고, pF에 전압 제곱을 곱하면 pJ가 됩니다.", modelAssumptions: "일정한 3.3 V 공급원과 완전 충전·방전, 이상 스위치 경로를 둡니다.", measurementExample: "공급 108.9 pJ, 충전 열 54.45 pJ, 방전 열 54.45 pJ로 장부를 맞춥니다.", invalidConditions: "불완전한 전압 스윙이나 내부 노드·단락 손실이 있으면 CV²만으로 전체 전력을 알 수 없습니다.", referenceFrame: "접지 0 V와 공급 3.3 V의 정지 회로" } },
-      { id: "cmos-activity-dynamic-power", sectionId: "activity", intuition: "한 번의 비용에 실제로 일어난 횟수를 곱합니다.", workedExample: "1 MHz 중 완전 출력 주기 10%라면 초당 10만 번×108.9 pJ=10.89 µW입니다.", boundary: "활동률을 토글 총수/클록으로 정의한 값과 섞으면 두 배 오류가 납니다.", scientificGrounding: { observable: "시간당 0→1→0 완전 출력 주기 수와 평균 공급 전력", unitsAndDimensions: "초당 주기 수 1/s에 한 주기의 J를 곱하면 평균 J/s, 즉 W가 됩니다.", modelAssumptions: "각 주기는 0과 VDD 사이 완전 전환이며 평균 α=0.1입니다.", measurementExample: "초당 100,000 완전 주기를 출력 기록에서 세면 10.89 µW입니다.", invalidConditions: "글리치나 부분 전압 스윙, 다른 α 정의를 그대로 식에 넣을 수 없습니다.", referenceFrame: "1초 관측 창을 쓰는 정지 회로 시간 기준" } },
-      { id: "cmos-leakage-power", sectionId: "activity", intuition: "출력이 가만히 있어도 실제 전하가 공급선에서 조금 흘러갑니다.", workedExample: "가정한 1 µA×3.3 V=3.3 µW이며 활동률 10%일 때 합은 14.19 µW입니다.", boundary: "누설은 소자·온도·전압·입력 상태에 의존하므로 1 µA가 일반 정격은 아닙니다.", scientificGrounding: { observable: "출력과 입력을 고정한 뒤 공급선에 직렬로 단 전류계가 가리키는 대기 전류", unitsAndDimensions: "전압 V에 초당 전하 흐름 A를 곱하면 초당 에너지 J/s인 W입니다.", modelAssumptions: "대기 공급 전류가 상태와 시간에 무관한 1 µA인 가상 사례입니다.", measurementExample: "출력을 멈추고 공급선에서 1 µA를 재면 3.3 µW로 계산합니다.", invalidConditions: "실제 온도·공정·전압을 바꾸면 가정한 1 µA를 재사용할 수 없습니다.", referenceFrame: "공급 3.3 V·접지 0 V의 정지 회로" } },
-      { id: "cmos-voltage-power-tradeoff", sectionId: "limits", intuition: "전압 제곱으로 전환 비용이 줄어도 전류와 속도도 달라집니다.", workedExample: "C·f·α 고정 가정에서 3.3→1.8 V는 10.89→3.24 µW입니다.", boundary: "1.8 V의 누설과 지연을 기존 3.3 V 값으로 계산할 수 없습니다.", scientificGrounding: { observable: "공급 전압별 동적 전력·대기 전류·전파 지연", unitsAndDimensions: "V, W, A, s를 별도로 기록합니다.", modelAssumptions: "동적 항 비교에서만 용량·주기·활동률을 수학적으로 고정합니다.", measurementExample: "0.1×1 MHz×10 pF×(1.8 V)²=3.24 µW를 구합니다.", invalidConditions: "낮은 전압에서 타이밍이나 잡음 여유가 부족하면 같은 동작을 보장할 수 없습니다.", referenceFrame: "두 전압 실험 모두 접지 0 V를 기준으로 두고 1초 동안 출력을 관측합니다." } },
+    "conceptExplanations": [
+      {
+        "id": "cmos-complementary-inverter",
+        "sectionId": "two-paths",
+        "intuition": "위쪽 길은 출력을 채우고 아래쪽 길은 비웁니다.",
+        "workedExample": "입력이 0이면 3.3 V 출력, 입력이 3.3 V이면 0 V 출력인 가상 회로입니다.",
+        "boundary": "전환 중 두 소자가 잠시 함께 켜지는 현상은 이상 안정 상태 설명에 포함되지 않습니다.",
+        "scientificGrounding": {
+          "observable": "각 입력 상태에서 출력 노드의 전위와 공급선·접지선으로 흐르는 전류",
+          "unitsAndDimensions": "전위 차이는 V, 각 소자를 지나는 전하의 시간당 흐름은 A로 기록합니다.",
+          "modelAssumptions": "상보형 pMOS·nMOS와 0/3.3 V 이상 논리 상태를 둡니다.",
+          "measurementExample": "입력 0과 3.3 V에서 출력 3.3과 0 V를 번갈아 기록합니다.",
+          "invalidConditions": "전환 중 단락 전류, 유한한 출력 저항, 누설을 0으로 둘 수 없습니다.",
+          "referenceFrame": "접지 0 V를 공통 전위 기준으로 둔 정지 회로"
+        }
+      },
+      {
+        "id": "cmos-load-capacitance",
+        "sectionId": "two-paths",
+        "intuition": "출력선과 다음 입력은 충전해야 할 전하를 담습니다.",
+        "workedExample": "10 pF×3.3 V=33 pC이고 저장 에너지는 54.45 pJ입니다.",
+        "boundary": "10 pF는 이 글의 가정값이며 앞 글의 개별 전극 용량 0.345 pF와 다릅니다.",
+        "scientificGrounding": {
+          "observable": "출력 전압 변화에 필요한 총 전하와 등가 용량",
+          "unitsAndDimensions": "C=Q/V의 단위 F, 전하 C, 에너지 J입니다.",
+          "modelAssumptions": "10 pF를 전압에 무관한 집중 용량으로 둡니다.",
+          "measurementExample": "0→3.3 V 충전에서 33 pC와 54.45 pJ를 계산합니다.",
+          "invalidConditions": "전압 의존 용량·큰 배선 분포 지연이 있으면 한 고정 용량으로 충분하지 않습니다.",
+          "referenceFrame": "공급선 3.3 V와 접지 0 V를 고정하고 출력 노드 전압은 접지를 기준으로 셉니다."
+        }
+      },
+      {
+        "id": "cmos-cycle-energy",
+        "sectionId": "energy-ledger",
+        "intuition": "공급원이 낸 에너지 절반은 잠시 저장되고 나머지와 함께 결국 열이 됩니다.",
+        "workedExample": "10 pF·3.3 V에서 0→1→0의 공급 에너지는 108.9 pJ입니다.",
+        "boundary": "단락 전류와 내부 노드 손실을 뺀 이상적인 한 출력의 계산입니다.",
+        "scientificGrounding": {
+          "observable": "충전 중 공급선 전류의 시간 적분과 부하 전압",
+          "unitsAndDimensions": "전압 V와 전하 C의 곱은 J이고, pF에 전압 제곱을 곱하면 pJ가 됩니다.",
+          "modelAssumptions": "일정한 3.3 V 공급원에서 저항성 경로를 통한 완전 충전·방전을 가정하고 누설·단락 전류·에너지 회수는 이 항에서 제외합니다.",
+          "measurementExample": "공급 108.9 pJ, 충전 열 54.45 pJ, 방전 열 54.45 pJ로 장부를 맞춥니다.",
+          "invalidConditions": "불완전한 전압 스윙이나 내부 노드·단락 손실이 있으면 CV²만으로 전체 전력을 알 수 없습니다.",
+          "referenceFrame": "접지 0 V와 공급 3.3 V의 정지 회로"
+        }
+      },
+      {
+        "id": "cmos-activity-dynamic-power",
+        "sectionId": "activity",
+        "intuition": "한 번의 비용에 실제로 일어난 횟수를 곱합니다.",
+        "workedExample": "1 MHz 중 완전 출력 주기 10%라면 초당 10만 번×108.9 pJ=10.89 µW입니다.",
+        "boundary": "활동률을 토글 총수/클록으로 정의한 값과 섞으면 두 배 오류가 납니다.",
+        "scientificGrounding": {
+          "observable": "시간당 0→1→0 완전 출력 주기 수와 평균 공급 전력",
+          "unitsAndDimensions": "초당 주기 수 1/s에 한 주기의 J를 곱하면 평균 J/s, 즉 W가 됩니다.",
+          "modelAssumptions": "각 주기는 0과 VDD 사이 완전 전환이며 평균 α=0.1입니다.",
+          "measurementExample": "초당 100,000 완전 주기를 출력 기록에서 세면 10.89 µW입니다.",
+          "invalidConditions": "글리치나 부분 전압 스윙, 다른 α 정의를 그대로 식에 넣을 수 없습니다.",
+          "referenceFrame": "1초 관측 창을 쓰는 정지 회로 시간 기준"
+        }
+      },
+      {
+        "id": "cmos-leakage-power",
+        "sectionId": "activity",
+        "intuition": "출력이 가만히 있어도 실제 전하가 공급선에서 조금 흘러갑니다.",
+        "workedExample": "가정한 1 µA×3.3 V=3.3 µW이며 활동률 10%일 때 합은 14.19 µW입니다.",
+        "boundary": "누설은 소자·온도·전압·입력 상태에 의존하므로 1 µA가 일반 정격은 아닙니다.",
+        "scientificGrounding": {
+          "observable": "출력과 입력을 고정한 뒤 공급선에 직렬로 단 전류계가 가리키는 대기 전류",
+          "unitsAndDimensions": "전압 V에 초당 전하 흐름 A를 곱하면 초당 에너지 J/s인 W입니다.",
+          "modelAssumptions": "대기 공급 전류가 상태와 시간에 무관한 1 µA인 가상 사례입니다.",
+          "measurementExample": "출력을 멈추고 공급선에서 1 µA를 재면 3.3 µW로 계산합니다.",
+          "invalidConditions": "실제 온도·공정·전압을 바꾸면 가정한 1 µA를 재사용할 수 없습니다.",
+          "referenceFrame": "공급 3.3 V·접지 0 V의 정지 회로"
+        }
+      },
+      {
+        "id": "cmos-voltage-power-tradeoff",
+        "sectionId": "limits",
+        "intuition": "전압 제곱으로 전환 비용이 줄어도 전류와 속도도 달라집니다.",
+        "workedExample": "C·f·α 고정 가정에서 3.3→1.8 V는 10.89→3.24 µW입니다.",
+        "boundary": "1.8 V의 누설과 지연을 기존 3.3 V 값으로 계산할 수 없습니다.",
+        "scientificGrounding": {
+          "observable": "공급 전압별 동적 전력·대기 전류·전파 지연",
+          "unitsAndDimensions": "V, W, A, s를 별도로 기록합니다.",
+          "modelAssumptions": "동적 항 비교에서만 용량·주기·활동률을 수학적으로 고정합니다.",
+          "measurementExample": "0.1×1 MHz×10 pF×(1.8 V)²=3.24 µW를 구합니다.",
+          "invalidConditions": "낮은 전압에서 타이밍이나 잡음 여유가 부족하면 같은 동작을 보장할 수 없습니다.",
+          "referenceFrame": "두 전압 실험 모두 접지 0 V를 기준으로 두고 1초 동안 출력을 관측합니다."
+        }
+      }
     ],
-    conceptStages: [
-      { label: "01 두 길", relation: "출력을 채우고 비우는 소자와 부하를 봅니다.", concepts: ["cmos-complementary-inverter", "cmos-load-capacitance"] },
-      { label: "02 에너지 장부", relation: "한 완전 주기에서 공급과 저장·발열을 맞춥니다.", concepts: ["cmos-cycle-energy"] },
-      { label: "03 평균 전력", relation: "실제 전환 빈도와 대기 전류를 나눕니다.", concepts: ["cmos-activity-dynamic-power", "cmos-leakage-power"] },
-      { label: "04 선택 경계", relation: "전압 변화가 속도와 누설에도 미치는 영향을 확인합니다.", concepts: ["cmos-voltage-power-tradeoff"] },
+    "conceptStages": [
+      {
+        "label": "01 두 길",
+        "relation": "출력을 채우고 비우는 소자와 부하를 봅니다.",
+        "concepts": [
+          "cmos-complementary-inverter",
+          "cmos-load-capacitance"
+        ]
+      },
+      {
+        "label": "02 에너지 장부",
+        "relation": "한 완전 주기에서 공급과 저장·발열을 맞춥니다.",
+        "concepts": [
+          "cmos-cycle-energy"
+        ]
+      },
+      {
+        "label": "03 평균 전력",
+        "relation": "실제 전환 빈도와 대기 전류를 나눕니다.",
+        "concepts": [
+          "cmos-activity-dynamic-power",
+          "cmos-leakage-power"
+        ]
+      },
+      {
+        "label": "04 선택 경계",
+        "relation": "전압 변화가 속도와 누설에도 미치는 영향을 확인합니다.",
+        "concepts": [
+          "cmos-voltage-power-tradeoff"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "입력이 0 V와 3.3 V일 때 어느 소자가 켜지고 출력은 얼마입니까?", answerChecklist: ["0 V 입력: pMOS 켜짐·nMOS 꺼짐·출력 3.3 V", "3.3 V 입력: pMOS 꺼짐·nMOS 켜짐·출력 0 V"], requiredConcepts: ["cmos-complementary-inverter"], sectionId: "two-paths" },
-      { level: "basic", question: "10 pF를 3.3 V로 충전하면 공급 전하와 저장 에너지는?", answerChecklist: ["33 pC", "54.45 pJ", "C×V와 ½CV² 구분"], requiredConcepts: ["cmos-load-capacitance"], sectionId: "two-paths" },
-      { level: "basic", question: "충전할 때 공급원이 낸 에너지와 위쪽 소자의 열은?", answerChecklist: ["108.9 pJ 공급", "54.45 pJ 위쪽 소자 발열", "54.45 pJ 저장"], requiredConcepts: ["cmos-cycle-energy"], sectionId: "energy-ledger" },
-      { level: "basic", question: "완전 출력 0→1→0 주기의 공급 에너지와 두 소자의 발열 합은?", answerChecklist: ["108.9 pJ 공급", "위쪽 54.45 pJ", "아래쪽 54.45 pJ", "합 108.9 pJ"], requiredConcepts: ["cmos-cycle-energy"], sectionId: "energy-ledger" },
-      { level: "basic", question: "1 MHz 기준의 10% 완전 출력 주기라면 동적 전력은?", answerChecklist: ["초당 10만 주기", "주기당 108.9 pJ", "10.89 µW"], requiredConcepts: ["cmos-activity-dynamic-power"], sectionId: "activity" },
-      { level: "basic", question: "1 µA 대기 전류를 가정할 때 대기 전력과 평균 합은?", answerChecklist: ["3.3 µW 대기", "10.89 µW 동적", "14.19 µW 합", "가정값"], requiredConcepts: ["cmos-leakage-power"], sectionId: "activity" },
-      { level: "advanced", question: "이 글의 활동률 정의에서 스위칭 식에 2를 더 곱하지 않는 이유를 설명하세요.", answerChecklist: ["활동률은 완전 출력 주기 비율", "CV²가 충전·방전 한 쌍", "토글 총수 정의와 구분"], requiredConcepts: ["cmos-activity-dynamic-power", "cmos-cycle-energy"], sectionId: "activity" },
-      { level: "advanced", question: "C만 5 pF로 줄이고 다른 가정을 고정하면 동적 전력은? 실제 회로의 추가 영향은?", answerChecklist: ["5.445 µW", "용량 변화와 지연·다음 입력·배선 조건 확인"], requiredConcepts: ["cmos-load-capacitance", "cmos-activity-dynamic-power"], sectionId: "limits" },
-      { level: "advanced", question: "VDD를 1.8 V로 바꿔 C·f·α를 고정하면 동적 전력은? 새 총 전력을 왜 곧바로 모릅니까?", answerChecklist: ["3.24 µW", "누설과 지연 변화", "새 조건 측정"], requiredConcepts: ["cmos-voltage-power-tradeoff", "cmos-leakage-power"], sectionId: "limits" },
-      { level: "advanced", question: "활동률 0에서도 전력이 남는 이유와 이 단순식에 빠진 손실을 두 가지 설명하세요.", answerChecklist: ["가정한 대기 누설 3.3 µW", "전환 중 단락 전류", "내부 노드 또는 글리치", "온도·공정 의존"], requiredConcepts: ["cmos-leakage-power", "cmos-voltage-power-tradeoff"], sectionId: "limits" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "입력이 0 V와 3.3 V일 때 어느 소자가 켜지고 출력은 얼마입니까?",
+        "answerChecklist": [
+          "0 V 입력: pMOS 켜짐·nMOS 꺼짐·출력 3.3 V",
+          "3.3 V 입력: pMOS 꺼짐·nMOS 켜짐·출력 0 V"
+        ],
+        "requiredConcepts": [
+          "cmos-complementary-inverter"
+        ],
+        "sectionId": "two-paths"
+      },
+      {
+        "level": "basic",
+        "question": "10 pF를 3.3 V로 충전하면 공급 전하와 저장 에너지는?",
+        "answerChecklist": [
+          "33 pC",
+          "54.45 pJ",
+          "C×V와 ½CV² 구분"
+        ],
+        "requiredConcepts": [
+          "cmos-load-capacitance"
+        ],
+        "sectionId": "two-paths"
+      },
+      {
+        "level": "basic",
+        "question": "충전할 때 공급원이 낸 에너지와 위쪽 소자의 열은?",
+        "answerChecklist": [
+          "108.9 pJ 공급",
+          "54.45 pJ 위쪽 소자 발열",
+          "54.45 pJ 저장"
+        ],
+        "requiredConcepts": [
+          "cmos-cycle-energy"
+        ],
+        "sectionId": "energy-ledger"
+      },
+      {
+        "level": "basic",
+        "question": "완전 출력 0→1→0 주기의 공급 에너지와 두 소자의 발열 합은?",
+        "answerChecklist": [
+          "108.9 pJ 공급",
+          "위쪽 54.45 pJ",
+          "아래쪽 54.45 pJ",
+          "합 108.9 pJ"
+        ],
+        "requiredConcepts": [
+          "cmos-cycle-energy"
+        ],
+        "sectionId": "energy-ledger"
+      },
+      {
+        "level": "basic",
+        "question": "1 MHz 기준의 10% 완전 출력 주기라면 동적 전력은?",
+        "answerChecklist": [
+          "초당 10만 주기",
+          "주기당 108.9 pJ",
+          "10.89 µW"
+        ],
+        "requiredConcepts": [
+          "cmos-activity-dynamic-power"
+        ],
+        "sectionId": "activity"
+      },
+      {
+        "level": "basic",
+        "question": "1 µA 대기 전류를 가정할 때 대기 전력과 평균 합은?",
+        "answerChecklist": [
+          "3.3 µW 대기",
+          "10.89 µW 동적",
+          "14.19 µW 합",
+          "가정값"
+        ],
+        "requiredConcepts": [
+          "cmos-leakage-power"
+        ],
+        "sectionId": "activity"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 활동률 정의에서 스위칭 식에 2를 더 곱하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "활동률은 완전 출력 주기 비율",
+          "CV²가 충전·방전 한 쌍",
+          "토글 총수 정의와 구분"
+        ],
+        "requiredConcepts": [
+          "cmos-activity-dynamic-power",
+          "cmos-cycle-energy"
+        ],
+        "sectionId": "activity"
+      },
+      {
+        "level": "advanced",
+        "question": "C만 5 pF로 줄이고 다른 가정을 고정하면 동적 전력은? 실제 회로의 추가 영향은?",
+        "answerChecklist": [
+          "5.445 µW",
+          "용량 변화와 지연·다음 입력·배선 조건 확인"
+        ],
+        "requiredConcepts": [
+          "cmos-load-capacitance",
+          "cmos-activity-dynamic-power"
+        ],
+        "sectionId": "activity"
+      },
+      {
+        "level": "advanced",
+        "question": "VDD를 1.8 V로 바꿔 C·f·α를 고정하면 동적 전력은? 새 총 전력을 왜 곧바로 모릅니까?",
+        "answerChecklist": [
+          "3.24 µW",
+          "누설과 지연 변화",
+          "새 조건 측정"
+        ],
+        "requiredConcepts": [
+          "cmos-voltage-power-tradeoff",
+          "cmos-leakage-power"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "활동률 0에서도 전력이 남는 이유와 이 단순식에 빠진 손실을 두 가지 설명하세요.",
+        "answerChecklist": [
+          "가정한 대기 누설 3.3 µW",
+          "전환 중 단락 전류",
+          "내부 노드 또는 글리치",
+          "온도·공정 의존"
+        ],
+        "requiredConcepts": [
+          "cmos-leakage-power",
+          "cmos-voltage-power-tradeoff"
+        ],
+        "sectionId": "limits"
+      }
     ],
-    papers: [
-      { title: "MIT OpenCourseWare 6.012, Lecture 14, ‘Digital Circuits (III): CMOS’ (2005)", href: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/6bec6dd1b07b02a1a84098b78f068cc3_lec14.pdf", problem: "충전·방전 에너지의 행방과 초당 전환 횟수가 평균 전력으로 이어지는 과정을 분명히 해야 합니다.", contribution: "원본 22쪽은 공급 CV²와 저장 ½CV², 23쪽은 방전 손실, 24쪽은 완전 주기 에너지 CV²와 평균 fCV²를 제시합니다.", assumptions: "이상적인 CMOS 전환과 부하 용량의 완전 충전·방전을 전제합니다. 강의안의 이상 정적 전력 0은 실제 누설 0을 뜻하지 않습니다.", evidenceScope: "공식 PDF 22–24쪽의 식과 에너지 장부를 직접 확인했습니다. 10 pF·3.3 V·1 MHz·1 µA는 글의 가정입니다.", notClaim: "강의안이 1 µA를 측정했거나 모든 CMOS 회로의 전력 손실을 CV²만으로 설명한다는 뜻이 아닙니다.", sectionId: "energy-ledger" },
-    ],
+    "papers": [
+      {
+        "title": "MIT OpenCourseWare 6.012, Lecture 14, ‘Digital Circuits (III): CMOS’ (2005)",
+        "href": "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/6bec6dd1b07b02a1a84098b78f068cc3_lec14.pdf",
+        "problem": "충전·방전 에너지의 행방과 초당 전환 횟수가 평균 전력으로 이어지는 과정을 분명히 해야 합니다.",
+        "contribution": "원본 22쪽은 공급 CV²와 저장 ½CV², 23쪽은 방전 손실, 24쪽은 완전 주기 에너지 CV²와 평균 fCV²를 제시합니다.",
+        "assumptions": "이상적인 CMOS 전환과 부하 용량의 완전 충전·방전을 전제합니다. 강의안의 이상 정적 전력 0은 실제 누설 0을 뜻하지 않습니다.",
+        "evidenceScope": "공식 PDF 22–24쪽의 식과 에너지 장부를 직접 확인했습니다. 10 pF·3.3 V·1 MHz·1 µA는 글의 가정입니다.",
+        "notClaim": "강의안이 1 µA를 측정했거나 모든 CMOS 회로의 전력 손실을 CV²만으로 설명한다는 뜻이 아닙니다.",
+        "sectionId": "energy-ledger"
+      }
+    ]
   },
   "circuits/resistance-and-power-dissipation": {
     coreIdea: "앞 글의 12 V·1 kΩ·2 kΩ·2 kΩ 가상 망에서 오른쪽만 1 kΩ으로 바꾸고 병렬·직렬 등가에서 개별 전류·열로 되돌아갑니다. 계산된 51.84 mW를 실제 저항 데이터시트 정격과 조건부로 비교합니다.",
@@ -94145,7 +98478,7 @@ export const ARTICLE_LEARNING: Readonly<
           "lateral-diffusion-geometry",
           "contact-window-clearance"
         ],
-        "sectionId": "mask"
+        "sectionId": "alternatives"
       },
       {
         "level": "advanced",
@@ -94158,7 +98491,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "contact-window-clearance"
         ],
-        "sectionId": "protect"
+        "sectionId": "alternatives"
       },
       {
         "level": "advanced",
@@ -94192,9 +98525,9 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "Jean A. Hoerni, US Patent 3,025,589, ‘Method of Manufacturing Semiconductor Devices’ (1959 출원, 1962 등록)",
         "href": "https://patentimages.storage.googleapis.com/cc/fb/db/690d609db55af5/US3025589.pdf",
         "problem": "작은 확산 소자의 접합을 오염·접촉 단락에서 지키고 접촉 가능한 영역을 남깁니다.",
-        "contribution": "원본 2–4쪽의 산화막 마스크·창·다이오드 및 이중 확산 트랜지스터 단면과 접합 보호 설명입니다.",
+        "contribution": "PDF3쪽의 다이오드 공정과4쪽의 트랜지스터·막 재료 조건,5쪽 청구항1(e)의 접합 위 덮개 유지 조건을 연결합니다.",
         "assumptions": "주로 실리콘 확산 다이오드·양극성 트랜지스터의 제조 방법입니다.",
-        "evidenceScope": "특허 원본 PDF 2–4쪽과 도 1–10을 직접 확인했습니다. 100·2·80 µm는 글의 가상 기하입니다.",
+        "evidenceScope": "원본 PDF3–5쪽(인쇄 열3–8)과도1–10을 확인했습니다. 100·2·80 µm 및110·15·2 µm 비교는 글의 가상 기하입니다.",
         "notClaim": "특허가 104 µm p형 폭·12 µm 거리 또는 오늘날 CMOS 전체 공정을 실측·보증했다는 뜻이 아닙니다.",
         "sectionId": "protect"
       }

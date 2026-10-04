@@ -3,56 +3,52 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import MosfetRegionsViz from "./mosfet-regions-and-transfer/viz/MosfetRegionsViz";
 
-/** Ideal long-channel educational case: Vth=.5 V, k=1 mA/V², VGS=1.5 V. */
+import NumericPath from "../world-systems/NumericPath";
+
 export default function MosfetRegionsAndTransferArticle() {
-  return (
-    <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">길을 만들고 양끝에 전압을 겁니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            앞 글에서는 절연된 전극 아래 실리콘 표면에 전자가 모일 수
-            있다는 것을 보았습니다. 그 전자 층의 양끝을 회로에 연결하면
-            어떤 일이 생길까요? 한쪽에서 전자를 공급하고 다른 쪽에서
-            받아, 전극 전압 하나로 흐름을 조절할 수 있습니다. 디지털
-            스위치의 ‘열기·닫기’와 아날로그 전류 조절이 여기서 갈라집니다.
-          </p>
-          <p className="leading-7">
-            작은 이상 소자를 <strong>가정</strong>합니다. 전극 전압 1.5 V,
-            전자 길이 생기는 기준 0.5 V, 전류를 정하는 비례값
-            1 mA/V²입니다. 양끝 전압을 0.2 V로 두면 0.18 mA, 1.0 V로
-            올리면 0.5 mA가 됩니다. 1.5 V로 더 올려도 이 이상 모델에서는
-            0.5 mA 그대로입니다. 처음에는 양끝 전압이 흐름을 키우다가
-            왜 더는 크게 키우지 못하는지 한 길을 따라 설명하겠습니다.
-          </p>
-          <p className="leading-7"><em>이 글의 질문은 같은 전극 전압에서 양끝 전압을 올릴 때 전류가 언제까지 커지는가입니다.</em></p>
-        </div>
-      </section>
+return <div className="space-y-16">
+<section id="overview" data-teach-level="S" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">1. 같은 전극 전압에서 흐름이 왜 더는 늘지 않을까요?</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
+            앞 글에서 절연된 전극은 아래 표면에 모이는 전자 수를 조절했습니다. 이번에는 그 표면의 양끝을 연결해 전자를 흘립니다. 양끝 전압을 올리면 처음에는 전류가 늘지만 어느
+            지점부터는 증가가 작아집니다. 전자가 지나가는 길의 끝에서 무엇이 달라지는지 살펴보겠습니다.
+          </p><p className="leading-7">
+            전하를 조절하는 위 전극과 전자를 이동시키는 양끝의 역할을 먼저 나눕니다. 그다음 같은 길의 입구와 출구에서 전하량이 달라지는 이유를 보겠습니다. 한 소자의 세 전압을 따라
+            계산하고 원문 식이 맞는 범위까지 확인하겠습니다.
+          </p></div>
+</section>
 
-      <section id="terminals" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">전극과 두 통로 끝의 역할을 나눕니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-7">
-            p형 실리콘 표면의 양쪽에 전자가 많은 n형 영역을 만듭니다.
-            왼쪽은 전자를 공급하는 <strong>소스</strong>, 오른쪽은 받아들이는
-            <strong>드레인</strong>이라고 부릅니다. 위쪽의 절연된 전극은
-            <strong>게이트</strong>입니다. p형 바탕은 몸체인 바디이며,
-            이 예제에서는 소스와 같은 전위에 묶습니다.
-          </p>
-          <p className="leading-7">
-            게이트는 절연층 너머 전기장으로 표면 전자 수를 조절합니다.
-            소스와 드레인 사이에 전압을 주면 전자는 소스에서 드레인으로
-            이동합니다. 회로에서 쓰는 양의 관습 전류는 그 반대 방향,
-            드레인에서 소스로 셉니다. 두 방향을 섞으면 전류 부호가
-            뒤집히므로 이 글의 계산에서는 드레인 전류를 양수로 둡니다.
-          </p>
-          <p className="leading-7"><em>게이트는 길의 전하 수를, 소스와 드레인의 전압은 그 길을 따라 움직이는 힘을 정합니다.</em></p>
-        </div>
-      </section>
+<section id="outside" data-teach-level="B" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">2. 두 전압을 정하고 하나의 전류를 읽습니다</h2>
+<NumericPath title="바깥 단자에서 하는 실험" steps={[{"label": "제어 전압", "value": "위 전극 1.5 V", "detail": "아래 표면에 모이는 전하를 조절합니다."}, {"label": "양끝 전압", "value": "0.2→1.0→1.5 V", "detail": "한쪽 끝을 0 V로 고정하고 다른 끝을 올립니다."}, {"label": "관찰", "value": "0.18→0.5→0.5 mA", "detail": "이상 모델이 주는 양끝 전류입니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">온도와 소자의 치수·재료는 바꾸지 않습니다. 아래 실리콘 바탕도 0 V에 둡니다. 위 전극 전압 하나로 전류가 모두 결정되는 것은 아닙니다. 같은 전극 전압에서도 길 양끝의 전압 차이가 흐름을 바꾸기 때문입니다.</p></div>
+</section>
 
-      <section id="channel" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">표면 전하가 양끝을 잇는 길이 됩니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="case" data-teach-level="0" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">3. 한 소자에서 세 전압을 비교합니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">모든 수치는 <strong>가정</strong>입니다. 위 전극은 1.5 V, 표면에 전자가 충분히 모이는 기준은 0.5 V입니다. 두 값의 차이 1.0 V가 길을 만드는 여유입니다. 치수와 재료가 전류에 미치는 영향은 1 mA/V²라는 비례값 하나로 묶겠습니다.</p><p className="leading-7">한쪽 끝과 바탕은 0 V입니다. 다른 끝이 0.2 V이면 0.18 mA, 1.0 V이면 0.5 mA입니다. 1.5 V로 더 올려도 긴 소자의 이상 모델에서는 0.5 mA입니다. 마지막 두 값이 같은 이유를 출구 쪽 전하에서 찾겠습니다.</p><p className="leading-7">이 숫자는 실제 미세 공정 제품의 측정값이 아닙니다. 길이가 충분히 길고 이동하기 쉬운 정도가 일정한 첫 모델을 골랐습니다. 뒤에서 어느 조건부터 이 그림을 고쳐야 하는지도 보겠습니다.</p></div>
+</section>
+
+<section id="picture" data-teach-level="1" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">4. 출구 쪽 표면에는 전자가 덜 모입니다</h2>
+<NumericPath title="0.2 V를 건 길에서 보는 전압 여유" steps={[{"label": "입구", "value": "1.5−0.5−0=1.0 V", "detail": "표면 전자를 모으는 여유가 큽니다."}, {"label": "길 중간", "value": "입구보다 높은 전위", "detail": "위 전극과의 전압 차이가 작아집니다."}, {"label": "출구", "value": "1.5−0.5−0.2=0.8 V", "detail": "입구보다 전자가 덜 모입니다."}]} /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">위 전극은 어디서나 같은 1.5 V여도 아래 길의 전위는 같지 않습니다. 출구 쪽으로 갈수록 길의 전위가 높아지므로 위 전극이 표면을 당기는 전압 여유가 줄어듭니다. 이 때문에 길을 균일한 고정 저항 하나로만 볼 수 없습니다.</p><p className="leading-7">
+            출구를 1.0 V까지 올리면 그 끝의 여유는 0 V가 됩니다. 출구를 더 높였다고 해서 길 전체의 전자가 한꺼번에 사라지는 것은 아닙니다. 입구 쪽에서는 전자가 계속
+            공급됩니다.
+          </p></div>
+</section>
+
+<section id="why" data-teach-level="2" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">5. 전하를 모으는 역할과 이동시키는 역할이 모두 필요합니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">위 전극만 올려 전자를 모아도 양끝 전압 차이가 없으면 이 정적 모델의 순전류는 0입니다. 반대로 양끝 전압만 준다고 원하는 표면 전자 층이 자동으로 생기지는 않습니다. 길의 전하와 길을 따라 작용하는 전기장을 함께 알아야 합니다.</p><p className="leading-7">양끝 전압을 올리면 이동시키는 힘은 커지지만 출구 쪽 전하량은 줄어듭니다. 이 두 변화가 전류의 증가를 둔화시킵니다. 아래 바탕의 전위도 표면 조건에 관여하므로 이번 계산에서는 한쪽 끝과 묶어 고정했습니다. 이제 각 단자의 이름을 붙이겠습니다.</p></div>
+</section>
+
+<section id="terminals" data-teach-level="3" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">6. 조절·공급·수집·바탕의 역할에 이름을 붙입니다</h2>
+<div className="overflow-x-auto"><table className="w-full min-w-[320px] text-left text-sm"><thead><tr><th className="p-3">먼저 본 역할</th><th className="p-3">이름</th><th className="p-3">이 사례의 연결</th></tr></thead><tbody><tr><td className="p-3">절연층 너머 표면 전하를 조절</td><td className="p-3">게이트</td><td className="p-3">1.5 V</td></tr><tr><td className="p-3">전자를 공급하는 끝</td><td className="p-3">소스</td><td className="p-3">0 V</td></tr><tr><td className="p-3">전자를 받아들이는 끝</td><td className="p-3">드레인</td><td className="p-3">0.2→1.0→1.5 V</td></tr><tr><td className="p-3">표면 아래의 실리콘 바탕</td><td className="p-3">바디</td><td className="p-3">소스와 같은 0 V</td></tr></tbody></table></div><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">p형 실리콘 표면의 양쪽에 전자가 많은 n형 영역을 만듭니다. 표의 소스와 드레인이 그 영역에 연결됩니다. 위쪽 게이트는 절연층을 사이에 두므로 전자를 직접 통과시키는 공급 단자가 아닙니다.</p><p className="leading-7">이 조건에서 전자는 소스에서 드레인으로 이동합니다. 양의 관습 전류는 그 반대 방향인 드레인에서 소스로 셉니다. 이 글의 양수 드레인 전류는 그 관습을 따릅니다. 바디가 다른 전위에 있으면 표면 전하가 생기는 기준도 바뀔 수 있으므로 연결 조건을 명시했습니다.</p></div>
+</section>
+
+<section id="channel" data-teach-level="4" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">7. 같은 길에서 위치에 따른 전하량을 읽습니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             게이트 전압이 앞 글의 문턱보다 높으면 전자가 절연층 바로 아래
             표면에 모입니다. 전극 아래의 이 얇은 전자 층이 소스와 드레인을
@@ -69,11 +65,11 @@ export default function MosfetRegionsAndTransferArticle() {
           </p>
           <p className="leading-7"><em>채널이 생겼다는 사실만으로 전류는 정해지지 않습니다. 길을 따라 바뀌는 국소 전압도 세어야 합니다.</em></p>
         </div>
-      </section>
+</section>
 
-      <section id="states" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">닫힘·완만한 증가·거의 일정한 전류</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="states" data-teach-level="4" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">8. 0.2·1.0·1.5 V에서 길의 끝을 비교합니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             게이트가 문턱 아래인 0.4 V라면 이상 모델에서는 강한 전자
             채널이 없고 드레인 전류를 0으로 놓습니다. 이를 <strong>차단</strong>
@@ -100,11 +96,11 @@ export default function MosfetRegionsAndTransferArticle() {
           <p className="leading-7"><em>여분 전압 1.0 V는 드레인 쪽 채널이 잘록해지는 양끝 전압의 기준입니다.</em></p>
         </div>
         <MosfetRegionsViz />
-      </section>
+</section>
 
-      <section id="current" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">같은 소자를 세 전압에서 계산합니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="current" data-teach-level="5" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">9. 원문의 국소 전하를 적분해 0.18 mA를 얻습니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             앞 절에서 드레인 끝의 전자 층이 잘록해지는 상태를
             <strong>핀치오프</strong>라고 부릅니다. 이름 그대로 채널 끝이
@@ -151,7 +147,7 @@ export default function MosfetRegionsAndTransferArticle() {
           assumptions={["길고 균일한 채널, 낮은 횡방향 전기장의 일정 이동도를 둡니다.", "바디와 소스를 같은 전위에 두고 문턱·k가 일정하다고 둡니다.", "0≤VDS<Vov의 선형 영역에만 이 식을 적용합니다."]}
           interpretation="0.2 V에서는 0.18 mA입니다. 양끝 전압이 1.0 V에 가까워질수록 드레인 끝의 전자 층이 약해지므로 단순 비례 증가가 둔화됩니다."
         />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             경계인 1.0 V를 위 식에 넣으면 0.5 mA가 나옵니다. 드레인 쪽
             채널이 잘록해진 뒤에는 이상적인 긴 채널 모형에서 그 값이
@@ -198,14 +194,19 @@ export default function MosfetRegionsAndTransferArticle() {
           확인했습니다. 원문의 C<sub>ox</sub>는 면적당 용량이며, 본문은
           이를 C′<sub>ox</sub>로 구분해 k=µ<sub>e</sub>C′<sub>ox</sub>W/L로 묶었습니다.
         </CitationBlock>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7"><em>0.2 V에서 0.18 mA, 경계인 1.0 V부터 이상 포화값 0.5 mA가 한 전류식에서 이어집니다.</em></p>
         </div>
-      </section>
+</section>
 
-      <section id="limits" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">평평한 전류도 실제로는 기울어집니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="source-limit" data-teach-level="6" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">10. 원문이 경계 부근에서 근사를 경고하는 이유입니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">MIT 강의안 25의 10쪽은 <code>Qi(y)=−Cox[VGS−V(y)−VT]</code>로 위치별 표면 전하를 적습니다. 원문의 Cox는 면적당 용량입니다. 13쪽에서 이를 길 방향으로 적분한 식에 k=1 mA/V²와 여분 전압 1.0 V를 넣으면 <code>ID=k(1.0×VDS−VDS²/2)</code>가 됩니다. 여기의 수치는 본문 가정입니다.</p><p className="leading-7">같은 소자에서 VDS를 0.8 V로 두면 1×(0.8−0.8²/2)=0.48 mA입니다. 이상 포화값 0.5 mA의 96%입니다. 강의안 26의 4쪽도 여분 전압의 80% 지점에서 이 96% 관계를 보여 줍니다. 전류가 경계에 오기 전부터 평평해지는 모습입니다.</p><p className="leading-7">그러나 강의안 26의 3쪽은 경계에 가까워질수록 전기장이 커져 완만한 채널 변화와 일정 이동도의 근사가 나빠진다고 지적합니다. 앞 절에서 1.0 V를 넣어 0.5 mA로 잇는 계산은 첫 모델의 연결법입니다. 경계의 실제 전기장까지 정확히 푼 결과가 아닙니다.</p><p className="leading-7">또 끝이 잘록해졌다고 전자 흐름이 끊기는 것은 아닙니다. 강의안 26의 5쪽처럼 전자는 그 부분의 전기장에 의해 드레인으로 이동할 수 있습니다. 이 점을 놓치면 포화 전류를 0으로 잘못 예측하게 됩니다.</p></div>
+</section>
+
+<section id="limits" data-teach-level="7" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">11. 실제 소자에서 다시 확인할 조건입니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             실제 소자에서 드레인 전압을 더 올리면 잘록해진 부분이 소스
             쪽으로 조금 밀려 유효 채널 길이가 줄어듭니다. 이
@@ -226,20 +227,19 @@ export default function MosfetRegionsAndTransferArticle() {
           </p>
           <p className="leading-7"><em>이상식은 영역을 나누는 출발점이고, 실제 설계에서는 데이터시트의 전압·전류·온도 곡선으로 경계를 다시 확인합니다.</em></p>
         </div>
-      </section>
+</section>
 
-      <section id="handoff" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">한 번 바꿀 때 드는 에너지를 셉니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="handoff" data-teach-level="7" className="scroll-mt-20">
+<h2 className="mb-6 text-2xl font-bold">12. 영역과 전류를 예측하고 에너지로 넘어갑니다</h2>
+<div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7">
             <Link to="/electronics/devices/mos-capacitor-and-inversion#numbers">앞 글의 전극 전하 계산</Link>과
             이번 글의 양단자 전류를 합치면 스위치를 한 번 뒤집을 때
             충전해야 할 전하와, 꺼졌을 때도 남는 누설을 따질 수 있습니다.
             다음 글은 그 에너지 장부를 셉니다.
           </p>
-          <p className="leading-7"><strong>읽고 나서 예측해 보세요.</strong> 게이트 1.5 V에서 양끝 0.2 V와 1.0 V는 왜 서로 다른 영역입니까? (답: 4절) 이상 모형에서 양끝 1.0 V와 1.5 V의 전류는 왜 같습니까? (답: 5절) 실제 소자에서도 정확히 같을까요? (답: 6절)</p>
+          <p className="leading-7"><strong>읽고 나서 예측해 보세요.</strong> 게이트 1.5 V에서 양끝 0.2 V와 1.0 V는 왜 서로 다른 영역입니까? (답: 8절) 이상 모형에서 양끝 1.0 V와 1.5 V의 전류는 왜 같습니까? (답: 9·10절) 실제 소자에서도 정확히 같을까요? (답: 11절)</p>
         </div>
-      </section>
-    </div>
-  );
+</section>
+</div>;
 }

@@ -420,12 +420,51 @@ export const dlFoundationArticles: Article[] = [
     title: "활성화 함수 기초: Step · Sigmoid · Tanh",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "값과 local slope" },
-      { id: "step-function", title: "계단 함수와 gradient" },
-      { id: "sigmoid", title: "Sigmoid와 saturation" },
-      { id: "tanh", title: "Tanh와 signed state" },
-      { id: "comparison", title: "출력 의미와 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 앞으로 보낼 값과 뒤로 보낼 변화율을 함께 고릅니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 숫자를 바꾸는 상자를 양쪽 방향으로 읽습니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 입력을 조금 움직였을 때 출력이 얼마나 움직이는지 봅니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 출력을 만드는 규칙과 기울기를 읽는 규칙을 구분합니다"
+  },
+  {
+    "id": "why-curve",
+    "title": "5. 단순한 합성과 딱 잘라 내는 규칙은 다른 한계를 가집니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 활성함수의 이름은 출력의 의미와 연결해 읽습니다"
+  },
+  {
+    "id": "trace",
+    "title": "7. 입력 2의 앞 계산과 뒤 계산을 이어 봅니다"
+  },
+  {
+    "id": "step-function",
+    "title": "8. 계단 함수에서는 작은 입력 변화가 앞쪽 학습으로 이어지지 않습니다"
+  },
+  {
+    "id": "sigmoid",
+    "title": "9. 공식 정의에 입력 2를 넣으면 값과 기울기를 다시 얻습니다"
+  },
+  {
+    "id": "tanh",
+    "title": "10. 부호를 남기는 곡선에서도 양 끝의 기울기는 작아집니다"
+  },
+  {
+    "id": "comparison",
+    "title": "11. 출력의 의미와 학습 경로를 함께 고릅니다"
+  }
+],
     component: () => import("@/pages/articles/ai/activation-functions"),
   },
   {
@@ -433,13 +472,55 @@ export const dlFoundationArticles: Article[] = [
     title: "Rectifier 활성화: ReLU · Dying ReLU · SELU",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "0에서 꺾이는 선" },
-      { id: "relu", title: "ReLU hinge" },
-      { id: "dying-relu", title: "Dying state" },
-      { id: "negative-slope", title: "Leaky ReLU · PReLU" },
-      { id: "self-normalization", title: "SELU 조건" },
-      { id: "comparison", title: "측정과 선택" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 음수 값을 지우면 학습에 돌아갈 신호도 지워집니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 앞 방향의 통과 여부를 뒤 방향에서도 다시 씁니다"
+  },
+  {
+    "id": "case",
+    "title": "3. −2를 조금 움직여도 0이면 뒤 변화율은 없습니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 부호 판단과 관측 기록을 다른 일로 둡니다"
+  },
+  {
+    "id": "why-negative-path",
+    "title": "5. 음수를 조금 남기면 변화율에도 작은 통로가 생깁니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 음수를 다루는 선택에 따라 이름이 달라집니다"
+  },
+  {
+    "id": "trace",
+    "title": "7. 같은 (−2,3)을 두 규칙으로 끝까지 보냅니다"
+  },
+  {
+    "id": "relu",
+    "title": "8. 원문의 음수 기울기를 0으로 놓으면 ReLU가 됩니다"
+  },
+  {
+    "id": "negative-slope",
+    "title": "9. 학습하는 음수 기울기는 입력과 뒤 변화율로 갱신됩니다"
+  },
+  {
+    "id": "self-normalization",
+    "title": "10. SELU의 식에 같은 값을 넣어도 두 값이 자동으로 표준화되지는 않습니다"
+  },
+  {
+    "id": "dying-relu",
+    "title": "11. 여러 자료에서 닫힌 경로와 다른 갱신 경로를 구분합니다"
+  },
+  {
+    "id": "comparison",
+    "title": "12. 같은 계산 조건에서 값의 분포와 비용까지 비교합니다"
+  }
+],
     component: () => import("@/pages/articles/ai/rectifier-activations"),
   },
   {
@@ -447,12 +528,51 @@ export const dlFoundationArticles: Article[] = [
     title: "Smooth·Gated 활성화: GELU · SiLU · SwiGLU",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "값과 통과 비율" },
-      { id: "gelu-silu", title: "GELU · SiLU" },
-      { id: "gated-ffn", title: "SwiGLU 구조" },
-      { id: "parameter-budget", title: "공정한 parameter 예산" },
-      { id: "comparison", title: "구조·kernel 비교" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 전달할 값과 그 값을 조절할 신호를 따로 만듭니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 두 경로가 만나는 곱셈을 전체 흐름에서 찾습니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 0–1 비율에 원래 값을 곱하면 결과는 음수일 수 있습니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 두 변환을 따로 배우기 때문에 같은 입력에서 다른 역할이 나옵니다"
+  },
+  {
+    "id": "why-two-paths",
+    "title": "5. 구조를 바꾸면 늘어난 계산도 함께 비교해야 합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 곡선 하나와 두 경로를 결합하는 구조를 나누어 부릅니다"
+  },
+  {
+    "id": "trace",
+    "title": "7. 세 행렬에 같은 입력을 넣어 (2.268941,0)을 만듭니다"
+  },
+  {
+    "id": "gelu-silu",
+    "title": "8. 원문의 한 칸 정의에 −1을 직접 넣습니다"
+  },
+  {
+    "id": "gated-ffn",
+    "title": "9. 원문 식 (6)의 세 행렬에 같은 숫자를 대응합니다"
+  },
+  {
+    "id": "parameter-budget",
+    "title": "10. 같은 숫자 수를 맞출 때 중간 폭은 3에서 2로 줄어듭니다"
+  },
+  {
+    "id": "comparison",
+    "title": "11. 조절값의 뜻과 실제 실험 조건을 함께 남깁니다"
+  }
+],
     component: () => import("@/pages/articles/ai/gated-activations"),
   },
   {
@@ -557,13 +677,51 @@ export const dlFoundationArticles: Article[] = [
     title: "SGD와 Effective Batch: Gradient를 한 Update로",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "Gradient와 update의 역할" },
-      { id: "update-contract", title: "Update contract" },
-      { id: "gradient-estimate", title: "Mini-batch estimate" },
-      { id: "sgd-update", title: "SGD update" },
-      { id: "effective-batch", title: "Gradient accumulation" },
-      { id: "release-boundary", title: "Update receipt" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 여러 묶음에서 계산한 변화율을 모아 숫자를 한 번 고칩니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 현재 값을 고정하고, 기여를 모으고, 마지막에 한 번 움직입니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 묶음 평균을 똑같이 평균하면 짧은 묶음이 과대평가됩니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 합계를 저장하는 곳과 현재 숫자를 바꾸는 곳을 나눕니다"
+  },
+  {
+    "id": "why-step-size",
+    "title": "5. 현재의 변화율은 멀리 이동한 뒤까지 예언하지 않습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 변화율과 실제 이동량을 다른 이름으로 부릅니다"
+  },
+  {
+    "id": "gradient-estimate",
+    "title": "7. 한 묶음의 변화율은 전체 자료의 변화율과 다를 수 있습니다"
+  },
+  {
+    "id": "trace",
+    "title": "8. 오차 2.5와 변화율 4를 구분해 3을 2.6으로 바꿉니다"
+  },
+  {
+    "id": "update-contract",
+    "title": "9. 실제 SGD 원문의 마지막 줄에 3, 4, 0.1을 넣습니다"
+  },
+  {
+    "id": "effective-batch",
+    "title": "10. 실제 loss 함수는 받은 공통 분모로 각 합을 나눕니다"
+  },
+  {
+    "id": "release-boundary",
+    "title": "11. 갱신 기록에는 값과 횟수, 분모의 정의가 함께 필요합니다"
+  }
+],
     component: () => import("@/pages/articles/ai/optimizers"),
   },
   {
@@ -571,11 +729,51 @@ export const dlFoundationArticles: Article[] = [
     title: "Momentum: Gradient History를 Velocity로",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "왜 과거 방향을 기억하나" },
-      { id: "ema", title: "Exponential moving average" },
-      { id: "velocity", title: "Momentum velocity" },
-      { id: "damping-boundary", title: "Overshoot와 검증 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 방향이 바뀌어도, 쌓인 기록 때문에 잠시 더 움직일 수 있습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 직전 기록을 줄이고, 새 방향을 더하고, 현재 값을 고칩니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 양수 두 번 뒤의 음수 한 번은 기록을 바로 뒤집지 못합니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 학습 값과 방향 기록은 재개할 때 함께 필요합니다"
+  },
+  {
+    "id": "why-memory",
+    "title": "5. 오래된 방향을 남기는 비율은 잡음과 방향 전환을 함께 바꿉니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 먼저 본 역할을 실제 이름과 연결합니다"
+  },
+  {
+    "id": "ema",
+    "title": "7. 같은 기억도 현재 신호 앞의 계수에 따라 크기가 달라집니다"
+  },
+  {
+    "id": "trace",
+    "title": "8. 같은 세 변화율을 기록과 학습 값에 차례로 적용합니다"
+  },
+  {
+    "id": "velocity",
+    "title": "9. 실제 PyTorch 원문도 기록을 먼저 고친 뒤 이동에 사용합니다"
+  },
+  {
+    "id": "nesterov",
+    "title": "10. Nesterov 분기는 같은 기록에서 다른 최종 방향을 만듭니다"
+  },
+  {
+    "id": "damping-boundary",
+    "title": "11. 기억이 커지는 것과 학습이 좋아지는 것을 구별합니다"
+  }
+],
     component: () => import("@/pages/articles/ai/momentum-optimizer"),
   },
   {
@@ -583,12 +781,55 @@ export const dlFoundationArticles: Article[] = [
     title: "Adam: Raw Moments에서 Adaptive Step까지",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "두 optimizer state" },
-      { id: "moments", title: "First·second raw moments" },
-      { id: "bias-correction", title: "Initialization bias correction" },
-      { id: "preconditioning", title: "Coordinate preconditioning" },
-      { id: "release-boundary", title: "State와 convergence 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 반대 신호가 와도, 기억한 방향과 크기를 함께 보고 움직입니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 부호 있는 장부와 제곱한 장부를 갱신하고 비율을 구합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 2와 −2는 방향 장부에서 상쇄되지만 제곱 장부에는 둘 다 4입니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 현재 값만 저장하면 두 번째 이동을 재현할 수 없습니다"
+  },
+  {
+    "id": "why-two-records",
+    "title": "5. 방향의 크기를 과거에 본 크기와 비교하려고 제곱근으로 나눕니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 두 장부와 보정을 실제 이름에 연결합니다"
+  },
+  {
+    "id": "moments",
+    "title": "7. 부호가 다른 신호를 두 장부에 다르게 반영합니다"
+  },
+  {
+    "id": "bias-correction",
+    "title": "8. 초기 보정의 지수는 자료 묶음 수가 아니라 실제 갱신 수입니다"
+  },
+  {
+    "id": "trace",
+    "title": "9. 두 번째 이동이 약 0.005263인 이유를 끝까지 계산합니다"
+  },
+  {
+    "id": "source-moments",
+    "title": "10. 실제 원문의 두 저장 공간에 같은 2와 −2를 넣습니다"
+  },
+  {
+    "id": "preconditioning",
+    "title": "11. 실제 분모는 제곱근을 보정한 뒤 작은 양수를 더합니다"
+  },
+  {
+    "id": "release-boundary",
+    "title": "12. 같은 한 단계 계산과 전체 학습의 수렴은 다른 검증입니다"
+  }
+],
     component: () => import("@/pages/articles/ai/adam-optimizer"),
   },
   {

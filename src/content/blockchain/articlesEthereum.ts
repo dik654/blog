@@ -7,11 +7,51 @@ export const ethereumArticles: Article[] = [
     title: "이더리움 실행 노드: EL·CL과 Engine API 경계",
     subcategory: "eth-core",
     sections: [
-      { id: "overview", title: "한 transaction의 노드 경로" },
-      { id: "el-cl-boundary", title: "EL·CL 책임과 Engine API" },
-      { id: "payload-state", title: "Payload 상태와 canonical head" },
-      { id: "release", title: "Crash·reorg·release gate" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 계산이 맞는 기록과 모두가 따를 기록을 구분합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 하나는 계산하고 다른 하나는 선택합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 100에서 10과 처리 비용을 빼는 후보를 받습니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 양쪽은 서로 다른 장부 상태를 기억합니다"
+  },
+  {
+    "id": "why-parts",
+    "title": "5. 자료가 없는 후보를 잘못된 후보로 저장하면 안 됩니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 실행 클라이언트와 합의 클라이언트가 Engine API로 연결됩니다"
+  },
+  {
+    "id": "el-cl-boundary",
+    "title": "7. 새 후보를 검증하고 선택 상태를 따로 전달합니다"
+  },
+  {
+    "id": "wire-source",
+    "title": "8. 명세의 필드는 서로 다른 확인 결과를 담습니다"
+  },
+  {
+    "id": "implementation",
+    "title": "9. Reth는 연결되지 않은 후보를 SYNCING으로 구분합니다"
+  },
+  {
+    "id": "payload-state",
+    "title": "10. VALID·현재 head·최종 확정은 서로 다른 상태입니다"
+  },
+  {
+    "id": "release",
+    "title": "11. 재시작 뒤에도 같은 후보를 두 번 적용하지 않습니다"
+  }
+],
     component: () => import("@/pages/articles/ethereum/node-architecture"),
   },
   {

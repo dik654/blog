@@ -1,0 +1,3 @@
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { teachCodeRefs } from "./teachCodeRefs";
+export default function TeachCode({codeKey,label}:{codeKey:string;label:string}){const s=useCodeSidebar();return <><CodeViewButton label={label} onClick={()=>s.open(codeKey,teachCodeRefs[codeKey])}/><CodeSidebar codeRefKey={s.codeRefKey} codeRef={s.codeRef} onClose={s.close} onNavigate={s.navigate} codeRefs={teachCodeRefs} fileTrees={{}} projectMetas={{"v2-core":{id:"v2-core",label:"Uniswap V2 core · 4dd5906",badgeClass:"border-sky-500 text-sky-700"},"v2-periphery":{id:"v2-periphery",label:"Uniswap V2 periphery · ed24991",badgeClass:"border-sky-500 text-sky-700"}}}/></>}

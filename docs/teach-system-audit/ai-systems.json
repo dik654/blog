@@ -136,7 +136,7 @@
         "browser1440": true,
         "learning": "strict require-registration 6편 통과",
         "formula": "strict require-explicit 통과",
-        "typescript": "noEmit 통과"
+        "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
       "remaining": [
         "root 통합 검토·전역 build·배포 검증"
@@ -216,7 +216,7 @@
         "browser1440": true,
         "learning": "strict require-registration 6편 통과",
         "formula": "strict require-explicit 통과",
-        "typescript": "noEmit 통과"
+        "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
       "remaining": [
         "root 통합 검토·전역 build·배포 검증"
@@ -282,25 +282,91 @@
       "route": "ai/agent-failure-modes-and-recovery",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-failure-modes-and-recovery.tsx",
       "publicPath": "cs/ai/agent-failure-modes-and-recovery",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "첫 문장부터 failure taxonomy 약어가 선행",
+        "영수증없으면 fresh_key=True 재시도하는 잘못된 절차",
+        "idempotency key 존재만으로 서버 계약 보장 추정",
+        "0.05×6=0.3을엄격부등호넘음으로오산",
+        "context drift 사례의20턴뒤15단계라는시간순서모순"
+      ],
+      "fixture": {
+        "assumed": true,
+        "order": 42,
+        "amount": 10000,
+        "key": "pay-42",
+        "duplicateAmount": 20000,
+        "retryLimit": 2,
+        "driftToy": {
+          "step": 0.05,
+          "threshold": 0.3,
+          "firstStrictExceed": 7
+        }
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "small-case",
+        "1": "inside-recovery",
+        "2": "why-recovery",
+        "3": "failure-taxonomy",
+        "4": "retry-idempotent",
+        "5-6": "recovery-checkpointing",
+        "7": [
+          "side-effect-control",
+          "human-in-the-loop-escalation"
+        ],
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://docs.stripe.com/api/idempotent_requests",
+          "location": "Idempotent requests, storage and pruning conditions",
+          "application": "같은pay-42 유지와 결과미확인 새키재시도 금지"
+        },
+        {
+          "href": "https://www.rfc-editor.org/rfc/rfc9110.html#name-idempotent-methods",
+          "location": "§9.2.2",
+          "application": "의도한효과의반복동일성과비멱등재시도조건"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "동일한 수치 사례와 요청 추적, 공식 원문 적용, 실패 조건과 예측 질문을 실제 본문에서 검토",
+        "humanize": {
+          "route": "ai/agent-failure-modes-and-recovery",
+          "roundTrip": true,
+          "chars": 4347,
+          "edits": 0,
+          "changeRate": 0.00034518467380051376,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "learning": "strict require-registration 10편 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agent-failure-modes-and-recovery.tsx",
+      "contentHash": "cfed5bbc2529e714222a050000c96f8e10b5f1a457d51f8dfee40853b35c7748",
+      "preserved": [
+        "기존 정확한 수식과 canonical anchor 보존",
+        "응답 실패와 실행 실패 구분 및 서버 중복 방지 계약으로 재시도 알고리즘 수정",
+        "도구 실행 위치·입력 부분합·backoff 수치 및 하네스 측정 범위 교정"
+      ],
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
+        "/tmp/teach-all/ai-systems-screens-02/summary.json",
+        "/tmp/teach-all/humanize-ai-systems-02/summary.json"
       ]
     },
     {
@@ -386,13 +452,13 @@
         "browser1440": true,
         "learning": "strict require-registration 6편 통과",
         "formula": "strict require-explicit 통과",
-        "typescript": "noEmit 통과"
+        "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
       "remaining": [
         "root 통합 검토·전역 build·배포 검증"
       ],
       "actualBodyFile": "src/pages/articles/ai/agentic-patterns/AgentLoopArticle.tsx",
-      "contentHash": "a5b5d25914ab0eeef5bd65ecf88408b35c06c31ee344a5ca688713e637f69af7",
+      "contentHash": "633398aebc3e9a98340097adde104bb7c063381daa0eb23eaa787c241fa618c4",
       "preserved": [
         "기존 핵심 수식·canonical anchor 유지",
         "잘못된 검증 비용·독립성·plan mode 일반화는 공식 근거와 대조하여 수정"
@@ -497,7 +563,7 @@
         "browser1440": true,
         "learning": "strict require-registration 6편 통과",
         "formula": "strict require-explicit 통과",
-        "typescript": "noEmit 통과"
+        "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
       "remaining": [
         "root 통합 검토·전역 build·배포 검증"
@@ -570,7 +636,7 @@
         "browser1440": true,
         "learning": "strict require-registration 6편 통과",
         "formula": "strict require-explicit 통과",
-        "typescript": "noEmit 통과"
+        "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
       "remaining": [
         "root 통합 검토·전역 build·배포 검증"
@@ -669,7 +735,7 @@
         "browser1440": true,
         "learning": "strict require-registration 6편 통과",
         "formula": "strict require-explicit 통과",
-        "typescript": "noEmit 통과"
+        "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
       "remaining": [
         "root 통합 검토·전역 build·배포 검증"
@@ -1560,25 +1626,76 @@
       "route": "ai/context-instruction-boundaries",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/context-instruction-boundaries.tsx",
       "publicPath": "cs/ai/context-instruction-boundaries",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "instruction·untrusted data·runtime 세 명칭이 첫 문장에 선행",
+        "실행 식에 실제 0/1 사례 대입이 없음",
+        "같은 이메일 사례의 거부 결과·예측 질문 없음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "emails": 1,
+        "customerRecords": 100,
+        "schema": 1,
+        "authorization": 0,
+        "sent": 0
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "small-case",
+        "1": "inside-boundary",
+        "2": "why-boundary",
+        "3": "three-layers",
+        "4": "request-trace",
+        "5-6": "attack-path",
+        "7": "release",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html#agent-specific-defenses",
+          "location": "Agent-Specific Defenses",
+          "application": "요약 전용 주체의 고객100건 전송 거부"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "동일한 수치 사례와 요청 추적, 공식 원문 적용, 실패 조건과 예측 질문을 실제 본문에서 검토",
+        "humanize": {
+          "route": "ai/context-instruction-boundaries",
+          "roundTrip": true,
+          "chars": 3283,
+          "edits": 0,
+          "changeRate": 0.00030469226081653034,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "learning": "strict require-registration 10편 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/context-instruction-boundaries/ModernArticle.tsx",
+      "contentHash": "0f64da9af96cae8bf19ba5b833e126f2c821e65c60e573f2deac531c5397d2d7",
+      "preserved": [
+        "기존 정확한 수식과 canonical anchor 보존",
+        "응답 실패와 실행 실패 구분 및 서버 중복 방지 계약으로 재시도 알고리즘 수정",
+        "도구 실행 위치·입력 부분합·backoff 수치 및 하네스 측정 범위 교정"
+      ],
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
+        "/tmp/teach-all/ai-systems-screens-02/summary.json",
+        "/tmp/teach-all/humanize-ai-systems-02/summary.json"
       ]
     },
     {
@@ -2910,25 +3027,98 @@
       "route": "ai/llm-harness",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-harness.tsx",
       "publicPath": "cs/ai/llm-harness",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 7
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "model/runtime/executor 등 역할명으로 시작",
+        "32회 측정사례가 마지막에만 있어앞설명과단절",
+        "공식원문상태필드에수치사례적용없음",
+        "기존측정원문이인증필요인데독자접근한계표시없음"
+      ],
+      "fixture": {
+        "sourceBased": true,
+        "literal": "PING",
+        "count": 32,
+        "spaces": 31,
+        "characters": 159,
+        "rawModel27B": [
+          27,
+          27
+        ],
+        "rawModel9B": [
+          0,
+          27
+        ],
+        "deterministicAgent": [
+          27,
+          27
+        ],
+        "variationChecks": [
+          135,
+          135
+        ]
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "small-case",
+        "1": "inside-harness",
+        "2": "why-harness",
+        "3": "agent-scaffold",
+        "4": "proposal-runtime",
+        "5-6": "artifact-repair",
+        "7": "model-change",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+          "location": "Feature list, passes:false",
+          "application": "32개·문자열·구분자검사전완료표시금지"
+        },
+        {
+          "href": "https://github.com/dik654/ojs-agents/blob/c6b0fb756aa66a33e9f0b1cd4a53c2ee1202a618/products/office-secretary/experiments/MODEL_SIZE_DECISION.md",
+          "location": "S027 + H017 summary",
+          "application": "원문인증열람확인,32PING측정과일반성능한계",
+          "access": "repository authentication required; public anonymous fetch404"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "동일한 수치 사례와 요청 추적, 공식 원문 적용, 실패 조건과 예측 질문을 실제 본문에서 검토",
+        "humanize": {
+          "route": "ai/llm-harness",
+          "roundTrip": true,
+          "chars": 3782,
+          "edits": 0,
+          "changeRate": 0.00026448029621795044,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "learning": "strict require-registration 10편 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/llm-harness/ModernArticle.tsx",
+      "contentHash": "181d01cefcf8c47b3283be625f33e7d73d4146e83c2f10395053dd4ac8038e20",
+      "preserved": [
+        "기존 정확한 수식과 canonical anchor 보존",
+        "응답 실패와 실행 실패 구분 및 서버 중복 방지 계약으로 재시도 알고리즘 수정",
+        "도구 실행 위치·입력 부분합·backoff 수치 및 하네스 측정 범위 교정"
+      ],
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
+        "/tmp/teach-all/ai-systems-screens-02/summary.json",
+        "/tmp/teach-all/humanize-ai-systems-02/summary.json"
       ]
     },
     {
@@ -4635,25 +4825,103 @@
       "route": "ai/tool-calling-lifecycle-and-costs",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/tool-calling-lifecycle-and-costs.tsx",
       "publicPath": "cs/ai/tool-calling-lifecycle-and-costs",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 7
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "용어 정의가 작은 사례보다 먼저 등장",
+        "항상 host가실행한다는server tool누락",
+        "400ms조회구간을RTT·전체왕복으로혼동",
+        "입력부분합을전체token비용으로정의",
+        "permission검사를invocation성공뒤로서술"
+      ],
+      "fixture": {
+        "assumed": true,
+        "cities": [
+          "Seoul",
+          "Busan",
+          "Jeju"
+        ],
+        "callMs": 400,
+        "sequentialMs": 1200,
+        "parallelExecutionMs": 400,
+        "tools": 10,
+        "nameDescriptionTokens": 40,
+        "schemaTokens": 160,
+        "systemTokens": 354,
+        "resultCount": 2,
+        "resultTokens": 150,
+        "partialInputTokens": 2654,
+        "backoffSeconds": [
+          0.5,
+          1,
+          2,
+          2
+        ]
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "small-case",
+        "1": "inside-tool-call",
+        "2": "why-tool-call",
+        "3": "selection-and-routing",
+        "4": "tool-use-loop",
+        "5-6": [
+          "argument-generation-and-invocation",
+          "context-cost",
+          "error-handling-and-retry"
+        ],
+        "7": "sources",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview",
+          "location": "How tool use works + Pricing",
+          "application": "원호출ID c1·c2·c3과2,654입력부분합"
+        },
+        {
+          "href": "https://developers.openai.com/api/docs/guides/function-calling",
+          "location": "Function calling flow",
+          "application": "모델제안·외부실행·결과재입력분리"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "동일한 수치 사례와 요청 추적, 공식 원문 적용, 실패 조건과 예측 질문을 실제 본문에서 검토",
+        "humanize": {
+          "route": "ai/tool-calling-lifecycle-and-costs",
+          "roundTrip": true,
+          "chars": 4538,
+          "edits": 0,
+          "changeRate": 0.0003306513832249669,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "learning": "strict require-registration 10편 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/tool-calling-lifecycle-and-costs.tsx",
+      "contentHash": "efd44c700b9c16e938ff9407e3459eb23b74e9ba0319aff367643bdd8d7292c8",
+      "preserved": [
+        "기존 정확한 수식과 canonical anchor 보존",
+        "응답 실패와 실행 실패 구분 및 서버 중복 방지 계약으로 재시도 알고리즘 수정",
+        "도구 실행 위치·입력 부분합·backoff 수치 및 하네스 측정 범위 교정"
+      ],
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
+        "/tmp/teach-all/ai-systems-screens-02/summary.json",
+        "/tmp/teach-all/humanize-ai-systems-02/summary.json"
       ]
     },
     {
@@ -4760,50 +5028,250 @@
       "route": "ai/vllm-scheduler",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/vllm-scheduler.tsx",
       "publicPath": "cs/ai/vllm-scheduler",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "구성요소와 상태 이름이 작은 사례보다 선행",
+        "코드가 공식 경로를 사용하지만 번역 주석·생략·재구성을 포함",
+        "C=ceil(P/c)를 상한만 정한 모든 배정에서 등식으로 서술",
+        "토큰 비중을 GPU 시간으로 단정하고 VTC 2×의 단위·기준 누락",
+        "선점 요청을 모든 정책에서 맨 앞에 넣는다고 일반화",
+        "비동기 max 주기를 이상적 겹침 조건 없이 단정"
+      ],
+      "fixture": {
+        "assumed": true,
+        "budget": 5,
+        "runningDecode": [
+          1,
+          1
+        ],
+        "prompt": 12,
+        "chunkCap": 4,
+        "actualChunk": 3,
+        "actualChunks": 4,
+        "minimumChunks": 3,
+        "recompute": {
+          "before": 8,
+          "hit": 3,
+          "repeat": 5
+        },
+        "overheadMs": {
+          "cpu": 5,
+          "gpu": 20,
+          "serial": 25,
+          "idealOverlap": 20
+        },
+        "vtcBound": {
+          "inputWeight": 1,
+          "outputWeight": 2,
+          "maxInput": 12,
+          "capacity": 20,
+          "differenceBound": 80
+        }
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "small-case",
+        "1": "inside-scheduler",
+        "2": "why-scheduler",
+        "3": "queue-batching",
+        "4": "schedule-method",
+        "5-6": "scheduler-source",
+        "5-6-chunk": "prefill-decode",
+        "5-6-priority": "priority-order",
+        "5-6-fairness": "scheduler-fairness",
+        "5-6-preemption": "preemption",
+        "5-6-overhead": "scheduler-overhead",
+        "7": "scheduler-limits",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py",
+          "location": "schedule L516–523 / _preempt_request L1274–1314",
+          "application": "5개 예산 중 1·1·3 배정과 선점·재삽입 조건"
+        },
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/request_queue.py",
+          "location": "FCFS prepend L92–94 / Priority prepend L160–165",
+          "application": "선점 요청이 정책에 따라 다른 위치로 복귀"
+        },
+        {
+          "href": "https://arxiv.org/pdf/2401.00588",
+          "location": "VTC Theorem 4.4 / 4.8",
+          "application": "2×를 서비스의 절대 차이 상한과 이론 하한의 관계로 교정"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "R1/R2/P 동일 사례, 기존 수식 5개 보존·보완과 VTC bound 원문 적용, priority 및 선점 코드 4개 검토",
+        "humanize": {
+          "route": "ai/vllm-scheduler",
+          "roundTrip": true,
+          "chars": 6841,
+          "edits": 0,
+          "changeRate": 7.309407207078955e-05,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "narrowTextAfterFix": 0,
+        "codeSourcePanel3901440": true,
+        "learning": "strict require-registration 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "app 실제 검사에서 공유 evidence enum 오류만 6개 확인. root 수정 후 통합 tsc -b 진행 중"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "bodyFiles": [
+        "src/pages/articles/ai/vllm-scheduler/Overview.tsx",
+        "src/pages/articles/ai/vllm-scheduler/QueueBatching.tsx",
+        "src/pages/articles/ai/vllm-scheduler/ScheduleMethod.tsx",
+        "src/pages/articles/ai/vllm-scheduler/PrefillDecode.tsx",
+        "src/pages/articles/ai/vllm-scheduler/Preemption.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/vllm-scheduler.tsx",
+      "contentHash": "c0dd84a2568652daaf1082bfe62a8dcbc03319974af54f82d436eca4bb76418b",
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-vllm-scheduler-summary.json",
+        "/tmp/teach-all/ai-systems-screens-04/summary.json",
+        "/tmp/teach-all/ai-systems-screens-04/code-panels.json"
+      ],
+      "preserved": [
+        "기존 canonical anchor와 수식 5개 유지·전제 교정",
+        "원문 scheduler/request/request_queue 전체 파일과 라이선스·commit·hash 보존",
+        "priority 동률 처리·FCFS와 priority 재삽입 차이, VTC 서비스 단위 상한 구분"
       ]
     },
     {
       "route": "ai/vllm-serving",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/vllm-serving.tsx",
       "publicPath": "cs/ai/vllm-serving",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 3
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "첫 절에 sequence state·scheduler·executor·worker·KV가 사례 없이 선행",
+        "실제 한 요청의 수량과 코드 필드를 잇는 추적이 없음",
+        "공식 파일 경로에 재구성 코드·번역 주석·생략 조건이 혼재",
+        "TPOT 한 출력의 간격 부재와 요청별 조건·집단 p95를 분리하지 않음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "A": {
+          "input": 6,
+          "output": 3
+        },
+        "B": {
+          "input": 2,
+          "output": 2
+        },
+        "C": {
+          "input": 3,
+          "output": 1
+        },
+        "tokenBudget": 4,
+        "sequenceCap": 2,
+        "latencyMs": {
+          "queue": 10,
+          "prefill": 30,
+          "front": 5,
+          "ITL": [
+            8,
+            12
+          ],
+          "TTFT": 45,
+          "E2E": 65,
+          "TPOT": 10
+        },
+        "layout": {
+          "DP": 2,
+          "TP": 4,
+          "PP": 1,
+          "GPU": 8
+        },
+        "goodputTokenPerSecond": 4
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "small-case",
+        "1": "inside-engine",
+        "2": "why-engine",
+        "3": "engine-loop",
+        "4": "request-trace",
+        "5-6": "scheduler-source",
+        "5-6-latency": "latency-accounting",
+        "5-6-placement": "serving-architecture",
+        "7": "serving-limits",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py",
+          "location": "v0.27.1 Scheduler.schedule, L459–692",
+          "application": "A의 남은 token 6−4와 예산 4, KV 할당 및 정책별 preemption"
+        },
+        {
+          "href": "https://www.usenix.org/conference/osdi22/presentation/yu",
+          "location": "Orca iteration-level scheduling",
+          "application": "완료한 B의 자리에 다음 계산부터 C 수용"
+        },
+        {
+          "href": "https://arxiv.org/abs/2309.06180",
+          "location": "PagedAttention §4",
+          "application": "가변 길이 A·B·C의 KV 저장 공간을 블록으로 할당"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "4개 수식 보존·보완과 A/B/C 숫자 추적·전체 원문 코드·정책별 선점·한계·예측 질문을 검토",
+        "humanize": {
+          "route": "ai/vllm-serving",
+          "roundTrip": true,
+          "chars": 5615,
+          "edits": 0,
+          "changeRate": 0.0001781261132881573,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "narrowTextAfterFix": 0,
+        "codeSourcePanel3901440": true,
+        "learning": "strict require-registration 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "bodyFiles": [
+        "src/pages/articles/ai/vllm-serving/Overview.tsx",
+        "src/pages/articles/ai/vllm-serving/EngineLoop.tsx",
+        "src/pages/articles/ai/vllm-serving/ServingArchitecture.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/vllm-serving.tsx",
+      "contentHash": "22a02b97eab91209b97f5ea7e474d4d1d97495e2737c806005077f141cdfec6b",
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-vllm-serving-summary.json",
+        "/tmp/teach-all/ai-systems-screens-03/summary.json",
+        "/tmp/teach-all/ai-systems-screens-03/code-panel.json"
+      ],
+      "preserved": [
+        "4개 기존 수식의 의미·기존 canonical anchor 유지",
+        "TPOT 한 출력의 경계와 집단 p95/요청별 SLO 구분",
+        "재구성 코드를 Apache-2.0 고정 commit 전체 원문으로 대체"
       ]
     },
     {
@@ -4958,23 +5426,18 @@
     }
   ],
   "counts": {
-    "total": 186,
-    "rewrittenLocalVerified": 6,
-    "unreviewed": 180
+    "unreviewed": 174,
+    "rewritten-local-verified": 12
   },
   "localValidationSummary": {
-    "routes": 6,
-    "screens": 12,
-    "failures": 0,
-    "humanizeGateExit0": 6,
-    "numericChecks": {
-      "overflow": 40,
-      "remainingBudget": 3,
-      "explorationBudget": 4,
-      "residualOverflow": 20,
-      "uniqueIssues": 4,
-      "judgeMean": 0.7
-    },
-    "remaining": "나머지 180편 실제 검토·개선과 전역 통합 검수"
+    "rewritten": 12,
+    "remainingUnreviewed": 174,
+    "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
+    "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
+    "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
+    "learningStrict": "/tmp/teach-all/ai-systems-learning-audit-10.log",
+    "formulaStrict": "/tmp/teach-all/ai-systems-formula-audit-02.log",
+    "typescript": "/tmp/teach-all/ai-systems-tsc-app.log (진행 중)",
+    "note": "자동 screening은 검토 완료가 아니며 현재 10편만 실제 본문 개선과 로컬 검증을 완료했습니다."
   }
 }

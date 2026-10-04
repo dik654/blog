@@ -68,11 +68,71 @@ export const defiArticles: Article[] = [
     title: "Uniswap V2: invariant·LP share·flash settlement",
     subcategory: "defi-dex",
     sections: [
-      { id: "overview", title: "Fee-adjusted invariant" },
-      { id: "pair-contract", title: "LP share와 protocol fee" },
-      { id: "router-swap", title: "Quote와 실행 경계" },
-      { id: "flash-swap", title: "Flash settlement·TWAP·release" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 두 자산을 미리 모아 두고 교환하게 합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 입력 준비·출력 전송·실제 잔액 검사로 나눕니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 1000개씩 있는 풀에 A 100개를 넣습니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 거래 안내와 자산 보관 계약을 나눕니다"
+  },
+  {
+    "id": "why-parts",
+    "title": "5. 사용자가 보냈다고 말한 양을 그대로 믿지 않습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. Pair는 자산을 보관하고 Router는 교환을 연결합니다"
+  },
+  {
+    "id": "swap-trace",
+    "title": "7. 같은 100개 입력을 견적과 실제 잔액에서 확인합니다"
+  },
+  {
+    "id": "swap-formula",
+    "title": "8. 출력량을 풀면 입력이 분모에도 들어갑니다"
+  },
+  {
+    "id": "swap-source",
+    "title": "9. 실제 코드에 100000000 정수 입력을 넣어 봅니다"
+  },
+  {
+    "id": "divergence-loss",
+    "title": "10. 자산을 맡기는 결과는 그대로 보유한 결과와 다릅니다"
+  },
+  {
+    "id": "pair-contract",
+    "title": "11. 새 지분은 두 입금 비율 중 작은 쪽으로 정합니다"
+  },
+  {
+    "id": "protocol-fee",
+    "title": "12. 프로토콜 수수료는 지분 발행으로 반영합니다"
+  },
+  {
+    "id": "router-swap",
+    "title": "13. 견적을 본 시점과 실행 시점의 잔액은 다를 수 있습니다"
+  },
+  {
+    "id": "flash-swap",
+    "title": "14. 먼저 받은 토큰도 같은 호출 안에서 대가를 갚아야 합니다"
+  },
+  {
+    "id": "twap",
+    "title": "15. 누적 가격의 차이를 경과 시간으로 나눕니다"
+  },
+  {
+    "id": "uniswap-v2-release-gate",
+    "title": "16. 같은 입력에서 잔액과 실패 조건을 비교합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/uniswap-v2"),
   },
   {
@@ -149,11 +209,51 @@ export const defiArticles: Article[] = [
     title: "스테이블코인 개요 — 4가지 유형 & 안정성 메커니즘",
     subcategory: "defi-stablecoin",
     sections: [
-      { id: "overview", title: "목표·상환·시장 경계" },
-      { id: "stabilization-mechanisms", title: "안정화 메커니즘" },
-      { id: "failure-boundaries", title: "실패 경계와 책임" },
-      { id: "stablecoin-release", title: "채택·복구 검증" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 1달러에 가까운 가격을 유지하려면 돈을 돌려받는 길이 필요합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 돈을 받고 토큰을 만들고 다시 돈으로 돌려줍니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 0.97달러에 산 토큰을 1달러에 돌려받는 경우입니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 토큰 수량·갚을 자산·상환 자격을 함께 봅니다"
+  },
+  {
+    "id": "why-parts",
+    "title": "5. 준비금이 충분해도 지금 지급할 현금은 부족할 수 있습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 목표 가격·시장 가격·상환 청구권은 다릅니다"
+  },
+  {
+    "id": "redemption-trace",
+    "title": "7. 9700달러 매수부터 실제 10000달러 수령까지 추적합니다"
+  },
+  {
+    "id": "source-terms",
+    "title": "8. 실제 약관은 상환 주체와 조건을 정합니다"
+  },
+  {
+    "id": "stabilization-mechanisms",
+    "title": "9. 같은 3% 이탈도 뒷받침하는 자산에 따라 복구가 다릅니다"
+  },
+  {
+    "id": "failure-boundaries",
+    "title": "10. 0.97달러를 보면 가격과 지급 경로를 함께 기록합니다"
+  },
+  {
+    "id": "stablecoin-release",
+    "title": "11. 발행에서 지급 완료까지 맞는지 검수합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/stablecoin-overview"),
   },
   {

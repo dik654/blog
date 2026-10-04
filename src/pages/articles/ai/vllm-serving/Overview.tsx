@@ -1,123 +1,133 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-
-import { Link } from "react-router-dom";
-import RequestLifecycleViz from "./viz/RequestLifecycleViz";
-import PrefillDecodeViz from "./viz/PrefillDecodeViz";
-
-const LATENCY_TERMS = [
-  {
-    symbol: "t_{queue}",
-    name: "Queue time",
-    description: "요청이 engine에 들어온 뒤 처음 scheduling될 때까지 기다린 시간입니다.",
-  },
-  {
-    symbol: "t_{prefill}",
-    name: "Prefill time",
-    description: "Prompt token을 처리하고 첫 output token을 낼 준비를 마치는 시간입니다.",
-  },
-  {
-    symbol: "TTFT",
-    name: "Time to first token",
-    description: "Client가 요청을 보낸 뒤 첫 output token을 받을 때까지의 시간입니다.",
-  },
-  {
-    symbol: "ITL_j",
-    name: "Inter-token latency",
-    description: "j번째 output token과 다음 output token 사이의 시간입니다.",
-  },
-  {
-    symbol: "N_{out}",
-    name: "Output token 수",
-    description: "요청이 완료될 때까지 실제 생성해 stream한 token 수입니다.",
-  },
-] as const;
+import TermBreakdown from "@/components/articles/term-breakdown";
+import { CitationBlock } from "@/components/ui/citation";
 
 export default function Overview() {
   return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        vLLM은 model을 한 번 실행하는 도구가 아니라, 끝나는 시간이 다른 요청을 계속 조립하는 engine입니다
-      </h2>
-
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">
-          한 사용자의 문장 생성은 prompt를 읽고 다음 token을 반복해서 만드는 과정입니다. 온라인 서비스에서는 수십 개의 요청이 서로 다른 시점에 들어오고 prompt와
-          output 길이도 모두 다릅니다. “batch size 32로 model을 실행한다”는 설명만으로는 어느 요청이 기다리고, 언제 batch에 합류하며, 완료된 자리의
-          memory가 언제 반환되는지 알 수 없습니다.
-        </p>
-        <p className="leading-8">
-          vLLM은 각 요청을 <em>sequence state</em>로 보관하고, scheduler가 GPU
-          iteration마다 이번에 계산할 token들을 다시 선택하도록 만듭니다. 선택된
-          token은 model executor가 worker의 batch로 내리고, 결과 token과 KV cache
-          상태가 engine으로 돌아오면 완료·중단·다음 iteration을 결정합니다. 이
-          글에서는 이 전체 수명주기를 먼저 잡은 뒤 scheduler·PagedAttention·
-          speculative decoding으로 범위를 확장합니다.
-        </p>
-      </div>
-
-      <RequestLifecycleViz />
-
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3 id="prefill-decode" className="scroll-mt-20">
-          Prefill과 decode는 같은 model을 쓰지만 GPU에 주는 일이 다릅니다
-        </h3>
-        <p className="leading-8">
-          <strong>Prefill</strong>은 prompt의 여러 token을 처리해 각 layer의 KV
-          cache를 만들며 첫 output token까지 준비합니다. 긴 prompt는 한 번에 큰
-          matrix multiplication을 만들 수 있어 compute 활용이 좋아지는 대신 한
-          요청이 많은 token budget을 차지합니다. <strong>Decode</strong>는 이미
-          만든 cache를 읽으며 요청마다 새 token을 보통 하나씩 처리합니다. 낮은
-          batch에서는 weight·KV를 읽는 memory traffic과 iteration overhead가
-          상대적으로 두드러집니다.
-        </p>
-      </div>
-
-      <PrefillDecodeViz />
-
-      <ExplainedFormula
-        question="사용자가 느낀 지연을 queue·prefill·decode 중 어디에서 잃었는지 어떻게 나눌까요?"
-        idea={
-          <>
-            첫 token까지의 시간과 그 뒤 token 사이의 시간을 나눕니다. TTFT가
-            나빠졌다면 queue나 prefill을 먼저 보고, 첫 token은 빠른데 답 전체가
-            느리다면 decode iteration의 ITL 분포를 확인합니다.
-          </>
-        }
-        formula={String.raw`\begin{aligned}
-TTFT &\approx t_{queue}+t_{prefill}+t_{front} \\
-T_{E2E} &= TTFT+\sum_{j=1}^{N_{out}-1}ITL_j \\
-TPOT &= \frac{T_{E2E}-TTFT}{\max(N_{out}-1,1)}
-\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-TTFT &\approx t_{queue}+t_{prefill}+t_{front} \\
-T_{E2E} &= \underbrace{TTFT+\sum_{j=1}^{N_{out}-1}ITL_j}_{\text{오른쪽 항으로 결과 계산}} \\
-TPOT &= \underbrace{\frac{T_{E2E}-TTFT}{\max(N_{out}-1,1)}}_{\text{기준량당 비율}}
-\end{aligned}`}
-        operations={[
-          { expression: String.raw`TTFT+\sum_{j=1}^{N_{out}-1}ITL_j`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","첫 token까지의 시간과 그 뒤 token 사이의 시간을","나눕니다."] },
-          { expression: String.raw`\frac{T_{E2E}-TTFT}{\max(N_{out}-1,1)}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","첫 token까지의 시간과 그 뒤 token 사이의 시간을","나눕니다."] },
-        ]}
-        terms={LATENCY_TERMS}
-        assumptions={[
-          "Client·gateway·frontend 시간을 t_front에 포함하거나 별도 span으로 측정한다고 먼저 정합니다.",
-          "Streaming response에서 token timestamp가 있고 tokenizer·stop 처리 기준이 동일합니다.",
-          "TPOT는 평균 간격이므로 p95 ITL spike나 burst 전송을 숨길 수 있어 ITL histogram도 함께 봅니다.",
-        ]}
-        interpretation="같은 E2E latency라도 긴 queue 뒤 빠른 decode와 즉시 시작한 느린 decode는 원인이 다릅니다. vLLM 설정을 바꿀 때 TTFT·queue time·ITL·output length를 같은 request trace에 묶어야 합니다."
-        title="온라인 generation latency의 분해"
-      />
-
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">
-          이 글은 engine 전체의 입구입니다. GPU iteration을 어떻게 채우는지는
-          <Link to="/cs/ai/vllm-scheduler">vLLM Scheduler</Link>, KV cache를
-          block으로 소유하는 방식은
-          <Link to="/cs/ai/vllm-paged-attention"> PagedAttention</Link>, 한 target
-          실행에서 여러 token을 확정하는 방식은
-          <Link to="/cs/ai/vllm-spec-decode"> Speculative Decoding</Link>에서
-          이어집니다.
-        </p>
-      </div>
-    </section>
+    <div className="space-y-16">
+      <section id="overview" data-teach-level="S" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          1. 짧은 답이 먼저 끝나면 다음 요청을 시작해야 합니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            두 사람이 문장 생성을 요청했다고 합시다. 한 사람의 답은 짧고 다른
+            사람의 답은 깁니다. 두 답이 모두 끝날 때까지 새 요청을 받지 못한다면
+            짧은 답이 끝난 자리도 오래 비워 둡니다. 온라인 서비스는 이런 빈
+            시간을 줄이면서 먼저 시작한 답도 계속 이어야 합니다.
+          </p>
+          <p>
+            이 글에서는 서로 길이가 다른 세 요청을 한 번의 계산마다 다시
+            조합합니다. 무엇을 기다리게 하고 무엇을 메모리에 남기는지 알면
+            처리량을 높인 설정이 왜 첫 응답을 늦출 수도 있는지 이해할 수
+            있습니다.
+          </p>
+        </div>
+      </section>
+      <section id="black-box" data-teach-level="B" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          2. 받고 고르고 계산하고 결과를 돌려줍니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            바깥에서 보면 문장이 들어오고 생성한 문장 조각이 차례로 나갑니다.
+            안에서는 요청 기록을 보관하는 자리, 이번 계산에 넣을 양을 고르는
+            자리, 실제 계산을 수행하는 자리가 이어집니다. 계산 결과가 돌아오면
+            끝난 요청을 빼고 남은 요청의 진행 상태를 갱신합니다.
+          </p>
+          <p>
+            매번 새 요청을 모두 실행할 수는 없습니다. 이번에 계산할 양, 함께
+            진행할 요청 수, 다음 계산에 남길 기록 공간에 각각 제한이 있습니다.
+            우선 세 제한 안에서 움직이는 작은 사례를 만들겠습니다.
+          </p>
+        </div>
+        <ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2">
+          <li className="border-l border-border pl-4">
+            <span className="block text-sm text-muted-foreground">1</span>
+            <span>입력 문장과 요청 식별자를 받는다</span>
+          </li>
+          <li className="border-l border-border pl-4">
+            <span className="block text-sm text-muted-foreground">2</span>
+            <span>이번에 처리할 요청과 양을 고른다</span>
+          </li>
+          <li className="border-l border-border pl-4">
+            <span className="block text-sm text-muted-foreground">3</span>
+            <span>계산하고 요청별 기록을 갱신한다</span>
+          </li>
+          <li className="border-l border-border pl-4">
+            <span className="block text-sm text-muted-foreground">4</span>
+            <span>출력을 보내고 완료한 요청을 뺀다</span>
+          </li>
+        </ol>
+      </section>
+      <section id="small-case" data-teach-level="0" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          3. 한 번에 4조각, 요청은 최대 2개를 처리합니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            A의 입력은 6조각이고 원하는 출력은 3조각입니다. B는 입력 2조각·출력 2조각이며 나중에 오는 C는 입력 3조각·출력 1조각입니다. 조각은 모델이 처리하는 정수 단위로만
+            생각하면 됩니다. 실제 문장의 글자 수와 같다고 가정하지 않습니다. (가정)
+          </p>
+          <p>
+            한 번의 계산에서 처리할 조각은 최대 4개, 함께 진행할 요청은 최대 2개입니다. 기록을 저장할 메모리는 충분하며 입력 재사용과 미리 여러 후보를 만드는 기능은 끕니다. A와
+            B가 기다리며 C는 세 번째 계산이 끝난 뒤 도착한다고 정합니다. (가정)
+          </p>
+          <p>
+            처음에는 A의 입력 4조각만 읽습니다. 다음에는 A의 남은 2조각과 B의
+            2조각을 함께 읽습니다. 각 입력을 다 읽으면 첫 출력 조각을 고를 수
+            있습니다. 입력을 4조각 처리했다고 출력도 4조각 생기는 것은 아닙니다.
+            (가정)
+          </p>
+        </div>
+      </section>
+      <section id="inside-engine" data-teach-level="1" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          4. 각 요청은 읽은 위치와 남겨 둔 기록이 다릅니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            A를 4조각 읽은 뒤에는 읽은 위치가 4이고 아직 입력 2조각이 남습니다.
+            다음 계산에서 처음부터 읽지 않도록 이미 처리한 부분의 중간 결과를
+            저장합니다. B는 자기 입력과 별도의 진행 기록을 가집니다.
+          </p>
+          <p>
+            선택 담당자는 남은 계산 양을 줄이고 필요한 저장 공간을 확보합니다.
+            계산 담당자가 실제 결과를 돌려주면 요청 식별자로 맞춰 출력과 진행
+            위치를 갱신합니다. 끝난 요청의 작업 자리는 새 요청에 넘길 수
+            있습니다.
+          </p>
+          <p>
+            저장 기록 일부는 이후 입력에서 재사용하도록 남길 수 있습니다. 요청이
+            끝났다는 사실이 모든 메모리를 즉시 지웠다는 뜻은 아니라는 점도
+            기억해 둡니다.
+          </p>
+        </div>
+      </section>
+      <section id="why-engine" data-teach-level="2" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          5. 처리할 양과 저장할 공간을 따로 제한해야 합니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            두 번째 계산에는 A와 B의 입력 2조각씩이 들어가 합계 4조각입니다.
+            요청 수만 보면 2개지만 한 요청의 긴 입력을 한꺼번에 넣으면 계산 양은
+            훨씬 커질 수 있습니다. 요청 수 제한만으로 한 번의 계산 시간을 제한할
+            수 없는 이유입니다.
+          </p>
+          <p>
+            반대로 계산 여유가 있어도 각 요청의 중간 결과를 저장할 공간이 없으면
+            진행할 수 없습니다. 기록을 비우고 나중에 다시 계산하거나 일부 요청을
+            기다리게 해야 합니다. 계산량과 저장량은 서로 대신할 수 없는
+            조건입니다.
+          </p>
+          <p>
+            긴 입력 하나를 나누어 읽으면 이미 답을 쓰는 요청이 중간에 진행할
+            기회를 얻습니다. 다만 너무 잘게 나누면 실행 준비 비용이 커질 수
+            있습니다. 이제 이 역할과 처리 단계에 이름을 붙이겠습니다.
+          </p>
+        </div>
+      </section>
+    </div>
   );
 }

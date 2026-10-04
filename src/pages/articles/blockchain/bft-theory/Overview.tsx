@@ -1,57 +1,10 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ContextViz from "./viz/ContextViz";
-
-export default function Overview() {
-  return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        BFT는 거짓말하는 replica가 있어도 서로 다른 두 값을 commit하지 않는 규칙이다
-      </h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="text-lg leading-8">
-          Crash fault에서는 process가 멈추거나 침묵하지만, Byzantine fault에서는 같은
-          phase·height에서 Alice에게 <code>vote(x)</code>, Bob에게 <code>vote(y)</code>를
-          보내는 equivocation까지 허용합니다. Byzantine fault tolerant(BFT) consensus는
-          이런 임의 행동이 fault bound 안에 있을 때 honest replica가 conflicting value를
-          commit하지 않고, timing 조건이 회복되면 결국 다음 결정을 내리게 합니다.
-        </p>
-        <p>
-          이 글은 equal-weight fixed membership의 partial-synchrony BFT에서 message
-          authentication, quorum certificate, lock, view change를 연결합니다. Process·timing·
-          failure와 safety/liveness는 <Link to="/cs/blockchain/distributed-systems">분산 시스템 기초</Link>,
-          crash-only majority는 <Link to="/cs/blockchain/smr-theory">SMR</Link>, 공개 membership의
-          resource weight는 <Link to="/cs/blockchain/consensus-mechanisms">PoW·PoS</Link>에서 가져옵니다.
-        </p>
-      </div>
-
-      <ContentBoundary article="bft-theory" />
-      <ContextViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>문제의 최소 계약</h3>
-        <ul>
-          <li><strong>Agreement:</strong> honest replica 둘이 서로 다른 value를 commit하지 않습니다.</li>
-          <li><strong>Validity:</strong> commit된 value는 protocol이 정한 valid proposal 조건을 만족합니다.</li>
-          <li><strong>Integrity:</strong> 한 replica가 같은 instance에서 conflicting commit을 만들지 않습니다.</li>
-          <li><strong>Termination:</strong> 정해진 fault·timing 조건에서 honest replica가 결국 결정합니다.</li>
-        </ul>
-        <p>
-          Agreement·validity·integrity는 나쁜 certificate가 만들어지지 않게 하는 safety이고 termination은 progress를 말하는
-          liveness입니다. 실제 state-machine service에는 이 ordered decision을 모든 replica가 결정적으로 apply하는 계약이 추가됩니다.
-        </p>
-      </div>
-
-      <div id="paper-byzantine-generals" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
-        <p className="text-xs font-bold text-primary">논문 읽기 · 문제와 인증 모델</p>
-        <p className="mt-2 text-sm font-semibold">The Byzantine Generals Problem</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 traitor가 임의 message를 보낼 때 interactive consistency를 이루는 조건입니다. Oral-message와 unforgeable signed-
-          message model을 구분하고 각각의 algorithm·하한을 제시합니다. 현대 partial-synchrony quorum protocol의 3f+1을 모든
-          authenticated synchronous setting에 그대로 옮겨 같은 결론으로 읽으면 틀립니다.
-        </p>
-        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://lamport.azurewebsites.net/pubs/byz.pdf" target="_blank" rel="noreferrer">Lamport·Shostak·Pease 원문 보기</a>
-      </div>
-    </section>
-  );
-}
+export default function Overview(){return <div className="space-y-12 [&_section]:space-y-5 [&_p]:leading-8 [&_h2]:text-2xl [&_h2]:font-bold">
+<section id="overview" data-teach-level="S"><h2>1. 같은 사람이 양쪽에 다른 답을 보내도 기록은 하나여야 합니다</h2><p>여러 컴퓨터가 같은 주문 목록을 관리합니다. 한 컴퓨터가 멈추는 것뿐 아니라, 어떤 상대에게는 ‘승인’이라고 하고 다른 상대에게는 ‘취소’라고 말할 수도 있습니다. 정직한 컴퓨터들이 그 두 말을 각각 믿고 서로 다른 결과를 확정하면 같은 서비스를 복제했다는 의미가 사라집니다.</p><p>해결하려는 문제는 모든 메시지가 진실인지 알아내는 일이 아닙니다. 일부 참여자가 거짓말해도 서로 모순된 두 확정이 생기지 않는 규칙을 만드는 일입니다. 통신이 다시 안정되면 새 결정도 내려야 하므로 무조건 기다리기만 하는 방법으로는 충분하지 않습니다.</p><p>이 글은 미리 정한 참여자들이 같은 한 표씩을 갖는 경우를 다룹니다. 먼저 누가 어떤 증거를 모으는지 나눈 뒤 네 명 중 한 명이 거짓말하는 상황을 끝까지 추적합니다.</p></section>
+<section id="black-box" data-teach-level="B"><h2>2. 제안을 받고, 서명을 확인하고, 충분한 동의를 모읍니다</h2><ol className="list-decimal space-y-3 pl-6"><li>이번에 무엇을 결정할까 → 대표가 순서와 후보를 제안합니다.</li><li>누가 어떤 대상에 동의했나 → 발신자와 대상이 묶인 메시지를 확인합니다.</li><li>충분한 사람이 같은 말을 했나 → 서로 다른 참여자의 동의를 모읍니다.</li><li>대표가 바뀌어도 무엇을 기억할까 → 이전에 확보한 동의 근거를 이어받습니다.</li></ol><p>서명을 모으는 이유는 악의적인 사람의 말을 모두 제거하기 위해서가 아닙니다. 두 결정을 만들려면 정직한 사람까지 모순된 말에 동의해야 하도록 겹침을 만드는 것입니다. 작은 집합으로 계산하면 그 뜻이 보입니다.</p></section>
+<section id="case" data-teach-level="0"><h2>3. 네 명 중 한 명은 두 후보에 모두 동의할 수 있습니다</h2><p>참여자는 A·B·C·D이고 D만 임의로 행동할 수 있다고 놓습니다. 모두 같은 한 표를 가지며 이번 주문 번호는 7입니다. 후보 X는 주문 승인, 후보 Y는 같은 주문 취소입니다(가정). A·B·C는 규칙을 지키고 D는 양쪽에 각각 동의할 수 있습니다.</p><p>동의 두 개만 있으면 확정한다고 정하면 X에 A·D, Y에 B·D를 모을 수 있습니다. 겹치는 사람은 D뿐입니다. 정직한 사람은 누구도 말을 바꾸지 않았는데 두 후보가 모두 조건을 통과합니다.</p><p>동의 세 개를 요구하면 어떻게 달라질까요? X의 A·B·D와 Y의 B·C·D에는 B와 D가 겹칩니다. 이때 B까지 같은 주문·단계에서 양쪽에 동의해야 합니다. B가 이를 금지하는 규칙을 지키면 이 두 묶음은 동시에 만들어질 수 없습니다.</p><p>세 명의 동의가 필요한 이유를 사례로 보았습니다. 다음에는 표를 셀 때 무엇을 같은 것으로 취급해야 하는지 열어 보겠습니다.</p></section>
+<section id="parts" data-teach-level="1"><h2>4. 서명에는 사람뿐 아니라 주문과 단계가 함께 들어갑니다</h2><p>확인할 것은 ‘B의 서명이 존재한다’가 아닙니다. B가 주문 7의 어느 후보에, 어떤 단계에서 동의했는지를 확인합니다. 다른 주문이나 예전 대표가 진행하던 단계의 서명을 현재 X의 표로 옮겨 쓸 수 없어야 합니다.</p><p>같은 A의 서명 세 개는 사람 세 명의 동의가 아닙니다. 표를 세는 장치는 참여자 명단과 중복 여부를 확인합니다. 대표가 바뀌었을 때도 이미 확보한 안전한 제안 근거와 각자가 지켜야 할 약속을 새 대표에게 전달합니다.</p><p>이 문맥이 빠지면 집합의 겹침 계산이 실제 메시지의 안전성을 설명하지 못합니다. 각 장치가 없어졌을 때의 실패를 더 살펴보겠습니다.</p></section>
+<section id="why-parts" data-teach-level="2"><h2>5. 기다리는 시간이 끝났다는 사실은 새 결정을 허용하는 증거가 아닙니다</h2><p>D가 말을 바꾸지 않고 단순히 침묵할 수도 있습니다. 네 명 전원의 동의를 요구하면 A·B·C는 영원히 기다립니다. 세 명의 동의로 진행하게 만들면 정직한 세 명끼리 통신이 회복된 뒤 필요한 표를 모을 여지가 있습니다.</p><p>그렇지만 일정 시간을 기다렸다는 이유만으로 이전 약속을 지우면 위험합니다. A는 이미 X에 관한 충분한 근거를 갖고 있는데 늦게 도착한 B가 새 대표의 Y에 동의할 수 있기 때문입니다. 기다림의 종료는 대표를 바꿀 이유이고, 새 후보의 안전성은 전달받은 증거와 별도로 판단합니다.</p><p>통신 지연으로 메시지를 못 받은 상황을 발신자가 악의적이라는 증거로 볼 수도 없습니다. 지연과 거짓말을 분리하는 모델은 <Link to="/cs/blockchain/distributed-systems">분산 시스템 기초</Link>에서 이어집니다. 이제 각 역할의 이름을 정리합니다.</p></section>
+<section id="names" data-teach-level="3"><h2>6. 비잔틴 장애 허용은 임의 행동의 범위를 먼저 정합니다</h2><dl className="space-y-4"><div><dt className="font-semibold">같은 상태를 복사해 처리하는 참여자 → replica</dt><dd>이 사례의 A·B·C·D입니다. 명단과 표 무게를 고정했습니다.</dd></div><div><dt className="font-semibold">침묵·거짓말·상대별 다른 응답 → Byzantine fault</dt><dd>프로그램이 단순 중단하는 crash fault보다 넓은 실패 모델입니다. 이런 장애를 견디는 합의를 BFT라고 부릅니다.</dd></div><div><dt className="font-semibold">같은 문맥에서 모순된 메시지 전송 → equivocation</dt><dd>D가 주문 7의 X와 Y에 모두 서명하는 경우입니다.</dd></div><div><dt className="font-semibold">결정에 필요한 동의 집합 → quorum</dt><dd>이 사례에서는 서로 다른 세 사람의 유효한 표입니다. 그 표 묶음이 판정 근거가 되는 certificate입니다.</dd></div><div><dt className="font-semibold">서로 모순된 확정이 없도록 지키는 성질 → safety</dt><dd>올바른 참여자들의 결정 일치, 허용된 후보만 결정하기, 같은 인스턴스의 모순된 결정 금지를 포함합니다.</dd></div><div><dt className="font-semibold">조건이 회복되면 결국 결정하는 성질 → liveness</dt><dd>통신과 정직한 참여자에 관한 조건 아래 정지 상태를 벗어나야 합니다.</dd></div><div><dt className="font-semibold">동의한 근거를 기억하는 규칙과 대표 교체 → lock과 view change</dt><dd>정확한 잠금·해제 조건은 각 프로토콜에 따라 다릅니다. 교체 자체가 과거 근거를 없애지는 않습니다.</dd></div></dl><ContentBoundary article="bft-theory"/><p>이름을 네 사람의 역할에 대응시켰습니다. 다음 절에서는 서명 확인이 왜 D의 정직함까지 보장하지 않는지 메시지 단위로 추적합니다.</p></section>
+</div>}

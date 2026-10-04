@@ -6,14 +6,55 @@ export const semiconductorArticles: Article[] = [
     title: "실리콘에 소량을 섞으면 흐름이 달라지는 이유",
     subcategory: "semiconductor-physics",
     sections: [
-      { id: "overview", title: "같은 실리콘인데 움직일 수 있는 전자가 달라집니다" },
-      { id: "states", title: "움직일 수 있는 에너지 자리가 따로 있습니다" },
-      { id: "intrinsic", title: "순수한 실리콘에서도 둘이 함께 생깁니다" },
-      { id: "dopants", title: "한쪽 수를 늘리면 다른 쪽 수가 줄어듭니다" },
-      { id: "count", title: "1세제곱센티미터의 수를 끝까지 셉니다" },
-      { id: "boundaries", title: "온도와 이동도를 빼면 계산이 틀어집니다" },
-      { id: "handoff", title: "두 영역을 붙이면 접합이 됩니다" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 실리콘 안의 전자를 전부 전류로 세면 안 됩니다"
+  },
+  {
+    "id": "outside",
+    "title": "2. 같은 온도에서 원자 종류를 바꾸고 이동 전하를 셉니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 1 cm³의 두 조각에서 10¹⁰개와 10¹⁶개를 비교합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 움직이는 전자·이동하는 빈자리·고정된 전하를 나눕니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 이동 전하 수와 전체 전하량은 서로 다른 장부입니다"
+  },
+  {
+    "id": "states",
+    "title": "6. 가능한 상태의 묶음에 에너지띠라는 이름을 붙입니다"
+  },
+  {
+    "id": "intrinsic",
+    "title": "7. 기준 조각 A에서 두 이동 전하를 함께 셉니다"
+  },
+  {
+    "id": "dopants",
+    "title": "8. 조각 B에 전자를 내놓는 원자를 넣습니다"
+  },
+  {
+    "id": "count",
+    "title": "9. 같은 조각의 많은 쪽과 적은 쪽을 계산합니다"
+  },
+  {
+    "id": "source",
+    "title": "10. 원문의 평형식과 중성 조건을 같은 사례에 대입합니다"
+  },
+  {
+    "id": "boundaries",
+    "title": "11. 온도·빛·이동도가 바뀌면 다시 확인할 것이 생깁니다"
+  },
+  {
+    "id": "handoff",
+    "title": "12. 전하 수를 예측한 뒤 두 영역의 경계로 갑니다"
+  }
+],
     component: () => import("@/pages/articles/semiconductors/bands-and-doping"),
   },
   {
@@ -21,12 +62,51 @@ export const semiconductorArticles: Article[] = [
     title: "웨이퍼의 필요한 곳만 열어 접합을 만드는 법",
     subcategory: "semiconductor-fabrication",
     sections: [
-      { id: "overview", title: "전기가 흐를 자리를 웨이퍼 위에서 어떻게 골라낼까요?" },
-      { id: "wafer", title: "웨이퍼는 여러 소자를 한 번에 가공하는 바탕입니다" },
-      { id: "mask", title: "산화막에 낸 창이 불순물의 입구를 정합니다" },
-      { id: "protect", title: "접합 위의 막을 남기고 전극 자리만 다시 엽니다" },
-      { id: "limits", title: "이 첫 평면 공정은 오늘의 칩 제조 전체가 아닙니다" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 들어갈 자리와 끝까지 덮어 둘 자리를 따로 정합니다"
+  },
+  {
+    "id": "outside",
+    "title": "2. 실리콘과 두 창의 위치를 정해 접합과 접촉을 만듭니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 100 µm의 첫 창과 80 µm의 전극 창을 고릅니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 첫 창은 원자 입구이고 다음 창은 전극 자리입니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 창을 열었다가 다시 덮는 데 이유가 있습니다"
+  },
+  {
+    "id": "wafer",
+    "title": "6. 바탕·산화막·접촉 창의 이름과 역할을 잇습니다"
+  },
+  {
+    "id": "mask",
+    "title": "7. 100 µm 입구에서 104 µm의 표면 영역을 만듭니다"
+  },
+  {
+    "id": "protect",
+    "title": "8. 80 µm 접촉 창을 열어 양쪽에 12 µm를 남깁니다"
+  },
+  {
+    "id": "source",
+    "title": "9. 원문의 남겨 둘 막을 가상 단면에서 찾습니다"
+  },
+  {
+    "id": "alternatives",
+    "title": "10. 같은 단면의 폭과 정렬을 바꿔 검산합니다"
+  },
+  {
+    "id": "limits",
+    "title": "11. 원문의 구조를 현대 제조 전체로 확대하지 않습니다"
+  }
+],
     component: () => import("@/pages/articles/semiconductors/wafer-and-planar-process"),
   },
   {

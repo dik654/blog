@@ -1,13 +1,33 @@
-# huggingface/transformers 저장소 · src/transformers/loss/loss_utils.py
-# (main branch, commit e12c79c, 2026년 8월 기준). 전체 201줄 중 이 글이
-# 다루는 fixed_cross_entropy·ForCausalLMLoss만 발췌했습니다. 다른 loss
-# 유형(masked LM·object detection 등)은 생략했습니다. 함수 이름
-# `fixed_cross_entropy` 자체가 2024년 Unsloth가 보고한 gradient
-# accumulation loss 정규화 버그(PR #34191)를 고친 결과물입니다.
-# 본문 대응: effective-batch section의 "각 micro loss의 reduction scale이
-# 같습니다"라는 가정이 실전에서 깨지는 지점 — micro-batch마다 자기
-# 토큰 수로만 나누면(mean reduction) sequence 길이가 다를 때 전체 batch
-# loss와 달라진다.
+# Copyright 2024 The HuggingFace Team. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+import torch
+import torch.nn as nn
+from torch.nn import BCEWithLogitsLoss, MSELoss
+
+from .loss_d_fine import DFineForObjectDetectionLoss
+from .loss_deformable_detr import DeformableDetrForObjectDetectionLoss, DeformableDetrForSegmentationLoss
+from .loss_deimv2 import Deimv2ForObjectDetectionLoss
+from .loss_for_object_detection import ForObjectDetectionLoss, ForSegmentationLoss
+from .loss_grounding_dino import GroundingDinoForObjectDetectionLoss
+from .loss_lw_detr import LwDetrForObjectDetectionLoss
+from .loss_rf_detr import RfDetrForSegmentationLoss
+from .loss_rnnt import ParakeetForRNNTLoss
+from .loss_rt_detr import RTDetrForObjectDetectionLoss
+from .loss_tdt import ParakeetForTDTLoss
+
 
 def fixed_cross_entropy(
     source: torch.Tensor,
@@ -16,18 +36,12 @@ def fixed_cross_entropy(
     ignore_index: int = -100,
     **kwargs,
 ) -> torch.Tensor:
-    # article의 버그 지점 — num_items_in_batch(accumulation window 전체의
-    # 유효 토큰 수)가 없으면 예전처럼 각 micro-batch가 "mean"으로 자기
-    # 자신의 토큰 수로만 나눈다. 이게 바로 K개 micro-batch의 sequence
-    # 길이가 다를 때 전체 loss와 어긋나는 원인이다.
     reduction = "sum" if num_items_in_batch is not None else "mean"
     loss = nn.functional.cross_entropy(source, target, ignore_index=ignore_index, reduction=reduction)
     if reduction == "sum":
+        # just in case users pass an int for num_items_in_batch, which could be the case for custom trainer
         if torch.is_tensor(num_items_in_batch):
             num_items_in_batch = num_items_in_batch.to(loss.device)
-        # article의 fix — micro-batch 자신의 토큰 수가 아니라, 미리 계산해
-        # 둔 accumulation window 전체의 유효 토큰 수로 나눈다("denominator를
-        # 미리 구한다"는 Unsloth의 fix 설명이 정확히 이 지점).
         loss = loss / num_items_in_batch
     return loss
 
@@ -41,17 +55,147 @@ def ForCausalLMLoss(
     shift_labels: torch.Tensor | None = None,
     **kwargs,
 ) -> torch.Tensor:
+    # Upcast to float if we need to compute the loss to avoid potential precision issues
     logits = logits.float()
 
     if shift_labels is None:
+        # Shift so that tokens < n predict n
         labels = nn.functional.pad(labels, (0, 1), value=ignore_index)
         shift_labels = labels[..., 1:].contiguous()
 
+    # Flatten the tokens
     logits = logits.view(-1, vocab_size)
     shift_labels = shift_labels.view(-1)
     shift_labels = shift_labels.to(logits.device)
-    # num_items_in_batch를 그대로 fixed_cross_entropy에 전달 — 이 값이
-    # None이면(구버전 호출 경로) 여전히 버그가 있던 mean-reduction 경로로
-    # 빠진다.
     loss = fixed_cross_entropy(logits, shift_labels, num_items_in_batch, ignore_index, **kwargs)
     return loss
+
+
+def ForMaskedLMLoss(
+    logits: torch.Tensor,
+    labels: torch.Tensor,
+    vocab_size: int,
+    num_items_in_batch: torch.Tensor | None = None,
+    ignore_index: int = -100,
+    **kwargs,
+):
+    # Upcast to float if we need to compute the loss to avoid potential precision issues
+    logits = logits.float()
+
+    # Flatten the tokens
+    logits = logits.view(-1, vocab_size)
+    labels = labels.view(-1)
+
+    labels = labels.to(logits.device)
+    loss = fixed_cross_entropy(logits, labels, num_items_in_batch, ignore_index, **kwargs)
+    return loss
+
+
+def ForSequenceClassificationLoss(labels: torch.Tensor, pooled_logits: torch.Tensor, config, **kwargs) -> torch.Tensor:
+    num_labels = config.num_labels
+    if config.problem_type is None:
+        if num_labels == 1:
+            config.problem_type = "regression"
+        elif num_labels > 1 and (labels.dtype in (torch.long, torch.int)):
+            config.problem_type = "single_label_classification"
+        else:
+            config.problem_type = "multi_label_classification"
+
+    labels = labels.to(pooled_logits.device)
+    if config.problem_type == "regression":
+        loss_fct = MSELoss()
+        if num_labels == 1:
+            return loss_fct(pooled_logits.squeeze(), labels.squeeze())
+        else:
+            return loss_fct(pooled_logits, labels)
+    if config.problem_type == "single_label_classification":
+        return fixed_cross_entropy(pooled_logits.view(-1, num_labels), labels.view(-1), **kwargs)
+
+    if config.problem_type == "multi_label_classification":
+        loss_fct = BCEWithLogitsLoss()
+        return loss_fct(pooled_logits, labels)
+
+    raise RuntimeError(f"Invalid problem type: {config.problem_type}")
+
+
+def ForQuestionAnsweringLoss(start_logits, end_logits, start_positions, end_positions, **kwargs):
+    total_loss = None
+    if start_positions is not None and end_positions is not None:
+        # If we are on multi-GPU, split add a dimension
+        if len(start_positions.size()) > 1:
+            start_positions = start_positions.squeeze(-1).to(start_logits.device)
+        if len(end_positions.size()) > 1:
+            end_positions = end_positions.squeeze(-1).to(end_logits.device)
+        # sometimes the start/end positions are outside our model inputs, we ignore these terms
+        ignored_index = start_logits.size(1)
+        start_positions = start_positions.clamp(0, ignored_index)
+        end_positions = end_positions.clamp(0, ignored_index)
+
+        start_loss = fixed_cross_entropy(start_logits, start_positions, ignore_index=ignored_index, **kwargs)
+        end_loss = fixed_cross_entropy(end_logits, end_positions, ignore_index=ignored_index, **kwargs)
+        total_loss = (start_loss + end_loss) / 2
+    return total_loss
+
+
+def ForTokenClassification(logits: torch.Tensor, labels, config, **kwargs):
+    # Upcast to float if we need to compute the loss to avoid potential precision issues
+    logits = logits.view(-1, config.num_labels)
+    labels = labels.view(-1).to(logits.device)
+    logits = logits.float()
+    # Flatten the tokens
+    return fixed_cross_entropy(logits, labels, **kwargs)
+
+
+def ForSemanticSegmentationLoss(
+    logits: torch.Tensor,
+    labels: torch.Tensor,
+    ignore_index: int = 255,
+    num_items_in_batch: torch.Tensor | None = None,
+    auxiliary_logits: torch.Tensor | None = None,
+    auxiliary_loss_weight: float = 0.4,
+    **kwargs,
+) -> torch.Tensor:
+    upsampled_logits = nn.functional.interpolate(logits, size=labels.shape[-2:], mode="bilinear", align_corners=False)
+    loss = fixed_cross_entropy(
+        upsampled_logits, labels, num_items_in_batch=num_items_in_batch, ignore_index=ignore_index
+    )
+    if auxiliary_logits is not None:
+        upsampled_auxiliary_logits = nn.functional.interpolate(
+            auxiliary_logits, size=labels.shape[-2:], mode="bilinear", align_corners=False
+        )
+        loss = loss + auxiliary_loss_weight * fixed_cross_entropy(
+            upsampled_auxiliary_logits, labels, num_items_in_batch=num_items_in_batch, ignore_index=ignore_index
+        )
+    return loss
+
+
+LOSS_MAPPING = {
+    "ForSemanticSegmentation": ForSemanticSegmentationLoss,
+    "ForCausalLM": ForCausalLMLoss,
+    "ForMaskedLM": ForMaskedLMLoss,
+    "ForQuestionAnswering": ForQuestionAnsweringLoss,
+    "ForSequenceClassification": ForSequenceClassificationLoss,
+    "ForImageClassification": ForSequenceClassificationLoss,
+    "ForVideoClassification": ForSequenceClassificationLoss,
+    "ForAudioClassification": ForSequenceClassificationLoss,
+    "ForTokenClassification": ForTokenClassification,
+    "ForSegmentation": ForSegmentationLoss,
+    "ForObjectDetection": ForObjectDetectionLoss,
+    "ForConditionalGeneration": ForCausalLMLoss,
+    "DeformableDetrForObjectDetection": DeformableDetrForObjectDetectionLoss,
+    "ConditionalDetrForObjectDetection": DeformableDetrForObjectDetectionLoss,
+    "DabDetrForObjectDetection": DeformableDetrForObjectDetectionLoss,
+    "GroundingDinoForObjectDetection": GroundingDinoForObjectDetectionLoss,
+    "MMGroundingDinoForObjectDetection": GroundingDinoForObjectDetectionLoss,
+    "ConditionalDetrForSegmentation": DeformableDetrForSegmentationLoss,
+    "RTDetrForObjectDetection": RTDetrForObjectDetectionLoss,
+    "RTDetrV2ForObjectDetection": RTDetrForObjectDetectionLoss,
+    "DFineForObjectDetection": DFineForObjectDetectionLoss,
+    "Deimv2ForObjectDetection": Deimv2ForObjectDetectionLoss,
+    "CsmForConditionalGeneration": ForCausalLMLoss,
+    "LwDetrForObjectDetection": LwDetrForObjectDetectionLoss,
+    "ParakeetForRNNT": ParakeetForRNNTLoss,
+    "ParakeetForTDT": ParakeetForTDTLoss,
+    "RfDetrForObjectDetection": LwDetrForObjectDetectionLoss,
+    "RfDetrForInstanceSegmentation": RfDetrForSegmentationLoss,
+}
