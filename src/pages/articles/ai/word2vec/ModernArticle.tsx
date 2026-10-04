@@ -1,96 +1,86 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { CitationBlock } from "@/components/ui/citation";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
+import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
-import { word2vecTree } from "./fileTree";
-import { Word2VecPairViz } from "./viz/ModernWord2VecViz";
-
-export default function Word2VecArticle() {
-  const sidebar = useCodeSidebar();
-  return <div className="space-y-16">
-    <section id="overview" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Word2Vec은 단어를 바로 이해하지 않고, word ID가 고른 row를 주변 단어와 함께 업데이트합니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">Tokenizer가 corpus를 word ID sequence로 만들면 각 ID는 embedding table의 한 row를 가리킵니다. 처음 row의 숫자는 무작위에 가깝습니다. 가까운 window에서 반복해서 관찰한 word–context pairs가 어떤 row끼리 높은 score를 가져야 하는지 학습하면서 좌표계가 생깁니다.</p></div>
-      <TermBreakdown title="Corpus 문장에서 training pair까지 필요한 용어" items={[
-        { term: "Vocabulary", description: "Word type과 integer ID의 고정 대응표입니다.", boundary: "ID 숫자 자체에는 의미나 거리가 없습니다." },
-        { term: "Embedding row", description: "ID가 선택하는 d개의 trainable scalar입니다.", example: "ID 42는 W[42]의 300개 값을 읽습니다." },
-        { term: "Center word", description: "현재 prediction example의 기준이 되는 가운데 token입니다." },
-        { term: "Context word", description: "같은 sentence의 local window 안에서 center와 함께 관찰한 이웃 token입니다.", boundary: "Window가 가까움을 관찰할 뿐 동의어 label을 직접 주는 것은 아닙니다." },
-      ]} />
-      <Word2VecPairViz />
-      <ContentBoundary article="word2vec" />
-    </section>
-
-    <section id="dual-tables" className="scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">같은 word도 center일 때와 context일 때 서로 다른 table row를 사용합니다</h2>
-      <TermBreakdown title="두 table을 한 줄씩 구분" items={[
-        { term: "Input table W", description: "Word가 center·condition 역할일 때 읽는 V×d matrix입니다." },
-        { term: "Output table W′", description: "Word가 예측 target·context 역할일 때 읽는 별도 V×d matrix입니다." },
-        { term: "Pair score", description: "Center input row와 context output row의 dot product입니다.", boundary: "같은 ID라도 두 row는 다른 gradient를 받아 같지 않습니다." },
-      ]} />
-      <ExplainedFormula question="One-hot ID는 어떻게 input row 하나와 output row 하나를 고르나요?" idea={<p>ID 위치만 1인 one-hot vector를 table에 곱하면 다른 모든 row는 0이 되고 선택한 row만 남습니다. 구현은 같은 결과를 sparse gather로 계산합니다.</p>} formula={String.raw`\mathbf v_w=\mathbf o_w^\top W,\quad \mathbf v'_w=\mathbf o_w^\top W'`} annotatedFormula={String.raw`\begin{aligned}\mathbf o_w&=\underbrace{(0,\ldots,1_w,\ldots,0)}_{\text{word w의 row 주소}}\\\mathbf v_w&=\underbrace{\mathbf o_w^\top W}_{\substack{\text{center 역할의}\\\text{input row 선택}}}\\\mathbf v'_w&=\underbrace{\mathbf o_w^\top W'}_{\substack{\text{context 역할의}\\\text{output row 선택}}}\\s(w,c)&=\underbrace{{\mathbf v'_c}^{\!\top}\mathbf v_w}_{\text{두 역할 row의 pair score}}\end{aligned}`} operations={[
-        { expression: String.raw`\mathbf o_w^\top W`, annotation: ["one-hot의 1인 위치만 남겨", "input table row를 선택"] },
-        { expression: String.raw`\mathbf o_w^\top W'`, annotation: ["같은 ID로 별도 table을 읽어", "output role row를 선택"] },
-        { expression: String.raw`{\mathbf v'_c}^{\top}\mathbf v_w`, annotation: ["center와 context 성분을 곱해 더하고", "관측 pair의 score를 계산"] },
-      ]} terms={[
-        { symbol: String.raw`\mathbf o_w`, name: "One-hot ID", description: "Vocabulary에서 word w의 위치만 1인 주소 vector입니다." },
-        { symbol: "W", name: "Input table", description: "Center 역할의 trainable V×d matrix입니다." },
-        { symbol: "W'", name: "Output table", description: "Context 역할의 별도 trainable V×d matrix입니다." },
-        { symbol: "s(w,c)", name: "Pair score", description: "Center w와 context c의 역할별 row 내적입니다." },
-      ]} assumptions={["Vocabulary ID 순서는 run과 artifact 전체에서 고정합니다.", "Input·output table은 같은 shape이어도 parameter를 공유하지 않습니다.", "Subword model처럼 여러 row를 합치는 경우는 별도 글에서 다룹니다."]} interpretation="V=5,d=3이면 W와 W′는 각각 5×3입니다. Word ID 2는 W[2]와 W′[2]를 따로 선택하며 두 row의 값과 용도는 서로 다릅니다." />
-      <CodeViewButton
-        onClick={() =>
-          sidebar.open("onehot-as-gather", codeRefs["onehot-as-gather"])
-        }
-      />
-    </section>
-
-    <section id="window" className="scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Dynamic window는 가까운 pair를 더 자주 보되 먼 pair도 일부 남깁니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
-            Maximum radius가 c여도 매 center마다 항상 ±c를 전부 쓰지는 않습니다. 실제 radius r을 1부터 c 사이에서 뽑으면 거리 δ의 context는 r≥δ일
-            때만 포함됩니다. 가까운 δ=1은 모든 draw에 들어오고 가장 먼 δ=c는 한 draw에서만 들어옵니다.
+import WordPairCaseViz from "./viz/WordPairCaseViz";
+const prose="prose prose-neutral max-w-none dark:prose-invert";
+const rows=[["0","</s>","[0, 0, 0]","[0, 0, 0]"],["1","red","[1, 0, 0]","[1, 0, 1]"],["2","cat","[1, 2, 0]","[2, 0, 1]"],["3","saw","[0, 1, 1]","[0, 1, 2]"],["4","dog","[0, 0, 1]","[1, 1, 0]"]];
+export default function Word2VecArticle(){const sidebar=useCodeSidebar();const code=(key:string)=><CodeViewButton onClick={()=>sidebar.open(key,codeRefs[key])}/>;return <div className="space-y-16">
+<section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">1. 단어 하나를 어떻게 계산할 수 있는 수로 바꿀까요?</h2><div className={prose}>
+<p>검색 프로그램이 cat이라는 글자를 받았다고 해 보겠습니다. 글자 자체를 더하거나 빼는 것으로는 dog와 어떤 관계인지 알기 어렵습니다. 각 단어에 몇 개의 수를 맡기고, 실제 문장에서 가까이 등장한 단어를 맞히는 동안 그 수를 고치는 방법이 있습니다. 자주 비슷한 이웃을 만난 단어들이 비슷한 계산에 쓰이도록 만드는 출발점입니다.</p>
+<p>이 글은 수를 고치는 규칙에 앞서, 어떤 단어의 수를 꺼내며 무엇과 짝지을지 설명합니다. 이 앞단을 바꾸면 같은 문장을 읽어도 다른 학습 문제가 됩니다. 다섯 단어짜리 문장으로 번호를 붙이고 수를 꺼낸 뒤, 원래 프로그램이 실제로 고른 쌍까지 확인하겠습니다.</p>
+<p>
+            번호는 단어의 뜻이 아닙니다. 책의 쪽수만 보고 내용을 알 수 없듯, 단어 번호가 2라고 해서 뜻도 2인 것은 아닙니다. 번호는 수가 저장된 자리를 찾는 데 쓰고 그 자리에
+            들어 있는 값은 학습하며 바꿉니다. 먼저 이 둘을 구별하면 이후의 계산이 단순해집니다.
+          </p></div></section>
+<section id="black-box" data-teach-level="B" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">2. 문장을 받고, 두 단어와 두 줄의 수를 내놓습니다</h2><div className={prose}>
+<p>전체 흐름은 세 번의 선택입니다. 먼저 문장을 단어들로 나누고 각 단어가 가진 번호를 찾습니다. 다음으로 현재 보고 있는 위치에서 가까운 이웃을 고릅니다. 마지막으로 한 단어는 입력 역할의 표에서, 다른 단어는 맞혀야 할 대상 역할의 표에서 수를 읽습니다.</p>
+<p>그 뒤에는 같은 자리의 수끼리 곱해 더하는 계산이 있습니다. 이 값으로 두 단어의 조합을 평가하고 학습 규칙에 따라 표를 고칩니다. 이 글에서는 어디서 수를 가져왔는지 분명히 하기 위해 표를 고정하겠습니다. 뒤의 학습 글에서 무엇을 바꾸는지 이해하려면, 지금은 꺼내는 값의 출처를 놓치지 않는 것이 좋습니다.</p>
+<p>문장 하나가 점수 하나로 곧장 바뀌지는 않습니다. 가까운 이웃이 두 곳이면 두 번의 선택이 생깁니다. 이웃을 더 멀리까지 보면 선택 횟수가 늘고, 중간 단어를 제거하면 가까움 자체가 달라집니다. 출력으로 나온 쌍만 보지 말고 그 쌍을 만든 선택 과정도 함께 보겠습니다.</p></div></section>
+<section id="case" data-teach-level="0" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">3. 같은 saw가 두 번 나오는 다섯 단어</h2><div className={prose}>
+<p>(가정) 문장은 <code>red saw cat saw dog</code>이며 끝에 줄바꿈 하나가 있습니다. 단어를 왼쪽부터 센 위치는 0, 1, 2, 3, 4입니다. 가운데 위치 2에는 cat이 있습니다. 이 문장은 문법을 평가하려는 예가 아니라, 같은 글자가 두 위치에 있는 경우를 관찰하기 위해 만든 입력입니다.</p>
+<p>단어 번호는 위치와 따로 정합니다. red는 1, cat은 2, saw는 3, dog는 4로 정하겠습니다. 번호 0의 <code>&lt;/s&gt;</code>는 문장의 끝을 표시합니다. 문장 안의 번호열은 [1, 3, 2, 3, 4]입니다. saw가 두 곳에 있어도 번호는 둘 다 3입니다.</p>
+<p>아래의 두 표도 모두 가정한 값입니다. 각 줄에는 수가 세 개씩 있습니다. 왼쪽 표는 입력 역할, 오른쪽 표는 맞혀야 할 대상 역할에 씁니다. 같은 cat의 번호 2로 왼쪽을 읽으면 [1, 2, 0]이고 오른쪽을 읽으면 [2, 0, 1]입니다. 같은 번호가 어느 표를 읽느냐에 따라 다른 값을 찾습니다.</p></div>
+<div className="my-6 overflow-x-auto"><table className="w-full text-sm"><caption className="mb-3 text-left">가정한 두 표: 숫자 행은 0부터 셉니다</caption><thead><tr>{["번호","단어","입력 역할","예측 대상 역할"].map(x=><th className="p-2 text-left" key={x}>{x}</th>)}</tr></thead><tbody>{rows.map(r=><tr key={r[0]}>{r.map((x,i)=><td className="border-t border-border p-2 whitespace-nowrap" key={i}>{x}</td>)}</tr>)}</tbody></table></div><div className={prose}>
+<p>cat을 입력으로 두고 바로 오른쪽 saw를 맞힌다고 해 보겠습니다. 왼쪽 표에서 cat의 [1, 2, 0]을, 오른쪽 표에서 saw의 [0, 1, 2]를 읽습니다. 같은 자리끼리 곱해 더하면 1×0 + 2×1 + 0×2 = 2입니다. 이 2는 두 줄을 조합한 점수이며, 두 단어가 동의어라는 판정이나 확률은 아닙니다.</p>
+<p>이번에는 cat의 바로 왼쪽을 봅니다. 그곳도 saw이므로 같은 두 줄을 읽고 점수 2를 얻습니다. 계산할 값은 같지만 문장에서 관찰한 위치는 다릅니다. 그래서 두 번의 학습 사례로 셉니다. 현재 위치와 단어 번호를 따로 적어 둔 이유가 여기서 드러납니다.</p></div></section>
+<section id="picture" data-teach-level="1" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">4. 보는 범위를 넓히면 선택이 두 개에서 네 개가 됩니다</h2><div className={prose}>
+<p>가운데 cat에서 양쪽 한 칸만 보면 위치 1과 3의 saw를 고릅니다. 양쪽 두 칸까지 보면 위치 0의 red와 위치 4의 dog도 들어옵니다. cat 자신의 위치 2는 건너뜁니다. 아래 그림은 이 선택과 그중 한 쌍이 두 표를 읽는 과정을 나누어 보여 줍니다.</p></div><WordPairCaseViz/><div className={prose}>
+<p>범위를 넓혀도 cat의 번호나 표의 크기는 바뀌지 않습니다. 달라지는 것은 이번에 함께 계산할 이웃과 그 횟수입니다. 두 번째 장면에서 네 위치를 골랐다가 세 번째 장면에서 saw 한 위치만 따라가면, 많은 사례도 같은 작은 선택의 반복이라는 점을 볼 수 있습니다.</p></div></section>
+<section id="why" data-teach-level="2" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">5. 번호표, 두 역할, 가까운 범위가 각각 필요한 이유</h2><div className={prose}>
+<p>단어마다 저장 위치를 고정하면 문장에서 같은 단어를 다시 만났을 때 같은 줄을 읽을 수 있습니다. saw의 두 위치마다 새 수를 따로 만드는 대신 번호 3의 줄을 함께 사용합니다. 여러 문장의 경험이 같은 줄에 모일 수 있는 이유입니다.</p>
+<p>표를 둘로 두면 입력으로 쓰인 단어와 맞혀야 할 후보에 다른 수를 맡길 수 있습니다. 이 선택이 수학적으로 언제나 필수인 것은 아닙니다. 두 역할의 값을 강제로 같게 묶지 않는 것이 여기서 다루는 모델의 설계입니다. 어떤 표를 읽었는지 지우면 앞서 계산한 점수의 뜻도 흐려집니다.</p>
+<p>가까운 범위는 계산 횟수와 관찰 대상을 함께 정합니다. 바로 옆 saw는 자주 포함하고 멀리 있는 red와 dog는 일부만 포함할 수 있습니다. 가까운 단어가 반드시 동의어여서가 아닙니다. 문장에서 같이 쓰이는 관계를 학습의 단서로 삼는 선택이며, 범위를 바꾸면 배우는 관계도 달라질 수 있습니다.</p>
+<p>이제 문장의 위치가 이웃을 고르고 단어 번호가 수의 줄을 고른다는 구분이 잡혔습니다. 다음 절에서는 이미 본 물건과 동작에 이름을 붙인 뒤, 같은 다섯 단어를 식과 원문 코드로 옮기겠습니다.</p></div></section>
+<section id="names" data-teach-level="3" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">6. 이미 본 역할에 이름을 붙입니다</h2><TermBreakdown title="문장, 번호, 수, 이웃의 대응" items={[
+{term:"Vocabulary · 어휘 목록",description:"단어 종류와 정수 ID의 대응표입니다. saw의 두 출현은 모두 ID 3을 사용합니다.",boundary:"문장의 위치와 ID는 다른 값입니다."},
+{term:"Embedding lookup · 임베딩 조회",description:"ID가 지정한 행을 읽어 여러 수로 이루어진 벡터를 꺼내는 동작입니다. cat의 입력 벡터는 [1,2,0]입니다."},
+{term:"Input/output table · 입력·출력 표",description:"입력 역할의 행과 예측 대상 역할의 행을 보관하는 별도 매개변수입니다. 이 글은 W와 U라고 씁니다."},
+{term:"Context window · 문맥 범위",description:"현재 위치에서 이웃을 찾는 범위입니다. 반경 1이면 좌우 한 칸씩 봅니다."},
+{term:"Dynamic window · 매번 바꾸는 반경",description:"최대 반경 안에서 이번에 쓸 반경을 뽑는 방법입니다. 가까운 위치가 더 자주 선택될 수 있습니다."},
+{term:"Word–context pair · 단어와 이웃의 쌍",description:"두 위치에서 읽은 단어를 입력과 예측 대상에 배정한 학습 사례입니다. 위치, 방향, 중복 여부를 함께 확인합니다."},
+]}/><div className={prose}><p>가운데 단어로 이웃을 예측하는 설명을 Skip-gram이라고 부릅니다. 이후 원문 C를 볼 때는 구현이 반대 방향으로 두 역할을 배정하는 경우도 확인하겠습니다. 중심 위치라는 말과 입력 표를 읽는 단어라는 말을 무조건 같은 뜻으로 쓰지 않겠습니다.</p></div></section>
+<section id="lookup" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">7. ID 2는 곱셈으로도 같은 행을 고릅니다</h2><div className={prose}><p>앞의 번호 선택을 행렬 계산으로 쓰면, 길이 5의 수열에서 번호 2인 자리만 1로 둡니다. [0, 0, 1, 0, 0]을 표의 각 행에 곱해 더하면 나머지 행은 모두 사라지고 cat의 행만 남습니다. 이를 one-hot 표현이라고 합니다. 실제 조회에서는 0인 항의 곱셈을 전부 수행할 필요가 없습니다.</p></div>
+<ExplainedFormula question="한 자리만 1인 벡터가 왜 W의 한 행을 고르나요?" idea={<p>각 행에 붙는 계수가 0 또는 1입니다. 선택한 행의 계수만 1이므로 합에도 그 행만 남습니다.</p>} formula={String.raw`v_i=e_i^\top W=W[i,:]`} annotatedFormula={String.raw`\begin{aligned}v_i&=\underbrace{e_i^\top W}_{\text{행별 계수를 곱해 더하기}}=W[i,:]\\e_2^\top&=(0,0,1,0,0)\\v_2&=0W[0]+0W[1]+1W[2]\\&\quad+0W[3]+0W[4]=(1,2,0)\end{aligned}`} operations={[{expression:String.raw`e_i^\top W`,annotation:["ID i의 자리만 1로 두고","그 행만 합에 남김"]}]} terms={[{symbol:"i",name:"단어 ID",description:"0부터 V−1까지의 행 번호입니다."},{symbol:"W",name:"입력 표",description:"V개 단어에 각각 d개의 수를 둔 V×d 행렬입니다."},{symbol:"e_i",name:"한 자리만 1인 벡터",description:"길이 V이며 ID i의 계수만 1입니다."}]} assumptions={["이 조회에서는 표를 미리 고정하고 행을 읽는 동안 바꾸지 않습니다.","가정한 V=5, d=3이며 ID가 표의 범위 안에 있습니다."]} interpretation="ID 2는 세 수 [1,2,0]을 읽습니다. 2라는 번호가 수의 크기나 의미의 거리를 정하지 않습니다."/>
+<div className={prose}><p>cat의 번호를 2에서 4로 바꾸더라도 대응하는 행을 함께 4번으로 옮기면 같은 값을 읽습니다. ID 차이 1이 의미의 가까움 1을 뜻하지 않는 이유입니다. 의미 비교에 사용할 값은 학습된 행에 있으며, 번호 순서는 임의로 정할 수 있습니다.</p></div></section>
+<section id="dual-tables" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">8. 같은 ID라도 두 표의 역할은 분리됩니다</h2><div className={prose}><p>cat을 입력으로, saw를 예측 대상으로 두면 W[2]와 U[3]을 읽습니다. W[2]와 U[2]를 모두 읽는 것이 아닙니다. 같은 단어가 반대 역할로 등장할 때 비로소 다른 표의 같은 ID 행을 읽습니다.</p></div>
+<ExplainedFormula question="두 역할을 바꾸면 점수도 같을까요?" idea={<p>표가 서로 다르므로 입력 ID와 출력 ID를 바꾸면 다른 두 행을 조합합니다. 각 성분을 곱해 더해 확인합니다.</p>} formula={String.raw`s(i,o)=W[i,:]\cdot U[o,:]`} annotatedFormula={String.raw`\begin{aligned}s(i,o)&=\underbrace{\sum_{k=1}^{d}W_{ik}U_{ok}}_{\text{같은 성분을 곱해 더하기}}\\s(2,3)&=(1,2,0)\cdot(0,1,2)=2\\s(3,2)&=(0,1,1)\cdot(2,0,1)=1\end{aligned}`} operations={[{expression:String.raw`W_{ik}U_{ok}`,annotation:["입력 i와 예측 대상 o의","같은 성분끼리 곱함"]},{expression:String.raw`\sum_{k=1}^{d}`,annotation:["d개 성분의 곱을 더해","쌍의 점수 하나를 만듦"]}]} terms={[{symbol:"i,o",name:"입력·출력 ID",description:"두 표에서 각각 읽을 행의 번호입니다."},{symbol:"d",name:"행의 길이",description:"가정한 표에서는 3입니다."},{symbol:"s(i,o)",name:"쌍의 점수",description:"두 행의 내적이며 아직 확률로 바꾼 값이 아닙니다."}]} assumptions={["단어별 입력·출력 표의 값을 공유하지 않는 모형입니다.","이 수들은 학습 결과가 아닌 설명용 가정입니다."]} interpretation="cat→saw는 2, saw→cat은 1입니다. 중심 위치가 같아도 입력과 예측 방향을 기록해야 계산을 재현할 수 있습니다."/>
+<div className={prose}><p>두 표가 별도 매개변수라는 사실은 모든 순간의 값이나 기울기가 반드시 다르다는 뜻이 아닙니다. 초기값이나 특정 사례에서 우연히 같을 수 있습니다. 별도 표이므로 각 역할의 학습 계산이 따로 값을 바꿀 수 있다는 뜻입니다. 같은 모양만 보고 하나의 표로 합쳐도 된다고 결론내리면 안 됩니다.</p>
+<p>단어별 표 두 개를 쓰는 조건에서 필요한 수는 2Vd개입니다. 지금은 2×5×3 = 30개이고 수당 4바이트라면 120바이트입니다. V=10,000, d=300이면 표마다 300만 개, 합쳐 600만 개입니다. FP32의 수당 4바이트를 적용한 표 자체의 크기는 24,000,000바이트, 즉 24 MB입니다. 다른 자료형이나 학습 중 추가 저장 공간은 별도로 계산합니다.</p>
+<p>이 셈은 모든 Word2Vec 출력 구조에 그대로 적용되지 않습니다. 단어마다 출력 행을 두는 방식과 달리, 계층형 softmax는 단어를 고르는 나무의 내부 노드에 출력 벡터를 둡니다. <a href="/cs/ai/word2vec-prediction-objectives">예측 목적과 출력 구조</a>에서 이 차이를 이어 다룹니다. 학습 뒤에도 입력 표, 출력 표, 둘의 합이나 평균 중 무엇을 내보냈는지 밝혀야 합니다.</p></div></section>
+<section id="pair-trace" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">9. 위치를 고른 뒤 번호를 읽습니다</h2><div className={prose}><p>
+            같은 문장의 가운데 위치 2에서 반경 1을 택하면 위치 1과 3을 고릅니다. 번호로 바꾼 뒤의 두 쌍은 cat→saw, cat→saw입니다. 중복을 없애 하나로 줄이면 실제
+            관찰 횟수까지 바뀝니다. 반경 2에서는 red와 dog가 더해져 네 쌍이 됩니다.
           </p></div>
-      <ExplainedFormula question="Maximum radius c에서 거리 δ인 context가 pair에 포함될 확률은 얼마인가요?" idea={<p>가능한 radius는 c개입니다. 그중 δ 이상인 radius가 c−δ+1개이므로 이 개수를 전체 c로 나눕니다.</p>} formula={String.raw`r\sim\operatorname{Unif}\{1,\ldots,c\},\quad P(\delta\text{ included})=(c-\delta+1)/c`} annotatedFormula={String.raw`\begin{aligned}r&\sim\underbrace{\operatorname{Unif}\{1,\ldots,c\}}_{\text{실제 radius 하나를 sampling}}\\I_\delta&=\underbrace{\mathbf 1[r\ge\delta]}_{\substack{\text{뽑은 radius가 거리 }\delta\text{에 닿을 때만}\\\text{pair에 포함}}}\\N_\delta&=\underbrace{c-\delta+1}_{\text{거리 }\delta\text{ 이상인 radius의 개수}}\\P(I_\delta=1)&=\underbrace{N_\delta/c}_{\text{포함 draw 수를 전체 draw 수로 나눔}}\end{aligned}`} operations={[
-        { expression: String.raw`r\sim\operatorname{Unif}\{1,\ldots,c\}`, annotation: ["최대 반경 안에서 실제 반경을 뽑아", "example마다 window 크기를 바꿈"] },
-        { expression: String.raw`\mathbf 1[r\ge\delta]`, annotation: ["radius가 context 거리까지 닿는지 비교해", "pair 포함 여부를 0·1로 만듦"] },
-        { expression: String.raw`c-\delta+1`, annotation: ["거리값부터 c까지 가능한 값을 세어", "포함되는 radius draw 수를 계산"] },
-        { expression: String.raw`N_\delta/c`, annotation: ["포함 draw를 전체 draw로 나눠", "거리별 sampling 확률로 정규화"] },
-      ]} terms={[
-        { symbol: "c", name: "Maximum radius", description: "한 방향에서 볼 수 있는 가장 먼 token 거리입니다." },
-        { symbol: "r", name: "Actual radius", description: "이번 center에서 sampling한 실제 window 반경입니다." },
-        { symbol: String.raw`\delta`, name: "Context distance", description: "Center와 context position 사이의 절대 거리입니다." },
-        { symbol: String.raw`I_\delta`, name: "Inclusion indicator", description: "거리 δ pair가 이번 example에 들어오면 1입니다." },
-      ]} assumptions={["Radius 1..c를 균일하게 sampling하는 단순 recipe입니다.", "Sentence boundary와 padding을 넘어 pair를 만들지 않습니다.", "다른 position weighting을 쓰면 이 확률도 달라집니다."]} interpretation="c=5이면 거리 1은 5/5, 거리 3은 3/5, 거리 5는 1/5로 포함됩니다. 이것은 가까운 문맥에 더 큰 관측 빈도를 주는 heuristic입니다." />
-    </section>
-
-    <section id="pairs" className="scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Training pair는 corpus에서 저절로 생기지 않고 recipe가 만든 versioned artifact입니다</h2>
-      <TermBreakdown title="Pair receipt에 남길 항목" items={[
-        { term: "Corpus revision", description: "문장과 token 순서를 제공한 source snapshot·cutoff입니다." },
-        { term: "Tokenizer·vocabulary", description: "문자열을 ID sequence와 sentence boundary로 바꾼 정확한 규칙입니다." },
-        { term: "Window draw", description: "Maximum radius·dynamic sampling·position weighting입니다." },
-        { term: "Frequency filter", description: "Minimum count와 frequent-token subsampling이 어떤 occurrence를 제거했는지 기록합니다." },
-        { term: "Seed", description: "Window와 subsampling draw를 재현할 random stream identity입니다." },
-      ]} />
-      <div id="paper-word2vec-original" className="not-prose mt-8 scroll-mt-24"><CitationBlock type="paper" citeKey={1} source="Mikolov et al. — Efficient Estimation of Word Representations" href="https://arxiv.org/abs/1301.3781">CBOW와 Skip-gram을 큰 corpus에서 효율적으로 학습하는 구조를 제안한 원 연구입니다. 논문의 analogy 결과가 모든 언어에서 같은 window recipe를 정당화하지는 않습니다.</CitationBlock></div>
-    </section>
-    <CodeSidebar
-      codeRefKey={sidebar.codeRefKey}
-      codeRef={sidebar.codeRef}
-      onClose={sidebar.close}
-      onNavigate={sidebar.navigate}
-      codeRefs={codeRefs}
-      fileTrees={{ torch: word2vecTree }}
-      projectMetas={{
-        torch: {
-          id: "torch",
-          label: "PyTorch · Python",
-          badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
-        },
-      }}
-    />
-  </div>;
-}
+<AlgorithmBlock title="가운데 위치에서 이웃 쌍을 만드는 설명용 절차" input={["번호열 ids=[1,3,2,3,4], 중심 위치 t=2, 실제 반경 r=1","이 절은 중심 단어를 입력으로 두는 방향"]} steps={[{code:"j를 max(0,t−r)부터 min(4,t+r)까지 순회",note:"문장 안의 위치만 남깁니다."},{code:"j=t이면 건너뛰기",note:"동일 위치를 자기 이웃으로 삼지 않습니다."},{code:"(입력=ids[t], 출력=ids[j], 위치=t,j)를 한 건 기록",note:"같은 ID라도 위치가 다르면 별도의 건으로 남깁니다."}]} output="(2,3; 위치 2,1), (2,3; 위치 2,3)"/>
+<div className={prose}><p>같은 위치를 건너뛰는 것과 같은 단어를 금지하는 것도 다릅니다. 위치 1의 saw에서 두 칸을 보면 위치 3의 saw를 만납니다. 서로 다른 위치이므로 saw→saw 쌍이 생길 수 있습니다. 이 절차는 단어 뜻이나 품사를 해석해 이웃을 고르는 규칙이 아닙니다.</p></div></section>
+<section id="window" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">10. 가까운 이웃이 더 자주 선택되는 이유</h2><div className={prose}><p>최대 반경 2에서 이번 반경을 1 또는 2로 같은 확률로 뽑는 모형을 생각하겠습니다. 가운데 cat 바로 옆의 saw는 어느 반경에서도 들어옵니다. 두 칸 떨어진 red와 dog는 반경 2에서만 들어오므로 각각 절반의 확률로 포함됩니다. 확률을 계산하는 대상은 실제로 존재하는 이웃 위치입니다.</p></div>
+<ExplainedFormula question="최대 반경 c에서 거리 δ인 이웃의 포함 확률은 얼마인가요?" idea={<p>가능한 반경 c개 중 이웃에 닿는 값은 δ부터 c까지입니다. 이 개수를 전체 경우의 수로 나눕니다.</p>} formula={String.raw`r\sim\mathrm{Unif}\{1,\ldots,c\},\quad P(r\ge\delta)=\frac{c-\delta+1}{c}`} annotatedFormula={String.raw`\begin{aligned}P(r\ge\delta)&=\frac{\overbrace{c-\delta+1}^{\text{이웃에 닿는 반경 수}}}{\underbrace{c}_{\text{균일한 전체 반경 수}}}\\c=2:\quad P(r\ge1)&=1,\quad P(r\ge2)=\tfrac12\\c=5:\quad P(r\ge3)&=\tfrac{5-3+1}{5}=\tfrac35\end{aligned}`} operations={[{expression:String.raw`r\ge\delta`,annotation:["뽑은 반경이 이웃까지 닿는지","포함 조건을 비교"]},{expression:String.raw`(c-\delta+1)/c`,annotation:["포함하는 반경 수를","전체 반경 수로 나눔"]}]} terms={[{symbol:"c",name:"최대 반경",description:"양의 정수입니다."},{symbol:"r",name:"실제 반경",description:"1부터 c까지 균일하게 뽑는다고 가정합니다."},{symbol:String.raw`\delta`,name:"위치 사이의 거리",description:"이번 번호열에서 실제 이웃까지의 거리이며 1≤δ≤c입니다."}]} assumptions={["균일 반경 모형의 확률입니다. 모든 구현의 유한 난수열이 독립 균일이라는 주장은 아닙니다.","문장 경계 밖의 가상 이웃에는 적용하지 않습니다."]} interpretation="c=5이면 거리 1·3·5의 포함 확률은 각각 1·3/5·1/5입니다. 가까움을 더 자주 관찰하는 규칙이지 문법적 관계의 보장은 아닙니다."/>
+<div className={prose}><p>c=4라면 거리별 기대 비율은 1, 3/4, 1/2, 1/4입니다. 검증 실험에서는 초기 난수 상태를 기록하고 반경을 많이 뽑아 히스토그램을 만듭니다. 각 거리의 포함 횟수를 뽑은 횟수로 나누되, 실제 문장으로 검증할 때는 해당 거리의 이웃이 존재하는 위치만 비교해야 합니다. 문장 끝에서 이웃이 없던 경우까지 섞으면 반경 선택과 경계 효과를 혼동합니다.</p></div></section>
+<section id="paper-word2vec-original" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">11. 원 논문의 그림과 식에 같은 cat을 넣습니다</h2><div className={prose}><p>첫 Word2Vec 논문의 §3.2와 5쪽 그림 1은 현재 단어를 입력에 놓고 주변 단어를 출력에 놓습니다. 원문의 짧은 표현은 <q>R words from history</q>입니다. 이어 미래 방향에서도 R개를 사용한다고 설명합니다. 우리 cat에 R=1을 넣으면 좌우 saw 두 위치, R=2를 넣으면 red와 dog까지 네 위치입니다. 문장 끝에서는 가능한 이웃만 남으므로 언제나 2R개라는 뜻은 아닙니다.</p>
+<p>후속 논문 §2의 식 (2)는 두 역할의 벡터를 실제로 분리해 씁니다. 식 안의 점수 <code>(v′wO)ᵀ vwI</code>에서 입력 단어 wI=cat, 출력 단어 wO=saw를 대입하면 (0,1,2)·(1,2,0)=2입니다. 원문은 이 점수를 지수 함수와 전체 후보의 합으로 바꿔 확률을 만듭니다. 여기서는 같은 2가 어느 두 행에서 나온 값인지까지 확인하며, 확률 계산은 다음 예측 목적 글로 이어집니다.</p></div>
+<CitationBlock source="Mikolov 외, Efficient Estimation… v3, §3.2, 4–5쪽과 그림 1" citeKey={1} href="https://arxiv.org/pdf/1301.3781v3"><p>반경 R을 뽑아 가까운 위치를 더 자주 쓰는 설계와 중심→이웃 방향을 확인합니다. 특정 반경이나 analogy 실험 결과를 모든 언어의 최적 선택으로 확대하지 않습니다.</p></CitationBlock>
+<CitationBlock source="Mikolov 외, Distributed Representations… v1, §2 식 (2), 3쪽" citeKey={2} href="https://arxiv.org/pdf/1310.4546v1"><p>입력 벡터와 출력 벡터를 구분한 원문 점수입니다. 같은 쪽 §2.1은 계층형 출력의 벡터가 단어별 출력 행이 아니라 내부 노드에 속함을 명시합니다.</p></CitationBlock></section>
+<section id="pytorch-lookup" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">12. 실제 PyTorch는 0을 곱하지 않고 행을 선택합니다</h2><div className={prose}><p>PyTorch v2.13.0의 원문을 고정해 읽겠습니다. <code>Embedding.forward</code>는 입력 ID와 표를 <code>F.embedding</code>에 넘깁니다. 추가 정규화가 없는 기본 조건에서는 이것이 <code>torch.embedding</code>으로 이어집니다. 아래 세 파일은 생략하거나 다시 쓴 예제가 아닌 해당 버전의 전체 원문입니다.</p></div>{code("module")}{code("functional")}{code("onehot-as-gather")}<div className={prose}><p>원본 <code>Embedding.cpp</code>의 <code>embedding_symint</code>는 ID가 1차원일 때 <code>weight.index_select(0, indices)</code>를 반환합니다. indices=[2,3,3]을 넣는다고 읽으면 0번 축의 세 행 W[2], W[3], W[3]을 이 순서로 골라 [1,2,0], [0,1,1], [0,1,1]을 얻습니다. 같은 ID를 두 번 요청하면 출력에도 두 번 나타납니다. 여기서는 원문에 값을 대입해 추적했으며 PyTorch 전체 빌드를 실행한 결과라고 주장하지 않습니다.</p>
+<p>행을 골라 읽는다고 기울기가 항상 희소 형식으로 저장되는 것은 아닙니다. 기본값 <code>sparse=False</code>에서는 역방향 계산이 밀집 기울기 경로를 택합니다. <code>sparse=True</code>가 별도 선택입니다. 또 <code>max_norm</code>을 지정하면 조회 전에 표의 행을 제자리에서 줄일 수 있으므로 7절의 고정 표와 같은 결과를 비교하려면 <code>max_norm=None</code> 조건을 지켜야 합니다.</p></div></section>
+<section id="source-sentence" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">13. 저자 C 코드가 실제 문장을 읽는 방법</h2><div className={prose}><p>저자 공개 저장소의 commit <code>20c129af</code>를 고정했습니다. <code>ReadWord</code>는 공백과 탭, 줄바꿈을 경계로 읽습니다. 가정한 문장 파일을 이 실제 함수에 넣자 red, saw, cat, saw, dog, <code>&lt;/s&gt;</code> 순서로 나왔습니다. 이 단순 규칙이 한국어 형태소나 모든 문장 부호를 자동으로 처리한다는 뜻은 아닙니다.</p></div>{code("reader")}<div className={prose}><p>관찰 실험에서는 앞의 번호표를 직접 넣고 빈도에 따른 단어 제거를 껐습니다. <code>TrainModelThread</code>의 문장 배열에는 [1,3,2,3,4]가 들어갑니다. 단어 번호 0인 문장 끝을 만나면 배열 채우기를 멈춥니다. 원본의 <code>min_count=5</code> 같은 기본값으로 이 작은 문장을 그대로 학습하면 단어가 제거될 수 있어, 실험 조건과 기본 실행을 구별했습니다.</p>
+<p>일반 실행에서는 드문 단어가 목록에서 빠지거나 자주 나오는 단어의 일부 출현이 제거될 수 있습니다. 원문은 남은 단어를 배열에 붙여 넣은 뒤 그 배열에서 거리를 셉니다. 가정한 문장에서 가운데 cat만 제거되면 [red,saw,saw,dog]가 되어 두 saw의 거리가 2에서 1로 줄어듭니다. 제거 전 문장의 거리를 그대로 쓰는 구현과 다른 쌍을 만들 수 있습니다.</p></div>{code("sentence")}</section>
+<section id="source-pair" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">14. C 구현에서는 saw가 입력이고 cat이 대상입니다</h2><div className={prose}><p>원본의 Skip-gram 분기를 보면 <code>word</code>는 현재 위치의 cat이고 <code>last_word</code>는 이웃 saw입니다. 그런데 입력 행의 시작은 <code>l1 = last_word * layer1_size</code>로 정합니다. 즉 이웃의 W[3]을 읽습니다. 양의 예측 대상은 <code>target = word</code>로 정하므로 cat의 U[2]입니다. 논문 그림의 중심→이웃 방향과 반대입니다. 이 경로의 <code>syn0</code>를 본문의 W, <code>syn1neg</code>를 U에 대응시킵니다.</p></div>{code("skip-pair")}{code("positive-score")}<div className={prose}><p>가정한 길이 3을 대입하면 입력 행의 시작은 3×3=9, 출력 행의 시작은 2×3=6입니다. 점수 반복문은 W[3]=[0,1,1]과 U[2]=[2,0,1]을 곱해 더하므로 1입니다. 논문 방향의 점수 2를 이 소스의 현재 쌍 점수라고 적으면 잘못된 추적이 됩니다. 이 계산은 원문 점수식에 표를 대입한 것으로, 다음 관찰 실행에서 학습을 켰다는 뜻은 아닙니다.</p>
+<p>실제 관찰 실행은 원문의 쌍 선택 지점에 출력문 한 줄만 더하고 학습 목적 두 가지와 단어 제거를 껐습니다. 하나의 스레드로 돌려 중심 위치 2에서 <code>from=3 to=2</code>가 두 번 나오는 것을 확인했습니다. 전체 다섯 위치에서는 10쌍이 나왔고 W의 값은 그대로였습니다. 번호 선택과 방향을 확인하는 실행이며 좋은 단어 벡터를 학습했다는 실험은 아닙니다.</p>
+<p>원문 C와 관찰용 호출 파일을 함께 보존했습니다. macOS에서 함수 이름 하나를 지원되는 동등한 입력 함수로 연결하는 컴파일 옵션을 사용했습니다. 학습을 끈 조건, 넣은 표와 번호 목록, 컴파일 옵션, 출력 기록을 함께 남겨 관찰 범위를 다시 확인할 수 있게 했습니다.</p></div>{code("observation")}</section>
+<section id="random-boundary" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">15. 난수의 출발값만 같아서는 부족합니다</h2><div className={prose}><p>원본은 정수 상태를 갱신한 뒤 <code>b = next_random % window</code>를 계산합니다. 실제 반경은 <code>window − b</code>입니다. 관찰 실험에서는 64비트 상태를 0에서 시작하고 위치마다 한 번만 갱신했습니다. 최대 반경 2에서 실제 반경은 [1,2,1,2,1]이었고 위치별 쌍 수는 [1,3,2,3,1]로 합쳐 10이었습니다.</p></div>{code("random-window")}<div className={prose}><p>이 원문 난수열을 10절의 독립 균일 추출과 같다고 가정하면 안 됩니다. 이 실험의 최대 반경 2에서는 정수의 홀짝이 번갈아 나와 반경도 번갈아 바뀝니다. 포함 확률의 수학 모형과 특정 구현에서 관찰한 유한 순서를 구분해야 합니다.</p>
+<p>정상 학습에서 단어 제거와 예측 대상 추출을 켜면 그 기능들도 같은 상태를 갱신합니다. 반경을 뽑기 전에 소비한 횟수가 달라져 이후 반경도 바뀔 수 있습니다. 따라서 이 10쌍 관찰을 학습 기능을 켠 실행의 쌍 순서라고 재사용할 수 없습니다. 스레드 수는 읽기 시작 위치와 처리 분량에도 영향을 줍니다. 초기값과 함께 코드, 설정, 상태를 소비하는 순서를 확인해야 합니다.</p></div></section>
+<section id="pairs" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">16. 두 실행의 쌍이 다르면 앞에서부터 비교합니다</h2><div className={prose}><p>같은 학습 사례를 다시 만들려면 결과 쌍뿐 아니라 만드는 조건을 기록해야 합니다. 이 글의 경우 원문 문장 바이트와 줄바꿈, 번호 목록 [끝,red,cat,saw,dog], 최대 반경 2, 단어 제거와 학습 목적 비활성, 단일 스레드와 시작 상태 0이 한 묶음입니다. 코드 버전도 이 조건의 일부입니다.</p>
+<p>기록을 네 묶음으로 나누어 확인할 수 있습니다. 먼저 본문 자료와 문장 경계를 확인합니다. 다음으로 단어를 나누는 규칙과 번호표를 비교합니다. 세 번째는 반경과 단어 제거 규칙입니다. 마지막으로 실제 코드 버전, 스레드 구성, 난수 상태와 소비 순서를 봅니다. 완성된 번호열이 다르면 반경 설정부터 의심할 이유가 없습니다.</p>
+<p>번호열까지 같은데 쌍 수가 다르면 각 위치에서 뽑은 반경과 남긴 이웃 위치를 비교합니다. 수가 같아도 충분하지 않습니다. cat→saw 두 번과 saw→cat 두 번은 건수가 같지만 방향이 다릅니다. 각 쌍의 두 ID, 원래 위치, 처리 순서를 정해진 형식으로 기록한 뒤 해시를 비교하고, 처음 달라진 표본을 열어 보는 편이 원인을 좁히기 쉽습니다.</p></div></section>
+<section id="release-check" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">17. 번호표만 바뀌면 맞는 크기의 표도 틀린 값을 냅니다</h2><div className={prose}><p>cat과 saw의 번호만 맞바꾸고 수의 표를 그대로 둔다고 해 보겠습니다. cat의 새 번호 3은 [1,2,0]이 아니라 W[3]=[0,1,1]을 읽습니다. 표의 크기는 여전히 5×3이라 크기 검사만으로는 이 오류를 잡지 못합니다. 번호를 바꿀 때는 입력과 출력의 두 표에서도 해당 행을 함께 옮겨야 합니다.</p>
+<p>배포할 때 번호표와 양쪽 표의 버전·체크섬을 함께 묶고, cat 같은 표본 단어가 실제로 어느 행을 읽는지 확인합니다. 서로 맞지 않으면 새 조합을 내보내지 않고 검증된 이전 번호표·표 묶음으로 복구합니다. 출력에 어느 표를 사용할지 정한 설정도 함께 되돌려야 합니다.</p>
+<p>동일한 쌍을 재생한다고 약속한 실행에서 쌍의 해시가 달라진 경우도 먼저 배포를 멈춥니다. 처음 달라진 위치의 입력, 반경, 방향을 비교해 바뀐 코드나 자료의 버전, 변경 이력과 담당자를 확인합니다. 재현이 확인된 이전 자료·코드·번호표·설정 묶음이 복구 기준입니다. 다만 같은 쌍의 재현과 최종 학습 가중치의 비트 단위 동일성은 다른 요구입니다. 병렬 갱신 순서나 수치 계산 조건까지 같다고 확인한 것은 아닙니다.</p></div></section>
+<section id="limits" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">18. 행을 읽었다고 단어의 뜻을 이해한 것은 아닙니다</h2><div className={prose}><p>가정한 표의 값은 직접 골랐으므로 의미의 좋고 나쁨을 평가할 근거가 없습니다. 실제로는 많은 문장에서 선택한 쌍이 표를 어떻게 바꾸는지 확인해야 합니다. 가까이 등장한다는 관찰도 동의어 정답은 아닙니다. 문장 위치를 고르는 규칙이 언어의 모든 관계를 포착하지는 못합니다.</p>
+<p>단어마다 고정된 행 하나를 읽는 방법은 같은 단어의 다른 용법을 그 순간의 문맥에 맞춰 새 벡터로 만들지 않습니다. 목록에 없는 단어도 그대로는 조회할 수 없습니다. <a href="/cs/ai/subword-static-embeddings">단어를 더 작은 조각으로 나누는 방법</a>은 이 경계를 다른 방식으로 다룹니다. 먼저 <a href="/cs/ai/word2vec-prediction-objectives">선택한 행으로 예측을 만드는 방법</a>을 읽고 이어 <a href="/cs/ai/word2vec-negative-sampling">일부 비교 대상으로 학습 비용을 줄이는 방법</a>으로 넘어갈 수 있습니다.</p></div><ContentBoundary article="word2vec"/></section>
+<section id="review" data-teach-level="8" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">19. 같은 문장에서 다음 결과를 예측해 보세요</h2><div className={prose}><ol><li>cat에서 반경 1로 만든 쌍의 중복을 지우면 몇 건이 남으며 원래 어떤 정보가 사라지나요? (답: 9절)</li><li>가정한 표로 저자 C 구현의 가운데 쌍을 계산하면 왜 2가 아니라 1인가요? (답: 14절)</li><li>번호표의 cat과 saw만 맞바꾸었는데 표 크기는 그대로입니다. cat은 어떤 행을 읽고 무엇을 함께 복구해야 하나요? (답: 17절)</li></ol></div></section>
+<CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{}}/>
+</div>;}

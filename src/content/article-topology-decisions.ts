@@ -1865,6 +1865,27 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "같은 abc를 바이트·패딩·첫 라운드·원문·공격 경계에 반복 대입해야 SHA-256과 SHA-3의 역할 및 보장 조건을 연결할 수 있습니다. 트리의 상세 경로는 별도 정본으로 이어집니다.",
     "sharedGate": "실제 compact의 8입력·pad/read_state 위치·독립 순열 모형과 hashlib 및 로컬 길이 확장을 대조했습니다. 전체 라이브러리·CPU dispatch·실제 keccak 의존성·성능 검증을 구분합니다."
   },
+  "ai/word2vec": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "문장에서 위치를 선택한 뒤 ID로 행을 읽어야 하나의 학습 쌍이 됩니다. 동일한 다섯 단어로 번호·역할·반경·실제 C의 방향을 연결하므로 이 앞단을 한 글에 유지합니다. 예측 목적의 미분과 음의 표본 학습은 기존 정본 두 글에서 확장합니다.",
+    "sharedGate": "[1,3,2,3,4]에서 가운데의 saw 두 출현, W2·U3=2와 W3·U2=1, 실제 반경 [1,2,1,2,1]의 10쌍, 30개 수와 120바이트, 균일 거리 확률을 본문·Viz·원문·6+4에서 대조합니다."
+  },
+  "ai/attention-kernel-anatomy-and-backends": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "동일한 여덟 위치의 평균 4.5를 인과 조각·분할 합치기·메모리 장부·실제 구현 선택까지 추적하는 한 계약입니다. FA2·FA3와 엔진 선택의 독립 하드웨어 상세는 정본으로 연결하며 사례의 출력 조건과 비용 경계를 한 글에서 대조합니다.",
+    "sharedGate": "8위치 d2, 16/10/6조각, 40밀집칸/36연결, 비인과 512FLOP와128/320B, 부분 평균의3/8·3/8·2/8, vLLM 자동B/명시A예외, Triton36/21/9/0을6+4·본문·3장면·13패널에서 대조합니다."
+  },
+  "crypto/poseidon-hash": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 두 수를 작은 라운드·역변환·혼합·출력·실제 원문·제약 실패에 반복 대입해 구성요소의 성질과 프로토콜의 보장 조건을 연결합니다. 스펀지 일반론은 기존 해시 정본으로 이어집니다.",
+    "sharedGate": "289개 작은 입력의 전수 대조와 선택 Rust 원문 5입력·두 변형·최적화 전후·압축 및 독립 모형을 확인합니다. 실제 회로·증명·성능·보안과 후속 PDF 미열람 범위를 명시합니다."
+  },
 };
 
 /**
@@ -1872,6 +1893,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/attention-kernel-anatomy-and-backends": "e7b8a70c42ffff14",
+  "ai/word2vec": "512dc5c5ab18c0ae",
+  "crypto/poseidon-hash": "223b2a56fc42e440",
   "ai/fft": "4a26bb91107c906e",
   "crypto/hash-theory": "a5cd8d47bbd208bc",
   "ai/cross-entropy": "a23db07aab820d12",
@@ -1997,7 +2021,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "business/shop-fitout-and-opening": "127d2cc59ed4cc75",
   "business/shop-site-selection": "dd6073120b5a9bef",
   "business/shop-unit-economics": "166b07c61126231c",
-  "business/supply-chain-bargaining": "9ac935b509088b19",
+  "business/supply-chain-bargaining": "4bab0e073d9f87c8",
   "institutions/healthcare-payment-systems": "2e1ca0897a7b1151",
   "institutions/how-to-read-a-country": "436b348e745e7179",
   "institutions/insurance-risk-pooling": "930b27098a1a795e",
@@ -2007,10 +2031,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "markets/funds-etfs-and-etns": "d737fae21c67e16f",
   "markets/options-and-asymmetric-payoffs": "e7ea53156ed34514",
   "markets/swaps-and-credit-risk": "c1add7c3c5db9fb9",
-  "property/commercial-lease-and-rent": "985d12575d5f4613",
+  "property/commercial-lease-and-rent": "6920decfee0e31b4",
   "property/land-development-residual": "53cae6351af0bb2b",
   "property/shop-closure-and-restoration": "245f0e685b2d2555",
-  "property/shop-transfer-and-goodwill": "6726bfcc1b276675",
+  "property/shop-transfer-and-goodwill": "3a14db592c004de0",
   "risk/margin-collateral-and-leverage": "9e95bb842afc2ebf",
   "macro/what-ricardo-assumed": "6566e07f66c31f32",
   "macro/who-counts-as-unemployed": "0e99dde8bd38dd55",

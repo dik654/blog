@@ -293,7 +293,48 @@ export const businessArticles: Article[] = [
     slug: "supply-chain-bargaining",
     title: "공급망의 힘은 공장 소유보다 규격·주문·판매처를 쥔 곳에 생긴다",
     subcategory: "business-network",
-    sections: [{"id": "overview", "title": "만든 사람과 가격을 정하는 사람이 왜 다른가"}, {"id": "black-box", "title": "만드는 곳, 옮기는 곳, 고객을 만나는 곳을 연결한다"}, {"id": "case", "title": "손님이 낸 100달러와 공장 출하 60달러를 구분한다"}, {"id": "picture", "title": "국경 화살표와 새로 더한 몫을 따로 표시한다"}, {"id": "need", "title": "대체할 수 없는 역할이 계약의 가격을 바꾼다"}, {"id": "names", "title": "단계별 가치와 대체 가능성에 이름을 붙인다"}, {"id": "mechanism", "title": "통제 지점을 찾으면 이익이 어디에 남는지 보입니다"}, {"id": "source", "title": "OECD 통계가 분리하려는 것은 수출액 안의 출처다"}, {"id": "comparison", "title": "국가의 산업정책도 같은 권한 지도를 바꿉니다"}, {"id": "limits", "title": "공급망 재편이 곧 한 국가의 승리라는 결론은 빠릅니다"}],
+    sections: [
+  {
+    "id": "overview",
+    "title": "1. 만든 사람과 가격을 정하는 사람이 왜 다른가"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 만드는 곳, 옮기는 곳, 고객을 만나는 곳을 연결한다"
+  },
+  {
+    "id": "case",
+    "title": "3. 손님이 낸 100달러와 공장 출하 60달러를 구분한다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 국경 화살표와 새로 더한 몫을 따로 표시한다"
+  },
+  {
+    "id": "need",
+    "title": "5. 대체할 수 없는 역할이 계약의 가격을 바꾼다"
+  },
+  {
+    "id": "names",
+    "title": "6. 단계별 가치와 대체 가능성에 이름을 붙인다"
+  },
+  {
+    "id": "mechanism",
+    "title": "7. 통제 지점을 찾으면 이익이 어디에 남는지 보입니다"
+  },
+  {
+    "id": "source",
+    "title": "8. OECD 통계가 분리하려는 것은 수출액 안의 출처다"
+  },
+  {
+    "id": "comparison",
+    "title": "9. 국가의 산업정책도 같은 권한 지도를 바꿉니다"
+  },
+  {
+    "id": "limits",
+    "title": "10. 공급망 재편이 곧 한 국가의 승리라는 결론은 빠릅니다"
+  }
+],
     component: () => import("@/pages/articles/business/supply-chain-bargaining"),
   },
 ];

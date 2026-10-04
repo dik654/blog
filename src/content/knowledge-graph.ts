@@ -382,37 +382,33 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/distributional-semantics#neural-approach",
   },
   "word-embedding-lookup": {
-    id: "word-embedding-lookup",
-    domain: "machine-learning",
-    label: "Word embedding lookup",
-    definition:
-      "Vocabulary ID가 가리키는 trainable matrix row를 dense word vector로 읽는 연산으로, one-hot vector와 matrix의 곱을 sparse index access로 계산한 것과 같습니다.",
-    canonicalHref: "/cs/ai/word2vec#overview",
+    "id": "word-embedding-lookup",
+    "domain": "machine-learning",
+    "label": "Word embedding lookup",
+    "definition": "번호는 뜻의 크기가 아니라 수를 보관한 행의 주소입니다. 번호와 행의 대응을 함께 바꿔야 합니다. PyTorch max_norm=None의 고정 표 조회를 sparse gradient 저장 형식과 구별합니다.",
+    "canonicalHref": "/cs/ai/word2vec#lookup"
   },
   "word2vec-dual-embedding-table": {
-    id: "word2vec-dual-embedding-table",
-    domain: "machine-learning",
-    label: "Word2Vec dual embedding table",
-    definition:
-      "같은 vocabulary ID도 center 역할에서는 input table W를, context·target 역할에서는 별도 output table W′를 읽고 서로 다른 gradient로 갱신하는 parameter boundary입니다.",
-    canonicalHref: "/cs/ai/word2vec#dual-tables",
+    "id": "word2vec-dual-embedding-table",
+    "domain": "machine-learning",
+    "label": "Word2Vec dual embedding table",
+    "definition": "입력과 예측 대상이 같은 단어라도 서로 다른 역할의 표에서 행을 읽습니다. 항상 값이나 기울기가 달라야 한다는 뜻은 아닙니다. 단어별 두 표 설명과 계층형 출력의 내부 노드 벡터를 구별하며 원문 C의 중심/입력 방향도 확인합니다.",
+    "canonicalHref": "/cs/ai/word2vec#dual-tables"
   },
   "word-context-pair-sampling-receipt": {
-    id: "word-context-pair-sampling-receipt",
-    domain: "machine-learning",
-    label: "Word–context pair sampling receipt",
-    definition:
-      "Corpus·tokenizer·vocabulary·sentence boundary·window draw·frequency filter·random seed를 함께 versioning해 같은 positive training-pair population을 재현하는 artifact contract입니다.",
-    canonicalHref: "/cs/ai/word2vec#pairs",
+    "id": "word-context-pair-sampling-receipt",
+    "domain": "machine-learning",
+    "label": "Word–context pair sampling receipt",
+    "definition": "같은 쌍을 다시 만들려면 문장과 번호표뿐 아니라 선택 규칙과 실행 조건을 함께 남깁니다. 정상 학습에서 난수 소비 순서와 스레드 구성이 달라지면 같은 시작 상태만으로 같은 쌍을 보장하지 않습니다. 쌍 재생과 최종 가중치의 비트 단위 재현도 다른 요구입니다.",
+    "canonicalHref": "/cs/ai/word2vec#pairs"
   },
   "dynamic-context-window": {
-    id: "dynamic-context-window",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Dynamic context window",
-    definition:
-      "정해진 최대 반경 안에서 example마다 실제 window radius를 sampling해 가까운 word pair가 먼 pair보다 더 자주 학습되게 하는 Word2Vec sampling 방법입니다.",
-    canonicalHref: "/cs/ai/word2vec#window",
+    "id": "dynamic-context-window",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Dynamic context window",
+    "definition": "가까운 위치는 작은 반경에도 들어오므로 더 자주 관찰할 수 있습니다. 실제로 존재하는 이웃에 적용하는 균일 모형입니다. 단어 제거 뒤의 위치와 문장 경계를 확인하며 특정 유한 난수열을 독립 균일 추출로 단정하지 않습니다.",
+    "canonicalHref": "/cs/ai/word2vec#window"
   },
   "cbow-objective": {
     id: "cbow-objective",
@@ -14780,11 +14776,46 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "알고리즘·버전·바이트 형식·suffix·출력 길이를 고정하고 알려진 결과·경계 입력·스트리밍·실패 사례를 대조하는 절차입니다. 함수 일부의 실행과 대체 형식·독립 모형·전체 라이브러리 및 성능 검증을 구별해 기록합니다.",
     "canonicalHref": "/cs/crypto/hash-theory#verification"
   },
-  "poseidon-parameter-profile": { id: "poseidon-parameter-profile", kind: "concept", domain: "computer-science", label: "Poseidon field · width · round parameter profile", definition: "Prime modulus p, state width t, rate/capacity, S-box exponent α, full/partial round counts, round constants와 MDS matrix를 하나의 versioned instance로 고정하는 Poseidon parameter 계약입니다.", canonicalHref: "/cs/crypto/poseidon-hash#profile" },
-  "poseidon-hades-round-schedule": { id: "poseidon-hades-round-schedule", kind: "method", domain: "computer-science", label: "Poseidon HADES full · partial round schedule", definition: "초기·마지막 full rounds에서는 모든 state words에 S-box를 적용하고 중간 partial rounds에서는 한 word에만 적용한 뒤 매 round linear mixing해 algebraic attacks margin과 circuit cost를 맞바꾸는 schedule입니다.", canonicalHref: "/cs/crypto/poseidon-hash#rounds" },
-  "poseidon-power-sbox-permutation-condition": { id: "poseidon-power-sbox-permutation-condition", kind: "theorem", domain: "mathematics", label: "Poseidon power S-box permutation condition", definition: "Prime field Fp에서 x↦x^α가 bijection이 되려면 multiplicative group order p−1과 α가 coprime이어야 하며 inverse exponent α⁻¹ mod(p−1)가 존재한다는 조건입니다.", canonicalHref: "/cs/crypto/poseidon-hash#rounds" },
-  "poseidon-mds-diffusion-layer": { id: "poseidon-mds-diffusion-layer", kind: "concept", domain: "mathematics", label: "Poseidon MDS diffusion layer", definition: "Invertible MDS matrix를 state vector에 곱해 작은 수의 active input coordinates가 다음 rounds의 여러 coordinates로 퍼지도록 하며 S-box schedule과 함께 differential/algebraic security를 구성하는 linear layer입니다.", canonicalHref: "/cs/crypto/poseidon-hash#rounds" },
-  "poseidon-release-gate": { id: "poseidon-release-gate", kind: "method", domain: "computer-science", label: "Poseidon parameter · implementation release gate", definition: "Parameter artifact hash와 field/width/round/constants/MDS/domain을 고정하고 official vectors·permutation inverse·wrong profile·byte-to-field ambiguity·native/circuit parity 뒤 constraints/time/memory를 비교하는 채택 절차입니다.", canonicalHref: "/cs/crypto/poseidon-hash#release" },
+  "poseidon-parameter-profile": {
+    "id": "poseidon-parameter-profile",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Poseidon의 체·라운드·입출력 설정",
+    "definition": "체·폭·S-box 지수·라운드 순서와 수·상수·혼합 행렬 및 출력·바이트·용도 규칙을 함께 고정해야 재현 가능한 함수를 정의합니다. Poseidon과 Poseidon2, 논문의 예시 설정과 실제 고정 소스의 설정은 서로 구별해야 합니다.",
+    "canonicalHref": "/cs/crypto/poseidon-hash#profile"
+  },
+  "poseidon-hades-round-schedule": {
+    "id": "poseidon-hades-round-schedule",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Poseidon의 전체·부분 라운드",
+    "definition": "HADES는 양끝에서 모든 상태 칸을 비선형으로 바꾸고 가운데에서 지정한 한 칸만 바꾸며 각 라운드에서 전체 상태를 혼합합니다. 직접 이차 곱셈 제약의 절약은 실제 전체 회로 비용이나 같은 S-box 개수의 다른 라운드 구성에 대한 안전성 보존과 다릅니다.",
+    "canonicalHref": "/cs/crypto/poseidon-hash#partial"
+  },
+  "poseidon-power-sbox-permutation-condition": {
+    "id": "poseidon-power-sbox-permutation-condition",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "거듭제곱 순열의 역지수 조건",
+    "definition": "소수체 Fp에서 양의 거듭제곱 x→x^α가 순열이 될 조건은 gcd(α,p−1)=1입니다. 비영 원소의 순환군에서 역지수로 복원하고 0도 고정되며, 이 구성요소의 가역성만으로 전체 해시의 안전성을 보장하지 않습니다.",
+    "canonicalHref": "/cs/crypto/poseidon-hash#inverse"
+  },
+  "poseidon-mds-diffusion-layer": {
+    "id": "poseidon-mds-diffusion-layer",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "선형 혼합의 분기 수와 MDS 조건",
+    "definition": "MDS 선형 혼합은 모든 비영 차이에서 입력·출력의 비영 칸 수 합이 적어도 t+1이며 모든 정사각 부분행렬의 가역성과 대응합니다. 전체 행렬식만의 가역성 검사보다 강하고, 다중 라운드의 불변 부분공간 경로 및 공격 분석은 추가로 검토해야 합니다.",
+    "canonicalHref": "/cs/crypto/poseidon-hash#diffusion"
+  },
+  "poseidon-release-gate": {
+    "id": "poseidon-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Poseidon 구현과 증명 관계의 검증 범위",
+    "definition": "버전·원문·설정을 고정해 알려진 출력과 경계 입력·다른 구현을 대조하고, 실제 증명 회로의 중간값 연결과 입력 범위를 확인하는 절차입니다. 원문 일부 실행·독립 모형·작은 전수 검사와 전체 패키지·증명·성능·보안 검증을 구분해 기록합니다.",
+    "canonicalHref": "/cs/crypto/poseidon-hash#verification"
+  },
   "rust-hash-streaming-contract": { id: "rust-hash-streaming-contract", kind: "concept", domain: "computer-science", label: "Rust hash streaming update · finalize contract", definition: "Init·여러 update chunks·finalize가 one-shot hashing과 같은 digest를 내고 finalize/reset/clone ownership, input bytes와 error behavior를 타입·test로 고정하는 구현 계약입니다.", canonicalHref: "/cs/blockchain/impl-hash-commitment#hash-api" },
   "field-hash-byte-serialization-boundary": { id: "field-hash-byte-serialization-boundary", kind: "concept", domain: "computer-science", label: "Field hash byte · element serialization boundary", definition: "Arbitrary bytes를 field elements로 pack할 때 chunk width·endianness·length/final delimiter와 values<p canonical check를 고정해 서로 다른 byte strings가 같은 field-element sequence로 해석되지 않게 하는 경계입니다.", canonicalHref: "/cs/blockchain/impl-hash-commitment#poseidon-api" },
   "merkle-leaf-inner-prefix-contract": { id: "merkle-leaf-inner-prefix-contract", kind: "concept", domain: "computer-science", label: "Merkle leaf · inner-node prefix contract", definition: "Leaf hash와 inner hash 입력에 서로 다른 type prefix와 canonical child order를 넣어 leaf bytes가 internal-node preimage로 재해석되는 structural ambiguity를 막는 tree hashing 계약입니다.", canonicalHref: "/cs/blockchain/impl-hash-commitment#merkle-api" },
@@ -17219,67 +17250,101 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/gpu/cutlass-collectives-and-tile-schedulers#autotuning",
   },
   "attention-kernel-stage-anatomy": {
-    id: "attention-kernel-stage-anatomy",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Attention kernel · QK matmul · PV matmul",
-    aliases: ["Attention Kernel", "QK Matmul", "PV Matmul", "Attention kernel stages"],
-    definition: "Q, K, V 를 받아 softmax(QKᵀ/√d)V 를 계산하는 GPU kernel 로, tile 마다 QK matmul(점수 tile 생성), softmax(scale·mask·지수·행 합), PV matmul(확률 tile 과 V 의 곱을 출력 누적에 더함) 세 단계가 차례로 일어나며 두 matmul 은 tensor core, 지수는 special function unit 이 맡습니다.",
-    canonicalHref: "/cs/ai/attention-kernel-anatomy-and-backends#anatomy",
+    "id": "attention-kernel-stage-anatomy",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Attention kernel · QK matmul · PV matmul",
+    "aliases": [
+      "Attention Kernel",
+      "QK Matmul",
+      "PV Matmul",
+      "Attention kernel stages"
+    ],
+    "definition": "행렬곱 32 FLOP와 지수 4회를 별도 단위로 세고 처리량 예산과 실제 시간을 구별합니다. 지수 호출 한 번을 일반 FLOP 하나와 같은 가격으로 더하지 않습니다. 최고 처리량으로 나눈 예산은 단일 명령 지연이나 실제 kernel 완료시간이 아닙니다.",
+    "canonicalHref": "/cs/ai/attention-kernel-anatomy-and-backends#anatomy"
   },
   "fused-attention-kernel": {
-    id: "fused-attention-kernel",
-    kind: "method",
-    domain: "computer-science",
-    label: "Fused attention kernel · softmax fusion",
-    aliases: ["Fused Attention Kernel", "Softmax Fusion", "Fused attention"],
-    definition: "QK matmul, softmax, PV matmul 을 kernel 세 개가 아니라 하나로 돌려 점수 tile 과 확률 tile 을 register 와 shared memory 에만 두고 HBM 에는 최종 출력만 쓰는 구현으로, softmax 의 scale·mask·지수·행 합을 점수 tile 이 register 에 있는 동안 바로 적용하는 것을 softmax fusion 이라 부릅니다.",
-    canonicalHref: "/cs/ai/attention-kernel-anatomy-and-backends#anatomy",
+    "id": "fused-attention-kernel",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Fused attention kernel · softmax fusion",
+    "aliases": [
+      "Fused Attention Kernel",
+      "Softmax Fusion",
+      "Fused attention"
+    ],
+    "definition": "전체 점수 저장을 줄이는 융합과 부분 출력·LSE·별도 합치기 kernel이 남는 경계를 설명합니다. 융합은 전체 중간 행렬의 왕복을 줄이지만 최종 O만 저장한다는 뜻은 아닙니다. 서로 겹치지 않는 부분과 같은 로그 밑·정규화 계약이 필요합니다.",
+    "canonicalHref": "/cs/ai/attention-kernel-anatomy-and-backends#split-source"
   },
   "causal-attention-kernel-skipping": {
-    id: "causal-attention-kernel-skipping",
-    kind: "method",
-    domain: "computer-science",
-    label: "Causal attention kernel · tile skipping",
-    aliases: ["Causal Attention Kernel", "Causal block skipping", "Causal tile skipping"],
-    definition: "Query 가 자기보다 뒤의 key 를 보지 못하는 mask 를 tile 단위로 적용해 query block 보다 뒤에 있는 K/V block 은 읽지도 곱하지도 않고, 대각선 tile 에서만 원소별 비교를 하는 kernel 로, tile 수와 FLOP 이 절반 가까이 줄고 Q block 사이의 일 편차가 load balancing 문제로 남습니다.",
-    canonicalHref: "/cs/ai/attention-kernel-anatomy-and-backends#causal",
+    "id": "causal-attention-kernel-skipping",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Causal attention kernel · tile skipping",
+    "aliases": [
+      "Causal Attention Kernel",
+      "Causal block skipping",
+      "Causal tile skipping"
+    ],
+    "definition": "미래 조각 생략, 대각선 내부 가림, 길이가 다른 query/key의 위치 정렬을 같은 사례로 계산합니다. 조각 수 감소와 유효 연결 수 감소는 같지 않습니다. 불균등 일감의 이상 배정 모형을 CUDA의 실제 SM 배정 순서로 주장하지 않습니다.",
+    "canonicalHref": "/cs/ai/attention-kernel-anatomy-and-backends#causal"
   },
   "prefill-vs-decode-attention-kernel": {
-    id: "prefill-vs-decode-attention-kernel",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Prefill attention · decode attention regimes",
-    aliases: ["Prefill Attention", "Decode Attention", "Attention Compute Intensity", "Attention Memory Footprint", "Attention arithmetic intensity"],
-    definition: "Prefill attention 은 N 개 query 가 N 개 key 를 보는 kernel 로 byte 당 FLOP 이 N/b 에 비례해 compute-bound 이고, decode attention 은 query 한 행이 KV cache 전체를 읽는 kernel 로 byte 당 FLOP 이 2/b 로 고정되어 memory-bound 이므로, 전자는 Q 축 병렬, 후자는 K/V 축 분할과 부분 결과 병합으로 따로 짭니다.",
-    canonicalHref: "/cs/ai/attention-kernel-anatomy-and-backends#regimes",
+    "id": "prefill-vs-decode-attention-kernel",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Prefill attention · decode attention regimes",
+    "aliases": [
+      "Prefill Attention",
+      "Decode Attention",
+      "Attention Compute Intensity",
+      "Attention Memory Footprint",
+      "Attention arithmetic intensity"
+    ],
+    "definition": "배열 크기와 실제 전송량, 비인과 512 FLOP의 4/1.6 비교, decode와 GQA의 분모를 구별합니다. Footprint는 저장 용량이고 traffic은 이동량입니다. N/b와 2g/b는 해당 최소 장부·재사용 가정의 기준 비율이며 실제 병목이나 지연 상한이 아닙니다.",
+    "canonicalHref": "/cs/ai/attention-kernel-anatomy-and-backends#regimes"
   },
   "flash-attention-generations": {
-    id: "flash-attention-generations",
-    kind: "method",
-    domain: "computer-science",
-    label: "FlashAttention-2 · FlashAttention-3",
-    aliases: ["FlashAttention-2", "FlashAttention-3", "FlashAttention 2", "FlashAttention 3", "FA2", "FA3"],
-    definition: "같은 online softmax 위에서 GPU 자원 배치를 바꾼 후속 kernel 로, 2 세대는 Q 를 warp 에 나눠 shared memory 왕복을 없애고 sequence 축으로 thread block 을 띄워 A100 에서 약 2 배, 3 세대는 Hopper 의 TMA·WGMMA 로 producer–consumer warp specialization 과 pingpong scheduling 을 써 matmul 과 softmax 를 겹치고 FP8 block quantization 으로 H100 에서 1.5~2 배를 각 논문이 보고했습니다.",
-    canonicalHref: "/cs/ai/attention-kernel-anatomy-and-backends#generations",
+    "id": "flash-attention-generations",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "FlashAttention-2 · FlashAttention-3",
+    "aliases": [
+      "FlashAttention-2",
+      "FlashAttention-3",
+      "FlashAttention 2",
+      "FlashAttention 3",
+      "FA2",
+      "FA3"
+    ],
+    "definition": "FA2의 부분 출력 reduction 감소와 FA3의 여러 조각 겹치기를 논문 조건에 맞춰 읽습니다. FA2의 감소 대상은 부분 출력 reduction이며 모든 shared memory 접근이 0이라는 뜻이 아닙니다. FA3의 겹치기는 의존성·버퍼·시작 종료 비용을 없애지 않습니다.",
+    "canonicalHref": "/cs/ai/attention-kernel-anatomy-and-backends#generations"
   },
   "attention-backend-selection": {
-    id: "attention-backend-selection",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Attention backend · FlashInfer",
-    aliases: ["Attention Backend", "FlashInfer", "VLLM_ATTENTION_BACKEND", "--attention-backend"],
-    definition: "Serving engine 이 attention 을 어느 kernel 구현으로 돌릴지 가리키는 선택지로, vLLM 은 FlashAttention·FlashInfer·Triton·FlexAttention 을 우선순위 목록에 두고 GPU 세대·dtype·head dim·KV 형식에 맞는 첫 번째를 고르며, FlashInfer 는 block-sparse KV 형식과 JIT template, plan–run scheduler 로 여러 KV 배치와 attention 변형을 한 kernel 계열로 다루는 attention engine 입니다.",
-    canonicalHref: "/cs/ai/attention-kernel-anatomy-and-backends#backends",
+    "id": "attention-backend-selection",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Attention backend · FlashInfer",
+    "aliases": [
+      "Attention Backend",
+      "FlashInfer",
+      "VLLM_ATTENTION_BACKEND",
+      "--attention-backend"
+    ],
+    "definition": "고정 vLLM의 지원 검사·자동 우선순위와 명시한 부적합 후보의 ValueError를 실제 제어 흐름으로 확인합니다. CPU 관찰은 지원 판정 의존성을 대체했으며 실제 설치된 GPU backend의 지원이나 속도를 측정하지 않았습니다. 우선순위는 버전·설정에 따라 달라집니다.",
+    "canonicalHref": "/cs/ai/attention-kernel-anatomy-and-backends#backend-source"
   },
   "attention-kernel-autotuning": {
-    id: "attention-kernel-autotuning",
-    kind: "method",
-    domain: "computer-science",
-    label: "Attention kernel autotuning",
-    aliases: ["Attention tile autotuning", "Attention kernel tile autotune"],
-    definition: "Backend 가 정해진 뒤 그 kernel 의 tile 크기 B_r·B_c, warp 수, pipeline stage 수를 (head dim, causal 여부, sequence bucket) 같은 shape key 마다 config 목록을 컴파일·벤치마크해 실측으로 고르고 기억하는 절차로, FlashAttention-2 는 미리 정한 표를, Triton 구현은 @triton.autotune 을 씁니다.",
-    canonicalHref: "/cs/ai/attention-kernel-anatomy-and-backends#backends",
+    "id": "attention-kernel-autotuning",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Attention kernel autotuning",
+    "aliases": [
+      "Attention tile autotuning",
+      "Attention kernel tile autotune"
+    ],
+    "definition": "수동 표와 autotune을 구별하고 고정 Triton의 후보 36→21→9, 실제 key와 작은 N의 한계를 읽습니다. 원문 후보 필터만 CPU에서 확인했으며 GPU 컴파일·벤치마크는 실행하지 않았습니다. 테스트 환경은 후보 하나를 쓰고 작은 N=8은 이 경로의 실행 예제가 아닙니다.",
+    "canonicalHref": "/cs/ai/attention-kernel-anatomy-and-backends#autotune-source"
   },
   "serving-benchmark-scope-taxonomy": {
     id: "serving-benchmark-scope-taxonomy",
@@ -27809,7 +27874,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "사용권과 보증금 청구권",
-    "definition": "임차인은 약정 기간 공간을 사용할 권리를 얻고 보증금은 임대차 채무를 정산한 뒤 반환받을 청구권으로 남깁니다.",
+    "definition": "보증금은 월세처럼 매달 사라지는 돈이 아닙니다. 관리비·세금·공사비를 제외하고 무상 기간·인상이 없는 가정입니다. 보증금은 묶이는 돈이며 반환 위험이 있고 회계상 비용 인식은 별도 문제입니다.",
     "canonicalHref": "/economics/property/commercial-lease-and-rent#mechanism"
   },
   "commercial-lease-jurisdiction": {
@@ -27817,7 +27882,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "상가 임차권의 관할권 차이",
-    "definition": "갱신·양도·임대료·공실·복구에 대한 법정 보호와 계약 자유의 범위가 나라와 지역마다 달라지는 성질입니다.",
+    "definition": "한국에서 가능한 갱신을 외국 점포에도 당연하게 요구할 수 없습니다. 보증금 규모에 따른 한국 법의 조항별 적용 범위와 관할·업종·계약 시점을 확인합니다. Law Commission의 2026년 개정 논의는 시행법과 구별합니다.",
     "canonicalHref": "/economics/property/commercial-lease-and-rent#comparison"
   },
   "rent-property-net-income": {
@@ -27825,7 +27890,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "임대 부동산의 순현금",
-    "definition": "명목 월세에서 공실·수선·세금·관리·금융 비용을 빼고 보증금 반환 의무를 따로 남기는 건물주의 장부입니다.",
+    "definition": "월세 수입이 그대로 부동산 투자 수익은 아닙니다. 앞의 3년 계약에 공실을 넣은 계산이 아닙니다. 취득가·세금·대출 구조를 모르면 순수익률도 계산할 수 없습니다.",
     "canonicalHref": "/economics/property/commercial-lease-and-rent#need"
   },
   "shop-transfer-asset-bundle": {
@@ -27833,7 +27898,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "점포 양도 자산 묶음",
-    "definition": "시설·재고·브랜드·고객 관계·계약·채무가 같은 가게 안에 있어도 소유권과 이전 절차가 서로 다르다는 점입니다.",
+    "definition": "가게를 판다는 말만으로 모든 권리가 넘어가지는 않습니다. 미리 합의한 수량·단가·정산 조건의 가정입니다. 보증금·세금·중개비·운영 자금을 제외하며 각 항목의 법률·회계·세무 처리가 같다는 뜻은 아닙니다.",
     "canonicalHref": "/economics/property/shop-transfer-and-goodwill#mechanism"
   },
   "lease-assignment-consent": {
@@ -27841,7 +27906,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "임대차 지위 이전과 동의",
-    "definition": "기존 임차인이 새 운영자에게 장소 사용권을 넘기려면 계약과 법이 정한 임대인의 동의·정보 공개 요건을 확인해야 한다는 조건입니다.",
+    "definition": "시설을 샀어도 그 자리에 계속 있을 권리는 별개입니다. 새 임대차인지 기존 지위 양도인지 구분합니다. 필요한 동의·신고 수리·책임 종료는 법과 실제 거래에 달려 있으며 지급 비율은 표준이 아닙니다.",
     "canonicalHref": "/economics/property/shop-transfer-and-goodwill#mechanism"
   },
   "goodwill-future-uncertainty": {
@@ -27849,7 +27914,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "영업상 이점의 미래 불확실성",
-    "definition": "기존 고객·상호·입지에서 기대하는 미래 초과수익은 과거 매출 자체가 아니며 새 조건에서 다시 검증해야 하는 가치입니다.",
+    "definition": "단골이 예전 점주를 따라 떠나면 기대한 돈이 들어오지 않습니다. 월 잔액 고정·세금·이자·시설값 회수·시간가치를 제외한 설명용 계산입니다. 전체 인수 투자 평가나 적정 권리금 추정이 아닙니다.",
     "canonicalHref": "/economics/property/shop-transfer-and-goodwill#limits"
   },
   "closure-settlement-order": {
@@ -27945,8 +28010,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "정책의 공급망 전달",
-    "definition": "관세·보조금·수출통제가 한 단계의 비용과 대체 가능성을 바꾸어 다른 나라의 가격과 투자로 전해지는 과정입니다.",
-    "canonicalHref": "/economics/business/supply-chain-bargaining#limits"
+    "definition": "한 국가의 관세·수출통제·표준 등이 계약·재고·대체 공급 경로를 따라 다른 국가의 비용과 주문에 영향을 주는 과정입니다. 세관 납부 책임과 최종 경제적 부담은 구별합니다.",
+    "canonicalHref": "/economics/business/supply-chain-bargaining#comparison"
   },
   "fund-share-vs-note": {
     "id": "fund-share-vs-note",

@@ -1,0 +1,20 @@
+{
+  "originalSha256": "df07a1d504c22aa747f9fc40ddc6cfed52e12c3a402861398426829b83d96ef4",
+  "sourceChange": "one printf inserted before existing l1 assignment only",
+  "training": "disabled: hs=0 negative=0 sample=0; actual TrainModelThread run with injected vocabulary and fixed rows",
+  "compiledCommand": "cc -std=c11 -D_DARWIN_C_SOURCE -Dfgetc_unlocked=getc_unlocked -O2 -pthread observe.c -lm -o observe",
+  "rowUnchanged": true,
+  "pairCount": 10,
+  "pairs": [
+    "PAIR pos=0 radius=1 from=3 to=1",
+    "PAIR pos=1 radius=2 from=1 to=3",
+    "PAIR pos=1 radius=2 from=2 to=3",
+    "PAIR pos=1 radius=2 from=3 to=3",
+    "PAIR pos=2 radius=1 from=3 to=2",
+    "PAIR pos=2 radius=1 from=3 to=2",
+    "PAIR pos=3 radius=2 from=3 to=3",
+    "PAIR pos=3 radius=2 from=2 to=3",
+    "PAIR pos=3 radius=2 from=4 to=3",
+    "PAIR pos=4 radius=1 from=3 to=4"
+  ]
+}

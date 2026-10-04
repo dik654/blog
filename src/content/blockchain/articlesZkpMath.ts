@@ -321,16 +321,98 @@ export const zkpMathArticles: Article[] = [
   },
   {
     slug: "poseidon-hash",
-    title: "Poseidon: field permutation·HADES·parameter profile",
+    title: "Poseidon: 두 수를 섞는 계산에서 증명 회로까지",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "Circuit-native hash의 입구" },
-      { id: "profile", title: "Parameter profile" },
-      { id: "rounds", title: "S-box·MDS·HADES rounds" },
-      { id: "sponge-boundary", title: "Sponge와 byte 경계" },
-      { id: "security-direction", title: "Security margin·proof-layer 전환" },
-      { id: "release", title: "Poseidon release gate" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 두 수를 섞은 결과가 맞다는 것을 확인하려 합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 섞는 규칙과 결과를 읽는 규칙을 함께 정합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 17로 나눈 나머지에서 3과 4를 추적합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 같은 두 칸이 바뀌는 네 장면을 봅니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 곱셈 세 번으로 다섯제곱을 확인할 수 있습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 상태·라운드·S-box·선형 혼합의 이름을 붙입니다"
+  },
+  {
+    "id": "round",
+    "title": "7. 한 라운드의 숫자와 일반식을 나란히 맞춥니다"
+  },
+  {
+    "id": "partial",
+    "title": "8. 한 칸만 다섯제곱하면 같은 입력도 10과 16이 됩니다"
+  },
+  {
+    "id": "inverse",
+    "title": "9. 되돌리는 지수 13과 행렬의 역을 확인합니다"
+  },
+  {
+    "id": "diffusion",
+    "title": "10. 행렬식 1만으로 충분히 섞인다고 결론 내리지 않습니다"
+  },
+  {
+    "id": "projection",
+    "title": "11. 전체 상태의 역과 한 칸짜리 해시의 역은 다릅니다"
+  },
+  {
+    "id": "profile",
+    "title": "12. 실제 코드에 넣을 같은 3과 4의 설정을 고정합니다"
+  },
+  {
+    "id": "source",
+    "title": "13. 최적화 전 원문에서 같은 상태의 64라운드를 따라갑니다"
+  },
+  {
+    "id": "optimized",
+    "title": "14. 계산을 옮겨도 결과는 같아야 합니다"
+  },
+  {
+    "id": "poseidon2",
+    "title": "15. Poseidon2는 시작부터 같은 3과 4를 다르게 섞습니다"
+  },
+  {
+    "id": "constraints",
+    "title": "16. 같은 설정의 240을 전체 증명 비용과 구분합니다"
+  },
+  {
+    "id": "constraint-failure",
+    "title": "17. 마지막 곱셈 조건 하나를 빼면 잘못된 결과가 통과합니다"
+  },
+  {
+    "id": "encoding",
+    "title": "18. 숫자 두 개의 압축과 임의 바이트 해시를 구분합니다"
+  },
+  {
+    "id": "security",
+    "title": "19. 최신 공격은 목표와 설정을 먼저 읽습니다"
+  },
+  {
+    "id": "binary",
+    "title": "20. 2026년에는 증명 방식과 해시를 함께 바꾸는 설계도 있습니다"
+  },
+  {
+    "id": "verification",
+    "title": "21. 원문 실행·작은 전수 검사·증명 실행의 범위를 나눕니다"
+  },
+  {
+    "id": "limits",
+    "title": "22. 같은 두 수에서 바뀔 결과를 예측합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/poseidon-hash"),
   },
   {

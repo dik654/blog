@@ -1900,14 +1900,86 @@ export const dlFoundationArticles: Article[] = [
   },
   {
     slug: "word2vec",
-    title: "Word2Vec 기초: Word ID에서 Context Pair까지",
+    title: "다섯 단어로 따라가는 Word2Vec: 번호, 두 표, 이웃 선택",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "ID에서 trainable row로" },
-      { id: "dual-tables", title: "Input·output table" },
-      { id: "window", title: "Context window의 형태" },
-      { id: "pairs", title: "Versioned pair receipt" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 단어 하나를 어떻게 계산할 수 있는 수로 바꿀까요?"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 문장을 받고, 두 단어와 두 줄의 수를 내놓습니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 같은 saw가 두 번 나오는 다섯 단어"
+  },
+  {
+    "id": "picture",
+    "title": "4. 보는 범위를 넓히면 선택이 두 개에서 네 개가 됩니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 번호표, 두 역할, 가까운 범위가 각각 필요한 이유"
+  },
+  {
+    "id": "names",
+    "title": "6. 이미 본 역할에 이름을 붙입니다"
+  },
+  {
+    "id": "lookup",
+    "title": "7. ID 2는 곱셈으로도 같은 행을 고릅니다"
+  },
+  {
+    "id": "dual-tables",
+    "title": "8. 같은 ID라도 두 표의 역할은 분리됩니다"
+  },
+  {
+    "id": "pair-trace",
+    "title": "9. 위치를 고른 뒤 번호를 읽습니다"
+  },
+  {
+    "id": "window",
+    "title": "10. 가까운 이웃이 더 자주 선택되는 이유"
+  },
+  {
+    "id": "paper-word2vec-original",
+    "title": "11. 원 논문의 그림과 식에 같은 cat을 넣습니다"
+  },
+  {
+    "id": "pytorch-lookup",
+    "title": "12. 실제 PyTorch는 0을 곱하지 않고 행을 선택합니다"
+  },
+  {
+    "id": "source-sentence",
+    "title": "13. 저자 C 코드가 실제 문장을 읽는 방법"
+  },
+  {
+    "id": "source-pair",
+    "title": "14. C 구현에서는 saw가 입력이고 cat이 대상입니다"
+  },
+  {
+    "id": "random-boundary",
+    "title": "15. 난수의 출발값만 같아서는 부족합니다"
+  },
+  {
+    "id": "pairs",
+    "title": "16. 두 실행의 쌍이 다르면 앞에서부터 비교합니다"
+  },
+  {
+    "id": "release-check",
+    "title": "17. 번호표만 바뀌면 맞는 크기의 표도 틀린 값을 냅니다"
+  },
+  {
+    "id": "limits",
+    "title": "18. 행을 읽었다고 단어의 뜻을 이해한 것은 아닙니다"
+  },
+  {
+    "id": "review",
+    "title": "19. 같은 문장에서 다음 결과를 예측해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/word2vec"),
   },
   {

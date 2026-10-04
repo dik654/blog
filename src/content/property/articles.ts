@@ -5,14 +5,96 @@ export const propertyArticles: Article[] = [
     slug: "commercial-lease-and-rent",
     title: "상가 임대는 공간만이 아니라 기간과 나갈 때의 상태를 사는 계약이다",
     subcategory: "property-lease",
-    sections: [{"id": "overview", "title": "공간을 쓰는 기간이 시설 투자와 맞아야 한다"}, {"id": "black-box", "title": "공간 인도, 매달 지급, 마지막 정산을 묶어 본다"}, {"id": "case", "title": "3천만 원을 맡기고 매달 200만 원씩 3년 쓴다"}, {"id": "picture", "title": "사용할 권리와 반환할 돈은 반대 방향으로 움직인다"}, {"id": "need", "title": "시작 상태를 남겨야 마지막 날의 약속을 판단할 수 있다"}, {"id": "names", "title": "맡긴 돈, 사용료, 종료 상태를 가르는 말"}, {"id": "mechanism", "title": "공간의 사용권과 끝날 때의 의무를 한 계약에서 읽습니다"}, {"id": "source", "title": "한국에서 공간을 인도받고 등록하는 이유를 원문으로 읽는다"}, {"id": "comparison", "title": "갱신과 양도는 국가별로 따로 확인해야 합니다"}, {"id": "limits", "title": "권리금과 보증금, 시설값은 서로 다른 청구권입니다"}],
+    sections: [
+  {
+    "id": "overview",
+    "title": "1. 공간을 쓰는 기간이 시설 투자와 맞아야 한다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 공간 인도, 매달 지급, 마지막 정산을 묶어 본다"
+  },
+  {
+    "id": "case",
+    "title": "3. 3천만 원을 맡기고 매달 200만 원씩 3년 쓴다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 사용할 권리와 반환할 돈은 반대 방향으로 움직인다"
+  },
+  {
+    "id": "need",
+    "title": "5. 시작 상태를 남겨야 마지막 날의 약속을 판단할 수 있다"
+  },
+  {
+    "id": "names",
+    "title": "6. 맡긴 돈, 사용료, 종료 상태를 가르는 말"
+  },
+  {
+    "id": "mechanism",
+    "title": "7. 공간의 사용권과 끝날 때의 의무를 한 계약에서 읽습니다"
+  },
+  {
+    "id": "source",
+    "title": "8. 한국에서 공간을 인도받고 등록하는 이유를 원문으로 읽는다"
+  },
+  {
+    "id": "comparison",
+    "title": "9. 갱신과 양도는 국가별로 따로 확인해야 합니다"
+  },
+  {
+    "id": "limits",
+    "title": "10. 권리금과 보증금, 시설값은 서로 다른 청구권입니다"
+  }
+],
     component: () => import("@/pages/articles/property/commercial-lease-and-rent"),
   },
   {
     slug: "shop-transfer-and-goodwill",
     title: "가게를 양도할 때 넘기는 것은 하나의 가게가 아니라 서로 다른 권리들이다",
     subcategory: "property-lease",
-    sections: [{"id": "overview", "title": "돈을 낸 뒤 실제로 영업을 이어받을 수 있어야 한다"}, {"id": "black-box", "title": "물건, 장소, 미완료 약속을 각각 넘겨야 한다"}, {"id": "case", "title": "3천300만 원을 시설과 재고와 미래 손님으로 나눈다"}, {"id": "picture", "title": "세 사람의 약속이 잔금 지급으로 모이게 그린다"}, {"id": "need", "title": "소유와 사용과 미래 기대의 증거는 서로 다르다"}, {"id": "names", "title": "양도대금을 구성하는 권리의 이름"}, {"id": "mechanism", "title": "자산양도·임대차·채무·영업 신고를 각각 닫습니다"}, {"id": "source", "title": "고객정보 이전은 고객에게 알려야 하는 별도 절차다"}, {"id": "comparison", "title": "한국의 권리금 회수 보호와 호주의 lease assignment는 제도가 다릅니다"}, {"id": "limits", "title": "과거 매출이 앞으로의 영업권 가치를 보장하지 않습니다"}],
+    sections: [
+  {
+    "id": "overview",
+    "title": "1. 돈을 낸 뒤 실제로 영업을 이어받을 수 있어야 한다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 물건, 장소, 미완료 약속을 각각 넘겨야 한다"
+  },
+  {
+    "id": "case",
+    "title": "3. 3천300만 원을 시설과 재고와 미래 손님으로 나눈다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 세 사람의 약속이 잔금 지급으로 모이게 그린다"
+  },
+  {
+    "id": "need",
+    "title": "5. 소유와 사용과 미래 기대의 증거는 서로 다르다"
+  },
+  {
+    "id": "names",
+    "title": "6. 양도대금을 구성하는 권리의 이름"
+  },
+  {
+    "id": "mechanism",
+    "title": "7. 자산양도·임대차·채무·영업 신고를 각각 닫습니다"
+  },
+  {
+    "id": "source",
+    "title": "8. 고객정보 이전은 고객에게 알려야 하는 별도 절차다"
+  },
+  {
+    "id": "comparison",
+    "title": "9. 한국의 권리금 회수 보호와 호주의 lease assignment는 제도가 다릅니다"
+  },
+  {
+    "id": "limits",
+    "title": "10. 과거 매출이 앞으로의 영업권 가치를 보장하지 않습니다"
+  }
+],
     component: () => import("@/pages/articles/property/shop-transfer-and-goodwill"),
   },
   {
