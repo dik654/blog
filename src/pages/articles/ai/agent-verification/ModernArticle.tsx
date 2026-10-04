@@ -1,108 +1,243 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { VerificationLayersViz } from "../llm-harness/viz/ModernHarnessViz";
 
-export default function AgentVerificationArticle() {
+export default function Article() {
   return (
     <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
-        <span id="layers" className="scroll-mt-20" />
+      <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Verifier는 확실한 검사부터 불확실한 판단 순으로 쌓습니다
+          1. 잘했다는 말과 실제 성공을 구분합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            Compiler·test처럼 정답이 명확한 일을 LLM judge에게 먼저 묻지
-            않습니다. <strong>Layered verification</strong>은 deterministic
-            check, environment oracle, rubric judge, human review를 위험과
-            불확실성에 맞춰 올립니다.
+          <p>
+            코드를 고친 프로그램이 모든 문제가 해결됐다고 답해도 테스트가 실패할
+            수 있습니다. 테스트가 통과해도 허용하지 않은 파일을 건드렸거나 같은
+            외부 요청을 두 번 실행했을 수 있습니다.
+          </p>
+          <p>
+            결과의 정확성, 실행한 경로, 실제로 바뀐 상태, 쓴 비용을 각각
+            확인하면 한 가지 성공으로 다른 실패를 덮지 않게 됩니다. 무엇을
+            기계적으로 확인하고 무엇을 사람이 해석해야 하는지도 함께 나눕니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="black-box" data-teach-level="B" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          2. 결과와 실행 기록을 서로 다른 검사에 넣습니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            결과 파일과 실행 기록을 모읍니다. 명확한 조건은 직접 검사하고 실제 환경의 상태를 읽어 그 기록과 맞춥니다. 설명의 품질처럼 정답을 단순하게 정하기 어려운 항목은 별도
+            기준으로 판단합니다.
+          </p>
+          <p>
+            검사 결과는 다음 수정의 입력입니다. 실패 원인을 찾고 수정한 뒤 같은
+            조건을 다시 확인해야 이전 실패가 없어졌는지 알 수 있습니다. 검사자를
+            많이 부르기 전에 각 검사가 어떤 질문을 맡는지부터 정합니다.
+          </p>
+        </div>
+        <ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2">
+          <li className="border-l border-border pl-4">
+            <span className="block text-sm text-muted-foreground">1</span>
+            <span>결과와 실행 기록을 모은다</span>
+          </li>
+          <li className="border-l border-border pl-4">
+            <span className="block text-sm text-muted-foreground">2</span>
+            <span>정해진 조건을 검사한다</span>
+          </li>
+          <li className="border-l border-border pl-4">
+            <span className="block text-sm text-muted-foreground">3</span>
+            <span>실제 환경과 맞춘다</span>
+          </li>
+          <li className="border-l border-border pl-4">
+            <span className="block text-sm text-muted-foreground">4</span>
+            <span>판단이 필요한 품질을 검토한다</span>
+          </li>
+        </ol>
+      </section>
+
+      <section id="small-case" data-teach-level="0" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          3. 27개 검사 중 1개가 실패했습니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            코드 수정 뒤 검사 27개 중 26개가 통과했습니다. 문서 설명의 품질은
+            별도 평가자 3명이 0.6, 0.7, 0.8로 판단했다고 합시다. 이 수치와 평가
+            조건은 가정입니다. (가정)
+          </p>
+          <p>
+            설명 점수 평균은 0.7이지만 실패한 필수 검사 1개가 없어지는 것은 아닙니다. 허용 파일만 바꾸었는지, 외부 변경 횟수가 맞는지, 예산 안에서 끝났는지도 따로 확인합니다.
+            평균으로 볼 항목과 반드시 통과해야 할 항목을 먼저 정합니다. (가정)
+          </p>
+        </div>
+      </section>
+
+      <section
+        id="inside-verification"
+        data-teach-level="1"
+        className="scroll-mt-20"
+      >
+        <h2 className="mb-6 text-2xl font-bold">
+          4. 무엇을 사실로 읽고 무엇을 평가할까요
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            검사 프로그램의 반환값은 이번 실행에서 어떤 조건이 통과했는지 알려
+            줍니다. 실제 파일과 외부 서비스 상태를 읽으면 실행 기록이 그 상태와
+            맞는지 확인할 수 있습니다. 설명의 명료함은 미리 정한 기준과 평가자의
+            판단이 필요합니다.
+          </p>
+          <p>
+            세 결과는 서로 대체되지 않습니다. 파일이 존재해도 요구한 내용인지 확인해야 하고 문장이 읽기 쉬워도 잘못된 사실을 담을 수 있습니다. 어떤 값이 무엇을 입증하는지 나누어야
+            다음 수정도 올바른 곳을 향합니다.
+          </p>
+        </div>
+      </section>
+
+      <section
+        id="why-verification"
+        data-teach-level="2"
+        className="scroll-mt-20"
+      >
+        <h2 className="mb-6 text-2xl font-bold">
+          5. 같은 오류를 다시 믿지 않으려면 확인 경로가 달라야 합니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            생성한 모델에게 자기 답이 맞는지만 다시 물으면 처음의 잘못된 가정을
+            그대로 사용할 수 있습니다. 다른 모델을 쓰더라도 같은 자료와 편향을
+            공유하면 같은 오류를 놓칩니다. 모델 크기만으로 독립성이나 정확성이
+            보장되지 않습니다.
+          </p>
+          <p>
+            기계 검사도 작성한 조건 밖의 실패를 보지 못합니다. 26/27이라는 값은
+            그 27개 검사에 관한 관측이지 제품 전체의 정확도를 뜻하지 않습니다.
+            실제 환경, 명시적 검사, 품질 판단이 맡는 범위를 나누는 이유입니다.
+            (가정)
+          </p>
+        </div>
+      </section>
+
+      <section id="layers" data-teach-level="3" className="scroll-mt-20">
+        <span id="verifier-truth-source" className="scroll-mt-20" />
+        <span id="critic-architecture" className="scroll-mt-20" />
+        <h2 className="mb-6 text-2xl font-bold">
+          6. 검사 방식과 진실의 출처에 이름을 붙입니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            확인하는 도구를 통틀어 verifier라고 부릅니다. 여러 확인 수단을 순서대로 결합하는 방식이 layered verification입니다. 먼저 값과 조건을 직접 확인하고
+            해석이 필요한 품질은 평가 기준을 붙여 검토합니다.
           </p>
         </div>
         <TermBreakdown
-          title="서로 대체하지 않는 네 검증층"
+          title="역할을 이해한 뒤 이름을 붙입니다"
           items={[
             {
               term: "Deterministic check",
-              description: "같은 input에 명확한 pass/fail을 내는 검사입니다.",
-              example: "Typecheck·unit test·schema·database invariant입니다.",
+              description:
+                "고정한 입력과 환경에서 명시된 조건의 통과 여부를 검사합니다.",
+              boundary:
+                "비결정적 테스트나 불안정한 환경에서는 재현 조건도 확인해야 합니다.",
             },
             {
               term: "Environment oracle",
-              description: "실제 외부 상태를 직접 읽는 관측입니다.",
-              example: "Browser overflow, API state, file hash와 metric입니다.",
+              description: "실제 파일·화면·외부 서비스 상태를 읽는 관측입니다.",
+              boundary:
+                "관측 시점과 접근 권한, 오래된 값의 가능성을 확인합니다.",
             },
             {
-              term: "Rubric judge",
+              term: "Rubric judge / semantic verifier",
               description:
-                "기계적 oracle이 약한 품질을 versioned rubric으로 비교합니다.",
-              example: "설명 hierarchy를 blind pairwise로 평가합니다.",
+                "설명 품질처럼 의미 해석이 필요한 항목을 명시적 기준으로 평가합니다.",
+              boundary: "평가자·입력 순서·기준에 따라 값이 흔들릴 수 있습니다.",
             },
             {
               term: "Human checkpoint",
-              description: "되돌리기 어려운 effect와 불일치를 승인합니다.",
-              example:
-                "Production deploy·delete·payment 전에 diff와 rollback을 봅니다.",
+              description:
+                "사람의 판단이 필요한 변경이나 불일치를 검토하는 지점입니다.",
+              boundary:
+                "모든 변경에 새 승인을 요구한다는 보편 규칙은 아닙니다.",
+            },
+            {
+              term: "External ground truth",
+              description:
+                "모델의 자기 보고 밖에서 확인한 테스트·실행·환경의 사실입니다.",
+              boundary:
+                "검사의 범위와 환경이 틀리면 전체 정답의 보증은 아닙니다.",
+            },
+            {
+              term: "Generator / critic",
+              description: "결과를 만드는 역할과 평가하는 역할입니다.",
+              boundary:
+                "두 역할이 같은 모델일 수도 다른 모델일 수도 있어 이름만으로 구조를 단정하지 않습니다.",
+            },
+            {
+              term: "Trajectory / effect / budget",
+              description: "실행 경로, 실제 외부 변경, 사용한 자원입니다.",
+              boundary:
+                "좋은 최종 문장만으로 세 항목이 올바르다고 추정하지 않습니다.",
             },
           ]}
         />
         <VerificationLayersViz />
-        <ContentBoundary article="agent-verification" />
       </section>
-      <section id="verifier-truth-source" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          Verifier는 진실이 어디서 오는지로도 갈립니다
+
+      <section
+        id="plan-execute-verify"
+        data-teach-level="4"
+        className="scroll-mt-20"
+      >
+        <span id="regression" className="scroll-mt-20" />
+        <h2 className="mb-6 text-2xl font-bold">
+          7. 실패한 1개를 고친 뒤 같은 27개를 다시 검사합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Compiler exit code나 test 실행 결과처럼 시스템 밖에서 그대로
-            확정되는 값을 <strong>external ground truth</strong>라 부릅니다.
-            반대로 rubric judge나 LLM이 설명·구조·톤을 읽고 점수를 매기는
-            판정은 <strong>semantic verifier</strong>입니다.
+            첫 관측은 tests=26/27입니다. 실패 위치를 확인해 수정하고 같은
+            조건에서 다시 검사합니다. tests=27/27을 얻어야 필수 테스트 조건을
+            충족합니다. 그와 별개로 허용 파일 변경, 의도한 외부 변경, 비용
+            한도도 각각 통과해야 합니다. (가정)
           </p>
           <p>
-            External ground truth는 채점자가 바뀌어도 값이 그대로입니다. 27개
-            test case 중 compiler가 확정하는 통과 개수는 항상 같은
-            26/27입니다. 반면 같은 코드 설명의 품질을 semantic verifier
-            셋이 각각 매기면 0.6, 0.7, 0.8처럼 흔들릴 수 있습니다.
+            평가자 점수 0.6·0.7·0.8은 설명 품질의 의견 차이를 드러냅니다. 평균
+            0.7만 남기지 않고 기준과 원문을 함께 남겨 불일치를 확인합니다. 같은
+            모델을 다시 호출해 평가하더라도 입력·출력 처리 비용과 시간이
+            추가됩니다. (가정)
           </p>
           <p>
-            이 구분이 앞서 본 deterministic check·environment oracle이 rubric judge보다 먼저 오는 이유입니다. Test-based
-            verification·compiler feedback·runtime feedback은 전부 external ground truth의 구체적인 형태이고 해석 없이
-            pass·fail을 내는 쪽부터 통과시키는 편이 judge 예산을 아낍니다.
-          </p>
-          <p>
-            다만 external ground truth도 test coverage가 좁으면 실제 실패를 그냥 통과시키고 semantic verifier도 calibration 없이
-            배포하면 같은 실수를 매번 놓칠 수 있습니다. 둘 중 하나만으로 verifier layer 전체를 대체할 수는 없습니다.
+            결과를 고칠 때는 새 검사와 함께 이전에 통과했던 조건도 다시
+            확인합니다. 실패 사례만 모으면 과도한 거부나 정상 작업의 회귀를 놓칠
+            수 있습니다. 이제 필수 조건을 결합하는 식과 공식 평가 문서의 예를
+            맞춰 보겠습니다.
           </p>
         </div>
       </section>
-      <section id="critic-architecture" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          Critic이 분리된 model인지 generator 자신인지가 신뢰 범위를 정합니다
+
+      <section
+        id="trajectory-effect"
+        data-teach-level="5"
+        className="scroll-mt-20"
+      >
+        <h2 className="mb-6 text-2xl font-bold">
+          8. 필수 실패는 다른 점수로 상쇄하지 않습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Generator-critic 구조는 결과를 만든 model과 다른 critic model이
-            따로 채점합니다. Generator-verifier 구조는 같은 model이 생성과
-            검증을 모두 맡습니다.
+            이 글은 산출물·경로·외부 변경·예산을 필수 조건으로 정하고 AND로 묶습니다. 테스트가 아직 26/27이면 산출물 조건은 0이고 다른 세 항목이 1이어도
+            0∧1∧1∧1=0입니다. 27/27이어도 외부 변경이 두 번 중복됐다면 그 항목이 0이 됩니다. (가정)
           </p>
           <p>
-            가령 7B model이 만든 코드를 70B critic model이 다시 채점하면 generator 혼자 판정할 때보다 놓치던 오류를 더 잡지만 critic 호출 자체가
-            token을 한 번 더 씁니다. 같은 model이 자기 출력을 다시 보는 generator-verifier는 별도 호출 비용은 없지만 처음에 놓친 가정을 검증 단계에서도 같은
-            이유로 놓치기 쉽습니다.
-          </p>
-          <p>
-            그래서 되돌리기 어려운 effect일수록 critic model을 generator와 분리하거나 앞 절의 external ground truth로 교차 확인하는 쪽을 택합니다.
-            Generator-verifier만으로 충분한 경우는 실수의 대가가 작고 재시도 비용이 낮을 때로 좁혀 둡니다.
+            품질 항목의 가중 평균은 별도 설계 선택입니다. 이 식은 모든 평가가
+            AND여야 한다는 법칙이 아니라 이번 실행의 필수 요구를 표현합니다.
           </p>
         </div>
-      </section>
-      <section id="trajectory-effect" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          최종 artifact와 trajectory·effect·budget을 따로 채점합니다
-        </h2>
         <ExplainedFormula
           question="Artifact가 맞아도 위험한 경로나 중복 effect가 있으면 run을 통과시키나요?"
           idea={
@@ -153,16 +288,22 @@ export default function AgentVerificationArticle() {
           ]}
           interpretation="코드가 맞아도 secret 전송이나 중복 deploy가 있으면 trajectory/effect가 0이라 전체 run은 실패합니다."
         />
-      </section>
-      <section id="plan-execute-verify" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          Verifier-guided agent는 매 단계마다 plan-execute-verify를 반복합니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Plan-execute-verify loop는 다음 action을 계획해 실행하고 그 결과를 앞서 정한 verifier로 확인한 뒤에야 다음 plan을 세웁니다. Verify를
-            건너뛰면 한 단계의 부분 실패가 다음 plan의 잘못된 전제로 그대로 넘어갑니다.
-          </p>
+        <div id="paper-agent-evals" className="mt-8 scroll-mt-20">
+          <CitationBlock
+            source="Anthropic — Demystifying evals for AI agents, Types of graders"
+            citeKey={1}
+            href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+          >
+            <q>binary (all graders must pass)</q>
+          </CitationBlock>
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            <p>
+              원문은 가중 점수, 모두 통과해야 하는 판정, 둘의 혼합을 구분합니다.
+              이 사례에서 필수 테스트와 실행 권한은 모두 통과해야 하는 쪽에
+              둡니다. 설명 점수 0.7을 평균낸다는 선택이 실패한 테스트를 보상하지
+              않도록 두 판정을 분리합니다. (가정)
+            </p>
+          </div>
         </div>
         <AlgorithmBlock
           title="Plan-execute-verify loop"
@@ -192,27 +333,51 @@ export default function AgentVerificationArticle() {
           output="검증된 artifact 또는 실패 사유가 붙은 중단 상태"
         />
       </section>
-      <section id="regression" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          운영 trace를 재현 가능한 regression fixture로 바꿉니다
+
+      <section id="release" data-teach-level="7" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          9. 평가도 바뀌고 틀릴 수 있습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Private chain-of-thought가 아니라 observable input, tool calls,
-            artifact, effect receipts와 metrics를 고정합니다. 실패 case만
-            추가하면 과도한 거부를 놓치므로 같은 유형의 기존 success case도 함께
-            실행합니다.
+            고정한 코드와 데이터에서도 시간·난수·외부 서비스가 달라지면 실행
+            결과가 달라질 수 있습니다. 검사 조건과 버전, 실제 로그를 보존하고
+            불안정한 테스트를 별도로 진단합니다. 외부에서 나온 값이라는 이유로
+            불변의 진실이라고 부르지 않습니다.
+          </p>
+          <p>
+            같은 모델의 자기 검토와 별도 critic 호출은 모두 추가 계산을 쓸 수 있습니다. 큰 모델이나 다른 모델이 더 잘 잡는지는 같은 오류 표본에서 확인합니다. 사람 판정과
+            비교해 평가 기준을 조정하고 중요한 조건은 가능한 직접 검사합니다.
+          </p>
+          <p>
+            검증을 통과했다는 말에는 검사한 범위가 따라야 합니다. 관측 가능한
+            입력·호출·결과·비용은 재현 자료로 남기되 비공개 사고 과정을
+            복원하거나 공개할 필요는 없습니다.
           </p>
         </div>
+        <ContentBoundary article="agent-verification" />
       </section>
-      <section id="release" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          Judge는 version과 calibration을 가진 보조 판정입니다
+
+      <section
+        id="prediction-questions"
+        data-teach-level="review"
+        className="scroll-mt-20"
+      >
+        <h2 className="mb-6 text-2xl font-bold">
+          10. 어떤 성공이 다른 실패를 가리지 못하나요
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Worker와 judge가 같은 오류를 공유할 수 있습니다. Rubric·judge version·input order를 고정하고 사람 label과 calibration하며
-            고위험 invariant는 deterministic oracle이나 독립 검토로 교차 확인합니다.
+            설명 점수 평균이 0.7인데 테스트는 26/27입니다. 필수 테스트 조건은
+            통과인가요? (답: 8절)
+          </p>
+          <p>
+            같은 모델에게 답을 다시 검사시키면 호출 비용과 오류 상관관계가
+            사라지나요? (답: 9절)
+          </p>
+          <p>
+            27개 테스트를 모두 통과했습니다. 그 숫자가 검사하지 않은 모든 사용자
+            환경도 보장하나요? (답: 5절)
           </p>
         </div>
       </section>

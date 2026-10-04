@@ -257,11 +257,47 @@ export const agentArticles: Article[] = [
     title: "Agent Loop 기초: State · Action · Observation · Exit",
     subcategory: "ai-agents",
     sections: [
-      { id: "overview", title: "State transition의 네 대상" },
-      { id: "transition", title: "Proposal에서 effect까지" },
-      { id: "observation-contract", title: "Typed observation" },
-      { id: "exit-states", title: "Terminal state 분리" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 답을 쓰기 전에 실제로 고쳐졌는지 알아야 합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 보고 고르고 실행하고 다시 봅니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 폭 390에서 430이 되는 페이지를 고칩니다"
+  },
+  {
+    "id": "inside-loop",
+    "title": "4. 다음 판단에 무엇을 남겨야 할까요"
+  },
+  {
+    "id": "why-runtime",
+    "title": "5. 말로 고쳤다고 해도 파일은 그대로일 수 있습니다"
+  },
+  {
+    "id": "agent-definition",
+    "title": "6. 같은 순환의 역할에 이름을 붙입니다"
+  },
+  {
+    "id": "request-trace",
+    "title": "7. 읽기·수정·측정 세 번을 같은 기록으로 잇습니다"
+  },
+  {
+    "id": "transition",
+    "title": "8. 관측을 다음 선택의 입력에 넣습니다"
+  },
+  {
+    "id": "exit-states",
+    "title": "9. 끝냈다·지쳤다·기다린다는 다른 결과입니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "10. 다음 결과를 먼저 예상해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/agent-loop-foundations"),
   },
   {
@@ -294,11 +330,47 @@ export const agentArticles: Article[] = [
     title: "Agent Plan: Artifact · Replanning · Reflection",
     subcategory: "ai-agents",
     sections: [
-      { id: "overview", title: "Executable plan state" },
-      { id: "executable-plan", title: "Task와 artifact receipt" },
-      { id: "replanning", title: "영향 범위 invalidation" },
-      { id: "reflection", title: "Feedback 기반 다음 trial" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 작업 중 전제가 바뀌면 어디부터 다시 할까요"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 입력이 결과로 넘어가는 연결을 보관합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 네 작업 중 세 작업만 새 자료에 의존합니다"
+  },
+  {
+    "id": "inside-plan",
+    "title": "4. 각 작업에는 입력·담당·결과·완료 근거가 있습니다"
+  },
+  {
+    "id": "why-plan",
+    "title": "5. 끝났다는 표시가 낡은 근거를 숨기지 않게 합니다"
+  },
+  {
+    "id": "planning-and-plan-mode",
+    "title": "6. 계획·분해·재계획의 역할을 구분합니다"
+  },
+  {
+    "id": "executable-plan",
+    "title": "7. 버전 3을 4로 바꾸며 연결된 결과만 다시 엽니다"
+  },
+  {
+    "id": "reflection",
+    "title": "8. 실패 설명을 다음 시도의 입력으로 넣습니다"
+  },
+  {
+    "id": "plan-boundaries",
+    "title": "9. 계획의 연결이 틀리면 재계획도 틀립니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "10. 어느 작업을 다시 열어야 할까요"
+  }
+],
     component: () => import("@/pages/articles/ai/agent-plan-replanning"),
   },
   {
@@ -326,11 +398,47 @@ export const agentArticles: Article[] = [
     title: "Agent Delegation: Artifact · Manager · Handoff",
     subcategory: "ai-agents",
     sections: [
-      { id: "overview", title: "위임의 네 소유권" },
-      { id: "delegation-contract", title: "Typed delegation" },
-      { id: "manager-handoff", title: "User state owner" },
-      { id: "parallel-merge", title: "Parallel merge 조건" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 여러 작업자가 만든 결과를 어떻게 믿고 합칠까요"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 나눠 읽고 따로 제출한 뒤 한곳에서 합칩니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 두 문서의 3건과 2건을 합칩니다"
+  },
+  {
+    "id": "inside-delegation",
+    "title": "4. 입력·쓰기·합치기·대화의 책임을 나눕니다"
+  },
+  {
+    "id": "why-delegation",
+    "title": "5. 같은 결과를 두 번 받거나 다른 판본을 읽을 수 있습니다"
+  },
+  {
+    "id": "delegation-contract",
+    "title": "6. 일을 맡기는 요청에도 입력과 반환 조건이 있습니다"
+  },
+  {
+    "id": "manager-handoff",
+    "title": "7. 제출 식별자로 중복을 빼고 네 문제를 남깁니다"
+  },
+  {
+    "id": "parallel-merge",
+    "title": "8. 공식 위임 구조를 제출물에 적용합니다"
+  },
+  {
+    "id": "delegation-boundaries",
+    "title": "9. 병렬 실행의 비용과 상관된 오류가 남습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "10. 도착 순서가 달라져도 결과가 같을까요"
+  }
+],
     component: () => import("@/pages/articles/ai/agent-delegation-contracts"),
   },
   {
@@ -365,11 +473,47 @@ export const agentArticles: Article[] = [
     title: "Agent run contract: context·capability·artifact·recovery",
     subcategory: "ai-agents",
     sections: [
-      { id: "contract", title: "Objective와 acceptance" },
-      { id: "context-capability", title: "Context path와 capability" },
-      { id: "artifact-continuity", title: "Versioned artifact continuity" },
-      { id: "recovery-handoff", title: "Recovery와 handoff" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 무엇을 보면 끝났다고 할 수 있을까요"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 요청을 실행 조건과 결과 확인으로 연결합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 두 화면에서 넘침이 없어야 끝입니다"
+  },
+  {
+    "id": "inside-contract",
+    "title": "4. 목표와 검사 대상은 같은 변경을 가리켜야 합니다"
+  },
+  {
+    "id": "why-contract",
+    "title": "5. 기록이 비면 이어받은 작업이 추측합니다"
+  },
+  {
+    "id": "contract",
+    "title": "6. 한 작업의 목표·권한·증거를 함께 기록합니다"
+  },
+  {
+    "id": "context-capability",
+    "title": "7. 같은 파일을 고치고 두 폭을 검사해 넘깁니다"
+  },
+  {
+    "id": "artifact-continuity",
+    "title": "8. 완료 문장과 실제 환경의 결과를 분리합니다"
+  },
+  {
+    "id": "recovery-handoff",
+    "title": "9. 시간 초과만으로 다시 실행하지 않습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "10. 기록에서 빠진 항목을 찾아보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/agent-run-contract"),
   },
   {
@@ -377,11 +521,47 @@ export const agentArticles: Article[] = [
     title: "Agent verification: artifact·trajectory·effect gate",
     subcategory: "ai-agents",
     sections: [
-      { id: "layers", title: "Layered verifier" },
-      { id: "trajectory-effect", title: "네 acceptance gate" },
-      { id: "regression", title: "Trace와 regression fixture" },
-      { id: "release", title: "Judge와 human review" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 잘했다는 말과 실제 성공을 구분합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 결과와 실행 기록을 서로 다른 검사에 넣습니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 27개 검사 중 1개가 실패했습니다"
+  },
+  {
+    "id": "inside-verification",
+    "title": "4. 무엇을 사실로 읽고 무엇을 평가할까요"
+  },
+  {
+    "id": "why-verification",
+    "title": "5. 같은 오류를 다시 믿지 않으려면 확인 경로가 달라야 합니다"
+  },
+  {
+    "id": "layers",
+    "title": "6. 검사 방식과 진실의 출처에 이름을 붙입니다"
+  },
+  {
+    "id": "plan-execute-verify",
+    "title": "7. 실패한 1개를 고친 뒤 같은 27개를 다시 검사합니다"
+  },
+  {
+    "id": "trajectory-effect",
+    "title": "8. 필수 실패는 다른 점수로 상쇄하지 않습니다"
+  },
+  {
+    "id": "release",
+    "title": "9. 평가도 바뀌고 틀릴 수 있습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "10. 어떤 성공이 다른 실패를 가리지 못하나요"
+  }
+],
     component: () => import("@/pages/articles/ai/agent-verification"),
   },
   {
@@ -415,11 +595,47 @@ export const agentArticles: Article[] = [
     title: "Agent control boundary: workflow·loop·checkpoint",
     subcategory: "ai-agents",
     sections: [
-      { id: "workflow-agent", title: "Workflow와 agent loop" },
-      { id: "selection", title: "불확실성과 effect 위험" },
-      { id: "loop-authority", title: "두 loop의 권한 분리" },
-      { id: "paper-loop-control", title: "운영 어휘의 근거 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 어디까지 스스로 고르게 할까요"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 탐색한 결과를 정해진 검사에 넘깁니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 20개 파일을 살펴보고 1곳에만 반영합니다"
+  },
+  {
+    "id": "inside-control",
+    "title": "4. 다음 경로와 허용 여부를 각각 결정합니다"
+  },
+  {
+    "id": "why-control",
+    "title": "5. 잘 찾았다는 사실이 넓은 권한을 주지는 않습니다"
+  },
+  {
+    "id": "workflow-agent",
+    "title": "6. 미리 정한 경로와 관측에 따른 선택을 구분합니다"
+  },
+  {
+    "id": "selection",
+    "title": "7. 6회 탐색과 2개 검사를 지나 대상 1개를 확인합니다"
+  },
+  {
+    "id": "paper-loop-control",
+    "title": "8. 공식 설명의 구분을 이 작업에 적용합니다"
+  },
+  {
+    "id": "loop-authority",
+    "title": "9. 한 번의 성공으로 전체 운영 규칙을 바꾸지 않습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "10. 경계를 바꾸면 무엇이 달라질까요"
+  }
+],
     component: () => import("@/pages/articles/ai/agent-control-boundaries"),
   },
   {

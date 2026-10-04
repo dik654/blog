@@ -43,11 +43,51 @@ export const fundamentalsArticles: Article[] = [
     title: "암호학 프리미티브 이론",
     subcategory: "fundamentals",
     sections: [
-      { id: "overview", title: "Primitive claim 읽기" },
-      { id: "security-game", title: "Security game·advantage" },
-      { id: "assumption-composition", title: "Assumption·composition" },
-      { id: "crypto-release", title: "Implementation·release gate" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 잘 도착한 편지도 몰래 읽혔을 수 있습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 내용을 준비하고, 가리고, 확인한 뒤 실행합니다"
+  },
+  {
+    "id": "worked-case",
+    "title": "3. 7번 지시로 30원을 보냅니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 같은 편지 안에서도 숨길 부분과 드러낼 부분이 다릅니다"
+  },
+  {
+    "id": "why-parts",
+    "title": "5. 내용을 가리는 계산만으로는 부족합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 정상 동작과 공격 저항에는 서로 다른 이름이 붙습니다"
+  },
+  {
+    "id": "request-trace",
+    "title": "7. 7번 지시를 복원한 다음에도 처리 이력을 봅니다"
+  },
+  {
+    "id": "source-interface",
+    "title": "8. 표준은 평문 또는 실패를 반환하도록 정합니다"
+  },
+  {
+    "id": "security-game",
+    "title": "9. 한 번 맞힌 결과와 보안 주장은 다릅니다"
+  },
+  {
+    "id": "assumption-composition",
+    "title": "10. 계산의 가정과 실제 사용 조건을 함께 지켜야 합니다"
+  },
+  {
+    "id": "crypto-release",
+    "title": "11. 7번이 다시 도착해도 잔액은 70원이어야 합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/crypto-theory"),
   },
 ];

@@ -19988,30 +19988,32 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/structured-generation-serving#runtime-integration",
   },
   "external-ground-truth-vs-semantic-verifier": {
-    id: "external-ground-truth-vs-semantic-verifier",
-    kind: "concept",
-    domain: "computer-science",
-    label: "External ground truth · semantic verifier distinction",
-    aliases: [
+    "id": "external-ground-truth-vs-semantic-verifier",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "External ground truth · semantic verifier distinction",
+    "aliases": [
       "Semantic Verifier",
       "External Ground Truth",
       "Test-Based Verification",
       "Compiler Feedback",
-      "Runtime Feedback",
+      "Runtime Feedback"
     ],
-    definition:
-      "Compiler exit code나 test 실행 결과처럼 시스템 밖에서 해석 없이 그대로 확정되는 external ground truth(test-based verification·compiler feedback·runtime feedback을 구체적 형태로 포함)와, rubric judge나 LLM이 설명·구조·톤을 읽고 매기는 semantic verifier를 진실이 오는 곳 기준으로 구분한 개념입니다.",
-    canonicalHref: "/cs/ai/agent-verification#verifier-truth-source",
+    "definition": "모델의 자기 보고 밖에서 얻은 테스트·실행·환경 관측과, 의미를 해석해 설명·구조·품질을 판단하는 검증을 구분합니다. 직접 관측도 검사 범위·환경·시점·재현 조건의 한계가 있어 전체 정답을 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/agent-verification#verifier-truth-source"
   },
   "generator-critic-verifier-architecture": {
-    id: "generator-critic-verifier-architecture",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Generator–critic vs. generator–verifier architecture",
-    aliases: ["Critic Model", "Generator–Critic Architecture", "Generator–Verifier Architecture"],
-    definition:
-      "결과를 만든 model과 다른 critic model이 따로 채점하는 generator-critic 구조와, 같은 model이 생성과 검증을 모두 맡는 generator-verifier 구조를 구분해, 분리된 critic은 호출 비용이 더 들지만 generator가 놓친 가정을 다시 놓치지 않고 self-verification은 비용은 없지만 같은 맹점을 반복할 수 있다는 차이를 고정합니다.",
-    canonicalHref: "/cs/ai/agent-verification#critic-architecture",
+    "id": "generator-critic-verifier-architecture",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Generator·critic·verifier의 역할과 오류 상관관계",
+    "aliases": [
+      "Critic Model",
+      "Generator–Critic Architecture",
+      "Generator–Verifier Architecture"
+    ],
+    "definition": "결과 생성과 평가의 역할을 나누고, 같은 모델 또는 다른 모델이 맡을 때의 추가 계산 비용·관측 독립성·오류 상관관계를 비교합니다. Critic이나 verifier라는 명칭만으로 같은 모델인지 다른 모델인지 결정되지 않으며, 다른 모델이나 큰 모델의 정확성 우위는 실제 평가로 확인합니다.",
+    "canonicalHref": "/cs/ai/agent-verification#critic-architecture"
   },
   "plan-execute-verify-loop": {
     id: "plan-execute-verify-loop",
@@ -21342,14 +21344,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/agent-loop-foundations#react-and-tool-augmented-llm",
   },
   "planning-and-plan-mode": {
-    id: "planning-and-plan-mode",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Planning · plan mode",
-    aliases: ["Planning", "Plan Mode"],
-    definition:
-      "매 step 다음 action 하나만 보는 reactive loop와 달리 실행 전에 앞으로 거칠 action의 순서와 dependency를 먼저 만드는 절차를 planning이라 하고, model이 그 초안만 내놓고 실행을 보류해 사람 승인을 기다리는 운영 모드를 plan mode라고 부릅니다.",
-    canonicalHref: "/cs/ai/agent-plan-replanning#planning-and-plan-mode",
+    "id": "planning-and-plan-mode",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Planning · plan mode",
+    "aliases": [
+      "Planning",
+      "Plan Mode"
+    ],
+    "definition": "실행 전에 행동의 순서와 의존 관계를 만드는 절차가 planning입니다. 계획 검토와 실행을 분리한 운영 방식을 plan mode라고 부를 수 있으나, 읽기·쓰기·도구 사용과 승인 조건은 제품과 설정에 따라 확인해야 합니다.",
+    "canonicalHref": "/cs/ai/agent-plan-replanning#planning-and-plan-mode"
   },
   "task-decomposition-and-subgoal": {
     id: "task-decomposition-and-subgoal",

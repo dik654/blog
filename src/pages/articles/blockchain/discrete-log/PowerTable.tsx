@@ -2,27 +2,22 @@ import CryptoFoundationsViz from "../crypto-foundations-viz";
 
 export default function PowerTable() {
   return (
-    <section id="power-table" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">작은 거듭제곱 표로 해·주기·실패 조건을 확인한다</h2>
+    <section data-teach-level="4" id="power-table" className="mb-16 scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">7. 5가 나타난 위치를 찾고 한 바퀴의 길이를 검산합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Mod 17의 nonzero multiplicative group은 order 16입니다. g=3의 거듭제곱은 x=0…15에서 모든 nonzero residue를 한 번씩 방문하므로 order 16의 generator입니다. y=5는 x=5에서 나오고, x=21도 같은 값을 내지만 21≡5 mod 16이므로 discrete log는 subgroup order를 법으로 읽습니다.
+          3절의 계산을 계속하면 x=0…15에서 1, 3, 9, 10, 13, 5, 15, 11, 16, 14, 8, 7, 4, 12, 2, 6을 얻습니다. 다음 곱셈에서 1로 돌아옵니다. 0 아닌 나머지 16개를 한 번씩 방문했으므로 g=3의 위수는 16입니다. Y=5는 다섯 번 곱한 위치에 있으며 21번도 같은 자리입니다. 답은 x≡5 mod 16으로 읽습니다.
         </p>
       </div>
       <CryptoFoundationsViz mode="power-cycle" />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Generator가 아니면 해의 범위가 달라집니다</h3>
+        <h3>작은 부분군에는 해가 없는 입력도 있습니다</h3>
         <p>
-          g=4는 mod 17에서 4,16,13,1의 네 값만 순환해 order 4입니다. 따라서 Y=3에 대한 log base 4는 존재하지 않고 Y=13이라면 x≡3 mod 4인 여러
-          정수 표현이 같은 group element를 냅니다. Protocol이 full group order를 기대하면서 작은-order input을 받아들이면 secret scalar의
-          residue가 새어 나올 수 있으므로 public input의 canonical encoding·identity 금지·subgroup membership을 검증합니다.
+          g=4의 위수는 4입니다. Y=3에는 해가 없고 Y=13에는 x≡3 mod 4인 해가 있습니다. 큰 부분군을 쓰기로 한 프로토콜이 작은 위수의 입력을 받아 계산 결과를 노출하면 비밀 지수의 일부 나머지가 새어 나올 수 있습니다. 따라서 바이트 인코딩과 소속 부분군을 확인하고 항등원 1의 허용 여부도 따로 정합니다.
         </p>
         <h3>표의 ‘뒤섞임’은 security proof가 아닙니다</h3>
         <p>
-          작은 숫자에서 규칙이 눈에 안 보인다는 관찰은 학습 직관일 뿐입니다. 실제 비용은 group representation을 이용하는 알고리즘에 달려 있습니다. Generic
-          group에서는 BSGS와 Pollard rho가 대략 √q scale을 만들지만 Fp*의 DLP에는 index calculus 계열이 group representation을
-          활용합니다. 반면 적절한 elliptic-curve group에는 알려진 subexponential generic shortcut이 없습니다. 이 차이가 parameter size
-          선택에 반영됩니다.
+          작은 표가 뒤섞여 보인다는 느낌은 보안 증명이 아닙니다. 곱셈과 비교만 허용한 공격과 숫자의 표현을 더 활용하는 공격은 비용이 다릅니다. 같은 부분군 위수라도 유한체의 곱셈군과 타원곡선군에 적용되는 최선의 알려진 공격이 같다고 볼 수 없습니다. 먼저 표의 절반씩을 만나는 공격을 같은 사례에 적용하겠습니다.
         </p>
       </div>
     </section>

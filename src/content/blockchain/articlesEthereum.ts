@@ -31,11 +31,51 @@ export const ethereumArticles: Article[] = [
     title: "EVM 완전 분석: 스택 머신에서 인터프리터까지",
     subcategory: "eth-core",
     sections: [
-      { id: "overview", title: "Transaction에서 상태 전이까지" },
-      { id: "machine-step", title: "256-bit stack machine" },
-      { id: "gas-state", title: "Gas·memory·state journal" },
-      { id: "release", title: "Halt·revert·release gate" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 여러 컴퓨터가 같은 지시를 실행해 같은 결과를 얻습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 실행 조건을 준비하고, 한 줄씩 계산하고, 결과를 정리합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 2와 3을 올리고 더하는 데 예산 9를 씁니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 지금 위치, 임시 값, 오래 남는 값을 따로 보관합니다"
+  },
+  {
+    "id": "why-parts",
+    "title": "5. 명령 바이트와 숫자 바이트를 구분해야 합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. EVM은 정해진 명령 규칙을 실행하는 가상 머신입니다"
+  },
+  {
+    "id": "machine-step",
+    "title": "7. 60 02 60 03 01 00을 한 명령씩 읽습니다"
+  },
+  {
+    "id": "word-rule",
+    "title": "8. 256비트를 넘은 덧셈 결과는 나머지만 남습니다"
+  },
+  {
+    "id": "reference-code",
+    "title": "9. add 함수가 두 값을 꺼내고 예산과 위치를 바꿉니다"
+  },
+  {
+    "id": "gas-state",
+    "title": "10. 실행 예산과 되돌릴 범위는 서로 다른 기록입니다"
+  },
+  {
+    "id": "release",
+    "title": "11. 정상 종료, REVERT, 예외 종료를 구분합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/evm-fundamentals"),
   },
   {

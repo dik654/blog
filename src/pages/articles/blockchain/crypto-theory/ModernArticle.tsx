@@ -1,246 +1,90 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ModernCryptoTheoryViz from "./viz/ModernCryptoTheoryViz";
 
 export default function ModernCryptoTheoryArticle() {
-  return (
-    <article className="space-y-14">
-      <section id="overview" className="space-y-6">
-        <header className="space-y-3">
-          <p className="text-sm font-semibold text-primary">
-            Cryptography · claim before algorithm
+  return <article className="space-y-14 [&_p]:leading-8 [&_h2]:text-2xl [&_h2]:font-bold [&_section]:space-y-5">
+    <section id="overview" data-teach-level="S">
+      <h2>1. 잘 도착한 편지도 몰래 읽혔을 수 있습니다</h2>
+      <p>두 사람이 송금 지시를 주고받습니다. 받는 사람이 원래 내용을 읽었다고 해서 중간에서 남이 읽지 않았다는 뜻은 아닙니다. 도착한 내용이 바뀌지 않았는지, 같은 지시를 다시 받은 것은 아닌지도 따로 확인해야 합니다. 암호를 고르는 일은 먼저 이 질문들을 나누는 데서 시작합니다.</p>
+      <p>이 글에서는 한 통의 지시가 보호되고 확인되는 과정을 따라갑니다. 읽을 수 있는 사람을 제한하는 계산과 이미 처리한 지시를 기억하는 장치는 맡는 일이 다릅니다. 계산을 강화하면 비용이 늘고, 처리 이력을 보관하면 저장 공간과 장애 복구가 필요합니다.</p>
+      <p>어떤 공격을 막겠다는 주장인지, 그 주장이 성립하려면 무엇을 지켜야 하는지 설명하는 것이 목표입니다. 우선 보내는 쪽과 받는 쪽 사이의 큰 흐름부터 보겠습니다.</p>
+    </section>
+    <section id="black-box" data-teach-level="B">
+      <h2>2. 내용을 준비하고, 가리고, 확인한 뒤 실행합니다</h2>
+      <p>
+            송신자는 지시의 내용과 사용할 곳을 먼저 정합니다. 보호 장치는 이를 전송 가능한 형태로 바꿉니다. 수신자는 도착한 것이 올바른 상대와 맥락에서 만들어졌는지 검사하고 마지막으로
+            실행 권한과 중복 여부를 확인합니다.
           </p>
-          <h2 className="text-3xl font-bold tracking-tight">
-            암호 primitive는 이름이 아니라 입력·정확성·공격 game·가정·실패
-            확률로 읽는다
-          </h2>
-        </header>
-        <p className="text-lg leading-8 text-foreground/90">
-          고정 사례는 Alice가 message <code>m</code>을 authenticated
-          encryption으로 보내고 Bob이 복호화하는 상황입니다. Correctness는 같은
-          key·nonce·associated data에서 Bob이 m을 얻는다는 뜻입니다.
-          Confidentiality game, ciphertext integrity game, nonce uniqueness와
-          key secrecy는 각각 별도 조건입니다. 복호화가 된다는 사실만으로
-          공격자가 정보를 못 얻거나 ciphertext를 못 위조한다는 결론은 나오지
-          않습니다.
-        </p>
-        <p>
-          이 글은 AES·ECDSA·BLS 같은 개별 알고리즘의 정본을 다시 만들지 않습니다. 보안 주장을 읽고 조합하기 위한 공통 언어를 소유하며 algorithm·parameter
-          선택은 해당 표준과 threat model로 내려갑니다.
-        </p>
-        <ContentBoundary article="crypto-theory" />
-        <ModernCryptoTheoryViz />
-        <div id="paper-goldwasser-micali">
-          <CitationBlock
-            source="Goldwasser & Micali · Probabilistic Encryption"
-            citeKey={1}
-            type="paper"
-            href="https://doi.org/10.1016/0022-0000(84)90070-9"
-          >
-            <p>
-              <strong>문제:</strong> Encryption security를 ciphertext를 역산하기
-              어렵다는 비형식적 설명보다 강한 계산적 정의로 나타내야 합니다.
-            </p>
-            <p>
-              <strong>기여:</strong> Probabilistic encryption과 semantic
-              security의 기반을 제시해 adversary experiment로 confidentiality를
-              논증합니다.
-            </p>
-            <p>
-              <strong>전제:</strong> Polynomial-time adversary와 명시된
-              computational assumption·security parameter를 사용합니다.
-            </p>
-            <p>
-              <strong>근거 범위:</strong> 계산적 encryption security를 game과
-              reduction으로 읽는 이론적 근거입니다.
-            </p>
-            <p>
-              <strong>말하지 않는 것:</strong> 임의 encryption
-              mode·implementation·key management가 자동으로 안전하거나
-              post-quantum이라는 뜻은 아닙니다.
-            </p>
-          </CitationBlock>
-        </div>
-      </section>
-      <section id="security-game" className="space-y-6">
-        <header>
-          <p className="text-sm font-semibold text-primary">
-            01 · security game
-          </p>
-          <h2 className="mt-2 text-2xl font-bold">
-            Adversary가 보는 것·질의할 것·이기는 조건을 적어야 “안전하다”가 측정
-            가능해진다
-          </h2>
-        </header>
-        <ExplainedFormula
-          question="두 challenge 중 하나를 맞히는 game에서 adversary의 advantage를 어떻게 읽을까요?"
-          idea="정보가 전혀 없으면 성공확률은 1/2입니다. 실제 성공확률이 이 baseline에서 얼마나 벗어나는지 절댓값으로 잽니다."
-          formula={String.raw`Adv_{\mathcal A}(\lambda)=\left|\Pr[b'=b]-\frac12\right|`}
-          annotatedFormula={String.raw`Adv_{\mathcal A}(\lambda)=\underbrace{\left|\Pr[b'=b]-\frac12\right|}_{\text{허용 경계 판정}}`}
-          operations={[
-            { expression: String.raw`\left|\Pr[b'=b]-\frac12\right|`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","정보가 전혀 없으면 성공확률은 1/2입니다."] },
-          ]}
-          terms={[
-            {
-              symbol: "𝒜",
-              name: "adversary",
-              description:
-                "Game이 허용한 관찰·oracle queries·시간과 memory 안에서 동작하는 공격자입니다.",
-            },
-            {
-              symbol: "λ",
-              name: "security parameter",
-              description:
-                "Key/parameter family와 adversary resource를 scale하는 입력입니다.",
-            },
-            {
-              symbol: "b",
-              name: "hidden challenge bit",
-              description: "Challenger가 균등하게 고른 실제 branch입니다.",
-            },
-            {
-              symbol: "b'",
-              name: "adversary guess",
-              description:
-                "Adversary가 transcript 뒤 출력한 branch 추측입니다.",
-            },
-            {
-              symbol: "Adv",
-              name: "distinguishing advantage",
-              description:
-                "Random guess baseline을 넘은 무차원 성공 격차입니다.",
-            },
-          ]}
-          assumptions={[
-            "b는 균등하며 game abort·invalid query 규칙을 고정합니다.",
-            "Adversary resources와 oracle access를 명시합니다.",
-            "Advantage가 작다는 주장은 security parameter family에 대한 asymptotic 또는 concrete bound를 필요로 합니다.",
-            "이 식은 correctness·availability·side-channel resistance를 측정하지 않습니다.",
-          ]}
-          interpretation="성공확률 0.51이면 advantage는 0.01입니다. 한 번 맞힌 사례가 1% advantage의 통계적 증거가 되지는 않으며 반복 experiment와 이론 bound를 구분합니다."
-        />
-        <p>
-          Correctness game은 honest key generation과 valid input에서 output
-          relation이 성립하는지 묻습니다.
-          Confidentiality·unforgeability·collision resistance는 adversary win
-          event가 다릅니다. 같은 “128-bit security”도 classical/quantum model,
-          query access, multi-user setting, message distribution과 failure
-          probability가 다르면 같은 claim이 아닙니다.
-        </p>
-      </section>
-      <section id="assumption-composition" className="space-y-6">
-        <header>
-          <p className="text-sm font-semibold text-primary">
-            02 · assumption and composition
-          </p>
-          <h2 className="mt-2 text-2xl font-bold">
-            Reduction은 공격을 hard problem에 연결하지만
-            encoding·nonce·domain·key lifecycle을 대신 검증하지 않는다
-          </h2>
-        </header>
-        <p>
-          Reduction은 primitive를 깨는 adversary를 이용해 assumed-hard problem을 푸는 algorithm을 구성합니다. Tightness loss와
-          adversary resources를 포함해야 concrete parameter를 고를 수 있습니다. Computational security는 제한된 resource에서
-          advantage가 작다는 뜻이고 information-theoretic security는 computation이 무한해도 지정된 view가 정보를 주지 않는다는 뜻입니다.
-          One-time pad와 Shamir sharing의 특정 threshold property를 일반 public-key system 전체로 확대하지 않습니다.
-        </p>
-        <p>
-          Composition에서는 byte encoding, protocol/domain tag, key purpose, nonce uniqueness, randomness source와
-          transcript order가 primitive input을 정합니다. Signature가 valid해도 다른 protocol의 같은 bytes로 replay할 수 있고 AEAD
-          nonce reuse는 표준 primitive를 안전하지 않게 쓸 수 있습니다. Key generation·storage·rotation·revocation과
-          implementation side channel은 security proof 밖의 운영 경계입니다.
-        </p>
-        <div id="paper-nist-key-management">
-          <CitationBlock
-            source="NIST SP 800-57 Part 1 Rev. 5 · Key Management"
-            citeKey={2}
-            type="paper"
-            href="https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final"
-          >
-            <p>
-              <strong>문제:</strong> Cryptographic key와 algorithm strength를
-              생성부터 폐기까지 일관된 lifecycle로 운영해야 합니다.
-            </p>
-            <p>
-              <strong>기여:</strong> Key types, protection requirements,
-              cryptoperiod, compromise recovery와 security-strength guidance를
-              제공합니다.
-            </p>
-            <p>
-              <strong>전제:</strong> NIST 적용 범위와 승인 algorithm/profile,
-              조직 risk assessment를 따릅니다.
-            </p>
-            <p>
-              <strong>근거 범위:</strong> Primitive proof와 별개인
-              key-management lifecycle 경계입니다.
-            </p>
-            <p>
-              <strong>말하지 않는 것:</strong> 특정 system이 compliant하거나
-              side channel·protocol composition까지 안전하다고 인증하지
-              않습니다.
-            </p>
-          </CitationBlock>
-        </div>
-        <div id="paper-rfc5116">
-          <CitationBlock
-            source="RFC 5116 · Authenticated Encryption interface"
-            citeKey={3}
-            type="paper"
-            href="https://www.rfc-editor.org/rfc/rfc5116"
-          >
-            <p>
-              <strong>문제:</strong> Encryption·integrity algorithm을 key,
-              nonce, plaintext와 associated data의 공통 interface로 사용해야
-              합니다.
-            </p>
-            <p>
-              <strong>기여:</strong> AEAD input/output와 nonce-reuse
-              consequence를 명시한 protocol interface를 정의합니다.
-            </p>
-            <p>
-              <strong>전제:</strong> 선택한 AEAD algorithm의 key/nonce length와
-              uniqueness requirement를 지킵니다.
-            </p>
-            <p>
-              <strong>근거 범위:</strong> Authenticated encryption
-              호출·nonce·associated-data 계약입니다.
-            </p>
-            <p>
-              <strong>말하지 않는 것:</strong> RFC interface만 따르면 key
-              distribution·randomness·endpoint authorization이 해결된다는 뜻은
-              아닙니다.
-            </p>
-          </CitationBlock>
-        </div>
-      </section>
-      <section id="crypto-release" className="space-y-6">
-        <header>
-          <p className="text-sm font-semibold text-primary">
-            03 · release gate
-          </p>
-          <h2 className="mt-2 text-2xl font-bold">
-            Algorithm name 대신 profile·game·vector·negative oracle·key
-            generation을 release artifact로 고정한다
-          </h2>
-        </header>
-        <p>
-          Release manifest는 algorithm/profile, parameter/security model,
-          library/compiler/provider, canonical encoding/domain tag, key
-          purpose/generation, nonce strategy, RNG, error behavior와
-          interoperability vectors를 포함합니다. Tests는 known-answer,
-          malformed/truncated input, wrong key/domain/AAD, nonce reuse detector,
-          replay, low-order/invalid point, RNG failure, key rotation과 crash
-          recovery를 다룹니다.
-        </p>
-        <p>
-          기초 6문제는 correctness/security, game, advantage,
-          computational/information-theoretic, reduction과 domain separation을
-          묻습니다. 심화 4문제는 multi-user bound, nonce catastrophe,
-          composition counterexample와 migration release matrix를 설계하게
-          합니다.
-        </p>
-      </section>
-    </article>
-  );
+      <ol className="list-decimal space-y-3 pl-6"><li>무엇을 부탁하는가 → 지시와 목적을 바이트로 정합니다.</li><li>누가 읽을 수 있는가 → 둘만 아는 값을 써 내용을 가립니다.</li><li>전송 중 바뀌었는가 → 도착한 묶음을 검사합니다.</li><li>지금 실행해도 되는가 → 권한과 처리 이력을 확인합니다.</li></ol>
+      <p>앞의 계산이 통과해도 마지막 판단은 남습니다. 한 통을 실제 숫자로 놓으면 어느 장치에서 무슨 일을 해야 하는지 분명해집니다.</p>
+    </section>
+    <section id="worked-case" data-teach-level="0">
+      <h2>3. 7번 지시로 30원을 보냅니다</h2>
+      <p>민수와 지연이 둘만 아는 값을 안전하게 공유했습니다. 민수의 7번 지시는 <code>pay=30</code>이고 이 지시가 쓰일 곳은 <code>shop=A</code>입니다. 잔액은 100원입니다(가정). 이 글의 인물·금액·문자열은 설명용이며 실제 송금 규격이 아닙니다.</p>
+      <p>정상 수신은 잔액을 100−30=70원으로 바꿉니다. 금액이 90원으로 바뀌었거나 사용처가 다른 가게로 바뀌었다면 거절해야 합니다. 똑같은 7번 지시가 다시 도착했을 때도 30원을 또 빼면 안 됩니다. 내용 변경과 재전송은 서로 다른 실패입니다.</p>
+      <p>숫자 7은 돈이 아니라 이번 보호 계산을 구분하는 값입니다. 내용, 사용처, 구분 값이 왜 별도로 필요한지 한 장면 안에서 열어 보겠습니다.</p>
+    </section>
+    <section id="parts" data-teach-level="1">
+      <h2>4. 같은 편지 안에서도 숨길 부분과 드러낼 부분이 다릅니다</h2>
+      <p>보호 장치에는 네 가지가 들어갑니다. 둘만 아는 값, 이번 계산의 구분 값 7, 숨길 내용 <code>pay=30</code>, 숨기지는 않지만 바뀌면 안 되는 사용처 <code>shop=A</code>입니다. 출력은 인터넷에 내보낼 수 있는 하나의 보호된 묶음입니다.</p>
+      <p>수신자는 같은 비밀과 도착한 구분 값·사용처·묶음을 검사합니다. 성공하면 원래 내용을 받고, 실패하면 실행할 내용을 받지 않습니다. 비밀 자체는 전송하는 묶음에 넣지 않습니다.</p>
+      <p>가게 이름은 전달 과정에서 보이게 두면서도 바꿔치기를 감지할 수 있습니다. 각 입력을 지웠을 때 무엇이 깨지는지 살펴보면 설계 이유가 드러납니다.</p>
+    </section>
+    <section id="why-parts" data-teach-level="2">
+      <h2>5. 내용을 가리는 계산만으로는 부족합니다</h2>
+      <p>사용처를 검사에 넣지 않으면 가게 A용 지시를 가게 B에서 해석할 여지가 생깁니다. 지시 번호를 기억하지 않으면 공격자는 이미 승인된 묶음을 그대로 재전송할 수 있습니다. 도착한 바이트가 진짜라는 사실과 지금 실행해도 된다는 판단을 분리하는 이유입니다.</p>
+      <p>한 비밀 아래 보호 계산의 구분 값을 재사용하는 것도 문제입니다. 일부 널리 쓰이는 방식에서는 서로 다른 두 내용을 같은 가림 값으로 덮게 되어 두 내용의 관계가 드러납니다. 한쪽 원문을 아는 공격자가 다른 원문까지 알아낼 수 있습니다. 구체적인 피해는 선택한 방식에 달려 있습니다.</p>
+      <p>네트워크에서 사본을 두 번 받는 것 자체가 새 보호 계산을 두 번 한 것은 아닙니다. 송신자의 구분 값 중복 방지와 수신자의 중복 실행 방지를 각각 구현해야 합니다. 이 역할들에 이제 표준 이름을 붙이겠습니다.</p>
+    </section>
+    <section id="names" data-teach-level="3">
+      <h2>6. 정상 동작과 공격 저항에는 서로 다른 이름이 붙습니다</h2>
+      <p>정상 상대의 지시를 원래대로 되찾는 성질은 <strong>정확성</strong>입니다. 남이 내용을 알아내지 못하게 하는 목표는 <strong>기밀성</strong>, 허가받지 않은 변경이나 위조를 알아내는 목표는 <strong>무결성</strong>입니다. 정상 입력 한 번이 성공했다는 검사는 첫 번째 성질의 사례일 뿐입니다.</p>
+      <dl className="space-y-4"><div><dt className="font-semibold">둘만 아는 값 → 키 K</dt><dd>보호 계산의 비밀 입력입니다. 키를 훔친 공격자는 정당한 상대처럼 계산할 수 있습니다.</dd></div><div><dt className="font-semibold">이번 계산의 구분 값 → nonce N</dt><dd>이름은 한 번 사용하는 수라는 뜻입니다. 이 글의 7에 해당하며 선택한 알고리즘이 요구하는 길이로 표현합니다.</dd></div><div><dt className="font-semibold">원래 내용과 보호된 묶음 → 평문 P와 암호문 C</dt><dd>원래 <code>pay=30</code>을 P로 넣어 C를 얻습니다. 암호문은 수신자가 같은 입력 조건으로 검사합니다.</dd></div><div><dt className="font-semibold">드러내되 바뀌면 안 되는 값 → 연관 데이터 A</dt><dd><code>shop=A</code>처럼 암호화하지 않아도 무결성을 묶어야 하는 값입니다.</dd></div><div><dt className="font-semibold">내용 보호와 변경 검사를 함께 하는 인터페이스 → AEAD</dt><dd>Authenticated Encryption with Associated Data의 약어입니다. 위 네 입력을 사용하는 호출 규칙이며 특정 알고리즘 하나의 이름은 아닙니다.</dd></div></dl>
+      <ContentBoundary article="crypto-theory" />
+      <ModernCryptoTheoryViz />
+      <p>도식의 각 입력에 7번 송금의 값을 대응시키면 됩니다. 다음에는 이 값들이 실제 수신과 실행에서 어디까지 이어지는지 추적합니다.</p>
+    </section>
+    <section id="request-trace" data-teach-level="4">
+      <h2>7. 7번 지시를 복원한 다음에도 처리 이력을 봅니다</h2>
+      <p>민수는 비밀 K, N=7, P=<code>pay=30</code>, A=<code>shop=A</code>로 암호화합니다. 7은 설명용 정수이며 실제 호출에는 알고리즘이 요구하는 바이트 길이로 인코딩합니다. 암호문 바이트를 손으로 지어내지는 않겠습니다. 이 글은 특정 라이브러리 실행 결과를 주장하지 않습니다.</p>
+      <p>지연은 받은 N, A, C와 자신이 가진 K를 복호화에 넣습니다. 유효한 입력이면 <code>pay=30</code>을 얻습니다. 잔액 100원과 실행 권한을 확인한 뒤 70원으로 바꾸면서 7번을 처리했다고 함께 기록합니다. 이 두 기록을 따로 저장하다 장애가 나면 같은 지시를 다시 실행할 수 있으므로 하나의 일관된 저장 작업으로 묶습니다.</p>
+      <AlgorithmBlock title="송금 수신의 개념 절차 (의사코드)" input={["K: 허가된 상대와 공유한 키", "N=7, A='shop=A', C: 수신한 보호 묶음", "balance=100, processed: 처리 이력 (가정)"]} steps={[{code:"P ← AEAD_DECRYPT(K, N, A, C)",note:"실패를 반환하면 아래 단계를 실행하지 않습니다."},{code:"지시의 형식·사용처·권한을 검증한다",note:"복호화 성공 자체가 송금 권한을 주지는 않습니다."},{code:"원자적 저장 작업을 시작한다"},{code:"processed에 (키 세대, 지시 번호 7)가 있으면 거절한다"},{code:"balance ≥ 30을 확인하고 balance ← balance − 30"},{code:"processed에 (키 세대, 7)를 추가하고 저장을 확정한다"}]} output="첫 수신: 70원. 같은 지시 재수신: 70원 유지." />
+      <p>원자적 저장은 전부 반영하거나 전부 취소하는 저장 방식입니다. 7번 지시의 결과가 70원에 머무는 이유는 암호 검사와 이 저장 절차가 함께 있기 때문입니다. 원문 표준이 어느 부분을 규정하는지 확인하겠습니다.</p>
+    </section>
+    <section id="source-interface" data-teach-level="5">
+      <h2>8. 표준은 평문 또는 실패를 반환하도록 정합니다</h2>
+      <CitationBlock source="RFC 5116 §2.2, p.7" citeKey={3} type="paper" href="https://www.rfc-editor.org/rfc/rfc5116#section-2.2"><p>원문은 복호화 출력을 “either a plaintext value P or a special symbol FAIL”로 적습니다.</p></CitationBlock>
+      <p>7번 지시에서 이 문구는 검사에 실패한 내용을 송금 처리기로 넘기지 말라는 경계로 적용됩니다. A를 가게 B로 바꾸거나 C를 변조한 입력은 안전한 알고리즘의 보안 전제 아래 거절 대상입니다. 실패한 암호문에서 일부 읽힌 금액을 먼저 실행해서는 안 됩니다.</p>
+      <div id="paper-rfc5116"><p>같은 문서의 §2.1은 K·N·P·A 입력을, §3.1은 같은 키 아래 nonce의 중복 방지를 다룹니다. 7번을 사용한 송신자는 장애 후에도 그 사용 사실을 잊으면 안 됩니다. §1.2는 재전송 방지와 접근 권한을 이 인터페이스의 범위 밖에 둡니다. 따라서 7절의 처리 이력은 호출자가 추가한 책임입니다.</p></div>
+      <p>이 표준은 키를 처음 안전하게 나누는 과정이나 송금 프로그램 전체를 인증하지 않습니다. 인터페이스를 읽었으므로 이제 남이 내용을 구분할 수 없다는 주장을 어떻게 수량화하는지 보겠습니다.</p>
+    </section>
+    <section id="security-game" data-teach-level="6">
+      <h2>9. 한 번 맞힌 결과와 보안 주장은 다릅니다</h2>
+      <p>공격자가 30원과 90원 지시 중 무엇이 보호되었는지 맞히게 합니다. 사용처와 길이는 같게 맞추고 둘 중 하나를 같은 확률로 고릅니다. 아무 정보가 없어도 절반은 맞습니다. 공격자가 무엇을 볼 수 있고 어떤 추가 암호화·복호화를 요청할 수 있는지도 먼저 정해야 공정한 비교가 됩니다.</p>
+      <ExplainedFormula question="우연히 맞힐 확률보다 얼마나 더 잘 구분할까요?" idea="성공확률에서 정보가 없는 기준 1/2을 빼고 방향을 없애기 위해 절댓값을 취합니다." formula={String.raw`Adv_{\mathcal A}(\lambda)=\left|\Pr[b'=b]-\frac12\right|`} annotatedFormula={String.raw`Adv_{\mathcal A}(\lambda)=\underbrace{\left|\Pr[b'=b]-\frac12\right|}_{\text{동일 확률 추측과의 격차}}`} operations={[{expression:String.raw`\Pr[b'=b]`,annotation:["공격자의 추측과 실제 선택이 일치할 확률입니다."]},{expression:String.raw`\frac12`,annotation:["두 지시를 똑같은 확률로 고른 경우의 기준입니다."]}]} terms={[{symbol:"𝒜",name:"공격자",description:"게임이 허용한 시간·메모리·질의 안에서 추측합니다."},{symbol:"λ",name:"보안 매개변수",description:"키와 입력 크기의 계열을 정합니다."},{symbol:"b, b′",name:"실제 선택과 추측",description:"30원 또는 90원에 대응하는 두 선택입니다."}]} assumptions={["선택 b는 균등하고 두 메시지는 같은 길이입니다.","공격자가 볼 정보와 추가 질의, 시간·메모리 한도를 고정합니다.","문헌에 따라 advantage를 두 배로 정의하므로 정의를 비교해야 합니다."]} interpretation="성공확률이 0.51이라고 가정하면 격차는 0.01입니다. 100번 중 51번 맞힌 실험만으로 실제 성공확률이 0.51이라고 확정하지는 못합니다." />
+      <div id="paper-goldwasser-micali"><CitationBlock source="Goldwasser–Micali · Probabilistic Encryption" citeKey={1} type="paper" href="https://doi.org/10.1016/0022-0000(84)90070-9"><p>확률적 암호화 연구는 무엇을 숨긴다는 것인지 계산 능력이 제한된 공격자를 기준으로 정의합니다. 위 식은 이 글에서 채택한 구분 게임의 표기이며 해당 논문의 식을 그대로 인용한 것은 아닙니다. 복호화의 정확성과 기밀성 증명을 나눠 읽는 이론적 근거로 사용합니다.</p></CitationBlock></div>
+      <p>위조 게임은 질문이 바뀝니다. 공격자가 허가받지 않은 새 묶음을 검사에 통과시키는지가 승리 조건입니다. 기밀성 게임에서 실패한 공격자가 위조 게임에서도 실패한다고 자동으로 결론낼 수 없습니다. 사용자마다 실패 사건의 상한이 ε라면 사용자 100명의 어느 한 명이라도 실패할 확률은 합집합 부등식으로 최대 100ε입니다. 이 상한에는 독립성이 필요 없지만 각 사용자에 대한 보안 조건과 총 질의 수가 맞아야 합니다.</p>
+      <p>실험과 정의를 구분하면 30원 지시를 한 번 잘 보낸 경험의 한계가 보입니다. 마지막으로 계산 능력과 실제 운영이 이 보장에 어떤 조건을 붙이는지 정리합니다.</p>
+    </section>
+    <section id="assumption-composition" data-teach-level="7">
+      <h2>10. 계산의 가정과 실제 사용 조건을 함께 지켜야 합니다</h2>
+      <p>계산적 보안은 정해진 자원 안에서 공격 성공률이 작다는 주장입니다. 환원 증명은 암호를 깨는 공격자를 부품으로 사용해 어렵다고 가정한 수학 문제를 푸는 프로그램을 구성합니다. 예를 들어 성공확률이 100분의 1로 줄어드는 환원이라면 공격자의 0.01 격차로 얻는 문제 풀이 성공 기여는 0.0001 수준입니다(가정). 이 손실과 늘어난 계산 시간을 빼고 보안 강도를 말할 수 없습니다.</p>
+      <p>정보 이론적 보안은 계산 능력을 무한히 주어도 지정한 관찰에서 비밀 정보를 얻지 못한다는 뜻입니다. 메시지 길이만큼 균등한 비밀을 한 번만 쓰는 일회용 패드가 대표적입니다. 비밀을 재사용하거나 생성·전달 과정이 새면 그 전제가 사라집니다. 한 부품의 성질이 전체 서비스로 자동 확대되는 것도 아닙니다.</p>
+      <p>사용 맥락도 별도로 고정합니다. <code>approve:30</code>이라는 같은 바이트를 한 서비스에서는 30원 지출 승인으로, 다른 서비스에서는 권한 30개 부여로 해석하면 서명이 유효해도 의도가 달라집니다(가정). 프로토콜·버전·사용처를 명확하게 인코딩해 서명 대상에 포함하는 방법을 도메인 분리라고 합니다. 같은 키를 여러 용도로 쓰는 문제와 nonce 중복 문제를 이 이름 하나로 모두 해결할 수는 없습니다.</p>
+      <div id="paper-nist-key-management"><CitationBlock source="NIST SP 800-57 Part 1 Rev.5" citeKey={2} type="paper" href="https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final"><p>이 권고서는 키의 생성·보호·사용 기간·훼손 후 대응을 구분합니다. 수학적 보안 증명 밖의 키 관리 책임을 확인하는 자료입니다. 특정 송금 구현의 규정 준수나 부채널 방어를 인증하는 자료로 쓰지 않습니다.</p></CitationBlock></div>
+      <p>키 저장소에서 비밀을 훔치거나 처리 시간을 관찰해 비밀의 일부를 알아내는 공격은 추상적인 입력·출력 게임에 포함했는지 따져야 합니다. <Link to="/cs/crypto/quantum-computing-and-cryptographic-risk">양자 계산이 바꾸는 가정</Link>도 공격자 자원을 정할 때 함께 검토합니다.</p>
+    </section>
+    <section id="crypto-release" data-teach-level="7">
+      <h2>11. 7번이 다시 도착해도 잔액은 70원이어야 합니다</h2>
+      <p>실제 구현에서는 공식 시험 벡터로 알려진 입력과 출력을 확인한 뒤 다른 구현과 같은 결과인지 비교합니다. 잘못된 키·사용처·길이·태그, 잘린 메시지는 실패해야 합니다. 이는 표준과의 일치 검사이며 새로운 보안 증명은 아닙니다.</p>
+      <p>nonce 중복 시험에서는 같은 키·7번으로 서로 다른 평문을 새로 암호화하려는 요청을 송신자가 거절하는지 확인합니다. 단순히 같은 암호문을 재전송하는 시험은 수신자의 중복 실행 방지를 확인합니다. 장애 복구로 송신 카운터나 수신 처리 이력이 과거로 돌아가면 두 방어가 모두 무너질 수 있습니다.</p>
+      <p>라이브러리를 교체할 때는 알고리즘·매개변수·소스 버전, 바이트 인코딩, 키 세대와 오류 처리를 고정합니다. 새 구현으로 쓴 메시지를 구 구현이 읽는 방향과 그 반대 방향을 각각 검사합니다. 되돌리기가 과거 키나 이미 쓴 nonce를 다시 활성화해서는 안 됩니다. 이 글에서는 이 시험들을 실제 시스템에서 실행하지 않았습니다.</p>
+      <p>다음 질문은 같은 지시에서 무엇이 달라지는지 예측하는 연습입니다.</p>
+      <ul className="list-disc space-y-3 pl-6"><li>유효한 7번 지시를 그대로 두 번 받으면 암호 검사만으로 두 번째 송금을 막을까요? (답: 7절)</li><li>30원과 90원을 맞히는 실제 성공확률이 0.51이라면 이 글의 advantage는 얼마일까요? (답: 9절)</li><li>사용처를 보호 대상에서 빼면 암호문을 바꾸지 않고도 어떤 의미의 혼동이 생길까요? (답: 5절)</li></ul>
+    </section>
+  </article>;
 }

@@ -1136,7 +1136,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/1602.04485",
       note: "특정 함수족에서 깊이와 폭 사이의 지수적 표현 격차를 보인 이론 결과",
     },
-  ],
+    {
+      "kind": "핵심 논문",
+      "href": "https://www.deeplearningbook.org/contents/mlp.html",
+      "note": "6.1절 식 (6.3)–(6.11)의 중간값을 같은 입력에 적용합니다.",
+      "label": "Deep Learning 6.1 · 실제 XOR 계산"
+    },
+],
   "ai/autoencoder": [
     {
       kind: "핵심 논문",
@@ -2731,7 +2737,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/2210.03629",
       note: "판단·행동·관찰을 번갈아 수행하는 에이전트 패턴",
     },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "§2 context equation",
+      "href": "https://arxiv.org/html/2210.03629v3#S2",
+      "note": "2026-10-04 원문 확인. 390→430→390과 read/patch/measure history"
+    },
+],
   "ai/agent-plan-replanning": [
     {
       kind: "핵심 논문",
@@ -2739,7 +2751,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/2303.11366",
       note: "외부·내부 feedback을 언어적 reflection과 episodic memory로 다음 trial에 전달하는 구조",
     },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "Algorithm 1, Append sr_t to mem",
+      "href": "https://arxiv.org/html/2303.11366v4#S3",
+      "note": "2026-10-04 원문 확인. C의 실패를 B 다음 시도의 수정·검사 기록에 연결"
+    },
+],
   "ai/agent-delegation-contracts": [
     {
       kind: "공식 가이드",
@@ -2753,7 +2771,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/",
       note: "Single/multi-agent orchestration·run exit condition·guardrail·human intervention 설계",
     },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "Multi-agent systems, Manager",
+      "href": "https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/",
+      "note": "2026-10-04 원문 확인. A1·B1 검증 후 고유4건 정리"
+    },
+],
   "ai/agent-extension-boundaries": [
     {
       kind: "공식 가이드",
@@ -3761,7 +3785,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://developers.openai.com/api/docs/guides/agents/guardrails-approvals",
       note: "Input/output/tool guardrail과 side effect 전 human approval의 공식 runtime control 경계",
     },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "The structure of an evaluation, outcome",
+      "href": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+      "note": "2026-10-04 원문 확인. v2 페이지의 실제 폭·버튼 상태"
+    },
+],
   "ai/agent-verification": [
     {
       kind: "공식 문서",
@@ -3769,7 +3799,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://developers.openai.com/api/docs/guides/agents/guardrails-approvals",
       note: "결정적 guardrail·승인·runtime observation을 model 판단과 분리하는 근거",
     },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "Types of graders, binary all graders must pass",
+      "href": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+      "note": "2026-10-04 원문 확인. 26/27과 0.7의 서로 다른 판정"
+    },
+],
   "ai/harness-failure-ablation": [
     {
       kind: "공식 문서",
@@ -3791,7 +3827,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://www.langchain.com/blog/the-art-of-loop-engineering",
       note: "agent·verification·event-driven·hill-climbing loop라는 최근 운영 어휘",
     },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "When to use agents",
+      "href": "https://www.anthropic.com/engineering/building-effective-agents",
+      "note": "2026-10-04 원문 확인. 파일 선택과 고정 검사·반영 권한 분리"
+    },
+],
   "ai/agent-code-mode": [
     {
       kind: "공식 문서",
@@ -5088,7 +5130,13 @@ export const ARTICLE_EVIDENCE: Readonly<
   "crypto/discrete-log": [
     { kind: "핵심 논문", label: "Pollard · Monte Carlo Methods for Index Computation", href: "https://doi.org/10.1090/S0025-5718-1978-0491431-9", note: "Collision walk로 작은 memory와 expected O(√q)를 만드는 rho 원문" },
     { kind: "핵심 논문", label: "Shanks · Class number, a theory of factorization, and genera", href: "https://www.ams.org/books/pspum/020/", note: "Baby-step/giant-step meet-in-the-middle의 고전적 출처와 범위" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "Handbook of Applied Cryptography §3.6 Algorithm 3.56",
+      "href": "https://cacr.uwaterloo.ca/hac/about/chap3.pdf",
+      "note": "p.105의 실제 BSGS 반환식에 g=3·Y=5·q=16 사례를 대입합니다."
+    },
+],
   "crypto/diffie-hellman": [
     { kind: "핵심 논문", label: "Diffie & Hellman · New Directions in Cryptography", href: "https://ee.stanford.edu/~hellman/publications/24.pdf", note: "공개 채널의 public-key distribution과 exponentiation key-agreement 아이디어 원문" },
     { kind: "공식 규격", label: "RFC 7748 · X25519 and X448", href: "https://www.rfc-editor.org/rfc/rfc7748.html", note: "Curve·scalar decoding·u-coordinate bytes·DH procedure·test-vector contract" },
@@ -6363,7 +6411,13 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/train-validation-test": [
     { kind: "보충 읽기", label: "The Elements of Statistical Learning · Model Assessment and Selection", href: "https://hastie.su.domains/ElemStatLearn/", note: "Training error·selection·final assessment와 generalization 역할 구분" },
     { kind: "핵심 논문", label: "Cross-Validation: What Does It Estimate and How Well Does It Do It?", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/", note: "Cross-validation estimand와 독립 final evaluation 경계" },
-  ],
+    {
+      "kind": "공식 문서",
+      "href": "https://scikit-learn.org/stable/common_pitfalls.html#data-leakage",
+      "note": "2026-10-04 확인. Test를 선택에 쓰지 않는 실제 문구와 train-only 전처리 원칙을 800/200/200명 사례에 적용합니다.",
+      "label": "scikit-learn · Common pitfalls 12.1–12.2.1"
+    },
+],
   "ai/flash-attention-io-aware-kernel": [
     {
       "kind": "핵심 논문",
@@ -7979,7 +8033,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://live.ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/f6ad70417c73f585b7ca065153d25d25_6002_l1.pdf",
       note: "집중 회로 근사의 전하 축적·변하는 자기 선속 조건, 전하 보존과 패러데이 법칙에서 회로식을 얻는 설명의 출처. 논문 증거와 교육용 모델을 구분한다.",
     },
-  ],
+    {
+      "kind": "공개 강의",
+      "label": "MIT 6.002 Lecture 2 · 수동 부호 규칙과 vi",
+      "href": "https://live.ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/99b2a662083d1b1f487c55ea0f0d0220_6002_l2.pdf",
+      "note": "9쪽의 실제 소비 전력 부호 규칙을 72=36+18+18 mW 검산에 적용합니다. 사례 숫자는 가정입니다."
+    },
+],
   "semiconductors/bands-and-doping": [
     {
       kind: "핵심 논문",
@@ -8023,7 +8083,13 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "circuits/resistance-and-power-dissipation": [
     { kind: "공식 문서", label: "Vishay D/CRCW e3, document 20035 (14-Apr-2026), 1–2쪽", href: "https://www.vishay.com/docs/20035/dcrcwe3.pdf", note: "D11/CRCW0603의 저항 범위, 표준 0.10 W와 확장 0.125 W, 열 조건을 공식 PDF에서 확인했다. 회로 숫자는 가정이다." },
-  ],
+    {
+      "kind": "공개 강의",
+      "label": "MIT 6.002 Lecture 22 · 저항의 P=VI=V²/R",
+      "href": "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/62cc78db14ad37dede55c361711ba2ae_6002_l22.pdf",
+      "note": "4쪽 Example 1의 부품별 전력식에 가상 12 V 회로의 각 전압·전류를 넣습니다."
+    },
+],
   "circuits/storage-elements-and-transients": [
     { kind: "공개 강의", label: "MIT OCW 6.002 Lecture 12, ‘Capacitors and First-Order Systems’, 4–5·10–11쪽", href: "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/84f4b553fc6a1ddd7007465041c4e213_6002_l12.pdf", note: "축전기 q=Cv, i=C dv/dt와 RC 지수 응답·초기 조건을 공식 강의안에서 확인했다. 수치는 글의 가정이다." },
     { kind: "공개 강의", label: "MIT OCW 8.02 Chapter 11, ‘Inductance’ (2007), 10·17–19쪽", href: "https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2007/f5c35823a7faac0d893754ab42804e7e_chap11inductance.pdf", note: "½LI², RL 상승식과 L/R 시간 상수·자기장 에너지 장부를 공식 PDF에서 확인했다. 1 H는 가정이다." },

@@ -75,188 +75,266 @@ export const ARTICLE_LEARNING: Readonly<
   Record<string, ArticleLearningContract>
 > = {
   "ai/deep-learning-overview": {
-    entryLevel: true,
-    entryNote:
-      "Input·target·gradient를 아직 모른다고 가정합니다. 먼저 representation 하나를 정의하고, 형태를 본 뒤 depth의 함수 합성으로만 확장합니다.",
-    coreIdea:
-      "딥러닝의 depth는 작은 변환이 만든 중간 representation을 다음 변환이 재사용하는 함수 합성입니다. 무엇을 보존할지는 objective가 편향하며, 표현 가능성·optimization·generalization은 별도 주장입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
+    "entryLevel": true,
+    "entryNote": "두 스위치 네 경우의 답을 만드는 작은 계산에서 시작해 중간 표현, 같은 입력의 추적, 원문 식 대입을 이어 갑니다.",
+    "coreIdea": "딥러닝의 depth는 작은 변환이 만든 중간 representation을 다음 변환이 재사용하는 함수 합성입니다. 무엇을 보존할지는 objective가 편향하며, 표현 가능성·optimization·generalization은 별도 주장입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "representation-learning",
-        role: "Task에 쓸 중간 숫자 표현을 objective와 model parameter로 함께 학습합니다.",
+        "id": "representation-learning",
+        "role": "Task에 쓸 중간 숫자 표현을 objective와 model parameter로 함께 학습합니다."
       },
       {
-        id: "representation-objective-bias",
-        role: "Data·target·loss가 representation이 보존할 차이를 제한하는 경계를 설명합니다.",
+        "id": "representation-objective-bias",
+        "role": "Data·target·loss가 representation이 보존할 차이를 제한하는 경계를 설명합니다."
       },
       {
-        id: "depth-efficiency",
-        role: "중간 계산 재사용이 특정 compositional function의 표현 비용을 줄이는 조건을 설명합니다.",
+        "id": "depth-efficiency",
+        "role": "중간 계산 재사용이 특정 compositional function의 표현 비용을 줄이는 조건을 설명합니다."
       },
       {
-        id: "depth-optimization-boundary",
-        role: "표현 가능성·optimization·generalization을 서로 다른 주장으로 분리합니다.",
-      },
+        "id": "depth-optimization-boundary",
+        "role": "표현 가능성·optimization·generalization을 서로 다른 주장으로 분리합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "representation-learning",
-        sectionId: "overview",
-        intuition:
-          "Pixel 같은 원시 숫자를 다음 계산이 쓰기 좋은 중간 좌표로 바꾸고, 어떤 좌표를 만들지도 task objective로 함께 배웁니다.",
-        workedExample:
-          "Image classifier는 pixel에서 edge 반응, 반복 texture, object part를 거쳐 class score에 유용한 표현을 만듭니다.",
-        boundary:
-          "Hidden coordinate 하나가 사람 개념 하나와 정확히 대응하거나 모든 downstream task에 최적이라는 뜻은 아닙니다.",
+        "id": "representation-learning",
+        "sectionId": "names",
+        "intuition": "Pixel 같은 원시 숫자를 다음 계산이 쓰기 좋은 중간 좌표로 바꾸고, 어떤 좌표를 만들지도 task objective로 함께 배웁니다.",
+        "workedExample": "교과서의 두 스위치 예에서 (1,1)을 중간 표현 (2,1)로 바꾸면 마지막 계산 2−2×1=0이 요구한 답을 만듭니다.",
+        "boundary": "Hidden coordinate 하나가 사람 개념 하나와 정확히 대응하거나 모든 downstream task에 최적이라는 뜻은 아닙니다."
       },
       {
-        id: "representation-objective-bias",
-        sectionId: "overview",
-        intuition:
-          "모델은 입력의 모든 차이를 보존하지 않고 현재 loss를 줄이는 데 도움이 되는 차이를 우선 남깁니다.",
-        workedExample:
-          "동일 사진도 animal classification objective는 얼굴 윤곽을, 촬영지 classification objective는 배경을 더 유용하게 만들 수 있습니다.",
-        boundary:
-          "Architecture만 보고 representation quality를 단정하지 않고 data·target·loss를 함께 기록합니다.",
+        "id": "representation-objective-bias",
+        "sectionId": "names",
+        "intuition": "모델은 입력의 모든 차이를 보존하지 않고 현재 loss를 줄이는 데 도움이 되는 차이를 우선 남깁니다.",
+        "workedExample": "정답이 같은 (0,1)과 (1,0)은 중간 표현 (1,0)으로 합쳐집니다. 이번 목표에는 두 입력의 차이를 보존할 필요가 없습니다.",
+        "boundary": "Architecture만 보고 representation quality를 단정하지 않고 data·target·loss를 함께 기록합니다."
       },
       {
-        id: "depth-efficiency",
-        sectionId: "depth",
-        intuition:
-          "앞 층이 만든 작은 계산을 여러 뒤쪽 판단이 공유하면 모든 조합을 한 층에 펼치는 비용을 줄일 수 있습니다.",
-        workedExample:
-          "Edge를 여러 texture가 재사용하고 texture를 여러 object part가 다시 재사용합니다.",
-        boundary:
-          "Depth separation은 정해진 함수족·근사 조건의 표현 결과이며 실제 학습 성공을 자동 보장하지 않습니다.",
+        "id": "depth-efficiency",
+        "sectionId": "depth",
+        "intuition": "앞 층이 만든 작은 계산을 여러 뒤쪽 판단이 공유하면 모든 조합을 한 층에 펼치는 비용을 줄일 수 있습니다.",
+        "workedExample": "같은 중간 합과 음수 제거를 네 입력에 재사용합니다. 다만 이 작은 예 자체가 깊이의 점근적 이점을 증명하지는 않습니다.",
+        "boundary": "Depth separation은 정해진 함수족·근사 조건의 표현 결과이며 실제 학습 성공을 자동 보장하지 않습니다."
       },
       {
-        id: "depth-optimization-boundary",
-        sectionId: "boundaries",
-        intuition:
-          "함수를 나타낼 수 있는가, parameter를 찾을 수 있는가, 새 data에도 유지되는가는 서로 다른 질문입니다.",
-        workedExample:
-          "더 깊은 network가 target function을 작게 표현해도 poor initialization으로 training loss가 더 높을 수 있습니다.",
-        boundary:
-          "Parameter 수 하나만 맞춘 실험으로 depth의 보편적 우월성을 주장하지 않습니다.",
-      },
+        "id": "depth-optimization-boundary",
+        "sectionId": "boundaries",
+        "intuition": "함수를 나타낼 수 있는가, parameter를 찾을 수 있는가, 새 data에도 유지되는가는 서로 다른 질문입니다.",
+        "workedExample": "더 깊은 network가 target function을 작게 표현해도 poor initialization으로 training loss가 더 높을 수 있습니다.",
+        "boundary": "Parameter 수 하나만 맞춘 실험으로 depth의 보편적 우월성을 주장하지 않습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "00 용어",
-        relation: "Representation 하나를 먼저 정의합니다.",
-        concepts: ["representation-learning"],
+        "label": "문제와 중간값",
+        "relation": "네 입력을 바로 더해서 풀 수 없는 이유를 먼저 확인하고, 다음 계산에 유용한 숫자로 바꿉니다.",
+        "concepts": [
+          "representation-learning",
+          "representation-objective-bias"
+        ]
       },
       {
-        label: "01 형태",
-        relation: "Objective가 무엇을 보존하도록 만드는지 확인합니다.",
-        concepts: ["representation-learning", "representation-objective-bias"],
+        "label": "같은 입력 추적",
+        "relation": "(1,1)이 (2,1)을 거쳐 0이 되는 과정을 원문 식과 대조합니다.",
+        "concepts": [
+          "depth-efficiency"
+        ]
       },
       {
-        label: "02 합성",
-        relation: "중간 표현을 다음 층이 재사용합니다.",
-        concepts: ["depth-efficiency"],
-      },
-      {
-        label: "03 경계",
-        relation: "표현·optimization·generalization 주장을 분리합니다.",
-        concepts: ["depth-efficiency", "depth-optimization-boundary"],
-      },
+        "label": "가능성과 실제 학습",
+        "relation": "정답을 표현할 수 있음과 그 수를 배우거나 새 자료에 적용할 수 있음을 구별합니다.",
+        "concepts": [
+          "depth-optimization-boundary"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question: "Representation과 representation learning을 pixel 예로 구분하세요.",
-        answerChecklist: ["중간 숫자", "pixel input", "task에 유용", "parameter와 함께 학습"],
-        requiredConcepts: ["representation-learning"],
-        sectionId: "overview",
+        "level": "basic",
+        "question": "입력 (1,1)이 중간 표현 (2,1)을 거쳐 답 0이 되는 과정을 설명하세요.",
+        "answerChecklist": [
+          "합 복사 (2,2)",
+          "이동 (2,1)",
+          "음수 제거 뒤 동일",
+          "2−2×1=0"
+        ],
+        "requiredConcepts": [
+          "representation-learning"
+        ],
+        "sectionId": "trace"
       },
       {
-        level: "basic",
-        question: "같은 사진에 다른 objective를 주면 representation이 달라질 수 있는 이유를 설명하세요.",
-        answerChecklist: ["data", "target", "loss", "보존할 차이", "architecture alone 아님"],
-        requiredConcepts: ["representation-objective-bias"],
-        sectionId: "overview",
+        "level": "basic",
+        "question": "같은 사진에 다른 objective를 주면 representation이 달라질 수 있는 이유를 설명하세요.",
+        "answerChecklist": [
+          "data",
+          "target",
+          "loss",
+          "보존할 차이",
+          "architecture alone 아님"
+        ],
+        "requiredConcepts": [
+          "representation-objective-bias"
+        ],
+        "sectionId": "names"
       },
       {
-        level: "basic",
-        question: "Hidden coordinate 하나를 사람 개념 하나로 단정하면 안 되는 이유를 설명하세요.",
-        answerChecklist: ["distributed representation", "objective dependence", "no one-to-one guarantee"],
-        requiredConcepts: ["representation-learning", "representation-objective-bias"],
-        sectionId: "overview",
+        "level": "basic",
+        "question": "(0,1)과 (1,0)이 같은 중간 표현으로 합쳐져도 이번 목표를 풀 수 있는 이유를 설명하세요.",
+        "answerChecklist": [
+          "둘 다 정답 1",
+          "중간 표현 (1,0)",
+          "목표에 불필요한 차이",
+          "다른 과제에서는 보존 필요 가능"
+        ],
+        "requiredConcepts": [
+          "representation-learning",
+          "representation-objective-bias"
+        ],
+        "sectionId": "trace"
       },
       {
-        level: "basic",
-        question: "x→h1→h2→ŷ에서 각 화살표와 중간 h의 역할을 설명하세요.",
-        answerChecklist: ["layer transform", "intermediate representation", "reuse", "task output"],
-        requiredConcepts: ["representation-learning", "depth-efficiency"],
-        sectionId: "depth",
+        "level": "basic",
+        "question": "x→h1→h2→ŷ에서 각 화살표와 중간 h의 역할을 설명하세요.",
+        "answerChecklist": [
+          "layer transform",
+          "intermediate representation",
+          "reuse",
+          "task output"
+        ],
+        "requiredConcepts": [
+          "representation-learning",
+          "depth-efficiency"
+        ],
+        "sectionId": "depth"
       },
       {
-        level: "basic",
-        question: "Edge→texture→part 예에서 depth efficiency가 생기는 지점을 찾으세요.",
-        answerChecklist: ["small transform", "shared intermediate", "composition", "not layer count alone"],
-        requiredConcepts: ["depth-efficiency"],
-        sectionId: "depth",
+        "level": "basic",
+        "question": "Edge→texture→part 예에서 depth efficiency가 생기는 지점을 찾으세요.",
+        "answerChecklist": [
+          "small transform",
+          "shared intermediate",
+          "composition",
+          "not layer count alone"
+        ],
+        "requiredConcepts": [
+          "depth-efficiency"
+        ],
+        "sectionId": "depth"
       },
       {
-        level: "basic",
-        question: "표현 가능성·optimization·generalization이 답하는 질문을 각각 구분하세요.",
-        answerChecklist: ["can represent", "can find parameters", "new data", "separate claims"],
-        requiredConcepts: ["depth-optimization-boundary"],
-        sectionId: "boundaries",
+        "level": "basic",
+        "question": "표현 가능성·optimization·generalization이 답하는 질문을 각각 구분하세요.",
+        "answerChecklist": [
+          "can represent",
+          "can find parameters",
+          "new data",
+          "separate claims"
+        ],
+        "requiredConcepts": [
+          "depth-optimization-boundary"
+        ],
+        "sectionId": "boundaries"
       },
       {
-        level: "advanced",
-        question: "얕고 넓은 model과 깊고 좁은 model의 표현 비용을 공정하게 비교하는 조건을 설계하세요.",
-        answerChecklist: ["target function family", "approximation error", "parameter/compute budget", "depth and width", "no universal claim"],
-        requiredConcepts: ["depth-efficiency", "depth-optimization-boundary"],
-        sectionId: "boundaries",
+        "level": "advanced",
+        "question": "얕고 넓은 model과 깊고 좁은 model의 표현 비용을 공정하게 비교하는 조건을 설계하세요.",
+        "answerChecklist": [
+          "target function family",
+          "approximation error",
+          "parameter/compute budget",
+          "depth and width",
+          "no universal claim"
+        ],
+        "requiredConcepts": [
+          "depth-efficiency",
+          "depth-optimization-boundary"
+        ],
+        "sectionId": "boundaries"
       },
       {
-        level: "advanced",
-        question: "Classification objective를 바꿨을 때 representation shift를 검증하는 실험을 설계하세요.",
-        answerChecklist: ["same data", "different target/loss", "probe or intervention", "held-out evaluation", "causal caveat"],
-        requiredConcepts: ["representation-objective-bias"],
-        sectionId: "boundaries",
+        "level": "advanced",
+        "question": "Classification objective를 바꿨을 때 representation shift를 검증하는 실험을 설계하세요.",
+        "answerChecklist": [
+          "same data",
+          "different target/loss",
+          "probe or intervention",
+          "held-out evaluation",
+          "causal caveat"
+        ],
+        "requiredConcepts": [
+          "representation-objective-bias"
+        ],
+        "sectionId": "boundaries"
       },
       {
-        level: "advanced",
-        question: "Depth separation theorem이 현실 training 결과를 직접 보장하지 않는 이유를 설명하세요.",
-        answerChecklist: ["constructed function family", "approximation condition", "optimization absent", "data/generalization absent"],
-        requiredConcepts: ["depth-efficiency", "depth-optimization-boundary"],
-        sectionId: "boundaries",
+        "level": "advanced",
+        "question": "Depth separation theorem이 현실 training 결과를 직접 보장하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "constructed function family",
+          "approximation condition",
+          "optimization absent",
+          "data/generalization absent"
+        ],
+        "requiredConcepts": [
+          "depth-efficiency",
+          "depth-optimization-boundary"
+        ],
+        "sectionId": "boundaries"
       },
       {
-        level: "advanced",
-        question: "더 깊은 candidate를 채택할 release evidence를 작성하세요.",
-        answerChecklist: ["same data/objective", "training compute", "multiple seeds", "train and held-out metrics", "latency/memory", "scope limit"],
-        requiredConcepts: ["representation-objective-bias", "depth-optimization-boundary"],
-        sectionId: "boundaries",
-      },
+        "level": "advanced",
+        "question": "더 깊은 candidate를 채택할 release evidence를 작성하세요.",
+        "answerChecklist": [
+          "same data/objective",
+          "training compute",
+          "multiple seeds",
+          "train and held-out metrics",
+          "latency/memory",
+          "scope limit"
+        ],
+        "requiredConcepts": [
+          "representation-objective-bias",
+          "depth-optimization-boundary"
+        ],
+        "sectionId": "boundaries"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title: "Deep Learning",
-        href: "https://www.nature.com/articles/nature14539",
-        problem: "여러 task의 deep learning 성과를 공통된 representation learning 관점으로 설명할 필요",
-        contribution: "여러 층의 representation과 backpropagation을 vision·speech·language 사례에 연결",
-        assumptions: "미분 가능한 model, task objective와 당시의 data·compute 조건",
-        evidenceScope: "2015년까지 review가 정리한 연구와 인용 실험 범위",
-        notClaim: "특정 hidden unit의 의미나 모든 deep architecture의 우월성을 증명하지 않음",
-        sectionId: "paper-deep-learning",
+        "title": "Deep Learning",
+        "href": "https://www.nature.com/articles/nature14539",
+        "problem": "여러 task의 deep learning 성과를 공통된 representation learning 관점으로 설명할 필요",
+        "contribution": "여러 층의 representation과 backpropagation을 vision·speech·language 사례에 연결",
+        "assumptions": "미분 가능한 model, task objective와 당시의 data·compute 조건",
+        "evidenceScope": "2015년까지 review가 정리한 연구와 인용 실험 범위",
+        "notClaim": "특정 hidden unit의 의미나 모든 deep architecture의 우월성을 증명하지 않음",
+        "sectionId": "paper-deep-learning"
       },
       {
-        title: "Benefits of Depth in Neural Networks",
-        href: "https://arxiv.org/abs/1602.04485",
-        problem: "Depth가 width와 다른 표현 자원인지 이론적으로 구분",
-        contribution: "특정 함수족에서 깊고 작은 network와 얕고 큰 network의 separation 구성",
-        assumptions: "논문이 정한 semi-algebraic gate·근사 조건",
-        evidenceScope: "구성된 함수족의 representation complexity",
-        notClaim: "현실의 모든 dataset에서 더 깊은 model이 더 잘 학습되거나 일반화한다는 결론이 아님",
-        sectionId: "paper-depth-benefit",
+        "title": "Benefits of Depth in Neural Networks",
+        "href": "https://arxiv.org/abs/1602.04485",
+        "problem": "Depth가 width와 다른 표현 자원인지 이론적으로 구분",
+        "contribution": "특정 함수족에서 깊고 작은 network와 얕고 큰 network의 separation 구성",
+        "assumptions": "논문이 정한 semi-algebraic gate·근사 조건",
+        "evidenceScope": "구성된 함수족의 representation complexity",
+        "notClaim": "현실의 모든 dataset에서 더 깊은 model이 더 잘 학습되거나 일반화한다는 결론이 아님",
+        "sectionId": "paper-depth-benefit"
       },
-    ],
+      {
+        "title": "Deep Learning 6.1 · Learning XOR",
+        "href": "https://www.deeplearningbook.org/contents/mlp.html",
+        "problem": "한 번의 affine 계산으로 풀 수 없는 네 입력의 관계를 표현하는 문제입니다.",
+        "contribution": "두 중간 좌표와 비선형 변환으로 같은 마지막 계산이 네 정답을 내는 실제 수치 해를 보입니다.",
+        "assumptions": "모든 이진 입력을 학습 자료에 포함하고 원문이 정한 가중치 해를 대입합니다.",
+        "evidenceScope": "식 (6.3)–(6.11)의 표현 가능성과 수치 대조이며 학습 실험은 아닙니다.",
+        "notClaim": "임의 초기값에서 이 해를 찾거나 새 자료에 일반화한다고 보장하지 않습니다.",
+        "sectionId": "source-xor"
+      }
+    ]
   },
   "ai/math-vectors-inner-products": {
     entryLevel: true,
@@ -4799,42 +4877,237 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/softmax": {
-    coreIdea: "Softmax는 categorical logits을 양수 weight로 바꾸고 모든 class가 공유하는 분모로 나눠 합이 1인 공동 확률을 만들며, max shift는 값을 안정화하고 temperature는 상대 간격을 조절합니다.",
-    entryLevel: true,
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "softmax-normalization", role: "서로 배타적인 class score를 공동 확률 분포로 정규화합니다." },
-      { id: "softmax-max-shift-invariance", role: "모든 logit에서 같은 최대값을 빼도 확률 비율이 같음을 이용합니다." },
-      { id: "softmax-temperature-scaling", role: "양수 temperature로 logit 간격과 분포 날카로움을 조절합니다." },
-      { id: "softmax-categorical-output-boundary", role: "서로 배타적인 class와 multi-label sigmoid 문제를 구분합니다." },
+    "coreIdea": "Softmax는 categorical logits을 양수 weight로 바꾸고 모든 class가 공유하는 분모로 나눠 합이 1인 공동 확률을 만들며, max shift는 값을 안정화하고 temperature는 상대 간격을 조절합니다.",
+    "entryLevel": true,
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "softmax-normalization",
+        "role": "서로 배타적인 class score를 공동 확률 분포로 정규화합니다."
+      },
+      {
+        "id": "softmax-max-shift-invariance",
+        "role": "모든 logit에서 같은 최대값을 빼도 확률 비율이 같음을 이용합니다."
+      },
+      {
+        "id": "softmax-temperature-scaling",
+        "role": "양수 temperature로 logit 간격과 분포 날카로움을 조절합니다."
+      },
+      {
+        "id": "softmax-categorical-output-boundary",
+        "role": "서로 배타적인 class와 multi-label sigmoid 문제를 구분합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "softmax-normalization", sectionId: "overview", intuition: "모든 후보가 하나의 확률 예산을 나눠 갖습니다.", workedExample: "Weight (2,1)은 probability (2/3,1/3)이 됩니다.", boundary: "각 class를 독립적으로 켜는 함수가 아니며 서로 배타적인 categorical 후보에서만 공동 probability로 해석합니다." },
-      { id: "softmax-max-shift-invariance", sectionId: "overview", intuition: "공통 상수는 분자와 분모에서 같은 배율로 약분됩니다.", workedExample: "(log2,0)과 (log2+100,100)은 같은 확률입니다.", boundary: "Scale을 곱하는 것은 분포를 바꿉니다." },
-      { id: "softmax-temperature-scaling", sectionId: "temperature", intuition: "Logit 차이를 softmax 전에 확대하거나 축소합니다.", workedExample: "T가 커지면 같은 logits의 probability가 더 평평해집니다.", boundary: "모델마다 logit scale이 달라 같은 T의 효과가 같지 않습니다." },
-      { id: "softmax-categorical-output-boundary", sectionId: "output-boundary", intuition: "하나만 참인 후보는 공동 예산, 여러 개가 참이면 독립 switch입니다.", workedExample: "고양이·개 중 하나는 softmax, 실내·야간 동시 label은 sigmoid입니다.", boundary: "Output semantics를 확인하지 않고 normalization을 고르면 안 됩니다." },
+    "conceptExplanations": [
+      {
+        "id": "softmax-normalization",
+        "sectionId": "trace",
+        "intuition": "모든 후보가 하나의 확률 예산을 나눠 갖습니다.",
+        "workedExample": "Logits (ln 2,0)의 지수 값 (2,1)을 총량 3으로 나누어 (2/3,1/3)을 얻습니다 (가정).",
+        "boundary": "각 class를 독립적으로 켜는 함수가 아니며 서로 배타적인 categorical 후보에서만 공동 probability로 해석합니다."
+      },
+      {
+        "id": "softmax-max-shift-invariance",
+        "sectionId": "source-normalization",
+        "intuition": "공통 상수는 분자와 분모에서 같은 배율로 약분됩니다.",
+        "workedExample": "(ln 2,0)에서 ln 2를 빼면 (0,−ln 2), 지수 값 (1,1/2), 합 3/2를 거쳐 같은 (2/3,1/3)을 얻습니다 (가정).",
+        "boundary": "Scale을 곱하는 것은 분포를 바꿉니다."
+      },
+      {
+        "id": "softmax-temperature-scaling",
+        "sectionId": "temperature",
+        "intuition": "Logit 차이를 softmax 전에 확대하거나 축소합니다.",
+        "workedExample": "T=2이면 (√2,1)을 정규화해 약 (0.5858,0.4142), T=1/2이면 (4,1)을 정규화해 (0.8,0.2)를 얻습니다 (가정).",
+        "boundary": "모델마다 logit scale이 달라 같은 T의 효과가 같지 않습니다."
+      },
+      {
+        "id": "softmax-categorical-output-boundary",
+        "sectionId": "output-boundary",
+        "intuition": "하나만 참인 후보는 공동 예산, 여러 개가 참이면 독립 switch입니다.",
+        "workedExample": "고양이·개 중 하나는 softmax, 실내·야간 동시 label은 sigmoid입니다.",
+        "boundary": "Output semantics를 확인하지 않고 normalization을 고르면 안 됩니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 score", relation: "Logit은 아직 확률이 아님", concepts: ["softmax-normalization"] },
-      { label: "01 normalize", relation: "양수 weight와 공동 분모 생성", concepts: ["softmax-normalization", "softmax-max-shift-invariance"] },
-      { label: "02 scale", relation: "Temperature로 상대 간격 조절", concepts: ["softmax-temperature-scaling"] },
-      { label: "03 boundary", relation: "Categorical과 multi-label을 분리", concepts: ["softmax-categorical-output-boundary"] },
+    "conceptStages": [
+      {
+        "label": "00 score",
+        "relation": "Logit은 아직 확률이 아님",
+        "concepts": [
+          "softmax-normalization"
+        ]
+      },
+      {
+        "label": "01 normalize",
+        "relation": "양수 weight와 공동 분모 생성",
+        "concepts": [
+          "softmax-normalization",
+          "softmax-max-shift-invariance"
+        ]
+      },
+      {
+        "label": "02 scale",
+        "relation": "Temperature로 상대 간격 조절",
+        "concepts": [
+          "softmax-temperature-scaling"
+        ]
+      },
+      {
+        "label": "03 boundary",
+        "relation": "Categorical과 multi-label을 분리",
+        "concepts": [
+          "softmax-categorical-output-boundary"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Logit과 probability의 차이를 설명하세요.", answerChecklist: ["unbounded score", "normalization", "sum one"], requiredConcepts: ["softmax-normalization"], sectionId: "overview" },
-      { level: "basic", question: "Weight (2,1)의 softmax probability를 계산하세요.", answerChecklist: ["sum 3", "2/3", "1/3"], requiredConcepts: ["softmax-normalization"], sectionId: "overview" },
-      { level: "basic", question: "공동 분모가 class 경쟁을 만드는 이유를 설명하세요.", answerChecklist: ["shared sum", "one increases", "others share less"], requiredConcepts: ["softmax-normalization"], sectionId: "overview" },
-      { level: "basic", question: "Max shift가 확률을 보존하는 이유를 설명하세요.", answerChecklist: ["common factor", "numerator", "denominator", "cancel"], requiredConcepts: ["softmax-max-shift-invariance"], sectionId: "overview" },
-      { level: "basic", question: "Temperature가 작아질 때 분포가 어떻게 변하는지 설명하세요.", answerChecklist: ["logit gap increases", "sharper", "same rank"], requiredConcepts: ["softmax-temperature-scaling"], sectionId: "temperature" },
-      { level: "basic", question: "Categorical과 multi-label output에 맞는 함수를 고르세요.", answerChecklist: ["exclusive softmax", "simultaneous sigmoid", "output semantics"], requiredConcepts: ["softmax-categorical-output-boundary"], sectionId: "output-boundary" },
-      { level: "advanced", question: "(1001,1000)의 stable softmax 계산 순서를 제시하세요.", answerChecklist: ["subtract 1001", "(0,-1)", "exp", "normalize"], requiredConcepts: ["softmax-max-shift-invariance"], sectionId: "overview" },
-      { level: "advanced", question: "T→0과 T→∞의 분포 경계를 설명하세요.", answerChecklist: ["argmax concentration", "uniform limit", "T positive"], requiredConcepts: ["softmax-temperature-scaling"], sectionId: "temperature" },
-      { level: "advanced", question: "Softmax가 translation invariant지만 scale invariant는 아닌 이유를 설명하세요.", answerChecklist: ["common additive factor cancels", "multiplication changes gaps", "probability changes"], requiredConcepts: ["softmax-max-shift-invariance", "softmax-temperature-scaling"], sectionId: "temperature" },
-      { level: "advanced", question: "잘못된 output contract의 반례를 설계하세요.", answerChecklist: ["two simultaneous labels", "softmax forces competition", "sigmoid alternative", "loss contract"], requiredConcepts: ["softmax-categorical-output-boundary"], sectionId: "output-boundary" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Logit과 probability의 차이를 설명하세요.",
+        "answerChecklist": [
+          "unbounded score",
+          "normalization",
+          "sum one"
+        ],
+        "requiredConcepts": [
+          "softmax-normalization"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Weight (2,1)의 softmax probability를 계산하세요.",
+        "answerChecklist": [
+          "sum 3",
+          "2/3",
+          "1/3"
+        ],
+        "requiredConcepts": [
+          "softmax-normalization"
+        ],
+        "sectionId": "trace"
+      },
+      {
+        "level": "basic",
+        "question": "공동 분모가 class 경쟁을 만드는 이유를 설명하세요.",
+        "answerChecklist": [
+          "shared sum",
+          "one increases",
+          "others share less"
+        ],
+        "requiredConcepts": [
+          "softmax-normalization"
+        ],
+        "sectionId": "trace"
+      },
+      {
+        "level": "basic",
+        "question": "Max shift가 확률을 보존하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "common factor",
+          "numerator",
+          "denominator",
+          "cancel"
+        ],
+        "requiredConcepts": [
+          "softmax-max-shift-invariance"
+        ],
+        "sectionId": "source-normalization"
+      },
+      {
+        "level": "basic",
+        "question": "Temperature가 작아질 때 분포가 어떻게 변하는지 설명하세요.",
+        "answerChecklist": [
+          "logit gap increases",
+          "sharper",
+          "same rank"
+        ],
+        "requiredConcepts": [
+          "softmax-temperature-scaling"
+        ],
+        "sectionId": "temperature"
+      },
+      {
+        "level": "basic",
+        "question": "Categorical과 multi-label output에 맞는 함수를 고르세요.",
+        "answerChecklist": [
+          "exclusive softmax",
+          "simultaneous sigmoid",
+          "output semantics"
+        ],
+        "requiredConcepts": [
+          "softmax-categorical-output-boundary"
+        ],
+        "sectionId": "output-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "(1001,1000)의 stable softmax 계산 순서를 제시하세요.",
+        "answerChecklist": [
+          "subtract 1001",
+          "(0,-1)",
+          "exp",
+          "normalize"
+        ],
+        "requiredConcepts": [
+          "softmax-max-shift-invariance"
+        ],
+        "sectionId": "source-normalization"
+      },
+      {
+        "level": "advanced",
+        "question": "T→0과 T→∞의 분포 경계를 설명하세요.",
+        "answerChecklist": [
+          "argmax concentration",
+          "uniform limit",
+          "T positive"
+        ],
+        "requiredConcepts": [
+          "softmax-temperature-scaling"
+        ],
+        "sectionId": "temperature"
+      },
+      {
+        "level": "advanced",
+        "question": "Softmax가 translation invariant지만 scale invariant는 아닌 이유를 설명하세요.",
+        "answerChecklist": [
+          "common additive factor cancels",
+          "multiplication changes gaps",
+          "probability changes"
+        ],
+        "requiredConcepts": [
+          "softmax-max-shift-invariance",
+          "softmax-temperature-scaling"
+        ],
+        "sectionId": "temperature"
+      },
+      {
+        "level": "advanced",
+        "question": "잘못된 output contract의 반례를 설계하세요.",
+        "answerChecklist": [
+          "two simultaneous labels",
+          "softmax forces competition",
+          "sigmoid alternative",
+          "loss contract"
+        ],
+        "requiredConcepts": [
+          "softmax-categorical-output-boundary"
+        ],
+        "sectionId": "output-boundary"
+      }
     ],
-    papers: [
-      { title: "Deep Learning", href: "https://www.deeplearningbook.org/contents/mlp.html", problem: "Output unit과 loss의 확률 계약을 정리합니다.", contribution: "Softmax classifier와 numerical stability를 설명합니다.", assumptions: "Categorical mutually-exclusive label을 전제로 합니다.", evidenceScope: "Softmax output unit의 교과서적 정의 범위입니다.", notClaim: "모든 classification이 categorical이라는 뜻은 아닙니다.", sectionId: "paper-softmax" },
+    "papers": [
+      {
+        "title": "Deep Learning",
+        "href": "https://www.deeplearningbook.org/contents/mlp.html",
+        "problem": "Output unit과 loss의 확률 계약을 정리합니다.",
+        "contribution": "Softmax classifier와 numerical stability를 설명합니다.",
+        "assumptions": "Categorical mutually-exclusive label을 전제로 합니다.",
+        "evidenceScope": "Softmax output unit의 교과서적 정의 범위입니다.",
+        "notClaim": "모든 classification이 categorical이라는 뜻은 아닙니다.",
+        "sectionId": "paper-softmax"
+      }
     ],
+    "entryNote": "(ln 2,0)의 두 점수를 양수 (2,1)로 바꾸고 공동 합 3으로 나누는 가정 사례부터 시작합니다. 같은 입력을 최댓값 이동과 temperature 조절, 원문 식 대입까지 따라갑니다."
   },
   "ai/backprop-optimization": {
     coreIdea: "Neural-network backpropagation은 scalar loss에서 시작한 output error를 layer별 local derivative로 분배해 parameter와 input gradient를 계산하며, 실제 parameter update는 optimizer에 넘깁니다.",
@@ -24821,100 +25094,483 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/agent-run-contract": {
-    entryLevel: true,
-    entryNote: "하네스의 실행 경계를 배운 뒤 한 run이 시작·중단·재개될 조건을 한 항목씩 정의합니다.",
-    coreIdea: "Run contract는 objective·acceptance·context·capability·artifact·verifier·recovery를 같은 run identity에 묶고, 대화가 아니라 versioned artifact와 receipt로 상태를 이어 줍니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "agent-run-contract", role: "Run admission과 완료 조건을 한 계약으로 고정합니다." },
-      { id: "agent-context-discovery-path", role: "필요한 정본을 단계적으로 찾는 경로를 정의합니다." },
-      { id: "agent-capability-runtime-boundary", role: "도구 설명과 실제 실행 권한을 분리합니다." },
-      { id: "agent-artifact-state-continuity", role: "Session 사이 상태를 artifact receipt로 이어 줍니다." },
+    "entryLevel": true,
+    "entryNote": "작은 사례에서 역할을 파악한 뒤 같은 입력을 끝까지 추적하고 원문과 한계를 확인합니다.",
+    "coreIdea": "Run contract는 objective·acceptance·context·capability·artifact·verifier·recovery를 같은 run identity에 묶고, 대화가 아니라 versioned artifact와 receipt로 상태를 이어 줍니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "agent-run-contract",
+        "role": "Run admission과 완료 조건을 한 계약으로 고정합니다."
+      },
+      {
+        "id": "agent-context-discovery-path",
+        "role": "필요한 정본을 단계적으로 찾는 경로를 정의합니다."
+      },
+      {
+        "id": "agent-capability-runtime-boundary",
+        "role": "도구 설명과 실제 실행 권한을 분리합니다."
+      },
+      {
+        "id": "agent-artifact-state-continuity",
+        "role": "Session 사이 상태를 artifact receipt로 이어 줍니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "agent-run-contract", sectionId: "overview", intuition: "작업 전에 완료의 뜻과 실패 시 행동까지 적는 접수증입니다.", workedExample: "UI run은 route·390/1440 acceptance·write scope·screenshot·rollback을 고정합니다.", boundary: "자연어 지시가 존재하는 것과 runtime admission은 다릅니다." },
-      { id: "agent-context-discovery-path", sectionId: "context-capability", intuition: "모든 문서를 외우지 않고 목차에서 필요한 정본만 찾습니다.", workedExample: "짧은 진입 문서가 design에는 Viz 규칙, 배포에는 runbook을 연결합니다.", boundary: "Ownership·freshness·fallback이 없으면 분할 문서도 stale합니다." },
-      { id: "agent-capability-runtime-boundary", sectionId: "context-capability", intuition: "열쇠 이름을 아는 것과 실제 열쇠를 가진 것은 다릅니다.", workedExample: "Delete schema가 보여도 read-only identity는 runtime에서 거부됩니다.", boundary: "Schema validation은 authorization이 아닙니다." },
-      { id: "agent-artifact-state-continuity", sectionId: "artifact-continuity", intuition: "기억 대신 version·checksum·검증 결과가 있는 작업물을 넘깁니다.", workedExample: "새 session이 commit과 screenshot receipt를 다시 검사합니다.", boundary: "대화 요약만으로 외부 상태를 재현할 수 없습니다." },
+    "conceptExplanations": [
+      {
+        "id": "agent-run-contract",
+        "sectionId": "contract",
+        "intuition": "작업 전에 완료의 뜻과 실패 시 행동까지 적는 접수증입니다.",
+        "workedExample": "UI run은 route·390/1440 acceptance·write scope·screenshot·rollback을 고정합니다.",
+        "boundary": "자연어 지시가 존재하는 것과 runtime admission은 다릅니다."
+      },
+      {
+        "id": "agent-context-discovery-path",
+        "sectionId": "context-capability",
+        "intuition": "모든 문서를 외우지 않고 목차에서 필요한 정본만 찾습니다.",
+        "workedExample": "짧은 진입 문서가 design에는 Viz 규칙, 배포에는 runbook을 연결합니다.",
+        "boundary": "Ownership·freshness·fallback이 없으면 분할 문서도 stale합니다."
+      },
+      {
+        "id": "agent-capability-runtime-boundary",
+        "sectionId": "context-capability",
+        "intuition": "열쇠 이름을 아는 것과 실제 열쇠를 가진 것은 다릅니다.",
+        "workedExample": "Delete schema가 보여도 read-only identity는 runtime에서 거부됩니다.",
+        "boundary": "Schema validation은 authorization이 아닙니다."
+      },
+      {
+        "id": "agent-artifact-state-continuity",
+        "sectionId": "artifact-continuity",
+        "intuition": "기억 대신 version·checksum·검증 결과가 있는 작업물을 넘깁니다.",
+        "workedExample": "새 session이 commit과 screenshot receipt를 다시 검사합니다.",
+        "boundary": "대화 요약만으로 외부 상태를 재현할 수 없습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 contract", relation: "완료와 admission 조건을 고정합니다.", concepts: ["agent-run-contract"] },
-      { label: "01 access", relation: "읽을 context와 실행 capability를 분리합니다.", concepts: ["agent-context-discovery-path", "agent-capability-runtime-boundary"] },
-      { label: "02 artifact", relation: "Versioned receipt로 session을 연결합니다.", concepts: ["agent-artifact-state-continuity"] },
-      { label: "03 recovery", relation: "Retry·rollback·escalation으로 종료합니다.", concepts: ["agent-run-contract", "agent-artifact-state-continuity"] },
+    "conceptStages": [
+      {
+        "label": "00 contract",
+        "relation": "완료와 admission 조건을 고정합니다.",
+        "concepts": [
+          "agent-run-contract"
+        ]
+      },
+      {
+        "label": "01 access",
+        "relation": "읽을 context와 실행 capability를 분리합니다.",
+        "concepts": [
+          "agent-context-discovery-path",
+          "agent-capability-runtime-boundary"
+        ]
+      },
+      {
+        "label": "02 artifact",
+        "relation": "Versioned receipt로 session을 연결합니다.",
+        "concepts": [
+          "agent-artifact-state-continuity"
+        ]
+      },
+      {
+        "label": "03 recovery",
+        "relation": "Retry·rollback·escalation으로 종료합니다.",
+        "concepts": [
+          "agent-run-contract",
+          "agent-artifact-state-continuity"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "UI 수정 run contract의 일곱 항목을 작성하세요.", answerChecklist: ["objective", "acceptance", "context", "capability", "artifact", "verifier", "recovery"], requiredConcepts: ["agent-run-contract"], sectionId: "overview" },
-      { level: "basic", question: "Objective와 acceptance를 구분하세요.", answerChecklist: ["direction", "observable completion", "viewport", "test"], requiredConcepts: ["agent-run-contract"], sectionId: "overview" },
-      { level: "basic", question: "Context discovery path의 최소 필드를 쓰세요.", answerChecklist: ["entry index", "canonical source", "owner", "freshness", "fallback"], requiredConcepts: ["agent-context-discovery-path"], sectionId: "context-capability" },
-      { level: "basic", question: "Tool schema와 runtime capability를 구분하세요.", answerChecklist: ["argument shape", "identity", "resource scope", "approval"], requiredConcepts: ["agent-capability-runtime-boundary"], sectionId: "context-capability" },
-      { level: "basic", question: "Handoff artifact에 남길 항목을 나열하세요.", answerChecklist: ["version", "URI", "checksum", "decision", "verifier result", "unfinished"], requiredConcepts: ["agent-artifact-state-continuity"], sectionId: "artifact-continuity" },
-      { level: "basic", question: "Contract completeness AND 식을 UI run에 적용하세요.", answerChecklist: ["all required", "missing verifier", "C=0", "admission deny"], requiredConcepts: ["agent-run-contract"], sectionId: "artifact-continuity" },
-      { level: "advanced", question: "Stale 문서를 읽은 run의 discovery failure를 막으세요.", answerChecklist: ["source version", "owner", "freshness", "fallback", "revalidate"], requiredConcepts: ["agent-context-discovery-path"], sectionId: "context-capability" },
-      { level: "advanced", question: "Broad delete schema와 narrow production 권한을 함께 설계하세요.", answerChecklist: ["schema", "caller identity", "target binding", "fresh approval", "deny test"], requiredConcepts: ["agent-capability-runtime-boundary"], sectionId: "context-capability" },
-      { level: "advanced", question: "Timeout 뒤 unknown effect를 안전하게 재개하세요.", answerChecklist: ["operation key", "receipt lookup", "idempotent retry", "rollback", "escalation"], requiredConcepts: ["agent-run-contract", "agent-artifact-state-continuity"], sectionId: "recovery-handoff" },
-      { level: "advanced", question: "Session 교대에서 완료 주장을 독립 검증하세요.", answerChecklist: ["artifact identity", "checksum", "actual state", "verifier rerun", "safe next action"], requiredConcepts: ["agent-artifact-state-continuity"], sectionId: "recovery-handoff" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "390px에서 문서 폭이 430px인 작업의 objective와 acceptance를 적으세요.",
+        "answerChecklist": [
+          "가로 넘침 제거",
+          "390/1440 검사",
+          "버튼 동작"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "agent-run-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "읽을 자료의 위치와 쓸 수 있는 범위를 왜 따로 적나요?",
+        "answerChecklist": [
+          "context path",
+          "자료 접근",
+          "변경 권한 별도"
+        ],
+        "sectionId": "context-capability",
+        "requiredConcepts": [
+          "agent-context-discovery-path",
+          "agent-capability-runtime-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "수정 뒤 390px 화면에서 문서가 410px이면 남은 넘침은 얼마인가요?",
+        "answerChecklist": [
+          "20px",
+          "미완료",
+          "재시도 기록"
+        ],
+        "sectionId": "context-capability",
+        "requiredConcepts": [
+          "agent-run-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "검사 결과에 파일 버전을 연결하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "같은 변경 검사",
+          "버전 불일치",
+          "이전 통과 재사용 금지"
+        ],
+        "sectionId": "inside-contract",
+        "requiredConcepts": [
+          "agent-artifact-state-continuity"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "필수 항목이 1·1·1·1·0일 때 준비 판정을 계산하세요.",
+        "answerChecklist": [
+          "AND",
+          "0",
+          "검사·복구 계획 누락"
+        ],
+        "sectionId": "artifact-continuity",
+        "requiredConcepts": [
+          "agent-run-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "작업 인계에 남길 결과를 사례에서 고르세요.",
+        "answerChecklist": [
+          "파일 v2",
+          "두 화면 측정",
+          "검사 시각",
+          "미완료",
+          "남은 시도"
+        ],
+        "sectionId": "context-capability",
+        "requiredConcepts": [
+          "agent-artifact-state-continuity"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "자료가 오래됐거나 정본을 찾지 못하면 어떤 확인 경로가 필요한가요?",
+        "answerChecklist": [
+          "자료 버전",
+          "담당자",
+          "갱신 시점",
+          "대체 경로",
+          "추측 중단"
+        ],
+        "sectionId": "artifact-continuity",
+        "requiredConcepts": [
+          "agent-context-discovery-path"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "도구가 임의 경로 쓰기를 받아도 이번 작업을 파일 1개로 제한하려면 무엇을 검사하나요?",
+        "answerChecklist": [
+          "현재 실행 주체",
+          "경로",
+          "작업 종류",
+          "실제 권한"
+        ],
+        "sectionId": "context-capability",
+        "requiredConcepts": [
+          "agent-capability-runtime-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "저장 요청이 시간 초과됐을 때 재시도 전에 무엇을 확인하나요?",
+        "answerChecklist": [
+          "현재 파일",
+          "실행 기록",
+          "중복 변경 가능성",
+          "복구 또는 인계"
+        ],
+        "sectionId": "recovery-handoff",
+        "requiredConcepts": [
+          "agent-run-contract",
+          "agent-artifact-state-continuity"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "v2 검사 뒤 v3로 수정했다면 완료 기록을 어떻게 처리하나요?",
+        "answerChecklist": [
+          "검사 대상 버전 다름",
+          "새 버전 재검사",
+          "기존 기록 보존",
+          "조건 버전"
+        ],
+        "sectionId": "inside-contract",
+        "requiredConcepts": [
+          "agent-artifact-state-continuity"
+        ]
+      }
     ],
-    papers: [],
+    "papers": []
   },
   "ai/agent-verification": {
-    entryLevel: true,
-    entryNote: "Compiler·browser·judge·사람 검토를 서로 다른 증거를 보는 검증층으로 하나씩 쌓습니다.",
-    coreIdea: "확실한 deterministic check부터 환경 oracle·rubric judge·human review를 올리고 artifact·trajectory·effect·budget gate는 평균내지 않고 모두 통과시킵니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "layered-agent-verification", role: "증거의 확실성과 위험에 맞는 검증층을 고릅니다." },
-      { id: "agent-trajectory-effect-evaluation", role: "결과·경로·외부 상태·비용을 독립 판정합니다." },
-      { id: "external-ground-truth-vs-semantic-verifier", role: "Verifier가 판정하는 진실이 외부 시스템에서 오는지 의미 해석에서 오는지를 구분합니다." },
-      { id: "generator-critic-verifier-architecture", role: "Critic이 generator와 분리된 model인지 generator 자신인지에 따른 신뢰 범위를 정합니다." },
-      { id: "plan-execute-verify-loop", role: "Plan→execute→verify를 반복해 부분 실패가 다음 plan에 그대로 넘어가지 않게 합니다." },
-],
-    conceptExplanations: [
-      { id: "layered-agent-verification", sectionId: "overview", intuition: "계산기로 확인할 일부터 검사하고 애매한 품질에만 judge와 사람을 씁니다.", workedExample: "Typecheck→Playwright→blind design rubric→production approval 순으로 올립니다.", boundary: "Judge는 deterministic oracle을 대체하지 않습니다." },
-      { id: "agent-trajectory-effect-evaluation", sectionId: "trajectory-effect", intuition: "목적지뿐 아니라 길·외부 변화·비용도 따로 채점합니다.", workedExample: "코드가 맞아도 secret 전송이나 중복 deploy가 있으면 reject합니다.", boundary: "Private reasoning이 아니라 observable call·artifact·receipt를 평가합니다." },
+    "entryLevel": true,
+    "entryNote": "작은 사례에서 역할을 파악한 뒤 같은 입력을 끝까지 추적하고 원문과 한계를 확인합니다.",
+    "coreIdea": "직접 검사·실제 환경·의미 평가의 범위를 구분하고 산출물·실행 경로·외부 변경·예산을 각각 확인합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "external-ground-truth-vs-semantic-verifier",
-        sectionId: "verifier-truth-source",
-        intuition: "Compiler·test 결과는 채점자가 바뀌어도 같은 값이고, LLM judge 점수는 채점자마다 흔들릴 수 있습니다.",
-        workedExample: "27개 test 중 compiler가 확정하는 통과 개수는 항상 같은 26/27이지만, 같은 설명을 semantic verifier 셋이 매기면 0.6·0.7·0.8로 갈립니다.",
-        boundary: "External ground truth도 test coverage가 좁으면 실제 실패를 놓치고, semantic verifier도 calibration 없이는 같은 실수를 반복해서 통과시킬 수 있습니다.",
+        "id": "layered-agent-verification",
+        "role": "증거의 확실성과 위험에 맞는 검증층을 고릅니다."
       },
       {
-        id: "generator-critic-verifier-architecture",
-        sectionId: "critic-architecture",
-        intuition: "다른 사람이 내 답을 채점하는 것과 내가 직접 내 답을 다시 보는 것은 놓치는 지점이 다릅니다.",
-        workedExample: "7B generator의 코드를 70B critic이 다시 채점하면 놓친 오류를 더 잡지만 critic 호출이 token을 한 번 더 씁니다.",
-        boundary: "Generator-verifier는 처음에 놓친 가정을 검증 단계에서도 같은 이유로 놓치기 쉬워, 고위험 effect에는 분리된 critic이나 external ground truth를 병행합니다.",
+        "id": "agent-trajectory-effect-evaluation",
+        "role": "결과·경로·외부 상태·비용을 독립 판정합니다."
       },
       {
-        id: "plan-execute-verify-loop",
-        sectionId: "plan-execute-verify",
-        intuition: "계획→실행→확인을 매번 거쳐야 다음 계획이 틀린 전제 위에 서지 않습니다.",
-        workedExample: "propose_next_action→execute→verify→update state를 A_a∧A_t∧A_e∧A_b가 모두 통과할 때까지 반복합니다.",
-        boundary: "Verify 단계를 생략하면 한 action의 부분 실패가 다음 plan에 그대로 전제로 들어갑니다.",
+        "id": "external-ground-truth-vs-semantic-verifier",
+        "role": "Verifier가 판정하는 진실이 외부 시스템에서 오는지 의미 해석에서 오는지를 구분합니다."
       },
-],
-    conceptStages: [
-      { label: "00 truth source", relation: "External ground truth와 semantic verifier를 진실이 오는 곳으로 구분합니다.", concepts: ["external-ground-truth-vs-semantic-verifier"] },
-      { label: "01 layers", relation: "확실한 검사부터 rubric judge·human review까지 쌓습니다.", concepts: ["layered-agent-verification"] },
-      { label: "02 critic architecture", relation: "Critic이 분리된 model인지 generator 자신인지로 신뢰 범위를 정합니다.", concepts: ["generator-critic-verifier-architecture"] },
-      { label: "03 effect", relation: "Trajectory·effect·budget을 독립 gate로 둡니다.", concepts: ["agent-trajectory-effect-evaluation"] },
-      { label: "04 loop", relation: "Plan→execute→verify를 반복해 다음 plan의 전제를 지킵니다.", concepts: ["plan-execute-verify-loop"] },
-      { label: "05 release", relation: "회귀 fixture와 사람 승인을 결합합니다.", concepts: ["layered-agent-verification", "agent-trajectory-effect-evaluation"] },
+      {
+        "id": "generator-critic-verifier-architecture",
+        "role": "Critic이 generator와 분리된 model인지 generator 자신인지에 따른 신뢰 범위를 정합니다."
+      },
+      {
+        "id": "plan-execute-verify-loop",
+        "role": "Plan→execute→verify를 반복해 부분 실패가 다음 plan에 그대로 넘어가지 않게 합니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Typecheck·Playwright·design rubric·배포 승인을 네 검증층에 배치하세요.", answerChecklist: ["deterministic", "environment", "rubric", "human"], requiredConcepts: ["layered-agent-verification"], sectionId: "overview" },
-      { level: "basic", question: "확실한 검사를 먼저 실행하는 이유를 설명하세요.", answerChecklist: ["cheap", "deterministic", "early rejection", "judge budget"], requiredConcepts: ["layered-agent-verification"], sectionId: "overview" },
-      { level: "basic", question: "External ground truth와 semantic verifier를 구분하는 기준을 설명하세요. Compiler feedback·test-based verification·runtime feedback이 같은 범주인 이유도 함께 쓰세요.", answerChecklist: ["외부에서 확정", "해석 없음", "의미 판단", "채점자마다 흔들림"], requiredConcepts: ["external-ground-truth-vs-semantic-verifier"], sectionId: "verifier-truth-source" },
-      { level: "basic", question: "Generator-critic과 generator-verifier 구조를 구분하세요.", answerChecklist: ["분리된 model", "같은 model", "추가 호출 비용", "같은 맹점 반복"], requiredConcepts: ["generator-critic-verifier-architecture"], sectionId: "critic-architecture" },
-      { level: "basic", question: "Artifact와 trajectory gate를 구분하세요.", answerChecklist: ["final result", "allowed path", "tool calls", "both required"], requiredConcepts: ["agent-trajectory-effect-evaluation"], sectionId: "trajectory-effect" },
-      { level: "basic", question: "Plan-execute-verify loop의 네 단계를 순서대로 쓰세요.", answerChecklist: ["plan", "execute", "verify", "update state"], requiredConcepts: ["plan-execute-verify-loop"], sectionId: "plan-execute-verify" },
-      { level: "advanced", question: "좋은 artifact가 secret 전송 실패를 상쇄하지 못하게 설계하세요.", answerChecklist: ["AND semantics", "trajectory fail", "effect fail", "overall reject"], requiredConcepts: ["agent-trajectory-effect-evaluation"], sectionId: "trajectory-effect" },
-      { level: "advanced", question: "고위험 effect에서 generator-verifier만으로는 부족한 이유와 대안을 설계하세요.", answerChecklist: ["같은 맹점", "분리된 critic", "external ground truth 교차확인", "human checkpoint"], requiredConcepts: ["generator-critic-verifier-architecture", "external-ground-truth-vs-semantic-verifier"], sectionId: "critic-architecture" },
-      { level: "advanced", question: "Verify 단계를 생략한 plan-execute loop의 실패 전파를 설명하고 고치세요.", answerChecklist: ["부분 실패", "다음 plan 전제", "verify 삽입", "budget 종료 시 checkpoint"], requiredConcepts: ["plan-execute-verify-loop"], sectionId: "plan-execute-verify" },
-      { level: "advanced", question: "High-risk effect에 필요한 독립 증거를 설계하세요.", answerChecklist: ["deterministic invariant", "external receipt", "approval", "replay", "escalation"], requiredConcepts: ["layered-agent-verification", "agent-trajectory-effect-evaluation"], sectionId: "release" },
+    "conceptExplanations": [
+      {
+        "id": "layered-agent-verification",
+        "sectionId": "layers",
+        "intuition": "계산기로 확인할 일부터 검사하고 애매한 품질에만 judge와 사람을 씁니다.",
+        "workedExample": "Typecheck→Playwright→blind design rubric→production approval 순으로 올립니다.",
+        "boundary": "Judge는 deterministic oracle을 대체하지 않습니다."
+      },
+      {
+        "id": "agent-trajectory-effect-evaluation",
+        "sectionId": "trajectory-effect",
+        "intuition": "목적지뿐 아니라 길·외부 변화·비용도 따로 채점합니다.",
+        "workedExample": "코드가 맞아도 secret 전송이나 중복 deploy가 있으면 reject합니다.",
+        "boundary": "Private reasoning이 아니라 observable call·artifact·receipt를 평가합니다."
+      },
+      {
+        "id": "external-ground-truth-vs-semantic-verifier",
+        "sectionId": "verifier-truth-source",
+        "intuition": "모델의 자기 보고 밖에서 확인한 사실과 의미 해석에 따른 평가를 구분합니다.",
+        "workedExample": "고정한 한 실행은 26/27 통과로 관측됐고 설명 평가는 0.6·0.7·0.8입니다. 환경·난수·검사가 바뀌면 실행 결과도 달라질 수 있습니다.",
+        "boundary": "직접 검사도 범위와 환경의 한계가 있으므로 전체정확성으로 확대하지 않습니다."
+      },
+      {
+        "id": "generator-critic-verifier-architecture",
+        "sectionId": "critic-architecture",
+        "intuition": "생성 역할과 평가 역할을 누가 맡는지, 두 역할의 오류가 얼마나 겹치는지 따로 확인합니다.",
+        "workedExample": "같은 모델을 다시 호출해도 계산과 시간이 추가됩니다. 다른 모델의 우위는 같은 오류 표본에서 측정합니다.",
+        "boundary": "Generator·critic·verifier라는 이름만으로 같은 모델인지 다른 모델인지 단정하지 않습니다."
+      },
+      {
+        "id": "plan-execute-verify-loop",
+        "sectionId": "plan-execute-verify",
+        "intuition": "계획→실행→확인을 매번 거쳐야 다음 계획이 틀린 전제 위에 서지 않습니다.",
+        "workedExample": "propose_next_action→execute→verify→update state를 A_a∧A_t∧A_e∧A_b가 모두 통과할 때까지 반복합니다.",
+        "boundary": "Verify 단계를 생략하면 한 action의 부분 실패가 다음 plan에 그대로 전제로 들어갑니다."
+      }
     ],
-    papers: [],
+    "conceptStages": [
+      {
+        "label": "00 truth source",
+        "relation": "External ground truth와 semantic verifier를 진실이 오는 곳으로 구분합니다.",
+        "concepts": [
+          "external-ground-truth-vs-semantic-verifier"
+        ]
+      },
+      {
+        "label": "01 layers",
+        "relation": "확실한 검사부터 rubric judge·human review까지 쌓습니다.",
+        "concepts": [
+          "layered-agent-verification"
+        ]
+      },
+      {
+        "label": "02 critic architecture",
+        "relation": "생성과 평가의 역할·추가 비용·오류 상관관계를 확인합니다.",
+        "concepts": [
+          "generator-critic-verifier-architecture"
+        ]
+      },
+      {
+        "label": "03 effect",
+        "relation": "Trajectory·effect·budget을 독립 gate로 둡니다.",
+        "concepts": [
+          "agent-trajectory-effect-evaluation"
+        ]
+      },
+      {
+        "label": "04 loop",
+        "relation": "Plan→execute→verify를 반복해 다음 plan의 전제를 지킵니다.",
+        "concepts": [
+          "plan-execute-verify-loop"
+        ]
+      },
+      {
+        "label": "05 release",
+        "relation": "회귀 fixture와 사람 승인을 결합합니다.",
+        "concepts": [
+          "layered-agent-verification",
+          "agent-trajectory-effect-evaluation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "테스트26/27과 설명 점수0.6·0.7·0.8은 어떤 종류의 증거인가요?",
+        "answerChecklist": [
+          "검사 실행의 관측",
+          "의미 판단",
+          "평균0.7",
+          "서로 대체 불가"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "layered-agent-verification",
+          "external-ground-truth-vs-semantic-verifier"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "직접 검사와 환경 관측, rubric judge의 역할을 비교하세요.",
+        "answerChecklist": [
+          "명시 조건",
+          "실제 상태",
+          "의미 평가",
+          "범위 구분"
+        ],
+        "sectionId": "layers",
+        "requiredConcepts": [
+          "layered-agent-verification"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 모델의 재검증도 비용이 드는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "추가 입력·출력 계산",
+          "시간",
+          "동일모델도호출"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "generator-critic-verifier-architecture"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "필수 gate가0·1·1·1이면 전체 판정은 무엇인가요?",
+        "answerChecklist": [
+          "AND",
+          "0",
+          "다른 성공이 상쇄 못함"
+        ],
+        "sectionId": "trajectory-effect",
+        "requiredConcepts": [
+          "agent-trajectory-effect-evaluation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Plan-execute-verify에서 실패한1개를 고친 뒤 무엇을 다시 검사하나요?",
+        "answerChecklist": [
+          "같은27개",
+          "고친실패",
+          "이전성공",
+          "상태갱신"
+        ],
+        "sectionId": "plan-execute-verify",
+        "requiredConcepts": [
+          "plan-execute-verify-loop"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "External ground truth가 제품 전체의 진실을 보장하지 않는 이유를 쓰세요.",
+        "answerChecklist": [
+          "검사 범위",
+          "환경 조건",
+          "관측 시점",
+          "불안정테스트"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "external-ground-truth-vs-semantic-verifier"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "큰 critic을 쓰면 반드시 더 정확하다는 주장을 어떻게 검증하나요?",
+        "answerChecklist": [
+          "같은오류표본",
+          "독립성확인",
+          "정확도측정",
+          "추가비용"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "generator-critic-verifier-architecture"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "테스트27/27이지만 외부 변경이 두 번 일어났습니다. 어떤 gate가 실패하나요?",
+        "answerChecklist": [
+          "effect",
+          "의도횟수와불일치",
+          "전체실패"
+        ],
+        "sectionId": "trajectory-effect",
+        "requiredConcepts": [
+          "agent-trajectory-effect-evaluation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "모델 셋이 같은 가정을 공유하면 다수결에 어떤 한계가 있나요?",
+        "answerChecklist": [
+          "상관된오류",
+          "다수도오답가능",
+          "직접증거교차확인"
+        ],
+        "sectionId": "why-verification",
+        "requiredConcepts": [
+          "external-ground-truth-vs-semantic-verifier",
+          "generator-critic-verifier-architecture"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "최종답만 맞고 중간 부분 실패를 무시하면 다음 계획에 어떤 문제가 생기나요?",
+        "answerChecklist": [
+          "잘못된전제전파",
+          "매단계관측",
+          "verify후state갱신",
+          "회귀검사"
+        ],
+        "sectionId": "plan-execute-verify",
+        "requiredConcepts": [
+          "plan-execute-verify-loop"
+        ]
+      }
+    ],
+    "papers": []
   },
   "ai/harness-failure-ablation": {
     entryLevel: true,
@@ -24944,226 +25600,1029 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [{ title: "Anthropic — Harness design for long-running apps", href: "https://www.anthropic.com/engineering/harness-design-long-running-apps", problem: "긴 horizon에서 plan 손실·조기 완료·회귀를 줄이는 harness component를 식별하는 문제", contribution: "Planner·generator·evaluator·persistent state 구성과 component ablation을 공개", assumptions: "문서의 model·application-building task·evaluation setup", evidenceScope: "해당 experiment의 architecture와 ablation", notClaim: "모든 model과 workload에 같은 component가 항상 필요하다는 주장", sectionId: "paper-harness-ablation" }],
   },
   "ai/agent-control-boundaries": {
-    entryLevel: true,
-    entryNote: "경로가 고정된 workflow, 의미 판단이 필요한 agent, 되돌리기 어려운 checkpoint를 차례로 구분합니다.",
-    coreIdea: "제어 형태는 성숙도 순서가 아니라 경로 불확실성과 effect 위험으로 선택하며, run 내부 action loop와 여러 run을 보고 harness를 바꾸는 개선 loop의 주기·권한을 분리합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "workflow-agent-checkpoint-boundary", role: "경로 불확실성과 effect 위험에 맞는 제어 주체를 고릅니다." },
-      { id: "loop-timescale-authority-separation", role: "Run 행동과 harness 개선의 주기·권한을 분리합니다." },
-      { id: "blast-radius-least-privilege-boundary", role: "Checkpoint를 놓쳐도 피해가 넘어가지 않을 반경을 least privilege로 미리 좁힙니다." },
-],
-    conceptExplanations: [
-      { id: "workflow-agent-checkpoint-boundary", sectionId: "overview", intuition: "정해진 철도·현장 탐색·국경 검문소를 같은 운행 방식으로 다루지 않습니다.", workedExample: "Source 탐색은 agent, build는 workflow, production deploy는 approval checkpoint가 맡습니다.", boundary: "Agent나 graph가 workflow보다 높은 성숙도라는 뜻이 아닙니다." },
-      { id: "loop-timescale-authority-separation", sectionId: "loop-authority", intuition: "한 경기의 작전과 시즌 규칙 변경을 같은 선수가 즉시 결정하지 않습니다.", workedExample: "Run loop는 bounded tool action을, 개선 loop는 여러 trace·review·canary를 다룹니다.", boundary: "Judge feedback 하나가 global harness를 즉시 바꾸면 안 됩니다." },
+    "entryLevel": true,
+    "entryNote": "작은 사례에서 역할을 파악한 뒤 같은 입력을 끝까지 추적하고 원문과 한계를 확인합니다.",
+    "coreIdea": "제어 형태는 성숙도 순서가 아니라 경로 불확실성과 effect 위험으로 선택하며, run 내부 action loop와 여러 run을 보고 harness를 바꾸는 개선 loop의 주기·권한을 분리합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "blast-radius-least-privilege-boundary",
-        sectionId: "blast-radius",
-        intuition: "한 action이 잘못됐을 때 번질 수 있는 최대 범위를 먼저 정하고, least privilege로 그 범위 자체를 좁혀 둡니다.",
-        workedExample: "Project 전체 write 권한 대신 이번 release의 target·revision만 write 가능한 scoped credential을 주면 실수의 반경이 release 1건으로 줄어듭니다.",
-        boundary: "Least privilege가 blast radius를 0으로 만들지는 않으며, 좁은 권한 안의 effect도 receipt·rollback 경로가 없으면 되돌릴 수 없습니다.",
+        "id": "workflow-agent-checkpoint-boundary",
+        "role": "경로 불확실성과 effect 위험에 맞는 제어 주체를 고릅니다."
       },
-],
-    conceptStages: [
-      { label: "00 route", relation: "경로 불확실성으로 workflow와 agent를 고릅니다.", concepts: ["workflow-agent-checkpoint-boundary"] },
-      { label: "01 risk", relation: "되돌리기 어려운 effect 앞에 checkpoint를 둡니다.", concepts: ["workflow-agent-checkpoint-boundary"] },
-      { label: "02 blast radius", relation: "Checkpoint 위치를 실패 영향 범위와 least privilege로 정합니다.", concepts: ["blast-radius-least-privilege-boundary"] },
-      { label: "03 run loop", relation: "한 run의 budget·capability 안에서 행동합니다.", concepts: ["loop-timescale-authority-separation"] },
-      { label: "04 improve", relation: "여러 trace로 harness 변경을 검토·canary합니다.", concepts: ["loop-timescale-authority-separation"] },
+      {
+        "id": "loop-timescale-authority-separation",
+        "role": "Run 행동과 harness 개선의 주기·권한을 분리합니다."
+      },
+      {
+        "id": "blast-radius-least-privilege-boundary",
+        "role": "Checkpoint를 놓쳐도 피해가 넘어가지 않을 반경을 least privilege로 미리 좁힙니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "자료 조사·build·production deploy를 세 제어 형태에 배치하세요.", answerChecklist: ["agent", "workflow", "checkpoint", "reason"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "overview" },
-      { level: "basic", question: "Workflow와 agent의 차이를 설명하세요.", answerChecklist: ["predefined path", "model-directed path", "not maturity", "hybrid"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "overview" },
-      { level: "basic", question: "낮은 불확실성·낮은 위험 작업의 제어를 고르세요.", answerChecklist: ["workflow", "fixed steps", "deterministic checks", "no needless agent"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "selection" },
-      { level: "basic", question: "Blast radius와 least privilege의 관계를 설명하세요.", answerChecklist: ["실패 영향 범위", "권한을 최소로 부여", "반경 축소", "checkpoint와 별개"], requiredConcepts: ["blast-radius-least-privilege-boundary"], sectionId: "blast-radius" },
-      { level: "basic", question: "높은 위험 action에 필요한 checkpoint를 쓰세요.", answerChecklist: ["target diff", "fresh approval", "receipt", "rollback"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "selection" },
-      { level: "basic", question: "Run loop와 harness 개선 loop를 구분하세요.", answerChecklist: ["single run", "multi-run sample", "different budget", "different authority"], requiredConcepts: ["loop-timescale-authority-separation"], sectionId: "loop-authority" },
-      { level: "advanced", question: "높은 불확실성·높은 위험 배포 흐름을 설계하세요.", answerChecklist: ["sandbox exploration", "candidate artifact", "deterministic gate", "human approval", "receipt"], requiredConcepts: ["workflow-agent-checkpoint-boundary"], sectionId: "selection" },
-      { level: "advanced", question: "Project 전체 write 권한을 scoped credential로 좁혀 blast radius를 줄이세요.", answerChecklist: ["scoped credential", "target·revision만", "실수 반경 축소", "receipt·rollback 유지"], requiredConcepts: ["blast-radius-least-privilege-boundary"], sectionId: "blast-radius" },
-      { level: "advanced", question: "Judge feedback poisoning이 global skill로 퍼지는 경로를 막으세요.", answerChecklist: ["quarantine", "multiple traces", "review", "canary", "rollback"], requiredConcepts: ["loop-timescale-authority-separation"], sectionId: "loop-authority" },
-      { level: "advanced", question: "Harness 변경의 release contract를 작성하세요.", answerChecklist: ["version", "representative traces", "review", "canary", "rollback trigger"], requiredConcepts: ["loop-timescale-authority-separation"], sectionId: "paper-loop-control" },
+    "conceptExplanations": [
+      {
+        "id": "workflow-agent-checkpoint-boundary",
+        "sectionId": "workflow-agent",
+        "intuition": "정해진 철도·현장 탐색·국경 검문소를 같은 운행 방식으로 다루지 않습니다.",
+        "workedExample": "Source 탐색은 agent, build는 workflow, production deploy는 approval checkpoint가 맡습니다.",
+        "boundary": "Agent나 graph가 workflow보다 높은 성숙도라는 뜻이 아닙니다."
+      },
+      {
+        "id": "loop-timescale-authority-separation",
+        "sectionId": "loop-authority",
+        "intuition": "한 경기의 작전과 시즌 규칙 변경을 같은 선수가 즉시 결정하지 않습니다.",
+        "workedExample": "Run loop는 bounded tool action을, 개선 loop는 여러 trace·review·canary를 다룹니다.",
+        "boundary": "Judge feedback 하나가 global harness를 즉시 바꾸면 안 됩니다."
+      },
+      {
+        "id": "blast-radius-least-privilege-boundary",
+        "sectionId": "blast-radius",
+        "intuition": "한 action이 잘못됐을 때 번질 수 있는 최대 범위를 먼저 정하고, least privilege로 그 범위 자체를 좁혀 둡니다.",
+        "workedExample": "Project 전체 write 권한 대신 이번 release의 target·revision만 write 가능한 scoped credential을 주면 실수의 반경이 release 1건으로 줄어듭니다.",
+        "boundary": "Least privilege가 blast radius를 0으로 만들지는 않으며, 좁은 권한 안의 effect도 receipt·rollback 경로가 없으면 되돌릴 수 없습니다."
+      }
     ],
-    papers: [
-      { title: "Anthropic — Building effective agents", href: "https://www.anthropic.com/engineering/building-effective-agents", problem: "Workflow와 agent를 언제 선택할지 판단하는 문제", contribution: "Predefined workflow와 model-directed agent를 구분하고 필요한 복잡성만 추가하는 원칙을 제시", assumptions: "공개된 model·tool 환경과 production 경험", evidenceScope: "Workflow·agent 선택 용어와 사례", notClaim: "Workflow와 agent가 성숙도 계층이거나 모든 workload에서 같은 성능을 보장한다는 주장은 아님", sectionId: "paper-loop-control" },
-      { title: "LangChain — The Art of Loop Engineering", href: "https://www.langchain.com/blog/the-art-of-loop-engineering", problem: "Agent 실행과 production 개선을 서로 다른 loop로 운영하는 문제", contribution: "Agent·verification·event-driven·hill-climbing loop vocabulary를 제시", assumptions: "공개된 agent application·observability 관점", evidenceScope: "최근 loop engineering 설계 어휘", notClaim: "공인 표준 taxonomy나 보편 성숙도 계층", sectionId: "paper-loop-control" },
+    "conceptStages": [
+      {
+        "label": "00 route",
+        "relation": "경로 불확실성으로 workflow와 agent를 고릅니다.",
+        "concepts": [
+          "workflow-agent-checkpoint-boundary"
+        ]
+      },
+      {
+        "label": "01 risk",
+        "relation": "되돌리기 어려운 effect 앞에 checkpoint를 둡니다.",
+        "concepts": [
+          "workflow-agent-checkpoint-boundary"
+        ]
+      },
+      {
+        "label": "02 blast radius",
+        "relation": "Checkpoint 위치를 실패 영향 범위와 least privilege로 정합니다.",
+        "concepts": [
+          "blast-radius-least-privilege-boundary"
+        ]
+      },
+      {
+        "label": "03 run loop",
+        "relation": "한 run의 budget·capability 안에서 행동합니다.",
+        "concepts": [
+          "loop-timescale-authority-separation"
+        ]
+      },
+      {
+        "label": "04 improve",
+        "relation": "여러 trace로 harness 변경을 검토·canary합니다.",
+        "concepts": [
+          "loop-timescale-authority-separation"
+        ]
+      }
     ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "20개 파일 중 다음 파일을 관측으로 고르는 자리는 어떤 제어 형태인가요?",
+        "answerChecklist": [
+          "agent loop",
+          "새 관측",
+          "모델의 다음 선택"
+        ],
+        "sectionId": "workflow-agent",
+        "requiredConcepts": [
+          "workflow-agent-checkpoint-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "검사 2개를 정해진 순서로 실행하는 자리는 어떤 형태인가요?",
+        "answerChecklist": [
+          "workflow",
+          "고정 경로",
+          "검사 생략 금지"
+        ],
+        "sectionId": "workflow-agent",
+        "requiredConcepts": [
+          "workflow-agent-checkpoint-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "읽기 예산 6회에서 2회 읽은 뒤 남은 횟수를 계산하세요.",
+        "answerChecklist": [
+          "6−2=4",
+          "읽기 횟수",
+          "예산 제한"
+        ],
+        "sectionId": "selection",
+        "requiredConcepts": [
+          "workflow-agent-checkpoint-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "품질 검사가 통과해도 prod-1 반영이 거부되는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "test-1만 허용",
+          "대상 검사",
+          "품질과 권한 분리"
+        ],
+        "sectionId": "selection",
+        "requiredConcepts": [
+          "workflow-agent-checkpoint-boundary",
+          "blast-radius-least-privilege-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Checkpoint와 최소 권한이 각각 하는 일을 구분하세요.",
+        "answerChecklist": [
+          "이번 실행 조건",
+          "필요 자원만 허용",
+          "서로 대체 불가"
+        ],
+        "sectionId": "workflow-agent",
+        "requiredConcepts": [
+          "blast-radius-least-privilege-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Blast radius를 대상 1개로 줄여도 피해가 남는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "범위 안 실패",
+          "변경 기록",
+          "복구 필요"
+        ],
+        "sectionId": "loop-authority",
+        "requiredConcepts": [
+          "blast-radius-least-privilege-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "경로 불확실성은 낮지만 실패 영향은 큰 작업을 설계하세요.",
+        "answerChecklist": [
+          "고정 workflow 가능",
+          "실행 대상 검사",
+          "허용 범위",
+          "복구 기록"
+        ],
+        "sectionId": "selection",
+        "requiredConcepts": [
+          "workflow-agent-checkpoint-boundary",
+          "blast-radius-least-privilege-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "원인 탐색과 검사·반영을 모두 자율 선택에 맡겼을 때의 실패를 예측하세요.",
+        "answerChecklist": [
+          "검사 생략",
+          "범위 확대",
+          "경로와 권한 분리",
+          "실행 조건 고정"
+        ],
+        "sectionId": "why-control",
+        "requiredConcepts": [
+          "workflow-agent-checkpoint-boundary",
+          "blast-radius-least-privilege-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "한 번의 좋은 평가로 전역 실행 정책을 바꾸면 생기는 문제를 설명하세요.",
+        "answerChecklist": [
+          "한 run과 전체 정책 분리",
+          "다른 사례 회귀",
+          "검토",
+          "비교 실행"
+        ],
+        "sectionId": "loop-authority",
+        "requiredConcepts": [
+          "loop-timescale-authority-separation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "최소 권한과 rollback이 서로 대체되지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "영향 범위 제한",
+          "실행 전후 상태",
+          "범위 안 피해",
+          "되돌릴 조건"
+        ],
+        "sectionId": "loop-authority",
+        "requiredConcepts": [
+          "blast-radius-least-privilege-boundary"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Anthropic — Building effective agents",
+        "href": "https://www.anthropic.com/engineering/building-effective-agents",
+        "problem": "Workflow와 agent를 언제 선택할지 판단하는 문제",
+        "contribution": "Predefined workflow와 model-directed agent를 구분하고 필요한 복잡성만 추가하는 원칙을 제시",
+        "assumptions": "공개된 model·tool 환경과 production 경험",
+        "evidenceScope": "Workflow·agent 선택 용어와 사례",
+        "notClaim": "Workflow와 agent가 성숙도 계층이거나 모든 workload에서 같은 성능을 보장한다는 주장은 아님",
+        "sectionId": "paper-loop-control"
+      },
+      {
+        "title": "LangChain — The Art of Loop Engineering",
+        "href": "https://www.langchain.com/blog/the-art-of-loop-engineering",
+        "problem": "Agent 실행과 production 개선을 서로 다른 loop로 운영하는 문제",
+        "contribution": "Agent·verification·event-driven·hill-climbing loop vocabulary를 제시",
+        "assumptions": "공개된 agent application·observability 관점",
+        "evidenceScope": "최근 loop engineering 설계 어휘",
+        "notClaim": "공인 표준 taxonomy나 보편 성숙도 계층",
+        "sectionId": "paper-loop-control"
+      }
+    ]
   },
   "ai/agent-loop-foundations": {
-    entryLevel: true,
-    entryNote: "LLM 호출에서 시작해 action proposal·runtime gate·typed observation·terminal state를 하나씩 정의합니다.",
-    coreIdea: "Agent loop는 model이 현재 state에서 action을 제안하고 runtime이 authorization·execution으로 만든 typed observation을 다음 state에 반영하는 반복입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "agent-observation-action-loop", role: "State→proposal→runtime→observation→next state의 최소 실행 단위를 정의합니다." },
-      { id: "typed-tool-observation-contract", role: "Empty·denied·timeout·partial effect를 구분하는 결과 schema를 만듭니다." },
-      { id: "agent-exit-state-machine", role: "Completed·exhausted·stalled·failed·approval·escalation을 분리합니다." },
-      { id: "ai-agent-definition-taxonomy", role: "AI agent·autonomous agent와 agentic workflow를 가르는 정의 축을 고정합니다." },
-      { id: "agent-step-and-horizon", role: "한 반복을 agent step으로, 그 반복이 감당할 범위를 agent horizon·long-horizon agent로 이름 붙입니다." },
-      { id: "agent-policy", role: "State를 action 확률 분포로 바꾸는 π_θ 함수에 agent policy라는 역할을 붙입니다." },
-      { id: "react-and-tool-augmented-llm", role: "Tool 호출 능력(tool-augmented LLM)과 reasoning-action 교대 pattern(ReAct)을 소개합니다." },
-],
-    conceptExplanations: [
-      { id: "agent-observation-action-loop", sectionId: "overview", intuition: "현재 작업판을 보고 행동을 제안하고 실제 결과로 작업판을 갱신합니다.", workedExample: "File read proposal을 runtime이 허가해 실행하고 content checksum observation을 다음 state에 넣습니다.", boundary: "Model proposal은 외부 effect 권한이 아닙니다." },
-      { id: "typed-tool-observation-contract", sectionId: "observation-contract", intuition: "빈 결과와 실행하지 못한 결과에 서로 다른 표찰을 붙입니다.", workedExample: "status=timeout, retryable=true, callId, payloadHandle, truncated=false를 남깁니다.", boundary: "Schema가 payload의 사실성이나 freshness를 자동 보장하지 않습니다." },
-      { id: "agent-exit-state-machine", sectionId: "exit-states", intuition: "끝났다는 말 대신 여러 종착역을 둡니다.", workedExample: "Verifier pass는 completed, 반복 action은 stalled, 승인 부재는 awaiting_approval입니다.", boundary: "Model final text만으로 completed가 되지 않습니다." },
+    "entryLevel": true,
+    "entryNote": "작은 사례에서 역할을 파악한 뒤 같은 입력을 끝까지 추적하고 원문과 한계를 확인합니다.",
+    "coreIdea": "Agent loop는 model이 현재 state에서 action을 제안하고 runtime이 authorization·execution으로 만든 typed observation을 다음 state에 반영하는 반복입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "ai-agent-definition-taxonomy",
-        sectionId: "agent-definition",
-        intuition: "다음 action을 model이 매 반복 스스로 정하는지, 코드가 미리 정한 순서를 따르는지로 agent와 workflow를 가릅니다.",
-        workedExample: "요약→분류→저장처럼 순서가 코드에 고정된 pipeline은 agentic workflow이고, 다음 tool을 model이 매번 고르면 AI agent입니다.",
-        boundary: "각 단계에서 LLM을 쓴다는 사실만으로 그 pipeline 전체가 agent가 되지는 않습니다.",
+        "id": "agent-observation-action-loop",
+        "role": "State→proposal→runtime→observation→next state의 최소 실행 단위를 정의합니다."
       },
       {
-        id: "agent-step-and-horizon",
-        sectionId: "agent-step-and-horizon",
-        intuition: "한 바퀴 반복을 step으로 세고, 그 작업이 버텨야 하는 step·시간·budget 범위를 horizon으로 봅니다.",
-        workedExample: "파일 여러 개를 고치고 test를 반복하는 작업은 horizon이 수십 step으로 늘어납니다.",
-        boundary: "Step 상한을 크게 잡는 것만으로는 long-horizon agent가 되지 않고 checkpoint·재검증이 함께 필요합니다.",
+        "id": "typed-tool-observation-contract",
+        "role": "Empty·denied·timeout·partial effect를 구분하는 결과 schema를 만듭니다."
       },
       {
-        id: "agent-policy",
-        sectionId: "transition",
-        intuition: "State 하나를 넣으면 다음 action의 확률 분포를 내놓는 함수가 policy입니다.",
-        workedExample: "s_t를 넣은 π_θ가 file read·grep·응답 종료 중 하나를 더 높은 확률로 제안합니다.",
-        boundary: "Policy가 제안한 action이 실행 권한을 갖는 것은 아니며, 그다음 authorization gate가 별도로 판정합니다.",
+        "id": "agent-exit-state-machine",
+        "role": "Completed·exhausted·stalled·failed·approval·escalation을 분리합니다."
       },
       {
-        id: "react-and-tool-augmented-llm",
-        sectionId: "react-and-tool-augmented-llm",
-        intuition: "Tool을 부를 수 있는 LLM 위에서, ReAct는 이유를 적은 reasoning과 실제 action을 번갈아 만듭니다.",
-        workedExample: "\"파일을 먼저 확인해야 한다\"는 reasoning 뒤 read_file action을 내고, 그 결과로 다음 reasoning을 갱신합니다.",
-        boundary: "논문의 task 결과를 production authorization이나 exactly-once effect 보장으로 확대하지 않습니다.",
+        "id": "ai-agent-definition-taxonomy",
+        "role": "AI agent·autonomous agent와 agentic workflow를 가르는 정의 축을 고정합니다."
       },
-],
-    conceptStages: [
-      { label: "00 define", relation: "무엇이 agent이고 무엇이 workflow인지 정의합니다.", concepts: ["ai-agent-definition-taxonomy"] },
-      { label: "01 state-proposal", relation: "다음 decision에 허용된 observable state를 고정하고, model proposal과 runtime effect를 분리하며 policy의 역할을 붙입니다.", concepts: ["agent-observation-action-loop", "agent-policy"] },
-      { label: "02 horizon", relation: "반복을 step으로 세고 감당할 범위를 horizon으로 봅니다.", concepts: ["agent-step-and-horizon"] },
-      { label: "03 observation", relation: "실행 결과를 typed state input으로 만듭니다.", concepts: ["typed-tool-observation-contract"] },
-      { label: "04 pattern", relation: "Tool 호출 능력 위에서 reasoning과 action을 번갈아 만드는 pattern을 봅니다.", concepts: ["react-and-tool-augmented-llm"] },
-      { label: "05 exit", relation: "Verifier·budget·failure·approval에서 terminal state를 판정합니다.", concepts: ["agent-exit-state-machine"] },
+      {
+        "id": "agent-step-and-horizon",
+        "role": "한 반복을 agent step으로, 그 반복이 감당할 범위를 agent horizon·long-horizon agent로 이름 붙입니다."
+      },
+      {
+        "id": "agent-policy",
+        "role": "State를 action 확률 분포로 바꾸는 π_θ 함수에 agent policy라는 역할을 붙입니다."
+      },
+      {
+        "id": "react-and-tool-augmented-llm",
+        "role": "Tool 호출 능력(tool-augmented LLM)과 reasoning-action 교대 pattern(ReAct)을 소개합니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "File read loop의 state·proposal·authorization·observation을 순서대로 쓰세요.", answerChecklist: ["state snapshot", "tool proposal", "permission gate", "executor", "typed result"], requiredConcepts: ["agent-observation-action-loop"], sectionId: "transition" },
-      { level: "basic", question: "Model proposal이 곧 effect가 아닌 이유를 설명하세요.", answerChecklist: ["untrusted proposal", "runtime authority", "resource check", "fresh approval"], requiredConcepts: ["agent-observation-action-loop"], sectionId: "transition" },
-      { level: "basic", question: "Empty search와 permission denied observation을 구분하는 필드를 설계하세요.", answerChecklist: ["status enum", "payload", "error code", "source", "timestamp"], requiredConcepts: ["typed-tool-observation-contract"], sectionId: "observation-contract" },
-      { level: "basic", question: "Partial write observation에 필요한 receipt를 나열하세요.", answerChecklist: ["operation ID", "committed targets", "failed targets", "retryability", "artifact identity"], requiredConcepts: ["typed-tool-observation-contract"], sectionId: "observation-contract" },
-      { level: "basic", question: "Completed·exhausted·stalled의 차이를 설명하세요.", answerChecklist: ["verifier pass", "budget used", "repeated action", "different resume policy"], requiredConcepts: ["agent-exit-state-machine"], sectionId: "exit-states" },
-      { level: "basic", question: "Awaiting approval과 failed를 분리해야 하는 이유를 쓰세요.", answerChecklist: ["resumable wait", "fatal failure", "pending payload", "fresh decision"], requiredConcepts: ["agent-exit-state-machine"], sectionId: "exit-states" },
-      { level: "advanced", question: "Timeout 뒤 retry할 때 duplicate external effect를 막는 observation contract를 설계하세요.", answerChecklist: ["stable operation key", "unknown outcome", "receipt lookup", "idempotency", "no blind retry"], requiredConcepts: ["typed-tool-observation-contract"], sectionId: "observation-contract" },
-      { level: "advanced", question: "Final answer가 있지만 verifier가 실패한 run의 terminal transition을 설계하세요.", answerChecklist: ["not completed", "failed or pending", "preserve artifact", "feedback", "retry budget"], requiredConcepts: ["agent-exit-state-machine"], sectionId: "exit-states" },
-      { level: "advanced", question: "Action loop의 audit event schema를 작성하세요.", answerChecklist: ["state version", "proposal", "authorization decision", "executor receipt", "observation", "next state"], requiredConcepts: ["agent-observation-action-loop", "typed-tool-observation-contract"], sectionId: "transition" },
-      { level: "advanced", question: "Read-only search와 payment action의 gate를 공정하게 비교하세요.", answerChecklist: ["different risk", "capability scope", "fresh approval", "idempotency", "effect verification"], requiredConcepts: ["agent-observation-action-loop", "agent-exit-state-machine"], sectionId: "transition" },
+    "conceptExplanations": [
+      {
+        "id": "agent-observation-action-loop",
+        "sectionId": "agent-definition",
+        "intuition": "현재 작업판을 보고 행동을 제안하고 실제 결과로 작업판을 갱신합니다.",
+        "workedExample": "File read proposal을 runtime이 허가해 실행하고 content checksum observation을 다음 state에 넣습니다.",
+        "boundary": "Model proposal은 외부 effect 권한이 아닙니다."
+      },
+      {
+        "id": "typed-tool-observation-contract",
+        "sectionId": "observation-contract",
+        "intuition": "빈 결과와 실행하지 못한 결과에 서로 다른 표찰을 붙입니다.",
+        "workedExample": "status=timeout, retryable=true, callId, payloadHandle, truncated=false를 남깁니다.",
+        "boundary": "Schema가 payload의 사실성이나 freshness를 자동 보장하지 않습니다."
+      },
+      {
+        "id": "agent-exit-state-machine",
+        "sectionId": "exit-states",
+        "intuition": "끝났다는 말 대신 여러 종착역을 둡니다.",
+        "workedExample": "Verifier pass는 completed, 반복 action은 stalled, 승인 부재는 awaiting_approval입니다.",
+        "boundary": "Model final text만으로 completed가 되지 않습니다."
+      },
+      {
+        "id": "ai-agent-definition-taxonomy",
+        "sectionId": "agent-definition",
+        "intuition": "다음 action을 model이 매 반복 스스로 정하는지, 코드가 미리 정한 순서를 따르는지로 agent와 workflow를 가릅니다.",
+        "workedExample": "요약→분류→저장처럼 순서가 코드에 고정된 pipeline은 agentic workflow이고, 다음 tool을 model이 매번 고르면 AI agent입니다.",
+        "boundary": "각 단계에서 LLM을 쓴다는 사실만으로 그 pipeline 전체가 agent가 되지는 않습니다."
+      },
+      {
+        "id": "agent-step-and-horizon",
+        "sectionId": "agent-step-and-horizon",
+        "intuition": "한 바퀴 반복을 step으로 세고, 그 작업이 버텨야 하는 step·시간·budget 범위를 horizon으로 봅니다.",
+        "workedExample": "파일 여러 개를 고치고 test를 반복하는 작업은 horizon이 수십 step으로 늘어납니다.",
+        "boundary": "Step 상한을 크게 잡는 것만으로는 long-horizon agent가 되지 않고 checkpoint·재검증이 함께 필요합니다."
+      },
+      {
+        "id": "agent-policy",
+        "sectionId": "transition",
+        "intuition": "State 하나를 넣으면 다음 action의 확률 분포를 내놓는 함수가 policy입니다.",
+        "workedExample": "s_t를 넣은 π_θ가 file read·grep·응답 종료 중 하나를 더 높은 확률로 제안합니다.",
+        "boundary": "Policy가 제안한 action이 실행 권한을 갖는 것은 아니며, 그다음 authorization gate가 별도로 판정합니다."
+      },
+      {
+        "id": "react-and-tool-augmented-llm",
+        "sectionId": "react-and-tool-augmented-llm",
+        "intuition": "Tool을 부를 수 있는 LLM 위에서, ReAct는 이유를 적은 reasoning과 실제 action을 번갈아 만듭니다.",
+        "workedExample": "\"파일을 먼저 확인해야 한다\"는 reasoning 뒤 read_file action을 내고, 그 결과로 다음 reasoning을 갱신합니다.",
+        "boundary": "논문의 task 결과를 production authorization이나 exactly-once effect 보장으로 확대하지 않습니다."
+      }
     ],
-    papers: [
-      { title: "ReAct: Synergizing Reasoning and Acting in Language Models", href: "https://arxiv.org/abs/2210.03629", problem: "Reasoning과 외부 interaction을 한 trajectory에서 결합하는 문제", contribution: "Reasoning trace와 task-specific action을 번갈아 생성하는 ReAct pattern", assumptions: "논문의 QA·interactive task·model·environment 조건", evidenceScope: "논문이 보고한 task 성능과 trajectory 사례", notClaim: "Production authorization·exactly-once effect·private reasoning 공개의 보장", sectionId: "paper-react" },
+    "conceptStages": [
+      {
+        "label": "00 define",
+        "relation": "무엇이 agent이고 무엇이 workflow인지 정의합니다.",
+        "concepts": [
+          "ai-agent-definition-taxonomy"
+        ]
+      },
+      {
+        "label": "01 state-proposal",
+        "relation": "다음 decision에 허용된 observable state를 고정하고, model proposal과 runtime effect를 분리하며 policy의 역할을 붙입니다.",
+        "concepts": [
+          "agent-observation-action-loop",
+          "agent-policy"
+        ]
+      },
+      {
+        "label": "02 horizon",
+        "relation": "반복을 step으로 세고 감당할 범위를 horizon으로 봅니다.",
+        "concepts": [
+          "agent-step-and-horizon"
+        ]
+      },
+      {
+        "label": "03 observation",
+        "relation": "실행 결과를 typed state input으로 만듭니다.",
+        "concepts": [
+          "typed-tool-observation-contract"
+        ]
+      },
+      {
+        "label": "04 pattern",
+        "relation": "Tool 호출 능력 위에서 reasoning과 action을 번갈아 만드는 pattern을 봅니다.",
+        "concepts": [
+          "react-and-tool-augmented-llm"
+        ]
+      },
+      {
+        "label": "05 exit",
+        "relation": "Verifier·budget·failure·approval에서 terminal state를 판정합니다.",
+        "concepts": [
+          "agent-exit-state-machine"
+        ]
+      }
     ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "430px 문서를 390px 화면에 표시하면 넘침은 얼마인가요?",
+        "answerChecklist": [
+          "40px",
+          "문서 폭−화면 폭",
+          "측정 뒤 완료 판정"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "agent-observation-action-loop"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "다음 행동의 제안과 실제 파일 변경을 구분하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "제안은 요청",
+          "권한 검사",
+          "실제 저장 결과"
+        ],
+        "sectionId": "why-runtime",
+        "requiredConcepts": [
+          "agent-observation-action-loop",
+          "agent-policy"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "거부와 빈 검색 결과를 다른 observation으로 기록하는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "실행 여부 다름",
+          "다음 행동 달라짐",
+          "빈 성공으로 합치지 않음"
+        ],
+        "sectionId": "transition",
+        "requiredConcepts": [
+          "typed-tool-observation-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "처음 6회 예산에서 읽기·수정·측정 3회를 마치면 몇 회가 남나요?",
+        "answerChecklist": [
+          "3회",
+          "각 실행 반영",
+          "검사 통과와 예산 구분"
+        ],
+        "sectionId": "request-trace",
+        "requiredConcepts": [
+          "agent-step-and-horizon"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Agent와 workflow를 다음 경로를 고르는 주체로 비교하세요.",
+        "answerChecklist": [
+          "모델이 관측으로 선택",
+          "코드가 경로 결정",
+          "한 작업에서 조합"
+        ],
+        "sectionId": "agent-definition",
+        "requiredConcepts": [
+          "ai-agent-definition-taxonomy"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Tool-augmented LLM과 ReAct의 관계를 설명하세요.",
+        "answerChecklist": [
+          "도구 사용 능력",
+          "추론·행동·관측 교대",
+          "권한 검사 별도"
+        ],
+        "sectionId": "agent-definition",
+        "requiredConcepts": [
+          "react-and-tool-augmented-llm"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "파일 저장 뒤 시간 초과가 났습니다. 안전한 다음 행동을 설명하세요.",
+        "answerChecklist": [
+          "변경 여부 미확정",
+          "실제 파일 조회",
+          "실행 기록 확인",
+          "맹목 재실행 금지"
+        ],
+        "sectionId": "why-runtime",
+        "requiredConcepts": [
+          "typed-tool-observation-contract"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "ReAct의 c_t에 390px 사례의 세 행동과 관측을 대응하세요.",
+        "answerChecklist": [
+          "430px 관측",
+          "읽기와 width 결과",
+          "수정",
+          "390px 재측정"
+        ],
+        "sectionId": "transition",
+        "requiredConcepts": [
+          "react-and-tool-augmented-llm",
+          "agent-policy"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "6회 예산을 썼는데 430px가 남았습니다. 종료 상태와 남길 증거를 설명하세요.",
+        "answerChecklist": [
+          "exhausted",
+          "미완료",
+          "현재 폭",
+          "변경 파일",
+          "남은 문제"
+        ],
+        "sectionId": "exit-states",
+        "requiredConcepts": [
+          "agent-exit-state-machine"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "반복 상한만 키워도 long-horizon 작업이 신뢰할 만해지지 않는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "잘못된 관측 누적",
+          "기록 유지",
+          "재검증",
+          "명확한 종료"
+        ],
+        "sectionId": "exit-states",
+        "requiredConcepts": [
+          "agent-step-and-horizon"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+        "href": "https://arxiv.org/abs/2210.03629",
+        "problem": "Reasoning과 외부 interaction을 한 trajectory에서 결합하는 문제",
+        "contribution": "Reasoning trace와 task-specific action을 번갈아 생성하는 ReAct pattern",
+        "assumptions": "논문의 QA·interactive task·model·environment 조건",
+        "evidenceScope": "논문이 보고한 task 성능과 trajectory 사례",
+        "notClaim": "Production authorization·exactly-once effect·private reasoning 공개의 보장",
+        "sectionId": "paper-react"
+      }
+    ]
   },
   "ai/agent-plan-replanning": {
-    entryLevel: true,
-    entryNote: "할 일 목록에서 시작해 dependency·artifact·evidence가 있는 plan state로 확장합니다.",
-    coreIdea: "Executable plan은 task dependency와 artifact receipt를 보존하고, 새 evidence가 assumption을 깨면 영향받은 downstream만 invalidation하며 feedback을 다음 trial의 수정 계약으로 바꿉니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "executable-plan-state", role: "Task·dependency·owner·artifact·status·evidence를 versioned graph로 만듭니다." },
-      { id: "evidence-driven-replanning", role: "깨진 assumption의 downstream만 다시 열고 검증 artifact를 보존합니다." },
-      { id: "feedback-grounded-reflection", role: "외부 feedback을 원인·수정·재검증이 있는 다음 trial 입력으로 만듭니다." },
-      { id: "planning-and-plan-mode", role: "실행 전 action 순서를 먼저 만드는 planning과, 승인을 기다리는 plan mode를 정의합니다." },
-      { id: "task-decomposition-and-subgoal", role: "큰 목표를 검증 가능한 subgoal로 나누는 decomposition을 추가합니다." },
-      { id: "hierarchical-planning", role: "Subgoal을 다시 나눠야 하는 여러 층의 planning을 설명합니다." },
-      { id: "plan-validation", role: "실행 전 dependency·artifact·budget 결함을 찾는 검사를 replanning과 구분합니다." },
-],
-    conceptExplanations: [
-      { id: "executable-plan-state", sectionId: "executable-plan", intuition: "문장 목록을 제출물과 검사 결과가 있는 작업 보드로 바꿉니다.", workedExample: "Task B는 schema:v3에 의존하고 output URI·checksum·validator를 가집니다.", boundary: "Output과 evidence가 없는 동사는 완료를 판정할 수 없습니다." },
-      { id: "evidence-driven-replanning", sectionId: "replanning", intuition: "새 사실이 깨뜨린 가지와 downstream만 다시 엽니다.", workedExample: "Schema v4는 client와 integration test를 invalidation하지만 unrelated screenshot은 보존합니다.", boundary: "전체 plan 재생성과 무한 retry가 아닙니다." },
-      { id: "feedback-grounded-reflection", sectionId: "reflection", intuition: "실패 관측을 다음 수정과 같은 재검증 command로 연결합니다.", workedExample: "Missing import→module path 수정→동일 compile·regression test 재실행을 기록합니다.", boundary: "근거 없는 self-review는 feedback source가 아닙니다." },
+    "entryLevel": true,
+    "entryNote": "작은 사례에서 역할을 파악한 뒤 같은 입력을 끝까지 추적하고 원문과 한계를 확인합니다.",
+    "coreIdea": "Executable plan은 task dependency와 artifact receipt를 보존하고, 새 evidence가 assumption을 깨면 영향받은 downstream만 invalidation하며 feedback을 다음 trial의 수정 계약으로 바꿉니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "planning-and-plan-mode",
-        sectionId: "planning-and-plan-mode",
-        intuition: "매번 다음 action만 보는 대신 실행 전에 순서 전체를 먼저 만들고, 그 초안을 사람이 검토하게 둘 수 있습니다.",
-        workedExample: "파일을 고치기 전에 \"A를 바꾸고 B test를 돌린다\"는 초안만 보여주는 상태가 plan mode입니다.",
-        boundary: "Plan mode에서 실행이 보류된다는 뜻이지 그 계획이 옳다는 보장은 아닙니다.",
+        "id": "executable-plan-state",
+        "role": "Task·dependency·owner·artifact·status·evidence를 versioned graph로 만듭니다."
       },
       {
-        id: "task-decomposition-and-subgoal",
-        sectionId: "task-decomposition-and-subgoal",
-        intuition: "완료를 판정할 수 없을 만큼 큰 목표를 독립적으로 검증 가능한 작은 단위로 나눕니다.",
-        workedExample: "\"API를 만든다\"를 schema 정의·구현·통합 test라는 세 subgoal로 나눕니다.",
-        boundary: "Decomposition은 경계만 정하고, 각 subgoal의 완료 근거는 executable plan의 artifact receipt가 채웁니다.",
+        "id": "evidence-driven-replanning",
+        "role": "깨진 assumption의 downstream만 다시 열고 검증 artifact를 보존합니다."
       },
       {
-        id: "hierarchical-planning",
-        sectionId: "hierarchical-planning",
-        intuition: "한 subgoal이 여전히 크면 그 안에서 다시 decomposition해 층을 늘립니다.",
-        workedExample: "구현이라는 subgoal 아래 client 코드·에러 처리라는 더 작은 subgoal을 둡니다.",
-        boundary: "층마다 완료 조건과 dependency를 명시하지 않으면 어느 layer가 막혔는지 추적할 수 없습니다.",
+        "id": "feedback-grounded-reflection",
+        "role": "외부 feedback을 원인·수정·재검증이 있는 다음 trial 입력으로 만듭니다."
       },
       {
-        id: "plan-validation",
-        sectionId: "plan-validation",
-        intuition: "실행을 시작하기 전에 계획 구조 자체에 순환이나 누락이 없는지 확인합니다.",
-        workedExample: "Task C가 존재하지 않는 artifact를 참조하면 실행 전에 이 참조 오류를 잡습니다.",
-        boundary: "실행 뒤 새 evidence로 영향 범위를 다시 여는 replanning과는 검사 시점이 다릅니다.",
+        "id": "planning-and-plan-mode",
+        "role": "순서와 의존 관계를 계획하는 일과 제품별 계획 검토 모드를 구분합니다."
       },
-],
-    conceptStages: [
-      { label: "00 plan", relation: "실행 전 action 순서를 만들고 plan mode로 승인을 기다립니다.", concepts: ["planning-and-plan-mode"] },
-      { label: "01 decompose", relation: "큰 목표를 검증 가능한 subgoal로 나누고, 한 층으로 부족하면 여러 층으로 확장합니다.", concepts: ["task-decomposition-and-subgoal", "hierarchical-planning"] },
-      { label: "02 task", relation: "Output schema가 있는 task를 만들고 version·checksum·validator evidence를 연결합니다.", concepts: ["executable-plan-state"] },
-      { label: "03 validate", relation: "실행 전 dependency·artifact·budget 결함을 찾습니다.", concepts: ["plan-validation"] },
-      { label: "04 replan", relation: "새 evidence의 영향 범위를 계산합니다.", concepts: ["evidence-driven-replanning"] },
-      { label: "05 reflect", relation: "실패를 다음 trial의 수정·재검증으로 바꿉니다.", concepts: ["feedback-grounded-reflection"] },
+      {
+        "id": "task-decomposition-and-subgoal",
+        "role": "큰 목표를 검증 가능한 subgoal로 나누는 decomposition을 추가합니다."
+      },
+      {
+        "id": "hierarchical-planning",
+        "role": "Subgoal을 다시 나눠야 하는 여러 층의 planning을 설명합니다."
+      },
+      {
+        "id": "plan-validation",
+        "role": "실행 전 dependency·artifact·budget 결함을 찾는 검사를 replanning과 구분합니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "A→B→C를 executable plan record로 바꾸세요.", answerChecklist: ["task IDs", "dependencies", "owners", "artifacts", "statuses", "validators"], requiredConcepts: ["executable-plan-state"], sectionId: "executable-plan" },
-      { level: "basic", question: "Task 완료에 worker message 대신 artifact receipt가 필요한 이유를 설명하세요.", answerChecklist: ["independent evidence", "URI", "checksum", "schema", "validator"], requiredConcepts: ["executable-plan-state"], sectionId: "executable-plan" },
-      { level: "basic", question: "Schema v3→v4에서 invalidation할 task를 고르세요.", answerChecklist: ["assumption edge", "direct consumer", "downstream", "unrelated preserve"], requiredConcepts: ["evidence-driven-replanning"], sectionId: "replanning" },
-      { level: "basic", question: "Replanning record의 최소 필드를 나열하세요.", answerChecklist: ["broken assumption", "affected edge", "tasks reopened", "preserved artifacts", "reason"], requiredConcepts: ["evidence-driven-replanning"], sectionId: "replanning" },
-      { level: "basic", question: "Compiler feedback 기반 reflection을 작성하세요.", answerChecklist: ["source", "observed failure", "cause", "change", "same verifier"], requiredConcepts: ["feedback-grounded-reflection"], sectionId: "reflection" },
-      { level: "basic", question: "Self-review와 grounded reflection을 구분하세요.", answerChecklist: ["external observation", "specific cause", "targeted change", "reverification"], requiredConcepts: ["feedback-grounded-reflection"], sectionId: "reflection" },
-      { level: "advanced", question: "Process restart 뒤 plan을 재개할 registry schema를 설계하세요.", answerChecklist: ["plan version", "task status", "artifact receipt", "pending owner", "attempt", "checkpoint"], requiredConcepts: ["executable-plan-state"], sectionId: "executable-plan" },
-      { level: "advanced", question: "Checksum이 같은 artifact를 보존하는 replan algorithm을 설명하세요.", answerChecklist: ["dependency graph", "version compare", "checksum match", "downstream closure", "reverify boundary"], requiredConcepts: ["evidence-driven-replanning"], sectionId: "replanning" },
-      { level: "advanced", question: "잘못된 grader feedback이 plan을 악화시키는 failure fixture를 설계하세요.", answerChecklist: ["bad oracle", "wrong reflection", "changed artifact", "independent verifier", "rollback"], requiredConcepts: ["feedback-grounded-reflection"], sectionId: "reflection" },
-      { level: "advanced", question: "Retry와 replanning을 구분하는 release gate를 작성하세요.", answerChecklist: ["same assumption retry", "new evidence", "dependency invalidation", "budget", "acceptance", "rollback"], requiredConcepts: ["evidence-driven-replanning", "feedback-grounded-reflection"], sectionId: "replanning" },
+    "conceptExplanations": [
+      {
+        "id": "executable-plan-state",
+        "sectionId": "executable-plan",
+        "intuition": "문장 목록을 제출물과 검사 결과가 있는 작업 보드로 바꿉니다.",
+        "workedExample": "Task B는 schema:v3에 의존하고 output URI·checksum·validator를 가집니다.",
+        "boundary": "Output과 evidence가 없는 동사는 완료를 판정할 수 없습니다."
+      },
+      {
+        "id": "evidence-driven-replanning",
+        "sectionId": "replanning",
+        "intuition": "새 사실이 깨뜨린 가지와 downstream만 다시 엽니다.",
+        "workedExample": "Schema v4는 client와 integration test를 invalidation하지만 unrelated screenshot은 보존합니다.",
+        "boundary": "전체 plan 재생성과 무한 retry가 아닙니다."
+      },
+      {
+        "id": "feedback-grounded-reflection",
+        "sectionId": "reflection",
+        "intuition": "실패 관측을 다음 수정과 같은 재검증 command로 연결합니다.",
+        "workedExample": "Missing import→module path 수정→동일 compile·regression test 재실행을 기록합니다.",
+        "boundary": "근거 없는 self-review는 feedback source가 아닙니다."
+      },
+      {
+        "id": "planning-and-plan-mode",
+        "sectionId": "planning-and-plan-mode",
+        "intuition": "매번 다음 action만 보는 대신 실행 전에 순서 전체를 먼저 만들고, 그 초안을 사람이 검토하게 둘 수 있습니다.",
+        "workedExample": "파일을 고치기 전에 \"A를 바꾸고 B test를 돌린다\"는 초안만 보여주는 상태가 plan mode입니다.",
+        "boundary": "계획 검토 모드의 실제 도구 권한과 승인 조건은 제품·설정에서 확인하며, 모드 이름이 계획의 정확성을 보장하지 않습니다."
+      },
+      {
+        "id": "task-decomposition-and-subgoal",
+        "sectionId": "task-decomposition-and-subgoal",
+        "intuition": "완료를 판정할 수 없을 만큼 큰 목표를 독립적으로 검증 가능한 작은 단위로 나눕니다.",
+        "workedExample": "\"API를 만든다\"를 schema 정의·구현·통합 test라는 세 subgoal로 나눕니다.",
+        "boundary": "Decomposition은 경계만 정하고, 각 subgoal의 완료 근거는 executable plan의 artifact receipt가 채웁니다."
+      },
+      {
+        "id": "hierarchical-planning",
+        "sectionId": "hierarchical-planning",
+        "intuition": "한 subgoal이 여전히 크면 그 안에서 다시 decomposition해 층을 늘립니다.",
+        "workedExample": "구현이라는 subgoal 아래 client 코드·에러 처리라는 더 작은 subgoal을 둡니다.",
+        "boundary": "층마다 완료 조건과 dependency를 명시하지 않으면 어느 layer가 막혔는지 추적할 수 없습니다."
+      },
+      {
+        "id": "plan-validation",
+        "sectionId": "plan-validation",
+        "intuition": "실행을 시작하기 전에 계획 구조 자체에 순환이나 누락이 없는지 확인합니다.",
+        "workedExample": "Task C가 존재하지 않는 artifact를 참조하면 실행 전에 이 참조 오류를 잡습니다.",
+        "boundary": "실행 뒤 새 evidence로 영향 범위를 다시 여는 replanning과는 검사 시점이 다릅니다."
+      }
     ],
-    papers: [
-      { title: "Reflexion: Language Agents with Verbal Reinforcement Learning", href: "https://arxiv.org/abs/2303.11366", problem: "Trial feedback을 다음 시도에 전달하는 문제", contribution: "언어적 reflection과 episodic memory를 이용한 다음-trial 개선", assumptions: "논문의 environment·heuristic·self-evaluation feedback과 task 조건", evidenceScope: "논문이 보고한 benchmark와 ablation 범위", notClaim: "근거 없는 self-review가 자동으로 오류를 고친다는 보편 주장", sectionId: "paper-reflexion" },
+    "conceptStages": [
+      {
+        "label": "00 plan",
+        "relation": "실행 전에 계획을 만들고 실제 실행 권한은 제품과 설정에서 확인합니다.",
+        "concepts": [
+          "planning-and-plan-mode"
+        ]
+      },
+      {
+        "label": "01 decompose",
+        "relation": "큰 목표를 검증 가능한 subgoal로 나누고, 한 층으로 부족하면 여러 층으로 확장합니다.",
+        "concepts": [
+          "task-decomposition-and-subgoal",
+          "hierarchical-planning"
+        ]
+      },
+      {
+        "label": "02 task",
+        "relation": "Output schema가 있는 task를 만들고 version·checksum·validator evidence를 연결합니다.",
+        "concepts": [
+          "executable-plan-state"
+        ]
+      },
+      {
+        "label": "03 validate",
+        "relation": "실행 전 dependency·artifact·budget 결함을 찾습니다.",
+        "concepts": [
+          "plan-validation"
+        ]
+      },
+      {
+        "label": "04 replan",
+        "relation": "새 evidence의 영향 범위를 계산합니다.",
+        "concepts": [
+          "evidence-driven-replanning"
+        ]
+      },
+      {
+        "label": "05 reflect",
+        "relation": "실패를 다음 trial의 수정·재검증으로 바꿉니다.",
+        "concepts": [
+          "feedback-grounded-reflection"
+        ]
+      }
     ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "A→B→C와 독립 D를 입력·출력 버전으로 적으세요.",
+        "answerChecklist": [
+          "schema:v3",
+          "client:r1",
+          "C는r1검사",
+          "D guide:r1"
+        ],
+        "sectionId": "executable-plan",
+        "requiredConcepts": [
+          "executable-plan-state"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "자료가 v3에서 v4로 바뀌면 B·C·D 중 무엇을 다시 여나요?",
+        "answerChecklist": [
+          "B 직접 영향",
+          "C 후속 영향",
+          "D 전제 유지면 보존"
+        ],
+        "sectionId": "executable-plan",
+        "requiredConcepts": [
+          "evidence-driven-replanning"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "계획 실행 전 순환·입력·자원을 검사하는 일은 무엇인가요?",
+        "answerChecklist": [
+          "plan validation",
+          "실행 전",
+          "재계획과 시점 다름"
+        ],
+        "sectionId": "reflection",
+        "requiredConcepts": [
+          "plan-validation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "큰 목표를 작은 목표로 나누고 다시 나누는 두 개념을 비교하세요.",
+        "answerChecklist": [
+          "task decomposition",
+          "subgoal",
+          "hierarchical planning",
+          "각 층 완료 조건"
+        ],
+        "sectionId": "planning-and-plan-mode",
+        "requiredConcepts": [
+          "task-decomposition-and-subgoal",
+          "hierarchical-planning"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Planning과 plan mode를 구분하고 권한을 일반화할 수 없는 이유를 쓰세요.",
+        "answerChecklist": [
+          "순서·의존 계획",
+          "운영 모드",
+          "제품별 권한 설정"
+        ],
+        "sectionId": "planning-and-plan-mode",
+        "requiredConcepts": [
+          "planning-and-plan-mode"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "C의 실패를 다음 B가 쓸 reflection으로 적으세요.",
+        "answerChecklist": [
+          "실제 실패",
+          "원인 가설",
+          "수정 대상",
+          "같은 검사"
+        ],
+        "sectionId": "reflection",
+        "requiredConcepts": [
+          "feedback-grounded-reflection"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "D가 사실은 schema를 읽었다면 보존 판단이 왜 틀리나요?",
+        "answerChecklist": [
+          "빠진 의존성",
+          "영향 추적 오류",
+          "D 재검사",
+          "실제 입력 확인"
+        ],
+        "sectionId": "plan-boundaries",
+        "requiredConcepts": [
+          "evidence-driven-replanning"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "재시작 뒤 B와 C를 정확히 이어가려면 어떤 기록이 필요한가요?",
+        "answerChecklist": [
+          "입력·출력 버전",
+          "상태",
+          "담당자",
+          "검사 결과",
+          "남은 예산"
+        ],
+        "sectionId": "inside-plan",
+        "requiredConcepts": [
+          "executable-plan-state"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "잘못된 reflection이 다음 시도를 악화시키는 경우와 방지책을 설명하세요.",
+        "answerChecklist": [
+          "원인 가설을 사실로 기억",
+          "잘못된 수정",
+          "관측과 가설 분리",
+          "독립 검사"
+        ],
+        "sectionId": "plan-boundaries",
+        "requiredConcepts": [
+          "feedback-grounded-reflection"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 조건의 재시도와 v4로 인한 재계획의 차이는 무엇인가요?",
+        "answerChecklist": [
+          "입력 전제 변경",
+          "영향 범위",
+          "새 버전",
+          "보존 결과",
+          "예산"
+        ],
+        "sectionId": "executable-plan",
+        "requiredConcepts": [
+          "evidence-driven-replanning",
+          "feedback-grounded-reflection"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+        "href": "https://arxiv.org/abs/2303.11366",
+        "problem": "Trial feedback을 다음 시도에 전달하는 문제",
+        "contribution": "언어적 reflection과 episodic memory를 이용한 다음-trial 개선",
+        "assumptions": "논문의 environment·heuristic·self-evaluation feedback과 task 조건",
+        "evidenceScope": "논문이 보고한 benchmark와 ablation 범위",
+        "notClaim": "근거 없는 self-review가 자동으로 오류를 고친다는 보편 주장",
+        "sectionId": "paper-reflexion"
+      }
+    ]
   },
   "ai/agent-delegation-contracts": {
-    entryLevel: true,
-    entryNote: "여러 agent를 쓰기 전에 input·artifact·merge·conversation state의 owner를 하나씩 정의합니다.",
-    coreIdea: "Delegation은 objective·input snapshot·capability·artifact schema·verification을 고정하고 manager call과 handoff의 user-facing state owner를 분리하는 typed contract입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "agent-delegation-artifact-ownership", role: "Delegate와 shared artifact의 writer·merge·verification owner를 고정합니다." },
-      { id: "manager-handoff-state-ownership", role: "Manager call과 handoff에서 conversation·pending effect owner를 분리합니다." },
+    "entryLevel": true,
+    "entryNote": "작은 사례에서 역할을 파악한 뒤 같은 입력을 끝까지 추적하고 원문과 한계를 확인합니다.",
+    "coreIdea": "Delegation은 objective·input snapshot·capability·artifact schema·verification을 고정하고 manager call과 handoff의 user-facing state owner를 분리하는 typed contract입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "agent-delegation-artifact-ownership",
+        "role": "Delegate와 shared artifact의 writer·merge·verification owner를 고정합니다."
+      },
+      {
+        "id": "manager-handoff-state-ownership",
+        "role": "Manager call과 handoff에서 conversation·pending effect owner를 분리합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "agent-delegation-artifact-ownership", sectionId: "delegation-contract", intuition: "일을 나누기 전에 각자 읽고 쓸 서류와 제출 형식·검사자를 정합니다.", workedExample: "Researcher는 evidence JSON만 쓰고 implementer만 source writer가 되며 coordinator가 checksum을 검증합니다.", boundary: "Agent 수가 지능을 자동 합산하지 않습니다." },
-      { id: "manager-handoff-state-ownership", sectionId: "manager-handoff", intuition: "전문가에게 자문을 받는 것과 고객 자체를 다음 담당자에게 넘기는 것을 구분합니다.", workedExample: "Manager call은 중앙이 final state를 유지하고 handoff는 specialist가 pending turn을 인수합니다.", boundary: "Identity·history·pending effect·return condition 없는 handoff는 state를 잃습니다." },
+    "conceptExplanations": [
+      {
+        "id": "agent-delegation-artifact-ownership",
+        "sectionId": "delegation-contract",
+        "intuition": "일을 나누기 전에 각자 읽고 쓸 서류와 제출 형식·검사자를 정합니다.",
+        "workedExample": "Researcher는 evidence JSON만 쓰고 implementer만 source writer가 되며 coordinator가 checksum을 검증합니다.",
+        "boundary": "Agent 수가 지능을 자동 합산하지 않습니다."
+      },
+      {
+        "id": "manager-handoff-state-ownership",
+        "sectionId": "manager-handoff",
+        "intuition": "전문가에게 자문을 받는 것과 고객 자체를 다음 담당자에게 넘기는 것을 구분합니다.",
+        "workedExample": "Manager call은 중앙이 final state를 유지하고 handoff는 specialist가 pending turn을 인수합니다.",
+        "boundary": "Identity·history·pending effect·return condition 없는 handoff는 state를 잃습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 input", relation: "Delegate가 읽을 immutable snapshot을 고정합니다.", concepts: ["agent-delegation-artifact-ownership"] },
-      { label: "01 output", relation: "Writer·schema·validator를 고정합니다.", concepts: ["agent-delegation-artifact-ownership"] },
-      { label: "02 state", relation: "Manager와 specialist 중 user-facing owner를 선택합니다.", concepts: ["manager-handoff-state-ownership"] },
-      { label: "03 merge", relation: "독립성·idempotency·conflict rule을 검증합니다.", concepts: ["agent-delegation-artifact-ownership", "manager-handoff-state-ownership"] },
+    "conceptStages": [
+      {
+        "label": "00 input",
+        "relation": "Delegate가 읽을 immutable snapshot을 고정합니다.",
+        "concepts": [
+          "agent-delegation-artifact-ownership"
+        ]
+      },
+      {
+        "label": "01 output",
+        "relation": "Writer·schema·validator를 고정합니다.",
+        "concepts": [
+          "agent-delegation-artifact-ownership"
+        ]
+      },
+      {
+        "label": "02 state",
+        "relation": "Manager와 specialist 중 user-facing owner를 선택합니다.",
+        "concepts": [
+          "manager-handoff-state-ownership"
+        ]
+      },
+      {
+        "label": "03 merge",
+        "relation": "독립성·idempotency·conflict rule을 검증합니다.",
+        "concepts": [
+          "agent-delegation-artifact-ownership",
+          "manager-handoff-state-ownership"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Research worker의 delegation contract를 작성하세요.", answerChecklist: ["objective", "snapshot", "read scope", "output schema", "deadline", "validator"], requiredConcepts: ["agent-delegation-artifact-ownership"], sectionId: "delegation-contract" },
-      { level: "basic", question: "Shared source tree에 writer 하나를 두는 이유를 설명하세요.", answerChecklist: ["conflict", "lost update", "ownership", "merge rule"], requiredConcepts: ["agent-delegation-artifact-ownership"], sectionId: "delegation-contract" },
-      { level: "basic", question: "Sub-agent 완료 message와 artifact receipt를 구분하세요.", answerChecklist: ["claim", "URI", "checksum", "schema", "verification"], requiredConcepts: ["agent-delegation-artifact-ownership"], sectionId: "delegation-contract" },
-      { level: "basic", question: "Manager call에서 conversation state owner를 고르세요.", answerChecklist: ["manager", "specialist as tool", "typed result", "final synthesis"], requiredConcepts: ["manager-handoff-state-ownership"], sectionId: "manager-handoff" },
-      { level: "basic", question: "Handoff payload의 필드를 나열하세요.", answerChecklist: ["identity", "history", "pending effects", "approval", "return condition"], requiredConcepts: ["manager-handoff-state-ownership"], sectionId: "manager-handoff" },
-      { level: "basic", question: "병렬화하기 좋은 두 task의 조건을 쓰세요.", answerChecklist: ["independent inputs", "separate outputs", "no shared writer", "deterministic merge"], requiredConcepts: ["agent-delegation-artifact-ownership"], sectionId: "parallel-merge" },
-      { level: "advanced", question: "같은 file을 수정하는 두 worker의 conflict-safe protocol을 설계하세요.", answerChecklist: ["single writer or transactions", "base revision", "patch artifact", "conflict detection", "revalidation"], requiredConcepts: ["agent-delegation-artifact-ownership"], sectionId: "parallel-merge" },
-      { level: "advanced", question: "Manager crash 뒤 specialist result를 중복 merge하지 않는 fixture를 설계하세요.", answerChecklist: ["operation ID", "receipt", "idempotent merge", "checkpoint", "replay"], requiredConcepts: ["agent-delegation-artifact-ownership", "manager-handoff-state-ownership"], sectionId: "parallel-merge" },
-      { level: "advanced", question: "Handoff 뒤 pending payment approval의 owner loss를 재현하고 막으세요.", answerChecklist: ["pending payload", "approval identity", "new owner ack", "resume condition", "audit event"], requiredConcepts: ["manager-handoff-state-ownership"], sectionId: "manager-handoff" },
-      { level: "advanced", question: "Multi-agent가 single-agent보다 나은지 공정하게 평가하세요.", answerChecklist: ["same model", "same tools", "same budget", "independent tasks", "artifact quality", "latency", "conflicts"], requiredConcepts: ["agent-delegation-artifact-ownership"], sectionId: "parallel-merge" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "A가3건 B가2건 찾고1건이 같으면 고유 문제는 몇 건인가요?",
+        "answerChecklist": [
+          "3+2−1=4",
+          "원문 근거",
+          "중복 판단"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "agent-delegation-artifact-ownership"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "각 작업자의 입력 판본과 쓸 파일을 정하는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "같은 기준",
+          "동시쓰기 충돌 방지",
+          "결과 책임"
+        ],
+        "sectionId": "inside-delegation",
+        "requiredConcepts": [
+          "agent-delegation-artifact-ownership"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "완료 문장과 제출물의 차이를 설명하세요.",
+        "answerChecklist": [
+          "주장과 증거",
+          "문제 원문 위치",
+          "입력 판본",
+          "제출 식별자"
+        ],
+        "sectionId": "inside-delegation",
+        "requiredConcepts": [
+          "agent-delegation-artifact-ownership"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Manager call에서 최종 보고서와 다음 대화의 책임은 누구에게 있나요?",
+        "answerChecklist": [
+          "중앙 담당자",
+          "전문가 결과 반환",
+          "최종 통합"
+        ],
+        "sectionId": "manager-handoff",
+        "requiredConcepts": [
+          "manager-handoff-state-ownership"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Handoff에서 넘겨야 할 미완료 상태를 사례로 적으세요.",
+        "answerChecklist": [
+          "확인중 문제",
+          "A1·B1 적용 여부",
+          "실행 상태",
+          "승인 상태"
+        ],
+        "sectionId": "manager-handoff",
+        "requiredConcepts": [
+          "manager-handoff-state-ownership"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 A1을 두 번 적용하지 않는 성질을 설명하세요.",
+        "answerChecklist": [
+          "idempotent merge",
+          "적용 식별자 기록",
+          "결과4건유지"
+        ],
+        "sectionId": "manager-handoff",
+        "requiredConcepts": [
+          "agent-delegation-artifact-ownership"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 식별자의 A1 내용이 달라졌다면 어떻게 처리하나요?",
+        "answerChecklist": [
+          "내용 비교",
+          "충돌",
+          "덮어쓰기 금지",
+          "근거 재확인"
+        ],
+        "sectionId": "manager-handoff",
+        "requiredConcepts": [
+          "agent-delegation-artifact-ownership"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "두 작업자가 같은 파일 구간을 바꿔야 하면 어떤 방식으로 합치나요?",
+        "answerChecklist": [
+          "순차 적용 또는 충돌 검출",
+          "기준 버전",
+          "검사",
+          "소유자"
+        ],
+        "sectionId": "delegation-boundaries",
+        "requiredConcepts": [
+          "agent-delegation-artifact-ownership"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "일을 여러 개로 나눠도 평가 오류가 줄지 않을 수 있는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "공유 가정",
+          "상관된 오류",
+          "독립 검증 필요",
+          "합치는 비용"
+        ],
+        "sectionId": "delegation-boundaries",
+        "requiredConcepts": [
+          "agent-delegation-artifact-ownership"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "Manager가 중단된 뒤 A1을 다시 받는 상황에서 어떤 기록을 복구하나요?",
+        "answerChecklist": [
+          "적용 식별자",
+          "최종 고유 목록",
+          "미완료 문제",
+          "대화 담당자"
+        ],
+        "sectionId": "manager-handoff",
+        "requiredConcepts": [
+          "agent-delegation-artifact-ownership",
+          "manager-handoff-state-ownership"
+        ]
+      }
     ],
-    papers: [
-      { title: "OpenAI — A practical guide to building agents", href: "https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/", problem: "Single·multi-agent orchestration과 guardrail·human intervention 선택 문제", contribution: "Manager·handoff와 incremental architecture 지침", assumptions: "가이드의 제품 예시·운영 관점·공개 시점", evidenceScope: "가이드가 설명하는 orchestration decision과 사례", notClaim: "Multi-agent의 보편적 성능 우위나 특정 vendor 구성이 표준이라는 주장", sectionId: "paper-openai-agent-guide" },
-    ],
+    "papers": [
+      {
+        "title": "OpenAI — A practical guide to building agents",
+        "href": "https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/",
+        "problem": "Single·multi-agent orchestration과 guardrail·human intervention 선택 문제",
+        "contribution": "Manager·handoff와 incremental architecture 지침",
+        "assumptions": "가이드의 제품 예시·운영 관점·공개 시점",
+        "evidenceScope": "가이드가 설명하는 orchestration decision과 사례",
+        "notClaim": "Multi-agent의 보편적 성능 우위나 특정 vendor 구성이 표준이라는 주장",
+        "sectionId": "paper-openai-agent-guide"
+      }
+    ]
   },
   "ai/agent-extension-boundaries": {
     entryLevel: true,
@@ -55038,47 +56497,318 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "crypto/discrete-log": {
-    coreIdea: "Order q의 cyclic subgroup에서 scalar exponentiation은 binary method로 빠르지만 exponent 복원은 group과 공격 모델에 따라 비싸며, BSGS·Pollard rho의 square-root attack과 exact DLP/CDH/DDH 가정을 기준으로 parameter를 고릅니다.",
-    assumedKnowledge: [{ id: "finite-field-multiplicative-order", role: "Generator·subgroup order와 exponent residue의 의미를 재사용합니다." }],
-    introducedHere: [
-      { id: "cyclic-subgroup-dlp", role: "DLP의 group·generator·해 존재 범위를 정의합니다." },
-      { id: "dlp-forward-reverse-asymmetry", role: "Binary exponentiation과 역산 공격 비용을 구분합니다." },
-      { id: "dlp-known-order-domain", role: "Order·membership·small-subgroup 경계를 고정합니다." },
-      { id: "bsgs-meet-in-middle", role: "√q×√q 분해로 discrete log를 복원합니다." },
-      { id: "generic-dlp-square-root-cost", role: "Generic classical attack의 concrete scale을 해석합니다." },
-      { id: "dlp-assumption-family-separation", role: "DLP·CDH·DDH protocol 가정을 분리합니다." },
-      { id: "dlp-security-release-gate", role: "Parameter·validation·quantum horizon parity 뒤 성능을 봅니다." },
+    "coreIdea": "Order q의 cyclic subgroup에서 scalar exponentiation은 binary method로 빠르지만 exponent 복원은 group과 공격 모델에 따라 비싸며, BSGS·Pollard rho의 square-root attack과 exact DLP/CDH/DDH 가정을 기준으로 parameter를 고릅니다.",
+    "assumedKnowledge": [
+      {
+        "id": "finite-field-multiplicative-order",
+        "role": "Generator·subgroup order와 exponent residue의 의미를 재사용합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "cyclic-subgroup-dlp", sectionId: "overview", intuition: "원형 시계에서 여러 번 이동한 최종 위치만 보고 몇 번 이동했는지 법 q 안에서 찾습니다.", workedExample: "Mod 17에서 g=3, Y=5이면 3⁵=5이고 해는 x≡5 mod 16입니다.", boundary: "Y가 g의 subgroup 밖이면 해가 없고 generator order를 모르면 exponent 범위도 정해지지 않습니다." },
-      { id: "dlp-forward-reverse-asymmetry", sectionId: "overview", intuition: "비트로 적은 이동 횟수는 빠르게 합성하지만 뒤섞인 최종 위치에서 횟수를 되찾는 shortcut은 제한됩니다.", workedExample: "x=13=1101₂이면 g,g²,g⁴,g⁸을 만들고 세 값을 곱해 O(log x)에 g¹³을 계산합니다.", boundary: "정방향이 빠르다는 사실만으로 역방향 hardness가 증명되지는 않으며 group별 공격을 분석합니다." },
-      { id: "dlp-known-order-domain", sectionId: "power-table", intuition: "전체 시계가 아니라 generator가 실제로 도는 작은 원의 칸 수가 exponent의 법입니다.", workedExample: "Mod 17에서 g=4의 order는 4라 Y=3에는 해가 없고 Y=13에는 x≡3 mod 4입니다.", boundary: "Small-order·identity·noncanonical input을 허용하면 protocol secret의 residue가 새거나 해석이 모호해집니다." },
-      { id: "bsgs-meet-in-middle", sectionId: "baby-giant", intuition: "전화번호부 앞 절반을 저장하고 뒤 절반에서 같은 중간 결과를 찾아 전체 후보를 두 축으로 나눕니다.", workedExample: "q=16,m=4,Y=5에서 5·3⁻⁴=3이 baby g¹과 만나 x=1·4+1=5입니다.", boundary: "O(√q) memory가 필요하고 subgroup order·inverse·canonical table key를 정확히 알아야 합니다." },
-      { id: "generic-dlp-square-root-cost", sectionId: "baby-giant", intuition: "q개 후보를 한 줄로 보지 않고 birthday collision이나 두 축 만남으로 약 √q scale에 찾습니다.", workedExample: "q≈2²⁵⁶이면 generic classical group operations scale은 약 2¹²⁸입니다.", boundary: "Finite-field index calculus·curve-specific attack·multi-target·quantum algorithm을 제외한 generic classical 기준입니다." },
-      { id: "dlp-assumption-family-separation", sectionId: "applications", intuition: "숨은 수를 찾기·공유값을 계산하기·세 번째 값이 맞는지 판별하기는 서로 다른 질문입니다.", workedExample: "DLP를 풀면 gᵃ에서 a를 얻어 CDH를 풀지만 pairing group에서는 DDH가 쉬워도 DLP는 어려울 수 있습니다.", boundary: "‘DLP 기반’이라는 한 문장으로 protocol의 confidentiality·unforgeability reduction을 대체하지 않습니다." },
-      { id: "dlp-security-release-gate", sectionId: "applications", intuition: "큰 숫자 하나 대신 실제 group identity·validation·공격 예산 전체를 고정해 보안 주장을 재현합니다.", workedExample: "Group/order/generator/cofactor/encoding/library를 receipt에 넣고 small subgroup·wrong curve·identity를 reject합니다.", boundary: "Benchmark 속도나 nominal 256-bit 표기만으로 classical·quantum 장기 security를 입증하지 않습니다." },
+    "introducedHere": [
+      {
+        "id": "cyclic-subgroup-dlp",
+        "role": "DLP의 group·generator·해 존재 범위를 정의합니다."
+      },
+      {
+        "id": "dlp-forward-reverse-asymmetry",
+        "role": "Binary exponentiation과 역산 공격 비용을 구분합니다."
+      },
+      {
+        "id": "dlp-known-order-domain",
+        "role": "Order·membership·small-subgroup 경계를 고정합니다."
+      },
+      {
+        "id": "bsgs-meet-in-middle",
+        "role": "√q×√q 분해로 discrete log를 복원합니다."
+      },
+      {
+        "id": "generic-dlp-square-root-cost",
+        "role": "Generic classical attack의 concrete scale을 해석합니다."
+      },
+      {
+        "id": "dlp-assumption-family-separation",
+        "role": "DLP·CDH·DDH protocol 가정을 분리합니다."
+      },
+      {
+        "id": "dlp-security-release-gate",
+        "role": "Parameter·validation·quantum horizon parity 뒤 성능을 봅니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 문제 domain", relation: "Order와 subgroup을 고정해 DLP 해를 정의합니다.", concepts: ["finite-field-multiplicative-order", "cyclic-subgroup-dlp", "dlp-known-order-domain"] },
-      { label: "02 비용 비대칭", relation: "Forward binary method와 reverse square-root attacks를 비교합니다.", concepts: ["dlp-forward-reverse-asymmetry", "bsgs-meet-in-middle", "generic-dlp-square-root-cost"] },
-      { label: "03 protocol·release", relation: "Exact assumption과 parameter gate로 확장합니다.", concepts: ["dlp-assumption-family-separation", "dlp-security-release-gate"] },
+    "conceptExplanations": [
+      {
+        "id": "cyclic-subgroup-dlp",
+        "sectionId": "names",
+        "intuition": "원형 시계에서 여러 번 이동한 최종 위치만 보고 몇 번 이동했는지 법 q 안에서 찾습니다.",
+        "workedExample": "Mod 17에서 g=3, Y=5이면 3⁵=5이고 해는 x≡5 mod 16입니다.",
+        "boundary": "Y가 g의 subgroup 밖이면 해가 없고 generator order를 모르면 exponent 범위도 정해지지 않습니다."
+      },
+      {
+        "id": "dlp-forward-reverse-asymmetry",
+        "sectionId": "forward-cost",
+        "intuition": "비트로 적은 이동 횟수는 빠르게 합성하지만 뒤섞인 최종 위치에서 횟수를 되찾는 shortcut은 제한됩니다.",
+        "workedExample": "x=13=1101₂이면 g,g²,g⁴,g⁸을 만들고 세 값을 곱해 O(log x)에 g¹³을 계산합니다.",
+        "boundary": "정방향이 빠르다는 사실만으로 역방향 hardness가 증명되지는 않으며 group별 공격을 분석합니다."
+      },
+      {
+        "id": "dlp-known-order-domain",
+        "sectionId": "power-table",
+        "intuition": "전체 시계가 아니라 generator가 실제로 도는 작은 원의 칸 수가 exponent의 법입니다.",
+        "workedExample": "Mod 17에서 g=4의 order는 4라 Y=3에는 해가 없고 Y=13에는 x≡3 mod 4입니다.",
+        "boundary": "Small-order·identity·noncanonical input을 허용하면 protocol secret의 residue가 새거나 해석이 모호해집니다."
+      },
+      {
+        "id": "bsgs-meet-in-middle",
+        "sectionId": "baby-giant",
+        "intuition": "전화번호부 앞 절반을 저장하고 뒤 절반에서 같은 중간 결과를 찾아 전체 후보를 두 축으로 나눕니다.",
+        "workedExample": "q=16,m=4,Y=5에서 5·3⁻⁴=3이 baby g¹과 만나 x=1·4+1=5입니다.",
+        "boundary": "O(√q) memory가 필요하고 subgroup order·inverse·canonical table key를 정확히 알아야 합니다."
+      },
+      {
+        "id": "generic-dlp-square-root-cost",
+        "sectionId": "applications",
+        "intuition": "q개 후보를 한 줄로 보지 않고 birthday collision이나 두 축 만남으로 약 √q scale에 찾습니다.",
+        "workedExample": "q≈2²⁵⁶이면 generic classical group operations scale은 약 2¹²⁸입니다.",
+        "boundary": "Finite-field index calculus·curve-specific attack·multi-target·quantum algorithm을 제외한 generic classical 기준입니다."
+      },
+      {
+        "id": "dlp-assumption-family-separation",
+        "sectionId": "applications",
+        "intuition": "숨은 수를 찾기·공유값을 계산하기·세 번째 값이 맞는지 판별하기는 서로 다른 질문입니다.",
+        "workedExample": "DLP를 풀면 gᵃ에서 a를 얻어 CDH를 풀지만 pairing group에서는 DDH가 쉬워도 DLP는 어려울 수 있습니다.",
+        "boundary": "‘DLP 기반’이라는 한 문장으로 protocol의 confidentiality·unforgeability reduction을 대체하지 않습니다."
+      },
+      {
+        "id": "dlp-security-release-gate",
+        "sectionId": "applications",
+        "intuition": "큰 숫자 하나 대신 실제 group identity·validation·공격 예산 전체를 고정해 보안 주장을 재현합니다.",
+        "workedExample": "Group/order/generator/cofactor/encoding/library를 receipt에 넣고 small subgroup·wrong curve·identity를 reject합니다.",
+        "boundary": "Benchmark 속도나 nominal 256-bit 표기만으로 classical·quantum 장기 security를 입증하지 않습니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Order q의 cyclic subgroup에서 Y=g^x DLP를 정의하고 x가 mod q에서만 유일한 이유를 설명하세요.", answerChecklist: ["generator g", "order q", "Y in subgroup", "find exponent", "x residue mod q", "outside subgroup no solution"], requiredConcepts: ["cyclic-subgroup-dlp", "dlp-known-order-domain"], sectionId: "overview" },
-      { level: "basic", question: "x=13의 binary exponentiation 경로를 쓰고 forward group operations가 O(log x)인 이유를 설명하세요.", answerChecklist: ["13=1101 binary", "successive squares", "g g4 g8", "three selected multiply", "bit length", "not reverse proof"], requiredConcepts: ["dlp-forward-reverse-asymmetry"], sectionId: "overview" },
-      { level: "basic", question: "Mod 17에서 g=3의 거듭제곱 표로 order 16과 log3(5)=5를 확인하세요.", answerChecklist: ["visit 1 through 16", "first return at 16", "generator", "3^5=5", "x=5 mod 16", "table infeasible large"], requiredConcepts: ["finite-field-multiplicative-order", "cyclic-subgroup-dlp"], sectionId: "power-table" },
-      { level: "basic", question: "Mod 17에서 g=4의 order와 Y=3의 해 존재 여부, Y=13의 exponent residue를 설명하세요.", answerChecklist: ["4,16,13,1", "order 4", "3 absent", "no solution", "13 at x3", "mod 4"], requiredConcepts: ["dlp-known-order-domain"], sectionId: "power-table" },
-      { level: "basic", question: "q=16 BSGS에서 m·baby table·giant multiplier를 계산하고 Y=5의 x를 복원하세요.", answerChecklist: ["m=4", "baby 1 3 9 10", "g^-4=4 mod17", "5*4=3", "i=1 j=1", "x=5"], requiredConcepts: ["bsgs-meet-in-middle"], sectionId: "baby-giant" },
-      { level: "basic", question: "DLP·CDH·DDH가 각각 요구하는 입력과 출력을 쓰고 함의 방향을 과대 해석하지 마세요.", answerChecklist: ["DLP recover exponent", "CDH compute g^ab", "DDH decide tuple", "DLP solves CDH", "reverse not automatic", "pairing DDH example"], requiredConcepts: ["dlp-assumption-family-separation"], sectionId: "applications" },
-      { level: "advanced", question: "q≈2^256에서 BSGS와 Pollard rho의 time·memory·확률성 trade-off와 128-bit 해석 한계를 비교하세요.", answerChecklist: ["sqrt q", "2^128 operations", "BSGS sqrt memory", "rho small memory", "expected probabilistic", "group-specific attacks", "hardware/multi-target", "not exact guarantee"], requiredConcepts: ["generic-dlp-square-root-cost", "bsgs-meet-in-middle"], sectionId: "baby-giant" },
-      { level: "advanced", question: "Y가 subgroup 밖이거나 small-order인 경우 DLP와 protocol validation이 어떻게 실패하는지 반례를 설계하세요.", answerChecklist: ["membership first", "no solution outside", "small order residues", "identity", "cofactor", "canonical encoding", "typed reject"], requiredConcepts: ["dlp-known-order-domain"], sectionId: "power-table" },
-      { level: "advanced", question: "Finite-field DLP와 elliptic-curve DLP에 nominal bit size를 그대로 비교하면 안 되는 이유를 공격 구조로 설명하세요.", answerChecklist: ["generic sqrt", "finite-field index calculus", "EC no known analogous subexponential generic shortcut", "subgroup order not modulus only", "concrete parameter", "implementation leakage", "quantum separate"], requiredConcepts: ["generic-dlp-square-root-cost", "dlp-security-release-gate"], sectionId: "applications" },
-      { level: "advanced", question: "Group·order·generator·cofactor·encoding·small subgroup·wrong curve·quantum horizon을 포함한 DLP release gate를 설계하세요.", answerChecklist: ["version receipt", "all parameters", "membership/identity", "canonical parser", "official vectors", "independent parity", "concrete attacks", "quantum migration", "performance last"], requiredConcepts: ["dlp-security-release-gate"], sectionId: "applications" },
+    "conceptStages": [
+      {
+        "label": "01 문제 domain",
+        "relation": "Order와 subgroup을 고정해 DLP 해를 정의합니다.",
+        "concepts": [
+          "finite-field-multiplicative-order",
+          "cyclic-subgroup-dlp",
+          "dlp-known-order-domain"
+        ]
+      },
+      {
+        "label": "02 비용 비대칭",
+        "relation": "Forward binary method와 reverse square-root attacks를 비교합니다.",
+        "concepts": [
+          "dlp-forward-reverse-asymmetry",
+          "bsgs-meet-in-middle",
+          "generic-dlp-square-root-cost"
+        ]
+      },
+      {
+        "label": "03 protocol·release",
+        "relation": "Exact assumption과 parameter gate로 확장합니다.",
+        "concepts": [
+          "dlp-assumption-family-separation",
+          "dlp-security-release-gate"
+        ]
+      }
     ],
-    papers: [
-      { title: "Pollard · Monte Carlo Methods for Index Computation (mod p)", href: "https://doi.org/10.1090/S0025-5718-1978-0491431-9", problem: "큰 cyclic group의 discrete logarithm을 대형 lookup table 없이 계산", contribution: "Pseudo-random walk와 collision을 이용한 rho method와 square-root expected cost", assumptions: "Group order·walk partition·collision equation과 invertibility 조건 고정", evidenceScope: "논문의 generic-style rho algorithm과 분석한 finite-field 범위", notClaim: "모든 구체 group의 최선 공격·parallel speedup·security bits를 정하지 않음", sectionId: "paper-pollard-dlp" },
-      { title: "Shanks · Class number, a theory of factorization, and genera", href: "https://www.ams.org/books/pspum/020/", problem: "큰 순환 구조의 index를 전수 탐색보다 빠르게 계산", contribution: "Baby-step/giant-step meet-in-the-middle 전략의 고전적 출처", assumptions: "Finite cyclic group operation·order bound·table lookup 가능", evidenceScope: "Square-root time–memory algorithm의 기원과 계산 구조", notClaim: "현대 구현 constant·curve별 최적 공격·모든 DLP security를 정하지 않음", sectionId: "paper-shanks-bsgs" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Order q의 cyclic subgroup에서 Y=g^x DLP를 정의하고 x가 mod q에서만 유일한 이유를 설명하세요.",
+        "answerChecklist": [
+          "generator g",
+          "order q",
+          "Y in subgroup",
+          "find exponent",
+          "x residue mod q",
+          "outside subgroup no solution"
+        ],
+        "requiredConcepts": [
+          "cyclic-subgroup-dlp",
+          "dlp-known-order-domain"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "x=13의 binary exponentiation 경로를 쓰고 forward group operations가 O(log x)인 이유를 설명하세요.",
+        "answerChecklist": [
+          "13=1101 binary",
+          "successive squares",
+          "g g4 g8",
+          "three selected multiply",
+          "bit length",
+          "not reverse proof"
+        ],
+        "requiredConcepts": [
+          "dlp-forward-reverse-asymmetry"
+        ],
+        "sectionId": "forward-cost"
+      },
+      {
+        "level": "basic",
+        "question": "Mod 17에서 g=3의 거듭제곱 표로 order 16과 log3(5)=5를 확인하세요.",
+        "answerChecklist": [
+          "visit 1 through 16",
+          "first return at 16",
+          "generator",
+          "3^5=5",
+          "x=5 mod 16",
+          "table infeasible large"
+        ],
+        "requiredConcepts": [
+          "finite-field-multiplicative-order",
+          "cyclic-subgroup-dlp"
+        ],
+        "sectionId": "power-table"
+      },
+      {
+        "level": "basic",
+        "question": "Mod 17에서 g=4의 order와 Y=3의 해 존재 여부, Y=13의 exponent residue를 설명하세요.",
+        "answerChecklist": [
+          "4,16,13,1",
+          "order 4",
+          "3 absent",
+          "no solution",
+          "13 at x3",
+          "mod 4"
+        ],
+        "requiredConcepts": [
+          "dlp-known-order-domain"
+        ],
+        "sectionId": "power-table"
+      },
+      {
+        "level": "basic",
+        "question": "q=16 BSGS에서 m·baby table·giant multiplier를 계산하고 Y=5의 x를 복원하세요.",
+        "answerChecklist": [
+          "m=4",
+          "baby 1 3 9 10",
+          "g^-4=4 mod17",
+          "5*4=3",
+          "i=1 j=1",
+          "x=5"
+        ],
+        "requiredConcepts": [
+          "bsgs-meet-in-middle"
+        ],
+        "sectionId": "baby-giant"
+      },
+      {
+        "level": "basic",
+        "question": "DLP·CDH·DDH가 각각 요구하는 입력과 출력을 쓰고 함의 방향을 과대 해석하지 마세요.",
+        "answerChecklist": [
+          "DLP recover exponent",
+          "CDH compute g^ab",
+          "DDH decide tuple",
+          "DLP solves CDH",
+          "reverse not automatic",
+          "pairing DDH example"
+        ],
+        "requiredConcepts": [
+          "dlp-assumption-family-separation"
+        ],
+        "sectionId": "applications"
+      },
+      {
+        "level": "advanced",
+        "question": "q≈2^256에서 BSGS와 Pollard rho의 time·memory·확률성 trade-off와 128-bit 해석 한계를 비교하세요.",
+        "answerChecklist": [
+          "sqrt q",
+          "2^128 operations",
+          "BSGS sqrt memory",
+          "rho small memory",
+          "expected probabilistic",
+          "group-specific attacks",
+          "hardware/multi-target",
+          "not exact guarantee"
+        ],
+        "requiredConcepts": [
+          "generic-dlp-square-root-cost",
+          "bsgs-meet-in-middle"
+        ],
+        "sectionId": "applications"
+      },
+      {
+        "level": "advanced",
+        "question": "Y가 subgroup 밖이거나 small-order인 경우 DLP와 protocol validation이 어떻게 실패하는지 반례를 설계하세요.",
+        "answerChecklist": [
+          "membership first",
+          "no solution outside",
+          "small order residues",
+          "identity",
+          "cofactor",
+          "canonical encoding",
+          "typed reject"
+        ],
+        "requiredConcepts": [
+          "dlp-known-order-domain"
+        ],
+        "sectionId": "power-table"
+      },
+      {
+        "level": "advanced",
+        "question": "Finite-field DLP와 elliptic-curve DLP에 nominal bit size를 그대로 비교하면 안 되는 이유를 공격 구조로 설명하세요.",
+        "answerChecklist": [
+          "generic sqrt",
+          "finite-field index calculus",
+          "EC no known analogous subexponential generic shortcut",
+          "subgroup order not modulus only",
+          "concrete parameter",
+          "implementation leakage",
+          "quantum separate"
+        ],
+        "requiredConcepts": [
+          "generic-dlp-square-root-cost",
+          "dlp-security-release-gate"
+        ],
+        "sectionId": "applications"
+      },
+      {
+        "level": "advanced",
+        "question": "Group·order·generator·cofactor·encoding·small subgroup·wrong curve·quantum horizon을 포함한 DLP release gate를 설계하세요.",
+        "answerChecklist": [
+          "version receipt",
+          "all parameters",
+          "membership/identity",
+          "canonical parser",
+          "official vectors",
+          "independent parity",
+          "concrete attacks",
+          "quantum migration",
+          "performance last"
+        ],
+        "requiredConcepts": [
+          "dlp-security-release-gate"
+        ],
+        "sectionId": "applications"
+      }
     ],
+    "papers": [
+      {
+        "title": "Pollard · Monte Carlo Methods for Index Computation (mod p)",
+        "href": "https://doi.org/10.1090/S0025-5718-1978-0491431-9",
+        "problem": "큰 cyclic group의 discrete logarithm을 대형 lookup table 없이 계산",
+        "contribution": "Pseudo-random walk와 collision을 이용한 rho method와 square-root expected cost",
+        "assumptions": "Group order·walk partition·collision equation과 invertibility 조건 고정",
+        "evidenceScope": "논문의 generic-style rho algorithm과 분석한 finite-field 범위",
+        "notClaim": "모든 구체 group의 최선 공격·parallel speedup·security bits를 정하지 않음",
+        "sectionId": "paper-pollard-dlp"
+      },
+      {
+        "title": "Shanks · Class number, a theory of factorization, and genera",
+        "href": "https://www.ams.org/books/pspum/020/",
+        "problem": "큰 순환 구조의 index를 전수 탐색보다 빠르게 계산",
+        "contribution": "Baby-step/giant-step meet-in-the-middle 전략의 고전적 출처",
+        "assumptions": "Finite cyclic group operation·order bound·table lookup 가능",
+        "evidenceScope": "Square-root time–memory algorithm의 기원과 계산 구조",
+        "notClaim": "현대 구현 constant·curve별 최적 공격·모든 DLP security를 정하지 않음",
+        "sectionId": "paper-shanks-bsgs"
+      }
+    ],
+    "entryNote": "3을 반복해 곱하고 17로 나눈 나머지를 계산하면서 공개 값 5에서 숨은 횟수 5를 찾는 문제를 따라갑니다."
   },
   "crypto/elliptic-curves": {
     coreIdea: "Finite-field curve points가 이루는 group에서 scalar multiplication과 subgroup validation을 정확히 구현하고, affine/Jacobian 및 BN254 G1/G2/GT 타입 경계를 보존한 뒤 pairing 관계를 검사합니다.",
@@ -63087,44 +64817,262 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "blockchain/evm-fundamentals": {
-    entryLevel: true,
-    entryNote: "가상 머신·stack·gas를 안다고 가정하지 않고 Alice→Bob 10 transaction이 한 opcode와 상태 변경을 거쳐 receipt가 되는 순서부터 시작합니다.",
-    coreIdea: "EVM은 transaction과 앞선 world state를 받아 256-bit stack opcode를 gas 한도 안에서 결정론적으로 실행하고, journaled 변경·logs·return data를 다음 상태 후보로 만드는 실행 규격입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "evm-256bit-stack-machine-step", role: "Program counter·opcode·stack·memory·gas가 한 단계 전이되는 단위를 정의합니다." },
-      { id: "evm-execution-environment-tuple", role: "Address·caller·value·input·code·block context와 write permission을 frame 입력으로 묶습니다." },
-      { id: "evm-gas-before-effect-accounting", role: "Opcode 효과보다 비용과 exceptional halt를 먼저 판정하는 resource 경계를 설명합니다." },
-      { id: "evm-journaled-state-revert-boundary", role: "Memory·storage와 success·REVERT·exception의 rollback 범위를 구분합니다." },
+    "entryLevel": true,
+    "entryNote": "2와 3을 올려 더하는 코드 바이트 하나에서 위치·임시 값·계산 예산이 변하는 과정을 먼저 봅니다.",
+    "coreIdea": "같은 코드 60 02 60 03 01 00을 실행하면 pc와 stack·gas가 같은 규칙으로 변하며, 실패한 호출의 상태 변경은 정해진 범위에서 취소됩니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "evm-256bit-stack-machine-step",
+        "role": "Program counter·opcode·stack·memory·gas가 한 단계 전이되는 단위를 정의합니다."
+      },
+      {
+        "id": "evm-execution-environment-tuple",
+        "role": "Address·caller·value·input·code·block context와 write permission을 frame 입력으로 묶습니다."
+      },
+      {
+        "id": "evm-gas-before-effect-accounting",
+        "role": "Opcode 효과보다 비용과 exceptional halt를 먼저 판정하는 resource 경계를 설명합니다."
+      },
+      {
+        "id": "evm-journaled-state-revert-boundary",
+        "role": "Memory·storage와 success·REVERT·exception의 rollback 범위를 구분합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "evm-256bit-stack-machine-step", sectionId: "machine-step", intuition: "계산기는 현재 명령과 stack 맨 위 값들을 읽어 다음 stack과 program counter를 한 칸씩 만듭니다.", workedExample: "ADD에서 2²⁵⁶-1과 1을 더하면 고정 256-bit 폭 때문에 결과가 0으로 wraparound합니다.", boundary: "Solidity compiler의 checked arithmetic과 EVM word 자체의 modular arithmetic은 같은 층이 아닙니다." },
-      { id: "evm-execution-environment-tuple", sectionId: "machine-step", intuition: "같은 bytecode라도 누구의 주소·storage·caller·value로 실행하는지 적은 작업 지시서입니다.", workedExample: "Alice가 C를 호출하면 origin=Alice, first-frame caller=Alice, address=C이며 nested call에서는 caller와 address가 달라집니다.", boundary: "Environment는 canonical block 선택이나 disk commit을 담당하지 않습니다." },
-      { id: "evm-gas-before-effect-accounting", sectionId: "gas-state", intuition: "명령을 실행한 뒤 비용을 청구하는 것이 아니라 예산이 충분한지 먼저 검사해 partial effect를 막습니다.", workedExample: "남은 gas 2에서 비용 3인 opcode를 만나면 stack·storage 변경 없이 exceptional halt합니다.", boundary: "Gas price와 fee market은 별도 정본이며 gas unit이 wall-clock time을 고정하지 않습니다." },
-      { id: "evm-journaled-state-revert-boundary", sectionId: "release", intuition: "지우개가 있는 작업장처럼 frame 결과가 확정되기 전 변경을 checkpoint 뒤에 쌓습니다.", workedExample: "SSTORE 뒤 REVERT하면 storage journal을 취소하고 return data만 caller로 돌려줍니다.", boundary: "Child 실패가 parent나 transaction 전체 실패를 자동 의미하지 않으며 canonical durability도 별도입니다." },
+    "conceptExplanations": [
+      {
+        "id": "evm-256bit-stack-machine-step",
+        "sectionId": "machine-step",
+        "intuition": "계산기는 현재 명령과 stack 맨 위 값들을 읽어 다음 stack과 program counter를 한 칸씩 만듭니다.",
+        "workedExample": "ADD에서 2²⁵⁶-1과 1을 더하면 고정 256-bit 폭 때문에 결과가 0으로 wraparound합니다.",
+        "boundary": "Solidity compiler의 checked arithmetic과 EVM word 자체의 modular arithmetic은 같은 층이 아닙니다."
+      },
+      {
+        "id": "evm-execution-environment-tuple",
+        "sectionId": "names",
+        "intuition": "같은 bytecode라도 누구의 주소·storage·caller·value로 실행하는지 적은 작업 지시서입니다.",
+        "workedExample": "Alice가 C를 호출하면 origin=Alice, first-frame caller=Alice, address=C이며 nested call에서는 caller와 address가 달라집니다.",
+        "boundary": "Environment는 canonical block 선택이나 disk commit을 담당하지 않습니다."
+      },
+      {
+        "id": "evm-gas-before-effect-accounting",
+        "sectionId": "gas-state",
+        "intuition": "명령을 실행한 뒤 비용을 청구하는 것이 아니라 예산이 충분한지 먼저 검사해 partial effect를 막습니다.",
+        "workedExample": "남은 gas 2에서 비용 3인 opcode를 만나면 stack·storage 변경 없이 exceptional halt합니다.",
+        "boundary": "Gas price와 fee market은 별도 정본이며 gas unit이 wall-clock time을 고정하지 않습니다."
+      },
+      {
+        "id": "evm-journaled-state-revert-boundary",
+        "sectionId": "release",
+        "intuition": "지우개가 있는 작업장처럼 frame 결과가 확정되기 전 변경을 checkpoint 뒤에 쌓습니다.",
+        "workedExample": "SSTORE 뒤 REVERT하면 storage journal을 취소하고 return data만 caller로 돌려줍니다.",
+        "boundary": "Child 실패가 parent나 transaction 전체 실패를 자동 의미하지 않으며 canonical durability도 별도입니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 input", relation: "Transaction에서 exact execution context를 고정합니다.", concepts: ["evm-execution-environment-tuple"] },
-      { label: "01 step", relation: "Opcode가 256-bit machine state를 한 단계 전이합니다.", concepts: ["evm-256bit-stack-machine-step"] },
-      { label: "02 account", relation: "Gas admission 뒤 journal에 candidate effects를 쌓습니다.", concepts: ["evm-gas-before-effect-accounting", "evm-journaled-state-revert-boundary"] },
-      { label: "03 release", relation: "종료 유형·post-state·receipt parity 뒤 runtime을 채택합니다.", concepts: ["evm-journaled-state-revert-boundary"] },
+    "conceptStages": [
+      {
+        "label": "00 input",
+        "relation": "Transaction에서 exact execution context를 고정합니다.",
+        "concepts": [
+          "evm-execution-environment-tuple"
+        ]
+      },
+      {
+        "label": "01 step",
+        "relation": "Opcode가 256-bit machine state를 한 단계 전이합니다.",
+        "concepts": [
+          "evm-256bit-stack-machine-step"
+        ]
+      },
+      {
+        "label": "02 account",
+        "relation": "Gas admission 뒤 journal에 candidate effects를 쌓습니다.",
+        "concepts": [
+          "evm-gas-before-effect-accounting",
+          "evm-journaled-state-revert-boundary"
+        ]
+      },
+      {
+        "label": "03 release",
+        "relation": "종료 유형·post-state·receipt parity 뒤 runtime을 채택합니다.",
+        "concepts": [
+          "evm-journaled-state-revert-boundary"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "EVM execution과 canonical block 선택의 책임을 구분하세요.", answerChecklist: ["deterministic transition", "EL", "CL/fork choice", "not finality"], requiredConcepts: ["evm-execution-environment-tuple"], sectionId: "overview" },
-      { level: "basic", question: "Stack·memory·storage의 lifetime과 단위를 비교하세요.", answerChecklist: ["256-bit word", "frame byte array", "persistent account key-value", "different rollback/cost"], requiredConcepts: ["evm-256bit-stack-machine-step", "evm-journaled-state-revert-boundary"], sectionId: "overview" },
-      { level: "basic", question: "Execution environment에 필요한 caller·address·value·input·code·write permission을 설명하세요.", answerChecklist: ["caller", "address", "value", "input/code", "static flag"], requiredConcepts: ["evm-execution-environment-tuple"], sectionId: "machine-step" },
-      { level: "basic", question: "x=2²⁵⁶-1, y=1인 ADD 결과와 전제를 계산하세요.", answerChecklist: ["mod 2^256", "0", "256-bit word", "compiler check separate"], requiredConcepts: ["evm-256bit-stack-machine-step"], sectionId: "machine-step" },
-      { level: "basic", question: "남은 gas보다 opcode 비용이 클 때 효과가 남지 않는 이유를 설명하세요.", answerChecklist: ["check before effect", "exceptional halt", "no partial mutation", "frame rollback"], requiredConcepts: ["evm-gas-before-effect-accounting"], sectionId: "gas-state" },
-      { level: "basic", question: "STOP/RETURN·REVERT·OOG의 state와 return-data 차이를 비교하세요.", answerChecklist: ["success", "explicit revert", "exception", "journal", "return data"], requiredConcepts: ["evm-journaled-state-revert-boundary"], sectionId: "release" },
-      { level: "advanced", question: "Wraparound와 Solidity checked arithmetic이 다른 결과를 내는 fixture를 만드세요.", answerChecklist: ["raw bytecode", "compiler guard", "same inputs", "status/post-state", "fork pin"], requiredConcepts: ["evm-256bit-stack-machine-step"], sectionId: "machine-step" },
-      { level: "advanced", question: "SSTORE 뒤 REVERT에서 journal과 storage root를 검증하세요.", answerChecklist: ["checkpoint", "write", "revert", "old value/root", "return data"], requiredConcepts: ["evm-journaled-state-revert-boundary"], sectionId: "release" },
-      { level: "advanced", question: "Child OOG를 parent가 처리해 transaction이 성공하는 반례를 설계하세요.", answerChecklist: ["nested frame", "success bit false", "child rollback", "parent continues", "overall status"], requiredConcepts: ["evm-gas-before-effect-accounting", "evm-journaled-state-revert-boundary"], sectionId: "release" },
-      { level: "advanced", question: "Candidate runtime의 cross-client release gate를 작성하세요.", answerChecklist: ["version/fork", "negative fixtures", "status/gas/logs", "post-state root", "rollback"], requiredConcepts: ["evm-execution-environment-tuple", "evm-journaled-state-revert-boundary"], sectionId: "release" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "EVM execution과 canonical block 선택의 책임을 구분하세요.",
+        "answerChecklist": [
+          "deterministic transition",
+          "EL",
+          "CL/fork choice",
+          "not finality"
+        ],
+        "requiredConcepts": [
+          "evm-execution-environment-tuple"
+        ],
+        "sectionId": "gas-state"
+      },
+      {
+        "level": "basic",
+        "question": "Stack·memory·storage의 lifetime과 단위를 비교하세요.",
+        "answerChecklist": [
+          "256-bit word",
+          "frame byte array",
+          "persistent account key-value",
+          "different rollback/cost"
+        ],
+        "requiredConcepts": [
+          "evm-256bit-stack-machine-step",
+          "evm-journaled-state-revert-boundary"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Execution environment에 필요한 caller·address·value·input·code·write permission을 설명하세요.",
+        "answerChecklist": [
+          "caller",
+          "address",
+          "value",
+          "input/code",
+          "static flag"
+        ],
+        "requiredConcepts": [
+          "evm-execution-environment-tuple"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "x=2²⁵⁶-1, y=1인 ADD 결과와 전제를 계산하세요.",
+        "answerChecklist": [
+          "mod 2^256",
+          "0",
+          "256-bit word",
+          "compiler check separate"
+        ],
+        "requiredConcepts": [
+          "evm-256bit-stack-machine-step"
+        ],
+        "sectionId": "word-rule"
+      },
+      {
+        "level": "basic",
+        "question": "남은 gas보다 opcode 비용이 클 때 효과가 남지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "check before effect",
+          "exceptional halt",
+          "no partial mutation",
+          "frame rollback"
+        ],
+        "requiredConcepts": [
+          "evm-gas-before-effect-accounting"
+        ],
+        "sectionId": "gas-state"
+      },
+      {
+        "level": "basic",
+        "question": "STOP/RETURN·REVERT·OOG의 state와 return-data 차이를 비교하세요.",
+        "answerChecklist": [
+          "success",
+          "explicit revert",
+          "exception",
+          "journal",
+          "return data"
+        ],
+        "requiredConcepts": [
+          "evm-journaled-state-revert-boundary"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "advanced",
+        "question": "Wraparound와 Solidity checked arithmetic이 다른 결과를 내는 fixture를 만드세요.",
+        "answerChecklist": [
+          "raw bytecode",
+          "compiler guard",
+          "same inputs",
+          "status/post-state",
+          "fork pin"
+        ],
+        "requiredConcepts": [
+          "evm-256bit-stack-machine-step"
+        ],
+        "sectionId": "word-rule"
+      },
+      {
+        "level": "advanced",
+        "question": "SSTORE 뒤 REVERT에서 journal과 storage root를 검증하세요.",
+        "answerChecklist": [
+          "checkpoint",
+          "write",
+          "revert",
+          "old value/root",
+          "return data"
+        ],
+        "requiredConcepts": [
+          "evm-journaled-state-revert-boundary"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "advanced",
+        "question": "Child OOG를 parent가 처리해 transaction이 성공하는 반례를 설계하세요.",
+        "answerChecklist": [
+          "nested frame",
+          "success bit false",
+          "child rollback",
+          "parent continues",
+          "overall status"
+        ],
+        "requiredConcepts": [
+          "evm-gas-before-effect-accounting",
+          "evm-journaled-state-revert-boundary"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "advanced",
+        "question": "Candidate runtime의 cross-client release gate를 작성하세요.",
+        "answerChecklist": [
+          "version/fork",
+          "negative fixtures",
+          "status/gas/logs",
+          "post-state root",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "evm-execution-environment-tuple",
+          "evm-journaled-state-revert-boundary"
+        ],
+        "sectionId": "release"
+      }
     ],
-    papers: [
-      { title: "Ethereum Yellow Paper · Shanghai version", href: "https://ethereum.github.io/yellowpaper/paper.pdf", problem: "모든 node가 EVM transaction과 world-state transition을 동일한 규칙으로 계산해야 합니다.", contribution: "256-bit stack machine, execution environment, opcode transition과 gas·exception semantics를 형식화합니다.", assumptions: "Yellow Paper Shanghai ruleset과 valid transaction·block context를 사용합니다.", evidenceScope: "EVM core semantics와 해당 문서 revision의 protocol rules에 한정합니다.", notClaim: "Shanghai 이후 fork rules나 특정 client 내부 구조와 성능을 영구히 고정하지 않습니다.", sectionId: "paper-yellow-paper" },
-      { title: "Ethereum execution-specs · tests@v20.0.1", href: "https://github.com/ethereum/execution-specs/tree/87aba1a38a476b31f819a2390eb481527e6dc683", problem: "Fork별 execution rules를 실행 가능한 reference와 tests로 일관되게 유지해야 합니다.", contribution: "Python block·transaction·EVM transition과 fork별 generated tests를 제공합니다.", assumptions: "Commit 87aba1a와 exact fork·fixture를 고정합니다.", evidenceScope: "해당 snapshot의 executable semantics와 tests artifact에 한정합니다.", notClaim: "Reference 구현이 production client의 network·storage architecture나 성능을 정하지 않습니다.", sectionId: "paper-execution-specs" },
-    ],
+    "papers": [
+      {
+        "title": "Ethereum Yellow Paper · Shanghai version",
+        "href": "https://ethereum.github.io/yellowpaper/paper.pdf",
+        "problem": "모든 node가 EVM transaction과 world-state transition을 동일한 규칙으로 계산해야 합니다.",
+        "contribution": "256-bit stack machine, execution environment, opcode transition과 gas·exception semantics를 형식화합니다.",
+        "assumptions": "Yellow Paper Shanghai ruleset과 valid transaction·block context를 사용합니다.",
+        "evidenceScope": "EVM core semantics와 해당 문서 revision의 protocol rules에 한정합니다.",
+        "notClaim": "Shanghai 이후 fork rules나 특정 client 내부 구조와 성능을 영구히 고정하지 않습니다.",
+        "sectionId": "paper-yellow-paper"
+      },
+      {
+        "title": "Ethereum execution-specs · tests@v20.0.1",
+        "href": "https://github.com/ethereum/execution-specs/tree/87aba1a38a476b31f819a2390eb481527e6dc683",
+        "problem": "Fork별 execution rules를 실행 가능한 reference와 tests로 일관되게 유지해야 합니다.",
+        "contribution": "Python block·transaction·EVM transition과 fork별 generated tests를 제공합니다.",
+        "assumptions": "Commit 87aba1a와 exact fork·fixture를 고정합니다.",
+        "evidenceScope": "해당 snapshot의 executable semantics와 tests artifact에 한정합니다.",
+        "notClaim": "Reference 구현이 production client의 network·storage architecture나 성능을 정하지 않습니다.",
+        "sectionId": "paper-execution-specs"
+      }
+    ]
   },
   "blockchain/evm-advanced": {
     entryLevel: true,
@@ -63556,34 +65504,298 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "blockchain/crypto-theory": {
-    entryLevel: true, entryNote: "알고리즘 이름을 외우지 않고 Alice/Bob authenticated-encryption 사례에서 correctness와 security부터 나눕니다.", coreIdea: "암호학 주장은 honest correctness, adversary game/advantage, assumption/reduction과 실제 domain·key·nonce artifact를 함께 고정해야 합니다.", assumedKnowledge: [],
-    introducedHere: [{ id: "cryptographic-correctness-security-separation", role: "정상 동작과 공격 저항을 구분합니다." }, { id: "cryptographic-security-game-advantage", role: "보안 주장을 측정 가능한 experiment로 만듭니다." }, { id: "computational-information-theoretic-security", role: "Resource 전제가 있는/없는 보안을 구분합니다." }, { id: "cryptographic-assumption-reduction-map", role: "Attack과 hard problem을 연결합니다." }, { id: "cryptographic-domain-parameter-artifact", role: "이론 전제를 실제 호출 identity에 묶습니다." }, { id: "crypto-primitive-release-gate", role: "Vector·negative oracle·migration을 검증합니다." }],
-    conceptExplanations: [
-      { id: "cryptographic-correctness-security-separation", sectionId: "overview", intuition: "정상 입력에서 답이 맞는 것과 공격자가 비밀을 못 알아내는 것은 다른 질문입니다.", workedExample: "같은 key/nonce/AAD로 m을 복호화해도 nonce reuse confidentiality는 깨질 수 있습니다.", boundary: "Correctness test만으로 security를 증명하지 않습니다." },
-      { id: "cryptographic-security-game-advantage", sectionId: "security-game", intuition: "공격자가 무엇을 보고 언제 이기나를 정한 게임에서 random baseline을 넘은 정도입니다.", workedExample: "Challenge bit 성공 0.51이면 advantage는 |0.51−0.5|=0.01입니다.", boundary: "한 번 맞힌 결과나 unspecified attacker의 성공률이 아닙니다." },
-      { id: "computational-information-theoretic-security", sectionId: "assumption-composition", intuition: "현실적 계산으로 못 깨는 것과 계산이 무한해도 정보가 없는 것은 다릅니다.", workedExample: "Public-key encryption은 보통 computational, one-time pad의 ideal secrecy는 조건부 information-theoretic입니다.", boundary: "한 component의 unconditional property를 전체 protocol로 확대하지 않습니다." },
-      { id: "cryptographic-assumption-reduction-map", sectionId: "assumption-composition", intuition: "Primitive attacker를 hard problem solver로 바꾸어 가정과 security claim을 잇습니다.", workedExample: "Advantage와 running-time loss를 포함해 target parameter가 충분한지 계산합니다.", boundary: "Reduction은 side channel·bad randomness를 자동 다루지 않습니다." },
-      { id: "cryptographic-domain-parameter-artifact", sectionId: "assumption-composition", intuition: "같은 bytes라도 protocol tag·key purpose·nonce가 다르면 다른 cryptographic statement입니다.", workedExample: "AEAD key, unique nonce, AAD, algorithm profile과 library revision을 한 receipt로 묶습니다.", boundary: "Algorithm name·key length만으로 invocation identity가 되지 않습니다." },
-      { id: "crypto-primitive-release-gate", sectionId: "crypto-release", intuition: "Known answer와 실패 oracle, interoperability와 key migration을 함께 통과합니다.", workedExample: "Wrong AAD/key/domain, malformed input, nonce replay, RNG failure와 rotation을 재생합니다.", boundary: "Benchmark speed나 happy path만으로 release하지 않습니다." },
+    "entryLevel": true,
+    "entryNote": "암호 이름을 외우지 않고 7번 지시로 30원을 보내는 사례에서 내용 보호와 중복 실행 방지를 구분합니다.",
+    "coreIdea": "같은 송금 지시에서 정확성·기밀성·무결성·재전송 방지를 따로 확인하고, 게임의 공격 조건과 키·nonce·사용처의 실제 호출 조건을 연결합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "cryptographic-correctness-security-separation",
+        "role": "정상 동작과 공격 저항을 구분합니다."
+      },
+      {
+        "id": "cryptographic-security-game-advantage",
+        "role": "보안 주장을 측정 가능한 experiment로 만듭니다."
+      },
+      {
+        "id": "computational-information-theoretic-security",
+        "role": "Resource 전제가 있는/없는 보안을 구분합니다."
+      },
+      {
+        "id": "cryptographic-assumption-reduction-map",
+        "role": "Attack과 hard problem을 연결합니다."
+      },
+      {
+        "id": "cryptographic-domain-parameter-artifact",
+        "role": "이론 전제를 실제 호출 identity에 묶습니다."
+      },
+      {
+        "id": "crypto-primitive-release-gate",
+        "role": "Vector·negative oracle·migration을 검증합니다."
+      }
     ],
-    conceptStages: [{ label: "Claim", relation: "Correctness·security 분리", concepts: ["cryptographic-correctness-security-separation"] }, { label: "Game", relation: "Adversary·advantage", concepts: ["cryptographic-security-game-advantage", "computational-information-theoretic-security"] }, { label: "Map", relation: "Assumption·invocation", concepts: ["cryptographic-assumption-reduction-map", "cryptographic-domain-parameter-artifact"] }, { label: "Release", relation: "Vectors·negative oracle", concepts: ["crypto-primitive-release-gate"] }],
-    exercises: [
-      { level: "basic", question: "Authenticated encryption 사례에서 correctness와 security 주장을 분리하세요.", answerChecklist: ["honest decrypt=m", "confidentiality game", "integrity game", "nonce uniqueness", "key secrecy"], requiredConcepts: ["cryptographic-correctness-security-separation"], sectionId: "overview" },
-      { level: "basic", question: "Security game의 adversary view·queries·win event·resource를 적으세요.", answerChecklist: ["view", "oracle access", "challenge", "win predicate", "time/memory/queries"], requiredConcepts: ["cryptographic-security-game-advantage"], sectionId: "security-game" },
-      { level: "basic", question: "성공확률 0.51인 balanced challenge game의 advantage를 계산하세요.", answerChecklist: ["baseline 1/2", "absolute gap", "0.01", "dimensionless", "not single-trial evidence"], requiredConcepts: ["cryptographic-security-game-advantage"], sectionId: "security-game" },
-      { level: "basic", question: "Computational security와 information-theoretic security를 비교하세요.", answerChecklist: ["resource bound", "security parameter", "unbounded computation", "example", "composition boundary"], requiredConcepts: ["computational-information-theoretic-security"], sectionId: "assumption-composition" },
-      { level: "basic", question: "Reduction이 primitive attack과 hard problem을 어떻게 연결하는지 설명하세요.", answerChecklist: ["attacker as subroutine", "solver construction", "advantage loss", "resource loss", "assumption"], requiredConcepts: ["cryptographic-assumption-reduction-map"], sectionId: "assumption-composition" },
-      { level: "basic", question: "같은 key bytes라도 domain·nonce·AAD가 중요한 이유를 설명하세요.", answerChecklist: ["statement identity", "cross-protocol replay", "nonce uniqueness", "AAD binding", "key purpose"], requiredConcepts: ["cryptographic-domain-parameter-artifact"], sectionId: "assumption-composition" },
-      { level: "advanced", question: "Multi-user security claim의 advantage bound와 전제를 설계하세요.", answerChecklist: ["users/keys", "queries", "union/tightness", "resource", "concrete parameter"], requiredConcepts: ["cryptographic-security-game-advantage", "cryptographic-assumption-reduction-map"], sectionId: "security-game" },
-      { level: "advanced", question: "AEAD nonce reuse catastrophe negative fixture를 작성하세요.", answerChecklist: ["same key/nonce", "different plaintext", "confidentiality/integrity impact", "detector", "key generation rollback"], requiredConcepts: ["cryptographic-domain-parameter-artifact", "crypto-primitive-release-gate"], sectionId: "crypto-release" },
-      { level: "advanced", question: "Signature가 valid하지만 다른 protocol에서 replay되는 composition 반례를 설계하세요.", answerChecklist: ["same bytes", "missing domain tag", "different intent", "canonical encoding", "reject wrong domain"], requiredConcepts: ["cryptographic-domain-parameter-artifact"], sectionId: "assumption-composition" },
-      { level: "advanced", question: "Primitive/library migration release matrix를 작성하세요.", answerChecklist: ["algorithm/profile pins", "vectors/interoperability", "malformed/wrong-domain", "RNG/key rotation", "dual-read/rollback"], requiredConcepts: ["crypto-primitive-release-gate"], sectionId: "crypto-release" },
+    "conceptExplanations": [
+      {
+        "id": "cryptographic-correctness-security-separation",
+        "sectionId": "names",
+        "intuition": "정상 입력에서 답이 맞는 것과 공격자가 비밀을 못 알아내는 것은 다른 질문입니다.",
+        "workedExample": "7번 지시 pay=30을 복원해도 이미 처리한 지시인지 확인하지 않으면 잔액 70원에서 다시 30원을 차감할 수 있습니다.",
+        "boundary": "Correctness test만으로 security를 증명하지 않습니다."
+      },
+      {
+        "id": "cryptographic-security-game-advantage",
+        "sectionId": "security-game",
+        "intuition": "공격자가 무엇을 보고 언제 이기나를 정한 게임에서 random baseline을 넘은 정도입니다.",
+        "workedExample": "Challenge bit 성공 0.51이면 advantage는 |0.51−0.5|=0.01입니다.",
+        "boundary": "한 번 맞힌 결과나 unspecified attacker의 성공률이 아닙니다."
+      },
+      {
+        "id": "computational-information-theoretic-security",
+        "sectionId": "assumption-composition",
+        "intuition": "현실적 계산으로 못 깨는 것과 계산이 무한해도 정보가 없는 것은 다릅니다.",
+        "workedExample": "Public-key encryption은 보통 computational, one-time pad의 ideal secrecy는 조건부 information-theoretic입니다.",
+        "boundary": "한 component의 unconditional property를 전체 protocol로 확대하지 않습니다."
+      },
+      {
+        "id": "cryptographic-assumption-reduction-map",
+        "sectionId": "assumption-composition",
+        "intuition": "Primitive attacker를 hard problem solver로 바꾸어 가정과 security claim을 잇습니다.",
+        "workedExample": "Advantage와 running-time loss를 포함해 target parameter가 충분한지 계산합니다.",
+        "boundary": "Reduction은 side channel·bad randomness를 자동 다루지 않습니다."
+      },
+      {
+        "id": "cryptographic-domain-parameter-artifact",
+        "sectionId": "assumption-composition",
+        "intuition": "같은 bytes라도 protocol tag·key purpose·nonce가 다르면 다른 cryptographic statement입니다.",
+        "workedExample": "AEAD key, unique nonce, AAD, algorithm profile과 library revision을 한 receipt로 묶습니다.",
+        "boundary": "Algorithm name·key length만으로 invocation identity가 되지 않습니다."
+      },
+      {
+        "id": "crypto-primitive-release-gate",
+        "sectionId": "crypto-release",
+        "intuition": "Known answer와 실패 oracle, interoperability와 key migration을 함께 통과합니다.",
+        "workedExample": "Wrong AAD/key/domain, malformed input, nonce replay, RNG failure와 rotation을 재생합니다.",
+        "boundary": "Benchmark speed나 happy path만으로 release하지 않습니다."
+      }
     ],
-    papers: [
-      { title: "Goldwasser–Micali · Probabilistic Encryption", href: "https://doi.org/10.1016/0022-0000(84)90070-9", problem: "Encryption security를 계산적으로 정의해야 합니다.", contribution: "Probabilistic encryption과 semantic security 기반을 제시합니다.", assumptions: "Polynomial-time adversary·security parameter·stated assumption을 사용합니다.", evidenceScope: "Computational encryption security 이론입니다.", notClaim: "임의 mode·implementation·PQC 안전을 보장하지 않습니다.", sectionId: "paper-goldwasser-micali" },
-      { title: "NIST SP 800-57 Part 1 Rev. 5", href: "https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final", problem: "Keys와 algorithm strength를 lifecycle로 관리해야 합니다.", contribution: "Key types·cryptoperiod·compromise recovery guidance를 제공합니다.", assumptions: "NIST scope와 risk assessment를 적용합니다.", evidenceScope: "Key-management lifecycle에 한정합니다.", notClaim: "특정 system compliance·side-channel 안전을 인증하지 않습니다.", sectionId: "paper-nist-key-management" },
-      { title: "RFC 5116 · Authenticated Encryption", href: "https://www.rfc-editor.org/rfc/rfc5116", problem: "Encryption·integrity input을 공통 interface로 사용해야 합니다.", contribution: "AEAD key/nonce/AAD/plaintext contract를 정의합니다.", assumptions: "Algorithm nonce/key requirements를 지킵니다.", evidenceScope: "AEAD invocation boundary입니다.", notClaim: "Key distribution·endpoint authorization을 해결하지 않습니다.", sectionId: "paper-rfc5116" },
+    "conceptStages": [
+      {
+        "label": "Claim",
+        "relation": "Correctness·security 분리",
+        "concepts": [
+          "cryptographic-correctness-security-separation"
+        ]
+      },
+      {
+        "label": "Game",
+        "relation": "Adversary·advantage",
+        "concepts": [
+          "cryptographic-security-game-advantage",
+          "computational-information-theoretic-security"
+        ]
+      },
+      {
+        "label": "Map",
+        "relation": "Assumption·invocation",
+        "concepts": [
+          "cryptographic-assumption-reduction-map",
+          "cryptographic-domain-parameter-artifact"
+        ]
+      },
+      {
+        "label": "Release",
+        "relation": "Vectors·negative oracle",
+        "concepts": [
+          "crypto-primitive-release-gate"
+        ]
+      }
     ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Authenticated encryption 사례에서 correctness와 security 주장을 분리하세요.",
+        "answerChecklist": [
+          "honest decrypt=m",
+          "confidentiality game",
+          "integrity game",
+          "nonce uniqueness",
+          "key secrecy"
+        ],
+        "requiredConcepts": [
+          "cryptographic-correctness-security-separation"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Security game의 adversary view·queries·win event·resource를 적으세요.",
+        "answerChecklist": [
+          "view",
+          "oracle access",
+          "challenge",
+          "win predicate",
+          "time/memory/queries"
+        ],
+        "requiredConcepts": [
+          "cryptographic-security-game-advantage"
+        ],
+        "sectionId": "security-game"
+      },
+      {
+        "level": "basic",
+        "question": "성공확률 0.51인 balanced challenge game의 advantage를 계산하세요.",
+        "answerChecklist": [
+          "baseline 1/2",
+          "absolute gap",
+          "0.01",
+          "dimensionless",
+          "not single-trial evidence"
+        ],
+        "requiredConcepts": [
+          "cryptographic-security-game-advantage"
+        ],
+        "sectionId": "security-game"
+      },
+      {
+        "level": "basic",
+        "question": "Computational security와 information-theoretic security를 비교하세요.",
+        "answerChecklist": [
+          "resource bound",
+          "security parameter",
+          "unbounded computation",
+          "example",
+          "composition boundary"
+        ],
+        "requiredConcepts": [
+          "computational-information-theoretic-security"
+        ],
+        "sectionId": "assumption-composition"
+      },
+      {
+        "level": "basic",
+        "question": "Reduction이 primitive attack과 hard problem을 어떻게 연결하는지 설명하세요.",
+        "answerChecklist": [
+          "attacker as subroutine",
+          "solver construction",
+          "advantage loss",
+          "resource loss",
+          "assumption"
+        ],
+        "requiredConcepts": [
+          "cryptographic-assumption-reduction-map"
+        ],
+        "sectionId": "assumption-composition"
+      },
+      {
+        "level": "basic",
+        "question": "같은 key bytes라도 domain·nonce·AAD가 중요한 이유를 설명하세요.",
+        "answerChecklist": [
+          "statement identity",
+          "cross-protocol replay",
+          "nonce uniqueness",
+          "AAD binding",
+          "key purpose"
+        ],
+        "requiredConcepts": [
+          "cryptographic-domain-parameter-artifact"
+        ],
+        "sectionId": "assumption-composition"
+      },
+      {
+        "level": "advanced",
+        "question": "Multi-user security claim의 advantage bound와 전제를 설계하세요.",
+        "answerChecklist": [
+          "users/keys",
+          "queries",
+          "union/tightness",
+          "resource",
+          "concrete parameter"
+        ],
+        "requiredConcepts": [
+          "cryptographic-security-game-advantage",
+          "cryptographic-assumption-reduction-map"
+        ],
+        "sectionId": "security-game"
+      },
+      {
+        "level": "advanced",
+        "question": "AEAD nonce reuse catastrophe negative fixture를 작성하세요.",
+        "answerChecklist": [
+          "same key/nonce",
+          "different plaintext",
+          "confidentiality/integrity impact",
+          "detector",
+          "key generation rollback"
+        ],
+        "requiredConcepts": [
+          "cryptographic-domain-parameter-artifact",
+          "crypto-primitive-release-gate"
+        ],
+        "sectionId": "crypto-release"
+      },
+      {
+        "level": "advanced",
+        "question": "Signature가 valid하지만 다른 protocol에서 replay되는 composition 반례를 설계하세요.",
+        "answerChecklist": [
+          "same bytes",
+          "missing domain tag",
+          "different intent",
+          "canonical encoding",
+          "reject wrong domain"
+        ],
+        "requiredConcepts": [
+          "cryptographic-domain-parameter-artifact"
+        ],
+        "sectionId": "assumption-composition"
+      },
+      {
+        "level": "advanced",
+        "question": "Primitive/library migration release matrix를 작성하세요.",
+        "answerChecklist": [
+          "algorithm/profile pins",
+          "vectors/interoperability",
+          "malformed/wrong-domain",
+          "RNG/key rotation",
+          "dual-read/rollback"
+        ],
+        "requiredConcepts": [
+          "crypto-primitive-release-gate"
+        ],
+        "sectionId": "crypto-release"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Goldwasser–Micali · Probabilistic Encryption",
+        "href": "https://doi.org/10.1016/0022-0000(84)90070-9",
+        "problem": "Encryption security를 계산적으로 정의해야 합니다.",
+        "contribution": "Probabilistic encryption과 semantic security 기반을 제시합니다.",
+        "assumptions": "Polynomial-time adversary·security parameter·stated assumption을 사용합니다.",
+        "evidenceScope": "Computational encryption security 이론입니다.",
+        "notClaim": "임의 mode·implementation·PQC 안전을 보장하지 않습니다.",
+        "sectionId": "paper-goldwasser-micali"
+      },
+      {
+        "title": "NIST SP 800-57 Part 1 Rev. 5",
+        "href": "https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final",
+        "problem": "Keys와 algorithm strength를 lifecycle로 관리해야 합니다.",
+        "contribution": "Key types·cryptoperiod·compromise recovery guidance를 제공합니다.",
+        "assumptions": "NIST scope와 risk assessment를 적용합니다.",
+        "evidenceScope": "Key-management lifecycle에 한정합니다.",
+        "notClaim": "특정 system compliance·side-channel 안전을 인증하지 않습니다.",
+        "sectionId": "paper-nist-key-management"
+      },
+      {
+        "title": "RFC 5116 · Authenticated Encryption",
+        "href": "https://www.rfc-editor.org/rfc/rfc5116",
+        "problem": "Encryption·integrity input을 공통 interface로 사용해야 합니다.",
+        "contribution": "AEAD key/nonce/AAD/plaintext contract를 정의합니다.",
+        "assumptions": "Algorithm nonce/key requirements를 지킵니다.",
+        "evidenceScope": "AEAD invocation boundary입니다.",
+        "notClaim": "Key distribution·endpoint authorization을 해결하지 않습니다.",
+        "sectionId": "paper-rfc5116"
+      }
+    ]
   },
   "blockchain/lotus-state": {
     entryLevel: true,
@@ -64727,88 +66939,546 @@ export const ARTICLE_LEARNING: Readonly<
 ],
   },
   "ai/supervised-learning-loop": {
-    entryLevel: true,
-    entryNote: "Model 용어를 모른다고 가정합니다. Input·target 한 쌍에서 시작해 tensor batch, forward, loss, backward, update를 하나씩 추가합니다.",
-    coreIdea: "지도학습 한 step은 input·target example을 batch로 묶고 같은 parameterized model로 prediction을 만든 뒤, loss의 gradient를 계산해 optimizer가 parameter를 갱신하는 반복입니다. Inference는 parameter를 고정하고 forward만 재사용합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "feature-target", role: "한 example에서 model이 받는 input과 맞혀야 할 target을 분리합니다." },
-      { id: "tensor-batch", role: "값의 axis 의미와 여러 example을 묶는 batch axis를 구분합니다." },
-      { id: "parameterized-model", role: "입력과 조절 가능한 parameter로 prediction을 만드는 함수를 읽습니다." },
-      { id: "forward-pass", role: "현재 parameter로 prediction과 backward용 중간값을 만드는 실행을 구분합니다." },
-      { id: "training-step", role: "Forward·loss·backward·optimizer update를 한 반복으로 연결합니다." },
-      { id: "inference", role: "학습 뒤 parameter를 고정하고 forward만 쓰는 사용 경계를 분리합니다." },
+    "entryLevel": true,
+    "entryNote": "두 쌍 (1,2), (2,4)와 공통 수 1을 사용해 답·오차·변화율·갱신을 손으로 계산합니다. 모든 가정 수치를 원문 식에 다시 넣어 확인합니다.",
+    "coreIdea": "지도학습 한 step은 input·target example을 batch로 묶고 같은 parameterized model로 prediction을 만든 뒤, loss의 gradient를 계산해 optimizer가 parameter를 갱신하는 반복입니다. Inference는 parameter를 고정하고 forward만 재사용합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "feature-target",
+        "role": "한 example에서 model이 받는 input과 맞혀야 할 target을 분리합니다."
+      },
+      {
+        "id": "tensor-batch",
+        "role": "값의 axis 의미와 여러 example을 묶는 batch axis를 구분합니다."
+      },
+      {
+        "id": "parameterized-model",
+        "role": "입력과 조절 가능한 parameter로 prediction을 만드는 함수를 읽습니다."
+      },
+      {
+        "id": "forward-pass",
+        "role": "현재 parameter로 prediction과 backward용 중간값을 만드는 실행을 구분합니다."
+      },
+      {
+        "id": "training-step",
+        "role": "Forward·loss·backward·optimizer update를 한 반복으로 연결합니다."
+      },
+      {
+        "id": "inference",
+        "role": "학습 뒤 parameter를 고정하고 forward만 쓰는 사용 경계를 분리합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "feature-target", sectionId: "overview", intuition: "문제에 주어진 정보가 input이고 채점 기준이 target입니다.", workedExample: "사진 pixel tensor x와 정답 class y를 한 example pair로 둡니다.", boundary: "Target이 input에 섞이면 leakage이며 self-supervised target은 사람이 붙인 label과 다를 수 있습니다." },
-      { id: "tensor-batch", sectionId: "tensor-batch", intuition: "축의 뜻을 가진 숫자 배열이 tensor이고 example 여러 개를 쌓은 축이 batch입니다.", workedExample: "사진 32장의 B×C×H×W는 32×3×224×224입니다.", boundary: "Axis 순서는 framework·model contract에 따라 달라 숫자만 보고 의미를 단정하지 않습니다." },
-      { id: "parameterized-model", sectionId: "overview", intuition: "같은 계산 틀의 조절 가능한 숫자 θ가 parameter입니다.", workedExample: "fθ(x)에서 θ는 weight·bias이고 batch row가 달라도 같은 θ를 공유합니다.", boundary: "Learning rate·layer 수는 보통 gradient가 직접 고치는 parameter가 아닙니다." },
-      { id: "forward-pass", sectionId: "training-step", intuition: "현재 θ를 바꾸지 않고 input을 prediction과 중간값으로 보내는 순방향 계산입니다.", workedExample: "x를 affine·activation·output layer에 차례로 넣어 ŷ를 만듭니다.", boundary: "Prediction을 만들 뿐 parameter update 자체가 아닙니다." },
-      { id: "training-step", sectionId: "training-step", intuition: "현재 답을 만들고 오차와 책임을 계산한 뒤 parameter를 한 번 움직이는 반복입니다.", workedExample: "Batch mean loss를 backward해 gradient를 얻고 optimizer가 θ를 θ′로 바꿉니다.", boundary: "한 step loss 감소가 generalization 향상을 보장하지 않습니다." },
-      { id: "inference", sectionId: "inference", intuition: "학습한 θ를 고정하고 새 input의 prediction만 계산합니다.", workedExample: "Image classifier에 target 없이 사진 한 장을 넣어 class score를 얻습니다.", boundary: "Update가 없어도 KV cache·batch·latency·memory 같은 runtime state는 남을 수 있습니다." },
+    "conceptExplanations": [
+      {
+        "id": "feature-target",
+        "sectionId": "names",
+        "intuition": "문제에 주어진 정보가 input이고 채점 기준이 target입니다.",
+        "workedExample": "두 행의 관측값 x=(1,2)와 비교할 정답 y=(2,4)를 분리합니다. 답을 만드는 경로에는 정답을 전달하지 않습니다 (가정).",
+        "boundary": "Target이 input에 섞이면 leakage이며 self-supervised target은 사람이 붙인 label과 다를 수 있습니다."
+      },
+      {
+        "id": "tensor-batch",
+        "sectionId": "tensor-batch",
+        "intuition": "축의 뜻을 가진 숫자 배열이 tensor이고 example 여러 개를 쌓은 축이 batch입니다.",
+        "workedExample": "사진 32장의 B×C×H×W는 32×3×224×224입니다.",
+        "boundary": "Axis 순서는 framework·model contract에 따라 달라 숫자만 보고 의미를 단정하지 않습니다."
+      },
+      {
+        "id": "parameterized-model",
+        "sectionId": "names",
+        "intuition": "같은 계산 틀의 조절 가능한 숫자 θ가 parameter입니다.",
+        "workedExample": "같은 θ=1을 두 행에 적용해 fθ(1)=1, fθ(2)=2를 얻습니다. 이동 크기 0.1은 θ와 다른 설정입니다 (가정).",
+        "boundary": "Learning rate·layer 수는 보통 gradient가 직접 고치는 parameter가 아닙니다."
+      },
+      {
+        "id": "forward-pass",
+        "sectionId": "training-step",
+        "intuition": "현재 θ를 바꾸지 않고 input을 prediction과 중간값으로 보내는 순방향 계산입니다.",
+        "workedExample": "θ=1을 고정해 예측 (1,2)를 먼저 계산하고, 두 행의 gradient를 모두 모은 뒤에만 θ를 바꿉니다 (가정).",
+        "boundary": "Prediction을 만들 뿐 parameter update 자체가 아닙니다."
+      },
+      {
+        "id": "training-step",
+        "sectionId": "training-step",
+        "intuition": "현재 답을 만들고 오차와 책임을 계산한 뒤 parameter를 한 번 움직이는 반복입니다.",
+        "workedExample": "개별 손실 (0.5,2)의 평균은 1.25, gradient 평균은 −2.5, 이동 크기 0.1로 새 θ=1.25, 새 평균 손실은 0.703125입니다 (가정).",
+        "boundary": "한 step loss 감소가 generalization 향상을 보장하지 않습니다."
+      },
+      {
+        "id": "inference",
+        "sectionId": "inference",
+        "intuition": "학습한 θ를 고정하고 새 input의 prediction만 계산합니다.",
+        "workedExample": "갱신한 θ=1.25를 고정하고 입력 3만 넣으면 3.75가 나옵니다. 정답이나 backward 없이 예측합니다 (가정).",
+        "boundary": "Update가 없어도 KV cache·batch·latency·memory 같은 runtime state는 남을 수 있습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 Example", relation: "Input과 target 역할을 먼저 고정합니다.", concepts: ["feature-target"] },
-      { label: "01 Shape", relation: "Example을 tensor batch로 묶고 같은 model을 적용합니다.", concepts: ["tensor-batch", "parameterized-model"] },
-      { label: "02 Step", relation: "Forward 뒤 loss·backward·update를 연결합니다.", concepts: ["forward-pass", "loss-objective", "backpropagation", "optimizer-update", "training-step"] },
-      { label: "03 Use", relation: "Update가 있는 training과 고정 parameter inference를 분리합니다.", concepts: ["training-step", "inference"] },
+    "conceptStages": [
+      {
+        "label": "00 Example",
+        "relation": "Input과 target 역할을 먼저 고정합니다.",
+        "concepts": [
+          "feature-target"
+        ]
+      },
+      {
+        "label": "01 Shape",
+        "relation": "Example을 tensor batch로 묶고 같은 model을 적용합니다.",
+        "concepts": [
+          "tensor-batch",
+          "parameterized-model"
+        ]
+      },
+      {
+        "label": "02 Step",
+        "relation": "Forward 뒤 loss·backward·update를 연결합니다.",
+        "concepts": [
+          "forward-pass",
+          "loss-objective",
+          "backpropagation",
+          "optimizer-update",
+          "training-step"
+        ]
+      },
+      {
+        "label": "03 Use",
+        "relation": "Update가 있는 training과 고정 parameter inference를 분리합니다.",
+        "concepts": [
+          "training-step",
+          "inference"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "고양이 분류의 input x와 target y를 구분하세요.", answerChecklist: ["pixel tensor", "class label", "model sees x", "loss compares y"], requiredConcepts: ["feature-target"], sectionId: "overview" },
-      { level: "basic", question: "Parameterized model의 θ와 hyperparameter를 구분하세요.", answerChecklist: ["weight/bias", "gradient-updated", "learning rate", "not same"], requiredConcepts: ["parameterized-model"], sectionId: "overview" },
-      { level: "basic", question: "32×3×224×224의 axis 의미를 설명하세요.", answerChecklist: ["batch 32", "channel 3", "height", "width", "contract caveat"], requiredConcepts: ["tensor-batch"], sectionId: "tensor-batch" },
-      { level: "basic", question: "Forward pass가 만들고 바꾸지 않는 것을 구분하세요.", answerChecklist: ["prediction", "intermediate", "current parameter", "no update"], requiredConcepts: ["forward-pass", "parameterized-model"], sectionId: "training-step" },
-      { level: "basic", question: "Forward·loss·backward·update 순서와 소유자를 설명하세요.", answerChecklist: ["prediction", "scalar objective", "gradient", "optimizer changes parameter"], requiredConcepts: ["training-step", "forward-pass", "loss-objective", "backpropagation", "optimizer-update"], sectionId: "training-step" },
-      { level: "basic", question: "Training과 inference가 공유하고 다르게 보존하는 state를 설명하세요.", answerChecklist: ["forward shared", "parameter fixed", "no optimizer update", "runtime cache possible"], requiredConcepts: ["training-step", "inference"], sectionId: "inference" },
-      { level: "advanced", question: "Batch mean과 sum reduction이 gradient scale을 어떻게 바꾸는지 설명하세요.", answerChecklist: ["sum contributions", "divide by B", "same examples", "learning-rate interaction"], requiredConcepts: ["tensor-batch", "training-step"], sectionId: "training-step" },
-      { level: "advanced", question: "Shape는 맞지만 batch와 channel axis를 바꾼 반례를 진단하세요.", answerChecklist: ["axis semantics", "model contract", "same numbers insufficient", "fixture"], requiredConcepts: ["tensor-batch"], sectionId: "tensor-batch" },
-      { level: "advanced", question: "Self-supervised target이 supervised label과 다른 경계를 설계하세요.", answerChecklist: ["target derived from input", "no human label required", "prediction task", "leakage boundary"], requiredConcepts: ["feature-target"], sectionId: "overview" },
-      { level: "advanced", question: "Training loop의 재현 receipt와 inference handoff를 작성하세요.", answerChecklist: ["data/batch", "parameter revision", "loss/reduction", "optimizer state", "checkpoint", "fixed inference", "runtime state"], requiredConcepts: ["training-step", "inference"], sectionId: "inference" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "고양이 분류의 input x와 target y를 구분하세요.",
+        "answerChecklist": [
+          "pixel tensor",
+          "class label",
+          "model sees x",
+          "loss compares y"
+        ],
+        "requiredConcepts": [
+          "feature-target"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Parameterized model의 θ와 hyperparameter를 구분하세요.",
+        "answerChecklist": [
+          "weight/bias",
+          "gradient-updated",
+          "learning rate",
+          "not same"
+        ],
+        "requiredConcepts": [
+          "parameterized-model"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "32×3×224×224의 axis 의미를 설명하세요.",
+        "answerChecklist": [
+          "batch 32",
+          "channel 3",
+          "height",
+          "width",
+          "contract caveat"
+        ],
+        "requiredConcepts": [
+          "tensor-batch"
+        ],
+        "sectionId": "tensor-batch"
+      },
+      {
+        "level": "basic",
+        "question": "두 입력 1과 2에 θ=1을 적용한 예측과, forward 단계에서 바꾸지 않는 값을 설명하세요.",
+        "answerChecklist": [
+          "예측 1과 2",
+          "θ=1 고정",
+          "두 행이 θ 공유",
+          "갱신은 모든 기여를 모은 뒤"
+        ],
+        "requiredConcepts": [
+          "forward-pass",
+          "parameterized-model"
+        ],
+        "sectionId": "training-step"
+      },
+      {
+        "level": "basic",
+        "question": "두 행의 오차로 평균 gradient −2.5와 새 θ=1.25를 계산하는 과정을 설명하세요.",
+        "answerChecklist": [
+          "개별 gradient −1과 −4",
+          "평균 −2.5",
+          "이동 크기 0.1",
+          "1−0.1×(−2.5)=1.25"
+        ],
+        "requiredConcepts": [
+          "training-step",
+          "optimizer-update"
+        ],
+        "sectionId": "training-step"
+      },
+      {
+        "level": "basic",
+        "question": "Training과 inference가 공유하고 다르게 보존하는 state를 설명하세요.",
+        "answerChecklist": [
+          "forward shared",
+          "parameter fixed",
+          "no optimizer update",
+          "runtime cache possible"
+        ],
+        "requiredConcepts": [
+          "training-step",
+          "inference"
+        ],
+        "sectionId": "inference"
+      },
+      {
+        "level": "advanced",
+        "question": "Batch mean과 sum reduction이 gradient scale을 어떻게 바꾸는지 설명하세요.",
+        "answerChecklist": [
+          "sum contributions",
+          "divide by B",
+          "same examples",
+          "learning-rate interaction"
+        ],
+        "requiredConcepts": [
+          "tensor-batch",
+          "training-step"
+        ],
+        "sectionId": "training-step"
+      },
+      {
+        "level": "advanced",
+        "question": "Shape는 맞지만 batch와 channel axis를 바꾼 반례를 진단하세요.",
+        "answerChecklist": [
+          "axis semantics",
+          "model contract",
+          "same numbers insufficient",
+          "fixture"
+        ],
+        "requiredConcepts": [
+          "tensor-batch"
+        ],
+        "sectionId": "tensor-batch"
+      },
+      {
+        "level": "advanced",
+        "question": "Self-supervised target이 supervised label과 다른 경계를 설계하세요.",
+        "answerChecklist": [
+          "target derived from input",
+          "no human label required",
+          "prediction task",
+          "leakage boundary"
+        ],
+        "requiredConcepts": [
+          "feature-target"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "advanced",
+        "question": "Training loop의 재현 receipt와 inference handoff를 작성하세요.",
+        "answerChecklist": [
+          "data/batch",
+          "parameter revision",
+          "loss/reduction",
+          "optimizer state",
+          "checkpoint",
+          "fixed inference",
+          "runtime state"
+        ],
+        "requiredConcepts": [
+          "training-step",
+          "inference"
+        ],
+        "sectionId": "inference"
+      }
     ],
-    papers: [
-      { title: "Deep Learning Book · Machine Learning Basics", href: "https://www.deeplearningbook.org/contents/ml.html", problem: "Supervised learning의 data·model·objective 역할을 구분합니다.", contribution: "Learning algorithm과 generalization을 공통 표기로 정리합니다.", assumptions: "명시된 data-generating process와 loss·model family입니다.", evidenceScope: "Supervised learning 기본 정의 범위입니다.", notClaim: "특정 architecture·optimizer의 우월성 보장이 아닙니다.", sectionId: "paper-supervised-learning" },
-      { title: "Automatic Differentiation in Machine Learning: a Survey", href: "https://jmlr.org/papers/v18/17-468.html", problem: "Derivative 계산과 optimization update를 구분합니다.", contribution: "Forward·reverse accumulation과 computational graph 비용을 정리합니다.", assumptions: "Primitive derivative와 추적 가능한 program입니다.", evidenceScope: "Autodiff 원리와 implementation taxonomy입니다.", notClaim: "Optimizer 수렴이나 generalization을 보장하지 않습니다.", sectionId: "paper-autodiff-survey" },
-    ],
+    "papers": [
+      {
+        "title": "Deep Learning Book · Machine Learning Basics",
+        "href": "https://www.deeplearningbook.org/contents/ml.html",
+        "problem": "Supervised learning의 data·model·objective 역할을 구분합니다.",
+        "contribution": "Learning algorithm과 generalization을 공통 표기로 정리합니다.",
+        "assumptions": "명시된 data-generating process와 loss·model family입니다.",
+        "evidenceScope": "Supervised learning 기본 정의 범위입니다.",
+        "notClaim": "특정 architecture·optimizer의 우월성 보장이 아닙니다.",
+        "sectionId": "paper-supervised-learning"
+      },
+      {
+        "title": "Automatic Differentiation in Machine Learning: a Survey",
+        "href": "https://jmlr.org/papers/v18/17-468.html",
+        "problem": "Derivative 계산과 optimization update를 구분합니다.",
+        "contribution": "Forward·reverse accumulation과 computational graph 비용을 정리합니다.",
+        "assumptions": "Primitive derivative와 추적 가능한 program입니다.",
+        "evidenceScope": "Autodiff 원리와 implementation taxonomy입니다.",
+        "notClaim": "Optimizer 수렴이나 generalization을 보장하지 않습니다.",
+        "sectionId": "paper-autodiff-survey"
+      }
+    ]
   },
   "ai/train-validation-test": {
-    entryLevel: true,
-    entryNote: "Model training을 자세히 모른다고 가정합니다. Train·validation·test를 비율이 아니라 서로 다른 결정을 소유하는 data 역할로 정의합니다.",
-    coreIdea: "Train은 parameter 학습, validation은 candidate 선택, test는 선택 종료 뒤 final assessment를 소유합니다. Validation feedback과 test 재사용을 기록해야 generalization evidence를 독립적으로 해석할 수 있습니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "train-validation-test", role: "Parameter 학습·candidate 선택·final assessment data를 분리합니다." },
-      { id: "validation-selection-feedback", role: "Validation score가 hyperparameter·checkpoint 선택으로 돌아가는 경로를 기록합니다." },
-      { id: "test-set-reuse-contamination", role: "Test 결과를 본 뒤 설정을 바꾸면 독립 final evidence를 잃는 경계를 설명합니다." },
-      { id: "generalization", role: "학습에 직접 쓰지 않은 같은 목표의 새 data에서 성능을 유지하는 능력을 구분합니다." },
+    "entryLevel": true,
+    "entryNote": "1,200명을 800/200/200으로 나눈 가정 사례에서 후보 A·B 선택과 최종 오답 44/200을 추적합니다. 파일 비율보다 정보가 결정을 바꾸는 방향을 먼저 봅니다.",
+    "coreIdea": "Train은 parameter 학습, validation은 candidate 선택, test는 선택 종료 뒤 final assessment를 소유합니다. Validation feedback과 test 재사용을 기록해야 generalization evidence를 독립적으로 해석할 수 있습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "train-validation-test",
+        "role": "Parameter 학습·candidate 선택·final assessment data를 분리합니다."
+      },
+      {
+        "id": "validation-selection-feedback",
+        "role": "Validation score가 hyperparameter·checkpoint 선택으로 돌아가는 경로를 기록합니다."
+      },
+      {
+        "id": "test-set-reuse-contamination",
+        "role": "Test 결과를 본 뒤 설정을 바꾸면 독립 final evidence를 잃는 경계를 설명합니다."
+      },
+      {
+        "id": "generalization",
+        "role": "학습에 직접 쓰지 않은 같은 목표의 새 data에서 성능을 유지하는 능력을 구분합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "train-validation-test", sectionId: "overview", intuition: "문제집은 weight를 배우고 모의고사는 선택을 조정하며 마지막 시험은 결정이 끝날 때까지 잠급니다.", workedExample: "Train으로 weight를 update하고 validation으로 learning rate를 고른 뒤 test로 frozen procedure를 한 번 평가합니다.", boundary: "고정 random 비율이 모든 group·time deployment에 맞는다는 뜻은 아닙니다." },
-      { id: "validation-selection-feedback", sectionId: "selection-feedback", intuition: "Gradient에 쓰지 않아도 score를 보고 후보를 고르면 validation 정보가 procedure로 돌아갑니다.", workedExample: "Validation loss가 가장 낮은 epoch의 checkpoint를 선택합니다.", boundary: "반복 tuning은 validation noise에도 맞출 수 있어 시도 횟수와 선택 규칙을 기록합니다." },
-      { id: "test-set-reuse-contamination", sectionId: "selection-feedback", intuition: "마지막 시험 점수를 보고 답안 규칙을 고치면 그 시험은 더 이상 마지막 시험이 아닙니다.", workedExample: "Test F1을 보고 threshold를 바꾸면 새 threshold에는 별도 untouched holdout이 필요합니다.", boundary: "Bug fix라도 test feedback 이후라면 adaptation으로 기록합니다." },
-      { id: "generalization", sectionId: "generalization", intuition: "연습 답을 외운 것이 아니라 같은 목표의 새 example에도 규칙을 적용하는 능력입니다.", workedExample: "Train accuracy 100%, test 70%면 observed gap이 큽니다.", boundary: "한 test score가 distribution shift와 미래 배포를 자동 보장하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "train-validation-test",
+        "sectionId": "names",
+        "intuition": "문제집은 weight를 배우고 모의고사는 선택을 조정하며 마지막 시험은 결정이 끝날 때까지 잠급니다.",
+        "workedExample": "Train 800명으로 A와 B를 학습하고 validation 200명의 오답 40·30으로 B를 고른 뒤 test 200명에서 44번 틀린 결과 22%를 보고합니다 (가정).",
+        "boundary": "고정 random 비율이 모든 group·time deployment에 맞는다는 뜻은 아닙니다."
+      },
+      {
+        "id": "validation-selection-feedback",
+        "sectionId": "selection-feedback",
+        "intuition": "Gradient에 쓰지 않아도 score를 보고 후보를 고르면 validation 정보가 procedure로 돌아갑니다.",
+        "workedExample": "A의 train 오답률 10%가 B의 15%보다 낮아도, 사전 기준인 validation 오답률 20%와 15%를 비교해 B를 선택합니다 (가정).",
+        "boundary": "반복 tuning은 validation noise에도 맞출 수 있어 시도 횟수와 선택 규칙을 기록합니다."
+      },
+      {
+        "id": "test-set-reuse-contamination",
+        "sectionId": "selection-feedback",
+        "intuition": "마지막 시험 점수를 보고 답안 규칙을 고치면 그 시험은 더 이상 마지막 시험이 아닙니다.",
+        "workedExample": "Test 오답률 22%를 본 뒤 B의 판정 기준을 고치면 그 200명은 선택에 사용된 자료가 되며 별도의 보지 않은 자료가 필요합니다 (가정).",
+        "boundary": "Bug fix라도 test feedback 이후라면 adaptation으로 기록합니다."
+      },
+      {
+        "id": "generalization",
+        "sectionId": "generalization",
+        "intuition": "연습 답을 외운 것이 아니라 같은 목표의 새 example에도 규칙을 적용하는 능력입니다.",
+        "workedExample": "Train accuracy 100%, test 70%면 observed gap이 큽니다.",
+        "boundary": "한 test score가 distribution shift와 미래 배포를 자동 보장하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 Roles", relation: "세 split이 바꿀 수 있는 결정을 분리합니다.", concepts: ["train-validation-test"] },
-      { label: "01 Feedback", relation: "Validation이 candidate selection으로 돌아오는 경로를 기록합니다.", concepts: ["validation-selection-feedback"] },
-      { label: "02 Final", relation: "Test feedback의 재사용 오염을 차단합니다.", concepts: ["test-set-reuse-contamination"] },
-      { label: "03 Evidence", relation: "학습 밖 성능과 실제 split unit 경계를 연결합니다.", concepts: ["generalization", "deployment-matched-validation-risk"] },
+    "conceptStages": [
+      {
+        "label": "00 Roles",
+        "relation": "세 split이 바꿀 수 있는 결정을 분리합니다.",
+        "concepts": [
+          "train-validation-test"
+        ]
+      },
+      {
+        "label": "01 Feedback",
+        "relation": "Validation이 candidate selection으로 돌아오는 경로를 기록합니다.",
+        "concepts": [
+          "validation-selection-feedback"
+        ]
+      },
+      {
+        "label": "02 Final",
+        "relation": "Test feedback의 재사용 오염을 차단합니다.",
+        "concepts": [
+          "test-set-reuse-contamination"
+        ]
+      },
+      {
+        "label": "03 Evidence",
+        "relation": "학습 밖 성능과 실제 split unit 경계를 연결합니다.",
+        "concepts": [
+          "generalization",
+          "deployment-matched-validation-risk"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Train·validation·test가 각각 바꿀 수 있는 결정을 설명하세요.", answerChecklist: ["parameter", "candidate/hyperparameter", "final report", "separate roles"], requiredConcepts: ["train-validation-test"], sectionId: "overview" },
-      { level: "basic", question: "Validation으로 checkpoint를 선택하는 것이 feedback인 이유를 설명하세요.", answerChecklist: ["score observed", "candidate selection", "procedure changes", "not gradient requirement"], requiredConcepts: ["validation-selection-feedback"], sectionId: "selection-feedback" },
-      { level: "basic", question: "Test score를 보고 threshold를 바꾼 뒤 필요한 조치를 쓰세요.", answerChecklist: ["test reused", "now selection data", "new untouched holdout", "record adaptation"], requiredConcepts: ["test-set-reuse-contamination"], sectionId: "selection-feedback" },
-      { level: "basic", question: "Training score와 generalization을 구분하세요.", answerChecklist: ["seen data fit", "unseen same goal", "held-out", "distribution caveat"], requiredConcepts: ["generalization"], sectionId: "generalization" },
-      { level: "basic", question: "Validation loss .4와 train loss .25의 observed gap을 계산하세요.", answerChecklist: [".15", "same metric", "diagnostic", "not cause proof"], requiredConcepts: ["generalization"], sectionId: "generalization" },
-      { level: "basic", question: "새 row·새 사람·미래 배포에 맞는 split unit을 구분하세요.", answerChecklist: ["random candidate", "group", "time", "deployment unit"], requiredConcepts: ["train-validation-test", "generalization"], sectionId: "next-protocol" },
-      { level: "advanced", question: "Validation을 100회 반복 tuning할 때 생기는 selection optimism과 기록 항목을 설명하세요.", answerChecklist: ["noise selection", "attempt count", "candidate lineage", "frozen rule", "test"], requiredConcepts: ["validation-selection-feedback"], sectionId: "selection-feedback" },
-      { level: "advanced", question: "Test reuse incident의 evidence ledger를 작성하세요.", answerChecklist: ["first access time", "observed metric", "changes after access", "invalidate final claim", "new holdout"], requiredConcepts: ["test-set-reuse-contamination"], sectionId: "selection-feedback" },
-      { level: "advanced", question: "큰 observed gap의 overfitting·shift·leakage 가설을 분리하는 검사를 설계하세요.", answerChecklist: ["learning curves", "split distribution", "entity/time overlap", "pipeline parity", "independent slice"], requiredConcepts: ["generalization", "train-validation-test"], sectionId: "generalization" },
-      { level: "advanced", question: "Cross-validation으로 넘길 것과 final test로 남길 것을 구분하세요.", answerChecklist: ["selection procedure", "fold-local fit", "group/time unit", "untouched final", "no adaptive reuse"], requiredConcepts: ["train-validation-test", "validation-selection-feedback", "test-set-reuse-contamination"], sectionId: "next-protocol" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Train·validation·test가 각각 바꿀 수 있는 결정을 설명하세요.",
+        "answerChecklist": [
+          "parameter",
+          "candidate/hyperparameter",
+          "final report",
+          "separate roles"
+        ],
+        "requiredConcepts": [
+          "train-validation-test"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Validation으로 checkpoint를 선택하는 것이 feedback인 이유를 설명하세요.",
+        "answerChecklist": [
+          "score observed",
+          "candidate selection",
+          "procedure changes",
+          "not gradient requirement"
+        ],
+        "requiredConcepts": [
+          "validation-selection-feedback"
+        ],
+        "sectionId": "selection-feedback"
+      },
+      {
+        "level": "basic",
+        "question": "Test score를 보고 threshold를 바꾼 뒤 필요한 조치를 쓰세요.",
+        "answerChecklist": [
+          "test reused",
+          "now selection data",
+          "new untouched holdout",
+          "record adaptation"
+        ],
+        "requiredConcepts": [
+          "test-set-reuse-contamination"
+        ],
+        "sectionId": "selection-feedback"
+      },
+      {
+        "level": "basic",
+        "question": "Training score와 generalization을 구분하세요.",
+        "answerChecklist": [
+          "seen data fit",
+          "unseen same goal",
+          "held-out",
+          "distribution caveat"
+        ],
+        "requiredConcepts": [
+          "generalization"
+        ],
+        "sectionId": "generalization"
+      },
+      {
+        "level": "basic",
+        "question": "Validation loss .4와 train loss .25의 observed gap을 계산하세요.",
+        "answerChecklist": [
+          ".15",
+          "same metric",
+          "diagnostic",
+          "not cause proof"
+        ],
+        "requiredConcepts": [
+          "generalization"
+        ],
+        "sectionId": "generalization"
+      },
+      {
+        "level": "basic",
+        "question": "새 row·새 사람·미래 배포에 맞는 split unit을 구분하세요.",
+        "answerChecklist": [
+          "random candidate",
+          "group",
+          "time",
+          "deployment unit"
+        ],
+        "requiredConcepts": [
+          "train-validation-test",
+          "generalization"
+        ],
+        "sectionId": "next-protocol"
+      },
+      {
+        "level": "advanced",
+        "question": "Validation을 100회 반복 tuning할 때 생기는 selection optimism과 기록 항목을 설명하세요.",
+        "answerChecklist": [
+          "noise selection",
+          "attempt count",
+          "candidate lineage",
+          "frozen rule",
+          "test"
+        ],
+        "requiredConcepts": [
+          "validation-selection-feedback"
+        ],
+        "sectionId": "selection-feedback"
+      },
+      {
+        "level": "advanced",
+        "question": "Test reuse incident의 evidence ledger를 작성하세요.",
+        "answerChecklist": [
+          "first access time",
+          "observed metric",
+          "changes after access",
+          "invalidate final claim",
+          "new holdout"
+        ],
+        "requiredConcepts": [
+          "test-set-reuse-contamination"
+        ],
+        "sectionId": "selection-feedback"
+      },
+      {
+        "level": "advanced",
+        "question": "큰 observed gap의 overfitting·shift·leakage 가설을 분리하는 검사를 설계하세요.",
+        "answerChecklist": [
+          "learning curves",
+          "split distribution",
+          "entity/time overlap",
+          "pipeline parity",
+          "independent slice"
+        ],
+        "requiredConcepts": [
+          "generalization",
+          "train-validation-test"
+        ],
+        "sectionId": "generalization"
+      },
+      {
+        "level": "advanced",
+        "question": "Cross-validation으로 넘길 것과 final test로 남길 것을 구분하세요.",
+        "answerChecklist": [
+          "selection procedure",
+          "fold-local fit",
+          "group/time unit",
+          "untouched final",
+          "no adaptive reuse"
+        ],
+        "requiredConcepts": [
+          "train-validation-test",
+          "validation-selection-feedback",
+          "test-set-reuse-contamination"
+        ],
+        "sectionId": "next-protocol"
+      }
     ],
-    papers: [
-      { title: "The Elements of Statistical Learning · Model Assessment and Selection", href: "https://hastie.su.domains/ElemStatLearn/", problem: "Training error와 generalization error, model selection과 assessment를 구분합니다.", contribution: "Training·validation·test 역할과 bias–variance 관점을 정리합니다.", assumptions: "Statistical learning의 sampling·loss 조건입니다.", evidenceScope: "교과서의 model assessment·selection 원리입니다.", notClaim: "고정 random 비율이 모든 group·time deployment에 맞는다는 뜻은 아닙니다.", sectionId: "paper-train-test" },
-      { title: "Cross-Validation: What Does It Estimate and How Well Does It Do It?", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/", problem: "CV가 특정 fitted model과 learning procedure 중 무엇의 error를 추정하는지 구분합니다.", contribution: "CV estimand와 uncertainty를 분석합니다.", assumptions: "논문의 OLS theorem과 CV construction 조건입니다.", evidenceScope: "논문이 분석한 estimand·coverage 범위입니다.", notClaim: "모든 learner의 finite-sample equality나 독립 test 대체를 보장하지 않습니다.", sectionId: "paper-cv-estimand" },
-    ],
+    "papers": [
+      {
+        "title": "The Elements of Statistical Learning · Model Assessment and Selection",
+        "href": "https://hastie.su.domains/ElemStatLearn/",
+        "problem": "Training error와 generalization error, model selection과 assessment를 구분합니다.",
+        "contribution": "Training·validation·test 역할과 bias–variance 관점을 정리합니다.",
+        "assumptions": "Statistical learning의 sampling·loss 조건입니다.",
+        "evidenceScope": "교과서의 model assessment·selection 원리입니다.",
+        "notClaim": "고정 random 비율이 모든 group·time deployment에 맞는다는 뜻은 아닙니다.",
+        "sectionId": "paper-train-test"
+      },
+      {
+        "title": "Cross-Validation: What Does It Estimate and How Well Does It Do It?",
+        "href": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/",
+        "problem": "CV가 특정 fitted model과 learning procedure 중 무엇의 error를 추정하는지 구분합니다.",
+        "contribution": "CV estimand와 uncertainty를 분석합니다.",
+        "assumptions": "논문의 OLS theorem과 CV construction 조건입니다.",
+        "evidenceScope": "논문이 분석한 estimand·coverage 범위입니다.",
+        "notClaim": "모든 learner의 finite-sample equality나 독립 test 대체를 보장하지 않습니다.",
+        "sectionId": "paper-cv-estimand"
+      }
+    ]
   },
   "ai/image-video-lora-architecture": {
     coreIdea:
@@ -90869,7 +93539,16 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "advanced", question: "ω→0과 ω→∞에서 이상 RC 축전기 출력과 전류는 어떻게 됩니까?", answerChecklist: ["저주파 출력≈입력·전류≈0", "고주파 출력≈0·전류≈입력/R", "이상 모델 경계"], requiredConcepts: ["passive-element-impedance", "impedance-model-boundary"], sectionId: "limits" },
     ],
     papers: [
-      { title: "MIT OpenCourseWare 6.002, Lecture 17, ‘The Impedance Model’ (Fall 2000 자료)", href: "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/66adf4d4611a57b949efa1b00a842a46_6002_l17.pdf", problem: "RC의 한 주파수 반복 응답을 매번 미분 방정식 대신 진폭·위상으로 계산하려고 합니다.", contribution: "4쪽은 1/(1+jωRC)와 크기·위상을, 5–7쪽은 R·C·L 임피던스와 복소 전압 분배를 제시합니다.", assumptions: "한 주파수의 정현파 정상 상태, 선형·집중 소자와 충분히 감쇠한 초기 과도입니다.", evidenceScope: "MIT 공식 강의안 4–7쪽의 식과 도식을 직접 확인했습니다. 5 V·1 kΩ·1 µF와 3.54 V는 본문 가정 계산입니다.", notClaim: "강의안이 이 수치 회로를 실험했거나 시작 직후의 전체 응답이 정상 진폭과 같다는 뜻이 아닙니다.", sectionId: "divider" },
+      {
+        "title": "MIT OpenCourseWare 6.002, Lecture 17, ‘The Impedance Model’ (Fall 2000 자료)",
+        "href": "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/66adf4d4611a57b949efa1b00a842a46_6002_l17.pdf",
+        "problem": "RC의 한 주파수 반복 응답을 매번 미분 방정식 대신 진폭·위상으로 계산하려고 합니다.",
+        "contribution": "4쪽은 1/(1+jωRC)와 크기·위상을, 5–8쪽은 R·C·L 임피던스와 복소 전압 분배를 제시합니다.",
+        "assumptions": "한 주파수의 정현파 정상 상태, 선형·집중 소자와 충분히 감쇠한 초기 과도입니다.",
+        "evidenceScope": "MIT 공식 강의안 4–8쪽의 식과 도식을 직접 확인했습니다. 5 V·1 kΩ·1 µF와 3.54 V는 본문 가정 계산입니다.",
+        "notClaim": "강의안이 이 수치 회로를 실험했거나 시작 직후의 전체 응답이 정상 진폭과 같다는 뜻이 아닙니다.",
+        "sectionId": "divider"
+      },
     ],
   },
   "circuits/frequency-shaping-and-bode": {
