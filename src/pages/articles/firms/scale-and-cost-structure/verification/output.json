@@ -1,0 +1,430 @@
+{
+  "date": "2026-10-05",
+  "scope": "Executed own article model inNode; not original paper code or observations.",
+  "cases": [
+    {
+      "quantity": 5,
+      "rows": [
+        {
+          "id": "A",
+          "label": "바로 가공",
+          "setup": 0,
+          "unit": 10,
+          "total": 50,
+          "average": 10
+        },
+        {
+          "id": "B",
+          "label": "기본 설비",
+          "setup": 60,
+          "unit": 4,
+          "total": 80,
+          "average": 16
+        },
+        {
+          "id": "C",
+          "label": "전용 설비",
+          "setup": 300,
+          "unit": 1,
+          "total": 305,
+          "average": 61
+        }
+      ],
+      "minimum": 50,
+      "minimizers": [
+        "A"
+      ]
+    },
+    {
+      "quantity": 8,
+      "rows": [
+        {
+          "id": "A",
+          "label": "바로 가공",
+          "setup": 0,
+          "unit": 10,
+          "total": 80,
+          "average": 10
+        },
+        {
+          "id": "B",
+          "label": "기본 설비",
+          "setup": 60,
+          "unit": 4,
+          "total": 92,
+          "average": 11.5
+        },
+        {
+          "id": "C",
+          "label": "전용 설비",
+          "setup": 300,
+          "unit": 1,
+          "total": 308,
+          "average": 38.5
+        }
+      ],
+      "minimum": 80,
+      "minimizers": [
+        "A"
+      ]
+    },
+    {
+      "quantity": 10,
+      "rows": [
+        {
+          "id": "A",
+          "label": "바로 가공",
+          "setup": 0,
+          "unit": 10,
+          "total": 100,
+          "average": 10
+        },
+        {
+          "id": "B",
+          "label": "기본 설비",
+          "setup": 60,
+          "unit": 4,
+          "total": 100,
+          "average": 10
+        },
+        {
+          "id": "C",
+          "label": "전용 설비",
+          "setup": 300,
+          "unit": 1,
+          "total": 310,
+          "average": 31
+        }
+      ],
+      "minimum": 100,
+      "minimizers": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "quantity": 11,
+      "rows": [
+        {
+          "id": "A",
+          "label": "바로 가공",
+          "setup": 0,
+          "unit": 10,
+          "total": 110,
+          "average": 10
+        },
+        {
+          "id": "B",
+          "label": "기본 설비",
+          "setup": 60,
+          "unit": 4,
+          "total": 104,
+          "average": 9.454545454545453
+        },
+        {
+          "id": "C",
+          "label": "전용 설비",
+          "setup": 300,
+          "unit": 1,
+          "total": 311,
+          "average": 28.272727272727273
+        }
+      ],
+      "minimum": 104,
+      "minimizers": [
+        "B"
+      ]
+    },
+    {
+      "quantity": 20,
+      "rows": [
+        {
+          "id": "A",
+          "label": "바로 가공",
+          "setup": 0,
+          "unit": 10,
+          "total": 200,
+          "average": 10
+        },
+        {
+          "id": "B",
+          "label": "기본 설비",
+          "setup": 60,
+          "unit": 4,
+          "total": 140,
+          "average": 7
+        },
+        {
+          "id": "C",
+          "label": "전용 설비",
+          "setup": 300,
+          "unit": 1,
+          "total": 320,
+          "average": 16
+        }
+      ],
+      "minimum": 140,
+      "minimizers": [
+        "B"
+      ]
+    },
+    {
+      "quantity": 30,
+      "rows": [
+        {
+          "id": "A",
+          "label": "바로 가공",
+          "setup": 0,
+          "unit": 10,
+          "total": 300,
+          "average": 10
+        },
+        {
+          "id": "B",
+          "label": "기본 설비",
+          "setup": 60,
+          "unit": 4,
+          "total": 180,
+          "average": 6
+        },
+        {
+          "id": "C",
+          "label": "전용 설비",
+          "setup": 300,
+          "unit": 1,
+          "total": 330,
+          "average": 11
+        }
+      ],
+      "minimum": 180,
+      "minimizers": [
+        "B"
+      ]
+    },
+    {
+      "quantity": 50,
+      "rows": [
+        {
+          "id": "A",
+          "label": "바로 가공",
+          "setup": 0,
+          "unit": 10,
+          "total": 500,
+          "average": 10
+        },
+        {
+          "id": "B",
+          "label": "기본 설비",
+          "setup": 60,
+          "unit": 4,
+          "total": 260,
+          "average": 5.2
+        },
+        {
+          "id": "C",
+          "label": "전용 설비",
+          "setup": 300,
+          "unit": 1,
+          "total": 350,
+          "average": 7
+        }
+      ],
+      "minimum": 260,
+      "minimizers": [
+        "B"
+      ]
+    },
+    {
+      "quantity": 79,
+      "rows": [
+        {
+          "id": "A",
+          "label": "바로 가공",
+          "setup": 0,
+          "unit": 10,
+          "total": 790,
+          "average": 10
+        },
+        {
+          "id": "B",
+          "label": "기본 설비",
+          "setup": 60,
+          "unit": 4,
+          "total": 376,
+          "average": 4.759493670886076
+        },
+        {
+          "id": "C",
+          "label": "전용 설비",
+          "setup": 300,
+          "unit": 1,
+          "total": 379,
+          "average": 4.7974683544303796
+        }
+      ],
+      "minimum": 376,
+      "minimizers": [
+        "B"
+      ]
+    },
+    {
+      "quantity": 80,
+      "rows": [
+        {
+          "id": "A",
+          "label": "바로 가공",
+          "setup": 0,
+          "unit": 10,
+          "total": 800,
+          "average": 10
+        },
+        {
+          "id": "B",
+          "label": "기본 설비",
+          "setup": 60,
+          "unit": 4,
+          "total": 380,
+          "average": 4.75
+        },
+        {
+          "id": "C",
+          "label": "전용 설비",
+          "setup": 300,
+          "unit": 1,
+          "total": 380,
+          "average": 4.75
+        }
+      ],
+      "minimum": 380,
+      "minimizers": [
+        "B",
+        "C"
+      ]
+    },
+    {
+      "quantity": 81,
+      "rows": [
+        {
+          "id": "A",
+          "label": "바로 가공",
+          "setup": 0,
+          "unit": 10,
+          "total": 810,
+          "average": 10
+        },
+        {
+          "id": "B",
+          "label": "기본 설비",
+          "setup": 60,
+          "unit": 4,
+          "total": 384,
+          "average": 4.7407407407407405
+        },
+        {
+          "id": "C",
+          "label": "전용 설비",
+          "setup": 300,
+          "unit": 1,
+          "total": 381,
+          "average": 4.703703703703704
+        }
+      ],
+      "minimum": 381,
+      "minimizers": [
+        "C"
+      ]
+    },
+    {
+      "quantity": 90,
+      "rows": [
+        {
+          "id": "A",
+          "label": "바로 가공",
+          "setup": 0,
+          "unit": 10,
+          "total": 900,
+          "average": 10
+        },
+        {
+          "id": "B",
+          "label": "기본 설비",
+          "setup": 60,
+          "unit": 4,
+          "total": 420,
+          "average": 4.666666666666667
+        },
+        {
+          "id": "C",
+          "label": "전용 설비",
+          "setup": 300,
+          "unit": 1,
+          "total": 390,
+          "average": 4.333333333333334
+        }
+      ],
+      "minimum": 390,
+      "minimizers": [
+        "C"
+      ]
+    },
+    {
+      "quantity": 100,
+      "rows": [
+        {
+          "id": "A",
+          "label": "바로 가공",
+          "setup": 0,
+          "unit": 10,
+          "total": 1000,
+          "average": 10
+        },
+        {
+          "id": "B",
+          "label": "기본 설비",
+          "setup": 60,
+          "unit": 4,
+          "total": 460,
+          "average": 4.6
+        },
+        {
+          "id": "C",
+          "label": "전용 설비",
+          "setup": 300,
+          "unit": 1,
+          "total": 400,
+          "average": 4
+        }
+      ],
+      "minimum": 400,
+      "minimizers": [
+        "C"
+      ]
+    }
+  ],
+  "pooling": {
+    "separate": 540,
+    "pooled": 390,
+    "extra60": 450,
+    "extra180": 570
+  },
+  "alternative": {
+    "at9": [
+      90,
+      96,
+      84
+    ],
+    "crossingAC": 8.333333333333334,
+    "crossingBC": 5,
+    "BneverOptimal": "Would require N>=10 andN<=5 together."
+  },
+  "sunk": {
+    "previous60": "irrecoverable; idlecapacity, noopportunity/resale/restartcost assumed",
+    "next5": 20,
+    "alternativeA": 50
+  },
+  "review": {
+    "primary": "Young530539 images; articleownfictionalnumbers",
+    "independent": "PASSnumeric andfullbody; six savings occurrences corrected to perpart sixunits",
+    "limitations": "costestimatesnotempirical;Q100onlygiven50/50partition;upfrontvssunkcostanddemand/pricingconditionspreserved"
+  }
+}

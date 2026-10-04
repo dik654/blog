@@ -1,0 +1,166 @@
+{
+  "pin": "1142dc4c4ecbc19cc16eee5cdd28472e689267e6",
+  "retrieved": "2026-10-05",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "d9cfdfdf548c48712f05c67eb76c79e7c9f45cba78db50794b780e3564b85ef7",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/LICENSE"
+    },
+    {
+      "path": "README.md",
+      "sha256": "ad35fc63e3964624b0566d0bf09591542207736285c691f5b9102fb367a0324f",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/README.md"
+    },
+    {
+      "path": "python-README.md",
+      "sha256": "7ca9edf3dacf456941eb23de2f481b56f9d51229d9ef39398edc1f8bcf863b9c",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/python/README.md"
+    },
+    {
+      "path": "src/dictionary.cc",
+      "sha256": "a147984811c7815f9e3121c5a8242025c5a74ccd788eb8d223265a0ab7f30a87",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/dictionary.cc"
+    },
+    {
+      "path": "src/main.cc",
+      "sha256": "702995b14cbb108367283239a43ed44660aff12bb3854a8582cc593dbf2f9ffb",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/main.cc"
+    },
+    {
+      "path": "src/utils.h",
+      "sha256": "d20f782981630dc077b1402b3d7b58ae549edb3c6c6d1c79acc67f601fccc709",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/utils.h"
+    },
+    {
+      "path": "src/quantmatrix.h",
+      "sha256": "8bea95168e9bf4d69e2cfbd78cfbea207bf4c89f88e33b9514dbf9d7844605e5",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/quantmatrix.h"
+    },
+    {
+      "path": "src/autotune.cc",
+      "sha256": "f1ef03070a3b67972ae8871e7859d3e7f6fabf0e92200c8f64cafd7d62feabd9",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/autotune.cc"
+    },
+    {
+      "path": "src/fasttext.cc",
+      "sha256": "07292cbcec567a10193e8ef2bca265fab6985025bdcfc899c807c98aeb4e4855",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/fasttext.cc"
+    },
+    {
+      "path": "src/utils.cc",
+      "sha256": "49f08a22e590d140526ddb7b24469327fb28f2e78a74def5032c551e9eff5df2",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/utils.cc"
+    },
+    {
+      "path": "src/model.cc",
+      "sha256": "1019cb40ea247f7d19bb6db9277b1dd5d1cd8c5fe6e98f223e0b50eeda3e15d8",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/model.cc"
+    },
+    {
+      "path": "src/loss.cc",
+      "sha256": "5282fb64f6df248b39f373f323c49a83a8ad36c3bbd3cbb1dd680a4c77c09447",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/loss.cc"
+    },
+    {
+      "path": "src/productquantizer.cc",
+      "sha256": "8c26c21398d8b85217250e540f27a6bbb4f59f436c20322794b545abc3058623",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/productquantizer.cc"
+    },
+    {
+      "path": "src/densematrix.h",
+      "sha256": "b79493c2aae55d45fd23d838ad2eaccce3347bfdd6b6f51719cc9196bd45fac1",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/densematrix.h"
+    },
+    {
+      "path": "src/args.cc",
+      "sha256": "34870849cd944a2f89d6f87564b5a1ec897af415121647c8276cd47d2b673603",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/args.cc"
+    },
+    {
+      "path": "src/matrix.h",
+      "sha256": "593ec94fae8419700ac96a7ad3831aada0691bbbaa135cef1b57dc222aeddc20",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/matrix.h"
+    },
+    {
+      "path": "src/productquantizer.h",
+      "sha256": "07b2d58edc4546501ea99d62c3725a7f8cc5d03816b112bb2995a16d4eb8b7ec",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/productquantizer.h"
+    },
+    {
+      "path": "src/meter.h",
+      "sha256": "ad3a0f1a5c419ecd7877ab68bc8a26579e7b148e6c6b35ddf822645fce650cf1",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/meter.h"
+    },
+    {
+      "path": "src/autotune.h",
+      "sha256": "0f111f261f63ed08fa12de222ed75516e504a66069ef2ba9c7edeee53ff2984f",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/autotune.h"
+    },
+    {
+      "path": "src/real.h",
+      "sha256": "064e51f29f457eec18943f1420a51e5e2044e8f9cd683c90e0d22baa9e96218b",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/real.h"
+    },
+    {
+      "path": "src/args.h",
+      "sha256": "235b16135b7869baeb442cc01e55718d26831036852199520b0934631698746e",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/args.h"
+    },
+    {
+      "path": "src/dictionary.h",
+      "sha256": "8d554cc9ec4a40329b39743e2a226ff5ff1ccfa0fc193ac8f002cf7bb49b60c0",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/dictionary.h"
+    },
+    {
+      "path": "src/quantmatrix.cc",
+      "sha256": "070d8e39db7ad99d7d562ec74200361535c566a61ce018e2683c16f53b0903e9",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/quantmatrix.cc"
+    },
+    {
+      "path": "src/model.h",
+      "sha256": "d66e9a0cb1bee9c1e74c25d738ce1ddba927380f98cc22da81eab4486f280c12",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/model.h"
+    },
+    {
+      "path": "src/matrix.cc",
+      "sha256": "a5f8c58d679a15fb0299996c5997dc4a3ef6dfe526543d3a74842810d53f216d",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/matrix.cc"
+    },
+    {
+      "path": "src/vector.h",
+      "sha256": "a3b9ec2b598af05c39747157fd58f94f8527018cd215e70a850edda19182b241",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/vector.h"
+    },
+    {
+      "path": "src/fasttext.h",
+      "sha256": "644996be394531cc9abac5e6bf2edbbb49631f8c8c48b685bd061a1771788a6d",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/fasttext.h"
+    },
+    {
+      "path": "src/meter.cc",
+      "sha256": "7738ea108876ab12619ddfe6a6316707e3e4be19d1ddffbc44ec40f0497c0985",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/meter.cc"
+    },
+    {
+      "path": "src/aligned.h",
+      "sha256": "e7612fa4bf1386a6b2a8d91590a1a06688c682203c92803406342a9d1e61f9d5",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/aligned.h"
+    },
+    {
+      "path": "src/vector.cc",
+      "sha256": "d864f14171e283a670655a2221df0a50a9d8c068c61e7ba78e25412a97958aea",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/vector.cc"
+    },
+    {
+      "path": "src/loss.h",
+      "sha256": "d739ab7583ea2da3519af0fb6bc8893e4cd3fdd553ca91cc41080d4a11e68007",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/loss.h"
+    },
+    {
+      "path": "src/densematrix.cc",
+      "sha256": "e5692b0e0c49dc81022ea31bec42b5ab100e8376d5a57f5ef15b71ebc4ec32cb",
+      "url": "https://raw.githubusercontent.com/facebookresearch/fastText/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/src/densematrix.cc"
+    }
+  ]
+}

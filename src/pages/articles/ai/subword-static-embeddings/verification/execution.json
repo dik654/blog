@@ -1,0 +1,29 @@
+{
+  "compileCommand": [
+    "c++",
+    "-std=c++17",
+    "-O1",
+    "-pthread",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/verification/observe.cc",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/codebase/src/dictionary.cc",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/codebase/src/autotune.cc",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/codebase/src/fasttext.cc",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/codebase/src/utils.cc",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/codebase/src/model.cc",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/codebase/src/loss.cc",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/codebase/src/productquantizer.cc",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/codebase/src/args.cc",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/codebase/src/quantmatrix.cc",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/codebase/src/matrix.cc",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/codebase/src/meter.cc",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/codebase/src/vector.cc",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/subword-static-embeddings/codebase/src/densematrix.cc",
+    "-o",
+    "/tmp/teach-all/subword-research/observe-retained"
+  ],
+  "compileExit": 0,
+  "observerSha256": "65011f8243fa84f31fdb751de8a37f02c63bb64c9dfba3718eff32832daf37f0",
+  "sourceManifest": "../codebase/PROVENANCE.json",
+  "runExit": 0,
+  "sameOutputAsOriginalObservation": true
+}

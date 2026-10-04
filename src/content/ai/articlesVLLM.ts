@@ -1658,16 +1658,98 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "launch-overhead-and-cpu-gpu-synchronization",
-    title: "Launch overhead 는 CPU 의 고정 비용이고 GPU 는 그것을 기다리다 굶습니다",
+    title: "CPU 제출과 GPU 대기: 같은 계산의 두 시간표",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "problem", title: "GPU 가 노는 이유는 CPU 가 아직 안 보내서" },
-      { id: "launch-overhead", title: "Host launch overhead 와 상각" },
-      { id: "submission-pipeline", title: "CPU 제출 병목과 GPU starvation" },
-      { id: "sync-points", title: "동기화 지점이 pipeline 을 비우는 방식" },
-      { id: "graph-replay", title: "Graph replay latency 와 warmup" },
-      { id: "capture-failure", title: "Capture failure 의 세 증상과 진단" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 계산이 빨라도 다음 일을 기다릴 수 있습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 전달한 일과 끝난 일을 따로 기록합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 같은 두 연산을 세 회 반복합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 빈 구간을 보면 기다림의 위치가 보입니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 두 시계를 맞추는 규칙이 필요합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 역할에 CPU와 GPU의 이름을 붙입니다"
+  },
+  {
+    "id": "async-trace",
+    "title": "7. 같은 세 회를 CPU와 GPU에서 추적합니다"
+  },
+  {
+    "id": "waiting-trace",
+    "title": "8. 값을 읽는 위치가 다음 준비를 늦춥니다"
+  },
+  {
+    "id": "graph-comparison",
+    "title": "9. 묶어서 제출해도 남는 비용을 셉니다"
+  },
+  {
+    "id": "finite-and-steady",
+    "title": "10. 첫 완료시간과 반복 간격은 다른 식입니다"
+  },
+  {
+    "id": "measurement",
+    "title": "11. 측정 시작과 끝을 먼저 표시합니다"
+  },
+  {
+    "id": "source-item",
+    "title": "12. 한 값을 읽는 호출은 어디서 기다릴까요?"
+  },
+  {
+    "id": "source-scope",
+    "title": "13. 기다리는 범위와 기다리는 주체를 나눕니다"
+  },
+  {
+    "id": "source-events",
+    "title": "14. wait와 synchronize는 다른 native 함수로 갑니다"
+  },
+  {
+    "id": "source-numpy",
+    "title": "15. CPU가 값을 읽는지 원문 분기로 확인합니다"
+  },
+  {
+    "id": "copy-overlap",
+    "title": "16. 복사를 예약한 것과 복사가 끝난 것은 다릅니다"
+  },
+  {
+    "id": "source-observation",
+    "title": "17. 원문 Python 호출이 어디로 내려가는지 관찰합니다"
+  },
+  {
+    "id": "queue-capacity",
+    "title": "18. 미완료 작업을 몇 회까지 남길지 정합니다"
+  },
+  {
+    "id": "eos",
+    "title": "19. 종료 판정을 늦추면 의미도 바뀔 수 있습니다"
+  },
+  {
+    "id": "replay-diagnosis",
+    "title": "20. 시간이 같아도 같은 경로라는 뜻은 아닙니다"
+  },
+  {
+    "id": "limits",
+    "title": "21. 빈 시간의 원인과 바꿀 비용을 연결합니다"
+  },
+  {
+    "id": "review",
+    "title": "22. 다음 실행을 예측해 봅니다"
+  }
+],
     component: () => import("@/pages/articles/ai/launch-overhead-and-cpu-gpu-synchronization"),
   },
 ];

@@ -1,0 +1,63 @@
+{
+  "python": "3.12.13",
+  "inputFixture": [
+    4,
+    3,
+    5
+  ],
+  "records": [
+    {
+      "observed": {
+        "party": 0,
+        "parties": 3,
+        "threshold": 1,
+        "field": 67,
+        "result": 35,
+        "mpyc": "0.11.2",
+        "ssl": false,
+        "prss": false
+      },
+      "stderr": "",
+      "exitCode": 0
+    },
+    {
+      "observed": {
+        "party": 1,
+        "parties": 3,
+        "threshold": 1,
+        "field": 67,
+        "result": 35,
+        "mpyc": "0.11.2",
+        "ssl": false,
+        "prss": false
+      },
+      "stderr": "",
+      "exitCode": 0
+    },
+    {
+      "observed": {
+        "party": 2,
+        "parties": 3,
+        "threshold": 1,
+        "field": 67,
+        "result": 35,
+        "mpyc": "0.11.2",
+        "ssl": false,
+        "prss": false
+      },
+      "stderr": "",
+      "exitCode": 0
+    }
+  ],
+  "transport": "localhost TCP; SSL disabled",
+  "scope": "Three honest processes using unchanged retained MPyC source.",
+  "notExecuted": [
+    "malicious parties",
+    "crash/restart/dropout",
+    "remote authenticated transport",
+    "DKG or signing",
+    "complete test suite",
+    "benchmark",
+    "security proof"
+  ]
+}

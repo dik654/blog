@@ -1,0 +1,49 @@
+{
+  "python": "3.12.13",
+  "nativeCudaExecuted": false,
+  "sourceSha256": "28d90fd68be59e8dd9a30d230e7df6f61a4b020e6e2da9fa89839691a1cfced5",
+  "unchangedClassNodes": [
+    {
+      "name": "Stream",
+      "first": 17,
+      "last": 133
+    },
+    {
+      "name": "Event",
+      "first": 159,
+      "last": 271
+    }
+  ],
+  "blockingEventOptions": {
+    "enable_timing": false,
+    "blocking": true,
+    "interprocess": false,
+    "external": false
+  },
+  "trace": [
+    [
+      "native_event_record",
+      "B"
+    ],
+    [
+      "native_event_wait",
+      "A"
+    ],
+    [
+      "native_event_record",
+      "A"
+    ],
+    [
+      "native_event_wait",
+      "A"
+    ],
+    [
+      "native_event_synchronize"
+    ],
+    [
+      "native_stream_synchronize",
+      "A"
+    ]
+  ],
+  "scope": "Original Python class bodies with recording native base substitutes; no GPU or timing test."
+}

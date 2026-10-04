@@ -1,0 +1,85 @@
+{
+  "python": "3.12.13",
+  "mpyc": "0.11.2",
+  "shares": [
+    [
+      6,
+      8,
+      10
+    ],
+    [
+      8,
+      13,
+      18
+    ],
+    [
+      8,
+      11,
+      14
+    ]
+  ],
+  "sumShares": [
+    14,
+    21,
+    28
+  ],
+  "productShares": [
+    45,
+    30,
+    57
+  ],
+  "productPolynomial": [
+    35,
+    56,
+    21
+  ],
+  "wrongTwoPointOutput": 60,
+  "weightsMod67": [
+    3,
+    64,
+    1
+  ],
+  "reshareMatrix": [
+    [
+      49,
+      53,
+      57
+    ],
+    [
+      36,
+      42,
+      48
+    ],
+    [
+      65,
+      6,
+      14
+    ]
+  ],
+  "newShares": [
+    37,
+    39,
+    41
+  ],
+  "output": 35,
+  "wrongReshareOutput": 38,
+  "singleShareMarginalChecks": 4489,
+  "freshSlopeOutputs": 67,
+  "dkgAnalogy": {
+    "key": 12,
+    "shares": [
+      22,
+      32,
+      42
+    ],
+    "publicKey": 142,
+    "coefficientCommitment": 196,
+    "publicShares": [
+      125,
+      21,
+      81
+    ]
+  },
+  "scope": "Original split/recombine with a controlled random draw; independent integer checks.",
+  "notClaim": "No complete view simulator, malicious protocol, DKG implementation, entropy or security audit."
+}

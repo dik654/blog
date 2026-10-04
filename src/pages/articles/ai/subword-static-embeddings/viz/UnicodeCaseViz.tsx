@@ -1,0 +1,8 @@
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
+import VizFrame from "@/components/viz/VizFrame";
+const labels=["코드 포인트 하나","코드 포인트 둘","같은 처리 정책"];
+const details=["é를 U+00E9 하나로 표현하면 UTF-8 바이트는 C3 A9입니다. 경계까지 세 문자여서 조각 하나를 만들고 bucket 7의 (7,1)을 반환합니다.","e 뒤에 U+0301을 붙이면 바이트는 65 CC 81입니다. 경계까지 네 문자여서 조각 두 개를 만들고 bucket 1과 3의 평균 (2,1)을 반환합니다.","코드는 두 입력을 자동으로 정규화하지 않습니다. 응용에서 합치기로 정하면 학습과 조회에 같은 정책을 적용하고 기존 행의 호환성을 다시 확인합니다."];
+export default function UnicodeCaseViz(){const a=useAnimatedScenes(3);return <VizFrame eyebrow="실제 원문으로 읽은 가정 표" title="보이는 글자와 저장 바이트" description="코드 포인트 수가 조각의 수를 바꿉니다." note="유효한 UTF-8 입력을 가정합니다. 화면상의 한 글자와 코드 포인트 하나가 항상 같지는 않습니다."><div data-viz-canvas tabIndex={0} role="group" aria-label="두 Unicode 표현 비교" onKeyDown={a.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"><svg viewBox="0 0 320 265" className="mx-auto block w-full max-w-[450px]" role="img" aria-label={details[a.active]}>
+{[["U+00E9","C3 A9","1개 조각","(7,1)"],["e + U+0301","65 CC 81","2개 조각","(2,1)"]].map((r,i)=><g key={i} opacity={a.active===2||a.active===i?1:.25}><rect x={8+i*160} y="20" width="144" height="199" rx="5" stroke="currentColor" fill="none"/>{r.map((s,j)=><text key={j} x={80+i*160} y={52+45*j} textAnchor="middle" fontSize={j===0?14:16} fill="currentColor">{s}</text>)}</g>)}<text x="160" y="252" textAnchor="middle" fontSize="15" fill="currentColor">{a.active===2?"정규화 정책도 같은 버전으로":"바이트가 다르면 주소도 다를 수 있음"}</text>
+</svg><p aria-live="polite" className="min-h-[11rem] text-sm leading-7">{details[a.active]}</p><AnimatedSceneControls {...a} labels={labels}/></div></VizFrame>;}

@@ -1,0 +1,106 @@
+{
+  "checkedAt": "2026-10-05",
+  "project": "PyTorch",
+  "release": "v2.14.0",
+  "files": [
+    {
+      "path": "aten/src/ATen/native/cuda/CUDAScalar.cu",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/aten/src/ATen/native/cuda/CUDAScalar.cu",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "01ec099231f47374e3ae7ce38bc47928fb8dc4a09a572821605b6fb8bd53d520",
+      "bytes": 3099
+    },
+    {
+      "path": "c10/cuda/CUDAFunctions.h",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/c10/cuda/CUDAFunctions.h",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "b84fe3149ae215180b4d6e05c2ff931f0103b4f9f8661bfcd0086a9590ffd4d4",
+      "bytes": 5357
+    },
+    {
+      "path": "torch/cuda/streams.py",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/cuda/streams.py",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "28d90fd68be59e8dd9a30d230e7df6f61a4b020e6e2da9fa89839691a1cfced5",
+      "bytes": 10658
+    },
+    {
+      "path": "torch/cuda/__init__.py",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/cuda/__init__.py",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "792f517e507fc6af48bedaa05a51c3987e35e66181262cac42a672d63f4ca36c",
+      "bytes": 75027
+    },
+    {
+      "path": "torch/csrc/utils/tensor_numpy.cpp",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/csrc/utils/tensor_numpy.cpp",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "e8ae93829b13ca4d106726a377e310a0632ef57faf436cd63c8ee80b1ac7d9b1",
+      "bytes": 19279
+    },
+    {
+      "path": "torch/csrc/cuda/Module.cpp",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/csrc/cuda/Module.cpp",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "bc4037c831f1652fb26ddd2ec007204a185d44e9f8614cf6f301cf83af2ba418",
+      "bytes": 84086
+    },
+    {
+      "path": "docs/source/notes/cuda.md",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/docs/source/notes/cuda.md",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "133ae6298b2696c121a866eeb1e0433c2344fb2d938188b43ebdddea0b09bf8a",
+      "bytes": 79314
+    },
+    {
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/LICENSE",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "bd018feef8825e88181c84eb7e3aa4eafb8f08a20d9fd6ef948569610c4a3e43",
+      "bytes": 3464
+    },
+    {
+      "path": "aten/src/ATen/cuda/CUDAEvent.h",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/aten/src/ATen/cuda/CUDAEvent.h",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "c26a08deab90f0e0c91fd636958315a675c790270a27bb4fe0786e1c532fc354",
+      "bytes": 186
+    },
+    {
+      "path": "c10/cuda/CUDAFunctions.cpp",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/c10/cuda/CUDAFunctions.cpp",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "f4650d75015c6983887cdc5c1873b80fa5b263cc92c6280fccc492e263e03f5d",
+      "bytes": 11849
+    },
+    {
+      "path": "torch/csrc/cuda/Event.cpp",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/csrc/cuda/Event.cpp",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "36d1b55683ccebd809c89d0e6400a67717d577b951c1569685a1064045314640",
+      "bytes": 8808
+    },
+    {
+      "path": "torch/csrc/cuda/Stream.cpp",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/csrc/cuda/Stream.cpp",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "b8fc2824f1f6096ef32c5ae7ac376ac51efe341319dd6beedaccbac662adcfcd",
+      "bytes": 7204
+    },
+    {
+      "path": "c10/cuda/CUDAEvent.h",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/c10/cuda/CUDAEvent.h",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "c629415faa92ff200eec1c534622251ecae5144471196bcdf46897fe253b5676",
+      "bytes": 12576
+    },
+    {
+      "path": "aten/src/ATen/native/Scalar.cpp",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/aten/src/ATen/native/Scalar.cpp",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "sha256": "7c3024a639a6cc601a39071d340c4ff4c6909f3e46d3291c4feb1d0ef4cfe76a",
+      "bytes": 1851
+    }
+  ],
+  "claimScope": "Whole original files are retained byte-for-byte. Excerpts explain selected CUDA branches. No native CUDA execution or timing was performed."
+}

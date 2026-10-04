@@ -4625,7 +4625,7 @@
       "route": "ai/inference-optimization-layers",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/inference-optimization-layers.tsx",
       "publicPath": "cs/ai/inference-optimization-layers",
-      "status": "unreviewed",
+      "status": "reviewed-rewrite-required",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -4643,7 +4643,15 @@
         "browser1440": "pending"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "작성 전6+4·작은 사례·원문 연구·본문/Viz/등록 실질 개선·문체·두 폭 검수"
+      ],
+      "reviewDate": "2026-10-05",
+      "originalDefects": [
+        "실제 본문345행과 Viz·정의5·학습·ownership 검토: 첫 문단에 네 층과 약어를 먼저 도입하며 같은 작은 사례의 unnamed 구조·원문 적용·예측 답 절이 없음.",
+        "100ms 요청의 절감20ms를 배치·겹침 조건 없이 GPU초 및 청구액으로 환산하고 benefit/cost를 ROI로 정의함.",
+        "GEMM 읽기28ms와 계산7ms를 자동 가산하고 최적화 층을 독립 시간 구간으로 귀속함.",
+        "편차의2배를 보편적 검증 문턱으로 주장하고 낮은/높은 batch에서 특정 회귀만 나타난다고 단정함.",
+        "graph의 모든 값 분기 금지·disaggregation의 필연적weight 병목·routing의필수조건 등 타 정본에서 교정한 단정이 남음."
       ]
     },
     {
@@ -4984,7 +4992,7 @@
       "route": "ai/launch-overhead-and-cpu-gpu-synchronization",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/launch-overhead-and-cpu-gpu-synchronization.tsx",
       "publicPath": "cs/ai/launch-overhead-and-cpu-gpu-synchronization",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -4998,23 +5006,205 @@
         "Queue pseudocode can move CPU clock backwards; graph overhead subtraction is not an identifiable host measurement.",
         "No actual pinned implementation panels or fixed case application."
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "initial": 3,
+        "operations": [
+          "+1",
+          "*2"
+        ],
+        "rounds": 3,
+        "S_us": 2,
+        "L_us": 3,
+        "E_us": 2,
+        "G_us": 1,
+        "assumptions": [
+          "제출 완료 뒤에만 GPU 작업을 시작할 수 있다",
+          "단일 GPU stream 순서로 이전 값에 연산한다",
+          "모든 회의 명령과 shape가 미리 알려져 CPU가 이전 GPU 값을 읽지 않아도 다음 제출을 준비한다",
+          "동기화 호출 자체의 추가 비용과 데이터 복사 지연은 기본 시간표에서0으로 둔다",
+          "그래프는 두 커널을 융합하지 않고 제출 비용만 바꾼다"
+        ]
+      },
+      "stageAnchors": {
+        "strategy": "overview",
+        "blackBox": "black-box",
+        "smallCase": "case",
+        "structure": "picture",
+        "necessity": "why",
+        "names": "names",
+        "trace": "async-trace/waiting-trace/graph-comparison/finite-and-steady/measurement",
+        "realSource": "source-item/source-scope/source-events/source-numpy/copy-overlap/source-observation",
+        "limits": "queue-capacity/eos/replay-diagnosis/limits",
+        "prediction": "review · 3개 질문과 답 절"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://developer.nvidia.com/blog/cuda-graphs/",
+          "scope": "V100·CUDA10.1·500,000원소·block512·20 kernel×1,000회의 원문 실험 범위입니다. 2.9 μs는 장치 kernel 시간, 9.6·3.8·3.4 μs는 해당 반복의 전체 시간을 kernel 수로 나눈 값입니다."
+        },
+        {
+          "href": "https://docs.pytorch.org/docs/2.14/notes/cuda.html",
+          "scope": "문서 버전2.14와 원문 v2.14.0을 고정하며 native GPU를 실행한 성능 재현으로 해석하지 않습니다. 본 글은 동작 계약을 보존한 전체 원문과 대조합니다. 수치 시간표는 별도 가정한 동일 계산의 모형입니다."
+        },
+        {
+          "href": "https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/group__CUDART__EVENT.html",
+          "scope": "공식13.4 API 설명과 PyTorch2.14의 Event.cpp·CUDAEvent.h 실제 연결을 함께 읽은 범위입니다. Event.wait의 stream 연결과 Event.synchronize의 host 완료 대기 구분을 뒷받침합니다. A26/B50은 별도 가정입니다."
+        },
+        {
+          "href": "https://docs.pytorch.org/docs/2.14/generated/torch.Tensor.numpy.html",
+          "scope": "원문 tensor_numpy.cpp의 일반 strided tensor 경로와 버전2.14 문서 조건을 대조한 범위입니다. 기본 CUDA 변환이 오류이며 force 경로에는 CPU 변환이 포함됨을 확인합니다. GPU 복사 시간을 직접 측정하지 않았습니다."
+        },
+        {
+          "href": "https://docs.pytorch.org/tutorials/intermediate/pinmem_nonblock.html",
+          "scope": "공식 튜토리얼의 예시 조건을 읽었으며 그 환경의 성능 수치를 다른 장치의 법칙으로 쓰지 않습니다. pin_memory의 host 비용과 비동기 복사 중 메모리 수명 조건을 확인하는 근거입니다. 본문 시간표에는 전송 비용이 없습니다."
+        },
+        {
+          "href": "https://docs.nvidia.com/cuda/cuda-runtime-api/api-sync-behavior.html",
+          "scope": "공식13.4 문서의 각 메모리 종류와 방향 조건을 그대로 구분하며 모든 복사를 같은 경로로 가정하지 않습니다. Pageable host→device staging 뒤 반환 가능성과 Async 호출도 host를 기다리게 할 수 있는 조건을 읽었습니다."
+        },
+        {
+          "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/aten/src/ATen/native/cuda/CUDAScalar.cu",
+          "scope": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+        },
+        {
+          "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/c10/cuda/CUDAFunctions.h",
+          "scope": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+        },
+        {
+          "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/cuda/streams.py",
+          "scope": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+        },
+        {
+          "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/cuda/__init__.py",
+          "scope": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+        },
+        {
+          "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/csrc/utils/tensor_numpy.cpp",
+          "scope": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+        },
+        {
+          "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/csrc/cuda/Module.cpp",
+          "scope": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+        },
+        {
+          "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/docs/source/notes/cuda.md",
+          "scope": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+        },
+        {
+          "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/aten/src/ATen/cuda/CUDAEvent.h",
+          "scope": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+        },
+        {
+          "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/c10/cuda/CUDAFunctions.cpp",
+          "scope": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+        },
+        {
+          "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/csrc/cuda/Event.cpp",
+          "scope": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+        },
+        {
+          "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/csrc/cuda/Stream.cpp",
+          "scope": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+        },
+        {
+          "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/c10/cuda/CUDAEvent.h",
+          "scope": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+        },
+        {
+          "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/aten/src/ATen/native/Scalar.cpp",
+          "scope": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "기존 공개392행 본문과 Viz·학습·정의7개·ownership을 실제 읽고 CPU와 GPU의 같은 여섯 계산을 따라가는22절로 재작성했습니다. 지시 제출과 데이터 사용을 작은 수치로 구별한 뒤 원문 item·event·device·NumPy의 실제 경로와 모형 한계로 연결했습니다.",
+        "factCorrections": [
+          "첫 완료와 장기 간격을 같은 step/TPOT 식으로 설명한 단정을 재귀식과3.005/3.06ms 반례로 교정했습니다.",
+          "동기화하면 graph 이득이 전부 사라진다는 설명을30→21μs와 GPU가바쁜21→21 반례로 교정했습니다.",
+          "Host 호출을 kernel 크기와 무관한 보편상수로 정의하고2019평균차이를 순수CPU시간으로 계산한 본문·definition·learning·edge를 교정했습니다.",
+          "모든 동기화가 장치 전체queue를 비운다는 단정을 stream/event/device범위로 나누고 Event.wait와CPU대기를 구분했습니다.",
+          "CUDA .numpy 기본의 오류와force변환을 구별하고 pinned/non_blocking의자동겹침·즉시버퍼재사용 단정을 교정했습니다.",
+          "Queue상한 알고리즘이CPU시계를과거로되돌리는문제를 max와완료항목제거로 교정했습니다.",
+          "결과판정을늦추면단순히동기화가사라진다는설명을18종료/38추가실행의 부작용·난수·메모리조건으로 교정했습니다.",
+          "성능무변화와GPUkernel수만으로fallback확정·발생빈도단정·외부tensor/모든분기금지를교정했습니다."
+        ],
+        "originalPreservation": "정확한 비동기제출·동기화 위치·기동/반복분리·원문2019수치를 보존했습니다. 기존N300/L5μs/준비1ms/계산2·4ms는첫완료지연을포함해더정확히유도했고 L5/E4의80%는준비없는장기모형범위를명시했습니다. Graph주소/크기/수명구현은직전완료한정본글에연결했습니다.",
+        "numeric": "작성전6+4·3→8→18→38의4시간표·D1/D2·GPU가바쁜반례·큰300kernel모형을 고정했습니다. theory독립Fraction검산과448조합의첫완료식/30회이후간격검사PASS입니다. GPU실측주장은없습니다.",
+        "sourceVerification": "PyTorch전체원문13개와LICENSE1개를고정원격SHA256과바이트대조했습니다. Scalar→CUDA복사→stream대기,PythonEvent→nativeEvent→CUDAAPI,device동기화연결과NumPyforce분기를읽었습니다.원문두classAST를변경없이CPython3.12.13에서실행하되nativebase는호출기록대체객체이므로CUDA동작/시간재현을주장하지않습니다.",
+        "papers": "NVIDIA2019 V100/CUDA10.1의대기위치별평균과초기비용,PyTorch2.14문서·원문,CUDA13.4event/복사반환조건,PyTorch공식pinned/non_blocking튜토리얼의동작범위를실제로읽어대조했습니다.",
+        "humanize": {
+          "paragraphs": 62,
+          "chunks": [
+            3950,
+            3798,
+            3786,
+            230
+          ],
+          "roundTrip": true,
+          "manualReview": "실제추출→바이트동일왕복→전문문체검토에서연결쉼표3개를제거했습니다.실제apply2문단변경·60유지·누락0이며숫자/마커보존입니다.전문/두번째묶음의max(1.06,2)·max(2.5,2)각주오탐은theory가전문읽고독립finalize승인했습니다."
+        },
+        "humanizeProps": {
+          "strings": 135,
+          "chars": 11843,
+          "nestedParagraphs": 19,
+          "roundTrip": true,
+          "gateExit": 0,
+          "manualReview": "본본문추출에서제외한중첩코드/링크19문단과제목·수식설명·용어·도식·코드해설을AST추출/원시slice재삽입왕복후전문으로검토했습니다.최종warmup설명까지포함한3묶음모두gate0이며문체수정0입니다."
+        },
+        "browser390": true,
+        "browser1440": true,
+        "codePanels3901440": 24,
+        "allScenes3901440": true,
+        "firstFifth": "통합본문6절의이름붙이기전비중390=.20085227,1440=.20066985입니다.작업지시와데이터값의차이·두시계·첫빈틈·완료기다림의필요를이름앞에설명했습니다.",
+        "viz": "시간표4장면×2폭에서SVG text bbox오류0·설명가림0·canvasScroll0을확인했습니다.900pxviewport내frame/control·위치변화0,실제7초타이머의2장면전환·Space재생/정지·Arrow키·reduced비활성을검수했습니다.대표모바일/데스크톱과수식PNG도실제로봤습니다.",
+        "browserDevIsolation": "다른글의개발HMR이패널과재생을초기화하는문제를피하려고검수브라우저의localhost5199개발WebSocket만대역연결했습니다.최신페이지초기로드·제품코드·수치·실제타이머·HTTP소스요청은그대로입니다.",
+        "formula": "원일반재귀식과첫완료식을annotatedFormula에보존했고 e0=0을별도행으로분리해390px의3px가로넘침을교정했습니다.양폭수식오류/overflow0·전역1460식explicit주석PASS입니다.",
+        "learning": "기초6/심화4계획과실제본문을맞추고정의7/ownership owns·evidence/full근거19를통합대조했습니다.공유mismatch0,strict실제exit0,양폭10문제및전체정답누락0입니다.",
+        "typescript": "실제 app tsc -p tsconfig.app.json --noEmit 세션37500 종료0입니다.초안의CodeSidebar prop오류를올바른개별props로교정했습니다.이후변경은중첩본문warmup의두문장보충이며root고정전체build는별도입니다.",
+        "prose": "전역799본문문장strict의재검토0,소유diff--check PASS입니다.Viz정적ERROR0의SVG REVIEW6건은모든장면두폭에서검토했습니다."
       },
       "remaining": [
-        "Primary source confirmation, same-case substantive rewrite, source implementation application, humanize, learning registration, browser and actual app TS"
+        "root 고정 snapshot 전체 build·배포 검증"
       ],
       "reviewedAt": "2026-10-04",
       "actualBodyRead": true,
       "reviewReadPaths": [
         "/Users/dylan/code/projects/blog/src/pages/articles/ai/launch-overhead-and-cpu-gpu-synchronization.tsx",
         "associated Viz/source helpers inspected"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/launch-overhead-and-cpu-gpu-synchronization/ModernArticle.tsx",
+      "bodyFiles": [
+        "src/pages/articles/ai/launch-overhead-and-cpu-gpu-synchronization.tsx",
+        "src/pages/articles/ai/launch-overhead-and-cpu-gpu-synchronization/ModernArticle.tsx"
+      ],
+      "sourceFixture": {
+        "project": "PyTorch v2.14.0",
+        "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+        "actualExecution": "원문 Stream/Event class AST 그대로·기록용 native base 대체·CPython3.12.13 실행",
+        "nativeCudaExecuted": false
+      },
+      "contentHash": "c1f29c8d163a7b231d9f2b424caa4cc30c66f21a3e3cf53f397fb71263893f14",
+      "evidenceFiles": [
+        "/tmp/teach-all/launch23/plan-before-body.json",
+        "/tmp/teach-all/launch23/body-before.tsx",
+        "/tmp/teach-all/launch-independent-theory.json",
+        "/tmp/teach-all/launch23/source-final.json",
+        "/tmp/teach-all/launch23/shared-verification.json",
+        "/tmp/teach-all/launch23/learning-final.log",
+        "/tmp/teach-all/launch23/tsc-final.log",
+        "/tmp/teach-all/launch23/prose-final.log",
+        "/tmp/teach-all/launch23/formula-final.log",
+        "/tmp/teach-all/launch23/viz.log",
+        "/tmp/teach-all/launch23/browser.log",
+        "/tmp/teach-all/launch23/screens/panels.json",
+        "/tmp/teach-all/launch23/screens/scenes.json",
+        "/tmp/teach-all/launch23/screens/layout.json",
+        "/tmp/teach-all/launch23/integrated-dom.json",
+        "/tmp/teach-all/launch23/playback.json",
+        "/tmp/teach-all/humanize-ai-systems-23/gate.txt",
+        "/tmp/teach-all/humanize-ai-systems-23/independent-finalize.md",
+        "/tmp/teach-all/humanize-ai-systems-23/roundtrip.json",
+        "/tmp/teach-all/humanize-ai-systems-23/apply.log",
+        "/tmp/teach-all/humanize-ai-systems-23-props/gate.txt"
       ]
     },
     {
@@ -9692,23 +9882,23 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 47,
-    "unreviewed": 137,
+    "rewritten-local-verified": 48,
+    "unreviewed": 136,
     "reviewed-rewrite-required": 2
   },
   "localValidationSummary": {
-    "rewritten": 47,
-    "remainingUnreviewed": 137,
+    "rewritten": 48,
+    "remainingUnreviewed": 136,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
-    "learningStrict": "/tmp/teach-all/graphs22/learning-final.log — 정확6+4 strict 실제exit0·공유mismatch0",
-    "formulaStrict": "/tmp/teach-all/graphs22/formula-final.log — 전역1456식explicitPASS·본글3식양폭overflow0",
-    "typescript": "/tmp/teach-all/graphs22/tsc-final.log — actual app tsc세션72579실제exit0; root고정전체build별도",
-    "note": "현재 47편은 실제 본문·원문·산술·문체·두 폭을 검수한 local-verified입니다. 미검토 137편과 재작성 필요 2편은 완료에 포함하지 않습니다. root 고정 snapshot build는 별도입니다.",
+    "learningStrict": "/tmp/teach-all/launch23/learning-final.log — 정확6+4 strict 실제exit0·공유mismatch0",
+    "formulaStrict": "/tmp/teach-all/launch23/formula-final.log — 전역1460식explicitPASS·본글1식양폭overflow0",
+    "typescript": "/tmp/teach-all/launch23/tsc-final.log — actual app tsc세션37500실제exit0; root고정전체build별도",
+    "note": "현재 48편은 local-verified입니다. 미검토 136편과 재작성 필요 2편은 완료에 포함하지 않습니다. 고정 snapshot build는 root 별도 검증입니다.",
     "reviewedRewriteRequired": 2,
-    "verifiedRewrites": 47,
-    "rewrittenLocalVerified": 47,
-    "unreviewed": 137
+    "verifiedRewrites": 48,
+    "rewrittenLocalVerified": 48,
+    "unreviewed": 136
   }
 }

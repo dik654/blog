@@ -1,0 +1,10 @@
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
+import VizFrame from "@/components/viz/VizFrame";
+const labels=["run","runs","같은 주소 두 번"];
+const details=["전용 (8,0)과 세 조각의 (2,1), (2,1), (4,1)을 더하면 (16,3)입니다. 네 항의 평균은 (4,0.75)입니다.","전용 줄이 없는 runs는 네 조각을 읽습니다. (2,1), (2,1), (3,1), (0,1)의 합은 (7,4)이고 평균은 (1.75,1)입니다.","서로 다른 조각 <ru와 run이 같은 2번 줄을 가리킵니다. 두 항을 모두 세므로 같은 저장 값이 두 번 기여합니다."];
+export default function CompositionCaseViz(){const a=useAnimatedScenes(3);const isRuns=a.active===1;const names=isRuns?["<ru","run","uns","ns>"]:["전용","<ru","run","un>"];const values=isRuns?["(2,1)","(2,1)","(3,1)","(0,1)"]:["(8,0)","(2,1)","(2,1)","(4,1)"];return <VizFrame eyebrow="같은 가정의 네 기여" title="저장 장소와 읽는 횟수" description="같은 줄을 가리키는 두 항을 지우지 않습니다." note="여덟 조각 행과 임의의 두 좌표로 만든 설명용 사례입니다."><div data-viz-canvas tabIndex={0} role="group" aria-label="단어별 행 읽기" onKeyDown={a.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"><svg viewBox="0 0 320 250" className="mx-auto block w-full max-w-[450px]" role="img" aria-label={details[a.active]}>
+<text x="160" y="26" textAnchor="middle" fontSize="20" fill="currentColor">{isRuns?"runs":"run"}</text>
+{names.map((name,i)=><g key={i}><rect x={6+80*i} y="53" width="68" height="75" rx="4" stroke="currentColor" fill="currentColor" fillOpacity={a.active===2&&(i===1||i===2)?.16:.035}/><text x={40+80*i} y="81" textAnchor="middle" fontSize="16" fill="currentColor">{name}</text><text x={40+80*i} y="112" textAnchor="middle" fontSize="14" fill="currentColor">{values[i]}</text><path d={"M"+(40+80*i)+" 132 V148 H160 V168"} stroke="currentColor" fill="none"/></g>)}
+<text x="160" y="193" textAnchor="middle" fontSize="17" fill="currentColor">합 {isRuns?"(7,4)":"(16,3)"} ÷ 4</text><text x="160" y="229" textAnchor="middle" fontSize="19" fill="currentColor">{isRuns?"(1.75,1)":"(4,0.75)"}</text>
+</svg><p aria-live="polite" className="min-h-[10rem] text-sm leading-7">{details[a.active]}</p><AnimatedSceneControls {...a} labels={labels}/></div></VizFrame>;}

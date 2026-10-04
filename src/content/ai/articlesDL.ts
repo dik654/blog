@@ -2077,26 +2077,170 @@ export const dlFoundationArticles: Article[] = [
   },
   {
     slug: "word2vec-negative-sampling",
-    title: "Word2Vec Negative Sampling: Pair Discrimination과 Update",
+    title: "Word2Vec 음수 표본 추출: 세 번의 비교가 바꾸는 두 표",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "Full softmax에서 sampled pair로" },
-      { id: "sgns", title: "Positive·noise logistic loss" },
-      { id: "noise", title: "Noise distribution과 k" },
-      { id: "subsampling", title: "고빈도 token을 덜 보기" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 한 번의 관찰에서 모든 단어를 비교해야 할까요"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 문장과 추첨표가 서로 다른 일을 맡습니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 같은 다섯 단어에서 세 번만 비교합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 관찰 한 건에 비교 두 건을 붙입니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 계산을 줄이면 묻는 질문도 바뀝니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 이제 각 역할의 이름을 붙입니다"
+  },
+  {
+    "id": "sgns",
+    "title": "7. 세 점수를 하나의 손실로 모읍니다"
+  },
+  {
+    "id": "gradient",
+    "title": "8. 오차를 두 표의 해당 행으로 돌려줍니다"
+  },
+  {
+    "id": "noise",
+    "title": "9. 자주 나온 단어를 얼마나 자주 뽑을까요"
+  },
+  {
+    "id": "count-prior",
+    "title": "10. 뽑는 개수는 학습의 비중도 바꿉니다"
+  },
+  {
+    "id": "duplicates",
+    "title": "11. 같은 단어가 다시 뽑히면 어떻게 될까요"
+  },
+  {
+    "id": "subsampling",
+    "title": "12. 문장을 먼저 줄이면 이웃부터 달라집니다"
+  },
+  {
+    "id": "paper-negative-sampling",
+    "title": "13. 논문의 식과 보고된 실험을 구별합니다"
+  },
+  {
+    "id": "source-noise",
+    "title": "14. 실제 C 코드의 추첨표를 만듭니다"
+  },
+  {
+    "id": "source-update",
+    "title": "15. 같은 세 비교를 원본 갱신으로 실행합니다"
+  },
+  {
+    "id": "source-policy",
+    "title": "16. 중복 네 번과 건너뛴 한 번을 추적합니다"
+  },
+  {
+    "id": "source-filter",
+    "title": "17. 원본은 다섯 단어 중 두 개를 남깁니다"
+  },
+  {
+    "id": "limits",
+    "title": "18. 같은 실행과 좋은 표현을 따로 확인합니다"
+  },
+  {
+    "id": "review",
+    "title": "19. 다음 결과를 예측해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/word2vec-negative-sampling"),
   },
   {
     slug: "subword-static-embeddings",
-    title: "Subword Static Embeddings: fastText에서 Release까지",
+    title: "fastText 부분 문자열 임베딩: 처음 보는 단어를 철자 조각으로 계산하기",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "Word row의 OOV 경계" },
-      { id: "ngrams", title: "Character n-gram 합" },
-      { id: "static-contextual", title: "Static과 contextual" },
-      { id: "release", title: "Vocabulary·matrix artifact" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 배운 적 없는 runs에도 숫자를 붙일 수 있을까요"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 문자열을 조각으로 바꾸고 저장된 줄을 읽습니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 세 글자씩 잘라 네 번의 기여를 셉니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 두 단어가 일부 저장 줄을 함께 사용합니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 철자의 반복을 공유하면 없는 단어에도 계산 경로가 생깁니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 이미 본 조각과 저장 주소에 이름을 붙입니다"
+  },
+  {
+    "id": "ngrams",
+    "title": "7. 합과 평균을 식으로 구분합니다"
+  },
+  {
+    "id": "collisions",
+    "title": "8. 겹친 주소와 반복된 조각은 모두 횟수를 남깁니다"
+  },
+  {
+    "id": "static-contextual",
+    "title": "9. 문맥은 바뀌어도 같은 조회 함수의 답은 같습니다"
+  },
+  {
+    "id": "paper-fasttext",
+    "title": "10. 논문의 합 점수에 같은 네 기여를 넣습니다"
+  },
+  {
+    "id": "source-rows",
+    "title": "11. 원문이 run에는 전용 번호를 붙이고 runs에는 붙이지 않습니다"
+  },
+  {
+    "id": "source-hash",
+    "title": "12. 실제 바이트 계산이 2번과 2번을 만듭니다"
+  },
+  {
+    "id": "source-vector",
+    "title": "13. 원래 조회 함수를 실행하면 합을 네 번으로 나눕니다"
+  },
+  {
+    "id": "source-update",
+    "title": "14. 평균으로 읽은 뒤 고칠 때의 배율도 확인합니다"
+  },
+  {
+    "id": "unicode",
+    "title": "15. 눈에 같은 글자도 두 바이트열이면 다른 답을 냅니다"
+  },
+  {
+    "id": "release",
+    "title": "16. 문자열에서 행으로 가는 규칙까지 함께 배포합니다"
+  },
+  {
+    "id": "evaluation",
+    "title": "17. 없는 단어를 처리한 비율과 잘 처리한 정도를 나눠 봅니다"
+  },
+  {
+    "id": "limits",
+    "title": "18. 숫자를 반환하는 기능의 경계를 확인합니다"
+  },
+  {
+    "id": "review",
+    "title": "19. 다음 입력의 경로를 먼저 예상해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/subword-static-embeddings"),
   },
 ];

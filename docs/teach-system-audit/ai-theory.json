@@ -7519,14 +7519,16 @@
     },
     {
       "route": "ai/subword-static-embeddings",
-      "title": "Subword Static Embeddings: fastText에서 Release까지",
+      "title": "fastText 부분 문자열 임베딩: 처음 보는 단어를 철자 조각으로 계산하기",
       "subcategory": "ai-foundations",
       "publicFiles": [
         "src/pages/articles/ai/subword-static-embeddings.tsx",
         "src/pages/articles/ai/subword-static-embeddings/ModernArticle.tsx",
-        "src/pages/articles/ai/word2vec/viz/ModernWord2VecViz.tsx"
+        "src/pages/articles/ai/subword-static-embeddings/viz/CompositionCaseViz.tsx",
+        "src/pages/articles/ai/subword-static-embeddings/viz/UnicodeCaseViz.tsx",
+        "src/pages/articles/ai/subword-static-embeddings/codeRefs.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -7534,20 +7536,142 @@
         "hasSourceSurface": true,
         "characters": 6348
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Terminology precedes concrete example",
+        "No actual numerical row trace or real pinned source",
+        "Sum described as universal returned vector although fixed getWordVector averages",
+        "Ngram set wording hides repeated substring occurrences and hash collisions",
+        "Unicode character/bucket identity and manifest requirements have no executable counterexample"
+      ],
+      "fixture": {
+        "assumption": true,
+        "word": "run",
+        "oov": "runs",
+        "nwords": 3,
+        "dim": 2,
+        "bucket": 8,
+        "minn": 3,
+        "maxn": 3,
+        "wordRow": [
+          8,
+          0
+        ],
+        "bucketRowRule": "b -> (b,1)",
+        "runPieces": [
+          "<ru",
+          "run",
+          "un>"
+        ],
+        "runHashes": [
+          1467166842,
+          718098122,
+          2161437548
+        ],
+        "runBuckets": [
+          2,
+          2,
+          4
+        ],
+        "runSum": [
+          16,
+          3
+        ],
+        "runMean": [
+          4,
+          0.75
+        ],
+        "runsPieces": [
+          "<ru",
+          "run",
+          "uns",
+          "ns>"
+        ],
+        "runsBuckets": [
+          2,
+          2,
+          3,
+          0
+        ],
+        "runsSum": [
+          7,
+          4
+        ],
+        "runsMean": [
+          1.75,
+          1
+        ],
+        "repeatWord": "aaaa",
+        "repeatBuckets": [
+          5,
+          2,
+          2,
+          3
+        ],
+        "repeatMean": [
+          3,
+          1
+        ]
+      },
+      "stageAnchors": {
+        "overview": "1 same run/runs lookup target",
+        "black-box": "2 fixed string->two numbers",
+        "case": "3 rows and three-character windows",
+        "picture": "4 same run/runs four contributions",
+        "why": "5 sharing versus independent word lookup",
+        "names": "6 delayed OOV/ngram/hash",
+        "ngrams": "7 general sum and mean with same numbers",
+        "collisions": "8 duplicates and shared gradients",
+        "static-contextual": "9 same string across contexts; sum vs cosine",
+        "paper-fasttext": "10 original paper137 sum score and memory choice",
+        "source-rows": "11 actual dictionary known/OOV + repeated indices",
+        "source-hash": "12 actual signed byte hash and UTF-8 windows",
+        "source-vector": "13 actual getWordVector native average and zero case",
+        "source-update": "14 actual mean and update scaling",
+        "unicode": "15 normalization counterexample",
+        "release": "16 identity manifest and bin/vec boundaries",
+        "evaluation": "17 coverage and quality evidence",
+        "limits": "18 unsupported assumptions and changes",
+        "review": "19 predictions"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "Bojanowski et al. TACL 2017 Q17-1010, printed p137 §3.2 and §4.2–4.3",
+          "anchor": "paper-fasttext",
+          "application": "실제 PDF 화면과 본문을 읽고 같은 run 행의 합 (16,3)을 논문 점수에 대입했습니다. 고정 API가 돌려주는 평균 (4,.75)과 구별하고 내적·cosine의 배율 조건을 설명했습니다."
+        },
+        {
+          "source": "facebookresearch/fastText 1142dc4c4ecbc19cc16eee5cdd28472e689267e6",
+          "anchor": "source-rows/source-hash/source-vector/source-update",
+          "application": "32개 원본 파일을 원격 Git blob 및 SHA256과 대조했습니다. 수정하지 않은 C++ 원본을 컴파일하고 저자 작성 observer에서 Dictionary/getSubwords/FastText.loadModel/getWordVector/Model.update를 실행했습니다. 같은 run/runs/aaaa와 두 Unicode 표현, bucket 변경, 별도 softmax 한 걸음의 float32 반복행 갱신을 추적했습니다. 전체 학습·품질·속도 실험과 구별했습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Existing full body, fixed rendered baseline, shared visualization, old6+4,2definitions and ownership read; new plan and6+4 fixed before body at /tmp/teach-all/subword-plan-before-body.json.",
+        "humanize": "본문 66문단 11568자와 3묶음 모두 실제 추출·왕복·prepare·gate·apply 완료. 첫 패스 연결 쉼표 한 곳과 소유 표현 한 곳을 고쳤으며 수치·마커 보존. 본문/props/code gate0. 두 Viz 및 최종 등록 122문자열 3묶음의 좌표 각주 오탐은 systems가 전문·diff·숫자·마커를 읽고 independent-finalize.md 승인. subword-registration-humanize-independent-systems.json.",
+        "numericTrace": "subword-independent-systems.json 및 subword-update-independent-systems.json: signed-byte FNV, 코드 포인트 창, 중복 기여, 평균, 메모리 수치와 float32 grad .003533691167831421/반복행 delta .007067203521728516 독립 검산 PASS.",
+        "mobile390": "output/playwright/teach-ai-theory-subword/subword.json: 19절·3예측·10원문 패널·두 Viz 각3장면, 용어 첫 위치25.8%, 수식7개 내부 경계, 모든 앵커·KaTeX·콘솔·넘침 PASS. 두 모바일 도식 이미지 직접 읽기 완료.",
+        "desktop1440": "동일 검수 PASS. 모든 도식 장면의 SVG 경계·높이 유지·키보드·재생/정지·reduced 모션 확인. 의도한 Framer reduced 안내만 별도 기록.",
+        "primarySources": "subword-source-final.json: 원본 32개 파일의 Git blob 및 SHA256 일치. codebase/PROVENANCE.json에 고정 버전·경로·라이선스 보존.",
+        "nativeExecution": "verification/execution.json: 보존한 observe.cc를 원본 라이브러리와 실제 재컴파일 exit0, 실행 exit0, 첫 관찰 로그와 출력 동일. 컴파일 경고 보존; 실행 바이너리는 저장하지 않음.",
+        "typecheck": "subword-tsc1.log actual app TS exit0.",
+        "formula": "subword-formula1.log 1460/1460 명시 주석 PASS; 일반식과 같은 사례의 수치가 실제 표시 식에 함께 있으며 두 폭 내부 경계 PASS.",
+        "prose": "subword-prose1.log 전역799편 재검토0.",
+        "viz": "subword-viz1.log ERROR0; 수동 SVG 신호는 실제 장면별 화면 검수로 확인.",
+        "learningAnswers": "ai-theory-learning-answer-review-subword.json: 기존 10개 학습 결과 보존/확장과 새 6+4의 본문 답 절 대조.",
+        "learning": "subword-integrated-learning.log strict actual exit0; subword-integrated-readback.json 10개 필드 일치; subword-exercises-dom.json 실제 10문항과 답·앵커 PASS.",
+        "metadata": "subword-metadata-readback.json 11개 정의/canonical/ownership/edge 필드 일치. root가 최종 제목과 UTF-8 바이트 순회·코드 포인트 길이의 evidence 교정까지 통합.",
+        "integration": "subword-browser-integrated.log: 최종 root 공유 등록 뒤 두 폭 전체 검수 PASS. 독립 검토 보완점 모두 해결."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+        "root 전역 build와 게시 검증"
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/subword-static-embeddings.tsx": "07fe66d858d3769c8f552f2398a94b326e9d2a4724f9251204d0c1fbe94ad45f",
+        "src/pages/articles/ai/subword-static-embeddings/ModernArticle.tsx": "1eb2e2786017ff3e60b81ddd8861dc5ba005d5e56245b5dcb413602ce721f03e",
+        "src/pages/articles/ai/subword-static-embeddings/viz/CompositionCaseViz.tsx": "c3f9c108c9a07a6a8ff80dfe8ed6a4f7af765660ac93f760e8a834e8ed30328d",
+        "src/pages/articles/ai/subword-static-embeddings/viz/UnicodeCaseViz.tsx": "edbc9cdb0709398827dc5893fcd8190054f34ba41ca975c5ee379531b7ea7057",
+        "src/pages/articles/ai/subword-static-embeddings/codeRefs.ts": "c05257ed06da46854e1a067922fd315b0aed3135734f37ec5e349bea9c70e4a0"
+      }
     },
     {
       "route": "ai/supervised-contrastive-learning",
@@ -8666,14 +8790,16 @@
     },
     {
       "route": "ai/word2vec-negative-sampling",
-      "title": "Word2Vec Negative Sampling: Pair Discrimination과 Update",
+      "title": "Word2Vec 음수 표본 추출: 세 번의 비교가 바꾸는 두 표",
       "subcategory": "ai-foundations",
       "publicFiles": [
         "src/pages/articles/ai/word2vec-negative-sampling.tsx",
         "src/pages/articles/ai/word2vec-negative-sampling/ModernArticle.tsx",
-        "src/pages/articles/ai/word2vec/viz/ModernWord2VecViz.tsx"
+        "src/pages/articles/ai/word2vec-negative-sampling/viz/SamplingCaseViz.tsx",
+        "src/pages/articles/ai/word2vec-negative-sampling/viz/FilterCaseViz.tsx",
+        "src/pages/articles/ai/word2vec-negative-sampling/codeRefs.ts"
       ],
-      "status": "body-reviewed-needs-rewrite",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8845,19 +8971,46 @@
           "review"
         ]
       },
-      "primarySourceApplication": [],
+      "primarySourceApplication": [
+        {
+          "source": "Mikolov 1310.4546v1 §2.2–2.3 Eq4–5, Table1",
+          "anchor": "paper-negative-sampling",
+          "application": "같은 세 점수1을 식4의 특정 표본에 대입해 손실2.939785를 구하고 기대목적과 구별합니다. 식5의 제거.9/유지.1을 원본C의 유지비교값.11과 대조합니다. 원문PDF4쪽 이미지와3–5쪽 텍스트·공식HTML 대조."
+        },
+        {
+          "source": "tmikolov/word2vec 20c129af, full word2vec.c/license",
+          "anchor": "source-noise/source-update/source-policy/source-filter",
+          "application": "실제 원본 InitUnigramTable, 바이트 동일한521–542/408–414블록을 저자 작성 제한호출에서 native CPU실행. seed43의red/dog·근사표581·실제입력갱신, seed0의중복4·정답제외,5위치의red cat남김을 확인. 전체TrainModelThread·품질·시간벤치 실행 주장은 없음."
+        }
+      ],
       "verification": {
         "contentReview": "기존 ModernArticle·baseline·NegativeSamplingViz 전문과 기초 6개·심화 4개, 개념 정의 3개와 ownership을 모두 읽었습니다. /tmp/teach-all/sgns-plan-before-body.json에 새 본문을 쓰기 전 질문과 같은 사례를 고정했습니다.",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "humanize": "humanize-ai-theory-sgns-verified/word2vec-negative-sampling--ModernArticle: 실제62문단11348자 extract→roundtrip→prepare→gate→apply;최신추가수정0. 첫패스A-7한곳, 이후 행수로 오해할 표현을 행당원소3개로 교정. 전문/3묶음 중 수식σ(1)각주 오탐은 systems가전문·숫자·마커·전체diff를 읽고 각경로independent-finalize 승인. 별도 props/Viz/code 전묶음gate0,학습등표시124문자열3묶음gate0 및 JSON재삽입동일.",
+        "numericTrace": "sgns-independent-systems.json(.py) 이상손실·기울기·LCG/제거·q/k검산PASS. verification/observe.py 실제CPU실행 run.log/source-scope 보존. 생성실행파일은저장하지않음.",
+        "mobile390": "output/playwright/teach-ai-theory-sgns/sgns.json:19절·3예측·8패널·두Viz각3장면·첫이름20.83%·콘솔/KaTeX/overflow/narrow/깨진anchor/수식내부좌우경계 모두PASS. 실제두모바일이미지직접읽기.",
+        "desktop1440": "동일PASS. 모든장면SVG경계0·높이불변·키보드/Space재생정지·reduced동작확인. 의도한 Framer reduced 안내만별도기록.",
+        "planning": "/tmp/teach-all/sgns-plan-before-body.json: 기존 전문/공유Viz/6+4/정의3/ownership 읽기 후 새본문 전19절·같은 사례·6+4 고정.",
+        "contentPeerReview": "sgns-source-independent-systems.json: 실제14–17절·원문·observe.py/C·run.log/scope 독립대조PASS. 두 원문블록바이트와SHA동일,표histogram으로표본열도독립검산.",
+        "primarySources": "sgns-source-final.json 원문/라이선스2파일 고정원격byte동일. codebase/PROVENANCE.json에pin·URL·hash보존.",
+        "typecheck": "sgns-tsc1.log actual app tsc exit0. 이후변경은문장·수식표시값과코드줄주석범위.",
+        "formula": "sgns-formula-final.log 전역명시주석PASS;실제표시식7개의일반식/사례/operations대응및양쪽폭KaTeX검수PASS.",
+        "prose": "sgns-prose-final.log 전역799편재검토0.",
+        "viz": "sgns-viz1.log ERROR0;SVG텍스트신호는실제모든장면경계검수로확인.",
+        "learningAnswers": "ai-theory-learning-answer-review-sgns.json:기존10문항결과를같은사례와정확한원문조건으로보존·확장;최종10문항의본문답절대조.",
+        "learning": "sgns26-integrated-learning.log root strict actual exit0; sgns-integrated-readback.json actual learning10 equal; sgns-exercises-dom.json all ten questions/checklists/answer anchors PASS.",
+        "metadata": "sgns-metadata-readback.json all14 actual definition/canonical/ownership/edge fields equal proposal; full26 integrated.",
+        "integration": "root shared registration complete; sgns-browser-integrated.log actual exit0 with390/1440 first terminology20% gate,8panels each,2Viz each3scenes,formula innerbounds and normal console pass."
       },
       "remaining": [
-        "19절 실제 본문과 고유 그림·원문 패널",
-        "문장·수치·화면 검수",
-        "공유 학습/개념/목차 통합"
-      ]
+        "root 전역 build와 게시 검증"
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/word2vec-negative-sampling.tsx": "3afebd9ec9c8fe9e6d88f53e7e50d7505757b969f9ba1d4465b58167d4abde9b",
+        "src/pages/articles/ai/word2vec-negative-sampling/ModernArticle.tsx": "072731789b8c823ac236ef3f80c7b2df192e57e4a9bb274201b90a03746111d3",
+        "src/pages/articles/ai/word2vec-negative-sampling/viz/SamplingCaseViz.tsx": "c7fe119eb824623758a29cc8b16ac932b9cc7a1e5773e11364f0ee97585dbe8c",
+        "src/pages/articles/ai/word2vec-negative-sampling/viz/FilterCaseViz.tsx": "4a3728ac34fa3eb4ac670868754773733dd3e742f610f7e1d60607e4a744b879",
+        "src/pages/articles/ai/word2vec-negative-sampling/codeRefs.ts": "285c6633e460df732135c180fb93078637b9017f1f0a61a8fcaa2c5027909505"
+      }
     },
     {
       "route": "ai/word2vec-prediction-objectives",
@@ -9290,14 +9443,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 32,
+    "rewritten": 34,
     "existingTeachTargetedRepairs": 3,
-    "reviewedAndImproved": 35,
-    "localVerified": 35,
+    "reviewedAndImproved": 37,
+    "localVerified": 37,
     "awaitingIntegration": 0,
-    "pending": 153,
+    "pending": 152,
     "complete": 0,
-    "bodyReviewedNeedsRewrite": 1,
-    "bodyReviewedTotal": 36
+    "bodyReviewedNeedsRewrite": 0,
+    "bodyReviewedTotal": 37
   }
 }

@@ -192,7 +192,7 @@
   "reviewed": 184,
   "remaining": 615,
   "goalComplete": false,
-  "deployed": false,
+  "deployed": true,
   "disposition": "145 substantive rewrites and39 retained teaching flows after actual body audit.",
   "validation": {
     "learning": "PASS799 public contracts; strict require-registration; actualexit0",
@@ -210,5 +210,12 @@
     "snapshot": "9323 indexedsource/configfiles verifiedagainstgitblobSHA. Isolatedreal.tmp/.vite. SGNS/MPC/launch-overhead/scale nextdraftsexcluded.",
     "upstreamIntegrity": "Paillier all8 source/license bytes match recordedSHA256, includingfileswithupstreamwhitespace.",
     "cacheCleanup": "The first184localcommit included5 generatedCPythonbytecodefiles fromverification. Removedbeforepush in separatecleanupcommit andignorefuture__pycache__/pyc. Remainingindexedfiles9318; noarticle/buildinputbehaviorchanged."
+  },
+  "deployment": {
+    "commit": "f92d9f6172d294bde6b344a7bb0caebc94745d8c",
+    "action": 37213053758,
+    "status": "success",
+    "production": "7 new routes at390/1440;14 views;0failed",
+    "report": "docs/teach-system-audit/checkpoint-184-production.json"
   }
 }

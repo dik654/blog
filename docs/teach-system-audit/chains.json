@@ -7502,7 +7502,7 @@
     {
       "route": "crypto/groth16",
       "title": "Groth16 증명 시스템",
-      "status": "unreviewed",
+      "status": "reviewed-needs-rewrite",
       "publicEntry": "src/pages/articles/blockchain/groth16.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/groth16.tsx",
@@ -7520,12 +7520,17 @@
           "세 점이라는 크기와 end-to-end 비용을 구분한다"
         ]
       },
-      "issues": [],
+      "issues": [
+        "기존 실제 본문 4절 전문, 공개 baseline, 5개 정본 정의와 6+4 및 ownership을 읽었습니다. 첫 사례 3×4=12 뒤에 용어·CRS·증명 기호를 먼저 나열하고 같은 계산의 행·다항식·원문 추적이 없습니다.",
+        "정확한 다항식 나눗셈의 수식 주석을 기준량 정규화라고 잘못 설명하며 검증식에도 의미 없는 자동 문구가 있습니다. 일반 수식·CRS·비용·모델 조건은 보존하고 구체적 유도로 교정합니다.",
+        "단일 행의 h=0 사례를 보존하고 3×4=12, 12²=144의 두 행으로 확장해 비영 몫을 보여줄 계획입니다. 공개값 자체가 숨긴 값의 후보를 줄이는 점과 정수/유한체 차이를 명시합니다.",
+        "최신 v0.6.0 태그의 원문을 실제 조회했습니다. prepare_inputs의 zip에는 길이 검사가 없고 prover의 만족 검사는 debug_assert입니다. 고정 원문 실제 실행으로 API 동작과 호출자 검사를 구별할 예정입니다."
+      ],
       "fixture": null,
       "stageEvidence": {},
       "sourceEvidence": [],
       "verification": {
-        "substantiveReading": "pending",
+        "substantiveReading": "기존 공개 전문·baseline·5정의·6+4·ownership 검토 완료; 재작성 계획과 원문 검증 중",
         "arithmetic": "pending",
         "humanize": "pending",
         "browser390": "pending",
@@ -7999,12 +8004,14 @@
     },
     {
       "route": "crypto/mpc",
-      "title": "MPC: Real/Ideal 보안 모델에서 DKG Release까지",
-      "status": "reviewed-needs-rewrite",
+      "title": "MPC: 4와 3을 더하고 비밀인 5를 곱하기",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/mpc.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/mpc.tsx",
-        "src/pages/articles/blockchain/mpc/ModernArticle.tsx"
+        "src/pages/articles/blockchain/mpc/ModernArticle.tsx",
+        "src/pages/articles/blockchain/mpc/viz/MpcJourneyViz.tsx",
+        "src/pages/articles/blockchain/mpc/codeRefs.ts"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -8025,19 +8032,49 @@
         "원문 없는 운영 용어와 DKG 점검 목록이 대부분이어서 같은 입력의 분할·덧셈·곱셈·결과 공개 과정을 추적할 수 없습니다. 정확한 adversary/abort 구분과 Shamir·Paillier 재사용은 보존합니다.",
         "고정 MPyC 0.11.2의 수동 공격 모델·임계값과 실제 입력/재공유/복원 원문을 읽고 세 값 4,3,5의 (4+3)×5=35 사례를 계획 중입니다. DKG와 동시 실행/기록 보존이 다른 문제임을 구분하고 실제 실행 없는 측정 주장은 교정합니다."
       ],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "공개 본문 전문·실제 baseline 및 공유 metadata 전문을 2026-10-05에 읽었습니다.",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "plan": "/tmp/teach-all/mpc-rewrite-plan.json: 본문 작성 전 6+4 고정",
+        "case": "F67, 세 입력 4/3/5의 (4+3)×5=35. 조각 합14/21/28→곱45/30/57→재공유37/39/41→35; 같은 원문 실제 세 프로세스"
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: 세 회사의 수량/단가로 35 계산",
+        "B": "black-box: 신뢰할 담당자와 실제 기록 비교",
+        "0": "case: 67의 나머지와 세 주소",
+        "1": "picture: 같은 표의 네 장면",
+        "2": "why: 덧셈의 직선 유지와 곱셈 차수 증가",
+        "3": "names: 조각·t·재공유·수동/능동 공격 역할",
+        "4": "sharing/addition/multiplication/reshare: 같은 4/3/5의 조각 경로",
+        "5": "source-input/source-multiply/source-output/source-dkg: 원문 구조·함수·배열·같은 입력과 다른 읽기 범위",
+        "6": "reshare-proof/privacy/output-leakage/security-model/dkg/session/composition: 일반 유도·공동분포·불가피한 누출·반례·비공개 상태 경계",
+        "7": "verification/limits: 실제 실행 범위와 예측 답 9/13/20절"
+      },
+      "sourceEvidence": [
+        {
+          "source": "MPyC 0.11.2, 38f06a7af688231fca4defe1613d01a2aa8bcbfb",
+          "mapping": "전체 package Python/README/basic docs 23파일 Gitblob+SHA256 보존. 원문 split/recombine의 통제한 기울기 검산과 같은 함수의 실제 3프로세스 새 난수 실행을 구분."
+        },
+        {
+          "source": "GRR98 manuscript section3/3.1, Figure2/Theorem2/start4",
+          "mapping": "실제 PDF6/7쪽 화면과 식을 읽고 상수항·차수·수동/능동 검증 조건 대조. 전체 프로토콜 증명 재검증 아님."
+        },
+        {
+          "source": "tss-lib 3f677ff761fcf692edb0243a5d812930844d879a",
+          "mapping": "VSS/keygen round1/3/message/README 7wholefiles preserve. 세션nonce없음→0, 전송/암호화/세션/방송 호출자 책임 읽음. Go 컴파일/실행없음."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "기존 전문·baseline·3개 정본·6+4·ownership과 새 본문 23절 전문을 읽었습니다. 합7의 상대입력 숨김 오개념과 비밀조각 공개로그 혼동 교정.",
+        "arithmetic": "실제 CPython3.12.13 원문함수 4489한조각계산·재공유/반례 및 실제3프로세스 result35 전원exit0. README재실행 결과 최초관측JSON과 완전동일. mpc-arithmetic/runtime-final.json.",
+        "independentBody": "theory 독립18산술 및 실제11/12/13/17/18절 전문 PASS: mpc-independent-theory.json.",
+        "humanize": "최초68문단 연결쉼표1개교정→목록문장보강 후 최종70문단11411자/3묶음 변경0 모두gate0. 표시158문자열8424자/3묶음 실제AST왕복·검토·적용 변경0 모두gate0. humanize-chains-mpc-final/mpc 및 humanize-chains-mpc-visible-final.",
+        "typescript": "실제 app tsc64221 및 최종38157 모두exit0. chains-mpc-tsc-final.log.",
+        "sourceBytes": "MPyC23 + tsslib7 전체30파일 원문 Gitblob·SHA256 최종 일치. 자체호출에서 pyc생성 차단, 생성cache만정리.",
+        "prose": "최종 chains-mpc-prose-final.log strict 재검토0 PASS, targetedviz2files PASS.",
+        "browser390": "최종 12패널·수식잘림0·도식열제목 실제 이미지 확인·고정4장면/제어위치·키보드/Space/실제재생/reduced PASS. 통합23절·앵커0오류·10답안전부열림/누락0·pageerror0. chains-mpc-detail/integrated/learning.json.",
+        "browser1440": "최종 12패널·수식잘림0·도식열제목·고정4장면/제어위치·키보드/Space/실제재생/reduced PASS. 통합23절·앵커0오류·10답안전부열림/누락0·pageerror0. chains-mpc-detail/integrated/learning.json.",
+        "registration": "batch27 공유 6+4·4개 definition·ownership 제안과 완전 일치; 새 method와 3EDGES 모두 실제 readback 일치. 최종 strict --require-registration exit0, chains-mpc-learning-strict-final.log. 공개 제목은 root의 자연스러운 문장으로 통합."
+      },
+      "remaining": []
     },
     {
       "route": "crypto/nova",
