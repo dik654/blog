@@ -185,7 +185,7 @@
   "reviewed": 177,
   "remaining": 622,
   "goalComplete": false,
-  "deployed": false,
+  "deployed": true,
   "disposition": "140 substantive rewrites and37 retained teaching flows after actual body audit.",
   "validation": {
     "learning": "PASS177 reviewed articles; strict require-registration; actual exit0",
@@ -195,6 +195,21 @@
     "prose": "PASS global baseline audit; actual exit0",
     "formula": "PASS1444 formulas,1444 explicit operation annotations; zero missing/raw/unsafe; actual exit0",
     "whitespace": "git diff --cached --check reports trailing whitespace in fixed upstream vLLM backend.py and Poseidon field-utils.rs/poseidon2.rs/poseidon2_instance_bn256.rs. All21 source/license files match recorded upstream SHA256. Preserved original bytes; this whitespace check is not claimed PASS.",
-    "snapshot": "9255 indexed source/config files verified against blob SHA; isolated TypeScript cache. Next closure/objectives/binary-field drafts excluded."
+    "snapshot": "9255 indexed source/config files verified against blob SHA; isolated TypeScript cache. Next closure/objectives/binary-field drafts excluded.",
+    "globalLearning": "PASS799 contracts",
+    "graph": "PASS3840 concepts6131 relations;0invariant violations",
+    "articleStructure": "PASS799 public articles",
+    "topology": "PASS",
+    "reading": "PASS",
+    "order": "PASS91listings432 prerequisiteedges on retry after generated cache cleanup; original attempt failed for no disk space; isolated Vite cache used"
+  },
+  "deployment": {
+    "commit": "9739b2182730f0afa85e32ea0920bc9e3415c4f7",
+    "workflow": "https://github.com/dik654/blog/actions/runs/37211438985",
+    "status": "success",
+    "verifiedAt": "2026-10-05 Asia/Seoul",
+    "production": "https://dik654.github.io/blog/",
+    "browser": "PASS12 checks on6 additions at390/1440; zeroissues; actualexit0",
+    "report": "/tmp/world-browser-audit/teach-checkpoint177-production-summary.json"
   }
 }

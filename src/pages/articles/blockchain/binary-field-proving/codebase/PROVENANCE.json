@@ -1,0 +1,185 @@
+{
+  "observedAt": "2026-10-04",
+  "files": [
+    {
+      "path": "models/README.md",
+      "repository": "IrreducibleOSS/binius-models",
+      "commit": "7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf",
+      "sourcePath": "README.md",
+      "url": "https://raw.githubusercontent.com/IrreducibleOSS/binius-models/7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf/README.md",
+      "gitBlobSha1": "47a4a2f92cebd327dc5d7aa389cfe66ad81e8ff5",
+      "sha256": "7897a6bbafb024c295b11f8f8ab0b8fdfda50180e46107f1240d6392bb4e12e4",
+      "bytes": 3677
+    },
+    {
+      "path": "models/pyproject.toml",
+      "repository": "IrreducibleOSS/binius-models",
+      "commit": "7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf",
+      "sourcePath": "pyproject.toml",
+      "url": "https://raw.githubusercontent.com/IrreducibleOSS/binius-models/7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf/pyproject.toml",
+      "gitBlobSha1": "2f160fbec181e270aab24bbb7d18a4a30c45886f",
+      "sha256": "012cc56e627b00c354a85bc0dc87a812ea2d55471b2198adb6c769c501861ab9",
+      "bytes": 1006
+    },
+    {
+      "path": "models/LICENSE.txt",
+      "repository": "IrreducibleOSS/binius-models",
+      "commit": "7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf",
+      "sourcePath": "LICENSE.txt",
+      "url": "https://raw.githubusercontent.com/IrreducibleOSS/binius-models/7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf/LICENSE.txt",
+      "gitBlobSha1": "b52cc7b27870cf00400e2ca9fe35fbcd8b74c91c",
+      "sha256": "e89ed7cfaac70f3b3a61b8588f0aa06ecd0b53ba5fb1058afa509ed34c608e34",
+      "bytes": 11351
+    },
+    {
+      "path": "models/binius_models/finite_fields/tower.py",
+      "repository": "IrreducibleOSS/binius-models",
+      "commit": "7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf",
+      "sourcePath": "binius_models/finite_fields/tower.py",
+      "url": "https://raw.githubusercontent.com/IrreducibleOSS/binius-models/7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf/binius_models/finite_fields/tower.py",
+      "gitBlobSha1": "9a68a1a59bd44b811da45292554a7fd0073695cb",
+      "sha256": "d0b6bab7f50f7211eb5f77fcc3f26835faaf0a7cfeef9eb6eb5c9d791e43e455",
+      "bytes": 17978
+    },
+    {
+      "path": "models/binius_models/finite_fields/finite_field.py",
+      "repository": "IrreducibleOSS/binius-models",
+      "commit": "7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf",
+      "sourcePath": "binius_models/finite_fields/finite_field.py",
+      "url": "https://raw.githubusercontent.com/IrreducibleOSS/binius-models/7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf/binius_models/finite_fields/finite_field.py",
+      "gitBlobSha1": "7aa79647b2197cbf8ff3fa4c1a3936098d8d708e",
+      "sha256": "19f15b0af3f8aba51168983c7d8e4a7c2c56bdecde9e651753b73359b0558921",
+      "bytes": 5945
+    },
+    {
+      "path": "models/binius_models/finite_fields/test_tower.py",
+      "repository": "IrreducibleOSS/binius-models",
+      "commit": "7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf",
+      "sourcePath": "binius_models/finite_fields/test_tower.py",
+      "url": "https://raw.githubusercontent.com/IrreducibleOSS/binius-models/7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf/binius_models/finite_fields/test_tower.py",
+      "gitBlobSha1": "339a2a8b842e6b330d46dd98a4e5b364b4f6eb8d",
+      "sha256": "61ca4044859291df3cfaec0e2f006e8cabdc83b39eb3645a79f95c318b2b9c15",
+      "bytes": 5226
+    },
+    {
+      "path": "models/binius_models/utils/utils.py",
+      "repository": "IrreducibleOSS/binius-models",
+      "commit": "7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf",
+      "sourcePath": "binius_models/utils/utils.py",
+      "url": "https://raw.githubusercontent.com/IrreducibleOSS/binius-models/7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf/binius_models/utils/utils.py",
+      "gitBlobSha1": "9b4abe8dc3ae4adfdd9877c0bc9c5f3a78c45e88",
+      "sha256": "0e46f003533cfcf2cd4a7e405b6327e225e6ddde501a4f21e7c7df5ae6a0d5b5",
+      "bytes": 2355
+    },
+    {
+      "path": "models/binius_models/ips/polynomial.py",
+      "repository": "IrreducibleOSS/binius-models",
+      "commit": "7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf",
+      "sourcePath": "binius_models/ips/polynomial.py",
+      "url": "https://raw.githubusercontent.com/IrreducibleOSS/binius-models/7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf/binius_models/ips/polynomial.py",
+      "gitBlobSha1": "0d08565f6561f7606b539f64be8d8c8fcdff0372",
+      "sha256": "61d7db19a1f761087de41c962a104ae975117d5684d7da6cd7e28d3649f3e2ed",
+      "bytes": 1309
+    },
+    {
+      "path": "models/binius_models/ips/sumcheck.py",
+      "repository": "IrreducibleOSS/binius-models",
+      "commit": "7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf",
+      "sourcePath": "binius_models/ips/sumcheck.py",
+      "url": "https://raw.githubusercontent.com/IrreducibleOSS/binius-models/7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf/binius_models/ips/sumcheck.py",
+      "gitBlobSha1": "cd0236641ec2ebb65d848745a387de87987f9a1d",
+      "sha256": "62c7c5b15532cf694cda840bc4a41da31024f11dfb246d1b19e4a539a37da09a",
+      "bytes": 11867
+    },
+    {
+      "path": "models/binius_models/ips/test_sumcheck.py",
+      "repository": "IrreducibleOSS/binius-models",
+      "commit": "7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf",
+      "sourcePath": "binius_models/ips/test_sumcheck.py",
+      "url": "https://raw.githubusercontent.com/IrreducibleOSS/binius-models/7ac5ad72f2ba38740fe1122c16b94bcdbe7bcecf/binius_models/ips/test_sumcheck.py",
+      "gitBlobSha1": "55b7d3acce38422ea76d4229afd4bbe3624727bc",
+      "sha256": "ad2cd3c6d363652e418feb8bfa0a96a30eeff2a94157af44a03c671c352bd9f1",
+      "bytes": 3214
+    },
+    {
+      "path": "flock/README.md",
+      "repository": "succinctlabs/flock",
+      "commit": "b684b1258e4b1f202bec24afd660ace851b09e5e",
+      "sourcePath": "README.md",
+      "url": "https://raw.githubusercontent.com/succinctlabs/flock/b684b1258e4b1f202bec24afd660ace851b09e5e/README.md",
+      "gitBlobSha1": "c66732e04a2e961dd67175c99c293c7d5b9352e2",
+      "sha256": "76b0b7dc0d73e8b46efb5f7c5f988e9bb8201350d1c871e8ae21cf39e1534ac6",
+      "bytes": 6341
+    },
+    {
+      "path": "flock/Cargo.toml",
+      "repository": "succinctlabs/flock",
+      "commit": "b684b1258e4b1f202bec24afd660ace851b09e5e",
+      "sourcePath": "Cargo.toml",
+      "url": "https://raw.githubusercontent.com/succinctlabs/flock/b684b1258e4b1f202bec24afd660ace851b09e5e/Cargo.toml",
+      "gitBlobSha1": "9f4dd300a8c5a8f2d5a19de1df0fd4b0b3c30046",
+      "sha256": "7c9d71dfd541ae0c1324bfc6c312314d27997a17b3b575f12de2e6b177b42cd9",
+      "bytes": 2882
+    },
+    {
+      "path": "flock/LICENSE-APACHE",
+      "repository": "succinctlabs/flock",
+      "commit": "b684b1258e4b1f202bec24afd660ace851b09e5e",
+      "sourcePath": "LICENSE-APACHE",
+      "url": "https://raw.githubusercontent.com/succinctlabs/flock/b684b1258e4b1f202bec24afd660ace851b09e5e/LICENSE-APACHE",
+      "gitBlobSha1": "7bff3f1c0c64e44e1f961f20c3267d8a1202c499",
+      "sha256": "1451f14d812ac78a159791bdeaafc7d400d888f60a8502790042930c1c9be7ff",
+      "bytes": 11318
+    },
+    {
+      "path": "flock/LICENSE-MIT",
+      "repository": "succinctlabs/flock",
+      "commit": "b684b1258e4b1f202bec24afd660ace851b09e5e",
+      "sourcePath": "LICENSE-MIT",
+      "url": "https://raw.githubusercontent.com/succinctlabs/flock/b684b1258e4b1f202bec24afd660ace851b09e5e/LICENSE-MIT",
+      "gitBlobSha1": "3bcb4e86f5028ee1c55add9343d2ba041cb3411d",
+      "sha256": "ed21a0d573a473913534aa8462b410c4c03d899900096bf3bdeb8fea650a01b5",
+      "bytes": 1103
+    },
+    {
+      "path": "flock/crates/flock-core/src/r1cs.rs",
+      "repository": "succinctlabs/flock",
+      "commit": "b684b1258e4b1f202bec24afd660ace851b09e5e",
+      "sourcePath": "crates/flock-core/src/r1cs.rs",
+      "url": "https://raw.githubusercontent.com/succinctlabs/flock/b684b1258e4b1f202bec24afd660ace851b09e5e/crates/flock-core/src/r1cs.rs",
+      "gitBlobSha1": "6bfe14bff5208322ac527abf0fcbeddd3576ffd1",
+      "sha256": "dcb6e2287b97262d5dc08092138a782e4e00680920df48f5cda4b702e17db04c",
+      "bytes": 38194
+    },
+    {
+      "path": "binius64/README.md",
+      "repository": "binius-zk/binius64",
+      "commit": "6a179536d90fcc76eeca0cee4e059f5e17efb459",
+      "sourcePath": "README.md",
+      "url": "https://raw.githubusercontent.com/binius-zk/binius64/6a179536d90fcc76eeca0cee4e059f5e17efb459/README.md",
+      "gitBlobSha1": "59d8af6399daf5c670c6b02626b89e8bece7d7d6",
+      "sha256": "435a399f2e90fb75685b16402a6dce5c16a20922af23873fcf7a126bf2e32de7",
+      "bytes": 8155
+    },
+    {
+      "path": "binius64/LICENSE-Apache-2.0.txt",
+      "repository": "binius-zk/binius64",
+      "commit": "6a179536d90fcc76eeca0cee4e059f5e17efb459",
+      "sourcePath": "LICENSE-Apache-2.0.txt",
+      "url": "https://raw.githubusercontent.com/binius-zk/binius64/6a179536d90fcc76eeca0cee4e059f5e17efb459/LICENSE-Apache-2.0.txt",
+      "gitBlobSha1": "bf0841f65960383640ff3300b5b332ab347c5762",
+      "sha256": "245f1fe888a9b2cc730d5313b1b430ef896bf29aede9649d4f11ebcf42faa8f2",
+      "bytes": 11388
+    },
+    {
+      "path": "binius64/LICENSE-MIT.txt",
+      "repository": "binius-zk/binius64",
+      "commit": "6a179536d90fcc76eeca0cee4e059f5e17efb459",
+      "sourcePath": "LICENSE-MIT.txt",
+      "url": "https://raw.githubusercontent.com/binius-zk/binius64/6a179536d90fcc76eeca0cee4e059f5e17efb459/LICENSE-MIT.txt",
+      "gitBlobSha1": "e2c4c0618714f8c626a1f6be6b226655a6d544ca",
+      "sha256": "723891a70c107d694fe1d457a7c7ed5d0580c274ac8cfa2aa18f3ee75f49790e",
+      "bytes": 1102
+    }
+  ]
+}

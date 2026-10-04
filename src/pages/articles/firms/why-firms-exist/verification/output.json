@@ -1,0 +1,96 @@
+{
+  "date": "2026-10-05",
+  "scope": "Executed the article’s own coordination model using Node; not code or measurements from Coase.",
+  "cases": [
+    {
+      "outside": 4,
+      "totals": [
+        24,
+        21,
+        19,
+        18,
+        18,
+        19,
+        21
+      ],
+      "minimum": 18,
+      "minimizers": [
+        3,
+        4
+      ]
+    },
+    {
+      "outside": 5,
+      "totals": [
+        30,
+        26,
+        23,
+        21,
+        20,
+        20,
+        21
+      ],
+      "minimum": 20,
+      "minimizers": [
+        4,
+        5
+      ]
+    },
+    {
+      "outside": 2,
+      "totals": [
+        12,
+        11,
+        11,
+        12,
+        14,
+        17,
+        21
+      ],
+      "minimum": 11,
+      "minimizers": [
+        1,
+        2
+      ]
+    },
+    {
+      "outside": 3.5,
+      "totals": [
+        21,
+        18.5,
+        17,
+        16.5,
+        17,
+        18.5,
+        21
+      ],
+      "minimum": 16.5,
+      "minimizers": [
+        3
+      ]
+    }
+  ],
+  "setup": {
+    "outside": 4,
+    "setup": 5,
+    "totals": [
+      24,
+      26,
+      24,
+      23,
+      23,
+      24,
+      26
+    ],
+    "minimum": 23,
+    "minimizers": [
+      3,
+      4
+    ]
+  },
+  "originalQuotes": [
+    "there is a cost of using the price mechanism",
+    "costs of organising an extra transaction within the firm"
+  ],
+  "quoteWordCount": 18
+}

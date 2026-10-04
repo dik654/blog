@@ -411,31 +411,28 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/ai/word2vec#window"
   },
   "cbow-objective": {
-    id: "cbow-objective",
-    kind: "method",
-    domain: "machine-learning",
-    label: "CBOW objective",
-    definition:
-      "주변 context word의 embedding을 합치거나 평균내 center word의 categorical distribution을 예측하는 Word2Vec 학습 objective입니다.",
-    canonicalHref: "/cs/ai/word2vec-prediction-objectives#cbow",
+    "id": "cbow-objective",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "CBOW objective",
+    "definition": "여러 이웃의 입력 행을 평균내 중심 단어 하나를 맞힙니다. 평균은 위치 순서를 보존하지 않지만 보관한 계산 경로로 각 입력의 기울기를 구할 수 있습니다. C=0을 제외하고 sum/mean·반복 출현·원본 C의 /cw 생략을 구별합니다.",
+    "canonicalHref": "/cs/ai/word2vec-prediction-objectives#cbow"
   },
   "skipgram-objective": {
-    id: "skipgram-objective",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Skip-gram objective",
-    definition:
-      "Center word embedding을 조건으로 local window에서 관측한 context word를 하나씩 예측하도록 word–context pair를 학습하는 objective입니다.",
-    canonicalHref: "/cs/ai/word2vec-prediction-objectives#skipgram",
+    "id": "skipgram-objective",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Skip-gram objective",
+    "definition": "중심의 한 입력 행을 공유해 실제 이웃 위치마다 별도 정답을 맞힙니다. 중심별 평균과 전체 쌍의 합은 이웃 수가 달라지면 상대 가중치도 다릅니다. 논문 방향과 이웃→중심인 고정 C 분기를 구별하며 희귀 단어의 보편적 우위를 주장하지 않습니다.",
+    "canonicalHref": "/cs/ai/word2vec-prediction-objectives#skipgram"
   },
   "hierarchical-softmax": {
-    id: "hierarchical-softmax",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Hierarchical softmax",
-    definition:
-      "Vocabulary word를 binary tree의 leaf로 놓고 root에서 해당 leaf까지의 binary decision probability를 곱해 word probability를 계산하는 parameterization입니다.",
-    canonicalHref: "/cs/ai/word2vec-prediction-objectives#hierarchical",
+    "id": "hierarchical-softmax",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Hierarchical softmax",
+    "definition": "많은 단어를 한꺼번에 비교하는 대신 정답 잎으로 가는 선택 확률을 곱합니다. 내부 노드의 별도 벡터와 나무가 분포를 정의합니다. flat softmax와 같은 분포의 캐시가 아니며 모든 후보를 출력하는 비용까지 한 경로 길이로 줄지는 않습니다.",
+    "canonicalHref": "/cs/ai/word2vec-prediction-objectives#hierarchical"
   },
   "sgns-objective": {
     id: "sgns-objective",
@@ -2365,32 +2362,33 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/in-context-lora#applications",
   },
   "cuda-graph-capture-replay": {
-    id: "cuda-graph-capture-replay",
-    kind: "method",
-    domain: "computer-science",
-    label: "CUDA graph capture · replay",
-    definition:
-      "Stream에 issue되는 kernel launch 시퀀스를 즉시 실행하는 대신 한 번 기록(capture)해 실행 그래프로 만들고, 이후에는 그 그래프를 CPU 쪽 재해석 없이 GPU에 그대로 재생(replay)해 kernel마다 반복되는 launch overhead를 상각하는 실행 모델입니다.",
-    canonicalHref: "/cs/ai/cuda-graph-capture#mechanics",
+    "id": "cuda-graph-capture-replay",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "CUDA graph capture · replay",
+    "definition": "같은 작업과 의존성을 기록하고 준비한 실행 객체를 반복 제출해 CPU의 매회 제출 작업을 줄이는 방법입니다. CPU 제출의 감소가 최종 지연의 감소를 항상 뜻하지 않습니다. 장치가 바쁘면 14→14 μs인 반례가 있습니다.",
+    "canonicalHref": "/cs/ai/cuda-graph-capture#trace"
   },
   "cuda-graph-static-address-constraint": {
-    id: "cuda-graph-static-address-constraint",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA graph static-address constraint",
-    aliases: ["Static Memory Address Requirement", "Static address constraint", "Static input · output address"],
-    definition:
-      "Captured graph는 capture 시점에 고정된 input·output tensor의 GPU 메모리 주소만 읽고 쓰므로, replay 이후 새 데이터를 반영하려면 새 tensor를 넘기는 대신 같은 buffer에 in-place copy로 덮어써야 하는 제약입니다.",
-    canonicalHref: "/cs/ai/cuda-graph-capture#mechanics",
+    "id": "cuda-graph-static-address-constraint",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA graph static-address constraint",
+    "aliases": [
+      "Static Memory Address Requirement",
+      "Static address constraint",
+      "Static input · output address"
+    ],
+    "definition": "일반 정적 replay는 기록된 메모리 인수를 사용하므로 새 데이터를 같은 입력 공간에 준비하고 그 공간의 수명을 유지해야 합니다. 명시적 CUDA node 업데이트나 주소표를 읽도록 바꾼 kernel은 다른 계약입니다. 모든 CUDA 실행에서 주소 변경이 금지된다는 뜻은 아닙니다.",
+    "canonicalHref": "/cs/ai/cuda-graph-capture#mechanics"
   },
   "cuda-graph-batch-shape-dispatch": {
-    id: "cuda-graph-batch-shape-dispatch",
-    kind: "method",
-    domain: "computer-science",
-    label: "CUDA graph batch-shape dispatch",
-    definition:
-      "Static-address 제약 때문에 batch size마다 별도 graph가 필요하므로, 실행 shape를 key로 capture된 graph를 캐시하고 처음 보는 shape는 capture, 이미 본 shape는 replay로 분기하며, dynamic shape는 미리 정한 크기로 패딩해 capture 개수를 제한하는 serving 패턴입니다.",
-    canonicalHref: "/cs/ai/cuda-graph-capture#implementation",
+    "id": "cuda-graph-batch-shape-dispatch",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "CUDA graph batch-shape dispatch",
+    "definition": "준비된 실행 모드와 크기·요청 구성의 키를 대조해 사용할 graph를 선택하고 그 키의 실행 기록을 재사용하는 과정입니다. 크기 33은 상한 32를 넘어 NONE이지만 mixed5에 FULL만 허용하면 assertion입니다. 모든 미일치가 자동으로 일반 실행이 되지는 않습니다.",
+    "canonicalHref": "/cs/ai/cuda-graph-capture#implementation"
   },
   "amortized-variational-inference": {
     id: "amortized-variational-inference",
@@ -14636,11 +14634,46 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "Plain interpolation이 dealer equivocation·bad share를 탐지하지 못하므로 VSS commitments·complaints·refresh verification을 별도 protocol로 두는 경계입니다.",
     "canonicalHref": "/cs/crypto/shamir-secret-sharing#active-boundary"
   },
-  "paillier-additive-homomorphic-boundary": { id:"paillier-additive-homomorphic-boundary", kind:"method", domain:"computer-science", label:"Paillier additive-homomorphic boundary", definition:"n² modulus에서 Enc(m;r)=g^m r^n으로 암호화해 ciphertext 곱을 plaintext mod n 덧셈으로 옮기되, composite-residuosity·unit-randomizer·ciphertext validation 전제와 active-security proof를 별도로 두는 경계입니다.", canonicalHref:"/cs/crypto/paillier-cryptosystem#homomorphism" },
-  "paillier-key-generation-contract": { id:"paillier-key-generation-contract", kind:"concept", domain:"computer-science", label:"Paillier key-generation contract", definition:"n=pq, λ=lcm(p−1,q−1), valid g와 μ=L(g^λ mod n²)⁻¹ mod n의 존재 조건을 하나의 cryptosystem profile로 고정합니다.", canonicalHref:"/cs/crypto/paillier-cryptosystem#key-generation" },
-  "paillier-randomized-encryption": { id:"paillier-randomized-encryption", kind:"method", domain:"computer-science", label:"Paillier randomized encryption", definition:"Fresh unit r∈Z*n을 사용해 c=g^m r^n mod n²를 만들고 같은 message의 ciphertext linkability를 줄이는 probabilistic encryption 단계입니다.", canonicalHref:"/cs/crypto/paillier-cryptosystem#encryption" },
-  "paillier-decryption-l-function": { id:"paillier-decryption-l-function", kind:"method", domain:"mathematics", label:"Paillier L-function decryption", definition:"L(u)=(u−1)/n과 secret λ·μ를 사용해 valid ciphertext에서 plaintext residue를 복원하는 계산입니다.", canonicalHref:"/cs/crypto/paillier-cryptosystem#decryption" },
-  "paillier-ciphertext-security-boundary": { id:"paillier-ciphertext-security-boundary", kind:"concept", domain:"computer-science", label:"Paillier ciphertext security boundary", definition:"Additive homomorphism의 의도적 malleability와 ciphertext integrity·range/relation proof·CCA protection·threshold decryption proof를 분리하는 경계입니다.", canonicalHref:"/cs/crypto/paillier-cryptosystem#security-boundary" },
+  "paillier-additive-homomorphic-boundary": {
+    "id": "paillier-additive-homomorphic-boundary",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Paillier의 덧셈 동형성과 나머지 범위",
+    "definition": "같은 키에서 암호문 곱을 평문의 mod n 덧셈으로 옮기는 성질입니다. g=n+1이면 두 난수의 정규 곱을 그대로 쓰며 일반 g의 지수 감김에는 난수 보정이 필요합니다. 공개 스칼라곱은 가능하지만 암호화한 두 평문의 일반 곱·합계 진위·정수 범위를 자동 보장하지 않습니다.",
+    "canonicalHref": "/cs/crypto/paillier-cryptosystem#homomorphism"
+  },
+  "paillier-key-generation-contract": {
+    "id": "paillier-key-generation-contract",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Paillier의 키와 복호 역원 조건",
+    "definition": "서로 다른 소수 p,q와 n=pq, λ=lcm(p−1,q−1), unit g에서 L(g^λ mod n²)의 역원이 존재하도록 정하는 조건입니다. g=n+1의 λ 복호는 gcd(λ,n)=1을 요구합니다. 일부 더 넓은 작은 키에서 CRT 왕복이 성공해도 이 전단사·보안 설정이 확인된 것은 아닙니다.",
+    "canonicalHref": "/cs/crypto/paillier-cryptosystem#key-generation"
+  },
+  "paillier-randomized-encryption": {
+    "id": "paillier-randomized-encryption",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Paillier의 난수 암호화와 재사용 누출",
+    "definition": "c=g^m r^n mod n²에서 정한 정상 키와 신선하고 균등한 독립 unit 난수를 사용해 메시지를 가리는 방식입니다. 같은 난수를 재사용하면 g=n+1에서 평문 차이 mod n이 드러납니다. 새 난수의 우연한 충돌 가능성은 남으며 낮은 수준 API가 모든 범위와 서로소 조건을 검사하는 것은 아닙니다.",
+    "canonicalHref": "/cs/crypto/paillier-cryptosystem#encryption"
+  },
+  "paillier-decryption-l-function": {
+    "id": "paillier-decryption-l-function",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Paillier의 L 함수와 CRT 복호",
+    "definition": "정상 암호문을 비밀 지수로 거듭제곱한 뒤 L(u)=(u−1)/n으로 계수를 읽고 역원을 곱해 평문 나머지를 복원하는 방식입니다. L은 u≡1 mod n인 입력을 요구합니다. 선택한 실제 구현은 두 소수의 제곱에서 복호한 값을 CRT로 합칩니다.",
+    "canonicalHref": "/cs/crypto/paillier-cryptosystem#decryption"
+  },
+  "paillier-ciphertext-security-boundary": {
+    "id": "paillier-ciphertext-security-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Paillier의 변조와 보안 조건",
+    "definition": "동형 연산이 허용하는 공개 변조와 결과의 진위·범위·참여자·복호 권한을 구분하는 조건입니다. DCRA 기반 의미론적 보안은 임의 변조 암호문의 복호를 허용하는 안전성이나 인수분해와의 동치 주장이 아닙니다. threshold·범위 증명·전체 MPC 및 양자 내성은 별도입니다.",
+    "canonicalHref": "/cs/crypto/paillier-cryptosystem#security"
+  },
   "mpc-dkg-transcript-artifact": { id:"mpc-dkg-transcript-artifact", kind:"concept", domain:"computer-science", label:"MPC DKG transcript artifact", definition:"Protocol/version, party IDs·indices, threshold, session/curve/group, commitments, encrypted shares, complaints·disqualifications, accepted public key와 round order를 하나의 session-bound distributed-key-generation receipt로 결속하는 계약입니다.", canonicalHref:"/cs/crypto/mpc#dkg" },
   "mpc-protocol-release-gate": { id:"mpc-protocol-release-gate", kind:"method", domain:"computer-science", label:"MPC protocol release gate", definition:"Adversary·network·threshold profile을 pin하고 duplicate ID·bad share·malformed Paillier key·reordered round·dropout·complaint·restart을 replay한 뒤 correctness·leakage·abort·messages·bytes·latency·rollback을 평가하는 채택 절차입니다.", canonicalHref:"/cs/crypto/mpc#release" },
   "scroll-zkevm-evm-trace-table-contract": { id:"scroll-zkevm-evm-trace-table-contract", kind:"concept", domain:"computer-science", label:"Scroll zkEVM trace · table contract", definition:"Pinned Scroll circuit source에서 EVM opcode step, stack·memory·storage read/write, bytecode, transaction·block·state data를 Halo2 tables·lookups·copy constraints로 연결해 native state transition의 witness semantics를 고정하는 계약입니다.", canonicalHref:"/cs/crypto/scroll-zkevm#trace-tables" },
@@ -15882,12 +15915,54 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "webcat-local-resource-enforcement": { id: "webcat-local-resource-enforcement", kind: "method", domain: "computer-science", label: "WEBCAT local resource enforcement", definition: "Browser 측에서 delivered resource hash·manifest signature·enrollment·log inclusion을 실행 전에 검사하고 mismatch를 차단하는 방법입니다.", canonicalHref: "/cs/blockchain/webcat-frontend-integrity#local-verification" },
   "webcat-transparency-enrollment": { id: "webcat-transparency-enrollment", kind: "concept", domain: "distributed-systems", label: "WEBCAT transparency · enrollment", definition: "Developer key와 manifest history를 공개 append-only evidence에 연결해 targeted manifest equivocation을 감사하는 trust-registration 경계입니다.", canonicalHref: "/cs/blockchain/webcat-frontend-integrity#transparency-release" },
   "webcat-release-boundary": { id: "webcat-release-boundary", kind: "method", domain: "computer-science", label: "WEBCAT alpha release boundary", definition: "Known-good·byte mutation·missing resource·wrong signer·log inconsistency fixtures와 current Firefox-extension alpha 범위를 기록해 verifier generation을 채택하는 기준입니다.", canonicalHref: "/cs/blockchain/webcat-frontend-integrity#transparency-release" },
-  "binary-tower-field-representation": { id: "binary-tower-field-representation", kind: "concept", domain: "mathematics", label: "Binary tower field representation", definition: "F₂ addition을 coordinate-wise XOR로 해석하고 irreducible-polynomial extensions를 tower로 조립해 k-bit words를 field elements로 표현하는 계약입니다.", canonicalHref: "/cs/crypto/binary-field-proving#binary-field" },
-  "boolean-arithmetization-fit": { id: "boolean-arithmetization-fit", kind: "concept", domain: "computer-science", label: "Boolean workload · arithmetization fit", definition: "XOR·AND·rotate 중심 workload와 proof field·multilinear table·lookup representation 사이의 변환 비용을 명시하는 설계 경계입니다.", canonicalHref: "/cs/crypto/binary-field-proving#binary-field" },
-  "binius-binary-tower-argument": { id: "binius-binary-tower-argument", kind: "concept", domain: "mathematics", label: "Binius binary-tower argument", definition: "Binary tower fields·multilinear polynomial protocols·commitment와 sumcheck를 조합해 Boolean computation을 succinct하게 검증하는 argument family입니다.", canonicalHref: "/cs/crypto/binary-field-proving#binius" },
-  "conventional-hash-friendly-proving": { id: "conventional-hash-friendly-proving", kind: "concept", domain: "computer-science", label: "Conventional-hash-friendly proving", definition: "SHA·BLAKE·Keccak semantics를 field-native primitive로 교체하지 않고 proof representation과 prover를 workload에 맞추는 방향입니다.", canonicalHref: "/cs/crypto/binary-field-proving#overview" },
-  "flock-batched-boolean-proof": { id: "flock-batched-boolean-proof", kind: "method", domain: "computer-science", label: "Flock batched Boolean proof", definition: "여러 Boolean computation instances를 batch해 conventional-hash proof throughput을 높이는 연구 prototype의 방법과 조건부 benchmark 경계입니다.", canonicalHref: "/cs/crypto/binary-field-proving#flock-selection" },
-  "primitive-proof-layer-selection-gate": { id: "primitive-proof-layer-selection-gate", kind: "method", domain: "computer-science", label: "Primitive · proof-layer selection gate", definition: "Security history·compatibility·prover/verifier cost·memory·proof size·hardware·audit maturity를 함께 비교해 primitive 교체와 prover 교체 중 하나를 선택하는 기준입니다.", canonicalHref: "/cs/crypto/binary-field-proving#flock-selection" },
+  "binary-tower-field-representation": {
+    "id": "binary-tower-field-representation",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "이진체 탑의 기저와 비트 표현",
+    "definition": "F₂ 위의 기약식 확장을 쌓아 비트들을 체 원소로 표현하는 방식입니다. 정한 기저에서 덧셈은 XOR이지만 확장체 곱은 계수들이 섞이는 환원을 포함하므로 비트별 AND와 다릅니다. 기저·주소·정수 매핑과 비트 인코딩을 고정해야 합니다.",
+    "canonicalHref": "/cs/crypto/binary-field-proving#tower"
+  },
+  "boolean-arithmetization-fit": {
+    "id": "boolean-arithmetization-fit",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "비트 계산표의 다항식 표현",
+    "definition": "비트 기록을 주소가 정한 표와 다항식으로 표현해 계산 관계를 검사하는 방식입니다. 같은 Boolean 표에서도 결과표의 다중선형 확장과 입력 확장식의 곱은 꼭짓점 밖에서 다를 수 있으며 비트 범위·차수·약속 연결을 별도로 확인합니다.",
+    "canonicalHref": "/cs/crypto/binary-field-proving#multilinear"
+  },
+  "binius-binary-tower-argument": {
+    "id": "binius-binary-tower-argument",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "Binius 계열의 작은 체 기록과 합 확인",
+    "definition": "작은 체의 기록과 큰 체의 질문을 다항식 약속 및 여러 검사에 연결하는 증명 계열입니다. 원래 Binius의 Brakedown 구성과 후속 FRI-Binius·Binius64는 구분해야 하며 합 확인만으로 전체 기록 연결이나 영지식이 성립하지 않습니다.",
+    "canonicalHref": "/cs/crypto/binary-field-proving#binius"
+  },
+  "conventional-hash-friendly-proving": {
+    "id": "conventional-hash-friendly-proving",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "기존 해시의 출력을 유지하는 증명 방식",
+    "definition": "SHA·BLAKE·Keccak 등 정한 해시의 입력·출력 의미를 유지하면서 계산 기록의 표현과 증명 방식을 조정하는 방향입니다. 해시 자체의 분석과 증명 관계·비트 범위·공개 결과·약속 및 입력 처리의 정확성은 서로 다른 요구입니다.",
+    "canonicalHref": "/cs/crypto/binary-field-proving#commitment"
+  },
+  "flock-batched-boolean-proof": {
+    "id": "flock-batched-boolean-proof",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Flock의 반복 Boolean 계산 증명",
+    "definition": "같은 Boolean 회로의 반복과 반복 사이 입출력 연결을 묶는 Flock의 방법입니다. 읽은 2026년 7월 v1은 영지식 미지원이며 후속 판과 고정 소스는 구분합니다. 성능 수치는 압축함수·순열 단위와 장비·batch·스레드·비교 기능 조건에 귀속합니다.",
+    "canonicalHref": "/cs/crypto/binary-field-proving#flock"
+  },
+  "primitive-proof-layer-selection-gate": {
+    "id": "primitive-proof-layer-selection-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "해시와 증명 방식의 선택 조건",
+    "definition": "호환성·필요한 보안 기능·해시 설정·증명 및 검증 비용·메모리·구현 검토를 함께 비교하는 절차입니다. 해시 변경과 증명 방식 변경뿐 아니라 둘을 함께 설계하는 선택도 있으며 축소 라운드의 도달 간격은 보안 비트 수가 아닙니다.",
+    "canonicalHref": "/cs/crypto/binary-field-proving#selection"
+  },
   "ethereum-roadmap-maturity-lanes": {
     "id": "ethereum-roadmap-maturity-lanes",
     "kind": "concept",
@@ -17427,54 +17502,79 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/serving-benchmark-methodology#reproducibility",
   },
   "cuda-graph-node": {
-    id: "cuda-graph-node",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA graph node · edge",
-    aliases: ["Graph Node", "Graph Edge", "CUDA graph node", "CUDA graph edge", "Kernel node", "Dependency edge"],
-    definition:
-      "CUDA graph에서 node는 kernel launch·memcpy·memset·event·host callback·child graph 같은 GPU 작업 하나이고, edge는 두 node 사이의 실행 의존 관계입니다. edge로 이어지지 않은 node의 순서는 보장되지 않으며 stream capture에서는 stream 순서와 event wait가 edge가 됩니다.",
-    canonicalHref: "/cs/ai/cuda-graph-capture#graph-anatomy",
+    "id": "cuda-graph-node",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA graph node · edge",
+    "aliases": [
+      "Graph Node",
+      "Graph Edge",
+      "CUDA graph node",
+      "CUDA graph edge",
+      "Kernel node",
+      "Dependency edge"
+    ],
+    "definition": "CUDA graph의 node는 kernel·메모리 복사·host 함수 등 작업을 나타내고 edge는 작업 사이의 실행 의존성을 표현합니다. 네 연산을 합친 kernel 하나라는 뜻이 아닙니다. 의존 edge가 없더라도 실제 동시 실행이 보장되지는 않습니다.",
+    "canonicalHref": "/cs/ai/cuda-graph-capture#graph-anatomy"
   },
   "cuda-graph-stream-capture": {
-    id: "cuda-graph-stream-capture",
-    kind: "method",
-    domain: "computer-science",
-    label: "CUDA stream capture",
-    aliases: ["Stream Capture", "cudaStreamBeginCapture", "cudaStreamEndCapture", "torch.cuda.graph capture"],
-    definition:
-      "cudaStreamBeginCapture와 cudaStreamEndCapture 사이에 stream에 issue된 작업을 실행하지 않고 graph node로 기록하며, 같은 stream의 순서와 다른 stream이 event로 합류한 의존을 edge로 옮겨 기존 stream 코드에서 graph template을 얻는 방법입니다.",
-    canonicalHref: "/cs/ai/cuda-graph-capture#stream-capture",
+    "id": "cuda-graph-stream-capture",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "CUDA stream capture",
+    "aliases": [
+      "Stream Capture",
+      "cudaStreamBeginCapture",
+      "cudaStreamEndCapture",
+      "torch.cuda.graph capture"
+    ],
+    "definition": "stream에 제출한 GPU 작업과 의존성을 graph 정의로 기록하는 API 경로이며 그 구간의 일반 Python 실행까지 replay하는 것은 아닙니다. 초기화는 캡처 전에 마치며 다른 stream이 합류하면 종료 전에 원래 stream으로 join합니다. 캡처된 GPU 작업의 결과가 이미 계산되었다고 읽지 않습니다.",
+    "canonicalHref": "/cs/ai/cuda-graph-capture#stream-capture"
   },
   "cuda-graph-instantiation": {
-    id: "cuda-graph-instantiation",
-    kind: "method",
-    domain: "computer-science",
-    label: "CUDA graph instantiation · exec update",
-    aliases: ["Graph Instantiation", "Graph Update", "Static Execution Graph", "Executable graph", "cudaGraphInstantiate", "cudaGraphExecUpdate"],
-    definition:
-      "Graph template을 검증하고 setup을 미리 끝내 topology·인자·주소가 고정된 executable graph로 굳히는 한 번의 비싼 단계와, topology가 같을 때만 node parameter를 갈아 끼워 재instantiate 없이 그 executable graph를 갱신하는 update입니다. replay 횟수가 instantiate 비용을 replay당 절감으로 나눈 값을 넘어야 이득입니다.",
-    canonicalHref: "/cs/ai/cuda-graph-capture#graph-anatomy",
+    "id": "cuda-graph-instantiation",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "CUDA graph instantiation · exec update",
+    "aliases": [
+      "Graph Instantiation",
+      "Graph Update",
+      "Static Execution Graph",
+      "Executable graph",
+      "cudaGraphInstantiate",
+      "cudaGraphExecUpdate"
+    ],
+    "definition": "graph 정의를 반복 실행할 객체로 준비하는 단계입니다. 일반 실행보다 추가로 드는 준비 비용은 동일한 완료 경계의 반복 절감으로 회수합니다. 평균 측정에 이미 들어간 준비 비용을 다시 더하면 손익분기가 틀립니다. 명시적 업데이트는 허용된 node·context·topology 제약을 별도로 확인합니다.",
+    "canonicalHref": "/cs/ai/cuda-graph-capture#graph-anatomy"
   },
   "cuda-graph-compatible-execution": {
-    id: "cuda-graph-compatible-execution",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA graph-compatible execution · graph pool",
-    aliases: ["Graph-Compatible Execution", "Graph Pool", "Graph memory pool", "graph_pool_handle", "Cudagraph compatible"],
-    definition:
-      "Capture 구간 안에 CPU–GPU 동기화와 값에 따른 dynamic control flow가 없고 모든 tensor가 private graph pool 안에서 replay 내내 같은 virtual address를 유지해야 한다는 조건입니다. 여러 graph가 pool을 공유하면 capture 순서대로만 replay한다는 조건 아래 중간 buffer 메모리를 나눠 씁니다.",
-    canonicalHref: "/cs/ai/cuda-graph-capture#graph-compatibility",
+    "id": "cuda-graph-compatible-execution",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA graph-compatible execution · graph pool",
+    "aliases": [
+      "Graph-Compatible Execution",
+      "Graph Pool",
+      "Graph memory pool",
+      "graph_pool_handle",
+      "Cudagraph compatible"
+    ],
+    "definition": "일반 정적 캡처·재생은 지원되는 작업, 주소와 크기, 입력·출력 수명을 요구합니다. pool 공유에는 비동시 실행과 데이터 의존성을 지키는 추가 조건이 있습니다. 모든 tensor가 graph private pool에 있어야 하는 것은 아닙니다. torch.cond와 CUDA conditional node는 지원 조건을 가진 별도 기능이며 모든 분기를 금지하는 규칙으로 일반화하지 않습니다.",
+    "canonicalHref": "/cs/ai/cuda-graph-capture#graph-compatibility"
   },
   "cuda-graph-shape-padding": {
-    id: "cuda-graph-shape-padding",
-    kind: "method",
-    domain: "computer-science",
-    label: "CUDA graph dynamic shape · padding to captured size",
-    aliases: ["Dynamic Shape Problem", "Padding to Captured Shape", "cudagraph_capture_sizes", "Capture size padding"],
-    definition:
-      "Replay가 shape를 바꿀 수 없어 step마다 batch가 달라지는 decode를 graph 하나로 돌릴 수 없는 문제를, capture size 목록을 두고 도착한 batch 이상인 가장 작은 size로 입력을 채워 그 graph를 replay하는 방식으로 푸는 방법입니다. 행 기준 낭비는 (S(b)−b)/S(b)이고 목록이 촘촘할수록 낭비는 줄고 graph 수와 기동 시간은 늘어납니다.",
-    canonicalHref: "/cs/ai/cuda-graph-capture#shape-padding",
+    "id": "cuda-graph-shape-padding",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "CUDA graph dynamic shape · padding to captured size",
+    "aliases": [
+      "Dynamic Shape Problem",
+      "Padding to Captured Shape",
+      "cudagraph_capture_sizes",
+      "Capture size padding"
+    ],
+    "definition": "실제 토큰 수 이상인 준비된 크기 중 가장 작은 것을 선택하고 추가 자리를 처리해 그 크기의 graph를 쓰는 방법입니다. 자리 비율은 시간 손실의 상한이나 보장이 아닙니다. 실제 재생 조건과 추가 자리의 무해한 처리를 별도로 검증합니다.",
+    "canonicalHref": "/cs/ai/cuda-graph-capture#shape-padding"
   },
   "replica-routing-load-balancing": {
     "id": "replica-routing-load-balancing",
@@ -25988,44 +26088,53 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "/economics/macro/aggregation-and-composition#aggregates-hide",
   },
   "cost-of-using-the-market": {
-    id: "cost-of-using-the-market",
-    kind: "concept",
-    domain: "economics",
-    label: "값으로 조정하는 일 자체에 드는 값",
-    aliases: ["값 기구를 쓰는 값", "조정 방식의 값"],
-    definition:
-      "값이 조정한다는 설명은 그 값을 알아내고 조건을 따지고 약속을 묶는 일이 공짜라는 전제 위에 서 있습니다. 실제로는 관련된 값이 얼마인지 알아내는 데만도 값이 들고, 이 몫 때문에 조정 방식 자체를 고르는 문제가 생깁니다. 물건을 만드는 데 드는 값이 아니라 같은 물건을 어떤 방식으로 조정하느냐에만 걸리는 값이라는 점에서 다른 비용과 갈립니다.",
-    canonicalHref: "/economics/firms/why-firms-exist#cost-of-market",
+    "id": "cost-of-using-the-market",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "시장을 이용하는 거래비용",
+    "aliases": [
+      "시장 이용 비용",
+      "가격 탐색 비용"
+    ],
+    "definition": "상대와 가격을 알아보고 조건을 협상하며 계약 이행을 확인하는 데 자원이 듭니다. 밖의 4를 탐색 1·협상 1·검사와 이행 확인 2로 둡니다. 넷째 일을 들이면 밖의 4가 빠지고 안의 4가 추가되어 합계 18이 유지됩니다. 생산비·품질·수량이 같다는 가정 아래 조정 비용을 비교합니다. 실제로 다르면 두 경로의 전체 비용을 같은 범위로 맞춥니다.",
+    "canonicalHref": "/economics/firms/why-firms-exist#cost-of-market"
   },
   "contracts-collapsed-into-one": {
-    id: "contracts-collapsed-into-one",
-    kind: "concept",
-    domain: "economics",
-    label: "여러 약속이 하나로 바뀌고 내용이 비워진다",
-    aliases: ["계약의 대체", "비워 둔 계약", "지시 범위 계약"],
-    definition:
-      "짝마다 맺던 약속을 가운데 하나와만 맺는 것으로 바꾸면 약속의 수가 짝의 수에서 사람의 수로 줄어듭니다. 남은 약속은 무엇을 할지를 적지 않고 지시를 받는 범위만 적는데, 기간이 길수록 할 일을 미리 적어 둘 수 없기 때문입니다. 비워 둔 자리를 나중에 채우는 것이 지시이고, 지시가 값을 대신하는 범위가 조직입니다.",
-    canonicalHref: "/economics/firms/why-firms-exist#one-contract",
+    "id": "contracts-collapsed-into-one",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "반복 계약과 제한된 지시 권한",
+    "aliases": [
+      "반복 협상과 계약",
+      "지시 권한의 범위"
+    ],
+    "definition": "보수·업무 범위 등을 미리 정하고 허용된 범위의 세부 작업을 나중에 배정하면 반복 협상의 일부를 줄일 수 있습니다. 여섯 작업을 매번 협상하는 가정과 기본 약정 뒤에 여섯 작업을 배정하는 가정을 비교합니다. 감독과 이행 확인은 남습니다. 고용 계약은 내용이 완전히 비어 있지 않으며 지시 권한에는 약정과 법의 제한이 있습니다. 장기 외주 계약도 가능하므로 계약서 수만으로 기업 내부를 판정하지 않습니다.",
+    "canonicalHref": "/economics/firms/why-firms-exist#one-contract"
   },
   "firm-boundary-at-equal-margin": {
-    id: "firm-boundary-at-equal-margin",
-    kind: "theorem",
-    domain: "economics",
-    label: "경계는 안팎의 한계값이 같아지는 자리다",
-    aliases: ["조직의 경계", "내부화 한계"],
-    definition:
-      "조직은 안에서 거래 하나를 더 다루는 값이 같은 거래를 시장에서 하는 값이나 다른 조직이 다루는 값과 같아질 때까지 커집니다. 어느 한쪽이 싸다는 것이 아니라 둘이 만나는 자리라는 점이 핵심이어서, 경계는 누가 정하는 것이 아니라 두 값이 정합니다. 안쪽 값이 내려가도 바깥쪽 값이 올라가도 경계는 같은 방향으로 밀리므로, 조직이 커졌다는 사실만으로는 어느 쪽이 움직였는지 알 수 없습니다.",
-    canonicalHref: "/economics/firms/why-firms-exist#boundary",
+    "id": "firm-boundary-at-equal-margin",
+    "kind": "theorem",
+    "domain": "economics",
+    "label": "기업 경계와 한계비용 비교",
+    "aliases": [
+      "조직의 경계",
+      "내부화 한계",
+      "정수 작업의 비용 최소화"
+    ],
+    "definition": "같은 여섯 일을 끝낼 때 안의 합계와 남은 밖의 비용을 더해 전체 비용을 최소화합니다. 안이 1·2·3·4·5·6이고 밖이 4이면 세 개와 네 개가 모두 18로 최저입니다. 밖이 3.5이면 세 개에서 16.5가 유일한 최저이며 정확한 비용 등식은 없습니다. 순서대로 들이고 다른 작업에 영향이 없으며 생산비·품질·수량이 같고 설립·전환 비용이 0인 모형입니다. 추가 비용이 감소하지 않는 조건에서 부호 비교가 전체 최저로 이어집니다.",
+    "canonicalHref": "/economics/firms/why-firms-exist#boundary"
   },
   "diminishing-returns-to-organising": {
-    id: "diminishing-returns-to-organising",
-    kind: "concept",
-    domain: "economics",
-    label: "조직하는 일에도 수확이 체감한다",
-    aliases: ["관리의 수확 체감", "조직하는 값의 상승"],
-    definition:
-      "안으로 들이는 거래가 늘수록 무엇을 어디에 둘지 정하는 일이 어려워지고 틀리는 몫이 커져, 하나를 더 다루는 값이 올라갑니다. 이것이 없으면 조직은 멈출 이유가 없어 세상 전체가 하나가 되므로, 경계가 존재한다는 사실 자체가 이 체감의 증거입니다. 흩어진 거리, 다루는 거래 종류의 다름, 값이 자주 바뀌는 정도가 이 상승을 가파르게 만듭니다.",
-    canonicalHref: "/economics/firms/why-firms-exist#what-moves",
+    "id": "diminishing-returns-to-organising",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "내부 조정의 추가 부담과 변화",
+    "aliases": [
+      "관리의 수확 체감",
+      "내부 조정 비용"
+    ],
+    "definition": "다루는 일이 늘거나 장소·작업 종류가 달라지면 내부 배정과 감독의 추가 부담이 커질 수 있습니다. 안쪽 비용 1·2·3·4·5·6을 고정하고 밖의 비용을 5로 바꾸면 최저가 4·5개, 2로 바꾸면 1·2개입니다. 동률이면 더 들이는 약속을 명시합니다. 비용 상승은 상황에 대한 가정이지 모든 기업의 법칙이 아닙니다. 안이 항상 5이고 밖이 4이면 내부 비용이 증가하지 않아도 전부 밖에 둡니다. 기술은 양쪽 비용을 바꿀 수 있습니다.",
+    "canonicalHref": "/economics/firms/why-firms-exist#what-moves"
   },
   "roundabout-production-economies": {
     id: "roundabout-production-economies",
@@ -27922,7 +28031,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "폐업의 정산 순서",
-    "definition": "영업 정지와 고객·직원·공급자·세금·임대차 채무를 상대방별로 정산하고 인도·보증금 반환까지 연결하는 순서입니다.",
+    "definition": "문을 닫아도 돈을 줄 상대방이 남습니다. 금액과 지급 순서는 가정입니다. 나중의 보증금 반환이나 사업자 폐업 신고가 앞선 지급 기한과 민사상 채무를 없애지는 않습니다.",
     "canonicalHref": "/economics/property/shop-closure-and-restoration#mechanism"
   },
   "restoration-scope-evidence": {
@@ -27930,7 +28039,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "원상복구 범위의 증거",
-    "definition": "임대차 계약의 약정, 최초 인도 상태, 허용된 공사와 종료 합의·실제 복구 필요를 대조하는 근거 묶음입니다.",
+    "definition": "철거할 범위를 기억에만 맡기면 보증금 다툼이 납니다. 견적이 곧 확정 채무는 아닙니다. 한국 판례의 계약과 재임대 사실관계, NSW 안내의 관할 범위가 다르면 같은 결론을 적용할 수 없습니다.",
     "canonicalHref": "/economics/property/shop-closure-and-restoration#comparison"
   },
   "deposit-closeout": {
@@ -27938,8 +28047,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "보증금 최종 정산",
-    "definition": "반환할 보증금에서 공제 가능한 임대차 채무를 확인하고 점포 인도와 함께 잔액을 확정하는 절차입니다.",
-    "canonicalHref": "/economics/property/shop-closure-and-restoration#limits"
+    "definition": "3천만 원을 냈어도 마지막에 같은 액수가 돌아오는 것은 아닙니다. 다른 공제가 없고 같은 복구비를 두 번 빼지 않는 가정입니다. 고객 환불·임금·세금·대출을 제외한 계산이며 지원금은 심사와 지급이 확정되기 전에 차감하지 않습니다.",
+    "canonicalHref": "/economics/property/shop-closure-and-restoration#case"
   },
   "franchise-split-ledger": {
     "id": "franchise-split-ledger",
@@ -27970,7 +28079,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "개발 잔여 토지가치",
-    "definition": "완공 후 가치에서 공사·금융·판매 등 비용과 요구 이익을 빼 토지에 지불 가능한 금액을 추정하는 방법입니다.",
+    "definition": "건물 매각액 가운데 땅에 돌아갈 몫만 남깁니다. 가격·비용 가정에 따른 단순 예산입니다. 시점별 할인과 시장 비교를 끝낸 토지 평가액이나 확정 거래가격이 아닙니다.",
     "canonicalHref": "/economics/property/land-development-residual#mechanism"
   },
   "land-permit-stack": {
@@ -27978,7 +28087,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "토지 개발 허가의 층",
-    "definition": "소유권과 도시계획상 사용 가능성, 개발행위허가, 건축허가, 기반시설 연결을 서로 다른 확인 단계로 보는 틀입니다.",
+    "definition": "땅을 소유해도 원하는 건물을 바로 지을 수는 없습니다. 지역·용도·규모·시점의 요건을 확인해야 합니다. 잉글랜드의 계획 허가와 건축 규정 승인에 한국의 의제 절차를 그대로 적용하지 않습니다.",
     "canonicalHref": "/economics/property/land-development-residual#comparison"
   },
   "development-time-risk": {
@@ -27986,8 +28095,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "개발의 시간 위험",
-    "definition": "공사비가 먼저 나가고 인허가와 매각 대금이 뒤따를 때 금리·지연·분양 실패가 잔여가치를 바꾸는 위험입니다.",
-    "canonicalHref": "/economics/property/land-development-residual#limits"
+    "definition": "회수가 늦어지면 같은 매각액에서도 추가 지출이 생깁니다. 고정 대출 잔액·단리·추가 관리비와 수수료 제외의 가정입니다. 사업 현금과 자기자본 현금은 차입·상환·이자 및 할인율의 기준을 구분합니다.",
+    "canonicalHref": "/economics/property/land-development-residual#mechanism"
   },
   "global-value-added-chain": {
     "id": "global-value-added-chain",
@@ -28661,6 +28770,40 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     ],
     "definition": "선택 확률 qᵢ로 뽑은 값에 목표 비중을 qᵢ로 나눈 배수를 곱해 기대 기여를 목표와 맞추는 방법입니다. 균등 자료 목표에서는 기울기를 Nqᵢ로 나누며, 목표에 기여하는 모든 자료를 양수 확률로 뽑아야 합니다. 불편성이 작은 분산을 보장하지는 않습니다.",
     "canonicalHref": "/cs/ai/math-variance-sampling#sampling-weights"
+  },
+  "huffman-coding": {
+    "id": "huffman-coding",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Huffman coding · 허프먼 부호",
+    "aliases": [
+      "Huffman tree",
+      "허프먼 나무"
+    ],
+    "definition": "양의 기호 빈도에서 가장 작은 두 노드를 합치는 과정을 반복해 이진 접두 부호의 빈도 가중 평균 길이를 최소화하는 방법입니다. 깊은 형제에 작은 빈도를 놓고 축소하는 증명에 기반하며 특정 주소의 유일성, 예측 품질이나 실제 실행 시간의 최적성은 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/word2vec-prediction-objectives#huffman"
+  },
+  "cuda-graph-parameter-indirection": {
+    "id": "cuda-graph-parameter-indirection",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "CUDA Graph parameter indirection · 입력 주소표",
+    "aliases": [
+      "Graph parameter indirection"
+    ],
+    "definition": "큰 입력을 고정 자리로 복사하는 대신 kernel이 주소표를 통해 입력을 읽게 바꾸고 작은 주소표를 갱신하는 설계입니다. PyGraph의 해당 kernel 변환과 주소표 갱신이 함께 필요합니다. 작은 입력에서는 표 전송 비용이 더 클 수 있으며 일반 replay가 자동으로 지원하는 기능이 아닙니다.",
+    "canonicalHref": "/cs/ai/cuda-graph-capture#research"
+  },
+  "cuda-graph-context-materialization": {
+    "id": "cuda-graph-context-materialization",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "CUDA Graph context materialization · 실행 문맥 복원",
+    "aliases": [
+      "Graph context materialization"
+    ],
+    "definition": "프로세스 재시작 때 graph 연결뿐 아니라 필요한 가상 주소·할당 상태·kernel 코드를 복원하고 호환되는 실행 객체를 준비하는 설계입니다. Foundry의 650→3.9초는 정한 H200·EP8·BF16 설정에서 환경 초기화와 가중치 적재를 제외한 값입니다. 일반 서버 전체 기동 시간이나 구현 재현 결과로 확대하지 않습니다.",
+    "canonicalHref": "/cs/ai/cuda-graph-capture#research"
   },
 };
 
@@ -44840,13 +44983,33 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "cuda-graph-stream-capture", to: "cuda-graph-node", relation: "produces", reason: "Capture 구간의 launch가 node가 되고 stream 순서가 edge가 됩니다." },
   { from: "cuda-graph-stream-capture", to: "cuda-graph-capture-replay", relation: "extends", reason: "Capture·replay 실행 모델의 capture 단계를 stream API 수준에서 구체화합니다." },
   { from: "cuda-graph-node", to: "cuda-graph-instantiation", relation: "prerequisite", reason: "Instantiate는 node·edge template을 검증해 executable graph로 굳힙니다." },
-  { from: "cuda-graph-instantiation", to: "cuda-graph-capture-replay", relation: "constrains", reason: "Replay 횟수가 instantiate 비용을 replay당 절감으로 나눈 손익분기를 넘어야 이득입니다." },
-  { from: "cuda-graph-static-address-constraint", to: "cuda-graph-compatible-execution", relation: "extends", reason: "주소 고정 제약에 동기화 금지·분기 금지·pool 주소 보존을 더해 capture 가능 조건을 완성합니다." },
+  {
+    "from": "cuda-graph-instantiation",
+    "to": "cuda-graph-capture-replay",
+    "relation": "constrains",
+    "reason": "추가 준비 비용은 같은 완료 경계의 반복 절감으로 회수합니다. 절감이 양수일 때 반복 횟수가 C/(Te−Tg)보다 커야 순이득입니다."
+  },
+  {
+    "from": "cuda-graph-static-address-constraint",
+    "to": "cuda-graph-compatible-execution",
+    "relation": "extends",
+    "reason": "일반 정적 주소 계약에 지원되는 캡처 동작과 데이터 수명을 더합니다. 명시적 업데이트와 조건부 node는 별도의 지원 규칙을 따릅니다."
+  },
   { from: "cuda-graph-compatible-execution", to: "cuda-graph-capture-replay", relation: "constrains", reason: "조건을 어긴 코드는 capture되지 않거나 replay가 잘못된 경로·값을 재생합니다." },
   { from: "cuda-graph-compatible-execution", to: "runtime-memory-pool-arena", relation: "extends", reason: "Graph pool은 runtime memory pool 안에서 replay용 주소를 보존하는 전용 영역입니다." },
-  { from: "cuda-graph-static-address-constraint", to: "cuda-graph-shape-padding", relation: "produces", reason: "주소와 shape가 고정되므로 batch가 달라지면 padding이나 새 graph가 필요합니다." },
+  {
+    "from": "cuda-graph-static-address-constraint",
+    "to": "cuda-graph-shape-padding",
+    "relation": "produces",
+    "reason": "일반 정적 replay가 같은 크기의 공간을 읽으므로 준비된 크기로 맞추는 전략을 사용합니다. 명시적 업데이트가 항상 불가능하다는 뜻은 아닙니다."
+  },
   { from: "cuda-graph-shape-padding", to: "cuda-graph-batch-shape-dispatch", relation: "prerequisite", reason: "Dispatch는 padding으로 정해진 capture size를 key로 graph를 찾습니다." },
-  { from: "cuda-graph-shape-padding", to: "decode-memory-bound-regime", relation: "evaluates", reason: "Padded 행의 시간 비용은 decode가 memory-bound인지에 따라 행 비율보다 작거나 같습니다." },
+  {
+    "from": "cuda-graph-shape-padding",
+    "to": "decode-memory-bound-regime",
+    "relation": "evaluates",
+    "reason": "추가 자리의 연산·메모리 비용은 실행 병목과 kernel 구현에 따라 달라집니다. 자리 비율은 시간 손실의 상한이나 보장이 아닙니다."
+  },
   { from: "cuda-graph-shape-padding", to: "runtime-warmup-cold-start", relation: "constrains", reason: "Capture size 수만큼 기동 때 forward와 instantiate를 치르므로 warmup 시간이 늘어납니다." },
   { from: "capability-first-model-routing", to: "replica-routing-load-balancing", relation: "prerequisite", reason: "Hard compatibility로 backend를 거른 뒤에야 같은 model의 replica 사이에서 routing을 고릅니다." },
   { from: "model-parallel-replica-layout", to: "replica-routing-load-balancing", relation: "prerequisite", reason: "Data parallel로 늘린 독립 replica가 있어야 요청을 나눠 보낼 대상이 생깁니다." },
@@ -50373,39 +50536,34 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "상대를 찾고 재고 강제하는 데 드는 값이라는 정의를 먼저 세워야, 같은 몫이 교환을 막는 대신 조정 방식을 바꾸는 쪽으로 쓰이는 것을 읽을 수 있습니다.",
   },
   {
-    from: "cost-of-using-the-market",
-    to: "contracts-collapsed-into-one",
-    relation: "produces",
-    reason:
-      "값을 쓰는 데 드는 몫이 짝마다 약속을 맺는 데서 나오므로, 그 수를 줄이는 방식이 조직의 형태로 나타납니다.",
+    "from": "cost-of-using-the-market",
+    "to": "contracts-collapsed-into-one",
+    "relation": "produces",
+    "reason": "반복 협상의 비용은 일부 조건을 미리 정하고 세부 작업을 나중에 배정하는 방식을 고려하게 합니다. 계약 수만으로 기업 존재를 증명하지 않습니다."
   },
   {
-    from: "contracts-collapsed-into-one",
-    to: "firm-boundary-at-equal-margin",
-    relation: "constrains",
-    reason:
-      "약속을 하나로 바꿔 아끼는 몫이 안쪽 값의 크기를 정하므로, 그 몫이 바깥쪽 값과 만나는 자리가 경계가 됩니다.",
+    "from": "contracts-collapsed-into-one",
+    "to": "firm-boundary-at-equal-margin",
+    "relation": "constrains",
+    "reason": "반복 협상에서 아끼는 비용과 내부 배정·감독 비용을 같은 작업의 전체 비용에 포함합니다. 지시 권한의 범위도 확인합니다."
   },
   {
-    from: "diminishing-returns-to-organising",
-    to: "firm-boundary-at-equal-margin",
-    relation: "constrains",
-    reason:
-      "안쪽 값이 거래 수와 함께 오르지 않으면 두 값이 만나는 자리가 생기지 않아 조직이 멈출 이유가 없습니다.",
+    "from": "diminishing-returns-to-organising",
+    "to": "firm-boundary-at-equal-margin",
+    "relation": "constrains",
+    "reason": "추가 비용이 감소하지 않고 고정비가 없는 조건에서 부호 비교로 동률을 포함한 최저를 찾습니다. 비용이 증가하지 않아도 전부 밖에 두는 최저가 가능하므로 경계의 보편적 필요조건은 아닙니다."
   },
   {
-    from: "price-as-sufficient-signal",
-    to: "cost-of-using-the-market",
-    relation: "contrasts",
-    reason:
-      "값 하나면 조정에 충분하다는 설명과 그 값을 알아내는 일 자체가 비싸다는 설명이 같은 자리를 반대 방향에서 봅니다.",
+    "from": "price-as-sufficient-signal",
+    "to": "cost-of-using-the-market",
+    "relation": "contrasts",
+    "reason": "가격이 정보를 전달하는 역할과 그 정보를 얻고 실제 거래를 맺는 비용을 구분합니다."
   },
   {
-    from: "marginal-decision-rule",
-    to: "firm-boundary-at-equal-margin",
-    relation: "prerequisite",
-    reason:
-      "하나 더 할 때의 값과 그 하나가 주는 것을 견주어 멈출 자리를 찾는 셈을 그대로 조정 방식의 선택에 적용한 것입니다.",
+    "from": "marginal-decision-rule",
+    "to": "firm-boundary-at-equal-margin",
+    "relation": "prerequisite",
+    "reason": "추가 변화의 부호를 같은 작업의 조정 방식에 적용하되 정수 선택의 동률·끝점과 설립비 반례를 확인합니다."
   },
   {
     from: "firm-boundary-at-equal-margin",
@@ -52365,6 +52523,54 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "stochastic-gradient-estimator",
     "relation": "constrains",
     "reason": "균등하지 않은 선택에서도 원하는 전체 목표의 기대 기울기를 맞춥니다."
+  },
+  {
+    "from": "word-embedding-lookup",
+    "to": "cbow-objective",
+    "relation": "prerequisite",
+    "reason": "각 주변 출현이 읽은 행을 모아 평균 입력을 만듭니다."
+  },
+  {
+    "from": "chain-rule",
+    "to": "cbow-objective",
+    "relation": "prerequisite",
+    "reason": "평균으로 들어간 각 출현의 계수 1/C가 역방향에도 필요합니다."
+  },
+  {
+    "from": "expectation",
+    "to": "huffman-coding",
+    "relation": "prerequisite",
+    "reason": "경로 길이를 요청 빈도로 가중한 평균을 최소화합니다."
+  },
+  {
+    "from": "huffman-coding",
+    "to": "hierarchical-softmax",
+    "relation": "optimizes",
+    "reason": "주어진 요청 빈도에서 평균 경로 길이를 줄입니다. 학습 품질이나 실제 실행 시간의 보장은 아닙니다."
+  },
+  {
+    "from": "cuda-graph-static-address-constraint",
+    "to": "cuda-graph-parameter-indirection",
+    "relation": "extends",
+    "reason": "큰 입력을 고정 공간으로 복사하는 대신 주소표를 읽게 kernel을 바꾸는 설계로 확장하며 표 갱신 비용을 따로 비교합니다."
+  },
+  {
+    "from": "cuda-graph-instantiation",
+    "to": "cuda-graph-context-materialization",
+    "relation": "extends",
+    "reason": "새 프로세스에서도 필요한 주소·할당·코드를 복원해 같은 실행 객체를 준비하려는 연구이며 연결 목록만의 저장과 구별합니다."
+  },
+  {
+    "from": "cuda-graph-parameter-indirection",
+    "to": "cuda-graph-capture-replay",
+    "relation": "optimizes",
+    "reason": "대응 kernel과 주소표를 함께 준비할 수 있을 때 정적 입력 복사의 부담을 줄여 반복 재생의 실제 이득을 늘리려는 방법입니다."
+  },
+  {
+    "from": "cuda-graph-context-materialization",
+    "to": "runtime-warmup-cold-start",
+    "relation": "optimizes",
+    "reason": "반복 캡처의 시작 비용을 줄이는 설계이며 환경 초기화와 가중치 적재를 제외한 연구 측정 경계를 따로 유지합니다."
   },
 ];
 

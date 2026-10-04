@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/tmikolov/word2vec",
+  "revision": "20c129af10659f7c50e86e3be406df663beff438",
+  "retrievedAt": "2026-10-04",
+  "files": [
+    "word2vec.c",
+    "LICENSE"
+  ],
+  "preservation": "Whole original files, unchanged; explanatory caller is separate under verification."
+}

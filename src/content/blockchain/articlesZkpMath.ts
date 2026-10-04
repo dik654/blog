@@ -417,14 +417,102 @@ export const zkpMathArticles: Article[] = [
   },
   {
     slug: "binary-field-proving",
-    title: "Binary-field proving: Binius·Flock·기존 hash 증명",
+    title: "이진체 증명: 네 비트에서 Binius와 Flock까지",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "Primitive와 prover 중 무엇을 바꿀까" },
-      { id: "binary-field", title: "F₂·F₂ᵏ와 Boolean workload" },
-      { id: "binius", title: "Binius binary-tower proof" },
-      { id: "flock-selection", title: "Flock·security margin·선택 gate" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 네 비트 계산을 모두 다시 하지 않고 확인하려 합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 계산 기록을 먼저 고정하고 그 기록에 질문합니다"
+  },
+  {
+    "id": "bits",
+    "title": "3. 1011과 0110을 자리별로 계산합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 네 기록이 마지막 한 점으로 줄어드는 모습을 봅니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 작은 비트를 큰 수의 칸마다 저장하는 비용을 줄입니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 역할을 본 뒤 체·기록·확장·합 확인의 이름을 붙입니다"
+  },
+  {
+    "id": "tower",
+    "title": "7. 같은 비트의 확장체 곱은 1111입니다"
+  },
+  {
+    "id": "tower-proof",
+    "title": "8. 왜 이 규칙에서 0이 아닌 값으로 나눌 수 있나요"
+  },
+  {
+    "id": "multilinear",
+    "title": "9. 네 기록에 주소를 붙여 다항식으로 만듭니다"
+  },
+  {
+    "id": "sumcheck",
+    "title": "10. 첫 질문에서 주소 비트 하나를 없앱니다"
+  },
+  {
+    "id": "second",
+    "title": "11. 둘째 질문은 마지막 한 점 5를 남깁니다"
+  },
+  {
+    "id": "source",
+    "title": "12. 원문의 Sumcheck에 같은 네 기록을 넣습니다"
+  },
+  {
+    "id": "source-field",
+    "title": "13. 체 곱셈 원문은 낮은 체의 세 곱을 재사용합니다"
+  },
+  {
+    "id": "soundness",
+    "title": "14. 질문을 0과 1에서만 고르면 거짓 식을 구분하지 못합니다"
+  },
+  {
+    "id": "zerocheck",
+    "title": "15. 오류가 두 개면 단순 합에서 사라질 수 있습니다"
+  },
+  {
+    "id": "commitment",
+    "title": "16. 마지막 5가 처음 고정한 기록에서 나왔는지 확인합니다"
+  },
+  {
+    "id": "binius",
+    "title": "17. Binius라는 이름 아래 서로 다른 판과 구현을 구분합니다"
+  },
+  {
+    "id": "flock",
+    "title": "18. Flock은 같은 회로의 반복과 반복 사이 연결을 함께 다룹니다"
+  },
+  {
+    "id": "measurements",
+    "title": "19. 성능 표에는 단위와 비교 기능이 함께 붙습니다"
+  },
+  {
+    "id": "selection",
+    "title": "20. 해시와 증명 방식을 함께 결정할 수도 있습니다"
+  },
+  {
+    "id": "encoding",
+    "title": "21. 비트 표기 11과 정수 11을 체에 넣는 함수는 다릅니다"
+  },
+  {
+    "id": "verification",
+    "title": "22. 어디까지 실제 실행했는지 확인합니다"
+  },
+  {
+    "id": "boundaries",
+    "title": "23. 같은 입력에서 무엇이 달라질지 예측합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/binary-field-proving"),
   },
   {

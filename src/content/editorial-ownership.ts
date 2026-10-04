@@ -1288,13 +1288,50 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "word2vec-prediction-objectives": {
-    title: "Word2Vec prediction objectives 글이 소유하는 범위",
-    owns: ["같은 window를 CBOW·Skip-gram examples로 바꾸고 hierarchical tree path로 target probability를 구성하는 계산"],
-    reuses: [
-      { label: "Word ID·dual table·pair receipt", href: "/cs/ai/word2vec" },
-      { label: "Softmax activation", href: "/cs/ai/activation-functions" },
+    "title": "같은 문장의 예측 목적과 확률 나무",
+    "owns": [
+      "같은 두 saw의 CBOW 평균과 cat 입력의 Skip-gram 확률·합/평균 손실",
+      "평균의 출현별 기울기와 중복 행 누적, 원본 C의 /cw 누락",
+      "내부 노드의 경로 확률과 전체 잎 정규화, 원문 표기 대응",
+      "Huffman 빈도 가중 길이·구성·최적성 증명과 실제 정렬 전제 반례",
+      "고정 C의 확률 표 근사와 한 중심 CPU 실행을 이상식·전체 학습과 구별"
     ],
-    evidence: [{ kind: "primary-source", rule: "Objective 비교는 원 Word2Vec 논문의 corpus·tree·evaluation 조건으로 제한한다." }],
+    "reuses": [
+      {
+        "label": "단어 번호와 두 표의 행 조회",
+        "href": "/cs/ai/word2vec"
+      },
+      {
+        "label": "Softmax 확률의 정규화",
+        "href": "/cs/ai/softmax"
+      },
+      {
+        "label": "교차 엔트로피와 로짓 기울기",
+        "href": "/cs/ai/cross-entropy#softmax-ce-gradient"
+      },
+      {
+        "label": "합성한 계산의 연쇄법칙",
+        "href": "/cs/ai/math-functions-derivatives-gradients#chain-rule"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Mikolov 두 논문의 방향과 식 (1)·(3), Huffman 식 (2), Corrected CBOW 식 (2)에 같은 수치 사례를 대입합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "수정하지 않은 원본 나무 함수와 바이트 동일한 CBOW 분기를 한 중심 호출에서 CPU 실행합니다. 전체 학습·GPU·성능 측정은 주장하지 않습니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "확률 표의 정수 배율과 /cw 생략, 문장 끝을 제외한 정렬을 실제 pinned 전체 C 원문에서 확인합니다."
+      },
+      {
+        "kind": "standard",
+        "rule": "요청 빈도 모형의 평균 길이와 실제 정답 선택, 이상 기울기와 원본 근사·갱신을 구별합니다."
+      }
+    ]
   },
   "word2vec-negative-sampling": {
     title: "Word2Vec negative sampling 글이 소유하는 범위",
@@ -9176,10 +9213,33 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Architecture는 WEBCAT concepts/FAQ, maturity는 SecureDrop 2026 alpha 발표에 귀속한다." }, { kind: "project-claim", rule: "Manifest 검증을 code correctness·developer honesty·모든 browser 지원으로 확대하지 않는다." }],
   },
   "binary-field-proving": {
-    title: "Binary-field proving ownership",
-    owns: ["F₂·binary tower와 Boolean arithmetization fit", "Binius·Flock를 통한 conventional-hash-friendly proving 선택 경계"],
-    reuses: [{ label: "Poseidon field-native hash", href: "/cs/crypto/poseidon-hash#overview" }, { label: "FRI·STARK pipeline", href: "/cs/crypto/stark-theory#overview" }],
-    evidence: [{ kind: "primary-source", rule: "Binius·Flock construction과 benchmark는 각 논문의 exact field·batch·hardware 조건에 귀속한다." }, { kind: "project-claim", rule: "Reduced-round cryptanalysis를 full-round break로, prototype throughput을 Ethereum 채택으로 확대하지 않는다." }],
+    "title": "같은 네 비트의 이진체 계산·합 확인·원문을 설명하는 범위",
+    "owns": [
+      "1011/0110의 정수·XOR·AND·Fan–Paar F₁₆ 곱 구분",
+      "같은 네 기록의 MLE와 두 sumcheck 질문·원문 실행",
+      "차수·오류 상쇄·PCS와 공개 입출력 연결·인코딩의 조건",
+      "Binius 판과 Flock v1의 기능·성능 단위 및 미실행 범위"
+    ],
+    "reuses": [
+      {
+        "label": "Poseidon과 이진체 해시의 선택",
+        "href": "/cs/crypto/poseidon-hash#binary"
+      },
+      {
+        "label": "기약식과 확장체의 기저",
+        "href": "/cs/crypto/extension-field-theory#overview"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "고정 모델 원문의 선택 정의와 Flock 검사 함수를 읽습니다. 읽은 논문 판과 초록만 확인한 후속 판을 구분합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "같은 네 기록과 독립 작은 체 연산·정직한 질문 조합을 실제 실행합니다. PCS·전체 SNARK·영지식·보안·성능을 검증한 것으로 확대하지 않습니다."
+      }
+    ]
   },
   "ethereum-future-roadmap": {
     "title": "연구·EIP 문서 상태·업그레이드 포함 단계·네트워크 활성화는 서로 다른 증거로 판정합니다.",
@@ -9907,36 +9967,95 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Correctness·privacy는 Shamir 1979의 finite-field·distinct-point·uniform-coefficient 조건에 한정한다." }, { kind: "project-measurement", rule: "Zero/duplicate index·insufficient/bad share·RNG replay를 negative fixtures로 둔다." }, { kind: "project-claim", rule: "Plain sharing이 VSS·dealer honesty·malicious DKG를 제공한다고 주장하지 않는다." }],
   },
   "paillier-cryptosystem": {
-    title: "Paillier cryptosystem 글이 소유하는 범위",
-    owns: ["Valid n·g·lambda·mu key profile과 randomized encryption/L-function decryption", "Additive homomorphism과 ciphertext malleability·integrity 경계"],
-    reuses: [{ label: "Prime-field arithmetic", href: "/cs/crypto/finite-field-theory#prime-field" }, { label: "MPC composition", href: "/cs/crypto/mpc" }],
-    evidence: [{ kind: "primary-source", rule: "Construction과 security claim은 Paillier 1999의 composite-residuosity·key/randomizer 조건에 한정한다." }, { kind: "project-measurement", rule: "Invalid r/c/key·reuse·wraparound·altered aggregate를 release 전에 재생한다." }, { kind: "project-claim", rule: "Homomorphism을 ciphertext integrity·range proof·malicious MPC 보장으로 확대하지 않는다." }],
+    "title": "같은 4와 3의 암호화·합산·원문 복호를 설명하는 범위",
+    "owns": [
+      "n=15의 같은 두 건수를 키·난수·암호문 곱·λ 및 CRT 복호로 추적",
+      "실제 고정 원문의 signed 표현·공개 지수·입력 검사·재무작위화 경로",
+      "난수 재사용·정수 합 감김·n=21의 키 반례·변조와 보안 가정의 조건"
+    ],
+    "reuses": [
+      {
+        "label": "두 나머지를 하나로 합치는 CRT",
+        "href": "/cs/crypto/crt#overview"
+      },
+      {
+        "label": "예측하기 어려운 난수의 조건",
+        "href": "/cs/crypto/csprng#overview"
+      },
+      {
+        "label": "여러 참여자의 계산과 MPC",
+        "href": "/cs/crypto/mpc"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Paillier 1999의 실제 읽은 절과 고정 phe 원문의 선택한 실행 경로에 귀속합니다. 양자 인수분해는 공식 초록 확인 범위로 구분합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "보존한 핵심 모듈을 작은 고정 입력으로 실제 호출하고 독립 정수 계산과 비교합니다. 통제한 getter를 실제 난수 보안 시험으로 확대하지 않습니다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "정상 복호와 전체 키 설정·진위·범위 증명·CCA·threshold·큰 키·보안 감사의 범위를 구분합니다."
+      }
+    ]
   },
   "cuda-graph-capture": {
-    title: "CUDA Graphs 정본이 소유하는 범위",
-    owns: [
-      "Kernel launch overhead가 exec 시간을 압도하는 조건과 capture/replay의 latency 모델",
-      "torch.cuda.graph capture/replay의 static input·output 주소 계약",
-      "vLLM CUDAGraphWrapper의 batch shape별 capture·dispatch·replay 실제 구현",
-      "Dynamic shape 패딩, full·piecewise capture 범위, graph pool 공유의 trade-off",
-      "CUDA graph의 node·edge 정의, 정의·instantiate·실행 세 단계, stream capture의 cross-stream join 규칙, instantiate 비용의 replay 손익분기와 topology가 같을 때의 exec update",
-      "Graph-compatible execution의 세 조건(CPU 동기화 금지·dynamic control flow 금지·graph pool 주소 보존)과 pool 공유의 메모리 절감·순서 조건",
-      "Capture size 목록으로 dynamic shape를 padding하는 방법과 행 기준 낭비 비율 (S(b)−b)/S(b), vLLM 기본 목록의 생성 규칙",
-],
-    reuses: [
-      { label: "CUDA stream ordering", href: "/cs/gpu/cuda-sync-streams#streams" },
-      { label: "Model VRAM known floor", href: "/cs/ai/model-vram-budgeting#known-floor" },
-      { label: "CUDA event dependency", href: "/cs/gpu/cuda-sync-streams#events" },
-      { label: "Decode memory-bound regime", href: "/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity" },
-      { label: "Runtime warmup · cold start", href: "/cs/ai/inference-runtime-anatomy#warmup" },
-      { label: "Launch overhead · CPU 제출 병목 · capture failure", href: "/cs/ai/launch-overhead-and-cpu-gpu-synchronization" },
-],
-    evidence: [
-      { kind: "primary-source", rule: "Capture/replay 실행 계약은 PyTorch torch.cuda.graph의 문서화된 static-address 의미론으로 제한한다." },
-      { kind: "project-measurement", rule: "실제 구현 설명은 vllm-project/vllm의 vllm/compilation/cuda_graph.py 코드 범위로 제한하며, latency 배율 예시는 개념 설명용 수치일 뿐 실측값이 아니다." },
-      { kind: "primary-source", rule: "node·edge·instantiate·update의 의미론은 CUDA Programming Guide의 서술로 제한하고, µs 수치는 NVIDIA blog의 V100 자기보고와 개념 예시임을 본문에 표시한다." },
-      { kind: "project-measurement", rule: "capture size 목록·상한·warmup 횟수는 vllm/config/compilation.py docstring 범위로 제한하며, size당 기동 시간과 pool 절감량은 개념 예시이고 실측이 아니다." },
-],
+    "title": "같은 네 계산으로 읽는 CUDA Graph의 반복 실행 계약",
+    "owns": [
+      "같은 작업과 의존성을 기록하고 준비한 실행 객체를 반복 제출해 CPU의 매회 제출 작업을 줄이는 방법입니다.",
+      "일반 정적 replay는 기록된 메모리 인수를 사용하므로 새 데이터를 같은 입력 공간에 준비하고 그 공간의 수명을 유지해야 합니다.",
+      "준비된 실행 모드와 크기·요청 구성의 키를 대조해 사용할 graph를 선택하고 그 키의 실행 기록을 재사용하는 과정입니다.",
+      "CUDA graph의 node는 kernel·메모리 복사·host 함수 등 작업을 나타내고 edge는 작업 사이의 실행 의존성을 표현합니다.",
+      "stream에 제출한 GPU 작업과 의존성을 graph 정의로 기록하는 API 경로이며 그 구간의 일반 Python 실행까지 replay하는 것은 아닙니다.",
+      "graph 정의를 반복 실행할 객체로 준비하는 단계입니다. 일반 실행보다 추가로 드는 준비 비용은 동일한 완료 경계의 반복 절감으로 회수합니다.",
+      "일반 정적 캡처·재생은 지원되는 작업, 주소와 크기, 입력·출력 수명을 요구합니다. pool 공유에는 비동시 실행과 데이터 의존성을 지키는 추가 조건이 있습니다.",
+      "실제 토큰 수 이상인 준비된 크기 중 가장 작은 것을 선택하고 추가 자리를 처리해 그 크기의 graph를 쓰는 방법입니다.",
+      "큰 입력을 고정 자리로 복사하는 대신 kernel이 주소표를 통해 입력을 읽게 바꾸고 작은 주소표를 갱신하는 설계입니다.",
+      "프로세스 재시작 때 graph 연결뿐 아니라 필요한 가상 주소·할당 상태·kernel 코드를 복원하고 호환되는 실행 객체를 준비하는 설계입니다."
+    ],
+    "reuses": [
+      {
+        "label": "CUDA stream ordering",
+        "href": "/cs/gpu/cuda-sync-streams#streams"
+      },
+      {
+        "label": "Model VRAM known floor",
+        "href": "/cs/ai/model-vram-budgeting#known-floor"
+      },
+      {
+        "label": "CUDA event dependency",
+        "href": "/cs/gpu/cuda-sync-streams#events"
+      },
+      {
+        "label": "Decode memory-bound regime",
+        "href": "/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity"
+      },
+      {
+        "label": "Runtime warmup · cold start",
+        "href": "/cs/ai/inference-runtime-anatomy#warmup"
+      },
+      {
+        "label": "Launch overhead · CPU 제출 병목 · capture failure",
+        "href": "/cs/ai/launch-overhead-and-cpu-gpu-synchronization"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "NVIDIA 공식 API, PyTorch 2.14 문서와 고정 원문, NVIDIA 2019·2024 측정의 장치·동기화·상각 범위를 구분해 대조한다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "vLLM 6e448d0와 PyTorch 2b3ec34의 원격 전체 원문·SHA-256·라이선스를 보존한다. PyGraph v1·Foundry v1의 설계·평가 범위는 실제 제품 동작과 구별한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "네 작업의 시간표와 주소·padding 산술은 명시한 가정이다. 원문 AST의 CPU 선택기 실행과 CUDA 대역 객체의 wrapper 제어 관찰만 자체 실행했으며 GPU 캡처·성능을 측정하지 않았다."
+      }
+    ]
   },
   "flash-attention-io-aware-kernel": {
     "title": "같은 네 점수로 읽는 FlashAttention의 저장·누적·기준 갱신",
@@ -13782,33 +13901,33 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "why-firms-exist": {
-    title: "시장을 쓰는 데에도 값이 듭니다 글이 소유하는 범위",
-    owns: [
-      "값으로 조정하는 일 자체에 드는 값과 생산에 드는 값의 구분",
-      "짝마다 맺던 약속이 하나로 바뀌고 내용이 비워진다는 계약의 성격",
-      "조직의 경계가 안팎의 한계값이 같아지는 자리라는 조건과 그 유도",
-      "조직하는 일의 수확 체감과 경계를 옮기는 조건",
+    "title": "같은 여섯 일로 기업의 경계를 비교하는 설명 범위",
+    "owns": [
+      "시장 이용 비용과 생산비·내부 조정 비용의 구분",
+      "반복 계약과 제한된 지시 권한의 관계",
+      "조건을 명시한 정수 작업의 비용 최소화·동률·반례",
+      "양쪽 비용 변화와 기업 경계의 비교"
     ],
-    reuses: [
+    "reuses": [
       {
-        label: "거래비용의 정의와 교환을 막는 쪽의 효과",
-        href: "/economics/scarcity/gains-from-trade#transaction-cost",
+        "label": "거래비용과 교환의 이득",
+        "href": "/economics/scarcity/gains-from-trade#transaction-cost"
       },
       {
-        label: "값 하나가 흩어진 지식을 옮긴다는 설명",
-        href: "/economics/prices/prices-as-information#sufficient",
+        "label": "가격이 정보를 전달하는 방식",
+        "href": "/economics/prices/prices-as-information#sufficient"
       },
       {
-        label: "하나 더 할 때의 값으로 멈출 자리를 찾는 셈",
-        href: "/economics/scarcity/scarcity-and-opportunity-cost#margin",
-      },
+        "label": "하나 더 할 때의 비용 비교",
+        "href": "/economics/scarcity/scarcity-and-opportunity-cost#margin"
+      }
     ],
-    evidence: [
+    "evidence": [
       {
-        kind: "primary-source",
-        rule: "경계 조건과 조직이 더 커지는 조건은 Coase 1937 원문을 직접 읽어 인용하고, 논문에 없는 숫자 예시는 이 글이 만든 것으로 표시한다",
-      },
-    ],
+        "kind": "primary-source",
+        "rule": "Coase1937 인쇄390~397쪽과 1991 공식 강연의 확인한 본문에 귀속합니다. 숫자·이산 식·실행 모형은 글에서 만든 가정이며 특정 기업의 실증 결과가 아닙니다."
+      }
+    ]
   },
   "scale-and-cost-structure": {
     title: "싸지는 것은 공장이 커져서가 아닙니다 글이 소유하는 범위",

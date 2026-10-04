@@ -1,0 +1,7 @@
+{
+  "originalSha": "df07a1d504c22aa747f9fc40ddc6cfed52e12c3a402861398426829b83d96ef4",
+  "blockFirstLine": 435,
+  "blockLastLine": 495,
+  "blockSha256": "a4cb7238911c1503b61ef9aa00f1bb587c7ef229c31f11e9bfa44c055cf2b662",
+  "scope": "Original CreateBinaryTree directly called; original CBOW if statement lines435\u2013495 copied exactly into a single-center caller with original globals; not full TrainModelThread, corpus training, or performance benchmark. h, bits, source table lookup and input update are executed native CPU."
+}

@@ -3,34 +3,62 @@ import type { Article } from "../types";
 export const firmsArticles: Article[] = [
   {
     slug: "why-firms-exist",
-    title: "시장을 쓰는 데에도 값이 듭니다",
+    title: "기업은 왜 존재할까: 같은 여섯 일의 비용과 계약",
     subcategory: "firm-boundary",
     sections: [
-      {
-        id: "overview",
-        title: "값이 조정한다고 했는데 공장 안에는 값이 없습니다",
-      },
-      {
-        id: "cost-of-market",
-        title: "부품 1. 값을 알아내는 일 자체가 공짜가 아닙니다",
-      },
-      {
-        id: "one-contract",
-        title: "부품 2. 조직은 여러 약속을 하나로 바꿉니다",
-      },
-      {
-        id: "boundary",
-        title: "부품 3. 경계는 두 값이 같아지는 자리에서 멈춥니다",
-      },
-      {
-        id: "what-moves",
-        title: "부품 4. 경계를 옮기는 것은 조직의 뜻이 아닙니다",
-      },
-      {
-        id: "handoff",
-        title: "경계 안에서는 값이 아니라 지시가 정합니다",
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 일을 맡길 때마다 다시 협상해야 한다면"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 밖에 주문하거나 안에서 배정한다"
+  },
+  {
+    "id": "case",
+    "title": "3. 전부 밖에 두면 24, 전부 안에 두면 21이다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 여섯 일을 옮길 때 합계가 어떻게 변하는가"
+  },
+  {
+    "id": "need",
+    "title": "5. 물건값을 알아보고 약속을 지키는 데에도 돈이 든다"
+  },
+  {
+    "id": "names",
+    "title": "6. 방식의 비용과 기업의 경계를 구분한다"
+  },
+  {
+    "id": "cost-of-market",
+    "title": "7. 넷째 일을 바꿔도 합계가 18인 이유"
+  },
+  {
+    "id": "one-contract",
+    "title": "8. 세부 작업을 나중에 정할 수 있는 범위를 약속한다"
+  },
+  {
+    "id": "source",
+    "title": "9. Coase의 원문은 시장을 사용하는 비용부터 묻는다"
+  },
+  {
+    "id": "boundary",
+    "title": "10. 하나 더 들일 때의 차이는 안의 비용 빼기 밖의 비용이다"
+  },
+  {
+    "id": "what-moves",
+    "title": "11. 회사가 커졌어도 안쪽이 좋아진 것은 아닐 수 있다"
+  },
+  {
+    "id": "limits",
+    "title": "12. 설립비가 생기면 첫 작업만 보고 멈출 수 없다"
+  },
+  {
+    "id": "handoff",
+    "title": "13. 같은 일을 끝내는 전체 비용으로 예측한다"
+  }
+],
     component: () => import("@/pages/articles/firms/why-firms-exist"),
   },
   {

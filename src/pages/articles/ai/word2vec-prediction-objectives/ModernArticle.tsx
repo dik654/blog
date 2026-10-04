@@ -1,140 +1,157 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
+import ProgressiveDetail from "@/components/articles/progressive-detail";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
-import { CitationBlock } from "@/components/ui/citation";
-import { PredictionObjectiveViz } from "../word2vec/viz/ModernWord2VecViz";
-
-export default function Word2VecPredictionObjectivesArticle() {
-  return <div className="space-y-16">
-    <section id="overview" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">CBOW와 Skip-gram은 같은 window를 반대 방향의 prediction examples로 바꿉니다</h2>
-      <TermBreakdown title="예측 방향을 정하는 세 용어" items={[
-        { term: "CBOW", description: "여러 context words를 한 representation으로 모아 center word 하나를 예측합니다." },
-        { term: "Skip-gram", description: "Center word 하나에서 각 context word를 별도 target으로 예측합니다." },
-        { term: "Hierarchical softmax", description: "Target word를 vocabulary leaf로 두고 root→leaf binary decisions의 확률을 곱합니다.", boundary: "Flat softmax의 같은 parameter를 단순히 빠르게 계산하는 것은 아닙니다." },
-      ]} />
-      <PredictionObjectiveViz />
-      <ContentBoundary article="word2vec-prediction-objectives" />
-    </section>
-
-    <section id="cbow" className="scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">CBOW는 context rows를 평균해 center-word logits 하나를 만듭니다</h2>
-      <ExplainedFormula question="서로 다른 수의 context words를 어떻게 한 center prediction으로 모으나요?" idea={<p>Valid context positions의 input rows를 더하고 context 수로 나눠 평균 h를 만듭니다. Output table과의 내적으로 vocabulary logits를 만든 뒤 softmax에서 실제 center probability를 읽습니다.</p>} formula={String.raw`\mathbf h_t=|C_t|^{-1}\sum_{j\in C_t}\mathbf v_{w_j},\quad P(w_t\mid C_t)=\operatorname{softmax}(W'\mathbf h_t)_{w_t}`} annotatedFormula={String.raw`\begin{aligned}C_t&=\underbrace{\{j:0<|j-t|\le r\}}_{\text{center를 뺀 context 위치}}\\\mathbf s_t&=\underbrace{\sum_{j\in C_t}\mathbf v_{w_j}}_{\text{context input rows를 합산}}\\\mathbf h_t&=\underbrace{\mathbf s_t/|C_t|}_{\text{context 수로 평균}}\\\boldsymbol\ell_t&=\underbrace{W'\mathbf h_t}_{\text{모든 center 후보 score}}\\P(w_t\mid C_t)&=\underbrace{\operatorname{softmax}(\boldsymbol\ell_t)_{w_t}}_{\text{정답 center의 확률}}\end{aligned}`} operations={[
-        { expression: String.raw`\sum_{j\in C_t}\mathbf v_{w_j}`, annotation: ["window 안 context rows를 더해", "주변 정보를 한 합으로 모음"] },
-        { expression: String.raw`\mathbf s_t/|C_t|`, annotation: ["context 개수로 나눠", "window 크기 차이를 평균으로 정규화"] },
-        { expression: String.raw`W'\mathbf h_t`, annotation: ["평균 context를 모든 output rows와 비교해", "vocabulary logits 생성"] },
-        { expression: String.raw`\operatorname{softmax}(\boldsymbol\ell_t)_{w_t}`, annotation: ["logits를 합 1의 분포로 바꾸고", "실제 center 위치의 확률을 선택"] },
-      ]} terms={[
-        { symbol: String.raw`C_t`, name: "Context positions", description: "Center t를 제외한 실제 window 위치입니다." },
-        { symbol: String.raw`\mathbf h_t`, name: "CBOW context", description: "순서를 버리고 평균한 context representation입니다." },
-        { symbol: "W'", name: "Output table", description: "Center candidates의 score를 만드는 V×d matrix입니다." },
-        { symbol: String.raw`\boldsymbol\ell_t`, name: "Vocabulary logits", description: "각 word type의 정규화 전 score입니다." },
-      ]} assumptions={["Position weight와 hidden nonlinearity가 없는 기본 CBOW입니다.", "Context order를 사용하지 않습니다.", "Dynamic window에 따라 실제 context 수가 달라집니다."]} interpretation="CBOW는 한 window를 한 example로 압축해 빠르지만 각 context의 순서와 개별 contribution을 잃습니다." />
-    </section>
-
-    <section id="skipgram" className="scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Skip-gram은 center 하나에서 context마다 별도의 loss를 만듭니다</h2>
-      <ExplainedFormula question="Center w_t에서 window context 여러 개를 예측할 때 loss는 어떻게 쌓이나요?" idea={<p>각 context c는 center-conditioned vocabulary probability의 별도 target입니다. 각 pair의 negative log probability를 더하거나 평균해 center의 loss를 만듭니다.</p>} formula={String.raw`\mathcal L_t=-|C_t|^{-1}\sum_{j\in C_t}\log P(w_j\mid w_t)`} annotatedFormula={String.raw`\begin{aligned}\ell_{tj}&=\underbrace{{\mathbf v'_{w_j}}^{\!\top}\mathbf v_{w_t}}_{\text{center와 context의 dot score}}\\p_{tj}&=\underbrace{\operatorname{softmax}(W'\mathbf v_{w_t})_{w_j}}_{\text{context j의 vocabulary 확률}}\\e_{tj}&=\underbrace{-\log p_{tj}}_{\text{정답 context가 낮으면 큰 penalty}}\\\mathcal L_t&=\underbrace{|C_t|^{-1}\sum_{j\in C_t}e_{tj}}_{\text{context별 error를 평균}}\end{aligned}`} operations={[
-        { expression: String.raw`{\mathbf v'_{w_j}}^\top\mathbf v_{w_t}`, annotation: ["center input과 context output row를 내적해", "pair score를 계산"] },
-        { expression: String.raw`\operatorname{softmax}(W'\mathbf v_{w_t})_{w_j}`, annotation: ["모든 후보를 공동 정규화하고", "관측 context 확률을 선택"] },
-        { expression: String.raw`-\log p_{tj}`, annotation: ["작은 정답 확률을 큰 양의 값으로 바꿔", "최소화할 error 생성"] },
-        { expression: String.raw`|C_t|^{-1}\sum_j e_{tj}`, annotation: ["pair errors를 더해 context 수로 나눠", "center마다 같은 평균 단위로 비교"] },
-      ]} terms={[
-        { symbol: String.raw`\mathbf v_{w_t}`, name: "Center input row", description: "현재 조건 word의 input embedding입니다." },
-        { symbol: String.raw`\mathbf v'_{w_j}`, name: "Context output row", description: "관측 context target의 output embedding입니다." },
-        { symbol: String.raw`p_{tj}`, name: "Context probability", description: "Center t에서 context j를 예측한 categorical probability입니다." },
-        { symbol: String.raw`\mathcal L_t`, name: "Center loss", description: "Window context pair errors의 평균입니다." },
-      ]} assumptions={["정확한 flat softmax를 사용하는 기본 Skip-gram입니다.", "Context pairs의 평균·합 reduction을 run마다 고정합니다.", "Rare-word 이점은 corpus·subsampling·budget에 따라 달라집니다."]} interpretation="Radius 2에서 context가 네 개면 center 하나가 네 categorical examples를 만듭니다. 이 방향 차이가 CBOW의 한-example averaging과 다릅니다." />
-    </section>
-
-    <section id="hierarchical" className="scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Hierarchical softmax는 word probability를 root-to-leaf decision 곱으로 바꿉니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Vocabulary word를 binary tree의 leaf에 놓으면 target word에 도달하려면 path의 각 node에서 왼쪽·오른쪽 결정을 내려야 합니다. Leaf probability는 path decision probabilities의 곱입니다. Balanced tree라면 V개 logits 대신 약 log₂V개의 node score를 계산합니다.</p><p>그러나 tree가 parameter sharing과 오류 구조를 정하므로 flat softmax와 같은 distribution을 그대로 근사하는 단순 캐시가 아닙니다.</p></div>
-      <ExplainedFormula
-        question="Leaf word의 확률은 path 위 node들의 sigmoid를 어떻게 곱해서 나오나요?"
-        idea={
-          <p>
-            Root에서 target leaf까지 내려가며 각 internal node에서 "기준
-            자식으로 가는가"를 하나의 sigmoid로 예측합니다. Leaf에 도달할
-            확률은 그 경로 위 모든 결정 확률의 곱입니다.
+import { CitationBlock } from "@/components/ui/citation-block";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import ObjectiveCaseViz from "./viz/ObjectiveCaseViz";
+import ProbabilityTreeViz from "./viz/ProbabilityTreeViz";
+const prose="prose prose-neutral max-w-none dark:prose-invert";
+const rows=[["0","</s>","[0, 0, 0]","[0, 0, 0]"],["1","red","[1, 0, 0]","[1, 0, 1]"],["2","cat","[1, 2, 0]","[2, 0, 1]"],["3","saw","[0, 1, 1]","[0, 1, 2]"],["4","dog","[0, 0, 1]","[1, 1, 0]"]];
+export default function Word2VecObjectivesArticle(){const sidebar=useCodeSidebar();const code=(key:string)=><CodeViewButton onClick={()=>sidebar.open(key,codeRefs[key])}/>;return <div className="space-y-16">
+<section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">1. 왜 같은 문장이 다른 예측 문제가 될까요?</h2><div className={prose}>
+<p>
+            단어마다 수를 저장한 표가 있다고 해 보겠습니다. cat의 줄을 읽을 수 있다는 것만으로 그 수가 좋은지는 알 수 없습니다. 실제 문장에서 함께 등장한 단어를 맞히게 하고 답을
+            잘 못 맞힌 만큼 표를 고칠 기준이 필요합니다. 이때 무엇을 보여 주고 무엇을 정답으로 삼는지가 학습의 방향을 정합니다.
           </p>
-        }
-        formula={String.raw`P(w\mid w_I)=\prod_{j=1}^{L(w)-1}\sigma\!\Big([\![n(w,j+1)=\mathrm{ch}(n(w,j))]\!]\cdot {v'_{n(w,j)}}^{\!\top} v_{w_I}\Big)`}
-        annotatedFormula={String.raw`\begin{aligned}
-s_j&=\underbrace{{v'_{n(w,j)}}^{\!\top} v_{w_I}}_{\text{현재 node 벡터와 input word 벡터의 내적}}\\
-\mathrm{sign}_j&=\underbrace{[\![n(w,j+1)=\mathrm{ch}(n(w,j))]\!]}_{\text{실제로 간 자식이 기준 자식이면 +1, 아니면 -1}}\\
-P(w\mid w_I)&=\underbrace{\prod_{j=1}^{L(w)-1}\sigma(\mathrm{sign}_j\cdot s_j)}_{\text{root부터 leaf 직전까지 각 node의 결정 확률을 모두 곱함}}
-\end{aligned}`}
-        operations={[
-          {
-            expression: String.raw`{v'_{n(w,j)}}^{\top} v_{w_I}`,
-            annotation: ["현재 path node의 벡터와", "input word 벡터를 내적해 raw score 계산"],
-          },
-          {
-            expression: String.raw`[\![n(w,j+1)=\mathrm{ch}(n(w,j))]\!]`,
-            annotation: ["실제로 내려간 자식이 기준 자식과 같은지로", "부호를 +1 또는 -1로 정함"],
-          },
-          {
-            expression: String.raw`\sigma(\mathrm{sign}_j\cdot s_j)`,
-            annotation: ["부호 있는 score를", "이 node에서 그 방향으로 갈 확률로 변환"],
-          },
-          {
-            expression: String.raw`\prod_{j=1}^{L(w)-1}(\cdot)`,
-            annotation: ["root부터 leaf 바로 위까지", "모든 node 결정 확률을 곱함"],
-          },
-        ]}
-        terms={[
-          { symbol: String.raw`L(w)`, name: "path 길이", description: "Root에서 leaf w까지 거치는 node 개수입니다." },
-          { symbol: String.raw`n(w,j)`, name: "j번째 path node", description: "Root(n(w,1))부터 leaf 바로 위 node까지, w로 가는 경로의 j번째 internal node입니다." },
-          { symbol: String.raw`\mathrm{ch}(n)`, name: "기준 자식", description: "Node n의 두 자식 중 항상 같은 쪽(예: 왼쪽)을 '기준'으로 고정해 부호를 정의합니다." },
-          { symbol: String.raw`v'_{n(w,j)}`, name: "node의 output vector", description: "Leaf가 아니라 internal node마다 따로 갖는 학습 parameter입니다." },
-          { symbol: String.raw`v_{w_I}`, name: "input word vector", description: "조건으로 주어진 input word(CBOW는 평균 context, Skip-gram은 center)의 embedding입니다." },
-        ]}
-        assumptions={[
-          "각 leaf가 정확히 한 vocabulary word에 대응하는 binary tree를 가정합니다.",
-          "모든 leaf path 확률의 합이 1이 되려면 tree가 확률 공간을 정확히 분할해야 합니다(각 internal node에서 왼쪽·오른쪽 확률의 합이 1).",
-        ]}
-        interpretation="Flat softmax의 V번 연산 대신, 이 곱은 균형 tree라면 약 log₂V번의 sigmoid 연산만 필요합니다. 다만 이 확률은 flat softmax를 근사하는 값이 아니라 tree 구조 자체가 정의하는 별도의 분포입니다."
-      />
-      <p className="text-sm leading-7 text-muted-foreground">
-        Tree 모양이 확률 공간을 정하므로 어떤 word를 어디에 놓을지가
-        중요합니다. Word2vec은 임의 binary tree가 아니라, corpus frequency로
-        직접 tree를 구성하는 Huffman coding을 씁니다.
-      </p>
-      <AlgorithmBlock
-        title="Huffman tree 구성 — 빈도가 높을수록 짧은 경로"
-        input={["Vocabulary word별 corpus frequency count"]}
-        steps={[
-          {
-            code: "heap = [Leaf(word, freq) for word, freq in vocab_freq.items()]",
-            note: "각 word를 자신의 frequency를 weight로 갖는 leaf node로 초기화합니다.",
-          },
-          {
-            code: "heapify(heap)  # frequency 기준 min-heap",
-            note: "Frequency가 가장 작은 두 node를 항상 먼저 꺼낼 수 있도록 min-heap으로 정렬합니다.",
-          },
-          {
-            code: "while len(heap) > 1:\n    a = heappop(heap)\n    b = heappop(heap)",
-            note: "현재 남은 node 중 frequency가 가장 작은 두 개를 꺼냅니다 — 흔한 word가 아니라 희귀한 word부터 먼저 묶습니다.",
-          },
-          {
-            code: "parent = InternalNode(freq=a.freq + b.freq, left=a, right=b)\nheappush(heap, parent)",
-            note: "두 node를 자식으로 갖는 새 internal node를 만들어 합산 frequency로 다시 heap에 넣습니다.",
-          },
-        ]}
-        output="heap[0] — 전체 vocabulary를 leaf로 갖는 단일 root node"
-        repeatUntil="heap에 root 하나만 남을 때까지 반복합니다."
-      />
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">
-          매 iteration마다 가장 작은 두 frequency를 먼저 합치는 greedy 선택은 Huffman의 고전적 보장을 그대로 물려받습니다. 결과 tree의 가중 경로
-          길이(frequency × path 길이의 합)를 가능한 tree 중 최소로 만든다는 보장입니다. 자연어 word frequency는 skew가 극심해 소수의 흔한 단어가 대부분의
-          학습 example을 차지합니다. 이 흔한 단어들에 짧은 경로를 몰아주면 balanced tree(모든 word에 같은 경로 길이)보다 학습 한 번당 평균 sigmoid 연산 수가
-          더 줄어듭니다.
-        </p>
-      </div>
-      <div id="paper-word2vec-objectives" className="not-prose mt-8 scroll-mt-24"><CitationBlock type="paper" citeKey={1} source="Mikolov et al. — Efficient Estimation of Word Representations" href="https://arxiv.org/abs/1301.3781#page=3">CBOW·Skip-gram prediction direction과 hierarchical softmax를 큰 vocabulary 학습에 사용한 원 연구입니다. 당시 speed·analogy 결과는 논문의 corpus와 구현 조건에 제한됩니다.</CitationBlock></div>
-    </section>
-  </div>;
-}
+<p>가운데 cat을 가리고 양쪽의 saw를 보여 줄 수 있습니다. 반대로 cat을 보여 주고 양쪽에서 어떤 단어를 보았는지 각각 맞히게 할 수도 있습니다. 같은 문장을 읽어도 첫 방식은 주변을 한데 모은 질문 하나이고, 두 번째는 가운데를 공유하는 질문 두 개입니다. 질문 수와 수를 모으는 순서가 모두 달라집니다.</p>
+<p>
+            이 글에서는 다섯 단어짜리 문장과 작은 표를 끝까지 사용합니다. 먼저 두 종류의 질문이 어떻게 생기는지 보겠습니다. 그다음 각 후보에 확률을 주고 정답 확률을 높이려면 어느
+            줄을 어느 정도 바꾸는지 계산합니다. 마지막에는 모든 후보를 한꺼번에 비교하는 대신 갈림길을 따라 하나의 단어를 찾는 방법을 실제 C 코드와 대조합니다.
+          </p></div></section>
+<section id="black-box" data-teach-level="B" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">2. 문장을 고른 뒤 두 갈래로 바꿉니다</h2><div className={prose}>
+<p>전체 흐름의 입력은 문장과 현재 위치입니다. 가까운 이웃을 고른 뒤 각 단어의 번호로 수의 줄을 읽습니다. 여기서 첫 번째 선택을 합니다. 이웃 줄을 모아서 가운데를 맞힐지, 가운데 줄 하나로 이웃들을 따로 맞힐지 정합니다. 아직 어느 방식이 더 좋다고 가정하지 않겠습니다.</p>
+<p>다음 선택은 정답에 확률을 주는 방법입니다. 후보가 다섯 개라면 다섯 점수를 계산한 뒤 전체 합에 대한 비율을 만들 수 있습니다. 후보가 아주 많다면 정답까지 가는 짧은 갈림길에만 점수를 붙일 수도 있습니다. 앞의 선택은 예측 문제를 만들고 뒤의 선택은 그 문제의 답에 확률을 매깁니다. 두 선택을 따로 보아야 조합을 바꿀 수 있습니다.</p>
+<p>결과로 나오는 것은 이번 정답의 확률과 표를 고칠 양입니다. 그 양은 다른 문장에서도 다시 쓰는 줄에 쌓입니다. 같은 saw가 두 위치에 있었다면 각각의 위치가 같은 줄을 가리켰다는 사실도 남아야 합니다. 한 번 읽은 단어 종류만 기억하고 두 번째 출현을 지우면 계산의 근거를 바꾸게 됩니다.</p></div></section>
+<section id="case" data-teach-level="0" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">3. 다섯 단어와 두 개의 수 표를 고정합니다</h2><div className={prose}>
+<p>(가정) 문장은 <code>red saw cat saw dog</code>이고 왼쪽부터 위치를 0에서 4까지 셉니다. 가운데 위치 2의 cat에서 양쪽 한 칸만 보겠습니다. 위치 1과 3의 saw가 이웃입니다. 양쪽 두 칸을 보면 red와 dog도 들어오지만, 우선 같은 단어가 두 번 등장한 가장 작은 경우를 따라갑니다.</p>
+<p>번호는 위치와 별개입니다. 단어 목록을 [문장 끝, red, cat, saw, dog]로 정하면 cat은 번호 2, 두 saw는 모두 번호 3입니다. 문장 번호열은 [1,3,2,3,4]입니다. 앞선 <a href="/cs/ai/word2vec">단어 번호와 두 표를 읽는 글</a>과 같은 설정이며 아래 값도 학습 결과가 아닌 설명을 위해 고른 수입니다.</p>
+<p>
+            입력 역할의 표와 예측 대상 역할의 표를 따로 둡니다. cat을 입력으로 쓰면 [1,2,0]을 읽고, 정답 후보로 평가하면 [2,0,1]을 읽습니다. 어느 표를 읽는지 기록하지
+            않으면 번호 2만 보고 계산을 복원할 수 없습니다. 두 표는 처음부터 끝까지 그대로 고정하고 고치는 양을 설명하는 지점에서만 한 번의 변화를 따로 보겠습니다.
+          </p></div>
+<div className="my-6 overflow-x-auto"><table className="w-full text-sm"><caption className="mb-3 text-left">가정한 표: 번호와 수는 앞 글과 같습니다</caption><thead><tr>{["번호","단어","입력 역할","예측 대상 역할"].map(x=><th key={x} className="p-2 text-left">{x}</th>)}</tr></thead><tbody>{rows.map(r=><tr key={r[0]}>{r.map((x,i)=><td key={i} className="border-t border-border p-2 whitespace-nowrap">{x}</td>)}</tr>)}</tbody></table></div><div className={prose}>
+<p>먼저 두 saw의 입력 줄 [0,1,1]과 [0,1,1]을 더하고 2로 나눕니다. 묶은 결과는 [0,1,1]입니다. 이 줄을 정답 후보 cat의 [2,0,1]과 같은 자리끼리 곱해 더하면 0×2+1×0+1×1=1입니다. 이 경우 정답은 가운데의 cat 하나입니다.</p>
+<p>같은 평균 [0,1,1]을 나머지 후보와도 비교해 보겠습니다. 번호 순서로 문장 끝은 0, red는 1, cat은 1, saw는 3, dog는 1입니다. 지금 가장 높은 점수를 받은 후보는 saw인데 관찰한 정답은 cat입니다. 점수표를 만드는 계산과 정답을 알려 주는 자료의 역할이 다른 것을 볼 수 있습니다. 어느 후보가 정답인지 먼저 안다고 그 후보의 점수를 임의로 높여 놓지는 않습니다.</p>
+<p>반대 방향에서는 cat의 입력 줄 [1,2,0]을 읽습니다. saw의 예측 대상 줄 [0,1,2]와 곱해 더하면 1×0+2×1+0×2=2입니다. 왼쪽 saw를 맞히는 질문과 오른쪽 saw를 맞히는 질문에서 각각 이 2를 얻습니다. 두 값이 같아도 서로 다른 위치에서 관찰한 두 답입니다.</p>
+<p>이 입력으로 다섯 후보를 전부 비교하면 점수는 [0,1,2,2,3]입니다. 가장 높은 dog와 관찰한 saw가 다시 다릅니다. 두 방식 모두 지금의 표에서 정답을 최고로 고르지 못하지만, 서로 다른 줄에서 출발했으므로 수를 고칠 경로도 다릅니다. 정답 saw의 점수 2만 보던 시야를 전체 후보로 넓혀야 이후의 확률 계산이 필요해집니다.</p>
+<p>점수 1과 2를 곧바로 확률처럼 읽으면 안 됩니다. 지금 표에는 수가 세 개 있지만 후보는 다섯 단어입니다. 어떤 후보를 얼마나 선호하는지 판단하려면 선택한 입력을 다른 후보들과도 비교해야 합니다. 따라서 점수가 더 큰 두 번째 방식이 더 좋은 학습 방식이라는 결론도 아직 낼 수 없습니다.</p>
+<p>후보들의 비교가 왜 필요한지 가장 단순한 경우로 확인할 수 있습니다. 다섯 후보의 점수가 모두 같다면 어느 단어를 더 선호할 근거도 없으므로 각각 1/5의 확률을 받습니다. cat을 정답으로 표시해도 예측 확률이 저절로 1이 되지는 않습니다. 정답은 표가 내놓은 답을 평가하고 나중에 수를 고치는 데 쓰입니다. 이번 입력에서 무엇을 알고 무엇을 맞혀야 하는지 섞지 않는 것이 중요합니다.</p></div></section>
+<section id="picture" data-teach-level="1" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">4. 두 saw를 합치거나 따로 맞힙니다</h2><div className={prose}>
+<p>아래 첫 장면에서는 양쪽 saw의 줄이 평균을 만드는 한 곳으로 모입니다. 그 결과로 가운데 cat을 맞힙니다. 두 번째 장면에서는 가운데 cat의 줄이 두 질문에 공통으로 들어갑니다. 정답은 왼쪽 saw와 오른쪽 saw에 각각 붙습니다. 그림의 화살표는 문장을 읽은 순서가 아니라 예측에 쓰이는 방향입니다.</p></div><ObjectiveCaseViz/><div className={prose}>
+<p>
+            세 번째 장면에서 보는 범위만 두 칸으로 넓혀 보세요. 가운데는 여전히 cat인데 첫 방식은 네 이웃을 한 번 모으고, 두 번째는 네 정답 위치를 따로 셉니다. 문장의 맨
+            앞이나 끝에서는 없는 위치를 채워 넣지 않습니다. 남은 이웃이 몇 개인지가 평균의 나눗셈과 질문 수를 함께 바꿉니다.
+          </p>
+<p>이 차이는 두 saw의 순서를 맞바꾸어 보면 더 잘 드러납니다. 첫 방식의 합과 평균은 그대로입니다. 두 번째 방식도 여기서 위치 자체를 별도 수로 표현하지 않는다면 같은 두 정답을 얻습니다. 단어 사이에 가까운 관계가 있다는 관찰을 쓸 뿐, 이 계산만으로 왼쪽과 오른쪽의 문법적 역할까지 구별하지는 못합니다.</p>
+<p>같은 줄을 두 번 사용했다는 사실은 표를 고칠 때 다시 필요합니다. 첫 방식에서는 두 출현이 하나의 평균에 얼마나 기여했는지 되짚습니다. 두 번째에서는 두 예측에서 생긴 고칠 양을 같은 cat 입력 줄에 더합니다. 입력 값이 공유된다는 것과 학습 사례를 하나로 줄인다는 것은 다릅니다.</p></div></section>
+<section id="why" data-teach-level="2" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">5. 무엇을 묶고 무엇을 나눌지 정하는 이유</h2><div className={prose}>
+<p>
+            이웃을 한 번 모으면 여러 단어의 정보를 가지고 가운데 하나를 맞힐 수 있습니다. 정답 후보들을 비교하는 작업도 묶은 입력 한 개에 대해 수행합니다. 대신 어느 수가 어느
+            위치에서 왔는지는 평균만 보고 되찾을 수 없습니다. 원래 위치와 계산 경로를 따로 보관하면 각 입력을 고칠 양은 계산할 수 있으므로 위치 구별이 사라진다는 말을 학습 경로까지
+            사라진다는 뜻으로 넓히지는 않겠습니다.
+          </p>
+<p>가운데 하나로 이웃마다 질문을 만들면 정답이 여러 번 주어집니다. 두 saw만 있을 때는 같아 보이지만 red와 dog가 들어오면 다른 후보를 높이려는 요구가 같은 cat 줄에 모입니다. 어느 정답을 더 자주 보았는지도 영향을 줍니다. 그만큼 예측 횟수가 늘 수 있어 같은 문장을 한 번 읽었다는 조건만으로 계산 예산이 같다고 볼 수 없습니다.</p>
+<p>더한 줄을 이웃 수로 나누는 이유도 분명히 할 수 있습니다. 두 saw를 세 번씩 반복해 여섯 출현으로 만들면 합은 세 배가 되지만 평균은 여전히 [0,1,1]입니다. 이웃이 많이 있었다는 이유만으로 입력 전체가 커지는 효과를 없앱니다. 물론 여섯 이웃의 구성이 달라지면 평균 자체도 바뀝니다. 나눗셈이 다른 문맥까지 같은 것으로 만드는 것은 아닙니다.</p>
+<p>마지막으로 후보가 많아지는 문제를 생각해 보겠습니다. 다섯 후보라면 각 줄을 전부 읽는 부담이 작지만 수만 개라면 같은 비교를 매번 되풀이하기 어렵습니다. 단어들을 두 묶음으로 나누고 정답이 있는 쪽을 거듭 고르면 한 단어에 도달하는 동안 일부 질문만 계산할 수 있습니다. 이 방식은 별도의 확률 구조를 만들기 때문에 기존 다섯 후보의 비율을 그대로 보존한다고 가정해서는 안 됩니다.</p>
+<p>한 가지 더 구별할 것은 학습의 정답과 언어 전체의 정답입니다. 이 문장에서 cat 옆에 saw가 실제로 있었다는 사실을 정답으로 씁니다. dog가 다른 문장에서 cat 옆에 등장할 수 없다고 선언하는 것이 아닙니다. 많은 문장의 서로 다른 관찰이 같은 수의 표에 모이면서, 여러 후보에 확률을 나누는 이유도 생깁니다.</p>
+<p>확률을 높인다는 말은 다음 글자를 반드시 한 개 골라 출력한다는 뜻도 아닙니다. 학습할 때는 실제 관찰한 정답에 얼마의 확률을 주었는지 계산하면 됩니다. 사용 단계에서 가장 높은 후보를 고를지, 각 단어의 수를 검색에 쓸지는 별도 선택입니다. 이 글은 관찰한 이웃으로 표를 고칠 기준을 만드는 과정까지 따라갑니다.</p>
+<p>지금까지 무엇을 입력으로 묶는지, 정답을 몇 번 세는지, 많은 후보를 어떻게 찾아갈지 나누어 보았습니다. 다음부터는 이 세 선택에 이름을 붙이고 같은 문장의 실제 확률과 표의 변화량을 구하겠습니다.</p>
+<p>읽는 동안에는 가운데 위치와 입력 역할을 따로 표시해 두면 좋습니다. 가운데 위치는 계속 cat이지만, 주변을 모으는 방식에서는 실제로 읽은 입력 줄이 saw의 줄입니다. 같은 cat이라는 글자가 그림의 가운데에 있다는 이유로 모든 식의 입력을 cat으로 놓으면 첫 점수 1부터 재현되지 않습니다. 뒤의 원본 프로그램에서도 이 구별을 그대로 사용합니다.</p></div></section>
+<section id="names" data-teach-level="3" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">6. 이제 역할에 이름을 붙입니다</h2><TermBreakdown title="두 예측 방향과 두 확률 계산" items={[
+{term:"CBOW · Continuous Bag of Words",description:"주변 단어들의 입력 벡터를 모아 중심 단어 하나를 예측합니다. 이 글에서는 평균을 사용합니다.",example:"saw 두 출현 → 평균 [0,1,1] → cat 하나",boundary:"Bag은 이 합산에서 단어의 순서를 구별하지 않는다는 뜻입니다."},
+{term:"Skip-gram",description:"중심 단어의 입력 벡터에서 주변 각 위치의 단어를 예측합니다.",example:"cat → 왼쪽 saw, cat → 오른쪽 saw",boundary:"15절의 저자 C 구현은 이웃 입력→중심 정답으로 역할을 배정하므로 논문 방향과 구별합니다."},
+{term:"Flat softmax · 전체 후보 정규화",description:"모든 후보 점수의 지수값을 더하고 각 값을 그 합으로 나누어 전체 합이 1인 확률을 만듭니다."},
+{term:"Hierarchical softmax · 계층적 softmax",description:"단어를 나무의 잎에 두고 정답 잎으로 가는 이진 선택의 확률을 곱합니다. 출력 벡터는 단어가 아니라 내부 노드에 둡니다."},
+{term:"Huffman coding · 허프먼 부호",description:"주어진 등장 빈도로 평균 경로 길이를 줄이는 이진 나무를 만드는 방법입니다. 확률을 학습하는 규칙과 나무 모양을 정하는 규칙은 별개입니다."},
+]}/><div className={prose}><p>단어마다 여러 수를 둔 한 행을 벡터라고 부르고 입력 표는 W, 단어별 출력 표는 U로 쓰겠습니다. 두 벡터의 같은 성분끼리 곱해 더한 점수가 내적입니다. 아래 확률 계산에서 필요한 <a href="/cs/ai/softmax#overview">softmax</a>는 비율을 만드는 연산이며, <a href="/cs/ai/cross-entropy">정답 확률의 음의 로그</a>는 높이고 싶은 확률을 줄이고 싶은 손실로 바꾸는 방법입니다.</p></div></section>
+<section id="cbow" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">7. 두 이웃의 평균으로 cat의 확률을 구합니다</h2><div className={prose}><p>CBOW에서 입력 출현 두 개를 더해 2로 나눈 h는 [0,1,1]입니다. 이 h를 U의 다섯 행과 각각 내적하면 번호 순서로 [0,1,1,3,1]을 얻습니다. cat은 번호 2이므로 정답 점수는 1입니다. saw의 점수가 3으로 더 높아 현재의 가정한 표는 가운데 cat을 잘 맞히지 못합니다.</p></div>
+<ExplainedFormula question="평균 입력에서 정답 cat의 확률과 손실은 얼마인가요?" idea={<p>모든 후보의 양수 값을 더해 분모를 만듭니다. 정답에 배정된 비율의 음의 로그를 취하면 정답 확률이 높을수록 손실이 작아집니다.</p>} formula={String.raw`h=\frac1C\sum_{j=1}^C W[c_j],\quad p_i=\frac{e^{U[i]^\top h}}{\sum_{k=0}^{V-1}e^{U[k]^\top h}},\quad L=-\ln p_t`} annotatedFormula={String.raw`\begin{aligned}h&=\underbrace{\frac1C\sum_{j=1}^C W[c_j]}_{\text{입력 출현 평균}}\quad(C>0)\\p_i&=\underbrace{\frac{e^{U[i]^\top h}}{\sum_{k=0}^{V-1}e^{U[k]^\top h}}}_{\text{모든 후보 중의 비율}}\\h&=\tfrac12\big((0,1,1)+(0,1,1)\big)=(0,1,1)\\p_2&=\frac{e}{1+3e+e^3}\approx0.0929633\\L&=\underbrace{-\ln p_t}_{\text{정답 확률의 손실}}\approx2.375551\end{aligned}`} operations={[{expression:String.raw`\frac1C\sum_{j=1}^C W[c_j]`,annotation:["위치별 입력 행을 더한 뒤","실제 출현 수로 나눔"]},{expression:String.raw`\sum_{k=0}^{V-1}e^{U[k]^\top h}`,annotation:["다섯 후보 모두를 계산해","하나의 분모를 만듦"]},{expression:String.raw`-\ln p_t`,annotation:["정답 확률이 커질수록","줄어드는 손실로 변환"]}]} terms={[{symbol:"C,c_j",name:"입력 개수와 ID",description:"C는 선택한 이웃 출현 수이며 c_j는 j번째 출현의 단어 번호입니다."},{symbol:"h,U[i]",name:"평균과 후보 행",description:"둘 다 길이 d인 벡터입니다. 가정에서는 d=3입니다."},{symbol:"V,t",name:"후보 수와 정답",description:"V=5, 정답 cat의 번호 t=2입니다."}]} assumptions={["유효 이웃이 적어도 하나 있고 자연로그를 사용합니다.","두 saw를 두 항으로 유지하며 W와 U는 3절의 고정된 표입니다."]} interpretation="전체 다섯 확률의 합은 1입니다. 정답 하나를 높이려면 다른 후보와의 상대 점수도 함께 달라져야 합니다."/>
+<div className={prose}><p>실제 계산에서는 큰 지수값을 곧바로 만들지 않고 모든 점수에서 같은 최댓값을 빼는 방법을 쓸 수 있습니다. 비율은 같고 큰 수의 범위를 줄입니다. 여기서는 작은 점수라 원래 식으로 계산했습니다. 이웃이 하나도 없다면 C=0의 평균은 정의되지 않으므로 이 예측을 건너뛰거나 별도의 입력 규칙을 정해야 합니다.</p></div></section>
+<section id="mean-gradient" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">8. 평균으로 들어간 오차는 나누어 돌아갑니다</h2><div className={prose}><p>평균은 각 입력을 1/C만큼 넣는 계산입니다. 입력 행 하나의 성분을 조금 바꾸면 평균의 해당 성분은 그 변화의 1/C만큼 바뀝니다. 따라서 손실이 h를 따라 얼마나 변하는지 알면 각 출현에 돌려줄 기울기에도 1/C를 곱합니다. 이것이 합성한 계산을 거꾸로 따라가는 <a href="/cs/ai/math-functions-derivatives-gradients#chain-rule">연쇄법칙</a>의 이 사례입니다.</p></div>
+<ExplainedFormula question="같은 saw 행을 두 번 읽었을 때 기울기는 어디에 쌓이나요?" idea={<p>
+            먼저 정답 확률에서 평균 입력까지 돌아온 뒤 평균의 나눗셈을 각 출현에 적용합니다. 같은 행을 가리킨 출현은 마지막에 같은 저장 위치로 더합니다.
+          </p>} formula={String.raw`g_h=\sum_i(p_i-\mathbf1_{i=t})U[i],\quad \frac{\partial L}{\partial W[w]}=\frac{m_w}{C}g_h`} annotatedFormula={String.raw`\begin{aligned}g_h&=\underbrace{\sum_i(p_i-\mathbf1_{i=t})U[i]}_{\text{후보 오차가 평균으로 돌아옴}}\\\frac{\partial L}{\partial W[w]}&=\underbrace{\frac{m_w}{C}g_h}_{\text{같은 행의 출현을 누적}}\\g_h&\approx(-1.628147,\ 0.779874,\ 0.559748)\\C=2,\ m_{\mathrm{saw}}=2:\quad\frac{\partial L}{\partial W[3]}&=\tfrac22 g_h=g_h\end{aligned}`} operations={[{expression:String.raw`p_i-\mathbf1_{i=t}`,annotation:["예측 확률에서 정답 표시를 빼","각 후보 점수의 기울기를 구함"]},{expression:String.raw`\frac{m_w}{C}g_h`,annotation:["출현마다 1/C를 적용한 뒤","같은 행의 m_w번을 더함"]}]} terms={[{symbol:"g_h",name:"평균 입력의 기울기",description:"h의 각 수를 바꿀 때 손실이 변하는 비율입니다."},{symbol:String.raw`\mathbf1_{i=t}`,name:"정답 표시",description:"후보 i가 정답이면 1이고 나머지는 0입니다."},{symbol:"m_w",name:"같은 행의 사용 횟수",description:"이번 평균에서 단어 w가 몇 번 나왔는지 셉니다."}]} assumptions={["flat softmax 손실의 점수 기울기 p−정답 표시는 연결된 cross-entropy 글에서 유도합니다.","모든 기울기는 갱신하기 전의 같은 W와 U에서 계산합니다."]} interpretation="두 출현의 기울기는 각각 g_h/2이지만 같은 saw 행에 모이면 g_h입니다. 중복 행을 읽었다고 각 출현의 나눗셈을 생략할 수는 없습니다."/>
+<div className={prose}><p>출력 행 U[i]의 기울기는 (p_i−정답 표시)h입니다. 입력과 출력의 표는 같은 손실에 참여하지만 거치는 계산이 다릅니다. h를 구할 때 한 나눗셈을 입력으로 돌려줄 때만 빠뜨리면 두 표의 변화가 함께 커지는 것이 아니어서, 모든 학습률을 한꺼번에 바꾸는 것으로 설명할 수 없습니다.</p>
+<p>입력이 세 행이라면 세 행을 더해 3으로 나누며 각 출현에는 g_h/3이 돌아갑니다. 행의 순서를 바꿔도 합과 평균은 같지만 어느 단어의 행을 사용했는지는 역방향 누적에 남습니다. 평균만 보고 위치별 정보를 되찾을 수 없다는 한계와, 보관한 계산 경로로 각 행을 학습할 수 있다는 사실이 함께 성립합니다.</p>
+<p>두 saw를 세 번씩 반복해 여섯 개로 늘리면 평균은 같고 합은 세 배입니다. 합을 입력으로 택하면 출력 점수도 세 배가 되어 확률이 달라집니다. 여섯 이웃이 서로 다른 구성이라면 평균의 방향까지 달라질 수 있습니다. sum과 mean은 선택 가능한 서로 다른 규칙이므로 학습과 비교에서 어느 쪽인지 고정합니다.</p></div></section>
+<section id="skipgram" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">9. 같은 cat으로 이웃 두 번을 예측합니다</h2><div className={prose}><p>Skip-gram의 논문 방향에서는 입력을 W[2]=[1,2,0]으로 고정합니다. U의 다섯 행과 내적한 점수는 [0,1,2,2,3]입니다. 두 이웃 saw는 모두 번호 3이므로 같은 확률 약 0.191516을 각각 정답 확률로 읽습니다. 입력을 평균내는 과정은 없습니다.</p></div>
+<ExplainedFormula question="반경 1의 두 예측을 합하거나 평균하면 무엇이 달라지나요?" idea={<p>같은 입력에서 두 saw를 관측했으므로 같은 손실이 두 번 나옵니다. 합은 두 번의 기여를 그대로 세고 평균은 관측 수로 나눕니다.</p>} formula={String.raw`L_{t,\mathrm{sum}}=-\sum_{j\in\mathcal C_t}\ln p(w_j\mid w_t),\quad L_{t,\mathrm{mean}}=L_{t,\mathrm{sum}}/|\mathcal C_t|`} annotatedFormula={String.raw`\begin{aligned}L_{t,\mathrm{sum}}&=\underbrace{-\sum_{j\in\mathcal C_t}\ln p(w_j\mid w_t)}_{\text{이웃 위치별 손실 누적}}\\L_{t,\mathrm{mean}}&=\underbrace{\frac{L_{t,\mathrm{sum}}}{|\mathcal C_t|}}_{\text{이 중심의 이웃 수로 나눔}}\\p(\mathrm{saw}\mid\mathrm{cat})&=\frac{e^2}{1+e+2e^2+e^3}\approx0.191516\\L_{t,\mathrm{sum}}&\approx3.305568,\quad L_{t,\mathrm{mean}}\approx1.652784\end{aligned}`} operations={[{expression:String.raw`-\sum_{j\in\mathcal C_t}\ln p(w_j\mid w_t)`,annotation:["서로 다른 이웃 위치에서","나온 손실을 각각 더함"]},{expression:String.raw`\frac{L_{t,\mathrm{sum}}}{|\mathcal C_t|}`,annotation:["이 중심의 기여를","평균 하나로 바꾸는 선택"]}]} terms={[{symbol:String.raw`\mathcal C_t`,name:"이웃 위치의 집합",description:"단어 종류의 집합이 아닙니다. 두 saw의 위치 1과 3을 모두 셉니다."},{symbol:"w_t,w_j",name:"중심과 이웃 단어",description:"입력 cat과 정답 saw에 해당합니다."},{symbol:"p",name:"후보 확률",description:"이 절에서는 단어별 U를 사용하는 flat softmax입니다."}]} assumptions={["평균을 정의할 때는 이웃 수가 양수입니다.","이 절은 논문 방향과 이상적인 전체 후보 확률을 설명하며 원본 C 실행 결과로 주장하지 않습니다."]} interpretation="반경 2에서는 red, saw, saw, dog의 네 정답이 생깁니다. 문장 경계 밖의 위치는 제외합니다."/>
+<div className={prose}><p>
+            각 정답은 출력 쪽에 서로 다른 오차를 만들고 그 기여들이 같은 cat 입력 행으로 돌아옵니다. 반경 2에서 saw가 두 번 나온 사실도 이 합에 두 번 반영됩니다. 한 문장당
+            한 번 읽었다는 말은 몇 번의 예측과 갱신을 했는지 알려 주지 않습니다.
+          </p></div></section>
+<section id="reduction" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">10. 합과 평균은 어떤 사례를 더 크게 셀까요?</h2><div className={prose}><p>
+            한 중심에서만 합과 평균을 비교하면 이웃 수만큼의 일정한 배율 차이입니다. 그러나 문장 끝과 가운데는 이웃 수가 다를 수 있고 매번 반경을 바꾸어도 개수가 달라집니다. 중심마다
+            먼저 평균을 낸 뒤 더하면 이웃이 많은 중심의 각 쌍에 더 작은 무게를 주게 됩니다.
+          </p>
+<p>
+            (가정) 이웃이 2개인 중심과 6개인 중심이 각각 있고 모든 쌍의 손실이 1이라고 합시다. 쌍을 전부 합하면 두 중심의 기여는 2와 6입니다. 각 중심에서 평균을 먼저 내면
+            1과 1입니다. 첫 계산은 쌍마다 같은 무게를 주고 두 번째는 중심마다 같은 총무게를 줍니다. 단순히 표시 단위만 바꾼 것이 아닙니다.
+          </p>
+<p>전체 쌍의 합을 전체 쌍 수 하나로 나누는 평균도 구별해야 합니다. 자료와 쌍 목록이 고정되어 있다면 이 전체 평균은 합의 일정한 배율입니다. 하지만 중심마다 서로 다른 수로 나누는 앞의 평균과는 다릅니다. 논문의 목적식, 프로그램의 반복문, 보고하는 손실의 분모를 함께 확인해야 예측 건수와 학습률을 해석할 수 있습니다.</p></div></section>
+<section id="hierarchical" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">11. 단어 하나를 찾는 길에 확률을 붙입니다</h2><div className={prose}><p>지금까지는 정답 확률 하나를 얻기 위해 다섯 후보를 모두 계산했습니다. 이제 같은 다섯 단어를 나무의 끝인 잎에 놓겠습니다. 내부 갈림길에서는 두 자식 중 어느 쪽으로 갈지 확률을 정합니다. 정답 잎까지 지나간 선택들의 확률을 곱하면 그 단어의 확률이 됩니다.</p>
+<p>이진 나무의 내부 노드는 각각 길이 3의 별도 벡터를 가집니다. 앞에서 단어마다 두었던 U를 그대로 노드 표라고 해석할 수 없습니다. 가정한 네 내부 벡터는 번호 0부터 [1,0,0], [0,1,0], [0,0,1], [1,0,0]입니다. 뿌리는 내부 번호 3입니다. 이 구조에서 cat의 주소를 001로 정하면 내부 번호 3, 2, 1을 지나갑니다.</p></div><ProbabilityTreeViz/><div className={prose}><p>
+            완전한 균형 이진 나무에 1024=2¹⁰개의 잎을 두면 모든 길이가 10번의 선택이고 65536=2¹⁶개이면 16번입니다. 한 정답의 확률에는 그 경로의 점수만 필요합니다.
+            모든 단어의 확률을 한꺼번에 출력하려면 나무 전체를 평가해야 하므로 그 작업까지 10번에 끝난다는 뜻은 아닙니다.
+          </p>
+<p>
+            단어가 다섯 개처럼 2의 거듭제곱이 아니면 균형 잡힌 나무도 길이가 섞일 수 있습니다. 또 짧은 길을 어느 단어에 배정할지가 평균 계산량을 바꿉니다. 우선 고정한 cat의
+            길에서 확률을 계산한 뒤 13절에서 이 나무를 고른 이유를 설명하겠습니다.
+          </p></div></section>
+<section id="path-probability" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">12. cat까지 세 번의 선택을 곱합니다</h2><div className={prose}><p>입력은 같은 CBOW 평균 h=[0,1,1]입니다. cat 경로의 세 내부 벡터와 내적하면 점수는 0, 1, 1입니다. 점수를 0과 1 사이로 바꾸는 함수 σ(s)=1/(1+e⁻ˢ)를 sigmoid라고 부릅니다. 이 글과 실제 C의 부호 약속은 주소 0 방향의 확률을 σ(s), 주소 1 방향을 1−σ(s)=σ(−s)로 둡니다.</p></div>
+<ExplainedFormula question="주소 001의 세 선택은 어떤 확률을 만드나요?" idea={<p>앞의 선택을 통과한 뒤 다음 선택을 하는 조건부 확률을 곱합니다. 주소가 1인 마지막 분기에서만 부호를 뒤집습니다.</p>} formula={String.raw`p(w\mid h)=\prod_{j=1}^{\ell_w}\sigma((1-2b_j)a_{n_j}^{\top}h)`} annotatedFormula={String.raw`\begin{aligned}s_j&=a_{n_j}^{\top}h,\quad \sigma(s)=\frac1{1+e^{-s}}\\p(w\mid h)&=\underbrace{\prod_{j=1}^{\ell_w}\sigma((1-2b_j)s_j)}_{\text{정답 길의 선택 확률을 곱함}}\\p(\mathrm{cat}\mid h)&=\sigma(0)\sigma(1)\sigma(-1)\\&\approx0.5\times0.731059\times0.268941\\&\approx0.098306\end{aligned}`} operations={[{expression:String.raw`a_{n_j}^{\top}h`,annotation:["이번 갈림길의 벡터와","같은 평균 입력의 점수"]},{expression:String.raw`(1-2b_j)s_j`,annotation:["주소 0이면 그대로 두고","주소 1이면 부호를 뒤집음"]},{expression:String.raw`\prod_{j=1}^{\ell_w}`,annotation:["뿌리에서 정답 잎까지","조건부 확률을 이어 곱함"]}]} terms={[{symbol:String.raw`n_j,a_{n_j}`,name:"경로의 내부 노드",description:"j번째 갈림길의 번호와 그 노드에 저장한 벡터입니다."},{symbol:"b_j",name:"정답 방향",description:"0 또는 1이며 cat 경로는 0,0,1입니다."},{symbol:String.raw`\ell_w`,name:"선택 횟수",description:"잎 직전까지 거치는 내부 노드 수입니다. cat은 3입니다."}]} assumptions={["각 단어가 유일한 잎에 대응하는 유한한 이진 나무입니다.","부모에 들어온 확률을 두 자식에게 합이 1인 비율로 나눕니다."]} interpretation="이 0.098306은 앞의 flat 확률 0.0929633을 근사한 결과가 아닙니다. 다른 매개변수와 나무로 정의한 별도의 확률입니다."/>
+<div className={prose}><p>모든 잎 확률의 합이 1인 이유는 각 갈림길에서 질량이 보존되기 때문입니다. 어떤 노드까지 올 확률이 q라면 두 자식으로 가는 확률의 합은 qσ(s)+q(1−σ(s))=q입니다. 잎의 두 형제를 부모로 합치는 일을 반복하면 맨 위의 1만 남습니다. 서로 다른 단어가 같은 주소를 쓰거나 빠진 자식의 확률을 버리면 이 논리가 성립하지 않습니다.</p>
+<p>실제 다섯 잎의 값을 더해 볼 수도 있습니다. 문장 끝은 0.5이고 red는 약 0.134471, cat은 약 0.098306입니다. saw와 dog는 각각 약 0.133612입니다. 반올림 전의 값을 더하면 정확히 1입니다. 한 경로를 계산하는 것과 전체 확률의 정규화는 이렇게 연결됩니다.</p></div>
+<ProgressiveDetail title="나무의 손실 기울기는 각 갈림길에서 어떻게 나오나요?" preview="각 노드의 확률 오차에 그 노드 벡터를 곱해 더합니다. 평균 입력으로 돌아온 뒤에는 8절의 1/C가 그대로 필요합니다."><p>주소 비트 b에 대해 0 방향의 정답 표시를 y=1−b라고 쓰면 한 분기의 손실은 −y ln σ(s)−(1−y)ln(1−σ(s))입니다. σ′(s)=σ(s)(1−σ(s))를 대입해 미분하면 −y(1−σ(s))+(1−y)σ(s)=σ(s)−y가 됩니다. 경로 손실은 분기 손실의 합이므로 h의 기울기는 경로마다 (σ(s)−y)a를 더한 값입니다.</p><p>
+            cat의 첫 두 비트는 0이라 y=1이고 마지막 비트는 1이라 y=0입니다. 가정한 내부 벡터를 대입하면 h의 기울기는 [−0.5, 0.731059, −0.268941]입니다.
+            각 saw 출현에는 이 값의 절반이 돌아가고 같은 행에 두 번 모이면 원래 값이 됩니다. 이 미분은 실제 C가 쓰는 확률 표의 근사값과는 구별한 이상적인 sigmoid
+            계산입니다.
+          </p></ProgressiveDetail></section>
+<section id="huffman" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">13. 자주 맞힐 단어의 길을 짧게 만듭니다</h2><div className={prose}><p>정답 경로가 짧으면 그 예측에서 읽는 내부 노드도 적습니다. (가정) 전체 학습 자료에서 다섯 단어의 횟수가 번호 순서로 [8,4,2,1,1]이라고 하겠습니다. 이는 앞의 한 문장에서 센 횟수가 아니라, 같은 단어 목록에 따로 부여한 전체 자료의 빈도 가정입니다.</p>
+<p>
+            가장 작은 1과 1을 합쳐 2를 만들고 다음 두 2를 합쳐 4를 만듭니다. 이어 4와 4, 8과 8을 합치면 하나의 뿌리가 됩니다. 합친 두 가지를 자식으로 남겨 두면 앞서
+            사용한 나무를 얻습니다. 길이는 번호 순서로 [1,2,3,4,4]입니다.
+          </p></div>
+<AlgorithmBlock title="이진 Huffman 나무의 설명용 절차" input={["서로 다른 단어와 양의 빈도, 단어 수 2 이상"]} steps={[{code:"각 단어를 빈도를 가진 잎으로 두고 가장 작은 값을 꺼낼 수 있게 준비",note:"정렬된 목록이나 최소 우선순위 자료구조로 구현할 수 있습니다."},{code:"남은 노드 중 빈도가 가장 작은 두 개 a,b를 꺼냄",note:"같은 빈도의 순서는 달라도 됩니다. 특정 주소는 달라질 수 있습니다."},{code:"a,b를 자식으로 하는 빈도 f(a)+f(b)의 부모를 다시 넣음",note:"한 노드로 줄였지만 두 원래 경로는 부모 아래에 남습니다."},{code:"노드 하나가 남을 때까지 반복하고 두 자식에 0과 1을 배정",note:"여기서는 같은 빈도에서 실제 C가 택한 주소와 맞추어 표시합니다."}]} output="같은 빈도 사례의 주소: 문장 끝 1, red 01, cat 001, saw 0001, dog 0000"/>
+<ExplainedFormula question="짧은 길을 자주 쓰면 평균 계산 횟수가 얼마나 줄까요?" idea={<p>각 단어를 예측할 횟수에 그 길이를 곱해 전체 선택 수를 셉니다. 전체 예측 횟수로 나누면 한 번당 평균 길이가 됩니다.</p>} formula={String.raw`\bar\ell=\frac{\sum_w f_w\ell_w}{\sum_w f_w}`} annotatedFormula={String.raw`\begin{aligned}\bar\ell&=\underbrace{\frac{\sum_w f_w\ell_w}{\sum_w f_w}}_{\text{빈도로 가중한 길이}}\\\bar\ell_{\mathrm{H}}&=\frac{8\cdot1+4\cdot2+2\cdot3+1\cdot4+1\cdot4}{16}\\&=\frac{30}{16}=1.875\\\bar\ell_{\mathrm{balanced}}&=\frac{8\cdot2+4\cdot2+2\cdot2+1\cdot3+1\cdot3}{16}\\&=\frac{34}{16}=2.125\end{aligned}`} operations={[{expression:String.raw`f_w\ell_w`,annotation:["그 단어의 출현 횟수에","정답 경로의 길이를 곱함"]},{expression:String.raw`\frac{\sum_w f_w\ell_w}{\sum_w f_w}`,annotation:["전체 선택 횟수를","전체 정답 횟수로 나눔"]}]} terms={[{symbol:"f_w",name:"단어 빈도",description:"나무를 만드는 가정한 빈도입니다. 이 비용 모형에서는 같은 비율로 정답을 요청합니다."},{symbol:String.raw`\ell_w`,name:"단어 경로의 길이",description:"그 잎에 도달할 때 수행하는 이진 선택 수입니다."},{symbol:String.raw`\bar\ell`,name:"가중 평균 길이",description:"이 빈도로 정답을 요청할 때 한 번당 평균 선택 수입니다."}]} assumptions={["비교 나무는 동일한 다섯 단어를 갖고, 이 f의 비율로 정답을 요청하며 내부 선택 비용을 같게 셉니다.","균형 비교 나무에서는 높은 세 빈도에 길이 2, 낮은 두 빈도에 길이 3을 배정합니다."]} interpretation="평균 길이는 줄지만 드문 saw와 dog의 길이는 3에서 4로 늘었습니다. 평균의 이득이 모든 단어의 이득을 뜻하지 않습니다."/>
+<div className={prose}><p>이 평균은 다섯 잎을 주어진 빈도 비율로 요청한다는 비용 모형입니다. 실제 C는 문장 끝 번호 0을 만나면 문장 채우기를 끝내며 이 번호를 중심 정답으로 학습하지 않습니다. 따라서 빈도 표의 8을 실제 문장 끝 예측 횟수라고 읽으면 안 됩니다. 단어 제거와 이웃 선택도 실제 정답의 비율을 바꾸므로 실행 비용은 그 정답 빈도로 다시 계산해야 합니다. 또 짧은 경로는 연산 수의 모형이지 메모리 접근과 병렬 실행을 포함한 실제 지연의 배수는 아닙니다.</p></div></section>
+<section id="huffman-proof" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">14. 작은 빈도 두 개부터 합쳐도 되는 이유</h2><div className={prose}><p>빈도가 작은 단어를 깊은 곳에 놓는 선택이 직관뿐이라면 최적이라는 보장을 할 수 없습니다. 양의 빈도를 가진 이진 접두 부호를 생각합시다. 접두 부호란 한 단어의 주소가 다른 단어 주소의 앞부분이 되지 않는 부호입니다. 단어가 잎에만 놓인 나무는 이 조건을 만족합니다.</p>
+<p>최적 나무에서 자식이 하나뿐인 내부 노드는 없애도 됩니다. 그 아래 모든 단어의 길이가 줄어 비용이 감소하기 때문입니다. 이렇게 모든 내부 노드에 자식이 둘인 나무에는 가장 깊은 곳의 형제 잎 두 개가 있습니다. 그 두 자리에 가장 작은 두 빈도를 놓아도 비용이 늘지 않는다는 것이 첫 단계입니다.</p></div>
+<ProgressiveDetail title="자리 교환과 작은 문제로의 축소를 식으로 확인하기" preview="작은 두 빈도를 가장 깊은 형제에 놓을 수 있고, 두 잎을 합치면 어느 나무에서나 같은 추가 비용을 더합니다."><p>빈도 f_a≤f_b인데 길이 d_a≤d_b라면 둘의 위치를 맞바꾼 비용 변화는 (f_a−f_b)(d_b−d_a)≤0입니다. 작은 빈도를 더 깊게 옮겨도 비용이 늘지 않습니다. 이를 반복하면 가장 작은 두 빈도가 가장 깊은 형제인 최적 나무를 하나 선택할 수 있습니다.</p><p>
+            이 두 잎의 부모를 빈도 f_a+f_b인 하나의 잎으로 바꾸면 둘의 길이가 한 단계씩 줄어 비용이 정확히 f_a+f_b만큼 줄어듭니다. 만약 줄인 나무보다 더 싼 나무가 있다면
+            거기에 두 잎을 다시 붙여 원래 최적 나무보다 싼 나무를 만들 수 있어 모순입니다. 따라서 줄인 나무도 최적이며 단어 수가 하나 줄어든 같은 문제를 반복하면 Huffman
+            절차가 나옵니다.
+          </p></ProgressiveDetail>
+<div className={prose}><p>가정한 첫 두 빈도 1과 1을 합쳤을 때 추가 비용은 2입니다. 뒤의 병합 비용은 4, 8, 16이므로 모두 더하면 30입니다. 이는 13절에서 잎별 빈도와 길이를 곱해 더한 값과 같습니다. 다만 같은 빈도의 교환이나 좌우 배정은 여러 최적 주소를 만들 수 있어 특정 단어의 주소까지 유일하다는 보장은 없습니다.</p>
+<p>최소가 되는 것은 주어진 빈도와 이진 접두 부호라는 조건에서의 평균 길이입니다. 나무가 단어 사이의 의미를 가장 잘 나누거나 예측 품질까지 최대로 만든다는 정리는 아닙니다. 여러 단어가 같은 내부 노드를 공유하므로 나무 모양을 바꾸면 학습되는 함수의 구조도 달라집니다.</p></div></section>
+<section id="paper-word2vec-objectives" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">15. 논문의 방향과 식에 같은 문장을 넣습니다</h2><div className={prose}><p>Mikolov 등의 <em>Efficient Estimation of Word Representations in Vector Space</em> v3의 4–5쪽은 주변을 합쳐 현재 단어를 예측하는 방식과 현재 단어로 주변을 예측하는 방식을 나눕니다. 그림 1에 우리의 cat과 양쪽 saw를 넣으면 4절의 두 화살표가 됩니다. 당시 자료의 실험 결과를 모든 언어의 우열로 읽지는 않습니다.</p>
+<p>같은 저자들의 <em>Distributed Representations of Words and Phrases and their Compositionality</em> v1, 2–3쪽 식 (1)은 중심 수 T로 나눈 뒤 각 중심의 주변 로그 확률을 합합니다. 저자 기호로 아래와 같습니다. 가정한 가운데 cat의 두 항은 모두 ln 0.191516입니다. 부호를 뒤집은 이 중심의 손실 기여는 T로 나누기 전 약 3.305568이며, 9절에서 선택한 중심별 평균 1.652784와 구별됩니다.</p></div>
+<ExplainedFormula question="원 논문 식 (1)의 분모는 무엇을 세나요?" idea={<p>원문은 한 중심의 이웃 수가 아니라 전체 중심 위치 수 T로 나눕니다. 같은 cat의 두 출현을 두 항으로 남겨 분모 차이를 확인합니다.</p>} formula={String.raw`\frac1T\sum_{t=1}^T\sum_{-c\le j\le c,\ j\ne0}\log p(w_{t+j}\mid w_t)`} annotatedFormula={String.raw`\begin{aligned}J&=\underbrace{\frac1T}_{\text{중심 위치 수의 역수}}\sum_{t=1}^T\underbrace{\sum_{-c\le j\le c,\ j\ne0}\log p(w_{t+j}\mid w_t)}_{\text{이웃 위치마다 더함}}\\\text{cat 위치의 합}&=2\ln(0.191515974\ldots)\\&\approx-3.305568\end{aligned}`} operations={[{expression:String.raw`\frac1T`,annotation:["전체 중심 위치 수를","공통 분모로 사용"]},{expression:String.raw`\sum_{-c\le j\le c,\ j\ne0}`,annotation:["중심 자신을 제외하고","선택한 이웃의 항을 더함"]}]} terms={[{symbol:"T",name:"원문의 전체 위치 수",description:"논문 목적식의 공통 분모입니다."},{symbol:"c,j",name:"반경과 상대 위치",description:"작은 사례는 c=1, j=−1,+1입니다."},{symbol:"J",name:"높이는 목적값",description:"원문의 로그 확률 평균입니다. 손실로 쓰려면 음의 부호를 붙입니다."}]} assumptions={["원문의 w_t는 1부터 센 위치이며 이 글의 위치 2인 cat에 대응시킵니다.","문장 경계나 단어 제거의 세부 처리는 실제 프로그램의 선택과 따로 확인합니다."]} interpretation="모든 중심의 이웃 수가 같을 때만 중심별 평균과 일정한 배율로 연결됩니다."/>
+<div className={prose}><p>
+            원문 식 (3)은 경로의 노드 n(w,j)와 기준 자식 ch(n)를 쓰고 다음 자식이 기준 자식이면 +1 아니면 −1인 부호를 sigmoid 점수에 곱합니다. 그 부호를 우리의
+            주소 비트 b에 대해 1−2b로 놓으면 12절과 같습니다. 원문의 L(w)는 뿌리부터 잎까지의 노드 수라 곱은 L(w)−1개이며 우리의 선택 수는 그 값입니다. cat은 노드
+            수 4, 선택 수 3입니다.
+          </p></div>
+<ExplainedFormula question="원문 식 (3)의 부호와 경로 길이는 우리 주소와 어떻게 대응하나요?" idea={<p>원문의 기준 자식에 주소 0을 붙이면 맞는 자식인지 나타내는 부호가 1−2b와 같습니다. 원문이 세는 노드에는 마지막 잎도 들어갑니다.</p>} formula={String.raw`p(w\mid w_I)=\prod_{j=1}^{L(w)-1}\sigma\!\left([\![n(w,j+1)=\operatorname{ch}(n(w,j))]\!]\,{v'_{n(w,j)}}^\top v_{w_I}\right)`} annotatedFormula={String.raw`\begin{aligned}p(w\mid w_I)&=\underbrace{\prod_{j=1}^{L(w)-1}\sigma\!\left(\varepsilon_j\,{v'_{n(w,j)}}^\top v_{w_I}\right)}_{\text{원문 식 (3)의 경로 확률}}\\\varepsilon_j&=[\![n(w,j+1)=\operatorname{ch}(n(w,j))]\!]\\\mathrm{cat}:\quad L(w)-1&=4-1=3,\quad(\varepsilon_1,\varepsilon_2,\varepsilon_3)=(+1,+1,-1)\\p(\mathrm{cat}\mid h)&=\sigma(0)\sigma(1)\sigma(-1)\end{aligned}`} operations={[{expression:String.raw`\varepsilon_j\,{v'_{n(w,j)}}^\top v_{w_I}`,annotation:["내부 노드 점수에","원문이 정한 자식 방향의 부호를 곱함"]},{expression:String.raw`\prod_{j=1}^{L(w)-1}`,annotation:["잎을 제외한 경로 노드에서","조건부 확률을 곱함"]}]} terms={[{symbol:String.raw`L(w),n(w,j)`,name:"원문의 경로 표기",description:"L은 뿌리부터 잎까지의 노드 수이며 n은 j번째 노드입니다."},{symbol:String.raw`\operatorname{ch},\varepsilon_j`,name:"기준 자식과 부호",description:"선택한 자식이 기준 자식이면 +1, 아니면 −1입니다. 원문의 이중 괄호는 0/1 지시함수가 아닙니다."},{symbol:String.raw`v'_{n(w,j)},v_{w_I}`,name:"노드 벡터와 입력",description:"원문은 Skip-gram 입력을 씁니다. 같은 경로 계산에 CBOW 평균 h를 넣을 수도 있습니다."}]} assumptions={["저자 표기를 보존하고 부호에만 ε라는 별칭을 붙였습니다.","이번 대입은 11절의 가정한 나무와 내부 벡터를 사용합니다."]} interpretation="원문 노드 수 4와 본문의 선택 수 3은 다른 계산 규칙이 아니라 같은 경로를 세는 두 표기입니다."/>
+<CitationBlock type="paper" citeKey={1} source="Mikolov et al. · 1301.3781v3, 4–5쪽 그림 1 · 1310.4546v1, 식 (1)–(3)" href="https://arxiv.org/abs/1310.4546v1">같은 두 saw를 예측 방향, 공통 분모 T, 주소 001의 부호에 각각 대입했습니다. 이 계산은 가정한 표의 수학적 적용이며 논문의 대규모 학습을 재현한 결과가 아닙니다.</CitationBlock>
+<div className={prose}><p>실제 저자 C 저장소의 Skip-gram 분기는 이웃의 입력 행으로 중심 단어를 예측합니다. 따라서 논문의 화살표를 코드 변수에 그대로 덮어씌우면 안 됩니다. 앞 글에서 확인한 것처럼 같은 cat·saw의 원본 입력 점수는 1이고 논문 방향의 점수는 2입니다. 이 글의 다음 실행은 방향이 분명한 CBOW 분기를 고정해 평균과 역방향 계산을 살펴봅니다.</p></div></section>
+<section id="source-tree" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">16. 실제 C 코드가 만든 cat의 주소는 001입니다</h2><div className={prose}><p>저자 저장소의 commit <code>20c129af</code>에 있는 전체 <code>word2vec.c</code>를 수정하지 않고 보존했습니다. <code>CreateBinaryTree</code>는 뒤에서 읽는 잎 목록과 앞에서 읽는 새 부모 목록 중 작은 쪽을 골라 둘씩 합칩니다. 우리의 정렬된 빈도 [8,4,2,1,1]을 실제 함수에 넣어 CPU에서 실행했습니다.</p></div>{code("tree-select")}{code("tree-merge")}<div className={prose}><p>관찰된 주소는 문장 끝 1, red 01, cat 001, saw 0001, dog 0000입니다. cat의 <code>codelen</code>은 3이고 <code>point</code>에서 실제로 읽는 내부 번호는 [3,2,1]입니다. 원본은 잎에서 부모를 따라 올라가며 모은 비트를 뒤집어 뿌리부터의 순서로 저장합니다. 세 비트만 적고 어느 내부 벡터를 읽는지 생략하면 확률을 계산할 수 없습니다.</p></div>{code("tree-path")}<div className={prose}><p>이 실행의 가중 길이 합은 30이었습니다. Huffman의 1952년 원 논문 1098쪽 식 (2)는 저자 기호로 L_av=Σ P(i)L(i)입니다. P(i)를 [8,4,2,1,1]/16, L(i)를 [1,2,3,4,4]로 넣으면 1.875입니다. 1099쪽의 가장 작은 두 확률을 하나로 묶는 구성과 14절의 축소 논리가 연결됩니다.</p></div>
+<CitationBlock type="paper" citeKey={2} source="David A. Huffman · A Method for the Construction of Minimum-Redundancy Codes · 1952, 1098쪽 식 (2), 1099쪽" href="https://www.cse.iitd.ac.in/~pkalra/siv864/huffman_1952.pdf">원문의 평균 길이 식에 같은 빈도와 경로 길이를 넣어 30/16을 얻었습니다. 이 보장은 이진 접두 부호의 길이에 관한 것이며 예측 정확도나 실행 시간의 최적성을 주장하지 않습니다.</CitationBlock></section>
+<section id="source-cbow" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">17. 평균과 경로 오차를 실제 코드로 따라갑니다</h2><div className={prose}><p>원본 CBOW 분기는 각 이웃의 <code>syn0</code> 행을 <code>neu1</code>에 더하고 <code>cw</code>로 나눕니다. 같은 번호열에서 가운데 cat, 최대 반경 2와 <code>b=1</code>을 직접 넣으면 양쪽 한 칸만 남습니다. saw 두 출현을 더한 뒤 <code>cw=2</code>로 나누어 <code>neu1=[0,1,1]</code>을 얻습니다.</p></div>{code("cbow-mean")}<div className={prose}><p><code>hs=1, negative=0</code>으로 두고 내부 노드 표 <code>syn1</code>을 11절의 가정한 값으로 넣었습니다. 원본은 <code>point</code>로 내부 행을 찾고 <code>code</code>로 정답 방향을 읽습니다. 각 점수에서 <code>g=(1−code−f)×alpha</code>를 구합니다. 여기서 f는 sigmoid를 계산한 표의 조회값이고 <code>alpha=0.1</code>은 이 관찰의 학습률입니다.</p></div>{code("cbow-path")}<div className={prose}><p>이 f를 이상적인 sigmoid와 완전히 같다고 적으면 실행값을 설명하지 못합니다. 원본의 정수 나눗셈 <code>1000/6/2</code>는 83입니다. 점수 0은 표의 498번에서 약 0.494000256을, 점수 1은 581번에서 약 0.725517869를 읽었습니다. 12절의 0.5와 0.731058579는 이상 함수의 값입니다. 두 차이를 숨기지 않고 각각 기록했습니다.</p></div>{code("sigmoid-table")}<div className={prose}><p>표 조회까지 포함한 실제 실행에서 <code>neu1e</code>는 약 [0.050599974, −0.072551787, 0.027448213]이었습니다. 이는 경로 노드들의 기여를 모은, 학습률과 감소 방향의 부호까지 포함한 변화량입니다. <code>neu1e</code>를 손실 기울기 자체라고 부르면 부호와 0.1을 두 번 적용할 수 있습니다.</p></div>
+<ProgressiveDetail title="원본의 큰 점수 처리와 실행 범위는 어디까지인가요?" preview="이번 세 점수는 모두 내부 범위입니다. 원본은 점수가 −6 이하이거나 6 이상인 경로 항을 건너뛰며 전체 학습을 이 관찰로 검증하지는 않았습니다."><p>실행 파일은 원본 435–495행의 CBOW 분기 전체를 바이트 그대로 옮겨, 가정한 한 중심 위치를 넣는 별도 호출 함수에서 돌립니다. 원본의 나무 구성 함수도 직접 호출했습니다. 전체 <code>TrainModelThread</code> 반복이나 자료 학습, 품질·속도 측정은 수행하지 않았습니다. 원문 파일, 추출 범위의 해시, 호출 파일과 실제 출력 기록을 함께 보존했습니다.</p><p>가정한 점수 0,1,1은 원본의 범위 안에 있습니다. 범위를 벗어나면 원본의 <code>continue</code>로 그 경로 항의 갱신이 생략됩니다. 따라서 이 프로그램의 모든 갱신을 이상적인 로그 확률의 정확한 기울기라고 확대할 수 없습니다. 이 경계와 확률 표의 근사는 아래 평균의 누락과 별개의 차이입니다.</p></ProgressiveDetail>{code("observation")}</section>
+<section id="source-update" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">18. 원본의 입력 갱신에는 나눗셈 하나가 없습니다</h2><div className={prose}><p>원본은 다시 이웃 위치를 순회하며 각 <code>syn0</code> 행에 <code>neu1e</code>를 그대로 더합니다. 앞에서 평균을 만들 때 사용한 <code>cw</code>로 나누는 연산이 이 부분에는 없습니다. 같은 saw가 두 번 등장하므로 W[3]에는 <code>neu1e</code>가 두 번 더해집니다. 실제 결과는 약 [0.101199947, 0.854896426, 1.05489635]였습니다.</p></div>{code("cbow-input-update")}<div className={prose}><p>같은 확률 표에서 얻은 변화량을 사용하면서 평균의 미분만 맞춘다면, 각 출현에는 <code>neu1e/2</code>를 더해야 합니다. 두 출현이 같은 행에 모인 순변화는 <code>neu1e</code> 한 번입니다. 원본에서 관찰한 두 배와의 차이는 반올림이나 정확한 sigmoid와의 차이로 설명되지 않습니다.</p>
+<p>출력 내부 노드의 갱신은 각 경로 항에서 한 번씩 이루어지고 입력 평균 h를 사용합니다. 입력 갱신만 C배 커지는 것을 모든 매개변수의 학습률 C배라고 해석할 수 없습니다. 문맥 개수 C가 달라지는 실행에서는 입력 쪽 배율도 사례마다 달라집니다.</p>
+<p>İrsoy·Benton·Stratos의 <em>Corrected CBOW Performs as well as Skip-gram</em> v2, 2쪽 식 (2)도 각 입력 출현의 기울기에 1/C가 필요함을 명시합니다. 원문 기호로 ∂L/∂v_wj=(1/C)∂L/∂v_c입니다. 우리의 C=2를 대입하면 8절과 같은 절반입니다. 논문은 음의 표본을 사용하는 목적을 분석하며, 여기서는 원본의 계층형 경로에서 계산한 오차도 같은 평균을 거슬러 가야 한다는 연쇄법칙을 따로 적용했습니다.</p></div>
+<CitationBlock type="paper" citeKey={3} source="İrsoy, Benton, Stratos · Corrected CBOW Performs as well as Skip-gram · 2012.15332v2, §2 식 (1)–(2)" href="https://arxiv.org/abs/2012.15332v2">입력 평균의 1/C와 출력 갱신을 나누어 보아야 하는 이유를 같은 두 saw로 확인했습니다. 저자들의 과제별 성능 결과는 해당 자료와 교정한 구현의 실험이며 모든 환경에서의 순위를 보장하지 않습니다.</CitationBlock></section>
+<section id="source-tree-boundary" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">19. 코드의 정렬 전제까지 확인해야 합니다</h2><div className={prose}><p>Huffman의 추상 절차는 남아 있는 모든 노드 중 가장 작은 두 개를 꺼냅니다. 원본 C는 효율을 위해 정렬된 잎과 새 부모의 두 목록 끝만 비교합니다. 이 구현의 보장을 읽으려면 잎 빈도가 큰 순서로 정렬되어 있다는 전제를 확인해야 합니다. 16절의 [8,4,2,1,1]은 그 조건에 맞습니다.</p>
+<p>그런데 원본 <code>SortVocab</code>는 문장 끝 번호 0을 맨 앞에 남기고 번호 1 이후만 정렬합니다. (가정) 전체 빈도가 [1,8,4,2,1]이면 뒤 네 개는 정렬되어 있어도 전체는 아닙니다. 이 배열을 같은 원본 나무 함수에 넣자 길이가 [1,2,3,4,4]로 나왔고 가중합은 41이었습니다. 동일한 빈도 묶음을 최소 우선순위 방식으로 올바르게 병합하면 30입니다.</p></div>{code("sort-boundary")}<div className={prose}><p>이 반례는 Huffman 최적성 증명을 반박하지 않습니다. 모든 남은 값 중 최소 둘을 고른다는 증명의 조건을 이 입력의 구현이 충족하지 않은 것입니다. 단어별 주소와 내부 노드를 저장할 때 실제 빈도 순서도 함께 남기면 이런 차이를 추적할 수 있습니다. 코드에 Huffman이라는 이름이 있다는 이유만으로 모든 입력에서 최적 길이를 보장한다고 쓰지 않겠습니다.</p></div></section>
+<section id="limits" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">20. 품질과 속도는 같은 조건에서 비교합니다</h2><div className={prose}><p>두 예측 방식과 두 출력 구조를 비교하려면 먼저 같은 자료 분할, 단어 번호표, 이웃 선택과 예측 방향을 고정합니다. 차원과 읽은 중심 위치 수뿐 아니라 실제 예측 건수와 사용한 시간 예산도 기록합니다. CBOW의 한 번과 Skip-gram의 여러 번은 같은 계산량이 아닐 수 있습니다.</p>
+<p>손실을 합했는지 중심별로 평균했는지, 평균 입력의 기울기를 교정했는지도 학습 규칙입니다. 계층형 출력에서는 실제 단어 빈도, 주소와 내부 노드 순서를 함께 저장해야 합니다. 나무나 ID만 바꾸고 학습된 내부 벡터를 그대로 읽으면 서로 다른 분기의 수를 정답 경로에 붙일 수 있습니다.</p>
+<p>검증 자료의 확률 손실과 사용하려는 과제의 품질을 별도로 비교합니다. 동시에 같은 하드웨어와 실행 설정에서 지연과 처리량을 측정합니다. 희귀 단어와 문맥 개수별로 결과를 나누면 전체 평균이 숨긴 차이도 볼 수 있습니다. 한 구현의 학습률 배율이나 나무 길이만으로 어떤 언어에서 항상 더 좋은 단어 벡터를 얻는다고 단정할 수 없습니다.</p>
+<p>단어별 고정 벡터와 순서를 버리는 문맥 합산은 실제 문장의 모든 관계를 표현하지 못합니다. 목록 밖 단어도 그대로는 읽을 수 없습니다. 이번 글은 정해진 단어 목록에서 어떤 예측 문제와 확률 계산을 만드는지 설명했습니다. 다음 <a href="/cs/ai/word2vec-negative-sampling">음의 표본을 이용한 학습</a>에서는 일부 비교 대상만 뽑을 때 무엇을 학습하는지가 달라지는 이유를 이어 봅니다.</p></div><ContentBoundary article="word2vec-prediction-objectives"/></section>
+<section id="review" data-teach-level="8" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">21. 다음 결과를 예측해 보세요</h2><div className={prose}><ol><li>같은 두 saw를 세 번씩 반복하면 CBOW의 평균은 어떻게 되고, 각 출현의 기울기와 같은 행에 모인 총기울기는 어떻게 되나요? (답: 8절)</li><li>cat의 경로를 계산해 얻은 0.098306을 flat softmax의 0.0929633과 다르다는 이유로 구현 오류라고 할 수 있나요? (답: 12절)</li><li>빈도 배열의 첫 값만 작아져 [1,8,4,2,1]이 됐습니다. 원본 코드가 여전히 최적 길이를 만든다고 할 수 있나요? (답: 19절)</li></ol></div></section>
+<CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{}}/>
+</div>;}

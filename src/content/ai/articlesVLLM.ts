@@ -1566,30 +1566,94 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "cuda-graph-capture",
-    title: "CUDA Graphs: kernel launch overhead를 capture-replay로 지우기",
+    title: "CUDA Graph: 같은 계산의 기록을 다시 실행하는 과정",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "overview", title: "Decode step의 launch overhead 문제" },
-      { id: "mechanics", title: "Capture/replay 계약과 static address 제약" },
-      {
-        id: "graph-anatomy",
-        title: "Node·edge·instantiate·update의 graph lifecycle",
-        subsections: [
-          { id: "stream-capture", title: "Stream capture와 cross-stream join" },
-          { id: "graph-update", title: "cudaGraphExecUpdate의 topology 조건" },
-        ],
-      },
-      { id: "graph-compatibility", title: "Graph-compatible execution과 graph pool" },
-      {
-        id: "implementation",
-        title: "vLLM CUDAGraphWrapper의 실제 구현",
-      },
-      { id: "shape-padding", title: "Dynamic shape와 capture size padding" },
-      {
-        id: "tradeoffs",
-        title: "Dynamic shape·capture 범위·memory pool trade-off",
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 같은 계산을 시키는 준비도 반복됩니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 입력·작업 목록·실행 결과를 나누어 봅니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 입력 3을 네 번 바꾸면 22가 됩니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 바뀌는 것은 계산 사이의 빈 시간입니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 순서와 주소를 함께 남기는 이유"
+  },
+  {
+    "id": "names",
+    "title": "6. 기록과 재생에 이름을 붙입니다"
+  },
+  {
+    "id": "trace",
+    "title": "7. 같은 입력을 끝까지 추적합니다"
+  },
+  {
+    "id": "timing",
+    "title": "8. 겹치는 시간은 단순히 더하지 않습니다"
+  },
+  {
+    "id": "mechanics",
+    "title": "9. 새 값은 기록에 남은 자리에 넣습니다"
+  },
+  {
+    "id": "graph-anatomy",
+    "title": "10. 작업 목록과 실행 가능한 기록을 구별합니다"
+  },
+  {
+    "id": "stream-capture",
+    "title": "11. 캡처 중의 Python 실행과 GPU 기록은 다릅니다"
+  },
+  {
+    "id": "wrapper",
+    "title": "12. vLLM은 같은 실행 조건의 기록을 찾습니다"
+  },
+  {
+    "id": "shape-padding",
+    "title": "13. 다섯 토큰은 여덟 자리로 맞춥니다"
+  },
+  {
+    "id": "implementation",
+    "title": "14. 크기 외의 조건도 함께 맞춥니다"
+  },
+  {
+    "id": "graph-compatibility",
+    "title": "15. 일반 재생의 제약과 다른 기능을 구별합니다"
+  },
+  {
+    "id": "memory-pool",
+    "title": "16. 여러 기록이 같은 공간을 쓸 때의 조건"
+  },
+  {
+    "id": "tradeoffs",
+    "title": "17. 반복할수록 준비 비용을 나눠 냅니다"
+  },
+  {
+    "id": "measurements",
+    "title": "18. 측정된 시간에서 무엇을 빼도 되는가"
+  },
+  {
+    "id": "research",
+    "title": "19. 복사 비용과 다시 시작하는 비용도 연구 대상입니다"
+  },
+  {
+    "id": "limits",
+    "title": "20. 같은 답과 같은 측정 범위를 먼저 확인합니다"
+  },
+  {
+    "id": "review",
+    "title": "21. 조건을 바꾸어 예측해 봅니다"
+  }
+],
     component: () => import("@/pages/articles/ai/cuda-graph-capture"),
   },
   {

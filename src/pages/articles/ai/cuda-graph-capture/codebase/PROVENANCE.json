@@ -1,0 +1,78 @@
+{
+  "readDate": "2026-10-04",
+  "sources": [
+    {
+      "project": "vllm",
+      "revision": "6e448d0ea9bf3d88d898b65449ca6dc2aec170ac",
+      "path": "vllm/compilation/cuda_graph.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/compilation/cuda_graph.py",
+      "local": "/tmp/teach-all/graphs22/research/vllm/vllm/compilation/cuda_graph.py",
+      "bytes": 14179,
+      "sha256": "cbc474f9098386d2eef2e3ff61364c611fbc1338d9c259ad5a24439aa7f06412"
+    },
+    {
+      "project": "vllm",
+      "revision": "6e448d0ea9bf3d88d898b65449ca6dc2aec170ac",
+      "path": "vllm/config/compilation.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/config/compilation.py",
+      "local": "/tmp/teach-all/graphs22/research/vllm/vllm/config/compilation.py",
+      "bytes": 68539,
+      "sha256": "31e1ebbf69af2b5f0c46d4b92caad47c4f87e594df339ba25038309f0836e0a5"
+    },
+    {
+      "project": "vllm",
+      "revision": "6e448d0ea9bf3d88d898b65449ca6dc2aec170ac",
+      "path": "vllm/forward_context.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/forward_context.py",
+      "local": "/tmp/teach-all/graphs22/research/vllm/vllm/forward_context.py",
+      "bytes": 14252,
+      "sha256": "985adacc9e7ed2a7695819ac2e2ad9cb264a7d886806d3091ad75bfda7392242"
+    },
+    {
+      "project": "vllm",
+      "revision": "6e448d0ea9bf3d88d898b65449ca6dc2aec170ac",
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/LICENSE",
+      "local": "/tmp/teach-all/graphs22/research/vllm/LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "project": "pytorch",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "path": "torch/cuda/graphs.py",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/cuda/graphs.py",
+      "local": "/tmp/teach-all/graphs22/research/pytorch/torch/cuda/graphs.py",
+      "bytes": 74753,
+      "sha256": "2ce9b12b17d39bba15e4f36dac0a6f2153f8ed40dd6464d0e188053732b7dbdf"
+    },
+    {
+      "project": "pytorch",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/LICENSE",
+      "local": "/tmp/teach-all/graphs22/research/pytorch/LICENSE",
+      "bytes": 3464,
+      "sha256": "bd018feef8825e88181c84eb7e3aa4eafb8f08a20d9fd6ef948569610c4a3e43"
+    },
+    {
+      "project": "vllm",
+      "revision": "6e448d0ea9bf3d88d898b65449ca6dc2aec170ac",
+      "path": "vllm/v1/cudagraph_dispatcher.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/cudagraph_dispatcher.py",
+      "local": "/tmp/teach-all/graphs22/research/vllm/vllm/v1/cudagraph_dispatcher.py",
+      "bytes": 15494,
+      "sha256": "51f632753af729aeee6ce4a802d9d74b64f22eef02a524f36e2a24b07ef0cf63"
+    },
+    {
+      "project": "pytorch",
+      "revision": "2b3ec34829036a65cd9d1398ea72a0167dc37470",
+      "path": "docs/source/notes/cuda.md",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/2b3ec34829036a65cd9d1398ea72a0167dc37470/docs/source/notes/cuda.md",
+      "local": "/tmp/teach-all/graphs22/research/pytorch/docs/source/notes/cuda.md",
+      "bytes": 79314,
+      "sha256": "133ae6298b2696c121a866eeb1e0433c2344fb2d938188b43ebdddea0b09bf8a"
+    }
+  ],
+  "note": "Whole upstream files retained verbatim; all article annotations are outside source."
+}

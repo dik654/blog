@@ -1,147 +1,23 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
-import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
+import {useAnimatedScenes} from "@/components/viz/useAnimatedScenes";
+import {AnimatedSceneControls} from "@/components/viz/AnimatedSceneControls";
 import VizFrame from "@/components/viz/VizFrame";
-
-/**
- * 한 Viz 에 한 mechanism: 도착한 batch 가 capture size 목록의 어느 칸으로 올라가고 그 차이가 얼마나 낭비되는지.
- * stage 높이는 고정하고 장면 전환은 SVG 내부만 바뀐다. gradient·glow·shadow·굵은 선 금지.
- */
-const SCENES = ["Capture size 목록", "batch 5 도착", "8 로 padding", "batch 17 → 32"] as const;
-
-const NOTES = [
-  "기동 때 [1, 2, 4, 8, 16, 32] 여섯 shape 만 capture 해 두었습니다. replay 는 이 여섯 크기로만 가능합니다.",
-  "요청 5개짜리 batch 가 왔습니다. 5 를 capture 한 graph 는 없으므로 그대로 replay 할 수 없습니다.",
-  "5 보다 크거나 같은 가장 작은 size 8 을 고릅니다. 3 행은 dummy 이고 낭비 비율은 3/8 = 37.5% 입니다.",
-  "17 이면 32 로 올라가 15/32 = 46.9% 를 버립니다. 목록이 성글수록 최악 낭비가 커지고 촘촘할수록 graph 수와 기동 시간이 늘어납니다.",
-] as const;
-
-const SIZES = [1, 2, 4, 8, 16, 32] as const;
-const CELL_W = 88;
-const CELL_X0 = 40;
-const ROW_Y = 44;
-
-function padded(batch: number) {
-  return SIZES.find((size) => size >= batch) ?? SIZES[SIZES.length - 1];
-}
-
-export default function CaptureSizePaddingViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
-  const s = scenes.active;
-  const batch = s === 3 ? 17 : s >= 1 ? 5 : 0;
-  const target = batch ? padded(batch) : 0;
-  const showTarget = s >= 2;
-  const waste = target ? target - batch : 0;
-  const barW = 520;
-  return (
-    <VizFrame
-      eyebrow="Padding to captured shape"
-      title="도착한 batch 는 그보다 크거나 같은 가장 작은 capture size 로 올라가고 그 차이만큼 행을 버립니다"
-      description="위 줄은 capture 해 둔 shape 목록, 아래 막대는 실제 batch(진한 부분)와 padding 으로 채운 dummy 행(빗금)입니다."
-      note="capture size 목록은 설명용 여섯 개이며 vLLM 기본값은 [1, 2, 4] 뒤로 8 단위·16 단위로 훨씬 촘촘합니다. 낭비 비율은 행 수 기준이고 실제 step 시간 증가는 decode 가 memory-bound 인 구간에서 이보다 작습니다."
-    >
-      <div
-        data-viz-canvas
-        tabIndex={0}
-        role="group"
-        aria-label="Capture size padding 애니메이션"
-        onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(24rem,calc(100dvh-15rem))] min-h-[20rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-      >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">Scene · {String(s + 1).padStart(2, "0")}</p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[s]}</h4>
-          <div className="mt-4 w-full overflow-x-auto">
-            <svg viewBox="0 0 600 190" className="h-auto w-full min-w-[32rem]" role="img" aria-label="capture size 와 padding">
-              <text x={CELL_X0} y={ROW_Y - 14} fontSize="10" fill="currentColor" className="text-muted-foreground">
-                cudagraph_capture_sizes
-              </text>
-              {SIZES.map((size, index) => {
-                const x = CELL_X0 + index * CELL_W;
-                const isTarget = showTarget && size === target;
-                return (
-                  <g key={size}>
-                    <rect
-                      x={x}
-                      y={ROW_Y}
-                      width={CELL_W - 8}
-                      height={30}
-                      fill={isTarget ? "var(--primary)" : "none"}
-                      fillOpacity={isTarget ? 0.15 : 0}
-                      stroke={isTarget ? "var(--primary)" : "var(--border)"}
-                      strokeWidth="1"
-                    />
-                    <text
-                      x={x + (CELL_W - 8) / 2}
-                      y={ROW_Y + 19}
-                      fontSize="11"
-                      fontWeight="700"
-                      textAnchor="middle"
-                      fill="currentColor"
-                      className="text-foreground"
-                    >
-                      {size}
-                    </text>
-                  </g>
-                );
-              })}
-              {batch > 0 && (
-                <g>
-                  <text x={CELL_X0} y={112} fontSize="10" fill="currentColor" className="text-muted-foreground">
-                    {showTarget ? `batch ${batch} → replay size ${target}` : `batch ${batch} 도착`}
-                  </text>
-                  <rect x={CELL_X0} y={120} width={barW} height={28} fill="none" stroke="var(--border)" strokeWidth="1" />
-                  <rect
-                    x={CELL_X0}
-                    y={120}
-                    width={(barW * batch) / (showTarget ? target : 32)}
-                    height={28}
-                    fill="var(--primary)"
-                    fillOpacity={0.4}
-                    stroke="var(--primary)"
-                    strokeWidth="1"
-                  />
-                  {showTarget && waste > 0 && (
-                    <g>
-                      <rect
-                        x={CELL_X0 + (barW * batch) / target}
-                        y={120}
-                        width={(barW * waste) / target}
-                        height={28}
-                        fill="var(--foreground)"
-                        fillOpacity={0.12}
-                        stroke="var(--foreground)"
-                        strokeOpacity={0.5}
-                        strokeWidth="1"
-                        strokeDasharray="3 2"
-                      />
-                      <text
-                        x={CELL_X0 + (barW * (batch + waste / 2)) / target}
-                        y={138}
-                        fontSize="10"
-                        textAnchor="middle"
-                        fill="currentColor"
-                        className="text-muted-foreground"
-                      >
-                        dummy {waste}
-                      </text>
-                    </g>
-                  )}
-                  <text x={CELL_X0 + 6} y={138} fontSize="10" fill="currentColor" className="text-foreground">
-                    real {batch}
-                  </text>
-                  <text x={CELL_X0} y={172} fontSize="11" fontWeight="700" fill="currentColor" className="text-foreground">
-                    {showTarget
-                      ? `waste = (${target} − ${batch}) / ${target} = ${((waste / target) * 100).toFixed(1)}%`
-                      : "capture 한 shape 가 아니므로 그대로 replay 불가"}
-                  </text>
-                </g>
-              )}
-            </svg>
-          </div>
-          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[s]}</p>
-        </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
-      </div>
-    </VizFrame>
-  );
+const labels=["5→8","17→24","33→없음"] as const;
+const titles=["5토큰 → 8자리","17토큰 → 24자리","33토큰 → 기록 없음"] as const;
+const counts=[5,17,33];const sizes=[1,2,4,8,16,24,32];
+const notes=[
+"실제 5자리와 추가 3자리입니다. 추가/할당은 3/8=37.5%이고 추가/실제는 3/5=60%입니다. 지연 증가율은 별도로 측정합니다.",
+"성긴 목록의 32자리 대신 24자리를 고릅니다. 추가 자리는 7개, 할당 자리의 약 29.17%입니다. 더 많은 크기를 준비하는 비용도 생깁니다.",
+"33 이상인 준비된 크기가 없습니다. 32짜리 기록으로 실행하지 않습니다. 원문 선택기는 상한을 넘으면 NONE을 돌려줍니다."
+];
+export default function CaptureSizePaddingViz(){
+ const scenes=useAnimatedScenes(3,6000);const s=scenes.active;const n=counts[s];const padded=sizes.find(v=>v>=n);const total=padded??33;
+ return <VizFrame eyebrow="크기 선택 · 가정" title="입력이 모두 들어가는 준비된 크기를 찾습니다" description="준비한 목록은 1·2·4·8·16·24·32토큰입니다. 채운 칸은 실제 입력이고 점선 칸은 추가 자리입니다." note="크기 조건만 보여 주는 그림입니다. 실제 재생은 모드와 요청 구성, 추가 자리의 주소·길이 처리도 맞아야 합니다.">
+ <div data-viz-canvas role="group" tabIndex={0} onKeyDown={scenes.onKeyDown} aria-label="실제 토큰과 할당 자리 비교" className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+ <div className="flex flex-none flex-col py-1"><h4 className="font-bold">{titles[s]}</h4>
+ <svg viewBox="0 0 340 245" role="img" aria-label={titles[s]+"의 실제 자리와 추가 자리"} className="mt-1 h-auto max-h-72 w-full">
+ <text x="170" y="25" textAnchor="middle" className="fill-foreground text-[14px]">{padded?"실제 "+n+" · 추가 "+(padded-n):"최대 32보다 1토큰 많음"}</text>
+ {Array.from({length:total},(_,i)=><g key={i}><rect x={24+(i%8)*37} y={43+Math.floor(i/8)*32} width="33" height="28" rx="3" className={i<n?"fill-primary/20 stroke-primary":"fill-background stroke-border"} strokeDasharray={i>=n?"3 2":undefined}/><text x={40.5+(i%8)*37} y={63+Math.floor(i/8)*32} textAnchor="middle" className="fill-foreground text-[14px]">{i<n?i+1:"+"}</text></g>)}
+ <text x="170" y="230" textAnchor="middle" className="fill-foreground text-[14px]">{padded?"선택 "+padded+" ≥ 실제 "+n:"선택 가능한 크기 없음 → NONE"}</text>
+ </svg><p className="mt-1 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{notes[s]}</p></div>
+ <AnimatedSceneControls {...scenes} labels={labels}/></div></VizFrame>;
 }
