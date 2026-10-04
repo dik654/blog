@@ -1,0 +1,24 @@
+{
+  "source": "https://www.rfc-editor.org/rfc/rfc8032.txt",
+  "rfcTextSHA256": "ed63657ff389301282b169b0abde9b5dd2c7e4d524fdfa5da6ff3094fc93c4c3",
+  "section": "6, printed pages20\u201323",
+  "codeFile": "rfc8032-section6.py",
+  "codeSHA256": "1347403b21a9d18bbd7ba5ace2e97b381a8c6a3b1277cd1fb8a9a3640cbc817d",
+  "normalization": "Extract complete Section6 illustration from first##comment to before7.TestVectors. Remove page headers/footers and formfeed-only boundaries; code statements unchanged. Published missing raise retained. Added source and IETF Revised BSD license legend above extracted statements.",
+  "removedHeaderFooterLines": [
+    1122,
+    1125,
+    1179,
+    1182,
+    1236,
+    1239
+  ],
+  "erratum": {
+    "id": 5930,
+    "status": "Verified",
+    "reported": "2019-12-06",
+    "updated": "2021-05-24",
+    "url": "https://www.rfc-editor.org/errata/eid5930",
+    "appliedToPublishedCode": false
+  }
+}

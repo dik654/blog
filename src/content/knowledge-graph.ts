@@ -6068,61 +6068,54 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "고정된 model·data·training family의 관측 범위에서 loss와 parameter·token·compute 사이의 power-law 경향을 fit한 경험 모델입니다.",
     canonicalHref: "/cs/ai/transformer-architecture#scaling-laws",
   },
-  surprisal: {
-    id: "surprisal",
-    domain: "statistics",
-    label: "Surprisal · self-information",
-    definition:
-      "실제로 관측된 사건에 모델 또는 source가 부여한 probability q를 −log q로 바꾼 정보 비용입니다.",
-    canonicalHref: "/cs/ai/cross-entropy#overview",
+  "surprisal": {
+    "id": "surprisal",
+    "domain": "statistics",
+    "label": "Surprisal · self-information",
+    "definition": "실제로 나온 글자에 미리 적어 둔 확률을 더할 수 있는 비용으로 바꿉니다. 밑은 1보다 커야 합니다. 사건의 의미나 중요도를 재는 값이 아니며 큰 손실이 큰 로짓 기울기를 뜻하지 않습니다.",
+    "canonicalHref": "/cs/ai/cross-entropy#log-cost"
   },
-  entropy: {
-    id: "entropy",
-    domain: "statistics",
-    label: "Entropy",
-    definition:
-      "실제 distribution에서 사건별 surprisal을 평균낸 source 자체의 불확실성입니다.",
-    canonicalHref: "/cs/ai/cross-entropy#entropy",
+  "entropy": {
+    "id": "entropy",
+    "domain": "statistics",
+    "label": "Entropy",
+    "definition": "원래 확률에 맞춘 한 사건 비용을 같은 원래 확률로 평균냅니다. 유한 이산 분포의 설명입니다. 소수 평균 길이를 모든 개별 기호의 실제 길이로 읽거나 미분 엔트로피·문장 의미로 그대로 옮기지 않습니다.",
+    "canonicalHref": "/cs/ai/cross-entropy#entropy"
   },
   "empirical-risk": {
-    id: "empirical-risk",
-    domain: "statistics",
-    label: "Empirical risk",
-    definition:
-      "Population expectation을 직접 알 수 없을 때 관측한 training sample의 loss를 평균내 만든 objective estimate입니다.",
-    canonicalHref: "/cs/ai/cross-entropy#expectation",
+    "id": "empirical-risk",
+    "domain": "statistics",
+    "label": "Empirical risk",
+    "definition": "관측한 비용을 횟수로 나누어 환경 전체의 평균 비용을 추정합니다. 주 사례는 원래 P와 관측 비중이 우연히 같습니다. 과적합·표집 편향·환경 변화가 있으면 낮은 자료 평균이 낮은 배포 비용을 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/cross-entropy#expectation"
   },
   "cross-entropy-nll": {
-    id: "cross-entropy-nll",
-    domain: "statistics",
-    label: "Cross-entropy · negative log-likelihood",
-    definition:
-      "관측한 정답 token에 모델이 부여한 확률의 negative log를 줄이는 likelihood objective입니다.",
-    canonicalHref: "/cs/ai/cross-entropy#cross-entropy",
+    "id": "cross-entropy-nll",
+    "domain": "statistics",
+    "label": "Cross-entropy · negative log-likelihood",
+    "definition": "실제 비중은 유지하고 예측표 Q로 매긴 비용만 평균냅니다. 유한 집합에서 P가 양수인 곳에 Q도 양수여야 유한합니다. 가산무한에서는 로그 비용의 합 가능성까지 확인합니다.",
+    "canonicalHref": "/cs/ai/cross-entropy#cross-entropy"
   },
   "maximum-likelihood": {
-    id: "maximum-likelihood",
-    domain: "statistics",
-    label: "Maximum likelihood estimation",
-    definition:
-      "관측한 data에 model이 부여하는 joint probability 또는 density가 가장 커지도록 parameter를 고르는 추정 원리입니다.",
-    canonicalHref: "/cs/ai/cross-entropy#cross-entropy",
+    "id": "maximum-likelihood",
+    "domain": "statistics",
+    "label": "Maximum likelihood estimation",
+    "definition": "같은 관측 자료에 가장 높은 확률 또는 밀도를 주는 모델 매개변수를 고릅니다. 고정 자료와 같은 모델군·우도 분해·양의 척도에서 NLL 최소화와 같습니다. 벌점 계수를 고정한 채 손실의 단위만 바꾸면 전체 최적점은 달라질 수 있습니다.",
+    "canonicalHref": "/cs/ai/cross-entropy#cross-entropy"
   },
   "kl-divergence": {
-    id: "kl-divergence",
-    domain: "statistics",
-    label: "KL divergence",
-    definition:
-      "실제 distribution P 대신 model Q로 사건을 설명해서 생기는 평균 log-ratio 초과 비용이며 방향이 있는 divergence입니다.",
-    canonicalHref: "/cs/ai/cross-entropy#kl-divergence",
+    "id": "kl-divergence",
+    "domain": "statistics",
+    "label": "KL divergence",
+    "definition": "P의 사건에 Q의 코드를 사용해 더 든 평균 로그 비용을 분리합니다. 방향이 있으며 일반적인 거리 함수가 아닙니다. 가산무한에서 CE와 H가 모두 무한이면 무한대끼리 빼서 정의하지 않습니다.",
+    "canonicalHref": "/cs/ai/cross-entropy#kl-divergence"
   },
   "likelihood-contract": {
-    id: "likelihood-contract",
-    domain: "statistics",
-    label: "Likelihood contract",
-    definition:
-      "관측 target이 categorical·Gaussian·Bernoulli 등 어떤 conditional distribution에서 생성됐다고 모델링할지 정해 output parameter와 NLL을 함께 고르는 계약입니다.",
-    canonicalHref: "/cs/ai/cross-entropy#ce-vs-mse",
+    "id": "likelihood-contract",
+    "domain": "statistics",
+    "label": "Likelihood contract",
+    "definition": "관측값이 어떤 조건부 분포에서 나왔다고 모델링할지 정한 뒤 그 확률 또는 밀도의 음의 로그를 씁니다. 분산을 학습하면 로그 분산 항을 유지합니다. Brier 제곱 점수도 분류 확률에 쓸 수 있어 문제 이름만으로 손실을 금지하지 않습니다.",
+    "canonicalHref": "/cs/ai/cross-entropy#ce-vs-mse"
   },
   sft: {
     id: "sft",
@@ -12680,46 +12673,60 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/blockchain/helios-consensus#sync-loop",
   },
   "crypto-primitive-assurance-boundary": {
-    id: "crypto-primitive-assurance-boundary", kind: "concept", domain: "computer-science",
-    label: "Cryptographic primitive assurance boundary",
-    definition: "Hash·commitment·signature·algebra가 각각 압축·binding/hiding·authorization·연산 규칙 중 어느 질문에 답하는지 분리하고 한 도구의 성공을 다른 보장으로 확대하지 않는 조합 경계입니다.",
-    canonicalHref: "/cs/crypto/crypto-primitives#overview",
+    "id": "crypto-primitive-assurance-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "암호 도구의 보장 범위",
+    "definition": "기록의 포함, 값의 은닉, 주어진 키에 대한 서명식, 외부에서 등록한 키와 메시지 정책의 보장을 구분하는 원칙입니다. 서명식의 성공만으로 업무 권한·데이터의 진실성·최신 배치를 보장하지 않습니다.",
+    "canonicalHref": "/cs/crypto/crypto-primitives#overview"
   },
   "poseidon-field-native-permutation": {
-    id: "poseidon-field-native-permutation", kind: "method", domain: "computer-science",
-    label: "Poseidon field-native permutation",
-    definition: "Prime-field state에 round constants·power S-box·linear mixing을 full/partial rounds로 반복해 arithmetic-circuit constraint를 줄이는 parameterized sponge permutation입니다.",
-    canonicalHref: "/cs/crypto/crypto-primitives#poseidon",
+    "id": "poseidon-field-native-permutation",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Poseidon의 체 기반 순열",
+    "definition": "체 상태에 상수 더하기·비선형 층·선형 혼합을 전체 및 부분 라운드로 반복하는 Poseidon의 내부 순열입니다. 이를 사용한 해시는 rate·capacity·패딩·출력 규칙도 필요하며 순열의 가역성이나 MDS 조건만으로 보안이 증명되지는 않습니다.",
+    "canonicalHref": "/cs/crypto/crypto-primitives#poseidon"
   },
   "merkle-selective-opening": {
-    id: "merkle-selective-opening", kind: "method", domain: "computer-science",
-    label: "Merkle selective opening",
-    definition: "Leaf·index bits·level별 sibling hash로 committed root를 다시 계산해 전체 dataset 없이 한 위치의 membership 또는 명시된 sparse default의 absence를 검증하는 방법입니다.",
-    canonicalHref: "/cs/crypto/crypto-primitives#merkle-commitment",
+    "id": "merkle-selective-opening",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Merkle 경로로 일부 기록 열기",
+    "definition": "기록·위치·트리 크기 및 형제 해시로 예상 루트를 다시 계산해 전체 데이터 없이 포함을 확인하는 방법입니다. 부재 판정은 고정 키 공간과 빈 값 등 별도의 sparse map 규칙을 요구합니다.",
+    "canonicalHref": "/cs/crypto/crypto-primitives#merkle-commitment"
   },
   "commitment-binding-hiding-separation": {
-    id: "commitment-binding-hiding-separation", kind: "concept", domain: "computer-science",
-    label: "Commitment binding · hiding separation",
-    definition: "하나의 commitment를 서로 다른 값으로 열기 어렵다는 binding과 commitment만 보고 값을 알아내기 어렵다는 hiding을 별도 가정·randomness·encoding으로 평가하는 보안 경계입니다.",
-    canonicalHref: "/cs/crypto/crypto-primitives#merkle-commitment",
+    "id": "commitment-binding-hiding-separation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "약정의 binding과 hiding",
+    "definition": "다른 값으로 같은 약정을 열기 어려운 binding과 약정의 분포에서 값을 알기 어려운 hiding을 별도 조건으로 평가하는 구분입니다. 작은 후보의 결정적 해시는 값을 숨기지 못하며 약정 하나의 분포와 반복된 무작위 값의 공동 누출도 구별합니다.",
+    "canonicalHref": "/cs/crypto/crypto-primitives#hiding"
   },
   "schnorr-fiat-shamir-transcript": {
-    id: "schnorr-fiat-shamir-transcript", kind: "method", domain: "computer-science",
-    label: "Schnorr Fiat–Shamir transcript",
-    definition: "Nonce commitment를 먼저 고정하고 domain·commitment·public key·message의 hash를 challenge로 삼아 secret scalar의 지식 관계를 비대화형 signature equation으로 바꾸는 방법입니다.",
-    canonicalHref: "/cs/crypto/crypto-primitives#schnorr",
+    "id": "schnorr-fiat-shamir-transcript",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Schnorr의 질문과 응답",
+    "definition": "임시 군 원소를 고정한 뒤 용도·임시 원소·공개키·메시지로 해시 질문을 만들고 개인 스칼라로 응답하는 Schnorr 구조입니다. 정확한 인코딩과 군·해시 및 nonce 규칙이 필요하며 같은 nonce의 서로 다른 질문은 개인값을 노출할 수 있습니다.",
+    "canonicalHref": "/cs/crypto/crypto-primitives#schnorr"
   },
   "ed25519-instance-contract": {
-    id: "ed25519-instance-contract", kind: "concept", domain: "computer-science",
-    label: "Ed25519 instance contract",
-    definition: "Edwards25519·SHA-512·seed expansion·deterministic nonce·little-endian point/scalar encoding·variant와 strict verification을 하나로 고정한 RFC 8032 EdDSA instance 계약입니다.",
-    canonicalHref: "/cs/crypto/crypto-primitives#ed25519",
+    "id": "ed25519-instance-contract",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Ed25519의 변형과 검증 조건",
+    "definition": "곡선·SHA-512·seed 확장·점과 스칼라 인코딩을 고정하고 pure·ctx·ph의 문맥 및 사전 해시와 검증식 선택을 구분하는 RFC8032의 조건입니다. 출판본 예제의 정오표와 형식 검사는 외부 공개키 등록·권한 정책·전체 구현 보안과 별도로 대조합니다.",
+    "canonicalHref": "/cs/crypto/crypto-primitives#ed25519"
   },
   "cryptographic-domain-type-separation": {
-    id: "cryptographic-domain-type-separation", kind: "concept", domain: "computer-science",
-    label: "Cryptographic domain · type separation",
-    definition: "Point group·scalar field·base/hash field와 protocol transcript domain을 식별자·modulus·encoding별 타입으로 분리해 cross-protocol 재사용과 잘못된 reduction을 막는 구현 원칙입니다.",
-    canonicalHref: "/cs/crypto/crypto-primitives#abelian-group",
+    "id": "cryptographic-domain-type-separation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "암호 연산과 메시지 타입 구분",
+    "definition": "군의 점·스칼라·좌표 체·해시 및 메시지의 용도를 나머지·허용 연산·바이트 길이와 순서별로 구별하는 원칙입니다. 같은 정수 자료형이나 32바이트 길이는 같은 수학적 의미를 보장하지 않습니다.",
+    "canonicalHref": "/cs/crypto/crypto-primitives#abelian-group"
   },
   "csprng-entropy-drbg-pipeline": {
     "id": "csprng-entropy-drbg-pipeline",
@@ -17664,58 +17671,86 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/ai/prefix-caching-radix-attention#attention-metadata"
   },
   "self-speculative-decoding": {
-    id: "self-speculative-decoding",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Self-speculative decoding · early-exit draft",
-    aliases: ["Self-Speculative Decoding", "Early exit draft", "LayerSkip self-speculation", "Draft & Verify layer skipping"],
-    definition: "별도 draft model 없이 target 의 앞 E 개 layer 에서 일찍 빠져나와 token 을 제안하고 나머지 L−E 개 layer 로 검증하는 방식으로, draft 와 verify 가 같은 weight 와 KV cache 를 공유해 추가 메모리가 없고 draft 비용 c 는 E/L, verify 는 (L−E)/L forward 가 됩니다.",
-    canonicalHref: "/cs/ai/speculative-decoding-variants#self-speculative",
+    "id": "self-speculative-decoding",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Self-speculative decoding · early-exit draft",
+    "aliases": [
+      "Self-Speculative Decoding",
+      "Early exit draft",
+      "LayerSkip self-speculation",
+      "Draft & Verify layer skipping"
+    ],
+    "definition": "학습한 한 모델의 앞 층으로 후보를 만들고 중간 상태를 저장해 뒤 층의 검증에 재사용합니다. 추가 모델 가중치가 없다는 것과 추가 메모리가 없다는 것은 다릅니다. 층 수의 비율은 exit 상태·KV·마지막 입력과 실제 실행 시간을 대신하지 않습니다.",
+    "canonicalHref": "/cs/ai/speculative-decoding-variants#self-source"
   },
   "mtp-head-draft-chain": {
-    id: "mtp-head-draft-chain",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "MTP head · MTP draft",
-    aliases: ["MTP Head", "MTP Draft", "MTP module", "Multi-token prediction head"],
-    definition: "Target 학습 때 함께 훈련된 보조 module 로, 마지막 hidden state 와 다음 token 의 embedding 을 받아 그다음 token 을 예측하며(DeepSeek-V3 는 공유 embedding, Transformer block 하나, projection, 공유 output head), serving 에서 draft 로 재사용하면 draft 비용 c 가 block 수 비 1/L 근처로 내려갑니다.",
-    canonicalHref: "/cs/ai/speculative-decoding-variants#mtp",
+    "id": "mtp-head-draft-chain",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "MTP head · MTP draft",
+    "aliases": [
+      "MTP Head",
+      "MTP Draft",
+      "MTP module",
+      "Multi-token prediction head"
+    ],
+    "definition": "DeepSeek-V3의 순차 MTP는 앞 깊이의 상태와 이미 지정한 다음 token을 합쳐 더 뒤의 글자를 예측합니다. Medusa의 같은 상태에서 여러 미래를 예측하는 head와 같은 구조가 아닙니다. 모듈 하나와 전체 층 수만으로 후보 시간 비나 수락률을 구할 수 없습니다.",
+    "canonicalHref": "/cs/ai/speculative-decoding-variants#mtp"
   },
   "mtp-speculation-utility-boundary": {
-    id: "mtp-speculation-utility-boundary",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "MTP speculation utility boundary",
-    aliases: ["MTP의 효용 경계", "MTP utility boundary", "MTP break-even condition"],
-    definition: "MTP draft 가 base decode 보다 빠른 조건을 (1−α^{K+1})/(1−α) > Kc + v(B) 로 적은 것으로, v(B)=max(1, B(K+1)/B*) 는 batch 가 compute-bound 경계를 넘을 때 verify 비용이 늘어나는 배율이며, 경계는 α 보다 batch 와 workload 분포가 정합니다.",
-    canonicalHref: "/cs/ai/speculative-decoding-variants#mtp",
+    "id": "mtp-speculation-utility-boundary",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "MTP speculation utility boundary",
+    "aliases": [
+      "MTP의 효용 경계",
+      "MTP utility boundary",
+      "MTP break-even condition"
+    ],
+    "definition": "한 후보의 평균 출력 1+α와 후보·검증의 전체 시간 c+v를 같은 단독 생성 기준으로 비교합니다. 직렬·추가 비용 0·출력 길이 미절단이라는 시간 모형입니다. x=B/B*에서 max(1,2x)/max(1,x)를 가정하면 이득은 0<x<.917이며 보편 GPU batch 한도가 아닙니다.",
+    "canonicalHref": "/cs/ai/speculative-decoding-variants#mtp-cost"
   },
   "tree-speculation-candidate-tree": {
-    id: "tree-speculation-candidate-tree",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Tree-based speculation · token tree",
-    aliases: ["Tree-Based Speculation", "Token tree", "Medusa tree", "Speculation tree"],
-    definition: "Draft 가 위치마다 top-s 개 후보를 내고 부모–자식으로 이어 token tree 를 만든 뒤 tree 전체를 한 forward 로 검증하는 방식으로, node 수는 Σ_k Π s_i 이고 위치별 성공 확률이 top-1 수락률 α 에서 top-s 포함률 β 로 올라 기대 확정 길이가 길어지는 대신 verify token 이 |T| 배로 늘어납니다.",
-    canonicalHref: "/cs/ai/speculative-decoding-variants#tree",
+    "id": "tree-speculation-candidate-tree",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Tree-based speculation · token tree",
+    "aliases": [
+      "Tree-Based Speculation",
+      "Token tree",
+      "Medusa tree",
+      "Speculation tree"
+    ],
+    "definition": "같은 앞 글에서 가능한 여러 다음 선택을 가지로 준비하고 한 경로를 남기는 후보 구조입니다. 깊이와 총 후보 수를 구별합니다. 확정 길이가 길어도 확인 비용 4.2이면 비 .7742라 chain의 2.533/1.7=1.49보다 느립니다.",
+    "canonicalHref": "/cs/ai/speculative-decoding-variants#tree-cost"
   },
   "tree-attention-verification": {
-    id: "tree-attention-verification",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Speculative tree verification · tree attention mask",
-    aliases: ["Speculative Tree Verification", "Tree attention", "Topology-aware causal mask", "Tree-based parallel decoding"],
-    definition: "Token tree 의 모든 node 를 한 sequence 로 펼쳐 target 에 넣되 각 node 가 prefix 와 자기 조상만 보도록 |T|×|T| mask 를 만들어 한 forward 로 모든 경로의 logit 을 얻고, root 에서 target 출력과 일치하는 자식을 따라 내려가 경로 하나를 확정하고 나머지 가지의 KV 를 버리는 검증입니다.",
-    canonicalHref: "/cs/ai/speculative-decoding-variants#tree-verify",
+    "id": "tree-attention-verification",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Speculative tree verification · tree attention mask",
+    "aliases": [
+      "Speculative Tree Verification",
+      "Tree attention",
+      "Topology-aware causal mask",
+      "Tree-based parallel decoding"
+    ],
+    "definition": "각 자리가 자기 조상과 자신만 읽게 한 뒤 부모 점수로 다음 후보를 확인하고 선택한 경로의 계산 기록을 남깁니다. 마스크가 같은 조건을 보이는 것과 sampling 분포를 보존하는 것은 별개입니다. Medusa typical fast의 확률 문턱은 exact residual 보정과 다르며 허용 칸 수가 실제 GPU 연산 수는 아닙니다.",
+    "canonicalHref": "/cs/ai/speculative-decoding-variants#mask"
   },
   "suffix-decoding": {
-    id: "suffix-decoding",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Suffix decoding · model-free draft",
-    aliases: ["Suffix Decoding", "SuffixDecoding", "Suffix tree speculation"],
-    definition: "이전 출력과 현재 prompt 를 suffix tree 에 넣어 두고 최근 token 열과 일치하는 가장 긴 suffix 아래의 자식을 빈도로 점수 매겨 draft 를 꺼내는 model-free 방식으로, draft 가 CPU 에서 token 당 약 20 µs 라 c 가 0.001 근처이고 miss 면 draft 길이 0 으로 보통 decode 비용에 머뭅니다.",
-    canonicalHref: "/cs/ai/speculative-decoding-variants#suffix",
+    "id": "suffix-decoding",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Suffix decoding · model-free draft",
+    "aliases": [
+      "Suffix Decoding",
+      "SuffixDecoding",
+      "Suffix tree speculation"
+    ],
+    "definition": "현재 입력의 끝부분과 같은 과거 기록을 찾아 관찰 빈도가 높은 다음 글을 후보로 만드는 방식입니다. 빈도 점수는 target 수락 확률의 보장이 아닙니다. 조회·갱신·반환 비용이 남으며 고정 wrapper의 None 오류와 C++의 strict 길이 조건을 현재 버전의 범위로 구분합니다.",
+    "canonicalHref": "/cs/ai/speculative-decoding-variants#suffix-source"
   },
   "inference-cost-per-token": {
     id: "inference-cost-per-token",
@@ -27651,7 +27686,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "총액과 순액 매출",
-    "definition": "거래에서 상품을 통제하는 주체인지 중개하는 주체인지에 따라 고객 지급액 가운데 자기 매출로 기록할 몫이 달라집니다.",
+    "definition": "상품이나 서비스를 고객에게 넘기기 전에 누가 통제했는지를 보고 본인·대리인 역할을 판단합니다. 결제 수령, 가격 재량, 재고 위험 중 하나만으로 결론 내리지 않습니다. 회계와 세무, IFRS15의 고객 계약과 IFRS16의 리스 범위를 구별합니다.",
     "canonicalHref": "/economics/business/business-model-cashflow#mechanism"
   },
   "working-capital-gap": {
@@ -27659,7 +27694,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "운전자금 간격",
-    "definition": "재고와 미수금에 돈을 쓰는 날부터 고객 대금을 회수하는 날까지 사업자가 메워야 하는 현금 간격입니다.",
+    "definition": "이익이 나도 정산이 늦으면 월급을 지급할 돈이 모자랄 수 있습니다. 결제 선불·재고 위탁이면 간격이 반대로 바뀔 수도 있습니다.",
     "canonicalHref": "/economics/business/business-model-cashflow#need"
   },
   "contribution-cash-trace": {
@@ -27667,7 +27702,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "거래당 남는 돈의 추적",
-    "definition": "가격에서 거래에 따라 늘어나는 비용을 순서대로 빼고 고정비와 조달비를 지급할 여지를 계산하는 방법입니다.",
+    "definition": "매출을 두 배로 만드는 일이 남는 돈도 두 배로 만들지는 않습니다. 고정비 배분 방식에 따라 거래당 이익의 표현이 달라질 수 있습니다.",
     "canonicalHref": "/economics/business/business-model-cashflow#limits"
   },
   "shop-contribution-margin": {
@@ -27819,7 +27854,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "가맹본부와 점주의 분리 장부",
-    "definition": "같은 고객 결제에서 본부의 로열티·공급 수입과 점주의 재료·임금·임대료·잔여현금을 별도로 적는 방법입니다.",
+    "definition": "월매출을 본부 지급액과 점포 비용·잔액으로 나누어 양쪽 수입과 위험을 비교합니다. 로열티 계산 기준은 지급일과 별개이며 공급 수입도 원가를 차감한 이익과 다릅니다.",
     "canonicalHref": "/economics/business/franchise-incentives#mechanism"
   },
   "franchise-contract-controls": {
@@ -27835,7 +27870,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "평균 매출의 한계",
-    "definition": "공개된 가맹점 평균 매출이 점주의 순이익과 다르고 표본·연식·폐점 처리에 영향을 받는다는 경계입니다.",
+    "definition": "평균 매출만으로 점주의 순이익이나 인수 후 수익성을 알 수 없다는 한계입니다. 기간·면적·표본과 실제 비용을 맞추고 무급 노동의 기회비용을 장부상 임금과 구별합니다.",
     "canonicalHref": "/economics/business/franchise-incentives#limits"
   },
   "development-residual-land-value": {
@@ -28111,7 +28146,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "method",
     "domain": "economics",
     "label": "점포의 근무·급여 대조",
-    "definition": "직원4시간 기록에서 임금률·수당·공제를 적용해 실제 지급과 명세서를 맞춥니다. 임금률·수당·보험·보관기한은 현지 적용법과 고용형태를 확인해야 합니다.",
+    "definition": "실제 근로·별도 휴게 기록과 임금률·수당·적법한 공제를 연결해 명세서 및 실제 지급을 맞추는 작업입니다. 이미 확인한 실제 근로시간에서 휴게를 다시 차감하지 않습니다.",
     "canonicalHref": "/economics/business/shop-daily-operations#mechanism"
   },
   "population-stock-flow-account": {"id": "population-stock-flow-account", "kind": "concept", "domain": "economics", "label": "인구의 잔액과 출입", "definition": "같은 거주지와 기간에서 처음 인구에 출생·전입을 더하고 사망·전출을 빼 마지막 인구를 계산하는 장부입니다.", "canonicalHref": "/economics/institutions/population-migration-and-care#mechanism"},

@@ -1716,17 +1716,90 @@ export const dlFoundationArticles: Article[] = [
   },
   {
     slug: "cross-entropy",
-    title: "크로스 엔트로피: 정보 이론에서 손실 함수로",
+    title: "확률을 비용으로 바꾸기: 교차 엔트로피와 학습 기울기",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "Surprisal에서 loss까지" },
-      { id: "expectation", title: "기대값과 empirical risk" },
-      { id: "entropy", title: "Entropy: 피할 수 없는 불확실성" },
-      { id: "cross-entropy", title: "Cross-entropy와 likelihood" },
-      { id: "kl-divergence", title: "KL: 모델의 추가 비용" },
-      { id: "ce-vs-mse", title: "Likelihood로 loss 고르기" },
-      { id: "softmax-ce-gradient", title: "Softmax–CE fused gradient" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 같은 네 기록을 설명하는 데 왜 더 긴 코드가 필요할까"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 실제로 나온 글자와 미리 정한 예측표를 함께 받는다"
+  },
+  {
+    "id": "case",
+    "title": "3 · A, A, B, C를 두 가지 이진 코드로 적는다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 글자는 그대로 두고 길이를 정하는 표만 바꾼다"
+  },
+  {
+    "id": "why",
+    "title": "5 · 확률을 곱할 때 비용은 더해지게 만든다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 한 사건의 비용과 평균 비용에 이름을 붙인다"
+  },
+  {
+    "id": "log-cost",
+    "title": "7 · 한 글자의 확률을 비용으로 바꾼다"
+  },
+  {
+    "id": "expectation",
+    "title": "8 · 실제 비중의 평균과 관측한 네 값의 평균을 구별한다"
+  },
+  {
+    "id": "entropy",
+    "title": "9 · 원래 규칙에 맞춘 평균 길이는 1.5 bit다"
+  },
+  {
+    "id": "cross-entropy",
+    "title": "10 · 예측표 Q를 쓰면 평균 비용이 1.75 bit다"
+  },
+  {
+    "id": "kl-divergence",
+    "title": "11 · 추가된 0.25 bit는 어느 방향의 차이인가"
+  },
+  {
+    "id": "softmax-ce-gradient",
+    "title": "12 · 같은 비용을 줄일 로짓의 방향을 구한다"
+  },
+  {
+    "id": "paper-shannon",
+    "title": "13 · Shannon의 원래 식에 같은 세 확률을 넣는다"
+  },
+  {
+    "id": "implementation",
+    "title": "14 · 실제 PyTorch는 네 행의 정답 열을 고른다"
+  },
+  {
+    "id": "stable-log-softmax",
+    "title": "15 · 큰 수를 먼저 빼야 작은 차이가 남는다"
+  },
+  {
+    "id": "reduction",
+    "title": "16 · 정답 형식과 가중치가 같아 보여도 분모를 확인한다"
+  },
+  {
+    "id": "ce-vs-mse",
+    "title": "17 · 관측값의 모양을 정한 뒤 손실을 고른다"
+  },
+  {
+    "id": "support",
+    "title": "18 · 실제로 나오는 글자에 확률 0을 주면 어떻게 될까"
+  },
+  {
+    "id": "limits",
+    "title": "19 · 낮은 비용이 무엇을 보장하는지 범위를 남긴다"
+  },
+  {
+    "id": "review",
+    "title": "20 · 표와 분모를 바꾸기 전에 결과를 예측한다"
+  }
+],
     component: () => import("@/pages/articles/ai/cross-entropy"),
   },
   {

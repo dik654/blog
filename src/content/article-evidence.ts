@@ -1344,11 +1344,35 @@ export const ARTICLE_EVIDENCE: Readonly<
 ],
   "ai/cross-entropy": [
     {
-      kind: "핵심 논문",
-      label: "A Mathematical Theory of Communication",
-      href: "https://doi.org/10.1002/j.1538-7305.1948.tb01338.x",
-      note: "entropy와 information measure의 출발점",
+      "kind": "핵심 논문",
+      "label": "A Mathematical Theory of Communication",
+      "href": "https://doi.org/10.1002/j.1538-7305.1948.tb01338.x",
+      "note": "entropy와 information measure의 출발점"
     },
+    {
+      "kind": "핵심 논문",
+      "label": "Shannon · 재현 PDF 정리 2와 정리 9",
+      "href": "https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf",
+      "note": "실제 식과 같은 세 확률의 1.5 bit, 6/1.5=4글자/초 적용입니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch v2.14.0 · 실제 cross_entropy 분기와 NLL",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/aten/src/ATen/native/LossNLL.cpp",
+      "note": "고정 원문의 정답 선택과 클래스 번호·확률 정답의 서로 다른 가중 mean 분모를 추적합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch v2.14.0 · CPU log_softmax 계산 순서",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/aten/src/ATen/native/cpu/LogSoftmaxKernelImpl.h",
+      "note": "x−max−log(sum)의 실제 순서와 큰 수에 작은 로그를 먼저 더하지 않는 주석을 읽습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.14 · CrossEntropyLoss",
+      "href": "https://docs.pytorch.org/docs/2.14/generated/torch.nn.CrossEntropyLoss.html",
+      "note": "정답 형식과 가중 mean·제외 정답의 API 조건을 실제 고정 코드와 대조합니다."
+    }
   ],
   "ai/fft": [
     {
@@ -5769,9 +5793,36 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Compound III liquidation", href: "https://docs.compound.finance/liquidation/", note: "Reserve-funded absorb·buyCollateral·discount quote의 공식 interface" },
   ],
   "crypto/crypto-primitives": [
-    { kind: "핵심 논문", label: "Poseidon · USENIX Security 2021", href: "https://www.usenix.org/conference/usenixsecurity21/presentation/grassi", note: "Prime-field SPN·HADES round strategy와 회로 비용/공격 분석의 원문" },
-    { kind: "공식 규격", label: "RFC 8032 · EdDSA: Ed25519 and Ed448", href: "https://www.rfc-editor.org/rfc/rfc8032.html", note: "Ed25519 curve·seed expansion·encoding·sign/verify·test-vector 계약" },
-    { kind: "공식 규격", label: "BIP 340 · Schnorr Signatures for secp256k1", href: "https://bips.dev/340/", note: "Tagged hash·x-only key·auxiliary nonce와 exact Schnorr byte contract" },
+    {
+      "kind": "공식 문서",
+      "label": "RFC 9162 · 2.1절",
+      "href": "https://www.rfc-editor.org/rfc/rfc9162.html#section-2.1",
+      "note": "원문의 잎·내부 노드 태그와 경로 순서를 읽고 자체 영수증 인코딩에 대입했습니다. 실제 CT 전송 형식 구현과 구별합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Poseidon · USENIX Security 2021",
+      "href": "https://www.usenix.org/system/files/sec21-grassi.pdf",
+      "note": "PDF 522–524쪽의 스펀지·라운드·행렬 조건을 읽었습니다. F₁₇의 한 라운드와 289전수는 별도의 설명 모형입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "BIP 340 · 규격 대조",
+      "href": "https://bips.dev/340/",
+      "note": "서명·검증·메시지 길이 및 용도 구분을 읽었습니다. 참조 구현 실행이나 작은 군과 실제 출력의 동일성을 주장하지 않습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "RFC 8032 · 6절 출판본과 공식 벡터",
+      "href": "https://www.rfc-editor.org/rfc/rfc8032.html#section-6",
+      "note": "원문 코드 문장을 보존하고 공식 벡터와 47바이트 영수증을 Python3.9.6에서 실행했습니다. 원문과 별도 길이·등록 키 정책을 구분합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "RFC 8032 · Verified Erratum 5930",
+      "href": "https://www.rfc-editor.org/errata/eid5930",
+      "note": "공식 HTML과 errata JSON의 Verified 상태 및 missing raise 수정을 읽었습니다. 정상 서명 뒤 00을 붙인 65바이트 입력의 원문 통과와 길이 보완 후 거부를 재현했습니다."
+    }
   ],
   "crypto/csprng": [
     { kind: "공식 규격", label: "NIST SP 800-90A Rev.1 · DRBG", href: "https://csrc.nist.gov/pubs/sp/800/90/a/r1/final", note: "Hash/HMAC/CTR_DRBG instantiate·generate·reseed state-transition 정본" },
@@ -7865,13 +7916,96 @@ export const ARTICLE_EVIDENCE: Readonly<
     }
   ],
   "ai/speculative-decoding-variants": [
-    { kind: "핵심 논문", label: "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding", href: "https://arxiv.org/abs/2404.16710", note: "Self-speculative decoding 의 KV 공유·학습 recipe 와 배율의 출처" },
-    { kind: "핵심 논문", label: "DeepSeek-V3 Technical Report", href: "https://arxiv.org/abs/2412.19437", note: "MTP module 구조(§2.2)와 수락률 85~90 %·TPS 1.8 배(§5.4.3)의 출처" },
-    { kind: "핵심 논문", label: "Medusa: Simple LLM Inference Acceleration Framework with Multiple Decoding Heads", href: "https://arxiv.org/abs/2401.10774", note: "Head 별 Cartesian 곱 tree 와 node 수 식 Σ_k Π s_i 의 출처" },
-    { kind: "핵심 논문", label: "SpecInfer: Accelerating Generative Large Language Model Serving with Tree-based Speculative Inference and Verification", href: "https://arxiv.org/abs/2305.09781", note: "Token tree, topology-aware mask, tree 검증 성공률 표의 출처" },
-    { kind: "핵심 논문", label: "SuffixDecoding: Extreme Speculative Decoding for Emerging AI Applications", href: "https://arxiv.org/abs/2411.04975", note: "Suffix tree draft, 20 µs/token, AgenticSQL 배율의 출처" },
-    { kind: "선행·비교 논문", label: "EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty", href: "https://arxiv.org/abs/2401.15077", note: "Feature 단계 tree draft 의 예로 링크만 하며 정본은 vllm-spec-decode" },
-    { kind: "선행·비교 논문", label: "Draft & Verify: Lossless Large Language Model Acceleration via Self-Speculative Decoding", href: "https://arxiv.org/abs/2309.08168", note: "학습 없이 layer 를 건너뛰는 self-speculative 변형의 출처" },
+    {
+      "kind": "공식 코드",
+      "label": "Medusa e2a5d20c medusa/model/utils.py whole original",
+      "href": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/medusa/model/utils.py",
+      "note": "고정 commit의 전체 파일을 수정 없이 보존했습니다. 실제 native CPU 실행·배열 대역·읽기 전용 대조 범위는 본문에서 따로 밝힙니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Medusa e2a5d20c medusa/model/kv_cache.py whole original",
+      "href": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/medusa/model/kv_cache.py",
+      "note": "고정 commit의 전체 파일을 수정 없이 보존했습니다. 실제 native CPU 실행·배열 대역·읽기 전용 대조 범위는 본문에서 따로 밝힙니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Medusa e2a5d20c medusa/model/medusa_model.py whole original",
+      "href": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/medusa/model/medusa_model.py",
+      "note": "고정 commit의 전체 파일을 수정 없이 보존했습니다. 실제 native CPU 실행·배열 대역·읽기 전용 대조 범위는 본문에서 따로 밝힙니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "LayerSkip 494752e5 self_speculation/self_speculation_generator.py whole original",
+      "href": "https://raw.githubusercontent.com/facebookresearch/LayerSkip/494752e5fbb0a82989f6cb384841684b1c2ef5c3/self_speculation/self_speculation_generator.py",
+      "note": "고정 commit의 전체 파일을 수정 없이 보존했습니다. 실제 native CPU 실행·배열 대역·읽기 전용 대조 범위는 본문에서 따로 밝힙니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "LayerSkip 494752e5 self_speculation/llama_model_utils.py whole original",
+      "href": "https://raw.githubusercontent.com/facebookresearch/LayerSkip/494752e5fbb0a82989f6cb384841684b1c2ef5c3/self_speculation/llama_model_utils.py",
+      "note": "고정 commit의 전체 파일을 수정 없이 보존했습니다. 실제 native CPU 실행·배열 대역·읽기 전용 대조 범위는 본문에서 따로 밝힙니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "ArcticInference aca5d9a8 arctic_inference/suffix_decoding/cache.py whole original",
+      "href": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/arctic_inference/suffix_decoding/cache.py",
+      "note": "고정 commit의 전체 파일을 수정 없이 보존했습니다. 실제 native CPU 실행·배열 대역·읽기 전용 대조 범위는 본문에서 따로 밝힙니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "ArcticInference aca5d9a8 csrc/suffix_decoding/suffix_tree.cc whole original",
+      "href": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/csrc/suffix_decoding/suffix_tree.cc",
+      "note": "고정 commit의 전체 파일을 수정 없이 보존했습니다. 실제 native CPU 실행·배열 대역·읽기 전용 대조 범위는 본문에서 따로 밝힙니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "ArcticInference aca5d9a8 csrc/suffix_decoding/suffix_tree.h whole original",
+      "href": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/csrc/suffix_decoding/suffix_tree.h",
+      "note": "고정 commit의 전체 파일을 수정 없이 보존했습니다. 실제 native CPU 실행·배열 대역·읽기 전용 대조 범위는 본문에서 따로 밝힙니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "ArcticInference aca5d9a8 csrc/suffix_decoding/int32_map.h whole original",
+      "href": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/csrc/suffix_decoding/int32_map.h",
+      "note": "고정 commit의 전체 파일을 수정 없이 보존했습니다. 실제 native CPU 실행·배열 대역·읽기 전용 대조 범위는 본문에서 따로 밝힙니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Medusa e2a5d20c medusa/model/modeling_llama_kv.py whole original",
+      "href": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/medusa/model/modeling_llama_kv.py",
+      "note": "고정 commit의 전체 파일을 수정 없이 보존했습니다. 실제 native CPU 실행·배열 대역·읽기 전용 대조 범위는 본문에서 따로 밝힙니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding (v4)",
+      "href": "https://arxiv.org/html/2404.16710v4",
+      "note": "§4의 self-drafting·verification·cache reuse를 R·A·Y에 적용했습니다. 원문의 실험 배율은 24절에서 모델·작업별 저자 보고로 읽습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "DeepSeek-V3 Technical Report (v2)",
+      "href": "https://arxiv.org/html/2412.19437v2",
+      "note": "§2.2 식 21–23 및 §5.4.3의 추가 token 수락률 85~90%와 TPS 1.8배 보고를 분리해 읽었습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Medusa: Simple LLM Inference Acceleration Framework with Multiple Decoding Heads (v3)",
+      "href": "https://arxiv.org/html/2401.10774v3",
+      "note": "Algorithm 1·§2.3.1과 Table 2를 읽고 실제 고정 함수의 root 선택·17칸 mask·RAY 행을 CPU 배열 대역으로 확인했습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "SpecInfer: Accelerating Generative Large Language Model Serving with Tree-based Speculative Inference and Verification (v4)",
+      "href": "https://arxiv.org/html/2305.09781v4",
+      "note": "Algorithm 2와 Table 1의 CIP top-1→top-5 70→89%를 구별했고 폭 3·2·2와 깊이별 .89/.85/.8은 교육용 가정으로 표시했습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "SuffixDecoding: Extreme Speculative Decoding for Emerging AI Applications (v3)",
+      "href": "https://arxiv.org/html/2411.04975v3",
+      "note": "§3의 자료 구조·길이 선택·hybrid와 Figure 4의 batch 1 H100 결과, 별도 OpenHands 전체 실행 비교를 각각 읽었습니다."
+    }
   ],
   "ai/inference-cost-and-capacity-planning": [
     { kind: "공식 문서", label: "Kubernetes · Horizontal Pod Autoscaling", href: "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/", note: "HPA 계산식, sync 15 초, tolerance 0.1, scale-down 안정화 창 5 분의 근거" },
@@ -9939,20 +10073,32 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "돌의 제작 시기를 약 기원전 1750년으로 설명하고 현대적 의미의 법전과 구분함. 1903년 머리말의 시간 간격은 학교 판본의 연대를 대조하지 않아 채택하지 않음",
     },
   ],
-  "business/business-model-cashflow": [{"kind": "공식 문서", "label": "IFRS 15 Revenue from Contracts with Customers", "href": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-15-revenue-from-contracts-with-customers/", "note": "고객 계약의 수익 인식과 통제 이전 기준. 세법이나 현금 수령 시점을 정하는 문서는 아닙니다."}, {"kind": "공식 문서", "label": "IAS 7 Statement of Cash Flows", "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-7-statement-of-cash-flows/", "note": "이익과 영업·투자·재무 현금흐름을 구분하는 회계 원문입니다."},
+  "business/business-model-cashflow": [
     {
       "kind": "공식 문서",
-      "label": "IFRS 15 · About, step 5",
+      "label": "IFRS15 · About, 수익 인식 5단계",
       "href": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-15-revenue-from-contracts-with-customers/",
-      "note": "2026-10-04 원문 확인. 100개를 고객에게 넘긴 시점과 194만 원이 은행에 들어온 시점을 따로 기록합니다. 단순 중개회사가 200만 원을 잠시 받았다면 상품 전체 금액과 중개 보수를 구분해 본인·대리인 판단을 해야 합니다."
+      "note": "공식 About의5단계와 통제 취득 설명을 실제 확인했습니다. 배송일·입금일이 언제나 수익 인식일이거나 모든 자영업자에게 같은 회계기준이 강제된다는 뜻은 아닙니다."
     },
     {
       "kind": "공식 문서",
-      "label": "IAS 7 · About, indirect method",
+      "label": "IAS7 · About, 현금흐름과 간접법",
       "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-7-statement-of-cash-flows/",
-      "note": "2026-10-04 원문 확인. 상품 판매를 인식한 날에도 194만 원을 아직 못 받았으면 이익과 입금은 일치하지 않습니다. 120만 원을 먼저 지급한 날과 194만 원을 받는 날을 붙여 읽어 자금 부족 기간 21일을 확인합니다."
+      "note": "공식 원문에서 시차를 직접 다루는 문구로 인용을 맞추었습니다. 완전한 현금흐름표나 전체 순이익을 계산한 것은 아닙니다."
     },
-],
+    {
+      "kind": "공식 문서",
+      "label": "IFRIC · Principal versus Agent: Software Reseller (2022년5월)",
+      "href": "https://www.ifrs.org/news-and-events/updates/ifric/2022/ifric-update-april-2022/",
+      "note": "최종2022년5월 추가본의 관련 요구사항을 실제 읽었습니다. 가격 재량이나 결제금 보관 하나로 본인·대리인을 자동 판정하거나 본문 결제업체를 곧바로 상품 대리인으로 단정하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "IFRS16 · Leases",
+      "href": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-16-leases/",
+      "note": "공식 기준 소개의 목적과 범위를 읽었습니다. 임대료와 상품 매출에 IFRS15를 일괄 적용하거나 개별 리스 회계 처리를 여기서 판정하지 않습니다."
+    }
+  ],
   "business/shop-unit-economics": [{"kind": "공식 문서", "label": "IAS 2 Inventories", "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/", "note": "재고의 비용 인식과 순실현가능가치 기준. 본문의 잔당 계산은 설명용 현금 사례입니다."},             {
       "kind": "공식 문서",
       "label": "UK Business rates overview",
@@ -10181,35 +10327,38 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "서천군지속가능지역재단이 게시한 공단 공고 PDF의 3~4쪽입니다. 33㎡ 사례는 이 날짜의 공고에만 적용한 계산이며 이후 변경 여부는 신청할 때 확인합니다."
     },
 ],
-  "business/franchise-incentives": [            {
-      "kind": "공식 문서",
-      "label": "US FTC Franchise Rule",
-      "href": "https://www.ftc.gov/legal-library/browse/rules/franchise-rule",
-      "note": "미국 가맹사업 공시 규칙의 원문입니다."
-    }, {"kind": "공식 문서", "label": "US FTC Consumer Guide to Buying a Franchise", "href": "https://www.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise", "note": "미국의 FDD 14일 사전 제공과 항목별 검토를 설명합니다."},             {
-      "kind": "공식 문서",
-      "label": "한국 공정위 가맹 정보공개서 비교",
-      "href": "https://franchise.ftc.go.kr/firHope/comparePopup.do",
-      "note": "한국의 점포 수·평균 매출·비용 비교 항목을 확인합니다."
-    },             {
-      "kind": "공식 문서",
-      "label": "EU Vertical Guidelines 2022",
-      "href": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=intcom%3AC%282022%294238",
-      "note": "유럽연합 수직 계약·가맹 제한의 경쟁법 해석 자료입니다."
-    },
+  "business/franchise-incentives": [
     {
       "kind": "공식 문서",
       "label": "US FTC · Consumer Guide, Royalties",
       "href": "https://www.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise",
-      "note": "2026-10-04 원문 확인. 점주의 임금·광고·공과금 등 추가 비용이 1천550만 원을 넘으면 적자가 되지만, 매출 연동 약정의 150만 원은 자동으로 없어지지 않습니다. 실제 면제·유예 여부는 계약으로 확인합니다."
+      "note": "Royalties 설명과 반복 비용 안내를 읽고 여섯 단어를 직접 인용했습니다. 사례 금액이 실제 브랜드 수치이거나 모든 본부가 같은 계산 방식을 쓴다는 뜻은 아닙니다."
     },
     {
       "kind": "공식 문서",
-      "label": "US FTC · FDD Item 19 안내",
+      "label": "US FTC · FDD Item 19와 Item 20 안내",
       "href": "https://www.ftc.gov/business-guidance/blog/2023/05/franchise-fundamentals-taking-deep-dive-franchise-disclosure-document",
-      "note": "2026-10-04 원문 확인. 예상 월매출 3천만 원을 권유받았다면 미국에서는 그 수치가 FDD의 해당 항목에 어떻게 기재됐는지 확인합니다. 한국 정보공개서의 평균 매출과도 점포 연식·면적·제외 점포를 맞춰 비교하고, 어느 공시도 1천550만 원의 순이익을 보장한다고 읽지 않습니다."
+      "note": "공식 본문의 Item 19 문장을 대조하고 좁은 예외 존재와 Item 20 설명을 읽었습니다. 다른 나라 공시에 같은 의무가 적용되거나 자료 부재만으로 불법이라고 판정하지 않습니다."
     },
-],
+    {
+      "kind": "공식 문서",
+      "label": "16 CFR 436.2(a) · 문서 제공 시기",
+      "href": "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-D/part-436/subpart-B/section-436.2",
+      "note": "2026-10-04 eCFR 본문의 적용 범위와 (a)를 실제 확인했습니다. 14일을 영업일로 읽거나 전 세계 가맹계약에 일괄 적용하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국 공정위 · 정보공개서 비교 항목",
+      "href": "https://franchise.ftc.go.kr/firHope/comparePopup.do",
+      "note": "2026-10-04 실제 HTML의 항목명·단위·산정기준 안내를 확인했습니다. 월 3천만 원을 관측된 평균으로 제시하거나 명의변경을 폐점으로 합산하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EU · Vertical Guidelines 2022, 165~168항",
+      "href": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A52022XC0630%2801%29",
+      "note": "EUR-Lex 원문 165~168항에서 기능상 필요성·면제·개별 평가의 구분을 읽었습니다. EU 전체의 FDD 의무나 모든 가격·판매지역 제한의 적법성을 주장하지 않습니다."
+    }
+  ],
   "property/land-development-residual": [{"kind": "공식 문서", "label": "RICS Valuation of development property", "href": "https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf", "note": "잔여법과 개발 부동산의 현금흐름·민감도를 설명하는 전문 기준입니다."},             {
       "kind": "공식 문서",
       "label": "한국 국토의 계획 및 이용에 관한 법률",
@@ -10593,51 +10742,57 @@ export const ARTICLE_EVIDENCE: Readonly<
   "business/shop-daily-operations": [
     {
       "kind": "공식 문서",
-      "label": "고용노동부 · 소규모 사업장 7가지 노동법",
-      "href": "https://www.moel.go.kr/news/cardinfo/view.do?bbs_seq=20220500493",
-      "note": "근로계약서 교부와 임금명세서의 구성·계산·공제 기재를 확인했습니다. 2026-10-04 대조."
-    },
-    {
-      "kind": "공식 문서",
-      "label": "한국 소득세법 제160조의5",
-      "href": "https://law.go.kr/LSW/lsLinkProc.do?lsNm=%EC%86%8C%EB%93%9D%EC%84%B8%EB%B2%95&mode=11",
-      "note": "사업용계좌의 신고·사용 대상과 기한을 2026-10-04 확인했습니다."
-    },
-    {
-      "kind": "공식 문서",
-      "label": "IAS 2 Inventories",
+      "label": "IAS 2 · 재고 판매와 손실",
       "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/",
-      "note": "공식 About의 재고 판매·손실 비용 인식 설명입니다."
+      "note": "공식 About의 판매 관련 비용과 손실 발생 기간의 비용 인식 설명을 읽었습니다. 모든 소상공인이 IFRS 적용 대상이거나 11만4천800원이 순이익이라는 뜻은 아닙니다."
     },
     {
       "kind": "공식 문서",
       "label": "Stripe · Payout reconciliation report",
       "href": "https://docs.stripe.com/reports/payout-reconciliation",
-      "note": "송금별 거래·수수료·잔액을 맞추는 결제업체 원문입니다. 사례의 2%와 이틀은 Stripe의 요금·일정이 아닌 가정입니다."
+      "note": "자동 송금 보고서의 범위, Itemized 내역과 수동·즉시 송금의 제한을 실제 문서에서 읽었습니다. 실제 Stripe 요금·일정이나 모든 송금 방식에서 같은 보고서를 쓸 수 있다는 뜻은 아닙니다."
     },
     {
       "kind": "공식 문서",
-      "label": "Australia Fair Work Ombudsman · Record-keeping and pay slips",
+      "label": "Fair Work Ombudsman · 기록과 임금명세서",
       "href": "https://www.fairwork.gov.au/tools-and-resources/fact-sheets/rights-and-obligations/record-keeping-pay-slips",
-      "note": "2026-10-04 확인. 호주 적용 노동법의 기록·명세서와 보관 의무 설명입니다."
+      "note": "Overview와 급여·근무시간 기록의 항목별 범위를 읽고 짧은 원문을 인용했습니다. 모든 고용형태의 시간 기록 항목이 같거나 호주의 기간을 다른 나라에 적용한다는 뜻은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "소득세법 제160조의5 · 사업용계좌",
+      "href": "https://www.law.go.kr/법령/소득세법/제160조의5",
+      "note": "국가법령정보센터의 실제 제160조의5 본문에서 대상 거래와 신고 범위를 읽었습니다. 모든 영세 점주에게 같은 계좌 신고 의무가 있다고 단정하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "개인정보 보호법 제21조 · 파기와 보존",
+      "href": "https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335625",
+      "note": "국가법령정보센터의 제21조 1~3항을 실제 읽었습니다. 모든 고객 연락처를 계속 보관할 근거나 개별 자료의 보존기간을 정한 것은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "고용노동부 · 5인 미만 사업장 적용 노동법",
+      "href": "https://www.moel.go.kr/news/cardinfo/view.do?bbs_seq=20220500493",
+      "note": "2022년 안내의 근로조건 명시·교부와 임금명세서 항목을 확인했습니다. 당시 최저임금·보험 요건을 현재 수치로 재사용하지 않습니다."
     },
     {
       "kind": "공식 문서",
       "label": "법제처 · 음식점 화재배상책임보험과 안전시설",
       "href": "https://easylaw.go.kr/CSP/OnhunqueansInfoRetrieve.laf?onhunqnaAstSeq=91&onhunqueSeq=4365",
-      "note": "2026-10-04 확인. 면적·층·출입구와 업종에 따른 대상·예외를 확인합니다."
+      "note": "2026-08-15 기준 안내에서 업종·면적·층·주출입구와 예외를 확인했습니다. 실제 점포의 가입 대상 판정은 별도입니다."
     },
     {
       "kind": "공식 문서",
-      "label": "한국 개인정보 보호법 제21조",
-      "href": "https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335625",
-      "note": "불필요한 개인정보의 파기와 다른 법령에 따른 보존 자료 분리를 확인합니다."
-    },
-    {
-      "kind": "공식 문서",
-      "label": "법제처 · 음식점 건강진단과 식품위생교육",
+      "label": "법제처 · 음식점 건강진단",
       "href": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=4&cciNo=1&cnpClsNo=1&csmSeq=839&popMenu=ov",
-      "note": "2026-09-15 기준 안내를 2026-10-04 확인. 식품위생법 제40조·제41조에 따른 대상·예외는 건강진단과 연결된 식품위생교육 절에서 확인합니다."
+      "note": "2026-09-15 기준 제40조의 대상·시기·예외 설명을 읽었습니다. 특정 질환의 진단이나 식품 안전 판정은 하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "법제처 · 식품위생교육",
+      "href": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=839&ccfNo=4&cciNo=1&cnpClsNo=2",
+      "note": "2026-09-15 기준 제41조의 교육·대리·면제 범위를 읽었습니다. 안내에 예고된 10월8일 시행 변경을 10월4일 현재 규정으로 적용하지 않습니다."
     }
   ],
   "institutions/population-migration-and-care": [{"kind": "공식 문서", "label": "UN DESA · WPP2024 Methodology, p.1–2 및 II.G", "href": "https://population.un.org/wpp/assets/Files/WPP2024_Methodology.pdf", "note": "2024판은 연령·성별 출생·사망·국제이동으로 매년 인구를 전진시킵니다. 추정과 전망을 구분합니다."}, {"kind": "공식 문서", "label": "ILO · Care economy, What is the care economy?", "href": "https://www.ilo.org/topics-and-sectors/care-economy", "note": "유급·무급, 직접·간접 돌봄과 제공자·수혜자·고용주·서비스 기관의 범위. 확인 2026-10-04."}, {"kind": "공식 문서", "label": "ONS · National population projections methodology", "href": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/methodologies/methodologyusedtoproducethenationalpopulationprojections", "note": "출생·사망·이동의 가정에 따른 전망이라는 방법적 경계. 한국의 장기 전망이나 다른 나라의 실제 수치를 대신하지 않습니다."}],

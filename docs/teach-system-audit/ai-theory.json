@@ -976,19 +976,11 @@
       "subcategory": "ai-foundations",
       "publicFiles": [
         "src/pages/articles/ai/cross-entropy.tsx",
-        "src/pages/articles/ai/cross-entropy/CEvsMSE.tsx",
-        "src/pages/articles/ai/cross-entropy/CrossEntropy.tsx",
-        "src/pages/articles/ai/cross-entropy/Entropy.tsx",
-        "src/pages/articles/ai/cross-entropy/Expectation.tsx",
-        "src/pages/articles/ai/cross-entropy/KLDivergence.tsx",
-        "src/pages/articles/ai/cross-entropy/Overview.tsx",
-        "src/pages/articles/ai/cross-entropy/SoftmaxCEGradient.tsx",
-        "src/pages/articles/ai/cross-entropy/viz/DistributionPenaltyViz.tsx",
-        "src/pages/articles/ai/cross-entropy/viz/InformationObjectiveMapViz.tsx",
-        "src/pages/articles/ai/cross-entropy/viz/LikelihoodChoiceViz.tsx",
-        "src/pages/articles/ai/cross-entropy/viz/SoftmaxGradientTraceViz.tsx"
+        "src/pages/articles/ai/cross-entropy/ModernArticle.tsx",
+        "src/pages/articles/ai/cross-entropy/viz/CodeCostViz.tsx",
+        "src/pages/articles/ai/cross-entropy/codeRefs.ts"
       ],
-      "status": "unreviewed",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -996,20 +988,139 @@
         "hasSourceSurface": false,
         "characters": 27917
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "첫 문단부터 정의와 용어가 앞서며 한 사건에서 학습까지 같은 사례가 이어지지 않습니다.",
+        "기존 P=(.7,.2,.1), Q=(.6,.3,.1) 표의 첫 행 두 기여와 CE .980/KL .178 합계가 실제값 .828631/.026812와 다릅니다.",
+        "큰 NLL을 큰 logit correction으로 연결하고 실제 원문 없이 fused 단일 연산을 암시합니다.",
+        "LSE를 먼저 조립한 뒤 큰 z를 빼는 수식과 subtract-first 수치 구현을 구별하지 않았습니다.",
+        "유한 support 양수 조건을 가산무한까지 일반화할 여지가 있으며 실제 코드·Shannon 원문 적용과 예측 문항이 없습니다."
+      ],
+      "fixture": {
+        "records": [
+          "A",
+          "A",
+          "B",
+          "C"
+        ],
+        "P": [
+          0.5,
+          0.25,
+          0.25
+        ],
+        "Q": [
+          0.25,
+          0.25,
+          0.5
+        ],
+        "Pcode": [
+          "0",
+          "10",
+          "11"
+        ],
+        "Qcode": [
+          "10",
+          "11",
+          "0"
+        ],
+        "codeLengths": [
+          2,
+          2,
+          2,
+          1
+        ],
+        "totalBits": 7,
+        "meanBits": 1.75,
+        "entropyBits": 1.5,
+        "excessBits": 0.25,
+        "nllNat": 1.2130075659799042,
+        "entropyNat": 1.0397207708399179,
+        "klNat": 0.17328679513998635,
+        "likelihood": "1/128",
+        "logits": [
+          "0",
+          "0",
+          "ln2"
+        ],
+        "hardGradient": [
+          -0.75,
+          0.25,
+          0.5
+        ],
+        "sharedBatchGradient": [
+          -0.25,
+          0,
+          0.25
+        ]
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "picture",
+        "2": "why",
+        "3": "names",
+        "4": [
+          "log-cost",
+          "expectation",
+          "entropy",
+          "cross-entropy",
+          "kl-divergence",
+          "softmax-ce-gradient"
+        ],
+        "5": [
+          "paper-shannon",
+          "implementation",
+          "stable-log-softmax"
+        ],
+        "6": [
+          "reduction",
+          "ce-vs-mse",
+          "support"
+        ],
+        "7": "limits",
+        "8": "review"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "Shannon 1948 재현 PDF11·16",
+          "href": "https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf",
+          "anchor": "paper-shannon",
+          "application": "정리2의 H에 P=(1/2,1/4,1/4)를 대입해1.5bit, 정리9 C/H에6bit/초를대입해4글자/초를계산. 실제이미지11·16확인."
+        },
+        {
+          "source": "PyTorch2.14 commit2b3ec348 LossNLL.cpp",
+          "anchor": "implementation",
+          "application": "4×3로짓과정답[0,0,1,2]의원문분기·열선택·mean에7ln2/4대입. 가중hard분모6과probabilitytarget분모4를구별."
+        },
+        {
+          "source": "동일commit LogSoftmaxKernelImpl.h",
+          "anchor": "stable-log-softmax",
+          "application": "실제x−max−logsum순서를같은z에대입하고공통1e8반올림예제를Python실행. 프레임워크바이너리실행주장없음."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "원래7본문·4Viz와고정baseline전체·원래6+4·정의7·ownership읽음. 기존정확한동전·우도·gradient·Gaussian조건과oldanchor보존. 수치오류와과잉융합/gradient/유한성주장을실제교정.",
+        "planning": "/tmp/teach-all/ce-plan.json: 본문 작성 전 작은 사례와6+4 고정.",
+        "primarySources": "/tmp/teach-all/ce-source-final.json: 고정원문4개remote byte동일과라이선스보존, PDF11·16 실제이미지검토.",
+        "numericTrace": "/tmp/teach-all/ce-independent-systems.json 및 글의 codebase/ce_arithmetic.py 실제Python실행. chains추가KL·가중치검산.",
+        "humanize": "실제extract→roundtrip→prepare→gate→apply, 최종전문10569자61문단연결쉼표2개. whole+3chunk와props99문자열P3좌표오탐은chains독립승인 /tmp/teach-all/ce-humanize-independent-chains.json. Viz쉼표1개후gate0, code14문자열gate0.",
+        "mobile390": "output/playwright/teach-ai-theory-ce/ce.json:20절·3예측·5코드패널·first1/5PASS,console/katex/overflow/narrow/broken0. ai-theory-ce-controls.json3장면frame/control안정·키보드·라벨PASS.",
+        "desktop1440": "같은검사PASS. ce-extra-browser.json의모든16수식양끝접근·실제source2·details3열기·reduced재생금지와수동조작PASS. 390그림/수식과1440원문화면직접확인.",
+        "prose": "/tmp/teach-all/ce-prose.log 전역799편 재검토0 PASS.",
+        "formula": "/tmp/teach-all/ce-formula.log 1445/1445 명시주석PASS.",
+        "learningAnswers": "/tmp/teach-all/ai-theory-learning-answer-review-ce.json: 기존6+4유지및모든답체크리스트실제본문대조.",
+        "typecheck": "/tmp/teach-all/ce-tsc-final.log 실제 npx tsc -p tsconfig.app.json --noEmit exit0 확인.",
+        "learning": "root 병합 후 strict --require-registration exit0 /tmp/teach-all/ce-integrated-learning.log. /tmp/teach-all/ce-integrated-readback.json에서 actual 6+4가 검수 제안과 완전히 같음을 확인하고 최종 통합 390/1440 재검 PASS."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+        "root 전역 build와 게시 검증"
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/cross-entropy.tsx": "b136ea31ab0ed7d4c111845f7b706be34c54833c07ac5903aa87f9d36e9bb804",
+        "src/pages/articles/ai/cross-entropy/ModernArticle.tsx": "55a444f5f66e43709cee4f1e0d390a091d26bf6506110cd7cac1d6364d6c59a9",
+        "src/pages/articles/ai/cross-entropy/viz/CodeCostViz.tsx": "95a23ce0dd0646865e17b1a053757e0648959347be3c4e76e08a94b4fd7b5924",
+        "src/pages/articles/ai/cross-entropy/codeRefs.ts": "9eca328ebd9a315e5bbc7d3f5bb60a2b189e05498e7c3df2fc6bfc70e7a21544"
+      }
     },
     {
       "route": "ai/deep-learning-overview",
@@ -2028,7 +2139,7 @@
         "src/pages/articles/ai/fft/viz/FFTReuseViz.tsx",
         "src/pages/articles/ai/fft/viz/SamplingWindowViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "body-reviewed-needs-rewrite",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -2036,19 +2147,159 @@
         "hasSourceSurface": false,
         "characters": 27101
       },
-      "originalProblems": [],
-      "fixture": null,
+      "originalProblems": [
+        "원문입구의16sample막대와3개임의bin막대는실제DFT관계없지만같은complex정보라고설명하고phase도표시하지않습니다.",
+        "일반식연산주석이정규화·허용경계같은무관한공통문장으로채워져계산의역할을설명하지못합니다.",
+        "같은정밀도이면동일한mathematicaloutput이라는표현을실수대수동치와부동소수점순서차이로분명히해야합니다.",
+        "kfs/N을모든bin의물리주파수처럼쓰며signed상반부·Nyquist짝홀과실수켤레조건을제대로구별하지않습니다.",
+        "DFT의유한벡터가역성과연속신호sampling복원정리의무한관측조건을구별해야합니다.",
+        "원문논문식·실제FFT구현·같은수치추적·예측문항이없습니다.",
+        "Whisper역사적80밴드와현재공식원문의80/128지원, power와magnitude·FNetreal부분투영을구별해야합니다."
+      ],
+      "fixture": {
+        "input": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "sampleRate": 8,
+        "N": 4,
+        "even": [
+          1,
+          3
+        ],
+        "odd": [
+          2,
+          4
+        ],
+        "E": [
+          4,
+          -2
+        ],
+        "O": [
+          6,
+          -2
+        ],
+        "twiddleForK1": [
+          0,
+          -1
+        ],
+        "coefficients": [
+          [
+            10.0,
+            0.0
+          ],
+          [
+            -2.0,
+            2.0
+          ],
+          [
+            -2.0,
+            -0.0
+          ],
+          [
+            -2.0,
+            -2.0
+          ]
+        ],
+        "inverseScale": "1/4",
+        "signedBinsHz": [
+          0,
+          2,
+          -4,
+          -2
+        ],
+        "observationDuration": 0.5,
+        "gridHz": 2,
+        "zeroPaddedN8GridHz": 1,
+        "constantControl": [
+          4,
+          0,
+          0,
+          0
+        ],
+        "parsevalInput": 30,
+        "parsevalCoefficientsDivN": 30,
+        "magnitudeCounterexample": [
+          1,
+          4,
+          3,
+          2
+        ],
+        "periodicHann": [
+          0,
+          0.5,
+          1,
+          0.5
+        ],
+        "windowedInput": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "windowedDFT": [
+          [
+            6.0,
+            0.0
+          ],
+          [
+            -3.0,
+            1.0
+          ],
+          [
+            0.0,
+            -0.0
+          ],
+          [
+            -3.0,
+            -1.0
+          ]
+        ],
+        "filter": [
+          1,
+          -1
+        ],
+        "linearConvolution": [
+          1,
+          1,
+          1,
+          1,
+          -4
+        ],
+        "circularN4": [
+          -3,
+          1,
+          1,
+          1
+        ],
+        "minimumLinearLength": 5,
+        "fnet4x1RealMixer": [
+          10,
+          -2,
+          -2,
+          -2
+        ],
+        "inverseOfRealPart": [
+          1,
+          3,
+          3,
+          3
+        ]
+      },
       "stageAnchors": {},
       "primarySourceApplication": [],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "原래4본문·4Viz·고정baseline전체문단·학습6+4·정의8을 실제읽음. ownership등록은없음.",
+        "planning": "/tmp/teach-all/fft-plan.json 본문 작성 전 같은4점사례·기존유도/질문보존계획",
+        "primarySources": "고정KissFFT e5e3fac·Whisper8609812와CooleyTukey/FNet/Hyena/Whisper원문조사중."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "원문 전체검토와 실제C실행",
+        "본문 재작성",
+        "humanize 및화면검수",
+        "공유등록"
       ]
     },
     {
@@ -8415,14 +8666,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 28,
+    "rewritten": 29,
     "existingTeachTargetedRepairs": 3,
-    "reviewedAndImproved": 31,
-    "localVerified": 31,
+    "reviewedAndImproved": 32,
+    "localVerified": 32,
     "awaitingIntegration": 0,
-    "pending": 158,
+    "pending": 156,
     "complete": 0,
-    "bodyReviewedNeedsRewrite": 0,
-    "bodyReviewedTotal": 31
+    "bodyReviewedNeedsRewrite": 1,
+    "bodyReviewedTotal": 33
   }
 }

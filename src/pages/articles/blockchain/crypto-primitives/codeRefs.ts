@@ -1,0 +1,17 @@
+import type { CodeRef, FileNode, ProjectMeta } from "@/components/code/types";
+import rfc from "./codebase/rfc8032-section6.py?raw";
+import example from "./verification/receipts.py?raw";
+export const codeRefs:Record<string,CodeRef>={
+"receipt":{code:example,"path": "case/receipts.py", "highlight": [18, 40], "lang": "python", "desc": "영수증의 태그·정수 인코딩과 47바이트 메시지를 만듭니다.", "annotations": [{"lines": [18, 40], "color": "sky", "note": "영수증의 태그·정수 인코딩과 47바이트 메시지를 만듭니다."}]},
+"merkle":{code:example,"path": "case/receipts.py", "highlight": [62, 79], "lang": "python", "desc": "C의 낮은 비트 0·1에 따라 루트를 계산하고 잘못된 순서와 빈 값의 차이를 검사합니다.", "annotations": [{"lines": [62, 79], "color": "sky", "note": "C의 낮은 비트 0·1에 따라 루트를 계산하고 잘못된 순서와 빈 값의 차이를 검사합니다."}]},
+"round":{code:example,"path": "case/receipts.py", "highlight": [56, 59], "lang": "python", "desc": "F₁₇ 두 칸의 full·partial 모형입니다. 아래 91–101행은 289상태와 약정 분포를 검사합니다.", "annotations": [{"lines": [56, 59], "color": "sky", "note": "F₁₇ 두 칸의 full·partial 모형입니다. 아래 91–101행은 289상태와 약정 분포를 검사합니다."}]},
+"schnorr":{code:example,"path": "case/receipts.py", "highlight": [81, 89], "lang": "python", "desc": "같은 메시지의 질문 9·5와 응답 1·0에서 개인값 3을 복원합니다.", "annotations": [{"lines": [81, 89], "color": "sky", "note": "같은 메시지의 질문 9·5와 응답 1·0에서 개인값 3을 복원합니다."}]},
+"expand":{code:rfc,"path": "rfc/rfc8032-section6.py", "highlight": [137, 149], "lang": "python", "desc": "원문 seed 확장은 앞 32바이트의 비트를 조정하고 뒤 32바이트를 비밀 prefix로 둡니다.", "annotations": [{"lines": [137, 149], "color": "sky", "note": "원문 seed 확장은 앞 32바이트의 비트를 조정하고 뒤 32바이트를 비밀 prefix로 둡니다."}]},
+"sign":{code:rfc,"path": "rfc/rfc8032-section6.py", "highlight": [168, 176], "lang": "python", "desc": "같은 메시지로 r·R·h·S를 계산하고 두 32바이트를 합칩니다.", "annotations": [{"lines": [168, 176], "color": "sky", "note": "같은 메시지로 r·R·h·S를 계산하고 두 32바이트를 합칩니다."}]},
+"verify":{code:rfc,"path": "rfc/rfc8032-section6.py", "highlight": [180, 197], "lang": "python", "desc": "출판본의 missing raise를 그대로 보존했습니다. 정오표 5930과 대조합니다.", "annotations": [{"lines": [180, 197], "color": "sky", "note": "출판본의 missing raise를 그대로 보존했습니다. 정오표 5930과 대조합니다."}]},
+"negative":{code:example,"path": "case/receipts.py", "highlight": [103, 116], "lang": "python", "desc": "공식 벡터·같은 영수증·65바이트·배치 변경·S 범위를 실제로 검사합니다.", "annotations": [{"lines": [103, 116], "color": "sky", "note": "공식 벡터·같은 영수증·65바이트·배치 변경·S 범위를 실제로 검사합니다."}]},
+"policy":{code:example,"path": "case/receipts.py", "highlight": [117, 127], "lang": "python", "desc": "항등원 공개키는 서명식을 통과하지만 등록 키 정책은 거부합니다.", "annotations": [{"lines": [117, 127], "color": "sky", "note": "항등원 공개키는 서명식을 통과하지만 등록 키 정책은 거부합니다."}]},
+"all-checks":{code:example,"path": "case/receipts.py", "highlight": [129, 146], "lang": "python", "desc": "실행 환경·원문 SHA와 판정을 출력합니다. 실제 제품 보안 검증과 구별합니다.", "annotations": [{"lines": [129, 146], "color": "sky", "note": "실행 환경·원문 SHA와 판정을 출력합니다. 실제 제품 보안 검증과 구별합니다."}]},
+};
+export const fileTrees:Record<string,FileNode>={rfc:{name:"출판본 RFC 예제",type:"dir",children:[{name:"rfc8032-section6.py",type:"file",path:"rfc/rfc8032-section6.py",codeKey:"verify"}]},case:{name:"본문의 검산",type:"dir",children:[{name:"receipts.py",type:"file",path:"case/receipts.py",codeKey:"receipt"}]}};
+export const projectMetas:Record<string,ProjectMeta>={rfc:{id:"rfc",label:"RFC 8032 출판본",badgeClass:"bg-sky-50 border-sky-300 text-sky-800"},case:{id:"case",label:"본문의 실제 실행",badgeClass:"bg-emerald-50 border-emerald-300 text-emerald-800"}};

@@ -1,0 +1,59 @@
+{
+  "runtime": "3.9.6",
+  "status": "PASS",
+  "sourceSHA256": "1347403b21a9d18bbd7ba5ace2e97b381a8c6a3b1277cd1fb8a9a3640cbc817d",
+  "root": "24239f9760532472a8a9be49f76a9fe959ac9b42e17ad3bd8c9a0893f4442002",
+  "recordC": "4300000014",
+  "leafC": "cef26f74417290f42cdff5e34228356469947815a00f5ae0d60e285694da0d51",
+  "proofC": [
+    "ecdd654aadfe436fac211eeafed9f87cb0cad56ad3cc01c6590b60da0209473d",
+    "5221fd40d47b085c8914d26d620727d5d93d89d71691de9600103088a112b4cf"
+  ],
+  "proofBytes": 64,
+  "message": "72656365697074732d76310000000124239f9760532472a8a9be49f76a9fe959ac9b42e17ad3bd8c9a0893f4442002",
+  "messageBytes": 47,
+  "dictionaryMatches": [
+    20
+  ],
+  "sparse": {
+    "emptyRoot": "6d4ba61144c91f407ad47f4cebfd8c27d14e6785b1cc853c60baf66c8a578b3e",
+    "zeroRoot": "f81a3ce967460f4bec16903a273daac97954cff06328ea59b7a451b8f535cf1d"
+  },
+  "schnorr": {
+    "P": 8,
+    "R": 13,
+    "e1": 9,
+    "e2": 5,
+    "s1": 1,
+    "s2": 0,
+    "recovered": 3
+  },
+  "permutations": {
+    "True": {
+      "uniqueOutputs": 289,
+      "eachFirstCoordinatePreimages": 17
+    },
+    "False": {
+      "uniqueOutputs": 289,
+      "eachFirstCoordinatePreimages": 17
+    }
+  },
+  "ed25519": {
+    "officialEmptyVector": true,
+    "public": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a",
+    "signature": "05444fd3690d5fbb20ee936c3c1777b979f7753d6a3fa1b58dc47e9116be00b390f659e0a0f2b45dda55935ac9573abab28abb16e8110b60f45de3bf08ed8e01",
+    "scalarA": "36144925721603087658594284515452164870581325872720374094707712194495455132720",
+    "nonceRScalar": "598653485583307599238533597349767484670785291530091687972546030505637127441",
+    "challengeH": "3403185398337864077098547437386460353368358269671771321870746002131537202814",
+    "responseS": "704841081553740735525206863519167716098032472572740997087843925430606886544",
+    "RBytes": "05444fd3690d5fbb20ee936c3c1777b979f7753d6a3fa1b58dc47e9116be00b3",
+    "SBytes": "90f659e0a0f2b45dda55935ac9573abab28abb16e8110b60f45de3bf08ed8e01",
+    "publishedAccepts65Bytes": true,
+    "lengthWrapperRejects65": true,
+    "identityEquationAccepts": true,
+    "externalKeyPolicyRejectsIdentity": true,
+    "wrongBatchRejected": true,
+    "SplusOrderRejected": true
+  },
+  "scope": "Original RFC illustration plus explicit length/key policy wrappers; not constant-time, production validation, BIP340, or actual Poseidon."
+}

@@ -5,7 +5,48 @@ export const businessArticles: Article[] = [
     slug: "business-model-cashflow",
     title: "사업 모델은 누가 먼저 돈을 내고 어떤 약속으로 회수하는가",
     subcategory: "business-cash",
-    sections: [{"id": "overview", "title": "누가 먼저 돈을 쓰고 누가 나중에 약속을 이행하는가"}, {"id": "black-box", "title": "고객의 약속, 물건의 이동, 돈의 지급을 따로 본다"}, {"id": "case", "title": "100건을 받기 7일 전에 120만 원을 쓴다"}, {"id": "picture", "title": "같은 200만 원에 물건 화살표와 돈 화살표를 그린다"}, {"id": "need", "title": "기다리는 돈을 따로 세지 않으면 주문 증가가 부담이 된다"}, {"id": "names", "title": "세 숫자에 이름을 붙인다"}, {"id": "mechanism", "title": "매출·이익·현금은 세 장의 다른 장부입니다"}, {"id": "source", "title": "상품을 넘겼는지로 수익을 확인한다"}, {"id": "comparison", "title": "나라가 달라도 계약과 회계의 두 질문은 남습니다"}, {"id": "limits", "title": "높은 성장률 하나로 좋은 사업이라고 판단할 수 없습니다"}],
+    sections: [
+  {
+    "id": "overview",
+    "title": "1. 누가 먼저 돈을 쓰고 누가 나중에 약속을 이행하는가"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 고객의 약속, 물건의 이동, 돈의 지급을 따로 본다"
+  },
+  {
+    "id": "case",
+    "title": "3. 100건을 받기 7일 전에 120만 원을 쓴다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 같은 100개의 물건과 194만 원에 날짜를 붙인다"
+  },
+  {
+    "id": "need",
+    "title": "5. 기다리는 돈을 따로 세지 않으면 주문 증가가 부담이 된다"
+  },
+  {
+    "id": "names",
+    "title": "6. 세 숫자에 이름을 붙인다"
+  },
+  {
+    "id": "mechanism",
+    "title": "7. 매출·이익·현금은 세 장의 다른 장부입니다"
+  },
+  {
+    "id": "source",
+    "title": "8. 상품을 넘겼는지로 수익을 확인한다"
+  },
+  {
+    "id": "comparison",
+    "title": "9. 나라가 달라도 계약과 회계의 두 질문은 남습니다"
+  },
+  {
+    "id": "limits",
+    "title": "10. 높은 성장률 하나로 좋은 사업이라고 판단할 수 없습니다"
+  }
+],
     component: () => import("@/pages/articles/business/business-model-cashflow"),
   },
   {
@@ -33,14 +74,96 @@ export const businessArticles: Article[] = [
     slug: "shop-daily-operations",
     title: "가게의 하루는 주문·재고·직원·입금을 맞추어 끝난다",
     subcategory: "business-cash",
-    sections: [{"id": "overview", "title": "주문을 받는 일과 돈이 남는 일을 매일 연결한다"}, {"id": "black-box", "title": "준비한 것, 팔린 것, 지급할 것을 서로 맞춘다"}, {"id": "case", "title": "20건을 팔았지만 그날 통장에는 아직 들어오지 않는다"}, {"id": "picture", "title": "주문 번호가 재료 사용과 입금까지 이어지게 한다"}, {"id": "need", "title": "잔액만 보면 손실이 난 곳을 찾을 수 없다"}, {"id": "names", "title": "세 장부를 맞추는 작업의 이름"}, {"id": "mechanism", "title": "20건을 준비하고 제공한 뒤 기록으로 마감한다"}, {"id": "source", "title": "실제 재고 손실과 입금 자료의 범위를 원문으로 확인한다"}, {"id": "comparison", "title": "나라를 바꾸어도 근무와 지급의 증거는 필요하다"}, {"id": "limits", "title": "장부가 맞아도 영업의 안전과 책임은 남는다"}],
+    sections: [
+  {
+    "id": "overview",
+    "title": "1. 주문을 받는 일과 돈이 남는 일을 매일 연결한다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 준비한 것, 팔린 것, 지급할 것을 서로 맞춘다"
+  },
+  {
+    "id": "case",
+    "title": "3. 20건을 팔았지만 그날 통장에는 아직 들어오지 않는다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 주문 번호가 재료 사용과 입금까지 이어지게 한다"
+  },
+  {
+    "id": "need",
+    "title": "5. 잔액만 보면 손실이 난 곳을 찾을 수 없다"
+  },
+  {
+    "id": "names",
+    "title": "6. 세 장부를 맞추는 작업의 이름"
+  },
+  {
+    "id": "mechanism",
+    "title": "7. 20건을 준비하고 제공한 뒤 기록으로 마감한다"
+  },
+  {
+    "id": "source",
+    "title": "8. 실제 재고 손실과 입금 자료의 범위를 원문으로 확인한다"
+  },
+  {
+    "id": "comparison",
+    "title": "9. 나라를 바꾸어도 근무와 지급의 증거는 필요하다"
+  },
+  {
+    "id": "limits",
+    "title": "10. 장부가 맞아도 영업의 안전과 책임은 남는다"
+  }
+],
     component: () => import("@/pages/articles/business/shop-daily-operations"),
   },
   {
     slug: "franchise-incentives",
     title: "프랜차이즈는 브랜드를 빌려 주는 계약이면서 비용을 나누는 시스템이다",
     subcategory: "business-network",
-    sections: [{"id": "overview", "title": "같은 간판 아래 세 사람의 돈은 다르게 남는다"}, {"id": "black-box", "title": "본부의 지원, 점포의 운영, 고객의 선택을 따로 둔다"}, {"id": "case", "title": "월 3천만 원에서 150만 원은 먼저 본부로 간다"}, {"id": "picture", "title": "손님에게 받은 돈과 본부가 받는 돈의 기준을 그린다"}, {"id": "need", "title": "통일된 품질을 만드는 약속이 비용 부담도 만든다"}, {"id": "names", "title": "반복 지급과 공급 조건의 이름"}, {"id": "mechanism", "title": "초기 가맹비보다 계약 전체의 현금흐름을 봅니다"}, {"id": "source", "title": "본부에 내는 돈은 점주 적자와 별도로 발생할 수 있다"}, {"id": "comparison", "title": "공시 제도는 나라가 달라도 수익률 보증은 아닙니다"}, {"id": "limits", "title": "평균 매출이 높아도 점주 한 사람의 삶은 다를 수 있습니다"}],
+    sections: [
+  {
+    "id": "overview",
+    "title": "1. 같은 간판 아래 세 사람의 돈은 다르게 남는다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 본부의 지원, 점포의 운영, 고객의 선택을 따로 둔다"
+  },
+  {
+    "id": "case",
+    "title": "3. 월 3천만 원에서 150만 원은 본부 몫으로 정해진다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 손님에게 받은 돈과 본부가 받는 돈의 기준을 그린다"
+  },
+  {
+    "id": "need",
+    "title": "5. 통일된 품질을 만드는 약속이 비용 부담도 만든다"
+  },
+  {
+    "id": "names",
+    "title": "6. 반복 지급과 공급 조건의 이름"
+  },
+  {
+    "id": "mechanism",
+    "title": "7. 초기 가맹비보다 계약 전체의 현금흐름을 봅니다"
+  },
+  {
+    "id": "source",
+    "title": "8. 본부에 내는 돈은 점주 적자와 별도로 발생할 수 있다"
+  },
+  {
+    "id": "comparison",
+    "title": "9. 공시 제도는 나라가 달라도 수익률 보증은 아닙니다"
+  },
+  {
+    "id": "limits",
+    "title": "10. 평균 매출이 높아도 점주 한 사람의 삶은 다를 수 있습니다"
+  }
+],
     component: () => import("@/pages/articles/business/franchise-incentives"),
   },
   {

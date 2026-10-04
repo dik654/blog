@@ -1,0 +1,136 @@
+{
+  "reviewedAt": "2026-10-04",
+  "files": [
+    {
+      "repository": "FasterDecoding/Medusa",
+      "commit": "e2a5d20c048a9b0a4092e6933c34313687422518",
+      "path": "medusa/model/utils.py",
+      "url": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/medusa/model/utils.py",
+      "local": "/tmp/teach-all/spec19/sources/Medusa/medusa/model/utils.py",
+      "sha256": "f62632ce0892cec19f3280ce02695c08e0ef84f2a2a8342040e7c75d22bfe4b7",
+      "bytes": 27771,
+      "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/medusa/medusa/model/utils.py"
+    },
+    {
+      "repository": "FasterDecoding/Medusa",
+      "commit": "e2a5d20c048a9b0a4092e6933c34313687422518",
+      "path": "medusa/model/kv_cache.py",
+      "url": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/medusa/model/kv_cache.py",
+      "local": "/tmp/teach-all/spec19/sources/Medusa/medusa/model/kv_cache.py",
+      "sha256": "29bdb043c8a4835caa594b666dfba5acb56c9d774046d2c9024551f9d933f5d4",
+      "bytes": 4405,
+      "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/medusa/medusa/model/kv_cache.py"
+    },
+    {
+      "repository": "FasterDecoding/Medusa",
+      "commit": "e2a5d20c048a9b0a4092e6933c34313687422518",
+      "path": "medusa/model/medusa_model.py",
+      "url": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/medusa/model/medusa_model.py",
+      "local": "/tmp/teach-all/spec19/sources/Medusa/medusa/model/medusa_model.py",
+      "sha256": "e96d8b4d0dce730972147d57d029e7bdc6f285bbb9fe8916092eda34e5e721d5",
+      "bytes": 15532,
+      "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/medusa/medusa/model/medusa_model.py"
+    },
+    {
+      "repository": "FasterDecoding/Medusa",
+      "commit": "e2a5d20c048a9b0a4092e6933c34313687422518",
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/LICENSE",
+      "local": "/tmp/teach-all/spec19/sources/Medusa/LICENSE",
+      "sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
+      "bytes": 11356,
+      "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/medusa/LICENSE"
+    },
+    {
+      "repository": "facebookresearch/LayerSkip",
+      "commit": "494752e5fbb0a82989f6cb384841684b1c2ef5c3",
+      "path": "self_speculation/self_speculation_generator.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/LayerSkip/494752e5fbb0a82989f6cb384841684b1c2ef5c3/self_speculation/self_speculation_generator.py",
+      "local": "/tmp/teach-all/spec19/sources/LayerSkip/self_speculation/self_speculation_generator.py",
+      "sha256": "76683547ff739c2ab5bce5cacb2a68aaa21ae6f5b1501f400859720aaaa346bd",
+      "bytes": 9871,
+      "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/layerskip/self_speculation/self_speculation_generator.py"
+    },
+    {
+      "repository": "facebookresearch/LayerSkip",
+      "commit": "494752e5fbb0a82989f6cb384841684b1c2ef5c3",
+      "path": "self_speculation/llama_model_utils.py",
+      "url": "https://raw.githubusercontent.com/facebookresearch/LayerSkip/494752e5fbb0a82989f6cb384841684b1c2ef5c3/self_speculation/llama_model_utils.py",
+      "local": "/tmp/teach-all/spec19/sources/LayerSkip/self_speculation/llama_model_utils.py",
+      "sha256": "5eb454b12b4c99f97b94acdcff0b52c38eeb9d1ce986e10e2b4658e9bc479da2",
+      "bytes": 14939,
+      "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/layerskip/self_speculation/llama_model_utils.py"
+    },
+    {
+      "repository": "facebookresearch/LayerSkip",
+      "commit": "494752e5fbb0a82989f6cb384841684b1c2ef5c3",
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/facebookresearch/LayerSkip/494752e5fbb0a82989f6cb384841684b1c2ef5c3/LICENSE",
+      "local": "/tmp/teach-all/spec19/sources/LayerSkip/LICENSE",
+      "sha256": "5597bb25219e348387edfbf34cfed051cb7f9be29b6488731b9b48db75dcc8eb",
+      "bytes": 19335,
+      "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/layerskip/LICENSE"
+    },
+    {
+      "repository": "snowflakedb/ArcticInference",
+      "commit": "aca5d9a8a62474035c15d114d40a01abc8c94b51",
+      "path": "arctic_inference/suffix_decoding/cache.py",
+      "url": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/arctic_inference/suffix_decoding/cache.py",
+      "local": "/tmp/teach-all/spec19/sources/ArcticInference/arctic_inference/suffix_decoding/cache.py",
+      "sha256": "91c48e6cb335edbd202c8f440e5766df54315ea2d8e40decf8f7a130f3a5e126",
+      "bytes": 14502,
+      "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/arctic/arctic_inference/suffix_decoding/cache.py"
+    },
+    {
+      "repository": "snowflakedb/ArcticInference",
+      "commit": "aca5d9a8a62474035c15d114d40a01abc8c94b51",
+      "path": "csrc/suffix_decoding/suffix_tree.cc",
+      "url": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/csrc/suffix_decoding/suffix_tree.cc",
+      "local": "/tmp/teach-all/spec19/sources/ArcticInference/csrc/suffix_decoding/suffix_tree.cc",
+      "sha256": "cbd8b63b13fbf0beaab4e8736a54d52891b1aac959c5d292d083d88ed37dfc7c",
+      "bytes": 38874,
+      "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/arctic/csrc/suffix_decoding/suffix_tree.cc"
+    },
+    {
+      "repository": "snowflakedb/ArcticInference",
+      "commit": "aca5d9a8a62474035c15d114d40a01abc8c94b51",
+      "path": "csrc/suffix_decoding/suffix_tree.h",
+      "url": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/csrc/suffix_decoding/suffix_tree.h",
+      "local": "/tmp/teach-all/spec19/sources/ArcticInference/csrc/suffix_decoding/suffix_tree.h",
+      "sha256": "d3c9a51fc57a974d680510bee8cfb1ba0a6f5ce6c582ed472cb5ef975b2f5aec",
+      "bytes": 5867,
+      "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/arctic/csrc/suffix_decoding/suffix_tree.h"
+    },
+    {
+      "repository": "snowflakedb/ArcticInference",
+      "commit": "aca5d9a8a62474035c15d114d40a01abc8c94b51",
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/LICENSE",
+      "local": "/tmp/teach-all/spec19/sources/ArcticInference/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357,
+      "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/arctic/LICENSE"
+    },
+    {
+      "repository": "snowflakedb/ArcticInference",
+      "commit": "aca5d9a8a62474035c15d114d40a01abc8c94b51",
+      "path": "csrc/suffix_decoding/int32_map.h",
+      "url": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/csrc/suffix_decoding/int32_map.h",
+      "local": "/tmp/teach-all/spec19/sources/ArcticInference/csrc/suffix_decoding/int32_map.h",
+      "sha256": "49fd3c8ffb900630f145958211d2e121a3347583ef4cf42910572ad2166e54ef",
+      "bytes": 13285,
+      "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/arctic/csrc/suffix_decoding/int32_map.h"
+    },
+    {
+      "repository": "FasterDecoding/Medusa",
+      "commit": "e2a5d20c048a9b0a4092e6933c34313687422518",
+      "path": "medusa/model/modeling_llama_kv.py",
+      "url": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/medusa/model/modeling_llama_kv.py",
+      "local": "/tmp/teach-all/spec19/sources/Medusa/medusa/model/modeling_llama_kv.py",
+      "sha256": "49290d92403ac2b1e8155b9ec5ad2d2b8778035e9a25cfc95649793e7b3a19b0",
+      "bytes": 55815,
+      "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/medusa/medusa/model/modeling_llama_kv.py"
+    }
+  ],
+  "scope": "Whole unmodified pinned source files. Licenses preserved; explanations and synthetic harnesses are separate."
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "errata_id": "5930",
+    "doc-id": "RFC8032",
+    "errata_status_code": "Verified",
+    "errata_type_code": "Technical",
+    "section": "6",
+    "orig_text": "def verify(public, msg, signature):\r\n    if len(public) != 32:\r\n        raise Exception(\"Bad public key length\")\r\n    if len(signature) != 64:\r\n        Exception(\"Bad signature length\")",
+    "correct_text": "def verify(public, msg, signature):\r\n    if len(public) != 32:\r\n        raise Exception(\"Bad public key length\")\r\n    if len(signature) != 64:\r\n        raise Exception(\"Bad signature length\")",
+    "notes": "Missing raise before Exception",
+    "submit_date": "2019-12-06",
+    "submitter_name": "Daniel Bleichenbacher",
+    "verifier_id": "",
+    "verifier_name": "Colin Perkins",
+    "update_date": "2021-05-24 11:25:10"
+  }
+]
