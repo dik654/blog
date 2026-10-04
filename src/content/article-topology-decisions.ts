@@ -1830,6 +1830,27 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "같은P와Q의 점 이동·선 값·최종72승을 이어야 원시 값과 마지막 출력의 차이를 이해할 수 있습니다. 실제BN은 별도 곡선·정규화로 명시해 같은 역할에 대응합니다.",
     "sharedGate": "작은 정수 연산16쌍과360개 원소, 실제 고정 Rust의cE 비교와87개 선·두 쌍의 곱을 확인했습니다. 일반정리 증명·독립 페어링 구현·EVM·시간 측정과 검산 범위를 구분합니다."
   },
+  "ai/cross-entropy": {
+    "action": "keep",
+    "rationale": "같은 글자의 코드 길이를 바꾸는 질문에서 한 사건 비용, 원래 평균, 모델 평균과 초과 비용이 차례로 나옵니다. 이 값을 실제 학습 함수로 옮길 때 필요한 로짓 미분과 정답 분모를 같은 네 관측으로 검산하므로 하나의 글로 유지합니다. 로그 법칙·일반 기댓값·역전파 계산 그래프는 연결 정본을 재사용합니다.",
+    "sharedGate": "A·A·B·C의 6/7자리, 평균 1.5/1.75 bit, KL 0.25 bit, 우도 1/128, 로짓 Q−y, 실제 mean 7ln2/4와 가중 11ln2/6·11ln2/4, 큰 공통 로짓에서 0 대 ln3을 본문·그림·원문·6+4에서 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "crypto/crypto-primitives": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 C 기록의 바이트·루트·서명을 연결해야 포함 여부와 서명식 및 외부 승인 정책의 차이를 이해할 수 있습니다. 작은 순열과 군은 실제 규격과 다른 모형임을 명시합니다.",
+    "sharedGate": "실제 해시·작은 군·289상태 순열·RFC 공식 벡터와 47바이트 서명 및 길이·등록 키 반례를 검산했습니다. 제품 보안과 실제 Poseidon·BIP 실행 범위를 구분합니다."
+  },
+  "ai/speculative-decoding-variants": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 RAY를 선택하고 기록하는 요청에서 후보 출처와 검증 모양이 바꾸는 상태·확률·비용을 비교하는 글입니다. 각 방법의 독립 상세가 아니라 동일 경로와 단독 기준을 유지하는 비교가 중심이므로 한 글로 유지합니다. 논문별 실험 조건은 펼침으로 분리했습니다.",
+    "sharedGate": "prefix4·7입력·17/10칸·RAY [0,1,4]·KV [4,5,8]→[4,5,6]·글/기록7, MTP 1.85/(v+.016)와 x<.917, suffix score1.875와 전체 시간비80/14를 본문·6+4·4장면·원문13패널에서 맞춥니다. 실제 CPU 실행과 전체 원본 byte, 두 폭과 수식·humanize를 별도 확인합니다."
+  },
 };
 
 /**
@@ -1837,6 +1858,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/cross-entropy": "a23db07aab820d12",
+  "ai/speculative-decoding-variants": "c2746d3bfcf6a81c",
+  "crypto/crypto-primitives": "33067f5c32a87fc6",
   "ai/math-probability-expectation-variance": "ecfd3995b1373409",
   "ai/math-random-variables-expectation": "2085777462bfb2ff",
   "ai/math-variance-sampling": "e5ce5d929d86a3b6",
@@ -1952,8 +1976,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "infrastructure/food-chain-and-prices": "6111a66d5c2ceefd",
   "infrastructure/electricity-grid-and-power": "d4901083041053ad",
   "infrastructure/climate-risk-and-exposure": "2dfca89c7ec5bb09",
-  "business/business-model-cashflow": "815491a924c31787",
-  "business/franchise-incentives": "f8215ec3d57de1ac",
+  "business/business-model-cashflow": "a2a19e5897a643d4",
+  "business/franchise-incentives": "a9ab37834708e551",
   "business/shop-fitout-and-opening": "79930f0f0473d091",
   "business/shop-site-selection": "c234354d4fbdfc7a",
   "business/shop-unit-economics": "05954906d5d9bf37",
@@ -2099,7 +2123,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "blockchain/robinhood-chain-blob-demand":"02cf5430aa729ef9",
 "blockchain/robinhood-chain-settlement":"a7a8664a0bcb7d32",
 "blockchain/rwa-composition":"d7b3622726d50ca4",
-"business/shop-daily-operations":"c37c9c2b3a26c9f3",
+"business/shop-daily-operations":"1824fd4a12a34295",
 "crypto/constraint-systems":"180451df5e454382",
 "crypto/fri":"ac11504ca83c08d9",
 "crypto/jolt":"ce2cf82725d8cb32",

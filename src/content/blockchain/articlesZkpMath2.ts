@@ -4,16 +4,98 @@ import type { Article } from "../types";
 export const zkpMath2Articles: Article[] = [
   {
     slug: "crypto-primitives",
-    title: "ZK 암호 프리미티브: 보장·조합·실패 조건",
+    title: "암호 도구: 영수증 한 장에서 해시와 서명까지",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "프리미티브별 보장 지도" },
-      { id: "poseidon", title: "Poseidon field permutation" },
-      { id: "merkle-commitment", title: "Merkle opening·binding·hiding" },
-      { id: "schnorr", title: "Schnorr transcript·nonce" },
-      { id: "ed25519", title: "Ed25519 instance 계약" },
-      { id: "abelian-group", title: "Group·field·domain 타입" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 영수증 한 장이 승인된 묶음에 들어 있는지 확인합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 기록·경로·서명이 들어오고 두 판정이 나옵니다"
+  },
+  {
+    "id": "case",
+    "title": "3. C의 20은 정확히 다섯 바이트입니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. C에서 루트까지 같은 기록을 따라갑니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 전체를 보내지 않고도 같은 묶음인지 확인하는 이유"
+  },
+  {
+    "id": "names",
+    "title": "6. 지금 본 도구와 성질에 이름을 붙입니다"
+  },
+  {
+    "id": "predictions",
+    "title": "7. 계산 전에 세 결과를 예상해 봅니다"
+  },
+  {
+    "id": "merkle-commitment",
+    "title": "8. C의 경로를 실제 해시와 표준의 규칙에 대입합니다"
+  },
+  {
+    "id": "hiding",
+    "title": "9. 해시가 같음을 확인해도 금액이 숨겨지지는 않습니다"
+  },
+  {
+    "id": "pedersen",
+    "title": "10. 값을 숨기는 것과 바꾸지 못하게 하는 것이 갈리는 예"
+  },
+  {
+    "id": "absence",
+    "title": "11. 빈 칸을 증명하려면 빈 값의 뜻부터 정해야 합니다"
+  },
+  {
+    "id": "poseidon",
+    "title": "12. 증명 회로에서는 해시의 안쪽 계산 비용이 달라집니다"
+  },
+  {
+    "id": "capacity",
+    "title": "13. 일부 출력을 버리는 것과 비밀을 숨기는 것은 다릅니다"
+  },
+  {
+    "id": "schnorr",
+    "title": "14. 서명 응답이 왜 개인값과 연결되는지 작은 수로 봅니다"
+  },
+  {
+    "id": "nonce",
+    "title": "15. 임시값을 반복하면 두 응답에서 개인값이 나옵니다"
+  },
+  {
+    "id": "bip340",
+    "title": "16. 비슷한 식을 쓴다고 같은 서명 규격은 아닙니다"
+  },
+  {
+    "id": "ed25519",
+    "title": "17. 실제 RFC 코드에 같은 영수증 메시지를 넣습니다"
+  },
+  {
+    "id": "source-bug",
+    "title": "18. 출판본 예제와 명세가 어긋나는 길이 검사를 발견합니다"
+  },
+  {
+    "id": "authority",
+    "title": "19. 서명식의 성공과 가게의 승인을 분리합니다"
+  },
+  {
+    "id": "variants",
+    "title": "20. Ed25519의 변형과 검증식 선택도 입력 규칙입니다"
+  },
+  {
+    "id": "abelian-group",
+    "title": "21. 같아 보이는 숫자도 계산하는 세계가 다릅니다"
+  },
+  {
+    "id": "limits",
+    "title": "22. 영수증 한 장에서 확인한 보장과 남은 조건"
+  }
+],
     component: () => import("@/pages/articles/blockchain/crypto-primitives"),
   },
   {

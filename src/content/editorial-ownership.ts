@@ -3327,43 +3327,58 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "AugMix claim은 논문의 operation set·corruption benchmark·architecture 범위로 제한한다." }, { kind: "standard", rule: "Policy revision·clean/shift fixture·inverse map·paired seeds·latency·rollback을 기록한다." }],
   },
   "cross-entropy": {
-    title: "Cross-entropy 글이 소유하는 범위",
-    owns: [
-      "Surprisal에서 entropy·cross-entropy·KL divergence로 이어지는 정보 비용 분해",
-      "Categorical negative log-likelihood와 maximum likelihood의 연결 조건",
-      "관측 분포에 따른 CE·MSE 선택과 likelihood contract",
-      "Softmax–cross-entropy의 fused gradient와 log-sum-exp 수치 안정성",
+    "title": "교차 엔트로피에서 직접 설명하는 범위",
+    "owns": [
+      "같은 네 글자의 두 코드와 정보량·엔트로피·교차 엔트로피·KL 비용 분해",
+      "우도 곱과 평균 NLL의 동치 조건 및 확률 지지집합의 한계",
+      "자연로그 CE의 로짓 기울기와 가중치·정답 합·평균 분모의 조건",
+      "고정 PyTorch CPU 원문의 정답 분기·분모·subtract-first 수치 순서",
+      "categorical·Gaussian 관측 가정과 Brier 점수의 구별"
     ],
-    reuses: [
+    "reuses": [
       {
-        label: "지수·로그와 곱셈을 합으로 바꾸는 법칙",
-        href: "/cs/ai/math-exponents-logarithms",
+        "label": "지수·로그와 곱셈을 합으로 바꾸는 법칙",
+        "href": "/cs/ai/math-exponents-logarithms"
       },
       {
-        label: "확률분포",
-        href: "/cs/ai/math-probability-expectation-variance",
-      },
-      { label: "기댓값", href: "/cs/ai/math-random-variables-expectation" },
-      { label: "표본평균", href: "/cs/ai/math-variance-sampling" },
-      {
-        label: "Chain rule·backpropagation",
-        href: "/cs/ai/backprop-optimization",
+        "label": "확률분포",
+        "href": "/cs/ai/math-probability-expectation-variance"
       },
       {
-        label: "분류 output과 prediction contract",
-        href: "/cs/ai/neural-network",
+        "label": "기댓값",
+        "href": "/cs/ai/math-random-variables-expectation"
       },
+      {
+        "label": "표본평균",
+        "href": "/cs/ai/math-variance-sampling"
+      },
+      {
+        "label": "Chain rule·backpropagation",
+        "href": "/cs/ai/backprop-optimization"
+      },
+      {
+        "label": "분류 output과 prediction contract",
+        "href": "/cs/ai/neural-network"
+      }
     ],
-    evidence: [
+    "evidence": [
       {
-        kind: "primary-source",
-        rule: "Entropy와 coding claim은 Shannon의 source alphabet·probability·coding 조건으로 제한한다.",
+        "kind": "primary-source",
+        "rule": "Shannon 재현 PDF 11·16쪽의 실제 식에 같은 세 확률과 가정한 통신로 용량을 대입한다."
       },
       {
-        kind: "standard",
-        rule: "Loss·likelihood·reduction·logarithm base·target support·numerical dtype을 함께 기록한다.",
+        "kind": "primary-source",
+        "rule": "PyTorch v2.14.0 commit 2b3ec348의 원문 경로를 수동 대입한 근거와 실제 프레임워크 실행을 구별한다."
       },
-    ],
+      {
+        "kind": "standard",
+        "rule": "큰 NLL과 bounded 로짓 기울기, 실수 등식과 유한 정밀도 연산 순서, 유한 지지집합과 가산무한 적분 가능성을 구별한다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "글의 Python binary32 산술 실행은 반올림 예제이며 원본 PyTorch 커널의 성능 재현이 아니다."
+      }
+    ]
   },
   "supervised-fine-tuning": {
     title: "Supervised fine-tuning 글이 소유하는 범위",
@@ -6590,24 +6605,46 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "crypto-primitives": {
-    title: "암호 프리미티브 조합 글이 소유하는 범위",
-    owns: [
-      "Poseidon field-native permutation과 sponge security/circuit-cost 경계",
-      "Merkle selective opening과 commitment binding·hiding 분리",
-      "Schnorr Fiat–Shamir transcript와 Ed25519 instance 계약",
-      "Point·scalar·field·protocol domain의 구현 타입 분리",
+    "title": "한 영수증에서 해시·약정·서명·입력 정책을 연결하는 범위",
+    "owns": [
+      "C20의 고정 바이트에서 두 형제를 따라 승인된 루트를 재구성",
+      "작은 후보 목록과 Pedersen 반례로 binding·hiding·공동 정보 구분",
+      "체 순열의 연산과 Poseidon의 실제 매개변수·용량·회로 비용 경계",
+      "같은 47바이트 메시지의 작은 Schnorr 응답과 nonce 재사용 추출",
+      "RFC8032 출판본 실제 실행과 정오표·변형·외부 키 정책의 구분"
     ],
-    reuses: [
-      { label: "유한체 arithmetic·multiplicative order", href: "/cs/crypto/finite-field-theory" },
-      { label: "DLP와 generic square-root attacks", href: "/cs/crypto/discrete-log" },
-      { label: "Elliptic-curve point·subgroup 구현", href: "/cs/crypto/elliptic-curves" },
-      { label: "CSPRNG·nonce lifecycle", href: "/cs/crypto/csprng" },
+    "reuses": [
+      {
+        "label": "유한체 arithmetic·multiplicative order",
+        "href": "/cs/crypto/finite-field-theory"
+      },
+      {
+        "label": "DLP와 generic square-root attacks",
+        "href": "/cs/crypto/discrete-log"
+      },
+      {
+        "label": "Elliptic-curve point·subgroup 구현",
+        "href": "/cs/crypto/elliptic-curves"
+      },
+      {
+        "label": "CSPRNG·nonce lifecycle",
+        "href": "/cs/crypto/csprng"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "Poseidon 비용·보안 주장은 논문의 field·width·S-box·matrix·round parameter 범위에만 귀속한다." },
-      { kind: "standard", rule: "Schnorr BIP 340과 RFC 8032 Ed25519의 curve·transcript·encoding·variant를 서로 바꾸어 일반화하지 않는다." },
-      { kind: "project-measurement", rule: "회로 constraint·proof time·verification time은 같은 field·arity·input·backend에서 vector parity 뒤 비교한다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "RFC9162와 Poseidon의 실제 정의를 읽으며 자체 영수증 형식과 작은 라운드를 원문 인스턴스로 주장하지 않습니다."
+      },
+      {
+        "kind": "standard",
+        "rule": "BIP340과 RFC8032의 곡선·바이트·dom2·cofactor 검증 선택을 분리하고 Verified 정오표를 출판본과 대조합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "Python3.9.6에서 공식 벡터·영수증 서명·실패 입력과 작은 유한 계산을 실행했습니다. 제품 전체 입력·상수 시간·BIP 바이너리·실제 Poseidon 성능을 검증했다고 확대하지 않습니다."
+      }
+    ]
   },
   csprng: {
     title: "CSPRNG entropy·state lifecycle 글이 소유하는 범위",
@@ -10418,24 +10455,42 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "speculative-decoding-variants": {
-    title: "Speculative decoding 변형 글이 소유하는 범위",
-    owns: [
-      "Draft 출처와 verify 모양이라는 두 축의 변형 분류",
-      "Self-speculative decoding 의 layer 비율 비용과 학습 전제",
-      "MTP head 의 구조, draft 비용 c≈1/L, 효용 경계 조건식",
-      "Token tree 의 node 수와 기대 길이 식, tree attention mask 와 경로 확정 절차",
-      "Suffix decoding 의 자료 구조, c≈0.001, miss 동작",
+    "title": "같은 경로로 비교하는 후보 출처와 검증 모양",
+    "owns": [
+      "일곱 자리의 후보 연결과 mask·위치·경로 선택 및 고정 구현의 실제 KV 복사",
+      "LayerSkip 앞 상태 재사용과 마지막 입력·추가 저장의 비용 경계",
+      "DeepSeek-V3 순차 MTP의 입력과 가정한 전체 시간의 효용 조건",
+      "Medusa typical과 SpecInfer exact 분포 갱신의 구별",
+      "Arctic suffix 후보 점수·실제 CPU 자료 구조·wrapper 및 조회 실패와 혼합 비용"
     ],
-    reuses: [
-      { label: "Draft–verify cycle, α, K, speedup 식, rejection sampling", href: "/cs/ai/vllm-spec-decode" },
-      { label: "EAGLE 과 native MTP proposer", href: "/cs/ai/vllm-spec-decode" },
-      { label: "Decode memory-bound regime", href: "/cs/ai/prefill-decode-phase-dynamics" },
+    "reuses": [
+      {
+        "label": "Draft–verify cycle, α, K, speedup 식, rejection sampling",
+        "href": "/cs/ai/vllm-spec-decode"
+      },
+      {
+        "label": "EAGLE 과 native MTP proposer",
+        "href": "/cs/ai/vllm-spec-decode"
+      },
+      {
+        "label": "Decode memory-bound regime",
+        "href": "/cs/ai/prefill-decode-phase-dynamics"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "각 변형의 배율과 수락률은 해당 논문의 자기보고 model·workload 로 한정하고 다른 model 로 일반화하지 않는다." },
-      { kind: "project-claim", rule: "MTP 의 효용 경계는 조건식으로만 적고 미공개 model 의 체감 수치를 본문 사실로 올리지 않는다." },
-      { kind: "standard", rule: "Speedup 계산은 앞 글의 독립·동일 α 단순화를 그대로 쓰며 v(B) 는 weight 읽기만 본 근사임을 명시한다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Medusa·LayerSkip·ArcticInference의 정확한 commit 전체 원문과 LICENSE를 보존하고 함수·행·배열 경계를 작은 RAY에 대응한다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "다섯 논문의 버전·식·알고리즘·측정 조건을 구별하며 논문 보고 성능을 모든 모델의 배율로 확대하지 않는다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "후보 비중과 시간 곡선은 가정이다. Medusa AST 배열 대역과 wrapper 대역, 실제 Arctic C++ CPU 자료 구조 실행을 전체 모델·GPU 성능 측정과 구별한다."
+      }
+    ]
   },
   "inference-cost-and-capacity-planning": {
     title: "추론 비용과 capacity planning 글이 소유하는 범위",

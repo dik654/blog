@@ -51470,322 +51470,342 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/cross-entropy": {
-    coreIdea:
-      "Cross-entropy는 실제로 일어난 사건에 model이 준 probability를 negative logarithm으로 바꾸고 실제 distribution에서 평균낸 비용입니다. Entropy는 source 자체의 불확실성, KL divergence는 model mismatch의 추가 비용이며 categorical NLL 최소화는 같은 가정에서 maximum likelihood와 연결됩니다.",
-    assumedKnowledge: [
+    "coreIdea": "같은 A·A·B·C 기록을 두 코드로 적어 평균 길이 1.5와 1.75 bit의 차이를 계산합니다. 이 차이를 엔트로피·교차 엔트로피·KL로 쓰고, 실제 PyTorch 원문의 정답 선택과 분모·계산 순서에 같은 사례를 대입합니다.",
+    "assumedKnowledge": [
       {
-        id: "logarithm",
-        role: "Probability를 additive surprisal scale로 변환하고 0 근처의 큰 penalty를 읽습니다.",
+        "id": "logarithm",
+        "role": "작은 확률을 더할 수 있는 비용으로 바꾸고 로그의 밑과 단위를 구별합니다."
       },
       {
-        id: "log-product-rule",
-        role: "Sample likelihood의 곱을 log-likelihood의 합으로 바꿉니다.",
+        "id": "log-product-rule",
+        "role": "여러 관측 확률의 곱을 관측 비용의 합으로 바꿉니다."
       },
       {
-        id: "probability-distribution",
-        role: "실제 P와 model Q가 각 사건에 배정한 mass를 구분합니다.",
+        "id": "probability-distribution",
+        "role": "원래 글자의 비중 P와 예측표 Q를 구별합니다."
       },
       {
-        id: "expectation",
-        role: "사건별 정보 비용을 실제 발생 probability로 평균냅니다.",
+        "id": "expectation",
+        "role": "각 글자의 비용을 원래 비중으로 평균냅니다."
       },
       {
-        id: "sample-mean",
-        role: "Population risk를 dataset과 mini-batch 평균으로 추정합니다.",
+        "id": "sample-mean",
+        "role": "관측한 네 비용의 평균과 실제 규칙의 평균을 비교합니다."
       },
       {
-        id: "prediction-contract",
-        role: "Categorical class와 다른 target 유형의 output·likelihood를 구분합니다.",
-      },
+        "id": "prediction-contract",
+        "role": "서로 배타적인 정답과 연속 관측의 출력 분포를 구별합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "surprisal",
-        role: "관측 사건에 준 probability를 한 사건의 정보 비용으로 바꿉니다.",
+        "id": "surprisal",
+        "role": "실제로 나온 글자에 미리 적어 둔 확률을 더할 수 있는 비용으로 바꿉니다."
       },
       {
-        id: "empirical-risk",
-        role: "관측 sample의 loss 평균으로 population objective를 추정합니다.",
+        "id": "empirical-risk",
+        "role": "관측한 비용을 횟수로 나누어 환경 전체의 평균 비용을 추정합니다."
       },
       {
-        id: "entropy",
-        role: "실제 source가 원래 가진 평균 불확실성을 계산합니다.",
+        "id": "entropy",
+        "role": "원래 확률에 맞춘 한 사건 비용을 같은 원래 확률로 평균냅니다."
       },
       {
-        id: "cross-entropy-nll",
-        role: "Model Q로 실제 P의 사건을 설명하는 평균 비용을 계산합니다.",
+        "id": "cross-entropy-nll",
+        "role": "실제 비중은 유지하고 예측표 Q로 매긴 비용만 평균냅니다."
       },
       {
-        id: "maximum-likelihood",
-        role: "Cross-entropy 최소화가 likelihood 최대화와 연결되는 조건을 설명합니다.",
+        "id": "maximum-likelihood",
+        "role": "같은 관측 자료에 가장 높은 확률 또는 밀도를 주는 모델 매개변수를 고릅니다."
       },
       {
-        id: "kl-divergence",
-        role: "Cross-entropy에서 source entropy를 빼 model mismatch를 분리합니다.",
+        "id": "kl-divergence",
+        "role": "P의 사건에 Q의 코드를 사용해 더 든 평균 로그 비용을 분리합니다."
       },
       {
-        id: "likelihood-contract",
-        role: "Target 생성 가정에서 CE·MSE 등 loss를 선택합니다.",
-      },
+        "id": "likelihood-contract",
+        "role": "관측값이 어떤 조건부 분포에서 나왔다고 모델링할지 정한 뒤 그 확률 또는 밀도의 음의 로그를 씁니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "surprisal",
-        sectionId: "overview",
-        intuition:
-          "실제로 나온 사건을 model이 얼마나 뜻밖이라고 평가했는지 재는 비용입니다.",
-        workedExample:
-          "q=0.5이면 −lnq≈0.693 nat이고 q=0.01이면 약 4.605 nat입니다.",
-        boundary:
-          "Model probability에 대한 비용이며 사건의 의미·중요도·도덕적 가치를 측정하지 않습니다.",
+        "id": "surprisal",
+        "sectionId": "log-cost",
+        "intuition": "실제로 나온 글자에 미리 적어 둔 확률을 더할 수 있는 비용으로 바꿉니다.",
+        "workedExample": "Q의 A 확률 1/4는 2 bit이고 C 확률 1/2는 1 bit입니다. 독립 A·C의 확률 1/8은 비용 3 bit입니다.",
+        "boundary": "밑은 1보다 커야 합니다. 사건의 의미나 중요도를 재는 값이 아니며 큰 손실이 큰 로짓 기울기를 뜻하지 않습니다."
       },
       {
-        id: "empirical-risk",
-        sectionId: "expectation",
-        intuition:
-          "실제 환경 전체의 평균 loss를 모르므로 관측한 training example의 loss를 평균낸 대체 점수입니다.",
-        workedExample:
-          "세 sample loss가 0.2,0.5,0.8이면 empirical risk는 0.5입니다.",
-        boundary:
-          "Training 평균이 낮아도 sampling bias·overfitting·distribution shift가 있으면 population risk가 낮다고 보장할 수 없습니다.",
+        "id": "empirical-risk",
+        "sectionId": "expectation",
+        "intuition": "관측한 비용을 횟수로 나누어 환경 전체의 평균 비용을 추정합니다.",
+        "workedExample": "A·A·B·C의 비용 2·2·2·1 bit를 평균하면 1.75 bit입니다. 별도의 0.2·0.5·0.8 관측은 평균 0.5입니다.",
+        "boundary": "주 사례는 원래 P와 관측 비중이 우연히 같습니다. 과적합·표집 편향·환경 변화가 있으면 낮은 자료 평균이 낮은 배포 비용을 보장하지 않습니다."
       },
       {
-        id: "entropy",
-        sectionId: "entropy",
-        intuition:
-          "완벽한 model도 없앨 수 없는 source 자체의 평균 선택 불확실성입니다.",
-        workedExample:
-          "공정한 두 사건은 entropy ln2이고 한 사건 probability가 1이면 entropy 0입니다.",
-        boundary:
-          "Discrete entropy의 설명이며 continuous differential entropy나 문장의 의미 점수로 그대로 옮기면 안 됩니다.",
+        "id": "entropy",
+        "sectionId": "entropy",
+        "intuition": "원래 확률에 맞춘 한 사건 비용을 같은 원래 확률로 평균냅니다.",
+        "workedExample": "P=(1/2,1/4,1/4)의 코드 길이 1·2·2를 평균하면 1.5 bit=1.5ln2 nat입니다.",
+        "boundary": "유한 이산 분포의 설명입니다. 소수 평균 길이를 모든 개별 기호의 실제 길이로 읽거나 미분 엔트로피·문장 의미로 그대로 옮기지 않습니다."
       },
       {
-        id: "cross-entropy-nll",
-        sectionId: "cross-entropy",
-        intuition:
-          "실제 사건을 model Q의 probability로 설명할 때 드는 평균 surprisal입니다.",
-        workedExample:
-          "정답 probability 0.9의 NLL은 약 0.105 nat, 0.01은 약 4.605 nat입니다.",
-        boundary:
-          "Categorical CE는 mutually exclusive label과 normalized model distribution을 전제로 하며 제품 metric의 optimum과 항상 같지는 않습니다.",
+        "id": "cross-entropy-nll",
+        "sectionId": "cross-entropy",
+        "intuition": "실제 비중은 유지하고 예측표 Q로 매긴 비용만 평균냅니다.",
+        "workedExample": "P=(1/2,1/4,1/4), Q=(1/4,1/4,1/2)에서 1.75 bit≈1.213008 nat입니다. 한 정답이면 −lnQ_y입니다.",
+        "boundary": "유한 집합에서 P가 양수인 곳에 Q도 양수여야 유한합니다. 가산무한에서는 로그 비용의 합 가능성까지 확인합니다."
       },
       {
-        id: "maximum-likelihood",
-        sectionId: "cross-entropy",
-        intuition:
-          "관측한 data가 현재 parameter 아래에서 가장 그럴듯해지도록 model을 고릅니다.",
-        workedExample:
-          "독립 sample의 정답 확률 0.8과 0.5의 likelihood는 0.4이고 log-likelihood는 log0.8+log0.5입니다.",
-        boundary:
-          "Model family와 conditional independence 등 likelihood specification이 틀리면 추정 결과의 의미도 달라집니다.",
+        "id": "maximum-likelihood",
+        "sectionId": "cross-entropy",
+        "intuition": "같은 관측 자료에 가장 높은 확률 또는 밀도를 주는 모델 매개변수를 고릅니다.",
+        "workedExample": "네 글자의 우도 1/128에 음의 밑 2 로그를 취하면 합계 7 bit, 평균 7/4 bit입니다.",
+        "boundary": "고정 자료와 같은 모델군·우도 분해·양의 척도에서 NLL 최소화와 같습니다. 벌점 계수를 고정한 채 손실의 단위만 바꾸면 전체 최적점은 달라질 수 있습니다."
       },
       {
-        id: "kl-divergence",
-        sectionId: "kl-divergence",
-        intuition:
-          "실제 P 대신 Q를 사용해서 추가로 치르는 평균 log 비용입니다.",
-        workedExample:
-          "P=Q이면 각 log ratio가 0이라 KL=0이지만 방향을 바꾸면 일반적으로 같은 값이 아닙니다.",
-        boundary:
-          "Symmetric하지 않고 triangle inequality도 만족하지 않으므로 metric distance가 아닙니다.",
+        "id": "kl-divergence",
+        "sectionId": "kl-divergence",
+        "intuition": "P의 사건에 Q의 코드를 사용해 더 든 평균 로그 비용을 분리합니다.",
+        "workedExample": "같은 세 글자의 차이는 1.75−1.5=0.25 bit입니다. P=(.5,.5), Q=(.9,.1)의 방향별 KL은 약 .510826과 .368064 nat로 다릅니다.",
+        "boundary": "방향이 있으며 일반적인 거리 함수가 아닙니다. 가산무한에서 CE와 H가 모두 무한이면 무한대끼리 빼서 정의하지 않습니다."
       },
       {
-        id: "likelihood-contract",
-        sectionId: "ce-vs-mse",
-        intuition:
-          "관측 target이 어떤 noise와 support에서 나왔다고 볼지 먼저 정하고 그 분포의 NLL을 loss로 고르는 약속입니다.",
-        workedExample:
-          "배타적 class는 categorical CE, 고정 variance 연속 target은 Gaussian NLL의 squared residual 항으로 연결됩니다.",
-        boundary:
-          "‘분류=CE, 회귀=MSE’라는 이름표만으로 multi-label·count·ordinal target을 올바르게 처리할 수 없습니다.",
-      },
+        "id": "likelihood-contract",
+        "sectionId": "ce-vs-mse",
+        "intuition": "관측값이 어떤 조건부 분포에서 나왔다고 모델링할지 정한 뒤 그 확률 또는 밀도의 음의 로그를 씁니다.",
+        "workedExample": "배타적 세 글자는 categorical CE입니다. Gaussian의 분산이 고정된 양수이면 NLL은 제곱 잔차에 양의 배수를 곱하고 상수를 더한 값입니다.",
+        "boundary": "분산을 학습하면 로그 분산 항을 유지합니다. Brier 제곱 점수도 분류 확률에 쓸 수 있어 문제 이름만으로 손실을 금지하지 않습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "한 사건",
-        relation: "Probability를 additive information cost로 변환",
-        concepts: ["logarithm", "probability-distribution", "surprisal"],
+        "label": "글자 하나",
+        "relation": "예측 확률을 더할 수 있는 비용으로 바꿉니다.",
+        "concepts": [
+          "logarithm",
+          "surprisal"
+        ]
       },
       {
-        label: "평균",
-        relation: "실제 source와 sample에서 비용을 평균",
-        concepts: ["expectation", "sample-mean", "empirical-risk", "entropy"],
+        "label": "같은 네 기록",
+        "relation": "관측 평균과 원래 비중의 평균을 구별합니다.",
+        "concepts": [
+          "expectation",
+          "sample-mean",
+          "empirical-risk",
+          "entropy"
+        ]
       },
       {
-        label: "Model fit",
-        relation: "Q의 비용을 likelihood와 mismatch로 분해",
-        concepts: ["cross-entropy-nll", "maximum-likelihood", "kl-divergence"],
-      },
-      {
-        label: "Loss 선택",
-        relation: "관측 distribution과 output 계약을 일치",
-        concepts: [
-          "prediction-contract",
-          "likelihood-contract",
+        "label": "표의 차이",
+        "relation": "평균 길이 1.75와 1.5의 차이를 우도와 연결합니다.",
+        "concepts": [
           "cross-entropy-nll",
-        ],
+          "maximum-likelihood",
+          "kl-divergence"
+        ]
       },
       {
-        label: "Backward",
-        relation: "Categorical logits의 correction 계산",
-        concepts: ["cross-entropy-nll", "fused-softmax-cross-entropy-gradient"],
-      },
-    ],
-    exercises: [
-      {
-        level: "basic",
-        question:
-          "정답 probability가 0.9, 0.5, 0.01일 때 natural-log surprisal을 계산하고 확신에 찬 오답의 비용을 비교할 수 있을까요?",
-        answerChecklist: [
-          "각각 약 0.105,0.693,4.605 nat을 계산한다.",
-          "Probability가 0에 가까울수록 비용이 발산한다고 설명한다.",
-          "정보의 semantic importance와 구분한다.",
-        ],
-        requiredConcepts: ["logarithm", "surprisal"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "Entropy H(P), cross-entropy H(P,Q), KL(P||Q)가 각각 어떤 비용을 분리하는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "H(P)는 source 자체의 평균 불확실성이라고 설명한다.",
-          "H(P,Q)는 Q로 P의 사건을 설명하는 비용이라고 설명한다.",
-          "KL=H(P,Q)−H(P)가 model mismatch라고 연결한다.",
-        ],
-        requiredConcepts: ["entropy", "cross-entropy-nll", "kl-divergence"],
-        sectionId: "kl-divergence",
-      },
-      {
-        level: "basic",
-        question:
-          "Categorical target과 fixed-variance Gaussian target에서 각각 CE와 squared error가 나오는 likelihood 가정을 비교할 수 있을까요?",
-        answerChecklist: [
-          "배타적 class의 categorical distribution을 말한다.",
-          "연속 target의 Gaussian mean과 fixed variance를 말한다.",
-          "Target 유형 이름이 아니라 observation model에서 loss가 나온다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "prediction-contract",
-          "likelihood-contract",
-          "cross-entropy-nll",
-        ],
-        sectionId: "ce-vs-mse",
-      },
-      {
-        level: "basic",
-        question:
-          "세 training sample의 loss가 0.2, 0.5, 0.8일 때 empirical risk를 계산하고 population risk와 같은 값이라고 단정할 수 없는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "(0.2+0.5+0.8)/3=0.5를 계산한다.",
-          "Empirical risk는 관측 sample 평균이고 population risk는 실제 data distribution의 기대값이라고 구분한다.",
-          "Sampling bias·overfitting·distribution shift 때문에 둘이 달라질 수 있다고 설명한다.",
-        ],
-        requiredConcepts: ["sample-mean", "expectation", "empirical-risk"],
-        sectionId: "expectation",
-      },
-      {
-        level: "basic",
-        question:
-          "공정한 동전 P=(0.5,0.5)와 항상 앞면인 동전 P=(1,0)의 entropy를 natural log로 계산하고 불확실성 차이를 설명할 수 있을까요?",
-        answerChecklist: [
-          "공정한 동전은 −2·0.5·ln0.5=ln2≈0.693 nat을 계산한다.",
-          "결정적 동전은 0 log 0의 극한을 사용해 0 nat임을 계산한다.",
-          "K개 discrete 사건에서는 균등 분포가 lnK로 최대라는 조건을 말한다.",
-        ],
-        requiredConcepts: ["logarithm", "probability-distribution", "entropy"],
-        sectionId: "entropy",
-      },
-      {
-        level: "basic",
-        question:
-          "Logits (1000,999)에서 첫 class가 정답일 때 max-shift log-sum-exp로 loss를 계산하고 직접 exp를 쓰는 구현이 위험한 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "m=1000을 빼 shifted logits (0,−1)을 만든다.",
-          "L=ln(1+e^(−1))≈0.313 nat을 계산한다.",
-          "공통 상수 이동은 softmax를 보존하고 direct exp(1000)는 overflow할 수 있다고 설명한다.",
-        ],
-        requiredConcepts: [
-          "cross-entropy-nll",
+        "label": "학습 방향",
+        "relation": "같은 logits와 정답에 대한 자연로그 손실의 미분을 구합니다.",
+        "concepts": [
           "fused-softmax-cross-entropy-gradient",
-        ],
-        sectionId: "softmax-ce-gradient",
+          "cross-entropy-nll"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "독립 sample의 likelihood product를 average cross-entropy로 바꾸고 두 objective가 같은 parameter optimum을 갖는 조건을 설명할 수 있을까요?",
-        answerChecklist: [
-          "Product likelihood에 log를 취해 sum으로 바꾼다.",
-          "Negative sign과 1/n은 monotone·positive scaling이라고 설명한다.",
-          "Model family와 sampling assumption을 명시한다.",
+        "label": "관측 가정",
+        "relation": "관측 분포·정답 형식·평균 분모를 확인합니다.",
+        "concepts": [
+          "prediction-contract",
+          "likelihood-contract",
+          "empirical-risk"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "7·12절을 보며 정답 확률 0.9, 0.5, 0.01의 자연로그 비용을 계산하세요. 비용이 커지면 정답 로짓 기울기도 끝없이 커지나요?",
+        "answerChecklist": [
+          "비용은 각각 약 0.105, 0.693, 4.605 nat입니다.",
+          "확률이 0에 가까워지면 비용은 발산하지만 자연로그 softmax CE의 정답 로짓 기울기는 Q_y−1입니다.",
+          "Q_y=0.01이면 −0.99이며 정보의 의미·중요도와는 다른 점수입니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
+          "logarithm",
+          "surprisal"
+        ],
+        "sectionId": "log-cost"
+      },
+      {
+        "level": "basic",
+        "question": "9·10·11절의 같은 세 글자에서 H(P), H(P,Q), KL(P‖Q)를 bit와 nat으로 구하고 각 비용의 역할을 설명하세요.",
+        "answerChecklist": [
+          "원래 비용 H(P)=1.5 bit=1.5ln2 nat입니다.",
+          "Q로 매긴 평균 비용 H(P,Q)=1.75 bit=1.75ln2 nat입니다.",
+          "차이는 KL=0.25 bit=0.25ln2 nat이며 실제 비중 P는 두 계산에서 같습니다."
+        ],
+        "requiredConcepts": [
+          "entropy",
+          "cross-entropy-nll",
+          "kl-divergence"
+        ],
+        "sectionId": "kl-divergence"
+      },
+      {
+        "level": "basic",
+        "question": "배타적 글자와 고정 분산의 Gaussian 관측에서 각각 CE와 제곱 오차가 나오는 이유를 설명하세요. 분산도 학습한다면 무엇이 달라지나요?",
+        "answerChecklist": [
+          "categorical 관측은 정답 확률의 음의 로그를 씁니다.",
+          "Gaussian NLL은 (y−μ)²/(2σ²)+ln(2πσ²)/2입니다.",
+          "양의 분산이 고정이면 제곱 오차의 양의 배수와 상수이며, 분산을 학습하면 로그 분산 항을 유지합니다.",
+          "분류 확률의 Brier 점수도 가능하므로 분류에서 MSE가 금지된 것은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "prediction-contract",
+          "likelihood-contract",
+          "cross-entropy-nll"
+        ],
+        "sectionId": "ce-vs-mse"
+      },
+      {
+        "level": "basic",
+        "question": "세 관측 비용이 0.2, 0.5, 0.8일 때 평균을 구하세요. 주 사례의 네 관측 평균 1.75 bit가 모집단 평균과 같은 이유를 설명하고 이를 모든 자료에 일반화할 수 있는지 말하세요.",
+        "answerChecklist": [
+          "세 값의 평균은 0.5입니다.",
+          "관측 평균과 실제 분포의 기댓값은 다른 대상입니다.",
+          "주 사례는 원래 P가 별도로 주어졌고 관측 비중이 우연히 P와 같습니다.",
+          "표집 편향·과적합·환경 변화가 있으면 낮은 관측 평균이 낮은 모집단 위험을 보장하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "sample-mean",
+          "expectation",
+          "empirical-risk"
+        ],
+        "sectionId": "expectation"
+      },
+      {
+        "level": "basic",
+        "question": "공정한 두 사건과 항상 한 사건만 나오는 규칙의 엔트로피를 nat으로 계산하세요. 주 사례의 평균 코드 길이 1.5 bit는 모든 기호가 1.5자리라는 뜻인가요?",
+        "answerChecklist": [
+          "공정한 두 사건은 ln2≈0.693 nat입니다.",
+          "결정적 사건은 0log0=0의 극한을 적용해 0 nat입니다.",
+          "유한 K개 사건의 최대는 균등 분포의 lnK입니다.",
+          "주 사례의 실제 정수 길이는 1·2·2이며 평균이 1.5입니다. 일반 확률에서는 부호화 규칙과 긴 묶음 조건을 구별합니다."
+        ],
+        "requiredConcepts": [
+          "logarithm",
+          "probability-distribution",
+          "entropy"
+        ],
+        "sectionId": "entropy"
+      },
+      {
+        "level": "basic",
+        "question": "로짓 (1000,999)에서 첫 클래스의 NLL을 구하세요. 세 로짓이 모두 100,000,000인 binary32 가정에서는 큰 LSE를 먼저 조립한 뒤 빼는 계산이 왜 실패할 수 있나요?",
+        "answerChecklist": [
+          "첫 예는 최댓값을 빼 0과 −1로 만들고 ln(1+e⁻¹)≈0.313262 nat을 얻습니다.",
+          "직접 exp(1000)은 넘칠 수 있으며 공통 상수 이동은 확률을 보존합니다.",
+          "둘째 예는 먼저 큰 수에 ln3을 더하면 반올림으로 사라져 결과가 0입니다.",
+          "먼저 차를 구하는 순서는 약 ln3=1.0986123 nat을 남기며 원문도 x−max−log(sum) 순서입니다."
+        ],
+        "requiredConcepts": [
+          "cross-entropy-nll",
+          "fused-softmax-cross-entropy-gradient"
+        ],
+        "sectionId": "stable-log-softmax"
+      },
+      {
+        "level": "advanced",
+        "question": "같은 A·A·B·C의 우도를 곱한 뒤 평균 CE로 바꾸세요. 두 목적이 같은 최적 매개변수를 고르는 조건과 로그 단위 변경의 한계를 설명하세요.",
+        "answerChecklist": [
+          "우도는 (1/4)²(1/4)(1/2)=1/128입니다.",
+          "음의 밑 2 로그는 합계 7 bit이고 평균은 7/4 bit입니다.",
+          "고정 자료·같은 모델군·같은 우도 분해와 양의 고정 척도를 전제합니다.",
+          "독립이 없으면 올바른 조건부 확률로 곱을 분해해야 합니다.",
+          "밑 변경은 기울기 척도를 바꾸고 별도 벌점 계수를 그대로 두면 전체 최적점도 달라질 수 있습니다."
+        ],
+        "requiredConcepts": [
           "log-product-rule",
           "maximum-likelihood",
           "cross-entropy-nll",
-          "empirical-risk",
+          "empirical-risk"
         ],
-        sectionId: "cross-entropy",
+        "sectionId": "cross-entropy"
       },
       {
-        level: "advanced",
-        question:
-          "P가 mass를 가진 사건에 Q가 0을 줄 때 forward KL과 cross-entropy가 왜 발산하는지 support 조건으로 설명할 수 있을까요?",
-        answerChecklist: [
-          "−log0과 log(P/0)가 무한대로 향한다고 설명한다.",
-          "P-positive support에서 Q>0 조건을 말한다.",
-          "Reverse direction은 다른 expectation이라 같은 결론이 아님을 구분한다.",
+        "level": "advanced",
+        "question": "18절에서 실제 양수 확률인 사건에 Q가 0을 주면 어떻게 되는지 설명하세요. 반대 방향과 가산무한 집합의 양수 조건도 함께 비교하세요.",
+        "answerChecklist": [
+          "−Plog0과 Plog(P/0) 때문에 CE와 forward KL이 무한대입니다.",
+          "P=(1/2,1/2), Q=(1,0)의 reverse KL은 ln2이므로 같은 결론이 아닙니다.",
+          "유한 집합에서는 P가 양수인 곳의 Q도 양수이면 유한하지만 가산무한에는 충분하지 않습니다.",
+          "P_n=2⁻ⁿ, Q_n=c exp(−2ⁿ)의 모든 Q_n은 양수여도 CE에 Σ1이 들어가 발산합니다."
         ],
-        requiredConcepts: ["surprisal", "cross-entropy-nll", "kl-divergence"],
-        sectionId: "kl-divergence",
-      },
-      {
-        level: "advanced",
-        question:
-          "p=(0.7,0.2,0.1), one-hot y=(1,0,0)의 softmax–CE logit gradient를 계산하고 update 방향을 설명할 수 있을까요?",
-        answerChecklist: [
-          "p−y=(−0.3,0.2,0.1)을 계산한다.",
-          "Gradient descent가 target logit을 올리고 나머지를 내린다고 설명한다.",
-          "Batch mean이면 batch-size scale이 추가된다고 말한다.",
-        ],
-        requiredConcepts: [
-          "fused-softmax-cross-entropy-gradient",
+        "requiredConcepts": [
+          "surprisal",
           "cross-entropy-nll",
+          "kl-divergence"
         ],
-        sectionId: "softmax-ce-gradient",
+        "sectionId": "support"
       },
       {
-        level: "advanced",
-        question:
-          "P=(0.5,0.5), Q=(0.9,0.1)에서 H(P), H(P,Q), KL(P||Q)를 계산해 H(P,Q)=H(P)+KL(P||Q)를 검산하고 이 값이 metric distance가 아닌 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "H(P)=ln2≈0.693 nat을 계산한다.",
-          "H(P,Q)=−0.5ln0.9−0.5ln0.1≈1.204 nat을 계산한다.",
-          "KL(P||Q)≈0.511 nat과 합의 등식을 확인한다.",
-          "방향을 바꾸면 값이 달라지고 triangle inequality를 만족하지 않아 metric이 아니라고 설명한다.",
+        "level": "advanced",
+        "question": "12·16절을 보며 Q=(0.7,0.2,0.1), 정답 A의 로짓 기울기를 구하세요. 주 사례의 네 정답에 가중치 (2,1,1)를 줄 때 클래스 번호와 one-hot 배열의 mean은 같은가요?",
+        "answerChecklist": [
+          "자연로그·가중치 없음·정답 합 1에서 기울기는 Q−y=(−0.3,0.2,0.1)입니다.",
+          "로짓을 직접 갱신하면 정답 로짓을 올리고 나머지는 내리며 신경망 가중치에는 추가 미분이 필요합니다.",
+          "가중치 없는 독립 행의 batch mean이면 각 행 기울기에 1/N을 곱합니다.",
+          "주 사례의 가중 합은 11ln2이고 클래스 번호 분모는 가중치 합 6입니다.",
+          "같은 one-hot 확률 정답 경로의 분모는 관측 수 4여서 결과가 다릅니다."
         ],
-        requiredConcepts: ["entropy", "cross-entropy-nll", "kl-divergence"],
-        sectionId: "kl-divergence",
+        "requiredConcepts": [
+          "fused-softmax-cross-entropy-gradient",
+          "cross-entropy-nll"
+        ],
+        "sectionId": "softmax-ce-gradient"
       },
-    ],
-    papers: [
       {
-        title: "A Mathematical Theory of Communication",
-        href: "https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf",
-        problem:
-          "Message의 의미와 분리해 source 선택의 불확실성과 noisy channel의 전달 한계를 정량화하는 문제",
-        contribution:
-          "Discrete source entropy와 channel capacity·coding result를 probability 기반 information measure로 연결",
-        assumptions:
-          "정의된 source alphabet·probability model과 논문이 다루는 discrete 또는 continuous channel 조건 안에서 읽음",
-        evidenceScope:
-          "1948년 통신 이론의 source·channel model과 coding theorem 범위",
-        notClaim:
-          "Entropy가 문장의 사실성·의미·인간적 중요도를 직접 측정하거나 cross-entropy training 전체를 제안했다는 뜻은 아님",
-        sectionId: "paper-shannon",
-      },
+        "level": "advanced",
+        "question": "P=(0.5,0.5), Q=(0.9,0.1)의 H(P), H(P,Q), KL(P‖Q)를 nat으로 구하고 반대 방향과 비교하세요. 고정 P에서 CE와 forward KL의 최소화는 왜 같은가요?",
+        "answerChecklist": [
+          "H(P)=ln2≈0.693147 nat입니다.",
+          "H(P,Q)≈1.203973 nat이며 차이 KL(P‖Q)≈0.510826 nat입니다.",
+          "반대 방향은 약 0.368064 nat로 일반적인 대칭 거리 함수가 아닙니다.",
+          "Gibbs 부등식으로 비음수이며 고정 P의 H(P)는 Q에 의존하지 않아 같은 최소점을 고릅니다."
+        ],
+        "requiredConcepts": [
+          "entropy",
+          "cross-entropy-nll",
+          "kl-divergence"
+        ],
+        "sectionId": "kl-divergence"
+      }
     ],
+    "papers": [
+      {
+        "title": "Shannon (1948), A Mathematical Theory of Communication",
+        "href": "https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf#page=11",
+        "problem": "관측 선택의 불확실성과 잡음 없는 부호화의 평균 전송 한계를 잽니다.",
+        "contribution": "재현 PDF 11쪽의 실제 식 H=−KΣpᵢlogpᵢ에 같은 세 확률을 넣어 1.5 bit를 구합니다. 16쪽의 C/H에 6 bit/초를 넣어 4글자/초를 계산합니다.",
+        "assumptions": "고정 정보원과 글자 집합, 명시한 부호화·통신로 조건입니다. 우리 예는 독립인 dyadic 확률입니다.",
+        "evidenceScope": "원문 정리 2와 정리 9의 식·실제 PDF 이미지와 작은 사례의 수동 대입입니다.",
+        "notClaim": "각 기호의 길이가 항상 H이거나 문장의 의미를 측정한다는 주장, 현대 CE 학습 전체를 제안했다는 주장이 아닙니다.",
+        "sectionId": "paper-shannon"
+      },
+      {
+        "title": "PyTorch v2.14.0 · LossNLL.cpp와 CPU log_softmax",
+        "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/aten/src/ATen/native/LossNLL.cpp#L632",
+        "problem": "로짓과 다른 형식의 정답에서 로그 비용을 계산하고 평균냅니다.",
+        "contribution": "실제 분기·정답 열 선택·분모에 같은 네 행을 대입해 7ln2/4와 가중 11ln2/6·11ln2/4를 구합니다.",
+        "assumptions": "commit 2b3ec348, 명시한 CPU 경로, label_smoothing=0과 정답 형식·가중치·유효 관측 조건입니다.",
+        "evidenceScope": "원문 전체를 보존하고 행별 계산을 수동 추적했습니다. 별도 Python 산술은 binary32 반올림만 실행합니다.",
+        "notClaim": "PyTorch 바이너리나 GPU 실행·속도 측정, 모든 실행에서 단일 커널 융합을 확인했다는 주장이 아닙니다.",
+        "sectionId": "implementation"
+      }
+    ]
   },
   "ai/supervised-fine-tuning": {
     coreIdea:
@@ -67851,55 +67871,356 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "crypto/crypto-primitives": {
-    coreIdea: "Poseidon·Merkle commitment·Schnorr·Ed25519·대수 구조가 각각 압축·선택적 opening·authorization·연산 계약 중 다른 보장을 제공하므로 입력·출력·가정·실패 조건을 분리해 조합합니다.",
-    assumedKnowledge: [
-      { id: "finite-field-multiplicative-order", role: "Group order·generator·scalar field의 최소 산술을 재사용합니다." },
-      { id: "cyclic-subgroup-dlp", role: "Schnorr와 Pedersen binding이 기대는 숨은 scalar 복원 문제를 재사용합니다." },
-      { id: "elliptic-curve-point-group", role: "Schnorr·Ed25519 point와 scalar multiplication의 group 의미를 재사용합니다." },
-      { id: "csprng-computational-unpredictability", role: "Signature nonce와 commitment blinding randomness의 예측 불가능성을 재사용합니다." },
+    "entryLevel": false,
+    "entryNote": "네 영수증 중 C20 하나가 승인된 묶음에 들어 있는지 확인하는 사례로 시작합니다. 뒤의 작은 군 계산에는 나머지와 역원 및 점 덧셈의 뜻을 사용합니다.",
+    "coreIdea": "같은 기록의 인코딩·해시 경로·서명식·등록 키 정책을 연결하면서 각 도구의 성공이 어느 주장까지 뒷받침하는지 나눕니다.",
+    "assumedKnowledge": [
+      {
+        "id": "finite-field-multiplicative-order",
+        "role": "군의 위수와 생성원의 뜻 및 나머지 산술을 사용합니다."
+      },
+      {
+        "id": "cyclic-subgroup-dlp",
+        "role": "Schnorr와 Pedersen의 조건을 개인 스칼라 복원 문제와 연결합니다."
+      },
+      {
+        "id": "elliptic-curve-point-group",
+        "role": "점 더하기와 스칼라 배수를 좌표별 계산과 구별합니다."
+      },
+      {
+        "id": "csprng-computational-unpredictability",
+        "role": "서명의 임시값과 약정의 무작위 값이 예측하기 어려워야 하는 조건을 사용합니다."
+      }
     ],
-    introducedHere: [
-      { id: "crypto-primitive-assurance-boundary", role: "프리미티브 성공을 다른 보장으로 과대 해석하지 않습니다." },
-      { id: "poseidon-field-native-permutation", role: "Field-native round와 sponge security/cost 전제를 계산합니다." },
-      { id: "merkle-selective-opening", role: "Leaf와 sibling path로 trusted root를 재구성합니다." },
-      { id: "commitment-binding-hiding-separation", role: "Binding과 hiding의 서로 다른 가정·randomness를 구분합니다." },
-      { id: "schnorr-fiat-shamir-transcript", role: "Sigma transcript를 domain-separated signature로 바꿉니다." },
-      { id: "ed25519-instance-contract", role: "RFC 8032의 curve·nonce·encoding·variant를 한 계약으로 읽습니다." },
-      { id: "cryptographic-domain-type-separation", role: "Point·scalar·field·protocol domain을 구현 타입으로 분리합니다." },
+    "introducedHere": [
+      {
+        "id": "crypto-primitive-assurance-boundary",
+        "role": "C의 기록에서 루트를 다시 계산하는 일과 루트를 승인한 키를 확인하는 일을 나눕니다."
+      },
+      {
+        "id": "poseidon-field-native-permutation",
+        "role": "상수 더하기·비선형 연산·선형 혼합을 체의 작은 숫자로 따라갑니다."
+      },
+      {
+        "id": "merkle-selective-opening",
+        "role": "현재 해시의 왼쪽·오른쪽에 형제를 붙여 같은 루트로 올라갑니다."
+      },
+      {
+        "id": "commitment-binding-hiding-separation",
+        "role": "다르게 열기 어려운 것과 후보를 알아맞히기 어려운 것은 별개입니다."
+      },
+      {
+        "id": "schnorr-fiat-shamir-transcript",
+        "role": "임시값을 고정한 뒤 같은 메시지에서 만든 질문에 개인값으로 응답합니다."
+      },
+      {
+        "id": "ed25519-instance-contract",
+        "role": "작은 서명식의 역할을 정확한 곡선·인코딩·해시·변형에 고정합니다."
+      },
+      {
+        "id": "cryptographic-domain-type-separation",
+        "role": "같은 정수나 32바이트라도 허용 연산과 나머지·인코딩을 구분합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "crypto-primitive-assurance-boundary", sectionId: "overview", intuition: "공구마다 고치는 문제가 다르듯 hash·commitment·signature가 답하는 보안 질문을 따로 둡니다.", workedExample: "Merkle proof가 root와 같아도 그 root가 최신 chain state인지 별도 consensus 근거가 필요합니다.", boundary: "Signature 성공은 message 내용의 진실이나 signer의 업무 권한을 자동으로 보장하지 않습니다." },
-      { id: "poseidon-field-native-permutation", sectionId: "poseidon", intuition: "회로가 이미 잘하는 field 곱셈으로 state를 비선형적으로 섞어 bit decomposition 비용을 피합니다.", workedExample: "x⁵ S-box는 square·square·multiply 세 번이지만 전체 비용은 width·full/partial rounds·absorb 횟수를 모두 셉니다.", boundary: "검증된 field·matrix·round parameter를 임의로 줄이거나 CPU hash speed로 일반화할 수 없습니다." },
-      { id: "merkle-selective-opening", sectionId: "merkle-commitment", intuition: "책 전체 대신 한 페이지와 목차까지의 형제 표지만 받아 표지 fingerprint를 다시 만듭니다.", workedExample: "Depth 256의 raw sibling payload는 256×32=8192 bytes이고 path bit가 hash 좌우 순서를 정합니다.", boundary: "Proof 성공은 trusted root에 대한 membership만 말하며 root provenance나 데이터의 의미적 유효성은 말하지 않습니다." },
-      { id: "commitment-binding-hiding-separation", sectionId: "merkle-commitment", intuition: "봉투를 다른 내용으로 바꾸기 어려운 것과 봉투만 보고 내용을 모르는 것은 서로 다른 성질입니다.", workedExample: "H(value∥r)는 충분한 r로 hiding을 보완하고 Pedersen C=vG+rH는 generator 관계와 uniform r을 요구합니다.", boundary: "Merkle root나 deterministic hash만으로 작은 value space의 dictionary attack을 막을 수 없습니다." },
-      { id: "schnorr-fiat-shamir-transcript", sectionId: "schnorr", intuition: "Nonce point를 먼저 고정한 뒤 message와 key를 hash한 challenge에 secret 관계로 답합니다.", workedExample: "R=kG, e=H(tag∥R∥P∥m), s=k+ex이면 verifier가 sG=R+eP를 검사합니다.", boundary: "같은 nonce의 두 challenge response는 secret을 노출하며 reduction은 DLP·random-oracle·encoding 전제를 가집니다." },
-      { id: "ed25519-instance-contract", sectionId: "ed25519", intuition: "Ed25519는 비슷한 서명식이 아니라 curve·hash·byte order·variant까지 고정한 구체 제품 규격입니다.", workedExample: "32-byte seed를 SHA-512로 expand해 scalar와 prefix를 나누고 R 32 bytes와 S 32 bytes를 signature로 냅니다.", boundary: "Deterministic nonce는 최초 seed entropy·fault·side channel·strict parsing을 대신 해결하지 않습니다." },
-      { id: "cryptographic-domain-type-separation", sectionId: "abelian-group", intuition: "겉으로 정수처럼 보여도 point coordinate·scalar·hash field 값에는 서로 다른 modulus와 허용 연산이 있습니다.", workedExample: "BN254 base-field p와 subgroup scalar order q를 같은 reduction 함수로 처리하지 않고 별도 타입으로 둡니다.", boundary: "아벨군·환·체를 단순 포함 계보로 보고 point에 coordinate-wise scalar 곱을 적용하면 group law가 깨집니다." },
+    "conceptExplanations": [
+      {
+        "id": "crypto-primitive-assurance-boundary",
+        "sectionId": "overview",
+        "intuition": "C의 기록에서 루트를 다시 계산하는 일과 루트를 승인한 키를 확인하는 일을 나눕니다.",
+        "workedExample": "A40·B70·C20·D90 중 C를 확인해 루트 24239f97…를 얻고 등록된 키와 배치 1의 47바이트 서명을 검사합니다.",
+        "boundary": "포함과 서명식의 성공만으로 현실 거래의 사실성·등록 키의 업무 권한·최신 배치를 보장하지 않습니다."
+      },
+      {
+        "id": "poseidon-field-native-permutation",
+        "sectionId": "poseidon",
+        "intuition": "상수 더하기·비선형 연산·선형 혼합을 체의 작은 숫자로 따라갑니다.",
+        "workedExample": "F₁₇에서 (3,4)→(4,6)→(13,12)→(3,2)입니다. 첫 칸만 세제곱하면 마지막은 (8,12)입니다.",
+        "boundary": "289상태의 순열 확인은 보안 증명이 아닙니다. 실제 Poseidon의 체·행렬·상수·라운드와 성능은 별도로 확인해야 합니다."
+      },
+      {
+        "id": "merkle-selective-opening",
+        "sectionId": "merkle-commitment",
+        "intuition": "현재 해시의 왼쪽·오른쪽에 형제를 붙여 같은 루트로 올라갑니다.",
+        "workedExample": "인덱스 2의 낮은 비트 0 다음 1에 따라 D·AB 두 형제를 사용합니다. 원시 형제는 64바이트이고 잎을 포함해 해시 3회입니다.",
+        "boundary": "트리 크기·인코딩·방향·기대한 루트가 필요하며 일반적인 불균형 트리에 같은 비트 규칙만 복사하지 않습니다."
+      },
+      {
+        "id": "commitment-binding-hiding-separation",
+        "sectionId": "hiding",
+        "intuition": "다르게 열기 어려운 것과 후보를 알아맞히기 어려운 것은 별개입니다.",
+        "workedExample": "C의 금액 후보 0부터 99를 해시하면 20을 찾습니다. 알려진 H=2G에서는 (3,4)와 (5,3)이 같은 11G를 엽니다.",
+        "boundary": "한 약정의 균등 분포와 여러 약정의 공동 정보가 다릅니다. 같은 r 재사용은 값의 차이를 드러낼 수 있습니다."
+      },
+      {
+        "id": "schnorr-fiat-shamir-transcript",
+        "sectionId": "schnorr",
+        "intuition": "임시값을 고정한 뒤 같은 메시지에서 만든 질문에 개인값으로 응답합니다.",
+        "workedExample": "G=2, p=23, q=11, x=3, k=7에서 R=13·P=8·e=9·s=1이고 검증 양변은 2입니다.",
+        "boundary": "같은 임시값에서 서로 다른 질문 차이의 역원이 있으면 개인값을 추출합니다. 작은 군과 toy 태그는 실제 BIP 340이 아닙니다."
+      },
+      {
+        "id": "ed25519-instance-contract",
+        "sectionId": "ed25519",
+        "intuition": "작은 서명식의 역할을 정확한 곡선·인코딩·해시·변형에 고정합니다.",
+        "workedExample": "공식 빈 메시지 벡터 뒤에 같은 영수증을 서명해 R=05444fd3…와 S=90f659e0…를 얻습니다. 출판본의 65바이트 통과를 재현했습니다.",
+        "boundary": "pure·ctx·ph와 cofactor 검증 선택을 구별합니다. 길이 검사 보완은 키 등록·상수 시간·전체 입력 검증을 대신하지 않습니다."
+      },
+      {
+        "id": "cryptographic-domain-type-separation",
+        "sectionId": "abelian-group",
+        "intuition": "같은 정수나 32바이트라도 허용 연산과 나머지·인코딩을 구분합니다.",
+        "workedExample": "작은 Schnorr의 군 원소는 mod 23, 응답은 mod 11입니다. 영수증 금액은 big-endian, Ed25519의 S는 little-endian입니다.",
+        "boundary": "군의 점 연산을 좌표별 연산으로 바꾸거나 체의 p와 스칼라 위수를 섞지 않습니다. 같은 바이트 길이는 같은 의미가 아닙니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 보장 지도", relation: "각 primitive가 답하는 질문을 먼저 분리합니다.", concepts: ["crypto-primitive-assurance-boundary"] },
-      { label: "02 압축·opening", relation: "Field hash와 selective opening의 가정을 연결합니다.", concepts: ["prime-field-modular-arithmetic", "poseidon-field-native-permutation", "merkle-selective-opening", "commitment-binding-hiding-separation"] },
-      { label: "03 authorization", relation: "DLP·random nonce에서 두 signature instance로 이어갑니다.", concepts: ["cyclic-subgroup-dlp", "csprng-computational-unpredictability", "schnorr-fiat-shamir-transcript", "ed25519-instance-contract"] },
-      { label: "04 구현 타입", relation: "Group·field·transcript domain을 분리해 조합합니다.", concepts: ["elliptic-curve-point-group", "cryptographic-domain-type-separation"] },
+    "conceptStages": [
+      {
+        "label": "01 같은 영수증의 경로",
+        "relation": "인코딩과 형제 해시로 루트를 만들고 숨겨지는 정보의 범위를 확인합니다.",
+        "concepts": [
+          "crypto-primitive-assurance-boundary",
+          "merkle-selective-opening",
+          "commitment-binding-hiding-separation"
+        ]
+      },
+      {
+        "label": "02 회로의 해시 연산",
+        "relation": "두 칸의 작은 순열과 실제 해시 매개변수의 경계를 나눕니다.",
+        "concepts": [
+          "poseidon-field-native-permutation"
+        ]
+      },
+      {
+        "label": "03 응답에서 실제 코드로",
+        "relation": "같은 47바이트 메시지를 작은 Schnorr와 실제 RFC 예제에 넣고 입력·정책 조건을 확인합니다.",
+        "concepts": [
+          "schnorr-fiat-shamir-transcript",
+          "ed25519-instance-contract",
+          "cryptographic-domain-type-separation"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Poseidon·Merkle commitment·signature·대수 구조가 각각 답하는 보안 질문과 답하지 않는 질문을 구분하세요.", answerChecklist: ["hash compression", "Merkle opening", "signature authorization", "algebra operation", "no semantic truth", "no root provenance"], requiredConcepts: ["crypto-primitive-assurance-boundary"], sectionId: "overview" },
-      { level: "basic", question: "Poseidon 한 round의 ARK·S-box·MDS 순서와 각 단계의 역할, x⁵ 계산 비용을 설명하세요.", answerChecklist: ["round constants", "break symmetry", "nonlinear S-box", "linear diffusion", "square square multiply", "parameter set fixed"], requiredConcepts: ["poseidon-field-native-permutation"], sectionId: "poseidon" },
-      { level: "basic", question: "Depth 256 binary Merkle proof의 raw sibling bytes를 계산하고 path bit가 hash 순서를 정하는 방법을 쓰세요.", answerChecklist: ["256 siblings", "32 bytes each", "8192 bytes", "leaf tag", "left/right order", "trusted root compare", "compressed format may differ"], requiredConcepts: ["merkle-selective-opening"], sectionId: "merkle-commitment" },
-      { level: "basic", question: "Commitment의 binding과 hiding을 구분하고 deterministic Merkle leaf가 hiding을 제공하지 않는 반례를 드세요.", answerChecklist: ["binding no alternate opening", "hiding conceals value", "small dictionary", "randomness", "encoding/domain", "separate assumptions"], requiredConcepts: ["commitment-binding-hiding-separation"], sectionId: "merkle-commitment" },
-      { level: "basic", question: "Schnorr의 R·e·s 생성과 sG=R+eP 검증 등식을 전개하고 각 transcript 입력을 쓰세요.", answerChecklist: ["R=kG", "tag R P message", "e hash", "s=k+ex", "P=xG", "equation expansion", "prime-order subgroup"], requiredConcepts: ["schnorr-fiat-shamir-transcript"], sectionId: "schnorr" },
-      { level: "basic", question: "Ed25519에서 seed expansion·deterministic nonce·challenge·64-byte signature와 strict variant 구분을 설명하세요.", answerChecklist: ["SHA-512 seed", "scalar and prefix", "r from prefix message", "R point", "challenge R A M", "S scalar", "32+32 bytes", "variant/context"], requiredConcepts: ["ed25519-instance-contract"], sectionId: "ed25519" },
-      { level: "advanced", question: "같은 Schnorr nonce로 challenge e1,e2에 응답했을 때 secret x 복원식을 유도하고 필요한 inverse 조건을 설명하세요.", answerChecklist: ["same R", "s1-s2", "e1-e2", "inverse mod q", "x formula", "e1 not e2", "sign convention"], requiredConcepts: ["schnorr-fiat-shamir-transcript", "prime-field-modular-arithmetic"], sectionId: "schnorr" },
-      { level: "advanced", question: "Sparse Merkle non-membership proof가 유효하려면 key path·default hash·collision·root provenance를 어떻게 고정해야 할까요?", answerChecklist: ["fixed depth", "key bit path", "default leaf", "level defaults", "canonical encoding", "collision handling", "trusted root", "not freshness"], requiredConcepts: ["merkle-selective-opening", "commitment-binding-hiding-separation"], sectionId: "merkle-commitment" },
-      { level: "advanced", question: "Poseidon parameter를 width 3·capacity 1로 정할 때 collision 상한과 임의 round 축소 반례를 설명하세요.", answerChecklist: ["capacity bits", "digest bits", "birthday half", "ideal bound only", "field width", "round analysis", "matrix/constants", "no arbitrary reduction"], requiredConcepts: ["poseidon-field-native-permutation"], sectionId: "poseidon" },
-      { level: "advanced", question: "Point·scalar·base/hash field·transcript domain을 타입으로 분리한 프리미티브 조합 release checklist를 설계하세요.", answerChecklist: ["modulus/order", "canonical encoding", "identity/subgroup", "domain tag", "nonce/blinding source", "strict parser", "negative vectors", "no cross-protocol cast"], requiredConcepts: ["cryptographic-domain-type-separation", "crypto-primitive-assurance-boundary"], sectionId: "abelian-group" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "C20의 인코딩부터 등록된 가게 승인까지 어떤 값을 차례로 계산하고 비교하나요?",
+        "answerChecklist": [
+          "C20=4300000014의 5바이트",
+          "00 태그 뒤 기록의 SHA-256",
+          "D 해시를 뒤에 붙여 CD 생성",
+          "AB 해시를 앞에 붙여 루트 생성",
+          "receipts-v1 11바이트+배치 4바이트+루트 32바이트=47바이트",
+          "서명식과 예상 공개키·배치 비교",
+          "현실 거래의 진실성은 별도"
+        ],
+        "sectionId": "authority",
+        "requiredConcepts": [
+          "crypto-primitive-assurance-boundary",
+          "merkle-selective-opening",
+          "ed25519-instance-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "인덱스 2의 경로 방향과 원시 형제 바이트·해시 횟수를 계산하세요.",
+        "answerChecklist": [
+          "낮은 비트 0 다음 1",
+          "C가 앞인 CD, CD가 뒤인 루트",
+          "형제 D와 AB의 2개 해시",
+          "2×32=64바이트",
+          "C 잎 1회+중간 2회=3회",
+          "깊이 256의 원시 형제는 8192바이트",
+          "서명·기록·압축 형식의 부가 비용 제외"
+        ],
+        "sectionId": "merkle-commitment",
+        "requiredConcepts": [
+          "merkle-selective-opening"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "금액 후보가 0부터 99일 때 C의 해시가 금액을 숨기나요? binding과 hiding을 구별하세요.",
+        "answerChecklist": [
+          "같은 인코딩으로 100개 후보 해시",
+          "이번 실행에서 20만 일치",
+          "충돌 찾기와 작은 후보 목록 검사는 다름",
+          "binding은 다른 값으로 열기 어려움",
+          "hiding은 원래 값을 알아내기 어려움",
+          "무작위 값의 크기·생성·재사용·인코딩 별도 조건"
+        ],
+        "sectionId": "hiding",
+        "requiredConcepts": [
+          "commitment-binding-hiding-separation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "F₁₇ 두 칸 모형에서 full과 partial 결과 및 x⁵의 비용을 설명하세요.",
+        "answerChecklist": [
+          "(3,4)+(1,2)=(4,6)",
+          "full 세제곱 (13,12)→혼합 (3,2)",
+          "partial (13,6)→혼합 (8,12)",
+          "두 경우 모두 뒤의 행렬 혼합 적용",
+          "x²→x⁴→x⁵는 곱셈 3회",
+          "단순 비선형 비용 3(tR_F+R_P)",
+          "실제 매개변수·전체 회로·CPU 시간과 구별"
+        ],
+        "sectionId": "poseidon",
+        "requiredConcepts": [
+          "poseidon-field-native-permutation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 영수증의 작은 Schnorr에서 P·R·e·s와 검증 양변을 계산하세요.",
+        "answerChecklist": [
+          "p=23, q=11, G=2",
+          "x=3→P=8, k=7→R=13",
+          "toy-schnorr-v1+한 바이트 R+한 바이트 P+47바이트 메시지",
+          "SHA-256을 big-endian 정수로 읽어 mod 11→e=9",
+          "s=(7+9×3) mod 11=1",
+          "2^s=R×P^e mod 23=2",
+          "실제 BIP 340과 다른 모형"
+        ],
+        "sectionId": "schnorr",
+        "requiredConcepts": [
+          "schnorr-fiat-shamir-transcript",
+          "cryptographic-domain-type-separation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "RFC 예제의 seed 확장부터 서명과 검증까지 같은 메시지가 어디 들어가나요?",
+        "answerChecklist": [
+          "32바이트 seed→SHA-512 64바이트",
+          "앞 절반의 비트 조정으로 a, 뒤 절반 prefix",
+          "r=H(prefix||message) mod q",
+          "R=rG의 32바이트 인코딩",
+          "h=H(R||A||message) mod q",
+          "S=(r+ha) mod q의 little-endian 32바이트",
+          "순수 Ed25519 실행이며 ctx·ph와 dom2·prehash 구분"
+        ],
+        "sectionId": "ed25519",
+        "requiredConcepts": [
+          "ed25519-instance-contract"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 k로 배치 1과 2에 서명한 두 응답에서 개인값을 복원하고 필요한 조건을 쓰세요.",
+        "answerChecklist": [
+          "e₁=9,s₁=1,e₂=5,s₂=0",
+          "같은 k와 같은 개인값 x",
+          "s₁−s₂=(e₁−e₂)x mod 11",
+          "질문 차이 4의 역원 3",
+          "x=1×3=3",
+          "질문 차이가 역원을 가져야 함",
+          "0 응답 자체가 이 모형에서 금지는 아님",
+          "옛 응답을 새 메시지에 붙이면 검증 실패"
+        ],
+        "sectionId": "nonce",
+        "requiredConcepts": [
+          "schnorr-fiat-shamir-transcript"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "H=2G가 알려진 위수 19의 약정에서 binding과 한 약정의 hiding을 각각 판단하세요.",
+        "answerChecklist": [
+          "C(3,4)=11G=C(5,3)로 binding 실패",
+          "고정 v에서 균등 r의 v+2r은 19개 값을 모두 한 번씩 통과",
+          "각 v의 C 분포가 동일하므로 한 약정의 perfect hiding 유지",
+          "실제 binding에는 큰 군과 생성원 사이 이산로그를 모른다는 가정",
+          "r 재사용 시 C₁−C₂=(v₁−v₂)G",
+          "한 약정 분포와 공동 정보 구별"
+        ],
+        "sectionId": "pedersen",
+        "requiredConcepts": [
+          "commitment-binding-hiding-separation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "빈 C 위치의 증명이 존재하는 금액 0과 다른 이유 및 큰 sparse map의 조건을 쓰세요.",
+        "answerChecklist": [
+          "빈 잎 SHA-256(02)",
+          "존재하는 C0은 SHA-256(00||4300000000)",
+          "두 루트가 실제로 다름",
+          "고정 키 공간·깊이·비트 방향",
+          "빈 하위 트리의 높이별 기본값",
+          "키 충돌 규칙·정규 인코딩",
+          "예상 루트와 배치의 최신성 정책",
+          "RFC9162 자체의 sparse map 규격이라는 주장은 아님"
+        ],
+        "sectionId": "absence",
+        "requiredConcepts": [
+          "merkle-selective-opening",
+          "commitment-binding-hiding-separation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "65바이트 서명과 항등원 공개키 사례를 통해 형식·서명식·권한 조건을 분리하세요.",
+        "answerChecklist": [
+          "출판본은 Exception 앞 raise 누락",
+          "little-endian S 뒤 00은 같은 정수라 65바이트 통과",
+          "Verified erratum 5930과 명시적 길이 검사",
+          "64바이트 A=O,R=O,S=0도 O=O로 식 통과",
+          "등록한 정상 공개키와 비교하면 거부",
+          "기대한 배치·용도도 별도 비교",
+          "cofactor 식과 비cofactor 식의 허용집합 일치 여부",
+          "같은 32바이트여도 점·스칼라·해시 및 p/q 분리"
+        ],
+        "sectionId": "authority",
+        "requiredConcepts": [
+          "crypto-primitive-assurance-boundary",
+          "ed25519-instance-contract",
+          "cryptographic-domain-type-separation"
+        ]
+      }
     ],
-    papers: [
-      { title: "Poseidon: A New Hash Function for Zero-Knowledge Proof Systems", href: "https://www.usenix.org/conference/usenixsecurity21/presentation/grassi", problem: "Bit-oriented hash가 arithmetic proof circuit에서 만드는 큰 constraint 비용", contribution: "Prime-field SPN과 HADES full/partial rounds 및 parameter analysis 제공", assumptions: "Field·width·S-box·matrix·round 수를 분석된 parameter set으로 고정", evidenceScope: "논문의 회로 비용 모델과 공격별 parameter 분석 범위", notClaim: "임의 round 축소·모든 CPU 구현 속도·모든 프로젝트 채택을 보장하지 않음", sectionId: "paper-poseidon-overview" },
-      { title: "RFC 8032 · EdDSA: Ed25519 and Ed448", href: "https://www.rfc-editor.org/rfc/rfc8032.html", problem: "Edwards-curve signature parameter·encoding·variant의 구현 불일치", contribution: "Ed25519/Ed448 sign·verify·encoding·test vectors와 security considerations 제공", assumptions: "정확한 variant·context·prehash·byte encoding과 strict parsing 고정", evidenceScope: "RFC가 정의한 EdDSA instance interoperability와 test vectors", notClaim: "특정 library의 constant-time·key storage·protocol 권한을 보장하지 않음", sectionId: "paper-rfc8032-overview" },
-      { title: "BIP 340 · Schnorr Signatures for secp256k1", href: "https://bips.dev/340/", problem: "Bitcoin용 Schnorr의 transcript·nonce·byte encoding을 정확히 고정", contribution: "X-only key·tagged hash·auxiliary nonce·test vectors를 정의", assumptions: "secp256k1과 BIP 340의 부호·encoding·challenge convention 고정", evidenceScope: "BIP 340 구체 signature scheme과 interoperability", notClaim: "모든 Schnorr variant나 임의 curve/hash 조합 보안을 일반화하지 않음", sectionId: "paper-bip340-schnorr" },
-      { title: "RFC 8032 §5.1 · Ed25519 algorithm", href: "https://www.rfc-editor.org/rfc/rfc8032.html#section-5.1", problem: "Ed25519의 seed expansion·point/scalar encoding·검증 순서 정의", contribution: "구체 parameter와 algorithm·test vector를 제공", assumptions: "Little-endian encoding·variant와 range/point policy를 RFC대로 적용", evidenceScope: "Ed25519 instance의 algorithm과 명시된 security considerations", notClaim: "HSM·fault·side-channel·application authorization을 대신 검증하지 않음", sectionId: "paper-rfc8032-ed25519" },
-    ],
+    "papers": [
+      {
+        "title": "RFC 9162 · Merkle Tree Hash",
+        "href": "https://www.rfc-editor.org/rfc/rfc9162.html#section-2.1",
+        "problem": "전체 기록 없이 C 한 장의 포함을 확인합니다.",
+        "contribution": "잎·노드의 태그와 인덱스·트리 크기를 이용한 경로 검증을 정의합니다.",
+        "assumptions": "정확한 해시와 입력 인코딩 및 예상 루트를 사용합니다.",
+        "evidenceScope": "4개 영수증의 태그와 좌우 순서를 원문 정의에 대입했습니다.",
+        "notClaim": "영수증 5바이트가 실제 CT 전송 형식이거나 sparse map 규격이라는 주장은 하지 않습니다.",
+        "sectionId": "merkle-commitment"
+      },
+      {
+        "title": "Poseidon · USENIX Security 2021",
+        "href": "https://www.usenix.org/system/files/sec21-grassi.pdf",
+        "problem": "비트 중심 해시의 계산을 체 기반 증명 회로로 옮길 때 비용이 커집니다.",
+        "contribution": "체의 비선형 층과 full·partial 라운드 및 매개변수 분석을 제시합니다.",
+        "assumptions": "실제 체·상수·행렬·라운드·패딩·용도 구분을 고정합니다.",
+        "evidenceScope": "2.1–2.3절의 역할을 읽고 별도의 F₁₇ 두 칸 모형과 비용식을 설명합니다.",
+        "notClaim": "작은 모형의 289전수는 실제 Poseidon 보안 검증이나 CPU 성능 측정이 아닙니다.",
+        "sectionId": "poseidon"
+      },
+      {
+        "title": "BIP 340 · Schnorr Signatures for secp256k1",
+        "href": "https://bips.dev/340/",
+        "problem": "같은 서명 방정식이라도 인코딩과 질문·nonce 규칙이 다를 수 있습니다.",
+        "contribution": "x좌표 인코딩·짝수 y·키를 포함한 tagged hash와 검증 규칙을 정의합니다.",
+        "assumptions": "BIP의 secp256k1과 태그·부호·범위 규칙을 사용합니다.",
+        "evidenceScope": "공식 현행 문서를 작은 모형과 비교했습니다.",
+        "notClaim": "이 글에서 BIP 참조 구현을 실행하거나 작은 e=9를 BIP 출력이라고 주장하지 않습니다.",
+        "sectionId": "bip340"
+      },
+      {
+        "title": "RFC 8032 · Ed25519와 예제 및 Verified Erratum 5930",
+        "href": "https://www.rfc-editor.org/rfc/rfc8032.html",
+        "problem": "명세·예제·입력 길이·변형·업무상 권한을 구분합니다.",
+        "contribution": "순수 Ed25519 예제와 공식 벡터 및 알고리즘·변형의 조건을 제공합니다.",
+        "assumptions": "원문은 보존하고 길이 및 외부 키·메시지 정책은 별도 함수로 구분합니다.",
+        "evidenceScope": "Python3.9.6에서 빈 메시지 공식 벡터와 같은 47바이트 영수증 및 65바이트·S 범위·항등원 사례를 실행했습니다.",
+        "notClaim": "ctx·ph·모든 비정상 입력·상수 시간·실제 제품의 전체 보안 검토는 하지 않았습니다.",
+        "sectionId": "ed25519"
+      }
+    ]
   },
   "crypto/csprng": {
     "entryLevel": true,
@@ -85658,105 +85979,321 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/speculative-decoding-variants": {
-    entryNote: "Draft–verify cycle, 수락률 α 와 speculation 길이 K, speedup 식의 비용 계수 c, rejection sampling, EAGLE 과 native MTP 의 제안 방식, decode 가 memory-bound 인 이유를 알고 들어옵니다.",
-    coreIdea: "Speculative decoding 변형은 draft 를 어디서 얻느냐(자기 앞 layer, MTP head, suffix tree)와 verify 를 어떤 모양으로 하느냐(chain, tree)로 갈리며, 각 변형은 같은 speedup 식에서 c 와 α 의 자리를 바꾸고 MTP 의 이득은 batch 가 compute-bound 경계를 넘지 않는다는 조건식으로 닫힙니다.",
-    assumedKnowledge: [
-      { id: "speculative-draft-verify-cycle", role: "모든 변형이 공유하는 draft–verify 의 기본 cycle 입니다." },
-      { id: "speculative-acceptance-rate", role: "위치별 수락률 α 로, tree 는 이것을 top-s 포함률 β 로 바꿉니다." },
-      { id: "speculation-length", role: "Chain 의 깊이 K 이며 tree 는 깊이와 폭으로 일반화합니다." },
-      { id: "speculative-speedup-model", role: "각 변형이 c 와 α 를 어떻게 바꾸는지를 대입하는 기준 식입니다." },
-      { id: "speculative-rejection-sampling", role: "Tree 의 stochastic 검증이 경로 선택으로 확장하는 절차입니다." },
-      { id: "eagle-feature-level-proposal", role: "Feature 단계에서 tree 를 만드는 draft 의 예로 링크합니다." },
-      { id: "native-mtp-proposal", role: "MTP 를 proposer 로 쓴다는 serving 관점의 정본이며 이 글은 head 의 구조와 효용 경계를 더합니다." },
-      { id: "decode-memory-bound-regime", role: "Verify 비용이 token 수와 무관한 조건이자 효용 경계의 v(B) 가 1 인 조건입니다." },
-    ],
-    introducedHere: [
-      { id: "self-speculative-decoding", role: "앞 E 개 layer 를 draft, 나머지를 verify 로 쓰는 변형의 비용과 학습 전제를 셉니다." },
-      { id: "mtp-head-draft-chain", role: "MTP module 의 구조와 draft 비용 c≈1/L 을 정의합니다." },
-      { id: "mtp-speculation-utility-boundary", role: "MTP 가 base decode 보다 빠른 조건을 batch 와 α 의 조건식으로 적습니다." },
-      { id: "tree-speculation-candidate-tree", role: "위치마다 후보 여러 개를 token tree 로 이어 검증 token 수와 기대 길이를 계산합니다." },
-      { id: "tree-attention-verification", role: "조상만 보는 mask 로 tree 를 한 forward 에 검증하고 경로를 확정하는 절차를 씁니다." },
-      { id: "suffix-decoding", role: "Suffix tree 통계로 draft 를 꺼내 c 를 0 근처로 만드는 model-free 변형을 설명합니다." },
-    ],
-    conceptExplanations: [
-      { id: "self-speculative-decoding", sectionId: "self-speculative", intuition: "초안을 다른 사람에게 맡기지 않고 자기 머리의 앞부분으로 빨리 쓴 뒤 나머지 부분으로 검토하는 것입니다. 같은 사람이라 자료를 두 벌 두지 않습니다.", workedExample: "L=32, E=8, K=4 이면 cycle 비용은 4×0.25+0.75 = 1.75 forward 이고 α=0.7 에서 기대 길이 2.77 이라 1.58 배, α=0.8 이면 1.92 배입니다.", boundary: "보통 model 은 앞 layer 의 α 가 낮아 LayerSkip 의 layer dropout 과 early exit loss 같은 학습 recipe 가 있어야 이득이 납니다." },
-      { id: "mtp-head-draft-chain", sectionId: "mtp", intuition: "본문을 다 쓴 사람이 마지막 생각을 이어받아 다음 단어 하나를 더 적어 주는 짧은 후기입니다. 후기는 한 장이라 비용이 거의 없습니다.", workedExample: "DeepSeek-V3 는 61 layer 에 MTP module 1 개라 c≈0.016 이고, K=1, α=0.85 에서 speedup 은 (1+0.85)/(1+0.016) = 1.82 배로 보고된 1.8 배와 맞습니다.", boundary: "Module 이 하나뿐인 model 에서 K>1 을 만들려면 같은 module 을 다시 돌리는데 학습 때 없던 깊이라 α 가 위치마다 내려갑니다." },
-      { id: "mtp-speculation-utility-boundary", sectionId: "mtp", intuition: "짧은 후기를 붙이는 비용은 거의 없지만, 검토자가 한 번에 볼 수 있는 분량을 넘기면 검토 시간이 그대로 늘어 이득이 사라지는 지점이 있습니다.", workedExample: "K=1, α=0.85 에서 기대 길이 1.85 이므로 v=1 이면 1.82 배, v=1.5 면 1.22 배, v=2 면 0.92 배로 base 보다 느려집니다.", boundary: "v(B) 는 weight 읽기만 본 근사이고 attention 의 KV 읽기는 token 수에 비례해 따로 늘어나므로 자기 GPU 의 ridge batch 를 재야 경계가 닫힙니다." },
-      { id: "tree-speculation-candidate-tree", sectionId: "tree", intuition: "다음 단어를 하나만 찍는 대신 두세 개를 적어 두고 그 각각의 다음 단어도 적어 두는 것입니다. 첫 찍기가 틀려도 둘째 후보로 이어갑니다.", workedExample: "폭 (3, 2, 2) 이면 3+6+12 = 21 token 을 한 번에 검증하고, 포함률 β=(0.89, 0.85, 0.80) 이면 기대 길이 1+0.89+0.76+0.61 = 3.25 로 α=0.7 chain 의 2.53 보다 깁니다.", boundary: "Verify token 이 |T| 배라 attention 의 KV 읽기와 compute-bound 에 가까운 batch 에서는 tree 를 줄여야 하며 Medusa 는 64 node 안에 둡니다." },
-      { id: "tree-attention-verification", sectionId: "tree-verify", intuition: "가지가 갈린 초안 여러 장을 한 책상에 펼쳐 놓고 각 장이 자기 윗줄만 보게 가린 채 한 번에 채점하는 것입니다. 형제 장은 서로 보지 못합니다.", workedExample: "폭 (2, 2) 인 tree 는 node 6 개라 6×6 mask 에 1 이 10 개이고 같은 6 token 의 causal mask 21 개보다 적습니다. Root 에서 일치하는 자식을 따라 내려가 경로 하나에 bonus token 을 붙입니다.", boundary: "Greedy 검증은 argmax 일치로, stochastic 검증은 residual 분포로 경로를 고르며 확정 경로 밖 가지의 KV 는 버려야 합니다." },
-      { id: "suffix-decoding", sectionId: "suffix", intuition: "지난 답장들을 모아 두고 지금 쓰는 문장의 끝과 같은 대목 뒤에 무엇이 자주 왔는지 찾아 그대로 제안하는 것입니다. 사전을 넘길 뿐 새로 생각하지 않습니다.", workedExample: "Draft 가 token 당 20 µs 라 step 25 ms 기준 c≈0.001 이고, AgenticSQL 평균 확정 6.3 token 을 넣으면 상한 6.2 배, 실측 5.3 배입니다.", boundary: "처음 보는 자유 서술에는 일치 suffix 가 없어 draft 길이가 0 이 되고 이득이 사라지지만 손실도 거의 없습니다." },
-    ],
-    conceptStages: [
-      { label: "00 기준선", relation: "Draft–verify cycle, α, K, speedup 식, rejection sampling, EAGLE·MTP proposer, decode regime 을 전제합니다.", concepts: ["speculative-draft-verify-cycle", "speculative-acceptance-rate", "speculation-length", "speculative-speedup-model", "speculative-rejection-sampling", "eagle-feature-level-proposal", "native-mtp-proposal", "decode-memory-bound-regime"] },
-      { label: "01 자기 앞 layer", relation: "Draft 출처를 target 의 앞 layer 로 바꿉니다.", concepts: ["self-speculative-decoding"] },
-      { label: "02 MTP head", relation: "Draft 비용을 layer 하나로 줄이고 이득 조건을 식으로 닫습니다.", concepts: ["mtp-head-draft-chain", "mtp-speculation-utility-boundary"] },
-      { label: "03 Tree", relation: "후보를 tree 로 넓히고 mask 로 한 번에 검증합니다.", concepts: ["tree-speculation-candidate-tree", "tree-attention-verification"] },
-      { label: "04 Suffix", relation: "Draft 출처를 과거 출력의 통계로 바꿔 c 를 0 근처로 만듭니다.", concepts: ["suffix-decoding"] },
-    ],
-    exercises: [
-      { level: "basic", question: "L=40, E=10, K=3 인 self-speculative decoding 의 cycle 비용을 forward 단위로 계산하세요.", answerChecklist: ["c = 0.25", "verify 0.75", "3×0.25+0.75 = 1.5"], requiredConcepts: ["self-speculative-decoding"], sectionId: "self-speculative" },
-      { level: "basic", question: "DeepSeek-V3 의 MTP module 을 이루는 네 구성 요소와 깊이 k 의 module 이 받는 입력을 쓰세요.", answerChecklist: ["공유 embedding", "Transformer block 하나", "projection", "공유 output head", "깊이 k−1 의 출력과 다음 token embedding"], requiredConcepts: ["mtp-head-draft-chain"], sectionId: "mtp" },
-      { level: "basic", question: "K=1, α=0.9, c=0.02 에서 v=1 과 v=1.8 일 때의 MTP speedup 을 각각 계산하세요.", answerChecklist: ["기대 길이 1.9", "v=1: 1.9/1.02 = 1.86", "v=1.8: 1.9/1.82 = 1.04"], requiredConcepts: ["mtp-speculation-utility-boundary"], sectionId: "mtp" },
-      { level: "basic", question: "폭 (4, 2, 1) 인 token tree 가 한 forward 에 검증하는 token 수를 계산하세요.", answerChecklist: ["4", "8", "8", "합 20"], requiredConcepts: ["tree-speculation-candidate-tree"], sectionId: "tree" },
-      { level: "basic", question: "폭 (2, 2) tree 의 6×6 tree attention mask 에서 1 의 개수를 세고 causal mask 와 비교하세요.", answerChecklist: ["깊이 1 node 는 1 개씩", "깊이 2 node 는 2 개씩", "합 10", "causal 21"], requiredConcepts: ["tree-attention-verification"], sectionId: "tree-verify" },
-      { level: "basic", question: "Suffix decoding 이 cache miss 일 때 그 step 의 비용이 왜 보통 decode 와 같은지 설명하세요.", answerChecklist: ["일치 suffix 짧음", "draft 길이 0", "target forward 1 회", "버리는 draft 없음"], requiredConcepts: ["suffix-decoding"], sectionId: "suffix" },
-      { level: "advanced", question: "같은 model 에서 self-speculative(E=8, L=32, K=4, α=0.75) 와 MTP(K=1, α=0.85, c=0.016) 의 speedup 을 v=1 에서 비교하고 v 가 1.5 일 때 순위가 바뀌는지 판단하세요.", answerChecklist: ["self: 기대 길이 3.05, 비용 1.75, 1.74 배", "MTP: 1.82 배", "v=1.5: self 비용 2.25, MTP 1.52", "MTP 1.22 배 vs self 1.36 배"], requiredConcepts: ["self-speculative-decoding", "mtp-speculation-utility-boundary"], sectionId: "mtp" },
-      { level: "advanced", question: "폭 (3, 2, 2) tree 와 깊이 3 chain 을 β=(0.89, 0.85, 0.80), α=0.7 에서 비교하고, batch 가 ridge 의 절반일 때 어느 쪽이 안전한지 논하세요.", answerChecklist: ["tree 기대 길이 3.25", "chain 2.53", "verify token 21 vs 3", "B(|T|+1) 이 ridge 초과", "chain 이 안전"], requiredConcepts: ["tree-speculation-candidate-tree", "mtp-speculation-utility-boundary"], sectionId: "tree" },
-      { level: "advanced", question: "Tree attention verification 의 stochastic 경로 선택이 target 분포를 보존하는 조건을 rejection sampling 의 residual 분포로 설명하세요.", answerChecklist: ["node 마다 p/q 로 수락", "거부 시 residual 분포", "형제로 이동 또는 정지", "경로별 logit 은 chain 과 동일"], requiredConcepts: ["tree-attention-verification"], sectionId: "tree-verify" },
-      { level: "advanced", question: "Agent workload 에서 suffix decoding 과 EAGLE 을 조합할 때 c 와 α 를 어떻게 다시 세워야 하는지, 전환 기준을 무엇으로 둘지 설계하세요.", answerChecklist: ["c 는 두 draft 비용의 합", "suffix miss 시 EAGLE 로 전환", "일치 suffix 길이를 기준", "runtime 에서 α 재측정"], requiredConcepts: ["suffix-decoding", "tree-speculation-candidate-tree"], sectionId: "suffix" },
-    ],
-    papers: [
+    "entryNote": "R 뒤의 A·B와 각 X·Y라는 같은 일곱 자리에서 한 경로를 확정합니다. 한 줄 후보의 확인 원리를 가져와 실제 기록 이동과 후보 출처별 시간을 비교합니다.",
+    "coreIdea": "같은 RAY를 만들 때 후보 출처와 확인 모양을 나누어 봅니다. tree 경로·계산 기록·샘플링 규칙과 회차 전체 비용을 함께 고정해야 변형의 이득을 판단할 수 있습니다.",
+    "assumedKnowledge": [
       {
-        title: "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding",
-        href: "https://arxiv.org/abs/2404.16710",
-        problem: "보통의 model 은 마지막 layer 까지 가야 답이 나오도록 학습되어 앞 layer 의 early exit 예측이 부정확하고, 별도 draft model 은 메모리를 더 쓰는 문제",
-        contribution: "뒤 layer 일수록 높은 layer dropout 과 공유 LM head 의 early exit loss 로 앞 layer 의 예측을 학습하고, 앞 E 개 layer 를 draft, 나머지를 verify 로 쓰며 KV cache 와 exit query cache 를 공유하는 self-speculative decoding 을 제시합니다.",
-        assumptions: "Llama 계열 model 에 제안한 학습 recipe 를 적용한 뒤의 결과이며 exit layer E 는 model 마다 고릅니다.",
-        evidenceScope: "CNN/DM 요약 2.16 배, 코드 1.82 배, TOPv2 2.0 배는 저자 자기보고입니다.",
-        notClaim: "학습을 바꾸지 않은 기존 checkpoint 에서 같은 α 와 배율이 나온다는 주장은 아닙니다.",
-        sectionId: "paper-layerskip",
+        "id": "speculative-draft-verify-cycle",
+        "role": "여러 후보를 제안하고 기준 모델이 확인한 뒤 확정 출력과 기록을 갱신하는 한 회차에서 시작합니다."
       },
       {
-        title: "DeepSeek-V3 Technical Report",
-        href: "https://arxiv.org/abs/2412.19437",
-        problem: "다음 token 하나만 예측하는 학습 목표가 표현을 촘촘히 쓰지 못하고, 추론에서 decode 가 step 마다 weight 전체를 읽는 문제",
-        contribution: "깊이마다 인과 사슬을 유지하는 순차 MTP module 을 보조 학습 목표로 두고, 추론에서 그 module 을 speculative decoding 의 draft 로 재사용합니다.",
-        assumptions: "671B MoE model 의 사전학습에 MTP 손실 가중치 λ 를 0.3 에서 0.1 로 낮추며 적용했고 module 은 1 개입니다.",
-        evidenceScope: "둘째 token 수락률 85~90 % 와 TPS 약 1.8 배는 §5.4.3 의 저자 자기보고입니다.",
-        notClaim: "다른 model 이나 큰 batch 에서 같은 배율이 유지된다거나 module 을 여러 번 돌린 깊이에서 같은 α 가 나온다는 뜻은 아닙니다.",
-        sectionId: "paper-deepseek-v3-mtp",
+        "id": "speculative-acceptance-rate",
+        "role": "같은 prefix에서 후보를 받아들이는 확률입니다. tree의 조건부 경로 포함률과 구별해 평균 길이를 계산합니다."
       },
       {
-        title: "Medusa: Simple LLM Inference Acceleration Framework with Multiple Decoding Heads",
-        href: "https://arxiv.org/abs/2401.10774",
-        problem: "별도 draft model 을 구하고 서빙하는 부담과 chain draft 의 첫 위치 실패가 cycle 을 끊는 문제",
-        contribution: "마지막 hidden state 위에 residual FFN head K 개를 붙여 위치 t+k+1 을 독립 예측하고, head 별 top-s_k 의 Cartesian 곱을 tree attention 으로 한 번에 검증하며 typical acceptance 를 제안합니다.",
-        assumptions: "Vicuna 7B~33B, Zephyr-7B 에서 batch 1 기준이며 Medusa-2 는 backbone 을 함께 미세조정합니다.",
-        evidenceScope: "2.3~2.8 배 speedup 은 저자 자기보고이며 typical acceptance 를 쓴 결과를 포함합니다.",
-        notClaim: "Typical acceptance 가 target 분포를 보존한다거나 큰 batch 에서 같은 배율이 난다는 주장은 아닙니다.",
-        sectionId: "paper-medusa",
+        "id": "speculation-length",
+        "role": "직선 후보 깊이 K와 tree 전체 node 수를 구별해 검증할 위치 수를 셉니다."
       },
       {
-        title: "SpecInfer: Accelerating Generative Large Language Model Serving with Tree-based Speculative Inference and Verification",
-        href: "https://arxiv.org/abs/2305.09781",
-        problem: "Chain 하나만 검증하면 draft 의 첫 실패에서 cycle 이 끊기고, 후보 여러 개를 따로 검증하면 forward 가 늘어나는 문제",
-        contribution: "후보를 token tree 로 조직하고 topology-aware causal mask 로 tree 전체를 한 forward 에 검증하는 tree-based parallel decoding 과 residual 분포로 경로를 내려가는 multi-step speculative sampling 을 제시합니다.",
-        assumptions: "작은 SSM 여러 개를 draft 로 두고 expansion·merge 로 tree 를 만드는 2023 년 구현 기준입니다.",
-        evidenceScope: "분산 추론 1.5~2.8 배, offloading 2.6~3.5 배와 폭 5 에서 검증 성공률 70→89 % 는 저자 자기보고입니다.",
-        notClaim: "Tree 가 모든 batch 크기에서 chain 보다 빠르다는 주장은 아니며 verify token 증가 비용은 memory-bound 전제입니다.",
-        sectionId: "paper-specinfer",
+        "id": "speculative-speedup-model",
+        "role": "평균 확정 수를 한 회차 시간으로 나눈다는 원리를 쓰되 실제 검증 비용을 별도 v로 둡니다."
       },
       {
-        title: "SuffixDecoding: Extreme Speculative Decoding for Emerging AI Applications",
-        href: "https://arxiv.org/abs/2411.04975",
-        problem: "Agent workload 처럼 반복이 많은 요청에서 model 기반 draft 가 GPU 를 쓰고 α 의 상한에 묶이는 문제",
-        contribution: "이전 출력과 prompt 의 suffix tree 에서 빈도 기반으로 speculation tree 를 꺼내고 일치 길이에 따라 draft 수를 조절하는 CPU 전용 model-free draft 를 제시합니다.",
-        assumptions: "AgenticSQL, SWE-Bench 같은 반복 구조가 있는 workload 와 global·per-request suffix tree 를 유지할 메모리를 전제합니다.",
-        evidenceScope: "AgenticSQL 5.3 배, EAGLE-2/3 대비 2.8 배, SWE-Bench 4.5 배, 평균 확정 6.3 token 은 저자 자기보고입니다.",
-        notClaim: "자유 서술이나 처음 보는 분포에서 같은 이득이 난다는 주장은 아닙니다.",
-        sectionId: "paper-suffix-decoding",
+        "id": "speculative-rejection-sampling",
+        "role": "거부한 후보의 부족분을 보충하는 확률 규칙을 tree 형제의 순차 갱신과 비교합니다."
       },
+      {
+        "id": "native-mtp-proposal",
+        "role": "미래 예측을 학습한 내부 부품을 후보 생성에 재사용하고 기준 모델 확인을 거치는 관계입니다."
+      },
+      {
+        "id": "decode-memory-bound-regime",
+        "role": "한 글자 생성에서 가중치 읽기가 큰 비용인 상황입니다. 이 사실만으로 여러 자리 검증 시간이 같아진다고 보장하지 않습니다."
+      }
     ],
+    "introducedHere": [
+      {
+        "id": "self-speculative-decoding",
+        "role": "학습한 한 모델의 앞 층으로 후보를 만들고 중간 상태를 저장해 뒤 층의 검증에 재사용합니다."
+      },
+      {
+        "id": "mtp-head-draft-chain",
+        "role": "DeepSeek-V3의 순차 MTP는 앞 깊이의 상태와 이미 지정한 다음 token을 합쳐 더 뒤의 글자를 예측합니다."
+      },
+      {
+        "id": "mtp-speculation-utility-boundary",
+        "role": "한 후보의 평균 출력 1+α와 후보·검증의 전체 시간 c+v를 같은 단독 생성 기준으로 비교합니다."
+      },
+      {
+        "id": "tree-speculation-candidate-tree",
+        "role": "같은 앞 글에서 가능한 여러 다음 선택을 가지로 준비하고 한 경로를 남기는 후보 구조입니다."
+      },
+      {
+        "id": "tree-attention-verification",
+        "role": "각 자리가 자기 조상과 자신만 읽게 한 뒤 부모 점수로 다음 후보를 확인하고 선택한 경로의 계산 기록을 남깁니다."
+      },
+      {
+        "id": "suffix-decoding",
+        "role": "현재 입력의 끝부분과 같은 과거 기록을 찾아 관찰 빈도가 높은 다음 글을 후보로 만드는 방식입니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "self-speculative-decoding",
+        "sectionId": "self-source",
+        "intuition": "학습한 한 모델의 앞 층으로 후보를 만들고 중간 상태를 저장해 뒤 층의 검증에 재사용합니다.",
+        "workedExample": "4층·첫 1층·후보 A와 Y의 사례에서 R·A의 앞 상태를 저장하고 마지막 Y의 앞 층도 계산합니다. 앞 3자리와 뒤 3×3자리로 층·자리 작업은 12개입니다.",
+        "boundary": "추가 모델 가중치가 없다는 것과 추가 메모리가 없다는 것은 다릅니다. 층 수의 비율은 exit 상태·KV·마지막 입력과 실제 실행 시간을 대신하지 않습니다."
+      },
+      {
+        "id": "mtp-head-draft-chain",
+        "sectionId": "mtp",
+        "intuition": "DeepSeek-V3의 순차 MTP는 앞 깊이의 상태와 이미 지정한 다음 token을 합쳐 더 뒤의 글자를 예측합니다.",
+        "workedExample": "기존 네 자리의 상태와 다음 R의 embedding을 각각 정규화해 이어 붙이고 d×2d 투영·Transformer block·공유 head를 거쳐 A의 점수를 만듭니다.",
+        "boundary": "Medusa의 같은 상태에서 여러 미래를 예측하는 head와 같은 구조가 아닙니다. 모듈 하나와 전체 층 수만으로 후보 시간 비나 수락률을 구할 수 없습니다."
+      },
+      {
+        "id": "mtp-speculation-utility-boundary",
+        "sectionId": "mtp-cost",
+        "intuition": "한 후보의 평균 출력 1+α와 후보·검증의 전체 시간 c+v를 같은 단독 생성 기준으로 비교합니다.",
+        "workedExample": "별도 시간 가정 α=.85,c=.016에서 v=1,1.5,2이면 비는 약 1.8209,1.2203,.9177이고 이득 조건은 v<1.834입니다.",
+        "boundary": "직렬·추가 비용 0·출력 길이 미절단이라는 시간 모형입니다. x=B/B*에서 max(1,2x)/max(1,x)를 가정하면 이득은 0<x<.917이며 보편 GPU batch 한도가 아닙니다.",
+        "proofIdea": "회차마다 기본 출력 하나와 확률 α로 수락한 후보 하나를 세면 평균은 1+α입니다. 단독 한 글자 시간으로 정규화한 후보 비용 c와 검증 비용 v를 합쳐 나누므로, 속도 비가 1보다 클 조건은 1+α>c+v입니다. 양쪽을 정리하면 v<1+α−c를 얻습니다.",
+        "counterexample": "α=.85와 c=.016을 유지해도 검증 비용이 1에서 2로 늘면 속도 비는 약 1.8209에서 .9177로 줄어 단독 생성보다 느립니다. 층 수나 수락률만으로 이득을 정할 수 없으며 실제 검증 비용과 나머지 실행 시간도 확인해야 합니다."
+      },
+      {
+        "id": "tree-speculation-candidate-tree",
+        "sectionId": "tree-cost",
+        "intuition": "같은 앞 글에서 가능한 여러 다음 선택을 가지로 준비하고 한 경로를 남기는 후보 구조입니다.",
+        "workedExample": "R의 두 갈래와 각 두 자식은 후보 6개·root 포함 입력 7개입니다. 폭 3,2,2에서는 후보 21개·입력 22개이며 조건부 포함률 .89,.85,.8의 평균 출력은 3.2517입니다.",
+        "boundary": "깊이와 총 후보 수를 구별합니다. 확정 길이가 길어도 확인 비용 4.2이면 비 .7742라 chain의 2.533/1.7=1.49보다 느립니다."
+      },
+      {
+        "id": "tree-attention-verification",
+        "sectionId": "mask",
+        "intuition": "각 자리가 자기 조상과 자신만 읽게 한 뒤 부모 점수로 다음 후보를 확인하고 선택한 경로의 계산 기록을 남깁니다.",
+        "workedExample": "7×7 표에는 17개, root 행·열을 뺀 표에는 10개의 허용 칸이 있습니다. RAY의 [0,1,4]는 KV [4,5,8]에서 [4,5,6]으로 복사되고 글·기록 길이가 모두 7이 됩니다.",
+        "boundary": "마스크가 같은 조건을 보이는 것과 sampling 분포를 보존하는 것은 별개입니다. Medusa typical fast의 확률 문턱은 exact residual 보정과 다르며 허용 칸 수가 실제 GPU 연산 수는 아닙니다."
+      },
+      {
+        "id": "suffix-decoding",
+        "sectionId": "suffix-source",
+        "intuition": "현재 입력의 끝부분과 같은 과거 기록을 찾아 관찰 빈도가 높은 다음 글을 후보로 만드는 방식입니다.",
+        "workedExample": "8개 기록에서 A·Y·B·Y의 경로 비중은 .75,.625,.25,.25이고 합은 1.875입니다. 고정 Arctic C++은 네 후보와 부모 [-1,0,-1,2]를 실제로 반환했습니다.",
+        "boundary": "빈도 점수는 target 수락 확률의 보장이 아닙니다. 조회·갱신·반환 비용이 남으며 고정 wrapper의 None 오류와 C++의 strict 길이 조건을 현재 버전의 범위로 구분합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "준비한 일곱 자리",
+        "relation": "같은 RAY의 부모 관계에서 mask와 경로의 역할을 찾습니다.",
+        "concepts": [
+          "tree-speculation-candidate-tree",
+          "tree-attention-verification"
+        ]
+      },
+      {
+        "label": "후보를 만드는 부품",
+        "relation": "앞 층 상태를 재사용하는 방법과 다음 token을 합치는 MTP 구조를 나눕니다.",
+        "concepts": [
+          "self-speculative-decoding",
+          "mtp-head-draft-chain"
+        ]
+      },
+      {
+        "label": "같은 시간 기준의 이득",
+        "relation": "수락률이 같아도 검증 비용과 부하에 따라 이득 경계가 달라집니다.",
+        "concepts": [
+          "mtp-speculation-utility-boundary",
+          "speculative-speedup-model"
+        ]
+      },
+      {
+        "label": "과거 기록에서 후보 찾기",
+        "relation": "관찰 빈도로 얻은 후보를 검증하고 조회·갱신·실패 비용까지 합칩니다.",
+        "concepts": [
+          "suffix-decoding",
+          "speculative-draft-verify-cycle"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "같은 일곱 입력에서 root 포함 mask의 1 수와 position IDs를 구하고, root 행·열을 제거했을 때의 수와 비교하세요.",
+        "answerChecklist": [
+          "root 포함 표는 1+2×2+4×3=17이고 위치는 [4,5,5,6,6,6,6]입니다.",
+          "root 행·열을 제외하면 2×1+4×2=10입니다. 일반 7자리 causal 표의 28칸과 다르며 허용 칸 수를 실제 GPU 연산 수로 읽지 않습니다."
+        ],
+        "requiredConcepts": [
+          "tree-attention-verification"
+        ],
+        "sectionId": "buffers"
+      },
+      {
+        "level": "basic",
+        "question": "기존 prefix 길이 4, 확정 경로 root→A→Y이면 어느 KV 칸을 어디로 복사하며 이번에 출력되는 글자와 다음 C의 상태는 무엇인가요?",
+        "answerChecklist": [
+          "선택 [0,1,4]에 기존 길이 4를 더한 [4,5,8]을 [4,5,6]으로 복사합니다.",
+          "RAY를 붙여 history·computed가 모두 7입니다. 고정 Medusa 갱신은 C의 다음 점수를 보관하며 C 자체는 이번 출력에 붙이지 않습니다."
+        ],
+        "requiredConcepts": [
+          "tree-attention-verification"
+        ],
+        "sectionId": "commit"
+      },
+      {
+        "level": "basic",
+        "question": "DeepSeek-V3의 순차 MTP module이 앞 깊이의 상태와 다음 글자를 어떤 네 부분을 거쳐 결합하는지 설명하세요.",
+        "answerChecklist": [
+          "공유 embedding과 앞 깊이 상태를 각각 RMSNorm한 뒤 이어 붙이고 d×2d 행렬로 d차원에 투영합니다.",
+          "별도 Transformer block과 공유 output head가 이어집니다. 첫 깊이의 상태·R로 다음 A를 예측하며 Medusa의 여러 독립 head와 구조가 다릅니다."
+        ],
+        "requiredConcepts": [
+          "mtp-head-draft-chain"
+        ],
+        "sectionId": "mtp"
+      },
+      {
+        "level": "basic",
+        "question": "별도 시간 가정 K=1·α=.85·c=.016에서 검증 비용 v가 1,1.5,2일 때 속도 비와 이득 조건을 구하세요.",
+        "answerChecklist": [
+          "각 비는 1.85/1.016≈1.8209, 1.85/1.516≈1.2203, 1.85/2.016≈.9177입니다.",
+          "이득은 v<1.834입니다. 검증 비용은 별도 시간 가정이며 모듈 수나 수락률만으로 같다고 놓지 않습니다."
+        ],
+        "requiredConcepts": [
+          "mtp-speculation-utility-boundary"
+        ],
+        "sectionId": "mtp-cost"
+      },
+      {
+        "level": "basic",
+        "question": "32층 중 8층에서 네 후보를 만든다고 합시다. 이번 회차 후보 비용이 1·검증 비용이 .75라는 별도 가정과 iid α=.75에서 평균 출력과 속도를 구하세요. 층 수만으로 시간 가정을 증명할 수 있나요?",
+        "answerChecklist": [
+          "iid .75의 평균은 1+.75+.75²+.75³+.75⁴=3.05078125이고 1.75로 나누어 약 1.7433입니다.",
+          "층 비율만으로 벽시계 시간을 유도할 수 없습니다. 마지막 후보의 앞 층 계산과 exit 상태·KV 저장도 필요하며 1과 .75는 별도 가정입니다."
+        ],
+        "requiredConcepts": [
+          "self-speculative-decoding"
+        ],
+        "sectionId": "self-cost"
+      },
+      {
+        "level": "basic",
+        "question": "같은 과거 8개 출력에서 R 뒤 A 6/B 2, A 뒤 Y 5/X 1일 때 네 후보의 경로 확률과 합을 구하세요.",
+        "answerChecklist": [
+          "A·Y·B·Y의 경로 비중은 .75,.625,.25,.25이며 부모 번호는 [-1,0,-1,2]입니다.",
+          "합 1.875는 관찰 빈도로 만든 후보 점수입니다. 실제 target의 평균 수락 길이로 바로 바꾸지 않습니다."
+        ],
+        "requiredConcepts": [
+          "suffix-decoding"
+        ],
+        "sectionId": "suffix"
+      },
+      {
+        "level": "advanced",
+        "question": "폭(3,2,2)의 후보 수와 root 포함 입력 수를 구하세요. 조건부 포함률(.89,.85,.8)의 평균 출력과 α=.7인 깊이 3 chain을 비교하세요. 회차 비용이 각각 4.2와 1.7이면 어느 쪽이 빠른가요?",
+        "answerChecklist": [
+          "후보는 3+6+12=21개, root 포함 입력은 22개이며 chain은 후보 3·입력 4개입니다.",
+          "조건부 포함률의 tail 합은 1+.89+.7565+.6052=3.2517이고 iid .7 chain은 2.533입니다.",
+          "시간 비는 3.2517/4.2≈.7742와 2.533/1.7=1.49여서 chain이 빠릅니다. 조건부 확률의 곱에는 추가 독립 가정이 필요 없지만 주변 포함률만으로 같은 식을 쓰지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "tree-speculation-candidate-tree"
+        ],
+        "sectionId": "tree-cost"
+      },
+      {
+        "level": "advanced",
+        "question": "장난감 시간 모형에서 x=B/B*, v=max(1,2x)/max(1,x), α=.85와 c=.016을 고정합니다. K=1이 유리한 x 범위를 구하고 ridge 절반과 비교하세요.",
+        "answerChecklist": [
+          "v는 x≤.5에서 1, .5<x≤1에서 2x, x≥1에서 2입니다.",
+          "v<1.834이므로 이득은 0<x<.917이며 .917에서는 같은 시간입니다. .5를 넘겨도 일부 이득이 남습니다.",
+          "단독과 검증을 모두 max 시간으로 둔 설명용 등식이며 실제 roofline 하한이나 보편 batch 한도는 아닙니다."
+        ],
+        "requiredConcepts": [
+          "mtp-speculation-utility-boundary"
+        ],
+        "sectionId": "batch-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "검증 분포가(.7,.3)이고 확률이 .2보다 크면 후보를 그대로 받는 규칙에서 항상 B를 제안하면 원래 분포가 보존되나요? 실제 Medusa typical fast 분기와 exact residual 검증을 비교하세요.",
+        "answerChecklist": [
+          "B의 확률 .3이 문턱 .2를 넘어 항상 B를 수락하므로 출력 B의 비중은 1입니다. 원래 .3과 다릅니다.",
+          "Medusa의 고정 typical fast는 후보의 그럴듯함을 평가합니다. exact sampling의 분포 보존에는 제안과 잔여 분포 갱신 규칙까지 필요합니다."
+        ],
+        "requiredConcepts": [
+          "tree-attention-verification"
+        ],
+        "sectionId": "sampling-boundary"
+      },
+      {
+        "level": "advanced",
+        "question": "suffix miss에도 조회 .02ms가 듭니다. baseline 25ms일 때 한 글자만 내면 속도는 얼마인가요? 또 두 종류 회차가 .6/.4 비중으로 출력 4/2, 시간 10/20ms이면 전체 속도를 구하세요.",
+        "answerChecklist": [
+          "miss 시간은 25.02ms이며 속도 비 25/25.02≈.999200639로 작게 손해입니다.",
+          "두 회차의 평균 출력은 .6×4+.4×2=3.2, 평균 시간은 .6×10+.4×20=14ms입니다. 전체 비는 3.2×25/14=80/14≈5.7143입니다.",
+          "회차별 속도 비 10과 2.5의 가중 평균 7은 전체 합산 시간의 비가 아닙니다. 검색 이후 fallback의 후보 시간도 함께 셉니다."
+        ],
+        "requiredConcepts": [
+          "suffix-decoding"
+        ],
+        "sectionId": "hybrid-cost"
+      }
+    ],
+    "papers": [
+      {
+        "title": "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding (v4)",
+        "href": "https://arxiv.org/html/2404.16710v4",
+        "sectionId": "self-speculative",
+        "problem": "별도 후보 모델의 가중치를 추가하지 않으면서 빠르고 유용한 후보를 얻는 문제입니다.",
+        "contribution": "앞 층에서 후보를 만들도록 학습하고 그 중간 상태와 계산 기록을 뒤 층의 검증에서 다시 사용합니다.",
+        "assumptions": "해당 학습 방법과 호환되는 checkpoint의 exit 위치를 사용하며 일반 앞 층의 출력을 바로 후보로 쓰지 않습니다.",
+        "evidenceScope": "§4의 self-drafting·verification·cache reuse를 R·A·Y에 적용했습니다. 원문의 실험 배율은 24절에서 모델·작업별 저자 보고로 읽습니다.",
+        "notClaim": "앞 층 비율 E/L이 실제 비용이거나 추가 메모리가 0이라고 주장하지 않습니다. 전체 모델 forward와 GPU 성능은 재현하지 않았습니다."
+      },
+      {
+        "title": "DeepSeek-V3 Technical Report (v2)",
+        "href": "https://arxiv.org/html/2412.19437v2",
+        "sectionId": "mtp",
+        "problem": "순차 미래 예측 모듈의 입력과 학습 목표를 단순 병렬 head와 혼동하는 문제입니다.",
+        "contribution": "식 21–23의 embedding·정규화·투영·block·공유 head에 기존 상태와 다음 R을 넣어 A의 예측 경로를 설명합니다.",
+        "assumptions": "DeepSeek-V3 보고서 v2의 순차 모듈 구조에 한정하며 다른 MTP 모델의 층 구성과 동일하다고 놓지 않습니다.",
+        "evidenceScope": "§2.2 식 21–23 및 §5.4.3의 추가 token 수락률 85~90%와 TPS 1.8배 보고를 분리해 읽었습니다.",
+        "notClaim": "c=.016과 검증 v=1은 별도 가정입니다. 61층과 모듈 한 개라는 개수만으로 후보 비용이나 특정 배치의 이득을 증명하지 않습니다."
+      },
+      {
+        "title": "Medusa: Simple LLM Inference Acceleration Framework with Multiple Decoding Heads (v3)",
+        "href": "https://arxiv.org/html/2401.10774v3",
+        "sectionId": "commit",
+        "problem": "별도 후보 모델 없이 여러 미래 위치의 후보를 만들고 가지별 앞 글을 지켜 검증하는 문제입니다.",
+        "contribution": "같은 RAY에서 root·후보·경로 선택과 KV 모으기를 원문 Algorithm 1 및 고정 구현에 대응합니다.",
+        "assumptions": "greedy 경로와 typical sampling을 나누고 Medusa-1과 Medusa-2의 학습 조건을 구별합니다.",
+        "evidenceScope": "Algorithm 1·§2.3.1과 Table 2를 읽고 실제 고정 함수의 root 선택·17칸 mask·RAY 행을 CPU 배열 대역으로 확인했습니다.",
+        "notClaim": "typical acceptance의 품질 결과를 target 분포의 항등식으로 바꾸지 않습니다. CPU 대역은 PyTorch 모델이나 GPU 성능 실행이 아닙니다."
+      },
+      {
+        "title": "SpecInfer: Accelerating Generative Large Language Model Serving with Tree-based Speculative Inference and Verification (v4)",
+        "href": "https://arxiv.org/html/2305.09781v4",
+        "sectionId": "sampling-boundary",
+        "problem": "여러 형제 후보를 검증하며 원래 기준 분포를 보존하는 순서와 확률 갱신을 정하는 문제입니다.",
+        "contribution": "Algorithm 2의 거부된 제안 제거와 잔여 분포 재정규화를 작은 (.7,.3)/(.4,.6)에 적용해 (1,0)을 얻습니다.",
+        "assumptions": "논문의 후보 선택·조건부 분포·중복 처리와 검증 순서를 함께 따릅니다. 임의 tree의 sampler에는 자동 적용하지 않습니다.",
+        "evidenceScope": "Algorithm 2와 Table 1의 CIP top-1→top-5 70→89%를 구별했고 폭 3·2·2와 깊이별 .89/.85/.8은 교육용 가정으로 표시했습니다.",
+        "notClaim": "서로 다른 깊이의 주변 포함률만으로 곱하거나 논문의 한 표 행을 모든 깊이의 보편 수락률로 사용하지 않습니다."
+      },
+      {
+        "title": "SuffixDecoding: Extreme Speculative Decoding for Emerging AI Applications (v3)",
+        "href": "https://arxiv.org/html/2411.04975v3",
+        "sectionId": "suffix",
+        "problem": "반복되는 입력과 출력에서 다음 후보를 모델 실행보다 싸게 찾고 검색 실패 비용까지 판단하는 문제입니다.",
+        "contribution": "C·D·SCORE에 과거 8개 기록을 적용해 .75/.625/.25/.25와 합 1.875를 만들고 native 구현의 부모 번호까지 확인합니다.",
+        "assumptions": "2025-10-07 v3 논문의 관찰 빈도 점수와 고정 ArcticInference의 count 분모·조회 길이 조건을 구분합니다.",
+        "evidenceScope": "§3의 자료 구조·길이 선택·hybrid와 Figure 4의 batch 1 H100 결과, 별도 OpenHands 전체 실행 비교를 각각 읽었습니다.",
+        "notClaim": "반복이 적은 입력이나 cache miss를 무비용으로 놓지 않습니다. 저자 보고 20µs와 가정한 25ms를 결합해 실측 전체 상한을 주장하지 않습니다."
+      }
+    ]
   },
   "ai/inference-cost-and-capacity-planning": {
     entryNote: "SLO 아래 GPU 당 tokens/s 를 benchmark 로 재는 법과 utilization–latency 곡선의 무릎은 앞 글에서 안다고 가정합니다. 그 값을 돈과 GPU 수로 바꾸는 데서 시작합니다.",
@@ -119208,7 +119745,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "business/business-model-cashflow": {
     "coreIdea": "사업 모델을 비교할 때는 매출 이름보다 비용을 먼저 내는 사람, 고객에게서 돈을 받는 시점, 재고·반품·미수금을 떠안는 주체를 추적해야 합니다.",
-    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "entryNote": "같은100개를 판매7일 전 준비하고14일 뒤 대금을 받는 사례로 약속·물건·돈의 날짜를 나눕니다. 실제 IFRS 원문의 통제 이전과 영업 입출금 시차를 적용합니다.",
     "assumedKnowledge": [
       {
         "id": "firm-boundary-at-equal-margin",
@@ -119233,15 +119770,15 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "id": "gross-net-revenue",
         "sectionId": "mechanism",
-        "intuition": "결제액을 손에 쥐었다는 사실과 매출의 소유는 다릅니다.",
-        "workedExample": "200만 원 주문에서 중개 플랫폼은 계약상 수수료만 자기 수익일 수 있습니다.",
-        "boundary": "회계 표시 기준과 세무 신고 기준은 관할권별로 따로 검토해야 합니다."
+        "intuition": "상품이나 서비스를 고객에게 넘기기 전에 누가 통제했는지를 보고 본인·대리인 역할을 판단합니다.",
+        "workedExample": "상품의 본인인 판매자는200만 원 매출, 결제업체는 가정한 별도 서비스 보수6만 원을 구분합니다.194만 원 입금은 순정산액입니다.",
+        "boundary": "결제 수령, 가격 재량, 재고 위험 중 하나만으로 결론 내리지 않습니다. 회계와 세무, IFRS15의 고객 계약과 IFRS16의 리스 범위를 구별합니다."
       },
       {
         "id": "working-capital-gap",
         "sectionId": "need",
         "intuition": "이익이 나도 정산이 늦으면 월급을 지급할 돈이 모자랄 수 있습니다.",
-        "workedExample": "판매7일 전120만 원을 내고 판매14일 뒤194만 원을 받아21일 자금 공백이 생깁니다.",
+        "workedExample": "판매7일 전120만 원을 내고 판매14일 뒤194만 원을 받아21일 공백이 생깁니다. 입금 전에 다음 묶음을 준비하면 선지출240만 원입니다.",
         "boundary": "결제 선불·재고 위탁이면 간격이 반대로 바뀔 수도 있습니다."
       },
       {
@@ -119255,7 +119792,7 @@ export const ARTICLE_LEARNING: Readonly<
     "conceptStages": [
       {
         "label": "01 · 총액과 순액 매출",
-        "relation": "200만 원 주문에서 중개 플랫폼은 계약상 수수료만 자기 수익일 수 있습니다.",
+        "relation": "현금 수령 주체와 고객에게 넘기기 전의 통제를 구분해 총액·순액 표시를 판단합니다.",
         "concepts": [
           "gross-net-revenue"
         ]
@@ -119318,7 +119855,8 @@ export const ARTICLE_LEARNING: Readonly<
         "question": "고객의 200만 원을 보관한 중개회사가 전부 자기 매출이라고 해도 되나요?",
         "answerChecklist": [
           "현금 보관과 상품 통제는 다름",
-          "약속한 재화·서비스와 본인·대리인 역할을 확인"
+          "약속한 재화·서비스와 본인·대리인 역할을 확인",
+          "이행 책임·재고 위험·가격 재량은 통제 판단을 돕는 지표이며 하나만으로 결정하지 않습니다."
         ],
         "sectionId": "source",
         "requiredConcepts": [
@@ -119343,7 +119881,8 @@ export const ARTICLE_LEARNING: Readonly<
         "question": "나라가 바뀔 때 같은 100건에서 다시 확인할 세 가지를 적으세요.",
         "answerChecklist": [
           "적용 회계·세무 기준",
-          "세금 포함 여부와 통화·정산 기한"
+          "세금 포함 여부와 통화·정산 기한",
+          "상품 계약·선불 구독·리스에 같은 인식 규칙을 일괄 적용하지 않습니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -119381,8 +119920,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "상품 제공일과 대금 입금일이 다를 때 두 공식 자료를 어떻게 함께 쓰나요?",
         "answerChecklist": [
-          "IFRS15로 약속 이행을 확인",
-          "IAS7로 이익과 실제 현금의 차이를 조정"
+          "IFRS15에서 통제 이전에 따른 약속 이행을 확인합니다.",
+          "IAS7의 영업 입출금 시차 조정을 읽고 직접 날짜별 지급과194만 원 미수금을 대조합니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -119402,6 +119941,48 @@ export const ARTICLE_LEARNING: Readonly<
           "working-capital-gap",
           "contribution-cash-trace"
         ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "IFRS15 · About, 수익 인식 5단계",
+        "href": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-15-revenue-from-contracts-with-customers/",
+        "sectionId": "source",
+        "problem": "현금 수령과 약속 이행 시점을 혼동하는 문제입니다.",
+        "contribution": "고객의 통제 취득에 따른 이행 의무 충족을100개 상품·200만 원에 적용합니다.",
+        "assumptions": "IFRS15가 적용되는 고객 계약이며 판매일 통제 이전·세금 생략은 본문 가정입니다.",
+        "evidenceScope": "공식 About의5단계와 통제 취득 설명을 실제 확인했습니다.",
+        "notClaim": "배송일·입금일이 언제나 수익 인식일이거나 모든 자영업자에게 같은 회계기준이 강제된다는 뜻은 아닙니다."
+      },
+      {
+        "title": "IAS7 · About, 현금흐름과 간접법",
+        "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-7-statement-of-cash-flows/",
+        "sectionId": "comparison",
+        "problem": "기간의 이익과 실제 영업 입출금을 혼동하는 문제입니다.",
+        "contribution": "영업 입출금의 이연·발생 조정을 읽고120만 원 지출과194만 원 수령의21일 간격을 추적합니다.",
+        "assumptions": "교육용 단일 묶음에서 다른 비용·세금·차입을 생략합니다.",
+        "evidenceScope": "공식 원문에서 시차를 직접 다루는 문구로 인용을 맞추었습니다.",
+        "notClaim": "완전한 현금흐름표나 전체 순이익을 계산한 것은 아닙니다."
+      },
+      {
+        "title": "IFRIC · Principal versus Agent: Software Reseller (2022년5월)",
+        "href": "https://www.ifrs.org/news-and-events/updates/ifric/2022/ifric-update-april-2022/",
+        "sectionId": "source",
+        "problem": "다른 회사가 개입한 거래에서 수령액 전부를 매출로 오해하는 문제입니다.",
+        "contribution": "B34~B38의 특정 재화·서비스 확인과 통제 판단, 보조 지표의 역할을 설명합니다.",
+        "assumptions": "해석위원회의 소프트웨어 재판매 사실관계와 본문의 일반 상품·결제 서비스를 구별합니다.",
+        "evidenceScope": "최종2022년5월 추가본의 관련 요구사항을 실제 읽었습니다.",
+        "notClaim": "가격 재량이나 결제금 보관 하나로 본인·대리인을 자동 판정하거나 본문 결제업체를 곧바로 상품 대리인으로 단정하지 않습니다."
+      },
+      {
+        "title": "IFRS16 · Leases",
+        "href": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-16-leases/",
+        "sectionId": "comparison",
+        "problem": "사업 비교 질문과 회계기준 적용 범위를 섞는 문제입니다.",
+        "contribution": "리스의 인식·측정·표시·공시를 다루는 별도 기준임을 확인합니다.",
+        "assumptions": "개별 임대차의 분류와 적용 예외는 별도 검토 범위입니다.",
+        "evidenceScope": "공식 기준 소개의 목적과 범위를 읽었습니다.",
+        "notClaim": "임대료와 상품 매출에 IFRS15를 일괄 적용하거나 개별 리스 회계 처리를 여기서 판정하지 않습니다."
       }
     ]
   },
@@ -120583,7 +121164,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "business/franchise-incentives": {
     "coreIdea": "가맹본부의 브랜드·매뉴얼·공급망 수입과 가맹점의 매출·임금·월세·로열티를 별도로 그려야 양쪽의 인센티브와 위험 배분을 볼 수 있습니다.",
-    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "entryNote": "한 점포의 월매출 3천만 원을 10개 절에서 따라갑니다. 로열티 계산과 지급일, 장부상 비용과 무급 노동의 기회비용, 미국·한국·EU 자료의 역할을 나눕니다.",
     "assumedKnowledge": [
       {
         "id": "shop-break-even-count",
@@ -120609,8 +121190,8 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "franchise-split-ledger",
         "sectionId": "mechanism",
         "intuition": "브랜드 전체 매출을 점주 개인 이익으로 읽을 수 없습니다.",
-        "workedExample": "월매출 3천만 원의 로열티 5%는 본부 150만 원 수입이면서 점주 비용입니다.",
-        "boundary": "본부 공급 수입은 계약과 상품별 원가를 확인해야 합니다."
+        "workedExample": "월매출 3천만 원의 5%인 150만 원은 본부 수입이자 점포 비용입니다. 재료 1천만 원과 월세 300만 원까지 차감한 1천550만 원은 다른 비용 전 금액입니다.",
+        "boundary": "계산 기준과 지급일은 별개입니다. 재료 공급 수입 전부가 본부 이익이 아니며, 사례는 세금과 다른 운영비를 생략합니다."
       },
       {
         "id": "franchise-contract-controls",
@@ -120623,14 +121204,14 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "franchise-average-sales-limit",
         "sectionId": "limits",
         "intuition": "평균 숫자만으로 새 점포의 이익을 예측하지 않습니다.",
-        "workedExample": "월매출 3천만 원이라도 로열티·월세·임금이 다르면 두 점주의 소득은 달라집니다.",
-        "boundary": "자료의 산출 방법과 조사 기간을 반드시 확인해야 합니다."
+        "workedExample": "같은 월매출 3천만 원이라도 실제 비용과 점주·가족의 노동시간이 다르면 인수 후 수익성은 달라집니다.",
+        "boundary": "연간 평균과 월평균, 명의변경과 폐점을 구별합니다. 무급 노동의 기회비용은 장부에 기록되는 임금과 자동으로 같아지지 않습니다."
       }
     ],
     "conceptStages": [
       {
         "label": "01 · 가맹본부와 점주의 분리 장부",
-        "relation": "월매출 3천만 원의 로열티 5%는 본부 150만 원 수입이면서 점주 비용입니다.",
+        "relation": "월매출 3천만 원에서 본부 지급액 150만 원과 점포의 다른 비용을 나눕니다.",
         "concepts": [
           "franchise-split-ledger"
         ]
@@ -120644,7 +121225,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "label": "03 · 평균 매출의 한계",
-        "relation": "월매출 3천만 원이라도 로열티·월세·임금이 다르면 두 점주의 소득은 달라집니다.",
+        "relation": "같은 매출에서도 실제 비용과 무급 노동, 표본에 포함된 점포가 다르면 판단이 달라집니다.",
         "concepts": [
           "franchise-average-sales-limit"
         ]
@@ -120655,8 +121236,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "basic",
         "question": "월매출 3천만 원에 매출의 5%를 로열티로 내는 점포입니다. 지급액을 계산하고 점주와 본부의 장부에 각각 어떻게 기록되는지 설명하세요.",
         "answerChecklist": [
-          "3천만 원 × 0.05 = 월 150만 원을 지급합니다.",
-          "점주에게는 로열티 비용이고 본부에는 계약상 수입입니다. 점주의 순이익과 같은 금액이 아닙니다."
+          "3천만 원 × 0.05 = 월 150만 원입니다.",
+          "점포의 로열티 비용이자 본부의 계약상 수입입니다. 점주의 최종 이익과 별개이며, 이 계산만으로 송금일이나 지급 우선순위가 정해지지는 않습니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -120665,10 +121246,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "재료1천만·월세300만·로열티150만을 빼면 얼마가 남나요?",
+        "question": "월매출 3천만 원에서 재료 1천만 원·월세 300만 원·로열티 150만 원을 빼면 얼마가 남나요?",
         "answerChecklist": [
-          "1천550만 원",
-          "임금·광고·공과금·세금 전 금액"
+          "1천550만 원입니다.",
+          "임금·광고·공과금·세금 전 금액입니다. 본문에서는 부가세를 제외하고 재료를 그달에 사용하며 입출금도 같은 달에 끝난다고 가정합니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -120689,7 +121270,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "운영비가1천550만 원보다 커져도 로열티가 자동 면제되나요?",
+        "question": "다른 운영비가 1천550만 원보다 커져도 로열티가 자동 면제되나요?",
         "answerChecklist": [
           "매출 연동 약정은 이익과 별개",
           "면제·유예 조항 별도 확인"
@@ -120702,10 +121283,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "미국 FDD의 Item19에서 확인할 것은 무엇인가요?",
+        "question": "미국 FDD의 Item 19에서 확인할 것은 무엇인가요?",
         "answerChecklist": [
-          "본부가 제시한 매출·수익 주장",
-          "예상3천만 원의 표본·전제·범위"
+          "본부가 제시한 월매출 3천만 원 등 실적 주장의 표본·가정·근거를 확인합니다.",
+          "실적 수치의 제공 자체가 언제나 의무인 것은 아닙니다. 특정 기존 점포 기록 등 좁은 예외와 적용 범위를 확인하고, 공시를 순이익 보증으로 읽지 않습니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -120714,10 +121295,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "점포의 이익 계산에서 가족 노동도 넣어야 하나요?",
+        "question": "무급 가족 노동이 많은 가게의 인수 후 수익성을 판단할 때 무엇을 추가로 계산하나요?",
         "answerChecklist": [
-          "무료라고 보면 수익 과장",
-          "새 점주가 대체할 임금으로 확인"
+          "장부에 기록된 실제 비용과 이익을 확인한 뒤 대체 직원의 임금이나 다른 일을 했을 때의 소득을 비교합니다.",
+          "기회비용을 고려해야 사업 선택을 비교할 수 있지만, 지급하지 않은 임금이 회계·세무상 자동으로 비용 처리되는 것은 아닙니다."
         ],
         "sectionId": "limits",
         "requiredConcepts": [
@@ -120752,12 +121333,12 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "평균3천만 원 매출의 자료를 검증할 사람과 질문을 제안하세요.",
+        "question": "평균 월매출 3천만 원 자료를 검증할 사람과 질문을 제안하세요.",
         "answerChecklist": [
-          "신생·기존·폐점·양도점 확인",
-          "실제 공사·인력·지정품목 비용과 손익 차이"
+          "신생·기존·양도·폐점 점주의 실제 공사·인력·지정품목·종료 비용을 확인합니다.",
+          "연간 매출을 월평균으로 바꾼 값인지, 조사 연도·면적·포함 점포·세금 기준은 무엇인지 확인합니다. 명의변경만으로 폐점으로 세지 않습니다."
         ],
-        "sectionId": "mechanism",
+        "sectionId": "comparison",
         "requiredConcepts": [
           "franchise-contract-controls",
           "franchise-average-sales-limit"
@@ -120774,6 +121355,58 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "franchise-contract-controls"
         ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "US FTC · Consumer Guide, Royalties",
+        "href": "https://www.ftc.gov/business-guidance/resources/consumers-guide-buying-franchise",
+        "sectionId": "source",
+        "problem": "점주의 적자가 본부 지급액을 자동으로 없앤다고 오해하는 문제입니다.",
+        "contribution": "매출 연동 5%인 150만 원과 점포의 나머지 비용을 나누어 적용합니다.",
+        "assumptions": "설명용 점포이며 면제·유예·지급일은 실제 계약에 따릅니다.",
+        "evidenceScope": "Royalties 설명과 반복 비용 안내를 읽고 여섯 단어를 직접 인용했습니다.",
+        "notClaim": "사례 금액이 실제 브랜드 수치이거나 모든 본부가 같은 계산 방식을 쓴다는 뜻은 아닙니다."
+      },
+      {
+        "title": "US FTC · FDD Item 19와 Item 20 안내",
+        "href": "https://www.ftc.gov/business-guidance/blog/2023/05/franchise-fundamentals-taking-deep-dive-franchise-disclosure-document",
+        "sectionId": "comparison",
+        "problem": "예상 매출을 순이익 보증으로 읽거나 떠난 점주를 조사에서 빼는 문제입니다.",
+        "contribution": "실적 주장의 가정·표본을 대조하고 현재·과거 점주의 비용을 확인합니다.",
+        "assumptions": "미국 FDD 맥락이며 실적 수치 제공 자체의 의무와 주장 방식의 제한을 구별합니다.",
+        "evidenceScope": "공식 본문의 Item 19 문장을 대조하고 좁은 예외 존재와 Item 20 설명을 읽었습니다.",
+        "notClaim": "다른 나라 공시에 같은 의무가 적용되거나 자료 부재만으로 불법이라고 판정하지 않습니다."
+      },
+      {
+        "title": "16 CFR 436.2(a) · 문서 제공 시기",
+        "href": "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-D/part-436/subpart-B/section-436.2",
+        "sectionId": "comparison",
+        "problem": "계약 전 검토 기간과 관할 범위를 모호하게 읽는 문제입니다.",
+        "contribution": "서명 또는 본부·관계회사 지급 전 최소 14달력일이라는 조건을 제시합니다.",
+        "assumptions": "미국·미국령에 위치할 가맹점의 판매이며 subpart E 면제 거래를 제외합니다.",
+        "evidenceScope": "2026-10-04 eCFR 본문의 적용 범위와 (a)를 실제 확인했습니다.",
+        "notClaim": "14일을 영업일로 읽거나 전 세계 가맹계약에 일괄 적용하지 않습니다."
+      },
+      {
+        "title": "한국 공정위 · 정보공개서 비교 항목",
+        "href": "https://franchise.ftc.go.kr/firHope/comparePopup.do",
+        "sectionId": "comparison",
+        "problem": "연평균 매출과 월 사례, 명의변경과 폐점을 혼동하는 문제입니다.",
+        "contribution": "연간 평균·면적당 매출과 계약종료·해지·명의변경 열을 구분합니다.",
+        "assumptions": "비교 화면의 항목을 읽었으며 특정 브랜드 값을 조회한 자료가 아닙니다.",
+        "evidenceScope": "2026-10-04 실제 HTML의 항목명·단위·산정기준 안내를 확인했습니다.",
+        "notClaim": "월 3천만 원을 관측된 평균으로 제시하거나 명의변경을 폐점으로 합산하지 않습니다."
+      },
+      {
+        "title": "EU · Vertical Guidelines 2022, 165~168항",
+        "href": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A52022XC0630%2801%29",
+        "sectionId": "comparison",
+        "problem": "품질 통일을 이유로 모든 계약 제한이 허용된다고 오해하는 문제입니다.",
+        "contribution": "상표·노하우 제공과 수직적 제한의 경쟁법 평가를 공시 문서와 나누어 설명합니다.",
+        "assumptions": "2022/C 248/01의 가맹계약 부분이며 개별 계약의 요건 검토는 별도입니다.",
+        "evidenceScope": "EUR-Lex 원문 165~168항에서 기능상 필요성·면제·개별 평가의 구분을 읽었습니다.",
+        "notClaim": "EU 전체의 FDD 의무나 모든 가격·판매지역 제한의 적법성을 주장하지 않습니다."
       }
     ]
   },
@@ -124748,42 +125381,42 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "shop-stock-reconciliation",
         "sectionId": "mechanism",
         "intuition": "팔린 재료와 버린 재료를 같은 손실 없는 출고로 처리하면 실제 원가를 놓칩니다.",
-        "workedExample": "시작10+입고15−판매20−폐기1=잔여4로 실제4개와 맞춥니다.",
+        "workedExample": "시작 10 + 입고 15 − 판매 20 − 폐기 1 = 잔여 4로 실사와 맞춥니다. 같은 단가 2천 원에서 판매 원가 4만 원과 폐기 2천 원을 나눕니다.",
         "boundary": "수량 대조만으로 식품의 안전과 사용 가능 가치를 보장할 수 없습니다."
       },
       {
         "id": "shop-payout-reconciliation",
         "sectionId": "mechanism",
         "intuition": "상품을 판 금액과 나중 은행에 들어온 금액은 두 매출이 아닙니다.",
-        "workedExample": "고객결제16만−수수료3천200=입금15만6천800원을 같은 주문과 지급일로 맞춥니다.",
-        "boundary": "결제방식별 할인·환불·보류·조정과 지급기한은 계약마다 다릅니다."
+        "workedExample": "판매일 고객 결제 16만 원 − 수수료 3천200원 = 예정액 15만6천800원을 계산하고 이틀 뒤 같은 송금의 은행 입금과 맞춥니다.",
+        "boundary": "미입금과 금액 차이를 구별합니다. 할인·환불·보류·조정은 계약과 보고서 범위에 따라 추가하며 사례의 2%·이틀은 실제 Stripe 조건이 아닙니다."
       },
       {
         "id": "shop-payroll-reconciliation",
         "sectionId": "mechanism",
         "intuition": "주문이 적어도 실제 일한 시간의 지급 기록은 필요합니다.",
-        "workedExample": "직원4시간 기록에서 임금률·수당·공제를 적용해 실제 지급과 명세서를 맞춥니다.",
-        "boundary": "임금률·수당·보험·보관기한은 현지 적용법과 고용형태를 확인해야 합니다."
+        "workedExample": "별도 휴게 기록과 구별해 확인한 실제 근로 4시간에 임금률·수당·공제를 적용하고 실제 지급·명세서를 맞춥니다.",
+        "boundary": "이미 실제 근로로 확인한 4시간에서 휴게를 다시 빼지 않습니다. 법정 휴게 제공과 유급 여부, 수당·보험·보관기한은 적용법을 확인합니다."
       }
     ],
     "conceptStages": [
       {
         "label": "01 · 점포의 재고실사",
-        "relation": "시작10+입고15−판매20−폐기1=잔여4로 실제4개와 맞춥니다.",
+        "relation": "시작 10 + 입고 15 − 판매 20 − 폐기 1 = 잔여 4로 실사와 맞춥니다. 같은 단가 2천 원에서 판매 원가 4만 원과 폐기 2천 원을 나눕니다.",
         "concepts": [
           "shop-stock-reconciliation"
         ]
       },
       {
         "label": "02 · 점포의 매출 정산 대조",
-        "relation": "고객결제16만−수수료3천200=입금15만6천800원을 같은 주문과 지급일로 맞춥니다.",
+        "relation": "판매일 고객 결제 16만 원 − 수수료 3천200원 = 예정액 15만6천800원을 계산하고 이틀 뒤 같은 송금의 은행 입금과 맞춥니다.",
         "concepts": [
           "shop-payout-reconciliation"
         ]
       },
       {
         "label": "03 · 점포의 근무·급여 대조",
-        "relation": "직원4시간 기록에서 임금률·수당·공제를 적용해 실제 지급과 명세서를 맞춥니다.",
+        "relation": "별도 휴게 기록과 구별해 확인한 실제 근로 4시간에 임금률·수당·공제를 적용하고 실제 지급·명세서를 맞춥니다.",
         "concepts": [
           "shop-payroll-reconciliation"
         ]
@@ -124792,10 +125425,10 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "20건×8천 원의 고객결제와2% 수수료를 계산하세요.",
+        "question": "20건 × 8천 원의 고객 결제와 2% 수수료를 계산하세요.",
         "answerChecklist": [
-          "결제16만 원",
-          "수수료3천200원,입금예정15만6천800원"
+          "고객 결제 16만 원입니다.",
+          "수수료 3천200원, 예정 입금 15만6천800원입니다. 판매일의 은행 입금으로 기록하지 않습니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -124804,10 +125437,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "시작10·입고15·판매20·폐기1이면 남은 재료는 얼마인가요?",
+        "question": "시작 10·입고 15·판매 20·폐기 1이면 남은 재료는 얼마인가요?",
         "answerChecklist": [
-          "10+15−20−1=4",
-          "실사4와 비교해 차이0"
+          "10 + 15 − 20 − 1 = 4개 분량입니다.",
+          "실사 4와 비교해 차이는 0입니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -124816,10 +125449,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "재료를1개 버렸을 때 어떤 비용을 별도로 남기나요?",
+        "question": "재료를 1개 버렸을 때 어떤 비용을 별도로 남기나요?",
         "answerChecklist": [
-          "폐기1×2천=2천 원",
-          "판매재료4만과 합계4만2천"
+          "같은 단가 2천 원을 적용하면 폐기손실은 1 × 2천 = 2천 원입니다.",
+          "판매 재료 4만 원과 합하면 4만2천 원이지만 폐기 사유를 구분해 기록합니다."
         ],
         "sectionId": "source",
         "requiredConcepts": [
@@ -124828,10 +125461,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "통장입금15만6천800원을 추가매출로 잡으면 왜 틀리나요?",
+        "question": "은행 입금 15만6천800원을 추가 매출로 잡으면 왜 틀리나요?",
         "answerChecklist": [
-          "판매16만은 이미 주문에서 기록",
-          "입금은 받을 돈의 도착, 이중매출 방지"
+          "판매 16만 원은 이미 주문 자료에서 기록했습니다.",
+          "입금은 받을 돈의 도착입니다. 같은 판매를 두 번 기록하지 않습니다."
         ],
         "sectionId": "need",
         "requiredConcepts": [
@@ -124840,10 +125473,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "직원4시간을 지급액으로 바꾸려면 무엇이 필요한가요?",
+        "question": "직원의 실제 근로 4시간을 지급액으로 바꾸려면 무엇이 필요한가요?",
         "answerChecklist": [
-          "실제 근무와 휴게 기록",
-          "계약 임금률·적용수당·적법공제·명세서"
+          "출퇴근·실제 근로·별도 휴게를 확인합니다. 이미 실제 일한 4시간에서 휴게를 다시 빼지 않습니다.",
+          "계약 임금률·적용 수당·적법한 공제를 계산해 명세서와 실제 지급을 맞춥니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -124854,8 +125487,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "basic",
         "question": "11만4천800원을 하루 순이익이라 할 수 없는 이유는 무엇인가요?",
         "answerChecklist": [
-          "직원과점주 노동·월세·보험·세금·설비 비용 미반영",
-          "세금 전 중간 결과"
+          "직원 임금·월세·보험·세금·설비 비용이 남아 있는 중간 계산입니다.",
+          "점주의 무급 노동은 사업 선택의 기회비용으로 따로 고려하며 장부상 임금과 같다고 가정하지 않습니다."
         ],
         "sectionId": "limits",
         "requiredConcepts": [
@@ -124866,10 +125499,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "장부 예상5개인데 실사4개라면 차이를 어떻게 해결하나요?",
+        "question": "폐기 반영 전 장부 예상 5개인데 실사 4개라면 차이를 어떻게 해결하나요?",
         "answerChecklist": [
-          "사유를 확인해 폐기·직원식사·누락주문을 구분",
-          "숫자를 지우지 않고 증거와 비용·조치를 기록"
+          "사유를 확인해 폐기·직원 식사·누락 주문을 구분합니다.",
+          "숫자를 지우지 않고 증거와 비용·조치를 기록합니다."
         ],
         "sectionId": "need",
         "requiredConcepts": [
@@ -124878,10 +125511,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "배달앱 주문을 카드2% 사례로 그대로 정산하면 무엇을 놓치나요?",
+        "question": "배달앱 주문을 카드 2% 사례로 그대로 정산하면 무엇을 놓치나요?",
         "answerChecklist": [
-          "부담자별 할인·배달·광고비와 환불",
-          "정산 대상 주문·일자와 은행입금을 대조"
+          "부담자별 할인·배달·광고비와 환불·보류 등 조정을 놓칠 수 있습니다.",
+          "정산 대상 주문·송금일과 은행 입금을 대조하고 아직 도착하지 않은 돈을 구별합니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -124890,10 +125523,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "해외 지점의4시간 근무를 같은 임금률만 적용하면 왜 부족한가요?",
+        "question": "해외 지점의 4시간 근무에 같은 임금률만 적용하면 왜 부족한가요?",
         "answerChecklist": [
-          "고용형태·직종규정·시간대수당·연금 조건",
-          "현지 명세서와 기록·보관기한 확인"
+          "고용형태·직종 규정·시간대 수당·연금 부담을 확인해야 합니다.",
+          "현지 명세서와 기록·보관 의무를 확인하며 다른 나라의 기간을 복사하지 않습니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -124904,8 +125537,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "돈과 재고가 맞아도 영업이 위험할 수 있는 경우와 대응을 제안하세요.",
         "answerChecklist": [
-          "보관·위생·설비·화재·개인정보 위험",
-          "담당자·예방점검·해당보험·증빙·개선절차 연결"
+          "보관·위생·설비·화재·개인정보 위험을 각각 확인합니다.",
+          "담당자·예방 점검·해당 보험·증빙·개선 절차를 연결합니다. 개인정보는 목적 종료 후 파기 원칙과 법령상 보존·분리 의무를 구별합니다."
         ],
         "sectionId": "limits",
         "requiredConcepts": [
@@ -124913,6 +125546,59 @@ export const ARTICLE_LEARNING: Readonly<
           "shop-payout-reconciliation",
           "shop-payroll-reconciliation"
         ]
+      }
+    ],
+    "entryNote": "같은 20건의 카드 주문과 재료 25개를 따라갑니다. 판매일의 재고·받을 돈·실제 근로시간을 기록하고 이틀 뒤 은행 도착을 별도로 확인합니다.",
+    "papers": [
+      {
+        "title": "IAS 2 · 재고 판매와 손실",
+        "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/",
+        "sectionId": "source",
+        "problem": "판매된 재료와 폐기 재료를 같은 기록으로 처리해 원인을 놓치는 문제입니다.",
+        "contribution": "판매 원가 4만 원과 폐기손실 2천 원을 나누고 중간 결과 11만4천800원을 계산합니다.",
+        "assumptions": "25개 분량의 단가를 모두 2천 원으로 놓고 다른 비용과 세금 계산을 생략합니다.",
+        "evidenceScope": "공식 About의 판매 관련 비용과 손실 발생 기간의 비용 인식 설명을 읽었습니다.",
+        "notClaim": "모든 소상공인이 IFRS 적용 대상이거나 11만4천800원이 순이익이라는 뜻은 아닙니다."
+      },
+      {
+        "title": "Stripe · Payout reconciliation report",
+        "href": "https://docs.stripe.com/reports/payout-reconciliation",
+        "sectionId": "source",
+        "problem": "주문 기록과 송금 묶음, 은행 입금을 같은 시점으로 읽는 문제입니다.",
+        "contribution": "20건의 정산 대상과 수수료를 연결해 예정액을 실제 도착한 송금과 대조합니다.",
+        "assumptions": "본문의 2%와 이틀은 설명용 가정이며 환불·보류·분쟁 등 조정이 없습니다.",
+        "evidenceScope": "자동 송금 보고서의 범위, Itemized 내역과 수동·즉시 송금의 제한을 실제 문서에서 읽었습니다.",
+        "notClaim": "실제 Stripe 요금·일정이나 모든 송금 방식에서 같은 보고서를 쓸 수 있다는 뜻은 아닙니다."
+      },
+      {
+        "title": "Fair Work Ombudsman · 기록과 임금명세서",
+        "href": "https://www.fairwork.gov.au/tools-and-resources/fact-sheets/rights-and-obligations/record-keeping-pay-slips",
+        "sectionId": "comparison",
+        "problem": "매출 자료로 근무시간을 추정하거나 기록 없이 지급하는 문제입니다.",
+        "contribution": "실제 근로 4시간과 임금률·수당·공제·명세서를 연결합니다.",
+        "assumptions": "호주의 관련 Commonwealth 노동법 적용 고용이며 현지 직종 규정과 고용형태를 확인합니다.",
+        "evidenceScope": "Overview와 급여·근무시간 기록의 항목별 범위를 읽고 짧은 원문을 인용했습니다.",
+        "notClaim": "모든 고용형태의 시간 기록 항목이 같거나 호주의 기간을 다른 나라에 적용한다는 뜻은 아닙니다."
+      },
+      {
+        "title": "소득세법 제160조의5 · 사업용계좌",
+        "href": "https://www.law.go.kr/법령/소득세법/제160조의5",
+        "sectionId": "mechanism",
+        "problem": "관리 목적의 계좌 분리와 법정 신고 의무를 혼동하는 문제입니다.",
+        "contribution": "복식부기의무자 등 적용 대상을 확인하고 생활비 인출을 재료비로 기록하지 않습니다.",
+        "assumptions": "2026-01-01 시행본을 2026-10-04 확인했으며 개별 사업자의 기장의무는 별도로 판단합니다.",
+        "evidenceScope": "국가법령정보센터의 실제 제160조의5 본문에서 대상 거래와 신고 범위를 읽었습니다.",
+        "notClaim": "모든 영세 점주에게 같은 계좌 신고 의무가 있다고 단정하지 않습니다."
+      },
+      {
+        "title": "개인정보 보호법 제21조 · 파기와 보존",
+        "href": "https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335625",
+        "sectionId": "limits",
+        "problem": "폐업 때 모든 자료를 무조건 지우거나 무기한 보관하는 문제입니다.",
+        "contribution": "불필요해진 정보의 파기와 다른 법령상 보존할 급여·세무 자료의 분리 관리를 나눕니다.",
+        "assumptions": "2026-09-11 시행본의 제21조이며 개별 기록의 구체적인 보존기간은 해당 법령을 확인합니다.",
+        "evidenceScope": "국가법령정보센터의 제21조 1~3항을 실제 읽었습니다.",
+        "notClaim": "모든 고객 연락처를 계속 보관할 근거나 개별 자료의 보존기간을 정한 것은 아닙니다."
       }
     ]
   },

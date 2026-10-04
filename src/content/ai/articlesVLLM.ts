@@ -933,36 +933,114 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "speculative-decoding-variants",
-    title: "Speculative decoding 변형은 draft 의 출처와 verify 의 모양으로 갈립니다",
+    title: "추측 디코딩 변형: 여러 갈래의 후보에서 한 경로를 남기는 과정",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "problem", title: "변형을 가르는 두 축: draft 출처와 verify 모양" },
-      {
-        id: "self-speculative",
-        title: "Self-speculative decoding 의 layer 비율 비용",
-        subsections: [{ id: "paper-layerskip", title: "LayerSkip 논문의 문제와 기여" }],
-      },
-      {
-        id: "mtp",
-        title: "MTP head 의 draft 비용과 효용 경계",
-        subsections: [{ id: "paper-deepseek-v3-mtp", title: "DeepSeek-V3 MTP 절의 문제와 기여" }],
-      },
-      {
-        id: "tree",
-        title: "Tree 기반 speculation 의 node 수와 기대 길이",
-        subsections: [{ id: "paper-medusa", title: "Medusa 논문의 문제와 기여" }],
-      },
-      {
-        id: "tree-verify",
-        title: "Tree attention mask 와 경로 확정",
-        subsections: [{ id: "paper-specinfer", title: "SpecInfer 논문의 문제와 기여" }],
-      },
-      {
-        id: "suffix",
-        title: "Suffix decoding 과 변형 선택",
-        subsections: [{ id: "paper-suffix-decoding", title: "SuffixDecoding 논문의 문제와 기여" }],
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 같은 다음 글을 여러 갈래로 준비할 수 있습니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 준비한 갈래를 확인하고 한 경로의 기록을 모읍니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 일곱 자리를 준비해 RAY 세 글자를 남깁니다"
+  },
+  {
+    "id": "structure",
+    "title": "4. 글자는 같아도 가지가 다르면 다른 자리입니다"
+  },
+  {
+    "id": "why-components",
+    "title": "5. 읽을 곳을 가리는 장치와 기록을 모으는 장치가 필요합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 여러 후보의 연결을 tree, 읽기 제한을 mask라고 부릅니다"
+  },
+  {
+    "id": "request-trace",
+    "title": "7. 부모의 점수로 다음 자리를 확인합니다"
+  },
+  {
+    "id": "mask",
+    "title": "8. 7×7 표의 17개 칸만 새 기록을 읽습니다"
+  },
+  {
+    "id": "buffers",
+    "title": "9. 실제 배열은 깊이와 후보 순위에서 만들어집니다"
+  },
+  {
+    "id": "greedy",
+    "title": "10. 연속 일치만 세어 RAY 행을 고릅니다"
+  },
+  {
+    "id": "commit",
+    "title": "11. 기록 4·5·8을 4·5·6으로 복사합니다"
+  },
+  {
+    "id": "sampling-boundary",
+    "title": "12. 그럴듯한 후보를 고르는 것과 같은 분포를 만드는 것은 다릅니다"
+  },
+  {
+    "id": "tree-cost",
+    "title": "13. 가지가 넓어지면 확정 길이와 확인 비용이 함께 늘어납니다"
+  },
+  {
+    "id": "self-speculative",
+    "title": "14. 같은 모델의 앞부분으로 후보를 만들 수도 있습니다"
+  },
+  {
+    "id": "self-source",
+    "title": "15. 마지막 후보의 앞 층 계산도 남아 있습니다"
+  },
+  {
+    "id": "self-cost",
+    "title": "16. 층 수의 비율을 시간으로 바꾸려면 추가 가정이 필요합니다"
+  },
+  {
+    "id": "mtp",
+    "title": "17. 다음 글자를 함께 넣는 보조 예측 부품입니다"
+  },
+  {
+    "id": "mtp-cost",
+    "title": "18. 한 후보가 이득일 조건은 검증 비용까지 포함합니다"
+  },
+  {
+    "id": "batch-boundary",
+    "title": "19. batch 모형도 단독 기준부터 같은 단위로 맞춥니다"
+  },
+  {
+    "id": "suffix",
+    "title": "20. 과거의 R 뒤에서 A와 Y를 찾습니다"
+  },
+  {
+    "id": "suffix-source",
+    "title": "21. 고정 원문은 네 후보와 부모 번호를 실제로 반환합니다"
+  },
+  {
+    "id": "suffix-boundary",
+    "title": "22. 조회가 빗나가도 수행한 일은 남습니다"
+  },
+  {
+    "id": "hybrid-cost",
+    "title": "23. 조회 후 다른 모델로 넘어가면 앞 비용도 더합니다"
+  },
+  {
+    "id": "paper-evidence",
+    "title": "24. 논문의 배율은 해당 모델과 입력에서 읽습니다"
+  },
+  {
+    "id": "boundary",
+    "title": "25. 같은 출력 규칙과 같은 시간 범위에서 선택합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "26. 같은 RAY에서 조건을 하나씩 바꿔 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/speculative-decoding-variants"),
   },
   {

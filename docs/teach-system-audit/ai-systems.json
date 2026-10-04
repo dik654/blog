@@ -7519,7 +7519,7 @@
       "route": "ai/speculative-decoding-variants",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants.tsx",
       "publicPath": "cs/ai/speculative-decoding-variants",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -7527,34 +7527,379 @@
         "sectionCount": 6
       },
       "beforeDefects": [
-        "작은 사례 전에 draft·verify·tree·MTP·suffix 등 여러 용어가 먼저 나옴",
-        "층 수의 비율 E/L·1/L을 실제 시간 c로 등치하고 별도 메모리0·verify0.75를 보편적으로 단정",
-        "MTP 이득 경계 v<1+α−c와 어긋나는 ridge의 절반에서 즉시 꺼야 한다는 결론 및 α>1.03 수치 오류",
-        "6개 후보의 ancestor+self mask는10인데 본문12로 쓰고 도식은10으로 표기",
-        "일반 tree 검증에 마지막 확정 root의 입력·한 칸 다음 점수와 선택 경로 KV gather를 생략",
-        "bonus를 포함한 확정 path 전체 KV commit 및 block table만 정리하면 된다는 단정",
-        "조건부 생존 확률의 곱에 불필요한 독립 가정과 tree 시간이 반드시 특정 비례라는 주장",
-        "suffix 조회·삽입·전송 비용을 빼고 cache miss이면 속도비가1보다 작아지지 않는다고 단정",
-        "SuffixDecoding 최신 v3(2025-10-07)의 EAGLE2/3 결과를2024논문으로 묶음",
-        "원문 파일·실제 함수 적용 없이 의사코드만 제시하며 번호 절과 예측 답 절 부재"
+        "작은 동일 사례와 이름 없는 구조를 거치지 않고 self/MTP/tree/suffix의 구조와 계산을 나열했습니다.",
+        "층 수 비율을 실제 비용으로, 같은 가중치를 추가 메모리 0으로 단정했습니다.",
+        "MTP 효용의 정규화된 단독 시간 분모를 빠뜨려 ridge 절반을 보편 이득 경계로 읽게 했습니다.",
+        "root 포함 여부·출력과 KV 갱신의 실제 회차 경계 및 typical/exact sampling 차이가 빠졌습니다.",
+        "suffix의 가장 긴 일치·거의 무비용 설명에 고정 원문의 후보 한도·점수 선택·실패 분기와 비용이 빠졌습니다."
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "tokens": {
+          "R": 0,
+          "A": 1,
+          "B": 2,
+          "X": 3,
+          "Y": 4,
+          "C": 5
+        },
+        "confirmedPrefixLength": 4,
+        "computedPrefixLength": 4,
+        "root": "R is the next target argmax, not the last already-confirmed input. It is selected from saved target logits but not yet appended to input_ids.",
+        "choices": [
+          [
+            0
+          ],
+          [
+            1
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "flat": [
+          "R",
+          "A",
+          "B",
+          "X",
+          "Y",
+          "X",
+          "Y"
+        ],
+        "positionIds": [
+          4,
+          5,
+          5,
+          6,
+          6,
+          6,
+          6
+        ],
+        "targetGreedy": {
+          "afterR": "A",
+          "afterRA": "Y",
+          "afterRAY": "C"
+        },
+        "selectedTreeIndices": [
+          0,
+          1,
+          4
+        ],
+        "selectedCacheSource": [
+          4,
+          5,
+          8
+        ],
+        "cacheDestination": [
+          4,
+          5,
+          6
+        ],
+        "committedOutput": [
+          "R",
+          "A",
+          "Y"
+        ],
+        "finalHistoryLength": 7,
+        "finalComputedLength": 7,
+        "nextRoot": "C is available through retained logits; this Medusa update has not appended it.",
+        "maskOnesIncludingRoot": 17,
+        "maskOnesExcludingRoot": 10,
+        "causal7MaskOnes": 28,
+        "suffixCorpus": {
+          "fiveSequences": [
+            9,
+            0,
+            1,
+            4
+          ],
+          "oneSequence": [
+            9,
+            0,
+            1,
+            3
+          ],
+          "twoSequences": [
+            9,
+            0,
+            2,
+            4
+          ],
+          "context": [
+            99,
+            9,
+            0
+          ],
+          "factor": 2,
+          "budget": 4,
+          "expectedTokens": [
+            1,
+            4,
+            2,
+            4
+          ],
+          "expectedParents": [
+            -1,
+            0,
+            -1,
+            2
+          ],
+          "probabilities": [
+            0.75,
+            0.625,
+            0.25,
+            0.25
+          ],
+          "score": 1.875
+        }
+      },
+      "stageAnchors": {
+        "strategy": "overview",
+        "blackBox": "black-box",
+        "smallCase": "small-case",
+        "structure": "structure",
+        "necessity": "why-components",
+        "names": "names",
+        "trace": "request-trace",
+        "realSource": [
+          "mask",
+          "buffers",
+          "greedy",
+          "commit",
+          "self-source",
+          "suffix-source",
+          "suffix-boundary"
+        ],
+        "depth": [
+          "sampling-boundary",
+          "tree-cost",
+          "self-cost",
+          "mtp",
+          "mtp-cost",
+          "batch-boundary",
+          "suffix",
+          "hybrid-cost",
+          "paper-evidence"
+        ],
+        "limits": "boundary",
+        "prediction": "prediction-questions"
+      },
+      "sourceEvidence": {
+        "reviewedAt": "2026-10-04",
+        "files": [
+          {
+            "repository": "FasterDecoding/Medusa",
+            "commit": "e2a5d20c048a9b0a4092e6933c34313687422518",
+            "path": "medusa/model/utils.py",
+            "url": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/medusa/model/utils.py",
+            "local": "/tmp/teach-all/spec19/sources/Medusa/medusa/model/utils.py",
+            "sha256": "f62632ce0892cec19f3280ce02695c08e0ef84f2a2a8342040e7c75d22bfe4b7",
+            "bytes": 27771,
+            "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/medusa/medusa/model/utils.py"
+          },
+          {
+            "repository": "FasterDecoding/Medusa",
+            "commit": "e2a5d20c048a9b0a4092e6933c34313687422518",
+            "path": "medusa/model/kv_cache.py",
+            "url": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/medusa/model/kv_cache.py",
+            "local": "/tmp/teach-all/spec19/sources/Medusa/medusa/model/kv_cache.py",
+            "sha256": "29bdb043c8a4835caa594b666dfba5acb56c9d774046d2c9024551f9d933f5d4",
+            "bytes": 4405,
+            "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/medusa/medusa/model/kv_cache.py"
+          },
+          {
+            "repository": "FasterDecoding/Medusa",
+            "commit": "e2a5d20c048a9b0a4092e6933c34313687422518",
+            "path": "medusa/model/medusa_model.py",
+            "url": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/medusa/model/medusa_model.py",
+            "local": "/tmp/teach-all/spec19/sources/Medusa/medusa/model/medusa_model.py",
+            "sha256": "e96d8b4d0dce730972147d57d029e7bdc6f285bbb9fe8916092eda34e5e721d5",
+            "bytes": 15532,
+            "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/medusa/medusa/model/medusa_model.py"
+          },
+          {
+            "repository": "FasterDecoding/Medusa",
+            "commit": "e2a5d20c048a9b0a4092e6933c34313687422518",
+            "path": "LICENSE",
+            "url": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/LICENSE",
+            "local": "/tmp/teach-all/spec19/sources/Medusa/LICENSE",
+            "sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
+            "bytes": 11356,
+            "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/medusa/LICENSE"
+          },
+          {
+            "repository": "facebookresearch/LayerSkip",
+            "commit": "494752e5fbb0a82989f6cb384841684b1c2ef5c3",
+            "path": "self_speculation/self_speculation_generator.py",
+            "url": "https://raw.githubusercontent.com/facebookresearch/LayerSkip/494752e5fbb0a82989f6cb384841684b1c2ef5c3/self_speculation/self_speculation_generator.py",
+            "local": "/tmp/teach-all/spec19/sources/LayerSkip/self_speculation/self_speculation_generator.py",
+            "sha256": "76683547ff739c2ab5bce5cacb2a68aaa21ae6f5b1501f400859720aaaa346bd",
+            "bytes": 9871,
+            "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/layerskip/self_speculation/self_speculation_generator.py"
+          },
+          {
+            "repository": "facebookresearch/LayerSkip",
+            "commit": "494752e5fbb0a82989f6cb384841684b1c2ef5c3",
+            "path": "self_speculation/llama_model_utils.py",
+            "url": "https://raw.githubusercontent.com/facebookresearch/LayerSkip/494752e5fbb0a82989f6cb384841684b1c2ef5c3/self_speculation/llama_model_utils.py",
+            "local": "/tmp/teach-all/spec19/sources/LayerSkip/self_speculation/llama_model_utils.py",
+            "sha256": "5eb454b12b4c99f97b94acdcff0b52c38eeb9d1ce986e10e2b4658e9bc479da2",
+            "bytes": 14939,
+            "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/layerskip/self_speculation/llama_model_utils.py"
+          },
+          {
+            "repository": "facebookresearch/LayerSkip",
+            "commit": "494752e5fbb0a82989f6cb384841684b1c2ef5c3",
+            "path": "LICENSE",
+            "url": "https://raw.githubusercontent.com/facebookresearch/LayerSkip/494752e5fbb0a82989f6cb384841684b1c2ef5c3/LICENSE",
+            "local": "/tmp/teach-all/spec19/sources/LayerSkip/LICENSE",
+            "sha256": "5597bb25219e348387edfbf34cfed051cb7f9be29b6488731b9b48db75dcc8eb",
+            "bytes": 19335,
+            "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/layerskip/LICENSE"
+          },
+          {
+            "repository": "snowflakedb/ArcticInference",
+            "commit": "aca5d9a8a62474035c15d114d40a01abc8c94b51",
+            "path": "arctic_inference/suffix_decoding/cache.py",
+            "url": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/arctic_inference/suffix_decoding/cache.py",
+            "local": "/tmp/teach-all/spec19/sources/ArcticInference/arctic_inference/suffix_decoding/cache.py",
+            "sha256": "91c48e6cb335edbd202c8f440e5766df54315ea2d8e40decf8f7a130f3a5e126",
+            "bytes": 14502,
+            "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/arctic/arctic_inference/suffix_decoding/cache.py"
+          },
+          {
+            "repository": "snowflakedb/ArcticInference",
+            "commit": "aca5d9a8a62474035c15d114d40a01abc8c94b51",
+            "path": "csrc/suffix_decoding/suffix_tree.cc",
+            "url": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/csrc/suffix_decoding/suffix_tree.cc",
+            "local": "/tmp/teach-all/spec19/sources/ArcticInference/csrc/suffix_decoding/suffix_tree.cc",
+            "sha256": "cbd8b63b13fbf0beaab4e8736a54d52891b1aac959c5d292d083d88ed37dfc7c",
+            "bytes": 38874,
+            "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/arctic/csrc/suffix_decoding/suffix_tree.cc"
+          },
+          {
+            "repository": "snowflakedb/ArcticInference",
+            "commit": "aca5d9a8a62474035c15d114d40a01abc8c94b51",
+            "path": "csrc/suffix_decoding/suffix_tree.h",
+            "url": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/csrc/suffix_decoding/suffix_tree.h",
+            "local": "/tmp/teach-all/spec19/sources/ArcticInference/csrc/suffix_decoding/suffix_tree.h",
+            "sha256": "d3c9a51fc57a974d680510bee8cfb1ba0a6f5ce6c582ed472cb5ef975b2f5aec",
+            "bytes": 5867,
+            "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/arctic/csrc/suffix_decoding/suffix_tree.h"
+          },
+          {
+            "repository": "snowflakedb/ArcticInference",
+            "commit": "aca5d9a8a62474035c15d114d40a01abc8c94b51",
+            "path": "LICENSE",
+            "url": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/LICENSE",
+            "local": "/tmp/teach-all/spec19/sources/ArcticInference/LICENSE",
+            "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+            "bytes": 11357,
+            "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/arctic/LICENSE"
+          },
+          {
+            "repository": "snowflakedb/ArcticInference",
+            "commit": "aca5d9a8a62474035c15d114d40a01abc8c94b51",
+            "path": "csrc/suffix_decoding/int32_map.h",
+            "url": "https://raw.githubusercontent.com/snowflakedb/ArcticInference/aca5d9a8a62474035c15d114d40a01abc8c94b51/csrc/suffix_decoding/int32_map.h",
+            "local": "/tmp/teach-all/spec19/sources/ArcticInference/csrc/suffix_decoding/int32_map.h",
+            "sha256": "49fd3c8ffb900630f145958211d2e121a3347583ef4cf42910572ad2166e54ef",
+            "bytes": 13285,
+            "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/arctic/csrc/suffix_decoding/int32_map.h"
+          },
+          {
+            "repository": "FasterDecoding/Medusa",
+            "commit": "e2a5d20c048a9b0a4092e6933c34313687422518",
+            "path": "medusa/model/modeling_llama_kv.py",
+            "url": "https://raw.githubusercontent.com/FasterDecoding/Medusa/e2a5d20c048a9b0a4092e6933c34313687422518/medusa/model/modeling_llama_kv.py",
+            "local": "/tmp/teach-all/spec19/sources/Medusa/medusa/model/modeling_llama_kv.py",
+            "sha256": "49290d92403ac2b1e8155b9ec5ad2d2b8778035e9a25cfc95649793e7b3a19b0",
+            "bytes": 55815,
+            "published": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants/codebase/medusa/medusa/model/modeling_llama_kv.py"
+          }
+        ],
+        "scope": "Whole unmodified pinned source files. Licenses preserved; explanations and synthetic harnesses are separate."
+      },
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "확정 prefix4와 새 root R에서 일곱 자리 RABXYXY를 준비해 RAY를 남기는 동일 사례를 구조·용어·17칸 mask·위치 배열·greedy 선택·KV 복사까지 추적했습니다. RBY와 후보에 없는 Z를 선택하는 작은 경계도 이름 앞에서 설명합니다.",
+        "originalPreservation": "기존 self L32/E8/K4 표, MTP 1.82/1.22/.92, tree21과 3.2517/2.533, root 제외 mask10을 보존하면서 시간 가정·분포 규칙·회차 경계를 교정했습니다. 논문 성능 보고를 원 버전과 작업 범위로 한정하고 부가 실험 조건은 펼침에 남겼습니다.",
+        "sourceVerification": "Medusa e2a5d20·LayerSkip 494752e5·ArcticInference aca5d9a8의 전체 10소스와 3라이선스를 원격 pinned byte 및 SHA256과 대조했습니다. Medusa 원본 AST의 배열 대역, 실제 Arctic C++ CPU 자료 구조, 원본 wrapper AST+native 호출 대역을 실행했습니다. LayerSkip 모델 forward·PyTorch/GPU 성능은 실행하지 않았습니다. 고정 wrapper None의 max_depth 오류와 strict suffix 길이 조건을 실제 실행 범위로 밝혔습니다.",
+        "sourceRanges": "13패널의 모든 source 길이와 highlight·annotation을 실제 본문과 읽어 맞췄습니다. commit의 파일 끝, LayerSkip의 crop 218–221, greedy/typical 분기 범위를 교정한 뒤 범위 초과0을 확인했습니다.",
+        "humanize": {
+          "roundTrip": true,
+          "paragraphs": 108,
+          "chars": 18541,
+          "chunks": 5,
+          "gateExit": 0,
+          "manualReview": "전문을 실제 extract→동일 apply byte 비교→prepare/gate→다섯 ≤4000자 묶음 검사→최종 apply했습니다. 연결 쉼표5개 제거, 문법1건 및 숫자 경계 공백을 교정해 33문단 반영·75불변·누락0입니다. 숫자·마커 순서와 근거를 보존했습니다. 모든 gate0입니다."
+        },
+        "humanizeProps": "실제 AST 표시 문자열188개를 추출하고 raw slice 동일 재삽입을 확인했습니다. 수식·역할 표·원문 패널·두 Viz·mask 표 전문을 읽어 붙은 공백10문장을 교정했습니다. 3묶음3984/3968/3330자와 전문 gate0, 공백 제외 모든 문자·숫자·마커 동일입니다. 후속 원문 행 범위 교정은 표시 문장을 바꾸지 않았습니다.",
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "codePanels3901440": 26,
+        "narrowText": 0,
+        "vizInternalScroll": "각4장면×2폭의 경로·결과 문장을 검사하고 SVG text bbox가 frame 밖으로 나가지 않음을 확인했습니다. 같은 원격 원문13패널을 두 폭에서 열었습니다. 모바일 내부 스크롤 끝에서 설명이 고정 controls 위에 들어오며 frame 높이는810px로 동일하고 controls 편차는0.08px 이하입니다. 초기 잘못된 C++ 문자열 기대값과 HMR 스크린샷 재시도는 검사 이력에 남겼고 최종 고유26패널은 통과했습니다.",
+        "keyboard": "실제 focus group에서 ArrowRight 한 경로·ArrowLeft 일곱 자리 복귀를 두 폭에서 확인했습니다. 시간 곡선 slider는 .1/.5/.8/.91/.92/1/1.3의14조건에서 계산한 속도 비와 일치합니다.",
+        "firstFifth": "기본 펼침 상태의 실제 본문에서 이름을 붙이는6절 앞 비중은390px 0.21088022,1440px 0.21080148입니다. 역할별8개 이름은 TermBreakdown으로 하나씩 설명합니다.",
+        "learning": "작성 전 고정한 기초6·심화4를 전부 설명하고 두 폭 DOM에서10개 질문을 확인했습니다. root 통합 strict exit0이며 첫 mask/position 문제의 답은 둘 다 있는 buffers9절로 맞췄습니다. 6개 정의·canonicalHref·ownership owns/evidence를 실질 교정하고 공유 등록과 대조했습니다.",
+        "formula": "네 ExplainedFormula의 일반식도 실제 annotatedFormula에 표시됩니다. 두 폭에서 각 일반식·연산 주석·기호·가정과 KaTeX 오류0을 확인했고 전역1441개 formula strict를 통과했습니다.",
+        "prose": "전역 strict 재검토0 및 JSX word-break strict exit0입니다. 새 Viz 정적 검사는 error0이며 SVG text10건은 실제 두 폭 bbox와 PNG로 확인했습니다.",
+        "numeric": "theory가 작성 전 6+4와 작은 mask·KV·비용을 독립 검산했습니다. 조건부 tail3.2517과 비용.7742/1.49, MTP v<1.834·toy x<.917, suffix1.875 및 혼합80/14를 계산했고 원문 AST/실제 native 실행과 각 가정을 구분했습니다.",
+        "typescript": "통합 actual app tsc -p tsconfig.app.json --noEmit 실제 세션85087 exit0. source 범위 숫자 교정은 Vite 모듈 로드로 재검증했으며 소유 경로 git diff --check PASS. root 고정 snapshot 전체 build는 별도 pending."
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 고정 snapshot 전역 build·배포 검증"
       ],
       "reviewEvidence": {
         "read": "전체 본문 1~384행과 Viz 전체를 실제 읽고 기존 정확한 tree node 합·계산 사례·논문·링크를 보존할 항목으로 분류했습니다.",
         "nextAction": "같은6후보·ancestor mask·greedy 경로·KV 위치를 고정한 작성 전6+4와 실제 source 검증을 준비합니다.",
         "sourceCheck": "공식 arXiv abs에서 SuffixDecoding v3, LayerSkip v4, DeepSeek-V3 v2, Medusa의 버전·title을 확인했습니다. 원문 상세와 코드는 다음 연구 단계입니다."
-      }
+      },
+      "bodyFiles": [
+        "src/pages/articles/ai/speculative-decoding-variants/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/speculative-decoding-variants/ModernArticle.tsx",
+      "contentHash": "a4bb75257c5bbf0256aaf1add882ba9961781f6287e977d62e499f1d6314f851",
+      "evidenceFiles": [
+        "/tmp/teach-all/ai-systems-registration-19.json",
+        "/tmp/teach-all/spec19/plan-before-body.json",
+        "/tmp/teach-all/spec19-independent-theory.json",
+        "/tmp/teach-all/spec19/medusa-execution.json",
+        "/tmp/teach-all/spec19/suffix-execution.log",
+        "/tmp/teach-all/spec19/suffix-wrapper-execution.json",
+        "/tmp/teach-all/spec19/source-verification.json",
+        "/tmp/teach-all/spec19/source-range-validation.json",
+        "/tmp/teach-all/spec19/shared-verification.json",
+        "/tmp/teach-all/spec19-integrated-learning.log",
+        "/tmp/teach-all/spec19/tsc-integrated-final.log",
+        "/tmp/teach-all/spec19/formula.log",
+        "/tmp/teach-all/spec19/prose.log",
+        "/tmp/teach-all/spec19/viz-static.log",
+        "/tmp/teach-all/spec19/jsx-word-breaks.log",
+        "/tmp/teach-all/spec19/interaction.json",
+        "/tmp/teach-all/spec19/learning-dom.json",
+        "/tmp/teach-all/ai-systems-screens-19/panels.json",
+        "/tmp/teach-all/ai-systems-screens-19/scenes.json",
+        "/tmp/teach-all/ai-systems-screens-19/curves.json",
+        "/tmp/teach-all/ai-systems-screens-19/layout.json",
+        "/tmp/teach-all/humanize-ai-systems-19/gate.txt",
+        "/tmp/teach-all/humanize-ai-systems-19/roundtrip.json",
+        "/tmp/teach-all/humanize-ai-systems-19/apply.log",
+        "/tmp/teach-all/humanize-ai-systems-19-props/gate.txt"
+      ]
     },
     {
       "route": "ai/tabular-data-synthesis",
@@ -8717,9 +9062,9 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 43,
+    "rewritten-local-verified": 44,
     "unreviewed": 141,
-    "reviewed-rewrite-required": 2
+    "reviewed-rewrite-required": 1
   },
   "localValidationSummary": {
     "rewritten": 43,
@@ -8729,9 +9074,11 @@
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
     "learningStrict": "/tmp/teach-all/spec18-integrated-learning-final.log — Spec18 strict 통과",
     "formulaStrict": "/tmp/teach-all/spec18/formula-final.log — 1438개 strict 통과",
-    "typescript": "/tmp/teach-all/spec18/tsc-merged-final.log — 최종 통합 actual app tsc exit0. root 고정 snapshot build pending.",
-    "note": "담당186편 중43편을 실제 본문·고정 사례·원문 적용·humanize·두 폭 화면으로 개선 검수했습니다. 나머지143편은 미완료이며141편 미검토·2편 재작성 필요입니다. 자동 screening은 검수 판정이 아닙니다.",
-    "reviewedRewriteRequired": 2,
-    "verifiedRewrites": 43
+    "typescript": "Spec19 통합 actual app tsc -p tsconfig.app.json --noEmit 세션85087 실제 exit0; /tmp/teach-all/spec19/tsc-integrated-final.log. 전역 snapshot build는 root 담당.",
+    "note": "현재44편은 실제 본문·원문·계산·문체·두 폭을 검수한 local-verified이며 미검토141편과 재작성 필요1편은 완료에 포함하지 않습니다. root 전역 고정 snapshot build는 별도로 추적합니다.",
+    "reviewedRewriteRequired": 1,
+    "verifiedRewrites": 43,
+    "rewrittenLocalVerified": 44,
+    "unreviewed": 141
   }
 }

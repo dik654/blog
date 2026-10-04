@@ -360,7 +360,7 @@
     },
     {
       "route": "business/business-model-cashflow",
-      "status": "unreviewed",
+      "status": "retained-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [
           "S",
@@ -377,11 +377,50 @@
         "numericAnswerPointers": 2,
         "caseMarkers": 2
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "actualBodyRead": true,
+        "publicFiles": [
+          "src/pages/articles/business/business-model-cashflow.tsx",
+          "src/pages/articles/world-systems/FlowRail.tsx"
+        ],
+        "reason": "기존10절의 S/B→동일100개/120·200·6·194만원/21일→그림→준비자금필요→이름→같은장부→실제IFRS원문→범위·예측 흐름을 실제로 확인. 기존구조를 유지하며 회계 적용 조건과 실제그림의날짜를 보완.",
+        "changes": "선불구독으로 조건을 좁힘. 상품통제와 물리배송/입금 시점구분. 고객돈을 실제보관하는 결제업체와 판매자의자금접근 구분. 본인·대리인지표는 통제판단 보조,결제서비스보수와 상품대리인보수 혼동제거. IFRS16리스범위,IAS7인용을실제입출금시차문구로교체. 그림에−7/0/+14일 실제표시. 예측질문3개로보완.",
+        "numericCase": "100×12000=120만원,100×20000=200만원,수수료6/입금194/다른비용전74만원,7+14=21일,2묶음선지출240만원. 세금·배송·반품생략 및판매일통제이전명시.",
+        "sourceApplication": "실제IFRS15About5단계,IAS7About직접/간접법,IFRIC2022년5월최종추가본B34~B38와IFRS16About공식원문확인.18단어/15단어인용은각원문25단어이하.",
+        "learning": "기존기초6·심화4보존,답과papers4·conceptStages관계·canonical3정의·EVIDENCE4동기화. strict1 PASS.",
+        "humanize": {
+          "report": "/tmp/teach-all/humanize-root-business-model/summary.json",
+          "chars": 4099,
+          "gate": 0,
+          "roundTrip": true,
+          "applied": "2문단·누락0",
+          "manual": "FlowRail실제문자열·SourceApplication인용/사례·6+4직접확인. 이후그림날짜수정은숫자와방향대조."
+        },
+        "browser": {
+          "report": "/tmp/teach-all/root-business-model-screens/summary.json",
+          "generic": "/tmp/world-browser-audit/teach-checkpoint160-business-summary.json",
+          "widths": [
+            390,
+            1440
+          ],
+          "sections": 10,
+          "namesFraction": 0.3813,
+          "predictions": 3,
+          "citationsPerWidth": 5,
+          "answersPerWidth": 10,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "actualScreens": "390날짜그림·1440원문/통제판단 실제읽음"
+        },
+        "validation": "165편 고정index에서 actual tsc-b·production build·1679정적경로·strict학습165·전역prose799/재검토0·수식1441/1441 exit0. 본문·원문·6+4·humanize·두폭검수는 위 기록참조.",
+        "remaining": "전체799편검토·다음고정index·배포·운영확인"
+      }
     },
     {
       "route": "business/franchise-incentives",
-      "status": "unreviewed",
+      "status": "retained-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [
           "S",
@@ -398,11 +437,51 @@
         "numericAnswerPointers": 2,
         "caseMarkers": 2
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "actualBodyRead": true,
+        "publicFiles": [
+          "src/pages/articles/business/franchise-incentives.tsx",
+          "src/pages/articles/world-systems/FlowRail.tsx"
+        ],
+        "reason": "기존10절의 같은월3천만원/150만원/1550만원 사례→역할그림→품질조정필요→용어→같은계약→FTC원문→나라별범위·예측 흐름을 실제 확인하고 보존했습니다.",
+        "changes": "로열티 계산기준과 지급일 분리. 월 입출금·재료사용·세금생략 가정. 본부공급수입과 이익 구별. 무급노동기회비용과 회계·세무비용 혼동 교정. US14달력일 비면제거래, 한국연매출·3.3㎡·명의변경, EU경쟁법과공시 범위 구별. 3예측 질문으로 보완.",
+        "numericCase": "3000×0.05=150;3000−150−1000−300=1550만원, 다른운영비 전. 가상점포이며 특정브랜드 관측값이 아닙니다.",
+        "sourceApplication": "FTC소비자안내·FDD블로그 Item19/20 actualread. eCFR436.2(a)actualcurrentread. 공정위비교화면 actualHTML항목확인. EUR-Lex2022가이드165~168 실제원문검색추출확인. 직접인용FTC각6/14단어.",
+        "learning": "기초6·심화4 보존/답·papers5·canonical2정의·EVIDENCE5·TOC 동기화. strict1 exit0.",
+        "humanize": {
+          "report": "/tmp/teach-all/humanize-root-franchise/summary.json",
+          "chars": 4257,
+          "gate": 0,
+          "roundTrip": true,
+          "applied": "2문단,0누락",
+          "manual": "FlowRail·SourceApplication·predictions·shared6+4 실제읽기"
+        },
+        "independentReport": "/tmp/teach-all/root-franchise-independent-systems.json",
+        "browser": {
+          "report": "/tmp/teach-all/root-franchise-screens/summary.json",
+          "generic": "/tmp/world-browser-audit/teach-checkpoint161-franchise-summary.json",
+          "widths": [
+            390,
+            1440
+          ],
+          "sections": 10,
+          "namesFraction": 0.35263,
+          "predictions": 3,
+          "citationsPerWidth": 6,
+          "answersPerWidth": 10,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "actualScreens": "390그림·1440국가비교 실제읽음"
+        },
+        "validation": "165편 고정index에서 actual tsc-b·production build·1679정적경로·strict학습165·전역prose799/재검토0·수식1441/1441 exit0. 본문·원문·6+4·humanize·두폭검수는 위 기록참조.",
+        "remaining": "전체799편검토·다음고정index·배포·운영확인"
+      }
     },
     {
       "route": "business/shop-daily-operations",
-      "status": "unreviewed",
+      "status": "retained-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [
           "S",
@@ -419,7 +498,52 @@
         "numericAnswerPointers": 2,
         "caseMarkers": 2
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "actualBodyRead": true,
+        "publicFiles": [
+          "src/pages/articles/business/shop-daily-operations.tsx",
+          "src/pages/articles/world-systems/FlowRail.tsx"
+        ],
+        "reason": "기존10절의 같은20주문/재료25개→그림→손실/정산차이필요→용어→영업/마감의사코드→실제IAS2/FWO원문→범위·예측 흐름을 실제 확인하고 보존했습니다.",
+        "changes": "모든재료동일원가와세금/환불생략 가정.114800원이당일현금아님. 정산예정과이틀뒤실제입금을 본문·의사코드에분리. 실제근로4시간에서휴게중복차감제거. 점주기회비용과회계비용구별. Stripe자동/수동/즉시송금범위·개인정보파기/법정보존분리·직접교육링크추가. 예측질문3개/단일답절.",
+        "numericCase": "20×8000=160000;2%=3200;예정156800;재료10+15−20−1=4;판매원가40000·폐기2000;다른비용전114800원.판매일과+2일을구별.",
+        "sourceApplication": "IAS2About 실제판매/손실문구,Stripe실제보고서범위와송금/거래식별,FWOOverview/근무/급여항목,MOEL2022계약/명세서만제한활용,소득세법2026-01-01시행160조의5,개인정보법2026-09-11시행21조,법제처2026-08-15화재및09-15건강/교육actualread.10월8일예고규정을10월4일현재로적용안함.",
+        "learning": "기초6·심화4 유지·실제답전체수정/읽기. papers5·EVIDENCE9·급여canonical정의·TOC동기화. strict1 exit0.",
+        "humanize": {
+          "report": "/tmp/teach-all/humanize-root-daily/summary.json",
+          "chars": 5715,
+          "paragraphs": 39,
+          "chunks": 2,
+          "gate": 0,
+          "chunkGates": [
+            0,
+            0
+          ],
+          "roundTrip": true,
+          "applied": "문장3·쉼표3,누락0",
+          "manual": "FlowRail·AlgorithmBlock·SourceApplication·predictions·shared6+4 별도실제읽기"
+        },
+        "browser": {
+          "report": "/tmp/teach-all/root-daily-screens/summary.json",
+          "generic": "/tmp/world-browser-audit/teach-checkpoint165-additions-summary.json",
+          "widths": [
+            390,
+            1440
+          ],
+          "sections": 10,
+          "namesFraction": 0.308915,
+          "predictions": 3,
+          "citationsPerWidth": 9,
+          "answersPerWidth": 10,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "actualScreens": "390그림·1440재고원문/정산범위 실제읽음"
+        },
+        "validation": "165편 고정index에서 actual tsc-b·production build·1679정적경로·strict학습165·전역prose799/재검토0·수식1441/1441 exit0. 본문·원문·6+4·humanize·두폭검수는 위 기록참조.",
+        "remaining": "전체799편검토·고정index·배포·운영확인"
+      }
     },
     {
       "route": "business/shop-fitout-and-opening",
@@ -4159,7 +4283,7 @@
   ],
   "counts": {
     "rewritten-local-verified": 31,
-    "retained-local-verified": 5,
-    "unreviewed": 189
+    "retained-local-verified": 6,
+    "unreviewed": 188
   }
 }

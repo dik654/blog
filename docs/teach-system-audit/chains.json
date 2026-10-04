@@ -6578,19 +6578,14 @@
     },
     {
       "route": "crypto/crypto-primitives",
-      "title": "ZK 암호 프리미티브: 보장·조합·실패 조건",
-      "status": "reviewed-needs-rewrite",
+      "title": "암호 도구: 영수증 한 장에서 해시와 서명까지",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/crypto-primitives.tsx",
       "bodyFiles": [
-        "src/pages/articles/blockchain/crypto-foundations-viz.tsx",
         "src/pages/articles/blockchain/crypto-primitives.tsx",
-        "src/pages/articles/blockchain/crypto-primitives/AbelianGroup.tsx",
-        "src/pages/articles/blockchain/crypto-primitives/Ed25519.tsx",
-        "src/pages/articles/blockchain/crypto-primitives/MerkleCommitment.tsx",
-        "src/pages/articles/blockchain/crypto-primitives/Overview.tsx",
-        "src/pages/articles/blockchain/crypto-primitives/Poseidon.tsx",
-        "src/pages/articles/blockchain/crypto-primitives/Schnorr.tsx",
-        "src/pages/articles/blockchain/math-viz-primitives.tsx"
+        "src/pages/articles/blockchain/crypto-primitives/ModernArticle.tsx",
+        "src/pages/articles/blockchain/crypto-primitives/viz/ReceiptProofViz.tsx",
+        "src/pages/articles/blockchain/crypto-primitives/codeRefs.ts"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -6616,16 +6611,49 @@
         "plan": "/tmp/teach-all/primitives-rewrite-plan.json written beforebody rewrite",
         "case": "Four tagged SHA256 receipts A40,B70,C20,D90; openCindex2 with lowbits0,1 and two32byte siblings; same47byte batch/domain/root message signed. ToyF23 order11 Schnorr andF17 oneSPNround are explicitly separate teaching models."
       },
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "All6actualbodyfiles,6sharedmodes,7concepts and6+4metadata read; source updates and native execution pending"
+      "stageEvidence": {
+        "S": "overview: 같은 A40·B70·C20·D90 중 C의 포함 여부와 등록 가게의 승인을 구분합니다.",
+        "B": "black-box: 기록·형제·서명 입력에서 루트 재구성과 외부 키·배치 비교까지 설명합니다.",
+        "0": "case: C=4300000014, 00/01 태그, 11+4+32=47바이트를 고정합니다.",
+        "1": "picture: 기록→D 형제→AB 형제→승인의 네 장면을 같은 C로 추적합니다.",
+        "2": "why: 전체 기록 대신 두 형제와 세 해시를 쓰는 이유 및 예상 루트 조건을 설명합니다.",
+        "3": "names: 실제 역할 뒤에 Merkle·binding/hiding·Schnorr·Ed25519·Poseidon 이름을 붙입니다.",
+        "4": "merkle-commitment/schnorr/poseidon: 실제 루트, 같은 메시지의 e9/s1, F17 full3,2/partial8,12를 계산합니다.",
+        "5": "bip340/ed25519/source-bug: RFC 원문 seed→r/R/h/S/verify에 같은47바이트를 대입하고 공식 정오표를 대조합니다.",
+        "6": "hiding/pedersen/absence/capacity/nonce/authority/variants/abelian-group: 후보100·균등19·순열289·nonce추출·65바이트·항등원·변형과 타입의 조건을 설명합니다.",
+        "7": "limits와 predictions: 실제 실행 범위와 미검증 범위 및 단일9/15/19절 답을 가진 세 예측 질문을 제공합니다."
       },
-      "remaining": [
-        "원문·코드와 수치 계획 검증",
-        "동일 영수증 사례의 실제 teach-system 본문 재작성",
-        "윤문·학습 등록·화면 검수"
-      ]
+      "sourceEvidence": [
+        {
+          "source": "RFC9162 §2.1",
+          "mapping": "실제 00/01 태그·경로 방향과 트리 크기 조건을 자체5바이트 영수증에 대입; CT 전송 형식과 sparse map 규격으로 확대하지 않음."
+        },
+        {
+          "source": "Poseidon USENIX2021 PDF522–524",
+          "mapping": "실제 순열·스펀지·full/partial·MDS와 추가 공격 조건을 읽음. F17 모형은 실제 매개변수·성능이 아님."
+        },
+        {
+          "source": "BIP340 official current specification",
+          "mapping": "키를 포함한 tagged hash·x좌표·짝수y·범위·메시지/nonce규칙 읽음; BIP 실행 주장은 없음."
+        },
+        {
+          "source": "RFC8032 §5.1.5–7/6/7.1 and Verified erratum5930",
+          "mapping": "출판본 statement 바이트 보존 및 공식빈벡터→같은47바이트 실행. 원문65바이트통과와 별도길이검사거부, 항등원식통과와 등록키정책거부를 분리."
+        }
+      ],
+      "verification": {
+        "arithmetic": "/tmp/teach-all/primitives-retained-run.json와 저장된 verification/observed-python-3.9.6.json PASS. SHA256 C경로·후보100·빈값vs0·Schnorr해시/추출·289순열·Pedersen분포·RFC벡터/서명/실패입력 실제실행. theory와systems 독립 숫자검산 및 theory 본문10–15/19–21 검토 PASS.",
+        "sourceBytes": "/tmp/teach-all/chains-primitives-source-check.json: RFC전체SHA, 추출 statement의 기존SHA, 라이선스 헤더추가후SHA, missingraise보존 모두PASS. codebase/manifest.json과 공식errata JSON보존.",
+        "humanize": "실제 추출66문단12305자·왕복·4묶음·변경0. systems 독립finalize main+4묶음 승인 후 apply0변경66유지0누락. 추가AST124표시문자열6795자·동일재삽입·전문과2묶음gate0.",
+        "typescript": "actual npx tsc -p tsconfig.app.json --noEmit session50240 exit0, /tmp/teach-all/chains-primitives-tsc.log.",
+        "prose": "/tmp/teach-all/chains-primitives-prose.log strict exit0, 신규경고없음.",
+        "browser": "output/playwright/teach-chains-primitives/summary.json:390/1440 각각10원문패널 PASS, 페이지넘침·좁은본문·수식오류·anchors·pageerror0. 최초검사 닫기대기 실패 및 Escape미지원 가정을 수정한 뒤 실제닫기버튼/hidden대기로 전20패널재검 PASS.",
+        "mathAndViz": "/tmp/teach-all/chains-primitives-detail.json:일반식실제표시·내부KaTeX경계0,4장면고정높이/controls·화살표·Space·자동진행·reduced PASS 양폭. 모바일수식·긴hex·마지막그림스크린샷 실제읽음.",
+        "registration": "부모batch22의22절TOC/제목/학습6+4/7정의와label/ownership/full5evidence/topology병합. /tmp/teach-all/primitives-integrated-learning.log strict--require등록exit0. 실제metadata readback7concept+ownership 확인.",
+        "integratedBrowser": "/tmp/teach-all/chains-primitives-integrated.json와 chains-primitives-learning.json:양폭제목/22절/anchors/수식/넘침0, 정답체크리스트10개를모두열고47바이트·64바이트·x3·5930·등록키거부확인. 초기느슨한답문자열selector는상단설명까지11개로세어 exact정답체크리스트selector로교정.",
+        "closingSupplement": "ReviewPrompts의 같은3질문을22절끝으로옮기고7절의안내1문단을맞췄습니다. 최종실제추출66문단12368자/4묶음/왕복/윤문0이며 systems가이전승인전문대비P16한곳만다름을확인해main+4묶음보충승인했습니다. final apply0변경66유지0누락. /tmp/teach-all/primitives-closing-check.json390/1440마지막절에답9/15/19절3질문표시·넘침0확인."
+      },
+      "remaining": []
     },
     {
       "route": "crypto/csprng",
@@ -7509,7 +7537,7 @@
     {
       "route": "crypto/hash-theory",
       "title": "Hash 이론: bytes·security game·compression·sponge",
-      "status": "unreviewed",
+      "status": "reviewed-needs-rewrite",
       "publicEntry": "src/pages/articles/blockchain/hash-theory.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/hash-theory.tsx",
@@ -7529,19 +7557,21 @@
           "Known vector와 실패 fixture를 통과한 뒤 속도를 잰다"
         ]
       },
-      "issues": [],
+      "issues": [
+        "실제공개ModernArticle과HashConstructionViz 및고정baseline5435자, 5concept/6+4/ownership을전체읽음. A 한바이트·tuple반례·작은mod17예가있지만같은입력의전체계산과실제원문추적없이이름/규칙나열로이동함.",
+        "ExplainedFormula에기준량당비율·정규화등무관한generic주석이남음. capacity를숨겨진securitymargin이라고하여공개입력에서전체내부상태계산가능함과비밀키를혼동할여지.",
+        "실제고정RustCrypto원문은읽기시작했으며API/상태/패딩을abc와같은사례로추적해야함. 원문FIPS와일반공격비용조건, prefix-free단정과파싱경계, truncateddigest와naiveMAC조건을대조예정."
+      ],
       "fixture": null,
       "stageEvidence": {},
       "sourceEvidence": [],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "공개ModernArticle 전체·실제HashConstructionViz 전체·baseline·5개정의와6+4·ownership 실제읽음. 2026-10-04공식FIPS180-4/202현황및고정RustCrypto tree존재확인; 실제매개변수/API추적진행중."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "abc 입력과6+4수치계획",
+        "공식FIPS·고정원문·실제실행대조",
+        "같은입력의본문재작성및윤문·학습·화면검수"
       ]
     },
     {
