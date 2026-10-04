@@ -1127,13 +1127,12 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/feature-engineering#overview",
   },
   "fold-local-statistic": {
-    id: "fold-local-statistic",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Fold-local preprocessing statistic",
-    definition:
-      "평균·분산·결측 대치·category frequency·선택 기준처럼 data에서 추정하는 상태를 현재 training fold에서만 fit하고 validation에는 고정 적용하는 방법입니다.",
-    canonicalHref: "/cs/ai/fold-local-validation#pipeline",
+    "id": "fold-local-statistic",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Fold-local preprocessing statistic",
+    "definition": "평균·분산·결측 대치·category frequency·선택 기준처럼 data에서 추정하는 상태를 현재 training fold에서만 fit하고 validation에는 고정 적용하는 방법입니다.",
+    "canonicalHref": "/cs/ai/fold-local-validation#pipeline"
   },
   "cross-fitted-target-encoding": {
     id: "cross-fitted-target-encoding",
@@ -7772,12 +7771,11 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/multi-agent-implementation#manufacturing",
   },
   "competition-evaluation-contract": {
-    id: "competition-evaluation-contract",
-    domain: "machine-learning",
-    label: "Competition evaluation contract",
-    definition:
-      "한 prediction row·cutoff·target·metric 계산 단위와 방향, local validation·public leaderboard·private/final evaluation의 서로 다른 역할을 실험 전에 고정하는 계약입니다.",
-    canonicalHref: "/cs/ai/competition-workflow#overview",
+    "id": "competition-evaluation-contract",
+    "domain": "machine-learning",
+    "label": "Competition evaluation contract",
+    "definition": "한 prediction row·cutoff·target·metric 계산 단위와 방향, local validation·public leaderboard·private/final evaluation의 서로 다른 역할을 실험 전에 고정하는 계약입니다.",
+    "canonicalHref": "/cs/ai/competition-workflow#target"
   },
   "model-selection-maximum-optimism": {
     "id": "model-selection-maximum-optimism",
@@ -7826,89 +7824,79 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/ai/paired-experiment-design#paired-delta"
   },
   "leaderboard-adaptive-feedback-budget": {
-    id: "leaderboard-adaptive-feedback-budget",
-    kind: "metric",
-    domain: "statistics",
-    label: "Adaptive leaderboard feedback budget",
-    definition:
-      "Public leaderboard 결과가 후속 model·feature·weight 선택을 바꾼 횟수와 결정 근거를 사전 한도 안에서 기록해 holdout의 반복 사용을 통제하는 운영 지표입니다.",
-    canonicalHref: "/cs/ai/competition-submission-control#feedback",
+    "id": "leaderboard-adaptive-feedback-budget",
+    "kind": "metric",
+    "domain": "statistics",
+    "label": "Adaptive leaderboard feedback budget",
+    "definition": "외부 평가 결과가 후속 후보·특징·프로토콜 선택을 바꾼 사건을 사전 운영 규칙으로 기록하고 제한하는 장치입니다. 모든 전송과 관측은 별도로 남기며 변경이 없는 유지·종료 선택도 피드백 영향을 받을 수 있습니다. 이 횟수는 통계적 정보 사용량이나 일반화 보장과 같지 않습니다.",
+    "canonicalHref": "/cs/ai/competition-submission-control#feedback"
   },
   "competition-submission-manifest": {
-    id: "competition-submission-manifest",
-    domain: "machine-learning",
-    label: "Competition submission manifest",
-    definition:
-      "Candidate/run ID·code/data/split/preprocess/checkpoint·OOF report·retrain 여부·inference environment·row order·file checksum을 제출 파일과 연결한 최종 lineage입니다.",
-    canonicalHref: "/cs/ai/competition-submission-control#manifest",
+    "id": "competition-submission-manifest",
+    "domain": "machine-learning",
+    "label": "Competition submission manifest",
+    "definition": "Candidate/run ID·code/data/split/preprocess/checkpoint·OOF report·retrain 여부·inference environment·row order·file checksum을 제출 파일과 연결한 최종 lineage입니다.",
+    "canonicalHref": "/cs/ai/competition-submission-control#manifest"
   },
   "deployment-matched-validation-risk": {
-    id: "deployment-matched-validation-risk",
-    domain: "statistics",
-    label: "Deployment-matched validation risk",
-    definition:
-      "학습 절차가 실제 train distribution의 data로 model을 만들고 배포에서 새로 만날 row·entity·time/site 단위에 내는 loss의 기대값을 validation 목표로 명시한 estimand입니다.",
-    canonicalHref: "/cs/ai/cross-validation#risk",
+    "id": "deployment-matched-validation-risk",
+    "domain": "statistics",
+    "label": "Deployment-matched validation risk",
+    "definition": "학습 절차가 실제 train distribution의 data로 model을 만들고 배포에서 새로 만날 row·entity·time/site 단위에 내는 loss의 기대값을 validation 목표로 명시한 estimand입니다.",
+    "canonicalHref": "/cs/ai/cross-validation#risk"
   },
   "pooled-oof-risk-estimate": {
-    id: "pooled-oof-risk-estimate",
-    kind: "metric",
-    domain: "statistics",
-    label: "Pooled out-of-fold risk estimate",
-    definition:
-      "각 행이 자신을 학습하지 않은 fold model에게서 받은 loss를 sample weight와 실제 validation 행 수로 합쳐 전체 held-out prediction risk를 계산하는 추정량입니다.",
-    canonicalHref: "/cs/ai/oof-risk-estimation#pooling",
+    "id": "pooled-oof-risk-estimate",
+    "kind": "metric",
+    "domain": "statistics",
+    "label": "Pooled out-of-fold risk estimate",
+    "definition": "각 행이 자신을 학습하지 않은 fold model에게서 받은 loss를 sample weight와 실제 validation 행 수로 합쳐 전체 held-out prediction risk를 계산하는 추정량입니다.",
+    "canonicalHref": "/cs/ai/oof-risk-estimation#pooling"
   },
   "cv-procedure-estimand": {
-    id: "cv-procedure-estimand",
-    kind: "theorem",
-    domain: "statistics",
-    label: "Cross-validation procedure estimand",
-    definition:
-      "보통의 CV estimate는 관측 data 전체로 fit한 특정 model의 conditional error보다 같은 모집단에서 새로 뽑은 training sets에 학습 절차를 적용한 model들의 평균 prediction error에 더 가깝다는 해석입니다.",
-    canonicalHref: "/cs/ai/oof-risk-estimation#estimand",
+    "id": "cv-procedure-estimand",
+    "kind": "theorem",
+    "domain": "statistics",
+    "label": "Cross-validation procedure estimand",
+    "definition": "보통의 CV estimate는 관측 data 전체로 fit한 특정 model의 conditional error보다 같은 모집단에서 새로 뽑은 training sets에 학습 절차를 적용한 model들의 평균 prediction error에 더 가깝다는 해석입니다.",
+    "canonicalHref": "/cs/ai/oof-risk-estimation#estimand"
   },
   "group-disjoint-split": {
-    id: "group-disjoint-split",
-    domain: "statistics",
-    label: "Group-disjoint split",
-    definition:
-      "한 entity·source·site처럼 공유 원인을 가진 모든 파생 행을 같은 partition에 두어 fold train과 validation의 group ID 교집합을 비우는 분할 조건입니다.",
-    canonicalHref: "/cs/ai/grouped-validation#disjoint",
+    "id": "group-disjoint-split",
+    "domain": "statistics",
+    "label": "Group-disjoint split",
+    "definition": "한 entity·source·site처럼 공유 원인을 가진 모든 파생 행을 같은 partition에 두어 fold train과 validation의 group ID 교집합을 비우는 분할 조건입니다.",
+    "canonicalHref": "/cs/ai/grouped-validation#disjoint"
   },
   "independent-evaluation-unit-count": {
-    id: "independent-evaluation-unit-count",
-    kind: "metric",
-    domain: "statistics",
-    label: "Independent evaluation-unit count",
-    definition:
-      "행 수가 아니라 배포 질문에서 새로 나타나며 독립에 가깝다고 보는 patient·site·source group 수를 근거 반복 단위로 세는 지표입니다.",
-    canonicalHref: "/cs/ai/grouped-validation#evidence",
+    "id": "independent-evaluation-unit-count",
+    "kind": "metric",
+    "domain": "statistics",
+    "label": "Independent evaluation-unit count",
+    "definition": "행 수가 아니라 배포 질문에서 새로 나타나며 독립에 가깝다고 보는 patient·site·source group 수를 근거 반복 단위로 세는 지표입니다.",
+    "canonicalHref": "/cs/ai/grouped-validation#evidence"
   },
   "walk-forward-label-availability": {
-    id: "walk-forward-label-availability",
-    domain: "statistics",
-    label: "Walk-forward label-availability boundary",
-    definition:
-      "각 validation origin에서 training row의 target horizon과 reporting delay를 지난 label available time이 첫 prediction cutoff보다 이른 행만 학습에 허용하는 시간 조건입니다.",
-    canonicalHref: "/cs/ai/walk-forward-validation#labels",
+    "id": "walk-forward-label-availability",
+    "domain": "statistics",
+    "label": "Walk-forward label-availability boundary",
+    "definition": "각 과거 예측 시작점에서 정답이 실제 도착했는지를 검사하여 당시 알 수 있었던 학습 정보를 재현하는 조건입니다. 정답 시각만으로 전체 학습 자격을 보장하지 않으며 입력 가용성·학습 범위·품질 조건도 함께 적용합니다. 단순 고정 모형에서는 사건 시각에 관찰 길이와 보고 지연을 더하고 명시한 동률 규칙으로 비교합니다.",
+    "canonicalHref": "/cs/ai/walk-forward-validation#labels"
   },
   "cv-leaderboard-rank-agreement": {
-    id: "cv-leaderboard-rank-agreement",
-    kind: "metric",
-    domain: "statistics",
-    label: "CV–leaderboard pairwise rank agreement",
-    definition:
-      "동일 후보 쌍에서 local CV와 public leaderboard의 우열 방향이 일치하는 비율로 절대 score offset과 model-selection 순서 보존을 분리하는 진단입니다.",
-    canonicalHref: "/cs/ai/validation-feedback-audit#agreement",
+    "id": "cv-leaderboard-rank-agreement",
+    "kind": "metric",
+    "domain": "statistics",
+    "label": "CV–leaderboard pairwise rank agreement",
+    "definition": "같은 후보 쌍의 두 평가 점수 차이가 양쪽 모두 사전 허용폭을 넘을 때 우열 부호가 일치한 비율입니다. 이 글의 운영 정의는 한쪽이라도 동점인 쌍을 분모에서 제외하고 제외 수를 함께 보고합니다. 유효 쌍이 없으면 계산 불가이며 통계적 유의성이나 다른 평가의 순서를 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/validation-feedback-audit#agreement"
   },
   "validation-protocol-adaptation-audit": {
-    id: "validation-protocol-adaptation-audit",
-    domain: "machine-learning",
-    label: "Validation-protocol adaptation audit",
-    definition:
-      "Leaderboard feedback을 보고 split·metric·preprocessing·candidate filter를 바꾼 시점과 가설을 기록하고 마지막에는 그 선택에 쓰지 않은 holdout에서 재평가하는 절차입니다.",
-    canonicalHref: "/cs/ai/validation-feedback-audit#adaptation",
+    "id": "validation-protocol-adaptation-audit",
+    "domain": "machine-learning",
+    "label": "Validation-protocol adaptation audit",
+    "definition": "Leaderboard feedback을 보고 split·metric·preprocessing·candidate filter를 바꾼 시점과 가설을 기록하고 마지막에는 그 선택에 쓰지 않은 holdout에서 재평가하는 절차입니다.",
+    "canonicalHref": "/cs/ai/validation-feedback-audit#adaptation"
   },
   "hpo-selection-evaluation-contract": {
     id: "hpo-selection-evaluation-contract",
@@ -7928,22 +7916,20 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/hyperparameter-tuning#trial-budget",
   },
   "adaptive-trial-proposal-history": {
-    id: "adaptive-trial-proposal-history",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Adaptive trial proposal history",
-    definition:
-      "완료·중단·실패 configuration과 관측값의 history로 surrogate 또는 acquisition rule을 갱신해 다음 configuration을 제안하는 sequential search 구조입니다.",
-    canonicalHref: "/cs/ai/adaptive-hyperparameter-search#proposal-loop",
+    "id": "adaptive-trial-proposal-history",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Adaptive trial proposal history",
+    "definition": "완료·중단·실패 configuration과 관측값의 history로 surrogate 또는 acquisition rule을 갱신해 다음 configuration을 제안하는 sequential search 구조입니다.",
+    "canonicalHref": "/cs/ai/adaptive-hyperparameter-search#proposal-loop"
   },
   "tpe-density-ratio": {
-    id: "tpe-density-ratio",
-    kind: "method",
-    domain: "statistics",
-    label: "Tree-structured Parzen estimator density ratio",
-    definition:
-      "관측 score를 좋은 집합과 나머지로 나누고 configuration의 조건부 밀도 l(λ)와 g(λ)를 추정해 l/g가 큰 후보를 선호하는 TPE의 핵심 관점입니다.",
-    canonicalHref: "/cs/ai/adaptive-hyperparameter-search#tpe",
+    "id": "tpe-density-ratio",
+    "kind": "method",
+    "domain": "statistics",
+    "label": "Tree-structured Parzen estimator density ratio",
+    "definition": "관측 score를 좋은 집합과 나머지로 나누고 configuration의 조건부 밀도 l(λ)와 g(λ)를 추정해 l/g가 큰 후보를 선호하는 TPE의 핵심 관점입니다.",
+    "canonicalHref": "/cs/ai/adaptive-hyperparameter-search#tpe"
   },
   "log-uniform-parameter-sampling": {
     id: "log-uniform-parameter-sampling",
@@ -8208,20 +8194,18 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/metric-selection-protocol#receipt",
   },
   "experiment-spec-attempt-identity": {
-    id: "experiment-spec-attempt-identity",
-    domain: "computer-science",
-    label: "Experiment specification · attempt identity",
-    definition:
-      "Code·data·split·resolved config·environment·command의 content digest로 실행 조건을 식별하고, seed·retry·worker를 별도 attempt ID에 포함해 같은 조건의 반복 실행을 덮어쓰지 않는 규칙입니다.",
-    canonicalHref: "/cs/ai/experiment-tracking#spec-attempt",
+    "id": "experiment-spec-attempt-identity",
+    "domain": "computer-science",
+    "label": "Experiment specification · attempt identity",
+    "definition": "비교할 공통 실행 조건의 정규화 digest와 실제 실행별 고유 ID를 구분하는 추적 규칙입니다. seed·retry·worker 같은 좌표는 반복될 수 있으므로 고유 실행 ID를 별도로 발급하며 각 실행의 완전한 유효 설정을 보존합니다. seed를 공통 조건에 포함할지는 명시한 비교 설계에 따릅니다.",
+    "canonicalHref": "/cs/ai/experiment-tracking#spec-attempt"
   },
   "content-addressed-artifact-reference": {
-    id: "content-addressed-artifact-reference",
-    domain: "computer-science",
-    label: "Content-addressed artifact reference",
-    definition:
-      "Artifact의 URI뿐 아니라 bytes digest·schema version·size·producer run을 함께 저장해 위치가 움직이거나 덮어써져도 정확한 내용과 의미를 검증하는 reference입니다.",
-    canonicalHref: "/cs/ai/experiment-tracking#artifact-reference",
+    "id": "content-addressed-artifact-reference",
+    "domain": "computer-science",
+    "label": "Content-addressed artifact reference",
+    "definition": "Artifact의 URI뿐 아니라 bytes digest·schema version·size·producer run을 함께 저장해 위치가 움직이거나 덮어써져도 정확한 내용과 의미를 검증하는 reference입니다.",
+    "canonicalHref": "/cs/ai/experiment-tracking#artifact-reference"
   },
   "metric-progress-coordinate": {
     id: "metric-progress-coordinate",
@@ -13026,40 +13010,52 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/crypto/extension-fields#extension-release-gate",
   },
   "diffie-hellman-key-agreement-flow": {
-    id: "diffie-hellman-key-agreement-flow", kind: "method", domain: "computer-science",
-    label: "Diffie–Hellman key-agreement flow",
-    definition: "두 참여자가 같은 group domain에서 ephemeral public values를 교환하고 상대 공개값에 자기 secret scalar를 적용해 같은 raw shared group element를 계산하는 key-agreement 경로입니다.",
-    canonicalHref: "/cs/crypto/diffie-hellman#protocol",
+    "id": "diffie-hellman-key-agreement-flow",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Diffie–Hellman key-agreement flow",
+    "definition": "두 참여자가 같은 group domain에서 ephemeral public values를 교환하고 상대 공개값에 자기 secret scalar를 적용해 같은 raw shared group element를 계산하는 key-agreement 경로입니다.",
+    "canonicalHref": "/cs/crypto/diffie-hellman#protocol"
   },
   "dh-public-value-validation": {
-    id: "dh-public-value-validation", kind: "method", domain: "computer-science",
-    label: "DH public-value validation",
-    definition: "Peer의 encoded public input이 길이·canonical policy·curve/group·subgroup·identity/all-zero 규칙을 만족하는지 선택 primitive의 specification대로 검사하고 typed failure로 종료하는 절차입니다.",
-    canonicalHref: "/cs/crypto/diffie-hellman#protocol",
+    "id": "dh-public-value-validation",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "DH public-value validation",
+    "definition": "Peer의 encoded public input이 길이·canonical policy·curve/group·subgroup·identity/all-zero 규칙을 만족하는지 선택 primitive의 specification대로 검사하고 typed failure로 종료하는 절차입니다.",
+    "canonicalHref": "/cs/crypto/diffie-hellman#public-validation"
   },
   "authenticated-dh-transcript": {
-    id: "authenticated-dh-transcript", kind: "concept", domain: "computer-science",
-    label: "Authenticated DH transcript",
-    definition: "Peer identity와 role, algorithm negotiation, domain, 두 ephemeral public values를 canonical transcript에 넣고 signature 또는 PSK MAC으로 인증해 MITM·downgrade·unknown-key-share를 막는 경계입니다.",
-    canonicalHref: "/cs/crypto/diffie-hellman#authenticated-transcript",
+    "id": "authenticated-dh-transcript",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Authenticated DH transcript",
+    "definition": "Peer identity와 role, algorithm negotiation, domain, 두 ephemeral public values를 canonical transcript에 넣고 signature 또는 PSK MAC으로 인증해 MITM·downgrade·unknown-key-share를 막는 경계입니다.",
+    "canonicalHref": "/cs/crypto/diffie-hellman#authenticated-transcript"
   },
   "dh-kdf-key-schedule": {
-    id: "dh-kdf-key-schedule", kind: "method", domain: "computer-science",
-    label: "DH transcript-bound KDF schedule",
-    definition: "Raw DH output을 extract하고 authenticated transcript digest·role·phase·purpose label로 expand해 방향과 용도가 분리된 handshake/application keys를 만드는 key schedule입니다.",
-    canonicalHref: "/cs/crypto/diffie-hellman#kdf-key-schedule",
+    "id": "dh-kdf-key-schedule",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "DH transcript-bound KDF schedule",
+    "definition": "Raw DH output을 extract하고 authenticated transcript digest·role·phase·purpose label로 expand해 방향과 용도가 분리된 handshake/application keys를 만드는 key schedule입니다.",
+    "canonicalHref": "/cs/crypto/diffie-hellman#kdf-key-schedule"
   },
   "dh-ephemeral-forward-secrecy-lifecycle": {
-    id: "dh-ephemeral-forward-secrecy-lifecycle", kind: "concept", domain: "computer-science",
-    label: "DH ephemeral · forward-secrecy lifecycle",
-    definition: "Session마다 새 secret scalar를 생성해 long-term authentication key와 분리하고 완료·실패 뒤 intermediate와 함께 폐기해 이후 장기 key 노출이 기록된 과거 session key를 복원하지 못하게 하는 수명주기입니다.",
-    canonicalHref: "/cs/crypto/diffie-hellman#ephemeral-lifecycle",
+    "id": "dh-ephemeral-forward-secrecy-lifecycle",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "DH ephemeral · forward-secrecy lifecycle",
+    "definition": "Session마다 새 secret scalar를 생성해 long-term authentication key와 분리하고 완료·실패 뒤 intermediate와 함께 폐기해 이후 장기 key 노출이 기록된 과거 session key를 복원하지 못하게 하는 수명주기입니다.",
+    "canonicalHref": "/cs/crypto/diffie-hellman#ephemeral-lifecycle"
   },
   "dh-deployment-release-gate": {
-    id: "dh-deployment-release-gate", kind: "method", domain: "computer-science",
-    label: "Diffie–Hellman deployment release gate",
-    definition: "Protocol·primitive·credential·transcript·KDF version을 고정하고 malformed/all-zero/wrong-group·MITM·role swap·downgrade·replay·RNG clone·key-confirmation·restart를 검사한 뒤 비용을 비교하는 배포 절차입니다.",
-    canonicalHref: "/cs/crypto/diffie-hellman#dh-release-gate",
+    "id": "dh-deployment-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Diffie–Hellman deployment release gate",
+    "definition": "Protocol·primitive·credential·transcript·KDF version을 고정하고 malformed/all-zero/wrong-group·MITM·role swap·downgrade·replay·RNG clone·key-confirmation·restart를 검사한 뒤 비용을 비교하는 배포 절차입니다.",
+    "canonicalHref": "/cs/crypto/diffie-hellman#dh-release-gate"
   },
   "erasure-code-symbol-recovery-contract": {
     id: "erasure-code-symbol-recovery-contract", kind: "concept", domain: "computer-science",
@@ -14584,10 +14580,38 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "mdbx-durability-release-gate": { id:"mdbx-durability-release-gate", kind:"method", domain:"computer-science", label:"MDBX transaction · durability release gate", definition:"Pinned libmdbx source·flags·filesystem에서 commit 단계별 kill, map-full, long reader, writer contention, malformed page, DUPSORT ordering을 재생해 committed generation·rows·cursor·reopen parity와 fsync/latency/RSS/map growth/rollback을 평가하는 절차입니다.", canonicalHref:"/cs/blockchain/mdbx-internals#release" },
   "ethereum-mpt-canonical-update-root": { id:"ethereum-mpt-canonical-update-root", kind:"method", domain:"computer-science", label:"Ethereum MPT canonical update · root", definition:"Secure-key nibble path에 leaf를 insert/update/delete하고 branch·extension·leaf를 canonical하게 split/compress한 뒤 RLP bytes의 inline/hash child references를 bottom-up 재계산해 deterministic root를 얻는 상태 commitment 절차입니다.", canonicalHref:"/cs/blockchain/merkle-patricia-trie#root-proof" },
   "ethereum-mpt-encoding-proof-release-gate": { id:"ethereum-mpt-encoding-proof-release-gate", kind:"method", domain:"computer-science", label:"Ethereum MPT encoding · proof release gate", definition:"Pinned protocol/source에서 odd/even hex-prefix, branch value, inline/hash 32-byte 경계, malformed/noncanonical RLP, wrong path/value/root, valid absence, update/delete를 replay해 root/proof/node-set parity 뒤 bytes/time/memory/rollback을 평가하는 절차입니다.", canonicalHref:"/cs/blockchain/merkle-patricia-trie#release" },
-  "elgamal-randomized-group-encryption": { id:"elgamal-randomized-group-encryption", kind:"method", domain:"computer-science", label:"ElGamal randomized group encryption", definition:"Order q의 cyclic group에서 public key y=g^x와 message group element M에 fresh random r를 쓰여 ciphertext (g^r, M·y^r)를 만들고 secret x로 shared mask를 제거하는 확률적 공개키 암호화입니다.", canonicalHref:"/cs/crypto/elgamal#encrypt-decrypt" },
-  "elgamal-ddh-indcpa-security-boundary": { id:"elgamal-ddh-indcpa-security-boundary", kind:"concept", domain:"computer-science", label:"ElGamal DDH · IND-CPA boundary", definition:"Validated group에서 DDH tuple을 구분하기 어렵고 nonce가 fresh하다는 전제 아래 textbook ElGamal이 chosen-plaintext indistinguishability를 목표로 하지만 active ciphertext integrity는 제공하지 않는 경계입니다.", canonicalHref:"/cs/crypto/elgamal#security" },
-  "elgamal-multiplicative-malleability": { id:"elgamal-multiplicative-malleability", kind:"concept", domain:"computer-science", label:"ElGamal multiplicative malleability", definition:"Ciphertexts를 component-wise 곱하면 plaintext group elements도 곱해지므로 homomorphic use에는 유용하지만 인증 없는 암호화에서는 공격자가 평문을 예측 가능하게 변조할 수 있는 성질입니다.", canonicalHref:"/cs/crypto/elgamal#security" },
-  "elgamal-hybrid-encryption-release-gate": { id:"elgamal-hybrid-encryption-release-gate", kind:"method", domain:"computer-science", label:"ElGamal hybrid-encryption release gate", definition:"Group·generator·subgroup·encoding·RNG·KDF·AEAD profile을 고정하고 malformed input·nonce reuse·ciphertext mutation·wrong key/domain을 거절한 뒤 hybrid KEM-DEM 구현의 시간·bytes·rollback을 비교하는 채택 절차입니다.", canonicalHref:"/cs/crypto/elgamal#release" },
+  "elgamal-randomized-group-encryption": {
+    "id": "elgamal-randomized-group-encryption",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "ElGamal randomized group encryption",
+    "definition": "Order q의 cyclic group에서 public key y=g^x와 message group element M에 fresh random r를 쓰여 ciphertext (g^r, M·y^r)를 만들고 secret x로 shared mask를 제거하는 확률적 공개키 암호화입니다.",
+    "canonicalHref": "/cs/crypto/elgamal#encrypt-decrypt"
+  },
+  "elgamal-ddh-indcpa-security-boundary": {
+    "id": "elgamal-ddh-indcpa-security-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "ElGamal DDH · IND-CPA boundary",
+    "definition": "Validated group에서 DDH tuple을 구분하기 어렵고 nonce가 fresh하다는 전제 아래 textbook ElGamal이 chosen-plaintext indistinguishability를 목표로 하지만 active ciphertext integrity는 제공하지 않는 경계입니다.",
+    "canonicalHref": "/cs/crypto/elgamal#security"
+  },
+  "elgamal-multiplicative-malleability": {
+    "id": "elgamal-multiplicative-malleability",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "ElGamal multiplicative malleability",
+    "definition": "Ciphertexts를 component-wise 곱하면 plaintext group elements도 곱해지므로 homomorphic use에는 유용하지만 인증 없는 암호화에서는 공격자가 평문을 예측 가능하게 변조할 수 있는 성질입니다.",
+    "canonicalHref": "/cs/crypto/elgamal#malleability"
+  },
+  "elgamal-hybrid-encryption-release-gate": {
+    "id": "elgamal-hybrid-encryption-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "ElGamal hybrid-encryption release gate",
+    "definition": "Group·generator·subgroup·encoding·RNG·KDF·AEAD profile을 고정하고 malformed input·nonce reuse·ciphertext mutation·wrong key/domain을 거절한 뒤 hybrid KEM-DEM 구현의 시간·bytes·rollback을 비교하는 채택 절차입니다.",
+    "canonicalHref": "/cs/crypto/elgamal#release"
+  },
   "mpc-real-ideal-adversary-boundary": { id:"mpc-real-ideal-adversary-boundary", kind:"concept", domain:"computer-science", label:"MPC real–ideal · adversary boundary", definition:"실제 parties·messages·corruptions의 view가 trusted ideal functionality의 input/output·allowed leakage로 simulation되는지를 semi-honest·malicious, static·adaptive, abort·fairness 조건별로 나눈 secure-computation 정의입니다.", canonicalHref:"/cs/crypto/mpc#security-model" },
   "shamir-threshold-polynomial-sharing": { id:"shamir-threshold-polynomial-sharing", kind:"method", domain:"mathematics", label:"Shamir threshold polynomial sharing", definition:"Field에서 secret s를 degree t polynomial f의 상수항으로 두고 nonzero points f(i)를 shares로 배포해 t+1개 points로는 interpolation하고 t개 이하로는 s에 대한 정보를 숨기는 방법입니다.", canonicalHref:"/cs/crypto/shamir-secret-sharing#overview" },
   "shamir-share-generation": { id:"shamir-share-generation", kind:"method", domain:"mathematics", label:"Shamir share generation", definition:"Uniform random nonconstant coefficients와 distinct nonzero field indices로 polynomial evaluations을 생성해 parties에 배포하는 단계입니다.", canonicalHref:"/cs/crypto/shamir-secret-sharing#share-generation" },
@@ -26280,7 +26304,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "absolute periodic deadline"
     ],
     "definition": "10000 µs 목표를 10400 µs에 처리해도 다음 목표는 20000 µs입니다. 현재 시각에 주기를 더하면 20400 µs가 되어 늦은 만큼 위상이 밀립니다.",
-    "canonicalHref": "/electronics/embedded/timers-and-sampling#timer"
+    "canonicalHref": "/electronics/embedded/timers-and-sampling#source-clock"
   },
   "adc-conversion-start-boundary": {
     "id": "adc-conversion-start-boundary",
@@ -26330,7 +26354,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "i2c address ack transaction"
     ],
     "definition": "I²C의 두 선은 여러 장치가 공유하며 7비트 주소와 방향 비트 뒤 데이터를 보냅니다. 매 8비트 뒤에 아홉 번째 ACK/NACK 클록이 있습니다. 반복 START로 쓰기에서 읽기로 전환할 수 있습니다.",
-    "canonicalHref": "/electronics/embedded/serial-buses-and-tradeoffs#i2c"
+    "canonicalHref": "/electronics/embedded/serial-buses-and-tradeoffs#source-spec"
   },
   "i2c-nine-clock-accounting": {
     "id": "i2c-nine-clock-accounting",
@@ -26349,7 +26373,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "aliases": [
       "i2c clock stretch boundary"
     ],
-    "definition": "NXP 규격의 I²C 타깃은 SCL을 낮게 잡아 거래를 지연시킬 수 있습니다. START·반복 START·STOP, 버스 점유와 소프트웨어 대기도 있어서 157.5 µs가 보장 완료 시각은 아닙니다.",
+    "definition": "63클록의 이상적인 시간은 400 kHz에서 157.5 µs입니다. 추가 스트레칭 200 µs는 357.5 µs로 늘리며 START/STOP·대기는 별도입니다. 실제 측정한 전체 클록 주기에 들어 있는 상승 시간을 다시 더하면 중복 계산입니다.",
     "canonicalHref": "/electronics/embedded/serial-buses-and-tradeoffs#count"
   },
   "spi-command-data-clocks": {
@@ -51719,6 +51743,12 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   {"from": "grover-amplitude-amplification", "to": "shor-order-finding-cryptography", "relation": "contrasts", "reason": "어려운 문제를 아무 수나 대입하는 일에서 반복 규칙을 알아내는 일로 바꿉니다."},
   {"from": "shor-order-finding-cryptography", "to": "quantum-logical-physical-resource-boundary", "relation": "constrains", "reason": "장부 속 오류 없는 작업 칸과 실제 잡음 있는 소자는 다릅니다."},
   {"from": "ml-dsa-rejection-and-hints", "to": "slh-dsa-hash-tree-signatures", "relation": "contrasts", "reason": "짧은 공개 루트 하나에 많은 서명용 요소를 묶되 각 요소의 사용 규칙이 필요합니다."},
+  {
+    "from": "cauchy-schwarz",
+    "to": "directional-derivative",
+    "relation": "prerequisite",
+    "reason": "단위 방향의 내적 상한으로 가장 큰 방향미분이 기울기의 유클리드 길이임을 설명합니다."
+  },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

@@ -838,7 +838,25 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Difference quotient·derivative·chain rule를 단변수 미적분의 문제와 함께 확장하는 공개 강의",
     },
     { kind: "보충 읽기", label: "The Matrix Calculus You Need For Deep Learning", href: "https://arxiv.org/abs/1802.01528", note: "Derivative와 chain rule을 deep-learning calculus convention으로 확장" },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "OpenStax Calculus Volume 1 §3.1의 차분몫과 x=3 예제",
+      "href": "https://openstax.org/books/calculus-volume-1/pages/3-1-defining-the-derivative",
+      "note": "식 (3.2)와 (3.4), Example 3.2의 제곱 함수에 같은 기준점 3을 대입해 유한 간격 6.1과 극한 6을 대조합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "OpenStax §3.6 연쇄법칙 식 (3.17)",
+      "href": "https://openstax.org/books/calculus-volume-1/pages/3-6-the-chain-rule",
+      "note": "원문 h′(x)=f′(g(x))g′(x)에 x=2, g(2)=7을 넣어 14×3=42를 계산합니다. 두 미분의 평가 위치와 미분 가능성 조건을 명시했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.8 비미분 가능 함수의 선택 규칙",
+      "href": "https://docs.pytorch.org/docs/2.8/notes/autograd.html#gradients-for-non-differentiable-functions",
+      "note": "문서 규칙 2의 최소 크기 부분기울기를 ReLU의 [0,1]에 적용해 0을 선택합니다. 실제 PyTorch 실행을 재현했다는 주장은 하지 않습니다."
+    },
+],
   "ai/math-gradients-jacobians": [
     {
       kind: "공개 강의",
@@ -847,7 +865,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "편미분·gradient·directional derivative를 다변수 함수의 기하학으로 확장",
     },
     { kind: "보충 읽기", label: "The Matrix Calculus You Need For Deep Learning", href: "https://arxiv.org/abs/1802.01528", note: "Gradient·Jacobian·vectorized chain rule의 shape convention을 확장" },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "OpenStax Calculus Volume 3 §4.6 방향미분과 최대 변화율",
+      "href": "https://openstax.org/books/calculus-volume-3/pages/4-6-directional-derivatives-and-the-gradient",
+      "note": "식 (4.38)에 (4,3)과 단위 방향 (3/5,4/5)를 넣어 24/5를 얻습니다. 정리 4.13의 최대·최소는 이 가정 사례에서 5와 −5입니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Parr·Howard v3 §4.1, 7쪽 야코비안의 실제 행렬",
+      "href": "https://arxiv.org/abs/1802.01528v3",
+      "note": "원문은 행 기울기를 쌓아 m개 출력과 n개 입력을 m행 n열로 둡니다. 같은 합·곱의 (2,3) 사례를 대입해 [[1,1],[3,2]]와 Jv를 계산하며 열 기울기 표기의 전치를 구별했습니다."
+    },
+],
   "ai/math-probability-expectation-variance": [
     {
       kind: "공개 강의",
@@ -903,7 +933,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://ocw.mit.edu/courses/18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018/resources/lecture-22-gradient-descent-downhill-to-a-minimum/",
       note: "Quadratic objective의 minimum과 level-set geometry를 작은 예제로 연결하는 공개 강의",
     },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "Boyd·Vandenberghe §4.1.1 식 (4.1) 및 §4.1.2 Example 4.2",
+      "href": "https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf#page=141",
+      "note": "인쇄 127쪽의 실제 문제 형태에 f₀=(x−3)²+2, f₁=−x, f₂=x−2를 넣습니다. 128쪽의 최적점 정의와 129쪽의 구간 조건 변환을 같은 x=2 및 x=3에서 확인합니다. inf와 달성된 min을 구별합니다."
+    },
+],
   "ai/math-optimization-convexity": [
     {
       kind: "공개 강의",
@@ -1812,7 +1848,14 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "높은 tube masking ratio와 visible-token encoder 기반 video pretraining",
     },
   ],
-  "ai/competition-workflow": [],
+  "ai/competition-workflow": [
+    {
+      "kind": "보충 읽기",
+      "label": "competition-workflow — §11.2 Data leakage definition",
+      "href": "https://scikit-learn.org/1.7/common_pitfalls.html#data-leakage",
+      "note": "2026-10-04 원문 확인. 09:00 측정·10:05 도착 입력을10:00 예측에서 제외"
+    },
+],
   "ai/model-selection-bias": [
     { kind: "핵심 논문", label: "On Over-fitting in Model Selection and Subsequent Selection Bias", href: "https://www.jmlr.org/papers/v11/cawley10a.html", note: "Finite validation criterion의 variance와 반복 selection이 만드는 편향" },
     {
@@ -1848,25 +1891,85 @@ export const ARTICLE_EVIDENCE: Readonly<
 ],
   "ai/competition-submission-control": [
     { kind: "핵심 논문", label: "The Ladder: A Reliable Leaderboard for Machine Learning Competitions", href: "https://proceedings.mlr.press/v37/blum15.html", note: "적응적 submission과 leaderboard holdout overfitting 문제" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "competition-submission-control — Algorithm 1, PDF p.4",
+      "href": "https://proceedings.mlr.press/v37/blum15.pdf",
+      "note": "2026-10-04 원문 확인. A/B와 동일B재전송의loss0.26/0.24/0.24 공개규칙 적용"
+    },
+],
   "ai/cross-validation": [
     { kind: "공식 문서", label: "scikit-learn: Cross-validation — evaluating estimator performance", href: "https://scikit-learn.org/stable/modules/cross_validation.html", note: "K-fold·group·time splitter의 서로 다른 data assumption과 current API" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "cross-validation — §3.1.2.4 grouped data",
+      "href": "https://scikit-learn.org/1.7/modules/cross_validation.html#cross-validation-iterators-for-grouped-data",
+      "note": "2026-10-04 원문 확인. C·D 미관측 조건과 집계 단위 분리"
+    },
+],
   "ai/fold-local-validation": [
     { kind: "공식 문서", label: "scikit-learn: Pipeline — chaining estimators", href: "https://scikit-learn.org/stable/modules/compose.html#pipeline-chaining-estimators", note: "Transform fit과 estimator fit을 같은 cross-validation 경계에서 실행하는 current API" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "fold-local-validation — §11.1 actual scaler calls and §11.2 leakage",
+      "href": "https://scikit-learn.org/1.7/common_pitfalls.html",
+      "note": "2026-10-04 원문 확인. [2,4] fit→[8,10] transform 및 pipeline 범위"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "fold-local-validation — Notes ddof=0 and scale_",
+      "href": "https://scikit-learn.org/1.7/modules/generated/sklearn.preprocessing.StandardScaler.html",
+      "note": "2026-10-04 원문 확인. 표준편차1과 분산0 scale1 경계"
+    },
+],
   "ai/oof-risk-estimation": [
     { kind: "핵심 논문", label: "Cross-Validation: What Does It Estimate and How Well Does It Do It?", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/", note: "CV procedure estimand와 fold dependence·uncertainty 해석" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "oof-risk-estimation — v4 §2 equation (2), §3 and §4.1",
+      "href": "https://arxiv.org/html/2104.00673v4#S2",
+      "note": "2026-10-04 원문 확인. 36/100 OOF 집계·학습크기·추정대상·의존성 조건"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "oof-risk-estimation — cross_val_predict metric caveat",
+      "href": "https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.cross_val_predict.html",
+      "note": "2026-10-04 원문 확인. non-decomposable metric와 fold 간 점수 비교 경계"
+    },
+],
   "ai/grouped-validation": [
     { kind: "공식 문서", label: "scikit-learn: Cross-validation iterators for grouped data", href: "https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators-for-grouped-data", note: "GroupKFold·StratifiedGroupKFold의 current semantics" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "grouped-validation — GroupKFold class description and Notes",
+      "href": "https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.GroupKFold.html",
+      "note": "2026-10-04 원문 확인. 그룹4개 분할수2·교집합 검사·행과 대상 수 분리"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "grouped-validation — StratifiedGroupKFold implementation boundary",
+      "href": "https://scikit-learn.org/1.7/modules/cross_validation.html#stratifiedgroupkfold",
+      "note": "2026-10-04 §3.1.2.4.2 원문 확인. 그룹을 유지하며 클래스 비율을 맞추려 하지만 완벽한 균형을 보장하지 않는 경계."
+    },
+],
   "ai/walk-forward-validation": [
     { kind: "공식 문서", label: "scikit-learn: TimeSeriesSplit", href: "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html", note: "Successive training windows와 gap parameter의 current behavior" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "walk-forward-validation — gap parameter / split API",
+      "href": "https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.TimeSeriesSplit.html",
+      "note": "2026-10-04 원문 확인. 37 samples와37 days 구별·별도 label availability 검사"
+    },
+],
   "ai/validation-feedback-audit": [
     { kind: "핵심 논문", label: "The Ladder: A Reliable Leaderboard for Machine Learning Competitions", href: "https://proceedings.mlr.press/v37/blum15.html", note: "적응적 leaderboard feedback과 holdout overfitting 문제" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "validation-feedback-audit — §2 adaptive dependence and Algorithm 1, PDF p.4",
+      "href": "https://proceedings.mlr.press/v37/blum15.pdf",
+      "note": "2026-10-04 원문 확인. B→A→C의 loss0.26→0.24→0.25에 공개갱신 규칙 적용"
+    },
+],
   "ai/hyperparameter-tuning": [
     {
       kind: "핵심 논문",
@@ -1878,7 +1981,25 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/adaptive-hyperparameter-search": [
     { kind: "핵심 논문", label: "Optuna: A Next-generation Hyperparameter Optimization Framework", href: "https://arxiv.org/abs/1907.10902", note: "define-by-run·study·trial·sampler·pruner·storage architecture" },
     { kind: "핵심 논문", label: "Algorithms for Hyper-Parameter Optimization", href: "https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization", note: "TPE의 good/other configuration density model" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "adaptive-hyperparameter-search — §4 equation (2) and §4.1, PDF p.4",
+      "href": "https://papers.nips.cc/paper_files/paper/2011/file/86e8f7ab32cfd12577bc2619bc635690-Paper.pdf",
+      "note": "2026-10-04 원문 확인. 가정 밀도비6/2→비례EI12/7과4/3"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "adaptive-hyperparameter-search — class description and parameters",
+      "href": "https://optuna.readthedocs.io/en/v4.5.0/reference/samplers/generated/optuna.samplers.TPESampler.html",
+      "note": "2026-10-04 원문 확인. startup10·running penalty·사후 constraints 구별"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "adaptive-hyperparameter-search — 2019 Abstract",
+      "href": "https://arxiv.org/abs/1907.10902",
+      "note": "2026-10-04 원문 확인. define-by-run 시스템설계와 고정버전 API 구별"
+    },
+],
   "ai/search-space-design": [
     { kind: "핵심 논문", label: "Optuna: A Next-generation Hyperparameter Optimization Framework", href: "https://arxiv.org/abs/1907.10902", note: "Conditional search space를 코드에서 구성하는 define-by-run 설계" },
   ],
@@ -1961,7 +2082,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://people.eecs.berkeley.edu/~alig/papers/mlflow.pdf",
       note: "Experiment·run·artifact를 공통 lifecycle interface로 연결한 초기 MLflow 설계",
     },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "experiment-tracking — RunInfo, checked 2026-10-04",
+      "href": "https://mlflow.org/docs/latest/api_reference/rest-api.html#runinfo",
+      "note": "2026-10-04 원문 확인. 동일좌표 실제실행에 별도고유run ID"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "experiment-tracking — 2018 §3.1, printed p.41",
+      "href": "https://people.eecs.berkeley.edu/~alig/papers/mlflow.pdf",
+      "note": "2026-10-04 원문 확인. 실제 log_artifact 호출의 생산 실행 연결"
+    },
+],
   "ai/learning-curve-tracking": [
     {
       kind: "공식 문서",
@@ -5415,9 +5548,24 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
 ],
   "crypto/diffie-hellman": [
-    { kind: "핵심 논문", label: "Diffie & Hellman · New Directions in Cryptography", href: "https://ee.stanford.edu/~hellman/publications/24.pdf", note: "공개 채널의 public-key distribution과 exponentiation key-agreement 아이디어 원문" },
-    { kind: "공식 규격", label: "RFC 7748 · X25519 and X448", href: "https://www.rfc-editor.org/rfc/rfc7748.html", note: "Curve·scalar decoding·u-coordinate bytes·DH procedure·test-vector contract" },
-    { kind: "공식 규격", label: "RFC 5869 · HKDF", href: "https://www.rfc-editor.org/rfc/rfc5869.html", note: "Raw shared material의 extract-then-expand와 salt/info·test-vector 계약" },
+    {
+      "kind": "공식 문서",
+      "label": "Diffie & Hellman · New Directions in Cryptography",
+      "href": "https://ee.stanford.edu/~hellman/publications/24.pdf",
+      "note": "649쪽 식 (7)~(12)에 q=23, α=5, Xᵢ=6, Xⱼ=15를 대입해 공유값 2를 대조합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "RFC 7748 · X25519 and X448",
+      "href": "https://www.rfc-editor.org/rfc/rfc7748.html",
+      "note": "§§5·6.1·7의 바이트 규칙과 공식 벡터를 확인하고 Node v24.13.0에서 공개값 둘·공유값 양쪽을 재현했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "RFC 5869 · HKDF",
+      "href": "https://www.rfc-editor.org/rfc/rfc5869.html",
+      "note": "§§2–3의 추출·확장과 info 의미를 확인하고 부록 A.1의 PRK·42바이트 출력을 실제 계산했습니다."
+    },
     { kind: "공식 규격", label: "NIST SP 800-56A Rev. 3", href: "https://doi.org/10.6028/NIST.SP.800-56Ar3", note: "Discrete-log key establishment의 domain/key validation·derivation·confirmation 범위; 2026 update planning note와 함께 확인" },
   ],
   "crypto/elliptic-curves": [
@@ -5837,7 +5985,19 @@ export const ARTICLE_EVIDENCE: Readonly<
   "crypto/elgamal": [
     { kind: "핵심 논문", label: "ElGamal · A Public-Key Cryptosystem and a Signature Scheme Based on Discrete Logarithms", href: "https://doi.org/10.1109/TIT.1985.1057074", note: "Randomized group encryption construction의 primary paper" },
     { kind: "공식 규격", label: "RFC 6090 · Fundamental Elliptic Curve Cryptography Algorithms", href: "https://www.rfc-editor.org/rfc/rfc6090.html", note: "EC group instance·validation/security considerations의 standard reference" },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "HAC · ElGamal 알고리즘 8.17–8.18, 8.26",
+      "href": "https://cacr.uwaterloo.ca/hac/about/chap8.pdf",
+      "note": "γ=17, δ=5, p−1−a=16을 넣어 역원 2와 메시지 10을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Boneh–Shoup v0.6 · 연습문제 11.5–11.6",
+      "href": "https://crypto.stanford.edu/~dabo/cryptobook/BonehShoup_0_6.pdf",
+      "note": "작은 사례의 제곱 값 구분과 변조를 별도 계산해 가정의 필요성을 설명합니다."
+    },
+],
   "crypto/mpc": [
     { kind: "공식 코드", label: "bnb-chain/tss-lib @ 3f677ff", href: "https://github.com/bnb-chain/tss-lib/tree/3f677ff761fcf692edb0243a5d812930844d879a", note: "Threshold DKG/MtA/VSS implementation의 pinned source" },
   ],
@@ -8538,29 +8698,41 @@ export const ARTICLE_EVIDENCE: Readonly<
   "embedded/timers-and-sampling": [
     {
       "kind": "공식 문서",
-      "label": "Raspberry Pi RP2040 Datasheet, 원본 535–537·559–560쪽",
+      "label": "Raspberry Pi, RP2040 Datasheet, Timer and SAR ADC",
       "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
-      "note": "타이머 1 µs 계수·네 알람과 GPIO26/ADC0 변환 조건을 확인했다."
+      "note": "build 3184e62-clean §4.6.1–4.6.3의 64비트 계수기·하위 32비트 알람과 §4.9.2.1의 채널 선택·START_ONCE·96주기 완료를 대조합니다."
     },
     {
-      "kind": "공개 강의",
-      "label": "MIT OCW RES.6-007 Lecture 16 Sampling, 원본 1–2쪽",
+      "kind": "공식 문서",
+      "label": "MIT OpenCourseWare RES.6-007, Lecture 16, Sampling (2011)",
       "href": "https://ocw.mit.edu/courses/res-6-007-signals-and-systems-spring-2011/8708ec068ebdea2c4ee2f38fad39fb83_MITRES_6_007S11_lec16.pdf",
-      "note": "이상 샘플링의 절반 경계와 앨리어싱을 확인했다."
+      "note": "원본 1–2쪽의 샘플 빈도 절반 경계와 그 위 입력의 앨리어싱 설명입니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Pico SDK 2.2.0 · time.c·time.h·adc.h 고정 원문",
+      "href": "https://github.com/raspberrypi/pico-sdk/blob/a1438dff1d38bd9c65dbd693f0e5db4b9ae91779/src/common/pico_time/time.c",
+      "note": "delay −10000의 첫 등록과 이전 목표 기준 갱신을 추적하고 adc_read의 시작·READY 대기·결과 반환에 연결합니다."
     }
   ],
   "embedded/serial-buses-and-tradeoffs": [
     {
       "kind": "공식 문서",
-      "label": "NXP UM10204 Rev. 7.0, 원본 1·9–10·15쪽",
+      "label": "NXP, UM10204 I²C-bus specification and user manual Rev. 7.0 (2021)",
       "href": "https://www.nxp.com/docs/en/user-guide/UM10204.pdf",
-      "note": "I²C 두 선, 모드별 속도, ACK·반복 START·스트레칭을 확인했다."
+      "note": "Rev. 7.0 §3.1.4–3.1.6·3.1.9–3.1.10, 인쇄 9–14쪽에서 시작·종료·응답·스트레칭·결합 거래의 방향 변경을 대조합니다."
     },
     {
       "kind": "공식 문서",
       "label": "Raspberry Pi Pico SDK Hardware APIs, I2C/SPI/UART/GPIO",
       "href": "https://www.raspberrypi.com/documentation/pico-sdk/hardware.html",
-      "note": "세 컨트롤러와 RP2040 GPIO 기능표를 확인했다."
+      "note": "I²C·SPI·UART API와 GPIO 기능 선택 표 및 UART 보율 설정 예를 제공합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Pico SDK 2.2.0 · 고정 commit a1438dff의 i2c.c·i2c.h",
+      "href": "https://github.com/raspberrypi/pico-sdk/blob/a1438dff1d38bd9c65dbd693f0e5db4b9ae91779/src/rp2_common/hardware_i2c/i2c.c",
+      "note": "7비트 주소·nostop·restart_on_next·마지막 STOP·읽기 결과와 _until의 절대 시각을 같은 거래에 적용합니다."
     }
   ],
   "embedded/scheduling-and-real-time": [

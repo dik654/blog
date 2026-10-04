@@ -2,55 +2,46 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-const SCENES = ["점수 함수", "허용 구간", "제약 적용", "정답 분리"] as const;
+const SCENES = ["점수", "허용 범위", "선택", "위치와 값"] as const;
+const EXPLANATIONS = [
+  "제곱한 차이가 0인 x=3에서 점수 2를 얻습니다. 아직 허용 범위를 적용하지 않았습니다.",
+  "가로축의 굵은 구간은 0≤x≤2입니다. x=3은 점수가 낮아도 범위 밖입니다.",
+  "허용 구간 안에서 가장 낮은 점은 x=2, 점수 3입니다. 빈 점은 사용할 수 없습니다.",
+  "고른 위치 2와 그 위치의 점수 3을 따로 기록합니다. 가로축과 세로축은 다른 값을 나타냅니다.",
+] as const;
+const xPixel = (x: number) => 34 + 60 * x;
+const yPixel = (y: number) => 216 - 15 * y;
+const curve = Array.from({ length: 101 }, (_, i) => {
+  const x = i / 25;
+  return `${i ? "L" : "M"}${xPixel(x)},${yPixel((x - 3) ** 2 + 2)}`;
+}).join(" ");
 
 export default function OptimizationProblemViz() {
   const scenes = useAnimatedScenes(SCENES.length);
   const active = scenes.active;
-  return (
-    <VizFrame
-      eyebrow="Animated optimization problem"
-      title="낮은 점을 찾기 전에 움직여도 되는 영역부터 고정한다"
-      description="같은 objective라도 feasible set이 달라지면 선택 가능한 minimizer가 달라지는 과정을 한 축 위에서 봅니다."
-      note="검은 점 x=3은 unconstrained minimizer입니다. 허용 구간이 [0,2]이면 그 점을 답으로 제출할 수 없습니다."
-    >
-      <div
-        data-viz-canvas
-        tabIndex={0}
-        role="group"
-        aria-label="objective feasible set minimizer 애니메이션"
-        onKeyDown={scenes.onKeyDown}
-        className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-      >
-        <svg viewBox="0 0 760 270" className="h-auto w-full" aria-label="제약 구간과 두 minimizer 위치">
-          <line x1="70" y1="190" x2="700" y2="190" stroke="currentColor" strokeOpacity=".35" strokeWidth="1" />
-          {[0, 1, 2, 3, 4].map((value) => (
-            <g key={value}>
-              <line x1={110 + value * 135} y1="184" x2={110 + value * 135} y2="198" stroke="currentColor" strokeOpacity=".45" strokeWidth="1" />
-              <text x={110 + value * 135} y="220" textAnchor="middle" fontSize="14" fill="currentColor">{value}</text>
-            </g>
-          ))}
-          <path d="M110 60 Q515 250 650 60" fill="none" stroke="#0ea5e9" strokeWidth="1.2" opacity={active >= 0 ? 1 : .25} />
-          <rect x="110" y="170" width="270" height="8" rx="4" fill="#8b5cf6" opacity={active >= 1 ? .85 : .12} />
-          <circle cx="515" cy="190" r="8" fill="var(--background)" stroke="currentColor" strokeWidth="1.2" opacity={active >= 0 ? 1 : .2} />
-          <circle cx="380" cy="190" r="8" fill={active >= 2 ? "#8b5cf6" : "var(--background)"} stroke="#8b5cf6" strokeWidth="1.2" opacity={active >= 1 ? 1 : .2} />
-          <path d="M500 142 C462 122 420 125 390 155" fill="none" stroke="#f97316" strokeWidth="1.1" strokeDasharray="5 5" opacity={active >= 2 ? 1 : 0} />
-          <path d="M390 155 l8 -2 l-4 8" fill="none" stroke="#f97316" strokeWidth="1.1" opacity={active >= 2 ? 1 : 0} />
-          <text x="515" y="35" textAnchor="middle" fontSize="13" fill="currentColor" opacity={active >= 0 ? 1 : .25}>unconstrained x*=3</text>
-          <text x="245" y="158" textAnchor="middle" fontSize="13" fill="#8b5cf6" opacity={active >= 1 ? 1 : .15}>feasible set [0,2]</text>
-          <text x="380" y="250" textAnchor="middle" fontSize="13" fill="#8b5cf6" opacity={active >= 3 ? 1 : .2}>constrained x*=2 · f*=3</text>
-        </svg>
-        <div className="mt-5 grid gap-4 border-t border-border pt-5 md:grid-cols-3">
-          <Fact label="Objective" value="f(x)=(x−3)²+2" detail="선택 x를 scalar 점수로 평가" active={active === 0} />
-          <Fact label="Constraint" value="0≤x≤2" detail="제출 가능한 선택을 제한" active={active === 1 || active === 2} />
-          <Fact label="Answer" value="argmin=2 · min=3" detail="위치와 최솟값을 따로 기록" active={active === 3} />
-        </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+  return <VizFrame eyebrow="같은 함수의 두 답" title="허용 구간 안에서 점수가 가장 낮은 점을 고른다"
+    description="곡선은 실제 f(x)=(x−3)²+2입니다. 가로축의 선택과 세로축의 점수를 구별합니다."
+    note="검은 빈 점 (3,2)은 제약 없는 답이고 강조 점 (2,3)은 [0,2] 안의 답입니다. 서로 다른 축의 단위와 화면 축척은 다릅니다.">
+    <div data-viz-canvas tabIndex={0} role="group" aria-label="허용 범위에 따른 최소점과 최솟값" onKeyDown={scenes.onKeyDown}
+      className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+      <svg viewBox="0 0 300 248" className="mx-auto h-auto w-full max-w-[340px]" aria-label="실제 제곱 점수 곡선과 구간 [0,2]">
+        <line x1="34" y1="26" x2="34" y2="216" stroke="currentColor" strokeOpacity=".35" strokeWidth="1" />
+        <line x1="34" y1="216" x2="280" y2="216" stroke="currentColor" strokeOpacity=".35" strokeWidth="1" />
+        {[0, 1, 2, 3, 4].map(x => <g key={x}><line x1={xPixel(x)} y1="216" x2={xPixel(x)} y2="220" stroke="currentColor" strokeWidth="1" /><text x={xPixel(x)} y="236" textAnchor="middle" fontSize="12" fill="currentColor">{x}</text></g>)}
+        {[3, 6, 11].map(y => <g key={y}><line x1="30" y1={yPixel(y)} x2="34" y2={yPixel(y)} stroke="currentColor" strokeWidth="1" /><text x="24" y={yPixel(y) + 4} textAnchor="end" fontSize="12" fill="currentColor">{y}</text></g>)}
+        <text x="34" y="15" fontSize="12" fill="currentColor">점수</text>
+        <text x="289" y="216" fontSize="12" fill="currentColor">x</text>
+        <path d={curve} fill="none" stroke="currentColor" strokeOpacity=".5" strokeWidth="1" />
+        <rect x={xPixel(0)} y="209" width={xPixel(2) - xPixel(0)} height="4" fill="var(--primary)" opacity={active >= 1 ? 1 : 0} />
+        <circle cx={xPixel(3)} cy={yPixel(2)} r="5" fill="var(--background)" stroke="currentColor" strokeWidth="1.2" />
+        <line x1={xPixel(2)} y1={yPixel(3)} x2={xPixel(2)} y2="209" stroke="var(--primary)" strokeWidth="1" strokeDasharray="3 3" opacity={active >= 2 ? 1 : 0} />
+        <circle cx={xPixel(2)} cy={yPixel(3)} r="5" fill="var(--primary)" opacity={active >= 2 ? 1 : 0} />
+      </svg>
+      <div aria-live="polite" className="mt-4 grid min-h-[138px] content-start gap-3 border-t border-border pt-4">
+        <p className="text-base font-semibold">{active < 2 ? "제약 없는 답: 위치 3 · 점수 2" : "구간 안의 답: 위치 2 · 점수 3"}</p>
+        <p className="text-sm leading-6">{EXPLANATIONS[active]}</p>
       </div>
-    </VizFrame>
-  );
-}
-
-function Fact({ label, value, detail, active }: { label: string; value: string; detail: string; active: boolean }) {
-  return <div className={`border-l pl-4 transition-colors ${active ? "border-primary" : "border-border"}`}><p className="text-xs font-bold text-muted-foreground">{label}</p><p className="mt-2 font-mono text-base font-black">{value}</p><p className="mt-2 text-sm leading-6 text-muted-foreground">{detail}</p></div>;
+      <AnimatedSceneControls {...scenes} labels={SCENES} />
+    </div>
+  </VizFrame>;
 }

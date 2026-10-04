@@ -1,27 +1,21 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { ValidationFeedbackViz } from "../cross-validation/viz/ModernCrossValidationViz";
+export default function Article() { return <div className="space-y-16"><section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 점수가 낮아진 것과 후보 순서가 바뀐 것은 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>내부 시험에서는 좋았던 방법을 외부에 제출했더니 점수가 낮아졌습니다. 곧바로 자료 나누기를 바꾸기 전에 같은 계산과 행 대응을 사용했는지, 후보의 우열까지 바뀌었는지 확인해야 합니다.</p><p>이 글은 다섯 후보의 두 점수표를 비교합니다. 절대 점수 차이와 선택 방향의 차이를 따로 계산하고 그 결과를 보고 고친 이력까지 남깁니다.</p></div></section>
 
-export default function ValidationFeedbackAuditArticle() {
-  return (
-    <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">Local CV와 public score가 다르면 숫자 차이와 선택 순서 차이를 먼저 분리합니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">Local .80과 public .76이라는 offset만으로 split이 틀렸다고 결론 내릴 수 없습니다. 같은 후보들을 두 평가가 비슷한 순서로 고르는지, metric·row mapping·preprocessing이 같은지부터 확인해야 합니다.</p></div>
-        <TermBreakdown title="Mismatch audit의 네 기록" items={[
-          { term: "Score offset", description: "같은 후보의 local score와 external score의 절대 차이입니다." },
-          { term: "Rank agreement", description: "후보 쌍의 우열 방향을 두 평가가 얼마나 같은 방향으로 판단하는지 나타냅니다." },
-          { term: "Protocol adaptation", description: "External feedback을 본 뒤 split·metric·feature·candidate filter를 바꾼 사건입니다." },
-          { term: "Frozen holdout", description: "그 선택과 변경에 한 번도 사용하지 않은 마지막 평가 data입니다." },
-        ]} />
-        <ValidationFeedbackViz />
-        <ContentBoundary article="validation-feedback-audit" />
-      </section>
-      <section id="agreement" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">후보 두 개씩의 우열 방향이 같은 비율을 계산합니다</h2>
-        <ExplainedFormula
+<section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 같은 후보를 맞추고 차이의 원인을 검사합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>두 평가에 같은 후보 ID가 있는지 맞춥니다. 지표와 행 연결, 전처리의 조건을 확인한 뒤 후보끼리의 순서를 비교합니다. 결과를 보고 무엇을 바꿨는지 기록하고 마지막에는 바꾸는 데 쓰지 않은 자료로 확인합니다.</p></div><ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2"><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">1</span><span>후보와 계산 조건을 맞춘다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">2</span><span>점수와 선택 방향을 나눠 비교한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">3</span><span>관측 뒤 변경한 이유와 버전을 남긴다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">4</span><span>선택에 쓰지 않은 자료로 마무리한다</span></li></ol></section>
+
+<section id="small-case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 다섯 후보 중 두 쌍의 순서만 바뀝니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>후보 A·B·C·D·E의 내부 점수를 [0.80,0.79,0.78,0.77,0.76], 공개 점수를 [0.76,0.74,0.75,0.72,0.73]이라고 합시다. 클수록 좋은 같은 종류의 지표이며 차이 0.001 이하는 동점으로 보기로 미리 정합니다. (가정)</p><p>A의 점수는 0.04 낮아졌습니다. 내부 순서는 A,B,C,D,E이고 공개 순서는 A,C,B,E,D입니다. 모든 관계가 뒤집힌 것은 아니며 B/C와 D/E 두 쌍의 우열이 바뀌었습니다. (가정)</p></div></section>
+
+<section id="inside-comparison" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 값의 비교와 방향의 비교를 따로 보관합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>후보별로 내부 점수와 공개 점수, 실행 버전과 평가 조건을 붙입니다. A의 0.04 차이는 한 후보의 두 평가 값 차이입니다. B/C의 비교는 같은 평가 안에서 두 후보를 뺀 뒤 그 부호를 다른 평가와 대조하는 작업입니다.</p><p>공개 평가 행을 볼 수 없다면 같은 행에서 계산이 일치하는지 직접 증명할 수 없습니다. 확인 가능한 지표 구현과 입력 형식부터 대조하고 자료 분포 차이는 별도 가설로 남깁니다.</p></div></section>
+
+<section id="why-parity" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 행이 어긋난 점수를 분포 변화로 설명하지 않습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>제출 ID와 예측값의 순서가 어긋났거나 지표 방향을 반대로 계산했다면 먼저 구현을 고쳐야 합니다. 그런 오류가 남은 채 분할을 바꾸면 잘못된 숫자에 맞춘 평가를 만들 수 있습니다.</p><p>반대로 계산 조건을 맞췄는데 점수가 다를 수도 있습니다. 평가 대상의 구성과 기간, 제한된 표본의 흔들림이 영향을 줄 수 있으므로 점수 차이 하나로 원인을 확정하지 않습니다.</p></div></section>
+
+<section id="feedback-terms" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 점수 차이와 순위 일치와 적응을 나눕니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>같은 후보의 평가 값 차이가 score offset입니다. 후보 쌍의 방향 일치 정도는 rank agreement이고 외부 결과를 보고 평가 규칙이나 후보를 바꾸는 일이 protocol adaptation입니다.</p></div><TermBreakdown title="역할을 이해한 뒤 이름을 붙입니다" items={[{"term": "Tie tolerance", "description": "작은 차이를 동점으로 볼 사전 허용폭입니다.", "boundary": "0.001이라는 가정은 통계적 유의성의 자동 기준이 아닙니다."}, {"term": "Frozen holdout", "description": "후보 선택과 규칙 변경에 한 번도 사용하지 않은 평가 자료입니다.", "boundary": "결과를 보고 다시 고치면 그 역할이 달라집니다."}, {"term": "Feedback log", "description": "관측한 외부 결과와 후속 선택의 연결 기록입니다.", "boundary": "기록만으로 이미 생긴 선택 편향이 없어지지는 않습니다."}]} /><ValidationFeedbackViz /></section>
+
+<section id="agreement" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 10쌍에서 동점을 제외하고 8개의 방향 일치를 셉니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>다섯 후보에는 5×4/2=10쌍이 있습니다. B/C의 내부 차이는 0.01, 공개 차이는 −0.01이므로 방향이 다릅니다. D/E도 내부 0.01과 공개 −0.01로 다릅니다. 나머지 여덟 쌍은 방향이 같고 모든 차이가 0.001보다 커서 일치율은 8/10=0.8입니다. (가정)</p><p>이 글의 분모에는 두 평가 모두에서 허용폭을 넘는 쌍만 넣습니다. 한쪽이라도 동점이면 제외하고 제외 개수도 보고합니다. 두 차이가 모두 0.0005처럼 작을 때 부호 0과 0이 같다고 방향 일치로 세면 안 됩니다. 유효 쌍이 없으면 비율은 계산 불가입니다.</p></div><ExplainedFormula
           question="Pairwise agreement .8은 어떻게 계산하고 무엇을 뜻하나요?"
           idea={<p>후보 a와 b의 local score 차이 부호와 public score 차이 부호를 비교합니다. 의미 있는 tolerance 밖에서 두 부호가 같으면 한 쌍의 선택 방향이 일치합니다.</p>}
           formula={String.raw`A=|\mathcal P|^{-1}\sum_{(a,b)\in\mathcal P}\mathbf 1[\operatorname{sgn}_\tau(\Delta^{L}_{ab})=\operatorname{sgn}_\tau(\Delta^{P}_{ab})]`}
@@ -35,31 +29,16 @@ export default function ValidationFeedbackAuditArticle() {
           terms={[
             { symbol: String.raw`s^L,s^P`, name: "Local·public scores", description: "같은 metric direction으로 정렬한 후보 score입니다." },
             { symbol: String.raw`\tau`, name: "Tie tolerance", description: "Noise보다 작은 차이를 동점으로 보는 사전 기준입니다." },
-            { symbol: String.raw`\mathcal P`, name: "Candidate pairs", description: "두 평가에 모두 존재하는 비교 후보 쌍입니다." },
+            { symbol: String.raw`\mathcal P`, name: "Candidate pairs", description: "두 평가에 모두 있고 양쪽 차이의 절댓값이 τ보다 큰 후보 쌍입니다. 한쪽이라도 동점이면 제외합니다." },
           ]}
-          assumptions={["Metric direction과 candidate identity가 두 평가에서 같습니다.", "Public feedback으로 후보 집합을 만든 경우 adaptive bias를 별도로 기록합니다."]}
-          interpretation="10쌍 중 8쌍의 방향이 같으면 A=.8입니다. Private leaderboard 순서가 보장된다는 뜻은 아닙니다."
-        />
-      </section>
-      <section id="adaptation" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">Public feedback 뒤 protocol을 바꿨다면 bug fix도 adaptation으로 기록합니다</h2>
-        <TermBreakdown title="변경 receipt에 남길 항목" items={[
-          { term: "Observed feedback", description: "어느 submission·score·error slice를 보고 변경을 시작했는지 기록합니다." },
-          { term: "Mismatch hypothesis", description: "Metric parity, row mapping, group/time shift 중 무엇을 의심했는지 씁니다." },
-          { term: "Protocol change", description: "Split·preprocess·metric·candidate filter의 before/after revision입니다." },
-          { term: "Feedback budget", description: "Holdout 결과가 후속 결정을 바꾼 횟수와 사전 한도입니다." },
-        ]} />
-      </section>
-      <section id="boundary" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">Audit는 적응 편향을 지우지 않으므로 unused holdout으로 닫습니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
-            metric fixture→row checksum→preprocess parity→group/time shift→pairwise direction을 검사한 뒤 protocol을
-            동결합니다. 그 과정에서 보지 않은 기간·site·private test에서 마지막으로 확인하고 결과를 본 뒤 다시 바꾸면 새 holdout이 필요합니다.
-          </p></div>
-        <div id="paper-validation-feedback" className="not-prose mt-8"><CitationBlock source="Blum & Hardt — The Ladder" citeKey={1} type="paper" href="https://proceedings.mlr.press/v37/blum15.html">
-          반복적·적응적 submission이 leaderboard holdout에 overfit하는 문제와 score 공개 제한을 다룹니다. 특정 대회의 private score나 일반적인 unbiasedness를 보장하는 근거는 아닙니다.
-        </CitationBlock></div>
-      </section>
-    </div>
-  );
-}
+          assumptions={["Metric direction과 candidate identity가 두 평가에서 같습니다.","P는 양쪽 모두 비동점인 쌍만 포함하며 |P|>0일 때 계산합니다. 제외한 동점 쌍 수도 보고합니다.", "Public feedback으로 후보 집합을 만든 경우 adaptive bias를 별도로 기록합니다."]}
+          interpretation="A/B/C/D/E의 10쌍 중 B/C와 D/E만 뒤집히면 8/10=0.8입니다. 동점 쌍을 방향 일치로 세지 않으며 유효 쌍이 없으면 계산 불가입니다."
+        /></section>
+
+<section id="paper-validation-feedback" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 원문의 점수 공개 규칙에 같은 후보를 넣습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Blum·Hardt의 Ladder 논문은 참가자가 앞 점수를 보고 다음 후보를 바꾸면 평가 자료와 후보가 의존하게 되는 문제를 다룹니다. 알고리즘 1은 평가자가 충분히 개선된 경우에만 공개 값을 갱신하는 규칙입니다. 참가자의 점검표만으로 그 효과가 생기는 것은 아닙니다.</p></div><div id="source-ladder-margin" className="mt-8 scroll-mt-20"><CitationBlock source="The Ladder — Algorithm 1, PDF p.4" citeKey={1} href="https://proceedings.mlr.press/v37/blum15.pdf"><q>Rₛ(fₜ) &lt; Rₜ₋₁ − η</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>여기 점수를 정확도로 가정해 loss=1−score로 바꾸고 η=0.01로 둡니다. B의 공개 0.74는 loss 0.26입니다. 다음 A의 loss 0.24는 0.26−0.01=0.25보다 작아 갱신됩니다. 그 뒤 C의 loss 0.25는 0.24−0.01=0.23보다 작지 않아 공개 값은 0.24에 머뭅니다. 모두 격자 0.01의 배수여서 이 예의 반올림은 값을 바꾸지 않습니다. (가정)</p></div></div></section>
+
+<section id="adaptation" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. 오류 수정도 어떤 피드백 뒤에 했는지 남깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>B/C의 방향이 뒤집힌 뒤 행 연결 버그를 발견했다고 합시다. 수정은 필요하지만 공개 결과가 수정의 계기가 되었다는 사실도 기록합니다. 어느 제출과 점수를 봤고 무엇을 의심했으며 분할·전처리·지표가 어떤 버전으로 바뀌었는지 연결합니다.</p><p>관측한 피드백 전체와 그 때문에 바뀐 결정을 따로 남깁니다. 같은 후보를 유지하기로 한 결정이나 종료 시점에도 점수가 영향을 줄 수 있으므로 코드 변경 횟수만으로 자료 사용을 다 설명하지 않습니다.</p></div></section>
+
+<section id="boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 좋은 일치율도 마지막 순서를 보장하지 않습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>0.8은 이번 다섯 후보와 두 평가 사이의 기술적인 비교입니다. 새 후보나 다른 기간에서 같은 값이 나오거나 비공개 평가의 순서가 유지된다는 보장은 없습니다. 허용폭도 결과를 보고 편한 값으로 고르면 새로운 선택이 됩니다.</p><p>계산 오류와 행 연결, 전처리, 대상·시간 분포를 점검한 뒤 평가 규칙을 고정합니다. 이 과정에서 사용하지 않은 기간이나 장소의 자료로 마지막 평가를 합니다. 그 결과를 보고 또 바꾼다면 다시 선택에 쓰지 않은 자료가 필요합니다.</p></div><ContentBoundary article="validation-feedback-audit" /></section>
+
+<section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 동점과 적응을 숨기지 않았나요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>다섯 후보의 열 쌍 중 B/C와 D/E만 뒤집히면 방향 일치율은 얼마인가요? (답: 7절)</p><p>두 평가 모두 차이가 0.0005인데 허용폭이 0.001입니다. 이 쌍을 방향 일치로 세나요? (답: 7절)</p><p>공개 점수를 보고 행 연결 버그를 고쳤습니다. 변경이 정당하더라도 어떤 이력을 남겨야 하나요? (답: 9절)</p></div></section></div>; }

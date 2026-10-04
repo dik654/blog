@@ -1,27 +1,21 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { OofRiskViz } from "../cross-validation/viz/ModernCrossValidationViz";
+export default function Article() { return <div className="space-y-16"><section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 배우지 않은 행의 답을 모아 평가합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>학습에 사용한 기록을 다시 맞힌 결과는 처음 보는 기록의 성능보다 좋게 보일 수 있습니다. 각 행을 평가할 때 그 행을 배우지 않은 모델의 답을 받아야 합니다.</p><p>자료를 나누어 서로 바꿔 평가하면 모든 행에 이런 답을 붙일 수 있습니다. 이 글은 크기가 다른 두 묶음의 예측을 원래 행에 모아 전체 실패를 계산하는 경로를 따라갑니다.</p></div></section>
 
-export default function OofRiskEstimationArticle() {
-  return (
-    <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">OOF prediction은 각 training row가 자신을 보지 않은 model에게서 받은 답입니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">K-fold는 K개의 score를 얻는 절차이기 전에 training rows 전체에 <strong>unseen prediction vector</strong>를 만드는 절차입니다. Row i가 fold k에 있으면 i의 prediction은 나머지 K−1 folds로 학습한 model에서만 나옵니다.</p></div>
-        <TermBreakdown title="OOF table의 네 열" items={[
-          { term: "Row ID", description: "원래 target과 prediction을 다시 정렬할 안정된 key입니다." },
-          { term: "Fold ID", description: "해당 prediction을 만들 때 제외된 partition입니다." },
-          { term: "OOF prediction", description: "그 row를 학습하지 않은 fold model의 출력입니다." },
-          { term: "OOF loss", description: "OOF prediction과 target을 metric 규칙으로 비교한 행별 실패입니다.", boundary: "In-sample prediction을 섞으면 더는 OOF가 아닙니다." },
-        ]} />
-        <OofRiskViz />
-        <ContentBoundary article="oof-risk-estimation" />
-      </section>
-      <section id="pooling" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">모든 OOF row를 원래 weight로 모은 뒤 risk를 한 번 계산합니다</h2>
-        <ExplainedFormula
+<section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 한 묶음을 빼고 예측한 뒤 자리를 바꿉니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>자료 한 묶음을 평가용으로 빼 두고 나머지로 학습합니다. 빼 둔 행만 예측해 원래 위치에 붙입니다. 다른 묶음에서도 반복한 뒤 같은 행의 정답과 답을 비교하여 처음 정한 가중치로 평균냅니다.</p></div><ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2"><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">1</span><span>평가할 묶음을 학습에서 뺀다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">2</span><span>나머지로 배우고 뺀 행을 예측한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">3</span><span>행 ID로 원래 위치에 붙인다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">4</span><span>모든 행의 실패를 가중 평균한다</span></li></ol></section>
+
+<section id="small-case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 20행과 80행의 실패를 합칩니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>자료 100행을 첫 20행과 나머지 80행으로 나누었다고 합시다. 첫 모델은 80행으로 학습해 제외한 20행을 예측하고 두 번째 모델은 20행으로 학습해 제외한 80행을 예측합니다. (가정)</p><p>첫 평가의 평균 손실은 0.2, 둘째는 0.4라고 합시다. 손실 합은 각각 4와 32입니다. 모든 행에 같은 무게를 주면 합계 36을 100으로 나누어 0.36입니다. 두 평균만 더해 2로 나누면 0.30으로 달라집니다. (가정)</p></div></section>
+
+<section id="inside-oof" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 예측마다 어느 행과 어느 학습 모델인지 남깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>각 출력에 행 ID와 평가 묶음 ID를 붙입니다. 첫 20행의 출력은 학습 80행으로 만든 모델을 가리켜야 하고 나머지 80행은 반대 모델을 가리켜야 합니다. 전처리의 평균이나 단어장도 해당 학습 행에서만 만듭니다.</p><p>출력 파일이 처리 순서대로 나와도 정답은 행 ID로 대응시킵니다. 길이가 100이라고 누락·중복이 없는 것은 아니므로 각 평가 행의 출력이 정확히 하나인지 검사합니다.</p></div></section>
+
+<section id="why-weight" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 묶음 평균을 같은 무게로 세면 작은 묶음이 커집니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>두 묶음에 각각 절반의 무게를 주면 첫 20행의 각 행은 전체 평균에서 1/40, 뒤 80행의 각 행은 1/160의 무게를 받습니다. 첫 묶음의 한 행이 다른 묶음의 행보다 4배 크게 반영됩니다. (가정)</p><p>행마다 같은 무게를 주려던 목적이라면 각 행은 1/100이어야 합니다. 묶음마다 같은 중요도를 주는 다른 목적도 가능하지만 그 목적을 사전에 명시해야 0.30과 0.36을 혼동하지 않습니다.</p></div></section>
+
+<section id="oof-terms" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 자신을 배우지 않은 답에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>그 행이 빠진 모델에서 얻은 답을 out-of-fold prediction, 줄여서 OOF 예측이라고 합니다. 평가 묶음의 번호가 fold ID이고 모든 행의 손실을 다시 합쳐 구한 위험이 pooled OOF risk입니다.</p></div><TermBreakdown title="역할을 이해한 뒤 이름을 붙입니다" items={[{"term": "Row ID", "description": "예측을 원래 입력과 정답에 대응시키는 안정된 행 식별자입니다.", "boundary": "출력 순서가 같다고 가정하는 대신 실제 대응을 확인합니다."}, {"term": "OOF loss", "description": "그 행을 보지 않은 모델의 예측을 정답과 비교한 손실입니다.", "boundary": "학습에 사용한 행의 재예측을 섞지 않습니다."}, {"term": "Evaluation weight", "description": "각 행이나 대상이 전체 평가에서 차지할 중요도입니다.", "boundary": "같은 행 가중치와 같은 대상 가중치는 다를 수 있습니다."}]} /><OofRiskViz /></section>
+
+<section id="pooling" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 손실 합 4와 32를 원래 분모 100으로 나눕니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>첫 모델의 평가 20행은 총 4, 두 번째 모델의 평가 80행은 총 32의 손실을 냈습니다. 각 가중치 w=1이면 분자는 4+32=36이고 분모는 20+80=100이므로 0.36입니다. 두 fold 평균의 단순 평균 0.30은 다른 무게를 사용한 결과입니다. (가정)</p><p>가중치가 달라지면 행별 가중 손실을 합산하고 가중치 합으로 나눕니다. 이 식에서는 가중치가 비음수이고 합이 양수여야 합니다. 가중치를 모두 0으로 두면 분모가 없어 결과를 계산할 수 없습니다.</p></div><ExplainedFormula
           question="왜 fold score의 단순 평균보다 pooled OOF risk가 필요한가요?"
           idea={<p>
             Fold 크기가 다르면 fold 평균에 같은 weight를 주는 순간 작은 fold의 행이 더 큰 영향력을 얻습니다. 행별 loss와 업무 weight는 원래 단위로 합칩니다.
@@ -39,23 +33,14 @@ export default function OofRiskEstimationArticle() {
             { symbol: String.raw`\widehat y_i^{\mathrm{OOF}}`, name: "OOF prediction", description: "Row i를 보지 않은 model의 prediction입니다." },
             { symbol: String.raw`w_i`, name: "Evaluation weight", description: "Metric이 row i에 주는 업무 weight입니다." },
           ]}
-          assumptions={["모든 eligible row에 OOF prediction이 정확히 하나 있습니다.", "Non-decomposable metric은 전체 OOF vector에서 metric 자체를 다시 계산합니다."]}
+          assumptions={["모든 eligible row에 OOF prediction이 정확히 하나 있습니다.", "가중치 w_i는 비음수이고 전체 합이 양수입니다.","이 식은 행별 손실로 분해되는 가중 평균에 적용합니다. AUC 같은 지표에는 이 식을 쓰지 않으며 전체 OOF 계산의 점수 비교가능성도 따로 확인합니다."]}
           interpretation="20행 평균 .2와 80행 평균 .4이면 equal-fold 평균은 .3, pooled row 평균은 (.2×20+.4×80)/100=.36입니다."
-        />
-      </section>
-      <section id="estimand" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">CV는 완성된 model 한 개보다 다시 실행할 learning procedure를 평가합니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
-            Fold마다 training subset과 fitted model이 다릅니다. OOF loss는 full data로 마지막에 fit한 model 하나의 conditional
-            error와 정확히 같지 않습니다. 비슷한 training sample에서 같은 procedure를 반복했을 때의 평균 risk에 더 가깝습니다.
-          </p></div>
-      </section>
-      <section id="boundary" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">Fold score는 서로 독립 반복이 아니므로 단순 표준오차를 과신하지 않습니다</h2>
-        <div id="paper-cv-estimand" className="not-prose"><CitationBlock source="Bates, Hastie, Tibshirani — Cross-Validation: What Does It Estimate and How Well Does It Do It?" citeKey={1} type="paper" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/">
-          CV estimand와 fold dependence에 따른 uncertainty 문제를 OLS theorem과 broader analysis로 다룹니다. 모든 learner에 같은 finite-sample equality가 성립한다는 뜻은 아닙니다.
-        </CitationBlock></div>
-      </section>
-    </div>
-  );
-}
+        /></section>
+
+<section id="paper-cv-estimand" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 논문의 행별 평균 식에 같은 손실을 넣습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Bates·Hastie·Tibshirani의 arXiv v4 §2 식 (2)는 각 행을 제외한 모델의 오차 eᵢ를 모아 전체 행 수로 나눕니다. 논문은 같은 크기의 fold를 가정하지만 행별 합산 자체를 확인하는 데 쓸 수 있습니다. 이 글의 20/80 설계가 논문의 모든 정리를 그대로 만족한다는 뜻은 아닙니다.</p></div><div id="source-cv-mean" className="mt-8 scroll-mt-20"><CitationBlock source="Bates·Hastie·Tibshirani v4 §2, 식 (2)" citeKey={1} href="https://arxiv.org/html/2104.00673v4#S2"><q>ē = (1/n) ∑ᵢ eᵢ</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>같은 가중치에서 n=100, ∑eᵢ=4+32=36을 넣으면 ē=0.36입니다. 원문은 이어서 행과 fold의 오차가 학습·평가 재사용 때문에 의존하므로 독립 표본처럼 표준오차를 계산하면 너무 좁은 구간이 나올 수 있음을 다룹니다.</p></div></div></section>
+
+<section id="estimand" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. 전체 자료로 다시 배운 모델 하나와는 구별합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>이 사례의 0.36은 학습 크기 80과 20인 두 모델의 평가를 섞은 값입니다. 전체 100행으로 다시 학습한 최종 모델은 어느 쪽과도 같지 않습니다. 그 모델의 미래 손실을 정확히 0.36이라고 단정할 수 없습니다.</p><p>논문은 동분산 Gaussian 선형 모형과 OLS, 제곱 손실 등의 조건에서 CV의 추정 대상이 특정 최종 모델의 오차와 어떻게 다른지 엄밀히 분석합니다. 일반 학습기에서도 어떤 절차와 학습 크기를 평가했는지 명시하는 교훈을 얻되 그 정리를 모든 모델의 정확한 등식으로 확장하지 않습니다.</p></div></section>
+
+<section id="boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 순위 지표에는 행 평균식을 그대로 쓰지 않습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>AUC는 양성과 음성의 점수 순서를 비교하므로 행별 손실 평균식으로 분해되지 않습니다. 두 fold가 각각 음성·양성 점수 [0.1,0.2]와 [0.8,0.9]라면 각 AUC는 1입니다. 합치면 네 양성·음성 비교 중 셋만 맞아 pooled AUC는 0.75입니다. 서로 다른 모델의 점수 범위가 달라질 수 있다는 경계 사례입니다. (가정)</p><p>scikit-learn 1.7.2 cross_val_predict 문서도 모은 예측의 지표가 다른 교차검증 방식과 일반적으로 같지 않다고 설명합니다. 전체 벡터로 계산했다고 항상 더 올바른 추정량이 되는 것은 아닙니다. 목표 지표의 의미와 점수 비교가능성을 확인하고 학습 자료가 겹치는 fold를 독립 반복처럼 다루지 않습니다.</p></div><div id="paper-oof-api" className="mt-8 scroll-mt-20"><CitationBlock source="scikit-learn 1.7.2 — cross_val_predict" citeKey={1} href="https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.cross_val_predict.html"><q>may not be a valid way to measure generalization performance</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>0.36은 명시한 행 평균 손실의 계산 결과입니다. AUC처럼 모델 사이 점수를 비교하는 지표에는 같은 해석을 자동으로 옮기지 않습니다.</p></div></div><ContentBoundary article="oof-risk-estimation" /></section>
+
+<section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 어느 평균과 어느 모델의 점수인가요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>20행 평균 0.2와 80행 평균 0.4의 손실 합과 전체 행 평균은 각각 얼마인가요? (답: 7절)</p><p>전체 100행으로 다시 학습한 모델의 미래 손실이 반드시 0.36이라고 할 수 있나요? (답: 9절)</p><p>두 fold의 AUC가 모두 1인데 합친 AUC가 0.75가 되는 예에서는 어떤 경계가 드러나나요? (답: 10절)</p></div></section></div>; }

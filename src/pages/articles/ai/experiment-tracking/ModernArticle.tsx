@@ -1,86 +1,31 @@
-import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { ProvenanceDagViz } from "./viz/ModernExperimentViz";
+export default function Article() { return <div className="space-y-16"><section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 점수에서 실제 입력과 실행까지 돌아갈 수 있어야 합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>좋은 결과 숫자를 남겨도 어떤 자료와 설정으로 만들었는지 잃으면 다시 확인하기 어렵습니다. 같은 파일명이 다른 내용으로 덮어써지면 과거 점수의 근거도 바뀝니다.</p><p>
+            이 글은 실패한 실행과 다시 성공한 실행을 나누고 그 성공이 만든 두 예측에서 입력까지 거슬러 가는 경로를 만듭니다. 무엇을 계산했고 실제로 몇 번 실행했는지 함께 남깁니다.
+          </p></div></section>
 
-export default function ExperimentTrackingArticle() {
-  return (
-    <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          실험 추적은 chart가 아니라 결과에서 input까지 돌아가는
-          provenance입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            “validation loss 0.213”은 결과 숫자일 뿐입니다.{" "}
-            <strong>Experiment provenance</strong>는 그 숫자에서 evaluation
-            report·prediction·checkpoint·실행 attempt·고정된 입력까지 거슬러 갈
-            수 있게 만드는 방향 있는 graph입니다.
-          </p>
-          <p>
-            먼저 같은 실험 조건과 같은 실행을 구분합니다. 같은
-            code·data·split·config를 seed만 바꿔 반복한 실행은 같은
-            specification 아래의 다른 attempts입니다. Worker 장애 뒤 retry도
-            이전 attempt를 덮어쓰지 않습니다.
-          </p>
-        </div>
-        <TermBreakdown
-          title="Provenance graph의 네 node"
-          items={[
-            {
-              term: "Experiment spec",
-              description:
-                "Code·data·split·resolved config·environment·command를 묶은 변경 불가능한 실행 조건입니다.",
-              example:
-                "Git tree·dataset digest·fold manifest·container digest를 함께 hash합니다.",
-              boundary:
-                "사람이 붙인 run name은 검색 label이지 identity가 아닙니다.",
-            },
-            {
-              term: "Attempt",
-              description: "Spec을 실제로 한 번 실행한 사건입니다.",
-              example: "Seed 2, retry 1, worker gpu-07을 별도 ID로 남깁니다.",
-              boundary: "실패 attempt도 exit code와 last step을 보존합니다.",
-            },
-            {
-              term: "Artifact",
-              description:
-                "Attempt가 읽거나 만든 versioned data·checkpoint·prediction·report입니다.",
-              example:
-                "URI와 bytes digest·schema·size·producer attempt를 함께 저장합니다.",
-              boundary:
-                "latest.pt 같은 위치 문자열만으로 내용을 식별하지 않습니다.",
-            },
-            {
-              term: "Provenance edge",
-              description:
-                "Attempt가 어떤 artifact를 읽고 무엇을 만들었는지 나타내는 관계입니다.",
-              example:
-                "split-v4 → run-27 → prediction-v8 → report-v3 흐름입니다.",
-              boundary:
-                "Node 목록만 있고 producer/consumer edge가 없으면 재계산 경로를 찾기 어렵습니다.",
-            },
-          ]}
-        />
-        <ProvenanceDagViz />
-        <ContentBoundary article="experiment-tracking" />
-      </section>
-      <section id="spec-attempt" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          Spec digest는 조건을, attempt ID는 실제 실행을 식별합니다
-        </h2>
-        <ExplainedFormula
+<section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 조건과 실행과 결과를 화살표로 연결합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>먼저 실행 조건을 고정하고 실제 시도마다 별도의 식별자를 만듭니다. 입력과 출력 파일을 그 실행에 연결하고 보고서는 사용한 출력 파일을 가리키게 합니다. 결과에서 뒤로 따라가면 자료와 코드와 설정을 찾을 수 있어야 합니다.</p></div><ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2"><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">1</span><span>고정한 조건과 입력을 식별한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">2</span><span>실제 실행마다 고유 번호를 만든다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">3</span><span>만든 파일과 생산 실행을 연결한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">4</span><span>보고서에서 예측과 입력을 역추적한다</span></li></ol></section>
+
+<section id="small-case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 실패 A1과 성공 A2를 덮어쓰지 않습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>조건 묶음을 S1, 입력 자료를 D1이라고 부릅시다. 첫 실행 A1은 실패했고 같은 조건을 다시 실행한 A2가 성공해 예측 [0.2,0.8]을 만들었습니다. 이 두 값의 평균은 0.50입니다. (가정)</p><p>다음 날 같은 파일 경로가 [0.1,0.9]로 바뀌어도 평균은 0.50입니다. 평균과 파일 이름만 남겼다면 과거 보고서가 어느 내용을 사용했는지 구별할 수 없습니다. A1과 A2라는 실행 번호, 그리고 각 파일의 내용을 함께 기록해야 합니다. (가정)</p></div></section>
+
+<section id="inside-provenance" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 실험 조건과 실제 실행은 서로 다른 대상을 가리킵니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>S1은 코드·자료·분할·공통 설정·실행 환경·명령의 고정된 묶음입니다. A1과 A2는 그 조건을 실제로 실행한 각각의 사건입니다. 같은 조건이라도 여러 번 실행할 수 있으므로 조건 식별자 하나로 실행을 덮어쓰지 않습니다.</p><p>입력 D1이 A2에서 읽혔고 A2가 예측 P2를 만들었으며 보고서 R2가 P2의 평균을 계산했다고 연결합니다. 목록에 이름만 나열하는 대신 누가 무엇을 읽고 만들었는지가 있어야 뒤로 따라갈 수 있습니다.</p></div></section>
+
+<section id="why-identity" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 같은 이름과 크기와 평균도 같은 내용을 보장하지 않습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>두 예측 배열은 모두 길이가 2이고 평균이 0.50입니다. 그러나 첫 행의 값은 0.2와 0.1로 다릅니다. 합계나 평균은 내용을 줄인 값이라 개별 예측을 복원할 수 없습니다.</p><p>파일 위치와 실제 내용도 구별합니다. 위치는 어디서 읽을지 알려 주고 내용의 digest는 읽은 바이트가 기록된 바이트와 같은지 확인하는 데 씁니다. 위치가 같아도 내용은 바뀔 수 있습니다.</p></div></section>
+
+<section id="tracking-terms" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 조건과 실행과 결과물에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>고정한 실험 조건이 experiment spec, 실제 실행 한 번이 attempt, 입력이나 출력으로 보존한 파일이 artifact입니다.</p></div><TermBreakdown title="역할을 이해한 뒤 이름을 붙입니다" items={[{"term": "Provenance edge", "description": "실행이 어떤 입력을 읽고 어떤 출력을 만들었는지 나타내는 관계입니다.", "boundary": "자료 목록만으로는 생산 경로가 완성되지 않습니다."}, {"term": "Content digest", "description": "정해진 바이트에 hash를 적용한 내용 식별값입니다.", "boundary": "신뢰할 기준 기록과 비교해야 하며 출처의 진위를 혼자 증명하지 않습니다."}, {"term": "Run ID", "description": "실제 실행을 다른 실행과 구분하는 고유 식별자입니다.", "boundary": "사용자가 붙인 같은 run name이나 seed를 대신 쓰지 않습니다."}]} /><ProvenanceDagViz /></section>
+
+<section id="spec-attempt" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 같은 실행 좌표가 반복돼도 ID는 새로 만듭니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>이 글의 S1은 반복 비교를 묶는 공통 조건이라 seed·재시도 번호·worker를 따로 저장한다고 정합니다. 실제 실행에는 이 값들을 포함한 전체 설정도 보존합니다. 다른 설계에서 seed를 공통 config에 포함했다면 seed가 바뀔 때 조건 hash도 달라지는 것이 맞습니다.</p><p>seed 2·retry 0·worker 7이라는 좌표를 다음 날 다시 사용할 수 있습니다. 좌표만으로 실행의 유일성을 보장하지 말고 실행마다 고유 ID u를 발급합니다. A1 실패 기록과 A2 성공 기록은 서로 다른 u에 보관합니다. (가정)</p><p>조건을 hash하기 전에 필드 순서와 직렬화 형식, 기본값의 해석을 고정합니다. 외부 자료는 시점 또는 snapshot을 지정하고 비밀 원문 대신 필요한 제공자·버전·정책을 기록합니다.</p></div><ExplainedFormula
           question="Configuration이 같은 반복과 조건이 다른 실험을 어떻게 기계적으로 구분하나요?"
           idea={
             <p>
-              정규화한 immutable inputs를 순서대로 직렬화해 spec digest를 만들고 seed·retry·worker를 붙여 실제 attempt를 구분합니다.
+              정규화한 immutable inputs를 순서대로 직렬화해 spec digest를 만들고 seed·retry·worker와 고유 실행 ID를 붙여 실제 attempt를 구분합니다.
             </p>
           }
-          formula={String.raw`d_s=H(c\Vert d\Vert s\Vert g\Vert e\Vert k),\quad a=(d_s,z,r,w)`}
-          annotatedFormula={String.raw`\begin{aligned}b_s&=\underbrace{\operatorname{encode}(c,d,s,g,e,k)}_{\text{실행 조건을 정규 순서로 직렬화}}\\d_s&=\underbrace{H(b_s)}_{\text{조건 bytes를 immutable identity로 압축}}\\a&=\underbrace{(d_s,z,r,w)}_{\text{seed·retry·worker를 붙여 attempt 구분}}\end{aligned}`}
+          formula={String.raw`d_s=H(\operatorname{encode}(c,d,s,g,e,k)),\quad a=(d_s,z,r,w,u)`}
+          annotatedFormula={String.raw`\begin{aligned}b_s&=\underbrace{\operatorname{encode}(c,d,s,g,e,k)}_{\text{실행 조건을 정규 순서로 직렬화}}\\d_s&=\underbrace{H(b_s)}_{\text{조건 bytes를 immutable identity로 압축}}\\a&=\underbrace{(d_s,z,r,w,u)}_{\text{seed·retry·worker와 고유 실행 ID를 보존}}\end{aligned}`}
           operations={[
             {
               expression: String.raw`\operatorname{encode}(c,d,s,g,e,k)`,
@@ -97,10 +42,10 @@ export default function ExperimentTrackingArticle() {
               ],
             },
             {
-              expression: String.raw`(d_s,z,r,w)`,
+              expression: String.raw`(d_s,z,r,w,u)`,
               annotation: [
                 "같은 spec에 실행 좌표를 붙여",
-                "반복·retry가 덮어쓰이지 않게 분리",
+                "고유 ID로 실제 실행을 별도 보존",
               ],
             },
           ]}
@@ -123,24 +68,20 @@ export default function ExperimentTrackingArticle() {
               description: "실행 조건 전체의 content identity입니다.",
             },
             {
-              symbol: "z,r,w",
-              name: "Seed · retry · worker",
-              description: "같은 조건 아래 실제 attempt를 구분하는 좌표입니다.",
+              symbol: "z,r,w,u",
+              name: "Seed · retry · worker · unique ID",
+              description: "z·r·w는 실행 좌표이고 u는 각각의 실제 실행을 구분하는 고유 ID입니다.",
             },
           ]}
           assumptions={[
             "Mutable external input은 snapshot 또는 as-of version으로 고정합니다.",
             "Secret 원문은 제외하되 provider·secret version·policy를 기록합니다.",
-            "Serialization schema와 default resolution도 versioning합니다.",
+            "Serialization schema와 default resolution도 versioning합니다.","반복을 묶는 이 글의 spec에서는 seed·retry·worker를 제외합니다. 각 attempt에는 seed를 포함한 실제 실행 설정 전체를 별도로 저장합니다.","같은 실행 좌표가 반복될 수 있으므로 u를 고유하게 발급합니다.",
           ]}
-          interpretation="Config 한 필드가 달라지면 spec digest가 달라집니다. 같은 digest를 seed 1·2로 실행하면 두 attempts는 다르지만 같은 조건의 반복입니다."
-        />
-      </section>
-      <section id="artifact-reference" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          Artifact는 위치·내용·형태·생산자를 함께 가리킵니다
-        </h2>
-        <ExplainedFormula
+          interpretation="조건 S1에 같은 seed 2·retry 0·worker 7을 쓰더라도 실제 실행 A1과 A2에는 서로 다른 u를 발급합니다. seed가 조건 config에도 포함된 다른 설계라면 seed 변경은 spec digest도 바꿉니다."
+        /></section>
+
+<section id="artifact-reference" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 9바이트의 내용이 바뀌었는지 직접 확인합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>줄바꿈 없는 UTF-8 문자열 [0.2,0.8]은 9바이트입니다. 실제 SHA-256 계산값은 <code className="break-all">3a865fbc8533680a422367dcd4fbd6acfabb3b8e449f419c40f146c1d8e1d9e4</code>입니다. 같은 방식의 [0.1,0.9]도 9바이트지만 <code className="break-all">79cd929e095901c3e5625aaee850c49564b962af3ecdf01a8877f7ad960def8e</code>가 나옵니다.</p><p>예측 P2에 저장 위치·내용 digest·행 ID 순서와 dtype 같은 schema·크기 9·생산 실행 A2를 연결합니다. 보고서 R2에서 P2를 읽어 기록된 digest와 비교하면 같은 경로가 새 내용으로 바뀐 경우를 찾을 수 있습니다.</p><p>digest 비교의 기준 기록 자체를 믿을 수 있어야 합니다. 파일과 기록을 함께 악의적으로 바꾸면 hash 일치만으로 진위를 보장하지 못합니다. 논리적인 값의 정규화 hash와 실제 저장 바이트 hash도 구별합니다.</p></div><ExplainedFormula
           question="URI가 바뀌거나 덮어써져도 과거 artifact를 같은 것으로 확인하려면 무엇이 필요한가요?"
           idea={
             <p>
@@ -162,7 +103,7 @@ export default function ExperimentTrackingArticle() {
               expression: String.raw`\mathbf1[d_a=d_a^{\rm recorded}]`,
               annotation: [
                 "실제 digest를 producer 기록과 비교해",
-                "변조·덮어쓰기 여부 판정",
+                "신뢰한 기록과 내용 일치 여부 검사",
               ],
             },
             {
@@ -201,43 +142,13 @@ export default function ExperimentTrackingArticle() {
             "Metadata보다 artifact retention이 짧아 dangling reference가 생기지 않게 합니다.",
             "Schema fixture로 row count·ID uniqueness·shape를 실제 검사합니다.",
           ]}
-          interpretation="s3://bucket/model/latest.pt만 저장하면 내일 다른 bytes를 가리킬 수 있습니다. Digest·schema·producer가 있어야 과거 report의 정확한 model을 찾습니다."
-        />
-      </section>
-      <section id="provenance-receipt" className="scroll-mt-20">
-        <h2 className="mb-4 text-2xl font-bold">
-          실패 attempt까지 남겨야 성공 결과만 보이는 편향을 막습니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Run 종료 receipt에는 exit code·last step·stderr·partial outputs와
-            required artifact checks를 포함합니다. 성공한 checkpoint만 남기면
-            어떤 configuration이 OOM이나 data error를 만들었는지 사라집니다.
-          </p>
-          <p>
-            다음 수업에서는 이 provenance 위에 metric observation을 쌓는{" "}
-            <Link to="/cs/ai/learning-curve-tracking">
-              learning-curve tracking
-            </Link>
-            을 다룹니다.
-          </p>
-        </div>
-        <div id="paper-mlflow-lifecycle" className="scroll-mt-24">
-          <CitationBlock
-            source="Accelerating the Machine Learning Lifecycle with MLflow"
-            citeKey={1}
-            href="https://people.eecs.berkeley.edu/~alig/papers/mlflow.pdf"
-          >
-            <strong>문제:</strong> 서로 다른 library와 deployment에서
-            experiment·run·model을 공통 관리하기 어려움. <strong>기여:</strong>{" "}
-            Tracking·Projects·Models의 초기 open interface.{" "}
-            <strong>전제:</strong> 2018년 초기 MLflow architecture.{" "}
-            <strong>근거 범위:</strong> 논문의 design·use cases.{" "}
-            <strong>과장 금지:</strong> 현재 registry·alias API가 그대로라는
-            뜻은 아닙니다.
-          </CitationBlock>
-        </div>
-      </section>
-    </div>
-  );
-}
+          interpretation="줄바꿈 없는 UTF-8 [0.2,0.8]은 9바이트이며 SHA-256은 3a865fbc…입니다. [0.1,0.9]도 9바이트지만 79cd929e…로 달라집니다. 같은 위치·크기·평균만으로 내용이 같다고 판단하지 않습니다."
+        /></section>
+
+<section id="paper-mlflow-lifecycle" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. 공식 run_id 항목을 실제 실행에 대응시킵니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>2026-10-04 확인한 MLflow REST API의 RunInfo는 run_id를 실행의 고유 식별자로 정의하고 run_name과 별도 필드로 둡니다. 우리 예의 A1과 A2도 각각의 실제 실행을 가리키도록 서로 다른 ID가 필요합니다. 아래 짧은 A1·A2는 설명용 이름이며 실제 발급 형식을 뜻하지 않습니다.</p></div><div id="source-mlflow-run-id" className="mt-8 scroll-mt-20"><CitationBlock source="MLflow REST API — RunInfo" citeKey={1} href="https://mlflow.org/docs/latest/api_reference/rest-api.html#runinfo"><q>Unique identifier for the run.</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>S1이라는 조건 이름을 두 실행의 run_id로 재사용하지 않습니다. 실패 A1과 성공 A2를 분리하고 P2의 생산자를 A2에 연결합니다. 도구를 사용했다는 사실만으로 모든 자료 버전과 내용 hash가 자동 수집되는 것은 아니므로 필요한 연결을 실제 기록해야 합니다.</p></div></div><div id="source-mlflow-artifact" className="mt-8 scroll-mt-20"><CitationBlock source="MLflow 2018 §3.1, 인쇄 p.41" citeKey={1} href="https://people.eecs.berkeley.edu/~alig/papers/mlflow.pdf"><q>mlflow.log_artifact("precision_recall.png")</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>원문은 결과 파일을 실행에 기록하는 실제 API 호출을 보여 줍니다. 같은 역할로 A2의 예측 파일 P2와 보고서를 연결할 수 있습니다. 2018년의 Tracking·Projects·Models 설계 설명과 현재의 세부 API 계약은 버전과 확인일을 구별합니다.</p></div></div></section>
+
+<section id="provenance-receipt" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 실패 기록도 다음 선택의 근거입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>A1에는 종료 코드와 마지막 단계, 오류 출력, 일부 생성된 파일을 남깁니다. A2만 보관하면 같은 조건에서 실패가 있었다는 사실과 복구 비용이 사라집니다. 종료 시 필수 파일이 실제로 존재하는지도 검사합니다.</p><p>다음 단계에서는 같은 실행 위에 학습 중 시간별 지표를 쌓습니다. <a href="/cs/ai/learning-curve-tracking">학습 곡선 추적</a>에서 지표 관측이 어느 단계와 실행을 가리키는지 이어서 다룹니다.</p></div></section>
+
+<section id="boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 기록이 있어도 파일과 실행 환경이 사라지면 재생할 수 없습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>파일 보존 기간이 기록보다 짧으면 보고서가 삭제된 대상을 가리키게 됩니다. 실제 파일과 접근 권한, 해석할 코드·환경을 함께 보존해야 합니다. checksum은 파일을 복구해 주는 저장소가 아닙니다.</p><p>같은 seed와 자료라도 실행 장치나 비결정적 연산 때문에 결과가 달라질 수 있습니다. 추적은 당시 무엇을 했는지 확인할 근거이며 같은 값의 완벽한 재현이나 좋은 모델 품질을 자동 보장하지 않습니다.</p></div><ContentBoundary article="experiment-tracking" /></section>
+
+<section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 결과에서 입력까지 실제로 돌아갈 수 있나요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>같은 조건과 seed·retry·worker를 다시 썼습니다. 두 실행을 구별하려면 무엇을 추가해야 하나요? (답: 7절)</p><p>두 파일의 크기와 평균이 모두 같다면 내용이 같다고 결론내릴 수 있나요? (답: 8절)</p><p>성공 A2만 남기고 실패 A1을 지우면 어떤 근거가 사라지나요? (답: 10절)</p></div></section></div>; }

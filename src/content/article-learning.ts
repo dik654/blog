@@ -2964,305 +2964,611 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/math-gradients-jacobians": {
-    coreIdea:
-      "Partial derivative는 input coordinate 하나의 local rate이고, gradient는 scalar output의 모든 coordinate slope를 vector로 묶습니다. Output도 vector면 Jacobian이 되며 JVP는 input direction의 작은 변화를 output 방향으로 전달합니다.",
-    assumedKnowledge: [
-      { id: "derivative", role: "Coordinate 하나를 움직인 local rate를 계산합니다." },
-      { id: "local-linear-approximation", role: "Jacobian과 gradient를 작은 변화의 1차 map으로 읽습니다." },
-      { id: "coordinate-vector", role: "Input·output coordinate 순서와 vector shape를 맞춥니다." },
-      { id: "dot-product", role: "Gradient의 선택 방향 성분을 directional derivative로 투영합니다." },
-      { id: "euclidean-norm", role: "길이 1인 방향끼리 steepest local rate를 비교합니다." },
+    "coreIdea": "입력 두 개를 하나씩 움직여 얻은 비율 4와 3을 모으면 함께 움직일 때의 결과 변화를 예측할 수 있습니다. 결과가 여러 개이면 그 비율을 결과별 행으로 쌓습니다. 같은 작은 변화라도 좌표 순서, 단위와 전달 방향을 맞춰야 올바른 계산이 됩니다.",
+    "assumedKnowledge": [
+      {
+        "id": "derivative",
+        "role": "Coordinate 하나를 움직인 local rate를 계산합니다."
+      },
+      {
+        "id": "local-linear-approximation",
+        "role": "Jacobian과 gradient를 작은 변화의 1차 map으로 읽습니다."
+      },
+      {
+        "id": "coordinate-vector",
+        "role": "Input·output coordinate 순서와 vector shape를 맞춥니다."
+      },
+      {
+        "id": "dot-product",
+        "role": "Gradient의 선택 방향 성분을 directional derivative로 투영합니다."
+      },
+      {
+        "id": "euclidean-norm",
+        "role": "길이 1인 방향끼리 steepest local rate를 비교합니다."
+      },
+      {
+        "id": "cauchy-schwarz",
+        "role": "단위 방향과 기울기의 내적이 기울기 길이를 넘지 않는 이유를 설명합니다. 본문에서 직관을 요약하고 정본 증명으로 연결합니다."
+      }
     ],
-    introducedHere: [
-      { id: "partial-derivative", role: "나머지 input을 고정하고 coordinate 하나의 local rate를 분리합니다." },
-      { id: "gradient", role: "Scalar output의 coordinate별 partial derivative를 vector로 묶습니다." },
-      { id: "directional-derivative", role: "Gradient를 선택한 unit direction에 투영해 그 방향 rate를 구합니다." },
-      { id: "jacobian-matrix", role: "Vector output과 vector input 사이 모든 local slope를 matrix로 배열합니다." },
-      { id: "jacobian-vector-product", role: "Input direction을 Jacobian에 적용해 output 변화 방향을 계산합니다." },
+    "introducedHere": [
+      {
+        "id": "partial-derivative",
+        "role": "나머지 input을 고정하고 coordinate 하나의 local rate를 분리합니다."
+      },
+      {
+        "id": "gradient",
+        "role": "Scalar output의 coordinate별 partial derivative를 vector로 묶습니다."
+      },
+      {
+        "id": "directional-derivative",
+        "role": "Gradient를 선택한 unit direction에 투영해 그 방향 rate를 구합니다."
+      },
+      {
+        "id": "jacobian-matrix",
+        "role": "Vector output과 vector input 사이 모든 local slope를 matrix로 배열합니다."
+      },
+      {
+        "id": "jacobian-vector-product",
+        "role": "Input direction을 Jacobian에 적용해 output 변화 방향을 계산합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "partial-derivative", sectionId: "overview", intuition: "여러 손잡이 중 하나만 움직이고 나머지를 고정해 민감도를 잽니다.", workedExample: "f=x²+3y에서 ∂f/∂x=2x, ∂f/∂y=3입니다.", boundary: "모든 partial 존재만으로 전체 differentiability를 보장하지 않습니다." },
-      { id: "gradient", sectionId: "gradient-direction", intuition: "각 손잡이의 local slope를 input coordinate 순서대로 모은 vector입니다.", workedExample: "(2,-1)에서 ∇f=(4,3)입니다.", boundary: "Coordinate scale과 norm이 달라지면 크기·steepest 해석도 달라집니다." },
-      { id: "directional-derivative", sectionId: "gradient-direction", intuition: "Gradient에서 선택한 이동 방향 성분만 dot product로 읽습니다.", workedExample: "(4,3)·(3/5,4/5)=24/5입니다.", boundary: "Direction vector를 unit norm으로 맞추지 않으면 이동 속도까지 섞입니다." },
-      { id: "jacobian-matrix", sectionId: "jacobian", intuition: "Output별 gradient를 행으로 쌓은 local linear map입니다.", workedExample: "F=(x+y,xy)의 J는 [[1,1],[y,x]]입니다.", boundary: "문헌별 row·column convention을 확인해야 합니다." },
-      { id: "jacobian-vector-product", sectionId: "jacobian", intuition: "전체 slope table에 input 방향 vector를 앞으로 통과시킵니다.", workedExample: "J(2,3)[.01,-.02]^T=[-.01,-.01]^T입니다.", boundary: "Reverse-mode VJP와 곱 순서·shape·계산 방향이 다릅니다." },
+    "conceptExplanations": [
+      {
+        "id": "partial-derivative",
+        "sectionId": "partials",
+        "intuition": "여러 손잡이 중 하나만 움직이고 나머지를 고정해 민감도를 잽니다.",
+        "workedExample": "f=x²+3y의 (2,−1)에서 x만 h만큼 움직이면 변화 4h+h², y만 움직이면 3h입니다. 각 비율의 극한은 4와 3입니다.",
+        "boundary": "모든 partial 존재만으로 전체 differentiability를 보장하지 않습니다."
+      },
+      {
+        "id": "gradient",
+        "sectionId": "gradient-direction",
+        "intuition": "각 손잡이의 local slope를 input coordinate 순서대로 모은 vector입니다.",
+        "workedExample": "(2,-1)에서 ∇f=(4,3)입니다.",
+        "boundary": "Coordinate scale과 norm이 달라지면 크기·steepest 해석도 달라집니다."
+      },
+      {
+        "id": "directional-derivative",
+        "sectionId": "gradient-direction",
+        "intuition": "Gradient에서 선택한 이동 방향 성분만 dot product로 읽습니다.",
+        "workedExample": "(4,3)·(3/5,4/5)=24/5입니다.",
+        "boundary": "Direction vector를 unit norm으로 맞추지 않으면 이동 속도까지 섞입니다."
+      },
+      {
+        "id": "jacobian-matrix",
+        "sectionId": "jacobian",
+        "intuition": "Output별 gradient를 행으로 쌓은 local linear map입니다.",
+        "workedExample": "F=(x+y,xy)의 (2,3)에서 합의 행은 (1,1), 곱의 행은 (3,2)이므로 J=[[1,1],[3,2]]입니다.",
+        "boundary": "문헌별 row·column convention을 확인해야 합니다."
+      },
+      {
+        "id": "jacobian-vector-product",
+        "sectionId": "jacobian",
+        "intuition": "전체 slope table에 input 방향 vector를 앞으로 통과시킵니다.",
+        "workedExample": "같은 J에 (.01,−.02)를 곱하면 (−.01,−.01)을 얻습니다. 실제 곱의 변화 −.0102와 남은 항 −.0002를 구별합니다.",
+        "boundary": "Reverse-mode VJP와 곱 순서·shape·계산 방향이 다릅니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 Coordinate", relation: "손잡이 하나의 local rate를 분리합니다.", concepts: ["derivative", "partial-derivative"] },
-      { label: "01 Direction", relation: "Coordinate slope를 vector로 묶고 방향 성분을 읽습니다.", concepts: ["gradient", "dot-product", "directional-derivative"] },
-      { label: "02 Matrix", relation: "Output도 여러 개일 때 local map을 행렬로 확장합니다.", concepts: ["jacobian-matrix", "jacobian-vector-product"] },
-      { label: "03 Boundary", relation: "Forward JVP와 reverse VJP의 책임을 구분합니다.", concepts: ["jacobian-vector-product", "vector-jacobian-product"] },
+    "conceptStages": [
+      {
+        "label": "00 Coordinate",
+        "relation": "손잡이 하나의 local rate를 분리합니다.",
+        "concepts": [
+          "derivative",
+          "partial-derivative"
+        ]
+      },
+      {
+        "label": "01 Direction",
+        "relation": "Coordinate slope를 vector로 묶고 방향 성분을 읽습니다.",
+        "concepts": [
+          "gradient",
+          "dot-product",
+          "directional-derivative"
+        ]
+      },
+      {
+        "label": "02 Matrix",
+        "relation": "Output도 여러 개일 때 local map을 행렬로 확장합니다.",
+        "concepts": [
+          "jacobian-matrix",
+          "jacobian-vector-product"
+        ]
+      },
+      {
+        "label": "03 Boundary",
+        "relation": "Forward JVP와 reverse VJP의 책임을 구분합니다.",
+        "concepts": [
+          "jacobian-vector-product",
+          "vector-jacobian-product"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "f=x²+3y에서 두 partial derivative를 계산하세요.", answerChecklist: ["hold y", "2x", "hold x", "3"], requiredConcepts: ["partial-derivative"], sectionId: "overview" },
-      { level: "basic", question: "(2,-1)에서 gradient를 input 순서와 함께 적으세요.", answerChecklist: ["partials 4 and 3", "x y order", "vector (4,3)", "scalar output"], requiredConcepts: ["partial-derivative", "gradient"], sectionId: "gradient-direction" },
-      { level: "basic", question: "Gradient (4,3)의 Euclidean norm을 계산하세요.", answerChecklist: ["sqrt 16+9", "5", "local magnitude", "coordinate caveat"], requiredConcepts: ["gradient", "euclidean-norm"], sectionId: "gradient-direction" },
-      { level: "basic", question: "u=(3/5,4/5) 방향 derivative를 계산하세요.", answerChecklist: ["unit norm", "dot product", "12/5+12/5", "24/5"], requiredConcepts: ["gradient", "directional-derivative", "dot-product"], sectionId: "gradient-direction" },
-      { level: "basic", question: "F=(x+y,xy)의 Jacobian 행·열을 적으세요.", answerChecklist: ["output rows", "input columns", "first row 1 1", "second row y x"], requiredConcepts: ["jacobian-matrix"], sectionId: "jacobian" },
-      { level: "basic", question: "(2,3)에서 v=(.01,-.02)의 JVP를 계산하세요.", answerChecklist: ["J [[1,1],[3,2]]", "row products", "first row -.01", "second row -.01"], requiredConcepts: ["jacobian-matrix", "jacobian-vector-product"], sectionId: "jacobian" },
-      { level: "advanced", question: "Negative gradient가 local steepest decrease인 전제를 설명하세요.", answerChecklist: ["differentiable", "unit Euclidean directions", "Cauchy-Schwarz", "local not finite-step guarantee"], requiredConcepts: ["gradient", "directional-derivative", "euclidean-norm"], sectionId: "gradient-direction" },
-      { level: "advanced", question: "Partial derivative가 모두 존재하지만 differentiability가 실패할 수 있는 이유를 설명하세요.", answerChecklist: ["coordinate slices only", "joint remainder", "continuity or differentiability stronger", "counterexample needed"], requiredConcepts: ["partial-derivative", "local-linear-approximation"], sectionId: "overview" },
-      { level: "advanced", question: "JVP와 VJP의 input/output shape와 계산 방향을 비교하세요.", answerChecklist: ["Jv forward", "input tangent", "vT J reverse", "output cotangent", "no full J required"], requiredConcepts: ["jacobian-vector-product", "vector-jacobian-product"], sectionId: "boundaries" },
-      { level: "advanced", question: "Input coordinate의 단위를 100배 바꾸면 gradient 성분 비교가 달라지는 이유와 대안을 설명하세요.", answerChecklist: ["coordinate dependence", "units", "rescale or metric", "same function meaning", "selection caveat"], requiredConcepts: ["gradient", "directional-derivative"], sectionId: "boundaries" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "f=x²+3y에서 두 partial derivative를 계산하세요.",
+        "answerChecklist": [
+          "hold y",
+          "2x",
+          "hold x",
+          "3"
+        ],
+        "requiredConcepts": [
+          "partial-derivative"
+        ],
+        "sectionId": "partials"
+      },
+      {
+        "level": "basic",
+        "question": "(2,-1)에서 gradient를 input 순서와 함께 적으세요.",
+        "answerChecklist": [
+          "partials 4 and 3",
+          "x y order",
+          "vector (4,3)",
+          "scalar output"
+        ],
+        "requiredConcepts": [
+          "partial-derivative",
+          "gradient"
+        ],
+        "sectionId": "gradient-direction"
+      },
+      {
+        "level": "basic",
+        "question": "Gradient (4,3)의 Euclidean norm을 계산하세요.",
+        "answerChecklist": [
+          "sqrt 16+9",
+          "5",
+          "local magnitude",
+          "coordinate caveat"
+        ],
+        "requiredConcepts": [
+          "gradient",
+          "euclidean-norm"
+        ],
+        "sectionId": "gradient-direction"
+      },
+      {
+        "level": "basic",
+        "question": "u=(3/5,4/5) 방향 derivative를 계산하세요.",
+        "answerChecklist": [
+          "unit norm",
+          "dot product",
+          "12/5+12/5",
+          "24/5"
+        ],
+        "requiredConcepts": [
+          "gradient",
+          "directional-derivative",
+          "dot-product"
+        ],
+        "sectionId": "gradient-direction"
+      },
+      {
+        "level": "basic",
+        "question": "F=(x+y,xy)의 Jacobian 행·열을 적으세요.",
+        "answerChecklist": [
+          "output rows",
+          "input columns",
+          "first row 1 1",
+          "second row y x"
+        ],
+        "requiredConcepts": [
+          "jacobian-matrix"
+        ],
+        "sectionId": "jacobian"
+      },
+      {
+        "level": "basic",
+        "question": "(2,3)에서 v=(.01,-.02)의 JVP를 계산하세요.",
+        "answerChecklist": [
+          "J [[1,1],[3,2]]",
+          "row products",
+          "first row -.01",
+          "second row -.01"
+        ],
+        "requiredConcepts": [
+          "jacobian-matrix",
+          "jacobian-vector-product"
+        ],
+        "sectionId": "jacobian"
+      },
+      {
+        "level": "advanced",
+        "question": "Negative gradient가 local steepest decrease인 전제를 설명하세요.",
+        "answerChecklist": [
+          "differentiable",
+          "unit Euclidean directions",
+          "Cauchy-Schwarz",
+          "local not finite-step guarantee"
+        ],
+        "requiredConcepts": [
+          "gradient",
+          "directional-derivative",
+          "euclidean-norm",
+          "cauchy-schwarz"
+        ],
+        "sectionId": "gradient-direction"
+      },
+      {
+        "level": "advanced",
+        "question": "Partial derivative가 모두 존재하지만 differentiability가 실패할 수 있는 이유를 설명하세요.",
+        "answerChecklist": [
+          "좌표축을 따로 살피는 편미분만으로 모든 방향의 오차를 통제할 수 없습니다.",
+          "r(x,y)=xy/(x²+y²), r(0,0)=0이면 두 축의 편미분은 0입니다.",
+          "대각선 x=y=t≠0에서는 값이 1/2여서 원점에 연속이 아닙니다.",
+          "따라서 이동 길이보다 작은 오차를 남기는 하나의 선형 근사도 존재하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "partial-derivative",
+          "local-linear-approximation"
+        ],
+        "sectionId": "boundaries"
+      },
+      {
+        "level": "advanced",
+        "question": "JVP와 VJP의 input/output shape와 계산 방향을 비교하세요.",
+        "answerChecklist": [
+          "J가 m행 n열일 때 JVP는 길이 n의 입력 방향 v를 길이 m의 출력 변화 Jv로 보냅니다.",
+          "VJP는 길이 m의 출력 비중 w를 길이 n의 입력 기여 wᵀJ로 보냅니다. 열벡터 표기로는 Jᵀw입니다.",
+          "J=[[1,1],[3,2]], w=(2,−1)이면 wᵀJ=(−1,0)입니다.",
+          "계산 경로를 따라 필요한 곱을 전달할 수 있어 두 방식 모두 전체 J 저장이 필수는 아닙니다."
+        ],
+        "requiredConcepts": [
+          "jacobian-vector-product",
+          "vector-jacobian-product"
+        ],
+        "sectionId": "boundaries"
+      },
+      {
+        "level": "advanced",
+        "question": "Input coordinate의 단위를 100배 바꾸면 gradient 성분 비교가 달라지는 이유와 대안을 설명하세요.",
+        "answerChecklist": [
+          "z=100x로 쓰면 같은 함수는 z²/10000+3y입니다.",
+          "같은 위치 (z,y)=(200,−1)의 기울기는 (0.04,3)으로 바뀝니다.",
+          "z의 1 이동은 x의 .01 이동이므로 .04×1=4×.01로 같은 변화 예측을 줍니다.",
+          "좌표의 단위를 맞추거나 거리를 재는 기준을 지정한 뒤 방향을 비교합니다."
+        ],
+        "requiredConcepts": [
+          "gradient",
+          "directional-derivative"
+        ],
+        "sectionId": "boundaries"
+      }
     ],
-    papers: [
-      { title: "MIT OpenCourseWare 18.02SC · Gradient and Directional Derivatives", href: "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/pages/2.-partial-derivatives/part-b-chain-rule-gradient-and-directional-derivatives/", problem: "다변수 함수의 coordinate별 rate를 방향과 기하로 연결합니다.", contribution: "Partial derivative·gradient·directional derivative를 강의와 문제로 설명합니다.", assumptions: "Multivariable differentiability와 Euclidean coordinate 조건입니다.", evidenceScope: "18.02SC 해당 단원의 계산·기하입니다.", notClaim: "Arbitrary norm·manifold·nonsmooth optimization 결과가 아닙니다.", sectionId: "paper-multivariable-gradient" },
-      { title: "The Matrix Calculus You Need For Deep Learning", href: "https://arxiv.org/abs/1802.01528", problem: "Vector input·output derivative의 shape와 convention 혼동을 줄입니다.", contribution: "Gradient·Jacobian과 vectorized chain rule를 tutorial로 정리합니다.", assumptions: "선언된 numerator-layout와 differentiability입니다.", evidenceScope: "Matrix calculus tutorial과 worked derivation입니다.", notClaim: "모든 autodiff implementation의 memory·performance contract가 아닙니다.", sectionId: "paper-jacobian-calculus" },
+    "papers": [
+      {
+        "title": "MIT OpenCourseWare 18.02SC · Gradient and Directional Derivatives",
+        "href": "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/pages/2.-partial-derivatives/part-b-chain-rule-gradient-and-directional-derivatives/",
+        "problem": "다변수 함수의 coordinate별 rate를 방향과 기하로 연결합니다.",
+        "contribution": "Partial derivative·gradient·directional derivative를 강의와 문제로 설명합니다.",
+        "assumptions": "Multivariable differentiability와 Euclidean coordinate 조건입니다.",
+        "evidenceScope": "18.02SC 해당 단원의 계산·기하입니다.",
+        "notClaim": "Arbitrary norm·manifold·nonsmooth optimization 결과가 아닙니다.",
+        "sectionId": "paper-multivariable-gradient"
+      },
+      {
+        "title": "The Matrix Calculus You Need For Deep Learning",
+        "href": "https://arxiv.org/abs/1802.01528",
+        "problem": "Vector input·output derivative의 shape와 convention 혼동을 줄입니다.",
+        "contribution": "Gradient·Jacobian과 vectorized chain rule를 tutorial로 정리합니다.",
+        "assumptions": "선언된 numerator-layout와 differentiability입니다.",
+        "evidenceScope": "Matrix calculus tutorial과 worked derivation입니다.",
+        "notClaim": "모든 autodiff implementation의 memory·performance contract가 아닙니다.",
+        "sectionId": "paper-jacobian-calculus"
+      }
     ],
+    "entryNote": "제곱과 덧셈으로 만든 결과 1이 입력 변화에 따라 1.0401 또는 1.03으로 바뀌는 가정 사례부터 시작합니다. 입력별 민감도, 길이가 같은 방향의 비교, 결과별 행렬과 실제 원문 표기를 차례로 연결합니다."
   },
   "ai/math-functions-derivatives-gradients": {
-    coreIdea:
-      "Derivative는 두 input의 output 차이를 input 차이로 나눈 difference quotient를 limit으로 local하게 만든 rate입니다. Local linear approximation은 이 rate로 작은 변화를 예측하고, chain rule은 같은 변화가 연속 변환에서 받은 배율을 곱합니다. Nonsmooth point에서는 표준 derivative·subgradient 집합·implementation convention을 구분합니다.",
-    assumedKnowledge: [
+    "coreIdea": "입력 3을 3.1로 옮겼을 때 제곱 결과는 9에서 9.61로 바뀝니다. 두 변화의 비율 6.1에서 입력 간격을 줄이면 미분계수 6을 얻습니다. 이 비율로 작은 변화를 예측하고, 두 계산을 연결할 때는 각 위치의 비율을 곱합니다. 모서리에서는 표준 미분과 프로그램의 선택을 구별합니다.",
+    "assumedKnowledge": [
       {
-        id: "scalar-quantity",
-        role: "입력 변화량·출력 변화량과 derivative를 숫자 하나의 크기로 읽습니다.",
+        "id": "scalar-quantity",
+        "role": "입력 변화량·출력 변화량과 derivative를 숫자 하나의 크기로 읽습니다."
       },
       {
-        id: "function-mapping",
-        role: "서로 가까운 두 input에 같은 function rule을 적용해 output 차이를 만듭니다.",
+        "id": "function-mapping",
+        "role": "서로 가까운 두 input에 같은 function rule을 적용해 output 차이를 만듭니다."
       },
       {
-        id: "function-composition",
-        role: "Chain rule에서 inner output을 outer input으로 잇는 실행 순서를 읽습니다.",
-      },
+        "id": "function-composition",
+        "role": "Chain rule에서 inner output을 outer input으로 잇는 실행 순서를 읽습니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "mathematical-limit",
-        role: "점 하나의 함수값과 주변 입력이 가까워질 때의 행동을 구분합니다.",
+        "id": "mathematical-limit",
+        "role": "점 하나의 함수값과 주변 입력이 가까워질 때의 행동을 구분합니다."
       },
       {
-        id: "difference-quotient",
-        role: "두 input 사이의 output 변화를 input 변화로 나눠 평균 rate를 만듭니다.",
+        "id": "difference-quotient",
+        "role": "두 input 사이의 output 변화를 input 변화로 나눠 평균 rate를 만듭니다."
       },
       {
-        id: "derivative",
-        role: "입력의 작은 변화에 대한 출력의 local rate를 계산합니다.",
+        "id": "derivative",
+        "role": "입력의 작은 변화에 대한 출력의 local rate를 계산합니다."
       },
       {
-        id: "local-linear-approximation",
-        role: "곡선을 한 점 근처에서 접선으로 근사해 작은 변화를 예측합니다.",
+        "id": "local-linear-approximation",
+        "role": "곡선을 한 점 근처에서 접선으로 근사해 작은 변화를 예측합니다."
       },
       {
-        id: "chain-rule",
-        role: "합성 경로의 local derivative를 곱해 전체 민감도를 계산합니다.",
+        "id": "chain-rule",
+        "role": "합성 경로의 local derivative를 곱해 전체 민감도를 계산합니다."
       },
       {
-        id: "subgradient",
-        role: "ReLU처럼 매끈하지 않은 convex corner의 가능한 지지 기울기를 다룹니다.",
-      },
+        "id": "subgradient",
+        "role": "ReLU처럼 매끈하지 않은 convex corner의 가능한 지지 기울기를 다룹니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "mathematical-limit",
-        sectionId: "overview",
-        intuition:
-          "그 점에 직접 도착했을 때의 값보다, 주변 입력들이 계속 가까워질 때 출력이 모이는 곳을 봅니다.",
-        workedExample:
-          "(x²−1)/(x−1)은 x=1에서 0/0이지만 x=0.99에서 1.99, 1.01에서 2.01이므로 극한은 2입니다.",
-        boundary:
-          "왼쪽과 오른쪽의 접근값이 다르면 양쪽 극한은 존재하지 않습니다. 함수값과 극한값도 반드시 같지는 않습니다.",
+        "id": "mathematical-limit",
+        "sectionId": "derivative",
+        "intuition": "그 점에 직접 도착했을 때의 값보다, 주변 입력들이 계속 가까워질 때 출력이 모이는 곳을 봅니다.",
+        "workedExample": "(x²−1)/(x−1)은 x=1에서 0/0이지만 x=0.99에서 1.99, 1.01에서 2.01이므로 극한은 2입니다.",
+        "boundary": "왼쪽과 오른쪽의 접근값이 다르면 양쪽 극한은 존재하지 않습니다. 함수값과 극한값도 반드시 같지는 않습니다."
       },
       {
-        id: "difference-quotient",
-        sectionId: "derivative",
-        intuition:
-          "두 output을 빼 변화량을 만든 뒤 두 input의 간격으로 나눠 입력 1단위당 평균 rate로 바꿉니다.",
-        workedExample:
-          "f(x)=x²의 x=3에서 간격 h를 쓰면 quotient는 ((3+h)²−9)/h=6+h입니다.",
-        boundary:
-          "h는 0이 아니며 유한한 h의 평균 rate를 derivative 자체로 부르면 안 됩니다.",
+        "id": "difference-quotient",
+        "sectionId": "derivative",
+        "intuition": "두 output을 빼 변화량을 만든 뒤 두 input의 간격으로 나눠 입력 1단위당 평균 rate로 바꿉니다.",
+        "workedExample": "f(x)=x²의 x=3에서 간격 h를 쓰면 quotient는 ((3+h)²−9)/h=6+h입니다.",
+        "boundary": "h는 0이 아니며 유한한 h의 평균 rate를 derivative 자체로 부르면 안 됩니다."
       },
       {
-        id: "derivative",
-        sectionId: "derivative",
-        intuition:
-          "두 점 사이의 평균 기울기에서 점 사이의 간격을 0에 가깝게 줄여 한 지점의 순간 변화율을 얻습니다.",
-        workedExample:
-          "f(x)=x²의 derivative는 2x이므로 x=3에서 6이며, 입력 0.01 변화는 출력 약 0.06 변화를 예측합니다.",
-        boundary:
-          "왼쪽과 오른쪽 difference quotient가 같은 값에 모이지 않으면 표준 derivative가 없습니다.",
+        "id": "derivative",
+        "sectionId": "derivative",
+        "intuition": "두 점 사이의 평균 기울기에서 점 사이의 간격을 0에 가깝게 줄여 한 지점의 순간 변화율을 얻습니다.",
+        "workedExample": "f(x)=x²의 derivative는 2x이므로 x=3에서 6이며, 입력 0.01 변화는 출력 약 0.06 변화를 예측합니다.",
+        "boundary": "왼쪽과 오른쪽 difference quotient가 같은 값에 모이지 않으면 표준 derivative가 없습니다."
       },
       {
-        id: "local-linear-approximation",
-        sectionId: "local-linearity",
-        intuition:
-          "매끈한 곡선도 충분히 가까이 확대하면 접선처럼 보이므로 작은 범위에서는 직선 계산으로 변화를 예측할 수 있습니다.",
-        workedExample:
-          "x=3에서 x²는 Δx=0.01일 때 9+6×0.01=9.06으로 예측하며 실제 9.0601과 가깝습니다.",
-        boundary:
-          "입력 변화가 크거나 곡률이 큰 영역에서는 1차 근사의 오차가 커지므로 정확한 등식으로 쓰면 안 됩니다.",
+        "id": "local-linear-approximation",
+        "sectionId": "local-linearity",
+        "intuition": "매끈한 곡선도 충분히 가까이 확대하면 접선처럼 보이므로 작은 범위에서는 직선 계산으로 변화를 예측할 수 있습니다.",
+        "workedExample": "x=3에서 x²는 Δx=0.01일 때 9+6×0.01=9.06으로 예측하며 실제 9.0601과 가깝습니다.",
+        "boundary": "입력 변화가 크거나 곡률이 큰 영역에서는 1차 근사의 오차가 커지므로 정확한 등식으로 쓰면 안 됩니다."
       },
       {
-        id: "chain-rule",
-        sectionId: "chain-rule",
-        intuition:
-          "원화→달러 환율과 달러→유로 환율을 곱하듯, 합성 함수의 연결된 local rate를 곱합니다.",
-        workedExample:
-          "y=(3x+1)²에서 x=2이면 inner derivative 3과 outer derivative 14를 곱해 dy/dx=42입니다.",
-        boundary:
-          "경로의 함수가 해당 지점에서 미분 가능해야 표준 chain rule을 그대로 적용할 수 있고, 분기 경로의 기여는 합산해야 합니다.",
-        proofIdea:
-          "작은 변화에서 Δy/Δx=(Δy/Δu)(Δu/Δx)로 중간 변화량을 끼워 넣고, Δx가 0에 가까워질 때 두 비율의 극한을 취합니다.",
-        counterexample:
-          "y=|u|, u=x를 x=0에서 보면 왼쪽 기울기 −1과 오른쪽 기울기 1이 달라 outer derivative가 없으므로 표준 chain rule로 값을 정할 수 없습니다.",
+        "id": "chain-rule",
+        "sectionId": "chain-rule",
+        "intuition": "입력 변화가 첫 구간에서 3배, 다음 구간에서 약 14배로 전달되므로 전체 작은 변화의 배율은 42입니다.",
+        "workedExample": "y=(3x+1)²에서 x=2이면 inner derivative 3과 outer derivative 14를 곱해 dy/dx=42입니다.",
+        "boundary": "경로의 함수가 해당 지점에서 미분 가능해야 표준 chain rule을 그대로 적용할 수 있고, 분기 경로의 기여는 합산해야 합니다.",
+        "proofIdea": "Δu≠0이면 Δy/Δx=(Δy/Δu)(Δu/Δx)로 나누어 각 극한을 취합니다. Δu=0인 경우도 포함하려면 각 단계의 1차 근사와 입력 변화보다 빨리 줄어드는 오차를 대입해 곱을 얻습니다.",
+        "counterexample": "y=|u|, u=x를 x=0에서 보면 왼쪽 기울기 −1과 오른쪽 기울기 1이 달라 outer derivative가 없으므로 표준 chain rule로 값을 정할 수 없습니다."
       },
       {
-        id: "subgradient",
-        sectionId: "nonsmooth",
-        intuition:
-          "Convex 함수의 모서리에서 함수를 아래에서 받치는 직선의 가능한 기울기를 한 값이 아닌 집합으로 다룹니다.",
-        workedExample:
-          "ReLU의 0에서 convex subgradient 집합은 [0,1]이고, 많은 autodiff 구현은 backward 값으로 0을 선택합니다.",
-        boundary:
-          "구현 convention은 유일한 표준 derivative가 아닙니다. 비convex 함수에는 convex subgradient 정의를 그대로 적용할 수 없습니다.",
-      },
+        "id": "subgradient",
+        "sectionId": "nonsmooth",
+        "intuition": "Convex 함수의 모서리에서 함수를 아래에서 받치는 직선의 가능한 기울기를 한 값이 아닌 집합으로 다룹니다.",
+        "workedExample": "ReLU의 0에서 아래로 받치는 기울기는 [0,1]입니다. PyTorch 2.8 문서의 최소 크기 부분기울기 규칙을 적용하면 그중 0을 선택합니다.",
+        "boundary": "구현 convention은 유일한 표준 derivative가 아닙니다. 비convex 함수에는 convex subgradient 정의를 그대로 적용할 수 없습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "00 Average rate",
-        relation: "두 output 차이를 input 차이로 나눠 평균 변화율을 만듭니다.",
-        concepts: ["function-mapping", "difference-quotient"],
+        "label": "00 Average rate",
+        "relation": "두 output 차이를 input 차이로 나눠 평균 변화율을 만듭니다.",
+        "concepts": [
+          "function-mapping",
+          "difference-quotient"
+        ]
       },
       {
-        label: "01 Local rate",
-        relation: "간격을 줄여 한 점의 derivative로 이동합니다.",
-        concepts: [
+        "label": "01 Local rate",
+        "relation": "간격을 줄여 한 점의 derivative로 이동합니다.",
+        "concepts": [
           "mathematical-limit",
           "difference-quotient",
           "derivative",
-          "local-linear-approximation",
-        ],
+          "local-linear-approximation"
+        ]
       },
       {
-        label: "02 Chain",
-        relation: "중간값을 지난 연속 local rate를 곱합니다.",
-        concepts: ["function-composition", "derivative", "chain-rule"],
+        "label": "02 Chain",
+        "relation": "중간값을 지난 연속 local rate를 곱합니다.",
+        "concepts": [
+          "function-composition",
+          "derivative",
+          "chain-rule"
+        ]
       },
       {
-        label: "03 Boundary",
-        relation: "표준 derivative와 subgradient·구현 선택을 분리합니다.",
-        concepts: ["derivative", "subgradient", "nonlinear-activation"],
-      },
+        "label": "03 Boundary",
+        "relation": "표준 derivative와 subgradient·구현 선택을 분리합니다.",
+        "concepts": [
+          "derivative",
+          "subgradient",
+          "nonlinear-activation"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "(x²−1)/(x−1)에 x=1을 직접 넣을 수 없는데도 x→1의 극한이 2인 이유를 수치와 대수로 설명할 수 있을까요?",
-        answerChecklist: [
+        "level": "basic",
+        "question": "(x²−1)/(x−1)에 x=1을 직접 넣을 수 없는데도 x→1의 극한이 2인 이유를 수치와 대수로 설명할 수 있을까요?",
+        "answerChecklist": [
           "x≠1인 주변에서 (x−1)(x+1)/(x−1)=x+1로 약분한다.",
           "0.99와 1.01 같은 양쪽 값이 2에 가까워짐을 보인다.",
-          "함수값과 극한값을 구분한다.",
+          "함수값과 극한값을 구분한다."
         ],
-        requiredConcepts: ["function-mapping", "mathematical-limit"],
-        sectionId: "overview",
+        "requiredConcepts": [
+          "function-mapping",
+          "mathematical-limit"
+        ],
+        "sectionId": "derivative"
       },
       {
-        level: "basic",
-        question:
-          "f(x)=x²의 x=3에서 h=1, 0.1, 0.01인 difference quotient를 비교해 derivative 6에 가까워지는 과정을 설명할 수 있을까요?",
-        answerChecklist: [
+        "level": "basic",
+        "question": "f(x)=x²의 x=3에서 h=1, 0.1, 0.01인 difference quotient를 비교해 derivative 6에 가까워지는 과정을 설명할 수 있을까요?",
+        "answerChecklist": [
           "Difference quotient가 6+h로 정리됨을 보인다.",
           "각 h에서 7, 6.1, 6.01을 계산한다.",
-          "h→0에서 local slope 6을 얻는다고 설명한다.",
+          "h→0에서 local slope 6을 얻는다고 설명한다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "mathematical-limit",
           "difference-quotient",
-          "derivative",
-          "local-linear-approximation",
+          "derivative"
         ],
-        sectionId: "derivative",
+        "sectionId": "derivative"
       },
       {
-        level: "basic",
-        question:
-          "y=(3x+1)²의 x=2에서 inner·outer derivative와 전체 derivative를 각각 계산할 수 있을까요?",
-        answerChecklist: [
+        "level": "basic",
+        "question": "y=(3x+1)²의 x=2에서 inner·outer derivative와 전체 derivative를 각각 계산할 수 있을까요?",
+        "answerChecklist": [
           "중간값 u=7을 계산한다.",
           "du/dx=3과 dy/du=14를 구한다.",
-          "Chain rule로 14×3=42를 얻는다.",
+          "Chain rule로 14×3=42를 얻는다."
         ],
-        requiredConcepts: ["function-composition", "derivative", "chain-rule"],
-        sectionId: "chain-rule",
+        "requiredConcepts": [
+          "function-composition",
+          "derivative",
+          "chain-rule"
+        ],
+        "sectionId": "chain-rule"
       },
       {
-        level: "basic",
-        question:
-          "f(x)=x²을 x=3 근처에서 접선으로 근사해 Δx=0.1일 때의 값을 예측하고 실제 값과 오차를 비교할 수 있을까요?",
-        answerChecklist: [
+        "level": "basic",
+        "question": "f(x)=x²을 x=3 근처에서 접선으로 근사해 Δx=0.1일 때의 값을 예측하고 실제 값과 오차를 비교할 수 있을까요?",
+        "answerChecklist": [
           "f(3)=9와 f′(3)=6을 계산한다.",
           "Local linear approximation으로 9+6×0.1=9.6을 예측한다.",
           "실제 f(3.1)=9.61과 비교해 1차 근사 오차가 0.01이라고 계산한다.",
-          "입력 변화나 곡률이 커지면 같은 1차 근사의 오차가 커질 수 있다고 제한한다.",
+          "입력 변화나 곡률이 커지면 같은 1차 근사의 오차가 커질 수 있다고 제한한다."
         ],
-        requiredConcepts: ["derivative", "local-linear-approximation"],
-        sectionId: "local-linearity",
+        "requiredConcepts": [
+          "derivative",
+          "local-linear-approximation"
+        ],
+        "sectionId": "local-linearity"
       },
       {
-        level: "basic",
-        question: "Difference quotient에서 빼기·나눗셈·limit이 각각 맡는 역할을 설명하세요.",
-        answerChecklist: ["subtract output change", "divide per input unit", "finite h average", "limit localizes", "not plug h=0"],
-        requiredConcepts: ["difference-quotient", "mathematical-limit", "derivative"],
-        sectionId: "derivative",
+        "level": "basic",
+        "question": "Difference quotient에서 빼기·나눗셈·limit이 각각 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "subtract output change",
+          "divide per input unit",
+          "finite h average",
+          "limit localizes",
+          "not plug h=0"
+        ],
+        "requiredConcepts": [
+          "difference-quotient",
+          "mathematical-limit",
+          "derivative"
+        ],
+        "sectionId": "derivative"
       },
       {
-        level: "basic",
-        question: "위치 metre, 시간 second 함수의 derivative 단위를 말하고 3m/1s 계산을 해석하세요.",
-        answerChecklist: ["output/input unit", "m/s", "rate", "unit consistency"],
-        requiredConcepts: ["difference-quotient", "derivative"],
-        sectionId: "derivative",
+        "level": "basic",
+        "question": "위치 metre, 시간 second 함수의 derivative 단위를 말하고 3m/1s 계산을 해석하세요.",
+        "answerChecklist": [
+          "output/input unit",
+          "m/s",
+          "rate",
+          "unit consistency"
+        ],
+        "requiredConcepts": [
+          "difference-quotient",
+          "derivative"
+        ],
+        "sectionId": "derivative"
       },
       {
-        level: "advanced",
-        question:
-          "Chain rule의 증명 아이디어를 변화량의 비율로 설명하고 |x|의 0에서 표준 적용이 실패하는 이유를 말할 수 있을까요?",
-        answerChecklist: [
+        "level": "advanced",
+        "question": "Chain rule의 증명 아이디어를 변화량의 비율로 설명하고 |x|의 0에서 표준 적용이 실패하는 이유를 말할 수 있을까요?",
+        "answerChecklist": [
           "Δy/Δx를 (Δy/Δu)(Δu/Δx)로 분해한다.",
           "각 비율의 극한이 존재할 때 derivative의 곱이 된다고 설명한다.",
-          "|x|의 좌우 기울기가 달라 derivative가 없음을 반례로 든다.",
+          "|x|의 좌우 기울기가 달라 derivative가 없음을 반례로 든다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "mathematical-limit",
           "derivative",
           "function-composition",
+          "chain-rule"
+        ],
+        "sectionId": "chain-rule"
+      },
+      {
+        "level": "advanced",
+        "question": "ReLU의 x=0에서 표준 미분, 볼록 부분기울기 집합, PyTorch 2.8 문서의 선택 규칙을 구분할 수 있을까요?",
+        "answerChecklist": [
+          "좌우 기울기 0과 1이 달라 표준 미분계수가 없습니다.",
+          "음수 쪽의 지지 조건 s≥0과 양수 쪽의 지지 조건 s≤1을 함께 적용해 [0,1]을 얻습니다.",
+          "PyTorch 문서는 크기가 가장 작은 부분기울기를 선택하므로 0을 사용합니다.",
+          "이 선택은 유일한 표준 미분값이나 모든 구현의 공통 규칙을 뜻하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivative",
+          "subgradient",
+          "nonlinear-activation"
+        ],
+        "sectionId": "nonsmooth"
+      },
+      {
+        "level": "advanced",
+        "question": "f(x)=x²의 x=3에서 Δx=.1과 1의 local-linear error를 비교해 finite step 경계를 설명하세요.",
+        "answerChecklist": [
+          "9.6 versus 9.61",
+          ".01 error",
+          "15 versus 16",
+          "1 error",
+          "curvature and step"
+        ],
+        "requiredConcepts": [
+          "derivative",
+          "local-linear-approximation"
+        ],
+        "sectionId": "local-linearity"
+      },
+      {
+        "level": "advanced",
+        "question": "y=f(x)+g(x)처럼 graph가 갈라졌다 합쳐질 때 chain contribution을 왜 더하는지 작은 변화로 설명하세요.",
+        "answerChecklist": [
+          "same Δx enters both",
+          "Δf plus Δg",
+          "local products per path",
+          "sum at merge",
+          "not multiply branches"
+        ],
+        "requiredConcepts": [
+          "derivative",
           "chain-rule",
+          "function-composition"
         ],
-        sectionId: "chain-rule",
-      },
-      {
-        level: "advanced",
-        question:
-          "ReLU의 x=0에서 표준 derivative, convex subgradient 집합, autodiff implementation convention을 서로 구분할 수 있을까요?",
-        answerChecklist: [
-          "좌우 기울기 0과 1이 달라 표준 derivative가 없다고 말한다.",
-          "Convex subgradient 집합은 [0,1]이라고 설명한다.",
-          "구현이 0을 고르는 것은 계산 convention이지 유일한 derivative가 아니라고 제한한다.",
-        ],
-        requiredConcepts: ["derivative", "subgradient", "nonlinear-activation"],
-        sectionId: "nonsmooth",
-      },
-      {
-        level: "advanced",
-        question: "f(x)=x²의 x=3에서 Δx=.1과 1의 local-linear error를 비교해 finite step 경계를 설명하세요.",
-        answerChecklist: ["9.6 versus 9.61", ".01 error", "15 versus 16", "1 error", "curvature and step"],
-        requiredConcepts: ["derivative", "local-linear-approximation"],
-        sectionId: "local-linearity",
-      },
-      {
-        level: "advanced",
-        question: "y=f(x)+g(x)처럼 graph가 갈라졌다 합쳐질 때 chain contribution을 왜 더하는지 작은 변화로 설명하세요.",
-        answerChecklist: ["same Δx enters both", "Δf plus Δg", "local products per path", "sum at merge", "not multiply branches"],
-        requiredConcepts: ["derivative", "chain-rule", "function-composition"],
-        sectionId: "chain-rule",
-      },
+        "sectionId": "chain-rule"
+      }
     ],
-    papers: [
-      { title: "MIT OpenCourseWare 18.01SC · Differentiation", href: "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/pages/1.-differentiation/", problem: "평균 변화율에서 derivative와 chain rule까지 계산합니다.", contribution: "Difference quotient·limit·local linearization·chain rule를 강의와 problem set으로 연결합니다.", assumptions: "단변수 함수의 해당 differentiability 조건입니다.", evidenceScope: "18.01SC differentiation 단원입니다.", notClaim: "모든 nonsmooth optimization이나 neural-network convergence를 보장하지 않습니다.", sectionId: "paper-differentiation" },
-      { title: "The Matrix Calculus You Need For Deep Learning", href: "https://arxiv.org/abs/1802.01528", problem: "Deep learning 독자의 scalar·vector chain rule 표기 혼동을 줄입니다.", contribution: "Derivative와 chain rule의 convention을 tutorial로 정리합니다.", assumptions: "선언된 derivative convention과 differentiability입니다.", evidenceScope: "Deep learning용 calculus 표기와 worked derivation입니다.", notClaim: "특정 framework backward의 완전한 specification이 아닙니다.", sectionId: "paper-matrix-calculus" },
+    "papers": [
+      {
+        "title": "MIT OpenCourseWare 18.01SC · Differentiation",
+        "href": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/pages/1.-differentiation/",
+        "problem": "평균 변화율에서 derivative와 chain rule까지 계산합니다.",
+        "contribution": "Difference quotient·limit·local linearization·chain rule를 강의와 problem set으로 연결합니다.",
+        "assumptions": "단변수 함수의 해당 differentiability 조건입니다.",
+        "evidenceScope": "18.01SC differentiation 단원입니다.",
+        "notClaim": "모든 nonsmooth optimization이나 neural-network convergence를 보장하지 않습니다.",
+        "sectionId": "paper-differentiation"
+      },
+      {
+        "title": "The Matrix Calculus You Need For Deep Learning",
+        "href": "https://arxiv.org/abs/1802.01528",
+        "problem": "Deep learning 독자의 scalar·vector chain rule 표기 혼동을 줄입니다.",
+        "contribution": "Derivative와 chain rule의 convention을 tutorial로 정리합니다.",
+        "assumptions": "선언된 derivative convention과 differentiability입니다.",
+        "evidenceScope": "Deep learning용 calculus 표기와 worked derivation입니다.",
+        "notClaim": "특정 framework backward의 완전한 specification이 아닙니다.",
+        "sectionId": "paper-matrix-calculus"
+      }
     ],
+    "entryNote": "빼기와 나누기로 두 점 사이의 변화율을 계산합니다. 같은 제곱 함수에서 현재 값·평균 변화율·한 점의 미분계수를 구별한 뒤, 앞 글의 2→7→49에 연쇄법칙을 적용합니다."
   },
   "ai/math-exponents-logarithms": {
     coreIdea:
@@ -3973,37 +4279,216 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/math-optimization-objectives": {
-    coreIdea: "Optimization은 decision variable·objective·constraint를 먼저 고정하고 feasible set 안의 minimizer 위치와 minimum value를 분리하는 문제입니다.",
-    assumedKnowledge: [
-      { id: "function-mapping", role: "Decision variable을 scalar score로 보내는 objective를 읽습니다." },
+    "coreIdea": "바꿀 선택, 비교할 점수, 반드시 지킬 조건을 따로 정합니다. 같은 함수라도 허용 범위가 바뀌면 최소점과 최솟값이 달라집니다. 벌점과 강제 제약의 차이, 최적값을 실제로 달성하는지까지 확인해야 결과를 쓸 수 있습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "function-mapping",
+        "role": "선택한 입력을 숫자 하나의 점수로 보내는 함수를 읽습니다."
+      }
     ],
-    introducedHere: [
-      { id: "optimization-objective", role: "선택을 비교할 scalar 점수와 decision variable을 고정합니다." },
-      { id: "optimization-feasible-set", role: "Constraint를 모두 만족하는 제출 가능한 선택만 남깁니다." },
-      { id: "minimizer", role: "Argmin 위치와 minimum value를 분리합니다." },
+    "introducedHere": [
+      {
+        "id": "optimization-objective",
+        "role": "바꿀 입력과 비교할 점수를 고정합니다."
+      },
+      {
+        "id": "optimization-feasible-set",
+        "role": "모든 조건을 만족하는 선택들의 집합을 정합니다."
+      },
+      {
+        "id": "minimizer",
+        "role": "가장 낮은 점수를 만드는 위치와 그 점수를 구별합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "optimization-objective", sectionId: "overview", intuition: "여러 선택을 같은 숫자 축에서 비교하는 점수판입니다.", workedExample: "f(x)=(x−3)²+2는 x가 3에서 멀수록 큰 penalty를 줍니다.", boundary: "Proxy objective를 실제 task 가치 전체와 동일시하지 않습니다." },
-      { id: "optimization-feasible-set", sectionId: "feasible-set", intuition: "규칙을 모두 지킨 뒤 실제 제출 가능한 선택만 모은 영역입니다.", workedExample: "0≤x≤2의 feasible set은 [0,2]입니다.", boundary: "집합이 비어 있으면 solver보다 problem definition을 먼저 수정합니다." },
-      { id: "minimizer", sectionId: "minimizer", intuition: "점수가 가장 낮아지는 위치이며 가장 낮은 점수 자체와 구분합니다.", workedExample: "Unconstrained 답은 x*=3,f*=2이고 [0,2]에서는 x*=2,f*=3입니다.", boundary: "Minimizer가 없거나 여러 개일 수 있고 local과 global은 비교 범위가 다릅니다." },
+    "conceptExplanations": [
+      {
+        "id": "optimization-objective",
+        "sectionId": "names",
+        "intuition": "여러 선택을 같은 기준으로 비교할 점수입니다.",
+        "workedExample": "f(x)=(x−3)²+2에서 선택 x=3의 점수는 2이고 x=2의 점수는 3입니다.",
+        "boundary": "측정한 점수가 실제 제품 가치를 잘 나타내는지는 별도로 검증합니다."
+      },
+      {
+        "id": "optimization-feasible-set",
+        "sectionId": "feasible-set",
+        "intuition": "모든 필수 규칙을 동시에 만족하는 선택만 남긴 집합입니다.",
+        "workedExample": "0≤x≤2이면 C=[0,2]이며 x=3은 점수가 낮아도 제외합니다.",
+        "boundary": "조건이 충돌해 집합이 비면 이동 간격을 바꾸어도 답이 생기지 않습니다."
+      },
+      {
+        "id": "minimizer",
+        "sectionId": "minimizer",
+        "intuition": "허용된 선택 중 점수가 가장 낮은 위치입니다. 그 위치를 평가한 점수와 구별합니다.",
+        "workedExample": "제약이 없으면 위치 3과 점수 2, [0,2]에서는 위치 2와 점수 3을 얻습니다.",
+        "boundary": "최소점이 여러 개이거나 없을 수 있습니다. 주변의 최소와 전체의 최소도 구별합니다."
+      }
     ],
-    conceptStages: [
-      { label: "평가", relation: "Decision variable을 scalar objective로 평가", concepts: ["function-mapping", "optimization-objective"] },
-      { label: "허용", relation: "Constraint를 만족하는 선택만 남김", concepts: ["optimization-objective", "optimization-feasible-set"] },
-      { label: "선택", relation: "Feasible candidate 중 최저 위치와 값을 분리", concepts: ["optimization-feasible-set", "minimizer"] },
+    "conceptStages": [
+      {
+        "label": "평가",
+        "relation": "바꿀 입력을 점수로 비교합니다.",
+        "concepts": [
+          "function-mapping",
+          "optimization-objective"
+        ]
+      },
+      {
+        "label": "허용",
+        "relation": "필수 조건을 모두 만족하는 선택만 남깁니다.",
+        "concepts": [
+          "optimization-objective",
+          "optimization-feasible-set"
+        ]
+      },
+      {
+        "label": "선택",
+        "relation": "가장 낮은 점수의 위치와 점수를 따로 기록합니다.",
+        "concepts": [
+          "optimization-feasible-set",
+          "minimizer"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "f(x)=(x−3)²+2에서 decision variable과 objective를 식별할 수 있을까요?", answerChecklist: ["바꾸는 선택은 x라고 적는다.", "비교 scalar는 f(x)라고 적는다.", "상수는 decision variable이 아니라고 구분한다."], requiredConcepts: ["optimization-objective"], sectionId: "overview" },
-      { level: "basic", question: "메모리 48GiB 이하 규칙이 objective가 아닌 이유를 설명할 수 있을까요?", answerChecklist: ["Objective는 선택을 비교한다.", "48GiB는 허용 여부를 판정한다.", "허용 선택만 feasible set에 들어간다."], requiredConcepts: ["optimization-objective", "optimization-feasible-set"], sectionId: "feasible-set" },
-      { level: "basic", question: "0≤x≤2의 feasible set과 x=3의 허용 여부를 판정할 수 있을까요?", answerChecklist: ["C=[0,2]라고 쓴다.", "x=3은 upper bound 밖이다.", "낮은 score라도 infeasible이면 답이 아니다."], requiredConcepts: ["optimization-feasible-set"], sectionId: "feasible-set" },
-      { level: "basic", question: "Unconstrained minimizer와 minimum value를 구분할 수 있을까요?", answerChecklist: ["x*=3을 구한다.", "f(3)=2를 계산한다.", "Argmin은 위치, min은 값이라고 말한다."], requiredConcepts: ["optimization-objective", "minimizer"], sectionId: "minimizer" },
-      { level: "basic", question: "같은 objective를 [0,2]에서 최소화할 수 있을까요?", answerChecklist: ["3이 infeasible임을 확인한다.", "x*=2를 고른다.", "f*=3을 계산한다."], requiredConcepts: ["optimization-feasible-set", "minimizer"], sectionId: "boundaries" },
-      { level: "basic", question: "여러 위치가 같은 minimum을 만들 때 argmin을 어떻게 표현할까요?", answerChecklist: ["Argmin은 위치 집합이다.", "Minimum value는 scalar일 수 있다.", "위치와 값을 같은 기호로 쓰지 않는다."], requiredConcepts: ["minimizer"], sectionId: "minimizer" },
-      { level: "advanced", question: "Hard constraint를 penalty로 바꾸면 무엇이 달라질까요?", answerChecklist: ["Hard constraint는 후보를 제외한다.", "Finite penalty는 위반 후보를 남길 수 있다.", "필수 조건은 별도 gate로 둔다."], requiredConcepts: ["optimization-objective", "optimization-feasible-set"], sectionId: "feasible-set" },
-      { level: "advanced", question: "Feasible set이 비었을 때 learning rate 조정이 답이 아닌 이유는 무엇일까요?", answerChecklist: ["허용 candidate가 없다고 진단한다.", "Minimizer domain이 비었다고 말한다.", "Constraint 충돌을 먼저 고친다."], requiredConcepts: ["optimization-feasible-set", "minimizer"], sectionId: "feasible-set" },
-      { level: "advanced", question: "Proxy objective 감소와 제품 가치 악화가 함께 일어나는 반례를 설계할 수 있을까요?", answerChecklist: ["Proxy와 실제 goal을 분리한다.", "다른 safety·quality metric 악화 예를 든다.", "Validation과 release constraint를 추가한다."], requiredConcepts: ["optimization-objective"], sectionId: "boundaries" },
-      { level: "advanced", question: "Interval clipping이 보편 constrained solver가 아닌 이유는 무엇일까요?", answerChecklist: ["1차원 interval projection이라고 식별한다.", "Coupled constraint에는 coordinate clipping이 부족하다.", "Constraint geometry에 맞는 solver가 필요하다."], requiredConcepts: ["optimization-feasible-set", "minimizer"], sectionId: "boundaries" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "f(x)=(x−3)²+2에서 바꾸는 선택과 비교할 점수는 무엇인가요?",
+        "answerChecklist": [
+          "바꾸는 입력은 x입니다.",
+          "비교할 점수는 f(x)입니다.",
+          "식의 3과 2는 이 문제에서 고정한 값입니다."
+        ],
+        "requiredConcepts": [
+          "optimization-objective"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "메모리 48GiB 이하라는 규칙과 오차를 낮춘다는 목표는 어떻게 다른가요?",
+        "answerChecklist": [
+          "오차는 허용된 선택의 좋고 나쁨을 비교합니다.",
+          "48GiB는 선택의 허용 여부를 판정합니다.",
+          "메모리 52GiB를 쓰는 선택은 오차가 낮아도 제외합니다."
+        ],
+        "requiredConcepts": [
+          "optimization-objective",
+          "optimization-feasible-set"
+        ],
+        "sectionId": "need"
+      },
+      {
+        "level": "basic",
+        "question": "0≤x≤2의 가능 집합에서 x=3을 답으로 쓸 수 있나요?",
+        "answerChecklist": [
+          "가능 집합은 [0,2]입니다.",
+          "x=3은 상한을 넘습니다.",
+          "점수가 낮아도 허용되지 않은 선택은 답이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "optimization-feasible-set"
+        ],
+        "sectionId": "feasible-set"
+      },
+      {
+        "level": "basic",
+        "question": "모든 실수를 허용할 때 최소점과 최솟값은 각각 무엇인가요?",
+        "answerChecklist": [
+          "제곱 항이 0인 x*=3을 고릅니다.",
+          "f(3)=2입니다.",
+          "argmin은 위치의 집합, min은 점수입니다."
+        ],
+        "requiredConcepts": [
+          "optimization-objective",
+          "minimizer"
+        ],
+        "sectionId": "minimizer"
+      },
+      {
+        "level": "basic",
+        "question": "같은 함수를 [0,2]에서 최소화하면 답은 어떻게 달라지나요?",
+        "answerChecklist": [
+          "3은 가능 집합 밖입니다.",
+          "구간에서 3과 가장 가까운 x*=2를 고릅니다.",
+          "f(2)=3이고 다른 허용된 점의 점수도 3 이상입니다."
+        ],
+        "requiredConcepts": [
+          "optimization-feasible-set",
+          "minimizer"
+        ],
+        "sectionId": "minimizer"
+      },
+      {
+        "level": "basic",
+        "question": "q(x)=(x²−1)²의 최소점들과 최솟값을 어떻게 구별하나요?",
+        "answerChecklist": [
+          "−1과 1 모두 점수 0을 만듭니다.",
+          "argmin q={−1,1}입니다.",
+          "min q=0은 점수 하나입니다."
+        ],
+        "requiredConcepts": [
+          "minimizer"
+        ],
+        "sectionId": "minimizer"
+      },
+      {
+        "level": "advanced",
+        "question": "x≤2를 위반하는 정도의 제곱을 벌점으로 더하면 왜 같은 문제가 아닌가요?",
+        "answerChecklist": [
+          "강제 제약은 위반한 후보를 제외합니다.",
+          "새 점수는 x=2에서 3, x=2.5에서 2.5입니다.",
+          "위반한 2.5가 새 문제의 최소점이 됩니다.",
+          "반드시 지킬 조건은 최종 선택에서도 별도로 확인합니다."
+        ],
+        "requiredConcepts": [
+          "optimization-objective",
+          "optimization-feasible-set"
+        ],
+        "sectionId": "feasible-set"
+      },
+      {
+        "level": "advanced",
+        "question": "x≥3과 x≤2를 함께 요구할 때 이동 간격을 조정해도 해결되지 않는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "두 조건을 만족하는 실수가 없습니다.",
+          "가능 집합이 비어 최소점이 존재하지 않습니다.",
+          "충돌하는 조건을 먼저 수정해야 합니다."
+        ],
+        "requiredConcepts": [
+          "optimization-feasible-set",
+          "minimizer"
+        ],
+        "sectionId": "feasible-set"
+      },
+      {
+        "level": "advanced",
+        "question": "측정한 점수는 좋아져도 제품 가치가 악화되는 예는 무엇인가요?",
+        "answerChecklist": [
+          "답변 길이만 줄이면 빈 답변이 점수 0을 얻을 수 있습니다.",
+          "답변의 유용성은 사라집니다.",
+          "정답률을 함께 평가하고 필요한 품질 조건을 명시합니다."
+        ],
+        "requiredConcepts": [
+          "optimization-objective"
+        ],
+        "sectionId": "boundaries"
+      },
+      {
+        "level": "advanced",
+        "question": "각 좌표를 자기 구간으로 자르는 방법이 모든 제약을 해결하지 못하는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "앞의 계산은 1차원 구간과 거리 제곱 함수에 해당합니다.",
+          "0≤x≤1, 0≤y≤1 안의 (1,1)도 x+y≤1을 어깁니다.",
+          "여러 좌표가 함께 들어가는 조건까지 만족하는 방법을 사용해야 합니다."
+        ],
+        "requiredConcepts": [
+          "optimization-feasible-set",
+          "minimizer"
+        ],
+        "sectionId": "minimizer"
+      }
     ],
+    "entryNote": "점수 2를 내는 선택 3이 허용 범위 [0,2] 밖이라 제외되는 가정 사례를 추적합니다. 남은 답인 위치 2와 점수 3을 구별하고 실제 교재의 식에 같은 문제를 대입합니다."
   },
   "ai/math-optimization-convexity": {
     coreIdea: "Convexity는 chord geometry를, L-smoothness는 gradient 변화 상한을, strong convexity는 최소 curvature를 정하고 condition number L/μ가 불균형을 요약합니다.",
@@ -23699,32 +24184,209 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/competition-workflow": {
-    coreIdea: "Prediction evaluation contract는 model을 만들기 전에 한 row의 identity·cutoff·target horizon·metric reducer와 local/public/private data가 바꿀 수 있는 결정을 고정하는 문서입니다.",
-    assumedKnowledge: [
-      { id: "train-validation-test", role: "학습·선택·최종 보고 data의 역할을 분리합니다." },
-      { id: "reproducible-training-run-contract", role: "Contract revision을 run lineage에 연결합니다." },
+    "coreIdea": "Prediction evaluation contract는 model을 만들기 전에 한 row의 identity·cutoff·target horizon·metric reducer와 local/public/private data가 바꿀 수 있는 결정을 고정하는 문서입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "train-validation-test",
+        "role": "학습·선택·최종 보고 data의 역할을 분리합니다."
+      },
+      {
+        "id": "reproducible-training-run-contract",
+        "role": "Contract revision을 run lineage에 연결합니다."
+      }
     ],
-    introducedHere: [{ id: "competition-evaluation-contract", role: "Prediction row·cutoff·target·metric과 evaluation roles를 한 계약으로 고정합니다." }],
-    conceptExplanations: [{ id: "competition-evaluation-contract", sectionId: "overview", intuition: "시험을 풀기 전에 문항 단위·채점법·연습 점수와 최종 점수의 역할을 적습니다.", workedExample: "Patient visit 한 건에서 10:00 이전 정보로 24시간 재입원을 예측하고 patient-group OOF AUROC로 선택한다고 씁니다.", boundary: "대회 test와 실제 deployment 질문이 다르면 두 계약을 나란히 두고 같은 성능으로 해석하지 않습니다." }],
-    conceptStages: [
-      { label: "Row", relation: "Prediction 하나의 entity·stable ID를 고정", concepts: ["competition-evaluation-contract"] },
-      { label: "Cutoff", relation: "Input information의 마지막 available time을 고정", concepts: ["competition-evaluation-contract"] },
-      { label: "Target·metric", relation: "Future window·label·reducer·direction을 고정", concepts: ["competition-evaluation-contract"] },
-      { label: "Roles", relation: "Local selection·public feedback·private final을 분리", concepts: ["train-validation-test", "competition-evaluation-contract"] },
+    "introducedHere": [
+      {
+        "id": "competition-evaluation-contract",
+        "role": "Prediction row·cutoff·target·metric과 evaluation roles를 한 계약으로 고정합니다."
+      }
     ],
-    exercises: [
-      {level:"basic",question:"Patient visit prediction row의 stable identity를 설계하세요.",answerChecklist:["patient ID","visit ID","one output","one target","unique key","schema"],requiredConcepts:["competition-evaluation-contract"],sectionId:"overview"},
-      {level:"basic",question:"Prediction cutoff와 target horizon을 구분하세요.",answerChecklist:["input boundary","future window","different sides","time convention","no overlap","version"],requiredConcepts:["competition-evaluation-contract"],sectionId:"target"},
-      {level:"basic",question:"10:00 cutoff와 24시간 horizon의 target window를 쓰세요.",answerChecklist:["open after cutoff","ends next day 10","endpoint rule","future events","binary label","timezone"],requiredConcepts:["competition-evaluation-contract"],sectionId:"target"},
-      {level:"basic",question:"Visit 평균과 patient 평균 metric이 다른 이유를 설명하세요.",answerChecklist:["row unit","group reducer","different weights","different estimand","metric contract","report both"],requiredConcepts:["competition-evaluation-contract"],sectionId:"metric"},
-      {level:"basic",question:"Higher-is-better와 lower-is-better direction을 계약에 넣는 이유를 쓰세요.",answerChecklist:["selection order","sign","loss vs score","consistent comparison","leaderboard","predeclare"],requiredConcepts:["competition-evaluation-contract"],sectionId:"metric"},
-      {level:"basic",question:"Local·public·private evaluation의 역할을 구분하세요.",answerChecklist:["local selection","public limited feedback","private final","decision rights","no reuse","manifest"],requiredConcepts:["competition-evaluation-contract"],sectionId:"roles"},
-      {level:"advanced",question:"Row·cutoff·target·metric·evaluation roles를 한 contract로 작성하세요.",answerChecklist:["identity","cutoff","horizon","label","reducer","direction","local","public","private"],requiredConcepts:["competition-evaluation-contract"],sectionId:"roles"},
-      {level:"advanced",question:"대회 row와 deployment unit이 다른 반례를 설명하세요.",answerChecklist:["competition row","deployment entity","different aggregation","different split","different claim","parallel contracts"],requiredConcepts:["competition-evaluation-contract"],sectionId:"roles"},
-      {level:"advanced",question:"Target window endpoint가 바뀔 때 label fixture를 설계하세요.",answerChecklist:["left endpoint","right endpoint","boundary event","timezone","expected label","version"],requiredConcepts:["competition-evaluation-contract"],sectionId:"target"},
-      {level:"advanced",question:"Final data를 본 뒤 model을 바꿨을 때 평가 역할 변화를 설명하세요.",answerChecklist:["feedback observed","decision changed","becomes selection data","not final","new holdout","audit"],requiredConcepts:["competition-evaluation-contract"],sectionId:"roles"},
+    "conceptExplanations": [
+      {
+        "id": "competition-evaluation-contract",
+        "sectionId": "target",
+        "intuition": "예측 행의 정체와 당시 사용할 정보, 미래 정답 창, 지표와 점수 사용 역할을 먼저 정합니다.",
+        "workedExample": "2026-04-16 10:00 UTC 뒤 24시간 창에는 다음 날 09:00 사건이 포함돼 y=1입니다. 09:00 측정·10:05 도착 값은 10:00 입력에서 제외합니다.",
+        "boundary": "관찰 미완결을 음성으로 바꾸지 않으며 정답 정의와 가용 시각, 최종 평가와 후보 선택을 구분합니다."
+      }
     ],
-    papers: [],
+    "conceptStages": [
+      {
+        "label": "Row",
+        "relation": "Prediction 하나의 entity·stable ID를 고정",
+        "concepts": [
+          "competition-evaluation-contract"
+        ]
+      },
+      {
+        "label": "Cutoff",
+        "relation": "Input information의 마지막 available time을 고정",
+        "concepts": [
+          "competition-evaluation-contract"
+        ]
+      },
+      {
+        "label": "Target·metric",
+        "relation": "Future window·label·reducer·direction을 고정",
+        "concepts": [
+          "competition-evaluation-contract"
+        ]
+      },
+      {
+        "label": "Roles",
+        "relation": "Local selection·public feedback·private final을 분리",
+        "concepts": [
+          "train-validation-test",
+          "competition-evaluation-contract"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "4월 16일 10:00부터 24시간을 관찰하면 예측 정답 구간의 끝은 언제인가요?",
+        "answerChecklist": [
+          "4월17일10:00",
+          "UTC",
+          "24시간"
+        ],
+        "sectionId": "target",
+        "requiredConcepts": [
+          "competition-evaluation-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "다음 날 09:00 사건은 가정한 열린 시작점과 닫힌 끝점의 구간에 포함되나요?",
+        "answerChecklist": [
+          "포함",
+          "y=1",
+          "구간 비교"
+        ],
+        "sectionId": "target",
+        "requiredConcepts": [
+          "competition-evaluation-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "사건이 시작점과 정확히 같은 10:00에 생겼다면 이 글의 미래 정답에 포함되나요?",
+        "answerChecklist": [
+          "제외",
+          "시작 열린 구간"
+        ],
+        "sectionId": "target",
+        "requiredConcepts": [
+          "competition-evaluation-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "09:00 측정값이 10:05에 도착했다면 10:00 예측 입력에 쓸 수 있나요?",
+        "answerChecklist": [
+          "불가",
+          "가용 시각",
+          "측정 시각과 구분"
+        ],
+        "sectionId": "source-availability",
+        "requiredConcepts": [
+          "competition-evaluation-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "다음 날 08:00까지만 관찰하고 사건이 없었다면 왜 바로 y=0으로 둘 수 없나요?",
+        "answerChecklist": [
+          "관찰 미완결",
+          "남은2시간",
+          "미확정 상태"
+        ],
+        "sectionId": "why-complete",
+        "requiredConcepts": [
+          "competition-evaluation-contract"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "한 사람의 방문이 여러 개면 방문 평균과 사람 평균을 구분해야 하는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "다른 가중치",
+          "대상별 기록 수",
+          "지표 계약"
+        ],
+        "sectionId": "metric",
+        "requiredConcepts": [
+          "competition-evaluation-contract"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "10:00에 정확히 도착한 특징의 포함 여부를 재현하려면 어떤 운영 규칙을 적어야 하나요?",
+        "answerChecklist": [
+          "동률 처리",
+          "스냅샷 확정",
+          "실제 조회 가능 시각"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "competition-evaluation-contract"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "최종 평가 점수를 본 뒤 특징을 바꾸면 그 자료의 역할은 어떻게 달라지나요?",
+        "answerChecklist": [
+          "선택 자료",
+          "독립 평가 아님",
+          "새 독립 평가 필요"
+        ],
+        "sectionId": "roles",
+        "requiredConcepts": [
+          "competition-evaluation-contract"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "정답 창에 사건이 존재한다는 수학적 정의와 학습 가능한 정답 상태는 왜 별개인가요?",
+        "answerChecklist": [
+          "현실 사건",
+          "관측 완결",
+          "보고 도착",
+          "label availability"
+        ],
+        "sectionId": "target",
+        "requiredConcepts": [
+          "competition-evaluation-contract"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "예측 행을 다른 방문으로 잘못 연결했을 때 같은 점수 이름만으로 비교할 수 없는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "행 식별자",
+          "정답 정의",
+          "입력 경계",
+          "동일 문제 필요"
+        ],
+        "sectionId": "inside-contract",
+        "requiredConcepts": [
+          "competition-evaluation-contract"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "scikit-learn 1.7.2 — Data leakage",
+        "href": "https://scikit-learn.org/1.7/common_pitfalls.html#data-leakage",
+        "problem": "예측 시점에 쓸 수 없었던 정보를 평가에 쓰는 문제",
+        "contribution": "예측 시점에 사용할 수 없었던 정보가 모델을 만드는 과정에 들어가는 누수를 정의하고 전처리의 학습 범위를 구분합니다.",
+        "assumptions": "본문의 입력 시점과 실제 도착 시각 구분",
+        "evidenceScope": "Common pitfalls §11.2의 실제 정의와 사례 적용",
+        "notClaim": "문서가 방문별 정답 창이나 전체 평가 계약을 정해 준다는 뜻은 아님",
+        "sectionId": "paper-evaluation-availability"
+      }
+    ],
+    "entryNote": "10:00 입력 경계와 다음 날 10:00 관찰 종료에서 한 방문의 예측 질문을 정의합니다."
   },
   "ai/model-selection-bias": {
     "coreIdea": "최고 관측값을 선택하면 실력과 함께 유한 평가의 흔들림도 선택합니다. 고정 후보와 평균 0 잡음의 기대값 부등식을 한 시행·적응 탐색·새 분포의 보장과 구분하고 독립된 평가로 이어갑니다.",
@@ -24422,260 +25084,1526 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "같은 5개 fold에서 두 score를 빼 평균 0.0034를 구하고 지연 100→118ms를 사전 상한과 비교합니다."
   },
   "ai/competition-submission-control": {
-    coreIdea: "Submission control은 upload 횟수와 external score가 후속 선택을 바꾼 adaptive feedback 횟수를 구분해 사전 budget에서 candidate를 동결하고, run·retrain·inference·row order·checksum·rollback을 final manifest로 봉인하는 절차입니다.",
-    assumedKnowledge: [
-      {id:"model-selection-maximum-optimism",role:"External score를 반복 선택에 쓸 때 생기는 낙관을 설명합니다."},
-      {id:"run-artifact-provenance",role:"Candidate와 generated submission을 연결합니다."},
+    "coreIdea": "Submission control은 upload 횟수와 external score가 후속 선택을 바꾼 adaptive feedback 횟수를 구분해 사전 budget에서 candidate를 동결하고, run·retrain·inference·row order·checksum·rollback을 final manifest로 봉인하는 절차입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "model-selection-maximum-optimism",
+        "role": "External score를 반복 선택에 쓸 때 생기는 낙관을 설명합니다."
+      },
+      {
+        "id": "run-artifact-provenance",
+        "role": "Candidate와 generated submission을 연결합니다."
+      }
     ],
-    introducedHere: [
-      {id:"leaderboard-adaptive-feedback-budget",role:"Public result가 다음 선택을 바꾼 횟수를 제한하고 셉니다."},
-      {id:"competition-submission-manifest",role:"Candidate부터 uploaded file까지 rollback 가능한 lineage를 봉인합니다."},
+    "introducedHere": [
+      {
+        "id": "leaderboard-adaptive-feedback-budget",
+        "role": "Public result가 다음 선택을 바꾼 횟수를 제한하고 셉니다."
+      },
+      {
+        "id": "competition-submission-manifest",
+        "role": "Candidate부터 uploaded file까지 rollback 가능한 lineage를 봉인합니다."
+      }
     ],
-    conceptExplanations: [
-      {id:"leaderboard-adaptive-feedback-budget",sectionId:"feedback",intuition:"정답 힌트를 보고 답을 바꾼 횟수를 세어 public score를 무제한 추가 학습 data로 쓰지 않게 합니다.",workedExample:"20 uploads 중 public score로 다음 선택을 바꾼 6회면 B_used=6입니다.",boundary:"Budget은 adaptive overfit을 제거하는 theorem이 아니며 sample shift와 score precision도 작용합니다."},
-      {id:"competition-submission-manifest",sectionId:"manifest",intuition:"최종 택배 상자에 어느 생산 라인과 검사표에서 나온 물건인지 추적 번호를 붙입니다.",workedExample:"Run r7·checkpoint h8·retrain yes·image digest·row order·submission SHA s9를 저장합니다.",boundary:"Manifest는 잘못된 candidate 선택을 고치지 않지만 replay·diff·rollback을 가능하게 합니다."},
+    "conceptExplanations": [
+      {
+        "id": "leaderboard-adaptive-feedback-budget",
+        "sectionId": "feedback",
+        "intuition": "모든 전송·관측을 기록하면서 후속 선택 변경을 별도로 셉니다.",
+        "workedExample": "네 전송의 표식 [0,1,1,0]은 사용 2회이며 사전 한도 2회에서 후보 B를 동결합니다.",
+        "boundary": "이 집계는 운영 규칙이며 코드 변경이 없다고 통계적으로 정보 사용이 없는 것은 아닙니다."
+      },
+      {
+        "id": "competition-submission-manifest",
+        "sectionId": "manifest",
+        "intuition": "최종 후보의 입력·실행·예측·제출 파일 사이의 관계를 보존합니다.",
+        "workedExample": "B의 run·code·data·split·전처리·재학습 실행·예측 행 순서·최종 digest를 연결해 같은 파일인지 검사합니다.",
+        "boundary": "보존된 파일과 접근 권한이 있어야 재생할 수 있으며 목록이 선택 품질을 보장하지는 않습니다."
+      }
     ],
-    conceptStages: [
-      {label:"Submit",relation:"Prediction artifact를 external evaluator에 전달",concepts:["run-artifact-provenance","competition-submission-manifest"]},
-      {label:"Count",relation:"Decision-changing feedback만 budget에 누적",concepts:["leaderboard-adaptive-feedback-budget","model-selection-maximum-optimism"]},
-      {label:"Freeze",relation:"사전 budget·stop condition에서 recipe를 동결",concepts:["leaderboard-adaptive-feedback-budget"]},
-      {label:"Seal",relation:"Candidate·retrain·inference·file lineage를 manifest로 봉인",concepts:["competition-submission-manifest"]},
+    "conceptStages": [
+      {
+        "label": "Submit",
+        "relation": "Prediction artifact를 external evaluator에 전달",
+        "concepts": [
+          "run-artifact-provenance",
+          "competition-submission-manifest"
+        ]
+      },
+      {
+        "label": "Count",
+        "relation": "Decision-changing feedback만 budget에 누적",
+        "concepts": [
+          "leaderboard-adaptive-feedback-budget",
+          "model-selection-maximum-optimism"
+        ]
+      },
+      {
+        "label": "Freeze",
+        "relation": "사전 budget·stop condition에서 recipe를 동결",
+        "concepts": [
+          "leaderboard-adaptive-feedback-budget"
+        ]
+      },
+      {
+        "label": "Seal",
+        "relation": "Candidate·retrain·inference·file lineage를 manifest로 봉인",
+        "concepts": [
+          "competition-submission-manifest"
+        ]
+      }
     ],
-    exercises: [
-      {level:"basic",question:"Submission count와 adaptive feedback count를 구분하세요.",answerChecklist:["all uploads","observed result","decision change","not all count","separate ledgers","budget"],requiredConcepts:["leaderboard-adaptive-feedback-budget"],sectionId:"overview"},
-      {level:"basic",question:"20 submissions 중 decision-changing feedback 6회의 B_used를 계산하세요.",answerChecklist:["six","not twenty","indicator","sum","schema fixes zero","repeats zero"],requiredConcepts:["leaderboard-adaptive-feedback-budget"],sectionId:"feedback"},
-      {level:"basic",question:"Schema fix가 adaptive count 0일 수 있는 조건을 설명하세요.",answerChecklist:["no score-driven choice","same candidate","format only","record submission","indicator zero","verify"],requiredConcepts:["leaderboard-adaptive-feedback-budget"],sectionId:"feedback"},
-      {level:"basic",question:"Candidate freeze가 필요한 이유를 설명하세요.",answerChecklist:["stop selection","protect final","budget reached","recipe fixed","no retune","new holdout if changed"],requiredConcepts:["leaderboard-adaptive-feedback-budget"],sectionId:"boundary"},
-      {level:"basic",question:"Final manifest의 candidate lineage 필드를 쓰세요.",answerChecklist:["run ID","code","data","split","preprocess","checkpoint"],requiredConcepts:["competition-submission-manifest"],sectionId:"manifest"},
-      {level:"basic",question:"Submission file integrity 필드를 쓰세요.",answerChecklist:["row count","row order","missing","range","checksum","uploaded ID"],requiredConcepts:["competition-submission-manifest"],sectionId:"manifest"},
-      {level:"advanced",question:"Feedback indicator→sum→freeze 식의 연산을 설명하세요.",answerChecklist:["compare decisions","because of feedback","indicator","sum adaptive","compare cap","freeze"],requiredConcepts:["leaderboard-adaptive-feedback-budget"],sectionId:"feedback"},
-      {level:"advanced",question:"Candidate retrain과 OOF candidate의 lineage를 설계하세요.",answerChecklist:["selected run","OOF report","retrain flag","full data recipe","new checkpoint","link both"],requiredConcepts:["competition-submission-manifest"],sectionId:"manifest"},
-      {level:"advanced",question:"Final score를 보고 다시 고친 경우 필요한 조치를 쓰세요.",answerChecklist:["final consumed","becomes selection","record adaptation","new independent data","new manifest","freeze again"],requiredConcepts:["leaderboard-adaptive-feedback-budget","competition-submission-manifest"],sectionId:"boundary"},
-      {level:"advanced",question:"Rollback 가능한 submission manifest를 설계하세요.",answerChecklist:["current artifact","previous artifact","checksums","environment","row order","decision reason","rollback command"],requiredConcepts:["competition-submission-manifest"],sectionId:"boundary"},
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "파일 전송 4회 중 선택을 바꾼 피드백이 2회면 두 기록의 합계는 각각 얼마인가요?",
+        "answerChecklist": [
+          "전송4",
+          "변경2",
+          "별도 집계"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "leaderboard-adaptive-feedback-budget"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "선택변경 표식 [0,1,1,0]을 합산하면 사용량이 얼마인가요?",
+        "answerChecklist": [
+          "2",
+          "합산"
+        ],
+        "sectionId": "feedback",
+        "requiredConcepts": [
+          "leaderboard-adaptive-feedback-budget"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "미리 정한 변경 한도 2회에 도달하면 어떤 상태로 바꾸나요?",
+        "answerChecklist": [
+          "후보 동결",
+          "추가 선택 변경 중지"
+        ],
+        "sectionId": "feedback",
+        "requiredConcepts": [
+          "leaderboard-adaptive-feedback-budget"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 파일을 다시 보냈지만 평가 행 순서를 고쳤다면 무조건 무변경으로 세도 되나요?",
+        "answerChecklist": [
+          "실제 예측대응 변경",
+          "프로토콜 확인",
+          "내용 확인"
+        ],
+        "sectionId": "why-log",
+        "requiredConcepts": [
+          "leaderboard-adaptive-feedback-budget"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "최종 제출 파일을 원래 실행에 연결하려면 어떤 식별자가 필요한가요?",
+        "answerChecklist": [
+          "run",
+          "code/data/split",
+          "checkpoint",
+          "제출digest"
+        ],
+        "sectionId": "manifest",
+        "requiredConcepts": [
+          "competition-submission-manifest"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "외부 점수를 보고 같은 후보를 유지했어도 무엇을 계속 기록해야 하나요?",
+        "answerChecklist": [
+          "모든 관측피드백",
+          "선택이유",
+          "동결결정"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "leaderboard-adaptive-feedback-budget",
+          "competition-submission-manifest"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "20회에서 형식수정 4·동일재실행 2·선택변경 6·나머지 8이면 무엇을 일반화 보장으로 읽으면 안 되나요?",
+        "answerChecklist": [
+          "변경수6은 운영집계",
+          "피드백8도기록",
+          "통계정리 아님"
+        ],
+        "sectionId": "feedback",
+        "requiredConcepts": [
+          "leaderboard-adaptive-feedback-budget"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "Ladder는 참가자의 단순 제출 횟수 제한과 어느 동작이 다른가요?",
+        "answerChecklist": [
+          "평가자 점수 공개",
+          "유의한 개선폭",
+          "이전값 유지"
+        ],
+        "sectionId": "paper-submission-control",
+        "requiredConcepts": [
+          "leaderboard-adaptive-feedback-budget"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "한도를 2회에서 3회로 늘려 추가 개선을 선택했다면 기록상 무엇이 달라지나요?",
+        "answerChecklist": [
+          "사전규칙 변경",
+          "원래정지조건 위반",
+          "새이력"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "leaderboard-adaptive-feedback-budget",
+          "competition-submission-manifest"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "입력과 제출 hash가 같아도 파일이 더는 보관되어 있지 않으면 무엇을 재현할 수 없나요?",
+        "answerChecklist": [
+          "실제bytes 복구",
+          "보존 정책",
+          "위치와 권한"
+        ],
+        "sectionId": "manifest",
+        "requiredConcepts": [
+          "competition-submission-manifest"
+        ]
+      }
     ],
-    papers: [{title:"The Ladder: A Reliable Leaderboard for Machine Learning Competitions",href:"https://proceedings.mlr.press/v37/blum15.html",problem:"Adaptive submissions가 leaderboard holdout에 overfit하는 문제",contribution:"Limited score update mechanism과 adaptive setting의 분석",assumptions:"논문의 loss·leaderboard mechanism·submission experiments",evidenceScope:"ICML 2015 theorem과 simulation·real submission results",notClaim:"Upload 횟수만 줄이면 private score가 보장된다는 뜻은 아님",sectionId:"paper-submission-control"}],
+    "papers": [
+      {
+        "title": "The Ladder: A Reliable Leaderboard for Machine Learning Competitions",
+        "href": "https://proceedings.mlr.press/v37/blum15.pdf",
+        "problem": "Adaptive submissions가 leaderboard holdout에 overfit하는 문제",
+        "contribution": "Limited score update mechanism과 adaptive setting의 분석",
+        "assumptions": "논문의 loss·leaderboard mechanism·submission experiments",
+        "evidenceScope": "§2 의존성과 Algorithm 1, PDF p.4의 실제 공개 규칙",
+        "notClaim": "Upload 횟수만 줄이면 private score가 보장된다는 뜻은 아님",
+        "sectionId": "paper-submission-control"
+      }
+    ],
+    "entryNote": "전송 네 번과 선택 변경 두 번을 나누고 동결된 B의 최종 제출 경로를 보존합니다."
   },
   "ai/cross-validation": {
-    coreIdea: "교차검증은 split 이름을 고르는 기술이 아니라 배포에서 새로 만날 단위와 loss의 기대값을 먼저 정의하고 그 질문을 과거 data의 분할로 재연하는 평가 설계입니다.",
-    assumedKnowledge: [
-      { id: "expectation", role: "새 배포 단위의 loss를 평균내는 연산을 읽습니다." },
-      { id: "train-validation-test", role: "학습·선택·최종 보고 data의 역할을 분리합니다." },
-      { id: "competition-evaluation-contract", role: "Prediction row·cutoff·metric direction을 고정합니다." },
-    ],
-    introducedHere: [
-      { id: "deployment-matched-validation-risk", role: "배포에서 새로 만날 row·entity·period·site와 그 단위의 expected loss를 validation 목표로 정합니다." },
-    ],
-    conceptExplanations: [
+    "coreIdea": "교차검증은 split 이름을 고르는 기술이 아니라 배포에서 새로 만날 단위와 loss의 기대값을 먼저 정의하고 그 질문을 과거 data의 분할로 재연하는 평가 설계입니다.",
+    "assumedKnowledge": [
       {
-        id: "deployment-matched-validation-risk",
-        sectionId: "risk",
-        intuition: "예행연습장을 자르기 전에 실제 공연에서 무엇이 새로 나타나는지부터 정합니다.",
-        workedExample: "새 환자 배포라면 Z를 patch가 아니라 unseen patient로 두고 환자별 loss를 평균냅니다.",
-        boundary: "배포 분포가 바뀌면 과거 CV risk는 새 site·정책·기간의 성능을 보장하지 않습니다.",
+        "id": "expectation",
+        "role": "새 배포 단위의 loss를 평균내는 연산을 읽습니다."
       },
+      {
+        "id": "train-validation-test",
+        "role": "학습·선택·최종 보고 data의 역할을 분리합니다."
+      },
+      {
+        "id": "competition-evaluation-contract",
+        "role": "Prediction row·cutoff·metric direction을 고정합니다."
+      }
     ],
-    conceptStages: [
-      { label: "Question", relation: "배포에서 새로 나타날 물체를 지정", concepts: ["competition-evaluation-contract", "deployment-matched-validation-risk"] },
-      { label: "Unit", relation: "Row·entity·period·site 중 averaging unit을 고정", concepts: ["deployment-matched-validation-risk"] },
-      { label: "Risk", relation: "그 단위의 expected loss를 estimand로 정의", concepts: ["expectation", "deployment-matched-validation-risk"] },
-      { label: "Split family", relation: "질문을 재연할 K-fold·group·walk-forward를 선택", concepts: ["train-validation-test", "deployment-matched-validation-risk"] },
+    "introducedHere": [
+      {
+        "id": "deployment-matched-validation-risk",
+        "role": "배포에서 새로 만날 row·entity·period·site와 그 단위의 expected loss를 validation 목표로 정합니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "새 row를 만나는 배포 질문의 evaluation unit과 split 출발점을 쓰세요.", answerChecklist: ["new row","row unit","exchangeable","K-fold","loss","deployment match"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "split-family" },
-      { level: "basic", question: "새 환자를 만나는 배포에서 patch split이 틀린 이유를 설명하세요.", answerChecklist: ["patient unit","shared cause","patch dependence","group split","patient loss","unseen patient"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "overview" },
-      { level: "basic", question: "다음 달 prediction 질문에 random K-fold보다 time split이 맞는 이유를 설명하세요.", answerChecklist: ["future period","time order","past train","future validation","no reverse time","deployment"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "split-family" },
-      { level: "basic", question: "새 병원의 다음 달 성능을 평가할 split 축 두 개를 쓰세요.", answerChecklist: ["site group","time order","group by site","future period","group×time","both constraints"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "split-family" },
-      { level: "basic", question: "Deployment unit과 deployment distribution을 구분하세요.", answerChecklist: ["one predicted object","frequency and conditions","unit identity","distribution weights","both in estimand","not synonyms"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "overview" },
-      { level: "basic", question: "Accuracy와 patient-level log loss가 서로 다른 estimand인 이유를 쓰세요.", answerChecklist: ["different loss","different averaging unit","metric direction","patient weighting","prediction question","predeclare"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "risk" },
-      { level: "advanced", question: "Training sample D와 새 unit Z를 포함한 risk 식의 세 연산을 설명하세요.", answerChecklist: ["A maps D to model","loss on Z","expectation over D","expectation over Z","procedure","deployment distribution"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "risk" },
-      { level: "advanced", question: "Row·entity·time이 모두 있는 dataset의 split decision tree를 설계하세요.", answerChecklist: ["deployment novelty","strongest dependency","time direction","nested group","combined split","report units"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "split-family" },
-      { level: "advanced", question: "정책 변경 뒤 과거 CV를 그대로 재사용할 수 없는 이유와 재검증 계획을 쓰세요.", answerChecklist: ["distribution shift","old estimand","new policy","new period","monitoring","revalidation"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "boundary" },
-      { level: "advanced", question: "Split class 이름만으로 validation contract가 완성되지 않는 이유를 반례로 설명하세요.", answerChecklist: ["wrong unit","wrong group key","wrong cutoff","wrong loss","same splitter","different claim"], requiredConcepts: ["deployment-matched-validation-risk"], sectionId: "boundary" },
+    "conceptExplanations": [
+      {
+        "id": "deployment-matched-validation-risk",
+        "sectionId": "risk",
+        "intuition": "사용할 장면의 새 대상과 실패의 평균 단위를 먼저 정합니다.",
+        "workedExample": "A·B로 학습하고 C 세 행의 손실 0·0·0과 D 한 행의 손실 1을 평가하면 행 평균 0.25, 대상 평균 0.50입니다.",
+        "boundary": "분할과 집계는 별개이며 고정 모델의 위험과 학습 자료까지 평균낸 절차 위험을 구별합니다."
+      }
     ],
-    papers: [
-      { title: "scikit-learn — Cross-validation: evaluating estimator performance", href: "https://scikit-learn.org/stable/modules/cross_validation.html", problem: "Data dependency와 time order에 맞는 splitter를 선택하는 문제", contribution: "KFold·GroupKFold·TimeSeriesSplit 등의 현재 semantics와 examples 제공", assumptions: "현재 stable version과 splitter parameters", evidenceScope: "공식 library behavior와 사용 예", notClaim: "Class 이름만으로 deployment estimand가 자동 보장된다는 뜻은 아님", sectionId: "paper-cv-foundation" },
+    "conceptStages": [
+      {
+        "label": "Question",
+        "relation": "배포에서 새로 나타날 물체를 지정",
+        "concepts": [
+          "competition-evaluation-contract",
+          "deployment-matched-validation-risk"
+        ]
+      },
+      {
+        "label": "Unit",
+        "relation": "Row·entity·period·site 중 averaging unit을 고정",
+        "concepts": [
+          "deployment-matched-validation-risk"
+        ]
+      },
+      {
+        "label": "Risk",
+        "relation": "그 단위의 expected loss를 estimand로 정의",
+        "concepts": [
+          "expectation",
+          "deployment-matched-validation-risk"
+        ]
+      },
+      {
+        "label": "Split family",
+        "relation": "질문을 재연할 K-fold·group·walk-forward를 선택",
+        "concepts": [
+          "train-validation-test",
+          "deployment-matched-validation-risk"
+        ]
+      }
     ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "새 환자 C에 3개 기록, D에 1개 기록이 있습니다. 평가 행 수와 환자 수는 각각 얼마인가요?",
+        "answerChecklist": [
+          "4행",
+          "2명",
+          "단위 구분"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "deployment-matched-validation-risk"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "C의 손실이 0·0·0이고 D의 손실이 1이면 전체 행 평균 손실은 얼마인가요?",
+        "answerChecklist": [
+          "1/4",
+          "0.25"
+        ],
+        "sectionId": "risk",
+        "requiredConcepts": [
+          "deployment-matched-validation-risk"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 손실을 환자별로 먼저 평균낸 뒤 두 환자에 같은 가중치를 주면 얼마인가요?",
+        "answerChecklist": [
+          "C=0",
+          "D=1",
+          "0.50"
+        ],
+        "sectionId": "risk",
+        "requiredConcepts": [
+          "deployment-matched-validation-risk"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "새 환자 평가에서 A·B로 학습하고 C·D로 평가하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "미관측 환자",
+          "모든 파생행 분리",
+          "배포 질문"
+        ],
+        "sectionId": "inside-evaluation",
+        "requiredConcepts": [
+          "deployment-matched-validation-risk"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "다음 달의 기존 환자를 예측하는 배포와 새 환자 배포는 어떤 분할 조건이 다른가요?",
+        "answerChecklist": [
+          "시간 방향",
+          "대상 신규성",
+          "동일 환자 허용 조건"
+        ],
+        "sectionId": "split-family",
+        "requiredConcepts": [
+          "deployment-matched-validation-risk"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "위험 식의 A·D·Z는 각각 어떤 절차와 자료와 대상을 뜻하나요?",
+        "answerChecklist": [
+          "학습 절차",
+          "학습 자료",
+          "배포 단위"
+        ],
+        "sectionId": "risk",
+        "requiredConcepts": [
+          "deployment-matched-validation-risk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "행 평균 0.25와 환자 평균 0.50 중 더 좋은 점수만 보고하면 무엇이 잘못되나요?",
+        "answerChecklist": [
+          "다른 추정 목표",
+          "사전 가중치",
+          "선택적 보고"
+        ],
+        "sectionId": "why-unit",
+        "requiredConcepts": [
+          "deployment-matched-validation-risk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "여러 학습 자료 D를 평균내는 위험과 이미 고정한 모델의 위험은 어떻게 다른가요?",
+        "answerChecklist": [
+          "절차 평균",
+          "고정 모델 조건부",
+          "학습 크기"
+        ],
+        "sectionId": "risk",
+        "requiredConcepts": [
+          "deployment-matched-validation-risk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "GroupKFold를 사용해도 환자별 같은 가중치가 자동 보장되지 않는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "분할과 집계 별개",
+          "행별 점수",
+          "환자별 reducer"
+        ],
+        "sectionId": "paper-cv-foundation",
+        "requiredConcepts": [
+          "deployment-matched-validation-risk"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "새 국가의 병원으로 배포한다면 기존 환자 분리 결과에 추가로 필요한 검증을 설명하세요.",
+        "answerChecklist": [
+          "새 site",
+          "시간",
+          "분포 변화",
+          "새 자료"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "deployment-matched-validation-risk"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "scikit-learn 1.7.2 — Grouped cross-validation",
+        "href": "https://scikit-learn.org/1.7/modules/cross_validation.html#cross-validation-iterators-for-grouped-data",
+        "problem": "Data dependency와 time order에 맞는 splitter를 선택하는 문제",
+        "contribution": "C·D 미관측 조건과 집계 단위 분리",
+        "assumptions": "scikit-learn 1.7.2에 고정한 API와 본문의 명시적 가정",
+        "evidenceScope": "§3.1.2.4 grouped data",
+        "notClaim": "Class 이름만으로 deployment estimand가 자동 보장된다는 뜻은 아님",
+        "sectionId": "paper-cv-foundation"
+      }
+    ],
+    "entryNote": "같은 네 예측의 행 평균 0.25와 사람 평균 0.50에서 평가 질문을 구분합니다."
   },
   "ai/fold-local-validation": {
-    coreIdea: "Fold-local validation은 model weight뿐 아니라 평균·대치값·vocabulary·feature selection처럼 data에서 배운 모든 fitted state를 현재 training fold에서만 만들고 validation에는 고정 적용하는 정보 경계입니다.",
-    assumedKnowledge: [
-      { id: "deployment-matched-validation-risk", role: "어느 validation rows를 보이지 않게 해야 하는지 정합니다." },
-      { id: "train-validation-test", role: "Fit과 evaluation data의 역할을 분리합니다." },
-      { id: "reproducible-training-run-contract", role: "Manifest·state·model revision을 한 run으로 연결합니다." },
+    "coreIdea": "Fold-local validation은 model weight뿐 아니라 평균·대치값·vocabulary·feature selection처럼 data에서 배운 모든 fitted state를 현재 training fold에서만 만들고 validation에는 고정 적용하는 정보 경계입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "deployment-matched-validation-risk",
+        "role": "어느 validation rows를 보이지 않게 해야 하는지 정합니다."
+      },
+      {
+        "id": "train-validation-test",
+        "role": "Fit과 evaluation data의 역할을 분리합니다."
+      },
+      {
+        "id": "reproducible-training-run-contract",
+        "role": "Manifest·state·model revision을 한 run으로 연결합니다."
+      }
     ],
-    introducedHere: [
-      { id: "fold-local-statistic", role: "Scaler·imputer·vocabulary·selection state를 train fold에서만 fit하고 validation에는 transform만 적용합니다." },
+    "introducedHere": [
+      {
+        "id": "fold-local-statistic",
+        "role": "Scaler·imputer·vocabulary·selection state를 train fold에서만 fit하고 validation에는 transform만 적용합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "fold-local-statistic", sectionId: "pipeline", intuition: "시험지 전체 평균을 미리 보고 공부하면 정답 label을 안 봤어도 시험 정보를 쓴 것입니다.", workedExample: "Fold 2를 뺀 rows에서 μ와 scale을 fit하고 fold 2에는 저장 state로 변환만 합니다.", boundary: "External pretrained transform은 가능하지만 source revision과 evaluation overlap을 기록합니다." },
+    "conceptExplanations": [
+      {
+        "id": "fold-local-statistic",
+        "sectionId": "pipeline",
+        "intuition": "평균과 단어장도 자료에서 배운 상태이므로 평가를 제외한 학습 자료에서만 만듭니다.",
+        "workedExample": "ddof=0에서 학습 [2,4]의 평균 3·표준편차 1을 적용하면 [8,10]→[5,7]입니다. 전체 fit은 평균 6·분산 10으로 평가 조건을 바꿉니다.",
+        "boundary": "Pipeline 밖의 전체 자료 계산은 자동 교정되지 않으며 선택 뒤 전체 학습 refit과 독립 평가의 닫힘을 구분합니다."
+      }
     ],
-    conceptStages: [
-      { label: "Assign", relation: "Row별 fold membership을 manifest로 고정", concepts: ["deployment-matched-validation-risk", "reproducible-training-run-contract"] },
-      { label: "Fit", relation: "Training rows에서만 fitted state를 추정", concepts: ["fold-local-statistic"] },
-      { label: "Apply", relation: "Validation에는 frozen state로 transform만 수행", concepts: ["fold-local-statistic"] },
-      { label: "Refit", relation: "선택 후 final holdout을 닫은 채 full train으로 재학습", concepts: ["train-validation-test", "reproducible-training-run-contract"] },
+    "conceptStages": [
+      {
+        "label": "Assign",
+        "relation": "Row별 fold membership을 manifest로 고정",
+        "concepts": [
+          "deployment-matched-validation-risk",
+          "reproducible-training-run-contract"
+        ]
+      },
+      {
+        "label": "Fit",
+        "relation": "Training rows에서만 fitted state를 추정",
+        "concepts": [
+          "fold-local-statistic"
+        ]
+      },
+      {
+        "label": "Apply",
+        "relation": "Validation에는 frozen state로 transform만 수행",
+        "concepts": [
+          "fold-local-statistic"
+        ]
+      },
+      {
+        "label": "Refit",
+        "relation": "선택 후 final holdout을 닫은 채 full train으로 재학습",
+        "concepts": [
+          "train-validation-test",
+          "reproducible-training-run-contract"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Fold manifest와 random seed를 구분하세요.", answerChecklist: ["row membership","explicit table","seed input","version dependence","stable IDs","checksum"], requiredConcepts: ["fold-local-statistic"], sectionId: "overview" },
-      { level: "basic", question: "Scaler fit과 transform을 구분하세요.", answerChecklist: ["fit estimates mean","fit estimates scale","train rows","transform applies","frozen state","validation"], requiredConcepts: ["fold-local-statistic"], sectionId: "overview" },
-      { level: "basic", question: "Validation까지 포함한 평균이 leakage인 이유를 설명하세요.", answerChecklist: ["validation distribution","enters state","before evaluation","optimistic information","label not required","train-only fix"], requiredConcepts: ["fold-local-statistic"], sectionId: "pipeline" },
-      { level: "basic", question: "Category vocabulary에 unknown token이 필요한 이유를 설명하세요.", answerChecklist: ["train vocabulary","unseen valid category","no refit","stable mapping","fallback","serving parity"], requiredConcepts: ["fold-local-statistic"], sectionId: "pipeline" },
-      { level: "basic", question: "OOF row에 남길 fitted-state provenance를 여섯 개 쓰세요.", answerChecklist: ["row ID","fold ID","manifest hash","transform revision","state checksum","model checkpoint"], requiredConcepts: ["fold-local-statistic"], sectionId: "manifest" },
-      { level: "basic", question: "Full-data refit 시점을 설명하세요.", answerChecklist: ["after selection","same recipe","all training data","final holdout closed","new state","deployment artifact"], requiredConcepts: ["fold-local-statistic"], sectionId: "manifest" },
-      { level: "advanced", question: "Imputer→encoder→selector→model pipeline의 fold-local fit 순서를 설계하세요.", answerChecklist: ["manifest first","imputer train fit","encoder train fit","selector train fit","valid transform only","model train fit"], requiredConcepts: ["fold-local-statistic"], sectionId: "pipeline" },
-      { level: "advanced", question: "Target encoding에서 ordinary fold-local fit보다 더 강한 경계가 필요한 이유를 설명하세요.", answerChecklist: ["uses labels","training row self label","cross fitting","inner folds","validation mapping","smoothing"], requiredConcepts: ["fold-local-statistic"], sectionId: "boundary" },
-      { level: "advanced", question: "External pretrained tokenizer를 허용할 audit record를 설계하세요.", answerChecklist: ["source corpus","revision","fit scope","entity overlap","purpose","frozen artifact"], requiredConcepts: ["fold-local-statistic"], sectionId: "boundary" },
-      { level: "advanced", question: "두 candidate가 서로 다른 fold state를 사용했을 때 비교가 깨지는 이유와 fixture를 쓰세요.", answerChecklist: ["different information","unpaired rows","manifest equality","state provenance","same metric","reject mismatch"], requiredConcepts: ["fold-local-statistic"], sectionId: "manifest" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "학습 값 2·4만 사용한 평균과 ddof=0 표준편차를 각각 계산하세요.",
+        "answerChecklist": [
+          "3",
+          "1",
+          "학습 범위"
+        ],
+        "sectionId": "pipeline",
+        "requiredConcepts": [
+          "fold-local-statistic"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "학습 평균 3과 표준편차 1을 평가 값 8·10에 적용하면 결과가 무엇인가요?",
+        "answerChecklist": [
+          "5",
+          "7",
+          "저장 상태 적용"
+        ],
+        "sectionId": "pipeline",
+        "requiredConcepts": [
+          "fold-local-statistic"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "평가까지 포함한 2·4·8·10의 평균을 계산하고 왜 평가 누수인지 설명하세요.",
+        "answerChecklist": [
+          "6",
+          "평가 분포 미리 반영",
+          "정답 없어도 누수"
+        ],
+        "sectionId": "why-fit",
+        "requiredConcepts": [
+          "fold-local-statistic"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "fit과 transform은 저장한 평균을 각각 어떻게 만들거나 사용하나요?",
+        "answerChecklist": [
+          "학습으로 추정",
+          "고정 상태 적용",
+          "평가에서 재학습 금지"
+        ],
+        "sectionId": "fold-terms",
+        "requiredConcepts": [
+          "fold-local-statistic"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "예측과 연결할 실제 행 배정 기록이 필요한 이유를 seed와 비교해 설명하세요.",
+        "answerChecklist": [
+          "자료 순서·버전 변화",
+          "행ID→foldID",
+          "재현 근거"
+        ],
+        "sectionId": "manifest",
+        "requiredConcepts": [
+          "fold-local-statistic"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "선택 뒤 전체 학습 자료로 다시 fit할 때 계속 닫아 둘 자료는 무엇인가요?",
+        "answerChecklist": [
+          "최종 독립 평가",
+          "선택과 fit 분리"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "fold-local-statistic"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "전체 자료의 분산 10으로 누출된 변환을 하면 8과 10의 변환값은 각각 얼마인가요?",
+        "answerChecklist": [
+          "2/√10≈0.63246",
+          "4/√10≈1.26491",
+          "평가조건 변경"
+        ],
+        "sectionId": "pipeline",
+        "requiredConcepts": [
+          "fold-local-statistic"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "Pipeline을 썼지만 그 전에 전체 자료로 단어장을 만들었다면 어떤 경계를 어겼나요?",
+        "answerChecklist": [
+          "파이프라인 밖 fitted state",
+          "평가 정보",
+          "fold 내부 fit 필요"
+        ],
+        "sectionId": "paper-fold-local",
+        "requiredConcepts": [
+          "fold-local-statistic"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "학습 특성이 모두 같은 값이면 StandardScaler가 분모를 어떻게 처리하나요?",
+        "answerChecklist": [
+          "분산0",
+          "scale1",
+          "0으로 나누지 않음"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "fold-local-statistic"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "외부 사전학습 변환을 fold마다 재학습하지 않을 때 확인할 출처와 중복 조건은 무엇인가요?",
+        "answerChecklist": [
+          "source revision",
+          "목적",
+          "평가 대상 overlap",
+          "고정 상태"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "fold-local-statistic"
+        ]
+      }
     ],
-    papers: [
-      { title: "scikit-learn — Pipeline: chaining estimators", href: "https://scikit-learn.org/stable/modules/compose.html#pipeline-chaining-estimators", problem: "Preprocessing과 estimator fit을 같은 validation 경계에서 실행하는 문제", contribution: "Pipeline의 fit·transform chaining과 parameter access 제공", assumptions: "현재 stable Pipeline API와 estimator semantics", evidenceScope: "공식 library behavior와 examples", notClaim: "임의 custom transformer가 자동으로 leakage-safe하다는 뜻은 아님", sectionId: "paper-fold-local" },
+    "papers": [
+      {
+        "title": "scikit-learn 1.7.2 — Common pitfalls §11.1–11.2",
+        "href": "https://scikit-learn.org/1.7/common_pitfalls.html",
+        "problem": "Preprocessing과 estimator fit을 같은 validation 경계에서 실행하는 문제",
+        "contribution": "[2,4] fit→[8,10] transform 및 pipeline 범위",
+        "assumptions": "scikit-learn 1.7.2에 고정한 API와 본문의 명시적 가정",
+        "evidenceScope": "§11.1 actual scaler calls and §11.2 leakage",
+        "notClaim": "임의 custom transformer가 자동으로 leakage-safe하다는 뜻은 아님",
+        "sectionId": "paper-fold-local"
+      },
+      {
+        "title": "scikit-learn 1.7.2 — StandardScaler",
+        "href": "https://scikit-learn.org/1.7/modules/generated/sklearn.preprocessing.StandardScaler.html",
+        "problem": "평균과 표준편차의 학습 범위와 구현 규칙 확인",
+        "contribution": "ddof=0과 분산 0의 scale=1 규칙",
+        "assumptions": "기본 with_mean·with_std 옵션과 이 글의 단일 특성",
+        "evidenceScope": "Notes와 scale_ 속성의 공식 설명",
+        "notClaim": "변환값이 작아졌다는 사실이 성능 향상은 아님",
+        "sectionId": "source-scaler-ddof"
+      }
     ],
+    "entryNote": "학습 [2,4]의 평균 3과 크기 1을 평가 [8,10]에 적용해 [5,7]을 계산합니다."
   },
   "ai/oof-risk-estimation": {
-    coreIdea: "OOF estimation은 각 training row가 자신을 학습하지 않은 fold model에서 prediction 하나를 받게 하고, 이를 원래 row·weight 단위로 모아 learning procedure의 held-out risk를 해석하는 절차입니다.",
-    assumedKnowledge: [
-      { id: "deployment-matched-validation-risk", role: "OOF가 어느 배포 risk를 모사할지 정합니다." },
-      { id: "fold-local-statistic", role: "각 OOF prediction의 preprocessing도 row 정보를 보지 않게 합니다." },
-      { id: "expectation", role: "Procedure risk의 평균 해석을 읽습니다." },
+    "coreIdea": "OOF estimation은 각 training row가 자신을 학습하지 않은 fold model에서 prediction 하나를 받게 하고, 이를 원래 row·weight 단위로 모아 learning procedure의 held-out risk를 해석하는 절차입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "deployment-matched-validation-risk",
+        "role": "OOF가 어느 배포 risk를 모사할지 정합니다."
+      },
+      {
+        "id": "fold-local-statistic",
+        "role": "각 OOF prediction의 preprocessing도 row 정보를 보지 않게 합니다."
+      },
+      {
+        "id": "expectation",
+        "role": "Procedure risk의 평균 해석을 읽습니다."
+      }
     ],
-    introducedHere: [
-      { id: "pooled-oof-risk-estimate", role: "각 row의 unseen prediction loss를 원래 evaluation weight로 모읍니다." },
-      { id: "cv-procedure-estimand", role: "Fold models의 평균 risk와 full-data model 하나의 error를 구분합니다." },
+    "introducedHere": [
+      {
+        "id": "pooled-oof-risk-estimate",
+        "role": "각 row의 unseen prediction loss를 원래 evaluation weight로 모읍니다."
+      },
+      {
+        "id": "cv-procedure-estimand",
+        "role": "Fold models의 평균 risk와 full-data model 하나의 error를 구분합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "pooled-oof-risk-estimate", sectionId: "pooling", intuition: "각 사람이 자신을 가르치지 않은 선생에게 시험받은 답을 원래 명단 순서로 모읍니다.", workedExample: "20행 loss .2와 80행 loss .4는 equal-fold .3이 아니라 pooled-row .36입니다.", boundary: "Non-decomposable metric은 전체 OOF vector에서 metric 자체를 다시 계산합니다." },
-      { id: "cv-procedure-estimand", sectionId: "estimand", intuition: "CV는 완성차 한 대보다 같은 공정으로 다른 재료에서 만든 자동차들의 평균 성능에 가깝습니다.", workedExample: "K-fold model은 n(1−1/K) rows로 학습되어 full n-data model과 동일한 object가 아닙니다.", boundary: "정확한 equality는 learner·data 조건에 의존하며 simple fold CI를 독립 반복처럼 읽지 않습니다.", proofIdea: "Fold별 model은 서로 다른 training subset의 함수이고 OOF loss는 이 resampled procedures의 결과를 합칩니다.", counterexample: "항상 같은 고정 model을 반환하는 procedure라면 fold model과 full model의 차이가 사라집니다." },
+    "conceptExplanations": [
+      {
+        "id": "pooled-oof-risk-estimate",
+        "sectionId": "pooling",
+        "intuition": "자신을 배우지 않은 모델의 예측을 각 원래 행에 붙여 정한 가중치로 평가합니다.",
+        "workedExample": "20행 평균 0.2와 80행 평균 0.4는 합 4+32=36, 행평균 0.36이며 단순 fold평균 0.30과 다릅니다.",
+        "boundary": "비음수 가중치와 양의 합이 필요하며 AUC처럼 분해되지 않는 지표에는 별도 집계 해석이 필요합니다."
+      },
+      {
+        "id": "cv-procedure-estimand",
+        "sectionId": "estimand",
+        "intuition": "여러 학습 자료로 만든 모델의 점수와 전체 자료로 완성한 모델 하나의 위험을 구분합니다.",
+        "workedExample": "학습 크기 80과 20인 두 모델의 0.36을 전체 100행 최종 모델의 정확한 미래 오차로 단정하지 않습니다.",
+        "boundary": "논문의 OLS·동분산 Gaussian·제곱손실 조건을 모든 학습기의 유한 표본 등식으로 확대하지 않습니다.",
+        "proofIdea": "Fold별 model은 서로 다른 training subset의 함수이고 OOF loss는 이 resampled procedures의 결과를 합칩니다.",
+        "counterexample": "항상 같은 고정 model을 반환하는 procedure라면 fold model과 full model의 차이가 사라집니다."
+      }
     ],
-    conceptStages: [
-      { label: "Exclude", relation: "Row가 속한 validation fold를 training에서 제외", concepts: ["fold-local-statistic", "pooled-oof-risk-estimate"] },
-      { label: "Predict", relation: "각 row에 unseen prediction 하나를 생성", concepts: ["pooled-oof-risk-estimate"] },
-      { label: "Pool", relation: "Row·weight 기준으로 held-out risk를 계산", concepts: ["pooled-oof-risk-estimate"] },
-      { label: "Interpret", relation: "특정 model과 learning procedure estimand를 구분", concepts: ["cv-procedure-estimand"] },
+    "conceptStages": [
+      {
+        "label": "Exclude",
+        "relation": "Row가 속한 validation fold를 training에서 제외",
+        "concepts": [
+          "fold-local-statistic",
+          "pooled-oof-risk-estimate"
+        ]
+      },
+      {
+        "label": "Predict",
+        "relation": "각 row에 unseen prediction 하나를 생성",
+        "concepts": [
+          "pooled-oof-risk-estimate"
+        ]
+      },
+      {
+        "label": "Pool",
+        "relation": "Row·weight 기준으로 held-out risk를 계산",
+        "concepts": [
+          "pooled-oof-risk-estimate"
+        ]
+      },
+      {
+        "label": "Interpret",
+        "relation": "특정 model과 learning procedure estimand를 구분",
+        "concepts": [
+          "cv-procedure-estimand"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "OOF prediction의 training exclusion 조건을 설명하세요.", answerChecklist: ["row fold identified","fold excluded","preprocess excluded","model excluded","one prediction","row order"], requiredConcepts: ["pooled-oof-risk-estimate"], sectionId: "overview" },
-      { level: "basic", question: "3-fold n rows의 OOF matrix shape를 쓰세요.", answerChecklist: ["n rows","one prediction column per output","all rows covered","fold IDs","not 3n","stable row order"], requiredConcepts: ["pooled-oof-risk-estimate"], sectionId: "overview" },
-      { level: "basic", question: "20행 .2와 80행 .4의 equal-fold와 pooled mean을 계산하세요.", answerChecklist: [".3",".36","unequal sizes","row weighting","100 rows","different estimand"], requiredConcepts: ["pooled-oof-risk-estimate"], sectionId: "pooling" },
-      { level: "basic", question: "Sample weights를 OOF risk에 적용하는 위치를 설명하세요.", answerChecklist: ["row loss","multiply weight","sum weighted loss","sum weights","same metric","not fold count"], requiredConcepts: ["pooled-oof-risk-estimate"], sectionId: "pooling" },
-      { level: "basic", question: "In-sample prediction을 OOF table에 섞으면 안 되는 이유를 쓰세요.", answerChecklist: ["row seen","training fit","optimistic","different provenance","not held out","reject"], requiredConcepts: ["pooled-oof-risk-estimate"], sectionId: "overview" },
-      { level: "basic", question: "Full-data model과 fold model의 training size 차이를 쓰세요.", answerChecklist: ["n","n(1-1/K)","different data","different fitted model","conditional error","procedure risk"], requiredConcepts: ["cv-procedure-estimand"], sectionId: "estimand" },
-      { level: "advanced", question: "CV procedure estimand의 proof idea와 고정-model 반례를 설명하세요.", answerChecklist: ["fold models differ","resampled sets","average procedure","full model not exact","fixed model","difference vanishes"], requiredConcepts: ["cv-procedure-estimand"], sectionId: "estimand" },
-      { level: "advanced", question: "Non-decomposable metric의 OOF 집계를 설계하세요.", answerChecklist: ["store predictions","restore rows","global target","metric once","sufficient statistics","no fold mean"], requiredConcepts: ["pooled-oof-risk-estimate"], sectionId: "boundary" },
-      { level: "advanced", question: "Fold scores를 독립 표본처럼 CI에 넣기 어려운 이유를 설명하세요.", answerChecklist: ["overlapping training sets","dependent models","correlated errors","K not sample size","coverage caveat","independent test"], requiredConcepts: ["cv-procedure-estimand"], sectionId: "boundary" },
-      { level: "advanced", question: "OOF artifact release fixture를 설계하세요.", answerChecklist: ["coverage exactly one","no train membership","row checksum","fold state checksum","metric parity","target untouched"], requiredConcepts: ["pooled-oof-risk-estimate", "cv-procedure-estimand"], sectionId: "boundary" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "첫 평가 묶음 20행을 예측할 모델은 나머지 몇 행으로 학습하나요?",
+        "answerChecklist": [
+          "80행",
+          "평가20 제외"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "pooled-oof-risk-estimate"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "첫 20행의 평균 손실 0.2에서 손실 합을 계산하세요.",
+        "answerChecklist": [
+          "4",
+          "20×0.2"
+        ],
+        "sectionId": "pooling",
+        "requiredConcepts": [
+          "pooled-oof-risk-estimate"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "다른 80행의 평균 손실 0.4에서 손실 합을 계산하세요.",
+        "answerChecklist": [
+          "32",
+          "80×0.4"
+        ],
+        "sectionId": "pooling",
+        "requiredConcepts": [
+          "pooled-oof-risk-estimate"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "전체 100행의 같은 가중치 평균과 두 묶음 평균의 단순 평균을 구하세요.",
+        "answerChecklist": [
+          "0.36",
+          "0.30",
+          "분모 차이"
+        ],
+        "sectionId": "pooling",
+        "requiredConcepts": [
+          "pooled-oof-risk-estimate"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "예측을 원래 정답에 다시 연결할 때 행 ID가 필요한 이유를 설명하세요.",
+        "answerChecklist": [
+          "출력 순서",
+          "행 정체",
+          "정답 대응"
+        ],
+        "sectionId": "inside-oof",
+        "requiredConcepts": [
+          "pooled-oof-risk-estimate"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "전체 100행으로 다시 학습한 모델의 오차가 반드시 0.36인가요?",
+        "answerChecklist": [
+          "아님",
+          "다른 학습 크기",
+          "다른 모델"
+        ],
+        "sectionId": "estimand",
+        "requiredConcepts": [
+          "cv-procedure-estimand"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "행별 가중치가 모두 음수이거나 합이 0이면 가중 평균식을 그대로 쓸 수 있나요?",
+        "answerChecklist": [
+          "비음수",
+          "양의 합",
+          "분모 조건"
+        ],
+        "sectionId": "pooling",
+        "requiredConcepts": [
+          "pooled-oof-risk-estimate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "AUC처럼 행별 손실로 분해되지 않는 지표를 다룰 때 어떤 조건이 더 필요한가요?",
+        "answerChecklist": [
+          "전체 벡터",
+          "모델간 점수 비교가능성",
+          "fold평균과 별개"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "pooled-oof-risk-estimate",
+          "cv-procedure-estimand"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "논문의 OLS 결과를 모든 모델의 유한 표본 정확한 등식으로 바꾸면 왜 안 되나요?",
+        "answerChecklist": [
+          "동분산 Gaussian 선형 모형",
+          "제곱손실",
+          "적용 가정"
+        ],
+        "sectionId": "paper-cv-estimand",
+        "requiredConcepts": [
+          "cv-procedure-estimand"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "학습 자료가 겹치는 여러 fold 점수를 독립 반복으로 간주하면 불확실성에 어떤 문제가 있나요?",
+        "answerChecklist": [
+          "의존성",
+          "공분산",
+          "표준오차 과소평가 가능"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "pooled-oof-risk-estimate",
+          "cv-procedure-estimand"
+        ]
+      }
     ],
-    papers: [
-      { title: "Cross-Validation: What Does It Estimate and How Well Does It Do It?", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11412612/", problem: "CV가 specific model error와 procedure average error 중 무엇을 추정하고 uncertainty가 얼마나 정확한지 해석하는 문제", contribution: "OLS estimand 분석과 fold dependence·interval coverage·nested variance scheme 제안", assumptions: "논문의 OLS theorem·training/test distribution·CV construction", evidenceScope: "JASA 이론 결과와 empirical coverage 비교", notClaim: "모든 learner의 finite-sample equality나 CV 무용론을 뜻하지 않음", sectionId: "paper-cv-estimand" },
+    "papers": [
+      {
+        "title": "Cross-Validation: What Does It Estimate and How Well Does It Do It?",
+        "href": "https://arxiv.org/html/2104.00673v4#S2",
+        "problem": "CV가 specific model error와 procedure average error 중 무엇을 추정하고 uncertainty가 얼마나 정확한지 해석하는 문제",
+        "contribution": "OLS estimand 분석과 fold dependence·interval coverage·nested variance scheme 제안",
+        "assumptions": "논문의 OLS theorem·training/test distribution·CV construction",
+        "evidenceScope": "v4 §2 식(2)·§3 OLS 가정·§4.1 의존성",
+        "notClaim": "모든 learner의 finite-sample equality나 CV 무용론을 뜻하지 않음",
+        "sectionId": "paper-cv-estimand"
+      },
+      {
+        "title": "scikit-learn 1.7.2 — cross_val_predict",
+        "href": "https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.cross_val_predict.html",
+        "problem": "모은 예측의 점수와 fold 점수의 차이",
+        "contribution": "집계 방식과 분해 가능한 지표의 조건",
+        "assumptions": "scikit-learn 1.7의 교차 예측 API가 보장하는 평가 행의 소속과 지표 해석 조건",
+        "evidenceScope": "공식 metric caveat의 원문",
+        "notClaim": "pooled AUC가 모든 목적에서 더 타당하다는 뜻 아님",
+        "sectionId": "paper-oof-api"
+      }
     ],
+    "entryNote": "20행과 80행의 평균을 다시 모아 0.36을 구하고 최종 모델과 지표의 경계를 구별합니다."
   },
   "ai/grouped-validation": {
-    coreIdea: "Grouped validation은 같은 patient·device·document·site처럼 공유 원인에서 나온 모든 rows를 한 partition에 두고, 행 수와 독립에 가까운 평가 entity 수를 분리해 보고하는 평가 설계입니다.",
-    assumedKnowledge: [
-      { id: "deployment-matched-validation-risk", role: "배포에서 새로 나타날 entity·site를 group key로 고릅니다." },
-      { id: "train-validation-test", role: "Group 전체를 training 또는 validation 역할에 배치합니다." },
+    "coreIdea": "Grouped validation은 같은 patient·device·document·site처럼 공유 원인에서 나온 모든 rows를 한 partition에 두고, 행 수와 독립에 가까운 평가 entity 수를 분리해 보고하는 평가 설계입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "deployment-matched-validation-risk",
+        "role": "배포에서 새로 나타날 entity·site를 group key로 고릅니다."
+      },
+      {
+        "id": "train-validation-test",
+        "role": "Group 전체를 training 또는 validation 역할에 배치합니다."
+      }
     ],
-    introducedHere: [
-      { id: "group-disjoint-split", role: "Train과 validation의 shared-cause group ID 교집합을 비웁니다." },
-      { id: "independent-evaluation-unit-count", role: "행 수와 별개로 validation의 고유 entity·site 수를 셉니다." },
+    "introducedHere": [
+      {
+        "id": "group-disjoint-split",
+        "role": "Train과 validation의 shared-cause group ID 교집합을 비웁니다."
+      },
+      {
+        "id": "independent-evaluation-unit-count",
+        "role": "행 수와 별개로 validation의 고유 entity·site 수를 셉니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "group-disjoint-split", sectionId: "disjoint", intuition: "같은 환자의 사진을 서로 다른 시험지에 나누지 않고 환자 전체를 한쪽에 둡니다.", workedExample: "Patient C의 2,110 patches가 validation이면 C의 patch는 train에 하나도 없어야 합니다.", boundary: "Patient가 달라도 같은 household·site를 공유하면 상위 dependency가 남을 수 있습니다." },
-      { id: "independent-evaluation-unit-count", sectionId: "evidence", intuition: "한 사람을 천 번 촬영해도 새로운 사람 천 명을 관찰한 것은 아닙니다.", workedExample: "20 patients×5,000 patches는 100,000 rows지만 unseen-patient 근거 단위는 20입니다.", boundary: "Group 간 site/time dependency가 있으면 고유 group 수도 완전한 독립 표본 수가 아닙니다." },
+    "conceptExplanations": [
+      {
+        "id": "group-disjoint-split",
+        "sectionId": "disjoint",
+        "intuition": "같은 대상에서 나온 기록을 한쪽에 통째로 놓아 처음 보는 대상을 평가합니다.",
+        "workedExample": "학습 {A,B}와 평가 {C,D}는 겹치지 않지만 C 한 행을 학습으로 옮기면 교집합이 {C}입니다.",
+        "boundary": "올바른 그룹 식별자가 필요하고 상위 병원·시간·전처리 누수는 별도 조건입니다."
+      },
+      {
+        "id": "independent-evaluation-unit-count",
+        "sectionId": "evidence",
+        "intuition": "같은 대상의 반복 기록을 독립된 여러 대상처럼 세지 않습니다.",
+        "workedExample": "C 세 행과 D 한 행은 평가 4행·2명입니다. 20명에게 각 5,000행을 얻어도 고유 대상은 20명입니다.",
+        "boundary": "그룹 사이 독립에 가까운 근사이며 상위 공유 원인이 있으면 대상 수만으로 불확실성을 확정하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "Trace cause", relation: "Rows를 생성한 entity·source·site를 찾음", concepts: ["deployment-matched-validation-risk", "group-disjoint-split"] },
-      { label: "Choose key", relation: "배포 novelty와 가장 가까운 shared-cause ID를 고름", concepts: ["group-disjoint-split"] },
-      { label: "Split", relation: "Train·validation group 교집합을 비움", concepts: ["group-disjoint-split"] },
-      { label: "Count evidence", relation: "Row 수와 independent group 수를 분리", concepts: ["independent-evaluation-unit-count"] },
+    "conceptStages": [
+      {
+        "label": "Trace cause",
+        "relation": "Rows를 생성한 entity·source·site를 찾음",
+        "concepts": [
+          "deployment-matched-validation-risk",
+          "group-disjoint-split"
+        ]
+      },
+      {
+        "label": "Choose key",
+        "relation": "배포 novelty와 가장 가까운 shared-cause ID를 고름",
+        "concepts": [
+          "group-disjoint-split"
+        ]
+      },
+      {
+        "label": "Split",
+        "relation": "Train·validation group 교집합을 비움",
+        "concepts": [
+          "group-disjoint-split"
+        ]
+      },
+      {
+        "label": "Count evidence",
+        "relation": "Row 수와 independent group 수를 분리",
+        "concepts": [
+          "independent-evaluation-unit-count"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "20 patients×5,000 patches의 row 수와 independent unit 수를 계산하세요.", answerChecklist: ["100000 rows","20 patients","different counts","patient unit","shared cause","report both"], requiredConcepts: ["independent-evaluation-unit-count"], sectionId: "evidence" },
-      { level: "basic", question: "Patient C가 양쪽 fold에 있을 때 group leakage 집합을 쓰세요.", answerChecklist: ["train groups","valid groups","intersection","contains C","not empty","reject split"], requiredConcepts: ["group-disjoint-split"], sectionId: "disjoint" },
-      { level: "basic", question: "Row shuffle가 group split을 대신하지 못하는 이유를 설명하세요.", answerChecklist: ["rows dependent","same entity","shuffle mixes","memorization","optimistic score","group key"], requiredConcepts: ["group-disjoint-split"], sectionId: "overview" },
-      { level: "basic", question: "Group key를 편리한 ID가 아니라 deployment novelty로 고르는 이유를 쓰세요.", answerChecklist: ["claim target","new entity","shared cause","ID semantics","strongest dependency","matched risk"], requiredConcepts: ["group-disjoint-split"], sectionId: "overview" },
-      { level: "basic", question: "Fold별로 group 수와 row 수를 함께 보고할 이유를 설명하세요.", answerChecklist: ["balance","entity evidence","large groups","row imbalance","uncertainty","diagnostic"], requiredConcepts: ["independent-evaluation-unit-count"], sectionId: "evidence" },
-      { level: "basic", question: "Group disjointness 식의 세 연산을 설명하세요.", answerChecklist: ["collect train IDs","collect valid IDs","deduplicate","intersection","empty set","leak detection"], requiredConcepts: ["group-disjoint-split"], sectionId: "disjoint" },
-      { level: "advanced", question: "Patient·household·hospital의 중첩 group split을 설계하세요.", answerChecklist: ["deployment novelty","nested levels","strongest cause","hospital holdout","patient disjoint","report hierarchy"], requiredConcepts: ["group-disjoint-split", "independent-evaluation-unit-count"], sectionId: "boundary" },
-      { level: "advanced", question: "Class imbalance를 가진 grouped dataset의 fold report를 설계하세요.", answerChecklist: ["group counts","row counts","class ratios","site coverage","no intersection","small group caveat"], requiredConcepts: ["group-disjoint-split", "independent-evaluation-unit-count"], sectionId: "boundary" },
-      { level: "advanced", question: "Group 간 time dependency가 남는 반례를 설명하세요.", answerChecklist: ["different IDs","same period","shared event","correlated outcomes","group count optimistic","time constraint"], requiredConcepts: ["independent-evaluation-unit-count"], sectionId: "boundary" },
-      { level: "advanced", question: "Group assignment artifact의 release fixtures를 설계하세요.", answerChecklist: ["stable group key","coverage","intersection empty","nested mapping","class report","manifest checksum"], requiredConcepts: ["group-disjoint-split"], sectionId: "boundary" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "A·B가 학습에 C·D가 평가에 있다면 두 대상 집합의 교집합을 구하세요.",
+        "answerChecklist": [
+          "공집합",
+          "공유 대상 없음"
+        ],
+        "sectionId": "disjoint",
+        "requiredConcepts": [
+          "group-disjoint-split"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "C의 세 기록 중 하나를 학습으로 옮기면 어느 대상이 교집합에 들어가나요?",
+        "answerChecklist": [
+          "C",
+          "동일 원인",
+          "분할 위반"
+        ],
+        "sectionId": "disjoint",
+        "requiredConcepts": [
+          "group-disjoint-split"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "평가 자료 C 세 행과 D 한 행에서 고유 평가 단위 수는 얼마인가요?",
+        "answerChecklist": [
+          "2",
+          "4행과 구분"
+        ],
+        "sectionId": "evidence",
+        "requiredConcepts": [
+          "independent-evaluation-unit-count"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "20명의 환자에게서 각 5,000개 기록을 얻었다면 행 수와 대상 수를 각각 계산하세요.",
+        "answerChecklist": [
+          "100000행",
+          "20명",
+          "독립성 근사"
+        ],
+        "sectionId": "evidence",
+        "requiredConcepts": [
+          "independent-evaluation-unit-count"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "환자 식별자를 groups 인자로 전달하는 이유를 사례에 맞춰 설명하세요.",
+        "answerChecklist": [
+          "같은 대상 묶음",
+          "API가 추론하지 않음"
+        ],
+        "sectionId": "paper-group-split",
+        "requiredConcepts": [
+          "group-disjoint-split"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "대상 4개로 GroupKFold의 분할 수를 5로 정하면 어떤 조건을 어기나요?",
+        "answerChecklist": [
+          "고유 그룹 수 이상 필요",
+          "4<5"
+        ],
+        "sectionId": "paper-group-split",
+        "requiredConcepts": [
+          "group-disjoint-split"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "환자는 다르지만 모두 같은 병원에서 왔습니다. 새 병원 배포 주장에 무엇이 빠졌나요?",
+        "answerChecklist": [
+          "상위 공유원인",
+          "병원 격리",
+          "배포 신규성"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "group-disjoint-split"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "GroupKFold 결과의 행 수와 양성 비율이 다르면 추가로 무엇을 확인하나요?",
+        "answerChecklist": [
+          "행 수",
+          "고유 그룹 수",
+          "class 비율",
+          "평가 지표 정의"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "group-disjoint-split"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "C 손실 0·0·0과 D 손실 1에서 대상별 평균과 행별 평균이 왜 다르나요?",
+        "answerChecklist": [
+          "0.50",
+          "0.25",
+          "같은 가중치 단위"
+        ],
+        "sectionId": "evidence",
+        "requiredConcepts": [
+          "independent-evaluation-unit-count"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "그룹 교집합이 없어도 미래 정보나 전처리 누수가 남는 사례를 설명하세요.",
+        "answerChecklist": [
+          "시간 가용성",
+          "전체자료 평균 fit",
+          "분리 조건 독립"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "group-disjoint-split"
+        ]
+      }
     ],
-    papers: [
-      { title: "scikit-learn — Cross-validation iterators for grouped data", href: "https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators-for-grouped-data", problem: "같은 subject의 samples가 train과 test에 동시에 나타나는 평가 오류", contribution: "GroupKFold·StratifiedGroupKFold 등 grouped iterator semantics 제공", assumptions: "사용자가 올바른 groups array를 제공하는 현재 API", evidenceScope: "공식 splitter behavior와 examples", notClaim: "Library가 실제 shared-cause group을 자동 발견한다는 뜻은 아님", sectionId: "paper-group-split" },
+    "papers": [
+      {
+        "title": "scikit-learn 1.7.2 — GroupKFold",
+        "href": "https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.GroupKFold.html",
+        "problem": "같은 subject의 samples가 train과 test에 동시에 나타나는 평가 오류",
+        "contribution": "그룹4개 분할수2·교집합 검사·행과 대상 수 분리",
+        "assumptions": "scikit-learn 1.7.2에 고정한 API와 본문의 명시적 가정",
+        "evidenceScope": "GroupKFold class description and Notes",
+        "notClaim": "Library가 실제 shared-cause group을 자동 발견한다는 뜻은 아님",
+        "sectionId": "paper-group-split"
+      }
     ],
+    "entryNote": "A·B와 C·D의 네 대상, 여덟 행으로 대상 겹침과 근거 수를 확인합니다."
   },
   "ai/walk-forward-validation": {
-    coreIdea: "Walk-forward validation은 각 forecast origin에서 feature와 label이 실제로 도착한 시각을 기준으로 training rows를 허용하고, 겹친 information interval을 gap·purge한 뒤 같은 production retraining policy로 origin을 전진시키는 backtest입니다.",
-    assumedKnowledge: [
-      { id: "deployment-matched-validation-risk", role: "다음 period라는 배포 질문을 시간 split으로 연결합니다." },
-      { id: "prediction-time-feature-availability", role: "Feature가 origin 전에 system에 도착했는지 검사합니다." },
-      { id: "rolling-origin-evaluation", role: "같은 rule로 여러 과거 forecast origins를 재연합니다." },
-      { id: "temporal-gap-purge", role: "겹친 feature·target interval을 split 경계에서 제거합니다." },
+    "coreIdea": "Walk-forward validation은 각 forecast origin에서 feature와 label이 실제로 도착한 시각을 기준으로 training rows를 허용하고, 겹친 information interval을 gap·purge한 뒤 같은 production retraining policy로 origin을 전진시키는 backtest입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "deployment-matched-validation-risk",
+        "role": "다음 period라는 배포 질문을 시간 split으로 연결합니다."
+      },
+      {
+        "id": "prediction-time-feature-availability",
+        "role": "Feature가 origin 전에 system에 도착했는지 검사합니다."
+      },
+      {
+        "id": "rolling-origin-evaluation",
+        "role": "같은 rule로 여러 과거 forecast origins를 재연합니다."
+      },
+      {
+        "id": "temporal-gap-purge",
+        "role": "겹친 feature·target interval을 split 경계에서 제거합니다."
+      }
     ],
-    introducedHere: [
-      { id: "walk-forward-label-availability", role: "Target horizon과 reporting delay를 지난 label만 각 origin의 training에 허용합니다." },
+    "introducedHere": [
+      {
+        "id": "walk-forward-label-availability",
+        "role": "Target horizon과 reporting delay를 지난 label만 각 origin의 training에 허용합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "walk-forward-label-availability", sectionId: "labels", intuition: "과거 사건이라도 결과가 아직 나오지 않았다면 그 시점의 model은 정답을 배울 수 없습니다.", workedExample: "10월 25일 event의 30일 outcome과 7일 delay는 12월 초까지 training label이 아닙니다.", boundary: "Label availability를 지켜도 feature·target interval과 entity가 validation에 겹치면 gap·purge·group constraint가 더 필요합니다." },
+    "conceptExplanations": [
+      {
+        "id": "walk-forward-label-availability",
+        "sectionId": "labels",
+        "intuition": "과거 사건이어도 당시 조회하지 못했던 입력과 정답은 학습에 넣지 않습니다.",
+        "workedExample": "UTC 2026-10-25에 30일+7일을 더하면 12-01입니다. 엄격한 이전 규칙에서 11-01과 12-01 같은 시각은 제외하고 12-02는 정답 조건을 통과합니다.",
+        "boundary": "가용성은 전체 학습 자격의 충분 조건이 아닙니다. 고정 지연은 단순 모형이며 gap의 표본 수를 달력 날짜와 구분합니다."
+      }
     ],
-    conceptStages: [
-      { label: "Origin", relation: "Prediction을 냈다고 가정할 cutoff를 고정", concepts: ["deployment-matched-validation-risk", "prediction-time-feature-availability"] },
-      { label: "Availability", relation: "Feature와 label의 실제 도착 시각을 비교", concepts: ["walk-forward-label-availability"] },
-      { label: "Purge", relation: "Validation과 정보를 공유하는 interval을 제거", concepts: ["temporal-gap-purge"] },
-      { label: "Advance", relation: "같은 rule로 origin을 전진", concepts: ["rolling-origin-evaluation"] },
+    "conceptStages": [
+      {
+        "label": "Origin",
+        "relation": "Prediction을 냈다고 가정할 cutoff를 고정",
+        "concepts": [
+          "deployment-matched-validation-risk",
+          "prediction-time-feature-availability"
+        ]
+      },
+      {
+        "label": "Availability",
+        "relation": "Feature와 label의 실제 도착 시각을 비교",
+        "concepts": [
+          "walk-forward-label-availability"
+        ]
+      },
+      {
+        "label": "Purge",
+        "relation": "Validation과 정보를 공유하는 interval을 제거",
+        "concepts": [
+          "temporal-gap-purge"
+        ]
+      },
+      {
+        "label": "Advance",
+        "relation": "같은 rule로 origin을 전진",
+        "concepts": [
+          "rolling-origin-evaluation"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Event time과 label available time을 구분하세요.", answerChecklist: ["event occurs","horizon ends","reporting delay","system arrival","different times","training uses available"], requiredConcepts: ["walk-forward-label-availability"], sectionId: "overview" },
-      { level: "basic", question: "30일 horizon과 7일 delay의 label wait를 계산하세요.", answerChecklist: ["30 plus 7","37 days","event time","outcome end","arrival","not earlier"], requiredConcepts: ["walk-forward-label-availability"], sectionId: "labels" },
-      { level: "basic", question: "Label available time이 origin 뒤인 row의 admission을 판정하세요.", answerChecklist: ["exclude","future label","origin comparison","event date insufficient","manifest","no training"], requiredConcepts: ["walk-forward-label-availability"], sectionId: "labels" },
-      { level: "basic", question: "시간 split 경계에서 gap과 purge가 각각 어떤 rows를 제거하는지 구분하세요.", answerChecklist: ["gap fixed distance","purge overlap based","feature interval","target interval","boundary rows","different rules"], requiredConcepts: ["temporal-gap-purge"], sectionId: "gap-purge" },
-      { level: "basic", question: "Expanding과 rolling training window를 구분하세요.", answerChecklist: ["expanding accumulates","rolling fixed length","old data kept","old data dropped","production policy","drift"], requiredConcepts: ["rolling-origin-evaluation"], sectionId: "boundary" },
-      { level: "basic", question: "Forecast origin을 여러 번 전진시키는 이유를 설명하세요.", answerChecklist: ["multiple historical deployments","same rule","different periods","stability","drift","not random folds"], requiredConcepts: ["rolling-origin-evaluation"], sectionId: "gap-purge" },
-      { level: "advanced", question: "90일 feature·30일 target·7일 delay의 walk-forward manifest를 설계하세요.", answerChecklist: ["origin","90-day history","30-day target","7-day delay","availability check","purge overlap"], requiredConcepts: ["walk-forward-label-availability", "temporal-gap-purge"], sectionId: "gap-purge" },
-      { level: "advanced", question: "Event time만 사용한 backtest의 leakage 반례를 설명하세요.", answerChecklist: ["past event","late label","origin before arrival","model could not know","optimistic","available-time fix"], requiredConcepts: ["walk-forward-label-availability"], sectionId: "labels" },
-      { level: "advanced", question: "반복 entity가 있는 time series split에 추가할 조건을 설계하세요.", answerChecklist: ["entity groups","time order","same entity overlap","group×time","availability","report units"], requiredConcepts: ["walk-forward-label-availability", "temporal-gap-purge"], sectionId: "boundary" },
-      { level: "advanced", question: "Walk-forward release fixture를 설계하세요.", answerChecklist: ["timezone","origin list","feature available","label available","gap purge","window policy"], requiredConcepts: ["walk-forward-label-availability", "rolling-origin-evaluation"], sectionId: "boundary" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "2026-10-25에 30일 관측과 7일 보고 지연을 더하면 정답 도착일은 언제인가요?",
+        "answerChecklist": [
+          "2026-12-01",
+          "37일",
+          "UTC"
+        ],
+        "sectionId": "labels",
+        "requiredConcepts": [
+          "walk-forward-label-availability"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "11월 1일 학습에서 10월 25일 사건의 정답을 사용할 수 없는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "결과 미확정",
+          "보고 미도착",
+          "과거 사건과 구분"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "walk-forward-label-availability"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "도착 시각보다 엄격히 뒤인 시작점만 허용하면 12월 1일 00:00의 판정은 무엇인가요?",
+        "answerChecklist": [
+          "같은 시각 제외",
+          "엄격한 부등식",
+          "정책 고정"
+        ],
+        "sectionId": "labels",
+        "requiredConcepts": [
+          "walk-forward-label-availability"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 규칙에서 12월 2일 00:00에는 이 행의 정답 조건을 통과하나요?",
+        "answerChecklist": [
+          "통과",
+          "도착 이전",
+          "다른 조건 별도"
+        ],
+        "sectionId": "labels",
+        "requiredConcepts": [
+          "walk-forward-label-availability"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "TimeSeriesSplit의 gap=37은 불규칙 시각 자료에서 37일을 뜻하나요?",
+        "answerChecklist": [
+          "37개 표본",
+          "달력 시간 아님",
+          "시각 검사"
+        ],
+        "sectionId": "paper-walk-forward",
+        "requiredConcepts": [
+          "walk-forward-label-availability"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "학습에 쓸 수 있는지 판단할 때 사건 시각 외에 필요한 두 시각은 무엇인가요?",
+        "answerChecklist": [
+          "특징 가용 시각",
+          "정답 가용 시각",
+          "시작점"
+        ],
+        "sectionId": "inside-time",
+        "requiredConcepts": [
+          "walk-forward-label-availability"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "정답 도착 조건을 통과했지만 학습 범위 밖이거나 품질 오류가 있는 행은 왜 제외될 수 있나요?",
+        "answerChecklist": [
+          "다른 자격 조건",
+          "필요 조건",
+          "전체 충분 조건 아님"
+        ],
+        "sectionId": "labels",
+        "requiredConcepts": [
+          "walk-forward-label-availability"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "검증과 겹치는 결과 구간을 제거하는 규칙과 단순 간격 규칙의 차이를 설명하세요.",
+        "answerChecklist": [
+          "purge 실제 겹침",
+          "gap 고정 거리",
+          "같은 뜻 아님"
+        ],
+        "sectionId": "gap-purge",
+        "requiredConcepts": [
+          "walk-forward-label-availability"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "실서비스가 최근 90일만 학습한다면 과거를 모두 누적한 검증과 무엇이 다른가요?",
+        "answerChecklist": [
+          "rolling 범위",
+          "expanding 범위",
+          "재학습 정책 일치"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "walk-forward-label-availability"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "양성 사건은 일찍 확정할 수 있는 문제에서 모든 행에 고정 37일을 적용할 때의 한계를 설명하세요.",
+        "answerChecklist": [
+          "보수적 최종 확정 가정",
+          "음성 관측 완결",
+          "행별 도착 기록"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "walk-forward-label-availability"
+        ]
+      }
     ],
-    papers: [
-      { title: "scikit-learn — TimeSeriesSplit", href: "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html", problem: "Time-ordered samples에서 미래를 training하고 과거를 평가하는 오류", contribution: "Successive training sets와 gap을 가진 current splitter API 제공", assumptions: "Equally spaced samples와 current parameters", evidenceScope: "공식 API behavior와 examples", notClaim: "Delayed labels·overlapping intervals·group constraints가 자동 처리된다는 뜻은 아님", sectionId: "paper-walk-forward" },
+    "papers": [
+      {
+        "title": "scikit-learn 1.7.2 — TimeSeriesSplit",
+        "href": "https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.TimeSeriesSplit.html",
+        "problem": "Time-ordered samples에서 미래를 training하고 과거를 평가하는 오류",
+        "contribution": "37 samples와37 days 구별·별도 label availability 검사",
+        "assumptions": "scikit-learn 1.7.2에 고정한 API와 본문의 명시적 가정",
+        "evidenceScope": "gap parameter / split API",
+        "notClaim": "Delayed labels·overlapping intervals·group constraints가 자동 처리된다는 뜻은 아님",
+        "sectionId": "paper-walk-forward"
+      }
     ],
+    "entryNote": "10월 25일 사건의 30일 결과와 7일 지연을 더해 정답 도착 12월 1일을 추적합니다."
   },
   "ai/validation-feedback-audit": {
-    coreIdea: "Validation feedback audit은 local·public score offset과 후보 선택 순서의 불일치를 분리하고, external feedback 뒤 바꾼 split·metric·feature·candidate filter를 기록한 뒤 그 선택에 쓰지 않은 holdout으로 평가를 닫는 절차입니다.",
-    assumedKnowledge: [
-      { id: "pooled-oof-risk-estimate", role: "Frozen local candidate score를 만듭니다." },
-      { id: "model-selection-maximum-optimism", role: "Noisy holdout을 반복 최적화할 때 생기는 낙관을 설명합니다." },
-      { id: "leaderboard-adaptive-feedback-budget", role: "External feedback이 후속 선택을 바꾼 횟수를 셉니다." },
+    "coreIdea": "Validation feedback audit은 local·public score offset과 후보 선택 순서의 불일치를 분리하고, external feedback 뒤 바꾼 split·metric·feature·candidate filter를 기록한 뒤 그 선택에 쓰지 않은 holdout으로 평가를 닫는 절차입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "pooled-oof-risk-estimate",
+        "role": "Frozen local candidate score를 만듭니다."
+      },
+      {
+        "id": "model-selection-maximum-optimism",
+        "role": "Noisy holdout을 반복 최적화할 때 생기는 낙관을 설명합니다."
+      },
+      {
+        "id": "leaderboard-adaptive-feedback-budget",
+        "role": "External feedback이 후속 선택을 바꾼 횟수를 셉니다."
+      }
     ],
-    introducedHere: [
-      { id: "cv-leaderboard-rank-agreement", role: "Local과 public에서 같은 후보 쌍의 우열 방향이 일치하는 비율을 계산합니다." },
-      { id: "validation-protocol-adaptation-audit", role: "Feedback 뒤 protocol 변경의 가설·시점·revision과 unused holdout을 기록합니다." },
+    "introducedHere": [
+      {
+        "id": "cv-leaderboard-rank-agreement",
+        "role": "Local과 public에서 같은 후보 쌍의 우열 방향이 일치하는 비율을 계산합니다."
+      },
+      {
+        "id": "validation-protocol-adaptation-audit",
+        "role": "Feedback 뒤 protocol 변경의 가설·시점·revision과 unused holdout을 기록합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "cv-leaderboard-rank-agreement", sectionId: "agreement", intuition: "두 심사위원의 평균 점수가 달라도 참가자들의 우열 순서가 비슷한지 따로 비교합니다.", workedExample: "후보 쌍 10개 중 local/public 차이 부호가 8개 같으면 agreement=.8입니다.", boundary: "작은 public sample·tie tolerance·adaptive submissions가 값을 왜곡하며 private 순서를 보장하지 않습니다." },
-      { id: "validation-protocol-adaptation-audit", sectionId: "adaptation", intuition: "정답 힌트를 보고 채점법을 바꿨다면 바뀐 채점법도 같은 시험에 맞춘 결과로 기록합니다.", workedExample: "Public score 뒤 random→time split으로 바꿨다면 가설·시점·본 후보를 기록하고 unused period에서 확인합니다.", boundary: "합리적인 bug fix도 feedback 이후라면 adaptation이며 audit 자체가 bias를 제거하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "cv-leaderboard-rank-agreement",
+        "sectionId": "agreement",
+        "intuition": "같은 후보 쌍의 우열 방향을 두 평가에서 비교합니다.",
+        "workedExample": "A/B/C/D/E 점수표의 10쌍 중 B/C와 D/E만 뒤집혀 8/10=0.8이며 양쪽 차이 모두 0.001을 넘습니다.",
+        "boundary": "한쪽이라도 허용폭 안인 동점 쌍을 분모에서 제외하고 유효 쌍이 없으면 계산 불가입니다. 실제 통계적 유의성을 뜻하지 않습니다."
+      },
+      {
+        "id": "validation-protocol-adaptation-audit",
+        "sectionId": "adaptation",
+        "intuition": "외부 결과를 보고 바꾼 평가 규칙과 후보 선택의 이력을 보존합니다.",
+        "workedExample": "B/C 방향 역전 뒤 행 연결 버그를 고쳐도 관측한 제출·점수와 수정 이유·전후 버전을 연결합니다.",
+        "boundary": "정당한 버그 수정과 유지·종료 선택도 피드백의 영향을 받을 수 있으며 기록이 편향을 지우지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "Parity", relation: "Metric·row mapping·preprocess 구현을 먼저 맞춤", concepts: ["pooled-oof-risk-estimate"] },
-      { label: "Agreement", relation: "Score offset과 candidate-pair 방향을 분리", concepts: ["cv-leaderboard-rank-agreement"] },
-      { label: "Adaptation", relation: "External feedback 뒤 protocol 변경을 receipt로 기록", concepts: ["validation-protocol-adaptation-audit", "leaderboard-adaptive-feedback-budget"] },
-      { label: "Freeze", relation: "Unused holdout에서 frozen procedure를 최종 확인", concepts: ["model-selection-maximum-optimism", "validation-protocol-adaptation-audit"] },
+    "conceptStages": [
+      {
+        "label": "Parity",
+        "relation": "Metric·row mapping·preprocess 구현을 먼저 맞춤",
+        "concepts": [
+          "pooled-oof-risk-estimate"
+        ]
+      },
+      {
+        "label": "Agreement",
+        "relation": "Score offset과 candidate-pair 방향을 분리",
+        "concepts": [
+          "cv-leaderboard-rank-agreement"
+        ]
+      },
+      {
+        "label": "Adaptation",
+        "relation": "External feedback 뒤 protocol 변경을 receipt로 기록",
+        "concepts": [
+          "validation-protocol-adaptation-audit",
+          "leaderboard-adaptive-feedback-budget"
+        ]
+      },
+      {
+        "label": "Freeze",
+        "relation": "Unused holdout에서 frozen procedure를 최종 확인",
+        "concepts": [
+          "model-selection-maximum-optimism",
+          "validation-protocol-adaptation-audit"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Score offset과 rank agreement를 구분하세요.", answerChecklist: ["absolute values","candidate order","different diagnostics","same candidates","metric direction","not interchangeable"], requiredConcepts: ["cv-leaderboard-rank-agreement"], sectionId: "overview" },
-      { level: "basic", question: "10 candidate pairs 중 8개 방향 일치의 agreement를 계산하세요.", answerChecklist: ["8 divided 10",".8","pairwise","direction","not absolute score","not private guarantee"], requiredConcepts: ["cv-leaderboard-rank-agreement"], sectionId: "agreement" },
-      { level: "basic", question: "Tie tolerance가 필요한 이유를 설명하세요.", answerChecklist: ["score noise","tiny differences","treat tie","predeclare","consistent direction","avoid false disagreement"], requiredConcepts: ["cv-leaderboard-rank-agreement"], sectionId: "agreement" },
-      { level: "basic", question: "Mismatch audit에서 distribution shift보다 먼저 확인할 세 구현 항목을 쓰세요.", answerChecklist: ["metric fixture","row mapping","submission checksum","preprocess parity","same candidate","direction"], requiredConcepts: ["cv-leaderboard-rank-agreement"], sectionId: "overview" },
-      { level: "basic", question: "Protocol adaptation의 before·after receipt 항목을 쓰세요.", answerChecklist: ["observed feedback","hypothesis","change time","old revision","new revision","candidate set"], requiredConcepts: ["validation-protocol-adaptation-audit"], sectionId: "adaptation" },
-      { level: "basic", question: "Bug fix도 feedback 뒤면 adaptation인 이유를 설명하세요.", answerChecklist: ["holdout observed","decision changed","same feedback channel","record required","bias not erased","new holdout"], requiredConcepts: ["validation-protocol-adaptation-audit"], sectionId: "adaptation" },
-      { level: "advanced", question: "Pairwise agreement 식의 subtraction·sign·indicator·average 의도를 설명하세요.", answerChecklist: ["candidate difference","direction","tolerance","compare signs","indicator","normalize pairs"], requiredConcepts: ["cv-leaderboard-rank-agreement"], sectionId: "agreement" },
-      { level: "advanced", question: "CV–leaderboard mismatch audit 순서를 설계하세요.", answerChecklist: ["metric parity","row checksum","preprocess parity","group time shift","rank agreement","adaptation receipt"], requiredConcepts: ["cv-leaderboard-rank-agreement", "validation-protocol-adaptation-audit"], sectionId: "boundary" },
-      { level: "advanced", question: "Feedback budget과 frozen holdout의 관계를 설명하세요.", answerChecklist: ["count adaptive changes","predeclare limit","public reused","freeze protocol","unused data","final evaluation"], requiredConcepts: ["validation-protocol-adaptation-audit", "leaderboard-adaptive-feedback-budget"], sectionId: "boundary" },
-      { level: "advanced", question: "Final holdout 결과를 보고 다시 고친 경우 필요한 다음 조치를 쓰세요.", answerChecklist: ["holdout consumed","selection data now","no longer final","new independent data","record adaptation","stop condition"], requiredConcepts: ["validation-protocol-adaptation-audit"], sectionId: "boundary" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "A의 local 0.80과 public 0.76 사이 차이를 계산하세요.",
+        "answerChecklist": [
+          "0.04",
+          "점수 차이",
+          "순위 별개"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "cv-leaderboard-rank-agreement"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "B와 C의 local 점수 0.79·0.78과 public 0.74·0.75에서 방향이 일치하나요?",
+        "answerChecklist": [
+          "불일치",
+          "local B>C",
+          "public C>B"
+        ],
+        "sectionId": "agreement",
+        "requiredConcepts": [
+          "cv-leaderboard-rank-agreement"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "후보 5개에서 중복 없는 쌍의 개수는 몇 개인가요?",
+        "answerChecklist": [
+          "5×4/2",
+          "10"
+        ],
+        "sectionId": "agreement",
+        "requiredConcepts": [
+          "cv-leaderboard-rank-agreement"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "10쌍 중 B/C와 D/E만 불일치하면 방향 일치율은 얼마인가요?",
+        "answerChecklist": [
+          "8/10",
+          "0.8"
+        ],
+        "sectionId": "agreement",
+        "requiredConcepts": [
+          "cv-leaderboard-rank-agreement"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "두 평가 모두 허용폭 안인 동점 쌍을 방향 일치율에서 어떻게 다루나요?",
+        "answerChecklist": [
+          "이 글은 분모에서 제외",
+          "제외수 보고"
+        ],
+        "sectionId": "agreement",
+        "requiredConcepts": [
+          "cv-leaderboard-rank-agreement"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "피드백을 본 뒤 행 연결 오류를 고친 경우에도 어떤 변경 기록을 남겨야 하나요?",
+        "answerChecklist": [
+          "관측값",
+          "가설",
+          "전후버전",
+          "적응 이력"
+        ],
+        "sectionId": "adaptation",
+        "requiredConcepts": [
+          "validation-protocol-adaptation-audit"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "방향을 비교할 유효 쌍이 하나도 없으면 일치율을 1로 보고할 수 있나요?",
+        "answerChecklist": [
+          "계산 불가",
+          "분모0",
+          "유효쌍0 보고"
+        ],
+        "sectionId": "agreement",
+        "requiredConcepts": [
+          "cv-leaderboard-rank-agreement"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "원문 Ladder에서 이전 loss 0.26·새 loss 0.24·폭 0.01이면 갱신되나요?",
+        "answerChecklist": [
+          "0.24<0.25",
+          "갱신",
+          "0.24 공개"
+        ],
+        "sectionId": "paper-validation-feedback",
+        "requiredConcepts": [
+          "validation-protocol-adaptation-audit"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "좋은 방향 일치율 0.8이 private 평가의 순서를 보장하지 않는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "유한자료",
+          "후보선택",
+          "분포변화",
+          "기술적통계"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "cv-leaderboard-rank-agreement",
+          "validation-protocol-adaptation-audit"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "공개 점수를 보고 분할을 반복해서 고쳤다면 마지막 성능 확인 자료는 어떻게 골라야 하나요?",
+        "answerChecklist": [
+          "사용안한자료",
+          "정책동결",
+          "새 기간·site",
+          "독립평가"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "cv-leaderboard-rank-agreement",
+          "validation-protocol-adaptation-audit"
+        ]
+      }
     ],
-    papers: [
-      { title: "The Ladder: A Reliable Leaderboard for Machine Learning Competitions", href: "https://proceedings.mlr.press/v37/blum15.html", problem: "반복적·적응적 submission이 leaderboard holdout에 overfit하는 문제", contribution: "변화가 충분할 때만 score를 갱신하는 제한적 공개 mechanism과 분석", assumptions: "논문의 competition model·loss·leaderboard mechanism", evidenceScope: "ICML 2015 이론과 experiments", notClaim: "일반 public leaderboard의 unbiasedness나 private 순서를 보장한다는 뜻은 아님", sectionId: "paper-validation-feedback" },
+    "papers": [
+      {
+        "title": "The Ladder: A Reliable Leaderboard for Machine Learning Competitions",
+        "href": "https://proceedings.mlr.press/v37/blum15.pdf",
+        "problem": "반복적·적응적 submission이 leaderboard holdout에 overfit하는 문제",
+        "contribution": "변화가 충분할 때만 score를 갱신하는 제한적 공개 mechanism과 분석",
+        "assumptions": "논문의 competition model·loss·leaderboard mechanism",
+        "evidenceScope": "§2 의존성과 Algorithm 1, PDF p.4의 실제 공개 규칙",
+        "notClaim": "일반 public leaderboard의 unbiasedness나 private 순서를 보장한다는 뜻은 아님",
+        "sectionId": "paper-validation-feedback"
+      }
     ],
+    "entryNote": "후보 다섯 개의 두 점수표에서 값의 차이와 8/10 방향 일치를 따로 계산합니다."
   },
   "ai/hyperparameter-tuning": {
     entryLevel: true,
@@ -24712,39 +26640,224 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/adaptive-hyperparameter-search": {
-    entryLevel: true,
-    entryNote: "History 한 행의 configuration·score·state부터 시작해 surrogate·acquisition·TPE로 진행합니다.",
-    coreIdea: "적응형 탐색은 완료·중단·실패·실행 중 trial history를 다음 configuration 제안의 입력으로 사용하는 sequential search입니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "adaptive-trial-proposal-history", role: "관측된 trials와 상태가 다음 proposal의 입력이 되는 구조를 설명합니다." },
-      { id: "tpe-density-ratio", role: "Good과 other configuration density ratio로 TPE의 선호를 읽습니다." },
+    "entryLevel": true,
+    "entryNote": "손실 네 개를 좋은 두 개와 나머지로 나누어 후보 P/Q의 밀도비 6과 2를 비교합니다.",
+    "coreIdea": "적응형 탐색은 완료·중단·실패·실행 중 trial history를 다음 configuration 제안의 입력으로 사용하는 sequential search입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "adaptive-trial-proposal-history",
+        "role": "관측된 trials와 상태가 다음 proposal의 입력이 되는 구조를 설명합니다."
+      },
+      {
+        "id": "tpe-density-ratio",
+        "role": "Good과 other configuration density ratio로 TPE의 선호를 읽습니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "adaptive-trial-proposal-history", sectionId: "proposal-loop", intuition: "이전 시식 결과와 실패 이유를 보고 다음 조합을 정하되 아직 조리 중인 후보도 구분합니다.", workedExample: "40 trial rows의 configuration·score·state로 41번째 candidate를 제안합니다.", boundary: "비교 조건이 다르거나 pending 결과가 많으면 history가 왜곡됩니다." },
-      { id: "tpe-density-ratio", sectionId: "tpe", intuition: "좋은 결과에서 자주 보이지만 나머지에서는 드문 설정을 다시 시험합니다.", workedExample: "good density .30, other density .05이면 ratio 6입니다.", boundary: "높은 ratio는 관측 history 안의 preference이지 인과적 최적성 보장이 아닙니다." },
+    "conceptExplanations": [
+      {
+        "id": "adaptive-trial-proposal-history",
+        "sectionId": "proposal-loop",
+        "intuition": "비교 가능한 설정·관측·상태의 이력을 읽어 다음 실행을 제안합니다.",
+        "workedExample": "완료 손실 0.40·0.25·0.20·0.35에서 경계 0.30으로 두 무리를 만들고 가정한 후보 값 6과 2로 P를 우선합니다.",
+        "boundary": "실패를 가짜 성능 값으로 바꾸지 않으며 이상화된 argmax와 실제 유한 후보 탐색·하드 제약 검사를 구별합니다."
+      },
+      {
+        "id": "tpe-density-ratio",
+        "sectionId": "tpe",
+        "intuition": "좋은 손실에서 설정이 나타날 밀도를 나머지의 밀도로 나누어 후보를 비교합니다.",
+        "workedExample": "P의 0.30/0.05=6과 Q의 0.20/0.10=2를 비교하고 γ=0.5에서 비례 EI는 12/7과 4/3입니다.",
+        "boundary": "밀도는 한 점의 성공 확률이 아니고 g>0이 필요합니다. 4개 관측 예시는 startup 기본 10인 Optuna 4.5.0의 실제 출력 주장이 아닙니다."
+      }
     ],
-    conceptStages: [
-      { label: "관측", relation: "configuration·score·state를 proposal 시점 history로 보존", concepts: ["adaptive-trial-proposal-history"] },
-      { label: "제안", relation: "history로 acquisition을 계산해 feasible candidate 선택", concepts: ["adaptive-trial-proposal-history"] },
-      { label: "TPE", relation: "good/other density ratio로 proposal preference 구체화", concepts: ["tpe-density-ratio"] },
+    "conceptStages": [
+      {
+        "label": "관측",
+        "relation": "configuration·score·state를 proposal 시점 history로 보존",
+        "concepts": [
+          "adaptive-trial-proposal-history"
+        ]
+      },
+      {
+        "label": "제안",
+        "relation": "history로 acquisition을 계산해 feasible candidate 선택",
+        "concepts": [
+          "adaptive-trial-proposal-history"
+        ]
+      },
+      {
+        "label": "TPE",
+        "relation": "good/other density ratio로 proposal preference 구체화",
+        "concepts": [
+          "tpe-density-ratio"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "History row의 최소 fields를 쓰세요.", answerChecklist: ["configuration", "score", "resource step", "state", "time", "worker"], requiredConcepts: ["adaptive-trial-proposal-history"], sectionId: "overview" },
-      { level: "basic", question: "Surrogate와 acquisition을 구분하세요.", answerChecklist: ["approximate observations", "candidate value", "exploit", "explore", "proposal", "sampler-specific"], requiredConcepts: ["adaptive-trial-proposal-history"], sectionId: "overview" },
-      { level: "basic", question: "COMPLETE·PRUNED·FAIL·PENDING을 구분하세요.", answerChecklist: ["final objective", "intermediate stop", "no comparable result", "running", "do not delete", "reason"], requiredConcepts: ["adaptive-trial-proposal-history"], sectionId: "parallel-boundary" },
-      { level: "basic", question: "TPE의 good과 other cohorts를 설명하세요.", answerChecklist: ["score quantile", "minimization direction", "good density", "other density", "same history", "not truth"], requiredConcepts: ["tpe-density-ratio"], sectionId: "tpe" },
-      { level: "basic", question: "l=.30, g=.05의 ratio를 계산하세요.", answerChecklist: ["divide", "six", "good common", "other rare", "preference", "not guarantee"], requiredConcepts: ["tpe-density-ratio"], sectionId: "tpe" },
-      { level: "basic", question: "Parallel proposals가 sequential history와 다른 이유를 설명하세요.", answerChecklist: ["pending", "results unavailable", "same snapshot", "duplicate risk", "worker", "record timing"], requiredConcepts: ["adaptive-trial-proposal-history"], sectionId: "parallel-boundary" },
-      { level: "advanced", question: "Proposal 식의 history·value·argmax 연산 의도를 설명하세요.", answerChecklist: ["collect evidence", "condition on history", "score candidate", "feasible filter", "maximize", "next config"], requiredConcepts: ["adaptive-trial-proposal-history"], sectionId: "proposal-loop" },
-      { level: "advanced", question: "TPE density-ratio 식의 각 연산 의도를 설명하세요.", answerChecklist: ["split by threshold", "conditional good", "conditional other", "divide", "penalize common both", "proposal"], requiredConcepts: ["tpe-density-ratio"], sectionId: "tpe" },
-      { level: "advanced", question: "FAIL을 임의의 큰 loss로 바꿀 때 생기는 문제를 분석하세요.", answerChecklist: ["failure cause", "not objective", "surrogate distortion", "feasibility", "preserve state", "separate model"], requiredConcepts: ["adaptive-trial-proposal-history"], sectionId: "parallel-boundary" },
-      { level: "advanced", question: "Adaptive sampler를 random baseline과 공정하게 비교하세요.", answerChecklist: ["same space", "same budget", "same seeds", "same parallelism", "multiple studies", "outer evaluation"], requiredConcepts: ["adaptive-trial-proposal-history", "tpe-density-ratio"], sectionId: "parallel-boundary" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "손실 0.40·0.25·0.20·0.35와 경계 0.30에서 좋은 완료 관측은 어느 것인가요?",
+        "answerChecklist": [
+          "0.25",
+          "0.20",
+          "작을수록좋음"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "adaptive-trial-proposal-history"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "후보 P의 좋은 밀도 0.30과 나머지 밀도 0.05에서 비율을 계산하세요.",
+        "answerChecklist": [
+          "6",
+          "0.30/0.05"
+        ],
+        "sectionId": "tpe",
+        "requiredConcepts": [
+          "tpe-density-ratio"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "후보 Q의 밀도가 각각 0.20과 0.10이면 두 후보 중 어느 비율이 큰가요?",
+        "answerChecklist": [
+          "Q비율2",
+          "P비율6",
+          "P우선"
+        ],
+        "sectionId": "tpe",
+        "requiredConcepts": [
+          "tpe-density-ratio"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "실행 실패로 최종 점수가 없을 때 임의의 나쁜 점수로 바꾸면 무엇이 섞이나요?",
+        "answerChecklist": [
+          "실패원인",
+          "성능",
+          "없는관측 조작"
+        ],
+        "sectionId": "why-state",
+        "requiredConcepts": [
+          "adaptive-trial-proposal-history"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "다음 후보를 제안하는 장치가 실제 학습을 대신 완료한 것인가요?",
+        "answerChecklist": [
+          "아님",
+          "제안만",
+          "objective 실행 별도"
+        ],
+        "sectionId": "proposal-loop",
+        "requiredConcepts": [
+          "adaptive-trial-proposal-history"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "동시에 실행 중인 두 후보는 서로의 아직 끝나지 않은 실제 결과를 알 수 있나요?",
+        "answerChecklist": [
+          "없음",
+          "pending",
+          "관측시점"
+        ],
+        "sectionId": "parallel-boundary",
+        "requiredConcepts": [
+          "adaptive-trial-proposal-history"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "γ=0.5에서 비례 EI 값은 밀도비 6과 2에 각각 얼마인가요?",
+        "answerChecklist": [
+          "12/7≈1.7143",
+          "4/3≈1.3333",
+          "실제손실아님"
+        ],
+        "sectionId": "paper-tpe",
+        "requiredConcepts": [
+          "tpe-density-ratio"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "Optuna의 constraints_func를 썼다는 이유로 불가능한 자원 요청이 절대 제안되지 않는다고 할 수 있나요?",
+        "answerChecklist": [
+          "사후성공실행 평가",
+          "하드조건 별도",
+          "제안과실행검사"
+        ],
+        "sectionId": "parallel-boundary",
+        "requiredConcepts": [
+          "adaptive-trial-proposal-history"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "실패·중단·실행중 상태를 같은 완료 점수 표에 섞으면 제안 이력이 왜 달라지나요?",
+        "answerChecklist": [
+          "관측조건",
+          "resource차이",
+          "누락이유",
+          "sampler정책"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "adaptive-trial-proposal-history",
+          "tpe-density-ratio"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "Optuna 4.5.0의 startup 기본 10인데 완료 관측 4개로 TPE 제안을 했다고 주장하려면 무엇이 필요한가요?",
+        "answerChecklist": [
+          "설정명시",
+          "실제실행아닌이론가정",
+          "default구분"
+        ],
+        "sectionId": "paper-optuna",
+        "requiredConcepts": [
+          "adaptive-trial-proposal-history"
+        ]
+      }
     ],
-    papers: [
-      { title: "Optuna: A Next-generation Hyperparameter Optimization Framework", href: "https://arxiv.org/abs/1907.10902", problem: "Conditional space와 pruning을 함께 관리하기 어려운 문제", contribution: "Define-by-run API와 study architecture", assumptions: "2019 version·tasks·samplers", evidenceScope: "System design과 reported experiments", notClaim: "현재 defaults의 보편적 우월성을 뜻하지 않음", sectionId: "paper-optuna" },
-      { title: "Algorithms for Hyper-Parameter Optimization", href: "https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization", problem: "비싸고 conditional한 objective의 sequential search", contribution: "TPE good/other density formulation", assumptions: "논문의 estimators·quantile·domains", evidenceScope: "Derivation과 experiments", notClaim: "Global optimum 또는 현재 모든 TPE option을 보장하지 않음", sectionId: "paper-tpe" },
-    ],
+    "papers": [
+      {
+        "title": "Optuna: A Next-generation Hyperparameter Optimization Framework",
+        "href": "https://arxiv.org/abs/1907.10902",
+        "problem": "Conditional space와 pruning을 함께 관리하기 어려운 문제",
+        "contribution": "Define-by-run API와 study architecture",
+        "assumptions": "2019 version·tasks·samplers",
+        "evidenceScope": "System design과 reported experiments",
+        "notClaim": "현재 defaults의 보편적 우월성을 뜻하지 않음",
+        "sectionId": "paper-optuna-design"
+      },
+      {
+        "title": "Algorithms for Hyper-Parameter Optimization",
+        "href": "https://papers.nips.cc/paper_files/paper/2011/file/86e8f7ab32cfd12577bc2619bc635690-Paper.pdf",
+        "problem": "비싸고 conditional한 objective의 sequential search",
+        "contribution": "TPE good/other density formulation",
+        "assumptions": "논문의 estimators·quantile·domains",
+        "evidenceScope": "Derivation과 experiments",
+        "notClaim": "Global optimum 또는 현재 모든 TPE option을 보장하지 않음",
+        "sectionId": "paper-tpe"
+      },
+      {
+        "title": "Optuna 4.5.0 — TPESampler",
+        "href": "https://optuna.readthedocs.io/en/v4.5.0/reference/samplers/generated/optuna.samplers.TPESampler.html",
+        "problem": "추상 TPE와 실제 초기 관측·병렬·제약 API의 차이",
+        "contribution": "밀도비·startup·constant_liar·constraints_func 의미",
+        "assumptions": "Optuna 4.5.0 문서에 고정한 기본 시작 시행 수와 실행 상태 처리 계약",
+        "evidenceScope": "공식 class description과 parameters",
+        "notClaim": "하드 실행 제약이 사전에 자동 차단된다는 보장 아님",
+        "sectionId": "source-optuna-ratio"
+      }
+    ]
   },
   "ai/search-space-design": {
     entryLevel: true,
@@ -25722,37 +27835,218 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/experiment-tracking": {
-    coreIdea: "결과 숫자에서 immutable inputs까지 돌아갈 수 있도록 experiment specification, execution attempt, content-addressed artifact와 provenance edge를 분리해 기록합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "experiment-spec-attempt-identity", role: "실행 조건 digest와 실제 seed·retry·worker attempt를 분리합니다." },
-      { id: "content-addressed-artifact-reference", role: "Artifact 위치·bytes digest·schema·producer를 한 reference로 묶습니다." },
+    "coreIdea": "결과 숫자에서 immutable inputs까지 돌아갈 수 있도록 experiment specification, execution attempt, content-addressed artifact와 provenance edge를 분리해 기록합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "experiment-spec-attempt-identity",
+        "role": "실행 조건 digest와 실제 seed·retry·worker attempt를 분리합니다."
+      },
+      {
+        "id": "content-addressed-artifact-reference",
+        "role": "Artifact 위치·bytes digest·schema·producer를 한 reference로 묶습니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "experiment-spec-attempt-identity", sectionId: "spec-attempt", intuition: "같은 요리법으로 여러 번 조리하면 요리법 ID 하나와 조리 기록 여러 개가 필요합니다.", workedExample: "같은 code·data·config digest 아래 seed 1과 seed 2, retry 1을 별도 attempt로 남깁니다.", boundary: "Mutable data와 외부 응답이 snapshot되지 않았다면 같은 specification이 아닙니다." },
-      { id: "content-addressed-artifact-reference", sectionId: "artifact-reference", intuition: "창고 주소뿐 아니라 상자 내용의 지문과 설명서, 만든 실행을 함께 붙입니다.", workedExample: "URI·SHA-256·prediction schema·size·producer attempt를 저장하고 소비 전에 다시 검사합니다.", boundary: "같은 logical content라도 serialization이 다르면 bytes digest가 달라질 수 있습니다." },
+    "conceptExplanations": [
+      {
+        "id": "experiment-spec-attempt-identity",
+        "sectionId": "spec-attempt",
+        "intuition": "같은 조건을 실행한 사건마다 고유 ID를 부여해 실패와 반복을 보존합니다.",
+        "workedExample": "조건 S1과 seed 2·retry 0·worker 7이 같아도 A1과 A2는 서로 다른 실제 실행이므로 별도 u가 필요합니다.",
+        "boundary": "seed를 spec에서 제외하는 비교 설계는 실제 실행 설정에 seed를 반드시 저장하며 같은 좌표만으로 고유성을 보장하지 않습니다."
+      },
+      {
+        "id": "content-addressed-artifact-reference",
+        "sectionId": "artifact-reference",
+        "intuition": "파일 위치와 바이트 내용, 해석 형식과 생산 실행을 함께 가리킵니다.",
+        "workedExample": "[0.2,0.8]과 [0.1,0.9]는 UTF-8 9바이트·평균 0.50이 같지만 SHA-256은 3a865fbc…와 79cd929e…로 다릅니다.",
+        "boundary": "신뢰할 기준 기록과 실제 보존 파일이 필요하며 hash 일치만으로 악의적 출처 변조를 막지는 못합니다."
+      }
     ],
-    conceptStages: [
-      { label: "Specification", relation: "Immutable inputs를 정규화해 실행 조건 identity를 고정", concepts: ["experiment-spec-attempt-identity"] },
-      { label: "Attempt", relation: "Seed·retry·worker를 실제 실행 identity로 분리", concepts: ["experiment-spec-attempt-identity"] },
-      { label: "Artifact", relation: "Output bytes와 schema·producer를 provenance edge로 연결", concepts: ["experiment-spec-attempt-identity", "content-addressed-artifact-reference"] },
+    "conceptStages": [
+      {
+        "label": "Specification",
+        "relation": "Immutable inputs를 정규화해 실행 조건 identity를 고정",
+        "concepts": [
+          "experiment-spec-attempt-identity"
+        ]
+      },
+      {
+        "label": "Attempt",
+        "relation": "Seed·retry·worker를 실제 실행 identity로 분리",
+        "concepts": [
+          "experiment-spec-attempt-identity"
+        ]
+      },
+      {
+        "label": "Artifact",
+        "relation": "Output bytes와 schema·producer를 provenance edge로 연결",
+        "concepts": [
+          "experiment-spec-attempt-identity",
+          "content-addressed-artifact-reference"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "같은 spec 아래 seed 1·2와 retry 1의 identity를 설계하라.", answerChecklist: ["shared digest", "seed 1", "seed 2", "retry separate", "worker", "no overwrite"], requiredConcepts: ["experiment-spec-attempt-identity"], sectionId: "spec-attempt" },
-      { level: "basic", question: "Spec digest에 포함할 여섯 입력을 열거하라.", answerChecklist: ["code", "data", "split", "config", "environment", "command"], requiredConcepts: ["experiment-spec-attempt-identity"], sectionId: "spec-attempt" },
-      { level: "basic", question: "Run name이 identity가 될 수 없는 이유를 설명하라.", answerChecklist: ["mutable", "not unique", "human label", "digest identity", "attempt coordinates", "audit"], requiredConcepts: ["experiment-spec-attempt-identity"], sectionId: "overview" },
-      { level: "basic", question: "Artifact reference의 다섯 필드를 작성하라.", answerChecklist: ["URI", "digest", "schema", "size", "producer", "version"], requiredConcepts: ["content-addressed-artifact-reference"], sectionId: "artifact-reference" },
-      { level: "basic", question: "URI는 같지만 bytes가 달라진 artifact를 판정하라.", answerChecklist: ["rehash", "digest mismatch", "fail", "no overwrite", "producer", "incident"], requiredConcepts: ["content-addressed-artifact-reference"], sectionId: "artifact-reference" },
-      { level: "basic", question: "실패 attempt에 남길 receipt를 설명하라.", answerChecklist: ["exit code", "last step", "stderr", "partial outputs", "required checks", "status"], requiredConcepts: ["experiment-spec-attempt-identity"], sectionId: "provenance-receipt" },
-      { level: "advanced", question: "Mutable dataset과 API 응답을 immutable spec으로 만드는 manifest를 설계하라.", answerChecklist: ["data as-of", "API snapshot", "git revision", "resolved config", "image", "canonical encode"], requiredConcepts: ["experiment-spec-attempt-identity", "content-addressed-artifact-reference"], sectionId: "spec-attempt" },
-      { level: "advanced", question: "같은 bytes지만 class order schema가 다른 prediction을 판정하라.", answerChecklist: ["digest same", "schema mismatch", "semantic failure", "class fixture", "producer", "new version"], requiredConcepts: ["content-addressed-artifact-reference"], sectionId: "artifact-reference" },
-      { level: "advanced", question: "Report에서 input까지 reverse traversal을 설계하라.", answerChecklist: ["report", "prediction", "checkpoint", "attempt", "spec", "immutable inputs"], requiredConcepts: ["experiment-spec-attempt-identity", "content-addressed-artifact-reference"], sectionId: "provenance-receipt" },
-      { level: "advanced", question: "Artifact retention이 metadata보다 짧을 때 failure와 repair를 설계하라.", answerChecklist: ["dangling URI", "availability", "retention", "backup", "restore drill", "failure status"], requiredConcepts: ["content-addressed-artifact-reference"], sectionId: "artifact-reference" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "같은 조건 S1과 seed 2로 같은 worker에서 두 번 실행하면 실행 ID도 같아도 되나요?",
+        "answerChecklist": [
+          "별도 고유ID",
+          "같은 좌표 반복 가능"
+        ],
+        "sectionId": "spec-attempt",
+        "requiredConcepts": [
+          "experiment-spec-attempt-identity"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "실패 실행 A1 뒤 재시도 A2가 성공하면 몇 개의 실행 기록을 보존해야 하나요?",
+        "answerChecklist": [
+          "2개",
+          "실패 보존",
+          "별도 ID"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "experiment-spec-attempt-identity"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "실행 A2가 만든 예측 [0.2,0.8]의 평균 0.50은 어느 입력과 연결해야 하나요?",
+        "answerChecklist": [
+          "A2",
+          "조건 S1",
+          "입력 D1",
+          "예측파일"
+        ],
+        "sectionId": "artifact-reference",
+        "requiredConcepts": [
+          "content-addressed-artifact-reference"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "latest라는 같은 경로가 다음날 [0.1,0.9]를 가리키면 내용 동일성은 무엇으로 확인하나요?",
+        "answerChecklist": [
+          "실제bytes digest",
+          "원래 digest",
+          "경로만불충분"
+        ],
+        "sectionId": "artifact-reference",
+        "requiredConcepts": [
+          "content-addressed-artifact-reference"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 두 배열의 평균이 모두 0.50이어도 예측 파일이 같다고 할 수 없는 이유는 무엇인가요?",
+        "answerChecklist": [
+          "집계 손실정보",
+          "서로 다른내용",
+          "행별값 확인"
+        ],
+        "sectionId": "why-identity",
+        "requiredConcepts": [
+          "content-addressed-artifact-reference"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "실험 조건의 hash를 계산하기 전에 필요한 직렬화 규칙을 설명하세요.",
+        "answerChecklist": [
+          "순서",
+          "schema",
+          "default해석",
+          "정규화"
+        ],
+        "sectionId": "spec-attempt",
+        "requiredConcepts": [
+          "experiment-spec-attempt-identity"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "seed를 조건 digest에서 제외하려면 실행 전체를 재현할 때 어디에 반드시 남겨야 하나요?",
+        "answerChecklist": [
+          "실제 effective config",
+          "attempt",
+          "그룹조건과전체조건 구분"
+        ],
+        "sectionId": "spec-attempt",
+        "requiredConcepts": [
+          "experiment-spec-attempt-identity"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "run ID가 고유해도 과거 artifact가 삭제됐다면 재생을 보장할 수 있나요?",
+        "answerChecklist": [
+          "보존기간",
+          "실제파일",
+          "접근권한",
+          "참조만불충분"
+        ],
+        "sectionId": "boundary",
+        "requiredConcepts": [
+          "experiment-spec-attempt-identity",
+          "content-addressed-artifact-reference"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "내용 digest를 생산자 기록과 비교하면 악의적인 기록 변조까지 무조건 검증되나요?",
+        "answerChecklist": [
+          "신뢰할기준 필요",
+          "인증별도",
+          "hash만진위보장아님"
+        ],
+        "sectionId": "artifact-reference",
+        "requiredConcepts": [
+          "content-addressed-artifact-reference"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "MLflow 2018 논문의 API 예시와 현재 run_id 명세는 각각 무엇을 근거로 삼나요?",
+        "answerChecklist": [
+          "역사적설계",
+          "확인일 API",
+          "버전구분",
+          "전체자동수집아님"
+        ],
+        "sectionId": "paper-mlflow-lifecycle",
+        "requiredConcepts": [
+          "experiment-spec-attempt-identity"
+        ]
+      }
     ],
-    papers: [
-      { title: "Accelerating the Machine Learning Lifecycle with MLflow", href: "https://people.eecs.berkeley.edu/~alig/papers/mlflow.pdf", problem: "서로 다른 ML library와 deployment의 experiment·run·model lifecycle을 공통 관리하기 어려움", contribution: "Tracking·Projects·Models의 초기 open interface 제안", assumptions: "2018년 초기 MLflow architecture와 사례", evidenceScope: "논문의 design과 reported use cases", notClaim: "현재 registry API가 논문과 동일하거나 provenance가 자동 완성된다는 뜻은 아님", sectionId: "paper-mlflow-lifecycle" },
+    "papers": [
+      {
+        "title": "Accelerating the Machine Learning Lifecycle with MLflow",
+        "href": "https://people.eecs.berkeley.edu/~alig/papers/mlflow.pdf",
+        "problem": "서로 다른 ML library와 deployment의 experiment·run·model lifecycle을 공통 관리하기 어려움",
+        "contribution": "Tracking·Projects·Models의 초기 open interface 제안",
+        "assumptions": "2018년 초기 MLflow architecture와 사례",
+        "evidenceScope": "논문의 design과 reported use cases",
+        "notClaim": "현재 registry API가 논문과 동일하거나 provenance가 자동 완성된다는 뜻은 아님",
+        "sectionId": "paper-mlflow-lifecycle"
+      },
+      {
+        "title": "MLflow REST API — RunInfo",
+        "href": "https://mlflow.org/docs/latest/api_reference/rest-api.html#runinfo",
+        "problem": "같은 설정의 여러 실행을 구별하는 문제",
+        "contribution": "고유 run_id와 별도 run_name 필드",
+        "assumptions": "2026-10-04에 확인한 MLflow 공식 REST API 문서의 RunInfo 필드 정의",
+        "evidenceScope": "RunInfo가 실행마다 갖는 고유 식별자와 사용자 지정 이름 필드의 구분",
+        "notClaim": "모든 provenance와 내용 hash가 자동 수집된다는 뜻 아님",
+        "sectionId": "source-mlflow-run-id"
+      }
     ],
-    entryLevel: true,
+    "entryLevel": true,
+    "entryNote": "실패 A1과 성공 A2, 같은 평균 0.50인 서로 다른 두 예측 파일을 구별합니다."
   },
   "ai/learning-curve-tracking": {
     coreIdea: "Metric을 불분명한 step이 아니라 optimizer update·processed units·wall time 좌표에 놓고 같은 자원 지점과 같은 evaluation contract에서 비교합니다.",
@@ -56376,12 +58670,293 @@ export const ARTICLE_LEARNING: Readonly<
     papers:[{title:"ethereum.org · Merkle Patricia Trie",href:"https://ethereum.org/developers/docs/data-structures-and-encoding/patricia-merkle-trie/",problem:"Ethereum state의 radix path·Patricia compression·Merkle commitment를 설명",contribution:"Branch/extension/leaf, hex-prefix, RLP inline/hash와 state/storage trie의 official documentation 제공",assumptions:"현재 문서의 execution-layer MPT profile과 referenced protocol semantics",evidenceScope:"MPT node/path/root structure의 official overview",notClaim:"Moving page가 특정 client source version·모든 verifier edge case를 고정하지 않음",sectionId:"paper-ethereum-mpt-docs"},{title:"ethereum/go-ethereum trie pinned source 6bb0588",href:"https://github.com/ethereum/go-ethereum/tree/6bb0588ad8e7f922e4ad5580f51265a4097af08f/trie",problem:"MPT update·node encoding·proof implementation seam을 exact source로 고정",contribution:"Official go-ethereum trie source·tests의 pinned snapshot 제공",assumptions:"Commit 6bb0588와 chain/protocol/database configuration 고정",evidenceScope:"선택 commit의 trie implementation behavior",notClaim:"다른 clients·future Verkle transition·generic storage durability를 대신하지 않음",sectionId:"paper-geth-trie-source"}]
   },
   "crypto/elgamal": {
-    entryLevel:true, entryNote:"Mod 23의 작은 곱셈표로 keygen·encrypt·decrypt를 직접 계산하며 group·DDH·IND-CPA를 알고 있다고 가정하지 않습니다.", coreIdea:"ElGamal은 수신자의 Diffie–Hellman public key와 매 ciphertext의 fresh random exponent로 shared group mask를 만들어 message group element를 숨기지만 raw scheme은 malleable하므로 실전에서는 validated group·KDF·AEAD가 결합된 pinned hybrid profile로 다루어야 합니다.", assumedKnowledge:[],
-    introducedHere:[{id:"elgamal-randomized-group-encryption",role:"Fresh exponent로 group message를 mask/unmask하는 계산을 소유합니다."},{id:"elgamal-ddh-indcpa-security-boundary",role:"DDH 가정에서 얻는 confidentiality와 얻지 못하는 integrity를 구분합니다."},{id:"elgamal-multiplicative-malleability",role:"Ciphertext 곱이 plaintext 곱이 되는 장점·공격 경계를 설명합니다."},{id:"elgamal-hybrid-encryption-release-gate",role:"Group·RNG·KDF·AEAD profile의 negative tests와 rollback을 고정합니다."}],
-    conceptExplanations:[{id:"elgamal-randomized-group-encryption",sectionId:"encrypt-decrypt",intuition:"g^r와 y^r는 송신자가 만든 one-time DH mask이고 수신자는 x로 같은 mask를 재생합니다.",workedExample:"p=23,g=5,x=6,y=8,M=10,r=7이면 c1=17,y^r=12,c2=5이고 c1^x=12의 inverse 2를 곱해 M=10을 복원합니다.",boundary:"M은 selected subgroup의 element이어야 하며 arbitrary bytes는 KDF·AEAD hybrid에서 다룹니다.",proofIdea:"c1^x=(g^r)^x=(g^x)^r=y^r이므로 c2에서 같은 mask를 나누면 M만 남습니다.",counterexample:"r=0이거나 재사용되면 c1=1 또는 ciphertext 사이 관계가 노출됩니다."},{id:"elgamal-ddh-indcpa-security-boundary",sectionId:"security",intuition:"Attacker가 y^r을 random group element와 구분하지 못해야 message mask도 구분하기 어렵습니다.",workedExample:"같은 M=10이어도 r=7과 r=3은 다른 (c1,c2)를 만듭니다.",boundary:"Validated group·DDH·fresh uniform r 아래 IND-CPA 범위이며 CCA integrity를 주장하지 않습니다.",counterexample:"RNG clone이 r를 반복하면 c2 비율에서 message 비율이 노출됩니다."},{id:"elgamal-multiplicative-malleability",sectionId:"security",intuition:"Ciphertext components를 곱하면 randomness와 messages도 group 연산으로 합쳐집니다.",workedExample:"Enc(M1;r1)·Enc(M2;r2)=Enc(M1M2;r1+r2)입니다.",boundary:"Voting aggregation 등은 명시적 protocol proof·range checks가 필요하며 일반 transport encryption에서는 변조 취약점입니다.",counterexample:"Attacker가 (1,α)를 곱해 복호 plaintext을 α배로 바꿔도 raw decrypt은 error를 내지 않습니다."},{id:"elgamal-hybrid-encryption-release-gate",sectionId:"release",intuition:"Textbook 식을 바로 bytes API로 배포하지 않습니다.",workedExample:"Official vectors·malformed point·identity·wrong subgroup·RNG repeat·AEAD tag mutation을 통과한 뒤 keygen/encrypt/decrypt ms와 ciphertext bytes를 잽습니다.",boundary:"Algorithm/version/group/encoding/KDF/AEAD/domain을 하나의 profile로 pin합니다."}],
-    conceptStages:[{label:"00 group",relation:"Cyclic subgroup·DDH·public input validation을 준비합니다.",concepts:["cyclic-subgroup-dlp","dlp-assumption-family-separation","dh-public-value-validation"]},{label:"01 encryption",relation:"Fresh randomness로 mask를 만듭니다.",concepts:["csprng-computational-unpredictability","elgamal-randomized-group-encryption"]},{label:"02 security",relation:"IND-CPA와 malleability를 분리합니다.",concepts:["elgamal-ddh-indcpa-security-boundary","elgamal-multiplicative-malleability"]},{label:"03 release",relation:"Hybrid profile을 검증합니다.",concepts:["elgamal-hybrid-encryption-release-gate"]}],
-    exercises:[{level:"basic",question:"p=23,g=5,x=6에서 public key y를 계산하세요.",answerChecklist:["5^6 mod23","8","secret x","public y"],requiredConcepts:["elgamal-randomized-group-encryption"],sectionId:"encrypt-decrypt"},{level:"basic",question:"M=10,r=7의 c1·mask·c2를 계산하세요.",answerChecklist:["c1=17","y^r=12","c2=5","mod23"],requiredConcepts:["elgamal-randomized-group-encryption"],sectionId:"encrypt-decrypt"},{level:"basic",question:"(17,5)를 x=6으로 복호하세요.",answerChecklist:["17^6=12","inverse 2","5*2 mod23","10"],requiredConcepts:["elgamal-randomized-group-encryption"],sectionId:"encrypt-decrypt"},{level:"basic",question:"같은 message가 다른 ciphertext를 만드는 이유를 쓰세요.",answerChecklist:["fresh r","c1 changes","mask changes","probabilistic"],requiredConcepts:["elgamal-ddh-indcpa-security-boundary"],sectionId:"security"},{level:"basic",question:"DLP·CDH·DDH를 ElGamal confidentiality와 연결해 구분하세요.",answerChecklist:["recover exponent","compute shared element","distinguish tuple","DDH IND-CPA"],requiredConcepts:["dlp-assumption-family-separation","elgamal-ddh-indcpa-security-boundary"],sectionId:"security"},{level:"basic",question:"Textbook ElGamal이 arbitrary bytes를 바로 암호화하는 API가 아닌 이유를 쓰세요.",answerChecklist:["group element message","encoding","hybrid","KDF","AEAD"],requiredConcepts:["elgamal-hybrid-encryption-release-gate"],sectionId:"release"},{level:"advanced",question:"Decrypt correctness를 exponent law로 증명하세요.",answerChecklist:["c1^x","g^(rx)","y^r","cancel inverse","M"],requiredConcepts:["elgamal-randomized-group-encryption"],sectionId:"encrypt-decrypt"},{level:"advanced",question:"Ciphertext 곱의 homomorphism과 active 변조 반례를 유도하세요.",answerChecklist:["componentwise multiply","r1+r2","M1M2","multiply alpha","no integrity"],requiredConcepts:["elgamal-multiplicative-malleability"],sectionId:"security"},{level:"advanced",question:"Nonce reuse/RNG clone 공격 fixture를 설계하세요.",answerChecklist:["same c1","c2 ratio","message ratio","clone/restart","must detect"],requiredConcepts:["elgamal-ddh-indcpa-security-boundary","csprng-computational-unpredictability"],sectionId:"security"},{level:"advanced",question:"ElGamal hybrid release receipt와 rollback 조건을 작성하세요.",answerChecklist:["source/profile","group/subgroup","encoding","RNG","KDF/AEAD/domain","negative vectors","timings/bytes","rollback"],requiredConcepts:["elgamal-hybrid-encryption-release-gate"],sectionId:"release"}],
-    papers:[{title:"ElGamal · A Public-Key Cryptosystem and a Signature Scheme Based on Discrete Logarithms",href:"https://doi.org/10.1109/TIT.1985.1057074",problem:"Discrete-log group에서 public-key encryption과 signature를 구성",contribution:"Ephemeral exponent와 DH-style mask를 쓰는 randomized encryption 구조 제시",assumptions:"Original group model과 논문의 security context",evidenceScope:"Textbook ElGamal construction의 primary source",notClaim:"Modern IND-CCA·hybrid profile·specific curve implementation 안전성을 자동 보장하지 않음",sectionId:"paper-elgamal-1985"},{title:"RFC 6090 · Fundamental Elliptic Curve Cryptography Algorithms",href:"https://www.rfc-editor.org/rfc/rfc6090.html",problem:"ECC group operations과 ElGamal-family 역사적 algorithms의 interoperable description",contribution:"Finite-field EC group·encoding/security considerations의 standard reference",assumptions:"RFC의 chosen curve/domain·validation requirements",evidenceScope:"EC group instance와 input validation 경계",notClaim:"Arbitrary EC ElGamal profile을 표준화하거나 AEAD를 대체하지 않음",sectionId:"paper-rfc6090-elgamal"}]
+    "entryLevel": true,
+    "entryNote": "메시지 10을 (17,5)로 숨기고 복원한 뒤, 암호문 변조·난수 재사용·잘못된 메시지 공간의 반례를 계산합니다.",
+    "coreIdea": "새 임시 비밀로 만든 공유값을 곱해 메시지를 가리고 수신자가 같은 값을 재현해 제거합니다. 복호 정확성과 비밀성·변조 방지는 다른 조건입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "elgamal-randomized-group-encryption",
+        "role": "새 임시 지수로 메시지를 가리고 같은 공유값으로 복원하는 계산을 설명합니다."
+      },
+      {
+        "id": "elgamal-ddh-indcpa-security-boundary",
+        "role": "DDH에 따른 비밀성과 메시지 공간의 반례를 설명합니다."
+      },
+      {
+        "id": "elgamal-multiplicative-malleability",
+        "role": "암호문 곱셈·변조·임시 지수 재사용의 결과를 계산합니다."
+      },
+      {
+        "id": "elgamal-hybrid-encryption-release-gate",
+        "role": "검토된 혼합 암호 규격의 입력·난수·인증 검사를 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "elgamal-randomized-group-encryption",
+        "sectionId": "encrypt-decrypt",
+        "intuition": "송신자와 수신자가 같은 가리개를 만들고 역원을 곱해 원래 값을 복원합니다.",
+        "workedExample": "p=23, g=5, x=6, y=8, M=10, r=7이면 (17,5)를 보내고 12의 역원 2로 10을 복원합니다.",
+        "boundary": "작은 전체 군의 사례는 정확성만 보입니다. 안전한 메시지 공간과 DDH 조건을 별도로 확인합니다.",
+        "proofIdea": "c₁ˣ=(gʳ)ˣ=(gˣ)ʳ=yʳ이므로 c₂에 그 역원을 곱하면 M만 남습니다.",
+        "counterexample": "r=0을 임의로 쓰면 가리개가 1이고 c₂가 메시지를 그대로 보여 줍니다."
+      },
+      {
+        "id": "elgamal-ddh-indcpa-security-boundary",
+        "sectionId": "security",
+        "intuition": "가리개가 임의의 군 원소와 구별되지 않으면 고정 메시지의 암호문도 구별하기 어렵습니다.",
+        "workedExample": "작은 예에서는 제곱으로 만들 수 있는 값인지 검사해 메시지 10과 4를 둘째 암호문 5와 2로 구별합니다.",
+        "boundary": "이 예에는 현대 비밀성 가정을 적용할 수 없습니다. 올바른 군·메시지 공간·난수와 DDH 조건이 필요합니다.",
+        "counterexample": "공개키 8의 모든 거듭제곱은 제곱 값 목록 안에 있어 메시지의 목록 안·밖 여부를 감추지 못합니다."
+      },
+      {
+        "id": "elgamal-multiplicative-malleability",
+        "sectionId": "malleability",
+        "intuition": "암호문의 곱셈 관계가 복호 메시지에도 남습니다.",
+        "workedExample": "(17,5)를 (17,10)으로 바꾸면 20을 복호합니다. (17,5)와 (10,1)의 곱 (9,5)는 10×4 mod 23=17을 복호합니다.",
+        "boundary": "집계에 사용하려면 별도 증명·범위·참여자 규칙이 필요합니다. 기본 복호는 변조를 탐지하지 않습니다.",
+        "counterexample": "같은 r=7로 10과 4를 가리면 둘째 값 5·2의 비율 5로 알려진 10에서 4를 복원합니다."
+      },
+      {
+        "id": "elgamal-hybrid-encryption-release-gate",
+        "sectionId": "release",
+        "intuition": "파일 암호화는 공유 재료·KDF·AEAD를 검토된 전체 규격으로 연결합니다.",
+        "workedExample": "버전·군·난수·인코딩·KDF·AEAD를 고정하고 입력·인증 태그·다른 키와 문맥의 실패를 검사합니다.",
+        "boundary": "임의 결합이 선택 암호문 공격 안전성을 보장하지 않습니다. 난수 노출 뒤 버전을 되돌려도 과거 비밀은 복구되지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "00 group",
+        "relation": "군·보안 가정·공개 입력 검사와 난수를 준비합니다.",
+        "concepts": [
+          "cyclic-subgroup-dlp",
+          "dlp-assumption-family-separation",
+          "dh-public-value-validation"
+        ]
+      },
+      {
+        "label": "01 encryption",
+        "relation": "같은 가리개를 생성하고 제거합니다.",
+        "concepts": [
+          "csprng-computational-unpredictability",
+          "elgamal-randomized-group-encryption"
+        ]
+      },
+      {
+        "label": "02 security",
+        "relation": "비밀성과 암호문 변조의 관계를 구분합니다.",
+        "concepts": [
+          "elgamal-ddh-indcpa-security-boundary",
+          "elgamal-multiplicative-malleability"
+        ]
+      },
+      {
+        "label": "03 release",
+        "relation": "전체 혼합 암호 규격의 정상·실패 처리를 확인합니다.",
+        "concepts": [
+          "elgamal-hybrid-encryption-release-gate"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "p=23, g=5, x=6에서 Bob의 공개키를 계산하세요.",
+        "answerChecklist": [
+          "5⁶ mod 23",
+          "8",
+          "개인키 6",
+          "공개키 진위 확인"
+        ],
+        "sectionId": "case",
+        "requiredConcepts": [
+          "elgamal-randomized-group-encryption"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "메시지 10과 r=7의 두 암호문 값을 계산하세요.",
+        "answerChecklist": [
+          "c₁=17",
+          "가리개 12",
+          "c₂=5",
+          "전송 (17,5)"
+        ],
+        "sectionId": "encrypt-decrypt",
+        "requiredConcepts": [
+          "elgamal-randomized-group-encryption"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "(17,5)를 x=6으로 복호하세요.",
+        "answerChecklist": [
+          "17⁶ mod 23=12",
+          "12×2 mod 23=1",
+          "역원 2",
+          "5×2=10"
+        ],
+        "sectionId": "encrypt-decrypt",
+        "requiredConcepts": [
+          "elgamal-randomized-group-encryption"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 메시지 10에 r=3을 쓰면 어떻게 바뀌나요?",
+        "answerChecklist": [
+          "c₁=10",
+          "가리개 6",
+          "c₂=14",
+          "암호문 (10,14)",
+          "서로 다르다는 사실만으로 안전성 증명 불가"
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "elgamal-randomized-group-encryption",
+          "elgamal-ddh-indcpa-security-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "작은 예에서 메시지 10과 4를 구별할 수 있는 이유를 설명하세요.",
+        "answerChecklist": [
+          "공개키 8은 제곱 값",
+          "가리개도 제곱 값",
+          "10과 5는 목록 밖",
+          "4와 2는 목록 안",
+          "DDH와 메시지 공간 확인"
+        ],
+        "sectionId": "security",
+        "requiredConcepts": [
+          "elgamal-ddh-indcpa-security-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "임의 파일을 메시지 군 원소로 직접 넣는 대신 어떤 구성이 필요한가요?",
+        "answerChecklist": [
+          "검토된 공유 재료 생성",
+          "KDF",
+          "AEAD",
+          "인코딩·문맥",
+          "전체 규격의 보안 조건"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "elgamal-hybrid-encryption-release-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "복호 등식과 HAC 원문의 다른 역원 계산을 같은 숫자로 설명하세요.",
+        "answerChecklist": [
+          "지수 rx=xr",
+          "가리개 일치",
+          "역원으로 상쇄",
+          "p−1−a=16",
+          "17¹⁶ mod 23=2",
+          "δ=5에 곱해 10"
+        ],
+        "sectionId": "source",
+        "requiredConcepts": [
+          "elgamal-randomized-group-encryption"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "암호문 곱셈과 변조 사례를 유도하세요.",
+        "answerChecklist": [
+          "지수 r₁+r₂",
+          "메시지 M₁M₂",
+          "(17,5)→(17,10)는 20",
+          "(17,5)×(10,1)=(9,5)",
+          "복호 17은 10×4의 나머지",
+          "변조 오류 없음"
+        ],
+        "sectionId": "malleability",
+        "requiredConcepts": [
+          "elgamal-multiplicative-malleability"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "지수 7을 재사용한 두 메시지에서 둘째 메시지를 복원하세요.",
+        "answerChecklist": [
+          "암호문 (17,5)와 (17,2)",
+          "둘째 값 비율 2÷5 mod 23=5",
+          "메시지 비율 일치",
+          "알려진 10×5 mod 23=4",
+          "난수 복제·재시작 위험"
+        ],
+        "sectionId": "malleability",
+        "requiredConcepts": [
+          "elgamal-ddh-indcpa-security-boundary",
+          "elgamal-multiplicative-malleability"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "혼합 암호 구현의 검수 범위와 난수 노출 후 조치를 설명하세요.",
+        "answerChecklist": [
+          "버전·군·차수·생성원",
+          "규격별 인코딩·키 검사",
+          "난수·KDF·AEAD",
+          "잘못된 입력·인증 태그·키·문맥",
+          "시간·크기·메모리는 이후",
+          "배포 중단과 원인 확인",
+          "이전 버전 복귀가 과거 노출을 취소하지 않음"
+        ],
+        "sectionId": "release",
+        "requiredConcepts": [
+          "elgamal-hybrid-encryption-release-gate"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "ElGamal · A Public-Key Cryptosystem and a Signature Scheme Based on Discrete Logarithms",
+        "href": "https://doi.org/10.1109/TIT.1985.1057074",
+        "problem": "Discrete-log group에서 public-key encryption과 signature를 구성",
+        "contribution": "Ephemeral exponent와 DH-style mask를 쓰는 randomized encryption 구조 제시",
+        "assumptions": "Original group model과 논문의 security context",
+        "evidenceScope": "구성의 원 논문 서지이며 단계별 원문 대조는 저자 공개 HAC 알고리즘을 사용했습니다.",
+        "notClaim": "이번 검토에서 DOI 원문 전문을 새로 읽었다고 주장하거나 현대 선택 암호문 안전성을 보장하지 않습니다.",
+        "sectionId": "paper-elgamal-1985"
+      },
+      {
+        "title": "RFC 6090 · Fundamental Elliptic Curve Cryptography Algorithms",
+        "href": "https://www.rfc-editor.org/rfc/rfc6090.html",
+        "problem": "ECC group operations과 ElGamal-family 역사적 algorithms의 interoperable description",
+        "contribution": "Finite-field EC group·encoding/security considerations의 standard reference",
+        "assumptions": "RFC의 chosen curve/domain·validation requirements",
+        "evidenceScope": "EC group instance와 input validation 경계",
+        "notClaim": "Arbitrary EC ElGamal profile을 표준화하거나 AEAD를 대체하지 않음",
+        "sectionId": "paper-rfc6090-elgamal"
+      },
+      {
+        "title": "HAC · ElGamal 알고리즘 8.17–8.18, 8.26",
+        "href": "https://cacr.uwaterloo.ca/hac/about/chap8.pdf",
+        "problem": "공개키만으로 메시지를 가리고 개인키로 복원하는 구성을 명시합니다.",
+        "contribution": "유한체와 일반 군의 키 생성·암호화·복호를 단계별로 제시합니다.",
+        "assumptions": "해당 군·메시지 범위·지수 생성 규칙을 지키며 옛 키 크기 권고와 구분합니다.",
+        "evidenceScope": "γ=17, δ=5, p−1−a=16을 넣어 역원 2와 메시지 10을 확인합니다.",
+        "notClaim": "복호 정확성만으로 현대 비밀성이나 능동 공격 저항성을 보장하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Boneh–Shoup v0.6 · 연습문제 11.5–11.6",
+        "href": "https://crypto.stanford.edu/~dabo/cryptobook/BonehShoup_0_6.pdf",
+        "problem": "곱셈형 ElGamal의 비밀성 가정과 메시지 공간의 조건을 구분합니다.",
+        "contribution": "DDH에 따른 비밀성, 곱셈 관계와 더 큰 메시지 공간의 반례를 다룹니다.",
+        "assumptions": "지정한 군·메시지 공간·난수 분포와 DDH 가정을 따릅니다.",
+        "evidenceScope": "작은 사례의 제곱 값 구분과 변조를 별도 계산해 가정의 필요성을 설명합니다.",
+        "notClaim": "작은 mod 23 예가 실제 안전한 암호 설정이라는 뜻은 아닙니다.",
+        "sectionId": "security"
+      }
+    ]
   },
   "crypto/mpc": {
     entryLevel:false, entryNote:"Alice 3·Bob 4의 sum 7만 공개하는 사례에서 real/ideal·adversary·abort/fairness를 먼저 고정합니다.", coreIdea:"MPC는 private inputs로 함수를 계산하면서 ideal functionality가 허용한 result 밖의 leakage를 제한하는 protocol 목표이며, Shamir·Paillier 같은 primitive와 DKG ceremony의 보장을 합성할 때 각 전제·failure·receipt를 보존해야 합니다.", assumedKnowledge:[{id:"shamir-threshold-polynomial-sharing",role:"Threshold sharing의 수학은 독립 Shamir 글에서 재사용합니다."},{id:"paillier-additive-homomorphic-boundary",role:"Additive homomorphism의 수학은 독립 Paillier 글에서 재사용합니다."}],
@@ -59054,53 +61629,345 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "crypto/diffie-hellman": {
-    coreIdea: "Diffie–Hellman은 검증된 peer public value와 local secret에서 같은 raw group element를 계산하고, 이를 authenticated transcript와 KDF에 결속해 용도별 session key로 만든 뒤 ephemeral secret을 폐기하는 key-establishment 구성 요소입니다.",
-    assumedKnowledge: [
-      { id: "dlp-assumption-family-separation", role: "DLP·CDH·DDH의 서로 다른 공격 목표와 claim을 재사용합니다." },
-      { id: "ec-subgroup-validation", role: "Untrusted elliptic-curve public input의 group membership 검사를 재사용합니다." },
-      { id: "csprng-computational-unpredictability", role: "Ephemeral scalar 생성의 예측 불가능성 요구를 재사용합니다." },
+    "coreIdea": "공개값에 자기 비밀을 적용하면 같은 공유값이 나오지만, 실제 통신에는 상대 인증과 KDF, 임시 비밀의 폐기가 함께 필요합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "dlp-assumption-family-separation",
+        "role": "DLP·CDH·DDH의 서로 다른 공격 목표와 claim을 재사용합니다."
+      },
+      {
+        "id": "ec-subgroup-validation",
+        "role": "Untrusted elliptic-curve public input의 group membership 검사를 재사용합니다."
+      },
+      {
+        "id": "csprng-computational-unpredictability",
+        "role": "Ephemeral scalar 생성의 예측 불가능성 요구를 재사용합니다."
+      }
     ],
-    introducedHere: [
-      { id: "diffie-hellman-key-agreement-flow", role: "두 public values에서 같은 raw shared element를 계산합니다." },
-      { id: "dh-public-value-validation", role: "Primitive-specific malformed·wrong-group·all-zero 입력을 거부합니다." },
-      { id: "authenticated-dh-transcript", role: "Identity·role·negotiation·ephemeral values를 인증합니다." },
-      { id: "dh-kdf-key-schedule", role: "Raw output을 transcript-bound direction/purpose keys로 유도합니다." },
-      { id: "dh-ephemeral-forward-secrecy-lifecycle", role: "Session secret의 생성·비재사용·폐기와 forward secrecy를 연결합니다." },
-      { id: "dh-deployment-release-gate", role: "MITM·downgrade·clone·restart parity 뒤 handshake 비용을 비교합니다." },
+    "introducedHere": [
+      {
+        "id": "diffie-hellman-key-agreement-flow",
+        "role": "공개값 교환과 같은 공유값에 도달하는 계산을 설명합니다."
+      },
+      {
+        "id": "dh-public-value-validation",
+        "role": "선택한 DH 함수의 바이트·공개 입력 처리 규칙을 설명합니다."
+      },
+      {
+        "id": "authenticated-dh-transcript",
+        "role": "신원·역할·협상과 공개값을 인증하는 대화 기록을 설명합니다."
+      },
+      {
+        "id": "dh-kdf-key-schedule",
+        "role": "공유 재료에서 방향·용도별 키를 만드는 순서를 설명합니다."
+      },
+      {
+        "id": "dh-ephemeral-forward-secrecy-lifecycle",
+        "role": "임시 비밀 생성과 폐기가 과거 통신 보호에 필요한 이유를 설명합니다."
+      },
+      {
+        "id": "dh-deployment-release-gate",
+        "role": "구현 교체 시 정상·실패 결과를 비교하는 범위를 설명합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "diffie-hellman-key-agreement-flow", sectionId: "protocol", intuition: "서로 다른 비밀 색을 직접 보내지 않고 공개 혼합물에 자기 비밀을 한 번 더 적용해 같은 결과에 도달합니다.", workedExample: "F23*에서 g=5,a=6,b=15이면 A=8,B=19이고 19^6=8^15=2 mod23입니다.", boundary: "p=23/order22는 공격 가능한 장난감이고 raw equality는 peer authentication·application key·post-quantum security가 아닙니다." },
-      { id: "dh-public-value-validation", sectionId: "protocol", intuition: "상대가 보낸 손잡이가 기대한 기계 부품인지 확인한 뒤에만 secret 연산에 넣습니다.", workedExample: "X25519는 RFC 7748의 32-byte u-coordinate/scalar rules와 all-zero shared output check policy를 적용하고 malformed length를 거부합니다.", boundary: "Generic on-curve/subgroup 절차를 X25519 acceptance에 임의로 덧붙이거나 다른 curve의 strict encoding rule을 그대로 복사하지 않습니다." },
-      { id: "authenticated-dh-transcript", sectionId: "authenticated-transcript", intuition: "같은 key를 만든 것뿐 아니라 누구와 어떤 역할·algorithm으로 만들었는지 대화 기록에 서명합니다.", workedExample: "Identity·client/server role·suite·A·B를 canonical transcript에 넣어 signature/PSK MAC을 검증하면 Mallory의 A/B 교체가 digest를 바꿉니다.", boundary: "Unauthenticated DH 뒤의 key confirmation만으로 peer identity가 생기지 않고 transcript에서 role·negotiation을 빼면 reflection/downgrade가 남습니다." },
-      { id: "dh-kdf-key-schedule", sectionId: "kdf-key-schedule", intuition: "Raw shared 재료를 먼저 고르게 농축하고 목적·방향 이름표마다 서로 다른 열쇠를 뽑습니다.", workedExample: "같은 Z라도 info에 client→server와 server→client label·transcript hash를 넣으면 서로 다른 AEAD keys를 얻습니다.", boundary: "HKDF는 invalid public key, unauthenticated transcript, weak RNG, secret erasure를 고치지 않고 hash/salt/info/output length를 고정해야 합니다." },
-      { id: "dh-ephemeral-forward-secrecy-lifecycle", sectionId: "ephemeral-lifecycle", intuition: "매 대화에 새 임시 열쇠를 만들고 끝나면 버려 훗날 장기 신분 열쇠가 새어도 과거 문을 다시 열 수 없게 합니다.", workedExample: "Session별 a를 CSPRNG로 생성하고 완료·실패 뒤 a와 Z를 지우며 long-term signing key는 transcript 인증에만 사용합니다.", boundary: "VM snapshot·forked RNG·crash dump·reused ephemeral·session ticket/application plaintext 보관은 forward-secrecy 결론의 별도 반례입니다." },
-      { id: "dh-deployment-release-gate", sectionId: "dh-release-gate", intuition: "정상 두 사람뿐 아니라 중간자·뒤바뀐 역할·복제된 난수에서도 같은 실패와 key receipt가 나오는지 먼저 시험합니다.", workedExample: "Pinned RFC/library/suite에서 vectors, malformed/all-zero, role swap, downgrade, replay, bad auth, confirmation failure, RNG clone, restart를 재생합니다.", boundary: "한 X25519 vector나 평균 handshake latency만으로 transcript authenticity·key separation·secret erasure·rollback safety를 입증하지 않습니다." },
+    "conceptExplanations": [
+      {
+        "id": "diffie-hellman-key-agreement-flow",
+        "sectionId": "protocol",
+        "intuition": "공개한 두 값에 각자의 숨긴 수를 적용하면 같은 총 지수가 됩니다.",
+        "workedExample": "g=5, p=23, a=6, b=15이면 A=8, B=19이고 19⁶과 8¹⁵의 나머지는 2입니다.",
+        "boundary": "작은 차수 22는 보안 설정이 아닙니다. 같은 값 계산은 인증이나 양자내성을 보장하지 않습니다."
+      },
+      {
+        "id": "dh-public-value-validation",
+        "sectionId": "public-validation",
+        "intuition": "상대가 보낸 바이트를 선택한 함수의 입력 규칙으로 해석합니다.",
+        "workedExample": "RFC 7748의 두 공개값과 양쪽 공유값을 Node에서 재현하고 0 공개 입력의 오류를 확인했습니다.",
+        "boundary": "X25519의 비정규 입력 허용과 0 결과 처리를 다른 곡선의 검사 규칙으로 대체하지 않습니다."
+      },
+      {
+        "id": "authenticated-dh-transcript",
+        "sectionId": "authenticated-transcript",
+        "intuition": "공유값과 함께 누가 어떤 역할로 어떤 값을 승인했는지 확인합니다.",
+        "workedExample": "중간자가 19 대신 10, 8 대신 17을 보내면 Alice 쪽 공유값은 6, Bob 쪽은 15이고 중간자는 둘을 압니다.",
+        "boundary": "각 구간의 키 확인만으로 신원이 생기지 않습니다. 서명 또는 PSK MAC이 신원·역할·협상·공개값을 연결해야 합니다."
+      },
+      {
+        "id": "dh-kdf-key-schedule",
+        "sectionId": "kdf-key-schedule",
+        "intuition": "공유 재료를 처리한 뒤 방향과 용도마다 별도 바이트 키를 만듭니다.",
+        "workedExample": "Z를 0x02로 인코딩한 실험에서 방향 이름표를 바꾸면 a0d369b9…와 0e7f6976…로 키가 달라집니다.",
+        "boundary": "교육용 2의 비밀량을 늘리지 않습니다. 실제 해시·salt·info 인코딩과 길이를 규격으로 고정합니다."
+      },
+      {
+        "id": "dh-ephemeral-forward-secrecy-lifecycle",
+        "sectionId": "ephemeral-lifecycle",
+        "intuition": "매 대화의 임시 비밀을 지워 나중에 장기 키를 잃어도 과거 공유값을 되살리지 못하게 합니다.",
+        "workedExample": "스냅샷에 a=6이 남으면 공개된 B=19로 과거 Z=2를 다시 계산할 수 있습니다.",
+        "boundary": "난수 복제·덤프·세션 티켓·평문 보관은 별도 위험이며 고전 DH는 양자내성 합의가 아닙니다."
+      },
+      {
+        "id": "dh-deployment-release-gate",
+        "sectionId": "dh-release-gate",
+        "intuition": "정상 계산과 공격받은 대화가 각각 어떤 결과를 내는지 비교합니다.",
+        "workedExample": "같은 설정에서 공식 벡터, 잘못된 길이·0 결과, 역할 교환·재전송·잘못된 인증·난수 복제·재시작을 검사합니다.",
+        "boundary": "공식 벡터 한 건은 전체 인증·키 분리·메모리 폐기를 검증하지 않습니다. 성공과 실패 의미를 맞춘 뒤 성능을 비교합니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 assumptions", relation: "Exact group assumption·input validation·randomness를 재사용합니다.", concepts: ["dlp-assumption-family-separation", "ec-subgroup-validation", "csprng-computational-unpredictability"] },
-      { label: "01 agree", relation: "Validated public values에서 같은 raw element를 계산합니다.", concepts: ["dh-public-value-validation", "diffie-hellman-key-agreement-flow"] },
-      { label: "02 authenticate", relation: "Identity·role·negotiation과 A/B를 transcript에 결속합니다.", concepts: ["authenticated-dh-transcript"] },
-      { label: "03 derive·erase", relation: "용도별 keys를 만들고 ephemeral material을 폐기합니다.", concepts: ["dh-kdf-key-schedule", "dh-ephemeral-forward-secrecy-lifecycle"] },
-      { label: "04 release", relation: "Adversarial session parity 뒤 비용을 비교합니다.", concepts: ["dh-deployment-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "00 assumptions",
+        "relation": "계산 공간·입력 검사·예측 불가능한 비밀을 준비합니다.",
+        "concepts": [
+          "dlp-assumption-family-separation",
+          "ec-subgroup-validation",
+          "csprng-computational-unpredictability"
+        ]
+      },
+      {
+        "label": "01 agree",
+        "relation": "공개값에서 같은 공유값을 계산합니다.",
+        "concepts": [
+          "dh-public-value-validation",
+          "diffie-hellman-key-agreement-flow"
+        ]
+      },
+      {
+        "label": "02 authenticate",
+        "relation": "신원·역할·협상·공개값을 인증 기록에 연결합니다.",
+        "concepts": [
+          "authenticated-dh-transcript"
+        ]
+      },
+      {
+        "label": "03 derive·erase",
+        "relation": "용도별 키를 만들고 필요가 끝난 임시 비밀을 지웁니다.",
+        "concepts": [
+          "dh-kdf-key-schedule",
+          "dh-ephemeral-forward-secrecy-lifecycle"
+        ]
+      },
+      {
+        "label": "04 release",
+        "relation": "공격받은 대화의 실패 의미를 확인한 뒤 성능을 비교합니다.",
+        "concepts": [
+          "dh-deployment-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "F23*의 g=5,a=6,b=15 예에서 A,B와 양쪽 shared value를 계산하고 보안 예가 아닌 이유를 쓰세요.", answerChecklist: ["A=8", "B=19", "Alice 19^6=2", "Bob 8^15=2", "same g^ab", "order22 small", "toy only"], requiredConcepts: ["diffie-hellman-key-agreement-flow"], sectionId: "protocol" },
-      { level: "basic", question: "Raw DH output을 곧바로 AEAD key로 쓰면 빠지는 peer identity·context·direction·confirmation 항목을 설명하세요.", answerChecklist: ["not authenticated", "transcript context", "KDF extract", "role/purpose labels", "direction keys", "key confirmation", "encoding validation"], requiredConcepts: ["diffie-hellman-key-agreement-flow", "dh-kdf-key-schedule"], sectionId: "security" },
-      { level: "basic", question: "X25519 peer input 처리에서 고정할 byte/function contract와 all-zero output의 typed failure를 설명하세요.", answerChecklist: ["RFC7748", "32-byte input", "little-endian u", "scalar clamping/decoding", "specified noncanonical policy", "all-zero shared output", "typed reject", "test vectors"], requiredConcepts: ["dh-public-value-validation"], sectionId: "protocol" },
-      { level: "basic", question: "Mallory가 A와 B를 바꾸는 MITM 흐름에서 DH 등식은 왜 각각 성공하며 transcript authentication이 무엇을 막는지 쓰세요.", answerChecklist: ["Alice-Mallory key", "Mallory-Bob key", "two valid DH sessions", "identity absent", "bind A/B", "roles", "suite negotiation", "signature or PSK MAC"], requiredConcepts: ["authenticated-dh-transcript", "diffie-hellman-key-agreement-flow"], sectionId: "authenticated-transcript" },
-      { level: "basic", question: "HKDF Extract와 Expand의 역할을 나누고 같은 Z에서 client/server key가 달라지게 할 info를 설계하세요.", answerChecklist: ["IKM Z", "extract PRK", "salt rule", "expand", "transcript hash", "client/server role", "purpose/phase label", "output length"], requiredConcepts: ["dh-kdf-key-schedule"], sectionId: "kdf-key-schedule" },
-      { level: "basic", question: "Ephemeral DH가 forward secrecy를 제공하려면 생성·비재사용·폐기 단계와 성립하지 않는 저장 반례를 설명하세요.", answerChecklist: ["fresh CSPRNG scalar", "per session", "long-term auth separate", "erase scalar", "erase raw Z", "past traffic", "snapshot/crash dump", "ticket/plaintext boundary"], requiredConcepts: ["dh-ephemeral-forward-secrecy-lifecycle"], sectionId: "ephemeral-lifecycle" },
-      { level: "advanced", question: "DLP·CDH·DDH 사이의 algorithm implication과 hardness claim 방향을 구분하고 gap group 가능성을 설명하세요.", answerChecklist: ["DLP solution gives CDH", "CDH solution distinguishes DDH tuple", "hard DLP alone not hard CDH", "hard DDH implies hard CDH", "gap group", "exact group", "protocol property"], requiredConcepts: ["dlp-assumption-family-separation", "diffie-hellman-key-agreement-flow"], sectionId: "security" },
-      { level: "advanced", question: "Unknown-key-share·role reflection·downgrade를 막는 authenticated transcript schema와 canonical serialization을 설계하세요.", answerChecklist: ["protocol/version", "suite", "client/server identities", "roles", "A/B", "group/domain", "length-prefix canonical encoding", "signature/PSK MAC", "transcript hash", "reject mismatch"], requiredConcepts: ["authenticated-dh-transcript", "dh-kdf-key-schedule"], sectionId: "authenticated-transcript" },
-      { level: "advanced", question: "Generic EC validation과 RFC 7748 X25519 acceptance를 무리하게 통합하지 않는 adapter·test 경계를 설계하세요.", answerChecklist: ["primitive ID", "RFC-specific decoding", "noncanonical acceptance policy", "all-zero output", "generic on-curve not exposed", "malformed length", "official vectors", "typed outcome", "no cross-curve rule"], requiredConcepts: ["dh-public-value-validation", "dh-deployment-release-gate"], sectionId: "dh-release-gate" },
-      { level: "advanced", question: "DH stack 교체의 version receipt·MITM·KDF·RNG clone·crash/restart·rollback release matrix를 작성하세요.", answerChecklist: ["protocol/library version", "curve/suite", "credential/transcript schema", "official vectors", "malformed/all-zero", "MITM/downgrade/role swap", "KDF labels/key parity", "bad confirmation", "RNG clone/replay", "secret erasure/restart", "performance last", "rollback"], requiredConcepts: ["dh-deployment-release-gate", "dh-ephemeral-forward-secrecy-lifecycle", "authenticated-dh-transcript"], sectionId: "dh-release-gate" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "g=5, p=23, a=6, b=15에서 공개값과 공유값을 계산하세요.",
+        "answerChecklist": [
+          "A=8",
+          "B=19",
+          "19⁶ mod 23=2",
+          "8¹⁵ mod 23=2",
+          "총 지수 90",
+          "차수 22의 교육용 사례"
+        ],
+        "sectionId": "protocol",
+        "requiredConcepts": [
+          "diffie-hellman-key-agreement-flow"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "공유값 2가 실제 암호화 키와 다른 이유를 설명하세요.",
+        "answerChecklist": [
+          "입력 확인",
+          "상대 인증",
+          "KDF 추출·확장",
+          "방향·용도 이름표",
+          "약한 2의 비밀량은 늘지 않음"
+        ],
+        "sectionId": "kdf-key-schedule",
+        "requiredConcepts": [
+          "diffie-hellman-key-agreement-flow",
+          "dh-kdf-key-schedule"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "X25519에서 고정할 입력 규칙과 0 결과의 의미를 설명하세요.",
+        "answerChecklist": [
+          "32바이트",
+          "낮은 자리 바이트부터 u 좌표 읽기",
+          "스칼라 비트 조정",
+          "RFC의 비정규 입력 허용",
+          "작은 차수 입력의 0 공유값",
+          "상위 규격의 중단 정책"
+        ],
+        "sectionId": "public-validation",
+        "requiredConcepts": [
+          "dh-public-value-validation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "중간자가 10과 17을 대신 보냈을 때 두 구간의 공유값을 계산하세요.",
+        "answerChecklist": [
+          "Alice 10⁶=6",
+          "중간자 8³=6",
+          "Bob 17¹⁵=15",
+          "중간자 19⁷=15",
+          "신원·역할·협상·공개값을 인증"
+        ],
+        "sectionId": "authenticated-transcript",
+        "requiredConcepts": [
+          "diffie-hellman-key-agreement-flow",
+          "authenticated-dh-transcript"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "HKDF의 Extract와 Expand 입력을 나누어 설명하세요.",
+        "answerChecklist": [
+          "salt와 Z",
+          "PRK",
+          "info에 방향·목적·문맥",
+          "출력 길이",
+          "DH에서 추출 생략하지 않음",
+          "대화 해시 자체는 인증 아님"
+        ],
+        "sectionId": "kdf-key-schedule",
+        "requiredConcepts": [
+          "dh-kdf-key-schedule"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "전방향 안전성에 필요한 생성·폐기와 스냅샷 반례를 설명하세요.",
+        "answerChecklist": [
+          "매 대화 새 비밀",
+          "장기 인증 키와 분리",
+          "성공·실패 뒤 비밀과 Z 폐기",
+          "a=6 보관이면 B=19로 Z=2 복원",
+          "티켓·평문은 별도"
+        ],
+        "sectionId": "ephemeral-lifecycle",
+        "requiredConcepts": [
+          "dh-ephemeral-forward-secrecy-lifecycle"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "DLP·CDH·DDH의 해결 가능성과 어렵다는 주장 방향을 구분하세요.",
+        "answerChecklist": [
+          "DLP 해결은 CDH 해결",
+          "CDH 해결은 DDH 판정",
+          "어려운 DLP만으로 어려운 CDH 결론 불가",
+          "어려운 DDH는 어려운 CDH 필요",
+          "군별 DDH 차이"
+        ],
+        "sectionId": "security",
+        "requiredConcepts": [
+          "diffie-hellman-key-agreement-flow"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "역할 교환·상대 혼동·약한 알고리즘 유도를 막는 기록을 설계하세요.",
+        "answerChecklist": [
+          "버전",
+          "알고리즘 협상",
+          "양쪽 신원·역할",
+          "공개 설정",
+          "A·B",
+          "길이와 순서를 정한 인코딩",
+          "서명 또는 PSK MAC",
+          "키 확인은 인증 문맥 안에서"
+        ],
+        "sectionId": "authenticated-transcript",
+        "requiredConcepts": [
+          "authenticated-dh-transcript",
+          "dh-kdf-key-schedule"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "일반 곡선 검사와 X25519 허용 규칙을 합칠 때의 오류를 설명하세요.",
+        "answerChecklist": [
+          "함수 식별",
+          "정확한 바이트 해석",
+          "비정규 입력 허용",
+          "0 결과 정책",
+          "다른 곡선 검사 복사 금지",
+          "잘못된 길이",
+          "공식 벡터와 실패 의미"
+        ],
+        "sectionId": "public-validation",
+        "requiredConcepts": [
+          "dh-public-value-validation",
+          "dh-deployment-release-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "DH 구현을 바꿀 때 정상 계산 외에 무엇을 비교해야 하나요?",
+        "answerChecklist": [
+          "버전·계산 공간",
+          "인증 키·기록 형식",
+          "공식 벡터",
+          "입력·역할·협상·재전송",
+          "KDF 키 분리",
+          "잘못된 인증·키 확인",
+          "난수 복제·재시작·비밀 폐기",
+          "실패 이유 구분",
+          "이전 버전의 안전성 검토"
+        ],
+        "sectionId": "dh-release-gate",
+        "requiredConcepts": [
+          "authenticated-dh-transcript",
+          "dh-ephemeral-forward-secrecy-lifecycle",
+          "dh-deployment-release-gate"
+        ]
+      }
     ],
-    papers: [
-      { title: "Diffie & Hellman · New Directions in Cryptography", href: "https://ee.stanford.edu/~hellman/publications/24.pdf", problem: "사전 shared secret 운반 없이 공개 통신에서 keying material 합의", contribution: "Public-key cryptography 방향과 exponentiation 기반 public-key distribution 아이디어 제시", assumptions: "선택 group에서 역문제와 shared value 계산이 공격자에게 어렵다는 전제", evidenceScope: "1976 원문의 key-distribution idea와 security problem setting", notClaim: "현대 encoding·peer authentication·KDF·forward-secrecy lifecycle을 표준화하지 않음", sectionId: "paper-diffie-hellman-1976" },
-      { title: "RFC 7748 · X25519 and X448", href: "https://www.rfc-editor.org/rfc/rfc7748.html", problem: "Modern elliptic-curve DH의 curve·scalar·byte function 상호운용", contribution: "X25519/X448 input/output encoding·ladder·DH procedure와 test vectors 제공", assumptions: "RFC의 scalar/u-coordinate acceptance와 all-zero output 처리 지침 준수", evidenceScope: "X25519/X448 primitive와 규정된 DH 사용 범위", notClaim: "Peer authentication·transcript KDF·모든 side-channel·application lifecycle을 해결하지 않음", sectionId: "paper-rfc7748-x25519" },
-      { title: "RFC 5869 · HKDF", href: "https://www.rfc-editor.org/rfc/rfc5869.html", problem: "DH output 같은 input keying material에서 용도별 strong keys 유도", contribution: "HMAC 기반 extract-then-expand·salt/info 의미와 test vectors 제공", assumptions: "선택 hash와 protocol-specific salt·info·output length 고정", evidenceScope: "HKDF construction과 key derivation building-block 범위", notClaim: "Peer identity·transcript authenticity·entropy 생성·secret erasure를 대신하지 않음", sectionId: "paper-rfc5869-hkdf" },
-      { title: "NIST SP 800-56A Rev. 3 · Pair-Wise Key Establishment", href: "https://doi.org/10.6028/NIST.SP.800-56Ar3", problem: "Finite-field·elliptic-curve discrete-log key establishment 절차 표준화", contribution: "Domain/key validation·scheme variants·derivation·confirmation requirement 제공", assumptions: "Rev.3 approved parameter와 compliance boundary; 2026 update planning 상태 재확인", evidenceScope: "표준이 정의한 pair-wise key-establishment schemes와 validation", notClaim: "RFC 7748 acceptance나 임의 application protocol 설계를 전부 대체하지 않음", sectionId: "paper-nist-80056a" },
+    "papers": [
+      {
+        "title": "Diffie & Hellman · New Directions in Cryptography",
+        "href": "https://ee.stanford.edu/~hellman/publications/24.pdf",
+        "problem": "사전 shared secret 운반 없이 공개 통신에서 keying material 합의",
+        "contribution": "Public-key cryptography 방향과 exponentiation 기반 public-key distribution 아이디어 제시",
+        "assumptions": "선택 group에서 역문제와 shared value 계산이 공격자에게 어렵다는 전제",
+        "evidenceScope": "649쪽 식 (7)~(12)에 q=23, α=5, Xᵢ=6, Xⱼ=15를 대입해 공유값 2를 대조합니다.",
+        "notClaim": "1976년 공격 비용 추정을 현재 보안 수준으로 쓰거나 현대 인증·바이트·KDF 전체 규격으로 간주하지 않습니다.",
+        "sectionId": "paper-diffie-hellman-1976"
+      },
+      {
+        "title": "RFC 7748 · X25519 and X448",
+        "href": "https://www.rfc-editor.org/rfc/rfc7748.html",
+        "problem": "Modern elliptic-curve DH의 curve·scalar·byte function 상호운용",
+        "contribution": "X25519/X448 input/output encoding·ladder·DH procedure와 test vectors 제공",
+        "assumptions": "RFC의 scalar/u-coordinate acceptance와 all-zero output 처리 지침 준수",
+        "evidenceScope": "§§5·6.1·7의 바이트 규칙과 공식 벡터를 확인하고 Node v24.13.0에서 공개값 둘·공유값 양쪽을 재현했습니다.",
+        "notClaim": "Peer authentication·transcript KDF·모든 side-channel·application lifecycle을 해결하지 않음",
+        "sectionId": "paper-rfc7748-x25519"
+      },
+      {
+        "title": "RFC 5869 · HKDF",
+        "href": "https://www.rfc-editor.org/rfc/rfc5869.html",
+        "problem": "DH output 같은 input keying material에서 용도별 strong keys 유도",
+        "contribution": "HMAC 기반 extract-then-expand·salt/info 의미와 test vectors 제공",
+        "assumptions": "선택 hash와 protocol-specific salt·info·output length 고정",
+        "evidenceScope": "§§2–3의 추출·확장과 info 의미를 확인하고 부록 A.1의 PRK·42바이트 출력을 실제 계산했습니다.",
+        "notClaim": "Peer identity·transcript authenticity·entropy 생성·secret erasure를 대신하지 않음",
+        "sectionId": "paper-rfc5869-hkdf"
+      },
+      {
+        "title": "NIST SP 800-56A Rev. 3 · Pair-Wise Key Establishment",
+        "href": "https://doi.org/10.6028/NIST.SP.800-56Ar3",
+        "problem": "Finite-field·elliptic-curve discrete-log key establishment 절차 표준화",
+        "contribution": "Domain/key validation·scheme variants·derivation·confirmation requirement 제공",
+        "assumptions": "Rev.3 approved parameter와 compliance boundary; 2026 update planning 상태 재확인",
+        "evidenceScope": "표준이 정의한 pair-wise key-establishment schemes와 validation",
+        "notClaim": "RFC 7748 acceptance나 임의 application protocol 설계를 전부 대체하지 않음",
+        "sectionId": "paper-nist-80056a"
+      }
     ],
+    "entryNote": "공개값 8·19를 교환해 같은 2를 얻는 사례를 따라가고, 입력 검사·인증·용도별 키 생성의 차이를 설명합니다."
   },
   "blockchain/uniswap-v2": {
     "entryLevel": true,
@@ -102531,7 +105398,7 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "GPIO2의 한 상승 에지를 가정하고 5·40·8·20·40·300·80 µs의 겹치지 않는 구간을 따라갑니다. 시간 상한은 설명용 가정이고 사건 비트와 SDK 호출 순서는 원문에서 확인합니다."
   },
   "embedded/timers-and-sampling": {
-    "coreIdea": "RP2040 1 µs 타이머에서 10000칸마다 GPIO26/ADC0를 읽는 가상 주기를 잡아 100 Hz 샘플·50 Hz 절반 경계를 구하고, 70 Hz 코사인이 30 Hz와 같은 이산 값을 남기는 원인 및 알람·변환 시각의 차이를 설명합니다.",
+    "coreIdea": "10 ms마다 읽는 두 가상 전압이 같은 목록을 만드는 사례에서 시작합니다. 목표 시각과 실제 읽기를 나누고 같은 시간표를 Pico SDK의 음수 반복 지연과 ADC 변환 함수에 대입합니다. 100 Hz 기록에서 30 Hz·70 Hz가 겹치는 이유와 원래 입력을 복원할 조건도 확인합니다.",
     "assumedKnowledge": [
       {
         "id": "interrupt-path-budget",
@@ -102569,15 +105436,15 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "rp2040-microsecond-timer",
         "sectionId": "timer",
         "intuition": "눈금은 CPU가 언제 대응했는지와 다릅니다.",
-        "workedExample": "목표 0,10000,20000 µs를 별도 절대 시각으로 둡니다.",
+        "workedExample": "목표 0·10000·20000 µs를 따로 두고 64비트 시간 계수기와 하위 32비트 알람 비교를 구분합니다.",
         "boundary": "타이머 1 µs 분해능을 샘플 지터 상한으로 해석하지 않습니다."
       },
       {
         "id": "absolute-periodic-deadline",
-        "sectionId": "timer",
+        "sectionId": "source-clock",
         "intuition": "기차 시각표는 늦게 도착했다고 모든 뒤 출발을 늦추지 않습니다.",
-        "workedExample": "10.4 ms의 늦은 ISR 뒤에도 다음 목표를 20 ms로 둡니다.",
-        "boundary": "여러 주기를 놓쳤을 때 건너뛰기·복구 정책이 필요합니다."
+        "workedExample": "이전 목표 10000, 콜백 시작 10400·종료 10420 µs에서 delay −10000은 다음 목표 20000, +10000은 20420입니다.",
+        "boundary": "등록 실패나 여러 목표를 놓친 경우를 별도로 처리합니다. 뒤늦은 콜백은 과거의 입력 값을 복원하지 못합니다."
       },
       {
         "id": "adc-conversion-start-boundary",
@@ -102597,7 +105464,7 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "sampled-cosine-alias",
         "sectionId": "alias",
         "intuition": "두 원래 파형이 정해진 시각마다 같은 높이에 닿습니다.",
-        "workedExample": "n=0…5의 30·70 Hz 코사인 샘플을 Viz에서 번갈아 비교합니다.",
+        "workedExample": "n=0…5의 정규화 값 1·−0.309·−0.809·0.809·0.309·−1이 두 코사인에서 같습니다. 같은 전압 변환을 적용해도 목록은 같습니다.",
         "boundary": "입력 위상·샘플 시각·다른 성분 조건이 바뀌면 이 단순 예와 달라집니다."
       },
       {
@@ -102766,9 +105633,9 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "Raspberry Pi, RP2040 Datasheet, Timer and SAR ADC",
         "href": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
         "problem": "주기 시각을 만들고 아날로그 입력을 디지털 값으로 바꿉니다.",
-        "contribution": "원본 535–537쪽의 1 µs 타이머·네 알람과 559–560쪽의 GPIO26/ADC0·48 MHz에서 96주기 변환입니다.",
+        "contribution": "build 3184e62-clean §4.6.1–4.6.3의 64비트 계수기·하위 32비트 알람과 §4.9.2.1의 채널 선택·START_ONCE·96주기 완료를 대조합니다.",
         "assumptions": "2 µs는 해당 ADC 클록의 변환 자체 조건입니다.",
-        "evidenceScope": "라즈베리 파이 공식 데이터시트 해당 쪽을 확인했습니다. 10 ms와 30/70 Hz는 가정입니다.",
+        "evidenceScope": "데이터시트의 실제 규칙과 입력 전압 제한을 읽었습니다. 10 ms, 400 µs 지연, 전압과 두 코사인 사례는 가정입니다.",
         "notClaim": "타이머 알람에서 샘플까지의 전체 지연이 2 µs로 보장된다는 뜻은 아닙니다.",
         "sectionId": "timer"
       },
@@ -102780,12 +105647,23 @@ export const ARTICLE_LEARNING: Readonly<
         "assumptions": "이상적인 대역 제한 신호와 등간격 샘플·재구성 조건입니다.",
         "evidenceScope": "MIT 공식 원본 PDF를 확인했습니다. 100 Hz·70 Hz 예시는 본문 계산입니다.",
         "notClaim": "실제 RP2040 센서에서 70 Hz가 측정됐다는 뜻은 아닙니다.",
-        "sectionId": "alias"
+        "sectionId": "source-model"
+      },
+      {
+        "title": "Pico SDK 2.2.0 · time.c·time.h·adc.h 고정 원문",
+        "href": "https://github.com/raspberrypi/pico-sdk/blob/a1438dff1d38bd9c65dbd693f0e5db4b9ae91779/src/common/pico_time/time.c",
+        "problem": "부호 있는 반복 지연이 다음 목표를 만드는 과정과 실제 ADC 한 번 읽기를 구분합니다.",
+        "contribution": "delay −10000의 첫 등록과 이전 목표 기준 갱신을 추적하고 adc_read의 시작·READY 대기·결과 반환에 연결합니다.",
+        "assumptions": "Pico SDK 2.2.0 commit a1438dff의 RP2040 경로이며 초기화와 입력 전압 조건을 맞춘 가정입니다.",
+        "evidenceScope": "전체 원문과 BSD 라이선스를 보존하며 표시 행에 같은 숫자를 대입했습니다. 보드 실측은 하지 않았습니다.",
+        "notClaim": "고정 주기 예약만으로 실제 포착 시각의 지터나 앨리어싱이 없어진다는 뜻은 아닙니다.",
+        "sectionId": "source-clock"
       }
-    ]
+    ],
+    "entryNote": "가정한 전압은 1.65 V 중심의 0.65–2.65 V 범위이며 입력 전원도 3.3 V로 둡니다. 코사인 값은 정규화한 수학 모형입니다. 실제 ADC 입력과 알람·변환 시각을 같은 것으로 가정하지 않습니다."
   },
   "embedded/serial-buses-and-tradeoffs": {
-    "coreIdea": "가상 네 바이트에서 I²C 레지스터 읽기 63클록=400kHz에 157.5 µs, SPI 명령+데이터 40클록=1MHz에 40 µs, UART 8N1 순수 페이로드 40비트=115200에 347.2 µs를 계산하고 서로 다른 거래와 제외한 대기를 명시합니다.",
+    "coreIdea": "센서 번호 0x48의 위치 0x10에서 네 바이트를 받는 가정 거래를 따라갑니다. 주소·위치·방향 변경·응답을 포함해 63클록을 세고 실제 SDK의 nostop·반복 START·마지막 STOP에 대응합니다. 다른 통신 방식은 거래 형식과 제외한 시간을 맞춰 비교합니다.",
     "assumedKnowledge": [
       {
         "id": "sample-rate-nyquist-boundary",
@@ -102821,9 +105699,9 @@ export const ARTICLE_LEARNING: Readonly<
     "conceptExplanations": [
       {
         "id": "i2c-address-ack-transaction",
-        "sectionId": "i2c",
+        "sectionId": "source-spec",
         "intuition": "주소로 장치를 고르고 매 바이트마다 계속할지 확인합니다.",
-        "workedExample": "주소+W, 위치, 주소+R, 네 데이터의 총 일곱 바이트 묶음을 셉니다.",
+        "workedExample": "API 주소 0x48에서 선 위의 주소+쓰기 0x90, 주소+읽기 0x91을 만들고 위치 0x10 뒤 네 결과를 받습니다. 마지막 NACK도 아홉 번째 클록을 씁니다.",
         "boundary": "실제 센서의 주소·레지스터 자동 증가는 장치 데이터시트가 정합니다."
       },
       {
@@ -102831,27 +105709,27 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "count",
         "intuition": "페이로드만 세면 실제 선로의 다른 칸을 빠뜨립니다.",
         "workedExample": "400 kHz에서 63/400000=157.5 µs, 100 kHz에서 630 µs입니다.",
-        "boundary": "START/STOP·클록 스트레칭·상승 시간·소프트웨어 대기는 제외했습니다."
+        "boundary": "START/STOP·스트레칭·소프트웨어 대기는 따로 셉니다. 실제 전체 클록 주기에 포함된 상승 시간을 다시 더하지 않습니다."
       },
       {
         "id": "i2c-clock-stretch-boundary",
         "sectionId": "count",
         "intuition": "선로 클록을 세어도 기다리는 시간을 셌다고 볼 수 없습니다.",
-        "workedExample": "157.5 µs에 클록 스트레칭 200 µs가 있으면 최소 357.5 µs 이상입니다.",
+        "workedExample": "추가 스트레칭 200 µs를 가정하면 클록 시간 157.5 µs와 합쳐 357.5 µs이며 다른 제어 시간은 아직 남습니다.",
         "boundary": "이 200 µs도 가정이며 대상 센서의 최대치를 따로 확인해야 합니다."
       },
       {
         "id": "spi-command-data-clocks",
         "sectionId": "spi",
         "intuition": "선택한 한 장치에 클록을 보내고 동시에 송수신합니다.",
-        "workedExample": "RP2040 SPI1의 한 핀 조합 GPIO8–11을 가정합니다.",
+        "workedExample": "명령 1바이트와 데이터 4바이트의 40클록을 1 MHz로 보내면 40 µs입니다. SPI1 GPIO8–11 조합은 가능한 핀 선택의 예입니다.",
         "boundary": "센서가 SPI를 지원하고 명령 형식이 같아야 거래가 성립합니다."
       },
       {
         "id": "uart-eight-n-one-frame",
         "sectionId": "uart",
         "intuition": "공유 클록 없이 약속한 속도로 한 글자씩 시작·끝을 표시합니다.",
-        "workedExample": "RP2040 UART0 TX/RX를 GPIO0/1에 두는 예입니다.",
+        "workedExample": "시작 1·데이터 8·정지 1비트, 패리티 없음으로 바이트당 10비트입니다. 네 바이트는 40비트이고 115200 bit/s에서 약 347.2 µs입니다.",
         "boundary": "주소·요청·오류 검사는 별도 상위 프로토콜이 필요합니다."
       },
       {
@@ -103025,11 +105903,11 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "NXP, UM10204 I²C-bus specification and user manual Rev. 7.0 (2021)",
         "href": "https://www.nxp.com/docs/en/user-guide/UM10204.pdf",
         "problem": "주소를 가진 여러 장치가 두 선을 공유하며 데이터와 응답을 교환합니다.",
-        "contribution": "원본 1·9–10·15쪽의 모드별 클록, 매 바이트 아홉 번째 ACK 클록, 반복 START와 클록 스트레칭입니다.",
+        "contribution": "Rev. 7.0 §3.1.4–3.1.6·3.1.9–3.1.10, 인쇄 9–14쪽에서 시작·종료·응답·스트레칭·결합 거래의 방향 변경을 대조합니다.",
         "assumptions": "가상 센서가 7비트 주소·한 바이트 위치·4바이트 연속 읽기를 지원합니다.",
         "evidenceScope": "NXP 공식 규격 PDF의 해당 쪽을 확인했습니다. 63클록 거래와 400 kHz는 본문 가정입니다.",
         "notClaim": "157.5 µs가 센서 전체 응답의 규격상 보장값이라는 뜻은 아닙니다.",
-        "sectionId": "i2c"
+        "sectionId": "source-spec"
       },
       {
         "title": "Raspberry Pi Pico SDK Hardware APIs, I2C/SPI/UART/GPIO",
@@ -103040,8 +105918,19 @@ export const ARTICLE_LEARNING: Readonly<
         "evidenceScope": "라즈베리 파이 공식 SDK 문서의 해당 API 설명을 확인했습니다. 거래 바이트 수는 본문 가정입니다.",
         "notClaim": "SPI·UART 가상 거래가 I²C 센서 읽기와 기능상 완전히 같다는 뜻은 아닙니다.",
         "sectionId": "uart"
+      },
+      {
+        "title": "Pico SDK 2.2.0 · 고정 commit a1438dff의 i2c.c·i2c.h",
+        "href": "https://github.com/raspberrypi/pico-sdk/blob/a1438dff1d38bd9c65dbd693f0e5db4b9ae91779/src/rp2_common/hardware_i2c/i2c.c",
+        "problem": "위치 한 바이트를 보낸 뒤 같은 센서에서 네 바이트를 받는 실제 드라이버 경로를 확인합니다.",
+        "contribution": "7비트 주소·nostop·restart_on_next·마지막 STOP·읽기 결과와 _until의 절대 시각을 같은 거래에 적용합니다.",
+        "assumptions": "정상 초기화와 한 프로그램의 버스 소유를 가정하고 센서의 레지스터 형식은 별도로 정했습니다.",
+        "evidenceScope": "고정 원본 전체와 라이선스를 보존하고 쓰기 길이 1·읽기 길이 4를 실제 분기에 대입했습니다.",
+        "notClaim": "센서에서 실행한 통신 결과나 157.5 µs의 실제 완료 시간 보장을 제시한 것은 아닙니다.",
+        "sectionId": "source-read"
       }
-    ]
+    ],
+    "entryNote": "주소·위치·결과와 4바이트 연속 읽기 지원은 가정입니다. 157.5 µs는 정상 I²C 거래의 순수 클록 시간이며 실패·시간 제한·상대 응답과 실제 완료를 따로 확인합니다."
   },
   "embedded/scheduling-and-real-time": {
     "coreIdea": "가상 한 코어의 제어 P5/C1, 센서 P10/C2/D4, 로그 P50/C3에서 평균 CPU 점유율 46%를 구하고, 자원 대기 없을 때 센서 3ms 완료·1ms 여유와 로그 뮤텍스 2ms 잔여 때 5ms 완료·1ms 초과를 비교합니다.",
