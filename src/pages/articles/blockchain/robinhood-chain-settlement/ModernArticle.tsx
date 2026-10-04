@@ -23,7 +23,10 @@ export default function RobinhoodChainSettlementArticle() { const sidebar=useCod
 <p data-stage-bridge="picture" className="text-sm text-muted-foreground">수량은 보존되지만 단계마다 쓸 수 있는 장소가 다릅니다. 왜 기다림과 재확인이 필요한지 살펴봅니다.</p>
 </section>
 <section id="need" data-teach-level="2" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">5. 빠른 영수증과 L1 인출 대기에는 서로 다른 이유가 있다</h2>
-<p>첫 실행 영수증은 순서 제공자가 거래를 처리했다는 빠른 결과입니다. 아직 Ethereum에 게시되지 않은 단계에서는 그 순서에 의존합니다. 게시한 L1 블록이 확정되면 자료의 순서를 되돌리기 훨씬 어려워지지만, canonical 인출 메시지를 집행하려면 별도의 이의 제기 기간이 남습니다.</p><p>공식 문서는 빠른 확인을 1초 미만, 게시는 수분, 게시 후 Ethereum 확정은 약 13분으로 안내합니다. 이는 통상 지연 안내이며 모든 거래의 기한을 보장하는 값이 아닙니다. 인출의 약 7일은 이 13분을 일곱 날 반복하는 과정이 아닙니다.</p><CitationBlock source="Robinhood Chain · Transaction finality" citeKey={2} href="https://docs.robinhood.com/chain/transaction-finality/">단계별 확인과 canonical 인출의 7일 대기를 구분합니다. 통상 지연은 장애·혼잡에 따라 달라집니다.</CitationBlock>
+<p>
+            첫 실행 영수증은 순서 제공자가 거래를 처리했다는 빠른 결과입니다. 아직 Ethereum에 게시되지 않은 단계에서는 그 순서에 의존합니다. 게시한 L1 블록이 확정되면 자료의
+            순서를 되돌리기 훨씬 어려워지지만 canonical 인출 메시지를 집행하려면 별도의 이의 제기 기간이 남습니다.
+          </p><p>공식 문서는 빠른 확인을 1초 미만, 게시는 수분, 게시 후 Ethereum 확정은 약 13분으로 안내합니다. 이는 통상 지연 안내이며 모든 거래의 기한을 보장하는 값이 아닙니다. 인출의 약 7일은 이 13분을 일곱 날 반복하는 과정이 아닙니다.</p><CitationBlock source="Robinhood Chain · Transaction finality" citeKey={2} href="https://docs.robinhood.com/chain/transaction-finality/">단계별 확인과 canonical 인출의 7일 대기를 구분합니다. 통상 지연은 장애·혼잡에 따라 달라집니다.</CitationBlock>
 <p data-stage-bridge="need" className="text-sm text-muted-foreground">기다림의 이유가 달랐습니다. 각 단계에 사용되는 이름을 붙입니다.</p>
 </section>
 <section id="names" data-teach-level="3" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">6. Soft confirmation·L1 finality·withdrawal을 구별한다</h2>

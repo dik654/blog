@@ -709,23 +709,89 @@
     },
     {
       "route": "embedded/interrupts-and-latency-budget",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 3,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "숫자 사례는 있으나 용어 전 구조·구성 이유·원문 함수 직접 적용 부족",
+          "초기화와 사건 소거 책임 및 경계의 설명 보완 필요"
+        ],
+        "fixture": "한 GPIO2 상승 에지, event8·INTR bit11 mask0x800·IRQ13; 가정한7구간5/40/8/20/40/300/80us, 마감1000us.",
+        "changes": "핀 쪽 사건과 NVIC pending을 별도로 그리고 같은 사건을 소거→콜백→일반 작업으로 추적합니다. SDK가 콜백 전에 소거하는 사실과 이중 소거의 새 에지 손실 가능성을 교정했습니다. ISR 카운터로 합쳐진 사건을 복원할 수 없는 한계와 관측 최댓값/보장 상한도 구별했습니다.",
+        "answerCoverage": "기초6·심화4 선독 후 실제 답 위치 대조. IRQ 폴링 답을 names로, MCU 원자쓰기 답을 race로 이동. 기존 개념·선수 조건 보존.",
+        "sourceApplication": "동일 SDK gpio.c153–170·198–203 및 gpio.h573–576 원문에 gpio2/event8을 대입했습니다. ArmDUI0662A§4.2.6·4.2.7과 RP2040§2.3.2·2.19.3·2.19.5를 대조했습니다.",
+        "verification": "정수몫2/8=0,8<<(4*2)=0x800; ISR73·읽기113·완료493·여유507, 대기600에서1053·초과53을 검산했습니다.",
+        "humanize": {
+          "roundTrip": true,
+          "finalGate": "추출 roundtrip 동일·수치/마커 보존. P3 함수 인자8)을 각주로 오인한 WARN은 chains 독립 finalize 승인. 권고 문법 수정도 반영."
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "numberedSections": 13,
+          "predictionQuestions": 3,
+          "codePanelsPerViewport": 3,
+          "interactiveStatesPerViewport": 2,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "frameShift": 0,
+          "report": "/tmp/world-browser-audit/teach-root-embedded-summary.json",
+          "screens": "/tmp/teach-all/root-embedded-screens/",
+          "fileTree": "/tmp/teach-all/root-embedded-filetree.json"
+        },
+        "remaining": "전체799글 개선 후 전역 빌드·배포·운영 확인."
+      }
     },
     {
       "route": "embedded/mcu-memory-map-and-registers",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 3,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "숫자 사례는 있으나 용어 전 구조·구성 이유·원문 함수 직접 적용 부족",
+          "초기화와 사건 소거 책임 및 경계의 설명 보완 필요"
+        ],
+        "fixture": "RP2040 GPIO5, mask0x20; OUT_SET0xD0000014·CLR0xD0000018·OE_SET0xD0000024; 초기 리셋 조건과 두 코어의0x01→0x21/0x41 사례.",
+        "changes": "주소와 값의 역할, 값 준비·핀 기능·출력 허용의 독립 조건을 먼저 그린 뒤 실제 SDK 함수에 gpio5를 대입합니다. CTRL override를 모두 보존한다는 오해를 고치고 SET/CLR의 한계와 SIO 원자 별칭 예외를 설명했습니다.",
+        "answerCoverage": "기초6·심화4 선독 후 실제 답 위치 대조. IRQ 폴링 답을 names로, MCU 원자쓰기 답을 race로 이동. 기존 개념·선수 조건 보존.",
+        "sourceApplication": "SDK2.2.0 commit a1438dff 전체 gpio.c·gpio.h·LICENSE를 upstream bytes와 SHA256으로 대조. init273–277, function35–53, direction1350–1359, OE1218–1224, put1155–1164, SET918–924행. RP2040 build3184e62-clean 주소·SIO·패드 표 대조.",
+        "verification": "0x20 및 세 SIO 주소·CTRL주소를 검산하고 두 SET 쓰기의0x61과 전체 덮어쓰기 손실을 비교했습니다.",
+        "humanize": {
+          "roundTrip": true,
+          "finalGate": "추출 roundtrip 동일, 직접 윤문 gate PASS. 제외된 속성·코드 주석 표시 문구도 별도 수동 검수."
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "numberedSections": 14,
+          "predictionQuestions": 3,
+          "codePanelsPerViewport": 6,
+          "interactiveStatesPerViewport": 4,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "frameShift": 0,
+          "report": "/tmp/world-browser-audit/teach-root-embedded-summary.json",
+          "screens": "/tmp/teach-all/root-embedded-screens/",
+          "fileTree": "/tmp/teach-all/root-embedded-filetree.json"
+        },
+        "remaining": "전체799글 개선 후 전역 빌드·배포·운영 확인."
+      }
     },
     {
       "route": "embedded/scheduling-and-real-time",
@@ -3090,7 +3156,7 @@
     }
   ],
   "counts": {
-    "unreviewed": 209,
-    "rewritten-local-verified": 16
+    "unreviewed": 207,
+    "rewritten-local-verified": 18
   }
 }

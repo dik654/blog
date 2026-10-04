@@ -38,7 +38,11 @@ export default function RobinhoodChainBlobDemandArticle(){
 <p>시작 초과분을 0으로 두고 실행 비용에 연동된 하한 분기가 작동하지 않는다고 가정합니다. 18개 블록 뒤 초과분은 max(0,0+18−14)=4입니다. 이어 10개 뒤에는 max(0,4+10−14)=0, 이후 6개와 6개 뒤에도 0입니다. 이는 초과량의 교육용 환산 계산입니다. 실제 blob 최소가격은 gas 단위 정수 함수와 활성 포크의 update fraction으로 계산하므로 4를 곧바로 가격 4배라고 읽지 않습니다.</p>
 <p>EIP-7918은 실행 base fee에 비해 blob 가격이 낮으면 다른 증가식을 적용합니다. 같은 첫 18개에 그 조건이 성립하면 환산 초과분은 18×(21−14)/21=6입니다. 따라서 사용량 18·10·6·6만으로 실제 초과분 경로를 확정할 수 없습니다. 부모 블록의 실행·blob base fee와 활성 규칙도 필요합니다.</p>
 <CitationBlock source="EIP-7918 · Blob base fee bounded by execution cost" citeKey={6} href="https://eips.ethereum.org/EIPS/eip-7918">Final 원문의 calc_excess_blob_gas 분기를 대조했습니다. 일반 목표 차감 경로와 실행 비용에 연동된 하한 경로를 구분합니다.</CitationBlock>
-<p>실제 연구에서는 체인 ID, 시작·끝 블록과 hash, timestamp, 재조직 처리 기준을 먼저 고정합니다. blob 거래의 versioned hash 수를 블록별로 합하고, 공식 배포 정보와 게시 주소·inbox 경로로 롤업을 분류합니다. 미분류 자료도 전체 분모에 남깁니다. A의 20과 나머지 20이 전체 40과 맞는지 확인한 뒤 비율을 계산합니다.</p>
+<p>
+            실제 연구에서는 체인 ID, 시작·끝 블록과 hash, timestamp, 재조직 처리 기준을 먼저 고정합니다. blob 거래의 versioned hash 수를 블록별로 합하고
+            공식 배포 정보와 게시 주소·inbox 경로로 롤업을 분류합니다. 미분류 자료도 전체 분모에 남깁니다. A의 20과 나머지 20이 전체 40과 맞는지 확인한 뒤 비율을
+            계산합니다.
+          </p>
 <p>Robinhood 공식 연결 문서는 mainnet 4663, testnet 46630을 구분하고 Ethereum blobs를 데이터 가용성 수단으로 명시합니다. 하지만 그 문서는 이 사례의 20개나 과거 3일 평균을 증명하지 않습니다. 예전 본문의 6.4 및 특정 체인이 증가를 만들었다는 서술은 재현 가능한 쿼리·블록 범위를 확보하지 못했으므로 관측값으로 유지하지 않습니다.</p>
 <CitationBlock source="Robinhood Chain · Connecting" citeKey={1} href="https://docs.robinhood.com/chain/connecting/">2026-10-04 공식 네트워크와 DA 설명. 사용량 기여 비율의 관측 근거와 구분합니다.</CitationBlock>
 <p data-stage-bridge="robinhood-chain-concentration" className="text-sm text-muted-foreground">네 블록의 계산과 실제 자료에 필요한 항목을 연결했습니다. 다음은 목표 14를 어떤 원문에서 읽는지 확인합니다.</p></section>

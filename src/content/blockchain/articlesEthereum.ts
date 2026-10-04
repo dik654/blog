@@ -148,11 +148,59 @@ export const ethereumArticles: Article[] = [
     title: "Account Abstraction 기초",
     subcategory: "eth-core",
     sections: [
-      { id: "overview", title: "EOA vs CA" },
-      { id: "erc4337", title: "ERC-4337 아키텍처" },
-      { id: "native-aa", title: "Native AA" },
-      { id: "use-cases", title: "활용 사례" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 잠깐 쓰는 열쇠에 지갑 전체를 맡기지 않으려면"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 요청을 모으는 쪽과 돈을 움직이는 쪽이 다릅니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 잔액 200에서 40을 보내고 권한 60을 남깁니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 7번 요청은 권한 검사와 비용 정산을 통과합니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 서명이 맞아도 금액과 상대를 확인해야 합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 이제 UserOperation·bundler·EntryPoint에 이름을 붙입니다"
+  },
+  {
+    "id": "erc4337",
+    "title": "7. 7번 요청이 접수에서 실제 송금으로 갑니다"
+  },
+  {
+    "id": "prefund",
+    "title": "8. 예약한 0.003 ETH 중 0.002 ETH를 돌려줍니다"
+  },
+  {
+    "id": "source",
+    "title": "9. 실제 코드는 검증과 실행을 따로 호출합니다"
+  },
+  {
+    "id": "native-aa",
+    "title": "10. EIP-7702는 기존 주소에 실행할 코드를 연결합니다"
+  },
+  {
+    "id": "use-cases",
+    "title": "11. 배치와 패스키에도 각각의 권한 검사가 필요합니다"
+  },
+  {
+    "id": "recovery",
+    "title": "12. 잃어버린 열쇠를 복구하면 이전 권한도 정리합니다"
+  },
+  {
+    "id": "limits",
+    "title": "13. 접수 성공, 송금 성공, 비용 확정을 따로 확인합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/aa-fundamentals"),
   },
   /* ── Reth (EL) ── */

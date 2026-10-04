@@ -245,11 +245,47 @@ export const dlFoundationArticles: Article[] = [
     title: "함수와 합성: input→output 규칙을 읽는 법",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "Input과 output" },
-      { id: "shape", title: "Domain과 codomain" },
-      { id: "composition", title: "함수 합성의 실행 순서" },
-      { id: "boundaries", title: "순서·shape·domain 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 계산 두 개를 연결할 때 무엇을 확인해야 할까"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 밖에서는 2가 들어가 49가 나온다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 2를 세 배 하고 1을 더한 뒤 제곱한다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 앞 계산의 결과가 다음 계산의 재료가 된다"
+  },
+  {
+    "id": "need",
+    "title": "5 · 순서와 허용 범위를 따로 검사하는 이유"
+  },
+  {
+    "id": "names",
+    "title": "6 · 계산 규칙은 함수, 규칙의 연결은 합성이다"
+  },
+  {
+    "id": "shape",
+    "title": "7 · 선언한 출력 집합과 실제 나오는 값은 다르다"
+  },
+  {
+    "id": "composition",
+    "title": "8 · 안쪽 g를 계산한 다음 바깥 f를 계산한다"
+  },
+  {
+    "id": "source",
+    "title": "9 · 교재의 합성 정의에 같은 2를 넣는다"
+  },
+  {
+    "id": "boundaries",
+    "title": "10 · 괄호를 바꾸는 것과 실행 순서를 바꾸는 것은 다르다"
+  }
+],
     component: () => import("@/pages/articles/ai/math-functions-composition"),
   },
   {

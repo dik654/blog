@@ -6,12 +6,63 @@ export const embeddedArticles: Article[] = [
     title: "주소 한 칸이 GPIO 출력을 바꾸는 방법",
     subcategory: "embedded-hardware",
     sections: [
-      { id: "overview", title: "주소에 값을 쓰면 칩 바깥의 한 핀이 바뀝니다" },
-      { id: "map", title: "주소는 기준 주소와 레지스터 오프셋을 더해 찾습니다" },
-      { id: "mask", title: "GPIO5만 고르는 값은 0x20입니다" },
-      { id: "mux", title: "핀의 기능 선택과 출력 허용은 별도의 문입니다" },
-      { id: "readback", title: "출력 래치를 읽는 것과 핀 전압을 읽는 것은 다릅니다" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 프로그램의 한 번 쓰기가 칩 바깥의 신호를 바꿉니다"
+  },
+  {
+    "id": "outside",
+    "title": "2. 주소와 값을 보내고 선택한 핀의 상태를 확인합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 5번을 고르는 0x20을 정해진 주소에 씁니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 저장할 값·핀 기능·출력 허용을 따로 준비합니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 어느 동작인지와 어느 핀인지 나누면 다른 출력을 유지할 수 있습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 주소로 찾는 장부와 출력 경로에 이름을 붙입니다"
+  },
+  {
+    "id": "map",
+    "title": "7. 기준 주소와 오프셋을 더해 동작 주소를 찾습니다"
+  },
+  {
+    "id": "mask",
+    "title": "8. GPIO5의 같은 마스크를 SET·CLR에 적용합니다"
+  },
+  {
+    "id": "mux",
+    "title": "9. 핀의 기능 선택과 출력 허용은 별도로 맞춥니다"
+  },
+  {
+    "id": "source-init",
+    "title": "10. 실제 gpio_init(5)는 출력부터 끈 뒤 낮은 값을 준비합니다"
+  },
+  {
+    "id": "source-direction",
+    "title": "11. 출력 허용 함수도 같은 0x20을 계산합니다"
+  },
+  {
+    "id": "source-output",
+    "title": "12. gpio_put(5,true)의 끝에서 주소에 0x20이 쓰입니다"
+  },
+  {
+    "id": "race",
+    "title": "13. 한 비트 쓰기는 충돌을 줄이지만 핀의 소유권까지 정하지 않습니다"
+  },
+  {
+    "id": "readback",
+    "title": "14. 출력 래치를 읽는 것과 핀 입력을 읽는 것은 다릅니다"
+  }
+],
     component: () => import("@/pages/articles/embedded/mcu-memory-map-and-registers"),
   },
   {
@@ -19,12 +70,59 @@ export const embeddedArticles: Article[] = [
     title: "인터럽트가 와도 마감 시각을 놓치는 이유",
     subcategory: "embedded-hardware",
     sections: [
-      { id: "overview", title: "센서가 준비됐다는 신호를 놓치지 않으려면" },
-      { id: "route", title: "GPIO 에지에서 처리 함수까지는 두 곳의 상태를 지납니다" },
-      { id: "handler", title: "처리 함수에서는 신호를 접수하고 오래 걸리는 읽기는 밖으로 넘깁니다" },
-      { id: "budget", title: "마감 1 ms에서 예제의 여유는 507 µs입니다" },
-      { id: "stress", title: "대기가 길어지면 처리 코드는 같아도 마감을 놓칩니다" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 센서가 알린 때부터 값을 쓸 수 있는 때까지 셉니다"
+  },
+  {
+    "id": "outside",
+    "title": "2. 입력 변화가 읽을 작업으로 이어지고 마감 전에 끝나야 합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 일곱 구간을 더하면 493 µs입니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 사건 기록과 처리 대기 기록은 서로 다른 곳에 있습니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 짧게 접수하는 일과 오래 읽는 일을 나눕니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 기록·대기·접수의 역할에 이름을 붙입니다"
+  },
+  {
+    "id": "route",
+    "title": "7. GPIO2의 에지 기록이 코어의 대기 요청으로 이어집니다"
+  },
+  {
+    "id": "handler",
+    "title": "8. 20 µs 안에 접수하고 300 µs 읽기를 일반 작업에 넘깁니다"
+  },
+  {
+    "id": "source-enable",
+    "title": "9. 원문은 콜백을 먼저 등록한 뒤 사건 전달을 켭니다"
+  },
+  {
+    "id": "source-dispatch",
+    "title": "10. 같은 사건은 소거된 뒤 사용자 콜백으로 전달됩니다"
+  },
+  {
+    "id": "budget",
+    "title": "11. 같은 사건의 완료 시각과 남은 507 µs를 계산합니다"
+  },
+  {
+    "id": "stress",
+    "title": "12. 대기가 길어지면 처리 코드는 같아도 마감을 놓칩니다"
+  },
+  {
+    "id": "limits",
+    "title": "13. 에지 비트 하나는 사건 횟수나 최악 시간의 증명서가 아닙니다"
+  }
+],
     component: () => import("@/pages/articles/embedded/interrupts-and-latency-budget"),
   },
   {

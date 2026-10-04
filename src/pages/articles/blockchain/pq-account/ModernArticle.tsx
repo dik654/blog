@@ -51,7 +51,11 @@ export default function ModernArticle() {
   </section>
   <section id="account-abstraction-validation" data-teach-level="4" className="scroll-mt-20 space-y-5">
    <h2 className="text-2xl font-bold">7. 검증을 통과한 0.1 ETH 요청을 실행하고 정산한다</h2>
-   <p>지갑은 sender A, nonce 7, B에게 0.1 ETH를 보내는 callData, gas와 비용 조건을 만듭니다. 현재 공개 구현은 이 구조의 해시와 EIP-712 domain을 결합합니다. domain에는 이름 ERC4337, 버전 1, chainId와 검증 계약 주소가 들어갑니다. 서명 자체는 이 구조 해시에 넣지 않으며, 배포·paymaster가 있는 요청에는 해당 버전의 추가 인코딩 규칙을 따라야 합니다.</p>
+   <p>
+            지갑은 sender A, nonce 7, B에게 0.1 ETH를 보내는 callData, gas와 비용 조건을 만듭니다. 현재 공개 구현은 이 구조의 해시와 EIP-712
+            domain을 결합합니다. domain에는 이름 ERC4337, 버전 1, chainId와 검증 계약 주소가 들어갑니다. 서명 자체는 이 구조 해시에 넣지 않으며
+            배포·paymaster가 있는 요청에는 해당 버전의 추가 인코딩 규칙을 따라야 합니다.
+          </p>
    <p>bundler의 사전 검사를 통과하면 handleOps가 검증 단계에 들어갑니다. 계정의 validateUserOp는 허용된 EntryPoint 호출인지 확인하고 서명을 검사하며 필요한 부족 예치금을 보냅니다. 이 사례는 deposit이 충분해 추가 입금이 0입니다. EntryPoint는 0.003 ETH 예약을 차감하고 nonce를 검사·갱신한 뒤 반환된 서명·유효 기간 등의 결과를 검사합니다.</p>
    <p>BaseAccount의 _validateNonce는 계정별 정책을 붙이는 빈 확장점입니다. 실제 유일성은 EntryPoint가 부르는 NonceManager가 담당합니다. key=0의 현재 sequence 7과 요청 7이 같아 다음 값을 8로 바꿉니다. 이후 검증이 실패해 전체 handleOps가 revert하면 예치금과 이 변경도 되돌아갑니다.</p>
    <p>모든 검증을 마치면 EntryPoint가 A의 callData를 호출합니다. A의 execute가 자기 잔액에서 B에게 0.1 ETH를 보냅니다. 여기까지가 송금 잔액을 바꾸는 단계입니다.</p>

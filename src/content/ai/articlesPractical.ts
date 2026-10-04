@@ -1134,11 +1134,47 @@ const strategyArticles: Article[] = [
     title: "Model-selection bias: noisy score의 최대값을 고를 때",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "True score와 observed score" },
-      { id: "maximum", title: "Maximum-selection optimism" },
-      { id: "budget", title: "Candidate 수와 noise" },
-      { id: "boundary", title: "Independent final evaluation" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 가장 높은 점수에는 실력과 우연이 함께 들어갑니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 평가하고 고르고 별도 자료에서 다시 확인합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 평균이 0.70인 세 후보가 서로 다른 점수를 받습니다"
+  },
+  {
+    "id": "inside-selection",
+    "title": "4. 후보별 평균과 이번의 흔들림을 나눕니다"
+  },
+  {
+    "id": "why-fresh",
+    "title": "5. 같은 점수를 다시 읽어도 새 검증이 되지 않습니다"
+  },
+  {
+    "id": "selection-terms",
+    "title": "6. 평균과 잡음과 최고값에 이름을 붙입니다"
+  },
+  {
+    "id": "maximum",
+    "title": "7. 평균이 0인 흔들림도 최고값을 남기면 달라집니다"
+  },
+  {
+    "id": "paper-model-selection-bias",
+    "title": "8. 논문이 지적한 선택 기준의 흔들림을 사례에 적용합니다"
+  },
+  {
+    "id": "boundary",
+    "title": "9. 후보 수만으로 편향의 크기를 정할 수 없습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "10. 최고값과 평균을 구분할 수 있나요"
+  }
+],
     component: () => import("@/pages/articles/ai/model-selection-bias"),
   },
   {
@@ -1159,11 +1195,47 @@ const strategyArticles: Article[] = [
     title: "Competition baseline: 첫 end-to-end artifact 만들기",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "작지만 완결된 baseline" },
-      { id: "coverage", title: "OOF row coverage" },
-      { id: "artifact", title: "Prediction·metric·submission lineage" },
-      { id: "boundary", title: "재현과 품질의 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 다섯 행의 예측이 빠짐없이 같은 실행에서 나와야 합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 입력과 분할과 예측과 제출을 하나로 연결합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 예측은 다섯 개지만 3번 행이 빠졌습니다"
+  },
+  {
+    "id": "inside-baseline",
+    "title": "4. 행 이름과 학습에 쓴 행을 함께 보관합니다"
+  },
+  {
+    "id": "why-coverage",
+    "title": "5. 총개수 검사와 누수 검사는 다른 오류를 찾습니다"
+  },
+  {
+    "id": "baseline-terms",
+    "title": "6. 행별 예측과 실행 기록에 이름을 붙입니다"
+  },
+  {
+    "id": "coverage",
+    "title": "7. 분할을 고쳐 모든 행의 횟수를 1로 만듭니다"
+  },
+  {
+    "id": "baseline-source",
+    "title": "8. 공식 API의 한 번씩 평가하는 조건에 대응합니다"
+  },
+  {
+    "id": "boundary",
+    "title": "9. 제출 순서와 환경까지 같은 실행에 연결합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "10. 예측 개수와 올바른 평가를 구분할 수 있나요"
+  }
+],
     component: () => import("@/pages/articles/ai/competition-baseline"),
   },
   {
@@ -1171,11 +1243,47 @@ const strategyArticles: Article[] = [
     title: "Paired experiment: 한 가설을 같은 fold에서 비교하기",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Failure slice에서 hypothesis까지" },
-      { id: "change", title: "한 축의 변경과 gate" },
-      { id: "paired-delta", title: "Fold별 paired delta" },
-      { id: "boundary", title: "상호작용·비용·불확실성" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 변경 하나가 좋아졌는지 같은 조건에서 비교합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 오류의 가설을 하나 정하고 짝지어 검사합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 다섯 차이의 평균은 0.0034입니다"
+  },
+  {
+    "id": "inside-pair",
+    "title": "4. 점수 두 개가 같은 평가 행을 가리켜야 합니다"
+  },
+  {
+    "id": "why-one-change",
+    "title": "5. 모델과 표현을 같이 바꾸면 원인을 나누기 어렵습니다"
+  },
+  {
+    "id": "experiment-terms",
+    "title": "6. 같은 자료의 차이를 paired difference라고 부릅니다"
+  },
+  {
+    "id": "paired-delta",
+    "title": "7. 평균 개선과 느려진 비용을 함께 판정합니다"
+  },
+  {
+    "id": "paired-source",
+    "title": "8. 공식 예제의 차이 계산에 같은 다섯 값을 넣습니다"
+  },
+  {
+    "id": "boundary",
+    "title": "9. 차이를 짝지어도 교란과 선택 편향이 모두 사라지지는 않습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "10. 짝과 평균과 채택을 구분할 수 있나요"
+  }
+],
     component: () => import("@/pages/articles/ai/paired-experiment-design"),
   },
   {

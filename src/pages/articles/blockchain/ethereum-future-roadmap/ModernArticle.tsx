@@ -29,7 +29,10 @@ export default function ModernEthereumFutureRoadmapArticle() { return <article c
 <p data-stage-bridge="names" className="text-sm text-muted-foreground">두 종류의 상태 이름을 구분했습니다. 같은 일정 확인을 실제 운영 순서로 따라갑니다.</p>
 </section>
 <section id="mechanism" data-teach-level="4" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">7. 제안에서 활성화 후 관측까지 한 줄로 추적한다</h2>
-<p>운영자는 먼저 EIP-7773에서 Sepolia와 메인넷 행을 나눕니다. 다음으로 시험에 사용할 실행·합의 클라이언트 릴리스와 fork 설정을 고정합니다. Sepolia에서 활성화 경계 직전과 직후의 거래·블록을 기록하고, 두 클라이언트가 같은 상태와 블록을 받아들이는지 확인합니다.</p><p>10월 6일이라는 날짜가 지났다는 이유만으로 성공 판정을 내리지 않습니다. 실제 블록 시각과 fork 적용, 서비스 로그, 재조직·동기화·장애 여부를 확인해야 합니다. 메인넷 판단은 이후 메인넷 일정·릴리스·관측을 별도로 가져와 같은 순서로 수행합니다. 10월 4일에는 이 마지막 증거가 아직 없습니다.</p><p>Glamsterdam의 ePBS와 BAL은 각각 블록 제작·검증 시점과 실행 자료를 바꾸는 기능입니다. 두 거래의 실제 구조와 코드는 <Link className="underline" to="/cs/blockchain/glamsterdam-block-execution">Glamsterdam 블록 실행</Link>에서 이어집니다. 이 글의 판단 대상은 기능의 원리보다 적용 상태입니다.</p>
+<p>
+            운영자는 먼저 EIP-7773에서 Sepolia와 메인넷 행을 나눕니다. 다음으로 시험에 사용할 실행·합의 클라이언트 릴리스와 fork 설정을 고정합니다. Sepolia에서
+            활성화 경계 직전과 직후의 거래·블록을 기록하고 두 클라이언트가 같은 상태와 블록을 받아들이는지 확인합니다.
+          </p><p>10월 6일이라는 날짜가 지났다는 이유만으로 성공 판정을 내리지 않습니다. 실제 블록 시각과 fork 적용, 서비스 로그, 재조직·동기화·장애 여부를 확인해야 합니다. 메인넷 판단은 이후 메인넷 일정·릴리스·관측을 별도로 가져와 같은 순서로 수행합니다. 10월 4일에는 이 마지막 증거가 아직 없습니다.</p><p>Glamsterdam의 ePBS와 BAL은 각각 블록 제작·검증 시점과 실행 자료를 바꾸는 기능입니다. 두 거래의 실제 구조와 코드는 <Link className="underline" to="/cs/blockchain/glamsterdam-block-execution">Glamsterdam 블록 실행</Link>에서 이어집니다. 이 글의 판단 대상은 기능의 원리보다 적용 상태입니다.</p>
 <p data-stage-bridge="mechanism" className="text-sm text-muted-foreground">계획과 실행을 연결할 증거가 정해졌습니다. 이제 원문 한 단어를 사례의 판단으로 바꿉니다.</p>
 </section>
 <section id="source" data-teach-level="5" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">8. 활성화라는 말에는 실제 네트워크 조건이 붙는다</h2>
@@ -41,7 +44,10 @@ export default function ModernEthereumFutureRoadmapArticle() { return <article c
 <p data-stage-bridge="comparison" className="text-sm text-muted-foreground">현재와 미래에 같은 판정 기준을 적용했습니다. 증거를 읽을 때 놓치기 쉬운 조건을 짚습니다.</p>
 </section>
 <section id="formal-simplification" data-teach-level="7" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">10. 검사할 명제가 잘못되면 증명이 있어도 목표를 놓친다</h2>
-<p>명세를 작게 만들면 구현과 시험이 다룰 조건을 줄일 수 있습니다. 형식 검증은 정한 가정 아래 어떤 성질이 유지되는지를 기계적으로 확인합니다. AI나 사람이 만든 증명 후보는 검사기를 통과해야 하고, 통과한 뒤에도 명세가 실제 원하는 기능과 일치하는지는 별도로 검토합니다.</p><p>예를 들어 운영자가 “10월 6일 이후에는 모두 새 규칙”이라고 잘못 적고 이를 완벽히 검사해도 메인넷·Sepolia를 구분하지 못한 오류는 남습니다. 올바른 명제에는 네트워크, 버전, 활성화 조건이 들어갑니다. 성능 측정에는 장비·입력·설정·반복과 실제 결과도 필요합니다.</p><p>Lean Consensus 연구 로드맵의 형식 검증 목표는 Ethereum 전체가 이미 검증됐다는 증거가 아닙니다. 논문·코드의 검증 범위와 남은 가정을 읽어야 합니다. 이 글 역시 확인일의 상태 판정이며 이후의 적용 완료를 미리 보증하지 않습니다.</p><CitationBlock source="Lean Consensus R&D Progress" citeKey={6} href="https://leanroadmap.org/">형식 검증의 연구 목표와 개별 작업 범위를 확인하는 자료입니다. 완료된 전체 시스템 증명으로 확대하지 않습니다.</CitationBlock>
+<p>
+            명세를 작게 만들면 구현과 시험이 다룰 조건을 줄일 수 있습니다. 형식 검증은 정한 가정 아래 어떤 성질이 유지되는지를 기계적으로 확인합니다. AI나 사람이 만든 증명 후보는
+            검사기를 통과해야 하고 통과한 뒤에도 명세가 실제 원하는 기능과 일치하는지는 별도로 검토합니다.
+          </p><p>예를 들어 운영자가 “10월 6일 이후에는 모두 새 규칙”이라고 잘못 적고 이를 완벽히 검사해도 메인넷·Sepolia를 구분하지 못한 오류는 남습니다. 올바른 명제에는 네트워크, 버전, 활성화 조건이 들어갑니다. 성능 측정에는 장비·입력·설정·반복과 실제 결과도 필요합니다.</p><p>Lean Consensus 연구 로드맵의 형식 검증 목표는 Ethereum 전체가 이미 검증됐다는 증거가 아닙니다. 논문·코드의 검증 범위와 남은 가정을 읽어야 합니다. 이 글 역시 확인일의 상태 판정이며 이후의 적용 완료를 미리 보증하지 않습니다.</p><CitationBlock source="Lean Consensus R&D Progress" citeKey={6} href="https://leanroadmap.org/">형식 검증의 연구 목표와 개별 작업 범위를 확인하는 자료입니다. 완료된 전체 시스템 증명으로 확대하지 않습니다.</CitationBlock>
 <p data-stage-bridge="formal-simplification" className="text-sm text-muted-foreground">네트워크·시점·증거 범위를 붙이면 로드맵을 오늘 가능한 일과 다음 준비로 나눌 수 있습니다.</p>
 <ReviewPrompts questions={["10월 4일에 Sepolia의 10월 6일 일정만 읽었다면 메인넷 지원을 선언할 수 있나요? (답: 3·7절)", "Review와 SFI가 함께 적힌 EIP를 왜 모순이라고 볼 수 없나요? (답: 6절)"]} />
 </section>

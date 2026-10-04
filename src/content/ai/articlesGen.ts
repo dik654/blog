@@ -387,46 +387,46 @@ export const genArticles: Article[] = [
     title: "월드모델 계획: 행동을 미리 비교하고 관측으로 다시 고치기",
     subcategory: "ai-generative",
     sections: [
-      {
-            "id": "overview",
-            "title": "1 · 실행하기 전에 후보를 비교하고 실행 뒤 다시 관측한다"
-      },
-      {
-            "id": "black-box",
-            "title": "2 · 현재 관측과 행동을 받아 다음 관측의 표현을 예측한다"
-      },
-      {
-            "id": "case",
-            "title": "3 · 두 번 오른쪽으로 가는 후보의 예측 비용은 0이다"
-      },
-      {
-            "id": "picture",
-            "title": "4 · 모델의 1.0을 실제 관측 0.8로 교체한다"
-      },
-      {
-            "id": "need",
-            "title": "5 · 그럴듯한 다음 화면만으로 좋은 행동을 고를 수는 없다"
-      },
-      {
-            "id": "names",
-            "title": "6 · JEPA는 표현을 예측하고 계획기는 행동을 고른다"
-      },
-      {
-            "id": "mechanism",
-            "title": "7 · 후보를 고르는 동안 모델 가중치는 고정한다"
-      },
-      {
-            "id": "source",
-            "title": "8 · 공식 rollout은 예측 표현을 다음 입력에 붙인다"
-      },
-      {
-            "id": "comparison",
-            "title": "9 · 예측 오차 0도 모든 표현이 같다면 쓸모없다"
-      },
-      {
-            "id": "limits",
-            "title": "10 · 예측이 정확해도 너무 먼 목표의 순위를 못 매길 수 있다"
-      }
+  {
+    "id": "overview",
+    "title": "1 · 실행하기 전에 후보를 비교하고 실행 뒤 다시 관측한다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 현재 관측과 행동을 받아 다음 관측의 표현을 예측한다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 두 번 오른쪽으로 가는 후보의 예측 비용은 0이다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 모델의 1.0을 실제 관측 0.8로 교체한다"
+  },
+  {
+    "id": "need",
+    "title": "5 · 그럴듯한 다음 화면만으로 좋은 행동을 고를 수는 없다"
+  },
+  {
+    "id": "names",
+    "title": "6 · JEPA는 표현을 예측하고 계획기는 행동을 고른다"
+  },
+  {
+    "id": "mechanism",
+    "title": "7 · 후보를 고르는 동안 모델 가중치는 고정한다"
+  },
+  {
+    "id": "source",
+    "title": "8 · 공식 rollout은 예측 표현을 다음 입력에 붙인다"
+  },
+  {
+    "id": "comparison",
+    "title": "9 · 예측 오차 0도 모든 표현이 같다면 쓸모없다"
+  },
+  {
+    "id": "limits",
+    "title": "10 · 예측이 정확해도 너무 먼 목표의 순위를 못 매길 수 있다"
+  }
 ],
     component: () => import("@/pages/articles/ai/world-model-latent-planning"),
   },

@@ -5,7 +5,7 @@
     {
       "route": "blockchain/aa-fundamentals",
       "title": "Account Abstraction 기초",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/aa-fundamentals.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/aa-fundamentals.tsx",
@@ -27,19 +27,44 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "USDC200→160/B0→40;session30mincap100,spent40/rem60;key0nonce7→8;paymaster.01reserve.003charge.001refund.002final.009"
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: user problem before role names",
+        "B": "black-box: opaque request/validation/payment/execution roles",
+        "0": "case: USDC200→160/B40,session30mincap100,nonce7→8,paymaster.01→.009",
+        "1": "picture: same amounts in FlowRail with distinct owner/output roles",
+        "2": "need: signature alone cannot limit recipient or cumulative110;separate permission/payment",
+        "3": "names: terms mapped to known actors",
+        "4": "erc4337: same7 request passesadmission,revalidation,EntryPoint,account,token,settlement",
+        "5/6": "prefund/source: original fivegas terms;validation/nonce/loops/execution/refund;native-aa:7702Behavior appliedto40transferfail",
+        "7": "use-cases/recovery/limits:batchatomicityvsapproval,passkeydomain,guardian3combinations,oldsession60,timeout,questions5/8/10"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Account abstraction1c6b669 fulloriginal3MIT files:EntryPoint,BaseAccount,NonceManager;sharedoriginalhashpreviouslyverifiedofficial",
+          "application": "prefund/source: original fivegas terms;validation/nonce/loops/execution/refund;native-aa:7702Behavior appliedto40transferfail"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read original actualbodyandalloriginalcomponents;rewrote publicentry substance;retained accurate source/failureconstraints andcombinationderivation;initialissues recorded separately.",
+        "arithmetic": "/tmp/teach-all/chains-next-arithmetic.json17Pythonchecks;/tmp/teach-all/blob-fee-original-harness.log6actualGo-original-functioncases. AA contract not compiled/deployed; no mainnetexecution.",
+        "learning": "/tmp/teach-all/chains-next-learning.log: strict require-registration 2 routes passed after root merged learning, canonical, TOC and topology.",
+        "humanize": "/tmp/teach-all/humanize-chains-next-final/aa-fundamentals/independent-finalize.md: parent approved unchanged-text false footnote 1) warning. Added reviewer-requested 0!=1 and integer 0≤t≤n boundary, reran extraction/roundtrip/gate with 0.0% changes and same false warning; semantic addition is separate from prose pass.",
+        "browser390": "output/playwright/teach-chains-next/summary.json: 22 original panels across 2 routes × 2 widths opened; overflow, broken anchors, KaTeX and runtime errors 0. /tmp/teach-all/chains-next-final-metrics.json verified later prose and formula layout.",
+        "browser1440": "output/playwright/teach-chains-next/summary.json: 22 original panels across 2 routes × 2 widths opened; overflow, broken anchors, KaTeX and runtime errors 0. /tmp/teach-all/chains-next-final-metrics.json verified later prose and formula layout.",
+        "static": "tscpass;/tmp/teach-all/chains-next-formulas.log1419explicit/0missing;targetedchartvizpass;proseglobalre-review0"
+      },
+      "remaining": [],
+      "reviewedInitialIssues": [
+        "First paragraph introduced EOA/secp256k1/nonce/validation policy before the case.",
+        "Promised approve+swap and session restrictions conflicted without explaining distinct owner permissions.",
+        "Same-case state/cost outcomes were not carried through actual original code.",
+        "Paymaster-inclusive fee explanation omitted its separate validation/postOp budgets from the worked formula.",
+        "Formal formula annotations were generic; no original code panels or final prediction questions."
+      ],
+      "reviewDisposition": "substantively-rewritten"
     },
     {
       "route": "blockchain/aave-v3",
@@ -1523,7 +1548,7 @@
     {
       "route": "blockchain/eip4844-blob-fee",
       "title": "EIP-4844 Blob Fee · Excess Feedback",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/ethereum/eip4844-blob-fee.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/eip4844-blob-fee.tsx",
@@ -1544,19 +1569,45 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "HistoricalE2/U5/T3→4blob-equivalent524288gas→price1;mini f1/n4/d2→6;BPO2E2/U18/T14/max21 normal6,reserve8"
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: user problem before role names",
+        "B": "black-box: submission,usage record,price output before component names",
+        "0": "case: historical excess2,usage5,target3→4;zero usage twice→1→0",
+        "1": "picture: same amounts in FlowRail with distinct owner/output roles",
+        "2": "need: separate data/execution resources and target versus max",
+        "3": "names: blob131072,used/excess,target/max,wei/blob gas;unitsconverted",
+        "4": "excess-update: 262144+655360−393216=524288→historicalfee1",
+        "5/6": "source: pinnedGeth129–168 headTimestamp/3branches;215–228 actualinteger6vs1;99–124 rejection;7918BPO2case6vs8",
+        "7": "limits:recordnotqueue;historical/currentfork;noactualdemandclaim;questions3/8/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "go-ethereumc9a2bc73c847319a8faa57de59e42c0efc420682 originaleip4844.go228lines;LGPL preserved;SHA256c8b68e4f32cef33e9420648344edc8fa3bb5d5cb42de22fbf0b34bea5dbdf63c",
+          "application": "source: pinnedGeth129–168 headTimestamp/3branches;215–228 actualinteger6vs1;99–124 rejection;7918BPO2case6vs8"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read original actualbodyandalloriginalcomponents;rewrote publicentry substance;retained accurate source/failureconstraints andcombinationderivation;initialissues recorded separately.",
+        "arithmetic": "/tmp/teach-all/chains-next-arithmetic.json17Pythonchecks;/tmp/teach-all/blob-fee-original-harness.log6actualGo-original-functioncases. AA contract not compiled/deployed; no mainnetexecution.",
+        "learning": "/tmp/teach-all/chains-next-learning.log: strict require-registration 2 routes passed after root merged learning, canonical, TOC and topology.",
+        "humanize": "/tmp/teach-all/humanize-chains-next-final/eip4844-blob-fee/gate.txt: gate 0, exact roundtrip, final text unchanged.",
+        "browser390": "output/playwright/teach-chains-next/summary.json: 22 original panels across 2 routes × 2 widths opened; overflow, broken anchors, KaTeX and runtime errors 0. /tmp/teach-all/chains-next-final-metrics.json verified later prose and formula layout.",
+        "browser1440": "output/playwright/teach-chains-next/summary.json: 22 original panels across 2 routes × 2 widths opened; overflow, broken anchors, KaTeX and runtime errors 0. /tmp/teach-all/chains-next-final-metrics.json verified later prose and formula layout.",
+        "static": "tscpass;/tmp/teach-all/chains-next-formulas.log1419explicit/0missing;targetedchartvizpass;proseglobalre-review0",
+        "chart": "/tmp/teach-all/blob-curve-final.json: 390 and 1440 SVG label bounds 0 errors; non-preserved aspect ratio exposes exponential shape, y bottom padding and bounded labels eliminate -5 clipping, x max 3.3 fits 3.0 label."
+      },
+      "remaining": [],
+      "reviewedInitialIssues": [
+        "Term-first overview without same-case role map/why sequence.",
+        "Claimed actual Reth code was a hand-authored Korean summary without an exact original pin.",
+        "Selected parameters using parent timestamp; current rule uses new block timestamp.",
+        "EIP7918 reserve-price branch missing.",
+        "Integer floor missing from displayed recurrence; ideal curve and integer price were conflated."
+      ],
+      "reviewDisposition": "substantively-rewritten"
     },
     {
       "route": "blockchain/erasure-coding",
