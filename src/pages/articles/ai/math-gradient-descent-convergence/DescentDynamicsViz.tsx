@@ -2,44 +2,39 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-const SCENES = ["방향", "안전한 보폭", "진동", "발산", "멈춤 판정"] as const;
-const paths = [
-  { eta: "η=0.5", points: [4, 2, 1, .5], color: "#22c55e", label: "수축" },
-  { eta: "η=2", points: [4, -4, 4, -4], color: "#eab308", label: "진동" },
-  { eta: "η=3", points: [4, -8, 16], color: "#f97316", label: "발산" },
+const SCENES = ["η=0.5", "η=2", "η=3"] as const;
+const CASES = [
+  { eta: .5, title: "0까지의 거리가 절반씩 줄어든다", text: "배율 0.5: 4→2→1→0.5. 점수는 8→2→0.5→0.125입니다." },
+  { eta: 2, title: "같은 거리를 좌우로 오간다", text: "배율 −1: 4→−4→4→−4. 점수는 매번 8로 그대로입니다." },
+  { eta: 3, title: "좌우를 오가며 거리가 두 배가 된다", text: "배율 −2: 4→−8→16→−32. 점수는 8→32→128→512입니다." },
 ] as const;
+const sx = (x: number) => 148 + 3.5 * x;
+const sy = (step: number) => 32 + 52 * step;
 
 export default function DescentDynamicsViz() {
   const scenes = useAnimatedScenes(SCENES.length);
-  const active = scenes.active;
-  const selected = active <= 1 ? paths[0] : active === 2 ? paths[1] : paths[2];
-  const scale = (x: number) => 380 + x * 22;
-  return <VizFrame eyebrow="Animated descent dynamics" title="같은 negative gradient라도 step size가 경로와 결론을 바꾼다" description="f(x)=x²/2, x₀=4에서 수축·진동·발산을 같은 축에 놓고 마지막에 stopping signal의 한계를 확인합니다." note="Gradient가 작은 것은 first-order stationary signal입니다. Nonconvex 문제에서는 global optimum이나 generalization을 자동으로 증명하지 않습니다.">
-    <div data-viz-canvas tabIndex={0} role="group" aria-label="gradient descent step convergence 애니메이션" onKeyDown={scenes.onKeyDown} className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
-      <svg viewBox="0 0 760 310" className="h-auto w-full" aria-label="quadratic 위 gradient descent 위치 변화">
-        <line x1="45" y1="250" x2="715" y2="250" stroke="currentColor" strokeOpacity=".3" strokeWidth="1" />
-        <line x1="380" y1="40" x2="380" y2="270" stroke="currentColor" strokeOpacity=".2" strokeWidth="1" />
-        <path d="M95 45 Q380 455 665 45" fill="none" stroke="#0ea5e9" strokeWidth="1.25" />
-        {selected.points.map((point, index) => {
-          const cx = Math.max(65, Math.min(695, scale(point)));
-          const cy = Math.max(58, 250 - Math.min(180, point * point * 7));
-          return <g key={`${point}-${index}`} opacity={index <= Math.max(0, active) ? 1 : .18}>
-            {index > 0 && <line x1={Math.max(65, Math.min(695, scale(selected.points[index - 1])))} y1={Math.max(58, 250 - Math.min(180, selected.points[index - 1] ** 2 * 7))} x2={cx} y2={cy} stroke={selected.color} strokeWidth="1.1" strokeDasharray="5 4" />}
-            <circle cx={cx} cy={cy} r={index === 0 ? 7 : 5} fill={index === 0 ? "var(--background)" : selected.color} stroke={selected.color} strokeWidth="1.2" />
-            <text x={cx} y={cy - 13} textAnchor="middle" fontSize="12" fill="currentColor">x{index}</text>
-          </g>;
-        })}
-        <text x="380" y="292" textAnchor="middle" fontSize="13" fill="currentColor">minimum x*=0</text>
-        <text x="610" y="96" textAnchor="middle" fontSize="14" fontWeight="700" fill={selected.color}>{selected.eta} · {selected.label}</text>
+  const selected = CASES[scenes.active];
+  const points = Array.from({ length: 4 }, (_, t) => 4 * (1 - selected.eta) ** t);
+  return <VizFrame eyebrow="같은 축에서 세 경로" title="보폭만 바꾸면 수축·왕복·발산이 갈린다"
+    description="f(x)=x²/2, 시작값 4를 고정했습니다. 가로축은 실제 위치이고 아래로 내려갈수록 반복 횟수가 늘어납니다."
+    note="점수 곡선이 아닌 위치의 기록입니다. 세 장면은 동일한 가로축을 사용하며 −32까지의 값을 자르거나 축척을 바꾸지 않았습니다.">
+    <div data-viz-canvas tabIndex={0} role="group" aria-label="같은 축에서 보폭별 반복 위치" onKeyDown={scenes.onKeyDown}
+      className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+      <svg viewBox="0 0 300 245" className="mx-auto h-auto w-full max-w-[350px]" aria-label="0부터 세 번까지 반복한 실제 위치의 경로">
+        <line x1="28" y1="215" x2="273" y2="215" stroke="currentColor" strokeOpacity=".35" strokeWidth="1" />
+        <line x1={sx(0)} y1="22" x2={sx(0)} y2="215" stroke="currentColor" strokeOpacity=".3" strokeWidth="1" strokeDasharray="3 4" />
+        {[-32, -16, 0, 16, 32].map(x => <g key={x}><line x1={sx(x)} y1="215" x2={sx(x)} y2="219" stroke="currentColor" strokeWidth="1" /><text x={sx(x)} y="238" textAnchor="middle" fontSize="12" fill="currentColor">{x}</text></g>)}
+        {points.map((x, t) => <g key={t}>
+          <text x="12" y={sy(t) + 4} fontSize="12" fill="currentColor">{t}</text>
+          {t > 0 && <line x1={sx(points[t - 1])} y1={sy(t - 1)} x2={sx(x)} y2={sy(t)} stroke="var(--primary)" strokeWidth="1" />}
+          <circle cx={sx(x)} cy={sy(t)} r="4" fill={t === 0 ? "var(--background)" : "var(--primary)"} stroke="var(--primary)" strokeWidth="1.2" />
+          <text x={sx(x)} y={sy(t) - 9} textAnchor="middle" fontSize="12" fill="currentColor">{x}</text>
+        </g>)}
       </svg>
-      <div className="mt-5 grid gap-4 border-t border-border pt-5 md:grid-cols-3">
-        <Fact label="Update" value="xₜ₊₁=(1−η)xₜ" detail="방향에 보폭을 곱해 다음 위치 선택" active={active === 0} />
-        <Fact label="Stability" value="|1−η|<1" detail="이 quadratic에서만 쓰는 수축 조건" active={active >= 1 && active <= 3} />
-        <Fact label="Stop" value="‖∇f‖≤εg" detail="멈춤 신호이지 global proof는 아님" active={active === 4} />
+      <div aria-live="polite" className="mt-4 grid min-h-[150px] content-start gap-3 border-t border-border pt-4">
+        <p className="text-base font-semibold">{selected.title}</p><p className="text-sm leading-6">{selected.text}</p>
       </div>
       <AnimatedSceneControls {...scenes} labels={SCENES} />
     </div>
   </VizFrame>;
 }
-
-function Fact({ label, value, detail, active }: { label: string; value: string; detail: string; active: boolean }) { return <div className={`border-l pl-4 ${active ? "border-primary" : "border-border"}`}><p className="text-xs font-bold text-muted-foreground">{label}</p><p className="mt-2 font-mono text-base font-black">{value}</p><p className="mt-2 text-sm leading-6 text-muted-foreground">{detail}</p></div>; }

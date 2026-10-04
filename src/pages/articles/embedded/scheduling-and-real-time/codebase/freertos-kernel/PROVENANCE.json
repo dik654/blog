@@ -1,0 +1,23 @@
+{
+  "repository": "https://github.com/FreeRTOS/FreeRTOS-Kernel",
+  "version": "V11.2.0",
+  "commit": "0adc196d4bd52a2d91102b525b0aafc1e14a2386",
+  "downloadedAt": "2026-10-04",
+  "files": [
+    {
+      "path": "tasks.c",
+      "sha256": "11f05459fd6bf793b1c143ddd31dd5715ba16a3d6ecd32e334bc04dca07bfce1"
+    },
+    {
+      "path": "include/task.h",
+      "sha256": "53861447873ce7425d971dc90b722467c43c34afedee48a1455d29723a2330f4"
+    },
+    {
+      "path": "LICENSE.md",
+      "sha256": "508a77d2e7b51d98adeed32648ad124b7b30241a8e70b2e72c99f92d8e5874d1"
+    }
+  ],
+  "modifications": "none",
+  "license": "MIT; LICENSE.md retained",
+  "execution": "source branch substitution only; no board execution"
+}

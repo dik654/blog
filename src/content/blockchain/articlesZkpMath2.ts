@@ -42,13 +42,55 @@ export const zkpMath2Articles: Article[] = [
     title: "Shamir Secret Sharing: Polynomial Share·복원·Privacy 경계",
     subcategory: "mpc",
     sections: [
-      { id: "overview", title: "Threshold polynomial sharing" },
-      { id: "share-generation", title: "Random polynomial과 share 생성" },
-      { id: "reconstruction", title: "Lagrange 복원" },
-      { id: "privacy-boundary", title: "t-share privacy" },
-      { id: "active-boundary", title: "VSS·refresh 경계" },
-      { id: "release", title: "Negative fixture와 release" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 세 사람 중 두 사람이 모여야 비밀을 복원하려면"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 나누는 사람은 비밀과 새 무작위 값을 함께 사용합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 비밀 5에 번호의 세 배를 더합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 보관자는 결과를 받고 복원자는 두 기록을 합칩니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 무작위 값이 있어야 같은 기록에 여러 비밀이 대응합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 기록은 share, 복원에 필요한 수는 threshold입니다"
+  },
+  {
+    "id": "share-generation",
+    "title": "7. 8·11·14는 조각의 번호와 함께 만들어집니다"
+  },
+  {
+    "id": "reconstruction",
+    "title": "8. 두 기록을 더할 때 무작위 계수만 지웁니다"
+  },
+  {
+    "id": "source",
+    "title": "9. Shamir 원문의 q(0)에 비밀 5를 대응합니다"
+  },
+  {
+    "id": "privacy-boundary",
+    "title": "10. 한 조각 8은 비밀 0·5·10 모두와 맞습니다"
+  },
+  {
+    "id": "active-boundary",
+    "title": "11. 거짓 조각 12를 내면 비밀 4도 계산됩니다"
+  },
+  {
+    "id": "release",
+    "title": "12. 조각의 값만큼 번호·회차·전달 경로도 확인합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/shamir-secret-sharing"),
   },
   {

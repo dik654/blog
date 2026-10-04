@@ -3401,7 +3401,7 @@
       "route": "ai/hyperparameter-tuning",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/hyperparameter-tuning.tsx",
       "publicPath": "cs/ai/hyperparameter-tuning",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -3409,23 +3409,92 @@
         "sectionCount": 4
       },
       "beforeDefects": [
-        "전체 실제 본문을 읽었으며 이름과 정의가 작은 사례보다 앞섬",
-        "정확한 식은 일부 보존하되 원래 식과 연산 주석 사이 다른 정의·예산 해석을 교정해야 함",
-        "같은 수치 사례를 원문 규칙에 넣는 적용과 답 절 예측 질문이 부족"
+        "정의와 용어가 숫자 사례에 선행",
+        "원식의 실제 평가 집합이 주석에서 개별비용≤총예산 후보 집합으로 바뀌어 누적 비용 조건을 잃음",
+        "실제 원문을 같은 선택에 적용하고 끝까지 추적하는 사례와 예측 질문이 부족"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "assumed": true,
+        "candidates": [
+          "A",
+          "B",
+          "C"
+        ],
+        "updates": 2000,
+        "costGpuMinutes": [
+          10,
+          10,
+          10
+        ],
+        "totalBudgetGpuMinutes": 30,
+        "validationLoss": [
+          0.24,
+          0.2,
+          0.22
+        ],
+        "selected": "B",
+        "outerLoss": 0.23,
+        "randomMass": 0.05,
+        "hit3": 0.142625
+      },
+      "stageAnchors": {
+        "S-1": "overview",
+        "B-2": "black-box",
+        "0-3": "small-case",
+        "1-4": "inside-study",
+        "2-5": "why-contract",
+        "3-6": "tuning-terms",
+        "4-7": "selection-contract",
+        "4-8": "trial-budget",
+        "5-9": "paper-random-search",
+        "6-10": "outer-evaluation",
+        "7-11": "boundary",
+        "review-12": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf",
+          "location": "p.282 equation(4), §2.2 p.285 validation/test definitions",
+          "application": "A/B/C 중B 선택과0.20/0.23 역할 분리"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "기존 유효 수식 보존·전체 탐색 비용 합계·로그 분포의 sampler 전제·누적 자원과 증분 비용 구분·표준 Pareto 관계와 허용 오차 순환·학습 좌표 식 일치·공식 원문 적용·예측 질문 검토",
+        "humanize": {
+          "route": "ai/hyperparameter-tuning",
+          "roundTrip": true,
+          "chars": 3438,
+          "edits": 0,
+          "changeRate": 0.004920405209840828,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "narrowText": 0,
+        "learning": "strict require-registration 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 통합 검토·전역 build·배포 검증"
       ],
-      "reviewEvidence": "/tmp/teach-all/baseline/ai--hyperparameter-tuning.json"
+      "reviewEvidence": "/tmp/teach-all/baseline/ai--hyperparameter-tuning.json",
+      "bodyFiles": [
+        "src/pages/articles/ai/hyperparameter-tuning/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/hyperparameter-tuning/ModernArticle.tsx",
+      "contentHash": "6fffa8980cd403512c0889d43025aa6f0426cdc77ba3bf079130926f220b875a",
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-hpo10-summary.json",
+        "/tmp/teach-all/ai-systems-screens-10/summary.json",
+        "/tmp/teach-all/ai-systems-numeric-10.json",
+        "/tmp/teach-all/ai-systems-learning-audit-10.log",
+        "/tmp/teach-all/ai-systems-formula-audit-10.log",
+        "/tmp/teach-all/ai-systems-tsc-10.log",
+        "/tmp/world-browser-audit/teach-ai-systems-hpo10-pruning-layout-final-summary.json"
+      ]
     },
     {
       "route": "ai/image-augmentation-transforms",
@@ -3781,7 +3850,7 @@
       "route": "ai/learning-curve-tracking",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/learning-curve-tracking.tsx",
       "publicPath": "cs/ai/learning-curve-tracking",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -3789,23 +3858,109 @@
         "sectionCount": 4
       },
       "beforeDefects": [
-        "전체 실제 본문을 읽었으며 이름과 정의가 작은 사례보다 앞섬",
-        "정확한 식은 일부 보존하되 원래 식과 연산 주석 사이 다른 정의·예산 해석을 교정해야 함",
-        "같은 수치 사례를 원문 규칙에 넣는 적용과 답 절 예측 질문이 부족"
+        "정의가 사례보다 앞서고 가로축 숫자 적용을 실제 API까지 잇지 못함",
+        "원식 p_k는 tuple인데 주석에서는 비율이라 표기가 충돌함",
+        "가까운 관측을 같은 자원으로 단정하고 복구 시 진척 되감김을 금지해 실제 재시도 경로를 숨길 수 있음"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "assumed": true,
+        "tokensPerUpdate": [
+          1000,
+          4000
+        ],
+        "targetTokens": 1000000,
+        "updatesAtTarget": [
+          1000,
+          250
+        ],
+        "observedTokens": [
+          1020000,
+          980000
+        ],
+        "observedUpdates": [
+          1020,
+          245
+        ],
+        "observedSeconds": [
+          120,
+          150
+        ],
+        "observedLoss": [
+          0.42,
+          0.39
+        ],
+        "totalTokenBudget": 2000000,
+        "progress": [
+          0.51,
+          0.49
+        ],
+        "toleranceTokens": 30000,
+        "distanceTokens": [
+          20000,
+          20000
+        ],
+        "observedDifference": 0.03
+      },
+      "stageAnchors": {
+        "S-1": "overview",
+        "B-2": "black-box",
+        "0-3": "small-case",
+        "1-4": "inside-observation",
+        "2-5": "why-axes",
+        "3-6": "curve-terms",
+        "4-7": "progress-coordinate",
+        "4-8": "comparison-boundary",
+        "5-9": "standard-wandb-tracking",
+        "6-10": "logging-receipt",
+        "7-11": "boundary",
+        "review-12": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://github.com/wandb/wandb/blob/2a058902a2425bf79e5add34b30d0e9ea5e39951/wandb/sdk/wandb_run.py#L2860-L2878",
+          "location": "v0.19.11 wandb_run.py define_metric:L2860–2878",
+          "application": "step_metric과step_sync에102만/98만 관측 대응",
+          "sourceSha256": "9883f15d60dcf17762ef22d8a4b1adec1bea2ef15fb18a0ba5f5ded557d814ed",
+          "commit": "2a058902a2425bf79e5add34b30d0e9ea5e39951"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "기존 유효 수식 보존·전체 탐색 비용 합계·로그 분포의 sampler 전제·누적 자원과 증분 비용 구분·표준 Pareto 관계와 허용 오차 순환·학습 좌표 식 일치·공식 원문 적용·예측 질문 검토",
+        "humanize": {
+          "route": "ai/learning-curve-tracking",
+          "roundTrip": true,
+          "chars": 3632,
+          "edits": 0,
+          "changeRate": 0.007514687798879649,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "narrowText": 0,
+        "learning": "strict require-registration 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 통합 검토·전역 build·배포 검증"
       ],
-      "reviewEvidence": "/tmp/teach-all/baseline/ai--learning-curve-tracking.json"
+      "reviewEvidence": "/tmp/teach-all/baseline/ai--learning-curve-tracking.json",
+      "bodyFiles": [
+        "src/pages/articles/ai/learning-curve-tracking/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/learning-curve-tracking/ModernArticle.tsx",
+      "contentHash": "493b7c9b0edc3410599c0882f81d8bd4140aa645b1984c93581f40cd42622478",
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-hpo10-summary.json",
+        "/tmp/teach-all/ai-systems-screens-10/summary.json",
+        "/tmp/teach-all/ai-systems-numeric-10.json",
+        "/tmp/teach-all/ai-systems-learning-audit-10.log",
+        "/tmp/teach-all/ai-systems-formula-audit-10.log",
+        "/tmp/teach-all/ai-systems-tsc-10.log",
+        "/tmp/world-browser-audit/teach-ai-systems-hpo10-pruning-layout-final-summary.json"
+      ]
     },
     {
       "route": "ai/lightgbm-efficient-trees",
@@ -4525,7 +4680,7 @@
       "route": "ai/multi-fidelity-pruning",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/multi-fidelity-pruning.tsx",
       "publicPath": "cs/ai/multi-fidelity-pruning",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -4533,29 +4688,118 @@
         "sectionCount": 4
       },
       "beforeDefects": [
-        "전체 실제 본문을 읽었으며 이름과 정의가 작은 사례보다 앞섬",
-        "정확한 식은 일부 보존하되 원래 식과 연산 주석 사이 다른 정의·예산 해석을 교정해야 함",
-        "같은 수치 사례를 원문 규칙에 넣는 적용과 답 절 예측 질문이 부족"
+        "정의 선행으로 한 후보의 중단/재개를 끝까지 추적하지 못함",
+        "누적 목표량 n_jr_j를 추가 비용처럼 해석할 수 있음",
+        "원식 FPR 명칭과 주석 분모·품질 방향·필수 조건이 불명확하고 감사 표본 범위 보완 필요"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "assumed": true,
+        "candidateCounts": [
+          9,
+          3,
+          1
+        ],
+        "resourceUnits": [
+          1,
+          3,
+          9
+        ],
+        "updatesPerUnit": 1000,
+        "incrementalCost": [
+          9,
+          6,
+          6
+        ],
+        "resumeTotal": 21,
+        "restartTotal": 27,
+        "noPruneTotal": 81,
+        "shadowSample": 20,
+        "prunedPopulation": 100,
+        "missedInSample": 4,
+        "observedMissRate": 0.2,
+        "initialScores": [
+          0.6,
+          0.59,
+          0.58,
+          0.57,
+          0.56,
+          0.55,
+          0.54,
+          0.53,
+          0.52
+        ],
+        "secondScores": [
+          0.65,
+          0.63,
+          0.61
+        ],
+        "finalA": 0.7,
+        "shadowFinalB": 0.85
+      },
+      "stageAnchors": {
+        "S-1": "overview",
+        "B-2": "black-box",
+        "0-3": "small-case",
+        "1-4": "inside-rungs",
+        "2-5": "why-coordinate",
+        "3-6": "pruning-terms",
+        "4-7": "successive-halving",
+        "4-8": "resource-accounting",
+        "5-9": "paper-hyperband",
+        "6-10": "false-prune-audit",
+        "7-11": "boundary",
+        "review-12": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://jmlr.org/papers/volume18/16-558/16-558.pdf",
+          "location": "Algorithm1 lines5–6 PDF p.8, §3.2 brackets",
+          "application": "9→3→1과1→3→9, 한bracket과전체차이"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "기존 유효 수식 보존·전체 탐색 비용 합계·로그 분포의 sampler 전제·누적 자원과 증분 비용 구분·표준 Pareto 관계와 허용 오차 순환·학습 좌표 식 일치·공식 원문 적용·예측 질문 검토",
+        "humanize": {
+          "route": "ai/multi-fidelity-pruning",
+          "roundTrip": true,
+          "chars": 3784,
+          "edits": 0,
+          "changeRate": 0.0,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "narrowText": 0,
+        "learning": "strict require-registration 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 통합 검토·전역 build·배포 검증"
       ],
-      "reviewEvidence": "/tmp/teach-all/baseline/ai--multi-fidelity-pruning.json"
+      "reviewEvidence": "/tmp/teach-all/baseline/ai--multi-fidelity-pruning.json",
+      "bodyFiles": [
+        "src/pages/articles/ai/multi-fidelity-pruning/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/multi-fidelity-pruning/ModernArticle.tsx",
+      "contentHash": "0c91b3cff11cb9cd2f89ddf7b8339c124cf546163b478aa72b2f6b58cefdd5fd",
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-hpo10-summary.json",
+        "/tmp/teach-all/ai-systems-screens-10/summary.json",
+        "/tmp/teach-all/ai-systems-numeric-10.json",
+        "/tmp/teach-all/ai-systems-learning-audit-10.log",
+        "/tmp/teach-all/ai-systems-formula-audit-10.log",
+        "/tmp/teach-all/ai-systems-tsc-10.log",
+        "/tmp/world-browser-audit/teach-ai-systems-hpo10-pruning-layout-final-summary.json"
+      ]
     },
     {
       "route": "ai/multi-objective-hpo",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/multi-objective-hpo.tsx",
       "publicPath": "cs/ai/multi-objective-hpo",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -4563,23 +4807,131 @@
         "sectionCount": 4
       },
       "beforeDefects": [
-        "전체 실제 본문을 읽었으며 이름과 정의가 작은 사례보다 앞섬",
-        "정확한 식은 일부 보존하되 원래 식과 연산 주석 사이 다른 정의·예산 해석을 교정해야 함",
-        "같은 수치 사례를 원문 규칙에 넣는 적용과 답 절 예측 질문이 부족"
+        "정의가 구체 사례보다 앞서고 단일 선택의 이유까지 추적하지 않음",
+        "표준 Pareto 원식과 δ허용폭을 넣은 주석이 서로 다른 관계였음",
+        "허용폭 관계의 순환 반례 및 반복 비율의 해석 경계 부족"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "assumed": true,
+        "values": {
+          "A": [
+            0.2,
+            10,
+            4
+          ],
+          "B": [
+            0.22,
+            12,
+            5
+          ],
+          "C": [
+            0.18,
+            15,
+            3
+          ],
+          "D": [
+            0.16,
+            9,
+            18
+          ]
+        },
+        "memoryLimitGB": 16,
+        "latencyLimitMs": 100,
+        "feasible": [
+          "A",
+          "B",
+          "C"
+        ],
+        "frontier": [
+          "A",
+          "C"
+        ],
+        "selected": "C",
+        "selectionLatencyCapMs": 80,
+        "repeatedDominance": 6,
+        "repeats": 10,
+        "relaxedCycle": {
+          "X": [
+            0,
+            1,
+            2
+          ],
+          "Y": [
+            2,
+            0,
+            1
+          ],
+          "Z": [
+            1,
+            2,
+            0
+          ],
+          "tolerance": 1
+        }
+      },
+      "stageAnchors": {
+        "S-1": "overview",
+        "B-2": "black-box",
+        "0-3": "small-case",
+        "1-4": "inside-objectives",
+        "2-5": "why-separate",
+        "3-6": "pareto-terms",
+        "4-7": "dominance",
+        "5-8": "paper-multiobjective-optuna",
+        "6-9": "uncertainty",
+        "7-10": "tolerance-boundary",
+        "7-11": "selection-receipt",
+        "review-12": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://optuna.readthedocs.io/en/v4.5.0/reference/generated/optuna.study.Study.html#optuna.study.Study.best_trials",
+          "location": "4.5.0 Study.best_trials exact all/any definition",
+          "application": "A/B지배와A/C상충"
+        },
+        {
+          "href": "https://optuna.readthedocs.io/en/v4.5.0/tutorial/20_recipes/002_multi_objective.html",
+          "location": "4.5.0 directions example",
+          "application": "원문FLOPS/정확도와본문손실/지연/메모리의방향구분"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "기존 유효 수식 보존·전체 탐색 비용 합계·로그 분포의 sampler 전제·누적 자원과 증분 비용 구분·표준 Pareto 관계와 허용 오차 순환·학습 좌표 식 일치·공식 원문 적용·예측 질문 검토",
+        "humanize": {
+          "route": "ai/multi-objective-hpo",
+          "roundTrip": true,
+          "chars": 3538,
+          "edits": 0,
+          "changeRate": 0.0026779422128259123,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "narrowText": 0,
+        "learning": "strict require-registration 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 통합 검토·전역 build·배포 검증"
       ],
-      "reviewEvidence": "/tmp/teach-all/baseline/ai--multi-objective-hpo.json"
+      "reviewEvidence": "/tmp/teach-all/baseline/ai--multi-objective-hpo.json",
+      "bodyFiles": [
+        "src/pages/articles/ai/multi-objective-hpo/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/multi-objective-hpo/ModernArticle.tsx",
+      "contentHash": "4aa7f3b8d3d5afc60978c70fe357d5eace785981f132f7a21b42a27e8714c42b",
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-hpo10-summary.json",
+        "/tmp/teach-all/ai-systems-screens-10/summary.json",
+        "/tmp/teach-all/ai-systems-numeric-10.json",
+        "/tmp/teach-all/ai-systems-learning-audit-10.log",
+        "/tmp/teach-all/ai-systems-formula-audit-10.log",
+        "/tmp/teach-all/ai-systems-tsc-10.log",
+        "/tmp/world-browser-audit/teach-ai-systems-hpo10-pruning-layout-final-summary.json"
+      ]
     },
     {
       "route": "ai/one-cycle-scheduling",
@@ -5675,7 +6027,7 @@
       "route": "ai/search-space-design",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/search-space-design.tsx",
       "publicPath": "cs/ai/search-space-design",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -5683,23 +6035,95 @@
         "sectionCount": 4
       },
       "beforeDefects": [
-        "전체 실제 본문을 읽었으며 이름과 정의가 작은 사례보다 앞섬",
-        "정확한 식은 일부 보존하되 원래 식과 연산 주석 사이 다른 정의·예산 해석을 교정해야 함",
-        "같은 수치 사례를 원문 규칙에 넣는 적용과 답 절 예측 질문이 부족"
+        "용어가 숫자 사례보다 앞서고 같은 후보가 원문까지 이어지지 않음",
+        "log 옵션과 균등 sampling 가정을 분리하지 않음",
+        "추정 feasibility를 실제 실행 가능성처럼 읽을 수 있어 조건부 분포와 실패 경계 보완 필요"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "assumed": true,
+        "bounds": [
+          1e-05,
+          0.1
+        ],
+        "u": 0.5,
+        "logMiddle": 0.001,
+        "linearMiddle": 0.050005,
+        "decadeMass": 0.25,
+        "memoryEstimateGB": [
+          18,
+          22
+        ],
+        "limitGB": 20,
+        "unexpectedActualGB": 21
+      },
+      "stageAnchors": {
+        "S-1": "overview",
+        "B-2": "black-box",
+        "0-3": "small-case",
+        "1-4": "inside-space",
+        "2-5": "why-scale",
+        "3-6": "space-terms",
+        "4-7": "scale",
+        "4-8": "conditional-space",
+        "5-9": "paper-optuna-space",
+        "6-10": "versioning",
+        "7-11": "boundary",
+        "review-12": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://optuna.readthedocs.io/en/v4.5.0/tutorial/10_key_features/002_configurations.html",
+          "location": "4.5.0 floating log example and Branches",
+          "application": "범위3구간 대4구간과 조건부 child 생성"
+        },
+        {
+          "href": "https://optuna.readthedocs.io/en/v4.5.0/reference/samplers/generated/optuna.samplers.RandomSampler.html",
+          "location": "4.5.0 RandomSampler description",
+          "application": "균등 로그 계산의 sampler 조건"
+        },
+        {
+          "href": "https://arxiv.org/abs/1907.10902",
+          "location": "2019 abstract define-by-run",
+          "application": "원 설계와4.5고정 세부 예제 구분"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "기존 유효 수식 보존·전체 탐색 비용 합계·로그 분포의 sampler 전제·누적 자원과 증분 비용 구분·표준 Pareto 관계와 허용 오차 순환·학습 좌표 식 일치·공식 원문 적용·예측 질문 검토",
+        "humanize": {
+          "route": "ai/search-space-design",
+          "roundTrip": true,
+          "chars": 3500,
+          "edits": 0,
+          "changeRate": 0.004409045654956589,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "narrowText": 0,
+        "learning": "strict require-registration 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 통합 검토·전역 build·배포 검증"
       ],
-      "reviewEvidence": "/tmp/teach-all/baseline/ai--search-space-design.json"
+      "reviewEvidence": "/tmp/teach-all/baseline/ai--search-space-design.json",
+      "bodyFiles": [
+        "src/pages/articles/ai/search-space-design/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/search-space-design/ModernArticle.tsx",
+      "contentHash": "851cb9311762cf1df7352fb612304c6f70db587bcd07910e5fbe5602ba7b77ae",
+      "evidenceFiles": [
+        "/tmp/world-browser-audit/teach-ai-systems-hpo10-summary.json",
+        "/tmp/teach-all/ai-systems-screens-10/summary.json",
+        "/tmp/teach-all/ai-systems-numeric-10.json",
+        "/tmp/teach-all/ai-systems-learning-audit-10.log",
+        "/tmp/teach-all/ai-systems-formula-audit-10.log",
+        "/tmp/teach-all/ai-systems-tsc-10.log",
+        "/tmp/world-browser-audit/teach-ai-systems-hpo10-pruning-layout-final-summary.json"
+      ]
     },
     {
       "route": "ai/sequence-modeling-tabular",
@@ -6894,20 +7318,20 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 30,
+    "rewritten-local-verified": 35,
     "unreviewed": 150,
-    "reviewed-rewrite-required": 6
+    "reviewed-rewrite-required": 1
   },
   "localValidationSummary": {
-    "rewritten": 30,
+    "rewritten": 35,
     "remainingUnreviewed": 150,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
-    "learningStrict": "/tmp/teach-all/ai-systems-learning-audit-09.log — batch09 5편 통과",
-    "formulaStrict": "/tmp/teach-all/ai-systems-formula-audit-09-final.log — strict require-explicit 통과",
-    "typescript": "/tmp/teach-all/ai-systems-tsc-09.log — npx tsc -p tsconfig.app.json --noEmit exit0",
-    "note": "현재 30편 본문 개선·개별 로컬 검증 완료. 미검토 150편과 검토 후 재작성 필요 6편은 완료에 포함하지 않습니다.",
-    "reviewedRewriteRequired": 6
+    "learningStrict": "/tmp/teach-all/ai-systems-learning-audit-10.log — batch10 5편 통과",
+    "formulaStrict": "/tmp/teach-all/ai-systems-formula-audit-10.log — strict require-explicit 통과",
+    "typescript": "/tmp/teach-all/ai-systems-tsc-10.log — npx tsc -p tsconfig.app.json --noEmit exit0",
+    "note": "현재 35편 본문 개선·개별 로컬 검증 완료. 미검토 150편과 검토 후 재작성 필요 1편은 완료에 포함하지 않습니다.",
+    "reviewedRewriteRequired": 1
   }
 }

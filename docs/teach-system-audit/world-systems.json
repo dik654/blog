@@ -699,13 +699,45 @@
     },
     {
       "route": "embedded/firmware-update-and-recovery",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 3,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "숫자 예는 있으나 이름 전 구조·구성 이유·같은 사례의 실제 코드 분기 대입 부족",
+          "작업/기록별 책임과 실제 검증 범위를 보완할 필요"
+        ],
+        "fixture": "가정4MiB4096KiB=256+1536+1536+768. v1보존·v2TEST·미확정REVERT/확정NONE. scratch조각 v2보관→v1이동→v2배치.",
+        "changes": "시험 요청·실제 기능 검사·확정·재시작을 분리했습니다. 실제 MCUboot 상태 표와 pending/confirmed·boot_set_next 및 진행 복원에 같은 v1/v2를 대입했습니다. 기대 해시 신뢰,키 보호,보안 카운터와 복귀 충돌을 보강했습니다.",
+        "answerCoverage": "원래 본문 전체와 기초6·심화4 선독. 기존 개념·공식·인용 보존 후 실제 답 anchor대조.",
+        "sourceApplication": "MCUbootv2.2.0 commit2d61c318 bootutil_public.c105–150·523–570·684–698·729–743,swap_scratch.c50–122·618–778;헤더·설계문서·Apache라이선스 원본5개 SHA 동일.",
+        "verification": "/tmp/teach-all/root-firmware-numeric-source.json; 전체앱tsc exit0; strict learning2편PASS. 실제보드 실행/전원차단 시험으로 주장하지 않음.",
+        "humanize": {
+          "roundTrip": true,
+          "finalGate": "actual extract→byte-identical roundtrip→prepare→manual edit→수치/마커 보존→gate0→apply; 문자열props/표/주석 별도 검토."
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "numberedSections": 15,
+          "predictionQuestions": 3,
+          "codePanelsPerViewport": 6,
+          "interactiveStatesPerViewport": 6,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "frameShift": 0,
+          "report": "/tmp/teach-all/root-firmware-screens/summary.json",
+          "note": "상태 변경시 높이 변화를 발견해 필요한 내용 높이를 확보하고 재검증했습니다. 실제 screenshot을 읽었습니다."
+        },
+        "remaining": "전체799글 개선 후 전역 빌드·배포·운영 확인."
+      }
     },
     {
       "route": "embedded/interrupts-and-latency-budget",
@@ -795,13 +827,45 @@
     },
     {
       "route": "embedded/scheduling-and-real-time",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 3,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "숫자 예는 있으나 이름 전 구조·구성 이유·같은 사례의 실제 코드 분기 대입 부족",
+          "작업/기록별 책임과 실제 검증 범위를 보완할 필요"
+        ],
+        "fixture": "한 코어 제어C1/P5/prio3·센서C2/P10/D4/prio2·로그C3/P50/prio1. CPU46%,센서완료3/5ms. 이전목표0/현재3 또는12/증분10.",
+        "changes": "작업 준비·실행·완료를 먼저 그리고 실제 준비 목록 선택과 절대 목표 계산에 대입했습니다. CPU 실행C와 대기 포함 응답R을 구분하고 우선순위 상속이 남은2ms를 없애지 않는 이유를 설명했습니다.",
+        "answerCoverage": "원래 본문 전체와 기초6·심화4 선독. 기존 개념·공식·인용 보존 후 실제 답 anchor대조.",
+        "sourceApplication": "FreeRTOSV11.2.0 commit0adc196d tasks.c194–209·2385–2428·6652–6690, 헤더·MIT라이선스 원본3개 SHA 동일.",
+        "verification": "/tmp/teach-all/root-scheduling-numeric-source.json; 전체앱tsc exit0; strict learning2편PASS. 실제보드 실행/전원차단 시험으로 주장하지 않음.",
+        "humanize": {
+          "roundTrip": true,
+          "finalGate": "actual extract→byte-identical roundtrip→prepare→manual edit→수치/마커 보존→gate0→apply; 문자열props/표/주석 별도 검토."
+        },
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "numberedSections": 14,
+          "predictionQuestions": 3,
+          "codePanelsPerViewport": 3,
+          "interactiveStatesPerViewport": 2,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "frameShift": 0,
+          "report": "/tmp/teach-all/root-scheduling-screens/summary.json",
+          "note": "상태 변경시 높이 변화를 발견해 필요한 내용 높이를 확보하고 재검증했습니다. 실제 screenshot을 읽었습니다."
+        },
+        "remaining": "전체799글 개선 후 전역 빌드·배포·운영 확인."
+      }
     },
     {
       "route": "embedded/serial-buses-and-tradeoffs",
@@ -3220,7 +3284,7 @@
     }
   ],
   "counts": {
-    "unreviewed": 205,
-    "rewritten-local-verified": 20
+    "unreviewed": 203,
+    "rewritten-local-verified": 22
   }
 }

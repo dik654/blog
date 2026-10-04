@@ -519,11 +519,51 @@ export const dlFoundationArticles: Article[] = [
     title: "Convexity·smoothness: 보장을 가능하게 하는 함수 구조",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "함수 지형의 네 조건" },
-      { id: "convexity", title: "Chord inequality" },
-      { id: "smoothness", title: "L-smoothness와 descent lemma" },
-      { id: "curvature-range", title: "Strong convexity와 condition number" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 지금의 기울기만 보고 얼마나 멀리 움직여도 될까"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 같은 점수 계산에서 위치와 변화율을 함께 읽는다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 두 끝의 평균 2보다 중간의 실제 점수 1이 낮다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 곡선의 위치와 예측 오차를 두 번 비교한다"
+  },
+  {
+    "id": "need",
+    "title": "5 · 함수 전체의 조건이 있어야 한 위치의 정보를 넓혀 쓸 수 있다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 볼록성은 모양을, 매끄러움은 기울기 변화의 상한을 정한다"
+  },
+  {
+    "id": "convexity",
+    "title": "7 · 제곱 함수의 현과 곡선 사이 차이는 항상 0 이상이다"
+  },
+  {
+    "id": "smoothness",
+    "title": "8 · 기울기 변화 상한 2로 예측 오차 d²를 덮는다"
+  },
+  {
+    "id": "curvature-range",
+    "title": "9 · 아래 굽음 1과 위 굽음 100이면 한 보폭으로 맞추기 어렵다"
+  },
+  {
+    "id": "source",
+    "title": "10 · 실제 교재의 θ·m·M을 같은 사례의 비율과 경계에 맞춘다"
+  },
+  {
+    "id": "boundaries",
+    "title": "11 · 매끈한 그림만으로 전체 학습의 보장을 얻을 수는 없다"
+  }
+],
     component: () => import("@/pages/articles/ai/math-optimization-convexity"),
   },
   {
@@ -531,12 +571,51 @@ export const dlFoundationArticles: Article[] = [
     title: "Gradient descent와 convergence: 보폭·전제·실패 경계",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "반복 규칙과 보폭" },
-      { id: "update", title: "Negative gradient update" },
-      { id: "step-size", title: "수축·진동·발산" },
-      { id: "convergence", title: "Convergence guarantee" },
-      { id: "stopping-boundary", title: "Stationary와 stopping signal" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 낮아지는 방향을 알아도 멀리 가면 점수가 커질 수 있다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 현재 위치와 기울기로 다음 위치를 만든다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 절반씩 빼면 4→2→1→0.5로 움직인다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 평가하고 이동한 뒤 새 위치에서 다시 시작한다"
+  },
+  {
+    "id": "need",
+    "title": "5 · 방향·이동 계수·종료 조건을 함께 정해야 한다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 경사하강법의 보폭과 수렴의 뜻을 구별한다"
+  },
+  {
+    "id": "update",
+    "title": "7 · 현재 위치에서 기울기의 η배를 빼면 (1−η)x가 된다"
+  },
+  {
+    "id": "step-size",
+    "title": "8 · 배율의 크기가 1보다 작으면 0까지의 거리가 줄어든다"
+  },
+  {
+    "id": "convergence",
+    "title": "9 · 한 번의 감소와 현재 오차를 연결하면 반복 뒤의 경계가 나온다"
+  },
+  {
+    "id": "source",
+    "title": "10 · 실제 교재의 한 번 감소 식에 시작값 4를 대입한다"
+  },
+  {
+    "id": "stopping-boundary",
+    "title": "11 · 작은 기울기와 작은 이동은 서로 다른 종료 이유다"
+  }
+],
     component: () =>
       import("@/pages/articles/ai/math-gradient-descent-convergence"),
   },

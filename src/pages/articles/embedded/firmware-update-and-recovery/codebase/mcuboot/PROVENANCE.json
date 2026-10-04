@@ -1,0 +1,31 @@
+{
+  "repository": "https://github.com/mcu-tools/mcuboot",
+  "version": "v2.2.0",
+  "commit": "2d61c318933819a0f4954fb2a5a957a62c6128ce",
+  "downloadedAt": "2026-10-04",
+  "files": [
+    {
+      "path": "boot/bootutil/src/bootutil_public.c",
+      "sha256": "d41eddf35a17e76291b30db8b9879b655d81e1264ee21f17ea86851078e2cf3a"
+    },
+    {
+      "path": "boot/bootutil/src/swap_scratch.c",
+      "sha256": "946937724e054dadd297dcbeb3f2c437265edaab554c7759d49402d8d46e9cf1"
+    },
+    {
+      "path": "boot/bootutil/include/bootutil/bootutil_public.h",
+      "sha256": "9ba4fbaa073f21e7b46ee889bd145cbc4f597849ef1f2f337745b5f6a3bf819d"
+    },
+    {
+      "path": "docs/design.md",
+      "sha256": "a53903d565954b9f3393c1138ea7eb6b31229b69aa5f9e34f8efe514528a59e4"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "86438164119907debf649e2f9f18a43ad506d75421c9d9675700066b0456205d"
+    }
+  ],
+  "modifications": "none",
+  "license": "Apache2.0 LICENSE retained",
+  "execution": "source state substitution only; no board power-cut test"
+}

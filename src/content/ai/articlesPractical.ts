@@ -1700,11 +1700,55 @@ const strategyArticles: Article[] = [
     title: "하이퍼파라미터 튜닝: Trial에서 Outer Evaluation까지",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Configuration · trial · study" },
-      { id: "selection-contract", title: "Validation과 outer data" },
-      { id: "trial-budget", title: "Random-search hit probability" },
-      { id: "outer-evaluation", title: "종료 조건과 final report" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 같은 시험을 거친 설정을 고르고 새 시험으로 확인합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 조건을 정하고 시험하고 고른 뒤 별도로 평가합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 세 설정 중 B를 고르지만 보고할 숫자는 따로 있습니다"
+  },
+  {
+    "id": "inside-study",
+    "title": "4. 설정과 실행과 선택 결과를 다른 기록으로 남깁니다"
+  },
+  {
+    "id": "why-contract",
+    "title": "5. 더 오래 학습한 효과가 설정의 효과와 섞이지 않게 합니다"
+  },
+  {
+    "id": "tuning-terms",
+    "title": "6. 설정 묶음과 실행과 선택용 평가에 이름을 붙입니다"
+  },
+  {
+    "id": "selection-contract",
+    "title": "7. 후보별 10을 누적해 30을 확인한 뒤 B를 고릅니다"
+  },
+  {
+    "id": "trial-budget",
+    "title": "8. 좋은 영역을 놓칠 확률에서 탐색 횟수를 계산합니다"
+  },
+  {
+    "id": "paper-random-search",
+    "title": "9. 논문이 고르는 것도 실제로 시험한 후보 중 하나입니다"
+  },
+  {
+    "id": "outer-evaluation",
+    "title": "10. 마지막 평가를 본 뒤 바꾸면 새 선택 과정이 됩니다"
+  },
+  {
+    "id": "boundary",
+    "title": "11. 비교 계약이 맞아도 작은 시험의 불확실성은 남습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "12. 선택과 보고와 총비용을 구분할 수 있나요"
+  }
+],
     component: () => import("@/pages/articles/ai/hyperparameter-tuning"),
   },
   {
@@ -1769,11 +1813,55 @@ const strategyArticles: Article[] = [
     title: "Search Space 설계: Type · Scale · Condition · Constraint",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Configuration 생성 규칙" },
-      { id: "scale", title: "Linear와 log sampling" },
-      { id: "conditional-space", title: "Conditional feasible space" },
-      { id: "versioning", title: "경계 진단과 revision" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 같은 범위에서도 무엇을 자주 뽑을지는 달라집니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 값의 모양과 뽑는 비중을 정하고 필요한 항목만 붙입니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 같은 중간 위치가 0.001과 0.050005로 갈립니다"
+  },
+  {
+    "id": "inside-space",
+    "title": "4. 한 숫자에도 형태·범위·비중·조건을 붙입니다"
+  },
+  {
+    "id": "why-scale",
+    "title": "5. 아무 조합이나 늘리면 같은 예산으로 보는 곳이 바뀝니다"
+  },
+  {
+    "id": "space-terms",
+    "title": "6. 값의 형태와 좌표와 존재 조건에 이름을 붙입니다"
+  },
+  {
+    "id": "scale",
+    "title": "7. 로그 좌표의 절반을 원래 크기로 돌립니다"
+  },
+  {
+    "id": "conditional-space",
+    "title": "8. 활성 분기와 예상 메모리를 모두 통과해야 합니다"
+  },
+  {
+    "id": "paper-optuna-space",
+    "title": "9. 공식 예제의 범위와 로그 옵션을 구분해 읽습니다"
+  },
+  {
+    "id": "versioning",
+    "title": "10. 실제 코드의 분기는 필요한 항목만 생성합니다"
+  },
+  {
+    "id": "boundary",
+    "title": "11. 사전 검사와 실제 실행의 차이도 결과입니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "12. 좌표와 추첨법과 실행 가능성을 구별했나요"
+  }
+],
     component: () => import("@/pages/articles/ai/search-space-design"),
   },
   {
@@ -1781,11 +1869,55 @@ const strategyArticles: Article[] = [
     title: "Multi-fidelity Pruning: 후보 수와 자원 깊이 교환",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Comparable resource coordinate" },
-      { id: "successive-halving", title: "Successive halving" },
-      { id: "false-prune-audit", title: "Late bloomer 감사" },
-      { id: "release", title: "Full-budget 재평가" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 모든 후보를 끝까지 돌리기 전에 일부에 자원을 더 줍니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 같은 진척에서 비교하고 일부만 더 학습합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 아홉 후보를 1·3·9단위에서 비교합니다"
+  },
+  {
+    "id": "inside-rungs",
+    "title": "4. 각 관측에 후보와 진척과 상태를 붙입니다"
+  },
+  {
+    "id": "why-coordinate",
+    "title": "5. 같은 epoch라는 이름만으로 비교 기준이 같지는 않습니다"
+  },
+  {
+    "id": "pruning-terms",
+    "title": "6. 평가 깊이와 비교 지점과 중단 정책에 이름을 붙입니다"
+  },
+  {
+    "id": "successive-halving",
+    "title": "7. 후보 수는 3으로 나누고 목표 깊이는 3배 합니다"
+  },
+  {
+    "id": "resource-accounting",
+    "title": "8. 누적 목표 9와 새로 쓰는 6을 구분합니다"
+  },
+  {
+    "id": "paper-hyperband",
+    "title": "9. 원문의 안쪽 반복에 같은 후보 수와 자원을 넣습니다"
+  },
+  {
+    "id": "false-prune-audit",
+    "title": "10. 멈춘 표본 20개 중 4개를 놓쳤다면 분모는 20입니다"
+  },
+  {
+    "id": "boundary",
+    "title": "11. 늦게 좋아지는 후보와 재개 상태를 따로 검사합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "12. 줄인 후보와 절약한 자원과 놓친 후보를 구별했나요"
+  }
+],
     component: () => import("@/pages/articles/ai/multi-fidelity-pruning"),
   },
   {
@@ -1793,11 +1925,55 @@ const strategyArticles: Article[] = [
     title: "Multi-objective HPO: Constraint에서 Pareto 선택까지",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Objective · constraint · frontier" },
-      { id: "dominance", title: "Tolerance-aware dominance" },
-      { id: "uncertainty", title: "Frontier 안정성" },
-      { id: "selection-receipt", title: "최종 선택 receipt" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 정확도와 속도와 메모리 사이에서 선택 이유를 남깁니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 필수 한도를 검사한 뒤 서로 나은 점이 있는 후보를 남깁니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 메모리로 D를 빼고 A와 C 사이의 선택을 남깁니다"
+  },
+  {
+    "id": "inside-objectives",
+    "title": "4. 목표값과 허용 여부와 선호를 다른 칸에 둡니다"
+  },
+  {
+    "id": "why-separate",
+    "title": "5. 0.18과 15와 3을 더하면 단위 선택이 결과를 바꿉니다"
+  },
+  {
+    "id": "pareto-terms",
+    "title": "6. 목표와 지배와 남은 경계에 이름을 붙입니다"
+  },
+  {
+    "id": "dominance",
+    "title": "7. A와 B의 각 축을 비교해 모두 통과하는지 봅니다"
+  },
+  {
+    "id": "paper-multiobjective-optuna",
+    "title": "8. 공식 문서도 모든 축과 적어도 한 축을 함께 검사합니다"
+  },
+  {
+    "id": "uncertainty",
+    "title": "9. 반복 10회 중 6회인 관계는 관측 0.6으로 보고합니다"
+  },
+  {
+    "id": "tolerance-boundary",
+    "title": "10. 허용폭을 넣은 비교는 순환할 수도 있습니다"
+  },
+  {
+    "id": "selection-receipt",
+    "title": "11. 남은 A와 C 중 선택한 이유를 따로 적습니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "12. 모든 면의 우열과 실제 선택을 나누어 보았나요"
+  }
+],
     component: () => import("@/pages/articles/ai/multi-objective-hpo"),
   },
   {
@@ -1934,11 +2110,55 @@ const strategyArticles: Article[] = [
     title: "Learning Curve 추적: Step을 비교 가능한 좌표로",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Metric observation의 형태" },
-      { id: "progress-coordinate", title: "Update · 처리량 · 시간" },
-      { id: "comparison-boundary", title: "같은 자원 지점 정렬" },
-      { id: "logging-receipt", title: "Evaluation receipt" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 곡선의 높이를 보기 전에 가로축이 무엇인지 확인합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 값에 진행 좌표를 붙이고 가까운 관측을 대응시킵니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 100만토큰까지 필요한 갱신은 1000회와 250회입니다"
+  },
+  {
+    "id": "inside-observation",
+    "title": "4. 점 하나에도 진행과 평가와 실행 정체를 붙입니다"
+  },
+  {
+    "id": "why-axes",
+    "title": "5. 같은 갱신 번호와 같은 진행률도 같은 자원량은 아닙니다"
+  },
+  {
+    "id": "curve-terms",
+    "title": "6. 값과 갱신 수와 처리량을 구별해 부릅니다"
+  },
+  {
+    "id": "progress-coordinate",
+    "title": "7. 모델 진척과 소비량과 시간의 세 좌표를 남깁니다"
+  },
+  {
+    "id": "comparison-boundary",
+    "title": "8. 가장 가까운 점을 골라도 허용폭 검사는 남습니다"
+  },
+  {
+    "id": "standard-wandb-tracking",
+    "title": "9. 실제 API는 사용할 가로축의 이름을 받습니다"
+  },
+  {
+    "id": "logging-receipt",
+    "title": "10. 가로축 설정과 실제 평가의 근거를 함께 보관합니다"
+  },
+  {
+    "id": "boundary",
+    "title": "11. 과거 상태에서 다시 시작한 실행은 새 경로로 남깁니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "12. 곡선의 같은 위치가 같은 의미인지 확인했나요"
+  }
+],
     component: () => import("@/pages/articles/ai/learning-curve-tracking"),
   },
   {
