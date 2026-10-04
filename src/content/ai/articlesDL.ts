@@ -1804,14 +1804,98 @@ export const dlFoundationArticles: Article[] = [
   },
   {
     slug: "fft",
-    title: "FFT (Fast Fourier Transform) — AI 관점",
+    title: "네 숫자로 따라가는 FFT: 회전, 계산 재사용, 실제 코드",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "DFT와 FFT의 역할 분리" },
-      { id: "fourier", title: "Sampling·window·spectrum" },
-      { id: "algorithm", title: "Cooley–Tukey의 계산 재사용" },
-      { id: "ai-usage", title: "AI 적용과 실제 선택 기준" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 네 숫자를 다시 쓰면서 같은 계산을 덜 한다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 순서가 있는 값들을 받아 회전별 합을 돌려준다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 1, 2, 3, 4에 네 가지 방향 규칙을 적용한다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 두 묶음의 합과 차이를 만든 뒤 함께 쓴다"
+  },
+  {
+    "id": "why",
+    "title": "5 · 반 바퀴 떨어진 두 출력은 같은 중간값을 공유한다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 표현, 계산 방법, 측정 조건에 이름을 붙인다"
+  },
+  {
+    "id": "fourier",
+    "title": "7 · 모든 복소 계수를 보관하면 네 값을 되찾는다"
+  },
+  {
+    "id": "phase",
+    "title": "8 · 막대 높이만 남기면 위치 정보가 사라진다"
+  },
+  {
+    "id": "nyquist-boundary",
+    "title": "9 · bin의 번호와 실제 진동수를 구별한다"
+  },
+  {
+    "id": "window",
+    "title": "10 · 창은 입력을 바꾸고 0 채우기는 평가 자리를 늘린다"
+  },
+  {
+    "id": "algorithm",
+    "title": "11 · 짝수와 홀수 위치의 변환을 재사용한다"
+  },
+  {
+    "id": "paper-cooley-tukey",
+    "title": "12 · 원 논문의 분해식에 같은 네 값을 넣는다"
+  },
+  {
+    "id": "complexity",
+    "title": "13 · 단계마다 N만큼 일하고 단계는 log₂N개다"
+  },
+  {
+    "id": "implementation",
+    "title": "14 · 실제 KISS FFT는 네 갈래 계산을 한 번 선택한다"
+  },
+  {
+    "id": "implementation-boundary",
+    "title": "15 · 역변환 배율과 메모리 약속도 원문에서 확인한다"
+  },
+  {
+    "id": "convolution",
+    "title": "16 · 필터를 적용할 때는 꼬리가 앞쪽으로 돌아오지 않게 한다"
+  },
+  {
+    "id": "ai-usage",
+    "title": "17 · 긴 음성은 짧은 구간을 옮겨 가며 변환한다"
+  },
+  {
+    "id": "paper-whisper-frontend",
+    "title": "18 · Whisper 원문은 복소 계수 뒤에서 정보를 더 줄인다"
+  },
+  {
+    "id": "paper-fnet",
+    "title": "19 · FNet은 같은 변환을 학습 가능한 선택 대신 섞기에 쓴다"
+  },
+  {
+    "id": "paper-hyena",
+    "title": "20 · Hyena는 긴 필터의 계산과 입력별 조절을 번갈아 적용한다"
+  },
+  {
+    "id": "limits",
+    "title": "21 · 어떤 것을 유지하고 어떤 것을 바꿨는지 먼저 묻는다"
+  },
+  {
+    "id": "review",
+    "title": "22 · 조건을 바꾸고 결과를 먼저 예상해 본다"
+  }
+],
     component: () => import("@/pages/articles/ai/fft"),
   },
   {

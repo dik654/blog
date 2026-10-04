@@ -1149,49 +1149,49 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "flash-attention-io-aware-kernel",
-    title: "FlashAttention 은 online softmax 로 attention 행렬을 HBM 에 쓰지 않습니다",
+    title: "FlashAttention: 점수를 저장하지 않고 같은 답을 구하는 과정",
     subcategory: "ai-llm-serving",
     sections: [
-      {
-            "id": "overview",
-            "title": "1 · 같은 답을 더 적은 왕복으로 구한다"
-      },
-      {
-            "id": "black-box",
-            "title": "2 · 점수와 값을 받아 가중평균을 돌려준다"
-      },
-      {
-            "id": "case",
-            "title": "3 · 네 항을 한 번에 계산하면 7.376113이다"
-      },
-      {
-            "id": "picture",
-            "title": "4 · 조각을 버리고 기준값과 두 합만 남긴다"
-      },
-      {
-            "id": "need",
-            "title": "5 · 계산보다 중간 행렬의 왕복이 커질 수 있다"
-      },
-      {
-            "id": "names",
-            "title": "6 · FlashAttention은 attention 행렬의 저장을 피하는 구현이다"
-      },
-      {
-            "id": "mechanism",
-            "title": "7 · 옛 합의 기준을 옮기면 중간 행렬이 필요 없다"
-      },
-      {
-            "id": "source",
-            "title": "8 · 공식 코드의 row_scale에 e⁻²를 넣는다"
-      },
-      {
-            "id": "comparison",
-            "title": "9 · FA4는 지수 계산과 온칩 이동도 함께 겹친다"
-      },
-      {
-            "id": "limits",
-            "title": "10 · 같은 shape와 오차 기준으로 시간을 재야 한다"
-      }
+  {
+    "id": "overview",
+    "title": "1 · 같은 답을 더 적은 왕복으로 구한다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 점수와 값을 받아 가중평균을 돌려준다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 네 항을 한 번에 계산하면 7.376113이다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 조각을 버리고 기준값과 두 합만 남긴다"
+  },
+  {
+    "id": "need",
+    "title": "5 · 계산보다 중간 행렬의 왕복이 커질 수 있다"
+  },
+  {
+    "id": "names",
+    "title": "6 · FlashAttention은 attention 행렬의 저장을 피하는 구현이다"
+  },
+  {
+    "id": "mechanism",
+    "title": "7 · 옛 합의 기준을 옮기면 중간 행렬이 필요 없다"
+  },
+  {
+    "id": "source",
+    "title": "8 · 공식 코드의 row_scale에 e⁻²를 넣는다"
+  },
+  {
+    "id": "comparison",
+    "title": "9 · FA4는 지수 계산과 온칩 이동도 함께 겹친다"
+  },
+  {
+    "id": "limits",
+    "title": "10 · 같은 shape와 오차 기준으로 시간을 재야 한다"
+  }
 ],
     component: () => import("@/pages/articles/ai/flash-attention-io-aware-kernel"),
   },

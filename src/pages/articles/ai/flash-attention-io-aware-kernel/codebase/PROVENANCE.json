@@ -1,0 +1,20 @@
+{
+  "repository": "Dao-AILab/flash-attention",
+  "commit": "e9515d5dee6ade134a33d6020d38d01ef0596996",
+  "retrievedAt": "2026-10-04",
+  "files": [
+    {
+      "path": "flash_attn/cute/softmax.py",
+      "url": "https://raw.githubusercontent.com/Dao-AILab/flash-attention/e9515d5dee6ade134a33d6020d38d01ef0596996/flash_attn/cute/softmax.py",
+      "bytes": 32023,
+      "sha256": "aaddf3030dba7b9809c4fefae3caab22d0f22b9ecf5050601d6646aefb611a49",
+      "equalsExistingSharedSource": true
+    },
+    {
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/Dao-AILab/flash-attention/e9515d5dee6ade134a33d6020d38d01ef0596996/LICENSE",
+      "bytes": 1558,
+      "sha256": "8c9ccb96c065e706135b6cbad279b721da6156e51f3a5f27c6b3329af9416d73"
+    }
+  ]
+}

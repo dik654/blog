@@ -7654,10 +7654,37 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "hash-theory": {
-    title: "Hash input·security game·construction 글이 소유하는 범위",
-    owns: ["Canonical bit/byte input과 tuple ambiguity", "Preimage·second-preimage·collision generic boundary", "Merkle–Damgård·sponge construction과 hash release gate"],
-    reuses: [{ label: "Merkle selective opening", href: "/cs/crypto/merkle-tree" }, { label: "Poseidon field permutation", href: "/cs/crypto/poseidon-hash" }],
-    evidence: [{ kind: "standard", rule: "SHA-2/SHA-3 normative claim은 FIPS 180-4/202에 한정한다." }, { kind: "primary-source", rule: "Rust API claim은 pinned RustCrypto source에 한정한다." }, { kind: "project-measurement", rule: "Known vectors와 boundary/differential parity 뒤 성능을 비교한다." }],
+    "title": "같은 abc의 바이트·SHA-256·SHA-3와 보안 조건을 설명하는 범위",
+    "owns": [
+      "abc의 바이트·패딩·첫 라운드·스트리밍·최종 출력",
+      "세 공격 목표와 실제 한 바이트 예 및 로컬 길이 확장 반례",
+      "SHA3의 상태·다섯 단계·suffix와 Keccak/SHAKE 구분",
+      "고정 원문 일부의 네이티브 실행과 자체 모형 및 미실행 범위"
+    ],
+    "reuses": [
+      {
+        "label": "Merkle selective opening",
+        "href": "/cs/crypto/merkle-tree"
+      },
+      {
+        "label": "Poseidon field permutation",
+        "href": "/cs/crypto/poseidon-hash"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "standard",
+        "rule": "FIPS 180-4와 202의 2015판을 직접 읽고 abc를 대입합니다. 개정 계획을 새 규격 발행으로 해석하지 않습니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "고정 RustCrypto sha2/sha3 원문·실제 버전·라이선스를 보존합니다. 전체 의존성 및 CPU 경로 실행을 주장하지 않습니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "선택 compact 함수와 pad/read_state를 실제 실행했습니다. 어댑터 범위와 Python 순열 모형을 따로 밝히며 보안 증명·상수 시간·성능 검증으로 확대하지 않습니다."
+      }
+    ]
   },
   "poseidon-hash": {
     title: "Poseidon profile·HADES round·field sponge 글이 소유하는 범위",
@@ -9861,26 +9888,54 @@ export const EDITORIAL_BOUNDARIES = {
 ],
   },
   "flash-attention-io-aware-kernel": {
-    title: "FlashAttention IO-aware kernel 글이 소유하는 범위",
-    owns: [
-      "Attention materialization 의 N×N HBM 왕복 비용 계산",
-      "IO-aware 비용 모델과 SRAM residency·HBM 접근량 Θ(N²d²/M)",
-      "Online softmax 의 running max·normalizer·출력 누적 갱신식",
-      "Q/K/V tiling forward loop 와 backward 의 logsumexp recompute-vs-store tradeoff",
+    "title": "같은 네 점수로 읽는 FlashAttention의 저장·누적·기준 갱신",
+    "owns": [
+      "N=4096·d=64·2바이트의 중간 배열 왕복 128MiB와 입력/출력 포함 분모의 구별",
+      "원 논문 IO 모형 d≤M≤Nd 및 점근 접근량과 실제 시간의 경계",
+      "점수 [1,3,2,5]의 기준·분모·분자 갱신과 실패 사례",
+      "고정 일반 Softmax의 lane별 부분합·finalize·출력 보정 및 역전파 저장/재계산",
+      "FA4 기준 유지와 고정 SoftmaxSm100의 log2 단위 조건 및 CPU 검산의 범위"
     ],
-    reuses: [
-      { label: "Scaled dot-product attention", href: "/cs/ai/attention-theory" },
-      { label: "Softmax 와 max-shift invariance", href: "/cs/ai/softmax" },
-      { label: "KV cache 모양", href: "/cs/ai/kv-cache-fundamentals" },
-      { label: "CUDA shared-memory GEMM tiling", href: "/cs/gpu/cuda-matrix-multiply" },
-      { label: "Autodiff save–recompute 경계", href: "/cs/ai/reverse-mode-autodiff" },
-      { label: "PagedAttention kernel 경계", href: "/cs/ai/vllm-paged-attention" },
+    "reuses": [
+      {
+        "label": "Scaled dot-product attention",
+        "href": "/cs/ai/attention-theory"
+      },
+      {
+        "label": "Softmax 와 max-shift invariance",
+        "href": "/cs/ai/softmax"
+      },
+      {
+        "label": "KV cache 모양",
+        "href": "/cs/ai/kv-cache-fundamentals"
+      },
+      {
+        "label": "CUDA shared-memory GEMM tiling",
+        "href": "/cs/gpu/cuda-matrix-multiply"
+      },
+      {
+        "label": "Autodiff save–recompute 경계",
+        "href": "/cs/ai/reverse-mode-autodiff"
+      },
+      {
+        "label": "PagedAttention kernel 경계",
+        "href": "/cs/ai/vllm-paged-attention"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "속도·HBM 접근 배율은 FlashAttention 논문의 A100 자기보고로 한정하고 다른 GPU 세대로 일반화하지 않는다." },
-      { kind: "standard", rule: "HBM·SRAM 용량과 대역폭은 논문이 적은 A100 수치를 쓰고 hardware 별 재확인을 전제한다." },
-      { kind: "project-claim", rule: "FlashAttention-2·3 의 병렬화·loop 재배치는 이 글에서 언급만 하고 수치·기여는 다음 글이 정본으로 다룬다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "FlashAttention 2205.14135v2의 정리 2와 FA4 2603.05451v1의 식 (6), 실험 본문·부록을 각각 읽는다. B200/B100 표기 차이는 그대로 남긴다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "e9515d5 전체 softmax.py·LICENSE를 보존하고 원격 SHA를 대조한다. 일반 함수의 네 lane 합산과 Blackwell scalar 기준 분기를 구별한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "가정한 네 점수 산술과 원문 scalar AST 몸체의 대체 의존성 실행만 자체 검산이다. 전체 CuTe 컴파일·GPU 수치·속도 실험으로 부르지 않는다."
+      }
+    ]
   },
   "continuous-batching-step-anatomy": {
     "title": "Scheduling step 해부 글이 소유하는 범위",
@@ -15119,6 +15174,44 @@ export const EDITORIAL_BOUNDARIES = {
       {
         "kind": "project-measurement",
         "rule": "정수 작은예16쌍과360개 원소를 전수검산하고 고정Rust --locked에서 같은 계수의 밀집 곱·cE·두 쌍의 곱·0/항등원을 실행했습니다. 원문 CPU 실행과 독립적인 선 생성·EVM·성능·상수 시간 검증을 구분합니다."
+      }
+    ]
+  },
+  "fft": {
+    "title": "FFT에서 직접 설명하는 범위",
+    "owns": [
+      "같은 네 값의 DFT·복원·위상·Parseval 관계와 표본률 해석",
+      "짝수·홀수 분해와 원문 Cooley–Tukey 식의 부호·연산 장부",
+      "고정 KISS FFT의 실제 radix-4 분기·float 역배율·임시 배열",
+      "창·0 채우기·원형과 선형 합성곱의 조건",
+      "같은 계산을 STFT·Whisper 특징·FNet 실수 mixer·Hyena 한 단계에 적용하는 경계"
+    ],
+    "reuses": [
+      {
+        "label": "복소수의 회전과 위상",
+        "href": "/cs/ai/math-complex-numbers-oscillations"
+      },
+      {
+        "label": "유한 정밀도와 연산 순서",
+        "href": "/cs/ai/math-numerical-precision-stability"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Cooley–Tukey 스캔의 식 번호·인덱스·부호를 확인한 뒤 같은 네 입력에 대입합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "고정 KISS FFT 원문을 수정하지 않고 C 호출 예제와 CPU에서 컴파일해 네 값·역배율·같은 포인터 경로를 확인합니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "Whisper 고정 원문과 FNet·Hyena의 실제 식을 대입한 근거를 전체 모델 실행·성능 재현과 구별합니다."
+      },
+      {
+        "kind": "standard",
+        "rule": "유한 DFT 가역성과 연속 표집 복원, 대수적 동일성과 반올림 비트, 원형 연산과 padding한 선형 연산을 구별합니다."
       }
     ]
   },

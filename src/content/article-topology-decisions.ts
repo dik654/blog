@@ -968,10 +968,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "ai/flash-attention-io-aware-kernel": {
     "action": "keep",
-    "status": "reviewed",
+    "status": "implemented",
     "reviewedAt": "2026-10-04",
-    "rationale": "같은 숫자 사례의 입력·상태·계산·공식 구현·실패 조건이 하나의 질문을 이룹니다. 최신 결과는 해당 원리를 확장하는 비교 절에 연결했습니다.",
-    "sharedGate": "본문 사례를 같은 단위와 축으로 재계산하고, 공식 원문과 코드의 버전·가정·측정 범위를 일치시켜야 합니다."
+    "rationale": "같은 네 점수의 기준과 두 합을 끝까지 따라가며 중간 저장, 원문 부분합과 FA4 기준 유지가 어떻게 같은 출력을 만드는지 비교합니다. 독립 하드웨어 상세는 기존 정본으로 연결하므로 이 사례의 유도와 실패 조건을 한 글에 유지합니다.",
+    "sharedGate": "점수 [1,3,2,5]·값 [2,4,6,8], 출력 7.376113, 잘못 보정한 출력 10.444571, lane 합 1.203438, threshold 3 유지/2 갱신, 128/1.5=85.33 및 32GiB/2TB/s=17.18ms 하한을 본문·6+4·원문 4패널·3장면에서 대조합니다."
   },
   "ai/fast-weight-memory-and-chunkwise-recurrence": {
     "rationale": "두 주소가 같은 2×2 기억을 공유해 간섭하는 사례가 차이 갱신, 그 순서 의존성과 chunk 병렬화, 독립 erase/write를 차례로 요구합니다. 서로 다른 기억 체계의 개론으로 넓히지 않고 같은 행렬의 쓰기·다시 읽기를 원문 끝까지 보존합니다.",
@@ -1851,6 +1851,20 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "같은 RAY를 선택하고 기록하는 요청에서 후보 출처와 검증 모양이 바꾸는 상태·확률·비용을 비교하는 글입니다. 각 방법의 독립 상세가 아니라 동일 경로와 단독 기준을 유지하는 비교가 중심이므로 한 글로 유지합니다. 논문별 실험 조건은 펼침으로 분리했습니다.",
     "sharedGate": "prefix4·7입력·17/10칸·RAY [0,1,4]·KV [4,5,8]→[4,5,6]·글/기록7, MTP 1.85/(v+.016)와 x<.917, suffix score1.875와 전체 시간비80/14를 본문·6+4·4장면·원문13패널에서 맞춥니다. 실제 CPU 실행과 전체 원본 byte, 두 폭과 수식·humanize를 별도 확인합니다."
   },
+  "ai/fft": {
+    "action": "keep",
+    "rationale": "같은 네 값의 표현을 바꾸는 질문에서 가역성·회전 분해·실제 FFT 경로가 이어집니다. 그 출력을 창·필터·특징·모델 mixer가 어떻게 바꾸는지를 같은 입력으로 비교하므로 한 글에 유지합니다. 일반 복소수와 수치 안정성은 정본 글로 연결하고 여기서는 변환 계약과 적용 경계를 설명합니다.",
+    "sharedGate": "네 출력·역복원, 8 Hz의 signed bin, Hann 출력, radix-2와 실제 radix-4, 원시 역변환 4배, 선형 [1,1,1,1,−4]와 원형 [-3,1,1,1], FNet 실수 투영의 [1,3,3,3]을 본문·도식·원문·6+4에서 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "crypto/hash-theory": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 abc를 바이트·패딩·첫 라운드·원문·공격 경계에 반복 대입해야 SHA-256과 SHA-3의 역할 및 보장 조건을 연결할 수 있습니다. 트리의 상세 경로는 별도 정본으로 이어집니다.",
+    "sharedGate": "실제 compact의 8입력·pad/read_state 위치·독립 순열 모형과 hashlib 및 로컬 길이 확장을 대조했습니다. 전체 라이브러리·CPU dispatch·실제 keccak 의존성·성능 검증을 구분합니다."
+  },
 };
 
 /**
@@ -1858,6 +1872,8 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/fft": "4a26bb91107c906e",
+  "crypto/hash-theory": "a5cd8d47bbd208bc",
   "ai/cross-entropy": "a23db07aab820d12",
   "ai/speculative-decoding-variants": "c2746d3bfcf6a81c",
   "crypto/crypto-primitives": "33067f5c32a87fc6",
@@ -1978,9 +1994,9 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "infrastructure/climate-risk-and-exposure": "2dfca89c7ec5bb09",
   "business/business-model-cashflow": "a2a19e5897a643d4",
   "business/franchise-incentives": "a9ab37834708e551",
-  "business/shop-fitout-and-opening": "79930f0f0473d091",
-  "business/shop-site-selection": "c234354d4fbdfc7a",
-  "business/shop-unit-economics": "05954906d5d9bf37",
+  "business/shop-fitout-and-opening": "127d2cc59ed4cc75",
+  "business/shop-site-selection": "dd6073120b5a9bef",
+  "business/shop-unit-economics": "166b07c61126231c",
   "business/supply-chain-bargaining": "9ac935b509088b19",
   "institutions/healthcare-payment-systems": "2e1ca0897a7b1151",
   "institutions/how-to-read-a-country": "436b348e745e7179",
@@ -2112,7 +2128,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "ai/agent-memory-lifecycle":"e3bb408c931ea9af",
 "ai/expert-parallelism-moe-systems":"1025d7f9fa6ef1a6",
 "ai/fast-weight-memory-and-chunkwise-recurrence":"7a7c39371c676228",
-"ai/flash-attention-io-aware-kernel":"4bc6b3022c566c1f",
+"ai/flash-attention-io-aware-kernel":"88f916e0409787de",
 "ai/reward-design-for-verifiable-rl":"9945c9823b138b96",
 "ai/world-model-latent-planning":"ad27657439f3c92a",
 "banking/repo-and-collateral-funding":"8b5c5b3336427561",

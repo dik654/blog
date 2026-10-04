@@ -3604,72 +3604,64 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/seq2seq#limitations",
   },
   "discrete-fourier-transform": {
-    id: "discrete-fourier-transform",
-    domain: "mathematics",
-    label: "Discrete Fourier transform (DFT)",
-    definition:
-      "길이 N의 equally spaced sample vector를 N개의 complex exponential basis와 내적해 magnitude와 phase를 가진 frequency coefficient로 바꾸는 invertible linear transform입니다.",
-    canonicalHref: "/cs/ai/fft#overview",
+    "id": "discrete-fourier-transform",
+    "domain": "mathematics",
+    "label": "Discrete Fourier transform (DFT)",
+    "definition": "유한한 N개 값을 N개의 복소 회전별 합으로 다시 적습니다. 모든 복소 계수를 보관한 정확한 산술에서 가역입니다. 크기나 실수 부분만 남기면 일반적으로 복원하지 못하며 연속 신호 전체의 유일한 복원과도 다릅니다.",
+    "canonicalHref": "/cs/ai/fft#fourier"
   },
   "sampling-nyquist-boundary": {
-    id: "sampling-nyquist-boundary",
-    kind: "theorem",
-    domain: "physics",
-    label: "Sampling · Nyquist boundary",
-    definition:
-      "Band-limited continuous signal을 일정 간격으로 sampling할 때 sample rate의 절반보다 낮은 frequency band에서 alias 없이 복원할 수 있다는 측정 조건입니다.",
-    canonicalHref: "/cs/ai/fft#nyquist-boundary",
+    "id": "sampling-nyquist-boundary",
+    "kind": "theorem",
+    "domain": "physics",
+    "label": "Sampling · Nyquist boundary",
+    "definition": "표본 시각 사이의 빠른 회전은 다른 느린 회전과 같은 기록을 만들 수 있습니다. 기본 저역 복원 정리는 엄격한 대역 |f|<f_s/2와 이상적인 양방향 무한 균일 표본을 전제합니다. 유한 DFT의 가역성이나 FFT 실행만으로 이 조건이 충족되지 않습니다.",
+    "canonicalHref": "/cs/ai/fft#nyquist-boundary"
   },
   "spectral-leakage-window": {
-    id: "spectral-leakage-window",
-    domain: "machine-learning",
-    label: "Spectral leakage · window trade-off",
-    definition:
-      "유한 frame의 경계 불연속이 spectrum energy를 여러 bin으로 퍼뜨리는 현상과 taper가 side lobe를 줄이는 대신 main lobe를 넓히는 맞바꿈입니다.",
-    canonicalHref: "/cs/ai/fft#fourier",
+    "id": "spectral-leakage-window",
+    "domain": "machine-learning",
+    "label": "Spectral leakage · window trade-off",
+    "definition": "유한 구간을 고르는 창이 원래 주파수 성분을 주변에 퍼뜨립니다. Hann은 직사각 창보다 side lobe를 낮추며 main lobe를 넓힙니다. 끝점 값의 불연속 하나로 모든 누설을 판정하거나 이미 생긴 alias를 없애는 연산으로 읽지 않습니다.",
+    "canonicalHref": "/cs/ai/fft#window"
   },
   "zero-padding-spectrum-grid": {
-    id: "zero-padding-spectrum-grid",
-    domain: "machine-learning",
-    label: "Zero-padding · spectrum grid",
-    definition:
-      "관측 sample 뒤에 0을 붙여 같은 finite observation의 discrete spectrum을 더 촘촘한 bin에서 평가하되 새로운 시간 관측이나 실제 분해능은 추가하지 않는 처리입니다.",
-    canonicalHref: "/cs/ai/fft#fourier",
+    "id": "zero-padding-spectrum-grid",
+    "domain": "machine-learning",
+    "label": "Zero-padding · spectrum grid",
+    "definition": "같은 유한 기록의 스펙트럼을 더 촘촘한 주파수 자리에서 평가합니다. 새 측정이 없으므로 실제 관측 시간을 두 배 늘린 것처럼 두 가까운 성분을 분리할 새 정보가 생기지는 않습니다.",
+    "canonicalHref": "/cs/ai/fft#window"
   },
   "cooley-tukey-fft": {
-    id: "cooley-tukey-fft",
-    kind: "method",
-    domain: "computer-science",
-    label: "Cooley–Tukey FFT",
-    definition:
-      "Composite-length DFT를 더 작은 sub-DFT로 factorization하고 roots of unity의 주기·대칭으로 중간값을 재사용하는 FFT algorithm family입니다.",
-    canonicalHref: "/cs/ai/fft#algorithm",
+    "id": "cooley-tukey-fft",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Cooley–Tukey FFT",
+    "definition": "길이를 인수로 나눠 작은 DFT의 중간값을 여러 출력에서 재사용합니다. radix-2의 반복은 N=2ᵐ 조건입니다. 혼합 radix 등 다른 방법이 있으며 정확한 대수 결과가 같아도 반올림·메모리·시간은 구현마다 달라집니다.",
+    "canonicalHref": "/cs/ai/fft#algorithm"
   },
   "fft-butterfly": {
-    id: "fft-butterfly",
-    domain: "computer-science",
-    label: "FFT butterfly",
-    definition:
-      "같은 even·odd sub-DFT와 twiddle product를 더하기와 빼기로 결합해 서로 N/2 떨어진 두 DFT output을 함께 만드는 계산 단위입니다.",
-    canonicalHref: "/cs/ai/fft#algorithm",
+    "id": "fft-butterfly",
+    "domain": "computer-science",
+    "label": "FFT butterfly",
+    "definition": "회전을 맞춘 같은 두 중간값을 더하고 빼서 두 출력을 만듭니다. 두 갈래 결합은 radix-2 사례입니다. 선의 교차 모양 자체가 곱셈을 뜻하거나 실제 라이브러리가 항상 같은 그래프·제자리 메모리를 쓴다는 뜻은 아닙니다.",
+    "canonicalHref": "/cs/ai/fft#algorithm"
   },
   "convolution-theorem": {
-    id: "convolution-theorem",
-    kind: "theorem",
-    domain: "mathematics",
-    label: "Convolution theorem",
-    definition:
-      "한 domain의 convolution이 Fourier domain의 pointwise multiplication과 대응한다는 정리입니다.",
-    canonicalHref: "/cs/ai/fft#ai-usage",
+    "id": "convolution-theorem",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Convolution theorem",
+    "definition": "같은 필터를 위치마다 적용하는 합성곱을 주파수별 곱셈으로 계산합니다. DFT의 기본 정리는 같은 길이의 원형 합성곱입니다. 선형 연산은 M≥Lx+Lh−1, 역변환 배율과 crop을 맞춰야 하며 짧은 필터에서는 직접 연산이 빠를 수 있습니다.",
+    "canonicalHref": "/cs/ai/fft#convolution"
   },
   "short-time-fourier-transform": {
-    id: "short-time-fourier-transform",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Short-time Fourier transform (STFT)",
-    definition:
-      "긴 signal을 겹칠 수 있는 local frame으로 나누고 window를 곱한 뒤 frame마다 DFT를 계산해 time–frequency representation을 만드는 방법입니다.",
-    canonicalHref: "/cs/ai/fft#ai-usage",
+    "id": "short-time-fourier-transform",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Short-time Fourier transform (STFT)",
+    "definition": "짧은 구간의 창을 조금씩 옮기며 시각별 DFT를 만듭니다. 창·겹침·가장자리 padding·중심 정렬·정규화 계약을 확인합니다. 제곱 크기와 Mel 필터·로그를 거친 특징은 일반적으로 원래 복소 계수를 보존하지 않습니다.",
+    "canonicalHref": "/cs/ai/fft#ai-usage"
   },
   "attention-query-key-value": {
     id: "attention-query-key-value",
@@ -14748,11 +14740,46 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "drand-threshold-bls-round-signature": { id: "drand-threshold-bls-round-signature", kind: "method", domain: "distributed-systems", label: "drand threshold-BLS round signature", definition: "DKG로 나눈 BLS secret shares 중 threshold 이상의 partial signatures를 같은 round message에 대해 모아 하나의 unique group signature로 보간·검증하는 beacon round 방법입니다.", canonicalHref: "/cs/blockchain/drand#threshold-round" },
   "drand-chain-hash-round-binding": { id: "drand-chain-hash-round-binding", kind: "concept", domain: "distributed-systems", label: "drand chain hash · round binding", definition: "Chain identity·period·genesis·public key와 round number, 이전 signature 또는 unchained domain을 signed message와 randomness derivation에 결속해 다른 network/round replay를 막는 계약입니다.", canonicalHref: "/cs/blockchain/drand#verification" },
   "drand-randomness-consumer-release-gate": { id: "drand-randomness-consumer-release-gate", kind: "method", domain: "distributed-systems", label: "drand consumer verification · release gate", definition: "Pinned chain info와 signature/round continuity·freshness·network identity를 검증하고 outage/replay/future round/malformed response를 fail closed한 뒤 application entropy derivation을 허용하는 절차입니다.", canonicalHref: "/cs/blockchain/drand#release" },
-  "hash-canonical-bit-byte-input": { id: "hash-canonical-bit-byte-input", kind: "concept", domain: "computer-science", label: "Hash canonical bit · byte input", definition: "Logical fields를 길이·endianness·text normalization·type tag가 고정된 byte string으로 직렬화해 같은 의미는 같은 bytes, 다른 typed tuple은 다른 bytes가 되게 하는 hash 입력 계약입니다.", canonicalHref: "/cs/crypto/hash-theory#input-security" },
-  "hash-preimage-second-preimage-collision": { id: "hash-preimage-second-preimage-collision", kind: "concept", domain: "computer-science", label: "Hash preimage · second-preimage · collision security", definition: "Digest에서 임의 입력을 찾기, 고정 입력과 같은 digest의 다른 입력 찾기, 공격자가 고른 두 다른 입력의 같은 digest 찾기를 각각 다른 공격 game과 generic work factor로 평가하는 안전성 구분입니다.", canonicalHref: "/cs/crypto/hash-theory#input-security" },
-  "merkle-damgard-padding-length-boundary": { id: "merkle-damgard-padding-length-boundary", kind: "concept", domain: "computer-science", label: "Merkle–Damgård padding · length boundary", definition: "Fixed-size compression function을 chaining해 arbitrary-length hash를 만들 때 message delimiter·length encoding으로 block 경계를 유일하게 하고 raw digest를 naive MAC으로 재사용할 때 length-extension 위험을 구분하는 경계입니다.", canonicalHref: "/cs/crypto/hash-theory#constructions" },
-  "sponge-rate-capacity-domain-separation": { id: "sponge-rate-capacity-domain-separation", kind: "concept", domain: "computer-science", label: "Sponge rate · capacity · domain separation", definition: "Permutation state를 input/output과 직접 XOR/더하는 rate와 숨겨진 security margin인 capacity로 나누고 suffix/type tag로 hash·XOF·tuple protocols를 분리하는 sponge construction 계약입니다.", canonicalHref: "/cs/crypto/hash-theory#constructions" },
-  "hash-primitive-release-gate": { id: "hash-primitive-release-gate", kind: "method", domain: "computer-science", label: "Hash primitive release gate", definition: "Algorithm/version/input encoding/domain/output length를 고정하고 empty·boundary·bit/byte/order/tag·known vectors·cross-library differential failures를 통과한 뒤 throughput/latency를 비교하는 hash 채택 절차입니다.", canonicalHref: "/cs/crypto/hash-theory#release" },
+  "hash-canonical-bit-byte-input": {
+    "id": "hash-canonical-bit-byte-input",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "해시의 바이트 입력과 필드 경계",
+    "definition": "프로토콜이 동등하다고 정한 입력의 정규화와 필드 타입·길이·순서·정수 형식을 고정해 모호하지 않은 바이트열을 만드는 원칙입니다. 해시는 의미를 해석하거나 원래 필드 경계를 복원하지 않습니다.",
+    "canonicalHref": "/cs/crypto/hash-theory#encoding"
+  },
+  "hash-preimage-second-preimage-collision": {
+    "id": "hash-preimage-second-preimage-collision",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "해시의 역상·제2역상·충돌 목표",
+    "definition": "정해진 출력의 입력 찾기, 정해진 입력과 같은 출력의 다른 입력 찾기, 자유롭게 고른 두 입력의 충돌 찾기를 구분합니다. 고전적 이상 함수의 공격 규모는 실제 비교 비트 수와 공격자의 선택 조건을 전제로 하며 실제 알고리즘 전체 보증이 아닙니다.",
+    "canonicalHref": "/cs/crypto/hash-theory#input-security"
+  },
+  "merkle-damgard-padding-length-boundary": {
+    "id": "merkle-damgard-padding-length-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "SHA-256의 패딩과 길이 확장",
+    "definition": "정해진 초기 상태와 블록 압축을 반복하면서 SHA-256의 끝 표시와 원래 비트 길이를 보존하는 구조입니다. 이 패딩은 임의 메시지의 prefix-free 인코딩이 아니며 전체 출력 상태와 길이를 이용한 secret-prefix 인증의 길이 확장 조건을 별도로 확인합니다.",
+    "canonicalHref": "/cs/crypto/hash-theory#padding"
+  },
+  "sponge-rate-capacity-domain-separation": {
+    "id": "sponge-rate-capacity-domain-separation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "스펀지의 rate·capacity·용도 구분",
+    "definition": "스펀지 상태의 직접 입출력 구간 rate와 나머지 capacity 및 도메인 suffix·패딩·출력 규칙을 구분하는 원리입니다. SHA-3의 내부 순열은 전체 상태를 바꾸며 capacity는 비밀키가 아니므로 알려진 입력의 상태 전체를 재현할 수 있습니다.",
+    "canonicalHref": "/cs/crypto/hash-theory#sponge"
+  },
+  "hash-primitive-release-gate": {
+    "id": "hash-primitive-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "해시 구현의 검증 범위",
+    "definition": "알고리즘·버전·바이트 형식·suffix·출력 길이를 고정하고 알려진 결과·경계 입력·스트리밍·실패 사례를 대조하는 절차입니다. 함수 일부의 실행과 대체 형식·독립 모형·전체 라이브러리 및 성능 검증을 구별해 기록합니다.",
+    "canonicalHref": "/cs/crypto/hash-theory#verification"
+  },
   "poseidon-parameter-profile": { id: "poseidon-parameter-profile", kind: "concept", domain: "computer-science", label: "Poseidon field · width · round parameter profile", definition: "Prime modulus p, state width t, rate/capacity, S-box exponent α, full/partial round counts, round constants와 MDS matrix를 하나의 versioned instance로 고정하는 Poseidon parameter 계약입니다.", canonicalHref: "/cs/crypto/poseidon-hash#profile" },
   "poseidon-hades-round-schedule": { id: "poseidon-hades-round-schedule", kind: "method", domain: "computer-science", label: "Poseidon HADES full · partial round schedule", definition: "초기·마지막 full rounds에서는 모든 state words에 S-box를 적용하고 중간 partial rounds에서는 한 word에만 적용한 뒤 매 round linear mixing해 algebraic attacks margin과 circuit cost를 맞바꾸는 schedule입니다.", canonicalHref: "/cs/crypto/poseidon-hash#rounds" },
   "poseidon-power-sbox-permutation-condition": { id: "poseidon-power-sbox-permutation-condition", kind: "theorem", domain: "mathematics", label: "Poseidon power S-box permutation condition", definition: "Prime field Fp에서 x↦x^α가 bijection이 되려면 multiplicative group order p−1과 α가 coprime이어야 하며 inverse exponent α⁻¹ mod(p−1)가 존재한다는 조건입니다.", canonicalHref: "/cs/crypto/poseidon-hash#rounds" },
@@ -15941,7 +15968,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "HBM Traffic Reduction",
       "IO complexity"
     ],
-    "definition": "연산량과 함께 HBM·온칩 저장 공간 사이의 이동량을 비용으로 보는 설계입니다. FlashAttention의 O(N²d²/M) 접근량은 해당 IO 모형의 가정 안에서 쓰는 점근식이며 정확한 바이트 비율이나 실측 가속비가 아닙니다.",
+    "definition": "연산량과 함께 HBM·온칩 저장 공간 사이의 이동량을 비용으로 보는 설계입니다. 원 논문 정리 2의 Θ(N²d²/M)는 원소 단위 용량 d≤M≤Nd와 해당 조각 배치에서 얻은 점근 접근량이며 정확한 바이트 비율이나 실측 가속비가 아닙니다.",
     "canonicalHref": "/cs/ai/flash-attention-io-aware-kernel#io-aware"
   },
   "online-softmax": {
@@ -15955,7 +15982,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Running Normalizer",
       "Online normalizer calculation"
     ],
-    "definition": "한 행의 점수를 조각으로 읽으며 최대값과 지수합을 갱신하는 계산법입니다. 최대 기준이 바뀌면 옛 합에 같은 지수 배율을 곱해 옮깁니다. 실수 산술에서는 전체 행 계산과 동치지만 부동소수점 결과의 bit 동일성을 보장하지 않습니다.",
+    "definition": "한 행의 점수를 조각으로 읽으며 기준값과 지수합을 갱신하는 계산법입니다. 기준이 바뀌면 옛 합을 같은 지수 배율로 옮깁니다. Attention의 값 누적에도 같은 보정이 필요합니다. 실수 산술의 동치이며 실제 부동소수점 bit 동일성을 보장하지 않습니다.",
     "canonicalHref": "/cs/ai/flash-attention-io-aware-kernel#online-softmax"
   },
   "attention-tiling": {
@@ -15981,7 +16008,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "IO-aware exact attention kernel"
     ],
     "definition": "Tiling과 online softmax로 큰 attention 중간 배열의 HBM 저장을 피하는 구현입니다. Backward는 필요한 점수·확률을 재계산하며, 연결을 근사로 줄이지 않는 수학적 exactness와 실제 수치 오차·성능은 구별합니다.",
-    "canonicalHref": "/cs/ai/flash-attention-io-aware-kernel#tiling"
+    "canonicalHref": "/cs/ai/flash-attention-io-aware-kernel#names"
   },
   "attention-recompute-vs-store": {
     "id": "attention-recompute-vs-store",
@@ -27718,7 +27745,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "점포의 손익분기 판매량",
-    "definition": "월 고정비를 건당 공헌이익으로 나누어 고정비를 충당하는 데 필요한 거래 건수를 구합니다.",
+    "definition": "일정한 월 고정비를 양수인 잔당 공헌이익으로 나눠 해당 비용을 충당할 최소 판매량을 구하는 계산입니다. 가격·비용·처리능력의 범위와 포함한 비용 항목을 확인합니다.",
     "canonicalHref": "/economics/business/shop-unit-economics#mechanism"
   },
   "shop-investment-recovery": {
@@ -27734,7 +27761,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "통행에서 구매까지의 전환",
-    "definition": "같은 시간대의 통행 인원에서 실제 입점과 구매에 이르는 비율을 단계별로 나누는 입지 추정입니다.",
+    "definition": "같은 관찰 시간과 점포 앞 범위에서 통행→입장→구매의 수와 조건부 비율을 나누는 방법입니다. 구매자 수와 영수증 수의 단위 및 관측값과 가정을 구분합니다.",
     "canonicalHref": "/economics/business/shop-site-selection#mechanism"
   },
   "site-permitted-use": {
@@ -27774,7 +27801,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "economics",
     "label": "인테리어의 종료 의무",
-    "definition": "설치한 설비가 나중에 이전·양도될지 철거·원상복구 비용이 될지를 개업 전에 분류하는 장부입니다.",
+    "definition": "임대차·적용법과 필요한 임대인 동의, 인수 합의에 따라 시설을 남길지 제거할지와 비용 부담을 정하는 의무입니다. 설치비가 양도가격으로 보장되지는 않습니다.",
     "canonicalHref": "/economics/business/shop-fitout-and-opening#limits"
   },
   "lease-right-and-deposit": {
@@ -28414,7 +28441,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "computer-science",
     "label": "조건부 softmax 기준 갱신",
-    "definition": "같은 기준으로 분자와 분모를 누적하되 수치적으로 안전한 구간에서는 최대값 기준의 재조정을 생략하는 방식입니다.",
+    "definition": "분자와 분모의 기준을 일치시킨 채 허용된 범위에서는 기준 재조정을 생략하는 방식입니다. 고정 SoftmaxSm100 구현은 점수 차이를 2의 지수 단위로 바꿔 양의 임계값과 비교합니다. 공통 배율의 상쇄가 overflow나 항별 근사 오차까지 복구하는 것은 아닙니다.",
     "canonicalHref": "/cs/ai/flash-attention-io-aware-kernel#comparison"
   },
   "independent-memory-erase-write": {

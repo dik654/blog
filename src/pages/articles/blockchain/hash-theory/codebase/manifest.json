@@ -1,0 +1,66 @@
+{
+  "repository": "https://github.com/RustCrypto/hashes",
+  "commit": "f6c786d72ed4d37a32dcd32daa2e7277dd4683e1",
+  "packageVersions": {
+    "sha2": "0.11.0",
+    "sha3": "0.12.0"
+  },
+  "normalization": "None: complete source files are byte-identical to the pinned raw source.",
+  "files": [
+    {
+      "file": "sha2-consts.rs",
+      "upstream": "sha2/src/consts.rs",
+      "sha256": "a70aa1d4f798b619e5332fd81162b10e73c02b3adbdbb3b69b6d17781437e073"
+    },
+    {
+      "file": "sha2-block-api.rs",
+      "upstream": "sha2/src/block_api.rs",
+      "sha256": "7d858102344cc8be2d22b207296c44087b91b2e7309c5598497c48c1182c89cc"
+    },
+    {
+      "file": "sha256-dispatch.rs",
+      "upstream": "sha2/src/sha256.rs",
+      "sha256": "e1b90f72b981d384cfde99a569d8e023cddc0a02bc0cf3b7392391f9429b10ca"
+    },
+    {
+      "file": "sha256-soft.rs",
+      "upstream": "sha2/src/sha256/soft.rs",
+      "sha256": "60449b6df17909cd34d533ec4d82851841cb8b26e01c0907827b33343917a31c"
+    },
+    {
+      "file": "sha256-compact.rs",
+      "upstream": "sha2/src/sha256/soft/compact.rs",
+      "sha256": "0f729259d0318e4c1c8055c0103da16bd360c98c11ca614b5bbe860fcda3ccff"
+    },
+    {
+      "file": "sha3-lib.rs",
+      "upstream": "sha3/src/lib.rs",
+      "sha256": "b5197ef5711ba506ba8f320a4ea9e20a9e266fa1a30efc213072157a21ee2583"
+    },
+    {
+      "file": "sha3-utils.rs",
+      "upstream": "sha3/src/utils.rs",
+      "sha256": "3eabf975c550c470fb104d23b4715bdcf19ff70438c3e5c309055ba7d0cb5438"
+    },
+    {
+      "file": "sha2-LICENSE-MIT",
+      "upstream": "sha2/LICENSE-MIT",
+      "sha256": "831e0f43ad0bf014c1c4fec5767aae470434c1d66d6e671be2d823e729063e25"
+    },
+    {
+      "file": "sha2-LICENSE-APACHE",
+      "upstream": "sha2/LICENSE-APACHE",
+      "sha256": "a9040321c3712d8fd0b09cf52b17445de04a23a10165049ae187cd39e5c86be5"
+    },
+    {
+      "file": "sha3-LICENSE-MIT",
+      "upstream": "sha3/LICENSE-MIT",
+      "sha256": "6462612d92b861384dcd378168a7a0ef3ef28876d3d380d382cb5a3091e360b8"
+    },
+    {
+      "file": "sha3-LICENSE-APACHE",
+      "upstream": "sha3/LICENSE-APACHE",
+      "sha256": "a9040321c3712d8fd0b09cf52b17445de04a23a10165049ae187cd39e5c86be5"
+    }
+  ]
+}

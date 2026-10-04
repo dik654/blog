@@ -1,0 +1,66 @@
+[
+  {
+    "repo": "mborgerding/kissfft",
+    "commit": "e5e3fac46e0d94a8f8170c06706b7a4218828333",
+    "path": "kiss_fft.c",
+    "url": "https://raw.githubusercontent.com/mborgerding/kissfft/e5e3fac46e0d94a8f8170c06706b7a4218828333/kiss_fft.c",
+    "sha256": "84154815c4e734bdc986fae5f2301212b1ed4dd91e005bc88680218d4bc3bae3",
+    "bytes": 11970
+  },
+  {
+    "repo": "mborgerding/kissfft",
+    "commit": "e5e3fac46e0d94a8f8170c06706b7a4218828333",
+    "path": "kiss_fft.h",
+    "url": "https://raw.githubusercontent.com/mborgerding/kissfft/e5e3fac46e0d94a8f8170c06706b7a4218828333/kiss_fft.h",
+    "sha256": "6907d7d90187eab2cd1e264e11d986b322e419e1a543846d4529da0f23218d47",
+    "bytes": 5051
+  },
+  {
+    "repo": "mborgerding/kissfft",
+    "commit": "e5e3fac46e0d94a8f8170c06706b7a4218828333",
+    "path": "_kiss_fft_guts.h",
+    "url": "https://raw.githubusercontent.com/mborgerding/kissfft/e5e3fac46e0d94a8f8170c06706b7a4218828333/_kiss_fft_guts.h",
+    "sha256": "8140ad59872effc33922c954f3a682a2dc5668532de8000a134e1a6c0e994595",
+    "bytes": 5465
+  },
+  {
+    "repo": "mborgerding/kissfft",
+    "commit": "e5e3fac46e0d94a8f8170c06706b7a4218828333",
+    "path": "kiss_fft_log.h",
+    "url": "https://raw.githubusercontent.com/mborgerding/kissfft/e5e3fac46e0d94a8f8170c06706b7a4218828333/kiss_fft_log.h",
+    "sha256": "f954cb6890ec999f7fbc80cdd1c8c0194bbaeb0f1c27e11bd23450f53871cf8c",
+    "bytes": 971
+  },
+  {
+    "repo": "mborgerding/kissfft",
+    "commit": "e5e3fac46e0d94a8f8170c06706b7a4218828333",
+    "path": "COPYING",
+    "url": "https://raw.githubusercontent.com/mborgerding/kissfft/e5e3fac46e0d94a8f8170c06706b7a4218828333/COPYING",
+    "sha256": "a2840585f8411be8e6826a31ef15ae65c950bd74a2437a73b013398a934ad0c6",
+    "bytes": 246
+  },
+  {
+    "repo": "mborgerding/kissfft",
+    "commit": "e5e3fac46e0d94a8f8170c06706b7a4218828333",
+    "path": "LICENSES/BSD-3-Clause",
+    "url": "https://raw.githubusercontent.com/mborgerding/kissfft/e5e3fac46e0d94a8f8170c06706b7a4218828333/LICENSES/BSD-3-Clause",
+    "sha256": "4d6bcab46f27d6d0c878e8305d4bdcfe040d52bf6656b9771f04c9fb9902c0ed",
+    "bytes": 1830
+  },
+  {
+    "repo": "openai/whisper",
+    "commit": "86098128c0b4f24f0e2aa2994de830614b474227",
+    "path": "whisper/audio.py",
+    "url": "https://raw.githubusercontent.com/openai/whisper/86098128c0b4f24f0e2aa2994de830614b474227/whisper/audio.py",
+    "sha256": "36ed287b2de3eaf40207cd2a44a8d45d57ea5c212a39df07401d4fcb4d5a5a1a",
+    "bytes": 4945
+  },
+  {
+    "repo": "openai/whisper",
+    "commit": "86098128c0b4f24f0e2aa2994de830614b474227",
+    "path": "LICENSE",
+    "url": "https://raw.githubusercontent.com/openai/whisper/86098128c0b4f24f0e2aa2994de830614b474227/LICENSE",
+    "sha256": "b5d65a59060e68c4ff940e1eddfa6f94b2d68fdf58ed7f4dd57721c997e35e9d",
+    "bytes": 1063
+  }
+]

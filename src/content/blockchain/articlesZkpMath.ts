@@ -233,15 +233,90 @@ export const zkpMathArticles: Article[] = [
   },
   {
     slug: "hash-theory",
-    title: "Hash 이론: bytes·security game·compression·sponge",
+    title: "해시: abc의 세 바이트에서 SHA-256과 SHA-3까지",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "Bit string에서 protocol digest까지" },
-      { id: "input-security", title: "Canonical input과 세 공격 game" },
-      { id: "constructions", title: "Compression chaining과 sponge" },
-      { id: "merkle-boundary", title: "Merkle로 넘기는 경계" },
-      { id: "release", title: "Hash release gate" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 세 글자 abc가 같은 요약값이 되는 과정을 따라갑니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 입력 바이트와 계산 규칙이 결과를 정합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. abc는 61 62 63이라는 세 바이트입니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 입력·채움·반복 계산·출력의 네 장면을 봅니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 정해진 크기의 계산을 반복하면 긴 입력도 처리할 수 있습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 앞에서 본 역할에 이름을 붙입니다"
+  },
+  {
+    "id": "padding",
+    "title": "7. 표준의 24비트를 실제 64바이트에 맞춥니다"
+  },
+  {
+    "id": "round",
+    "title": "8. 첫 라운드에서 61626380이 상태를 바꾸는 모습을 계산합니다"
+  },
+  {
+    "id": "source-compression",
+    "title": "9. 고정한 Rust 원문에서 같은 첫 블록을 실행합니다"
+  },
+  {
+    "id": "streaming",
+    "title": "10. a 다음 bc를 받아도 최종 길이는 24비트입니다"
+  },
+  {
+    "id": "input-security",
+    "title": "11. 아무 충돌 찾기와 정해진 결과 맞히기는 다른 문제입니다"
+  },
+  {
+    "id": "length-extension",
+    "title": "12. H(key || abc)를 인증값으로 쓰면 뒤를 잇는 경로가 생깁니다"
+  },
+  {
+    "id": "sponge",
+    "title": "13. SHA-3에서는 같은 abc를 1600비트 상태에 넣습니다"
+  },
+  {
+    "id": "permutation",
+    "title": "14. 25칸을 섞는 다섯 단계도 같은 입력으로 추적합니다"
+  },
+  {
+    "id": "source-sponge",
+    "title": "15. 원문의 06과 마지막 80이 들어가는 위치를 맞춥니다"
+  },
+  {
+    "id": "variants",
+    "title": "16. SHA3·Keccak·SHAKE는 이름이 비슷해도 바꿔 넣을 수 없습니다"
+  },
+  {
+    "id": "encoding",
+    "title": "17. 같은 abc라도 두 필드의 경계는 해시가 찾아주지 않습니다"
+  },
+  {
+    "id": "merkle-boundary",
+    "title": "18. 트리의 구조와 인증은 해시 바깥에서 정합니다"
+  },
+  {
+    "id": "verification",
+    "title": "19. 맞춘 결과와 실행하지 않은 범위를 함께 남깁니다"
+  },
+  {
+    "id": "limits",
+    "title": "20. 세 글자의 경로에서 다음 결과를 예측합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/hash-theory"),
   },
   {
