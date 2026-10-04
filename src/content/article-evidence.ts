@@ -1376,30 +1376,71 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/fft": [
     {
-      kind: "핵심 논문",
-      label:
-        "An Algorithm for the Machine Calculation of Complex Fourier Series",
-      href: "https://research.ibm.com/publications/an-algorithm-for-the-machine-calculation-of-complex-fourier-series",
-      note: "Cooley–Tukey 분할과 재사용을 설명한 1965년 논문",
+      "kind": "핵심 논문",
+      "label": "An Algorithm for the Machine Calculation of Complex Fourier Series",
+      "href": "https://research.ibm.com/publications/an-algorithm-for-the-machine-calculation-of-complex-fourier-series",
+      "note": "Cooley–Tukey 분할과 재사용을 설명한 1965년 논문"
     },
     {
-      kind: "공식 연구",
-      label: "Robust Speech Recognition via Large-Scale Weak Supervision",
-      href: "https://cdn.openai.com/papers/whisper.pdf",
-      note: "Whisper의 16kHz·80-channel log-Mel frontend specification",
+      "kind": "공식 연구",
+      "label": "Robust Speech Recognition via Large-Scale Weak Supervision",
+      "href": "https://cdn.openai.com/papers/whisper.pdf",
+      "note": "Whisper의 16kHz·80-channel log-Mel frontend specification"
     },
     {
-      kind: "핵심 논문",
-      label: "FNet: Mixing Tokens with Fourier Transforms",
-      href: "https://arxiv.org/abs/2105.03824",
-      note: "Fourier transform을 fixed token mixer로 사용한 encoder 실험",
+      "kind": "핵심 논문",
+      "label": "FNet: Mixing Tokens with Fourier Transforms",
+      "href": "https://arxiv.org/abs/2105.03824",
+      "note": "Fourier transform을 fixed token mixer로 사용한 encoder 실험"
     },
     {
-      kind: "핵심 논문",
-      label: "Hyena Hierarchy: Towards Larger Convolutional Language Models",
-      href: "https://arxiv.org/abs/2302.10866",
-      note: "Implicit long convolution과 gating에서 FFT가 맡는 실행 역할",
+      "kind": "핵심 논문",
+      "label": "Hyena Hierarchy: Towards Larger Convolutional Language Models",
+      "href": "https://arxiv.org/abs/2302.10866",
+      "note": "Implicit long convolution과 gating에서 FFT가 맡는 실행 역할"
     },
+    {
+      "kind": "핵심 논문",
+      "label": "An Algorithm for the Machine Calculation of Complex Fourier Series",
+      "href": "https://web.stanford.edu/class/cme324/classics/cooley-tukey.pdf",
+      "note": "297–298쪽 식 (6)·(7)에 N=4와 같은 네 값을 대입하고 양의 지수 규약의 켤레 출력을 계산합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Robust Speech Recognition via Large-Scale Weak Supervision",
+      "href": "https://cdn.openai.com/papers/whisper.pdf",
+      "note": "§2.2의 16 kHz·25 ms·10 ms를 400·160 표본으로 계산하고 고정 audio.py의 제곱 크기·Mel·로그 순서를 추적합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "FNet: Mixing Tokens with Fourier Transforms",
+      "href": "https://aclanthology.org/2022.naacl-main.319.pdf",
+      "note": "4299쪽 식 (3)의 두 축 변환 뒤 실수 투영에 4×1 입력을 대입해 [10,−2,−2,−2]를 구합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Hyena Hierarchy: Towards Larger Convolutional Language Models",
+      "href": "https://arxiv.org/pdf/2302.10866v3",
+      "note": "6쪽 식 (4)의 한 단계에 같은 입력과 h=[1,−1], g=[1,0,2,1]을 넣어 인과적 출력 [1,0,2,1]을 계산합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "KISS FFT · e5e3fac4 고정 원문",
+      "href": "https://github.com/mborgerding/kissfft/blob/e5e3fac46e0d94a8f8170c06706b7a4218828333/kiss_fft.c",
+      "note": "실제 radix-4 분기와 임시 배열을 같은 네 값의 CPU 실행으로 확인했습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Whisper · 86098128 audio.py",
+      "href": "https://github.com/openai/whisper/blob/86098128c0b4f24f0e2aa2994de830614b474227/whisper/audio.py",
+      "note": "16 kHz·400·160과 제곱 크기·시간축 절단·80/128 Mel·로그 순서입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.14 · STFT",
+      "href": "https://docs.pytorch.org/docs/2.14/generated/torch.stft.html",
+      "note": "복소 출력의 주파수·시간 축과 기본 인자 계약을 구별합니다."
+    }
   ],
   "ai/deep-learning-overview": [
     {
@@ -6494,9 +6535,24 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/vdf": [{ kind:"핵심 논문", label:"Boneh et al. · VDF", href:"https://eprint.iacr.org/2018/601.pdf", note:"VDF definitions and constructions" },{ kind:"핵심 논문", label:"Wesolowski · Efficient VDF", href:"https://eprint.iacr.org/2018/623.pdf", note:"Quotient proof construction" }],
   "blockchain/drand": [{ kind:"공식 문서", label:"drand specification", href:"https://docs.drand.love/docs/specification/", note:"Threshold beacon protocol specification" },{ kind:"공식 코드", label:"drand @ 2363f3b", href:"https://github.com/drand/drand/tree/2363f3b9ba5fd6f14e0b84a096b248479790d75d", note:"Pinned official source" }],
   "crypto/hash-theory": [
-    { kind: "공식 규격", label: "NIST FIPS 180-4", href: "https://csrc.nist.gov/pubs/fips/180-4/upd1/final", note: "SHA-2 padding·compression·digest의 normative standard" },
-    { kind: "공식 규격", label: "NIST FIPS 202", href: "https://csrc.nist.gov/pubs/fips/202/final", note: "SHA-3/SHAKE와 KECCAK permutation·suffix의 normative standard" },
-    { kind: "공식 코드", label: "RustCrypto/hashes @ f6c786d", href: "https://github.com/RustCrypto/hashes/tree/f6c786d72ed4d37a32dcd32daa2e7277dd4683e1", note: "Streaming hash implementations/tests의 pinned source" },
+    {
+      "kind": "공식 문서",
+      "label": "NIST FIPS 180-4 · 2015판",
+      "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf",
+      "note": "5.1.1절의 abc와 인쇄 13쪽, 6.2절 인쇄 22–23쪽을 읽고 첫 라운드와 출력에 대입했습니다. 임의 프로토콜·secret-prefix 인증·구현 부채널 안전성을 보장하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NIST FIPS 202 · 2015판",
+      "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf",
+      "note": "3.2절과 Algorithm 7–9, 6.1–6.2절을 읽고 별도 Python 모형을 hashlib와 대조했습니다. capacity를 비밀키로 보거나 임의 매개변수의 안전성을 승인하지 않습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "RustCrypto hashes · f6c786d 원문",
+      "href": "https://github.com/RustCrypto/hashes/tree/f6c786d72ed4d37a32dcd32daa2e7277dd4683e1",
+      "note": "rustc 1.93.0에서 compact를 8입력으로 실행하고 pad/read_state를 명시한 대체 형식으로 실행했습니다. 전체 Cargo/API·CPU dispatch·실제 keccak/cursor 의존성의 실행이나 성능 측정을 주장하지 않습니다."
+    }
   ],
   "crypto/poseidon-hash": [
     { kind: "핵심 논문", label: "Grassi et al. · Poseidon", href: "https://eprint.iacr.org/2019/458.pdf", note: "HADES·field S-box·parameter/security/cost analysis의 원 연구" },
@@ -7369,9 +7425,9 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/flash-attention-io-aware-kernel": [
     {
       "kind": "핵심 논문",
-      "label": "FlashAttention · 2022",
-      "href": "https://arxiv.org/abs/2205.14135",
-      "note": "원 논문의 모델·GPU 구성에서 저자 측정. FLOPs가 같아도 시간은 달라지며 모든 shape에서 같은 이득은 아니다."
+      "label": "FlashAttention · arXiv 2205.14135v2",
+      "href": "https://arxiv.org/html/2205.14135v2",
+      "note": "정리 2의 d≤M≤Nd와 원소 단위 접근량, 조각 처리 및 역전파 재계산을 확인했습니다. 저자 실험은 이 글의 GPU 재현 측정이 아닙니다."
     },
     {
       "kind": "핵심 논문",
@@ -7381,9 +7437,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       "kind": "공식 코드",
-      "label": "본문에서 사용하는 고정 commit의 전체 구현",
+      "label": "FlashAttention e9515d5 · softmax.py 전체 원문",
       "href": "https://github.com/Dao-AILab/flash-attention/blob/e9515d5dee6ade134a33d6020d38d01ef0596996/flash_attn/cute/softmax.py",
-      "note": "CodeSidebar에 원문 전체와 LICENSE를 보관했습니다. 주석의 숫자 대입은 설명용 검산이며 GPU 학습·성능 재현을 뜻하지 않습니다."
+      "note": "online_softmax의 lane별 부분합, finalize의 width=4 합산, rescale_O, SoftmaxSm100의 log2 단위 조건을 같은 네 점수에 대응합니다. 원문 scalar 분기의 CPU 대체 의존성 실행과 전체 GPU 실행을 구별합니다."
     }
   ],
   "ai/continuous-batching-step-anatomy": [
@@ -10099,104 +10155,108 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "공식 기준 소개의 목적과 범위를 읽었습니다. 임대료와 상품 매출에 IFRS15를 일괄 적용하거나 개별 리스 회계 처리를 여기서 판정하지 않습니다."
     }
   ],
-  "business/shop-unit-economics": [{"kind": "공식 문서", "label": "IAS 2 Inventories", "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/", "note": "재고의 비용 인식과 순실현가능가치 기준. 본문의 잔당 계산은 설명용 현금 사례입니다."},             {
-      "kind": "공식 문서",
-      "label": "UK Business rates overview",
-      "href": "https://www.gov.uk/introduction-to-business-rates",
-      "note": "잉글랜드 등의 상업용 부동산 관련 비용을 확인하는 영국 정부 안내입니다."
-    },             {
-      "kind": "공식 문서",
-      "label": "NSW Retail Tenancy Guide",
-      "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide",
-      "note": "NSW 상업 임대차의 outgoings와 fit-out 비용을 구분하는 원문입니다."
-    },
+  "business/shop-unit-economics": [
     {
       "kind": "공식 문서",
-      "label": "IAS 2 · About, expense recognition",
+      "label": "IAS 2 · 판매 재고와 비용 인식",
       "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/",
-      "note": "2026-10-04 원문 확인. 2천 원 가운데 재료 부분을 공급 명세와 실제 사용량으로 확인합니다. 남은 재료와 버린 재료를 따로 세어 비용을 잘못 낮추지 않습니다. 결제 수수료는 재고가 아닌 별도 비용으로 합칩니다."
+      "note": "공식 About의 재고 판매와 손실 인식 설명을 읽고 판매 시점의 짧은 원문을 대조했습니다. 모든 점주에게 IFRS가 적용되거나 전체 2천 원이 IAS 2 재고비라는 뜻은 아닙니다."
     },
     {
       "kind": "공식 문서",
-      "label": "Business Queensland · Break-even point",
+      "label": "Business Queensland · Break-even and profit",
       "href": "https://www.business.qld.gov.au/running-business/finance/essentials/break-even-profit",
-      "note": "2026-10-04 원문 확인. 월 2천 잔이면 매출 1,200만 원, 주문별 비용 400만 원, 고정비 800만 원입니다. 두 비용의 합이 1,200만 원이므로 이 사례에 포함한 비용만큼은 정확히 충당합니다."
+      "note": "공식 HTML의 Break-even point 정의와 판매·비용 설명을 읽고 14단어 문장을 인용했습니다. 2천 잔에 점주 노동·세금·투자 회수까지 포함되거나 수요·현금 유동성이 보장된다는 뜻은 아닙니다."
     },
-],
+    {
+      "kind": "공식 문서",
+      "label": "GOV.UK · Business rates overview",
+      "href": "https://www.gov.uk/introduction-to-business-rates",
+      "note": "공식 Overview의 대상·지역별 처리·감면·면제 설명을 읽었습니다. 영국 모든 점포가 같은 세액을 내거나 현재 특정 점포의 부담을 계산했다는 뜻은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NSW · What are outgoings?",
+      "href": "https://www.smallbusiness.nsw.gov.au/help/common-questions/what-are-outgoings",
+      "note": "공식 본문의 정의·계약 및 공개서 명시·직접적이고 합리적인 관련 범위를 읽었습니다. 다른 관할권의 비용 전가를 판정하거나 모든 항목의 청구가 허용된다는 뜻은 아닙니다."
+    }
+  ],
   "business/shop-site-selection": [
     {
       "kind": "공식 문서",
-      "label": "Australia: Choose your business location",
+      "label": "호주 정부 · Choose your business location",
       "href": "https://business.gov.au/planning/new-businesses/choose-your-business-location",
-      "note": "입지 비용·시설·고객 접근·지방정부 확인 항목을 제시하는 공식 안내입니다."
+      "note": "Location·Cost·Facilities and utilities·Compliance와 작은 공간 시험 안내의 실제 원문을 읽었습니다. 호주 정부가 5%·40%를 추정하거나 모든 입지에서 반복 구매를 보장한다는 뜻은 아닙니다."
     },
     {
       "kind": "공식 문서",
-      "label": "Korea: 식품위생법 시행규칙 제36조",
+      "label": "식품위생법 시행규칙 제36조",
       "href": "https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=115900",
-      "note": "한국 음식점 등의 시설기준이 별표 14와 연결됨을 확인합니다."
-    },
-    {
-      "kind": "공식 문서",
-      "label": "Australian Government · Choose your business location, Location",
-      "href": "https://business.gov.au/planning/new-businesses/choose-your-business-location",
-      "note": "2026-10-04 원문 확인. 1천 명 가운데 실제로 들어온 50명과 산 20명을 각각 기록합니다. 보고서에 천 명만 있어도 5%와 40%를 증명한 것은 아니므로, 시간대 관찰과 짧은 시험 판매로 가정을 점검합니다."
-    },
-    {
-      "kind": "공식 문서",
-      "label": "한국 식품위생법 시행규칙 제36조",
-      "href": "https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=115900",
-      "note": "2026-10-04 원문 확인. 하루 20건이 예상되는 후보지가 음식점이라면 건축물 용도만 확인하고 끝내지 않습니다. 별표 14의 해당 업종 시설요건을 도면과 대조하고 관할 위생부서에 배기·급배수·구획 등을 확인한 뒤 계약 조건을 정합니다."
+      "note": "실제 HTML에서 별표 14가 업종별 시설기준임을 지정하는 조문을 읽고 짧게 인용했습니다. 별표 전체를 검토해 특정 점포의 적합성을 판정하거나 임대차 분쟁을 해결한 것은 아닙니다."
     },
     {
       "kind": "공식 문서",
       "label": "중소벤처기업부 · 소상공인365 정식 서비스 개시",
       "href": "https://www.mss.go.kr/site/chungbuk/ex/bbs/View.do?bcIdx=1055594&cbIdx=180",
-      "note": "2025-01-02 공식 보도자료에서 기능의 범위를 확인했습니다. 플랫폼의 제공 항목과 특정 점포의 매출 예측 정확도는 별도 문제입니다."
-    },
-],
-  "business/shop-fitout-and-opening": [            {
-      "kind": "공식 문서",
-      "label": "한국 식품위생법 시행규칙 제36조 및 별표 14",
-      "href": "https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=115900",
-      "note": "업종별 시설기준의 법적 출발점입니다. 개별 점포의 허가 여부를 이 문서만으로 단정하지 않습니다."
-    }, {"kind": "공식 문서", "label": "NSW Retail Tenancy Guide", "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide", "note": "임차인의 fit-out·outgoings·make good 확인 항목을 제시합니다."},             {
-      "kind": "공개 강의",
-      "label": "YouTube · Square The Build Out (Ggiata)",
-      "href": "https://www.youtube.com/watch?v=odwii7_bJww",
-      "note": "게시기관의 공식 전사에서 임대료 선발생·가스 용량 부족·최종 검사 불확실성을 확인했습니다. 정확한 영상 시각은 확인하지 않았으며 특정 미국 매장의 사례로만 씁니다."
-    },
+      "note": "공식 HTML의 입지평가·배달정보 리포트와 경영진단·유동인구 설명을 읽었습니다. 현재 특정 계정에 제공되는 모든 기능을 실제 사용했거나 매출 예측 정확도를 검증한 것은 아닙니다."
+    }
+  ],
+  "business/shop-fitout-and-opening": [
     {
       "kind": "공식 문서",
       "label": "국세청 · 사업자등록 신청 절차",
       "href": "https://g.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7777&mi=2444",
-      "note": "2026-10-04 원문 확인. 30일 공사 중 임대차계약서와 업종 신고에 필요한 서류를 준비합니다. 등록 신청 자체는 개업 전에도 가능하므로 4천800만 원 공사 관련 증빙을 받을 사업자 정보를 정하되, 영업 시작은 업종별 요건 충족과 별도로 판단합니다."
+      "note": "실제 공식 HTML에서 개업 전 또는 사업 시작일부터 20일 이내 신청 문구를 읽었습니다. 등록증으로 모든 시설·소방·위생 요건이 충족된다는 뜻은 아닙니다."
     },
     {
       "kind": "공식 문서",
-      "label": "NSW Retail Tenancy Guide · Shopping centre tips",
+      "label": "NSW · Retail Tenancy Guide",
       "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide",
-      "note": "2026-10-04 원문 확인. 4천800만 원 시설 중 남길 배관과 철거할 간판을 설치 전에 적습니다. 사례의 공사비는 현재의 지출이며 퇴거 때 받을 가격이나 철거비를 포함한 최종 비용과 같지 않습니다."
+      "note": "공식 페이지의 검색 색인 본문에서 fit-out과 make good 안내 및 짧은 인용 문장을 확인했습니다. 모든 임대인의 철거 요구가 자동으로 유효하거나 설치비가 양도가치가 된다는 뜻은 아닙니다."
     },
     {
       "kind": "공식 문서",
-      "label": "법제처 · 음식점 화재배상책임보험 가입과 소방 안전 의무",
-      "href": "https://easylaw.go.kr/CSP/OnhunqueansInfoRetrieve.laf?onhunqnaAstSeq=91&onhunqueSeq=4365",
-      "note": "2026-08-15 안내를 2026-10-04 확인. 면적·층·출입구와 업종별 대상 및 제외 조건을 확인합니다."
+      "label": "GOV.UK · When is permission required?",
+      "href": "https://www.gov.uk/guidance/when-is-permission-required",
+      "note": "011·012·012a의 용도변경과 물리적 공사 구분, 공식 지침 모음의 England 범위를 읽었습니다. 같은 용도군의 모든 공사에 허가가 필요하거나 영국 전체에 같은 절차가 적용된다고 단정하지 않습니다."
     },
     {
       "kind": "공식 문서",
-      "label": "법제처 · 음식점 건강진단과 식품위생교육",
-      "href": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=4&cciNo=1&cnpClsNo=1&csmSeq=839&popMenu=ov",
-      "note": "2026-09-15 기준 안내를 2026-10-04 확인. 식품위생법 제40조·제41조와 대상·예외는 건강진단 본문 및 연결된 식품위생교육 절에서 확인합니다."
+      "label": "GOV.UK · 상가 임차인의 책임",
+      "href": "https://www.gov.uk/renting-business-property-tenant-responsibilities",
+      "note": "실제 공식 본문의 repairs와 moving out 설명을 읽었습니다. 한국이나 NSW의 원상복구 범위를 이 안내로 판정하지 않습니다."
     },
     {
       "kind": "공식 문서",
-      "label": "Square · The Build Out 전사",
+      "label": "Square · The Build Out 공식 전사",
       "href": "https://squareup.com/us/en/the-bottom-line/videos/making-a-restaurant-with-ggiata/the-build-out",
-      "note": "해당 영상의 공식 전사입니다. Square는 Ggiata가 제작 참여 보수를 받았다고 공개하므로 독립적인 성과 검증과 구분합니다."
+      "note": "공식 전사에서 공간 인수 후 임대료·가스관 증설·최종 검사와 허가 누락 발언을 읽었습니다. 영상 자체의 시각을 확인한 것이 아니며 모든 매장의 비용이나 독립적인 성과 검증으로 일반화하지 않습니다."
     },
-],
+    {
+      "kind": "공식 문서",
+      "label": "식품위생법 시행규칙 제36조",
+      "href": "https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=115900",
+      "note": "2026-09-01 시행본의 실제 HTML에서 별표 14를 업종별 시설기준으로 지정한 조문을 읽었습니다. 별표 전체의 개별 요건이나 점포 적합성을 판정한 것은 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "법제처 · 음식점 화재배상책임보험과 안전시설",
+      "href": "https://easylaw.go.kr/CSP/OnhunqueansInfoRetrieve.laf?onhunqnaAstSeq=91&onhunqueSeq=4365",
+      "note": "2026-08-15 안내의 대상 업종·면적·층·출입구와 예외를 읽었습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "법제처 · 음식점 건강진단",
+      "href": "https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=4&cciNo=1&cnpClsNo=1&csmSeq=839&popMenu=ov",
+      "note": "2026-09-15 안내의 제40조 대상·시기·예외를 읽었습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "법제처 · 식품위생교육",
+      "href": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=839&ccfNo=4&cciNo=1&cnpClsNo=2",
+      "note": "2026-09-15 안내의 제41조 교육·대리·예외를 읽었습니다. 10월8일 예고 내용을 10월4일 현재 규정으로 적용하지 않습니다."
+    }
+  ],
   "property/commercial-lease-and-rent": [            {
       "kind": "공식 문서",
       "label": "대한민국 상가건물 임대차보호법",

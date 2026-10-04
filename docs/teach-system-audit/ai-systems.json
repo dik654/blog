@@ -3353,25 +3353,124 @@
       "route": "ai/flash-attention-io-aware-kernel",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/flash-attention-io-aware-kernel.tsx",
       "publicPath": "cs/ai/flash-attention-io-aware-kernel",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 3,
         "levelMarkers": 10,
         "sectionCount": 10
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "query/key/value/scale/mask/dtype/S/Q/K/V/softmax introduced in second section before numeric case",
+        "full formula prop is hidden by shorter annotatedFormula, omitting visible m and numerator update",
+        "general Softmax row_sum is lane partial until finalize width4 reduction; body treats it as entire row sum",
+        "FA4 condition lacks pinned implementation, log2 exponent-unit conversion, and executable scalar boundary check",
+        "shared ownership still claims original A100-only scope despite FA4 section",
+        "IO asymptotic range d<=M<=Nd omitted"
+      ],
+      "fixture": {
+        "scores": [
+          1,
+          3,
+          2,
+          5
+        ],
+        "values": [
+          2,
+          4,
+          6,
+          8
+        ],
+        "tileSize": 2,
+        "assumptions": "scaled scores; no mask or dropout; nonempty row; real arithmetic first"
+      },
+      "stageAnchors": {
+        "strategy": "overview",
+        "blackBox": "black-box",
+        "smallCase": "case",
+        "structure": "picture",
+        "necessity": "need",
+        "names": "names",
+        "trace": "mechanism",
+        "realSource": "source",
+        "depth": "comparison",
+        "limits": "limits",
+        "prediction": "글 끝 ReviewPrompts 3개"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/html/2205.14135v2",
+          "appliedAt": "names/source",
+          "scope": "Theorem2 d≤M≤Nd 접근 모형과 재계산 경계"
+        },
+        {
+          "href": "https://arxiv.org/html/2603.05451v1",
+          "appliedAt": "comparison",
+          "scope": "식6 조건부 기준 갱신, 각 실행 역할과 B200/B100 불일치"
+        },
+        {
+          "href": "https://github.com/Dao-AILab/flash-attention/blob/e9515d5dee6ade134a33d6020d38d01ef0596996/flash_attn/cute/softmax.py",
+          "appliedAt": "source/comparison",
+          "scope": "4 lane별 부분합·finalize·분자 보정·log2 단위 scalar 분기"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "기존 10절과 올바른 네 점수 유도를 실제 읽고 보존했습니다. 이름을 앞서 나열하던 2절을 입력·출력의 평이한 계약으로 고치고 두 조각의 평균을 반씩 섞는 실패 사례를 추가했습니다. 기준과 두 합을 같은 사례로 실제 코드·조건부 갱신까지 추적합니다.",
+        "originalPreservation": "기존 7.376113,128MiB/1.5MiB=85.33,출력 포함64,32GiB/2TB/s=17.18ms 하한,역전파 재계산,FA4와Amdahl1.33을 보존했습니다. 조각별/행별 합 혼동과 숨겨진 일반식,IO 모형의 적용 범위를 실제 교정했습니다.",
+        "sourceVerification": "고정 e9515d5 원문 softmax.py와 LICENSE를 원격 byte·SHA256으로 대조했습니다. 공유 원문 파일은 변경하지 않았습니다. 원문 update_row_max_from_local AST 몸체에서 타입 표기·컴파일 장식을 제거하고 const_expr·exp2만 scalar 대역으로 실행해 threshold0/2/3/등호/첫조각을 확인했습니다. GPU 실행·CuTe compile·근사 오차·속도 측정으로 부르지 않습니다.",
+        "humanize": {
+          "roundTrip": true,
+          "paragraphs": 45,
+          "chunks": 2,
+          "chars": 6650,
+          "gateExit": 0,
+          "manualReview": "최초 실제 추출 44문단을 byte 동일 왕복 후 읽어 C-11 연결 쉼표2개를 교정했습니다. 용어 표로 SRAM 설명 이동, 긴 소스 문단 분리, 타입 표기 문구 교정 뒤 최신45문단을 다시 실제 추출·byte 동일 왕복·prepare/gate·2묶음3834/2813자·apply 했습니다. 최신 수정0·누락0·모든 gate0입니다."
+        },
+        "humanizeProps": "실제 AST 표시 문자열143개를 추출·동일 원시 slice 재삽입 후 전문을 읽었습니다. 한 묶음의 연결 쉼표 경고를 실제3개 교정해 해소했습니다. 도식의 중복 안내2문구 제거 뒤 최신141문자열8028자를 다시 추출해 전문과3묶음3982/3964/78자 모두gate0입니다. 원문 코드·숫자만인 값과 추출에서 제외된 링크 포함2문단은 별도로 직접 읽었습니다. 후속 도식 좌표 수정은 문구를 바꾸지 않았습니다.",
+        "browser390": true,
+        "browser1440": true,
+        "codePanels3901440": 8,
+        "allScenes3901440": true,
+        "narrowText": 0,
+        "firstFifth": "양 폭의 실제 본문에서 이름6절 진입 전 비중 .23638034입니다. 기존처럼 태그10개만으로 통과시키지 않고 초반 용어를 실제 옮겼습니다.",
+        "viz": "두 폭×3장면의 결과·SVG bbox·ArrowLeft/Right를 확인했습니다. 초기 label을 통과하던 선을 끊고 도식 높이를 줄였습니다. 최종 noteVisibleWithoutScroll 전부true,frame810px,control편차0px이며 실제PNG에서 선·숫자·기호·설명을 확인했습니다.",
+        "formula": "일반식 m,a,ℓ,u,O를 annotatedFormula 안에 모두 표시했습니다. 양 폭의 DOM·수식 PNG로 분자 갱신과 기준식을 확인하고 KaTeX 오류0입니다. 전역 formula 검사exit0였으며 타팀작성중1개 주석전환대기는 본 글과 별개입니다.",
+        "learning": "기초6·심화4를 작성 전 고정하고 기존 정확한 문제를 보존했습니다. 조건부 질문에 실제 log2 분기를 추가하고 실제 답 위치를 맞췄습니다. 공유learning·7정의/정본·owns/evidence·3근거를 직렬화 대조해 mismatch0,strict 실제exit0,두 폭DOM10문제일치입니다.",
+        "numeric": "theory 독립 검산PASS 및 source-and-arithmetic.json 실제실행PASS입니다. 분모만 보정한10.444571,논리lane합1.203438,keep기준3출력7.376113,threshold3유지/2갱신을 확인했습니다.",
+        "typescript": "actual app tsc -p tsconfig.app.json --noEmit 세션5866 실제exit0입니다. 공유등록을 Vite SSR로 로드해 비교했고 이후 도식 좌표/높이만 고쳤습니다. root 고정 snapshot 전체 build는 별도입니다.",
+        "prose": "전역 prose strict 재검토0,소유git diff --check PASS입니다. Viz 정적 error0의 SVG text 리뷰는 양 폭 실제 bbox와 PNG로 검수했습니다."
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "root 고정 snapshot 전체 build·배포 검증"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/flash-attention-io-aware-kernel.tsx",
+      "bodyFiles": [
+        "src/pages/articles/ai/flash-attention-io-aware-kernel.tsx"
+      ],
+      "contentHash": "ec17be4fe5b9b7879f025ce6d2af19ba16ae3bae7ae0f2dfd5af59109b769cc3",
+      "evidenceFiles": [
+        "/tmp/teach-all/flash20/plan-before-body.json",
+        "/tmp/teach-all/flash20/body-before.tsx",
+        "/tmp/teach-all/flash20-independent-theory.json",
+        "/tmp/teach-all/flash20/source-and-arithmetic.json",
+        "/tmp/teach-all/flash20/shared-verification.json",
+        "/tmp/teach-all/flash20/learning-final.log",
+        "/tmp/teach-all/flash20/tsc-final.log",
+        "/tmp/teach-all/flash20/prose.log",
+        "/tmp/teach-all/flash20/formula.log",
+        "/tmp/teach-all/flash20/viz-static-final.log",
+        "/tmp/teach-all/flash20/browser-final.log",
+        "/tmp/teach-all/flash20/screens/panels.json",
+        "/tmp/teach-all/flash20/screens/layout.json",
+        "/tmp/teach-all/flash20/screens/scenes.json",
+        "/tmp/teach-all/flash20/last-dom.json",
+        "/tmp/teach-all/flash20/last-dom-final.log",
+        "/tmp/teach-all/flash20/interaction.json",
+        "/tmp/teach-all/humanize-ai-systems-20-final/roundtrip.json",
+        "/tmp/teach-all/humanize-ai-systems-20-final/gate.txt",
+        "/tmp/teach-all/humanize-ai-systems-20-final/apply.log",
+        "/tmp/teach-all/humanize-ai-systems-20-props-verified/gate.txt",
+        "/tmp/teach-all/humanize-ai-systems-20-props-verified/chunk-review.json"
       ]
     },
     {
@@ -7898,7 +7997,8 @@
         "/tmp/teach-all/humanize-ai-systems-19/gate.txt",
         "/tmp/teach-all/humanize-ai-systems-19/roundtrip.json",
         "/tmp/teach-all/humanize-ai-systems-19/apply.log",
-        "/tmp/teach-all/humanize-ai-systems-19-props/gate.txt"
+        "/tmp/teach-all/humanize-ai-systems-19-props/gate.txt",
+        "/tmp/teach-all/spec19/learning-final.log"
       ]
     },
     {
@@ -9062,23 +9162,23 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 44,
-    "unreviewed": 141,
+    "rewritten-local-verified": 45,
+    "unreviewed": 140,
     "reviewed-rewrite-required": 1
   },
   "localValidationSummary": {
-    "rewritten": 43,
-    "remainingUnreviewed": 141,
+    "rewritten": 45,
+    "remainingUnreviewed": 140,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
-    "learningStrict": "/tmp/teach-all/spec18-integrated-learning-final.log — Spec18 strict 통과",
-    "formulaStrict": "/tmp/teach-all/spec18/formula-final.log — 1438개 strict 통과",
-    "typescript": "Spec19 통합 actual app tsc -p tsconfig.app.json --noEmit 세션85087 실제 exit0; /tmp/teach-all/spec19/tsc-integrated-final.log. 전역 snapshot build는 root 담당.",
-    "note": "현재44편은 실제 본문·원문·계산·문체·두 폭을 검수한 local-verified이며 미검토141편과 재작성 필요1편은 완료에 포함하지 않습니다. root 전역 고정 snapshot build는 별도로 추적합니다.",
+    "learningStrict": "/tmp/teach-all/flash20/learning-final.log — strict 실제 exit0",
+    "formulaStrict": "/tmp/teach-all/flash20/formula.log — 본 글 일반식/연산주석과 실제 양 폭 표시 PASS; 타팀 초안 전환대기1개는 root 후속 검수",
+    "typescript": "/tmp/teach-all/flash20/tsc-final.log — actual app tsc 세션5866 실제exit0; 공유 메타데이터 SSR 대조 mismatch0. 전체 고정 build는 root 담당.",
+    "note": "현재45편은 실제 본문·원문·계산·문체·두 폭을 검수한 local-verified입니다. 미검토140편과 재작성 필요1편을 완료에 포함하지 않습니다. root 고정 snapshot build는 별도입니다.",
     "reviewedRewriteRequired": 1,
-    "verifiedRewrites": 43,
-    "rewrittenLocalVerified": 44,
-    "unreviewed": 141
+    "verifiedRewrites": 45,
+    "rewrittenLocalVerified": 45,
+    "unreviewed": 140
   }
 }

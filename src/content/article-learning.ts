@@ -9888,442 +9888,370 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/fft": {
-    coreIdea:
-      "DFT는 equally spaced finite sample을 complex rotation basis의 coefficient로 바꾸는 invertible representation이고, FFT는 같은 DFT를 roots-of-unity factorization으로 더 빠르게 계산하는 algorithm입니다. 실제 spectrum 해석은 sample rate·frame·window의 측정 계약에 묶이며, AI에서는 feature extraction·exact convolution·fixed mixing을 서로 다른 용도로 구분해야 합니다.",
-    assumedKnowledge: [
+    "coreIdea": "같은 네 값 [1,2,3,4]를 회전별 합으로 바꾸고 복원하며 DFT의 의미를 확인합니다. 두 작은 변환의 재사용과 실제 KISS FFT의 radix-4 경로를 구별하고, 측정·창·합성곱·AI 특징과 모델 섞기의 조건을 같은 사례로 검산합니다.",
+    "assumedKnowledge": [
       {
-        id: "coordinate-vector",
-        role: "길이 N의 signal과 N개의 frequency coefficient를 서로 다른 basis의 좌표 vector로 읽습니다.",
+        "id": "coordinate-vector",
+        "role": "순서가 있는 네 입력과 네 복소 출력을 서로 다른 좌표 표현으로 읽습니다."
       },
       {
-        id: "dot-product",
-        role: "Signal과 각 complex rotation basis의 일치 성분을 coefficient로 계산합니다.",
+        "id": "dot-product",
+        "role": "각 회전 패턴과 입력을 곱해 더하여 그 성분을 계산합니다."
       },
       {
-        id: "radian-measure",
-        role: "한 바퀴 2π와 angular frequency를 sample index의 phase로 변환합니다.",
+        "id": "radian-measure",
+        "role": "한 바퀴 2π를 각 위치의 회전각으로 바꿉니다."
       },
       {
-        id: "complex-number",
-        role: "Frequency coefficient의 magnitude와 phase, conjugate symmetry를 계산합니다.",
+        "id": "complex-number",
+        "role": "가로·세로 성분을 함께 계산하고 크기와 방향을 구별합니다."
       },
       {
-        id: "euler-formula",
-        role: "Cosine·sine basis를 하나의 complex exponential 회전으로 묶습니다.",
+        "id": "euler-formula",
+        "role": "정현파와 복소 지수의 회전을 연결합니다."
       },
       {
-        id: "roots-of-unity",
-        role: "DFT의 N개 discrete rotation basis와 FFT의 주기·대칭 재사용을 읽습니다.",
-      },
+        "id": "roots-of-unity",
+        "role": "회전값의 주기와 유한 등비급수로 역변환·분할을 설명합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "discrete-fourier-transform",
-        role: "Finite sample vector를 frequency별 complex coefficient로 바꾸고 inverse로 복원합니다.",
+        "id": "discrete-fourier-transform",
+        "role": "유한한 N개 값을 N개의 복소 회전별 합으로 다시 적습니다."
       },
       {
-        id: "sampling-nyquist-boundary",
-        role: "Sample rate가 alias 없이 관측할 수 있는 continuous frequency band의 전제를 설명합니다.",
+        "id": "sampling-nyquist-boundary",
+        "role": "표본 시각 사이의 빠른 회전은 다른 느린 회전과 같은 기록을 만들 수 있습니다."
       },
       {
-        id: "spectral-leakage-window",
-        role: "Finite frame 경계와 taper가 side lobe·main lobe에 만드는 trade-off를 구분합니다.",
+        "id": "spectral-leakage-window",
+        "role": "유한 구간을 고르는 창이 원래 주파수 성분을 주변에 퍼뜨립니다."
       },
       {
-        id: "zero-padding-spectrum-grid",
-        role: "더 촘촘한 spectrum grid와 실제 관측 resolution 증가를 분리합니다.",
+        "id": "zero-padding-spectrum-grid",
+        "role": "같은 유한 기록의 스펙트럼을 더 촘촘한 주파수 자리에서 평가합니다."
       },
       {
-        id: "cooley-tukey-fft",
-        role: "DFT를 sub-transform으로 factorization해 exact output을 O(N log N) work로 계산합니다.",
+        "id": "cooley-tukey-fft",
+        "role": "길이를 인수로 나눠 작은 DFT의 중간값을 여러 출력에서 재사용합니다."
       },
       {
-        id: "fft-butterfly",
-        role: "같은 even·odd intermediate로 N/2 떨어진 output 두 개를 함께 만듭니다.",
+        "id": "fft-butterfly",
+        "role": "회전을 맞춘 같은 두 중간값을 더하고 빼서 두 출력을 만듭니다."
       },
       {
-        id: "short-time-fourier-transform",
-        role: "Local frame마다 DFT를 적용해 time–frequency feature를 만듭니다.",
+        "id": "short-time-fourier-transform",
+        "role": "짧은 구간의 창을 조금씩 옮기며 시각별 DFT를 만듭니다."
       },
       {
-        id: "convolution-theorem",
-        role: "긴 convolution을 Fourier coefficient별 multiplication으로 계산하는 조건을 설명합니다.",
-      },
+        "id": "convolution-theorem",
+        "role": "같은 필터를 위치마다 적용하는 합성곱을 주파수별 곱셈으로 계산합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "discrete-fourier-transform",
-        sectionId: "overview",
-        intuition:
-          "길이 N의 sample을 시간 순서 좌표 대신 N sample 동안 0,1,…번 회전하는 pattern이 얼마나 섞였는지 나타내는 좌표로 다시 적습니다.",
-        workedExample:
-          "상수 signal x=(1,1,1,1)은 k=0 basis와는 모두 같은 방향으로 더해져 X[0]=4가 되고, 회전하는 다른 basis와는 상쇄됩니다.",
-        boundary:
-          "FFT와 DFT를 혼동하지 않습니다. DFT는 transform이고 FFT는 같은 coefficient를 더 적은 계산으로 구하는 algorithm family입니다.",
+        "id": "discrete-fourier-transform",
+        "sectionId": "fourier",
+        "intuition": "유한한 N개 값을 N개의 복소 회전별 합으로 다시 적습니다.",
+        "workedExample": "[1,2,3,4]는 [10,−2+2i,−2,−2−2i]가 되고 반대 회전과 1/4 배율로 원래 값을 복원합니다. 상수 [1,1,1,1]은 [4,0,0,0]입니다.",
+        "boundary": "모든 복소 계수를 보관한 정확한 산술에서 가역입니다. 크기나 실수 부분만 남기면 일반적으로 복원하지 못하며 연속 신호 전체의 유일한 복원과도 다릅니다."
       },
       {
-        id: "sampling-nyquist-boundary",
-        sectionId: "nyquist-boundary",
-        intuition:
-          "시간을 띄엄띄엄 관측하면 너무 빠른 회전은 sample 시점에서 느린 회전과 같은 좌표를 남길 수 있으므로, 관측 전에 frequency band를 제한해야 합니다.",
-        workedExample:
-          "8kHz sample rate에서 1kHz cosine과 7kHz cosine은 integer sample 시점에 같은 값을 내므로 DFT만으로 원래 둘을 구분할 수 없습니다.",
-        boundary:
-          "fₛ/2 아래라는 조건은 sampling 전 source가 band-limited이고 안정적으로 일정 간격 sampling되었다는 전제를 가집니다. FFT를 실행했다는 사실 자체가 anti-aliasing을 보장하지 않습니다.",
-        proofIdea:
-          "Sampling은 continuous spectrum의 복사본을 fₛ 간격으로 반복시킵니다. 원래 support가 |f|<fₛ/2이면 인접 사본이 겹치지 않아 low-pass reconstruction으로 분리할 수 있습니다.",
-        counterexample:
-          "Band limit를 어기면 f와 fₛ−f가 같은 discrete cosine sample을 만들 수 있습니다. 예를 들어 fₛ=8kHz에서 1kHz와 7kHz가 alias pair입니다.",
-        scientificGrounding: {
-          observable:
-            "시간에 따른 voltage·pressure·pixel intensity처럼 일정한 clock 시점에 측정한 signal amplitude와 그 spectrum을 관측합니다.",
-          unitsAndDimensions:
-            "Sample rate와 frequency는 Hz(s⁻¹), sample interval은 second이며 amplitude 단위는 microphone pressure·voltage 등 sensor에 따라 달라집니다.",
-          modelAssumptions:
-            "Continuous source가 sampling 전에 fₛ/2 아래로 band-limited되고 sample clock이 일정하며 reconstruction filter 조건을 만족한다고 둡니다.",
-          measurementExample:
-            "16kHz audio는 sample interval 62.5μs이고 이론적 Nyquist boundary는 8kHz이며, 실제 acquisition에서는 그 아래 transition band의 anti-alias filter가 필요합니다.",
-          invalidConditions:
-            "Band 밖 energy, irregular sampling, clock jitter, nonlinear sensor distortion이 크면 단순 uniform-sampling theorem의 복원 결론을 그대로 적용할 수 없습니다.",
-          referenceFrame:
-            "Frequency와 phase는 sensor의 time coordinate와 clock origin을 기준으로 합니다. Clock rate나 시작 시점이 바뀌면 Hz mapping과 phase가 함께 바뀝니다.",
-        },
+        "id": "sampling-nyquist-boundary",
+        "sectionId": "nyquist-boundary",
+        "intuition": "표본 시각 사이의 빠른 회전은 다른 느린 회전과 같은 기록을 만들 수 있습니다.",
+        "workedExample": "8 kHz로 얻은 1 kHz와 7 kHz 코사인은 모든 정수 표본에서 같습니다. 주 사례의 8 Hz·길이 4 bin은 0,2,−4,−2 Hz이며 가운데 ±4는 같은 한 bin입니다.",
+        "boundary": "기본 저역 복원 정리는 엄격한 대역 |f|<f_s/2와 이상적인 양방향 무한 균일 표본을 전제합니다. 유한 DFT의 가역성이나 FFT 실행만으로 이 조건이 충족되지 않습니다.",
+        "proofIdea": "f_s 간격의 주파수 차이는 정수 표본에서 exp(2πimn)=1이 되어 같은 회전입니다. 코사인의 주기·짝함수 성질로 7 kHz와 1 kHz의 일치를 직접 보이며 정확한 경계의 sin(πn)=0도 확인합니다.",
+        "counterexample": "엄격한 저역 조건을 어긴 7 kHz는 8 kHz 표집에서 1 kHz와 같습니다. 정확한 Nyquist 주파수의 사인파도 위상에 따라 모든 표본이 0입니다.",
+        "scientificGrounding": {
+          "observable": "일정한 시간 간격의 압력·전압 등 신호 값과 그 회전별 계수입니다.",
+          "unitsAndDimensions": "표본률과 주파수는 Hz, 표본 사이 시간은 초이며 진폭의 단위는 센서에 따릅니다.",
+          "modelAssumptions": "엄격한 저역 제한 |f|<f_s/2, 이상적인 양방향 무한 균일 표본과 해당 신호 공간의 복원 조건을 전제합니다.",
+          "measurementExample": "16 kHz의 표본 간격은 62.5 μs, 기본 저역 경계는 8 kHz입니다. 실제 측정에는 경계 아래 anti-alias 필터의 여유 대역이 필요합니다.",
+          "invalidConditions": "대역 밖 성분, 불규칙 표집과 시계 오차, 큰 비선형 센서 왜곡에서는 단순 균일 표집 결론을 그대로 적용하지 않습니다.",
+          "referenceFrame": "주파수와 위상은 측정 시계의 표본률과 시작 시각을 기준으로 합니다. 주 사례의 네 칸 폭 0.5초와 첫·끝 표본 시각 차이 0.375초를 구별합니다."
+        }
       },
       {
-        id: "spectral-leakage-window",
-        sectionId: "fourier",
-        intuition:
-          "관측 frame의 양 끝을 곧바로 이어 붙였을 때 값이 튀면 DFT는 그 급격한 경계를 설명하려고 energy를 여러 frequency bin에 퍼뜨립니다.",
-        workedExample:
-          "Frame 안에 정수 주기가 들어오지 않는 sinusoid에 Hann window를 곱하면 rectangular window보다 side lobe는 작아지지만 main lobe가 넓어집니다.",
-        boundary:
-          "Window는 aliasing을 제거하지 않으며 leakage 감소와 가까운 tone 분리 능력을 동시에 무한히 개선하지 못합니다.",
+        "id": "spectral-leakage-window",
+        "sectionId": "window",
+        "intuition": "유한 구간을 고르는 창이 원래 주파수 성분을 주변에 퍼뜨립니다.",
+        "workedExample": "주기형 Hann [0,1/2,1,1/2]를 같은 입력에 곱하면 [0,1,3,2], 그 DFT는 [6,−3+i,0,−3−i]입니다.",
+        "boundary": "Hann은 직사각 창보다 side lobe를 낮추며 main lobe를 넓힙니다. 끝점 값의 불연속 하나로 모든 누설을 판정하거나 이미 생긴 alias를 없애는 연산으로 읽지 않습니다."
       },
       {
-        id: "zero-padding-spectrum-grid",
-        sectionId: "fourier",
-        intuition:
-          "이미 찍은 점들 사이의 spectrum 곡선을 더 촘촘한 좌표에서 계산해 peak 위치를 보기 쉽게 만들지만, 새 signal을 관측하지는 않습니다.",
-        workedExample:
-          "N sample 뒤에 N개의 0을 붙이면 DFT bin 간격 표시는 절반이 되지만 실제 관측 duration N/fₛ와 window main-lobe 폭은 그대로입니다.",
-        boundary:
-          "Zero-padding으로 표시 grid는 촘촘해져도 가까운 두 sinusoid를 물리적으로 분리하는 새 정보가 생기지는 않습니다.",
+        "id": "zero-padding-spectrum-grid",
+        "sectionId": "window",
+        "intuition": "같은 유한 기록의 스펙트럼을 더 촘촘한 주파수 자리에서 평가합니다.",
+        "workedExample": "표본률 8 Hz에서 네 값 뒤에 0 네 개를 붙이면 bin 간격은 2 Hz에서 1 Hz가 되지만 실제 관측창 폭은 0.5초 그대로입니다.",
+        "boundary": "새 측정이 없으므로 실제 관측 시간을 두 배 늘린 것처럼 두 가까운 성분을 분리할 새 정보가 생기지는 않습니다."
       },
       {
-        id: "cooley-tukey-fft",
-        sectionId: "algorithm",
-        intuition:
-          "모든 output에서 같은 회전 합을 처음부터 다시 계산하지 않고 even sample과 odd sample의 작은 DFT를 한 번씩 만들어 여러 output에 재사용합니다.",
-        workedExample:
-          "Radix-2에서는 N-point DFT를 두 N/2-point DFT E[k],O[k]로 나누고 twiddle factor를 곱해 X[k]와 X[k+N/2]를 만듭니다.",
-        boundary:
-          "Radix-2는 N이 2의 거듭제곱일 때 편한 한 variant입니다. Mixed-radix·Rader·Bluestein과 실제 memory locality까지 포함해 library가 plan을 선택합니다.",
+        "id": "cooley-tukey-fft",
+        "sectionId": "algorithm",
+        "intuition": "길이를 인수로 나눠 작은 DFT의 중간값을 여러 출력에서 재사용합니다.",
+        "workedExample": "E=[4,−2], O=[6,−2]를 결합해 네 출력을 만듭니다. 실제 고정 KISS FFT는 길이 4를 [4,1]로 나누고 kf_bfly4를 선택합니다.",
+        "boundary": "radix-2의 반복은 N=2ᵐ 조건입니다. 혼합 radix 등 다른 방법이 있으며 정확한 대수 결과가 같아도 반올림·메모리·시간은 구현마다 달라집니다."
       },
       {
-        id: "fft-butterfly",
-        sectionId: "algorithm",
-        intuition:
-          "한 번 계산한 even 결과와 phase가 맞춰진 odd 결과를 더한 값과 뺀 값이 서로 반 바퀴 떨어진 두 output이 됩니다.",
-        workedExample:
-          "a=E[k], b=ω_N^kO[k]라 두면 butterfly output은 a+b와 a−b이며 두 입력 intermediate를 공유합니다.",
-        boundary:
-          "Butterfly 그림의 선 모양 자체가 algorithm의 본질은 아닙니다. In-place overwrite 순서·bit reversal·precision이 실제 구현 결과와 성능에 영향을 줍니다.",
+        "id": "fft-butterfly",
+        "sectionId": "algorithm",
+        "intuition": "회전을 맞춘 같은 두 중간값을 더하고 빼서 두 출력을 만듭니다.",
+        "workedExample": "E[1]=−2와 ω₄O[1]=(−i)(−2)=2i를 사용해 X[1]=−2+2i, X[3]=−2−2i를 함께 만듭니다.",
+        "boundary": "두 갈래 결합은 radix-2 사례입니다. 선의 교차 모양 자체가 곱셈을 뜻하거나 실제 라이브러리가 항상 같은 그래프·제자리 메모리를 쓴다는 뜻은 아닙니다."
       },
       {
-        id: "short-time-fourier-transform",
-        sectionId: "ai-usage",
-        intuition:
-          "긴 소리를 한 번에 한 spectrum으로 만들지 않고 짧은 frame을 조금씩 옮기며 각 구간의 frequency 성분을 계산합니다.",
-        workedExample:
-          "16kHz signal에서 N=400, hop H=160이면 25ms frame의 spectrum을 10ms 간격으로 얻습니다.",
-        boundary:
-          "Magnitude나 Mel band만 남기면 phase와 세부 frequency 정보가 사라질 수 있으며 checkpoint는 sample rate·window·normalization 계약에 묶입니다.",
+        "id": "short-time-fourier-transform",
+        "sectionId": "ai-usage",
+        "intuition": "짧은 구간의 창을 조금씩 옮기며 시각별 DFT를 만듭니다.",
+        "workedExample": "16 kHz, N=400, H=160이면 25 ms 구간을 10 ms마다 처리하고 bin 간격은 40 Hz입니다.",
+        "boundary": "창·겹침·가장자리 padding·중심 정렬·정규화 계약을 확인합니다. 제곱 크기와 Mel 필터·로그를 거친 특징은 일반적으로 원래 복소 계수를 보존하지 않습니다."
       },
       {
-        id: "convolution-theorem",
-        sectionId: "ai-usage",
-        intuition:
-          "Shift마다 같은 filter를 적용하는 convolution은 Fourier rotation basis에서는 frequency별 독립 배율로 바뀌어 긴 kernel 계산을 pointwise product로 줄일 수 있습니다.",
-        workedExample:
-          "길이 Lx와 Lh의 linear convolution은 적어도 Lx+Lh−1로 padding한 뒤 FFT(x)와 FFT(h)를 곱하고 inverse FFT해 wrap-around를 피합니다.",
-        boundary:
-          "Padding하지 않으면 circular convolution이 되며 짧은 kernel에서는 transform·workspace 비용 때문에 optimized direct convolution이 더 빠를 수 있습니다.",
-        proofIdea:
-          "Convolution sum을 DFT 정의에 대입하고 합의 index 순서를 바꾸면 x의 DFT와 h의 DFT가 frequency bin마다 곱으로 분리됩니다.",
-        counterexample:
-          "길이 3인 두 vector를 padding 없이 길이 3 DFT에서 곱하면 끝 값이 앞으로 감기는 circular convolution이 되어 길이 5 linear convolution과 다릅니다.",
-      },
+        "id": "convolution-theorem",
+        "sectionId": "convolution",
+        "intuition": "같은 필터를 위치마다 적용하는 합성곱을 주파수별 곱셈으로 계산합니다.",
+        "workedExample": "[1,2,3,4]와 [1,−1]의 선형 출력은 [1,1,1,1,−4]입니다. 길이 4 원형 출력은 꼬리가 감겨 [-3,1,1,1]이며 길이 5 이상으로 채워야 선형 출력이 겹치지 않습니다.",
+        "boundary": "DFT의 기본 정리는 같은 길이의 원형 합성곱입니다. 선형 연산은 M≥Lx+Lh−1, 역변환 배율과 crop을 맞춰야 하며 짧은 필터에서는 직접 연산이 빠를 수 있습니다.",
+        "proofIdea": "원형 합성곱을 DFT 정의에 넣고 r=(n−m) mod M으로 치환하면 회전값이 ω_M^(km)ω_M^(kr)로 분리됩니다. 두 유한 합을 나누면 X[k]H[k]이며 충분한 0 채우기에서 선형 합성곱과 일치합니다.",
+        "counterexample": "주 사례에서 길이 4 DFT를 사용하면 선형 꼬리 −4가 첫 값 1에 더해져 −3이 됩니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "표현",
-        relation: "Finite sample을 complex rotation basis coefficient로 변환",
-        concepts: [
-          "coordinate-vector",
-          "dot-product",
-          "radian-measure",
+        "label": "같은 네 값",
+        "relation": "두 성분을 보관한 표현을 만들고 역변환합니다.",
+        "concepts": [
           "complex-number",
-          "euler-formula",
           "roots-of-unity",
-          "discrete-fourier-transform",
-        ],
+          "discrete-fourier-transform"
+        ]
       },
       {
-        label: "측정 경계",
-        relation:
-          "Continuous source에서 sample·frame·window가 보존하는 정보 규정",
-        concepts: [
+        "label": "측정과 창",
+        "relation": "표본률·대역·유한 관측의 조건을 확인합니다.",
+        "concepts": [
           "sampling-nyquist-boundary",
           "spectral-leakage-window",
-          "zero-padding-spectrum-grid",
-          "discrete-fourier-transform",
-        ],
+          "zero-padding-spectrum-grid"
+        ]
       },
       {
-        label: "계산 재사용",
-        relation: "Roots의 대칭으로 exact DFT의 중복 work 제거",
-        concepts: [
-          "roots-of-unity",
-          "discrete-fourier-transform",
+        "label": "계산 재사용",
+        "relation": "같은 중간값을 여러 출력에 쓰고 실제 분기를 추적합니다.",
+        "concepts": [
           "cooley-tukey-fft",
-          "fft-butterfly",
-        ],
+          "fft-butterfly"
+        ]
       },
       {
-        label: "Local feature",
-        relation: "Frame별 spectrum을 time–frequency representation으로 확장",
-        concepts: [
-          "spectral-leakage-window",
-          "discrete-fourier-transform",
-          "short-time-fourier-transform",
-        ],
-      },
-      {
-        label: "Operator",
-        relation: "Convolution을 frequency별 multiplication으로 계산",
-        concepts: [
-          "discrete-fourier-transform",
+        "label": "AI에서의 역할",
+        "relation": "같은 선형 연산과 특징 추출·모델 섞기를 구별합니다.",
+        "concepts": [
           "convolution-theorem",
-          "cooley-tukey-fft",
-        ],
-      },
-    ],
-    exercises: [
-      {
-        level: "basic",
-        question:
-          "DFT와 FFT의 역할을 구분하고, 길이 N에서 direct DFT와 radix-2 FFT의 계산량이 각각 어떻게 커지는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "DFT는 sample vector를 frequency coefficient로 바꾸는 invertible transform이라고 적는다.",
-          "FFT는 같은 DFT coefficient를 재사용해 계산하는 algorithm family라고 구분한다.",
-          "Direct DFT는 O(N²), radix-2 FFT는 O(N log N) work임을 적고 결과를 근사해 얻는 것이 아님을 명시한다.",
-        ],
-        requiredConcepts: ["discrete-fourier-transform", "cooley-tukey-fft"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "16kHz audio에서 N=400, hop H=160인 STFT의 frame duration과 인접 frame 시간 간격을 계산하고 N과 H가 서로 다른 축을 바꾸는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Frame duration N/fₛ=400/16000=25ms를 계산한다.",
-          "Frame 간격 H/fₛ=160/16000=10ms를 계산한다.",
-          "N은 local 관측 길이·frequency grid를, H는 time-axis sampling·계산량을 주로 바꾼다고 구분한다.",
-        ],
-        requiredConcepts: [
           "short-time-fourier-transform",
+          "cooley-tukey-fft"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "7·11·13절에서 DFT와 FFT의 역할을 구별하세요. 같은 네 출력과 N² 대 NlogN의 증가율은 어떤 조건에서 비교하나요?",
+        "answerChecklist": [
+          "DFT는 회전별 합의 정의이고 FFT는 같은 합을 중간값 재사용으로 계산하는 방법입니다.",
+          "주 입력의 출력은 [10,−2+2i,−2,−2−2i]입니다.",
+          "직접 계산은 N², radix-2는 N=2ᵐ과 상수 시간 산술에서 Θ(NlogN)입니다.",
+          "대수적으로 같은 변환이어도 반올림 비트나 실제 시간 배율까지 같은 것은 아닙니다."
+        ],
+        "requiredConcepts": [
           "discrete-fourier-transform",
+          "cooley-tukey-fft"
         ],
-        sectionId: "ai-usage",
+        "sectionId": "algorithm"
       },
       {
-        level: "basic",
-        question:
-          "길이 5 signal과 길이 3 filter의 linear convolution을 FFT로 계산할 때 최소 padding 길이와 결과 길이를 구하고 padding이 필요한 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "Linear convolution 길이 Lx+Lh−1=7을 계산한다.",
-          "두 operand를 적어도 길이 7인 transform grid에 zero-padding한다고 적는다.",
-          "Padding이 부족하면 circular convolution의 끝 값이 앞으로 감기는 wrap-around가 생긴다고 설명한다.",
+        "level": "basic",
+        "question": "16 kHz, N=400, H=160의 STFT에서 구간 길이와 이동 시간을 계산하세요. 작은 길이 4의 Hann 예에서는 입력이 어떻게 바뀌나요? 10·17절을 함께 보세요.",
+        "answerChecklist": [
+          "400/16000=25 ms와 160/16000=10 ms입니다.",
+          "N은 한 번에 보는 범위와 주파수 grid를, H는 다음 구간의 시간 간격을 정합니다.",
+          "주기형 Hann [0,1/2,1,1/2]를 곱하면 [1,2,3,4]가 [0,1,3,2]로 바뀝니다."
         ],
-        requiredConcepts: ["convolution-theorem", "discrete-fourier-transform"],
-        sectionId: "ai-usage",
+        "requiredConcepts": [
+          "short-time-fourier-transform",
+          "discrete-fourier-transform"
+        ],
+        "sectionId": "ai-usage"
       },
       {
-        level: "advanced",
-        question:
-          "8kHz로 sampling한 1kHz와 7kHz cosine이 모든 integer sample index에서 같은 sequence를 만든다는 것을 삼각함수 식으로 보이고, 어떤 전제가 빠져 aliasing이 생겼는지 설명할 수 있을까요?",
-        answerChecklist: [
-          "7kHz sample을 cos(2π·7n/8)=cos(2πn−2πn/8)로 적는다.",
-          "2π 주기성과 cosine의 짝함수 성질로 cos(2πn/8), 즉 1kHz sample과 같음을 보인다.",
-          "Source가 fₛ/2=4kHz 아래로 band-limited된다는 전제가 깨졌음을 적는다.",
-          "FFT 종류나 zero-padding을 바꾸어도 이미 같아진 sample에서 원래 frequency를 복구할 수 없다고 제한한다.",
+        "level": "basic",
+        "question": "길이 5 입력과 길이 3 필터의 선형 합성곱에 필요한 최소 공간은 얼마인가요? 주 사례의 길이 4와 2에서는 부족한 공간이 어느 값을 바꾸나요?",
+        "answerChecklist": [
+          "최소 길이는 5+3−1=7이며 두 입력을 그 이상으로 0 채웁니다.",
+          "주 사례는 4+2−1=5가 필요하고 선형 출력은 [1,1,1,1,−4]입니다.",
+          "길이 4 원형 연산에서는 꼬리 −4가 첫 값으로 돌아와 [-3,1,1,1]이 됩니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
+          "convolution-theorem",
+          "discrete-fourier-transform"
+        ],
+        "sectionId": "convolution"
+      },
+      {
+        "level": "advanced",
+        "question": "8 kHz 표집의 1 kHz와 7 kHz 코사인이 같음을 유도하세요. 정확한 Nyquist 경계와 유한 표본 복원의 한계도 설명하세요.",
+        "answerChecklist": [
+          "cos(2π·7n/8)=cos(2πn−2πn/8)=cos(2πn/8)입니다.",
+          "7 kHz는 기본 저역 조건인 4 kHz 미만을 어깁니다. FFT와 0 채우기로 이미 같은 표본을 구별할 수 없습니다.",
+          "정확한 경계의 sin(πn)은 모든 정수 n에서 0이므로 경계를 무조건 포함하지 않습니다.",
+          "연속 복원 정리는 이상적인 무한 균일 표본 등 별도 조건이며 유한 DFT의 가역성과 다릅니다."
+        ],
+        "requiredConcepts": [
           "sampling-nyquist-boundary",
           "discrete-fourier-transform",
-          "radian-measure",
+          "radian-measure"
         ],
-        sectionId: "fourier",
+        "sectionId": "nyquist-boundary"
       },
       {
-        level: "basic",
-        question:
-          "길이 4의 상수 signal x=(1,1,1,1)이 k=0 DFT basis에서 X[0]=4가 되고 다른 정수 회전 basis에서는 상쇄되는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "k=0 basis가 모두 1이라고 적는다.",
-          "네 sample을 더해 X[0]=4를 계산한다.",
-          "다른 roots가 단위원을 돌아 vector sum 0을 만든다고 설명한다.",
+        "level": "basic",
+        "question": "3·7절에서 상수 입력 [1,1,1,1]의 DFT를 구하고 회전값의 합으로 이유를 설명하세요. 주 입력 [1,2,3,4]의 첫 출력과도 비교하세요.",
+        "answerChecklist": [
+          "k=0에서는 모두 같은 방향이므로 상수 입력의 합은 4입니다.",
+          "나머지 정수 회전에서는 방향들이 상쇄되어 0입니다.",
+          "주 입력의 첫 출력은 1+2+3+4=10이며 다른 세 출력은 위치별 차이를 기록합니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "roots-of-unity",
           "dot-product",
-          "discrete-fourier-transform",
+          "discrete-fourier-transform"
         ],
-        sectionId: "overview",
+        "sectionId": "fourier"
       },
       {
-        level: "basic",
-        question:
-          "Sample rate 16kHz, frame length 400일 때 Nyquist frequency·frame duration·DFT bin spacing을 계산할 수 있을까요?",
-        answerChecklist: [
-          "Nyquist frequency 8kHz를 계산한다.",
-          "Frame duration 400/16000=25ms를 계산한다.",
-          "Bin spacing 16000/400=40Hz를 계산한다.",
+        "level": "basic",
+        "question": "9·17절의 16 kHz·길이 400에서 경계 주파수, 구간 폭과 bin 간격을 계산하세요. 주 사례 8 Hz·길이 4의 음수 주파수 표기는 어떻게 읽나요?",
+        "answerChecklist": [
+          "경계는 8 kHz, 구간 폭은 25 ms, bin 간격은 40 Hz입니다.",
+          "주 사례 전체 복소 bin은 0,2,−4,−2 Hz로 적을 수 있습니다.",
+          "가운데 −4와 +4는 같은 한 bin이며 실수 절반 스펙트럼에서는 +4로 표시할 수 있습니다.",
+          "네 칸 폭은 0.5초지만 첫·끝 표본 시각 차이는 3/8초입니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "sampling-nyquist-boundary",
-          "discrete-fourier-transform",
+          "discrete-fourier-transform"
         ],
-        sectionId: "nyquist-boundary",
+        "sectionId": "nyquist-boundary"
       },
       {
-        level: "basic",
-        question:
-          "Hann window와 zero-padding이 각각 spectrum에서 바꾸는 것과 바꾸지 못하는 것을 구분할 수 있을까요?",
-        answerChecklist: [
-          "Hann이 side lobe를 줄이는 대신 main lobe를 넓힌다고 설명한다.",
-          "Zero-padding이 frequency grid를 촘촘히 보간한다고 설명한다.",
-          "둘 다 sampling 전 aliasing을 복구하지 못한다고 말한다.",
+        "level": "basic",
+        "question": "9·10절에서 Hann과 0 채우기가 바꾸는 양과 바꾸지 못하는 것을 구별하세요. 주 사례를 길이 8로 채우면 무엇이 달라지나요?",
+        "answerChecklist": [
+          "Hann은 입력을 가중해 side lobe를 낮추며 main lobe를 넓힙니다.",
+          "0 네 개를 붙이면 bin 간격이 2 Hz에서 1 Hz로 좁아지지만 실제 관측창은 0.5초입니다.",
+          "새 측정이나 이미 잃은 alias 구별 정보가 생기지는 않습니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "sampling-nyquist-boundary",
           "spectral-leakage-window",
-          "zero-padding-spectrum-grid",
+          "zero-padding-spectrum-grid"
         ],
-        sectionId: "fourier",
+        "sectionId": "window"
       },
       {
-        level: "advanced",
-        question:
-          "Radix-2 DFT의 even·odd 분해에서 X[k+N/2]의 odd 항 부호가 바뀌는 이유를 roots-of-unity 식으로 유도할 수 있을까요?",
-        answerChecklist: [
-          "ω_N^{k+N/2}=−ω_N^k를 보인다.",
-          "Even과 odd sub-DFT가 두 output에서 재사용됨을 적는다.",
-          "Butterfly output a+b와 a−b로 연결한다.",
+        "level": "advanced",
+        "question": "11·14·15절을 함께 보며 radix-2의 두 출력에서 부호가 달라지는 이유를 유도하세요. 실제 길이 4 KISS FFT의 분기와 역배율도 같은가요?",
+        "answerChecklist": [
+          "E와 O는 길이 N/2의 주기를 가지며 ω_N^(k+N/2)=−ω_N^k입니다.",
+          "같은 −2와 2i를 더하고 빼 −2+2i, −2−2i를 만듭니다.",
+          "고정 원문은 [4,1]을 기록해 kf_bfly4를 선택하며 두 radix-2 재귀를 실행하지 않습니다.",
+          "float 역방향 원시 출력은 [4,8,12,16]이므로 호출자가 4로 나눕니다. 같은 포인터도 임시 배열을 사용합니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "roots-of-unity",
           "cooley-tukey-fft",
-          "fft-butterfly",
+          "fft-butterfly"
         ],
-        sectionId: "algorithm",
+        "sectionId": "algorithm"
       },
       {
-        level: "advanced",
-        question:
-          "길이 Lx와 Lh인 linear convolution을 FFT로 계산할 때 필요한 padding·crop과 direct 방식보다 느릴 수 있는 조건을 설명할 수 있을까요?",
-        answerChecklist: [
-          "적어도 Lx+Lh−1 길이로 padding한다고 말한다.",
-          "Inverse FFT 뒤 필요한 linear-convolution 구간을 취한다고 설명한다.",
-          "짧은 kernel·작은 batch에서는 transform과 workspace overhead가 이득을 넘을 수 있다고 제한한다.",
+        "level": "advanced",
+        "question": "원형 합성곱 정리를 DFT의 이중 합에서 유도하고 선형 결과의 padding·crop과 성능 한계를 설명하세요.",
+        "answerChecklist": [
+          "r=(n−m) mod M 치환으로 회전값을 두 인자로 나누어 두 합 X[k]H[k]를 얻습니다.",
+          "M≥Lx+Lh−1로 채우고 역배율을 맞춘 뒤 필요한 전체 선형 구간을 취합니다.",
+          "주 사례는 M=8로 계산한 앞 5개가 전체 선형 결과이며 인과적 길이 4는 그 뒤에 고릅니다.",
+          "짧은 필터·작은 입력에서는 변환과 작업 공간 비용 때문에 직접 연산이 빠를 수 있습니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "convolution-theorem",
           "cooley-tukey-fft",
-          "discrete-fourier-transform",
+          "discrete-fourier-transform"
         ],
-        sectionId: "ai-usage",
+        "sectionId": "convolution"
       },
       {
-        level: "advanced",
-        question:
-          "STFT·FFT convolution·FNet·Hyena를 feature·exact operator·fixed mixer·learned long operator로 각각 분류하고 같은 ‘FFT 사용’으로 묶으면 안 되는 이유를 설명할 수 있을까요?",
-        answerChecklist: [
-          "STFT를 local feature representation으로 분류한다.",
-          "FFT convolution을 같은 linear operator의 실행 경로로 구분한다.",
-          "FNet의 fixed mixing과 Hyena의 learned filter·gating을 content-adaptive attention과 구별한다.",
+        "level": "advanced",
+        "question": "17–21절에서 STFT, FFT 합성곱, FNet, Hyena의 역할을 구분하세요. 같은 네 값의 FNet 실수 부분만 역변환하면 무엇을 얻나요?",
+        "answerChecklist": [
+          "STFT는 시각별 특징 표현, FFT 합성곱은 조건을 맞춘 같은 선형 연산의 계산법입니다.",
+          "FNet은 두 축의 고정 DFT 뒤 실수 부분을 취하는 mixer입니다. 4×1 예에서 [10,−2,−2,−2]를 역변환하면 [1,3,3,3]입니다.",
+          "Hyena는 학습한 긴 필터와 입력에서 만든 gate를 반복하며 FFT는 그 합성곱의 계산 수단입니다.",
+          "작은 mixer 계산은 잔차·정규화·feed-forward를 포함한 전체 모델 실행이나 품질 보장이 아닙니다."
         ],
-        requiredConcepts: [
+        "requiredConcepts": [
           "short-time-fourier-transform",
           "convolution-theorem",
-          "cooley-tukey-fft",
+          "cooley-tukey-fft"
         ],
-        sectionId: "ai-usage",
-      },
+        "sectionId": "limits"
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title:
-          "An Algorithm for the Machine Calculation of Complex Fourier Series",
-        href: "https://research.ibm.com/publications/an-algorithm-for-the-machine-calculation-of-complex-fourier-series",
-        problem:
-          "Large composite sample count의 discrete complex Fourier coefficients를 direct summation보다 적은 arithmetic으로 계산하는 문제",
-        contribution:
-          "Transform length factorization과 intermediate reuse를 이용한 generic FFT 계산과 operation count를 제시",
-        assumptions:
-          "Composite N과 논문이 정의한 complex Fourier-series 계산·machine arithmetic 조건을 전제로 함",
-        evidenceScope:
-          "1965년 논문의 factorization 유도와 operation-count 분석 범위",
-        notClaim:
-          "모든 N·memory hierarchy·hardware에서 radix-2가 최적이거나 현대 FFT library의 모든 최적화를 포함한다는 뜻은 아님",
-        sectionId: "paper-cooley-tukey",
+        "title": "An Algorithm for the Machine Calculation of Complex Fourier Series",
+        "href": "https://web.stanford.edu/class/cme324/classics/cooley-tukey.pdf",
+        "problem": "큰 유한 회전 합에서 반복 계산을 줄입니다.",
+        "contribution": "297–298쪽 식 (6)·(7)에 N=4와 같은 네 값을 대입하고 양의 지수 규약의 켤레 출력을 계산합니다.",
+        "assumptions": "합성수 N, 원문이 정의한 복소 곱 뒤 덧셈의 연산 장부를 사용합니다.",
+        "evidenceScope": "스캔 PDF 전체 5쪽을 읽고 식의 인덱스·부호·T=N(r₁+r₂)를 대조했습니다.",
+        "notClaim": "실제 현대 장치의 속도 배율이나 모든 FFT의 제자리 구현을 보장하지 않습니다.",
+        "sectionId": "paper-cooley-tukey"
       },
       {
-        title: "Robust Speech Recognition via Large-Scale Weak Supervision",
-        href: "https://cdn.openai.com/papers/whisper.pdf",
-        problem:
-          "다양한 domain·accent·noise의 speech recognition을 대규모 weakly supervised data로 학습하는 문제",
-        contribution:
-          "16kHz audio와 80-channel log-Mel frontend를 포함한 encoder–decoder speech recipe와 evaluation을 공개",
-        assumptions:
-          "논문의 data construction·model scale·task formatting·frontend와 evaluation setup을 전제로 함",
-        evidenceScope:
-          "Whisper model family의 multilingual speech recognition·translation·identification 실험 범위",
-        notClaim:
-          "Log-Mel이나 FFT frontend 하나가 robustness의 원인이거나 모든 speech model의 최적 입력이라는 뜻은 아님",
-        sectionId: "paper-whisper-frontend",
+        "title": "Robust Speech Recognition via Large-Scale Weak Supervision",
+        "href": "https://cdn.openai.com/papers/whisper.pdf",
+        "problem": "짧은 음성 구간에서 모델의 입력 특징을 만듭니다.",
+        "contribution": "§2.2의 16 kHz·25 ms·10 ms를 400·160 표본으로 계산하고 고정 audio.py의 제곱 크기·Mel·로그 순서를 추적합니다.",
+        "assumptions": "논문의 당시 80채널 설정과 고정 코드의 80·128 지원을 구별합니다.",
+        "evidenceScope": "PDF 3쪽과 실제 고정 코드 전체를 읽고 작은 Hann 출력에 제곱 크기 연산을 대입했습니다.",
+        "notClaim": "Whisper 전체 실행·속도 측정이나 모든 복소 정보의 보존을 주장하지 않습니다.",
+        "sectionId": "paper-whisper-frontend"
       },
       {
-        title: "FNet: Mixing Tokens with Fourier Transforms",
-        href: "https://arxiv.org/abs/2105.03824",
-        problem:
-          "Transformer encoder의 self-attention token mixing을 더 단순하고 빠른 연산으로 대체할 수 있는지 평가하는 문제",
-        contribution:
-          "Parameter-free Fourier transform mixing을 encoder block에 적용해 GLUE·pretraining 조건에서 speed–accuracy trade-off를 비교",
-        assumptions:
-          "논문의 encoder architecture·sequence length·hardware·training budget과 evaluation task를 전제로 함",
-        evidenceScope:
-          "논문이 보고한 masked-language pretraining·GLUE·Long Range Arena와 throughput 범위",
-        notClaim:
-          "Fourier mixing이 content-adaptive attention과 같거나 모든 decoder·long-context serving에서 우월하다는 뜻은 아님",
-        sectionId: "paper-fnet",
+        "title": "FNet: Mixing Tokens with Fourier Transforms",
+        "href": "https://aclanthology.org/2022.naacl-main.319.pdf",
+        "problem": "입력 위치를 고정 Fourier 연산으로 섞는 모델을 구성합니다.",
+        "contribution": "4299쪽 식 (3)의 두 축 변환 뒤 실수 투영에 4×1 입력을 대입해 [10,−2,−2,−2]를 구합니다.",
+        "assumptions": "실수 부분은 두 변환 뒤에 취합니다. 실제 블록에는 잔차·정규화·후속 층이 있습니다.",
+        "evidenceScope": "원문 식·각주 4와 §3.3의 장치별 구현 선택을 읽고 작은 mixer를 계산했습니다.",
+        "notClaim": "mixer의 가역성이나 모든 장치·길이에서 FFT의 우월성을 주장하지 않습니다.",
+        "sectionId": "paper-fnet"
       },
       {
-        title: "Hyena Hierarchy: Towards Larger Convolutional Language Models",
-        href: "https://arxiv.org/abs/2302.10866",
-        problem:
-          "긴 sequence에서 attention의 quadratic operator를 subquadratic한 learned long-range operator로 바꾸는 문제",
-        contribution:
-          "Implicit long convolution과 data-controlled gating의 hierarchy를 제안하고 language·image task에서 비교",
-        assumptions:
-          "논문의 Hyena parameterization·FFT convolution path·training recipe·model scale·sequence length를 전제로 함",
-        evidenceScope:
-          "논문의 language modeling·SuperGLUE·image와 long-context benchmark 범위",
-        notClaim:
-          "FFT가 attention weight를 학습하거나 모든 sequence length·hardware에서 end-to-end 속도 우위를 보장한다는 뜻은 아님",
-        sectionId: "paper-hyena",
-      },
-    ],
+        "title": "Hyena Hierarchy: Towards Larger Convolutional Language Models",
+        "href": "https://arxiv.org/pdf/2302.10866v3",
+        "problem": "긴 합성곱과 입력별 gate를 결합해 위치를 처리합니다.",
+        "contribution": "6쪽 식 (4)의 한 단계에 같은 입력과 h=[1,−1], g=[1,0,2,1]을 넣어 인과적 출력 [1,0,2,1]을 계산합니다.",
+        "assumptions": "원문 N은 여기의 반복 차수 J이며 입력 투영과 학습 필터를 사용합니다.",
+        "evidenceScope": "v3의 정의 3.1·Algorithm 3과 필터 매개화를 읽고 가정한 한 단계를 대입했습니다.",
+        "notClaim": "학습한 전체 Hyena 실행·동일한 attention 가중치·모든 조건의 속도나 품질 보장은 아닙니다.",
+        "sectionId": "paper-hyena"
+      }
+    ]
   },
   "ai/transformer-architecture": {
     coreIdea:
@@ -62840,48 +62768,296 @@ export const ARTICLE_LEARNING: Readonly<
     papers:[{title:"drand specification",href:"https://docs.drand.love/docs/specification/",problem:"Distributed randomness beacon의 DKG·round·verification interoperability",contribution:"Chain info와 threshold BLS protocol의 official specification 제공",assumptions:"선택 network의 pinned chain info와 scheme version",evidenceScope:"drand protocol/message/verification semantics",notClaim:"Consumer fairness·availability·모든 deployment security를 자동 보장하지 않음",sectionId:"paper-drand-spec"},{title:"drand/drand pinned source 2363f3b",href:"https://github.com/drand/drand/tree/2363f3b9ba5fd6f14e0b84a096b248479790d75d",problem:"현재 implementation/API verification seam 확인",contribution:"Official Go source·tests의 pinned snapshot 제공",assumptions:"Commit 2363f3b와 chain/config/dependencies 고정",evidenceScope:"선택 commit source behavior",notClaim:"Moving main·모든 network uptime·audit를 보장하지 않음",sectionId:"paper-drand-source"}],
   },
   "crypto/hash-theory": {
-    entryLevel: true,
-    entryNote: "Bit·byte와 hash를 모른다고 가정하지 않고 문자 A의 실제 byte부터 시작합니다.",
-    coreIdea: "Hash는 임의 길이의 canonical bytes를 고정 길이 digest로 압축하며, 보안은 충돌·역상·제2역상을 구분하고 construction·domain·encoding까지 고정해야 성립합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "hash-canonical-bit-byte-input", role: "의미를 모호하지 않은 bytes로 고정합니다." },
-      { id: "hash-preimage-second-preimage-collision", role: "서로 다른 세 공격 목표를 구분합니다." },
-      { id: "merkle-damgard-padding-length-boundary", role: "Compression chaining과 padding 경계를 설명합니다." },
-      { id: "sponge-rate-capacity-domain-separation", role: "Sponge의 흡수·보안 여유·용도 분리를 설명합니다." },
-      { id: "hash-primitive-release-gate", role: "Known vector와 negative test 뒤 성능을 비교합니다." },
+    "entryLevel": true,
+    "entryNote": "줄바꿈 없는 abc 세 글자에서 시작해 비트·바이트·패딩과 상태의 이름을 차례로 소개합니다.",
+    "coreIdea": "같은 입력 바이트를 SHA-256과 SHA-3의 실제 단계에 대입하고 출력 일치·보안 목표·인증·직렬화의 조건을 구분합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "hash-canonical-bit-byte-input",
+        "role": "abc의 세 바이트와 필드 경계를 프로토콜의 입력 규칙으로 고정합니다."
+      },
+      {
+        "id": "hash-preimage-second-preimage-collision",
+        "role": "정해진 결과·정해진 메시지·자유로운 두 입력이라는 공격 목표를 나눕니다."
+      },
+      {
+        "id": "merkle-damgard-padding-length-boundary",
+        "role": "같은 abc의 패딩·상태 반복과 길이 확장 조건을 실제 코드로 추적합니다."
+      },
+      {
+        "id": "sponge-rate-capacity-domain-separation",
+        "role": "같은 바이트를 rate에 넣고 capacity·suffix·순열·출력의 역할을 구분합니다."
+      },
+      {
+        "id": "hash-primitive-release-gate",
+        "role": "원문 함수 실행·자체 모형·전체 라이브러리와 성능 검증의 범위를 나눕니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "hash-canonical-bit-byte-input", sectionId: "input-security", intuition: "Hash가 보는 것은 문서의 의미가 아니라 정확한 bit string입니다.", workedExample: "ASCII A는 0x41, 즉 01000001입니다. (ab,c)와 (a,bc)는 length prefix가 없으면 둘 다 abc입니다.", boundary: "Unicode normalization·endianness·length·type tag를 protocol이 고정해야 합니다.", counterexample: "구분자 없는 tuple concatenation은 서로 다른 typed inputs를 같은 bytes로 만듭니다." },
-      { id: "hash-preimage-second-preimage-collision", sectionId: "input-security", intuition: "Digest에서 입력 찾기, 고정 입력의 짝 찾기, 아무 두 입력의 충돌 찾기는 다른 game입니다.", workedExample: "Ideal n-bit hash의 generic cost는 preimage/second-preimage 약 2^n, collision 약 2^(n/2)입니다.", boundary: "이는 idealized generic bound이며 실제 algorithm·output truncation·protocol attack을 대신하지 않습니다." },
-      { id: "merkle-damgard-padding-length-boundary", sectionId: "constructions", intuition: "Fixed compression을 이전 state와 다음 block에 반복 적용해 긴 message를 처리합니다.", workedExample: "Toy C(h,m)=3h+m mod17에서 h0=5,m1=7,m2=2이면 h1=5,h2=0입니다.", boundary: "Padding과 length encoding이 유일해야 하며 raw digest를 naive secret-prefix MAC으로 쓰지 않습니다.", counterexample: "Padding 경계를 생략하면 다른 block sequences가 같은 parse를 가질 수 있습니다." },
-      { id: "sponge-rate-capacity-domain-separation", sectionId: "constructions", intuition: "State 중 rate만 입출력에 쓰고 capacity는 내부에 남겨 security margin을 만듭니다.", workedExample: "Width 5, rate 3, capacity 2이면 세 words를 흡수할 때마다 permutation하고 squeeze도 rate에서 꺼냅니다.", boundary: "Capacity·rounds·suffix는 parameter profile이며 임의 변경하면 별도 primitive입니다." },
-      { id: "hash-primitive-release-gate", sectionId: "release", intuition: "정상 digest 한 개가 아니라 boundary와 cross-library parity를 먼저 통과시킵니다.", workedExample: "empty, abc, block−1/block/block+1, chunked input, tag swap과 truncated output을 fixture로 둡니다.", boundary: "Throughput은 같은 CPU·message distribution·API semantics에서 correctness 뒤 측정합니다." },
+    "conceptExplanations": [
+      {
+        "id": "hash-canonical-bit-byte-input",
+        "sectionId": "encoding",
+        "intuition": "해시는 파일의 의미가 아닌 합의한 바이트열을 받습니다.",
+        "workedExample": "abc=61 62 63은 24비트입니다. (ab,c)와 (a,bc)를 태그·길이로 쓰면 01026162020163과 01016102026263으로 다릅니다.",
+        "boundary": "정규화는 프로토콜이 동등하다고 정한 입력에 적용합니다. 설명용 길이 한 바이트는 0–255로 제한합니다.",
+        "counterexample": "그냥 두 필드를 이어 붙이면 둘 다 abc가 되어 해시 전에 구별을 잃습니다."
+      },
+      {
+        "id": "hash-preimage-second-preimage-collision",
+        "sectionId": "input-security",
+        "intuition": "아무 두 출력을 비교할 때는 이전 후보 모두가 비교 대상이 됩니다.",
+        "workedExample": "16가지 출력에서 다섯 후보의 아무 충돌 확률은 4097/8192, 고정 목표 적중은 289201/1048576입니다.",
+        "boundary": "고전적 이상 함수 모형의 규모를 실제 알고리즘·모든 메시지 길이·양자 비용의 보증으로 확대하지 않습니다.",
+        "counterexample": "8비트 예의 trial:7/11과 target:265는 전체 SHA-256 충돌이나 평균 시도 횟수가 아닙니다."
+      },
+      {
+        "id": "merkle-damgard-padding-length-boundary",
+        "sectionId": "padding",
+        "intuition": "끝 표시와 전체 길이를 보존하며 블록마다 같은 압축 함수를 적용합니다.",
+        "workedExample": "abc는 3+1+52+8=64바이트이며 W0=61626380, W15=00000018입니다. 첫 새 a=5d6aebcd, e=fa2a4622입니다.",
+        "boundary": "SHA-256 패딩은 임의 메시지의 prefix-free 인코딩이 아닙니다. 전체 출력 상태와 키 길이를 아는 secret-prefix 인증에는 길이 확장 경로가 있습니다.",
+        "counterexample": "키 4 + 메시지 3 뒤의 57바이트 패딩과 !를 넣으면 새 메시지는 61바이트이고 기존 상태에서 계산을 이을 수 있습니다."
+      },
+      {
+        "id": "sponge-rate-capacity-domain-separation",
+        "sectionId": "sponge",
+        "intuition": "앞부분에 입력을 XOR한 뒤 큰 상태 전체를 섞고 앞부분에서 출력을 읽습니다.",
+        "workedExample": "SHA3-256은 1600=1088+512비트이고 abc와 06의 첫 lane은 0000000006636261, 마지막 rate lane은 8000000000000000입니다.",
+        "boundary": "capacity는 비밀키가 아닙니다. 같은 알려진 입력으로 전체 상태를 계산할 수 있으며 suffix·출력·공격 모형을 따로 정합니다.",
+        "counterexample": "135바이트에서는 마지막 86 한 바이트에 패딩이 겹치고 136바이트에서는 별도 패딩 블록이 생깁니다. suffix 01의 Keccak과 06의 SHA3도 다릅니다."
+      },
+      {
+        "id": "hash-primitive-release-gate",
+        "sectionId": "verification",
+        "intuition": "정상 결과와 경계 결과를 맞춘 뒤 실행한 함수와 실행하지 않은 전체 경로를 구분합니다.",
+        "workedExample": "실제 compact 함수의 8입력, pad/read_state의 바이트 위치, 자체 24라운드 모형의 SHA3와 SHAKE 32/200바이트를 대조했습니다.",
+        "boundary": "Rust 호출 예제는 전체 Cargo/API/CPU dispatch를 실행하지 않았고 SHA3 주변 cursor는 대체 형식입니다. 성능·상수 시간 검증을 주장하지 않습니다.",
+        "counterexample": "pad 함수의 네이티브 성공을 실제 keccak 의존성 전체의 실행 성공이라고 보고하면 범위를 넘습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 입력", relation: "Bits와 bytes를 canonical message로 고정합니다.", concepts: ["bit-byte", "hash-canonical-bit-byte-input"] },
-      { label: "01 보안", relation: "세 공격 game을 구분합니다.", concepts: ["hash-preimage-second-preimage-collision"] },
-      { label: "02 construction", relation: "Compression과 sponge를 비교합니다.", concepts: ["merkle-damgard-padding-length-boundary", "sponge-rate-capacity-domain-separation", "cryptographic-domain-type-separation"] },
-      { label: "03 재사용", relation: "Merkle selective opening은 기존 정본으로 연결합니다.", concepts: ["merkle-selective-opening"] },
-      { label: "04 release", relation: "Failure parity 뒤 비용을 봅니다.", concepts: ["hash-primitive-release-gate"] },
+    "conceptStages": [
+      {
+        "label": "01 같은 입력",
+        "relation": "abc의 세 바이트와 블록 경계를 정합니다.",
+        "concepts": [
+          "hash-canonical-bit-byte-input",
+          "merkle-damgard-padding-length-boundary"
+        ]
+      },
+      {
+        "label": "02 실제 계산",
+        "relation": "첫 라운드와 상태·버퍼·출력을 원문에 대입합니다.",
+        "concepts": [
+          "merkle-damgard-padding-length-boundary",
+          "hash-primitive-release-gate"
+        ]
+      },
+      {
+        "label": "03 보안 목표",
+        "relation": "공격자가 고르는 값과 인증의 경계를 구분합니다.",
+        "concepts": [
+          "hash-preimage-second-preimage-collision",
+          "merkle-damgard-padding-length-boundary"
+        ]
+      },
+      {
+        "label": "04 같은 입력의 스펀지",
+        "relation": "rate·capacity·suffix와 실제 패딩 위치를 연결합니다.",
+        "concepts": [
+          "sponge-rate-capacity-domain-separation"
+        ]
+      },
+      {
+        "label": "05 검증 범위",
+        "relation": "입력 형식과 실제 실행 범위를 기록합니다.",
+        "concepts": [
+          "hash-canonical-bit-byte-input",
+          "hash-primitive-release-gate"
+        ]
+      }
     ],
-    exercises: [
-      { level:"basic", question:"문자 A의 ASCII byte와 bit string을 쓰세요.", answerChecklist:["0x41","01000001","8 bits","hash input bytes"], requiredConcepts:["hash-canonical-bit-byte-input"], sectionId:"input-security" },
-      { level:"basic", question:"(ab,c)와 (a,bc)의 모호성을 고치세요.", answerChecklist:["same abc","length prefix","type tag","canonical encoding"], requiredConcepts:["hash-canonical-bit-byte-input"], sectionId:"input-security" },
-      { level:"basic", question:"Preimage·second-preimage·collision을 구분하세요.", answerChecklist:["digest target","fixed message","attacker chooses pair","different games"], requiredConcepts:["hash-preimage-second-preimage-collision"], sectionId:"input-security" },
-      { level:"basic", question:"Ideal n-bit hash의 generic work factor를 비교하세요.", answerChecklist:["preimage 2^n","second-preimage 2^n","collision 2^(n/2)","birthday"], requiredConcepts:["hash-preimage-second-preimage-collision"], sectionId:"input-security" },
-      { level:"basic", question:"Toy compression의 h1,h2를 계산하세요.", answerChecklist:["C=3h+m mod17","h1=5","h2=0","toy insecure"], requiredConcepts:["merkle-damgard-padding-length-boundary"], sectionId:"constructions" },
-      { level:"basic", question:"Sponge의 rate와 capacity 역할을 구분하세요.", answerChecklist:["rate I/O","capacity hidden","permutation","domain suffix"], requiredConcepts:["sponge-rate-capacity-domain-separation"], sectionId:"constructions" },
-      { level:"advanced", question:"Raw Merkle–Damgård digest를 naive MAC으로 쓰는 위험을 설명하세요.", answerChecklist:["length extension","padding","secret-prefix","HMAC","construction boundary"], requiredConcepts:["merkle-damgard-padding-length-boundary"], sectionId:"constructions" },
-      { level:"advanced", question:"Hash와 Merkle leaf/node domain을 설계하세요.", answerChecklist:["type prefix","length","leaf","inner","no reinterpretation"], requiredConcepts:["cryptographic-domain-type-separation","merkle-selective-opening"], sectionId:"merkle-boundary" },
-      { level:"advanced", question:"Output truncation이 security에 미치는 영향을 설명하세요.", answerChecklist:["effective n","collision half exponent","preimage exponent","protocol target","no blanket claim"], requiredConcepts:["hash-preimage-second-preimage-collision"], sectionId:"input-security" },
-      { level:"advanced", question:"Hash release matrix를 작성하세요.", answerChecklist:["algorithm/version","encoding/domain","known vectors","boundary chunks","differential","performance last","rollback"], requiredConcepts:["hash-primitive-release-gate"], sectionId:"release" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "abc의 바이트·길이와 두 필드 (ab,c)/(a,bc)의 인코딩을 쓰세요.",
+        "answerChecklist": [
+          "61 62 63, 3바이트와 24비트",
+          "그냥 이어 붙이면 모두 abc",
+          "태그·길이 예는 01026162020163/01016102026263",
+          "길이 한 바이트는 0–255로 제한"
+        ],
+        "requiredConcepts": [
+          "hash-canonical-bit-byte-input"
+        ],
+        "sectionId": "encoding"
+      },
+      {
+        "level": "basic",
+        "question": "abc의 SHA-256 패딩과 55/56바이트 경계를 계산하세요.",
+        "answerChecklist": [
+          "3+1+52+8=64바이트",
+          "W0=61626380, W15=00000018",
+          "55바이트는 1블록, 56바이트는 2블록",
+          "64바이트 입력도 패딩 블록을 추가"
+        ],
+        "requiredConcepts": [
+          "merkle-damgard-padding-length-boundary"
+        ],
+        "sectionId": "padding"
+      },
+      {
+        "level": "basic",
+        "question": "abc의 첫 라운드에서 T1·T2와 새 a·e를 쓰고 마지막 출력의 차이를 설명하세요.",
+        "answerChecklist": [
+          "T1=54da50e8, T2=08909ae5",
+          "새 a=5d6aebcd, 새 e=fa2a4622",
+          "덧셈은 2^32 나머지",
+          "64라운드 뒤 시작 상태를 다시 더하고 big-endian으로 32바이트 출력"
+        ],
+        "requiredConcepts": [
+          "merkle-damgard-padding-length-boundary"
+        ],
+        "sectionId": "round"
+      },
+      {
+        "level": "basic",
+        "question": "a 다음 bc를 주어도 같은 해시가 되는 조건을 원문의 길이 계산과 연결하세요.",
+        "answerChecklist": [
+          "같은 상태를 유지하고 마지막에 한 번만 종료",
+          "8×(버퍼 3+64×완료 블록 0)=24비트",
+          "개별 다이제스트를 붙이는 것과 다름",
+          "상태 저장 little-endian과 최종 출력 big-endian을 구별"
+        ],
+        "requiredConcepts": [
+          "merkle-damgard-padding-length-boundary",
+          "hash-primitive-release-gate"
+        ],
+        "sectionId": "streaming"
+      },
+      {
+        "level": "basic",
+        "question": "같은 abc의 SHA3-256에서 rate·capacity와 두 패딩 위치를 설명하세요.",
+        "answerChecklist": [
+          "1600=1088+512비트, rate 136바이트",
+          "첫 lane 0000000006636261",
+          "state[16]=8000000000000000",
+          "capacity는 비밀키가 아니며24라운드 후 앞 32바이트 출력"
+        ],
+        "requiredConcepts": [
+          "sponge-rate-capacity-domain-separation"
+        ],
+        "sectionId": "sponge"
+      },
+      {
+        "level": "basic",
+        "question": "16가지 출력에서 다섯 후보의 아무 충돌과 고정 목표 적중을 비교하세요.",
+        "answerChecklist": [
+          "아무 충돌 1−(16×15×14×13×12)/16^5=4097/8192",
+          "고정 목표 1−(15/16)^5=289201/1048576",
+          "역상·제2역상·자유로운 충돌의 입력 선택을 구별",
+          "trial 예는 8비트 출력의 관측이며 전체 256비트 충돌 아님"
+        ],
+        "requiredConcepts": [
+          "hash-preimage-second-preimage-collision"
+        ],
+        "sectionId": "input-security"
+      },
+      {
+        "level": "advanced",
+        "question": "키 4바이트와 abc에 대한 secret-prefix 인증을 어떻게 연장했는지 계산하세요.",
+        "answerChecklist": [
+          "원래 총 7바이트와 패딩 57바이트로 64바이트 상태",
+          "기존 32바이트 결과를 8개의 상태값으로 읽음",
+          "새 메시지 abc+패딩 57+!는 61바이트, 키 포함 65바이트",
+          "원래 패딩이 새 패딩 메시지의 접두어일 수 있음",
+          "HMAC의 로컬 비교는 다르며 이 실행만으로 보안 증명 아님"
+        ],
+        "requiredConcepts": [
+          "merkle-damgard-padding-length-boundary"
+        ],
+        "sectionId": "length-extension"
+      },
+      {
+        "level": "advanced",
+        "question": "135/136바이트의 SHA3 패딩과 Keccak·SHAKE의 차이를 설명하세요.",
+        "answerChecklist": [
+          "135에서는 06 XOR 80=86, 136에서는 새 패딩 블록",
+          "Keccak256은 01, SHA3는 06으로 같은 abc 결과가 다름",
+          "SHAKE128은 rate 168바이트/capacity256비트/1f",
+          "같은 입력의 32바이트 출력은 64바이트 출력의 접두어",
+          "200바이트 출력은 rate를 넘어 추가 순열 필요"
+        ],
+        "requiredConcepts": [
+          "sponge-rate-capacity-domain-separation"
+        ],
+        "sectionId": "variants"
+      },
+      {
+        "level": "advanced",
+        "question": "SHA-256을 64비트로 자른 식별자와 작은 비밀번호 후보에 보안 수치를 어떻게 적용하나요?",
+        "answerChecklist": [
+          "실제 비교 비트 수 64를 사용",
+          "고전적 이상 함수의 충돌 규모 2^32",
+          "적은 입력 후보는 출력 길이와 별도로 열거 가능",
+          "구조 공격·긴 메시지·양자 비용·메모리 조건은 별도",
+          "고정 입력열의 12/266회는 평균값이 아님"
+        ],
+        "requiredConcepts": [
+          "hash-preimage-second-preimage-collision"
+        ],
+        "sectionId": "input-security"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 원문 실행 범위를 재현 가능한 검사 목록으로 구분하세요.",
+        "answerChecklist": [
+          "byte-preserved compact와 상수 및 8개의 실제 Rust 입력",
+          "pad/read_state 원문은 대체 cursor 형식에서만 실행",
+          "독립 Python 24라운드 모형과 hashlib 대조",
+          "전체 Cargo/API/CPU dispatch/keccak 의존성 실행은 미포함",
+          "필드·정규화·길이·알고리즘·suffix·출력 길이와 파일 SHA를 기록",
+          "성능이나 상수 시간 보증으로 확대하지 않음"
+        ],
+        "requiredConcepts": [
+          "hash-canonical-bit-byte-input",
+          "hash-primitive-release-gate"
+        ],
+        "sectionId": "verification"
+      }
     ],
-    papers: [
-      { title:"NIST FIPS 180-4 · Secure Hash Standard", href:"https://csrc.nist.gov/pubs/fips/180-4/upd1/final", problem:"SHA-2 family의 padding·functions·digest를 상호운용 가능하게 규정", contribution:"Normative algorithm과 test 가능한 bit-level contract 제공", assumptions:"선택 SHA-2 variant와 FIPS message conventions 사용", evidenceScope:"표준에 명시된 SHA-2 construction과 digest", notClaim:"모든 protocol 사용이 안전하거나 구현이 side-channel safe임을 보장하지 않음", sectionId:"paper-fips-180-4" },
-      { title:"NIST FIPS 202 · SHA-3 Standard", href:"https://csrc.nist.gov/pubs/fips/202/final", problem:"Permutation-based hash와 XOF를 표준화", contribution:"KECCAK-p, SHA3, SHAKE와 suffix/output contract 제공", assumptions:"FIPS 202 parameter·padding을 그대로 사용", evidenceScope:"표준 SHA-3/SHAKE construction", notClaim:"임의 sponge parameter의 안전성을 보장하지 않음", sectionId:"paper-fips-202" },
-      { title:"RustCrypto hashes pinned source", href:"https://github.com/RustCrypto/hashes/tree/f6c786d72ed4d37a32dcd32daa2e7277dd4683e1", problem:"Streaming Rust hash API의 실제 source seam 확인", contribution:"Digest implementations와 tests의 pinned snapshot 제공", assumptions:"Commit f6c786d와 dependency/target 고정", evidenceScope:"선택 commit source/API", notClaim:"모든 target audit·constant-time·향후 release를 보장하지 않음", sectionId:"paper-rustcrypto-hashes" },
-    ],
+    "papers": [
+      {
+        "title": "NIST FIPS 180-4 · 2015판",
+        "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf",
+        "problem": "같은 비트 입력을 정확한 SHA-256 출력으로 계산해야 합니다.",
+        "contribution": "패딩·초기 상태·64라운드·상태 더하기를 정의합니다.",
+        "assumptions": "선택한 SHA-256 변형과 32비트 나머지·big-endian 입력을 유지합니다.",
+        "evidenceScope": "5.1.1절의 abc와 인쇄 13쪽, 6.2절 인쇄 22–23쪽을 읽고 첫 라운드와 출력에 대입했습니다.",
+        "notClaim": "임의 프로토콜·secret-prefix 인증·구현 부채널 안전성을 보장하지 않습니다.",
+        "sectionId": "padding"
+      },
+      {
+        "title": "NIST FIPS 202 · 2015판",
+        "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf",
+        "problem": "같은 메시지의 SHA3·SHAKE 상태·suffix·출력 규칙을 구별합니다.",
+        "contribution": "상태 배치·다섯 단계·스펀지·pad10*1·SHA3/SHAKE를 정의합니다.",
+        "assumptions": "비트 순서와 rate·capacity·라운드·suffix를 선택 규격에 맞춥니다.",
+        "evidenceScope": "3.2절과 Algorithm 7–9, 6.1–6.2절을 읽고 별도 Python 모형을 hashlib와 대조했습니다.",
+        "notClaim": "capacity를 비밀키로 보거나 임의 매개변수의 안전성을 승인하지 않습니다.",
+        "sectionId": "permutation"
+      },
+      {
+        "title": "RustCrypto hashes · f6c786d 원문",
+        "href": "https://github.com/RustCrypto/hashes/tree/f6c786d72ed4d37a32dcd32daa2e7277dd4683e1",
+        "problem": "상태·버퍼·패딩·바이트 순서를 실제 함수 경로에 맞춥니다.",
+        "contribution": "sha2 0.11.0의 compact/block API와 sha3 0.12.0의 profile/pad/read_state입니다.",
+        "assumptions": "commit과 원문 bytes를 보존하고 실행용 어댑터를 별도 파일로 둡니다.",
+        "evidenceScope": "rustc 1.93.0에서 compact를 8입력으로 실행하고 pad/read_state를 명시한 대체 형식으로 실행했습니다.",
+        "notClaim": "전체 Cargo/API·CPU dispatch·실제 keccak/cursor 의존성의 실행이나 성능 측정을 주장하지 않습니다.",
+        "sectionId": "verification"
+      }
+    ]
   },
   "crypto/poseidon-hash": {
     entryLevel:true, entryNote:"유한체와 permutation을 모른다고 가정하고 F17의 두-word state 계산부터 시작합니다.", coreIdea:"Poseidon은 field-native power S-box와 MDS mixing을 full/partial HADES rounds로 조합해 circuit constraint를 줄이지만 field·width·round constants 전체가 하나의 보안 profile입니다.", assumedKnowledge:[],
@@ -81915,7 +82091,7 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/flash-attention-io-aware-kernel": {
-    "coreIdea": "문장 속 한 위치가 앞의 네 위치를 얼마나 참고할지 정한다고 해 봅시다. 이미 계산한 점수는 [1, 3, 2, 5]이고 가져올 값은 [2, 4, 6, 8]입니다. 이 글은 가중평균 7.376113을 구하는 과정을 끝까지 따라갑니다. 핵심은 점수 전체를 메모리에 적어 두지 않아도, 지금까지의 기준값과 두 합만 고쳐 가면 답을 구할 수 있다는 것입니다. 이후 같은 계산이 GPU에서 어디를 기다리는지 살펴봅니다.",
+    "coreIdea": "(가정) 점수 [1,3,2,5]와 값 [2,4,6,8]의 출력 7.376113을 끝까지 따라갑니다. 전체 점수 배열 대신 기준값·지수합·가중합을 남기고, 기준을 바꿀 때 두 합을 함께 옮기면 같은 답을 얻습니다. 고정 코드의 lane별 부분합과 마지막 합산, FA4의 실제 log2 단위 갱신 조건까지 이 숫자로 대조합니다.",
     "entryNote": "본문의 작은 숫자는 원리를 검산하기 위한 가정입니다. 공식 논문과 코드의 버전을 고정하고, 저자 실험과 이 글의 산술 검산을 구분합니다.",
     "assumedKnowledge": [
       {
@@ -81982,14 +82158,14 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "names",
         "intuition": "계산 횟수뿐 아니라 저장 계층 사이의 이동량도 비용으로 셉니다.",
         "workedExample": "128MiB×head 32×batch 8=32GiB입니다. 가정한 2TB/s로 나눈 값은 약 17.18ms입니다.",
-        "boundary": "이동량을 대역폭으로 나눈 하한은 kernel 실행시간이 아닙니다. 점근식 O(N²d²/M)도 정확한 바이트 비율이 아닙니다."
+        "boundary": "원 논문 정리 2는 d≤M≤Nd와 원소 단위 저장량을 가정합니다. Θ(N²d²/M)는 점근 접근량이며 정확한 바이트 비율이나 실측 실행시간이 아닙니다."
       },
       {
         "id": "online-softmax",
         "sectionId": "mechanism",
         "intuition": "기준 최대값이 바뀌면 옛 분자와 분모를 같은 배율로 옮겨 새 조각과 더합니다.",
         "workedExample": "기준 3에서 5로 바꾸면 옛 합에 e⁻²를 곱합니다. 최종 8.876695/1.203438≈7.376113입니다.",
-        "boundary": "분모만 보정하고 분자는 그대로 두면 다른 출력이 됩니다. 실제 부동소수점 오차는 별도로 확인합니다."
+        "boundary": "분모만 보정하고 분자는 그대로 두면 다른 출력이 됩니다. 실제 부동소수점 오차는 별도로 확인합니다. 고정 일반 함수의 row_sum은 lane별 부분합이며 finalize에서 네 lane을 합칩니다."
       },
       {
         "id": "attention-tiling",
@@ -82016,8 +82192,8 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "attention-conditional-rescaling",
         "sectionId": "comparison",
         "intuition": "최댓값이 커졌어도 안전한 범위에서는 옛 기준으로 합산해 보정 작업을 줄일 수 있습니다.",
-        "workedExample": "둘째 조각에서 기준 3을 유지하면 u=65.590396, ℓ=8.892271이고 비율은 여전히 7.376113입니다.",
-        "boundary": "큰 지수를 무조건 허용하면 overflow가 납니다. FA4의 갱신 조건·근사 오차·지원 target을 함께 지켜야 합니다."
+        "workedExample": "기준 3을 유지하면 u≈65.590396, ℓ≈8.892271이며 출력은 7.376113입니다. 실제 log2 단위의 가정한 임계값 3은 유지, 2는 기준 5 갱신을 고릅니다.",
+        "boundary": "공통 배율은 나눗셈에서 사라지지만 overflow나 항별 근사 오차는 복구되지 않습니다. 기본 임계값 0은 조건부 생략을 끄며 CPU scalar 분기 확인은 전체 GPU 실행이 아닙니다."
       }
     ],
     "conceptStages": [
@@ -82068,7 +82244,7 @@ export const ARTICLE_LEARNING: Readonly<
           "두 합을 나누면 약 7.376113이며 분자·분모에 같은 기준을 사용해야 합니다."
         ],
         "requiredConcepts": [
-          "attention-materialization"
+          "online-softmax"
         ],
         "sectionId": "case"
       },
@@ -82136,10 +82312,11 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "둘째 조각에서도 기준 3을 유지하면 두 합과 출력은 어떻게 달라지나요?",
+        "question": "둘째 조각에서도 기준 3을 유지하면 두 합과 출력은 어떻게 되나요? 실제 코드의 가정한 임계값 3과 2에서는 각각 어느 기준을 고르나요?",
         "answerChecklist": [
           "지수합은 약 8.892271이고 가중합은 약 65.590396으로 함께 커집니다.",
-          "비율은 약 7.376113으로 같지만 무제한 기준 유지에는 overflow 위험이 있습니다."
+          "비율은 약 7.376113으로 같지만 무제한 기준 유지에는 overflow 위험이 있습니다.",
+          "(3−5)log₂e≈−2.885390입니다. 임계값 3은 −3 이상이므로 기준 3을 유지하고, 임계값 2는 조건이 거짓이므로 기준 5로 옮깁니다."
         ],
         "requiredConcepts": [
           "attention-conditional-rescaling"
@@ -82168,7 +82345,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "attention-materialization"
         ],
-        "sectionId": "limits"
+        "sectionId": "need"
       },
       {
         "level": "advanced",
@@ -82180,16 +82357,16 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "attention-materialization"
         ],
-        "sectionId": "limits"
+        "sectionId": "paper-flashattention4"
       }
     ],
     "papers": [
       {
-        "title": "FlashAttention · 2022",
-        "href": "https://arxiv.org/abs/2205.14135",
+        "title": "FlashAttention · arXiv 2205.14135v2",
+        "href": "https://arxiv.org/html/2205.14135v2",
         "problem": "N×N 점수와 확률 중간값을 HBM에 쓰고 읽는 비용",
         "contribution": "tile과 online softmax, backward 재계산",
-        "assumptions": "온칩 저장량과 dtype에 맞는 tile이 필요",
+        "assumptions": "d≤M≤Nd에서 원소 단위로 용량과 접근량을 세는 IO 모형이며 실제 dtype와 tile 제약은 별도입니다.",
         "evidenceScope": "원 논문의 모델·GPU 구성에서 저자 측정",
         "notClaim": "FLOPs가 같아도 시간은 달라지며 모든 shape에서 같은 이득은 아니다.",
         "sectionId": "paper-flashattention-reading"
@@ -119988,7 +120165,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "business/shop-unit-economics": {
     "coreIdea": "점포의 손익분기점은 객단가에서 재료·수수료 같은 변동비를 뺀 한 건의 공헌이익으로 고정비를 나눈 결과이며, 점주 노동과 개업비 회수는 별도로 계산해야 합니다.",
-    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "entryNote": "같은 6천 원 한 잔에서 비용 2천 원을 빼고 월 800만 원을 채웁니다. 주문 경로·투자 회수·현금 입출금 시점이 달라질 때 바꿀 숫자를 구분합니다.",
     "assumedKnowledge": [
       {
         "id": "contribution-cash-trace",
@@ -120015,21 +120192,21 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "mechanism",
         "intuition": "6천 원 매출을 모두 월세에 쓸 수는 없습니다.",
         "workedExample": "잔당 가격 6천 원에서 재료·포장·결제 2천 원을 빼면 4천 원이 남습니다.",
-        "boundary": "업종과 주문 채널이 달라지면 건당 변동비도 달라집니다."
+        "boundary": "공헌이익은 순이익이나 은행 잔액이 아닙니다. 주문 채널·판매가·원가가 달라지면 다시 계산합니다."
       },
       {
         "id": "shop-break-even-count",
         "sectionId": "mechanism",
         "intuition": "문을 열어두는 비용을 한 건씩 채워야 합니다.",
-        "workedExample": "800만÷4천=월2천 잔; 월1,500잔이면200만 원이 부족합니다.",
-        "boundary": "점주 임금·세금·투자비 회수는 계산에 추가해야 합니다."
+        "workedExample": "800만 원 ÷ 4천 원 = 월 2천 잔입니다. 월 1,500잔이면 200만 원 부족합니다. 모두 배달이라 잔당 기여가 3천 원이면 최소 2,667잔입니다.",
+        "boundary": "월 고정비와 잔당 공헌이익이 일정하고 필요한 주문을 처리할 수 있는 범위입니다. 양수인 고정비에서 잔당 기여가 0 이하이면 판매 확대만으로 충당하지 못합니다."
       },
       {
         "id": "shop-investment-recovery",
         "sectionId": "limits",
         "intuition": "월별 흑자가 난다고 초기 투자금을 회수한 것은 아닙니다.",
-        "workedExample": "시설6천만 원을36개월에 단순 회수하려면 월 약166만7천 원을 추가로 남겨야 합니다.",
-        "boundary": "단순 회수 기간은 이자·세금·기회비용과 폐업 비용을 생략합니다."
+        "workedExample": "시설 6천만 원을 36개월에 단순 회수하는 목표만 기존 월 비용에 더하면 최소 2,417잔이 필요합니다.",
+        "boundary": "이자·세금·할인율·잔존가치·점주 노동과 폐업 비용을 생략한 목표입니다. 감가상각이나 이미 포함한 투자 회수 몫을 중복 합산하지 않습니다."
       }
     ],
     "conceptStages": [
@@ -120042,14 +120219,14 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "label": "02 · 점포의 손익분기 판매량",
-        "relation": "800만÷4천=월2천 잔; 월1,500잔이면200만 원이 부족합니다.",
+        "relation": "800만 원 ÷ 4천 원 = 월 2천 잔입니다. 월 1,500잔이면 200만 원 부족합니다. 모두 배달이라 잔당 기여가 3천 원이면 최소 2,667잔입니다.",
         "concepts": [
           "shop-break-even-count"
         ]
       },
       {
         "label": "03 · 개업비 회수 기간",
-        "relation": "시설6천만 원을36개월에 단순 회수하려면 월 약166만7천 원을 추가로 남겨야 합니다.",
+        "relation": "시설 6천만 원을 36개월에 단순 회수하는 목표만 기존 월 비용에 더하면 최소 2,417잔이 필요합니다.",
         "concepts": [
           "shop-investment-recovery"
         ]
@@ -120060,8 +120237,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "basic",
         "question": "6천 원 한 잔에서 월 비용에 보탤 돈은 얼마인가요?",
         "answerChecklist": [
-          "변동비 2천 원 차감",
-          "공헌이익 4천 원"
+          "주문 때문에 추가되는 비용 2천 원을 빼면 공헌이익 4천 원입니다.",
+          "순이익이 아니라 월 고정비를 충당하기 전 금액입니다."
         ],
         "sectionId": "names",
         "requiredConcepts": [
@@ -120070,10 +120247,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "월 800만 원을 충당할 판매량을 구하세요.",
+        "question": "월 800만 원을 충당할 판매량과 하루 평균을 구하세요.",
         "answerChecklist": [
-          "800만÷4천=월 2천 잔",
-          "30일이면 하루 평균66.67잔, 정수 목표67잔"
+          "800만 원 ÷ 4천 원 = 월 2천 잔입니다.",
+          "30일 영업의 하루 평균은 약 66.67잔, 매일 같은 정수 목표로 삼으면 67잔입니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -120082,10 +120259,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "매일 67잔과 월 2천 잔이 완전히 같은가요?",
+        "question": "매일 67잔과 월 2천 잔은 완전히 같은가요?",
         "answerChecklist": [
-          "67×30=2,010잔",
-          "67잔은 하루 평균을 올림한 목표"
+          "67 × 30 = 2,010잔이므로 10잔 많습니다.",
+          "67잔은 하루 평균을 올린 목표이며 반드시 매일 정확히 그 수를 팔아야 월 합계를 채우는 것은 아닙니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -120096,8 +120273,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "basic",
         "question": "월 1,500잔일 때 비용 부족액은 얼마인가요?",
         "answerChecklist": [
-          "매출900만−변동비300만=600만",
-          "고정비800만에서200만 부족"
+          "매출 900만 원 − 주문별 비용 300만 원 = 공헌이익 600만 원입니다.",
+          "고정비 800만 원에 200만 원 부족합니다. 가격·비용·처리능력 가정을 유지한 계산입니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -120107,10 +120284,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "IAS2가 사례의 2천 원 전체를 재고비라고 정의하나요?",
+        "question": "IAS 2가 사례의 2천 원 전체를 재고비로 정의하나요?",
         "answerChecklist": [
-          "2천 원에는 재료·포장·결제비가 포함",
-          "결제 수수료는 재고와 별도 비용"
+          "2천 원에는 재료·포장·결제비가 포함되며 결제 수수료는 재고와 별도 비용입니다.",
+          "팔린 재료·남은 재료·폐기를 구분하고 이번 달 구매액 전체를 이번 달 판매 원가로 잡지 않습니다."
         ],
         "sectionId": "source",
         "requiredConcepts": [
@@ -120119,10 +120296,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "시설비6천만 원을36개월에 단순 회수하려면 월 얼마를 남겨야 하나요?",
+        "question": "시설 6천만 원을 36개월에 단순 회수하는 목표만 더하면 월 얼마와 몇 잔이 필요한가요?",
         "answerChecklist": [
-          "약166만7천 원",
-          "세금·할인율·잔존가치를 생략한 가정"
+          "추가로 남길 목표는 월 약 166만7천 원입니다.",
+          "(8,000,000 + 60,000,000 ÷ 36) ÷ 4,000 = 2,416.67잔이므로 최소 2,417잔입니다. 세금·할인율·잔존가치·점주 노동 등은 제외한 가정입니다."
         ],
         "sectionId": "limits",
         "requiredConcepts": [
@@ -120131,10 +120308,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "배달 주문에1천 원이 더 들면 손익분기 판매량은 어떤 방향으로 움직이나요?",
+        "question": "모든 주문에 배달 비용 1천 원이 더 들면 손익분기 판매량은 얼마인가요?",
         "answerChecklist": [
-          "건당 기여4천→3천 원",
-          "고정비가 같으면 필요한 건수가 늘어남"
+          "잔당 공헌이익이 4천 원에서 3천 원으로 줄어듭니다.",
+          "월 고정비가 같으면 800만 원 ÷ 3천 원 = 2,666.67잔이므로 최소 2,667잔입니다. 매장 주문과 섞이면 채널별 기여와 비중을 확인합니다."
         ],
         "sectionId": "need",
         "requiredConcepts": [
@@ -120144,10 +120321,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "판매량을 늘릴 때 직원 추가가 필요하면 선형 계산은 왜 틀릴 수 있나요?",
+        "question": "판매량 증가에 따라 직원을 추가해야 한다면 무엇을 다시 계산하나요?",
         "answerChecklist": [
-          "고정비800만 원 가정이 깨짐",
-          "근무표와 처리능력 기준으로 비용을 다시 계산"
+          "월 고정비 800만 원 가정이 깨지므로 근무표·임금·처리능력을 다시 반영합니다.",
+          "가격과 잔당 비용도 일정한지 확인합니다. 계산한 판매량이 실제 처리 가능한 수요인지 따져야 합니다."
         ],
         "sectionId": "need",
         "requiredConcepts": [
@@ -120157,10 +120334,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "월2천 잔을 팔아도 점주 생활비가 부족할 수 있는 이유는 무엇인가요?",
+        "question": "월 2천 잔을 팔아도 점주 생활비가 부족한 이유와 투자 회수를 더할 때의 주의점을 설명하세요.",
         "answerChecklist": [
-          "가정의 고정비에 점주 노동과 투자 회수를 제외",
-          "실제 목표 판매량에는 이를 추가"
+          "고정비 800만 원에 점주 노동 대가와 투자 회수를 넣지 않은 사례입니다. 무급 노동의 기회비용은 실제 급여·세무상 비용과 구별합니다.",
+          "감가상각이나 투자 회수 몫을 이미 넣었는지 확인해 같은 금액을 중복 합산하지 않습니다. 실제 현금 목표에서는 입출금 날짜도 맞춥니다."
         ],
         "sectionId": "limits",
         "requiredConcepts": [
@@ -120172,8 +120349,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "해외 점포 손익을 비교할 때 월세만 바꾸면 되나요?",
         "answerChecklist": [
-          "임금·세금·별도 부동산 비용과 임대차 전가 비용 확인",
-          "주문별 변동비·영업일·처리능력도 같은 기준으로 비교"
+          "임금·세금·business rates와 감면·면제, NSW outgoings의 계약·공개서 및 법적 범위를 확인합니다.",
+          "월 비용이 바뀌면 분자, 주문별 비용이 바뀌면 분모를 고칩니다. 영업일·채널 비중·처리능력도 같은 기준으로 비교합니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -120181,11 +120358,53 @@ export const ARTICLE_LEARNING: Readonly<
           "shop-break-even-count"
         ]
       }
+    ],
+    "papers": [
+      {
+        "title": "IAS 2 · 판매 재고와 비용 인식",
+        "href": "https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/",
+        "sectionId": "source",
+        "problem": "이번 달 재료 구매액 전체를 팔린 음료의 원가로 읽는 문제입니다.",
+        "contribution": "2천 원의 재료 부분을 팔린 양·남은 양·폐기에 연결하고 수수료는 별도로 합칩니다.",
+        "assumptions": "본문 2천 원은 재료·포장·결제비 합계이며 실제 업장의 수치는 아닙니다.",
+        "evidenceScope": "공식 About의 재고 판매와 손실 인식 설명을 읽고 판매 시점의 짧은 원문을 대조했습니다.",
+        "notClaim": "모든 점주에게 IFRS가 적용되거나 전체 2천 원이 IAS 2 재고비라는 뜻은 아닙니다."
+      },
+      {
+        "title": "Business Queensland · Break-even and profit",
+        "href": "https://www.business.qld.gov.au/running-business/finance/essentials/break-even-profit",
+        "sectionId": "comparison",
+        "problem": "높은 매출을 비용 충당과 혼동하는 문제입니다.",
+        "contribution": "2천 잔에서 매출 1,200만 원과 변동비 400만 원·고정비 800만 원의 합을 맞춥니다.",
+        "assumptions": "가격·잔당 비용·월 고정비가 일정하고 공헌이익이 양수인 비교 범위입니다.",
+        "evidenceScope": "공식 HTML의 Break-even point 정의와 판매·비용 설명을 읽고 14단어 문장을 인용했습니다.",
+        "notClaim": "2천 잔에 점주 노동·세금·투자 회수까지 포함되거나 수요·현금 유동성이 보장된다는 뜻은 아닙니다."
+      },
+      {
+        "title": "GOV.UK · Business rates overview",
+        "href": "https://www.gov.uk/introduction-to-business-rates",
+        "sectionId": "comparison",
+        "problem": "해외 점포의 부동산 부담을 임대료 하나로 보는 문제입니다.",
+        "contribution": "추가 월 비용이 있다면 분자의 고정비를 고치고 감면·면제 적용을 확인합니다.",
+        "assumptions": "비주거 부동산 안내이며 스코틀랜드·북아일랜드의 처리 차이와 잉글랜드·웨일스의 감면 절차를 구분합니다.",
+        "evidenceScope": "공식 Overview의 대상·지역별 처리·감면·면제 설명을 읽었습니다.",
+        "notClaim": "영국 모든 점포가 같은 세액을 내거나 현재 특정 점포의 부담을 계산했다는 뜻은 아닙니다."
+      },
+      {
+        "title": "NSW · What are outgoings?",
+        "href": "https://www.smallbusiness.nsw.gov.au/help/common-questions/what-are-outgoings",
+        "sectionId": "comparison",
+        "problem": "임대료 외 약정 비용을 빠뜨리거나 임대인의 모든 청구를 유효하게 보는 문제입니다.",
+        "contribution": "청소·관리·수선 등 부담 항목을 계약·공개서와 법적 범위에 대조해 월 비용에 반영합니다.",
+        "assumptions": "호주 NSW의 해당 소매 임대차이며 개별 청구의 유효성은 사실관계와 법에 따라 달라집니다.",
+        "evidenceScope": "공식 본문의 정의·계약 및 공개서 명시·직접적이고 합리적인 관련 범위를 읽었습니다.",
+        "notClaim": "다른 관할권의 비용 전가를 판정하거나 모든 항목의 청구가 허용된다는 뜻은 아닙니다."
+      }
     ]
   },
   "business/shop-site-selection": {
     "coreIdea": "입지는 유동인구 숫자 하나가 아니라 예상 방문자·구매전환·객단가·임대료를 같은 시간대와 동일 업종에서 대조하고 그 건물에서 영업이 가능한지 확인하는 선택입니다.",
-    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "entryNote": "같은 영업시간의 통행 1천 명에서 입장 50명과 구매 20건을 계산합니다. 이 비율이 관찰값인지 계획의 가정인지 구분하고 월 고정비와 영업 허용 조건에 대조합니다.",
     "assumedKnowledge": [
       {
         "id": "shop-break-even-count",
@@ -120211,8 +120430,8 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "site-conversion-funnel",
         "sectionId": "mechanism",
         "intuition": "길을 지나는 인파의 숫자가 그대로 매장 안 구매와 매출로 이어지는 것은 아닙니다.",
-        "workedExample": "하루 1천 명 × 5% 입점 × 40% 구매는 하루 20건입니다.",
-        "boundary": "관찰 날짜와 업종·날씨를 바꾸면 비율이 달라집니다."
+        "workedExample": "같은 하루의 1천 명 × 5% 입장 × 40% 구매 = 20명이며 한 명이 한 건을 결제한다고 놓습니다.",
+        "boundary": "시간·장소·사람과 영수증의 단위를 맞춥니다. 다른 점포의 관찰값을 새 점포의 실제 전환율로 읽지 않습니다."
       },
       {
         "id": "site-permitted-use",
@@ -120225,14 +120444,14 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "site-downside-budget",
         "sectionId": "limits",
         "intuition": "좋은 자리처럼 보이는 곳도 손님이 적은 달을 견뎌야 합니다.",
-        "workedExample": "예상 20건이 10건으로 줄면 월 공헌이익이 절반으로 떨어지는지 확인합니다.",
-        "boundary": "반드시 이전 점포의 매출을 새 점포가 재현한다는 전제를 두지 않습니다."
+        "workedExample": "같은 가격과 건당 비용에서 하루 구매가 20건에서 10건이 되면 월 공헌이익은 360만 원에서 180만 원, 고정비 부족액은 440만 원에서 620만 원이 됩니다.",
+        "boundary": "공헌이익은 은행 잔액과 다릅니다. 보증금 반환 시점·원상복구·종료 비용은 별도로 계산하며 이전 점포의 매출 재현을 보장하지 않습니다."
       }
     ],
     "conceptStages": [
       {
         "label": "01 · 통행에서 구매까지의 전환",
-        "relation": "하루 1천 명 × 5% 입점 × 40% 구매는 하루 20건입니다.",
+        "relation": "같은 하루의 1천 명 × 5% 입장 × 40% 구매 = 20명이며 한 명이 한 건을 결제한다고 놓습니다.",
         "concepts": [
           "site-conversion-funnel"
         ]
@@ -120246,7 +120465,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "label": "03 · 입지의 하방 예산",
-        "relation": "예상 20건이 10건으로 줄면 월 공헌이익이 절반으로 떨어지는지 확인합니다.",
+        "relation": "같은 가격과 건당 비용에서 하루 구매가 20건에서 10건이 되면 월 공헌이익은 360만 원에서 180만 원, 고정비 부족액은 440만 원에서 620만 원이 됩니다.",
         "concepts": [
           "site-downside-budget"
         ]
@@ -120255,10 +120474,10 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "1천 명 중5%입장, 그중40%구매면 주문 수는 얼마인가요?",
+        "question": "같은 하루에 통행 1천 명 중 5%가 들어오고 그중 40%가 한 건씩 사면 주문 수는 얼마인가요?",
         "answerChecklist": [
-          "입장50명",
-          "구매20건"
+          "입장 50명, 구매자 20명이며 한 명당 한 건 가정에서 구매 20건입니다.",
+          "전체 통행 대비 구매 전환은 5% × 40% = 2%입니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -120267,10 +120486,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "하루20건·8천 원이면 매출과 월 비용 충당액은 얼마인가요?",
+        "question": "하루 20건·건당 8천 원이면 매출과 월 고정비 충당액은 얼마인가요?",
         "answerChecklist": [
-          "하루매출16만 원",
-          "건당변동비2천 차감 후 하루12만,30일360만"
+          "하루 매출은 16만 원입니다.",
+          "건당 추가 비용 2천 원을 빼면 하루 12만 원, 같은 조건의 30일에 360만 원입니다. 은행에 즉시 남은 현금이나 순이익으로 읽지 않습니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -120280,10 +120499,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "고정비800만 원에 얼마가 부족한가요?",
+        "question": "월 고정비 800만 원에 얼마가 부족한가요?",
         "answerChecklist": [
-          "800−360=440만 원",
-          "매출과 남는 돈을 구분"
+          "800만 원 − 360만 원 = 440만 원 부족합니다.",
+          "판매가와 건당 비용은 부가세를 제외한 같은 기준이며 보증금·초기 공사비·세금 납부 시점은 이 비교에서 빠졌습니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -120292,10 +120511,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "월 고정비가 800만 원이고 한 주문의 판매가 8천 원에서 변동비 2천 원이 나갑니다. 월 최소 주문 수를 구하고 소수점 처리의 이유를 설명하세요.",
+        "question": "고정비 800만 원, 한 주문의 판매가 8천 원과 추가 비용 2천 원에서 월 최소 주문 수를 구하세요.",
         "answerChecklist": [
-          "한 주문에서 고정비를 충당할 금액은 8천 원 − 2천 원 = 6천 원입니다.",
-          "800만 원 ÷ 6천 원 = 1,333.33…건이므로 온전한 주문으로는 최소 월 1,334건이 필요합니다."
+          "한 주문의 공헌이익은 6천 원입니다.",
+          "800만 원 ÷ 6천 원 = 1,333.33…건이므로 최소 1,334건입니다. 하루 평균과 매일 같은 정수 목표를 구별하면 30일에 약 44.45건과 45건입니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -120305,10 +120524,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "음식점 계약 전 건축물 용도 외에 무엇을 확인하나요?",
+        "question": "음식점 계약 전에 건축물 용도 외에 무엇을 확인하나요?",
         "answerChecklist": [
-          "해당 업종의 시설기준",
-          "배기·급배수·구획과 관할부서 확인"
+          "해당 업종의 시설기준과 필요한 신고·허가를 확인합니다.",
+          "임대차의 업종·간판·배기·급배수·전기 증설 허용을 관청의 조건과 별도로 맞춥니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -120317,10 +120536,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "상권보고서의1천 명은 무엇을 증명하지 못하나요?",
+        "question": "상권보고서의 1천 명은 무엇을 증명하지 못하나요?",
         "answerChecklist": [
-          "실제 점포 입장5%와 구매40%",
-          "출입구·시간대별 구매 이유"
+          "새 점포의 입장률 5%와 입장 후 구매율 40%를 증명하지 못합니다.",
+          "같은 시간·위치의 관찰과 적법한 시험 운영 결과를 구분하고 다른 장소의 값을 새 점포 실측값으로 기록하지 않습니다."
         ],
         "sectionId": "source",
         "requiredConcepts": [
@@ -120329,10 +120548,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "통행이 두 배면 손익분기점을 보장하나요?",
+        "question": "나머지 조건이 같고 통행만 두 배라면 손익분기점을 넘나요?",
         "answerChecklist": [
-          "전환이 같아도20→40건",
-          "월1,200건은1,334건에 미달"
+          "하루 구매 40건, 월 1,200건입니다.",
+          "월 공헌이익 720만 원으로 80만 원 부족합니다. 필요한 월 1,334건보다 적습니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -120344,8 +120563,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "같은 반경의 두 점포를 현장에서 비교할 계획을 세우세요.",
         "answerChecklist": [
-          "영업 요일과 시간 반복 관찰",
-          "출입구·횡단보도·진행 방향·경쟁점과 배달 접근"
+          "영업 요일과 시간 길이를 맞춰 반복 관찰하고 반복 통행 집계 방법도 기록합니다.",
+          "출입구·횡단보도·진행 방향·경쟁점·배달 접근을 대조합니다. 아직 열지 않은 점포의 구매 전환은 검증할 가정으로 남깁니다."
         ],
         "sectionId": "need",
         "requiredConcepts": [
@@ -120354,10 +120573,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "손님이 충분한데도 계약을 보류해야 하는 경우를 만드세요.",
+        "question": "손님이 충분해도 계약을 보류할 조건을 제안하세요.",
         "answerChecklist": [
-          "업종 시설·배기·전기·용도 조건 미충족",
-          "공사·신고 가능 여부를 지출 전에 확인"
+          "업종 시설기준·용도·배기·전기 조건을 충족할 수 없는 경우입니다.",
+          "임대인 동의와 행정상 요건을 각각 확인해 공사·신고 가능성을 지출 전에 판단합니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -120366,10 +120585,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "개업 뒤 주변 공사가 생기면 어떤 가정을 다시 검토하나요?",
+        "question": "주변 공사로 하루 구매가 10건으로 줄면 무엇을 다시 계산하나요?",
         "answerChecklist": [
-          "통행·입장·구매 비율",
-          "현금 버틸 기간과 계약 종료 비용"
+          "같은 가격·건당 비용에서 월 300건 × 6천 원 = 180만 원, 고정비 부족액은 620만 원입니다.",
+          "입출금 날짜와 버틸 현금, 보증금 반환 시점·원상복구·계약 종료 비용을 별도로 계산합니다."
         ],
         "sectionId": "limits",
         "requiredConcepts": [
@@ -120377,11 +120596,43 @@ export const ARTICLE_LEARNING: Readonly<
           "site-downside-budget"
         ]
       }
+    ],
+    "papers": [
+      {
+        "title": "호주 정부 · Choose your business location",
+        "href": "https://business.gov.au/planning/new-businesses/choose-your-business-location",
+        "sectionId": "source",
+        "problem": "지나는 사람 수만으로 구매와 매출을 보장하는 문제입니다.",
+        "contribution": "1천 명·50명·20건을 나눠 기록하고 비용·시설·허용 조건을 함께 확인합니다.",
+        "assumptions": "본문 비율·금액은 가정이며 같은 시간·장소·단위를 비교합니다.",
+        "evidenceScope": "Location·Cost·Facilities and utilities·Compliance와 작은 공간 시험 안내의 실제 원문을 읽었습니다.",
+        "notClaim": "호주 정부가 5%·40%를 추정하거나 모든 입지에서 반복 구매를 보장한다는 뜻은 아닙니다."
+      },
+      {
+        "title": "식품위생법 시행규칙 제36조",
+        "href": "https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=115900",
+        "sectionId": "comparison",
+        "problem": "상권 수요나 임대인 동의를 시설·영업 요건 충족으로 읽는 문제입니다.",
+        "contribution": "20건이 예상되는 음식점도 해당 업종 시설기준과 도면·신고 요건을 별도로 확인합니다.",
+        "assumptions": "2026-09-01 시행본 제36조이며 업종·점포의 사실관계와 적용 규칙을 따로 확인합니다.",
+        "evidenceScope": "실제 HTML에서 별표 14가 업종별 시설기준임을 지정하는 조문을 읽고 짧게 인용했습니다.",
+        "notClaim": "별표 전체를 검토해 특정 점포의 적합성을 판정하거나 임대차 분쟁을 해결한 것은 아닙니다."
+      },
+      {
+        "title": "중소벤처기업부 · 소상공인365 정식 서비스 개시",
+        "href": "https://www.mss.go.kr/site/chungbuk/ex/bbs/View.do?bcIdx=1055594&cbIdx=180",
+        "sectionId": "comparison",
+        "problem": "플랫폼이 제공하는 정보와 특정 점포의 검증된 전환율을 혼동하는 문제입니다.",
+        "contribution": "입지·배달·유동인구 등의 자료로 후보를 좁히되 5%·40%는 별도로 검증할 가정으로 둡니다.",
+        "assumptions": "2025-01-02 서비스 개시 자료에서 발표한 기능 범위입니다.",
+        "evidenceScope": "공식 HTML의 입지평가·배달정보 리포트와 경영진단·유동인구 설명을 읽었습니다.",
+        "notClaim": "현재 특정 계정에 제공되는 모든 기능을 실제 사용했거나 매출 예측 정확도를 검증한 것은 아닙니다."
+      }
     ]
   },
   "business/shop-fitout-and-opening": {
     "coreIdea": "점포 공사는 임대인의 사용 동의, 업종에 필요한 설비 확인, 범위가 적힌 견적·변경 승인, 공정 검수, 신고와 개업 준비가 이어지는 계약과 현금의 순서입니다.",
-    "entryNote": "하나의 가정 사례를 10개 절에서 따라갑니다. 공식 자료는 2026-10-04 확인했으며 현지 제도의 적용 범위를 구분합니다.",
+    "entryNote": "같은 4천800만 원 공사비를 1천만·2천만·1천800만 원으로 나누는 약정을 따라갑니다. 무매출 30일의 월세와 영업 요건, 퇴거 때의 책임을 함께 확인합니다.",
     "assumedKnowledge": [
       {
         "id": "site-permitted-use",
@@ -120407,42 +120658,42 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "fitout-dependency-order",
         "sectionId": "mechanism",
         "intuition": "도면 전에 전력과 배기가 가능한지 알아야 합니다.",
-        "workedExample": "4천만 원 공사에 배기 800만 원이 추가되면 예산과 개업일이 함께 바뀝니다.",
+        "workedExample": "기본 공사 4천만 원에 전기·배기 800만 원을 더합니다. 추가 작업을 기존 30일 안에 마칠 수 있는지는 자재·승인·선행 공정에 따라 달라집니다.",
         "boundary": "업종과 건물의 실제 상태에 따라 공정과 신고 순서는 달라집니다."
       },
       {
         "id": "fitout-change-order",
         "sectionId": "mechanism",
         "intuition": "추가 비용이 구두로 쌓이면 처음 견적은 의미가 없어집니다.",
-        "workedExample": "추가전기·배기800만 원을 착수 전 금액·범위·일정 변경 승인으로 남깁니다.",
+        "workedExample": "추가 전기·배기 800만 원의 범위·금액·일정 영향과 승인자를 착수 전에 기록합니다.",
         "boundary": "법적 효력은 해당 계약과 관할권의 건설·소비자 규칙에 좌우됩니다."
       },
       {
         "id": "fitout-exit-liability",
         "sectionId": "limits",
         "intuition": "벽에 쓴 돈이 모두 자산으로 회수되지는 않습니다.",
-        "workedExample": "배기 덕트는 인수자가 원하면 가치가 있지만 임대인이 철거를 요구하면 비용이 됩니다.",
-        "boundary": "임대차 특약과 실제 인수인계 합의가 종료 의무를 바꿀 수 있습니다."
+        "workedExample": "배기 덕트를 새 점주에게 넘기려면 임대차·적용법·필요한 임대인 동의와 인수 합의를 함께 맞춥니다.",
+        "boundary": "설치비가 양도가격이 되지는 않습니다. 임대인의 요구만으로 계약에 없던 모든 철거 의무가 자동으로 생기는 것도 아닙니다."
       }
     ],
     "conceptStages": [
       {
         "label": "01 · 점포 공사의 선후관계",
-        "relation": "4천만 원 공사에 배기 800만 원이 추가되면 예산과 개업일이 함께 바뀝니다.",
+        "relation": "기본 공사 4천만 원에 전기·배기 800만 원을 더합니다. 추가 작업을 기존 30일 안에 마칠 수 있는지는 자재·승인·선행 공정에 따라 달라집니다.",
         "concepts": [
           "fitout-dependency-order"
         ]
       },
       {
         "label": "02 · 추가 공사 승인",
-        "relation": "추가전기·배기800만 원을 착수 전 금액·범위·일정 변경 승인으로 남깁니다.",
+        "relation": "추가 전기·배기 800만 원의 범위·금액·일정 영향과 승인자를 착수 전에 기록합니다.",
         "concepts": [
           "fitout-change-order"
         ]
       },
       {
         "label": "03 · 인테리어의 종료 의무",
-        "relation": "배기 덕트는 인수자가 원하면 가치가 있지만 임대인이 철거를 요구하면 비용이 됩니다.",
+        "relation": "배기 덕트를 새 점주에게 넘기려면 임대차·적용법·필요한 임대인 동의와 인수 합의를 함께 맞춥니다.",
         "concepts": [
           "fitout-exit-liability"
         ]
@@ -120451,10 +120702,10 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "기본 공사 4천만 원, 추가 공사 800만 원, 매출 없이 기다린 한 달 월세 200만 원을 합하세요. 이 합계가 전체 개업자금과 다른 이유도 설명하세요.",
+        "question": "공사비 4천만 원과 추가 800만 원, 무매출 30일의 월세 200만 원을 합하세요.",
         "answerChecklist": [
-          "4천만 원 + 800만 원 + 200만 원 = 확인된 현금 지출 5천만 원입니다.",
-          "세금·이자·초도 재료·보험·개업 이후 운영비가 제외되어 있으므로 전체 필요자금으로 단정할 수 없습니다."
+          "확인한 현금 필요액은 5천만 원입니다. 공사비 전액을 개업 전에 지급하고 30일이 월세 한 번인 가정입니다.",
+          "세금·이자·초도 재료·보험·개업 후 운영자금은 별도로 마련합니다. 이 합계가 전체 필요자금이나 당기 비용은 아닙니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -120463,10 +120714,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "벽 마감 전에 확인할 설비는 무엇인가요?",
+        "question": "벽 마감 전에 확인할 설비와 기록은 무엇인가요?",
         "answerChecklist": [
-          "배관·방수·배선 기록",
-          "전기 부하·가스·배기·배수 용량과 경로"
+          "배관·방수·배선의 검수 결과와 사진을 남깁니다.",
+          "전기·가스 용량과 배기·배수 경로를 확인하고 장비를 함께 켠 기능 시험을 준비합니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -120475,10 +120726,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "기성금은 무엇을 확인하고 지급하도록 정하나요?",
+        "question": "그림의 기성금과 잔금은 어떤 지급 조건을 합의한 예시인가요?",
         "answerChecklist": [
-          "공종별 진행과 검수 결과",
-          "수량·자재·완료 조건을 계약과 연결"
+          "첫 1천만 원, 중간 2천만 원, 인수 때 1천800만 원으로 합계 4천800만 원입니다.",
+          "각 지급을 합의한 작업·검수·인계 조건에 연결합니다. 이 비율은 업계 표준이 아니며 영업 절차 책임과 지연 때 지급 조건은 별도 약정입니다."
         ],
         "sectionId": "names",
         "requiredConcepts": [
@@ -120488,10 +120739,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "추가 공사800만 원이 생겼을 때 기록할 사항은 무엇인가요?",
+        "question": "추가 공사 800만 원이 생겼을 때 무엇을 기록하나요?",
         "answerChecklist": [
-          "변경 범위와 금액",
-          "착수 전 변경 일정과 승인"
+          "변경 범위·금액·일정 영향과 승인자를 착수 전에 기록합니다.",
+          "다른 공정과 함께 마칠 수 있는지, 자재·허가·선행 작업을 기다려야 하는지 확인합니다. 금액 증가만으로 개업 지연을 단정하지 않습니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -120500,10 +120751,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "사업자등록증이 영업 가능 승인을 대신하나요?",
+        "question": "사업자등록증은 시설을 영업에 써도 된다는 승인인가요?",
         "answerChecklist": [
-          "세무 등록과 업종 시설·신고가 다름",
-          "개업 전 등록 신청도 가능"
+          "사업자등록은 세무 등록이며 업종별 시설·신고·허가를 대신하지 않습니다.",
+          "국세청 안내에 따라 개업 전에도 등록 신청이 가능합니다."
         ],
         "sectionId": "source",
         "requiredConcepts": [
@@ -120512,10 +120763,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "설치한 시설의 퇴거 비용을 언제 확인하나요?",
+        "question": "시설을 설치하기 전에 퇴거 때 무엇을 합의하나요?",
         "answerChecklist": [
-          "설치 전 남길 것과 제거할 것을 서면 합의",
-          "공사비와 나중 양도가치는 다름"
+          "남길 시설과 제거할 시설, 비용 부담을 계약과 현지 규칙에 맞춰 서면으로 정합니다.",
+          "설치비 4천800만 원을 전부 회수할 양도가격으로 보지 않습니다."
         ],
         "sectionId": "comparison",
         "requiredConcepts": [
@@ -120526,8 +120777,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "추가 공사로 개업이 한 달 더 늦으면 고정 견적만 비교한 판단에 무엇이 빠지나요?",
         "answerChecklist": [
-          "추가 공사비와 대기 월세·이자·보험",
-          "첫 매출과 운영자금 회수 날짜의 지연"
+          "지연이 실제 발생한 조건에서 추가 월세·이자·보험과 첫 매출 지연을 계산합니다.",
+          "사례와 같은 월세 한 번을 더 내면 월세만 200만 원이 추가됩니다. 다른 비용이 같다는 가정 아래 확인한 필요액은 5천200만 원입니다."
         ],
         "sectionId": "case",
         "requiredConcepts": [
@@ -120539,8 +120790,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "소방과 의무보험을 모든 작은 음식점에 똑같이 적용하면 왜 틀리나요?",
         "answerChecklist": [
-          "다중이용업소 해당 여부 확인",
-          "면적·층·출입구·업종 조건과 제외"
+          "다중이용업소의 대상 업종과 면적·층·출입구 조건 및 예외를 확인해야 합니다.",
+          "개별 점포의 조건을 관할 부서와 대조합니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -120549,10 +120800,10 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "장비가 고장났을 때 시공사와 제조사 중 누구에게 요청할지 준비하세요.",
+        "question": "장비가 고장났을 때 시공사와 제조사 중 누구에게 요청할지 어떻게 준비하나요?",
         "answerChecklist": [
-          "장비 보증과 시공 하자 책임 구분",
-          "보증서·시공 도면·연락처·기간·보수 범위 인계"
+          "장비 자체 보증과 시공 하자 책임을 구분합니다.",
+          "도면·보증서·연락처·접수 방법·기간·보수 범위를 인수합니다."
         ],
         "sectionId": "names",
         "requiredConcepts": [
@@ -120562,16 +120813,68 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "완성사진만 보고 잔금을 지급하기 어려운 이유를 설명하세요.",
+        "question": "완성 사진만으로 잔금 지급 조건과 개업 가능 여부를 함께 판단하기 어려운 이유는 무엇인가요?",
         "answerChecklist": [
-          "기능 시험·안전·신고 완료 별도",
-          "임대인 허용과 반환 의무·인수 문서 확인"
+          "계약한 기능 시험·시공 결과·인계 자료와 지급 약정을 확인합니다. 사진만 보고 약정 조건을 일방적으로 바꾸지 않습니다.",
+          "영업 신고·검사와 임대차 허용, 반환 의무는 별도로 확인합니다. 관청 절차를 시공사가 맡는지는 계약에 따릅니다."
         ],
-        "sectionId": "limits",
+        "sectionId": "names",
         "requiredConcepts": [
           "fitout-dependency-order",
           "fitout-exit-liability"
         ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "국세청 · 사업자등록 신청 절차",
+        "href": "https://g.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7777&mi=2444",
+        "sectionId": "source",
+        "problem": "세무 등록을 영업 가능 승인으로 혼동하는 문제입니다.",
+        "contribution": "30일 공사 중 사업자 정보를 준비하고 업종별 영업 요건을 따로 확인합니다.",
+        "assumptions": "한국의 해당 사업자등록 절차이며 개별 업종 서류는 별도로 확인합니다.",
+        "evidenceScope": "실제 공식 HTML에서 개업 전 또는 사업 시작일부터 20일 이내 신청 문구를 읽었습니다.",
+        "notClaim": "등록증으로 모든 시설·소방·위생 요건이 충족된다는 뜻은 아닙니다."
+      },
+      {
+        "title": "NSW · Retail Tenancy Guide",
+        "href": "https://www.smallbusiness.nsw.gov.au/about-retail-leases/retail-tenancy-guide",
+        "sectionId": "comparison",
+        "problem": "설치비만 보고 퇴거 때 남길 시설과 제거할 시설을 빠뜨리는 문제입니다.",
+        "contribution": "현재 공사비 4천800만 원과 이후 인수·철거 조건을 구분합니다.",
+        "assumptions": "호주 NSW의 소매 임차 안내이며 다른 관할권은 해당 법과 계약을 확인합니다.",
+        "evidenceScope": "공식 페이지의 검색 색인 본문에서 fit-out과 make good 안내 및 짧은 인용 문장을 확인했습니다.",
+        "notClaim": "모든 임대인의 철거 요구가 자동으로 유효하거나 설치비가 양도가치가 된다는 뜻은 아닙니다."
+      },
+      {
+        "title": "GOV.UK · When is permission required?",
+        "href": "https://www.gov.uk/guidance/when-is-permission-required",
+        "sectionId": "comparison",
+        "problem": "용도가 같다는 이유만으로 물리적 공사 승인도 생략하는 문제입니다.",
+        "contribution": "임대차 허용 범위와 행정상 필요한 승인을 각각 확인합니다.",
+        "assumptions": "잉글랜드의 계획 허가 안내이며 개별 공사의 적용 여부는 사실관계에 따라 판단합니다.",
+        "evidenceScope": "011·012·012a의 용도변경과 물리적 공사 구분, 공식 지침 모음의 England 범위를 읽었습니다.",
+        "notClaim": "같은 용도군의 모든 공사에 허가가 필요하거나 영국 전체에 같은 절차가 적용된다고 단정하지 않습니다."
+      },
+      {
+        "title": "GOV.UK · 상가 임차인의 책임",
+        "href": "https://www.gov.uk/renting-business-property-tenant-responsibilities",
+        "sectionId": "comparison",
+        "problem": "시설을 쓴 뒤 수선·반환 책임을 계약에서 확인하지 않는 문제입니다.",
+        "contribution": "설치 전에 임대차의 수선과 퇴거 조건을 함께 읽습니다.",
+        "assumptions": "현지 법정 의무와 계약상 책임 배분을 함께 확인하는 안내입니다.",
+        "evidenceScope": "실제 공식 본문의 repairs와 moving out 설명을 읽었습니다.",
+        "notClaim": "한국이나 NSW의 원상복구 범위를 이 안내로 판정하지 않습니다."
+      },
+      {
+        "title": "Square · The Build Out 공식 전사",
+        "href": "https://squareup.com/us/en/the-bottom-line/videos/making-a-restaurant-with-ggiata/the-build-out",
+        "sectionId": "comparison",
+        "problem": "외관만 보고 가스 공급 용량과 개업 지연의 현금 부담을 놓치는 문제입니다.",
+        "contribution": "본문의 무매출 월세와 추가 설비 공사 예산을 현장 사례에 연결합니다.",
+        "assumptions": "미국 Ggiata 한 매장의 경험이며 Square가 참여 보수를 지급했다고 공개했습니다.",
+        "evidenceScope": "공식 전사에서 공간 인수 후 임대료·가스관 증설·최종 검사와 허가 누락 발언을 읽었습니다.",
+        "notClaim": "영상 자체의 시각을 확인한 것이 아니며 모든 매장의 비용이나 독립적인 성과 검증으로 일반화하지 않습니다."
       }
     ]
   },

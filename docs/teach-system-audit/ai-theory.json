@@ -1110,14 +1110,15 @@
         "formula": "/tmp/teach-all/ce-formula.log 1445/1445 명시주석PASS.",
         "learningAnswers": "/tmp/teach-all/ai-theory-learning-answer-review-ce.json: 기존6+4유지및모든답체크리스트실제본문대조.",
         "typecheck": "/tmp/teach-all/ce-tsc-final.log 실제 npx tsc -p tsconfig.app.json --noEmit exit0 확인.",
-        "learning": "root 병합 후 strict --require-registration exit0 /tmp/teach-all/ce-integrated-learning.log. /tmp/teach-all/ce-integrated-readback.json에서 actual 6+4가 검수 제안과 완전히 같음을 확인하고 최종 통합 390/1440 재검 PASS."
+        "learning": "root 병합 후 strict --require-registration exit0 /tmp/teach-all/ce-integrated-learning.log. /tmp/teach-all/ce-integrated-readback.json에서 actual 6+4가 검수 제안과 완전히 같음을 확인하고 최종 통합 390/1440 재검 PASS.",
+        "renderWarningCorrection": "FormulaGuide symbol의 Unicode P‖Q를 KaTeX P\\Vert Q로 교정했습니다. /tmp/teach-all/ce-warning-final.json:390/1440 console warning/error와 KaTeX 오류0."
       },
       "remaining": [
         "root 전역 build와 게시 검증"
       ],
       "bodyHashes": {
         "src/pages/articles/ai/cross-entropy.tsx": "b136ea31ab0ed7d4c111845f7b706be34c54833c07ac5903aa87f9d36e9bb804",
-        "src/pages/articles/ai/cross-entropy/ModernArticle.tsx": "55a444f5f66e43709cee4f1e0d390a091d26bf6506110cd7cac1d6364d6c59a9",
+        "src/pages/articles/ai/cross-entropy/ModernArticle.tsx": "55acf4bcb75b07aeb8a5d815e16ffeefafb0311df36ee0b1e23f3f321fd86249",
         "src/pages/articles/ai/cross-entropy/viz/CodeCostViz.tsx": "95a23ce0dd0646865e17b1a053757e0648959347be3c4e76e08a94b4fd7b5924",
         "src/pages/articles/ai/cross-entropy/codeRefs.ts": "9eca328ebd9a315e5bbc7d3f5bb60a2b189e05498e7c3df2fc6bfc70e7a21544"
       }
@@ -2129,17 +2130,12 @@
       "title": "FFT (Fast Fourier Transform) — AI 관점",
       "subcategory": "ai-foundations",
       "publicFiles": [
-        "src/pages/articles/ai/fft/AIUsage.tsx",
-        "src/pages/articles/ai/fft/Algorithm.tsx",
-        "src/pages/articles/ai/fft/Fourier.tsx",
-        "src/pages/articles/ai/fft/Overview.tsx",
         "src/pages/articles/ai/fft/index.tsx",
-        "src/pages/articles/ai/fft/viz/DomainRepresentationViz.tsx",
-        "src/pages/articles/ai/fft/viz/FFTApplicationDecisionViz.tsx",
-        "src/pages/articles/ai/fft/viz/FFTReuseViz.tsx",
-        "src/pages/articles/ai/fft/viz/SamplingWindowViz.tsx"
+        "src/pages/articles/ai/fft/ModernArticle.tsx",
+        "src/pages/articles/ai/fft/viz/ButterflyCaseViz.tsx",
+        "src/pages/articles/ai/fft/codeRefs.ts"
       ],
-      "status": "body-reviewed-needs-rewrite",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -2286,21 +2282,87 @@
           3,
           3,
           3
-        ]
+        ],
+        "firstLastSampleSpan": 0.375,
+        "nyquistConvention": "full complex bins use -4; real half-spectrum may label same bin +4; not two independent coefficients"
       },
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "stageAnchors": {
+        "S": "overview",
+        "B": "black-box",
+        "0": "case",
+        "1": "picture",
+        "2": "why",
+        "3": "names",
+        "4": [
+          "fourier",
+          "phase",
+          "window",
+          "algorithm",
+          "complexity",
+          "convolution",
+          "ai-usage"
+        ],
+        "5": [
+          "paper-cooley-tukey",
+          "implementation",
+          "paper-whisper-frontend",
+          "paper-fnet",
+          "paper-hyena"
+        ],
+        "6": [
+          "nyquist-boundary",
+          "implementation-boundary"
+        ],
+        "7": "limits",
+        "8": "review"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "Cooley–Tukey 1965 scan, pages297–298",
+          "anchor": "paper-cooley-tukey",
+          "application": "같은 네 값에 식 (6)·(7)의 중간 배열과 양의 지수 규약을 대입하고 T=N(r1+r2)의 길이4 장부16을 비교했습니다."
+        },
+        {
+          "source": "KISS FFT commit e5e3fac46e0d94a8f8170c06706b7a4218828333",
+          "anchor": "implementation",
+          "application": "원본 C와 헤더를 CPU에서 컴파일해 분해 [4,1], 실제 kf_bfly4 경로의 네 출력, 역변환 4배와 같은 포인터 임시 배열 경로를 실행했습니다."
+        },
+        {
+          "source": "Whisper commit86098128; paper PDF3",
+          "anchor": "paper-whisper-frontend",
+          "application": "400/16000와160/16000의 시간 계산 및 주 Hann 출력의 제곱 크기를 원문 abs()**2에 대입했습니다. 실제 STFT/모델 실행은 주장하지 않습니다."
+        },
+        {
+          "source": "FNet printed4299 Eq3; Hyena v3 page6 Eq4",
+          "anchor": "paper-fnet / paper-hyena",
+          "application": "같은4×1 입력의 실수 투영 후 역복원 [1,3,3,3]과 가정한 한 단계의 인과적 필터·gate 출력 [1,0,2,1]을 계산했습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "原래4본문·4Viz·고정baseline전체문단·학습6+4·정의8을 실제읽음. ownership등록은없음.",
-        "planning": "/tmp/teach-all/fft-plan.json 본문 작성 전 같은4점사례·기존유도/질문보존계획",
-        "primarySources": "고정KissFFT e5e3fac·Whisper8609812와CooleyTukey/FNet/Hyena/Whisper원문조사중."
+        "contentReview": "원래4본문·4Viz·고정 baseline 모든 문단·6+4·정의8을 읽었습니다. 실제 DFT와 무관한 임의 막대, 부호 없는 bin 해석, 부정확한 가역성 범위를 교정하고 정확한 기존 유도·수치·앵커를 보존했습니다.",
+        "planning": "/tmp/teach-all/fft-plan.json: 본문 전 동일4값·6+4 고정.",
+        "primarySources": "/tmp/teach-all/fft-source-final.json: 고정8개 원본/라이선스 모두 원격 byte 동일. PDF4개 hash와 실제 이미지 검토 위치 기록.",
+        "numericTrace": "/tmp/teach-all/fft-independent-systems.json, /tmp/teach-all/fft-humanize-independent-chains.json, codebase/verify_kiss.c CPU 실제 실행 /tmp/teach-all/fft-kiss-final-run.log.",
+        "humanize": "최종 /tmp/teach-all/humanize-ai-theory-fft-final/fft--ModernArticle. 69문단 실제 추출·roundtrip·prepare·gate·apply; 두 패스의 연결 쉼표 총3개, 숫자/마커 보존. 전문과4묶음·props chunk2 통계 WARN은 chains 독립 finalize. 나머지 props·Viz·code gate0.",
+        "mobile390": "output/playwright/teach-ai-theory-fft/fft.json:22절·3예측·6코드패널·3Viz장면·키보드, 실제 본문 first1/5 PASS. console warning/error·KaTeX·overflow·narrow·broken·SVG outside 모두0.",
+        "desktop1440": "같은 검사 PASS. /tmp/teach-all/fft-extra-browser.json 모든22수식 양끝 접근·3유도·2원문펼침 확인. reduced 자동재생금지/수동조작 PASS; 개발용 motion reduced 안내 경고는 별도 기록.",
+        "prose": "/tmp/teach-all/fft-prose.log: 공개799편 재검토0.",
+        "formula": "/tmp/teach-all/fft-formula.log:1444/1444 명시 연산 주석 PASS.",
+        "viz": "/tmp/teach-all/fft-viz-final.log:ERROR0, 모든 SVG 텍스트 실제 두 너비 검사.",
+        "typecheck": "/tmp/teach-all/fft-tsc-fourth.log 실제 app tsc exit0. 이후 변경은 본문 문장·SVG 좌표/선 두께와 metadata 제안입니다.",
+        "learningAnswers": "/tmp/teach-all/ai-theory-learning-answer-review-fft.json: 기존6+4와 모든 체크리스트를 실제 본문 위치에 대조했습니다.",
+        "learning": "batch23 공유 등록 병합 후 strict exit0. fft-integrated-readback.json의 실제 6+4 완전 일치, fft-metadata-readback.json의 20개 정의·정본·ownership 필드 일치 확인.",
+        "integration": "공유 등록 후 두 너비의 22절·3예측·6코드패널·3장면·키보드·첫 1/5·경계 검사를 재실행했습니다. fft-browser-integrated.log PASS."
       },
       "remaining": [
-        "원문 전체검토와 실제C실행",
-        "본문 재작성",
-        "humanize 및화면검수",
-        "공유등록"
-      ]
+        "root 전역 build와 게시 검증"
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/fft/index.tsx": "2405cf014251ac0587cfa2846f978d8b56143ece81436ec867f66bb7c7e60fc2",
+        "src/pages/articles/ai/fft/ModernArticle.tsx": "008a211577f918a46df17781d8649c8242b6b4f305b149be30dfd03cfb60c87e",
+        "src/pages/articles/ai/fft/viz/ButterflyCaseViz.tsx": "45677b5ce3680a1f1e8b1dcf0fce2f9cb3ca89681ffd45ba17463cf806e44f96",
+        "src/pages/articles/ai/fft/codeRefs.ts": "bd3cbf04567882a20c364be201c9b6bf2aaeba8760f4b4048b84adef11283256"
+      }
     },
     {
       "route": "ai/gan",
@@ -8411,7 +8473,7 @@
         "src/pages/articles/ai/word2vec/fileTree.ts",
         "src/pages/articles/ai/word2vec/viz/ModernWord2VecViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "body-reviewed-needs-rewrite",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8419,19 +8481,29 @@
         "hasSourceSurface": true,
         "characters": 8310
       },
-      "originalProblems": [],
+      "originalProblems": [
+        "입구에 새 용어가 먼저 나오며 동일 문장·수치 추적과 예측 문제가 없습니다.",
+        "PyTorch 원문이라고 표시한 37행 파일은 두 실제 파일의 기능을 섞은 재구성본입니다.",
+        "center/input과 context/output의 고정 대응은 실제 저자 C 코드 방향과 다르며 두 표의 값이 항상 다르다는 단정도 과합니다.",
+        "단어별 두 출력 표 설명을 계층형 출력의 내부 노드와 구별하지 않습니다.",
+        "번호 선택의 희소 접근을 sparse gradient와 구별하고 max_norm의 표 변경 조건을 명시해야 합니다.",
+        "문장 제거 전후 거리·중복 단어 위치·난수 소비와 실행 순서가 빠져 seed만으로 동일 학습을 보장하는 듯 읽힙니다."
+      ],
       "fixture": null,
       "stageAnchors": {},
       "primarySourceApplication": [],
       "verification": {
-        "contentReview": "pending",
+        "contentReview": "기존 본문·공유 Viz·코드 패널과 재구성 코드·baseline 전체·학습 6+4·개념4·ownership을 읽고 문제를 확인했습니다.",
         "humanize": "pending",
         "numericTrace": "pending",
         "mobile390": "pending",
-        "desktop1440": "pending"
+        "desktop1440": "pending",
+        "planning": "/tmp/teach-all/word2vec-plan-before-body.json"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "같은 다섯 단어 사례로 본문 재작성",
+        "원문 보존·실행 범위 검증",
+        "humanize·수식·두 너비 화면·공유 등록"
       ]
     },
     {
@@ -8666,14 +8738,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 29,
+    "rewritten": 30,
     "existingTeachTargetedRepairs": 3,
-    "reviewedAndImproved": 32,
-    "localVerified": 32,
+    "reviewedAndImproved": 33,
+    "localVerified": 33,
     "awaitingIntegration": 0,
     "pending": 156,
     "complete": 0,
     "bodyReviewedNeedsRewrite": 1,
-    "bodyReviewedTotal": 33
+    "bodyReviewedTotal": 34
   }
 }

@@ -547,7 +547,7 @@
     },
     {
       "route": "business/shop-fitout-and-opening",
-      "status": "unreviewed",
+      "status": "retained-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [
           "S",
@@ -564,11 +564,56 @@
         "numericAnswerPointers": 2,
         "caseMarkers": 2
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "actualBodyRead": true,
+        "publicFiles": [
+          "src/pages/articles/business/shop-fitout-and-opening.tsx",
+          "src/pages/articles/world-systems/FlowRail.tsx"
+        ],
+        "reason": "기존 10절 사례→그림→필요→용어→같은 공사→국세청·NSW 실제 원문→한계 흐름을 보존하고 지급 조건과 관할 범위를 보충했습니다.",
+        "changes": "4천800만 원을 1천만·2천만·1천800만 원의 합의한 지급 조건에 연결했습니다. 30일은 월세 1회, 공사비 개업 전 지급 가정입니다. 추가 800만 원이 개업 지연을 항상 뜻하지 않음을 설명하고 원상복구를 계약·적용법·필요한 동의에 연결했습니다.",
+        "numericCase": "4000+800+200=5000만원. 지연으로 월세 한 번을 더 내고 다른 조건이 같으면 5200만원. 지급1000+2000+1800=4800만원.",
+        "sourceApplication": "국세청 actual HTML 20일 문구, NSW 공식 색인 본문 fit-out/make good, GOV.UK 계획011/012/012a·공식 지침모음 England·tenant repairs/moving out, Square 공식전사와 보수공개 실제 읽음. 영상 시각은 미확인. 국가법령 실제 제36조 2026-09-01 시행본의 별표14 연결만 확인했으며 별표 전체 충족 판정을 하지 않음. 화재·건강·교육 공식본문 검수 재사용.",
+        "learning": "기초6·심화4 실제 읽기·수정. papers5·EVIDENCE9·canonical 종료의무 정의·TOC 동기화, strict1 exit0.",
+        "humanize": {
+          "report": "/tmp/teach-all/humanize-root-fitout/summary.json",
+          "chars": 4636,
+          "paragraphs": 34,
+          "chunks": 2,
+          "gate": 0,
+          "chunkGates": [
+            0,
+            0
+          ],
+          "roundTrip": true,
+          "applied": "5문단·누락0",
+          "manual": "FlowRail·SourceApplication·citation·predictions·shared6+4 별도 실제 읽기"
+        },
+        "browser": {
+          "report": "/tmp/teach-all/root-fitout-screens/summary.json",
+          "widths": [
+            390,
+            1440
+          ],
+          "sections": 10,
+          "namesFraction": 0.36263,
+          "predictions": 3,
+          "citationsPerWidth": 10,
+          "answersPerWidth": 10,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "actualScreens": "390 지급 그림·1440 국가별 원문 적용 실제 읽음",
+          "generic": "/tmp/world-browser-audit/teach-checkpoint171-root-first-summary.json"
+        },
+        "validation": "171편 고정index actual tsc-b·Vite9.53s·1679정적경로·strict171·전역prose799/재검토0·수식1442/1442 actualexit0. 개별본문/원문/학습/humanize/양폭 검수는 위 기록참조.",
+        "remaining": "전체799편 검토·고정index 전체빌드·배포·운영확인"
+      }
     },
     {
       "route": "business/shop-site-selection",
-      "status": "unreviewed",
+      "status": "retained-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [
           "S",
@@ -585,11 +630,55 @@
         "numericAnswerPointers": 2,
         "caseMarkers": 2
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "actualBodyRead": true,
+        "publicFiles": [
+          "src/pages/articles/business/shop-site-selection.tsx",
+          "src/pages/articles/world-systems/FlowRail.tsx"
+        ],
+        "reason": "기존10절 사례·비용 계산·호주 원문·한국 시설기준의 흐름은 유지했습니다. 세 단계 구매 그림과 관측 범위, 하방 계산을 보충했습니다.",
+        "changes": "같은 영업시간·구매자당 한 영수증·일정 가격과 비용·부가세 제외 가정을 표시. 건물 허용은 구매 뒤 순서가 아니라 계약 전 별도 확인. 미개업 점포와 다른 점포의 측정치를 구별. 공헌이익과 현금·순이익을 분리. 모든 수치를 비율로 부른 제목 수정. 중복 인용2개 제거.",
+        "numericCase": "1000×5%×40%=20;하루매출16만·월공헌360만·부족440만.최소1334건.통행2배면40건/일·월720만/부족80만.10건/일이면월180만/부족620만.",
+        "sourceApplication": "호주정부 실제 Location/Cost/Facilities/Compliance와 시험공간 설명, 중기부2025-01-02공식HTML의 입지/배달/유동인구 기능, 한국 시행규칙2026-09-01제36조 실제 별표14 연결 원문. 특정점포 시설적합성·실제플랫폼기능사용·예측정확도는 판정하지 않음.",
+        "learning": "기초6·심화4 실제 읽기와 수치답 보완. papers3·EVIDENCE3·conversion canonical 정의·TOC 동기화. strict1 exit0.",
+        "humanize": {
+          "report": "/tmp/teach-all/humanize-root-site/summary.json",
+          "chars": 4123,
+          "paragraphs": 34,
+          "chunks": 1,
+          "gate": 0,
+          "chunkGates": [
+            0
+          ],
+          "roundTrip": true,
+          "applied": "5문단·누락0",
+          "manual": "FlowRail·SourceApplication·citation·predictions·6+4 전체별도읽기"
+        },
+        "browser": {
+          "report": "/tmp/teach-all/root-site-screens/summary.json",
+          "widths": [
+            390,
+            1440
+          ],
+          "sections": 10,
+          "namesFraction": 0.416735,
+          "predictions": 3,
+          "citationsPerWidth": 3,
+          "answersPerWidth": 10,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "actualScreens": "390전환그림·1440용어/계산 실제읽음",
+          "generic": "/tmp/world-browser-audit/teach-checkpoint171-root-first-summary.json"
+        },
+        "validation": "171편 고정index actual tsc-b·Vite9.53s·1679정적경로·strict171·전역prose799/재검토0·수식1442/1442 actualexit0. 개별본문/원문/학습/humanize/양폭 검수는 위 기록참조.",
+        "remaining": "전체799편 검토·고정index 전체빌드·배포·운영확인"
+      }
     },
     {
       "route": "business/shop-unit-economics",
-      "status": "unreviewed",
+      "status": "retained-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [
           "S",
@@ -606,7 +695,51 @@
         "numericAnswerPointers": 2,
         "caseMarkers": 4
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "actualBodyRead": true,
+        "publicFiles": [
+          "src/pages/articles/business/shop-unit-economics.tsx",
+          "src/pages/articles/world-systems/FlowRail.tsx"
+        ],
+        "reason": "기존10절의 6천원음료→월2천잔→IAS2/QLD원문→한계 흐름을 보존하고 그림을 잔당4천→월800만→잔액0으로 바꿨습니다.",
+        "changes": "같은 달 입출금·부가세 제외·일정 가격/비용/처리능력 가정. 월비용은 분자·잔당기여는 분모의 변화라는 교정. 배달2667잔과 투자회수2417잔을 실제 본문·답에 계산. 점주기회비용/급여, 감가상각/투자회수 중복구분. 공헌이익0이하 한계. 중복IAS2삭제와 직접NSW근거.",
+        "numericCase": "6000−2000=4000;8m/4000=2000;67×30=2010;1500이면−200만원;2500이면+200만원;배달8m/3000올림2667;투자(8m+60m/36)/4000올림2417.",
+        "sourceApplication": "IAS2 About 실제판매/손실문구 재사용. QLD공식 실제HTML에서 Break-even 정의14단어를 확인. GOVUKrates Overview의 과세·면제·감면·지역차이 actualread. NSW What are outgoings 실제정의/계약/공개서/법정범위 actualread.",
+        "learning": "기초6·심화4 전체읽기·수치답 보완, papers4·EVIDENCE4·손익분기 canonical정의·TOC. strict1 exit0.",
+        "humanize": {
+          "report": "/tmp/teach-all/humanize-root-unit/summary.json",
+          "chars": 4134,
+          "paragraphs": 33,
+          "chunks": 1,
+          "gate": 0,
+          "chunkGates": [
+            0
+          ],
+          "roundTrip": true,
+          "applied": "3문단·누락0",
+          "manual": "FlowRail·SourceApplication·citation·3예측·실제 공유6+4 별도읽기"
+        },
+        "browser": {
+          "report": "/tmp/teach-all/root-unit-screens/summary.json",
+          "generic": "/tmp/world-browser-audit/teach-checkpoint171-additions-summary.json",
+          "widths": [
+            390,
+            1440
+          ],
+          "sections": 10,
+          "namesFraction": 0.415665,
+          "predictions": 3,
+          "citationsPerWidth": 4,
+          "answersPerWidth": 10,
+          "overflow": 0,
+          "brokenAnchors": 0,
+          "console": 0,
+          "actualScreens": "390잔당→월 그림·1440공식정의/해외비용 실제읽음"
+        },
+        "validation": "171편 고정index actual tsc-b·Vite9.53s·1679정적경로·strict171·전역prose799/재검토0·수식1442/1442 actualexit0. 개별본문/원문/학습/humanize/양폭 검수는 위 기록참조.",
+        "remaining": "전체799편 검토·고정index 전체빌드·배포·운영확인"
+      }
     },
     {
       "route": "business/supply-chain-bargaining",
@@ -4283,7 +4416,7 @@
   ],
   "counts": {
     "rewritten-local-verified": 31,
-    "retained-local-verified": 6,
-    "unreviewed": 188
+    "retained-local-verified": 11,
+    "unreviewed": 183
   }
 }

@@ -7536,13 +7536,14 @@
     },
     {
       "route": "crypto/hash-theory",
-      "title": "Hash 이론: bytes·security game·compression·sponge",
-      "status": "reviewed-needs-rewrite",
+      "title": "해시: abc의 세 바이트에서 SHA-256과 SHA-3까지",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/hash-theory.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/hash-theory.tsx",
-        "src/pages/articles/blockchain/hash-theory/HashConstructionViz.tsx",
-        "src/pages/articles/blockchain/hash-theory/ModernArticle.tsx"
+        "src/pages/articles/blockchain/hash-theory/ModernArticle.tsx",
+        "src/pages/articles/blockchain/hash-theory/viz/HashJourneyViz.tsx",
+        "src/pages/articles/blockchain/hash-theory/codeRefs.ts"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -7562,17 +7563,49 @@
         "ExplainedFormula에기준량당비율·정규화등무관한generic주석이남음. capacity를숨겨진securitymargin이라고하여공개입력에서전체내부상태계산가능함과비밀키를혼동할여지.",
         "실제고정RustCrypto원문은읽기시작했으며API/상태/패딩을abc와같은사례로추적해야함. 원문FIPS와일반공격비용조건, prefix-free단정과파싱경계, truncateddigest와naiveMAC조건을대조예정."
       ],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "공개ModernArticle 전체·실제HashConstructionViz 전체·baseline·5개정의와6+4·ownership 실제읽음. 2026-10-04공식FIPS180-4/202현황및고정RustCrypto tree존재확인; 실제매개변수/API추적진행중."
+      "fixture": {
+        "plan": "/tmp/teach-all/hash-rewrite-plan.json before body",
+        "case": "ASCII abc=61 62 63,24 bits; SHA256 first W0 61626380/W15 18; first a5d6aebcd/e fa2a4622; same input in SHA3 rate136/c512 and local secret-prefix length extension"
       },
-      "remaining": [
-        "abc 입력과6+4수치계획",
-        "공식FIPS·고정원문·실제실행대조",
-        "같은입력의본문재작성및윤문·학습·화면검수"
-      ]
+      "stageEvidence": {
+        "S": "overview: 두 컴퓨터의 같은 abc 파일과 신뢰할 비교 기준",
+        "B": "black-box: 비밀키 없는 공개 바이트→32바이트 계산과 복원·출처 한계",
+        "0": "case:61 62 63/24비트/3+1+52+8=64바이트",
+        "1": "picture:입력→패딩→라운드→출력의 네 장면",
+        "2": "why:긴 파일의 블록 처리와 작은17출력 연결 모형의 한계",
+        "3": "names:실제 역할 뒤 해시·블록·상태·패딩·압축·스펀지 용어",
+        "4": "padding/round/sponge/permutation:같은 abc의 SHA256 첫 라운드와 SHA3 첫 lane 변화",
+        "5": "source-compression/streaming/source-sponge:고정 원문에 같은 입력·패딩·총길이·출력 대입 및 실제 함수 실행",
+        "6": "input-security/length-extension/variants/encoding:공격자 선택·기존상태 연장·suffix·바이트 경계",
+        "7": "verification/limits:실제 실행과 미실행 경계 및 마지막10/12/15절 답 세 질문"
+      },
+      "sourceEvidence": [
+        {
+          "source": "FIPS180-4(2015)5.1.1/6.2 printed13/22/23",
+          "mapping": "PDF 페이지 실제 이미지와 텍스트를 읽고 abc 패딩·초기 상태·64라운드·feedforward를 계산"
+        },
+        {
+          "source": "FIPS202(2015)3.2/Alg7–9/6.1–2",
+          "mapping": "전체 관련 절 텍스트와 printed20 실제 페이지를 읽고 lane·다섯 단계·suffix06/1f와 squeeze 경계를 계산"
+        },
+        {
+          "source": "RustCrypto hashes f6c786d sha2 0.11.0/sha3 0.12.0",
+          "mapping": "전체 고정 compact/stream/pad/profile 원문과 actual패키지 버전 대조;11 source/license SHA 보존. compact와pad/read_state native 실행, 실제 전체Cargo/API/cursor/keccak 미실행 구분"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "공개ModernArticle 전체·실제HashConstructionViz 전체·baseline·5개정의와6+4·ownership 실제읽음. 2026-10-04공식FIPS180-4/202현황및고정RustCrypto tree존재확인; 실제매개변수/API추적진행중.",
+        "arithmetic": "verification/observed-rust-1.93.0.jsonl 및 observed-python-3.9.6.json. compact8입력/순서, pad/read_state2위치, 독립64라운드와24라운드 모형·hashlib SHA3/SHAKE32/200,2튜플·8비트공격예·로컬길이확장 실제PASS. theory 독립확률/첫라운드와 본문11–16 PASS.",
+        "sourceBytes": "/tmp/teach-all/chains-hash-source-check.json 11 source/license SHA PASS.",
+        "humanize": "본문65문단11908자 실제왕복·전문/4묶음 gate0·변경0·apply65유지0누락. AST118문자열6961자 왕복·전문/2묶음 gate0.",
+        "typescript": "actual app tsc initial81418 exit0 and final48579 exit0.",
+        "prose": "/tmp/teach-all/chains-hash-prose.log strict exit0.",
+        "browser": "output/playwright/teach-chains-hash/summary.json에서390/1440 각각11원문패널실제열림, 페이지넘침/수식문법/pageerror/좁은본문0. 통합후별도화면에서기존metadata anchor오류도0으로확인.",
+        "mathAndViz": "/tmp/teach-all/chains-hash-detail.json 양폭 수식 내부bounds0,4장면높이/상대controls고정,화살표/Space/실제장면변경대기/reduced PASS. 모바일수식 실제이미지읽음.",
+        "registration": "부모 batch23의 제목·20절·5정의/label·ownership·topology·6+4·full evidence 병합 후 strict require-registration exit0. 실제shared5개정의/learning/ownership을검토한제안과deep equal 확인.",
+        "integratedBrowser": "/tmp/teach-all/chains-hash-integrated.json 및 chains-hash-learning.json: 390/1440 실제새제목·20절·anchor/수식bounds/페이지오류/넘침0; 정답체크리스트10개모두열고61바이트·4097/8192·첫a·136패딩·전체keccak미실행범위 확인."
+      },
+      "remaining": []
     },
     {
       "route": "crypto/hyperplonk",
@@ -8277,7 +8310,7 @@
     {
       "route": "crypto/poseidon-hash",
       "title": "Poseidon: field permutation·HADES·parameter profile",
-      "status": "unreviewed",
+      "status": "reviewed-needs-rewrite",
       "publicEntry": "src/pages/articles/blockchain/poseidon-hash.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/poseidon-hash.tsx",
@@ -8298,19 +8331,22 @@
           "공식 vectors와 native/circuit parity가 먼저다"
         ]
       },
-      "issues": [],
+      "issues": [
+        "공개 entry의 ModernArticle 전체·실제 두 Viz·고정 baseline·5개 concept 정의·6+4·ownership을 읽었습니다. 이름과 parameter 목록이 먼저 나오며 F17 한 라운드가 실제 source에 연결되지 않습니다.",
+        "정확한 기존 F17의 x^5 역원13·full round11,1은 보존합니다. generic 수식 주석과 hidden capacity 표현을 고치고 순열·MDS 조건·해시 보안·R1CS 비용을 같은 사례로 구분해야 합니다.",
+        "2023/537 원문 초록은 높은 목표 보안 수준의 기존 권장 라운드 부족을 지적합니다. 현재 글의 오직 reduced-round 분석이라는 귀속은 부정확합니다. 2025/954와2025/950의 대상·운영 모드 및 실험 범위도 실제 원문에서 대조합니다.",
+        "기존 hash-theory#constructions 링크는 재작성 후 오래된 anchor이며 sponge로 변경할 예정입니다. 첫 사례→원문 수치 대입→한계와 마지막 예측 질문이 필요합니다."
+      ],
       "fixture": null,
       "stageEvidence": {},
       "sourceEvidence": [],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "공개 본문과 실제 두 Viz, baseline 및 정본 metadata 전수 읽음. 고정055bde3 GitHub tree의 실제 파일 존재 확인. 공식 ePrint 2019/458,2023/323,2023/537,2025/954,2025/950 페이지를2026-10-04 확인. PDF/원문 세부 검수 진행 중."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "작은 두 입력의 수치·6+4 계획",
+        "Poseidon/Poseidon2 고정 원문과 cryptanalysis의 실제 범위 확인",
+        "본문 재작성·humanize·학습·실제 화면 검수"
       ]
     },
     {

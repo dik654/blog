@@ -53,21 +53,144 @@ export const businessArticles: Article[] = [
     slug: "shop-unit-economics",
     title: "가게 한 곳은 하루 몇 건을 팔아야 월세와 인건비를 내는가",
     subcategory: "business-cash",
-    sections: [{"id": "overview", "title": "하루 장사가 한 달의 생활을 감당하는가"}, {"id": "black-box", "title": "받는 돈에서 주문 때문에 나간 돈을 먼저 뺀다"}, {"id": "case", "title": "6천 원 한 잔이 매달 800만 원을 나눠 부담한다"}, {"id": "picture", "title": "한 잔의 남는 돈을 월 단위로 모은다"}, {"id": "need", "title": "매출이 같아도 주문 방식에 따라 남는 돈이 달라진다"}, {"id": "names", "title": "반복 비용과 한 잔의 기여에 이름을 붙인다"}, {"id": "mechanism", "title": "가격을 올리기보다 한 건의 남는 돈과 필요한 건수를 함께 봅니다"}, {"id": "source", "title": "팔린 재료와 남은 재료를 구분해 잔당 비용을 잡는다"}, {"id": "comparison", "title": "점주와 임대인의 숫자는 다른 속도로 움직입니다"}, {"id": "limits", "title": "손익분기점에 도달해도 투자금 회수가 끝난 것은 아닙니다"}],
+    sections: [
+  {
+    "id": "overview",
+    "title": "1. 하루 장사가 한 달의 생활을 감당하는가"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 받는 돈에서 주문 때문에 나간 돈을 먼저 뺀다"
+  },
+  {
+    "id": "case",
+    "title": "3. 6천 원 한 잔이 매달 800만 원을 나눠 부담한다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 한 잔의 남는 돈을 월 단위로 모은다"
+  },
+  {
+    "id": "need",
+    "title": "5. 매출이 같아도 주문 방식에 따라 남는 돈이 달라진다"
+  },
+  {
+    "id": "names",
+    "title": "6. 반복 비용과 한 잔의 기여에 이름을 붙인다"
+  },
+  {
+    "id": "mechanism",
+    "title": "7. 같은 한 잔을 모아 2천 잔과 1,500잔의 월 합계를 비교한다"
+  },
+  {
+    "id": "source",
+    "title": "8. 팔린 재료와 남은 재료를 구분해 잔당 비용을 잡는다"
+  },
+  {
+    "id": "comparison",
+    "title": "9. 점주와 임대인의 숫자는 다른 속도로 움직입니다"
+  },
+  {
+    "id": "limits",
+    "title": "10. 손익분기점에 도달해도 투자금 회수가 끝난 것은 아닙니다"
+  }
+],
     component: () => import("@/pages/articles/business/shop-unit-economics"),
   },
   {
     slug: "shop-site-selection",
     title: "가게 자리는 발길보다 구매할 사람과 허용된 용도를 먼저 본다",
     subcategory: "business-cash",
-    sections: [{"id": "overview", "title": "발길을 내 가게의 반복 구매로 바꿀 수 있는가"}, {"id": "black-box", "title": "손님, 출입구, 건물의 허용 조건을 순서대로 통과한다"}, {"id": "case", "title": "1천 명이 지나가도 구매는 20건이다"}, {"id": "picture", "title": "사람 수가 주문 수로 줄어드는 위치를 그린다"}, {"id": "need", "title": "관찰과 허용 조건을 분리해야 자리의 탈락 이유가 보인다"}, {"id": "names", "title": "관찰한 세 비율에 이름을 붙인다"}, {"id": "mechanism", "title": "후보지는 관찰·전환·비용 세 장으로 비교합니다"}, {"id": "source", "title": "정부의 입지 질문을 현장 관찰표로 바꾼다"}, {"id": "comparison", "title": "계약 전에 용도와 설비가 업종을 받아주는지 확인합니다"}, {"id": "limits", "title": "입지 점수는 미래 매출의 보증서가 아닙니다"}],
+    sections: [
+  {
+    "id": "overview",
+    "title": "1. 발길을 내 가게의 반복 구매로 바꿀 수 있는가"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 손님이 오는 경로와 건물의 허용 조건을 나누어 본다"
+  },
+  {
+    "id": "case",
+    "title": "3. 1천 명이 지나가도 구매는 20건이다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 사람 수가 주문 수로 줄어드는 위치를 그린다"
+  },
+  {
+    "id": "need",
+    "title": "5. 관찰과 허용 조건을 분리해야 자리의 탈락 이유가 보인다"
+  },
+  {
+    "id": "names",
+    "title": "6. 사람 수, 다음 행동의 비율, 구매 금액에 이름을 붙인다"
+  },
+  {
+    "id": "mechanism",
+    "title": "7. 후보지는 관찰·전환·비용 세 장으로 비교합니다"
+  },
+  {
+    "id": "source",
+    "title": "8. 정부의 입지 질문을 현장 관찰표로 바꾼다"
+  },
+  {
+    "id": "comparison",
+    "title": "9. 계약 전에 용도와 설비가 업종을 받아주는지 확인합니다"
+  },
+  {
+    "id": "limits",
+    "title": "10. 입지 점수는 미래 매출의 보증서가 아닙니다"
+  }
+],
     component: () => import("@/pages/articles/business/shop-site-selection"),
   },
   {
     slug: "shop-fitout-and-opening",
     title: "가게 인테리어는 도면보다 사용 동의와 설비 검사가 먼저다",
     subcategory: "business-cash",
-    sections: [{"id": "overview", "title": "공간을 꾸미기 전에 영업 가능한 상태를 정한다"}, {"id": "black-box", "title": "사용 동의, 공사, 개업 확인은 서로 다른 결과를 만든다"}, {"id": "case", "title": "4천만 원 견적이 4천800만 원이 되고 30일 동안 팔지 못한다"}, {"id": "picture", "title": "완료의 표시를 돈 지급 시점에 연결한다"}, {"id": "need", "title": "도면보다 먼저 확인할 것은 돌아가는 설비와 빠져나갈 길이다"}, {"id": "names", "title": "공사 중 돈과 책임을 나누는 말"}, {"id": "mechanism", "title": "공사는 사용 동의에서 영업 신고까지 이어집니다"}, {"id": "source", "title": "영업 신고와 사업자등록을 서로 다른 문서로 준비한다"}, {"id": "comparison", "title": "나라와 업종에 따라 허가의 문턱이 달라집니다"}, {"id": "limits", "title": "완성 사진은 준공·영업 가능·회수 가능의 증거가 아닙니다"}],
+    sections: [
+  {
+    "id": "overview",
+    "title": "1. 공간을 꾸미기 전에 영업 가능한 상태를 정한다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 사용 동의, 공사, 개업 확인은 서로 다른 결과를 만든다"
+  },
+  {
+    "id": "case",
+    "title": "3. 4천만 원 견적이 4천800만 원이 되고 30일 동안 팔지 못한다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 완료의 표시를 돈 지급 시점에 연결한다"
+  },
+  {
+    "id": "need",
+    "title": "5. 도면보다 먼저 확인할 것은 돌아가는 설비와 빠져나갈 길이다"
+  },
+  {
+    "id": "names",
+    "title": "6. 공사 중 돈과 책임을 나누는 말"
+  },
+  {
+    "id": "mechanism",
+    "title": "7. 공사는 사용 동의에서 영업 신고까지 이어집니다"
+  },
+  {
+    "id": "source",
+    "title": "8. 영업 신고와 사업자등록을 서로 다른 문서로 준비한다"
+  },
+  {
+    "id": "comparison",
+    "title": "9. 나라와 업종에 따라 허가의 문턱이 달라집니다"
+  },
+  {
+    "id": "limits",
+    "title": "10. 완성 사진은 준공·영업 가능·회수 가능의 증거가 아닙니다"
+  }
+],
     component: () => import("@/pages/articles/business/shop-fitout-and-opening"),
   },
   {
