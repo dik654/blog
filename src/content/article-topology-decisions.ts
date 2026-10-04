@@ -72,13 +72,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/tokenizer": KEEP("BPE→Unigram→byte-level tokenization에서 token id·embedding matrix lookup까지 텍스트를 모델 입력으로 바꾸는 하나의 전처리 arc입니다."),
   "ai/vae": KEEP("Latent model→pathwise gradient→ELBO→collapse diagnosis→variant 경계가 하나의 VAE 학습 arc입니다."),
   "ai/vllm-paged-attention": {
-    action: "keep",
-    status: "reviewed",
-    reviewedAt: "2026-08-29",
-    rationale:
-      "Variable KV state의 addressing·ownership·allocation·fragmentation·prefix sharing·fork/copy-on-write를 한 block manager mechanism으로 추적합니다. 2026-08-29 coverage 보강으로 concept가 17개로 늘었지만 모두 같은 allocator·block table 위의 facet이며 admission·preemption은 serving-memory-admission-and-preemption, radix prefix caching은 prefix-caching-radix-attention으로 분리했습니다.",
-    sharedGate:
-      "같은 block size·pool 크기·요청 길이 fixture에서 allocation·fragmentation·sharing·CoW의 block 수와 hit rate를 한 receipt로 비교합니다.",
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "요청의KV기록이35→38→49로늘고앞32개를다른요청과공유하는상태를추적합니다. 주소표·추가할당·참조수·hash제거·커널읽기는같은기록의수명과유효성을맞추는역할이므로한글에서원문까지연결합니다.",
+    "sharedGate": "block16에서3→3→4개,position37은block2/offset5,공유앞32·tailCoW와ref2→1→0을실제v0.27.1코드의partial-hit확장및해제경계와대조합니다."
   },
   "ai/vllm-spec-decode": {
     action: "keep",
@@ -459,31 +457,31 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "semiconductors/lithography-and-resolution": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-03",
-    "rationale": "한 층에 무늬를 얼마나 작게 찍는지와 여러 층을 어디에 맞춰 찍는지를 같은 접촉 창 사례로 구분합니다. 확산 온도·시간은 다음 글이 소유합니다.",
-    "sharedGate": "가상 λ193 nm·NA0.8·k1 .4/.3에서 CD96.5/72.4 nm, 선200 nm·창120 nm·이동0/30/50 nm에서 최소 여유40/10/−10 nm가 본문·Viz·문제에 일치하는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 연결 창을 빛으로 기록하고 아래 층에 옮기는 과정에서 크기와 상대 위치를 별도로 검사합니다. 같은 창을 유지해야 CD와 오버레이를 혼동하는 이유와 한계가 드러나므로 한 글로 유지합니다.",
+    "sharedGate": "CD96.5·72.375·48.25nm과 정렬여유40/10/−10nm을 검산하고 ASML공식Rayleigh식과 두 층 정렬 정의에 같은 값을 적용합니다."
   },
   "semiconductors/doping-and-thermal-budget": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-03",
-    "rationale": "한 번 넣은 불순물이 두 열 단계에서 얼마나 퍼지는지 농도 모양→폭→누적 Dt→접합 한계로 풉니다. 창의 광학 해상도는 앞 글, 완성 배선 지연은 다음 글이 소유합니다.",
-    "sharedGate": "가상 D1=10^-14 cm²/s·3600s, D2=4×10^-14 cm²/s·1800s에서 B=1.08×10^-10 cm²·a1=120nm·a2≈208nm·표면 비≈0.58이 본문·Viz·문제에 일치하는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 원자 분포를 두 번 가열하여 누적 열 예산·폭·깊이별 농도·접합 깊이를 연결합니다. 공급을 유지하는 비교도 같은 경계 조건을 바꿔 무엇을 다시 계산해야 하는지 보여 줍니다.",
+    "sharedGate": "B1=3.6e−11,B2=7.2e−11cm²,a120→207.846nm,표면0.57735·240nm깊이0.0183→0.1522·접합257.516→418.585nm를 검산합니다."
   },
   "semiconductors/interconnect-and-rc-delay": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-03",
-    "rationale": "한 가상 배선을 π 회로→74 ps→길이 두 배 158 ps→금속·절연막 변경→실제 타이밍 경계 순서로 추적합니다. 제조 결함과 패키징 수율은 다음 글의 범위입니다.",
-    "sharedGate": "500 Ω·20 fF·200 Ω·100 fF에서 60+14=74 ps, 길이 두 배 110+48=158 ps, 저항만 69.8 ps, 용량만 44 ps, 둘 다 41.3 ps가 본문·Viz·문제에서 일치하는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 출력이 시작·끝 용량을 충전하는 두 경로에서 원문의π식과 저항별 합을 비교합니다. 길이·재료 변화는 동일 회로의 항별 민감도이므로 함께 읽어 전체 지연과 한 항의 제곱 증가를 구별합니다.",
+    "sharedGate": "25+49=60+14=74ps,무배선10ps,길이2배158ps,저항만69.8·용량만44·둘다41.3ps와 단일극50%시간6.931ps를 검산합니다."
   },
   "semiconductors/yield-defect-and-packaging": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-03",
-    "rationale": "결함이 해로운 위치→포아송 0개 확률→면적·밀도 민감도→패키징 조건부 생존으로 한 후보 다이를 추적합니다. 다음 임베디드 글은 완성 칩을 사용하는 단계입니다.",
-    "sharedGate": "D0=.1개/cm²·Ac=1cm²에서 e^-.1≈90.48%, Ac=4에서 e^-.4≈67.03%, D0=.2에서 e^-.2≈81.87%, 1000×.904837×.98≈886.7개가 본문·Viz·문제에서 일치하는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "동일1000개후보에서결함0개확률과뒤단계조건부비율을연결합니다. 면적·밀도변경은첫확률의민감도이며패키지시험은분모가바뀌는지점을보여주므로단일수율흐름으로유지합니다.",
+    "sharedGate": "e−0.1=0.904837,면적4의0.67032·밀도0.2의0.818731,기댓값904.837→886.741을 검산하고P(A)P(B|A)의분모를대조합니다."
   },
   "embedded/mcu-memory-map-and-registers": {
     "action": "keep",
@@ -1300,6 +1298,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "한 풀의 입력100이 실제 잔액·수수료 조정·불변식 검사를 통과하는 경로에서 지분·일시 인출·누적 가격까지 같은 저장 상태가 담당하는 역할을 나눕니다. 파생 기능을 별도 소개 없이 섞지 않고 원문 함수의 진입점마다 이 풀의 수치를 적용하므로 구현 단위를 유지합니다.",
     "sharedGate": "정수출력90661089와조정곱을고정core4dd5906·periphery원문으로대조하고 선택적 프로토콜 지분발행 및 동일자산 일시인출의상환올림·시간가중누적의단위를검산합니다."
   },
+  "ai/reverse-mode-autodiff": {
+    "action": "keep",
+    "rationale": "a=6이 제곱과 덧셈의 두 사용처로 갈라졌다가12+1로 합쳐지는 계산을 중심으로 graph·tape·VJP를 연결합니다. 저장해야 할 값과 실제 입력별 backward 반환값을 분리하면26과39의 소유권을 놓치므로 같은 글에서 원문까지 추적합니다. 신경망 손실과 행렬 batch 유도는 연결된 backprop 글이 맡습니다.",
+    "sharedGate": "가정 w3,x2,b0→a6→L42, dL/da13, dL/dw26·dx39·db13; 공식 코드 반환 순서(input,weight,bias)는(39,26,13). 원문162–202행과수치차분26.004 및 중앙차분을 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04"
+  },
+  "ai/backprop-optimization": {
+    "rationale": "두 선택지의 한 오차에서 공유 가중치·bias·자료별 입력으로 gradient가 갈라지는 하나의 계산을 소유합니다. 출력 신호 p−y와 선형 층의 합산 축을 나누면 같은 사례의 반쪽만 확인하므로 원 논문과 코드의 전치까지 함께 읽습니다. 기록 관리와 fan-out 엔진은 autodiff 글로 연결합니다.",
+    "sharedGate": "가정 X(1,2),W[[ln2,0],[0,0]],target(0,1)→p(2/3,1/3),Lln3,G(2/3,−2/3),dW[[2/3,−2/3],[4/3,−4/3]],dbG,dX((2/3)ln2,0). 8변수 중앙차분·중복 batch 합/평균·공식 weight 전치와 원문식(6)(7)을 같이 대조합니다.",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "action": "keep"
+  },
+  "blockchain/aave-v3": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "풀의가용자금과한차입자의담보·부채를함께추적하여인출가능성과상환안전성을구별합니다. 같은계수·시점에서이자·HF·실제청산한도를계산해야하므로원문함수마다동일계정을대응시키는글로유지합니다.",
+    "sharedGate": "풀10000중부채8000의사용률80%,C담보10000/부채7000→담보8000의HF0.914와고정원문의공급내림·부채올림·80%분기·0.95청산조건을검산합니다."
+  },
+  "ai/architecture-decision-records": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "200개 프로필에서 하나만 복구하는 저장 선택을 같은 기준으로 비교하고 작업자가1→4로 바뀐 뒤의 대체 결정을 추적합니다. 선택 내용·구현 상태·이력 연결을 나누어 같은 결정을 검증하는 글로 유지합니다.",
+    "sharedGate": "A한개변경/나머지199개유지,작업자1→4에서ADR005를006으로대체하는조건을원문의Context/Decision/Status/Consequences에대응합니다."
+  },
+  "ai/agent-changelog-evidence": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "12개기록을잃게하던수정을4개검사로확인하고Unreleased에서실제버전공개까지같은항목을따라갑니다. 사용자영향·검증·공개시점을구별해야같은변경을과장하지않으므로한글로유지합니다.",
+    "sharedGate": "입력0/5/12/명시삭제0의네결과와run1842를원문의Fixed/Unreleased→v1.4.0에연결하며검사성공과배포완료를구별합니다."
+  },
+  "ai/engineering-lessons-ledger": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "기록12개손실사건에서한개행동규칙을추출하고적용범위·삭제예외·검사를같은네경우로확인합니다. 사건보고와앞으로따를규칙의구별이재사용판단에필요하므로같은글에둡니다.",
+    "sharedGate": "0/5/12/명시삭제0의검사4개와사건postmortem021·run1842를연결하여잠정규칙의승격/재검토조건과비난없는원문postmortem원칙을대조합니다."
+  },
 };
 
 /**
@@ -1307,6 +1347,12 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/agent-changelog-evidence": "d836245b317bf83d",
+  "ai/architecture-decision-records": "af6ac91ddada1812",
+  "ai/engineering-lessons-ledger": "a47f67e2b082967e",
+  "ai/backprop-optimization": "01fefafd8dd962d9",
+  "ai/reverse-mode-autodiff": "b583e8474515e655",
+  "blockchain/aave-v3": "1ebfddd4c59b21f6",
   "blockchain/uniswap-v2": "6ca624f8fa914913",
   "ai/activation-functions": "c6f9a3b966843092",
   "ai/adam-optimizer": "b246a49a4f20c77b",
@@ -1379,10 +1425,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "embedded/timers-and-sampling": "d65d89abe395b450",
   "embedded/interrupts-and-latency-budget": "c4b9955ab55f378b",
   "embedded/mcu-memory-map-and-registers": "21fe616f12dd3bdb",
-  "semiconductors/yield-defect-and-packaging": "163db4ca3af9975d",
-  "semiconductors/interconnect-and-rc-delay": "9fe870634104880b",
-  "semiconductors/doping-and-thermal-budget": "77caf87831e26635",
-  "semiconductors/lithography-and-resolution": "45e896d39b860a36",
+  "semiconductors/yield-defect-and-packaging": "e2a487c102874573",
+  "semiconductors/interconnect-and-rc-delay": "3996b172fe38d57e",
+  "semiconductors/doping-and-thermal-budget": "5bfbe9faf76c12fd",
+  "semiconductors/lithography-and-resolution": "3912753ae6c1c36e",
   "semiconductors/wafer-and-planar-process": "8ef30e6f8c1d03e3",
   "circuits/feedback-gain-and-stability": "2bbfa8da24590edd",
   "circuits/frequency-shaping-and-bode": "57bed2f731a22ee4",
@@ -1435,7 +1481,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/transformer-architecture": "8fc15de1523628d0",
   "ai/tokenizer": "87660ba663da6629",
   "ai/vae": "147d459b37db9ccd",
-  "ai/vllm-paged-attention": "7150bf99c717624c",
+  "ai/vllm-paged-attention": "ea303e6227016d05",
   "ai/vllm-spec-decode": "4ae6d26832c9fab4",
   "ai/vllm-scheduler": "2bde960d9b11b3a0",
   "ai/retrieval-ranking-funnel": "a90156ebba994926",
@@ -1504,7 +1550,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "crypto/post-quantum-signatures":"bbd9a75525a1bc9e",
 "crypto/prover-memory-and-verifier-cost":"268bbd7ee27658e6",
 "crypto/quantum-computing-and-cryptographic-risk":"fdb29244df1b5b98",
-"crypto/quantum-key-distribution":"94d23fc15a99243c",
+"crypto/quantum-key-distribution":"daa73d234fcf8d76",
 "crypto/snark-overview":"961154e8537ab05f",
 "crypto/stark-theory":"544cd9e5420b7914",
 "crypto/zk-theory":"d8c8dd6527fe6308",

@@ -1,26 +1,5 @@
 import ModernAaveViz from "./viz/ModernAaveViz";
-
-export default function EfficiencyMode() {
-  return (
-    <section id="efficiency-mode" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">E-Mode와 isolation은 효율을 높이는 대신 asset 조합을 제한한다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>E-Mode category는 상관관계가 높은 자산 조합에 별도 LTV·liquidation threshold·bonus를 적용할 수 있습니다. Isolation은 특정 collateral을 활성화한 account가 빌릴 수 있는 asset과 총 debt ceiling을 제한합니다. 둘 다 “안전한 asset”이라는 영구 속성이 아니라 deployment configuration과 account state가 만나는 validation mode입니다.</p>
-      </div>
-      <ModernAaveViz mode="risk" />
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[42rem] border-collapse text-sm">
-          <thead><tr className="border-b"><th className="p-3 text-left">Mode</th><th className="p-3 text-left">의도</th><th className="p-3 text-left">반드시 검사할 반례</th></tr></thead>
-          <tbody>
-            <tr className="border-b"><td className="p-3 font-semibold">E-Mode</td><td className="p-3">같은 category의 correlated assets에 높은 효율</td><td className="p-3">Category 밖 borrow·oracle depeg·category 변경</td></tr>
-            <tr><td className="p-3 font-semibold">Isolation</td><td className="p-3">새 collateral exposure를 debt ceiling 안에 제한</td><td className="p-3">허용 밖 debt asset·ceiling 초과·다른 collateral 혼합</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="aave-v3-release-gate" className="scroll-mt-24 prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Release gate</h3>
-        <p>Chain ID, Pool proxy/implementation SHA, reserve addresses, oracle sources, decimals, indexes/timestamp, rate data, LTV/LT/bonus/fee, caps, E-Mode/isolation config를 receipt에 고정합니다. Supply/withdraw/borrow/repay, zero debt, 0·optimal·above-optimal utilization, long idle index, stale/negative oracle, HF 1·0.95 경계, partial/full close, insufficient collateral, mode/category/ceiling 변경과 pause/freeze를 base/candidate에 재생합니다. Balances·indexes·rates·HF·events·reverts가 같아진 뒤 gas를 비교하고 이전 implementation/config snapshot으로 rollback rehearsal을 합니다.</p>
-      </div>
-    </section>
-  );
-}
+export default function EfficiencyMode(){return <div className="space-y-14 [&_section]:space-y-5 [&_h2]:text-2xl [&_h2]:font-bold [&_p]:leading-8">
+<section id="efficiency-mode" data-teach-level="7"><h2>14. 자산 조합에 따라 허용 비율과 차입 범위를 바꿉니다</h2><p>앞의 LTV75%와 청산 비율80%는 특정 설정을 가정했습니다. E-Mode는 서로 비슷하게 움직인다고 보는 자산 조합에 별도 LTV·청산 비율·보상 등을 적용할 수 있는 방식입니다. 같은 범주로 설정한 담보와 차입만 허용하는지, 어떤 자산이 그 범주에 속하는지 실제 구성을 확인합니다.</p><p>높은 허용 비율을 주었다고 두 자산의 가격 관계가 영원히 유지되는 것은 아닙니다. 한쪽이 목표 가격에서 벗어나거나 가격 입력이 늦으면 기대한 상관관계가 깨질 수 있습니다. 범주 변경 직전·직후의 같은 계정도 다시 계산해야 합니다.</p><p>Isolation은 특정 담보가 만드는 위험을 제한하도록 빌릴 수 있는 자산과 총부채 한도를 좁힙니다. C가 그런 담보를 선택했다면 일반 LTV 검사만 통과해도7000을 빌릴 수 있다고 판단하지 않습니다. 허용한 차입 자산인지, 부채 상한을 넘는지, 다른 담보와의 혼용이 가능한지를 확인합니다. 정확한 제약은 고정한 버전과 네트워크 설정을 따릅니다.</p><ModernAaveViz mode="risk"/></section>
+<section id="aave-v3-release-gate" data-teach-level="7"><h2>15. 같은 가격·계수·설정에서 실행 결과를 비교합니다</h2><p>구현을 바꾸거나 서비스를 연결할 때는 체인 ID, Pool 대리 주소와 실제 구현, reserve와 가격 출처, 자산 소수 자릿수, 이자 계수와 시각을 기록합니다. 이율의 구간 설정, LTV와 청산 비율, 보상과 수수료, 공급·차입 상한과 모드도 같은 시점으로 고정해야 합니다.</p><p>정상 공급·출금·차입·상환뿐 아니라 부채0, 사용률0·80%·90%, 긴 미갱신 기간을 검사합니다. HF1과0.95의 앞뒤, 담보 부족, 일부·전액 청산 후보, 범주 밖 차입과 부채 상한 초과를 나눕니다. 가격이 오래됐거나 허용할 수 없는 값일 때 어느 가격 공급자와 검증 경로가 이를 거절하는지도 확인합니다.</p><p>동일한 사례에서 잔액과 계수가 일치하는지 봅니다. 이율과 HF를 대조하고 발생한 이벤트와 실패 사유까지 맞춘 뒤 처리 비용을 비교합니다. 권한이 있는 실제 변경 절차와 저장 형식 호환성을 확인하고 복구 계획을 세웁니다. 이미 완료한 청산을 구현 주소만 바꿔 취소할 수는 없습니다. 이 글은 원본을 읽고 산술을 검산한 설명이며 실제 Pool에서 위 시험 전체를 수행한 기록은 아닙니다.</p><ul className="list-disc space-y-3 pl-6"><li>담보가 10000달러이면 공급자 전원이10000달러를 즉시 인출할 수 있을까요? (답: 5절)</li><li>공급 계수 1.05일 때1050을 그대로 저장 단위에 더하면 얼마로 표시될까요? (답: 8절)</li><li>C의 HF0.914에도 항상 부채의 50%까지만 청산할 수 있을까요? (답: 13절)</li></ul></section>
+</div>}

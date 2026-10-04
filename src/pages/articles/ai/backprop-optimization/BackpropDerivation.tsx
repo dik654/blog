@@ -1,25 +1,13 @@
 import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
-
-export default function BackpropDerivation() {
-  return (
-    <section id="tensor-backward" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Fused output gradient를 linear layer까지 전파한다</h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          Multi-class classification에서 softmax와 cross-entropy를 따로 미분하면 softmax Jacobian의 diagonal과 off-
-          diagonal 항이 보이지만 두 operation을 합치면 logit gradient는 prediction에서 target distribution을 뺀 값으로 정리된다.
-        </p>
-        <p>
-          실제 library가 raw logits를 받는 fused cross-entropy를 제공하는 이유는
-          이 경로를 수치적으로 안정되게 계산할 수 있기 때문이다.
-        </p>
-      </div>
-
-      <ExplainedFormula
+import AlgorithmBlock from "@/components/ui/algorithm-block";
+import { CitationBlock } from "@/components/ui/citation";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { backpropCodeRefs } from "./backpropCodeRefs";
+export default function BackpropDerivation(){const sidebar=useCodeSidebar();return <div className="mt-16 space-y-16"><section id="trace" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">8. 두 점수의 신호를 입력과 짝지으면 네 가중치의 답이 나옵니다</h2><p className="leading-8">이번 softmax와 cross-entropy를 함께 미분하면 점수의 gradient는 예측 p에서 정답 y를 뺀 값입니다. 따라서 G=(2/3,1/3)−(0,1)=(2/3,−2/3)입니다. 첫 점수를 늘리면 오차가 커지고 둘째 점수를 늘리면 오차가 줄어드는 부호입니다.</p><p className="leading-8">입력 1에 연결된 첫 행의 가중치 gradient는 1×G=(2/3,−2/3)입니다. 입력 2에 연결된 둘째 행은 2×G=(4/3,−4/3)입니다. Bias는 각 점수에 1배로 더했으므로 db=(2/3,−2/3)입니다.</p><p className="leading-8">입력의 첫 칸은 첫 선택지에서 ln2, 둘째에서 0과 곱했으므로 dX₁=(2/3)ln2≈0.462098입니다. 둘째 칸의 가중치는 두 선택지 모두 0이라 dX₂=0입니다. 이것이 dW의 둘째 행이 0이라는 뜻은 아닙니다. W를 바꾸는 미분에는 입력 2가 곱해지므로 그 행은(4/3,−4/3)입니다.</p><AlgorithmBlock title="한 자료의 오차를 같은 배열로 되돌리는 의사코드" input={["X=[[1,2]], W=[[ln2,0],[0,0]], b=[0,0], target=[0,1] (가정)"]} steps={[{code:"Z ← XW+b = [[ln2,0]]; p ← softmax(Z) = [[2/3,1/3]]"},{code:"L ← −ln(p둘째)=ln3; G ← p−y = [[2/3,−2/3]]"},{code:"dW ← XᵀG = [[2/3,−2/3],[4/3,−4/3]]"},{code:"db ← 행 방향 합 G; dX ← GWᵀ = [[(2/3)ln2,0]]"}]} output="입력·가중치·bias와 같은 모양의 세 gradient; parameter는 아직 고치지 않음" /></section><section id="tensor-backward" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">9. 전치 위치와 합산 축을 모양과 미분으로 확인합니다</h2><p className="leading-8">이번 두 선택지에서 정답 확률은 p₂=e^(z₂)/(e^(z₁)+e^(z₂))입니다. 첫 점수 z₁을 올리면 정답 확률의 변화율은 −p₁p₂입니다. 손실 −ln(p₂)의 변화율 −1/p₂를 곱하면 p₁=2/3이 남습니다. 둘째 점수 z₂에 대한 확률 변화율은 p₂(1−p₂)이므로 같은 −1/p₂를 곱하면 p₂−1=−2/3입니다.</p><p className="leading-8">일반적인 선택지 i의 확률을 점수 j로 미분하면 pᵢ(δᵢⱼ−pⱼ)입니다. δᵢⱼ는 두 번호가 같을 때 1, 다를 때 0입니다. 손실의 확률별 변화율 −yᵢ/pᵢ를 곱해 모두 더하면 −Σᵢ yᵢ(δᵢⱼ−pⱼ)=−yⱼ+pⱼΣᵢyᵢ가 됩니다. 정답 분포의 합이 1이라는 조건을 넣으면 pⱼ−yⱼ입니다. 가중치를 붙인 다른 손실이나 합이 1이 아닌 target에는 이 마지막 단순화를 그대로 적용하지 않습니다.</p><ExplainedFormula
         question="softmax와 cross-entropy를 연달아 미분하면 logit별 gradient가 왜 prediction−label이 될까?"
-        idea={<>softmax Jacobian과 negative log-likelihood derivative를 chain rule로 합치면 공통 항이 소거됩니다. Target class에는 확률을 올리는 방향, 나머지에는 내리는 방향의 gradient가 남습니다.</>}
+        idea={<>softmax Jacobian과 negative log-likelihood derivative를 chain rule로 합치면 공통 항이 소거됩니다. Gradient의 반대 방향으로 이동하면 target 확률을 올리고 나머지 확률을 내리는 국소 방향이 됩니다.</>}
         formula={String.raw`\begin{aligned}\hat y&=\operatorname{softmax}(z)\\L&=-\sum_c y_c\log\hat y_c\\\frac{\partial L}{\partial z}&=\hat y-y\end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}\hat y&=\underbrace{\operatorname{softmax}(z)}_{\substack{\text{logit을 공동}\text{class 확률로 변환}}}\\[5pt]L&=\underbrace{-\sum_c y_c\log\hat y_c}_{\substack{\text{정답 class에 준 확률을}\text{scalar penalty로 모음}}}\\[5pt]\frac{\partial L}{\partial z}&=\underbrace{\hat y-y}_{\substack{\text{예측 몫에서 목표 몫을 빼}\text{logit별 수정 책임 생성}}}\end{aligned}`}
         operations={[
@@ -35,18 +23,7 @@ export default function BackpropDerivation() {
         ]}
         assumptions={["sample loss의 sum 표기입니다. Batch mean reduction이면 gradient 전체에 1/B가 곱해집니다."]}
         interpretation="이 간결한 gradient는 softmax와 cross-entropy를 함께 미분했을 때의 결과입니다. Softmax 단독의 Jacobian이 identity라는 뜻은 아닙니다."
-      />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          Cross-entropy의 정보이론·maximum likelihood·KL 관계는 이 글에서 다시
-          유도하지 않고 <Link to="/cs/ai/cross-entropy">canonical Cross-entropy 글</Link>이
-          소유한다. 여기서는 그 scalar objective가 linear classifier에 보내는
-          upstream gradient만 사용한다.
-        </p>
-      </div>
-
-      <ExplainedFormula
+      /><p className="leading-8">위 간단한 p−y는 target의 합이 1이고 class 가중치를 따로 주지 않은 categorical loss의 결과입니다. Batch 평균이면 이미 loss를 1/B배 했으므로 G부터 모든 downstream gradient도 1/B배입니다. Softmax만 미분했을 때의 Jacobian이 항등행렬이라는 뜻은 아닙니다.</p><ExplainedFormula
         question="logit gradient G를 weight·bias·input gradient로 어떻게 나눌까?"
         idea={<>forward Z=XW+1bᵀ의 differential dZ=dXW+XdW+1dbᵀ에서 각 variable의 coefficient를 모으면 shape가 맞는 세 gradient가 나옵니다.</>}
         formula={String.raw`\begin{aligned}G&=\frac{\partial L}{\partial Z}\\\frac{\partial L}{\partial W}&=X^\top G\\\frac{\partial L}{\partial b}&=\sum_{r=1}^{B}G_{r,:}\\\frac{\partial L}{\partial X}&=GW^\top\end{aligned}`}
@@ -64,8 +41,4 @@ export default function BackpropDerivation() {
         ]}
         assumptions={["Z=XW+b인 row-batch convention입니다."]}
         interpretation="transpose 위치는 암기 항목이 아니라 결과 shape가 원래 variable shape와 같아야 한다는 조건에서 정해집니다."
-      />
-
-    </section>
-  );
-}
+      /><p className="leading-8">자료 B개, 입력 폭 D, 출력 폭 C이면 X는 B×D, W는 D×C, G는 B×C입니다. XᵀG는 D×C로 W와 같고, G의 행 합은 길이 C로 b와 같으며, GWᵀ는 B×D로 X와 같습니다. 차원이 우연히 같아 보이는 작은 정방행렬 예에서 끝내지 않고 이 일반 모양으로도 확인합니다.</p><p className="leading-8">같은 자료 두 개를 복제해 합 loss를 만들면 dW와 db는 이번 값의 2배입니다. 평균 loss라면 G의 각 행이 이번 값의 1/2이고 두 행을 합해 원래 dW·db로 돌아옵니다. dX는 자료 행마다 그 행의 값이 1/2배가 되어 남습니다. 평균의 영향을 parameter와 input의 서로 다른 합산 위치에서 구별합니다.</p></section><section id="source-paper" data-teach-level="5" className="space-y-6"><h2 className="text-2xl font-bold">10. 1986년 원문 식의 입력과 뒤 기여에 같은 숫자를 넣습니다</h2><p className="leading-8">Rumelhart·Hinton·Williams의 Learning representations by back-propagating errors는 534쪽 식(6)에 ∂E/∂wᵢⱼ=(∂E/∂xⱼ)yᵢ를 씁니다. 원문의 yᵢ는 이전 단위의 출력으로 이 글의 입력 X에, xⱼ는 다음 단위의 합산 점수 Z에 해당합니다. 같은 문자를 무조건 같은 역할로 읽지 않습니다.</p><p className="leading-8">입력 두 번째 칸 yᵢ=2와 둘째 점수의 뒤 기여 ∂E/∂xⱼ=−2/3을 넣으면 해당 가중치의 gradient는 −4/3입니다. 535쪽 식(7)은 입력 쪽 기여를 Σⱼ(∂E/∂xⱼ)wᵢⱼ로 합칩니다. 첫 입력에 적용하면 (2/3)ln2+(−2/3)×0으로 8절의 약 0.462098을 얻습니다.</p><p className="leading-8">원문은 sigmoid와 제곱 오차로 출력 신호를 유도합니다. 이번 사례는 softmax–cross-entropy에서 얻은 G를 사용했습니다. 출력 신호를 만드는 손실은 다르지만, 선형 결합을 거슬러 가며 입력을 곱하고 기여를 합치는 이 국소 규칙은 같습니다.</p><div id="paper-backprop" className="scroll-mt-24"><CitationBlock source="Rumelhart, Hinton, Williams — Learning representations by back-propagating errors (1986)" citeKey={1} href="https://www.cs.toronto.edu/~hinton/absps/naturebp.pdf">원문은 거울 대칭 판별과 두 가족 관계 구조의 예에서 중간 표현을 학습합니다. 최종 출력의 정답은 주어지고 hidden unit의 정답을 따로 주지 않습니다. 모든 현대 신경망의 최적해나 일반화를 보장하지 않으며, 식(6)·(7)의 국소 전달 규칙을 위 배열에 대입해 읽습니다.</CitationBlock></div></section><section id="source-code" data-teach-level="6" className="space-y-6"><h2 className="text-2xl font-bold">11. 공식 코드의 weight 저장 방향을 바꾸어 같은 gradient를 얻습니다</h2><p className="leading-8">PyTorch v2.8.0 고정 revision ba56102387ef21a3b04b357e5b183d48f0afefc7의 docs/source/notes/extending.rst 162–202행은 사용자 정의 LinearFunction의 실제 문서 예제입니다. Native nn.Linear kernel을 그대로 보여주는 코드는 아닙니다.</p><CodeViewButton label="공식 LinearFunction의 forward 원문" onClick={() => sidebar.open("linear-forward",backpropCodeRefs["linear-forward"])} /><p className="leading-8">168행은 input.mm(weight.t())입니다. 따라서 이 글의 W 대신 weight=Wᵀ를 저장합니다. 이번 W가 대각 형태라 숫자로는 같아 보이지만, 저장 의미는 출력 폭×입력 폭입니다. grad_output에는 G=[[2/3,−2/3]]을 그대로 넣습니다.</p><CodeViewButton label="공식 LinearFunction의 backward 원문" onClick={() => sidebar.open("linear-backward",backpropCodeRefs["linear-backward"])} /><p className="leading-8">196행 grad_output.mm(weight)는 G Wᵀ=[[0.462098…,0]]입니다. 198행 grad_output.t().mm(input)는[[2/3,4/3],[−2/3,−4/3]]입니다. 이것은 코드에 저장된 weight=Wᵀ에 대한 gradient이므로 8절 dW의 전치와 일치합니다. 200행 sum(0)은 db=[2/3,−2/3]을 만듭니다.</p><p className="leading-8">반환되는 세 배열의 순서는 input·weight·bias입니다. 일치 검사는 숫자뿐 아니라 이 순서와 shape, 저장 방향까지 포함해야 합니다. 원문의 needs_input_grad 조건은 필요하지 않은 입력 gradient 계산을 건너뛰는 선택이며 미분 공식을 바꾸는 항이 아닙니다.</p></section><section id="boundaries" data-teach-level="7" className="space-y-6"><h2 className="text-2xl font-bold">12. Gradient 계산이 끝났다고 학습의 다음 단계까지 검증된 것은 아닙니다</h2><p className="leading-8">이번 −4/3은 현재 위치에서 오차가 어떻게 달라지는지 알려 줍니다. 큰 보폭으로 움직인 뒤에도 같은 방향과 크기가 유지된다는 보장은 없습니다. 작은 차분 검사도 선택한 입력 근처의 확인이며 전체 학습의 수렴이나 새 자료의 성능을 증명하지 않습니다.</p><p className="leading-8">계산에 dropout을 사용하면 forward의 값을 지우는 경로와 그 기록이 바뀝니다. Gradient clipping은 backward가 만든 gradient를 optimizer에 넘기기 전에 크기 등을 조절합니다. AdamW는 gradient와 별도 상태, 별도의 감쇠 규칙로 parameter를 갱신합니다. 네 동작의 개입 지점을 바꾸면 같은 학습이라고 볼 수 없습니다.</p><p className="leading-8">PyTorch의 loss.backward()는 leaf gradient를 .grad에 누적하고 optimizer.step()이 실제 parameter를 바꿉니다. 의도한 자료 누적이 아니라면 이전 gradient를 비워야 합니다. 자료 수·합/평균·정밀도·미분 불가능한 지점의 규칙을 고정하고 값을 비교합니다.</p><p className="leading-8">기울기의 곱과 전치가 낯설다면 <Link to="/cs/ai/math-functions-derivatives-gradients">국소 변화율과 chain rule</Link>, <Link to="/cs/ai/math-gradients-jacobians">Gradient와 Jacobian</Link>을 연결해 읽을 수 있습니다. 실제 이동 규칙은 <Link to="/cs/ai/optimizers">SGD와 한 번의 갱신</Link>에서 같은 분모와 자료 수까지 확인합니다.</p><ContentBoundary article="backprop-optimization" /><h3 className="text-xl font-semibold">읽은 내용으로 예측해 보세요</h3><ol className="list-decimal space-y-3 pl-6"><li>입력 2의 gradient가 0인데도 그 입력에 붙은 weight gradient가 (4/3,−4/3)인 이유는 무엇일까요? (답: 8절)</li><li>같은 자료 두 개의 loss를 평균하면 dW와 각 행의 dX는 각각 어떻게 달라질까요? (답: 9절)</li><li>공식 코드의 grad_weight가 본문의 dW와 전치 관계인 이유는 무엇일까요? (답: 11절)</li></ol></section><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={backpropCodeRefs} fileTrees={{pytorch:{name:"pytorch",type:"dir",children:[{name:"docs/source/notes/extending.rst",type:"file",path:"pytorch/docs/source/notes/extending.rst",codeKey:"linear-forward"}]}}} projectMetas={{pytorch:{id:"pytorch",label:"PyTorch v2.8.0",badgeClass:"border-border"}}} /></div>;}

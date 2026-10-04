@@ -1,21 +1,2 @@
 import type { FileNode } from "@/components/code/types";
-
-const f = (name: string, path: string, codeKey?: string): FileNode => ({
-  name,
-  type: "file",
-  path,
-  codeKey,
-});
-const d = (name: string, children: FileNode[]): FileNode => ({
-  name,
-  type: "dir",
-  children,
-});
-
-export const reverseModeAutodiffTree: FileNode = d("pytorch-docs", [
-  f(
-    "extending_autograd.py",
-    "pytorch-docs/extending_autograd.py",
-    "linear-forward",
-  ),
-]);
+export const reverseModeAutodiffTree: FileNode = {name:"pytorch",type:"dir",children:[{name:"docs/source/notes",type:"dir",children:[{name:"extending.rst — forward와 저장",type:"file",path:"pytorch/docs/source/notes/extending.rst",codeKey:"linear-forward"},{name:"extending.rst — backward",type:"file",path:"pytorch/docs/source/notes/extending.rst",codeKey:"vjp-backward"}]}]};

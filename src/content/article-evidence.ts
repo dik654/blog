@@ -981,7 +981,25 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://jmlr.org/papers/v18/17-468.html",
       note: "finite difference·symbolic differentiation·forward/reverse-mode autodiff의 계산 차이를 정리한 survey",
     },
-  ],
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch v2.8.0 LinearFunction 실제 문서 예제",
+      "href": "https://github.com/pytorch/pytorch/blob/ba56102387ef21a3b04b357e5b183d48f0afefc7/docs/source/notes/extending.rst#L162-L202",
+      "note": "전체 고정 RST 원문·LICENSE·SHA256 보존. input2,weight3,grad_output13을 실제 forward·backward에 대입합니다. native nn.Linear 구현과 구분합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.8 Autograd saved tensor·version 확인",
+      "href": "https://docs.pytorch.org/docs/2.8/notes/autograd.html#in-place-correctness-checks",
+      "note": "저장한 값과 in-place 변경의 version 검사를 같은 a=6 사례에 적용합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.8 backward의 leaf gradient 누적",
+      "href": "https://docs.pytorch.org/docs/2.8/generated/torch.autograd.backward.html",
+      "note": "한 graph의 경로 합과 여러 backward 호출의 .grad 저장 정책을 구분합니다."
+    },
+],
   "ai/softmax": [
     {
       kind: "보충 읽기",
@@ -997,7 +1015,19 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://www.nature.com/articles/323533a0",
       note: "chain rule로 hidden weight의 error contribution을 계산하는 원문",
     },
-  ],
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch v2.8.0 LinearFunction의 행렬 backward",
+      "href": "https://github.com/pytorch/pytorch/blob/ba56102387ef21a3b04b357e5b183d48f0afefc7/docs/source/notes/extending.rst#L167-L202",
+      "note": "동일 원문을 보존하고167–178·182–202행으로 나누어 엽니다. input(1,2),weight=Wᵀ,G(2/3,−2/3)의 실제 저장 방향과 세 반환값을 대조합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Rumelhart·Hinton·Williams 1986 저자 공개 원문",
+      "href": "https://www.cs.toronto.edu/~hinton/absps/naturebp.pdf",
+      "note": "실제 스캔534쪽식(6)·535쪽식(7)에 입력2와 뒤 기여−2/3을 대입해 weight gradient−4/3을 얻습니다. 원문 사례는 거울 대칭·가족 관계이며 TTS로 소개한 기존 오기를 교정했습니다."
+    },
+],
   "ai/activation-functions": [
     {
       kind: "핵심 논문",
@@ -3311,15 +3341,33 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/agent-changelog-evidence": [
     { kind: "공식 가이드", label: "Keep a Changelog 1.1.0", href: "https://keepachangelog.com/en/1.1.0/", note: "사람이 읽는 notable-change 목록, 날짜·version·linkable section·Unreleased convention" },
     { kind: "프로젝트 실측", label: "Empty compaction guard change fixture", note: "run·commit·test·ADR link를 분리해 보여 주는 고정 학습 사례이며 보편 release format은 아님" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "agent-changelog-evidence — 확인한 원문",
+      "href": "https://keepachangelog.com/en/1.1.0/",
+      "note": "2026-10-04 원문 확인. 12개 기록의 덮어쓰기 수정과 검사 4개를 Unreleased→v1.4.0 Fixed 항목에 대응"
+    },
+],
   "ai/architecture-decision-records": [
     { kind: "보충 읽기", label: "Michael Nygard — Documenting Architecture Decisions", href: "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions", note: "Significant decision의 title·status·context·decision·consequences와 superseding history" },
     { kind: "프로젝트 실측", label: "Profile storage ADR fixture", note: "Single JSON·profile files·database를 같은 driver로 비교하는 학습 사례이며 최적 storage 권고는 아님" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "architecture-decision-records — 확인한 원문",
+      "href": "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions",
+      "note": "2026-10-04 원문 확인. 200개 프로필 중 A만 복구하려는 저장 선택을 다섯 필드와 대체 이력에 적용"
+    },
+],
   "ai/engineering-lessons-ledger": [
     { kind: "공식 가이드", label: "Google SRE Workbook — Postmortem Culture", href: "https://sre.google/workbook/postmortem-culture/", note: "Blameless incident analysis, complete data, measurable preventive action·owner·review" },
     { kind: "프로젝트 실측", label: "Derived empty state guardrail fixture", note: "Scope·exception·test·revisit가 있는 provisional lesson 예시이며 모든 AI output에 적용하는 보편 rule은 아님" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "engineering-lessons-ledger — 확인한 원문",
+      "href": "https://sre.google/sre-book/postmortem-culture/",
+      "note": "2026-10-04 원문 확인. 12개 손실 사건과 4검사 행동 규칙을 분리하고 담당자·재검토 조건에 연결"
+    },
+],
   "ai/openclaw-assistant": [
     {
       kind: "공식 문서",
@@ -3807,6 +3855,42 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "vLLM — Metrics design (prefix_cache_queries · prefix_cache_hits)",
       href: "https://docs.vllm.ai/en/latest/design/metrics/",
       note: "token 단위 query·hit counter와 최근 1k query 구간 hit rate 정의",
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Hash and block design",
+      "href": "https://docs.vllm.ai/en/v0.27.1/design/prefix_caching/",
+      "note": "2026-10-04 고정 원문 확인. sha256 기본·salt·full-block 기본 모형과 코드의 확장 구분"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "§4 and §6",
+      "href": "https://arxiv.org/abs/2309.06180",
+      "note": "2026-10-04 고정 원문 확인. 주소 indirection과 fork/beam 공유, 측정 범위 제한"
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "§3.1 / Theorem 3.1",
+      "href": "https://papers.nips.cc/paper_files/paper/2024/file/724be4472168f31ba1c9ac630f15dec8-Paper-Conference.pdf",
+      "note": "2026-10-04 고정 원문 확인. A/B 앞32 prefix의 다른 표현과 offline 가정"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vLLM v0.27.1 실제 원문 · block_pool.py",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/block_pool.py",
+      "note": "2026-10-04 고정 원문 확인. ref=2→1→0와 free/hash eviction 차이"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vLLM v0.27.1 실제 원문 · kv_cache_utils.py",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/kv_cache_utils.py",
+      "note": "2026-10-04 고정 원문 확인. 32-token prefix의 chain hash와 첫 parent 초기화"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vLLM v0.27.1 실제 원문 · single_type_kv_cache_manager.py",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/single_type_kv_cache_manager.py",
+      "note": "2026-10-04 고정 원문 확인. 35→38→49의 수요 및 partial-hit CoW 추가 ref"
     },
 ],
   "ai/vllm-spec-decode": [
@@ -5255,7 +5339,19 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/aave-v3": [
     { kind: "공식 코드", label: "Aave DAO aave-v3-origin @ cff15de6d127", href: "https://github.com/aave-dao/aave-v3-origin/tree/cff15de6d1271b0c800fc001f4aea4c263e8a597", note: "V3.1–3.x Pool·reserve index·rate·HF·liquidation·mode source snapshot" },
     { kind: "공식 문서", label: "Aave V3 introduction", href: "https://aave.com/help/aave-101/introduction-to-aave", note: "공급·aToken·utilization·overcollateralized borrow·liquidation의 공식 사용자 경계" },
-  ],
+    {
+      "kind": "보충 읽기",
+      "label": "Aave Origin cff15de6 · TokenMath floor/ceil accounting",
+      "href": "https://github.com/aave-dao/aave-v3-origin/blob/cff15de6d1271b0c800fc001f4aea4c263e8a597/src/contracts/protocol/libraries/helpers/TokenMath.sol",
+      "note": "getATokenBalance의내림과getVTokenBalance의올림을1050·7560사례와대조합니다."
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Aave Origin cff15de6 · MathUtils actual return",
+      "href": "https://github.com/aave-dao/aave-v3-origin/blob/cff15de6d1271b0c800fc001f4aea4c263e8a597/src/contracts/protocol/libraries/math/MathUtils.sol",
+      "note": "79–83행의실제3차반환식을ray정수로검산합니다.주석의binomial표현을정확한지수계산으로해석하지않습니다."
+    },
+],
   "blockchain/compound-v3": [
     { kind: "공식 코드", label: "Compound Finance Comet @ f766f51583c2", href: "https://github.com/compound-finance/comet/tree/f766f51583c23acc33b2a7824654ef2029a96804", note: "Signed principal·indexes·rate curves·factors·absorb·collateral sale source snapshot" },
     { kind: "공식 문서", label: "Compound III documentation", href: "https://docs.compound.finance/", note: "Deployment artifact·single-base market·proxy integration의 공식 기준" },
@@ -8291,9 +8387,9 @@ export const ARTICLE_EVIDENCE: Readonly<
   "semiconductors/lithography-and-resolution": [
     {
       "kind": "공식 문서",
-      "label": "ASML, ‘How microchips are made’, 공정 단계",
-      "href": "https://www.asml.com/en/technology/all-about-microchips/how-microchips-are-made",
-      "note": "감광막·노광·현상·식각의 순서를 확인했다."
+      "label": "ASML, Six crucial steps in semiconductor manufacturing",
+      "href": "https://www.asml.com/en/company/stories/2021/semiconductor-manufacturing-process-steps",
+      "note": "Photoresist coating·Lithography·Etch 절에서 기록·현상·아래 층 가공을 구분했다. 본문 치수는 가정이다."
     },
     {
       "kind": "공식 문서",
@@ -9685,7 +9781,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "Shor · Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms",
       "href": "https://arxiv.org/abs/quant-ph/9508027",
       "note": "15·밑2·첫 공간256에서 주기4와 측정64, 최대공약수3·5를 연결한 교육용 계산입니다."
-    }, {"kind": "공식 문서", "label": "Babbush 외 · 2026 ECDLP 자원 추정", "href": "https://arxiv.org/abs/2603.28846", "note": "2026-10-04 확인. §II.2의 논리·물리 자원 가정을 대조합니다. 공개 HTML 표시 날짜와 버전 표기가 달라 추정 수치·절을 함께 명시합니다."}, {"kind": "공식 문서", "label": "IBM Quantum Learning · Grover introduction", "href": "https://quantum.cloud.ibm.com/learning/en/courses/fundamentals-of-quantum-algorithms/grover-algorithm/introduction", "note": "공식 강의의 제곱근 질의 개선과 실제 장치 비용 구별. 본문을 읽었으며 연결된 동영상 전체 시청을 주장하지 않습니다."}, {"kind": "공식 문서", "label": "NIST · Post-Quantum Cryptography", "href": "https://csrc.nist.gov/Projects/Post-Quantum-Cryptography", "note": "2026-10-04 확인. 표준화 상태는 최종 FIPS와 후보 선정·표준 작성 중인 상태를 나눠 읽습니다."}],
+    }, {"kind": "공식 문서", "label": "Babbush 외 · 2026 ECDLP 자원 추정 · v2", "href": "https://arxiv.org/abs/2603.28846v2", "note": "2026-04-15 수정 v2를 2026-10-04 확인. §II.2의 논리·물리 자원 조건을 대조합니다. v2는 검증 자료의 ZKP 건전성에 영향을 주던 소프트웨어 오류를 수정했습니다."}, {"kind": "공식 문서", "label": "IBM Quantum Learning · Grover introduction", "href": "https://quantum.cloud.ibm.com/learning/en/courses/fundamentals-of-quantum-algorithms/grover-algorithm/introduction", "note": "공식 강의의 제곱근 질의 개선과 실제 장치 비용 구별. 본문을 읽었으며 연결된 동영상 전체 시청을 주장하지 않습니다."}, {"kind": "공식 문서", "label": "NIST · Post-Quantum Cryptography", "href": "https://csrc.nist.gov/Projects/Post-Quantum-Cryptography", "note": "2026-10-04 확인. 표준화 상태는 최종 FIPS와 후보 선정·표준 작성 중인 상태를 나눠 읽습니다."}],
   "crypto/ml-kem-and-noisy-equations": [{"kind": "공식 문서", "label": "FIPS 203 · Algorithm 18, Tables 2–3", "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf", "note": "2024 최종 표준 §6·8. 2025-11-17 errata 안내가 있으므로 구현 시 최신 정정표도 확인합니다."}, {"kind": "공식 문서", "label": "PQClean · ML-KEM-768 kem.c · 0586a824", "href": "https://github.com/PQClean/PQClean/blob/0586a824fc0d49df0b6b6e9179d8d15d06d0974f/crypto_kem/ml-kem-768/clean/kem.c", "note": "136–163행의 원문 바이트와 라이선스를 코드 패널에 보존했습니다. 본문 사례의 작은 수는 이 코드의 파라미터가 아닙니다."}, {"kind": "공식 문서", "label": "NIST SP 800-227 · Recommendations for KEMs", "href": "https://csrc.nist.gov/pubs/sp/800/227/final", "note": "2025-09-18 최종 권고. KEM의 기능과 이를 통신 프로토콜에 조합할 때 필요한 검사를 읽습니다."}, {"kind": "공식 문서", "label": "FIPS 203 최종본·정정 안내", "href": "https://csrc.nist.gov/pubs/fips/203/final", "note": "2026-10-04 확인. 정정표 파일은 접근 제한으로 직접 읽지 못했으며 정정 내용을 추측하지 않습니다."}],
   "crypto/post-quantum-signatures": [{"kind": "공식 문서", "label": "FIPS 204 · Algorithms 7–8, Table 2", "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.204.pdf", "note": "ML-DSA 최종 표준. 서명·검증, domain context와 key/signature 크기를 대조합니다."}, {"kind": "공식 문서", "label": "PQClean · ML-DSA-44 sign.c · 0586a824", "href": "https://github.com/PQClean/PQClean/blob/0586a824fc0d49df0b6b6e9179d8d15d06d0974f/crypto_sign/ml-dsa-44/clean/sign.c", "note": "135–194행 생성과265–328행 검증을 보존했습니다. 난수·인코딩·일치 검사의 실제 순서를 읽습니다."}, {"kind": "공식 문서", "label": "FIPS 205 · §6–10와 Table 2", "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.205.pdf", "note": "SLH-DSA 최종 표준. WOTS+·FORS·hypertree의 역할과12개 파라미터 묶음의 크기를 확인합니다."}, {"kind": "공식 문서", "label": "NIST PQC · 최신 표준화 상태", "href": "https://csrc.nist.gov/Projects/Post-Quantum-Cryptography", "note": "2026-10-04 확인. FIPS203·204·205와 후속 Falcon·HQC 표준화 상태를 구분합니다."}, {"kind": "공식 문서", "label": "FIPS 204 · 최신 정정 안내", "href": "https://csrc.nist.gov/pubs/fips/204/final", "note": "2026-07-31 정정 예정 항목 안내가 추가됐습니다. 정정표 파일은 접근 제한으로 직접 열지 못했으며 구체 정정 내용을 추정하지 않습니다."}],
   "crypto/quantum-key-distribution": [

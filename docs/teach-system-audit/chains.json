@@ -44,7 +44,7 @@
     {
       "route": "blockchain/aave-v3",
       "title": "Aave V3: utilization·index·health·liquidation",
-      "status": "rewritten-awaiting-global-integration",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/aave-v3.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/aave-v3.tsx",
@@ -142,12 +142,10 @@
         "formula": "global strict missing0 /tmp/teach-all/chains-formula-final.log",
         "typecheck": "/tmp/teach-all/chains-tsc-6.log tsc-b PASS",
         "viz": "exactModernAaveVizstrictPASS",
-        "execution": "Source reading and independent arithmetic only, not actualEVM Pool execution"
+        "execution": "Source reading and independent arithmetic only, not actualEVM Pool execution",
+        "learning": "/tmp/teach-all/chains-learning-aave.log strict registered 6+4 passed after parent integration"
       },
-      "remaining": [
-        "root learning/TOC/evidence integration and strict learning audit",
-        "global build and publication"
-      ]
+      "remaining": []
     },
     {
       "route": "blockchain/autobahn-deep",
@@ -1602,7 +1600,7 @@
     {
       "route": "blockchain/ethereum-future-roadmap",
       "title": "Ethereum 로드맵: 제안·시험·메인넷 적용 구분",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/ethereum-future-roadmap.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/ethereum-future-roadmap.tsx",
@@ -1630,19 +1628,37 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "2026-10-04 review date versus Sepolia epoch353024/time1791294816 =2026-10-06T13:53:36Z; blank Mainnet/Hoodi dates; stagesCFI/DFI/SFI/Included",
+        "assumption": "Small amounts/trades/throughput are stated educational assumptions; current dates/config and product restrictions sourced separately."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: purpose and outcome before jargon",
+        "B": "black-box: named participants kept opaque before internals",
+        "0": "case: concrete fixture above",
+        "1": "picture: same objects and values in role flow",
+        "2": "need: actual failure when roles omitted",
+        "3/4": "names separates EIP status from upgrade scheduling; mechanism follows same planned Sepolia event to release/config/activation checks; source applies exact7773/8081 statuses",
+        "5/6": "Official EIP7773 Review and8081 Draft metadata reread,7732/7928 scheduledforGlam;Hegota7805/8141SFI,8025PFI,Q22027expectation. EIP7723 scheduling stages differ from EIP lifecycle.",
+        "7": "formal-simplification: metadata recommendation not activation; future date not completed test; roadmap not benchmark; predictionanswers8/6/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Official EIP7773 Review and8081 Draft metadata reread,7732/7928 scheduledforGlam;Hegota7805/8141SFI,8025PFI,Q22027expectation. EIP7723 scheduling stages differ from EIP lifecycle.",
+          "application": "names separates EIP status from upgrade scheduling; mechanism follows same planned Sepolia event to release/config/activation checks; source applies exact7773/8081 statuses"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Complete original rendered baseline and source TSX read for all7. Decision uses same-case teaching progression and actual source application, not tags. Existing substantive explanation retained.",
+        "arithmetic": "/tmp/teach-all/chains-web3-arithmetic.json:33 independent Decimal/integer checks; no chain/SDK/verifier execution or benchmark.",
+        "source": "Official EIP7773 Review and8081 Draft metadata reread,7732/7928 scheduledforGlam;Hegota7805/8141SFI,8025PFI,Q22027expectation. EIP7723 scheduling stages differ from EIP lifecycle. Pinned13files SHA256 exactly officialGitHub: /tmp/teach-all/chains-web3-source-hashes.json.",
+        "learning": "/tmp/teach-all/chains-learning-web3.log strict registered6+4 all7passed; questions/answersections manually read.",
+        "humanize": "/tmp/teach-all/humanize-web3-final/ethereum-future-roadmap/gate.txt: gate0; actualextract/roundtrip/prepare/gate/apply; numbers and markers preserved.",
+        "browser390": "output/playwright/teach-chains-web3/summary.json:7routes×2widths=14loads,38sourcepanelsopened;pageoverflow/narrowtext/KaTeX/brokenanchors/runtime0. Static FlowRail has no article interaction states.",
+        "browser1440": "Same14-load report;38codepanelchecks. Shared conceptual map zero statebuttons not counted as interactive coverage."
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation-with-prose-and-source-panel-corrections"
     },
     {
       "route": "blockchain/evm-advanced",
@@ -2195,7 +2211,7 @@
     {
       "route": "blockchain/glamsterdam-block-execution",
       "title": "Glamsterdam: ePBS와 블록 접근 목록의 실행 경로",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/glamsterdam-block-execution.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/glamsterdam-block-execution.tsx",
@@ -2223,19 +2239,37 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "X100,T1−10→90,T2+5→95;stale parallel105;BALindex0pre,1/2tx,3post;bid.01ETH=10000000Gwei",
+        "assumption": "Small amounts/trades/throughput are stated educational assumptions; current dates/config and product restrictions sourced separately."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: purpose and outcome before jargon",
+        "B": "black-box: named participants kept opaque before internals",
+        "0": "case: concrete fixture above",
+        "1": "picture: same objects and values in role flow",
+        "2": "need: actual failure when roles omitted",
+        "3/4": "names introduces BAL/ePBS only after two writers;mechanism maps exact90/95 records andbid value;source separates signedbid/envelope from execution-builtBALhash",
+        "5/6": "Consensus889a389 Gloas containers747–794 andbid2103–2156;executiona87891f Amsterdamfork326–365/BAL30–56 original regions reread. Development commit not deployedfork assertion.",
+        "7": "limits: sharedstate dependency, hiddenfee writes, withholding, bandwidth not measuredspeed; executable95 validation distinctfrombidpayment; predictionsanswer7/8/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Consensus889a389 Gloas containers747–794 andbid2103–2156;executiona87891f Amsterdamfork326–365/BAL30–56 original regions reread. Development commit not deployedfork assertion.",
+          "application": "names introduces BAL/ePBS only after two writers;mechanism maps exact90/95 records andbid value;source separates signedbid/envelope from execution-builtBALhash"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Complete original rendered baseline and source TSX read for all7. Decision uses same-case teaching progression and actual source application, not tags. Existing substantive explanation retained.",
+        "arithmetic": "/tmp/teach-all/chains-web3-arithmetic.json:33 independent Decimal/integer checks; no chain/SDK/verifier execution or benchmark.",
+        "source": "Consensus889a389 Gloas containers747–794 andbid2103–2156;executiona87891f Amsterdamfork326–365/BAL30–56 original regions reread. Development commit not deployedfork assertion. Pinned13files SHA256 exactly officialGitHub: /tmp/teach-all/chains-web3-source-hashes.json.",
+        "learning": "/tmp/teach-all/chains-learning-web3.log strict registered6+4 all7passed; questions/answersections manually read.",
+        "humanize": "/tmp/teach-all/humanize-web3-final/glamsterdam-block-execution/gate-pass2.txt: gate0; redundant connective commas removed, final applied text independently re-extracted and exact-matched.",
+        "browser390": "output/playwright/teach-chains-web3/summary.json:7routes×2widths=14loads,38sourcepanelsopened;pageoverflow/narrowtext/KaTeX/brokenanchors/runtime0. Static FlowRail has no article interaction states.",
+        "browser1440": "Same14-load report;38codepanelchecks. Shared conceptual map zero statebuttons not counted as interactive coverage."
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation-with-prose-and-source-panel-corrections"
     },
     {
       "route": "blockchain/gossipbft",
@@ -2670,7 +2704,7 @@
     {
       "route": "blockchain/hyperliquid",
       "title": "Hyperliquid: 주문·담보·HIP-3·HIP-4·자금 이동",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/hyperliquid.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/hyperliquid.tsx",
@@ -2697,19 +2731,37 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "1000 collateral, .1 BTC at50000, .04 taker fee.90+.06 maker fee.45;998.65−700−20=278.65; below300 maintenance above200 backstop; HIP4 Yes100×.60=60 pays100/0",
+        "assumption": "Small amounts/trades/throughput are stated educational assumptions; current dates/config and product restrictions sourced separately."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: purpose and outcome before jargon",
+        "B": "black-box: named participants kept opaque before internals",
+        "0": "case: concrete fixture above",
+        "1": "picture: same objects and values in role flow",
+        "2": "need: actual failure when roles omitted",
+        "3/4": "order-lifecycle names order/mark/funding after story; mechanism traces maker+taker fills and margin; source matches same quantity to API encoded size and shows SDK example has different ETH.2@1100 assumptions",
+        "5/6": "SDK2fdb18f exchange140–189/signing505–527/basic_order22–38 read; official fee/liquidation/HIP3/HIP4/USDC docs reread. HIP4 mainnet overview versus Testnet-only deployment API preserved.",
+        "7": "risk-checklist: no exchange execution/internal engine claim; API success not fill; HIP3 stake burned not compensation; HIP4 no leverage does not ensure profit; questions answer7/8/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "SDK2fdb18f exchange140–189/signing505–527/basic_order22–38 read; official fee/liquidation/HIP3/HIP4/USDC docs reread. HIP4 mainnet overview versus Testnet-only deployment API preserved.",
+          "application": "order-lifecycle names order/mark/funding after story; mechanism traces maker+taker fills and margin; source matches same quantity to API encoded size and shows SDK example has different ETH.2@1100 assumptions"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Complete original rendered baseline and source TSX read for all7. Decision uses same-case teaching progression and actual source application, not tags. Existing substantive explanation retained.",
+        "arithmetic": "/tmp/teach-all/chains-web3-arithmetic.json:33 independent Decimal/integer checks; no chain/SDK/verifier execution or benchmark.",
+        "source": "SDK2fdb18f exchange140–189/signing505–527/basic_order22–38 read; official fee/liquidation/HIP3/HIP4/USDC docs reread. HIP4 mainnet overview versus Testnet-only deployment API preserved. Pinned13files SHA256 exactly officialGitHub: /tmp/teach-all/chains-web3-source-hashes.json.",
+        "learning": "/tmp/teach-all/chains-learning-web3.log strict registered6+4 all7passed; questions/answersections manually read.",
+        "humanize": "/tmp/teach-all/humanize-web3-final/hyperliquid/gate.txt: gate0; actualextract/roundtrip/prepare/gate/apply; numbers and markers preserved.",
+        "browser390": "output/playwright/teach-chains-web3/summary.json:7routes×2widths=14loads,38sourcepanelsopened;pageoverflow/narrowtext/KaTeX/brokenanchors/runtime0. Static FlowRail has no article interaction states.",
+        "browser1440": "Same14-load report;38codepanelchecks. Shared conceptual map zero statebuttons not counted as interactive coverage."
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation-with-prose-and-source-panel-corrections"
     },
     {
       "route": "blockchain/impl-elliptic-curve",
@@ -3641,7 +3693,7 @@
     {
       "route": "blockchain/pq-account",
       "title": "양자내성 계정: 송금·검증·nonce·복구 이전",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/pq-account.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/pq-account.tsx",
@@ -3670,19 +3722,38 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "A1ETH,B0,deposit.02,key0seq7 send.1,prefund.003,100000gas×10Gwei=.001;A.9/B.1/deposit.019,seq8;MLDSA44sig2420−ECDSA65=2355bytes",
+        "assumption": "Small amounts/trades/throughput are stated educational assumptions; current dates/config and product restrictions sourced separately."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: purpose and outcome before jargon",
+        "B": "black-box: named participants kept opaque before internals",
+        "0": "case: concrete fixture above",
+        "1": "picture: same objects and values in role flow",
+        "2": "need: actual failure when roles omitted",
+        "3/4": "account-abstraction-validation traces same nonce7/signature/call/prefund;source maps fields/hash/validateUserOp/nonceManager/handleOps/call failure/refund to exactcase. ml-dsa-signature-boundary carries sameoperation into algorithms/context/ownerbypass analysis",
+        "5/6": "account-abstraction1c6b669 5fullSolidity files originalregions readandbytecompared;handleOpsvalidation annotationcorrected86→85. NISTFIPS204sizes andCSWP39upd1 supersedes2025/current20260629 read;SimpleAccount actualECDSA notPQverifier.",
+        "7": "migration-release: validation-revert versus execution-fail; existingowner/upgrade alternatepaths;pure/prehash/context/downgrade;AND/ORpolicy; no compiled/onchainMLDSA claim;predictionsanswer7/8/10"
+      },
+      "sourceEvidence": [
+        {
+          "source": "account-abstraction1c6b669 5fullSolidity files originalregions readandbytecompared;handleOpsvalidation annotationcorrected86→85. NISTFIPS204sizes andCSWP39upd1 supersedes2025/current20260629 read;SimpleAccount actualECDSA notPQverifier.",
+          "application": "account-abstraction-validation traces same nonce7/signature/call/prefund;source maps fields/hash/validateUserOp/nonceManager/handleOps/call failure/refund to exactcase. ml-dsa-signature-boundary carries sameoperation into algorithms/context/ownerbypass analysis"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Complete original rendered baseline and source TSX read for all7. Decision uses same-case teaching progression and actual source application, not tags. Existing substantive explanation retained.",
+        "arithmetic": "/tmp/teach-all/chains-web3-arithmetic.json:33 independent Decimal/integer checks; no chain/SDK/verifier execution or benchmark.",
+        "source": "account-abstraction1c6b669 5fullSolidity files originalregions readandbytecompared;handleOpsvalidation annotationcorrected86→85. NISTFIPS204sizes andCSWP39upd1 supersedes2025/current20260629 read;SimpleAccount actualECDSA notPQverifier. Pinned13files SHA256 exactly officialGitHub: /tmp/teach-all/chains-web3-source-hashes.json.",
+        "learning": "/tmp/teach-all/chains-learning-web3.log strict registered6+4 all7passed; questions/answersections manually read.",
+        "humanize": "/tmp/teach-all/humanize-web3-final/pq-account/gate.txt: gate0; actualextract/roundtrip/prepare/gate/apply; numbers and markers preserved.",
+        "browser390": "output/playwright/teach-chains-web3/summary.json:7routes×2widths=14loads,38sourcepanelsopened;pageoverflow/narrowtext/KaTeX/brokenanchors/runtime0. Static FlowRail has no article interaction states.",
+        "browser1440": "Same14-load report;38codepanelchecks. Shared conceptual map zero statebuttons not counted as interactive coverage.",
+        "sourcePanel": "/tmp/teach-all/chains-pq-solidity-panel.json: actual Solidity UserOperationLib 232rows; packed type string preserved;53commentspans;390/1440 screenshots inspected. All8panels×2widths already opened in batch browser."
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation-with-prose-and-source-panel-corrections"
     },
     {
       "route": "blockchain/proofs-porep",
@@ -5500,7 +5571,7 @@
     {
       "route": "blockchain/robinhood-chain-blob-demand",
       "title": "Robinhood Chain과 블롭 수요: 평균·기여·BPO 회계",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/robinhood-chain-blob-demand.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/robinhood-chain-blob-demand.tsx",
@@ -5527,24 +5598,42 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "4 blocks 18/10/6/6, A contributes14/2/2/2: average10, A share50%, first share77.78%; target14,max21; normal excess0→4→0→0→0; sparse fraction.25625",
+        "assumption": "Small amounts/trades/throughput are stated educational assumptions; current dates/config and product restrictions sourced separately."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: purpose and outcome before jargon",
+        "B": "black-box: named participants kept opaque before internals",
+        "0": "case: concrete fixture above",
+        "1": "picture: same objects and values in role flow",
+        "2": "need: actual failure when roles omitted",
+        "3/4": "target-vs-average defines current gas/count units after case; robinhood-chain-concentration follows same first18 and total40; bpo-sparse-blobpool applies .15+.85/8 to same18",
+        "5/6": "geth c9a2bc7 config41–75 &350–373 mainnetBPO2 schedule/target14/max21. EIP7918 condition/first-block6 blob-gas units and EIP8070 Review current text read; finality/activation not inferred from default definitions.",
+        "7": "reading-checklist: no RPC data collected; hypothetical totals not actual Robinhood demand; average cannot exclude first-blockcongestion; predictions answer7/8/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "geth c9a2bc7 config41–75 &350–373 mainnetBPO2 schedule/target14/max21. EIP7918 condition/first-block6 blob-gas units and EIP8070 Review current text read; finality/activation not inferred from default definitions.",
+          "application": "target-vs-average defines current gas/count units after case; robinhood-chain-concentration follows same first18 and total40; bpo-sparse-blobpool applies .15+.85/8 to same18"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Complete original rendered baseline and source TSX read for all7. Decision uses same-case teaching progression and actual source application, not tags. Existing substantive explanation retained.",
+        "arithmetic": "/tmp/teach-all/chains-web3-arithmetic.json:33 independent Decimal/integer checks; no chain/SDK/verifier execution or benchmark.",
+        "source": "geth c9a2bc7 config41–75 &350–373 mainnetBPO2 schedule/target14/max21. EIP7918 condition/first-block6 blob-gas units and EIP8070 Review current text read; finality/activation not inferred from default definitions. Pinned13files SHA256 exactly officialGitHub: /tmp/teach-all/chains-web3-source-hashes.json.",
+        "learning": "/tmp/teach-all/chains-learning-web3.log strict registered6+4 all7passed; questions/answersections manually read.",
+        "humanize": "/tmp/teach-all/humanize-web3-final/robinhood-chain-blob-demand/gate.txt: gate1 math14) falsefootnote; parent independent-finalize.md approves onecommachange; notautomaticPASS.",
+        "browser390": "output/playwright/teach-chains-web3/summary.json:7routes×2widths=14loads,38sourcepanelsopened;pageoverflow/narrowtext/KaTeX/brokenanchors/runtime0. Static FlowRail has no article interaction states.",
+        "browser1440": "Same14-load report;38codepanelchecks. Shared conceptual map zero statebuttons not counted as interactive coverage."
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation-with-prose-and-source-panel-corrections"
     },
     {
       "route": "blockchain/robinhood-chain-settlement",
       "title": "Robinhood Chain: 전송 확정·브리지 인출·Stock Token 권리",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/robinhood-chain-settlement.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/robinhood-chain-settlement.tsx",
@@ -5572,19 +5661,37 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "TOK18decimals A100→90/B0→10;Bwithdraw5→B5,pending5→L1B5,ETH gas separate",
+        "assumption": "Small amounts/trades/throughput are stated educational assumptions; current dates/config and product restrictions sourced separately."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: purpose and outcome before jargon",
+        "B": "black-box: named participants kept opaque before internals",
+        "0": "case: concrete fixture above",
+        "1": "picture: same objects and values in role flow",
+        "2": "need: actual failure when roles omitted",
+        "3/4": "names explains sequencer/L1/bridge after case; mechanism follows same transfer across soft/posted/final then withdrawal. Source SDKstatus UNCONFIRMED/CONFIRMED/EXECUTED andexecute guard applied to pending5",
+        "5/6": "Robinhoodconnecting main4663/test46630;transaction-finality subsecond/minutes/~13min andbridging7daychallenge+separateretryable7days reread. Arbitrum SDKcbb96c6 status241–249/execute774–806 read. StockToken debtsecurity/uiMultiplier/AP rights reread.",
+        "7": "limits: TOK withdrawal not asserted supported forStockToken; SDKsnapshot not deployedbytecode; gas/address/rights differ; predictionsanswer7/8/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Robinhoodconnecting main4663/test46630;transaction-finality subsecond/minutes/~13min andbridging7daychallenge+separateretryable7days reread. Arbitrum SDKcbb96c6 status241–249/execute774–806 read. StockToken debtsecurity/uiMultiplier/AP rights reread.",
+          "application": "names explains sequencer/L1/bridge after case; mechanism follows same transfer across soft/posted/final then withdrawal. Source SDKstatus UNCONFIRMED/CONFIRMED/EXECUTED andexecute guard applied to pending5"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Complete original rendered baseline and source TSX read for all7. Decision uses same-case teaching progression and actual source application, not tags. Existing substantive explanation retained.",
+        "arithmetic": "/tmp/teach-all/chains-web3-arithmetic.json:33 independent Decimal/integer checks; no chain/SDK/verifier execution or benchmark.",
+        "source": "Robinhoodconnecting main4663/test46630;transaction-finality subsecond/minutes/~13min andbridging7daychallenge+separateretryable7days reread. Arbitrum SDKcbb96c6 status241–249/execute774–806 read. StockToken debtsecurity/uiMultiplier/AP rights reread. Pinned13files SHA256 exactly officialGitHub: /tmp/teach-all/chains-web3-source-hashes.json.",
+        "learning": "/tmp/teach-all/chains-learning-web3.log strict registered6+4 all7passed; questions/answersections manually read.",
+        "humanize": "/tmp/teach-all/humanize-web3-final/robinhood-chain-settlement/gate.txt: gate0; actualextract/roundtrip/prepare/gate/apply; numbers and markers preserved.",
+        "browser390": "output/playwright/teach-chains-web3/summary.json:7routes×2widths=14loads,38sourcepanelsopened;pageoverflow/narrowtext/KaTeX/brokenanchors/runtime0. Static FlowRail has no article interaction states.",
+        "browser1440": "Same14-load report;38codepanelchecks. Shared conceptual map zero statebuttons not counted as interactive coverage."
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation-with-prose-and-source-panel-corrections"
     },
     {
       "route": "blockchain/rollup-fundamentals",
@@ -5664,7 +5771,7 @@
     {
       "route": "blockchain/rwa-composition",
       "title": "기관 토큰화: BUIDL의 권리·평가·매매·현금 회수",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/rwa-composition.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/rwa-composition.tsx",
@@ -5692,19 +5799,37 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "fictional assets105−liabilities3=NAV102,100shares→1.02;A10claim10.20quote10.15;20% haircut→81.60 assumed lendingvalue",
+        "assumption": "Small amounts/trades/throughput are stated educational assumptions; current dates/config and product restrictions sourced separately."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: purpose and outcome before jargon",
+        "B": "black-box: named participants kept opaque before internals",
+        "0": "case: concrete fixture above",
+        "1": "picture: same objects and values in role flow",
+        "2": "need: actual failure when roles omitted",
+        "3/4": "claim-asset-map names claim/control/NAV after cashflows; token-cashflow-control follows same10units into permissionedRFQ and10.15USDC; source ties actual BUIDL custody/transfer-agent roles and Circle secondarymarket distinction",
+        "5/6": "Securitize2024-03-20launch,Uniswap2026-02-11BUIDL liquidity,Circle2024-04-11offramp andUSDC redemption docs all reread; original quote whitelisted applied to A10. Launch minimum5million scopedhistorical.",
+        "7": "rwa-release: toyNAV not BUIDL floatingNAV; bankUSD independent of tokenreceipt; quote/eligibility not guaranteed;haircutnotautomaticloan;questionsanswer7/8/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Securitize2024-03-20launch,Uniswap2026-02-11BUIDL liquidity,Circle2024-04-11offramp andUSDC redemption docs all reread; original quote whitelisted applied to A10. Launch minimum5million scopedhistorical.",
+          "application": "claim-asset-map names claim/control/NAV after cashflows; token-cashflow-control follows same10units into permissionedRFQ and10.15USDC; source ties actual BUIDL custody/transfer-agent roles and Circle secondarymarket distinction"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Complete original rendered baseline and source TSX read for all7. Decision uses same-case teaching progression and actual source application, not tags. Existing substantive explanation retained.",
+        "arithmetic": "/tmp/teach-all/chains-web3-arithmetic.json:33 independent Decimal/integer checks; no chain/SDK/verifier execution or benchmark.",
+        "source": "Securitize2024-03-20launch,Uniswap2026-02-11BUIDL liquidity,Circle2024-04-11offramp andUSDC redemption docs all reread; original quote whitelisted applied to A10. Launch minimum5million scopedhistorical. Pinned13files SHA256 exactly officialGitHub: /tmp/teach-all/chains-web3-source-hashes.json.",
+        "learning": "/tmp/teach-all/chains-learning-web3.log strict registered6+4 all7passed; questions/answersections manually read.",
+        "humanize": "/tmp/teach-all/humanize-web3-final/rwa-composition/gate.txt: gate0; actualextract/roundtrip/prepare/gate/apply; numbers and markers preserved.",
+        "browser390": "output/playwright/teach-chains-web3/summary.json:7routes×2widths=14loads,38sourcepanelsopened;pageoverflow/narrowtext/KaTeX/brokenanchors/runtime0. Static FlowRail has no article interaction states.",
+        "browser1440": "Same14-load report;38codepanelchecks. Shared conceptual map zero statebuttons not counted as interactive coverage."
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation-with-prose-and-source-panel-corrections"
     },
     {
       "route": "blockchain/smr-theory",
@@ -6281,7 +6406,7 @@
     {
       "route": "crypto/constraint-systems",
       "title": "R1CS와 QAP",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/constraint-systems.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/ZkCaseDiagram.tsx",
@@ -6308,19 +6433,38 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "F17 z=(1,3,16,4,12);rows3*4−12=0,(12+4)*1−16=0;bad y15 gives residual1;QAP quotient12",
+        "assumption": "All small numbers/hardware budgets explicitly educational, not benchmark or cryptographic deployment."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: reason and outcome before terms",
+        "B": "black-box: actors and messages as opaque roles",
+        "0": "case: numeric fixture",
+        "1": "picture: same values in nameless role diagram",
+        "2": "need: concrete failure requiring each role",
+        "3": "names: terminology mapped to known roles",
+        "4": "mechanism: actual A/B/C coefficient rows select same z;bit b(b−1)=0 and omitted-row counterexample",
+        "5/6": "source: Pinocchio §2.2.1 Definition2: A13X+7,B−3X+7,C4X+8;AB−C=12(X−1)(X−2); Nova Z=(W,x,1) reordered explicitly",
+        "7": "limits: constraint encoding does not provide secrecy;range/public-input/rule omission; questions7/8/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Pinocchio author CMU PDFp3 freshly downloaded/read, exact divisibility; Nova original Definition10 recorded in existing source review",
+          "application": "source: Pinocchio §2.2.1 Definition2: A13X+7,B−3X+7,C4X+8;AB−C=12(X−1)(X−2); Nova Z=(W,x,1) reordered explicitly"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read complete baseline actual body all9; inspected source-containing TSX and actual Jolt originals. Pass is based on connected case and source application, not section tags.",
+        "arithmetic": "/tmp/zk-arithmetic-check.py rerun29checks passed; /tmp/zk-arithmetic-results.json; not compiled prover execution",
+        "learning": "/tmp/teach-all/chains-learning-zk.log registered strict6+4 all9 passed; predictions and actual answer locations read",
+        "source": "Pinocchio author CMU PDFp3 freshly downloaded/read, exact divisibility; Nova original Definition10 recorded in existing source review",
+        "humanize": "/tmp/teach-all/humanize-zk-final/constraint-systems/independent-finalize.md: automatic gate1 false footnote detection on unchanged text, parent independently reviewed and approved finalize; NOT automatic PASS; extraction/roundtrip/prepare applied; actual text unchanged",
+        "browser390": "output/playwright/teach-chains-zk/summary.json 9routes×2 widths, no page overflow/narrow text/KaTeX/broken same-page anchors/runtime errors; static diagram labels insideSVG; Jolt4panelsopened; polycommit390diagram visually inspected",
+        "browser1440": "same report and same checks; all4Joltpanelsopened; static diagrams have no article interaction states"
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation"
     },
     {
       "route": "crypto/crt",
@@ -6824,7 +6968,7 @@
     {
       "route": "crypto/fri",
       "title": "FRI (Fast Reed-Solomon IOP)",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/fri/index.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/ZkCaseDiagram.tsx",
@@ -6851,19 +6995,38 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "F17 f(4)=10,f(13)=11;β5 fold12 atT16;g=T+13;β3 secondfold16;independent sample27/64 versus repeatedposition3/4",
+        "assumption": "All small numbers/hardware budgets explicitly educational, not benchmark or cryptographic deployment."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: reason and outcome before terms",
+        "B": "black-box: actors and messages as opaque roles",
+        "0": "case: numeric fixture",
+        "1": "picture: same values in nameless role diagram",
+        "2": "need: concrete failure requiring each role",
+        "3": "names: terminology mapped to known roles",
+        "4": "mechanism: sum/difference isolate even/oddparts using inverse2/inverse8; characteristic2/zero excluded",
+        "5/6": "source: FRI §1 d<ρN appliedN16,ρ3/16,d2; WHIR constrained code examplef4+2f2=15",
+        "7": "limits: lowdegree not execution/secret,independent sampling not complete soundness;questions7/8/10"
+      },
+      "sourceEvidence": [
+        {
+          "source": "FRI official Dagstuhl PDFp2 definition freshly checked; WHIR official ePrint abstract/history confirms2024-11-21 and constrained codes; directPDF403 retained previous source review",
+          "application": "source: FRI §1 d<ρN appliedN16,ρ3/16,d2; WHIR constrained code examplef4+2f2=15"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read complete baseline actual body all9; inspected source-containing TSX and actual Jolt originals. Pass is based on connected case and source application, not section tags.",
+        "arithmetic": "/tmp/zk-arithmetic-check.py rerun29checks passed; /tmp/zk-arithmetic-results.json; not compiled prover execution",
+        "learning": "/tmp/teach-all/chains-learning-zk.log registered strict6+4 all9 passed; predictions and actual answer locations read",
+        "source": "FRI official Dagstuhl PDFp2 definition freshly checked; WHIR official ePrint abstract/history confirms2024-11-21 and constrained codes; directPDF403 retained previous source review",
+        "humanize": "/tmp/teach-all/humanize-zk-final/fri/gate.txt: gate0; extraction/roundtrip/prepare applied; actual text unchanged",
+        "browser390": "output/playwright/teach-chains-zk/summary.json 9routes×2 widths, no page overflow/narrow text/KaTeX/broken same-page anchors/runtime errors; static diagram labels insideSVG; Jolt4panelsopened; polycommit390diagram visually inspected",
+        "browser1440": "same report and same checks; all4Joltpanelsopened; static diagrams have no article interaction states"
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation"
     },
     {
       "route": "crypto/frobenius-optimization",
@@ -7055,7 +7218,7 @@
     {
       "route": "crypto/jolt",
       "title": "Jolt: 명령 실행과 메모리 읽기·쓰기의 증명",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/jolt.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/ZkCaseDiagram.tsx",
@@ -7082,19 +7245,38 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "memory[0,3,4,0]→[0,3,4,7];onehotread3,4/writedelta7;γ2 gives7+2*3+4*4=29",
+        "assumption": "All small numbers/hardware budgets explicitly educational, not benchmark or cryptographic deployment."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: reason and outcome before terms",
+        "B": "black-box: actors and messages as opaque roles",
+        "0": "case: numeric fixture",
+        "1": "picture: same values in nameless role diagram",
+        "2": "need: concrete failure requiring each role",
+        "3": "names: terminology mapped to known roles",
+        "4": "mechanism: same ADD3+4 execution,64bit wrapping and lookup representation; source distinguishes u128tableindex from registeraddress",
+        "5/6": "source: real tracer add17–25,lookup8–30,Twist36–54,verifier916–949; output7→8 changes absorbed public bytes",
+        "7": "limits:instructionalone not wholeprogram,alpha/RV64version,commitment+ZKconfiguration,measurement versusreading;questions10/9/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Jolt47130f3: four original source regions read and byte-compared to official GitHub commit; hashes in chains-jolt-source-hashes.json; no prover execution",
+          "application": "source: real tracer add17–25,lookup8–30,Twist36–54,verifier916–949; output7→8 changes absorbed public bytes"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read complete baseline actual body all9; inspected source-containing TSX and actual Jolt originals. Pass is based on connected case and source application, not section tags.",
+        "arithmetic": "/tmp/zk-arithmetic-check.py rerun29checks passed; /tmp/zk-arithmetic-results.json; not compiled prover execution",
+        "learning": "/tmp/teach-all/chains-learning-zk.log registered strict6+4 all9 passed; predictions and actual answer locations read",
+        "source": "Jolt47130f3: four original source regions read and byte-compared to official GitHub commit; hashes in chains-jolt-source-hashes.json; no prover execution",
+        "humanize": "/tmp/teach-all/humanize-zk-final/jolt/gate.txt: gate0; extraction/roundtrip/prepare applied; actual text unchanged",
+        "browser390": "output/playwright/teach-chains-zk/summary.json 9routes×2 widths, no page overflow/narrow text/KaTeX/broken same-page anchors/runtime errors; static diagram labels insideSVG; Jolt4panelsopened; polycommit390diagram visually inspected",
+        "browser1440": "same report and same checks; all4Joltpanelsopened; static diagrams have no article interaction states"
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation"
     },
     {
       "route": "crypto/karatsuba",
@@ -7212,7 +7394,7 @@
     {
       "route": "crypto/ml-kem-and-noisy-equations",
       "title": "ML-KEM: 오류를 섞은 계산에서 두 사람이 같은 비밀을 얻는 과정",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/crypto/ml-kem-and-noisy-equations.tsx",
       "bodyFiles": [
         "src/pages/articles/crypto/ml-kem-and-noisy-equations.tsx",
@@ -7239,19 +7421,54 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "t": [
+          9,
+          6
+        ],
+        "u": [
+          6,
+          5
+        ],
+        "v": 6,
+        "residual": 7,
+        "e2minus4": 3
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: practical reason before notation",
+        "B": "black-box: physical/computational roles before internal mechanics",
+        "0": "case: concrete numeric fixture explicitly assumed",
+        "1": "picture: unlabeled role diagram grounded in same fixture",
+        "2": "need: what breaks without each role",
+        "3": "names: actual terminology only after roles are visible",
+        "4": "mechanism: same mod17 t=[9,6],u=[6,5],v6, subtract16→7, residual−1; changing e2 to−4 decodes0",
+        "5/6": "source: PQClean kem.c146/150/153/155/158/161 follows decode,derive,reencrypt,compare,fallback,conditional copy; tiny arithmetic distinguished from real ML-KEM",
+        "7": "limits/comparison: NTT and compression; fixed buffer versus FIPS outer length validation; authentication,ephemeral deletion,hybrid negotiation; questions5/8/10"
+      },
+      "sourceEvidence": [
+        {
+          "source": "FIPS203 Algorithm18/Tables2–3;SP800227",
+          "application": "ML-KEM768 sizes1184/2400/1088/32; original decapsulation check explained against case."
+        },
+        {
+          "file": "crypto_kem/ml-kem-768/clean/kem.c",
+          "commit": "0586a824fc0d49df0b6b6e9179d8d15d06d0974f",
+          "sha256": "f5f3f5c8c7646479923b7a978fa963d894e020917fbe9135812691b15f21f010",
+          "matchesOfficial": true
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read complete rendered baseline and corresponding TSX, including source application and limits; no pass from tags or heading count. Existing explanation retained.",
+        "arithmetic": "/tmp/teach-all/chains-arithmetic-pq.json; independently computed examples; no quantum hardware or compiled PQClean execution",
+        "source": "Official pages and exact PQClean commit raw-file hashes rechecked; licensed copies retained.",
+        "learning": "/tmp/teach-all/chains-learning-pq.log strict registered 6+4 passed all4; section answers inspected",
+        "humanize": "/tmp/teach-all/humanize-pq-final/summary.json gate0 all4, actual extraction/unchanged round trip/prepare/final apply; string props and code annotations manually reviewed",
+        "browser390": "output/playwright/teach-chains-pq/summary.json no overflow/narrow prose/KaTeX/anchor/runtime errors; all3 C panels opened. Static NumericPath does not have interactive states; zero states is not an interaction pass. QKD entry screenshot visually inspected.",
+        "browser1440": "same report; all3 C panels opened; no interactive article viz claimed",
+        "prose": "/tmp/teach-all/chains-prose-pq.log global re-review0"
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation"
     },
     {
       "route": "crypto/mpc",
@@ -7294,7 +7511,7 @@
     {
       "route": "crypto/nova",
       "title": "Nova: 계산을 접고 반복 실행을 잇는 방법",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/nova.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/ZkCaseDiagram.tsx",
@@ -7321,19 +7538,38 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "F17 products3*4=12,2*5=10;r2 folds7,14,15;T1,u3,E2;13=13;IVC3→12→14 differs restart11",
+        "assumption": "All small numbers/hardware budgets explicitly educational, not benchmark or cryptographic deployment."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: reason and outcome before terms",
+        "B": "black-box: actors and messages as opaque roles",
+        "0": "case: numeric fixture",
+        "1": "picture: same values in nameless role diagram",
+        "2": "ivc: concrete failure requiring each role",
+        "3": "names: terminology mapped to known roles",
+        "4": "mechanism: expand cross terms and E1+rT+r²E2;fixedT before challenge; no arbitrary residual",
+        "5/6": "source: Nova Construction1 E0+2*1+4*0=2,u1+2*1=3; compression relation and IVC continuity separately explained",
+        "7": "limits:folding not final compressedproof,nonzero challenge model and smallfield2/17 toybound,rule+state+step identity;questions7/8/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Nova ePrint2021/370 abstract and §§1.1–1.2 freshly read; Construction1 formula retained from prior source review, repeatedPDF targetedaccessfailed",
+          "application": "source: Nova Construction1 E0+2*1+4*0=2,u1+2*1=3; compression relation and IVC continuity separately explained"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read complete baseline actual body all9; inspected source-containing TSX and actual Jolt originals. Pass is based on connected case and source application, not section tags.",
+        "arithmetic": "/tmp/zk-arithmetic-check.py rerun29checks passed; /tmp/zk-arithmetic-results.json; not compiled prover execution",
+        "learning": "/tmp/teach-all/chains-learning-zk.log registered strict6+4 all9 passed; predictions and actual answer locations read",
+        "source": "Nova ePrint2021/370 abstract and §§1.1–1.2 freshly read; Construction1 formula retained from prior source review, repeatedPDF targetedaccessfailed",
+        "humanize": "/tmp/teach-all/humanize-zk-final/nova/independent-finalize.md: automatic gate1 false footnote detection on unchanged text, parent independently reviewed and approved finalize; NOT automatic PASS; extraction/roundtrip/prepare applied; actual text unchanged",
+        "browser390": "output/playwright/teach-chains-zk/summary.json 9routes×2 widths, no page overflow/narrow text/KaTeX/broken same-page anchors/runtime errors; static diagram labels insideSVG; Jolt4panelsopened; polycommit390diagram visually inspected",
+        "browser1440": "same report and same checks; all4Joltpanelsopened; static diagrams have no article interaction states"
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation"
     },
     {
       "route": "crypto/paillier-cryptosystem",
@@ -7484,7 +7720,7 @@
     {
       "route": "crypto/polycommit",
       "title": "다항식 커밋먼트: KZG와 IPA로 평가값 확인하기",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/polycommit.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/ZkCaseDiagram.tsx",
@@ -7511,19 +7747,38 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "F17 f=X²+2X+3,z4,y10,qX+6;bad11 remainder16;exposedτ7 gives forgery7;IPA folded15,4/7,2 gives11 with cross14,1",
+        "assumption": "All small numbers/hardware budgets explicitly educational, not benchmark or cryptographic deployment."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: reason and outcome before terms",
+        "B": "black-box: actors and messages as opaque roles",
+        "0": "case: numeric fixture",
+        "1": "picture: same values in nameless role diagram",
+        "2": "need: concrete failure requiring each role",
+        "3": "names: terminology mapped to known roles",
+        "4": "mechanism: correct quotient versus bad remainder and knownτ forgery are separated",
+        "5/6": "source: KZG §3.2 original φ=ψ_i(X)(X−i)+φ(i), atτ7:13*3+10=15; comparison: Bulletproofs original vector folding x2/inverse9",
+        "7": "limits:binding versus hiding,degree restriction,setupsecret,quantum DLP,matchingsecuritycost;questions7/7/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "KZG original PDFp7 and author Stanford Bulletproofs PDFp13 freshly read; no scalar toy claimed as real curve execution",
+          "application": "source: KZG §3.2 original φ=ψ_i(X)(X−i)+φ(i), atτ7:13*3+10=15; comparison: Bulletproofs original vector folding x2/inverse9"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read complete baseline actual body all9; inspected source-containing TSX and actual Jolt originals. Pass is based on connected case and source application, not section tags.",
+        "arithmetic": "/tmp/zk-arithmetic-check.py rerun29checks passed; /tmp/zk-arithmetic-results.json; not compiled prover execution",
+        "learning": "/tmp/teach-all/chains-learning-zk.log registered strict6+4 all9 passed; predictions and actual answer locations read",
+        "source": "KZG original PDFp7 and author Stanford Bulletproofs PDFp13 freshly read; no scalar toy claimed as real curve execution",
+        "humanize": "/tmp/teach-all/humanize-zk-final/polycommit/independent-finalize.md: automatic gate1 false footnote detection on unchanged text, parent independently reviewed and approved finalize; NOT automatic PASS; extraction/roundtrip/prepare applied; actual text unchanged",
+        "browser390": "output/playwright/teach-chains-zk/summary.json 9routes×2 widths, no page overflow/narrow text/KaTeX/broken same-page anchors/runtime errors; static diagram labels insideSVG; Jolt4panelsopened; polycommit390diagram visually inspected",
+        "browser1440": "same report and same checks; all4Joltpanelsopened; static diagrams have no article interaction states"
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation"
     },
     {
       "route": "crypto/poseidon-hash",
@@ -7567,7 +7822,7 @@
     {
       "route": "crypto/post-quantum-signatures",
       "title": "양자내성 서명: ML-DSA의 가린 응답과 SLH-DSA의 해시 나무",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/crypto/post-quantum-signatures.tsx",
       "bodyFiles": [
         "src/pages/articles/crypto/post-quantum-signatures.tsx",
@@ -7594,19 +7849,51 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "z": [
+          3,
+          3
+        ],
+        "AzMinusCt": [
+          6,
+          9
+        ]
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: practical reason before notation",
+        "B": "black-box: physical/computational roles before internal mechanics",
+        "0": "case: concrete numeric fixture explicitly assumed",
+        "1": "picture: unlabeled role diagram grounded in same fixture",
+        "2": "need: what breaks without each role",
+        "3": "names: actual terminology only after roles are visible",
+        "4": "mechanism: same mod17 A,s,e,t,y gives z[3,3],Az−ct[6,9]=Ay−e; high-part boundary8→7 and bound4 rejection",
+        "5/6": "source: PQClean sign.c135–194 and265–328 cover randomness,rejection,hints and verifier context/norm/challenge; SLH H4 toy exposes H3 forgery and why checksum/full construction required",
+        "7": "comparison/limits: actual sizes and categories; nonce reuse; boot/recovery migration; final versus pending standard status; questions8/9/10"
+      },
+      "sourceEvidence": [
+        {
+          "source": "FIPS204 2024-08-13 final,2026-07-31 errata notice;FIPS205 final",
+          "application": "Official CSRC pages rechecked 2026-10-04; toy modulus17 versus real8380417 explicitly separated."
+        },
+        {
+          "file": "crypto_sign/ml-dsa-44/clean/sign.c",
+          "commit": "0586a824fc0d49df0b6b6e9179d8d15d06d0974f",
+          "sha256": "474d7a8c33b45a5e19d9f8a76f501c7ecaa6ca667171a0f40942c71456cbbec2",
+          "matchesOfficial": true
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read complete rendered baseline and corresponding TSX, including source application and limits; no pass from tags or heading count. Existing explanation retained.",
+        "arithmetic": "/tmp/teach-all/chains-arithmetic-pq.json; independently computed examples; no quantum hardware or compiled PQClean execution",
+        "source": "Official pages and exact PQClean commit raw-file hashes rechecked; licensed copies retained.",
+        "learning": "/tmp/teach-all/chains-learning-pq.log strict registered 6+4 passed all4; section answers inspected",
+        "humanize": "/tmp/teach-all/humanize-pq-final/summary.json gate0 all4, actual extraction/unchanged round trip/prepare/final apply; string props and code annotations manually reviewed",
+        "browser390": "output/playwright/teach-chains-pq/summary.json no overflow/narrow prose/KaTeX/anchor/runtime errors; all3 C panels opened. Static NumericPath does not have interactive states; zero states is not an interaction pass. QKD entry screenshot visually inspected.",
+        "browser1440": "same report; all3 C panels opened; no interactive article viz claimed",
+        "prose": "/tmp/teach-all/chains-prose-pq.log global re-review0"
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation"
     },
     {
       "route": "crypto/proofofsql",
@@ -7649,7 +7936,7 @@
     {
       "route": "crypto/prover-memory-and-verifier-cost",
       "title": "증명기 메모리와 검증 비용",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/prover-memory-and-verifier-cost/index.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/ZkCaseDiagram.tsx",
@@ -7676,24 +7963,43 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "2^20*64*4=256MiB,LDE8=2GiB,hash512MiB−32B,peak4.75GiB−32B or2.75GiB−32B;MSM416→456MiB;gas199450→230200",
+        "assumption": "All small numbers/hardware budgets explicitly educational, not benchmark or cryptographic deployment."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: reason and outcome before terms",
+        "B": "black-box: actors and messages as opaque roles",
+        "0": "case: numeric fixture",
+        "1": "picture: same values in nameless role diagram",
+        "2": "need: concrete failure requiring each role",
+        "3": "names: terminology mapped to known roles",
+        "4": "mechanism: actual simultaneous buffer lifetimes and2L−1tree sum,not sum of all files",
+        "5/6": "source: ICICLE2.8.0 max(s+indices,s+points+buckets) with c16/18; EIP1108 pairing4+inputs3 and EIP197192bytes/pair",
+        "7": "limits:estimatedmemorynotbenchmark,devicecapacitycannotblindlypool,wrapperaddsassumptions,costunitsdistinct;questions7/8/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Official ICICLE2.8.0 memory table/formula freshly read; EIP1108 original gas table rechecked; originalEIP197 encodingretained",
+          "application": "source: ICICLE2.8.0 max(s+indices,s+points+buckets) with c16/18; EIP1108 pairing4+inputs3 and EIP197192bytes/pair"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read complete baseline actual body all9; inspected source-containing TSX and actual Jolt originals. Pass is based on connected case and source application, not section tags.",
+        "arithmetic": "/tmp/zk-arithmetic-check.py rerun29checks passed; /tmp/zk-arithmetic-results.json; not compiled prover execution",
+        "learning": "/tmp/teach-all/chains-learning-zk.log registered strict6+4 all9 passed; predictions and actual answer locations read",
+        "source": "Official ICICLE2.8.0 memory table/formula freshly read; EIP1108 original gas table rechecked; originalEIP197 encodingretained",
+        "humanize": "/tmp/teach-all/humanize-zk-final/prover-memory-and-verifier-cost/gate.txt: gate0; extraction/roundtrip/prepare applied; actual text unchanged",
+        "browser390": "output/playwright/teach-chains-zk/summary.json 9routes×2 widths, no page overflow/narrow text/KaTeX/broken same-page anchors/runtime errors; static diagram labels insideSVG; Jolt4panelsopened; polycommit390diagram visually inspected",
+        "browser1440": "same report and same checks; all4Joltpanelsopened; static diagrams have no article interaction states"
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation"
     },
     {
       "route": "crypto/quantum-computing-and-cryptographic-risk",
       "title": "양자컴퓨터는 어떤 계산을 바꾸고 어떤 암호를 위협할까",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/crypto/quantum-computing-and-cryptographic-risk.tsx",
       "bodyFiles": [
         "src/pages/articles/crypto/quantum-computing-and-cryptographic-risk.tsx",
@@ -7719,25 +8025,65 @@
           "10 · 키 교환·서명·해시·광학 통신은 바꿔야 할 이유가 다릅니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 구조와 사례 추적은 충족합니다. 최신 논문 인용의 버전이 고정되지 않았고 strict <를 이하로 적은 두 자원 수치를 교정했습니다."
+      ],
+      "fixture": {
+        "Grover": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.5,
+            -0.5,
+            -0.5,
+            -0.5
+          ]
+        ],
+        "Shor": "N15,a2,r4,gcd(3,15)=3,gcd(5,15)=5;Q256 Fourier peaks0,64,128,192",
+        "latest": "2603.28846v2 2026-04-15; logical <1200/<1450 and physical <500000 under assumptions"
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: practical reason before notation",
+        "B": "black-box: physical/computational roles before internal mechanics",
+        "0": "case: concrete numeric fixture explicitly assumed",
+        "1": "picture: unlabeled role diagram grounded in same fixture",
+        "2": "need: what breaks without each role",
+        "3": "names: actual terminology only after roles are visible",
+        "4": "mechanism: four amplitudes after oracle and reflection; second iteration decreases target probability to0.25",
+        "5/6": "source: original Grover inversion operation applied to average0.25; Shor15 period and Q256 recovery, invalid denominator2 rejected; comparison: v2 resource assumptions",
+        "7": "limits: query cost versus circuit time; logical versus physical qubits; hash preimage versus collision; PQC versus QKD; questions4/7/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "arXiv quant-ph/9605043,quant-ph/9508027",
+          "application": "Actual operations applied to four amplitudes and N15/Q256 example, not merely listed."
+        },
+        {
+          "source": "https://arxiv.org/abs/2603.28846v2",
+          "application": "v2 date and ZKP software correction checked on official abstract 2026-10-04; resource estimates are conditional, not machine execution."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read complete rendered baseline and corresponding TSX, including source application and limits; no pass from tags or heading count. Existing explanation retained.",
+        "arithmetic": "/tmp/teach-all/chains-arithmetic-pq.json; independently computed examples; no quantum hardware or compiled PQClean execution",
+        "source": "Official pages and exact PQClean commit raw-file hashes rechecked; licensed copies retained.",
+        "learning": "/tmp/teach-all/chains-learning-pq.log strict registered 6+4 passed all4; section answers inspected",
+        "humanize": "/tmp/teach-all/humanize-pq-final/summary.json gate0 all4, actual extraction/unchanged round trip/prepare/final apply; string props and code annotations manually reviewed",
+        "browser390": "output/playwright/teach-chains-pq/summary.json no overflow/narrow prose/KaTeX/anchor/runtime errors; all3 C panels opened. Static NumericPath does not have interactive states; zero states is not an interaction pass. QKD entry screenshot visually inspected.",
+        "browser1440": "same report; all3 C panels opened; no interactive article viz claimed",
+        "prose": "/tmp/teach-all/chains-prose-pq.log global re-review0"
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation-with-source-version-correction"
     },
     {
       "route": "crypto/quantum-key-distribution",
       "title": "양자키분배: 12개 신호에서 비밀 키까지",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/crypto/quantum-key-distribution.tsx",
       "bodyFiles": [
         "src/pages/articles/crypto/quantum-key-distribution.tsx",
@@ -7764,19 +8110,55 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "AliceParity": [
+          1,
+          1,
+          0
+        ],
+        "BobParity": [
+          0,
+          0,
+          0
+        ],
+        "independentNoErrorTwo": 0.5625,
+        "fixedTableNoErrorTwo": 0.75,
+        "leftoverHashBound": 0.3535533905932738,
+        "signals": "12→8 same basis→public2→A010110/B011110→parity110/000→correctposition3→illustrative01, but no certified secret output"
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: practical reason before notation",
+        "B": "black-box: physical/computational roles before internal mechanics",
+        "0": "case: concrete numeric fixture explicitly assumed",
+        "1": "picture: unlabeled role diagram grounded in same fixture",
+        "2": "need: what breaks without each role",
+        "3": "names: actual terminology only after roles are visible",
+        "4": "mechanism: retained six bits remain the same through parity equations,syndrome,correction,leakage and compression; tests2,10 removed",
+        "5/6": "source: BB84 public comparison and conditional 25% error; comparison: original Tomamichel Eq6 applied Hmin3,l2 to bound0.35355, abort for requested1e−6; actual finite-key protocol distinctions retained",
+        "7": "limits: authentication covers all transcript; no entropy certification from two passing samples; trusted relay,MDI/DI device assumptions; questions3/7/10"
+      },
+      "sourceEvidence": [
+        {
+          "source": "https://arxiv.org/html/1103.4130v2 Eq6;BB84 originalp177",
+          "application": "Original leftover-hash bound applied to six-bit example with explicit optimistic assumptions and no actual security certification."
+        },
+        {
+          "source": "ITU-T X.1711 2026-03-16 §§7.2.2,7.4,8.2,AppIV",
+          "application": "Official recommendation in force checked; standard describes framework, not product certification."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read complete rendered baseline and corresponding TSX, including source application and limits; no pass from tags or heading count. Existing explanation retained.",
+        "arithmetic": "/tmp/teach-all/chains-arithmetic-pq.json; independently computed examples; no quantum hardware or compiled PQClean execution",
+        "source": "Official pages and exact PQClean commit raw-file hashes rechecked; licensed copies retained.",
+        "learning": "/tmp/teach-all/chains-learning-pq.log strict registered 6+4 passed all4; section answers inspected",
+        "humanize": "/tmp/teach-all/humanize-pq-final/summary.json gate0 all4, actual extraction/unchanged round trip/prepare/final apply; string props and code annotations manually reviewed",
+        "browser390": "output/playwright/teach-chains-pq/summary.json no overflow/narrow prose/KaTeX/anchor/runtime errors; all3 C panels opened. Static NumericPath does not have interactive states; zero states is not an interaction pass. QKD entry screenshot visually inspected.",
+        "browser1440": "same report; all3 C panels opened; no interactive article viz claimed",
+        "prose": "/tmp/teach-all/chains-prose-pq.log global re-review0"
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation"
     },
     {
       "route": "crypto/reed-solomon",
@@ -7931,7 +8313,7 @@
     {
       "route": "crypto/snark-overview",
       "title": "SNARK 개론",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/snark-overview/index.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/ZkCaseDiagram.tsx",
@@ -7958,19 +8340,38 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "F17 relation xw=y: (3,12,w4) valid,(3,12,w5) bad witness,(0,1) no witness",
+        "assumption": "All small numbers/hardware budgets explicitly educational, not benchmark or cryptographic deployment."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: reason and outcome before terms",
+        "B": "black-box: actors and messages as opaque roles",
+        "0": "case: numeric fixture",
+        "1": "picture: same values in nameless role diagram",
+        "2": "need: concrete failure requiring each role",
+        "3": "interface: terminology mapped to known roles",
+        "4": "mechanism: same public instance is traced through completeness,soundness,knowledge,ZK and Fiat–Shamir ordering",
+        "5/6": "source: Groth16 §2.2 Prove(R,σ,φ,w), φ=(3,12),w4; source-groth16-zk separates information already public",
+        "7": "limits: rule omission,public input,preparation and 1KiB proof versus1GiB workspace; questions7/9/10"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Groth16 ePrint2016/260 §§2.2; UCL accepted-version official mirror accessed; abstract/definitions align, current direct ePrint download403",
+          "application": "source: Groth16 §2.2 Prove(R,σ,φ,w), φ=(3,12),w4; source-groth16-zk separates information already public"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read complete baseline actual body all9; inspected source-containing TSX and actual Jolt originals. Pass is based on connected case and source application, not section tags.",
+        "arithmetic": "/tmp/zk-arithmetic-check.py rerun29checks passed; /tmp/zk-arithmetic-results.json; not compiled prover execution",
+        "learning": "/tmp/teach-all/chains-learning-zk.log registered strict6+4 all9 passed; predictions and actual answer locations read",
+        "source": "Groth16 ePrint2016/260 §§2.2; UCL accepted-version official mirror accessed; abstract/definitions align, current direct ePrint download403",
+        "humanize": "/tmp/teach-all/humanize-zk-final/snark-overview/gate.txt: gate0; extraction/roundtrip/prepare applied; actual text unchanged",
+        "browser390": "output/playwright/teach-chains-zk/summary.json 9routes×2 widths, no page overflow/narrow text/KaTeX/broken same-page anchors/runtime errors; static diagram labels insideSVG; Jolt4panelsopened; polycommit390diagram visually inspected",
+        "browser1440": "same report and same checks; all4Joltpanelsopened; static diagrams have no article interaction states"
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation"
     },
     {
       "route": "crypto/sp1",
@@ -8051,7 +8452,7 @@
     {
       "route": "crypto/stark-theory",
       "title": "STARK 증명 시스템",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/stark-theory.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/ZkCaseDiagram.tsx",
@@ -8078,24 +8479,43 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "F17 Horner1→6→10;v=8T²+14T+1;transitionquotient10;boundary8T+14,8T+13;weighted6T+9;T3 masked13→2",
+        "assumption": "All small numbers/hardware budgets explicitly educational, not benchmark or cryptographic deployment."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: reason and outcome before terms",
+        "B": "black-box: actors and messages as opaque roles",
+        "0": "case: numeric fixture",
+        "1": "picture: same values in nameless role diagram",
+        "2": "need: concrete failure requiring each role",
+        "3": "names: terminology mapped to known roles",
+        "4": "mechanism: same three rows interpolated,transitiononlyT0/1,begin/endboundaries enforced",
+        "5/6": "source: original AIR row boundary w_j(i)=α and adjacent transition applied to same trace; extended evaluationv3=13; maskv+T(T−1)(T−2)r",
+        "7": "limits: omitted output11,maskingoneconstantnotfullZK,transparentnotassumptionfree,workingmemory;questions7/10/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "STARK ePrint2018/046 original accessible via web initial parse; detailedp36 quote retained from prior source review; repeatedPDF access failed so no fresh full reread claimed",
+          "application": "source: original AIR row boundary w_j(i)=α and adjacent transition applied to same trace; extended evaluationv3=13; maskv+T(T−1)(T−2)r"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read complete baseline actual body all9; inspected source-containing TSX and actual Jolt originals. Pass is based on connected case and source application, not section tags.",
+        "arithmetic": "/tmp/zk-arithmetic-check.py rerun29checks passed; /tmp/zk-arithmetic-results.json; not compiled prover execution",
+        "learning": "/tmp/teach-all/chains-learning-zk.log registered strict6+4 all9 passed; predictions and actual answer locations read",
+        "source": "STARK ePrint2018/046 original accessible via web initial parse; detailedp36 quote retained from prior source review; repeatedPDF access failed so no fresh full reread claimed",
+        "humanize": "/tmp/teach-all/humanize-zk-final/stark-theory/independent-finalize.md: automatic gate1 false footnote detection on unchanged text, parent independently reviewed and approved finalize; NOT automatic PASS; extraction/roundtrip/prepare applied; actual text unchanged",
+        "browser390": "output/playwright/teach-chains-zk/summary.json 9routes×2 widths, no page overflow/narrow text/KaTeX/broken same-page anchors/runtime errors; static diagram labels insideSVG; Jolt4panelsopened; polycommit390diagram visually inspected",
+        "browser1440": "same report and same checks; all4Joltpanelsopened; static diagrams have no article interaction states"
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation"
     },
     {
       "route": "crypto/zk-theory",
       "title": "영지식 증명 이론",
-      "status": "unreviewed",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/zk-theory.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/ZkCaseDiagram.tsx",
@@ -8122,19 +8542,38 @@
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "case": "mod23 order11,g2,w4,Y16,r10,R12;e2→s7,e5→s8;extract4;RFC response2;Pedersen(4,10)/(7,9)→C2",
+        "assumption": "All small numbers/hardware budgets explicitly educational, not benchmark or cryptographic deployment."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: reason and outcome before terms",
+        "B": "black-box: actors and messages as opaque roles",
+        "0": "case: numeric fixture",
+        "1": "picture: same values in nameless role diagram",
+        "2": "need: concrete failure requiring each role",
+        "3": "names: terminology mapped to known roles",
+        "4": "mechanism: subtract two responses, invert question difference8 by7, recover4; simulator buildsR12 from e2/s7",
+        "5/6": "source: RFC8235 §2.2 r=v−ac and V=g^r A^c mapped to same4/10/2; commitment: alternate opening exposes log_g h3",
+        "7": "limits: subgroup checks,fresh randomness,transcript context/encoding,HVZK versus malicious verifier/FS,quantum DLP; questions7/8/9"
+      },
+      "sourceEvidence": [
+        {
+          "source": "RFC8235 §§2.2–2.3 official text freshly checked including opposite sign and UserID/OtherInfo",
+          "application": "source: RFC8235 §2.2 r=v−ac and V=g^r A^c mapped to same4/10/2; commitment: alternate opening exposes log_g h3"
+        }
+      ],
+      "verification": {
+        "substantiveReading": "Read complete baseline actual body all9; inspected source-containing TSX and actual Jolt originals. Pass is based on connected case and source application, not section tags.",
+        "arithmetic": "/tmp/zk-arithmetic-check.py rerun29checks passed; /tmp/zk-arithmetic-results.json; not compiled prover execution",
+        "learning": "/tmp/teach-all/chains-learning-zk.log registered strict6+4 all9 passed; predictions and actual answer locations read",
+        "source": "RFC8235 §§2.2–2.3 official text freshly checked including opposite sign and UserID/OtherInfo",
+        "humanize": "/tmp/teach-all/humanize-zk-final/zk-theory/independent-finalize.md: automatic gate1 false footnote detection on unchanged text, parent independently reviewed and approved finalize; NOT automatic PASS; extraction/roundtrip/prepare applied; actual text unchanged",
+        "browser390": "output/playwright/teach-chains-zk/summary.json 9routes×2 widths, no page overflow/narrow text/KaTeX/broken same-page anchors/runtime errors; static diagram labels insideSVG; Jolt4panelsopened; polycommit390diagram visually inspected",
+        "browser1440": "same report and same checks; all4Joltpanelsopened; static diagrams have no article interaction states"
+      },
+      "remaining": [],
+      "reviewDisposition": "retain-substantive-existing-explanation"
     }
   ]
 }

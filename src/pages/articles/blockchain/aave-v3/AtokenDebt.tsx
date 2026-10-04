@@ -1,38 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ModernAaveViz from "./viz/ModernAaveViz";
-
-export default function AtokenDebt() {
-  return (
-    <section id="atoken-debt" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Scaled balance와 reserve index가 사용자별 이자를 분리한다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>
-            매초 모든 사용자의 storage balance를 쓰지 않고 공급·차입 시 normalized index로 나눈 scaled amount를 기록합니다. 조회 시 aToken은
-            liquidity index, VariableDebtToken은 variable borrow index를 곱합니다. 최신 V3 source에서는 stable debt mode가
-            deprecated되어 이 글은 variable debt path만 다룹니다.
-          </p>
-      </div>
-      <ModernAaveViz mode="index" />
-      <ExplainedFormula
-        question="Index가 움직일 때 현재 공급·부채 balance는 어떻게 바뀔까요?"
-        idea="사용자의 scaled unit은 transaction 사이에 그대로 두고 reserve 공통 index만 앞으로 움직입니다. 입출금 시 현재 amount를 index로 나누어 scaled delta로 바꿉니다."
-        formula={String.raw`B_{supply}=b_s I_L,\qquad B_{debt}=b_d I_V`}
-        annotatedFormula={String.raw`B_{supply}=\underbrace{b_s I_L,\qquad B_{debt}=b_d I_V}_{\text{liquidity index 계산}}`}
-        operations={[
-          { expression: String.raw`b_s I_L,\qquad B_{debt}=b_d I_V`, annotation: ["liquidity index이(가) 식의 결과에 기여하는","방식을 계산합니다.","사용자의 scaled unit은 transaction 사이에","그대로 두고 reserve 공통 index만 앞으로"] },
-        ]}
-        terms={[
-          { symbol: "b_s,b_d", name: "scaled balances", description: "사용자별로 저장된 공급·variable debt 단위입니다." },
-          { symbol: "I_L", name: "liquidity index", description: "공급자 수익을 반영하는 ray-scaled reserve index입니다." },
-          { symbol: "I_V", name: "variable borrow index", description: "Variable borrower 이자를 반영하는 ray-scaled reserve index입니다." },
-        ]}
-        assumptions={["모든 곱·나눗셈은 같은 ray scale과 source rounding을 사용합니다.", "Index·scaled balance·reserve timestamp는 같은 Pool implementation과 reserve에 속합니다."]}
-        interpretation="Scaled supply 1,000과 I_L=1.05는 1,050 underlying, scaled debt 500과 I_V=1.08은 540 debt를 뜻합니다. 1,000 aToken units를 storage에 그대로 더하는 식으로 구현하면 index가 1이 아닐 때 과다 mint됩니다."
-      />
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>공급 index와 차입 index의 시간식은 같지 않다</h3>
-        <p>Pinned source의 liquidity index는 liquidity rate에 선형 누적을 적용합니다. Variable borrow index는 연율×경과시간을 ray 단위 x로 만든 뒤 <code>1+x+x²/2+x³/6</code>의 binomial approximation을 사용합니다. 극단적인 rate·긴 inactivity에서는 이상적 exponential과 오차가 있으므로 “연속복리와 정확히 동일”이라고 쓰면 안 됩니다.</p>
-      </div>
-    </section>
-  );
-}
+import TeachCode from "./TeachCode";
+export default function AtokenDebt(){return <div className="mb-16 space-y-14 [&_section]:space-y-5 [&_h2]:text-2xl [&_h2]:font-bold [&_p]:leading-8">
+<section id="atoken-debt" data-teach-level="5"><h2>8. 저장한 단위에 공통 계수를 곱해 현재 잔액을 얻습니다</h2><p>처음 계수가 1일 때 공급한 1000을 저장해 두고 계수가 1.05가 되면 현재 공급 잔액을1050으로 읽을 수 있습니다. 계수와 분리해 저장하는 단위를 scaled balance라고 합니다. 이 방식이면 매초 모든 사용자의 저장 잔액을 쓰지 않아도 공통 계수로 이자를 반영할 수 있습니다.</p><ExplainedFormula question="C의 부채를 모든 순간 저장하지 않고 어떻게 늘릴까요?" idea="현재 잔액을 사용자별 저장 단위와 자산별 누적 계수의 곱으로 나타냅니다. 입출금은 당시 계수로 나눈 저장 단위의 증감으로 바꿉니다." formula={String.raw`B_s=b_s I_L,\qquad B_d=b_d I_V`} annotatedFormula={String.raw`B_s=\underbrace{b_s}_{\text{저장 공급 단위}}\underbrace{I_L}_{\text{공급 계수}},\quad B_d=\underbrace{b_d}_{\text{저장 부채 단위}}\underbrace{I_V}_{\text{차입 계수}}`} operations={[{expression:String.raw`b_s I_L`,annotation:"공급 단위 1000에 현재 계수 1.05를 곱하면1050입니다."},{expression:String.raw`b_d I_V`,annotation:"C의 부채 단위 7000에 계수 1.08을 곱하면7560입니다."}]} terms={[{symbol:"b_s,b_d",name:"저장된 단위",description:"입출금·차입·상환 사이에 유지하는 사용자별 단위입니다."},{symbol:"I_L",name:"공급 누적 계수",description:"공급자의 이자를 반영하며 liquidity index라고 부릅니다."},{symbol:"I_V",name:"변동 차입 누적 계수",description:"변동 부채의 이자를 반영하는 variable borrow index입니다."}]} assumptions={["같은 reserve·구현·시점의 계수와 잔액을 사용합니다.","코드는 ray 배율10^27의 정수로 연산하며 반올림 방향은 함수마다 다릅니다."]} interpretation="7000의1.08배는7560이며 별도 저장 부채500의1.08배는540입니다. 공급 계수와 차입 계수를 같은 값으로 가정하면 안 됩니다."/><ModernAaveViz mode="index"/><p>계수가 1.05인 시점에 새로1050을 공급하면 저장 단위는1050/1.05=1000입니다. 1050을 저장 단위에 그대로 더하면 현재 표시가1102.5가 되어 실제 입금보다52.5 많아집니다. 나누어 저장하고 곱해 읽는 두 방향이 필요합니다.</p></section>
+<section id="index-source" data-teach-level="6"><h2>9. 실제 코드는 공급을 내리고 부채를 올려 읽습니다</h2><p>이 snapshot의 TokenMath는 공급 잔액에 <code>rayMulFloor</code>, 변동 부채 잔액에 <code>rayMulCeil</code>을 사용합니다. 앞 절의1000×1.05와7000×1.08을 ray로 표시하면 각각1050과7560입니다. 나누어떨어지지 않는 최소 단위에서는 공급과 부채가 서로 다른 방향으로 반올림됩니다.</p><TeachCode codeKey="supply" label="공급 잔액 내림 실제 원문"/><TeachCode codeKey="debt" label="부채 잔액 올림 실제 원문"/><p>시간을 반영하는 방식도 다릅니다. 공급 계수는 해당 구간 이율에 선형 이자를 적용합니다. 변동 차입 쪽 MathUtils의 반환식은 <code>RAY + x + x.rayMul(x / 2 + x.rayMul(x / 6))</code>입니다. x는 연율×경과초/1년을 ray로 나타낸 값입니다.</p><TeachCode codeKey="time" label="시간에 따른 차입 계수 실제 원문"/><p>정수 반올림을 제외하면 이 식은1+x+x²/2+x³/6입니다. x=0.1이면 약 1.105166667이며 정확한 e^0.1≈1.105170918과는 다릅니다. x=1이면2.666666667로 e≈2.718281828과 차이가 커집니다. 긴 미갱신 기간이나 높은 이율을 검사해야 하는 이유입니다. 소스 주석에 binomial이라는 표현이 남아 있어도 이 글은 실제 반환식의3차 근사를 기준으로 계산합니다.</p><p>이자 계수 1.08을 실제로 얼마 뒤에 얻는지는 그동안 변한 이율과 갱신 시점에 달려 있습니다. 다음은 풀의8000·2000에서 그 이율을 구하는 과정입니다.</p></section>
+</div>}

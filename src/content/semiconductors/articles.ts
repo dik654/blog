@@ -114,12 +114,47 @@ export const semiconductorArticles: Article[] = [
     title: "작게 찍는 해상도와 제자리에 맞추는 정렬은 다릅니다",
     subcategory: "semiconductor-fabrication",
     sections: [
-      { id: "overview", title: "같은 자리에 두 번 찍어야 연결됩니다" },
-      { id: "transfer", title: "빛은 보호막이 아니라 감광막에 먼저 무늬를 남깁니다" },
-      { id: "resolution", title: "193 nm 빛으로 계산한 가상 경계는 96.5 nm입니다" },
-      { id: "overlay", title: "새 창이 옆으로 밀리면 좁은 쪽의 여유가 먼저 사라집니다" },
-      { id: "limits", title: "찍힌 감광막과 식각 뒤 실제 구조를 다시 재야 합니다" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 창의 폭과 놓인 위치를 따로 확인해야 연결됩니다"
+  },
+  {
+    "id": "outside",
+    "title": "2. 빛으로 기록한 무늬가 아래 층의 열린 자리가 됩니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 200 nm 선 위에 120 nm 창을 놓습니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 기록할 막·무늬를 비출 경로·아래 층을 차례로 봅니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 기록과 물질 제거를 나누어 원하는 부분만 가공합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 이미 본 기록·투영·위치 차이에 이름을 붙입니다"
+  },
+  {
+    "id": "transfer",
+    "title": "7. 120 nm 창의 무늬를 감광막에서 아래 층으로 옮깁니다"
+  },
+  {
+    "id": "resolution",
+    "title": "8. 원문의 크기 식에 193 nm를 넣으면 96.5 nm입니다"
+  },
+  {
+    "id": "overlay",
+    "title": "9. 같은 120 nm 창을 30 nm 옮겨 원문의 위치 정의를 적용합니다"
+  },
+  {
+    "id": "limits",
+    "title": "10. 찍힌 감광막과 식각 뒤 실제 구조를 다시 재야 합니다"
+  }
+],
     component: () => import("@/pages/articles/semiconductors/lithography-and-resolution"),
   },
   {
@@ -127,12 +162,55 @@ export const semiconductorArticles: Article[] = [
     title: "열을 준 시간만으로 도핑 경계를 정할 수 없는 이유",
     subcategory: "semiconductor-fabrication",
     sections: [
-      { id: "overview", title: "창을 정확히 열어도 가열 뒤에는 경계가 움직입니다" },
-      { id: "profile", title: "농도는 갑자기 끊기지 않고 깊이에 따라 줄어듭니다" },
-      { id: "first", title: "첫 1시간의 퍼짐 폭은 120 nm입니다" },
-      { id: "budget", title: "다음 30분이 앞의 1시간보다 더 크게 퍼뜨립니다" },
-      { id: "limits", title: "퍼짐 폭 하나로 접합과 전기적 결과를 끝내지 않습니다" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 뒤의 짧은 가열이 앞에서 만든 분포를 더 크게 바꿀 수 있습니다"
+  },
+  {
+    "id": "outside",
+    "title": "2. 넣은 총량은 유지하고 가열 뒤의 깊이별 양을 비교합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 한 시간 뒤 120 nm였던 폭 척도가 삼십 분 뒤 약 208 nm가 됩니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 같은 원자 수가 더 넓은 깊이에 나뉩니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 시간만 더하면 두 가열 상태의 차이를 놓칩니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 총량·움직이기 쉬운 정도·누적 곱을 구별합니다"
+  },
+  {
+    "id": "profile",
+    "title": "7. 원문의 곡선 모양에서 120 nm가 뜻하는 것을 읽습니다"
+  },
+  {
+    "id": "first",
+    "title": "8. 첫 3600초의 곱으로 120 nm를 계산합니다"
+  },
+  {
+    "id": "budget",
+    "title": "9. 다음 1800초의 기여를 더해 약 208 nm를 얻습니다"
+  },
+  {
+    "id": "source",
+    "title": "10. 같은 곡선의 총량과 두 깊이의 농도를 검산합니다"
+  },
+  {
+    "id": "supply",
+    "title": "11. 계속 공급해 표면 농도를 고정하면 다른 문제를 풉니다"
+  },
+  {
+    "id": "limits",
+    "title": "12. 퍼짐 폭 하나로 접합과 전기적 결과를 끝내지 않습니다"
+  }
+],
     component: () => import("@/pages/articles/semiconductors/doping-and-thermal-budget"),
   },
   {
@@ -140,13 +218,55 @@ export const semiconductorArticles: Article[] = [
     title: "배선이 길어지면 신호가 얼마나 늦어질까",
     subcategory: "semiconductor-fabrication",
     sections: [
-      { id: "overview", title: "트랜지스터가 빨라도 먼 곳의 입력은 늦게 바뀝니다" },
-      { id: "wire", title: "선이 길어지면 저항도, 충전할 용량도 커집니다" },
-      { id: "delay", title: "누가 어느 용량을 충전하는지 세면 74 ps가 나옵니다" },
-      { id: "length", title: "길이를 두 배로 늘리면 전체는 158 ps입니다" },
-      { id: "materials", title: "금속과 절연막은 식의 다른 자리를 바꿉니다" },
-      { id: "limits", title: "정확한 도착 시각은 실제 파형과 배치에서 다시 구합니다" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 멀리 있는 입력을 바꾸려면 연결선의 전하도 채워야 합니다"
+  },
+  {
+    "id": "outside",
+    "title": "2. 출력 전압의 변화가 선 끝 입력에 도달합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 같은 출력·입력에 200 Ω·100 fF 선을 추가합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 시작 쪽과 끝 쪽 용량이 거치는 저항이 다릅니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 전체 용량을 선 끝에 몰면 시작 쪽 경로를 잘못 셉니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 두 점으로 줄인 선과 그 시간 척도에 이름을 붙입니다"
+  },
+  {
+    "id": "wire",
+    "title": "7. 같은 배선의 시작과 끝에 용량 절반씩을 둡니다"
+  },
+  {
+    "id": "delay",
+    "title": "8. 출력의 60 ps와 선 안쪽의 14 ps를 합칩니다"
+  },
+  {
+    "id": "source",
+    "title": "9. 원문의 π 식에 같은 네 값을 직접 넣습니다"
+  },
+  {
+    "id": "length",
+    "title": "10. 길이를 두 배로 늘리면 전체는 158 ps입니다"
+  },
+  {
+    "id": "materials",
+    "title": "11. 금속과 절연막은 식의 다른 자리를 바꿉니다"
+  },
+  {
+    "id": "limits",
+    "title": "12. 정확한 도착 시각은 실제 파형과 배치에서 다시 구합니다"
+  }
+],
     component: () => import("@/pages/articles/semiconductors/interconnect-and-rc-delay"),
   },
   {
@@ -154,13 +274,55 @@ export const semiconductorArticles: Article[] = [
     title: "결함이 없는 다이와 출하되는 칩은 몇 개일까",
     subcategory: "semiconductor-fabrication",
     sections: [
-      { id: "overview", title: "같은 웨이퍼에서 나온 다이가 모두 출하되지는 않습니다" },
-      { id: "area", title: "결함이 떨어진 위치가 회로를 망가뜨리는지가 중요합니다" },
-      { id: "poisson", title: "평균 0.1개라면 0개일 확률은 약 90.48%입니다" },
-      { id: "sensitivity", title: "위험 면적이 네 배면 결함 0개 확률은 67.03%입니다" },
-      { id: "package", title: "패키지와 시험을 통과하는 비율은 다음 분모에서 셉니다" },
-      { id: "limits", title: "실제 수율에는 결함의 뭉침과 사양 탈락도 들어갑니다" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 어느 단계에서 몇 개가 남았는지부터 세어야 합니다"
+  },
+  {
+    "id": "outside",
+    "title": "2. 후보 다이가 결함 검사와 조립·시험을 거쳐 출하됩니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 후보 1000개에서 약 904.8개, 다시 약 886.7개를 기대합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 결함 위치 지도와 단계별 통과 장부를 함께 봅니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 면적과 분모를 나누어야 실패 원인을 잘못 셈하지 않습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 위험 면적·평균 결함 수·통과율에 이름을 붙입니다"
+  },
+  {
+    "id": "area",
+    "title": "7. 고장을 만드는 위치를 모아 1 cm²로 가정합니다"
+  },
+  {
+    "id": "poisson",
+    "title": "8. 평균 0.1개에서 결함 0개 확률을 계산합니다"
+  },
+  {
+    "id": "source",
+    "title": "9. 원문의 0개 확률에 같은 면적과 밀도를 넣습니다"
+  },
+  {
+    "id": "sensitivity",
+    "title": "10. 위험 면적과 밀도를 바꾸되 후보 수와 구별합니다"
+  },
+  {
+    "id": "package",
+    "title": "11. 원문의 조립·시험 순서에 다음 단계 98%를 대응시킵니다"
+  },
+  {
+    "id": "limits",
+    "title": "12. 실제 수율에는 결함의 뭉침과 사양 탈락도 들어갑니다"
+  }
+],
     component: () => import("@/pages/articles/semiconductors/yield-defect-and-packaging"),
   },
 ];

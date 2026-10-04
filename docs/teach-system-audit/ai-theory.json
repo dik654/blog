@@ -368,7 +368,7 @@
         "src/pages/articles/ai/backprop-optimization/viz/BackpropVizControls.tsx",
         "src/pages/articles/ai/backprop-optimization/viz/useBackpropScenes.ts"
       ],
-      "status": "unreviewed",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -376,19 +376,73 @@
         "hasSourceSurface": false,
         "characters": 10367
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Credit assignment·backprop 이름과 팀 성적표 비유가 실제 수치 사례보다 먼저 등장했습니다.",
+        "Backward 비용이 parameter 수가 아니라 layer 수에 비례한다는 잘못된 설명을 본문과 학습 예제에서 확인했습니다.",
+        "1986년 논문의 실제 예제를 text-to-speech로 잘못 소개했습니다. 실제 스캔의 거울 대칭·가족 관계 예제와 식6·7을 읽고 교정했습니다.",
+        "한 input gradient가0이면 해당 weight의 gradient도0인 것처럼 혼동할 여지가 있고 실제 코드의 weight 전치 관례를 보여주지 않았습니다."
+      ],
+      "fixture": "X=[[1,2]],W=[[ln2,0],[0,0]],b0,target(0,1)→p(2/3,1/3),Lln3,G(2/3,−2/3),dW[[2/3,−2/3],[4/3,−4/3]],dbG,dX((2/3)ln2,0) (가정).",
+      "stageAnchors": {
+        "S": [
+          "overview"
+        ],
+        "B": [
+          "black-box"
+        ],
+        "0": [
+          "case"
+        ],
+        "1": [
+          "parts"
+        ],
+        "2": [
+          "why-reuse"
+        ],
+        "3": [
+          "names",
+          "loss-function"
+        ],
+        "4": [
+          "trace",
+          "tensor-backward"
+        ],
+        "5": [
+          "source-paper"
+        ],
+        "6": [
+          "source-code"
+        ],
+        "7": [
+          "boundaries"
+        ]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "공식 코드",
+          "label": "PyTorch v2.8.0 LinearFunction의 행렬 backward",
+          "href": "https://github.com/pytorch/pytorch/blob/ba56102387ef21a3b04b357e5b183d48f0afefc7/docs/source/notes/extending.rst#L167-L202",
+          "note": "동일 원문을 보존하고167–178·182–202행으로 나누어 엽니다. input(1,2),weight=Wᵀ,G(2/3,−2/3)의 실제 저장 방향과 세 반환값을 대조합니다."
+        },
+        {
+          "kind": "핵심 논문",
+          "label": "Rumelhart·Hinton·Williams 1986 저자 공개 원문",
+          "href": "https://www.cs.toronto.edu/~hinton/absps/naturebp.pdf",
+          "note": "실제 스캔534쪽식(6)·535쪽식(7)에 입력2와 뒤 기여−2/3을 대입해 weight gradient−4/3을 얻습니다. 원문 사례는 거울 대칭·가족 관계이며 TTS로 소개한 기존 오기를 교정했습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "공개3본문과기존6+4학습내용을읽고전치·합산축·target합1조건을같은사례로다시썼습니다. softmax–CE 미분의두class전개와일반Σ소거유도보강. first1/5 이름도입없음390/1440확인.",
+        "learningAnswers": "기초6·심화4각답본문대조. Scalar가항상필수라는질문을scalarseed1대외부벡터로교정;복제batch의parameter합산과input행평균분리. /tmp/teach-all/ai-theory-learning-answer-review-backprop.json",
+        "humanize": "세파일extract→roundtrip→prepare→gate→apply. LossFunction exit0; 나머지2는수식쉼표등WARNexit1,P3보존통과. /tmp/teach-all/humanize-ai-theory-backprop/summary.json",
+        "numericTrace": "8변수중앙차분PASS. 변경W22 .001→L1.09727939988,차분−1.33288879. 공식weightgradient전치·복제batchsum/mean대조. /tmp/teach-all/ai-theory-arithmetic-backprop.json. Torch실행은하지않음.",
+        "mobile390": "overflow·narrow·KaTeX·console0,예측3,원문코드2버튼열기닫기PASS. output/playwright/teach-ai-theory-batch3/backprop.json;viz화면직접확인.",
+        "desktop1440": "본문검사동일PASS및source-code화면직접읽기. 3장면제어버튼위치동일·키보드wrap/Space재생정지PASS. /tmp/teach-all/ai-theory-backprop-controls.json",
+        "typecheck": "/tmp/teach-all/ai-theory-tsc-batch5-final.log 전체 tsc PASS; backprop lang literal narrowing 교정 포함",
+        "viz": "변경BackpropTensorViz strict PASS"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "root 전역 build·게시 검증"
       ]
     },
     {
@@ -1858,12 +1912,12 @@
       "publicFiles": [
         "src/pages/articles/ai/fast-weight-memory-and-chunkwise-recurrence.tsx",
         "src/pages/articles/ai/research-audit-sources/PaperReading.tsx",
-        "src/pages/articles/ai/research-audit-sources/codeRefs.ts",
         "src/pages/articles/world-systems/NumericPath.tsx",
         "src/pages/articles/world-systems/ReviewPrompts.tsx",
-        "src/pages/articles/world-systems/SourceApplication.tsx"
+        "src/pages/articles/world-systems/SourceApplication.tsx",
+        "src/pages/articles/ai/fast-weight-memory-and-chunkwise-recurrence/codeRefs.ts"
       ],
-      "status": "unreviewed",
+      "status": "existing-teach-targeted-repair-awaiting-integration",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 3,
@@ -1871,20 +1925,91 @@
         "hasSourceSurface": true,
         "characters": 18015
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 본문의 작은 수치 사례·추적·실제 원문 적용·한계·예측 질문은 확인했으므로 핵심 설명은 유지합니다.",
+        "첫1/5에 key·RLVR·encoder 등의 이름이 역할보다 먼저 등장하고 가정 표시와 역할→이름 연결이 불완전했습니다.",
+        "하나의 코드 강조 범위가25행을 넘고 관련 없는 공유 codeRefs도 함께 불러왔습니다. 기사 전용 원문 refs로 필요한 두세부분을 나눴습니다.",
+        "실제 GDN2원문은 TRANSPOSE_STATE인데 본문은 IS_V_FIRST라고 썼습니다.",
+        "64개chunk와chunk사이63개내부경계를 구별하지 않았고 비용항의d와L표기가 불명확했습니다. 새 n길이,C64,d128의가정으로 명확히 했습니다."
+      ],
+      "fixture": "M[[2,0],[1.8,2.4]],k1(1,0),k2(.6,.8)→읽기(2,1.8)/(1.2,3);목표(5,0)수정후k2(3,1.92);b(.25,1),w(.5,1)→(4,1.35);erase0→(7,1.8). 원문TRANSPOSE_STATE=True와정규화/scale조건고정.",
+      "stageAnchors": {
+        "S": [
+          "overview"
+        ],
+        "B": [
+          "black-box"
+        ],
+        "0": [
+          "case"
+        ],
+        "1": [
+          "picture"
+        ],
+        "2": [
+          "need"
+        ],
+        "3": [
+          "names"
+        ],
+        "4": [
+          "mechanism"
+        ],
+        "5": [
+          "source"
+        ],
+        "6": [
+          "comparison"
+        ],
+        "7": [
+          "limits"
+        ]
+      },
+      "primarySourceApplication": [
+        {
+          "label": "Parallelizing Linear Transformers with the Delta Rule · 2024",
+          "href": "https://arxiv.org/abs/2406.06484",
+          "anchor": "paper-delta-reading"
+        },
+        {
+          "label": "Gated DeltaNet-2 · arXiv 2605.22791v1",
+          "href": "https://arxiv.org/html/2605.22791v1",
+          "anchor": "paper-gdn2"
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "baseline전체paragraph와원본TSX전체·raw근거행·6+4문제를 읽었습니다. 기존 고유사례와정확한 유도유지, 실제문제만국소교정. 핵심기존내용과anchor는preservedEvidence에기록.",
+        "learningAnswers": "30문항정답과본문대조 /tmp/teach-all/ai-theory-learning-answer-review-batch5.json",
+        "primarySources": "GDN2v1식29,VPRv1식2,ReasoningArena그룹분산,LeWMv1식3·부록D,PlanningLimitsv1범위를웹1차원문에서재확인. 로컬raw4파일의고정revision원격과byte동일 /tmp/teach-all/ai-theory-research-source-hashes.json",
+        "numericTrace": "행렬읽기·독립gate·erase0·4후보비용·형식점수실제함수검산PASS /tmp/teach-all/ai-theory-arithmetic-batch5.json. 모델학습/GPUkernel실행재현주장없음.",
+        "humanize": "extract→동일apply roundtrip→prepare→gate→apply. Reward/world exit0;fast-weight exit1수식쉼표WARN. 수치·마커·가정보존. /tmp/teach-all/humanize-ai-theory-batch5/summary.json",
+        "mobile390": "3route390px pageoverflow·narrow·KaTeX·console·깨진anchor0,예측3각각. codebuttons2/3/4열기닫기,first1/5역할먼저 PASS. output/playwright/teach-ai-theory-batch5/summary.json",
+        "desktop1440": "동일검사PASS;WorldPlanningViz실제관측버튼후비용10.24/1.44/1.44/.64과reset확인. 전체screenshots중390입구·코드및1440세계모형표를직접확인.",
+        "typecheck": "전체 npx tsc -b PASS /tmp/teach-all/ai-theory-tsc-batch5-final.log"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+        "root metadata·topology병합 및 전역 build·게시검증"
+      ],
+      "preservedEvidence": {
+        "case": [
+          "값 v와 key k의 외적 vkᵀ를 더하면 M=[[2,0],[1.8,2.4]]입니다. 첫 열은 k₁로 읽는 결과이므로 Mk₁=(2,1.8)입니다. 두 번째 쌍의 key가 첫 key와 0.6만큼 겹쳐 0.6×3=1.8이 섞였습니다.",
+          "k₂로 읽으면 (1.2,3)입니다. 두 key가 직교할 때에는 서로의 값이 섞이지 않지만 실제로는 제한된 차원에 많은 정보를 넣습니다. 작은 행렬의 절약과 간섭은 같은 설계에서 함께 생깁니다."
+        ],
+        "sameCaseTrace": [
+          "단위 key에 β=1을 쓰면 목표값으로 대체됩니다. 먼저 α=0.1을 적용한다면 기존 읽기 (2,1.8)이 (0.2,0.18)로 줄고 그 상태에 대한 새 오차를 계산해야 합니다. decay 전의 읽기를 빼면 다른 식이 됩니다.",
+          "병렬화 계산에서는 같은 두 쌍을 초기 기억 M₀=0부터 순서대로 쓴다고 둡니다. decay 없이 실제 correction을 u₁,u₂라고 합시다. u₁=β₁v₁이고 u₂=β₂v₂−β₂(k₂·k₁)u₁입니다. β=1인 위 사례는 u₁=(2,0), u₂=(−1.2,3)입니다. 따라서 u₂+0.6u₁=v₂라는 하삼각 연립식으로 한 chunk의 corrections를 구할 수 있습니다.",
+          "일반적으로 strictly-lower 행렬 L의 항을 Lᵢⱼ=βᵢ(kᵢ·kⱼ)로 놓으면 (I+L)U=diag(β)V입니다. 부호는 더하기입니다. 역행렬을 명시적으로 만들 필요 없이 triangular solve나 UT/WY 변환으로 풀고 chunk 사이에서 상태를 넘깁니다. 초기 기억이 0이 아니면 그 읽기 항도 반영합니다. gate가 있으면 누적 decay와 축 배치까지 포함해야 합니다."
+        ],
+        "sourceApplication": [
+          "공식 GDN2 원문의 218–243행에서 b_h가 상태이고 b_b_tile은 key축 erase gate, b_w_tile은 value축 write gate입니다. 먼저 decay를 곱하고 기존 값을 읽은 뒤, 조절한 새 값에서 그 읽기를 뺍니다. 마지막 외적을 상태에 더합니다.",
+          "우리의 M을 쓰는 값×key 배치는 IS_V_FIRST 분기에 대응합니다. α=1, erase와 write를 모두 1로 두면 erase_d=(2,1.8), 새 값=(5,0), correction=(3,−1.8)입니다. 결과 M과 읽기는 7절 계산과 같습니다. 원문에는 반대 전치 배치도 있으므로 축을 먼저 맞춥니다.",
+          "원문 실물 · GDN2 공식 kernel"
+        ],
+        "limits": [
+          "M의 크기는 고정되어도 많은 key가 겹치면 회상 정보가 손실됩니다. β=1에서 정확한 대체라는 설명도 단위 key와 같은 key 재질의 조건입니다. 다른 query, 낮은 정밀도, decay, 비단위 norm에서는 조건을 다시 계산해야 합니다.",
+          "Prefix scan은 결합법칙이 있는 연산을 트리로 묶는 일반 기법입니다. 64개 합의 up/down sweep이 각 6단계라는 사실만으로 위 delta kernel의 실행시간을 예측할 수 없습니다. state update와 triangular solve의 실제 GPU 비용을 재야 합니다."
+        ]
+      }
     },
     {
       "route": "ai/fft",
@@ -5031,7 +5156,7 @@
         "src/pages/articles/ai/reverse-mode-autodiff/codeRefs.ts",
         "src/pages/articles/ai/reverse-mode-autodiff/fileTree.ts"
       ],
-      "status": "rewritten-awaiting-integration",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -5108,12 +5233,12 @@
         "numericTrace": "손계산26·39·13과 중앙차분 및3.001의값42.026004 대조PASS. 전체원문byte/SHA256대조PASS. PyTorch미설치로실제customFunction실행은하지않음. /tmp/teach-all/ai-theory-arithmetic-autodiff.json",
         "mobile390": "본문overflow·narrow·KaTeX·console0, 답포인터3, 코드버튼3열기닫기 PASS. output/playwright/teach-ai-theory-batch3/autodiff.json",
         "desktop1440": "같은본문검사PASS. /tmp/teach-all/ai-theory-autodiff-controls.json의3장면에서버튼geometry동일, 방향키wrap·Space재생/정지확인.",
-        "typecheck": "/tmp/teach-all/ai-theory-tsc-batch3.log PASS",
+        "typecheck": "/tmp/teach-all/ai-theory-tsc-batch5-final.log 전체 tsc PASS; backprop lang literal narrowing 교정 포함",
         "formula": "전체799편1421수식explicitoperationsPASS /tmp/teach-all/ai-theory-formula-batch3.log",
         "viz": "자기소유AutodiffGraphViz strict style PASS. 같은w3,x2,a6,L42및반환gradient를 모든장면에서대조."
       },
       "remaining": [
-        "root에서metadata·topology 병합및전역게시검증"
+        "root 전역 build·게시 검증"
       ]
     },
     {
@@ -5122,13 +5247,13 @@
       "subcategory": "ai-llm-theory",
       "publicFiles": [
         "src/pages/articles/ai/research-audit-sources/PaperReading.tsx",
-        "src/pages/articles/ai/research-audit-sources/codeRefs.ts",
         "src/pages/articles/ai/reward-design-for-verifiable-rl.tsx",
         "src/pages/articles/world-systems/NumericPath.tsx",
         "src/pages/articles/world-systems/ReviewPrompts.tsx",
-        "src/pages/articles/world-systems/SourceApplication.tsx"
+        "src/pages/articles/world-systems/SourceApplication.tsx",
+        "src/pages/articles/ai/reward-design-for-verifiable-rl/codeRefs.ts"
       ],
-      "status": "unreviewed",
+      "status": "existing-teach-targeted-repair-awaiting-integration",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 3,
@@ -5136,20 +5261,99 @@
         "hasSourceSurface": true,
         "characters": 19223
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 본문의 작은 수치 사례·추적·실제 원문 적용·한계·예측 질문은 확인했으므로 핵심 설명은 유지합니다.",
+        "첫1/5에 key·RLVR·encoder 등의 이름이 역할보다 먼저 등장하고 가정 표시와 역할→이름 연결이 불완전했습니다.",
+        "하나의 코드 강조 범위가25행을 넘고 관련 없는 공유 codeRefs도 함께 불러왔습니다. 기사 전용 원문 refs로 필요한 두세부분을 나눴습니다."
+      ],
+      "fixture": "TP38,FP12,FN2,TN48→통과50%,정답40%,precision76%,recall95%;[0,0,1,1]중심화±.5;potential차이합0;고정format_reward에형식준수오답3→1,태그없는3→0.",
+      "stageAnchors": {
+        "S": [
+          "overview"
+        ],
+        "B": [
+          "black-box"
+        ],
+        "0": [
+          "case"
+        ],
+        "1": [
+          "picture"
+        ],
+        "2": [
+          "need"
+        ],
+        "3": [
+          "names"
+        ],
+        "4": [
+          "mechanism"
+        ],
+        "5": [
+          "source"
+        ],
+        "6": [
+          "comparison"
+        ],
+        "7": [
+          "limits"
+        ]
+      },
+      "primarySourceApplication": [
+        {
+          "label": "Policy invariance under reward transformations · 1999",
+          "href": "https://people.eecs.berkeley.edu/~russell/papers/icml99-shaping.pdf",
+          "anchor": "paper-shaping-theorem"
+        },
+        {
+          "label": "Open-R1 rewards.py · 5b6ff22",
+          "href": "https://github.com/huggingface/open-r1/blob/5b6ff22b3fb7aa069c54866e517f39dfc3160e09/src/open_r1/rewards.py",
+          "anchor": "paper-verifier-code"
+        },
+        {
+          "label": "Verifiable Process Rewards · arXiv 2605.10325v1",
+          "href": "https://arxiv.org/html/2605.10325v1",
+          "anchor": "paper-vpr"
+        },
+        {
+          "label": "Reasoning Arena · arXiv 2606.09380v1",
+          "href": "https://arxiv.org/html/2606.09380v1",
+          "anchor": "paper-reasoning-arena"
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "baseline전체paragraph와원본TSX전체·raw근거행·6+4문제를 읽었습니다. 기존 고유사례와정확한 유도유지, 실제문제만국소교정. 핵심기존내용과anchor는preservedEvidence에기록.",
+        "learningAnswers": "30문항정답과본문대조 /tmp/teach-all/ai-theory-learning-answer-review-batch5.json",
+        "primarySources": "GDN2v1식29,VPRv1식2,ReasoningArena그룹분산,LeWMv1식3·부록D,PlanningLimitsv1범위를웹1차원문에서재확인. 로컬raw4파일의고정revision원격과byte동일 /tmp/teach-all/ai-theory-research-source-hashes.json",
+        "numericTrace": "행렬읽기·독립gate·erase0·4후보비용·형식점수실제함수검산PASS /tmp/teach-all/ai-theory-arithmetic-batch5.json. 모델학습/GPUkernel실행재현주장없음.",
+        "humanize": "extract→동일apply roundtrip→prepare→gate→apply. Reward/world exit0;fast-weight exit1수식쉼표WARN. 수치·마커·가정보존. /tmp/teach-all/humanize-ai-theory-batch5/summary.json",
+        "mobile390": "3route390px pageoverflow·narrow·KaTeX·console·깨진anchor0,예측3각각. codebuttons2/3/4열기닫기,first1/5역할먼저 PASS. output/playwright/teach-ai-theory-batch5/summary.json",
+        "desktop1440": "동일검사PASS;WorldPlanningViz실제관측버튼후비용10.24/1.44/1.44/.64과reset확인. 전체screenshots중390입구·코드및1440세계모형표를직접확인.",
+        "typecheck": "전체 npx tsc -b PASS /tmp/teach-all/ai-theory-tsc-batch5-final.log"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+        "root metadata·topology병합 및 전역 build·게시검증"
+      ],
+      "preservedEvidence": {
+        "case": [
+          "정답 40개에서 통과 38개·탈락 2개, 오답 60개에서 통과 12개·탈락 48개입니다. 통과율은 50/100=50%이고 실제 정답률은 40/100=40%입니다. 두 비율은 다른 질문에 답합니다.",
+          "통과한 답의 정답 비율은 38/50=76%입니다. 반면 실제 정답을 놓치지 않는 비율은 38/40=95%입니다. 보상 평균만 보고 모델이 50%를 해결한다고 주장하면 잘못 통과한 12개를 성공으로 세게 됩니다."
+        ],
+        "sameCaseTrace": [
+          "네 응답의 reward가 [0,0,0,0]이면 평균을 뺀 값은 모두 0입니다. [1,1,1,1]도 같습니다. 순수한 group-relative advantage는 서로 무엇을 더 강화할지 구별하지 못합니다. KL 같은 별도 loss가 없다는 뜻은 아닙니다.",
+          "[0,0,1,1]이면 평균 0.5를 빼 [−0.5,−0.5,0.5,0.5]가 됩니다. 표준편차로 나누는지와 어떤 추정량을 쓰는지는 trainer 설정에 따릅니다. 보상을 나누는 규칙과 실제 loss를 같은 버전으로 확인해야 합니다.",
+          "Reward shaping의 한 방법은 γΦ(s′)−Φ(s)를 기존 reward에 더하는 것입니다. 경로를 따라 할인합을 구하면 중간 potential이 상쇄됩니다. γ=1, potential이 0→0.5→0.2→0이면 변화량 0.5−0.3−0.2=0입니다. 반면 방문마다 +0.5를 주면 순환만으로 양의 점수가 생깁니다."
+        ],
+        "sourceApplication": [
+          "Open-R1 commit 5b6ff22의 accuracy_reward는 정답과 응답을 파싱해 verify를 호출합니다. 정답 파싱 실패나 검증 예외에서는 None을 돌려주는 경로가 있습니다. 이 값은 오답 0과 다르며 실제 trainer가 어떻게 제외하는지 함께 확인해야 합니다.",
+          "format_reward는 think·answer 태그의 정규식만 확인합니다. 앞의 오답 60개 중 하나가 그 형식을 지키면 형식 점수는 1일 수 있습니다. 그 점수를 정확성 점수와 합산하더라도 이 오답이 실제 정답으로 바뀌지는 않습니다.",
+          "사이드바의 원문 전체와 100개 평가 표를 함께 봅니다. 코드가 무엇을 검사하는지는 원문으로 확인하고 false acceptance가 12개인지 같은 값은 독립된 실행·평가 데이터로 측정해야 합니다. 이 글의 100개는 설명용 가정입니다."
+        ],
+        "limits": [
+          "평가에는 문제 출처·중복·정답 라벨, parser와 test 버전, 실패·시간초과·채점 불가의 분모를 기록합니다. 학습용 reward가 개선되어도 독립 held-out 성공과 실제 효과가 개선되는지 따로 확인합니다. 에이전트 결과 검증은 최종 artifact와 외부 효과까지 이어집니다.",
+          "100개 표본의 76% precision을 모든 분포의 고정 상수로 쓰지 않습니다. 모델이 최적화되면서 새로운 오류를 찾아낼 수 있고 문제 종류나 출력 형식도 바뀝니다. 같은 verifier를 쓰더라도 주기적으로 오류 집합을 다시 읽어야 합니다."
+        ]
+      }
     },
     {
       "route": "ai/rl-foundations-for-llm-post-training",
@@ -6933,13 +7137,13 @@
       "publicFiles": [
         "src/pages/articles/ai/research-audit-sources/PaperReading.tsx",
         "src/pages/articles/ai/research-audit-sources/WorldPlanningViz.tsx",
-        "src/pages/articles/ai/research-audit-sources/codeRefs.ts",
         "src/pages/articles/ai/world-model-latent-planning.tsx",
         "src/pages/articles/world-systems/NumericPath.tsx",
         "src/pages/articles/world-systems/ReviewPrompts.tsx",
-        "src/pages/articles/world-systems/SourceApplication.tsx"
+        "src/pages/articles/world-systems/SourceApplication.tsx",
+        "src/pages/articles/ai/world-model-latent-planning/codeRefs.ts"
       ],
-      "status": "unreviewed",
+      "status": "existing-teach-targeted-repair-awaiting-integration",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 3,
@@ -6947,20 +7151,101 @@
         "hasSourceSurface": true,
         "characters": 21164
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 본문의 작은 수치 사례·추적·실제 원문 적용·한계·예측 질문은 확인했으므로 핵심 설명은 유지합니다.",
+        "첫1/5에 key·RLVR·encoder 등의 이름이 역할보다 먼저 등장하고 가정 표시와 역할→이름 연결이 불완전했습니다.",
+        "하나의 코드 강조 범위가25행을 넘고 관련 없는 공유 codeRefs도 함께 불러왔습니다. 기사 전용 원문 refs로 필요한 두세부분을 나눴습니다.",
+        "LeWM H5전체실행의 근거 위치는부록D Planning solver이며F.1이 아닙니다. 5개block은frame skip5로25환경timestep인단위를 보충했습니다.",
+        "CEM평균·재관측·실제.4차이·논문실행간격 질문의 답anchor4곳을 실제본문위치로 교정했습니다."
+      ],
+      "fixture": "가정x0,목표2,H2,K1의4후보비용16/4/4/0;실제.8재관측후10.24/1.44/1.44/.64,눈감고2행동은1.6으로예측2와.4차이. LeWM원문sum축·CEM평균(1,0)·부록D의H5block/25환경timestep전체실행조건과대조.",
+      "stageAnchors": {
+        "S": [
+          "overview"
+        ],
+        "B": [
+          "black-box"
+        ],
+        "0": [
+          "case"
+        ],
+        "1": [
+          "picture"
+        ],
+        "2": [
+          "need"
+        ],
+        "3": [
+          "names"
+        ],
+        "4": [
+          "mechanism"
+        ],
+        "5": [
+          "source"
+        ],
+        "6": [
+          "comparison"
+        ],
+        "7": [
+          "limits"
+        ]
+      },
+      "primarySourceApplication": [
+        {
+          "label": "LeWM official implementation · 8edfeb3",
+          "href": "https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/jepa.py",
+          "anchor": "paper-lewm-code"
+        },
+        {
+          "label": "LeWorldModel · arXiv 2603.19312v1",
+          "href": "https://arxiv.org/html/2603.19312v1",
+          "anchor": "paper-lewm"
+        },
+        {
+          "label": "V-JEPA 2 · arXiv 2506.09985",
+          "href": "https://arxiv.org/abs/2506.09985",
+          "anchor": "paper-vjepa2"
+        },
+        {
+          "label": "The Planning Limits of Latent World Models · arXiv 2609.39235",
+          "href": "https://arxiv.org/abs/2609.39235",
+          "anchor": "paper-planning-limits"
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "baseline전체paragraph와원본TSX전체·raw근거행·6+4문제를 읽었습니다. 기존 고유사례와정확한 유도유지, 실제문제만국소교정. 핵심기존내용과anchor는preservedEvidence에기록.",
+        "learningAnswers": "30문항정답과본문대조 /tmp/teach-all/ai-theory-learning-answer-review-batch5.json",
+        "primarySources": "GDN2v1식29,VPRv1식2,ReasoningArena그룹분산,LeWMv1식3·부록D,PlanningLimitsv1범위를웹1차원문에서재확인. 로컬raw4파일의고정revision원격과byte동일 /tmp/teach-all/ai-theory-research-source-hashes.json",
+        "numericTrace": "행렬읽기·독립gate·erase0·4후보비용·형식점수실제함수검산PASS /tmp/teach-all/ai-theory-arithmetic-batch5.json. 모델학습/GPUkernel실행재현주장없음.",
+        "humanize": "extract→동일apply roundtrip→prepare→gate→apply. Reward/world exit0;fast-weight exit1수식쉼표WARN. 수치·마커·가정보존. /tmp/teach-all/humanize-ai-theory-batch5/summary.json",
+        "mobile390": "3route390px pageoverflow·narrow·KaTeX·console·깨진anchor0,예측3각각. codebuttons2/3/4열기닫기,first1/5역할먼저 PASS. output/playwright/teach-ai-theory-batch5/summary.json",
+        "desktop1440": "동일검사PASS;WorldPlanningViz실제관측버튼후비용10.24/1.44/1.44/.64과reset확인. 전체screenshots중390입구·코드및1440세계모형표를직접확인.",
+        "typecheck": "전체 npx tsc -b PASS /tmp/teach-all/ai-theory-tsc-batch5-final.log"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+        "root metadata·topology병합 및 전역 build·게시검증"
+      ],
+      "preservedEvidence": {
+        "case": [
+          "가정 모형 x′=x+a에서 시작 0, 목표 2입니다. [−1,−1]의 마지막 위치는 −2라서 제곱거리 (−2−2)²=16입니다. [−1,+1]과 [+1,−1]은 마지막 0이므로 비용 4입니다. [+1,+1]은 마지막 2이므로 비용 0입니다.",
+          "이 계산에서 가장 좋은 후보는 [+1,+1]입니다. 아직 실제 물체를 움직이지는 않았습니다. 후보 수와 예측 길이를 늘리면 더 많은 미래를 비교할 수 있지만 모델 호출과 메모리, 계획 시간이 함께 늘어납니다."
+        ],
+        "sameCaseTrace": [
+          "먼저 현재 관측과 목표를 같은 encoder로 표현합니다. 각 후보를 predictor에 순서대로 넣고 마지막 표현과 목표 표현의 제곱거리를 비교합니다. 네 후보를 전부 센 우리의 가정 사례와 달리 큰 연속 행동 공간에서는 일부 후보만 표본으로 뽑습니다.",
+          "예를 들어 비용이 낮은 후보 두 개가 [+1,+1]과 [+1,−1]이라면 두 행동 좌표의 평균은 [+1,0]입니다. CEM은 이런 elite 통계를 다음 표본 분포에 사용합니다. 비용이 같은 후보를 고르는 방식과 탐색 분산도 결과를 바꾸며 전역 최적해를 보장하지 않습니다.",
+          "계획 중 고치는 것은 행동 열의 후보 분포입니다. Predictor의 학습된 parameter를 매 후보마다 다시 학습하는 것이 아닙니다. 계획을 실행할 때 몇 행동을 먼저 쓸지 K와 미래를 몇 단계 볼지 H를 구별합니다. 이 글의 상호작용은 H=2, K=1입니다."
+        ],
+        "sourceApplication": [
+          "논문 저자의 le-wm commit 8edfeb3에서 rollout은 predictor의 다음 latent를 emb에 이어 붙입니다. criterion은 마지막 예측과 목표의 좌표별 제곱 차이를 합해 후보마다 비용 하나를 만듭니다. 이름이 mse_loss여도 reduction=\"none\" 뒤 sum을 하므로 단순 평균이라고 읽지 않습니다.",
+          "이 API의 의미를 확인하려고 latent를 z=x 한 차원으로 줄인 우리 가정을 넣으면 [+1,+1]의 마지막 예측 2와 목표 2에서 비용은 0입니다. [−1,−1]의 마지막 −2에서는 비용 16입니다. 실제 학습된 LeWM의 192차원 표현을 이 자리 숫자로 대체했다는 뜻은 아닙니다.",
+          "별도 사이드바의 stable-worldmodel commit 21446f1은 cost가 작은 top-k 후보를 골라 평균·표준편차를 갱신하는 실제 solver입니다. 2026-10-02의 framework 코드이며 논문 발표 때 dependency와 동일하다고 주장하지 않습니다."
+        ],
+        "limits": [
+          "1단계 예측 오차, 긴 rollout 오차, 후보 행동의 순위, 실제 closed-loop 성공률을 따로 잽니다. 시작·목표 분포, 카메라 변화, action 시간 간격, H·K, 후보 수·반복 수와 계획 wall-clock도 함께 기록합니다.",
+          "2026-09-30의 The Planning Limits of Latent World Models는 예측 정확도뿐 아니라 목표가 계획 범위 안에 있는지 따져 봅니다. 짧은 예측이 완벽하다고 합시다. 그래도 먼 목표를 향해 지금 우회해야 하는 행동의 가치를 못 드러낼 수 있습니다. 논문의 특정 환경 결과를 모든 world model의 불가능성으로 확대하지 않습니다."
+        ]
+      }
     },
     {
       "route": "ai/yarn-rope-extension",
@@ -7002,10 +7287,12 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 11,
-    "localVerified": 10,
-    "awaitingIntegration": 1,
-    "pending": 178,
+    "rewritten": 12,
+    "existingTeachTargetedRepairs": 3,
+    "reviewedAndImproved": 15,
+    "localVerified": 12,
+    "awaitingIntegration": 3,
+    "pending": 174,
     "complete": 0
   }
 }

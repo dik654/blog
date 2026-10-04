@@ -1,34 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ModernAaveViz from "./viz/ModernAaveViz";
-
-export default function Liquidation() {
-  return (
-    <section id="liquidation" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Health factor는 oracle value에 weighted liquidation threshold를 적용한 비율이다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>각 collateral의 oracle value에 liquidation threshold를 곱해 더하고 전체 debt value로 나눕니다. HF가 1 미만이면 liquidation 대상입니다. LTV는 새 borrow/withdraw 허용에, liquidation threshold는 청산 판정에 쓰이므로 같은 숫자라고 가정하면 안 됩니다.</p>
-      </div>
-      <ModernAaveViz mode="liquidation" />
-      <ExplainedFormula
-        question="담보 가격 하락이 health factor와 청산량에 어떻게 연결될까요?"
-        idea="먼저 asset decimals와 oracle scale을 맞춰 base currency value를 만들고, 담보별 threshold를 곱한 합을 debt로 나눕니다. Liquidation 시 debt repayment와 bonus collateral은 available collateral·close factor에 의해 다시 제한됩니다."
-        formula={String.raw`HF=\frac{\sum_i V_i\,LT_i}{D},\qquad C_{seize}=\frac{D_{repaid}(1+bonus)}{P_C}`}
-        annotatedFormula={String.raw`HF=\underbrace{\frac{\sum_i V_i\,LT_i}{D},\qquad C_{seize}=\frac{D_{repaid}(1+bonus)}{P_C}}_{\text{기준량당 비율}}`}
-        operations={[
-          { expression: String.raw`\frac{\sum_i V_i\,LT_i}{D},\qquad C_{seize}=\frac{D_{repaid}(1+bonus)}{P_C}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","먼저 asset decimals와 oracle scale을","맞춰 base currency value를 만들고, 담보별","threshold를 곱한 합을 debt로 나눕니다."] },
-        ]}
-        terms={[
-          { symbol: "V_i", name: "collateral value", description: "Oracle price·token balance·decimals로 계산한 base-currency 가치입니다." },
-          { symbol: "LT_i", name: "liquidation threshold", description: "Collateral별 governance risk percentage입니다." },
-          { symbol: "D", name: "total debt value", description: "Index가 반영된 모든 borrow의 base-currency 합입니다." },
-        ]}
-        assumptions={["Oracle freshness·price sign·asset decimals·eMode category를 먼저 검증합니다.", "Bonus, protocol fee, close factor와 collateral cap은 pinned implementation/config를 사용합니다."]}
-        interpretation="담보 $10,000, LT=80%, debt $7,000이면 HF≈1.143입니다. 담보가 $8,000으로 하락하면 HF≈0.914라 청산 가능합니다. Debt $1,000을 갚고 bonus 5%, collateral price $100이면 cap 전 10.5개를 계산합니다. Price decimals를 10배 틀리면 HF와 seize가 함께 잘못됩니다."
-      />
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Close factor는 “항상 50%”가 아니다</h3>
-        <p>Pinned origin snapshot은 담보·부채가 최소 base threshold 이상이고 HF가 0.95보다 높을 때 total debt의 기본 50%를 cap으로 씁니다. 이 조건 밖에서는 전체 debt까지 후보가 될 수 있고, 선택 debt reserve·available collateral·사용자 <code>debtToCover</code>가 실제 양을 더 줄입니다. 오래된 V3 설명을 모든 3.x 배포에 그대로 복사하지 않습니다.</p>
-      </div>
-    </section>
-  );
-}
+import TeachCode from "./TeachCode";
+export default function Liquidation(){return <div className="mb-16 space-y-14 [&_section]:space-y-5 [&_h2]:text-2xl [&_h2]:font-bold [&_p]:leading-8">
+<section id="liquidation" data-teach-level="6"><h2>12. 담보가 8000이면 청산 기준 가치6400이 부채7000보다 작습니다</h2><p>C의 담보 100개 가격이 100달러일 때는10000×80%/7000≈1.143입니다. 가격 80달러에서는8000×80%/7000≈0.914입니다. HF가1 아래이면 이 계정은 청산 가능한 위험 상태에 들어갑니다. 실제 청산 호출에는 자산 활성화·중지 상태 등의 나머지 조건도 적용됩니다.</p><ExplainedFormula question="서로 다른 담보를 같은 부채와 어떻게 비교하나요?" idea="같은 기준 통화로 평가한 담보 각각에 청산 비율을 곱하고 모두 더한 뒤 현재 총부채로 나눕니다." formula={String.raw`HF=\frac{\sum_i V_iLT_i}{D}`} annotatedFormula={String.raw`HF=\frac{\overbrace{\sum_i\underbrace{V_iLT_i}_{\text{담보별 청산 기준 가치}}}^{\text{전체 담보 합}}}{\underbrace{D}_{\text{현재 총부채 가치}}}`} operations={[{expression:String.raw`V_iLT_i`,annotation:"담보 8000에80%를 반영하면 부채와 비교할 금액은6400입니다."},{expression:String.raw`\sum_i V_iLT_i`,annotation:"여러 담보의 서로 다른 가격과 청산 비율을 반영한 금액을 합칩니다."},{expression:String.raw`6400/7000`,annotation:"청산 기준 담보가 부채를 얼마나 덮는지 비교하면약 0.914입니다."}]} terms={[{symbol:"V_i",name:"담보별 가치",description:"수량·소수 자릿수·oracle 가격을 맞춰 기준 통화로 평가합니다."},{symbol:"LT_i",name:"담보별 청산 비율",description:"자산과 활성 모드에 따라 정한 비율입니다."},{symbol:"D",name:"계정 총부채 가치",description:"해당 시점의 차입 계수가 반영된 모든 부채의 합입니다."}]} assumptions={["자산 단위와 가격 배율을 맞추고 가격의 유효성·최신성 및 적용 모드를 확인합니다.","부채가 0인 경우 이 나눗셈 대신 원문의 별도 분기를 적용합니다."]} interpretation="가격이 10배로 잘못 해석되면 같은 수량의 담보 가치와HF가 함께 달라집니다. 단순 잔액 수량만 더하면 다른 자산을 비교할 수 없습니다."/><ModernAaveViz mode="liquidation"/><TeachCode codeKey="health" label="담보 합·부채 비율 실제 원문"/><p>GenericLogic에서 이 계산 직전의 avgLiquidationThreshold는 이름과 달리 아직 담보 가치×기준 비율을 더한 값입니다. HF를 계산한 뒤 총담보 가치로 나누어 평균 비율로 바꿉니다. 부채가 0이면 HF를 uint256 최대값으로 나타내는 분기를 사용합니다. 변수 이름만 보고 먼저 평균을 내면 다른 식이 됩니다.</p></section>
+<section id="close-factor" data-teach-level="7"><h2>13. 청산 가능 상태여도 실제 갚는 양은 다시 제한됩니다</h2><p>청산자가 C의 부채1000달러를 갚고 담보 보상이5%라고 합시다(가정). 전체 담보 차감의 기준 가치는 1050달러입니다. C의 담보 가격이 80달러인 사례에서는1050/80=13.125개입니다. 단위 가격 100달러인 별도 담보라면10.5개입니다. 실제 청산자 수령량은 보상 부분에 붙는 프로토콜 수수료와 반올림을 반영해야 합니다.</p><p>C에게 남은 담보 가치는 8000−1050=6950, 부채는 7000−1000=6000입니다. 다른 변화가 없으면 HF는6950×80%/6000≈0.927로 여전히1 아래입니다. 일부를 갚았다는 사실이 곧 정상 상태로 복구됐다는 뜻은 아닙니다.</p><p>이 snapshot은 선택한 담보와 부채가 각각 최소 기준 가치2000 이상이고 HF가0.95보다 높을 때 기본50% 한도를 적용하는 분기를 둡니다. 분기의 기준은 계정 총부채의 50%이며 선택 부채가 그보다 작으면 선택 부채 전액이 후보가 될 수 있습니다. C의 HF0.914는 이 조건에 들어가지 않아 선택 부채 전액7000이 우선 후보가 됩니다.</p><TeachCode codeKey="close" label="청산 후보량·요청량 제한 실제 원문"/><p>그 뒤 요청한 debtToCover와 가용 담보, 보상·수수료, 남겨 둘 작은 잔액에 관한 규칙이 실제 양을 더 제한합니다. 위1000달러 계산은 이 추가 조건도 허용한다는 가정입니다. 담보 부족이나 오래된 가격이면 단순1050달러 나눗셈만으로 성공을 확정하지 않습니다. ‘V3는 항상50% 청산’이라고 모든 배포에 적용하면 이 분기를 놓칩니다.</p></section>
+</div>}

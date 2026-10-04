@@ -1,0 +1,3 @@
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { teachCodeRefs } from "./teachCodeRefs";
+export default function TeachCode({codeKey,label}:{codeKey:string;label:string}){const s=useCodeSidebar();return <><CodeViewButton label={label} onClick={()=>s.open(codeKey,teachCodeRefs[codeKey])}/><CodeSidebar codeRefKey={s.codeRefKey} codeRef={s.codeRef} onClose={s.close} onNavigate={s.navigate} codeRefs={teachCodeRefs} fileTrees={{}} projectMetas={{"aave-v3-origin":{id:"aave-v3-origin",label:"Aave Origin · cff15de6",badgeClass:"border-sky-500 text-sky-700"}}}/></>}

@@ -179,12 +179,67 @@ export const defiArticles: Article[] = [
     title: "Aave V3: utilization·index·health·liquidation",
     subcategory: "defi-lending",
     sections: [
-      { id: "overview", title: "Reserve·account·evidence boundary" },
-      { id: "atoken-debt", title: "Scaled balance·indexes" },
-      { id: "interest-rate", title: "Utilization kink rate" },
-      { id: "liquidation", title: "Health factor·close factor" },
-      { id: "efficiency-mode", title: "E-Mode·isolation·release" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 돈을 모아 빌려주되 담보가 버틸 수 있는지 계속 계산합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 돈을 맡기고 빌린 뒤 갚는 과정입니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 10000달러 중 8000달러를 빌려준 풀입니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 자산별 풀과 사람별 계정을 함께 관리합니다"
+  },
+  {
+    "id": "why-parts",
+    "title": "5. 부채를 갚을 담보와 오늘 인출할 돈은 다릅니다"
+  },
+  {
+    "id": "names",
+    "title": "6. Reserve·index·health factor에 이름을 붙입니다"
+  },
+  {
+    "id": "account-trace",
+    "title": "7. C의 7000달러 차입을 계속 따라갑니다"
+  },
+  {
+    "id": "atoken-debt",
+    "title": "8. 저장한 단위에 공통 계수를 곱해 현재 잔액을 얻습니다"
+  },
+  {
+    "id": "index-source",
+    "title": "9. 실제 코드는 공급을 내리고 부채를 올려 읽습니다"
+  },
+  {
+    "id": "interest-rate",
+    "title": "10. 남은 자금이 적어지면 차입 이율이 빠르게 올라갑니다"
+  },
+  {
+    "id": "rate-source",
+    "title": "11. 실제 분기는 정확히 80%일 때 아래 구간을 씁니다"
+  },
+  {
+    "id": "liquidation",
+    "title": "12. 담보가 8000이면 청산 기준 가치6400이 부채7000보다 작습니다"
+  },
+  {
+    "id": "close-factor",
+    "title": "13. 청산 가능 상태여도 실제 갚는 양은 다시 제한됩니다"
+  },
+  {
+    "id": "efficiency-mode",
+    "title": "14. 자산 조합에 따라 허용 비율과 차입 범위를 바꿉니다"
+  },
+  {
+    "id": "aave-v3-release-gate",
+    "title": "15. 같은 가격·계수·설정에서 실행 결과를 비교합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/aave-v3"),
   },
   {

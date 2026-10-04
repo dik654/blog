@@ -4100,32 +4100,31 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/vllm-paged-attention#logical-physical-address",
   },
   "pagedattention-memory-kernel-boundary": {
-    id: "pagedattention-memory-kernel-boundary",
-    kind: "concept",
-    domain: "computer-science",
-    label: "PagedAttention manager · kernel boundary",
-    definition:
-      "Block allocation·reference·eviction을 소유하는 memory manager, block table을 따라 K/V를 읽는 attention kernel, request ordering을 정하는 scheduler의 책임을 분리한 경계입니다.",
-    canonicalHref: "/cs/ai/vllm-paged-attention#memory-kernel-boundary",
+    "id": "pagedattention-memory-kernel-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "PagedAttention manager · kernel boundary",
+    "definition": "Manager는 KV block의 할당·보유·반환과 cache identity를 관리하고 kernel은 block table 및 tensor 배치 규약으로 실제 K·V를 읽어 계산합니다. 역할은 다르지만 유효 길이·주소·복사 완료·재사용 시점이 일치해야 계산 정확성이 유지됩니다.",
+    "canonicalHref": "/cs/ai/vllm-paged-attention#memory-kernel-boundary"
   },
   "kv-block-reference-ownership": {
-    id: "kv-block-reference-ownership",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "KV block reference ownership",
-    definition:
-      "여러 request block table이 공유할 수 있는 physical KV block의 reference count를 일관되게 갱신하고 reference가 남은 block의 eviction·overwrite를 금지하는 ownership 불변식입니다.",
-    canonicalHref: "/cs/ai/vllm-paged-attention#block-pool",
+    "id": "kv-block-reference-ownership",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "KV block reference ownership",
+    "definition": "KV block을 누가 언제까지 보유하는지 관리하는 규칙입니다. 단순 모형은 살아 있는 요청 table의 참조 수를 세지만 실제 구현에는 복사·전송 pin도 더해집니다. Hash 조회 항목 제거와 물리 공간 재사용은 구분하며 아직 보유 참조가 있는 공간을 다른 내용으로 덮어쓰면 안 됩니다.",
+    "canonicalHref": "/cs/ai/vllm-paged-attention#block-pool"
   },
   "kv-free-queue-eviction": {
-    id: "kv-free-queue-eviction",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "KV free queue · cache eviction",
-    aliases: ["Free Block Pool"],
-    definition:
-      "Reference count가 0인 physical block을 allocation 후보 순서로 보관하면서 hash가 남은 block은 prefix hit에 재활성화하고, 재할당할 때 이전 hash identity를 제거하는 lifecycle입니다.",
-    canonicalHref: "/cs/ai/vllm-paged-attention#free-queue-eviction",
+    "id": "kv-free-queue-eviction",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "KV free queue · cache eviction",
+    "aliases": [
+      "Free Block Pool"
+    ],
+    "definition": "현재 다른 용도로 돌려줄 수 있는 KV block의 목록과 캐시 항목을 제거하는 규칙입니다. Free block에도 예전 내용과 hash가 남아 재사용 hit가 가능할 수 있습니다. Hash 항목 eviction이 사용 중인 물리 공간을 즉시 free한다는 뜻은 아닙니다.",
+    "canonicalHref": "/cs/ai/vllm-paged-attention#free-queue-eviction"
   },
   "kv-manager-allocation-contract": {
     id: "kv-manager-allocation-contract",
@@ -8391,31 +8390,28 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/agent-devlog-patterns#overview",
   },
   "curated-changelog-entry-contract": {
-    id: "curated-changelog-entry-contract",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Curated Changelog entry contract",
-    definition:
-      "검증을 마친 notable change를 날짜·version, 사람이 이해할 결과·영향, verification, stable evidence link로 기록하되 raw commit·debugging transcript와 아직 배포되지 않은 상태를 섞지 않는 시간순 변경 기록 계약입니다.",
-    canonicalHref: "/cs/ai/agent-changelog-evidence#overview",
+    "id": "curated-changelog-entry-contract",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Curated Changelog entry contract",
+    "definition": "검증을 마친 notable change를 날짜·version, 사람이 이해할 결과·영향, verification, stable evidence link로 기록하되 raw commit·debugging transcript와 아직 배포되지 않은 상태를 섞지 않는 시간순 변경 기록 계약입니다.",
+    "canonicalHref": "/cs/ai/agent-changelog-evidence#entry-terms"
   },
   "architecture-decision-record-contract": {
-    id: "architecture-decision-record-contract",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Architecture Decision Record contract",
-    definition:
-      "이후 선택을 제약하는 architecturally significant decision 하나의 title·status·context·같은 driver로 비교한 options·decision·consequences를 보존하고, accepted를 구현 완료로 오인하지 않으며 바뀐 결정은 원문 삭제 대신 superseding ADR로 연결하는 계약입니다.",
-    canonicalHref: "/cs/ai/architecture-decision-records#overview",
+    "id": "architecture-decision-record-contract",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Architecture Decision Record contract",
+    "definition": "이후 선택을 제약하는 architecturally significant decision 하나의 title·status·context·같은 driver로 비교한 options·decision·consequences를 보존하고, accepted를 구현 완료로 오인하지 않으며 바뀐 결정은 원문 삭제 대신 superseding ADR로 연결하는 계약입니다.",
+    "canonicalHref": "/cs/ai/architecture-decision-records#decision-terms"
   },
   "reusable-lesson-contract": {
-    id: "reusable-lesson-contract",
-    kind: "concept",
-    domain: "computer-science",
-    label: "재사용 가능한 Lesson contract",
-    definition:
-      "한 사건의 요약 대신 다음 작업에서 실행할 현재 rule·적용 scope·정상 exception·evidence·verification·revisit condition을 한 정본에 유지하며, 근거가 약하거나 심각한 단일 사건에서는 좁은 provisional lesson으로 시작하는 계약입니다.",
-    canonicalHref: "/cs/ai/engineering-lessons-ledger#overview",
+    "id": "reusable-lesson-contract",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "재사용 가능한 Lesson contract",
+    "definition": "한 사건의 요약 대신 다음 작업에서 실행할 현재 rule·적용 scope·정상 exception·evidence·verification·revisit condition을 한 정본에 유지하며, 근거가 약하거나 심각한 단일 사건에서는 좁은 provisional lesson으로 시작하는 계약입니다.",
+    "canonicalHref": "/cs/ai/engineering-lessons-ledger#lesson-terms"
   },
   "devlog-record-promotion-threshold": {
     id: "devlog-record-promotion-threshold",
@@ -8427,13 +8423,12 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/agent-devlog-patterns#promotion",
   },
   "postmortem-lesson-boundary": {
-    id: "postmortem-lesson-boundary",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Postmortem · Lessons 경계",
-    definition:
-      "Postmortem은 production incident의 timeline·impact·detection·mitigation·contributing factors·owner가 있는 verifiable action을 소유하고, Lessons는 그 사건을 대체하지 않은 채 여러 상황에서 현재 재사용할 rule과 test만 소유하는 분리 원칙입니다.",
-    canonicalHref: "/cs/ai/engineering-lessons-ledger#postmortem",
+    "id": "postmortem-lesson-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Postmortem · Lessons 경계",
+    "definition": "Postmortem은 production incident의 timeline·impact·detection·mitigation·contributing factors·owner가 있는 verifiable action을 소유하고, Lessons는 그 사건을 대체하지 않은 채 여러 상황에서 현재 재사용할 rule과 test만 소유하는 분리 원칙입니다.",
+    "canonicalHref": "/cs/ai/engineering-lessons-ledger#postmortem"
   },
   "agent-drafted-record-evidence-boundary": {
     id: "agent-drafted-record-evidence-boundary",
@@ -8445,68 +8440,68 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/agent-devlog-patterns#agent-review",
   },
   "changelog-notability-audience-boundary": {
-    id: "changelog-notability-audience-boundary",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Changelog notability · audience 경계",
-    definition: "변경의 크기를 commit 수로 재지 않고 누가 읽는지와 behavior·data format·policy·security에 관찰 가능한 영향이 있는지를 함께 판정해 Changelog에 넣을 변화를 고르는 경계입니다.",
-    canonicalHref: "/cs/ai/agent-changelog-evidence#notability",
+    "id": "changelog-notability-audience-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Changelog notability · audience 경계",
+    "definition": "변경의 크기를 commit 수로 재지 않고 누가 읽는지와 behavior·data format·policy·security에 관찰 가능한 영향이 있는지를 함께 판정해 Changelog에 넣을 변화를 고르는 경계입니다.",
+    "canonicalHref": "/cs/ai/agent-changelog-evidence#notability"
   },
   "changelog-verification-publication-state": {
-    id: "changelog-verification-publication-state",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Changelog verification · publication state",
-    definition: "구현·검증·merge·deployment를 서로 다른 상태로 보존하고 아직 실제 반영되지 않은 변화는 Unreleased 또는 pending으로 표시하는 공개 lifecycle입니다.",
-    canonicalHref: "/cs/ai/agent-changelog-evidence#publication",
+    "id": "changelog-verification-publication-state",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Changelog verification · publication state",
+    "definition": "구현·검증·merge·deployment를 서로 다른 상태로 보존하고 아직 실제 반영되지 않은 변화는 Unreleased 또는 pending으로 표시하는 공개 lifecycle입니다.",
+    "canonicalHref": "/cs/ai/agent-changelog-evidence#publication"
   },
   "changelog-stable-evidence-link": {
-    id: "changelog-stable-evidence-link",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Changelog stable evidence link",
-    definition: "짧은 변경 결과에서 고정 run·commit·test·decision identifier로 돌아가 위치 변경 뒤에도 같은 근거와 verification receipt를 찾게 하는 추적 참조입니다.",
-    canonicalHref: "/cs/ai/agent-changelog-evidence#links",
+    "id": "changelog-stable-evidence-link",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Changelog stable evidence link",
+    "definition": "짧은 변경 결과에서 고정 run·commit·test·decision identifier로 돌아가 위치 변경 뒤에도 같은 근거와 verification receipt를 찾게 하는 추적 참조입니다.",
+    "canonicalHref": "/cs/ai/agent-changelog-evidence#links"
   },
   "adr-decision-driver-comparability": {
-    id: "adr-decision-driver-comparability",
-    kind: "concept",
-    domain: "computer-science",
-    label: "ADR decision-driver comparability",
-    definition: "복구 범위·동시성·migration·운영 비용처럼 결정을 좌우하는 기준을 먼저 고정하고 모든 option을 같은 축에서 비교해 선택을 나중에 재검토할 수 있게 하는 계약입니다.",
-    canonicalHref: "/cs/ai/architecture-decision-records#drivers",
+    "id": "adr-decision-driver-comparability",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "ADR decision-driver comparability",
+    "definition": "복구 범위·동시성·migration·운영 비용처럼 결정을 좌우하는 기준을 먼저 고정하고 모든 option을 같은 축에서 비교해 선택을 나중에 재검토할 수 있게 하는 계약입니다.",
+    "canonicalHref": "/cs/ai/architecture-decision-records#drivers"
   },
   "adr-status-implementation-separation": {
-    id: "adr-status-implementation-separation",
-    kind: "concept",
-    domain: "computer-science",
-    label: "ADR status · implementation separation",
-    definition: "ADR의 proposed·accepted 상태와 구현 task·migration·deployment·verification 상태를 분리해 결정 채택을 실행 완료로 오인하지 않게 하는 경계입니다.",
-    canonicalHref: "/cs/ai/architecture-decision-records#status",
+    "id": "adr-status-implementation-separation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "ADR status · implementation separation",
+    "definition": "ADR의 proposed·accepted 상태와 구현 task·migration·deployment·verification 상태를 분리해 결정 채택을 실행 완료로 오인하지 않게 하는 경계입니다.",
+    "canonicalHref": "/cs/ai/architecture-decision-records#status"
   },
   "adr-supersession-history-chain": {
-    id: "adr-supersession-history-chain",
-    kind: "concept",
-    domain: "computer-science",
-    label: "ADR supersession history chain",
-    definition: "결정이 바뀔 때 원문을 삭제하거나 덮어쓰지 않고 superseded 상태와 새 ADR link로 과거 context와 현재 결정을 모두 찾게 하는 history입니다.",
-    canonicalHref: "/cs/ai/architecture-decision-records#supersession",
+    "id": "adr-supersession-history-chain",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "ADR supersession history chain",
+    "definition": "결정이 바뀔 때 원문을 삭제하거나 덮어쓰지 않고 superseded 상태와 새 ADR link로 과거 context와 현재 결정을 모두 찾게 하는 history입니다.",
+    "canonicalHref": "/cs/ai/architecture-decision-records#supersession"
   },
   "lesson-scope-exception-test-triad": {
-    id: "lesson-scope-exception-test-triad",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Lesson scope · exception · test triad",
-    definition: "현재 rule의 적용 경로, 정상적으로 규칙을 깨도 되는 예외, 둘을 구별하는 verification fixture를 한 정본에서 함께 관리하는 실행 가능한 lesson 형태입니다.",
-    canonicalHref: "/cs/ai/engineering-lessons-ledger#scope-test",
+    "id": "lesson-scope-exception-test-triad",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Lesson scope · exception · test triad",
+    "definition": "현재 rule의 적용 경로, 정상적으로 규칙을 깨도 되는 예외, 둘을 구별하는 verification fixture를 한 정본에서 함께 관리하는 실행 가능한 lesson 형태입니다.",
+    "canonicalHref": "/cs/ai/engineering-lessons-ledger#scope-test"
   },
   "provisional-lesson-evidence-threshold": {
-    id: "provisional-lesson-evidence-threshold",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Provisional lesson evidence threshold",
-    definition: "반복 evidence가 부족해도 data loss·security처럼 severity가 크면 적용 범위를 좁히고 provisional status·반례·revisit 조건을 붙여 시작하되 넓은 보편 rule로 일반화하지 않는 기준입니다.",
-    canonicalHref: "/cs/ai/engineering-lessons-ledger#provisional",
+    "id": "provisional-lesson-evidence-threshold",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Provisional lesson evidence threshold",
+    "definition": "반복 evidence가 부족해도 data loss·security처럼 severity가 크면 적용 범위를 좁히고 provisional status·반례·revisit 조건을 붙여 시작하되 넓은 보편 rule로 일반화하지 않는 기준입니다.",
+    "canonicalHref": "/cs/ai/engineering-lessons-ledger#provisional"
   },
   "claw-independent-reimplementation-snapshot-boundary": {
     id: "claw-independent-reimplementation-snapshot-boundary",
@@ -16097,14 +16092,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/serving-memory-admission-and-preemption#hybrid-fixed-state",
   },
   "kv-internal-fragmentation": {
-    id: "kv-internal-fragmentation",
-    kind: "concept",
-    domain: "computer-science",
-    label: "KV internal fragmentation",
-    aliases: ["Internal Fragmentation"],
-    definition:
-      "Request에 배정했지만 그 request가 끝내 쓰지 않는 KV slot으로, 연속 최대 길이 예약에서는 예약과 실제 길이의 차이 전체, fixed-size block에서는 마지막 block의 빈 slot(B 미만)으로 상한이 정해지는 낭비입니다.",
-    canonicalHref: "/cs/ai/vllm-paged-attention#fragmentation-kinds",
+    "id": "kv-internal-fragmentation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "KV internal fragmentation",
+    "aliases": [
+      "Internal Fragmentation"
+    ],
+    "definition": "할당한 KV block 안에서 아직 유효 token 기록에 쓰지 않은 공간입니다. 한 full-attention group에 길이만큼 할당하는 단순 모형에서는 마지막 block의 빈 slot이 B보다 작습니다. 평균 빈 공간은 요청 길이의 나머지 분포에 의존합니다.",
+    "canonicalHref": "/cs/ai/vllm-paged-attention#fragmentation-kinds"
   },
   "kv-external-fragmentation": {
     id: "kv-external-fragmentation",
@@ -16147,24 +16143,26 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/vllm-paged-attention#beam-branch-sharing",
   },
   "kv-prefix-block-sharing": {
-    id: "kv-prefix-block-sharing",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Prefix KV block sharing",
-    aliases: ["Prefix Sharing"],
-    definition:
-      "같은 prefix를 가진 여러 request의 block table이 hash lookup으로 찾은 같은 full physical block을 가리켜 prefill 생략과 함께 memory를 나눠 쓰는 상태로, partial block은 공유하지 않고 새 token은 항상 자기 block에 쓰므로 copy-on-write가 필요 없습니다.",
-    canonicalHref: "/cs/ai/vllm-paged-attention#prefix-sharing",
+    "id": "kv-prefix-block-sharing",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Prefix KV block sharing",
+    "aliases": [
+      "Prefix Sharing"
+    ],
+    "definition": "같은 prefix의 KV를 여러 요청의 block table이 함께 참조하는 상태입니다. Physical block과 hash 단위가 같은 기본 경로는 full block을 공유하지만 더 작은 hash 단위의 partial hit는 CoW와 추가 수명 관리를 요구할 수 있습니다.",
+    "canonicalHref": "/cs/ai/vllm-paged-attention#prefix-sharing"
   },
   "prefix-cache-hit-rate": {
-    id: "prefix-cache-hit-rate",
-    kind: "metric",
-    domain: "distributed-systems",
-    label: "Prefix cache hit rate",
-    aliases: ["Cache Hit Rate"],
-    definition:
-      "일정 구간에서 cache에 조회한 token 합 대비 시작부터 연속으로 hit한 full-block token 합의 비율로, 한 token이라도 hit한 request 비율(request hit rate)과 달리 prefill 절감량에 비례하는 지표입니다.",
-    canonicalHref: "/cs/ai/vllm-paged-attention#prefix-operations",
+    "id": "prefix-cache-hit-rate",
+    "kind": "metric",
+    "domain": "distributed-systems",
+    "label": "Prefix cache hit rate",
+    "aliases": [
+      "Cache Hit Rate"
+    ],
+    "definition": "조회 집합에서 재사용한 token 합을 조회 token 합으로 나누거나 한 번이라도 hit한 요청 수를 전체 요청 수로 나눈 비율입니다. 두 정의와 집계 창을 명시해야 하며 token hit 비율도 실행 시간 절감률과 같지는 않습니다.",
+    "canonicalHref": "/cs/ai/vllm-paged-attention#prefix-operations"
   },
   "prefix-cache-locality": {
     id: "prefix-cache-locality",

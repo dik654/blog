@@ -3,41 +3,8 @@ import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "../reverse-mode-autodiff/codeRefs";
 import AutodiffGraphViz from "./viz/AutodiffGraphViz";
-
-export default function ForwardPass({
-  onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
-  return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <p className="mb-3 text-sm font-bold text-primary">용어 1 · computational graph</p>
-      <h2 className="mb-6 text-3xl font-bold">계산을 값과 operation의 화살표로 먼저 그린다</h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          <strong>Computational graph</strong>는 계산 중 생긴 값을 node로,
-          값을 만든 operation을 화살표로 나타낸 실행 지도입니다. 예를 들어
-          <code>a=wx</code>, <code>L=a²</code>이면 <code>w·x → a → L</code>이라는
-          두 단계가 먼저 생깁니다. 아직 미분하지 않습니다. 어떤 값이 어떤 값에
-          의존하는지만 고정합니다.
-        </p>
-      </div>
-
-      <AutodiffGraphViz />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3 id="tape" className="scroll-mt-20">용어 2 · autodiff tape</h3>
-        <p>
-          <strong>Tape</strong>는 이 graph를 거꾸로 실행할 때 필요한 operation 순서와
-          중간값을 적어 둔 기록입니다. Linear layer에서는 weight gradient에 입력
-          <code>X</code>가 필요하고 activation derivative에는 <code>Z</code> 또는
-          <code>A</code>가 필요합니다. 그래서 training forward는 prediction뿐 아니라
-          backward용 saved tensor도 만듭니다.
-        </p>
-      </div>
-
-      <ExplainedFormula
+import NumericPath from "../../world-systems/NumericPath";
+export default function ForwardPass({onCodeRef}:{onCodeRef:(key:string,ref:CodeRef)=>void}){return <div className="space-y-16"><section id="overview" data-teach-level="S" className="space-y-6"><h2 className="text-2xl font-bold">1. 중간값을 두 번 썼다면, 돌아오는 변화도 두 길에서 더합니다</h2><p className="leading-8">3에 2를 곱해 6을 만들고, 그 6을 제곱한 값에 다시 6을 더한다고 합시다. 결과는 36+6=42입니다. 처음 숫자 3을 아주 조금 바꾸면 마지막 42는 얼마나 바뀔까요 (가정)?</p><p className="leading-8">중간값 6에서 보면 제곱하는 길의 변화율은 12, 그대로 더하는 길의 변화율은 1입니다. 두 길이 마지막 값에 모두 기여하므로 합은 13입니다. 처음 숫자 3을 2와 곱했으므로, 처음 숫자에 대한 변화율은 13×2=26입니다.</p><p className="leading-8">앞으로 계산한 6을 다시 이용해 뒤에서부터 변화율을 구했습니다. 이 작은 계산을 저장 기록, 같은 값을 여러 번 쓴 경로, 실제 프로그램의 입력별 반환값까지 따라갑니다.</p></section><section id="black-box" data-teach-level="B" className="space-y-6"><h2 className="text-2xl font-bold">2. 값을 만드는 계산을 먼저 끝내고 그 계산의 반대 순서로 돌아옵니다</h2><p className="leading-8">첫 통과에서는 곱셈 결과 6, 제곱 결과 36, 마지막 합 42를 순서대로 만듭니다. 두 번째 통과에서는 마지막 합의 변화율 1에서 시작합니다. 합의 양쪽으로 1씩 보내면 제곱 길은 12, 더하기 길은 1을 중간값에 돌려줍니다.</p><NumericPath title="같은 중간값에 도착한 두 기여" steps={[{label:"제곱 길",value:"2×6 = 12"},{label:"그대로 더한 길",value:"1"},{label:"같은 값의 기여 합",value:"13"},{label:"처음 3의 변화율",value:"13×2 = 26"}]} /><p className="leading-8">처음 3을 실제로 다른 값으로 바꾸는 일은 아직 하지 않았습니다. 현재 계산의 민감도를 알아내는 단계와, 그 결과를 사용해 다음 값을 선택하는 단계는 다릅니다.</p></section><section id="case" data-teach-level="0" className="space-y-6"><h2 className="text-2xl font-bold">3. 한 길의 기여를 덮어쓰면 26 대신 24 또는 2가 됩니다</h2><p className="leading-8">중간값 6은 제곱하는 곳과 마지막 합에 그대로 넣는 곳에서 재사용됩니다. 돌아온 12와 1을 서로 다른 숫자의 변화율로 취급하면 안 됩니다. 둘 다 동일한 6을 조금 바꿨을 때 마지막 결과에 생기는 변화입니다.</p><p className="leading-8">더하기 길을 빠뜨리면 처음 숫자에 대한 변화율은 12×2=24, 제곱 길을 빠뜨리면 1×2=2가 됩니다. 두 길을 더해야 26입니다. 원래 제곱만 하는 별도 문제라면 결과는 36이고 변화율 24가 맞지만, 이번 문제의 마지막 합 42와는 다른 함수입니다.</p><p className="leading-8">작은 변화로 대조해 보겠습니다. 처음 숫자를 3.001로 바꾸면 중간값 6.002, 마지막 결과 42.026004입니다 (가정). 결과 차이 0.026004를 입력 차이 0.001로 나누면 26.004입니다. 변화 폭을 줄이면 현재 위치의 변화율 26에 가까워집니다.</p><p className="leading-8">한편 처음 입력 2의 변화율은 같은 13에 곱셈의 다른 값 3을 곱한 39입니다. 하나의 결과 42에 대해서도 어느 입력을 바꾸는지에 따라 민감도가 다릅니다.</p></section><section id="parts" data-teach-level="1" className="space-y-6"><h2 className="text-2xl font-bold">4. 값의 저장 공간, 연산 기록, 돌아오는 기여를 구분합니다</h2><p className="leading-8">곱셈을 되짚으려면 처음에 곱했던 3과 2가 필요합니다. 제곱을 되짚으려면 그때 제곱했던 6이 필요합니다. 마지막 답 42만 보관하면 일반적으로 앞의 두 입력과 중간값을 복원할 수 없습니다.</p><p className="leading-8">따라서 어떤 연산이 어떤 값을 읽었는지와 나중에 필요한 수를 함께 남깁니다. 돌아오는 기여를 쌓는 장부는 앞으로 계산한 값의 저장 공간과 별도입니다. 앞의 값 6을 변화율 13으로 덮어쓰면 제곱을 다시 확인할 때 잘못된 값을 읽게 됩니다.</p><p className="leading-8">두 길이 있는 경우에는 돌아온 기여를 모두 더한 뒤 곱셈 쪽으로 보냅니다. 먼저 도착한 기여만 전달하고 나중 기여를 잊으면 전체 함수의 민감도가 아닙니다. 계산을 거꾸로 한 번 읽는다는 말에는 이런 의존 순서가 포함됩니다.</p><p className="leading-8">값을 만든 뒤에 처음 숫자 3을 4로 바꿔 놓고 예전 결과 42를 미분하려 하면, 3으로 계산한 기록과 4라는 현재 값이 충돌합니다. 무엇을 저장했고 언제 바꾸었는지가 계산의 정확성에 직접 영향을 줍니다.</p></section><section id="why-reuse" data-teach-level="2" className="space-y-6"><h2 className="text-2xl font-bold">5. 처음 숫자를 하나씩 바꿔 전체 계산을 반복하지 않아도 됩니다</h2><p className="leading-8">처음 숫자가 둘뿐이면 작은 변화를 두 번 주어 볼 수 있습니다. 그러나 처음 숫자가 아주 많으면 숫자 하나마다 전체 계산을 다시 실행하는 방식은 비쌉니다. 각 연산이 자기 주변의 변화율을 계산해 뒤에서 온 기여에 곱하면, 앞의 많은 숫자에 대한 답을 같은 역순 통과에서 얻을 수 있습니다.</p><p className="leading-8">이는 연산을 공짜로 한다는 뜻은 아닙니다. 큰 행렬을 곱했던 단계는 돌아올 때도 큰 행렬 계산이 필요합니다. 전체 비용은 원래 계산의 크기와 연산별 미분 비용에 따르며, 층 개수만 세거나 처음 숫자의 개수와 무관하다고 말할 수 없습니다.</p><p className="leading-8">중간값을 모두 보관하면 되짚기가 쉬워지지만 기억 공간을 많이 사용합니다. 일부를 보관하지 않고 다시 계산하면 기억 공간은 줄지만 추가 계산을 해야 합니다. 두 방법 모두 처음에 실행했던 계산과 같은 값을 재현해야 합니다.</p><p className="leading-8">마지막에 관심 있는 값이 하나라는 조건도 중요합니다. 여러 출력의 모든 민감도를 각각 구하려면 서로 다른 출발 기여로 여러 번 돌아와야 할 수 있습니다. 어떤 입력 변화 한 방향만 필요한 경우에는 앞으로 따라가는 계산이 더 유리할 수도 있습니다.</p></section><section id="names" data-teach-level="3" className="space-y-6"><h2 className="text-2xl font-bold">6. 이미 본 기록과 기여에 이름을 붙입니다</h2><div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr><th>먼저 본 역할</th><th>실제 이름</th><th>이번 계산</th></tr></thead><tbody><tr><td>값과 연산의 의존 관계</td><td>Computational graph</td><td>3·2→6→36과 6→42</td></tr><tr><td>되짚을 순서와 필요한 저장 값</td><td>Autodiff tape / saved tensors</td><td>3,2,6과 연산 기록</td></tr><tr><td>각 연산 주변의 변화율</td><td>Local derivative</td><td>제곱에서 2×6=12</td></tr><tr><td>뒤에서 받은 마지막 값의 변화율</td><td>Upstream gradient</td><td>중간값에서 13</td></tr><tr><td>뒤에서 앞으로 변화율을 전파</td><td>Reverse-mode automatic differentiation</td><td>13×2=26,13×3=39</td></tr><tr><td>여러 사용처의 기여를 합침</td><td>Fan-out accumulation</td><td>12+1=13</td></tr><tr><td>선택한 출력 기여와 미분 행렬의 곱</td><td>Vector–Jacobian product, VJP</td><td>필요한 입력 방향의 답만 계산</td></tr><tr><td>입력 변화 방향을 앞으로 전파</td><td>Jacobian–vector product, JVP</td><td>한 입력 방향을 따라감</td></tr></tbody></table></div><p className="leading-8">이 글의 기호는 w=3, x=2, b=0, a=wx+b=6, L=a²+a=42입니다 (가정). b를 0으로 두어 처음 계산은 같지만, 덧셈 값에 대한 변화율도 실제 코드에서 확인할 수 있습니다. Gradient를 계산한 사실만으로 w·x·b가 갱신되지는 않습니다.</p><AutodiffGraphViz /></section><section id="tape" data-teach-level="3" className="space-y-6"><h2 className="text-2xl font-bold">7. 실제 backward에 필요한 값만 저장합니다</h2><ExplainedFormula
         question="linear layer의 forward가 backward에 필요한 어떤 값을 남겨야 할까?"
         idea={<>matrix multiplication으로 pre-activation Z를 만들고 activation f를 적용합니다. Weight gradient에는 X가, activation backward에는 Z 또는 A가 필요하므로 framework는 이 tensor들을 saved state로 보관합니다.</>}
         formula={String.raw`Z=XW+\mathbf 1b^\top,\qquad A=f(Z)`}
@@ -54,30 +21,6 @@ export default function ForwardPass({
           { symbol: "Z_{\\rm lin}", name: "linear projection", description: "bias를 더하기 전 XW의 결과입니다." },
           { symbol: "Z,A", name: "saved activations", description: "Z는 nonlinearity 전 값, A는 적용 후 값입니다." },
         ]}
-        assumptions={["row-major batch 표기이며 framework에 따라 weight를 transpose해 저장할 수 있습니다."]}
+        assumptions={["각 행이 하나의 자료인 row-batch 표기이며 framework에 따라 weight를 transpose해 저장할 수 있습니다."]}
         interpretation="forward activation memory가 training memory의 큰 비중을 차지하는 이유는 backward가 local derivative를 계산할 때 이 중간값을 다시 사용하기 때문입니다."
-      />
-      <CodeViewButton
-        onClick={() =>
-          onCodeRef("linear-forward", codeRefs["linear-forward"])
-        }
-      />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          <strong>Activation checkpointing</strong>은 일부 중간값을 저장하지 않고 backward 때
-          forward를 다시 계산해 memory를 줄이는 대신 compute를 더 쓰는
-          trade-off입니다. 즉 gradient 공식을 바꾸지 않고 tape의 저장 정책을 바꿉니다.
-          In-place operation이나 detach가 문제가 되는지도 이 graph와 saved tensor의
-          수명 관점에서 확인해야 합니다.
-        </p>
-        <p id="paper-autodiff" className="scroll-mt-20">
-          Forward·reverse accumulation의 계산 차이와 tape 구현 범위는
-          <a href="https://jmlr.org/papers/v18/17-468.html" target="_blank" rel="noreferrer"> automatic differentiation survey</a>를
-          기준으로 확인합니다. 이 survey는 derivative 계산을 설명하지만 optimizer의
-          수렴이나 함수의 differentiability를 대신 보장하지는 않습니다.
-        </p>
-      </div>
-    </section>
-  );
-}
+      /><p className="leading-8">이번 한 칸 사례에서는 X=[[2]], W=[[3]], b=[0]이고 선형 출력 Z가 6입니다. 첫 사례의 a는 이 Z에 해당합니다. 일반적으로 별도 함수 f를 이어 붙이면 그 함수가 필요로 하는 Z 또는 A의 저장이 추가됩니다. 입력에 대한 gradient에는 W가, W에 대한 gradient에는 X가 필요합니다. 따라서 X만 있으면 모든 미분을 구할 수 있다고 생각하면 안 됩니다.</p><p className="leading-8">제곱의 local derivative를 구하려면 별도의 a=6이 필요합니다. 곱셈을 담당하는 연산과 제곱을 담당하는 연산이 각자 필요한 값을 보관합니다. 모든 연산이 모든 중간값을 복사해 보관하는 구조라고 일반화하지 않습니다.</p><CodeViewButton label="Forward와 저장의 실제 원문" onClick={() => onCodeRef("linear-forward", codeRefs["linear-forward"])} /></section></div>;}

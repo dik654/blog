@@ -1,23 +1,2 @@
 import { Link } from "react-router-dom";
-
-export default function LossFunction() {
-  return (
-    <section id="loss-function" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Loss: 출력 오차를 하나의 scalar로 모으기</h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          backpropagation을 시작하려면 모델 출력 전체를 최적화할 scalar objective로 모아야 한다. 회귀에는 MSE·MAE·Huber, 확률 분류에는 cross-
-          entropy가 흔하지만 loss는 task 이름보다 출력의 의미와 noise 가정에 맞춰 고른다. KL divergence도 단순한 “분포용 loss”라기보다 방향과
-          support를 고려해야 하는 divergence다.
-        </p>
-      </div>
-      <div className="not-prose mt-6 rounded-2xl border border-sky-200 bg-sky-50/60 p-5 dark:border-sky-900 dark:bg-sky-950/20">
-        <p className="text-sm font-semibold">Cross-entropy와 KL의 정의는 기준 글에 모았습니다</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          이 글에서는 loss에서 gradient가 시작된다는 역할만 다루고 정보이론·MLE·KL 방향성은 중복하지 않습니다.
-        </p>
-        <Link to="/cs/ai/cross-entropy" className="mt-3 inline-flex text-sm font-semibold text-sky-700 hover:underline dark:text-sky-300">Cross-entropy 글 바로 보기 →</Link>
-      </div>
-    </section>
-  );
-}
+export default function LossFunction(){return <div className="mt-16"><section id="loss-function" data-teach-level="3" className="space-y-6"><h2 className="text-2xl font-bold">7. 오차의 정의가 돌아올 신호의 의미와 크기를 정합니다</h2><p className="leading-8">이번 target은 둘째 선택지의 one-hot 벡터(0,1)입니다. 이 선택지에 배정한 확률을 p정답이라고 하면 오차는 −ln(p정답)입니다. 확률 1/3은 오차 ln3≈1.098612, 확률 0.8은 −ln0.8≈0.223144입니다 (가정). 자연로그로 셉니다.</p><p className="leading-8">이 categorical cross-entropy 규칙은 서로 배타적인 선택지의 분포와 맞춥니다. 연속 값을 맞추는 과제나 여러 독립적인 0/1 정답은 다른 출력 의미와 가정을 사용합니다. 과제 이름만 보고 같은 공식을 붙이지 않습니다.</p><p className="leading-8">단일 scalar에서 시작하면 dL/dL=1이라는 출발값으로 전체 미분을 연결할 수 있습니다. 여러 출력을 그대로 미분하려면 어떤 출력 조합을 원하는지 별도의 출발 벡터를 지정해야 합니다. Scalar loss로 정한 것은 그 선택을 하나의 목적에 모은 경우입니다.</p><p className="leading-8">확률의 정보량과 분포를 비교할 때의 전제는 <Link to="/cs/ai/cross-entropy">Cross-entropy 기준 글</Link>에서 다룹니다. 여기서는 지금 정한 손실이 같은 X와 W에 보내는 미분을 추적합니다.</p></section></div>;}
