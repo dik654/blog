@@ -208,6 +208,7 @@
     "reading": "PASS; actualexit0",
     "order": "PASS91listings437prerequisiteedges; actualexit0",
     "snapshot": "9323 indexedsource/configfiles verifiedagainstgitblobSHA. Isolatedreal.tmp/.vite. SGNS/MPC/launch-overhead/scale nextdraftsexcluded.",
-    "upstreamIntegrity": "Paillier all8 source/license bytes match recordedSHA256, includingfileswithupstreamwhitespace."
+    "upstreamIntegrity": "Paillier all8 source/license bytes match recordedSHA256, includingfileswithupstreamwhitespace.",
+    "cacheCleanup": "The first184localcommit included5 generatedCPythonbytecodefiles fromverification. Removedbeforepush in separatecleanupcommit andignorefuture__pycache__/pyc. Remainingindexedfiles9318; noarticle/buildinputbehaviorchanged."
   }
 }
