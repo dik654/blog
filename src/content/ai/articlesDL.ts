@@ -580,11 +580,59 @@ export const dlFoundationArticles: Article[] = [
     title: "Reverse-mode autodiff: Graph · Tape · VJP",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "Computational graph" },
-      { id: "tape", title: "Saved tape" },
-      { id: "reverse-mode", title: "VJP와 branch sum" },
-      { id: "save-recompute", title: "Save·recompute 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 중간값을 두 번 썼다면, 돌아오는 변화도 두 길에서 더합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 값을 만드는 계산을 먼저 끝내고 그 계산의 반대 순서로 돌아옵니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 한 길의 기여를 덮어쓰면 26 대신 24 또는 2가 됩니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 값의 저장 공간, 연산 기록, 돌아오는 기여를 구분합니다"
+  },
+  {
+    "id": "why-reuse",
+    "title": "5. 처음 숫자를 하나씩 바꿔 전체 계산을 반복하지 않아도 됩니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 이미 본 기록과 기여에 이름을 붙입니다"
+  },
+  {
+    "id": "tape",
+    "title": "7. 실제 backward에 필요한 값만 저장합니다"
+  },
+  {
+    "id": "trace",
+    "title": "8. 42에서 시작해 13을 합친 뒤 26과 39를 반환합니다"
+  },
+  {
+    "id": "reverse-mode",
+    "title": "9. VJP는 필요한 곱을 구하며 모든 편미분 표를 먼저 만들지 않습니다"
+  },
+  {
+    "id": "source-forward",
+    "title": "10. 공식 LinearFunction 원문에 같은 입력 2와 가중치 3을 넣습니다"
+  },
+  {
+    "id": "source-backward",
+    "title": "11. 공식 backward에 돌아온 13을 넣으면 입력별 세 답이 나옵니다"
+  },
+  {
+    "id": "save-recompute",
+    "title": "12. 기록을 버리거나 바꿀 때는 같은 forward를 재현해야 합니다"
+  },
+  {
+    "id": "boundaries",
+    "title": "13. 한 그래프의 경로 합과 여러 backward 호출의 저장 정책을 구별합니다"
+  }
+],
     component: () => import("@/pages/articles/ai/reverse-mode-autodiff"),
   },
   {
@@ -640,10 +688,55 @@ export const dlFoundationArticles: Article[] = [
     title: "신경망 Backprop: Loss에서 Tensor Gradient까지",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "왜 역전파인가" },
-      { id: "loss-function", title: "Scalar loss 만들기" },
-      { id: "tensor-backward", title: "출력에서 weight까지" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 오답 하나가 공유 값마다 다른 수정 신호를 보냅니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 입력으로 답과 오차를 만든 뒤 같은 계산을 반대로 따라갑니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 같은 크기로 고쳐도 입력 2에 붙은 값은 점수를 두 배 움직입니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 공유 곱셈 값과 자료마다 다른 입력을 구분합니다"
+  },
+  {
+    "id": "why-reuse",
+    "title": "5. 연산의 크기는 여전히 중요하지만 입력마다 전체 계산을 반복할 필요는 없습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 이미 본 값과 두 작업에 이름을 붙입니다"
+  },
+  {
+    "id": "loss-function",
+    "title": "7. 오차의 정의가 돌아올 신호의 의미와 크기를 정합니다"
+  },
+  {
+    "id": "trace",
+    "title": "8. 두 점수의 신호를 입력과 짝지으면 네 가중치의 답이 나옵니다"
+  },
+  {
+    "id": "tensor-backward",
+    "title": "9. 전치 위치와 합산 축을 모양과 미분으로 확인합니다"
+  },
+  {
+    "id": "source-paper",
+    "title": "10. 1986년 원문 식의 입력과 뒤 기여에 같은 숫자를 넣습니다"
+  },
+  {
+    "id": "source-code",
+    "title": "11. 공식 코드의 weight 저장 방향을 바꾸어 같은 gradient를 얻습니다"
+  },
+  {
+    "id": "boundaries",
+    "title": "12. Gradient 계산이 끝났다고 학습의 다음 단계까지 검증된 것은 아닙니다"
+  }
+],
     component: () => import("@/pages/articles/ai/backprop-optimization"),
   },
   {

@@ -5439,46 +5439,272 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "입력 (1,−1), Wg=I, Wv=diag(2,3), Wo=[[1,0],[1,0]]에서 SwiGLU 출력 (2.268941,0)을 같은 원문 식에 대입합니다. 폭2와3의 가중치 수12도 계산합니다 (가정)."
   },
   "ai/reverse-mode-autodiff": {
-    coreIdea: "Reverse-mode autodiff는 forward computational graph와 saved tape를 기준으로 scalar loss의 책임을 역순 VJP로 보내고, 여러 branch에서 돌아온 contribution을 합쳐 input gradient를 계산합니다.",
-    entryLevel: true,
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "computational-graph", role: "값과 primitive operation dependency를 node와 edge로 나타냅니다." },
-      { id: "autodiff-tape", role: "Backward local rule이 요구하는 forward 값과 operation 순서를 기록합니다." },
-      { id: "reverse-mode-autodiff", role: "Scalar output에서 graph를 역순으로 순회해 많은 input gradient를 계산합니다." },
-      { id: "vector-jacobian-product", role: "Full Jacobian을 만들지 않고 upstream cotangent가 묻는 방향만 계산합니다." },
-      { id: "fanout-gradient-accumulation", role: "한 값의 여러 사용처에서 돌아온 gradient contribution을 합칩니다." },
-      { id: "autodiff-save-recompute-boundary", role: "Forward 값을 저장할지 backward에서 재계산할지 memory와 compute로 선택합니다." },
+    "coreIdea": "Reverse-mode autodiff는 forward computational graph와 saved tape를 기준으로 scalar loss의 책임을 역순 VJP로 보내고, 여러 branch에서 돌아온 contribution을 합쳐 input gradient를 계산합니다.",
+    "entryLevel": true,
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "computational-graph",
+        "role": "값과 primitive operation dependency를 node와 edge로 나타냅니다."
+      },
+      {
+        "id": "autodiff-tape",
+        "role": "Backward local rule이 요구하는 forward 값과 operation 순서를 기록합니다."
+      },
+      {
+        "id": "reverse-mode-autodiff",
+        "role": "Scalar output에서 graph를 역순으로 순회해 많은 input gradient를 계산합니다."
+      },
+      {
+        "id": "vector-jacobian-product",
+        "role": "Full Jacobian을 만들지 않고 upstream cotangent가 묻는 방향만 계산합니다."
+      },
+      {
+        "id": "fanout-gradient-accumulation",
+        "role": "한 값의 여러 사용처에서 돌아온 gradient contribution을 합칩니다."
+      },
+      {
+        "id": "autodiff-save-recompute-boundary",
+        "role": "Forward 값을 저장할지 backward에서 재계산할지 memory와 compute로 선택합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "computational-graph", sectionId: "overview", intuition: "값은 node, 값을 만든 operation은 화살표인 실행 지도입니다.", workedExample: "w=3, x=2에서 a=wx=6, L=a²=36의 두 operation을 연결합니다.", boundary: "Neural architecture block diagram보다 더 작은 primitive 실행 단위입니다." },
-      { id: "autodiff-tape", sectionId: "tape", intuition: "거꾸로 계산할 때 다시 볼 값과 순서를 적은 영수증입니다.", workedExample: "Z=XW+b에서 dW를 만들 X와 activation derivative에 필요한 Z를 저장합니다.", boundary: "모든 값을 저장하면 training memory가 커집니다." },
-      { id: "reverse-mode-autodiff", sectionId: "reverse-mode", intuition: "Loss의 책임을 forward와 반대 방향으로 보냅니다.", workedExample: "dL/da=12와 da/dw=2를 곱해 dL/dw=24를 얻습니다.", boundary: "Scalar output과 많은 input에 특히 유리합니다." },
-      { id: "vector-jacobian-product", sectionId: "reverse-mode", intuition: "Jacobian 표 전체 대신 지금 필요한 한 방향의 곱만 구합니다.", workedExample: "upstream cotangent ȳ와 local Jacobian J를 곱해 x̄를 만듭니다.", boundary: "Row·column convention에 따라 transpose 위치가 달라집니다." },
-      { id: "fanout-gradient-accumulation", sectionId: "reverse-mode", intuition: "같은 값이 갈라졌다면 돌아오는 책임을 모두 더합니다.", workedExample: "L=x²+3x에서 dL/dx=2x+3입니다.", boundary: "Micro-batch 누적과 graph fan-out 누적은 원인이 다릅니다." },
-      { id: "autodiff-save-recompute-boundary", sectionId: "save-recompute", intuition: "Memory를 아끼려면 중간값 일부를 버리고 backward에서 다시 계산합니다.", workedExample: "a=wx를 저장하지 않고 checkpoint 입력에서 다시 계산합니다.", boundary: "Gradient 식은 같지만 compute·memory·random-state 재현 비용은 달라집니다." },
+    "conceptExplanations": [
+      {
+        "id": "computational-graph",
+        "sectionId": "case",
+        "intuition": "값은 node, 값을 만든 operation은 화살표인 실행 지도입니다.",
+        "workedExample": "w=3,x=2,b=0에서 a=6을 제곱하는 경로와 그대로 더하는 경로가 L=42를 만듭니다 (가정).",
+        "boundary": "Neural architecture block diagram보다 더 작은 primitive 실행 단위입니다."
+      },
+      {
+        "id": "autodiff-tape",
+        "sectionId": "tape",
+        "intuition": "각 연산의 backward가 필요로 하는 forward 값과 순서를 보관합니다.",
+        "workedExample": "곱셈은 w=3과x=2, 제곱은a=6을 backward에 사용합니다. 실제 LinearFunction은 input·weight·bias를 보관하며 제곱 기록은 별도 연산의 책임입니다 (가정).",
+        "boundary": "모든 값을 저장하면 training memory가 커집니다."
+      },
+      {
+        "id": "reverse-mode-autodiff",
+        "sectionId": "trace",
+        "intuition": "Loss의 책임을 forward와 반대 방향으로 보냅니다.",
+        "workedExample": "dL/da=12+1=13을 합친 뒤 dL/dw=13×2=26, dL/dx=13×3=39, dL/db=13을 얻습니다 (가정).",
+        "boundary": "Scalar output과 많은 input에 특히 유리합니다."
+      },
+      {
+        "id": "vector-jacobian-product",
+        "sectionId": "source-backward",
+        "intuition": "Jacobian 표 전체 대신 지금 필요한 한 방향의 곱만 구합니다.",
+        "workedExample": "공식 backward의 grad_output=[[13]]에 weight=[[3]],input=[[2]]를 곱해 grad_input39,grad_weight26을 직접 반환합니다 (가정).",
+        "boundary": "Row·column convention에 따라 transpose 위치가 달라집니다."
+      },
+      {
+        "id": "fanout-gradient-accumulation",
+        "sectionId": "boundaries",
+        "intuition": "같은 값이 갈라졌다면 돌아오는 책임을 모두 더합니다.",
+        "workedExample": "같은a의두 경로12+1=13을 합하는 미분 규칙과, 새 forward 두 번의 결과26+26=52를 .grad에 남기는 호출 간 정책을 구분합니다 (가정).",
+        "boundary": "Micro-batch 누적과 graph fan-out 누적은 원인이 다릅니다."
+      },
+      {
+        "id": "autodiff-save-recompute-boundary",
+        "sectionId": "save-recompute",
+        "intuition": "Memory를 아끼려면 중간값 일부를 버리고 backward에서 다시 계산합니다.",
+        "workedExample": "a=6을 저장하지 않았다면 원래w=3,x=2,b=0으로 다시 계산합니다. 저장값을7로 바꿔 예전 제곱을 미분하면12 대신14가 되어 잘못됩니다 (가정).",
+        "boundary": "Gradient 식은 같지만 compute·memory·random-state 재현 비용은 달라집니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 graph", relation: "Forward dependency를 먼저 고정", concepts: ["computational-graph"] },
-      { label: "01 tape", relation: "Backward가 요구할 상태를 기록", concepts: ["computational-graph", "autodiff-tape"] },
-      { label: "02 reverse", relation: "VJP와 branch sum으로 책임을 역전파", concepts: ["reverse-mode-autodiff", "vector-jacobian-product", "fanout-gradient-accumulation"] },
-      { label: "03 memory", relation: "Saved tensor와 recomputation을 선택", concepts: ["autodiff-tape", "autodiff-save-recompute-boundary"] },
+    "conceptStages": [
+      {
+        "label": "00 graph",
+        "relation": "Forward dependency를 먼저 고정",
+        "concepts": [
+          "computational-graph"
+        ]
+      },
+      {
+        "label": "01 tape",
+        "relation": "Backward가 요구할 상태를 기록",
+        "concepts": [
+          "computational-graph",
+          "autodiff-tape"
+        ]
+      },
+      {
+        "label": "02 reverse",
+        "relation": "VJP와 branch sum으로 책임을 역전파",
+        "concepts": [
+          "reverse-mode-autodiff",
+          "vector-jacobian-product",
+          "fanout-gradient-accumulation"
+        ]
+      },
+      {
+        "label": "03 memory",
+        "relation": "Saved tensor와 recomputation을 선택",
+        "concepts": [
+          "autodiff-tape",
+          "autodiff-save-recompute-boundary"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "a=wx, L=a²의 computational graph를 그리세요.", answerChecklist: ["w·x node", "a", "square node", "L"], requiredConcepts: ["computational-graph"], sectionId: "overview" },
-      { level: "basic", question: "w=3, x=2의 forward 값을 계산하세요.", answerChecklist: ["a=6", "L=36", "forward order"], requiredConcepts: ["computational-graph"], sectionId: "overview" },
-      { level: "basic", question: "Tape가 X와 Z를 저장하는 이유를 설명하세요.", answerChecklist: ["local derivative", "saved tensor", "operation order"], requiredConcepts: ["autodiff-tape"], sectionId: "tape" },
-      { level: "basic", question: "같은 예에서 dL/dw=24를 reverse 순서로 계산하세요.", answerChecklist: ["seed 1", "dL/da=12", "da/dw=2", "24"], requiredConcepts: ["reverse-mode-autodiff"], sectionId: "reverse-mode" },
-      { level: "basic", question: "VJP가 full Jacobian과 다른 점을 설명하세요.", answerChecklist: ["upstream cotangent", "local Jacobian", "needed direction", "no materialization"], requiredConcepts: ["vector-jacobian-product"], sectionId: "reverse-mode" },
-      { level: "basic", question: "L=x²+3x의 branch gradient를 합치세요.", answerChecklist: ["2x", "3", "sum", "2x+3"], requiredConcepts: ["fanout-gradient-accumulation"], sectionId: "reverse-mode" },
-      { level: "advanced", question: "Reverse mode가 scalar loss와 많은 parameter에 유리한 이유를 설명하세요.", answerChecklist: ["one scalar seed", "one reverse traversal", "many inputs", "forward-mode boundary"], requiredConcepts: ["reverse-mode-autodiff", "vector-jacobian-product"], sectionId: "reverse-mode" },
-      { level: "advanced", question: "Checkpointing의 memory·compute trade-off를 설계하세요.", answerChecklist: ["save subset", "recompute", "memory decreases", "compute increases"], requiredConcepts: ["autodiff-save-recompute-boundary"], sectionId: "save-recompute" },
-      { level: "advanced", question: "In-place update가 tape를 깨뜨릴 수 있는 이유를 설명하세요.", answerChecklist: ["saved value", "version", "local derivative", "mutation boundary"], requiredConcepts: ["autodiff-tape", "autodiff-save-recompute-boundary"], sectionId: "save-recompute" },
-      { level: "advanced", question: "Fan-out 누적과 micro-batch 누적을 구분하세요.", answerChecklist: ["same graph value", "multiple backward calls", "sum-of-paths", "step reset"], requiredConcepts: ["fanout-gradient-accumulation"], sectionId: "reverse-mode" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "a=wx+b,L=a²+a의 계산 그래프에서 같은a가 사용되는 두 경로를 그리세요.",
+        "answerChecklist": [
+          "곱셈·bias덧셈으로 a",
+          "제곱 경로",
+          "a를 그대로 더하는 경로",
+          "두 결과의 합 L"
+        ],
+        "requiredConcepts": [
+          "computational-graph"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "w=3,x=2,b=0에서 a와 L을 계산하고, 제곱만한 함수의 결과와 구분하세요.",
+        "answerChecklist": [
+          "a=6",
+          "a²=36",
+          "L=36+6=42",
+          "제곱만 하면36"
+        ],
+        "requiredConcepts": [
+          "computational-graph"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "이번 곱셈과 제곱의 backward는 각각 어떤 forward 값을 저장하거나 재계산해야 하나요?",
+        "answerChecklist": [
+          "곱셈은w와x",
+          "제곱은a",
+          "각local derivative에 필요",
+          "연산별 저장 책임"
+        ],
+        "requiredConcepts": [
+          "autodiff-tape"
+        ],
+        "sectionId": "tape"
+      },
+      {
+        "level": "basic",
+        "question": "같은 예의 dL/dw=26을 reverse 순서로 계산하세요.",
+        "answerChecklist": [
+          "출발기여1",
+          "제곱길12와그대로길1 합산",
+          "dL/da13",
+          "da/dw2",
+          "26"
+        ],
+        "requiredConcepts": [
+          "reverse-mode-autodiff",
+          "fanout-gradient-accumulation"
+        ],
+        "sectionId": "trace"
+      },
+      {
+        "level": "basic",
+        "question": "VJP가 full Jacobian과 다른 점을 설명하세요.",
+        "answerChecklist": [
+          "upstream cotangent",
+          "local Jacobian",
+          "needed direction",
+          "no materialization"
+        ],
+        "requiredConcepts": [
+          "vector-jacobian-product"
+        ],
+        "sectionId": "reverse-mode"
+      },
+      {
+        "level": "basic",
+        "question": "L=x²+3x의 branch gradient를 합치세요.",
+        "answerChecklist": [
+          "2x",
+          "3",
+          "sum",
+          "2x+3"
+        ],
+        "requiredConcepts": [
+          "fanout-gradient-accumulation"
+        ],
+        "sectionId": "reverse-mode"
+      },
+      {
+        "level": "advanced",
+        "question": "Reverse mode가 scalar loss와 많은 parameter에 유리한 이유를 설명하세요.",
+        "answerChecklist": [
+          "one scalar seed",
+          "one reverse traversal",
+          "many inputs",
+          "forward-mode boundary"
+        ],
+        "requiredConcepts": [
+          "reverse-mode-autodiff",
+          "vector-jacobian-product"
+        ],
+        "sectionId": "reverse-mode"
+      },
+      {
+        "level": "advanced",
+        "question": "Checkpointing의 memory·compute trade-off를 설계하세요.",
+        "answerChecklist": [
+          "save subset",
+          "recompute",
+          "memory decreases",
+          "compute increases"
+        ],
+        "requiredConcepts": [
+          "autodiff-save-recompute-boundary"
+        ],
+        "sectionId": "save-recompute"
+      },
+      {
+        "level": "advanced",
+        "question": "In-place update가 tape를 깨뜨릴 수 있는 이유를 설명하세요.",
+        "answerChecklist": [
+          "saved value",
+          "version",
+          "local derivative",
+          "mutation boundary"
+        ],
+        "requiredConcepts": [
+          "autodiff-tape",
+          "autodiff-save-recompute-boundary"
+        ],
+        "sectionId": "save-recompute"
+      },
+      {
+        "level": "advanced",
+        "question": "Fan-out 누적과 micro-batch 누적을 구분하세요.",
+        "answerChecklist": [
+          "same graph value",
+          "multiple backward calls",
+          "sum-of-paths",
+          "step reset"
+        ],
+        "requiredConcepts": [
+          "fanout-gradient-accumulation"
+        ],
+        "sectionId": "boundaries"
+      }
     ],
-    papers: [
-      { title: "Automatic Differentiation in Machine Learning: a Survey", href: "https://jmlr.org/papers/v18/17-468.html", problem: "Derivative 계산 방법과 비용을 구분합니다.", contribution: "Forward·reverse accumulation과 구현을 정리합니다.", assumptions: "Primitive derivative와 추적 가능한 실행 graph를 전제로 합니다.", evidenceScope: "Autodiff 원리와 system design survey 범위입니다.", notClaim: "Optimization 수렴을 보장하지 않습니다.", sectionId: "paper-autodiff" },
+    "papers": [
+      {
+        "title": "Automatic Differentiation in Machine Learning: a Survey",
+        "href": "https://jmlr.org/papers/v18/17-468.html",
+        "problem": "Derivative 계산 방법과 비용을 구분합니다.",
+        "contribution": "Forward·reverse accumulation과 구현을 정리합니다.",
+        "assumptions": "Primitive derivative와 추적 가능한 실행 graph를 전제로 합니다.",
+        "evidenceScope": "Autodiff 원리와 system design survey 범위입니다.",
+        "notClaim": "Optimization 수렴을 보장하지 않습니다.",
+        "sectionId": "paper-autodiff"
+      }
     ],
+    "entryNote": "3×2=6을 제곱하고 같은6을 더해42를 만드는 가정 사례에서 시작합니다. 두 경로의 기여12+1=13을 합친 뒤 실제 원문에 대입해 입력별 gradient39·26·13을 계산합니다."
   },
   "ai/softmax": {
     "coreIdea": "Softmax는 categorical logits을 양수 weight로 바꾸고 모든 class가 공유하는 분모로 나눠 합이 1인 공동 확률을 만들며, max shift는 값을 안정화하고 temperature는 상대 간격을 조절합니다.",
@@ -5714,65 +5940,268 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "(ln 2,0)의 두 점수를 양수 (2,1)로 바꾸고 공동 합 3으로 나누는 가정 사례부터 시작합니다. 같은 입력을 최댓값 이동과 temperature 조절, 원문 식 대입까지 따라갑니다."
   },
   "ai/backprop-optimization": {
-    coreIdea: "Neural-network backpropagation은 scalar loss에서 시작한 output error를 layer별 local derivative로 분배해 parameter와 input gradient를 계산하며, 실제 parameter update는 optimizer에 넘깁니다.",
-    entryLevel: true,
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "loss-objective", role: "Model error를 reverse pass가 시작할 scalar 하나로 모읍니다." },
-      { id: "backpropagation", role: "Reverse-mode autodiff를 multi-layer network parameter에 적용합니다." },
-      { id: "fused-softmax-cross-entropy-gradient", role: "Categorical output의 logit gradient를 prediction minus target으로 계산합니다." },
-      { id: "batched-linear-backward", role: "Upstream matrix를 weight·bias·input gradient shape로 분배합니다." },
-      { id: "training-intervention", role: "Gradient 계산과 optimizer·regularization 개입 지점을 구분합니다." },
-      { id: "parameter-credit-assignment-problem", role: "수많은 parameter 각각이 최종 loss에 얼마나 기여했는지 알아내는, backprop이 푸는 핵심 문제를 정의합니다." },
-],
-    conceptExplanations: [
+    "coreIdea": "Neural-network backpropagation은 scalar loss에서 시작한 output error를 layer별 local derivative로 분배해 parameter와 input gradient를 계산하며, 실제 parameter update는 optimizer에 넘깁니다.",
+    "entryLevel": true,
+    "assumedKnowledge": [],
+    "introducedHere": [
       {
-        id: "loss-objective",
-        sectionId: "loss-function",
-        intuition: "여러 output error를 backward seed 하나로 모읍니다.",
-        workedExample: "정답 확률 0.8의 NLL은 약 0.223입니다.",
-        boundary: "Loss 하나가 task의 모든 가치를 대변하지는 않습니다.",
+        "id": "loss-objective",
+        "role": "Model error를 reverse pass가 시작할 scalar 하나로 모읍니다."
       },
       {
-        id: "backpropagation",
-        sectionId: "overview",
-        intuition: "Credit assignment problem의 답인 parameter별 gradient를, 출력 error의 책임을 hidden parameter까지 chain rule로 되돌려 계산합니다.",
-        workedExample: "Loss에서 output weight, activation, hidden weight 순으로 gradient를 전달하며, 이 순서가 parameter 수가 아니라 layer 수에 비례하는 비용을 만듭니다.",
-        boundary: "Gradient 계산이지 update rule이 아니며, 계산된 gradient를 실제로 소비하는 쪽은 gradient-based optimization입니다.",
+        "id": "backpropagation",
+        "role": "Reverse-mode autodiff를 multi-layer network parameter에 적용합니다."
       },
-      { id: "fused-softmax-cross-entropy-gradient", sectionId: "tensor-backward", intuition: "Softmax와 NLL을 함께 미분해 간단한 error vector를 만듭니다.", workedExample: "(0.7,0.2,0.1)−(1,0,0)=(−0.3,0.2,0.1)입니다.", boundary: "Softmax 단독 Jacobian이 identity라는 뜻이 아닙니다." },
-      { id: "batched-linear-backward", sectionId: "tensor-backward", intuition: "Batch의 input과 error를 각 원래 tensor shape의 책임으로 모읍니다.", workedExample: "dW=XᵀG, db=row-sum(G), dX=GWᵀ입니다.", boundary: "Weight 저장 convention과 loss reduction을 고정해야 합니다." },
-      { id: "training-intervention", sectionId: "overview", intuition: "Gradient 계산 뒤의 update와 다른 training 개입을 섞지 않습니다.", workedExample: "Backprop은 gradient, optimizer는 parameter update를 소유합니다.", boundary: "Regularization 세부 정본은 별도 글이 소유합니다." },
       {
-        id: "parameter-credit-assignment-problem",
-        sectionId: "overview",
-        intuition: "최종 성적표 하나를 보고 어느 팀원이 얼마나 잘했는지 나눠 계산하는 것과 같은 문제입니다.",
-        workedExample: "Parameter를 하나씩 흔들어 loss를 다시 재는 방법은 parameter 수(예: 수백만)만큼 forward pass가 필요하지만, backprop은 layer 수만큼의 backward pass로 모든 parameter의 답을 한 번에 구합니다.",
-        boundary: "RL의 trajectory·action에 대한 credit assignment와는 다른 층위이며, 이 글은 하나의 forward 계산 그래프 안 parameter 기여도만 다룹니다.",
+        "id": "fused-softmax-cross-entropy-gradient",
+        "role": "Categorical output의 logit gradient를 prediction minus target으로 계산합니다."
       },
-],
-    conceptStages: [
-      { label: "00 credit assignment", relation: "각 parameter가 최종 loss에 얼마나 기여했는지 알아내야 하는 문제를 정의합니다.", concepts: ["parameter-credit-assignment-problem"] },
-      { label: "01 scalar seed", relation: "Prediction error를 scalar loss로 모음", concepts: ["loss-objective"] },
-      { label: "02 output error", relation: "Categorical output의 logit 책임 생성", concepts: ["fused-softmax-cross-entropy-gradient"] },
-      { label: "03 tensor backward", relation: "Error를 weight·bias·input shape로 분배", concepts: ["backpropagation", "batched-linear-backward"] },
-      { label: "04 handoff", relation: "Gradient 계산과 update를 분리", concepts: ["training-intervention"] },
+      {
+        "id": "batched-linear-backward",
+        "role": "Upstream matrix를 weight·bias·input gradient shape로 분배합니다."
+      },
+      {
+        "id": "training-intervention",
+        "role": "Gradient 계산과 optimizer·regularization 개입 지점을 구분합니다."
+      },
+      {
+        "id": "parameter-credit-assignment-problem",
+        "role": "현재 계산에서 각 parameter를 조금 바꾸면 loss가 얼마나 달라지는지 구하는 문제입니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Backpropagation과 optimizer의 책임을 구분하세요.", answerChecklist: ["gradient calculation", "parameter update", "separate stages"], requiredConcepts: ["backpropagation", "training-intervention"], sectionId: "overview" },
-      { level: "basic", question: "Scalar loss가 필요한 이유를 설명하세요.", answerChecklist: ["single seed", "model error", "reverse pass"], requiredConcepts: ["loss-objective"], sectionId: "loss-function" },
-      { level: "basic", question: "정답 확률 0.8의 NLL을 계산하세요.", answerChecklist: ["-log 0.8", "about 0.223", "natural log"], requiredConcepts: ["loss-objective"], sectionId: "loss-function" },
-      { level: "basic", question: "Prediction과 one-hot target에서 p−y를 계산하세요.", answerChecklist: ["subtract componentwise", "target negative", "others positive"], requiredConcepts: ["fused-softmax-cross-entropy-gradient"], sectionId: "tensor-backward" },
-      { level: "basic", question: "dW=XᵀG가 공유 weight의 gradient인 이유를 설명하세요.", answerChecklist: ["input-error product", "batch accumulation", "weight shape"], requiredConcepts: ["batched-linear-backward"], sectionId: "tensor-backward" },
-      { level: "basic", question: "db가 G의 row sum인 이유를 설명하세요.", answerChecklist: ["bias broadcast", "every sample", "sum contributions"], requiredConcepts: ["batched-linear-backward"], sectionId: "tensor-backward" },
-      { level: "advanced", question: "Softmax–CE fused gradient의 전제와 경계를 설명하세요.", answerChecklist: ["categorical", "target distribution", "loss reduction", "not softmax alone"], requiredConcepts: ["fused-softmax-cross-entropy-gradient"], sectionId: "tensor-backward" },
-      { level: "advanced", question: "X·W·G shape에서 dW·db·dX shape를 유도하세요.", answerChecklist: ["X transpose", "row sum", "W transpose", "original shapes"], requiredConcepts: ["batched-linear-backward"], sectionId: "tensor-backward" },
-      { level: "advanced", question: "Batch mean reduction이 gradient에 주는 scale을 설명하세요.", answerChecklist: ["sum versus mean", "1/B", "all gradients", "comparison condition"], requiredConcepts: ["batched-linear-backward"], sectionId: "tensor-backward" },
-      { level: "advanced", question: "Backprop·clipping·AdamW·dropout의 개입 지점을 구분하세요.", answerChecklist: ["gradient calculation", "gradient intervention", "optimizer update", "activation path"], requiredConcepts: ["training-intervention"], sectionId: "overview" },
+    "conceptExplanations": [
+      {
+        "id": "loss-objective",
+        "sectionId": "loss-function",
+        "intuition": "정답 확률을 하나의 오차로 세고 미분의 출발값을 정합니다.",
+        "workedExample": "정답 확률 1/3은 loss ln3≈1.098612, 0.8은 약0.223144입니다 (가정).",
+        "boundary": "Scalar seed는1이며 여러 출력은 원하는 조합의 별도 출발 벡터가 필요합니다."
+      },
+      {
+        "id": "backpropagation",
+        "sectionId": "trace",
+        "intuition": "두 점수의 변화율을 입력과 짝지어 각 가중치에 되돌립니다.",
+        "workedExample": "G=(2/3,−2/3)을 입력1·2에 곱해 dW=[[2/3,−2/3],[4/3,−4/3]]을 구합니다 (가정).",
+        "boundary": "비용은 연산·배열 크기에 의존하며 gradient 계산과 parameter 이동은 별개입니다."
+      },
+      {
+        "id": "fused-softmax-cross-entropy-gradient",
+        "sectionId": "tensor-backward",
+        "intuition": "확률에 대한 손실 미분과 점수에 대한 확률 미분을 곱해 공통 인자를 없앱니다.",
+        "workedExample": "p=(2/3,1/3),y=(0,1)에서 G=p−y=(2/3,−2/3)입니다 (가정).",
+        "boundary": "Target 합1, 가중치 없는 categorical CE 조건이며 batch 평균이면1/B가 붙습니다. Softmax 단독 미분이 아닙니다."
+      },
+      {
+        "id": "batched-linear-backward",
+        "sectionId": "tensor-backward",
+        "intuition": "입력과 뒤에서 온 기여를 곱하고 공유된 값에 도달한 자료별 기여를 합합니다.",
+        "workedExample": "X=[[1,2]],W=[[ln2,0],[0,0]]이면 dW=XᵀG,db=G,dX=[[(2/3)ln2,0]]입니다 (가정).",
+        "boundary": "Z=XW+b의 저장 방향입니다. 공식 코드의 weight=Wᵀ에 대한 gradient는 dW의 전치입니다."
+      },
+      {
+        "id": "training-intervention",
+        "sectionId": "boundaries",
+        "intuition": "입력과 중간값을 바꾸는 때, gradient를 구하는 때, 실제 가중치를 바꾸는 때를 구분합니다.",
+        "workedExample": "Dropout은 forward 경로, backprop은 gradient, clipping은 gradient 크기, AdamW는 parameter 갱신에 개입합니다.",
+        "boundary": "각 단계의 위치와 상태를 바꾸면 같은 학습 절차로 비교할 수 없습니다."
+      },
+      {
+        "id": "parameter-credit-assignment-problem",
+        "sectionId": "names",
+        "intuition": "같은 크기로 두 가중치를 고쳐도 입력1·2 때문에 오차 변화가 달라집니다.",
+        "workedExample": "입력2의 둘째 가중치를0.001 늘리면 오차 변화율은 약−1.332889로 국소 gradient−4/3에 접근합니다 (가정).",
+        "boundary": "국소 민감도이며 최종 성능의 인과적 공로를 비율로 나누는 계산은 아닙니다."
+      }
     ],
-    papers: [
-      { title: "Learning Representations by Back-propagating Errors", href: "https://www.nature.com/articles/323533a0", problem: "Hidden unit에 직접 target 없이 multi-layer weight를 학습합니다.", contribution: "Output error derivative를 layer 반대 방향으로 전달합니다.", assumptions: "Differentiable unit과 supervised target을 전제로 합니다.", evidenceScope: "1986년 사례와 backprop 계산 설명 범위입니다.", notClaim: "현대 network의 수렴과 일반화를 보장하지 않습니다.", sectionId: "paper-backprop" },
+    "conceptStages": [
+      {
+        "label": "00 credit assignment",
+        "relation": "각 parameter의 현재 loss 민감도를 알아내야 하는 문제를 정의합니다.",
+        "concepts": [
+          "parameter-credit-assignment-problem"
+        ]
+      },
+      {
+        "label": "01 scalar seed",
+        "relation": "Prediction error를 scalar loss로 모음",
+        "concepts": [
+          "loss-objective"
+        ]
+      },
+      {
+        "label": "02 output error",
+        "relation": "Categorical output의 logit 책임 생성",
+        "concepts": [
+          "fused-softmax-cross-entropy-gradient"
+        ]
+      },
+      {
+        "label": "03 tensor backward",
+        "relation": "Error를 weight·bias·input shape로 분배",
+        "concepts": [
+          "backpropagation",
+          "batched-linear-backward"
+        ]
+      },
+      {
+        "label": "04 handoff",
+        "relation": "Gradient 계산과 update를 분리",
+        "concepts": [
+          "training-intervention"
+        ]
+      }
     ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "Backpropagation과 optimizer의 책임을 구분하세요.",
+        "answerChecklist": [
+          "gradient calculation",
+          "parameter update",
+          "separate stages"
+        ],
+        "requiredConcepts": [
+          "backpropagation",
+          "training-intervention"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Scalar loss의 출발값과 여러 출력을 미분할 때 필요한 추가 선택을 설명하세요.",
+        "answerChecklist": [
+          "dL/dL=1",
+          "single scalar seed",
+          "여러 출력은 원하는 조합의 출발 벡터 필요"
+        ],
+        "requiredConcepts": [
+          "loss-objective"
+        ],
+        "sectionId": "loss-function"
+      },
+      {
+        "level": "basic",
+        "question": "정답 확률 0.8의 NLL을 계산하세요.",
+        "answerChecklist": [
+          "-log 0.8",
+          "about 0.223",
+          "natural log"
+        ],
+        "requiredConcepts": [
+          "loss-objective"
+        ],
+        "sectionId": "loss-function"
+      },
+      {
+        "level": "basic",
+        "question": "확률 (2/3,1/3), 정답 (0,1)의 logit gradient를 계산하세요.",
+        "answerChecklist": [
+          "p−y",
+          "(2/3,−2/3)",
+          "첫 점수 양수",
+          "둘째 점수 음수"
+        ],
+        "requiredConcepts": [
+          "fused-softmax-cross-entropy-gradient"
+        ],
+        "sectionId": "tensor-backward"
+      },
+      {
+        "level": "basic",
+        "question": "dW=XᵀG가 공유 weight의 gradient인 이유를 설명하세요.",
+        "answerChecklist": [
+          "input-error product",
+          "batch accumulation",
+          "weight shape"
+        ],
+        "requiredConcepts": [
+          "batched-linear-backward"
+        ],
+        "sectionId": "tensor-backward"
+      },
+      {
+        "level": "basic",
+        "question": "db가 G의 row sum인 이유를 설명하세요.",
+        "answerChecklist": [
+          "bias broadcast",
+          "every sample",
+          "sum contributions"
+        ],
+        "requiredConcepts": [
+          "batched-linear-backward"
+        ],
+        "sectionId": "tensor-backward"
+      },
+      {
+        "level": "advanced",
+        "question": "Softmax–CE fused gradient의 전제와 경계를 설명하세요.",
+        "answerChecklist": [
+          "categorical",
+          "target distribution",
+          "loss reduction",
+          "not softmax alone"
+        ],
+        "requiredConcepts": [
+          "fused-softmax-cross-entropy-gradient"
+        ],
+        "sectionId": "tensor-backward"
+      },
+      {
+        "level": "advanced",
+        "question": "X·W·G shape에서 dW·db·dX shape를 유도하세요.",
+        "answerChecklist": [
+          "X transpose",
+          "row sum",
+          "W transpose",
+          "original shapes"
+        ],
+        "requiredConcepts": [
+          "batched-linear-backward"
+        ],
+        "sectionId": "tensor-backward"
+      },
+      {
+        "level": "advanced",
+        "question": "같은 자료 두 개를 복제해 합 loss와 평균 loss를 비교할 때 dW와 각 행의 dX는 어떻게 달라지나요?",
+        "answerChecklist": [
+          "같은 batch의 mean은sum 대비1/2",
+          "복제 전 대비 mean dW 동일",
+          "각 행 dX는복제 전의1/2",
+          "공유 parameter 합산과input 행 구분"
+        ],
+        "requiredConcepts": [
+          "batched-linear-backward"
+        ],
+        "sectionId": "tensor-backward"
+      },
+      {
+        "level": "advanced",
+        "question": "Backprop·clipping·AdamW·dropout의 개입 지점을 구분하세요.",
+        "answerChecklist": [
+          "gradient calculation",
+          "gradient intervention",
+          "optimizer update",
+          "activation path"
+        ],
+        "requiredConcepts": [
+          "training-intervention"
+        ],
+        "sectionId": "boundaries"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Learning Representations by Back-propagating Errors",
+        "href": "https://www.cs.toronto.edu/~hinton/absps/naturebp.pdf",
+        "problem": "Hidden unit에 직접 target 없이 multi-layer weight를 학습합니다.",
+        "contribution": "Output error derivative를 layer 반대 방향으로 전달합니다.",
+        "assumptions": "Differentiable unit과 supervised target을 전제로 합니다.",
+        "evidenceScope": "534쪽 식(6)과535쪽 식(7)의 국소 gradient 규칙, 거울 대칭·가족 관계의1986년 사례를 확인합니다. 원문의 제곱오차·sigmoid와 본문의 softmax–CE 출력 신호를 구분합니다.",
+        "notClaim": "현대 network의 수렴과 일반화를 보장하지 않습니다.",
+        "sectionId": "paper-backprop"
+      }
+    ],
+    "entryNote": "입력 (1,2)이 두 선택지의 확률 (2/3,1/3)을 만들지만 정답은 둘째인 가정 사례에서 시작합니다. 같은 오차를 네 가중치·두 bias·두 입력의 gradient로 되돌려 원 논문의 식과 실제 코드에 대입합니다."
   },
   "ai/optimizers": {
     "entryLevel": true,
@@ -32738,8 +33167,8 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/agent-changelog-evidence": {
     "entryLevel": true,
-    "entryNote": "선행 수업을 가정하지 않고 고정된 empty-compaction 사건에서 용어 하나씩 정의한 뒤 형태·작은 예·경계와 조합 흐름을 순서대로 설명합니다.",
-    "coreIdea": "Changelog는 commit dump가 아니라 특정 audience가 알아야 할 검증된 변화의 시간순 index입니다. Observable impact로 notable 후보를 고르고 구현·검증·merge·deployment 상태를 분리한 뒤 run·commit·test·ADR로 돌아가는 stable evidence link를 남깁니다.",
+    "entryNote": "기록 12개를 빈 결과가 지우던 오류를 고치고 검사 4개와 공개 상태를 변경 항목에 연결합니다.",
+    "coreIdea": "독자에게 의미 있는 동작 변화와 검증 근거를 짧게 남기고 Unreleased·실제 공개 상태를 구분합니다. 고정 실행·코드·검사 링크로 같은 결과를 추적하며 테스트 통과를 전 환경 안정성으로 확대하지 않습니다.",
     "assumedKnowledge": [],
     "introducedHere": [
       {
@@ -32762,31 +33191,31 @@ export const ARTICLE_LEARNING: Readonly<
     "conceptExplanations": [
       {
         "id": "curated-changelog-entry-contract",
-        "sectionId": "overview",
-        "intuition": "최근 변화에서 상세 근거로 내려가는 짧은 시간 index입니다.",
-        "workedExample": "2026-04-16 empty overwrite 차단과 회귀 test·run link를 한 항목에 둡니다.",
-        "boundary": "Debugging transcript와 미검증 완료 주장을 섞지 않습니다."
+        "sectionId": "entry-terms",
+        "intuition": "독자가 알아야 할 동작 변화를 버전별로 골라 적습니다.",
+        "workedExample": "빈 정리 결과가 기존 12개 기록을 덮어쓰지 않도록 고친 결과와 검사 4개를 기록합니다.",
+        "boundary": "모든 commit이나 실행 명령을 나열하는 문서가 아닙니다."
       },
       {
         "id": "changelog-notability-audience-boundary",
         "sectionId": "notability",
-        "intuition": "변경 줄 수가 아니라 누가 알아야 하고 무엇이 실제로 달라졌는지를 봅니다.",
-        "workedExample": "Formatting commit은 빼고 behavior가 달라진 guard는 Fixed에 넣습니다.",
-        "boundary": "내부 Changelog라고 모든 command를 notable로 만들지 않습니다."
+        "intuition": "누가 무엇이 달라졌는지 알아야 하는지로 포함 여부를 정합니다.",
+        "workedExample": "프로필 손실 방지는 사용자와 운영자에게 중요한 Fixed이며 단순 들여쓰기 변경은 보통 제외합니다.",
+        "boundary": "출력 형식 자체가 계약이면 formatting도 의미 있는 변경일 수 있습니다."
       },
       {
         "id": "changelog-verification-publication-state",
         "sectionId": "publication",
-        "intuition": "완료 검증과 독자가 실제로 쓰는 시점을 서로 다른 표지판으로 둡니다.",
-        "workedExample": "Test pass 뒤 운영 반영 전이면 Unreleased에 남깁니다.",
-        "boundary": "Merge가 deployment나 장기 안정성을 보장하지 않습니다."
+        "intuition": "검사·병합·공개 상태를 각각 보존합니다.",
+        "workedExample": "run-1842에서 4/4가 통과해도 운영 반영 전에는 Unreleased이며 예시 v1.4.0 공개 확인 후 옮깁니다.",
+        "boundary": "패키지 릴리스와 모든 설치 환경의 배포는 같지 않습니다."
       },
       {
         "id": "changelog-stable-evidence-link",
         "sectionId": "links",
-        "intuition": "짧은 요약이 영수증 번호를 통해 상세 거래로 돌아가게 합니다.",
-        "workedExample": "run-1842·c8f…·test-guard-empty-03·ADR-005를 연결합니다.",
-        "boundary": "Secret 원문을 공개 entry에 복사하지 않습니다."
+        "intuition": "같은 검사 결과로 돌아갈 수 있는 고정 식별자와 자료를 연결합니다.",
+        "workedExample": "run-1842에서 0·5·12·명시적삭제0의 기대값과 실제값을 고정 코드 revision에 연결합니다.",
+        "boundary": "링크가 열려도 자료가 바뀔 수 있어 hash·보존·권한·담당자를 함께 확인합니다."
       }
     ],
     "conceptStages": [
@@ -32824,155 +33253,147 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "Curated Changelog entry의 필수 필드를 쓰라.",
+        "question": "기록 12개를 빈 결과가 지우던 수정 항목에 어떤 결과와 영향을 적나요?",
         "answerChecklist": [
-          "date/version",
-          "result",
-          "impact",
-          "verification",
-          "links"
+          "빈 자동교체 차단",
+          "기존12보존",
+          "독자 영향",
+          "검증근거"
         ],
+        "sectionId": "entry-terms",
         "requiredConcepts": [
           "curated-changelog-entry-contract"
-        ],
-        "sectionId": "overview"
+        ]
       },
       {
         "level": "basic",
-        "question": "Formatting commit과 overwrite guard 중 notable change를 판정하라.",
+        "question": "0·5·12·명시적삭제0의 네 검사에서 무엇을 구분하나요?",
         "answerChecklist": [
-          "audience",
-          "behavior",
-          "omit formatting",
-          "include guard"
+          "빈실패",
+          "불완전",
+          "검증전체",
+          "허용삭제",
+          "숫자만으로 판정불가"
         ],
-        "requiredConcepts": [
-          "changelog-notability-audience-boundary"
-        ],
-        "sectionId": "notability"
-      },
-      {
-        "level": "basic",
-        "question": "Verified·merged·deployed 상태를 구분하라.",
-        "answerChecklist": [
-          "test",
-          "merge",
-          "runtime availability",
-          "different evidence"
-        ],
-        "requiredConcepts": [
-          "changelog-verification-publication-state"
-        ],
-        "sectionId": "publication"
-      },
-      {
-        "level": "basic",
-        "question": "Unreleased 영역이 필요한 상황을 설명하라.",
-        "answerChecklist": [
-          "verified",
-          "not deployed",
-          "pending",
-          "no dated claim"
-        ],
-        "requiredConcepts": [
-          "changelog-verification-publication-state"
-        ],
-        "sectionId": "publication"
-      },
-      {
-        "level": "basic",
-        "question": "Entry에서 상세 evidence로 돌아가는 link set을 설계하라.",
-        "answerChecklist": [
-          "run",
-          "commit",
-          "test",
-          "ADR",
-          "stable ID"
-        ],
-        "requiredConcepts": [
-          "changelog-stable-evidence-link"
-        ],
-        "sectionId": "links"
-      },
-      {
-        "level": "basic",
-        "question": "긴 debugging transcript를 Changelog에 복사하지 않고 보존하라.",
-        "answerChecklist": [
-          "short result",
-          "artifact owner",
-          "redaction",
-          "link",
-          "verification"
-        ],
+        "sectionId": "small-case",
         "requiredConcepts": [
           "curated-changelog-entry-contract",
-          "changelog-stable-evidence-link"
-        ],
-        "sectionId": "links"
+          "changelog-verification-publication-state"
+        ]
       },
       {
-        "level": "advanced",
-        "question": "내부 project의 notable 기준을 audience별로 설계하라.",
+        "level": "basic",
+        "question": "검사 4/4 통과 뒤 운영 반영 전이면 항목을 어디에 두나요?",
         "answerChecklist": [
-          "user",
-          "operator",
-          "developer",
-          "impact",
-          "noise"
+          "Unreleased",
+          "검증과 공개 구분"
         ],
+        "sectionId": "publication",
         "requiredConcepts": [
-          "changelog-notability-audience-boundary"
-        ],
-        "sectionId": "notability"
+          "changelog-verification-publication-state"
+        ]
       },
       {
-        "level": "advanced",
-        "question": "Merge됐지만 rollout이 실패한 change의 상태와 근거를 작성하라.",
+        "level": "basic",
+        "question": "기존 동작의 오류를 고친 항목은 공식 예시의 어느 분류인가요?",
         "answerChecklist": [
-          "merged",
-          "not deployed",
-          "blocked",
-          "failure receipt",
-          "rollback"
+          "Fixed",
+          "버전별 항목",
+          "Unreleased에서 이동"
         ],
-        "requiredConcepts": [
-          "changelog-verification-publication-state",
-          "changelog-stable-evidence-link"
-        ],
-        "sectionId": "publication"
-      },
-      {
-        "level": "advanced",
-        "question": "Link rot와 permission 변경을 탐지하는 audit를 설계하라.",
-        "answerChecklist": [
-          "existence",
-          "redirect",
-          "permission",
-          "digest",
-          "retention",
-          "owner"
-        ],
-        "requiredConcepts": [
-          "changelog-stable-evidence-link"
-        ],
-        "sectionId": "links"
-      },
-      {
-        "level": "advanced",
-        "question": "Raw commit log를 curated Changelog로 migration하라.",
-        "answerChecklist": [
-          "audience",
-          "filter",
-          "result",
-          "verification",
-          "links",
-          "archive"
-        ],
+        "sectionId": "entry-source",
         "requiredConcepts": [
           "curated-changelog-entry-contract",
           "changelog-notability-audience-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "들여쓰기 변경을 보통 제외하지만 예외가 될 조건은 무엇인가요?",
+        "answerChecklist": [
+          "독자",
+          "관찰 가능한 영향",
+          "출력 형식 계약"
         ],
-        "sectionId": "overview"
+        "sectionId": "entry-limits",
+        "requiredConcepts": [
+          "changelog-notability-audience-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "현재 main 링크만 남기면 run-1842 추적에 어떤 문제가 있나요?",
+        "answerChecklist": [
+          "내용 변경",
+          "고정 revision",
+          "같은 실행 코드",
+          "자료 hash"
+        ],
+        "sectionId": "links",
+        "requiredConcepts": [
+          "changelog-stable-evidence-link"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "패키지는 출시했지만 서비스 두 곳 중 한 곳만 반영했습니다. 공개 상태를 어떻게 적나요?",
+        "answerChecklist": [
+          "패키지 릴리스",
+          "환경별 배포",
+          "범위 명시",
+          "미반영 위치"
+        ],
+        "sectionId": "publication",
+        "requiredConcepts": [
+          "changelog-verification-publication-state"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "결과 5개가 양수이므로 정상이라고 발표한 항목을 어떻게 검증·수정하나요?",
+        "answerChecklist": [
+          "기존12",
+          "완전성 검사",
+          "기대값·실제값",
+          "수정 근거",
+          "과장 철회"
+        ],
+        "sectionId": "small-case",
+        "requiredConcepts": [
+          "curated-changelog-entry-contract",
+          "changelog-verification-publication-state"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "링크가 열리지만 다른 문서를 가리키는 문제를 어떻게 찾나요?",
+        "answerChecklist": [
+          "고정 식별자",
+          "hash",
+          "권한",
+          "보존",
+          "담당자"
+        ],
+        "sectionId": "links",
+        "requiredConcepts": [
+          "changelog-stable-evidence-link"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "검사4개 통과를 모든 환경에서 안정적이라고 발표하면 어떤 추가 근거가 빠지나요?",
+        "answerChecklist": [
+          "동시쓰기",
+          "중단",
+          "다른형식",
+          "배포 범위",
+          "장기상태 별도"
+        ],
+        "sectionId": "entry-limits",
+        "requiredConcepts": [
+          "curated-changelog-entry-contract",
+          "changelog-verification-publication-state"
+        ]
       }
     ],
     "papers": [
@@ -32990,8 +33411,8 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/architecture-decision-records": {
     "entryLevel": true,
-    "entryNote": "선행 수업을 가정하지 않고 고정된 empty-compaction 사건에서 용어 하나씩 정의한 뒤 형태·작은 예·경계와 조합 흐름을 순서대로 설명합니다.",
-    "coreIdea": "ADR은 significant decision 하나의 context·options·decision·consequences를 보존합니다. 모든 option을 같은 decision driver로 비교하고 accepted와 implementation을 분리하며, 결정이 바뀌면 원문 삭제 대신 supersession chain으로 history를 남깁니다.",
+    "entryNote": "프로필 200개 중 A 하나만 복구하려는 상황에서 저장 선택을 비교하고 ADR-005를 남깁니다.",
+    "coreIdea": "선택 당시의 조건과 공통 비교 기준, 채택한 결정과 후속 비용을 함께 보존합니다. 합의와 구현을 구분하고 작업자가 1개에서 4개로 늘면 새 ADR로 대체 이유를 남깁니다.",
     "assumedKnowledge": [],
     "introducedHere": [
       {
@@ -33014,31 +33435,31 @@ export const ARTICLE_LEARNING: Readonly<
     "conceptExplanations": [
       {
         "id": "architecture-decision-record-contract",
-        "sectionId": "overview",
-        "intuition": "결론뿐 아니라 당시 왜 합리적이었는지를 남기는 결정 영수증입니다.",
-        "workedExample": "ADR-005가 profile별 파일 선택의 context와 consequences를 소유합니다.",
-        "boundary": "작은 bug fix와 일일 진행률은 ADR이 아닙니다."
+        "sectionId": "decision-terms",
+        "intuition": "중요한 선택 하나와 그 이유·대가를 보존합니다.",
+        "workedExample": "ADR-005는 200개 설정에서 A만 복구하려고 프로필별 파일을 고른 조건을 남깁니다.",
+        "boundary": "모든 작은 수정이나 진행 상태를 ADR로 만들지 않습니다."
       },
       {
         "id": "adr-decision-driver-comparability",
         "sectionId": "drivers",
-        "intuition": "세 후보를 같은 시험 문제로 평가해야 나중에 결론을 재검토할 수 있습니다.",
-        "workedExample": "JSON·files·DB를 blast radius와 migration cost로 비교합니다.",
-        "boundary": "근거 없는 점수나 option별 다른 기준을 쓰지 않습니다."
+        "intuition": "모든 대안을 같은 요구와 제약으로 비교합니다.",
+        "workedExample": "파일 1개·분리 파일 200개·DB를 복구 범위·동시 쓰기·이전·운영 부담으로 비교합니다.",
+        "boundary": "근거 없는 점수나 대안마다 다른 잣대로 결론을 꾸미지 않습니다."
       },
       {
         "id": "adr-status-implementation-separation",
         "sectionId": "status",
-        "intuition": "회의에서 채택한 상태와 현장에 설치해 검증한 상태는 다른 영수증입니다.",
-        "workedExample": "Accepted ADR과 migration test·rollout receipt를 따로 둡니다.",
-        "boundary": "Accepted는 implemented나 deployed가 아닙니다."
+        "intuition": "결정 채택과 실제 구현·이전·배포 완료를 나눕니다.",
+        "workedExample": "ADR-005가 accepted여도 200개 이전 및 A만 복구하는 검사가 끝나지 않았다면 rollout은 pending입니다.",
+        "boundary": "합의가 코드·데이터·운영 상태를 자동으로 바꾸지 않습니다."
       },
       {
         "id": "adr-supersession-history-chain",
         "sectionId": "supersession",
-        "intuition": "과거 표지판을 지우지 않고 새 길이 왜 생겼는지 연결합니다.",
-        "workedExample": "ADR-006이 ADR-005를 supersede하고 changed driver를 적습니다.",
-        "boundary": "번호 재사용이나 원문 덮어쓰기를 하지 않습니다."
+        "intuition": "과거 선택을 보존하고 새 조건의 결정을 링크합니다.",
+        "workedExample": "작업자가 1개에서 4개로 늘어 ADR-006이 ADR-005를 대체하면 이전 기록과 대체 이유를 함께 남깁니다.",
+        "boundary": "번호를 재사용하거나 당시 조건을 현재 조건으로 덮어쓰지 않습니다."
       }
     ],
     "conceptStages": [
@@ -33076,153 +33497,145 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "Profile storage 결정을 기록하는 ADR 한 건에 반드시 들어갈 기본 필드와 각 필드의 역할을 쓰라.",
+        "question": "프로필 200개 중 A 하나만 복구하려는 요구를 ADR의 어떤 항목에 적나요?",
         "answerChecklist": [
-          "title",
-          "status",
-          "context",
-          "decision",
-          "consequences"
+          "Context",
+          "복구 단위",
+          "작업자1",
+          "운영 제약"
         ],
+        "sectionId": "source-template",
         "requiredConcepts": [
           "architecture-decision-record-contract"
-        ],
-        "sectionId": "overview"
+        ]
       },
       {
         "level": "basic",
-        "question": "Significant decision과 작은 bug fix를 구분하라.",
+        "question": "파일 1개·파일 200개·DB를 같은 기준으로 비교할 항목을 제시하세요.",
         "answerChecklist": [
-          "future constraint",
-          "architecture",
-          "bug issue",
-          "not every change"
+          "복구 범위",
+          "동시 쓰기",
+          "이전",
+          "운영 부담"
         ],
-        "requiredConcepts": [
-          "architecture-decision-record-contract"
-        ],
-        "sectionId": "overview"
-      },
-      {
-        "level": "basic",
-        "question": "세 storage option을 같은 driver로 비교하라.",
-        "answerChecklist": [
-          "blast radius",
-          "recovery",
-          "migration",
-          "operations",
-          "same axes"
-        ],
+        "sectionId": "drivers",
         "requiredConcepts": [
           "adr-decision-driver-comparability"
-        ],
-        "sectionId": "drivers"
+        ]
       },
       {
         "level": "basic",
-        "question": "Accepted와 implemented가 다른 이유를 쓰라.",
+        "question": "분리 파일을 선택했어도 남는 비용 두 가지를 적으세요.",
         "answerChecklist": [
-          "decision adopted",
-          "task",
-          "migration",
-          "deployment",
-          "verification"
+          "파일 수 증가",
+          "백업 관리",
+          "여러 파일 원자성",
+          "쓰기 조정"
         ],
-        "requiredConcepts": [
-          "adr-status-implementation-separation"
-        ],
-        "sectionId": "status"
-      },
-      {
-        "level": "basic",
-        "question": "ADR을 supersede할 때 남길 정보를 쓰라.",
-        "answerChecklist": [
-          "old status",
-          "new ADR",
-          "changed context",
-          "reason",
-          "history"
-        ],
-        "requiredConcepts": [
-          "adr-supersession-history-chain"
-        ],
-        "sectionId": "supersession"
-      },
-      {
-        "level": "basic",
-        "question": "Positive·negative consequence를 함께 쓰는 이유를 설명하라.",
-        "answerChecklist": [
-          "benefit",
-          "cost",
-          "trade-off",
-          "future review"
-        ],
-        "requiredConcepts": [
-          "architecture-decision-record-contract"
-        ],
-        "sectionId": "overview"
-      },
-      {
-        "level": "advanced",
-        "question": "근거 수치가 부족한 option comparison을 설계하라.",
-        "answerChecklist": [
-          "observations",
-          "unknowns",
-          "same drivers",
-          "no fake score",
-          "experiment"
-        ],
-        "requiredConcepts": [
-          "adr-decision-driver-comparability"
-        ],
-        "sectionId": "drivers"
-      },
-      {
-        "level": "advanced",
-        "question": "Accepted 뒤 migration 실패 시 ADR·task·Changelog 상태를 판정하라.",
-        "answerChecklist": [
-          "accepted",
-          "implementation failed",
-          "not deployed",
-          "evidence",
-          "rollback"
-        ],
-        "requiredConcepts": [
-          "adr-status-implementation-separation"
-        ],
-        "sectionId": "status"
-      },
-      {
-        "level": "advanced",
-        "question": "File storage를 DB로 바꾸는 superseding ADR을 설계하라.",
-        "answerChecklist": [
-          "old preserved",
-          "new context",
-          "drivers",
-          "decision",
-          "link"
-        ],
-        "requiredConcepts": [
-          "adr-supersession-history-chain",
-          "adr-decision-driver-comparability"
-        ],
-        "sectionId": "supersession"
-      },
-      {
-        "level": "advanced",
-        "question": "암묵 decision 하나를 evidence 기반 ADR로 복원하라.",
-        "answerChecklist": [
-          "history",
-          "context",
-          "uncertainty",
-          "options",
-          "status"
-        ],
+        "sectionId": "drivers",
         "requiredConcepts": [
           "architecture-decision-record-contract",
-          "adr-status-implementation-separation"
+          "adr-decision-driver-comparability"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "Accepted와 rollout pending이 동시에 있을 수 있는 이유를 설명하세요.",
+        "answerChecklist": [
+          "합의와 구현 구분",
+          "이전 검증",
+          "배포 확인"
         ],
-        "sectionId": "overview"
+        "sectionId": "status",
+        "requiredConcepts": [
+          "adr-status-implementation-separation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "작업자가 1개에서 4개로 늘면 ADR-005를 어떻게 다루나요?",
+        "answerChecklist": [
+          "새 조건 재검토",
+          "ADR-006",
+          "superseded",
+          "과거 보존"
+        ],
+        "sectionId": "supersession",
+        "requiredConcepts": [
+          "adr-supersession-history-chain"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "원문의 기본 필드와 이 글에서 추가한 비교 절을 구분하세요.",
+        "answerChecklist": [
+          "Title·Context·Decision·Status·Consequences",
+          "Options는 확장"
+        ],
+        "sectionId": "source-template",
+        "requiredConcepts": [
+          "architecture-decision-record-contract"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "동시 작업자 4개가 생겼다는 사실만으로 DB를 자동 채택할 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "같은 기준 재비교",
+          "제품·설계 확인",
+          "동시성 계약",
+          "운영 비용"
+        ],
+        "sectionId": "supersession",
+        "requiredConcepts": [
+          "adr-decision-driver-comparability",
+          "adr-supersession-history-chain"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "ADR-005가 채택된 뒤 200개 이전과 A만 복구를 완료했다고 판단할 근거를 설계하세요.",
+        "answerChecklist": [
+          "이전 전후 내용·개수",
+          "A 복구",
+          "중단 상태",
+          "같은 revision",
+          "배포 위치"
+        ],
+        "sectionId": "decision-limits",
+        "requiredConcepts": [
+          "adr-status-implementation-separation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "과거 ADR을 현재 조건에 맞게 고치면 이전 코드를 이해하는 데 무엇을 잃나요?",
+        "answerChecklist": [
+          "당시 Context",
+          "결정 이유",
+          "새 선택의 근거",
+          "대체 링크"
+        ],
+        "sectionId": "supersession",
+        "requiredConcepts": [
+          "architecture-decision-record-contract",
+          "adr-supersession-history-chain"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "기록이 없던 과거 파일 분리 선택을 복원할 때 무엇을 사실과 추정으로 나누나요?",
+        "answerChecklist": [
+          "당시 근거",
+          "확인한 코드·이력",
+          "추정 표시",
+          "모르는 이유 보존"
+        ],
+        "sectionId": "decision-limits",
+        "requiredConcepts": [
+          "architecture-decision-record-contract",
+          "adr-decision-driver-comparability"
+        ]
       }
     ],
     "papers": [
@@ -33240,8 +33653,8 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/engineering-lessons-ledger": {
     "entryLevel": true,
-    "entryNote": "선행 수업을 가정하지 않고 고정된 empty-compaction 사건에서 용어 하나씩 정의한 뒤 형태·작은 예·경계와 조합 흐름을 순서대로 설명합니다.",
-    "coreIdea": "Engineering Lesson은 사건 요약이 아니라 다음 작업에서 실행할 현재 rule입니다. Rule에 scope·정상 exception·test를 붙이고 evidence가 약하지만 severity가 큰 경우에는 좁은 provisional 상태로 시작합니다. Postmortem은 incident history를, Lesson은 current rule만 소유합니다.",
+    "entryNote": "기록 12개가 0개가 된 실패와 정상 삭제를 구분해 실제로 적용할 교체 규칙과 검사 4개를 만듭니다.",
+    "coreIdea": "사건의 과거 사실과 현재 행동 규칙을 분리해 연결합니다. 적용 경로·정상 예외·검증·담당자·재검토 조건을 함께 두고 하나의 강한 사건은 범위를 좁힌 잠정 규칙으로 다룹니다.",
     "assumedKnowledge": [],
     "introducedHere": [
       {
@@ -33264,31 +33677,31 @@ export const ARTICLE_LEARNING: Readonly<
     "conceptExplanations": [
       {
         "id": "reusable-lesson-contract",
-        "sectionId": "overview",
-        "intuition": "과거 이야기를 저장하는 대신 다음 판단에서 꺼내 쓸 도구입니다.",
-        "workedExample": "Derived empty output으로 기존 state를 자동 replace하지 않는 rule을 둡니다.",
-        "boundary": "범위와 test 없는 구호는 Lesson이 아닙니다."
+        "sectionId": "lesson-terms",
+        "intuition": "다음 작업에서 적용할 현재 규칙과 근거·검사·재검토 조건을 남깁니다.",
+        "workedExample": "기존 12개를 자동 교체할 때 정리 결과의 완전성을 확인하고 실패·부분 결과면 보존합니다.",
+        "boundary": "범위 없는 위험 경고나 사건 시간표만으로 실행 규칙을 대신하지 않습니다."
       },
       {
         "id": "lesson-scope-exception-test-triad",
         "sectionId": "scope-test",
-        "intuition": "어디서 멈추고 어떤 경우에 열어 줄지 시험까지 붙인 경계입니다.",
-        "workedExample": "Compaction은 scope, explicit delete는 exception, empty/delete fixture로 구분합니다.",
-        "boundary": "단순 length 검사로 domain intent를 대신하지 않습니다."
+        "intuition": "적용 경로와 정상 예외를 검사로 구분합니다.",
+        "workedExample": "빈 결과 0개와 부분 결과 5개는 기존 12개를 보존, 전체 12개는 검증 후 교체, 허용한 삭제 0개는 별도 경로로 처리합니다.",
+        "boundary": "length > 0만으로 완전성과 정상 삭제 의도를 확인할 수 없습니다."
       },
       {
         "id": "provisional-lesson-evidence-threshold",
         "sectionId": "provisional",
-        "intuition": "증거가 적을수록 금지 범위를 좁히고 다시 볼 조건을 선명하게 합니다.",
-        "workedExample": "한 번의 data loss 뒤 destructive replace path에만 provisional guard를 둡니다.",
-        "boundary": "모든 AI output을 금지하는 보편 rule로 넓히지 않습니다."
+        "intuition": "근거가 제한돼도 큰 손실을 막도록 범위를 좁힌 잠정 규칙을 둘 수 있습니다.",
+        "workedExample": "한 번의 12개 손실을 근거로 자동 교체 경로만 보호하고 새 저장소·삭제 계약 변경 때 재검토합니다.",
+        "boundary": "한 사건을 모든 AI 출력의 보편 법칙으로 확대하지 않습니다."
       },
       {
         "id": "postmortem-lesson-boundary",
         "sectionId": "postmortem",
-        "intuition": "사고 보고서와 현재 안전 규칙을 서로 link하되 복제하지 않습니다.",
-        "workedExample": "Postmortem은 impact·timeline·action, Lesson은 empty replace guard만 소유합니다.",
-        "boundary": "Blameless를 accountability 부재로 해석하지 않습니다."
+        "intuition": "과거 사건의 영향·대응과 앞으로 사용할 현재 규칙의 책임을 나눕니다.",
+        "workedExample": "postmortem-021에는 손실 12개와 복구 이력을 두고 lesson에는 교체 규칙·검사 4개·담당자를 연결합니다.",
+        "boundary": "Blameless는 개인 비난을 피하되 개선 담당자와 책임까지 없애는 뜻은 아닙니다."
       }
     ],
     "conceptStages": [
@@ -33326,170 +33739,161 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "Reusable Lesson의 필수 필드를 쓰라.",
+        "question": "실패한 정리 결과 0개와 허용한 삭제 결과 0개은 각각 어떤 상태를 만들어야 하나요?",
         "answerChecklist": [
-          "rule",
-          "scope",
-          "exception",
-          "evidence",
-          "verification",
-          "revisit"
+          "실패는12보존",
+          "정상삭제는0",
+          "의도·권한·대상 확인"
         ],
-        "requiredConcepts": [
-          "reusable-lesson-contract"
-        ],
-        "sectionId": "overview"
-      },
-      {
-        "level": "basic",
-        "question": "‘Compaction은 위험하다’가 충분한 Lesson이 아닌 이유를 쓰라.",
-        "answerChecklist": [
-          "vague",
-          "no scope",
-          "no exception",
-          "no test"
-        ],
-        "requiredConcepts": [
-          "reusable-lesson-contract"
-        ],
-        "sectionId": "overview"
-      },
-      {
-        "level": "basic",
-        "question": "Empty replace guard의 scope·exception·test를 설계하라.",
-        "answerChecklist": [
-          "compaction",
-          "delete intent",
-          "empty fixture",
-          "delete fixture",
-          "state"
-        ],
+        "sectionId": "small-case",
         "requiredConcepts": [
           "lesson-scope-exception-test-triad"
-        ],
-        "sectionId": "scope-test"
+        ]
       },
       {
         "level": "basic",
-        "question": "한 data-loss 사건에서 provisional Lesson을 만들 수 있는 이유와 제한을 쓰라.",
+        "question": "결과가 5개라서 양수라는 사실만으로 기존 12개를 교체할 수 있나요?",
         "answerChecklist": [
-          "severity",
-          "narrow scope",
-          "status",
-          "counterexample",
-          "revisit"
+          "불완전 가능",
+          "보존",
+          "완전성 검증"
         ],
+        "sectionId": "scope-test",
         "requiredConcepts": [
-          "provisional-lesson-evidence-threshold"
-        ],
-        "sectionId": "provisional"
+          "lesson-scope-exception-test-triad"
+        ]
       },
       {
         "level": "basic",
-        "question": "Postmortem과 Lesson이 각각 소유하는 내용을 나누라.",
+        "question": "12개 전체 결과도 개수만 같으면 통과할 수 없는 이유는 무엇인가요?",
         "answerChecklist": [
-          "impact",
-          "timeline",
-          "mitigation",
-          "action",
-          "current rule",
-          "test"
+          "내용",
+          "형식",
+          "버전",
+          "대상",
+          "완전성"
         ],
-        "requiredConcepts": [
-          "postmortem-lesson-boundary"
-        ],
-        "sectionId": "postmortem"
-      },
-      {
-        "level": "basic",
-        "question": "Blameless 문장을 system condition 중심으로 다시 쓰라.",
-        "answerChecklist": [
-          "no blame",
-          "system condition",
-          "validation gap",
-          "action",
-          "owner"
-        ],
-        "requiredConcepts": [
-          "postmortem-lesson-boundary"
-        ],
-        "sectionId": "postmortem"
-      },
-      {
-        "level": "advanced",
-        "question": "새 counterexample이 나온 Lesson을 복사본 없이 갱신하라.",
-        "answerChecklist": [
-          "canonical rule",
-          "evidence",
-          "scope",
-          "exception",
-          "test update"
-        ],
+        "sectionId": "scope-test",
         "requiredConcepts": [
           "reusable-lesson-contract",
           "lesson-scope-exception-test-triad"
-        ],
-        "sectionId": "scope-test"
+        ]
       },
       {
-        "level": "advanced",
-        "question": "Severity와 evidence로 provisional·accepted·rejected matrix를 만들라.",
+        "level": "basic",
+        "question": "사건 시간표와 현재 행동규칙을 각각 어디에 두나요?",
         "answerChecklist": [
-          "severity",
-          "evidence",
-          "provisional",
-          "accepted",
-          "reject",
-          "revisit"
+          "postmortem",
+          "lesson",
+          "근거 링크",
+          "중복복사 피함"
         ],
+        "sectionId": "postmortem",
+        "requiredConcepts": [
+          "postmortem-lesson-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "한 번의 큰 손실에서 시작하는 규칙에 어떤 상태와 범위를 붙이나요?",
+        "answerChecklist": [
+          "provisional",
+          "자동교체경로",
+          "근거한계",
+          "재검토"
+        ],
+        "sectionId": "provisional",
         "requiredConcepts": [
           "provisional-lesson-evidence-threshold"
-        ],
-        "sectionId": "provisional"
+        ]
       },
       {
-        "level": "advanced",
-        "question": "Postmortem action과 Lesson verification이 link되는 구조를 설계하라.",
+        "level": "basic",
+        "question": "현재 규칙의 재검토를 시작할 두 조건을 제시하세요.",
         "answerChecklist": [
-          "incident ID",
-          "owner",
-          "end state",
-          "rule",
-          "test",
-          "no duplication"
+          "새저장소",
+          "정상삭제계약변경",
+          "반례",
+          "담당자"
         ],
+        "sectionId": "provisional",
         "requiredConcepts": [
-          "postmortem-lesson-boundary",
-          "lesson-scope-exception-test-triad"
-        ],
-        "sectionId": "postmortem"
+          "reusable-lesson-contract",
+          "provisional-lesson-evidence-threshold"
+        ]
       },
       {
         "level": "advanced",
-        "question": "Agent의 Lesson 후보 과잉 일반화를 막는 review를 설계하라.",
+        "question": "모든 0개 결과를 금지하는 규칙을 범위·예외·검사로 고치세요.",
         "answerChecklist": [
-          "artifact links",
-          "evidence count",
-          "severity",
-          "counterexample",
-          "scope",
-          "approval"
+          "교체경로",
+          "완전성",
+          "명시삭제별도",
+          "0·5·12·0검사"
         ],
+        "sectionId": "scope-test",
+        "requiredConcepts": [
+          "reusable-lesson-contract",
+          "lesson-scope-exception-test-triad"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "개인을 비난하지 않는 사건 검토에서 개선 책임을 어떻게 남기나요?",
+        "answerChecklist": [
+          "시스템조건",
+          "당시정보",
+          "담당자",
+          "실행가능조치",
+          "결과검증"
+        ],
+        "sectionId": "lesson-limits",
+        "requiredConcepts": [
+          "postmortem-lesson-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "새 저장소가 부분갱신을 사용하면 기존 규칙과 사건 기록을 어떻게 다루나요?",
+        "answerChecklist": [
+          "계약재검토",
+          "현재lesson갱신",
+          "검사추가",
+          "대체표시",
+          "과거사실보존"
+        ],
+        "sectionId": "provisional",
         "requiredConcepts": [
           "provisional-lesson-evidence-threshold",
-          "reusable-lesson-contract"
+          "postmortem-lesson-boundary"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "검사 4개를 모두 통과했지만 동시 쓰기가 생겼습니다. 규칙 범위를 확대하기 전에 무엇을 확인하나요?",
+        "answerChecklist": [
+          "새실패경로",
+          "불변식",
+          "동시쓰기검사",
+          "실행근거",
+          "범위명시"
         ],
-        "sectionId": "provisional"
+        "sectionId": "lesson-limits",
+        "requiredConcepts": [
+          "reusable-lesson-contract",
+          "lesson-scope-exception-test-triad",
+          "provisional-lesson-evidence-threshold"
+        ]
       }
     ],
     "papers": [
       {
         "title": "Google SRE Workbook — Postmortem Culture",
-        "href": "https://sre.google/workbook/postmortem-culture/",
+        "href": "https://sre.google/sre-book/postmortem-culture/",
         "problem": "Incident 복구 뒤 formal learning과 action이 사라지는 문제",
         "contribution": "Blameless analysis·complete data·measurable action·owner·review",
         "assumptions": "대규모 production 사례이며 팀별 trigger와 process가 필요",
-        "evidenceScope": "Incident evidence를 system learning으로 연결하는 운영 원리",
+        "evidenceScope": "SRE book의 사건 기록·예방조치·blameless 원칙입니다. 현재 lesson 형식과 4검사는 이 글의 적용입니다.",
         "notClaim": "Lesson이 Postmortem과 같거나 accountability를 없앤다는 뜻은 아님",
         "sectionId": "paper-google-sre-postmortem"
       }
@@ -40575,385 +40979,458 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "기존 답 두 개와 긴 입력 하나를 전체 예산 5 안에서 1·1·3으로 배정하는 사례에서 시작합니다."
   },
   "ai/vllm-paged-attention": {
-    coreIdea: "PagedAttention은 길이를 미리 모르는 request KV state를 fixed-size logical block으로 나누고 request block table이 non-contiguous physical block을 가리키게 하는 memory indirection입니다. 이 indirection이 internal fragmentation을 마지막 block 하나로 묶고 external fragmentation을 없애며, reference count와 copy-on-write로 fork·beam·prefix 공유를 block 단위로 만듭니다. BlockPool은 allocate·free·cached lifecycle을 소유하고 KVCacheManager는 scheduler의 token 계획을 block demand로 바꾸며, Automatic Prefix Caching은 full-block hash가 같은 causal prefix의 prefill만 재사용합니다.",
-    assumedKnowledge: [
+    "coreIdea": "요청의 논리 순서와 실제 KV 저장 위치를 block table로 연결하고 필요한 만큼 공간을 추가합니다. 공유 참조와 복사 수명을 보존하면서 prefix를 재사용하며, 단순 full-block 모형과 고정 버전의 partial-hit CoW 경로를 구분합니다.",
+    "assumedKnowledge": [
       {
-        id: "autoregressive-decoding",
-        role: "확정 token이 다음 token의 조건이 되어 request state가 순차적으로 늘어나는 이유를 사용합니다.",
+        "id": "autoregressive-decoding",
+        "role": "확정 token이 다음 token의 조건이 되어 request state가 순차적으로 늘어나는 이유를 사용합니다."
       },
       {
-        id: "kv-cache-decode-state",
-        role: "과거 token의 layer별 K·V를 저장해 decode 재계산을 줄이는 memory state를 출발점으로 사용합니다.",
+        "id": "kv-cache-decode-state",
+        "role": "과거 token의 layer별 K·V를 저장해 decode 재계산을 줄이는 memory state를 출발점으로 사용합니다."
       },
       {
-        id: "serving-iteration-resource-feasibility",
-        role: "Scheduler가 선택한 token을 실행하려면 KV block demand가 free pool을 넘지 않아야 함을 전제로 합니다.",
+        "id": "serving-iteration-resource-feasibility",
+        "role": "Scheduler가 선택한 token을 실행하려면 KV block demand가 free pool을 넘지 않아야 함을 전제로 합니다."
       },
       {
-        id: "scheduler-request-progress-gap",
-        role: "이번 iteration에 배정된 new token과 speculative lookahead가 allocation demand로 내려오는 경로를 읽습니다.",
+        "id": "scheduler-request-progress-gap",
+        "role": "이번 iteration에 배정된 new token과 speculative lookahead가 allocation demand로 내려오는 경로를 읽습니다."
       },
       {
-        id: "kv-pool-capacity-budget",
-        role: "Layer·KV head·head dimension·dtype이 physical KV pool의 전체 token capacity를 정하는 계산을 재사용합니다.",
+        "id": "kv-pool-capacity-budget",
+        "role": "Layer·KV head·head dimension·dtype이 physical KV pool의 전체 token capacity를 정하는 계산을 재사용합니다."
       },
       {
-        id: "beam-search",
-        role: "매 step 상위 k개 candidate만 남기는 pruning이 branch 공유 관계를 바꾸는 원인으로 사용합니다.",
-      },
-],
-    introducedHere: [
+        "id": "beam-search",
+        "role": "매 step 상위 k개 candidate만 남기는 pruning이 branch 공유 관계를 바꾸는 원인으로 사용합니다."
+      }
+    ],
+    "introducedHere": [
       {
-        id: "paged-kv-block-allocation",
-        role: "Variable-length sequence를 fixed-size block의 on-demand allocation으로 바꾸고 마지막 block의 내부 fragmentation을 계산합니다.",
-      },
-      {
-        id: "kv-block-address-translation",
-        role: "Logical token position을 request block table과 offset으로 physical KV slot에 연결합니다.",
+        "id": "paged-kv-block-allocation",
+        "role": "Variable-length sequence를 fixed-size block의 on-demand allocation으로 바꾸고 마지막 block의 내부 fragmentation을 계산합니다."
       },
       {
-        id: "pagedattention-memory-kernel-boundary",
-        role: "Block manager·paged attention kernel·scheduler의 서로 다른 책임을 구분합니다.",
+        "id": "kv-block-address-translation",
+        "role": "Logical token position을 request block table과 offset으로 physical KV slot에 연결합니다."
       },
       {
-        id: "kv-block-reference-ownership",
-        role: "여러 request가 공유하는 physical block의 reference count와 안전한 eviction 시점을 설명합니다.",
+        "id": "pagedattention-memory-kernel-boundary",
+        "role": "Block manager·paged attention kernel·scheduler의 서로 다른 책임을 구분합니다."
       },
       {
-        id: "kv-free-queue-eviction",
-        role: "Reference가 0인 cached block이 free queue에서 hit 후보이면서 allocation 시 eviction 후보가 되는 lifecycle을 추적합니다.",
+        "id": "kv-block-reference-ownership",
+        "role": "공유 block의 요청 참조와 복사·전송 pin을 구분해 안전한 물리 재사용 조건을 설명합니다."
       },
       {
-        id: "kv-manager-allocation-contract",
-        role: "Cache hit·기존 partial block·new/lookahead token을 새 physical block demand와 성공·실패로 변환합니다.",
+        "id": "kv-free-queue-eviction",
+        "role": "Free 목록에 남은 cache 내용, hash 항목 제거, 물리 공간 재사용을 구분합니다."
       },
       {
-        id: "hybrid-cache-group-coordination",
-        role: "Full·sliding-window attention과 recurrent state가 섞일 때 compatible layer별 cache group을 함께 조율합니다.",
+        "id": "kv-manager-allocation-contract",
+        "role": "Cache hit·기존 partial block·new/lookahead token을 새 physical block demand와 성공·실패로 변환합니다."
       },
       {
-        id: "chained-prefix-block-hash",
-        role: "Parent hash·current full-block token·extra identity를 결합해 causal prefix cache key를 만듭니다.",
+        "id": "hybrid-cache-group-coordination",
+        "role": "Full·sliding-window attention과 recurrent state가 섞일 때 compatible layer별 cache group을 함께 조율합니다."
       },
       {
-        id: "automatic-prefix-cache-scope",
-        role: "연속 full-block hit가 줄이는 prompt prefill과 줄이지 못하는 suffix·decode 비용을 구분합니다.",
-      },
-      { id: "kv-internal-fragmentation", role: "배정됐지만 쓰이지 않는 KV slot을 연속 예약과 fixed-size block에서 각각 계산합니다." },
-      { id: "kv-external-fragmentation", role: "Free 합은 충분해도 연속 조각이 없어 못 받는 상태가 paging에서 왜 사라지는지 설명합니다." },
-      { id: "kv-block-allocator", role: "Free pool을 소유하고 allocate·free 두 연산으로 block 소유자를 바꾸는 BlockPool의 역할을 정합니다." },
-      { id: "kv-sequence-fork-copy-on-write", role: "Block table 복사와 ref 증가로 prompt를 공유하고 쓰기 시 block 하나만 복사하는 fork 절차를 설명합니다." },
-      { id: "beam-branch-kv-sharing", role: "Beam pruning이 ref를 내려 block을 되돌리고 새 candidate가 공유 block에 쓸 때만 복사하는 동적 공유를 추적합니다." },
-      { id: "kv-prefix-block-sharing", role: "Hash lookup으로 찾은 full block을 여러 request가 함께 가리켜 memory를 아끼는 상태와 fork와의 차이를 구분합니다." },
-      { id: "prefix-cache-hit-rate", role: "Token 단위 hit rate와 request 단위 hit rate를 정의하고 절감량과의 관계를 계산합니다." },
-      { id: "prefix-cache-locality", role: "Replica 배치와 eviction 시점이라는 두 축이 논리적 반복률과 실제 hit 사이를 벌리는 이유를 설명합니다." },
-],
-    conceptExplanations: [
-      {
-        id: "paged-kv-block-allocation",
-        sectionId: "overview",
-        intuition:
-          "책장이 얼마나 길어질지 몰라도 16쪽짜리 묶음을 필요한 만큼만 추가하면 최대 분량 전체를 미리 비워 둘 필요가 없습니다.",
-        workedExample:
-          "B=16, n=35이면 3개 block에 48 slot을 잡고 마지막 13 slot만 비어 있어 request별 내부 낭비는 B보다 작습니다.",
-        boundary:
-          "Metadata·alignment·hybrid cache group·shared block은 단순 slot 식에 없으며 paging이 memory waste를 0으로 만들지는 않습니다.",
+        "id": "chained-prefix-block-hash",
+        "role": "Parent hash·current full-block token·extra identity를 결합해 causal prefix cache key를 만듭니다."
       },
       {
-        id: "kv-block-address-translation",
-        sectionId: "logical-physical-address",
-        intuition:
-          "책의 37쪽이 어느 보관 상자에 있는지 목차에서 상자 번호를 찾고, 상자 안 다섯 번째 위치를 읽습니다.",
-        workedExample:
-          "B=16, j=37, T=[P7,P2,P9]이면 logical index 2와 offset 5를 얻어 P9[5]의 KV를 읽습니다.",
-        boundary:
-          "실제 tensor address에는 layer·K/V·head·dimension stride가 추가되고 hybrid group마다 table semantics가 다를 수 있습니다.",
+        "id": "automatic-prefix-cache-scope",
+        "role": "35-token 입력의 앞32 hit로 남는3을 계산하고 full-block 기본 모형과 partial-hit 확장을 구분합니다."
       },
       {
-        id: "pagedattention-memory-kernel-boundary",
-        sectionId: "memory-kernel-boundary",
-        intuition:
-          "창고 관리자는 상자 소유권을, 배달원은 주소표를 따라 물건을 읽는 일을, 배차 담당은 어느 주문을 진행할지 맡습니다.",
-        workedExample:
-          "Scheduler가 5 token slot을 요청하면 manager가 P9를 배정하고 block table을 돌려주며 attention kernel은 P9를 읽어 score를 계산합니다.",
-        boundary:
-          "세 계층은 같은 request ID와 block table을 공유해도 failure ownership이 다르므로 allocation failure와 kernel regression을 같은 문제로 보면 안 됩니다.",
+        "id": "kv-internal-fragmentation",
+        "role": "배정됐지만 쓰이지 않는 KV slot을 연속 예약과 fixed-size block에서 각각 계산합니다."
       },
       {
-        id: "kv-block-reference-ownership",
-        sectionId: "block-pool",
-        intuition:
-          "공유 문서를 두 사람이 열어 둔 동안 한 사람이 닫았다는 이유만으로 문서를 덮어쓰면 안 됩니다.",
-        workedExample:
-          "A·B가 P7을 공유해 ref=2일 때 A가 끝나면 ref=1이고 B도 놓아 ref=0이 된 뒤에야 eviction 가능 조건을 만족합니다.",
-        boundary:
-          "ref=0은 일반 eviction의 필요조건이며 null/pinned/transfer block 같은 추가 state는 current source 계약을 확인합니다.",
+        "id": "kv-external-fragmentation",
+        "role": "같은 group의 고정 block을 연결해 연속 공간 부족을 줄이며 다른 수용 조건은 남는다고 설명합니다."
       },
       {
-        id: "kv-free-queue-eviction",
-        sectionId: "free-queue-eviction",
-        intuition:
-          "아무도 빌리지 않은 책은 서가에 남아 다시 찾을 수 있지만 자리가 부족하면 가장 먼저 치울 후보가 됩니다.",
-        workedExample:
-          "ref=0이고 hash가 남은 P7이 cache hit되면 touch로 free queue에서 빠지고, 새 allocation이 먼저 P7을 고르면 old hash를 제거하고 재사용합니다.",
-        boundary:
-          "Free queue ordering과 duplicate-hash handling은 vLLM revision에 따라 바뀔 수 있어 현재 BlockPool source로 고정합니다.",
+        "id": "kv-block-allocator",
+        "role": "Free pool을 소유하고 allocate·free 두 연산으로 block 소유자를 바꾸는 BlockPool의 역할을 정합니다."
       },
       {
-        id: "kv-manager-allocation-contract",
-        sectionId: "kv-cache-manager",
-        intuition:
-          "필요한 총 좌석에서 이미 가진 좌석을 빼 새로 예약할 좌석 수를 구하고, 없으면 배차 담당에게 실패를 알립니다.",
-        workedExample:
-          "B=16, computed=30, new=5, lookahead=4, owned=2이면 39 slot에 3 block이 필요해 새 block 하나를 요청합니다.",
-        boundary:
-          "단일 full-attention 식이며 cached tokens·encoder budget·Mamba state·block alignment가 실제 demand를 더 제한할 수 있습니다.",
+        "id": "kv-sequence-fork-copy-on-write",
+        "role": "Block table 복사와 ref 증가로 prompt를 공유하고 쓰기 시 block 하나만 복사하는 fork 절차를 설명합니다."
       },
       {
-        id: "hybrid-cache-group-coordination",
-        sectionId: "hybrid-cache-groups",
-        intuition:
-          "보관 기간이 다른 물품을 같은 규칙의 창고 한 칸으로 계산하지 않고 규칙이 맞는 그룹끼리 묶어 동시에 관리합니다.",
-        workedExample:
-          "Full-attention layer는 긴 prefix KV를, sliding-window layer는 최근 window를 보존하므로 compatible cache spec별 group capacity를 runtime에서 확인합니다.",
-        boundary:
-          "Architecture가 local attention이라고 선언해도 current allocator가 이를 physical capacity 절감에 반영하는지는 runtime log와 source로 검증해야 합니다.",
+        "id": "beam-branch-kv-sharing",
+        "role": "Beam pruning이 ref를 내려 block을 되돌리고 새 candidate가 공유 block에 쓸 때만 복사하는 동적 공유를 추적합니다."
       },
       {
-        id: "chained-prefix-block-hash",
-        sectionId: "prefix-caching",
-        intuition:
-          "현재 문단 내용뿐 아니라 앞 문단의 지문을 함께 도장에 넣어 같은 문단이 다른 책에 나와도 구분합니다.",
-        workedExample:
-          "H2=Hash(H1, document-block, LoRA/MM/salt)이므로 token block이 같아도 parent H1이나 adapter가 다르면 cache key가 달라집니다.",
-        boundary:
-          "Hash identity가 실제 KV 계산 조건을 모두 포함하지 않으면 잘못된 state reuse가 생기고 collision·tenant isolation은 stronger hash/salt 정책이 필요합니다.",
+        "id": "kv-prefix-block-sharing",
+        "role": "Hash lookup으로 찾은 full block을 여러 request가 함께 가리켜 memory를 아끼는 상태와 fork와의 차이를 구분합니다."
       },
       {
-        id: "automatic-prefix-cache-scope",
-        sectionId: "full-block-boundary",
-        intuition:
-          "공통 서문은 다시 읽지 않지만 각 질문과 그에 대한 새 답변은 여전히 처리해야 합니다.",
-        workedExample:
-          "4,096-token prompt에서 3,072 token hit면 1,024 token만 prefill하지만 500 output token의 decode는 그대로 남습니다.",
-        boundary:
-          "Request hit rate가 높아도 hit token 수가 작거나 block이 execution 전에 eviction되면 TTFT 이득이 작을 수 있습니다.",
+        "id": "prefix-cache-hit-rate",
+        "role": "Token 단위 hit rate와 request 단위 hit rate를 정의하고 절감량과의 관계를 계산합니다."
       },
       {
-        id: "kv-internal-fragmentation",
-        sectionId: "fragmentation-kinds",
-        intuition: "2인분을 예약해 놓고 1인분만 먹으면 나머지 자리는 식사 내내 비어 있습니다. 작은 접시로 나눠 받으면 마지막 접시만 남습니다.",
-        workedExample: "최대 2,048 slot을 잡고 1,000 token에서 끝나면 1,048 slot 낭비지만, B=16 block이면 63 block 1,008 slot 중 8 slot만 낭비돼 0.8%입니다.",
-        boundary: "Block 단위 낭비는 slot만 세며 metadata·alignment·공유 block은 별도입니다. 논문의 20.4%~38.2% 유효 사용률은 저자 자기보고 수치입니다.",
+        "id": "prefix-cache-locality",
+        "role": "Replica 배치와 eviction 시점이라는 두 축이 논리적 반복률과 실제 hit 사이를 벌리는 이유를 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "paged-kv-block-allocation",
+        "sectionId": "fragmentation-kinds",
+        "intuition": "필요 길이를 고정 크기 공간으로 나누고 올림해 할당합니다.",
+        "workedExample": "B=16, A=35이면 3개 block, 48칸 중 13칸이 비며 길이 49에는 4개가 필요합니다.",
+        "boundary": "한 full-attention group의 slot 모형입니다. 다른 group·정렬·lookahead·추가 복사는 별도로 셉니다."
       },
       {
-        id: "kv-external-fragmentation",
-        sectionId: "fragmentation-kinds",
-        intuition: "빈 좌석이 다섯 개여도 흩어져 있으면 5인 가족이 함께 앉지 못합니다. 좌석마다 이름표를 붙여 순서를 기억하면 흩어져도 됩니다.",
-        workedExample: "2,048·512·1,024 slot 연속 예약 중 가운데 512가 끝나면 그 자리는 512보다 큰 요청에 쓸모없지만, paging에서는 free block 3개가 3 block 요청 어디에나 맞습니다.",
-        boundary: "Block 단위에서만 0이며 block 내부의 빈 slot(internal)과 hybrid cache group 사이의 배분 불균형은 별개 문제입니다.",
+        "id": "kv-block-address-translation",
+        "sectionId": "logical-physical-address",
+        "intuition": "요청 안의 위치를 block 번호와 내부 위치로 나눕니다.",
+        "workedExample": "A가 38 token을 계산한 뒤 j=37은 table[2]=P9의 offset 5입니다.",
+        "boundary": "A가 아직 35 token이면 위치 37은 유효하지 않습니다. tensor stride와 실행 완료도 맞아야 합니다."
       },
       {
-        id: "kv-block-allocator",
-        sectionId: "block-allocator",
-        intuition: "창고지기는 빈 상자를 하나씩 내주고 되돌아온 상자를 줄 끝에 세울 뿐, 어느 주문을 먼저 처리할지는 정하지 않습니다.",
-        workedExample: "8,000 block pool에서 63 block 요청 100개를 받으면 6,300이 점유되고 free pool은 1,700입니다. Allocate는 queue head에서 꺼내 ref=1, free는 역순으로 ref를 내려 0이면 tail로 보냅니다.",
-        boundary: "Allocator는 실패만 돌려주고 preemption 판단은 scheduler 소유입니다. Free 순서·hash 제거 시점은 vLLM revision에 따라 바뀔 수 있습니다.",
+        "id": "pagedattention-memory-kernel-boundary",
+        "sectionId": "memory-kernel-boundary",
+        "intuition": "공간의 소유·재사용과 실제 주소로 읽는 계산은 다른 역할이지만 규약이 맞아야 합니다.",
+        "workedExample": "A의 P9[5]를 kernel이 읽는 동안 manager가 P9를 다른 내용으로 재사용하면 안 됩니다.",
+        "boundary": "주소가 맞아도 KV 내용·유효 길이·복사 완료 순서가 틀리면 계산 결과가 깨집니다."
       },
       {
-        id: "kv-sequence-fork-copy-on-write",
-        sectionId: "sequence-forking",
-        intuition: "공유 문서를 복사하지 않고 링크만 나눠 준 뒤, 누군가 처음 수정하는 페이지 한 장만 그 사람 몫으로 복사합니다.",
-        workedExample: "B=16, 35-token prompt를 두 sample로 fork하면 P7·P2·P9의 ref가 2가 되고, 첫 sample이 P9에 쓸 때 ref>1이라 P3로 복사하고 ref(P9)=1로 내리며, 둘째 sample은 제자리에 씁니다.",
-        boundary: "복사 단위는 block 하나(B slot)이며 마지막 block이 꽉 찼으면 CoW 없이 새 block을 잡습니다. 현재 V1은 fork API 대신 prefix cache로 같은 효과를 냅니다.",
+        "id": "kv-block-reference-ownership",
+        "sectionId": "block-pool",
+        "intuition": "마지막 사용이 끝나기 전에는 공유 공간을 덮어쓰지 않습니다.",
+        "workedExample": "P7을 A·B가 공유하면 ref=2, A가 끝나면 1이므로 B를 위해 유지합니다.",
+        "boundary": "실제 ref에는 복사·전송을 위한 추가 pin도 있을 수 있어 table 참조 수만 세면 부족합니다."
       },
       {
-        id: "beam-branch-kv-sharing",
-        sectionId: "beam-branch-sharing",
-        intuition: "가지치기하는 나무에서 잘린 가지의 잎만 떨어지고 줄기는 살아남은 가지들이 계속 함께 씁니다.",
-        workedExample: "k=4에서 candidate 0~2가 앞 세 block을 공유하다가 다음 step 상위 4개가 모두 candidate 1·2에서 나오면 candidate 0·3만 참조하던 block 2·4·5·8이 ref 0으로 반환되고 block 9~12가 새로 할당됩니다.",
-        boundary: "논문의 37.6%~55.2% 절감은 당시 workload의 자기보고 수치이며, 현재 V1은 beam마다 별도 request와 prefix cache로 구현이 달라 절감률은 block size와 분기 위치에 따릅니다.",
+        "id": "kv-free-queue-eviction",
+        "sectionId": "block-pool",
+        "intuition": "Free 목록에 예전 cache 내용이 남아 있어도 새 용도로 다시 줄 후보일 수 있습니다.",
+        "workedExample": "B까지 P7을 놓아 ref=0이 되어도 hash가 남으면 다음 요청이 hit하고 touch할 수 있습니다.",
+        "boundary": "Hash lookup 항목만 제거하는 evict_blocks와 physical 공간 재사용은 다른 동작입니다."
       },
       {
-        id: "kv-prefix-block-sharing",
-        sectionId: "prefix-sharing",
-        intuition: "같은 서문을 가진 책 열 권이 서문 페이지 한 벌을 함께 가리키고, 각자 본문만 따로 씁니다.",
-        workedExample: "1,000-token system prompt는 B=16에서 full block 62개(992 token)로, 동시 request 10개가 공유하면 620 block 대신 62 block이고 각 block의 ref는 10입니다. 마지막 8 token은 각자 다시 계산합니다.",
-        boundary: "Hash 기반 공유는 full block만 공유하고 쓰기가 없어 CoW가 필요 없습니다. Radix tree로 branch 관계를 명시하는 방식은 다음 글이 다룹니다.",
+        "id": "kv-manager-allocation-contract",
+        "sectionId": "kv-cache-manager",
+        "intuition": "최종 길이를 block 수로 바꾼 뒤 현재 보유량과 추가 예약을 반영합니다.",
+        "workedExample": "A의 35→38에는 ceil(38/16)−3=0개, 이어 49에는 4−3=1개를 추가합니다.",
+        "boundary": "전용 tail을 가진 진행 요청 식입니다. 신규 hit의 free 차감과 partial-hit CoW 예약은 별도입니다."
       },
       {
-        id: "prefix-cache-hit-rate",
-        sectionId: "prefix-operations",
-        intuition: "손님 열 명 중 아홉이 쿠폰을 냈다는 것과 매출의 몇 퍼센트가 할인됐는지는 다른 숫자입니다.",
-        workedExample: "1,200-token request 10개 중 9개가 992 token을 hit하면 token hit rate는 8,928/12,000=74.4%, request hit rate는 90%이며 decode는 하나도 줄지 않습니다.",
-        boundary: "구간(최근 1,000 query 또는 rate 창)에 따라 값이 다르고, hit로 세었어도 실행 전 eviction되면 실제 절감은 없을 수 있습니다.",
+        "id": "hybrid-cache-group-coordination",
+        "sectionId": "hybrid-cache-groups",
+        "intuition": "서로 다른 층의 보존 규칙을 group별로 계산해 함께 맞춥니다.",
+        "workedExample": "A의 49-token 전체 보존 식을 일부 창만 남기는 층이나 Mamba 상태에 그대로 곱하지 않습니다.",
+        "boundary": "Physical block·hash 단위와 manager별 partial hit 지원 조건을 확인해야 합니다."
       },
       {
-        id: "prefix-cache-locality",
-        sectionId: "cache-locality",
-        intuition: "단골이라도 다른 지점에 가거나 너무 오랜만에 오면 점원이 기억하지 못합니다.",
-        workedExample: "같은 prompt request 10개를 replica 2개에 round-robin하면 replica마다 첫 요청이 miss라 request hit rate는 90%에서 80%로, replica 8개면 20%로 떨어집니다.",
-        boundary: "Prefix-aware routing과 cache-aware scheduling 정책 자체는 다음 글 소유이며, 여기서는 locality가 깨지는 두 축과 측정 방법만 다룹니다.",
+        "id": "chained-prefix-block-hash",
+        "sectionId": "prefix-caching",
+        "intuition": "앞 구간의 hash를 현재 구간의 token과 함께 넣어 문맥을 잇습니다.",
+        "workedExample": "P2에 대응하는 H1은 P7의 H0와 token 16–31을 함께 입력으로 사용합니다.",
+        "boundary": "NONE_HASH는 seed 또는 임의 byte로 초기화하며 모델·namespace·extra 조건의 일치를 별도로 보장해야 합니다."
       },
-],
-    conceptStages: [
       {
-        label: "Variable state",
-        relation: "길이를 모르는 autoregressive KV를 on-demand fixed-size block으로 분해하고 두 fragmentation을 구분",
-        concepts: [
+        "id": "automatic-prefix-cache-scope",
+        "sectionId": "prefix-caching",
+        "intuition": "앞부분의 KV를 재사용하면 남은 입력을 새로 계산합니다.",
+        "workedExample": "A가 만든 앞 32 token을 B가 hit하면 길이 35 중 3 token의 prefill이 남습니다.",
+        "boundary": "새 답 전체를 저장한 것은 아니며 첫 출력이 prefill에서 나올 수 있어 출력 N개와 decode N회를 동일시하지 않습니다."
+      },
+      {
+        "id": "kv-internal-fragmentation",
+        "sectionId": "fragmentation-kinds",
+        "intuition": "할당한 마지막 block의 아직 쓰지 않은 slot입니다.",
+        "workedExample": "A=35일 때 48−35=13칸, A=38일 때 10칸이 비어 있습니다.",
+        "boundary": "평균 약 절반은 길이 나머지 분포에 의존하며 모든 부하에 고정된 값이 아닙니다."
+      },
+      {
+        "id": "kv-external-fragmentation",
+        "sectionId": "fragmentation-kinds",
+        "intuition": "전체 빈 공간이 충분해도 연속된 자리 부족으로 할당하지 못하는 문제입니다.",
+        "workedExample": "P7·P2·P9가 흩어져 있어도 table로 연결하면 A의 35 token을 보관합니다.",
+        "boundary": "같은 group의 고정 크기 block 범위의 설명이며 시스템 전체 수용 조건이 free 수 하나로 줄지는 않습니다."
+      },
+      {
+        "id": "kv-block-allocator",
+        "sectionId": "kv-cache-manager",
+        "intuition": "확보 가능한 수량을 검사하고 이전 identity를 제거한 뒤 공간을 넘깁니다.",
+        "workedExample": "A가 49로 늘 때 P5 하나를 확보하고 table 끝에 붙입니다.",
+        "boundary": "반환 시 ref와 hash를 보며 현 원문은 hash 없는 block을 앞에, 있는 block을 뒤에 둡니다."
+      },
+      {
+        "id": "kv-sequence-fork-copy-on-write",
+        "sectionId": "sequence-forking",
+        "intuition": "공유한 tail을 바꾸기 전에 해당 실행의 공간으로 나눕니다.",
+        "workedExample": "35-token A를 두 갈래로 나누면 P9를 공유하다 첫 쓰기 때 P3로 복사해 총 4개 block이 됩니다.",
+        "boundary": "논문의 fork 모형이며 현 partial-hit 경로는 복사 출발·도착 block에 추가 ref를 유지합니다."
+      },
+      {
+        "id": "beam-branch-kv-sharing",
+        "sectionId": "beam-branch-sharing",
+        "intuition": "후보를 버릴 때 그 후보의 보유 참조만 놓습니다.",
+        "workedExample": "두 갈래 중 A1을 버려도 A2가 읽는 P7·P2는 ref가 남아 유지됩니다.",
+        "boundary": "현재 엔진의 beam API와 원 논문의 fork API를 같은 것으로 가정하지 않습니다."
+      },
+      {
+        "id": "kv-prefix-block-sharing",
+        "sectionId": "prefix-sharing",
+        "intuition": "다른 요청의 table이 같은 앞부분의 physical block을 가리킵니다.",
+        "workedExample": "A=[P7,P2,P9], B=[P7,P2,P11]이면 table 항목은 6개지만 실제 block은 4개입니다.",
+        "boundary": "기본 full-block 사례와 더 작은 hash 단위의 partial-hit CoW를 구분합니다. 새 token마다 반드시 새 block이 필요한 것은 아닙니다."
+      },
+      {
+        "id": "prefix-cache-hit-rate",
+        "sectionId": "prefix-operations",
+        "intuition": "조회 token 비중과 한 번이라도 hit한 요청 비중을 따로 셉니다.",
+        "workedExample": "10×35 조회에서 9×32 hit이면 token 비율은 288/350≈82.29%, 요청 비율은 90%입니다.",
+        "boundary": "약 7.71%p 차이는 시간 절감률 차이가 아닙니다. 조회와 실제 실행 때의 유효성도 확인합니다."
+      },
+      {
+        "id": "prefix-cache-locality",
+        "sectionId": "cache-locality",
+        "intuition": "같은 prefix가 도착한 replica에 필요한 시점까지 남아 있어야 합니다.",
+        "workedExample": "10개를 순차 처리하고 첫 요청만 miss이면 replica 1·2·8개에서 request hit는 90·80·20%입니다.",
+        "boundary": "동시 도착·eviction·중간 touch·부하 편향이 있으면 이 단순 warmup 계산은 달라집니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "Variable state",
+        "relation": "길이를 모르는 autoregressive KV를 on-demand fixed-size block으로 분해하고 두 fragmentation을 구분",
+        "concepts": [
           "autoregressive-decoding",
           "serving-iteration-resource-feasibility",
           "kv-pool-capacity-budget",
           "kv-cache-decode-state",
           "paged-kv-block-allocation",
           "kv-internal-fragmentation",
-          "kv-external-fragmentation",
-        ],
+          "kv-external-fragmentation"
+        ]
       },
       {
-        label: "Addressing",
-        relation: "Logical sequence 순서를 non-contiguous physical KV slot에 연결",
-        concepts: ["kv-block-address-translation", "pagedattention-memory-kernel-boundary"],
+        "label": "Addressing",
+        "relation": "Logical sequence 순서를 non-contiguous physical KV slot에 연결",
+        "concepts": [
+          "kv-block-address-translation",
+          "pagedattention-memory-kernel-boundary"
+        ]
       },
       {
-        label: "Ownership",
-        relation: "Shared block의 reference·allocate·free·fork·copy-on-write lifecycle 관리",
-        concepts: [
+        "label": "Ownership",
+        "relation": "Shared block의 reference·allocate·free·fork·copy-on-write lifecycle 관리",
+        "concepts": [
           "kv-block-reference-ownership",
           "kv-free-queue-eviction",
           "kv-block-allocator",
           "kv-sequence-fork-copy-on-write",
           "beam-search",
-          "beam-branch-kv-sharing",
-        ],
+          "beam-branch-kv-sharing"
+        ]
       },
       {
-        label: "Allocation",
-        relation: "Scheduler token plan을 cache-group별 physical block demand로 변환",
-        concepts: [
+        "label": "Allocation",
+        "relation": "Scheduler token plan을 cache-group별 physical block demand로 변환",
+        "concepts": [
           "scheduler-request-progress-gap",
           "kv-manager-allocation-contract",
-          "hybrid-cache-group-coordination",
-        ],
+          "hybrid-cache-group-coordination"
+        ]
       },
       {
-        label: "Reuse",
-        relation: "Full-block chained hash로 causal prefix를 찾아 block을 공유하고 hit rate·locality로 측정",
-        concepts: [
+        "label": "Reuse",
+        "relation": "Full-block chained hash로 causal prefix를 찾아 block을 공유하고 hit rate·locality로 측정",
+        "concepts": [
           "chained-prefix-block-hash",
           "automatic-prefix-cache-scope",
           "kv-prefix-block-sharing",
           "prefix-cache-hit-rate",
-          "prefix-cache-locality",
+          "prefix-cache-locality"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "B=16에서 A의 35 token에는 block과 빈 slot이 각각 몇 개인가요?",
+        "answerChecklist": [
+          "3개",
+          "48칸",
+          "빈 13칸",
+          "올림 나눗셈"
         ],
+        "sectionId": "fragmentation-kinds",
+        "requiredConcepts": [
+          "paged-kv-block-allocation",
+          "kv-internal-fragmentation"
+        ]
       },
+      {
+        "level": "basic",
+        "question": "A가 38 token을 계산했고 table=[P7,P2,P9]이면 위치 37은 어디인가요?",
+        "answerChecklist": [
+          "logical 2",
+          "P9",
+          "offset 5",
+          "35일 때는 미계산"
+        ],
+        "sectionId": "logical-physical-address",
+        "requiredConcepts": [
+          "kv-block-address-translation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "A·B가 P7을 공유한 뒤 A만 끝나면 P7의 ref와 재사용 여부는 어떻게 되나요?",
+        "answerChecklist": [
+          "2에서 1",
+          "B가 사용",
+          "덮어쓰기 불가",
+          "추가 pin 확인"
+        ],
+        "sectionId": "block-pool",
+        "requiredConcepts": [
+          "kv-block-reference-ownership",
+          "kv-free-queue-eviction"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "전용 tail의 A가 35→38→49로 늘 때 각 단계의 추가 block을 구하세요.",
+        "answerChecklist": [
+          "0개",
+          "1개",
+          "3개에서 4개",
+          "lookahead 0"
+        ],
+        "sectionId": "kv-cache-manager",
+        "requiredConcepts": [
+          "kv-manager-allocation-contract",
+          "kv-block-allocator"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "B가 35-token 입력 중 앞 32개를 hit하면 새로 처리할 입력은 얼마인가요?",
+        "answerChecklist": [
+          "3 token",
+          "prefill 재사용",
+          "새 답 생성은 남음"
+        ],
+        "sectionId": "prefix-caching",
+        "requiredConcepts": [
+          "chained-prefix-block-hash",
+          "automatic-prefix-cache-scope"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "A=[P7,P2,P9], B=[P7,P2,P11]의 실제 block 수와 공유 block의 ref를 구하세요.",
+        "answerChecklist": [
+          "실제 4개",
+          "P7·P2 ref 2",
+          "table 항목 합 6과 구분"
+        ],
+        "sectionId": "prefix-sharing",
+        "requiredConcepts": [
+          "kv-prefix-block-sharing"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "10개가 각각 35 token을 조회하고 9개가 32 token을 hit했습니다. 두 hit 비율과 해석 한계를 설명하세요.",
+        "answerChecklist": [
+          "288/350",
+          "약 82.29%",
+          "90%",
+          "차이 약 7.71%p",
+          "시간 절감률 아님"
+        ],
+        "sectionId": "prefix-operations",
+        "requiredConcepts": [
+          "prefix-cache-hit-rate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "공유 tail을 fork하거나 partial hit한 뒤 쓰려 합니다. 왜 추가 block과 복사 수명 관리가 필요한가요?",
+        "answerChecklist": [
+          "동일 slot 쓰기 충돌",
+          "CoW",
+          "source·destination 유지",
+          "table 전환",
+          "복사 완료 전에 재사용 금지"
+        ],
+        "sectionId": "hybrid-cache-groups",
+        "requiredConcepts": [
+          "pagedattention-memory-kernel-boundary",
+          "kv-block-reference-ownership",
+          "kv-sequence-fork-copy-on-write",
+          "beam-branch-kv-sharing"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "A의 단순 할당 식을 다른 cache group과 신규 prefix hit에도 그대로 적용하면 무엇을 놓치나요?",
+        "answerChecklist": [
+          "보존 규칙",
+          "hash 단위",
+          "ref=0 hit의 free 차감",
+          "partial-hit CoW",
+          "manager별 지원 조건"
+        ],
+        "sectionId": "hybrid-cache-groups",
+        "requiredConcepts": [
+          "kv-manager-allocation-contract",
+          "hybrid-cache-group-coordination",
+          "kv-block-allocator"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 입력의 hit가 줄었습니다. hash chain과 replica·eviction 기록으로 어떤 조건을 구분해야 하나요?",
+        "answerChecklist": [
+          "parent와 token·extras",
+          "namespace",
+          "도착 replica",
+          "아직 남은 내용",
+          "동시 warmup",
+          "histogram만으로 원인 확정 불가"
+        ],
+        "sectionId": "cache-locality",
+        "requiredConcepts": [
+          "chained-prefix-block-hash",
+          "kv-external-fragmentation",
+          "prefix-cache-locality"
+        ]
+      }
     ],
-    exercises: [
+    "papers": [
       {
-        level: "basic",
-        question: "B=16에서 1,000-token request의 block 수·낭비 slot·낭비율을 계산하고, 최대 2,048 slot 연속 예약의 internal fragmentation과 비교하라.",
-        answerChecklist: ["ceil 1000/16 = 63", "1008 slots", "8 slack", "0.8%", "1048 wasted in max reservation", "less than B"],
-        requiredConcepts: ["kv-internal-fragmentation", "paged-kv-block-allocation"],
-        sectionId: "fragmentation-kinds",
+        "title": "Efficient Memory Management for Large Language Model Serving with PagedAttention",
+        "href": "https://arxiv.org/abs/2309.06180",
+        "problem": "동적으로 늘어나는 request KV cache를 연속 memory에 over-reserve할 때 internal/external fragmentation과 parallel branch의 duplicate storage가 capacity를 낮추는 문제",
+        "contribution": "Logical block table·non-contiguous physical block·reference sharing/copy-on-write와 paged attention kernel을 결합한 vLLM system 제안",
+        "assumptions": "논문의 vLLM implementation·models·GPU·block size·scheduler·parallel sampling/beam workload와 baseline",
+        "evidenceScope": "§4의 block indirection·공유와 §6의 해당 실험 조건 성능입니다.",
+        "notClaim": "현재 v0.27.1의 모든 코드 분기나 임의 장치의 같은 절감률을 보장하지 않습니다.",
+        "sectionId": "paper-pagedattention"
       },
       {
-        level: "basic",
-        question: "연속 예약에서 가운데 512-slot request가 끝났을 때 생기는 external fragmentation을 설명하고 paging에서 그것이 block 단위로 0이 되는 이유를 적어라.",
-        answerChecklist: ["hole 512", "cannot merge", "same block size", "block table preserves order", "any free block fits", "free count only"],
-        requiredConcepts: ["kv-external-fragmentation", "kv-block-address-translation"],
-        sectionId: "fragmentation-kinds",
-      },
-      {
-        level: "basic",
-        question: "B=16, j=37, T=[P7,P2,P9]일 때 physical block과 offset을 계산하고 P ID 순서가 중요하지 않은 이유를 적어라.",
-        answerChecklist: ["logical 2", "offset 5", "P9", "block table preserves order", "non-contiguous"],
-        requiredConcepts: ["kv-block-address-translation"],
-        sectionId: "logical-physical-address",
-      },
-      {
-        level: "basic",
-        question: "A·B가 P7을 공유할 때 A 종료 전후 reference count와 eviction 가능 여부를 계산하라.",
-        answerChecklist: ["initial ref 2", "A release ref 1", "not evictable", "B release ref 0", "necessary condition"],
-        requiredConcepts: ["kv-block-reference-ownership"],
-        sectionId: "block-pool",
-      },
-      {
-        level: "basic",
-        question: "B=16, 35-token prompt를 두 sample로 fork한 뒤 첫 sample과 둘째 sample이 각각 첫 output token을 쓸 때 ref count와 복사 block 수의 변화를 추적하라.",
-        answerChecklist: ["ref 2 for 3 blocks", "no new block at fork", "ref(P9)>1", "allocate copy", "ref(P9)=1", "second writes in place", "one block copied"],
-        requiredConcepts: ["kv-sequence-fork-copy-on-write", "kv-block-reference-ownership"],
-        sectionId: "sequence-forking",
-      },
-      {
-        level: "basic",
-        question: "1,000-token system prompt를 B=16으로 공유하는 동시 request 10개에서 공유 block 수·절약 block 수·각 block의 ref를 계산하고, 1,200-token request 10개 중 9개가 hit할 때 token hit rate와 request hit rate를 구하라.",
-        answerChecklist: ["62 full blocks", "992 tokens", "partial 8 recomputed", "ref 10", "558 saved", "8928/12000 = 74.4%", "request 90%"],
-        requiredConcepts: ["kv-prefix-block-sharing", "prefix-cache-hit-rate"],
-        sectionId: "prefix-sharing",
-      },
-      {
-        level: "advanced",
-        question: "PagedAttention 논문의 problem·contribution·evaluation boundary와 current vLLM에 그대로 일반화할 수 없는 claim을 설명하라.",
-        answerChecklist: ["KV fragmentation", "logical/physical blocks", "block table", "sharing/COW", "paged kernel", "paper model/GPU/workload", "not universal speedup"],
-        requiredConcepts: ["paged-kv-block-allocation", "pagedattention-memory-kernel-boundary"],
-        sectionId: "paper-pagedattention",
-      },
-      {
-        level: "advanced",
-        question: "ref=0+hash block의 cache hit와 new allocation이 동시에 경쟁할 때 allocator의 allocate·free·touch 순서와 old hash removal 불변식을 pseudocode로 설명하라.",
-        answerChecklist: ["free queue head pop", "remove old hash", "ref=1", "hit touch removes from queue", "increment ref", "free reversed order", "ref 0 push tail", "no stale hit"],
-        requiredConcepts: ["kv-block-allocator", "kv-free-queue-eviction", "kv-block-reference-ownership"],
-        sectionId: "block-allocator",
-      },
-      {
-        level: "advanced",
-        question: "논문의 k=4 beam search 예에서 candidate 0·3이 버려질 때 어떤 block이 ref 0으로 반환되고 새 block이 몇 개 필요한지 추적한 뒤, 이전 system의 KV 복사와 비교해 복사량이 sequence 길이에 비례하지 않는 이유를 설명하라.",
-        answerChecklist: ["shared block 0", "candidates 0-2 share 3 blocks", "blocks 2,4,5,8 freed", "blocks 9-12 allocated", "copy only when writing shared block", "one block copy", "37.6%-55.2% self-reported"],
-        requiredConcepts: ["beam-branch-kv-sharing", "kv-sequence-fork-copy-on-write"],
-        sectionId: "beam-branch-sharing",
-      },
-      {
-        level: "advanced",
-        question: "같은 prompt request 10개를 replica 2개·8개에 round-robin할 때 request hit rate 변화와, 8,000 block pool에서 두 사용 사이에 8,500 block traffic이 지나갈 때의 eviction을 계산하고, routing 문제와 eviction 문제를 histogram으로 구분하는 운영 평가를 설계하라.",
-        answerChecklist: ["independent replica cache", "2 replicas 80%", "8 replicas 20%", "LRU head reached", "evicted before reuse", "cached-token histogram", "eviction count", "TTFT", "version identity"],
-        requiredConcepts: ["prefix-cache-locality", "prefix-cache-hit-rate", "kv-free-queue-eviction"],
-        sectionId: "cache-locality",
-      },
+        "title": "SGLang: Efficient Execution of Structured Language Model Programs",
+        "href": "https://papers.nips.cc/paper_files/paper/2024/file/724be4472168f31ba1c9ac630f15dec8-Paper-Conference.pdf",
+        "problem": "여러 LLM call과 branching을 가진 structured program에서 반복 prefix KV 계산·program control overhead·constrained decoding 비용이 큰 문제",
+        "contribution": "Frontend language와 compiler, radix tree 기반 RadixAttention의 automatic KV reuse와 cache-aware scheduling을 포함한 SGLang runtime 제안",
+        "assumptions": "논문의 SGLang program/runtime·models·GPU·workloads·RadixAttention cache와 scheduling policy",
+        "evidenceScope": "§3.1의 radix prefix 표현과 조건을 둔 offline cache-aware 순서 정리입니다.",
+        "notClaim": "vLLM이 radix tree를 쓴다는 뜻이나 모든 online 부하의 최적 지연 보장이 아닙니다.",
+        "sectionId": "paper-radixattention"
+      }
     ],
-    papers: [
-      {
-        title:
-          "Efficient Memory Management for Large Language Model Serving with PagedAttention",
-        href: "https://arxiv.org/abs/2309.06180",
-        problem:
-          "동적으로 늘어나는 request KV cache를 연속 memory에 over-reserve할 때 internal/external fragmentation과 parallel branch의 duplicate storage가 capacity를 낮추는 문제",
-        contribution:
-          "Logical block table·non-contiguous physical block·reference sharing/copy-on-write와 paged attention kernel을 결합한 vLLM system 제안",
-        assumptions:
-          "논문의 vLLM implementation·models·GPU·block size·scheduler·parallel sampling/beam workload와 baseline",
-        evidenceScope:
-          "PagedAttention memory management 설계와 논문이 보고한 memory waste·throughput·latency·sharing 실험 범위",
-        notClaim:
-          "Paging만 도입하면 최신 임의 model·hybrid allocator·GPU·traffic에서 같은 성능 배수가 보장되거나 모든 fragmentation이 사라진다는 뜻은 아님",
-        sectionId: "paper-pagedattention",
-      },
-      {
-        title:
-          "SGLang: Efficient Execution of Structured Language Model Programs",
-        href: "https://papers.nips.cc/paper_files/paper/2024/file/724be4472168f31ba1c9ac630f15dec8-Paper-Conference.pdf",
-        problem:
-          "여러 LLM call과 branching을 가진 structured program에서 반복 prefix KV 계산·program control overhead·constrained decoding 비용이 큰 문제",
-        contribution:
-          "Frontend language와 compiler, radix tree 기반 RadixAttention의 automatic KV reuse와 cache-aware scheduling을 포함한 SGLang runtime 제안",
-        assumptions:
-          "논문의 SGLang program/runtime·models·GPU·workloads·RadixAttention cache와 scheduling policy",
-        evidenceScope:
-          "RadixAttention의 prefix tree reuse·cache-aware scheduling 설계와 논문 benchmark 범위",
-        notClaim:
-          "vLLM APC가 radix tree를 사용하거나 SGLang의 전체 성능 결과가 chained block-hash 방식의 vLLM에 그대로 적용된다는 뜻은 아님",
-        sectionId: "paper-radixattention",
-      },
-    ],
+    "entryNote": "16칸짜리 공간에 35개 기록을 담고 38개, 49개로 늘리며 순서표·공유·재사용을 따라갑니다."
   },
   "ai/vllm-spec-decode": {
     coreIdea: "Speculative decoding은 작은 proposer의 출력을 정답으로 대신 쓰는 기법이 아닙니다. 현재 prefix에서 만든 K개 후보를 target이 한 verification pass로 채점하고, rejection point까지의 prefix와 correction 하나만 commit해 target distribution을 보존합니다. 이득은 acceptance rate α·speculation length K·draft 비용 c로 닫히는 speedup 식이 1을 넘는, 즉 memory-bound에 가까운 workload에서만 생깁니다.",
@@ -58064,49 +58541,327 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "blockchain/aave-v3": {
-    entryLevel: true,
-    entryNote: "대출 용어를 안다고 가정하지 않고 reserve 현금·부채에서 utilization, index, health와 liquidation으로 내려갑니다.",
-    coreIdea: "Aave V3는 reserve utilization을 kink rate로 가격화하고 scaled balances를 indexes로 현재화하며 oracle-weighted health factor와 deployment risk mode로 borrow·liquidation을 제한합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "lending-reserve-utilization", role: "Available liquidity와 debt의 사용 비율을 잽니다." },
-      { id: "lending-indexed-balance-accounting", role: "Scaled balances와 reserve indexes를 연결합니다." },
-      { id: "aave-v3-kink-rate-strategy", role: "Optimal usage 전후 variable/liquidity rate를 계산합니다." },
-      { id: "aave-v3-health-factor", role: "Weighted collateral threshold와 debt를 비교합니다." },
-      { id: "aave-v3-partial-liquidation", role: "Close factor·bonus·fee로 repay/seize를 정합니다." },
-      { id: "aave-v3-risk-mode-boundary", role: "E-Mode·isolation config와 asset compatibility를 고정합니다." },
+    "entryLevel": true,
+    "entryNote": "10000달러를 모아8000달러를 빌려준 풀과 담보10000·부채7000인 한 차입자의 기록을 함께 따라갑니다.",
+    "coreIdea": "Aave는 자산별 가용 자금·부채·이자 계수와 사람별 담보 위험을 연결하며 사용률, 현재 잔액과 청산 판정은 각각의 상태와 단위로 계산합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "lending-reserve-utilization",
+        "role": "Available liquidity와 debt의 사용 비율을 잽니다."
+      },
+      {
+        "id": "lending-indexed-balance-accounting",
+        "role": "Scaled balances와 reserve indexes를 연결합니다."
+      },
+      {
+        "id": "aave-v3-kink-rate-strategy",
+        "role": "Optimal usage 전후 variable/liquidity rate를 계산합니다."
+      },
+      {
+        "id": "aave-v3-health-factor",
+        "role": "Weighted collateral threshold와 debt를 비교합니다."
+      },
+      {
+        "id": "aave-v3-partial-liquidation",
+        "role": "Close factor·bonus·fee로 repay/seize를 정합니다."
+      },
+      {
+        "id": "aave-v3-risk-mode-boundary",
+        "role": "E-Mode·isolation config와 asset compatibility를 고정합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "lending-reserve-utilization", sectionId: "interest-rate", intuition: "금고에서 빌려 간 몫이 클수록 남은 출금 여유가 작다는 압력계입니다.", workedExample: "Available 200,debt800이면 U=80%입니다.", boundary: "Source version의 virtual balance·unbacked·supply usage denominator를 섞지 않습니다." },
-      { id: "lending-indexed-balance-accounting", sectionId: "atoken-debt", intuition: "모든 통장을 매초 쓰지 않고 공통 이자 배율만 전진시킵니다.", workedExample: "Scaled supply1000×1.05=1050, debt500×1.08=540입니다.", boundary: "Supply와 borrow index·linear/binomial approximation·ray rounding은 서로 다릅니다." },
-      { id: "aave-v3-kink-rate-strategy", sectionId: "interest-rate", intuition: "목표 utilization까지는 완만하고 남은 liquidity가 부족해지면 급한 slope로 상환과 공급을 유도합니다.", workedExample: "가상 config에서 U80% borrow6%/supply4.32%, U90% borrow43.5%/supply35.235%입니다.", boundary: "숫자는 reserve governance snapshot이며 realized APY나 미래 rate가 아닙니다." },
-      { id: "aave-v3-health-factor", sectionId: "liquidation", intuition: "담보마다 청산에 인정할 비율만 남겨 debt와 비교하는 안전 여유입니다.", workedExample: "$10k×80%/$7k≈1.143; 담보 $8k면 약0.914입니다.", boundary: "LTV·oracle freshness·mode category·decimals를 liquidation threshold와 혼동하지 않습니다." },
-      { id: "aave-v3-partial-liquidation", sectionId: "liquidation", intuition: "위험 position의 일부 또는 전체 debt를 갚고 bonus collateral을 받되 version별 cap과 available collateral을 지킵니다.", workedExample: "$1000 repay,5% bonus,$100 collateral이면 cap 전 10.5 units입니다.", boundary: "Pinned source의 HF0.95·position-size 조건 밖에서는 50%가 아닌 full candidate가 될 수 있습니다." },
-      { id: "aave-v3-risk-mode-boundary", sectionId: "efficiency-mode", intuition: "비슷한 자산에는 높은 효율, 새 collateral에는 제한된 debt ceiling을 적용하는 별도 차선입니다.", workedExample: "E-Mode category 밖 borrow와 isolation debt ceiling 초과를 각각 거부합니다.", boundary: "Asset의 영구 속성이 아니라 deployment config·account selection·oracle 상태에 달렸습니다." },
+    "conceptExplanations": [
+      {
+        "id": "lending-reserve-utilization",
+        "sectionId": "interest-rate",
+        "intuition": "금고에서 빌려 간 몫이 클수록 남은 출금 여유가 작다는 압력계입니다.",
+        "workedExample": "가용2000·부채8000이면사용률80%이고 모두10으로 나눈200·800도 같습니다.",
+        "boundary": "가상 관리 잔액에 이번 증가·감소를 반영하는 원문과 unbacked를 더한 공급 측 분모를 구분합니다."
+      },
+      {
+        "id": "lending-indexed-balance-accounting",
+        "sectionId": "atoken-debt",
+        "intuition": "모든 통장을 매초 쓰지 않고 공통 이자 배율만 전진시킵니다.",
+        "workedExample": "공급 단위1000×1.05=1050, C의 부채 단위7000×1.08=7560이고 별도500의 예는540입니다.",
+        "boundary": "공급 잔액 내림과 부채 올림을 구분합니다. 차입 시간식은 실제 반환식의3차 다항 근사이며 정확한 지수함수가 아닙니다."
+      },
+      {
+        "id": "aave-v3-kink-rate-strategy",
+        "sectionId": "interest-rate",
+        "intuition": "목표 utilization까지는 완만하고 남은 liquidity가 부족해지면 급한 slope로 상환과 공급을 유도합니다.",
+        "workedExample": "가상 config에서 U80% borrow6%/supply4.32%, U90% borrow43.5%/supply35.235%입니다.",
+        "boundary": "본문의 이율 설정은 가정입니다. 실제 배포에서는 같은 시점의 reserve 설정을 확인하며 계산 이율을 실현 APY나 미래 이율로 읽지 않습니다."
+      },
+      {
+        "id": "aave-v3-health-factor",
+        "sectionId": "liquidation",
+        "intuition": "담보마다 청산에 인정할 비율만 남겨 debt와 비교하는 안전 여유입니다.",
+        "workedExample": "$10k×80%/$7k≈1.143; 담보 $8k면 약0.914입니다.",
+        "boundary": "LTV·oracle freshness·mode category·decimals를 liquidation threshold와 혼동하지 않습니다."
+      },
+      {
+        "id": "aave-v3-partial-liquidation",
+        "sectionId": "close-factor",
+        "intuition": "위험 position의 일부 또는 전체 debt를 갚고 bonus collateral을 받되 version별 cap과 available collateral을 지킵니다.",
+        "workedExample": "C의 부채1000을 갚고5%보상이면1050달러의 담보 차감입니다. 가격80이면13.125개,별도가격100이면10.5개이고 수수료·한도는추가적용합니다.",
+        "boundary": "Pinned source의 HF0.95·position-size 조건 밖에서는 50%가 아닌 full candidate가 될 수 있습니다."
+      },
+      {
+        "id": "aave-v3-risk-mode-boundary",
+        "sectionId": "efficiency-mode",
+        "intuition": "비슷한 자산에는 높은 효율, 새 collateral에는 제한된 debt ceiling을 적용하는 별도 차선입니다.",
+        "workedExample": "E-Mode category 밖 borrow와 isolation debt ceiling 초과를 각각 거부합니다.",
+        "boundary": "Asset의 영구 속성이 아니라 deployment config·account selection·oracle 상태에 달렸습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 pool", relation: "Reserve·account·evidence snapshot을 구분합니다.", concepts: ["lending-reserve-utilization"] },
-      { label: "01 index", relation: "Scaled balance를 현재 공급·부채로 만듭니다.", concepts: ["lending-indexed-balance-accounting"] },
-      { label: "02 rate", relation: "Usage를 rate와 liquidity distribution으로 바꿉니다.", concepts: ["aave-v3-kink-rate-strategy"] },
-      { label: "03 health", relation: "Oracle value로 liquidation 여유와 settlement를 계산합니다.", concepts: ["aave-v3-health-factor", "aave-v3-partial-liquidation"] },
-      { label: "04 modes", relation: "Category·ceiling과 release receipt를 검증합니다.", concepts: ["aave-v3-risk-mode-boundary"] },
+    "conceptStages": [
+      {
+        "label": "00 pool",
+        "relation": "Reserve·account·evidence snapshot을 구분합니다.",
+        "concepts": [
+          "lending-reserve-utilization"
+        ]
+      },
+      {
+        "label": "01 index",
+        "relation": "Scaled balance를 현재 공급·부채로 만듭니다.",
+        "concepts": [
+          "lending-indexed-balance-accounting"
+        ]
+      },
+      {
+        "label": "02 rate",
+        "relation": "Usage를 rate와 liquidity distribution으로 바꿉니다.",
+        "concepts": [
+          "aave-v3-kink-rate-strategy"
+        ]
+      },
+      {
+        "label": "03 health",
+        "relation": "Oracle value로 liquidation 여유와 settlement를 계산합니다.",
+        "concepts": [
+          "aave-v3-health-factor",
+          "aave-v3-partial-liquidation"
+        ]
+      },
+      {
+        "label": "04 modes",
+        "relation": "Category·ceiling과 release receipt를 검증합니다.",
+        "concepts": [
+          "aave-v3-risk-mode-boundary"
+        ]
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Available200,debt800,U*=80%,r0=2%,s1=4%,RF=10%에서 U·borrow·supply rate를 계산하세요.", answerChecklist: ["U=80%", "borrow=6%", "supply usage 80%", "reserve factor", "supply=4.32%", "config snapshot"], requiredConcepts: ["lending-reserve-utilization", "aave-v3-kink-rate-strategy"], sectionId: "interest-rate" },
-      { level: "basic", question: "같은 config에 s2=75%,U=90%를 넣어 borrow·supply rate를 계산하세요.", answerChecklist: ["excess 50%", "borrow=43.5%", "supply=35.235%", "above kink", "slope2", "not forecast"], requiredConcepts: ["aave-v3-kink-rate-strategy"], sectionId: "interest-rate" },
-      { level: "basic", question: "Scaled supply1000,I_L1.05와 scaled debt500,I_V1.08의 current balances를 계산하세요.", answerChecklist: ["1050", "540", "different indexes", "ray scale", "scaled storage", "same reserve"], requiredConcepts: ["lending-indexed-balance-accounting"], sectionId: "atoken-debt" },
-      { level: "basic", question: "담보 $10,000·LT80%·debt$7,000과 담보 $8,000 상태의 HF를 비교하세요.", answerChecklist: ["8000 threshold value", "HF about1.143", "6400 threshold value", "HF about0.914", "liquidatable below1", "oracle values"], requiredConcepts: ["aave-v3-health-factor"], sectionId: "liquidation" },
-      { level: "basic", question: "Pinned source에서 HF0.95 전후 close-factor 후보와 $1,000 repay·5% bonus·$100 collateral seize를 설명하세요.", answerChecklist: ["50% default condition", "full candidate outside", "position-size threshold", "debtToCover cap", "10.5 units", "available collateral", "protocol fee"], requiredConcepts: ["aave-v3-partial-liquidation"], sectionId: "liquidation" },
-      { level: "basic", question: "E-Mode와 isolation의 허용 asset·parameter·실패 조건을 비교하세요.", answerChecklist: ["category", "correlated assets", "category LT/LTV/bonus", "isolation borrow list", "debt ceiling", "config snapshot", "reject mismatch"], requiredConcepts: ["aave-v3-risk-mode-boundary"], sectionId: "efficiency-mode" },
-      { level: "advanced", question: "Borrow usage와 supply usage가 unbacked에서 갈라지는 식과 rate distribution을 유도하세요.", answerChecklist: ["available+debt", "borrow usage", "unbacked denominator", "supply usage", "variable rate", "reserve factor", "same snapshot"], requiredConcepts: ["lending-reserve-utilization", "aave-v3-kink-rate-strategy"], sectionId: "interest-rate" },
-      { level: "advanced", question: "Liquidity index 선형 누적과 variable borrow index 3차 binomial approximation의 오차 반례를 설계하세요.", answerChecklist: ["linear supply", "x=rate*dt/year", "1+x+x2/2+x3/6", "not exact exponential", "long idle", "extreme rate", "ray rounding", "source vector"], requiredConcepts: ["lending-indexed-balance-accounting"], sectionId: "atoken-debt" },
-      { level: "advanced", question: "Multi-collateral HF와 liquidation의 decimals·oracle·bonus·fee·available cap receipt를 설계하세요.", answerChecklist: ["asset balances", "prices", "decimal units", "weighted LT", "indexed debt", "close factor", "bonus", "protocol fee", "available collateral", "rounding", "stale price"], requiredConcepts: ["aave-v3-health-factor", "aave-v3-partial-liquidation"], sectionId: "liquidation" },
-      { level: "advanced", question: "Aave V3 implementation/config 교체의 index·rate·oracle·mode·liquidation release matrix를 작성하세요.", answerChecklist: ["chain/proxy/SHA", "reserve config", "oracle", "indexes/time", "kink boundaries", "long idle", "HF1/0.95", "partial/full", "mode/category/ceiling", "pause/freeze", "events/reverts", "gas last", "rollback"], requiredConcepts: ["lending-indexed-balance-accounting", "aave-v3-kink-rate-strategy", "aave-v3-partial-liquidation", "aave-v3-risk-mode-boundary"], sectionId: "aave-v3-release-gate" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "가용 자금200·부채800, 기준 사용률80%, 기본 이율2%, 첫 증가분4%, 프로토콜 몫10%일 때 사용률과 두 이율을 계산하세요.",
+        "answerChecklist": [
+          "U=80%",
+          "borrow=6%",
+          "supply usage 80%",
+          "reserve factor",
+          "supply=4.32%",
+          "config snapshot"
+        ],
+        "requiredConcepts": [
+          "lending-reserve-utilization",
+          "aave-v3-kink-rate-strategy"
+        ],
+        "sectionId": "interest-rate"
+      },
+      {
+        "level": "basic",
+        "question": "같은 설정에서 두 번째 증가분75%와 사용률90%를 넣어 차입·공급 이율을 계산하세요.",
+        "answerChecklist": [
+          "excess 50%",
+          "borrow=43.5%",
+          "supply=35.235%",
+          "above kink",
+          "slope2",
+          "not forecast"
+        ],
+        "requiredConcepts": [
+          "aave-v3-kink-rate-strategy"
+        ],
+        "sectionId": "interest-rate"
+      },
+      {
+        "level": "basic",
+        "question": "저장 공급1000과 계수1.05, 저장 부채500과 계수1.08의 현재 잔액을 계산하고 C의 저장 부채7000과도 비교하세요.",
+        "answerChecklist": [
+          "1050",
+          "540",
+          "different indexes",
+          "ray scale",
+          "scaled storage",
+          "same reserve",
+          "C의 현재 부채7560"
+        ],
+        "requiredConcepts": [
+          "lending-indexed-balance-accounting"
+        ],
+        "sectionId": "atoken-debt"
+      },
+      {
+        "level": "basic",
+        "question": "담보10000달러·청산 비율80%·부채7000달러의 HF를 구하고 담보가8000달러로 내려간 경우와 비교하세요.",
+        "answerChecklist": [
+          "8000 threshold value",
+          "HF about1.143",
+          "6400 threshold value",
+          "HF about0.914",
+          "liquidatable below1",
+          "oracle values"
+        ],
+        "requiredConcepts": [
+          "aave-v3-health-factor"
+        ],
+        "sectionId": "liquidation"
+      },
+      {
+        "level": "basic",
+        "question": "HF0.95 전후의 청산 후보량을 설명하고 1000달러 상환·보상5%의 담보량을 가격80과100에서 각각 계산하세요.",
+        "answerChecklist": [
+          "50% default condition",
+          "full candidate outside",
+          "position-size threshold",
+          "debtToCover cap",
+          "10.5 units",
+          "available collateral",
+          "protocol fee",
+          "가격80일 때13.125개"
+        ],
+        "requiredConcepts": [
+          "aave-v3-partial-liquidation"
+        ],
+        "sectionId": "close-factor"
+      },
+      {
+        "level": "basic",
+        "question": "E-Mode와 isolation의 허용 자산, 적용 비율과 실패 조건을 비교하세요.",
+        "answerChecklist": [
+          "category",
+          "correlated assets",
+          "category LT/LTV/bonus",
+          "isolation borrow list",
+          "debt ceiling",
+          "config snapshot",
+          "reject mismatch"
+        ],
+        "requiredConcepts": [
+          "aave-v3-risk-mode-boundary"
+        ],
+        "sectionId": "efficiency-mode"
+      },
+      {
+        "level": "advanced",
+        "question": "unbacked1000을 추가하면 차입 사용률과 공급 측 사용률이 왜 달라지며 공급 이율은 어떻게 변하나요?",
+        "answerChecklist": [
+          "available+debt",
+          "borrow usage",
+          "unbacked denominator",
+          "supply usage",
+          "variable rate",
+          "reserve factor",
+          "same snapshot"
+        ],
+        "requiredConcepts": [
+          "lending-reserve-utilization",
+          "aave-v3-kink-rate-strategy"
+        ],
+        "sectionId": "interest-rate"
+      },
+      {
+        "level": "advanced",
+        "question": "공급의 선형 누적과 차입의3차 다항 근사를 비교하고 x=0.1과1에서 정확한 지수함수와의 차이를 설명하세요.",
+        "answerChecklist": [
+          "linear supply",
+          "x=rate*dt/year",
+          "1+x+x2/2+x3/6",
+          "actual return expression",
+          "not exact exponential",
+          "long idle/extreme rate",
+          "ray floor/ceil rounding",
+          "pinned source"
+        ],
+        "requiredConcepts": [
+          "lending-indexed-balance-accounting"
+        ],
+        "sectionId": "index-source"
+      },
+      {
+        "level": "advanced",
+        "question": "여러 담보의 HF와 실제 청산량을 검수할 때 가격 단위, 보상과 수수료, 가용 담보 한도를 어떻게 기록하나요?",
+        "answerChecklist": [
+          "asset balances",
+          "prices",
+          "decimal units",
+          "weighted LT",
+          "indexed debt",
+          "close factor",
+          "bonus",
+          "protocol fee",
+          "available collateral",
+          "rounding",
+          "stale price"
+        ],
+        "requiredConcepts": [
+          "aave-v3-health-factor",
+          "aave-v3-partial-liquidation"
+        ],
+        "sectionId": "close-factor"
+      },
+      {
+        "level": "advanced",
+        "question": "Aave의 구현과 설정을 바꿀 때 잔액·이율·가격·모드·청산 결과를 대조할 검수 사례와 복구 계획을 작성하세요.",
+        "answerChecklist": [
+          "chain/proxy/SHA",
+          "reserve config",
+          "oracle",
+          "indexes/time",
+          "kink boundaries",
+          "long idle",
+          "HF1/0.95",
+          "partial/full",
+          "mode/category/ceiling",
+          "pause/freeze",
+          "events/reverts",
+          "gas last",
+          "rollback"
+        ],
+        "requiredConcepts": [
+          "lending-indexed-balance-accounting",
+          "aave-v3-kink-rate-strategy",
+          "aave-v3-partial-liquidation",
+          "aave-v3-risk-mode-boundary"
+        ],
+        "sectionId": "aave-v3-release-gate"
+      }
     ],
-    papers: [
-      { title: "Aave DAO aave-v3-origin source snapshot", href: "https://github.com/aave-dao/aave-v3-origin/tree/cff15de6d1271b0c800fc001f4aea4c263e8a597", problem: "Aave V3.1–3.x reserve·account·risk state transition을 실행하는 문제", contribution: "Pool·rate strategy·index·health factor·liquidation·mode의 executable source를 제공", assumptions: "Commit cff15de6d127과 chain·proxy implementation·reserve configuration을 고정", evidenceScope: "Pinned aave-v3-origin source의 protocol logic과 typed failure 동작 범위", notClaim: "Moving main·미래 release·모든 network 주소와 risk parameter를 일반화하지 않음", sectionId: "paper-aave-v3-origin-source" },
-      { title: "DefaultReserveInterestRateStrategyV2", href: "https://github.com/aave-dao/aave-v3-origin/blob/cff15de6d1271b0c800fc001f4aea4c263e8a597/src/contracts/misc/DefaultReserveInterestRateStrategyV2.sol", problem: "Reserve utilization과 liquidity pressure를 variable borrow·supply rate로 가격화하는 문제", contribution: "Optimal usage 전후 normalized slopes와 supply usage·reserve-factor 배분 식을 제공", assumptions: "동일 Pool implementation과 reserve의 rate data·virtual balance·unbacked snapshot을 사용", evidenceScope: "Pinned interest-rate strategy source의 rate calculation과 parameter validation 범위", notClaim: "본문 예시 rate가 현재 market config이거나 realized APY·미래 rate를 보장하지 않음", sectionId: "paper-aave-rate-strategy" },
-    ],
+    "papers": [
+      {
+        "title": "Aave DAO aave-v3-origin source snapshot",
+        "href": "https://github.com/aave-dao/aave-v3-origin/tree/cff15de6d1271b0c800fc001f4aea4c263e8a597",
+        "problem": "자산별 공급·차입·이자 계수와 계정별 담보 위험을 코드로 연결해야 합니다.",
+        "contribution": "Pool·rate strategy·index·health factor·liquidation·mode의 executable source를 제공",
+        "assumptions": "고정 commit cff15de6d1271b0c800fc001f4aea4c263e8a597의원본과라이선스를보존합니다.시장예제의수치설정은가정입니다.",
+        "evidenceScope": "Pinned aave-v3-origin source의 protocol logic과 typed failure 동작 범위",
+        "notClaim": "Moving main·미래 release·모든 network 주소와 risk parameter를 일반화하지 않음",
+        "sectionId": "paper-aave-v3-origin-source"
+      },
+      {
+        "title": "DefaultReserveInterestRateStrategyV2",
+        "href": "https://github.com/aave-dao/aave-v3-origin/blob/cff15de6d1271b0c800fc001f4aea4c263e8a597/src/contracts/misc/DefaultReserveInterestRateStrategyV2.sol",
+        "problem": "Reserve utilization과 liquidity pressure를 variable borrow·supply rate로 가격화하는 문제",
+        "contribution": "Optimal usage 전후 normalized slopes와 supply usage·reserve-factor 배분 식을 제공",
+        "assumptions": "동일 Pool implementation과 reserve의 rate data·virtual balance·unbacked snapshot을 사용",
+        "evidenceScope": "Pinned interest-rate strategy source의 rate calculation과 parameter validation 범위",
+        "notClaim": "본문 예시 rate가 현재 market config이거나 realized APY·미래 rate를 보장하지 않음",
+        "sectionId": "paper-aave-rate-strategy"
+      }
+    ]
   },
   "blockchain/compound-v3": {
     coreIdea: "Compound III Comet은 한 base asset의 signed principal을 supply/borrow indexes로 현재화하고 독립 rate curves·분리된 collateral factors·reserve-funded absorb와 sale로 market risk를 관리합니다.",
@@ -98723,7 +99478,9 @@ export const ARTICLE_LEARNING: Readonly<
         "answerChecklist": [
           "절반",
           "다른 조건 일정",
-          "실제 초점·공정 고려 필요"
+          "실제 초점·공정 고려 필요",
+          "계산상48.25 nm",
+          "NA1.6의 실제 구현 가능성은 별도"
         ],
         "requiredConcepts": [
           "rayleigh-critical-dimension"
@@ -98828,12 +99585,12 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     "papers": [
       {
-        "title": "ASML, ‘How microchips are made’, lithography process",
-        "href": "https://www.asml.com/en/technology/all-about-microchips/how-microchips-are-made",
+        "title": "ASML, Six crucial steps in semiconductor manufacturing",
+        "href": "https://www.asml.com/en/company/stories/2021/semiconductor-manufacturing-process-steps",
         "problem": "레티클 무늬가 감광막과 아래 층에 전달되는 공정 순서를 설명합니다.",
         "contribution": "감광막 도포·노광·베이크/현상·식각·계측의 장비 제조사 설명입니다.",
         "assumptions": "일반적인 반도체 제조 순서이며 특정 양성·음성 감광막은 고정하지 않습니다.",
-        "evidenceScope": "ASML 공식 웹페이지 각 절을 직접 확인했습니다. 본문 선·창 폭은 가상입니다.",
+        "evidenceScope": "공식 글의 Photoresist coating·Lithography·Etch 절을 확인했습니다. 현상으로 감광막을 여는 단계와 아래 층의 식각을 구별하며 본문의 치수는 가정입니다.",
         "notClaim": "ASML이 가상 200·120 nm 예를 측정했다는 뜻은 아닙니다.",
         "sectionId": "transfer"
       },
@@ -99095,7 +99852,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "junction-depth-threshold"
         ],
-        "sectionId": "limits"
+        "sectionId": "source"
       },
       {
         "level": "advanced",
@@ -99135,7 +99892,7 @@ export const ARTICLE_LEARNING: Readonly<
           "fixed-dose-diffusion",
           "fick-gaussian-profile"
         ],
-        "sectionId": "profile"
+        "sectionId": "supply"
       },
       {
         "level": "advanced",
@@ -99157,9 +99914,9 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "MIT OpenCourseWare 6.152J, Lecture 4, ‘Diffusion’ (2005)",
         "href": "https://ocw.mit.edu/courses/6-152j-micro-nano-processing-technology-fall-2005/dbad8f442ecf1244e2a257de2671d0e2_lecture4.pdf",
         "problem": "고정 도즈와 고정 표면 농도 확산의 깊이별 프로파일과 접합 위치를 설명합니다.",
-        "contribution": "원본 6–7·14–15쪽의 가우스/erfc 해, a=2√Dt, 배경 농도와 만나는 접합 깊이입니다.",
+        "contribution": "PDF6–7쪽, 슬라이드11–14의 가우스 모양·a=2√Dt와 고정 표면 농도의 erfc 해를 비교합니다.",
         "assumptions": "일정 확산계수와 각 해의 초기·경계 조건을 구분합니다.",
-        "evidenceScope": "MIT 공식 원본 PDF의 해당 쪽을 확인했습니다. D1·D2·시간과 120/208 nm는 본문의 가정 계산입니다.",
+        "evidenceScope": "PDF6쪽의 대칭 확산 그림은 Q 적분 범위를 전체 축으로 표시하지만 식의 앞계수는 한쪽 총량 정규화입니다. 본문은 표면에서 안쪽으로의 적분 범위를 명시하고 6.774의 Q=Cs√(πDt)와 대조했습니다. D와시간은 가정입니다.",
         "notClaim": "a가 실제 접합 깊이이거나 강의안이 본문의 두 열 단계를 실험했다는 뜻은 아닙니다.",
         "sectionId": "profile"
       },
@@ -99167,9 +99924,9 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "MIT OpenCourseWare 6.774, Lecture 9 transcript, ‘Dopant Diffusion’ (2004)",
         "href": "https://ocw.mit.edu/courses/6-774-physics-of-microfabrication-front-end-processing-fall-2004/149Phbk_yJVmBm_KPM035Wd40as-4iVuA_transcript.pdf",
         "problem": "여러 가열 단계에서 최종 도핑 프로파일의 누적 변화를 추정합니다.",
-        "contribution": "원본 2–3쪽에서 일정 D의 가우스 가정 아래 각 단계 D×t를 더해 열 예산으로 볼 수 있다고 설명합니다.",
+        "contribution": "PDF3쪽의 단계별 Dt 합산, PDF4쪽의 배경 농도와 만나는 접합 정의, PDF6쪽의 Q=Cs√(πDt)를 같은 사례에 적용합니다.",
         "assumptions": "고정 도즈와 충분히 좁은 초기 분포·일정 D의 단계별 근사입니다.",
-        "evidenceScope": "MIT 공식 강의 전사 PDF 2–3쪽을 확인했습니다. 두 D 값은 가상입니다.",
+        "evidenceScope": "공식 전사 PDF3·4·6쪽을 확인했습니다. 두 D와 초기 표면/배경 비100은 본문의 가정이며 접합 약258→419nm도 이 가정의 계산입니다.",
         "notClaim": "모든 고농도·주입 후 결함·산화 공정에서 Dt 합산이 그대로 성립한다는 뜻은 아닙니다.",
         "sectionId": "budget"
       }

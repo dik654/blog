@@ -286,47 +286,79 @@ export const vllmServingArticles: Article[] = [
     title: "vLLM PagedAttention: KV Block · Allocation · Prefix Cache",
     subcategory: "ai-llm-serving",
     sections: [
-      {
-        id: "overview",
-        title: "Variable-length KV를 block으로 바꾸기",
-        subsections: [
-          { id: "fragmentation-kinds", title: "Internal·external fragmentation" },
-          { id: "logical-physical-address", title: "Logical→physical address translation" },
-          { id: "paper-pagedattention", title: "PagedAttention 원 논문의 핵심" },
-          { id: "memory-kernel-boundary", title: "Manager·kernel·scheduler 책임 경계" },
-        ],
-      },
-      {
-        id: "block-pool",
-        title: "Physical block의 소유권과 수명",
-        subsections: [
-          { id: "free-queue-eviction", title: "Free queue와 cache eviction" },
-          { id: "block-allocator", title: "Allocator의 allocate·free" },
-          { id: "sequence-forking", title: "Sequence fork와 copy-on-write" },
-          { id: "beam-branch-sharing", title: "Beam·branch block 공유" },
-          { id: "block-invariants", title: "BlockPool의 세 불변식" },
-        ],
-      },
-      {
-        id: "kv-cache-manager",
-        title: "Scheduler와 allocation 계약",
-        subsections: [
-          { id: "allocation-failure", title: "Allocation 실패의 책임 경계" },
-          { id: "hybrid-cache-groups", title: "Hybrid model cache group" },
-        ],
-      },
-      {
-        id: "prefix-caching",
-        title: "Automatic Prefix Caching",
-        subsections: [
-          { id: "full-block-boundary", title: "Token·full-block hit 경계" },
-          { id: "prefix-sharing", title: "Block 단위 prefix sharing" },
-          { id: "paper-radixattention", title: "SGLang·RadixAttention 논문의 핵심" },
-          { id: "prefix-operations", title: "Cache hit rate의 두 정의" },
-          { id: "cache-locality", title: "Cache locality의 두 축" },
-        ],
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 길이를 모르는 답의 기록을 조금씩 늘립니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 위치 목록과 저장 공간과 계산기를 연결합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 35개 기록은 16칸짜리 공간 3개에 들어갑니다"
+  },
+  {
+    "id": "inside-blocks",
+    "title": "4. 순서표와 사용 중 표시를 따로 둡니다"
+  },
+  {
+    "id": "why-blocks",
+    "title": "5. 연속된 큰 빈자리와 중복 기록을 줄입니다"
+  },
+  {
+    "id": "block-names",
+    "title": "6. 기록과 주소와 소유권에 이름을 붙입니다"
+  },
+  {
+    "id": "logical-physical-address",
+    "title": "7. 38개로 늘어난 A의 위치 37을 찾아갑니다"
+  },
+  {
+    "id": "fragmentation-kinds",
+    "title": "8. 마지막 빈칸과 연속 공간 부족은 다릅니다"
+  },
+  {
+    "id": "block-pool",
+    "title": "9. A가 끝나도 B가 읽는 P7은 덮어쓰지 않습니다"
+  },
+  {
+    "id": "sequence-forking",
+    "title": "10. 공유한 마지막 block에 쓰기 전에 복사합니다"
+  },
+  {
+    "id": "kv-cache-manager",
+    "title": "11. 35에서 38은 추가 0개, 49는 추가 1개입니다"
+  },
+  {
+    "id": "hybrid-cache-groups",
+    "title": "12. 같은 16칸 계산으로 모든 모델을 재지 않습니다"
+  },
+  {
+    "id": "prefix-caching",
+    "title": "13. 같은 앞의 32 token을 다시 읽지 않습니다"
+  },
+  {
+    "id": "prefix-sharing",
+    "title": "14. 계산 생략과 저장 공간 절약을 각각 셉니다"
+  },
+  {
+    "id": "cache-locality",
+    "title": "15. 반복 입력이 같은 저장소에 남아 있어야 합니다"
+  },
+  {
+    "id": "paper-pagedattention",
+    "title": "16. 원 논문의 범위와 현재 구현을 연결합니다"
+  },
+  {
+    "id": "memory-kernel-boundary",
+    "title": "17. 주소가 맞아도 내용과 수명이 틀리면 실패합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "18. 같은 사례에서 다음 값을 예상해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/vllm-paged-attention"),
   },
   {

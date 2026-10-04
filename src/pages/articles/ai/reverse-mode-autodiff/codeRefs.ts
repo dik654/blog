@@ -1,27 +1,6 @@
 import type { CodeRef } from "@/components/code/types";
-import extendingAutogradPy from "./codebase/pytorch-docs/extending_autograd.py?raw";
-
+import extendingRst from "./codebase/pytorch/docs/source/notes/extending.rst?raw";
 export const codeRefs: Record<string, CodeRef> = {
-  "linear-forward": {
-    path: "pytorch-docs/extending_autograd.py",
-    code: extendingAutogradPy,
-    lang: "python",
-    highlight: [8, 22],
-    desc: "문제: forward가 backward에 필요한 어떤 값을 남겨야 하는지 실제 코드로 확인해야 합니다.\n\n해결: PyTorch 공식 문서의 LinearFunction 예제가 forward에서 만든 input·weight·bias를 setup_context에서 명시적으로 save_for_backward합니다.",
-    annotations: [
-      { lines: [12, 14], color: "sky", note: "article의 Z=XW+1b^⊤ (weight가 [out,in]이라 전치해서 곱함)" },
-      { lines: [21, 22], color: "emerald", note: "article의 질문 — forward가 backward를 위해 남겨야 할 값" },
-    ],
-  },
-  "vjp-backward": {
-    path: "pytorch-docs/extending_autograd.py",
-    code: extendingAutogradPy,
-    lang: "python",
-    highlight: [24, 43],
-    desc: "문제: x̄=ȳ·J_f(x)가 실제로 어떤 tensor 연산인지, Jacobian 전체를 만들지 않고 계산되는지 확인해야 합니다.\n\n해결: 이 문서 예제는 autograd engine 뒤에 VJP를 숨기지 않고 backward에 직접 손으로 적어 둡니다 — Jacobian 행렬을 한 번도 만들지 않고 곱 결과만 계산합니다.",
-    annotations: [
-      { lines: [30, 34], color: "amber", note: "article의 x̄=ȳ·J_f(x) — grad_output과 weight의 행렬곱 하나로 VJP를 계산" },
-      { lines: [35, 39], color: "violet", note: "같은 ȳ가 weight 방향으로는 다른 local Jacobian과 곱해짐 — fan-out의 한 예" },
-    ],
-  },
+  "linear-forward": {path:"pytorch/docs/source/notes/extending.rst",code:extendingRst,lang:"python",highlight:[162,178],desc:"PyTorch v2.8.0 @ ba56102387ef21a3b04b357e5b183d48f0afefc7의 실제 전체 RST 원문입니다. 162–202행의 LinearFunction은 custom autograd 작성법을 보이는 교육 예제이며, nn.Linear의 최적화된 native kernel이 아닙니다. 원문 경로·행 번호·주석을 보존했습니다.",annotations:[{lines:[167,171],color:"sky",note:"input.mm(weight.t()) 뒤 bias를 더합니다. input=[[2]], weight=[[3]], bias=[0]이면 output=[[6]]입니다 (가정)."},{lines:[176,178],color:"emerald",note:"곱셈의 입력과 weight, bias를 backward용으로 저장합니다. 제곱 연산에 필요한 a=6은 그 별도 연산의 저장 책임입니다."}]},
+  "vjp-backward": {path:"pytorch/docs/source/notes/extending.rst",code:extendingRst,lang:"python",highlight:[182,202],desc:"같은 고정 원문의 LinearFunction.backward입니다. 필요한 입력의 gradient만 계산하며, 각 입력 방향의 product를 반환합니다. 한 값이 여러 소비자에게 쓰인 뒤 기여가 합쳐지는 fan-out 누적은 이 세 반환값 자체와 구분합니다.",annotations:[{lines:[188,189],color:"amber",note:"Forward 때 보관한 원래 input·weight를 꺼냅니다. 현재 값으로 바뀐 다른 기록을 사용하면 그 forward의 미분이 아닙니다."},{lines:[195,200],color:"violet",note:"grad_output=[[13]], input=[[2]], weight=[[3]]이면 grad_input=[[39]], grad_weight=[[26]], grad_bias=[13]입니다 (가정). full Jacobian을 만들지 않고 세 product를 계산합니다."}]},
 };

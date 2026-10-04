@@ -215,7 +215,10 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">10. 장치·중계소·인증이 바뀌면 보안 주장도 다시 정합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">첫째는 광원입니다. 약한 레이저 펄스에는 광자가 없거나 여러 개일 수 있습니다. 여러 광자의 일부를 빼내는 공격은 이상적인 단일 광자 표만으로 평가할 수 없습니다. 밝기를 달리한 시험 신호를 섞는 decoy-state 방식은 검출 통계를 비교해 단일 광자 성분의 기여와 오류를 제한합니다. 밝기 선택과 상태 준비의 가정도 검증해야 합니다.</p>
-          <p className="leading-8">둘째는 검출기입니다. MDI, 즉 측정 장치 독립 QKD에서는 양쪽이 신호를 보내고 가운데의 측정 발표로 기록을 고릅니다. 측정소를 신뢰하지 않아도 되는 증명을 쓰지만, 양끝의 상태 준비와 난수·인증까지 신뢰가 사라지지는 않습니다.</p>
+          <p className="leading-8">
+            둘째는 검출기입니다. MDI, 즉 측정 장치 독립 QKD에서는 양쪽이 신호를 보내고 가운데의 측정 발표로 기록을 고릅니다. 측정소를 신뢰하지 않아도 되는 증명을 쓰지만 양끝의
+            상태 준비와 난수·인증까지 신뢰가 사라지지는 않습니다.
+          </p>
           <p className="leading-8">DI, 즉 장치 독립 QKD는 여러 측정 선택에서 나타나는 상관관계를 검사합니다. Bell 부등식 위반으로 장치 내부 모형에 대한 의존을 줄입니다. 독립적인 비밀 난수, 실험실 정보 유출 방지, 인증과 신뢰할 후처리, 유한 표본 분석은 여전히 필요합니다. MDI와 DI를 같은 말로 쓰면 믿어야 할 장치를 잘못 고릅니다.</p>
         </div>
         <div id="paper-decoy" className="scroll-mt-20"><CitationBlock source="Lo·Ma·Chen · Decoy State Quantum Key Distribution" citeKey={4} href="https://arxiv.org/abs/quant-ph/0411004">2005 원 논문의 강도별 통계와 단일 광자 기여 추정을 사용합니다. 이 글은 특정 상용 광원의 누출이나 키율을 측정하지 않았습니다.</CitationBlock></div>

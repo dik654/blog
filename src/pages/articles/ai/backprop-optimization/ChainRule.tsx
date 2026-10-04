@@ -1,29 +1,11 @@
-import TermBreakdown from "@/components/articles/term-breakdown";
+import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
+import { CitationBlock } from "@/components/ui/citation";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "../reverse-mode-autodiff/codeRefs";
-
-export default function ChainRule({
-  onCodeRef,
-}: {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}) {
-  return (
-    <section id="reverse-mode" className="mb-16 scroll-mt-20">
-      <p className="mb-3 text-sm font-bold text-primary">용어 3 · reverse-mode autodiff</p>
-      <h2 className="mb-6 text-3xl font-bold">loss의 책임을 graph 반대 방향으로 보낸다</h2>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          <strong>Reverse mode</strong>는 scalar loss의 derivative를 1로 놓고
-          forward graph를 반대로 순회하는 자동미분 방식입니다. 각 operation은 자기
-          주변의 local derivative만 알고, 뒤에서 받은 책임을 입력 쪽으로 보냅니다.
-          이 정의를 이해한 다음에야 VJP와 fan-out을 붙입니다.
-        </p>
-      </div>
-
-      <ExplainedFormula
+export default function ChainRule({onCodeRef}:{onCodeRef:(key:string,ref:CodeRef)=>void}){return <div className="mt-16 space-y-16"><section id="trace" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">8. 42에서 시작해 13을 합친 뒤 26과 39를 반환합니다</h2><p className="leading-8">L 자체에 대한 변화율은 1입니다. 합L=a²+a는 두 입력에 각각 1을 보냅니다. 제곱 연산은 1×2a=12를 반환하고, 그대로 더한 길은 1을 반환합니다. 같은 a에 모인 기여가 13이 된 뒤에야 앞의 곱셈을 되짚습니다.</p><p className="leading-8">a=wx+b에서 w에 대한 local derivative는 x=2, x에 대한 값은 w=3, b에 대한 값은 1입니다. 따라서 dL/dw=26, dL/dx=39, dL/db=13입니다. 세 답은 서로 다른 입력에 대한 것이므로 마지막에 26+39+13을 더하는 계산이 아닙니다.</p><AlgorithmBlock title="하나의 forward 기록을 되짚는 의사코드" input={["w=3,x=2,b=0,a=6,L=42와 그 연산 기록 (가정)"]} steps={[{code:"L의 출발 기여 ← 1"},{code:"a 장부 ← 제곱 길의 12 + 그대로 더한 길의 1 = 13"},{code:"w 장부 ← 13×x =26; x 장부 ← 13×w =39"},{code:"b 장부 ← 13×1 =13"}]} output="입력별 gradient (26,39,13); 원래 입력 값은 그대로" /><p className="leading-8">출발 기여를 2로 주면 모든 결과도 2배가 됩니다. 이 경우 계산한 것은 L 자체의 gradient 대신 2L의 gradient에 해당합니다. 여러 출력에서는 출발 벡터가 어떤 출력 조합의 미분을 원하는지 정합니다.</p></section><section id="reverse-mode" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">9. VJP는 필요한 곱을 구하며 모든 편미분 표를 먼저 만들지 않습니다</h2><ExplainedFormula
         question="scalar loss에서 한 operation의 input gradient를 local 정보만으로 어떻게 계산할까?"
         idea={<>뒤쪽 graph가 전달한 upstream cotangent ȳ에 현재 operation y=f(x)의 local Jacobian을 곱합니다. 한 x가 여러 downstream branch에 쓰였다면 branch별 contribution을 더합니다.</>}
         formula={String.raw`\begin{aligned}\bar y&=\frac{\partial L}{\partial y}\\[3pt]\bar x&=\bar y\,J_f(x)\\[3pt]\bar x_{\rm total}&=\sum_{p\in\operatorname{children}(x)}\bar x^{(p)}\end{aligned}`}
@@ -41,54 +23,4 @@ export default function ChainRule({
         ]}
         assumptions={["row-vector cotangent 표기입니다. Column convention에서는 transpose 위치가 바뀝니다.", "최종 output L은 scalar입니다."]}
         interpretation="reverse mode는 output 수가 작고 input parameter가 매우 많을 때 유리합니다. Scalar loss 하나로 수많은 parameter gradient를 구하는 neural network에 맞는 이유입니다."
-      />
-      <CodeViewButton
-        onClick={() => onCodeRef("vjp-backward", codeRefs["vjp-backward"])}
-      />
-
-      <TermBreakdown
-        title="이 선호가 무엇과 비교한 결과인지 — forward-mode·수치미분"
-        items={[
-          {
-            term: "Forward-mode autodiff (JVP)",
-            description:
-              "입력 방향 벡터 ẋ 하나를 정하고, primal 계산과 같은 forward pass 안에서 ẏ=J_f(x)ẋ를 함께 전파합니다. Reverse mode처럼 별도 backward tape가 필요 없습니다.",
-            example:
-              "Input이 n차원, output이 m차원이면 forward mode는 전체 Jacobian을 얻는 데 n번의 forward pass가 필요하고, reverse mode는 m번의 backward pass가 필요합니다.",
-            boundary:
-              "n≪m(input이 적고 output이 많음)이면 forward mode가 유리합니다. Neural network의 scalar loss는 input parameter가 수백만·output이 1개인 정반대 상황이라 reverse mode를 씁니다.",
-          },
-          {
-            term: "수치미분(numerical differentiation)",
-            description:
-              "f'(x)≈(f(x+h)−f(x))/h로 근사합니다. Autodiff처럼 정확한 값이 아니라 h 크기에 따라 오차가 생깁니다.",
-            example:
-              "h가 너무 작으면 floating-point 뺄셈에서 cancellation 오차가 커지고, h가 너무 크면 truncation 오차가 커집니다.",
-            boundary:
-              "Autodiff 결과를 검증하는 gradient check 용도로는 유용하지만, parameter마다 별도 forward pass가 필요해 실제 학습에는 쓰지 않습니다.",
-          },
-        ]}
-      />
-
-      <div id="save-recompute" className="prose prose-neutral dark:prose-invert max-w-none scroll-mt-20">
-        <h3>Save·recompute 경계</h3>
-        <p>
-          앞의 graph Viz에서 본 것처럼 tape는 backward에 필요한 값을 저장합니다.
-          Checkpointing은 그중 일부를 버리고 다시 계산합니다. 같은 derivative를
-          유지하면서 memory를 줄이지만 compute와 random-state 재현 비용은 늘어납니다.
-        </p>
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>Gradient가 누적되는 이유도 graph에서 나온다</h3>
-        <p>
-          Parameter 하나가 여러 sample과 여러 operation에서 재사용되면 모든 경로의
-          partial derivative를 더해야 전체 derivative가 된다. Framework가
-          <code>.grad</code>에 값을 누적하는 동작은 편의상의 우연이 아니라 이
-          sum-of-paths 규칙을 구현한 것이다. 여러 micro-batch를 의도적으로 누적할
-          수도 있지만, 그렇지 않다면 step 사이에 gradient buffer를 초기화한다.
-        </p>
-      </div>
-    </section>
-  );
-}
+      /><p className="leading-8">이번 합과 제곱은 작은 scalar 연산이어서 local derivative가 눈에 보입니다. 큰 배열에서도 원리는 같으며, 모든 출력·입력 쌍의 미분 행렬을 저장한 뒤 곱해야 하는 것은 아닙니다. 예를 들어 행렬곱의 backward는 입력 배열과 뒤 기여의 행렬곱으로 필요한 결과를 직접 만듭니다.</p><p className="leading-8">간단한 다른 분기 L=x²+3x에서는 같은 x에 2x와 3이 돌아와 2x+3입니다. 이번 a²+a의 12+1과 같은 합 규칙입니다. 반면 서로 다른 input·weight·bias로 반환되는 gradient는 각각 다른 저장 공간으로 전달됩니다.</p><p className="leading-8">Forward mode는 입력 방향 하나에 대한 JVP를 primal 계산과 함께 앞으로 전파합니다. 일반적인 조밀한 전체 Jacobian을 만들려면 입력 n개에 대한 forward 방향 n개 또는 출력 m개에 대한 reverse 방향 m개가 필요합니다. 특수한 희소성·벡터화·혼합 모드에 따라 실제 실행 비용은 달라집니다. Scalar loss와 많은 parameter는 reverse mode가 유리한 대표 조건입니다.</p></section><section id="source-forward" data-teach-level="5" className="space-y-6"><h2 className="text-2xl font-bold">10. 공식 LinearFunction 원문에 같은 입력 2와 가중치 3을 넣습니다</h2><p className="leading-8">원문은 PyTorch v2.8.0 revision ba56102387ef21a3b04b357e5b183d48f0afefc7의 docs/source/notes/extending.rst 162–202행입니다. 전체 원문을 변경 없이 보존했습니다. 이는 사용자 정의 미분을 설명하는 공식 문서 예제이며 실제 nn.Linear의 최적화된 native 구현과는 구분합니다.</p><CodeViewButton label="고정 문서의 forward·setup_context" onClick={() => onCodeRef("linear-forward",codeRefs["linear-forward"])} /><p className="leading-8">168행 input.mm(weight.t())에 input=[[2]], weight=[[3]]을 넣으면[[6]]입니다. Bias=[0]을 170행에서 더해도 같은 값입니다. 한 칸이라 전치가 눈에 안 보이지만 일반 배열에서 원문 weight는 출력 폭×입력 폭이며,7절의 W 표기와 전치 관계입니다.</p><p className="leading-8">176–178행 setup_context는 전달받은 input·weight·bias를 save_for_backward에 넣습니다. 원문 예제는 제곱 연산을 포함하지 않으므로 a²에 필요한 a의 저장까지 이 함수가 수행한다고 읽으면 안 됩니다. 전체 L을 만들 때는 선형 출력에 이어 제곱과 덧셈 연산이 별도로 기록됩니다.</p></section><section id="source-backward" data-teach-level="6" className="space-y-6"><h2 className="text-2xl font-bold">11. 공식 backward에 돌아온 13을 넣으면 입력별 세 답이 나옵니다</h2><p className="leading-8">두 길에서 합쳐진 a의 기여 13을 grad_output=[[13]]으로 전달합니다 (가정). 188행이 꺼낸 input=[[2]], weight=[[3]], bias=[0]은 바로 앞 절에서 저장했던 값입니다. 각 입력이 미분을 요구한다고 두고 195–200행을 따라갑니다.</p><CodeViewButton label="고정 문서의 backward 계산" onClick={() => onCodeRef("vjp-backward",codeRefs["vjp-backward"])} /><p className="leading-8">196행 grad_output.mm(weight)는 13×3=[[39]]로 grad_input을 만듭니다. 198행 grad_output.t().mm(input)는 13×2=[[26]]로 grad_weight를 만듭니다. 200행 sum(0)은 묶음의 행 방향을 합해 grad_bias=[13]을 만듭니다.</p><p className="leading-8">202행의 반환 순서는 input, weight, bias 순서입니다. 손계산에서 w부터 적었던 (26,39,13)을 그대로 이 순서에 넣으면 input과 weight의 gradient가 뒤바뀝니다. 값만 맞는지와 어떤 입력에 돌려주었는지를 함께 검증해야 합니다.</p><p className="leading-8">이 함수가 반환하는 세 값은 세 입력의 미분입니다. 같은 a를 두 번 쓴 소비자에서 12와 1이 합쳐지는 fan-out은 이 함수에 13이 들어오기 전에 처리된 경로입니다. 여러 입력으로 gradient를 반환하는 것과 한 입력의 여러 사용처를 합치는 일을 구별합니다.</p></section><section id="save-recompute" data-teach-level="7" className="space-y-6"><h2 className="text-2xl font-bold">12. 기록을 버리거나 바꿀 때는 같은 forward를 재현해야 합니다</h2><p className="leading-8">Activation checkpointing은 일부 중간값을 저장하지 않고 backward 때 다시 계산하는 방법입니다. 이번 a=6을 버렸다면 w=3,x=2,b=0으로 다시 6을 계산한 뒤 제곱의 derivative12를 구할 수 있습니다. 그 대신 곱셈과 덧셈을 다시 실행합니다.</p><p className="leading-8">무작위로 값을 지우는 연산이 있었다면 재계산 때도 같은 선택을 재현해야 원래 함수의 미분이 됩니다. 어느 구간을 저장하고 어디를 다시 계산할지, 무작위 상태를 어떻게 복원할지, 실제 메모리와 경과 시간이 얼마나 달라지는지를 함께 확인합니다.</p><p className="leading-8">In-place 변경은 저장한 배열 자체를 덮어쓸 수 있습니다. 예전 a=6 대신 나중에 바뀐 7을 제곱 derivative에 사용하면 12 대신 14가 됩니다. PyTorch는 필요한 saved tensor의 version을 확인해 이런 변경을 오류로 알릴 수 있습니다. 저장 공간을 바꾼 행위와 새 배열로 같은 계산을 이어간 행위를 구분합니다.</p><p className="leading-8">Detach는 기록에서 연결을 끊는 선택입니다. 값을 복사해 같은 숫자가 남아 있어도 이전 연산으로 돌아가는 경로가 남아 있다는 뜻은 아닙니다. 메모리 절약과 미분 경로 차단을 같은 기능으로 취급하지 않습니다.</p></section><section id="boundaries" data-teach-level="7" className="space-y-6"><h2 className="text-2xl font-bold">13. 한 그래프의 경로 합과 여러 backward 호출의 저장 정책을 구별합니다</h2><p className="leading-8">한 a의 여러 사용처에서 온 기여를 더하는 것은 전체 함수의 미분 규칙입니다. 여러 backward 호출 결과를 leaf의 .grad에 계속 더해 두는 것은 프레임워크의 저장 정책입니다. 이 둘은 연결되지만 수학이 모든 API의 호출 간 누적 방식을 강제하는 것은 아닙니다.</p><p className="leading-8">PyTorch에서 매번 새 forward로 같은 예를 계산하고 gradient를 비우지 않은 채 backward를 두 번 호출하면 w.grad에 26+26=52가 남을 수 있습니다 (가정). 같은 그래프를 두 번 사용하는 경우에는 saved tensor가 해제되는 수명과 retain_graph 조건도 별도로 맞춰야 합니다. 의도한 자료 누적이 아니라면 다음 학습 단계 전에 장부를 비웁니다.</p><p className="leading-8">자동미분도 부동소수점 계산과 각 연산의 derivative 규칙을 사용합니다. 미분 불가능한 지점의 선택, 잘못 작성한 사용자 backward, 자료형의 반올림까지 없애 주지는 않습니다. 수치미분은 작은 변화폭의 근사로 검사할 수 있지만 너무 작은 폭은 뺄셈 오차, 너무 큰 폭은 근사 오차를 키웁니다.</p><p className="leading-8">검산에서는 이번 결과 26을 작은 차분 26.004와 비교한 방식으로 시작합니다. PyTorch 공식 문서의 gradcheck도 사용자 backward와 수치 차분의 Jacobian을 대조하도록 안내합니다. 검사를 통과한 입력 범위와 정밀도를 남겨야 다른 입력이나 불연속점까지 증명했다고 오해하지 않습니다.</p><div id="paper-autodiff" className="scroll-mt-24"><CitationBlock source="Baydin et al. — Automatic Differentiation in Machine Learning: a Survey" citeKey={1} href="https://jmlr.org/papers/v18/17-468.html">원문은 forward·reverse accumulation과 저장·재계산의 범위를 정리합니다. 입력·출력 수에 따른 선택과 계산 기록의 의미를 읽는 근거이며, optimizer의 수렴이나 함수의 미분 가능성을 보장하는 논문은 아닙니다.</CitationBlock></div><ContentBoundary article="reverse-mode-autodiff" /><h3 className="text-xl font-semibold">읽은 내용으로 예측해 보세요</h3><ol className="list-decimal space-y-3 pl-6"><li>같은 a=6의 두 길 중 하나를 빠뜨리면 dL/dw가 26 대신 어떤 값이 될까요? (답: 3절)</li><li>실제 backward의 반환 순서는 왜(26,39,13)이 아니라(39,26,13)일까요? (답: 11절)</li><li>새 forward를 두 번 수행하면서 .grad를 비우지 않으면 26이 52로 남을 수 있는 이유는 무엇일까요? (답: 13절)</li></ol></section></div>;}

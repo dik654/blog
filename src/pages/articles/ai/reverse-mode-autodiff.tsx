@@ -17,11 +17,11 @@ export default function ReverseModeAutodiffArticle() {
         onClose={sidebar.close}
         onNavigate={sidebar.navigate}
         codeRefs={codeRefs}
-        fileTrees={{ "pytorch-docs": reverseModeAutodiffTree }}
+        fileTrees={{ "pytorch": reverseModeAutodiffTree }}
         projectMetas={{
-          "pytorch-docs": {
-            id: "pytorch-docs",
-            label: "PyTorch docs · Python",
+          "pytorch": {
+            id: "pytorch",
+            label: "PyTorch v2.8.0 · 문서 원문",
             badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
           },
         }}

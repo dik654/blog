@@ -104,14 +104,14 @@ export default function Article() {
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">9 · 2026년 논문은 회로 자원과 장치 가정을 함께 읽습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">2026년 Babbush 등의 연구는 secp256k1의 256비트 이산로그에 대해 논리 큐비트 1,200개 이하·Toffoli 게이트 9천만 개 이하인 구성과, 1,450개 이하·7천만 개 이하인 구성을 제시합니다. 공간과 연산 수를 맞바꾸는 두 선택지입니다.</p>
+          <p className="leading-8">2026년 Babbush 등의 연구는 secp256k1의 256비트 이산로그에 대해 논리 큐비트 1,200개 미만·Toffoli 게이트 9천만 개 미만인 구성과, 1,450개 미만·7천만 개 미만인 구성을 제시합니다. 공간과 연산 수를 맞바꾸는 두 선택지입니다.</p>
           <p className="leading-8">물리 오류율 10⁻³, 평면 연결 등의 초전도 장치 가정에서 50만 개 미만의 물리 큐비트와 분 단위 시간을 추정합니다. 이는 그런 장치를 실제로 만들고 암호를 해독했다는 보고가 아닙니다. 숨긴 회로에 관한 검증 자료와, 하드웨어가 가정대로 동작한다는 증거도 구분해야 합니다.</p>
           <p className="leading-8">논리 큐비트는 알고리즘이 다루는 계산 단위이며 실제 장치에서는 오류 정정으로 논리 오류율을 충분히 낮추어 구현합니다. 실제 잡음 있는 물리 큐비트 여러 개와 반복 검사를 이용해 그 동작을 지탱합니다. 필요한 배수는 오류율·정정 코드·연결·요구 정확도에 따라 달라집니다.</p>
           <p className="leading-8">서로 다른 논문에서 가장 작은 큐비트 수와 가장 짧은 시간만 골라 합칠 수는 없습니다. 소자 종류와 게이트 속도, 정정 일정이 다르면 존재하지 않는 기계의 사양이 됩니다.</p>
         </div>
 
         <SourceApplication source="Babbush 외 · §II.2와 초록의 물리 자원 조건" excerpt="fewer than half a million physical qubits" application="원문의 50만 개 미만은 물리 큐비트 수입니다. 앞의 논리 큐비트 1,200개와 같은 단위가 아닙니다. 지정 오류율·연결·정정 조건으로 대응시킨 추정이며, 네 후보 계산을 실제 칩에서 50만 번 실행한 수치도 아닙니다." />
-        <CitationBlock source="Babbush 외 · 2026 ECDLP 자원 추정" citeKey={3} href="https://arxiv.org/abs/2603.28846">2026-10-04 확인. §II.2의 논리·물리 자원 가정을 대조합니다. 공개 HTML 표시 날짜와 버전 표기가 달라 추정 수치·절을 함께 명시합니다.</CitationBlock>
+        <CitationBlock source="Babbush 외 · 2026 ECDLP 자원 추정" citeKey={3} href="https://arxiv.org/abs/2603.28846v2">2026-04-15 수정된 v2를 2026-10-04 확인했습니다. §II.2의 논리·물리 자원 가정을 대조합니다. 저자는 v2에서 검증 자료의 영지식 증명 건전성을 해칠 수 있던 소프트웨어 오류를 수정했다고 명시합니다. 이 수정 여부와 실제 양자 하드웨어의 실현 여부는 별개입니다.</CitationBlock>
         <CitationBlock source="IBM Quantum Learning · Grover introduction" citeKey={4} href="https://quantum.cloud.ibm.com/learning/en/courses/fundamentals-of-quantum-algorithms/grover-algorithm/introduction">공식 강의의 제곱근 질의 개선과 실제 장치 비용 구별. 본문을 읽었으며 연결된 동영상 전체 시청을 주장하지 않습니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">이 구분을 실제로 교체할 암호의 목록에 적용합니다.</p>
       </section>

@@ -1,32 +1,12 @@
 import ContentBoundary from "@/components/articles/content-boundary";
-import { CitationBlock } from "@/components/ui/citation";
+import { CitationBlock } from "@/components/ui/citation-block";
 import ModernAaveViz from "./viz/ModernAaveViz";
-
-export default function Overview() {
-  return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Aave V3 reserve는 liquidity·debt·risk configuration을 한 실행 경계로 묶는다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="text-lg leading-8">공급자는 underlying을 reserve에 넣고 scaled aToken balance를 받습니다. 차입자는 담보 가치와 LTV·cap·mode 검사를 통과한 뒤 variable debt를 만듭니다. 이후 utilization이 rate를, reserve indexes가 모든 계정의 현재 잔고를, oracle과 liquidation threshold가 account health를 갱신합니다.</p>
-        <p>“Aave V3”라는 이름만으로 수치 parameter를 고정할 수는 없습니다. Network·Pool implementation·reserve asset·governance configuration·oracle snapshot을 함께 기록해야 합니다. 이 글의 예제 rate와 threshold는 수학을 읽기 위한 가상 값이며 배포 조언이 아닙니다.</p>
-      </div>
-      <ContentBoundary article="aave-v3" />
-      <ModernAaveViz mode="pool" />
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[44rem] border-collapse text-sm">
-          <thead><tr className="border-b"><th className="p-3 text-left">층</th><th className="p-3 text-left">상태</th><th className="p-3 text-left">실패 경계</th></tr></thead>
-          <tbody>
-            <tr className="border-b"><td className="p-3 font-semibold">Reserve</td><td className="p-3">available liquidity·total variable debt·indexes·rates</td><td className="p-3">cap·pause/freeze·insufficient liquidity</td></tr>
-            <tr className="border-b"><td className="p-3 font-semibold">Account</td><td className="p-3">scaled balances·collateral flags·mode</td><td className="p-3">LTV·HF·debt ceiling·asset compatibility</td></tr>
-            <tr><td className="p-3 font-semibold">Evidence</td><td className="p-3">implementation SHA·addresses·config·oracle</td><td className="p-3">다른 release/network parameter 혼합</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="paper-aave-v3-origin-source" className="scroll-mt-24">
-        <CitationBlock source="Aave DAO · aave-v3-origin source snapshot" href="https://github.com/aave-dao/aave-v3-origin/tree/cff15de6d1271b0c800fc001f4aea4c263e8a597" citeKey={1}>
-          문제: V3.1–3.x Pool의 supply·borrow·index·rate·liquidation·mode를 실행합니다. 기여: Pool interfaces와 ReserveLogic, GenericLogic, LiquidationLogic, MathUtils, rate strategy의 정확한 source seam을 제공합니다. 전제: inspected main snapshot cff15de6d127과 선택 deployment configuration을 고정합니다. 근거 범위: 이 source snapshot의 protocol logic입니다. 비주장: moving main의 미래 동작이나 모든 network의 주소·risk parameter가 같다고 일반화하지 않습니다.
-        </CitationBlock>
-      </div>
-    </section>
-  );
-}
+export default function Overview(){return <div className="mb-16 space-y-14 [&_section]:space-y-5 [&_h2]:text-2xl [&_h2]:font-bold [&_p]:leading-8">
+<section id="overview" data-teach-level="S"><h2>1. 돈을 모아 빌려주되 담보가 버틸 수 있는지 계속 계산합니다</h2><p>돈을 맡기는 사람은 수익을 원하고 빌리는 사람은 지금 쓸 자금이 필요합니다. 스마트계약에 자금을 모아 두면 두 사람이 직접 상대를 찾지 않고도 공급과 차입을 연결할 수 있습니다. 다만 빌려간 돈이 돌아오도록 충분한 담보와 상환 규칙이 필요합니다.</p><p>Aave V3는 맡긴 돈의 잔액, 빌린 사람의 부채, 담보 가치와 이율을 함께 관리합니다. 코드가 있다고 담보 가격이 고정되거나 돈을 언제나 즉시 뺄 수 있는 것은 아닙니다. 하나의 풀과 한 차입자의 숫자로 연결된 계산을 보겠습니다.</p></section>
+<section id="black-box" data-teach-level="B"><h2>2. 돈을 맡기고 빌린 뒤 갚는 과정입니다</h2><ol className="list-decimal space-y-3 pl-6"><li>공급 → 자산을 받고 공급자의 잔액을 기록합니다.</li><li>담보 확인 → 빌릴 사람이 맡긴 자산의 가치와 허용 한도를 계산합니다.</li><li>차입 → 가용 자금을 내보내고 부채를 기록합니다.</li><li>시간 경과 → 풀 상태에 맞춰 이율과 현재 잔액을 계산합니다.</li><li>상환·청산 → 돈을 갚거나 위험해진 담보를 처분해 부채를 줄입니다.</li></ol><p>풀에 남은 현금과 차입자의 담보는 다른 자산일 수 있습니다. 어느 숫자가 어느 계산에 쓰이는지 사례에서 나눠 보겠습니다.</p></section>
+<section id="case" data-teach-level="0"><h2>3. 10000달러 중 8000달러를 빌려준 풀입니다</h2><p>공급자가 모은 자금이 10000달러이고 총차입이 8000달러여서 남은 자금이 2000달러라고 합시다(가정). 총차입 중 C의 부채는 7000달러, 다른 사람의 부채는 1000달러입니다. C는 가격 100달러인 별도 자산100개, 즉10000달러의 담보를 맡겼습니다. 수치와 달러 표시는 계산용이며 실제 시장의 설정값이 아닙니다.</p><p>새로 빌릴 수 있는 비율을 75%, 청산 판단 비율을 80%라고 가정하면 최초7000달러 차입은7500달러 한도 안에 있습니다. 청산 판단에서는10000×80%=8000달러를 부채7000과 비교합니다. 이후 담보 가격이 80달러가 되면 담보는 8000달러, 청산 판단에 쓸 금액은6400달러로 줄어듭니다.</p><p>이 글은 C의 부채와 담보를 따라가면서 풀 전체의8000·2000이 이율에 어떻게 쓰이는지도 봅니다. 부채의 이자 증가와 담보의 가격 하락은 각각 C의 위험을 높일 수 있습니다.</p></section>
+<section id="parts" data-teach-level="1"><h2>4. 자산별 풀과 사람별 계정을 함께 관리합니다</h2><p>자산별 장부는 남은 자금과 총부채, 이율과 이자를 계산할 누적 계수를 관리합니다. 사람별 장부는 맡긴 자산과 부채, 어떤 자산을 담보로 사용할지를 기록합니다. 외부 가격을 전하는 담당자와 허용 비율·차입 한도를 정하는 설정도 필요합니다.</p><p>가격이 떨어지면 제3자가 C의 부채 일부를 대신 갚고 정해진 보상과 함께 담보를 받는 경로가 있습니다. 공급자의 출금, 새로운 차입, 담보 처분은 서로 다른 조건을 확인합니다. 풀의 남은 돈과 담보의 가치 중 하나만 보아서는 충분하지 않습니다.</p></section>
+<section id="why-parts" data-teach-level="2"><h2>5. 부채를 갚을 담보와 오늘 인출할 돈은 다릅니다</h2><p>C의 담보가 10000달러여도 공급자 모두가10000달러를 즉시 인출할 수 있는 것은 아닙니다. 사례에서 풀에 남은 자금은 2000달러입니다. 빌려준8000이 돌아오거나 새 공급이 들어와야 더 많은 인출을 처리할 수 있습니다.</p><p>반대로 가용 자금이 충분해도 C의 담보 가격이 급락하면 부채를 다 회수하지 못할 수 있습니다. 모든 사용자의 잔액을 매초 저장소에서 늘리는 방식도 비쌉니다. 자금 사용률, 계정의 위험과 이자 계수를 나눠 관리하는 이유입니다.</p></section>
+<section id="names" data-teach-level="3"><h2>6. Reserve·index·health factor에 이름을 붙입니다</h2><dl className="space-y-4"><div><dt className="font-semibold">자산별 자금·부채 장부 → reserve</dt><dd>Pool이 자산별 상태를 조정합니다. 사용률 utilization은 빌려준 비중을 나타냅니다.</dd></div><div><dt className="font-semibold">공급 잔액·변동 부채 기록 → aToken·variable debt token</dt><dd>원래 맡기거나 빌린 자산은 underlying입니다. 잔액은 저장된 단위와 누적 계수 index로 계산합니다.</dd></div><div><dt className="font-semibold">새 차입 비율·청산 판단 비율 → LTV·liquidation threshold</dt><dd>서로 다른 목적의 비율입니다. 사례의75%와80%를 바꿔 쓰면 안 됩니다.</dd></div><div><dt className="font-semibold">청산 기준 담보 가치와 부채의 비율 → health factor, HF</dt><dd>담보 가치에 청산 비율을 곱해 합한 뒤 총부채 가치로 나눕니다.</dd></div><div><dt className="font-semibold">외부 가격 입력 → oracle</dt><dd>자산 수량과 가격 단위를 맞춰 담보·부채의 비교 가치를 만듭니다.</dd></div></dl><ContentBoundary article="aave-v3"/><ModernAaveViz mode="pool"/></section>
+<section id="account-trace" data-teach-level="4"><h2>7. C의 7000달러 차입을 계속 따라갑니다</h2><p>C가 담보 사용을 켜고7000을 요청하면 Pool은 담보와 차입 가능 자산, LTV와 한도, 중지 상태와 남은 자금을 검사합니다. 이 사례에서는7000≤7500이고 필요한 자금이 있어 진행한다고 가정합니다. 변동 부채를 기록하고 자산을 내보낸 뒤 다른 차입1000까지 합하면 총부채8000·가용자금2000입니다.</p><p>시간이 지나면 이자 계수에 따라 부채가 늘고 가격이 바뀌면 담보 가치가 달라집니다. 가격 80달러의 상태에서 C의 부채를 여전히7000이라고 고정해 보면 HF=6400/7000≈0.914입니다. 이자가 더 붙었다면 분모도 함께 늘려야 합니다. 서로 다른 시점의 계수를 섞지 않습니다.</p><div id="paper-aave-v3-origin-source"><CitationBlock source="Aave DAO · aave-v3-origin cff15de6" citeKey={1} href="https://github.com/aave-dao/aave-v3-origin/tree/cff15de6d1271b0c800fc001f4aea4c263e8a597"><p>아래 계산과 실제 코드 패널은 이 commit으로 고정합니다. 같은 V3라는 이름이어도 네트워크의 Pool 구현, 자산과 설정, 가격 출처에 따라 결과가 달라집니다. 원본과 라이선스를 보존했으며 현재 배포 주소나 실행 결과를 추정하지 않습니다.</p></CitationBlock></div><p>이제 처음 저장한 단위에서 현재 잔액을 얻는 식을 만든 뒤 실제 함수에 숫자를 넣어 보겠습니다.</p></section>
+</div>}

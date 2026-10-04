@@ -59,7 +59,7 @@ const TABLES: readonly (readonly { name: string; entries: readonly string[] }[])
 const NOTES = [
   "35-token prompt는 B=16에서 3 block을 씁니다. P9에는 3 token만 있고 13 slot이 비어 있습니다.",
   "Fork는 block table을 복사하고 세 block의 reference count를 2로 올립니다. 새 block은 하나도 잡지 않습니다.",
-  "A1이 첫 output token을 P9에 쓰려 하지만 ref(P9)=2입니다. P3를 받아 P9를 복사하고 자기 table만 P3로 바꿉니다. ref(P9)는 1이 됩니다.",
+  "A1이 다음 token의 KV를 P9에 쓰려 하지만 ref(P9)=2입니다. P3를 받아 P9를 복사하고 자기 table만 P3로 바꿉니다. ref(P9)는 1이 됩니다.",
   "A2가 같은 자리에 쓸 때는 ref(P9)=1이므로 복사 없이 제자리에 씁니다. 복사된 block은 전체에서 하나뿐입니다.",
   "A1이 끝나면 P7·P2는 ref 1로 남고 P3는 ref 0이 되어 free queue로 돌아갑니다. A2의 KV는 손상되지 않습니다.",
 ] as const;
@@ -73,7 +73,7 @@ export default function ForkCopyOnWriteViz() {
       eyebrow="Sequence fork · copy-on-write"
       title="Fork는 block table을 복사하고, 쓰기가 일어나는 block 하나만 물리적으로 복사합니다"
       description="장면마다 두 sample의 block table과 physical block의 reference count가 어떻게 바뀌는지 봅니다. 색이 있는 block은 이번 장면에서 상태가 바뀐 block입니다."
-      note="논문 Fig. 8의 절차를 B=16, 35-token prompt에 맞춰 옮긴 그림입니다. 현재 V1은 fork API 대신 prefix cache로 앞부분 block을 공유하므로 복사가 일어나는 지점은 구현마다 다를 수 있습니다."
+      note="논문 Fig. 8의 절차를 B=16, 35-token prompt에 맞춰 옮긴 그림입니다. 원 논문의 fork 모형입니다. 현 고정 버전은 partial prefix hit의 CoW와 복사 완료 전 추가 ref도 별도로 구현합니다."
     >
       <div
         data-viz-canvas

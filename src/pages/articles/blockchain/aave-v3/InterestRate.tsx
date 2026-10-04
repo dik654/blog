@@ -1,37 +1,8 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { CitationBlock } from "@/components/ui/citation";
+import { CitationBlock } from "@/components/ui/citation-block";
 import ModernAaveViz from "./viz/ModernAaveViz";
-
-export default function InterestRate() {
-  return (
-    <section id="interest-rate" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Utilization kink는 liquidity 부족 비용을 두 기울기로 가격화한다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>가상 예제로 available liquidity 200, debt 800이면 borrow usage U=800/(200+800)=80%입니다. Optimal point를 넘으면 slope2가 남은 1−Uopt 구간에 정규화되어 빠르게 붙습니다. Supply rate는 borrow rate와 supply usage를 곱하고 reserve factor를 뺀 값입니다.</p>
-      </div>
-      <ModernAaveViz mode="rate" />
-      <ExplainedFormula
-        question="Optimal utilization 전후의 variable borrow rate를 어떻게 계산할까요?"
-        idea="Optimal point까지 slope1을 선형 배분하고, 그 위에서는 slope1을 모두 더한 뒤 초과 utilization 비율에 slope2를 적용합니다."
-        formula={String.raw`r_v(U)=\begin{cases}r_0+s_1U/U_* & U\le U_*\\ r_0+s_1+s_2(U-U_*)/(1-U_*) & U>U_*\end{cases},\quad r_L=r_vU_s(1-RF)`}
-        annotatedFormula={String.raw`r_v(U)=\begin{cases}r_0+s_1U/\underbrace{U_*}_{\text{borrow usage ratio 계산}} & U\le U_*\\ r_0+s_1+s_2(U-U_*)/(1-U_*) & U>U_*\end{cases},\quad r_L=\underbrace{r_vU_s(1-RF)}_{\text{허용 경계 판정}}`}
-        operations={[
-          { expression: String.raw`U_*`, annotation: ["borrow usage ratio이(가) 식의 결과에 기여하는","방식을 계산합니다.","Optimal point까지 slope1을 선형 배분하고, 그","위에서는 slope1을 모두 더한 뒤 초과"] },
-          { expression: String.raw`r_vU_s(1-RF)`, annotation: ["supply usage ratio이(가) 식의 결과에 기여하는","방식을 계산합니다.","Optimal point까지 slope1을 선형 배분하고, 그","위에서는 slope1을 모두 더한 뒤 초과"] },
-        ]}
-        terms={[
-          { symbol: "U", name: "borrow usage ratio", description: "totalDebt/(availableLiquidity+totalDebt)입니다." },
-          { symbol: "U_s", name: "supply usage ratio", description: "Unbacked까지 포함한 denominator를 쓰므로 source version에 따라 U와 다를 수 있습니다." },
-          { symbol: "RF", name: "reserve factor", description: "Borrow interest 중 treasury 측으로 귀속되는 governance parameter입니다." },
-        ]}
-        assumptions={["r₀,s₁,s₂,U*,RF는 같은 reserve config snapshot입니다.", "APR 표시는 ray/per-year 값을 UI scale로 바꾼 것이며 realized APY·future rate 보장이 아닙니다."]}
-        interpretation="r₀=2%,s₁=4%,s₂=75%,U*=80%,RF=10%,unbacked=0이면 U=80%에서 r_v=6%, r_L=4.32%입니다. U=90%에서는 r_v=43.5%, r_L=35.235%입니다. 다른 reserve의 slope를 섞으면 그럴듯하지만 존재하지 않는 curve가 됩니다."
-      />
-      <div id="paper-aave-rate-strategy" className="scroll-mt-24">
-        <CitationBlock source="Aave V3 origin · DefaultReserveInterestRateStrategyV2" href="https://github.com/aave-dao/aave-v3-origin/blob/cff15de6d1271b0c800fc001f4aea4c263e8a597/src/contracts/misc/DefaultReserveInterestRateStrategyV2.sol" citeKey={2}>
-          문제: Reserve utilization에 따라 variable borrow·liquidity rate를 계산합니다. 기여: optimal usage 전후 slope, supply usage, reserve factor와 parameter validation의 executable 식을 제공합니다. 전제: cff15de6d127 snapshot과 해당 Pool/reserve의 rate data입니다. 근거 범위: 이 strategy source의 rate 계산입니다. 비주장: 예시 숫자가 현재 특정 market의 governance config이거나 미래 rate를 예측한다고 주장하지 않습니다.
-        </CitationBlock>
-      </div>
-    </section>
-  );
-}
+import TeachCode from "./TeachCode";
+export default function InterestRate(){return <div className="mb-16 space-y-14 [&_section]:space-y-5 [&_h2]:text-2xl [&_h2]:font-bold [&_p]:leading-8">
+<section id="interest-rate" data-teach-level="6"><h2>10. 남은 자금이 적어지면 차입 이율이 빠르게 올라갑니다</h2><p>사례의 사용률은8000/(2000+8000)=80%입니다. 모두10으로 나눈 가용200·부채800도 같은80%입니다. 특정 비율까지는 이율을 완만하게 높이고 그 위에서는 더 빠르게 높이면 자금이 거의 소진되는 상황에서 차입을 줄이고 공급을 늘릴 유인이 생깁니다. 실제 참여자의 반응이나 즉시 출금을 보장하는 장치는 아닙니다.</p><p>기본 이율2%, 첫 구간 증가분4%포인트, 두 번째 구간 증가분75%포인트, 기준 사용률80%, 이자 중 프로토콜 몫10%라고 합시다(모두 가정). 사용률80%에서는 첫 증가분을 모두 더해 차입 이율이6%입니다. 사용률90%는 남은20%포인트 구간의 절반을 사용하므로75%포인트의 절반37.5를 추가해43.5%입니다.</p><ExplainedFormula question="기준 사용률 위아래를 같은 식으로 어떻게 연결할까요?" idea="각 구간에서 진행한 비율에 그 구간의 최대 증가분을 곱합니다. 공급 이율은 차입 이율에 실제 이자를 내는 비중과 공급자 몫을 곱합니다." formula={String.raw`r_v(U)=\begin{cases}r_0+s_1U/U_*&U\le U_*\\r_0+s_1+s_2(U-U_*)/(1-U_*)&U>U_*\end{cases},\quad r_L=r_vU_s(1-RF)`} annotatedFormula={String.raw`r_v=r_0+s_1+s_2\underbrace{\frac{U-U_*}{1-U_*}}_{\text{두 번째 구간 진행 비율}}\ (U>U_*),\quad r_L=r_v\underbrace{U_s}_{\text{이자를 내는 비중}}\underbrace{(1-RF)}_{\text{공급자 몫}}`} operations={[{expression:String.raw`U/U_*`,annotation:"첫 구간 끝80%를 기준으로 현재 사용률이 얼마나 진행했는지 구합니다."},{expression:String.raw`(U-U_*)/(1-U_*)`,annotation:"90%−80%=10%포인트를 남은20%포인트로 나누면 두 번째 구간의 절반입니다."},{expression:String.raw`r_vU_s(1-RF)`,annotation:"빌려준 자금이 내는 이자 중 프로토콜 몫을 제외해 공급 잔액에 배분합니다."}]} terms={[{symbol:"U",name:"차입 사용률",description:"총부채/(가용자금+총부채)입니다."},{symbol:"U_*",name:"기울기가 바뀌는 기준",description:"예제에서는80%이며 실제 자산별 설정입니다."},{symbol:"r_0,s_1,s_2",name:"기본값과 구간 증가분",description:"같은 reserve에 설정된 연율 기준 값입니다."},{symbol:"U_s",name:"공급 측 사용률",description:"소스는 분모에 unbacked를 추가할 수 있습니다."},{symbol:"RF",name:"프로토콜 이자 몫",description:"공급자에게 전부 배분하지 않고 별도로 귀속시키는 비율입니다."}]} assumptions={["동일한 자산 설정과 갱신 시점을 사용합니다.","연율 표시는 현재 계산 값으로 미래 이율이나 실현 복리 수익률을 보장하지 않습니다."]} interpretation="unbacked=0일 때80%에서 공급 이율은6%×80%×90%=4.32%입니다.90%에서는43.5%×90%×90%=35.235%입니다."/><ModernAaveViz mode="rate"/></section>
+<section id="rate-source" data-teach-level="6"><h2>11. 실제 분기는 정확히 80%일 때 아래 구간을 씁니다</h2><p>원문은 <code>borrowUsageRatio &gt; optimalUsageRatio</code>일 때만 두 번째 구간을 사용합니다. 같으면 else에서4%×80%/80%를 기본2%에 더해6%를 만듭니다. 다음 공급 이율 계산에서는6%에80%와90%를 차례로 곱합니다.</p><TeachCode codeKey="rate" label="사용률·두 이율 계산 실제 원문"/><p>이 구현의 availableLiquidity는 상태로 관리한 <code>virtualUnderlyingBalance</code>에 이번 증가를 더하고 감소를 뺀 값입니다. 언제나 토큰 계약의 balanceOf를 직접 읽은 잔액이라고 설명하면 안 됩니다. 사례에서는 이 계산 결과가2000이고 부채가 8000이라고 고정했습니다.</p><p>unbacked는 아직 대응 자산으로 뒷받침되지 않은 공급을 나타내는 값입니다. 이를1000으로 바꾸면 차입 사용률은 여전히8000/10000=80%지만 공급 측 비율은 8000/11000≈72.727%입니다. 공급 이율은약 3.92727%로 달라집니다. 부채가 0이면 이 함수는 공급 이율0과 기본 차입 이율로 바로 반환합니다.</p><div id="paper-aave-rate-strategy"><CitationBlock source="Aave Origin cff15de6 · DefaultReserveInterestRateStrategyV2, 124–169행" citeKey={2} href="https://github.com/aave-dao/aave-v3-origin/blob/cff15de6d1271b0c800fc001f4aea4c263e8a597/src/contracts/misc/DefaultReserveInterestRateStrategyV2.sol"><p>두 사용률의 분모, 기준 사용률 분기와 reserveFactor 차감을 원문으로 대조했습니다. 예제의2%·4%·75%는 이 함수에 넣는 가상 설정이며 특정 배포의 현재 값이 아닙니다.</p></CitationBlock></div><p>풀의 이율이 어떻게 잔액에 연결되는지 확인했습니다. 이제 C의 담보가 8000달러로 줄었을 때 누가 얼마를 갚고 무엇을 받는지 보겠습니다.</p></section>
+</div>}
