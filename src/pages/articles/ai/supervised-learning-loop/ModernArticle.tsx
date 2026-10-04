@@ -6,39 +6,29 @@ import TrainingLoopViz from "./TrainingLoopViz";
 const DLB = "https://www.deeplearningbook.org/contents/ml.html";
 const AUTODIFF = "https://jmlr.org/papers/v18/17-468.html";
 
-export default function SupervisedLearningLoopArticle() {
-  return (
-    <article className="space-y-16">
-      <section id="overview" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">00 · 한 쌍부터</p><h2 className="mt-2 text-2xl font-bold">Example은 input x와 target y의 역할을 묶은 한 건이다</h2></header>
-        <Term term="Input feature" shape="x" description="모델이 prediction을 만들 때 실제로 받는 관측값입니다." example="고양이 분류에서는 사진의 pixel tensor입니다." boundary="정답 label이나 미래 정보가 input에 섞이면 leakage가 됩니다." />
-        <Term term="Target" shape="y" description="Prediction이 맞았는지 loss가 비교할 기준입니다." example="사진의 정답 class인 ‘고양이’입니다." boundary="Target이 항상 사람이 붙인 label인 것은 아닙니다. Self-supervised 학습은 input에서 target을 구성하기도 합니다." />
-        <Term term="Parameterized model" shape="fθ" description="입력 x와 조절 가능한 숫자 θ를 받아 prediction을 만드는 함수입니다." example="ŷ=fθ(x)에서 θ는 weight와 bias입니다." boundary="Learning rate·batch size 같은 hyperparameter는 보통 gradient가 직접 고치는 θ가 아닙니다." />
-      </section>
 
-      <section id="tensor-batch" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">01 · 형태를 묶기</p><h2 className="mt-2 text-2xl font-bold">Tensor는 축의 뜻을 가진 숫자 배열이고 batch는 example 축이다</h2></header>
-        <p>RGB 사진 한 장의 shape를 C×H×W로 정했다면 32장을 묶은 input은 B×C×H×W=32×3×224×224가 됩니다.</p>
-        <ul className="space-y-3 pl-0">
-          <li className="list-none border-l border-sky-500 pl-4"><strong>B · batch:</strong> 서로 다른 example의 개수</li>
-          <li className="list-none border-l border-violet-500 pl-4"><strong>C · channel:</strong> 한 위치에 저장한 feature 종류</li>
-          <li className="list-none border-l border-emerald-500 pl-4"><strong>H·W · spatial:</strong> 사진 안의 세로·가로 위치</li>
-        </ul>
-        <p className="text-sm text-muted-foreground">
-            축 순서는 framework contract에 따라 달라질 수 있습니다. 숫자 32가 보인다고 자동으로 batch라고 단정하지 않습니다.
-          </p>
-        <TrainingLoopViz />
-      </section>
+import NumericPath from "../../world-systems/NumericPath";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 
-      <section id="training-step" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">02 · 처음으로 조합</p><h2 className="mt-2 text-2xl font-bold">Forward·loss·backward·update가 한 training step을 이룬다</h2></header>
-        <ol className="space-y-4 pl-0">
-          <Step number="1" title="Forward pass" detail="현재 θ로 prediction과 backward에 필요한 중간값을 만듭니다." />
-          <Step number="2" title="Loss" detail="Prediction과 target의 차이를 scalar objective로 모읍니다." />
-          <Step number="3" title="Backward" detail="Loss가 각 parameter에 얼마나 민감한지 gradient를 계산합니다." />
-          <Step number="4" title="Optimizer update" detail="Gradient와 optimizer state를 사용해 다음 θ를 정합니다." />
-        </ol>
-        <ExplainedFormula
+export default function SupervisedLearningLoopArticle(){return <article className="space-y-16">
+<section id="overview" data-teach-level="S" className="space-y-6"><h2 className="text-2xl font-bold">1. 정답과의 차이로 계산에 쓰는 숫자를 고칩니다</h2>
+<p className="leading-8">입력 1에는 2를, 입력 2에는 4를 답하는 계산을 만들고 싶습니다. 우선 입력에 1을 곱해 답하게 했더니 각각 1과 2가 나옵니다. 두 답 모두 작습니다. 정답을 본 뒤 곱하는 수를 조금 키우면 다음 답이 가까워질 것입니다. 이 입력·정답·시작값은 계산을 확인하기 위한 가정입니다 (가정).</p><p className="leading-8">실제 학습에서도 사람이 모든 답을 직접 계산식으로 적어 넣는 대신, 현재 답과 정답 사이의 차이로 조절 가능한 숫자를 고칩니다. 이때 답을 만드는 일, 얼마나 틀렸는지 재는 일, 어느 숫자를 얼마나 고칠지 결정하는 일을 구분해야 잘못된 갱신을 찾을 수 있습니다.</p><p className="leading-8">끝까지 사용할 자료는 두 쌍 (1, 2), (2, 4)입니다. 처음 곱하는 수는 1, 한 번에 움직이는 크기를 조절하는 수는 0.1로 두겠습니다 (가정). 오늘 확인할 결과는 한 번 고친 뒤 곱하는 수가 1.25가 되는 경로입니다.</p>
+</section>
+<section id="black-box" data-teach-level="B" className="space-y-6"><h2 className="text-2xl font-bold">2. 답 만들기와 숫자 고치기를 다른 단계로 봅니다</h2>
+<p className="leading-8">계산은 네 부분을 순서대로 지납니다. 두 문제를 받아 현재 규칙으로 답을 만듭니다. 정답과의 차이를 하나의 점수로 모읍니다. 규칙의 숫자를 움직일 때 그 점수가 어느 방향으로 변하는지 계산합니다. 마지막으로 그 방향을 이용해 규칙의 숫자를 한 번 고칩니다.</p><NumericPath title="현재 규칙으로 채점한 뒤 다음 규칙을 만듭니다" steps={[{label:"현재 답",value:"1, 2"},{label:"틀린 정도",value:"1.25"},{label:"변화 방향",value:"−2.5"},{label:"새 곱셈 수",value:"1.25"}]} /><p className="leading-8">가운데 1.25는 틀린 정도이고 마지막 1.25는 새 곱셈 수입니다. 숫자는 우연히 같지만 역할과 단위가 다릅니다. 이 둘을 한 변수에 덮어쓰지 않도록 각 단계가 무엇을 받아 무엇을 내는지 추적하겠습니다.</p>
+</section>
+<section id="case" data-teach-level="0" className="space-y-6"><h2 className="text-2xl font-bold">3. 두 오차를 제곱한 뒤 같은 기준으로 평균합니다</h2>
+<p className="leading-8">첫 문제의 답은 1, 정답은 2이므로 차이는 −1입니다. 둘째 문제의 답은 2, 정답은 4이므로 차이는 −2입니다. 양수와 음수 오차가 서로 지워지지 않게 제곱하고, 뒤 미분을 간단히 하려고 각각 절반을 취합니다. 두 문제의 점수는 0.5와 2, 평균은 1.25입니다.</p><p className="leading-8">한 문제만 잘 맞히는 쪽으로 움직이지 않도록 두 문제를 같은 비중으로 평균했습니다. 이 선택은 정의입니다. 절반을 빼거나 합계만 쓰면 틀린 순위는 같더라도 변화량의 크기가 달라지므로, 이동 크기도 함께 살펴야 합니다.</p><p className="leading-8">이 점수는 현재 답을 평가한 숫자입니다. 어떤 숫자를 고칠지 알아내려면 입력과 정답을 계산 경로에서 분리해 두어야 합니다.</p>
+</section>
+<section id="parts" data-teach-level="1" className="space-y-6"><h2 className="text-2xl font-bold">4. 채점 상자 안에는 두 비교와 하나의 합산이 있습니다</h2><p className="leading-8">채점 단계를 열면 첫 답 1과 첫 정답 2의 차이, 둘째 답 2와 둘째 정답 4의 차이를 구하는 두 부분이 있습니다. 각 차이를 제곱하고 절반을 취한 뒤 마지막 부분이 두 값을 평균합니다. 답을 만드는 데 쓰는 공통 수 1은 아직 바꾸지 않습니다.</p><NumericPath title="두 문제를 따로 비교한 뒤 한 점수로 모읍니다" steps={[{label:"각 답과 정답",value:"1−2, 2−4"},{label:"각 차이의 제곱 절반",value:"0.5, 2"},{label:"두 점수의 평균",value:"1.25"}]} /><p className="leading-8">두 비교는 따로 진행하지만 마지막 점수는 하나입니다. 같은 값을 언제 공유하고 언제 숨겨야 하는지 정해야 이 구조가 새 문제에도 쓸 수 있는 규칙을 배웁니다.</p></section><section id="why-parts" data-teach-level="2" className="space-y-6"><h2 className="text-2xl font-bold">5. 정답은 채점에 쓰고, 다음 답을 만들 때는 숨깁니다</h2>
+<p className="leading-8">입력 2로 답을 만드는 계산이 정답 4까지 읽을 수 있다면, 곱셈 규칙을 배우지 않고 정답을 그대로 복사할 수 있습니다. 그러면 정답을 모르는 새 문제에서 같은 동작을 할 수 없습니다. 답을 만드는 부분에는 입력만 전달하고, 채점하는 부분에서 정답을 따로 비교합니다.</p><p className="leading-8">또한 두 문제는 같은 곱셈 수를 사용해야 합니다. 첫 문제용 수와 둘째 문제용 수를 따로 저장하면 새로운 입력에 쓸 공통 규칙이 사라집니다. 한 번 채점하는 동안에는 이 공통 수를 고정하고, 두 문제의 기여를 모두 모은 다음 한 번 바꿉니다.</p><p className="leading-8">무엇을 숨기고 무엇을 공유할지가 정해졌습니다. 이 역할에 이름을 붙이면 큰 사진 배열을 넣어도 같은 계산 순서를 유지할 수 있습니다.</p>
+</section>
+<section id="names" data-teach-level="3" className="space-y-6"><h2 className="text-2xl font-bold">6. 한 바퀴의 역할을 실제 용어에 대응합니다</h2><p className="leading-8">정답을 숨겨 답을 만들고, 차이를 모아 공유하는 수를 한 번 고치는 역할을 확인했습니다. 아래 이름들은 이 역할을 문서와 코드에서 찾는 데 쓰입니다.</p><div className="overflow-x-auto"><table className="w-full min-w-[600px] text-left text-sm leading-7"><thead><tr><th className="w-1/2 p-3">앞에서 본 역할</th><th className="p-3">표준 이름과 뜻</th></tr></thead><tbody><tr><td className="border-t border-border p-3">답을 만들 때 주어지는 1과 2</td><td className="border-t border-border p-3">Input feature: 모델이 실제로 받는 관측값 x입니다.</td></tr><tr><td className="border-t border-border p-3">채점할 때 비교하는 2와 4</td><td className="border-t border-border p-3">Target: 예측과 비교할 정답 y입니다.</td></tr><tr><td className="border-t border-border p-3">입력에 공통 수 θ를 곱하는 계산</td><td className="border-t border-border p-3">Parameterized model: 조절 가능한 숫자를 가진 같은 함수 fθ(x)=θx입니다.</td></tr><tr><td className="border-t border-border p-3">학습으로 직접 고치는 공통 수 θ</td><td className="border-t border-border p-3">Parameter: 현재 답을 만드는 조절 가능한 숫자입니다.</td></tr><tr><td className="border-t border-border p-3">이번 이동 크기로 정한 0.1</td><td className="border-t border-border p-3">Hyperparameter: 학습 규칙을 정하는 설정이며 이번 계산에서 직접 미분해 고치는 θ와 다릅니다.</td></tr><tr><td className="border-t border-border p-3">현재 θ를 고정한 채 답을 만들기</td><td className="border-t border-border p-3">Forward pass: 예측과 이후 계산에 필요한 중간값을 만듭니다.</td></tr><tr><td className="border-t border-border p-3">얼마나 틀렸는지를 하나로 모으기</td><td className="border-t border-border p-3">Loss: 이번 예에서는 개별 ½제곱오차의 평균입니다.</td></tr><tr><td className="border-t border-border p-3">θ별로 손실의 변화율을 계산하기</td><td className="border-t border-border p-3">Backward: 뒤에서 앞으로 미분을 연결해 변화율을 계산합니다.</td></tr><tr><td className="border-t border-border p-3">계산된 변화율로 θ를 실제로 바꾸기</td><td className="border-t border-border p-3">Optimizer update: 학습된 수를 다음 값으로 이동하는 단계입니다.</td></tr></tbody></table></div><p className="leading-8">사진 분류에서는 input이 사진 숫자 배열이고 target이 고양이 같은 정답 이름입니다. Target이 반드시 사람이 붙인 이름일 필요는 없습니다. 입력 일부를 가리고 그 부분을 맞히는 self-supervised 학습은 자료에서 정답을 만듭니다. 이 경우에도 가린 정답을 답을 만드는 경로에 그대로 노출하면 과제가 달라집니다.</p><p className="leading-8">변화율을 계산하는 것과 숫자를 바꾸는 것을 구별하면 각각의 오류를 찾기 쉽습니다. 같은 규칙에 여러 문제를 함께 넣는 배열의 모양도 확인하겠습니다.</p></section>
+<section id="tensor-batch" data-teach-level="3" className="space-y-6"><h2 className="text-2xl font-bold">7. 여러 문제를 묶되 각 축의 뜻을 보존합니다</h2>
+<p className="leading-8">축마다 의미를 붙인 숫자 배열을 tensor라고 부릅니다. 서로 다른 문제 여러 개를 같은 계산에 넣는 묶음이 batch입니다. 이 예는 두 행에 각각 입력 한 개를 둔 2×1 배열이며, 두 행이 같은 θ를 공유합니다.</p><p className="leading-8">사진이라면 RGB 세 색을 channel 축으로 두고, 세로와 가로를 별도 축으로 둡니다. 사진 32장을 묶은 배열의 한 가지 약속은 B×C×H×W=32×3×224×224입니다 (가정). 숫자 32가 항상 문제 개수를 뜻하는 것은 아니므로, 배열 크기와 함께 축 순서를 확인합니다.</p><p className="leading-8">B와 C를 바꿔서 3×32×224×224를 전달하면 일부 계산은 형태 검사를 통과해도 세 문제에 각각 32색이 있다는 다른 뜻이 됩니다. 반대로 두 축 크기가 같으면 모양 자체도 같아져 더 찾기 어렵습니다. 입력 한 행에 알려진 값을 넣어 어느 축으로 결과가 움직이는지 확인하는 이유입니다.</p><TrainingLoopViz /><p className="leading-8">두 행을 묶어도 각 행의 답과 오차를 계산한 뒤 하나의 갱신으로 모은다는 원칙은 같습니다. 이제 첫 절의 숫자를 그 순서대로 움직여 보겠습니다.</p>
+</section>
+<section id="training-step" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">8. 1에서 시작한 공통 숫자가 1.25가 되는 한 바퀴</h2>
+<p className="leading-8">θ=1일 때 두 예측은 1과 2이고, 개별 손실은 0.5와 2입니다. 손실 ½(θx−y)²를 θ로 미분하면 (θx−y)x가 됩니다. 안쪽 차이가 θ에 따라 x배로 움직이기 때문입니다. 첫 행의 기여는 (1−2)×1=−1, 둘째 행은 (2−4)×2=−4입니다.</p><p className="leading-8">두 기여를 평균하면 (−1−4)/2=−2.5입니다. 이것이 gradient, 현재 지점의 변화율입니다. 이동 크기 0.1을 곱한 반대 방향으로 고치면 θ′=1−0.1×(−2.5)=1.25가 됩니다. 새 예측은 1.25와 2.5, 새 개별 손실은 0.28125와 1.125, 평균은 0.703125입니다.</p><ExplainedFormula
           question="한 batch의 오차가 parameter update로 이어지는 이유는 무엇일까요?"
           idea={<>각 example의 loss를 같은 기준으로 평균한 뒤, 그 평균이 가장 빠르게 증가하는 gradient의 반대 방향으로 parameter를 조금 이동합니다.</>}
           formula={String.raw`\hat y_i=f_\theta(x_i),\quad \mathcal L_B=\frac{1}{|B|}\sum_{i\in B}\ell(\hat y_i,y_i),\quad \theta_{t+1}=\theta_t-\eta\nabla_\theta\mathcal L_B`}
@@ -57,29 +47,18 @@ export default function SupervisedLearningLoopArticle() {
           ]}
           assumptions={["기본 gradient descent를 보이는 식이며 AdamW는 추가 state와 update 규칙을 사용합니다.", "Loss 감소가 새로운 data의 성능 향상을 자동으로 뜻하지 않습니다."]}
           interpretation="Backpropagation은 gradient를 계산하고 optimizer는 그 gradient로 parameter를 바꿉니다. 두 책임을 한 단어로 합치지 않습니다."
-        />
-      </section>
-
-      <section id="inference" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">03 · 반복 밖의 경계</p><h2 className="mt-2 text-2xl font-bold">Inference는 parameter를 고정하고 forward만 사용한다</h2></header>
-        <div className="grid gap-4 md:grid-cols-2">
-          <Compare title="Training" lines={["input + target", "forward + saved intermediates", "loss + backward", "optimizer가 θ 변경"]} />
-          <Compare title="Inference" lines={["새 input", "forward", "prediction", "θ는 고정"]} />
-        </div>
-        <p>
-            없는 것은 parameter 갱신이지 runtime state가 아닙니다. 생성 model은 KV cache를 만들 수 있고 batch·latency·memory 제약도
-            남습니다.
-          </p>
-        <p>다음 단계에서 학습용 data와 선택·보고용 data를 섞지 않는 <a className="font-semibold text-primary underline" href="/cs/ai/train-validation-test">Train·validation·test 경계</a>를 봅니다.</p>
-        <div id="paper-supervised-learning"><CitationBlock source="Deep Learning Book · Machine Learning Basics" citeKey={1} href={DLB}><Evidence problem="Supervised learning의 input·target·model·empirical objective 역할 구분" contribution="Learning algorithm과 generalization을 공통 표기로 정리" assumptions="명시된 data-generating process와 loss·model family" scope="교과서의 supervised learning 기본 정의" notClaim="특정 architecture나 optimizer의 우월성 보장이 아님" /></CitationBlock></div>
+        /><p className="leading-8">같은 두 문제를 합계로 모으면 gradient는 −5입니다. 이동 크기 0.1을 그대로 쓰면 θ′=1.5로 더 멀리 움직입니다. 평균을 합계로 바꾸면서 같은 크기의 갱신을 유지하려면 이 예에서는 이동 크기를 0.05로 바꿉니다. 데이터 묶음의 크기와 손실을 모으는 방식은 함께 기록해야 합니다.</p><AlgorithmBlock title="두 행의 평균 손실로 한 번 갱신하기 (의사코드)" input={["(x,y) = [(1,2),(2,4)], θ=1, 이동 크기=0.1 (가정)"]} steps={[{code:"각 행의 예측 ŷᵢ ← θ × xᵢ"},{code:"개별 손실 ℓᵢ ← (ŷᵢ − yᵢ)² / 2"},{code:"g ← ((ŷ₁ − y₁)x₁ + (ŷ₂ − y₂)x₂) / 2"},{code:"새 θ ← θ − 0.1 × g",note:"두 행 모두 기존 θ로 계산한 뒤 마지막에 한 번 바꿉니다."}]} output="g=−2.5, 새 θ=1.25, 같은 자료의 새 평균 손실=0.703125" /><p className="leading-8">이 계산에서는 손실이 줄었지만 모든 이동 크기에 대해 그렇지는 않습니다. 우선 원문의 갱신 식과 이번 대입이 같은 동작인지 확인하겠습니다.</p>
+</section>
+<section id="source-update" data-teach-level="5" className="space-y-6"><h2 className="text-2xl font-bold">9. 원문의 평균 기울기와 갱신 식에 대입합니다</h2>
+<p className="leading-8">Deep Learning 5.9절 149–150쪽의 식 (5.98)은 m′개 문제의 손실 변화율을 평균하고, 식 (5.99)은 그 평균 g의 반대 방향으로 θ를 움직입니다. 원문은 이동 크기를 ε로 씁니다. 이 글의 η와 같은 역할이며, 여기서는 ε=0.1입니다.</p><ExplainedFormula question="원문 식 (5.98)–(5.99)에 두 행의 기여를 넣으면 무엇이 바뀔까요?" idea={<>문제 수 m′로 나누어 평균 기울기를 만들고, 그 기울기만큼 현재 parameter를 옮깁니다.</>} formula={String.raw`g=\frac{1}{m'}\nabla_\theta\sum_{i=1}^{m'}L(x^{(i)},y^{(i)},\theta),\qquad\theta\leftarrow\theta-\epsilon g`} annotatedFormula={String.raw`g=\underbrace{\frac{1}{m'}}_{\text{문제 수로 평균}}\underbrace{\nabla_\theta\sum_{i=1}^{m'}L(x^{(i)},y^{(i)},\theta)}_{\text{각 문제의 변화율을 모음}},\qquad\theta\leftarrow\theta-\underbrace{\epsilon g}_{\text{이동 크기와 방향}}`} operations={[{expression:String.raw`\frac{1}{m'}`,annotation:["이번 묶음의 문제 수 2로 나누어","평균 변화율을 만듭니다"]},{expression:String.raw`\epsilon g`,annotation:["0.1에 −2.5를 곱한 뒤","현재 θ에서 뺍니다"]}]} terms={[{symbol:"m'",name:"이번 묶음의 크기",description:"전체 자료 크기가 아니라 이번에 계산하는 두 행입니다."},{symbol:"g",name:"평균 gradient",description:"이 예에서는 (−1−4)/2=−2.5입니다."},{symbol:String.raw`\epsilon`,name:"이동 크기",description:"원문의 learning rate 기호입니다."}]} assumptions={["미분 가능한 행별 손실을 평균하는 경우입니다.","이번 예는 ½제곱오차를 쓰며, 원문이 예로 드는 음의 로그우도와 같은 값이라고 주장하지 않습니다."]} interpretation="원문 순서에 따라 g=−2.5를 먼저 만든 뒤 θ=1을 1.25로 바꿉니다. 평균 손실 자체를 θ에서 빼는 계산이 아닙니다." /><a href="https://www.deeplearningbook.org/contents/ml.html" target="_blank" rel="noreferrer" className="text-primary underline">원문: Deep Learning 5.9절, 식 (5.98)–(5.99)</a><p className="leading-8">손실의 변화율을 구하는 일과 숫자를 바꾸는 일이 원문에서도 분리됩니다. 실제로 사용하거나 다시 학습할 때는 어떤 상태를 남겨야 하는지도 달라집니다.</p>
+</section>
+<section id="inference" data-teach-level="6" className="space-y-6"><h2 className="text-2xl font-bold">10. 학습을 멈춘 뒤에는 같은 숫자로 새 답만 계산합니다</h2>
+<p className="leading-8">한 번 갱신한 θ=1.25를 고정하고 새 입력 3을 넣으면 3.75가 나옵니다. Deep Learning 5.1.4절 107쪽의 식 (5.13)은 실제 예측을 ŷ=wᵀx+b로 씁니다. 입력 한 칸인 이번 사례에서는 w=1.25, x=3, b=0을 넣어 3.75를 얻습니다. 이처럼 parameter를 고정하고 답을 계산하는 사용을 inference라고 합니다. 정답이나 backward, optimizer update는 이 계산에 필요하지 않습니다. 한 번 학습했으므로 정답 규칙인 2배에 도달했다는 뜻도 아닙니다.</p><p className="leading-8">학습을 이어 하려면 어떤 두 행을 어떤 순서로 썼는지, θ의 저장값, 손실 정의와 평균 방식, 이동 크기, optimizer의 추가 상태를 보존해야 합니다. 이 예의 단순 갱신은 과거 변화율을 저장하지 않지만 다른 갱신법은 과거 값을 다음 계산에 씁니다. 저장한 parameter 묶음을 checkpoint라고 부릅니다.</p><p className="leading-8">Inference에서 고정되는 것은 학습한 parameter입니다. 긴 문장을 생성할 때 이미 계산한 중간값을 저장하는 KV cache처럼 실행 중 변하는 상태는 남을 수 있습니다. 메모리, 묶음 크기, 응답 시간도 여전히 확인 대상입니다.</p>        <div id="paper-supervised-learning"><CitationBlock source="Deep Learning Book · Machine Learning Basics" citeKey={1} href={DLB}><Evidence problem="Supervised learning의 input·target·model·empirical objective 역할 구분" contribution="Learning algorithm과 generalization을 공통 표기로 정리" assumptions="명시된 data-generating process와 loss·model family" scope="교과서의 supervised learning 기본 정의" notClaim="특정 architecture나 optimizer의 우월성 보장이 아님" /></CitationBlock></div>
         <div id="paper-autodiff-survey"><CitationBlock source="Automatic Differentiation in Machine Learning: a Survey" citeKey={2} href={AUTODIFF}><Evidence problem="Derivative 계산과 optimization update를 구분" contribution="Forward·reverse accumulation과 computational graph 비용을 정리" assumptions="Primitive derivative와 추적 가능한 program" scope="Autodiff 계산 원리와 implementation taxonomy" notClaim="Optimizer 수렴이나 generalization을 보장하지 않음" /></CitationBlock></div>
-        <ContentBoundary article="supervised-learning-loop" />
-      </section>
-    </article>
-  );
-}
-
-function Term({ term, shape, description, example, boundary }: { term: string; shape: string; description: string; example: string; boundary: string }) { return <div className="grid gap-3 border-l border-primary/70 pl-5 sm:grid-cols-[7rem_1fr]"><div><p className="text-xs font-bold text-primary">용어</p><p className="mt-1 font-bold">{term}</p><p className="mt-2 font-mono text-lg font-black">{shape}</p></div><div><p className="leading-7">{description}</p><p className="mt-2 text-sm text-muted-foreground"><strong className="text-foreground">예:</strong> {example}</p><p className="mt-2 text-sm text-muted-foreground"><strong className="text-foreground">경계:</strong> {boundary}</p></div></div>; }
-function Step({ number, title, detail }: { number: string; title: string; detail: string }) { return <li className="grid list-none grid-cols-[2rem_1fr] gap-3"><span className="flex h-8 w-8 items-center justify-center rounded-full border border-primary font-mono text-xs font-black">{number}</span><div><p className="font-bold">{title}</p><p className="mt-1 text-sm leading-6 text-muted-foreground">{detail}</p></div></li>; }
-function Compare({ title, lines }: { title: string; lines: string[] }) { return <div className="border border-border p-5"><p className="font-bold text-primary">{title}</p><div className="mt-4 space-y-2">{lines.map((line,index)=><div key={line} className="flex items-center gap-3 text-sm"><span className="font-mono text-xs text-muted-foreground">{index+1}</span><span>{line}</span></div>)}</div></div>; }
+<p className="leading-8">실제 라이브러리의 미분은 여러 계산의 변화율을 이어 계산합니다. 그 내부 경로는 <a href="/cs/ai/reverse-mode-autodiff" className="text-primary underline">역방향 자동미분</a>에서 이어서 살펴봅니다.</p>
+</section>
+<section id="limits" data-teach-level="7" className="space-y-6"><h2 className="text-2xl font-bold">11. 손실 감소가 보장하는 범위를 확인합니다</h2>
+<p className="leading-8">이동 크기를 1로 바꾸면 같은 g=−2.5에서 θ′=3.5가 됩니다. 새 예측은 3.5와 7, 개별 손실은 1.125와 4.5, 평균은 2.8125로 처음의 1.25보다 커집니다. 현재 변화율의 반대 방향이라는 조건만으로 큰 이동 뒤의 손실 감소가 보장되지는 않습니다.</p><p className="leading-8">0.1을 쓴 원래 예에서 손실이 줄었다고 처음 보지 않은 자료까지 잘 맞힌다는 결론도 나오지 않습니다. 틀린 정답을 학습하거나 실제 사용 때와 다른 입력을 보면 연습 점수와 실제 성능이 갈라집니다. 학습·선택·최종 평가 자료를 나누는 이유는 <a href="/cs/ai/train-validation-test" className="text-primary underline">다음 글</a>에서 확인합니다.</p><ContentBoundary article="supervised-learning-loop" /><h3 className="text-xl font-semibold">읽은 내용으로 예측해 보세요</h3><ol className="list-decimal space-y-3 pl-6"><li>두 행의 기여를 평균하지 않고 더하면서 이동 크기 0.1을 유지하면 새 θ는 얼마일까요? (답: 8절)</li><li>θ=1.25를 고정한 뒤 입력 3을 넣을 때 정답이나 backward가 필요할까요? (답: 10절)</li><li>같은 첫 기울기에 이동 크기 1을 쓰면 손실은 왜 오히려 커질까요? (답: 11절)</li></ol>
+</section>
+</article>;}
 function Evidence({ problem, contribution, assumptions, scope, notClaim }: { problem: string; contribution: string; assumptions: string; scope: string; notClaim: string }) { return <div className="space-y-2"><p><strong>문제:</strong> {problem}</p><p><strong>핵심 아이디어:</strong> {contribution}</p><p><strong>중요 가정:</strong> {assumptions}</p><p><strong>근거 범위:</strong> {scope}</p><p><strong>일반화 금지:</strong> {notClaim}</p></div>; }

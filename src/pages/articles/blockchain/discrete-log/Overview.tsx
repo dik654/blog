@@ -1,44 +1,54 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ExplainedFormula from "@/components/ui/explained-formula";
-import { CitationBlock } from "@/components/ui/citation";
-import CryptoFoundationsViz from "../crypto-foundations-viz";
 
 export default function Overview() {
-  return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">이산로그는 group element에서 숨은 scalar를 되찾는 문제다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="text-lg leading-8">
-          공개키 암호에서 signer는 secret scalar x를 고르고 공개 group element Y=gˣ 또는 additive notation의 Y=[x]G를 공개합니다. x에서 Y로 가는 scalar multiplication은 double-and-add나 square-and-multiply로 빠르지만, Y만 보고 x를 되찾는 discrete logarithm problem(DLP)은 적절한 큰 subgroup에서 비싸다고 가정합니다. “유한체의 로그”라는 표현보다 <strong>고정 generator에 대한 group element의 지수 좌표를 찾는 문제</strong>라고 읽는 편이 정확합니다.
-        </p>
-        <p>
-          먼저 group·generator·order를 고정해야 문제의 범위가 정해집니다. g가 order q인 subgroup을 생성하면 x는 mod q에서만 유일하고, Y가 그 subgroup 밖에 있으면 해가 없습니다. Field arithmetic와 multiplicative order는 <Link to="/cs/crypto/finite-field-theory#prime-field">유한체 정본</Link>, elliptic-curve point group의 구현은 <Link to="/cs/crypto/elliptic-curves">타원곡선 정본</Link>에서 이어집니다.
-        </p>
-      </div>
-      <ContentBoundary article="discrete-log" />
-      <CryptoFoundationsViz mode="dlp-asymmetry" />
-      <ExplainedFormula
-        question="큰 x에서도 gˣ을 왜 빠르게 계산할 수 있을까요?"
-        idea="x를 binary로 분해하고 매 bit마다 현재 값을 square한 뒤 bit가 1일 때만 g를 곱합니다. 지수 크기가 아니라 지수를 적는 bit 수에 비례합니다."
-        formula={String.raw`x=\sum_{i=0}^{\ell-1}b_i2^i\quad\Longrightarrow\quad g^x=\prod_{i:b_i=1}g^{2^i},\qquad \ell=\lfloor\log_2x\rfloor+1`}
-        annotatedFormula={String.raw`x=\underbrace{\sum_{i=0}^{\ell-1}b_i2^i\quad\Longrightarrow\quad g^x=\prod_{i:b_i=1}g^{2^i},\qquad \ell=\lfloor\log_2x\rfloor+1}_{\text{로그 비용 변환}}`}
-        operations={[
-          { expression: String.raw`\sum_{i=0}^{\ell-1}b_i2^i\quad\Longrightarrow\quad g^x=\prod_{i:b_i=1}g^{2^i},\qquad \ell=\lfloor\log_2x\rfloor+1`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","x를 binary로 분해하고 매 bit마다"] },
-        ]}
-        terms={[
-          { symbol: "b_i", name: "exponent bit", description: "x의 i번째 binary digit로 0 또는 1입니다." },
-          { symbol: "g^{2^i}", name: "successive squares", description: "직전 값을 한 번 square해 얻는 group element입니다." },
-          { symbol: String.raw`\ell`, name: "bit length", description: "필요한 square step 수의 크기를 정합니다." },
-        ]}
-        assumptions={["Group operation과 equality가 효율적이고 g·Y encoding이 canonical합니다.", "Side-channel이 중요한 secret exponent 구현은 constant-time algorithm을 별도로 사용합니다."]}
-        interpretation="x=13=1101₂이면 g,g²,g⁴,g⁸을 만들고 g·g⁴·g⁸을 곱합니다. 약 log₂x step이라는 정방향 비용만으로 역방향이 어렵다는 사실이 증명되지는 않으며, 다음 절의 공격을 따로 분석해야 합니다."
-      />
-      <div id="paper-pollard-dlp" className="scroll-mt-24">
-        <CitationBlock source="Pollard (1978) · Monte Carlo Methods for Index Computation (mod p)" href="https://doi.org/10.1090/S0025-5718-1978-0491431-9" citeKey={1}>
-          문제: 큰 cyclic group의 index, 즉 discrete logarithm을 큰 lookup table 없이 찾습니다. 기여: pseudo-random walk와 collision을 이용한 rho method를 제시해 기대 O(√q) group operations와 작은 memory trade-off를 만듭니다. 전제: group order·partition/walk와 collision equation이 유효합니다. 근거 범위: 논문의 algorithm과 분석 범위입니다. 비주장: 모든 구체 group에서 최선의 공격이 generic rho이거나 256-bit modulus가 곧 128-bit security라는 뜻은 아닙니다.
-        </CitationBlock>
-      </div>
+  return <div className="space-y-12 [&_section]:space-y-5 [&_p]:leading-8 [&_h2]:text-2xl [&_h2]:font-bold">
+    <section id="overview" data-teach-level="S">
+      <h2>1. 공개된 결과에서 비밀 숫자를 되찾기 어렵게 만듭니다</h2>
+      <p>
+            다른 사람이 확인할 값은 공개하면서 그 값을 만든 비밀 숫자는 숨겨야 하는 경우가 있습니다. 비밀을 아는 사람은 공개 값을 빠르게 계산하고 공개 값만 받은 사람은 비밀을 되찾는
+            데 훨씬 많은 일을 하도록 설계합니다. 이 차이가 충분해야 남이 공개 정보를 보고 자신을 흉내 내기 어렵습니다.
+          </p>
+      <p>계산을 한 방향으로 빨리 한다는 사실만으로 반대 방향이 어렵다고 증명되지는 않습니다. 되돌리는 방법을 실제로 찾아보고 필요한 시간과 저장 공간을 비교해야 합니다. 이 글에서는 손으로 풀 수 있는 작은 계산을 먼저 끝내고, 큰 수로 바꿀 때 어느 비용이 커지는지 살펴봅니다.</p>
+      <p>
+            사용하는 숫자 세계가 바뀌면 더 빠른 공격이 생길 수 있다는 것이 확인해야 할 경계입니다. 먼저 비밀 입력과 공개 출력 사이의 관계를 열지 않은 채 전체 흐름을 보겠습니다.
+          </p>
     </section>
-  );
+    <section id="black-box" data-teach-level="B">
+      <h2>2. 숫자를 고르고, 반복 계산하고, 결과만 공개합니다</h2>
+      <ol className="list-decimal space-y-3 pl-6"><li>얼마나 반복할까 → 비밀 숫자를 고릅니다.</li><li>한 번에 어떻게 바꿀까 → 모두가 아는 계산 규칙을 반복합니다.</li><li>어디에 도착했을까 → 마지막 값만 공개합니다.</li><li>몇 번 반복했을까 → 공격자는 도착 값에서 출발해 비밀 숫자를 찾습니다.</li></ol>
+      <p>공격자도 계산 규칙은 알고 있습니다. 규칙을 숨겨서 생기는 어려움이 아니라 같은 규칙을 되짚는 비용을 따지는 문제입니다. 작은 숫자에서는 공격자도 쉽게 답을 찾을 수 있으므로 과정을 눈으로 확인하기 좋습니다.</p>
+    </section>
+    <section id="worked-case" data-teach-level="0">
+      <h2>3. 3을 다섯 번 곱해 17로 나눈 나머지는 5입니다</h2>
+      <p>
+            1에서 출발해 3을 곱하고 매번 17로 나눈 나머지만 남깁니다. 반복 횟수를 5로 정하면 1 → 3 → 9 → 10 → 13 → 5가 됩니다. 공개하는 값은 5이고 숨기려는
+            값은 반복 횟수 5입니다(가정). 두 값이 우연히 같지만 각각 결과 값과 반복 횟수를 뜻합니다.
+          </p>
+      <p>3×3=9 다음에는 9×3=27에서 17을 빼 10을 남깁니다. 그다음 10×3=30은 13이 되고, 13×3=39는 5가 됩니다. 나머지를 바로 남겨도 마지막에 한 번 나머지를 구한 결과와 같습니다. 곱셈 결과가 끝없이 커지지 않게 하는 계산입니다.</p>
+      <p>받는 사람은 17과 3, 마지막 값 5를 압니다. 몇 번 곱했는지를 직접 세면 여기서는 답을 금방 찾습니다. 이제 반복 횟수가 커질 때 정방향 계산과 역방향 탐색이 어떻게 달라지는지 보겠습니다.</p>
+    </section>
+    <section id="parts" data-teach-level="1">
+      <h2>4. 계산 규칙에는 나머지 기준과 한 번의 이동이 함께 있습니다</h2>
+      <p>이 문제를 정하려면 세 가지 질문에 답해야 합니다. 어떤 값들을 쓰는가, 한 번에 무엇을 곱하는가, 몇 번 만에 처음 값으로 돌아오는가입니다. 같은 17을 쓰더라도 3 대신 4를 곱하면 1 → 4 → 16 → 13 → 1의 네 값만 돌게 됩니다.</p>
+      <p>3을 곱하는 경우에는 16번 뒤 1로 돌아옵니다. 그래서 반복 횟수 5와 21은 같은 결과 5를 만듭니다. 공개된 결과로 정수 전체에서 유일한 횟수를 찾는 문제가 아닙니다. 한 바퀴 안의 어느 위치인지 찾는 문제입니다.</p>
+      <p>이 세 질문이 정해져야 찾는 답의 범위도 정해집니다. 규칙을 임의로 고를 수 없는 이유를 확인한 뒤 표준 이름을 붙이겠습니다.</p>
+    </section>
+    <section id="why-parts" data-teach-level="2">
+      <h2>5. 짧은 순환에서는 큰 숫자를 붙여도 비밀 후보가 적습니다</h2>
+      <p>4를 곱하는 네 칸짜리 순환에서 반복 횟수를 아주 큰 정수로 골라도 공개 결과는 네 가지뿐입니다. 공격자는 후보 네 개만 확인하면 됩니다. 더구나 마지막 값으로 3을 받았다면 이 순환에서는 그런 결과에 도착할 수조차 없습니다.</p>
+      <p>
+            이 때문에 공개 입력이 허용된 순환 안에 있는지 검사하고 비밀 숫자의 후보 공간이 충분히 큰지 확인합니다. 단순히 나머지를 구하는 기준 숫자의 자릿수가 크다는 이유만으로
+            안전하다고 판단할 수 없습니다.
+          </p>
+      <p>작은 예에서 필요한 요소가 모두 드러났습니다. 다음 이름들은 새 장치를 추가하는 것이 아니라 이미 계산한 역할을 부르는 말입니다.</p>
+    </section>
+    <section id="names" data-teach-level="3">
+      <h2>6. 찾는 것은 고정된 생성원에서 출발한 지수 좌표입니다</h2>
+      <dl className="space-y-4"><div><dt className="font-semibold">서로 곱하고 되돌릴 수 있는 값들의 집합 → 군</dt><dd>이 사례는 17로 나눈 0 아닌 나머지들의 곱셈군입니다. <Link to="/cs/crypto/finite-field-theory#prime-field">유한체 글</Link>에서 나눗셈을 되돌리는 값의 존재를 설명합니다.</dd></div><div><dt className="font-semibold">반복해서 곱할 출발 규칙 → 생성원 g</dt><dd>g=3은 이 집합의 모든 값을 방문합니다. 자신이 방문하는 순환이 전체보다 작으면 그 부분을 부분군이라고 합니다.</dd></div><div><dt className="font-semibold">처음으로 1에 돌아오는 횟수 → 위수 q</dt><dd>g=3의 q는 16, g=4의 q는 4입니다. 숨은 지수 x는 q로 나눈 나머지 범위에서 읽습니다.</dd></div><div><dt className="font-semibold">Y=gˣ에서 x를 찾는 문제 → 이산로그 문제</dt><dd>Discrete Logarithm Problem, 줄여서 DLP입니다. 이산은 값들이 연속된 실수가 아니라 떨어진 원소라는 뜻입니다. 실수 로그 버튼으로 풀 수 있는 같은 문제가 아닙니다.</dd></div></dl>
+      <p><Link to="/cs/crypto/elliptic-curves">타원곡선</Link>에서는 곱셈 대신 점 덧셈을 반복하고 같은 관계를 Y=[x]G로 적습니다. 어느 표현이든 공개 값에서 숨은 반복 횟수를 찾는다는 질문은 같습니다.</p>
+      <ContentBoundary article="discrete-log" />
+      <p>이제 g=3, q=16, Y=5를 그대로 사용해 순환의 전체 모습과 공격의 경로를 확인합니다.</p>
+    </section>
+  </div>;
 }

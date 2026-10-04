@@ -1,109 +1,259 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { AgentLoopViz } from "./viz/ModernAgentPatternViz";
 
-export default function AgentLoopArticle() {
+export default function Article() {
   return (
     <div className="space-y-16">
-      <section id="agent-definition" className="scroll-mt-20">
+      <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Agent는 script가 아니라 model이 다음 action을 정하는 시스템입니다
+          1. 답을 쓰기 전에 실제로 고쳐졌는지 알아야 합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            고정된 순서로 정해진 단계를 실행하는 코드는 어떤 model을 부르든
-            agent가 아닙니다. <strong>AI agent</strong>는 현재 state를 보고
-            다음에 무엇을 할지를 model 자신이 매 반복 정한다는 점에서
-            다릅니다. 사람 개입 없이 이 반복을 계속할 수 있다는 성질을
-            강조할 때는 같은 대상을 <strong>autonomous agent</strong>라고
-            부릅니다.
+          <p>
+            화면이 옆으로 밀리는 문제를 고쳐 달라고 맡겼다고 합시다. 파일을
+            어디서 찾을지, 바꾼 뒤 무엇을 확인할지까지 처음부터 알기는
+            어렵습니다. 한 번 답을 생성하는 것만으로는 수정과 검사를 끝낼 수
+            없습니다.
           </p>
           <p>
-            반대로 <strong>agentic workflow</strong>는 각 단계에서 model을
-            부르더라도 다음에 어떤 단계로 갈지는 코드가 미리 정한 graph를
-            따릅니다. Model이 매 반복 다음 action을 선택하는지, 아니면
-            정해진 순서 중 한 자리만 채우는지가 이 둘을 가르는 기준입니다.
+            현재 결과를 보고 다음 일을 고르는 과정을 반복해야 합니다. 다만 다음에 하고 싶다는 말과 실제로 할 수 있다는 권한은 분리합니다. 이 글은 파일을 찾고 고친 뒤 검사 결과를
+            다시 읽는 한 작업을 끝까지 따라갑니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="black-box" data-teach-level="B" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          2. 보고 고르고 실행하고 다시 봅니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            일을 맡은 쪽은 먼저 현재 상황을 읽습니다. 이어서 다음 행동을 제안하고 실행 담당자가 허용된 행동만 수행합니다. 돌아온 결과는 다음 판단에 넣습니다. 네 자리가 연결되면 작업
+            중 새로 발견한 사실에 따라 경로를 바꿀 수 있습니다.
+          </p>
+          <p>
+            결과가 없거나 읽을 수 없었다면 그 사실도 되돌려 줍니다. 실패를 빈 성공처럼 보관하면 다음 판단이 잘못된 전제에서 시작합니다. 지금은 이 큰 순환만 잡고 실제로 바뀌는 값을
+            넣어 보겠습니다.
+          </p>
+        </div>
+        <ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2">
+          <li className="border-l border-border pl-4">
+            <span className="block text-sm text-muted-foreground">1</span>
+            <span>현재 상황을 읽는다</span>
+          </li>
+          <li className="border-l border-border pl-4">
+            <span className="block text-sm text-muted-foreground">2</span>
+            <span>다음 일을 고른다</span>
+          </li>
+          <li className="border-l border-border pl-4">
+            <span className="block text-sm text-muted-foreground">3</span>
+            <span>허용 범위에서 실행한다</span>
+          </li>
+          <li className="border-l border-border pl-4">
+            <span className="block text-sm text-muted-foreground">4</span>
+            <span>실제 결과를 기록한다</span>
+          </li>
+        </ol>
+      </section>
+
+      <section id="small-case" data-teach-level="0" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          3. 폭 390에서 430이 되는 페이지를 고칩니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            화면 폭은 390px인데 문서 폭은 430px입니다. 따라서 오른쪽으로 40px가 넘칩니다. 수정할 파일은 1개이고 실행은 최대 6번 허용한다고 정합니다. 이 숫자와 파일명은
+            이해를 위한 가정이며 실제 측정 보고가 아닙니다. (가정)
+          </p>
+          <p>
+            처음에는 원인을 모릅니다. 파일을 읽은 결과 고정 폭 430px가
+            발견됐다고 합시다. 이를 고친 뒤 같은 화면을 다시 재어 문서 폭이
+            390px인지 확인해야 끝입니다. 바꿨다는 말만으로는 처음의 40px 문제가
+            없어졌는지 알 수 없습니다. (가정)
+          </p>
+          <p>
+            이제 목표·현재 값·남은 실행 횟수가 생겼습니다. 다음에는 이 셋을 잃지
+            않으려면 어떤 자리가 필요한지 살펴봅니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="inside-loop" data-teach-level="1" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          4. 다음 판단에 무엇을 남겨야 할까요
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            읽을 기록에는 목표, 수정할 파일, 마지막 측정, 남은 횟수가
+            들어갑니다. 행동 제안에는 파일을 읽을지 수정할지와 대상 경로가
+            필요합니다. 실행 담당자는 그 경로와 작업이 허용됐는지 확인합니다.
+          </p>
+          <p>
+            결과 기록은 성공 여부와 실제 값, 관측 시점, 실행 식별자를 보존합니다. 파일이 없었다면 없었다고 남기고 읽기 권한이 없었다면 거부됐다고 남깁니다. 둘을 같게 쓰면 같은
+            실패를 계속 반복하기 쉽습니다.
+          </p>
+          <p>
+            40px를 줄이는 작업에서도 판단 기록과 실행 결과는 별개라는 점이
+            보입니다. 그 구분이 왜 필요한지 실패 한 번을 넣어 보겠습니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="why-runtime" data-teach-level="2" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          5. 말로 고쳤다고 해도 파일은 그대로일 수 있습니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            다음 행동을 고르는 쪽이 수정 내용을 제안했어도 실행 담당자가 쓰기를
+            거부하면 파일은 바뀌지 않습니다. 이때 다음 기록에 수정 완료라고
+            적으면 이어지는 검사와 최종 답도 거짓 전제를 물려받습니다.
+          </p>
+          <p>
+            반대로 파일을 바꾼 뒤 응답을 받지 못한 경우에는 변경이 있었는지 아직
+            모릅니다. 재실행하기 전에 실제 파일과 실행 기록을 확인해야 합니다.
+            성공·거부·응답 없음이라는 차이를 보존하는 이유입니다.
+          </p>
+          <p>
+            행동을 고르는 능력, 행동할 권한, 실제 결과를 나눴습니다. 이제 이
+            역할에 쓰는 표준 이름을 붙일 수 있습니다.
+          </p>
+        </div>
+      </section>
+
+      <section
+        id="agent-definition"
+        data-teach-level="3"
+        className="scroll-mt-20"
+      >
+        <span id="agent-step-and-horizon" className="scroll-mt-20" />
+        <h2 className="mb-6 text-2xl font-bold">
+          6. 같은 순환의 역할에 이름을 붙입니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            관측에 따라 모델이 다음 행동을 고르는 시스템을 AI agent라고 부릅니다. 다음 경로가 미리 정한 코드로 결정되는 구간은 agentic workflow입니다. 둘은 섞어 쓸
+            수 있고 자율적으로 반복한다고 실행 권한이 무제한인 것은 아닙니다.
+          </p>
+          <p>
+            한 바퀴가 agent step이며 작업이 요구하는 단계·시간·비용의 길이를
+            agent horizon이라고 부릅니다. Long-horizon agent는 긴 작업에서
+            기록과 재검증을 유지해야 합니다. 반복 상한을 높이는 것만으로 이
+            성질이 생기지는 않습니다.
           </p>
         </div>
         <TermBreakdown
-          title="Agent와 workflow를 가르는 기준"
+          title="역할을 이해한 뒤 이름을 붙입니다"
           items={[
             {
-              term: "AI Agent",
+              term: "Observable state",
               description:
-                "현재 state를 보고 다음 action을 model 스스로 결정해 반복하는 시스템입니다.",
+                "다음 판단에 허용된 목표·대상·관측·남은 예산의 현재 기록입니다.",
               boundary:
-                "한 번 호출로 답을 내는 LLM 응답은 반복 결정이 없어 agent라고 부르지 않습니다.",
+                "비밀 인증정보나 전체 메모리를 모두 보여 준다는 뜻은 아닙니다.",
             },
             {
-              term: "Autonomous Agent",
-              description:
-                "사람 승인 없이 여러 step을 스스로 이어갈 수 있다는 성질을 강조하는 이름입니다.",
-              boundary:
-                "완전 자율이 항상 바람직하다는 뜻은 아니고, 뒤 절의 runtime gate가 이 자율의 범위를 제한합니다.",
+              term: "Action proposal",
+              description: "모델이 제안한 도구 이름과 인자입니다.",
+              boundary: "제안 자체는 실행 결과가 아닙니다.",
             },
             {
-              term: "Agentic Workflow",
+              term: "Runtime gate",
               description:
-                "다음 단계로의 이동을 model이 아니라 미리 정한 graph가 결정하는 구조입니다.",
-              example: "요약→분류→저장처럼 순서가 코드에 고정된 pipeline이 해당합니다.",
+                "실행 환경이 자원·작업·권한·예산을 검사하는 자리입니다.",
               boundary:
-                "각 단계 안에서 LLM을 쓴다고 그 pipeline 전체가 agent가 되지는 않습니다.",
+                "입력 문서에 허용됐다고 써 있어도 권한이 생기지 않습니다.",
+            },
+            {
+              term: "Typed observation",
+              description:
+                "성공·빈 결과·거부·시간 초과·부분 실행을 구분한 반환 기록입니다.",
+              boundary: "모든 실패를 빈 문자열 하나로 합치지 않습니다.",
+            },
+            {
+              term: "Agent policy",
+              description:
+                "현재 기록을 다음 행동의 분포로 바꾸는 선택 규칙입니다.",
+              boundary:
+                "학습 방법과 실행 권한은 이 규칙만으로 결정되지 않습니다.",
+            },
+            {
+              term: "Tool-augmented LLM",
+              description:
+                "외부 도구를 사용할 수 있도록 연결한 언어 모델입니다.",
+              boundary:
+                "도구 호출 능력만으로 반복 수행이 자동으로 생기지 않습니다.",
+            },
+            {
+              term: "ReAct",
+              description:
+                "Reasoning과 Acting을 엮어 관측에 따라 행동을 갱신하는 논문의 방식입니다.",
+              boundary: "생성한 추론 문장은 권한 검사나 정답 증명이 아닙니다.",
             },
           ]}
         />
-      </section>
-
-      <section id="overview" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">Agent의 최소 단위는 답변이 아니라 상태 전이입니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            일반 LLM 호출은 입력에서 출력을 한 번 만듭니다. Agent는 현재 작업 상태를 읽고 다음 action을 <strong>제안</strong>하며, runtime이 그 제안을 검사·실행한 결과를 다시 state에 넣습니다. 그래서 먼저 “무슨 pattern을 쓸까?”가 아니라 한 번의 transition에 누가 무엇을 소유하는지 고정해야 합니다.
-          </p>
-        </div>
-        <TermBreakdown title="한 transition의 네 대상을 하나씩 정의합니다" description="용어를 먼저 분리한 뒤 아래 Viz에서 하나의 loop로 조합합니다." items={[
-          { term: "Observable state", description: "현재 goal·plan status·artifact identity·최근 observation 중 model의 다음 판단에 허용된 snapshot입니다.", example: "수정 대상 파일, 마지막 test result, 남은 budget이 들어갑니다.", boundary: "전체 process memory나 비밀 credential을 그대로 뜻하지 않습니다." },
-          { term: "Action proposal", description: "Model이 만든 tool name과 schema-valid arguments입니다.", example: "read_file(path=/repo/a.ts)를 제안합니다.", boundary: "제안만으로 파일이 읽히거나 바뀌지 않습니다." },
-          { term: "Runtime gate", description: "Identity·resource·operation·budget·approval을 검사해 action을 허용하거나 거부합니다.", example: "쓰기 권한이 없는 path는 denied observation으로 바꿉니다.", boundary: "Prompt의 ‘허용됨’ 문장은 authorization이 아닙니다." },
-          { term: "Typed observation", description: "실행 결과의 status·payload·source·time·truncation·effect receipt를 담은 다음 입력입니다.", example: "timeout과 empty search는 다른 status를 가집니다.", boundary: "자유 형식 문자열 하나로 모든 실패를 뭉치지 않습니다." },
-        ]} />
         <AgentLoopViz />
-        <ContentBoundary article="agent-loop-foundations" />
       </section>
 
-      <section id="agent-step-and-horizon" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          몇 번 이 반복을 견딜 수 있는지가 agent horizon을 정합니다
+      <section id="request-trace" data-teach-level="4" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          7. 읽기·수정·측정 세 번을 같은 기록으로 잇습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            State→proposal→runtime→observation 한 바퀴를{" "}
-            <strong>agent step</strong>이라고 부릅니다. 짧은 작업은 몇 step
-            안에 끝나지만, 파일 여러 개를 고치고 test를 반복 실행하는
-            작업은 수십 step이 필요합니다. 이 작업이 감당해야 하는 step
-            수·시간·budget의 범위를 <strong>agent horizon</strong>이라고
-            합니다.
+            처음 state에는 viewport=390, document=430, remaining=6을 둡니다. 첫
+            proposal은 read_file(path=/repo/page.css)입니다. Runtime이 읽기를
+            허용하고 width:430px를 반환하면 remaining=5가 됩니다. (가정)
           </p>
           <p>
-            Horizon이 커질수록 초기 state 오류나 잘못된 observation 하나가
-            뒤 step까지 누적될 가능성도 커집니다.{" "}
-            <strong>Long-horizon agent</strong>는 이 누적을 견디도록 중간
-            checkpoint·재검증·budget 관리를 갖춘 agent를 가리키며, 단순히
-            step 상한을 크게 잡는 것과는 다릅니다.
+            두 번째 proposal은 그 파일의 폭 규칙 수정입니다. 쓰기 범위와 현재 파일 버전을 확인한 뒤 실제 저장 결과를 기록합니다. remaining=4이며 이 시점에는 화면이
+            고쳐졌다고 결론내리지 않습니다. (가정)
+          </p>
+          <p>
+            세 번째 proposal은 같은 390px 화면의 측정입니다. 반환 값
+            document=390을 얻어 390−390=0px임을 확인하면 remaining=3입니다. 파일
+            변경과 이 측정이 일치할 때 작업을 완료로 판정합니다. 거부됐다면 값을
+            그대로 두고 거부 이유로 다음 행동을 고릅니다. (가정)
+          </p>
+          <p>
+            세 번의 요청에서 달라진 것은 파일, 관측값, 남은 횟수입니다. 이
+            기록의 갱신을 식과 원 논문의 표기에 대응시켜 보겠습니다.
           </p>
         </div>
       </section>
 
-      <section id="transition" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">Proposal과 effect 사이에 runtime을 둡니다</h2>
+      <section id="transition" data-teach-level="5" className="scroll-mt-20">
+        <span id="observation-contract" className="scroll-mt-20" />
+        <span id="react-and-tool-augmented-llm" className="scroll-mt-20" />
+        <h2 className="mb-6 text-2xl font-bold">
+          8. 관측을 다음 선택의 입력에 넣습니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            아래 식은 제안·허가·실행·기록을 분리한 이 글의 설계 표기입니다. 성공
+            확률을 예측하는 법칙이 아닙니다. 390px 측정의 반환값은 마지막 갱신
+            단계에서 다음 state에 들어갑니다.
+          </p>
+          <p>
+            Observation에는 status와 값의 위치, 도구·호출 식별자·시각, 실제 변경
+            기록을 남깁니다. 큰 결과를 줄였다면 생략 여부도 적습니다. 다음
+            판단이 읽지 못한 부분을 모두 확인했다고 오해하지 않게 하기
+            위해서입니다.
+          </p>
+        </div>
         <ExplainedFormula
           question="현재 state에서 다음 state까지 어떤 순서로 책임을 넘길까요?"
-          idea={<p>
-            Model proposal을 authorization이 좁히고 executor가 만든 observation을 state update가 commit합니다. 각 함수는 서로 다른
-            실패 owner입니다.
-          </p>}
+          idea={
+            <p>
+              Model proposal을 authorization이 좁히고 executor가 만든
+              observation을 state update가 commit합니다. 각 함수는 서로 다른
+              실패 owner입니다.
+            </p>
+          }
           formula={String.raw`a_t\sim\pi_\theta(\cdot\mid s_t),\quad \tilde a_t=\mathcal A(a_t),\quad o_t=\mathcal E(\tilde a_t),\quad s_{t+1}=\mathcal U(s_t,a_t,o_t)`}
           annotatedFormula={String.raw`\begin{aligned}
 a_t&\sim\underbrace{\pi_\theta(\cdot\mid s_t)}_{\text{현재 state에서 action을 제안}}\\
@@ -112,76 +262,164 @@ o_t&=\underbrace{\mathcal E(\tilde a_t)}_{\text{허용된 action만 실행해 ob
 s_{t+1}&=\underbrace{\mathcal U(s_t,a_t,o_t)}_{\text{결과·receipt·budget을 다음 state에 반영}}
 \end{aligned}`}
           operations={[
-            { expression: String.raw`\pi_\theta(\cdot\mid s_t)`, annotation: ["현재 보이는 state를 조건으로", "다음 action 후보를 생성"] },
-            { expression: String.raw`\mathcal A(a_t)`, annotation: ["제안을 곧바로 실행하지 않고", "runtime policy로 좁힘"] },
-            { expression: String.raw`\mathcal E(\tilde a_t)`, annotation: ["허용된 action을 실행해", "성공·실패·partial receipt를 관찰"] },
-            { expression: String.raw`\mathcal U(s_t,a_t,o_t)`, annotation: ["이전 state와 실제 결과를 함께 써서", "다음 판단의 state를 commit"] },
+            {
+              expression: String.raw`\pi_\theta(\cdot\mid s_t)`,
+              annotation: [
+                "현재 보이는 state를 조건으로",
+                "다음 action 후보를 생성",
+              ],
+            },
+            {
+              expression: String.raw`\mathcal A(a_t)`,
+              annotation: [
+                "제안을 곧바로 실행하지 않고",
+                "runtime policy로 좁힘",
+              ],
+            },
+            {
+              expression: String.raw`\mathcal E(\tilde a_t)`,
+              annotation: [
+                "허용된 action을 실행해",
+                "성공·실패·partial receipt를 관찰",
+              ],
+            },
+            {
+              expression: String.raw`\mathcal U(s_t,a_t,o_t)`,
+              annotation: [
+                "이전 state와 실제 결과를 함께 써서",
+                "다음 판단의 state를 commit",
+              ],
+            },
           ]}
           terms={[
-            { symbol: "s_t", name: "Observable state", description: "t번째 decision이 읽을 수 있는 versioned run state입니다." },
-            { symbol: "\\pi_\\theta", name: "Agent policy", description: "Observable state를 다음 action의 확률 분포로 바꾸는 model 함수입니다." },
-            { symbol: "a_t", name: "Action proposal", description: "Model이 제안한 tool call·response·plan update입니다." },
-            { symbol: "\\mathcal A", name: "Authorization gate", description: "실행 전에 identity·capability·approval·budget을 판정합니다." },
-            { symbol: "o_t", name: "Typed observation", description: "Executor가 반환한 status·payload·receipt입니다." },
+            {
+              symbol: "s_t",
+              name: "Observable state",
+              description:
+                "t번째 decision이 읽을 수 있는 versioned run state입니다.",
+            },
+            {
+              symbol: "\\pi_\\theta",
+              name: "Agent policy",
+              description:
+                "Observable state를 다음 action의 확률 분포로 바꾸는 model 함수입니다.",
+            },
+            {
+              symbol: "a_t",
+              name: "Action proposal",
+              description:
+                "Model이 제안한 tool call·response·plan update입니다.",
+            },
+            {
+              symbol: "\\mathcal A",
+              name: "Authorization gate",
+              description:
+                "실행 전에 identity·capability·approval·budget을 판정합니다.",
+            },
+            {
+              symbol: "o_t",
+              name: "Typed observation",
+              description: "Executor가 반환한 status·payload·receipt입니다.",
+            },
           ]}
-          assumptions={["Model proposal과 runtime execution 권한은 분리되어 있습니다.", "Denied·timeout·empty·partial effect는 서로 다른 observation status입니다.", "State update는 artifact version과 effect receipt를 잃지 않습니다."]}
+          assumptions={[
+            "Model proposal과 runtime execution 권한은 분리되어 있습니다.",
+            "Denied·timeout·empty·partial effect는 서로 다른 observation status입니다.",
+            "State update는 artifact version과 effect receipt를 잃지 않습니다.",
+          ]}
           interpretation="이 식은 성공 확률을 계산하지 않습니다. 한 action의 제안·허가·실행·기록 책임을 순서대로 분리하는 실행 계약입니다."
         />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            위 식의 π_θ가 <strong>agent policy</strong>입니다. State s_t를
-            넣으면 다음 action의 확률 분포를 내놓는 함수이고, 그중 하나를
-            뽑는 절차가 방금 본 proposal 단계입니다. Policy를 어떻게
-            학습·설계하느냐(예: prompt로 고정할지, RL로 갱신할지)는 이
-            글의 범위 밖이고, 이 글은 policy가 loop 안에서 차지하는 자리만
-            고정합니다.
-          </p>
+        <div id="paper-react" className="mt-8 scroll-mt-20">
+          <CitationBlock
+            source="ReAct §2, arXiv:2210.03629v3"
+            citeKey={1}
+            href="https://arxiv.org/html/2210.03629v3#S2"
+          >
+            <q>cₜ = (o₁, a₁, …, oₜ₋₁, aₜ₋₁, oₜ)</q>
+          </CitationBlock>
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            <p>
+              원문의 cₜ는 지금까지의 관측과 행동을 연결합니다. 이 사례를 넣으면
+              첫 관측인 430px, 파일 읽기 행동, width:430px라는 결과, 수정 행동,
+              390px라는 새 관측이 차례로 다음 선택의 입력이 됩니다. ReAct의 이
+              표기가 파일 쓰기 권한이나 중복 실행 방지를 제공하는 것은 아닙니다.
+            </p>
+          </div>
         </div>
+        <AlgorithmBlock
+          title="한 행동을 기록에 반영하는 절차 (의사코드)"
+          input={["현재 state와 남은 실행 횟수", "도구별 권한·완료 검사"]}
+          steps={[
+            {
+              code: "proposal ← choose(state)",
+              note: "현재 관측에서 다음 행동을 하나 고릅니다.",
+            },
+            {
+              code: "if not allowed(proposal): record(denied); return",
+              note: "거부를 성공처럼 기록하지 않습니다.",
+            },
+            {
+              code: "result ← execute(proposal)",
+              note: "허가된 행동만 실행합니다.",
+            },
+            {
+              code: "state ← append(state, proposal, result)",
+              note: "결과·실제 변경·남은 횟수를 함께 갱신합니다.",
+            },
+            {
+              code: "if acceptance(state): status ← completed",
+              note: "모델의 종료 문장과 별개로 결과를 판정합니다.",
+            },
+          ]}
+          output="다음 판단에 쓸 기록과 완료 또는 계속 상태"
+        />
       </section>
 
-      <section id="observation-contract" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">Observation은 다음 decision이 실패를 구분할 수 있는 형태여야 합니다</h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>검색 결과가 비었다는 사실과 권한이 없어 검색하지 못했다는 사실은 다릅니다. 최소한 아래 필드를 서로 다른 줄로 남깁니다.</p>
-          <ul>
-            <li><strong>Status</strong><br />success · empty · denied · timeout · partial · failed</li>
-            <li><strong>Payload identity</strong><br />inline value 또는 큰 artifact의 URI·checksum</li>
-            <li><strong>Provenance</strong><br />tool revision · call ID · observed time · truncation</li>
-            <li><strong>Effect receipt</strong><br />외부 상태를 바꿨다면 operation ID·committed target·retryability</li>
-          </ul>
-        </div>
-      </section>
-
-      <section id="react-and-tool-augmented-llm" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          ReAct는 reasoning trace와 action을 번갈아 생성합니다
+      <section id="exit-states" data-teach-level="7" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          9. 끝냈다·지쳤다·기다린다는 다른 결과입니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            지금까지 본 loop가 성립하려면 model이 애초에 tool을 호출할 수
-            있어야 합니다. 이렇게 tool call 능력을 갖춘 LLM을{" "}
-            <strong>tool-augmented LLM</strong>이라고 부르는데, 이 자체는
-            loop나 반복 결정 없이도 성립하는 더 기본적인 전제입니다.
+            Completed는 정해 둔 완료 검사를 통과한 경우입니다. Exhausted는 6번의 예산을 모두 쓴 경우이고 stalled는 같은 행동만 반복해 진전이 없는 경우입니다.
+            예산 소진을 완료로 바꾸어 보고하지 않습니다.
           </p>
           <p>
-            <strong>ReAct</strong>는 그 위에서 매 step마다 “왜 이 action을
-            고르는지” 적은 reasoning trace와 실제 action을 번갈아 만들고,
-            돌아온 observation으로 다음 reasoning을 갱신하는 구체적인
-            pattern입니다. 이 글의 s_t·a_t·o_t 표기는 ReAct가 보여 준
-            thought-action-observation 교대를 state·proposal·observation
-            역할로 다시 정리한 것입니다.
+            승인이 필요한 경우 awaiting_approval, 실행 실패는 failed, 담당자에게
+            넘기는 경우 escalated처럼 구분할 수 있습니다. 이 이름은 애플리케이션
+            설계이며 보편적으로 고정된 표준 상태 목록은 아닙니다.
+          </p>
+          <p>
+            390px에서 넘침이 없어도 다른 화면이나 다른 페이지가 올바르다는
+            증거는 아닙니다. 이 작업의 완료 범위를 넓히려면 그 범위를 검사에
+            먼저 넣습니다. 긴 작업의 신뢰도는 반복 횟수보다 관측의 정확성과 완료
+            조건에 달려 있습니다.
           </p>
         </div>
-        <div id="paper-react" className="not-prose mt-8 scroll-mt-24">
-          <CitationBlock source="ReAct: Synergizing Reasoning and Acting in Language Models" citeKey={1} href="https://arxiv.org/abs/2210.03629">Reasoning trace와 task-specific action을 번갈아 생성해 외부 observation으로 판단을 갱신하는 패턴을 제안합니다. 논문의 task 결과를 production authorization·exactly-once effect·private reasoning 공개 보장으로 확대하지 않습니다.</CitationBlock>
-        </div>
+        <ContentBoundary article="agent-loop-foundations" />
       </section>
 
-      <section id="exit-states" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">Loop 종료도 하나의 boolean이 아니라 state machine입니다</h2>
+      <section
+        id="prediction-questions"
+        data-teach-level="review"
+        className="scroll-mt-20"
+      >
+        <h2 className="mb-6 text-2xl font-bold">
+          10. 다음 결과를 먼저 예상해 보세요
+        </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p><strong>completed</strong>는 verifier가 acceptance를 확인한 상태입니다. <strong>exhausted</strong>는 turn·time·cost budget을 쓴 상태이고, <strong>stalled</strong>는 같은 action이 반복되는 상태입니다. 여기에 <strong>awaiting_approval</strong>·<strong>failed</strong>·<strong>escalated</strong>를 분리해야 재개와 partial artifact 처리 정책을 정할 수 있습니다.</p>
-          <p>Model이 final answer를 생성했다는 사실은 completed evidence가 아닙니다. 결과 schema·test·environment invariant처럼 독립된 verifier를 통과해야 합니다.</p>
+          <p>
+            수정 제안 뒤 쓰기 권한이 거부됐습니다. 다음 state의 파일이
+            바뀌었다고 기록해도 될까요? (답: 5절)
+          </p>
+          <p>
+            파일 수정이 성공했지만 화면을 다시 재지 않았습니다. 처음의 40px
+            넘침이 없어졌다고 완료해도 될까요? (답: 7절)
+          </p>
+          <p>
+            6번의 실행을 모두 썼지만 문서 폭이 여전히 430px입니다. 어떤 종료
+            상태이며 무엇을 남겨야 할까요? (답: 9절)
+          </p>
         </div>
       </section>
     </div>

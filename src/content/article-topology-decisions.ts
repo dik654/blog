@@ -21,11 +21,11 @@ const KEEP = (rationale: string): ArticleTopologyDecision => ({
 
 export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopologyDecision>> = {
   "circuits/lumped-circuit-and-conservation": {
-    action: "keep",
-    status: "reviewed",
-    reviewedAt: "2026-10-03",
-    rationale: "전압·전류의 뜻에서 갈림길·고리·풀이·전력 검산·근사 경계까지 같은 12 V 저항망 하나를 따라가므로 독립 글로 자르면 예제의 연결이 끊깁니다.",
-    sharedGate: "12 V·1 kΩ·2 kΩ·2 kΩ 예제와 한 갈래를 1 kΩ으로 바꾼 예제에서 KCL·KVL·전력 합이 모두 일치해야 합니다.",
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "전류·전압을 정의한 뒤 같은 세 저항망의 해를 구하고 원문의 보존 법칙과 에너지 검산까지 잇습니다. 여러 절은 이 한 풀이를 점차 여는 단계입니다.",
+    "sharedGate": "6 V·6/3/3 mA와 4.8 V·7.2/2.4/4.8 mA의 갈림길·고리 조건을 대조하고 최초 회로의 72=36+18+18 mW를 검산합니다."
   },
   "ai/claw-bash": KEEP("Parse→classify→authorize→execute→release가 한 Bash effect의 단일 실행 계약을 이룹니다."),
   "ai/claw-cli": KEEP("입력 dispatch→slash parse→stream reducer→초기화가 하나의 CLI control-plane 경로입니다."),
@@ -393,16 +393,40 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "devices/mos-capacitor-and-inversion": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "절연 전극 구조에서 표면 상태, 전압 기준, 반전 전하 계산, 산화막 경계까지가 하나의 MOS 축전기 질문을 풉니다. 양단자 전류를 조절하는 MOSFET은 다음 글로 분리합니다.", sharedGate: "10 nm·100 µm²·평탄띠 0 V·문턱 0.5 V·전극 1.0 V의 가정에서 0.345 pF·0.173 pC·전자 약 108만 개가 본문·식·Viz·연습문제에서 일치하는지 확인합니다." },
   "devices/mosfet-regions-and-transfer": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "한 긴 채널 소자의 네 단자와 채널에서 세 전류 영역·실제 모델 경계까지를 같은 전압 가정으로 추적합니다. 축전기의 표면 전하 정의는 앞 글, 스위칭 에너지는 다음 글이 소유합니다.", sharedGate: "Vth=0.5 V·k=1 mA/V²·VGS=1.5 V의 가정에서 VDS=0.2/1.0/1.5 V의 0.18/0.5/0.5 mA가 본문·식·Viz·연습문제에 일치하는지 확인합니다." },
   "devices/switching-energy-and-leakage": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "가상 CMOS 출력 하나에서 충전·방전 장부, 활동률, 누설, 전압 변경의 경계까지 같은 10 pF·3.3 V 사례로 따라갑니다. MOSFET 영역은 앞 글, 제조는 다음 글이 소유합니다.", sharedGate: "0→1→0 한 쌍당 108.9 pJ, 10%·1 MHz의 10.89 µW, 누설 3.3 µW와 합 14.19 µW가 본문·식·Viz·연습문제에 일치하는지 확인합니다." },
-  "circuits/resistance-and-power-dissipation": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "같은 12 V 망의 등가 계산에서 각 부품 발열과 실제 부품표 정격을 이어 답합니다. 보존 법칙은 앞 글, 시간 변화는 다음 글이 소유합니다.", sharedGate: "오른쪽 2→1 kΩ 변경 전후의 6→7.2 mA, 갈림길 6→4.8 V, 첫 부품 36→51.84 mW, 공급 72→86.4 mW가 본문·식·Viz·문제에 일치하는지 확인합니다." },
-  "circuits/storage-elements-and-transients": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "저항 회로에 저장 요소 하나를 넣을 때 이어지는 상태와 지수 시간 상수를 RC·RL 쌍으로 설명합니다. 정상 상태 저항은 앞 글, 반복 입력은 다음 글이 소유합니다.", sharedGate: "5 V·1 kΩ에서 1 µF의 RC와 1 H의 RL이 모두 1 ms, 1τ에 3.16 V와 3.16 mA, 최종 저장 에너지가 각각 12.5 µJ라는 가정이 본문·식·Viz·문제에 일치하는지 확인합니다." },
-  "circuits/steady-state-and-impedance": { action: "keep" as const, status: "reviewed" as const, reviewedAt: "2026-10-03", rationale: "한 RC 회로의 반복 입력에서 진폭·위상 읽기, 복소 임피던스, 분압, 정상 상태 경계까지를 한 질문으로 설명합니다. 스위치 과도는 앞 글, 폭넓은 주파수 그림은 다음 글이 소유합니다.", sharedGate: "1 kΩ·1 µF·5 V 최대 진폭에서 ω=1000 rad/s이면 −j1000 Ω, H=0.707∠−45°, 출력 3.54 V가 본문·식·Viz·문제에 일치하는지 확인합니다." },
-  "circuits/frequency-shaping-and-bode": {action:"keep" as const,status:"reviewed" as const,reviewedAt:"2026-10-03",rationale:"한 RC의 주파수 범위를 다루며 경계·dB·기울기를 연결합니다. 복소 임피던스 한 점은 앞 글, 피드백의 안정성은 다음 글이 다룹니다.",sharedGate:"1 kΩ·1 µF·5 V 최대 진폭: fc≈159.15 Hz, 0.1/1/10fc의 출력 4.98/3.54/0.50 V, fc→10fc 변화 −17.03 dB를 본문·Viz·문제에서 맞춥니다."},
+  "circuits/resistance-and-power-dissipation": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "등가저항으로 전체를 계산한 뒤 원래 연결로 돌아와 개별 발열과 실제 부품 정격을 읽는 한 부품 선택 과정입니다.",
+    "sharedGate": "회로를 줄여 전원 7.2 mA를 구한 뒤 세 부품의 전력 합 86.4 mW를 검산하고 Vishay 표준 100 mW·확장 125 mW의 조건을 구분합니다."
+  },
+  "circuits/storage-elements-and-transients": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "저장 상태가 한 번의 스위치 뒤 어떻게 이어지는지 같은 공급·저항 조건으로 비교합니다. 전압과 전류의 서로 다른 연속성을 비교하려고 두 첫 차수 회로를 한 글에서 다룹니다.",
+    "sharedGate": "RC 1 ms의 3.16 V와 RL 1 ms의 3.16 mA, 에너지12.5 µJ, RC 1% 도착4.605 ms를 검산하고 R 두 배의 반대 시간 상수 변화를 설명합니다."
+  },
+  "circuits/steady-state-and-impedance": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 RC의 시간 파형을 복소 진폭으로 옮겨 한 번 계산하고 실제 파형의 크기와 지연으로 돌아오는 단일 경로입니다.",
+    "sharedGate": "ZC=−j1000 Ω, 전체 크기1414 Ω, 전류3.54 mA, 출력3.54 V·−45°·지연0.785 ms를 같은 입력에서 대조합니다."
+  },
+  "circuits/frequency-shaping-and-bode": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 RC의 주파수 응답식을 여러 속도와 로그 눈금에 반복 적용합니다. 출력점 변경은 같은 분배 법칙에서 통과 방향이 바뀌는 경계를 확인합니다.",
+    "sharedGate": "fc159.15 Hz, 0.995/0.707/0.0995, 경계→열 배의 −17.03 dB와 고주파 −20 dB/dec 근사를 구분합니다."
+  },
   "circuits/feedback-gain-and-stability": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-03",
-    "rationale": "1 V를 넣은 증폭기의 오차에서 폐루프 이득, 두 극 지연, 루프 교차·위상 여유와 부하 경계까지 한 되먹임 질문으로 풉니다. 필터 자체의 진폭 지도는 앞 글에 남깁니다.",
-    "sharedGate": "A0=100·극10/100 rad/s·β=0.1/0.5에서 폐루프 9.09/1.96, 교차 78.2/212.6 rad/s, 여유 59.3°/27.9°가 본문·Viz·문제에 일치하는지 확인합니다."
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 음의 되먹임 연결에서 안정된 배율과 변하는 입력의 지연을 함께 판단합니다. 두 극은 별도 주제를 확장하는 대신 직류 해만으로 알 수 없는 경계를 보입니다.",
+    "sharedGate": "정적 배율100/11·100/51, 교차78.154·212.590 rad/s, 위상 여유59.282°·27.885°와 단극 비교95.739°를 검산합니다."
   },
   "semiconductors/wafer-and-planar-process": {
     "action": "keep",
@@ -1037,6 +1061,97 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "관측에서 기억 쓰기·읽기·망각·행동 평가까지 같은 기록의 수명주기를 따라갑니다. 추가 MemoryArena 해설은 회상 점수와 실제 후속 행동 성과를 구분하는 기존 질문의 검증 단계입니다.",
     "sharedGate": "동일 관측 기록이 장기 기억으로 채택되는 조건과 다음 행동에 쓰이는 경로를 추적하고, 회상 성공만으로 전체 작업 성공을 주장하지 않습니다."
   },
+  "ai/deep-learning-overview": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 구체적 사례의 관측부터 계산, 실제 원문, 적용 경계까지 이어지는 순차 학습 질문을 소유합니다. 기존 핵심 유도와 원문 해설 anchor를 보존했습니다.",
+    "sharedGate": "네 입력 (0,0),(0,1),(1,0),(1,1)이 같은 중간 계산으로 0,1,1,0을 내는 수치와 선형 계산의 반례를 대조합니다."
+  },
+  "ai/supervised-learning-loop": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 구체적 사례의 관측부터 계산, 실제 원문, 적용 경계까지 이어지는 순차 학습 질문을 소유합니다. 기존 핵심 유도와 원문 해설 anchor를 보존했습니다.",
+    "sharedGate": "두 행의 손실 0.5·2, 평균 gradient −2.5, θ 1→1.25, 새 손실 0.703125를 본문·원문 대입·문제에서 일치시킵니다."
+  },
+  "ai/train-validation-test": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 구체적 사례의 관측부터 계산, 실제 원문, 적용 경계까지 이어지는 순차 학습 질문을 소유합니다. 기존 핵심 유도와 원문 해설 anchor를 보존했습니다.",
+    "sharedGate": "같은 1,200명의 800/200/200 분리, A·B 선택과 test 44/200, 전처리 평균 10 대 전체 평균 15의 누출 경계를 대조합니다."
+  },
+  "ai/softmax": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 구체적 사례의 관측부터 계산, 실제 원문, 적용 경계까지 이어지는 순차 학습 질문을 소유합니다. 기존 핵심 유도와 원문 해설 anchor를 보존했습니다.",
+    "sharedGate": "같은 logits (ln 2,0)에서 확률 (2/3,1/3), max shift와 T=2·1/2 결과가 본문·수식·실제 Viz 계산에서 일치해야 합니다."
+  },
+  "ai/agent-loop-foundations": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "화면 폭을 고치는 한 요청의 관측·선택·실행·종료가 연결된 하나의 반복입니다. 용어 절과 원문 절을 갈라 별도 글로 만들면 같은 상태의 변화가 끊깁니다.",
+    "sharedGate": "390 px 화면에서 430 px 본문을 390 px로 고치는 세 행동과 다음 선택의 관측 이력을 대조합니다."
+  },
+  "ai/agent-control-boundaries": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 페이지 수정 작업에서 모델이 고를 수 있는 일과 런타임이 허용하는 일의 경계를 하나의 실행으로 설명합니다.",
+    "sharedGate": "여섯 번 탐색·두 검사·대상 파일 하나의 예에서 계획과 실제 파일 변경 권한이 일치하는지 확인합니다."
+  },
+  "ai/agent-run-contract": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 실행의 시작 조건·중간 기록·검사·종료를 같은 완료 기준으로 연결합니다.",
+    "sharedGate": "두 화면 검사와 재시도 두 번의 조건을 따라 실제 관측으로 성공·실패·한도 도달을 구분합니다."
+  },
+  "ai/agent-plan-replanning": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 의존 계획의 한 단계 실패가 뒤의 작업과 독립 작업에 주는 영향을 한 사례로 추적합니다.",
+    "sharedGate": "A→B→C와 독립 D에서 v3→v4 변경 후 무효화되는 결과와 재검사 범위를 원문 기억 갱신 단계와 대조합니다."
+  },
+  "ai/agent-delegation-contracts": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 위임 요청의 분할·결과 반환·검증·병합을 하나의 완료 책임으로 설명합니다.",
+    "sharedGate": "두 작업의 3건·2건에서 겹친 1건을 빼 4건을 얻고 책임자가 반환물과 원래 요구를 대조합니다."
+  },
+  "ai/agent-verification": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 산출물의 검사에서 통과 개수·평균 점수·종료 기준이 서로 다른 판단을 맡는 이유를 추적합니다.",
+    "sharedGate": "26/27 검사와 평균0.7의 의미를 구분하고 자기 보고·환경 관측·평가기의 오류 상관관계를 확인합니다."
+  },
+  "blockchain/crypto-theory": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "한 송금 지시를 숨기고 변조를 막아도 두 번 처리할 수 있다는 사례에서 암호 주장과 사용처 처리를 단계적으로 구분합니다.",
+    "sharedGate": "7번 지시로 30원을 보낼 때 내용 보호·변조 거부·중복 지시·원자적 사용처 기록이 각각 맡는 조건을 확인합니다."
+  },
+  "crypto/discrete-log": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "같은 작은 군에서 정방향 거듭제곱을 만든 뒤 원문의 역방향 탐색으로 원래 지수를 찾는 하나의 문제입니다.",
+    "sharedGate": "mod17, g3, Y5의 표와 HAC Algorithm3.56에서 작은 걸음·큰 걸음의 교차 및 반환 지수를 검산합니다."
+  },
+  "blockchain/evm-fundamentals": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-04",
+    "rationale": "하나의 짧은 바이트코드를 읽고 스택·프로그램 위치·남은 비용을 실제 실행 함수까지 따라갑니다.",
+    "sharedGate": "60 02 60 03 01 00이 pc0→2→4→5, gas20→17→14→11, 스택 결과5로 이어지는지 고정 execution-specs 원문과 대조합니다."
+  },
 };
 
 /**
@@ -1044,6 +1159,19 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/agent-control-boundaries": "09ac3cdb6f297b06",
+  "ai/agent-delegation-contracts": "872b22c7db72ecbb",
+  "ai/agent-loop-foundations": "1a044aaefe48abc1",
+  "ai/agent-plan-replanning": "066b27b1cff27452",
+  "ai/agent-run-contract": "c039f76838539f06",
+  "ai/agent-verification": "b9bdcdbbf2efdd95",
+  "ai/deep-learning-overview": "4e624eab044f92d0",
+  "ai/softmax": "a26b8d6cda0822fb",
+  "ai/supervised-learning-loop": "3379216184ac4425",
+  "ai/train-validation-test": "2f8d22411ae7df5d",
+  "blockchain/crypto-theory": "cf4f2e2ae2a5e979",
+  "blockchain/evm-fundamentals": "f44e69161afbdef3",
+  "crypto/discrete-log": "3a45605b7fb5946c",
   "institutions/public-budget-and-taxes": "c34329142b861ee1",
   "institutions/media-attention-and-public-belief": "e1368345f124f1ac",
   "institutions/education-skills-and-signals": "9853e5435f8204c1",
@@ -1090,11 +1218,11 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "semiconductors/doping-and-thermal-budget": "77caf87831e26635",
   "semiconductors/lithography-and-resolution": "45e896d39b860a36",
   "semiconductors/wafer-and-planar-process": "20fd73be7dfc606d",
-  "circuits/feedback-gain-and-stability": "15f097e2dabbb613",
-  "circuits/frequency-shaping-and-bode": "38c916fc1b32d16f",
-  "circuits/steady-state-and-impedance": "f2cf3866dd83a148",
-  "circuits/storage-elements-and-transients": "cc761424ab916184",
-  "circuits/resistance-and-power-dissipation": "c6f5fea1f52dda34",
+  "circuits/feedback-gain-and-stability": "2bbfa8da24590edd",
+  "circuits/frequency-shaping-and-bode": "57bed2f731a22ee4",
+  "circuits/steady-state-and-impedance": "a477754ef165a51d",
+  "circuits/storage-elements-and-transients": "2c0ad5c1225fe820",
+  "circuits/resistance-and-power-dissipation": "661e59ead0e416e7",
   "devices/switching-energy-and-leakage": "ceb9d7570a210e44",
   "devices/mosfet-regions-and-transfer": "1879d22ab7ea8d40",
   "devices/mos-capacitor-and-inversion": "8cc6ce4600003dae",
@@ -1175,7 +1303,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "firms/why-firms-exist": "63891a70391f81d0",
   "firms/scale-and-cost-structure": "81801244a44eeece",
   "firms/market-power-and-markup": "bd7e2fcb297b90d2",
-  "circuits/lumped-circuit-and-conservation": "ae617ac8e7582b07",
+  "circuits/lumped-circuit-and-conservation": "1dc30f31646ad464",
   "testimony/speeches-were-reconstructed": "f1adf0d6f339adc2",
   "testimony/told-but-not-believed": "f7b915d7d5618ff8",
   "testimony/the-writer-was-there": "e7af6bbec0f76e44",

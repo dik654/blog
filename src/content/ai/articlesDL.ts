@@ -9,11 +9,47 @@ export const dlFoundationArticles: Article[] = [
     title: "딥러닝의 출발점: 표현을 층으로 쌓는 이유",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "Representation은 무엇인가" },
-      { id: "shape", title: "중간 표현의 형태" },
-      { id: "depth", title: "깊이가 만드는 함수 합성" },
-      { id: "boundaries", title: "표현·학습·일반화의 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 입력을 다른 숫자로 바꾸면 풀 수 있는 문제가 생깁니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 관측한 값과 답 사이에 바꿔 적는 단계를 둡니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 네 입력을 같은 계산 규칙으로 처리해 봅니다"
+  },
+  {
+    "id": "shape",
+    "title": "4. 음수를 지우는 동작이 입력 사이의 관계를 바꿉니다"
+  },
+  {
+    "id": "why-parts",
+    "title": "5. 중간 단계 없이 한 번에 더하기만 하면 왜 실패할까요"
+  },
+  {
+    "id": "names",
+    "title": "6. 바꿔 적은 숫자와 그것을 만드는 과정에 이름을 붙입니다"
+  },
+  {
+    "id": "trace",
+    "title": "7. (1, 1)이 중간 표현을 거쳐 0이 되는 경로를 따라갑니다"
+  },
+  {
+    "id": "source-xor",
+    "title": "8. 교과서의 식에 같은 입력을 직접 넣습니다"
+  },
+  {
+    "id": "depth",
+    "title": "9. 여러 층의 합성과 선형 계산의 한계를 식으로 확인합니다"
+  },
+  {
+    "id": "boundaries",
+    "title": "10. 표현할 수 있음과 배울 수 있음은 다른 확인입니다"
+  }
+],
     component: () => import("@/pages/articles/ai/deep-learning-overview"),
   },
   {
@@ -21,11 +57,51 @@ export const dlFoundationArticles: Article[] = [
     title: "지도학습 한 바퀴: example에서 parameter update까지",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "Input과 target" },
-      { id: "tensor-batch", title: "Tensor와 batch" },
-      { id: "training-step", title: "Forward에서 update까지" },
-      { id: "inference", title: "학습과 inference의 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 정답과의 차이로 계산에 쓰는 숫자를 고칩니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 답 만들기와 숫자 고치기를 다른 단계로 봅니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 두 오차를 제곱한 뒤 같은 기준으로 평균합니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 채점 상자 안에는 두 비교와 하나의 합산이 있습니다"
+  },
+  {
+    "id": "why-parts",
+    "title": "5. 정답은 채점에 쓰고, 다음 답을 만들 때는 숨깁니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 한 바퀴의 역할을 실제 용어에 대응합니다"
+  },
+  {
+    "id": "tensor-batch",
+    "title": "7. 여러 문제를 묶되 각 축의 뜻을 보존합니다"
+  },
+  {
+    "id": "training-step",
+    "title": "8. 1에서 시작한 공통 숫자가 1.25가 되는 한 바퀴"
+  },
+  {
+    "id": "source-update",
+    "title": "9. 원문의 평균 기울기와 갱신 식에 대입합니다"
+  },
+  {
+    "id": "inference",
+    "title": "10. 학습을 멈춘 뒤에는 같은 숫자로 새 답만 계산합니다"
+  },
+  {
+    "id": "limits",
+    "title": "11. 손실 감소가 보장하는 범위를 확인합니다"
+  }
+],
     component: () => import("@/pages/articles/ai/supervised-learning-loop"),
   },
   {
@@ -33,11 +109,47 @@ export const dlFoundationArticles: Article[] = [
     title: "Train·validation·test: 데이터 역할을 섞지 않는 법",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "세 split의 역할" },
-      { id: "selection-feedback", title: "Validation feedback" },
-      { id: "generalization", title: "Generalization과 gap" },
-      { id: "next-protocol", title: "Cross-validation으로 넘기는 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 연습에 쓴 문제로 마지막 성적까지 매기면 무엇이 빠질까요"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 배우기, 고르기, 보고하기의 순서를 고정합니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 연습 성적이 좋은 후보와 새 자료 성적이 좋은 후보가 다릅니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 자료 묶음마다 나갈 수 있는 정보가 다릅니다"
+  },
+  {
+    "id": "why-holdout",
+    "title": "5. 선택에 쓰인 점수에는 선택한 흔적이 남습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 세 자료의 표준 이름은 역할을 나타냅니다"
+  },
+  {
+    "id": "selection-feedback",
+    "title": "7. B를 선택한 뒤 마지막 200명에서 44번 틀렸습니다"
+  },
+  {
+    "id": "source-choice",
+    "title": "8. 공식 문서의 ‘모델 선택에 쓰지 않는다’를 사례에 적용합니다"
+  },
+  {
+    "id": "source-preprocessing",
+    "title": "9. 입력의 평균을 구할 때도 같은 경계를 유지합니다"
+  },
+  {
+    "id": "generalization",
+    "title": "10. 점수 차이는 진단의 출발점이고 원인의 증명은 아닙니다"
+  }
+],
     component: () => import("@/pages/articles/ai/train-validation-test"),
   },
   {
@@ -360,10 +472,47 @@ export const dlFoundationArticles: Article[] = [
     title: "Softmax: Logit에서 공동 확률까지",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "Logit과 공동 분모" },
-      { id: "temperature", title: "Temperature" },
-      { id: "output-boundary", title: "Categorical 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 서로 다른 점수 두 개를 하나의 확률로 읽으려면"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 양수로 바꾸고, 합을 구하고, 각자의 몫을 읽습니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 점수가 0인 후보도 몫을 가집니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 한 후보의 계산 안에 다른 후보도 들어갑니다"
+  },
+  {
+    "id": "why-exponential",
+    "title": "5. 점수의 차이가 비율이 되도록 지수를 씁니다"
+  },
+  {
+    "id": "names",
+    "title": "6. Logit은 점수이고 softmax는 공동 몫을 만드는 계산입니다"
+  },
+  {
+    "id": "trace",
+    "title": "7. 같은 두 점수에서 큰 공통값을 빼도 답은 같습니다"
+  },
+  {
+    "id": "source-normalization",
+    "title": "8. 원문 식 (6.29)와 (6.33)에 같은 숫자를 대입합니다"
+  },
+  {
+    "id": "temperature",
+    "title": "9. 차이를 줄이면 같은 후보가 더 비슷한 몫을 가집니다"
+  },
+  {
+    "id": "output-boundary",
+    "title": "10. 합이 1이라는 조건과 실제 정답률은 다른 질문입니다"
+  }
+],
     component: () => import("@/pages/articles/ai/softmax"),
   },
   {

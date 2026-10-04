@@ -21,11 +21,47 @@ export const zkpMathArticles: Article[] = [
     title: "이산로그 문제: 정의·공격 비용·보안 가정",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "Group에서 숨은 scalar 찾기" },
-      { id: "power-table", title: "작은 군으로 해·order 확인" },
-      { id: "baby-giant", title: "BSGS·Pollard rho 공격 비용" },
-      { id: "applications", title: "DLP·CDH·DDH와 선택 기준" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 공개된 결과에서 비밀 숫자를 되찾기 어렵게 만듭니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 숫자를 고르고, 반복 계산하고, 결과만 공개합니다"
+  },
+  {
+    "id": "worked-case",
+    "title": "3. 3을 다섯 번 곱해 17로 나눈 나머지는 5입니다"
+  },
+  {
+    "id": "parts",
+    "title": "4. 계산 규칙에는 나머지 기준과 한 번의 이동이 함께 있습니다"
+  },
+  {
+    "id": "why-parts",
+    "title": "5. 짧은 순환에서는 큰 숫자를 붙여도 비밀 후보가 적습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 찾는 것은 고정된 생성원에서 출발한 지수 좌표입니다"
+  },
+  {
+    "id": "power-table",
+    "title": "7. 5가 나타난 위치를 찾고 한 바퀴의 길이를 검산합니다"
+  },
+  {
+    "id": "forward-cost",
+    "title": "8. 만드는 쪽은 반복 횟수의 자릿수만 따라갈 수 있습니다"
+  },
+  {
+    "id": "baby-giant",
+    "title": "9. 네 칸짜리 표와 네 칸씩의 이동을 서로 만나게 합니다"
+  },
+  {
+    "id": "applications",
+    "title": "10. 부분군 크기와 프로토콜이 요구하는 문제를 함께 봅니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/discrete-log"),
   },
   {

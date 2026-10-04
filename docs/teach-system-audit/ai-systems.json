@@ -1,0 +1,4980 @@
+{
+  "scope": 186,
+  "date": "2026-10-04",
+  "screeningIsNotReview": true,
+  "articles": [
+    {
+      "route": "ai/adaptive-hyperparameter-search",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/adaptive-hyperparameter-search.tsx",
+      "publicPath": "cs/ai/adaptive-hyperparameter-search",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/agent-changelog-evidence",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-changelog-evidence.tsx",
+      "publicPath": "cs/ai/agent-changelog-evidence",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/agent-code-mode",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-code-mode.tsx",
+      "publicPath": "cs/ai/agent-code-mode",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/agent-control-boundaries",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-control-boundaries.tsx",
+      "publicPath": "cs/ai/agent-control-boundaries",
+      "status": "rewritten-local-verified",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [
+        "정의와 용어 카드로 시작",
+        "서로 다른 예가 흩어져 같은 경로를 추적할 수 없음",
+        "원문 규칙 적용·예측 질문 없음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "files": 20,
+        "readLimit": 6,
+        "actualReads": 2,
+        "checks": 2,
+        "targetCount": 1
+      },
+      "stageAnchors": {
+        "0": "small-case",
+        "1": "inside-control",
+        "2": "why-control",
+        "3": "workflow-agent",
+        "4": "selection",
+        "7": "loop-authority",
+        "S": "overview",
+        "B": "black-box",
+        "5-6": "paper-loop-control",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://www.anthropic.com/engineering/building-effective-agents",
+          "location": "When to use agents",
+          "application": "파일 선택과 고정 검사·반영 권한 분리"
+        }
+      ],
+      "validation": {
+        "semanticReview": "작은 사례·역할·같은 사례 추적·원문 적용·한계·예측 질문을 본문에서 확인",
+        "humanize": {
+          "route": "ai/agent-control-boundaries",
+          "roundTrip": true,
+          "chars": 2954,
+          "edits": 0,
+          "changeRate": 0.0013559322033898091,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "learning": "strict require-registration 6편 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "noEmit 통과"
+      },
+      "remaining": [
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agent-control-boundaries/ModernArticle.tsx",
+      "contentHash": "a3b4ca2803e2c1ae4c982bfd30c89289190a69db4878332e78d87a7512d398c1",
+      "preserved": [
+        "기존 핵심 수식·canonical anchor 유지",
+        "잘못된 검증 비용·독립성·plan mode 일반화는 공식 근거와 대조하여 수정"
+      ]
+    },
+    {
+      "route": "ai/agent-delegation-contracts",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-delegation-contracts.tsx",
+      "publicPath": "cs/ai/agent-delegation-contracts",
+      "status": "rewritten-local-verified",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [
+        "소유권 용어 표가 실제 위임 사례보다 먼저 등장",
+        "중복·순서·충돌 규칙이 추상 설명에 머묾",
+        "manager와handoff의 같은 사례 비교·예측 질문 없음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "workers": 2,
+        "issuesA": [
+          "x",
+          "y",
+          "z"
+        ],
+        "issuesB": [
+          "z",
+          "w"
+        ],
+        "unique": 4,
+        "receipts": [
+          "A1",
+          "B1"
+        ]
+      },
+      "stageAnchors": {
+        "0": "small-case",
+        "1": "inside-delegation",
+        "2": "why-delegation",
+        "3": "delegation-contract",
+        "4": "manager-handoff",
+        "7": "delegation-boundaries",
+        "S": "overview",
+        "B": "black-box",
+        "5-6": "parallel-merge",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/",
+          "location": "Multi-agent systems, Manager",
+          "application": "A1·B1 검증 후 고유4건 정리"
+        }
+      ],
+      "validation": {
+        "semanticReview": "작은 사례·역할·같은 사례 추적·원문 적용·한계·예측 질문을 본문에서 확인",
+        "humanize": {
+          "route": "ai/agent-delegation-contracts",
+          "roundTrip": true,
+          "chars": 2772,
+          "edits": 0,
+          "changeRate": 0.00018040772145044848,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "learning": "strict require-registration 6편 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "noEmit 통과"
+      },
+      "remaining": [
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agentic-patterns/DelegationContractsArticle.tsx",
+      "contentHash": "5a2d742a3c04d7b6151e7f5cf9c5798379538f9afa75ecaa75c1ac3e30077205",
+      "preserved": [
+        "기존 핵심 수식·canonical anchor 유지",
+        "잘못된 검증 비용·독립성·plan mode 일반화는 공식 근거와 대조하여 수정"
+      ]
+    },
+    {
+      "route": "ai/agent-devlog-patterns",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-devlog-patterns.tsx",
+      "publicPath": "cs/ai/agent-devlog-patterns",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/agent-extension-boundaries",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-extension-boundaries.tsx",
+      "publicPath": "cs/ai/agent-extension-boundaries",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/agent-failure-modes-and-recovery",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-failure-modes-and-recovery.tsx",
+      "publicPath": "cs/ai/agent-failure-modes-and-recovery",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/agent-frameworks",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-frameworks.tsx",
+      "publicPath": "cs/ai/agent-frameworks",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 3
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/agent-loop-foundations",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-loop-foundations.tsx",
+      "publicPath": "cs/ai/agent-loop-foundations",
+      "status": "rewritten-local-verified",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [
+        "첫 두 절에 agent·state·proposal 등 정의가 사례보다 먼저 등장",
+        "하나의 숫자 사례와 request trace 없음",
+        "원 논문 표기의 사례 적용과 답 절이 있는 예측 질문 없음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "viewport": 390,
+        "beforeWidth": 430,
+        "overflow": 40,
+        "actions": 3,
+        "budget": 6
+      },
+      "stageAnchors": {
+        "0": "small-case",
+        "1": "inside-loop",
+        "2": "why-runtime",
+        "3": "agent-definition",
+        "4": "request-trace",
+        "7": "exit-states",
+        "S": "overview",
+        "B": "black-box",
+        "5-6": "transition",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/html/2210.03629v3#S2",
+          "location": "§2 context equation",
+          "application": "390→430→390과 read/patch/measure history"
+        }
+      ],
+      "validation": {
+        "semanticReview": "작은 사례·역할·같은 사례 추적·원문 적용·한계·예측 질문을 본문에서 확인",
+        "humanize": {
+          "route": "ai/agent-loop-foundations",
+          "roundTrip": true,
+          "chars": 3961,
+          "edits": 0,
+          "changeRate": 0.0008843967150978793,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "learning": "strict require-registration 6편 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "noEmit 통과"
+      },
+      "remaining": [
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agentic-patterns/AgentLoopArticle.tsx",
+      "contentHash": "a5b5d25914ab0eeef5bd65ecf88408b35c06c31ee344a5ca688713e637f69af7",
+      "preserved": [
+        "기존 핵심 수식·canonical anchor 유지",
+        "잘못된 검증 비용·독립성·plan mode 일반화는 공식 근거와 대조하여 수정"
+      ]
+    },
+    {
+      "route": "ai/agent-memory-lifecycle",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-memory-lifecycle.tsx",
+      "publicPath": "cs/ai/agent-memory-lifecycle",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 8
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/agent-plan-replanning",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-plan-replanning.tsx",
+      "publicPath": "cs/ai/agent-plan-replanning",
+      "status": "rewritten-local-verified",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [
+        "이름과 plan record 표가 작은 사례보다 먼저 등장",
+        "Plan Mode의 승인·쓰기 제한을 모든 제품에 일반화",
+        "자료 v3→v4 예가 앞 정의·원문과 끊겨 있음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "tasks": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "dependencies": [
+          "A→B",
+          "B→C"
+        ],
+        "versions": [
+          3,
+          4
+        ],
+        "reopened": [
+          "B",
+          "C"
+        ],
+        "preserved": [
+          "D"
+        ]
+      },
+      "stageAnchors": {
+        "0": "small-case",
+        "1": "inside-plan",
+        "2": "why-plan",
+        "3": "planning-and-plan-mode",
+        "4": "executable-plan",
+        "7": "plan-boundaries",
+        "S": "overview",
+        "B": "black-box",
+        "5-6": "reflection",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/html/2303.11366v4#S3",
+          "location": "Algorithm 1, Append sr_t to mem",
+          "application": "C의 실패를 B 다음 시도의 수정·검사 기록에 연결"
+        }
+      ],
+      "validation": {
+        "semanticReview": "작은 사례·역할·같은 사례 추적·원문 적용·한계·예측 질문을 본문에서 확인",
+        "humanize": {
+          "route": "ai/agent-plan-replanning",
+          "roundTrip": true,
+          "chars": 3034,
+          "edits": 0,
+          "changeRate": 0.0009897723523589752,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "learning": "strict require-registration 6편 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "noEmit 통과"
+      },
+      "remaining": [
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agentic-patterns/PlanReplanningArticle.tsx",
+      "contentHash": "fcabdc4481feb6a3a7cd18564a8146637b77174621f6a891e6549398bb519dc8",
+      "preserved": [
+        "기존 핵심 수식·canonical anchor 유지",
+        "잘못된 검증 비용·독립성·plan mode 일반화는 공식 근거와 대조하여 수정"
+      ]
+    },
+    {
+      "route": "ai/agent-run-contract",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-run-contract.tsx",
+      "publicPath": "cs/ai/agent-run-contract",
+      "status": "rewritten-local-verified",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [
+        "목표·acceptance 등 용어가 1문단에 압축",
+        "식의 0/1 의미를 작은 실제 사례와 연결하지 않음",
+        "세션 인계 예시와 원문 적용·예측 질문 없음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "widths": [
+          390,
+          1440
+        ],
+        "beforeWidth": 430,
+        "failureWidth": 410,
+        "retryLimit": 2,
+        "fileCount": 1
+      },
+      "stageAnchors": {
+        "0": "small-case",
+        "1": "inside-contract",
+        "2": "why-contract",
+        "3": "contract",
+        "4": "context-capability",
+        "7": "recovery-handoff",
+        "S": "overview",
+        "B": "black-box",
+        "5-6": "artifact-continuity",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+          "location": "The structure of an evaluation, outcome",
+          "application": "v2 페이지의 실제 폭·버튼 상태"
+        }
+      ],
+      "validation": {
+        "semanticReview": "작은 사례·역할·같은 사례 추적·원문 적용·한계·예측 질문을 본문에서 확인",
+        "humanize": {
+          "route": "ai/agent-run-contract",
+          "roundTrip": true,
+          "chars": 3311,
+          "edits": 0,
+          "changeRate": 0.000604412209126659,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "learning": "strict require-registration 6편 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "noEmit 통과"
+      },
+      "remaining": [
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agent-run-contract/ModernArticle.tsx",
+      "contentHash": "4e46e4d65a9d0b321fea350aa90de3df28ed0b1c37287211e2e170157738a89f",
+      "preserved": [
+        "기존 핵심 수식·canonical anchor 유지",
+        "잘못된 검증 비용·독립성·plan mode 일반화는 공식 근거와 대조하여 수정"
+      ]
+    },
+    {
+      "route": "ai/agent-sandbox-security",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-sandbox-security.tsx",
+      "publicPath": "cs/ai/agent-sandbox-security",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/agent-verification",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-verification.tsx",
+      "publicPath": "cs/ai/agent-verification",
+      "status": "rewritten-local-verified",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [
+        "첫 문장에4검증층나열",
+        "generator-verifier가같은모델이며별도호출비용없다는잘못된단정",
+        "7B→70Bcritic이면오류를더잡는다는조건없는성능주장",
+        "test결과항상26/27이라는재현조건누락"
+      ],
+      "fixture": {
+        "assumed": true,
+        "tests": 27,
+        "passedBefore": 26,
+        "scores": [
+          0.6,
+          0.7,
+          0.8
+        ],
+        "mean": 0.7
+      },
+      "stageAnchors": {
+        "0": "small-case",
+        "1": "inside-verification",
+        "2": "why-verification",
+        "3": "layers",
+        "4": "plan-execute-verify",
+        "7": "release",
+        "S": "overview",
+        "B": "black-box",
+        "5-6": "trajectory-effect",
+        "review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+          "location": "Types of graders, binary all graders must pass",
+          "application": "26/27과0.7의서로다른판정"
+        }
+      ],
+      "validation": {
+        "semanticReview": "작은 사례·역할·같은 사례 추적·원문 적용·한계·예측 질문을 본문에서 확인",
+        "humanize": {
+          "route": "ai/agent-verification",
+          "roundTrip": true,
+          "chars": 3209,
+          "edits": 0,
+          "changeRate": 0.000779666302822446,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "browser390": true,
+        "browser1440": true,
+        "learning": "strict require-registration 6편 통과",
+        "formula": "strict require-explicit 통과",
+        "typescript": "noEmit 통과"
+      },
+      "remaining": [
+        "root 통합 검토·전역 build·배포 검증"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agent-verification/ModernArticle.tsx",
+      "contentHash": "ed8744ae752c8032e1eee2a66a3a73c15be0295753df575686e3c31a52e12444",
+      "preserved": [
+        "기존 핵심 수식·canonical anchor 유지",
+        "잘못된 검증 비용·독립성·plan mode 일반화는 공식 근거와 대조하여 수정"
+      ]
+    },
+    {
+      "route": "ai/architecture-decision-records",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/architecture-decision-records.tsx",
+      "publicPath": "cs/ai/architecture-decision-records",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/attention-kernel-anatomy-and-backends",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/attention-kernel-anatomy-and-backends.tsx",
+      "publicPath": "cs/ai/attention-kernel-anatomy-and-backends",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/augmentation-evaluation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/augmentation-evaluation.tsx",
+      "publicPath": "cs/ai/augmentation-evaluation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/catboost-ordered-learning",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/catboost-ordered-learning.tsx",
+      "publicPath": "cs/ai/catboost-ordered-learning",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/classification-metrics",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/classification-metrics.tsx",
+      "publicPath": "cs/ai/classification-metrics",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claude-code",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code.tsx",
+      "publicPath": "cs/ai/claude-code",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claude-code-checkpointing",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code-checkpointing.tsx",
+      "publicPath": "cs/ai/claude-code-checkpointing",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claude-code-hooks",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code-hooks.tsx",
+      "publicPath": "cs/ai/claude-code-hooks",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claude-code-instructions-memory",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code-instructions-memory.tsx",
+      "publicPath": "cs/ai/claude-code-instructions-memory",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claude-code-permissions",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code-permissions.tsx",
+      "publicPath": "cs/ai/claude-code-permissions",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claude-code-subagents",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code-subagents.tsx",
+      "publicPath": "cs/ai/claude-code-subagents",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-api-client",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-api-client.tsx",
+      "publicPath": "cs/ai/claw-api-client",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-bash",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-bash.tsx",
+      "publicPath": "cs/ai/claw-bash",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-cli",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-cli.tsx",
+      "publicPath": "cs/ai/claw-cli",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 9
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-compaction",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-compaction.tsx",
+      "publicPath": "cs/ai/claw-compaction",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-config",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-config.tsx",
+      "publicPath": "cs/ai/claw-config",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-file-ops",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-file-ops.tsx",
+      "publicPath": "cs/ai/claw-file-ops",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-hooks",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-hooks.tsx",
+      "publicPath": "cs/ai/claw-hooks",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-mcp",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-mcp.tsx",
+      "publicPath": "cs/ai/claw-mcp",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-overview",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-overview.tsx",
+      "publicPath": "cs/ai/claw-overview",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-permissions",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-permissions.tsx",
+      "publicPath": "cs/ai/claw-permissions",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-plugin",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-plugin.tsx",
+      "publicPath": "cs/ai/claw-plugin",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-policy-engine",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-policy-engine.tsx",
+      "publicPath": "cs/ai/claw-policy-engine",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-recovery",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-recovery.tsx",
+      "publicPath": "cs/ai/claw-recovery",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-session",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-session.tsx",
+      "publicPath": "cs/ai/claw-session",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-subagent-orchestration",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-subagent-orchestration.tsx",
+      "publicPath": "cs/ai/claw-subagent-orchestration",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-task-team",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-task-team.tsx",
+      "publicPath": "cs/ai/claw-task-team",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-telemetry",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-telemetry.tsx",
+      "publicPath": "cs/ai/claw-telemetry",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-tool-system",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-tool-system.tsx",
+      "publicPath": "cs/ai/claw-tool-system",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/claw-worker-boot",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-worker-boot.tsx",
+      "publicPath": "cs/ai/claw-worker-boot",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/code-mode-runtime-contracts",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/code-mode-runtime-contracts.tsx",
+      "publicPath": "cs/ai/code-mode-runtime-contracts",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/competition-baseline",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/competition-baseline.tsx",
+      "publicPath": "cs/ai/competition-baseline",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/competition-submission-control",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/competition-submission-control.tsx",
+      "publicPath": "cs/ai/competition-submission-control",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/competition-workflow",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/competition-workflow.tsx",
+      "publicPath": "cs/ai/competition-workflow",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/context-engineering",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/context-engineering.tsx",
+      "publicPath": "cs/ai/context-engineering",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/context-instruction-boundaries",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/context-instruction-boundaries.tsx",
+      "publicPath": "cs/ai/context-instruction-boundaries",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/context-provenance-freshness",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/context-provenance-freshness.tsx",
+      "publicPath": "cs/ai/context-provenance-freshness",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/context-window-optimization",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/context-window-optimization.tsx",
+      "publicPath": "cs/ai/context-window-optimization",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/continual-learning-foundations",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/continual-learning-foundations.tsx",
+      "publicPath": "cs/ai/continual-learning-foundations",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/continuous-batching-step-anatomy",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/continuous-batching-step-anatomy.tsx",
+      "publicPath": "cs/ai/continuous-batching-step-anatomy",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/cosine-restart-scheduling",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/cosine-restart-scheduling.tsx",
+      "publicPath": "cs/ai/cosine-restart-scheduling",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/cost-sensitive-thresholding",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/cost-sensitive-thresholding.tsx",
+      "publicPath": "cs/ai/cost-sensitive-thresholding",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/cross-review-error-classes",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/cross-review-error-classes.tsx",
+      "publicPath": "cs/ai/cross-review-error-classes",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/cross-validation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/cross-validation.tsx",
+      "publicPath": "cs/ai/cross-validation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/cuda-graph-capture",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/cuda-graph-capture.tsx",
+      "publicPath": "cs/ai/cuda-graph-capture",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/data-augmentation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/data-augmentation.tsx",
+      "publicPath": "cs/ai/data-augmentation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/disaggregated-prefill-decode-serving",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/disaggregated-prefill-decode-serving.tsx",
+      "publicPath": "cs/ai/disaggregated-prefill-decode-serving",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/document-parsing-and-table-extraction",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/document-parsing-and-table-extraction.tsx",
+      "publicPath": "cs/ai/document-parsing-and-table-extraction",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/dropout-regularization",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/dropout-regularization.tsx",
+      "publicPath": "cs/ai/dropout-regularization",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/early-stopping",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/early-stopping.tsx",
+      "publicPath": "cs/ai/early-stopping",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/ecod",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/ecod.tsx",
+      "publicPath": "cs/ai/ecod",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/eda-workflow",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/eda-workflow.tsx",
+      "publicPath": "cs/ai/eda-workflow",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/engineering-lessons-ledger",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/engineering-lessons-ledger.tsx",
+      "publicPath": "cs/ai/engineering-lessons-ledger",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/ensemble-methods",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/ensemble-methods.tsx",
+      "publicPath": "cs/ai/ensemble-methods",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/evaluation-datasets-and-pipelines",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/evaluation-datasets-and-pipelines.tsx",
+      "publicPath": "cs/ai/evaluation-datasets-and-pipelines",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/evaluation-metrics",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/evaluation-metrics.tsx",
+      "publicPath": "cs/ai/evaluation-metrics",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/experiment-tracking",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/experiment-tracking.tsx",
+      "publicPath": "cs/ai/experiment-tracking",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/expert-parallelism-moe-systems",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/expert-parallelism-moe-systems.tsx",
+      "publicPath": "cs/ai/expert-parallelism-moe-systems",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 3,
+        "levelMarkers": 10,
+        "sectionCount": 10
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/feature-engineering",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/feature-engineering.tsx",
+      "publicPath": "cs/ai/feature-engineering",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/fine-tuning-tradeoffs-forgetting-and-merging",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/fine-tuning-tradeoffs-forgetting-and-merging.tsx",
+      "publicPath": "cs/ai/fine-tuning-tradeoffs-forgetting-and-merging",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/flash-attention-io-aware-kernel",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/flash-attention-io-aware-kernel.tsx",
+      "publicPath": "cs/ai/flash-attention-io-aware-kernel",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 3,
+        "levelMarkers": 10,
+        "sectionCount": 10
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/fold-local-validation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/fold-local-validation.tsx",
+      "publicPath": "cs/ai/fold-local-validation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/gradient-boosting",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/gradient-boosting.tsx",
+      "publicPath": "cs/ai/gradient-boosting",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/graphrag-community-and-multihop-search",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/graphrag-community-and-multihop-search.tsx",
+      "publicPath": "cs/ai/graphrag-community-and-multihop-search",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/grouped-validation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/grouped-validation.tsx",
+      "publicPath": "cs/ai/grouped-validation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/harness-failure-ablation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/harness-failure-ablation.tsx",
+      "publicPath": "cs/ai/harness-failure-ablation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/hybrid-kv-cache-allocation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/hybrid-kv-cache-allocation.tsx",
+      "publicPath": "cs/ai/hybrid-kv-cache-allocation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 2
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/hyperparameter-tuning",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/hyperparameter-tuning.tsx",
+      "publicPath": "cs/ai/hyperparameter-tuning",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/image-augmentation-transforms",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/image-augmentation-transforms.tsx",
+      "publicPath": "cs/ai/image-augmentation-transforms",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/imbalance-loss-weighting",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/imbalance-loss-weighting.tsx",
+      "publicPath": "cs/ai/imbalance-loss-weighting",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/imbalance-resampling",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/imbalance-resampling.tsx",
+      "publicPath": "cs/ai/imbalance-resampling",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/imbalanced-classification-evaluation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/imbalanced-classification-evaluation.tsx",
+      "publicPath": "cs/ai/imbalanced-classification-evaluation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/imbalanced-data",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/imbalanced-data.tsx",
+      "publicPath": "cs/ai/imbalanced-data",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 3
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/inference-cost-and-capacity-planning",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/inference-cost-and-capacity-planning.tsx",
+      "publicPath": "cs/ai/inference-cost-and-capacity-planning",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": true,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/inference-failure-absorption",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/inference-failure-absorption.tsx",
+      "publicPath": "cs/ai/inference-failure-absorption",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/inference-optimization-layers",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/inference-optimization-layers.tsx",
+      "publicPath": "cs/ai/inference-optimization-layers",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/inference-runtime-anatomy",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/inference-runtime-anatomy.tsx",
+      "publicPath": "cs/ai/inference-runtime-anatomy",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/inference-stack-standard-levels",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/inference-stack-standard-levels.tsx",
+      "publicPath": "cs/ai/inference-stack-standard-levels",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/knowledge-graph-construction",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/knowledge-graph-construction.tsx",
+      "publicPath": "cs/ai/knowledge-graph-construction",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/kv-cache-fundamentals",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/kv-cache-fundamentals.tsx",
+      "publicPath": "cs/ai/kv-cache-fundamentals",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 2
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/label-smoothing",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/label-smoothing.tsx",
+      "publicPath": "cs/ai/label-smoothing",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/launch-overhead-and-cpu-gpu-synchronization",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/launch-overhead-and-cpu-gpu-synchronization.tsx",
+      "publicPath": "cs/ai/launch-overhead-and-cpu-gpu-synchronization",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/learning-curve-tracking",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/learning-curve-tracking.tsx",
+      "publicPath": "cs/ai/learning-curve-tracking",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/lightgbm-efficient-trees",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/lightgbm-efficient-trees.tsx",
+      "publicPath": "cs/ai/lightgbm-efficient-trees",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/llm-application-caching",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-application-caching.tsx",
+      "publicPath": "cs/ai/llm-application-caching",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/llm-as-a-judge",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-as-a-judge.tsx",
+      "publicPath": "cs/ai/llm-as-a-judge",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/llm-evaluation-criteria-and-methods",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-evaluation-criteria-and-methods.tsx",
+      "publicPath": "cs/ai/llm-evaluation-criteria-and-methods",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/llm-gateway-and-model-routing",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-gateway-and-model-routing.tsx",
+      "publicPath": "cs/ai/llm-gateway-and-model-routing",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/llm-guardrails-and-output-validation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-guardrails-and-output-validation.tsx",
+      "publicPath": "cs/ai/llm-guardrails-and-output-validation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/llm-harness",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-harness.tsx",
+      "publicPath": "cs/ai/llm-harness",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/llm-monitoring-observability-and-drift",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-monitoring-observability-and-drift.tsx",
+      "publicPath": "cs/ai/llm-monitoring-observability-and-drift",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/llm-serving-capacity",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-serving-capacity.tsx",
+      "publicPath": "cs/ai/llm-serving-capacity",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 3
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/llm-serving-ops",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-serving-ops.tsx",
+      "publicPath": "cs/ai/llm-serving-ops",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/lora-finetuning",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/lora-finetuning.tsx",
+      "publicPath": "cs/ai/lora-finetuning",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/lr-decay-policies",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/lr-decay-policies.tsx",
+      "publicPath": "cs/ai/lr-decay-policies",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/lr-scheduling",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/lr-scheduling.tsx",
+      "publicPath": "cs/ai/lr-scheduling",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/mcp-primitives",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/mcp-primitives.tsx",
+      "publicPath": "cs/ai/mcp-primitives",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/mcp-protocol",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/mcp-protocol.tsx",
+      "publicPath": "cs/ai/mcp-protocol",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/mcp-server-operations",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/mcp-server-operations.tsx",
+      "publicPath": "cs/ai/mcp-server-operations",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/mcp-transports",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/mcp-transports.tsx",
+      "publicPath": "cs/ai/mcp-transports",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/metric-selection-protocol",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/metric-selection-protocol.tsx",
+      "publicPath": "cs/ai/metric-selection-protocol",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/mixup-cutmix",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/mixup-cutmix.tsx",
+      "publicPath": "cs/ai/mixup-cutmix",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/model-artifact-registry",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/model-artifact-registry.tsx",
+      "publicPath": "cs/ai/model-artifact-registry",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/model-selection-bias",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/model-selection-bias.tsx",
+      "publicPath": "cs/ai/model-selection-bias",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/model-vram-budgeting",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/model-vram-budgeting.tsx",
+      "publicPath": "cs/ai/model-vram-budgeting",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 9
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/multi-agent-implementation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/multi-agent-implementation.tsx",
+      "publicPath": "cs/ai/multi-agent-implementation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/multi-fidelity-pruning",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/multi-fidelity-pruning.tsx",
+      "publicPath": "cs/ai/multi-fidelity-pruning",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/multi-objective-hpo",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/multi-objective-hpo.tsx",
+      "publicPath": "cs/ai/multi-objective-hpo",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/one-cycle-scheduling",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/one-cycle-scheduling.tsx",
+      "publicPath": "cs/ai/one-cycle-scheduling",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/onprem-k8s-inference-platform",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/onprem-k8s-inference-platform.tsx",
+      "publicPath": "cs/ai/onprem-k8s-inference-platform",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/oof-risk-estimation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/oof-risk-estimation.tsx",
+      "publicPath": "cs/ai/oof-risk-estimation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/open-r1",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/open-r1.tsx",
+      "publicPath": "cs/ai/open-r1",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/openclaw-assistant",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/openclaw-assistant.tsx",
+      "publicPath": "cs/ai/openclaw-assistant",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/own-vs-rent-inference-capacity",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/own-vs-rent-inference-capacity.tsx",
+      "publicPath": "cs/ai/own-vs-rent-inference-capacity",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/paired-experiment-design",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/paired-experiment-design.tsx",
+      "publicPath": "cs/ai/paired-experiment-design",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/parallelism-strategy-and-placement",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/parallelism-strategy-and-placement.tsx",
+      "publicPath": "cs/ai/parallelism-strategy-and-placement",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/prediction-time-feature-availability",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prediction-time-feature-availability.tsx",
+      "publicPath": "cs/ai/prediction-time-feature-availability",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/prefill-decode-phase-dynamics",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prefill-decode-phase-dynamics.tsx",
+      "publicPath": "cs/ai/prefill-decode-phase-dynamics",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/prefix-caching-radix-attention",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prefix-caching-radix-attention.tsx",
+      "publicPath": "cs/ai/prefix-caching-radix-attention",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/prompt-engineering",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prompt-engineering.tsx",
+      "publicPath": "cs/ai/prompt-engineering",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 2
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/prompt-few-shot",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prompt-few-shot.tsx",
+      "publicPath": "cs/ai/prompt-few-shot",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 2
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/prompt-injection-poisoning-and-data-protection",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prompt-injection-poisoning-and-data-protection.tsx",
+      "publicPath": "cs/ai/prompt-injection-poisoning-and-data-protection",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/prompt-reasoning",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prompt-reasoning.tsx",
+      "publicPath": "cs/ai/prompt-reasoning",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 2
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/prompt-structured-output",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prompt-structured-output.tsx",
+      "publicPath": "cs/ai/prompt-structured-output",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 2
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/query-transformation-and-adaptive-retrieval",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/query-transformation-and-adaptive-retrieval.tsx",
+      "publicPath": "cs/ai/query-transformation-and-adaptive-retrieval",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/qwen-korean-consistency",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/qwen-korean-consistency.tsx",
+      "publicPath": "cs/ai/qwen-korean-consistency",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/qwen-korean-reasoning-posttraining",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/qwen-korean-reasoning-posttraining.tsx",
+      "publicPath": "cs/ai/qwen-korean-reasoning-posttraining",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 1
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/qwen36-hybrid-architecture",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/qwen36-hybrid-architecture.tsx",
+      "publicPath": "cs/ai/qwen36-hybrid-architecture",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 3
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/qwen36-hybrid-runtime",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/qwen36-hybrid-runtime.tsx",
+      "publicPath": "cs/ai/qwen36-hybrid-runtime",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 3
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/qwen36-long-context-deployment",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/qwen36-long-context-deployment.tsx",
+      "publicPath": "cs/ai/qwen36-long-context-deployment",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/qwen38-flash-next-architecture",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/qwen38-flash-next-architecture.tsx",
+      "publicPath": "cs/ai/qwen38-flash-next-architecture",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/rag-context-assembly-and-evaluation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/rag-context-assembly-and-evaluation.tsx",
+      "publicPath": "cs/ai/rag-context-assembly-and-evaluation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/rag-ingestion-and-chunking",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/rag-ingestion-and-chunking.tsx",
+      "publicPath": "cs/ai/rag-ingestion-and-chunking",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/rag-pipeline",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/rag-pipeline.tsx",
+      "publicPath": "cs/ai/rag-pipeline",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/ranking-metrics",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/ranking-metrics.tsx",
+      "publicPath": "cs/ai/ranking-metrics",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/rate-limiting-and-reliability-patterns",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/rate-limiting-and-reliability-patterns.tsx",
+      "publicPath": "cs/ai/rate-limiting-and-reliability-patterns",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/region-agnostic-inference-routing",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/region-agnostic-inference-routing.tsx",
+      "publicPath": "cs/ai/region-agnostic-inference-routing",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/regression-metrics",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/regression-metrics.tsx",
+      "publicPath": "cs/ai/regression-metrics",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/regularization-practice",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/regularization-practice.tsx",
+      "publicPath": "cs/ai/regularization-practice",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/reproducible-ml-execution",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/reproducible-ml-execution.tsx",
+      "publicPath": "cs/ai/reproducible-ml-execution",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/retrieval-ranking-funnel",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/retrieval-ranking-funnel.tsx",
+      "publicPath": "cs/ai/retrieval-ranking-funnel",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/sandbox-deployment-controls",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/sandbox-deployment-controls.tsx",
+      "publicPath": "cs/ai/sandbox-deployment-controls",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/sandbox-gpu-isolation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/sandbox-gpu-isolation.tsx",
+      "publicPath": "cs/ai/sandbox-gpu-isolation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/sandbox-runtime-isolation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/sandbox-runtime-isolation.tsx",
+      "publicPath": "cs/ai/sandbox-runtime-isolation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/search-based-reasoning-and-test-time-compute",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/search-based-reasoning-and-test-time-compute.tsx",
+      "publicPath": "cs/ai/search-based-reasoning-and-test-time-compute",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/search-space-design",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/search-space-design.tsx",
+      "publicPath": "cs/ai/search-space-design",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/sequence-modeling-tabular",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/sequence-modeling-tabular.tsx",
+      "publicPath": "cs/ai/sequence-modeling-tabular",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/serving-benchmark-methodology",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/serving-benchmark-methodology.tsx",
+      "publicPath": "cs/ai/serving-benchmark-methodology",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/serving-latency-metrics-and-slo",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/serving-latency-metrics-and-slo.tsx",
+      "publicPath": "cs/ai/serving-latency-metrics-and-slo",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/serving-memory-admission-and-preemption",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/serving-memory-admission-and-preemption.tsx",
+      "publicPath": "cs/ai/serving-memory-admission-and-preemption",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/sionic-glm-b300",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/sionic-glm-b300.tsx",
+      "publicPath": "cs/ai/sionic-glm-b300",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 9
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/skills-anatomy",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/skills-anatomy.tsx",
+      "publicPath": "cs/ai/skills-anatomy",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/smoothie-qwen-weight-editing",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/smoothie-qwen-weight-editing.tsx",
+      "publicPath": "cs/ai/smoothie-qwen-weight-editing",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 1
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/speculative-decoding-variants",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/speculative-decoding-variants.tsx",
+      "publicPath": "cs/ai/speculative-decoding-variants",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 6
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/tabular-data-synthesis",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/tabular-data-synthesis.tsx",
+      "publicPath": "cs/ai/tabular-data-synthesis",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/tabular-deep-learning",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/tabular-deep-learning.tsx",
+      "publicPath": "cs/ai/tabular-deep-learning",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/tensor-and-pipeline-parallel-inference",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/tensor-and-pipeline-parallel-inference.tsx",
+      "publicPath": "cs/ai/tensor-and-pipeline-parallel-inference",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/time-features",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/time-features.tsx",
+      "publicPath": "cs/ai/time-features",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/tool-calling-lifecycle-and-costs",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/tool-calling-lifecycle-and-costs.tsx",
+      "publicPath": "cs/ai/tool-calling-lifecycle-and-costs",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 7
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/training-pipeline",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/training-pipeline.tsx",
+      "publicPath": "cs/ai/training-pipeline",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/transfer-learning-practice",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/transfer-learning-practice.tsx",
+      "publicPath": "cs/ai/transfer-learning-practice",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/validation-feedback-audit",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/validation-feedback-audit.tsx",
+      "publicPath": "cs/ai/validation-feedback-audit",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/vllm-paged-attention",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/vllm-paged-attention.tsx",
+      "publicPath": "cs/ai/vllm-paged-attention",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/vllm-scheduler",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/vllm-scheduler.tsx",
+      "publicPath": "cs/ai/vllm-scheduler",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/vllm-serving",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/vllm-serving.tsx",
+      "publicPath": "cs/ai/vllm-serving",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 3
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/vllm-spec-decode",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/vllm-spec-decode.tsx",
+      "publicPath": "cs/ai/vllm-spec-decode",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/walk-forward-validation",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/walk-forward-validation.tsx",
+      "publicPath": "cs/ai/walk-forward-validation",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/warmup-scheduling",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/warmup-scheduling.tsx",
+      "publicPath": "cs/ai/warmup-scheduling",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/weight-decay",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/weight-decay.tsx",
+      "publicPath": "cs/ai/weight-decay",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 4
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/xgboost-tree-objective",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/xgboost-tree-objective.tsx",
+      "publicPath": "cs/ai/xgboost-tree-objective",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    },
+    {
+      "route": "ai/xml-prompting",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/xml-prompting.tsx",
+      "publicPath": "cs/ai/xml-prompting",
+      "status": "unreviewed",
+      "screeningSignals": {
+        "explicitAssumption": false,
+        "answerPointers": 0,
+        "levelMarkers": 0,
+        "sectionCount": 5
+      },
+      "beforeDefects": [],
+      "fixture": null,
+      "stageAnchors": {},
+      "sourceEvidence": [],
+      "validation": {
+        "semanticReview": "pending",
+        "humanize": "pending",
+        "browser390": "pending",
+        "browser1440": "pending"
+      },
+      "remaining": [
+        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      ]
+    }
+  ],
+  "counts": {
+    "total": 186,
+    "rewrittenLocalVerified": 6,
+    "unreviewed": 180
+  },
+  "localValidationSummary": {
+    "routes": 6,
+    "screens": 12,
+    "failures": 0,
+    "humanizeGateExit0": 6,
+    "numericChecks": {
+      "overflow": 40,
+      "remainingBudget": 3,
+      "explorationBudget": 4,
+      "residualOverflow": 20,
+      "uniqueIssues": 4,
+      "judgeMean": 0.7
+    },
+    "remaining": "나머지 180편 실제 검토·개선과 전역 통합 검수"
+  }
+}

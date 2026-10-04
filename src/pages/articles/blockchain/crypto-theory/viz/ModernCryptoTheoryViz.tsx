@@ -1,47 +1,9 @@
-const rows = [
-  ["정확성", "정상 key·input에서 intended output이 나오는가?"],
-  ["보안 game", "누가 무엇을 보고·질의하고·출력하면 이기는가?"],
-  [
-    "가정·reduction",
-    "공격자가 이기면 어떤 hard problem solver를 만들 수 있는가?",
-  ],
-  [
-    "구현·운영",
-    "encoding·nonce·domain·key lifecycle이 증명 전제를 보존하는가?",
-  ],
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+const scenes=[
+ {label:"보호",balance:"100원",instruction:"N=7 · pay=30 · shop=A",result:"K로 보호한 묶음 C",detail:"숨길 내용과 숨기지 않을 사용처를 같은 보호 계산에 넣습니다. 키 K는 밖으로 보내지 않습니다."},
+ {label:"복원",balance:"100원",instruction:"수신한 N·A·C + 보관한 K",result:"정상 입력이면 pay=30",detail:"변조된 입력은 실패로 처리합니다. 내용 복원은 잔액 변경과 별개입니다."},
+ {label:"실행",balance:"70원",instruction:"권한·잔액·미처리 7번 확인",result:"30원 차감 + 7번 처리 기록",detail:"잔액과 처리 이력을 함께 저장합니다. 한쪽만 저장하다 장애가 나면 재실행 위험이 생깁니다."},
+ {label:"재전송",balance:"70원",instruction:"같은 7번의 유효한 묶음",result:"이미 처리함 → 추가 차감 없음",detail:"암호 검사를 통과하는 사본도 중복 실행 검사에서 거절합니다. 70원은 그대로 남습니다."},
 ] as const;
-
-export default function ModernCryptoTheoryViz() {
-  return (
-    <figure
-      data-viz="crypto-security-model"
-      className="rounded-xl border border-border bg-card p-4 sm:p-6"
-    >
-      <figcaption className="mb-4">
-        <p className="text-sm font-semibold text-primary">
-          Primitive를 읽는 네 층
-        </p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          알고리즘 이름 하나는 correctness·security·implementation을 동시에
-          보장하지 않습니다.
-        </p>
-      </figcaption>
-      <div data-viz-canvas className="space-y-3">
-        {rows.map(([a, b], i) => (
-          <div
-            key={a}
-            className="grid min-w-0 gap-1 border-t border-border pt-3 sm:grid-cols-[7rem_1fr]"
-          >
-            <p className="text-sm font-semibold">
-              <span className="mr-2 text-primary">{i + 1}</span>
-              {a}
-            </p>
-            <p className="break-words text-sm leading-6 text-muted-foreground">
-              {b}
-            </p>
-          </div>
-        ))}
-      </div>
-    </figure>
-  );
-}
+export default function ModernCryptoTheoryViz(){const state=useAnimatedScenes(scenes.length);const scene=scenes[state.active];return <div data-viz="crypto-security-model" data-viz-keyboard tabIndex={0} onKeyDown={state.onKeyDown} className="not-prose flex min-w-0 flex-col rounded-lg border border-border p-4 sm:p-6"><p className="mb-4 font-semibold">7번 지시의 내용 확인과 중복 실행 방지</p><div data-viz-canvas className="min-h-[24rem] min-w-0 overflow-auto"><div className="space-y-4"><div className="border border-border p-4"><p className="text-xs text-muted-foreground">이번 단계의 입력</p><p className="mt-2 break-words font-mono text-sm">{scene.instruction}</p></div><svg aria-hidden="true" className="mx-auto h-5 w-8" viewBox="0 0 32 20"><path d="M16 1V18M11 13L16 18L21 13" fill="none" stroke="currentColor" strokeWidth="1" /></svg><div className="border border-primary/40 bg-primary/5 p-4"><p className="font-semibold">{scene.result}</p><p className="mt-2 text-sm">잔액 {scene.balance}</p></div></div><p aria-live="polite" className="mt-5 text-sm leading-7">{scene.detail}</p><p className="mt-3 text-xs leading-6 text-muted-foreground">인물·금액·지시 번호는 설명용 가정입니다. 실제 암호문 바이트의 계산 결과는 생략했습니다.</p></div><AnimatedSceneControls labels={scenes.map(x=>x.label)} {...state} /></div>}
