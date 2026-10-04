@@ -217,28 +217,135 @@ export const dlFoundationArticles: Article[] = [
     title: "행렬·선형변환·SVD: embedding 압축을 읽는 최소 선형대수",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "행렬을 숫자 표 이상으로 읽기" },
-      { id: "matrix-map", title: "행렬과 linear map" },
-      { id: "multiplication", title: "행렬 곱과 함수 합성" },
-      { id: "rank-basis", title: "Rank와 orthonormal basis" },
-      { id: "svd", title: "SVD의 세 단계" },
-      { id: "low-rank", title: "Low-rank approximation" },
-      { id: "applications", title: "Embedding·PCA로 연결" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 두 숫자를 섞는 계산에서 어떤 차이가 살아남을까"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 입력의 순서와 두 출력 규칙을 먼저 고정한다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 함께 움직이는 부분과 서로 다른 부분을 나눈다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 나누고 늘리고 합치는 경로를 한 그림으로 본다"
+  },
+  {
+    "id": "need",
+    "title": "5 · 큰 표를 줄이려면 어떤 변화가 사라지는지 알아야 한다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 방금 계산한 자리에 이름을 붙인다"
+  },
+  {
+    "id": "matrix-map",
+    "title": "7 · 한 행은 출력 한 칸의 계산을 맡는다"
+  },
+  {
+    "id": "multiplication",
+    "title": "8 · 두 규칙의 곱은 오른쪽부터 적용한다"
+  },
+  {
+    "id": "rank-basis",
+    "title": "9 · 표가 커도 출력이 움직이는 방향은 하나일 수 있다"
+  },
+  {
+    "id": "svd",
+    "title": "10 · 같은 입력을 기준 변경, 배율 적용, 출력 합성으로 추적한다"
+  },
+  {
+    "id": "svd-shapes",
+    "title": "11 · reduced는 모양을 줄이며 0인 특잇값도 남을 수 있다"
+  },
+  {
+    "id": "low-rank",
+    "title": "12 · 큰 방향 하나를 남기면 (9,9)가 되고 차이가 사라진다"
+  },
+  {
+    "id": "source-paper",
+    "title": "13 · MIT 원문 문제의 같은 행렬에 계산을 대입한다"
+  },
+  {
+    "id": "source-code",
+    "title": "14 · PyTorch의 실제 분기는 입력 모양과 bias를 확인한다"
+  },
+  {
+    "id": "applications",
+    "title": "15 · 표를 잘 복원해도 분류에 필요한 차이를 지울 수 있다"
+  },
+  {
+    "id": "boundaries",
+    "title": "16 · 크기, 독립 방향, 사용 목적을 각각 확인한다"
+  }
+],
     component: () => import("@/pages/articles/ai/math-matrices-svd"),
   },
   {
     slug: "math-high-dimensional-geometry",
-    title: "고차원에서는 거리가 무너지고 그 틈을 JL 사영과 latent 표현이 메운다",
+    title: "고차원 데이터: 거리 보존, 내재 차원, 압축의 조건",
     subcategory: "ai-foundations",
     sections: [
-      { id: "problem", title: "거리 하나로 가까움을 구분하기 어려워지는 이유" },
-      { id: "distance", title: "Euclidean distance와 고차원 거리 집중" },
-      { id: "jl-lemma", title: "Johnson–Lindenstrauss lemma" },
-      { id: "intrinsic-dimension", title: "Ambient dimension과 intrinsic dimension" },
-      { id: "latent-representation", title: "Low-rank·latent·bottleneck representation" },
-      { id: "applications", title: "Autoencoder·분포 의미론·vector search로 연결" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 숫자 칸을 줄여도 점 사이의 차이를 남길 수 있을까"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 점들을 받아 더 적은 칸으로 쓰고 거리를 비교한다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 네 칸에 반복된 값을 합하고 2로 나눈다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 같은 네 점을 줄이는 좋은 규칙과 나쁜 규칙을 비교한다"
+  },
+  {
+    "id": "problem",
+    "title": "5 · 줄일 수 있는 양보다 남겨야 할 관계를 먼저 정한다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 칸 수, 실제 자유도, 줄이는 규칙에 이름을 붙인다"
+  },
+  {
+    "id": "distance",
+    "title": "7 · 같은 직선에서는 모든 거리가 2배의 차이로 계산된다"
+  },
+  {
+    "id": "concentration",
+    "title": "8 · 독립적인 무작위 좌표에서는 제곱거리의 상대 요동이 줄어든다"
+  },
+  {
+    "id": "jl-lemma",
+    "title": "9 · 일반적인 거리 보존의 충분조건과 사례의 최소 크기를 구별한다"
+  },
+  {
+    "id": "probability",
+    "title": "10 · 존재 증명과 한 번 뽑아 성공할 확률을 나눈다"
+  },
+  {
+    "id": "source",
+    "title": "11 · 실제 코드에서 행렬 배율과 자동 크기 선택을 읽는다"
+  },
+  {
+    "id": "intrinsic-dimension",
+    "title": "12 · 실제로 변하는 자유도와 추정한 숫자의 범위를 구별한다"
+  },
+  {
+    "id": "latent-representation",
+    "title": "13 · 좁은 통로를 만들었다고 중요한 정보가 저절로 남지는 않는다"
+  },
+  {
+    "id": "applications",
+    "title": "14 · 거리를 보존했는지와 과제를 해결했는지를 따로 확인한다"
+  }
+],
     component: () => import("@/pages/articles/ai/math-high-dimensional-geometry"),
   },
   {
@@ -459,13 +566,63 @@ export const dlFoundationArticles: Article[] = [
     title: "지수·로그: 확률과 정보량을 읽는 최소 수학",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "곱셈을 덧셈으로 옮기기" },
-      { id: "exponents", title: "지수와 반복 배율" },
-      { id: "logarithms", title: "로그는 지수의 역질문" },
-      { id: "log-identities", title: "곱·나눗셈의 log 규칙" },
-      { id: "log-bases", title: "밑과 단위" },
-      { id: "applications", title: "정보량과 loss로 연결" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 절반으로 줄인 양과 줄인 횟수를 함께 기록한다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 한 번마다 같은 배율을 받고 남은 양을 돌려준다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 세 결과를 확인하는 두 기록은 같은 상황을 나타낸다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 위 막대는 절반씩 줄고 아래 눈금은 한 칸씩 늘어난다"
+  },
+  {
+    "id": "need",
+    "title": "5 · 아주 작은 양도 변화의 횟수로 비교할 수 있다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 배율, 적용 정도, 거꾸로 묻는 계산에 이름을 붙인다"
+  },
+  {
+    "id": "exponents",
+    "title": "7 · 같은 밑의 곱은 적용한 지수를 더한다"
+  },
+  {
+    "id": "logarithms",
+    "title": "8 · 결과 1/8에서 필요한 지수 −3을 되찾는다"
+  },
+  {
+    "id": "log-identities",
+    "title": "9 · 곱을 합으로 옮겨 같은 세 번을 추적한다"
+  },
+  {
+    "id": "log-bases",
+    "title": "10 · 밑 2와 자연로그는 같은 양을 다른 단위로 쓴다"
+  },
+  {
+    "id": "applications",
+    "title": "11 · 낮게 예측한 실제 사건에는 큰 비용을 준다"
+  },
+  {
+    "id": "source",
+    "title": "12 · 교재의 역관계와 CPython의 실제 나눗셈에 대입한다"
+  },
+  {
+    "id": "numerical",
+    "title": "13 · 2000번의 곱은 0이 되지만 로그의 합은 남는다"
+  },
+  {
+    "id": "boundaries",
+    "title": "14 · 연산을 바꾸기 전에 입력 조건과 비교 대상을 확인한다"
+  }
+],
     component: () => import("@/pages/articles/ai/math-exponents-logarithms"),
   },
   {

@@ -1,0 +1,28 @@
+{
+  "source": "NVIDIA CUDA Binary Utilities 13.0.2",
+  "url": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-binary-utilities/index.html",
+  "section": "2.1 cuobjdump usage",
+  "retrievedAt": "2026-10-04",
+  "files": [
+    {
+      "file": "document-add-sm100-sass.txt",
+      "sourceBlock": 8,
+      "sha256": "9655b033ef5a4cce97f4f5c9f1af0eaffc1e5ca4087dad579b196494b6c6f0b3",
+      "lines": 79
+    },
+    {
+      "file": "document-add-sm100-ptx.txt",
+      "sourceBlock": 9,
+      "sha256": "972527e3975aa123f59e502adeda313692d47e08c21f7935330ff06ca7719dae",
+      "lines": 52
+    },
+    {
+      "file": "document-resource-usage.txt",
+      "sourceBlock": 14,
+      "sha256": "c82aedef746298291545f74c0d5e0adf5d199feb30e74f61e750a5077a24af37",
+      "lines": 11
+    }
+  ],
+  "scope": "공식 문서에 실린 출력 블록 전체를 바꾸지 않고 추출한 것입니다. add.o 또는 원래 .cu/.cubin 파일을 확보한 것은 아니며 이 환경에서 컴파일한 출력도 아닙니다. resource-usage 블록은 별도 함수의 예이고 add의 자원 사용량이 아닙니다.",
+  "copyright": "NVIDIA Corporation; documentation attribution retained. These are published instruction/data output examples, not a claim of an open-source license."
+}

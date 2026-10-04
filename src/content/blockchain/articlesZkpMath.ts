@@ -332,16 +332,66 @@ export const zkpMathArticles: Article[] = [
   },
   {
     slug: "fft",
-    title: "FFT / NTT — 다항식 곱셈 가속",
+    title: "NTT: 네 계수를 빠르게 계산하고 되돌리기",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "FFT / NTT란?" },
-      { id: "dft", title: "DFT와 시간복잡도" },
-      { id: "butterfly", title: "Butterfly 분할" },
-      { id: "unit-root", title: "유한체 단위근" },
-      { id: "intt", title: "INTT (역변환)" },
-      { id: "zk-usage", title: "ZKP에서의 활용" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 같은 계산 규칙을 여러 위치에서 빠르게 읽으려면"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 계수 목록을 받아 정한 위치의 값 목록을 돌려줍니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 네 계수를 17 안에서 계산합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 짝수 항과 홀수 항을 계산한 뒤 두 쌍으로 합칩니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 반대 위치에서는 홀수 항의 부호만 바뀝니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 반복 주기의 길이와 변환 알고리즘을 구분합니다"
+  },
+  {
+    "id": "dft",
+    "title": "7. 각 출력은 같은 식을 다른 위치에서 읽은 값입니다"
+  },
+  {
+    "id": "butterfly",
+    "title": "8. 작은 결과 한 쌍으로 두 출력을 만듭니다"
+  },
+  {
+    "id": "trace",
+    "title": "9. 네 계수를 나누고 합쳐 같은 네 결과를 확인합니다"
+  },
+  {
+    "id": "source",
+    "title": "10. 원 논문의 합과 보조 배열에 같은 수를 넣습니다"
+  },
+  {
+    "id": "unit-root",
+    "title": "11. 길이에 맞는 반복 주기가 체 안에 있어야 합니다"
+  },
+  {
+    "id": "intt",
+    "title": "12. 반대 근으로 계산한 뒤 길이의 역원을 곱합니다"
+  },
+  {
+    "id": "zk-usage",
+    "title": "13. 곱의 길이를 확보한 뒤 같은 위치끼리 곱합니다"
+  },
+  {
+    "id": "release",
+    "title": "14. 같은 값이 나오는지 확인한 뒤 전체 비용을 봅니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/fft"),
   },
   {
@@ -447,12 +497,67 @@ export const zkpMathArticles: Article[] = [
     title: "유한체 구현: representation·Montgomery·release",
     subcategory: "zkp-math",
     sections: [
-      { id: "overview", title: "표현 수명주기와 근거 경계" },
-      { id: "prime-repr", title: "Canonical bytes와 limb" },
-      { id: "montgomery", title: "Montgomery REDC" },
-      { id: "operator-overload", title: "API·typed failure·test" },
-      { id: "fr-scalar", title: "Fp/Fr 타입과 release gate" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 같은 답을 계산하되 저장하는 숫자를 바꿉니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 숫자를 받아 계산하고 약속한 바이트로 내보냅니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 7×5의 답을 내부 숫자 15로 보관합니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 입력과 출력에서 바꾸고 계산 중에는 같은 형식을 씁니다"
+  },
+  {
+    "id": "need",
+    "title": "5. 두 번 붙은 배율을 한 번 지워야 표현이 유지됩니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 저장 표현과 계산 규칙에 이름을 붙입니다"
+  },
+  {
+    "id": "representation",
+    "title": "7. 여러 자리 정수와 바이트 순서를 따로 읽습니다"
+  },
+  {
+    "id": "montgomery-form",
+    "title": "8. 내부 숫자 3은 일반 숫자 7을 뜻합니다"
+  },
+  {
+    "id": "redc",
+    "title": "9. 17의 배수를 더해 낮은 다섯 비트를 0으로 만듭니다"
+  },
+  {
+    "id": "trace",
+    "title": "10. 원 논문의 변환으로 같은 요청을 끝까지 계산합니다"
+  },
+  {
+    "id": "source",
+    "title": "11. 실제 64비트 코드에도 7과 5를 넣습니다"
+  },
+  {
+    "id": "api",
+    "title": "12. 나눗셈 실패와 입력 거부는 실제 API마다 확인합니다"
+  },
+  {
+    "id": "fp-fr",
+    "title": "13. 좌표와 반복 횟수는 다른 나머지 규칙을 씁니다"
+  },
+  {
+    "id": "carry",
+    "title": "14. 넘친 자리와 구현의 분기를 함께 확인합니다"
+  },
+  {
+    "id": "release",
+    "title": "15. 같은 값을 되찾는 검사와 잘못된 입력 검사를 나눕니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/field-arithmetic"),
   },
   {

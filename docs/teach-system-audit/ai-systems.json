@@ -3909,7 +3909,7 @@
       "route": "ai/kv-cache-fundamentals",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/kv-cache-fundamentals.tsx",
       "publicPath": "cs/ai/kv-cache-fundamentals",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -3917,24 +3917,227 @@
         "sectionCount": 2
       },
       "beforeDefects": [
-        "첫 숫자 사례가 Query·Key·Value 설명 뒤에 위치하며 동일 사례의 단계 추적과 예측 질문이 부족",
-        "MLA가 매번 KV를 head 차원으로 복원해야 한다는 주장을 실제 흡수 구현과 대조해야 함",
-        "Gemma·Qwen·Muse runtime 관찰의 고정 source·측정 원문과 정적 config를 구분해야 함"
+        "past Q discarded only incremental causal path; prefill Q has entirechunk axis but decodeQ1 axis unlikeoldTQsharedshape",
+        "cache append before current attention; just-samplednexttoken hasnotcacheyet",
+        "repeat expand usesview but reshape mayallocate; eager temporaryrepeat notcache expansion; fusedGQA avoids literalreplication",
+        "KV byte quarter doesnot make entiredecodequarter; weights100+cache100→weights100+cache25 gives.625 byte ratio",
+        "MLA doesnotrequire fullK/V up-projection eachcachedtoken; WUK canabsorb inquery and WUV inoutput; positionalKeyextra cache matters",
+        "Gemma alternativeattention appliesonlyglobal and startsV=rawKprojection but K normalization+RoPE differ fromV normalization, update storesboth; flagnotoneKVtensor",
+        "Gemma uniform960KiB proxy notofficial pertokenshape or independentmeasuredcapacity; no originalmeasurementlog yet",
+        "Muse52KiB appliesdense/no-window-retirement; local39window2048 doesnotgrowforever"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "assumed": true,
+        "layers": 1,
+        "pastPositions": 3,
+        "nextPositions": 4,
+        "queryHeads": 4,
+        "kvHeads": 2,
+        "headDim": 2,
+        "bytesPerElement": 2,
+        "cacheBytesBefore": 48,
+        "cacheBytesAfter": 64,
+        "queryEphemeralBytes": 16,
+        "headMapping": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "qHead0": [
+          1,
+          0
+        ],
+        "kHead0": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ]
+        ],
+        "vHead0": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "scores": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "weights": [
+          0.25,
+          0.25,
+          0.25,
+          0.25
+        ],
+        "output": [
+          2.5,
+          5
+        ]
+      },
+      "stageAnchors": {
+        "1-S": "overview",
+        "2-B": "black-box",
+        "3-0": "small-case",
+        "4-1": "inside-cache",
+        "5-2": "why-cache",
+        "6-3": "kv-shape",
+        "7-4": "request-trace",
+        "8-4": "attention-read",
+        "9-4": "kv-shape-sharing",
+        "10-5": "shape-layout",
+        "11-5": "source-repeat-kv",
+        "12-5": "source-cache-update",
+        "13-6": "paper-mqa",
+        "14-6": "paper-gqa",
+        "15-6": "kv-shape-formula",
+        "16-6": "model-configs",
+        "17-6": "kv-shape-runtime",
+        "18-6": "cache-representation-design",
+        "19-6": "mla-vs-gqa",
+        "20-6": "position-key",
+        "21-7": "parallel-budget",
+        "22-7": "capacity-bandwidth",
+        "23-7": "boundary",
+        "24-review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://raw.githubusercontent.com/huggingface/transformers/5eddc12edfaf8cafde8c9bae4ccb12f8a139b4f9/src/transformers/models/mixtral/modeling_mixtral.py",
+          "location": "transformers/models/mixtral/modeling_mixtral.py",
+          "application": "전체파일 SHA256 검증 및 본문 작은사례를 해당 원문에 대입"
+        },
+        {
+          "href": "https://raw.githubusercontent.com/huggingface/transformers/5eddc12edfaf8cafde8c9bae4ccb12f8a139b4f9/src/transformers/cache_utils.py",
+          "location": "transformers/cache_utils.py",
+          "application": "전체파일 SHA256 검증 및 본문 작은사례를 해당 원문에 대입"
+        },
+        {
+          "href": "https://raw.githubusercontent.com/huggingface/transformers/5eddc12edfaf8cafde8c9bae4ccb12f8a139b4f9/src/transformers/models/gemma4/modeling_gemma4.py",
+          "location": "transformers/models/gemma4/modeling_gemma4.py",
+          "application": "전체파일 SHA256 검증 및 본문 작은사례를 해당 원문에 대입"
+        },
+        {
+          "href": "https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/config.json",
+          "location": "configs/Qwen3.6-27B/config.json",
+          "application": "전체파일 SHA256 검증 및 본문 작은사례를 해당 원문에 대입"
+        },
+        {
+          "href": "https://huggingface.co/meta-models/Muse-Glimmer-30B/resolve/a4e59da52a7bc87ae7251dd5545c0dd437c44b68/config.json",
+          "location": "configs/Muse-Glimmer-30B/config.json",
+          "application": "전체파일 SHA256 검증 및 본문 작은사례를 해당 원문에 대입"
+        },
+        {
+          "href": "https://huggingface.co/google/gemma-4-31B/resolve/5bbc2fb1c1b2c611d06e3d9f23c170ba21659d89/config.json",
+          "location": "configs/gemma-4-31B/config.json",
+          "application": "전체파일 SHA256 검증 및 본문 작은사례를 해당 원문에 대입"
+        },
+        {
+          "href": "https://arxiv.org/html/1911.02150v1",
+          "location": "Fast Transformer Decoding: One Write-Head is All You Need",
+          "application": "§2.4의 과거 기록 연결과 §3의 K/V head 축 제거에 3위치·4Q·1KV 사례24byte를 대입합니다."
+        },
+        {
+          "href": "https://arxiv.org/html/2305.13245v3",
+          "location": "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints",
+          "application": "§2.2 묶음별 변환 가중치 평균과 Table1 XXL의1.51초·47.2 대0.28초·47.1 결과입니다."
+        },
+        {
+          "href": "https://arxiv.org/html/2405.04434v5",
+          "location": "DeepSeek-V2 — latent compression and matrix absorption",
+          "application": "§2.1.2의 행렬 흡수와 §2.1.3의 위치 경로, Table1의(dc+dR)L 저장식을 적용합니다."
+        },
+        {
+          "href": "https://arxiv.org/html/2407.21783v3#S3.SS2",
+          "location": "The Llama 3 Herd — Table 3 model dimensions",
+          "application": "§3.2 Table3의8B열 구조값을 읽었고 gatedHFconfig 대신 공개원논문에 근거합니다."
+        },
+        {
+          "href": "https://docs.pytorch.org/docs/2.14/generated/torch.Tensor.expand.html",
+          "location": "PyTorch2.14 expand",
+          "application": "기존storage view이며 후속연산은별도할당가능"
+        },
+        {
+          "href": "https://docs.pytorch.org/docs/2.14/generated/torch.reshape.html",
+          "location": "PyTorch2.14 reshape",
+          "application": "호환stride이면view,아니면copy이며 복사여부의존금지"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "실제 pinned Transformers source AST·전체 원문 hash7개·공식 model config3개를 검증했습니다. cache48→64B와Q16B·head0,0,1,1·출력(2.5,5)·MLA 행렬흡수·Gemma1120MiB·전송200→125MB를 정확한 산술 및 theory 독립 검산으로 확인했습니다. 실제 PyTorch/GPU 실행·성능 측정은 아닙니다.",
+        "humanize": {
+          "roundTrip": true,
+          "chars": 11620,
+          "edits": 0,
+          "changeRate": 0,
+          "gateExit": 1,
+          "numbersMarkersPointersPreserved": true,
+          "independentFinalize": "theory 승인; shape·벡터 괄호를 각주로 읽은 WARN14건. 본문74문단 최신 input/final 동일."
+        },
+        "humanizeInitial": "최초 폭2→폭 2 공백1곳; 이후 causal 자기위치 포함·다음실행까지 수명·GQA 샘플당칩당시간을 원문검토로 명확히 한 뒤 fresh 동일성 검사.",
+        "humanizeProps": "166개 문자열 actual AST roundtrip. 층마다 같은 값이라는 오해를 막도록 각 KV layer의 기록 크기를 더해로 고친 뒤 fresh input/final 변경0. 수식 괄호 WARN8건 theory 독립 승인.",
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "codePanels3901440": 18,
+        "narrowText": 0,
+        "vizInternalScroll": "5장면×2폭 모두 실제 화면을 확인했습니다. 48→64B 배열 및 ephemeral Q가 일치하며 내부 스크롤 뒤 설명10/10 완전 표시; frame/control delta0.",
+        "learning": "strict require-registration PASS;24절·6+4문제·5개념",
+        "formula": "전역1426개 strict PASS, 해당3개 명시적 연산 주석",
+        "prose": "전역 재검토0",
+        "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
       "remaining": [
-        "실제 본문 재작성과 원문·수치 검증",
-        "학습 등록·humanize·390/1440 검수"
+        "root 통합 검토·전역 build·배포 검증"
       ],
-      "readEvidence": "/tmp/teach-all/read-kv-cache-fundamentals.txt"
+      "readEvidence": "/tmp/teach-all/read-kv-cache-fundamentals.txt",
+      "bodyFiles": [
+        "src/pages/articles/ai/kv-cache-fundamentals.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/kv-cache-fundamentals.tsx",
+      "contentHash": "64fd103a92fb4536680e6b894a97b066f7dca2d8b09e78d92f3a93360bc9451a",
+      "evidenceFiles": [
+        "/tmp/teach-all/ai-systems-learning-14.log",
+        "/tmp/teach-all/ai-systems-tsc-14-final.log",
+        "/tmp/teach-all/ai-systems-formula-14.log",
+        "/tmp/teach-all/ai-systems-viz-14.log",
+        "/tmp/teach-all/ai-systems-prose-14-final.log",
+        "/tmp/teach-all/ai-systems-numeric-14.json",
+        "/tmp/teach-all/kv14-independent-theory.json",
+        "/tmp/world-browser-audit/teach-ai-systems-kv14-final-summary.json",
+        "/tmp/teach-all/ai-systems-screens-14/panels.json",
+        "/tmp/teach-all/ai-systems-screens-14/scenes.json",
+        "/tmp/teach-all/ai-systems-screens-14/scroll-notes.json",
+        "/tmp/teach-all/ai-systems-readability-14.log",
+        "/tmp/teach-all/humanize-ai-systems-14-verified/kv-cache-fundamentals/independent-finalize.md",
+        "/tmp/teach-all/humanize-ai-systems-14-props-final/independent-finalize.md"
+      ]
     },
     {
       "route": "ai/label-smoothing",
@@ -6476,7 +6679,7 @@
       "route": "ai/serving-memory-admission-and-preemption",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/serving-memory-admission-and-preemption.tsx",
       "publicPath": "cs/ai/serving-memory-admission-and-preemption",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -6484,24 +6687,176 @@
         "sectionCount": 6
       },
       "beforeDefects": [
-        "V0 watermark와 V1 동작을 섞은 절차 및 CPU swap 부족이면 recompute라는 주장 검증 필요",
-        "정의·수식이 먼저이고 작은 사례·배정·회수·재개를 같은 값으로 추적하지 않음",
-        "hybrid의 고정 state 단순 모형과 실제 allocator 보존 정책의 경계를 추가해야 함"
+        "사례보다 다수 용어가 먼저 등장함",
+        "본문과 Viz 성장 수치 불일치 및 한 실행과16실행 혼동",
+        "watermark를 특정 주소 예약과 전 버전1%로 일반화함",
+        "현재 full-input fit 검사와 chunk 실제 할당을 구분하지 않음",
+        "CPU swap 실패를 자동 recompute fallback으로 잘못 설명함",
+        "recompute 성능·CPU swap 상한·hybrid 물리 할당을 보편화함",
+        "실제 고정 코드 적용과 답 절이 있는 예측 질문 없음"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "assumed": true,
+        "pool": 40,
+        "watermark": 3,
+        "tokensPerBlock": 16,
+        "MiBPerBlock": 2,
+        "Cprompt": 144,
+        "states": [
+          [
+            14,
+            12,
+            0
+          ],
+          [
+            14,
+            12,
+            9
+          ],
+          [
+            15,
+            13,
+            10
+          ],
+          [
+            16,
+            14,
+            0
+          ],
+          [
+            16,
+            14,
+            0
+          ],
+          [
+            0,
+            14,
+            11
+          ]
+        ],
+        "CresumeTokens": 161,
+        "CresumeBlocks": 11
+      },
+      "stageAnchors": {
+        "1-S": "overview",
+        "2-B": "black-box",
+        "3-0": "small-case",
+        "4-1": "inside-admission",
+        "5-2": "why-headroom",
+        "6-3": "memory-terms",
+        "7-4": "watermark-admission",
+        "8-4": "growth-pressure",
+        "9-4": "resume-trace",
+        "10-5": "footprint",
+        "11-5": "source-v0-admission",
+        "12-5": "pool-budget",
+        "13-5": "source-v1-admission",
+        "14-6": "preemption-modes",
+        "15-6": "source-v1-preemption",
+        "16-6": "source-v0-swap",
+        "17-6": "recovery-cost",
+        "18-6": "hybrid-fixed-state",
+        "19-6": "paper-vllm",
+        "20-6": "engine-settings",
+        "21-6": "engine-pool-sizing",
+        "22-7": "boundary",
+        "23-review": "prediction-questions"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/f49777ba62b4926d0f8c100ab06edb03c5c10098/vllm/core/block_manager.py",
+          "location": "v0.6.6 block_manager.py — can_allocate / _can_swap",
+          "application": "C9:40/14/3→OK; full blocks+append demand for swap-in"
+        },
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/f49777ba62b4926d0f8c100ab06edb03c5c10098/vllm/core/scheduler.py",
+          "location": "v0.6.6 scheduler.py — _swap_out",
+          "application": "CPU space failure raises RuntimeError, no recompute fallback"
+        },
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/f49777ba62b4926d0f8c100ab06edb03c5c10098/vllm/engine/arg_utils.py",
+          "location": "v0.6.6 arg_utils.py — swap_space",
+          "application": "4GiB default, distinct from simultaneous swap capacity policy"
+        },
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/kv_cache_manager.py",
+          "location": "v0.27.1 kv_cache_manager.py — allocate_slots",
+          "application": "1000input63blocks rejects free50 before actual256chunk16 allocation"
+        },
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py",
+          "location": "v0.27.1 scheduler.py — _preempt_request",
+          "application": "C10 freed, PREEMPTED, computed0, history161 preserved"
+        },
+        {
+          "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/config/scheduler.py",
+          "location": "v0.27.1 scheduler config — full ISL and watermark",
+          "application": "full input fit default True; watermark default0.0"
+        },
+        {
+          "href": "https://arxiv.org/html/2309.06180v1",
+          "location": "PagedAttention §4.5 and §7.3",
+          "application": "C all-or-nothing eviction; CPU bound depends on no-new-admission policy"
+        },
+        {
+          "href": "https://docs.sglang.io/docs/advanced_features/server_arguments",
+          "location": "SGLang Server Arguments — memory and scheduling",
+          "application": "conservativeness direction; static memory includes weights and KV"
+        },
+        {
+          "href": "https://nvidia.github.io/TensorRT-LLM/features/kvcache.html",
+          "location": "TensorRT-LLM KV Cache System — size and host offload",
+          "application": "free100MiB×0.9 vs token80MiB chooses80MiB; host byte capacity"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "고정 V0 can_allocate 전체 함수와 _swap_out 실패 분기를 실제 AST로 실행; V1의 원문 전체입력/조각 검사 식을 단일group 가정 coordinator에 실행; 실제 GPU 실행이나 성능 측정은 아님. 이력161과computed160의 차이 및 두 복구 비용을 theory 독립 검산.",
+        "humanize": {
+          "roundTrip": true,
+          "chars": 11247,
+          "edits": 0,
+          "changeRate": 0,
+          "gateExit": 0,
+          "numbersMarkersPointersPreserved": true
+        },
+        "humanizeInitial": "공백7곳·연결 쉼표1개 교정; gate0.0%, 문장터치1.1%. 최종23절 재배치 뒤 원래71개 표시문단 모두 보존됨을 전문 대조.",
+        "humanizeProps": "최종144문자열8710자 actual AST roundtrip 및 gate0. 이전 중간 적용의 stale offset 중단과 재추출/검증 경로는 props-verified/process-note.md에 기록.",
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "codePanels3901440": 22,
+        "narrowText": 0,
+        "vizInternalScroll": "A cell 대비를 높이고 desktop SVG 크기를 줄임. 6장면×2폭 계산/소유 일치. 모바일 내부 스크롤 후 설명12/12 완전 표시. frame/control delta0.",
+        "learning": "strict require-registration 통과,23절·6+4문제·8개념",
+        "formula": "strict1424개 전역 통과, 해당3개 명시적 연산 주석",
+        "prose": "전역 재검토0",
+        "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
       "remaining": [
-        "실제 본문 재작성과 원문·수치 검증",
-        "학습 등록·humanize·390/1440 검수"
+        "root 통합 검토·전역 build·배포 검증"
       ],
-      "readEvidence": "/tmp/teach-all/read-serving-memory-admission-and-preemption.txt"
+      "readEvidence": "/tmp/teach-all/read-serving-memory-admission-and-preemption.txt",
+      "bodyFiles": [
+        "src/pages/articles/ai/serving-memory-admission-and-preemption.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/serving-memory-admission-and-preemption.tsx",
+      "contentHash": "c0da4a09232f11d59b7f91dccf45fae33b42bfa7abe60a06e3b97858751f0eb6",
+      "evidenceFiles": [
+        "/tmp/teach-all/ai-systems-learning-13.log",
+        "/tmp/teach-all/ai-systems-tsc-13-final.log",
+        "/tmp/teach-all/ai-systems-formula-13.log",
+        "/tmp/teach-all/ai-systems-viz-13.log",
+        "/tmp/teach-all/ai-systems-prose-13-final.log",
+        "/tmp/teach-all/ai-systems-numeric-13.json",
+        "/tmp/teach-all/memory-independent-theory.json",
+        "/tmp/world-browser-audit/teach-ai-systems-memory13-final-summary.json",
+        "/tmp/teach-all/ai-systems-screens-13/code-panels.json",
+        "/tmp/teach-all/ai-systems-screens-13/viz-scenes.json",
+        "/tmp/teach-all/ai-systems-screens-13/scroll-notes.json",
+        "/tmp/teach-all/ai-systems-readability-13.log",
+        "/tmp/teach-all/humanize-ai-systems-13-verified/serving-memory-admission-and-preemption/gate.txt",
+        "/tmp/teach-all/humanize-ai-systems-13-props-verified/gate.txt"
+      ]
     },
     {
       "route": "ai/sionic-glm-b300",
@@ -7596,9 +7951,9 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 37,
+    "rewritten-local-verified": 39,
     "unreviewed": 145,
-    "reviewed-rewrite-required": 4
+    "reviewed-rewrite-required": 2
   },
   "localValidationSummary": {
     "rewritten": 36,
@@ -7608,9 +7963,9 @@
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
     "learningStrict": "/tmp/teach-all/ai-systems-learning-audit-11.log — batch11 1편 통과",
     "formulaStrict": "/tmp/teach-all/ai-systems-formula-audit-11.log — strict require-explicit 통과",
-    "typescript": "최근 batch12: 실제 app tsc --noEmit exit0; root 전역 production build는 통합 단계",
-    "note": "담당 186편 중 37편을 실제 본문·고정 사례·원문 적용·humanize·두 폭 화면으로 개선 검수했습니다. 나머지 149편은 미완료이며 자동 screening은 검수 판정이 아닙니다.",
-    "reviewedRewriteRequired": 4,
-    "verifiedRewrites": 37
+    "typescript": "최근 batch14 실제 app tsc --noEmit exit0; root 전역 production build는 통합 단계",
+    "note": "담당186편 중39편을 실제 본문·고정 사례·원문 적용·humanize·두 폭 화면으로 개선 검수했습니다. 나머지147편은 미완료이며 자동 screening은 검수 판정이 아닙니다.",
+    "reviewedRewriteRequired": 2,
+    "verifiedRewrites": 39
   }
 }

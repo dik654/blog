@@ -225,17 +225,17 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "gpu/cuda-shared-memory": [
     {
-      kind: "공식 문서",
-      label: "NVIDIA CUDA Programming Guide — Memory Performance",
-      href: "https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html#memory-performance",
-      note: "32-byte global transaction, 32-bank shared access, broadcast와 transpose staging의 공식 설명",
+      "kind": "공식 문서",
+      "label": "CUDA C++ Best Practices Guide 13.0.2 · 10.2.1·10.2.3",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-best-practices-guide/index.html",
+      "note": "32바이트 주소 구간과 정렬, 32-bit bank mapping·broadcast를 64×64 전치의 주소에 적용합니다."
     },
     {
-      kind: "공식 문서",
-      label: "NVIDIA CUDA C++ Programming Guide — Shared Memory",
-      href: "https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#shared-memory",
-      note: "Shared-memory allocation·scope·architecture-specific performance 조건의 reference",
-    },
+      "kind": "공식 문서",
+      "label": "NVIDIA cuda-samples v13.0 · transpose.cu",
+      "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/6_Performance/transpose/transpose.cu",
+      "note": "124–189행의 세 함수에 입력 2371→tile[5][3]→출력 229를 대입하고 410–433행의 host 조건을 대조합니다."
+    }
   ],
   "gpu/cuda-sync-streams": [
     {
@@ -801,7 +801,31 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://ocw.mit.edu/courses/18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018/resources/lecture-7-eckart-young-the-closest-rank-k-matrix-to-a/",
       note: "Truncated SVD가 같은 rank budget에서 주는 최적 reconstruction과 PCA 연결",
     },
-  ],
+    {
+      "kind": "공식 문서",
+      "label": "MIT 18.065 · Lecture 7의 정리와 문제 2",
+      "href": "https://ocw.mit.edu/courses/18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018/resources/lecture-7-eckart-young-the-closest-rank-k-matrix-to-a/",
+      "note": "실제 문제의 마지막 행렬 [[2,1],[1,2]]에서 rank 1 근사 1.5ones와 제곱 오차 1을 계산합니다. 추가한 입력 (4,2)의 출력은 (10,8)과 (9,9)입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "MIT 18.06SC · Lecture 29 요약 1–2쪽",
+      "href": "https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/d273f75ee2552a5c3c35ccab37e5edce_MIT18_06SCF11_Ses3.5sum.pdf",
+      "note": "Avᵢ=σᵢuᵢ에 두 방향을 대입해 배율 3과 1을 확인하고 AᵀA의 고유값 9와 1을 구별합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.8 · torch.linalg.svd",
+      "href": "https://docs.pytorch.org/docs/2.8/generated/torch.linalg.svd.html",
+      "note": "U·S·Vh 반환 크기와 full/reduced, q=min(m,n)을 확인했습니다. Rank 1인 3×2 입력도 reduced S에 두 값 (1,0)을 남깁니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch v2.8.0 · aten/src/ATen/native/Linear.cpp",
+      "href": "https://github.com/pytorch/pytorch/blob/ba56102387ef21a3b04b357e5b183d48f0afefc7/aten/src/ATen/native/Linear.cpp#L50-L118",
+      "note": "전체 고정 파일·라이선스·SHA256을 보존했습니다. 2차원 입력과 존재하는 bias의 addmm 경로에 input=[[4,2]], weight=A를 대입하고 3차원 입력의 펼침 경로를 확인합니다. 실제 장비 실행이나 성능 측정은 아닙니다."
+    },
+],
   "ai/math-vectors-inner-products": [
     {
       kind: "공개 강의",
@@ -3754,7 +3778,79 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/1911.02150",
       note: "모든 query head가 하나의 K/V head를 공유하는 MQA와 decode memory-bandwidth 문제",
     },
-  ],
+    {
+      "kind": "공식 코드",
+      "label": "KV fundamentals — transformers/models/mixtral/modeling_mixtral.py",
+      "href": "https://raw.githubusercontent.com/huggingface/transformers/5eddc12edfaf8cafde8c9bae4ccb12f8a139b4f9/src/transformers/models/mixtral/modeling_mixtral.py",
+      "note": "2026-10-04 확인. 전체파일 SHA256 검증 및 본문 작은사례를 해당 원문에 대입"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "KV fundamentals — transformers/cache_utils.py",
+      "href": "https://raw.githubusercontent.com/huggingface/transformers/5eddc12edfaf8cafde8c9bae4ccb12f8a139b4f9/src/transformers/cache_utils.py",
+      "note": "2026-10-04 확인. 전체파일 SHA256 검증 및 본문 작은사례를 해당 원문에 대입"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "KV fundamentals — transformers/models/gemma4/modeling_gemma4.py",
+      "href": "https://raw.githubusercontent.com/huggingface/transformers/5eddc12edfaf8cafde8c9bae4ccb12f8a139b4f9/src/transformers/models/gemma4/modeling_gemma4.py",
+      "note": "2026-10-04 확인. 전체파일 SHA256 검증 및 본문 작은사례를 해당 원문에 대입"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "KV fundamentals — configs/Qwen3.6-27B/config.json",
+      "href": "https://huggingface.co/Qwen/Qwen3.6-27B/resolve/6a9e13bd6fc8f0983b9b99948120bc37f49c13e9/config.json",
+      "note": "2026-10-04 확인. 전체파일 SHA256 검증 및 본문 작은사례를 해당 원문에 대입"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "KV fundamentals — configs/Muse-Glimmer-30B/config.json",
+      "href": "https://huggingface.co/meta-models/Muse-Glimmer-30B/resolve/a4e59da52a7bc87ae7251dd5545c0dd437c44b68/config.json",
+      "note": "2026-10-04 확인. 전체파일 SHA256 검증 및 본문 작은사례를 해당 원문에 대입"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "KV fundamentals — configs/gemma-4-31B/config.json",
+      "href": "https://huggingface.co/google/gemma-4-31B/resolve/5bbc2fb1c1b2c611d06e3d9f23c170ba21659d89/config.json",
+      "note": "2026-10-04 확인. 전체파일 SHA256 검증 및 본문 작은사례를 해당 원문에 대입"
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "KV fundamentals — Fast Transformer Decoding: One Write-Head is All You Need",
+      "href": "https://arxiv.org/html/1911.02150v1",
+      "note": "2026-10-04 확인. §2.4의 과거 기록 연결과 §3의 K/V head 축 제거에 3위치·4Q·1KV 사례24byte를 대입합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "KV fundamentals — GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints",
+      "href": "https://arxiv.org/html/2305.13245v3",
+      "note": "2026-10-04 확인. §2.2 묶음별 변환 가중치 평균과 Table1 XXL의1.51초·47.2 대0.28초·47.1 결과입니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "KV fundamentals — DeepSeek-V2 — latent compression and matrix absorption",
+      "href": "https://arxiv.org/html/2405.04434v5",
+      "note": "2026-10-04 확인. §2.1.2의 행렬 흡수와 §2.1.3의 위치 경로, Table1의(dc+dR)L 저장식을 적용합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "KV fundamentals — The Llama 3 Herd — Table 3 model dimensions",
+      "href": "https://arxiv.org/html/2407.21783v3#S3.SS2",
+      "note": "2026-10-04 확인. §3.2 Table3의8B열 구조값을 읽었고 gatedHFconfig 대신 공개원논문에 근거합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "KV fundamentals — PyTorch2.14 expand",
+      "href": "https://docs.pytorch.org/docs/2.14/generated/torch.Tensor.expand.html",
+      "note": "2026-10-04 확인. 기존storage view이며 후속연산은별도할당가능"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "KV fundamentals — PyTorch2.14 reshape",
+      "href": "https://docs.pytorch.org/docs/2.14/generated/torch.reshape.html",
+      "note": "2026-10-04 확인. 호환stride이면view,아니면copy이며 복사여부의존금지"
+    },
+],
   "ai/hybrid-kv-cache-allocation": [
     {
       kind: "핵심 논문",
@@ -5670,9 +5766,24 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "EIP-197 · alt_bn128 pairing check", href: "https://eips.ethereum.org/EIPS/eip-197", note: "BN254 G1/G2/GT·Fp² encoding·subgroup·product pairing contract" },
   ],
   "crypto/field-arithmetic": [
-    { kind: "핵심 논문", label: "Montgomery · Modular Multiplication Without Trial Division", href: "https://www.ams.org/journals/mcom/1985-44-170/S0025-5718-1985-0777282-X/", note: "Coprime radix representation과 REDC의 대수·operand 조건 원문" },
-    { kind: "공식 코드", label: "arkworks algebra v0.5.0 @ 7ad88c46", href: "https://github.com/arkworks-rs/algebra/tree/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src", note: "Field trait·bigint·Montgomery backend 주장을 고정한 ark-ff 0.5.0 source snapshot" },
-    { kind: "공식 규격", label: "EIP-197 · BN254 field/group boundary", href: "https://eips.ethereum.org/EIPS/eip-197", note: "Base field p·group order q·Fp/Fp² coordinate와 subgroup 요구의 protocol-visible 경계" },
+    {
+      "kind": "공식 코드",
+      "label": "arkworks algebra v0.5.0 finite-field source snapshot",
+      "href": "https://github.com/arkworks-rs/algebra/tree/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src",
+      "note": "from_bigint·mul_assign·into_bigint에 같은 7×5를 적용하고 실제 빌드로 확인했습니다. 역원 0·입력 17·교차체 5·reader에 남은 99도 실행했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Montgomery · Modular Multiplication Without Trial Division",
+      "href": "https://doi.org/10.1090/S0025-5718-1985-0777282-X",
+      "note": "519–520쪽의 REDC에 p=17, R=32, T=21을 넣고 m=27, u=15와 출력 1을 계산했습니다. 범위 증명과 입력 변환도 대조했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-197 · alt_bn128 pairing precompile",
+      "href": "https://eips.ethereum.org/EIPS/eip-197",
+      "note": "생성점 (1,2)의 좌표식을 대입하고 서로 다른 p와 q, 작은 5의 유효성과 타입 구분, 바이트 순서를 설명했습니다."
+    }
   ],
   "crypto/extension-fields": [
     { kind: "공식 코드", label: "arkworks curves BN254 @ e2d16a27", href: "https://github.com/arkworks-rs/curves/tree/e2d16a27e2cfa9f972ae9772df827a22730011b4/bn254/src/fields", note: "ark-bn254 0.5.0 API와 함께 읽는 concrete non-residue·tower·Frobenius coefficient source snapshot" },
@@ -5727,18 +5838,17 @@ export const ARTICLE_EVIDENCE: Readonly<
 ],
   "crypto/fft": [
     {
-      kind: "핵심 논문",
-      label: "Pollard — The Fast Fourier Transform in a Finite Field",
-      href: "https://doi.org/10.1007/BF01934338",
-      note: "Finite-field roots-of-unity transform과 fast computation의 초기 원문",
+      "kind": "공식 문서",
+      "label": "The Fast Fourier Transform in a Finite Field",
+      "href": "https://doi.org/10.1090/S0025-5718-1971-0301966-0",
+      "note": "원문 식 (1)~(3)의 d4, r4, GF17, d′4와 역배율 −d′13을 같은 네 계수에 대입했습니다. §3(i)의 길이 조건과 §3(ii)의 정수 복원 경계도 구분했습니다."
     },
     {
-      kind: "핵심 논문",
-      label:
-        "Cooley & Tukey — An Algorithm for the Machine Calculation of Complex Fourier Series",
-      href: "https://doi.org/10.1090/S0025-5718-1965-0178586-1",
-      note: "Composite-length DFT factorization과 intermediate reuse의 원 논문",
-    },
+      "kind": "공식 문서",
+      "label": "An Algorithm for the Machine Calculation of Complex Fourier Series",
+      "href": "https://doi.org/10.1090/S0025-5718-1965-0178586-1",
+      "note": "원문 식 (3), (6), (7)에 N4, r1=r2=2를 넣고 유한체 근 4에서 보조 배열 [[4,6],[15,15]]가 같은 출력으로 결합됨을 계산했습니다."
+    }
   ],
   "blockchain/helios": [
     { kind: "공식 코드", label: "a16z/helios source snapshot 43a8c9f", href: "https://github.com/a16z/helios/tree/43a8c9f3cdda41a6f383c4db41d9a83f102638b1", note: "Consensus light client와 execution proof를 local RPC에 연결한 pinned implementation 근거" },
@@ -6350,8 +6460,24 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
 ],
   "crypto/karatsuba": [
-    { kind: "핵심 논문", label: "Karatsuba & Ofman · Multiplication of many-digital numbers", href: "https://www.mathnet.ru/eng/dan26729", note: "Operand 분할로 quadratic보다 낮은 multiplication complexity를 구성한 1962 원문" },
-    { kind: "공식 문서", label: "GNU MP 6.3.0 · Karatsuba Multiplication", href: "https://gmplib.org/manual/Karatsuba-Multiplication.html", note: "세 곱 공식·odd-size split·carry/addition·target threshold의 production 구현 설명" },
+    {
+      "kind": "보충 읽기",
+      "label": "Karatsuba & Ofman · Multiplication of many-digital numbers",
+      "href": "https://www.mathnet.ru/eng/dan26729",
+      "note": "1962 논문의 서지 정보만 확인했습니다. PDF 접근 오류로 전문을 읽지 못했으므로 본문의 식·증명·구현 주장은 GMP 공식 문서와 배포 코드에서 확인한 범위로 제한합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "GNU MP 6.3.0 · Karatsuba Multiplication",
+      "href": "https://gmplib.org/manual/Karatsuba-Multiplication",
+      "note": "차의 곱 484를 높은 곱 672와 낮은 곱 2652의 합에서 빼 교차항 2840을 얻습니다. 합의 추가 자리와 실제 전환 크기의 범위를 구분합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "GNU MP 6.3.0 공식 배포 · mpn/generic/toom22_mul.c",
+      "href": "https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz",
+      "note": "공식 배포의 전체 C 원문·라이선스·SHA256을 보관했습니다. 두 64비트 자리의 [34,12]와 [78,56]을 분할·부호·세 곱·합산 순서에 대입했습니다. 실제 C 실행은 하지 않았습니다."
+    }
   ],
   "crypto/sparse-multiplication": [
     { kind: "공식 코드", label: "arkworks algebra 0.5.0 Fp12 @ 7ad88c46", href: "https://github.com/arkworks-rs/algebra/blob/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/fp12_2over3over2.rs", note: "mul_by_034·mul_by_014와 pinned coefficient-layout lowering source" },
@@ -7083,7 +7209,61 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 구현", label: "vLLM v0.6.3 BlockSpaceManagerV1", href: "https://github.com/vllm-project/vllm/blob/v0.6.3/vllm/core/block_manager_v1.py", note: "watermark 기본 0.01과 can_allocate의 OK·LATER·NEVER 조건" },
     { kind: "공식 문서", label: "SGLang Server Arguments", href: "https://docs.sglang.io/advanced_features/server_arguments.html", note: "mem-fraction-static·max-total-tokens·schedule-conservativeness와 retract 안내" },
     { kind: "공식 문서", label: "TensorRT-LLM KV Cache System", href: "https://nvidia.github.io/TensorRT-LLM/features/kvcache.html", note: "free_gpu_memory_fraction 기본 0.9와 host_cache_size secondary offload" },
-  ],
+    {
+      "kind": "공식 코드",
+      "label": "Memory admission — v0.6.6 block_manager.py — can_allocate / _can_swap",
+      "href": "https://github.com/vllm-project/vllm/blob/f49777ba62b4926d0f8c100ab06edb03c5c10098/vllm/core/block_manager.py",
+      "note": "2026-10-04 확인. C9:40/14/3→OK; full blocks+append demand for swap-in"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Memory admission — v0.6.6 scheduler.py — _swap_out",
+      "href": "https://github.com/vllm-project/vllm/blob/f49777ba62b4926d0f8c100ab06edb03c5c10098/vllm/core/scheduler.py",
+      "note": "2026-10-04 확인. CPU space failure raises RuntimeError, no recompute fallback"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Memory admission — v0.6.6 arg_utils.py — swap_space",
+      "href": "https://github.com/vllm-project/vllm/blob/f49777ba62b4926d0f8c100ab06edb03c5c10098/vllm/engine/arg_utils.py",
+      "note": "2026-10-04 확인. 4GiB default, distinct from simultaneous swap capacity policy"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Memory admission — v0.27.1 kv_cache_manager.py — allocate_slots",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/kv_cache_manager.py",
+      "note": "2026-10-04 확인. 1000input63blocks rejects free50 before actual256chunk16 allocation"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Memory admission — v0.27.1 scheduler.py — _preempt_request",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py",
+      "note": "2026-10-04 확인. C10 freed, PREEMPTED, computed0, history161 preserved"
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Memory admission — v0.27.1 scheduler config — full ISL and watermark",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/config/scheduler.py",
+      "note": "2026-10-04 확인. full input fit default True; watermark default0.0"
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Memory admission — PagedAttention §4.5 and §7.3",
+      "href": "https://arxiv.org/html/2309.06180v1",
+      "note": "2026-10-04 확인. C all-or-nothing eviction; CPU bound depends on no-new-admission policy"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Memory admission — SGLang Server Arguments — memory and scheduling",
+      "href": "https://docs.sglang.io/docs/advanced_features/server_arguments",
+      "note": "2026-10-04 확인. conservativeness direction; static memory includes weights and KV"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Memory admission — TensorRT-LLM KV Cache System — size and host offload",
+      "href": "https://nvidia.github.io/TensorRT-LLM/features/kvcache.html",
+      "note": "2026-10-04 확인. free100MiB×0.9 vs token80MiB chooses80MiB; host byte capacity"
+    },
+],
   "ai/inference-runtime-anatomy": [
     { kind: "공식 문서", label: "vLLM Architecture Overview", href: "https://docs.vllm.ai/en/latest/design/arch_overview.html", note: "frontend·engine core·worker·model runner 의 process 구조와 ZMQ 연결의 근거" },
     { kind: "공식 코드", label: "vllm/v1/worker/gpu_worker.py · vllm/v1/engine/core.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/worker/gpu_worker.py", note: "init_device → load_model → determine_available_memory → initialize_from_config → compile_or_warm_up_model 순서와 KV byte 뺄셈의 근거" },
@@ -7135,15 +7315,62 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "vLLM Optimization and Tuning: Chunked Prefill", href: "https://docs.vllm.ai/en/latest/configuration/optimization.html", note: "V1 기본 활성화, decode 우선, max_num_batched_tokens 절충의 공식 근거" },
   ],
   "gpu/sm-warp-scheduling-and-issue": [
-    { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1 · SIMT Architecture / Hardware Multithreading / Multiprocessor Level", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Warp 32 thread·경로 직렬화·on-chip context·산술 latency 약 4 clock 과 warp 16개 요건의 근거" },
-    { kind: "공식 문서", label: "NVIDIA Nsight Compute Profiling Guide · Scheduler Statistics / Warp State Statistics", href: "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html", note: "SM subpartition 4개, active·eligible·issued warp, long/short scoreboard·wait·not selected 분류의 근거" },
-    { kind: "공식 문서", label: "NVIDIA Hopper Architecture In-Depth", href: "https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/", note: "H100 SXM5 SM 132개와 SM diagram 의 처리 block 4개 구성의 근거" },
+    {
+      "kind": "공식 문서",
+      "label": "NVIDIA CUDA C++ Programming Guide 12.8.1 · SIMT Architecture, Hardware Multithreading, Multiprocessor Level",
+      "href": "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html",
+      "note": "32-thread SIMT와 경로 분기, CC7.x 산술4clock·최대처리량·독립성 조건, __syncwarp와*_sync의 참여 규칙을 제공합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NVIDIA Nsight Compute Profiling Guide · Scheduler Statistics, Warp State Statistics",
+      "href": "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html",
+      "note": "Resident·eligible·issued와 명령해독·입력의존·실행pipe 조건, scoreboard·not selected·pipe throttle의 정의를 제공합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NVIDIA Hopper Architecture In-Depth",
+      "href": "https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/",
+      "note": "H100 SXM5의132SM과 SM당4scheduler 구성을528 warp instruction/clock 발행 모형에 적용합니다."
+    }
   ],
   "gpu/cuda-compilation-and-isa-analysis": [
-    { kind: "공식 문서", label: "CUDA Compiler Driver NVCC — GPU Compilation", href: "https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html", note: "cudafe++·cicc·ptxas·fatbinary 단계, compute_XX·sm_XX 의 두 단계 compile, PTX runtime JIT 규칙, cubin 의 same-major 호환의 근거" },
-    { kind: "공식 규격", label: "Parallel Thread Execution ISA", href: "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html", note: "PTX 가 세대를 넘는 가상 ISA 라는 목표, .reg 의 무제한 가상 register 와 ptxas allocation, @p opcode.type 문법, sm_80·sm_90 의 ISA version 의 근거" },
-    { kind: "공식 문서", label: "CUDA Binary Utilities — cuobjdump·nvdisasm", href: "https://docs.nvidia.com/cuda/cuda-binary-utilities/index.html", note: "cuobjdump -sass·-ptx·-lelf·-res-usage, nvdisasm -cfg·-plr·-g 옵션과 본문 SASS 예제의 근거" },
-    { kind: "공식 문서", label: "CUDA C++ Programming Guide — Compute Capabilities", href: "https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#compute-capabilities", note: "major.minor 의미, GPU 별 번호, 8.0·9.0 의 register·shared memory 한도, 9.0 전용 feature 의 근거" },
+    {
+      "kind": "공식 문서",
+      "label": "CUDA Compiler Driver NVCC — GPU Compilation",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-compiler-driver-nvcc/index.html",
+      "note": "공개 compilation phase와 내부 단계의 경계, 대상 옵션·호환·JIT 경로를 제공합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Parallel Thread Execution ISA",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/parallel-thread-execution/index.html",
+      "note": "가상 register와 instruction·target 조건을 정의합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CUDA Binary Utilities (cuobjdump, nvdisasm)",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-binary-utilities/index.html",
+      "note": "§2.1의 실제 add PTX·SASS와 별도 test.cubin 자원 출력, 분석 옵션을 제공합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CUDA C++ Programming Guide — Compute Capabilities",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-programming-guide/index.html#compute-capabilities",
+      "note": "8.0·9.0의 register와 shared memory 한도를 제공합니다. 명령별 target은 PTX 규격을 함께 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Floating Point and IEEE 754 · §2.3",
+      "href": "https://docs.nvidia.com/cuda/floating-point/index.html#the-fused-multiply-add-fma",
+      "note": "원문의 이진 A=1+2⁻²³,B=−(1+2⁻²²)에 대해 FMA의2⁻⁴⁶과 분리 연산의0을 대조합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "NVIDIA cuda-samples v13.0 · vectorAdd.cu",
+      "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu",
+      "note": "전체 원본과 BSD 3-Clause 라이선스는 gpu-execution-sources에 보존합니다. 문서의 add.o와 별도 자료입니다."
+    }
   ],
   "gpu/triton-kernel-programming-and-compiler": [
     { kind: "핵심 논문", label: "Tillet, Kung, Cox · Triton (MAPL 2019)", href: "https://www.eecs.harvard.edu/~htk/publication/2019-mapl-tillet-kung-cox.pdf", note: "Tile 단위 프로그래밍 모델과 compiler 가 tiling·coalescing·shared memory·synchronization 을 소유한다는 설계의 원 논문" },
@@ -7624,7 +7851,25 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/math-high-dimensional-geometry": [
     { kind: "핵심 논문", label: "Dasgupta & Gupta — An Elementary Proof of a Theorem of Johnson and Lindenstrauss", href: "https://doi.org/10.1002/rsa.10073", note: "JL lemma의 명시적 차원 하한 k≥4ln(n)/(ε²/2−ε³/3)의 근거" },
     { kind: "핵심 논문", label: "Pope et al. — The Intrinsic Dimension of Images and Its Impact on Learning", href: "https://arxiv.org/abs/2104.08894", note: "ImageNet 등 자연 이미지의 intrinsic dimension 추정치(26~43)의 근거" },
-  ],
+    {
+      "kind": "핵심 논문",
+      "label": "Dasgupta–Gupta · 정리 2.1과 pp.61–62 증명",
+      "href": "https://cseweb.ucsd.edu/~dasgupta/papers/jl.pdf",
+      "note": "존재 조건과 실패 확률을 같은 n=4에 대입하고 성공 하한 1/n을 보존합니다. 6 계수의 더 강한 충분조건을 구별합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "scikit-learn 1.7.2 · random_projection.py, 25dee604",
+      "href": "https://github.com/scikit-learn/scikit-learn/blob/25dee604bae18205b01548348388baf7a1cdfe0e/sklearn/random_projection.py",
+      "note": "원문 전체·라이선스·SHA256을 보존합니다. 행렬 분산 1/k, X @ components_.T, 정수 자르기와 n4의 auto 거부에 같은 사례를 대입했습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Pope et al. · ICLR2021 식(2)와 표1",
+      "href": "https://arxiv.org/pdf/2104.08894",
+      "note": "ImageNet 26·38·43·43과 이웃 수 3·5·10·20을 함께 읽고 실제 자료의 추정과 별도 생성 자료 검증을 구별합니다."
+    },
+],
   "ai/math-numerical-precision-stability": [
     { kind: "핵심 논문", label: "Goldberg — What Every Computer Scientist Should Know About Floating-Point Arithmetic", href: "https://doi.org/10.1145/103162.103163", note: "IEEE 754 형식·유효숫자·machine epsilon 수치의 근거" },
     { kind: "보충 읽기", label: "Goodfellow, Bengio & Courville — Deep Learning, Chapter 4", href: "https://www.deeplearningbook.org/contents/numerical.html", note: "Softmax max-subtraction 안정화 기법의 근거" },
@@ -10315,6 +10560,38 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "go-ethereum c9a2bc7 eip4844.go",
       "href": "https://github.com/ethereum/go-ethereum/blob/c9a2bc73c847319a8faa57de59e42c0efc420682/consensus/misc/eip4844/eip4844.go",
       "note": "원본 fakeExponential 함수를 여섯 입력으로 로컬에서 실행했습니다."
+    }
+  ],
+  "ai/math-exponents-logarithms": [
+    {
+      "kind": "공식 문서",
+      "label": "OpenStax College Algebra 2e · §6.3의 예제 2와 연습문제 27",
+      "href": "https://openstax.org/books/college-algebra-2e/pages/6-3-logarithmic-functions",
+      "note": "실제 2³=8의 역관계와 log₂x=−3에 같은 1/8을 대입합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "OpenStax College Algebra 2e · §6.5의 곱과 밑 변환 유도",
+      "href": "https://openstax.org/books/college-algebra-2e/pages/6-5-logarithmic-properties",
+      "note": "M=bᵐ, N=bⁿ에 1/2·1/4·밑 2를 넣어 −1−2=−3을 얻습니다. 양수 입력과 밑 조건을 보존합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "CPython v3.9.6 · Modules/mathmodule.c",
+      "href": "https://github.com/python/cpython/blob/db3ff76da19004f266b62e98a81bdfd322861436/Modules/mathmodule.c#L2340-L2362",
+      "note": "전체 원문·PSF 라이선스·SHA256을 보존했습니다. math_log_impl의 num/den에 0.125와 밑 2를 넣고 로그 0의 오류 래퍼도 확인합니다. 시스템 수학 라이브러리의 내부 근사 구현으로 주장하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Python 3.9 · math의 log, log2, log1p",
+      "href": "https://docs.python.org/3.9/library/math.html",
+      "note": "밑 변환 규칙과 별도 log2, 작은 증분을 받는 log1p를 확인합니다. 고정 소스 v3.9.6과 현재 3.9 계열 문서를 구별해 기록했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Python 3.9 · sys.float_info",
+      "href": "https://docs.python.org/3.9/library/sys.html#sys.float_info",
+      "note": "float_info.min은 정규 최솟값이며 math.ulp(0.0)은 비정규 값을 포함한 최솟값입니다. 로컬 Python3.9.6 실행에서 2⁻¹⁰²²와 2⁻¹⁰⁷⁴를 구별했습니다."
     }
   ],
 };

@@ -84,80 +84,71 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/math-vectors-inner-products#projection",
   },
   "cauchy-schwarz": {
-    id: "cauchy-schwarz",
-    kind: "theorem",
-    domain: "mathematics",
-    label: "Cauchy–Schwarz inequality",
-    definition:
-      "두 vector의 dot product 절댓값은 두 길이의 곱을 넘을 수 없으며, 같은 직선 방향일 때만 등호가 성립한다는 부등식입니다.",
-    canonicalHref: "/cs/ai/math-vectors-inner-products#cauchy-schwarz",
+    "id": "cauchy-schwarz",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Cauchy–Schwarz inequality",
+    "definition": "실수 벡터의 내적 절댓값은 두 유클리드 길이의 곱을 넘지 않습니다. 두 벡터가 선형 종속일 때 등호가 성립하며 한쪽이 0인 경우도 포함합니다. 둘 다 0이 아니면 같은 직선 위의 같은 방향 또는 반대 방향입니다.",
+    "canonicalHref": "/cs/ai/math-vectors-inner-products#cauchy-schwarz"
   },
   "linear-map-matrix": {
-    id: "linear-map-matrix",
-    domain: "mathematics",
-    label: "Matrix · linear map",
-    definition:
-      "Input vector의 좌표를 row별 dot product로 섞어 output vector를 만드는 linear transformation과 그 계수를 행·열로 배열한 표현입니다.",
-    canonicalHref: "/cs/ai/math-matrices-svd#matrix-map",
+    "id": "linear-map-matrix",
+    "domain": "mathematics",
+    "label": "Matrix · linear map",
+    "definition": "Input vector의 좌표를 row별 dot product로 섞어 output vector를 만드는 linear transformation과 그 계수를 행·열로 배열한 표현입니다.",
+    "canonicalHref": "/cs/ai/math-matrices-svd#matrix-map"
   },
   "matrix-multiplication": {
-    id: "matrix-multiplication",
-    domain: "mathematics",
-    label: "Matrix multiplication",
-    definition:
-      "첫 linear map의 output을 다음 linear map의 input으로 넘기는 함수 합성을 row–column dot product로 계산하는 연산입니다.",
-    canonicalHref: "/cs/ai/math-matrices-svd#multiplication",
+    "id": "matrix-multiplication",
+    "domain": "mathematics",
+    "label": "Matrix multiplication",
+    "definition": "첫 linear map의 output을 다음 linear map의 input으로 넘기는 함수 합성을 row–column dot product로 계산하는 연산입니다.",
+    "canonicalHref": "/cs/ai/math-matrices-svd#multiplication"
   },
   "matrix-rank": {
-    id: "matrix-rank",
-    domain: "mathematics",
-    label: "Matrix rank",
-    definition:
-      "Matrix의 column 또는 row가 펼치는 독립 방향의 수이며, linear map의 output이 실제로 움직일 수 있는 부분공간의 dimension입니다.",
-    canonicalHref: "/cs/ai/math-matrices-svd#rank-basis",
+    "id": "matrix-rank",
+    "domain": "mathematics",
+    "label": "Matrix rank",
+    "definition": "Matrix의 column 또는 row가 펼치는 독립 방향의 수이며, linear map의 output이 실제로 움직일 수 있는 부분공간의 dimension입니다.",
+    "canonicalHref": "/cs/ai/math-matrices-svd#rank-basis"
   },
   "orthonormal-basis": {
-    id: "orthonormal-basis",
-    domain: "mathematics",
-    label: "Orthonormal basis",
-    definition:
-      "서로 다른 vector끼리 dot product가 0이고 각 norm이 1인 독립 방향 모음으로, projection coefficient가 서로 간섭하지 않는 좌표계를 만듭니다.",
-    canonicalHref: "/cs/ai/math-matrices-svd#rank-basis",
+    "id": "orthonormal-basis",
+    "domain": "mathematics",
+    "label": "Orthonormal basis",
+    "definition": "주어진 공간을 펼치는 벡터들 중 서로의 내적이 0이고 각 길이가 1인 기저입니다. 그 공간의 벡터를 각 기저와의 내적을 계수로 삼아 표현할 수 있습니다.",
+    "canonicalHref": "/cs/ai/math-matrices-svd#rank-basis"
   },
   "singular-value-decomposition": {
-    id: "singular-value-decomposition",
-    kind: "method",
-    domain: "mathematics",
-    label: "Singular value decomposition · SVD",
-    definition:
-      "임의의 matrix를 input orthonormal directions, nonnegative direction scales, output orthonormal directions의 곱 UΣVᵀ로 분해합니다.",
-    canonicalHref: "/cs/ai/math-matrices-svd#svd",
+    "id": "singular-value-decomposition",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Singular value decomposition · SVD",
+    "definition": "실수 행렬을 입력의 직교 방향, 음이 아닌 특잇값, 출력의 직교 방향으로 분해한 A=UΣVᵀ 표현입니다. 전체 분해와 축소 분해의 행렬 크기를 구별하며 같은 특잇값의 방향과 부호가 유일하다고 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/math-matrices-svd#svd"
   },
   "frobenius-norm": {
-    id: "frobenius-norm",
-    domain: "mathematics",
-    label: "Frobenius norm",
-    definition:
-      "Matrix의 모든 entry를 하나의 긴 vector처럼 보고 제곱합의 제곱근으로 전체 크기나 reconstruction error를 재는 norm입니다.",
-    canonicalHref: "/cs/ai/math-matrices-svd#low-rank",
+    "id": "frobenius-norm",
+    "domain": "mathematics",
+    "label": "Frobenius norm",
+    "definition": "Matrix의 모든 entry를 하나의 긴 vector처럼 보고 제곱합의 제곱근으로 전체 크기나 reconstruction error를 재는 norm입니다.",
+    "canonicalHref": "/cs/ai/math-matrices-svd#low-rank"
   },
   "low-rank-approximation": {
-    id: "low-rank-approximation",
-    kind: "method",
-    domain: "mathematics",
-    label: "Low-rank approximation",
-    definition:
-      "큰 matrix를 적은 수의 독립 latent directions와 두 작은 factor로 근사해 저장·계산을 줄이고 주요 variation을 보존하는 방법입니다.",
-    canonicalHref: "/cs/ai/math-matrices-svd#low-rank",
+    "id": "low-rank-approximation",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Low-rank approximation",
+    "definition": "행렬을 더 낮은 계수의 행렬로 근사하는 방법입니다. 작은 두 인자의 저장량이 원래 원소 수보다 적을 때 저장 이득이 있으며 오차의 크기는 선택한 노름으로 평가합니다. 작은 재구성 오차만으로 과제 정보의 보존을 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/math-matrices-svd#low-rank"
   },
   "eckart-young-theorem": {
-    id: "eckart-young-theorem",
-    kind: "theorem",
-    domain: "mathematics",
-    label: "Eckart–Young theorem",
-    definition:
-      "가장 큰 singular value k개를 남긴 truncated SVD가 spectral norm과 Frobenius norm에서 가장 가까운 rank-k matrix라는 정리입니다.",
-    canonicalHref: "/cs/ai/math-matrices-svd#low-rank",
+    "id": "eckart-young-theorem",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Eckart–Young theorem",
+    "definition": "0≤k≤min(m,n)인 정수 k에 대해 큰 특잇값 k개까지 남긴 절단 SVD가 rank≤k인 m×n 실수 행렬 중 스펙트럴 노름과 프로베니우스 노름 오차를 각각 최소화한다는 정리입니다. 최적 행렬이 유일할 필요는 없습니다.",
+    "canonicalHref": "/cs/ai/math-matrices-svd#low-rank"
   },
   "radian-measure": {
     id: "radian-measure",
@@ -2649,13 +2640,12 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "서로 다른 두 input에서 생긴 output 차이를 input 차이로 나눠, 아직 유한한 구간에서 측정한 입력 1단위당 평균 변화율입니다.",
     canonicalHref: "/cs/ai/math-functions-derivatives-gradients#derivative",
   },
-  derivative: {
-    id: "derivative",
-    domain: "mathematics",
-    label: "Derivative",
-    definition:
-      "입력의 아주 작은 변화에 대한 출력 변화의 비율로, 한 지점의 local slope와 민감도를 나타냅니다.",
-    canonicalHref: "/cs/ai/math-functions-derivatives-gradients#derivative",
+  "derivative": {
+    "id": "derivative",
+    "domain": "mathematics",
+    "label": "Derivative",
+    "definition": "한 점에서 입력 간격을 0으로 보낼 때 차분 몫이 수렴하면 그 극한으로 정의하는 순간 변화율입니다. 해당 점의 국소 기울기와 민감도를 나타내며 유한한 이동의 정확한 변화량과는 구별합니다.",
+    "canonicalHref": "/cs/ai/math-functions-derivatives-gradients#derivative"
   },
   "local-linear-approximation": {
     id: "local-linear-approximation",
@@ -2683,12 +2673,11 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/math-gradients-jacobians#overview",
   },
   "jacobian-matrix": {
-    id: "jacobian-matrix",
-    domain: "mathematics",
-    label: "Jacobian matrix",
-    definition:
-      "Vector-valued function의 각 output coordinate를 각 input coordinate로 편미분해 행과 열에 배치한 local linear map입니다.",
-    canonicalHref: "/cs/ai/math-gradients-jacobians#jacobian",
+    "id": "jacobian-matrix",
+    "domain": "mathematics",
+    "label": "Jacobian matrix",
+    "definition": "벡터 함수의 각 출력 좌표를 각 입력 좌표로 편미분해 출력 행·입력 열로 배열한 행렬입니다. 함수가 전체적으로 미분 가능할 때 그 점의 국소 선형 근사를 나타냅니다. 편미분이 존재한다는 사실만으로 이 근사를 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/math-gradients-jacobians#jacobian"
   },
   "jacobian-vector-product": {
     id: "jacobian-vector-product",
@@ -2714,37 +2703,33 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "매끈하지 않은 convex 함수의 한 점에서 함수를 아래에서 받치는 affine lower bound의 기울기이며, 가능한 값이 집합일 수 있습니다.",
     canonicalHref: "/cs/ai/math-functions-derivatives-gradients#nonsmooth",
   },
-  exponentiation: {
-    id: "exponentiation",
-    domain: "mathematics",
-    label: "Exponentiation · 거듭제곱",
-    definition:
-      "같은 밑을 지수가 나타내는 횟수만큼 곱하는 연산에서 출발해 정수·유리수·실수 지수로 확장한 scale 변환입니다.",
-    canonicalHref: "/cs/ai/math-exponents-logarithms#exponents",
+  "exponentiation": {
+    "id": "exponentiation",
+    "domain": "mathematics",
+    "label": "Exponentiation · 거듭제곱",
+    "definition": "같은 밑을 지수가 나타내는 횟수만큼 곱하는 연산에서 출발해 정수·유리수·실수 지수로 확장한 scale 변환입니다.",
+    "canonicalHref": "/cs/ai/math-exponents-logarithms#exponents"
   },
-  logarithm: {
-    id: "logarithm",
-    domain: "mathematics",
-    label: "Logarithm · 로그",
-    definition:
-      "밑을 몇 제곱해야 주어진 양수가 되는지 되묻는 exponentiation의 inverse function입니다.",
-    canonicalHref: "/cs/ai/math-exponents-logarithms#logarithms",
+  "logarithm": {
+    "id": "logarithm",
+    "domain": "mathematics",
+    "label": "Logarithm · 로그",
+    "definition": "양의 밑 b≠1에 대해 b의 몇 제곱이 주어진 양수 x가 되는지 나타내는 실수 지수입니다. 밑이 1보다 작을 때와 클 때의 증가·감소 방향을 구별합니다.",
+    "canonicalHref": "/cs/ai/math-exponents-logarithms#logarithms"
   },
   "log-product-rule": {
-    id: "log-product-rule",
-    domain: "mathematics",
-    label: "Log product rule",
-    definition:
-      "양수의 곱을 같은 밑 logarithm 값의 합으로 바꾸고 나눗셈을 차로 바꾸는 항등식입니다.",
-    canonicalHref: "/cs/ai/math-exponents-logarithms#log-identities",
+    "id": "log-product-rule",
+    "domain": "mathematics",
+    "label": "Log product rule",
+    "definition": "양수의 곱을 같은 밑 logarithm 값의 합으로 바꾸고 나눗셈을 차로 바꾸는 항등식입니다.",
+    "canonicalHref": "/cs/ai/math-exponents-logarithms#log-identities"
   },
   "change-of-log-base": {
-    id: "change-of-log-base",
-    domain: "mathematics",
-    label: "Change of logarithm base",
-    definition:
-      "한 밑의 logarithm을 다른 밑의 logarithm 비율로 바꾸어 bit·nat처럼 scale과 단위를 변환하는 항등식입니다.",
-    canonicalHref: "/cs/ai/math-exponents-logarithms#log-bases",
+    "id": "change-of-log-base",
+    "domain": "mathematics",
+    "label": "Change of logarithm base",
+    "definition": "한 밑의 logarithm을 다른 밑의 logarithm 비율로 바꾸어 bit·nat처럼 scale과 단위를 변환하는 항등식입니다.",
+    "canonicalHref": "/cs/ai/math-exponents-logarithms#log-bases"
   },
   "sample-space": {
     id: "sample-space",
@@ -2939,12 +2924,11 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/math-optimization-convexity#convexity",
   },
   "gradient-descent": {
-    id: "gradient-descent",
-    domain: "mathematics",
-    label: "Gradient descent",
-    definition:
-      "현재 gradient의 반대 방향으로 step을 반복해 differentiable objective를 줄이는 first-order optimization method입니다.",
-    canonicalHref: "/cs/ai/math-gradient-descent-convergence#overview",
+    "id": "gradient-descent",
+    "domain": "mathematics",
+    "label": "Gradient descent",
+    "definition": "현재 기울기의 반대 방향에 양의 학습률을 곱해 다음 위치를 정하는 반복 최적화 방법입니다. 유한한 이동이 실제로 목적함수를 줄이는지는 함수의 매끄러움과 학습률 등 조건에 달려 있습니다.",
+    "canonicalHref": "/cs/ai/math-gradient-descent-convergence#overview"
   },
   "learning-rate": {
     id: "learning-rate",
@@ -2997,12 +2981,11 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/math-gradient-descent-convergence#convergence",
   },
   "stationary-point": {
-    id: "stationary-point",
-    domain: "mathematics",
-    label: "Stationary point",
-    definition:
-      "Gradient가 0이거나 충분히 작은 위치이며 nonconvex 문제에서는 local minimum·maximum·saddle point를 모두 포함할 수 있습니다.",
-    canonicalHref: "/cs/ai/math-gradient-descent-convergence#stopping-boundary",
+    "id": "stationary-point",
+    "domain": "mathematics",
+    "label": "Stationary point",
+    "definition": "미분 가능한 목적함수의 기울기가 정확히 0인 점입니다. 작은 기울기 노름은 근사적인 정지 조건이며 정확한 정지점이나 그 점까지의 거리 보장과 다릅니다. 비볼록 함수에서는 극소·극대·안장점을 구별해야 합니다.",
+    "canonicalHref": "/cs/ai/math-gradient-descent-convergence#stopping-boundary"
   },
   "optimization-stopping-signal": {
     id: "optimization-stopping-signal",
@@ -3100,13 +3083,12 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "모델의 prediction이 target과 얼마나 맞지 않는지를 파라미터 최적화에 쓸 scalar로 나타낸 값입니다.",
     canonicalHref: "/cs/ai/backprop-optimization#loss-function",
   },
-  gradient: {
-    id: "gradient",
-    domain: "mathematics",
-    label: "Gradient",
-    definition:
-      "각 파라미터를 아주 조금 바꿨을 때 loss가 어느 방향으로 얼마나 변하는지 모은 편미분 벡터입니다.",
-    canonicalHref: "/cs/ai/math-gradients-jacobians#gradient-direction",
+  "gradient": {
+    "id": "gradient",
+    "domain": "mathematics",
+    "label": "Gradient",
+    "definition": "실수값 함수의 각 입력 좌표에 대한 편미분을 모은 벡터입니다. 미분 가능하고 유클리드 길이로 방향을 비교할 때 0이 아닌 기울기는 가장 큰 국소 증가 방향이며 단위 방향과의 내적으로 방향미분을 얻습니다.",
+    "canonicalHref": "/cs/ai/math-gradients-jacobians#gradient-direction"
   },
   backpropagation: {
     id: "backpropagation",
@@ -3780,31 +3762,28 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/attention-theory#self-attention",
   },
   "kv-cache-decode-state": {
-    id: "kv-cache-decode-state",
-    kind: "concept",
-    domain: "computer-science",
-    label: "KV cache · autoregressive decode state",
-    definition:
-      "Autoregressive decode에서 과거 token의 layer별 key와 value projection을 다시 계산하지 않도록 보존하고, 현재 token의 query가 다음 step마다 이 기록을 조회하게 하는 runtime state입니다.",
-    canonicalHref: "/cs/ai/kv-cache-fundamentals#kv-shape",
+    "id": "kv-cache-decode-state",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "KV cache · autoregressive decode state",
+    "definition": "다음 위치를 위한 기록과 이번에만 쓰는 질문의 수명이 다릅니다. 같은 모델·앞부분·위치 조건의 causal 실행이며 입력 원문이나 모델 가중치 자체를 저장하는 뜻이 아닙니다.",
+    "canonicalHref": "/cs/ai/kv-cache-fundamentals#kv-shape"
   },
   "grouped-query-kv-sharing": {
-    id: "grouped-query-kv-sharing",
-    kind: "method",
-    domain: "machine-learning",
-    label: "MHA·GQA·MQA KV-head sharing",
-    definition:
-      "Query head 수는 유지하되 더 적은 key/value head를 여러 query head가 공유하게 만들어 cache width와 decode memory traffic을 줄이는 attention 설계 축입니다.",
-    canonicalHref: "/cs/ai/kv-cache-fundamentals#kv-shape-sharing",
+    "id": "grouped-query-kv-sharing",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "MHA·GQA·MQA KV-head sharing",
+    "definition": "여러 조회 관점이 동일한 기록 묶음을 나눠 읽습니다. 계산용 펼침과 cache 저장을 구분하며 reshape는 복사할 수 있습니다. 공유가 품질 동등성을 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/kv-cache-fundamentals#kv-shape-sharing"
   },
   "per-token-kv-byte": {
-    id: "per-token-kv-byte",
-    kind: "metric",
-    domain: "computer-science",
-    label: "Per-token KV cache byte",
-    definition:
-      "한 token의 K/V를 보존하는 layer 수·KV head 수·head dimension·K/V tensor 수·cache dtype byte를 곱해 구하는 dense-allocation memory 비용입니다.",
-    canonicalHref: "/cs/ai/kv-cache-fundamentals#kv-shape-formula",
+    "id": "per-token-kv-byte",
+    "kind": "metric",
+    "domain": "computer-science",
+    "label": "Per-token KV cache byte",
+    "definition": "한 층의 기록 숫자를 세고 원소byte를 곱한 뒤 층별로 더합니다. 층별 폭·window·병렬 분할·head 복제·block 빈칸·scale과 실제 최종 K/V 배열을 확인해야 합니다.",
+    "canonicalHref": "/cs/ai/kv-cache-fundamentals#kv-shape-formula"
   },
   "hybrid-layer-kv-retention": {
     id: "hybrid-layer-kv-retention",
@@ -4144,22 +4123,20 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/vllm-paged-attention#hybrid-cache-groups",
   },
   "chained-prefix-block-hash": {
-    id: "chained-prefix-block-hash",
-    kind: "method",
-    domain: "computer-science",
-    label: "Chained prefix-block hash",
-    definition:
-      "Parent block hash·현재 full-block token IDs·LoRA/multimodal/salt 같은 KV identity를 hash해 앞선 causal prefix의 순서와 계산 조건을 cache key에 연결하는 방법입니다.",
-    canonicalHref: "/cs/ai/vllm-paged-attention#prefix-caching",
+    "id": "chained-prefix-block-hash",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Chained prefix-block hash",
+    "definition": "이전 구간의 hash와 현재 hash 단위의 token ID 및 LoRA·multimodal·salt 등의 추가 키를 묶어 앞 문맥과 계산 조건을 재사용 키에 연결합니다. 본문 기본 사례는 hash 단위와 물리 block이 모두 16이지만 두 단위는 다를 수 있습니다. 같은 cache namespace의 모델·위치 조건도 일치해야 합니다.",
+    "canonicalHref": "/cs/ai/vllm-paged-attention#prefix-caching"
   },
   "automatic-prefix-cache-scope": {
-    id: "automatic-prefix-cache-scope",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Automatic prefix cache scope",
-    definition:
-      "새 request의 시작부터 연속으로 일치한 full KV block의 prefill은 생략하지만 partial suffix와 새 output token decode는 그대로 수행하는 prefix reuse의 효과 범위입니다.",
-    canonicalHref: "/cs/ai/vllm-paged-attention#full-block-boundary",
+    "id": "automatic-prefix-cache-scope",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Automatic prefix cache scope",
+    "definition": "새 요청의 시작에서 연속으로 일치한 KV를 재사용해 해당 입력의 계산을 줄입니다. hash 단위와 물리 block이 같은 기본 모형은 full block 경계까지 hit하지만, 더 작은 hash 단위의 partial hit에는 별도 CoW 경로가 있습니다. 미일치 입력과 새 출력 계산까지 없어지는 뜻은 아닙니다.",
+    "canonicalHref": "/cs/ai/vllm-paged-attention#full-block-boundary"
   },
   "serving-end-to-end-contract": {
     id: "serving-end-to-end-contract",
@@ -9235,40 +9212,36 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/gpu/cuda-thread-hierarchy#indexing-1d"
   },
   "cuda-shared-scratchpad": {
-    id: "cuda-shared-scratchpad",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA block-shared scratchpad",
-    definition:
-      "같은 block threads가 함께 stage·exchange·reuse하는 SM의 programmer-managed on-chip memory입니다. Global traffic 감소와 address reordering 이득을 얻는 대신 capacity·barrier·occupancy 비용을 부담합니다.",
-    canonicalHref: "/cs/gpu/cuda-shared-memory#overview",
+    "id": "cuda-shared-scratchpad",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA block-shared scratchpad",
+    "definition": "같은 block threads가 함께 stage·exchange·reuse하는 SM의 programmer-managed on-chip memory입니다. Global traffic 감소와 address reordering 이득을 얻는 대신 capacity·barrier·occupancy 비용을 부담합니다.",
+    "canonicalHref": "/cs/gpu/cuda-shared-memory#trace"
   },
   "cuda-global-coalescing": {
-    id: "cuda-global-coalescing",
-    kind: "method",
-    domain: "computer-science",
-    label: "CUDA global-memory coalescing",
-    definition:
-      "한 warp memory instruction의 lane addresses를 가능한 적은 global-memory segments와 transactions로 충족해 옮긴 byte 중 useful byte 비율을 높이는 access 설계입니다.",
-    canonicalHref: "/cs/gpu/cuda-shared-memory#coalescing",
+    "id": "cuda-global-coalescing",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "CUDA global-memory coalescing",
+    "definition": "한 warp memory instruction의 lane addresses를 가능한 적은 global-memory segments와 transactions로 충족해 옮긴 byte 중 useful byte 비율을 높이는 access 설계입니다.",
+    "canonicalHref": "/cs/gpu/cuda-shared-memory#coalescing"
   },
   "cuda-shared-bank-conflict": {
-    id: "cuda-shared-bank-conflict",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA shared-memory bank conflict",
-    definition:
-      "한 warp의 shared-memory instruction에서 여러 active lanes가 같은 bank의 서로 다른 addresses를 요구해 request가 여러 차례로 직렬화되는 현상입니다. 같은 address read broadcast와는 구분합니다.",
-    canonicalHref: "/cs/gpu/cuda-shared-memory#bank-conflict",
+    "id": "cuda-shared-bank-conflict",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA shared-memory bank conflict",
+    "definition": "한 warp의 shared-memory instruction에서 여러 active lanes가 같은 bank의 서로 다른 addresses를 요구해 request가 여러 차례로 직렬화되는 현상입니다. 같은 address read broadcast와는 구분합니다.",
+    "canonicalHref": "/cs/gpu/cuda-shared-memory#bank-conflict"
   },
   "cuda-data-layout-aos-soa": {
-    id: "cuda-data-layout-aos-soa",
-    kind: "method",
-    domain: "computer-science",
-    label: "CUDA AoS·SoA data-layout choice",
-    definition:
-      "Record fields를 object별로 붙이는 Array of Structures와 field별로 모으는 Structure of Arrays를 warp의 실제 field subset·address stride·conversion cost에 맞춰 선택하는 memory-layout 방법입니다.",
-    canonicalHref: "/cs/gpu/cuda-shared-memory#aos-soa",
+    "id": "cuda-data-layout-aos-soa",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "CUDA AoS·SoA data-layout choice",
+    "definition": "Record fields를 object별로 붙이는 Array of Structures와 field별로 모으는 Structure of Arrays를 warp의 실제 field subset·address stride·conversion cost에 맞춰 선택하는 memory-layout 방법입니다.",
+    "canonicalHref": "/cs/gpu/cuda-shared-memory#aos-soa"
   },
   "cuda-synchronization-scope": {
     id: "cuda-synchronization-scope",
@@ -9487,13 +9460,12 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/blockchain/consensus-mechanisms#overview",
   },
   "pow-hash-target-lottery": {
-    id: "pow-hash-target-lottery",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "PoW hash-target lottery",
-    definition:
-      "Block header의 hash가 target보다 작을 때 proof를 인정하고, 균등·독립 hash 근사에서 성공 확률 T/2^b와 기대 시도 수 2^b/T를 갖는 계산 자원 기반 추첨입니다.",
-    canonicalHref: "/cs/blockchain/consensus-mechanisms#pow",
+    "id": "pow-hash-target-lottery",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "PoW hash-target lottery",
+    "definition": "해시가 b비트에서 균등·독립이고 H<T를 성공으로 정한 설명 모형은 성공 확률 T/2^b와 평균 시도 수 2^b/T를 갖습니다. 실제 Bitcoin의 H≤target처럼 경계가 포함되면 성공값 수는 target+1이므로 원문의 조건을 확인해야 합니다.",
+    "canonicalHref": "/cs/blockchain/consensus-mechanisms#pow"
   },
   "pow-chainwork-probabilistic-finality": {
     id: "pow-chainwork-probabilistic-finality",
@@ -9719,7 +9691,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "id": "polynomial-coefficient-evaluation-form",
     "domain": "mathematics",
     "label": "Polynomial coefficient · evaluation form",
-    "definition": "같은 degree-bounded polynomial을 거듭제곱별 coefficient vector 또는 서로 다른 points에서의 value vector로 나타내는 두 표현입니다.",
+    "definition": "차수 한계가 있는 다항식을 거듭제곱별 계수로 적거나 서로 다른 위치의 값으로 적는 두 표현입니다. 평가값에서 유일하게 되찾으려면 차수 한계에 맞는 충분한 개수의 서로 다른 위치가 필요합니다.",
     "canonicalHref": "/cs/crypto/finite-field-theory#polynomial"
   },
   "polynomial-root-degree-bound": {
@@ -9773,52 +9745,47 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "method",
     "domain": "mathematics",
     "label": "Barycentric Lagrange interpolation",
-    "definition": "고정 sample x 좌표의 inverse-product weight를 precompute하고 rational ratio 형태로 interpolant의 새 point value를 O(n)에 평가하는 방법입니다.",
+    "definition": "서로 다른 고정 표본 위치에서 역수 곱 가중치를 미리 계산하고 새 위치의 다항식 값을 두 합의 비로 O(n)에 구하는 방법입니다. 새 위치가 기존 표본 위치와 같으면 분모 0인 식을 사용하지 않고 그 표본값을 바로 돌려줍니다.",
     "canonicalHref": "/cs/crypto/lagrange#usage"
   },
   "finite-field-ntt": {
-    id: "finite-field-ntt",
-    kind: "method",
-    domain: "mathematics",
-    label: "Number theoretic transform (NTT)",
-    definition:
-      "Polynomial coefficient를 finite-field primitive roots-of-unity domain의 evaluation vector로 바꾸는 invertible linear transform입니다.",
-    canonicalHref: "/cs/crypto/fft#dft",
+    "id": "finite-field-ntt",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Number theoretic transform (NTT)",
+    "definition": "Polynomial coefficient를 finite-field primitive roots-of-unity domain의 evaluation vector로 바꾸는 invertible linear transform입니다.",
+    "canonicalHref": "/cs/crypto/fft#dft"
   },
   "ntt-domain-two-adicity": {
-    id: "ntt-domain-two-adicity",
-    domain: "mathematics",
-    label: "NTT domain · 2-adicity",
-    definition:
-      "Fₚ*의 subgroup order가 transform length를 지원하는 조건과, p−1을 나누는 최대 2의 거듭제곱으로 radix-2 domain 크기를 정하는 성질입니다.",
-    canonicalHref: "/cs/crypto/fft#unit-root",
+    "id": "ntt-domain-two-adicity",
+    "domain": "mathematics",
+    "label": "NTT domain · 2-adicity",
+    "definition": "Fₚ*의 subgroup order가 transform length를 지원하는 조건과, p−1을 나누는 최대 2의 거듭제곱으로 radix-2 domain 크기를 정하는 성질입니다.",
+    "canonicalHref": "/cs/crypto/fft#unit-root"
   },
   "ntt-butterfly": {
-    id: "ntt-butterfly",
-    kind: "method",
-    domain: "computer-science",
-    label: "Finite-field NTT butterfly",
-    definition:
-      "Even·odd sub-transform과 finite-field twiddle product를 더하고 빼서 서로 n/2 떨어진 두 NTT output을 함께 만드는 radix-2 계산 단위입니다.",
-    canonicalHref: "/cs/crypto/fft#butterfly",
+    "id": "ntt-butterfly",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Finite-field NTT butterfly",
+    "definition": "Even·odd sub-transform과 finite-field twiddle product를 더하고 빼서 서로 n/2 떨어진 두 NTT output을 함께 만드는 radix-2 계산 단위입니다.",
+    "canonicalHref": "/cs/crypto/fft#butterfly"
   },
   "inverse-ntt": {
-    id: "inverse-ntt",
-    kind: "method",
-    domain: "mathematics",
-    label: "Inverse NTT (INTT)",
-    definition:
-      "Primitive root의 inverse와 transform length의 field inverse를 사용해 roots-of-unity evaluation vector에서 원래 polynomial coefficient를 복원하는 변환입니다.",
-    canonicalHref: "/cs/crypto/fft#intt",
+    "id": "inverse-ntt",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Inverse NTT (INTT)",
+    "definition": "Primitive root의 inverse와 transform length의 field inverse를 사용해 roots-of-unity evaluation vector에서 원래 polynomial coefficient를 복원하는 변환입니다.",
+    "canonicalHref": "/cs/crypto/fft#intt"
   },
   "ntt-linear-convolution": {
-    id: "ntt-linear-convolution",
-    kind: "method",
-    domain: "computer-science",
-    label: "NTT linear polynomial product",
-    definition:
-      "결과 coefficient 길이 이상으로 zero-padding한 두 polynomial을 NTT하고 pointwise multiply한 뒤 INTT해 wrap-around 없는 linear product를 계산하는 방법입니다.",
-    canonicalHref: "/cs/crypto/fft#zk-usage",
+    "id": "ntt-linear-convolution",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "NTT linear polynomial product",
+    "definition": "곱의 계수 수 이상이며 체가 필요한 원시 단위근을 지원하는 길이에 두 입력을 0으로 채운 뒤 NTT·위치별 곱·역변환으로 원래 다항식 곱을 구합니다. 길이가 부족하면 순환 곱으로 감길 수 있습니다.",
+    "canonicalHref": "/cs/crypto/fft#zk-usage"
   },
   "storage-proof-claim-decomposition": {
     id: "storage-proof-claim-decomposition",
@@ -12938,34 +12905,44 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/crypto/elliptic-curves#g1-g2-bn254",
   },
   "field-limb-canonical-representation": {
-    id: "field-limb-canonical-representation", kind: "concept", domain: "computer-science",
-    label: "Field limb · canonical representation",
-    definition: "외부 byte string을 고정 endian의 0≤x<p residue로 검증한 뒤 radix 2^w little-endian limbs와 내부 Montgomery value로 옮기고 encode 전에 다시 canonical residue로 돌리는 표현 계약입니다.",
-    canonicalHref: "/cs/crypto/field-arithmetic#prime-repr",
+    "id": "field-limb-canonical-representation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Field limb · canonical representation",
+    "definition": "정규 디코딩은 외부 바이트를 약속한 순서로 읽고 0≤x<p를 검사한 뒤 내부 limb와 Montgomery 표현으로 바꿉니다. 출력은 일반 값으로 되돌려 직렬화합니다. 범위를 줄여 받는 mod_order 생성자는 이 정규 디코더와 다른 기능입니다.",
+    "canonicalHref": "/cs/crypto/field-arithmetic#representation"
   },
   "montgomery-domain-reduction": {
-    id: "montgomery-domain-reduction", kind: "method", domain: "computer-science",
-    label: "Montgomery-domain reduction",
-    definition: "홀수 modulus p와 power-of-two radix R에서 a를 aR mod p로 저장하고 p′=−p⁻¹ mod R를 이용해 wide product의 modular division을 exact shift와 bounded correction으로 바꾸는 방법입니다.",
-    canonicalHref: "/cs/crypto/field-arithmetic#montgomery",
+    "id": "montgomery-domain-reduction",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Montgomery-domain reduction",
+    "definition": "홀수 법 p와 p보다 큰 2의 거듭제곱 R에서 a를 aR mod p로 저장합니다. p′=−p⁻¹ mod R로 낮은 자리를 없앤 뒤 R로 정확히 나누며, 0≤T<pR이면 p를 많아야 한 번 빼 정규 범위로 돌릴 수 있습니다.",
+    "canonicalHref": "/cs/crypto/field-arithmetic#redc"
   },
   "field-api-invariant-boundary": {
-    id: "field-api-invariant-boundary", kind: "concept", domain: "computer-science",
-    label: "Field API invariant boundary",
-    definition: "Constructor·Add/Sub/Mul/Inv·serialization 각각이 field ID, canonical range, internal domain과 zero-inverse failure를 타입과 결과로 보존하고 secret-dependent control flow를 별도 검토하게 하는 API 경계입니다.",
-    canonicalHref: "/cs/crypto/field-arithmetic#operator-overload",
+    "id": "field-api-invariant-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Field API invariant boundary",
+    "definition": "생성·연산·역원·직렬화가 정규 범위와 내부 표현, 0의 역원 실패를 구분해야 한다는 API 경계입니다. 체 식별자는 타입과 외부 프로토콜 문맥에서 확인해야 하며 표지가 없는 같은 바이트가 서로 다른 체에서 모두 허용될 수 있습니다.",
+    "canonicalHref": "/cs/crypto/field-arithmetic#api"
   },
   "base-scalar-field-type-separation": {
-    id: "base-scalar-field-type-separation", kind: "concept", domain: "computer-science",
-    label: "Base-field · scalar-field type separation",
-    definition: "Curve coordinate modulus p의 Fp/Fq와 subgroup order r의 Fr을 비슷한 bit width나 limb layout 때문에 혼용하지 않고 서로 다른 decode·arithmetic·protocol 타입으로 유지하는 원칙입니다.",
-    canonicalHref: "/cs/crypto/field-arithmetic#fr-scalar",
+    "id": "base-scalar-field-type-separation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Base-field · scalar-field type separation",
+    "definition": "Curve coordinate modulus p의 Fp/Fq와 subgroup order r의 Fr을 비슷한 bit width나 limb layout 때문에 혼용하지 않고 서로 다른 decode·arithmetic·protocol 타입으로 유지하는 원칙입니다.",
+    "canonicalHref": "/cs/crypto/field-arithmetic#fp-fr"
   },
   "field-implementation-release-gate": {
-    id: "field-implementation-release-gate", kind: "method", domain: "computer-science",
-    label: "Finite-field implementation release gate",
-    definition: "Field ID·modulus·limb width·Montgomery constants·library version/SHA를 고정하고 boundary·canonical·inverse·cross-field·official vector·independent parity·side-channel을 확인한 뒤 성능을 비교하는 채택 절차입니다.",
-    canonicalHref: "/cs/crypto/field-arithmetic#fr-scalar",
+    "id": "field-implementation-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Finite-field implementation release gate",
+    "definition": "체와 내부 표현, 라이브러리 버전을 고정해 범위·역원·직렬화·독립 계산을 대조하고 실행 비용과 입력에 따른 제어 흐름을 따로 검토하는 절차입니다. 서로 다른 체가 같은 바이트를 허용하는 사례는 외부 타입과 프로토콜 문맥으로 구분해야 합니다.",
+    "canonicalHref": "/cs/crypto/field-arithmetic#release"
   },
   "extension-tower-implementation-layout": {
     id: "extension-tower-implementation-layout", kind: "concept", domain: "computer-science",
@@ -13114,7 +13091,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "computer-science",
     "label": "Reed–Solomon typed decoder outcome",
-    "definition": "Recovered bytes와 insufficient symbols·too many errors·profile mismatch·malformed symbol·integrity mismatch를 구분해 보장 밖의 후보를 success로 돌려주지 않는 decoder 결과 계약입니다.",
+    "definition": "복원 후보와 자료 부족·형식 오류·규칙 불일치 등 실제 확인한 실패를 구분합니다. 오류가 복원 경계를 넘으면 다른 정상 목록으로 잘못 복원될 수 있어 모든 초과 오류의 탐지를 보장하지 않습니다. 원본 확인에는 인증된 별도 근거가 필요합니다.",
     "canonicalHref": "/cs/crypto/reed-solomon#misdecode"
   },
   "berlekamp-welch-reconstruction": {
@@ -13178,7 +13155,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "concept",
     "domain": "distributed-systems",
     "label": "EIP-7702 delegation authorization",
-    "definition": "EOA가 chain·delegate address·nonce에 서명해 persistent delegation indicator를 설정하고 해당 code를 자신의 account context에서 실행하도록 허가하는 type-4 authorization입니다.",
+    "definition": "EOA가 chain_id·위임할 코드 주소·nonce에 서명해 지속되는 코드 연결을 설정하는 EIP-7702의 승인입니다. chain_id=0은 여러 체인에서 허용하는 예외이며 실제 호출은 EOA의 저장소와 잔액 문맥에서 실행됩니다. 이후 송금 실패가 처리된 연결을 자동 취소하지는 않습니다.",
     "canonicalHref": "/cs/blockchain/aa-fundamentals#native-aa"
   },
   "aa-capability-policy": {
@@ -13955,22 +13932,28 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/crypto/crt#crypto-usage"
   },
   "karatsuba-two-way-recombination": {
-    id: "karatsuba-two-way-recombination", kind: "method", domain: "computer-science",
-    label: "Karatsuba two-way split · recombination",
-    definition: "두 operand를 high·low 조각으로 나누고 교차항을 합의 곱에서 꺼내 네 절반 곱을 세 절반 곱과 선형 결합으로 바꾸는 bilinear multiplication 방법입니다.",
-    canonicalHref: "/cs/crypto/karatsuba#karatsuba-trick",
+    "id": "karatsuba-two-way-recombination",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Karatsuba two-way split · recombination",
+    "definition": "두 수를 높은 조각과 낮은 조각으로 나누고 합 또는 차의 곱에서 교차항을 재사용해 네 작은 곱을 세 곱으로 줄이는 방법입니다. 합의 곱은 중간 입력이 한 자리 커질 수 있어 추가 폭을 보존해야 합니다.",
+    "canonicalHref": "/cs/crypto/karatsuba#karatsuba-trick"
   },
   "karatsuba-recurrence-bound": {
-    id: "karatsuba-recurrence-bound", kind: "theorem", domain: "computer-science",
-    label: "Karatsuba recurrence bound",
-    definition: "T(n)=3T(n/2)+Theta(n) recurrence가 leaf count 3^log2(n)와 level별 선형 결합 비용으로 Theta(n^log2(3))가 된다는 점근적 bound입니다.",
-    canonicalHref: "/cs/crypto/karatsuba#recursive",
+    "id": "karatsuba-recurrence-bound",
+    "kind": "theorem",
+    "domain": "computer-science",
+    "label": "Karatsuba recurrence bound",
+    "definition": "균형 잡힌 입력과 고정된 종료 크기, 선형 합산 비용을 둔 모형에서 T(n)=3T(n/2)+Θ(n)을 합해 Θ(n^log₂3)을 얻는 성장률입니다. 전체 재귀 나무의 곱 수와 실제 구현의 호출 수는 구분합니다.",
+    "canonicalHref": "/cs/crypto/karatsuba#recursive"
   },
   "karatsuba-crossover-cost-model": {
-    id: "karatsuba-crossover-cost-model", kind: "method", domain: "computer-science",
-    label: "Karatsuba crossover · cost model",
-    definition: "곱셈 수뿐 아니라 addition·carry·temporary·allocation·cache를 같은 target에서 측정해 schoolbook, Karatsuba, Toom/FFT 사이 cutoff를 정하는 선택 절차입니다.",
-    canonicalHref: "/cs/crypto/karatsuba#cost-comparison",
+    "id": "karatsuba-crossover-cost-model",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Karatsuba crossover · cost model",
+    "definition": "같은 입력과 실행 환경에서 곱셈과 합산, 올림, 임시 공간과 메모리 비용을 비교해 학교식·Karatsuba·다른 곱셈 방식 사이의 전환 크기를 고르는 방법입니다.",
+    "canonicalHref": "/cs/crypto/karatsuba#cost-comparison"
   },
   "sparse-coefficient-support": {
     id: "sparse-coefficient-support", kind: "concept", domain: "mathematics",
@@ -14626,7 +14609,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "method",
     "domain": "mathematics",
     "label": "Shamir threshold polynomial sharing",
-    "definition": "Field에서 secret s를 degree t polynomial f의 상수항으로 두고 nonzero points f(i)를 shares로 배포해 t+1개 points로는 interpolation하고 t개 이하로는 s에 대한 정보를 숨기는 방법입니다.",
+    "definition": "유한체에서 비밀 s를 상수항으로 두고 나머지 t개 계수를 0을 포함해 독립·균등하게 뽑아 t차 이하 다항식을 만듭니다. 서로 다른 0 아닌 위치의 t+1개 조각으로 복원하며 t개 이하의 조각은 비밀에 대한 새 정보를 주지 않습니다.",
     "canonicalHref": "/cs/crypto/shamir-secret-sharing#names"
   },
   "shamir-share-generation": {
@@ -16111,84 +16094,99 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/vllm-spec-decode#speedup-model",
   },
   "request-memory-footprint": {
-    id: "request-memory-footprint",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Request memory footprint",
-    aliases: ["Sequence-Length-Dependent Allocation", "요청 KV footprint"],
-    definition:
-      "요청 하나가 끝까지 갔을 때 GPU KV pool에서 차지하는 byte로, prompt와 생성 상한을 더한 token 수를 block 단위로 올림한 뒤 model 구조가 정하는 block당 byte를 곱해 얻으며, paged 방식에서는 prefill 몫만 admission 시점에 잡고 나머지는 decode 중 block 단위로 자랍니다.",
-    canonicalHref: "/cs/ai/serving-memory-admission-and-preemption#footprint",
+    "id": "request-memory-footprint",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Request memory footprint",
+    "aliases": [
+      "Sequence-Length-Dependent Allocation",
+      "요청 KV footprint"
+    ],
+    "definition": "요청의 보존 길이를 block 크기로 올림한 뒤 단위당 byte를 곱한 저장 용량입니다. 전체 입력 fit 검사와 실제 조각 할당 및 최대 출력 길이 예약을 구분합니다. 공유와 모델별 상태는 실제 수요를 바꿉니다.",
+    "canonicalHref": "/cs/ai/serving-memory-admission-and-preemption#footprint"
   },
   "memory-watermark": {
-    id: "memory-watermark",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Memory watermark",
-    aliases: ["watermark_blocks", "KV pool watermark"],
-    definition:
-      "새 admission이 쓰지 못하도록 KV pool에 남겨 두는 free block 하한으로, 실행 중 요청이 decode마다 요구하는 성장분을 예약해 잦은 preemption을 늦추는 장치이며 실행 중 요청의 block 추가에는 적용되지 않습니다.",
-    canonicalHref: "/cs/ai/serving-memory-admission-and-preemption#watermark-admission",
+    "id": "memory-watermark",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Memory watermark",
+    "aliases": [
+      "watermark_blocks",
+      "KV pool watermark"
+    ],
+    "definition": "새 요청을 받은 뒤 남길 빈 공간 개수의 하한입니다. 특정 주소를 잠그는 규칙이 아닙니다. 고정 V0 기본1%와 V1 기본0%를 구별합니다. 본문의3은 따로 지정한 값이며 진행 요청 성장 뒤 압박을 없애지는 못합니다.",
+    "canonicalHref": "/cs/ai/serving-memory-admission-and-preemption#watermark-admission"
   },
   "memory-admission-control": {
-    id: "memory-admission-control",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Memory admission control",
-    aliases: ["KV admission check", "can_allocate"],
-    definition:
-      "대기 요청의 prefill block 수를 현재 free block에서 뺀 나머지가 watermark 이상이면 OK, 모자라면 LATER로 대기시키고, pool 전체로도 채울 수 없으면 NEVER로 거절하는 KV memory 관문입니다.",
-    canonicalHref: "/cs/ai/serving-memory-admission-and-preemption#watermark-admission",
+    "id": "memory-admission-control",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Memory admission control",
+    "aliases": [
+      "KV admission check",
+      "can_allocate"
+    ],
+    "definition": "새 요청의 공간을 확보할 수 있는지 확인하고 일시 대기와 용량상 불가능을 나눕니다. V1은 전체 입력이 들어가는지 먼저 검사할 수 있습니다. chunk 공간이 있어도 free50에서 입력1000의63block은 거절됩니다.",
+    "canonicalHref": "/cs/ai/serving-memory-admission-and-preemption#source-v0-admission"
   },
   "request-admission-control": {
-    id: "request-admission-control",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Request admission control",
-    aliases: ["scheduler admission"],
-    definition:
-      "대기 요청을 실행 집합에 넣기 전에 동시 sequence 수 상한, step당 token 예산, KV memory 관문을 차례로 통과시키는 scheduler 단계의 승인 절차로, 세 관문 중 하나라도 막히면 요청은 queue에 남습니다.",
-    canonicalHref: "/cs/ai/serving-memory-admission-and-preemption#watermark-admission",
+    "id": "request-admission-control",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Request admission control",
+    "aliases": [
+      "scheduler admission"
+    ],
+    "definition": "저장 공간과 진행 요청 자리 및 이번 계산량 한도를 함께 확인하는 전체 수용 결정입니다. 공간만 늘려도 다른 한도에 걸리면 수용하지 못합니다. 원문은 실제 성공 뒤 상태를 바꿉니다.",
+    "canonicalHref": "/cs/ai/serving-memory-admission-and-preemption#black-box"
   },
   "memory-pressure": {
-    id: "memory-pressure",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Memory pressure",
-    aliases: ["KV pressure", "KV cache pressure"],
-    definition:
-      "Free block이 실행 중 요청들이 다음 step에 요구하는 block 수보다 적어 누군가를 내보내지 않으면 decode를 진행할 수 없는 상태로, pool 크기가 아니라 pool과 workload의 관계에서 생깁니다.",
-    canonicalHref: "/cs/ai/serving-memory-admission-and-preemption#watermark-admission",
+    "id": "memory-pressure",
+    "kind": "concept",
+    "domain": "distributed-systems",
+    "label": "Memory pressure",
+    "aliases": [
+      "KV pressure",
+      "KV cache pressure"
+    ],
+    "definition": "진행할 요청들이 추가로 요구하는 공간을 현재 빈 공간으로 충족하지 못하는 상태입니다. 같은 pool이라도 요청 길이와 동시 요청 수에 따라 달라집니다. 하한 아래라는 사실과 실제 추가 수요 실패는 구별합니다.",
+    "canonicalHref": "/cs/ai/serving-memory-admission-and-preemption#growth-pressure"
   },
   "recompute-preemption": {
-    id: "recompute-preemption",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Recompute preemption",
-    aliases: ["PreemptionMode.RECOMPUTE", "recomputation preemption"],
-    definition:
-      "Victim 요청의 KV block을 pool에 즉시 돌려주고 요청을 WAITING 앞에 되돌린 뒤, 재개 시 prompt와 그때까지 생성한 token을 하나의 prompt처럼 한 번의 prefill로 다시 계산하는 preemption 방식입니다.",
-    canonicalHref: "/cs/ai/serving-memory-admission-and-preemption#preemption-modes",
+    "id": "recompute-preemption",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Recompute preemption",
+    "aliases": [
+      "PreemptionMode.RECOMPUTE",
+      "recomputation preemption"
+    ],
+    "definition": "저장 결과를 해제하고 토큰 이력을 다시 처리해 내부 상태를 복원하는 방식입니다. 동기식·전용block 사례입니다. 공유 참조와 비동기 결과가 있으면 즉시 전체 반환을 가정하지 않으며 재계산은 GPU 자원을 씁니다.",
+    "canonicalHref": "/cs/ai/serving-memory-admission-and-preemption#source-v1-preemption"
   },
   "swap-preemption": {
-    id: "swap-preemption",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "Swap preemption",
-    aliases: ["PreemptionMode.SWAP", "swap_space", "KV swap-out · swap-in"],
-    definition:
-      "Victim 요청의 KV block을 CPU swap 영역으로 복사해 두고 free block이 watermark를 넘길 만큼 남으면 다시 GPU로 복사해 재개하는 preemption 방식으로, GPU 연산 대신 CPU RAM과 PCIe 대역폭을 소비하며 작은 block에서 불리합니다.",
-    canonicalHref: "/cs/ai/serving-memory-admission-and-preemption#preemption-modes",
+    "id": "swap-preemption",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "Swap preemption",
+    "aliases": [
+      "PreemptionMode.SWAP",
+      "swap_space",
+      "KV swap-out · swap-in"
+    ],
+    "definition": "계산 결과의 byte를 CPU 공간에 복사했다가 GPU로 되가져오는 방식입니다. 고정 V0에서 CPU 공간 실패는 RuntimeError이며 자동 재계산 전환이 아닙니다. 재진입에는 기존 공간과 새 위치의 추가 수요도 확인합니다.",
+    "canonicalHref": "/cs/ai/serving-memory-admission-and-preemption#source-v0-swap"
   },
   "fixed-recurrent-state-allocation": {
-    id: "fixed-recurrent-state-allocation",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Fixed recurrent-state allocation",
-    aliases: ["고정 recurrent state 할당"],
-    definition:
-      "Hybrid model에서 recurrent layer의 요청당 고정 shape state를 admission 시점에 통째로 확보하는 할당으로, token 수가 아니라 요청 수에 곱해지므로 짧은 요청도 즉시 큰 block을 요구하고 동시 요청 수가 memory 상한이 됩니다.",
-    canonicalHref: "/cs/ai/serving-memory-admission-and-preemption#hybrid-fixed-state",
+    "id": "fixed-recurrent-state-allocation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Fixed recurrent-state allocation",
+    "aliases": [
+      "고정 recurrent state 할당"
+    ],
+    "definition": "길이에 따라 커지는 KV와 별도로 요청마다 필요한 고정 모양의 상태를 확보합니다. 상태 한 벌의 논리 용량입니다. convolution history·복사본·checkpoint·padding·병렬 분할과 실제 group별 배정은 별도로 계산합니다.",
+    "canonicalHref": "/cs/ai/serving-memory-admission-and-preemption#hybrid-fixed-state"
   },
   "kv-internal-fragmentation": {
     "id": "kv-internal-fragmentation",
@@ -16212,14 +16210,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/vllm-paged-attention#fragmentation-kinds",
   },
   "kv-block-allocator": {
-    id: "kv-block-allocator",
-    kind: "method",
-    domain: "distributed-systems",
-    label: "KV block allocator",
-    aliases: ["BlockPool"],
-    definition:
-      "엔진 시작 시 정한 physical block pool을 소유하고 allocate(free queue head에서 꺼내 ref=1로 block table에 연결)와 free(ref를 내려 0이 된 block만 queue tail로 반환)로 block 소유자를 바꾸는 부품이며, 누구를 멈출지는 정하지 않습니다.",
-    canonicalHref: "/cs/ai/vllm-paged-attention#block-allocator",
+    "id": "kv-block-allocator",
+    "kind": "method",
+    "domain": "distributed-systems",
+    "label": "KV block allocator",
+    "aliases": [
+      "BlockPool"
+    ],
+    "definition": "물리 block pool에서 새 공간을 할당하고 보유 참조가 끝난 공간을 반환하는 부품입니다. 고정 v0.27.1은 새 할당 때 이전 hash를 지우고 참조를 올리며, 반환할 때 hash 없는 block은 queue 앞에, hash 있는 block은 뒤에 둡니다. cache hit의 touch와 복사 pin도 수명을 바꾸며 중단할 요청은 scheduler가 정합니다.",
+    "canonicalHref": "/cs/ai/vllm-paged-attention#block-allocator"
   },
   "kv-sequence-fork-copy-on-write": {
     id: "kv-sequence-fork-copy-on-write",
@@ -16370,7 +16369,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "TTFT",
       "첫 token 지연"
     ],
-    "definition": "요청이 서버에 도착한 시각부터 첫 output token 이 client 에 닿기까지의 시간으로, gateway·queue 대기와 prefill 계산이 함께 들어 있는 요청당 값 하나의 latency 지표입니다.",
+    "definition": "이 글에서는 client가 요청을 보낸 시각부터 첫 토큰을 받을 때까지를 같은 시계로 잽니다. 서버 접수부터 재면 요청 전송 구간이 빠집니다. 실제 도구가 빈 내용의 이벤트도 첫 도착으로 세는지 확인해야 합니다.",
     "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#metrics"
   },
   "inter-token-latency": {
@@ -16395,7 +16394,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Time per Output Token (TPOT)",
       "TPOT"
     ],
-    "definition": "한 요청의 (E2E − TTFT)/(n−1), 곧 첫 token 이후 간격들의 요청 단위 산술평균으로, 요청당 값 하나이며 ITL 표본의 분산을 숨기는 decode 속도 지표입니다.",
+    "definition": "출력 토큰이 n≥2개이고 E2E를 마지막 토큰 수신까지로 정의하면 (E2E−TTFT)/(n−1)은 요청 하나의 평균 토큰 간격입니다. n=1에서는 정의되지 않습니다. 묶음 이벤트나 뒤따르는 usage 이벤트로 계산한 도구 값은 토큰별 간격 평균과 다를 수 있습니다.",
     "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#metrics"
   },
   "end-to-end-request-latency": {
@@ -16409,7 +16408,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "E2EL",
       "Request latency"
     ],
-    "definition": "요청 도착부터 마지막 token 수신까지의 시간으로, TTFT + (n−1)·TPOT 로 정확히 분해되며 응답 길이 n 에 비례해 길이 분포가 다른 workload 끼리 직접 비교하지 않는 지표입니다.",
+    "definition": "정한 요청 시작부터 종료 사건까지의 경과 시간입니다. 같은 client 시계와 토큰별 수신 시각을 쓰고 n≥2일 때 마지막 토큰 기준 E2E는 TTFT+(n−1)·TPOT입니다. 마지막 usage 이벤트를 종료로 삼으면 값이 달라지며 응답 길이만으로 지연을 정할 수 없습니다.",
     "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#metrics"
   },
   "serving-throughput-rate": {
@@ -16425,7 +16424,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "QPS",
       "Request throughput"
     ],
-    "definition": "측정 시간 T 동안 서버 전체가 낸 output token 총수를 T 로 나눈 tokens/s 와 완료 요청 수를 T 로 나눈 RPS 로, benchmark 한 번에 값 하나이며 요청별 분포가 없는 서버 단위 처리량입니다.",
+    "definition": "정한 관측 시간에 센 출력 토큰 수나 완료 요청 수를 그 시간으로 나눈 처리량입니다. 본문의 60초·24000토큰·120완료 요청은 400토큰/s와 2요청/s입니다. 표본 포함 기준과 시간 창을 명시하며 서버 합계를 요청별 지연과 구분합니다.",
     "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#throughput"
   },
   "latency-throughput-tradeoff": {
@@ -16438,7 +16437,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Latency-throughput tradeoff",
       "Batch size vs latency"
     ],
-    "definition": "Decode batch 를 키우면 한 step 시간 t(B) 가 sublinear 하게 늘어 서버 tokens/s = B/t(B) 는 오르지만 그 t(B) 가 모든 요청의 ITL 이 되고, 처리율에 가까운 도착률에서는 대기가 TTFT 에 더해지는 구조적 상충입니다.",
+    "definition": "묶음 크기와 대기열이 서버 처리량 및 개별 요청의 지연에 함께 영향을 주는 관계입니다. B개 요청이 매 동기식 실행마다 한 토큰씩 낸다는 모형에서는 처리량이 B/t(B)이지만, t(B)가 반드시 완만하게 증가하거나 모든 client ITL과 같다는 보장은 없습니다. 실제 부하에서 두 값을 함께 측정합니다.",
     "canonicalHref": "/cs/ai/serving-latency-metrics-and-slo#throughput"
   },
   "latency-percentile-distribution": {
@@ -16555,164 +16554,247 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/prefill-decode-phase-dynamics#prefill-optimization",
   },
   "cuda-programming-model-hardware-mapping": {
-    id: "cuda-programming-model-hardware-mapping",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA programming model · hardware mapping",
-    aliases: ["CUDA Programming Model", "CUDA execution model mapping"],
-    definition:
-      "프로그래머가 보는 grid·block·thread·kernel 과 하드웨어가 정하는 배치를 나누는 계약으로, block 은 SM 하나에 통째로 놓이고 thread 32개가 warp 로 묶여 SM 안의 subpartition 하나에 배정되며 실행 순서와 선택은 모델이 약속하지 않고 하드웨어가 정합니다.",
-    canonicalHref: "/cs/gpu/sm-warp-scheduling-and-issue#sm-structure",
+    "id": "cuda-programming-model-hardware-mapping",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA programming model · hardware mapping",
+    "aliases": [
+      "CUDA Programming Model",
+      "CUDA execution model mapping"
+    ],
+    "definition": "프로그램은 일을 묶고 하드웨어가 실제 실행 위치와 순서를 정합니다. 특정 SM·subpartition 배정과 warp 간 진전 순서를 프로그램의 약속으로 사용하지 않습니다.",
+    "canonicalHref": "/cs/gpu/sm-warp-scheduling-and-issue#sm-structure"
   },
   "sm-subpartition-warp-scheduler": {
-    id: "sm-subpartition-warp-scheduler",
-    kind: "concept",
-    domain: "computer-science",
-    label: "SM subpartition · warp scheduler",
-    aliases: ["Streaming Multiprocessor (SM)", "SM", "SM Subpartition", "SMSP", "Warp Scheduler", "processing block"],
-    definition:
-      "SM(Streaming Multiprocessor) 을 4개로 나눈 subpartition 마다 warp scheduler 하나, dispatch unit, register file 조각과 실행 pipe 가 있어 scheduler 가 매 clock 자기 warp 가운데 하나의 instruction 을 issue 하는 SM 의 일차 처리 단위입니다.",
-    canonicalHref: "/cs/gpu/sm-warp-scheduling-and-issue#sm-structure",
+    "id": "sm-subpartition-warp-scheduler",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "SM subpartition · warp scheduler",
+    "aliases": [
+      "Streaming Multiprocessor (SM)",
+      "SM",
+      "SM Subpartition",
+      "SMSP",
+      "Warp Scheduler",
+      "processing block"
+    ],
+    "definition": "GPU의 SM 안에서 warp들을 맡아 낼 수 있는 명령을 선택하는 처리 구역과 scheduler입니다. 본문은 H100의 SM당4scheduler와 scheduler당1 warp instruction/clock의 발행 모형을 쓰며 다른 세대의 공통값이나 명령별 처리량으로 확대하지 않습니다.",
+    "canonicalHref": "/cs/gpu/sm-warp-scheduling-and-issue#sm-structure"
   },
   "warp-instruction-issue-dispatch": {
-    id: "warp-instruction-issue-dispatch",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Warp instruction issue · dispatch",
-    aliases: ["Instruction Issue", "Instruction Dispatch", "Issue Slot", "issue active"],
-    definition:
-      "Scheduler 가 eligible warp 가운데 하나를 골라 instruction 하나를 내보내는 결정(issue, clock 당 최대 1)과 그 instruction 을 FMA·ALU·LSU·Tensor 같은 실제 pipe 로 보내는 단계(dispatch)를 구분하는 SM 실행 단위로, pipe 가 차 있으면 issue 된 instruction 도 기다립니다.",
-    canonicalHref: "/cs/gpu/sm-warp-scheduling-and-issue#issue-scoreboard",
+    "id": "warp-instruction-issue-dispatch",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Warp instruction issue · dispatch",
+    "aliases": [
+      "Instruction Issue",
+      "Instruction Dispatch",
+      "Issue Slot",
+      "issue active"
+    ],
+    "definition": "명령을 선택해 내보내고 해당 실행 경로로 보냅니다. Math pipe throttle은 실행 pipe의 가용성을 기다리는 상태이며 일반적인 발행 이후 대기열의 길이가 아닙니다.",
+    "canonicalHref": "/cs/gpu/sm-warp-scheduling-and-issue#issue-scoreboard"
   },
   "warp-scoreboard-ready-stalled": {
-    id: "warp-scoreboard-ready-stalled",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Scoreboard · ready warp · stalled warp",
-    aliases: ["Scoreboard", "Ready Warp", "Eligible Warp", "Stalled Warp", "Long Scoreboard", "Short Scoreboard", "warp stall reason"],
-    definition:
-      "Issue 된 instruction 의 결과 register 에 미완료 표시를 남기고 결과가 도착하면 지우는 장부로, 표시가 다음 instruction 의 입력을 막지 않는 warp 가 ready(eligible), 막는 warp 가 stalled 가 되어 매 clock scheduler 의 후보 집합을 정합니다.",
-    canonicalHref: "/cs/gpu/sm-warp-scheduling-and-issue#issue-scoreboard",
+    "id": "warp-scoreboard-ready-stalled",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Scoreboard · ready warp · stalled warp",
+    "aliases": [
+      "Scoreboard",
+      "Ready Warp",
+      "Eligible Warp",
+      "Stalled Warp",
+      "Long Scoreboard",
+      "Short Scoreboard",
+      "warp stall reason"
+    ],
+    "definition": "아직 준비되지 않은 연산 결과와 다음 명령의 입력 의존을 추적합니다. Eligible warp가 되려면 명령 해독·입력 의존 해소·실행 pipe 가용성이 모두 필요하며, 배치된 resident 수와 현재 후보 수는 다릅니다.",
+    "canonicalHref": "/cs/gpu/sm-warp-scheduling-and-issue#issue-scoreboard"
   },
   "instruction-dependency-chain-latency": {
-    id: "instruction-dependency-chain-latency",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Instruction dependency chain · latency",
-    aliases: ["Dependency Chain", "Instruction Dependency Latency", "dependent instruction latency", "RAW dependency"],
-    definition:
-      "한 warp 안에서 앞 instruction 의 결과를 다음 instruction 이 바로 읽는 줄(dependency chain)과, issue 부터 그 결과가 register 에 쓰여 scoreboard 표시가 지워질 때까지의 clock 수(dependency latency, 산술 약 4·global load 수백)를 함께 가리키며 이 시간은 다른 warp 의 issue 로만 가려집니다.",
-    canonicalHref: "/cs/gpu/sm-warp-scheduling-and-issue#latency-hiding",
+    "id": "instruction-dependency-chain-latency",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Instruction dependency chain · latency",
+    "aliases": [
+      "Dependency Chain",
+      "Instruction Dependency Latency",
+      "dependent instruction latency",
+      "RAW dependency"
+    ],
+    "definition": "같은 결과를 이어받는 계산은 결과가 준비되어야 시작합니다. 4·8은 본문 모형입니다. 공식 CC7.x 산술4clock 설명을 모든 H100 명령의 실측으로 쓰지 않습니다.",
+    "canonicalHref": "/cs/gpu/sm-warp-scheduling-and-issue#latency-hiding"
   },
   "tlp-ilp-mlp-latency-hiding": {
-    id: "tlp-ilp-mlp-latency-hiding",
-    kind: "method",
-    domain: "computer-science",
-    label: "TLP · ILP · MLP latency hiding",
-    aliases: ["Thread-Level Parallelism (TLP)", "Instruction-Level Parallelism (ILP)", "Memory-Level Parallelism (MLP)", "TLP", "ILP", "MLP"],
-    definition:
-      "Latency 동안 결과를 기다리는 instruction 수를 issue 속도 × latency 만큼 유지하기 위해 서로 다른 warp 가 하나씩 드는 thread-level, 한 warp 가 독립 instruction 을 여러 개 드는 instruction-level, 한 warp 가 memory 요청을 여러 개 띄우는 memory-level 세 가지 parallelism 을 조합하는 방법입니다.",
-    canonicalHref: "/cs/gpu/sm-warp-scheduling-and-issue#latency-hiding",
+    "id": "tlp-ilp-mlp-latency-hiding",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "TLP · ILP · MLP latency hiding",
+    "aliases": [
+      "Thread-Level Parallelism (TLP)",
+      "Instruction-Level Parallelism (ILP)",
+      "Memory-Level Parallelism (MLP)",
+      "TLP",
+      "ILP",
+      "MLP"
+    ],
+    "definition": "기다리는 동안 독립된 다른 일을 유지해 발행을 이어 갑니다. 이는 resident 독립 작업 용량의 하한이며 매 순간 eligible4개를 요구하지 않습니다. 큐·대역폭·자원과 변동 지연도 확인합니다.",
+    "canonicalHref": "/cs/gpu/sm-warp-scheduling-and-issue#latency-hiding"
   },
   "gpu-issue-pipeline-bubble": {
-    id: "gpu-issue-pipeline-bubble",
-    kind: "concept",
-    domain: "computer-science",
-    label: "GPU issue pipeline bubble",
-    aliases: ["Pipeline Bubble (GPU issue)", "No Eligible", "empty issue slot"],
-    definition:
-      "Subpartition 의 scheduler 가 어느 clock 에 issue 할 eligible warp 를 하나도 찾지 못해 그 clock 의 issue slot 이 비는 현상으로, Nsight Compute 의 No Eligible 비율로 읽으며 분산 추론의 pipeline parallel stage bubble 과는 다른 층위입니다.",
-    canonicalHref: "/cs/gpu/sm-warp-scheduling-and-issue#latency-hiding",
+    "id": "gpu-issue-pipeline-bubble",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "GPU issue pipeline bubble",
+    "aliases": [
+      "Pipeline Bubble (GPU issue)",
+      "No Eligible",
+      "empty issue slot"
+    ],
+    "definition": "준비된 후보가 없으면 이번 발행 기회가 빕니다. 모든 실제 미발행이 자동으로 No Eligible인 것은 아닙니다. 지표 분모와 원인을 확인하며 분산추론 stage의 bubble과 구분합니다.",
+    "canonicalHref": "/cs/gpu/sm-warp-scheduling-and-issue#memory-and-bubbles"
   },
   "warp-divergence-reconvergence": {
-    id: "warp-divergence-reconvergence",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Warp divergence · reconvergence",
-    aliases: ["Warp Divergence", "Branch Divergence", "Reconvergence", "reconvergence point", "Independent Thread Scheduling"],
-    definition:
-      "Warp 의 32 lane 이 조건문에서 갈라지면 scheduler 가 각 경로를 active mask 로 나머지 lane 을 끈 채 차례로 issue 하고 경로가 다시 만나는 reconvergence point 에서 합치는 실행으로, 비용은 lane 비율이 아니라 경로 길이의 합만큼 늘어난 issue slot 입니다.",
-    canonicalHref: "/cs/gpu/sm-warp-scheduling-and-issue#divergence",
+    "id": "warp-divergence-reconvergence",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Warp divergence · reconvergence",
+    "aliases": [
+      "Warp Divergence",
+      "Branch Divergence",
+      "Reconvergence",
+      "reconvergence point",
+      "Independent Thread Scheduling"
+    ],
+    "definition": "조건이 갈리면 서로 다른 경로의 명령을 해당 lane들로 실행합니다. 분기·재합류 비용을 생략한 모형입니다.10명령 직선 경로 대비4배slot을 시간4배로 확정하지 않습니다. ITS가 모든 교착과 동기화 오류를 없애지 않습니다.",
+    "canonicalHref": "/cs/gpu/sm-warp-scheduling-and-issue#divergence"
   },
   "cuda-compilation-pipeline": {
-    id: "cuda-compilation-pipeline",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA compilation pipeline · nvcc 두 단계 컴파일",
-    aliases: ["CUDA Compilation Pipeline", "CUDA Frontend", "nvcc", "cudafe++", "cicc", "NVVM"],
-    definition:
-      "nvcc 가 .cu 를 cudafe++ 로 host·device 코드로 가르고, device 코드를 cicc(NVVM) 로 가상 ISA 인 PTX 까지, ptxas 로 실제 기계어 SASS 까지 두 번 컴파일한 뒤 fatbinary 로 묶어 host object 에 묻는 driver 절차입니다.",
-    canonicalHref: "/cs/gpu/cuda-compilation-and-isa-analysis#pipeline",
+    "id": "cuda-compilation-pipeline",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA compilation pipeline · nvcc 두 단계 컴파일",
+    "aliases": [
+      "CUDA Compilation Pipeline",
+      "CUDA Frontend",
+      "nvcc",
+      "cudafe++",
+      "cicc",
+      "NVVM"
+    ],
+    "definition": "NVCC가 소스와 실행 대상을 받아 device 코드의 PTX·장치 이미지와 host 결과를 만드는 공개 컴파일 단계입니다. 내부 cudafe++·cicc 호출 순서는 안정된 빌드 인터페이스와 구별합니다.",
+    "canonicalHref": "/cs/gpu/cuda-compilation-and-isa-analysis#pipeline"
   },
   "ptx-virtual-isa": {
-    id: "ptx-virtual-isa",
-    kind: "concept",
-    domain: "computer-science",
-    label: "PTX · 가상 ISA와 가상 register",
-    aliases: ["PTX", "Parallel Thread Execution", "PTX Instruction", "PTX Register", "compute_XX"],
-    definition:
-      "NVIDIA 가 문서로 공개하고 세대를 넘어 유지하는 가상 instruction set 으로, @p opcode.type d,a,b,c 꼴의 instruction 과 형별로 이름이 붙고 수에 제한이 없는 가상 register 를 쓰며 실제 GPU 는 직접 실행하지 않고 ptxas 나 driver JIT 가 SASS 로 바꿔야 도는 중간 표현입니다.",
-    canonicalHref: "/cs/gpu/cuda-compilation-and-isa-analysis#ptx-and-sass",
+    "id": "ptx-virtual-isa",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "PTX · 가상 ISA와 가상 register",
+    "aliases": [
+      "PTX",
+      "Parallel Thread Execution",
+      "PTX Instruction",
+      "PTX Register",
+      "compute_XX"
+    ],
+    "definition": "PTX는 계산을 가상 이름과 연산으로 적은 중간 표현입니다. r<5>·f<4>·rd<11>은 폭이 다른 가상 이름 묶음입니다. 선언 수는 최종 물리 배정량이 아니며 PTX 버전과 target 조건도 확인합니다.",
+    "canonicalHref": "/cs/gpu/cuda-compilation-and-isa-analysis#ptx-and-sass"
   },
   "sass-machine-isa": {
-    id: "sass-machine-isa",
-    kind: "concept",
-    domain: "computer-science",
-    label: "SASS · GPU 세대별 기계 ISA",
-    aliases: ["SASS", "Machine ISA", "cubin", "sm_XX"],
-    definition:
-      "특정 compute capability 의 SM 이 실제로 실행하는 기계 instruction set 으로, 물리 register 번호·constant bank 읽기·predicated EXIT 같은 세대별 형태를 가지며 cubin 에 담기고 opcode 이름만 문서화되어 latency 는 공개되지 않는 GPU 의 native ISA 입니다.",
-    canonicalHref: "/cs/gpu/cuda-compilation-and-isa-analysis#ptx-and-sass",
+    "id": "sass-machine-isa",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "SASS · GPU 세대별 기계 ISA",
+    "aliases": [
+      "SASS",
+      "Machine ISA",
+      "cubin",
+      "sm_XX"
+    ],
+    "definition": "SASS에서는 target이 실행하는 명령과 물리 저장 자리로 같은 계산을 읽습니다. 문서 출력이며 직접 컴파일하거나 실행한 결과가 아닙니다. FFMA와 길이 검사 분기가 없고 명령 간격은 latency가 아닙니다.",
+    "canonicalHref": "/cs/gpu/cuda-compilation-and-isa-analysis#sass-trace"
   },
   "fatbin-jit-compute-capability": {
-    id: "fatbin-jit-compute-capability",
-    kind: "method",
-    domain: "computer-science",
-    label: "Fatbinary · JIT/AOT 선택과 compute capability 호환",
-    aliases: ["JIT Compilation", "Ahead-of-Time Compilation (AOT)", "Fat Binary (Fatbin)", "Fatbin", "Compute Capability", "-gencode", "cudaErrorNoKernelImageForDevice"],
-    definition:
-      "sm_XX cubin 과 compute_XX PTX 를 한 컨테이너에 담은 fatbinary 에서 runtime 이 현재 GPU 의 compute capability(major.minor) 와 같은 major·같거나 낮은 minor 의 cubin 을 찾아 그대로 올리고(AOT), 없으면 실행 가능한 가장 높은 PTX 를 driver 가 그 자리에서 SASS 로 컴파일해 cache 하는(JIT) 이미지 선택 규칙입니다.",
-    canonicalHref: "/cs/gpu/cuda-compilation-and-isa-analysis#fatbin-and-jit",
+    "id": "fatbin-jit-compute-capability",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Fatbinary · JIT/AOT 선택과 compute capability 호환",
+    "aliases": [
+      "JIT Compilation",
+      "Ahead-of-Time Compilation (AOT)",
+      "Fat Binary (Fatbin)",
+      "Fatbin",
+      "Compute Capability",
+      "-gencode",
+      "cudaErrorNoKernelImageForDevice"
+    ],
+    "definition": "배포한 fatbinary에서 대상 GPU가 사용할 cubin을 선택하거나 지원되는 PTX를 JIT하는 경로입니다. 일반 대상의 호환과 a·f 대상의 제한, driver의 PTX ISA 지원·강제 JIT 설정·cache 상태를 구별합니다.",
+    "canonicalHref": "/cs/gpu/cuda-compilation-and-isa-analysis#fatbin-and-jit"
   },
   "ptxas-register-allocation-scheduling": {
-    id: "ptxas-register-allocation-scheduling",
-    kind: "method",
-    domain: "computer-science",
-    label: "ptxas register allocation · instruction scheduling",
-    aliases: ["ptxas", "Compiler Register Allocation", "Compiler Instruction Scheduling", "-Xptxas -v", "-maxrregcount"],
-    definition:
-      "ptxas 가 PTX 의 가상 register 를 각 값의 live range 가 겹치는 최댓값만큼 물리 register 에 배정하고, dependency 를 지키는 범위에서 global load 를 앞당기고 소비자를 미뤄 in-order warp 안에서 latency 를 숨기는 두 결정으로, 하나를 좋게 하면 다른 하나가 나빠지는 상충 관계입니다.",
-    canonicalHref: "/cs/gpu/cuda-compilation-and-isa-analysis#ptxas-optimizations",
+    "id": "ptxas-register-allocation-scheduling",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "ptxas register allocation · instruction scheduling",
+    "aliases": [
+      "ptxas",
+      "Compiler Register Allocation",
+      "Compiler Instruction Scheduling",
+      "-Xptxas -v",
+      "-maxrregcount"
+    ],
+    "definition": "마지막으로 사용한 값의 자리를 다음 값이 재사용하며, 미리 읽은 값은 더 오래 머뭅니다. Register 제한은 재배치·재계산·spill을 유도할 수 있으며 spill이 항상 같은 방식으로 생기지는 않습니다. ABI 최소치와 실제 보고를 확인합니다.",
+    "canonicalHref": "/cs/gpu/cuda-compilation-and-isa-analysis#ptxas-optimizations"
   },
   "loop-unrolling-tradeoff": {
-    id: "loop-unrolling-tradeoff",
-    kind: "method",
-    domain: "computer-science",
-    label: "Loop unrolling tradeoff · #pragma unroll",
-    aliases: ["Compiler Unrolling", "Loop Unrolling Tradeoff", "#pragma unroll", "Loop Unrolling"],
-    definition:
-      "Loop 본문을 U 벌 복사해 element 당 loop 제어 비용을 o/U 로 줄이고 U 개의 load 를 함께 앞당길 여지를 만들되, 동시에 살아 있는 값이 (U−1)ℓ 만큼 늘어 register 가 occupancy 경계를 넘으면 손해로 바뀌는 최적화의 손익 구조입니다.",
-    canonicalHref: "/cs/gpu/cuda-compilation-and-isa-analysis#ptxas-optimizations",
+    "id": "loop-unrolling-tradeoff",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Loop unrolling tradeoff · #pragma unroll",
+    "aliases": [
+      "Compiler Unrolling",
+      "Loop Unrolling Tradeoff",
+      "#pragma unroll",
+      "Loop Unrolling"
+    ],
+    "definition": "반복을 묶으면 제어 비용을 나누지만 동시에 살아 있는 값이 늘 수 있습니다. 입력 n이 U로 나뉘는 명령 수 모형이며 꼬리 반복은 별도입니다. 동시 생존·자원 배정과 실제 성능은 compiler 출력과 측정으로 확인합니다.",
+    "canonicalHref": "/cs/gpu/cuda-compilation-and-isa-analysis#unrolling"
   },
   "classic-compiler-optimizations-cuda": {
-    id: "classic-compiler-optimizations-cuda",
-    kind: "method",
-    domain: "computer-science",
-    label: "고전 compiler 최적화의 CUDA 단계 배치 · CSE/DCE/folding/strength reduction/selection",
-    aliases: ["Common Subexpression Elimination", "CSE", "Dead Code Elimination", "DCE", "Constant Folding", "Strength Reduction", "Instruction Selection", "-fmad"],
-    definition:
-      "값의 의미만으로 가능한 CSE·DCE·constant folding 은 cicc 가 PTX 를 내기 전에, 기계 instruction 을 골라야 하는 instruction selection(mul+add→FFMA, mad→IMAD) 은 ptxas 가 SASS 를 내며, strength reduction(곱셈→shift, 상수 나눗셈→곱셈·shift) 은 양쪽에서 일어나므로 어느 파일을 열어야 확인되는지가 단계로 정해지는 구분입니다.",
-    canonicalHref: "/cs/gpu/cuda-compilation-and-isa-analysis#classic-optimizations",
+    "id": "classic-compiler-optimizations-cuda",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "고전 compiler 최적화의 CUDA 단계 배치 · CSE/DCE/folding/strength reduction/selection",
+    "aliases": [
+      "Common Subexpression Elimination",
+      "CSE",
+      "Dead Code Elimination",
+      "DCE",
+      "Constant Folding",
+      "Strength Reduction",
+      "Instruction Selection",
+      "-fmad"
+    ],
+    "definition": "중복 계산과 쓰이지 않는 값을 줄이고 target에 맞는 연산을 고릅니다. PTX와 SASS 양쪽을 봅니다. 부동소수 반올림·overflow와 메모리 변경 조건을 보존해야 하며 특정 내부 도구가 모든 최적화를 독점하지 않습니다.",
+    "canonicalHref": "/cs/gpu/cuda-compilation-and-isa-analysis#classic-optimizations"
   },
   "ptx-sass-gap-isa-analysis": {
-    id: "ptx-sass-gap-isa-analysis",
-    kind: "method",
-    domain: "computer-science",
-    label: "PTX–SASS gap · cuobjdump/nvdisasm ISA-level analysis",
-    aliases: ["PTX–SASS Gap", "PTX-SASS Gap", "cuobjdump", "nvdisasm", "ISA-Level Analysis", "-plr", "-cfg"],
-    definition:
-      "PTX 에서 센 register·instruction·load 수가 ptxas 를 거치며 달라지므로 성능 판단은 SASS 로만 하되, cuobjdump 로 fatbin 의 cubin·PTX 구성과 resource usage 를 열고 nvdisasm 의 -plr·-cfg·-g 로 register liveness·control flow·source line 을 읽어 의도한 instruction 이 나왔는지, register 가 어디서 겹치는지, load 와 소비자 사이 거리가 얼마인지를 확인하는 절차입니다.",
-    canonicalHref: "/cs/gpu/cuda-compilation-and-isa-analysis#isa-analysis",
+    "id": "ptx-sass-gap-isa-analysis",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "PTX–SASS gap · cuobjdump/nvdisasm ISA-level analysis",
+    "aliases": [
+      "PTX–SASS Gap",
+      "PTX-SASS Gap",
+      "cuobjdump",
+      "nvdisasm",
+      "ISA-Level Analysis",
+      "-plr",
+      "-cfg"
+    ],
+    "definition": "실제 배포 이미지와 최종 명령을 확인하고 시간이 달라진 원인을 측정합니다. Opcode 몇 개의 개수나 SASS 일치만으로 실행 시간 차이를 설명할 수 없습니다. Host·launch·메모리 배치·cache·반복 측정을 함께 봅니다.",
+    "canonicalHref": "/cs/gpu/cuda-compilation-and-isa-analysis#isa-analysis"
   },
   "triton-program-instance-grid": {
     id: "triton-program-instance-grid",
@@ -18867,24 +18949,30 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/yarn-rope-extension#long-context-scope",
   },
   "kv-cache-representation-design-axis": {
-    id: "kv-cache-representation-design-axis",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Cache representation design · MLA vs GQA",
-    aliases: ["Cache Representation Design", "MLA vs GQA", "MLA versus GQA"],
-    definition:
-      "Token 하나를 KV cache 에 얼마나 압축된 형태로 남길지 정하는 설계 축으로, GQA·MQA 는 저장하는 K/V head 의 개수를 물리적으로 줄여 읽을 때 별도 복원 연산이 없는 반면 MLA(Multi-head Latent Attention)는 head 표현 자체를 훨씬 작은 low-rank latent 로 압축해 저장 byte 를 더 크게 줄이는 대신 attention 계산 시 latent 를 head 차원으로 복원하는 up-projection 을 거칩니다.",
-    canonicalHref: "/cs/ai/kv-cache-fundamentals#cache-representation-design",
+    "id": "kv-cache-representation-design-axis",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Cache representation design · MLA vs GQA",
+    "aliases": [
+      "Cache Representation Design",
+      "MLA vs GQA",
+      "MLA versus GQA"
+    ],
+    "definition": "기록 묶음 수를 줄이거나 그 기록을 만드는 작은 공통 표현을 저장할 수 있습니다. MLA의 선형 변환은 query/output에 흡수할 수 있으므로 매번 전체K/V복원을 요구하지 않습니다. 위치key 추가저장·실제kernel 비용은 별도입니다.",
+    "canonicalHref": "/cs/ai/kv-cache-fundamentals#cache-representation-design"
   },
   "kv-cache-capacity-vs-bandwidth-saving": {
-    id: "kv-cache-capacity-vs-bandwidth-saving",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Capacity saving vs bandwidth saving",
-    aliases: ["Capacity vs Bandwidth Saving", "KV Capacity Saving", "KV Bandwidth Saving"],
-    definition:
-      "KV cache 절감을 두 다른 축으로 재는 구분으로, capacity saving 은 고정된 memory 에 몇 token·request 를 담을 수 있는지를 늘리는 것이고 bandwidth saving 은 decode 한 step 이 실제로 읽는 byte 를 줄여 그 step 의 시간을 줄이는 것이며, GQA 처럼 저장 byte 를 줄이면서 추가 연산이 없는 방법은 두 절감이 같은 방향으로 움직이지만 MLA 처럼 저장 byte 절감에 up-projection 연산이 따라오면 bandwidth saving 이 capacity saving 만큼 자동으로 따라오지 않을 수 있습니다.",
-    canonicalHref: "/cs/ai/kv-cache-fundamentals#mla-vs-gqa",
+    "id": "kv-cache-capacity-vs-bandwidth-saving",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Capacity saving vs bandwidth saving",
+    "aliases": [
+      "Capacity vs Bandwidth Saving",
+      "KV Capacity Saving",
+      "KV Bandwidth Saving"
+    ],
+    "definition": "저장 용량 절감과 실행 중 옮기는 전체 byte의 절감을 따로 계산합니다. 가중치 100 MB가 그대로이고 KV 전송만 100 MB에서 25 MB가 되면 전체 전송량은 200 MB에서 125 MB로 줄어 비율은 0.625입니다. 같은 유효 대역폭과 전송 지배를 가정할 때만 이를 시간비로 읽을 수 있습니다.",
+    "canonicalHref": "/cs/ai/kv-cache-fundamentals#capacity-bandwidth"
   },
   "system-prompt-role": {
     id: "system-prompt-role",
@@ -21406,43 +21494,48 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/ai/structured-pruning#sparse-kernel-execution",
   },
   "high-dimensional-geometry-and-distance": {
-    id: "high-dimensional-geometry-and-distance",
-    kind: "concept",
-    domain: "mathematics",
-    label: "High-dimensional geometry · Euclidean distance concentration",
-    aliases: ["High-Dimensional Geometry", "Euclidean Distance"],
-    definition:
-      "두 vector의 좌표별 차이를 제곱해 더한 뒤 제곱근을 취하는 Euclidean distance 정의와, 차원 d가 커질수록 무작위 점들 사이 거리가 서로 비슷한 값으로 몰려 최근접·최원접의 상대 차이가 사라지는 고차원 기하 현상을 함께 묶은 개념입니다.",
-    canonicalHref: "/cs/ai/math-high-dimensional-geometry#distance",
+    "id": "high-dimensional-geometry-and-distance",
+    "kind": "concept",
+    "domain": "mathematics",
+    "label": "High-dimensional geometry · Euclidean distance concentration",
+    "aliases": [
+      "High-Dimensional Geometry",
+      "Euclidean Distance"
+    ],
+    "definition": "좌표 차이의 제곱합으로 유클리드 거리를 계산하고 확률 분포와 의존 조건 아래 그 거리의 요동을 분석하는 개념입니다. 독립 이진 좌표의 제곱거리 상대 표준편차는 1/√D이지만 좌표 수만으로 모든 자료의 거리 집중이나 최근접·최원접의 일치를 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/math-high-dimensional-geometry#concentration"
   },
   "johnson-lindenstrauss-lemma": {
-    id: "johnson-lindenstrauss-lemma",
-    kind: "theorem",
-    domain: "mathematics",
-    label: "Johnson–Lindenstrauss lemma",
-    aliases: ["JL Lemma"],
-    definition:
-      "n개의 점을 무작위 linear projection으로 원래 ambient dimension과 무관하게 점 개수의 로그에만 비례하는 차원 k로 옮겨도, 모든 점 쌍의 거리가 (1±ε) 배 안에서 보존된다는 정리입니다.",
-    canonicalHref: "/cs/ai/math-high-dimensional-geometry#jl-lemma",
+    "id": "johnson-lindenstrauss-lemma",
+    "kind": "theorem",
+    "domain": "mathematics",
+    "label": "Johnson–Lindenstrauss lemma",
+    "aliases": [
+      "JL Lemma"
+    ],
+    "definition": "고정한 유한 유클리드 점 집합과 0<ε<1에 대해 충분한 차원으로 옮겨 모든 쌍의 제곱거리를 (1±ε) 안에 보존하는 선형 변환이 존재한다는 정리입니다. 충분 차원은 ε를 고정하면 점 수의 로그 규모이며 무작위 구성의 성공 확률은 별도 조건으로 정합니다. 최소 차원이나 모든 사영의 성공을 뜻하지 않습니다.",
+    "canonicalHref": "/cs/ai/math-high-dimensional-geometry#jl-lemma"
   },
   "intrinsic-dimension": {
-    id: "intrinsic-dimension",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Intrinsic dimension",
-    definition:
-      "데이터가 저장된 좌표 수인 ambient dimension과 달리, 그 데이터가 실제로 자유롭게 변할 수 있는 독립 방향의 수를 재는 값으로, 자연 이미지·embedding처럼 좌표 수가 많은 데이터에서도 대개 ambient dimension보다 훨씬 작습니다.",
-    canonicalHref: "/cs/ai/math-high-dimensional-geometry#intrinsic-dimension",
+    "id": "intrinsic-dimension",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Intrinsic dimension",
+    "definition": "연속적인 데이터 모양이 국소적으로 독립적으로 변하는 자유도입니다. 저장 좌표 수와 선형 행렬의 rank를 구별하며 관측 자료의 추정값은 분포·표본·이웃 수 등의 조건에 의존합니다. 유한 표본만으로 배후 자유도를 유일하게 정하지는 않습니다.",
+    "canonicalHref": "/cs/ai/math-high-dimensional-geometry#intrinsic-dimension"
   },
   "latent-and-bottleneck-representation": {
-    id: "latent-and-bottleneck-representation",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Latent · bottleneck · low-rank representation",
-    aliases: ["Latent Representation", "Bottleneck Representation", "Low-Rank Representation"],
-    definition:
-      "모델이 input을 변환해 만드는 저차원 내부 좌표(latent representation)를, 그 차원을 input보다 좁게 강제해 중요한 방향만 남기는 구조(bottleneck representation)로 만들거나 행렬을 두 작은 factor의 곱으로 표현하는 계산(low-rank representation)으로 얻는 방법을 묶은 개념으로, 데이터의 intrinsic dimension이 ambient dimension보다 작다는 사실 덕분에 정보를 거의 잃지 않고 압축할 수 있습니다.",
-    canonicalHref: "/cs/ai/math-high-dimensional-geometry#latent-representation",
+    "id": "latent-and-bottleneck-representation",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Latent · bottleneck · low-rank representation",
+    "aliases": [
+      "Latent Representation",
+      "Bottleneck Representation",
+      "Low-Rank Representation"
+    ],
+    "definition": "잠재 표현은 모델 내부의 표현이며 반드시 저차원인 것은 아닙니다. 병목은 중간 폭 등의 제약이고 낮은 계수 표현은 행렬을 작은 인자들의 곱으로 나타내는 방법입니다. 낮은 내재 차원이나 좁은 폭만으로 무손실 복원 또는 좋은 과제 성능을 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/math-high-dimensional-geometry#latent-representation"
   },
   "ai-agent-definition-taxonomy": {
     id: "ai-agent-definition-taxonomy",
@@ -21693,14 +21786,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/gpu/cuda-sync-streams#sync-overhead-divergence",
   },
   "parameter-credit-assignment-problem": {
-    id: "parameter-credit-assignment-problem",
-    kind: "concept",
-    domain: "machine-learning",
-    label: "Parameter credit assignment problem",
-    aliases: ["Credit Assignment Problem"],
-    definition:
-      "최종 loss라는 scalar 하나에 수많은 parameter 각각이 얼마나 기여했는지 알아내는 문제이며, backpropagation은 chain rule로 이 기여도를 parameter별 gradient로 계산해 이 문제를 parameter 수가 아니라 layer 수에 비례하는 비용으로 풉니다. RL trajectory·action에 대한 credit assignment(rl-foundations-for-llm-post-training 소유)와는 시간 축의 action이 아니라 한 forward 계산 그래프 안 parameter를 대상으로 한다는 점에서 다른 층위입니다.",
-    canonicalHref: "/cs/ai/backprop-optimization#overview",
+    "id": "parameter-credit-assignment-problem",
+    "kind": "concept",
+    "domain": "machine-learning",
+    "label": "Parameter credit assignment problem",
+    "aliases": [
+      "Credit Assignment Problem"
+    ],
+    "definition": "최종 스칼라 손실의 각 파라미터에 대한 국소 민감도를 구하는 문제입니다. 역전파는 중간 미분을 재사용해 이를 계산하며 비용은 층 수만이 아니라 실제 순방향 연산 그래프의 크기와 기본 연산별 미분 비용에 연결됩니다. 행동 궤적의 보상 귀속과 구별합니다.",
+    "canonicalHref": "/cs/ai/backprop-optimization#overview"
   },
   "training-memory-budget-and-checkpointing": {
     id: "training-memory-budget-and-checkpointing",
@@ -31306,11 +31400,10 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "전체 entry reconstruction error를 비교하는 기준 norm 중 하나입니다.",
   },
   {
-    from: "low-rank-approximation",
-    to: "eckart-young-theorem",
-    relation: "constrains",
-    reason:
-      "Truncated SVD가 어떤 rank-k 후보보다 가깝다는 최적성의 대상입니다.",
+    "from": "low-rank-approximation",
+    "to": "eckart-young-theorem",
+    "relation": "constrains",
+    "reason": "rank≤k인 후보 집합에서 절단 SVD가 선택한 두 노름의 오차를 최소화한다는 최적성의 범위를 정합니다."
   },
   {
     from: "scalar-quantity",
@@ -34759,11 +34852,10 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Vector-valued 합성 함수에서는 local derivative의 곱이 Jacobian matrix product로 확장됩니다.",
   },
   {
-    from: "gradient",
-    to: "directional-derivative",
-    relation: "produces",
-    reason:
-      "Gradient와 unit direction의 dot product가 해당 방향의 local rate입니다.",
+    "from": "gradient",
+    "to": "directional-derivative",
+    "relation": "produces",
+    "reason": "함수가 그 점에서 미분 가능할 때 기울기와 단위 방향의 내적으로 방향미분을 계산합니다. 편미분들의 존재만으로 이 등식을 보장하지 않습니다."
   },
   {
     from: "dot-product",
@@ -35378,10 +35470,10 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     reason: "Gradient가 0인 위치를 first-order stationary point로 판별합니다.",
   },
   {
-    from: "stationary-point",
-    to: "optimization-stopping-signal",
-    relation: "produces",
-    reason: "Small gradient norm을 first-order stationary proximity를 보는 한 stopping signal로 사용합니다.",
+    "from": "stationary-point",
+    "to": "optimization-stopping-signal",
+    "relation": "produces",
+    "reason": "작은 기울기 노름은 반복을 끝낼 근사적인 일차 조건입니다. 추가 조건 없이 정확한 정지점까지의 거리가 작다고 결론 내리지 않습니다."
   },
   {
     from: "learning-rate",
@@ -44786,7 +44878,12 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "matrix-multiplication", to: "recurrent-parallel-duality", relation: "prerequisite", reason: "여러 step 을 한 번에 행렬곱으로 계산하는 parallel 형태가 duality 의 다른 한 축입니다." },
   { from: "delta-rule-error-correction", to: "chunkwise-parallel-form", relation: "prerequisite", reason: "Delta rule 의 오차 항이 이전 상태 전체에 의존해 순서를 강제한다는 사실이 chunkwise 알고리즘이 풀어야 할 문제입니다." },
   { from: "recurrent-parallel-duality", to: "chunkwise-parallel-form", relation: "prerequisite", reason: "두 형태가 같은 계산의 다른 표현이라는 사실이 있어야 그 중간 절충인 chunk 단위 형태를 정의할 수 있습니다." },
-  { from: "chunkwise-parallel-form", to: "parallel-prefix-scan", relation: "contrasts", reason: "둘 다 순차 recurrence 를 병렬 단계로 바꾸지만 chunkwise 형태는 chunk 크기 C 의 행렬 역행렬로, parallel scan 은 O(log n) 트리 단계로 다르게 풉니다." },
+  {
+    "from": "chunkwise-parallel-form",
+    "to": "parallel-prefix-scan",
+    "relation": "contrasts",
+    "reason": "묶음 내부의 삼각 계산과 상태 전달을 사용하는 형태를 결합법칙 기반의 일반 병렬 prefix scan과 구별합니다. 행렬의 역관계로 표현할 수 있어도 실제 코드가 역행렬을 직접 만든다는 뜻은 아닙니다."
+  },
   { from: "utf8-encoding", to: "byte-level-tokenization", relation: "prerequisite", reason: "UTF-8 byte 값 자체가 이 tokenization의 초기 256-symbol alphabet을 이룹니다." },
   { from: "byte-level-tokenization", to: "subword-bpe", relation: "extends", reason: "초기 alphabet을 byte 256개로 고정한 뒤 그 위에서 BPE 병합 규칙을 그대로 적용하는 구현 계열입니다." },
   { from: "byte-level-tokenization", to: "tokenizer-checkpoint-compatibility", relation: "constrains", reason: "Byte 단위 alphabet도 tokenizer 버전이 바뀌면 병합 결과와 ID 매핑이 달라져 호환성 계약의 대상이 됩니다." },
@@ -45100,7 +45197,12 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "outcome-vs-process-reward", to: "reward-hacking-and-specification-gaming", relation: "prerequisite", reason: "잘못 정의된 reward 형태를 알아야 policy가 그것을 hacking하는 구체적 경로가 보입니다." },
   { from: "sparse-vs-dense-reward", to: "reward-hacking-and-specification-gaming", relation: "prerequisite", reason: "Dense reward의 중간 신호를 잘못 정의할 때 hacking 위험이 커진다는 것이 이 절의 핵심 사례입니다." },
   { from: "credit-assignment-problem", to: "reward-shaping", relation: "prerequisite", reason: "Credit assignment의 신호 희석 문제가 potential-based shaping이 풀려는 문제입니다." },
-  { from: "reward-hacking-and-specification-gaming", to: "reward-shaping", relation: "constrains", reason: "임의의 shaping 항은 hacking 위험이 있어, optimal policy를 보존하는 potential-based 형태만 안전하다는 제약이 붙습니다." },
+  {
+    "from": "reward-hacking-and-specification-gaming",
+    "to": "reward-shaping",
+    "relation": "constrains",
+    "reason": "보조 점수가 목표를 바꾸는지 확인해야 합니다. Potential 차이 형태는 같은 할인율과 적절한 MDP·종료 조건에서 정책 보존을 증명할 수 있지만 유일하게 안전한 설계라는 뜻은 아닙니다."
+  },
   { from: "rlvr-verifiable-task", to: "binary-vs-continuous-reward", relation: "prerequisite", reason: "Verifier 결과를 binary로 볼지 continuous로 볼지가 RLVR reward의 값 형태를 정합니다." },
   { from: "binary-vs-continuous-reward", to: "reward-calibration", relation: "prerequisite", reason: "값 형태가 다른 reward 원천을 섞으려면 calibration으로 척도를 먼저 맞춰야 합니다." },
   { from: "versioned-verifier-measurement", to: "reward-calibration", relation: "constrains", reason: "Verifier마다 다른 원점수 척도를 calibration 없이 합치면 measurement 계약의 의미가 왜곡됩니다." },
@@ -45445,11 +45547,26 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "structured-pruning-shape-propagation", to: "sparse-kernel-execution", relation: "contrasts", reason: "Shape 자체를 줄이는 경로는 kernel 지원과 무관하게 이득이 생기는 반면 pattern 경로는 kernel 지원이 있어야만 이득이 생깁니다." },
   { from: "sparse-storage-break-even", to: "sparse-kernel-execution", relation: "contrasts", reason: "저장 공간 손익분기와 실제 연산 감소는 서로 다른 조건이라는 것을 대조합니다." },
   { from: "euclidean-norm", to: "high-dimensional-geometry-and-distance", relation: "prerequisite", reason: "Euclidean distance는 두 점 차이 vector의 Euclidean norm이므로 norm 정의가 선행돼야 합니다." },
-  { from: "high-dimensional-geometry-and-distance", to: "johnson-lindenstrauss-lemma", relation: "prerequisite", reason: "무엇을 보존해야 하는 대상인 거리와 그 집중 현상을 알아야 JL lemma의 보장 내용을 이해할 수 있습니다." },
+  {
+    "from": "high-dimensional-geometry-and-distance",
+    "to": "johnson-lindenstrauss-lemma",
+    "relation": "prerequisite",
+    "reason": "보존할 유클리드 거리와 그 오차 조건을 먼저 정의합니다. 특정 자료에서 거리 집중이 일어난다는 사실은 JL 정리의 전제가 아닙니다."
+  },
   { from: "matrix-multiplication", to: "johnson-lindenstrauss-lemma", relation: "prerequisite", reason: "JL이 쓰는 무작위 사영은 결국 무작위 행렬을 곱하는 matrix-vector 연산이라 행렬 곱 정의가 선행돼야 합니다." },
   { from: "matrix-rank", to: "intrinsic-dimension", relation: "extends", reason: "Rank가 선형 부분공간의 자유도를 재는 것처럼, intrinsic dimension은 이 개념을 반드시 선형이지 않은 데이터·manifold로 일반화합니다." },
-  { from: "johnson-lindenstrauss-lemma", to: "intrinsic-dimension", relation: "contrasts", reason: "JL의 목표 차원은 점 개수 n에만 의존해 데이터 구조를 보지 않지만, intrinsic dimension은 데이터 자체의 구조로 정해지는 다른 축입니다." },
-  { from: "intrinsic-dimension", to: "latent-and-bottleneck-representation", relation: "prerequisite", reason: "실제 데이터의 자유도가 ambient dimension보다 훨씬 작다는 사실이 있어야 낮은 차원 latent representation이 정보를 거의 잃지 않는다는 주장이 성립합니다." },
+  {
+    "from": "johnson-lindenstrauss-lemma",
+    "to": "intrinsic-dimension",
+    "relation": "contrasts",
+    "reason": "JL의 일반 충분 차원은 점 수 n과 오차 ε, 별도로 정한 확률 목표에 의존합니다. 데이터 모양의 내재 차원과 구별하며 낮은 내재 차원을 전제하지 않습니다."
+  },
+  {
+    "from": "intrinsic-dimension",
+    "to": "latent-and-bottleneck-representation",
+    "relation": "prerequisite",
+    "reason": "데이터 모양의 자유도는 좁은 표현을 검토할 단서입니다. 전체 모양의 위상, 연속성, 학습과 보존할 정보까지 확인해야 하며 낮은 자유도만으로 거의 무손실 압축을 보장하지 않습니다."
+  },
   { from: "low-rank-approximation", to: "latent-and-bottleneck-representation", relation: "prerequisite", reason: "SVD의 rank-k 근사가 low-rank representation의 구체적 계산 방법을 제공합니다." },
   { from: "latent-and-bottleneck-representation", to: "undercomplete-bottleneck", relation: "extends", reason: "일반적인 latent·bottleneck 개념을 autoencoder의 구체적 구조 제약(latent dimension < input dimension)으로 특수화합니다." },
   { from: "ai-agent-definition-taxonomy", to: "agent-observation-action-loop", relation: "prerequisite", reason: "무엇이 agent이고 무엇이 workflow인지 정의해야 그 반복 실행 단위를 이어서 설명할 수 있습니다." },

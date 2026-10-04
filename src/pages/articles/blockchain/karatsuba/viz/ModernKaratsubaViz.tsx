@@ -1,7 +1,7 @@
 const products = [
-  { id: "z₂", formula: "12 × 56", role: "높은 자리" },
-  { id: "z₀", formula: "34 × 78", role: "낮은 자리" },
-  { id: "z₁", formula: "46 × 134 − z₂ − z₀", role: "교차항" },
+  { id: "높은 곱", formula: "12 × 56 = 672", role: "첫 번째 곱" },
+  { id: "낮은 곱", formula: "34 × 78 = 2652", role: "두 번째 곱" },
+  { id: "합의 곱", formula: "46 × 134 = 6164", role: "세 번째 곱" },
 ] as const;
 
 export default function ModernKaratsubaViz() {
@@ -41,9 +41,9 @@ export default function ModernKaratsubaViz() {
         ))}
       </div>
       <div className="mt-4 rounded-lg border border-primary/30 bg-primary/5 p-4 text-center">
-        <p className="text-xs text-muted-foreground">자리 이동 뒤 재결합</p>
+        <p className="text-xs text-muted-foreground">가운데 항 = 6164 − 672 − 2652 = 2840</p>
         <p className="mt-2 break-words font-mono text-sm font-semibold text-foreground">
-          z₂·100² + z₁·100 + z₀ = 7,006,652
+          672·100² + 2840·100 + 2652 = 7,006,652
         </p>
       </div>
     </figure>

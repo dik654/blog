@@ -1,0 +1,12 @@
+{
+  "repository": "https://github.com/NVIDIA/cuda-samples",
+  "version": "v13.0",
+  "commit": "3f1c50965017932fc81e6d94a3fc9e04c105b312",
+  "upstreamPath": "Samples/6_Performance/transpose/transpose.cu",
+  "sourceUrl": "https://raw.githubusercontent.com/NVIDIA/cuda-samples/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/6_Performance/transpose/transpose.cu",
+  "sha256": "14b15f234a54fbe3d31185e397caab40532cd76a347691af4ce840cae8f30682",
+  "unchanged": true,
+  "retrievedAt": "2026-10-04",
+  "license": "BSD-3-Clause; original copyright/license retained in full file",
+  "execution": "원문과 주소 계산만 대조. GPU 실행·성능 측정하지 않음."
+}

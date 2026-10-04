@@ -1,23 +1,2 @@
 import type { FileNode } from "@/components/code/types";
-
-const f = (name: string, path: string, codeKey?: string): FileNode => ({
-  name,
-  type: "file",
-  path,
-  codeKey,
-});
-const d = (name: string, children: FileNode[]): FileNode => ({
-  name,
-  type: "dir",
-  children,
-});
-
-export const kvCacheFundamentalsTree: FileNode = d("transformers", [
-  d("models/mixtral", [
-    f(
-      "modeling_mixtral.py",
-      "transformers/models/mixtral/modeling_mixtral.py",
-      "repeat-kv-heads",
-    ),
-  ]),
-]);
+export const kvCacheFundamentalsTree: FileNode = {"name": "transformers", "type": "dir", "children": [{"name": "transformers/models/mixtral/modeling_mixtral.py", "path": "transformers/models/mixtral/modeling_mixtral.py", "type": "file", "codeKey": "current-projection"}, {"name": "transformers/cache_utils.py", "path": "transformers/cache_utils.py", "type": "file", "codeKey": "dynamic-update"}, {"name": "transformers/models/gemma4/modeling_gemma4.py", "path": "transformers/models/gemma4/modeling_gemma4.py", "type": "file", "codeKey": "gemma-shared-projection"}, {"name": "configs/Qwen3.6-27B/config.json", "path": "configs/Qwen3.6-27B/config.json", "type": "file", "codeKey": "qwen-config"}, {"name": "configs/Muse-Glimmer-30B/config.json", "path": "configs/Muse-Glimmer-30B/config.json", "type": "file", "codeKey": "muse-config"}, {"name": "configs/gemma-4-31B/config.json", "path": "configs/gemma-4-31B/config.json", "type": "file", "codeKey": "gemma-config"}]};

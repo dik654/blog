@@ -4746,26 +4746,51 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "kv-cache-fundamentals": {
-    title: "KV cache 기초 글이 소유하는 범위",
-    owns: [
+    "title": "KV cache 기초 글이 소유하는 범위",
+    "owns": [
       "MHA·GQA·MQA의 KV head 공유와 token당 KV byte 계산",
       "Autoregressive decode에서 현재 Query와 보존되는 과거 K/V의 역할 경계",
       "Cache representation design 축과 GQA(head 공유) vs MLA(latent 압축)의 비교",
       "Capacity saving과 bandwidth saving의 구분, 그리고 언제 이 둘이 갈리는지",
-],
-    reuses: [
-      { label: "Attention 기본 원리", href: "/cs/ai/attention-theory" },
-      { label: "Bit·byte", href: "/cs/blockchain/bit-byte" },
-      { label: "Decode 의 memory-bound 성질", href: "/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity" },
-      { label: "MLA latent KV compression 의 정의", href: "/cs/ai/motif-3-architecture#gdla" },
-],
-    evidence: [
+      "동일한 작은 head 사례를 실제 repeat_kv·DynamicLayer.update에 대입하고, MLA 변환 흡수와 추가 위치 key를 구분하는 과정",
+      "고정 Qwen·Muse·Gemma 설정의 층별 KV 논리 용량과 실제 dtype·window·저장 배열·측정 로그의 경계"
+    ],
+    "reuses": [
       {
-        kind: "primary-source",
-        rule: "MHA·MQA·GQA의 공유 구조와 비교 결과는 원 논문의 model·training·decode 조건으로 제한한다.",
+        "label": "Attention 기본 원리",
+        "href": "/cs/ai/attention-theory"
       },
-      { kind: "standard", rule: "Llama 3 8B 의 layer·head 수는 공식 논문(arXiv:2407.21783) Table 3 값을 쓰고, 그 값으로 계산한 KV byte·MHA 대비 배율은 이 글의 산수 예임을 밝힌다." },
-],
+      {
+        "label": "Bit·byte",
+        "href": "/cs/blockchain/bit-byte"
+      },
+      {
+        "label": "Decode 의 memory-bound 성질",
+        "href": "/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity"
+      },
+      {
+        "label": "MLA를 조합한 Motif 3의 GDLA 설계",
+        "href": "/cs/ai/motif-3-architecture#gdla"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "MHA·MQA·GQA의 공유 구조와 비교 결과는 원 논문의 model·training·decode 조건으로 제한한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "Llama 3 8B 의 layer·head 수는 공식 논문(arXiv:2407.21783) Table 3 값을 쓰고, 그 값으로 계산한 KV byte·MHA 대비 배율은 이 글의 산수 예임을 밝힌다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "Transformers v5.15.0 commit 5eddc12edfaf8cafde8c9bae4ccb12f8a139b4f9와 각 model config commit의 전체 원문으로 배열·head·layer·window를 확인한다. 논리 byte 계산을 원 실행 로그 없는 실제 VRAM 측정으로 부르지 않는다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "DeepSeek-V2 §2.1.2–2.1.3의 query/output 변환 흡수와 RoPE key 추가 저장을 함께 읽는다. GQA Table 1 시간은 샘플당·TPU 칩당 수치이며 모델·배치·병렬 조건을 보존한다."
+      }
+    ]
   },
   "hybrid-kv-cache-allocation": {
     title: "Hybrid KV cache allocator 글이 소유하는 범위",
@@ -4886,45 +4911,45 @@ export const EDITORIAL_BOUNDARIES = {
 ],
   },
   "vllm-paged-attention": {
-    title: "PagedAttention·KV block manager 정본 글이 소유하는 범위",
-    owns: [
+    "title": "PagedAttention·KV block manager 정본 글이 소유하는 범위",
+    "owns": [
       "Variable-length KV state의 fixed-size logical·physical block allocation과 내부 fragmentation",
       "Request block table의 logical-token→physical-block address translation과 paged kernel 경계",
       "BlockPool reference count·free queue·cached block eviction의 ownership 불변식",
       "KVCacheManager의 cache lookup·slot demand·allocation 실패 계약과 hybrid cache group 경계",
-      "Automatic Prefix Caching의 chained full-block hash·재사용 범위·운영 지표",
-      "연속 예약과 fixed-size block에서의 internal·external fragmentation 계산과 paging이 external fragmentation을 없애는 이유",
+      "Automatic Prefix Caching의 chained hash·공간 단위와 hash 단위·partial-hit CoW의 재사용 범위와 운영 지표",
+      "연속 예약의 external fragmentation과 같은 크기 block을 자유롭게 연결하는 모형에서 block 단위 외부 단편화가 사라지는 조건",
       "BlockPool allocator의 allocate·free 연산, sequence fork·copy-on-write, beam·branch block 공유의 reference count 전이",
-      "Block 단위 prefix sharing과 token·request hit rate, replica·eviction 두 축의 cache locality 측정",
-],
-    reuses: [
-      {
-        label: "Autoregressive decoding과 KV state",
-        href: "/cs/ai/seq2seq#decoder",
-      },
-      {
-        label: "Scheduler token budget과 preemption",
-        href: "/cs/ai/vllm-scheduler",
-      },
-      {
-        label: "MHA·GQA·MQA와 KV byte·hybrid capacity",
-        href: "/cs/ai/kv-cache-fundamentals",
-      },
-      {
-        label: "Serving request lifecycle과 latency",
-        href: "/cs/ai/vllm-serving",
-      },
+      "Block 단위 prefix sharing과 token·request hit rate, replica·eviction 두 축의 cache locality 측정"
     ],
-    evidence: [
+    "reuses": [
       {
-        kind: "primary-source",
-        rule: "PagedAttention·RadixAttention claim은 각 논문의 model·hardware·workload·runtime 설계와 평가 범위로 제한한다.",
+        "label": "Autoregressive decoding과 KV state",
+        "href": "/cs/ai/seq2seq#decoder"
       },
       {
-        kind: "standard",
-        rule: "BlockPool·KVCacheManager·APC hash semantics는 현재 vLLM V1 source·design revision과 확인 날짜를 고정한다.",
+        "label": "Scheduler token budget과 preemption",
+        "href": "/cs/ai/vllm-scheduler"
       },
+      {
+        "label": "MHA·GQA·MQA와 KV byte·hybrid capacity",
+        "href": "/cs/ai/kv-cache-fundamentals"
+      },
+      {
+        "label": "Serving request lifecycle과 latency",
+        "href": "/cs/ai/vllm-serving"
+      }
     ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "PagedAttention·RadixAttention의 설계와 성능 수치는 각 논문의 model·hardware·workload와 평가 범위를 유지한다. 논문 당시 sequence fork와 현재 구현의 prefix partial-hit CoW를 구분한다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "BlockPool·KVCacheManager·APC는 vLLM v0.27.1 commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac의 전체 파일로 확인한다. hash 없는 반환 block의 앞쪽 배치, 사용 중 hash eviction과 물리 반환의 차이, 복사 pin, hash 단위가 더 작은 경로를 함께 확인한다."
+      }
+    ]
   },
   "vllm-spec-decode": {
     title: "Speculative decoding 정본 글이 소유하는 범위",
@@ -6962,23 +6987,41 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "aa-fundamentals": {
-    title: "Account Abstraction 기초 글이 소유하는 범위",
-    owns: [
+    "title": "Account Abstraction 기초 글이 소유하는 범위",
+    "owns": [
       "고정 EOA validation과 programmable smart-account policy의 책임 경계",
       "ERC-4337 UserOperation·Bundler·EntryPoint·Paymaster의 end-to-end lifecycle",
       "EIP-7702 Final delegation과 Withdrawn native-AA proposal의 현재 상태 구분",
-      "Session capability·recovery governance·paymaster budget의 release gate",
+      "Session capability·recovery governance·paymaster budget의 release gate"
     ],
-    reuses: [
-      { label: "Ethereum transaction·nonce·receipt", href: "/cs/blockchain/evm-fundamentals" },
-      { label: "EIP-1559 fee market", href: "/cs/blockchain/reth-eip1559" },
-      { label: "Elliptic-curve signature 기초", href: "/cs/crypto/elliptic-curves" },
+    "reuses": [
+      {
+        "label": "Ethereum transaction·nonce·receipt",
+        "href": "/cs/blockchain/evm-fundamentals"
+      },
+      {
+        "label": "EIP-1559 fee market",
+        "href": "/cs/blockchain/reth-eip1559"
+      },
+      {
+        "label": "Elliptic-curve signature 기초",
+        "href": "/cs/crypto/elliptic-curves"
+      }
     ],
-    evidence: [
-      { kind: "standard", rule: "ERC-4337·ERC-7562·EIP-7702·EIP-7701의 status와 version을 2026-08-14 현재 공식 EIP 문서에 귀속한다." },
-      { kind: "project-claim", rule: "Smart account·passkey·batch·paymaster를 자동 보안·무료 gas·inclusion guarantee로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "Replay·mutable-state invalidation·budget exhaustion·timeout·recovery conflict parity 뒤 gas·latency를 비교한다." },
-    ],
+    "evidence": [
+      {
+        "kind": "standard",
+        "rule": "ERC-4337·ERC-7562·EIP-7702·EIP-7701의 문서 상태와 계정 원문 버전을 본문에서 실제 확인한 2026-10-04 기준에 귀속합니다. 문서 상태와 네트워크 활성화를 구분합니다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "Smart account·passkey·batch·paymaster를 자동 보안·무료 gas·inclusion guarantee로 확대하지 않는다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "Replay·mutable-state invalidation·budget exhaustion·timeout·recovery conflict parity 뒤 gas·latency를 비교한다."
+      }
+    ]
   },
   "isms-overview": {
     title: "ISMS-P 관리체계 개요 글이 소유하는 범위",
@@ -7759,41 +7802,77 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-measurement", rule: "Wrong wire·copy·opening·subgroup·round-order failure parity 뒤 rows·degree·FFT/MSM·memory·verify를 비교한다." },
     ],
   },
-  crt: {
-    title: "CRT 글이 소유하는 범위",
-    owns: [
+  "crt": {
+    "title": "CRT 글이 소유하는 범위",
+    "owns": [
       "정수 congruence·pairwise-coprime CRT의 존재와 modulo-product 유일성",
       "부분 곱·modular inverse selector를 이용한 구성과 non-coprime 반례",
-      "RSA-CRT 재결합의 correctness·fault·side-channel·benchmark 경계",
+      "RSA-CRT 재결합의 correctness·fault·side-channel·benchmark 경계"
     ],
-    reuses: [
-      { label: "Prime-field modular arithmetic와 inverse", href: "/cs/crypto/finite-field-theory#prime-field" },
-      { label: "Lagrange selector와 interpolation 유일성", href: "/cs/crypto/lagrange#formula" },
-      { label: "Finite-field implementation release gate", href: "/cs/crypto/field-arithmetic#fr-scalar" },
+    "reuses": [
+      {
+        "label": "Prime-field modular arithmetic와 inverse",
+        "href": "/cs/crypto/finite-field-theory#prime-field"
+      },
+      {
+        "label": "Lagrange selector와 interpolation 유일성",
+        "href": "/cs/crypto/lagrange#formula"
+      },
+      {
+        "label": "Finite-field implementation release gate",
+        "href": "/cs/crypto/field-arithmetic#release"
+      }
     ],
-    evidence: [
-      { kind: "standard", rule: "RSA CRT parameter와 primitive 입력 범위는 RFC 8017 PKCS #1 v2.2에 귀속한다." },
-      { kind: "project-claim", rule: "Pairwise-coprime 정리에서 RSA constant-time·fault resistance나 고정 speedup을 유도하지 않는다." },
-      { kind: "project-measurement", rule: "Direct/CRT parity와 fault·timing gate 뒤 같은 key·backend·target에서 latency를 비교한다." },
-    ],
+    "evidence": [
+      {
+        "kind": "standard",
+        "rule": "RSA CRT parameter와 primitive 입력 범위는 RFC 8017 PKCS #1 v2.2에 귀속한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "Pairwise-coprime 정리에서 RSA constant-time·fault resistance나 고정 speedup을 유도하지 않는다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "Direct/CRT parity와 fault·timing gate 뒤 같은 key·backend·target에서 latency를 비교한다."
+      }
+    ]
   },
-  karatsuba: {
-    title: "Karatsuba 글이 소유하는 범위",
-    owns: [
-      "일반 high/low operand 분할과 네 곱→세 곱 bilinear 재결합",
-      "T(n)=3T(n/2)+Theta(n)의 recurrence tree와 n^log2(3) bound",
-      "Addition·carry·temporary·cache를 포함한 target별 crossover 선택",
+  "karatsuba": {
+    "title": "Karatsuba 글이 소유하는 범위",
+    "owns": [
+      "두 조각의 네 곱을 합·차의 곱을 이용한 세 곱으로 바꾸는 유도와 올림·부호 경계",
+      "균형 잡힌 전체 재귀 나무의 마지막 곱과 선형 합산을 더한 성장률",
+      "가정한 비용 모형과 실제 플랫폼별 전환 크기의 구분"
     ],
-    reuses: [
-      { label: "Polynomial coefficient 표현", href: "/cs/crypto/finite-field-theory#polynomial" },
-      { label: "Fp² Karatsuba·inverse와 tower reduction", href: "/cs/crypto/extension-fields#fp2" },
-      { label: "더 큰 polynomial의 NTT product", href: "/cs/crypto/fft#zk-usage" },
+    "reuses": [
+      {
+        "label": "Polynomial coefficient 표현",
+        "href": "/cs/crypto/finite-field-theory#polynomial"
+      },
+      {
+        "label": "Fp² Karatsuba·inverse와 tower reduction",
+        "href": "/cs/crypto/extension-fields#fp2"
+      },
+      {
+        "label": "더 큰 polynomial의 NTT product",
+        "href": "/cs/crypto/fft#zk-usage"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "Subquadratic multiplication의 역사적·점근적 주장은 Karatsuba–Ofman 원문 범위에 귀속한다." },
-      { kind: "primary-source", rule: "Odd limb·sign·threshold 구현 설명은 GNU MP 6.3.0 manual 범위에 고정한다." },
-      { kind: "project-measurement", rule: "Cutoff는 target·compiler·limb·allocation을 고정한 paired benchmark로 다시 측정한다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Karatsuba–Ofman 1962 논문은 MathNet 서지를 확인했습니다. PDF 접근 오류로 전문을 읽지 않았으며 본문의 재귀 유도는 직접 전개하고 GMP 공식 문서와 대조했습니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "GMP 6.3.0 공식 문서와 GNU 배포 소스의 toom22_mul.c 전체를 대조합니다. 실제 배열 사례는 십진 입력과 자리 기준이 달라지는 점을 명시합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "본문의 정수 검산과 원문 경로 대조를 실제 GMP 네이티브 실행·성능 측정으로 표현하지 않습니다. 전환 크기를 정하려면 같은 입력과 CPU·컴파일러·자리 폭·메모리 조건에서 별도로 측정합니다."
+      }
+    ]
   },
   "sparse-multiplication": {
     title: "Sparse multiplication 글이 소유하는 범위",
@@ -9322,22 +9401,37 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "math-gradients-jacobians": {
-    title: "Partial derivative·gradient·Jacobian 글이 소유하는 범위",
-    owns: [
-      "Coordinate 하나를 고정해 재는 partial derivative와 전체 differentiability 경계",
+    "title": "Partial derivative·gradient·Jacobian 글이 소유하는 범위",
+    "owns": [
+      "나머지 좌표를 고정하고 하나만 움직여 재는 편미분과 전체 미분 가능성의 경계",
       "Gradient·directional derivative·Euclidean steepest local direction",
       "Output-by-input Jacobian shape와 Jacobian-vector product",
-      "Gradient·JVP·VJP의 input/output 방향 차이",
+      "Gradient·JVP·VJP의 input/output 방향 차이"
     ],
-    reuses: [
-      { label: "Vector·dot product·norm", href: "/cs/ai/math-vectors-inner-products" },
-      { label: "Derivative와 local linearity", href: "/cs/ai/math-functions-derivatives-gradients" },
-      { label: "Reverse-mode VJP", href: "/cs/ai/reverse-mode-autodiff" },
+    "reuses": [
+      {
+        "label": "Vector·dot product·norm",
+        "href": "/cs/ai/math-vectors-inner-products"
+      },
+      {
+        "label": "Derivative와 local linearity",
+        "href": "/cs/ai/math-functions-derivatives-gradients"
+      },
+      {
+        "label": "Reverse-mode VJP",
+        "href": "/cs/ai/reverse-mode-autodiff"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "Gradient·directional derivative claim은 multivariable calculus의 coordinate·norm·differentiability 조건에 귀속한다." },
-      { kind: "standard", rule: "Jacobian row·column convention과 JVP·VJP 곱 방향을 formula shape와 함께 기록한다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Gradient·directional derivative claim은 multivariable calculus의 coordinate·norm·differentiability 조건에 귀속한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "Jacobian row·column convention과 JVP·VJP 곱 방향을 formula shape와 함께 기록한다."
+      }
+    ]
   },
   "math-optimization-objectives": {
     title: "Optimization objective·feasible set·minimizer 글이 소유하는 범위",
@@ -9578,45 +9672,96 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "continuous-batching-step-anatomy": {
-    title: "Scheduling step 해부 글이 소유하는 범위",
-    owns: [
+    "title": "Scheduling step 해부 글이 소유하는 범위",
+    "owns": [
       "한 scheduling step 의 입력(running·waiting·budget·KV)과 출력(SchedulerOutput) 정의",
-      "Token budget 이 running 먼저, waiting 나중 순서로 소모되는 배분식과 sequence budget 의 별도 상한",
+      "진행 목록 먼저·대기 목록 다음의 token budget 배분과 sequence budget의 별도 상한; 진행 목록에 prefill이 섞여 모든 decode 우선은 아닌 경계",
       "schedule() 의 running 순회 → preemption → waiting admission → chunk 분할 → batch 조립 순서",
       "Decode·prefill·mixed batch 가 같은 절차에서 갈리는 조건과 mixed batch 의 이득·비용",
+      "계산 위치를 예약해 전진시키는 시점과 실제 GPU 실행 완료·출력 확인 시점의 구분"
     ],
-    reuses: [
-      { label: "Iteration-level continuous batching 과 resource feasibility", href: "/cs/ai/vllm-serving#engine-loop" },
-      { label: "Request progress gap·queue 정책·preemption 비용", href: "/cs/ai/vllm-scheduler" },
-      { label: "Prefill·decode 의 compute·memory 특성", href: "/cs/ai/prefill-decode-phase-dynamics" },
-      { label: "CUDA graph batch-shape dispatch", href: "/cs/ai/cuda-graph-capture#implementation" },
+    "reuses": [
+      {
+        "label": "Iteration-level continuous batching 과 resource feasibility",
+        "href": "/cs/ai/vllm-serving#engine-loop"
+      },
+      {
+        "label": "Request progress gap·queue 정책·preemption 비용",
+        "href": "/cs/ai/vllm-scheduler"
+      },
+      {
+        "label": "Prefill·decode 의 compute·memory 특성",
+        "href": "/cs/ai/prefill-decode-phase-dynamics"
+      },
+      {
+        "label": "CUDA graph batch-shape dispatch",
+        "href": "/cs/ai/cuda-graph-capture#implementation"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "함수·필드 이름과 분기 순서는 vLLM V1 main branch 의 scheduler.py·config/scheduler.py 에서 읽은 범위로만 쓰고 읽은 시점을 본문에 적는다." },
-      { kind: "project-claim", rule: "Sarathi-Serve 의 처리 용량 배수는 논문의 model·GPU·latency 조건에 묶인 저자 자기보고로 표기하고 최신 vLLM 성능으로 옮기지 않는다." },
-      { kind: "standard", rule: "수치 예(budget 2048·decode 40·prompt 3000)는 배분식의 산수이며 step 시간·ITL 은 측정 없이 크기 관계로만 말한다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "함수·필드와 분기 순서는 vLLM v0.27.1 commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac의 scheduler·config 전체 원문으로 고정한다. 역사적 SequenceGroup은 v0.6.6 경로와 구분한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "Sarathi-Serve 의 처리 용량 배수는 논문의 model·GPU·latency 조건에 묶인 저자 자기보고로 표기하고 최신 vLLM 성능으로 옮기지 않는다."
+      },
+      {
+        "kind": "standard",
+        "rule": "작은 budget 8 사례의 배정 8→8→4와 기존 budget 2048·decode 40·prompt 3000 사례의 2048→1032→41은 가정의 산수다. 배정 token 수를 실제 시간이나 실행 완료의 증거로 쓰지 않는다."
+      }
+    ]
   },
   "serving-memory-admission-and-preemption": {
-    title: "KV admission·preemption 글이 소유하는 범위",
-    owns: [
-      "요청 memory footprint 계산식과 admission 시점 prefill 몫·최종 상한의 구분",
-      "Memory watermark의 정의와 free block 기반 OK·LATER·NEVER admission 판정",
-      "Memory pressure의 정의와 recompute·swap preemption의 비용 비교(연산 vs PCIe)",
-      "Hybrid model의 고정 recurrent-state 할당이 admission 필요 block을 바꾸는 방식",
+    "title": "KV admission·preemption 글이 소유하는 범위",
+    "owns": [
+      "요청 footprint와 전체 입력 fit 검사·실제 조각 할당·최대 출력 길이 예약의 서로 다른 조건",
+      "V0의 OK·LATER·NEVER와 watermark, V1의 전체 입력 fit 및 버전별 기본값 차이",
+      "메모리 압박 뒤 V1 recompute의 token 이력·computed 위치·block 참조 전이와 V0 swap의 CPU 공간 실패",
+      "별도 연산·편도 전송량을 가정한 recompute 및 왕복 swap 시간 비교",
+      "고정 recurrent state의 논리 용량과 실제 group·padding·복사본·checkpoint 할당의 경계"
     ],
-    reuses: [
-      { label: "Paged KV block allocation·fragmentation·cache group", href: "/cs/ai/vllm-paged-attention" },
-      { label: "RUNNING·WAITING 순서, token budget, preemption 상태 전이", href: "/cs/ai/vllm-scheduler" },
-      { label: "Token당 KV byte", href: "/cs/ai/kv-cache-fundamentals" },
-      { label: "Weight·KV·workspace 장부와 성장축 분류", href: "/cs/ai/model-vram-budgeting" },
-      { label: "배포 용량 단위의 context·concurrency admission", href: "/cs/ai/llm-serving-capacity" },
+    "reuses": [
+      {
+        "label": "Paged KV block allocation·fragmentation·cache group",
+        "href": "/cs/ai/vllm-paged-attention"
+      },
+      {
+        "label": "RUNNING·WAITING 순서, token budget, preemption 상태 전이",
+        "href": "/cs/ai/vllm-scheduler"
+      },
+      {
+        "label": "Token당 KV byte",
+        "href": "/cs/ai/kv-cache-fundamentals"
+      },
+      {
+        "label": "Weight·KV·workspace 장부와 성장축 분류",
+        "href": "/cs/ai/model-vram-budgeting"
+      },
+      {
+        "label": "배포 용량 단위의 context·concurrency admission",
+        "href": "/cs/ai/llm-serving-capacity"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "Recompute·swap 비교의 정성적 결론은 vLLM 논문의 block 크기 실험 범위로 한정하고, ms 단위 수치는 본문이 직접 계산한 예시임을 밝힌다." },
-      { kind: "standard", rule: "Watermark·swap_space·gpu_memory_utilization 같은 기본값은 버전을 명시한 공식 문서나 code에서만 가져온다." },
-      { kind: "project-claim", rule: "SGLang·TensorRT-LLM의 설정은 각 engine 문서가 정의한 범위로만 읽고 vLLM의 preemption mechanism과 동일시하지 않는다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "고정 V0 v0.6.6과 V1 v0.27.1의 전체 소스에서 admission·preemption 분기를 확인한다. V0 swap의 CPU 공간 실패는 RuntimeError이며 자동 recompute 전환으로 바꾸지 않는다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "PagedAttention 논문 §4.5의 preemption 설계와 §7.3의 평가 조건을 보존한다. 본문의 6.44 ms·1.6777 ms 등은 가정한 연산율과 편도 byte의 왕복 전송 계산이며 실제 장비 측정이 아니다."
+      },
+      {
+        "kind": "standard",
+        "rule": "Watermark·swap_space·gpu_memory_utilization 같은 기본값은 버전을 명시한 공식 문서나 code에서만 가져온다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "SGLang·TensorRT-LLM의 설정은 각 engine 문서가 정의한 범위로만 읽고 vLLM의 preemption mechanism과 동일시하지 않는다."
+      }
+    ]
   },
   "inference-runtime-anatomy": {
     title: "Inference runtime 해부 글이 소유하는 범위",
@@ -9642,24 +9787,45 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "serving-latency-metrics-and-slo": {
-    title: "Serving latency 지표와 SLO 글이 소유하는 범위",
-    owns: [
-      "TTFT·ITL·TPOT·E2E 의 정의와 E2E = TTFT + (n−1)·TPOT 분해식",
-      "tokens/s·RPS 의 서버 단위 정의와 batch·queueing 이 만드는 latency–throughput 상충",
-      "정렬 표본의 percentile(P50·P95·P99)·tail latency·ITL 분산을 분포로 읽는 방법",
-      "percentile·임계값·window·허용 위반율로 적는 SLO 와 window 단위 violation 판정 절차",
+    "title": "Serving latency 지표와 SLO 글이 소유하는 범위",
+    "owns": [
+      "TTFT·ITL·TPOT·E2E의 관측 지점과 사건; n≥2·토큰별 시각·마지막 토큰 종료 조건에서의 E2E 분해",
+      "정한 시간 창의 tokens/s·RPS와 요청별 지연을 함께 읽고 batch 크기의 효과를 실제 값으로 확인하는 과정",
+      "Nearest-rank와 선형 보간 percentile의 차이 및 ITL 목록과 요청 평균 TPOT의 다른 표본 단위",
+      "요청별 goodput 조건과 고정 window의 percentile SLO·허용 위반율·관측 분모를 구분하는 판정"
     ],
-    reuses: [
-      { label: "Request lifecycle 과 latency decomposition 측정 계약", href: "/cs/ai/vllm-serving#prefill-decode" },
-      { label: "SLO 조건 아래의 goodput", href: "/cs/ai/vllm-serving#serving-goodput" },
-      { label: "Little's law 와 error budget burn rate", href: "/cs/ai/llm-serving-ops#observability-aiops" },
-      { label: "SLO 로 막히는 admission 상한", href: "/cs/ai/llm-serving-capacity#capacity-admission" },
+    "reuses": [
+      {
+        "label": "Request lifecycle 과 latency decomposition 측정 계약",
+        "href": "/cs/ai/vllm-serving#latency-accounting"
+      },
+      {
+        "label": "SLO 조건 아래의 goodput",
+        "href": "/cs/ai/vllm-serving#serving-goodput"
+      },
+      {
+        "label": "Little's law 와 error budget burn rate",
+        "href": "/cs/ai/llm-serving-ops#observability-aiops"
+      },
+      {
+        "label": "SLO 로 막히는 admission 상한",
+        "href": "/cs/ai/llm-serving-capacity#capacity-admission"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "지표 계산식은 vLLM serve.py 와 GenAI-Perf 문서의 정의를 그대로 옮기고 두 도구의 percentile 집합 차이를 명시한다." },
-      { kind: "standard", rule: "SLO 문장은 SLI·percentile·임계값·window·평가 기간·허용 위반율을 모두 적은 뒤에만 위반을 판정한다." },
-      { kind: "project-claim", rule: "Step 시간·표본 분포 같은 수치 예는 설명용 가정이며 특정 model·GPU 의 측정값으로 인용하지 않는다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "vLLM v0.27.1 commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac의 요청 송수신·serve.py 계산과 GenAI-Perf 문서의 관측 정의를 대조한다. 빈 content, 묶음 응답, 마지막 usage 이벤트 및 토큰 수 정규화가 바꾸는 값과 percentile 표본 집합을 명시한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "SLO 문장은 SLI·percentile·임계값·window·평가 기간·허용 위반율을 모두 적은 뒤에만 위반을 판정한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "Step 시간·표본 분포 같은 수치 예는 설명용 가정이며 특정 model·GPU 의 측정값으로 인용하지 않는다."
+      }
+    ]
   },
   "prefill-decode-phase-dynamics": {
     title: "Prefill 은 compute-bound, decode 는 memory-bound 글이 소유하는 범위",
@@ -9685,49 +9851,101 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "sm-warp-scheduling-and-issue": {
-    title: "SM 내부 warp scheduling 글이 소유하는 범위",
-    owns: [
+    "title": "SM 내부 warp scheduling 글이 소유하는 범위",
+    "owns": [
       "CUDA programming model 이 정하는 것과 하드웨어가 정하는 것의 경계(block→SM, warp→subpartition)",
-      "SM subpartition 4개와 warp scheduler 의 clock 당 issue 상한",
-      "Scoreboard 의 ready·stalled 판정과 issue·dispatch 의 구분, stall 원인 분류",
+      "H100 SM의 네 scheduler와 clock당 발행 모형 및 다른 세대·SKU·명령별 처리량의 경계",
+      "Resident·eligible·issued의 구별, 해독·입력 의존·실행 pipe 조건 및 stall 원인",
       "Dependency latency 를 TLP·ILP·MLP 로 숨기는 Little's law 계산과 issue pipeline bubble",
-      "Warp divergence 의 경로 직렬화 비용과 reconvergence·independent thread scheduling 의 범위",
+      "Warp divergence 의 경로 직렬화 비용과 reconvergence·independent thread scheduling 의 범위"
     ],
-    reuses: [
-      { label: "Grid·block·thread 와 warp SIMT", href: "/cs/gpu/cuda-thread-hierarchy#overview" },
-      { label: "Occupancy resource bound 계산", href: "/cs/gpu/gpu-architecture#gpu-latency-hiding-occupancy" },
-      { label: "Register 가 residency 를 줄이는 경로", href: "/cs/gpu/cuda-register-pressure#residency" },
-      { label: "Memory coalescing", href: "/cs/gpu/cuda-shared-memory#coalescing" },
+    "reuses": [
+      {
+        "label": "Grid·block·thread 와 warp SIMT",
+        "href": "/cs/gpu/cuda-thread-hierarchy#overview"
+      },
+      {
+        "label": "Occupancy resource bound 계산",
+        "href": "/cs/gpu/gpu-architecture#gpu-latency-hiding-occupancy"
+      },
+      {
+        "label": "Register 가 residency 를 줄이는 경로",
+        "href": "/cs/gpu/cuda-register-pressure#residency"
+      },
+      {
+        "label": "Memory coalescing",
+        "href": "/cs/gpu/cuda-shared-memory#coalescing"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "산술 latency 약 4 clock 과 warp 16개 요건은 CUDA C++ Programming Guide 12.8.1 의 CC 7.x 서술 범위로만 쓰고 세대별 실제 값으로 일반화하지 않는다." },
-      { kind: "standard", rule: "Global load latency 500 clock 은 계산 예를 위한 가정값으로 표기하고 문서 수치로 승격하지 않는다." },
-      { kind: "primary-source", rule: "Stall 원인 이름과 subpartition 정의는 Nsight Compute Profiling Guide 의 용어를 그대로 쓰고 scheduler 의 선택 정책은 공개되지 않았다고 적는다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "산술 latency 약 4 clock 과 warp 16개 요건은 CUDA C++ Programming Guide 12.8.1 의 CC 7.x 서술 범위로만 쓰고 세대별 실제 값으로 일반화하지 않는다."
+      },
+      {
+        "kind": "standard",
+        "rule": "Global load latency 500 clock 은 계산 예를 위한 가정값으로 표기하고 문서 수치로 승격하지 않는다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "Stall 원인 이름과 subpartition 정의는 Nsight Compute Profiling Guide 의 용어를 그대로 쓰고 scheduler 의 선택 정책은 공개되지 않았다고 적는다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "Little 관계의 resident 독립 작업 용량과 순간 eligible 개수를 구별한다. Stall 표본을 latency clock이나 개선 시간의 직접 측정으로 바꾸지 않고 ITS와 참여 mask의 범위를 보존한다."
+      }
+    ]
   },
   "cuda-compilation-and-isa-analysis": {
-    title: "CUDA 컴파일 경로 글이 소유하는 범위",
-    owns: [
-      "nvcc 가 cudafe++·cicc·ptxas·fatbinary·host compiler 를 잇는 두 단계 컴파일 절차",
+    "title": "CUDA 컴파일 경로 글이 소유하는 범위",
+    "owns": [
+      "NVCC의 공개 compilation phase와 내부 도구 호출 순서의 경계, PTX·cubin·host 결과 생성",
       "PTX 의 instruction 문법·가상 register 와 SASS 의 세대별 기계어 형태, 둘의 예제 비교",
       "Fatbinary 안에서 runtime 이 cubin 을 고르거나 PTX 를 JIT 하는 규칙과 compute capability 호환",
       "ptxas 의 register allocation·instruction scheduling 상충과 loop unrolling 의 instruction·register 손익식",
-      "CSE·DCE·constant folding·strength reduction·instruction selection 이 cicc 와 ptxas 어느 단계에서 일어나는지",
-      "PTX–SASS gap 과 cuobjdump·nvdisasm 으로 SASS 를 읽는 ISA-level analysis 절차",
+      "CSE·DCE·상수 계산·strength reduction·명령 선택의 의미와 PTX·SASS에서 확인할 수 있는 범위",
+      "PTX–SASS gap 과 cuobjdump·nvdisasm 으로 SASS 를 읽는 ISA-level analysis 절차"
     ],
-    reuses: [
-      { label: "Host·device·kernel 실행 경로", href: "/cs/gpu/cuda-basics#execution-path" },
-      { label: "Warp·SIMT 실행 model", href: "/cs/gpu/cuda-thread-hierarchy#overview" },
-      { label: "Register live range·residency·spill 비용", href: "/cs/gpu/cuda-register-pressure#live-range" },
-      { label: "Occupancy 와 latency hiding 경계", href: "/cs/gpu/gpu-architecture#gpu-latency-hiding-occupancy" },
-      { label: "Hopper 전용 feature 의 채택 판단", href: "/cs/gpu/gpu-arch-hopper#release-gate" },
-      { label: "Timing 절차와 profiler 분석 loop", href: "/cs/gpu/cuda-perf-analysis#profiling" },
+    "reuses": [
+      {
+        "label": "Host·device·kernel 실행 경로",
+        "href": "/cs/gpu/cuda-basics#execution-path"
+      },
+      {
+        "label": "Warp·SIMT 실행 model",
+        "href": "/cs/gpu/cuda-thread-hierarchy#overview"
+      },
+      {
+        "label": "Register live range·residency·spill 비용",
+        "href": "/cs/gpu/cuda-register-pressure#live-range"
+      },
+      {
+        "label": "Occupancy 와 latency hiding 경계",
+        "href": "/cs/gpu/gpu-architecture#gpu-latency-hiding-occupancy"
+      },
+      {
+        "label": "Hopper 전용 feature 의 채택 판단",
+        "href": "/cs/gpu/gpu-arch-hopper#release-gate"
+      },
+      {
+        "label": "Timing 절차와 profiler 분석 loop",
+        "href": "/cs/gpu/cuda-perf-analysis#profiling"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "컴파일 단계·JIT 규칙·도구 옵션·compute capability 수치는 NVIDIA 공식 문서(NVCC·PTX ISA·Binary Utilities·Programming Guide) 에서 읽은 범위로만 쓰고 읽은 시점을 본문에 적는다." },
-      { kind: "standard", rule: "본문 PTX 예제는 nvcc 의 전형적 출력 형태이고 SASS 예제는 Binary Utilities 문서의 출력 예임을 밝히며, 독자의 CUDA 버전·sm_XX 에서 같은 줄이 나온다고 말하지 않는다." },
-      { kind: "standard", rule: "Unroll 의 instruction·register 산수는 측정이 아닌 크기 관계이며 실제 수는 -Xptxas -v 와 SASS 로 확인해야 한다고 본문에 적는다. SASS 로 cycle 을 계산하지 않는다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "컴파일 단계·JIT 규칙·도구 옵션·compute capability 수치는 NVIDIA 공식 문서(NVCC·PTX ISA·Binary Utilities·Programming Guide) 에서 읽은 범위로만 쓰고 읽은 시점을 본문에 적는다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "PTX와 SASS는 CUDA Binary Utilities13.0.2 §2.1의 실제 문서 출력 전체이며 로컬 컴파일 출력이나 cuda-samples vectorAdd의 동일 바이너리라고 주장하지 않는다. 별도 자원 보고도 함수 범위를 보존한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "Unroll 의 instruction·register 산수는 측정이 아닌 크기 관계이며 실제 수는 -Xptxas -v 와 SASS 로 확인해야 한다고 본문에 적는다. SASS 로 cycle 을 계산하지 않는다."
+      }
+    ]
   },
   "triton-kernel-programming-and-compiler": {
     title: "Triton kernel 프로그래밍과 compiler 글이 소유하는 범위",
@@ -10999,22 +11217,37 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "math-high-dimensional-geometry": {
-    title: "고차원 기하·JL lemma·intrinsic dimension 글이 소유하는 범위",
-    owns: [
-      "Euclidean distance 정의와 차원이 늘수록 거리가 집중되는 고차원 기하 현상",
-      "Johnson–Lindenstrauss lemma의 진술과 무작위 사영으로 얻는 차원-거리 보존 관계",
-      "Ambient dimension과 구분되는 intrinsic dimension의 정의와 자연 이미지 추정치",
-      "Low-rank·latent·bottleneck representation을 하나의 압축 원리로 묶는 설명",
+    "title": "고차원 기하·JL lemma·intrinsic dimension 글이 소유하는 범위",
+    "owns": [
+      "좌표와 분포 조건을 구별한 거리 계산 및 제곱거리 집중",
+      "고정한 유한 점 집합의 JL 존재 충분조건과 별도의 무작위 성공 확률",
+      "주변 차원·내재 차원·선형 rank 및 이미지 조건부 추정의 구별",
+      "잠재 표현과 중간 폭 제약, 낮은 rank 표현의 서로 다른 보장"
     ],
-    reuses: [
-      { label: "Euclidean norm·거리 정의", href: "/cs/ai/math-vectors-inner-products#norm" },
-      { label: "SVD의 low-rank approximation·rank", href: "/cs/ai/math-matrices-svd#low-rank" },
-      { label: "Autoencoder의 undercomplete bottleneck 구조", href: "/cs/ai/autoencoder#bottleneck" },
+    "reuses": [
+      {
+        "label": "Euclidean norm·거리 정의",
+        "href": "/cs/ai/math-vectors-inner-products#norm"
+      },
+      {
+        "label": "SVD의 low-rank approximation·rank",
+        "href": "/cs/ai/math-matrices-svd#low-rank"
+      },
+      {
+        "label": "Autoencoder의 undercomplete bottleneck 구조",
+        "href": "/cs/ai/autoencoder#bottleneck"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "JL lemma의 차원 하한은 Dasgupta–Gupta 증명 조건(Gaussian 무작위 사영, Euclidean 공간)으로 제한한다." },
-      { kind: "primary-source", rule: "Intrinsic dimension 수치(26~43)는 Pope et al. 2021의 MLE 추정 도구와 실험 데이터셋 조건으로 제한하고 모든 데이터셋에 일반화하지 않는다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Dasgupta–Gupta 본 증명은 무작위 부분공간에 직교 사영하고 √(D/k)로 정규화합니다. 4 계수의 존재 보장과 한 번의 성공 하한 1/n을 구별하며 Gaussian 행렬 구현은 별도로 읽습니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "ImageNet 26–43은 Pope2021 표1의 이웃 수별 MLE 추정값입니다. 생성 자료에서의 별도 추정기 점검과 실제 이미지 추정을 구별하고 압축 모델의 최적 폭이나 정확 복원 보장으로 확대하지 않습니다."
+      }
+    ]
   },
   "math-numerical-precision-stability": {
     title: "부동소수점 정밀도·수치 안정성·tensor shape 글이 소유하는 범위",

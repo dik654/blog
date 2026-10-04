@@ -1,0 +1,29 @@
+{
+  "repository": "https://github.com/arkworks-rs/algebra",
+  "tag": "v0.5.0",
+  "revision": "7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c",
+  "verifiedTagType": "commit",
+  "license": "MIT OR Apache-2.0",
+  "files": [
+    {
+      "file": "montgomery_backend.rs",
+      "upstreamPath": "ff/src/fields/models/fp/montgomery_backend.rs",
+      "sha256": "c99d628fb0487830572402c766a0463098e3d6d8b7fe288b7fad45a3bf6d3373"
+    },
+    {
+      "file": "fp.rs",
+      "upstreamPath": "ff/src/fields/models/fp/mod.rs",
+      "sha256": "ca75e60c8d11492404ae8888e06bd71a042d568b8f6b9c044c93bb4562c036bc"
+    },
+    {
+      "file": "prime.rs",
+      "upstreamPath": "ff/src/fields/prime.rs",
+      "sha256": "0986e75ae42ae3a0ffedc4ca2986afa6a89bd23879c6f48b3536bc349a74cfd1"
+    },
+    {
+      "file": "const_helpers.rs",
+      "upstreamPath": "ff/src/const_helpers.rs",
+      "sha256": "bb70cd52452e1e6a4e294f27152a604e831555670b04eb26e6027ae3c38369b7"
+    }
+  ]
+}

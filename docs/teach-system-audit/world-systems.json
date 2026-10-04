@@ -1141,13 +1141,88 @@
     },
     {
       "route": "gpu/cuda-compilation-and-isa-analysis",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "첫 절에많은도구·ISA이름이선행하고작은수치사례가없음",
+          "전형적PTX/SASS를동일컴파일출력으로취급하나고정실물근거없음",
+          "PTX와cubin호환규칙의a/f타깃및driver조건누락",
+          "x*2*.5의무조건접기·store없는커널0ms·SASS동일이면noise단정·unrollR16/19불일치"
+        ],
+        "fixture": "가정한 8원소·block4×grid2, block0/thread3에서i3·주소+12바이트·A3=7+B3=5→C3=12. 실제 vectorAdd+0.0f와 별도 문서 add PTX/SASS에 같은 값을 각각 적용.",
+        "stageAnchors": {
+          "S": "overview",
+          "B": "black-box",
+          "0": "case",
+          "1": "picture",
+          "2": "why",
+          "3": "names",
+          "4": "trace",
+          "5": [
+            "pipeline",
+            "ptx-and-sass"
+          ],
+          "6": [
+            "sass-trace",
+            "ptxas-optimizations",
+            "fatbin-and-jit",
+            "capabilities",
+            "unrolling",
+            "classic-optimizations",
+            "floating-options",
+            "isa-analysis",
+            "evidence"
+          ],
+          "7": "limits"
+        },
+        "preservedDepth": "기초6+심화4와 기존8concept, register/liveness·명령순서·unroll식·CSE/DCE/folding/strength reduction/instruction selection·SM한도·a/f대상·JIT/cache·분석옵션을 보존·교정. 실제원문FADD, R13/19/31, 부동소수2^-46 대0, host -O·device -G/dopt 경계를 보강.",
+        "sourceApplication": "NVIDIA cuda-samples 고정3f1c509 전체vectorAdd47–54행(+0.0f)·BSD3notice. CUDA13.0.2 문서실제PTX52행/SASS79행/별도resource11행 전체출력과SHA256. 문서출력은 원본.cu/.cubin 또는로컬컴파일결과가 아님을 명시.",
+        "numericVerification": "실제 문서 PTX의 제한된 의미 해석으로8threads 전부, 실제opcode/해시·unroll·float32/Fraction 검산23 PASS. chains 독립검토는공식웹pre일치와수치·주장범위PASS. GPU실행/성능측정 아님.",
+        "numericReport": "/tmp/teach-all/root-compiler-numeric.json",
+        "independentReport": "/tmp/teach-all/root-compiler-independent-chains.json",
+        "humanize": {
+          "chars": 11524,
+          "paragraphs": 75,
+          "changes": 4,
+          "roundTrip": true,
+          "numbersAndMarkersPreserved": true,
+          "gate": "0",
+          "chunks": "4500자 이하3묶음 각각prepare/수치/마커/gate0",
+          "applied": true,
+          "report": "/tmp/teach-all/humanize-root-compiler/summary.json",
+          "manualScope": "Mixed props·codeRefs·CitationBlock·Viz·수식 역할과 조건을 따로 읽고 고정 원문과 대조."
+        },
+        "verification": "strict learning/prose/formula1425/1425/변경Viz PASS. 실제 app tsc 최종세션44132 exit0. 초기props/lang오류를 수정하고 최종파일로 재실행.",
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "sections": 19,
+          "predictionQuestions": 3,
+          "scenes": 3,
+          "codePanelsPerViewport": 5,
+          "keyboard": true,
+          "playAndReducedMotion": true,
+          "frameAndControlShift": 0,
+          "fitsViewport": true,
+          "overflow": 0,
+          "formulaBaseOutsideCard": 0,
+          "anchors": 0,
+          "console": 0,
+          "actualScreensRead": true,
+          "report": "/tmp/teach-all/root-compiler-screens/summary.json",
+          "formulaReport": "/tmp/teach-all/root-compiler-formula-bounds.json",
+          "genericReport": "/tmp/world-browser-audit/teach-checkpoint133-additions-summary.json"
+        },
+        "remaining": "전체799편 검토 후 전역 빌드·배포·운영 확인."
+      }
     },
     {
       "route": "gpu/cuda-kernel-fusion",
@@ -1201,7 +1276,7 @@
     },
     {
       "route": "gpu/cuda-shared-memory",
-      "status": "rewrite-required",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
@@ -1210,13 +1285,73 @@
       "review": {
         "reviewedAt": "2026-10-04",
         "beforeDefects": [
-          "처음부터미정의이름다수",
-          "작은하나의사례가실제고정원문까지연결되지않음",
-          "수식연산설명generic문구와출처/코드범위보강필요"
+          "도입이 정의·약어 나열이고 서로 다른 예 사이에 같은 값의 경로가 없음",
+          "수식 연산 주석이 일반 문구이며 실제 고정 원본 적용이 없음",
+          "Coalescing을 off-chip 전송량으로 읽게 하는 설명, useful byte 중복 계산과 reuse의 단위가 불명확",
+          "학습용 block-local 이웃 덧셈을 전체 배열의 이웃 계산으로 오해할 여지가 있음"
         ],
-        "plan": "/tmp/teach-all/root-cuda-next2-review-plan.md",
-        "answerCoverage": "본문8모듈,Viz2개,각기초6·심화4·개념/출처선독.",
-        "remaining": "본문작성·정적/화면검수진행중"
+        "fixture": "가정 64×64 float 표의 입력 행37·열3, index2371, 값7. block(0,1)의 thread(3,5)가 tile[5][3]에 놓고 thread(5,3)가 출력 행3·열37의 index229에 기록.",
+        "stageAnchors": {
+          "S": "overview",
+          "B": "black-box",
+          "0": "case",
+          "1": "picture",
+          "2": "why",
+          "3": "names",
+          "4": "trace",
+          "5": [
+            "source-naive",
+            "source-exchange"
+          ],
+          "6": [
+            "coalescing",
+            "bank-conflict",
+            "padding",
+            "reuse",
+            "boundary",
+            "aos-soa"
+          ],
+          "7": "limits"
+        },
+        "preservedDepth": "기초6+심화4, 세 수식과 학습용 CUDA 조각4개 보존. Sector 32→4, bank stride32/33, 4096→4224,128B×reuse8, AoS/SoA/AoSoA, 축별 경계와 barrier, 자원·프로파일 조건을 실제 사례와 연결.",
+        "sourceApplication": "NVIDIA cuda-samples v13.0 commit3f1c509 전체 transpose.cu 630행과 BSD3 라이선스·SHA256 보존. 124–189행의 세 함수와410–433행 host 검사, 초기1024 설정과 장치·인자로 결정한 실행 크기를 구분. 공식 Best Practices13.0.2 10.2.1·10.2.3 조건 대조.",
+        "numericVerification": "20개 정수/원문 검사 PASS; 독립 chains 검산에서4096원소 전체의 정확한 전치와 유일한 출력, sector/bank/경계/재사용/AoS 확인. GPU 실행·컴파일·성능 측정은 아님.",
+        "numericReport": "/tmp/teach-all/root-shared-numeric.json",
+        "independentReport": "/tmp/teach-all/cuda-shared-memory-independent-chains.json",
+        "humanize": {
+          "chars": 7942,
+          "changes": 4,
+          "roundTrip": true,
+          "numbersAndMarkersPreserved": true,
+          "gate": "WARN1: thread(5,3)의3)을 각주로 분류하는 P3 오탐 보존",
+          "finalize": "독립 검토가 주어 중복을 찾아 완문 교정한 뒤 최신 전문과 diff를 재검토하여 승인. 적용 완료.",
+          "report": "/tmp/teach-all/humanize-root-shared/summary.json",
+          "independentReview": "/tmp/teach-all/humanize-root-shared/cuda-shared-memory/independent-finalize.md"
+        },
+        "verification": "strict learning·prose·formula·변경Viz PASS, actual app tsc exit0.",
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "sections": 16,
+          "predictionQuestions": 3,
+          "scenes": 3,
+          "codePanelsPerViewport": 4,
+          "keyboard": true,
+          "playAndReducedMotion": true,
+          "frameAndControlShift": 0,
+          "fitsViewport": true,
+          "overflow": 0,
+          "formulaBaseOutsideCard": 0,
+          "anchors": 0,
+          "console": 0,
+          "actualScreensRead": true,
+          "report": "/tmp/teach-all/root-shared-screens/summary.json",
+          "formulaReport": "/tmp/teach-all/root-shared-formula-bounds.json",
+          "genericReport": "/tmp/world-browser-audit/teach-checkpoint129-additions-summary.json"
+        },
+        "remaining": "전체799편 검토 후 전역 빌드·배포·운영 확인."
       }
     },
     {
@@ -1739,13 +1874,89 @@
     },
     {
       "route": "gpu/sm-warp-scheduling-and-issue",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "첫절에SM/SMSP등부품이름이선행하고같은경로추적없음",
+          "eligible판정에서pipe조건누락·issue후대기로maththrottle일반화",
+          "Little법칙의동시resident와매순간ready를혼동",
+          "ITS면교착해소단정·divergence3배단정·평균eligible만으로원인확정"
+        ],
+        "fixture": "가정한4warp·scheduler1·6clock. A/B/C/D/A/빈칸, 첫B읽기지연8→4를바꾸면clock6이B로채워짐. 준비시점A9/B10/C7/D8과active4/eligible0/issued0의같은경로.",
+        "stageAnchors": {
+          "S": "overview",
+          "B": "black-box",
+          "0": "case",
+          "1": "picture",
+          "2": "why",
+          "3": "names",
+          "4": "trace",
+          "5": [
+            "sm-structure",
+            "issue-scoreboard"
+          ],
+          "6": [
+            "profiler-states",
+            "latency-hiding",
+            "memory-and-bubbles",
+            "divergence",
+            "thread-scheduling",
+            "evidence"
+          ],
+          "7": "limits"
+        },
+        "preservedDepth": "기초6+심화4·8concept 유지. SM상한·scoreboard·issue/dispatch·stall종류·Little/TLP/ILP/MLP·bubble·divergence·ITS/warp통신 범위를 같은 사례와 보존. 그래프definition16개와 두CUDA ownership의 기존 단정도 교정.",
+        "sourceApplication": "CUDA Guide12.8.1의CC7.x4clock과active16을조건부사용. Nsight원문eligible의해독/입력/pipe3조건에clock6을대입. H100SXM5의132SM/4scheduler자료와528issue모형 분리. 문서실물정의·하드웨어모형이며공개되지않은실제scheduler코드나GPU실행이라고주장하지않음.",
+        "numericVerification": "실제Viz모형을독립시간표와대조한13검사PASS. theory독립본문/등록/소스/수치검산PASS와보완3곳(동일정수용량가정·basic답10절·advanced13/14절안내)을 실제 반영.",
+        "numericReport": "/tmp/teach-all/root-sm-numeric.json",
+        "independentReport": "/tmp/teach-all/root-sm-independent-theory.json",
+        "humanize": {
+          "initialChars": 9796,
+          "changes": 3,
+          "manualProps": 1,
+          "finalChars": 9872,
+          "roundTrip": true,
+          "numbersAndMarkersPreserved": true,
+          "gate": 0,
+          "finalPass": "보완 뒤 실제 본문을 다시 추출하고3묶음 prepare/gate0;추가윤문0",
+          "report": "/tmp/teach-all/humanize-root-sm-final/summary.json",
+          "applied": true
+        },
+        "verification": "learning strict/require-registration·prose strict·수식 명시 주석·변경Viz strict PASS. systems의최신실제app tsc exit0,checkpoint의고정index소스도별도검사예정.",
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "sections": 16,
+          "predictionQuestions": 3,
+          "scenesPerViewport": 12,
+          "latencyVariants": [
+            8,
+            4
+          ],
+          "keyboard": true,
+          "playAndReducedMotion": true,
+          "frameAndControlShift": 0,
+          "fitsViewport": true,
+          "contentVisible": true,
+          "overflow": 0,
+          "formulaBaseOutsideCard": 0,
+          "anchors": 0,
+          "console": 0,
+          "citationsOpened": 3,
+          "actualScreensRead": true,
+          "report": "/tmp/teach-all/root-sm-screens/summary.json",
+          "genericReport": "/tmp/world-browser-audit/teach-checkpoint137-additions-summary.json"
+        },
+        "remaining": "전체799편 검토 후 전역 빌드·배포·운영 확인."
+      }
     },
     {
       "route": "gpu/triton-kernel-programming-and-compiler",
@@ -3486,9 +3697,8 @@
     }
   ],
   "counts": {
-    "unreviewed": 197,
-    "rewritten-local-verified": 22,
-    "retained-local-verified": 4,
-    "rewrite-required": 2
+    "unreviewed": 195,
+    "rewritten-local-verified": 26,
+    "retained-local-verified": 4
   }
 }

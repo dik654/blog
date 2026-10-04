@@ -1,0 +1,19 @@
+import experiment from "./verification/main.rs?raw";
+import type { CodeRef, FileNode } from "@/components/code/types";
+import mont from "./codebase/montgomery_backend.rs?raw";
+import fp from "./codebase/fp.rs?raw";
+import prime from "./codebase/prime.rs?raw";
+import buffer from "./codebase/const_helpers.rs?raw";
+export const codeRefs: Record<string, CodeRef> = {
+"experiment": {code:experiment, highlight:[3,17], desc:"이 글에서 실제 실행한 검증 프로그램입니다. upstream 원문이 아니라 기본 MontConfig 메서드를 사용하도록 구성한 실험 코드입니다.", annotations:[{lines:[3,9],color:"sky",note:"Mod17은 상수만 제공하고 연산 함수를 덮어쓰지 않으므로 본문에서 여는 기본 Rust 연산 경로를 사용합니다."}], path:"check/main.rs",lang:"rust"},
+"constants": {code:mont,"highlight": [15, 27], "desc": "실제 R 상수는 2^(64N)을 p로 줄인 값이며, INV는 한 64비트 자리의 취소 상수입니다.", "annotations": [{"lines": [15, 27], "color": "sky", "note": "N=1, p=17이면 R=R2=1, INV=1085102592571150095입니다."}], "path": "ark/montgomery_backend.rs", "lang": "rust"},
+"from-bigint": {code:mont,"highlight": [357, 369], "desc": "입력 정수의 범위를 검사한 뒤 R² 상수를 곱해 내부 표현으로 들어갑니다.", "annotations": [{"lines": [357, 369], "color": "sky", "note": "7은 허용 범위라 변환하고 17은 None으로 거부합니다. new_unchecked는 검사를 대신하지 않습니다."}], "path": "ark/montgomery_backend.rs", "lang": "rust"},
+"multiply": {code:mont,"highlight": [185, 208], "desc": "N=1은 asm 분기의 대상이 아니므로 Rust 반복문의 곱셈과 하위 자리 취소를 읽습니다.", "annotations": [{"lines": [185, 208], "color": "sky", "note": "a=7, b=5이면 r[0]=35, k=1085102592571150093이고 상위 자리로 남는 값은 1입니다."}], "path": "ark/montgomery_backend.rs", "lang": "rust"},
+"into-bigint": {code:mont,"highlight": [373, 389], "desc": "내부 값에 Montgomery reduction을 한 번 적용해 일반 정수로 돌아옵니다.", "annotations": [{"lines": [373, 389], "color": "sky", "note": "N=1, 저장값 1이면 k=INV이고 (1+17×INV)/2^64=1을 돌려줍니다."}], "path": "ark/montgomery_backend.rs", "lang": "rust"},
+"inverse": {code:mont,"highlight": [296, 354], "desc": "0에는 역원이 없어 None을 반환합니다. 이어지는 반복 횟수는 입력값에 의존합니다.", "annotations": [{"lines": [296, 354], "color": "sky", "note": "0.inverse()의 실패는 Option::None입니다. 이 코드가 상수 시간이라고 주장하지 않습니다."}], "path": "ark/montgomery_backend.rs", "lang": "rust"},
+"division": {code:fp,"highlight": [709, 730], "desc": "곱셈 연산자는 mul_assign으로 이어집니다. 나눗셈 연산자는 역원의 Option에 unwrap을 사용합니다.", "annotations": [{"lines": [709, 730], "color": "sky", "note": "분모가 0이면 역원이 None이므로 이 / 경로는 panic합니다. 외부 입력은 inverse 결과를 먼저 처리해야 합니다."}], "path": "ark/fp.rs", "lang": "rust"},
+"decode": {code:fp,"highlight": [605, 644], "desc": "필요한 바이트 수만 reader에서 읽고 from_bigint로 범위를 검사합니다.", "annotations": [{"lines": [605, 644], "color": "sky", "note": "F17에서 바이트 17은 InvalidData입니다. reader에 남은 바이트를 모두 소비했는지는 별도 검사입니다."}], "path": "ark/fp.rs", "lang": "rust"},
+"endian": {code:buffer,"highlight": [148, 166], "desc": "내부 limb를 옮길 때 to_le_bytes와 from_le_bytes를 사용합니다.", "annotations": [{"lines": [148, 166], "color": "sky", "note": "라이브러리 직렬화의 little-endian과 EIP-197의 32바이트 big-endian을 구분합니다."}], "path": "ark/const_helpers.rs", "lang": "rust"},
+"reduce": {code:prime,"highlight": [59, 103], "desc": "mod_order 생성자는 이미 정규화된 입력만 받는 역직렬화와 다르게 나머지를 계산합니다.", "annotations": [{"lines": [59, 103], "color": "sky", "note": "F17::from_le_bytes_mod_order([17])은 0입니다. 이 동작을 canonical 디코더의 거부 규칙으로 읽지 않습니다."}], "path": "ark/prime.rs", "lang": "rust"},
+};
+export const fileTrees: Record<string, FileNode> = {check:{name:"이 글의 실행 검증",type:"dir",children:[{name:"main.rs",type:"file",path:"check/main.rs",codeKey:"experiment"}]},ark:{name:"ark-ff 0.5.0 · 고정 원문",type:"dir",children:[{"name": "montgomery_backend.rs", "type": "file", "path": "ark/montgomery_backend.rs", "codeKey": "multiply"},{"name": "fp.rs", "type": "file", "path": "ark/fp.rs", "codeKey": "decode"},{"name": "prime.rs", "type": "file", "path": "ark/prime.rs", "codeKey": "reduce"},{"name": "const_helpers.rs", "type": "file", "path": "ark/const_helpers.rs", "codeKey": "endian"},]}};
