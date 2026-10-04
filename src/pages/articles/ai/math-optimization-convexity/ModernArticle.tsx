@@ -86,7 +86,7 @@ export default function OptimizationGeometryArticle() {
         <ExplainedFormula question="여러 입력에서도 삼각형 넓이와 같은 1/2이 나오는 이유는 무엇인가요?"
           idea={<>경로 x+td를 따라 실제 변화율을 적분합니다. 출발점의 기울기 기여를 빼면 이동 중 바뀐 부분만 남습니다. 그 내적을 거리와 기울기 변화 상한으로 제한합니다.</>}
           formula={String.raw`\begin{aligned}f(x+d)-f(x)-\nabla f(x)^\top d&=\int_0^1[\nabla f(x+td)-\nabla f(x)]^\top d\,dt\\&\le\int_0^1Lt\lVert d\rVert^2dt=\frac L2\lVert d\rVert^2\end{aligned}`}
-          annotatedFormula={String.raw`\int_0^1\underbrace{\lVert\nabla f(x+td)-\nabla f(x)\rVert}_{\le Lt\lVert d\rVert}\underbrace{\lVert d\rVert}_{\text{전체 이동 길이}}dt\le L\lVert d\rVert^2\underbrace{\int_0^1t\,dt}_{1/2}`}
+          annotatedFormula={String.raw`\begin{gathered}\begin{aligned}f(x+d)-f(x)-\nabla f(x)^\top d&=\int_0^1[\nabla f(x+td)-\nabla f(x)]^\top d\,dt\\&\le\int_0^1Lt\lVert d\rVert^2dt=\frac L2\lVert d\rVert^2\end{aligned}\\[8pt]\int_0^1\underbrace{\lVert\nabla f(x+td)-\nabla f(x)\rVert}_{\le Lt\lVert d\rVert}\underbrace{\lVert d\rVert}_{\text{전체 이동 길이}}dt\le L\lVert d\rVert^2\underbrace{\int_0^1t\,dt}_{1/2}\end{gathered}`}
           operations={[{expression:String.raw`\nabla f(x+td)-\nabla f(x)`,annotation:['현재 경로 위치와 출발점의','기울기 차이를 분리']},{expression:String.raw`Lt\lVert d\rVert`,annotation:['두 위치의 거리 t‖d‖에','변화 상한 L을 곱함']},{expression:String.raw`\int_0^1t\,dt=1/2`,annotation:['경로 전체의 오차 상한을 누적해','제곱 이동의 계수를 얻음']}]}
           terms={[{symbol:'t',name:'경로의 진행 비율',description:'0은 출발점, 1은 도착점입니다.'},{symbol:'d',name:'입력 이동 벡터',description:'경로를 미분하면 전체 이동 d가 곱해집니다.'}]}
           assumptions={['경로 전체가 L-매끄러움이 성립하는 정의역 안에 있습니다.','기울기 내적을 Cauchy–Schwarz 부등식으로 제한하며 유클리드 노름을 씁니다.']}
@@ -121,7 +121,7 @@ export default function OptimizationGeometryArticle() {
       <ExplainedFormula question="원문의 위아래 이차 경계에 같은 이동 0.1을 넣으면 무엇이 나오나요?"
         idea={<>§9.1.2 식 (9.8)과 (9.13)은 원문의 m과 M으로 접선 위의 최소·최대 여유를 적습니다. 이 글의 μ와 L에 각각 대응합니다.</>}
         formula={String.raw`\begin{aligned}f(y)&\ge f(x)+\nabla f(x)^\top(y-x)+\frac m2\lVert y-x\rVert_2^2\\f(y)&\le f(x)+\nabla f(x)^\top(y-x)+\frac M2\lVert y-x\rVert_2^2\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\underbrace{1+2(0.1)}_{\text{접선 예측 }1.2}+\underbrace{\frac22(0.1)^2}_{\text{아래 여유 }0.01}&\le f(1.1)\\f(1.1)&\le\underbrace{1+2(0.1)}_{\text{접선 예측 }1.2}+\underbrace{\frac22(0.1)^2}_{\text{위 여유 }0.01}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{gathered}\begin{aligned}f(y)&\ge f(x)+\nabla f(x)^\top(y-x)+\frac m2\lVert y-x\rVert_2^2\\f(y)&\le f(x)+\nabla f(x)^\top(y-x)+\frac M2\lVert y-x\rVert_2^2\end{aligned}\\[8pt]\begin{aligned}\underbrace{1+2(0.1)}_{\text{접선 예측 }1.2}+\underbrace{\frac22(0.1)^2}_{\text{아래 여유 }0.01}&\le f(1.1)\\f(1.1)&\le\underbrace{1+2(0.1)}_{\text{접선 예측 }1.2}+\underbrace{\frac22(0.1)^2}_{\text{위 여유 }0.01}\end{aligned}\end{gathered}`}
         operations={[{expression:String.raw`m=2,\ M=2`,annotation:['제곱 함수의 아래·위 굽음을','원문의 기호에 대입']},{expression:'y-x=0.1',annotation:['앞에서 사용한 같은 이동을','두 경계식에 넣음']},{expression:String.raw`1.21\le f(1.1)\le1.21`,annotation:['아래와 위 경계가 만나','실제 값 1.21을 고정']}]}
         terms={[{symbol:'m',name:'원문의 하한',description:'이 글의 강한 볼록성 상수 μ에 해당합니다.'},{symbol:'M',name:'원문의 상한',description:'이 글의 L에 대응하는 굽음 상한입니다.'}]}
         assumptions={['원문 §9.1.2는 관심 집합 S에서 두 번 미분 가능하며 굽음의 아래·위 행렬 경계를 둡니다.','여기서는 f=x²라 모든 실수에서 두 경계가 성립합니다. 일반적인 L-매끄러움의 유도보다 원문이 사용하는 가정이 더 강합니다.']}

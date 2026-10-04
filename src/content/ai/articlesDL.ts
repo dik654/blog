@@ -366,14 +366,67 @@ export const dlFoundationArticles: Article[] = [
     title: "복소수·회전·Euler 공식: Fourier 수식을 읽는 최소 수학",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "복소수가 회전을 기록하는 이유" },
-      { id: "radians", title: "Radian과 한 바퀴" },
-      { id: "unit-circle", title: "Sine·cosine과 단위원" },
-      { id: "complex-plane", title: "복소수와 복소평면" },
-      { id: "euler-formula", title: "Euler 공식과 회전 곱셈" },
-      { id: "roots-of-unity", title: "Roots of unity" },
-      { id: "applications", title: "DFT·FFT로 연결" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 한 점을 돌리는 일을 두 숫자의 계산으로 바꾼다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 현재 위치와 돌릴 양을 받아 새 위치를 만든다"
+  },
+  {
+    "id": "case",
+    "title": "3 · (3,4)를 네 번 돌려 같은 점으로 돌아온다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 같은 원 위의 점과 두 축의 그림자를 함께 본다"
+  },
+  {
+    "id": "why",
+    "title": "5 · 반복할 수 있는 규칙에 방향과 크기를 함께 남긴다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 이미 본 좌표와 회전에 이름을 붙인다"
+  },
+  {
+    "id": "radians",
+    "title": "7 · 지나간 호를 반지름으로 나누어 같은 회전량을 얻는다"
+  },
+  {
+    "id": "unit-circle",
+    "title": "8 · 길이를 1로 맞추면 두 좌표가 코사인과 사인이 된다"
+  },
+  {
+    "id": "complex-plane",
+    "title": "9 · i를 곱하면 두 좌표가 (−b,a)로 바뀐다"
+  },
+  {
+    "id": "series",
+    "title": "10 · 유한한 합을 늘려 함수 값에 가까이 간다"
+  },
+  {
+    "id": "euler-formula",
+    "title": "11 · 같은 급수의 짝수 항과 홀수 항이 회전 좌표가 된다"
+  },
+  {
+    "id": "roots-of-unity",
+    "title": "12 · 네 방향을 반복해서 곱하면 정해진 회전을 골라낼 수 있다"
+  },
+  {
+    "id": "source",
+    "title": "13 · 실제 Python 코드는 두 실수의 네 곱을 계산한다"
+  },
+  {
+    "id": "applications",
+    "title": "14 · 같은 네 점에서 회전 성분을 더하고 배율을 확인한다"
+  },
+  {
+    "id": "limits",
+    "title": "15 · 방향, 누적 회전, 수치 근사와 계수 배율을 구분한다"
+  }
+],
     component: () =>
       import("@/pages/articles/ai/math-complex-numbers-oscillations"),
   },
@@ -550,14 +603,75 @@ export const dlFoundationArticles: Article[] = [
     title: "미분방정식·수치적분: diffusion의 ODE·SDE를 읽는 최소 수학",
     subcategory: "ai-foundations",
     sections: [
-      { id: "overview", title: "변화 법칙에서 경로 만들기" },
-      { id: "initial-value", title: "초기값 문제와 vector field" },
-      { id: "euler-method", title: "Euler method와 오차" },
-      { id: "stability", title: "Step size와 수치 안정성" },
-      { id: "heun-runge-kutta", title: "Heun·Runge–Kutta" },
-      { id: "ode-sde-boundary", title: "ODE와 SDE의 경계" },
-      { id: "applications", title: "Diffusion·Neural ODE로 연결" },
-    ],
+  {
+    "id": "overview",
+    "title": "1 · 지금 줄어드는 속도로 잠시 뒤의 양을 계산한다"
+  },
+  {
+    "id": "black-box",
+    "title": "2 · 현재 양과 시간을 받아 조금 뒤의 양을 돌려준다"
+  },
+  {
+    "id": "case",
+    "title": "3 · 1에서 시작해 0.5, 다시 0.25로 간다"
+  },
+  {
+    "id": "picture",
+    "title": "4 · 곡선을 짧은 선분으로 따라가는 모습을 본다"
+  },
+  {
+    "id": "why",
+    "title": "5 · 원래 규칙을 고치는 일과 계산 간격을 고치는 일을 나눈다"
+  },
+  {
+    "id": "names",
+    "title": "6 · 지금 본 규칙과 계산 방법에 이름을 붙인다"
+  },
+  {
+    "id": "initial-value",
+    "title": "7 · 변화율의 단위와 시작값을 정하면 기준 경로를 구할 수 있다"
+  },
+  {
+    "id": "euler-method",
+    "title": "8 · 현재 변화율에 간격을 곱하고 현재 값에 더한다"
+  },
+  {
+    "id": "error",
+    "title": "9 · 한 번 놓친 굽음과 여러 번 누적된 오차를 구별한다"
+  },
+  {
+    "id": "stability",
+    "title": "10 · 줄어드는 원래 문제를 계산이 키우지 않도록 간격을 제한한다"
+  },
+  {
+    "id": "heun-runge-kutta",
+    "title": "11 · 예상 끝점의 기울기도 읽어 첫 결과를 고친다"
+  },
+  {
+    "id": "source",
+    "title": "12 · 실제 코드의 반환값이 새 상태인지 변화량인지 읽는다"
+  },
+  {
+    "id": "adaptive",
+    "title": "13 · 간격을 자동으로 바꿀 때도 무엇을 허용했는지 확인한다"
+  },
+  {
+    "id": "ode-sde-boundary",
+    "title": "14 · 무작위 흔들림은 시간의 제곱근 크기로 더한다"
+  },
+  {
+    "id": "noise-variance",
+    "title": "15 · 잡음의 합과 최종 상태의 분산은 다를 수 있다"
+  },
+  {
+    "id": "applications",
+    "title": "16 · 신경망의 변화율과 이를 따라가는 계산 비용을 따로 잰다"
+  },
+  {
+    "id": "predict",
+    "title": "17 · 설정을 바꾸기 전에 결과를 예측한다"
+  }
+],
     component: () =>
       import("@/pages/articles/ai/math-differential-equations-numerical-solvers"),
   },

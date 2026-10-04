@@ -1,0 +1,21 @@
+import type { CodeRef, FileNode } from "@/components/code/types";
+import source0 from "./codebase/fq2.rs?raw";
+import source1 from "./codebase/fq6.rs?raw";
+import source2 from "./codebase/fq12.rs?raw";
+import source3 from "./codebase/quadratic_extension.rs?raw";
+import source4 from "./codebase/cubic_extension.rs?raw";
+import source5 from "./codebase/fp12_2over3over2.rs?raw";
+import source6 from "./verification/main.rs?raw";
+export const codeRefs:Record<string,CodeRef>={
+"params2":{code:source0,"path": "ark/fq2.rs", "highlight": [5, 27], "lang": "rust", "desc": "u²=−1이며 Fq2 Frobenius 계수는 [1,−1]입니다.", "annotations": [{"lines": [5, 27], "color": "sky", "note": "u²=−1이며 Fq2 Frobenius 계수는 [1,−1]입니다."}]} ,
+"params6":{code:source1,"path": "ark/fq6.rs", "highlight": [5, 15], "lang": "rust", "desc": "v³=9+u는 두 계수 [9,1]로 정합니다.", "annotations": [{"lines": [5, 15], "color": "sky", "note": "v³=9+u는 두 계수 [9,1]로 정합니다."}]} ,
+"params12":{code:source2,"path": "ark/fq12.rs", "highlight": [5, 15], "lang": "rust", "desc": "w²=v이며 v는 Fq6의 [0,1,0]입니다.", "annotations": [{"lines": [5, 15], "color": "sky", "note": "w²=v이며 v는 Fq6의 [0,1,0]입니다."}]} ,
+"quad":{code:source3,"path": "ark/quadratic_extension.rs", "highlight": [649, 675], "lang": "rust", "desc": "전체 확장 차수 2인 Fq2는 두 sum_of_products를 사용합니다. 전체 차수 12인 Fq12는 else의 세 곱 경로를 사용합니다.", "annotations": [{"lines": [649, 675], "color": "sky", "note": "전체 확장 차수 2인 Fq2는 두 sum_of_products를 사용합니다. 전체 차수 12인 Fq12는 else의 세 곱 경로를 사용합니다."}]} ,
+"cubic":{code:source4,"path": "ark/cubic_extension.rs", "highlight": [566, 593], "lang": "rust", "desc": "ad=be=0, cf=1+3u이며 x=y=z=0입니다. 둘째 출력은 ξcf=6+28u입니다.", "annotations": [{"lines": [566, 593], "color": "sky", "note": "ad=be=0, cf=1+3u이며 x=y=z=0입니다. 둘째 출력은 ξcf=6+28u입니다."}]} ,
+"xi":{code:source1,"path": "ark/fq6.rs", "highlight": [92, 104], "lang": "rust", "desc": "1+3u를 세 번 두 배로 만든 뒤 9+u의 곱을 구성합니다. 첫 계수 −3+8+1=6, 둘째 24+3+1=28입니다.", "annotations": [{"lines": [92, 104], "color": "sky", "note": "1+3u를 세 번 두 배로 만든 뒤 9+u의 곱을 구성합니다. 첫 계수 −3+8+1=6, 둘째 24+3+1=28입니다."}]} ,
+"top":{code:source5,"path": "ark/fp12_2over3over2.rs", "highlight": [26, 36], "lang": "rust", "desc": "v를 곱해 [C0,C1,C2]를 [ξC2,C0,C1]로 바꿉니다. 이번 [0,6+28u,0]은 [0,0,6+28u]가 됩니다.", "annotations": [{"lines": [26, 36], "color": "sky", "note": "v를 곱해 [C0,C1,C2]를 [ξC2,C0,C1]로 바꿉니다. 이번 [0,6+28u,0]은 [0,0,6+28u]가 됩니다."}]} ,
+"frob":{code:source5,"path": "ark/fp12_2over3over2.rs", "highlight": [40, 59], "lang": "rust", "desc": "아래 Fq6에 Frobenius를 적용한 뒤 쓸 위층 배율은 power mod 12로 고릅니다. 설정의 index 6 배율은 −1입니다.", "annotations": [{"lines": [40, 59], "color": "sky", "note": "아래 Fq6에 Frobenius를 적용한 뒤 쓸 위층 배율은 power mod 12로 고릅니다. 설정의 index 6 배율은 −1입니다."}]} ,
+"bytes":{code:source3,"path": "ark/quadratic_extension.rs", "highlight": [689, 700], "lang": "rust", "desc": "두 계수는 c0를 먼저 쓰고 c1을 뒤에 씁니다. 가운데 세 계수도 c0,c1,c2 순서입니다. EIP-197의 숫자 순서와 구분합니다.", "annotations": [{"lines": [689, 700], "color": "sky", "note": "두 계수는 c0를 먼저 쓰고 c1을 뒤에 씁니다. 가운데 세 계수도 c0,c1,c2 순서입니다. EIP-197의 숫자 순서와 구분합니다."}]} ,
+"experiment":{code:source6,"path": "check/main.rs", "highlight": [1, 99], "lang": "rust", "desc": "본문에서 작성하고 실제 실행한 검증입니다. 144개 기저 곱과 16개 추가 곱, 역원·Frobenius·직렬화 및 잘못된 해석을 확인합니다. 페어링이나 성능 측정은 포함하지 않습니다.", "annotations": [{"lines": [1, 99], "color": "sky", "note": "본문에서 작성하고 실제 실행한 검증입니다. 144개 기저 곱과 16개 추가 곱, 역원·Frobenius·직렬화 및 잘못된 해석을 확인합니다. 페어링이나 성능 측정은 포함하지 않습니다."}]} ,
+};
+export const fileTrees:Record<string,FileNode>={"ark": {"name": "arkworks · 7ad88c46 고정 원문", "type": "dir", "children": [{"name": "fq2.rs", "type": "file", "path": "ark/fq2.rs", "codeKey": "params2"}, {"name": "fq6.rs", "type": "file", "path": "ark/fq6.rs", "codeKey": "params6"}, {"name": "fq12.rs", "type": "file", "path": "ark/fq12.rs", "codeKey": "params12"}, {"name": "quadratic_extension.rs", "type": "file", "path": "ark/quadratic_extension.rs", "codeKey": "quad"}, {"name": "cubic_extension.rs", "type": "file", "path": "ark/cubic_extension.rs", "codeKey": "cubic"}, {"name": "fp12_2over3over2.rs", "type": "file", "path": "ark/fp12_2over3over2.rs", "codeKey": "top"}]}, "check": {"name": "이 글의 실제 실행 프로그램", "type": "dir", "children": [{"name": "main.rs", "type": "file", "path": "check/main.rs", "codeKey": "experiment"}]}};

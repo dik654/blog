@@ -63,7 +63,7 @@ export default function VectorsInnerProductsArticle(){return <article className=
         question="벡터 x=(3,4)의 원점으로부터 길이는 얼마일까요?"
         idea={<>서로 직각인 좌표의 이동량을 제곱해 더한 뒤 제곱근을 취합니다. 제곱은 음수 좌표도 양수로 바꾸고 제곱근은 길이의 단위를 되찾습니다.</>}
         formula={String.raw`\lVert x\rVert_2=\sqrt{\sum_{j=1}^{d}x_j^2}\qquad\Longrightarrow\qquad \lVert(3,4)\rVert_2=\sqrt{3^2+4^2}=5`}
-        annotatedFormula={String.raw`\lVert(3,4)\rVert_2=\sqrt{\underbrace{9+16}_{25}}=5`}
+        annotatedFormula={String.raw`\begin{gathered}\lVert x\rVert_2=\sqrt{\sum_{j=1}^{d}x_j^2}\qquad\Longrightarrow\qquad \lVert(3,4)\rVert_2=\sqrt{3^2+4^2}=5\\[8pt]\lVert(3,4)\rVert_2=\sqrt{\underbrace{9+16}_{25}}=5\end{gathered}`}
         operations={[{ expression: String.raw`3^2+4^2=25`, annotation: ["두 직각 방향의 제곱 기여를 더합니다."] },{ expression: String.raw`\sqrt{25}=5`, annotation: ["제곱된 길이를 원래 길이로 바꿉니다."] }]}
         terms={[
           { symbol: "x_j", name: "j번째 좌표", description: "벡터를 이루는 한 방향의 부호 있는 값입니다." },
@@ -82,7 +82,7 @@ export default function VectorsInnerProductsArticle(){return <article className=
         question="u=(3,4)와 v=(4,−3)은 왜 내적이 0일까요?"
         idea={<>같은 좌표끼리의 기여를 더하면 첫 축의 +12와 둘째 축의 −12가 정확히 상쇄됩니다. 두 벡터가 직각이라 서로의 방향 성분이 0이라는 뜻입니다.</>}
         formula={String.raw`u\cdot v=\sum_{j=1}^{d}u_jv_j=3\times4+4\times(-3)=0=\lVert u\rVert\lVert v\rVert\cos 90^\circ`}
-        annotatedFormula={String.raw`u\cdot v=\underbrace{12}_{\text{첫 축}}+\underbrace{(-12)}_{\text{둘째 축}}=0`}
+        annotatedFormula={String.raw`\begin{gathered}u\cdot v=\sum_{j=1}^{d}u_jv_j=\lVert u\rVert\lVert v\rVert\cos\theta\\[8pt]u\cdot v=\underbrace{12}_{\text{첫 축}}+\underbrace{(-12)}_{\text{둘째 축}}=0\end{gathered}`}
         operations={[{ expression: String.raw`3\cdot4=12`, annotation: ["첫 축에서 양수 12가 기여합니다."] },{ expression: String.raw`4\cdot(-3)=-12`, annotation: ["둘째 축에서 음수 12가 기여해 합은 0입니다."] }]}
         terms={[
           { symbol: "u_jv_j", name: "좌표별 기여", description: "같은 축에서 두 벡터가 같은 부호면 양수, 반대 부호면 음수입니다." },
@@ -166,7 +166,12 @@ export default function VectorsInnerProductsArticle(){return <article className=
           \lVert w_M\rVert_2 &\le R\sqrt{M}\\
           M\gamma &\le R\sqrt{M}\quad\Longrightarrow\quad M\le\left(\frac{R}{\gamma}\right)^2
         \end{aligned}`}
-        annotatedFormula={String.raw`\underbrace{M\gamma}_{\text{전진의 하한}}\le\underbrace{\lVert w_M\rVert}_{\text{전체 길이}}\le\underbrace{R\sqrt M}_{\text{길이의 상한}}`}
+        annotatedFormula={String.raw`\begin{gathered}\begin{aligned}
+          w_M\cdot w^* &\ge M\gamma\\
+          w_M\cdot w^* &\le \lVert w_M\rVert_2\lVert w^*\rVert_2=\lVert w_M\rVert_2\\
+          \lVert w_M\rVert_2 &\le R\sqrt{M}\\
+          M\gamma &\le R\sqrt{M}\quad\Longrightarrow\quad M\le\left(\frac{R}{\gamma}\right)^2
+        \end{aligned}\\[8pt]\underbrace{M\gamma}_{\text{전진의 하한}}\le\underbrace{\lVert w_M\rVert}_{\text{전체 길이}}\le\underbrace{R\sqrt M}_{\text{길이의 상한}}\end{gathered}`}
         operations={[{ expression: String.raw`M\gamma\le R\sqrt M`, annotation: ["방향 성분의 하한과 전체 길이의 상한을 묶습니다."] },{ expression: String.raw`M\le (R/\gamma)^2`, annotation: ["M이 양수이면 √M으로 나누고 제곱합니다. M=0이면 이미 성립합니다."] }]}
         terms={[
           { symbol: String.raw`M`, name: "수정 횟수", description: "조건을 만족해 가중치를 바꾼 누적 횟수입니다." },

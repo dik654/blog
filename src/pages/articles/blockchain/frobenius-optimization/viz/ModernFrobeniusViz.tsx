@@ -1,51 +1,13 @@
-const slots = [
-  { before: "c₀", after: "c₀", note: "base field 고정" },
-  { before: "c₁v", after: "γ₁c₁v", note: "상수 곱" },
-  { before: "c₂v²", after: "γ₂c₂v²", note: "상수 곱" },
-  { before: "…", after: "…", note: "basis별 table" },
-] as const;
-
-export default function ModernFrobeniusViz() {
-  return (
-    <figure
-      data-viz="frobenius-basis-action"
-      data-viz-canvas
-      className="not-prose my-8 min-w-0 rounded-xl border border-border/70 bg-card p-4 sm:p-6"
-    >
-      <figcaption className="mb-5">
-        <p className="text-sm font-semibold text-foreground">
-          큰 p제곱을 basis별 고정 변환으로 내린다
-        </p>
-        <p className="mt-1 text-xs leading-5 text-muted-foreground">
-          선택한 Fp¹² tower에서 x↦xᵖ의 작용을 coefficient permutation과
-          미리 계산한 상수 곱으로 바꿉니다. γ 값은 field profile에 종속됩니다.
-        </p>
-      </figcaption>
-      <div className="space-y-3">
-        {slots.map((slot, index) => (
-          <div
-            key={`${slot.before}-${index}`}
-            className="grid min-w-0 grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-lg border border-border bg-background p-3"
-          >
-            <div className="min-w-0 break-words font-mono text-xs text-foreground">
-              {slot.before}
-            </div>
-            <span aria-hidden className="text-xs text-muted-foreground">→</span>
-            <div className="min-w-0">
-              <p className="break-words font-mono text-xs font-semibold text-primary">
-                {slot.after}
-              </p>
-              <p className="mt-1 text-[11px] text-muted-foreground">{slot.note}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="mt-4 rounded-lg border border-primary/30 bg-primary/5 p-4">
-        <p className="text-xs font-semibold text-foreground">검산 불변식</p>
-        <p className="mt-1 break-words font-mono text-sm text-primary">
-          φ¹²(x)=x, φ(xy)=φ(x)φ(y)
-        </p>
-      </div>
-    </figure>
-  );
-}
+import StepViz from "@/components/ui/step-viz";
+const scenes=[
+ {label:"직접 세제곱",body:"같은 1+u를 제곱하면 2u이고 한 번 더 곱하면 1+2u입니다. 1,u 순서의 출력은 [1,2]입니다.",basis:"1, u",input:"[1,1]",rule:"x²=2u → x³=1+2u",output:"[1,2]",value:"1+2u"},
+ {label:"옛 기저의 표",body:"1은 그대로 두고 u의 계수에 2를 곱합니다. 행렬의 두 행이 출력의 첫째·둘째 계수를 만듭니다.",basis:"1, u",input:"[1,1]",rule:"[[1,0],[0,2]]",output:"[1,2]",value:"1+2u"},
+ {label:"새 기저의 표",body:"v=1+u를 쓰면 같은 입력은 [0,1]입니다. 첫 계수에도 둘째 계수의 두 배가 들어가므로 표를 바꿔야 합니다.",basis:"1, v",input:"[0,1]",rule:"[[1,2],[0,2]]",output:"[2,2]",value:"2+2v=1+2u"},
+ {label:"잘못 복사한 표",body:"옛 대각선 표를 그대로 쓰면 [0,2]가 나와 다른 값입니다. 두 번 적용하면 돌아오므로 원복 검사만으로는 이 오류를 잡지 못합니다.",basis:"1, v",input:"[0,1]",rule:"[[1,0],[0,2]]",output:"[0,2]",value:"2v=2+2u · 오답"},
+];
+export default function ModernFrobeniusViz(){return <StepViz steps={scenes.map(s=>({label:s.label,body:<span className="block min-h-[120px] sm:min-h-[72px]">{s.body}</span>}))}>{i=><div className="w-full min-w-0 space-y-4">
+ <div className="grid grid-cols-2 gap-3"><div className="rounded-lg border p-4"><p className="text-xs text-muted-foreground">계수의 기저</p><p className="mt-2 text-lg font-semibold">{scenes[i].basis}</p></div><div className="rounded-lg border p-4"><p className="text-xs text-muted-foreground">같은 입력 1+u</p><p className="mt-2 text-lg font-semibold">{scenes[i].input}</p></div></div>
+ <div className="flex min-h-[86px] items-center justify-center rounded-lg border bg-primary/5 p-4 text-center font-mono text-sm leading-7 break-words">{scenes[i].rule}</div>
+ <div className={`min-h-[105px] rounded-lg border p-4 ${i===3?"border-amber-500/60 bg-amber-500/5":"border-primary/50 bg-primary/5"}`}><p className="text-xs text-muted-foreground">출력 {scenes[i].output}</p><p className="mt-2 text-sm font-semibold leading-7">{scenes[i].value}</p></div>
+ <p className="text-xs leading-6 text-muted-foreground">모든 계수 계산은 3의 나머지입니다. 올바른 세 장면은 같은 수학적 결과를 서로 다른 계산·표현으로 보여 줍니다.</p>
+ </div>}</StepViz>}

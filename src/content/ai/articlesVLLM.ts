@@ -331,41 +331,210 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "prefill-decode-phase-dynamics",
-    title: "Prefill 은 compute-bound, decode 는 memory-bound: 간섭과 chunk 크기",
+    title: "Prefill과 decode의 간섭: 계산·메모리 장부에서 조각 크기까지",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "problem", title: "두 phase 가 다른 자원에 막히는 이유" },
-      { id: "arithmetic-intensity", title: "Intensity 와 ridge point" },
-      { id: "interference", title: "섞인 batch 의 step 시간과 간섭" },
-      { id: "chunk-size", title: "Chunk 크기 역산 절차" },
-      { id: "long-context", title: "64K 이상에서 n² 항의 지배" },
-      { id: "prefill-optimization", title: "Prefill 최적화의 네 층" },
-      { id: "evidence", title: "근거와 경계" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 긴 새 입력이 기존 답변을 얼마나 늦출지 따져 봅니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 이번에 할 양을 고르고 함께 실행한 뒤 진행을 기록합니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. A와 B에 한 칸씩 주고 C에 네 칸을 줍니다"
+  },
+  {
+    "id": "inside-step",
+    "title": "4. 계산할 횟수와 가져올 데이터는 다른 장부입니다"
+  },
+  {
+    "id": "why-two-resources",
+    "title": "5. 더 빨리 계산해도 기다리는 데이터가 남을 수 있습니다"
+  },
+  {
+    "id": "phase-terms",
+    "title": "6. 입력 읽기와 답변 이어 쓰기에 이름을 붙입니다"
+  },
+  {
+    "id": "request-trace",
+    "title": "7. C의 20위치를 다섯 번에 걸쳐 읽습니다"
+  },
+  {
+    "id": "mixed-model",
+    "title": "8. 조각 크기에 따라 두 시간을 비교합니다"
+  },
+  {
+    "id": "arithmetic-intensity",
+    "title": "9. byte마다 필요한 연산 수로 두 한도를 비교합니다"
+  },
+  {
+    "id": "bound-not-measurement",
+    "title": "10. 하한 1.8 ms는 2 ms 목표의 통과 증거가 아닙니다"
+  },
+  {
+    "id": "paper-roofline",
+    "title": "11. 원 논문의 roof는 속도의 상한입니다"
+  },
+  {
+    "id": "source-progress",
+    "title": "12. 실제 scheduler는 남은 위치 수에서 출발합니다"
+  },
+  {
+    "id": "source-priority",
+    "title": "13. 진행 목록 먼저가 모든 decode 먼저라는 뜻은 아닙니다"
+  },
+  {
+    "id": "source-admission",
+    "title": "14. 대기 중인 C도 조각과 저장 조건을 함께 통과합니다"
+  },
+  {
+    "id": "paper-sarathi",
+    "title": "15. Sarathi는 A와 B를 먼저 담는 절차를 명시합니다"
+  },
+  {
+    "id": "large-case",
+    "title": "16. 큰 dense 사례에서도 byte 단위를 먼저 맞춥니다"
+  },
+  {
+    "id": "chunk-attention",
+    "title": "17. 조각의 뒤쪽일수록 더 많은 앞 기록을 봅니다"
+  },
+  {
+    "id": "chunk-size",
+    "title": "18. 448은 다시 측정할 후보로 고릅니다"
+  },
+  {
+    "id": "long-context",
+    "title": "19. 긴 문맥에서는 앞 위치 쌍의 계산이 커집니다"
+  },
+  {
+    "id": "prefix-rereads",
+    "title": "20. 작게 나누면 같은 앞 기록을 다시 읽습니다"
+  },
+  {
+    "id": "paper-distserve",
+    "title": "21. 두 단계를 다른 장치로 보내면 KV 전달이 생깁니다"
+  },
+  {
+    "id": "prefill-optimization",
+    "title": "22. 바꿀 대상을 실행·배정·배치 위치로 나눕니다"
+  },
+  {
+    "id": "boundary",
+    "title": "23. 이 모형의 숫자로 말할 수 있는 범위를 확인합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "24. 조건을 바꿔 다음 결과를 예상해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/prefill-decode-phase-dynamics"),
   },
   {
     slug: "disaggregated-prefill-decode-serving",
-    title: "Prefill과 decode를 분리 배치하면 KV transfer 비용만큼 간섭이 사라집니다",
+    title: "Prefill·decode 분리 서빙: KV 전달부터 두 풀의 용량까지",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "problem", title: "두 phase를 섞을 때 생기는 문제" },
-      { id: "routing", title: "Replica routing과 cache-aware load balancing" },
-      { id: "disaggregation", title: "Prefill worker와 decode worker" },
-      { id: "kv-transfer", title: "KV transfer의 byte·시간·대역폭" },
-      { id: "provisioning", title: "두 풀의 GPU 수와 heterogeneous serving" },
-      {
-        id: "evidence",
-        title: "근거: DistServe·Splitwise·Mooncake와 engine 문서",
-        subsections: [
-          { id: "paper-distserve", title: "DistServe" },
-          { id: "paper-splitwise", title: "Splitwise" },
-          { id: "paper-mooncake", title: "Mooncake" },
-          { id: "paper-vllm-disagg", title: "vLLM disaggregated prefilling 문서" },
-          { id: "paper-sglang-router", title: "SGLang PD disaggregation·router" },
-        ],
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 읽는 일과 이어 쓰는 일을 다른 장치에 맡깁니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 목적지를 고르고 기록을 넘긴 뒤 출력을 보냅니다"
+  },
+  {
+    "id": "small-case",
+    "title": "3. 네 자리의 기록 128바이트를 옮기는 요청입니다"
+  },
+  {
+    "id": "handoff-map",
+    "title": "4. 복사 중에는 양쪽 자리가 함께 필요합니다"
+  },
+  {
+    "id": "why-hold",
+    "title": "5. 끝났다는 신호가 없으면 안전하게 자리를 돌려줄 수 없습니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 서로 다른 GPU에서 두 단계를 실행하는 것이 분리 서빙입니다"
+  },
+  {
+    "id": "request-trace",
+    "title": "7. 요청 R은 4·6·8밀리초의 서로 다른 완료를 지납니다"
+  },
+  {
+    "id": "proxy-request",
+    "title": "8. 실제 프록시는 P에 한 토큰만 요청합니다"
+  },
+  {
+    "id": "proxy-output",
+    "title": "9. 첫 출력의 주인은 응답을 보내는 코드에서 확인합니다"
+  },
+  {
+    "id": "source-allocation",
+    "title": "10. 받을 공간을 잡고 비동기 읽기가 끝나기를 기다립니다"
+  },
+  {
+    "id": "source-finish",
+    "title": "11. P의 계산 완료와 원본 반환은 다른 사건입니다"
+  },
+  {
+    "id": "cache-reuse",
+    "title": "12. D의 캐시도 재사용할 수 있고 층별 전송은 별도입니다"
+  },
+  {
+    "id": "routing-source",
+    "title": "13. SGLang의 균형 판정은 두 조건을 함께 봅니다"
+  },
+  {
+    "id": "routing-estimate",
+    "title": "14. 캐시 이득보다 대기가 크면 다른 서버가 빠릅니다"
+  },
+  {
+    "id": "transfer-bytes",
+    "title": "15. 논리 기록 크기와 실제 전송량을 먼저 구분합니다"
+  },
+  {
+    "id": "layer-overlap",
+    "title": "16. 앞 층을 먼저 보내도 전송 대기열은 남습니다"
+  },
+  {
+    "id": "transfer-budget",
+    "title": "17. 한 요청의 시간과 초당 옮길 양은 다른 조건입니다"
+  },
+  {
+    "id": "provisioning",
+    "title": "18. GPU 시간의 평균 장부에서 후보 풀 크기를 구합니다"
+  },
+  {
+    "id": "paper-distserve",
+    "title": "19. DistServe는 평균 계산 뒤 배치 후보를 실제 부하 모형으로 비교합니다"
+  },
+  {
+    "id": "paper-mooncake",
+    "title": "20. Mooncake의 저장 계층과 평가 버전을 나누어 읽습니다"
+  },
+  {
+    "id": "heterogeneous",
+    "title": "21. GPU 종류와 두 대뿐인 배포도 같은 조건으로 비교합니다"
+  },
+  {
+    "id": "failures",
+    "title": "22. 전송 실패 뒤의 재시도도 한 요청의 일부입니다"
+  },
+  {
+    "id": "boundary",
+    "title": "23. 실제 코드의 범위와 가정한 시간을 구분합니다"
+  },
+  {
+    "id": "prediction-questions",
+    "title": "24. 조건을 바꾸어 다음 결과를 예상해 보세요"
+  }
+],
     component: () => import("@/pages/articles/ai/disaggregated-prefill-decode-serving"),
   },
   {

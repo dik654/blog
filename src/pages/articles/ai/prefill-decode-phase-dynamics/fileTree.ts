@@ -1,0 +1,2 @@
+import type { FileNode } from "@/components/code/types";
+export const prefillDecodeTree: FileNode = {"name": "vllm", "type": "dir", "children": [{"name": "vllm/v1/core/sched/scheduler.py", "path": "vllm/v1/core/sched/scheduler.py", "type": "file", "codeKey": "progress-fields"}, {"name": "vllm/config/scheduler.py", "path": "vllm/config/scheduler.py", "type": "file", "codeKey": "scheduler-config"}, {"name": "transformers/models/mixtral/modeling_mixtral.py", "path": "transformers/models/mixtral/modeling_mixtral.py", "type": "file", "codeKey": "attention-products"}]};

@@ -1266,13 +1266,87 @@
     },
     {
       "route": "gpu/cuda-register-pressure",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "용어부터 시작한 6절 구성으로 같은 숫자를 따라가는 경로가 없었음",
+          "할당 반올림과 warp/block 상한이 생략되어 occupancy 해석이 부정확했음",
+          "spill의 정적 보고·동적 바이트·DRAM 시간과 최신 shared spill 조건이 분리되지 않았음",
+          "실제 원문 코드 적용과 예측 질문 부족"
+        ],
+        "fixture": "CC7.0의 37칸×32명=1184를 1280으로 할당. 128명 묶음은 12개·75%, 320명 묶음은 4개·62.5%. 96칸·256명은 2개·25%.",
+        "stageAnchors": {
+          "S": "overview",
+          "B": "black-box",
+          "0": "case",
+          "1": "picture",
+          "2": "why",
+          "3": "names",
+          "4": "trace",
+          "5": "register-file",
+          "6": [
+            "live-range",
+            "residency",
+            "occupancy-wave",
+            "spill-path",
+            "shared-spill",
+            "implementation"
+          ],
+          "7": [
+            "release-gate",
+            "evidence",
+            "review"
+          ]
+        },
+        "preservedDepth": "기초6+심화4와 canonical concept 8개를 유지하고 정의·소유권도 교정. 할당 단위, live range, rematerialization, occupancy, tail, static/dynamic spill, shared spill, 실제 계산 API의 적용 조건을 보존.",
+        "sourceApplication": "cuda-samples v13.0의 commit 3f1c50965017932fc81e6d94a3fc9e04c105b312 전체 simpleOccupancy.cu와 BSD 고지 보존. 3개 함수에 같은 입력을 대입. NVIDIA standalone occupancy 13.0.96은 로컬 CPU로 실제 컴파일·6사례 실행했으며 가정한 장치 속성과 GPU 실측을 구분. proprietary header는 저장소에 포함하지 않음. PTX9.0 shared spilling의 sm75+ 요구 때문에 CC7.0 사례에 적용할 수 없음을 명시.",
+        "numericVerification": "CPU 독립 occupancy calculator 6사례와 theory 독립 검산 모두 PASS. 10 block tail 25→6.25%, 동일 시간 평균15.625%, 8.388608GB/7.8125GiB 및 3TB/s 가정의 전송만2.7962ms 구분.",
+        "independentReport": "/tmp/teach-all/root-register-independent-theory.json",
+        "numericReport": "/tmp/teach-all/root-register-occupancy-cpu-final.log",
+        "humanize": {
+          "initialChars": 9442,
+          "roundTrip": true,
+          "numbersAndMarkersPreserved": true,
+          "gate": 0,
+          "passes": [
+            "/tmp/teach-all/humanize-root-register/summary.json",
+            "/tmp/teach-all/humanize-root-register-final/summary.json"
+          ],
+          "finalSpacingRules": 14,
+          "manualProps": "Viz·코드 버튼·예측 질문의 띄어쓰기 추가 점검",
+          "applied": true
+        },
+        "verification": "실제 app tsc exit0, learning strict/require-registration PASS, prose strict·수식 명시 주석·변경 Viz strict PASS. 다음 고정 index checkpoint에서 전역 build 예정.",
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "sections": 17,
+          "predictionQuestions": 3,
+          "scenesPerViewport": 6,
+          "keyboard": true,
+          "playAndReducedMotion": true,
+          "frameAndControlShift": 0,
+          "fitsViewport": true,
+          "overflow": 0,
+          "formulaBaseOutsideCard": 0,
+          "anchors": 0,
+          "console": 0,
+          "codePanelsPerViewport": 3,
+          "actualScreensRead": true,
+          "report": "/tmp/teach-all/root-register-screens/summary.json",
+          "genericReport": "/tmp/world-browser-audit/teach-checkpoint141-additions-summary.json",
+          "finalRunLog": "/tmp/teach-all/root-register-browser-final-spaces.log"
+        },
+        "remaining": "전체799편 검토 후 전역 빌드·배포·운영 확인."
+      }
     },
     {
       "route": "gpu/cuda-shared-memory",
@@ -1356,13 +1430,96 @@
     },
     {
       "route": "gpu/cuda-sync-streams",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-04",
+        "beforeDefects": [
+          "용어 우선이며 2/5/2ms 사례가 그림·실제 코드까지 이어지지 않음",
+          "__syncwarp의 memory ordering 누락과 shuffle/vote의 보장 혼동",
+          "fence를 항상 더 가볍다고 단정하며 ordering과 visibility·atomic publication 혼동",
+          "cudaMemcpyAsync pageable 예외·버퍼 재사용 시점 설명 불충분",
+          "event record 세대와 재사용·미기록 event 대기 동작 누락",
+          "여러 GPU의 handle 사용 제약을 과도하게 일반화하며 cross-device event 대기 예외 누락",
+          "예측 질문과 실제 원문 코드 적용 부재"
+        ],
+        "fixture": "A의7→8과 두 독립 묶음의2·5·2ms. 순차18ms, 겹침14ms, 두 buffer를 재사용하는 네 작업24ms. 같은 값의 생산·소비·재사용을 계산 안과 여러 장치에 확장.",
+        "stageAnchors": {
+          "S": "overview",
+          "B": "black-box",
+          "0": "case",
+          "1": "picture",
+          "2": "why",
+          "3": "names",
+          "4": "streams",
+          "5": "source-pipeline",
+          "6": [
+            "host-memory",
+            "default-stream",
+            "events",
+            "event-time",
+            "block-sync",
+            "warp-sync",
+            "memory-fence",
+            "named-async-barrier",
+            "sync-overhead-divergence",
+            "multi-gpu",
+            "peer-copy"
+          ],
+          "7": [
+            "limits",
+            "evidence",
+            "review"
+          ]
+        },
+        "preservedDepth": "기초6·심화4·canonical8개 유지. Pageable Async 예외, legacy/per-thread 기본줄, event 세대, syncwarp ordering과 shuffle/vote 경계, fence/publication, PTX named와 C++ phase/token, 불균형 비용, cross-device API 예외와 P2P방향을 실질 교정.",
+        "sourceApplication": "cuda-samples v13.0 commit3f1c50965017932fc81e6d94a3fc9e04c105b312의 전체 simpleMultiCopy.cu와 BSD 고지 보존. 실제입력+1·slot교대·hostalloc·계측4패널. 7은대입예이고 기본0→1과구별. CUDA13.0.2/PTX9.0의공식규칙을동일사례에적용. SIMULATE_IO host수명과legacy계측의조건을명시.",
+        "numericVerification": "별도 CPU 모형이N1–24에서9+(N−1)5와각자원의비겹침·두자리수명을검산. 원문kernel의스칼라대입7→8과event capture모형도검사. GPU나CUDA실제실행을주장하지않음.",
+        "numericReport": "src/pages/articles/gpu/cuda-sync-streams/verification/output.json",
+        "independentReport": "/tmp/teach-all/root-streams-independent-theory.json",
+        "humanize": {
+          "passes": [
+            "/tmp/teach-all/humanize-root-streams/summary.json",
+            "/tmp/teach-all/humanize-root-streams-final/summary.json"
+          ],
+          "finalChars": 17327,
+          "roundTrip": true,
+          "gate": 0,
+          "finalChunks": 5,
+          "numbersAndMarkersPreserved": true,
+          "applied": true,
+          "manualProps": "공개6+4와canonical정의·코드설명에서숫자/단어띄어쓰기점검"
+        },
+        "firstFifth": "독립 실제본문 names4052/18756=21.60%. 같은단위·자원대기·결과위치·두자리수명2286자를추가했고물리화면비율은390에서24.20%,1440에서23.99%.",
+        "verification": "strict learning/require-registration·prose·Viz·수식1435명시주석PASS. actual app tsc exit0 /tmp/teach-all/checkpoint145-working-tsc.log. 고정index의전역build는checkpoint146에서실행.",
+        "browser": {
+          "viewports": [
+            390,
+            1440
+          ],
+          "sections": 22,
+          "predictionQuestions": 3,
+          "scenesPerViewport": 3,
+          "panelsPerViewport": 4,
+          "keyboard": true,
+          "playAndReducedMotion": true,
+          "frameAndControlShift": 0,
+          "fitsViewport": true,
+          "overflow": 0,
+          "formulaBaseOutsideCard": 0,
+          "anchors": 0,
+          "console": 0,
+          "actualScreensRead": true,
+          "report": "/tmp/teach-all/root-streams-screens/summary.json",
+          "finalLog": "/tmp/teach-all/root-streams-browser-final.log",
+          "genericReport": "/tmp/world-browser-audit/teach-checkpoint145-additions-summary.json"
+        },
+        "remaining": "전체799편검토후전역빌드·배포·운영확인."
+      }
     },
     {
       "route": "gpu/cuda-thread-hierarchy",
@@ -3697,8 +3854,8 @@
     }
   ],
   "counts": {
-    "unreviewed": 195,
-    "rewritten-local-verified": 26,
+    "unreviewed": 193,
+    "rewritten-local-verified": 28,
     "retained-local-verified": 4
   }
 }

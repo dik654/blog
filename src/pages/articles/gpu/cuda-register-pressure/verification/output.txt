@@ -1,0 +1,6 @@
+37 128 error=0 blocks=12 regs=5120 occupancy=75%
+37 320 error=0 blocks=4 regs=12800 occupancy=62.5%
+96 256 error=0 blocks=2 regs=24576 occupancy=25%
+64 256 error=0 blocks=4 regs=16384 occupancy=50%
+128 256 error=0 blocks=2 regs=32768 occupancy=25%
+255 1024 error=0 blocks=0 regs=262144 occupancy=0%

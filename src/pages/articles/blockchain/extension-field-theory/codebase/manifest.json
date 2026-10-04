@@ -1,0 +1,25 @@
+{
+  "commit": "7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c",
+  "files": [
+    {
+      "path": "ff/src/fields/models/quadratic_extension.rs",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/quadratic_extension.rs",
+      "sha256": "3be7611a5416776baca2ee491c2def1172e096bc86efa44b9352afe28eed184d"
+    },
+    {
+      "path": "ff/src/fields/models/fp2.rs",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/fp2.rs",
+      "sha256": "999f09c561bafc92c923b1af6c866fc474f60f35a7d6f7d7c2dcfca5ef8db6ba"
+    },
+    {
+      "path": "LICENSE-MIT",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/LICENSE-MIT",
+      "sha256": "8f71659370c5268d9a1dc962a46232540e8fca63462586d8efaa95aab492a208"
+    },
+    {
+      "path": "LICENSE-APACHE",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/algebra/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/LICENSE-APACHE",
+      "sha256": "e8d77d4bbe96e1b46ec0f40d1f12e19825e718c764bb3e9a695633ade9289f9e"
+    }
+  ]
+}

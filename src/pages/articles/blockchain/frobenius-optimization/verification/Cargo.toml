@@ -1,0 +1,12 @@
+[package]
+name = "teach-frobenius-check"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+ark-bn254 = { git = "https://github.com/arkworks-rs/algebra", rev = "7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c", default-features = false, features = ["curve", "std"] }
+ark-ff = { git = "https://github.com/arkworks-rs/algebra", rev = "7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c", default-features = false, features = ["std"] }
+ark-serialize = { git = "https://github.com/arkworks-rs/algebra", rev = "7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c", default-features = false, features = ["std"] }
+num-bigint = "0.4"
+[[bin]]
+name = "teach-frobenius-check"
+path = "main.rs"

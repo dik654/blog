@@ -239,22 +239,48 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "gpu/cuda-sync-streams": [
     {
-      kind: "공식 문서",
-      label: "NVIDIA CUDA Programming Guide — Asynchronous Execution",
-      href: "https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/asynchronous-execution.html",
-      note: "Stream ordering, default-stream modes, events, pinned transfer와 실제 concurrency 조건",
+      "kind": "공식 문서",
+      "label": "CUDA Runtime13.0.2 · API/Stream Synchronization",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-runtime-api/api-sync-behavior.html",
+      "note": "공식 API 의미를2·5·2ms의 가정한 시간표와 구별해 적용합니다. Stream 수나 Async 접미사만으로 특정 겹침·14ms를 보장하지 않습니다."
     },
     {
-      kind: "공식 문서",
-      label:
-        "NVIDIA CUDA Programming Guide — Programming Systems with Multiple GPUs",
-      href: "https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/multi-gpu-systems.html",
-      note: "Current device별 allocation·stream·event ownership과 peer access 경계",
+      "kind": "공식 문서",
+      "label": "CUDA Runtime13.0.2 · Event Management",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-runtime-api/group__CUDART__EVENT.html",
+      "note": "빈 event와 세대1·2의 순서를 공식 규칙에 대입합니다. 미기록 event가 미래 생산을 예약하거나 뒤의 기록이 기존 wait를 바꾸지 않습니다."
     },
-    { kind: "공식 문서", label: "NVIDIA CUDA Programming Guide — Advanced Kernel Programming", href: "https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html", note: "__syncwarp()로 warp subset을 명시적으로 동기화하라는 공식 권고" },
-    { kind: "공식 문서", label: "NVIDIA CUDA Programming Guide — Asynchronous Barriers", href: "https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/async-barriers.html", note: "Cuda::barrier의 arrive/wait 분리와 __syncthreads() 대비 권장 범위" },
-    { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide — Memory Fence Functions", href: "https://docs.nvidia.com/cuda/cuda-c-programming-guide/#memory-fence-functions", note: "__threadfence 계열이 barrier와 달리 도착을 기다리지 않는다는 공식 구분" },
-],
+    {
+      "kind": "공식 코드",
+      "label": "NVIDIA cuda-samples v13.0 · simpleMultiCopy",
+      "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/simpleMultiCopy/simpleMultiCopy.cu",
+      "note": "실제 전체 원문에 입력7과streams_used2를 대입한 추적입니다. 공식 sample 전체의 GPU 실행이나2·5·2ms의 실제 측정을 주장하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CUDA Guide13.0.2 · Synchronization/Warp Functions",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-programming-guide/index.html#synchronization-functions",
+      "note": "thread0이7을 쓰고thread1이8을 만드는 경로에 적용합니다. Shuffle/vote의 sync 접미사를 임의의 메모리 barrier로 취급하지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CUDA Guide13.0.2 · Memory Fence Functions",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-programming-guide/index.html#memory-fence-functions",
+      "note": "data7과 flag의 release/acquire를 조건부 전달 원리로 설명합니다. Fence 하나로 일반 flag의 data race와 모든 재사용 문제가 해결되지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CUDA Guide13.0.2 · Asynchronous Barrier / PTX9.0",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-programming-guide/index.html#asynchronous-barrier",
+      "note": "C++의2명 카운트와 PTX원문의64명 생산자/소비자를 구별합니다. 분리 barrier가 모든 동기화에서 더 빠르다는 결론을 내리지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CUDA Guide13.0.2 · Multi-Device System",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-programming-guide/index.html#multi-device-system",
+      "note": "GPU0에서GPU1로 가는8의 생산·복사·소비 경로에 적용합니다. 장치 수나NVLink 명칭으로 접근 가능성·대역폭·속도배수를 보장하지 않습니다."
+    }
+  ],
   "ai/arima": [
     {
       kind: "핵심 논문",
@@ -5786,9 +5812,18 @@ export const ARTICLE_EVIDENCE: Readonly<
     }
   ],
   "crypto/extension-fields": [
-    { kind: "공식 코드", label: "arkworks curves BN254 @ e2d16a27", href: "https://github.com/arkworks-rs/curves/tree/e2d16a27e2cfa9f972ae9772df827a22730011b4/bn254/src/fields", note: "ark-bn254 0.5.0 API와 함께 읽는 concrete non-residue·tower·Frobenius coefficient source snapshot" },
-    { kind: "공식 문서", label: "ark-bn254 0.5.0 crate documentation", href: "https://docs.rs/ark-bn254/0.5.0/ark_bn254/", note: "Fq/Fq2/Fq6/Fq12/Fr public type와 crate version 확인" },
-    { kind: "공식 규격", label: "EIP-197 · BN254 G2 and pairing", href: "https://eips.ethereum.org/EIPS/eip-197", note: "G2 Fp² encoding·subgroup·pairing product의 protocol contract; 내부 Fp12 layout 근거와 구분" },
+    {
+      "kind": "공식 코드",
+      "label": "arkworks algebra · BN254 설정과 공통 연산",
+      "href": "https://github.com/arkworks-rs/algebra/tree/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/curves/bn254/src/fields",
+      "note": "A·B의 출력 [6,28], 두 중간 곱과 전용 함수에 실제 값을 넣었습니다. --locked Rust 실행으로 144개 기저 곱·16개 추가 곱·15개 Frobenius 직접 대조와 역원·직렬화를 확인했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-197 · Definition of groups와 Encoding",
+      "href": "https://eips.ethereum.org/EIPS/eip-197",
+      "note": "6+28u를 a·i+b로 대응시켜28·6의 전송 순서를 만들고 내부6·28순서와 비교했습니다."
+    }
   ],
   "crypto/finite-field-theory": [
     {
@@ -6303,7 +6338,26 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Scalable, transparent, and post-quantum secure computational integrity", href: "https://eprint.iacr.org/2018/046.pdf", note: "AIR·FRI·hash-based STARK pipeline의 primary paper" },
     { kind: "공식 코드", label: "Plonky3/Plonky3 @ f5b7977", href: "https://github.com/Plonky3/Plonky3/tree/f5b7977e5c89adc8375b5c63a5a5092985b1f603", note: "Generic config·proof pipeline의 pinned official source" },
   ],
-  "crypto/extension-field-theory": [{ kind:"핵심 논문", label:"Lidl & Niederreiter · Finite Fields", href:"https://doi.org/10.1017/CBO9780511525926", note:"Minimal polynomial·tower·Frobenius의 수학적 정본" }],
+  "crypto/extension-field-theory": [
+    {
+      "kind": "보충 읽기",
+      "label": "Lidl & Niederreiter · Finite Fields",
+      "href": "https://doi.org/10.1017/CBO9780511525926",
+      "note": "교재 전문을 이번 검토에서 직접 열람하지 못했습니다. 아래 실제 열람한 HAC와 고정 ark-ff 원문으로 본문의 계산을 확인했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Handbook of Applied Cryptography · §§2.5–2.6",
+      "href": "https://cacr.uwaterloo.ca/hac/about/chap2.pdf",
+      "note": "g=X+1,m=X²+1에 s=X+2,t=2를 넣어 sg+tm=1과 같은 역원 2+u를 계산했습니다. 탑 차수와 Frobenius의 부분체 조건도 같은 작은 구성에 적용했습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "ark-ff 0.5.0 · quadratic_extension.rs",
+      "href": "https://github.com/arkworks-rs/algebra/blob/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/quadratic_extension.rs",
+      "note": "동일 commit 의존성과 자체 F₃/β2 설정으로 81개 곱, 여덟 역원과 아홉 Frobenius를 실제 Rust에서 확인했습니다. β1과 잘못된 표도 별도로 실행했습니다."
+    }
+  ],
   "crypto/pairing": [{ kind:"핵심 논문", label:"Miller · Weil Pairing", href:"https://crypto.stanford.edu/miller/miller.pdf", note:"Miller function recurrence 원 연구" },{ kind:"핵심 논문", label:"Hess et al. · Eta Pairing Revisited", href:"https://eprint.iacr.org/2006/110.pdf", note:"Ate-family pairing construction" }],
   "blockchain/vdf": [{ kind:"핵심 논문", label:"Boneh et al. · VDF", href:"https://eprint.iacr.org/2018/601.pdf", note:"VDF definitions and constructions" },{ kind:"핵심 논문", label:"Wesolowski · Efficient VDF", href:"https://eprint.iacr.org/2018/623.pdf", note:"Quotient proof construction" }],
   "blockchain/drand": [{ kind:"공식 문서", label:"drand specification", href:"https://docs.drand.love/docs/specification/", note:"Threshold beacon protocol specification" },{ kind:"공식 코드", label:"drand @ 2363f3b", href:"https://github.com/drand/drand/tree/2363f3b9ba5fd6f14e0b84a096b248479790d75d", note:"Pinned official source" }],
@@ -6484,9 +6538,18 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Aranha et al. · Efficient Implementation of Bilinear Pairings", href: "https://eprint.iacr.org/2012/408", note: "BN curve·degree-12 extension에서 sparse multiplication·reduction·platform benchmark의 원 연구" },
   ],
   "crypto/frobenius-optimization": [
-    { kind: "핵심 논문", label: "Scott et al. · On the final exponentiation for calculating pairings", href: "https://eprint.iacr.org/2008/490", note: "Pairing-friendly curve의 final exponent factorization과 Frobenius 활용 원 연구" },
-    { kind: "공식 코드", label: "arkworks algebra 0.5.0 Fp12 Frobenius @ 7ad88c46", href: "https://github.com/arkworks-rs/algebra/blob/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields/models/fp12_2over3over2.rs", note: "Degree 12·coefficient table·power modulo dispatch의 pinned implementation source" },
-    { kind: "공식 코드", label: "arkworks curves BN254 fields @ e2d16a27", href: "https://github.com/arkworks-rs/curves/tree/e2d16a27e2cfa9f972ae9772df827a22730011b4/bn254/src/fields", note: "구체 BN254 non-residue·tower·Frobenius coefficient profile source" },
+    {
+      "kind": "공식 코드",
+      "label": "arkworks algebra · 고정 Frobenius와 일반 pow 원문",
+      "href": "https://github.com/arkworks-rs/algebra/tree/7ad88c46e859a94ab8e0b19fd8a217c3dc472f1c/ff/src/fields",
+      "note": "보존한 원문 9개 파일을 실제 Cargo checkout과 바이트 비교했습니다. --locked Rust 실행으로 아홉 작은 값·81쌍·기저 변경 및 큰 M의 직접 pʲ제곱과 전체 지수 분해를 확인했습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Scott et al. · On the final exponentiation · §§3,5",
+      "href": "https://eprint.iacr.org/2008/490",
+      "note": "공식 PDF 본문의 3·5절을 읽고 같은 실제 BN254 z를 p·r·λ 다항식에 넣어 H와 대조했습니다. 일반 거듭제곱으로 네 항의 곱과 전체 지수가 같음을 실제 실행했습니다."
+    }
   ],
   "blockchain/bft-comparison": [
     { kind: "핵심 논문", label: "Castro·Liskov — Practical Byzantine Fault Tolerance", href: "https://pmg.csail.mit.edu/papers/osdi99.pdf", note: "PBFT normal phase·checkpoint·view change와 당시 NFS evaluation 범위" },
@@ -6546,21 +6609,37 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "NVIDIA Nsight Systems User Guide · CUDA Trace / Timeline View", href: "https://docs.nvidia.com/nsight-systems/UserGuide/index.html", note: "CUDA API trace 와 workload trace 의 구분, CPU range 에서 launch 된 GPU activity 의 timeline 투영, kernel 에서 Nsight Compute 를 띄우는 연결의 근거" },
 ],
   "gpu/cuda-register-pressure": [
-    { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Thread register·SM residency·device-memory-backed local address space와 compiler resource inspection의 pinned semantics" },
-    { kind: "공식 문서", label: "NVIDIA Nsight Compute 2025.1 User Guide", href: "https://docs.nvidia.com/nsight-compute/2025.1/NsightCompute/index.html", note: "Launch resource·scheduler·local-memory traffic metric의 release-pinned semantics" },
     {
-      kind: "공식 문서",
-      label: "NVIDIA CUDA C++ Best Practices Guide 12.8.1 · Occupancy",
-      href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html",
-      note: "65,536 registers, 256개 단위 warp 반올림, 37 registers·block 크기별 occupancy 예와 register pressure 옵션",
+      "kind": "공식 문서",
+      "label": "CUDA Best Practices13.0.2 §11.1.1",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-best-practices-guide/index.html#calculating-occupancy",
+      "note": "Thread당 저장량이 같아도 block 크기가 배치를 바꾸는 문제입니다. CC 7.0의 37 registers/thread와 두 block 크기에 대한 공식 자원 계산 예제입니다. 다른 세대의 공통 상수나 속도 배수를 보장하지 않습니다."
     },
     {
-      kind: "공식 문서",
-      label: "NVIDIA Nsight Compute Profiling Guide · Occupancy·Launch Statistics",
-      href: "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html",
-      note: "Theoretical occupancy metric, achieved와의 차이가 불균형을 뜻한다는 설명, waves per SM과 tail effect",
+      "kind": "공식 문서",
+      "label": "CUDA Programming Guide13.0.2",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-programming-guide/index.html",
+      "note": "저장 자원과 배치 및 local 주소 공간의 경계를 설명합니다. 문서에 명시한 의미와 API의 범위입니다. 모든 local byte를 DRAM 시간으로 바꾸지 않습니다."
     },
-],
+    {
+      "kind": "공식 문서",
+      "label": "Nsight Compute Profiling Guide",
+      "href": "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#sections-and-rules",
+      "note": "관측한 active 상태가 배치 상한과 다른 이유를 살핍니다. 각 metric의 정의와 수집 조건입니다. 단일 counter만으로 원인을 확정하지 않습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "cuda-samples v13.0 simpleOccupancy",
+      "href": "https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/simpleOccupancy/simpleOccupancy.cu",
+      "note": "API의 block 수 출력을 warp 비율로 연결합니다. 고정 원문 전체와 배치 비율·launch·square 함수의 실제 줄 범위입니다. 실제 sample을 37 registers로 컴파일하거나 GPU 시간을 측정한 결과가 아닙니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PTX ISA9.0 shared-memory spilling",
+      "href": "https://docs.nvidia.com/cuda/archive/13.0.2/parallel-thread-execution/index.html#pragma-strings-enable-smem-spilling",
+      "note": "Register 밖에 둔 값의 저장 경로를 선택합니다. 정식 pragma와 적용 범위입니다. CC 7.0 지원이나 속도 개선을 보장하지 않습니다."
+    }
+  ],
   "gpu/cuda-kernel-fusion": [
     { kind: "핵심 논문", label: "FlashAttention · IO-Aware Exact Attention", href: "https://arxiv.org/abs/2205.14135", note: "Attention 내부의 tile 단위 HBM IO 절감 근거이며 model-wide Megakernel의 보편적 이득을 뜻하지 않음" },
     { kind: "공식 문서", label: "NVIDIA CUDA C++ Best Practices Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-best-practices-guide/index.html", note: "Fusion 후보의 timing·effective bandwidth·reference comparison 경계를 고정하는 공식 guide" },
@@ -7313,7 +7392,55 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve", href: "https://arxiv.org/abs/2403.02310", note: "Chunked prefill 과 stall-free scheduling 으로 decode 간섭을 다룬 OSDI 2024 연구, 수치는 저자 자기보고" },
     { kind: "핵심 논문", label: "DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving", href: "https://arxiv.org/abs/2401.09670", note: "Prefill·decode 간섭을 정량화한 OSDI 2024 연구, 분리 서빙 자체는 이 글 범위 밖" },
     { kind: "공식 문서", label: "vLLM Optimization and Tuning: Chunked Prefill", href: "https://docs.vllm.ai/en/latest/configuration/optimization.html", note: "V1 기본 활성화, decode 우선, max_num_batched_tokens 절충의 공식 근거" },
-  ],
+    {
+      "kind": "공식 코드",
+      "label": "Prefill/decode — vllm/v1/core/sched/scheduler.py",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py",
+      "note": "2026-10-04 확인. 전체 원문 SHA256과 행 범위를 확인하고 같은 A·B·C 사례를 해당 연산에 대입합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Prefill/decode — vllm/config/scheduler.py",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/config/scheduler.py",
+      "note": "2026-10-04 확인. 전체 원문 SHA256과 행 범위를 확인하고 같은 A·B·C 사례를 해당 연산에 대입합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Prefill/decode — transformers/models/mixtral/modeling_mixtral.py",
+      "href": "https://raw.githubusercontent.com/huggingface/transformers/5eddc12edfaf8cafde8c9bae4ccb12f8a139b4f9/src/transformers/models/mixtral/modeling_mixtral.py",
+      "note": "2026-10-04 확인. 전체 원문 SHA256과 행 범위를 확인하고 같은 A·B·C 사례를 해당 연산에 대입합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Prefill/decode — Roofline — EECS-2008-134 §3",
+      "href": "https://www2.eecs.berkeley.edu/Pubs/TechRpts/2008/EECS-2008-134.pdf",
+      "note": "2026-10-04 확인. §3의 byte 경계와 성능 상한 식에 c4의 600 MFLOP·148 MB를 넣어 시간 하한1.48 ms로 바꿉니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Prefill/decode — Sarathi-Serve — Algorithm 3 and §4.3",
+      "href": "https://arxiv.org/html/2403.02310v3",
+      "note": "2026-10-04 확인. Algorithm3에 A1·B1·C4를 넣고 §4.3의 반복 KV 읽기를 C20의 다섯 조각으로 계산합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Prefill/decode — DistServe — phase placement and communication",
+      "href": "https://arxiv.org/html/2401.09670v3",
+      "note": "2026-10-04 확인. §3.3의 1.13 GB·10요청/s 전송 사례와 §4 배치를 C의 입력 처리 뒤 기록 전달에 연결합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Prefill/decode — vLLM v0.27.1 — chunked prefill documentation and source",
+      "href": "https://docs.vllm.ai/en/v0.27.1/configuration/optimization/",
+      "note": "2026-10-04 확인. L483~523에 running 앞 P가 budget6을 쓰는 반례를 넣어 모든 decode 우선이라는 일반화를 검증합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Prefill/decode — NVIDIA H100 SXM specifications",
+      "href": "https://www.nvidia.com/en-us/data-center/h100/",
+      "note": "2026-10-04 확인. FP16 표의 sparsity 각주와 3.35 TB/s를 확인하며 dense989는 반올림 참조 가정입니다."
+    },
+],
   "gpu/sm-warp-scheduling-and-issue": [
     {
       "kind": "공식 문서",
@@ -7449,12 +7576,120 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 구현", label: "vLLM vllm/compilation/cuda_graph.py CUDAGraphWrapper", href: "https://github.com/vllm-project/vllm/blob/main/vllm/compilation/cuda_graph.py", note: "batch_descriptor를 key로 capture·replay를 분기하는 실제 구현" },
   ],
   "ai/disaggregated-prefill-decode-serving": [
-    { kind: "핵심 논문", label: "DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving", href: "https://arxiv.org/abs/2401.09670", note: "Phase별 parallelism·replica 배치 알고리즘, OPT-66B 512 token KV 1.13 GB와 90 Gbps 계산, NVLink 600 GB/s, 7.4배·12.6배 결과의 출처" },
-    { kind: "핵심 논문", label: "Splitwise: Efficient Generative LLM Inference Using Phase Splitting", href: "https://arxiv.org/abs/2311.18677", note: "Layer-wise KV 전송의 64%·16.5%·0.8% overhead, H100 400 Gbps·A100 200 Gbps, 이종 배치의 1.4배·2.35배 throughput" },
-    { kind: "핵심 논문", label: "Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving", href: "https://arxiv.org/abs/2407.00079", note: "분산 KV cache, Conductor의 prefix hit·queue·transfer 시간 scoring, decode node 사전 선택, 525%·75% 결과" },
-    { kind: "공식 문서", label: "vLLM Disaggregated Prefilling", href: "https://docs.vllm.ai/en/latest/features/disagg_prefill.html", note: "kv_transfer_config·kv_role·connector 목록, prompt_token_ids 전달, throughput은 오르지 않는다는 명시" },
-    { kind: "공식 문서", label: "SGLang PD Disaggregation", href: "https://docs.sglang.io/advanced_features/pd_disaggregation.html", note: "disaggregation-mode prefill·decode, Mooncake·NIXL backend, bootstrap port, router pd-disaggregation 인자" },
-    { kind: "공식 구현", label: "sglang-router README (PyPI)", href: "https://pypi.org/project/sglang-router/", note: "Cache-aware policy의 근사 radix tree, cache_threshold·balance_abs_threshold·balance_rel_threshold·eviction_interval·max_tree_size" },
+    {
+      "kind": "공식 코드",
+      "label": "Disaggregation — vllm-project/vllm tests/v1/kv_connector/nixl_integration/toy_proxy_server.py",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/tests/v1/kv_connector/nixl_integration/toy_proxy_server.py",
+      "note": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/connector.py",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/connector.py",
+      "note": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/pull_scheduler.py",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/pull_scheduler.py",
+      "note": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/pull_worker.py",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/pull_worker.py",
+      "note": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/base_scheduler.py",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/base_scheduler.py",
+      "note": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/base_worker.py",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/base_worker.py",
+      "note": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/push_scheduler.py",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/push_scheduler.py",
+      "note": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Disaggregation — vllm-project/vllm vllm/distributed/kv_transfer/kv_connector/v1/nixl/push_worker.py",
+      "href": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/distributed/kv_transfer/kv_connector/v1/nixl/push_worker.py",
+      "note": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Disaggregation — sgl-project/sglang sgl-model-gateway/src/policies/cache_aware.rs",
+      "href": "https://raw.githubusercontent.com/sgl-project/sglang/35f3c96ff4794a4de15daf12caad371084a037ee/sgl-model-gateway/src/policies/cache_aware.rs",
+      "note": "고정 revision 전체 원문과 실제 분기·행 범위 확인. 설명용 숫자를 제어 흐름에 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Disaggregation — SGLang CacheAwareConfig",
+      "href": "https://github.com/sgl-project/sglang/blob/35f3c96ff4794a4de15daf12caad371084a037ee/sgl-model-gateway/src/policies/mod.rs",
+      "note": "고정 원문에서 기본값과 크기 기반 정리의 실제 조건을 확인했습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Disaggregation — SGLang tree eviction",
+      "href": "https://github.com/sgl-project/sglang/blob/35f3c96ff4794a4de15daf12caad371084a037ee/sgl-model-gateway/src/policies/tree.rs",
+      "note": "고정 원문에서 기본값과 크기 기반 정리의 실제 조건을 확인했습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "Disaggregation — vLLM scheduler full-prompt recompute",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/sched/scheduler.py#L2671-L2674",
+      "note": "입력 전체 hit에서 마지막 입력 위치를 다시 계산하는 경로입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Disaggregation — vLLM v0.27.1 — NIXL pull and toy proxy",
+      "href": "https://docs.vllm.ai/en/v0.27.1/features/disagg_prefill/",
+      "note": "R의 입력4위치·128B와 P4ms·전송2ms·D2ms 가정을 실제 제어 흐름에 대응합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Disaggregation — SGLang 35f3c96 — cache-aware implementation",
+      "href": "https://github.com/sgl-project/sglang/blob/35f3c96ff4794a4de15daf12caad371084a037ee/sgl-model-gateway/src/policies/cache_aware.rs",
+      "note": "load40/8·41/8·1000/967을 절대32·상대1.1에 넣어 false·true·false를 확인합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Disaggregation — Splitwise v2 — transfer and provisioning",
+      "href": "https://arxiv.org/html/2311.18677v2",
+      "note": "Fig.11의 의존 경로에 R의 층별64B·준비2/4ms를 넣고 §VI-A의 두번째토큰64%→16.5%와 E2E0.8%를 원조건으로 한정합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Disaggregation — DistServe v3 — placement algorithms",
+      "href": "https://arxiv.org/html/2401.09670v3",
+      "note": "Algorithm1의 올림식에 가정10RPS·P5RPS·D4RPS를 넣어2·3복사본을 구합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Disaggregation — Mooncake FAST 2025 — published version",
+      "href": "https://www.usenix.org/system/files/fast25-qin.pdf",
+      "note": "p.162 Algorithm1 lines14–16에 R의 prefix 복사1ms·대기0.5ms·계산2ms를 넣어3.5ms를 얻습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Disaggregation — NIXL lease renewal v0.27.1",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/docs/design/nixl_kv_cache_lease.md",
+      "note": "완료·heartbeat·만료를 나누고 장기 대기와 실패의 보관 기한을 설명합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Disaggregation — Mooncake arXiv v4 version boundary",
+      "href": "https://arxiv.org/html/2407.00079v4",
+      "note": "2025-09-03 v4의 모델·평가·Algorithm1을 FAST2025 출판본과 구분합니다."
+    }
   ],
   "ai/tensor-and-pipeline-parallel-inference": [
     { kind: "핵심 논문", label: "Megatron-LM (arXiv 1909.08053)", href: "https://arxiv.org/abs/1909.08053", note: "column 뒤 row 분할, head 단위 attention 분할, layer 당 all-reduce 두 번의 근거" },
@@ -10592,6 +10827,52 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "Python 3.9 · sys.float_info",
       "href": "https://docs.python.org/3.9/library/sys.html#sys.float_info",
       "note": "float_info.min은 정규 최솟값이며 math.ulp(0.0)은 비정규 값을 포함한 최솟값입니다. 로컬 Python3.9.6 실행에서 2⁻¹⁰²²와 2⁻¹⁰⁷⁴를 구별했습니다."
+    }
+  ],
+  "ai/math-complex-numbers-oscillations": [
+    {
+      "kind": "공식 문서",
+      "label": "NIST DLMF · 지수·사인·코사인 급수와 4.2.24",
+      "href": "https://dlmf.nist.gov/4.2.E24",
+      "note": "절대수렴 항을 나누고 x=0, y=π/2에 같은 회전을 대입합니다. 급수 원문은 본문에서 각각 연결합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "OpenStax Precalculus 2e · 8.5 극형식 곱",
+      "href": "https://openstax.org/books/precalculus-2e/pages/8-5-polar-form-of-complex-numbers",
+      "note": "r=5인 출발점과 크기 1인 1/4바퀴 회전의 합성에 적용합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "CPython v3.9.6 · complexobject.c와 complexobject.h",
+      "href": "https://github.com/python/cpython/blob/db3ff76da19004f266b62e98a81bdfd322861436/Objects/complexobject.c",
+      "note": "전체 파일과 PSF 라이선스·해시를 보존하며 두 좌표와 네 곱을 추적합니다. 작성 예제의 실제 실행은 원문 파일과 구분합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Python 3.9 계열 · cmath",
+      "href": "https://docs.python.org/3.9/library/cmath.html",
+      "note": "위상의 라디안 단위와 반환 범위를 확인하고 0의 API 반환값을 수학적 유일 위상과 구별합니다."
+    }
+  ],
+  "ai/math-differential-equations-numerical-solvers": [
+    {
+      "kind": "공식 문서",
+      "label": "Driscoll·Braun FNC v1.0 · Euler 방법과 오차",
+      "href": "https://fncbook.github.io/v1.0/ivp/euler.html",
+      "note": "식 (168)에 −x와 h=.5를 대입해 .5→.25를 추적하고 식 (171)의 h로 나눈 오차 정의를 대조합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "torchdiffeq · 657943a의 실제 solver 경로",
+      "href": "https://github.com/rtqichen/torchdiffeq/blob/657943acefa826ef04c025ebeb1ff5e9d60dc268/torchdiffeq/_impl/fixed_grid.py",
+      "note": "Euler와 Heun2, integrate, rk2 및 오차 비율 함수를 같은 입력으로 읽어 −.5→.5와 −.375→.625를 구합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Higham 2001 · Brownian 증가량과 Euler–Maruyama",
+      "href": "https://epubs.siam.org/doi/10.1137/S0036144500378302",
+      "note": "§2와 식 (4.3)에 f=−x, g=.2, h=.25를 대입해 .75+.1ε를 구합니다."
     }
   ],
 };

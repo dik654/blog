@@ -3443,7 +3443,7 @@
         "src/pages/articles/ai/math-complex-numbers-oscillations/codebase/PROVENANCE.md",
         "src/pages/articles/ai/math-complex-numbers-oscillations/codebase/LICENSE"
       ],
-      "status": "locally-verified-awaiting-integration",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3530,11 +3530,16 @@
         "prose": "Global799routes rereview0 PASS /tmp/teach-all/ai-theory-complex-prose.log.",
         "typecheck": "Actual npx tsc -p tsconfig.app.json --noEmit exit0 /tmp/teach-all/ai-theory-complex-tsc-final.log.",
         "registrationProposal": "/tmp/teach-all/ai-theory-registration-batch16.json",
-        "learning": "Awaiting parent metadata integration and strict learning check."
+        "learning": "Parent batch16 integrated; strict exit0 /tmp/teach-all/theory16-learning-final.log.",
+        "learningIntegration": "parent merged batch16; strict exit 0 /tmp/teach-all/theory16-learning-final.log",
+        "visibleGeneralFormulaSupplement": {
+          "report": "/tmp/teach-all/theory-formula-visibility-repair26.json",
+          "cards": 7,
+          "browser": "390/1440 PASS; optional proofs opened; every visible general/example formula and horizontal start/end reachable; initial names position after first fifth.",
+          "prosePreservation": "Only annotatedFormula values changed, except separately humanized complex same-case paragraph."
+        }
       },
-      "remaining": [
-        "Parent shared metadata integration, strict learning check, final integration/publication verification"
-      ],
+      "remaining": [],
       "preservedEvidence": {
         "anchors": [
           "overview",
@@ -3558,7 +3563,7 @@
       },
       "bodyHashes": {
         "src/pages/articles/ai/math-complex-numbers-oscillations.tsx": "f3849969f7928b859044b69606379642c026903e2a1aee12c3b7cb25a2ef4c00",
-        "src/pages/articles/ai/math-complex-numbers-oscillations/ModernArticle.tsx": "7e17d6b602473519425083c0fae201a7b38e512d5bf034ad0f7e261c4a32ca9b",
+        "src/pages/articles/ai/math-complex-numbers-oscillations/ModernArticle.tsx": "d57064603df653a281fac59bc17466b47ad57cf012117178ea9566b9b5381ce2",
         "src/pages/articles/ai/math-complex-numbers-oscillations/codeRefs.ts": "e014c2ac5589f17147630a66d29ead28c6819fa29286712b1f73a6d8adbad8d0",
         "src/pages/articles/ai/math-complex-numbers-oscillations/viz/QuarterTurnViz.tsx": "f7137ab97153d22f587c88c329e28ae580d8a11006fac70dfd8e1b7760b8b7f7",
         "src/pages/articles/ai/math-complex-numbers-oscillations/codebase/quarter_turn.py": "0cc9d19e94dbb7ec7e6e81627cec7af0763e930ea3f6b7ea69c5c126b0b7e0af",
@@ -3574,15 +3579,19 @@
       "subcategory": "ai-foundations",
       "publicFiles": [
         "src/pages/articles/ai/math-differential-equations-numerical-solvers.tsx",
-        "src/pages/articles/ai/math-differential-equations-numerical-solvers/Applications.tsx",
-        "src/pages/articles/ai/math-differential-equations-numerical-solvers/EulerMethod.tsx",
-        "src/pages/articles/ai/math-differential-equations-numerical-solvers/HeunRungeKutta.tsx",
-        "src/pages/articles/ai/math-differential-equations-numerical-solvers/InitialValue.tsx",
-        "src/pages/articles/ai/math-differential-equations-numerical-solvers/OdeSdeBoundary.tsx",
-        "src/pages/articles/ai/math-differential-equations-numerical-solvers/Overview.tsx",
-        "src/pages/articles/ai/math-differential-equations-numerical-solvers/Stability.tsx"
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/ModernArticle.tsx",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codeRefs.ts",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/viz/DecayStepsViz.tsx",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/LICENSE",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/PROVENANCE.md",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/torchdiffeq/__init__.py",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/torchdiffeq/_impl/fixed_grid.py",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/torchdiffeq/_impl/misc.py",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/torchdiffeq/_impl/odeint.py",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/torchdiffeq/_impl/rk_common.py",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/torchdiffeq/_impl/solvers.py"
       ],
-      "status": "unreviewed",
+      "status": "local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3590,20 +3599,136 @@
         "hasSourceSurface": false,
         "characters": 23532
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
-      "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+      "originalProblems": [
+        "Abstract names precede a concrete traced case and actual geometry.",
+        "Original 6+4 questions have missing worked answers and disconnected numeric examples.",
+        "ODE uniqueness needs regularity; SDE variance needs the diffusion coefficient and Brownian/state distinction.",
+        "Local truncation error conventions and stability versus accuracy are conflated.",
+        "No same-case application to pinned primary solver code."
+      ],
+      "fixture": {
+        "assumption": "x prime = -x, x(0)=1, seconds, h=.5, T=1.",
+        "Euler": [
+          1,
+          0.5,
+          0.25
+        ],
+        "Heun": [
+          1,
+          0.625,
+          0.390625
+        ],
+        "extension": "Same drift plus .2 dW; h=.25, conditional next state .75+.1 epsilon. Two-step variance .015625."
       },
-      "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+      "stageAnchors": {
+        "S": [
+          "overview"
+        ],
+        "B": [
+          "black-box"
+        ],
+        "0": [
+          "case"
+        ],
+        "1": [
+          "picture"
+        ],
+        "2": [
+          "why"
+        ],
+        "3": [
+          "names"
+        ],
+        "4": [
+          "initial-value",
+          "euler-method",
+          "error",
+          "stability",
+          "heun-runge-kutta"
+        ],
+        "5": [
+          "source"
+        ],
+        "6": [
+          "adaptive",
+          "ode-sde-boundary",
+          "noise-variance"
+        ],
+        "7": [
+          "applications",
+          "predict"
+        ]
+      },
+      "primarySourceApplication": [
+        {
+          "label": "FNC v1.0 Euler equation168, error definition171 and theorem6.2",
+          "href": "https://fncbook.github.io/v1.0/ivp/euler.html",
+          "anchor": "paper-fnc-euler",
+          "application": "f=-x,h=.5 gives .5 then .25; distinguish one-step defect O(h²) from normalized LTE O(h). Recurrence and geometric-sum global bound are derived."
+        },
+        {
+          "label": "torchdiffeq 657943acefa826ef04c025ebeb1ff5e9d60dc268",
+          "href": "https://github.com/rtqichen/torchdiffeq/blob/657943acefa826ef04c025ebeb1ff5e9d60dc268/torchdiffeq/_impl/fixed_grid.py",
+          "anchor": "paper-torchdiffeq",
+          "application": "Euler returns dy=-.5, integrate adds to1; Heun2 reuses f0=-1, predicted.5 gives k2=-.5, dy=-.375 and state.625. Output interpolation, discarded fixed-grid rtol and min-step adaptive override are traced. Source states version.2.5, not a release-tag claim; library execution is not claimed."
+        },
+        {
+          "label": "Higham2001 section2 and equation4.3",
+          "href": "https://epubs.siam.org/doi/10.1137/S0036144500378302",
+          "anchor": "paper-higham-em",
+          "application": "Same -x drift, g=.2 and h=.25 produce .75+.1epsilon. Conditional noise variance g²h and state variance with drift are distinguished."
+        }
+      ],
+      "verification": {
+        "contentReview": "Original seven modules, full rendered baseline, original6+4, eight definitions and ownership read. Rewritten around one decay case, actual curves and real pinned code. All seven old anchors and useful formulas preserved.",
+        "humanize": "Initial11818 chars66 paragraphs: actual extract/roundtrip/prepare/gate/apply removed two connecting commas (.0085%). Final12040 chars67 paragraphs: fresh roundtrip, zero edits; four chunks3970/3857/3913/301. Chains independently approved whole and four chunks in /tmp/teach-all/humanize-ai-theory-ode-final/math-differential-equations-numerical-solvers--ModernArticle; P3 mathematical closing-parenthesis falsepositive retained. AST props3417/code1011/Viz549 chars all read and gate0.",
+        "numericTrace": "51 rational/floating arithmetic and source hash checks PASS /tmp/teach-all/ai-theory-arithmetic-ode.json. Chains independent core math /tmp/teach-all/ode-independent-chains.json. No claim of actual torchdiffeq execution.",
+        "mobile390": "output/playwright/teach-ai-theory-ode/ode.json: 17 sections, first1/5 before names, three predictions, seven actual code panels, no page/console/KaTeX/overflow/narrow/broken-anchor issues.",
+        "desktop1440": "Same checksPASS. Both widths five scenes: stable controls, frame fits, ArrowLeft/Space and no outside SVG labels /tmp/teach-all/ai-theory-ode-controls.json. Both optional proof sections opened without errors /tmp/teach-all/ai-theory-ode-details.json. Mobile actual curve and desktop general+numeric formula screenshots viewed.",
+        "learningAnswers": "All original6basic+4advanced retained and answers read in body. Error/adaptive/noise-sum moved to actual answer sections9/13/15. /tmp/teach-all/ai-theory-learning-answer-review-ode.json.",
+        "formula": "1434/1434 global strict PASS /tmp/teach-all/ai-theory-ode-formula-final.log. Generic equations explicitly retained in annotatedFormula because component otherwise displays only the annotated replacement.",
+        "prose": "799 routes re-review0 PASS /tmp/teach-all/ai-theory-ode-prose-final.log.",
+        "typecheck": "Actual npx tsc -p tsconfig.app.json --noEmit exit0 /tmp/teach-all/ai-theory-ode-tsc-final.log.",
+        "registrationProposal": "/tmp/teach-all/ai-theory-registration-batch17.json",
+        "learning": "Parent batch17 integrated; strict require-registration exit0 /tmp/teach-all/agents17-learning-final.log. Integrated 17 TOC headings and 6+4 question/answer anchors read back from shared files; error/adaptive/noise-variance remain9/13/15."
+      },
+      "remaining": [],
+      "preservedEvidence": {
+        "anchors": [
+          "overview",
+          "initial-value",
+          "euler-method",
+          "stability",
+          "heun-runge-kutta",
+          "ode-sde-boundary",
+          "applications"
+        ],
+        "formulas": "Original decay closed form, Euler update, stability, Heun update and Euler–Maruyama rendered explicitly with examples; added local defect and global-error recurrence. General formulas are present in visible annotatedFormula, not only hidden formula props.",
+        "limits": [
+          "Existence and uniqueness require conditions; waiting-time and blowup counterexamples.",
+          "Stability is not accuracy; h lambda1 versus exact positive solution.",
+          "Normalized LTE convention, smoothness and finite-horizon error bounds.",
+          "Higher order need not enlarge negative-real-axis stability interval.",
+          "Output grid differs from internal steps; NFE includes extra calls.",
+          "Adaptive local estimates and min-step override do not ensure final or physical error.",
+          "Brownian increments versus scaled conditional noise versus total state variance.",
+          "Ito versus ordinary derivative; Gaussian noise does not guarantee positivity."
+        ]
+      },
+      "bodyHashes": {
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers.tsx": "839ca89db5522763fb8fe5a05ff523d1c720646bfb85fb2e8e3049ef5e360ccc",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/ModernArticle.tsx": "339288ee6c48d6f7523b2ded2dd2160a46544add02d13490930c721d629085b4",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codeRefs.ts": "684d0eacc42402b5eef5800d3c1686bf4a1b109fc66ea609ba4a71eed2e2582a",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/viz/DecayStepsViz.tsx": "8b375db8b0aea3aaa6c2423cd4fc03f4fa785b0ebc403ed17e3a29ce4fb88ac2",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/LICENSE": "df970ff07a0460f29115f2feddcceb8253f5840a8b35df857884354e3d47753c",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/PROVENANCE.md": "9690443e25caed531a9a266eecdccda18c2582e353d7bc05987c50f3359d11b1",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/torchdiffeq/__init__.py": "9092b253060d186b00846d00ff260b6dec72f9fe7e0a9aa0d5bbf87e7c45dcd9",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/torchdiffeq/_impl/fixed_grid.py": "bb2915bdbbfb464cdb79593460761b8d9da73f653eb6894e178caf0ee03266b3",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/torchdiffeq/_impl/misc.py": "49a4707d4c2bdd2ad162fa449fcad3bedec5719159cfddf1caec516bc28db5be",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/torchdiffeq/_impl/odeint.py": "1fe96dc69b91d7bd53d100023b38cdb876c8b31ebbc46c12f8172c8b03b855cc",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/torchdiffeq/_impl/rk_common.py": "7be03cff5f9ee078edf7be1200c28aa21e56640f551532991959c5aca27f7bb2",
+        "src/pages/articles/ai/math-differential-equations-numerical-solvers/codebase/torchdiffeq/_impl/solvers.py": "724bc51c021f84366759018ba5c61e263b58492e9e2083e6b60fda71e84e68bd"
+      }
     },
     {
       "route": "ai/math-exponents-logarithms",
@@ -3680,7 +3805,13 @@
         "typecheck": "npx tsc -p tsconfig.app.json --noEmit 실제 exit 0. /tmp/teach-all/ai-theory-logs-tsc.log",
         "formula": "전역 strict 1424/1424 PASS. /tmp/teach-all/ai-theory-logs-formula.log",
         "prose": "전역 재검토 0, 해당 route 포함 strict PASS. /tmp/teach-all/ai-theory-logs-prose.log",
-        "learning": "Root merged batch14 and strict PASS: /tmp/teach-all/batch14-theory-memory-learning.log. All 6+4 answers matched against article."
+        "learning": "Root merged batch14 and strict PASS: /tmp/teach-all/batch14-theory-memory-learning.log. All 6+4 answers matched against article.",
+        "visibleGeneralFormulaSupplement": {
+          "report": "/tmp/teach-all/theory-formula-visibility-repair26.json",
+          "cards": 4,
+          "browser": "390/1440 PASS; optional proofs opened; every visible general/example formula and horizontal start/end reachable; initial names position after first fifth.",
+          "prosePreservation": "Only annotatedFormula values changed, except separately humanized complex same-case paragraph."
+        }
       },
       "remaining": [
         "root batch14 learning·TOC·evidence·topology 병합 및 strict 학습 검사",
@@ -3696,7 +3827,10 @@
         "src/pages/articles/ai/math-exponents-logarithms/ProductRule.tsx",
         "src/pages/articles/ai/math-exponents-logarithms/viz/InverseTableViz.tsx",
         "src/pages/articles/ai/math-exponents-logarithms/viz/ScaleInverseViz.tsx"
-      ]
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/math-exponents-logarithms/ModernArticle.tsx": "98c321125ad6cf6cb36d562ed7096f06680d0e39db132952b55b93363976ab65"
+      }
     },
     {
       "route": "ai/math-functions-composition",
@@ -3902,11 +4036,20 @@
         "typecheck": "실제 npx tsc -b exit0. 후속 문단·펼침 배치 변경 뒤 양쪽 폭 브라우저 오류0.",
         "prose": "이 글의 prose 재검토0. 전역의 타팀 pruning 작업 중 경고는 소유자에게 이미 전달했습니다. /tmp/teach-all/ai-theory-prose-gd.log",
         "learning": "root batch11 병합 후 strict --require-registration 개별 검사 PASS.",
-        "reactKeys": "root 통합 검수에서 보폭 표의 같은 0.5 셀 key가 충돌해 열 번호로 교정했습니다. 별도 browser helper에 console.error 수집도 추가했습니다. 수정 후 390/1440 재검으로 확인합니다."
+        "reactKeys": "root 통합 검수에서 보폭 표의 같은 0.5 셀 key가 충돌해 열 번호로 교정했습니다. 별도 browser helper에 console.error 수집도 추가했습니다. 수정 후 390/1440 재검으로 확인합니다.",
+        "visibleGeneralFormulaSupplement": {
+          "report": "/tmp/teach-all/theory-formula-visibility-repair26.json",
+          "cards": 1,
+          "browser": "390/1440 PASS; optional proofs opened; every visible general/example formula and horizontal start/end reachable; initial names position after first fifth.",
+          "prosePreservation": "Only annotatedFormula values changed, except separately humanized complex same-case paragraph."
+        }
       },
       "remaining": [
         "root 전역 build와 게시 검증"
-      ]
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/math-gradient-descent-convergence/ModernArticle.tsx": "a8cad3b4c77b533ed8b35be982e65b2d529a82f0a75bf3928c0234aa8eb700a3"
+      }
     },
     {
       "route": "ai/math-gradients-jacobians",
@@ -4071,7 +4214,13 @@
         "formula": "Global strict1425/1425 annotated PASS /tmp/teach-all/ai-theory-highdim-formula.log.",
         "prose": "Global strict799routes rereview0 PASS /tmp/teach-all/ai-theory-highdim-prose.log.",
         "typecheck": "Actual npx tsc -p tsconfig.app.json --noEmit exited0: /tmp/teach-all/ai-theory-highdim-tsc-clean.log (session92956).",
-        "learning": "Root merged batch15 TOC/learning/canonical/evidence/topology/title/editorial ownership. Strict PASS /tmp/teach-all/merged-15-14-sm-learning.log. All6+4 answers reviewed in body."
+        "learning": "Root merged batch15 TOC/learning/canonical/evidence/topology/title/editorial ownership. Strict PASS /tmp/teach-all/merged-15-14-sm-learning.log. All6+4 answers reviewed in body.",
+        "visibleGeneralFormulaSupplement": {
+          "report": "/tmp/teach-all/theory-formula-visibility-repair26.json",
+          "cards": 1,
+          "browser": "390/1440 PASS; optional proofs opened; every visible general/example formula and horizontal start/end reachable; initial names position after first fifth.",
+          "prosePreservation": "Only annotatedFormula values changed, except separately humanized complex same-case paragraph."
+        }
       },
       "remaining": [
         "Root integration and publication verification"
@@ -4105,7 +4254,7 @@
       "bodyHashes": {
         "src/pages/articles/ai/math-high-dimensional-geometry.tsx": "2ad1f20079f5f98d04c14666f2d68c94223860c54eaab745326c2f0b8b8faa8f",
         "src/pages/articles/ai/math-high-dimensional-geometry/viz/MathHighDimensionalGeometryViz.tsx": "6c0415a0d187bb9bebe815d41871c91b0bb5acbd5a1cff2b364623b4325988d2",
-        "src/pages/articles/ai/math-high-dimensional-geometry/ModernArticle.tsx": "793bb05b6a344aeb25a0eb3dd07fccfcbfdf7f499bb580c265bf6542ac240769",
+        "src/pages/articles/ai/math-high-dimensional-geometry/ModernArticle.tsx": "4484ecfc3ae4bc9058ad88816ed4e0db49e287ac781f51028d1127376359b7c5",
         "src/pages/articles/ai/math-high-dimensional-geometry/codeRefs.ts": "1a8437ba3f70023995e0db38640a54b26b07c33e472f6e581d179ce9260fd868",
         "src/pages/articles/ai/math-high-dimensional-geometry/viz/RepeatedCoordinatesViz.tsx": "533cae5627fff88f37aed8bc38e0173185c2712cd657c90d9b39d1b43175867b"
       }
@@ -4192,7 +4341,13 @@
         "formula": "전역 strict 1424/1424, 주석 누락 0. /tmp/teach-all/ai-theory-matrices-formula.log",
         "prose": "해당 route 포함 전역 재검토 0, strict PASS. /tmp/teach-all/ai-theory-matrices-prose.log",
         "typecheck": "실제 npx tsc -p tsconfig.app.json --noEmit exit 0. /tmp/teach-all/ai-theory-matrices-tsc.log",
-        "learning": "Root batch13 공유 등록 병합 후 strict PASS, 자체 --require-registration도 확인합니다. /tmp/teach-all/ai-theory-matrices-learning.log"
+        "learning": "Root batch13 공유 등록 병합 후 strict PASS, 자체 --require-registration도 확인합니다. /tmp/teach-all/ai-theory-matrices-learning.log",
+        "visibleGeneralFormulaSupplement": {
+          "report": "/tmp/teach-all/theory-formula-visibility-repair26.json",
+          "cards": 3,
+          "browser": "390/1440 PASS; optional proofs opened; every visible general/example formula and horizontal start/end reachable; initial names position after first fifth.",
+          "prosePreservation": "Only annotatedFormula values changed, except separately humanized complex same-case paragraph."
+        }
       },
       "remaining": [
         "root 전역 build와 게시 검증"
@@ -4210,7 +4365,10 @@
         "src/pages/articles/ai/math-matrices-svd/viz/LowRankBudgetViz.tsx",
         "src/pages/articles/ai/math-matrices-svd/viz/MatrixMapViz.tsx",
         "src/pages/articles/ai/math-matrices-svd/viz/SvdStagesViz.tsx"
-      ]
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/math-matrices-svd/ModernArticle.tsx": "f906336dd8f3c498ed34a997437dcf188a931f54e2cf98b3e231aa3ebdd0dced"
+      }
     },
     {
       "route": "ai/math-numerical-precision-stability",
@@ -4305,11 +4463,20 @@
         "formula": "전역 strict 1422/1422 통과.",
         "typecheck": "실제 npx tsc -b exit0.",
         "prose": "이 글의 prose 재검토 0. 전역 결과는 /tmp/teach-all/ai-theory-prose-convexity.log에 보존했습니다.",
-        "learning": "root batch10 및 intuition 보완 병합 후 strict --require-registration 검사 PASS. Cauchy–Schwarz→하강 보조정리 연결도 병합했습니다."
+        "learning": "root batch10 및 intuition 보완 병합 후 strict --require-registration 검사 PASS. Cauchy–Schwarz→하강 보조정리 연결도 병합했습니다.",
+        "visibleGeneralFormulaSupplement": {
+          "report": "/tmp/teach-all/theory-formula-visibility-repair26.json",
+          "cards": 2,
+          "browser": "390/1440 PASS; optional proofs opened; every visible general/example formula and horizontal start/end reachable; initial names position after first fifth.",
+          "prosePreservation": "Only annotatedFormula values changed, except separately humanized complex same-case paragraph."
+        }
       },
       "remaining": [
         "root 전역 build와 게시 검증"
-      ]
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/math-optimization-convexity/ModernArticle.tsx": "baef35bf063cd12e85594ea5bd8c61801fb7a517fb030c2a6bf68cc50ed0036b"
+      }
     },
     {
       "route": "ai/math-optimization-objectives",
@@ -4369,11 +4536,20 @@
         "viz": "strict 위반 0. SVG text 검토 4곳은 390/1440 화면에서 확인했습니다.",
         "typecheck": "실제 npx tsc -b exit0.",
         "prose": "전역 검사에서 이 글의 재검토 항목 0. 타팀 ElGamal 1건은 해당 소유자에게 문단 신호를 전달했습니다.",
-        "learning": "root batch9 병합 후 strict --require-registration 개별 검사 PASS. 6+4 답은 answer-review에 대조했습니다."
+        "learning": "root batch9 병합 후 strict --require-registration 개별 검사 PASS. 6+4 답은 answer-review에 대조했습니다.",
+        "visibleGeneralFormulaSupplement": {
+          "report": "/tmp/teach-all/theory-formula-visibility-repair26.json",
+          "cards": 1,
+          "browser": "390/1440 PASS; optional proofs opened; every visible general/example formula and horizontal start/end reachable; initial names position after first fifth.",
+          "prosePreservation": "Only annotatedFormula values changed, except separately humanized complex same-case paragraph."
+        }
       },
       "remaining": [
         "root 전역 build와 게시 검증"
-      ]
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/math-optimization-objectives/ModernArticle.tsx": "81172595f72a60574a936da947daa1d4fe5f9aee62bf40805984b94642f1f611"
+      }
     },
     {
       "route": "ai/math-probability-expectation-variance",
@@ -4477,15 +4653,7 @@
       "subcategory": "ai-foundations",
       "publicFiles": [
         "src/pages/articles/ai/math-vectors-inner-products.tsx",
-        "src/pages/articles/ai/math-vectors-inner-products/Applications.tsx",
-        "src/pages/articles/ai/math-vectors-inner-products/CauchySchwarz.tsx",
-        "src/pages/articles/ai/math-vectors-inner-products/DotProduct.tsx",
-        "src/pages/articles/ai/math-vectors-inner-products/Norm.tsx",
-        "src/pages/articles/ai/math-vectors-inner-products/Overview.tsx",
-        "src/pages/articles/ai/math-vectors-inner-products/Projection.tsx",
-        "src/pages/articles/ai/math-vectors-inner-products/Vectors.tsx",
-        "src/pages/articles/ai/math-vectors-inner-products/viz/CauchyBoundViz.tsx",
-        "src/pages/articles/ai/math-vectors-inner-products/viz/ProjectionViz.tsx",
+        "src/pages/articles/ai/math-vectors-inner-products/ModernArticle.tsx",
         "src/pages/articles/ai/math-vectors-inner-products/viz/VectorMeasurementViz.tsx"
       ],
       "status": "local-verified",
@@ -4548,11 +4716,20 @@
         "formula": "전역strict1423/1423PASS,6기존식의실제연산주석유지.",
         "typecheck": "npx tsc -p tsconfig.app.json --noEmit 실제exit0.",
         "prose": "해당route재검토0. /tmp/teach-all/ai-theory-prose-vectors.log. 전역타팀지연/roofline경고는소유자에게전달했습니다.",
-        "learning": "root batch12 공유 등록 병합 후 strict --require-registration PASS. /tmp/teach-all/ai-theory-vectors-learning.log"
+        "learning": "root batch12 공유 등록 병합 후 strict --require-registration PASS. /tmp/teach-all/ai-theory-vectors-learning.log",
+        "visibleGeneralFormulaSupplement": {
+          "report": "/tmp/teach-all/theory-formula-visibility-repair26.json",
+          "cards": 3,
+          "browser": "390/1440 PASS; optional proofs opened; every visible general/example formula and horizontal start/end reachable; initial names position after first fifth.",
+          "prosePreservation": "Only annotatedFormula values changed, except separately humanized complex same-case paragraph."
+        }
       },
       "remaining": [
         "root 전역 build와 게시 검증"
-      ]
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/math-vectors-inner-products/ModernArticle.tsx": "0fc33e4651b2736796406f633a47de56aca78c1662b4732cccc40dfb2a6d597e"
+      }
     },
     {
       "route": "ai/mixture-of-experts",
@@ -4723,11 +4900,20 @@
         "desktop1440": "같은6편의 본문·곡선18상태·9code버튼 확인. CodeSidebar는 실제 전체 원문과 line highlight를 노출함.",
         "typecheck": "/tmp/teach-all/ai-theory-tsc-batch2-final.log tsc PASS",
         "formula": "전체799편1419수식의 explicit operation gate PASS; 이는 내용 증명의 대체가 아님. /tmp/teach-all/ai-theory-formula-batch2.log",
-        "viz": "자기 소유 ActivationCurve 및 ModernOptimizerViz strict style PASS; SVG text는 실제390/1440화면 확인"
+        "viz": "자기 소유 ActivationCurve 및 ModernOptimizerViz strict style PASS; SVG text는 실제390/1440화면 확인",
+        "visibleGeneralFormulaSupplement": {
+          "report": "/tmp/teach-all/theory-formula-visibility-repair26.json",
+          "cards": 1,
+          "browser": "390/1440 PASS; optional proofs opened; every visible general/example formula and horizontal start/end reachable; initial names position after first fifth.",
+          "prosePreservation": "Only annotatedFormula values changed, except separately humanized complex same-case paragraph."
+        }
       },
       "remaining": [
         "전역 통합 및 게시 검증은 root에서 진행"
-      ]
+      ],
+      "bodyHashes": {
+        "src/pages/articles/ai/momentum-optimizer/ModernArticle.tsx": "0ecef6e80f18c0c585fc57ced3f50fd624c57675f2402577d419798ab5c897b0"
+      }
     },
     {
       "route": "ai/motif-3-architecture",
@@ -5912,7 +6098,13 @@
         "desktop1440": "동일검사PASS;WorldPlanningViz실제관측버튼후비용10.24/1.44/1.44/.64과reset확인. 전체screenshots중390입구·코드및1440세계모형표를직접확인.",
         "typecheck": "전체 npx tsc -b PASS /tmp/teach-all/ai-theory-tsc-batch5-final.log",
         "prose": "긴 원문조건과수치계산문단분리,열거제목을한질문으로수정. 전역799편 prose재검토0 PASS /tmp/teach-all/ai-theory-prose-batch5.log",
-        "learning": "root 병합 후 strict --require-registration 개별 검사 PASS. 6+4 문제의 실제 본문 답은 batch5 answer-review에 대조했습니다."
+        "learning": "root 병합 후 strict --require-registration 개별 검사 PASS. 6+4 문제의 실제 본문 답은 batch5 answer-review에 대조했습니다.",
+        "visibleGeneralFormulaSupplement": {
+          "report": "/tmp/teach-all/theory-formula-visibility-repair26.json",
+          "cards": 1,
+          "browser": "390/1440 PASS; optional proofs opened; every visible general/example formula and horizontal start/end reachable; initial names position after first fifth.",
+          "prosePreservation": "Only annotatedFormula values changed, except separately humanized complex same-case paragraph."
+        }
       },
       "remaining": [
         "root 전역 build와 게시 검증"
@@ -5936,6 +6128,9 @@
           "평가에는 문제 출처·중복·정답 라벨, parser와 test 버전, 실패·시간초과·채점 불가의 분모를 기록합니다. 학습용 reward가 개선되어도 독립 held-out 성공과 실제 효과가 개선되는지 따로 확인합니다. 에이전트 결과 검증은 최종 artifact와 외부 효과까지 이어집니다.",
           "100개 표본의 76% precision을 모든 분포의 고정 상수로 쓰지 않습니다. 모델이 최적화되면서 새로운 오류를 찾아낼 수 있고 문제 종류나 출력 형식도 바뀝니다. 같은 verifier를 쓰더라도 주기적으로 오류 집합을 다시 읽어야 합니다."
         ]
+      },
+      "bodyHashes": {
+        "src/pages/articles/ai/reward-design-for-verifiable-rl.tsx": "f833dd74553abf0fcebe904769df6d3190c8455ab37b4eacb84964c82f928af8"
       }
     },
     {
@@ -7806,7 +8001,13 @@
         "desktop1440": "동일검사PASS;WorldPlanningViz실제관측버튼후비용10.24/1.44/1.44/.64과reset확인. 전체screenshots중390입구·코드및1440세계모형표를직접확인.",
         "typecheck": "전체 npx tsc -b PASS /tmp/teach-all/ai-theory-tsc-batch5-final.log",
         "prose": "긴 원문조건과수치계산문단분리,열거제목을한질문으로수정. 전역799편 prose재검토0 PASS /tmp/teach-all/ai-theory-prose-batch5.log",
-        "learning": "root 병합 후 strict --require-registration 개별 검사 PASS. 6+4 문제의 실제 본문 답은 batch5 answer-review에 대조했습니다."
+        "learning": "root 병합 후 strict --require-registration 개별 검사 PASS. 6+4 문제의 실제 본문 답은 batch5 answer-review에 대조했습니다.",
+        "visibleGeneralFormulaSupplement": {
+          "report": "/tmp/teach-all/theory-formula-visibility-repair26.json",
+          "cards": 1,
+          "browser": "390/1440 PASS; optional proofs opened; every visible general/example formula and horizontal start/end reachable; initial names position after first fifth.",
+          "prosePreservation": "Only annotatedFormula values changed, except separately humanized complex same-case paragraph."
+        }
       },
       "remaining": [
         "root 전역 build와 게시 검증"
@@ -7830,6 +8031,9 @@
           "1단계 예측 오차, 긴 rollout 오차, 후보 행동의 순위, 실제 closed-loop 성공률을 따로 잽니다. 시작·목표 분포, 카메라 변화, action 시간 간격, H·K, 후보 수·반복 수와 계획 wall-clock도 함께 기록합니다.",
           "2026-09-30의 The Planning Limits of Latent World Models는 예측 정확도뿐 아니라 목표가 계획 범위 안에 있는지 따져 봅니다. 짧은 예측이 완벽하다고 합시다. 그래도 먼 목표를 향해 지금 우회해야 하는 행동의 가치를 못 드러낼 수 있습니다. 논문의 특정 환경 결과를 모든 world model의 불가능성으로 확대하지 않습니다."
         ]
+      },
+      "bodyHashes": {
+        "src/pages/articles/ai/world-model-latent-planning.tsx": "1c5451b8670af3971d5623e30ab8ce43bd3e1d981320c429ac9491ab2350fae2"
       }
     },
     {
@@ -7872,14 +8076,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 23,
+    "rewritten": 24,
     "existingTeachTargetedRepairs": 3,
-    "reviewedAndImproved": 26,
-    "localVerified": 25,
-    "awaitingIntegration": 1,
-    "pending": 163,
+    "reviewedAndImproved": 27,
+    "localVerified": 27,
+    "awaitingIntegration": 0,
+    "pending": 162,
     "complete": 0,
     "bodyReviewedNeedsRewrite": 0,
-    "bodyReviewedTotal": 26
+    "bodyReviewedTotal": 27
   }
 }

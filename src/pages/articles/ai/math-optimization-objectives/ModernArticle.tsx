@@ -88,7 +88,7 @@ export default function OptimizationObjectivesArticle() {
       <ExplainedFormula question="앞의 [0,2] 문제를 교재의 표준 형태로 쓰면 무엇이 들어갈까요?"
         idea={<>점수는 f₀에 넣고 제약의 오른쪽을 0으로 맞춥니다. 이 예는 부등식 두 개이며 등식은 없습니다.</>}
         formula={String.raw`\begin{aligned}\operatorname{minimize}\quad &f_0(x)\\\operatorname{subject\ to}\quad &f_i(x)\le0,\quad i=1,\ldots,m\\&h_i(x)=0,\quad i=1,\ldots,p\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}f_0(x)&=\underbrace{(x-3)^2+2}_{\text{비교할 점수}}\\f_1(x)&=\underbrace{-x}_{x\ge0}\le0\\f_2(x)&=\underbrace{x-2}_{x\le2}\le0\end{aligned}`}
+        annotatedFormula={String.raw`\begin{gathered}\begin{aligned}\operatorname{minimize}\quad &f_0(x)\\\operatorname{subject\ to}\quad &f_i(x)\le0,\quad i=1,\ldots,m\\&h_i(x)=0,\quad i=1,\ldots,p\end{aligned}\\[8pt]\begin{aligned}f_0(x)&=\underbrace{(x-3)^2+2}_{\text{비교할 점수}}\\f_1(x)&=\underbrace{-x}_{x\ge0}\le0\\f_2(x)&=\underbrace{x-2}_{x\le2}\le0\end{aligned}\end{gathered}`}
         operations={[{expression:'f_0(2)=3',annotation:['허용된 선택 2를','목적함수로 평가']},{expression:String.raw`f_1(2)=-2,\quad f_2(2)=0`,annotation:['두 값이 모두 0 이하이므로','두 제약을 모두 만족']},{expression:'f_2(3)=1>0',annotation:['선택 3은 점수가 2라도','상한 제약을 어김']}]}
         terms={[{symbol:'m=2',name:'부등식 수',description:'하한과 상한을 각각 하나의 함수로 적습니다.'},{symbol:'p=0',name:'등식 수',description:'이 예에는 등식 제약이 없습니다.'}]}
         assumptions={['원문의 일반적인 문제 표현을 이 글의 가정 사례에 적용했습니다.','함수의 정의역은 모두 실수이며 제약을 만족하는 집합은 [0,2]입니다.']}

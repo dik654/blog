@@ -1,0 +1,16 @@
+{
+  "repository": "NVIDIA/cuda-samples",
+  "commit": "3f1c50965017932fc81e6d94a3fc9e04c105b312",
+  "version": "v13.0",
+  "sourceUrl": "https://raw.githubusercontent.com/NVIDIA/cuda-samples/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/simpleOccupancy/simpleOccupancy.cu",
+  "sha256": "5e30127e4bb78af14639ee95f5f981723d72dea763be9ef0c45254c22425899d",
+  "retrievedAt": "2026-10-04",
+  "scope": "Unchanged full BSD-3 source. CUDA/GPU execution not performed; conditional input arithmetic is checked separately.",
+  "cpuVerification": {
+    "cudaRuntimePackage": "nvidia-cuda-runtime13.0.96",
+    "headerSHA256": "163b8f296ef2a33c799e2dc8c525b37166da9217bcc6a3c1d26b1c10aca5e22b",
+    "command": "clang++ -std=c++17 -I<CUDA_INCLUDE> verification/occupancy_input.cpp -o /tmp/occupancy_input && /tmp/occupancy_input",
+    "hardware": "CPU-only; supplied CC7.0 properties",
+    "assertions": "API success and expected blocks12/4/2/4/2/0"
+  }
+}

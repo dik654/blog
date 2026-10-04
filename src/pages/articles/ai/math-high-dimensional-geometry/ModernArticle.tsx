@@ -60,7 +60,7 @@ export default function HighDimensionalGeometryArticle(){const sidebar=useCodeSi
 <h2 className="text-2xl font-bold">7 · 같은 직선에서는 모든 거리가 2배의 차이로 계산된다</h2>
 <ExplainedFormula question="p(t)=(t,t,t,t)와 p(s)=(s,s,s,s)의 거리는 얼마인가요?" idea="네 좌표의 차이가 모두 t−s입니다. 제곱을 더하면 부호가 상쇄되지 않고, 제곱근을 취하면 좌표의 원래 단위로 돌아옵니다."
 formula={String.raw`\operatorname{dist}(x,y)=\lVert x-y\rVert_2=\sqrt{\sum_{i=1}^{D}(x_i-y_i)^2}`}
-annotatedFormula={String.raw`\lVert p(t)-p(s)\rVert_2=\sqrt{\underbrace{4(t-s)^2}_{\text{같은 차이 네 개}}}=2|t-s|`}
+annotatedFormula={String.raw`\begin{gathered}\operatorname{dist}(x,y)=\lVert x-y\rVert_2=\sqrt{\sum_{i=1}^{D}(x_i-y_i)^2}\\[8pt]\lVert p(t)-p(s)\rVert_2=\sqrt{\underbrace{4(t-s)^2}_{\text{같은 차이 네 개}}}=2|t-s|\end{gathered}`}
 operations={[{expression:String.raw`f(p(t))=(t+t+t+t)/2=2t`,annotation:["출력에서도 |2t−2s|=2|t−s|입니다.","여섯 쌍뿐 아니라 이 직선의 모든 점 쌍에서 같습니다."]}]}
 terms={[{symbol:"D",name:"입력 좌표 수",description:"일반 식의 합에 들어가는 항의 수입니다."},{symbol:"t−s",name:"직선 위의 매개값 차이",description:"네 좌표가 같은 차이를 공유합니다."},{symbol:"dist",name:"두 점 사이 거리",description:"좌표 수 D와 이름을 구별해 적습니다."}]}
 assumptions={["비교할 좌표의 단위를 맞췄습니다. 단위가 다른 측정값을 그대로 섞으면 거리의 의미가 달라집니다.","거리를 정의하는 데 좌표의 독립성은 필요 없습니다. 독립성은 다음 절의 확률 계산에 쓰입니다."]} interpretation="일반적인 실수 x,y의 거리 식과 특별한 직선 p(t)의 계산을 구별합니다. 이 직선에서 z=2t를 받은 뒤 (z/2,z/2,z/2,z/2)로 복원할 수 있습니다." />

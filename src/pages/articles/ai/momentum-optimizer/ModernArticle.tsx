@@ -31,7 +31,7 @@ export default function MomentumOptimizerArticle(){ const sidebar=useCodeSidebar
             </p>
           }
           formula={String.raw`\begin{aligned}m_t&=\beta m_{t-1}+(1-\beta)g_t\\m_t&=(1-\beta)\sum_{j=0}^{t-1}\beta^jg_{t-j}\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}r_t&=\underbrace{\beta m_{t-1}}_{\text{직전 memory를 beta만큼 보존}}\\n_t&=\underbrace{(1-\beta)g_t}_{\text{현재 gradient의 새 기여를 추가}}\\m_t&=\underbrace{r_t+n_t}_{\text{보존분과 신규분을 한 state로 합성}}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{gathered}\begin{aligned}m_t&=\beta m_{t-1}+(1-\beta)g_t\\m_t&=(1-\beta)\sum_{j=0}^{t-1}\beta^jg_{t-j}\end{aligned}\\[8pt]\begin{aligned}r_t&=\underbrace{\beta m_{t-1}}_{\text{직전 memory를 beta만큼 보존}}\\n_t&=\underbrace{(1-\beta)g_t}_{\text{현재 gradient의 새 기여를 추가}}\\m_t&=\underbrace{r_t+n_t}_{\text{보존분과 신규분을 한 state로 합성}}\end{aligned}\end{gathered}`}
           operations={[
             {
               expression: String.raw`\beta m_{t-1}`,
