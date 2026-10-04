@@ -435,47 +435,42 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/ai/word2vec-prediction-objectives#hierarchical"
   },
   "sgns-objective": {
-    id: "sgns-objective",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Skip-gram with negative sampling · SGNS",
-    definition:
-      "관측된 center–context pair의 sigmoid score는 높이고 noise distribution에서 뽑은 pair의 score는 낮추는 binary logistic objective입니다.",
-    canonicalHref: "/cs/ai/word2vec-negative-sampling#sgns",
+    "id": "sgns-objective",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Skip-gram with negative sampling · SGNS",
+    "definition": "관찰한 쌍에는 라벨 1, 분포에서 뽑은 비교 쌍에는 라벨 0을 붙여 두 표를 고칩니다. 단어 전체 확률을 정규화하지 않습니다. 공유 행·상충 라벨 때문에 모든 관찰 점수가 매번 오르는 것은 아니며 실제 근사표와 순차 갱신은 이상식과 구별합니다.",
+    "canonicalHref": "/cs/ai/word2vec-negative-sampling#sgns"
   },
   "negative-sampling-distribution": {
-    id: "negative-sampling-distribution",
-    domain: "statistics",
-    label: "Negative-sampling noise distribution",
-    definition:
-      "관측되지 않은 비교 context를 뽑는 probability distribution으로, sample 수와 frequency smoothing이 SGNS의 compute와 optimum score를 함께 바꿉니다.",
-    canonicalHref: "/cs/ai/word2vec-negative-sampling#noise",
+    "id": "negative-sampling-distribution",
+    "domain": "statistics",
+    "label": "Negative-sampling noise distribution",
+    "definition": "어느 단어를 비교 대상으로 얼마나 자주 고를지 정한 확률입니다. 관찰된 적 있는 쌍도 비교 대상으로 나올 수 있습니다. q는 라벨 0 안의 분포, k는 포함되는 라벨 비중을 정하며 실제 코드의 번호 변경·정답 제외·중복도 기록해야 합니다.",
+    "canonicalHref": "/cs/ai/word2vec-negative-sampling#noise"
   },
   "frequent-word-subsampling": {
-    id: "frequent-word-subsampling",
-    kind: "method",
-    domain: "machine-learning",
-    label: "Frequent-word subsampling",
-    definition:
-      "Corpus에서 지나치게 자주 나타나는 word token을 frequency-dependent probability로 일부 버려 pair 분포와 training compute를 바꾸는 Word2Vec heuristic입니다.",
-    canonicalHref: "/cs/ai/word2vec-negative-sampling#subsampling",
+    "id": "frequent-word-subsampling",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "Frequent-word subsampling",
+    "definition": "문장에서 일부 출현을 먼저 지운 뒤 남은 위치로 이웃을 만듭니다. 논문의 유효 확률 해석과 원본 C의 sqrt(t/f)+t/f 비교값은 다릅니다. 단어별 유지 가능성과 특정 출현의 남김 결과, 난수의 소비 순서를 구별합니다.",
+    "canonicalHref": "/cs/ai/word2vec-negative-sampling#subsampling"
   },
   "fasttext-subword-embedding": {
-    id: "fasttext-subword-embedding",
-    kind: "method",
-    domain: "machine-learning",
-    label: "fastText subword embedding",
-    definition:
-      "Word를 character n-gram들의 trainable vector 합으로 나타내 형태가 비슷한 단어와 vocabulary 밖 단어가 subword parameter를 공유하게 하는 static embedding 방법입니다.",
-    canonicalHref: "/cs/ai/subword-static-embeddings#ngrams",
+    "id": "fasttext-subword-embedding",
+    "kind": "method",
+    "domain": "machine-learning",
+    "label": "fastText subword embedding",
+    "definition": "문자 조각의 공유 행과 등록 단어의 전용 행으로 표현을 만듭니다. 논문의 합 점수와 고정 fastText 조회의 평균을 구분합니다. 충돌과 같은 조각의 반복은 횟수를 보존하며 형태 공유가 문맥별 표현이나 품질을 보장하지 않습니다.",
+    "canonicalHref": "/cs/ai/subword-static-embeddings#ngrams"
   },
   "static-embedding-artifact": {
-    id: "static-embedding-artifact",
-    domain: "machine-learning",
-    label: "Static embedding artifact contract",
-    definition:
-      "Embedding matrix와 vocabulary ID, tokenizer·corpus·window·sampling·seed·evaluation metadata를 함께 versioning해야 row의 의미를 재현할 수 있다는 배포 계약입니다.",
-    canonicalHref: "/cs/ai/subword-static-embeddings#release",
+    "id": "static-embedding-artifact",
+    "domain": "machine-learning",
+    "label": "Static embedding artifact contract",
+    "definition": "문자열을 어떤 행으로 보내고 어떻게 조립하는지까지 같은 버전으로 배포합니다. 행렬만으로 사전 순서·전처리·해시·합성 규칙을 대신할 수 없습니다. 단어별 .vec는 조각 조회를 모두 보존하지 않으며 품질과 비용의 평가·되돌림 조건은 별도입니다.",
+    "canonicalHref": "/cs/ai/subword-static-embeddings#release"
   },
   "bidirectional-encoder-visibility": {
     id: "bidirectional-encoder-visibility",
@@ -14593,7 +14588,14 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "Group·generator·subgroup·encoding·RNG·KDF·AEAD profile을 고정하고 malformed input·nonce reuse·ciphertext mutation·wrong key/domain을 거절한 뒤 hybrid KEM-DEM 구현의 시간·bytes·rollback을 비교하는 채택 절차입니다.",
     "canonicalHref": "/cs/crypto/elgamal#release"
   },
-  "mpc-real-ideal-adversary-boundary": { id:"mpc-real-ideal-adversary-boundary", kind:"concept", domain:"computer-science", label:"MPC real–ideal · adversary boundary", definition:"실제 parties·messages·corruptions의 view가 trusted ideal functionality의 input/output·allowed leakage로 simulation되는지를 semi-honest·malicious, static·adaptive, abort·fairness 조건별로 나눈 secure-computation 정의입니다.", canonicalHref:"/cs/crypto/mpc#security-model" },
+  "mpc-real-ideal-adversary-boundary": {
+    "id": "mpc-real-ideal-adversary-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "MPC의 허용 정보와 전체 계산 기록",
+    "definition": "실제 참여자의 입력·난수·메시지·출력 기록을 허용된 입력과 출력·누출만 가진 이상적인 계산 및 모의 실행과 비교하는 보안 기준입니다. 결과 자체가 상대 입력을 결정하는 추론은 제거하지 않습니다. 수동·능동 공격, 정적·적응적 부패, 통신·중단·공정성 조건을 구분합니다.",
+    "canonicalHref": "/cs/crypto/mpc#output-leakage"
+  },
   "shamir-threshold-polynomial-sharing": {
     "id": "shamir-threshold-polynomial-sharing",
     "kind": "method",
@@ -14674,8 +14676,22 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "동형 연산이 허용하는 공개 변조와 결과의 진위·범위·참여자·복호 권한을 구분하는 조건입니다. DCRA 기반 의미론적 보안은 임의 변조 암호문의 복호를 허용하는 안전성이나 인수분해와의 동치 주장이 아닙니다. threshold·범위 증명·전체 MPC 및 양자 내성은 별도입니다.",
     "canonicalHref": "/cs/crypto/paillier-cryptosystem#security"
   },
-  "mpc-dkg-transcript-artifact": { id:"mpc-dkg-transcript-artifact", kind:"concept", domain:"computer-science", label:"MPC DKG transcript artifact", definition:"Protocol/version, party IDs·indices, threshold, session/curve/group, commitments, encrypted shares, complaints·disqualifications, accepted public key와 round order를 하나의 session-bound distributed-key-generation receipt로 결속하는 계약입니다.", canonicalHref:"/cs/crypto/mpc#dkg" },
-  "mpc-protocol-release-gate": { id:"mpc-protocol-release-gate", kind:"method", domain:"computer-science", label:"MPC protocol release gate", definition:"Adversary·network·threshold profile을 pin하고 duplicate ID·bad share·malformed Paillier key·reordered round·dropout·complaint·restart을 replay한 뒤 correctness·leakage·abort·messages·bytes·latency·rollback을 평가하는 채택 절차입니다.", canonicalHref:"/cs/crypto/mpc#release" },
+  "mpc-dkg-transcript-artifact": {
+    "id": "mpc-dkg-transcript-artifact",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "분산 키 생성의 실행 연결과 비공개 상태",
+    "definition": "분산 키 생성의 버전·참여자 주소·임계값·키 설정·공개 약속·단계와 실행 식별자를 묶고 수신 시 검사하는 조건입니다. 공개 감사 기록과 접근을 제한한 비밀 조각·난수·참여자별 상태를 구분합니다. 기록 자체는 재전송 방지나 서명·nonce·재분산의 보장이 아닙니다.",
+    "canonicalHref": "/cs/crypto/mpc#dkg"
+  },
+  "mpc-protocol-release-gate": {
+    "id": "mpc-protocol-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "MPC의 실행 검증과 적용 조건",
+    "definition": "계산할 함수·입력 표현·참여자 수·공격과 통신 모델을 정하고 실제 시험의 성공·실패와 미검증 범위를 대조하는 절차입니다. 작은 정직한 실행이나 한 조각 분포 확인을 전체 보안 증명·능동 검증·공정성·이탈 복구로 확대하지 않으며 성능은 같은 조건의 메시지·바이트·지연으로 비교합니다.",
+    "canonicalHref": "/cs/crypto/mpc#verification"
+  },
   "scroll-zkevm-evm-trace-table-contract": { id:"scroll-zkevm-evm-trace-table-contract", kind:"concept", domain:"computer-science", label:"Scroll zkEVM trace · table contract", definition:"Pinned Scroll circuit source에서 EVM opcode step, stack·memory·storage read/write, bytecode, transaction·block·state data를 Halo2 tables·lookups·copy constraints로 연결해 native state transition의 witness semantics를 고정하는 계약입니다.", canonicalHref:"/cs/crypto/scroll-zkevm#trace-tables" },
   "scroll-zkevm-witness-proof-artifact": { id:"scroll-zkevm-witness-proof-artifact", kind:"concept", domain:"computer-science", label:"Scroll zkEVM witness · proof artifact", definition:"Chain/fork·block/chunk identity, transaction data commitment, pre/post state roots, trace/table shape, circuit·verifier-key·source/config hashes와 proof/aggregation layer를 재현 가능한 validity-proof receipt에 묶는 artifact입니다.", canonicalHref:"/cs/crypto/scroll-zkevm#proof-artifact" },
   "scroll-zkevm-release-gate": { id:"scroll-zkevm-release-gate", kind:"method", domain:"computer-science", label:"Scroll zkEVM circuit release gate", definition:"Native EVM·witness·circuit parity와 wrong opcode·RW order·lookup·state root·public input·key/proof failures을 pinned version에서 거절한 뒤 witness/prove/aggregate/verify 시간·RSS·proof bytes·rollback을 평가하는 절차입니다.", canonicalHref:"/cs/crypto/scroll-zkevm#release" },
@@ -18230,74 +18246,99 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/ai/vllm-scheduler#scheduler-overhead"
   },
   "host-launch-overhead": {
-    id: "host-launch-overhead",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Host launch overhead · amortization",
-    aliases: ["Host Launch Overhead", "Launch Amortization", "Per-launch CPU cost", "Launch latency (host side)"],
-    definition:
-      "Python 인자 준비·dispatcher·driver 를 거쳐 kernel 하나를 GPU queue 에 넣기까지 드는 kernel 크기와 무관한 µs 단위 CPU 고정 비용이며, fusion·batch·graph 는 모두 이 고정 비용을 더 많은 일에 나눠 붙이는 상각입니다.",
-    canonicalHref: "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#launch-overhead",
+    "id": "host-launch-overhead",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Host launch overhead · amortization",
+    "aliases": [
+      "Host Launch Overhead",
+      "Launch Amortization",
+      "Per-launch CPU cost",
+      "Launch latency (host side)"
+    ],
+    "definition": "GPU 작업의 실행을 요청하는 host 호출 경로가 쓰는 시간입니다. 포함한 Python 준비·dispatcher·driver 경계를 지정해 측정합니다. 모든 kernel 크기와 장치에서 고정된 상수가 아닙니다. 2019 완료 평균 3.8−2.9 μs를 순수 host 호출 시간으로 해석할 수 없습니다.",
+    "canonicalHref": "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#names"
   },
   "cpu-submission-bottleneck": {
-    id: "cpu-submission-bottleneck",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CPU submission bottleneck · runtime CPU bottleneck",
-    aliases: ["CPU Submission Bottleneck", "Runtime CPU Bottleneck", "CPU-bound serving step", "Python overhead bottleneck"],
-    definition:
-      "Scheduling·sampling·detokenize 같은 runtime CPU 시간에 launch N개의 비용을 더한 CPU 한 step 의 제출 시간이 GPU 한 step 의 실행 시간보다 길어 step 시간을 CPU 가 정하는 상태입니다. 비동기 제출 아래 step 시간은 max(T_sched+Nτ_L, T_GPU) 입니다.",
-    canonicalHref: "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#submission-pipeline",
+    "id": "cpu-submission-bottleneck",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CPU submission bottleneck · runtime CPU bottleneck",
+    "aliases": [
+      "CPU Submission Bottleneck",
+      "Runtime CPU Bottleneck",
+      "CPU-bound serving step",
+      "Python overhead bottleneck"
+    ],
+    "definition": "CPU의 작업 준비와 제출 속도가 반복 진행을 제한하는 상태입니다. 첫 완료시간과 충분히 긴 동일 작업의 평균 완료 간격을 구별합니다. max(S+NL,NE)는 동일 작업·미리 정한 제출·충분한 미완료 공간의 장기 간격입니다. 첫 완료 S+L+E+(N−1)max(L,E)나 실제 TPOT와 바꾸어 쓰지 않습니다.",
+    "canonicalHref": "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#finite-and-steady"
   },
   "gpu-queue-starvation": {
-    id: "gpu-queue-starvation",
-    kind: "concept",
-    domain: "computer-science",
-    label: "GPU starvation · empty command queue",
-    aliases: ["GPU Starvation", "GPU idle gap", "Empty GPU queue"],
-    definition:
-      "GPU command queue 가 비어 GPU 가 다음 kernel 의 도착을 기다리며 노는 시간입니다. CPU 제출 속도 λ 가 GPU 소비 속도 μ 보다 느리면 바쁜 비율이 min(1, λ/μ) 로 떨어지고, 동기화 뒤의 scheduling 시간도 그대로 starvation 이 됩니다.",
-    canonicalHref: "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#submission-pipeline",
+    "id": "gpu-queue-starvation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "GPU starvation · empty command queue",
+    "aliases": [
+      "GPU Starvation",
+      "GPU idle gap",
+      "Empty GPU queue"
+    ],
+    "definition": "필요한 다음 작업이 아직 준비되지 않아 GPU 실행열이 비는 현상입니다. 관측 범위와 원인을 함께 확인합니다. 빈 GPU 구간만으로 CPU 제출을 원인으로 확정할 수 없습니다. 데이터 의존성·통신·자원 경쟁을 함께 대조하며 유한 구간과 장기 비율을 섞지 않습니다.",
+    "canonicalHref": "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#measurement"
   },
   "cpu-gpu-synchronization-point": {
-    id: "cpu-gpu-synchronization-point",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CPU–GPU synchronization point",
-    aliases: ["CPU–GPU Synchronization", "CPU-GPU Synchronization", "Implicit synchronization", "cudaDeviceSynchronize", ".item() sync"],
-    definition:
-      "torch.cuda.synchronize·cudaDeviceSynchronize 같은 명시적 호출과 .item()·.cpu()·pageable copy 같은 암묵적 호출로 CPU 가 GPU 결과를 실제로 기다리는 지점이며, queue 를 비우고 다음 step 의 scheduling 을 GPU 실행 뒤에 직렬로 놓아 step 시간을 T_sched+max(Nτ_L, T_GPU) 로 늘립니다.",
-    canonicalHref: "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#sync-points",
+    "id": "cpu-gpu-synchronization-point",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CPU–GPU synchronization point",
+    "aliases": [
+      "CPU–GPU Synchronization",
+      "CPU-GPU Synchronization",
+      "Implicit synchronization",
+      "cudaDeviceSynchronize",
+      ".item() sync"
+    ],
+    "definition": "CPU가 필요한 GPU 작업의 완료를 확인하며 기다리는 지점입니다. Stream·event·device의 대상 범위와 GPU 사이의 의존성 연결을 구별합니다. Event.wait는 이후 GPU 작업의 의존성을 연결하고 Event.synchronize는 CPU가 기다립니다. 모든 동기화가 장치 queue 전체를 비우거나 비동기 복사 반환이 완료를 뜻하는 것은 아닙니다.",
+    "canonicalHref": "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#source-scope"
   },
   "cuda-graph-replay-latency": {
-    id: "cuda-graph-replay-latency",
-    kind: "metric",
-    domain: "computer-science",
-    label: "CUDA graph replay latency",
-    aliases: ["Graph Replay Latency", "Graph launch cost", "First replay penalty"],
-    definition:
-      "cudaGraphLaunch 호출부터 graph 의 마지막 kernel 완료까지의 시간으로, CPU 쪽 launch 몫은 kernel 수와 거의 무관한 수십 µs 이고 나머지는 GPU 실행 시간입니다. 첫 replay 는 executable graph upload 가 섞여 이후보다 느립니다.",
-    canonicalHref: "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#graph-replay",
+    "id": "cuda-graph-replay-latency",
+    "kind": "metric",
+    "domain": "computer-science",
+    "label": "CUDA graph replay latency",
+    "aliases": [
+      "Graph Replay Latency",
+      "Graph launch cost",
+      "First replay penalty"
+    ],
+    "definition": "Graph 재생을 요청하는 host 호출의 길이와 마지막 GPU 작업 완료까지의 지연을 구분해 측정하는 시간입니다. Host 호출이 줄어도 GPU가 바쁘면 최종 완료는 같을 수 있습니다. 첫 replay와 반복 replay, 초기 준비와 관측 범위를 나누며 보편적인 수십 μs 상수를 가정하지 않습니다.",
+    "canonicalHref": "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#graph-comparison"
   },
   "cuda-graph-warmup": {
-    id: "cuda-graph-warmup",
-    kind: "method",
-    domain: "computer-science",
-    label: "CUDA graph warmup",
-    aliases: ["Graph Warmup", "cudagraph_num_of_warmups", "Pre-capture warmup"],
-    definition:
-      "Capture 전에 side stream 에서 eager 를 몇 번 돌려 JIT compile·lazy init·allocator pool 확장이 기록에 섞이지 않게 하고, capture 뒤 replay 를 한 번 돌려 첫 launch 의 upload 비용을 요청 전에 치르는 절차입니다.",
-    canonicalHref: "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#graph-replay",
+    "id": "cuda-graph-warmup",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "CUDA graph warmup",
+    "aliases": [
+      "Graph Warmup",
+      "cudagraph_num_of_warmups",
+      "Pre-capture warmup"
+    ],
+    "definition": "캡처 전 필요한 초기화를 실행하고 첫 재생 등의 초기 비용을 반복 실행과 구분하거나 요청 전에 치르는 사전 실행 절차입니다. 모든 실행기가 모든 크기를 언제 처음 replay하는지는 실제 구현을 확인합니다. 준비 비용을 이미 포함한 평균에 다시 더하거나 해당 측정을 현재 장치의 법칙으로 쓰지 않습니다.",
+    "canonicalHref": "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#limits"
   },
   "cuda-graph-capture-failure": {
-    id: "cuda-graph-capture-failure",
-    kind: "concept",
-    domain: "computer-science",
-    label: "CUDA graph capture failure",
-    aliases: ["Graph Capture Failure", "Cudagraph fallback", "Silent eager fallback"],
-    definition:
-      "Graph-compatible 조건이 깨져 capture 가 오류로 끝나거나, 기록은 됐지만 replay 가 틀린 경로·주소·pool 순서를 재생하거나, runtime 이 호환되지 않는 backend·상한 초과 batch 를 graph 없이 eager 로 돌리는 세 가지 결과이며, 마지막은 오류 없이 낮은 batch 의 TPOT 만 나빠져 가장 늦게 발견됩니다.",
-    canonicalHref: "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#capture-failure",
+    "id": "cuda-graph-capture-failure",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "CUDA graph capture failure",
+    "aliases": [
+      "Graph Capture Failure",
+      "Cudagraph fallback",
+      "Silent eager fallback"
+    ],
+    "definition": "캡처 단계의 오류, 실행 계약이 어긋난 잘못된 재생, 실행 조건에 따른 graph 경로 미선택을 구별해 진단하는 문제입니다. 모든 조건 미일치가 조용한 fallback은 아니며 발생 빈도도 측정하지 않았습니다. Host API와 GPU 작업·출력을 대조하고 GPU kernel 행 수를 host 제출 수와 혼동하지 않습니다.",
+    "canonicalHref": "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#replay-diagnosis"
   },
   "gpu-sm-register-file": {
     "id": "gpu-sm-register-file",
@@ -26137,54 +26178,68 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/economics/firms/why-firms-exist#what-moves"
   },
   "roundabout-production-economies": {
-    id: "roundabout-production-economies",
-    kind: "concept",
-    domain: "economics",
-    label: "싸지는 힘은 돌아가는 방법에서 온다",
-    aliases: ["우회 생산", "돌아가는 방법", "간접적 생산 방법"],
-    definition:
-      "당장 물건이 되지 않는 일을 먼저 하고 그 뒤로 하나당 품을 줄이는 생산 방식입니다. 같은 방법으로 수량만 늘리면 하나당 값은 그대로이므로, 값이 내려간 자리에서는 크기가 아니라 방법이 바뀐 것입니다. 먼저 들이는 몫과 그 뒤 낮아진 단위당 값이라는 두 수로 적히며, 분업이 공정을 단순한 단계로 쪼개 기계로 넘기는 일이 이 돌아감의 대표적인 모습입니다.",
-    canonicalHref: "/economics/firms/scale-and-cost-structure#roundabout",
+    "id": "roundabout-production-economies",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "준비 비용과 생산 방법의 선택",
+    "aliases": [
+      "우회 생산",
+      "돌아가는 방법",
+      "간접적 생산 방법"
+    ],
+    "definition": "설비를 먼저 갖춰 이후 직접 작업을 줄일 수 있습니다. 고정비를 나누는 효과와 방법 자체를 바꾸는 효과를 구분합니다. B=60+4N에서 20개의 평균은 7, 100개의 평균은 4. 6입니다. 같은 방법에서도 평균이 낮아집니다. 100개에서는 C=300+N의 400이 B 460보다 작습니다. 같은 품질·기간·생산 여력과 아직 지출하지 않은 준비 비용을 비교합니다. 이미 돌려받을 수 없이 쓴 60은 새 5개 주문의 추가 비용에 다시 더하지 않으며 기회비용·재가동 비용 등은 따로 확인합니다.",
+    "canonicalHref": "/economics/firms/scale-and-cost-structure#roundabout"
   },
   "minimum-market-for-a-detour": {
-    id: "minimum-market-for-a-detour",
-    kind: "theorem",
-    domain: "economics",
-    label: "돌아가는 방법이 열리는 최소 수량",
-    aliases: ["최소 수량", "분업은 시장의 크기가 제한한다", "N*"],
-    definition:
-      "먼저 들이는 몫을 두 방법의 단위당 값 차이로 나눈 수량입니다. 시장이 이보다 작으면 그 방법은 기술로 가능해도 쓰이지 않고, 넘어서야 비로소 쓰입니다. 한 단계 더 돌아갈수록 먼저 들이는 몫이 커지므로 그 단계가 열리는 수량도 함께 커지며, 그래서 같은 기술을 가진 곳에서도 시장 크기에 따라 실제로 쓰이는 방법이 갈립니다.",
-    canonicalHref: "/economics/firms/scale-and-cost-structure#minimum-market",
+    "id": "minimum-market-for-a-detour",
+    "kind": "theorem",
+    "domain": "economics",
+    "label": "생산 방법의 비용 동률 수량",
+    "aliases": [
+      "최소 수량",
+      "분업은 시장의 크기가 제한한다",
+      "N*"
+    ],
+    "definition": "새 방법에 먼저 더 쓰는 돈을 하나마다 아끼는 돈으로 나누면 두 비용이 같은 수량을 구할 수 있습니다. A/B는 60÷6=10에서 동률, 정수 11개부터B가 더 쌉니다.B/C는(300−60)÷(4−1)=80에서 동률, 81개부터C가 더 쌉니다. 준비 비용 차이와 하나당 절약액이 양수이며 같은 수량·품질·납기·가동 여력을 전제합니다. 준비 비용만 크다고 필요한 수량이 반드시 커지지는 않으며 모든 대안을 비교합니다.",
+    "canonicalHref": "/economics/firms/scale-and-cost-structure#minimum-market"
   },
   "market-extent-is-produced": {
-    id: "market-extent-is-produced",
-    kind: "concept",
-    domain: "economics",
-    label: "시장의 크기도 생산이 정한다",
-    aliases: ["시장 크기의 내생성", "사들일 힘", "분업이 분업을 부른다"],
-    definition:
-      "큰 시장은 사람 수나 면적이 아니라 사들일 힘이고, 사들일 힘은 만들어 낼 힘에 달려 있습니다. 분업이 시장의 크기에 달려 있는 동시에 시장의 크기가 분업에 달려 있으므로 고리가 닫히고, 한쪽에서 열린 돌아감이 다른 쪽의 수량을 키워 다음 돌아감을 엽니다. 인구가 늘지 않아도 이 고리만으로 수량이 커질 수 있다는 점에서 바깥에서 주어진 조건과 구분됩니다.",
-    canonicalHref: "/economics/firms/scale-and-cost-structure#market-is-produced",
+    "id": "market-extent-is-produced",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "생산 능력과 구매력의 상호 영향",
+    "aliases": [
+      "시장 크기의 내생성",
+      "사들일 힘",
+      "분업이 분업을 부른다"
+    ],
+    "definition": "생산성 변화가 다른 산업의 가격·소득·주문을 바꾸면 전문화의 조건도 달라질 수 있습니다. 세 고객의 30개 주문을 모은 90개 계획은 실제 주문과 지급 능력이 있을 때 성립합니다. 인구가 그대로여도 구매력과 산업 사이의 거래는 달라질 수 있습니다. Young 533~534쪽은 생산 활동 사이의 비례와 수요·공급 반응, 자본 축적·기술 습득·이동의 시간 조건을 논의합니다. 생산이 늘면 반드시 팔리거나 무한 성장한다는 뜻은 아닙니다.",
+    "canonicalHref": "/economics/firms/scale-and-cost-structure#market-is-produced"
   },
   "industrial-differentiation": {
-    id: "industrial-differentiation",
-    kind: "concept",
-    domain: "economics",
-    label: "수확 체증은 한 곳이 커지기보다 조각이 갈라지며 실현된다",
-    aliases: ["산업의 분화", "중간 단계의 독립", "회사 크기의 한계"],
-    definition:
-      "한 곳이 쓰는 수량은 그곳이 파는 양에 묶여 있지만, 중간 단계를 떼어 내 따로 만드는 곳을 세우면 그곳은 같은 것을 쓰는 여러 곳에 팔아 더 큰 수량을 봅니다. 한 곳 안에서는 끝내 열리지 않았을 돌아감이 쪼개고 나면 열리므로, 수확 체증의 전형적인 모양은 비대해짐이 아니라 갈라짐입니다. 회사 하나가 경제적으로 커질 수 있는 크기에 느슨하나마 한계가 있다는 전제가 이 구조를 떠받칩니다.",
-    canonicalHref: "/economics/firms/scale-and-cost-structure#differentiation",
+    "id": "industrial-differentiation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "전문 업체가 여러 고객의 물량을 모으는 효과",
+    "aliases": [
+      "산업의 분화",
+      "중간 단계의 독립",
+      "회사 크기의 한계"
+    ],
+    "definition": "한 업체만으로 부족한 수량을 전문 생산자가 여러 고객에게서 모으면 다른 생산 방법을 선택할 수 있습니다. 각자 30개를 B로 만들면 180×3=540입니다. 90개를 모아 C로 만들면 390이며 추가 비용 60을 더하면 450, 180을 더하면 570입니다. 부품 규격·일정·공급 능력을 맞추고 운송·검사·계약 비용을 더합니다. 생산 절약분이 고객 가격으로 전부 이전되거나 산업이 반드시 분리된다는 뜻은 아닙니다.",
+    "canonicalHref": "/economics/firms/scale-and-cost-structure#differentiation"
   },
   "increasing-returns-not-monopoly": {
-    id: "increasing-returns-not-monopoly",
-    kind: "concept",
-    domain: "economics",
-    label: "싸진다는 사실에서 하나만 남는다는 결론이 따라 나오지 않는다",
-    aliases: ["수확 체증과 독점의 분리", "흔한 오류"],
-    definition:
-      "많이 만들수록 싸진다는 것과 결국 하나만 남는다는 것은 다른 주장입니다. 돌아감의 이득이 상당 부분 쪼개져 나간 별도 산업의 몫으로 실현되므로 하나가 전부를 가져가는 그림이 되지 않습니다. 파는 쪽이 하나로 남는 경우는 따로 조건이 필요하고, 그 조건은 어떤 조각에서 돌아가는 방법이 열리는 최소 수량이 시장 전체보다 큰 경우입니다.",
-    canonicalHref: "/economics/firms/scale-and-cost-structure#not-monopoly",
+    "id": "increasing-returns-not-monopoly",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "비용 절약과 독점 결과의 구분",
+    "aliases": [
+      "수확 체증과 독점의 분리",
+      "흔한 오류"
+    ],
+    "definition": "생산 비용이 낮아질 가능성과 실제 판매자가 하나로 남는 결과는 따로 검토합니다. 시장 8개에서는A 80과두 업체가 4개씩 만드는 40+40이같습니다. 100개에서는C 400이두 업체가 50개씩 만드는 B의 260+260=520보다작습니다. 한 분할의 비용 비교로 모든 분할의 비용 조건이나 실제 독점 결과를 증명하지 않습니다. 진입·품질·운송·계약·규제·경쟁 행동과 판매가격도 확인합니다.",
+    "canonicalHref": "/economics/firms/scale-and-cost-structure#not-monopoly"
   },
   "price-setter-faces-whole-demand": {
     id: "price-setter-faces-whole-demand",
@@ -28804,6 +28859,14 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     ],
     "definition": "프로세스 재시작 때 graph 연결뿐 아니라 필요한 가상 주소·할당 상태·kernel 코드를 복원하고 호환되는 실행 객체를 준비하는 설계입니다. Foundry의 650→3.9초는 정한 H200·EP8·BF16 설정에서 환경 초기화와 가중치 적재를 제외한 값입니다. 일반 서버 전체 기동 시간이나 구현 재현 결과로 확대하지 않습니다.",
     "canonicalHref": "/cs/ai/cuda-graph-capture#research"
+  },
+  "mpc-shared-multiplication-degree-reduction": {
+    "id": "mpc-shared-multiplication-degree-reduction",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "비밀 조각의 곱과 차수 축소",
+    "definition": "차수 t의 두 비밀 분산식을 곱하면 차수는 최대 2t가 됩니다. 2t+1개의 정상 곱 조각을 새 차수 t 다항식으로 나누고 공개 보간 무게로 합치면 비밀 상수항을 보존한 차수 t 이하의 공유를 얻습니다. 독립 균등한 새 계수·정직한 재공유 조건과 능동 검증을 구분합니다.",
+    "canonicalHref": "/cs/crypto/mpc#reshare-proof"
   },
 };
 
@@ -32346,11 +32409,10 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "어떤 negative pair가 얼마나 자주 update되는지와 optimum log-odds를 정합니다.",
   },
   {
-    from: "sigmoid-activation",
-    to: "sgns-objective",
-    relation: "prerequisite",
-    reason:
-      "Pair dot product를 positive label의 logistic probability로 바꿉니다.",
+    "from": "sigmoid-activation",
+    "to": "sgns-objective",
+    "relation": "prerequisite",
+    "reason": "점수를 라벨 1/0의 이진 손실로 바꾸고 σ−y의 오차를 계산합니다."
   },
   {
     from: "sgns-objective",
@@ -45162,20 +45224,75 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "scheduler-overhead", to: "scheduler-closed-loop-transition", relation: "constrains", reason: "Output 을 보기 전에 다음 step 을 짜는 겹치기는 closed-loop 갱신을 한 step 늦게 반영하게 합니다." },
   { from: "scheduler-overhead", to: "serving-latency-decomposition", relation: "produces", reason: "동기 구조에서 scheduling 시간이 step 주기에 더해져 decode TPOT 에 그대로 나타납니다." },
   { from: "kv-external-fragmentation", to: "gpu-sharing-fragmentation", relation: "contrasts", reason: "이름이 같지만 KV block 층과 GPU·MIG·node 층으로 다른 개념이라 경계를 명시합니다." },
-  { from: "latency-launch-bound-kernel", to: "host-launch-overhead", relation: "prerequisite", reason: "Launch-bound kernel 구간의 원인이 되는 host 쪽 고정 비용을 분리해 정의합니다." },
-  { from: "host-launch-overhead", to: "cuda-graph-capture-replay", relation: "prerequisite", reason: "Capture·replay 가 상각하는 대상이 바로 launch 마다 반복되는 host 고정 비용입니다." },
-  { from: "host-launch-overhead", to: "gpu-queue-starvation", relation: "produces", reason: "Launch 당 CPU 시간이 kernel 당 GPU 시간보다 길면 queue 가 비어 starvation 이 생깁니다." },
-  { from: "cpu-submission-bottleneck", to: "gpu-queue-starvation", relation: "produces", reason: "CPU 한 step 의 제출이 GPU 한 step 보다 길면 그 차이만큼 GPU 가 굶습니다." },
+  {
+    "to": "host-launch-overhead",
+    "relation": "prerequisite",
+    "reason": "짧은 작업의 지연 원인을 분리할 때 host 호출 경계를 정의하며 모든 크기·호출 경로에서 같은 상수로 가정하지 않습니다.",
+    "from": "latency-launch-bound-kernel"
+  },
+  {
+    "to": "cuda-graph-capture-replay",
+    "relation": "prerequisite",
+    "reason": "반복 GPU 작업의 host 제출을 줄이는 대상 비용이며 실제 kernel 융합이나 계산량 변화와 구별합니다.",
+    "from": "host-launch-overhead"
+  },
+  {
+    "to": "gpu-queue-starvation",
+    "relation": "produces",
+    "reason": "같은 실행시간과 추가 준비 없는 이상 모형에서 제출이 더 느리면 다음 지시를 기다리는 빈 구간이 생깁니다.",
+    "from": "host-launch-overhead"
+  },
+  {
+    "to": "gpu-queue-starvation",
+    "relation": "produces",
+    "reason": "CPU 준비와 제출이 진행을 제한하는 조건에서 GPU가 다음 작업을 기다릴 수 있습니다. 최초 지연과 장기 간격을 구별합니다.",
+    "from": "cpu-submission-bottleneck"
+  },
   { from: "inference-runtime-process-anatomy", to: "cpu-submission-bottleneck", relation: "optimizes", reason: "Frontend·driver·worker 분리는 scheduling CPU 시간을 GPU 실행과 겹치게 하는 장치입니다." },
-  { from: "cpu-gpu-synchronization-point", to: "gpu-queue-starvation", relation: "produces", reason: "동기화 뒤의 scheduling 은 GPU 실행과 겹치지 못해 그대로 starvation 이 됩니다." },
+  {
+    "to": "gpu-queue-starvation",
+    "relation": "produces",
+    "reason": "CPU가 필요한 완료를 기다려 다음 준비가 늦어지면 뒤 실행열이 빌 수 있습니다. 모든 stream을 비우는 동기화라는 뜻은 아닙니다.",
+    "from": "cpu-gpu-synchronization-point"
+  },
   { from: "cuda-stream-ordering", to: "cpu-gpu-synchronization-point", relation: "prerequisite", reason: "비동기 enqueue 계약이 있어야 CPU 가 GPU 결과를 기다리는 지점이 별도의 비용이 됩니다." },
-  { from: "cuda-kernel-timing-protocol", to: "cpu-gpu-synchronization-point", relation: "contrasts", reason: "측정에서는 일부러 동기화를 넣지만 serving loop 에서는 같은 호출이 pipeline 을 비웁니다." },
-  { from: "cuda-graph-capture-replay", to: "cuda-graph-replay-latency", relation: "produces", reason: "Replay 한 번의 launch 몫과 GPU 실행 몫을 나눠 잰 것이 replay latency 입니다." },
-  { from: "cuda-graph-replay-latency", to: "cpu-submission-bottleneck", relation: "optimizes", reason: "Launch N개를 수십 µs 하나로 줄여 CPU 제출 시간을 scheduling 시간까지 낮춥니다." },
-  { from: "cuda-graph-warmup", to: "cuda-graph-replay-latency", relation: "optimizes", reason: "Capture 뒤 replay 를 미리 한 번 돌려 첫 launch 의 upload 비용을 요청 전에 치릅니다." },
+  {
+    "to": "cpu-gpu-synchronization-point",
+    "relation": "contrasts",
+    "reason": "측정에는 완료 범위를 명시하고 기다리지만 실제 실행에서는 그 대기가 다음 준비의 겹침을 막는지 따로 판단합니다.",
+    "from": "cuda-kernel-timing-protocol"
+  },
+  {
+    "to": "cuda-graph-replay-latency",
+    "relation": "produces",
+    "reason": "재생의 host 호출 구간과 마지막 GPU 작업 완료 구간을 따로 정의해 재며 초기 비용과 반복 측정을 구분합니다.",
+    "from": "cuda-graph-capture-replay"
+  },
+  {
+    "to": "cpu-submission-bottleneck",
+    "relation": "optimizes",
+    "reason": "Graph로 host 제출 부담을 줄일 수 있지만 GPU가 바쁘거나 다른 CPU 준비가 병목이면 최종 완료의 이득이 없을 수 있습니다.",
+    "from": "cuda-graph-replay-latency"
+  },
+  {
+    "to": "cuda-graph-replay-latency",
+    "relation": "optimizes",
+    "reason": "필요한 초기 실행 비용을 미리 치러 반복과 나누어 잴 수 있습니다. 첫 replay를 언제 수행하는지는 실제 실행기를 확인합니다.",
+    "from": "cuda-graph-warmup"
+  },
   { from: "cuda-graph-warmup", to: "runtime-warmup-cold-start", relation: "extends", reason: "Graph warmup 은 runtime 기동 warmup 의 capture 관련 항목을 구체화합니다." },
-  { from: "cuda-graph-compatible-execution", to: "cuda-graph-capture-failure", relation: "constrains", reason: "동기화 금지·분기 금지·pool 주소 보존 조건이 깨지는 방식이 실패의 세 갈래를 정합니다." },
-  { from: "cuda-graph-capture-failure", to: "cpu-submission-bottleneck", relation: "produces", reason: "조용한 eager fallback 은 launch N개를 되돌려 낮은 batch 에서 CPU 병목을 다시 만듭니다." },
+  {
+    "to": "cuda-graph-capture-failure",
+    "relation": "constrains",
+    "reason": "지원되는 작업과 주소·수명·실행 경로의 계약 위반을 구분합니다. 외부 tensor와 모든 CPU 분기를 일괄 금지하는 조건은 아닙니다.",
+    "from": "cuda-graph-compatible-execution"
+  },
+  {
+    "to": "cpu-submission-bottleneck",
+    "relation": "produces",
+    "reason": "Graph 경로를 선택하지 않으면 제출 부담이 다시 늘 수 있지만 실제 병목과 입력 조건에 따라 완료시간 영향은 달라집니다.",
+    "from": "cuda-graph-capture-failure"
+  },
   { from: "gpu-sm-register-file", to: "gpu-register-residency-budget", relation: "prerequisite", reason: "SM 전체 register 예산이 있어야 thread당 요구량을 resident warp 상한으로 환산할 수 있습니다." },
   { from: "gpu-sm-register-file", to: "gpu-register-allocation-granularity", relation: "prerequisite", reason: "Register file이 subpartition 4개로 나뉘어 있다는 사실이 warp 수를 4의 배수로 내리는 규칙의 근거입니다." },
   { from: "gpu-register-allocation-granularity", to: "gpu-register-residency-budget", relation: "constrains", reason: "256개 단위 반올림과 4의 배수 내림이 단순 나눗셈보다 낮은 resident warp 상한을 만듭니다." },
@@ -45247,7 +45364,12 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "amdahl-law-speedup-bound", to: "optimization-roi", relation: "prerequisite", reason: "ROI 의 Δt 는 Amdahl 을 거친 end-to-end 절감이어야 합니다." },
   { from: "optimization-roi", to: "performance-regression-gate", relation: "produces", reason: "ROI 의 검증 비용 항이 곧 변경마다 돌리는 benchmark gate 입니다." },
   { from: "performance-regression-gate", to: "inference-optimization-layer-map", relation: "evaluates", reason: "Regression 이 잡히면 구간별 profile 로 어느 층이 깨졌는지 귀속시킵니다." },
-  { from: "cuda-graph-capture-failure", to: "performance-regression-gate", relation: "constrains", reason: "조용한 eager fallback 은 낮은 batch 에서만 나타나므로 gate 가 양끝 batch 를 재야 합니다." },
+  {
+    "to": "performance-regression-gate",
+    "relation": "constrains",
+    "reason": "Graph 선택과 결과·시간을 입력 크기와 실행 모드별로 대조하며 성능 변화만으로 fallback을 확정하지 않습니다.",
+    "from": "cuda-graph-capture-failure"
+  },
   { from: "time-per-output-token", to: "performance-regression-gate", relation: "prerequisite", reason: "Gate 가 문턱으로 삼는 지표의 정의를 재사용합니다." },
   { from: "cuda-host-device-kernel-lifecycle", to: "gpu-profiling-nsys-ncu-roles", relation: "prerequisite", reason: "Host API 반환과 device 완료가 다르다는 lifecycle 위에서 timeline 의 간격을 읽습니다." },
   { from: "gpu-profiling-nsys-ncu-roles", to: "cuda-bottleneck-hypothesis-loop", relation: "prerequisite", reason: "Timeline 으로 좁히고 counter 로 내려가는 도구의 역할 분리가 loop 의 단계 순서를 정합니다." },
@@ -50573,67 +50695,58 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "흩어진 지식을 값이 옮긴다는 설명과, 그 옮기는 일이 비싸서 경계 안에서는 지시가 대신한다는 설명이 같은 조정 문제를 두 방식으로 답합니다.",
   },
   {
-    from: "firm-boundary-at-equal-margin",
-    to: "roundabout-production-economies",
-    relation: "prerequisite",
-    reason:
-      "조직이 어디까지 안으로 들이는지를 먼저 세워야, 그 안에서 만드는 방법이 바뀌면 값이 어떻게 달라지는지를 따로 물을 수 있습니다.",
+    "from": "firm-boundary-at-equal-margin",
+    "to": "roundabout-production-economies",
+    "relation": "prerequisite",
+    "reason": "기업 안팎의 전체 비용을 비교하는 원칙을 재사용해 같은 부품을 만드는 대안별 준비 비용과 추가 비용을 비교합니다. 기업 경계가 항상 한계비용의 정확한 동률에 있다는 가정은 필요하지 않습니다."
   },
   {
-    from: "roundabout-production-economies",
-    to: "minimum-market-for-a-detour",
-    relation: "produces",
-    reason:
-      "먼저 들이는 몫이 수량으로 나뉘므로, 그 몫을 나눠 질 최소 수량이 곧바로 따라 나옵니다.",
+    "from": "roundabout-production-economies",
+    "to": "minimum-market-for-a-detour",
+    "relation": "produces",
+    "reason": "준비 비용 차이와 하나당 절약액이 모두 양수이면 두 전체 비용이 같은 수량은 두 차이의 비율입니다. 동률 수량과 엄격히 더 싼 첫 정수 수량은 구분합니다."
   },
   {
-    from: "minimum-market-for-a-detour",
-    to: "market-extent-is-produced",
-    relation: "constrains",
-    reason:
-      "수량이 방법을 정한다면 그 수량이 어디서 오는지를 묻게 되고, 밖에서 주어진 것이 아니라는 답이 이 조건의 범위를 바꿉니다.",
+    "from": "minimum-market-for-a-detour",
+    "to": "market-extent-is-produced",
+    "relation": "constrains",
+    "reason": "비용 비교에 넣는 수량은 실제 주문과 지급 능력을 확인해야 합니다. 생산성 변화가 다른 산업의 수요를 바꿀 수 있지만 생산 증가만으로 판매나 무한 성장을 보장하지 않습니다."
   },
   {
-    from: "minimum-market-for-a-detour",
-    to: "industrial-differentiation",
-    relation: "produces",
-    reason:
-      "한 곳이 보는 수량으로는 넘지 못하는 최소 수량을 여러 곳에 파는 조각은 넘을 수 있어, 떼어 내는 편이 싸집니다.",
+    "from": "minimum-market-for-a-detour",
+    "to": "industrial-differentiation",
+    "relation": "produces",
+    "reason": "전문 생산자가 여러 고객의 같은 주문을 모으면 다른 생산 방법을 쓸 수 있습니다. 운송·검사·계약 비용까지 더한 전체가 작을 때 분업이 비용을 줄입니다."
   },
   {
-    from: "industrial-differentiation",
-    to: "increasing-returns-not-monopoly",
-    relation: "constrains",
-    reason:
-      "돌아감의 이득이 쪼개져 나간 산업의 몫으로 실현되면 하나가 전부를 가져가는 그림이 되지 않습니다.",
+    "from": "industrial-differentiation",
+    "to": "increasing-returns-not-monopoly",
+    "relation": "constrains",
+    "reason": "완제품 업체들이 남은 채 전문 공급자에게 주문을 모을 수 있습니다. 이 생산비 절약은 공급자나 고객 시장의 실제 기업 수와 가격을 확정하지 않습니다."
   },
   {
-    from: "minimum-market-for-a-detour",
-    to: "increasing-returns-not-monopoly",
-    relation: "constrains",
-    reason:
-      "하나만 남는 경우를 말하려면 최소 수량과 시장 크기를 견주는 별도의 조건이 필요하다는 것을 같은 식이 보입니다.",
+    "from": "minimum-market-for-a-detour",
+    "to": "increasing-returns-not-monopoly",
+    "relation": "constrains",
+    "reason": "동률 수량이 시장 전체보다 크다는 조건만으로 한 업체의 비용 우위를 증명할 수 없습니다. 시장8개에서 A80과 두 업체의40+40은 같으며 모든 관련 분할의 비용 조건을 별도로 검토해야 합니다."
   },
   {
-    from: "diminishing-returns-to-organising",
-    to: "industrial-differentiation",
-    relation: "produces",
-    reason:
-      "안으로 들일수록 값이 오른다는 것이 회사 하나가 경제적으로 커질 수 있는 크기의 한계가 되어, 남은 이득이 별도 산업의 몫으로 넘어갑니다.",
+    "from": "diminishing-returns-to-organising",
+    "to": "industrial-differentiation",
+    "relation": "produces",
+    "reason": "내부 조정 비용이 늘면 전문 업체와 거래할 유인이 생길 수 있습니다. 외부 생산비와 계약비까지 비교해야 하며 모든 기업이 같은 규모 한계를 갖거나 반드시 분리된다고 단정하지 않습니다."
   },
   {
-    from: "absolute-vs-comparative-advantage",
-    to: "industrial-differentiation",
-    relation: "contrasts",
-    reason:
-      "누가 무엇을 맡을지를 기회비용의 차이로 가르는 설명과, 맡을 조각 자체가 수량 때문에 새로 생겨난다는 설명이 같은 분업을 두 방향에서 봅니다.",
+    "from": "absolute-vs-comparative-advantage",
+    "to": "industrial-differentiation",
+    "relation": "contrasts",
+    "reason": "기회비용의 차이로 작업을 나누는 설명과 주문을 모아 생산 방법을 바꾸는 설명은 분업의 서로 다른 이유를 보여 줍니다."
   },
   {
-    from: "minimum-market-for-a-detour",
-    to: "price-setter-faces-whole-demand",
-    relation: "prerequisite",
-    reason:
-      "그 방법이 열리는 최소 수량이 시장보다 클 때 파는 쪽이 하나로 남는다는 조건이 먼저 서야, 값을 고르는 쪽이 생기는 경우를 말할 수 있습니다.",
+    "from": "minimum-market-for-a-detour",
+    "to": "price-setter-faces-whole-demand",
+    "relation": "prerequisite",
+    "reason": "비용 동률 수량과 기업 수의 관계를 구분한 다음 판매자가 가격을 선택하는 별도 가정을 살펴봅니다. 동률 수량이 시장보다 크다는 사실에서 단일 판매자를 도출하지 않습니다."
   },
   {
     from: "price-setter-faces-whole-demand",
@@ -51320,11 +51433,10 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "같은 설계에서 사람 수와 값을 함께 재면 한 설명만으로 둘을 다 설명할 수 없는 경우가 드러납니다.",
   },
   {
-    from: "neither-model-fits",
-    to: "increasing-returns-not-monopoly",
-    relation: "extends",
-    reason:
-      "한 사실에서 따라 나오지 않는 결론을 따로 적어 두는 규율이 두 글에서 같은 모양으로 반복됩니다.",
+    "from": "neither-model-fits",
+    "to": "increasing-returns-not-monopoly",
+    "relation": "extends",
+    "reason": "단순 모형이 실제 산업을 완전히 설명하지 못하면 생산비 절약과 시장 기업 수의 조건을 따로 검토해야 합니다."
   },
   {
     from: "class-table-ambiguity",
@@ -51418,11 +51530,10 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "깨진 가정을 짚고 나면 그 자리에 원래 0으로 두었던 반대 방향의 힘이 드러납니다.",
   },
   {
-    from: "minimum-market-for-a-detour",
-    to: "population-as-two-sided-force",
-    relation: "produces",
-    reason:
-      "수량이 커질수록 먼저 들이는 몫을 나눠 질 수 있어 더 돌아가는 방법이 열린다는 조건이 사람이 느는 쪽의 다른 효과를 만듭니다.",
+    "from": "minimum-market-for-a-detour",
+    "to": "population-as-two-sided-force",
+    "relation": "produces",
+    "reason": "인구 증가가 실제 주문과 구매력 증가로 이어지면 준비 비용을 나누고 생산 방법을 바꿀 가능성이 생깁니다. 인구 수만으로 유효 수요나 비용 절약을 보장하지 않습니다."
   },
   {
     from: "paradox-of-thrift",
@@ -52571,6 +52682,60 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "runtime-warmup-cold-start",
     "relation": "optimizes",
     "reason": "반복 캡처의 시작 비용을 줄이는 설계이며 환경 초기화와 가중치 적재를 제외한 연구 측정 경계를 따로 유지합니다."
+  },
+  {
+    "from": "word-embedding-lookup",
+    "to": "sgns-objective",
+    "relation": "prerequisite",
+    "reason": "관찰과 추첨의 단어 번호로 같은 입력 행과 선택한 출력 행을 읽습니다."
+  },
+  {
+    "from": "chain-rule",
+    "to": "sgns-objective",
+    "relation": "prerequisite",
+    "reason": "내적의 점수 오차를 두 표의 행에 돌려줍니다."
+  },
+  {
+    "from": "expectation",
+    "to": "negative-sampling-distribution",
+    "relation": "prerequisite",
+    "reason": "추첨된 기록의 손실과 뽑기 전 평균 목적을 구별합니다."
+  },
+  {
+    "from": "shamir-threshold-polynomial-sharing",
+    "to": "mpc-shared-multiplication-degree-reduction",
+    "relation": "prerequisite",
+    "reason": "입력의 조각과 최대 차수·복원 개수를 알고 곱 조각의 차수 변화를 추적합니다."
+  },
+  {
+    "from": "lagrange-interpolation-basis",
+    "to": "mpc-shared-multiplication-degree-reduction",
+    "relation": "prerequisite",
+    "reason": "서로 다른 2t+1개 주소의 보간 무게로 곱의 상수항을 보존합니다."
+  },
+  {
+    "from": "mpc-shared-multiplication-degree-reduction",
+    "to": "mpc-real-ideal-adversary-boundary",
+    "relation": "constrains",
+    "reason": "재공유의 정확성과 수동 공격 전제는 전체 기록의 보안 및 능동 검증과 구분해야 합니다."
+  },
+  {
+    "from": "word-embedding-lookup",
+    "to": "fasttext-subword-embedding",
+    "relation": "prerequisite",
+    "reason": "전용 단어 행에 공유 조각 행을 더할 때 두 주소의 역할을 구분합니다."
+  },
+  {
+    "from": "chain-rule",
+    "to": "fasttext-subword-embedding",
+    "relation": "prerequisite",
+    "reason": "같은 공유 행의 출현 횟수를 평균 합성의 미분 계수에 반영합니다."
+  },
+  {
+    "from": "fasttext-subword-embedding",
+    "to": "static-embedding-artifact",
+    "relation": "prerequisite",
+    "reason": "문자열에서 조각과 행으로 가는 계산을 알아야 함께 배포할 규칙을 정할 수 있습니다."
   },
 ];
 

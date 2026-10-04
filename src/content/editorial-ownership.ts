@@ -1334,22 +1334,72 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "word2vec-negative-sampling": {
-    title: "Word2Vec negative sampling 글이 소유하는 범위",
-    owns: ["Positive·noise pair의 SGNS logistic objective, noise distribution과 frequent-token subsampling의 서로 다른 적용 경계"],
-    reuses: [
-      { label: "Word–context pair receipt", href: "/cs/ai/word2vec" },
-      { label: "Shifted-PMI 해석", href: "/cs/ai/distributional-semantics" },
+    "title": "같은 비교 쌍의 SGNS와 원본의 표본 처리",
+    "owns": [
+      "관찰 saw→cat과 비교 red·dog의 이진 손실·기울기 및 공유 행의 한계",
+      "빈도의 3/4승, q와 k의 서로 다른 역할과 독립 점수의 무게 균형",
+      "정답 제외·중복·번호 0 변경의 실제 원본 제어와 순차 갱신",
+      "문장 제거 전후 관찰 쌍, 논문 식과 실제 C 유지 비교값의 차이",
+      "원본 unigram 함수와 제한된 한 쌍·다섯 위치 CPU 실행의 범위"
     ],
-    evidence: [{ kind: "primary-source", rule: "3/4 noise·subsampling·k claim은 원 논문의 recipe와 평가 범위로 제한한다." }],
+    "reuses": [
+      {
+        "label": "Word–context pair receipt",
+        "href": "/cs/ai/word2vec"
+      },
+      {
+        "label": "Shifted-PMI 해석",
+        "href": "/cs/ai/distributional-semantics"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "논문 식 (4)·(5)에 같은 점수를 대입하고 표 1의 자료·평가 범위를 구별합니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "20c129af의 원문·라이선스를 보존하고 실제 줄 범위로 추첨·갱신·문장 추가를 읽습니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "원본 InitUnigramTable과 바이트 동일한 두 블록의 제한 호출을 실행합니다. 전체 학습·품질·시간 측정은 주장하지 않습니다."
+      }
+    ]
   },
   "subword-static-embeddings": {
-    title: "Subword static embeddings 글이 소유하는 범위",
-    owns: ["Character n-gram hash rows로 OOV vector를 합성하고 문자열-to-vector artifact를 호환 가능하게 release하는 계약"],
-    reuses: [
-      { label: "Word lookup foundation", href: "/cs/ai/word2vec" },
-      { label: "Static과 contextual representation", href: "/cs/ai/distributional-semantics" },
+    "title": "같은 문자열의 조각 합성과 배포 규칙",
+    "owns": [
+      "run과 OOV runs의 전용 행·조각 행 주소와 합·평균의 실제 숫자 추적",
+      "해시 충돌과 반복 조각의 횟수 및 수학적 미분과 실제 갱신 배율의 구별",
+      "고정 fastText의 바이트 해시·UTF-8 길이 순회·평균 반환의 실제 CPU 관찰",
+      "Unicode와 bucket 변경에 따른 행 주소·결과 변화 및 .bin/.vec의 저장 범위",
+      "동일 입력·비용·후속 품질·집단별 평가와 되돌림을 포함한 배포 계약"
     ],
-    evidence: [{ kind: "primary-source", rule: "Subword composition과 OOV claim은 fastText 논문의 n-gram·hash·language setting으로 제한한다." }],
+    "reuses": [
+      {
+        "label": "Word lookup foundation",
+        "href": "/cs/ai/word2vec"
+      },
+      {
+        "label": "Static과 contextual representation",
+        "href": "/cs/ai/distributional-semantics"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "논문 137쪽의 합 점수에 같은 숫자를 대입하고 고정 조회 함수의 평균과 구별합니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "1142dc4c의 실제 원문·라이선스와 주소·평균·업데이트·저장 줄 범위를 보존합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "가정한 행으로 원본 C++ 조회와 별도 한 단계 갱신을 실제 실행합니다. 전체 학습이나 품질·시간 벤치마크는 주장하지 않습니다."
+      }
+    ]
   },
   bert: {
     title: "BERT encoder visibility 글이 소유하는 범위",
@@ -9955,10 +10005,41 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "mpc": {
-    title: "MPC real/ideal·DKG release 글이 소유하는 범위",
-    owns: ["Real/ideal view와 adversary·network·abort/fairness claim", "Session-bound DKG transcript와 active-failure release gate"],
-    reuses: [{ label: "Shamir threshold sharing", href: "/cs/crypto/shamir-secret-sharing" }, { label: "Paillier additive homomorphism", href: "/cs/crypto/paillier-cryptosystem" }],
-    evidence: [{ kind: "primary-source", rule: "Concrete DKG behavior는 pinned tss-lib source와 selected protocol profile에만 귀속한다." }, { kind: "project-measurement", rule: "Bad share·cross-session round·complaint·dropout·restart를 replay하고 messages·bytes·latency를 분리한다." }, { kind: "project-claim", rule: "한 primitive의 security를 전체 MPC의 malicious security·fairness로 확대하지 않는다." }],
+    "title": "같은 세 입력의 조각 계산과 전체 MPC 조건을 설명하는 범위",
+    "owns": [
+      "4,3,5의 같은 사례에서 분산·덧셈·곱셈·재공유·결과 공개와 유도",
+      "출력 자체의 누출과 한 조각·전체 기록의 비밀성 구분",
+      "고정 MPyC 실제 실행 및 별도 정직한 DKG 모형과 읽기만 한 Go 원문",
+      "세션 검사·공개 감사 기록과 비공개 상태·실행 및 미검증 범위"
+    ],
+    "reuses": [
+      {
+        "label": "Shamir의 조각과 복원",
+        "href": "/cs/crypto/shamir-secret-sharing"
+      },
+      {
+        "label": "공개 보간 무게",
+        "href": "/cs/crypto/lagrange"
+      },
+      {
+        "label": "Paillier의 합산과 변조 조건",
+        "href": "/cs/crypto/paillier-cryptosystem"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "MPyC의 고정 원문과 GRR 원고의 실제 읽은 절에 귀속합니다. 별도 tss-lib Go 코드는 읽기만 했으며 전체 DKG 실행으로 확대하지 않습니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "원문 함수의 고정 기울기 검산과 실제 세 프로세스의 새 난수 실행을 구분합니다. 한 조각 분포 전수 검사는 전체 기록 보안 증명이 아닙니다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "결과 자체에서 얻는 입력 추론을 프로토콜의 추가 누출과 구분합니다. 정직한 localhost 실행으로 능동 공격·외부망·공정성·이탈 복구를 주장하지 않습니다."
+      }
+    ]
   },
   "shamir-secret-sharing": {
     title: "Shamir Secret Sharing 글이 소유하는 범위",
@@ -10815,25 +10896,52 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "launch-overhead-and-cpu-gpu-synchronization": {
-    title: "Launch overhead 와 CPU–GPU 동기화 글이 소유하는 범위",
-    owns: [
-      "Host launch overhead 의 정의와 상각의 세 방법, CPU 제출 속도와 GPU 소비 속도의 비 min(1, λ/μ) 로 읽는 GPU starvation",
-      "CPU submission bottleneck 과 runtime CPU bottleneck 의 step 시간 식 max(T_sched+Nτ_L, T_GPU) 와 동기화가 있을 때의 T_sched+max(Nτ_L, T_GPU)",
-      "명시적·암묵적 동기화 지점의 목록과 serving loop 에서의 대체 방법",
-      "Graph replay latency 의 launch 몫과 첫 replay 비용, capture 전후 warmup 절차, capture failure 의 세 증상과 진단 순서",
+    "title": "CPU 제출과 GPU 완료를 구별하는 시간표와 실제 대기 경로",
+    "owns": [
+      "GPU 작업의 실행을 요청하는 host 호출 경로가 쓰는 시간입니다. 포함한 Python 준비·dispatcher·driver 경계를 지정해 측정합니다.",
+      "CPU의 작업 준비와 제출 속도가 반복 진행을 제한하는 상태입니다. 첫 완료시간과 충분히 긴 동일 작업의 평균 완료 간격을 구별합니다.",
+      "필요한 다음 작업이 아직 준비되지 않아 GPU 실행열이 비는 현상입니다. 관측 범위와 원인을 함께 확인합니다.",
+      "CPU가 필요한 GPU 작업의 완료를 확인하며 기다리는 지점입니다. Stream·event·device의 대상 범위와 GPU 사이의 의존성 연결을 구별합니다.",
+      "Graph 재생을 요청하는 host 호출의 길이와 마지막 GPU 작업 완료까지의 지연을 구분해 측정하는 시간입니다.",
+      "캡처 전 필요한 초기화를 실행하고 첫 재생 등의 초기 비용을 반복 실행과 구분하거나 요청 전에 치르는 사전 실행 절차입니다.",
+      "캡처 단계의 오류, 실행 계약이 어긋난 잘못된 재생, 실행 조건에 따른 graph 경로 미선택을 구별해 진단하는 문제입니다."
     ],
-    reuses: [
-      { label: "CUDA graph capture · replay 와 graph-compatible execution", href: "/cs/ai/cuda-graph-capture#graph-compatibility" },
-      { label: "Capture size padding", href: "/cs/ai/cuda-graph-capture#shape-padding" },
-      { label: "CUDA stream ordering", href: "/cs/gpu/cuda-sync-streams#streams" },
-      { label: "Latency-bound · launch-bound kernel", href: "/cs/gpu/gpu-memory-hierarchy-and-roofline#latency-launch-bound" },
-      { label: "Runtime warmup · cold start 와 process 분리", href: "/cs/ai/inference-runtime-anatomy#warmup" },
+    "reuses": [
+      {
+        "label": "CUDA graph capture · replay 와 graph-compatible execution",
+        "href": "/cs/ai/cuda-graph-capture#graph-compatibility"
+      },
+      {
+        "label": "Capture size padding",
+        "href": "/cs/ai/cuda-graph-capture#shape-padding"
+      },
+      {
+        "label": "CUDA stream ordering",
+        "href": "/cs/gpu/cuda-sync-streams#streams"
+      },
+      {
+        "label": "Latency-bound · launch-bound kernel",
+        "href": "/cs/gpu/gpu-memory-hierarchy-and-roofline#latency-launch-bound"
+      },
+      {
+        "label": "Runtime warmup · cold start 와 process 분리",
+        "href": "/cs/ai/inference-runtime-anatomy#warmup"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "µs 단위 수치는 NVIDIA blog 의 V100 자기보고로 제한하고, scheduling 1.0 ms·launch 5 µs·GPU 2.0 ms 같은 step 예시는 개념 수치임을 본문과 Viz 에 표시한다." },
-      { kind: "standard", rule: "동기화 호출의 목록과 비동기 의미론은 PyTorch CUDA semantics 와 CUDA Best Practices Guide 의 서술 범위로 제한한다." },
-      { kind: "project-claim", rule: "vLLM 의 warmup 횟수·fallback 조건은 compilation.py docstring 과 design 문서 범위로 제한하며 fallback 의 성능 영향 수치는 개념 예시다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "PyTorch v2.14.0의 원격 전체 원문·SHA-256·라이선스를 보존하고 scalar 복사, event·stream·device 대기, NumPy 분기와 원문 줄 범위를 직접 대조한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "CUDA13.4 API의 완료·event·복사 반환 조건과 PyTorch2.14 문서를 대조한다. NVIDIA2019의 평균은 원 실험의 동기화·장치·반복 범위만 주장한다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "시간표는 단일 stream의 고정된 가정이며 독립 유리수 계산으로 대조한다. 원문 Python class의 AST 호출 관찰에는 native base 대체 객체를 사용했고 GPU 실행·지연은 측정하지 않았다."
+      }
+    ]
   },
   "warp-stall-reasons-and-issue-utilization": {
     title: "Warp stall reason 과 issue utilization 판독 글이 소유하는 범위",
@@ -13930,38 +14038,38 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "scale-and-cost-structure": {
-    title: "싸지는 것은 공장이 커져서가 아닙니다 글이 소유하는 범위",
-    owns: [
-      "하나당 값이 내려가는 힘의 출처가 크기가 아니라 돌아가는 방법이라는 구분",
-      "돌아가는 방법이 열리는 최소 수량의 식과 단계마다 그 수량이 커지는 구조",
-      "시장의 크기가 생산으로 함께 정해진다는 되먹임",
-      "수확 체증이 산업의 분화로 실현된다는 모양",
-      "싸진다는 사실에서 하나만 남는다는 결론이 따라 나오지 않는다는 경계",
+    "title": "같은 부품의 비용·방법 선택·주문 합산의 설명 범위",
+    "owns": [
+      "고정비 배분과 생산 방법 변경의 구분",
+      "비용 동률 수량의 조건부 유도·정수 동률·대안 건너뛰기",
+      "지출 전후의 비용 비교와 이미 회수 불가능한 지출",
+      "전문 업체의 물량 합산 및 추가 운송·계약 비용",
+      "조건을 가진 구매력의 상호 영향과 비용·독점 결과의 구분"
     ],
-    reuses: [
+    "reuses": [
       {
-        label: "조직이 어디까지 안으로 들이는지의 경계 조건",
-        href: "/economics/firms/why-firms-exist#boundary",
+        "label": "기업 경계의 비용 비교",
+        "href": "/economics/firms/why-firms-exist#boundary"
       },
       {
-        label: "조직하는 일의 수확 체감과 회사 크기의 한계",
-        href: "/economics/firms/why-firms-exist#what-moves",
+        "label": "내부 조정 부담의 변화 가능성",
+        "href": "/economics/firms/why-firms-exist#what-moves"
       },
       {
-        label: "누가 무엇을 맡을지를 가르는 기회비용의 차이",
-        href: "/economics/scarcity/gains-from-trade#two-advantages",
+        "label": "기회비용과 비교우위",
+        "href": "/economics/scarcity/gains-from-trade#two-advantages"
       },
       {
-        label: "부분에서 참인 것이 전체에서 어긋나는 자리",
-        href: "/economics/macro/aggregation-and-composition",
-      },
+        "label": "부분과 전체의 구분",
+        "href": "/economics/macro/aggregation-and-composition"
+      }
     ],
-    evidence: [
+    "evidence": [
       {
-        kind: "primary-source",
-        rule: "Young 1928에 말로 적힌 것과 이 글이 식으로 적은 것을 가르고, 인용 문장은 쪽 이미지로 대조한 범위에서만 쪽수를 붙인다",
-      },
-    ],
+        "kind": "primary-source",
+        "rule": "Young1928의 확인한 단락과 실제530·539쪽 이미지에만 귀속합니다. 세 방법·수량·수식·실행 모형은 글의 가정이며 생산비 관측치나 기업 수의 실증 결과가 아닙니다."
+      }
+    ]
   },
   "market-power-and-markup": {
     title: "혼자 팔면 값을 고르게 됩니다 글이 소유하는 범위",

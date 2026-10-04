@@ -1,0 +1,31 @@
+{
+  "pin": "20c129af10659f7c50e86e3be406df663beff438",
+  "sourceSha256": "df07a1d504c22aa747f9fc40ddc6cfed52e12c3a402861398426829b83d96ef4",
+  "blocks": [
+    {
+      "label": "SG negative loop plus input update",
+      "firstLine": 521,
+      "lastLine": 542,
+      "sha256": "ac83c0c8fd910b52e9a0f8026adf4235212ad10ab906ac76db4e3fce8162800d"
+    },
+    {
+      "label": "subsampling plus append",
+      "firstLine": 408,
+      "lastLine": 414,
+      "sha256": "9ee08cf89fb2f2ce513b07d67128bdb5ff1592c7b921659f31d328e359a58d3f"
+    }
+  ],
+  "scope": "Original full InitUnigramTable is called. Two original blocks are extracted byte unchanged into authored one-pair and five-ID callers. The draw-report loop is an authored observation replica, not an added line inside the original block. No full TrainModelThread/corpus training/GPU/quality or runtime benchmark. Manual tables and seed43/0 are specified assumptions. Original sigmoid initialization expression retained. The table has100000000 entries; output histogram only is saved.",
+  "compiler": [
+    "cc",
+    "-std=c11",
+    "-D_DARWIN_C_SOURCE",
+    "-Dfgetc_unlocked=getc_unlocked",
+    "-O1",
+    "-pthread",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/word2vec-negative-sampling/verification/observe_sgns.c",
+    "-lm",
+    "-o",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/word2vec-negative-sampling/verification/observe_sgns"
+  ]
+}

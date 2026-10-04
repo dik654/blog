@@ -107,16 +107,102 @@ export const zkpMath2Articles: Article[] = [
   },
   {
     slug: "mpc",
-    title: "MPC: Real/Ideal 보안 모델에서 DKG Release까지",
+    title: "MPC: 4와 3을 더하고 비밀인 5를 곱하기",
     subcategory: "mpc",
     sections: [
-      { id: "overview", title: "3+4=7에서 시작하는 MPC" },
-      { id: "security-model", title: "Real/ideal 보안 모델" },
-      { id: "shamir", title: "Shamir 독립 정본으로 연결" },
-      { id: "paillier", title: "Paillier 독립 정본으로 연결" },
-      { id: "dkg", title: "DKG transcript artifact" },
-      { id: "release", title: "Active failure release gate" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 4와 3을 더한 뒤 다른 사람의 5를 곱합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 믿을 수 있는 계산 담당자가 해 주던 일을 나눕니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 이번 계산에서는 67로 나눈 나머지를 씁니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 나눈 조각이 계산을 거쳐 결과가 됩니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 더하기와 곱하기는 조각의 모양을 다르게 바꿉니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 조각·임계값·재공유에 이름을 붙입니다"
+  },
+  {
+    "id": "sharing",
+    "title": "7. 4와 3과 5를 세 직선에 넣습니다"
+  },
+  {
+    "id": "addition",
+    "title": "8. 각자 두 조각을 더하면 7의 조각이 됩니다"
+  },
+  {
+    "id": "multiplication",
+    "title": "9. 곱 조각 45와 30과 57은 이차식 위에 있습니다"
+  },
+  {
+    "id": "reshare",
+    "title": "10. 곱 조각을 다시 나누고 열마다 무게를 곱합니다"
+  },
+  {
+    "id": "reshare-proof",
+    "title": "11. 일반식에서도 상수항을 지키고 차수를 낮춥니다"
+  },
+  {
+    "id": "privacy",
+    "title": "12. 한 조각의 비밀성과 전체 계산의 비밀성은 검증 범위가 다릅니다"
+  },
+  {
+    "id": "output-leakage",
+    "title": "13. 35가 공개되면 무엇이 이미 드러나나요"
+  },
+  {
+    "id": "source-input",
+    "title": "14. 원문의 input이 같은 세 값을 조각으로 보냅니다"
+  },
+  {
+    "id": "source-multiply",
+    "title": "15. 덧셈은 로컬 연산이고 비밀 곱셈은 _reshare로 이어집니다"
+  },
+  {
+    "id": "source-output",
+    "title": "16. 지정한 수신자에게 필요한 조각만 보내 결과를 엽니다"
+  },
+  {
+    "id": "security-model",
+    "title": "17. 잘못된 조각을 보내면 35가 38로 바뀔 수 있습니다"
+  },
+  {
+    "id": "dkg",
+    "title": "18. 같은 나눔을 키 생성에 쓸 때는 공개할 결과가 바뀝니다"
+  },
+  {
+    "id": "source-dkg",
+    "title": "19. 고정한 tss-lib는 조각 합산에 여러 검증을 더합니다"
+  },
+  {
+    "id": "session",
+    "title": "20. 이전 실행의 메시지를 새 계산에 섞지 않습니다"
+  },
+  {
+    "id": "composition",
+    "title": "21. Shamir와 Paillier는 전체 MPC의 한 부품입니다"
+  },
+  {
+    "id": "verification",
+    "title": "22. 실제 실행과 읽은 원문, 미검증 범위를 구분합니다"
+  },
+  {
+    "id": "limits",
+    "title": "23. 다음 결과를 숫자로 예측합니다"
+  }
+],
     component: () => import("@/pages/articles/blockchain/mpc"),
   },
   {

@@ -1,117 +1,117 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { CitationBlock } from "@/components/ui/citation";
-import { NegativeSamplingViz } from "../word2vec/viz/ModernWord2VecViz";
-
-export default function Word2VecNegativeSamplingArticle() {
-  return <div className="space-y-16">
-    <section id="overview" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Negative sampling은 단어 확률을 근사하는 꼼수가 아니라 관측 pair와 noise pair를 구분하는 새 학습 문제입니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
-            Skip-gram의 flat softmax는 center 하나를 vocabulary의 모든 output row와 비교합니다. SGNS는 이 계산을 그대로 근사하지 않습니다.
-            Corpus window에서 실제 관측한 pair에는 positive label을 주고 별도의 noise distribution에서 뽑은 context에는 negative
-            label을 줍니다. 한 step은 선택한 몇 개 row만 읽지만 결과 score는 정규화된 word probability가 아닙니다.
+import { CitationBlock } from "@/components/ui/citation-block";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import { codeRefs } from "./codeRefs";
+import SamplingCaseViz from "./viz/SamplingCaseViz";
+import FilterCaseViz from "./viz/FilterCaseViz";
+const prose="prose prose-neutral max-w-none dark:prose-invert";
+const rows=[["0","문장 끝","[0,0,0]","[0,0,0]"],["1","red","[1,0,0]","[1,0,1]"],["2","cat","[1,2,0]","[2,0,1]"],["3","saw","[0,1,1]","[0,1,2]"],["4","dog","[0,0,1]","[1,1,0]"]];
+export default function Word2VecNegativeSamplingArticle(){const sidebar=useCodeSidebar();const code=(key:string)=><CodeViewButton onClick={()=>sidebar.open(key,codeRefs[key])}/>;return <div className="space-y-16">
+<section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">1. 한 번의 관찰에서 모든 단어를 비교해야 할까요</h2>
+<div className={prose}><p>문장에서 함께 나온 단어를 보고 수의 표를 고친다고 해 보겠습니다. 한 단어를 볼 때마다 사전에 있는 모든 단어와 비교하면 큰 사전일수록 일이 늘어납니다. 이번에 실제로 본 짝 하나와 따로 뽑은 두 짝만 비교해도 학습에 쓸 신호를 만들 수 있을까요? 먼저 비교 횟수를 세고 그 비교가 무엇을 뜻하는지 확인하겠습니다.</p><p>같은 세 비교에서 모두 점수 1이 나와도 처리 방향은 다릅니다. 관찰한 짝에는 더 높은 점수를 요구하고 추첨으로 만든 짝에는 더 낮은 점수를 요구합니다. 점수가 같은데 요구가 반대인 이유는 문장에서 얻은 관찰과 별도의 추첨이 서로 다른 역할을 하기 때문입니다.</p><p>이 글은 앞선 <a href="/cs/ai/word2vec">다섯 단어와 두 표</a>를 이어 사용합니다. 작은 계산에서 시작해 어느 줄이 얼마나 바뀌는지 따라갑니다. 끝에서는 실제 C 코드의 추첨과 갱신을 실행하고 같은 단어를 여러 번 뽑거나 관찰한 정답을 다시 뽑았을 때 무엇이 달라지는지 확인합니다.</p></div>
+</section>
+<section id="black-box" data-teach-level="B" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">2. 문장과 추첨표가 서로 다른 일을 맡습니다</h2>
+<div className={prose}><p>전체 흐름에는 두 입구가 있습니다. 한쪽은 문장을 읽고 가까이 나타난 단어의 짝을 만듭니다. 다른 쪽은 단어별 출현 횟수로 만든 추첨표에서 비교 대상을 고릅니다. 두 입구가 만든 기록을 합친 뒤 현재 수의 표가 어느 기록을 잘 구별하는지 점검합니다.</p><p>비교의 출발 단어는 그대로 두고 도착 단어만 바꿉니다. 출발 쪽 줄 하나와 각 도착 쪽 줄을 같은 자리끼리 곱해 더하면 점수가 나옵니다. 점수에 관찰에서 왔는지 추첨에서 왔는지 표시를 붙이고 그 표시와 어긋난 만큼 관련된 줄에 고칠 양을 보냅니다.</p><p>문장을 줄이는 작업은 이보다 앞에 있습니다. 너무 자주 나오는 단어의 일부 출현을 먼저 지우면 이후에 고르는 이웃 자체가 바뀝니다. 비교 대상을 추가하는 추첨과 문장에서 출현을 제거하는 작업을 별도 상자로 생각해 두세요. 하나는 만든 질문에 비교를 붙이고 다른 하나는 만들 질문의 재료를 바꿉니다.</p></div>
+</section>
+<section id="case" data-teach-level="0" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">3. 같은 다섯 단어에서 세 번만 비교합니다</h2>
+<div className={prose}><p>(가정) 문장은 <code>red saw cat saw dog</code>이고 위치는 왼쪽부터 0에서 4입니다. 위치 2의 cat과 왼쪽 위치 1의 saw가 가까이 나온 한 건만 고릅니다. 이 글의 계산 방향은 saw를 입력으로 보고 cat을 대상에 두겠습니다. 뒤에서 읽을 원본 C의 방향과 맞춘 선택이며 문장을 왼쪽에서 오른쪽으로 읽는 방향과는 별개입니다.</p><p>번호 목록은 [문장 끝, red, cat, saw, dog]입니다. 문장의 번호열은 [1,3,2,3,4]이고 두 saw는 서로 다른 위치지만 같은 번호 3을 가집니다. 아래의 두 표도 앞 글과 같은 가정입니다. 학습으로 얻은 좋은 수라고 주장하지 않고 한 번 고칠 때 무슨 일이 일어나는지 계산하는 출발점으로 사용합니다.</p></div>
+<div className="my-6 overflow-x-auto"><table className="w-full text-sm"><caption className="mb-3 text-left">가정한 두 표: 한 단어도 역할에 따라 읽는 줄이 다릅니다</caption><thead><tr>{["번호","단어","입력 역할","비교 대상 역할"].map(x=><th key={x} className="p-2 text-left">{x}</th>)}</tr></thead><tbody>{rows.map(r=><tr key={r[0]}>{r.map((x,i)=><td key={i} className="border-t border-border p-2 whitespace-nowrap">{x}</td>)}</tr>)}</tbody></table></div>
+<div className={prose}><p>입력 saw의 줄은 [0,1,1]이고 관찰 대상 cat의 줄은 [2,0,1]입니다. 같은 자리끼리 곱해 더하면 0×2+1×0+1×1=1입니다. 이 비교에는 문장에서 직접 관찰했다는 표시 1을 붙입니다. 표시 1은 지금의 점수가 1이라는 사실과 별개이며 점수가 다른 값이어도 관찰 표시는 그대로입니다.</p><p>이번에는 비교 대상으로 red와 dog를 하나씩 뽑았다고 정하겠습니다. red의 줄 [1,0,1]과 비교하면 0×1+1×0+1×1=1입니다. dog의 줄 [1,1,0]과 비교해도 0×1+1×1+1×0=1입니다. 이 두 기록에는 추첨에서 왔다는 표시 0을 붙입니다. 세 점수는 같지만 첫 비교와 뒤의 두 비교가 받은 표시는 다릅니다.</p><p>red가 문장에 없었다는 뜻으로 0을 붙인 것은 아닙니다. 실제로 red는 같은 다섯 단어 문장의 맨 앞에 있습니다. saw와 red도 가까이 나온 위치가 있습니다. 추첨 기록의 표시는 언어적으로 불가능한 짝을 증명하는 판정이 아닙니다. 이번 비교가 어느 경로에서 만들어졌는지를 알려 줍니다.</p><p>읽은 줄을 세어 보겠습니다. 입력에서는 saw 한 줄이고 대상에서는 cat, red, dog 세 줄입니다. 서로 다른 줄은 합해서 네 개지만 두 표에 걸쳐 있습니다. 입력 줄을 세 비교가 함께 사용하므로 같은 saw 값을 세 번 곱셈에 사용해도 서로 다른 입력 줄이 세 개 생기지는 않습니다. 비교 점수를 계산한 횟수는 세 번입니다.</p><p>문장에는 오른쪽에도 saw가 있습니다. 그 위치에서 cat과 만든 관찰은 또 한 건입니다. 지금은 한 건의 계산을 선명하게 보기 위해 왼쪽만 선택했습니다. 실제 문장을 전부 처리할 때는 오른쪽의 관찰과 그때 새로 고른 비교 대상도 따로 셉니다. 한 단어 종류와 한 번의 출현, 한 건의 비교를 구별하면 중복을 다루는 규칙을 이해하기 쉬워집니다.</p><p>
+            번호 0인 문장 끝도 두 표에는 자리가 있습니다. 그러나 이 작은 한 건에서는 비교 대상으로 쓰지 않았습니다. 저장된 줄이 존재한다는 사실만으로 모든 단계에서 그 줄을
+            선택한다고 결론낼 수 없습니다. 실제 코드가 번호 0을 뽑았을 때 다른 번호로 바꾸는 장면은 16절에서 살펴보겠습니다.
           </p></div>
-      <TermBreakdown title="SGNS 한 step을 구성하는 용어" items={[
-        { term: "Positive pair", description: "Corpus window에서 실제 함께 관찰한 center–context pair입니다.", example: "‘따뜻한 창가’에서 center=창가, context=따뜻한." },
-        { term: "Noise pair", description: "Noise distribution에서 context를 뽑아 center와 임시로 결합한 label-0 pair입니다.", boundary: "실제로 corpus에 절대 나오지 않는다는 뜻은 아닙니다." },
-        { term: "Negative count k", description: "Positive pair 하나당 비교할 noise contexts의 수입니다." },
-        { term: "Sparse row update", description: "Center input row, positive output row와 sampled negative output rows만 이번 gradient에 참여합니다.", boundary: "같은 negative가 중복 sampling되는 처리 규칙도 결과에 영향을 줍니다." },
-      ]} />
-      <NegativeSamplingViz />
-      <ContentBoundary article="word2vec-negative-sampling" />
-    </section>
-
-    <section id="sgns" className="scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">SGNS는 positive dot score를 올리고 sampled negative dot score를 내립니다</h2>
-      <ExplainedFormula question="Positive pair 하나와 negative k개는 어떤 방향의 loss를 만드나요?" idea={<p>Positive pair에는 label 1의 logistic likelihood를, negative pair에는 label 0의 likelihood를 붙입니다. 최대화할 log-likelihood 앞에 minus를 붙여 최소화 loss로 사용합니다.</p>} formula={String.raw`\mathcal L=-\log\sigma(s^+)-\sum_{i=1}^{k}\log\sigma(-s_i^-)`} annotatedFormula={String.raw`\begin{aligned}s^+&=\underbrace{{\mathbf v'_c}^{\!\top}\mathbf v_w}_{\text{관측 pair score}}\\s_i^-&=\underbrace{{\mathbf v'_{n_i}}^{\!\top}\mathbf v_w}_{\text{noise pair score}}\\p^+&=\underbrace{\sigma(s^+)}_{\text{label 1 확률}}\\p_i^-&=\underbrace{\sigma(-s_i^-)}_{\text{label 0 확률}}\\\mathcal L^+&=\underbrace{-\log p^+}_{\text{positive가 낮을 때 벌점}}\\\mathcal L^-&=\underbrace{-\sum_{i=1}^{k}\log p_i^-}_{\text{negative가 높을 때 벌점}}\\\mathcal L&=\underbrace{\mathcal L^++\mathcal L^-}_{\text{두 벌점을 합산}}\end{aligned}`} operations={[
-        { expression: String.raw`{\mathbf v'_c}^{\top}\mathbf v_w`, annotation: ["center input row와 관측 context output row를 내적해", "positive compatibility를 계산"] },
-        { expression: String.raw`\sigma(s^+)`, annotation: ["positive score를 0~1로 압축해", "label 1 likelihood로 읽음"] },
-        { expression: String.raw`\sigma(-s_i^-)`, annotation: ["noise score의 부호를 뒤집어", "score가 낮을수록 label 0 likelihood가 커지게 함"] },
-        { expression: String.raw`-\log(\cdot)`, annotation: ["정답 likelihood의 곱을 합으로 바꾸고", "높은 likelihood를 작은 최소화 loss로 변환"] },
-      ]} terms={[
-        { symbol: String.raw`\mathbf v_w`, name: "Center input row", description: "조건 word w의 input-table vector입니다." },
-        { symbol: String.raw`\mathbf v'_c`, name: "Positive output row", description: "관측 context c의 output-table vector입니다." },
-        { symbol: String.raw`\mathbf v'_{n_i}`, name: "Noise output row", description: "i번째 sampled context의 output-table vector입니다." },
-        { symbol: "k", name: "Negative count", description: "Positive 하나당 sampling한 noise pair 수입니다." },
-      ]} assumptions={["Noise samples는 명시한 distribution과 random seed로 뽑습니다.", "Duplicate negative와 accidental positive 처리 규칙을 run metadata에 남깁니다.", "표시한 식은 positive 하나당 negative terms를 합하는 convention입니다."]} interpretation="s⁺=1, negative scores가 0과 −1이면 positive 항은 −log σ(1), negative 항은 −log σ(0)와 −log σ(1)입니다. Gradient는 positive score를 높이고 두 negative scores를 낮추는 방향입니다." />
-    </section>
-
-    <section id="noise" className="scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Noise distribution은 오답을 고르는 방식이면서 SGNS가 학습할 class prior입니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Uniform sampling은 희귀 context도 고빈도 context와 같은 확률로 뽑습니다. Raw unigram sampling은 매우 흔한 context가 negatives를 거의 독점합니다. 원 Word2Vec recipe는 count에 3/4 power를 적용해 둘 사이의 분포를 만들었습니다. 이것은 보편 법칙이 아니라 corpus와 budget에 묶인 설계 선택입니다.</p></div>
-      <ExplainedFormula question="Unigram count를 3/4 power로 바꾼 뒤 왜 다시 전체 합으로 나누나요?" idea={<p>Power는 고빈도와 저빈도 word 사이의 격차를 줄일 뿐 아직 probability가 아닙니다. 모든 transformed weights의 합으로 나눠야 vocabulary 전체 mass가 1이 됩니다.</p>} formula={String.raw`P_n(c)=f(c)^{3/4}\big/\sum_{u\in V}f(u)^{3/4}`} annotatedFormula={String.raw`\begin{aligned}a(c)&=\underbrace{f(c)^{3/4}}_{\substack{\text{빈도 격차를 줄인}\\\text{noise weight}}}\\Z&=\underbrace{\sum_{u\in V}a(u)}_{\text{전체 weight 합}}\\P_n(c)&=\underbrace{a(c)/Z}_{\substack{\text{합이 1이 되도록}\\\text{확률로 정규화}}}\end{aligned}`} operations={[
-        { expression: String.raw`f(c)^{3/4}`, annotation: ["frequency를 1보다 작은 지수로 눌러", "고빈도 word의 상대 우세를 완화"] },
-        { expression: String.raw`\sum_{u\in V}a(u)`, annotation: ["모든 candidate weight를 더해", "normalizer Z를 계산"] },
-        { expression: String.raw`a(c)/Z`, annotation: ["각 weight를 전체 합으로 나눠", "합이 1인 sampling distribution 생성"] },
-      ]} terms={[
-        { symbol: String.raw`f(c)`, name: "Unigram count", description: "Corpus에서 context c가 나타난 횟수입니다." },
-        { symbol: String.raw`a(c)`, name: "Smoothed weight", description: "3/4 power를 적용한 정규화 전 weight입니다." },
-        { symbol: "Z", name: "Normalizer", description: "Vocabulary의 모든 smoothed weight 합입니다." },
-        { symbol: String.raw`P_n(c)`, name: "Noise probability", description: "Context c를 negative로 sampling할 확률입니다." },
-      ]} assumptions={["Count와 vocabulary revision이 고정되어 있습니다.", "3/4 exponent를 사용하는 원 recipe입니다.", "Sampling 구현의 replacement·deduplication 정책은 별도로 기록합니다."]} interpretation="Count가 10,000과 100이면 raw ratio는 100:1이지만 3/4 power 뒤 ratio는 약 31.6:1입니다. 고빈도 word를 여전히 더 자주 뽑되 독점을 완화합니다." />
-    </section>
-
-    <section id="subsampling" className="scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Frequent-word subsampling은 loss 뒤가 아니라 pair를 만들기 전에 token occurrence를 버립니다</h2>
-      <TermBreakdown title="Noise sampling과 subsampling을 혼동하지 않기" items={[
-        { term: "Noise sampling", description: "만들어진 positive pair 옆에 label-0 contexts를 추가합니다.", boundary: "Output-row 비교 대상을 정합니다." },
-        { term: "Frequent-word subsampling", description: "Window를 만들기 전에 고빈도 token occurrence 일부를 제거합니다.", boundary: "Positive pair 분포와 token 간 거리를 함께 바꿉니다." },
-        { term: "Keep/drop receipt", description: "Frequency table, threshold, 식, seed와 corpus revision을 묶어 어떤 pair population을 학습했는지 재현합니다." },
-      ]} />
-      <ExplainedFormula
-        question="고빈도 token을 얼마나 자주 버릴지는 어떤 식으로 정해지나요?"
-        idea={
-          <p>
-            목표 threshold t보다 훨씬 자주 나오는 word일수록 corpus를 훑을 때
-            그 occurrence를 window에 넣기 전에 더 높은 확률로 버립니다. t보다
-            드물게 나오는 word는 사실상 거의 버리지 않습니다.
-          </p>
-        }
-        formula={String.raw`P_{\mathrm{discard}}(w)=1-\sqrt{t/f(w)}`}
-        annotatedFormula={String.raw`\begin{aligned}
-r(w)&=\underbrace{t/f(w)}_{\text{threshold 대비 상대 빈도(w가 흔할수록 0에 가까움)}}\\
-P_{\mathrm{discard}}(w)&=\underbrace{1-\sqrt{r(w)}}_{\text{r(w)가 작을수록(=흔할수록) 1에 가까운 폐기 확률}}
-\end{aligned}`}
-        operations={[
-          {
-            expression: String.raw`t/f(w)`,
-            annotation: ["threshold를 실제 relative frequency로 나눠", "희귀할수록 1에, 흔할수록 0에 가까운 비율 생성"],
-          },
-          {
-            expression: String.raw`\sqrt{r(w)}`,
-            annotation: ["제곱근을 취해", "빈도 차이에 따른 비율 변화를 완만하게 만듦"],
-          },
-          {
-            expression: String.raw`1-\sqrt{r(w)}`,
-            annotation: ["1에서 빼서", "흔한 word일수록 큰 폐기 확률로 뒤집음"],
-          },
-        ]}
-        terms={[
-          {
-            symbol: String.raw`f(w)`,
-            name: "relative frequency",
-            description: "전체 corpus token 수 대비 word w의 occurrence 비율입니다(count(w)/total_count).",
-          },
-          {
-            symbol: "t",
-            name: "threshold",
-            description: "Subsampling 강도를 정하는 hyperparameter입니다. 원 논문은 약 1e-5를 씁니다.",
-          },
-          {
-            symbol: String.raw`P_{\mathrm{discard}}(w)`,
-            name: "폐기 확률",
-            description: "Corpus를 훑을 때 word w의 각 occurrence를 window에 넣기 전에 버릴 확률입니다.",
-          },
-        ]}
-        assumptions={[
-          "f(w) ≤ t인 word는 이 식이 음수를 낼 수 있어, 실제 구현은 0으로 clip합니다(버리지 않음).",
-          "이 식은 원 논문 식입니다. 공개된 원 C 구현(word2vec.c)은 이와 수학적으로 다른 keep-probability 식을 쓴다고 알려져 있습니다 — 논문 식과 released code가 정확히 일치하지 않는 점이 실전 재현에서 자주 놓치는 함정입니다.",
-        ]}
-        interpretation="t=1e-5, f(w)=1e-3(매우 흔한 word)이면 r=0.01, discard 확률은 1-0.1=0.9로 열 번 중 아홉 번을 버립니다. f(w)=1e-6(희귀 word)이면 r=10이라 sqrt(r)>1이 되어 discard 확률은 0으로 clip됩니다."
-      />
-      <div id="paper-negative-sampling" className="not-prose mt-8 scroll-mt-24"><CitationBlock type="paper" citeKey={1} source="Mikolov et al. — Distributed Representations of Words and Phrases" href="https://arxiv.org/abs/1310.4546">Negative sampling과 frequent-word subsampling을 제시한 후속 Word2Vec 연구입니다. 3/4 exponent와 threshold의 효과는 논문의 corpus·task·training budget 범위에서 해석해야 합니다.</CitationBlock></div>
-    </section>
-  </div>;
-}
+</section>
+<section id="picture" data-teach-level="1" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">4. 관찰 한 건에 비교 두 건을 붙입니다</h2>
+<div className={prose}><p>첫 장면은 saw에서 cat으로 이어지는 관찰 하나입니다. 두 번째 장면에서 같은 출발점에 red와 dog의 비교가 붙습니다. 세 번째 장면은 세 점수가 모두 1이어도 요구하는 방향이 다른 것을 보여 줍니다. 여기까지는 새로운 단어의 뜻을 외우기보다 어떤 값이 어디서 왔는지 따라가면 됩니다.</p></div>
+<SamplingCaseViz/>
+<div className={prose}><p>한 비교에서 고칠 양을 구한 뒤에는 출발 쪽과 도착 쪽 모두에 돌려주어야 합니다. cat, red, dog는 서로 다른 대상 줄이므로 각각 자기 비교에서 온 양을 받습니다. saw의 입력 줄은 세 비교에서 온 양을 모두 받습니다. 한쪽만 바꾸는 계산으로 끝내면 원래 의도한 두 표의 학습과 달라집니다.</p><p>추첨 결과가 red, red였다고 바꾸어 보세요. 비교는 여전히 두 번 추가되지만 대상 줄은 같은 red를 두 번 가리킵니다. 서로 다른 대상 줄의 수는 줄어도 두 기록의 기여가 사라지지는 않습니다. 같은 줄을 한 번 읽고 두 배로 계산할지, 한 번 고친 줄을 다음 비교에서 다시 읽을지는 실행 규칙에 따라 달라집니다.</p></div>
+</section>
+<section id="why" data-teach-level="2" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">5. 계산을 줄이면 묻는 질문도 바뀝니다</h2>
+<div className={prose}><p>후보가 다섯 개뿐인 예에서는 다섯 번 비교하는 대신 세 번 비교한 차이가 작습니다. 사전에 단어가 100,000개 있고 따로 뽑는 비교가 두 개라면 이야기가 달라집니다. 매번 100,000개 점수를 계산하던 일을 관찰 하나와 비교 둘로 줄일 수 있습니다. 다만 추첨표를 준비하는 비용이나 문장을 읽는 비용까지 없어지지는 않습니다.</p><p>중요한 변화는 질문에 있습니다. 이전 방식은 이 입력 뒤에서 어떤 단어를 고를지 후보 전체에 확률을 나누었습니다. 지금은 각 짝이 관찰 쪽과 추첨 쪽 중 어느 쪽에서 왔는지 묻습니다. cat에 높은 값을 주어도 red와 dog의 값이 반드시 그만큼 줄도록 전체를 묶는 나눗셈은 하지 않습니다.</p><p>점수 1을 뒤에서 정의할 변환에 넣으면 약 0.731059가 됩니다. 같은 세 점수에 이 변환을 각각 적용해 더하면 약 2.193176입니다. 합이 1을 넘었다고 계산이 틀린 것은 아닙니다. 서로 다른 세 이진 질문의 값을 더했기 때문입니다. 단어 세 개 중 하나를 뽑는 확률로 해석하려던 가정을 고쳐야 합니다.</p><p>이번처럼 각 줄에 원소가 세 개 있으면 한 점수에 곱셈 세 번과 덧셈 두 번이 필요합니다. 세 대상을 평가하는 데 곱셈 아홉 번과 덧셈 여섯 번을 사용합니다. 다섯 후보를 전부 평가하면 각각 열다섯 번과 열 번입니다. 이 셈은 점수만 만드는 산술이며 값을 읽는 시간과 표를 고치는 계산은 아직 포함하지 않았습니다. 무엇을 세었는지 고정해야 같은 숫자로 비용을 비교할 수 있습니다.</p><p>추첨표를 바꾸면 어떤 비교를 자주 만나는지도 달라집니다. red를 자주 뽑으면 saw와 red를 낮추려는 요구가 더 자주 생깁니다. 비교 두 개를 스무 개로 늘려도 이런 요구의 총비중이 달라집니다. 계산량을 줄이는 장치가 동시에 무엇을 학습할지 정하는 장치라는 점을 먼저 기억해 두겠습니다.</p></div>
+</section>
+<section id="names" data-teach-level="3" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">6. 이제 각 역할의 이름을 붙입니다</h2>
+<TermBreakdown title="이미 본 역할에 이름 붙이기" items={[
+{term:"Positive pair",description:"문장에서 고른 관찰 쌍입니다. 이 글에서는 입력 saw와 대상 cat에 라벨 1을 붙였습니다."},
+{term:"Negative sample",description:"별도 분포에서 뽑아 라벨 0을 붙이는 대상입니다. 이번에는 red와 dog입니다.",boundary:"관찰된 적 없는 단어 쌍이라는 뜻은 아닙니다."},
+{term:"SGNS",description:"Skip-gram with negative sampling의 줄임말입니다. 관찰 쌍과 뽑은 비교 쌍의 이진 손실로 두 표를 학습합니다."},
+{term:"Noise distribution q",description:"비교 대상을 뽑는 확률입니다. 단어별 빈도를 바꾸어 만든 추첨표에 해당합니다."},
+{term:"Subsampling",description:"이웃을 만들기 전에 단어 출현의 일부를 버리는 작업입니다. 추첨 비교를 추가하는 단계와 다릅니다."},
+{term:"Sigmoid σ",description:"점수 s를 1/(1+exp(−s))로 바꾸는 함수입니다. 유한한 점수를 0과 1 사이로 옮깁니다."}
+]}/>
+<div className={prose}><p>기호를 짧게 정하겠습니다. 입력 줄을 v, 대상 단어 c의 줄을 u_c라고 쓰고 점수는 s_c=u_cᵀv입니다. 관찰에서 온 라벨은 y=1, 추첨에서 온 라벨은 y=0입니다. 여기서 얻는 이진 값은 선택한 학습 분포에 대한 구별 기준이며 단어가 문장에 나타날 확률이라고 바꾸어 부르지 않습니다.</p></div>
+</section>
+<section id="sgns" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">7. 세 점수를 하나의 손실로 모읍니다</h2>
+<ExplainedFormula question="관찰 하나와 추첨 둘의 손실은 얼마인가요?" idea={<p>관찰에는 σ(s)가 클수록, 추첨에는 1−σ(s)=σ(−s)가 클수록 작은 벌점을 줍니다. 확률의 곱을 자연로그로 바꾸어 더하고 최소화하도록 부호를 뒤집습니다.</p>} formula={String.raw`L=-\ln\sigma(s^+)-\sum_{i=1}^{k}\ln\sigma(-s_i^-)`} annotatedFormula={String.raw`\begin{aligned}\sigma(s)&=\frac1{1+e^{-s}},\quad s_c=u_c^\top v\\L&=\underbrace{-\ln\sigma(s^+)}_{\text{관찰 한 건}}+\underbrace{-\sum_{i=1}^{k}\ln\sigma(-s_i^-)}_{\text{추첨 건별 벌점}}\\L_{\rm case}&=-\ln\sigma(1)-2\ln\sigma(-1)\\&\approx0.313262+2(1.313262)=2.939785\end{aligned}`} operations={[{expression:String.raw`-\ln\sigma(s^+)`,annotation:["관찰한 짝을 낮게 보았을수록","큰 벌점을 부여"]},{expression:String.raw`-\sum_{i=1}^{k}\ln\sigma(-s_i^-)`,annotation:["추첨에서 만든 각 짝의","라벨 0 벌점을 따로 더함"]}]} terms={[{symbol:"s^+,s_i^-",name:"두 종류의 점수",description:"같은 v를 공유해도 대상 행은 다를 수 있습니다. 위첨자는 점수의 양수·음수 부호가 아닙니다."},{symbol:"k",name:"추첨 건수",description:"이상식에서는 뽑은 k건을 모두 포함합니다. 코드의 건너뛰기는 뒤에서 구별합니다."},{symbol:"L",name:"합산 손실",description:"이번 관찰 한 건의 라벨 1 항과 k개의 라벨 0 항을 합합니다."}]} assumptions={["이 절은 수학적 sigmoid와 자연로그를 사용합니다.","추첨 결과 red와 dog를 고정하고 아직 표를 갱신하지 않았습니다."]} interpretation="점수 1이 모두 같아도 cat의 벌점은 약 0.313262, red와 dog의 벌점은 각각 약 1.313262입니다."/>
+<div className={prose}><p>선택하지 않은 출력 행에는 이 손실에서 직접 돌아오는 항이 없습니다. 그래서 한 쌍의 점수와 갱신 비용은 줄 길이 d에 대해 대략 (k+1)d에 비례합니다. 이것을 희소한 행 접근이라고 부를 수 있지만 사용한 프로그램의 기울기 저장 형식까지 자동으로 희소하다는 뜻은 아닙니다. 두 표 자체의 저장 공간도 여전히 단어 수에 비례합니다.</p></div>
+</section>
+<section id="gradient" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">8. 오차를 두 표의 해당 행으로 돌려줍니다</h2>
+<div className={prose}><p>한 항을 라벨 y로 합쳐 쓰면 ℓ(s,y)=−y lnσ(s)−(1−y)ln(1−σ(s))입니다. σ의 미분은 σ(1−σ)이므로 첫 로그 항의 미분은 −y(1−σ), 두 번째는 (1−y)σ입니다. 더하면 σ−y만 남습니다. 확률에 대한 벌점이 점수를 고치는 오차로 바뀌는 지점입니다.</p></div>
+<ExplainedFormula question="세 오차가 saw 입력 줄로 어떻게 돌아오나요?" idea={<p>점수는 두 행의 내적입니다. 점수 오차에 맞은편 행을 곱하면 해당 행을 바꿀 기울기가 됩니다. 입력 v는 세 점수를 공유하므로 세 기여를 더합니다.</p>} formula={String.raw`\partial_s\ell=\sigma(s)-y,\quad\nabla_vL=\sum_j(\sigma(s_j)-y_j)u_j`} annotatedFormula={String.raw`\begin{aligned}\partial_s\ell&=\underbrace{\sigma(s)-y}_{\text{예측과 라벨의 차이}}\\\nabla_vL&=\underbrace{\sum_j(\sigma(s_j)-y_j)u_j}_{\text{대상 행을 통해 입력에 누적}}\\\nabla_{u_j}\ell_j&=(\sigma(s_j)-y_j)v\\\nabla_vL&=(p-1)[2,0,1]+p[1,0,1]+p[1,1,0]\\&=[4p-2,p,2p-1]\approx[0.924234,0.731059,0.462117]\\v_{\rm next}&=v-0.1\nabla_vL\approx[-0.092423,0.926894,0.953788],\quad p=\sigma(1)\end{aligned}`} operations={[{expression:String.raw`\sigma(s)-y`,annotation:["관찰은 음수, 추첨은 양수인","점수 기울기를 계산"]},{expression:String.raw`\sum_j(\sigma(s_j)-y_j)u_j`,annotation:["세 대상 행을 통과한 기여를","공통 입력에 더함"]}]} terms={[{symbol:"v,u_j",name:"입력과 대상 행",description:"이번에는 v가 saw, 대상이 cat·red·dog입니다."},{symbol:"j",name:"비교 기록 번호",description:"중복 단어를 뽑으면 같은 행이 여러 기록에서 나타납니다."},{symbol:"0.1",name:"가정한 학습률",description:"이 절의 이상 기울기에 곱해 한 번 내리는 크기입니다."}]} assumptions={["모든 기울기를 갱신 전 표에서 계산합니다.","같은 대상 행이 반복되면 그 행의 기여도 합쳐야 합니다."]} interpretation="cat 출력 기울기는 (p−1)[0,1,1], red와 dog는 각각 p[0,1,1]입니다. 내리는 갱신에서는 기울기의 부호를 뒤집습니다."/>
+<div className={prose}><p>점수 자체를 서로 독립된 변수로 본다면 관찰 항은 점수를 올리고 추첨 항은 내리는 방향입니다. 실제로는 여러 점수가 같은 행을 공유합니다. 다른 비교에서 돌아오는 기여와 유한한 학습률 때문에 모든 관찰 점수가 매번 오를 것이라고 보장할 수 없습니다. 11절에서 같은 점수에 반대 라벨이 붙는 가장 작은 경우를 보겠습니다.</p><p>기존의 별도 수치 예도 같은 식으로 읽을 수 있습니다. 관찰 점수 1, 두 추첨 점수 0과 −1이면 손실은 −lnσ(1)−lnσ(0)−lnσ(1)≈1.319671입니다. 뒤의 σ(1)은 음수 점수 −1에 다시 부호를 뒤집어 얻은 값입니다. 이 별도 점수 예를 앞 표에서 실제로 나온 세 점수라고 섞지는 않겠습니다.</p></div>
+</section>
+<section id="noise" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">9. 자주 나온 단어를 얼마나 자주 뽑을까요</h2>
+<div className={prose}><p>이제 비교 대상이 어떻게 선택되는지 보겠습니다. (가정) 방금의 다섯 단어 문장과 별개인 전체 자료의 출현 횟수를 번호 순서로 [1,1,1,16,1]이라고 둡니다. saw가 16번, 다른 항목은 한 번씩입니다. 총합은 20이며 문장 끝의 횟수도 이 표에 포함했습니다. 원문 코드를 관찰할 때도 이 가정한 빈도표를 직접 넣습니다.</p></div>
+<ExplainedFormula question="빈도 16을 왜 추첨 확률 2/3으로 바꾸나요?" idea={<p>빈도를 그대로 쓰면 saw의 비중은 16/20입니다. 모든 단어를 똑같이 뽑으면 1/5입니다. 3/4승은 큰 빈도의 격차를 줄인 뒤 그 무게 전체를 합이 1이 되도록 나눕니다.</p>} formula={String.raw`q(c)=\frac{f(c)^{3/4}}{\sum_u f(u)^{3/4}}`} annotatedFormula={String.raw`\begin{aligned}a_c&=\underbrace{f(c)^{3/4}}_{\text{빈도 격차를 완화}}\\q(c)&=\underbrace{\frac{a_c}{\sum_u a_u}}_{\text{전체 무게로 나눔}}\\f&=[1,1,1,16,1],\quad a=[1,1,1,8,1],\quad\sum_u a_u=12\\q(\mathrm{saw})&=8/12=2/3,\quad q(\mathrm{red})=1/12\\(10000/100)^{3/4}&=100^{3/4}\approx31.6228\end{aligned}`} operations={[{expression:String.raw`f(c)^{3/4}`,annotation:["원 빈도에 1보다 작은 지수를 적용해","큰 항의 상대 비중을 줄임"]},{expression:String.raw`\frac{a_c}{\sum_u a_u}`,annotation:["변환한 무게 전체를 분모로 써서","확률의 합을 1로 만듦"]}]} terms={[{symbol:"f(c)",name:"고정한 빈도",description:"횟수나 같은 총합으로 나눈 상대빈도를 써도 이 정규화 결과는 같습니다."},{symbol:"q(c)",name:"이상적인 추첨 확률",description:"한 번 뽑을 때 그 단어를 선택할 확률입니다."},{symbol:"3/4",name:"논문에서 선택한 지수",description:"모든 자료에서 최적이라는 수학 법칙은 아닙니다."}]} assumptions={["빈도는 음수가 아니며 무게의 전체 합은 양수입니다.","원본 C의 유한 표·번호 0 변경·정답 제외를 아직 적용하지 않은 분포입니다."]} interpretation="10,000 대 100의 원 비율 100:1도 약 31.6:1로 줄어듭니다. 비율만 구한 뒤에는 다른 모든 단어의 무게를 포함해 확률로 나누어야 합니다."/>
+<div className={prose}><p>q는 라벨 0 안에서 어떤 단어를 얼마나 자주 고르는지를 정합니다. 관찰 한 건에 라벨 0 기록을 몇 개 붙이는지는 k가 정합니다. 두 값을 모두 학습 분포의 일부로 기록해야 하지만 같은 역할이라고 부르면 무엇을 바꾸었는지 놓치기 쉽습니다.</p></div>
+</section>
+<section id="count-prior" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">10. 뽑는 개수는 학습의 비중도 바꿉니다</h2>
+<div className={prose}><p>관찰 한 건마다 k개의 추첨 기록을 모두 같은 무게로 넣는 모형에서는 라벨 1의 비중이 1/(k+1)입니다. k=5이면 1/6, k=20이면 1/21입니다. 추첨 항만 세면 네 배이지만 관찰 항까지 포함한 내적은 6회에서 21회로 늘어 3.5배입니다. 실제 실행시간은 표 접근과 준비 비용도 포함하므로 이 비율만으로 결정되지 않습니다.</p></div>
+<ExplainedFormula question="추첨을 더 많이 하면 최적인 점수도 바뀌나요?" idea={<p>같은 한 점수를 자유롭게 조절할 수 있다고 가정합니다. 그 점수에 관찰 무게 a와 추첨 무게 b가 걸리면 두 요구의 균형에서 미분이 0이 됩니다.</p>} formula={String.raw`L(s)=-a\ln\sigma(s)-b\ln\sigma(-s),\quad s^*=\ln(a/b)`} annotatedFormula={String.raw`\begin{aligned}L(s)&=-a\ln\sigma(s)-b\ln\sigma(-s)\\L'(s)&=\underbrace{(a+b)\sigma(s)-a}_{\text{두 라벨의 기울기 합}}\\\sigma(s^*)&=\frac{a}{a+b},\quad s^*=\underbrace{\ln(a/b)}_{\text{관찰과 추첨 무게의 로그비}}\\a=1,\ b=k&:\quad s^*=-\ln k\\s^*_{20}-s^*_{5}&=-\ln20+\ln5=-\ln4\end{aligned}`} operations={[{expression:String.raw`(a+b)\sigma(s)-a`,annotation:["관찰과 추첨에서 온 기울기를 합해","균형인 지점을 찾음"]},{expression:String.raw`\ln(a/b)`,annotation:["최적 이진 확률의 승산을 뒤집어","최적 점수로 변환"]}]} terms={[{symbol:"a,b",name:"한 점수에 걸린 두 무게",description:"양의 관찰 무게와 양의 추첨 무게입니다."},{symbol:"s^*",name:"독립 점수의 최소점",description:"이상 모형의 자유 변수 하나에 대한 결과입니다."},{symbol:"k",name:"관찰당 추첨 개수",description:"조건부 분포가 같은 특수 예에서 b=k로 둡니다."}]} assumptions={["a와 b가 모두 양수이고 점수 s를 다른 점수와 독립적으로 바꿀 수 있습니다.","공유된 저차원 벡터의 모든 점수가 동시에 이 값에 도달한다고 보장하지 않습니다.","한쪽 무게가 0이면 유한한 최소점 대신 점수가 한쪽 무한대로 향하는 경계를 따로 봅니다."]} interpretation="k를 바꾸면 동일 목적의 계산을 더 정확히 하는 데 그치지 않습니다. 추첨의 비중과 이 독립 모형의 최적 점수가 함께 바뀝니다."/>
+<div className={prose}><p>두 무게가 양수일 때 두 번째 미분은 (a+b)σ(s)(1−σ(s))로 양수입니다. 그래서 위에서 미분이 0인 점은 이 한 변수 문제의 유일한 최소점입니다. 이 결론에는 다른 점수와 독립적으로 움직일 수 있다는 가정이 필요합니다.</p><p>q를 바꾸면 단어별 b가 달라지고 k를 바꾸면 추첨 전체의 무게가 달라집니다. 이 균형을 전체 동시 출현 표와 연결하는 설명은 <a href="/cs/ai/distributional-semantics">분포 의미론의 행렬 해석</a>에서 이어집니다. 여기서는 한 비교의 목적과 코드가 실제로 포함한 기록의 범위를 구별하는 데 집중합니다.</p></div>
+</section>
+<section id="duplicates" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">11. 같은 단어가 다시 뽑히면 어떻게 될까요</h2>
+<div className={prose}><p>추첨에서도 cat이 나올 수 있습니다. 관찰 cat 한 건과 추첨 cat 한 건을 둘 다 포함하면 같은 점수에 라벨 1과 0이 한 번씩 걸립니다. 합친 미분은 2σ(s)−1입니다. s=1에서는 약 0.462117로 양수이므로 내리는 갱신은 이 점수를 낮추려 합니다. 두 무게가 같을 때의 최적 점수는 0입니다. 관찰이라는 이유만으로 그 점수가 반드시 오른다는 주장의 반례입니다.</p><p>처리 정책은 여러 가지입니다. 추첨한 cat을 그대로 두면 원래 q에서 뽑은 기록의 합을 계산합니다. cat이 나오면 버리고 다시 뽑는 정책은 cat을 제외한 조건부 분포를 만듭니다. 다시 뽑지 않고 건너뛰면 포함되는 음수 기록 수가 줄어듭니다. 단순히 같은 k라는 설정만 적어 놓으면 서로 다른 실행을 같은 것으로 오해할 수 있습니다.</p><p>red가 두 번 뽑힌 경우에도 선택이 있습니다. 두 번의 기여를 포함할 수 있고 한 번만 남길 수도 있습니다. 갱신 전 점수로 두 번 계산한 합과 첫 갱신 뒤 바뀐 red를 다시 읽는 순차 갱신은 일반적으로 같지 않습니다. 한 행이 공유된 사실과 각 기록을 평가한 시점을 함께 적어야 합니다. 원본은 16절에서 보듯 중복을 남깁니다.</p></div>
+</section>
+<section id="subsampling" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">12. 문장을 먼저 줄이면 이웃부터 달라집니다</h2>
+<div className={prose}><p>같은 문장에서 두 saw와 마지막 dog를 제거했다고 합시다. 남은 순서는 red cat입니다. cat의 반경 1 안에는 이제 red 한 위치만 있습니다. 원래 cat 옆에 있던 두 saw는 없어졌고 원래 두 칸 떨어진 red가 새 이웃이 되었습니다. 자료에서 실제 출현을 지우면 이후 관찰 쌍의 분포와 거리도 바뀝니다.</p></div>
+<FilterCaseViz/>
+<div className={prose}><p>빈도가 큰 단어를 일부 버리는 이유는 학습 질문이 너무 흔한 출현에 치우치는 것을 줄이기 위해서입니다. 그러나 어떤 제거가 좋은지는 자료와 후속 과제에 달려 있습니다. 빈도가 작다는 이유만으로 모든 문장에서 중요한 단어라고 증명되는 것도 아니고 많은 단어를 버렸다는 이유만으로 품질이 좋아지는 것도 아닙니다.</p></div>
+<ExplainedFormula question="논문에 적힌 제거 확률은 어떻게 읽나요?" idea={<p>상대빈도 f에 비해 기준 t가 작을수록 덜 남깁니다. f가 너무 작아서 음수 제거 확률이 나오면 확률의 범위로 제한한 수학적 규칙을 별도로 명시해야 합니다.</p>} formula={String.raw`P_{\rm discard}=\max(0,1-\sqrt{t/f}),\quad P_{\rm keep}=\min(1,\sqrt{t/f})`} annotatedFormula={String.raw`\begin{aligned}r&=\underbrace{t/f}_{\text{기준과 상대빈도의 비}}\\P_{\rm discard}&=\underbrace{\max(0,1-\sqrt r)}_{\text{유효 확률로 제한}}\\P_{\rm keep}&=1-P_{\rm discard}=\min(1,\sqrt r)\\t=10^{-5},f=10^{-3}&:\quad r=0.01,\ P_{\rm discard}=0.9\\t=10^{-5},f=10^{-6}&:\quad r=10,\ P_{\rm discard}=0\end{aligned}`} operations={[{expression:String.raw`t/f`,annotation:["같은 단위의 상대빈도를 나누어","제거 강도를 정하는 비율 생성"]},{expression:String.raw`\max(0,1-\sqrt r)`,annotation:["논문 식의 음수 영역을 제한해","버릴 확률로 해석"]}]} terms={[{symbol:"f",name:"상대빈도",description:"단어의 횟수를 전체 횟수로 나눈 값입니다. 9절의 정규화 분포와 달리 여기에는 실제 비율이 필요합니다."},{symbol:"t",name:"선택한 기준",description:"논문은 보통 10⁻⁵ 정도라고 설명합니다. 실제 설정값을 기록합니다."},{symbol:"r",name:"빈도에 대한 비율",description:"f가 작으면 r은 1보다 커질 수도 있습니다."}]} assumptions={["f와 t는 양수입니다. 제거를 끄는 설정은 별도 분기로 다룹니다.","max는 논문 식을 확률 범위로 해석하기 위한 명시적 제한입니다. 원본 C에 이 max 호출이 있다는 주장은 아닙니다."]} interpretation="원본 C는 이 식과 다른 유지 비교값을 씁니다. 같은 t/f=.01에서 논문식 유지 .1과 코드의 .11을 17절에서 대조합니다."/>
+</section>
+<section id="paper-negative-sampling" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">13. 논문의 식과 보고된 실험을 구별합니다</h2>
+<div className={prose}><p>Mikolov 등의 2013년 논문 2.2절 식 (4)는 관찰의 로그항 하나와 추첨 분포에 대한 기대값 k개를 더해 최대화합니다. 이 글의 7절은 실제로 뽑은 red와 dog를 넣고 부호를 뒤집은 한 번의 최소화 손실입니다. 뽑기 전의 평균 목적과 뽑은 뒤의 손실은 연결되지만 같은 표기는 아닙니다.</p></div>
+<ExplainedFormula question="원문 식의 기대값과 이번 세 비교는 어떻게 연결되나요?" idea={<p>고정한 표에서 q로 뽑은 각 음수항을 평균내면 원문 기대항을 얻습니다. 이번 red와 dog는 그 평균을 추정하는 특정 추첨 결과입니다.</p>} formula={String.raw`J=\ln\sigma(u_c^\top v)+\sum_{i=1}^k\mathbb E_{n_i\sim q}\ln\sigma(-u_{n_i}^\top v)`} annotatedFormula={String.raw`\begin{aligned}J&=\ln\sigma(u_c^\top v)+\underbrace{\sum_{i=1}^k\mathbb E_{n_i\sim q}\ln\sigma(-u_{n_i}^\top v)}_{\text{추첨 전 평균 기여}}\\\widehat J&=\ln\sigma(1)+\ln\sigma(-1)+\ln\sigma(-1)\\\widehat J&\approx-2.939785,\quad L=-\widehat J\\\mathbb E[\widehat J]&=J\end{aligned}`} operations={[{expression:String.raw`\sum_{i=1}^k\mathbb E_{n_i\sim q}\ln\sigma(-u_{n_i}^\top v)`,annotation:["추첨에서 만날 항들의 기대값을","k회 분량으로 더함"]}]} terms={[{symbol:"J",name:"논문의 최대화 목적",description:"관찰 쌍과 현재 표를 고정한 평균 목적입니다."},{symbol:String.raw`\widehat J`,name:"특정 추첨의 값",description:"이번에는 red와 dog로 계산했습니다."},{symbol:String.raw`\mathbb E`,name:"추첨 전 평균",description:"그 분포로 여러 결과를 얻었을 때의 가중 평균입니다."}]} assumptions={["각 추첨의 주변분포가 q이고 항을 건너뛰지 않습니다. 기대값 합에는 독립성이 필수는 아닙니다.","원본의 번호 변경·정답 제외를 적용한 실행은 실제 포함된 분포와 항으로 다시 해석합니다."]} interpretation="원문이 말하는 표본만 사용한다는 설명은 q의 확률값을 각 손실 항에 직접 대입하지 않는다는 뜻입니다. q 선택이 결과에 영향을 주지 않는다는 뜻은 아닙니다."/>
+<div className={prose}><p>2.3절 식 (5)의 제거 규칙과 3/4승은 논문에서 선택한 방법입니다. 3절 표 1은 당시 약 10억 단어의 뉴스 자료, 최소 출현 5회와 약 692,000 단어의 목록, 300차원 표현에 대한 유추 과제 결과입니다. 제시된 k 범위와 시간·정확도를 모든 자료에서의 최적값이나 보장으로 확대하지 않습니다.</p></div>
+<CitationBlock citeKey={1} source="Mikolov et al. · 1310.4546v1 · `2.2–2.3, Eq4–5, Table1" href="https://arxiv.org/html/1310.4546v1#S2.SS2"><p>원문 식 (4)의 기대항에 같은 세 점수를 적용했습니다. 식 (5)는 단어 제거 단계에, 표 1은 명시된 자료와 평가 범위에 사용했습니다.</p></CitationBlock>
+</section>
+<section id="source-noise" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">14. 실제 C 코드의 추첨표를 만듭니다</h2>
+<div className={prose}><p>저자 저장소의 <code>20c129af</code> 버전을 고정했습니다. <code>InitUnigramTable</code>은 실제 빈도의 0.75승을 합한 뒤 100,000,000칸의 정수 표를 채웁니다. 번호를 누적확률에 비례하는 길이로 반복해 넣는 방식입니다. 관찰에서는 앞의 [1,1,1,16,1]을 넣고 원본 함수를 실제로 호출했습니다.</p></div>
+{code("unigram")}
+<div className={prose}><p>실제 표에서 번호 0부터 센 칸 수는 아래와 같습니다. 이상적인 1/12과 2/3에 가깝지만 정수 칸을 채우는 경계 비교 때문에 정확히 같은 유리수는 아닙니다. <code>int</code>가 4바이트인 이 관찰 환경에서 표만 400,000,000바이트입니다. 이런 준비 비용을 한 비교의 상수 시간 조회와 구별해야 합니다.</p></div>
+<div className="my-5 overflow-x-auto"><table className="w-full text-sm"><thead><tr><th className="p-2 text-left">번호</th><th className="p-2 text-left">이상 무게</th><th className="p-2 text-left">실제 표의 칸 수</th></tr></thead><tbody>{[[0,1,8333335],[1,1,8333333],[2,1,8333334],[3,8,66666666],[4,1,8333332]].map(r=><tr key={r[0]}>{r.map((x,i)=><td key={i} className="border-t p-2">{x}</td>)}</tr>)}</tbody></table></div>
+<div className={prose}><p>현재 원문은 문장에서 이웃을 고른 뒤 이웃의 입력 줄로 가운데 단어를 대상으로 삼습니다. 관찰한 위치가 cat이고 이웃이 saw일 때 실제 출발 줄이 saw인 이유입니다. 이 방향을 논문에서 설명한 가운데→이웃 방향과 구별하기 위해 이 글의 작은 사례도 saw→cat으로 고정했습니다.</p></div>
+{code("direction")}
+</section>
+<section id="source-update" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">15. 같은 세 비교를 원본 갱신으로 실행합니다</h2>
+<div className={prose}><p>관찰 코드는 원본의 한 쌍 처리 블록 521–542행을 한 글자도 바꾸지 않고 작은 호출 함수에 넣었습니다. 입력 saw, 정답 cat, 학습률 0.1, 추첨 횟수 2를 지정하고 난수 상태를 43에서 시작합니다. 전체 문장 학습을 실행한 것이 아니라 지정한 한 쌍의 원문 제어와 수 갱신을 확인한 실행입니다.</p></div>
+{code("proposal")}
+<div className={prose}><p>첫 갱신은 정답 cat을 라벨 1로 처리합니다. 그다음 실제 상태 갱신과 추첨표 조회에서 red와 dog가 순서대로 나옵니다. 표의 조회 위치는 16,544,202와 92,103,759이며 각각 번호 1과 4를 저장하고 있습니다. 3절에서 정한 비교 두 건이 원본에서도 실제로 발생하도록 이 시작 상태를 골랐습니다.</p></div>
+{code("update")}
+<div className={prose}><p>점수는 세 번 모두 1입니다. 원본은 수학적 sigmoid를 매번 계산하는 대신 미리 만든 표를 읽습니다. 조회식 안의 <code>1000/6/2</code>가 정수 계산으로 83이 되어 점수 1은 581번을 읽고 약 0.725517869를 얻습니다. 수학적 σ(1)≈0.731058579와 이 값을 섞으면 작은 차이의 이유를 놓칩니다.</p></div>
+{code("sigmoid")}
+<div className={prose}><p>원본의 g는 이미 학습률과 감소 방향을 포함한 (라벨−표의 값)×0.1입니다. 관찰 cat에서는 약 +0.027448213, 두 추첨에서는 각각 −0.072551787입니다. 옛 출력 줄에 g를 곱해 입력 쪽 고칠 양에 더한 뒤 그 출력 줄을 즉시 고칩니다. 입력 saw는 세 비교가 끝난 뒤 누적된 양을 한 번 더합니다.</p><p>실제 결과의 saw 입력은 약 [−0.090207145,0.927448213,0.954896450]입니다. 이상식을 쓴 8절의 [−0.092423,0.926894,0.953788]과 가깝지만 같지는 않습니다. 출력 cat은 약 [2,0.027448213,1.027448180]이 되었고 선택하지 않은 출력 saw와 문장 끝의 줄은 그대로였습니다. 같은 단어 saw라도 입력 역할과 출력 역할을 구별해야 합니다.</p></div>
+{code("observation")}
+</section>
+<section id="source-policy" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">16. 중복 네 번과 건너뛴 한 번을 추적합니다</h2>
+<div className={prose}><p>두 표를 원래 가정값으로 돌린 뒤 추첨 횟수를 6, 시작 상태를 0으로 바꿉니다. 실제 제안은 dog, saw, saw, saw, saw, cat 순서입니다. 처음 두 조회에서 표가 준 원 번호는 0이었지만 코드는 그 번호를 그대로 쓰지 않고 다른 단어 번호로 바꿉니다. 따라서 표의 무게만으로 최종 비교 대상의 분포를 완전히 설명할 수 없습니다.</p></div>
+{code("policy")}
+<div className={prose}><p>마지막 cat은 이번 정답 번호와 같아서 <code>continue</code>로 건너뜁니다. 반복 번호는 그대로 늘어나므로 채워 넣기 위한 재추첨은 없습니다. 음수 갱신은 5회, 양수까지 포함한 내적은 6회입니다. 서로 다른 출력 줄은 cat, dog, saw의 세 개입니다. 설정값 6과 음수 갱신 수 5, 내적 수 6을 따로 셉니다.</p><p>출력 saw는 네 번 등장하며 매번 즉시 바뀝니다. 다음 비교는 바뀐 줄을 읽지만 입력 saw는 한 쌍이 끝날 때까지 이전 값을 유지합니다. 관찰 결과 출력 saw는 약 [0,0.626154482,1.626154420], 입력 saw는 약 [−0.017655361,0.606009603,0.332163990]입니다. 첫 점수 하나를 계산한 뒤 기여를 단순히 네 배 한 실행이 아닙니다.</p><p>원본이 확인하는 것은 이번 정답과 번호가 같은지뿐입니다. 그 짝이 자료 어딘가에서 관찰된 적이 있는지 전체 목록을 검색하지는 않습니다. 이 구별이 없으면 관찰된 짝을 전부 음수에서 제외하는 알고리즘으로 잘못 이해하게 됩니다.</p><p>근사표 밖의 점수도 별도로 봐야 합니다. 원본은 점수가 6보다 크면 확률을 1로, −6보다 작으면 0으로 처리합니다. 정확한 sigmoid의 유한 점수 기울기와 같지는 않습니다. 앞선 수치 사례는 이 경계를 넘지 않으며 이런 근사와 병렬 실행까지 포함한 실제 학습의 품질은 따로 측정해야 합니다.</p></div>
+</section>
+<section id="source-filter" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">17. 원본은 다섯 단어 중 두 개를 남깁니다</h2>
+<div className={prose}><p>같은 빈도표에서 전체 횟수는 20입니다. saw의 상대빈도는 16/20=0.8이고 나머지는 1/20=0.05입니다. (가정) 기준을 0.008로 두면 saw에서 t/f=0.01입니다. 논문 식으로 해석한 유지율은 0.1이지만 원본 C가 난수와 비교하는 값은 0.11입니다.</p></div>
+{code("filter")}
+<ExplainedFormula question="원본의 0.11은 어느 연산에서 나오나요?" idea={<p>실제 코드의 횟수와 전체 횟수를 상대빈도 f로 정리하면 제곱근 항에 t/f가 하나 더 붙습니다. 1을 넘으면 0 이상 1 미만인 난수가 이 비교값을 넘을 수 없어 모두 남습니다.</p>} formula={String.raw`R=\left(\sqrt{f/t}+1\right)t/f=\sqrt{t/f}+t/f`} annotatedFormula={String.raw`\begin{aligned}R&=\underbrace{\left(\sqrt{f/t}+1\right)t/f}_{\text{원본의 유지 비교값}}\\&=\sqrt{t/f}+t/f\\f=0.8,\ t=0.008&:\quad R=0.1+0.01=0.11\\f=0.05,\ t=0.008&:\quad R=0.4+0.16=0.56\\U&=\underbrace{(\texttt{next\_random}\mathbin{\&}65535)/65536}_{\text{16비트 값에서 만든 비교 난수}}\\\text{버림 조건}&:\ R<U\end{aligned}`} operations={[{expression:String.raw`\left(\sqrt{f/t}+1\right)t/f`,annotation:["원본 횟수 식을 상대빈도로 정리해","제곱근 항과 비율 항을 함께 남김"]},{expression:String.raw`(\texttt{next\_random}\mathbin{\&}65535)/65536`,annotation:["하위 16비트를 사용해","정해진 격자 위 비교값 생성"]}]} terms={[{symbol:"R",name:"코드의 비교값",description:"1을 넘을 수 있으므로 그 자체를 무조건 확률이라고 부르지 않습니다."},{symbol:"U",name:"유한 격자의 난수 값",description:"0부터 65535/65536까지 가능한 값입니다."},{symbol:"f,t",name:"빈도와 기준",description:"같은 전체 횟수와 실제 설정으로 계산합니다."}]} assumptions={["sample>0인 분기이며 비교는 코드의 float 연산을 따릅니다.","연속 균등 난수 모형에서는 유지확률이 min(1,R)이지만 실제 격자·난수 상태·부동소수점 비교를 별도로 기록합니다."]} interpretation="유효 확률로 제한하는 논문 해석과 원본 C의 비교 분기는 다른 규칙입니다. 같은 t/f가 같아도 유지 결과가 달라질 수 있습니다."/>
+<div className={prose}><p>시작 상태 0에서 다섯 위치에 사용한 비교값은 아래와 같습니다. 원본 408–414행의 제거와 문장 배열 추가 블록을 그대로 실행했을 때 번호 1과 2만 남았습니다. 마지막 dog는 흔한 saw가 아니어도 이번 난수가 0.56보다 커서 제거되었습니다. 남길 가능성이 더 크다는 것과 이번 출현이 반드시 남는다는 것은 다릅니다.</p></div>
+<div className="my-5 overflow-x-auto"><table className="w-full text-sm"><thead><tr>{["위치·단어","비교값 R","하위비트/65536","결과"].map(x=><th key={x} className="p-2 text-left">{x}</th>)}</tr></thead><tbody>{[["0 red","0.56","11/65536","남김"],["1 saw","0.11","59066/65536","버림"],["2 cat","0.56","22845/65536","남김"],["3 saw","0.11","52484/65536","버림"],["4 dog","0.56","58047/65536","버림"]].map(r=><tr key={r[0]}>{r.map((x,i)=><td key={i} className="border-t p-2 whitespace-nowrap">{x}</td>)}</tr>)}</tbody></table></div>
+<div className={prose}><p>이 다섯 위치 관찰은 원본 파일 읽기 전체를 다시 실행한 것이 아니라 고정한 번호열에 원본 제거 블록을 적용한 범위입니다. 실제 전체 학습에서는 문장 경계, 단어 제거, 이웃 범위 선택, 음수 추첨이 같은 난수 상태를 차례로 소비합니다. 따라서 seed만 같고 분기나 실행 순서가 달라도 같은 표본 열이라고 보장할 수 없습니다.</p></div>
+</section>
+<section id="limits" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">18. 같은 실행과 좋은 표현을 따로 확인합니다</h2>
+<div className={prose}><p>재현할 때는 자료와 단어 분리 방식부터 고정합니다. 단어 목록의 순서, 두 표의 초기값, 빈도표와 전체 횟수, 입력과 대상의 방향, 이웃 범위와 문장 경계를 함께 기록합니다. 여기에 추첨 지수와 k, 정답 제외와 중복 정책, 제거 기준과 실제 식, 난수 상태의 소비 순서와 스레드 수를 연결해야 같은 실행을 설명할 수 있습니다.</p><p>단어 제거를 바꾼 실험에서는 단어별 남김 비율과 거리별 관찰 쌍의 수를 먼저 비교합니다. 고친 표를 평가할 때는 같은 계산 예산이나 실제 시간, 포함된 갱신 수를 기록하고 선택한 후속 과제의 성능을 측정합니다. 바꾼 설정을 유지할 기준과 되돌릴 기준도 비교 전에 정해야 결과를 보고 유리한 조건만 고르지 않습니다.</p><p>이 글의 작은 실행은 원본 분기의 의미와 수치 차이를 확인합니다. 좋은 단어 표현을 학습했다거나 특정 하드웨어에서 더 빠르다는 실험은 아닙니다. q와 k를 바꾸면 학습 목적도 달라지고 원본의 유한 추첨표·라벨 제외·근사표는 이상식에 조건을 추가합니다. 공개된 원문이 있다는 이유만으로 그 실행과 논문 식을 같은 것으로 뭉뚱그리지 않겠습니다.</p></div>
+<ContentBoundary article="word2vec-negative-sampling"/>
+</section>
+<section id="review" data-teach-level="8" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">19. 다음 결과를 예측해 보세요</h2>
+<div className={prose}><p>정답 cat을 추첨에서도 한 번 포함하고 두 기록을 같은 무게로 세면 점수 1을 올리게 될까요, 내리게 될까요? 합친 미분과 그 이유를 예측해 보세요. (답: 11절)</p><p>원본에서 추첨 횟수를 6으로 설정했는데 여섯 번째 후보가 정답 cat과 같았습니다. 채택한 음수 수와 양수까지 포함한 내적 수는 각각 얼마일까요? (답: 16절)</p><p>같은 다섯 위치에 원본 제거 규칙을 적용해 red cat만 남았습니다. cat의 반경 1 이웃과 제거 전후 관찰 질문이 어떻게 바뀌는지 설명해 보세요. (답: 12·17절)</p></div>
+</section>
+<CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{}}/></div>; }

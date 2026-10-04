@@ -622,25 +622,55 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/word2vec-negative-sampling": [
     {
-      kind: "핵심 논문",
-      label: "Distributed Representations of Words and Phrases",
-      href: "https://arxiv.org/abs/1310.4546",
-      note: "Negative sampling·unigram 3/4 noise·frequent-word subsampling을 확장한 후속 연구",
+      "kind": "핵심 논문",
+      "label": "Distributed Representations of Words and Phrases",
+      "href": "https://arxiv.org/abs/1310.4546",
+      "note": "Negative sampling·unigram 3/4 noise·frequent-word subsampling을 확장한 후속 연구"
     },
     {
-      kind: "보충 읽기",
-      label: "Neural Word Embedding as Implicit Matrix Factorization",
-      href: "https://proceedings.neurips.cc/paper_files/paper/2014/hash/b78666971ceae55a8e87efb7cbfd9ad4-Abstract.html",
-      note: "SGNS의 dot product를 shifted-PMI word–context matrix factorization으로 분석",
+      "kind": "보충 읽기",
+      "label": "Neural Word Embedding as Implicit Matrix Factorization",
+      "href": "https://proceedings.neurips.cc/paper_files/paper/2014/hash/b78666971ceae55a8e87efb7cbfd9ad4-Abstract.html",
+      "note": "SGNS의 dot product를 shifted-PMI word–context matrix factorization으로 분석"
     },
+    {
+      "kind": "핵심 논문",
+      "label": "Distributed Representations of Words and Phrases and their Compositionality",
+      "href": "https://arxiv.org/abs/1310.4546v1",
+      "note": "2.2절 식 (4)의 기대 목적과 한 표본 손실, 2.3절 식 (5)의 제거 규칙, 표 1의 평가 범위를 구별합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "저자 word2vec.c · 20c129af",
+      "href": "https://github.com/tmikolov/word2vec/blob/20c129af10659f7c50e86e3be406df663beff438/word2vec.c",
+      "note": "원본 unigram 생성 함수와 521–542/408–414행을 실제 제한 호출에서 실행했습니다. 변경 없는 source와 라이선스 및 관찰 호출·결과를 보존합니다."
+    }
   ],
   "ai/subword-static-embeddings": [
     {
-      kind: "핵심 논문",
-      label: "Enriching Word Vectors with Subword Information",
-      href: "https://aclanthology.org/Q17-1010/",
-      note: "Character n-gram 합으로 morphology와 OOV 한계를 보강한 fastText 연구",
+      "kind": "핵심 논문",
+      "label": "Enriching Word Vectors with Subword Information",
+      "href": "https://aclanthology.org/Q17-1010/",
+      "note": "Character n-gram 합으로 morphology와 OOV 한계를 보강한 fastText 연구"
     },
+    {
+      "kind": "핵심 논문",
+      "label": "Enriching Word Vectors with Subword Information",
+      "href": "https://aclanthology.org/Q17-1010/",
+      "note": "137쪽 3.2절의 조각 목록·합 점수·해시 저장을 실제 PDF 화면에서 읽고 같은 가정 숫자를 대입했습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "fastText · 고정 커밋 1142dc4c",
+      "href": "https://github.com/facebookresearch/fastText/tree/1142dc4c4ecbc19cc16eee5cdd28472e689267e6",
+      "note": "전체 src와 라이선스를 보존하고 C++ 원문을 컴파일했습니다. 사전 생성·조회와 별도 Model::update 한 단계의 실행 범위를 기록했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "fastText Python · encoding conventions",
+      "href": "https://github.com/facebookresearch/fastText/blob/1142dc4c4ecbc19cc16eee5cdd28472e689267e6/python/README.md",
+      "note": "UTF-8 입력, ASCII 단어 경계, UTF-8 바이트 순회와 코드 포인트 기준 조각 길이를 실제 원문 동작과 대조했습니다."
+    }
   ],
   "ai/distributional-semantics": [
     {
@@ -6468,7 +6498,36 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
 ],
   "crypto/mpc": [
-    { kind: "공식 코드", label: "bnb-chain/tss-lib @ 3f677ff", href: "https://github.com/bnb-chain/tss-lib/tree/3f677ff761fcf692edb0243a5d812930844d879a", note: "Threshold DKG/MtA/VSS implementation의 pinned source" },
+    {
+      "kind": "공식 코드",
+      "label": "MPyC 0.11.2 · 38f06a7a 고정 원문",
+      "href": "https://github.com/lschoe/mpyc/tree/38f06a7af688231fca4defe1613d01a2aa8bcbfb",
+      "note": "README와 기본 문서, 원문의 선택 경로를 읽었습니다. CPython 3.12.13에서 원문 split/recombine 검산과 세 프로세스의 같은 (4+3)×5=35를 실제 실행했습니다. 전체 테스트·악성 네트워크·이탈/재시작·외부망 보호·성능·전체 보안 증명을 검증하지 않았습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Gennaro·Rabin·Rabin · Simple-Mult 원고",
+      "href": "https://mit6875.github.io/PAPERS/GennaroRabinRabin.pdf",
+      "note": "저자 원고의 3절 모형·3.1절 유도·Figure 2와 정리 2·4절 도입을 읽고 PDF 6/7쪽 수식을 화면으로 확인했습니다. 전체 논문의 VSS·능동 프로토콜·fast-track·보안 증명을 다시 검증하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "tss-lib · 3f677ff7의 선택한 DKG·VSS 원문",
+      "href": "https://github.com/bnb-chain/tss-lib/tree/3f677ff761fcf692edb0243a5d812930844d879a",
+      "note": "round_1/round_3, Feldman VSS, 메시지 인터페이스를 읽었습니다. 고정 전체 파일과 라이선스·Git blob·SHA256을 보존했습니다. Go를 컴파일하거나 DKG·서명·nonce·재분산·공격 시험을 실행하지 않았습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "tss-lib · 호출자가 제공할 전송 조건",
+      "href": "https://github.com/bnb-chain/tss-lib/blob/3f677ff761fcf692edb0243a5d812930844d879a/README.md#how-to-use-this-securely",
+      "note": "고정 README의 해당 절과 SessionNonce 분기 및 메시지 경로를 대조했습니다. 현재 이동 브랜치의 보안 인증이나 실제 배포 검수 결과가 아닙니다."
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Lindell · How To Simulate It",
+      "href": "https://eprint.iacr.org/2016/046",
+      "note": "공식 초록과 저자 서지 페이지를 읽었습니다. PDF는 403으로 전문 미열람입니다. 세 프로세스 성공이나 한 조각 분포 검사를 이 안내서의 전체 증명 검증으로 확대하지 않습니다."
+    }
   ],
   "crypto/shamir-secret-sharing": [
     { kind: "핵심 논문", label: "Shamir · How to Share a Secret", href: "https://doi.org/10.1145/359168.359176", note: "Threshold polynomial sharing의 primary paper" },
@@ -8357,10 +8416,120 @@ export const ARTICLE_EVIDENCE: Readonly<
     }
   ],
   "ai/launch-overhead-and-cpu-gpu-synchronization": [
-    { kind: "공식 문서", label: "Getting Started with CUDA Graphs (NVIDIA Technical Blog)", href: "https://developer.nvidia.com/blog/cuda-graphs/", note: "V100 에서 kernel 당 9.6·3.8·3.4 µs 와 첫 graph launch 약 33% 추가 비용이라는 저자 자기보고 수치의 출처" },
-    { kind: "공식 문서", label: "PyTorch CUDA semantics", href: "https://docs.pytorch.org/docs/stable/notes/cuda.html", note: "비동기 enqueue, .item() 등 동기화 호출 목록, capture 전 warmup 과 capture 제약의 근거" },
-    { kind: "공식 문서", label: "CUDA C++ Best Practices Guide — Timing", href: "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html", note: "kernel launch 와 Async copy 가 비동기라는 서술과 CPU–GPU 동기화 지점이 pipeline stall 을 뜻한다는 권고의 근거" },
-    { kind: "공식 구현", label: "vLLM vllm/config/compilation.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/config/compilation.py", note: "cudagraph_num_of_warmups docstring 과 capture size 상한을 두는 이유의 근거" },
+    {
+      "kind": "공식 문서",
+      "label": "Getting Started with CUDA Graphs · NVIDIA 2019",
+      "href": "https://developer.nvidia.com/blog/cuda-graphs/",
+      "note": "V100·CUDA10.1·500,000원소·block512·20 kernel×1,000회의 원문 실험 범위입니다. 2.9 μs는 장치 kernel 시간, 9.6·3.8·3.4 μs는 해당 반복의 전체 시간을 kernel 수로 나눈 값입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.14 · CUDA semantics",
+      "href": "https://docs.pytorch.org/docs/2.14/notes/cuda.html",
+      "note": "문서 버전2.14와 원문 v2.14.0을 고정하며 native GPU를 실행한 성능 재현으로 해석하지 않습니다. 본 글은 동작 계약을 보존한 전체 원문과 대조합니다. 수치 시간표는 별도 가정한 동일 계산의 모형입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CUDA Runtime 13.4 · Event Management",
+      "href": "https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/group__CUDART__EVENT.html",
+      "note": "공식13.4 API 설명과 PyTorch2.14의 Event.cpp·CUDAEvent.h 실제 연결을 함께 읽은 범위입니다. Event.wait의 stream 연결과 Event.synchronize의 host 완료 대기 구분을 뒷받침합니다. A26/B50은 별도 가정입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch 2.14 · Tensor.numpy",
+      "href": "https://docs.pytorch.org/docs/2.14/generated/torch.Tensor.numpy.html",
+      "note": "원문 tensor_numpy.cpp의 일반 strided tensor 경로와 버전2.14 문서 조건을 대조한 범위입니다. 기본 CUDA 변환이 오류이며 force 경로에는 CPU 변환이 포함됨을 확인합니다. GPU 복사 시간을 직접 측정하지 않았습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "PyTorch · pin_memory와 non_blocking 튜토리얼",
+      "href": "https://docs.pytorch.org/tutorials/intermediate/pinmem_nonblock.html",
+      "note": "공식 튜토리얼의 예시 조건을 읽었으며 그 환경의 성능 수치를 다른 장치의 법칙으로 쓰지 않습니다. pin_memory의 host 비용과 비동기 복사 중 메모리 수명 조건을 확인하는 근거입니다. 본문 시간표에는 전송 비용이 없습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CUDA Runtime 13.4 · API synchronization behavior",
+      "href": "https://docs.nvidia.com/cuda/cuda-runtime-api/api-sync-behavior.html",
+      "note": "공식13.4 문서의 각 메모리 종류와 방향 조건을 그대로 구분하며 모든 복사를 같은 경로로 가정하지 않습니다. Pageable host→device staging 뒤 반환 가능성과 Async 호출도 host를 기다리게 할 수 있는 조건을 읽었습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch2.14/aten/src/ATen/native/cuda/CUDAScalar.cu · 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/aten/src/ATen/native/cuda/CUDAScalar.cu",
+      "note": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch2.14/c10/cuda/CUDAFunctions.h · 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/c10/cuda/CUDAFunctions.h",
+      "note": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch2.14/torch/cuda/streams.py · 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/cuda/streams.py",
+      "note": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch2.14/torch/cuda/__init__.py · 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/cuda/__init__.py",
+      "note": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch2.14/torch/csrc/utils/tensor_numpy.cpp · 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/csrc/utils/tensor_numpy.cpp",
+      "note": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch2.14/torch/csrc/cuda/Module.cpp · 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/csrc/cuda/Module.cpp",
+      "note": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch2.14/docs/source/notes/cuda.md · 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/docs/source/notes/cuda.md",
+      "note": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch2.14/aten/src/ATen/cuda/CUDAEvent.h · 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/aten/src/ATen/cuda/CUDAEvent.h",
+      "note": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch2.14/c10/cuda/CUDAFunctions.cpp · 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/c10/cuda/CUDAFunctions.cpp",
+      "note": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch2.14/torch/csrc/cuda/Event.cpp · 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/csrc/cuda/Event.cpp",
+      "note": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch2.14/torch/csrc/cuda/Stream.cpp · 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/torch/csrc/cuda/Stream.cpp",
+      "note": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch2.14/c10/cuda/CUDAEvent.h · 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/c10/cuda/CUDAEvent.h",
+      "note": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "PyTorch2.14/aten/src/ATen/native/Scalar.cpp · 전체 원문",
+      "href": "https://github.com/pytorch/pytorch/blob/2b3ec34829036a65cd9d1398ea72a0167dc37470/aten/src/ATen/native/Scalar.cpp",
+      "note": "revision 2b3ec34829036a65cd9d1398ea72a0167dc37470의 전체 파일을 원격 원문과 SHA-256 대조했습니다. 실제 패널과 호출 연결은 본문의 해당 줄 범위에 한정하며 native CUDA 성능을 실행 재현하지 않았습니다."
+    }
   ],
   "gpu/warp-stall-reasons-and-issue-utilization": [
     { kind: "공식 문서", label: "NVIDIA Nsight Compute Profiling Guide · Warp Sampling / Warp Stall Reasons / Scheduler Statistics", href: "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html", note: "Sampling 간격 32~2048 clock, active·eligible·issued warp 정의, long/short scoreboard·barrier·not selected·wait·throttle 의 정의와 처방 문장의 근거" },
@@ -9914,12 +10083,17 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "firms/scale-and-cost-structure": [
     {
-      kind: "핵심 논문",
-      label:
-        "Allyn A. Young, “Increasing Returns and Economic Progress”, The Economic Journal, Vol. 38, No. 152 (Dec. 1928), pp. 527–542",
-      href: "https://www.jstor.org/stable/2224835",
-      note: "돌아가는 생산 방법이 수확 체증의 본체라는 출발점(530쪽), 분업이 분업에 달려 있다는 정리와 큰 시장의 정의(533쪽), 회사 크기의 한계와 산업의 분화(539쪽), 수확 체증에서 독점으로 가는 추론이 흔한 오류라는 경고(527쪽)의 출처. 스캔본을 전면 OCR해 읽고 인용 문장은 쪽 이미지로 대조했음",
+      "kind": "핵심 논문",
+      "label": "Allyn A. Young · Increasing Returns and Economic Progress (1928)",
+      "href": "https://gwern.net/doc/economics/automation/1928-young.pdf",
+      "note": "실제 공개 PDF의 527~534쪽·536~539쪽에서 관련 단락을 읽고 530·539쪽 이미지를 대조했습니다. 출판사 Vol38 issue152의 DOI10.2307/2224097을 확인했습니다. 이전 JSTOR2224835는 다른 논문이어서 교체했습니다. 전체 논문의 모든 내용을 검증했거나 숫자와 동률 식이 원문에 있거나 같은 방법에서 평균비용이 절대 내려가지 않는다고 주장하지 않습니다. 주문 합산과 비용 비교는 시장 독점의 실증 결과가 아닙니다."
     },
+    {
+      "kind": "공식 문서",
+      "label": "The Economic Journal · Volume38 Issue152 출판사 서지",
+      "href": "https://academic.oup.com/ej/issue/38/152",
+      "note": "원문 제목·저자·527~542쪽·DOI10.2307/2224097을 출판사 목록에서 확인했습니다. 다른 논문으로 연결되는 기존 식별자를 교체했습니다."
+    }
   ],
   "firms/market-power-and-markup": [
     {

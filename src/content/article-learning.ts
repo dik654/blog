@@ -3141,76 +3141,485 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/word2vec-negative-sampling": {
-    entryLevel: true,
-    entryNote: "Negative sample을 오답 단어라고만 부르지 않고 positive pair·noise distribution·binary label·sparse row update를 차례로 정의합니다.",
-    coreIdea: "SGNS는 vocabulary probability를 근사하지 않고 관측 pair와 sampled noise pair를 구분합니다. Noise와 subsampling 정책은 compute뿐 아니라 학습 분포와 optimum을 바꿉니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "sgns-objective", role: "Positive score를 올리고 sampled negative scores를 내리는 logistic loss를 계산합니다." },
-      { id: "negative-sampling-distribution", role: "Noise context를 고르는 normalized frequency distribution을 만듭니다." },
-      { id: "frequent-word-subsampling", role: "Pair 생성 전에 고빈도 token occurrence를 제거합니다." },
+    "entryLevel": false,
+    "entryNote": "앞 글의 단어 번호와 두 표를 이어 사용합니다. 같은 saw→cat에서 비교 두 건을 추가한 뒤 손실·기울기·분포와 원본의 제거·중복을 차례로 설명합니다.",
+    "coreIdea": "일부 비교 대상만 뽑으면 계산량뿐 아니라 학습 질문과 비중이 바뀝니다. 같은 세 점수에서 이상 손실과 원본 갱신을 대조하고 문장 제거가 관찰 쌍 자체를 바꾸는 이유를 확인합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "word-embedding-lookup",
+        "role": "번호로 두 표의 행을 읽고 같은 단어의 반복 사용을 추적합니다."
+      },
+      {
+        "id": "sigmoid-activation",
+        "role": "내적 점수를 라벨을 구별하는 이진 값으로 바꿉니다."
+      },
+      {
+        "id": "cross-entropy-nll",
+        "role": "관찰과 추첨 라벨의 음의 로그를 손실로 사용합니다."
+      },
+      {
+        "id": "chain-rule",
+        "role": "점수의 오차를 입력·출력 행으로 돌려줍니다."
+      },
+      {
+        "id": "expectation",
+        "role": "추첨 전의 평균 목적과 특정 표본의 손실을 구별합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "sgns-objective", sectionId: "sgns", intuition: "실제 함께 나온 pair와 출제 분포가 만든 가짜 pair를 구분하는 binary 문제입니다.", workedExample: "Positive 한 개와 k=2 negatives면 center row 하나, positive output row 하나와 negative output rows 두 개가 세 dot scores를 만듭니다.", boundary: "Vocabulary 전체 normalizer가 없으므로 score를 calibrated word probability로 읽지 않습니다." },
-      { id: "negative-sampling-distribution", sectionId: "noise", intuition: "어떤 오답을 얼마나 자주 보여줄지 정하는 출제 분포입니다.", workedExample: "Counts 10,000과 100의 raw ratio 100:1은 3/4 power 뒤 약 31.6:1로 완화됩니다.", boundary: "Exponent 3/4와 k는 empirical choices이며 바꾸면 compute와 objective optimum이 함께 바뀝니다." },
-      { id: "frequent-word-subsampling", sectionId: "subsampling", intuition: "거의 모든 문장에 나오는 token occurrence 일부를 window 전에 건너뜁니다.", workedExample: "고빈도 ‘the’ occurrence 일부가 제거되면 그 token을 지나 새 이웃 pair가 생길 수도 있습니다.", boundary: "Noise contexts를 추가하는 negative sampling과 달리 positive-pair population 자체를 바꿉니다." },
+    "introducedHere": [
+      {
+        "id": "sgns-objective",
+        "role": "관찰한 쌍에는 라벨 1, 분포에서 뽑은 비교 쌍에는 라벨 0을 붙여 두 표를 고칩니다."
+      },
+      {
+        "id": "negative-sampling-distribution",
+        "role": "어느 단어를 비교 대상으로 얼마나 자주 고를지 정한 확률입니다."
+      },
+      {
+        "id": "frequent-word-subsampling",
+        "role": "문장에서 일부 출현을 먼저 지운 뒤 남은 위치로 이웃을 만듭니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 Positive", relation: "Corpus에서 관측한 pair에 label 1을 줍니다.", concepts: ["sgns-objective"] },
-      { label: "01 Noise", relation: "Frequency-smoothed distribution에서 label-0 contexts를 뽑습니다.", concepts: ["negative-sampling-distribution"] },
-      { label: "02 Loss", relation: "Positive와 noise dot scores에 logistic loss를 적용합니다.", concepts: ["sgns-objective", "negative-sampling-distribution"] },
-      { label: "03 Pair filter", relation: "고빈도 occurrence를 pair 생성 전에 줄입니다.", concepts: ["frequent-word-subsampling"] },
+    "conceptExplanations": [
+      {
+        "id": "sgns-objective",
+        "sectionId": "sgns",
+        "intuition": "관찰한 쌍에는 라벨 1, 분포에서 뽑은 비교 쌍에는 라벨 0을 붙여 두 표를 고칩니다.",
+        "workedExample": "입력 saw=[0,1,1]과 cat·red·dog의 점수 1에서 손실 2.939785를 구하고 입력 기울기 [.924234,.731059,.462117]을 추적합니다.",
+        "boundary": "단어 전체 확률을 정규화하지 않습니다. 공유 행·상충 라벨 때문에 모든 관찰 점수가 매번 오르는 것은 아니며 실제 근사표와 순차 갱신은 이상식과 구별합니다."
+      },
+      {
+        "id": "negative-sampling-distribution",
+        "sectionId": "noise",
+        "intuition": "어느 단어를 비교 대상으로 얼마나 자주 고를지 정한 확률입니다.",
+        "workedExample": "별도 빈도 [1,1,1,16,1]은 3/4승 후 [1,1,1,8,1]이고 saw는 2/3, 나머지는 각각 1/12입니다.",
+        "boundary": "관찰된 적 있는 쌍도 비교 대상으로 나올 수 있습니다. q는 라벨 0 안의 분포, k는 포함되는 라벨 비중을 정하며 실제 코드의 번호 변경·정답 제외·중복도 기록해야 합니다."
+      },
+      {
+        "id": "frequent-word-subsampling",
+        "sectionId": "subsampling",
+        "intuition": "문장에서 일부 출현을 먼저 지운 뒤 남은 위치로 이웃을 만듭니다.",
+        "workedExample": "같은 다섯 단어에서 원본 조건과 시작 상태 0은 red cat을 남깁니다. cat의 이웃은 두 saw에서 red 하나로 바뀝니다.",
+        "boundary": "논문의 유효 확률 해석과 원본 C의 sqrt(t/f)+t/f 비교값은 다릅니다. 단어별 유지 가능성과 특정 출현의 남김 결과, 난수의 소비 순서를 구별합니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Positive 한 개와 k=2일 때 참여하는 rows와 dot-product 수를 말하세요.", answerChecklist: ["one center row", "one positive row", "two noise rows", "three dot products"], requiredConcepts: ["sgns-objective"], sectionId: "sgns" },
-      { level: "basic", question: "Positive와 negative score의 gradient가 원하는 방향을 설명하세요.", answerChecklist: ["positive up", "negative down", "sigmoid labels", "loss minimized"], requiredConcepts: ["sgns-objective"], sectionId: "sgns" },
-      { level: "basic", question: "SGNS score를 vocabulary probability라고 부를 수 없는 이유를 설명하세요.", answerChecklist: ["binary objective", "sampled rows", "no vocabulary normalizer", "noise prior"], requiredConcepts: ["sgns-objective", "negative-sampling-distribution"], sectionId: "sgns" },
-      { level: "basic", question: "Counts 10,000과 100에 3/4 power를 적용한 상대 비율을 계산하세요.", answerChecklist: ["100 ratio", "raise to 0.75", "about 31.6", "renormalize"], requiredConcepts: ["negative-sampling-distribution"], sectionId: "noise" },
-      { level: "basic", question: "Noise sampling과 frequent-word subsampling의 적용 시점을 구분하세요.", answerChecklist: ["noise after positive pair", "label zero contexts", "subsampling before window", "positive population changes"], requiredConcepts: ["negative-sampling-distribution", "frequent-word-subsampling"], sectionId: "subsampling" },
-      { level: "basic", question: "Subsampling receipt에 기록할 입력을 나열하세요.", answerChecklist: ["frequency table", "threshold and formula", "seed", "corpus tokenizer revision"], requiredConcepts: ["frequent-word-subsampling"], sectionId: "subsampling" },
-      { level: "advanced", question: "Positive score 1, negatives 0과 -1을 loss에 대입해 각 항을 쓰세요.", answerChecklist: ["-log sigma 1", "-log sigma 0", "-log sigma 1 for neg -1", "direction"], requiredConcepts: ["sgns-objective"], sectionId: "sgns" },
-      { level: "advanced", question: "k를 5에서 20으로 늘릴 때 compute와 learned score boundary를 설명하세요.", answerChecklist: ["fourfold negative scores", "class prior changes", "not same objective", "measure quality and latency"], requiredConcepts: ["sgns-objective", "negative-sampling-distribution"], sectionId: "noise" },
-      { level: "advanced", question: "Accidental positive와 duplicate negatives를 처리하는 두 정책을 비교하세요.", answerChecklist: ["detect observed pair", "resample or retain", "deduplicate or weight", "receipt required"], requiredConcepts: ["sgns-objective", "negative-sampling-distribution"], sectionId: "noise" },
-      { level: "advanced", question: "Subsampling 전후 pair histogram과 downstream 결과를 비교하는 release gate를 설계하세요.", answerChecklist: ["token keep rates", "distance pair histogram", "fixed budget", "rollback threshold"], requiredConcepts: ["frequent-word-subsampling", "sgns-objective"], sectionId: "subsampling" },
+    "conceptStages": [
+      {
+        "label": "같은 세 비교",
+        "relation": "관찰과 추첨에서 온 기록의 라벨을 구별합니다.",
+        "concepts": [
+          "sgns-objective"
+        ]
+      },
+      {
+        "label": "손실과 두 표",
+        "relation": "라벨별 점수 오차를 같은 입력과 선택한 출력에 돌려줍니다.",
+        "concepts": [
+          "sgns-objective"
+        ]
+      },
+      {
+        "label": "비교의 분포와 무게",
+        "relation": "q와 k, 정답 제외와 중복이 학습 목적과 실행을 바꾸는 이유를 봅니다.",
+        "concepts": [
+          "negative-sampling-distribution",
+          "sgns-objective"
+        ]
+      },
+      {
+        "label": "문장 자체의 변화",
+        "relation": "출현을 지운 뒤 이웃을 만들고 논문 식과 실제 원문을 대조합니다.",
+        "concepts": [
+          "frequent-word-subsampling"
+        ]
+      }
     ],
-    papers: [
-      { title: "Distributed Representations of Words and Phrases and their Compositionality", href: "https://arxiv.org/abs/1310.4546", problem: "큰 vocabulary 비용과 고빈도 word가 training을 지배하는 문제를 다룹니다.", contribution: "Negative sampling과 frequent-word subsampling recipe를 제안합니다.", assumptions: "논문의 unigram 3/4 noise·threshold·corpus·analogy evaluation을 전제로 합니다.", evidenceScope: "Sampling objective와 논문에 보고된 speed·accuracy 범위입니다.", notClaim: "3/4 exponent·k·threshold가 모든 corpus에서 최적이거나 SGNS가 calibrated probability를 낸다는 뜻은 아닙니다.", sectionId: "paper-negative-sampling" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "입력 saw와 관찰 cat, 추첨 red·dog에서 점수와 읽은 행 수, 손실을 구하세요.",
+        "answerChecklist": [
+          "입력 [0,1,1]과 세 출력 행의 점수는 모두 1입니다.",
+          "서로 다른 입력 1행과 출력 3행을 읽고 내적을 3회 계산합니다.",
+          "손실은 −lnσ(1)−2lnσ(−1)≈2.939785입니다."
+        ],
+        "requiredConcepts": [
+          "sgns-objective"
+        ],
+        "sectionId": "sgns"
+      },
+      {
+        "level": "basic",
+        "question": "5–7절을 보고 세 개의 σ(1)을 더했는데 1보다 큰 이유를 설명하세요.",
+        "answerChecklist": [
+          "각 값은 관찰과 추첨 라벨을 구별하는 별도의 이진 질문에 해당합니다.",
+          "합 3σ(1)≈2.193176이어도 모순이 없습니다.",
+          "단어 전체에 대한 정규화가 없으므로 단어가 나타날 확률로 읽지 않습니다."
+        ],
+        "requiredConcepts": [
+          "sgns-objective"
+        ],
+        "sectionId": "why"
+      },
+      {
+        "level": "basic",
+        "question": "별도 빈도 [1,1,1,16,1]를 비교 대상을 뽑는 확률로 바꾸세요.",
+        "answerChecklist": [
+          "3/4승 후 무게는 [1,1,1,8,1]이고 합은 12입니다.",
+          "saw의 확률은 2/3, 나머지는 각각 1/12입니다.",
+          "10,000 대 100의 비율도 100에서 약 31.6으로 줄고 모든 무게의 합으로 다시 나눕니다."
+        ],
+        "requiredConcepts": [
+          "negative-sampling-distribution"
+        ],
+        "sectionId": "noise"
+      },
+      {
+        "level": "basic",
+        "question": "12·17절에서 t/f=.01일 때 논문과 코드의 남기는 규칙을 비교하세요.",
+        "answerChecklist": [
+          "논문 식을 확률 범위로 제한한 유지율은 .1입니다.",
+          "원본 C의 비교값은 sqrt(.01)+.01=.11입니다.",
+          "실제 16비트 난수 격자와 float 비교를 연속 확률 모형과 구별합니다."
+        ],
+        "requiredConcepts": [
+          "frequent-word-subsampling"
+        ],
+        "sectionId": "source-filter"
+      },
+      {
+        "level": "basic",
+        "question": "문장이 red cat으로 줄면 cat의 반경 1 이웃이 어떻게 바뀌나요?",
+        "answerChecklist": [
+          "제거 전에는 두 saw 위치가 이웃입니다.",
+          "제거 후에는 red 한 위치가 이웃입니다.",
+          "비교 대상을 추가하는 추첨과 달리 관찰 쌍을 만들 문장 자체가 바뀝니다."
+        ],
+        "requiredConcepts": [
+          "frequent-word-subsampling",
+          "negative-sampling-distribution"
+        ],
+        "sectionId": "subsampling"
+      },
+      {
+        "level": "basic",
+        "question": "시작 상태 43의 실제 원본 C 결과가 8절의 이상식 결과와 다른 이유를 설명하세요.",
+        "answerChecklist": [
+          "원본은 점수 1에 sigmoid 근사표 581번을 읽어 약 .725518을 얻습니다.",
+          "수학적 σ(1)은 약 .731059입니다.",
+          "실행 후 입력 행은 약 [−.090207,.927448,.954896]입니다.",
+          "전체 학습 대신 지정한 한 관찰 쌍의 원문 블록을 실행한 범위입니다."
+        ],
+        "requiredConcepts": [
+          "sgns-objective"
+        ],
+        "sectionId": "source-update"
+      },
+      {
+        "level": "advanced",
+        "question": "8·11절을 보고 손실과 입력 행을 미분한 뒤 별도 점수 1·0·−1의 손실을 구하세요.",
+        "answerChecklist": [
+          "한 항의 점수 미분은 σ(s)−y입니다.",
+          "입력 기울기는 각 오차에 해당 출력 행을 곱해 더합니다.",
+          "같은 세 비교의 입력 기울기는 약 [.924234,.731059,.462117]입니다.",
+          "관찰 1·추첨 0과 −1의 별도 손실은 약 1.319671입니다.",
+          "공유 행과 상충 라벨 때문에 모든 관찰 점수가 매번 오른다고 보장할 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "sgns-objective"
+        ],
+        "sectionId": "gradient"
+      },
+      {
+        "level": "advanced",
+        "question": "k를 5에서 20으로 늘릴 때 계산량과 독립 점수의 최적값을 구별하세요.",
+        "answerChecklist": [
+          "음수 항은 4배이지만 관찰 항을 포함한 내적은 6에서 21로 3.5배입니다.",
+          "건너뛰기 없이 같은 무게로 세는 모형에서 양수 라벨 비중은 1/(k+1)입니다.",
+          "양의 두 무게 a,b가 한 자유 점수에 걸리면 σ(s*)=a/(a+b), s*=ln(a/b)입니다.",
+          "a=1,b=k이면 −ln5에서 −ln20으로 −ln4만큼 바뀝니다.",
+          "공유 벡터의 제약과 원본의 제외 정책을 독립 점수 모형과 구별합니다."
+        ],
+        "requiredConcepts": [
+          "sgns-objective",
+          "negative-sampling-distribution"
+        ],
+        "sectionId": "count-prior"
+      },
+      {
+        "level": "advanced",
+        "question": "시작 상태 0에서 여섯 번 제안한 원본 경로를 다른 제외·중복 정책과 비교하세요.",
+        "answerChecklist": [
+          "실제 제안은 dog, saw, saw, saw, saw, cat입니다.",
+          "마지막 cat은 재추첨 없이 건너뛰므로 음수 갱신은 5회, 관찰을 포함한 내적은 6회입니다.",
+          "출력 saw는 4번 즉시 바뀌므로 고정한 첫 점수의 기여를 4배 한 것과 다릅니다.",
+          "원본은 이번 정답 ID만 확인하며 전체 자료의 관찰 쌍 목록을 검사하지 않습니다.",
+          "조건부 재추첨·중복 제거·그대로 포함은 서로 다른 기록과 목적을 만듭니다."
+        ],
+        "requiredConcepts": [
+          "sgns-objective",
+          "negative-sampling-distribution"
+        ],
+        "sectionId": "source-policy"
+      },
+      {
+        "level": "advanced",
+        "question": "단어 제거와 추첨을 바꾼 실험에서 재현할 조건과 평가 기준을 설계하세요.",
+        "answerChecklist": [
+          "자료·단어 분리·목록과 빈도표, 입력 방향·이웃 범위·문장 경계를 고정합니다.",
+          "제거 기준과 실제 식, seed와 난수 소비 순서, 중복·제외 정책을 기록합니다.",
+          "남김 비율, 거리별 관찰 쌍의 분포, 갱신 수와 실제 시간을 함께 측정합니다.",
+          "같은 예산과 후속 과제, 유지·되돌림 기준을 정하고 논문의 실험을 보편 최적으로 확대하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "frequent-word-subsampling",
+          "sgns-objective"
+        ],
+        "sectionId": "limits"
+      }
     ],
+    "papers": [
+      {
+        "title": "Distributed Representations of Words and Phrases and their Compositionality",
+        "href": "https://arxiv.org/abs/1310.4546v1",
+        "problem": "큰 단어 목록에서 주변 예측에 드는 계산과 흔한 출현의 학습 비중을 줄입니다.",
+        "contribution": "2.2절 식 (4)의 관찰·기대항을 같은 세 점수에 적용하고 2.3절 식 (5)의 제거 규칙을 원본 C와 비교합니다.",
+        "assumptions": "선택한 자료와 추첨 분포·k·제거 기준을 고정합니다. 표 1은 당시 약 10억 단어 뉴스 자료와 300차원 유추 과제 범위입니다.",
+        "evidenceScope": "식의 부호를 뒤집어 같은 추첨의 손실 2.939785를 계산했습니다. 원본 20c129af의 유한 표·번호 변경·정답 제외·유지식은 별도 실제 실행으로 대조합니다.",
+        "notClaim": "3/4승·k·제거 기준이 모든 자료에서 최적이거나 작은 실행이 논문의 품질·속도를 재현했다는 뜻은 아닙니다.",
+        "sectionId": "paper-negative-sampling"
+      }
+    ]
   },
   "ai/subword-static-embeddings": {
-    entryLevel: true,
-    entryNote: "OOV·character n-gram·hash bucket·static representation을 먼저 정의하고 word가 subword rows의 합으로 만들어지는 과정을 봅니다.",
-    coreIdea: "Subword static embedding은 word 문자열을 character n-grams로 분해해 공유 bucket rows를 합칩니다. OOV를 표현할 수 있지만 문장 instance마다 달라지는 contextual state는 아닙니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "fasttext-subword-embedding", role: "Character n-gram bucket rows를 합쳐 word와 OOV vector를 만듭니다." },
-      { id: "static-embedding-artifact", role: "문자열에서 row와 vector까지의 모든 revision을 한 release contract로 묶습니다." },
+    "entryLevel": false,
+    "entryNote": "단어 번호로 저장 행을 읽는 앞 글을 이어 사용합니다. run과 처음 보는 runs를 같은 작은 표로 계산한 뒤 실제 fastText 함수와 배포 조건을 확인합니다.",
+    "coreIdea": "철자의 일부를 공유하면 전용 행이 없는 단어에도 계산 경로가 생깁니다. 같은 주소를 몇 번 읽었는지와 합·평균의 차이를 지키고 문자열에서 행으로 가는 규칙을 함께 배포해야 같은 결과를 얻습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "word-embedding-lookup",
+        "role": "단어 전용 행과 공유 조각 행의 주소를 구분합니다."
+      },
+      {
+        "id": "chain-rule",
+        "role": "평균 합성의 반복 행으로 돌아오는 미분 계수를 유도합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "fasttext-subword-embedding", sectionId: "ngrams", intuition: "처음 보는 합성어도 이미 배운 글자 조각들의 좌표를 모아 임시 주소를 만드는 방식입니다.", workedExample: "‘running’의 <ru, run, unn, ing, ng> bucket rows를 더해 vocabulary 밖에서도 vector를 만듭니다.", boundary: "Hash collision로 unrelated n-grams가 row를 공유하며 같은 spelling의 문장별 sense를 구분하지 않습니다." },
-      { id: "static-embedding-artifact", sectionId: "release", intuition: "좌표 파일만 넘기지 않고 그 좌표의 row 이름표와 생성 recipe를 같은 봉투에 넣습니다.", workedExample: "Vocabulary·n-gram range·hash·bucket 수·matrices·corpus cutoff·seed·평가표 checksum을 한 manifest에 기록합니다.", boundary: "Dimension과 dtype이 같아도 vocabulary나 hash가 다르면 row 의미와 OOV 합성이 호환되지 않습니다." },
+    "introducedHere": [
+      {
+        "id": "fasttext-subword-embedding",
+        "role": "문자 조각의 공유 행과 등록 단어의 전용 행으로 표현을 만듭니다."
+      },
+      {
+        "id": "static-embedding-artifact",
+        "role": "문자열을 어떤 행으로 보내고 어떻게 조립하는지까지 같은 버전으로 배포합니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 OOV", relation: "전용 word row가 없는 입력 경계를 확인합니다.", concepts: ["fasttext-subword-embedding"] },
-      { label: "01 N-gram", relation: "문자열을 boundary-marked character 조각으로 나눕니다.", concepts: ["fasttext-subword-embedding"] },
-      { label: "02 Compose", relation: "Hash bucket rows를 합쳐 static vector를 만듭니다.", concepts: ["fasttext-subword-embedding"] },
-      { label: "03 Release", relation: "문자열-to-vector 경로와 evidence를 versioning합니다.", concepts: ["fasttext-subword-embedding", "static-embedding-artifact"] },
+    "conceptExplanations": [
+      {
+        "id": "fasttext-subword-embedding",
+        "sectionId": "ngrams",
+        "intuition": "문자 조각의 공유 행과 등록 단어의 전용 행으로 표현을 만듭니다.",
+        "workedExample": "전용 (8,0)과 bucket 2·2·4를 읽은 run은 합 (16,3), 고정 조회 함수의 평균 (4,0.75)를 얻습니다. OOV runs는 (1.75,1)입니다.",
+        "boundary": "논문의 합 점수와 고정 fastText 조회의 평균을 구분합니다. 충돌과 같은 조각의 반복은 횟수를 보존하며 형태 공유가 문맥별 표현이나 품질을 보장하지 않습니다."
+      },
+      {
+        "id": "static-embedding-artifact",
+        "sectionId": "release",
+        "intuition": "문자열을 어떤 행으로 보내고 어떻게 조립하는지까지 같은 버전으로 배포합니다.",
+        "workedExample": "같은 é도 코드 포인트 표현에 따라 (7,1)과 (2,1)을 반환합니다. bucket을 8에서 4로 바꾸면 run의 가정 평균도 (4,0.75)에서 (3,0.75)로 바뀝니다.",
+        "boundary": "행렬만으로 사전 순서·전처리·해시·합성 규칙을 대신할 수 없습니다. 단어별 .vec는 조각 조회를 모두 보존하지 않으며 품질과 비용의 평가·되돌림 조건은 별도입니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "OOV가 무엇이고 word-only lookup이 왜 vector를 만들지 못하는지 설명하세요.", answerChecklist: ["not in vocabulary", "no dedicated row", "unknown policy", "string still available"], requiredConcepts: ["fasttext-subword-embedding"], sectionId: "overview" },
-      { level: "basic", question: "‘run’에 boundary를 붙여 길이 3 n-grams 예시를 만드세요.", answerChecklist: ["boundary symbols", "sliding characters", "examples such as <ru run un>", "fixed normalization"], requiredConcepts: ["fasttext-subword-embedding"], sectionId: "ngrams" },
-      { level: "basic", question: "Hash bucket이 필요한 이유와 collision 의미를 설명하세요.", answerChecklist: ["bounded table", "hash modulo B", "shared row", "collision allowed"], requiredConcepts: ["fasttext-subword-embedding"], sectionId: "ngrams" },
-      { level: "basic", question: "Vocabulary word와 OOV word의 vector 합성 항을 비교하세요.", answerChecklist: ["word row if known", "subword rows", "OOV no word row", "same dimension"], requiredConcepts: ["fasttext-subword-embedding"], sectionId: "ngrams" },
-      { level: "basic", question: "Subword static embedding과 contextual embedding을 구분하세요.", answerChecklist: ["same string same vector", "character sharing", "sentence forward absent", "sense not separated"], requiredConcepts: ["fasttext-subword-embedding"], sectionId: "static-contextual" },
-      { level: "basic", question: "Release manifest의 row identity 항목을 네 개 나열하세요.", answerChecklist: ["vocabulary", "normalization", "ngram range", "hash and buckets"], requiredConcepts: ["static-embedding-artifact"], sectionId: "release" },
-      { level: "advanced", question: "두 n-gram이 collision한 경우 forward와 gradient sharing을 설명하세요.", answerChecklist: ["same bucket ID", "same row contribution", "gradients accumulate", "possible interference"], requiredConcepts: ["fasttext-subword-embedding"], sectionId: "ngrams" },
-      { level: "advanced", question: "Unicode normalization revision이 달라졌을 때 OOV vector가 변하는 경로를 추적하세요.", answerChecklist: ["characters change", "ngrams change", "hash IDs change", "manifest incompatibility"], requiredConcepts: ["fasttext-subword-embedding", "static-embedding-artifact"], sectionId: "release" },
-      { level: "advanced", question: "두 static artifacts의 neighbor quality를 공정하게 비교하는 평가를 설계하세요.", answerChecklist: ["same text normalization", "same query set", "OOV subgroup", "downstream and rollback"], requiredConcepts: ["static-embedding-artifact"], sectionId: "release" },
-      { level: "advanced", question: "Hash bucket 수를 줄이는 release의 memory 이득과 collision 위험을 함께 판정하세요.", answerChecklist: ["row count memory", "collision rate", "OOV and subgroup metrics", "compatibility or rollback"], requiredConcepts: ["fasttext-subword-embedding", "static-embedding-artifact"], sectionId: "release" },
+    "conceptStages": [
+      {
+        "label": "같은 두 문자열",
+        "relation": "전용 행이 있는 run과 없는 runs가 어떤 항을 읽는지 비교합니다.",
+        "concepts": [
+          "fasttext-subword-embedding"
+        ]
+      },
+      {
+        "label": "주소와 횟수",
+        "relation": "충돌과 반복을 남겨 합·평균과 공유 행의 미분을 계산합니다.",
+        "concepts": [
+          "fasttext-subword-embedding"
+        ]
+      },
+      {
+        "label": "실제 함수",
+        "relation": "고정 원문에서 주소 생성·평균 반환·비지도 갱신의 배율을 읽습니다.",
+        "concepts": [
+          "fasttext-subword-embedding"
+        ]
+      },
+      {
+        "label": "같은 결과의 조건",
+        "relation": "Unicode와 bucket 변경을 반례로 배포 규칙과 평가를 정합니다.",
+        "concepts": [
+          "static-embedding-artifact"
+        ]
+      }
     ],
-    papers: [
-      { title: "Enriching Word Vectors with Subword Information", href: "https://aclanthology.org/Q17-1010/", problem: "Word-level static embedding이 morphology를 공유하지 못하고 OOV에 vector를 주기 어려운 문제를 다룹니다.", contribution: "Word와 boundary-marked character n-gram vectors를 합산하는 방법을 제안합니다.", assumptions: "논문의 n-gram range·hash buckets·language corpora·evaluation setting을 전제로 합니다.", evidenceScope: "Subword static representation과 morphology·rare/OOV 결과 범위입니다.", notClaim: "Character similarity가 항상 semantic similarity이거나 contextual sense를 만든다는 뜻은 아닙니다.", sectionId: "paper-fasttext" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "등록된 run과 미등록 runs는 어떤 행을 읽고 어떤 두 숫자를 반환하나요?",
+        "answerChecklist": [
+          "run은 전용 (8,0)과 bucket 2·2·4를 읽어 합 (16,3)을 4로 나누고 (4,0.75)를 반환합니다.",
+          "runs는 전용 행 없이 bucket 2·2·3·0을 읽어 (7,4)/4=(1.75,1)을 반환합니다.",
+          "OOV는 사전에 전용 단어 번호가 없다는 뜻이며 입력 문자열 자체가 없다는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "fasttext-subword-embedding"
+        ],
+        "sectionId": "ngrams"
+      },
+      {
+        "level": "basic",
+        "question": "8·11절을 보고 <ru와 run의 충돌을 aaaa의 반복과 비교하세요.",
+        "answerChecklist": [
+          "<ru와 run은 서로 다른 조각이 같은 bucket에 도달한 충돌입니다.",
+          "aaaa의 가운데 aaa는 서로 다른 시작 위치에서 같은 조각이 두 번 나온 경우입니다.",
+          "원문은 두 경우 모두 목록에 두 번 넣고 평균의 분모에도 두 번 셉니다.",
+          "run의 전체 행 목록 [0,5,5,7]에서 중복을 지우면 같은 계산이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "fasttext-subword-embedding"
+        ],
+        "sectionId": "source-rows"
+      },
+      {
+        "level": "basic",
+        "question": "두 문장에서 run이 다른 의미로 쓰이면 같은 조회 함수의 결과도 바뀌나요?",
+        "answerChecklist": [
+          "동일한 파일과 문자열이면 두 문맥 모두 (4,0.75)를 반환합니다.",
+          "getWordVector는 문장의 다른 단어를 입력으로 받지 않습니다.",
+          "합과 평균은 비영벡터의 코사인 방향을 보존하지만 길이와 내적 점수까지 같지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "fasttext-subword-embedding"
+        ],
+        "sectionId": "static-contextual"
+      },
+      {
+        "level": "basic",
+        "question": "눈에 같은 é를 두 Unicode 표현으로 주면 왜 다른 행을 읽나요?",
+        "answerChecklist": [
+          "U+00E9는 코드 포인트 하나, U+0065 뒤 U+0301은 두 개입니다.",
+          "고정 원문은 UTF-8 바이트를 순회하며 두 표현을 자동으로 정규화하지 않습니다.",
+          "길이 3 조각 하나는 bucket 7의 (7,1), 두 조각은 bucket 1·3의 평균 (2,1)을 만듭니다.",
+          "같게 취급할 응용에서는 학습과 조회에 같은 명시적 정규화 정책을 적용합니다."
+        ],
+        "requiredConcepts": [
+          "fasttext-subword-embedding",
+          "static-embedding-artifact"
+        ],
+        "sectionId": "unicode"
+      },
+      {
+        "level": "basic",
+        "question": "행 값 외에 함께 배포할 정보와 이 사례의 숫자 저장량을 설명하세요.",
+        "answerChecklist": [
+          "사전 순서, 조각 길이, 해시의 바이트 처리, bucket 수, 전처리와 합성·정규화 규칙을 맞춥니다.",
+          "전체 입력 숫자는 11행×2좌표×4바이트=88바이트이고 bucket만 세면 64바이트입니다.",
+          "파일 헤더, 사전, 출력 행렬과 작업 메모리는 별도입니다.",
+          "단어별 최종 벡터만 내보낸 .vec로 임의의 OOV 조각 행을 복원할 수는 없습니다.",
+          "학습 recipe, checksum, 평가와 이전 버전으로 돌아갈 자료도 함께 남깁니다."
+        ],
+        "requiredConcepts": [
+          "static-embedding-artifact"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "basic",
+        "question": "벡터가 나오면 그 단어를 잘 표현했다고 보아도 되나요? 빈 문자열은 어떤가요?",
+        "answerChecklist": [
+          "충돌로 다른 조각이 고친 행이나 거의 사용하지 않은 초기값도 숫자를 만들 수 있습니다.",
+          "OOV를 처리한 비율은 의미 품질의 증거와 다릅니다.",
+          "이번 빈 문자열은 길이 3 조각이 없어 0벡터를 반환합니다.",
+          "예약된 문장 끝은 별도 처리하며 일반 단어의 규칙으로 확대하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "fasttext-subword-embedding"
+        ],
+        "sectionId": "source-vector"
+      },
+      {
+        "level": "advanced",
+        "question": "8·14절을 함께 보며 평균 합성의 공유 행 미분과 실제 비지도 갱신을 구별하세요.",
+        "answerChecklist": [
+          "h=(1/M)Σm_j z_j이므로 ∂L/∂z_j=(m_j/M)∂L/∂h입니다.",
+          "run의 bucket 2는 m₂=2, M=4여서 평균 미분 계수는 1/2입니다.",
+          "합을 사용하면 해당 계수는 2입니다.",
+          "고정 비지도 원문은 숨은 값을 평균내지만 normalizeGradient=false라 state.grad를 출현마다 더합니다.",
+          "별도 한 단계 관찰에서 같은 행에 수정량이 두 번 더해졌으며 같은 학습률의 정확한 평균 미분으로 부르지 않습니다."
+        ],
+        "requiredConcepts": [
+          "fasttext-subword-embedding"
+        ],
+        "sectionId": "source-update"
+      },
+      {
+        "level": "advanced",
+        "question": "bucket을 8개에서 4개로 줄이면 비용과 호환성은 어떻게 바뀌나요?",
+        "answerChecklist": [
+          "bucket 숫자 저장량은 64에서 32바이트로 줄지만 전체 메모리가 절반이라는 뜻은 아닙니다.",
+          "un>의 나머지가 4에서 0으로 바뀝니다.",
+          "새 표도 b번=(b,1)로 두면 run 평균은 (3,0.75)가 되어 원래 결과와 다릅니다.",
+          "8을 4로 접을 때 기존 충돌은 남고 새 충돌이 생길 수 있습니다.",
+          "주소 규칙과 학습된 행, 평가와 배포 버전을 함께 바꿉니다."
+        ],
+        "requiredConcepts": [
+          "static-embedding-artifact"
+        ],
+        "sectionId": "release"
+      },
+      {
+        "level": "advanced",
+        "question": "형태 공유가 더 좋다는 주장을 검증할 평가를 설계하세요.",
+        "answerChecklist": [
+          "같은 질의, 말뭉치 시점, 전처리, 지표와 처리 실패를 세는 분모를 고정합니다.",
+          "전체 결과와 빈도·OOV·언어 및 문자 체계별 집단을 구분합니다.",
+          "가까운 벡터 목록의 변화만으로 후속 업무 품질의 개선을 단정하지 않습니다.",
+          "비용과 품질의 되돌림 조건을 정하고 이전 산출물을 보존합니다.",
+          "논문의 여러 언어 평가와 설정을 모든 업무의 보편적 최적으로 확대하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "static-embedding-artifact"
+        ],
+        "sectionId": "evaluation"
+      },
+      {
+        "level": "advanced",
+        "question": "Unicode 정규화 버전을 바꿀 때 같은 행 파일만 사용해도 되는지 반례로 설명하세요.",
+        "answerChecklist": [
+          "같은 가정 표에서도 두 표현은 (7,1)과 (2,1)로 달라집니다.",
+          "조회 전처리만 바꾸면 학습한 사전·행 주소와 맞지 않을 수 있습니다.",
+          "학습 자료부터 같은 정책을 적용하고 필요한 재훈련, 사전·해시 설정 고정과 재평가를 합니다.",
+          "checksum과 되돌릴 이전 규칙·행을 함께 보존합니다.",
+          "정규화는 기본 코드의 자동 기능이 아니며 어떤 문자를 합칠지는 응용의 정책입니다."
+        ],
+        "requiredConcepts": [
+          "fasttext-subword-embedding",
+          "static-embedding-artifact"
+        ],
+        "sectionId": "unicode"
+      }
     ],
+    "papers": [
+      {
+        "title": "Enriching Word Vectors with Subword Information",
+        "href": "https://aclanthology.org/Q17-1010/",
+        "problem": "단어마다 독립된 표현만 두면 희귀 단어와 처음 보는 철자의 형태 정보를 공유하기 어렵습니다.",
+        "contribution": "3.2절은 문자 조각의 벡터 합과 제한된 해시 저장으로 단어의 점수를 구성합니다.",
+        "assumptions": "논문의 조각 길이 3–6, bucket 2,000,000개와 여러 언어의 유사도·유추 평가 조건을 원문 범위로 구분합니다.",
+        "evidenceScope": "137쪽 식에 같은 네 기여와 출력 (1,0)을 넣으면 점수 16입니다. 고정 구현의 조회 평균은 별도 원문 실행으로 내적 4와 구별했습니다.",
+        "notClaim": "여덟 행의 가정 실행은 학습 품질이나 논문의 성능을 재현한 실험이 아니며 모든 설정의 최적값을 제시하지 않습니다.",
+        "sectionId": "paper-fasttext"
+      }
+    ]
   },
   "ai/math-functions-composition": {
     "entryLevel": true,
@@ -62051,12 +62460,312 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "crypto/mpc": {
-    entryLevel:false, entryNote:"Alice 3·Bob 4의 sum 7만 공개하는 사례에서 real/ideal·adversary·abort/fairness를 먼저 고정합니다.", coreIdea:"MPC는 private inputs로 함수를 계산하면서 ideal functionality가 허용한 result 밖의 leakage를 제한하는 protocol 목표이며, Shamir·Paillier 같은 primitive와 DKG ceremony의 보장을 합성할 때 각 전제·failure·receipt를 보존해야 합니다.", assumedKnowledge:[{id:"shamir-threshold-polynomial-sharing",role:"Threshold sharing의 수학은 독립 Shamir 글에서 재사용합니다."},{id:"paillier-additive-homomorphic-boundary",role:"Additive homomorphism의 수학은 독립 Paillier 글에서 재사용합니다."}],
-    introducedHere:[{id:"mpc-real-ideal-adversary-boundary",role:"Corruption·network·abort·fairness 조건별 보안 claim을 구분합니다."},{id:"mpc-dkg-transcript-artifact",role:"Party·round·commitment·complaint·public key를 session receipt에 결속합니다."},{id:"mpc-protocol-release-gate",role:"Active failures·dropout·restart와 cost를 pinned profile에서 검증합니다."}],
-    conceptExplanations:[{id:"mpc-real-ideal-adversary-boundary",sectionId:"security-model",intuition:"Trusted referee의 ideal output과 실제 transcript view를 비교합니다.",workedExample:"Sum 7만 공개할 때 transcript에서 input 3이나 4를 더 알 수 있으면 실패입니다.",boundary:"Semi-honest·malicious, static·adaptive, abort·fairness는 별도 조건입니다.",counterexample:"Privacy가 있어도 마지막 party가 abort해 자신만 result를 얻을 수 있습니다."},{id:"mpc-dkg-transcript-artifact",sectionId:"dkg",intuition:"모든 round message를 같은 session·roster·threshold에 결속합니다.",workedExample:"P1,P2,P3,t=1의 roster hash, commitments, encrypted shares, complaints와 public key를 receipt에 넣습니다.",boundary:"DKG output은 application signature·nonce·resharing 보장을 대신하지 않습니다.",counterexample:"Session ID가 빠지면 이전 commitment를 새 ceremony에 replay할 수 있습니다."},{id:"mpc-protocol-release-gate",sectionId:"release",intuition:"Happy path보다 bad share·dropout·restart에서 계약 보존을 먼저 봅니다.",workedExample:"Duplicate ID, invalid share/key, reordered round, complaint와 timeout을 재생하고 messages·bytes·p99·RSS를 잽니다.",boundary:"같은 n/t·adversary/network·security·hardware profile에서 비교합니다."}],
-    conceptStages:[{label:"00 security",relation:"Functionality·party·adversary model을 고정합니다.",concepts:["mpc-real-ideal-adversary-boundary"]},{label:"01 compose",relation:"독립 primitive의 전제와 실패를 전체 protocol claim으로 올리기 전에 조합 경계를 검사합니다.",concepts:["mpc-real-ideal-adversary-boundary","mpc-protocol-release-gate"]},{label:"02 DKG",relation:"Rounds를 session artifact에 결속합니다.",concepts:["mpc-dkg-transcript-artifact"]},{label:"03 release",relation:"Active failures·cost·rollback을 검사합니다.",concepts:["mpc-protocol-release-gate"]}],
-    exercises:[{level:"basic",question:"Semi-honest와 malicious adversary를 구분하세요.",answerChecklist:["follows protocol","observes view","deviates","abort/malformed","different guarantees"],requiredConcepts:["mpc-real-ideal-adversary-boundary"],sectionId:"security-model"},{level:"basic",question:"Shamir의 privacy가 전체 MPC의 malicious security를 곧바로 증명하지 않는 이유를 쓰세요.",answerChecklist:["primitive scope","bad share/dealer","protocol composition","adversary model","separate gate"],requiredConcepts:["mpc-real-ideal-adversary-boundary","mpc-protocol-release-gate"],sectionId:"shamir"},{level:"basic",question:"Paillier의 additive homomorphism과 MPC의 integrity·fairness 보장을 구분하세요.",answerChecklist:["malleability","no authenticity","abort/fairness separate","protocol proof","profile"],requiredConcepts:["mpc-real-ideal-adversary-boundary"],sectionId:"paillier"},{level:"basic",question:"Primitive를 MPC에 재사용할 때 보존해야 할 전제 네 가지를 적으세요.",answerChecklist:["field/key profile","party threshold","adversary/network","validation/session","failure semantics"],requiredConcepts:["mpc-real-ideal-adversary-boundary","mpc-protocol-release-gate"],sectionId:"security-model"},{level:"basic",question:"DKG receipt에 필요한 fields를 나열하세요.",answerChecklist:["protocol/version","session","roster/indices","threshold","round order","commitments/shares","complaints","public key"],requiredConcepts:["mpc-dkg-transcript-artifact"],sectionId:"dkg"},{level:"basic",question:"DKG session ID와 roster hash가 replay 방지에 필요한 이유를 설명하세요.",answerChecklist:["ceremony identity","same parties/threshold","old message replay","binding","typed reject"],requiredConcepts:["mpc-dkg-transcript-artifact"],sectionId:"dkg"},{level:"advanced",question:"Shamir 기반 MPC를 semi-honest에서 malicious setting으로 옮길 때 추가 의무 표를 설계하세요.",answerChecklist:["dealer equivocation","share validation","commitment/complaint","abort","authentication","simulation claim"],requiredConcepts:["mpc-real-ideal-adversary-boundary","mpc-protocol-release-gate"],sectionId:"shamir"},{level:"advanced",question:"Paillier primitive를 threshold decryption protocol에 넣을 때 누락되기 쉬운 보안 의무를 설계하세요.",answerChecklist:["valid key/ciphertext","distributed key","decryption proof","range/relation","malicious shares","abort/fairness"],requiredConcepts:["mpc-real-ideal-adversary-boundary","mpc-protocol-release-gate"],sectionId:"paillier"},{level:"advanced",question:"Session-crossing DKG replay와 complaint/dropout fixture를 설계하세요.",answerChecklist:["session/roster hash","old commitment","round order","complaint evidence","disqualification","abort/restart"],requiredConcepts:["mpc-dkg-transcript-artifact","mpc-real-ideal-adversary-boundary"],sectionId:"dkg"},{level:"advanced",question:"MPC release receipt·benchmark·rollback 경계를 작성하세요.",answerChecklist:["source SHA","n/t/adversary/network","security parameter","negative matrix","rounds/messages/bytes","p50/p99/RSS","restart","rollback"],requiredConcepts:["mpc-protocol-release-gate"],sectionId:"release"}],
-    papers:[{title:"bnb-chain/tss-lib pinned source 3f677ff",href:"https://github.com/bnb-chain/tss-lib/tree/3f677ff761fcf692edb0243a5d812930844d879a",problem:"Threshold-signature DKG/MtA/VSS의 concrete implementation seam을 고정",contribution:"Official Go source·tests의 pinned snapshot",assumptions:"Commit 3f677ff와 protocol/toolchain/dependency profile 고정",evidenceScope:"선택 source의 round/artifact behavior",notClaim:"Generic MPC 정의·모든 threshold schemes·moving main의 security를 대신하지 않음",sectionId:"paper-tsslib-source"}]
+    "entryLevel": false,
+    "entryNote": "Shamir의 조각과 보간을 짧게 되짚고 같은 세 입력을 분산·덧셈·곱셈·재공유·공개 결과까지 추적합니다.",
+    "coreIdea": "결과 자체가 드러내는 정보와 계산 기록의 추가 누출을 구분합니다. 같은 조각의 차수 변화와 재공유를 실제 원문에 대입하고 수동 모델·세션·비공개 상태의 조건을 확인합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "shamir-threshold-polynomial-sharing",
+        "role": "상수항과 새 계수로 입력을 나누며 각 참여자는 자기 주소의 조각을 받습니다."
+      },
+      {
+        "id": "lagrange-interpolation-basis",
+        "role": "서로 다른 점의 공개 보간 무게로 상수항을 복원합니다."
+      },
+      {
+        "id": "paillier-additive-homomorphic-boundary",
+        "role": "암호문 합산이라는 부품과 전체 MPC의 진위·복호 권한을 비교합니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "mpc-real-ideal-adversary-boundary",
+        "role": "허용 결과의 추론과 전체 계산 기록의 비밀성을 구분합니다."
+      },
+      {
+        "id": "mpc-dkg-transcript-artifact",
+        "role": "키 생성의 실행 연결과 비공개 조각 보존 조건을 설명합니다."
+      },
+      {
+        "id": "mpc-protocol-release-gate",
+        "role": "실제 실행과 미검증 범위를 같은 사례에 맞춰 정합니다."
+      },
+      {
+        "id": "mpc-shared-multiplication-degree-reduction",
+        "role": "조각 곱의 차수 증가와 재공유 유도를 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "mpc-real-ideal-adversary-boundary",
+        "sectionId": "output-leakage",
+        "intuition": "함수가 정한 결과에서 이미 얻는 정보와 계산 메시지가 추가로 주는 정보를 구분합니다.",
+        "workedExample": "같은 4,3,5의 결과 35를 알면 단가 5의 소유자는 첫 두 입력의 합 7을 압니다. 두 사람의 합 7과 자기 값 3은 상대 값 4를 드러냅니다.",
+        "boundary": "자기 입력과 허용된 출력·누출을 기준으로 전체 기록의 공동 분포를 비교하며 수동·능동, 정적·적응적, 공정성과 중단 조건을 구분합니다.",
+        "counterexample": "각 조각이 따로 균등해도 기울기를 재사용한 두 조각의 차이에는 입력 차이 66이 남습니다."
+      },
+      {
+        "id": "mpc-dkg-transcript-artifact",
+        "sectionId": "dkg",
+        "intuition": "키 기여를 합치되 어느 실행의 조각과 공개 약속인지 확인합니다.",
+        "workedExample": "별도 정직한 모형은 키 12와 다항식 12+10X, 조각 22/32/42, 공개키 142를 만듭니다.",
+        "boundary": "이 작은 군의 합산은 전체 DKG·악성 기여 검증·서명·nonce·참여자 교체를 구현한 것이 아닙니다. 공개 기록과 비공개 상태를 구분합니다.",
+        "counterexample": "이전 실행 A의 메시지를 B에서 기록만 하고 검사하지 않으면 실행이 섞일 수 있습니다. SessionNonce가 없으면 고정 소스는 0을 사용합니다."
+      },
+      {
+        "id": "mpc-protocol-release-gate",
+        "sectionId": "verification",
+        "intuition": "같은 함수와 모델을 정하고 실제로 실행한 범위만 근거로 삼습니다.",
+        "workedExample": "고정 MPyC의 세 로컬 프로세스가 4,3,5를 각각 입력해 모두 35를 출력했습니다. 별도 원문 함수 검산은 4,489개의 한 조각 분포를 확인했습니다.",
+        "boundary": "localhost의 정직한 실행과 악성 참여자·외부망 보호·이탈·재시작·전체 Go DKG 및 보안 감사를 구분합니다.",
+        "counterexample": "원문 함수를 호출해 숫자를 얻었다고 해서 전체 기록의 모의 실행 증명이나 실제 배포의 신뢰 분리가 확인된 것은 아닙니다."
+      },
+      {
+        "id": "mpc-shared-multiplication-degree-reduction",
+        "sectionId": "reshare-proof",
+        "intuition": "곱 조각을 새로 나누고 보간 무게로 합쳐 비밀 결과를 열지 않고 차수를 낮춥니다.",
+        "workedExample": "곱 조각 45/30/57을 새 기울기 4/6/8로 나눠 무게 3/−3/1로 합치면 37/39/41이 됩니다. H=35+2X에서 두 점으로 35를 복원합니다.",
+        "boundary": "체에 서로 다른 2t+1개 주소가 필요하며 정직한 재공유·독립적이고 균등한 새 계수 조건을 사용합니다.",
+        "counterexample": "첫 곱 조각 45를 46으로 일관되게 재공유하면 낮은 차수의 결과가 생겨도 출력은 38로 틀립니다.",
+        "proofIdea": "차수 2t 이하인 q에서 q(0)=Σλᵢq(i)입니다. hᵢ(0)=q(i), deg hᵢ≤t인 새 분산식을 택하면 H=Σλᵢhᵢ의 상수항은 q(0), 차수는 t 이하입니다. 0이 아닌 무게에 대응하는 독립 균등 계수로 새 계수도 균등해집니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "01 같은 세 입력",
+        "relation": "무엇을 공개할지 정하고 입력을 직선 조각으로 나눕니다.",
+        "concepts": [
+          "mpc-real-ideal-adversary-boundary",
+          "shamir-threshold-polynomial-sharing"
+        ]
+      },
+      {
+        "label": "02 조각으로 계산",
+        "relation": "덧셈과 곱셈의 차수 차이를 재공유로 처리합니다.",
+        "concepts": [
+          "mpc-shared-multiplication-degree-reduction",
+          "lagrange-interpolation-basis"
+        ]
+      },
+      {
+        "label": "03 원문과 결과",
+        "relation": "고정 원문 입력·연산·출력을 같은 수치와 대조합니다.",
+        "concepts": [
+          "mpc-real-ideal-adversary-boundary",
+          "mpc-protocol-release-gate",
+          "mpc-shared-multiplication-degree-reduction"
+        ]
+      },
+      {
+        "label": "04 키와 세션 조건",
+        "relation": "정직한 키 모형과 실제 DKG·메시지 검사의 책임을 구분합니다.",
+        "concepts": [
+          "mpc-dkg-transcript-artifact",
+          "mpc-protocol-release-gate"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "두 사람이 자기 값과 합계 7을 알 때 상대 값을 숨길 수 있나요?",
+        "answerChecklist": [
+          "자기 값 3을 알면 7−3=4",
+          "이 누출은 결과 자체에 포함됨",
+          "MPC는 결과와 자기 입력에서 이미 얻는 정보까지 없애는 보장이 아님"
+        ],
+        "sectionId": "output-leakage",
+        "requiredConcepts": [
+          "mpc-real-ideal-adversary-boundary"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 4,3,5의 조각과 목표 결과를 계산하세요.",
+        "answerChecklist": [
+          "mod 67에서 fₓ=4+2X, fᵧ=3+5X, f_z=5+3X",
+          "세 입력의 조각은 [6,8,10], [8,13,18], [8,11,14]",
+          "목표는 (4+3)×5=35",
+          "기울기는 재현용 고정값이며 실제로는 입력마다 새 독립·균등 계수 사용"
+        ],
+        "sectionId": "sharing",
+        "requiredConcepts": [
+          "mpc-shared-multiplication-degree-reduction"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "덧셈은 각자 하고 곱셈에는 통신이 더 필요한 이유는 무엇인가요?",
+        "answerChecklist": [
+          "합 조각 [14,21,28]은 차수 1",
+          "곱 조각 [45,30,57]은 q=35+56X+21X²의 차수 2",
+          "두 점 복원식 2×45−30은 60으로 틀림",
+          "차수를 다시 1로 낮추기 위해 새 조각을 교환"
+        ],
+        "sectionId": "multiplication",
+        "requiredConcepts": [
+          "mpc-shared-multiplication-degree-reduction"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "재공유한 조각에서 같은 결과 35를 복원하세요.",
+        "answerChecklist": [
+          "각 q_i를 기울기 4,6,8인 직선으로 재공유",
+          "보간 무게 [3,−3,1]로 각 열을 합침",
+          "새 조각 [37,39,41]은 H=35+2X",
+          "2×37−39=35"
+        ],
+        "sectionId": "reshare",
+        "requiredConcepts": [
+          "mpc-shared-multiplication-degree-reduction"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "수동 공격과 능동 공격을 이번 계산에서 구분하세요.",
+        "answerChecklist": [
+          "수동 공격자는 정해진 계산을 따르며 자기 기록을 더 분석",
+          "능동 공격자는 q₁을 45 대신 46으로 재공유할 수 있음",
+          "첫 행의 무게 3 때문에 출력이 35+3=38로 바뀜",
+          "선택 MPyC의 t<m/2 수동 모델은 능동 검증이나 공정성을 자동 보장하지 않음"
+        ],
+        "sectionId": "security-model",
+        "requiredConcepts": [
+          "mpc-real-ideal-adversary-boundary",
+          "mpc-shared-multiplication-degree-reduction"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "DKG는 이번 함수 계산과 무엇이 다른가요?",
+        "answerChecklist": [
+          "별도 용도로 세 상수 4+3+5를 합쳐 비밀키 12를 나눔",
+          "합 다항식 12+10X와 조각 [22,32,42]",
+          "mod 269의 위수 67인 g=16에서 공개키 g¹²=142",
+          "이는 정직한 소형 예이며 전체 DKG·서명·nonce·참여자 변경은 별도"
+        ],
+        "sectionId": "dkg",
+        "requiredConcepts": [
+          "mpc-dkg-transcript-artifact"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "재공유가 상수항을 보존하면서 차수를 낮추는 것을 유도하세요.",
+        "answerChecklist": [
+          "q는 차수 2t라 2t+1개의 서로 다른 점에서 q(0)을 복원",
+          "h_i(0)=q(i)이며 각 h_i의 차수는 t",
+          "H=Σλ_i h_i이면 H(0)=q(0), deg H≤t",
+          "정직하고 독립적인 새 계수의 조건에서 재무작위화",
+          "같은 사례에서 β=3×4−3×6+8=2"
+        ],
+        "sectionId": "reshare-proof",
+        "requiredConcepts": [
+          "mpc-shared-multiplication-degree-reduction"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "하나의 조각이 균등하다는 계산을 전체 MPC 보안 증명과 구분하세요.",
+        "answerChecklist": [
+          "주소 i≠0에서 s+ai는 균등한 a가 변할 때 체의 모든 값을 한 번씩 지남",
+          "각 상수항에 대한 한 조각 분포가 같음을 67×67개 계산으로 확인",
+          "기울기를 재사용한 4+2X와 3+2X의 같은 주소 조각 차이는 66 mod 67",
+          "전체 기록과 허용 출력의 공동 분포에 대한 모의 실행 증명은 별도"
+        ],
+        "sectionId": "privacy",
+        "requiredConcepts": [
+          "mpc-real-ideal-adversary-boundary",
+          "mpc-shared-multiplication-degree-reduction"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "결과 공개와 DKG 메시지의 재사용·이탈 조건을 설계하세요.",
+        "answerChecklist": [
+          "허용 결과와 수신자·입력 범위를 계산 전에 정함",
+          "실행 A의 메시지를 B에서 거부하는 실제 일치 검사가 필요",
+          "고정 tss-lib README는 전송 보호·세션 일치·신뢰할 수 있는 방송을 호출자 책임으로 둠",
+          "SessionNonce가 없으면 0을 사용하므로 고유한 값을 자동 생성했다고 가정할 수 없음",
+          "비밀 조각과 키를 공개 감사 로그에 모으지 않으며 공개 기록과 제한된 참여자별 상태를 분리"
+        ],
+        "sectionId": "session",
+        "requiredConcepts": [
+          "mpc-real-ideal-adversary-boundary",
+          "mpc-dkg-transcript-artifact",
+          "mpc-protocol-release-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "실제 실행 성공이 무엇을 입증하고 무엇을 남기나요?",
+        "answerChecklist": [
+          "원문 split/recombine의 고정 계수 검산과 실제 세 프로세스의 새 난수 실행을 구분",
+          "3명·t=1·mod 67에서 모두 결과 35를 출력하고 정상 종료",
+          "기본 localhost 연결은 SSL과 PRSS를 끈 시험이며 외부망 보호나 독립 관리 주체의 증거가 아님",
+          "악성 참여자·이탈·재시작·전체 Go DKG·성능·보안 감사는 실행하지 않음",
+          "단순 재시도는 공정성·이전 정보 노출·중복 실행을 자동 해결하지 않음"
+        ],
+        "sectionId": "verification",
+        "requiredConcepts": [
+          "mpc-protocol-release-gate",
+          "mpc-real-ideal-adversary-boundary"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "MPyC 0.11.2 · 38f06a7a 고정 원문",
+        "href": "https://github.com/lschoe/mpyc/tree/38f06a7af688231fca4defe1613d01a2aa8bcbfb",
+        "problem": "비밀 조각의 계산을 같은 입력으로 실제 호출합니다.",
+        "contribution": "Shamir 기반 입력·로컬 연산·곱 재공유·결과 공개를 구현합니다.",
+        "assumptions": "t<m/2인 수동 공격 모델이며 실제 연결과 공개 수신자 조건을 구분합니다.",
+        "evidenceScope": "README와 기본 문서, 원문의 선택 경로를 읽었습니다. CPython 3.12.13에서 원문 split/recombine 검산과 세 프로세스의 같은 (4+3)×5=35를 실제 실행했습니다.",
+        "notClaim": "전체 테스트·악성 네트워크·이탈/재시작·외부망 보호·성능·전체 보안 증명을 검증하지 않았습니다.",
+        "sectionId": "source-multiply"
+      },
+      {
+        "title": "Gennaro·Rabin·Rabin · Simple-Mult 원고",
+        "href": "https://mit6875.github.io/PAPERS/GennaroRabinRabin.pdf",
+        "problem": "곱셈으로 늘어난 공유의 차수를 결과 공개 없이 되돌립니다.",
+        "contribution": "재공유와 공개 보간 무게를 사용해 차수 축소와 재무작위화를 연결합니다.",
+        "assumptions": "선택한 Simple-Mult의 정직한 동작과 수동 공격 조건, 별도 능동 공격용 검증을 구분합니다.",
+        "evidenceScope": "저자 원고의 3절 모형·3.1절 유도·Figure 2와 정리 2·4절 도입을 읽고 PDF 6/7쪽 수식을 화면으로 확인했습니다.",
+        "notClaim": "전체 논문의 VSS·능동 프로토콜·fast-track·보안 증명을 다시 검증하지 않았습니다.",
+        "sectionId": "reshare-proof"
+      },
+      {
+        "title": "tss-lib · 3f677ff7의 선택한 DKG·VSS 원문",
+        "href": "https://github.com/bnb-chain/tss-lib/tree/3f677ff761fcf692edb0243a5d812930844d879a",
+        "problem": "정직한 키 합산과 실제 키 생성의 검증·실행 연결을 구분합니다.",
+        "contribution": "선택한 키 생성 단계와 VSS 확인 및 메시지 인터페이스를 제공합니다.",
+        "assumptions": "실제 곡선·프로토콜과 본문의 작은 곱셈군 모형이 다르며 호환 설정과 원문 버전에 귀속합니다.",
+        "evidenceScope": "round_1/round_3, Feldman VSS, 메시지 인터페이스를 읽었습니다. 고정 전체 파일과 라이선스·Git blob·SHA256을 보존했습니다.",
+        "notClaim": "Go를 컴파일하거나 DKG·서명·nonce·재분산·공격 시험을 실행하지 않았습니다.",
+        "sectionId": "source-dkg"
+      },
+      {
+        "title": "tss-lib · 호출자가 제공할 전송 조건",
+        "href": "https://github.com/bnb-chain/tss-lib/blob/3f677ff761fcf692edb0243a5d812930844d879a/README.md#how-to-use-this-securely",
+        "problem": "다른 실행의 자료와 통신 상대를 혼동하지 않아야 합니다.",
+        "contribution": "암호화된 통신·실행마다 고유한 세션·일치 검사·신뢰할 수 있는 방송과 오류 처리의 책임을 설명합니다.",
+        "assumptions": "문서의 요구와 호출자가 실제 제공한 보호를 구분합니다.",
+        "evidenceScope": "고정 README의 해당 절과 SessionNonce 분기 및 메시지 경로를 대조했습니다.",
+        "notClaim": "현재 이동 브랜치의 보안 인증이나 실제 배포 검수 결과가 아닙니다.",
+        "sectionId": "session"
+      },
+      {
+        "title": "Lindell · How To Simulate It",
+        "href": "https://eprint.iacr.org/2016/046",
+        "problem": "전체 실행 기록의 보안을 모의 실행으로 정의하고 증명하는 방법을 다룹니다.",
+        "contribution": "안전한 계산 등에서 모의 실행 증명을 작성하는 안내서입니다.",
+        "assumptions": "공식 페이지의 2025-01-23 수정 이력과 저자 서지를 확인했습니다.",
+        "evidenceScope": "공식 초록과 저자 서지 페이지를 읽었습니다. PDF는 403으로 전문 미열람입니다.",
+        "notClaim": "세 프로세스 성공이나 한 조각 분포 검사를 이 안내서의 전체 증명 검증으로 확대하지 않습니다.",
+        "sectionId": "privacy"
+      }
+    ]
   },
   "crypto/shamir-secret-sharing": {
     "entryLevel": false,
@@ -88868,117 +89577,342 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/launch-overhead-and-cpu-gpu-synchronization": {
-    entryNote: "CUDA graph 의 capture·replay 계약과 stream 의 비동기 실행을 알고, decode step 의 kernel 수와 시간을 profiler 로 본 적이 있는 독자가 시작점입니다.",
-    coreIdea: "GPU 는 CPU 가 queue 에 넣어 준 kernel 만 실행하므로, launch 당 µs 단위 CPU 고정 비용과 scheduling 시간을 합한 CPU 한 step 이 GPU 한 step 보다 길면 step 시간은 CPU 가 정하고 GPU 는 굶습니다. 비동기 제출 아래 step 시간은 max(T_sched+Nτ_L, T_GPU) 이고, .item() 같은 동기화 지점은 scheduling 을 GPU 뒤에 직렬로 놓아 T_sched+max(Nτ_L, T_GPU) 로 늘리며, graph replay 는 Nτ_L 만 수십 µs 로 줄이고 첫 replay 와 warmup·capture failure 는 별도의 비용입니다.",
-    assumedKnowledge: [
-      { id: "cuda-graph-capture-replay", role: "Launch N개를 graph launch 하나로 바꾸는 실행 모델을 전제하고 그 latency 와 실패만 이 글이 다룹니다." },
-      { id: "cuda-graph-compatible-execution", role: "Capture 가 실패하는 조건의 원천으로 재사용합니다." },
-      { id: "cuda-stream-ordering", role: "kernel 이 queue 에 들어간 뒤 비동기로 실행된다는 계약이 두 timeline 을 나누는 전제입니다." },
-      { id: "latency-launch-bound-kernel", role: "kernel 이 launch-bound 인 구간의 정의를 재사용하고 그 원인인 host 비용을 분리합니다." },
-      { id: "runtime-warmup-cold-start", role: "Graph warmup 이 runtime 기동 warmup 의 한 항목임을 연결합니다." },
-      { id: "inference-runtime-process-anatomy", role: "Scheduling CPU 시간을 GPU 실행과 겹치는 process 분리의 근거로 재사용합니다." },
+    "coreIdea": "같은 두 계산을 세 회 반복해 3→8→18→38을 얻습니다. 준비·전달·계산을 두 시간축에 놓으면 CPU 제출 종료 24 μs와 GPU 완료 26 μs가 구별됩니다. 결과 대기와 묶음 제출을 각각 바꾸어 30·15·21 μs의 원인을 추적하고 실제 PyTorch의 값 읽기·stream 의존성·CPU 대기 경로로 연결합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "cuda-stream-ordering",
+        "role": "같은 stream의 앞 계산 뒤에 다음 계산이 실행되는 순서입니다. 지시를 전달한 시각과 실행을 완료한 시각을 구분할 때 재사용합니다."
+      },
+      {
+        "id": "cuda-event-dependency",
+        "role": "한 stream의 특정 완료 지점을 다른 stream의 이후 작업과 연결하는 관계입니다. CPU 완료 대기와 이 관계가 다른 이유를 원문에서 추적합니다."
+      }
     ],
-    introducedHere: [
-      { id: "host-launch-overhead", role: "Launch 하나의 CPU 고정 비용과 그것을 나눠 붙이는 상각의 세 방법을 정의합니다." },
-      { id: "cpu-submission-bottleneck", role: "CPU 한 step 의 제출 시간이 GPU 한 step 보다 긴 상태와 step 시간 식을 정의합니다." },
-      { id: "gpu-queue-starvation", role: "빈 queue 앞에서 GPU 가 노는 시간과 바쁜 비율 min(1, λ/μ) 를 정의합니다." },
-      { id: "cpu-gpu-synchronization-point", role: "명시적·암묵적 동기화가 pipeline 을 비우고 scheduling 을 직렬화하는 방식을 설명합니다." },
-      { id: "cuda-graph-replay-latency", role: "Replay 한 번의 launch 몫과 첫 replay 의 추가 비용을 수치로 정합니다." },
-      { id: "cuda-graph-warmup", role: "Capture 전 eager warmup 과 capture 뒤 첫 replay 를 요청 전에 치르는 절차를 설명합니다." },
-      { id: "cuda-graph-capture-failure", role: "오류·잘못된 replay·조용한 eager fallback 세 증상과 진단 순서를 정합니다." },
+    "introducedHere": [
+      {
+        "id": "host-launch-overhead",
+        "role": "GPU 작업의 실행을 요청하는 host 호출 경로가 쓰는 시간입니다. 포함한 Python 준비·dispatcher·driver 경계를 지정해 측정합니다."
+      },
+      {
+        "id": "cpu-submission-bottleneck",
+        "role": "CPU의 작업 준비와 제출 속도가 반복 진행을 제한하는 상태입니다. 첫 완료시간과 충분히 긴 동일 작업의 평균 완료 간격을 구별합니다."
+      },
+      {
+        "id": "gpu-queue-starvation",
+        "role": "필요한 다음 작업이 아직 준비되지 않아 GPU 실행열이 비는 현상입니다. 관측 범위와 원인을 함께 확인합니다."
+      },
+      {
+        "id": "cpu-gpu-synchronization-point",
+        "role": "CPU가 필요한 GPU 작업의 완료를 확인하며 기다리는 지점입니다. Stream·event·device의 대상 범위와 GPU 사이의 의존성 연결을 구별합니다."
+      },
+      {
+        "id": "cuda-graph-replay-latency",
+        "role": "Graph 재생을 요청하는 host 호출의 길이와 마지막 GPU 작업 완료까지의 지연을 구분해 측정하는 시간입니다."
+      },
+      {
+        "id": "cuda-graph-warmup",
+        "role": "캡처 전 필요한 초기화를 실행하고 첫 재생 등의 초기 비용을 반복 실행과 구분하거나 요청 전에 치르는 사전 실행 절차입니다."
+      },
+      {
+        "id": "cuda-graph-capture-failure",
+        "role": "캡처 단계의 오류, 실행 계약이 어긋난 잘못된 재생, 실행 조건에 따른 graph 경로 미선택을 구별해 진단하는 문제입니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "host-launch-overhead",
-        sectionId: "launch-overhead",
-        intuition: "택배 하나를 부치는 데 드는 접수 시간은 상자가 크든 작든 같습니다. 작은 상자 300개를 따로 부치면 접수 시간이 배송 시간보다 길어집니다.",
-        workedExample: "launch 하나 5 µs 에 kernel 300개면 step 마다 1.5 ms 를 제출에만 씁니다. V100 blog 에서는 2.9 µs kernel 이 launch 를 포함해 3.8 µs, 동기화까지 넣으면 9.6 µs 였습니다.",
-        boundary: "이 비용은 GPU 실행이 충분히 길면 그 뒤에 숨어 보이지 않습니다. 상각은 kernel 당 CPU 비용을 줄이는 것이 아니라 나누는 분모를 키우는 것입니다.",
+        "id": "host-launch-overhead",
+        "sectionId": "names",
+        "intuition": "계산할 일을 전달하는 시간과 실제 계산하는 시간을 나누어 읽으면 줄여야 할 비용이 드러납니다.",
+        "workedExample": "가정한 두 launch는 각각 3 μs이고 회별 준비 2 μs와 합해 CPU 제출에 8 μs를 씁니다. GPU 계산 두 개는 합계 4 μs입니다.",
+        "boundary": "모든 kernel 크기와 장치에서 고정된 상수가 아닙니다. 2019 완료 평균 3.8−2.9 μs를 순수 host 호출 시간으로 해석할 수 없습니다."
       },
       {
-        id: "cpu-submission-bottleneck",
-        sectionId: "submission-pipeline",
-        intuition: "주방(GPU)이 아무리 빨라도 주문을 받아 전표를 쓰는 홀(CPU)이 더 느리면 손님이 나가는 속도는 홀이 정합니다.",
-        workedExample: "scheduling 1.0 ms 에 launch 1.5 ms 를 더한 CPU step 2.5 ms 가 GPU 2.0 ms 보다 길어 TPOT 은 2.5 ms 입니다. graph 로 launch 를 60 µs 로 줄이면 CPU 1.06 ms 가 되어 GPU 2.0 ms 가 step 을 정합니다.",
-        boundary: "GPU 실행이 4 ms 처럼 길면 CPU 2.5 ms 는 숨고 launch 를 줄여도 step 은 그대로입니다. launch 를 지운 뒤에도 scheduling 이 병목이면 다음 수단은 비동기 scheduling 입니다.",
+        "id": "cpu-submission-bottleneck",
+        "sectionId": "finite-and-steady",
+        "intuition": "지시는 늦게 도착하는데 GPU가 빨리 계산하면 다음 계산까지 빈 시간이 생깁니다.",
+        "workedExample": "S2 L3 E2 N2의 첫 완료는 10 μs이고 미리 제출한 완료는 10·18·26 μs입니다. CPU 회별 8 μs가 GPU 회별 4 μs보다 길어 이 모형의 반복 간격이 8 μs입니다.",
+        "boundary": "max(S+NL,NE)는 동일 작업·미리 정한 제출·충분한 미완료 공간의 장기 간격입니다. 첫 완료 S+L+E+(N−1)max(L,E)나 실제 TPOT와 바꾸어 쓰지 않습니다."
       },
       {
-        id: "gpu-queue-starvation",
-        sectionId: "submission-pipeline",
-        intuition: "컨베이어 앞의 작업자가 부품이 안 와서 손을 놓고 있는 시간입니다. 작업자가 느린 것이 아니라 부품을 올리는 쪽이 느린 것입니다.",
-        workedExample: "launch 5 µs 면 CPU 는 초당 20만 개를 넣고 kernel 4 µs 면 GPU 는 초당 25만 개를 비우므로 바쁜 비율은 0.8, 즉 20% 가 starvation 입니다. step 단위로는 CPU 2.5 ms 대 GPU 2.0 ms 에서 0.5 ms 입니다.",
-        boundary: "이 starvation 은 scheduler 의 요청 starvation 이나 training 의 input starvation 과 다른 GPU command queue 의 빈 시간입니다. GPU 쪽 profiler 에는 kernel 사이 빈틈으로만 나타나므로 CPU timeline 을 나란히 봐야 원인이 보입니다.",
+        "id": "gpu-queue-starvation",
+        "sectionId": "measurement",
+        "intuition": "먼저 끝난 계산이 다음 지시를 기다리는 빈 구간을 시간축에서 찾습니다.",
+        "workedExample": "기본 eager의 전체 0–26 μs 중 계산 합계는 12 μs여서 비율은 6/13입니다. 장기 반복 구간에서는 회별 4/8=.5이고 별도 L5 E4·준비 없음 모형은 .8입니다.",
+        "boundary": "빈 GPU 구간만으로 CPU 제출을 원인으로 확정할 수 없습니다. 데이터 의존성·통신·자원 경쟁을 함께 대조하며 유한 구간과 장기 비율을 섞지 않습니다."
       },
       {
-        id: "cpu-gpu-synchronization-point",
-        sectionId: "sync-points",
-        intuition: "홀 직원이 주방이 요리를 다 낼 때까지 서서 기다렸다가 그제야 다음 주문을 받으러 가는 것입니다. 기다리는 동안 주방도 곧 할 일이 떨어집니다.",
-        workedExample: "step 끝의 .item() 하나로 async 2.5 ms 이던 step 이 1.0+max(1.5, 2.0)=3.0 ms 가 됩니다. graph 를 써도 1.0+2.0=3.0 ms 로 같아 replay 의 이득이 사라집니다.",
-        boundary: "timing 측정에는 동기화가 필요하므로 측정값과 serving step 시간을 구분해야 합니다. pinned memory 와 non_blocking=True 로 copy 를 stream 에 넣으면 copy 는 동기화 지점이 아닙니다.",
+        "id": "cpu-gpu-synchronization-point",
+        "sectionId": "source-scope",
+        "intuition": "답을 읽으려는 쪽이 언제까지 무엇을 기다리는지 정해야 다음 준비를 겹칠 수 있는지 알 수 있습니다.",
+        "workedExample": "기본 회별 값 읽기는 완료를 10·20·30 μs로 바꿉니다. 독립 A26/B50 가정에서 A의 stream 대기는 26, device 전체 대기는 50 μs입니다.",
+        "boundary": "Event.wait는 이후 GPU 작업의 의존성을 연결하고 Event.synchronize는 CPU가 기다립니다. 모든 동기화가 장치 queue 전체를 비우거나 비동기 복사 반환이 완료를 뜻하는 것은 아닙니다."
       },
       {
-        id: "cuda-graph-replay-latency",
-        sectionId: "graph-replay",
-        intuition: "녹음된 안내방송을 트는 데 버튼 한 번이면 되지만 방송이 끝나는 시간은 녹음 길이가 정합니다. 처음 트는 날은 테이프를 넣는 시간이 더 듭니다.",
-        workedExample: "V100 blog 의 kernel 20개 graph 는 kernel 당 3.4 µs, 실행 2.9 µs 이므로 graph launch 의 몫은 약 10 µs 입니다. kernel 300개 decode step 이면 launch 1.5 ms 가 수십 µs 로 내려오고 GPU 1.2 ms 가 step 이 됩니다.",
-        boundary: "Replay 는 GPU 실행 시간과 scheduling 시간을 줄이지 않습니다. 첫 replay 는 upload 가 섞여 약 33% 느리다는 blog 관찰이 있으며 수치는 hardware 마다 다릅니다.",
+        "id": "cuda-graph-replay-latency",
+        "sectionId": "graph-comparison",
+        "intuition": "목록 한 번을 전달하는 시간과 목록 안의 계산을 모두 끝내는 시간은 다릅니다.",
+        "workedExample": "S2·G1·두 계산 각2 μs의 미리 제출 완료는 7·11·15 μs이고 CPU 제출은 9 μs에 끝납니다. 매회 기다려도 7·14·21 μs여서 eager 대기 30 μs보다 짧습니다.",
+        "boundary": "Host 호출이 줄어도 GPU가 바쁘면 최종 완료는 같을 수 있습니다. 첫 replay와 반복 replay, 초기 준비와 관측 범위를 나누며 보편적인 수십 μs 상수를 가정하지 않습니다."
       },
       {
-        id: "cuda-graph-warmup",
-        sectionId: "graph-replay",
-        intuition: "공연 전 리허설입니다. 처음 켤 때만 드는 조명 예열과 악기 조율을 관객이 오기 전에 끝내 둡니다.",
-        workedExample: "PyTorch 문서대로 side stream 에서 eager 를 몇 번 돌린 뒤 capture 하고, capture 뒤 replay 를 한 번 더 돌려 첫 launch 의 upload 를 끝냅니다. vLLM 은 cudagraph_num_of_warmups 만큼 eager 를 돈 뒤 기록합니다.",
-        boundary: "capture size 60개면 size 마다 warmup·capture·첫 replay 가 붙어 기동이 수 초 늘어납니다. 이 시간은 runtime warmup 의 한 항목이며 어느 size 를 capture 할지는 padding 정책이 정합니다.",
+        "id": "cuda-graph-warmup",
+        "sectionId": "limits",
+        "intuition": "처음 준비한 기록과 여러 번 사용한 기록을 같은 조건으로 착각하지 않도록 초기 작업을 따로 셉니다.",
+        "workedExample": "2019 실험의 약 400 μs 준비와 첫 launch 약 33% 증가는 해당 환경의 관찰이며 20×1,000회 평균 3.4 μs에 초기 비용이 포함됩니다.",
+        "boundary": "모든 실행기가 모든 크기를 언제 처음 replay하는지는 실제 구현을 확인합니다. 준비 비용을 이미 포함한 평균에 다시 더하거나 해당 측정을 현재 장치의 법칙으로 쓰지 않습니다."
       },
       {
-        id: "cuda-graph-capture-failure",
-        sectionId: "capture-failure",
-        intuition: "녹음이 실패하는 경우는 셋입니다. 녹음 중 오류가 나거나, 녹음은 됐는데 엉뚱한 내용이 담겼거나, 녹음기가 조용히 꺼져 매번 생방송을 하고 있는 경우입니다.",
-        workedExample: "sampler 의 .item() 은 capture 오류로 바로 잡히지만, cascade attention 이 켜져 eager 로 떨어지면 오류 없이 낮은 batch 의 step 만 1.2 ms 에서 1.5 ms 이상으로 늘어납니다. profiler 에서 step 당 launch 수가 1 인지 300 인지 보면 구분됩니다.",
-        boundary: "enforce_eager 와 비교해 차이가 없으면 fallback 을 의심하고, CUDA_LAUNCH_BLOCKING=1 은 비동기 오류의 위치만 고정할 뿐 fallback 을 잡지는 못합니다. 복구는 문제 연산을 capture 밖으로 빼거나 piecewise 로 남기는 것입니다.",
-      },
+        "id": "cuda-graph-capture-failure",
+        "sectionId": "replay-diagnosis",
+        "intuition": "오류가 났는지, 재생한 결과가 맞는지, 원하는 경로가 실제로 선택됐는지는 별도 질문입니다.",
+        "workedExample": "S2 L1 E3 N2 G1의 세 회는 eager와 graph 모두 9·15·21 μs입니다. CPU 제출은 12→9 μs이므로 완료시간이 같다는 사실만으로 fallback을 확정할 수 없습니다.",
+        "boundary": "모든 조건 미일치가 조용한 fallback은 아니며 발생 빈도도 측정하지 않았습니다. Host API와 GPU 작업·출력을 대조하고 GPU kernel 행 수를 host 제출 수와 혼동하지 않습니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 고정 비용", relation: "Launch 하나의 host 비용과 상각의 방법을 정의합니다.", concepts: ["latency-launch-bound-kernel", "host-launch-overhead"] },
-      { label: "01 두 timeline", relation: "CPU 제출과 GPU 실행을 나란히 놓고 병목과 starvation 의 조건을 식으로 닫습니다.", concepts: ["cuda-stream-ordering", "cpu-submission-bottleneck", "gpu-queue-starvation", "inference-runtime-process-anatomy"] },
-      { label: "02 동기화", relation: "동기화 지점이 queue 를 비우고 scheduling 을 직렬화하는 비용을 계산합니다.", concepts: ["cpu-gpu-synchronization-point"] },
-      { label: "03 Graph replay", relation: "Replay 한 번의 latency 와 첫 replay·warmup 비용을 재사용한 capture·replay 위에 얹습니다.", concepts: ["cuda-graph-capture-replay", "cuda-graph-replay-latency", "cuda-graph-warmup", "runtime-warmup-cold-start"] },
-      { label: "04 실패", relation: "Graph-compatible 조건이 깨졌을 때의 세 증상과 진단 순서를 정합니다.", concepts: ["cuda-graph-compatible-execution", "cuda-graph-capture-failure"] },
-    ],
-    exercises: [
-      { level: "basic", question: "Host launch overhead 가 kernel 크기와 무관한 고정 비용이라는 말의 뜻을 V100 blog 수치(2.9·3.8·9.6 µs)로 설명하세요.", answerChecklist: ["launch 는 CPU 쪽 인자 준비·dispatch·driver 시간", "kernel 2.9 µs 에 launch 0.9 µs 추가", "동기화까지 넣으면 9.6 µs", "일이 작을수록 비중 커짐"], requiredConcepts: ["host-launch-overhead"], sectionId: "launch-overhead" },
-      { level: "basic", question: "launch 당 5 µs, kernel 당 GPU 4 µs 일 때 GPU 가 바쁜 비율과 starvation 비율을 계산하고, batch 를 키워 kernel 당 13 µs 가 되면 어떻게 바뀌는지 설명하세요.", answerChecklist: ["λ=20만/s", "μ=25만/s", "ρ=0.8", "20% starvation", "13 µs 면 ρ=1 로 GPU 병목"], requiredConcepts: ["gpu-queue-starvation", "host-launch-overhead"], sectionId: "launch-overhead" },
-      { level: "basic", question: "scheduling 1.0 ms, launch 300×5 µs, GPU 2.0 ms 인 step 의 비동기 step 시간을 계산하고 무엇이 병목인지 말하세요.", answerChecklist: ["CPU step 2.5 ms", "max(2.5, 2.0)=2.5", "CPU submission bottleneck", "GPU busy 80%"], requiredConcepts: ["cpu-submission-bottleneck"], sectionId: "submission-pipeline" },
-      { level: "basic", question: ".item() 이 왜 동기화 지점이며, 같은 예시에서 step 끝에 .item() 이 있을 때 step 시간이 얼마로 바뀌는지 계산하세요.", answerChecklist: ["GPU 값을 CPU 가 읽으려면 완료를 기다림", "queue 가 빔", "scheduling 이 직렬화", "1.0+max(1.5,2.0)=3.0 ms"], requiredConcepts: ["cpu-gpu-synchronization-point"], sectionId: "sync-points" },
-      { level: "basic", question: "Graph replay 가 줄이는 시간과 줄이지 않는 시간을 구분하고, 첫 replay 가 이후보다 느린 이유를 설명하세요.", answerChecklist: ["launch N개 → 수십 µs 하나", "GPU 실행 시간 그대로", "scheduling 시간 그대로", "첫 launch 는 upload 가 섞여 느림"], requiredConcepts: ["cuda-graph-replay-latency"], sectionId: "graph-replay" },
-      { level: "basic", question: "Capture 전 warmup 과 capture 뒤 warmup 이 각각 무엇을 미리 치르는지 설명하세요.", answerChecklist: ["capture 전: JIT·lazy init·allocator 확장", "side stream 에서 eager 몇 번", "capture 뒤: 첫 replay 의 upload", "vLLM cudagraph_num_of_warmups"], requiredConcepts: ["cuda-graph-warmup"], sectionId: "graph-replay" },
-      { level: "advanced", question: "같은 예시에서 graph replay(launch 60 µs) 를 켠 뒤 동기화가 있을 때와 없을 때의 step 시간을 계산하고, graph 를 켜도 TPOT 이 그대로인 경우 무엇을 먼저 의심해야 하는지 설명하세요.", answerChecklist: ["async graph max(1.06, 2.0)=2.0", "sync graph 1.0+2.0=3.0", "동기화가 이득을 지움", "동기화 지점부터 찾기", "그 다음 eager fallback 의심"], requiredConcepts: ["cpu-gpu-synchronization-point", "cuda-graph-replay-latency", "cuda-graph-capture-failure"], sectionId: "sync-points" },
-      { level: "advanced", question: "GPU 실행이 0.8 ms 로 짧은 작은 model 에서 graph 를 켜도 CPU 가 병목으로 남는 이유를 식으로 보이고, 다음 수단이 무엇인지 설명하세요.", answerChecklist: ["max(1.0+0.06, 0.8)=1.06", "scheduling 이 병목", "launch 는 이미 지움", "scheduling 을 GPU 실행과 겹치는 비동기 scheduling", "process 분리"], requiredConcepts: ["cpu-submission-bottleneck", "inference-runtime-process-anatomy"], sectionId: "submission-pipeline" },
-      { level: "advanced", question: "AlgorithmBlock 의 timeline 에서 max(t_gpu, k.ready) 항과 t_cpu=max(t_cpu, t_gpu) 항이 각각 어떤 현상을 만드는지 설명하고, queue 상한이 CPU 쪽에 만드는 wait 와 구분하세요.", answerChecklist: ["ready 가 늦으면 GPU starvation", "동기화는 CPU 가 GPU 를 따라잡을 때까지 멈춤", "다음 T_sched 가 뒤로 밀림", "queue 상한은 CPU 가 앞설 때 block", "두 wait 의 방향이 반대"], requiredConcepts: ["gpu-queue-starvation", "cpu-gpu-synchronization-point"], sectionId: "submission-pipeline" },
-      { level: "advanced", question: "낮은 batch 에서만 TPOT 이 나빠진 serving 에서 capture failure 의 세 증상 중 무엇을 의심하고 어떤 순서로 진단·복구할지 설계하세요.", answerChecklist: ["조용한 eager fallback", "profiler 에서 step 당 launch 수 1 vs 300", "enforce_eager 와 비교", "CUDA_LAUNCH_BLOCKING 은 오류 위치용", "문제 연산 분리 또는 piecewise", "부하 시험만으로는 놓침"], requiredConcepts: ["cuda-graph-capture-failure", "cuda-graph-compatible-execution"], sectionId: "capture-failure" },
-    ],
-    papers: [
+    "conceptStages": [
       {
-        title: "Getting Started with CUDA Graphs (NVIDIA Technical Blog)",
-        href: "https://developer.nvidia.com/blog/cuda-graphs/",
-        problem: "짧은 kernel 을 많이 반복하는 코드에서 kernel 실행보다 launch 와 동기화 비용이 커져 GPU 가 노는 문제",
-        contribution: "V100 에서 2.9 µs kernel 20개 반복을 동기화 포함·overlap·graph 세 방식으로 재 kernel 당 9.6·3.8·3.4 µs 를 보이고, instantiate 약 400 µs 와 첫 graph launch 가 약 33% 느리다는 관찰을 제시",
-        assumptions: "Tesla V100 과 당시 CUDA driver, kernel 20개를 1000회 반복하는 단순 loop 라는 저자 실험 조건",
-        evidenceScope: "저자 자기보고 단일 hardware 측정이며 launch overhead 가 고정 비용이라는 근거와 첫 replay 의 추가 비용의 출처로만 사용",
-        notClaim: "다른 GPU 세대·driver·Python 층이 있는 runtime 에서 같은 µs 값이 나온다거나 graph 가 GPU 실행 시간을 줄인다는 뜻은 아님",
-        sectionId: "launch-overhead",
+        "label": "01 같은 계산의 두 시계",
+        "relation": "3→8→18→38의 지시와 계산을 각각 기록해 첫 완료와 반복 간격, 빈 구간의 원인을 구별합니다.",
+        "concepts": [
+          "host-launch-overhead",
+          "cpu-submission-bottleneck",
+          "gpu-queue-starvation"
+        ]
       },
       {
-        title: "PyTorch CUDA semantics — Asynchronous execution and CUDA Graphs",
-        href: "https://docs.pytorch.org/docs/stable/notes/cuda.html",
-        problem: "GPU 연산이 enqueue 만 되고 나중에 실행되는 비동기 의미론 아래에서 어떤 호출이 CPU 를 멈추고 어떤 조건에서 graph 를 쓸 수 있는지 사용자가 알기 어려운 문제",
-        contribution: "비동기 실행 계약, .item() 등 동기화를 일으키는 호출 목록, 정확한 timing 의 방법, capture 전 side stream warmup 과 capture 안 동기화·dynamic control flow 금지, private memory pool 규칙을 문서화",
-        assumptions: "PyTorch 의 caching allocator 와 stream 의미론을 쓰는 코드이며 capture 구간이 CPU 값에 의존하지 않는다는 사용 조건",
-        evidenceScope: "공식 문서의 의미론 서술이며 수치 측정은 포함하지 않음",
-        notClaim: "특정 model 에서 replay 가 얼마나 빨라지는지나 fallback 의 성능 영향은 문서가 주장하지 않음",
-        sectionId: "sync-points",
+        "label": "02 기다리는 대상과 주체",
+        "relation": "PyTorch에서 한 값을 읽는 호출과 stream의 의존성, CPU 완료 대기가 실제로 내려가는 경로를 대조합니다.",
+        "concepts": [
+          "cuda-stream-ordering",
+          "cuda-event-dependency",
+          "cpu-gpu-synchronization-point"
+        ]
       },
+      {
+        "label": "03 묶어서 제출한 결과",
+        "relation": "같은 계산에서 graph 제출과 회별 대기를 각각 바꾼 뒤 초기 비용과 실제 경로 미선택을 별도로 진단합니다.",
+        "concepts": [
+          "cuda-graph-replay-latency",
+          "cuda-graph-warmup",
+          "cuda-graph-capture-failure"
+        ]
+      }
     ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "준비 2µs·두 제출 각각 3µs·두 계산 각각 2µs인 세 회를 미리 제출하면 값과 완료 시각은?",
+        "answerChecklist": [
+          "3→4→8→9→18→19→38",
+          "완료 10·18·26µs",
+          "CPU 제출 종료 24µs·실행 합계 12µs",
+          "각 실행은 제출 완료와 이전 실행 완료 중 늦은 시각에 시작"
+        ],
+        "sectionId": "async-trace",
+        "requiredConcepts": [
+          "host-launch-overhead",
+          "cpu-submission-bottleneck"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "각 회의 두 계산을 마친 값을 CPU가 읽은 뒤 다음 준비를 시작하면 왜 10·20·30µs인가?",
+        "answerChecklist": [
+          "첫 회 완료 10 뒤 다음 준비 시작",
+          "두 번째 준비 10–12·제출 12–15/15–18·실행 15–17/18–20",
+          "준비가 이전 실행과 겹치지 못함",
+          "동기화 범위가 반드시 장치 전체인 것은 아님"
+        ],
+        "sectionId": "waiting-trace",
+        "requiredConcepts": [
+          "cpu-gpu-synchronization-point"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "두 계산을 묶어 제출하는 비용만 1µs로 바꾸면 미리 제출/매회 대기 시 완료 시각은?",
+        "answerChecklist": [
+          "미리 제출 7·11·15µs",
+          "매회 대기 7·14·21µs",
+          "계산은 여전히 두 개씩·총 12µs",
+          "매회 대기해도 마지막 완료 30→21로 줄어 이득이 모두 사라지지 않음"
+        ],
+        "sectionId": "graph-comparison",
+        "requiredConcepts": [
+          "cuda-graph-replay-latency"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "A의 마지막 작업 26µs·독립 B의 마지막 작업 50µs인 장치에서 A만 기다리는 것과 장치 전체 대기는?",
+        "answerChecklist": [
+          "A의 stream synchronize는 A의 선행 작업만·이 가정에서는 26",
+          "device synchronize는 B도 포함해 50",
+          "event.wait(A)는 A의 미래 작업에 의존성을 추가·CPU 완료 대기와 다름",
+          "event.synchronize는 해당 기록 완료까지 CPU 대기; 다른 stream 의존성이 있으면 A에도 전파"
+        ],
+        "sectionId": "source-scope",
+        "requiredConcepts": [
+          "cpu-gpu-synchronization-point"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "비동기 복사 호출이 CPU에 돌아오면 입력/출력 메모리는 바로 재사용해도 되는가?",
+        "answerChecklist": [
+          "완료 전 pinned H2D 원본 변경 금지",
+          "D2H 출력 CPU 읽기는 완료 확인 이후",
+          "pinned+non_blocking만으로 계산 겹침 보장 못함·독립 작업/stream/하드웨어 필요",
+          "CUDA tensor.numpy 기본값은 CPU 변환 대신 오류·force=True는 CPU 복사 포함"
+        ],
+        "sectionId": "copy-overlap",
+        "requiredConcepts": [
+          "cpu-gpu-synchronization-point"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "그래프를 켜고 완료시간이 같다는 관찰만으로 fallback을 확정할 수 있는가?",
+        "answerChecklist": [
+          "불가: S2 L1 E3 G1의 세 회는 eager와graph 모두 9·15·21",
+          "호스트 API 호출/선택 경로·실제 GPU 노드·출력 일치 비교",
+          "capture 오류/잘못된 replay/선택되지 않은 graph 세 현상 구별",
+          "2019 평균 3.8−2.9 또는 20(3.4−2.9)를 순수 host 호출시간으로 해석 금지"
+        ],
+        "sectionId": "replay-diagnosis",
+        "requiredConcepts": [
+          "cuda-graph-capture-failure",
+          "host-launch-overhead"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "같은 N개 계산에 준비 S·제출 L·실행 E를 가정할 때 첫 회 정확한 지연과 반복 간격을 유도하라. N300 S1ms L.005ms NE2ms와 G.06ms에도 적용하라.",
+        "answerChecklist": [
+          "r_j=S+jL, e_j=max(r_j,e_(j−1))+E",
+          "첫 회 S+L+E+(N−1)max(L,E)",
+          "충분히 길고 다음 입력을 CPU가 기다리지 않으며 무한 큐·같은 작업일 때 장기 평균 간격 max(S+NL,NE)",
+          "큰 예 eager 첫3.005/반복2.5ms, graph 첫3.06/반복2ms",
+          "첫 회는graph가.055ms 늦어도 세 회 완료8.005→7.06ms",
+          "동기화 또는 가변시간에서 단순 평균식으로 대체하지 않음"
+        ],
+        "sectionId": "finite-and-steady",
+        "requiredConcepts": [
+          "cpu-submission-bottleneck",
+          "gpu-queue-starvation"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "미완료 회를 준비 전 D개로 제한하는 별도 모형에서 graph D1/D2를 계산하고 값18에서 종료하는 요청에 미리 실행한38의 의미를 설명하라.",
+        "answerChecklist": [
+          "D1 완료7·14·21·CPU 제출17",
+          "D2 세 번째 준비7–9·제출9–10·완료7·11·15",
+          "시계는 max(현재,가장 이른 완료)로 전진하고 완료된 항목 제거",
+          "D는 이 글의 application throttle이며 실제 driver 큐 크기 주장 아님",
+          "18을 본 뒤 종료해야 하는 의미라면38은 숨기더라도 실행된 부작용·난수·메모리 비용이 남음"
+        ],
+        "sectionId": "queue-capacity",
+        "requiredConcepts": [
+          "cpu-submission-bottleneck",
+          "cpu-gpu-synchronization-point"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "세 회 eager CPU 제출24·완료26·계산합12에서 타이머와 바쁜 비율을 어떻게 보고해야 하는가? 초기 graph 준비와 첫 replay도 반복 실행과 구분하세요.",
+        "answerChecklist": [
+          "동기화 없는 CPU 타이머는 제출 범위24; 완료 대기 포함26",
+          "유한 전체 범위 바쁜 비율12/26=6/13; 반복 간격8 기준4/8=.5",
+          "CUDA event 사이 경과시간은 빈틈/다른 의존대기 포함 가능·kernel 시간 합과 다름",
+          "warmup·첫 replay·steady 반복·profile overhead를 별도 기록",
+          "GPU idle만으로 CPU원인 단정하지 말고 의존/통신/메모리/경쟁 확인"
+        ],
+        "sectionId": "measurement",
+        "requiredConcepts": [
+          "host-launch-overhead",
+          "gpu-queue-starvation",
+          "cuda-graph-warmup"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "고정한 PyTorch2.14 소스에서 .item·Event.wait·Event.synchronize·numpy(force)의 분기를 같은 사례에 대응하고 관찰 실행의 한계를 말하라.",
+        "answerChecklist": [
+          "CUDA scalar는 pinned CPU 한 칸·현재 stream의 memcpy_and_sync",
+          "CUDA helper는 cudaMemcpyAsync 뒤 cudaStreamSynchronize; ROCm 별도 분기",
+          "Event.wait는 stream wait, synchronize는 host wait; blocking flag는 host 기다림 방식",
+          "NumPy default CUDA 거부; force 경로 detach().cpu()",
+          "실제 Python wrapper AST 호출 관찰은 대체된 nativebase의 호출 기록이며 GPU timing 검증이 아님"
+        ],
+        "sectionId": "source-observation",
+        "requiredConcepts": [
+          "cpu-gpu-synchronization-point"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Getting Started with CUDA Graphs · NVIDIA 2019",
+        "href": "https://developer.nvidia.com/blog/cuda-graphs/",
+        "sectionId": "replay-diagnosis",
+        "problem": "짧은 작업의 반복에서 제출과 완료 대기 위치가 전체 시간에 미치는 영향을 비교하는 문제입니다.",
+        "contribution": "Kernel마다 대기, 회마다 대기, graph를 회마다 대기하는 세 반복의 벽시계 평균과 초기 비용을 보고합니다.",
+        "assumptions": "V100·CUDA10.1·500,000원소·block512·20 kernel×1,000회의 원문 실험 범위입니다.",
+        "evidenceScope": "2.9 μs는 장치 kernel 시간, 9.6·3.8·3.4 μs는 해당 반복의 전체 시간을 kernel 수로 나눈 값입니다.",
+        "notClaim": "평균 차이를 순수 host 호출시간으로 분해하거나 현재 모든 장치에서 같은 성능을 보장하는 근거가 아닙니다."
+      },
+      {
+        "title": "PyTorch 2.14 · CUDA semantics",
+        "href": "https://docs.pytorch.org/docs/2.14/notes/cuda.html",
+        "sectionId": "measurement",
+        "problem": "비동기 GPU 제출에서 정확한 시간 측정과 stream의 순서, 캡처 준비 조건을 구별하는 문제입니다.",
+        "contribution": "CPU 반환과 GPU 완료의 차이, 완료를 확인한 측정, stream 의존성과 graph 준비의 조건을 설명합니다.",
+        "assumptions": "문서 버전2.14와 원문 v2.14.0을 고정하며 native GPU를 실행한 성능 재현으로 해석하지 않습니다.",
+        "evidenceScope": "본 글은 동작 계약을 보존한 전체 원문과 대조합니다. 수치 시간표는 별도 가정한 동일 계산의 모형입니다.",
+        "notClaim": "모든 값 읽기가 장치 전체를 기다리거나 모든 Python 분기·외부 tensor가 capture에 금지된다는 주장은 아닙니다."
+      },
+      {
+        "title": "CUDA Runtime 13.4 · Event Management",
+        "href": "https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/group__CUDART__EVENT.html",
+        "sectionId": "source-events",
+        "problem": "작업 사이 의존성과 host 대기, event 사이 경과시간을 혼동하지 않고 사용할 필요가 있습니다.",
+        "contribution": "Event 기록과 대기 범위, blocking flag의 host 기다림 방식, 두 event 사이 시간 측정 조건을 규정합니다.",
+        "assumptions": "공식13.4 API 설명과 PyTorch2.14의 Event.cpp·CUDAEvent.h 실제 연결을 함께 읽은 범위입니다.",
+        "evidenceScope": "Event.wait의 stream 연결과 Event.synchronize의 host 완료 대기 구분을 뒷받침합니다. A26/B50은 별도 가정입니다.",
+        "notClaim": "Event.elapsed_time이 kernel 실행시간의 합이거나 모든 stream이 동시에 끝났음을 보장한다는 뜻은 아닙니다."
+      },
+      {
+        "title": "PyTorch 2.14 · Tensor.numpy",
+        "href": "https://docs.pytorch.org/docs/2.14/generated/torch.Tensor.numpy.html",
+        "sectionId": "source-numpy",
+        "problem": "CUDA tensor에서 CPU의 NumPy 배열을 얻을 때 오류 조건과 복사 경로를 구별하는 문제입니다.",
+        "contribution": "기본 CPU 조건과 force=True의 detach·CPU 이동·conjugate/negative 해제 경로를 설명합니다.",
+        "assumptions": "원문 tensor_numpy.cpp의 일반 strided tensor 경로와 버전2.14 문서 조건을 대조한 범위입니다.",
+        "evidenceScope": "기본 CUDA 변환이 오류이며 force 경로에는 CPU 변환이 포함됨을 확인합니다. GPU 복사 시간을 직접 측정하지 않았습니다.",
+        "notClaim": "기본 .numpy()가 CUDA에서 자동 동기화 변환되거나 반환 배열이 원래 GPU 저장 공간을 공유한다는 뜻은 아닙니다."
+      },
+      {
+        "title": "PyTorch · pin_memory와 non_blocking 튜토리얼",
+        "href": "https://docs.pytorch.org/tutorials/intermediate/pinmem_nonblock.html",
+        "sectionId": "copy-overlap",
+        "problem": "Host 반환과 복사 완료, 실제 계산 겹침 및 복사 중 버퍼 사용의 차이를 구별하는 문제입니다.",
+        "contribution": "별도 stream과 pinned source, 사용 가능한 복사 엔진을 둔 겹침 예와 원본 변경·결과 읽기의 완료 조건을 설명합니다.",
+        "assumptions": "공식 튜토리얼의 예시 조건을 읽었으며 그 환경의 성능 수치를 다른 장치의 법칙으로 쓰지 않습니다.",
+        "evidenceScope": "pin_memory의 host 비용과 비동기 복사 중 메모리 수명 조건을 확인하는 근거입니다. 본문 시간표에는 전송 비용이 없습니다.",
+        "notClaim": "pinned와 non_blocking만으로 모든 코드가 계산과 복사를 겹치거나 반환 즉시 모든 버퍼를 재사용해도 된다는 뜻은 아닙니다."
+      },
+      {
+        "title": "CUDA Runtime 13.4 · API synchronization behavior",
+        "href": "https://docs.nvidia.com/cuda/cuda-runtime-api/api-sync-behavior.html",
+        "sectionId": "copy-overlap",
+        "problem": "복사 함수의 이름만으로 host 반환 조건을 판단하면 pageable staging과 전송 방향의 차이를 놓칩니다.",
+        "contribution": "동기·비동기 호출에서 pageable/pinned 및 host/device 전송 방향에 따른 반환 조건을 분리합니다.",
+        "assumptions": "공식13.4 문서의 각 메모리 종류와 방향 조건을 그대로 구분하며 모든 복사를 같은 경로로 가정하지 않습니다.",
+        "evidenceScope": "Pageable host→device staging 뒤 반환 가능성과 Async 호출도 host를 기다리게 할 수 있는 조건을 읽었습니다.",
+        "notClaim": "모든 동기 복사가 최종 DMA까지 기다리거나 모든 Async 복사가 host에 즉시 돌아온다는 보편적 규칙은 아닙니다."
+      }
+    ]
   },
   "gpu/warp-stall-reasons-and-issue-utilization": {
     entryNote: "Scoreboard 가 warp 를 ready·stalled 로 나누고 eligible 이 없는 clock 에 issue slot 이 빈다는 것, 그리고 timeline 에서 hot kernel 을 좁힌 뒤 counter 를 본다는 loop 를 안 상태에서, Nsight Compute 가 그 상태를 어떻게 세고 어떤 순서로 읽는지로 들어갑니다.",
@@ -111662,289 +112596,258 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "firms/scale-and-cost-structure": {
-    entryNote:
-      "앞 글에서 조직은 값을 받아들이는 쪽이었습니다. 여기서는 그 조직이 값을 어떻게 만드는지를 보되, 아직 값을 고르는 힘은 다루지 않습니다.",
-    coreIdea:
-      "하나당 값이 내려가는 것은 많이 만들어서가 아니라 먼저 들이는 몫이 있는 돌아가는 방법으로 갈아탔기 때문이고, 갈아탈 수 있는 조건은 그 몫을 나눠 질 수량입니다. 그 수량은 밖에서 주어진 것이 아니라 생산이 함께 키우며, 커진 결과는 한 곳이 비대해지는 모양보다 중간 단계가 갈라져 별도 산업이 되는 모양으로 나타납니다.",
-    assumedKnowledge: [
+    "entryNote": "같은 부품 20개와 100개를 세 방법으로 만드는 비용부터 비교합니다. 같은 설비의 비용 배분, 설비 변경, 세 고객의 주문 합산을 나누고 동률·지출 시점·판매 조건을 확인합니다.",
+    "coreIdea": "고정비를 더 많은 물량에 나누면 같은 방법에서도 평균비용이 낮아질 수 있습니다. 다른 방법으로 바꿀 때는 준비 비용과 하나당 비용의 차이를 함께 비교합니다. 전문화의 이득에는 운송·계약 비용과 실제 수요 조건을 더하며 비용 하락만으로 독점 결과를 단정하지 않습니다.",
+    "assumedKnowledge": [
       {
-        id: "firm-boundary-at-equal-margin",
-        role: "조직이 어디까지 안으로 들이는지를 세운 자리에서, 그 안의 만드는 방법을 묻습니다.",
+        "id": "firm-boundary-at-equal-margin",
+        "role": "조직이 어디까지 안으로 들이는지를 세운 자리에서, 그 안의 만드는 방법을 묻습니다."
       },
       {
-        id: "diminishing-returns-to-organising",
-        role: "회사 하나가 경제적으로 커질 수 있는 크기에 한계가 있다는 전제를 그대로 가져옵니다.",
+        "id": "diminishing-returns-to-organising",
+        "role": "내부 조정 비용이 커질 수 있다는 가능성을 재사용하되 모든 기업의 규모 한계가 증명됐다고 가정하지 않습니다."
       },
       {
-        id: "marginal-decision-rule",
-        role: "한 걸음 더 갈 때의 값과 그 걸음이 주는 것을 견주는 셈을 방법 선택에 씁니다.",
+        "id": "marginal-decision-rule",
+        "role": "한 걸음 더 갈 때의 값과 그 걸음이 주는 것을 견주는 셈을 방법 선택에 씁니다."
       },
       {
-        id: "absolute-vs-comparative-advantage",
-        role: "누가 무엇을 맡을지를 가르는 1단계의 분업 설명을 비교 대상으로 둡니다.",
-      },
+        "id": "absolute-vs-comparative-advantage",
+        "role": "누가 무엇을 맡을지를 가르는 1단계의 분업 설명을 비교 대상으로 둡니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "roundabout-production-economies",
-        role: "싸지는 힘의 출처를 크기가 아니라 방법에 둡니다.",
+        "id": "roundabout-production-economies",
+        "role": "설비를 먼저 갖춰 이후 직접 작업을 줄일 수 있습니다. 고정비를 나누는 효과와 방법 자체를 바꾸는 효과를 구분합니다."
       },
       {
-        id: "minimum-market-for-a-detour",
-        role: "그 방법이 실제로 쓰이기 위한 수량 조건을 식으로 적습니다.",
+        "id": "minimum-market-for-a-detour",
+        "role": "새 방법에 먼저 더 쓰는 돈을 하나마다 아끼는 돈으로 나누면 두 비용이 같은 수량을 구할 수 있습니다."
       },
       {
-        id: "market-extent-is-produced",
-        role: "그 수량이 밖에서 주어진 것이 아님을 보입니다.",
+        "id": "market-extent-is-produced",
+        "role": "생산성 변화가 다른 산업의 가격·소득·주문을 바꾸면 전문화의 조건도 달라질 수 있습니다."
       },
       {
-        id: "industrial-differentiation",
-        role: "커진 결과가 실제로 나타나는 모양을 정의합니다.",
+        "id": "industrial-differentiation",
+        "role": "한 업체만으로 부족한 수량을 전문 생산자가 여러 고객에게서 모으면 다른 생산 방법을 선택할 수 있습니다."
       },
       {
-        id: "increasing-returns-not-monopoly",
-        role: "싸진다는 사실에서 따라 나오지 않는 것을 명시해 다음 글의 범위를 가릅니다.",
-      },
+        "id": "increasing-returns-not-monopoly",
+        "role": "생산 비용이 낮아질 가능성과 실제 판매자가 하나로 남는 결과는 따로 검토합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "roundabout-production-economies",
-        sectionId: "roundabout",
-        intuition:
-          "손에 잡히는 것으로 못을 박으면 만 번째 못도 첫 번째와 같은 품이 듭니다. 망치를 먼저 만들면 당장은 못이 하나도 안 박히지만 그 뒤로 품이 줄어듭니다.",
-        workedExample:
-          "곧장 가면 하나당 10입니다. 망치를 만드는 데 60이 들고 그 뒤로 하나당 4라면, 백 개를 만들 때 1000 대신 460이 듭니다.",
-        boundary:
-          "같은 방법으로 수량만 늘리는 것과 섞으면 안 됩니다. 방법이 그대로이면 수량이 아무리 늘어도 하나당 값은 내려가지 않습니다.",
+        "id": "roundabout-production-economies",
+        "sectionId": "roundabout",
+        "intuition": "설비를 먼저 갖춰 이후 직접 작업을 줄일 수 있습니다. 고정비를 나누는 효과와 방법 자체를 바꾸는 효과를 구분합니다.",
+        "workedExample": "B=60+4N에서 20개의 평균은 7, 100개의 평균은 4. 6입니다. 같은 방법에서도 평균이 낮아집니다. 100개에서는 C=300+N의 400이 B 460보다 작습니다.",
+        "boundary": "같은 품질·기간·생산 여력과 아직 지출하지 않은 준비 비용을 비교합니다. 이미 돌려받을 수 없이 쓴 60은 새 5개 주문의 추가 비용에 다시 더하지 않으며 기회비용·재가동 비용 등은 따로 확인합니다."
       },
       {
-        id: "minimum-market-for-a-detour",
-        sectionId: "minimum-market",
-        intuition:
-          "먼저 든 몫은 만드는 개수로 나뉩니다. 개수가 적으면 그 몫이 하나하나에 무겁게 얹혀 오히려 비쌉니다.",
-        workedExample:
-          "먼저 60이 들고 하나당 값이 10에서 4로 내려가면, 60을 6으로 나눈 열 개가 두 방법의 값이 같아지는 수량입니다. 못이 열 개를 넘어야 망치를 만드는 쪽이 싸집니다.",
-        proofIdea:
-          "곧장 갈 때 N개를 만드는 값은 c곧장·N이고 돌아갈 때는 F + c돌아·N입니다. 둘의 차이는 F − (c곧장 − c돌아)·N이고, N에 대해 단조로 줄어듭니다. 차이가 0이 되는 N이 F를 단위당 줄어드는 값으로 나눈 수이고, 그보다 큰 N에서는 차이가 음수가 되어 돌아가는 쪽이 쌉니다.",
-        counterexample:
-          "단위당 값이 줄지 않는 돌아감, 즉 분모가 0이거나 음수이면 최소 수량이 정의되지 않고 그 방법은 어떤 수량에서도 싸지지 않습니다. 먼저 들이는 몫이 있다는 것만으로는 수확 체증이 생기지 않습니다.",
-        boundary:
-          "만들 개수를 미리 안다고 둔 계산입니다. 실제로는 내다본 수량으로 고르고, 그 수량이 오면 맞고 오지 않으면 먼저 들인 몫만 남습니다.",
+        "id": "minimum-market-for-a-detour",
+        "sectionId": "minimum-market",
+        "intuition": "새 방법에 먼저 더 쓰는 돈을 하나마다 아끼는 돈으로 나누면 두 비용이 같은 수량을 구할 수 있습니다.",
+        "workedExample": "A/B는 60÷6=10에서 동률, 정수 11개부터B가 더 쌉니다.B/C는(300−60)÷(4−1)=80에서 동률, 81개부터C가 더 쌉니다.",
+        "boundary": "준비 비용 차이와 하나당 절약액이 양수이며 같은 수량·품질·납기·가동 여력을 전제합니다. 준비 비용만 크다고 필요한 수량이 반드시 커지지는 않으며 모든 대안을 비교합니다.",
+        "proofIdea": "두 전체 비용의 차이는 (F₂−F₁)−(c₁−c₂)N입니다. 두 차이가 양수이면 N이 커질수록 차이가 줄어 N*=(F₂−F₁)/(c₁−c₂)에서 0, 그보다 크면 음수입니다. 정수 수량의 엄격한 절약은 floor(N*)+1부터이며 동률에서는 두 방법을 모두 허용합니다.",
+        "counterexample": "C′=75+N이면 B의 준비 비용 60보다 크지만 B가 A보다 비싸지 않으려면 N≥10, C′보다 비싸지 않으려면 N≤5여야 합니다. B는 최저가 되지 않습니다. 9개에서A 90, B 96, C′ 84이므로 A→B만 순서대로 비교하면 더 싼 방법을 놓칩니다."
       },
       {
-        id: "market-extent-is-produced",
-        sectionId: "market-is-produced",
-        intuition:
-          "큰 시장은 사람이 많은 곳이 아니라 사들일 힘이 큰 곳이고, 사들일 힘은 만들어 낼 힘에서 나옵니다.",
-        workedExample:
-          "한쪽에서 돌아가는 방법이 열려 생산이 늘면 그 생산이 다른 쪽의 수량을 키우고, 커진 수량이 다른 쪽의 다음 돌아감을 엽니다. 인구가 그대로여도 이 고리만으로 수량이 커질 수 있습니다.",
-        boundary:
-          "고리가 닫혀 있다는 것이 끝없이 돈다는 뜻은 아닙니다. 수요가 더 늘지 않는 곳과 더 돌아가도 값이 내려가지 않는 곳에서 멈춥니다.",
+        "id": "market-extent-is-produced",
+        "sectionId": "market-is-produced",
+        "intuition": "생산성 변화가 다른 산업의 가격·소득·주문을 바꾸면 전문화의 조건도 달라질 수 있습니다.",
+        "workedExample": "세 고객의 30개 주문을 모은 90개 계획은 실제 주문과 지급 능력이 있을 때 성립합니다. 인구가 그대로여도 구매력과 산업 사이의 거래는 달라질 수 있습니다.",
+        "boundary": "Young 533~534쪽은 생산 활동 사이의 비례와 수요·공급 반응, 자본 축적·기술 습득·이동의 시간 조건을 논의합니다. 생산이 늘면 반드시 팔리거나 무한 성장한다는 뜻은 아닙니다."
       },
       {
-        id: "industrial-differentiation",
-        sectionId: "differentiation",
-        intuition:
-          "인쇄소 하나가 종이도 잉크도 활자도 스스로 만들던 때에는 어느 조각도 수량이 나오지 않았습니다. 떼어 내 따로 만들면 여러 인쇄소에 팝니다.",
-        workedExample:
-          "활자를 따로 만드는 곳은 인쇄소 하나가 쓰던 양이 아니라 여러 곳이 쓰는 양을 봅니다. 한 인쇄소 안에서는 끝내 넘지 못했을 최소 수량을 그 조각은 넘습니다.",
-        boundary:
-          "쪼개지는 쪽만 일어난다는 뜻은 아닙니다. 합쳐지는 일도 조건에 따라 일어나며, 이 글이 말하는 것은 어느 쪽이 수확 체증의 전형적인 모양인가입니다.",
+        "id": "industrial-differentiation",
+        "sectionId": "differentiation",
+        "intuition": "한 업체만으로 부족한 수량을 전문 생산자가 여러 고객에게서 모으면 다른 생산 방법을 선택할 수 있습니다.",
+        "workedExample": "각자 30개를 B로 만들면 180×3=540입니다. 90개를 모아 C로 만들면 390이며 추가 비용 60을 더하면 450, 180을 더하면 570입니다.",
+        "boundary": "부품 규격·일정·공급 능력을 맞추고 운송·검사·계약 비용을 더합니다. 생산 절약분이 고객 가격으로 전부 이전되거나 산업이 반드시 분리된다는 뜻은 아닙니다."
       },
       {
-        id: "increasing-returns-not-monopoly",
-        sectionId: "not-monopoly",
-        intuition:
-          "가장 많이 만드는 곳이 가장 싸니 결국 하나만 남는다는 추론은 자연스러워 보이지만, 돌아감의 이득이 어디서 실현되는지를 보면 그대로 이어지지 않습니다.",
-        workedExample:
-          "이득의 상당 부분은 쪼개져 나간 조각들의 몫으로 실현되고, 그 조각들은 서로 다른 일을 맡고 있습니다. 하나가 전부를 가져가는 그림이 되지 않습니다.",
-        boundary:
-          "하나로 남는 경우가 없다는 뜻이 아닙니다. 어떤 조각에서 최소 수량이 시장 전체보다 크면 하나가 다 만드는 쪽이 싸지며, 그것은 싸진다는 사실이 아니라 두 수를 견준 결과입니다.",
-      },
+        "id": "increasing-returns-not-monopoly",
+        "sectionId": "not-monopoly",
+        "intuition": "생산 비용이 낮아질 가능성과 실제 판매자가 하나로 남는 결과는 따로 검토합니다.",
+        "workedExample": "시장 8개에서는A 80과두 업체가 4개씩 만드는 40+40이같습니다. 100개에서는C 400이두 업체가 50개씩 만드는 B의 260+260=520보다작습니다.",
+        "boundary": "한 분할의 비용 비교로 모든 분할의 비용 조건이나 실제 독점 결과를 증명하지 않습니다. 진입·품질·운송·계약·규제·경쟁 행동과 판매가격도 확인합니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "00 힘의 출처",
-        relation: "싸지는 힘을 크기에서 방법으로 옮깁니다.",
-        concepts: ["roundabout-production-economies"],
+        "label": "00 같은 부품의 세 방법",
+        "relation": "B=60+4N에서 20개의 평균은 7, 100개의 평균은 4. 6입니다. 같은 방법에서도 평균이 낮아집니다. 100개에서는 C=300+N의 400이 B 460보다 작습니다.",
+        "concepts": [
+          "roundabout-production-economies"
+        ]
       },
       {
-        label: "01 열리는 조건",
-        relation: "그 방법이 쓰이려면 수량이 받쳐 줘야 합니다.",
-        concepts: ["minimum-market-for-a-detour"],
+        "label": "01 동률과 모든 대안",
+        "relation": "A/B는 60÷6=10에서 동률, 정수 11개부터B가 더 쌉니다.B/C는(300−60)÷(4−1)=80에서 동률, 81개부터C가 더 쌉니다.",
+        "concepts": [
+          "minimum-market-for-a-detour"
+        ]
       },
       {
-        label: "02 수량의 출처",
-        relation: "그 수량도 밖에서 주어진 것이 아닙니다.",
-        concepts: ["market-extent-is-produced"],
-      },
-      {
-        label: "03 나타나는 모양",
-        relation: "커진 결과는 갈라짐으로 나타나고, 거기서 따라 나오지 않는 것이 있습니다.",
-        concepts: ["industrial-differentiation", "increasing-returns-not-monopoly"],
-      },
-    ],
-    exercises: [
-      {
-        level: "basic",
-        question:
-          "같은 방법으로 수량만 늘리면 하나당 값이 어떻게 되는지, 그리고 값이 실제로 내려간 자리에서는 무엇이 바뀐 것인지 쓰세요.",
-        answerChecklist: [
-          "방법이 그대로이면 하나당 값은 그대로",
-          "만 번째 못도 첫 번째와 같은 품",
-          "내려간 자리에서는 방법이 바뀐 것",
-          "크기의 효과가 아니라 방법의 효과",
-        ],
-        requiredConcepts: ["roundabout-production-economies"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "돌아가는 길과 곧장 가는 길을 가르는 것이 무엇인지, 돌아가는 길이 치르는 대가가 무엇인지 쓰세요.",
-        answerChecklist: [
-          "먼저 들이는 몫이 있느냐가 가름",
-          "당장 물건이 되지 않는 일을 먼저 함",
-          "그 뒤로 하나당 품이 줄어듦",
-          "개수가 적으면 그 몫이 나뉘지 않아 오히려 비쌈",
-        ],
-        requiredConcepts: ["roundabout-production-economies"],
-        sectionId: "roundabout",
-      },
-      {
-        level: "basic",
-        question:
-          "먼저 60이 들고 하나당 값이 10에서 4로 내려갈 때 그 방법이 열리는 최소 수량을 구하세요.",
-        answerChecklist: [
-          "하나당 줄어드는 값은 6",
-          "60을 6으로 나눔",
-          "최소 수량은 열 개",
-          "열 개를 넘어야 돌아가는 쪽이 쌈",
-        ],
-        requiredConcepts: ["minimum-market-for-a-detour"],
-        sectionId: "minimum-market",
-      },
-      {
-        level: "basic",
-        question:
-          "한 번 더 돌아가는 방법이 열리는 수량이 왜 앞 단계보다 큰지 쓰세요.",
-        answerChecklist: [
-          "먼저 들이는 몫이 더 큼",
-          "최소 수량은 그 몫에 비례",
-          "그래서 단계마다 필요한 시장이 커짐",
-          "설비를 만드는 설비가 그 예",
-        ],
-        requiredConcepts: ["minimum-market-for-a-detour"],
-        sectionId: "minimum-market",
-      },
-      {
-        level: "basic",
-        question:
-          "큰 시장이 무엇인지와, 시장의 크기가 밖에서 주어진 것이 아닌 이유를 쓰세요.",
-        answerChecklist: [
-          "사람 수나 면적이 아님",
-          "사들일 힘",
-          "사들일 힘은 만들어 낼 힘에 달림",
-          "그래서 생산의 양이 시장의 크기를 정함",
-        ],
-        requiredConcepts: ["market-extent-is-produced"],
-        sectionId: "market-is-produced",
-      },
-      {
-        level: "basic",
-        question:
-          "중간 단계를 떼어 내 따로 만드는 곳을 세우면 왜 더 돌아가는 방법이 열리는지 쓰세요.",
-        answerChecklist: [
-          "한 곳이 쓰는 수량은 그곳이 파는 양에 묶임",
-          "떼어 낸 곳은 여러 곳에 팖",
-          "보는 수량이 커짐",
-          "한 곳 안에서는 못 넘던 최소 수량을 넘음",
-        ],
-        requiredConcepts: ["industrial-differentiation"],
-        sectionId: "differentiation",
-      },
-      {
-        level: "advanced",
-        question:
-          "두 방법의 총값을 적어 최소 수량의 식을 유도하고, 그 식이 정의되지 않는 경우가 무엇을 뜻하는지 쓰세요.",
-        answerChecklist: [
-          "곧장은 c곧장·N, 돌아가면 F + c돌아·N",
-          "차이는 F − (c곧장 − c돌아)·N",
-          "차이가 0이 되는 N이 F를 단위당 줄어드는 값으로 나눈 수",
-          "분모가 0이거나 음수이면 어떤 수량에서도 싸지지 않음",
-        ],
-        requiredConcepts: ["minimum-market-for-a-detour"],
-        sectionId: "minimum-market",
-      },
-      {
-        level: "advanced",
-        question:
-          "분업이 시장의 크기에 달려 있으면서 시장의 크기도 분업에 달려 있다는 말이 왜 단순한 동어반복이 아닌지 설명하세요.",
-        answerChecklist: [
-          "한쪽에서 열린 돌아감이 생산을 늘림",
-          "늘어난 생산이 다른 쪽의 수량을 키움",
-          "커진 수량이 다른 쪽의 다음 돌아감을 엶",
-          "변화가 변화의 조건을 만들어 누적됨",
-        ],
-        requiredConcepts: [
-          "market-extent-is-produced",
-          "minimum-market-for-a-detour",
-        ],
-        sectionId: "market-is-produced",
-      },
-      {
-        level: "advanced",
-        question:
-          "많이 만들수록 싸지므로 결국 하나만 남는다는 추론이 어디서 끊기는지, 그리고 하나만 남는 경우를 말하려면 무엇이 더 필요한지 쓰세요.",
-        answerChecklist: [
-          "이득이 쪼개져 나간 산업의 몫으로도 실현됨",
-          "조각들이 서로 다른 일을 맡아 하나가 전부를 가져가지 않음",
-          "하나로 남으려면 최소 수량이 시장 전체보다 커야 함",
-          "싸진다는 사실과 두 수를 견준 결과는 다른 주장",
-        ],
-        requiredConcepts: [
-          "increasing-returns-not-monopoly",
+        "label": "02 실제 주문과 전문화",
+        "relation": "각자 30개를 B로 만들면 180×3=540입니다. 90개를 모아 C로 만들면 390이며 추가 비용 60을 더하면 450, 180을 더하면 570입니다.",
+        "concepts": [
           "industrial-differentiation",
-          "minimum-market-for-a-detour",
-        ],
-        sectionId: "not-monopoly",
+          "market-extent-is-produced"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "큰 회사가 더 싸게 판다는 관찰 하나에 섞여 있는 서로 다른 원인들을 가르고, 왜 관찰된 값만으로는 가를 수 없는지 쓰세요.",
-        answerChecklist: [
-          "수량이 받쳐 줘 더 돌아가는 방법을 씀",
-          "사 오는 중간재의 산업이 커져서 쌈",
-          "안에서 다루는 값이 밖에서 사 오는 값보다 싸짐",
-          "값을 깎게 할 힘은 만드는 값의 문제가 아님",
+        "label": "03 비용과 시장 결과",
+        "relation": "시장 8개에서는A 80과두 업체가 4개씩 만드는 40+40이같습니다. 100개에서는C 400이두 업체가 50개씩 만드는 B의 260+260=520보다작습니다.",
+        "concepts": [
+          "increasing-returns-not-monopoly"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "20개와 100개 주문에서 세 방법의 전체 비용과 최저를 비교하세요.",
+        "answerChecklist": [
+          "20개에서 A 200·B 140·C 320이므로 B가 최저이며 평균은 7입니다. 하나당 추가 비용 4와 구분합니다.",
+          "100개에서는 A 1000·B 460·C 400이므로 C가 최저입니다. C의 300은 B의 60에 더하는 누적 금액이 아닙니다."
         ],
-        requiredConcepts: [
+        "sectionId": "case",
+        "requiredConcepts": [
+          "roundabout-production-economies"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "10개와 80개는 왜 엄격히 더 싼 첫 정수 수량이 아닌가요?",
+        "answerChecklist": [
+          "10개에서 A와 B가 100으로 동률이며 B가 더 싼 첫 정수는 11입니다.",
+          "80개에서 B와 C가 380으로 동률이며 C가 더 싼 첫 정수는 81입니다."
+        ],
+        "sectionId": "minimum-market",
+        "requiredConcepts": [
+          "minimum-market-for-a-detour"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "B를 그대로 써도 평균이 7에서 4. 6으로 바뀌는 이유를 계산하세요.",
+        "answerChecklist": [
+          "20개는 (60+4×20)/20=7, 100개는 (60+4×100)/100=4. 6입니다.",
+          "같은 준비 비용 60을 더 많은 수량에 나누므로 같은 방법에서도 평균은 낮아질 수 있습니다. 가동 여력과 품질을 같게 둔 가정입니다."
+        ],
+        "sectionId": "need",
+        "requiredConcepts": [
+          "roundabout-production-economies"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "이미 B의 60을 지출한 뒤 새 5개 주문을 추가하면 어떤 비용을 비교하나요?",
+        "answerChecklist": [
+          "돌려받을 수 없는 지출이고 가동 여력이 남는 가정에서는 앞으로 쓰는 4×5=20과 A의 10×5=50을 비교합니다.",
+          "과거 60을 새 주문에 다시 더하지 않습니다. 되팔 가치·다른 주문의 기회·정비와 재가동 비용이 있으면 앞으로 달라지는 비용에 포함합니다."
+        ],
+        "sectionId": "roundabout",
+        "requiredConcepts": [
+          "roundabout-production-economies"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "세 업체가 30개씩 만드는 경우와 90개를 모아 만드는 경우를 비교하세요.",
+        "answerChecklist": [
+          "각자B로 180씩 만들어 합계 540, 모아서C로 만들면 390입니다. 생산 비용 차이는 150입니다.",
+          "추가 비용 60이면 450으로 90 절약, 추가 비용 180이면 570으로 30 증가입니다. 생산 절약이 고객 가격으로 전부 이전된다는 뜻은 아닙니다."
+        ],
+        "sectionId": "differentiation",
+        "requiredConcepts": [
+          "industrial-differentiation"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "구매력과 생산 능력의 관계에서 왜 인구나 생산량 하나만 보면 부족한가요?",
+        "answerChecklist": [
+          "같은 인구에서도 가격·소득·산업 간 주문이 바뀔 수 있습니다. 90개 계획에도 고객의 실제 주문과 지급 능력이 필요합니다.",
+          "Young의 설명에는 생산 활동의 비례, 수요·공급 반응, 자본 축적·기술 습득·이동의 시간이 포함됩니다. 만든 물건이 자동으로 팔린다는 뜻은 아닙니다."
+        ],
+        "sectionId": "market-is-produced",
+        "requiredConcepts": [
+          "market-extent-is-produced"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "비용 동률 수량의 일반식을 유도하고 적용 조건을 설명하세요.",
+        "answerChecklist": [
+          "새 방법에서 기존 방법을 뺀 전체 비용은 ΔF−ΔcN입니다. ΔF=F₂−F₁>0,Δc=c₁−c₂>0이면 N*=ΔF/Δc에서 0이고 N>N*에서 새 방법이 더 쌉니다.",
+          "정수의 엄격한 절약은 floor(N*)+1부터입니다. 같은 품질·기간·수량·가동 여력과 아직 지출하지 않은 준비 비용을 비교합니다.",
+          "ΔF>0인데 Δc≤0이면 수량으로 차이를 회수하지 못합니다. 준비 비용이 같고 하나당 비용만 낮으면 모든 양의 수량에서 새 방법이 더 쌉니다."
+        ],
+        "sectionId": "all-methods",
+        "requiredConcepts": [
+          "minimum-market-for-a-detour"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "C′=75+N일 때 B를 거치지 않는 이유와 순차 비교의 실패를 보이세요.",
+        "answerChecklist": [
+          "B가 A보다 비싸지 않으려면 N≥10, C′보다 비싸지 않으려면 N≤5여야 하므로 함께 만족할 수 없습니다.",
+          "9개에서 A 90·B 96·C′ 84이므로 C′가 최저입니다. A→B의 동률 10만 보고 멈추면 이 선택을 놓칩니다.",
+          "C′의 준비 비용 75가 B의 60보다 커도 전체 동률 수량이 반드시 더 크지는 않습니다. 절약액과 모든 대안을 함께 비교합니다."
+        ],
+        "sectionId": "all-methods",
+        "requiredConcepts": [
+          "minimum-market-for-a-detour"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "비용 동률 수량이 시장보다 크면 한 업체가 더 싸다는 주장을 검토하세요.",
+        "answerChecklist": [
+          "시장 8개에서 A 80과 두 업체 4개씩의 40+40은 같습니다. 동률 수량 10이 8보다 커도 한 업체의 엄격한 비용 우위는 없습니다.",
+          "100개에서는 한 곳의C 400이 두 곳 50개씩의 260+260=520보다 쌉니다. 제시한 분할의 비교이며 모든 분할의 비용 조건이나 실제 독점 결과를 증명하지 않습니다."
+        ],
+        "sectionId": "not-monopoly",
+        "requiredConcepts": [
+          "increasing-returns-not-monopoly",
+          "minimum-market-for-a-detour"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "큰 업체가 더 싸게 판다는 관찰에서 비용·가격·거래 조건을 어떻게 나누나요?",
+        "answerChecklist": [
+          "같은 설비의 고정비 배분, 다른 설비 선택, 전문 공급자의 비용 절약과 구매 협상·이윤 정책을 구분합니다.",
+          "수량·품질·납기·설비 여력·운송·계약·기회비용을 맞추고 판매가격과 생산비를 따로 확인합니다.",
+          "주문 자체가 이익인지에는 판매액·대금 지급일·수요의 불확실성도 필요합니다. 싸게 생산할 수 있다는 것만으로 투자 성공이나 가격 인하를 단정하지 않습니다."
+        ],
+        "sectionId": "not-monopoly",
+        "requiredConcepts": [
           "roundabout-production-economies",
           "industrial-differentiation",
-          "firm-boundary-at-equal-margin",
-        ],
-        sectionId: "not-monopoly",
-      },
+          "increasing-returns-not-monopoly"
+        ]
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title:
-          "Allyn A. Young, “Increasing Returns and Economic Progress” (1928)",
-        href: "https://www.jstor.org/stable/2224835",
-        problem:
-          "수확 체증을 개별 회사나 개별 산업의 크기 변화로 설명하면 어디서 그 이득이 생기는지가 잡히지 않고, 싸진다는 사실에서 독점으로 간다는 결론이 쉽게 따라붙었습니다.",
-        contribution:
-          "수확 체증의 본체를 회사의 크기가 아니라 돌아가는 생산 방법에 두고, 그 방법이 시장의 크기에 묶여 있음을 Adam Smith의 명제로 되돌렸습니다. 그 위에 시장의 크기도 생산이 정한다는 되먹임을 세워 분업이 분업에 달려 있다는 정리로 적었고, 수확 체증이 실현되는 전형적인 모양이 한 곳의 비대화가 아니라 산업의 분화라고 보였습니다. 수확 체증에서 독점으로 가는 추론을 흔한 오류로 명시한 것도 같은 글입니다.",
-        assumptions:
-          "대부분의 산업에서 회사 하나가 경제적으로 커질 수 있는 크기에 느슨하나마 한계가 있다고 두고, 서로의 생산물이 서로의 시장이 되는 관계가 전반적으로 성립한다고 봅니다.",
-        evidenceScope:
-          "스캔본을 내려받아 전면 OCR한 뒤 전체를 읽었고, 본문에 인용한 네 문장은 해당 쪽 이미지를 직접 열어 글자 단위로 대조했습니다. 쪽 번호는 각 면의 머리글에 찍힌 것을 읽은 것이어서 문장 단위로 특정했습니다.",
-        notClaim:
-          "최소 수량을 식으로 적은 것은 이 글이지 논문이 아닙니다. 논문에는 망치와 자동차의 예가 말로 적혀 있을 뿐 수식이 없고, 본문의 숫자 예시도 관계를 보이기 위해 만든 것입니다. 또 수확 체증이 독점을 부르지 않는다는 것은 필연적 경향이 아니라는 뜻이지 독점이 생기지 않는다는 뜻이 아닙니다.",
-        sectionId: "minimum-market",
-      },
-    ],
+        "title": "Allyn A. Young · Increasing Returns and Economic Progress (1928)",
+        "href": "https://gwern.net/doc/economics/automation/1928-young.pdf",
+        "sectionId": "minimum-market",
+        "problem": "개별 기업 크기만으로 비용 절약과 산업 사이의 전문화·시장 확대를 설명하기 어렵습니다.",
+        "contribution": "우회 생산과 산업 사이 분업을 시장 크기와 연결하고, 생산과 구매력의 상호 영향 및 수확 체증을 독점과 동일시하는 추론의 한계를 논의합니다.",
+        "assumptions": "본문은 A10N·B60+4N·C300+N의 가정 모형입니다. 논문의 533~534쪽 수요·공급 반응 및 조정 시간과 539쪽 기업 규모 한계 가정을 보존합니다.",
+        "evidenceScope": "실제 공개 PDF의 527~534쪽·536~539쪽에서 관련 단락을 읽고 530·539쪽 이미지를 대조했습니다. 출판사 Vol38 issue152의 DOI10. 2307/2224097을 확인했습니다. 이전 JSTOR2224835는 다른 논문이어서 교체했습니다.",
+        "notClaim": "전체 논문의 모든 내용을 검증했거나 숫자와 동률 식이 원문에 있거나 같은 방법에서 평균비용이 절대 내려가지 않는다고 주장하지 않습니다. 주문 합산과 비용 비교는 시장 독점의 실증 결과가 아닙니다."
+      }
+    ]
   },
   "firms/market-power-and-markup": {
     entryNote:

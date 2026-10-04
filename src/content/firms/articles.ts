@@ -63,38 +63,62 @@ export const firmsArticles: Article[] = [
   },
   {
     slug: "scale-and-cost-structure",
-    title: "싸지는 것은 공장이 커져서가 아닙니다",
+    title: "규모와 비용: 같은 부품의 세 생산 방법",
     subcategory: "firm-pricing",
     sections: [
-      {
-        id: "overview",
-        title: "많이 만들면 싸진다는 말에는 설명이 빠져 있습니다",
-      },
-      {
-        id: "roundabout",
-        title: "부품 1. 싸지는 힘은 곧장 가지 않고 돌아가는 데서 옵니다",
-      },
-      {
-        id: "minimum-market",
-        title: "부품 2. 돌아가려면 먼저 그만큼의 시장이 있어야 합니다",
-      },
-      {
-        id: "market-is-produced",
-        title: "부품 3. 그 시장의 크기도 생산이 정합니다",
-      },
-      {
-        id: "differentiation",
-        title: "부품 4. 커지는 것은 공장이 아니라 산업이 쪼개지는 것입니다",
-      },
-      {
-        id: "not-monopoly",
-        title: "부품 5. 싸진다는 것에서 하나만 남는다는 것이 따라 나오지 않습니다",
-      },
-      {
-        id: "handoff",
-        title: "파는 쪽이 하나인 이유는 따로 세워야 합니다",
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 부품 20개와 100개에 같은 설비를 골라도 될까"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 같은 물건과 기간을 맞춘 뒤 전체 비용을 비교한다"
+  },
+  {
+    "id": "case",
+    "title": "3. 20개라면 200, 140, 320 중에서 고른다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 5개·10개·20개·80개·100개를 같은 표로 비교한다"
+  },
+  {
+    "id": "need",
+    "title": "5. 방법을 바꾸지 않아도 평균은 내려갈 수 있다"
+  },
+  {
+    "id": "names",
+    "title": "6. 고정비·변동비·평균비용과 방법 선택을 구분한다"
+  },
+  {
+    "id": "roundabout",
+    "title": "7. 60을 내기 전의 선택과 이미 낸 뒤의 선택은 다르다"
+  },
+  {
+    "id": "minimum-market",
+    "title": "8. 준비 비용 차이를 하나당 절약액으로 나눈다"
+  },
+  {
+    "id": "all-methods",
+    "title": "9. 더 비싼 설비라는 이름만으로 차례대로 넘어가지 않는다"
+  },
+  {
+    "id": "differentiation",
+    "title": "10. 30개씩 세 주문을 모으면 90개용 방법을 고를 수 있다"
+  },
+  {
+    "id": "market-is-produced",
+    "title": "11. 생산 능력과 구매력이 서로의 조건을 바꾼다"
+  },
+  {
+    "id": "not-monopoly",
+    "title": "12. 비용이 줄어든다는 사실만으로 판매자가 하나가 되지는 않는다"
+  },
+  {
+    "id": "handoff",
+    "title": "13. 같은 방법의 절약과 방법을 바꾸는 절약을 각각 계산한다"
+  }
+],
     component: () =>
       import("@/pages/articles/firms/scale-and-cost-structure"),
   },

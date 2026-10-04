@@ -1,130 +1,101 @@
 import { Link } from "react-router-dom";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import ContentBoundary from "@/components/articles/content-boundary";
-
-const FLOW = [
-  ["01", "Function", "공개 output과 허용 leakage"],
-  ["02", "Adversary", "corruption·network·abort"],
-  ["03", "Building blocks", "sharing·encryption·proof"],
-  ["04", "Rounds", "session-bound message order"],
-  ["05", "Receipt", "result·failure·cost·rollback"],
-] as const;
-
-export default function ModernArticle() {
-  return (
-    <article className="space-y-14">
-      <section id="overview" className="space-y-5">
-        <h2 className="text-3xl font-bold">
-          MPC: 함수 결과는 공유하되 private inputs은 공유하지 않는다
-        </h2>
-        <p className="text-lg leading-8">
-          Alice의 3과 Bob의 4를 더해 7을 얻되 서로의 input을 알지 못하게 한다고
-          해 봅시다. MPC의 질문은 “나누어 계산했는가”가 아니라 실제 party view가
-          trusted ideal functionality가 허용한 result·leakage 밖의 정보를 주는지입니다.
-        </p>
-        <figure data-viz="mpc-security-flow" className="not-prose rounded-xl border border-border bg-card p-4 sm:p-5">
-          <figcaption className="mb-4 text-sm font-semibold">
-            Private inputs에서 session-bound protocol receipt까지
-          </figcaption>
-          <div className="grid gap-3 sm:grid-cols-5">
-            {FLOW.map(([number, title, description]) => (
-              <div key={number} className="min-w-0 rounded-lg border border-border bg-background p-4">
-                <span className="text-xs font-semibold text-primary">{number}</span>
-                <p className="mt-2 break-words text-sm font-semibold">{title}</p>
-                <p className="mt-1 text-xs leading-5 text-muted-foreground">{description}</p>
-              </div>
-            ))}
-          </div>
-        </figure>
-        <p>
-          Shamir sharing, Paillier encryption, DKG는 각각 threshold storage,
-          homomorphic arithmetic, dealerless key generation을 담당합니다. 한 building
-          block의 security를 전체 protocol의 malicious security·fairness로 확대하면
-          안 됩니다.
-        </p>
-        <ContentBoundary article="mpc" />
-      </section>
-
-      <section id="security-model" className="space-y-5">
-        <h2 className="text-2xl font-bold">Adversary·network·abort/fairness를 먼저 고정한다</h2>
-        <p>
-          Semi-honest adversary는 protocol을 따르면서 본 messages로 추가 정보를
-          얻으려 하지만 malicious adversary는 message를 변조하고 잘못된 share를
-          보내거나 중간에 abort할 수 있습니다. Static/adaptive corruption,
-          authenticated channels/broadcast, synchrony/timeout과 corruption threshold도
-          security statement의 일부입니다.
-        </p>
-        <p>
-          Privacy가 있어도 fairness는 없을 수 있습니다. 마지막 message를 먼저 본
-          공격자가 abort해 자신만 result를 얻는 반례가 가능하므로 output delivery와
-          abort 범위를 별도 기록합니다.
-        </p>
-      </section>
-
-      <section id="shamir" className="scroll-mt-20 space-y-4">
-        <h2 className="text-2xl font-bold">Shamir은 독립적인 threshold-sharing primitive입니다</h2>
-        <p>
-          Secret을 random polynomial의 상수항으로 두고 nonzero points를 shares로
-          나눕니다. 복원식, t-share privacy의 전제, 잘못된 share·refresh·VSS 경계는
-          MPC 전체 정의와 다른 학습 단위이므로 별도 글로 이동했습니다.
-        </p>
-        <Link className="font-medium text-primary hover:underline" to="/cs/crypto/shamir-secret-sharing">
-          Shamir Secret Sharing 글로 이동 →
-        </Link>
-      </section>
-
-      <section id="paillier" className="scroll-mt-20 space-y-4">
-        <h2 className="text-2xl font-bold">Paillier는 독립적인 확률적 public-key cryptosystem입니다</h2>
-        <p>
-          Ciphertext 곱을 plaintext 덧셈으로 옮기는 항등식에는 key generation,
-          unit randomizer, modulus와 security assumption이 붙습니다. Homomorphism을
-          active MPC input proof나 ciphertext integrity로 확대하지 않는 경계는 별도
-          글에서 유도합니다.
-        </p>
-        <Link className="font-medium text-primary hover:underline" to="/cs/crypto/paillier-cryptosystem">
-          Paillier Cryptosystem 글로 이동 →
-        </Link>
-      </section>
-
-      <section id="dkg" className="space-y-5">
-        <h2 className="text-2xl font-bold">DKG round를 session-bound artifact로 보존한다</h2>
-        <p>
-          Protocol/source version, session ID, party public identities·indices, n/t,
-          curve/group, commitment·encrypted-share·proof messages, round order,
-          complaints·disqualifications와 accepted group public key를 receipt에 넣습니다.
-          Session ID나 roster hash가 빠지면 이전 ceremony의 commitment를 새 ceremony에
-          replay할 수 있습니다.
-        </p>
-        <p>
-          DKG의 output은 한 명이 전체 secret을 얻지 않은 public key와 secret
-          shares입니다. Application signature protocol, nonce generation, resharing과
-          membership rotation은 별도 protocol/version입니다.
-        </p>
-      </section>
-
-      <section id="release" className="space-y-5">
-        <h2 className="text-2xl font-bold">Active failures·dropout·restart를 통과한 뒤 성능을 재다</h2>
-        <p>
-          Duplicate party/index, out-of-field share, invalid commitment, malformed key,
-          reordered/cross-session round, false/valid complaint, dropout, timeout과
-          crash/restart를 replay합니다. 같은 n/t·adversary/network model·security
-          parameter·hardware에서 rounds, messages, wire bytes, p50/p99 latency,
-          CPU/RSS를 나누고 regression이면 이전 protocol generation으로 rollback합니다.
-        </p>
-        <div id="paper-tsslib-source">
-          <CitationBlock
-            source="bnb-chain/tss-lib pinned source 3f677ff"
-            citeKey={1}
-            href="https://github.com/bnb-chain/tss-lib/tree/3f677ff761fcf692edb0243a5d812930844d879a"
-          >
-            <p><b>문제:</b> Threshold DKG/MtA/VSS의 concrete implementation seam을 고정합니다.</p>
-            <p><b>기여:</b> Official Go source·tests의 pinned snapshot입니다.</p>
-            <p><b>전제:</b> Commit과 protocol/toolchain/dependency profile을 함께 pin합니다.</p>
-            <p><b>근거 범위:</b> 선택 source의 round·artifact behavior입니다.</p>
-            <p><b>말하지 않는 것:</b> Generic MPC 정의나 모든 threshold scheme을 대신하지 않습니다.</p>
-          </CitationBlock>
-        </div>
-      </section>
-    </article>
-  );
-}
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
+import MpcJourneyViz from "./viz/MpcJourneyViz";
+import { codeRefs, fileTrees, projectMetas } from "./codeRefs";
+export default function ModernArticle(){const sidebar=useCodeSidebar();return <div className="space-y-16 [overflow-wrap:anywhere]">
+<section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 4와 3을 더한 뒤 다른 사람의 5를 곱합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">
+            세 회사가 공동 견적을 계산합니다. 첫 회사의 내부 수량은 4, 둘째 회사의 내부 수량은 3, 셋째 회사의 비공개 단가는 5입니다. 합의한 계산은 (4+3)×5이며 공개할
+            결과는 35입니다. 각자는 자기 입력을 나눈 조각을 보내고 조각끼리 계산한 뒤 마지막 결과만 엽니다.
+          </p>
+<p className="leading-8">이것이 안전한 다자간 계산, MPC가 다루는 문제입니다. 결과를 공개하면서 결과에 담긴 정보까지 지울 수는 없습니다. 두 사람이 자신의 수와 둘의 합을 알면 상대 수를 빼서 알아냅니다. MPC의 비밀성은 자기 입력과 허용된 결과에서 이미 알 수 있는 것 이상이 계산 과정 때문에 더 드러나지 않도록 하는 목표입니다.</p>
+<p className="leading-8">이 글의 숫자는 독자가 모든 단계를 검산하도록 공개한 예입니다. 실제 세 프로세스에는 각자의 입력 하나씩만 주었습니다. 같은 세 값이 어떻게 나뉘고 더해지고 곱해지는지 본 뒤, 고정한 Python 원문과 결과를 대조합니다.</p>
+</div></section>
+<section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 믿을 수 있는 계산 담당자가 해 주던 일을 나눕니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">모두가 믿는 담당자가 있다면 세 회사가 그 사람에게만 입력을 주고, 담당자가 정해진 35만 돌려주면 됩니다. MPC는 이런 가상의 담당자 없이 참여자들이 메시지를 주고받아 정한 함수를 계산합니다.</p>
+<p className="leading-8">비교의 기준은 각자가 실제 실행에서 본 자기 난수·조각·메시지·결과입니다. 가상 담당자에게 자기 입력을 주고 허용된 결과를 받은 상황과 비교해 추가 정보가 생기는지 따집니다. 이 비교에는 누가 규칙을 어길 수 있는지, 누구에게 결과를 주는지, 중단을 허용하는지도 들어갑니다.</p>
+</div></section>
+<section id="case" data-teach-level="0" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">3. 이번 계산에서는 67로 나눈 나머지를 씁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">숫자는 0부터 66까지이고 덧셈과 곱셈 뒤에는 67로 나눈 나머지를 남깁니다. 예를 들어 70은 3입니다. 이번 값 (4+3)×5=35는 67보다 작아서 정수 계산과 같은 결과입니다. 단가가 10으로 바뀌면 정수 70과 체의 결과 3은 달라집니다.</p>
+<p className="leading-8">참여자는 첫째·둘째·셋째의 세 명입니다. 조각을 평가할 주소는 1,2,3입니다. 각 입력을 직선의 상수항으로 두고 기울기를 새로 골라 세 주소에서 읽습니다. 뒤의 표에서 보이는 전체 조각은 설명용이고 실제 각 참여자는 자기 주소의 조각만 받습니다.</p>
+</div></section>
+<section id="picture" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 나눈 조각이 계산을 거쳐 결과가 됩니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">입력 하나를 세 조각으로 나누고, 각 참여자가 첫 두 조각을 더합니다. 그다음 셋째 입력의 조각을 곱합니다. 곱셈 뒤에는 복원에 필요한 점의 수가 늘어나므로 조각을 다시 나눠 원래의 조건으로 되돌립니다. 마지막에 지정한 사람에게만 결과를 복원합니다.</p>
+</div><MpcJourneyViz/></section>
+<section id="why" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 더하기와 곱하기는 조각의 모양을 다르게 바꿉니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">직선 두 개를 더하면 다시 직선입니다. 그래서 각자가 자기 조각을 더해도 숨긴 상수항의 합을 담은 직선 위에 남습니다. 직선 두 개를 곱하면 보통 이차식이 되어 그대로는 같은 복원 규칙을 쓸 수 없습니다.</p>
+<p className="leading-8">곱셈 뒤의 식을 누구 한 명에게 모아 열어 버리면 중간 값이 드러납니다. 대신 각자의 곱 조각을 다시 나누고 정해진 무게로 합칩니다. 원하는 상수항은 유지하면서 차수와 가리는 난수 계수를 다시 정하는 방법입니다.</p>
+</div></section>
+<section id="names" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 조각·임계값·재공유에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">입력을 여러 점의 값으로 나눈 것을 비밀 분산이라고 하고 각 점의 값을 share, 조각이라고 부릅니다. 앞서 쓴 직선 방식은 Shamir 분산입니다. 여기서 t=1은 다항식의 최대 차수이자 허용하는 수동 공격자 수이며, 복원에는 t+1=2개의 정상 조각이 필요합니다. 문헌에 따라 복원 개수 자체를 threshold라고 부르므로 기호의 뜻을 먼저 확인합니다.</p>
+<p className="leading-8">각자 조각을 더하거나 곱하는 것이 공유된 값의 연산입니다. 곱셈 뒤 새 직선 조각으로 바꾸는 절차가 재공유와 차수 축소입니다. 기울기를 고른 사람이 입력을 나눠 주는 역할을 dealer라고 부르지만 전체 계산을 한 사람에게 맡긴다는 뜻은 아닙니다.</p>
+<p className="leading-8">정해진 연산을 하면서 본 기록을 분석하는 공격은 수동 공격입니다. 잘못된 조각을 보내거나 멈추는 행동까지 허용하는 것은 능동 공격입니다. 이 글에서 실행한 MPyC는 절반 미만의 수동 공격자를 다루는 구현입니다.</p>
+</div></section>
+<section id="sharing" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 4와 3과 5를 세 직선에 넣습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">첫 입력 4는 4+2X, 둘째 입력 3은 3+5X, 셋째 입력 5는 5+3X로 나눕니다. 기울기 2,5,3은 손으로 계산할 수 있게 고정한 예입니다. 실제 분산에서는 각 입력마다 독립적이고 균등한 새 기울기를 사용합니다.</p>
+<p className="leading-8">주소 1,2,3에서 첫 입력의 조각은 6,8,10이고 둘째는 8,13,18이며 셋째는 8,11,14입니다. 첫 참여자는 자기 주소의 6,8,8을, 둘째는 8,13,11을, 셋째는 10,18,14를 가집니다. 입력 주인은 자기 입력과 자기가 사용한 난수도 압니다.</p>
+<p className="leading-8">한 직선의 두 정상 점을 모으면 상수항을 복원할 수 있습니다. 그래서 서로 독립이어야 할 참여자 두 명의 기록을 한 서버에 모으면 이 설정의 비밀성 조건이 깨집니다. 같은 컴퓨터에서 실행한 시험은 배포 환경의 신뢰 분리를 증명하지 않습니다.</p>
+</div><ExplainedFormula question="하나의 입력을 같은 비밀을 담은 세 조각으로 어떻게 바꾸나요?" idea="상수항은 입력으로 두고 새 기울기로 직선을 만듭니다." formula={String.raw`\begin{gathered}f_s(X)=s+aX\pmod{67}\\f_x(X)=4+2X\\(f_x(1),f_x(2),f_x(3))\\=(6,8,10)\end{gathered}`} annotatedFormula={String.raw`\begin{gathered}f_s(X)=s+aX\pmod{67}\\f_x(X)=4+2X\\(f_x(1),f_x(2),f_x(3))\\=(6,8,10)\end{gathered}`} operations={[{"expression": "f_s(X)=s+aX\\pmod{67}", "annotation": ["상수항 s를 유지하고 기울기 a로 조각을 가립니다."]}, {"expression": "(6,8,10)", "annotation": ["각 참여자에게 해당 주소의 값 하나를 줍니다."]}]} terms={[{"symbol": "s", "name": "입력", "description": "첫 회사의 값은 4입니다."}, {"symbol": "a", "name": "새 기울기", "description": "예에서는 2이며 실제로는 F₆₇에서 균등하게 고릅니다."}, {"symbol": "X", "name": "조각 주소", "description": "0이 아닌 서로 다른 1,2,3을 씁니다."}]} assumptions={["입력별 기울기는 독립적입니다.", "한 참여자가 받는 조각과 설명용 전체 표를 구분합니다."]} interpretation="상수항 4를 한 조각에 그대로 담아 보내지 않습니다."/></section>
+<section id="addition" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. 각자 두 조각을 더하면 7의 조각이 됩니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">첫 참여자는 6+8=14, 둘째는 8+13=21, 셋째는 10+18=28을 계산합니다. 세 값은 (4+2X)+(3+5X)=7+7X 위에 있습니다. 숨긴 상수항은 4+3=7이고 기울기는 2+5=7입니다.</p>
+<p className="leading-8">덧셈 자체에는 상대방의 새 메시지가 필요하지 않습니다. 각자 이미 가진 두 조각을 더하면 됩니다. 결과를 아직 공개하지 않으므로 각자는 여전히 직선 위의 한 값만 가집니다. 입력을 나누는 통신과 결과를 여는 통신은 따로 있습니다.</p>
+</div></section>
+<section id="multiplication" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. 곱 조각 45와 30과 57은 이차식 위에 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">이제 각자가 합 조각에 셋째 입력의 조각을 곱합니다. 14×8 mod67=45, 21×11 mod67=30, 28×14 mod67=57입니다. 이 값들은 (7+7X)(5+3X)=35+56X+21X² 위에 있습니다.</p>
+<p className="leading-8">원하는 상수항은 35로 맞지만 차수가 2가 됐습니다. 직선을 가정하고 첫 두 점에 2×45−30을 적용하면 60이 나옵니다. 이것은 원하는 35가 아닙니다. 이차식의 상수항은 세 점의 무게 3,−3,1을 써서 3×45−3×30+57=102≡35 mod67로 복원합니다.</p>
+<p className="leading-8">중간 곱 조각을 모두 공개해 이 계산을 하는 대신 다음 절에서는 각 조각을 다시 숨겨 나눕니다. 실제 구현에서도 비밀 값끼리 곱할 때 이 통신 절차를 호출합니다.</p>
+</div><ExplainedFormula question="곱한 조각을 두 점만으로 복원하면 왜 틀리나요?" idea="직선 두 개를 곱하면 이차항이 남습니다." formula={String.raw`\begin{gathered}q(X)=(7+7X)(5+3X)\\=35+56X+21X^2\pmod{67}\\(q(1),q(2),q(3))=(45,30,57)\\2\cdot45-30=60\ne35\end{gathered}`} annotatedFormula={String.raw`\begin{gathered}q(X)=(7+7X)(5+3X)\\=35+56X+21X^2\pmod{67}\\(q(1),q(2),q(3))=(45,30,57)\\2\cdot45-30=60\ne35\end{gathered}`} operations={[{"expression": "21X^2", "annotation": ["곱셈으로 새 이차항이 생겼습니다."]}, {"expression": "2\\cdot45-30=60\\ne35", "annotation": ["직선용 두 점 복원식을 그대로 쓰면 틀립니다."]}]} terms={[{"symbol": "q", "name": "곱 조각의 다항식", "description": "상수항은 원하는 결과 35입니다."}, {"symbol": "t", "name": "입력 공유의 최대 차수", "description": "여기서는 1이고 곱의 차수는 최대 2t=2입니다."}]} assumptions={["같은 주소의 두 조각을 곱합니다.", "중간 조각 전체를 공개하지 않습니다."]} interpretation="복원 규칙을 다시 쓸 수 있도록 차수를 낮춰야 합니다."/></section>
+<section id="reshare" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 곱 조각을 다시 나누고 열마다 무게를 곱합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">첫 참여자는 자기 곱 조각 45를 45+4X로, 둘째는 30을 30+6X로, 셋째는 57을 57+8X로 다시 나눕니다. 기울기 4,6,8도 재현용입니다. 실제로는 앞선 난수와 독립적인 새 계수를 사용합니다.</p>
+<p className="leading-8">세 주소로 보낸 행은 각각 [49,53,57], [36,42,48], [65,6,14]입니다. 마지막 행의 73과 81은 mod67에서 6과 14가 됩니다. 받는 참여자는 자기 열의 세 값에 무게 3,−3,1을 곱해 합칩니다.</p>
+<p className="leading-8">첫 열은 3×49−3×36+65=104≡37입니다. 둘째 열은 3×53−3×42+6=39이고 셋째는 3×57−3×48+14=41입니다. 새 조각 37,39,41은 35+2X 위에 있습니다. 이제 첫 두 점으로 2×37−39=35를 복원할 수 있습니다.</p>
+<p className="leading-8">각 참여자가 자기 열만 받는 동안 45,30,57 자체를 모두 알 필요는 없습니다. 이 예의 전체 행렬은 검산용입니다. 실제 메시지를 한곳에 기록해 표처럼 공개하면 비밀 분산의 목적을 잃습니다.</p>
+</div></section>
+<section id="reshare-proof" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 일반식에서도 상수항을 지키고 차수를 낮춥니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">차수 t인 두 식을 곱한 q의 차수는 최대 2t입니다. 체에서 서로 다른 2t+1개의 주소가 있으면 q(0)은 그 점들의 공개 보간 무게 λᵢ로 복원됩니다. 여기서는 주소 1,2,3의 0에서의 무게가 3,−3,1입니다.</p>
+<p className="leading-8">각 참여자는 hᵢ(0)=q(i)인 새 차수 t 다항식 hᵢ를 나눕니다. 이 새 식들을 같은 무게로 더한 H의 차수는 최대 t이고, H(0)=Σλᵢq(i)=q(0)입니다. 그래서 비밀 결과를 열지 않고 다시 낮은 차수의 조각을 얻습니다.</p>
+<p className="leading-8">이번 새 기울기는 3×4−3×6+8=2입니다. 일반 실행에서는 적어도 하나의 정직한 새 계수가 독립적이고 균등하며 그 보간 무게가 0이 아니면 해당 합도 균등하게 가려집니다. 이 차수·분포 계산은 전체 참여자의 기록에 대한 보안 증명을 대신하지 않습니다.</p>
+</div><ExplainedFormula question="재공유의 어떤 성질이 원하는 35를 보존하나요?" idea="각 새 다항식의 상수항에 예전 곱 조각을 두고 보간 무게를 그대로 씁니다." formula={String.raw`\begin{gathered}H(X)=\sum_{i=1}^{2t+1}\lambda_i h_i(X)\\h_i(0)=q(i),\quad\deg h_i\le t\\H(0)=\sum_i\lambda_i q(i)=q(0)\\\deg H\le t\\t=1:\quad H(X)=35+2X\end{gathered}`} annotatedFormula={String.raw`\begin{gathered}H(X)=\sum_{i=1}^{2t+1}\lambda_i h_i(X)\\h_i(0)=q(i),\quad\deg h_i\le t\\H(0)=\sum_i\lambda_i q(i)=q(0)\\\deg H\le t\\t=1:\quad H(X)=35+2X\end{gathered}`} operations={[{"expression": "H(0)=\\sum_i\\lambda_i q(i)=q(0)", "annotation": ["상수항은 원래 곱의 상수항으로 복원됩니다."]}, {"expression": "\\deg H\\le t", "annotation": ["차수 t 이하 식들의 합도 차수 t 이하입니다."]}]} terms={[{"symbol": "λᵢ", "name": "공개 보간 무게", "description": "이번 세 주소에서는 3,−3,1입니다."}, {"symbol": "hᵢ", "name": "새 분산 다항식", "description": "상수항 q(i)를 새 난수 계수로 다시 가립니다."}]} assumptions={["참여자가 2t+1명 이상이며 주소는 서로 다르고 0이 아닙니다.", "유한체에 필요한 주소가 있고 정직한 재공유 절차를 따릅니다."]} interpretation="같은 계산을 이어 해도 공유의 차수를 t로 유지할 수 있습니다."/><CitationBlock source="Gennaro·Rabin·Rabin · 3.1절 Simple-Mult" citeKey={1} href="https://mit6875.github.io/PAPERS/GennaroRabinRabin.pdf"><p className="leading-8">저자 원고의 3절 모형, 3.1절 유도와 Figure 2·정리 2, 4절 도입을 읽었습니다. PDF 6·7쪽에서 수식을 직접 확인했습니다. 이 곱셈 절차의 수동 공격 조건과 능동 공격용 추가 검증을 구분합니다.</p>
+</CitationBlock></section>
+<section id="privacy" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 한 조각의 비밀성과 전체 계산의 비밀성은 검증 범위가 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">주소 i가 0이 아니면 s+ai는 a를 바꿀 때 체의 모든 값을 한 번씩 지납니다. s가 어떤 값이든 a를 균등하게 뽑으면 한 조각의 분포는 같습니다. 예를 들어 주소 1의 조각 6은 상수항 4·기울기 2뿐 아니라 상수항 5·기울기 1과도 맞습니다.</p>
+<p className="leading-8">보존한 원문 분산 함수를 이용해 67개 상수항 각각에서 67개 기울기를 대입했습니다. 각 경우 첫 조각의 67개 출력이 모두 한 번씩 나오는 것을 확인했습니다. 이것은 한 조각의 분포에 대한 4,489개 계산입니다.</p>
+<p className="leading-8">여러 입력에 기울기를 재사용하면 이 성질을 함께 적용할 수 없습니다. 4+2X와 3+2X의 조각을 같은 사람이 받으면 둘의 차이는 항상 −1, mod67에서는 66입니다. 각각의 조각만 보면 균등하더라도 두 조각을 함께 본 분포에는 입력 차이가 남습니다.</p>
+<p className="leading-8">전체 MPC의 비밀성은 자기 입력·난수·여러 단계의 메시지·출력을 함께 다룹니다. 허용된 정보만 가진 모의 실행으로 그 공동 분포를 만들 수 있는지 보이는 것이 실제와 이상적인 계산의 비교입니다. 한 조각의 전수 검사나 정직한 실행 성공만으로 이 증명을 끝냈다고 말하지 않습니다.</p>
+</div></section>
+<section id="output-leakage" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">13. 35가 공개되면 무엇이 이미 드러나나요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">셋째 회사는 자기 단가 5와 결과 35를 알므로 첫 두 수량의 합이 7임을 알 수 있습니다. 첫 회사가 자기 수량 4와 결과 35만 아는 상황에서는 단가 5·다른 수량 3뿐 아니라 단가 7·다른 수량 1도 가능합니다. 외부 정보나 좁은 허용 범위가 추가되면 후보가 더 줄어듭니다.</p>
+<p className="leading-8">이와 달리 두 사람만 3과 4를 더해 합 7을 둘 다 받으면, 각자 자기 수를 빼서 상대 수를 정확히 압니다. 이 사실은 어떤 프로토콜도 결과를 그대로 주면서 막을 수 없습니다. 무엇을 공개할지 정하는 일은 암호 프로토콜을 선택하기 전에 해야 합니다.</p>
+<p className="leading-8">같은 집단에서 한 사람씩 빼며 여러 합을 공개하는 경우에도 결과들의 차이로 개별 값이 드러날 수 있습니다. 결과를 받을 사람, 반복 조회, 최소 집계 인원과 추가적인 통계적 보호는 응용의 별도 조건입니다.</p>
+</div></section>
+<section id="source-input" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">14. 원문의 input이 같은 세 값을 조각으로 보냅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">실행한 원문은 MPyC 0.11.2, 커밋 38f06a7a입니다. 별도 호출 예제는 SecFld(67)를 만들고 세 프로세스의 표준 입력에 각각 4,3,5를 줍니다. input은 세 송신자를 정하고 _distribute를 호출합니다.</p>
+<p className="leading-8">_distribute는 각 송신자의 값을 thresha.random_split에 넣습니다. random_split은 secrets.randbelow(order)로 차수 t만큼의 계수를 고르고 주소 1부터 m까지에서 평가합니다. 각 참여자는 자기 몫을 보관하고 나머지는 해당 상대에게 전송합니다.</p>
+<p className="leading-8">고정 기울기의 표는 원문 함수를 별도 검산 호출할 때 난수 한 번을 통제해 재현했습니다. 세 프로세스 실행에서는 난수 함수를 바꾸지 않았으며 내부 조각을 모아 출력하지 않았습니다. 따라서 실제 실행의 난수 조각이 본문의 고정 숫자와 같았다고 주장하지 않습니다.</p>
+</div><CodeViewButton label="원문의 입력 분산" onClick={()=>sidebar.open("input",codeRefs["input"])}/><CodeViewButton label="원문의 다항식 조각 생성" onClick={()=>sidebar.open("split",codeRefs["split"])}/><CodeViewButton label="같은 세 값을 실행한 별도 호출 예제" onClick={()=>sidebar.open("call",codeRefs["call"])}/><CitationBlock source="MPyC 0.11.2 · 고정 원문과 기본 사용 문서" citeKey={2} href="https://github.com/lschoe/mpyc/tree/38f06a7af688231fca4defe1613d01a2aa8bcbfb"><p className="leading-8">같은 커밋의 README와 기본 사용 문서에서 수동 공격 모델과 임계값, 입력·출력의 의미를 읽고 실제 호출과 대조했습니다. 기본 연산에 필요한 모듈 전체를 원문 그대로 보존했습니다.</p></CitationBlock></section>
+<section id="source-multiply" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">15. 덧셈은 로컬 연산이고 비밀 곱셈은 _reshare로 이어집니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">비밀 숫자의 +와 *는 Python의 일반 평문 숫자 연산과 다른 원문 함수를 부릅니다. runtime.add는 두 준비된 조각을 얻어 a+b를 반환합니다. runtime.mul은 먼저 a*b를 계산하고 상대 피연산자도 비밀 객체이면 _reshare를 호출합니다.</p>
+<p className="leading-8">_reshare는 2t+1명의 참여자가 자기 곱 조각을 다시 나눠 보내도록 합니다. 각 수신자는 받은 점들을 thresha.recombine으로 합쳐 새 조각 하나를 얻습니다. 이번 t=1, m=3에서는 세 명 모두 재공유에 참여합니다. 송신 순서를 분산하는 uci도 있지만 주소의 값에 맞는 보간을 하므로 같은 상수항을 얻습니다.</p>
+<p className="leading-8">공개된 상수를 곱할 때는 비밀 다항식의 차수가 늘지 않아 같은 재공유 분기로 들어가지 않습니다. 이것이 비밀 값끼리의 곱과 공개 스칼라곱의 비용이 다른 이유입니다. 이 글에서는 성능 시간을 측정해 비교하지 않았습니다.</p>
+</div><CodeViewButton label="원문의 add와 mul" onClick={()=>sidebar.open("arithmetic",codeRefs["arithmetic"])}/><CodeViewButton label="원문의 곱 조각 재공유" onClick={()=>sidebar.open("reshare",codeRefs["reshare"])}/><CodeViewButton label="원문의 보간 무게와 재결합" onClick={()=>sidebar.open("recombine",codeRefs["recombine"])}/></section>
+<section id="source-output" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">16. 지정한 수신자에게 필요한 조각만 보내 결과를 엽니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">output의 기본 수신자는 모든 참여자입니다. 원문은 수신자의 주소 주변에서 t개의 다른 조각을 받아 자기 조각과 함께 총 t+1개로 복원합니다. t=1에서는 두 정상 점이면 됩니다. 받는 사람을 따로 지정할 수도 있으므로 함수 결과가 누구에게 공개되는지는 호출의 일부입니다.</p>
+<p className="leading-8">세 프로세스는 같은 식 (x+y)*z의 output에서 모두 35를 출력했습니다. SecFld의 기본 signed=False를 썼기 때문에 0부터 66까지의 나머지로 읽습니다. 같은 체 값 35를 부호 있는 표현으로 읽으면 −32일 수 있으므로 표현 옵션과 수학적 원소를 구분합니다.</p>
+<p className="leading-8">연결 시험은 같은 컴퓨터의 TCP이고 SSL은 끈 상태입니다. 추가 NumPy·GMP·uvloop와 PRSS 기능도 끄고 원문의 기본 Python 경로를 사용했습니다. 이를 외부망의 인증·암호화나 독립된 관리 주체를 검증한 결과로 확대하지 않습니다.</p>
+</div><CodeViewButton label="원문의 결과 수신자와 복원" onClick={()=>sidebar.open("output",codeRefs["output"])}/><CodeViewButton label="원문의 유한체와 signed 설정" onClick={()=>sidebar.open("type",codeRefs["type"])}/></section>
+<section id="security-model" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">17. 잘못된 조각을 보내면 35가 38로 바뀔 수 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">첫 참여자가 자기 곱 조각 45를 46이라고 거짓말하고 그 값을 일관된 새 직선으로 나눴다고 해 봅시다. 재결합에서 이 행의 무게가 3이므로 결과는 35+3=38로 바뀝니다. 새 조각들이 한 직선 위에 있다는 사실만으로 원래 곱을 정확하게 계산했는지 알 수 없습니다.</p>
+<p className="leading-8">이 반례는 별도 정수 모형으로 실행했습니다. MPyC 네트워크에 악성 메시지를 주입한 시험은 아닙니다. 선택한 구현의 문서는 t&lt;m/2인 수동 공격 모델을 명시하고 시작 시 2t&lt;m을 검사합니다. 이 조건을 만족했다는 사실만으로 능동 공격 검증이 추가되는 것은 아닙니다.</p>
+<p className="leading-8">능동 공격까지 다루려면 어떤 입력과 연산이 유효한지 증명하거나 확인하는 프로토콜이 필요합니다. 누가 공격자인지 처음부터 정하는 정적 모델과 실행 중 바뀌는 적응적 모델도 다릅니다. 통신 지연과 이탈, 비공개 채널과 신뢰할 수 있는 방송 조건을 함께 읽어야 합니다.</p>
+<p className="leading-8">비밀성이 있어도 결과를 모두에게 전달하는 공정성이 자동으로 생기지는 않습니다. 어떤 프로토콜에서는 공격자가 결과를 먼저 알고 마지막 메시지를 보내지 않을 수 있습니다. 여기서 성공한 정직한 실행은 이런 이탈 상황의 복구나 공정성을 시험한 것이 아닙니다.</p>
+</div></section>
+<section id="dkg" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">18. 같은 나눔을 키 생성에 쓸 때는 공개할 결과가 바뀝니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">함수 결과 35를 공개하는 대신 여러 사람이 비밀키를 함께 만들고 싶을 수 있습니다. 별도의 정직한 키 생성 모형으로 같은 상수 4,3,5를 더하면 비밀키는 12이고, 다항식 합은 12+10X입니다. 각자의 합 조각은 22,32,42입니다. 누구도 합 비밀키 자체를 복원해 공개할 필요는 없습니다.</p>
+<p className="leading-8">공개키를 설명하기 위해 별도 작은 군을 씁니다. 269로 나눈 곱셈에서 g=16의 위수는 67입니다. 공개키 g¹² mod269는 142이고 기울기의 공개 약속 g¹⁰은 196입니다. 주소 1의 조각 22는 g²²=142×196 mod269=125인지 확인할 수 있습니다.</p>
+<p className="leading-8">이것은 정직한 분산 키 생성, DKG의 핵심 합산을 보여 주는 작은 모형입니다. 실제 키 기여분은 새 난수로 만들며 잘못된 기여·서로 다른 조각·참여자 자격·거짓 불만·이탈까지 다뤄야 합니다. 작은 군은 쉽게 전수 조사할 수 있으므로 비밀키 안전성의 예가 아닙니다.</p>
+</div><ExplainedFormula question="키를 열지 않고 각 조각이 같은 다항식에 속하는지 어떻게 확인하나요?" idea="다항식 계수의 공개 군 원소와 조각의 군 원소를 비교합니다." formula={String.raw`\begin{gathered}s_i=k+ai\pmod{67}\\g^{s_i}=g^k(g^a)^i\pmod{269}\\k=12,\quad a=10,\quad i=1\\g^{22}=142\cdot196\bmod269=125\end{gathered}`} annotatedFormula={String.raw`\begin{gathered}s_i=k+ai\pmod{67}\\g^{s_i}=g^k(g^a)^i\pmod{269}\\k=12,\quad a=10,\quad i=1\\g^{22}=142\cdot196\bmod269=125\end{gathered}`} operations={[{"expression": "g^{s_i}=g^k(g^a)^i\\pmod{269}", "annotation": ["조각의 지수 관계가 공개된 계수 약속과 맞는지 확인합니다."]}, {"expression": "g^{22}=142\\cdot196\\bmod269=125", "annotation": ["같은 주소 1의 조각 22를 대입한 결과입니다."]}]} terms={[{"symbol": "k", "name": "합 비밀키", "description": "설명용 세 기여분의 합 12입니다."}, {"symbol": "g", "name": "군 생성원", "description": "mod269에서 위수 67인 16입니다."}, {"symbol": "sᵢ", "name": "합 키의 조각", "description": "이번 세 주소에서 22,32,42입니다."}]} assumptions={["체의 연산과 군의 연산은 서로 다른 modulus를 씁니다.", "이 정직한 작은 모형은 전체 DKG 프로토콜이나 안전한 키가 아닙니다."]} interpretation="23처럼 바뀐 조각은 이 공개 관계를 만족하지 않습니다."/></section>
+<section id="source-dkg" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">19. 고정한 tss-lib는 조각 합산에 여러 검증을 더합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">DKG 원문은 앞의 MPyC와 다른 프로젝트인 bnb-chain/tss-lib의 커밋 3f677ff7입니다. 이번에는 실행하지 않고 선택한 Go 경로를 읽었습니다. round_1은 각자의 키 기여분으로 VSS 조각과 곡선 위 계수 약속을 만들고 약속에 대한 해시 약속 및 Paillier 관련 값과 증명을 준비합니다.</p>
+<p className="leading-8">round_3은 받은 키 조각을 더한 Xi를 곡선 군의 위수로 줄입니다. 이어 해시 약속의 열기, 선택한 증명 설정과 VSS 조각을 확인한 뒤 공개 계수들을 곡선 덧셈으로 합칩니다. 앞의 작은 곱셈군 예와 같은 지수 관계를 실제 원문은 곡선의 스칼라곱과 점 덧셈으로 검사합니다.</p>
+<p className="leading-8">이 파일에는 구 버전 호환을 위한 증명 설정 분기도 있습니다. 선택 소스에 확인 함수가 있다는 것과 어떤 설정으로 전체 프로토콜을 안전하게 실행했다는 주장을 구분해야 합니다. 이 글은 Go DKG, 서명, nonce 생성, 재분산이나 참여자 교체를 실행하지 않았습니다.</p>
+</div><CodeViewButton label="원문의 키 기여와 세션 준비" onClick={()=>sidebar.open("dkg-start",codeRefs["dkg-start"])}/><CodeViewButton label="원문의 조각 합산과 검증" onClick={()=>sidebar.open("dkg-verify",codeRefs["dkg-verify"])}/><CodeViewButton label="원문의 조각과 계수 약속 검사" onClick={()=>sidebar.open("vss",codeRefs["vss"])}/></section>
+<section id="session" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">20. 이전 실행의 메시지를 새 계산에 섞지 않습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">오늘의 실행 A에서 받은 약속을 내일 실행 B에 다시 넣으면 수학적으로 같은 형식이어도 잘못된 실행의 자료입니다. 참여자와 주소·임계값·키 설정·단계 및 실행 식별자를 메시지와 묶고, 받는 쪽에서 기대한 실행과 실제로 일치하는지 확인해야 합니다. 식별자를 기록만 하는 것으로 검사가 생기지는 않습니다.</p>
+<p className="leading-8">고정한 tss-lib README는 전송을 응용 계층의 책임으로 둡니다. 참가자 사이의 암호화된 통신, 실행마다 고유한 세션 ID의 일치 검사, 모두가 같은 내용을 받는 신뢰할 수 있는 방송, 시간 초과와 오류 처리를 요구합니다. round_1의 SessionNonce는 호출자가 주면 복사하지만 없으면 0을 씁니다. 라이브러리가 매번 고유한 nonce를 자동으로 만들었다고 가정하면 안 됩니다.</p>
+<p className="leading-8">공개 감사 기록으로 어느 버전과 설정에서 누가 참여했는지 확인할 수 있게 합니다. 공개 약속과 허용한 결과, 실패했다면 그 이유도 남길 수 있습니다.</p><p className="leading-8">각자의 비밀 조각과 키, 난수와 비공개 메시지를 한 공개 기록에 모으면 입력이나 키를 복원할 수 있습니다. 공개 기록과 접근이 제한된 참여자별 상태를 분리하고 비밀 자료를 어디까지 보존할지 정해야 합니다.</p>
+<p className="leading-8">오류가 나면 단순히 처음부터 다시 실행하는 것으로 끝나지 않습니다. 이전 결과나 난수가 이미 노출됐는지, 같은 요청이 두 번 처리되는지, 새 세션과 새 난수가 필요한지 확인해야 합니다. 여기서는 세션 재전송·시간 초과·이탈·재시작을 실제 실행하지 않았습니다.</p>
+</div><CodeViewButton label="원문의 메시지 경로와 방송 표시" onClick={()=>sidebar.open("transport",codeRefs["transport"])}/><CitationBlock source="tss-lib · 호출자에게 요구하는 전송 조건" citeKey={3} href="https://github.com/bnb-chain/tss-lib/blob/3f677ff761fcf692edb0243a5d812930844d879a/README.md#how-to-use-this-securely"><p className="leading-8">보존한 README에서 누가 통신을 보호하고 세션을 검사해야 하는지 읽었습니다. 방송과 시간 초과 요구도 선택한 Go 경로와 대조했습니다. 실제 외부망 배포나 공격 시험, 전체 보안 감사는 수행하지 않았습니다.</p></CitationBlock></section>
+<section id="composition" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">21. Shamir와 Paillier는 전체 MPC의 한 부품입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">Shamir는 조각의 비밀성과 복원 관계를 제공합니다. 조각에 대한 잘못된 계산을 자동으로 발견하는 것은 아닙니다. 이번 재공유 반례의 38은 그 차이를 보여 줍니다. Paillier는 암호문 곱으로 평문 합을 만들지만 같은 성질로 공개 변조도 허용합니다.</p>
+<p className="leading-8">어떤 프로토콜은 비밀 분산으로 계산하고 어떤 프로토콜은 암호화·다른 암호 도구를 함께 씁니다. DKG는 키를 만드는 일이며 그 키로 안전하게 서명하거나 임의 함수를 계산하는 절차 전체와 같지 않습니다. 여기서는 두 부품의 일반 수학을 반복 정의하기보다 이미 설명한 정본으로 연결합니다.</p>
+</div><div className="flex flex-col gap-3 text-sm"><Link className="text-primary underline" to="/cs/crypto/shamir-secret-sharing">Shamir: 조각의 비밀성과 복원</Link><Link className="text-primary underline" to="/cs/crypto/paillier-cryptosystem">Paillier: 암호문 합산과 표현·변조 조건</Link></div></section>
+<section id="verification" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">22. 실제 실행과 읽은 원문, 미검증 범위를 구분합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">CPython 3.12.13에서 변경 없이 보존한 MPyC 핵심 모듈을 불러왔습니다. 별도 검산은 고정 기울기의 원문 split·recombine과 독립 정수식을 대조했습니다. 세 프로세스 실행은 각자 입력 하나를 받아 동일한 공개 결과 35를 얻었고 모두 정상 종료했습니다.</p>
+<p className="leading-8">원문·라이선스·Git blob·SHA256, 별도 호출 예제와 관측 결과를 보존했습니다. 정규 입력 4,3,5와 재공유, 잘못된 두 점 복원과 거짓 행의 38, 기울기 재사용, 한 조각의 4,489개 분포 계산, 별도 정직한 DKG 군 관계를 확인했습니다.</p>
+<p className="leading-8">전체 MPyC 테스트 묶음이나 Go의 DKG와 서명은 실행하지 않았습니다. 악성 네트워크 참여자, 이탈과 재시작, 외부망 보호 및 보안 감사도 이번 실행 범위에 포함하지 않습니다.</p><p className="leading-8">실행 시간을 성능 표로 보고하지 않았습니다. 비용을 비교하려면 계산할 함수와 체의 표현, 참여자 수를 맞춰야 합니다. 공격 모델과 통신망도 같게 정한 뒤 메시지 수와 바이트, 지연 시간을 구분해 측정합니다.</p>
+</div></section>
+<section id="limits" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">23. 다음 결과를 숫자로 예측합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">세 비밀 입력의 계산을 나눠도 결과 자체의 정보는 공개됩니다. 같은 조각을 더할 때와 곱할 때의 차수, 다시 나누는 통신, 결과의 수신자, 공격자의 행동과 세션 조건을 함께 보았습니다.</p>
+<p className="leading-8">곱 조각 두 개만으로 복원하면 어떤 값이 나오는지 설명해 보세요. 셋째 회사가 자기 단가 5와 공개 결과 35를 알면 무엇을 알 수 있는지도 확인해 보세요. 마지막으로 이전 실행의 메시지를 새 실행에서 막는 실제 검사가 어디에 있어야 하는지 말해 보세요.</p>
+</div><ReviewPrompts questions={["곱 조각 45와 30을 직선의 두 점으로 복원하면 왜 35가 아닌 60이 나오나요? (답: 9절)","단가 5와 결과 35를 아는 셋째 참여자는 첫 두 입력의 어떤 관계를 알 수 있나요? (답: 13절)","tss-lib에서 세션 ID를 로그에 남기기만 해도 다른 실행의 메시지가 거부되나요? (답: 20절)"]}/></section>
+<CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas}/></div>}

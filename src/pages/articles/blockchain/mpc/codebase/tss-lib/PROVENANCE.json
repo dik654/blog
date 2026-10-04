@@ -1,0 +1,50 @@
+{
+  "repo": "bnb-chain/tss-lib",
+  "commit": "3f677ff761fcf692edb0243a5d812930844d879a",
+  "sourceUnmodified": true,
+  "files": [
+    {
+      "path": "README.md",
+      "gitBlob": "c4411d96aa042059470a675800a27024d2ecf592",
+      "sha256": "be66cacde223be5b5f26d5c3fbaf4b180cffe5e85a09172e932e531f5df86b56",
+      "bytes": 9557
+    },
+    {
+      "path": "LICENSE",
+      "gitBlob": "03b6589eb3be79f373c2de661b6447a68413261b",
+      "sha256": "7a77921a2f0bce150e08f4e0ee99059fbda168c22b909656516b5f075ec0df09",
+      "bytes": 1064
+    },
+    {
+      "path": "ecdsa/keygen/round_1.go",
+      "gitBlob": "f49a35477a5405349c1e0311c74340bcdbf832ee",
+      "sha256": "b9991bdc087ae9501bed0edb1663d63a1e75fca994127b9166f558f4e40d8679",
+      "bytes": 5297
+    },
+    {
+      "path": "ecdsa/keygen/round_3.go",
+      "gitBlob": "d61799a3fb0248f6a1136142e10239f4e43def96",
+      "sha256": "411ac460b8ba91192922b166f11b93f919e228a127ed1336b97e70ed2b9f37ab",
+      "bytes": 6878
+    },
+    {
+      "path": "crypto/vss/feldman_vss.go",
+      "gitBlob": "6165ebd026017a46aafb0f04fbba7b860a9267c3",
+      "sha256": "1f98e06777ed9c18d0ebf8e8cafa2593d01921909802a123d7cb2d75282ab857",
+      "bytes": 4576
+    },
+    {
+      "path": "tss/party.go",
+      "gitBlob": "dc62d166722e648f34073990e7cc69cb006da6af",
+      "sha256": "635e53c3bbcc553469fc75129f33b32151914317c410fbcf4088c2ce6e8442c8",
+      "bytes": 5491
+    },
+    {
+      "path": "tss/message.go",
+      "gitBlob": "acb4a6ec288e26bbff8b2ea317a524ac8e69ce7c",
+      "sha256": "ca80564861e6f822242372bcdb62b97dfd613fe6e88b75a86f101e1e9f417562",
+      "bytes": 4913
+    }
+  ],
+  "execution": "read-only; not compiled or run"
+}

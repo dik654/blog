@@ -1,0 +1,146 @@
+{
+  "repo": "lschoe/mpyc",
+  "commit": "38f06a7af688231fca4defe1613d01a2aa8bcbfb",
+  "version": "0.11.2",
+  "sourceUnmodified": true,
+  "files": [
+    {
+      "path": "LICENSE",
+      "gitBlob": "0860d963aeaa2893ed47711f7c185398b8513af0",
+      "sha256": "aa34ed5969b06382f3b365ae572b288029e4fb73fb78f17810c6dca70c396f25",
+      "bytes": 1075
+    },
+    {
+      "path": "README.md",
+      "gitBlob": "fd4fb382a3f0d494886b685acf4d8832cb7878d2",
+      "sha256": "b6493ab616cda6d3db160cbb86cea7d9b28256729410082eb4765230ff13b40f",
+      "bytes": 4026
+    },
+    {
+      "path": "docs/basics.rst",
+      "gitBlob": "911e5cf564f2ad951e6ae06173b54f00f366d698",
+      "sha256": "04acea1912f5baac631adb2f74b3dfdbbc1d87dfa642258c2724656085f0d7a4",
+      "bytes": 5627
+    },
+    {
+      "path": "mpyc/__init__.py",
+      "gitBlob": "f0e31f0ed65e3705e862fd21404bf7c1c70c7466",
+      "sha256": "b2700384a4125a19dca4b8c17546cfe8b18b630a620f81184e0cb50271bdbd25",
+      "bytes": 10132
+    },
+    {
+      "path": "mpyc/__main__.py",
+      "gitBlob": "ccebf68e23ec338d12477341275c8a8753ffbccb",
+      "sha256": "bde2a81e6074d12e449bcf6f692043c39c69819e127c8f32a0b673ed57453d75",
+      "bytes": 6972
+    },
+    {
+      "path": "mpyc/asyncoro.py",
+      "gitBlob": "8f5d9248fb01556db7f10f6746f950b40ceda322",
+      "sha256": "66fc0d6f94215c66f3f08f2bc52cd00e6560075758d7901979103d1ccd6b93a5",
+      "bytes": 15254
+    },
+    {
+      "path": "mpyc/finfields.py",
+      "gitBlob": "0f822cb129285e49559f70d6880dabc07720b6d2",
+      "sha256": "beccf9b09b7f3dad187672456d73c098b138e7a2030964176a8f92a5d95d96e0",
+      "bytes": 48237
+    },
+    {
+      "path": "mpyc/fingroups.py",
+      "gitBlob": "ac813f70f124df5332094b2dc804687832bbf218",
+      "sha256": "539c4ea1f0ef7488bf753a0c31c51e454f36bf51c0a343603aed18c962464d49",
+      "bytes": 64001
+    },
+    {
+      "path": "mpyc/gfpx.py",
+      "gitBlob": "5e2b7ba089dd611be4893d20faa371b90187f2cd",
+      "sha256": "f20ab8db7f45f87fe693458033dcfeedae95ac6966a1bb99ed8097893a3fd1d7",
+      "bytes": 29503
+    },
+    {
+      "path": "mpyc/gmpy.py",
+      "gitBlob": "7c84be21314ae92bee8bebcc4775cbfc8d72bc77",
+      "sha256": "cc22ff88a096bea8914f0f4e4bfe4498ff87e2d6721810503b5bd9ab44f06947",
+      "bytes": 8315
+    },
+    {
+      "path": "mpyc/mpctools.py",
+      "gitBlob": "fd2ec54eebcf6ff2cd32dcce091cd1ef2f499526",
+      "sha256": "435808fe871db9c973d73ca0376152bb6da3eb7cde64483165f17671fe98c15e",
+      "bytes": 4165
+    },
+    {
+      "path": "mpyc/numpy.py",
+      "gitBlob": "60e647927aae6cc894231c9a763ec861fbc8c7b5",
+      "sha256": "908d9f7224fd88ce47d83a423e866a94aad2795b66f6e32940bc188819decbdf",
+      "bytes": 7490
+    },
+    {
+      "path": "mpyc/random.py",
+      "gitBlob": "64f7230a405c0a5e608cb9781a5684fc34eec15c",
+      "sha256": "70e146041891174c6e06c32d4a49ece41b54b7dbc37053924d29550591687c4d",
+      "bytes": 11215
+    },
+    {
+      "path": "mpyc/runtime.py",
+      "gitBlob": "ed5e8045d4dbdc203b95426664fa737690d5bd48",
+      "sha256": "81dfc8eec15316e2210bbd8c0c73c1e63282a1f490af1bb2abe2814ab51a45e4",
+      "bytes": 198810
+    },
+    {
+      "path": "mpyc/secgroups.py",
+      "gitBlob": "1f32840781d3948034414ab64336436ba5fddd25",
+      "sha256": "1d871e7a8a48a313c13f9a27ef3e8e0ebbbb38f1d2cd7c773f689e876aa9d876",
+      "bytes": 31592
+    },
+    {
+      "path": "mpyc/seclists.py",
+      "gitBlob": "e6312d58cb58afd97475eb044260a9f24602f182",
+      "sha256": "f39f1e99c9dba07cca0de89848c6973f50d04450d97ee077fbe893d129b0acc5",
+      "bytes": 14635
+    },
+    {
+      "path": "mpyc/secpols.py",
+      "gitBlob": "440d231c03295a96037d478c8bcc17f85e2e3007",
+      "sha256": "a7e43234e4b1db0646727e745be2bfc9f3e1ebcbe2f94eb09925261c6d068fa2",
+      "bytes": 24068
+    },
+    {
+      "path": "mpyc/sectypes.py",
+      "gitBlob": "13eafd1eda1d88efbd66f1e432a8b14bbf5950db",
+      "sha256": "229a6816965eea55adfba6bd522120f90d34c9195b4f91702f58e32ef91fd918",
+      "bytes": 50631
+    },
+    {
+      "path": "mpyc/statistics.py",
+      "gitBlob": "a6e0df1907af83cf223e08439f2ed63154e92a5a",
+      "sha256": "089115dfd15be56aeea23c53de1ac3ec5604f31cb789b75c104056dda7ae1152",
+      "bytes": 20749
+    },
+    {
+      "path": "mpyc/thresha.py",
+      "gitBlob": "0c058a099b127184ef7fb91cdf76a44f834826cb",
+      "sha256": "d853c0c1d7e7a51858c09aeb0d63f2d8467579347213c0803541cc76c7bf8790",
+      "bytes": 9268
+    },
+    {
+      "path": "pyproject.toml",
+      "gitBlob": "c287b84cff46a96696f8a3da94ca37928f0b431f",
+      "sha256": "83118d18786ddba268982ae1d9a3a62ec89177fc591c2c1569e1df4bd2d62fea",
+      "bytes": 1576
+    },
+    {
+      "path": "setup.cfg",
+      "gitBlob": "8e67c8a6ba4691a7b22fa83ab1ab7bfbd3cbdf15",
+      "sha256": "6896dad6b3e7ae7ce281e7400242ba2d4cf7222e81dc3afd0bb70cb81ae9bc5b",
+      "bytes": 80
+    },
+    {
+      "path": "setup.py",
+      "gitBlob": "ece20baf21cc36e75acc7805c4393f3fdfa40f09",
+      "sha256": "39aee6e66150fb4225cf63181718dce82a7c74bdd545d376f224a89e1e9385f2",
+      "bytes": 111
+    }
+  ]
+}

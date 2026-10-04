@@ -1557,17 +1557,32 @@
     },
     {
       "route": "firms/market-power-and-markup",
-      "status": "unreviewed",
+      "status": "reviewed-rewrite-required",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-05",
+        "actualBodyRead": true,
+        "actualTwoVizAndLearning5DefinitionsRead": true,
+        "defects": [
+          "minimumthresholdlargerthanmarket impliesonefirmfalse repeatedfrompriorarticle",
+          "manysellers automaticallyprice takers false; productdifferentiation canmarketpower",
+          "already-soldunitslowerprice soundsretroactive refund; alternativeuniformpricecomparisonneedtime",
+          "MR differential13−2q vs discretefourthunit6 mixed; MRat3=7 andat4=5neither6",
+          "MR=MConlyinteriorsmoothnecessary; capacity,entry,cornersglobalmaximumignored",
+          "markup independentcost false; costchangesoptimumepsilon. derivativeelasticityvsfinite1% approximate",
+          "profitpuretransfer blanketignoresfixedcost/economicprofits;surpluswelfareassumptions missing",
+          "both oldhandoff firmboundaryexactequality andunchangedmethodcannotdecrease false",
+          "sourceclaimsread mustrefresh actualscan;6+4andfullLernerproofpreserve;7.5–8.5pxSVG480minmobile"
+        ]
+      }
     },
     {
       "route": "firms/scale-and-cost-structure",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
@@ -1588,7 +1603,27 @@
           "quotes>25words and current claimfullscanread mustrefresh evidence",
           "smallconsistentcase beforeterms missing, source→caseapplication, graphs8pxandhorizontalmin480"
         ],
-        "next": "A=10N B=60+4N C=300+N sameparts;10/80ties,20/100sameBavg7/4.6,fullenvelope,3shops30aggregate90cost540→390, actualYoung527530533534537–539 andspecificlimits; preserve5conceptsproof and6+4"
+        "completedAt": "2026-10-05",
+        "sourceChanged": true,
+        "primarySource": "Young1928 PDF actual527–534/536–539 relevant paragraphs,530/539 images; publishercorrectDOI2224097; old2224835differentpaper",
+        "result": "13 sections S/B/0/1/2/3/4/5/6/6/6/7/7; sameA/B/C parts fixture; 5 concepts and6+4 preserved; definitions+11relatededge reasons corrected",
+        "verification": {
+          "model": "12positivequantities,10/80ties11/81strict,Cprime9,sunk5,pool90+60/180,Q8equal,Q100selectedpartition; independentFractionPASS",
+          "independentBody": "theory readall13sections/model/2Viz/Young530539; PASS withonewordingcorrection applied: perpart sixunits",
+          "humanize": "50paragraphs7215chars plusfinal7230;7+1 phrase edits; whole+2chunkgates0 each;96visible strings5497chars whole+2gates0; exactroundtrip verified",
+          "browser": "390/1440;13sections;firstnames28.8%;3predictions;1citation;10answerlists;5+4sceneskeyboard/playback/reduced allPASS;brokenanchors0,overflow0,console0;all5KaTeXbasebounds0;scrolledlastscene/readbackPASS",
+          "typescript": "actual npx tsc -p tsconfig.app.json --noEmit exit0",
+          "learning": "strict --require-registration exit0",
+          "prose": "globalbaselinePASS0review; noexceptionsadded",
+          "localRoutes": "generic2views0failed"
+        },
+        "files": [
+          "src/pages/articles/firms/scale-and-cost-structure.tsx",
+          "src/pages/articles/firms/scale-and-cost-structure/model.ts",
+          "src/pages/articles/firms/scale-and-cost-structure/viz/DetourViz.tsx",
+          "src/pages/articles/firms/scale-and-cost-structure/viz/DifferentiationViz.tsx"
+        ],
+        "bodySha256": "8133df0e1b33a4dc9185dab24c85b3af516811fa187869db6ff3fc5c0c1423fd"
       }
     },
     {
@@ -4712,9 +4747,9 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 32,
+    "rewritten-local-verified": 33,
     "retained-local-verified": 16,
-    "unreviewed": 176,
+    "unreviewed": 175,
     "reviewed-rewrite-required": 1
   }
 }

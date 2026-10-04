@@ -126,11 +126,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "blockchain/reth-sync": KEEP("Anchor→pipeline execution/unwind→backfill/live handoff→notification이 한 sync state transition입니다."),
   "blockchain/reth-txpool": KEEP("Admission→nonce chain→subpool→consumption→reorg/eviction이 한 transaction lifecycle입니다."),
   "crypto/mpc": {
-    action: "split",
-    status: "implemented",
-    reviewedAt: "2026-08-27",
-    rationale: "Shamir와 Paillier는 DKG의 보편적 순차 단계가 아니며 각각 독립 유도·security assumption·응용 경계를 가진 canonical method입니다.",
-    targetRoutes: ["crypto/mpc", "crypto/shamir-secret-sharing", "crypto/paillier-cryptosystem"],
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "같은 4,3,5의 조각을 덧셈·곱셈·재공유·고정 원문까지 연결하고 결과 공개가 드러내는 관계를 함께 설명합니다. DKG는 별도 목적의 같은 합산 모형으로 비교하고 Shamir·보간·Paillier의 일반 정본은 재사용합니다.",
+    "sharedGate": "고정 원문 split/recombine·4,489개 한 조각 분포와 세 실제 프로세스의 35 출력, 독립 차수·상수항·반례를 검토합니다. 390/1440 수식·네 장면·12패널 및 6+4와 실행 경계를 확인합니다."
   },
   "gpu/cuda-basics": {
     "action": "keep",
@@ -373,13 +373,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "sharedGate": "본문·두 Viz·6+4 문제에서 최저 동률3/4개=18,등식 없는3개=16.5,설립비5의23 및 조건이 일치해야 합니다. 원문 해석과 설명용 숫자를 구분합니다."
   },
   "firms/scale-and-cost-structure": {
-    action: "keep" as const,
-    status: "reviewed" as const,
-    reviewedAt: "2026-10-03",
-    rationale:
-      "돌아가는 방법·최소 수량·시장 크기의 되먹임·산업의 분화·따라 나오지 않는 결론까지가 왜 싸지는가라는 하나의 질문을 푸는 한 묶음이다. 특히 마지막 부품은 앞 네 부품이 세운 것을 근거로만 설 수 있어 떼어 낼 수 없다.",
-    sharedGate:
-      "같은 숫자 예시에서 먼저 들이는 몫과 단위당 값을 같은 단위로 세고, 최소 수량과 갈아타는 자리가 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-05",
+    "rationale": "같은 부품의 세 방법으로 고정비 배분·동률·모든 대안·주문 합산·시장 조건까지 이어지는13절입니다.5개념과조건부증명·6+4가 한 사례를 공유합니다.",
+    "sharedGate": "A10N/B60+4N/C300+N의10/80동률,11/81정수절약,같은B평균7/4.6,Cprime75+N건너뛰기,3×30합계540→90의390및추가60/180을본문·2Viz·6+4에서대조합니다. 비용과가격/시장결과를구분합니다."
   },
   "firms/market-power-and-markup": {
     action: "keep" as const,
@@ -1912,6 +1910,27 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "같은 4와 3을 수식·암호문 합산·복호·고정 원문에 반복 대입하고 그 결과가 정수 표현과 API 조건에서 달라지는 이유를 연결합니다. 일반 CRT와 난수 생성은 정본을 재사용합니다.",
     "sharedGate": "n=15의 120개 조합과 n=21의 252개 CRT 왕복, 표현·재사용·변조·정규 검사 및 실행 한계를 검토합니다. 390/1440 수식·네 장면·10개 원문 패널과 6+4를 확인합니다."
   },
+  "ai/word2vec-negative-sampling": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "추첨 비교를 추가하는 단계와 문장에서 출현을 지우는 단계를 같은 다섯 단어로 대조해야 두 학습 분포를 혼동하지 않습니다. 이상 손실·q와 k·실제 추첨·제거를 한 글에 두고 앞의 행 조회와 이후 전체 행렬 해석은 각 정본에 연결합니다.",
+    "sharedGate": "같은 세 점수1의 손실2.939785·입력 기울기, 무게[1,1,1,8,1]/12, 원본 seed43의 red/dog와 seed0의5개 채택·red cat 남김을 본문·두 그림·원문·6+4에서 같은 조건으로 확인합니다."
+  },
+  "ai/launch-overhead-and-cpu-gpu-synchronization": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "같은 여섯 연산의 CPU 제출과 GPU 완료를 하나의 시간표로 추적해 실제 값 읽기·stream 의존성·범위 대기로 연결합니다. 주소·크기·graph 생성 계약은 기존 CUDA Graph 정본을 재사용하며 제출 병목의 진단과 완료 의미를 이 글이 소유합니다.",
+    "sharedGate": "3→8→18→38, S2/L3/E2/G1의 완료10·18·26/10·20·30/7·11·15/7·14·21, 첫3.005 대3.06ms와장기간격2.5대2, A26/B50의범위, D1/D2의21/15μs를 본문·수식·4장면·원문12패널·6기초/4심화에서 대조한다."
+  },
+  "ai/subword-static-embeddings": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "조각 합성의 조회 결과는 사전·해시·문자 정규화와 행 파일의 조합으로 결정됩니다. run/runs의 같은 네 기여를 원문과 배포 반례까지 이어야 .vec만으로 OOV 기능이 유지된다는 오해를 막을 수 있어 한 글로 유지합니다. 앞선 단어 조회와 연쇄법칙은 정본을 재사용합니다.",
+    "sharedGate": "run의 [0,5,5,7]→(4,.75), runs의 [5,5,6,3]→(1.75,1), Unicode의 (7,1)/(2,1)과 bucket 축소 후 (3,.75)를 본문·두 그림·실제 원문·6+4에서 같은 가정으로 대조합니다."
+  },
 };
 
 /**
@@ -1919,6 +1938,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/launch-overhead-and-cpu-gpu-synchronization": "6ce09e8e1f3ff2c4",
+  "ai/subword-static-embeddings": "9318c48cfc1ef572",
+  "ai/word2vec-negative-sampling": "40651034445f4f77",
   "ai/cuda-graph-capture": "d0ab85923d9ad4ae",
   "ai/word2vec-prediction-objectives": "16f9c34ef7e7fd8b",
   "crypto/binary-field-proving": "97e459fcf7d8e433",
@@ -2154,7 +2176,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/reth-rpc": "a3ee98c5da5ab0f6",
   "blockchain/reth-sync": "da31c51eece15592",
   "blockchain/reth-txpool": "610e2f10b793ae99",
-  "crypto/mpc": "487961f55cafda95",
+  "crypto/mpc": "07f3cf355d38676f",
   "gpu/cuda-basics": "41615071ec176bec",
   "gpu/gpu-arch-hopper": "036cadb2e337870a",
   "gpu/cuda-persistent-kernels": "9a0d1ef64c90bed2",
@@ -2166,7 +2188,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "saas/private-access-inbound-closure": "4ce0f54f2ee45937",
   "ai/onprem-k8s-inference-platform": "acd23d8e4dc14592",
   "firms/why-firms-exist": "663c6174003a6728",
-  "firms/scale-and-cost-structure": "81801244a44eeece",
+  "firms/scale-and-cost-structure": "94e938bc20ccbb61",
   "firms/market-power-and-markup": "bd7e2fcb297b90d2",
   "circuits/lumped-circuit-and-conservation": "1dc30f31646ad464",
   "testimony/speeches-were-reconstructed": "f1adf0d6f339adc2",
