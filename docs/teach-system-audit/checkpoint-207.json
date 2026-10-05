@@ -215,7 +215,7 @@
   "reviewed": 207,
   "remaining": 592,
   "goalComplete": false,
-  "deployed": false,
+  "deployed": true,
   "disposition": "165 substantive rewrites and 42 retained teaching flows after actual body audit.",
   "validation": {
     "individual": "Six additions: actual full body/source/formula/exact 6+4 review; concrete case→three predictions→front Viz; 390px visible full-text review and two-width interactions PASS. Three earlier rewritten intros also received case-specific front Viz.",
@@ -232,6 +232,7 @@
     "order": "PASS 91 listings and 437 prerequisite edges; actual exit 0.",
     "viz": "Target 12 affected routes across 24 two-width checks PASS; global SVG advisory inventory remains non-blocking.",
     "whitespace": "PASS git diff --check; actual exit 0.",
-    "mobileViewport": "100svh invariant remains enforced; no 100dvh source use."
+    "mobileViewport": "100svh invariant remains enforced; no 100dvh source use.",
+    "production": "GitHub Pages run 37312864987 success for commit 2318a3df61dfd729ec0298079d0797ba60ccab22; new six routes and six-route prior-Viz set at 390/1440 produced 24 checks with 0 failed."
   }
 }

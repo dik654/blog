@@ -1588,7 +1588,7 @@
       "route": "ai/augmentation-evaluation",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/augmentation-evaluation.tsx",
       "publicPath": "cs/ai/augmentation-evaluation",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -1638,11 +1638,10 @@
         "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
-        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0",
+        "production": "GitHub Pages run 37312864987 success; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-207-production/summary.json"
       },
-      "remaining": [
-        "checkpoint 207 배포·production 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-05",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -1661,7 +1660,7 @@
       "route": "ai/catboost-ordered-learning",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/catboost-ordered-learning.tsx",
       "publicPath": "cs/ai/catboost-ordered-learning",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -1719,11 +1718,10 @@
         "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
-        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0",
+        "production": "GitHub Pages run 37312864987 success; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-207-production/summary.json"
       },
-      "remaining": [
-        "checkpoint 207 배포·production 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-05",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -1742,7 +1740,7 @@
       "route": "ai/classification-metrics",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/classification-metrics.tsx",
       "publicPath": "cs/ai/classification-metrics",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -1790,11 +1788,10 @@
         "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
-        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0",
+        "production": "GitHub Pages run 37312864987 success; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-207-production/summary.json"
       },
-      "remaining": [
-        "checkpoint 207 배포·production 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-05",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -1813,7 +1810,7 @@
       "route": "ai/claude-code",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code.tsx",
       "publicPath": "cs/ai/claude-code",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -1860,11 +1857,10 @@
         "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
-        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0",
+        "production": "GitHub Pages run 37312864987 success; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-207-production/summary.json"
       },
-      "remaining": [
-        "checkpoint 207 배포·production 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-05",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -1885,7 +1881,7 @@
       "route": "ai/claude-code-checkpointing",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code-checkpointing.tsx",
       "publicPath": "cs/ai/claude-code-checkpointing",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -1931,11 +1927,10 @@
         "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
-        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0",
+        "production": "GitHub Pages run 37312864987 success; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-207-production/summary.json"
       },
-      "remaining": [
-        "checkpoint 207 배포·production 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-05",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -1954,7 +1949,7 @@
       "route": "ai/claude-code-hooks",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code-hooks.tsx",
       "publicPath": "cs/ai/claude-code-hooks",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2000,11 +1995,10 @@
         "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
-        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0",
+        "production": "GitHub Pages run 37312864987 success; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-207-production/summary.json"
       },
-      "remaining": [
-        "checkpoint 207 배포·production 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-05",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -8406,7 +8400,7 @@
       "fixture": {
         "assumed": true,
         "bounds": [
-          0.00001,
+          1e-05,
           0.1
         ],
         "u": 0.5,
@@ -9957,7 +9951,7 @@
           "roundTrip": true,
           "chars": 6841,
           "edits": 0,
-          "changeRate": 0.00007309407207078955,
+          "changeRate": 7.309407207078955e-05,
           "gateExit": 0,
           "numbersMarkersPointersPreserved": true
         },
@@ -10496,7 +10490,8 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 61,
+    "rewritten-local-verified": 55,
+    "rewritten-production-verified": 6,
     "unreviewed": 125
   },
   "localValidationSummary": {
