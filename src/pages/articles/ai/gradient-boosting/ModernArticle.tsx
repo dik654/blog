@@ -7,16 +7,33 @@ import { BoostingFunctionViz } from "../gbm-viz";
 
 export default function GradientBoostingArticle() {
   return (
-    <article id="overview" className="space-y-16">
-      <section className="space-y-6">
+    <article className="space-y-16">
+      <section id="overview" className="space-y-6">
         <LessonHeader
           number="00"
-          eyebrow="먼저 tree 하나"
-          title="Decision tree는 input 공간을 leaf 칸으로 나누는 piecewise-constant 함수다"
+          eyebrow="55㎡ 집 한 채부터"
+          title="현재 4억인 예측을 새 tree가 4.48억으로 고칩니다"
         >
-          Boosting을 배우기 전에 weak learner의 shape부터 봅니다. Split 질문을
-          따라 도착한 leaf 하나가 현재 tree의 상수 output을 소유합니다.
+          목표값이 7억인 55㎡ 집의 현재 score는 4억입니다. Squared loss에서
+          고칠 방향은 3이고, 새 tree는 이 방향을 2.4로 근사했습니다. Learning
+          rate가 0.2이면 이번 round가 더하는 값은 0.48, 새 score는 4.48입니다.
         </LessonHeader>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>55㎡ 집은 tree의 모든 leaf 값을 더해서 예측할까요?</li>
+            <li>현재 score 4와 목표 7 사이의 pseudo-residual은 3일까요?</li>
+            <li>새 tree 2.4를 그대로 더하면 다음 score가 6.4일까요?</li>
+          </ol>
+          <p>
+            답은 차례로 <strong>아니요, 예, 아니요</strong>입니다. 한 sample은 leaf
+            하나만 선택하고, 새 tree에는 0.2를 곱하므로 4+0.2×2.4=4.48입니다.
+          </p>
+        </div>
+        <div className="[&>figure]:max-h-[calc(100svh-8rem)] [&>figure]:overflow-y-auto">
+          <BoostingFunctionViz />
+        </div>
+        <ContentBoundary article="gradient-boosting" />
         <TermLesson
           name="Decision tree as a piecewise-constant function"
           oneLine="Feature split로 input 공간을 겹치지 않는 terminal region으로 나누고, sample이 도착한 leaf의 상수 값을 출력하는 함수입니다."
@@ -24,7 +41,6 @@ export default function GradientBoostingArticle() {
           example="면적 60㎡ 이하는 3억, 초과는 6억을 출력하면 두 구간을 가진 regression tree입니다."
           boundary="Leaf value는 probability가 아니라 additive logit일 수 있고 missing·category routing은 구현마다 다릅니다."
         />
-        <BoostingFunctionViz />
         <ExplainedFormula
           question="왜 모든 leaf 값을 더하지 않고 sample이 속한 leaf 하나만 남을까요?"
           idea="Leaf region은 서로 겹치지 않게 input 공간을 나눕니다. Indicator는 x가 속한 region에서만 1이므로 정확히 한 상수 값만 output에 남습니다."
@@ -206,7 +222,6 @@ export default function GradientBoostingArticle() {
             },
           ]}
         />
-        <ContentBoundary article="gradient-boosting" />
       </section>
     </article>
   );

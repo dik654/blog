@@ -12,11 +12,11 @@ const Arrow = () => (
 
 export function BoostingFunctionViz() {
   const story = useStory(4);
-  const labels = ["한 tree", "현재 오차", "새 tree", "ensemble"] as const;
+  const labels = ["55㎡가 leaf 하나 선택", "7−4=3", "새 tree h=2.4", "4+0.2×2.4=4.48"] as const;
   return (
     <StoryShell
-      title="작은 구간 함수를 loss가 줄어드는 방향으로 하나씩 더한다"
-      subtitle="먼저 tree 하나의 shape를 보고, 그 다음에만 residual target과 additive update를 붙입니다."
+      title="55㎡ 집의 4억 예측을 4.48억으로 한 걸음 고칩니다"
+      subtitle="목표 7·현재 4·tree 2.4·learning rate 0.2를 같은 행에서 추적합니다."
       labels={labels}
       {...story}
     >
@@ -32,11 +32,11 @@ export function BoostingFunctionViz() {
         <NodeBox
           active={story.step >= 1}
           title="Residual target"
-          detail="현재 prediction에서 loss가 줄어드는 sample별 방향"
+          detail="y−F = 7−4 = 3"
         />
         <Arrow />
         <div className="space-y-2">
-          {["F₀", "+ ηh₁", "+ ηh₂"].map((x, i) => (
+          {["F₀ = 4", "+ 0.2×2.4", "F₁ = 4.48"].map((x, i) => (
             <div
               key={x}
               className={`border px-4 py-3 text-center text-sm font-black transition-opacity ${story.step >= Math.min(3, i + 1) ? "border-primary bg-primary/10 opacity-100" : "border-border opacity-25"}`}
@@ -49,10 +49,10 @@ export function BoostingFunctionViz() {
       <p className="mt-5 text-sm leading-7 text-muted-foreground">
         {
           [
-            "Tree 하나는 input 공간을 leaf 칸으로 나누고 각 칸에서 상수 값을 냅니다.",
-            "현재 score가 틀린 방향을 negative loss derivative로 계산합니다.",
-            "새 weak tree가 그 방향을 leaf별 상수로 근사합니다.",
-            "Learning rate η로 목소리를 줄여 기존 함수에 더하고 validation에서 round 수를 고릅니다.",
+            "55㎡는 ‘60㎡ 이하’ leaf 하나에만 들어가므로 다른 leaf 값은 더하지 않습니다.",
+            "Squared loss에서 목표 7과 현재 score 4의 차이 3이 이번 round의 방향입니다.",
+            "새 weak tree는 residual 3을 완전히 맞히지 못하고 55㎡ leaf에서 2.4를 냅니다.",
+            "2.4에 η=0.2를 곱한 0.48만 더해 새 score 4.48을 만들고, 다음 round가 남은 오차를 다시 봅니다.",
           ][story.step]
         }
       </p>

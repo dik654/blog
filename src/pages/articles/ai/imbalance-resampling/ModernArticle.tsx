@@ -9,20 +9,31 @@ export default function ImbalanceResamplingArticle() {
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Resampling은 원래 population이 아니라 training fold의 노출 분포만
-          바꿉니다
+          두 minority 점 (2,4)와 (6,8) 사이에 (3,5)를 만듭니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <strong>Training-fold resampling</strong>은 split을 끝낸 뒤 training
-            subset 안에서만 positive·negative row가 model에 보이는 횟수나
-            synthetic distribution을 바꾸는 방법입니다.
+            Training fold의 minority 두 점을 <strong>xᵢ=(2,4)</strong>,
+            <strong>xⱼ=(6,8)</strong>로 고정합니다. λ=0.25이면 두 점의 차이
+            (4,4)를 1/4만큼 이동해 synthetic point <strong>(3,5)</strong>를 만듭니다.
           </p>
           <p>
-            Validation·test는 원 prevalence를 유지합니다. 그렇지 않으면 model이
-            실제 배포 population에서 어떻게 동작하는지 측정할 기준이 사라집니다.
+            이 계산에 쓸 두 점과 neighbor index는 split 뒤 training subset에서만
+            골라야 합니다. Validation·test는 원래 prevalence와 좌표를 유지합니다.
+          </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>Minority row 하나를 세 번 노출하면 서로 다른 관측 세 개가 생길까요?</li>
+            <li>전체 dataset에서 SMOTE한 뒤 train·validation으로 나눠도 될까요?</li>
+            <li>λ=0.25로 만든 점은 (3,5)일까요?</li>
+          </ol>
+          <p>
+            답은 차례로 <strong>아니요, 아니요, 예</strong>입니다. 노출 횟수는
+            정보량과 다르고, validation point가 neighbor 계산에 들어가면 leakage입니다.
           </p>
         </div>
+        <ResamplingGeometryViz />
+        <ContentBoundary article="imbalance-resampling" />
         <TermBreakdown
           title="Sampling을 바꾸기 전 구분할 네 대상"
           items={[
@@ -59,8 +70,6 @@ export default function ImbalanceResamplingArticle() {
             },
           ]}
         />
-        <ResamplingGeometryViz />
-        <ContentBoundary article="imbalance-resampling" />
       </section>
       <section id="fold-local" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">

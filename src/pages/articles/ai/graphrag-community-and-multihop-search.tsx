@@ -17,30 +17,41 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Community 와 multi-hop 은 한 번의 hop 으로 못 푸는 질문을 답합니다
+          마리 퀴리에서 두 번 건너면 앙리 베크렐에 닿습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <Link to="/cs/ai/knowledge-graph-construction#pipeline">앞 글</Link>이 만든
-            property graph 는 node 하나에서 edge 를 한 번 건너는 질문에는 바로
-            답합니다. 그런데 "이 그래프 전체에서 가장 중요한 주제가 무엇인가" 처럼
-            그래프 전체를 봐야 하는 질문이나, entity 세 개를 건너야 하는 질문에는
-            edge 하나짜리 탐색만으로 부족합니다.
+            고정된 그래프에는 node 7개와 edge 6개가 있습니다. 마리 퀴리에서
+            <code>wonAward</code>를 따라 노벨 물리학상으로 가고, 같은 상을 받은
+            사람을 역으로 찾으면 앙리 베크렐에 닿습니다. 이 local 질문은 2-hop,
+            방문 node 3개로 답할 수 있습니다.
           </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>이 질문을 풀 때 node 7개를 모두 읽어야 할까요?</li>
+            <li>마리 퀴리 문서 하나만 찾은 vector 검색이 베크렐의 학교까지 바로 답할 수 있을까요?</li>
+            <li>“그래프 전체의 주제는 무엇인가”라는 질문도 마리 퀴리 한 명에서 시작하면 충분할까요?</li>
+          </ol>
           <p>
-            GraphRAG 는 이 틈을 두 방향으로 메웁니다. 관련 entity 를 community 로
-            묶어 미리 요약해 두고 그 요약을 모아 전체 질문에 답하는 global search,
-            그리고 entity 를 여러 개 건너 관계를 잇는 multi-hop reasoning 입니다.
-          </p>
-          <p>
-            이 글은 community 를 어떻게 나누고 요약하는지, local search 와 global
-            search 가 비용을 어떻게 다르게 쓰는지, 벡터 검색과 그래프 탐색을 어떻게
-            섞는지, 그리고 multi-hop 질문을 vector 검색만으로는 왜 놓치는지 순서로
-            봅니다.
+            세 답은 모두 <strong>아니요</strong>입니다. 첫 질문은 2-hop만 걷고,
+            학교 질문은 한 hop을 더 이어야 하며, 전체 질문은 두 community summary를
+            모두 읽어야 합니다.
           </p>
         </div>
         <GraphragCommunityAndMultihopSearchViz />
         <ContentBoundary article="graphrag-community-and-multihop-search" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            <Link to="/cs/ai/knowledge-graph-construction#pipeline">앞 글</Link>이 만든
+            property graph를 GraphRAG는 두 방식으로 넓힙니다. 관련 entity를
+            community로 묶어 미리 요약한 뒤 전체 질문에 쓰고, entity 여러 개를
+            건너야 하는 질문은 edge를 순서대로 따라갑니다.
+          </p>
+          <p>
+            아래에서는 community 분할, local·global search의 비용, vector로 찾은
+            진입점에서 시작하는 graph traversal, multi-hop 실패 경계를 차례로 봅니다.
+          </p>
+        </div>
       </section>
 
       <section id="community" className="scroll-mt-20">
@@ -215,6 +226,31 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
             <Link to="/cs/ai/retrieval-ranking-funnel#retrieval">retrieval funnel 글</Link>
             의 graph-structured retrieval 경계가 정본입니다.
           </p>
+          <p>
+            현재 Microsoft GraphRAG의 DRIFT search는 이 결합을 반복형으로
+            확장합니다. 먼저 질문과 가까운 community report 상위 K개로 넓은
+            초안과 후속 질문을 만들고, 각 후속 질문은 local search로 entity와
+            관계를 더 찾습니다. 마지막에는 여러 경로의 답을 순위화해 합칩니다.
+          </p>
+          <p>
+            따라서 DRIFT를 쓰려면 community report만으로는 부족합니다. Report와
+            함께 text unit, entity description embedding이 있어야 후속 local
+            search가 움직입니다. 공식 CLI는 2026년 10월 6일 확인 기준으로
+            <code>local</code>·<code>global</code>·<code>drift</code>·
+            <code>basic</code> 방법을 구분합니다.
+          </p>
+        </div>
+        <div className="not-prose my-8">
+          <CitationBlock
+            source="Microsoft GraphRAG — DRIFT Search 공식 문서"
+            citeKey={2}
+            href="https://github.com/microsoft/graphrag/blob/main/docs/query/drift_search.md"
+          >
+            Primer가 관련 community report를 읽어 초기 답과 후속 질문을 만들고,
+            후속 단계는 local search를 실행한 뒤 결과를 합치는 현재 DRIFT 절차의
+            근거입니다. 문서의 필수 데이터 표는 report·text unit·embedding의
+            역할도 구분합니다.
+          </CitationBlock>
         </div>
       </section>
 
@@ -256,6 +292,11 @@ export default function GraphragCommunityAndMultihopSearchArticle() {
             Global search 의 map(중간 답변과 helpfulness 점수)과 reduce(정렬 후
             context 채우기) 절차, community level 별 성능 비교, 원본 대비 token
             비율(2.6%)도 이 논문의 실험(podcast·news corpus)입니다.
+          </p>
+          <p>
+            DRIFT의 primer·후속 local search·최종 결합 절차와 필요한 인덱스는
+            Microsoft GraphRAG의 현재 공식 문서에서 별도로 확인했습니다. 이는
+            2024년 논문의 실험 수치가 아니라 현재 구현의 검색 경로 설명입니다.
           </p>
           <p>
             이 글의 그래프 예(node 7개, edge 6개, Q≈0.208)는 modularity 개념을
