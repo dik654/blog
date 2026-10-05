@@ -13,22 +13,22 @@ const Arrow = () => (
 export function CodeModeProgramViz() {
   const story = useStory(4);
   const labels = [
-    "tool 왕복",
-    "program IR",
-    "local data",
-    "bounded result",
+    "10만 행 왕복",
+    "program 한 번",
+    "runtime 집계",
+    "20개 결과",
   ] as const;
 
   return (
     <StoryShell
-      title="여러 번의 model 왕복을 한 program과 local dataflow로 접는다"
-      subtitle="코드를 쓴다는 사실보다, 누가 반복을 실행하고 어느 데이터가 model context로 돌아오는지를 봅니다."
+      title="Issue 10만 건에서 팀별 count 20개만 남기는 경로"
+      subtitle="원본 rows가 model context를 오가는 경로와 sandbox 안에서 줄어드는 경로를 단계별로 비교합니다."
       labels={labels}
       {...story}
     >
       <div className="grid min-w-0 items-center gap-3 md:grid-cols-[1fr_auto_1fr_auto_1fr]">
         <div className="space-y-2">
-          {["model 판단", "tool 실행", "result 재입력"].map((label, index) => (
+          {["10만 rows를 model에 반환", "filter tool을 다시 제안", "중간 result를 다시 입력"].map((label, index) => (
             <div
               key={label}
               className={`border px-3 py-2 text-center text-xs transition-opacity ${
@@ -50,6 +50,9 @@ export function CodeModeProgramViz() {
         />
         <Arrow />
         <div className="space-y-2">
+          <p className={`text-center font-mono text-[11px] font-bold transition-opacity ${story.step >= 2 ? "opacity-100" : "opacity-25"}`}>
+            100,000 issue rows · sandbox 안에 유지
+          </p>
           <div
             className={`grid grid-cols-4 gap-1 transition-opacity ${
               story.step >= 2 ? "opacity-100" : "opacity-25"
@@ -80,10 +83,10 @@ export function CodeModeProgramViz() {
       <p className="mt-5 text-sm leading-7 text-muted-foreground">
         {
           [
-            "일반 tool loop는 result가 돌아올 때마다 model이 다음 호출을 다시 결정합니다.",
-            "Code Mode는 여러 호출과 명시적 control flow를 한 program IR로 먼저 표현합니다.",
-            "원본 rows는 sandbox 변수에 남고 filter·group·sort가 runtime 안에서 끝납니다.",
-            "Model에는 미리 정한 schema·행 수·byte budget 안의 최종 결과만 돌아옵니다.",
+            "일반 tool loop에서는 10만 행과 중간 result가 model context로 돌아올 수 있고 다음 호출마다 다시 판단합니다.",
+            "Code Mode에서는 filter와 group을 담은 짧은 program을 model이 한 번 만들고 runtime에 넘깁니다.",
+            "원본 10만 rows는 sandbox 변수에 남고 filter·group·sort가 model 밖에서 끝납니다.",
+            "Model에는 팀별 count 20개와 source·truncation metadata만 돌아옵니다. 권한과 정확성 검사는 별도입니다.",
           ][story.step]
         }
       </p>

@@ -53,15 +53,15 @@ export default function ExtensionBoundariesArticle() {
           </ol>
           <p>답은 각각 실행 전 거부, 실행 뒤 결과 불합격, 권한 변화 없음입니다. 뒤의 실제 코드와 실패 표에서 같은 답이 나오는지 확인합니다.</p>
         </div>
+        <ExtensionAuthorityViz />
       </section>
 
       <section id="map" data-teach-level="0" className="scroll-mt-24">
         <h2 className="mb-5 text-2xl font-bold">3. 네 장치는 서로 다른 질문에 답합니다</h2>
         <div className={prose}>
           <p>Hook의 질문은 “어느 사건 전후에 자동으로 무엇을 할까”입니다. Skill은 “이 일을 어떤 순서와 자료로 할까”, Guardrail은 “이 identity가 이 resource에 이 operation을 해도 되는가”, Verifier는 “실제 결과가 합격 조건을 만족했는가”를 묻습니다.</p>
-          <p>네 장치는 한 run에서 이어질 수 있지만 서로의 답을 대신하지 않습니다. 아래 그림은 실행 순서를 단순화한 지도입니다. 실제 제품에서는 Hook이 여러 시점에 다시 등장할 수 있고 Guardrail도 입력·tool·출력 경계마다 있을 수 있습니다.</p>
+          <p>네 장치는 한 run에서 이어질 수 있지만 서로의 답을 대신하지 않습니다. 앞 그림은 실행 순서를 단순화한 지도입니다. 실제 제품에서는 Hook이 여러 시점에 다시 등장할 수 있고 Guardrail도 입력·tool·출력 경계마다 있을 수 있습니다.</p>
         </div>
-        <ExtensionAuthorityViz />
       </section>
 
       <section id="hook" data-teach-level="1" className="scroll-mt-24">

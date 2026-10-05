@@ -159,15 +159,15 @@ export function DelegationOwnershipViz() {
 }
 
 export function ExtensionAuthorityViz() {
-  return <PatternViz id="agent-extension-authority" eyebrow="Authority boundary" title="Hook·Skill·Guardrail·Verifier는 서로 다른 질문에 답합니다" description="언제 실행되는가, 무엇을 알려 주는가, 무엇을 막는가, 무엇을 합격시키는가를 네 모양으로 분리합니다." nodes={[
-    { label: "Hook", caption: "event에 자동 실행", shape: "circle" },
-    { label: "Skill", caption: "필요할 때 읽는 procedure", shape: "document" },
-    { label: "Guardrail", caption: "policy deny · approval", shape: "gate" },
-    { label: "Verifier", caption: "artifact acceptance", shape: "diamond" },
-  ]} edgeLabels={["may load", "constrain", "evaluate"]} sceneNotes={[
-    "Hook은 tool 전후·session 종료 같은 runtime event에 결정적으로 실행되지만 새 capability를 만들지는 않습니다.",
-    "Skill은 지침·reference·script를 점진적으로 공개하는 지식 묶음이며 실행 권한 그 자체가 아닙니다.",
-    "Guardrail은 input·output·action이 policy를 넘지 못하게 deny·redact·approval로 더 제한합니다.",
-    "Verifier는 결과 artifact가 schema·test·invariant·rubric을 만족하는지 판정하며 policy pass와 별개입니다.",
-  ]} note="하나의 callback에 네 책임을 섞으면 우회 경로와 false completion을 추적하기 어렵습니다. Decision owner를 분리해 기록합니다." />;
+  return <PatternViz id="agent-extension-authority" eyebrow="APR-42 migration" title="한 DB 변경이 허용되고 합격하기까지 네 판정을 지납니다" description="prod/customers에 status 열을 추가하는 같은 요청에서 각 장치가 읽는 입력과 내리는 결정을 따라갑니다." nodes={[
+    { label: "Hook", caption: "resource 문자열 정규화", shape: "circle" },
+    { label: "Skill", caption: "backup → migrate → count", shape: "document" },
+    { label: "Guardrail", caption: "APR-42를 effect 전에 확인", shape: "gate" },
+    { label: "Verifier", caption: "1,200행 · rollback 합격", shape: "diamond" },
+  ]} edgeLabels={["procedure", "authorize", "check receipt"]} sceneNotes={[
+    "Hook은 ' PROD/CUSTOMERS '를 prod/customers로 정규화합니다. 이 자동 반응만으로 쓰기 권한은 생기지 않습니다.",
+    "Skill은 backup→migrate→count→rollback-test 순서를 제공합니다. 절차를 읽었다는 사실은 APR-42를 대신하지 않습니다.",
+    "Guardrail은 resource와 APR-42를 executor 전에 확인합니다. 승인이 없으면 effectStarted=false인 denied로 끝납니다.",
+    "Verifier는 effect receipt 뒤 실제 1,200행과 rollback 시험을 봅니다. 1,199행이면 authorized였어도 rejected입니다.",
+  ]} note="accepted·denied·rejected를 한 성공 여부로 합치지 않으면 실패 위치와 복구 책임을 바로 찾을 수 있습니다." />;
 }

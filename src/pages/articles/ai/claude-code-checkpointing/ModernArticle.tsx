@@ -17,7 +17,17 @@ export default function ClaudeCodeCheckpointingArticle() {
             Session을 되감는다는 말이 machine 전체를 과거로 돌린다는 뜻은 아닙니다. Claude Code가 direct edit 전에 snapshot한 file
             content와 conversation 지점이 복구 대상이고 Bash·database·API·deploy effect는 밖에 남습니다.
           </p>
+          <p>
+            한 session에서 direct Edit로 <code>auth.ts</code>를 바꾸고, Bash formatter가 <code>generated.ts</code>를 다시 썼으며,
+            API로 ticket <code>INC-81</code>도 만들었다고 합시다. Rewind를 누르기 전에 무엇이 실제로 돌아갈지 먼저 나눠야 합니다.
+          </p>
+          <ol>
+            <li><code>auth.ts</code>, <code>generated.ts</code>, <code>INC-81</code> 중 checkpoint가 직접 복원하는 것은 무엇일까요?</li>
+            <li>Conversation만 되감는 선택과 code까지 되감는 선택은 같은 결과일까요?</li>
+            <li>Symlink나 hard link를 거친 file도 일반 file과 같다고 가정해도 될까요?</li>
+          </ol>
         </div>
+        <CheckpointBoundaryViz />
         <TermBreakdown
           title="복구 범위를 정하는 네 대상"
           items={[
@@ -49,7 +59,6 @@ export default function ClaudeCodeCheckpointingArticle() {
             },
           ]}
         />
-        <CheckpointBoundaryViz />
         <ContentBoundary article="claude-code-checkpointing" />
       </section>
       <section id="coverage" className="scroll-mt-20">

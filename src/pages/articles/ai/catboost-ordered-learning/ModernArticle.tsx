@@ -16,6 +16,19 @@ export default function CatBoostOrderedLearningArticle() {
           Ordered boosting은 permutation에서 현재 row보다 앞선 rows만 학습한
           prefix model로 현재 row의 pseudo-residual을 계산합니다.
         </LessonHeader>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            네 row의 순서가 <code>A, C, B, D</code>이고 B의 label이 1이라고 합시다. Full model로 B의 residual을 만들면 그 model은 이미
+            B의 label을 학습에 사용했습니다. Prefix model은 A와 C만 본 상태에서 B를 예측하고, 그 뒤에야 B의 label로 loss slope를 계산합니다.
+          </p>
+          <p>그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>B의 label은 prefix model fit과 B의 gradient 계산 중 어디에 들어갈까요?</li>
+            <li>Category target statistic에서 자기 label을 빼면 ordered boosting도 자동으로 끝날까요?</li>
+            <li>Permutation prefix가 외부 validation이나 time split을 대신할까요?</li>
+          </ol>
+        </div>
+        <CatBoostOrderingViz />
         <TermLesson
           name="CatBoost ordered boosting"
           oneLine="현재 row를 포함하지 않은 permutation-prefix model prediction에서 그 row의 gradient target을 만들어 prediction shift를 줄이는 boosting 방법입니다."
@@ -23,7 +36,6 @@ export default function CatBoostOrderedLearningArticle() {
           example="순서 A,C,B,D에서 B의 gradient model은 A·C만 보고 B·D는 보지 않습니다."
           boundary="외부 validation·time/group split을 대체하지 않고 ordered category statistic과 ordered gradient는 다른 계산입니다."
         />
-        <CatBoostOrderingViz />
       </section>
       <section id="prefix-gradient" className="space-y-6">
         <LessonHeader
