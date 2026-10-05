@@ -7,7 +7,7 @@ const rows = [
 
 export default function WhyEnsembleViz() {
   return (
-    <div data-viz className="rounded-xl border border-border/70 bg-card p-4 sm:p-6">
+    <figure data-viz="ensemble-error-ledger" className="rounded-xl border border-border/70 bg-card p-4 sm:p-6">
       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Row-aligned error ledger</p>
       <h3 className="mt-1 text-lg font-semibold">모델 이름이 아니라 같은 OOF 행에서 error 방향을 나란히 봅니다</h3>
       <div className="mt-5 overflow-hidden rounded-lg border border-border/60">
@@ -21,6 +21,6 @@ export default function WhyEnsembleViz() {
         ))}
       </div>
       <p className="mt-4 text-xs leading-5 text-muted-foreground">같은 방향의 큰 error가 반복되는 group·time·class slice는 앙상블보다 data·feature·label 문제를 먼저 조사합니다.</p>
-    </div>
+    </figure>
   );
 }

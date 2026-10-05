@@ -21,18 +21,41 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            LLM 평가는 golden set 하나만으로 끝나지 않습니다. Coverage 가 부족한 golden set 은 애초에 특정 카테고리의 실패를 담지 못합니다. 전체 평균
-            정확도는 특정 slice 의 붕괴를 가리고, offline 에서 통과한 model 도 실 트래픽의 분포가 다르면 온라인에서 다시 무너집니다.
+            Golden set 200개를 fact QA 60개, 요약 40개, code 50개,
+            안전 거절 30개, multi-turn 20개로 채웠다고 합시다. 운영 트래픽의
+            code 비중은 35%인데 이 표본에서는 25%입니다. 전체 정확도가 90%여도
+            기타 언어 slice가 72%라면 평균만으로는 그 실패를 볼 수 없습니다.
+          </p>
+          <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+          <ol>
+            <li>사람이 검수한 example이 200개면 운영 traffic coverage도 자동으로 충분할까요?</li>
+            <li>전체 정확도 90%만 통과하면 72%인 기타 언어 slice도 배포해도 될까요?</li>
+            <li>Offline을 통과하면 shadow와 A/B 없이 곧바로 사용자 응답을 바꿔도 될까요?</li>
+          </ol>
+          <p>
+            세 답은 모두 <strong>아니요</strong>입니다. 표본 구성과 운영 비중을
+            비교하고, 전체와 slice gate를 함께 통과시킨 뒤 offline, shadow,
+            A/B 순서로 실제 환경에 가까워져야 합니다.
+          </p>
+        </div>
+
+        <EvaluationDatasetsAndPipelinesViz />
+        <ContentBoundary article="evaluation-datasets-and-pipelines" />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            LLM 평가는 golden set 하나만으로 끝나지 않습니다. Coverage가 부족한
+            golden set은 특정 category의 실패를 담지 못하고, offline에서 통과한
+            model도 실제 traffic의 distribution이 다르면 다시 무너집니다.
           </p>
           <p>
-            이 글은 golden set 을 채우는 법에서 시작해 harness 로 자동화하고 offline·shadow·A/B 순서로 차례차례 실 트래픽에 내보내는 하나의 파이프라인으로
+            이 글은 golden set을 채우는 법에서 시작해 harness로 자동화하고 offline, shadow, A/B 순서로 실제 traffic에 내보내는 하나의 pipeline으로
             다룹니다.
           </p>
           <p>
             평가 지표 자체(정확도·judge score)를 어떻게 정의하는지는 다루지 않고 그 지표를 무엇에 얼마나, 어떤 순서로 적용해야 결과를 믿을 수 있는지에 집중합니다.
           </p>
         </div>
-        <ContentBoundary article="evaluation-datasets-and-pipelines" />
       </section>
 
       <section id="golden-set" className="scroll-mt-20">
@@ -43,10 +66,6 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
           <p>
             Evaluation dataset 은 시스템의 품질을 재려고 모은 example 전체를 가리키고 golden set 은 그중 사람이 직접 정답을 확인해 신뢰도를 높인 핵심
             부분집합입니다. Example 하나(입력과 기대 출력 한 쌍)를 test case 라고 부릅니다.
-          </p>
-          <p>
-            가정: golden set 200 개를 fact QA 60 개, 요약 40 개, code 생성 50 개, 안전 거절 30 개, multi-turn 20 개로 채웠습니다. 운영
-            트래픽에서 code 질문 비중이 35 % 인데 golden set 엔 25 % 밖에 없다면 code 카테고리의 coverage 가 부족합니다.
           </p>
           <p>
             golden set 이 실제로 마주칠 카테고리·언어·길이·난이도를 얼마나 고르게 담았는지 나타내는 척도가 evaluation coverage 입니다. 표본 수만 많고 특정
@@ -61,7 +80,6 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
             없습니다. 개수만 세는 200 개는 coverage 를 보장하지 않습니다.
           </p>
         </div>
-        <EvaluationDatasetsAndPipelinesViz />
         <TermBreakdown
           title="Golden set 을 이루는 세 층"
           description="데이터셋 전체, 그 안의 단위, 그리고 단위들이 얼마나 고르게 퍼졌는지는 서로 다른 질문입니다."

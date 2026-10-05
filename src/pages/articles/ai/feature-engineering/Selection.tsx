@@ -32,14 +32,14 @@ L_j^{\pi}&=L\!\left(f(X_{-j},X_j^{\pi}),y\right),\\
 I_j&=\mathbb E_{\pi}\!\left[L_j^{\pi}-L_0\right].
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-L_0&=\underbrace{L\!\left(f(X),y\right),}_{\text{허용 경계 판정}}\\
-L_j^{\pi}&=\underbrace{L\!\left(f(X_{-j},X_j^{\pi}),y\right),}_{\text{허용 경계 판정}}\\
-I_j&=\underbrace{\mathbb E_{\pi}\!\left[L_j^{\pi}-L_0\right].}_{\text{확률 가중 평균}}
+L_0&=\underbrace{L\!\left(f(X),y\right)}_{\text{원래 validation loss}},\\
+L_j^{\pi}&=\underbrace{L\!\left(f(X_{-j},X_j^{\pi}),y\right)}_{\text{feature j의 대응만 섞은 loss}},\\
+I_j&=\underbrace{\mathbb E_{\pi}\!\left[L_j^{\pi}-L_0\right]}_{\text{여러 shuffle에서 평균한 loss 증가}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`L\!\left(f(X),y\right),`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Validation에서 j번째 column만 무작위로 섞어 그","피처와 target·다른 피처의 대응을 끊은 뒤 loss가","얼마나 늘어나는지 봅니다."] },
-          { expression: String.raw`L\!\left(f(X_{-j},X_j^{\pi}),y\right),`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Validation에서 j번째 column만 무작위로 섞어 그","피처와 target·다른 피처의 대응을 끊은 뒤 loss가","얼마나 늘어나는지 봅니다."] },
-          { expression: String.raw`\mathbb E_{\pi}\!\left[L_j^{\pi}-L_0\right].`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Validation에서 j번째 column만 무작위로 섞어 그","피처와 target·다른 피처의 대응을 끊은 뒤 loss가","얼마나 늘어나는지 봅니다."] },
+          { expression: String.raw`L\!\left(f(X),y\right)`, annotation: ["원래 validation feature와 target으로 비교 기준 loss를 계산합니다."] },
+          { expression: String.raw`L\!\left(f(X_{-j},X_j^{\pi}),y\right)`, annotation: ["Column j의 row 대응만 섞고 같은 model로 loss를 다시 계산합니다."] },
+          { expression: String.raw`\mathbb E_{\pi}\!\left[L_j^{\pi}-L_0\right]`, annotation: ["Shuffle 뒤 늘어난 loss를 여러 permutation에서 평균해 noise를 줄입니다."] },
         ]}
         terms={[
           { symbol: "X_j^π", name: "permuted feature", description: "Row 순서를 random permutation π로 바꾼 j번째 validation column입니다." },
@@ -76,9 +76,14 @@ I_j&=\underbrace{\mathbb E_{\pi}\!\left[L_j^{\pi}-L_0\right].}_{\text{확률 가
         <h3>마지막 검사는 training-serving parity입니다</h3>
         <p>
           Offline notebook과 online service가 같은 이름의 피처를 서로 다른 SQL, timezone, default value 또는 library version으로
-          계산하면 training-serving skew가 생깁니다. 대표 entity와 cutoff를 고정한 golden fixture를 두고 batch 결과와 online 결과를
-          값·dtype·freshness까지 비교합니다. Model artifact와 함께 feature definition version을 배포하고 missing rate·unknown
-          rate·freshness·distribution drift를 운영 지표로 감시해야 selection 이후의 이득이 production에서도 유지됩니다.
+          계산하면 training-serving skew가 생깁니다.
+        </p>
+        <p>
+          대표 entity와 cutoff를 고정한 golden fixture에서 batch와 online 결과의 값, dtype, freshness를 비교합니다. Model artifact와 함께
+          feature definition version도 배포합니다.
+        </p>
+        <p>
+          Missing rate, unknown rate, freshness, distribution drift를 운영 지표로 감시해야 selection 이후의 이득이 production에서도 유지됩니다.
         </p>
       </div>
     </section>

@@ -975,9 +975,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/expert-parallelism-moe-systems": {
     "action": "keep",
     "status": "reviewed",
-    "reviewedAt": "2026-10-04",
-    "rationale": "같은 숫자 사례의 입력·상태·계산·공식 구현·실패 조건이 하나의 질문을 이룹니다. 최신 결과는 해당 원리를 확장하는 비교 절에 연결했습니다.",
-    "sharedGate": "본문 사례를 같은 단위와 축으로 재계산하고, 공식 원문과 코드의 버전·가정·측정 범위를 일치시켜야 합니다."
+    "reviewedAt": "2026-10-06",
+    "rationale": "token 37 하나가 두 원격 expert로 이동하고 다시 합쳐지는 같은 경로를 따라 sharding·all-to-all·locality·병목을 차례로 설명합니다. 열 절은 독립 주제를 병렬로 늘어놓지 않고 한 dispatch의 계산, 공식 구현, 실패 조건을 단계별로 검증하므로 한 글로 유지합니다.",
+    "sharedGate": "64 expert·8 GPU, GPU 0의 token 37, expert 13/GPU 1과 expert 42/GPU 5, 가중치 0.25/0.75, hidden 4096 FP16, dispatch 16 KiB와 combine 16 KiB를 도입 사례·시각화·본문·기초 6·심화 4문제에서 같은 단위로 보존하고 DeepEP V2.5 고정 소스의 dispatch 계약과 대조합니다."
   },
   "ai/reward-design-for-verifiable-rl": {
     "rationale": "정답 40·오답 60개의 고정 표가 자동 보상의 오류, 검사 빈도와 대상, 실제 학습 신호와 평가 분모를 묶습니다. 작은 원문 형식 함수에 오답 3을 넣어 통과 1을 확인하고 과정 oracle의 적용 범위까지 따져 하나의 보상 설계 질문으로 유지합니다.",
@@ -2238,7 +2238,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "inference-from-sources/naming-the-past": "58060787a5f1d221",
 
 "ai/agent-memory-lifecycle":"26623451d21d621d",
-"ai/expert-parallelism-moe-systems":"1025d7f9fa6ef1a6",
+"ai/expert-parallelism-moe-systems":"8ca7f026945e21e1",
 "ai/fast-weight-memory-and-chunkwise-recurrence":"7a7c39371c676228",
 "ai/flash-attention-io-aware-kernel":"88f916e0409787de",
 "ai/reward-design-for-verifiable-rl":"9945c9823b138b96",

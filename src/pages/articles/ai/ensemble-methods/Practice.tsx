@@ -8,8 +8,11 @@ export default function Practice() {
       <div className="prose max-w-none prose-neutral dark:prose-invert">
         <p>
           가장 재현 가능한 단일 model에서 시작해 후보 하나를 임시로 추가하고 동일 OOF rows에서 loss 차이를 계산합니다. 가장 큰 marginal gain을 주는 후보를
-          채택한 뒤 이 과정을 반복합니다. 이것이 forward selection이고 큰 library를 다룰 때 실용적입니다. 같은 model을 여러 번 선택하도록 허용하면 선택 횟수가
-          정수 weight가 되지만 반복 탐색은 OOF noise에도 맞출 수 있어 ensemble size와 stopping rule을 제한해야 합니다.
+          채택한 뒤 이 과정을 반복합니다. 이것이 forward selection이고 큰 library를 다룰 때 실용적입니다.
+        </p>
+        <p>
+          같은 model을 여러 번 선택하도록 허용하면 선택 횟수가 정수 weight가 됩니다. 반복 탐색은 OOF noise에도 맞출 수 있으므로 ensemble size와 stopping
+          rule을 제한해야 합니다.
         </p>
       </div>
 
@@ -25,13 +28,13 @@ export default function Practice() {
         annotatedFormula={String.raw`\begin{aligned}
           \Delta_j
           &=\underbrace{\widehat R_{\mathrm{OOF}}(E)
-            -\widehat R_{\mathrm{OOF}}(E\oplus j)}_{\text{변화량 계산}} \\
-          C_j&=\underbrace{(\Delta p95_j,\Delta M_j,\Delta O_j)}_{\text{변화량 계산}}
+            -\widehat R_{\mathrm{OOF}}(E\oplus j)}_{\text{후보를 더해 줄어든 paired OOF loss}} \\
+          C_j&=\underbrace{(\Delta p95_j,\Delta M_j,\Delta O_j)}_{\text{추가 latency·memory·운영 비용}}
         \end{aligned}`}
         operations={[
           { expression: String.raw`\widehat R_{\mathrm{OOF}}(E)
-            -\widehat R_{\mathrm{OOF}}(E\oplus j)`, annotation: ["paired marginal gain이(가) 식의 결과에","기여하는 방식을 계산합니다.","같은 OOF 행에서 현재 ensemble loss와 후보를","더한 ensemble loss를 빼 개선량을 구하고, 추가"] },
-          { expression: String.raw`(\Delta p95_j,\Delta M_j,\Delta O_j)`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","같은 OOF 행에서 현재 ensemble loss와 후보를","더한 ensemble loss를 빼 개선량을 구하고, 추가","latency·memory와 함께 봅니다."] },
+            -\widehat R_{\mathrm{OOF}}(E\oplus j)`, annotation: ["같은 OOF rows에서 후보 추가 전 loss와 추가 후 loss를 뺍니다."] },
+          { expression: String.raw`(\Delta p95_j,\Delta M_j,\Delta O_j)`, annotation: ["그 품질 이득과 함께 늘어난 p95, memory, 운영 복잡도를 한 묶음으로 비교합니다."] },
         ]}
         terms={[
           { symbol: "E", name: "current ensemble", description: "이미 채택된 base models와 고정 결합 규칙입니다." },
@@ -54,8 +57,10 @@ export default function Practice() {
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           논문이 제안한 방법은 forward stepwise 추가입니다. 여러 algorithm과 hyperparameter로 만든 큰 model library에서 validation
           metric을 가장 개선하는 model을 하나씩 넣습니다. Accuracy·cross entropy·ROC area 등 목표 metric에 맞춰 선택할 수 있다는 점이 핵심입니다.
-          7개 문제와 10개 metric의 실험 결과를 모든 현대 workload의 보장으로 확대하지 않으며 selection set 재사용에 따른 overfit은 별도 outer
-          evidence로 관리해야 합니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          7개 문제와 10개 metric의 실험 결과를 모든 현대 workload의 보장으로 확대할 수는 없습니다. Selection set 재사용에 따른 overfit은 별도 outer
+          evidence로 관리합니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1145/1015330.1015432" target="_blank" rel="noreferrer">논문 초록과 출판 정보 보기</a>
       </div>
@@ -63,8 +68,11 @@ export default function Practice() {
       <div className="prose max-w-none prose-neutral dark:prose-invert">
         <p>
           배포 artifact에는 base model IDs, OOF/test prediction checksum, row/class mapping, transforms, weights
-          또는 meta checkpoint, fold-test aggregation, dependency versions를 묶습니다. 한 base model이 실패했을 때 전체 요청을
-          실패시킬지 degraded ensemble로 응답할지도 미리 정해 둡니다. Quality gain이 반복되지 않거나 운영 비용을 정당화하지 못하는 마지막 model에서 멈춥니다.
+          또는 meta checkpoint, fold-test aggregation, dependency versions를 묶습니다.
+        </p>
+        <p>
+          한 base model이 실패했을 때 전체 요청을 실패시킬지 degraded ensemble로 응답할지도 미리 정합니다. Quality gain이 반복되지 않거나 운영 비용을
+          정당화하지 못하는 마지막 model에서 멈춥니다.
         </p>
       </div>
     </section>

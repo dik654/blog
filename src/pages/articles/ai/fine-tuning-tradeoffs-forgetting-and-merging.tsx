@@ -20,9 +20,30 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Fine-tuning이라는 한 단어 안에는 실제로 서로 다른 목적이 섞여 있습니다. 지시를 따르게 만들기, 특정 분야 지식을 넣기, 특정 작업 하나만 잘하게 만들기, 말투
-            바꾸기, 정책상 특정 행동을 하거나 하지 않게 만들기. 이 다섯은 다 fine-tuning이라 불리지만 필요한 데이터도, 뒤이어 생기는 forgetting 위험도 서로
-            다릅니다.
+            같은 base checkpoint <code>θ=(0,0)</code>에서 domain 학습은
+            <code>(+0.6,−0.2)</code>, style 학습은 <code>(−0.1,+0.5)</code>만큼
+            parameter를 옮긴 2차원 toy 사례를 보겠습니다. 두 delta를 λ=1로 더하면
+            새 checkpoint는 <code>(+0.5,+0.3)</code>입니다.
+          </p>
+          <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+          <ol>
+            <li>두 delta를 좌표별로 더하면 (+0.5,+0.3)이 될까요?</li>
+            <li>Domain benchmark가 좋아졌다는 사실만으로 base의 일반 능력도 유지됐다고 결론 내릴 수 있을까요?</li>
+            <li>두 task vector를 더하기만 하면 실제 수십억 차원에서도 두 능력이 항상 함께 보존될까요?</li>
+          </ol>
+          <p>
+            첫째만 <strong>예</strong>입니다. Vector 합은 계산 규칙일 뿐이며 capability
+            regression과 task 간섭은 base·domain·style holdout에서 따로 재야 합니다.
+          </p>
+        </div>
+
+        <TaskArithmeticMergeViz />
+        <ContentBoundary article="fine-tuning-tradeoffs-forgetting-and-merging" />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Fine-tuning이라는 한 단어 안에는 서로 다른 목적이 섞여 있습니다. 지시를 따르게 만들기, 특정 분야 지식을 넣기, 고정된 작업을 잘하게 만들기, 말투 바꾸기,
+            정책상 특정 행동을 하거나 하지 않게 만들기는 필요한 데이터와 forgetting 위험이 다릅니다.
           </p>
           <p>
             <Link to="/cs/ai/lora-finetuning">LoRA·QLoRA 글</Link>이 다룬
@@ -91,7 +112,6 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
             차이가 만드는 tradeoff를 아래 절에서 봅니다.
           </p>
         </div>
-        <ContentBoundary article="fine-tuning-tradeoffs-forgetting-and-merging" />
       </section>
 
       <section id="data-tradeoff" className="scroll-mt-20">
@@ -297,7 +317,6 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
             각각 보존된 채 한 지점으로 합쳐집니다.
           </p>
         </div>
-        <TaskArithmeticMergeViz />
         <AlgorithmBlock
           title="Task arithmetic으로 여러 fine-tuning 합치기"
           input={[

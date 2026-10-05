@@ -19,9 +19,10 @@ export default function Numeric() {
         question="Standardization은 숫자를 무엇으로 바꾸며, 왜 validation 평균을 쓰면 안 될까?"
         idea={<>Training fold의 평균을 원점으로 옮기고 training fold의 표준편차를 한 칸의 크기로 삼습니다. Validation 값은 이미 정해진 자로 재야 합니다. Validation까지 포함해 자를 다시 만들면 평가 대상의 분포를 미리 본 것입니다.</>}
         formula={String.raw`z_i=\frac{x_i-\mu_{\mathrm{train}}}{\sigma_{\mathrm{train}}}`}
-        annotatedFormula={String.raw`z_i=\underbrace{\frac{x_i-\mu_{\mathrm{train}}}{\sigma_{\mathrm{train}}}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`z_i=\underbrace{\frac{x_i-\mu_{\mathrm{train}}}{\sigma_{\mathrm{train}}}}_{\text{training 평균에서 몇 표준편차 떨어졌는가}}`}
         operations={[
-          { expression: String.raw`\frac{x_i-\mu_{\mathrm{train}}}{\sigma_{\mathrm{train}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Training fold의 평균을 원점으로 옮기고","training fold의 표준편차를 한 칸의 크기로","삼습니다."] },
+          { expression: String.raw`x_i-\mu_{\mathrm{train}}`, annotation: ["Raw value에서 training fold 평균을 빼 중심을 0으로 옮깁니다."] },
+          { expression: String.raw`\frac{x_i-\mu_{\mathrm{train}}}{\sigma_{\mathrm{train}}}`, annotation: ["Centered value를 training 표준편차로 나눠 한 칸의 크기를 맞춥니다."] },
         ]}
         terms={[
           { symbol: "x_i", name: "raw value", description: "원래 단위를 가진 i번째 관측값입니다." },
@@ -47,9 +48,15 @@ export default function Numeric() {
         </p>
         <h3>결측, clipping과 binning은 서로 다른 결정을 담습니다</h3>
         <p>
-          결측 대치는 관측되지 않은 값을 어떻게 표현할지 정하고 clipping은 측정 오류나 정책상 상한을 다루며, binning은 연속값을 구간 결정으로 바꿉니다. 결측이 업무 과정
-          자체를 나타낼 수 있으면 대치값과 함께 missing indicator를 둡니다. Binning은 세율 구간처럼 실제 경계가 있을 때 유용하지만 임의 경계 양옆의 가까운 두 값을
-          전혀 다른 category로 만들어 정보를 잃을 수 있습니다. 모든 통계와 경계는 fold 안에서 fit하고 validation의 residual과 slice를 확인합니다.
+          결측 대치는 관측되지 않은 값을 어떻게 표현할지 정하고 clipping은 측정 오류나 정책상 상한을 다룹니다. 결측이 업무 과정 자체를 나타낼 수 있으면 대치값과 함께
+          missing indicator를 둡니다.
+        </p>
+        <p>
+          Binning은 연속값을 구간 결정으로 바꿉니다. 세율처럼 실제 경계가 있을 때 유용하지만 임의 경계 양옆의 가까운 두 값을 전혀 다른 category로 만들어 정보를 잃을 수
+          있습니다.
+        </p>
+        <p>
+          모든 통계와 경계는 fold 안에서 fit하고 validation의 residual과 slice를 확인합니다.
         </p>
       </div>
     </section>
