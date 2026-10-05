@@ -1,5 +1,4 @@
 import FormatConversionViz from "./viz/FormatConversionViz";
-import ProviderCompatMatrixViz from "./viz/ProviderCompatMatrixViz";
 import { CitationBlock } from "@/components/ui/citation";
 
 const compatibilityAxes = [
@@ -105,10 +104,6 @@ export default function OpenAICompat() {
           </a>
           에서 바로 확인할 수 있습니다.
         </p>
-
-        <div className="not-prose my-8">
-          <ProviderCompatMatrixViz />
-        </div>
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           capability profile은 관측된 사실이어야 한다

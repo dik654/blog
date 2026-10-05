@@ -17,7 +17,22 @@ export default function ClaudeCodeInstructionsMemoryArticle() {
             Instruction은 model이 현재 판단에 참고하는 글입니다. Permission이나 sandbox처럼 action을 강제하는 설정이 아닙니다. 먼저 누가 썼고 어느
             scope에 있고 언제 load되는지를 분리합니다.
           </p>
+          <p>
+            한 repository를 열었다고 합시다. 조직 파일에는 <code>production 명령은 승인받기</code>, 사용자 파일에는 <code>한국어로 설명하기</code>가 적혀 있습니다.
+            Project <code>CLAUDE.md</code>에는 <code>pnpm test</code>, <code>CLAUDE.local.md</code>에는 <code>staging URL 사용</code>이 적혀 있습니다.
+          </p>
+          <p>
+            <code>.claude/rules/auth.md</code>는 <code>src/auth/**</code>에만 적용되고 auto memory에는 <code>표로 비교하는 설명을 선호함</code>이 남아 있습니다.
+            이제 Claude가 <code>src/auth/token.ts</code>를 처음 읽습니다.
+          </p>
+          <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li><code>auth.md</code>는 session 시작 때부터 들어올까요, 해당 file을 읽을 때 들어올까요?</li>
+            <li>같은 directory에 <code>CLAUDE.md</code>와 <code>AGENTS.md</code>가 있으면 기본 설정에서 둘을 모두 읽을까요?</li>
+            <li><code>production 명령은 승인받기</code>를 읽었다는 사실만으로 실제 Bash call이 차단될까요?</li>
+          </ol>
         </div>
+        <InstructionMemoryViz />
         <TermBreakdown
           title="서로 owner가 다른 context source"
           items={[
@@ -52,7 +67,6 @@ export default function ClaudeCodeInstructionsMemoryArticle() {
             },
           ]}
         />
-        <InstructionMemoryViz />
         <ContentBoundary article="claude-code-instructions-memory" />
       </section>
       <section id="load-order" className="scroll-mt-20">
@@ -66,23 +80,23 @@ export default function ClaudeCodeInstructionsMemoryArticle() {
               전역·개인·project source를 먼저 잇고 현재 file에 맞는 nested rule과 repository memory를 뒤에 연결합니다.
             </p>
           }
-          formula={String.raw`X=M\mathbin{\Vert}U\mathbin{\Vert}P\mathbin{\Vert}N_f\mathbin{\Vert}A`}
-          annotatedFormula={String.raw`\begin{aligned}X&=\underbrace{M\mathbin{\Vert}U}_{\text{조직·개인 scope}}\\&\quad\mathbin{\Vert}\underbrace{P\mathbin{\Vert}N_f}_{\text{project·현재 path}}\\&\quad\mathbin{\Vert}\underbrace{A}_{\text{repository auto memory}}\end{aligned}`}
+          formula={String.raw`X=M\mathbin{\Vert}U\mathbin{\Vert}P\mathbin{\Vert}L\mathbin{\Vert}N_f\mathbin{\Vert}A`}
+          annotatedFormula={String.raw`\begin{aligned}X&=\underbrace{M\mathbin{\Vert}U}_{\text{조직·개인 scope}}\\&\quad\mathbin{\Vert}\underbrace{P\mathbin{\Vert}L}_{\text{project·local source}}\\&\quad\mathbin{\Vert}\underbrace{N_f\mathbin{\Vert}A}_{\text{현재 path·auto memory}}\end{aligned}`}
           operations={[
             {
               expression: String.raw`M\mathbin{\Vert}U`,
               annotation: ["넓은 scope의 source를", "load order대로 연결"],
             },
             {
-              expression: String.raw`P\mathbin{\Vert}N_f`,
+              expression: String.raw`P\mathbin{\Vert}L`,
               annotation: [
-                "Project 규칙과 현재 file의",
-                "path rule을 이어 붙임",
+                "Team project source와 개인 local source를",
+                "같은 context에 이어 붙임",
               ],
             },
             {
-              expression: String.raw`\mathbin{\Vert}A`,
-              annotation: ["Claude가 저장한 memory를", "별도 source로 추가"],
+              expression: String.raw`N_f\mathbin{\Vert}A`,
+              annotation: ["현재 file의 path rule과", "repository memory를 추가"],
             },
           ]}
           terms={[
@@ -105,7 +119,12 @@ export default function ClaudeCodeInstructionsMemoryArticle() {
             {
               symbol: "P",
               name: "Project source",
-              description: "Repository가 공유하는 instruction입니다.",
+              description: "설정에 따라 CLAUDE.md·AGENTS.md에서 읽는 공유 instruction입니다.",
+            },
+            {
+              symbol: "L",
+              name: "Local source",
+              description: "현재 project에서 개인만 쓰는 CLAUDE.local.md입니다.",
             },
             {
               symbol: "N_f",
@@ -121,7 +140,7 @@ export default function ClaudeCodeInstructionsMemoryArticle() {
           assumptions={[
             "각 source의 owner와 scope를 식별할 수 있습니다.",
             "기호 ∥는 overwrite가 아니라 ordered context concatenation입니다.",
-            "실제 load 여부는 /context나 InstructionsLoaded event로 확인합니다.",
+            "AGENTS.md 선택은 Project instructions 설정과 client version에 따라 확인합니다.",
           ]}
           interpretation="X에 금지 문장이 있어도 tool 실행을 차단하려면 별도 permission·hook·credential boundary가 필요합니다."
         />
@@ -138,6 +157,14 @@ export default function ClaudeCodeInstructionsMemoryArticle() {
             25KB까지만 load되므로 중요한 조직 정책을 밀어 넣는 저장소가
             아닙니다. Compaction 뒤에도 필요한 규칙은 짧고 구체적인
             instruction으로 유지하고 실제 context를 점검합니다.
+          </p>
+          <p>
+            Claude Code v2.1.277 이상은 <code>AGENTS.md</code>를 project instruction으로 직접 읽을 수 있습니다. 기본값에서는 working directory
+            위에 <code>CLAUDE.md</code>나 <code>CLAUDE.local.md</code>가 있으면 그것을 읽고 <code>AGENTS.md</code>는 생략합니다.
+          </p>
+          <p>
+            둘을 함께 쓰려면 Project instructions를 <code>claude-md-and-agents-md</code>로 정합니다. 또는 <code>CLAUDE.md</code>에서
+            <code>@AGENTS.md</code>를 import합니다.
           </p>
         </div>
       </section>

@@ -28,6 +28,22 @@ export default function Overview() {
           현재 기능이 아니라 hardening contract로 표시합니다.
         </p>
 
+        <p>
+          같은 입력창에 세 입력이 차례로 들어온다고 합시다. 첫째는 <code>/status</code>, 둘째는 <code>테스트를 고쳐줘</code>, 셋째는
+          <code>EOF</code>입니다. CLI는 첫 입력을 local handler로, 둘째를 model turn으로, 셋째를 종료 신호로 보내야 합니다.
+        </p>
+        <p>
+          화면에는 서로 다른 세 결과가 보이지만 session·turn·event identity는 한 실행 기록으로 이어져야 합니다.
+        </p>
+        <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li><code>/status</code>가 model prompt로 전송될까요, local registry에서 끝날까요?</li>
+          <li>일반 prompt 중 tool permission이 필요해지면 renderer가 입력 focus를 승인 UI로 옮겨야 할까요?</li>
+          <li>같은 event를 TTY와 JSONL로 표시하면 색과 줄바꿈은 달라도 terminal state는 같아야 할까요?</li>
+        </ol>
+
+        <ReplLoopViz />
+
         <div id="paper-claw-cli-source" className="scroll-mt-24">
           <CitationBlock
             source="Claw Code CLI entry @ b71afdd"
@@ -46,8 +62,6 @@ export default function Overview() {
             </p>
           </CitationBlock>
         </div>
-
-        <ReplLoopViz />
 
         <h3 className="text-xl font-semibold mt-8 mb-3">
           먼저 입력의 의미가 아니라 실행 경계를 나눈다

@@ -14,10 +14,22 @@ export default function ClaudeCodeSubagentsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Main conversation을 복제하는 기능이 아닙니다. Objective·input snapshot·tool scope·artifact·verification을 넘기고
-            별도 context에서 나온 summary를 main이 다시 검증하는 handoff입니다.
+            일반 subagent는 objective·input snapshot·tool scope를 넘겨 별도 context에서 일하게 합니다. <code>fork</code>는 예외로, 현재
+            conversation history와 system prompt·tools·model을 이어받습니다. 어느 쪽이든 반환 artifact를 main이 다시 검증해야 합니다.
           </p>
+          <p>
+            Main에서 결제 login 실패를 조사하다가 terminal log와 <code>src/auth/session.ts</code>를 이미 읽었다고 합시다. 이제 read-only
+            <code>auth-reviewer</code>에게 <code>INC-81의 원인 후보와 file:line receipt를 반환하라</code>고 맡깁니다. 일반 subagent에는 이 task
+            message와 자신의 prompt·tools가 들어가고, fork에는 지금까지의 main 대화 전체가 들어갑니다.
+          </p>
+          <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>일반 subagent가 main에서만 본 terminal log를 자동으로 기억할까요?</li>
+            <li>custom subagent는 main이 load한 CLAUDE.md hierarchy를 받을까요?</li>
+            <li>fork를 선택하면 설명을 덜 넘겨도 되는 대신 input isolation을 잃을까요?</li>
+          </ol>
         </div>
+        <SubagentHandoffViz />
         <TermBreakdown
           title="Handoff에서 먼저 고정할 네 소유권"
           items={[
@@ -48,7 +60,6 @@ export default function ClaudeCodeSubagentsArticle() {
             },
           ]}
         />
-        <SubagentHandoffViz />
         <ContentBoundary article="claude-code-subagents" />
       </section>
       <section id="handoff-contract" className="scroll-mt-20">
@@ -112,7 +123,7 @@ export default function ClaudeCodeSubagentsArticle() {
             },
           ]}
           assumptions={[
-            "Subagent는 main과 별도 context에서 실행됩니다.",
+            "일반 subagent는 fresh context, fork는 main의 전체 conversation에서 시작합니다.",
             "Shared source writer와 merge owner가 하나로 정해집니다.",
             "반환 artifact에는 source identity가 있습니다.",
           ]}
@@ -129,6 +140,11 @@ export default function ClaudeCodeSubagentsArticle() {
             두 subagent가 같은 file을 동시에 편집하면 writer·merge·verification
             owner가 모호해집니다. Main은 반환 summary가 아니라 실제 source와
             command receipt를 읽은 뒤 최소 diff를 한 writer에게 맡깁니다.
+          </p>
+          <p>
+            일반 custom subagent는 main 대화나 이미 읽은 file을 받지 않지만, 기본적으로 main이 load한 user·project·local CLAUDE.md hierarchy와
+            시작 시점의 Git status snapshot을 받습니다. Main의 auto memory와 output style은 받지 않습니다. Fork는 전체 history를 물려받으므로
+            배경 설명이 큰 side task에 유리하지만, fresh context가 주는 격리는 사라집니다.
           </p>
         </div>
       </section>

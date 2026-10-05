@@ -10,41 +10,42 @@ export default function ValidationStagesViz() {
     >
       <BashSteps
         columns={3}
+        compactMobile
         items={[
           {
             label: "MODEL · 01",
             title: "Command proposal",
-            body: '예: rg "401" src. Model은 command와 목적을 제안할 뿐 실행 권한을 만들지 않습니다.',
+            body: 'rg "401" src와 목적을 제안합니다. 실행 권한은 없습니다.',
             tone: "blue",
           },
           {
             label: "HOST · 02",
             title: "Value validation",
-            body: "빈 command, 길이, timeout과 background 설정처럼 값 자체의 오류를 먼저 거릅니다.",
+            body: "빈 값·길이·timeout·background 설정을 검사합니다.",
             tone: "slate",
           },
           {
             label: "HOST · 03",
             title: "Shell · path classify",
-            body: "Intent, 위험 pattern, cwd와 target path를 분류하고 불확실성을 보존합니다.",
+            body: "Shell·cwd·target effect를 분류하고 불확실성을 남깁니다.",
             tone: "violet",
           },
           {
             label: "HOST · 04",
             title: "Permission decision",
-            body: "Mode·rule·approval을 적용합니다. Deny이면 process를 만들지 않습니다.",
+            body: "Mode·rule·approval을 적용합니다. Deny면 process가 없습니다.",
             tone: "amber",
           },
           {
             label: "EFFECT · 05",
             title: "Bounded process",
-            body: "허용된 command만 cwd·timeout·output limit과 sandbox 경계 안에서 실행합니다.",
+            body: "허용된 command만 cwd·timeout·sandbox 경계에서 실행합니다.",
             tone: "rose",
           },
           {
             label: "HOST · 06",
             title: "Typed observation",
-            body: "stdout·stderr·exit code·timeout·truncation을 구분해 model과 audit에 반환합니다.",
+            body: "stdout·stderr·exit·timeout·truncation을 나눠 반환합니다.",
             tone: "emerald",
           },
         ]}
