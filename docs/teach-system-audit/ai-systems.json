@@ -2474,7 +2474,7 @@
       "route": "ai/claw-compaction",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-compaction.tsx",
       "publicPath": "cs/ai/claw-compaction",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2539,12 +2539,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "production": "checkpoint219 배포 후 기록 예정",
+        "production": "GitHub Pages run 37336364710 success @ 3edfc34920ac0ee88fb628b36db06495b7b5a74a; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-219-production/summary.json",
         "semanticReview": "로그인 401 history 한 건으로 raw history 선택, tool pair 보존, typed state 복원, context/effect rollback 분리를 먼저 추적했습니다. 네 본문과 여섯 Viz를 읽고 pinned string heuristic을 semantic compressor로 과장하지 않는지 재검토했습니다."
       },
-      "remaining": [
-        "checkpoint219 전역 build·배포·운영 390/1440 확인"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -2567,7 +2565,7 @@
       "route": "ai/claw-config",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-config.tsx",
       "publicPath": "cs/ai/claw-config",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2637,12 +2635,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "production": "checkpoint219 배포 후 기록 예정",
+        "production": "GitHub Pages run 37336364710 success @ 3edfc34920ac0ee88fb628b36db06495b7b5a74a; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-219-production/summary.json",
         "semanticReview": "세 nested field를 USER·PROJECT·LOCAL 순서로 합쳐 sibling 보존과 winner 출처를 직접 보이게 했습니다. Bootstrap readiness, OAuth helper와 token storage, remote proxy data를 완성된 실행 protocol로 확대하지 않는지 전 본문에서 확인했습니다."
       },
-      "remaining": [
-        "checkpoint219 전역 build·배포·운영 390/1440 확인"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -2665,7 +2661,7 @@
       "route": "ai/claw-file-ops",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-file-ops.tsx",
       "publicPath": "cs/ai/claw-file-ops",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2717,12 +2713,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "production": "checkpoint219 배포 후 기록 예정",
+        "production": "GitHub Pages run 37336364710 success @ 3edfc34920ac0ee88fb628b36db06495b7b5a74a; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-219-production/summary.json",
         "semanticReview": "auth.ts h1을 읽은 뒤 h2로 바뀌고 동일 문자열이 두 번 있는 사건으로 stale input과 non-unique edit를 먼저 드러냈습니다. 현재 direct write, 검색 누락, canonical path와 handle-bound open의 보장 범위를 네 본문 전체에서 대조했습니다."
       },
-      "remaining": [
-        "checkpoint219 전역 build·배포·운영 390/1440 확인"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -2745,7 +2739,7 @@
       "route": "ai/claw-hooks",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-hooks.tsx",
       "publicPath": "cs/ai/claw-hooks",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2793,12 +2787,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "production": "checkpoint219 배포 후 기록 예정",
+        "production": "GitHub Pages run 37336364710 success @ 3edfc34920ac0ee88fb628b36db06495b7b5a74a; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-219-production/summary.json",
         "semanticReview": "Ask가 즉시 사용자 prompt가 되지 않고 다음 matching hook으로 이어진 뒤 Deny에서 executor 앞에 멈추는 실제 순서를 그림에 반영했습니다. Shell/env inheritance, output parser, updatedInput revalidation과 cancellation의 보장 한계를 전 문단에서 확인했습니다."
       },
-      "remaining": [
-        "checkpoint219 전역 build·배포·운영 390/1440 확인"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -2818,7 +2810,7 @@
       "route": "ai/claw-mcp",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-mcp.tsx",
       "publicPath": "cs/ai/claw-mcp",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2884,12 +2876,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "production": "checkpoint219 배포 후 기록 예정",
+        "production": "GitHub Pages run 37336364710 success @ 3edfc34920ac0ee88fb628b36db06495b7b5a74a; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-219-production/summary.json",
         "semanticReview": "docs.search 한 호출로 process 생존, pinned initialize, discovery, request ID와 terminal result를 구분했습니다. 2026-07-28은 명시적 modern negotiation과 server/discover를 쓰고 modern stdio에 initialize가 없다는 공식 SDK migration 경계를 새로 반영했습니다."
       },
-      "remaining": [
-        "checkpoint219 전역 build·배포·운영 390/1440 확인"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -2909,7 +2899,7 @@
       "route": "ai/claw-overview",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-overview.tsx",
       "publicPath": "cs/ai/claw-overview",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2969,12 +2959,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "production": "checkpoint219 배포 후 기록 예정",
+        "production": "GitHub Pages run 37336364710 success @ 3edfc34920ac0ee88fb628b36db06495b7b5a74a; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-219-production/summary.json",
         "semanticReview": "로그인 401 요청 하나를 provider proposal, permission, edit/test executor, diff·test receipt와 session commit으로 추적했습니다. 네 본문 전체에서 compile-time dependency와 runtime flow, Python reference와 oracle, deterministic parity와 semantic quality를 혼동하지 않는지 재검토했습니다."
       },
-      "remaining": [
-        "checkpoint219 전역 build·배포·운영 390/1440 확인"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -11170,8 +11158,8 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 61,
-    "rewritten-production-verified": 12,
+    "rewritten-local-verified": 55,
+    "rewritten-production-verified": 18,
     "unreviewed": 113
   },
   "localValidationSummary": {
@@ -11183,10 +11171,10 @@
     "learningStrict": "/tmp/teach-all/checkpoint219-learning.log — 799편 정확6+4 strict actual exit0",
     "formulaStrict": "/tmp/teach-all/checkpoint219-formula.log — 1,471식 explicit annotation strict actual exit0",
     "typescript": "checkpoint219 actual npx tsc -b --pretty false exit0",
-    "note": "현재 73편은 actual-body semantic review를 마쳤고 그중 12편은 운영 검증까지 완료했습니다. 미검토 113편은 완료에 포함하지 않습니다.",
+    "note": "현재 73편은 actual-body semantic review를 마쳤고 그중 18편은 운영 검증까지 완료했습니다. 미검토 113편은 완료에 포함하지 않습니다.",
     "reviewedRewriteRequired": 0,
     "verifiedRewrites": 73,
-    "rewrittenLocalVerified": 61,
+    "rewrittenLocalVerified": 55,
     "unreviewed": 113,
     "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
@@ -11198,6 +11186,7 @@
     "checkpoint213Browser": "/tmp/teach-all/browser-ai-six-213/summary.json",
     "checkpoint213Humanize": "/tmp/teach-all/humanize-ai-six-visible-213/summary.json",
     "checkpoint213Production": "docs/teach-system-audit/checkpoint-213-production.json",
-    "checkpoint219Browser": "/tmp/teach-all/browser-ai-six-219/summary.json"
+    "checkpoint219Browser": "/tmp/teach-all/browser-ai-six-219/summary.json",
+    "checkpoint219Production": "docs/teach-system-audit/checkpoint-219-production.json"
   }
 }
