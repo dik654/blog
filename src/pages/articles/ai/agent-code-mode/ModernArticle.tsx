@@ -34,6 +34,7 @@ export default function AgentCodeModeArticle() {
             있으며, 비용 절감과 안전성은 따로 판정해야 합니다. 이제 이 차이에 이름을 붙이고 수치로 확인합니다.
           </p>
         </div>
+        <CodeModeProgramViz />
         <TermLesson
           name="Agent tool-call round trip"
           oneLine="Model이 다음 tool과 인자를 만들고, 실행 결과를 context로 받아 다음 판단을 하는 inference→execution→observation 한 바퀴입니다."
@@ -70,7 +71,6 @@ export default function AgentCodeModeArticle() {
             />
           </CitationBlock>
         </div>
-        <CodeModeProgramViz />
       </section>
 
       <section id="tool-discovery" className="space-y-6">

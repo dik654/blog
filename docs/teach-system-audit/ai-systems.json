@@ -272,19 +272,24 @@
         "browser1440": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
         "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
-        "prose": "전역 799편 strict 재검토 0 actual exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
         "typescript": "actual npx tsc -b --pretty false exit0",
         "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json",
-        "production": "GitHub Pages run 37307865750 success; 390/1440 browser checks 0 failed; mobile viewport representative set anchorDelta 0"
+        "production": "checkpoint 201은 이전 content version의 운영 검증이며 현재 front Viz 개선본은 checkpoint 207 배포 예정",
+        "frontViz": "도입 사례 직후 핵심 Viz 배치와 사례 수치 일치; 390/1440 12회 공동 browser 검사 0 failed: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
       },
-      "remaining": [],
+      "remaining": [
+        "checkpoint 207 배포·production 검증"
+      ],
       "reviewDate": "2026-10-05",
       "reviewMode": "targeted-entry-rewrite-after-full-body-review",
       "bodyFiles": [
         "src/pages/articles/ai/agent-code-mode/ModernArticle.tsx"
       ],
       "actualBodyFile": "src/pages/articles/ai/agent-code-mode/ModernArticle.tsx",
-      "contentHash": "b755929d05b3fa24561afe35bd0f0fbb2ea730d305312bb8793a07a6574a0649",
+      "contentHash": "acd9b9622db301bce6c2944efc7c98e18848d33aa660eec912d4dd2891de2da3",
       "preserved": [
         "기존 7개 핵심 개념과 1개 설명 수식",
         "2,010 대 400 token 가정 계산",
@@ -559,14 +564,19 @@
         "browser1440": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
         "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
-        "prose": "전역 799편 strict 재검토 0 actual exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
         "typescript": "actual npx tsc -b --pretty false exit0",
         "runtimeFixture": "Node 24 actual run accepted/denied/rejected PASS; 승인 누락 trace3·effect false; 행 불일치 effect true",
         "browserInteraction": "4 scenes·keyboard·play/pause·reduced-motion 양폭 통과: /tmp/teach-all/extension-browser-current/summary.json",
         "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json",
-        "production": "GitHub Pages run 37307865750 success; 390/1440 browser checks 0 failed; mobile viewport representative set anchorDelta 0"
+        "production": "checkpoint 201은 이전 content version의 운영 검증이며 현재 front Viz 개선본은 checkpoint 207 배포 예정",
+        "frontViz": "도입 사례 직후 핵심 Viz 배치와 사례 수치 일치; 390/1440 12회 공동 browser 검사 0 failed: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
       },
-      "remaining": [],
+      "remaining": [
+        "checkpoint 207 배포·production 검증"
+      ],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--agent-extension-boundaries.json",
       "reviewDate": "2026-10-05",
       "reviewMode": "rewritten-after-full-body-review",
@@ -576,7 +586,7 @@
         "src/pages/articles/ai/agentic-patterns/viz/ModernAgentPatternViz.tsx"
       ],
       "actualBodyFile": "src/pages/articles/ai/agentic-patterns/ExtensionBoundariesArticle.tsx",
-      "contentHash": "0ef04cecde1b8fc77a7b71518731527027e138647d563d0fe722c607209bbf65",
+      "contentHash": "1bfa1cc299a23da66063e8747537dd9393507928c71869117a6f1ee29bac59ba",
       "preserved": [
         "Hook·Skill·Guardrail·Verifier의 기존 네 책임 구분",
         "기존 시각화의 네 장면과 canonical route",
@@ -870,12 +880,17 @@
         "browser1440": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
         "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
-        "prose": "전역 799편 strict 재검토 0 actual exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
         "typescript": "actual npx tsc -b --pretty false exit0",
         "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json",
-        "production": "GitHub Pages run 37307865750 success; 390/1440 browser checks 0 failed; mobile viewport representative set anchorDelta 0"
+        "production": "checkpoint 201은 이전 content version의 운영 검증이며 현재 front Viz 개선본은 checkpoint 207 배포 예정",
+        "frontViz": "도입 사례 직후 핵심 Viz 배치와 사례 수치 일치; 390/1440 12회 공동 browser 검사 0 failed: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
       },
-      "remaining": [],
+      "remaining": [
+        "checkpoint 207 배포·production 검증"
+      ],
       "reviewDate": "2026-10-05",
       "reviewMode": "targeted-entry-and-toc-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -883,7 +898,7 @@
         "src/pages/articles/ai/agent-memory-lifecycle/MemoryTraceViz.tsx"
       ],
       "actualBodyFile": "src/pages/articles/ai/agent-memory-lifecycle/ModernArticle.tsx",
-      "contentHash": "ff2912240040fbffa76578478676e5644c1d2a0dacc679a1a7cf01f0da4edb47",
+      "contentHash": "f272dafc8f3cc2f57a7a39f62b29478d389e929392b01244571fec45443f32aa",
       "preserved": [
         "기존 7개 핵심 개념과 두 수식",
         "MemGPT·Generative Agents·CoALA·MemoryArena 출처 범위",
@@ -1573,150 +1588,435 @@
       "route": "ai/augmentation-evaluation",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/augmentation-evaluation.tsx",
       "publicPath": "cs/ai/augmentation-evaluation",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Policy artifact 정의가 수치가 있는 한 release 사건보다 먼저 나옴",
+        "Clean·robustness·TTA 비용을 먼저 예측하는 질문이 없음",
+        "기존 핵심 Viz가 용어 카드 뒤에 있어 도입 사례와 시각적 연결이 늦음"
+      ],
+      "fixture": {
+        "policy": "flip p=.5 → brightness ±.1 → normalize v3",
+        "seed": 17,
+        "baselineClean": 0.84,
+        "candidateClean": 0.86,
+        "baselineLowLight": 0.75,
+        "candidateLowLight": 0.71,
+        "ttaLowLight": 0.73,
+        "p95Ms": {
+          "base": 12,
+          "tta": 31
+        }
+      },
+      "stageAnchors": {
+        "1": "policy artifact",
+        "2": "clean-robust",
+        "3": "tta inverse map",
+        "4": "paired release gate",
+        "S": "overview의 policy A 수치 사례",
+        "B": "overview의 세 예측과 front Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/1912.02781",
+          "application": "AugMix operation chain·consistency objective와 corruption benchmark의 근거 범위"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "Policy A 하나의 clean .84→.86, fixed low-light .75→.71, 4-view TTA .73, p95 12→31ms를 먼저 제시하고 clean gain·seed noise·spatial inverse map을 예측한 뒤 artifact·평가 경계·TTA 식·non-compensating release gate로 연결했습니다.",
+        "humanize": "실제 390px 렌더링 전문 추출 후 전체 문장 수동 검토·금지 상투어0·사례/예측/Viz 순서 통과: /tmp/teach-all/humanize-ai-six-visible-207/summary.json",
+        "browser390": "앞 Viz가 용어 카드보다 먼저이고 예측 질문3개·overflow0·console0·request0·버튼/키보드 조작 통과: /tmp/teach-all/browser-ai-six-207/summary.json",
+        "browser1440": "앞 Viz가 용어 카드보다 먼저이고 예측 질문3개·overflow0·console0·request0·버튼/키보드 조작 통과: /tmp/teach-all/browser-ai-six-207/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "checkpoint 207 배포·production 검증"
+      ],
+      "reviewDate": "2026-10-05",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/augmentation-evaluation/ModernArticle.tsx",
+        "src/pages/articles/ai/data-augmentation/viz/ModernAugmentationViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/augmentation-evaluation/ModernArticle.tsx",
+      "contentHash": "af2be78b84bec2bc0f175b54f00c4db7157189cd418b0f12faeabb4cf92676e6",
+      "preserved": [
+        "기존 네 개념과 TTA inverse-map 수식",
+        "AugMix 원 논문의 corruption benchmark 한계",
+        "정확히 기초6+심화4 연습문제"
       ]
     },
     {
       "route": "ai/catboost-ordered-learning",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/catboost-ordered-learning.tsx",
       "publicPath": "cs/ai/catboost-ordered-learning",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Prefix gradient 정의는 있었지만 A,C,B,D 사례에서 독자가 label 경로를 먼저 예측하지 않음",
+        "Ordered statistic·ordered boosting·external split의 차이를 묻는 선행 질문 부재",
+        "기존 ordering Viz가 용어 정의 뒤에 위치"
+      ],
+      "fixture": {
+        "permutation": [
+          "A",
+          "C",
+          "B",
+          "D"
+        ],
+        "current": "B",
+        "prefix": [
+          "A",
+          "C"
+        ],
+        "excludedFromFit": [
+          "B",
+          "D"
+        ],
+        "labelUse": "B label enters loss derivative after prefix prediction"
+      },
+      "stageAnchors": {
+        "1": "prefix-gradient",
+        "2": "symmetric-tree",
+        "3": "evidence",
+        "S": "overview의 A,C,B,D 사례",
+        "B": "overview의 세 예측과 front Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://proceedings.neurips.cc/paper/2018/hash/14491b756b3a51daac41c24863285549-Abstract.html",
+          "application": "Prediction shift와 ordered boosting·categorical statistic"
+        },
+        {
+          "href": "https://catboost.ai/docs/en/concepts/educational-materials-papers",
+          "application": "공식 reference에서 두 ordering 장치 범위 교차 확인"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "A,C,B,D에서 B의 prefix가 A,C인 한 사례로 B label이 prefix fit에는 없고 loss slope에는 들어가는 경로를 먼저 그렸습니다. Ordered category statistic과 ordered boosting을 별도 leakage 경계로 유지하고 external validation 대체가 아님을 확인했습니다.",
+        "humanize": "실제 390px 렌더링 전문 추출 후 전체 문장 수동 검토·금지 상투어0·사례/예측/Viz 순서 통과: /tmp/teach-all/humanize-ai-six-visible-207/summary.json",
+        "browser390": "앞 Viz가 용어 카드보다 먼저이고 예측 질문3개·overflow0·console0·request0·버튼/키보드 조작 통과: /tmp/teach-all/browser-ai-six-207/summary.json",
+        "browser1440": "앞 Viz가 용어 카드보다 먼저이고 예측 질문3개·overflow0·console0·request0·버튼/키보드 조작 통과: /tmp/teach-all/browser-ai-six-207/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "checkpoint 207 배포·production 검증"
+      ],
+      "reviewDate": "2026-10-05",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/catboost-ordered-learning/ModernArticle.tsx",
+        "src/pages/articles/ai/gbm-viz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/catboost-ordered-learning/ModernArticle.tsx",
+      "contentHash": "9d63f40781ec5b38d37c0c448fe1005cf4c5cf19d23072750e6023110b07386d",
+      "preserved": [
+        "기존 prefix derivative 수식과 symmetric tree 구분",
+        "NeurIPS 2018 source scope",
+        "정확히 기초6+심화4 연습문제"
       ]
     },
     {
       "route": "ai/classification-metrics",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/classification-metrics.tsx",
       "publicPath": "cs/ai/classification-metrics",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Score·probability·action 용어가 수치 사례보다 먼저 등장",
+        "세 평가층의 답이 갈라지는 동일 population 예측 질문 부재",
+        "기존 Viz가 용어 카드 뒤에 위치"
+      ],
+      "fixture": {
+        "applications": 1000,
+        "positives": 100,
+        "negatives": 900,
+        "positiveScore": 0.51,
+        "negativeScore": 0.49,
+        "thresholds": [
+          0.5,
+          0.52
+        ],
+        "falseNegativeCostRatio": 20
+      },
+      "stageAnchors": {
+        "1": "proper-score",
+        "2": "threshold",
+        "3": "report",
+        "S": "overview의 대출 1000건 사례",
+        "B": "overview의 세 예측과 front Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://doi.org/10.1198/016214506000001437",
+          "application": "Strictly proper scoring rule과 Brier regret의 probability-space 범위"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "실제 부도100/정상900에 .51/.49를 주는 model로 완벽 ranking, probability 의미, .50/.52 action을 먼저 분리했습니다. Brier regret와 오류 비용 식의 population·threshold 가정을 유지하고 세 층을 서로 대체하지 않도록 검토했습니다.",
+        "humanize": "실제 390px 렌더링 전문 추출 후 전체 문장 수동 검토·금지 상투어0·사례/예측/Viz 순서 통과: /tmp/teach-all/humanize-ai-six-visible-207/summary.json",
+        "browser390": "앞 Viz가 용어 카드보다 먼저이고 예측 질문3개·overflow0·console0·request0·버튼/키보드 조작 통과: /tmp/teach-all/browser-ai-six-207/summary.json",
+        "browser1440": "앞 Viz가 용어 카드보다 먼저이고 예측 질문3개·overflow0·console0·request0·버튼/키보드 조작 통과: /tmp/teach-all/browser-ai-six-207/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "checkpoint 207 배포·production 검증"
+      ],
+      "reviewDate": "2026-10-05",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/classification-metrics/ModernArticle.tsx",
+        "src/pages/articles/ai/evaluation-metrics/viz/ModernEvaluationViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/classification-metrics/ModernArticle.tsx",
+      "contentHash": "42f964fc35787da611f723a1e6db94bf44d4663bfb5d9d0a60b151782f6c3e68",
+      "preserved": [
+        "Brier strictly proper 증명",
+        "threshold empirical cost 식과 assumptions",
+        "정확히 기초6+심화4 연습문제"
       ]
     },
     {
       "route": "ai/claude-code",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code.tsx",
       "publicPath": "cs/ai/claude-code",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Harness 정의와 네 주체가 concrete workspace trace보다 먼저 나옴",
+        "Proposal·permission deny·failed command·verifier를 먼저 예측하는 질문 부재",
+        "기존 WorkspaceHarnessViz가 용어 카드 뒤에 위치"
+      ],
+      "fixture": {
+        "request": "로그인 실패 재현→최소 auth.ts 수정→regression test",
+        "proposal": "search auth error then edit",
+        "deniedEffect": "file unchanged",
+        "observation": "exit status + result",
+        "completion": "independent regression test"
+      },
+      "stageAnchors": {
+        "1": "agent-loop",
+        "2": "tool-effect",
+        "3": "paper-how-claude-code-works",
+        "S": "overview의 로그인 실패 요청",
+        "B": "overview의 세 예측과 front Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://code.claude.com/docs/en/how-claude-code-works",
+          "application": "2026-10-05 현재 gather context→take action→verify, model과 harness, tools·environments 경계"
+        },
+        {
+          "href": "https://code.claude.com/docs/en/tools-reference",
+          "application": "Built-in tool identity와 effect 범위"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "로그인 실패 한 요청에서 model proposal, harness search, permission deny, typed observation, regression verifier를 추적했습니다. Model 판단과 runtime effect를 분리하는 기존 상태 전이 식과 공식 문서의 세 단계 loop가 일치함을 확인했습니다.",
+        "humanize": "실제 390px 렌더링 전문 추출 후 전체 문장 수동 검토·금지 상투어0·사례/예측/Viz 순서 통과: /tmp/teach-all/humanize-ai-six-visible-207/summary.json",
+        "browser390": "앞 Viz가 용어 카드보다 먼저이고 예측 질문3개·overflow0·console0·request0·버튼/키보드 조작 통과: /tmp/teach-all/browser-ai-six-207/summary.json",
+        "browser1440": "앞 Viz가 용어 카드보다 먼저이고 예측 질문3개·overflow0·console0·request0·버튼/키보드 조작 통과: /tmp/teach-all/browser-ai-six-207/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "checkpoint 207 배포·production 검증"
+      ],
+      "reviewDate": "2026-10-05",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/claude-code/ModernArticle.tsx",
+        "src/pages/articles/ai/claude-code/viz/ModernClaudeCodeViz.tsx",
+        "src/pages/articles/ai/claude-code/codeRefs.ts",
+        "src/pages/articles/ai/claude-code/fileTree.ts"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/claude-code/ModernArticle.tsx",
+      "contentHash": "57ff1778777f5d53a412fcc314143eabc6c67ef56abc946bf79fe07b7a23fb27",
+      "preserved": [
+        "기존 proposal→gate→execution→observation 수식",
+        "실제 hook source side panel과 effect 분류",
+        "정확히 기초6+심화4 연습문제"
       ]
     },
     {
       "route": "ai/claude-code-checkpointing",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code-checkpointing.tsx",
       "publicPath": "cs/ai/claude-code-checkpointing",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Snapshot 정의가 서로 다른 세 effect의 복구 사건보다 먼저 나옴",
+        "Conversation/code rewind와 link 경계를 먼저 예측하는 질문 부재",
+        "기존 CheckpointBoundaryViz가 용어 카드 뒤에 위치"
+      ],
+      "fixture": {
+        "directEdit": "auth.ts",
+        "bashEdit": "generated.ts",
+        "remoteEffect": "ticket INC-81",
+        "linkBoundary": "symlink/hard-link skipped"
+      },
+      "stageAnchors": {
+        "1": "coverage",
+        "2": "recovery-plan",
+        "3": "paper-claude-checkpointing",
+        "S": "overview의 auth.ts/generated.ts/INC-81 사례",
+        "B": "overview의 세 예측과 front Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://code.claude.com/docs/en/checkpointing",
+          "application": "2026-10-05 현재 direct edit snapshot·rewind 선택·Bash와 link 제외"
+        },
+        {
+          "href": "https://code.claude.com/docs/en/how-claude-code-works#undo-changes-with-checkpoints",
+          "application": "File change와 database·API·deployment remote effect 경계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "같은 session의 auth.ts direct edit, Bash generated.ts, remote INC-81을 먼저 나눠 checkpoint 교집합 식과 effect별 rollback owner에 연결했습니다. 공식 문서의 Bash·symlink·hard-link 제외와 remote action 한계를 확인했습니다.",
+        "humanize": "실제 390px 렌더링 전문 추출 후 전체 문장 수동 검토·금지 상투어0·사례/예측/Viz 순서 통과: /tmp/teach-all/humanize-ai-six-visible-207/summary.json",
+        "browser390": "앞 Viz가 용어 카드보다 먼저이고 예측 질문3개·overflow0·console0·request0·버튼/키보드 조작 통과: /tmp/teach-all/browser-ai-six-207/summary.json",
+        "browser1440": "앞 Viz가 용어 카드보다 먼저이고 예측 질문3개·overflow0·console0·request0·버튼/키보드 조작 통과: /tmp/teach-all/browser-ai-six-207/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "checkpoint 207 배포·production 검증"
+      ],
+      "reviewDate": "2026-10-05",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/claude-code-checkpointing/ModernArticle.tsx",
+        "src/pages/articles/ai/claude-code/viz/ModernClaudeCodeViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/claude-code-checkpointing/ModernArticle.tsx",
+      "contentHash": "bae281f2422a0e26ca1984e9c81898b2a89e3b2de13e5eb41d6d33116bedf598",
+      "preserved": [
+        "Recoverable effect 교집합 식",
+        "Git·transaction·compensation과의 경계",
+        "정확히 기초6+심화4 연습문제"
       ]
     },
     {
       "route": "ai/claude-code-hooks",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code-hooks.tsx",
       "publicPath": "cs/ai/claude-code-hooks",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Typed handler 정의가 concrete PreToolUse Bash(rm *) 사건보다 먼저 나옴",
+        "Matcher miss·exit0 no-decision·timeout을 먼저 예측하는 질문 부재",
+        "기존 HookLifecycleViz가 용어 카드 뒤에 위치"
+      ],
+      "fixture": {
+        "event": "PreToolUse",
+        "matcher": "Bash",
+        "if": "Bash(rm *)",
+        "handler": "block-rm.sh",
+        "nonmatch": "npm test",
+        "match": "rm -rf /tmp/build",
+        "exit0": "no decision",
+        "exit2": "block"
+      },
+      "stageAnchors": {
+        "1": "resolution",
+        "2": "security",
+        "3": "paper-claude-hooks",
+        "S": "overview의 Bash(rm *) 사례",
+        "B": "overview의 세 예측과 front Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://code.claude.com/docs/en/hooks",
+          "application": "2026-10-05 현재 event→matcher→if→handler, JSON/exit, event별 blocking과 timeout"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "PreToolUse→Bash matcher→Bash(rm *) if→block-rm.sh 한 입력을 따라 npm test 미실행, rm handler 실행, exit0 no-decision, exit2 block을 구분했습니다. Command hook timeout이 일반적으로 normal permission flow로 진행되는 현재 문서와 security 경계를 확인했습니다.",
+        "humanize": "실제 390px 렌더링 전문 추출 후 전체 문장 수동 검토·금지 상투어0·사례/예측/Viz 순서 통과: /tmp/teach-all/humanize-ai-six-visible-207/summary.json",
+        "browser390": "앞 Viz가 용어 카드보다 먼저이고 예측 질문3개·overflow0·console0·request0·버튼/키보드 조작 통과: /tmp/teach-all/browser-ai-six-207/summary.json",
+        "browser1440": "앞 Viz가 용어 카드보다 먼저이고 예측 질문3개·overflow0·console0·request0·버튼/키보드 조작 통과: /tmp/teach-all/browser-ai-six-207/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "checkpoint 207 배포·production 검증"
+      ],
+      "reviewDate": "2026-10-05",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/claude-code-hooks/ModernArticle.tsx",
+        "src/pages/articles/ai/claude-code/viz/ModernClaudeCodeViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/claude-code-hooks/ModernArticle.tsx",
+      "contentHash": "4845551e50523488fff5cc85d8247c604d200ae7ef05c3f8c3b0f4fd2ce5cb07",
+      "preserved": [
+        "Event·matcher·if Boolean 식",
+        "handler security와 fail policy 경계",
+        "정확히 기초6+심화4 연습문제"
       ]
     },
     {
@@ -10196,27 +10496,29 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 55,
-    "unreviewed": 131
+    "rewritten-local-verified": 61,
+    "unreviewed": 125
   },
   "localValidationSummary": {
-    "rewritten": 55,
-    "remainingUnreviewed": 131,
+    "rewritten": 61,
+    "remainingUnreviewed": 125,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
     "learningStrict": "/tmp/teach-all/launch23/learning-final.log — 정확6+4 strict 실제exit0·공유mismatch0",
     "formulaStrict": "/tmp/teach-all/launch23/formula-final.log — 전역1460식explicitPASS·본글1식양폭overflow0",
     "typescript": "/tmp/teach-all/launch23/tsc-final.log — actual app tsc세션37500실제exit0; root고정전체build별도",
-    "note": "현재 55편은 actual-body semantic review와 local·production 검증을 마쳤습니다. 미검토 131편은 완료에 포함하지 않습니다. checkpoint 201은 GitHub Pages run 37307865750으로 배포되어 운영 검증을 통과했습니다.",
+    "note": "현재 61편은 actual-body semantic review와 local 검증을 마쳤습니다. 미검토 125편은 완료에 포함하지 않습니다. checkpoint 207 production build가 통과했고 배포를 진행합니다.",
     "reviewedRewriteRequired": 0,
-    "verifiedRewrites": 55,
-    "rewrittenLocalVerified": 55,
-    "unreviewed": 131,
+    "verifiedRewrites": 61,
+    "rewrittenLocalVerified": 61,
+    "unreviewed": 125,
     "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
     "checkpoint201Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "mobileViewport": "/tmp/teach-all/mobile-viewport-stability-201.json",
-    "checkpoint201Production": "docs/teach-system-audit/checkpoint-201-production.json"
+    "checkpoint201Production": "docs/teach-system-audit/checkpoint-201-production.json",
+    "checkpoint207Browser": "/tmp/teach-all/browser-ai-six-207/summary.json",
+    "checkpoint207Humanize": "/tmp/teach-all/humanize-ai-six-visible-207/summary.json"
   }
 }

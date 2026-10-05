@@ -26,7 +26,18 @@ export default function ClassificationMetricsArticle() {
             probability로 믿어도 되는지는 별도 문제입니다. Threshold까지
             선택해야 비로소 업무 비용과 처리량을 평가할 수 있습니다.
           </p>
+          <p>
+            대출 신청 1,000건 중 실제 부도는 100건이라고 합시다. Model A는 부도 100건에 모두 .51, 정상 900건에 모두 .49를 줍니다.
+            양성의 순서는 완벽하지만, .51을 실제 부도 확률 51%로 읽을 근거는 아직 없습니다.
+          </p>
+          <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>Model A의 ROC-AUC는 높아도 Brier score가 나쁠 수 있을까요?</li>
+            <li>Threshold를 .50에서 .52로 올리면 ranking도 바뀔까요, action만 바뀔까요?</li>
+            <li>False negative 비용이 20배면 accuracy가 가장 높은 threshold가 최선일까요?</li>
+          </ol>
         </div>
+        <ClassificationMetricViz />
         <TermBreakdown
           title="한 model을 평가하는 세 층"
           items={[
@@ -55,7 +66,6 @@ export default function ClassificationMetricsArticle() {
             },
           ]}
         />
-        <ClassificationMetricViz />
         <ContentBoundary article="classification-metrics" />
       </section>
 

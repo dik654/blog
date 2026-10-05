@@ -1,18 +1,18 @@
 import { useState } from "react";
 
 const stages = [
-  { label: "현재 작업", input: "업무 7 · 목표와 실패한 검사", check: "지금 실행을 계속할 때 필요한가?", output: "다음 행동과 미해결 문제를 working state에 남김", note: "설명용 업무 7의 현재 상태입니다. 실행이 끝나면 폐기하거나 다음 실행이 읽을 checkpoint로 넘길지 결정합니다." },
-  { label: "장기 기억", input: "업무 7에서 확인한 사용자 선호", check: "보존 동의·출처·유효기간이 있는가?", output: "조건을 충족한 사실만 memory로 저장", note: "여러 session에 쓸 사실에는 갱신과 삭제 규칙이 필요합니다. 이번 작업에서 잠깐 쓰인 값을 모두 영구 사실로 바꾸지 않습니다." },
-  { label: "원문 보관", input: "업무 7의 긴 로그와 수정 파일", check: "나중에 원문을 다시 확인해야 하는가?", output: "외부 artifact에 보관하고 주소·해시로 참조", note: "요약에는 필요한 결론과 원문 위치를 남깁니다. 주소와 해시는 같은 자료인지 확인하는 단서이며 접근 권한은 별도로 검사합니다." },
-  { label: "다시 시작", input: "새 context가 읽은 업무 7의 기록", check: "목표·결정·미완료와 원문을 복원했는가?", output: "같은 다음 행동을 수행하는지 replay로 확인", note: "문장을 잘 회상하는지만 보지 않습니다. 새 실행이 실제로 올바른 행동을 이어 가는지 확인해야 resume 품질을 판단할 수 있습니다." },
+  { label: "현재 작업", input: "결제 migration · payment-17 실패", check: "새 session이 다음 행동을 고르는 데 필요한가?", output: "schema 수정이라는 next action과 미해결 test를 working state에 남김", note: "목표만 남기고 payment-17을 빼면 새 session은 같은 결정을 복원하지 못할 수 있습니다." },
+  { label: "장기 기억", input: "사용자는 한국어 설명을 선호함", check: "여러 session에 쓸 가치·보존 동의·expiry가 있는가?", output: "source와 delete path가 있는 preference만 long-term memory에 저장", note: "이번 migration의 실패 상태와 사용자 선호는 보관 수명이 다릅니다. 한 배열에 같은 만료 규칙으로 넣지 않습니다." },
+  { label: "원문 보관", input: "backup artifact://bk-42 · 긴 tool log", check: "요약 뒤에도 원문과 backup을 다시 열어야 하는가?", output: "artifact URI·digest·access scope를 checkpoint에서 참조", note: "압축은 원문 참조를 남기지만 forgetting은 복원 대상을 지웁니다. 두 연산을 같은 삭제로 취급하지 않습니다." },
+  { label: "다시 시작", input: "필수 key 6개 중 4개가 복원된 새 context", check: "goal·payment-17·backup·next action이 모두 있는가?", output: "4/6이면 계속 실행하지 않고 원문을 열어 state를 보충", note: "Recall이 높아도 다음 행동이 틀릴 수 있습니다. Resume 평가는 실제 행동 성공까지 함께 봅니다." },
 ];
 
 export default function MemoryTraceViz() {
   const [active, setActive] = useState(0);
   const stage = stages[active];
   return (
-    <figure data-viz-canvas className="my-8 rounded-xl border p-4 sm:p-6" aria-label="기록의 수명에 따른 저장과 복원 과정">
-      <figcaption className="mb-4 text-base font-semibold">업무 7의 기록은 어디로 가는가 · 가정 사례</figcaption>
+    <figure data-viz-canvas className="my-8 rounded-xl border p-4 sm:p-6" aria-label="결제 migration 기록의 수명에 따른 저장과 복원 과정">
+      <figcaption className="mb-4 text-base font-semibold">payment-17 실패를 새 session이 복원하는 네 단계 · 가정 사례</figcaption>
       <div className="h-[26rem] sm:h-[22rem]" aria-live="polite">
         <ol className="space-y-2 text-sm leading-6">
           {[["현재 기록", stage.input], ["확인할 조건", stage.check], ["다음 저장·동작", stage.output]].map(([label, value], i) => (

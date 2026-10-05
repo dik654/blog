@@ -15,10 +15,21 @@ export default function ClaudeCodeHooksArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             “자동화 script”라고만 부르면 언제 실행되고 무엇을 보고 어떤
-            decision을 낼지 알 수 없습니다. Event·matcher·optional argument
-            filter·handler·input/output·timeout·log를 한 계약으로 읽습니다.
+            decision을 낼지 알 수 없습니다. Event와 matcher로 대상을 고르고,
+            optional argument filter와 handler를 거쳐 input, output, timeout, log를 한 계약으로 읽습니다.
           </p>
+          <p>
+            <code>PreToolUse</code>에서 Bash만 고르고, <code>Bash(rm *)</code>일 때 <code>block-rm.sh</code>를 실행하는 hook을
+            생각해 봅시다. <code>npm test</code>는 handler를 만들지 않고, <code>rm -rf /tmp/build</code>는 JSON input과 함께 handler로 갑니다.
+          </p>
+          <p>그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>Event는 맞지만 matcher가 Edit라면 Bash handler가 실행될까요?</li>
+            <li>Command hook이 exit 0과 빈 stdout을 내면 명시적 allow일까요, decision 없음일까요?</li>
+            <li>정책 hook이 timeout 나면 항상 fail-closed라고 가정해도 될까요?</li>
+          </ol>
         </div>
+        <HookLifecycleViz />
         <TermBreakdown
           title="Hook 한 개를 구성하는 네 층"
           items={[
@@ -53,7 +64,6 @@ export default function ClaudeCodeHooksArticle() {
             },
           ]}
         />
-        <HookLifecycleViz />
         <ContentBoundary article="claude-code-hooks" />
       </section>
       <section id="resolution" className="scroll-mt-20">
@@ -133,9 +143,14 @@ export default function ClaudeCodeHooksArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Workspace가 바꿀 수 있는 script를 조직 credential로 실행하면 hook이 새로운 공격 경로가 됩니다. Handler
-            path·revision·environment·timeout·allowed URL·log retention을 고정하고 실패할 때 fail-open인지 fail-closed인지
-            event별로 시험합니다. Event 이름과 matcher syntax는 제품 version에 따라 바뀌므로 고정 목록을 암기하지 않고 현재 schema를 확인합니다.
+            Workspace가 바꿀 수 있는 script를 조직 credential로 실행하면 hook이 새로운 공격 경로가 됩니다.
+          </p>
+          <p>
+            Handler의 path와 revision, environment, timeout, allowed URL, log retention을 고정합니다. 실패할 때
+            fail-open인지 fail-closed인지도 event별로 시험합니다.
+          </p>
+          <p>
+            Event 이름과 matcher syntax는 제품 version에 따라 바뀌므로 고정 목록을 암기하지 않고 현재 schema를 확인합니다.
           </p>
         </div>
       </section>

@@ -1679,7 +1679,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "핵심 논문",
       label: "AugMix",
       href: "https://arxiv.org/abs/1912.02781",
-      note: "고정 corruption benchmark에서 robustness와 uncertainty를 평가한 방법",
+      note: "2026-10-05 원문 재검토 · 고정 corruption benchmark에서 robustness와 uncertainty를 평가한 방법",
     },
   ],
   "ai/imbalanced-data": [
@@ -1738,7 +1738,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind:"핵심 논문",label:"LightGBM",href:"https://proceedings.neurips.cc/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html",note:"GOSS row sampling과 EFB column bundling" },
   ],
   "ai/catboost-ordered-learning": [
-    { kind:"핵심 논문",label:"CatBoost",href:"https://proceedings.neurips.cc/paper/2018/hash/14491b756b3a51daac41c24863285549-Abstract.html",note:"Prediction shift·ordered boosting·categorical statistic 분석" },
+    { kind:"핵심 논문",label:"CatBoost",href:"https://proceedings.neurips.cc/paper/2018/hash/14491b756b3a51daac41c24863285549-Abstract.html",note:"2026-10-05 원문 재검토 · prediction shift·ordered boosting·categorical statistic 분석" },
+    { kind:"공식 문서",label:"CatBoost — Reference papers",href:"https://catboost.ai/docs/en/concepts/educational-materials-papers",note:"Ordered boosting과 ordered categorical feature statistic의 서로 다른 역할을 공식 문서에서 교차 확인" },
   ],
   "ai/tabular-deep-learning": [
     {
@@ -2351,7 +2352,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "핵심 논문",
       label: "Strictly Proper Scoring Rules, Prediction, and Estimation",
       href: "https://doi.org/10.1198/016214506000001437",
-      note: "실제 probability distribution의 정직한 보고를 유도하는 proper scoring rule의 일반 이론",
+      note: "2026-10-05 원문 재검토 · 실제 probability distribution의 정직한 보고를 유도하는 proper scoring rule의 일반 이론",
     },
   ],
   "ai/ranking-metrics": [
@@ -3460,7 +3461,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "Claude Code — How Claude Code works",
       href: "https://code.claude.com/docs/en/how-claude-code-works",
-      note: "Model proposal을 context·tool execution·observation·verification에 연결하는 현재 workspace harness 개요",
+      note: "2026-10-05 현재 · gather context→take action→verify loop, model과 harness, 다섯 built-in tool 범주, local·cloud·remote-control 실행 환경",
     },
     {
       kind: "공식 문서",
@@ -3498,7 +3499,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "Claude Code — Hooks reference",
       href: "https://code.claude.com/docs/en/hooks",
-      note: "Lifecycle event·matcher·handler·JSON I/O·exit·timeout의 현재 계약",
+      note: "2026-10-05 현재 · lifecycle event→matcher→optional if→handler, command·HTTP·MCP·prompt·agent, JSON/exit code와 event별 timeout·blocking 계약",
     },
   ],
   "ai/claude-code-checkpointing": [
@@ -3506,7 +3507,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "Claude Code — Checkpointing",
       href: "https://code.claude.com/docs/en/checkpointing",
-      note: "Direct file snapshot과 Bash·subagent·remote effect를 구분하는 복구 경계",
+      note: "2026-10-05 현재 · direct file snapshot, conversation/code rewind 선택, Bash 변경과 symlink·hard-link 제외 경계",
+    },
+    {
+      kind: "공식 문서",
+      label: "Claude Code — How Claude Code works · checkpoints",
+      href: "https://code.claude.com/docs/en/how-claude-code-works#undo-changes-with-checkpoints",
+      note: "File change만 checkpoint 대상이며 database·API·deployment 같은 remote system action은 복원되지 않는다는 제품 경계",
     },
   ],
   "ai/qwen-korean-consistency": [

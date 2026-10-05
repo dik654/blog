@@ -23,7 +23,18 @@ export default function ClaudeCodeArticle() {
             실행하고, observation을 다시 model에 돌려주는 제품 runtime입니다.
             둘을 같은 주체로 보면 prompt와 실제 file effect의 경계가 사라집니다.
           </p>
+          <p>
+            “로그인 실패를 재현하고 최소 수정한 뒤 test하라”는 요청을 따라가 봅시다. Model이 <code>auth.ts</code> 검색을 제안하고,
+            harness가 검색을 실행해 exit status와 결과를 돌려줍니다. Model이 Edit를 제안해도 permission gate가 거부하면 file은 바뀌지 않습니다.
+          </p>
+          <p>그림을 넘기기 전에 세 결과를 예측해 보세요.</p>
+          <ol>
+            <li>Model이 올바른 patch를 제안하면 그 자체로 workspace effect가 생길까요?</li>
+            <li>검색 command가 exit 1이면 다음 state에는 성공한 검색 결과와 같은 값이 들어갈까요?</li>
+            <li>Model의 “수정 완료” 문장만으로 regression test를 통과했다고 판정할 수 있을까요?</li>
+          </ol>
         </div>
+        <WorkspaceHarnessViz />
         <TermBreakdown
           title="한 workspace 작업에 등장하는 네 주체"
           items={[
@@ -54,7 +65,6 @@ export default function ClaudeCodeArticle() {
             },
           ]}
         />
-        <WorkspaceHarnessViz />
         <ContentBoundary article="claude-code" />
       </section>
 
