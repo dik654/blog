@@ -2163,7 +2163,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/claw-overview": "54338db509409889",
   "ai/claw-permissions": "214dbb529274cccc",
   "ai/claw-session": "cbcc7c0e39c3bc6b",
-  "ai/claw-worker-boot": "b7df07ea1da8f092",
+  "ai/claw-worker-boot": "f9191c745d76c11f",
   "ai/llm-serving-ops": "81298c7a1551297d",
   "ai/multiview-fusion": "3781959f74ddda54",
   "ai/open-r1": "478fefd6da1c4f57",

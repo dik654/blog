@@ -48,9 +48,11 @@ export function ToolFrame({
 export function ToolSteps({
   items,
   columns = 4,
+  compactMobile = false,
 }: {
   items: ToolStep[];
   columns?: 3 | 4 | 5;
+  compactMobile?: boolean;
 }) {
   const grid =
     columns === 3
@@ -60,7 +62,7 @@ export function ToolSteps({
         : "sm:grid-cols-2 lg:grid-cols-4";
 
   return (
-    <ol className={`grid gap-x-7 gap-y-7 ${grid}`}>
+    <ol className={`grid gap-x-7 gap-y-7 ${compactMobile ? "grid-cols-2 [&>*:last-child]:col-span-2 sm:[&>*:last-child]:col-span-1" : ""} ${grid}`}>
       {items.map((item) => (
         <li
           key={`${item.label}-${item.title}`}

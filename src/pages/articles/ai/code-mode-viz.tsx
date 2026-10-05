@@ -105,8 +105,8 @@ export function CodeModeRuntimeViz() {
 
   return (
     <StoryShell
-      title="Type이 맞는 program도 capability·result·effect 경계를 각각 통과해야 한다"
-      subtitle="실행 성공과 외부 effect 성공을 한 상자로 합치지 않고, 실패가 남기는 receipt까지 보여 줍니다."
+      title="#101–#105 label 작업을 capability·result·effect 경계로 나눠 본다"
+      subtitle="#101·#102 성공, #103 timeout, #104·#105 미시작 상태를 한 번의 성공으로 뭉개지 않습니다."
       labels={labels}
       {...story}
     >
@@ -114,8 +114,8 @@ export function CodeModeRuntimeViz() {
         <div className="space-y-3">
           <NodeBox
             active
-            title="Program control flow"
-            detail="loop · branch · bounded concurrency · try/catch"
+            title="for issue of #101…#105"
+            detail="read → 조건 검사 → label write · bounded concurrency"
             tone="sequence"
           />
           <div
@@ -149,8 +149,8 @@ export function CodeModeRuntimeViz() {
             }`}
           >
             <p className="text-xs font-black">Result disclosure</p>
-            <div className="mt-3 grid grid-cols-4 gap-1">
-              {["schema", "50 rows", "32 KiB", "source IDs"].map((item) => (
+            <div className="mt-3 grid grid-cols-2 gap-1 sm:grid-cols-4">
+              {["issue+status", "≤50 rows", "≤32 KiB", "call IDs"].map((item) => (
                 <span
                   key={item}
                   className="border border-border p-2 text-center text-[11px]"
@@ -170,11 +170,11 @@ export function CodeModeRuntimeViz() {
             <p className="text-xs font-black">External effect receipt</p>
             <div className="mt-3 grid grid-cols-5 gap-1 text-center text-[11px]">
               {[
-                "write 1 ✓",
-                "write 2 ✓",
-                "write 3 ?",
-                "write 4 —",
-                "write 5 —",
+                "#101 ✓",
+                "#102 ✓",
+                "#103 ?",
+                "#104 —",
+                "#105 —",
               ].map((item, index) => (
                 <span
                   key={item}

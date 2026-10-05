@@ -10,7 +10,28 @@ export default function ContextEngineeringFoundationArticle() {
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">Context는 저장된 정보 전체가 아니라 이번 generation이 실제로 읽는 token state입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">Model weight에는 학습된 일반 패턴이 들어 있고, document store에는 필요할지 모르는 자료가 있습니다. 그러나 현재 답을 만들 때 model이 직접 읽는 것은 request에 직렬화된 system instruction·user task·retrieved fragment·message history·tool result뿐입니다. 이 유한한 token 집합을 <strong>inference context state</strong>라고 부릅니다.</p>
+          <p className="text-lg leading-8">
+            직원 A가 “올해 연차 승인 규칙은 무엇인가요?”라고 물었습니다. 저장소에는
+            만료된 <code>policy-v6.pdf</code>, 현재 문서 <code>policy-v7.pdf</code>,
+            무관한 복지 자료가 함께 있습니다. Caller에게 HR 문서 읽기 권한이 있을
+            때 selector가 <code>policy://leave/section-4@v7</code>만 고르고, 그
+            fragment를 system·user message와 함께 직렬화해야 모델이 실제로 읽습니다.
+          </p>
+          <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+          <ol>
+            <li><code>policy-v7.pdf</code>가 저장소에 있으면 이번 답의 context에도 자동으로 들어올까요?</li>
+            <li>v6와 v7을 모두 넣고 모델이 최신 문서를 고르게 두면 freshness 충돌이 해결될까요?</li>
+            <li>Context window가 크면 무관하거나 권한 없는 자료를 함께 넣어도 해가 없을까요?</li>
+          </ol>
+          <p>
+            세 답은 모두 <strong>아니요</strong>입니다. 저장·선택·직렬화는 서로 다른
+            단계이고, 권한과 freshness는 model 추측 전에 selector가 해결해야 합니다.
+          </p>
+        </div>
+        <ContextStateViz />
+        <ContentBoundary article="context-engineering" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>Model weight에는 학습된 일반 패턴이 들어 있고, document store에는 필요할지 모르는 자료가 있습니다. 그러나 현재 답을 만들 때 model이 직접 읽는 것은 request에 직렬화된 system instruction·user task·retrieved fragment·message history·tool result뿐입니다. 이 유한한 token 집합을 <strong>inference context state</strong>라고 부릅니다.</p>
           <p>외부 저장소에 문서가 있다는 것과 그 문서가 context에 들어왔다는 것은 다릅니다. 검색이 실패하거나 selector가 제외했거나 serialization 전에 권한 검사를 통과하지 못했다면 model은 그 정보를 현재 답에 사용할 수 없습니다.</p>
         </div>
         <TermBreakdown
@@ -23,8 +44,6 @@ export default function ContextEngineeringFoundationArticle() {
             { term: "Inference context state", description: "Provider message와 tool schema 형태로 직렬화되어 이번 generation이 실제로 읽는 token sequence입니다.", example: "system 규칙 2k + user task 1k + policy fragment 4k + 최근 tool result 3k" },
           ]}
         />
-        <ContextStateViz />
-        <ContentBoundary article="context-engineering" />
       </section>
 
       <section id="context-state" className="scroll-mt-20">

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
+import Pipeline5StepViz from "./viz/Pipeline5StepViz";
 import RegistryLayersViz from "./viz/RegistryLayersViz";
 
 const TRACE_STEPS = [
@@ -60,14 +61,32 @@ export default function Overview() {
           읽거나 검색하자고 제안할 수 있지만 이 제안이 곧 파일 접근 권한은 아닙니다. Host가 등록된 tool contract와 실제 arguments를 확인하고 권한을 허용한 뒤에야
           executor가 움직입니다.
         </p>
+        <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+        <ol>
+          <li><code>edit_file</code> 인자가 JSON Schema를 통과하면 workspace 쓰기 권한도 통과한 걸까요?</li>
+          <li>모델이 본 schema 뒤에 plugin이 reload되면 같은 이름의 최신 executor를 바로 호출해도 될까요?</li>
+          <li>edit timeout은 파일이 전혀 바뀌지 않았다는 뜻이므로 같은 call을 곧바로 재시도해도 될까요?</li>
+        </ol>
+        <p>
+          세 답은 모두 <strong>아니요</strong>입니다. 구조 검증과 권한은 다른
+          경계이며, call은 모델이 본 registry generation에 고정해야 합니다.
+          Timeout 뒤에는 effect receipt를 조회해 이미 생긴 변경부터 확인합니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <Pipeline5StepViz />
+      </div>
+
+      <ContentBoundary article="claw-tool-system" />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           이 글에서 registry는 실행 가능한 tool definition을 이름으로 찾는 색인입니다. schema는 JSON input의 모양을 검사하는 규칙이고 executor는
           허용된 operation을 실제 filesystem이나 process로 옮기는 component입니다. Runtime은 이 셋을 소유하는 대신 반환된 observation을
           session에 반영하고 다음 model call 또는 종료를 결정합니다.
         </p>
       </div>
-
-      <ContentBoundary article="claw-tool-system" />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>로그인 오류 한 건을 일곱 경계로 추적합니다</h3>

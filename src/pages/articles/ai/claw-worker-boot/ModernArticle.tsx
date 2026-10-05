@@ -16,20 +16,36 @@ export default function ModernWorkerBootArticle() {
           <h2 className="text-3xl font-bold tracking-tight">프로세스가 떠 있는 것과 prompt를 받을 준비가 된 것은 다르다</h2>
         </header>
         <p className="text-lg leading-8 text-foreground/90">
-          외부 coding agent를 worker로 띄우면 운영체제는 곧바로 process ID를 돌려주지만, 화면에는 workspace trust 질문이나 tool permission 요청이 남아 있을 수 있습니다. 이때 task prompt를 보내면 coding agent가 아니라 shell이나 승인 화면에 입력될 수 있으므로, <strong>boot는 spawn이 아니라 ready handshake가 끝날 때까지</strong> 이어집니다.
+          Worker <code>w-17</code>을 repository checkout에서 띄워 작업
+          <code>auth-401-17</code>을 맡긴다고 합시다. Process ID는 이미 생겼지만
+          화면에는 workspace trust 질문이 남아 있습니다. 이때 로그인 수정 prompt를
+          보내면 coding agent가 아니라 승인 화면이나 shell에 입력될 수 있습니다.
         </p>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+          <ol>
+            <li><code>w-17</code>의 PID가 살아 있으면 task prompt를 보내도 될까요?</li>
+            <li>cwd가 allowlist 경로와 맞으면 checkout revision과 filesystem owner도 같은 대상임이 증명될까요?</li>
+            <li>Startup timeout이 나면 아무 effect도 없었으므로 prompt를 항상 그대로 재전송해도 될까요?</li>
+          </ol>
+          <p>
+            세 답은 모두 <strong>아니요</strong>입니다. Ready cue·trust·tool gate와
+            task receipt를 함께 확인하고, replay 전에는 이전 attempt의 effect를
+            조회해야 합니다.
+          </p>
+        </div>
+        <WorkerBootPathViz />
+        <ContentBoundary article="claw-worker-boot" />
         <p>
           이 글은 Claw Code의 commit <code>b71afdd…</code>에 있는 in-memory worker boot state machine을 고정해 읽습니다. 실제 구현의 status·screen cue·replay 동작을 먼저 확인한 뒤, path identity·process generation·idempotency처럼 source에서 보장되지 않는 운영 hardening을 별도로 구분합니다.
         </p>
-        <WorkerBootPathViz />
-        <ContentBoundary article="claw-worker-boot" />
         <ExplainedFormula
           question="작업 prompt를 보내도 되는 순간을 한 조건으로 어떻게 표현할까?"
           idea={<>Process 생존만 보지 않고 ready cue, trust gate, tool permission gate가 모두 통과했을 때만 1이 되는 곱으로 읽습니다. 하나라도 0이면 전송하지 않습니다.</>}
-          formula={String.raw`G_{send}=I_{alive},I_{ready},I_{trust},I_{tool}`}
-          annotatedFormula={String.raw`G_{send}=\underbrace{I_{alive},I_{ready},I_{trust},I_{tool}}_{\text{Process 생존 indicator 계산}}`}
+          formula={String.raw`G_{send}=I_{alive}\land I_{ready}\land I_{trust}\land I_{tool}`}
+          annotatedFormula={String.raw`G_{send}=\underbrace{I_{alive}\land I_{ready}\land I_{trust}\land I_{tool}}_{\text{네 gate가 모두 참일 때만 전송}}`}
           operations={[
-            { expression: String.raw`I_{alive},I_{ready},I_{trust},I_{tool}`, annotation: ["Process 생존 indicator이(가) 식의 결과에","기여하는 방식을 계산합니다.","Process 생존만 보지 않고 ready cue, trust","gate, tool permission gate가 모두"] },
+            { expression: String.raw`I_{alive}\land I_{ready}\land I_{trust}\land I_{tool}`, annotation: ["같은 w-17 관찰에서", "process·ready·trust·tool 조건의 논리곱을 계산"] },
           ]}
           terms={[
             { symbol: "I_{alive}", name: "Process 생존 indicator", description: "Worker process가 종료되지 않았으면 1, 아니면 0입니다." },

@@ -6,8 +6,8 @@
       "score": 138
     },
     "ai/claw-tool-system": {
-      "fingerprint": "a0070674c0055701",
-      "score": 80
+      "fingerprint": "7f9cc01e83b3ff93",
+      "score": 81
     },
     "ai/claw-session": {
       "fingerprint": "233e73cafa316b6b",
@@ -450,7 +450,7 @@
       "score": 18
     },
     "ai/claw-telemetry": {
-      "fingerprint": "4e17f7894e1043ad",
+      "fingerprint": "10933236665a6d14",
       "score": 18
     },
     "ai/feature-engineering": {
@@ -698,8 +698,8 @@
       "score": 14
     },
     "ai/claw-worker-boot": {
-      "fingerprint": "ae3966e383a721b8",
-      "score": 13
+      "fingerprint": "7f0fd01de2069ea4",
+      "score": 15
     },
     "ai/claw-policy-engine": {
       "fingerprint": "69dc2b9767d0d95d",
@@ -810,7 +810,7 @@
       "score": 10
     },
     "ai/claw-task-team": {
-      "fingerprint": "3e5d5354003a51f4",
+      "fingerprint": "83f898dd4246a4e6",
       "score": 10
     },
     "ai/knowledge-distillation": {

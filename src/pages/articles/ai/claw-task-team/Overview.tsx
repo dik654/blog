@@ -1,3 +1,7 @@
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+import TaskStatusViz from "./viz/TaskStatusViz";
+
 const packetParts = [
   ["Goal", "무엇이 달라져야 하는지 결과 중심으로 적습니다."],
   ["Scope", "읽고 바꿀 수 있는 저장소·경로·서비스 범위를 정합니다."],
@@ -15,7 +19,33 @@ export default function Overview() {
       <h2 className="text-2xl font-bold mb-6">
         TaskPacket은 작업 지시를 검증 가능한 계약으로 바꾼다
       </h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="text-lg leading-8">
+          작업 <code>auth-401-17</code>을 생각해 봅시다. 목표는 로그인 401을 최소
+          수정하는 것이고, 수정 범위는 <code>src/auth.ts</code>와 결정론적 인증
+          테스트뿐입니다. credential·network 접근은 금지하며, 완료 조건은 허용된
+          diff와 login fixture의 exit code 0입니다. worker <code>w-3</code>은
+          attempt 2, lease version 7을 받아 이 계약 안에서만 움직입니다.
+        </p>
+        <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+        <ol>
+          <li>유효한 TaskPacket의 scope에 파일을 적으면 worker의 파일 접근 권한도 자동으로 생길까요?</li>
+          <li>worker가 “완료”라고 보고하면 verifier receipt 없이도 Completed로 바꿔도 될까요?</li>
+          <li>이전 요청이 timeout된 동안 같은 idempotency key로 재시도하면 새 task를 하나 더 만들어야 할까요?</li>
+        </ol>
+        <p>
+          세 답은 모두 <strong>아니요</strong>입니다. Packet은 작업 계약이지 권한
+          부여가 아니며, 완료에는 acceptance evidence가 필요합니다. 같은 생성
+          요청은 기존 task와 조정해야 중복 실행을 막을 수 있습니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <TaskStatusViz />
+      </div>
+
       <ContentBoundary article="claw-task-team" />
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           “로그인 버그를 고쳐줘” 같은 요청만 worker에게 넘기면 어디까지 수정해도
@@ -96,5 +126,3 @@ export default function Overview() {
     </section>
   );
 }
-import ContentBoundary from "@/components/articles/content-boundary";
-import { CitationBlock } from "@/components/ui/citation";
