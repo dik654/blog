@@ -1,6 +1,5 @@
 import { CitationBlock } from "@/components/ui/citation";
 import DispatchViz from "./viz/DispatchViz";
-import Pipeline5StepViz from "./viz/Pipeline5StepViz";
 
 const CALL_ENVELOPE = [
   ["Identity", "turn ID · call ID · attempt · tool name · source version/instance"],
@@ -70,10 +69,6 @@ export default function Dispatch() {
           모델 편의를 이유로 unknown field를 버리거나 문자열을 숫자로 몰래 바꾸면 어떤 contract가 실행됐는지 모호해집니다. 오류에는 secret을 제외한 instance
           path와 실패한 keyword, 기대 type, schema digest를 넣습니다. 수정된 call은 새 attempt로 다시 검증합니다.
         </p>
-      </div>
-
-      <div className="not-prose my-8 min-w-0">
-        <Pipeline5StepViz />
       </div>
 
       <div

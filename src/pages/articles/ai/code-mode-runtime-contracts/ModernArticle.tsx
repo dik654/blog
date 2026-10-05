@@ -18,6 +18,28 @@ export default function CodeModeRuntimeContractsArticle() {
           Control flow의 반복 가능성과 tool response·network·time·external
           state의 비결정성을 먼저 분리합니다.
         </LessonHeader>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            Issue <code>#101</code>부터 <code>#105</code>까지 읽고 조건에 맞는 label을
+            붙이는 program을 생각해 봅시다. Runtime에는 <code>repo.read</code>와
+            <code>issue.write</code>만 연결하고 shell과 임의 network는 열지 않습니다.
+            #101·#102 쓰기는 성공했지만 #103은 timeout됐고, #104·#105는 시작하지
+            않았습니다.
+          </p>
+          <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+          <ol>
+            <li>Loop가 deterministic하면 외부 issue API의 응답과 결과도 매번 같을까요?</li>
+            <li>Program이 typecheck를 통과하면 shell이나 임의 network도 안전하게 호출할 수 있을까요?</li>
+            <li>#103이 timeout되면 다섯 issue를 처음부터 다시 처리해도 될까요?</li>
+          </ol>
+          <p>
+            세 답은 모두 <strong>아니요</strong>입니다. 외부 상태와 effect는 별도
+            증거가 필요하고, type은 권한을 만들지 않습니다. 재시도 전에는 #101부터
+            #103까지의 receipt를 조정해야 합니다.
+          </p>
+        </div>
+        <CodeModeRuntimeViz />
+        <ContentBoundary article="code-mode-runtime-contracts" />
         <TermLesson
           name="Deterministic runtime control flow"
           oneLine="Loop·branch·sort·aggregation·bounded concurrency 같은 명시적 semantics를 매 단계 model 추론 대신 일반 runtime이 수행하는 특성입니다."
@@ -25,7 +47,6 @@ export default function CodeModeRuntimeContractsArticle() {
           example="같은 array의 filter·sort·reduce는 같은 runtime rule로 반복하지만 API 응답은 달라질 수 있습니다."
           boundary="Control flow가 deterministic해도 tool response·clock·network·concurrent effect까지 동일해지는 것은 아닙니다."
         />
-        <CodeModeRuntimeViz />
       </section>
 
       <section id="capability" className="space-y-6">
@@ -284,7 +305,6 @@ export default function CodeModeRuntimeContractsArticle() {
             },
           ]}
         />
-        <ContentBoundary article="code-mode-runtime-contracts" />
       </section>
     </article>
   );

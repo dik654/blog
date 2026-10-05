@@ -1,4 +1,3 @@
-import TaskStatusViz from "./viz/TaskStatusViz";
 import { CitationBlock } from "@/components/ui/citation";
 
 const registryRecords = [
@@ -29,10 +28,6 @@ export default function Registry() {
           result도 한곳에서 함께 추적합니다. 작업을 담는 HashMap으로만 쓰기에는 몫이 큽니다. 상태 값만 저장하면 재시작이나 늦은 event가 들어왔을 때 왜 그 상태가 됐는지
           복구하기 어렵습니다.
         </p>
-
-        <div className="not-prose my-8">
-          <TaskStatusViz />
-        </div>
 
         <div id="paper-claw-task-registry-source" className="scroll-mt-24">
           <CitationBlock

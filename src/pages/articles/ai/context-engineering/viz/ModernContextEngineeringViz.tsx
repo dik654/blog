@@ -78,23 +78,23 @@ function Arrow({ x1, y1, x2, y2, id }: { x1: number; y1: number; x2: number; y2:
 
 export function ContextStateViz() {
   const mobile = useMobileDiagram();
-  const labels = ["후보 저장소", "현재 작업 선택", "Token 직렬화", "Model이 읽는 상태"];
+  const labels = ["정책 후보", "권한·freshness 선택", "Message 직렬화", "이번 답의 context"];
   const notes = [
-    "문서·기억·tool 결과가 저장돼 있어도 아직 model context는 아닙니다.",
-    "현재 질문과 권한에 필요한 fragment만 source identity와 함께 고릅니다.",
-    "선택한 instruction·data·history를 provider message 순서와 token으로 직렬화합니다.",
-    "이번 generation이 직접 읽는 것은 직렬화된 token state뿐입니다.",
+    "policy-v6·v7과 복지 자료가 저장돼 있어도 아직 model context는 아닙니다.",
+    "직원 A의 질문·HR 읽기 권한·현재 version을 통과한 policy-v7 §4만 고릅니다.",
+    "System 규칙·사용자 질문·policy-v7 §4·tool receipt를 역할과 순서에 맞춰 직렬화합니다.",
+    "이번 답이 직접 읽는 정책 근거는 직렬화된 policy://leave/section-4@v7입니다.",
   ];
   return (
-    <SceneFrame id="context-state-viz" eyebrow="Context state" title="저장된 정보가 이번 inference의 context가 되는 경로" description="Store→select→serialize→read를 한 단계씩 봅니다." labels={labels} notes={notes}>
+    <SceneFrame id="context-state-viz" eyebrow="LEAVE POLICY · EMPLOYEE A" title="policy-v7 §4가 이번 답의 context가 되는 경로" description="저장된 정책 후보가 권한·freshness 선택과 직렬화를 거쳐 model 입력이 됩니다." labels={labels} notes={notes}>
       {(active) => (
-        <svg viewBox={mobile ? ["0 32 190 210", "175 40 190 190", "360 40 220 200", "560 45 150 185"][active] : "0 0 720 260"} role="img" aria-label={labels[active]} className="block h-auto w-full">
+        <svg viewBox={mobile ? ["0 32 190 210", "175 40 190 190", "360 40 220 200", "560 45 150 185"][active] : "0 0 720 260"} role="img" aria-label={labels[active]} className={mobile ? "block aspect-[190/210] h-auto w-full" : "block h-auto w-full"}>
           <g opacity={active === 0 ? 1 : 0.52}>
             <ellipse cx="82" cy="73" rx="55" ry="22" fill="var(--background)" stroke={active === 0 ? accent : border} strokeWidth="1.25" />
             <path d="M27 73v87c0 12 25 22 55 22s55-10 55-22V73" fill="var(--background)" stroke={active === 0 ? accent : border} strokeWidth="1.25" />
             {[100,128,156].map((y) => <path key={y} d={`M27 ${y}c0 12 25 22 55 22s55-10 55-22`} fill="none" stroke={border} />)}
-            <text x="82" y="66" textAnchor="middle" className="fill-foreground text-[13px] font-bold">외부 저장소</text>
-            <text x="82" y="207" textAnchor="middle" className="fill-muted-foreground text-[11px]">docs · memory · logs</text>
+            <text x="82" y="66" textAnchor="middle" className="fill-foreground text-[13px] font-bold">정책 저장소</text>
+            <text x="82" y="207" textAnchor="middle" className="fill-muted-foreground text-[11px]">policy v6 · v7 · HR docs</text>
           </g>
           {!mobile && <Arrow x1={144} y1={126} x2={207} y2={126} id="context-state-a" />}
           <motion.g animate={{ opacity: active === 1 ? 1 : 0.52, scale: active === 1 ? 1.03 : 1 }} style={{ transformOrigin: "270px 126px" }}>
@@ -106,7 +106,7 @@ export function ContextStateViz() {
           <g opacity={active === 2 ? 1 : 0.52}>
             <rect x="394" y="62" width="146" height="128" rx="8" fill="var(--background)" stroke={active === 2 ? accent : border} strokeWidth="1.25" />
             {[82,108,134,160].map((y, i) => <g key={y}><rect x="409" y={y} width={i === 2 ? 105 : 116} height="16" rx="3" fill={i === active - 1 ? accent : "var(--muted-foreground)"} fillOpacity={i === active - 1 ? 0.16 : 0.07} stroke={border} /><text x="417" y={y + 12} className="fill-muted-foreground text-[9px]">{["instruction", "user task", "retrieved data", "tool result"][i]}</text></g>)}
-            <text x="467" y="214" textAnchor="middle" className="fill-muted-foreground text-[11px]">ordered token message</text>
+            <text x="467" y="214" textAnchor="middle" className="fill-muted-foreground text-[11px]">policy-v7 §4 in messages</text>
           </g>
           {!mobile && <Arrow x1={547} y1={126} x2={598} y2={126} id="context-state-c" />}
           <motion.g animate={{ opacity: active === 3 ? 1 : 0.52, y: active === 3 ? -2 : 0 }}>

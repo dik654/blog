@@ -1,23 +1,23 @@
 const stateGroups = [
   {
     label: "시작",
-    states: "Spawning",
-    detail: "프로세스를 띄우고 화면 신호를 관찰",
+    states: "w-17 · Spawning",
+    detail: "PID가 생겼지만 auth-401-17은 아직 보내지 않음",
   },
   {
     label: "게이트",
-    states: "Trust / tool approval",
-    detail: "승인 prompt를 task input과 분리",
+    states: "Trust / tool gate",
+    detail: "cwd·화면 cue를 검사하고 승인 prompt를 task와 분리",
   },
   {
     label: "전달",
-    states: "ReadyForPrompt → Running",
-    detail: "Ready일 때만 prompt를 보내고 수락을 관찰",
+    states: "Ready → Running",
+    detail: "Ready에서 auth-401-17을 보내고 task receipt를 관찰",
   },
   {
     label: "종료",
     states: "Finished · Failed",
-    detail: "결과 또는 실패 evidence를 남김",
+    detail: "attempt 결과·timeout·effect evidence를 남김",
   },
 ] as const;
 
@@ -28,10 +28,10 @@ export function WorkerBootPathViz() {
       className="not-prose my-9 overflow-hidden rounded-xl border border-border bg-card"
     >
       <figcaption className="border-b border-border px-5 py-4 sm:px-6">
-        <p className="text-xs font-semibold text-primary">실제 pinned state machine</p>
-        <p className="mt-1 text-base font-bold">프로세스 생성과 작업 전달 사이의 네 경계</p>
+        <p className="text-xs font-semibold text-primary">W-17 · AUTH-401-17</p>
+        <p className="mt-1 text-base font-bold">PID가 생긴 뒤 로그인 작업을 안전하게 전달하는 네 경계</p>
       </figcaption>
-      <div data-viz-canvas className="grid gap-4 p-5 sm:p-6 lg:grid-cols-4">
+      <div data-viz-canvas className="grid grid-cols-2 gap-3 p-5 sm:gap-4 sm:p-6 lg:grid-cols-4">
         {stateGroups.map((group, index) => (
           <section key={group.label} className="relative min-w-0 rounded-lg border border-border bg-background p-4">
             <p className="text-[11px] font-bold tracking-wide text-primary">0{index + 1} · {group.label}</p>
@@ -44,7 +44,7 @@ export function WorkerBootPathViz() {
         ))}
       </div>
       <p className="border-t border-border bg-muted/25 px-5 py-3 text-xs leading-5 text-muted-foreground sm:px-6">
-        ReadyForPrompt는 화면에 문자가 보였다는 뜻이 아니라, 구현이 정한 ready cue를 관찰했다는 상태입니다.
+        PID 생존이나 path allowlist 하나로는 부족합니다. ReadyForPrompt와 trust·tool gate, task receipt를 같은 worker generation에서 확인합니다.
       </p>
     </figure>
   );

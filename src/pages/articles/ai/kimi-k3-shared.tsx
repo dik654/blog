@@ -149,7 +149,7 @@ export function StoryShell({
             {playing ? "일시정지" : "자동 재생"}
           </button>
         </div>
-        <div className="mt-5 grid gap-2 sm:grid-cols-4">
+        <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {labels.map((label, index) => (
             <button
               key={label}

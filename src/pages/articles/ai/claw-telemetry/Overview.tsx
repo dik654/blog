@@ -15,7 +15,34 @@ export default function Overview() {
       <h2 className="text-2xl font-bold mb-6">
         Telemetry는 에이전트의 설명이 아니라 실행 증거다
       </h2>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="text-lg leading-8">
+          세션 <code>session-7</code>의 <code>turn-12</code>에서 모델 요청
+          <code>model-1</code>이 로그인 401 수정안을 만들고,
+          <code>tool-edit-1</code>이 <code>src/auth.ts</code>를 바꾼 뒤
+          <code>test-1</code>이 timeout됐다고 가정하겠습니다. 최종 답변만으로는
+          수정이 실제 적용됐는지, 테스트가 시작됐는지, 어느 이벤트가 export되지
+          못했는지 구분할 수 없습니다.
+        </p>
+        <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+        <ol>
+          <li>오류 span이나 log가 검색되지 않으면 실행 중 오류도 없었다고 결론 내릴 수 있을까요?</li>
+          <li>전체 p95 latency 하나만으로 어느 tool·attempt가 느렸는지 찾을 수 있을까요?</li>
+          <li>관측 backend를 신뢰하면 prompt와 tool arguments를 기본으로 전부 저장해도 될까요?</li>
+        </ol>
+        <p>
+          세 답은 모두 <strong>아니요</strong>입니다. Export drop은 관측 공백을
+          만들고, 집계값은 개별 인과관계를 보존하지 않으며, 원문에는 credential과
+          개인정보가 섞일 수 있습니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <TelemetryArchViz />
+      </div>
+
       <ContentBoundary article="claw-telemetry" />
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           에이전트가 잘못된 결과를 냈을 때 최종 답변만 보면 모델이 잘못
@@ -30,8 +57,6 @@ export default function Overview() {
           위해 추가로 갖춰야 할 계약이며 pinned source가 모두 구현했다는 뜻은
           아닙니다.
         </p>
-
-        <TelemetryArchViz />
 
         <div id="paper-claw-telemetry-source" className="scroll-mt-24">
           <CitationBlock
