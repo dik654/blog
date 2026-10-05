@@ -539,16 +539,98 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "inference-optimization-layers",
-    title: "추론 최적화의 층: model·kernel·runtime·system 과 ROI",
+    title: "추론 최적화: 같은 요청의 시간과 비용을 구별하기",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "problem", title: "네 층과 자기 구간만 줄이는 구조" },
-      { id: "layers", title: "층은 건드리는 병목으로 구분" },
-      { id: "amdahl", title: "Amdahl 로 계산하는 end-to-end 상한" },
-      { id: "interactions", title: "층 사이 상호작용과 hardware-aware 설계" },
-      { id: "roi", title: "ROI 와 최적화 선택 loop" },
-      { id: "regression-gate", title: "Regression 과 benchmark gate" },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 무엇을 줄였는지부터 확인합니다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 요청에서 결과와 청구까지 이어 봅니다"
+  },
+  {
+    "id": "case",
+    "title": "3. 100 ms에서 40 ms만 바꿔 봅니다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 줄어든 칸과 남은 칸을 같은 축에 놓습니다"
+  },
+  {
+    "id": "why",
+    "title": "5. 분류표와 시간표는 서로 다른 일을 합니다"
+  },
+  {
+    "id": "names",
+    "title": "6. 바꾸는 위치와 측정값에 이름을 붙입니다"
+  },
+  {
+    "id": "layers",
+    "title": "7. 네 층은 변경 위치를 찾는 지도입니다"
+  },
+  {
+    "id": "amdahl",
+    "title": "8. 남겨 둔 60 ms가 전체 개선을 제한합니다"
+  },
+  {
+    "id": "interactions",
+    "title": "9. 두 개선을 더하려면 서로 바꾸는 조건을 봅니다"
+  },
+  {
+    "id": "overlap",
+    "title": "10. 동시에 한 일의 시간을 그대로 더하면 안 됩니다"
+  },
+  {
+    "id": "work-and-cost",
+    "title": "11. 요청 20개의 기다림과 한 번의 계산을 구별합니다"
+  },
+  {
+    "id": "capacity",
+    "title": "12. 복사본 수는 정수로 줄어듭니다"
+  },
+  {
+    "id": "roi",
+    "title": "13. 비용 회수는 실제로 줄어든 청구에서 계산합니다"
+  },
+  {
+    "id": "source-amdahl",
+    "title": "14. 원 논문은 남는 일의 한계를 지적합니다"
+  },
+  {
+    "id": "source-profile",
+    "title": "15. 측정 도구의 백분율도 분모부터 읽습니다"
+  },
+  {
+    "id": "source-config",
+    "title": "16. 설정 하나가 실제로 두 경로를 바꿉니다"
+  },
+  {
+    "id": "source-metrics",
+    "title": "17. 측정 함수는 요청을 세며 GPU 청구를 세지 않습니다"
+  },
+  {
+    "id": "source-cost",
+    "title": "18. 편익과 비용의 식에 같은 숫자를 넣습니다"
+  },
+  {
+    "id": "regression-gate",
+    "title": "19. 허용한 악화와 측정 불확실성을 따로 봅니다"
+  },
+  {
+    "id": "limits",
+    "title": "20. 한 조건의 성공을 모든 요청으로 넓히지 않습니다"
+  },
+  {
+    "id": "decision",
+    "title": "21. 다음 변경은 새 시간표에서 시작합니다"
+  },
+  {
+    "id": "review",
+    "title": "22. 같은 사례를 바꾸어 예측해 봅니다"
+  }
+],
     component: () => import("@/pages/articles/ai/inference-optimization-layers"),
   },
   {

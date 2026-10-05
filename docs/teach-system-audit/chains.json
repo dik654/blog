@@ -7501,12 +7501,14 @@
     },
     {
       "route": "crypto/groth16",
-      "title": "Groth16 증명 시스템",
-      "status": "reviewed-needs-rewrite",
+      "title": "Groth16: 두 번의 곱셈을 증명 세 점으로 확인하기",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/blockchain/groth16.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/groth16.tsx",
-        "src/pages/articles/blockchain/groth16/ModernArticle.tsx"
+        "src/pages/articles/blockchain/groth16/ModernArticle.tsx",
+        "src/pages/articles/blockchain/groth16/modernCodeRefs.ts",
+        "src/pages/articles/blockchain/groth16/viz/Groth16JourneyViz.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -7526,19 +7528,50 @@
         "단일 행의 h=0 사례를 보존하고 3×4=12, 12²=144의 두 행으로 확장해 비영 몫을 보여줄 계획입니다. 공개값 자체가 숨긴 값의 후보를 줄이는 점과 정수/유한체 차이를 명시합니다.",
         "최신 v0.6.0 태그의 원문을 실제 조회했습니다. prepare_inputs의 zip에는 길이 검사가 없고 prover의 만족 검사는 debug_assert입니다. 고정 원문 실제 실행으로 API 동작과 호출자 검사를 구별할 예정입니다."
       ],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "기존 공개 전문·baseline·5정의·6+4·ownership 검토 완료; 재작성 계획과 원문 검증 중",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "plan": "/tmp/teach-all/groth16-rewrite-plan.json: 본문 작성 전 사례와 6+4 고정",
+        "case": "3×4=12와12²=144의 두 행; F101에서는y43, UV−W=72T; 노출τ5/α2/β3/γ7/δ11,r13/s17→83/24/48, 양변73. 실제BN254는y144·8점QAP."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: 같은 두 곱셈과 공개/비공개 값",
+        "B": "black-box: 준비·생성·확인의 입력과 결과",
+        "0": "case: F101/실제Fr 및변수순서",
+        "1": "picture: 같은 두줄→다항식→증명→확인4장면",
+        "2": "why: 모든줄의오차와정확한나눗셈 필요",
+        "3": "names: R1CS/QAP/CRS·witness/statement/relation·세군점",
+        "4": "rows/qap/setup/proof/verify: 같은변수·몫72·공개64·비공개79·난수·양변73",
+        "5": "source-circuit/qap/key/proof/verify/bytes: 실제원문10패널과같은값의실행/API한계",
+        "6": "qap-proof/derive/zk/trapdoor/binding/cost:근·차수·완전성유도,추론/노출설정/제약누락/비용",
+        "7": "research/verification/limits:원문범위와실제실행·미검증,예측답12/20/14절"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Groth2016 공식IACR PDF2.2/2.3/3.2,정리2",
+          "mapping": "실제전문중선택절읽음및15/16페이지화면확인.완전성·모의증명식과제한된군모델을구분."
+        },
+        {
+          "source": "ark-groth16 v0.6.0 0bb3e604c534bd118ed477eaf1231f591d6fc40f",
+          "mapping": "원본13wholefiles Gitblob/SHA256,LICENSE보존. Rust1.93 CPUsetup/prove/verify/8pointQAP 실제실행. sourcepathdependency와Cargo.lock."
+        },
+        {
+          "source": "ark-ec/bn254/serialize0.6.0 .cargo_vcs_info and lock",
+          "mapping": "선택원문whole13files/licence/VCS/SHA256보존,점검사·인코딩호출의범위확인."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "기존4절전문·baseline·5정의·6+4·ownership 및새26절전체읽음.다항식나눗셈자동오류주석과용어먼저나열을교정.",
+        "arithmetic": "별도F101 10201r/s전수·QAP/위조/근검산, 실제Rust BN2548점/typedAPI/입력·난수·바이트·제약누락·release/debug 실행. verification의재현소스/lock/관측JSON보존.",
+        "independentBody": "theory작은산술·6+4와실제8–15/17절 PASS, groth16-independent-theory.json.",
+        "humanize": "최초연결쉼표15개정리;최신pass3 65문단12176자·4묶음동일roundtrip.수식괄호P3오탐은systems다섯경로independent-finalize승인.표시134문자열/2묶음gate0.",
+        "typescript": "실제 tsc -p tsconfig.app.json --noEmit: 최초 96428과 최종 30842 모두 exit 0.",
+        "sourceBytes": "고정main13파일Gitblob/SHA256최종일치. dependencies13wholefiles/crateVCS·lock 보존.",
+        "prose": "최종공개799prose strict재검토0, targetviz2filesPASS.",
+        "browser390": "수식2곳줄바꿈후bounds0,10원문패널열림,고정4장면/키보드/Space실제재생/reduced PASS. 실제수식·도식이미지읽음.공유등록대기. 통합 제목·26절·6+4 전체 답안 확인, broken/math/overflow/pageerror 모두 0.",
+        "browser1440": "수식bounds0,10원문패널열림,고정4장면/키보드/Space실제재생/reduced PASS.공유등록대기. 통합 제목·26절·6+4 전체 답안 확인, broken/math/overflow/pageerror 모두 0.",
+        "registration": "batch28 shared 통합 뒤 learning·정의5·ownership을 AST readback으로 원안과 일치 확인. 26절 목차 앵커와 6+4 정답 10개를 390/1440에서 모두 열어 확인. strict --require-registration 최종 26579 exit 0.",
+        "retainedRun": "최종 세션 46897 exit 0. 보존한 Cargo.toml/Cargo.lock으로 release와 debug를 다시 실행했고 관측 JSON이 보존본과 일치함."
+      },
+      "remaining": []
     },
     {
       "route": "crypto/halo2",
@@ -8292,39 +8325,88 @@
     },
     {
       "route": "crypto/plonk",
-      "title": "PLONK 증명 시스템",
-      "status": "unreviewed",
+      "title": "PLONK: 3×4 뒤에 3을 더한 표를 짧게 증명하기",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/plonk.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/plonk.tsx",
-        "src/pages/articles/blockchain/plonk/ModernArticle.tsx"
+        "src/pages/articles/blockchain/plonk/ModernArticle.tsx",
+        "src/pages/articles/blockchain/plonk/modernCodeRefs.ts",
+        "src/pages/articles/blockchain/plonk/viz/PLONKJourneyViz.tsx",
+        "src/pages/articles/blockchain/plonk/verification/main.go"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 26,
+        "predictionPointers": 3,
+        "assumptionMarkers": 5,
+        "sourceButtons": 12,
         "headings": [
-          "Gate·copy constraint·polynomial opening을 서로 다른 책임으로 나눈다",
-          "Selector를 바꾸면 같은 세 column에서 여러 gate를 표현할 수 있다",
-          "Copy constraint를 값의 permutation equality로 바꾼다",
-          "모든 항을 commit한 뒤 무작위 점에서 한 identity로 모은다"
+          "3에 비밀인 4를 곱한 뒤 3을 한 번 더 더합니다",
+          "같은 표에서 산술과 복사, 나눗셈과 원문을 따라갑니다",
+          "위치를 섞은 두 곱의 비율을 누적합니다",
+          "네 줄에서 0인 오차를 X⁴−1로 나눕니다",
+          "실제 Go 컴파일러는 같은 계산을 여덟 줄에 배치합니다",
+          "검증은 배열 길이부터 열기까지 차례로 확인합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 실제 4절 전체와 baseline, 6개 정본 정의 및 6+4 학습을 읽었습니다. 첫 한 줄 곱셈 뒤 전문 용어와 수식이 먼저 나오며 값·위치·복사 연결을 같은 표로 추적하지 않습니다.",
+        "누적 곱을 기준량 정규화로 설명하는 자동 수식 주석과 selector 결과 0을 연산처럼 읽는 주석을 교정해야 합니다. 원래 조건·일반식·PCS/구현 차이는 보존합니다.",
+        "공개 입력 누락이 언제나 재사용으로 이어진다는 단정은 별도 제약 결속과 구분해야 합니다. 실제 고정 구현에서 회로·입력 길이·transcript 순서와 비밀성 무작위화를 확인할 예정입니다."
+      ],
+      "fixture": {
+        "case": "공개 x=3,y=15와 비공개 w=4; v=xw=12,y=v+x. 손계산은 F97 네 줄, 실제 gnark compiler는 BN254 여덟 줄.",
+        "domain": "H=(1,22,96,75), 열 위치 H·2H·3H, β=2,γ=7",
+        "permutation": "올바른 Z=1→50→67→76→1; 마지막 12를11로 바꾸면45",
+        "quotient": "α=3,ζ=5에서 N=78,T=85,Z_H=42, 85×42 mod97=78",
+        "enumeration": "β·γ 9409쌍 중 유효 분모8306, 잘못된 표 우연 통과170; β=0 유효91개 모두 통과",
+        "runtime": "gnark v0.16.3, gnark-crypto v0.21.0, Go1.26.2, domain8, constraints3, proof520bytes"
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "stageEvidence": {
+        "S": "overview: 공개3·15와 비공개4의 두 계산 및 공개 결과가 숨긴 값을 이미 드러내는 한계",
+        "B": "black-box: 준비·증명·검증의 입력과 출구",
+        "0": "case: F97 네 줄과 잘못된 11+4=15",
+        "1": "picture: 같은 표의 산술·복사·누적·원문 네 장면",
+        "2": "why: 줄별 산술만 맞아도 전체 데이터 흐름은 틀릴 수 있음",
+        "3": "names: wire·selector·gate·copy·σ·H·Z_H·PCS를 뒤에서 명명",
+        "4": "arithmetization부터 split: 같은 네 줄의 위치·누적곱·경계·몫·KZG·다점 숨김·몫 조각",
+        "5": "source-circuit부터 source-proof: 고정 gnark/gnark-crypto 원문12패널과 실제 실행",
+        "6": "binding/setup-cost: 빠뜨린 복사 relation과 범용 SRS·회로별 키의 경계",
+        "7": "research/verification/limits: 읽은 원문의 범위·실행 범위·세 예측 질문"
+      },
+      "sourceEvidence": [
+        {
+          "source": "PLONK 2019/953과 KZG ASIACRYPT 2010",
+          "mapping": "PLONK는 이번 검토에서 서지·초록만 확인하고 PDF 접근 오류를 명시했습니다. KZG 원문은 PCS 열기 범위로만 사용하며 산술화 보장과 분리했습니다."
+        },
+        {
+          "source": "Sefranek 2023 학위논문과 2024/848",
+          "mapping": "학위논문3·6·7장과 PDF44·54·57쪽을 읽었습니다. 2024 논문은 초록과 저자 발표를 확인해 몫 조각 무작위화와 전체 영지식 정리의 범위를 구분했습니다."
+        },
+        {
+          "source": "Lipmaa·Parisella·Siim 2024/994 및 Lipmaa 2025/1759",
+          "mapping": "공식 초록과 출판 서지만 확인했습니다. 전문 증명이나 현재 구현과의 일치를 주장하지 않습니다."
+        },
+        {
+          "source": "gnark v0.16.3 cfc7b2f9, gnark-crypto v0.21.0 0a975d74",
+          "mapping": "선택 원문21파일·라이선스·Git blob·SHA256을 보존했습니다. Go CPU에서 성공·wrong witness/public/order/length/evaluation/point/key/missing-copy fixture를 다시 실행했습니다."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "기존4절·baseline·정본6·6+4를 읽은 뒤26절을 S/B/0/1/2/3/4×9/5×6/6×2/7×3으로 재작성했습니다. 옛 단일 곱셈 학습 예를 같은3·4·12·15 추적으로 교체했습니다.",
+        "arithmetic": "독립 F97 보간·몫·9409 βγ 전수·9409 두 점 mask PASS. 실제 Go 실행을 다시 수행해 고정 observed JSON과 domain8·constraints3·proof520bytes·실패 결과를 재현했습니다.",
+        "sourceBytes": "보존한 gnark/gnark-crypto 원문21파일이 PROVENANCE의 SHA256과 모두 일치합니다.",
+        "humanize": "본문·도식 표시71문단을 전문 검토하고 C-11 연결 쉼표18개를 제거했습니다. 재추출 exact roundtrip, 숫자·마커 보존, 네 chunk 모두 gate0. 전체 gate의 수식 Z(1)을 각주1)로 오인한 경고는 원문·chunk 대조로 false positive 확정.",
+        "browser390": "26sections,names10.88%,3predictions,10answers,12sourcepanels,6citations,5ExplainedFormula,4scenes;단계비감소,0overflow,0narrow,0broken,0KaTeX errors,all base bounds,keyboard/play/reduced,console0 PASS.",
+        "browser1440": "26sections,names10.90%,3predictions,10answers,12sourcepanels,6citations,5ExplainedFormula,4scenes;단계비감소,0overflow,0narrow,0broken,0KaTeX errors,all base bounds,keyboard/play/reduced,console0 PASS.",
+        "typescript": "actual tsconfig.app noEmit exit0",
+        "learning": "strict require-registration route check exit0 with exact6+4",
+        "prose": "strict route check exit0 with0 review findings",
+        "formula": "global1471 explicit formula checks PASS; actual rendered displays checked separately",
+        "topology": "keep/implemented decision added; fingerprint is recorded at the checkpoint gate",
+        "bodySha256": "bd84605e7a016cbe0c40b1aa8290a4bc294d9d3031db197866714a712c33bc0e"
+      },
+      "remaining": []
     },
     {
       "route": "crypto/plonky3",

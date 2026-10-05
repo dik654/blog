@@ -7840,17 +7840,15 @@
       "subcategory": "ai-foundations",
       "publicFiles": [
         "src/pages/articles/ai/text-unicode-encoding.tsx",
-        "src/pages/articles/ai/text-unicode-encoding/Applications.tsx",
-        "src/pages/articles/ai/text-unicode-encoding/BitsBytes.tsx",
-        "src/pages/articles/ai/text-unicode-encoding/CodePoints.tsx",
-        "src/pages/articles/ai/text-unicode-encoding/Normalization.tsx",
-        "src/pages/articles/ai/text-unicode-encoding/Offsets.tsx",
-        "src/pages/articles/ai/text-unicode-encoding/Overview.tsx",
-        "src/pages/articles/ai/text-unicode-encoding/Utf8.tsx",
-        "src/pages/articles/ai/text-unicode-encoding/viz/NormalizationChoiceViz.tsx",
-        "src/pages/articles/ai/text-unicode-encoding/viz/TextUnitStackViz.tsx"
+        "src/pages/articles/ai/text-unicode-encoding/ModernArticle.tsx",
+        "src/pages/articles/ai/text-unicode-encoding/codeRefs.ts",
+        "src/pages/articles/ai/text-unicode-encoding/codebase/utf8proc.c",
+        "src/pages/articles/ai/text-unicode-encoding/verification/observe.c",
+        "src/pages/articles/ai/text-unicode-encoding/verification/observe.mjs",
+        "src/pages/articles/ai/text-unicode-encoding/viz/TextCaseViz.tsx",
+        "src/pages/articles/ai/text-unicode-encoding/viz/SpanCaseViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -7858,20 +7856,94 @@
         "hasSourceSurface": false,
         "characters": 15441
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
-      "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+      "originalProblems": [
+        "Terminology starts before concrete trace",
+        "Formula operations contain generic generated placeholders rather than mathematical meaning",
+        "No UTF-16 coordinate or real source execution",
+        "Valid scalar is not identical to assigned character; all code points are not valid UTF-8 scalar input",
+        "General different-length claim needs cases where counts equal",
+        "No end prediction or concrete API failure boundaries"
+      ],
+      "fixture": {
+        "raw": "Aé가😀",
+        "NFC": "Aé가😀",
+        "NFD": "Aé가😀",
+        "rawCounts": [
+          5,
+          6,
+          11,
+          4
+        ],
+        "nfcCounts": [
+          4,
+          5,
+          10,
+          4
+        ],
+        "nfdCounts": [
+          6,
+          7,
+          14,
+          4
+        ],
+        "countOrder": [
+          "codePoint",
+          "UTF16unit",
+          "UTF8byte",
+          "extendedGrapheme"
+        ],
+        "rawHex": "41 65 CC 81 EA B0 80 F0 9F 98 80",
+        "nfcHex": "41 C3 A9 EA B0 80 F0 9F 98 80",
+        "familyCounts": [
+          7,
+          11,
+          25,
+          1
+        ]
       },
-      "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+      "stageAnchors": {
+        "overview": "1. 같은 가를 선택했는데 옆 글자가 잘립니다 / S",
+        "black-box": "2. 원문과 비교용 글, 선택 범위를 함께 돌려줍니다 / B",
+        "case": "3. A 다음에 e와 악센트를 따로 넣습니다 / 0",
+        "picture": "4. 같은 글을 세는 네 줄을 겹쳐 봅니다 / 1",
+        "why": "5. 저장할 때의 칸과 화면에서 묶는 칸은 다릅니다 / 2",
+        "case-move": "6. 앞의 두 항목을 합치면 뒤의 가도 이동합니다 / 2",
+        "names": "7. 저장 칸과 번호에 이름을 붙입니다 / 3",
+        "bits-bytes": "8. 여덟 자리의 0과 1은 256가지입니다 / 4",
+        "code-points": "9. 번호 다섯 개가 화면의 네 묶음이 됩니다 / 4",
+        "utf-8": "10. 가의 번호 44032를 EA B0 80으로 나눕니다 / 4",
+        "normalization": "11. 합치기와 분해하기가 바꾸는 것을 셉니다 / 4",
+        "offsets": "12. 같은 가의 원문과 변환 후 위치를 연결합니다 / 4",
+        "source-decode": "13. 실제 해독 원문에 같은 열한 바이트를 넣습니다 / 5",
+        "source-normalize": "14. 같은 입력이 분해·정렬·합성 경로를 통과합니다 / 5",
+        "source-boundaries": "15. 원문의 경계 함수가 악센트 앞을 붙입니다 / 5",
+        "source-units": "16. JavaScript가 여섯 칸을 세는 이유를 확인합니다 / 5",
+        "validation": "17. 변환 성공과 유효한 문자열은 따로 확인합니다 / 6",
+        "roundtrip": "18. 원문 복원과 대표형 비교, 화면 경계의 기준을 나눕니다 / 6",
+        "applications": "19. 비교용 글에서 모델 번호까지 이어집니다 / 6",
+        "limits": "20. 버전과 입력 정책을 바꾸면 다시 확인합니다 / 7",
+        "review": "21. 같은 문자열의 다음 결과를 예측합니다 / 8"
+      },
+      "primarySourceApplication": [
+        "RFC 3629의1–4octet 유효 범위와 Unicode UAX #15·#29의 정규화·경계 규칙을 같은 입력의 byte와 grapheme에 적용했습니다.",
+        "JuliaStrings/utf8proc v2.11.3 commit e5e79922의 수정하지 않은 utf8proc.c·h·data·README·LICENSE를 SHA256으로 고정했습니다.",
+        "decode, map, combining order, Hangul/general composition, grapheme boundary, scalar validation, NUL length paths를 실제 원문9개 패널에 연결했습니다.",
+        "고정 C 원문을 컴파일해 Unicode17.0.0 결과를 관찰했고 Node24.13/V8 13.6/ICU77.1/Unicode16.0의 UTF-16·Buffer·Intl.Segmenter 결과를 별도로 기록했습니다."
+      ],
+      "verification": {
+        "contentReview": "기존7개 본문·2개 Viz·고정 렌더·6+4·원문3·정의6을 읽은 뒤21절 S/B/0/1/2/2/3/4/4/4/4/4/5/5/5/5/6/6/6/7/8로 재작성했습니다. 실제 원문9개 패널, 두 Viz, 정본6개와 정확히6+4를 통합했습니다.",
+        "humanize": "본문11779자와 코드·표시·등록 문자열을 전체 및 chunk로 exact roundtrip 검증했습니다. 숫자505개와 마커132개를 보존했습니다. 전체 gate의 각주4) 인접 숫자 오탐은 section reference 문맥을 독립 확인한 finalize 기록으로 닫았고 세 본문 chunk는 모두 gate0입니다.",
+        "numericTrace": "고정 C 실행 PASS: raw5/6/11/4,NFC4/5/10/4,NFD6/7/14/4,family7/11/25/1; malformed3종 거부, surrogate valid0이나 compatibility encoder3bytes와 decoder거부, explicit-NUL3 vs NULLTERM1. 별도 Node와 독립 Python 검산 PASS.",
+        "sourceBytes": "utf8proc.c/h/data.c,README,LICENSE five files remain byte and SHA256 equal to pinned sources.",
+        "mobile390": "21sections,names23.97%,3predictions,9sourcepanels,4citations,2Viz×3scenes;0overflow,0narrow text,0page/console errors,0KaTeX errors,0broken anchors,keyboard/play/reduced PASS.",
+        "desktop1440": "21sections,names23.97%,3predictions,9sourcepanels,4citations,2Viz×3scenes;0overflow,0narrow text,0page/console errors,0KaTeX errors,0broken anchors,keyboard/play/reduced PASS.",
+        "typescript": "actual tsconfig.app noEmit exit0 on final working tree",
+        "learning": "strict require-registration route check exit0",
+        "prose": "strict route check exit0 with0 review findings",
+        "formula": "global1471 explicit formula checks PASS; this route renders no broken math",
+        "bodySha256": "9e138084ec5556e105c2034f27210224e5a193c36c1941b822c490db4c221538"
+      },
+      "remaining": []
     },
     {
       "route": "ai/tokenizer",
@@ -9448,9 +9520,9 @@
     "reviewedAndImproved": 37,
     "localVerified": 37,
     "awaitingIntegration": 0,
-    "pending": 152,
+    "pending": 151,
     "complete": 0,
-    "bodyReviewedNeedsRewrite": 0,
-    "bodyReviewedTotal": 37
+    "bodyReviewedNeedsRewrite": 1,
+    "bodyReviewedTotal": 38
   }
 }

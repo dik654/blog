@@ -1,0 +1,98 @@
+{
+  "repository": "https://github.com/arkworks-rs/groth16",
+  "commit": "0bb3e604c534bd118ed477eaf1231f591d6fc40f",
+  "release": "v0.6.0",
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 2041,
+      "gitBlob": "374ac7d7cddd4c689f62f3426908028e24d721a1",
+      "sha256": "efe7a66fd389c384b3c7f07fecb598defd3b0dcef9cbf1b3cd6b652576c3d83a",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/groth16/0bb3e604c534bd118ed477eaf1231f591d6fc40f/CHANGELOG.md"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 3700,
+      "gitBlob": "77f5477143f9c51d7473dd30b1cc5477fb751606",
+      "sha256": "039ce6a5380f5a0ffa21df4e979bf0b06b443d20a773e148947a9742bd1c0ba7",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/groth16/0bb3e604c534bd118ed477eaf1231f591d6fc40f/Cargo.toml"
+    },
+    {
+      "path": "LICENSE-APACHE",
+      "bytes": 10847,
+      "gitBlob": "16fe87b06e802f094b3fbb0894b137bca2b16ef1",
+      "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/groth16/0bb3e604c534bd118ed477eaf1231f591d6fc40f/LICENSE-APACHE"
+    },
+    {
+      "path": "LICENSE-MIT",
+      "bytes": 1046,
+      "gitBlob": "72dc60d84b692387206266939bc34656bcba1e15",
+      "sha256": "8f71659370c5268d9a1dc962a46232540e8fca63462586d8efaa95aab492a208",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/groth16/0bb3e604c534bd118ed477eaf1231f591d6fc40f/LICENSE-MIT"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2671,
+      "gitBlob": "e97d32a3aa77a6f52bab7eefc8f75ab14bd6c6b6",
+      "sha256": "d5bfe579eb73b8deff348409c24e267256ef9fc67919ece7ef6f1372596d9326",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/groth16/0bb3e604c534bd118ed477eaf1231f591d6fc40f/README.md"
+    },
+    {
+      "path": "src/constraints.rs",
+      "bytes": 20158,
+      "gitBlob": "a8829fa957d0de7b6b08fb976413108c880aab21",
+      "sha256": "ebbe7740aa8950edcbe41e3a146da7d309d6958f959b404887aaa056cce14b27",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/groth16/0bb3e604c534bd118ed477eaf1231f591d6fc40f/src/constraints.rs"
+    },
+    {
+      "path": "src/data_structures.rs",
+      "bytes": 4783,
+      "gitBlob": "457f581ae4a9202ba9b24f88971afdc8eaef4f85",
+      "sha256": "b4f55d91a20107d51a9f93dcd1cfb56d184a9b99ff962057675ca2c9ec49ec08",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/groth16/0bb3e604c534bd118ed477eaf1231f591d6fc40f/src/data_structures.rs"
+    },
+    {
+      "path": "src/generator.rs",
+      "bytes": 7368,
+      "gitBlob": "6ab38c708c9b5c69a16d2c2250adc7aa85d13d9f",
+      "sha256": "e188a02698d50b9a148950bf1653423b91541f9de5805054554e4044751bf9ae",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/groth16/0bb3e604c534bd118ed477eaf1231f591d6fc40f/src/generator.rs"
+    },
+    {
+      "path": "src/lib.rs",
+      "bytes": 2837,
+      "gitBlob": "a152f50d462808ef74f82d48daf08ca7c7edcd5f",
+      "sha256": "b538ed5279f57dd2e1b719134cb588919fd272de0862d84e5e1227dfa286961d",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/groth16/0bb3e604c534bd118ed477eaf1231f591d6fc40f/src/lib.rs"
+    },
+    {
+      "path": "src/prover.rs",
+      "bytes": 8831,
+      "gitBlob": "315bd0bb97d831154f7cbc40f7eee8a0edef63d0",
+      "sha256": "2747321418043a0d362b95075b14141056b327b27266232c7fdbf6de018fc3bd",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/groth16/0bb3e604c534bd118ed477eaf1231f591d6fc40f/src/prover.rs"
+    },
+    {
+      "path": "src/r1cs_to_qap.rs",
+      "bytes": 8658,
+      "gitBlob": "323a3dc773c9de118495125076111d0766b8b4d3",
+      "sha256": "cb024c922c9c406a8ed0f549b4dbfa85a1a924511ea47446a990a6ef7d2a1b78",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/groth16/0bb3e604c534bd118ed477eaf1231f591d6fc40f/src/r1cs_to_qap.rs"
+    },
+    {
+      "path": "src/test.rs",
+      "bytes": 4818,
+      "gitBlob": "4ddd15627dc5f5084b7a6aa181a70b85e6b4a2ba",
+      "sha256": "63afd958a59b5378a555ea682ee2a3975b5bdf190c838500f63d0efc9e1bc8d0",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/groth16/0bb3e604c534bd118ed477eaf1231f591d6fc40f/src/test.rs"
+    },
+    {
+      "path": "src/verifier.rs",
+      "bytes": 2654,
+      "gitBlob": "4eecb3cee6daae298a689901050dd0efad5f7b51",
+      "sha256": "b8ed2acdcec0b65214cd03c92e1c12a33cd5d97470d652473e8c4c944fcf23c8",
+      "url": "https://raw.githubusercontent.com/arkworks-rs/groth16/0bb3e604c534bd118ed477eaf1231f591d6fc40f/src/verifier.rs"
+    }
+  ]
+}

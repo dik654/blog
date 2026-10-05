@@ -15095,34 +15095,44 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/cs/crypto/snark-overview#selection"
   },
   "groth16-relation-specific-crs": {
-    id: "groth16-relation-specific-crs", kind: "concept", domain: "computer-science",
-    label: "Groth16 relation-specific CRS",
-    definition: "한 QAP relation의 coefficient와 secret τ·α·β·γ·δ evaluation을 G1/G2 elements에 encode해 proving/verifying key를 만들고 secret contribution 폐기를 요구하는 circuit-specific setup입니다.",
-    canonicalHref: "/cs/crypto/groth16#qap-setup",
+    "id": "groth16-relation-specific-crs",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Groth16의 관계별 준비물과 설정 비밀",
+    "definition": "관계의 제약과 변수 순서·공개 및 비공개 구분에 맞춰 다항식 평가와 α·β·γ·δ 기여를 곡선점으로 준비하는 설정입니다. 공개할 증명·검증용 준비물과 숨겨야 할 설정 비밀을 구분하며 실제 답안은 준비 입력에 필요하지 않습니다. 회로와 키의 대응·선택한 설정 절차·비밀 폐기 조건은 별도로 확인합니다.",
+    "canonicalHref": "/cs/crypto/groth16#setup"
   },
   "groth16-qap-quotient-witness": {
-    id: "groth16-qap-quotient-witness", kind: "method", domain: "mathematics",
-    label: "Groth16 QAP quotient witness",
-    definition: "Assignment polynomial에서 h(X)=(A(X)B(X)−C(X))/t(X)를 exact division으로 만들고 그 encoded contribution을 proof에 포함해 모든 R1CS row의 만족을 결속하는 방법입니다.",
-    canonicalHref: "/cs/crypto/groth16#qap-setup",
+    "id": "groth16-qap-quotient-witness",
+    "kind": "method",
+    "domain": "mathematics",
+    "label": "Groth16의 정확한 다항식 몫",
+    "definition": "서로 다른 제약 번호에서 보간한 U,V,W의 오차가 목표식 T의 배수임을 UV−W=hT로 나타내는 방법입니다. 같은 체와 차수 제한 아래 모든 행의 만족과 정확한 나눗셈이 연결됩니다. 한 평가점의 숫자 나눗셈이나 witness_map 배열 반환은 이 항등식의 확인을 대신하지 않습니다.",
+    "canonicalHref": "/cs/crypto/groth16#qap-proof"
   },
   "groth16-three-element-proof": {
-    id: "groth16-three-element-proof", kind: "concept", domain: "computer-science",
-    label: "Groth16 three-element proof",
-    definition: "QAP assignment·quotient와 fresh zero-knowledge randomness를 proving-key MSM으로 조합해 A∈G1, B∈G2, C∈G1 세 group elements로 만드는 Groth16 proof representation입니다.",
-    canonicalHref: "/cs/crypto/groth16#prove-verify",
+    "id": "groth16-three-element-proof",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Groth16의 세 증명점과 난수",
+    "definition": "관계별 준비점에 답안과 몫 및 독립 균등한 새 난수를 조합해 A∈G₁,B∈G₂,C∈G₁로 나타내는 증명입니다. C의 보정 항이 완전성 등식을 유지합니다. 실제 전송은 지수가 아닌 점이며 세 점이라는 개수, 곡선과 인코딩별 바이트, 영지식 생성 조건은 구분합니다.",
+    "canonicalHref": "/cs/crypto/groth16#proof"
   },
   "groth16-pairing-public-input-binding": {
-    id: "groth16-pairing-public-input-binding", kind: "method", domain: "computer-science",
-    label: "Groth16 pairing · public-input binding",
-    definition: "Public inputs로 verifying-key IC elements를 선형 결합한 vk_x를 proof A·B·C와 e(A,B)=e(α,β)e(vk_x,γ)e(C,δ) pairing relation에 넣어 proof를 정확한 statement에 결속하는 검증 방법입니다.",
-    canonicalHref: "/cs/crypto/groth16#prove-verify",
+    "id": "groth16-pairing-public-input-binding",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Groth16의 공개값 결합과 페어링 검증",
+    "definition": "정해진 공개 입력 순서로 IC₀+ΣxᵢICᵢ를 만들고 e(A,B)=e(α,β)e(vkₓ,γ)e(C,δ)를 확인하는 방법입니다. 같은 관계·키·군과 실제 입력 개수 및 점 검사 조건이 필요합니다. 고정 구현에서 읽지 않은 남는 입력이나 바이트까지 확인했다고 해석하지 않습니다.",
+    "canonicalHref": "/cs/crypto/groth16#verify"
   },
   "groth16-setup-security-release-gate": {
-    id: "groth16-setup-security-release-gate", kind: "method", domain: "computer-science",
-    label: "Groth16 setup · verification release gate",
-    definition: "Circuit/key hash·ceremony transcript·curve·encoding을 고정하고 wrong public input·bad subgroup·toxic-waste/key mismatch·invalid quotient fixture를 fail closed한 뒤 setup/prove/verify cost를 비교하는 채택 절차입니다.",
-    canonicalHref: "/cs/crypto/groth16#boundaries",
+    "id": "groth16-setup-security-release-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Groth16의 실제 검증 범위와 적용 조건",
+    "definition": "회로와 키·공개 입력 의미·정수 및 체 표현·바이트 프로필을 고정하고 실제 성공과 실패를 대조하는 검토입니다. 생성 함수의 반환·역직렬화·페어링 성공을 빠진 회로 제약이나 권한·공동 설정·비밀 폐기·전체 보안·성능의 보장으로 확대하지 않습니다.",
+    "canonicalHref": "/cs/crypto/groth16#verification"
   },
   "plonkish-selector-gate": {
     id: "plonkish-selector-gate", kind: "concept", domain: "mathematics",
@@ -18599,11 +18609,11 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     canonicalHref: "/cs/gpu/warp-specialization-and-async-pipelines#software-pipelining",
   },
   "inference-optimization-layer-map": {
-    id: "inference-optimization-layer-map",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Inference optimization layers · model/kernel/runtime/system",
-    aliases: [
+    "id": "inference-optimization-layer-map",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Inference optimization layers · model/kernel/runtime/system",
+    "aliases": [
       "Inference Optimization",
       "Model-Level Optimization",
       "Kernel-Level Optimization",
@@ -18611,51 +18621,64 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "System-Level Optimization",
       "Operator-Level Optimization",
       "Graph-Level Optimization",
-      "Optimization layer",
+      "Optimization layer"
     ],
-    definition:
-      "같은 model 의 요청 시간과 GPU 시간당 처리량을 개선하는 작업을 건드리는 병목으로 나눈 분류입니다. model 층은 weight·architecture 로 읽을 byte 와 FLOP 을, kernel 층(operator·graph)은 SRAM 재사용과 fusion 으로 HBM 왕복을, runtime 층은 launch·batch·KV 메모리로 빈 시간을, system 층은 GPU 배치와 요청 흐름으로 간섭을 줄이며 각 층의 이득은 end-to-end 의 자기 구간에 갇힙니다.",
-    canonicalHref: "/cs/ai/inference-optimization-layers#layers",
+    "definition": "모델·커널·런타임·시스템은 변경이 놓이는 위치를 설명하는 서로 겹칠 수 있는 분류입니다. 요청의 직렬 시간 구간과 일대일로 대응하지 않습니다. 최적화 층의 이름으로 Amdahl의 p를 정하지 않습니다. CPU 작업이 GPU와 겹치는지, 추가 작업과 품질·메모리 조건이 바뀌는지 함께 확인합니다.",
+    "canonicalHref": "/cs/ai/inference-optimization-layers#layers"
   },
   "amdahl-law-speedup-bound": {
-    id: "amdahl-law-speedup-bound",
-    kind: "theorem",
-    domain: "computer-science",
-    label: "Amdahl's law · end-to-end speedup bound",
-    aliases: ["Amdahl's Law", "Amdahl law", "End-to-End Optimization", "End-to-end speedup bound"],
-    definition:
-      "전체 시간 중 비율 p 인 구간을 s 배 빠르게 하면 end-to-end speedup 이 S=1/((1−p)+p/s) 이고 s→∞ 에서도 1/(1−p) 를 넘지 못한다는 법칙입니다. 구간이 직렬이고 독립이라는 가정 아래 성립하며 micro benchmark 의 s 보다 profile 의 p 가 결과를 정합니다.",
-    canonicalHref: "/cs/ai/inference-optimization-layers#amdahl",
+    "id": "amdahl-law-speedup-bound",
+    "kind": "theorem",
+    "domain": "computer-science",
+    "label": "Amdahl's law · end-to-end speedup bound",
+    "aliases": [
+      "Amdahl's Law",
+      "Amdahl law",
+      "End-to-End Optimization",
+      "End-to-end speedup bound"
+    ],
+    "definition": "고정된 직렬 시간의 비율 p만 s배 빠르게 바뀌고 나머지와 추가 비용이 그대로일 때 전체 가속은 1/((1−p)+p/s)입니다. 0≤p<1, s>0의 고정된 직렬 모형에 한정한 유한 상한입니다. p=1이면 그 유한 상한이 없고, 겹침이나 추가 변환이 바뀌면 의존 시간표를 다시 계산합니다.",
+    "canonicalHref": "/cs/ai/inference-optimization-layers#amdahl"
   },
   "hardware-aware-codesign": {
-    id: "hardware-aware-codesign",
-    kind: "method",
-    domain: "computer-science",
-    label: "Hardware-aware optimization · algorithm–hardware co-design",
-    aliases: ["Hardware-Aware Optimization", "Algorithm–Hardware Co-Design", "Algorithm-Hardware Co-Design", "Co-design"],
-    definition:
-      "Hardware 의 HBM 대역폭·SRAM 크기·tensor core 정밀도가 정하는 병목을 roofline 위에서 먼저 읽고 어느 층이 이득을 낼지 정하는 태도와, 그 경계에 맞춰 알고리즘 자체를 다시 쓰는 co-design 입니다. FlashAttention·PagedAttention·MLA 처럼 층은 다르지만 출발점이 hardware 병목인 설계가 예입니다.",
-    canonicalHref: "/cs/ai/inference-optimization-layers#interactions",
+    "id": "hardware-aware-codesign",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Hardware-aware optimization · algorithm–hardware co-design",
+    "aliases": [
+      "Hardware-Aware Optimization",
+      "Algorithm–Hardware Co-Design",
+      "Algorithm-Hardware Co-Design",
+      "Co-design"
+    ],
+    "definition": "장치의 읽기·계산·작업 공간과 실제 실행 경로를 함께 고려해 알고리즘과 구현을 정하는 설계입니다. 다른 변경과의 상호작용을 다시 측정합니다. 읽기 하한 28 ms와 계산 하한 7 ms를 합쳐 실측 35 ms로 쓰지 않습니다. 겹치는 자원 하한은 max로 비교하며 실제 성능·품질·전송 비용은 따로 검증합니다.",
+    "canonicalHref": "/cs/ai/inference-optimization-layers#interactions"
   },
   "optimization-roi": {
-    id: "optimization-roi",
-    kind: "metric",
-    domain: "computer-science",
-    label: "Optimization ROI",
-    aliases: ["Optimization ROI", "Optimization return on investment", "Optimization payback"],
-    definition:
-      "요청당 end-to-end 절감 시간 Δt 에 기간 내 요청 수 Q 와 절감 1 초의 값 v 를 곱한 것을 구현·검증·유지 비용의 합으로 나눈 비율 ROI=ΔtQv/(C_impl+C_verify+C_maint) 입니다. 같은 기법이라도 트래픽에 따라 100배 달라지므로 기법이 아니라 workload 의 속성입니다.",
-    canonicalHref: "/cs/ai/inference-optimization-layers#roi",
+    "id": "optimization-roi",
+    "kind": "metric",
+    "domain": "computer-science",
+    "label": "Optimization ROI",
+    "aliases": [
+      "Optimization ROI",
+      "Optimization return on investment",
+      "Optimization payback"
+    ],
+    "definition": "같은 기간과 범위에서 ROI=(화폐 편익−비용)/비용으로 정의합니다. 편익/비용 비율 및 단순 회수 기간과 구분하고, 지연 감소를 현금 절감으로 자동 변환하지 않습니다. 20개가 한 계산을 공유하는 사례는 400 request-ms와 20 GPU-ms를 구분합니다. 정수 복사본·예약 계약·유지비·할인·성공한 업무의 분모를 확인하고 중복 편익을 더하지 않습니다.",
+    "canonicalHref": "/cs/ai/inference-optimization-layers#roi"
   },
   "performance-regression-gate": {
-    id: "performance-regression-gate",
-    kind: "method",
-    domain: "computer-science",
-    label: "Performance regression · benchmark gate",
-    aliases: ["Performance Regression", "Benchmark gate", "Performance regression gate"],
-    definition:
-      "변경 뒤 같은 workload 의 latency·처리량이 나빠지는 regression 을, warm 상태의 고정 λ sweep 과 같은 입력 분포에서 TTFT·TPOT p50·p99, SLO 안 처리량, 품질 parity 를 noise 의 2배 이상 문턱으로 paired 비교해 막는 절차입니다. 낮은 batch 와 높은 batch 를 모두 재야 CPU 병목형과 GPU 병목형 regression 을 둘 다 잡습니다.",
-    canonicalHref: "/cs/ai/inference-optimization-layers#regression-gate",
+    "id": "performance-regression-gate",
+    "kind": "method",
+    "domain": "computer-science",
+    "label": "Performance regression · benchmark gate",
+    "aliases": [
+      "Performance Regression",
+      "Benchmark gate",
+      "Performance regression gate"
+    ],
+    "definition": "같은 조건의 성능·품질을 비교해 사전에 정한 허용 악화와 측정 불확실성을 구분하는 검증 절차입니다. 고정된 승인 기준에 대한 누적 변화도 확인합니다. 이 구간은 평균 차이의 설명용 예이며 개별 p99의 구간이 아닙니다. 2×잡음은 보편 문턱이 아니고, 늘어난 프로파일 구간은 원인 후보이므로 대조와 되돌림으로 가설을 확인합니다.",
+    "canonicalHref": "/cs/ai/inference-optimization-layers#regression-gate"
   },
   "gpu-profiling-nsys-ncu-roles": {
     id: "gpu-profiling-nsys-ncu-roles",
@@ -26242,54 +26265,64 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/economics/firms/scale-and-cost-structure#not-monopoly"
   },
   "price-setter-faces-whole-demand": {
-    id: "price-setter-faces-whole-demand",
-    kind: "concept",
-    domain: "economics",
-    label: "혼자 팔면 값 하나가 아니라 수요 선 전체를 마주한다",
-    aliases: ["값을 고르는 쪽", "값 수용자와 값 설정자"],
-    definition:
-      "여럿이 팔 때 파는 쪽 하나가 보는 것은 값 하나이고 자기가 얼마를 내놓든 그 값은 움직이지 않습니다. 혼자 팔면 값마다 팔리는 양이 다른 선 전체를 마주하므로 값을 고를 수 있게 되는데, 고를 수 있는 것은 값 하나뿐이고 수량은 따라옵니다. 값과 수량을 따로 고를 수 없다는 제약이 이후의 모든 계산을 만듭니다.",
-    canonicalHref: "/economics/firms/market-power-and-markup#facing-demand",
+    "id": "price-setter-faces-whole-demand",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "가격과 판매량의 관계를 마주하는 업체",
+    "aliases": [
+      "값을 고르는 쪽",
+      "값 수용자와 값 설정자"
+    ],
+    "definition": "같은 기간 가격을 바꾸면 해당 업체의 주문량도 달라질 수 있습니다. 가격 10에는 3개, 9에는 4개가 팔리는 관계에서 가격 10과 수량 4를 함께 고를 수는 없습니다. 가격수용은 자기 판매량이 가격에 거의 영향을 주지 않는다는 모형의 가정입니다. 판매자 수만으로 정하지 않으며 차별화·대체 상품·진입과 시장 경계를 확인합니다.",
+    "canonicalHref": "/economics/firms/market-power-and-markup#facing-demand"
   },
   "marginal-revenue-below-price": {
-    id: "marginal-revenue-below-price",
-    kind: "concept",
-    domain: "economics",
-    label: "하나 더 팔 때 늘어나는 돈은 그 값보다 낮다",
-    aliases: ["한계수입", "깎이는 몫"],
-    definition:
-      "하나 더 팔려면 값을 내려야 하고 그 내린 값은 이미 팔던 것에도 적용되므로, 새로 받는 값에서 이미 팔던 수량만큼 깎이는 몫을 빼야 실제로 늘어난 돈이 됩니다. 여럿이 팔 때는 값이 움직이지 않아 이 둘째 몫이 없고 늘어나는 돈이 값과 같습니다. 이미 팔던 수량이 많을수록 깎이는 몫이 커지므로 늘어나는 돈은 값보다 빠르게 내려갑니다.",
-    canonicalHref: "/economics/firms/market-power-and-markup#marginal-revenue",
+    "id": "marginal-revenue-below-price",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "같은 가격을 받는 판매의 추가 수입",
+    "aliases": [
+      "한계수입",
+      "깎이는 몫"
+    ],
+    "definition": "가격을 내린 대안에서는 새 판매 수입과 앞의 수량에 해당하는 가격 차이가 함께 생깁니다. 3개에 10을 받는 매출 30과 4개에 9를 받는 매출 36의 차이는 9−3=6입니다. 미분값 R′(3)=7, R′(4)=5와 한 구간의 차이를 구분합니다. 과거 판매분 환불이 아니라 같은 기간의 대안 비교입니다. 내려가는 미분 가능한 수요와 양의 수량에서 MR=p+qp′<p이며 가격차별은 매출식을 바꿉니다.",
+    "canonicalHref": "/economics/firms/market-power-and-markup#marginal-revenue"
   },
   "monopoly-stopping-condition": {
-    id: "monopoly-stopping-condition",
-    kind: "theorem",
-    domain: "economics",
-    label: "멈추는 자리는 늘어나는 돈이 한계비용과 같아지는 수량이다",
-    aliases: ["Cournot의 조건", "독점의 멈추는 자리"],
-    definition:
-      "혼자 파는 쪽은 하나 더 팔아 늘어나는 돈이 하나 더 만드는 데 드는 값보다 크면 더 팔고 작아지면 멈춥니다. 값은 그 수량에서 수요 선을 올려다봐 읽으므로, 멈추는 자리를 정하는 것과 받는 값을 읽는 것이 서로 다른 선에서 일어납니다. 늘어나는 돈이 이미 값보다 낮으므로 멈춘 자리의 값은 한계비용보다 반드시 높습니다.",
-    canonicalHref: "/economics/firms/market-power-and-markup#stopping-point",
+    "id": "monopoly-stopping-condition",
+    "kind": "theorem",
+    "domain": "economics",
+    "label": "이익의 내부 최적조건과 전체 비교",
+    "aliases": [
+      "Cournot의 조건",
+      "독점의 멈추는 자리"
+    ],
+    "definition": "매끄러운 내부 최대점에서는 한계수입과 한계비용이 같습니다. 전체 최대와 허용 범위도 확인합니다. p=13−q, C=7q이면 π=6q−q²=9−(q−3)²입니다. 수량 3에서 이익 9가 최대이고 가격은 10입니다. MR=MC는 일반적으로 필요조건이며 정수·생산 한도·진입 여부와 다른 후보도 비교합니다. 생산 한도 2에서는 MR9>MC7이지만 q2가 최대입니다.",
+    "canonicalHref": "/economics/firms/market-power-and-markup#stopping-point"
   },
   "markup-set-by-elasticity": {
-    id: "markup-set-by-elasticity",
-    kind: "theorem",
-    domain: "economics",
-    label: "틈의 크기는 수요의 민감도가 정한다",
-    aliases: ["마크업", "값과 한계비용의 틈"],
-    definition:
-      "멈추는 조건을 값으로 나누어 정리하면 값에서 틈이 차지하는 몫이 수요 민감도의 역수 하나로 적힙니다. 파는 쪽이 얼마나 크거나 얼마나 싸게 만드는가가 아니라 사는 쪽이 값에 얼마나 민감한가가 틈을 정하므로, 대신할 것이 많을수록 틈이 좁아집니다. 민감도가 무한대로 가면 틈이 0이 되어 아무도 값을 고르지 않을 때의 값으로 돌아옵니다.",
-    canonicalHref: "/economics/firms/market-power-and-markup#markup-size",
+    "id": "markup-set-by-elasticity",
+    "kind": "theorem",
+    "domain": "economics",
+    "label": "내부 최적점의 마크업과 수요 탄력성",
+    "aliases": [
+      "마크업",
+      "값과 한계비용의 틈"
+    ],
+    "definition": "가격 기준의 이익 최적조건을 나누어 쓰면 마크업이 그 점의 가격탄력성 절댓값의 역수와 같습니다. 기본 최적점 p10/q3에서 ε=−10/3이고 (10−7)/10=30%입니다. 같은 수요에서 MC9이면 p11/q2, ε=−11/2, 마크업2/11≈18.18%입니다. 양의 가격·수량, 유한한 음의 수요 미분, 동일 가격·단일 상품의 매끄러운 내부 이익 최대점이 필요합니다. 비용이 최적점과 탄력성을 바꾸므로 비용과 무관한 관계가 아닙니다.",
+    "canonicalHref": "/economics/firms/market-power-and-markup#markup-size"
   },
   "monopoly-output-restriction": {
-    id: "monopoly-output-restriction",
-    kind: "concept",
-    domain: "economics",
-    label: "사라지는 몫을 만드는 것은 높은 값이 아니라 줄어든 수량이다",
-    aliases: ["옮겨 간 몫과 사라진 몫", "수량 제한"],
-    definition:
-      "값이 올라 사는 쪽에서 파는 쪽으로 넘어간 몫은 누가 갖느냐의 문제일 뿐 세상에서 없어진 것이 아닙니다. 같은 때 수량이 줄어 만들었더라면 드는 값보다 더 쳐주었을 거래가 아예 일어나지 않는데, 이 몫은 누구에게도 가지 않습니다. 값에 상한을 씌웠을 때 생기던 것과 같은 삼각형이 이번에는 아무도 상한을 씌우지 않았는데 생깁니다.",
-    canonicalHref: "/economics/firms/market-power-and-markup#what-is-lost",
+    "id": "monopoly-output-restriction",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "이전된 잉여와 일어나지 않은 거래의 잉여",
+    "aliases": [
+      "옮겨 간 몫과 사라진 몫",
+      "수량 제한"
+    ],
+    "definition": "같은 생산 비용에서 가격과 수량이 함께 바뀌면 이전된 몫과 거래 감소로 생기지 않은 잉여를 나눌 수 있습니다. p7/q6의 소비자 잉여18·생산자0이 p10/q3에서 소비자4.5·생산자9가 됩니다. 소비자 감소13.5는 이전9와 손실4.5로 나뉩니다. 고정비 0·외부 효과 없음·같은 수요와 비용을 유지한 정적 비교입니다. 고정비가 있으면 생산자 잉여와 이익을 구분하며 실제 분할이나 정책의 모든 결과를 설명하지 않습니다.",
+    "canonicalHref": "/economics/firms/market-power-and-markup#what-is-lost"
   },
   "electric-current": {
     id: "electric-current",
@@ -27204,67 +27237,75 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "canonicalHref": "/electronics/embedded/firmware-update-and-recovery#limits"
   },
   "value-of-marginal-product": {
-    id: "value-of-marginal-product",
-    kind: "concept",
-    domain: "economics",
-    label: "한 사람을 더 써서 더 만들어 파는 몫",
-    aliases: ["한계생산가치", "파생수요"],
-    definition:
-      "가게가 사람을 한 명 더 써서 같은 시간에 더 만들어 파는 금액입니다. 설비와 자리가 그대로인 채 손만 늘면 기다리는 시간이 생기므로 사람이 늘수록 이 몫은 줄어들고, 그 줄어듦이 사람을 무한히 쓰지 않는 이유가 됩니다. 사람을 원하는 이유가 사람 자체가 아니라 그가 만들 물건이 팔리는 데 있으므로 이 수요는 물건의 값에 매달려 있습니다.",
-    canonicalHref: "/economics/labor/wage-floor-natural-experiment#two-counts",
+    "id": "value-of-marginal-product",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "노동의 추가 생산과 수입",
+    "aliases": [
+      "한계생산가치",
+      "파생수요"
+    ],
+    "definition": "노동을 조금 더 투입할 때 수입이 늘어나는 비율을 셉니다. 상품가격이 일정하면 한계수입생산과 한계생산가치가 같습니다. B=13n−n²/2이면 v=13−n입니다. B3=34.5와 B4=44의 차이 9.5는 순간 변화율 v3=10, v4=9와 구분합니다. 상품가격이 생산량에 따라 바뀌면 추가 생산의 가치와 추가 매출을 구분합니다. 추가 수입 감소는 이번 가정이며 유한 고용의 유일한 이유가 아닙니다.",
+    "canonicalHref": "/economics/labor/wage-floor-natural-experiment#two-counts"
   },
   "wage-at-marginal-product": {
-    id: "wage-at-marginal-product",
-    kind: "concept",
-    domain: "economics",
-    label: "사는 쪽이 여럿이면 임금은 그 몫에서 멈춘다",
-    aliases: ["임금 수용자", "경쟁 노동시장의 임금"],
-    definition:
-      "비슷한 가게가 여럿이면 가게 하나가 임금을 흔들 수 없어 고를 수 있는 것은 몇 명을 쓸지뿐입니다. 한 명 더 써서 얻는 몫이 임금보다 크면 쓰고 작으면 쓰지 않으므로, 멈추는 자리에서 임금과 마지막 사람의 한계생산가치가 같아집니다. 1단계가 값에 대해 세운 전제를 사람이 파는 시간에 그대로 옮긴 경우입니다.",
-    canonicalHref: "/economics/labor/wage-floor-natural-experiment#many-buyers",
+    "id": "wage-at-marginal-product",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "주어진 시급에서의 노동 선택",
+    "aliases": [
+      "임금 수용자",
+      "경쟁 노동시장의 임금"
+    ],
+    "definition": "임금 수용자는 시급을 주어진 값으로 받고 가능한 노동시간 중 이익이 가장 큰 선택을 찾습니다. 시급 8에서 B−8n=12.5−(n−5)²/2이므로 연속 노동 5시간이 최대입니다. 전체 노동수요 13−n과 공급 n+3의 경쟁 기준도 5시간·시급 8입니다. 시장 전체의 임금 결정과 개별 고용주의 임금 수용을 구분합니다. 고용주 수만으로 임금 수용을 확정하지 않으며 내부 등식은 정수·용량·미고용 선택을 대신하지 않습니다.",
+    "canonicalHref": "/economics/labor/wage-floor-natural-experiment#many-buyers"
   },
   "monopsony-wage-gap": {
-    id: "monopsony-wage-gap",
-    kind: "theorem",
-    domain: "economics",
-    label: "사는 쪽이 하나면 임금이 한계생산가치보다 낮게 멈춘다",
-    aliases: ["수요독점", "임금의 틈"],
-    definition:
-      "사는 쪽이 하나뿐이면 한 명 더 부르려고 임금을 올릴 때 이미 일하던 사람의 임금도 함께 오르므로, 한 명 더 쓰는 데 드는 값이 그때 주는 임금보다 큽니다. 그래서 멈추는 자리가 당겨져 사람도 적고 임금도 낮으며, 임금과 한계생산가치 사이에 틈이 남습니다. 틈의 비율은 사람이 임금에 얼마나 민감하게 모이는지의 역수로 적히며, 파는 쪽이 하나일 때의 값 틈과 부호만 뒤집힌 같은 구조입니다.",
-    canonicalHref: "/economics/labor/wage-floor-natural-experiment#one-buyer",
+    "id": "monopsony-wage-gap",
+    "kind": "theorem",
+    "domain": "economics",
+    "label": "전체 임금 증가와 시급의 차이",
+    "aliases": [
+      "수요독점",
+      "임금의 틈"
+    ],
+    "definition": "더 많은 노동을 구하려고 모든 시간의 시급을 올리면 임금 총액의 추가 비용이 시급보다 큽니다. W=n(n+3), W′=2n+3이며 이익 10n−1.5n²는 n10/3에서 최대입니다. w19/3·v29/3, 공급탄력성 19/10과 시급 기준 차이 10/19가 대응합니다. 양의 노동·임금과 매끄러운 내부·같은 시급·상승하는 노동공급 조건이 필요합니다. 여러 고용주와 구직 마찰에서도 힘이 생길 수 있고 부분적인 차등 임금이 차이를 모두 없애지는 않습니다.",
+    "canonicalHref": "/economics/labor/wage-floor-natural-experiment#one-buyer"
   },
   "minimum-wage-prediction-split": {
-    id: "minimum-wage-prediction-split",
-    kind: "theorem",
-    domain: "economics",
-    label: "같은 바닥이 두 셈에서 반대 방향의 예측을 낳는다",
-    aliases: ["최저임금 예측의 분기"],
-    definition:
-      "임금에 바닥을 걸면 그 구간에서 임금이 사람 수에 따라 오르지 않으므로, 이미 일하던 사람에게 더 줘야 하던 몫이 사라집니다. 사는 쪽이 여럿이던 경우에는 맞던 자리를 위로 밀어 올려 사람이 줄지만, 사는 쪽이 하나이던 경우에는 그 몫이 없어져 사람이 오히려 늘 수 있습니다. 바닥을 올리면 일자리가 준다는 명제가 조건부임을 보이며, 어느 조건인지는 자료로만 가를 수 있습니다.",
-    canonicalHref:
-      "/economics/labor/wage-floor-natural-experiment#two-predictions",
+    "id": "minimum-wage-prediction-split",
+    "kind": "theorem",
+    "domain": "economics",
+    "label": "최저임금의 구간에 따른 노동 선택",
+    "aliases": [
+      "최저임금 예측의 분기"
+    ],
+    "definition": "최저시급을 지급 시급에 적용한 총액을 먼저 만들고, 구간별 이익과 꺾인 점을 비교합니다. W_F=nmax(F,n+3)입니다. 최적 시간은 F가 19/3 이하일 때 10/3, 19/3~8에서 F−3, 8~13에서 13−F, 13 이상에서 0입니다. F9는 4시간, F12는 1시간입니다. 원래 추가 비용과 F의 최댓값을 쓰면 틀립니다. 처음에는 노동이 늘다가 줄 수 있습니다. 실제 정책의 최적 수준을 추정한 것이 아니며 정수 동률도 따로 비교합니다.",
+    "canonicalHref": "/economics/labor/wage-floor-natural-experiment#two-predictions"
   },
   "side-by-side-comparison": {
-    id: "side-by-side-comparison",
-    kind: "method",
-    domain: "economics",
-    label: "한쪽만 바뀐 자리를 찾아 두 변화를 견준다",
-    aliases: ["나란히 두고 견주기", "비교 집단"],
-    definition:
-      "바뀐 쪽과 바뀌지 않은 쪽을 같은 기간 같은 조건에서 각각 전후로 재고, 두 변화의 차이를 바뀐 것의 몫으로 읽는 방법입니다. 두 쪽에 똑같이 걸리는 경기나 계절의 영향은 차이를 낼 때 상쇄되므로, 비교 집단이 얼마나 비슷한지가 결과의 신뢰를 정합니다. 같은 집단 안에서 영향을 세게 받은 쪽과 거의 받지 않은 쪽을 다시 갈라 보는 것이 그 비슷함을 점검하는 방법입니다.",
-    canonicalHref:
-      "/economics/labor/wage-floor-natural-experiment#what-happened",
+    "id": "side-by-side-comparison",
+    "kind": "method",
+    "domain": "economics",
+    "label": "두 지역의 전후 변화 차이와 인과 조건",
+    "aliases": [
+      "나란히 두고 견주기",
+      "비교 집단"
+    ],
+    "definition": "비교 지역의 변화가 인상 지역의 미인상 경로를 대신할 수 있는지 검토합니다. 가정한 20→21과 25→23의 변화 차이는 3입니다. 미인상시 두 지역 모두 2만큼 줄었을 것이라면 인상 지역의 반사실적 결과 18과 관측 21의 차이 3이 정책효과입니다. 평행추세·선행 반응·지역 간 파급·동시 충격·측정과 표본 구성을 검토합니다. 가까운 지역이나 비슷한 시작 평균만으로 인과가 보장되지 않습니다.",
+    "canonicalHref": "/economics/labor/wage-floor-natural-experiment#comparison-conditions"
   },
   "neither-model-fits": {
-    id: "neither-model-fits",
-    kind: "concept",
-    domain: "economics",
-    label: "재 본 결과가 두 설명 중 어느 쪽도 그대로 맞히지 못하는 상태",
-    aliases: ["설명되지 않은 측정", "열린 결론"],
-    definition:
-      "한 측정이 어떤 설명의 예측을 반증했다고 해서 경쟁하던 다른 설명이 확인된 것은 아닙니다. 사람 수는 한쪽 예측과 어긋나고 값의 움직임은 다른 쪽 예측과 어긋나면, 결과는 둘 중 하나를 고르는 것이 아니라 둘 다 부족하다는 것입니다. 이 상태를 한쪽의 증거로 읽지 않는 것이 측정을 해석하는 기본 규율이며, 적용 범위를 업종·지역·시점으로 좁혀 적는 일과 짝을 이룹니다.",
-    canonicalHref:
-      "/economics/labor/wage-floor-natural-experiment#what-happened",
+    "id": "neither-model-fits",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "한 관측으로 모형을 확정하지 않는 해석",
+    "aliases": [
+      "설명되지 않은 측정",
+      "열린 결론"
+    ],
+    "definition": "고용의 방향 하나와 맞는 모형이 그 결과의 유일한 설명인지는 별개의 문제입니다. 1994년 표 3의 고용 변화 차이와 표 7의 로그가격 계수는 다른 단위와 표본입니다. 저자가 검토한 단순 모형들의 예측을 함께 비교하며 표 7의 0.033을 정확한 3.2%로 취급하지 않습니다. 상품가격을 고정한 설명용 모형이 가격 하락을 예측한 것은 아닙니다. 추가 상품수요·품질·시장 조건과 측정 자료를 검토하며 모든 모형이나 모든 정책을 배제했다고 확대하지 않습니다.",
+    "canonicalHref": "/economics/labor/wage-floor-natural-experiment#prices-and-models"
   },
   "class-table-ambiguity": {
     id: "class-table-ambiguity",
@@ -45353,17 +45394,42 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "multi-stage-smem-pipeline", to: "software-pipelining-latency-amortization", relation: "extends", reason: "Stage ring 은 반복 i 의 load 와 반복 i−1 의 계산을 겹치는 software pipelining 을 shared memory 로 구현한 것입니다." },
   { from: "tlp-ilp-mlp-latency-hiding", to: "software-pipelining-latency-amortization", relation: "prerequisite", reason: "Software pipelining 은 한 warp 가 여러 memory 요청을 띄우는 memory-level parallelism 을 반복문 구조로 만드는 방법입니다." },
   { from: "warp-specialization-producer-consumer", to: "cutlass-collective-mainloop-epilogue", relation: "prerequisite", reason: "CollectiveMma 의 sm90 mainloop 이 producer·consumer warpgroup 과 stage pipeline 위에서 정의됩니다." },
-  { from: "decode-memory-bound-regime", to: "inference-optimization-layer-map", relation: "prerequisite", reason: "Model 층과 kernel 층이 건드리는 weight read 병목의 정의를 재사용합니다." },
-  { from: "inference-optimization-layer-map", to: "amdahl-law-speedup-bound", relation: "prerequisite", reason: "층에 귀속된 구간의 비율 p 가 Amdahl 식의 입력입니다." },
+  {
+    "from": "decode-memory-bound-regime",
+    "to": "inference-optimization-layer-map",
+    "relation": "prerequisite",
+    "reason": "가중치·기록 읽기가 제한하는 특정 조건을 최적화 후보의 한 사례로 사용하며 모든 decode와 모든 batch가 같은 병목이라는 전제는 두지 않습니다."
+  },
+  {
+    "from": "inference-optimization-layer-map",
+    "to": "amdahl-law-speedup-bound",
+    "relation": "prerequisite",
+    "reason": "분류 이름과 실제 요청의 시간 구간을 구별한 뒤 직렬·고정 시간 조건이 맞는 구간에 p와 s를 적용합니다."
+  },
   { from: "amdahl-law-speedup-bound", to: "quantized-kernel-amdahl-bound", relation: "extends", reason: "일반형 Amdahl 을 low-bit kernel 로 대체되는 비율에 한정한 특수형입니다." },
   { from: "amdahl-law-speedup-bound", to: "gpu-fusion-roi-boundary", relation: "extends", reason: "Fusion 절감을 baseline 비중으로 정규화하는 판단은 같은 식을 fusion 에 적용한 것입니다." },
   { from: "amdahl-law-speedup-bound", to: "cuda-achieved-throughput-ledger", relation: "evaluates", reason: "구간별 achieved 값을 재는 장부가 p 와 s 의 측정 근거입니다." },
   { from: "roofline-arithmetic-intensity", to: "hardware-aware-codesign", relation: "prerequisite", reason: "Hardware 의 병목 경계를 roofline 으로 읽는 것이 hardware-aware 판단의 출발점입니다." },
   { from: "hardware-aware-codesign", to: "inference-optimization-layer-map", relation: "constrains", reason: "한 층의 선택이 다른 층의 p 와 가능한 선택지를 바꾸므로 층은 독립이 아닙니다." },
   { from: "flash-attention", to: "hardware-aware-codesign", relation: "extends", reason: "SRAM tile 에 맞춰 attention 을 다시 쓴 co-design 의 대표 예입니다." },
-  { from: "amdahl-law-speedup-bound", to: "optimization-roi", relation: "prerequisite", reason: "ROI 의 Δt 는 Amdahl 을 거친 end-to-end 절감이어야 합니다." },
-  { from: "optimization-roi", to: "performance-regression-gate", relation: "produces", reason: "ROI 의 검증 비용 항이 곧 변경마다 돌리는 benchmark gate 입니다." },
-  { from: "performance-regression-gate", to: "inference-optimization-layer-map", relation: "evaluates", reason: "Regression 이 잡히면 구간별 profile 로 어느 층이 깨졌는지 귀속시킵니다." },
+  {
+    "from": "amdahl-law-speedup-bound",
+    "to": "optimization-roi",
+    "relation": "prerequisite",
+    "reason": "직렬 모형에서 예상한 지연 감소와 중복 없는 장치 작업·실제 청구 감소를 각각 확인해야 비용 편익을 계산할 수 있습니다."
+  },
+  {
+    "from": "optimization-roi",
+    "to": "performance-regression-gate",
+    "relation": "produces",
+    "reason": "비용을 줄이는 후보도 품질·지연·처리량의 허용 조건을 대조해야 하며 검증 비용과 남은 불확실성을 비용 판단에 포함합니다."
+  },
+  {
+    "from": "performance-regression-gate",
+    "to": "inference-optimization-layer-map",
+    "relation": "evaluates",
+    "reason": "늘어난 구간을 변경 위치별 원인 후보로 추적하되 분류와 프로파일만으로 원인을 확정하지 않고 대조 실험으로 확인합니다."
+  },
   {
     "to": "performance-regression-gate",
     "relation": "constrains",
@@ -50749,60 +50815,52 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "reason": "비용 동률 수량과 기업 수의 관계를 구분한 다음 판매자가 가격을 선택하는 별도 가정을 살펴봅니다. 동률 수량이 시장보다 크다는 사실에서 단일 판매자를 도출하지 않습니다."
   },
   {
-    from: "price-setter-faces-whole-demand",
-    to: "marginal-revenue-below-price",
-    relation: "produces",
-    reason:
-      "값을 고르면 수량이 따라온다는 제약에서, 하나 더 팔려면 이미 팔던 것의 값도 내려야 한다는 결과가 바로 나옵니다.",
+    "from": "price-setter-faces-whole-demand",
+    "to": "marginal-revenue-below-price",
+    "relation": "produces",
+    "reason": "같은 기간 모든 판매에 같은 가격을 적용하고 수요가 내려가면, 더 판매하는 대안에서 새 판매 수입과 다른 수량의 가격 차이가 함께 생깁니다. 과거 거래의 환불을 뜻하지 않습니다."
   },
   {
-    from: "marginal-revenue-below-price",
-    to: "monopoly-stopping-condition",
-    relation: "produces",
-    reason:
-      "멈추는 자리를 정할 때 보는 것이 값이 아니라 깎이는 몫을 뺀 나머지라는 점이 조건의 모양을 정합니다.",
+    "from": "marginal-revenue-below-price",
+    "to": "monopoly-stopping-condition",
+    "relation": "produces",
+    "reason": "연속 수량의 매출 미분에서 비용 미분을 빼면 내부 이익 최적조건을 얻습니다. 유한한 한 개의 매출 차이와 미분값은 구분하고 경계와 전체 최대도 확인합니다."
   },
   {
-    from: "marginal-decision-rule",
-    to: "monopoly-stopping-condition",
-    relation: "prerequisite",
-    reason:
-      "하나 더 할 때 얻는 것과 드는 것을 견주어 멈출 자리를 찾는 셈을 그대로 쓰되, 얻는 쪽의 내용만 바꾼 것입니다.",
+    "from": "marginal-decision-rule",
+    "to": "monopoly-stopping-condition",
+    "relation": "prerequisite",
+    "reason": "추가 매출과 추가 비용을 비교하는 원칙을 재사용합니다. 내부 미분 조건은 정수·생산 한도·진입 여부의 전체 비교를 대신하지 않습니다."
   },
   {
-    from: "monopoly-stopping-condition",
-    to: "markup-set-by-elasticity",
-    relation: "produces",
-    reason:
-      "같은 조건을 값으로 나누어 정리하면 틈의 비율이 수요 민감도 하나로 적힙니다.",
+    "from": "monopoly-stopping-condition",
+    "to": "markup-set-by-elasticity",
+    "relation": "produces",
+    "reason": "양의 가격·수량과 내려가는 미분 가능한 수요 아래의 동일 가격 내부 조건을 나누면 가격 기준 마크업이 그 점의 탄력성 절댓값 역수와 같습니다."
   },
   {
-    from: "monopoly-stopping-condition",
-    to: "monopoly-output-restriction",
-    relation: "produces",
-    reason:
-      "멈추는 수량이 아무도 값을 고르지 않을 때보다 작아지므로, 일어나지 않는 거래가 생깁니다.",
+    "from": "monopoly-stopping-condition",
+    "to": "monopoly-output-restriction",
+    "relation": "produces",
+    "reason": "같은 수요와 생산 비용의 기본 사례에서 이익 최대 수량3은 가격이 한계비용과 같은 기준수량6보다 작습니다. 그때 이전된 잉여9와 거래 감소의 손실4.5를 나눕니다."
   },
   {
-    from: "deadweight-loss",
-    to: "monopoly-output-restriction",
-    relation: "extends",
-    reason:
-      "값에 상한을 씌웠을 때 생기던 삼각형이 아무도 상한을 씌우지 않았는데 같은 모양으로 생깁니다.",
+    "from": "deadweight-loss",
+    "to": "monopoly-output-restriction",
+    "relation": "extends",
+    "reason": "외부 효과와 다른 비용 변화를 생략한 같은 잉여 계산을 재사용해, 가치가 생산비보다 높은 거래가 줄어든 손실을 계산합니다. 모든 시장에서 삼각형의 모양이나 원인이 같다는 뜻은 아닙니다."
   },
   {
-    from: "price-as-sufficient-signal",
-    to: "markup-set-by-elasticity",
-    relation: "constrains",
-    reason:
-      "값 하나에 흩어진 지식만이 아니라 사는 쪽이 얼마나 빠져나갈 수 있는지도 함께 적히므로, 값을 읽는 것만으로 둘을 가를 수 없습니다.",
+    "from": "price-as-sufficient-signal",
+    "to": "markup-set-by-elasticity",
+    "relation": "constrains",
+    "reason": "가격에는 비용·수요·판매자의 선택 조건이 함께 반영될 수 있으므로 가격 하나만으로 원인과 시장 지배력을 모두 식별할 수 없습니다."
   },
   {
-    from: "markup-set-by-elasticity",
-    to: "efficiency-is-not-fairness",
-    relation: "contrasts",
-    reason:
-      "틈의 크기를 재는 일과 그 틈을 어떻게 할지 정하는 일이 다른 단계라는 구분이 여기서도 그대로 성립합니다.",
+    "from": "markup-set-by-elasticity",
+    "to": "efficiency-is-not-fairness",
+    "relation": "contrasts",
+    "reason": "최적점의 마크업이나 정적 잉여 손실을 계산하는 일과 분배·투자·제도를 포함해 정책을 정하는 일은 구분합니다."
   },
   { from: "electric-current", to: "kirchhoff-current-law", relation: "prerequisite", reason: "한 경계를 지나는 전하의 속도로 전류를 읽어야 갈림길의 보존식을 세울 수 있습니다." },
   { from: "electric-potential-difference", to: "kirchhoff-voltage-law", relation: "prerequisite", reason: "두 점 사이의 에너지 차이를 같은 방향으로 더해야 한 바퀴의 합을 해석할 수 있습니다." },
@@ -51377,66 +51435,58 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "reason": "시험 이미지의 자동 복귀는 사용자 부트로더가 구성한 swap 동작이며 칩 내장 BOOTSEL과 구별합니다."
   },
   {
-    from: "marginal-decision-rule",
-    to: "value-of-marginal-product",
-    relation: "prerequisite",
-    reason:
-      "하나 더 할 때 얻는 것과 드는 것을 견주는 셈을 그대로 쓰되, 얻는 쪽을 그 사람이 더 만들어 파는 몫으로 둡니다.",
+    "from": "marginal-decision-rule",
+    "to": "value-of-marginal-product",
+    "relation": "prerequisite",
+    "reason": "추가 수입과 전체 추가 비용을 비교하되 노동시간의 순간 미분과 유한 구간의 차이를 구분합니다."
   },
   {
-    from: "value-of-marginal-product",
-    to: "wage-at-marginal-product",
-    relation: "produces",
-    reason:
-      "얻는 몫이 사람 수와 함께 줄어들므로, 임금을 흔들 수 없는 가게는 그 몫이 임금과 같아지는 자리에서 멈춥니다.",
+    "from": "value-of-marginal-product",
+    "to": "wage-at-marginal-product",
+    "relation": "produces",
+    "reason": "주어진 시급에서 연속적인 내부 선택은 추가 수입과 시급을 비교합니다. 정수·경계·전체 최대와 임금 수용 가정을 함께 확인합니다."
   },
   {
-    from: "marginal-revenue-below-price",
-    to: "monopsony-wage-gap",
-    relation: "contrasts",
-    reason:
-      "하나 더 팔 때 이미 팔던 것에서 깎이던 몫이, 하나 더 쓸 때 이미 일하던 사람에게 더 줘야 하는 몫으로 부호만 뒤집혀 나타납니다.",
+    "from": "marginal-revenue-below-price",
+    "to": "monopsony-wage-gap",
+    "relation": "contrasts",
+    "reason": "동일 기간의 전체 수입·지출 비교에서 다른 단위의 가격·임금도 달라질 수 있다는 구조를 대조합니다. 과거 거래를 소급 정산한다는 뜻은 아닙니다."
   },
   {
-    from: "markup-set-by-elasticity",
-    to: "monopsony-wage-gap",
-    relation: "contrasts",
-    reason:
-      "값과 한계비용의 틈을 수요 민감도가 정하듯, 한계생산가치와 임금의 틈을 공급 민감도가 정합니다.",
+    "from": "markup-set-by-elasticity",
+    "to": "monopsony-wage-gap",
+    "relation": "contrasts",
+    "reason": "판매의 마크업과 노동 구매의 임금 차이는 해당 점의 수요·공급 탄력성과 내부 조건에서 연결됩니다. 가격·생산성과 비용의 영향을 분리해 없애지 않습니다."
   },
   {
-    from: "wage-at-marginal-product",
-    to: "minimum-wage-prediction-split",
-    relation: "produces",
-    reason:
-      "맞던 자리가 어디인지 정해져 있어야 바닥을 걸었을 때 그 자리가 어느 쪽으로 밀리는지 셀 수 있습니다.",
+    "from": "wage-at-marginal-product",
+    "to": "minimum-wage-prediction-split",
+    "relation": "produces",
+    "reason": "경쟁 기준의 초기 시급과 노동시간을 정한 뒤 최저임금이 구속하는 구간의 선택을 비교합니다."
   },
   {
-    from: "monopsony-wage-gap",
-    to: "minimum-wage-prediction-split",
-    relation: "produces",
-    reason:
-      "바닥이 이미 일하던 사람에게 더 줘야 하던 몫을 없애므로, 틈이 있던 경우에만 사람이 늘어나는 구간이 생깁니다.",
+    "from": "monopsony-wage-gap",
+    "to": "minimum-wage-prediction-split",
+    "relation": "produces",
+    "reason": "같은 시급·상승 공급의 총액에 하한을 적용하면 구간과 꺾인 점이 생깁니다. 노동은 일부 범위에서 늘고 높은 하한에서는 줄 수 있습니다."
   },
   {
-    from: "minimum-wage-prediction-split",
-    to: "side-by-side-comparison",
-    relation: "evaluates",
-    reason:
-      "두 셈이 반대를 가리키면 책상에서 가를 수 없으므로, 한쪽만 바뀐 자리를 찾아 재는 방법이 필요해집니다.",
+    "from": "minimum-wage-prediction-split",
+    "to": "side-by-side-comparison",
+    "relation": "evaluates",
+    "reason": "조건과 인상 폭에 따라 다른 예측이 나오므로 실제 비교 가능한 자료와 식별 가정을 검토해야 합니다."
   },
   {
-    from: "side-by-side-comparison",
-    to: "neither-model-fits",
-    relation: "produces",
-    reason:
-      "같은 설계에서 사람 수와 값을 함께 재면 한 설명만으로 둘을 다 설명할 수 없는 경우가 드러납니다.",
+    "from": "side-by-side-comparison",
+    "to": "neither-model-fits",
+    "relation": "produces",
+    "reason": "고용과 가격처럼 다른 결과를 함께 읽어 모형의 추가 조건을 확인합니다. 한 관측이 모든 대안 모형을 확정하거나 배제하지는 않습니다."
   },
   {
     "from": "neither-model-fits",
     "to": "increasing-returns-not-monopoly",
     "relation": "extends",
-    "reason": "단순 모형이 실제 산업을 완전히 설명하지 못하면 생산비 절약과 시장 기업 수의 조건을 따로 검토해야 합니다."
+    "reason": "단순 모형의 해석 범위를 확인하는 원칙을 생산비 절약과 시장 기업 수의 관계에도 적용합니다."
   },
   {
     from: "class-table-ambiguity",
@@ -51467,18 +51517,16 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "평균적으로 얼마나 떨어졌는지만 담는 값이라, 어디서 떨어졌는지가 다른 두 분배를 같은 값으로 뭉갭니다.",
   },
   {
-    from: "monopsony-wage-gap",
-    to: "two-sources-of-wage-spread",
-    relation: "produces",
-    reason:
-      "임금이 한계생산가치 아래로 내려가는 폭이 사람마다 다르면, 같은 몫을 만드는 사람 사이에도 차이가 생깁니다.",
+    "from": "monopsony-wage-gap",
+    "to": "two-sources-of-wage-spread",
+    "relation": "produces",
+    "reason": "노동에서 생기는 수입이 같아도 구직·교섭·이동 조건과 고용주가 마주한 공급 관계에 따라 임금이 달라질 수 있습니다."
   },
   {
-    from: "value-of-marginal-product",
-    to: "two-sources-of-wage-spread",
-    relation: "produces",
-    reason:
-      "더 만들어 파는 몫 자체가 다른 것이 벌어짐의 다른 한 갈래를 이룹니다.",
+    "from": "value-of-marginal-product",
+    "to": "two-sources-of-wage-spread",
+    "relation": "produces",
+    "reason": "노동을 추가해 생기는 생산과 수입 자체가 달라지는 경로를 임금 차이의 다른 조건과 구분합니다."
   },
   {
     from: "cumulative-share-curve",
@@ -51495,11 +51543,10 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "재는 일과 어느 쪽이 나은지 판단하는 일이 다른 단계라는 구분이 여기서 한 숫자의 한계로 다시 나타납니다.",
   },
   {
-    from: "neither-model-fits",
-    to: "crossing-curves-incomparability",
-    relation: "contrasts",
-    reason:
-      "측정이 한쪽 설명을 반증해도 다른 설명을 세우지 못하듯, 요약 숫자가 순서를 줘도 그 순서가 더 나음을 뜻하지는 않습니다.",
+    "from": "neither-model-fits",
+    "to": "crossing-curves-incomparability",
+    "relation": "contrasts",
+    "reason": "관측된 순서나 하나의 예측과의 일치만으로 모든 설명·가치 판단이 정해지지 않는다는 해석 원칙을 연결합니다."
   },
   {
     from: "multiplicative-vs-additive-growth",
@@ -51550,11 +51597,10 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "모두가 똑같이 나눠 가진다고 두고 계산한 평균이므로, 벌어진 정도는 이 값에 담기지 않습니다.",
   },
   {
-    from: "minimum-wage-prediction-split",
-    to: "broken-assumption-diagnosis",
-    relation: "extends",
-    reason:
-      "같은 셈이 조건에 따라 반대 결론을 낸다는 구조를 빗나간 예측을 읽는 방법으로 일반화한 것입니다.",
+    "from": "minimum-wage-prediction-split",
+    "to": "broken-assumption-diagnosis",
+    "relation": "extends",
+    "reason": "서로 다른 전제가 다른 예측을 낳을 때 실제로 어느 조건이 바뀌었는지 확인하는 절차를 확장합니다."
   },
   {
     from: "exchange-identity",
@@ -51599,11 +51645,10 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "여럿을 한 숫자로 줄일 때 무엇을 얼마의 비중으로 평균할지가 결과를 바꾼다는 문제가 값 수준에서도 똑같이 나타납니다.",
   },
   {
-    from: "neither-model-fits",
-    to: "identity-is-not-causation",
-    relation: "extends",
-    reason:
-      "측정이 한 설명을 반증해도 다른 설명을 세우지 못하듯, 반증될 수 없는 식은 어떤 설명도 세워 주지 못합니다.",
+    "from": "neither-model-fits",
+    "to": "identity-is-not-causation",
+    "relation": "extends",
+    "reason": "식의 성립과 인과 설명의 식별을 구분합니다. 관측이나 항등식 하나가 경쟁하는 설명 중 하나를 자동으로 입증하지 않습니다."
   },
   {
     from: "money-multiplier-ceiling",
@@ -51655,18 +51700,16 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "여럿을 한 숫자로 줄일 때 생기는 문제를, 숫자를 여러 개 두어 푸는 쪽이 어떤 것인지 보입니다.",
   },
   {
-    from: "value-of-marginal-product",
-    to: "three-unemployment-conditions",
-    relation: "contrasts",
-    reason:
-      "가게가 사람을 쓸지 정하는 셈과, 그 사람이 통계에서 어느 칸에 들어가는지를 정하는 규칙이 서로 다른 자리입니다.",
+    "from": "value-of-marginal-product",
+    "to": "three-unemployment-conditions",
+    "relation": "contrasts",
+    "reason": "고용주가 노동시간을 선택하는 모형과 개인을 고용·실업 통계로 분류하는 규칙을 구분합니다."
   },
   {
-    from: "neither-model-fits",
-    to: "comparability-versus-coverage",
-    relation: "extends",
-    reason:
-      "한 숫자가 답을 주지 못할 때 무엇을 더 재야 하는지를 정하는 규율이 같은 모양으로 반복됩니다.",
+    "from": "neither-model-fits",
+    "to": "comparability-versus-coverage",
+    "relation": "extends",
+    "reason": "측정 단위와 표본·범위가 달라지면 결과의 비교 가능성도 다시 확인해야 한다는 원칙을 연결합니다."
   },
   {
     from: "absolute-vs-comparative-advantage",

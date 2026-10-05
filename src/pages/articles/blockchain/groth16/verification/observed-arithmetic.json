@@ -1,0 +1,37 @@
+{
+  "field": 101,
+  "qapDifferenceIntegerCoefficients": [
+    144,
+    -216,
+    72
+  ],
+  "h": 72,
+  "ic": [
+    0,
+    42,
+    15
+  ],
+  "publicExponent": 64,
+  "privateNumerator": 79,
+  "hTimesT": 56,
+  "baseC": 49,
+  "proof": [
+    83,
+    24,
+    48
+  ],
+  "verificationExponent": 73,
+  "wrongY44Exponent": 77,
+  "allRandomnessPairsChecked": 10201,
+  "distinctAB": 10201,
+  "rootsFor43": [
+    4,
+    97
+  ],
+  "rootsFor2": [],
+  "knownTrapdoorFake": [
+    1,
+    1,
+    38
+  ]
+}

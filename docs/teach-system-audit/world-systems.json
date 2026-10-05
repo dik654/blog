@@ -1557,7 +1557,7 @@
     },
     {
       "route": "firms/market-power-and-markup",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
@@ -1577,7 +1577,30 @@
           "profitpuretransfer blanketignoresfixedcost/economicprofits;surpluswelfareassumptions missing",
           "both oldhandoff firmboundaryexactequality andunchangedmethodcannotdecrease false",
           "sourceclaimsread mustrefresh actualscan;6+4andfullLernerproofpreserve;7.5–8.5pxSVG480minmobile"
-        ]
+        ],
+        "completedAt": "2026-10-05",
+        "sourceChanged": true,
+        "primarySource": "Cournot1897 actual English scan54–59 relevant text; printed56/57/58/59 actual images; equation2 and capacity boundaries checked; ninequotedwords.",
+        "result": "15sections S/B/0/1/2/3/4/4/5/6/6/6/6/7/7; fiveconcepts and6+4; sameuniformpricecase traces difference vsderivative,globalmaximum,capacity,entry,markup,welfare; tenrelatededges corrected",
+        "verification": {
+          "model": "independent Fraction PASS; q3p10R30C21profit9 andq4p9R36C28profit8; derivative7/5vsdifference6; alternative demand,MC9,cap2,entryF10,CS/PStransfer9loss4.5",
+          "independentBody": "theory read15sections/model/2Viz/Cournot56–59; allnumeric/source/boundariesPASS; two general formulas added to displayed annotated formulas per review",
+          "humanize": "62paras8794chars7edits0.9473%;whole+2gates0;135visible7267charswhole+2gates0;exactroundtrip",
+          "browser": "390/1440 15sections names21.739%;3predictions1citation10answers;2Viz4+5scenes keyboard/play/reduced PASS;anchors/overflow/console0; final0KaTeXerrors12displays and everybaseboundsPASS; added2generalformula lines recheckedboundsPASS",
+          "correctionDuringVerification": "Python generated TeX control characters caused6KaTeXerrors; fixedall20rawtemplates,correctedgeneratorescaping; actualrender0errors12displays confirmed afterrepair",
+          "typescript": "actual tsconfig.app noEmit exit0",
+          "learning": "strict require-registration exit0",
+          "prose": "globalbaselinePASS0review",
+          "formula": "global1463 explicitPASS; actualKaTeXchecked separately",
+          "localRoutes": "2views0failed"
+        },
+        "files": [
+          "src/pages/articles/firms/market-power-and-markup.tsx",
+          "src/pages/articles/firms/market-power-and-markup/model.ts",
+          "src/pages/articles/firms/market-power-and-markup/viz/PriceChoiceViz.tsx",
+          "src/pages/articles/firms/market-power-and-markup/viz/MarkupViz.tsx"
+        ],
+        "bodySha256": "31d0867d94f27afe314f64108fd6c5c2f14809e8eddcda20c4448684eedad00f"
       }
     },
     {
@@ -3319,13 +3342,52 @@
     },
     {
       "route": "labor/wage-floor-natural-experiment",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automatedSignals": {
         "teachLevelAttributes": [],
         "numericAnswerPointers": 0,
         "caseMarkers": 0
       },
-      "review": null
+      "review": {
+        "reviewedAt": "2026-10-05",
+        "actualBodyRead": true,
+        "actualThreeVizLearning6DefinitionsAndEdgesRead": true,
+        "defects": [
+          "firstworker13/second12 disagrees with actual13−n=12/11; continuous integral differs from finite-step total",
+          "floorcost max(F,originalmarginalcost) wrong; need nmax(F,n+3) andpiecewisedifference/derivative",
+          "integer ties4or5atw8,3or4atfloor9 hidden; continuousfractionquantity needscoherentcase",
+          "manyemployers doesnotautomatically implywagetaking; onebuyer notnecessaryfrictions; partialwagediscrimination notalwayseliminatesgap",
+          "diminishingproductivity notnecessaryforfinitehiring; monopolyprice revenue vsvalue distinguish",
+          "initiallybindingfloor employment rises thenfalls; blanketfloorincreasemonotonicdecreasefalse",
+          "differenceindifferences needsparallelcounterfactualtrends/noanticipation/nospillover/measurement notmeregeographicproximity",
+          "table3rounded0.59−(−2.16)=2.75 not2.76; row3vsbalancedrow4 andmissing/closed sample differ",
+          "table7logcoefficient0.033 notexact3.2%; primaryauthors restrictedmodels cannotuniversaldisprove monopsony",
+          "threeoldSVGs7.5–9px480minwidth;3numericprediction pointers andsourcecaseapplication absent;overlongquotes"
+        ],
+        "completedAt": "2026-10-05",
+        "sourceChanged": true,
+        "primarySource": "Card and Krueger 1994 AER actual PDF tables 3 and 7, NBER working papers 5224 and 6386 actual abstract pages; row and sample distinctions checked against the scans.",
+        "result": "17 sections S/B/0/1/2/3/4/4/5/6/6/6/6/6/6/7/7; one continuous hiring case follows total benefit, wage bill, profit, the unrestricted choice, and three wage floors; a separate integer case exposes ties; the same observations then enter difference-in-differences with its assumptions and limits.",
+        "verification": {
+          "model": "independent Fraction PASS: n3 benefit34.5 bill18 profit16.5; n4 benefit44 bill28 profit16; unrestricted n10/3,w19/3,value29/3,gap10/19; piecewise floor choices at 19/3,8,13; F9→n4 and F12→n1; integer ties checked separately",
+          "sourceTables": "1994 table3 rounded row gives 0.59−(−2.16)=2.75 while published unrounded estimate is2.76 SE1.36; balanced row is0.47−(−2.28)=2.75 SE1.34; table7 log coefficient0.033 SE0.014 n315 and expm1 gives3.355%, kept distinct from authors'3.2% wording",
+          "humanize": "17 paragraph edits; whole text and three chunk roundtrips exact; all humanize gates PASS; final list punctuation and sentence splits also pass the global prose audit",
+          "browser": "390/1440: 17sections, names20.29%,3predictions,3citations,10answers,3Viz with4/6/4 scenes; keyboard, play, reduced motion, anchors, overflow and console all PASS;0KaTeXerrors16displays and display bounds PASS",
+          "typescript": "actual tsconfig.app noEmit exit0",
+          "learning": "strict require-registration exit0 across799 public articles",
+          "prose": "global baseline PASS with0 review findings for the route",
+          "formula": "global1471 explicit formula checks PASS; actual KaTeX checked separately"
+        },
+        "files": [
+          "src/pages/articles/labor/wage-floor-natural-experiment.tsx",
+          "src/pages/articles/labor/wage-floor-natural-experiment/model.ts",
+          "src/pages/articles/labor/wage-floor-natural-experiment/viz/LaborSceneFrame.tsx",
+          "src/pages/articles/labor/wage-floor-natural-experiment/viz/WageStopViz.tsx",
+          "src/pages/articles/labor/wage-floor-natural-experiment/viz/TwoPredictionsViz.tsx",
+          "src/pages/articles/labor/wage-floor-natural-experiment/viz/MeasuredViz.tsx"
+        ],
+        "bodySha256": "ede6a67c5848eb1b72cf4a039d1c860c8ff40c35b05d5e83a90c88f969a8e88a"
+      }
     },
     {
       "route": "legal-system/precedent-and-legal-change",
@@ -4747,9 +4809,9 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 33,
+    "rewritten-local-verified": 35,
     "retained-local-verified": 16,
-    "unreviewed": 175,
-    "reviewed-rewrite-required": 1
+    "unreviewed": 174,
+    "reviewed-rewrite-required": 0
   }
 }

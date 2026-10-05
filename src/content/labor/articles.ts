@@ -3,38 +3,78 @@ import type { Article } from "../types";
 export const laborArticles: Article[] = [
   {
     slug: "wage-floor-natural-experiment",
-    title: "임금을 올리면 일자리가 준다는 예측을 재 봤습니다",
+    title: "최저임금: 총임금 계산과 두 지역의 고용 비교",
     subcategory: "wage-formation",
     sections: [
-      {
-        id: "overview",
-        title: "한 시간에 4.25달러 받던 사람이 5.05달러를 받게 되었습니다",
-      },
-      {
-        id: "two-counts",
-        title: "부품 1. 한 사람을 더 쓸 때 얻는 것과 내는 것을 셉니다",
-      },
-      {
-        id: "many-buyers",
-        title: "부품 2. 사는 가게가 여럿이면 임금은 얻는 몫에서 멈춥니다",
-      },
-      {
-        id: "one-buyer",
-        title: "부품 3. 사는 가게가 하나면 앞 글의 셈이 뒤집혀 나타납니다",
-      },
-      {
-        id: "two-predictions",
-        title: "부품 4. 같은 바닥이 한쪽은 줄이고 다른 쪽은 늘립니다",
-      },
-      {
-        id: "what-happened",
-        title: "부품 5. 재 본 결과는 두 셈 중 어느 쪽도 그대로 맞히지 못했습니다",
-      },
-      {
-        id: "handoff",
-        title: "정해진 몫이 사람 사이에서 어떻게 벌어지는지가 남습니다",
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 시급이 높아졌는데 노동을 더 쓰는 경우가 있을까"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 수입과 임금 합계를 받아 같은 하루의 계획을 비교한다"
+  },
+  {
+    "id": "case",
+    "title": "3. 임금 합계가 18에서 28로 늘 때 수입은 9.5 늘어난다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 새 시간의 7과 다른 세 시간의 3을 함께 센다"
+  },
+  {
+    "id": "why",
+    "title": "5. 지급 시급 하나로 고용의 방향을 정할 수 없다"
+  },
+  {
+    "id": "names",
+    "title": "6. 노동의 추가 수입, 임금 수용, 수요독점을 구분한다"
+  },
+  {
+    "id": "two-counts",
+    "title": "7. 한 시간의 차이와 순간적인 변화율은 다르다"
+  },
+  {
+    "id": "many-buyers",
+    "title": "8. 시급을 주어진 값으로 받으면 5시간을 고른다"
+  },
+  {
+    "id": "one-buyer",
+    "title": "9. 임금 총액을 미분하면 시급보다 큰 추가 비용이 나온다"
+  },
+  {
+    "id": "two-predictions",
+    "title": "10. 최저시급은 총액을 바꾸고 그 뒤에 추가 비용을 계산한다"
+  },
+  {
+    "id": "finite-units",
+    "title": "11. 정수 인원에서는 동률을 숨기지 않는다"
+  },
+  {
+    "id": "what-happened",
+    "title": "12. 실제 연구에서는 법정 하한과 두 지역의 고용을 조사했다"
+  },
+  {
+    "id": "comparison-conditions",
+    "title": "13. 비교 지역은 바뀌지 않았을 때의 경로를 대신한다"
+  },
+  {
+    "id": "prices-and-models",
+    "title": "14. 고용이 늘었다는 관측만으로 수요독점을 입증하지 않는다"
+  },
+  {
+    "id": "measurement-and-reanalysis",
+    "title": "15. 전화 응답과 급여 자료, 표본 선택도 검토 대상이다"
+  },
+  {
+    "id": "limits",
+    "title": "16. 방향을 이해하는 모형과 정책을 결정하는 자료를 구분한다"
+  },
+  {
+    "id": "handoff",
+    "title": "17. 임금 차이의 이유와 측정의 범위를 함께 묻는다"
+  }
+],
     component: () =>
       import("@/pages/articles/labor/wage-floor-natural-experiment"),
   },

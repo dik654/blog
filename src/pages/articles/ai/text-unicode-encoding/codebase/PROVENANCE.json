@@ -1,0 +1,38 @@
+{
+  "repository": "https://github.com/JuliaStrings/utf8proc",
+  "tag": "v2.11.3",
+  "commit": "e5e799221b45bbb90f5fdc5c69b6b8dfbf017e78",
+  "checked": "2026-10-05",
+  "files": [
+    {
+      "path": "utf8proc.c",
+      "url": "https://raw.githubusercontent.com/JuliaStrings/utf8proc/e5e799221b45bbb90f5fdc5c69b6b8dfbf017e78/utf8proc.c",
+      "bytes": 33114,
+      "sha256": "edf80118fd34796bcabef4567cc684adebc7058f2afe8cfdc11b7a78e383ed84"
+    },
+    {
+      "path": "utf8proc.h",
+      "url": "https://raw.githubusercontent.com/JuliaStrings/utf8proc/e5e799221b45bbb90f5fdc5c69b6b8dfbf017e78/utf8proc.h",
+      "bytes": 34049,
+      "sha256": "a4e498b7392c383cf3b22e662da21e0b48f1264806235d87b5d8bd166232f658"
+    },
+    {
+      "path": "utf8proc_data.c",
+      "url": "https://raw.githubusercontent.com/JuliaStrings/utf8proc/e5e799221b45bbb90f5fdc5c69b6b8dfbf017e78/utf8proc_data.c",
+      "bytes": 2360214,
+      "sha256": "950e549dbfc853c4304425f3af1875e72fa9fc9697c273c763400c2da4e380a7"
+    },
+    {
+      "path": "LICENSE.md",
+      "url": "https://raw.githubusercontent.com/JuliaStrings/utf8proc/e5e799221b45bbb90f5fdc5c69b6b8dfbf017e78/LICENSE.md",
+      "bytes": 5125,
+      "sha256": "3b510150d34f248a221bb88e1d811238d6c6c18b51231822c42974c39bb07256"
+    },
+    {
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/JuliaStrings/utf8proc/e5e799221b45bbb90f5fdc5c69b6b8dfbf017e78/README.md",
+      "bytes": 5755,
+      "sha256": "65cc44111c81eb9ec5f07e3ae84536550cbb11749dcd50f2e625cd74d94eccef"
+    }
+  ]
+}

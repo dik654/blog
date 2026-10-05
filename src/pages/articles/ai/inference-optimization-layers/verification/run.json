@@ -1,0 +1,450 @@
+{
+  "python": "3.12.13",
+  "numpy": "2.2.6",
+  "config": [
+    {
+      "enforce_eager": false,
+      "mode": "VLLM_COMPILE",
+      "cudagraph_mode": "FULL_AND_PIECEWISE"
+    },
+    {
+      "enforce_eager": true,
+      "mode": "NONE",
+      "cudagraph_mode": "NONE"
+    }
+  ],
+  "baseline100": {
+    "metrics": {
+      "completed": 20,
+      "failed": 0,
+      "total_input": 40,
+      "total_output": 20,
+      "request_throughput": 200.0,
+      "request_goodput": 0.0,
+      "output_throughput": 200.0,
+      "total_token_throughput": 600.0,
+      "mean_ttft_ms": 100.00000000000001,
+      "median_ttft_ms": 100.0,
+      "std_ttft_ms": 1.3877787807814457e-14,
+      "percentiles_ttft_ms": [
+        [
+          50,
+          100.0
+        ],
+        [
+          95,
+          100.0
+        ],
+        [
+          99,
+          100.0
+        ]
+      ],
+      "mean_tpot_ms": 0.0,
+      "median_tpot_ms": 0.0,
+      "std_tpot_ms": 0.0,
+      "percentiles_tpot_ms": [
+        [
+          50,
+          0.0
+        ],
+        [
+          95,
+          0.0
+        ],
+        [
+          99,
+          0.0
+        ]
+      ],
+      "mean_itl_ms": 0.0,
+      "median_itl_ms": 0.0,
+      "std_itl_ms": 0.0,
+      "percentiles_itl_ms": [
+        [
+          50,
+          0.0
+        ],
+        [
+          95,
+          0.0
+        ],
+        [
+          99,
+          0.0
+        ]
+      ],
+      "mean_e2el_ms": 100.00000000000001,
+      "median_e2el_ms": 100.0,
+      "std_e2el_ms": 1.3877787807814457e-14,
+      "percentiles_e2el_ms": [
+        [
+          50,
+          100.0
+        ],
+        [
+          95,
+          100.0
+        ],
+        [
+          99,
+          100.0
+        ]
+      ],
+      "max_output_tokens_per_s": 20.0,
+      "max_concurrent_requests": 20,
+      "rtfx": 0.0
+    },
+    "output_lengths": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "stdout": "tip: install termplotlib and gnuplot to plot the metrics\n",
+    "scope": "Synthetic 20 simultaneous successful records; duration supplied, not measured; text content not checked by metrics function."
+  },
+  "candidate80": {
+    "metrics": {
+      "completed": 20,
+      "failed": 0,
+      "total_input": 40,
+      "total_output": 20,
+      "request_throughput": 250.0,
+      "request_goodput": 250.0,
+      "output_throughput": 250.0,
+      "total_token_throughput": 750.0,
+      "mean_ttft_ms": 80.00000000000001,
+      "median_ttft_ms": 80.0,
+      "std_ttft_ms": 1.3877787807814457e-14,
+      "percentiles_ttft_ms": [
+        [
+          50,
+          80.0
+        ],
+        [
+          95,
+          80.0
+        ],
+        [
+          99,
+          80.0
+        ]
+      ],
+      "mean_tpot_ms": 0.0,
+      "median_tpot_ms": 0.0,
+      "std_tpot_ms": 0.0,
+      "percentiles_tpot_ms": [
+        [
+          50,
+          0.0
+        ],
+        [
+          95,
+          0.0
+        ],
+        [
+          99,
+          0.0
+        ]
+      ],
+      "mean_itl_ms": 0.0,
+      "median_itl_ms": 0.0,
+      "std_itl_ms": 0.0,
+      "percentiles_itl_ms": [
+        [
+          50,
+          0.0
+        ],
+        [
+          95,
+          0.0
+        ],
+        [
+          99,
+          0.0
+        ]
+      ],
+      "mean_e2el_ms": 80.00000000000001,
+      "median_e2el_ms": 80.0,
+      "std_e2el_ms": 1.3877787807814457e-14,
+      "percentiles_e2el_ms": [
+        [
+          50,
+          80.0
+        ],
+        [
+          95,
+          80.0
+        ],
+        [
+          99,
+          80.0
+        ]
+      ],
+      "max_output_tokens_per_s": 20.0,
+      "max_concurrent_requests": 20,
+      "rtfx": 0.0
+    },
+    "output_lengths": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "stdout": "tip: install termplotlib and gnuplot to plot the metrics\n",
+    "scope": "Synthetic 20 simultaneous successful records; duration supplied, not measured; text content not checked by metrics function."
+  },
+  "boundary90": {
+    "metrics": {
+      "completed": 20,
+      "failed": 0,
+      "total_input": 40,
+      "total_output": 20,
+      "request_throughput": 222.22222222222223,
+      "request_goodput": 222.22222222222223,
+      "output_throughput": 222.22222222222223,
+      "total_token_throughput": 666.6666666666667,
+      "mean_ttft_ms": 90.00000000000001,
+      "median_ttft_ms": 90.0,
+      "std_ttft_ms": 1.3877787807814457e-14,
+      "percentiles_ttft_ms": [
+        [
+          50,
+          90.0
+        ],
+        [
+          95,
+          90.0
+        ],
+        [
+          99,
+          90.0
+        ]
+      ],
+      "mean_tpot_ms": 0.0,
+      "median_tpot_ms": 0.0,
+      "std_tpot_ms": 0.0,
+      "percentiles_tpot_ms": [
+        [
+          50,
+          0.0
+        ],
+        [
+          95,
+          0.0
+        ],
+        [
+          99,
+          0.0
+        ]
+      ],
+      "mean_itl_ms": 0.0,
+      "median_itl_ms": 0.0,
+      "std_itl_ms": 0.0,
+      "percentiles_itl_ms": [
+        [
+          50,
+          0.0
+        ],
+        [
+          95,
+          0.0
+        ],
+        [
+          99,
+          0.0
+        ]
+      ],
+      "mean_e2el_ms": 90.00000000000001,
+      "median_e2el_ms": 90.0,
+      "std_e2el_ms": 1.3877787807814457e-14,
+      "percentiles_e2el_ms": [
+        [
+          50,
+          90.0
+        ],
+        [
+          95,
+          90.0
+        ],
+        [
+          99,
+          90.0
+        ]
+      ],
+      "max_output_tokens_per_s": 20.0,
+      "max_concurrent_requests": 20,
+      "rtfx": 0.0
+    },
+    "output_lengths": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "stdout": "tip: install termplotlib and gnuplot to plot the metrics\n",
+    "scope": "Synthetic 20 simultaneous successful records; duration supplied, not measured; text content not checked by metrics function."
+  },
+  "candidateWrongText": {
+    "metrics": {
+      "completed": 20,
+      "failed": 0,
+      "total_input": 40,
+      "total_output": 20,
+      "request_throughput": 250.0,
+      "request_goodput": 250.0,
+      "output_throughput": 250.0,
+      "total_token_throughput": 750.0,
+      "mean_ttft_ms": 80.00000000000001,
+      "median_ttft_ms": 80.0,
+      "std_ttft_ms": 1.3877787807814457e-14,
+      "percentiles_ttft_ms": [
+        [
+          50,
+          80.0
+        ],
+        [
+          95,
+          80.0
+        ],
+        [
+          99,
+          80.0
+        ]
+      ],
+      "mean_tpot_ms": 0.0,
+      "median_tpot_ms": 0.0,
+      "std_tpot_ms": 0.0,
+      "percentiles_tpot_ms": [
+        [
+          50,
+          0.0
+        ],
+        [
+          95,
+          0.0
+        ],
+        [
+          99,
+          0.0
+        ]
+      ],
+      "mean_itl_ms": 0.0,
+      "median_itl_ms": 0.0,
+      "std_itl_ms": 0.0,
+      "percentiles_itl_ms": [
+        [
+          50,
+          0.0
+        ],
+        [
+          95,
+          0.0
+        ],
+        [
+          99,
+          0.0
+        ]
+      ],
+      "mean_e2el_ms": 80.00000000000001,
+      "median_e2el_ms": 80.0,
+      "std_e2el_ms": 1.3877787807814457e-14,
+      "percentiles_e2el_ms": [
+        [
+          50,
+          80.0
+        ],
+        [
+          95,
+          80.0
+        ],
+        [
+          99,
+          80.0
+        ]
+      ],
+      "max_output_tokens_per_s": 20.0,
+      "max_concurrent_requests": 20,
+      "rtfx": 0.0
+    },
+    "output_lengths": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "stdout": "tip: install termplotlib and gnuplot to plot the metrics\n",
+    "scope": "Synthetic 20 simultaneous successful records; duration supplied, not measured; text content not checked by metrics function."
+  },
+  "scope": "Unchanged AST of enums, one enforce_eager branch, BenchmarkMetrics and calculate_metrics. Synthetic fields and caller duration. No full VllmConfig validation, inference server, GPU or actual performance/cost observation.",
+  "sourceHashes": {
+    "codebase/vllm/vllm/config/compilation.py": "31e1ebbf69af2b5f0c46d4b92caad47c4f87e594df339ba25038309f0836e0a5",
+    "codebase/vllm/vllm/config/vllm.py": "66e82e95c5cdbb88715e25feb65f4cc2be83cd67bff5b5f703d52dea43a0815e",
+    "codebase/vllm/vllm/benchmarks/serve.py": "3f0e40ac91a8e817815274ff4af964f2399d3d841f74fd2f04be168122fd0760"
+  }
+}

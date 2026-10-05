@@ -1,0 +1,169 @@
+{
+  "case": [
+    {
+      "hours": 3,
+      "wage": 6,
+      "revenue": 34.5,
+      "cost": 18,
+      "profit": 16.5
+    },
+    {
+      "hours": 4,
+      "wage": 7,
+      "revenue": 44,
+      "cost": 28,
+      "profit": 16
+    }
+  ],
+  "floor9": [
+    {
+      "hours": 3,
+      "wage": 9,
+      "revenue": 34.5,
+      "cost": 27,
+      "profit": 7.5
+    },
+    {
+      "hours": 4,
+      "wage": 9,
+      "revenue": 44,
+      "cost": 36,
+      "profit": 8
+    },
+    {
+      "hours": 5,
+      "wage": 9,
+      "revenue": 52.5,
+      "cost": 45,
+      "profit": 7.5
+    }
+  ],
+  "floors": [
+    {
+      "F": 0,
+      "monopsony": 3.3333333333333335,
+      "competitive": 5,
+      "plan": {
+        "hours": 3.3333333333333335,
+        "wage": 6.333333333333334,
+        "revenue": 37.77777777777778,
+        "cost": 21.111111111111114,
+        "profit": 16.666666666666664
+      }
+    },
+    {
+      "F": 6,
+      "monopsony": 3.3333333333333335,
+      "competitive": 5,
+      "plan": {
+        "hours": 3.3333333333333335,
+        "wage": 6.333333333333334,
+        "revenue": 37.77777777777778,
+        "cost": 21.111111111111114,
+        "profit": 16.666666666666664
+      }
+    },
+    {
+      "F": 6.333333333333333,
+      "monopsony": 3.3333333333333335,
+      "competitive": 5,
+      "plan": {
+        "hours": 3.3333333333333335,
+        "wage": 6.333333333333334,
+        "revenue": 37.77777777777778,
+        "cost": 21.111111111111114,
+        "profit": 16.666666666666664
+      }
+    },
+    {
+      "F": 7,
+      "monopsony": 4,
+      "competitive": 5,
+      "plan": {
+        "hours": 4,
+        "wage": 7,
+        "revenue": 44,
+        "cost": 28,
+        "profit": 16
+      }
+    },
+    {
+      "F": 8,
+      "monopsony": 5,
+      "competitive": 5,
+      "plan": {
+        "hours": 5,
+        "wage": 8,
+        "revenue": 52.5,
+        "cost": 40,
+        "profit": 12.5
+      }
+    },
+    {
+      "F": 9,
+      "monopsony": 4,
+      "competitive": 4,
+      "plan": {
+        "hours": 4,
+        "wage": 9,
+        "revenue": 44,
+        "cost": 36,
+        "profit": 8
+      }
+    },
+    {
+      "F": 12,
+      "monopsony": 1,
+      "competitive": 1,
+      "plan": {
+        "hours": 1,
+        "wage": 12,
+        "revenue": 12.5,
+        "cost": 12,
+        "profit": 0.5
+      }
+    },
+    {
+      "F": 13,
+      "monopsony": 0,
+      "competitive": 0,
+      "plan": {
+        "hours": 0,
+        "wage": 13,
+        "revenue": 0,
+        "cost": 0,
+        "profit": 0
+      }
+    },
+    {
+      "F": 14,
+      "monopsony": 0,
+      "competitive": 0,
+      "plan": {
+        "hours": 0,
+        "wage": 14,
+        "revenue": 0,
+        "cost": 0,
+        "profit": 0
+      }
+    }
+  ],
+  "integers": {
+    "w8": [
+      4,
+      5
+    ],
+    "monopsony": [
+      3
+    ],
+    "F9": [
+      3,
+      4
+    ],
+    "F12": [
+      0,
+      1
+    ]
+  },
+  "log033": 3.3550539241305475
+}

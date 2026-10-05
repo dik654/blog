@@ -380,13 +380,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "sharedGate": "A10N/B60+4N/C300+N의10/80동률,11/81정수절약,같은B평균7/4.6,Cprime75+N건너뛰기,3×30합계540→90의390및추가60/180을본문·2Viz·6+4에서대조합니다. 비용과가격/시장결과를구분합니다."
   },
   "firms/market-power-and-markup": {
-    action: "keep" as const,
-    status: "reviewed" as const,
-    reviewedAt: "2026-10-03",
-    rationale:
-      "마주하는 것·늘어나는 돈·멈추는 조건·틈의 크기·사라지는 몫까지가 혼자 팔면 값이 어디에 멈추는가라는 하나의 질문을 푸는 한 묶음이다. 틈의 크기를 떼면 Cournot의 조건이 왜 중요한지가 남지 않는다.",
-    sharedGate:
-      "같은 수요와 한계비용에서 멈추는 수량·읽히는 값·틈의 비율·사라지는 삼각형이 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "하나의판매사례를15절로이어가고5개념의증명·반례와6+4를보존합니다. 미분·정수·경계·최대·마크업·잉여의구분은같은수요와비용으로연결됩니다.",
+    "sharedGate": "p13−q/MC7의q3p10R30C21π9,q4p9R36C28π8,ΔR6vsMR7/5,π9−(q−3)^2,MC9/두번째수요/한도2/진입F10/CS18→4.5 PS0→9 DWL4.5를본문·2Viz·6+4에서대조합니다."
   },
   "devices/pn-junction-and-rectification": {
     "action": "keep",
@@ -529,13 +527,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "sharedGate": "가정4MiB4096KiB=256+1536+1536+768. v1보존·v2TEST·미확정REVERT/확정NONE. scratch조각 v2보관→v1이동→v2배치. MCUbootv2.2.0 commit2d61c318 bootutil_public.c105–150·523–570·684–698·729–743,swap_scratch.c50–122·618–778;헤더·설계문서·Apache라이선스 원본5개 SHA 동일. 실보드 벤치마크/전원차단 실행아님."
   },
   "labor/wage-floor-natural-experiment": {
-    action: "keep" as const,
-    status: "reviewed" as const,
-    reviewedAt: "2026-10-03",
-    rationale:
-      "얻는 몫·두 가지 멈추는 자리·갈라지는 예측·재는 방법·읽는 규율까지가 임금이 어디서 멈추는가라는 하나의 질문을 푸는 한 묶음이다. 측정을 떼어 내면 앞의 분기가 왜 중요한지가 남지 않고, 분기를 떼어 내면 측정 결과를 한쪽 증거로 오독하게 된다.",
-    sharedGate:
-      "같은 숫자 묶음(더 파는 몫 13−n, 부르는 임금 n+3, 바닥 9)에서 멈추는 사람 수·임금·틈과, 원문 표 3·표 7의 값이 본문·식·Viz·연습문제에서 일치하는지로 판정한다.",
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "같은 노동시간 사례에서 총액·미분·최저임금·정수 선택을 연결한 뒤 실증 자료의 비교 조건을 검토합니다.17절에 기존6개념과정확6+4,증명·반례를보존합니다.",
+    "sharedGate": "연속B13n−n²/2와별도정수B12.5n−n²/2,총액nmax(F,n+3),F구간19/3·8·13,표3행별표본및반올림,표7로그계수,비교추세가정을본문·3Viz·6+4에서대조합니다."
   },
   "labor/measuring-the-spread": {
     action: "keep" as const,
@@ -1931,6 +1927,34 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "조각 합성의 조회 결과는 사전·해시·문자 정규화와 행 파일의 조합으로 결정됩니다. run/runs의 같은 네 기여를 원문과 배포 반례까지 이어야 .vec만으로 OOV 기능이 유지된다는 오해를 막을 수 있어 한 글로 유지합니다. 앞선 단어 조회와 연쇄법칙은 정본을 재사용합니다.",
     "sharedGate": "run의 [0,5,5,7]→(4,.75), runs의 [5,5,6,3]→(1.75,1), Unicode의 (7,1)/(2,1)과 bucket 축소 후 (3,.75)를 본문·두 그림·실제 원문·6+4에서 같은 가정으로 대조합니다."
   },
+  "crypto/groth16": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "같은 두 줄을 제약·정확한 몫·설정·증명·검증으로 연결하고 실제 원문의 8점 QAP과 API 경계를 대조합니다. 일반 보간·페어링·SNARK 보안 개념은 연결 글을 재사용하며 개별 구현 심화와 범위를 구분합니다.",
+    "sharedGate": "독립 작은 산술과 원문 Rust의 실제 성공·실패, 고정 source/lock, humanize 및 390/1440 수식·4장면·10원문 패널·6+4를 확인합니다. 공동 설정·전체 보안·성능은 미검증으로 남깁니다."
+  },
+  "crypto/plonk": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "공개3·15와 비공개4의 같은 표를 selector 산술, 복사 누적곱, 몫, 숨김, 실제 구현까지 이어야 각 부품이 보장하는 범위를 구분할 수 있습니다. 일반 유한체·NTT·KZG·Fiat–Shamir는 정본을 재사용하고 PLONK의 연결 순서와 gnark 고정 구현을 이 글이 소유합니다.",
+    "sharedGate": "F97 네 줄의 Z=1→50→67→76→1과 오류45, N(5)=78=T(5)85×42, 9409개 β·γ 및 두 점 blinding, gnark domain8·constraints3·proof520bytes와 실패 fixture를 26절·4장면·12원문 버튼·6기초/4심화에서 대조합니다."
+  },
+  "ai/text-unicode-encoding": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "같은 Aé가😀의 grapheme·code point·UTF-16·UTF-8 좌표가 정규화와 span 이동에서 어떻게 달라지는지 한 경로로 추적합니다. bit·byte부터 실제 utf8proc 원문과 tokenizer 경계까지 같은 문자열을 쓰므로 한 글로 유지합니다.",
+    "sharedGate": "raw5/6/11/4, NFC4/5/10/4, NFD6/7/14/4와 family7/11/25/1, malformed3종·surrogate·NUL 경계를 21절·2Viz의6장면·9원문 패널·6기초/4심화에서 실제 C와 Node 결과로 대조합니다."
+  },
+  "ai/inference-optimization-layers": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "100 ms 요청의 같은 시간표를 따라 분류·직렬 상한·상호작용을 이해한 뒤 요청 기다림과 실제 작업·비용의 차이를 확인합니다. vLLM의 설정과 측정 함수는 이 구별을 실제 코드로 검증하므로 한 글로 유지합니다. 개별 최적화의 내부 알고리즘은 각 정본을 재사용합니다.",
+    "sharedGate": "100→80→64와 극한60 ms, 추가5/8 ms, 겹침80/20, 400 request-ms 대20 GPU-ms, 3→2/2→2 복사본, ROI−79.72%·1800일, 차이2.4와95%구간1.72–3.08을 22절·4장면·9원문패널·6기초/4심화에 동일 조건으로 대조한다."
+  },
 };
 
 /**
@@ -1939,11 +1963,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/launch-overhead-and-cpu-gpu-synchronization": "6ce09e8e1f3ff2c4",
+  "ai/inference-optimization-layers": "0f317d8baf76db75",
+  "ai/text-unicode-encoding": "582c3439a0477107",
   "ai/subword-static-embeddings": "9318c48cfc1ef572",
   "ai/word2vec-negative-sampling": "40651034445f4f77",
   "ai/cuda-graph-capture": "d0ab85923d9ad4ae",
   "ai/word2vec-prediction-objectives": "16f9c34ef7e7fd8b",
   "crypto/binary-field-proving": "97e459fcf7d8e433",
+  "crypto/groth16": "bb320354ebeeaaf0",
+  "crypto/plonk": "82db69ea7621f48d",
   "crypto/paillier-cryptosystem": "eb97ea187d036bd9",
   "ai/attention-kernel-anatomy-and-backends": "e7b8a70c42ffff14",
   "ai/word2vec": "512dc5c5ab18c0ae",
@@ -2093,7 +2121,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "macro/what-the-price-level-hides": "a44701dc2ad7feae",
   "macro/why-per-head-stalls": "288664818602d036",
   "labor/measuring-the-spread": "9c6d52345e9d0a9c",
-  "labor/wage-floor-natural-experiment": "24f8973f6bfad249",
+  "labor/wage-floor-natural-experiment": "20cf9700da2533c9",
   "embedded/firmware-update-and-recovery": "b54e482e0b1c8341",
   "embedded/scheduling-and-real-time": "a2fdefd3408002c7",
   "embedded/serial-buses-and-tradeoffs": "b77cf44426bedb4f",
@@ -2189,7 +2217,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/onprem-k8s-inference-platform": "acd23d8e4dc14592",
   "firms/why-firms-exist": "663c6174003a6728",
   "firms/scale-and-cost-structure": "94e938bc20ccbb61",
-  "firms/market-power-and-markup": "bd7e2fcb297b90d2",
+  "firms/market-power-and-markup": "a2f97a2c13566714",
   "circuits/lumped-circuit-and-conservation": "1dc30f31646ad464",
   "testimony/speeches-were-reconstructed": "f1adf0d6f339adc2",
   "testimony/told-but-not-believed": "f7b915d7d5618ff8",
