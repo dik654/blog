@@ -10,18 +10,36 @@ export default function DataAugmentationFoundationArticle() {
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">Data augmentation은 사진을 많이 만드는 일이 아니라 허용할 변화를 정의하는 일입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">같은 상품을 조금 옆에서 찍거나 조명이 달라져도 상품 ID는 그대로입니다. 반대로 숫자 6을 뒤집거나 신호등 색을 바꾸면 정답이 달라질 수 있습니다. Augmentation은 <strong>배포에서 생길 변화 중 target 의미를 보존하는 범위</strong>를 training에 넣는 모델링입니다.</p>
-          <p>
-            transform 이름부터 고르지는 않습니다. 무엇이 달라질 수 있는지, 무엇은 반드시 같아야 하는지, target을 그대로 둘지 함께 바꿀지를 차례로 적는 게 먼저입니다.
+          <p className="text-lg leading-8">
+            640×480 상품 사진에서 box가 (80,120)–(240,360)이라고 합시다.
+            사진을 좌우로 뒤집으면 같은 상품이지만 box는 (400,120)–(560,360)으로
+            옮겨야 합니다. 밝기만 바꾸면 좌표는 그대로입니다. 같은 source에서
+            나온 두 변화도 target을 다루는 규칙은 다릅니다.
           </p>
+          <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+          <ol>
+            <li>사진만 좌우로 뒤집고 원래 box를 그대로 두어도 label-preserving pair일까요?</li>
+            <li>Augmented 파일을 네 장 저장하면 training objective가 정확히 네 배가 될까요?</li>
+            <li>Validation 성능이 오르는 동안 transform strength는 계속 높일수록 좋을까요?</li>
+          </ol>
+          <p>
+            세 답은 모두 <strong>아니요</strong>입니다. 첫 pair는 box가 어긋나고,
+            training은 파일 수가 아니라 sampling distribution의 expectation을
+            최적화합니다. 변환이 target 의미를 깨기 시작하면 더 강한 policy는
+            label noise를 늘립니다.
+          </p>
+        </div>
+        <AugmentationContractViz />
+        <ContentBoundary article="data-augmentation" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>같은 상품을 조금 옆에서 찍거나 조명이 달라져도 상품 ID는 그대로입니다. 반대로 숫자 6을 뒤집거나 신호등 색을 바꾸면 정답이 달라질 수 있습니다. Augmentation은 <strong>배포에서 생길 변화 중 target 의미를 보존하는 범위</strong>를 training에 넣는 모델링입니다.</p>
+          <p>Transform 이름부터 고르지 않습니다. 무엇이 달라질 수 있는지, 무엇은 반드시 같아야 하는지, target을 그대로 둘지 함께 바꿀지를 차례로 적습니다.</p>
         </div>
         <TermBreakdown title="처음 구분할 세 용어" items={[
           { term: "Label-preserving transformation", description: "Input은 달라져도 현재 task의 target 의미는 유지되는 변화입니다.", example: "상품 분류에서 작은 crop과 밝기 변화.", boundary: "좌우 방향·색·시간이 target인 task에서는 같은 변환이 허용되지 않을 수 있습니다." },
           { term: "Augmentation distribution", description: "Transform 종류뿐 아니라 적용 확률·parameter 범위·순서를 함께 정한 sampling policy입니다.", example: "확률 0.5 flip 뒤 ±10% brightness." },
           { term: "Target map", description: "Sampling한 같은 parameter로 class·box·mask·keypoint·soft label을 유효한 target으로 갱신하는 함수입니다.", example: "Image를 오른쪽으로 12px 옮기면 box의 x 좌표도 12px 이동." },
         ]} />
-        <AugmentationContractViz />
-        <ContentBoundary article="data-augmentation" />
       </section>
 
       <section id="target-map" className="scroll-mt-20">

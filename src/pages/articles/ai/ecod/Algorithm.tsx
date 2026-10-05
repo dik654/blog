@@ -46,9 +46,9 @@ export default function Algorithm() {
         question="분포가 어느 방향으로 길게 늘어졌는지 어떻게 한 숫자로 정할까?"
         idea={<>평균에서 떨어진 거리를 세제곱하면 방향 부호가 남습니다. 이를 표준편차의 세제곱 scale로 나누어 feature 단위에 덜 민감한 skewness coefficient를 만듭니다.</>}
         formula={String.raw`\gamma_j=\frac{\frac1n\sum_{r=1}^{n}(X_{rj}-\bar X_j)^3}{\left[\frac1{n-1}\sum_{r=1}^{n}(X_{rj}-\bar X_j)^2\right]^{3/2}}`}
-        annotatedFormula={String.raw`\gamma_j=\underbrace{\frac{\frac1n\sum_{r=1}^{n}(X_{rj}-\bar X_j)^3}{\left[\frac1{n-1}\sum_{r=1}^{n}(X_{rj}-\bar X_j)^2\right]^{3/2}}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\gamma_j=\underbrace{\frac{\frac1n\sum_{r=1}^{n}(X_{rj}-\bar X_j)^3}{\left[\frac1{n-1}\sum_{r=1}^{n}(X_{rj}-\bar X_j)^2\right]^{3/2}}}_{\text{부호 있는 3차 모멘트 / 표준편차}^3}`}
         operations={[
-          { expression: String.raw`\frac{\frac1n\sum_{r=1}^{n}(X_{rj}-\bar X_j)^3}{\left[\frac1{n-1}\sum_{r=1}^{n}(X_{rj}-\bar X_j)^2\right]^{3/2}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","평균에서 떨어진 거리를 세제곱하면 방향 부호가 남습니다."] },
+          { expression: String.raw`\frac{\frac1n\sum_{r=1}^{n}(X_{rj}-\bar X_j)^3}{\left[\frac1{n-1}\sum_{r=1}^{n}(X_{rj}-\bar X_j)^2\right]^{3/2}}`, annotation: ["평균에서 떨어진 거리를 세제곱해 tail 방향을 남깁니다.", "표준편차의 세제곱으로 나눠 feature 단위를 없앱니다."] },
         ]}
         terms={[
           { symbol: "\\bar X_j", name: "feature mean", description: "Feature j의 reference sample 평균입니다." },
@@ -66,11 +66,12 @@ export default function Algorithm() {
         question="원 ECOD 논문은 feature contribution을 row score로 어떻게 합칠까?"
         idea={<>왼쪽만 합친 score, 오른쪽만 합친 score, skewness로 feature별 방향을 고른 score를 각각 만든 뒤 row 수준에서 가장 극단적인 하나를 선택합니다.</>}
         formula={String.raw`\begin{aligned}O_L(i)&=\sum_j U_{L,ij}\\O_R(i)&=\sum_j U_{R,ij}\\O_A(i)&=\sum_j U_{S,ij}\\O_i^{\mathrm{paper}}&=\max\{O_L(i),O_R(i),O_A(i)\}\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}O_L(i)&=\underbrace{\sum_j U_{L,ij}}_{\text{오른쪽 항으로 결과 계산}}\\O_R(i)&=\underbrace{\sum_j U_{R,ij}}_{\text{오른쪽 항으로 결과 계산}}\\O_A(i)&=\underbrace{\sum_j U_{S,ij}}_{\text{selected tail 계산}}\\O_i^{\mathrm{paper}}&=\max\{O_L(i),O_R(i),O_A(i)\}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}O_L(i)&=\underbrace{\sum_j U_{L,ij}}_{\text{모든 feature의 왼쪽 tail 합}}\\O_R(i)&=\underbrace{\sum_j U_{R,ij}}_{\text{모든 feature의 오른쪽 tail 합}}\\O_A(i)&=\underbrace{\sum_j U_{S,ij}}_{\text{feature별 선택 tail 합}}\\O_i^{\mathrm{paper}}&=\underbrace{\max\{O_L(i),O_R(i),O_A(i)\}}_{\text{세 row score 중 최댓값}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_j U_{L,ij}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","왼쪽만 합친 score, 오른쪽만 합친 score,","skewness로 feature별 방향을 고른 score를","각각 만든 뒤 row 수준에서 가장 극단적인 하나를"] },
-          { expression: String.raw`\sum_j U_{R,ij}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","왼쪽만 합친 score, 오른쪽만 합친 score,","skewness로 feature별 방향을 고른 score를","각각 만든 뒤 row 수준에서 가장 극단적인 하나를"] },
-          { expression: String.raw`\sum_j U_{S,ij}`, annotation: ["selected tail이(가) 식의 결과에 기여하는 방식을","계산합니다.","왼쪽만 합친 score, 오른쪽만 합친 score,","skewness로 feature별 방향을 고른 score를"] },
+          { expression: String.raw`\sum_j U_{L,ij}`, annotation: ["Row i의 모든 feature에서 왼쪽 tail contribution을 더합니다."] },
+          { expression: String.raw`\sum_j U_{R,ij}`, annotation: ["같은 row에서 오른쪽 tail contribution만 더합니다."] },
+          { expression: String.raw`\sum_j U_{S,ij}`, annotation: ["각 feature의 skewness가 고른 방향의 contribution을 더합니다."] },
+          { expression: String.raw`\max\{O_L(i),O_R(i),O_A(i)\}`, annotation: ["세 합 가운데 가장 큰 값을 논문의 최종 row score로 택합니다."] },
         ]}
         terms={[
           { symbol: "O_L,O_R", name: "one-direction scores", description: "모든 feature에서 같은 tail 방향의 contribution을 합친 두 후보입니다." },
@@ -89,9 +90,10 @@ export default function Algorithm() {
         question="현재 PyOD 3.6.4 소스가 실제로 반환하는 score는 무엇인가?"
         idea={<>소스는 각 feature에서 left·right·skew-selected contribution의 최댓값을 먼저 고른 다음, 그 결과를 feature 축으로 합산합니다.</>}
         formula={String.raw`O_i^{\mathrm{PyOD}}=\sum_j\max\left\{U_{L,ij},U_{R,ij},U_{S,ij}\right\}`}
-        annotatedFormula={String.raw`O_i^{\mathrm{PyOD}}=\underbrace{\sum_j\max\left\{U_{L,ij},U_{R,ij},U_{S,ij}\right\}}_{\text{경계 후보 선택}}`}
+        annotatedFormula={String.raw`O_i^{\mathrm{PyOD}}=\underbrace{\sum_j\max\left\{U_{L,ij},U_{R,ij},U_{S,ij}\right\}}_{\text{feature별 최댓값을 먼저 고른 뒤 합산}}`}
         operations={[
-          { expression: String.raw`\sum_j\max\left\{U_{L,ij},U_{R,ij},U_{S,ij}\right\}`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","소스는 각 feature에서","left·right·skew-selected","contribution의 최댓값을 먼저 고른 다음, 그 결과를"] },
+          { expression: String.raw`\max\left\{U_{L,ij},U_{R,ij},U_{S,ij}\right\}`, annotation: ["Feature j 안에서 left, right, skew-selected 중 최댓값을 먼저 고릅니다."] },
+          { expression: String.raw`\sum_j`, annotation: ["그 feature별 최댓값을 더해 PyOD의 row score를 만듭니다."] },
         ]}
         terms={[
           { symbol: "U_{S,ij}", name: "skew-selected contribution", description: "Skewness 부호에 따라 left 또는 right에서 가져온 feature score입니다." },
@@ -106,10 +108,14 @@ export default function Algorithm() {
         <p className="text-xs font-bold text-primary">논문 읽기 · ECOD 원 방법</p>
         <p className="mt-2 text-sm font-semibold">ECOD: Unsupervised Outlier Detection Using Empirical CDFs</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Li 등이 제안한 것은 parameter-free score입니다. label 없이 feature별 empirical tail probability를 계산한 뒤 negative
-          log·skewness correction·row aggregation을 거쳐 global outlier ranking을 만듭니다. 논문의 비교는 선정한 tabular
-          benchmark와 원문의 aggregation 식을 전제로 합니다. feature dependence를 정확히 모델링하거나 score를 실제 anomaly probability로
-          calibration한다는 뜻은 아닙니다.
+          Li 등은 label 없이 feature별 empirical tail probability를 계산한 뒤
+          negative log와 skewness correction을 적용합니다. 그 contribution을
+          row 단위로 모아 global outlier ranking을 만듭니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          논문의 비교는 선정한 tabular benchmark와 원문의 aggregation 식을
+          전제로 합니다. Feature dependence를 정확히 모델링하거나 score를 실제
+          anomaly probability로 calibration한다는 뜻은 아닙니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2201.00382" target="_blank" rel="noreferrer">원 논문의 score·복잡도·실험 범위 보기</a>
       </div>

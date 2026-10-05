@@ -38,7 +38,7 @@ export default function TableOfContents({ sections }: Props) {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <ScrollArea className="h-[calc(100vh-8rem)]">
+    <ScrollArea className="h-[calc(100svh-8rem)]">
       <nav className="space-y-0.5">
         <p className="mb-3 text-sm font-semibold text-foreground">목차</p>
         {sections.map((section) => {

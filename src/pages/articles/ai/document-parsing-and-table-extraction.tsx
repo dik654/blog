@@ -20,8 +20,30 @@ export default function DocumentParsingAndTableExtractionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            PDF·HTML 문서를 그냥 pure text로 뽑으면 다단 레이아웃은 읽는 순서가 뒤섞이고 표는 셀 경계가 사라져 숫자가 엉뚱한 항목에 붙습니다. 표·다단 레이아웃처럼 구조가
-            있는 문서는 layout을 분석하고 순서를 복원해야 뜻이 살아 있는 텍스트로 바뀝니다.
+            3열 표를 읽는다고 합시다. 첫 헤더 행은 <code>지표</code>와
+            <code>colspan=2</code>인 <code>2024</code>, 둘째 행은
+            <code>Q1·Q2</code>, 데이터 행은 <code>매출·120·150</code>입니다.
+            병합 정보를 버리면 2024가 어느 두 숫자의 상위 헤더인지 사라집니다.
+          </p>
+          <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+          <ol>
+            <li><code>2024 Q1 Q2 매출 120 150</code>이라는 pure text만 있으면 셀 관계를 항상 복원할 수 있을까요?</li>
+            <li><code>colspan=2</code>인 2024를 한 칸으로 두어도 모든 행의 열 개수가 같을까요?</li>
+            <li>512-token 경계에서 헤더와 데이터 행이 갈라져도 뒤 chunk의 숫자 뜻은 보존될까요?</li>
+          </ol>
+          <p>
+            세 답은 모두 <strong>아니요</strong>입니다. 병합 셀을 실제 grid로
+            펼치고 다단 헤더를 열별로 합친 뒤, 행마다 헤더를 반복하거나 표 전체를
+            보존해야 숫자 120과 150의 의미가 남습니다.
+          </p>
+        </div>
+        <DocumentParsingAndTableExtractionViz />
+        <ContentBoundary article="document-parsing-and-table-extraction" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            PDF·HTML 문서를 그냥 pure text로 뽑으면 다단 레이아웃은 읽는 순서가
+            뒤섞이고 표는 셀 경계가 사라집니다. 구조가 있는 문서는 layout을
+            분석하고 읽는 순서를 복원해야 뜻이 살아 있는 텍스트로 바뀝니다.
           </p>
           <p>
             이 글은 PDF·HTML에서 layout을 나누고 reading order를 복원하는 단계부터 시작해 OCR로 이미지 문서를 읽고 표 영역을 찾아 구조를 인식한 뒤, 정규화와
@@ -34,7 +56,6 @@ export default function DocumentParsingAndTableExtractionArticle() {
             구조가 있는 문서를 chunking 이전에 어떻게 구조화하는지에만 집중합니다.
           </p>
         </div>
-        <ContentBoundary article="document-parsing-and-table-extraction" />
       </section>
 
       <section id="layout-and-order" className="scroll-mt-20">
@@ -128,7 +149,6 @@ export default function DocumentParsingAndTableExtractionArticle() {
             그만큼 더 어렵습니다.
           </p>
         </div>
-        <DocumentParsingAndTableExtractionViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             rowspan은 한 셀이 아래로 여러 행에 걸치는 병합, colspan은 옆으로 여러 열에 걸치는 병합을 나타내는 속성입니다. 예를 들어 헤더 1행이 "지표"와

@@ -26,12 +26,12 @@ x=[1,2,3],\ y=[2,4,6]&\Rightarrow r_{xy}=1.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
 r_{xy}&=\underbrace{\frac{\sum_i(x_i-\bar{x})(y_i-\bar{y})}
-{\sqrt{\sum_i(x_i-\bar{x})^2}\sqrt{\sum_i(y_i-\bar{y})^2}},}_{\text{기준량당 비율}}\\
+{\sqrt{\sum_i(x_i-\bar{x})^2}\sqrt{\sum_i(y_i-\bar{y})^2}},}_{\text{함께 움직인 크기 / 각 변수의 변동 크기}}\\
 x=[1,2,3],\ y=[2,4,6]&\Rightarrow r_{xy}=1.
 \end{aligned}`}
         operations={[
           { expression: String.raw`\frac{\sum_i(x_i-\bar{x})(y_i-\bar{y})}
-{\sqrt{\sum_i(x_i-\bar{x})^2}\sqrt{\sum_i(y_i-\bar{y})^2}},`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 값에서 평균을 뺀 deviation의 곱을 더하고, 두","변수의 deviation 크기로 나눕니다."] },
+{\sqrt{\sum_i(x_i-\bar{x})^2}\sqrt{\sum_i(y_i-\bar{y})^2}}`, annotation: ["같은 행의 centered x와 y를 곱해 함께 움직인 방향을 더합니다.", "두 변수의 변동 크기로 나눠 단위를 없애고 −1에서 1 사이로 맞춥니다."] },
         ]}
         terms={[
           { symbol: String.raw`\bar{x},\bar{y}`, name: "sample means", description: "각 변수의 reference sample 평균입니다." },

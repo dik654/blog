@@ -16092,12 +16092,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "document-structure-extraction",
-   "owner": "/ai/document-parsing-and-table-extraction#layout-and-order",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#layout-and-order",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "Layout parsing·reading order를 합친 문서 구조 추출의 canonical",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16106,12 +16106,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "document-structure-extraction",
-   "owner": "/ai/document-parsing-and-table-extraction#layout-and-order",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#layout-and-order",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "문서를 영역으로 나누는 구성 요소로 본문에서 별도 설명·수치 예 포함",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16120,12 +16120,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "document-structure-extraction",
-   "owner": "/ai/document-parsing-and-table-extraction#layout-and-order",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#layout-and-order",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "2단 컬럼 순서 오류 수치 예를 포함한 별도 설명",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16134,12 +16134,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "pdf-html-parsing-and-dom-tree",
-   "owner": "/ai/document-parsing-and-table-extraction#layout-and-order",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#layout-and-order",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "PyMuPDF·pdfplumber 근거로 좌표 추출을 설명하는 canonical",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16148,12 +16148,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "ocr-and-layout-aware-extraction",
-   "owner": "/ai/document-parsing-and-table-extraction#ocr",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#ocr",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": true,
    "reason": "본문 언급은 있었으나 canonical node 없어 새로 정의",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16162,12 +16162,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "ocr-and-layout-aware-extraction",
-   "owner": "/ai/document-parsing-and-table-extraction#ocr",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#ocr",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "hi_res/ocr_only 전략 근거로 위치 보존 OCR을 설명",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16176,12 +16176,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "pdf-html-parsing-and-dom-tree",
-   "owner": "/ai/document-parsing-and-table-extraction#layout-and-order",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#layout-and-order",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "태그 구조를 DOM tree로 바꾸는 절차로 별도 설명",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16190,12 +16190,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "pdf-html-parsing-and-dom-tree",
-   "owner": "/ai/document-parsing-and-table-extraction#layout-and-order",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#layout-and-order",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "부모-자식 트리 구조를 별도 예시로 설명",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16204,12 +16204,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "table-extraction-and-structure-recognition",
-   "owner": "/ai/document-parsing-and-table-extraction#table-structure",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#table-structure",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "표 영역 검출 단계의 canonical",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16218,12 +16218,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "table-extraction-and-structure-recognition",
-   "owner": "/ai/document-parsing-and-table-extraction#table-structure",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#table-structure",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "PubTables-1M GriTS/AccCon 수치로 행·열·헤더 복원을 설명",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16232,12 +16232,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "merged-cell-and-multi-level-header",
-   "owner": "/ai/document-parsing-and-table-extraction#table-structure",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#table-structure",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": true,
    "reason": "본문 언급은 있었으나 canonical node 없어 새로 정의, 세로 병합 속성",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16246,12 +16246,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "merged-cell-and-multi-level-header",
-   "owner": "/ai/document-parsing-and-table-extraction#table-structure",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#table-structure",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": true,
    "reason": "본문 언급은 있었으나 canonical node 없어 새로 정의, 가로 병합 속성",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16260,12 +16260,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "merged-cell-and-multi-level-header",
-   "owner": "/ai/document-parsing-and-table-extraction#table-structure",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#table-structure",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "2단 헤더를 flat header로 합치는 절차의 canonical",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16274,12 +16274,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "merged-cell-and-multi-level-header",
-   "owner": "/ai/document-parsing-and-table-extraction#table-structure",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#table-structure",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "TableFormer TEDS 단순·복잡 표 비교로 뒷받침한 canonical",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16288,12 +16288,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "table-normalization-and-linearization",
-   "owner": "/ai/document-parsing-and-table-extraction#table-normalization",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#table-normalization",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "사각형 grid 규격화 단계의 canonical",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16302,12 +16302,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "table-normalization-and-linearization",
-   "owner": "/ai/document-parsing-and-table-extraction#table-normalization",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#table-normalization",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "markdown·row-level 두 방식 비교로 뒷받침한 canonical",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16316,12 +16316,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "table-normalization-and-linearization",
-   "owner": "/ai/document-parsing-and-table-extraction#table-normalization",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#table-normalization",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "'열 이름=값' 문장 표현의 별도 수치 예 포함",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16330,12 +16330,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "table-metadata-and-provenance",
-   "owner": "/ai/document-parsing-and-table-extraction#metadata-and-chunking",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#metadata-and-chunking",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "페이지·좌표·컬럼 이름 부가 정보의 canonical",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16344,12 +16344,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "structure-preserving-chunking",
-   "owner": "/ai/document-parsing-and-table-extraction#metadata-and-chunking",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#metadata-and-chunking",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "표·행 경계를 지키는 chunking 규칙의 canonical",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",
@@ -16358,12 +16358,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "table-metadata-and-provenance",
-   "owner": "/ai/document-parsing-and-table-extraction#metadata-and-chunking",
+   "owner": "/cs/ai/document-parsing-and-table-extraction#metadata-and-chunking",
    "plannedArticle": "document-parsing-and-table-extraction",
    "plannedRoute": "ai/document-parsing-and-table-extraction",
    "inProse": false,
    "reason": "Unstructured orig_elements 근거로 원본 위치 추적을 설명",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-05"
   },
   {
    "batch": "1560",

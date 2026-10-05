@@ -30,7 +30,7 @@ export default function Hypothesis() {
 &\Rightarrow \widehat{\Delta}=1.5\text{ min}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\bar{y}_A-\bar{y}_B,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","먼저 같은 metric 단위의 차이를 effect","estimate로 계산하고, resampling이나 model","가정으로 confidence interval을 만듭니다."] },
+          { expression: String.raw`\bar{y}_A-\bar{y}_B`, annotation: ["같은 정의로 잰 A의 평균 12.0분에서 B의 평균 10.5분을 뺍니다.", "관측 effect는 원래 metric 단위인 1.5분으로 남습니다."] },
         ]}
         terms={[
           { symbol: String.raw`\bar{y}_A,\bar{y}_B`, name: "slice means", description: "같은 metric과 cutoff로 계산한 두 slice의 평균입니다." },

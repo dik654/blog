@@ -1,5 +1,6 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ContentBoundary from "@/components/articles/content-boundary";
+import EdaCaseViz from "./viz/EdaCaseViz";
 
 export default function Overview() {
   return (
@@ -8,6 +9,26 @@ export default function Overview() {
         EDA는 그래프를 많이 그리는 단계가 아니라 데이터 가정을 검증하는 단계다
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="text-lg leading-8">
+          고정 예제로 배송 1,000건을 살펴보겠습니다. 한 행은 주문 한 건이고 target은 배송 완료 뒤 계산한 지연 시간이며 같은 고객의 반복 주문과 날짜를 보존해 split합니다.
+          센서 값 100건이 비었다면 전체 결측률은 10%입니다. 특정 장비 200건 중 80건이 비었다면 그 slice의 결측률은 40%입니다. 전체 평균 하나가 숨기는 구조를 이렇게
+          단계마다 다시 모집단과 slice에 연결합니다.
+        </p>
+        <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+        <ol>
+          <li>전체 결측률이 10%이면 특정 장비 slice도 약 10%일까요?</li>
+          <li>같은 고객의 반복 주문을 random row split하면 고객 정보 누출을 막을 수 있을까요?</li>
+          <li>장비 slice의 결측률이 40%이면 그 행을 바로 삭제하거나 평균으로 채워도 될까요?</li>
+        </ol>
+        <p>
+          세 답은 모두 <strong>아니요</strong>입니다. 전체 평균은 slice 집중을
+          숨길 수 있고, 반복 entity는 group boundary를 지켜야 합니다. 결측은
+          삭제 규칙이 아니라 수집 원인과 target 관계를 조사할 신호입니다.
+        </p>
+      </div>
+      <EdaCaseViz />
+      <ContentBoundary article="eda-workflow" />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           데이터를 처음 받으면 행 수와 평균부터 보기보다 한 행이 무엇을
           뜻하는지, target이 언제 생성됐는지, 같은 대상이 여러 행에
@@ -15,32 +36,8 @@ export default function Overview() {
           상관관계도 잘못 해석됩니다.
         </p>
         <p>
-          EDA는 schema와 품질, target·split, 단변량 분포, 피처 관계, 결측 패턴을 차례로 확인하고 모델링 가설로 연결합니다. 시각화는 이상값과 구조를 찾는 도구입니다.
-          그 자체가 결론은 아닙니다.
+          EDA는 schema와 품질, target·split, 단변량 분포, 피처 관계, 결측 패턴을 차례로 확인하고 모델링 가설로 연결합니다. 시각화는 이상값과 구조를 찾는 도구이며 그 자체가 결론은 아닙니다.
         </p>
-        <p>
-          고정 예제로 배송 1,000건을 살펴보겠습니다. 한 행은 주문 한 건이고 target은 배송 완료 뒤 계산한 지연 시간이며 같은 고객의 반복 주문과 날짜를 보존해 split합니다.
-          센서 값 100건이 비었다면 전체 결측률은 10%입니다. 특정 장비 200건 중 80건이 비었다면 그 slice의 결측률은 40%입니다. 전체 평균 하나가 숨기는 구조를 이렇게
-          단계마다 다시 모집단과 slice에 연결합니다.
-        </p>
-      </div>
-      <ContentBoundary article="eda-workflow" />
-      <div className="not-prose my-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          ["Unit", "한 행·한 ID·한 시점의 의미"],
-          ["Quality", "중복·결측·범위·label 오류"],
-          ["Boundary", "group·time·source 기반 split"],
-          ["Hypothesis", "검증할 관계와 다음 실험"],
-        ].map(([title, text]) => (
-          <div key={title} className="rounded-xl border bg-card p-4">
-            <strong>{title}</strong>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              {text}
-            </p>
-          </div>
-        ))}
-      </div>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           뒤에서는 분포, 상관관계, 결측 패턴, 가설과 시각화로 이어집니다. 각
           발견에는 데이터 slice와 재현 가능한 집계 코드를 남겨 모델 성능 변화와

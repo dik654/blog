@@ -51,10 +51,10 @@ print(detector.get_params())`}</code></pre>
         question="Contamination c는 연속 score를 어떻게 binary label로 바꿀까?"
         idea={<>Training score의 상위 c 비율이 경계를 넘도록 <code>100(1−c)</code> percentile을 threshold로 사용합니다. PyOD는 score가 threshold보다 클 때 1을 반환합니다.</>}
         formula={String.raw`\begin{aligned}\tau&=Q_{1-c}\!\left(\{O_i^{\mathrm{train}}\}_{i=1}^{n}\right)\\\widehat y_i&=\mathbf1[O_i>\tau]\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\tau&=\underbrace{Q_{1-c}\!\left(\{O_i^{\mathrm{train}}\}_{i=1}^{n}\right)}_{\text{허용 경계 판정}}\\\widehat y_i&=\underbrace{\mathbf1[O_i>\tau]}_{\text{허용 경계 판정}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\tau&=\underbrace{Q_{1-c}\!\left(\{O_i^{\mathrm{train}}\}_{i=1}^{n}\right)}_{\text{training score의 }(1-c)\text{ 분위수}}\\\widehat y_i&=\underbrace{\mathbf1[O_i>\tau]}_{\text{threshold를 넘으면 label 1}}\end{aligned}`}
         operations={[
-          { expression: String.raw`Q_{1-c}\!\left(\{O_i^{\mathrm{train}}\}_{i=1}^{n}\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Training score의 상위 c 비율이 경계를 넘도록","100(1−c) percentile을 threshold로","사용합니다."] },
-          { expression: String.raw`\mathbf1[O_i>\tau]`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Training score의 상위 c 비율이 경계를 넘도록","100(1−c) percentile을 threshold로","사용합니다."] },
+          { expression: String.raw`Q_{1-c}\!\left(\{O_i^{\mathrm{train}}\}_{i=1}^{n}\right)`, annotation: ["Training score를 정렬해 상위 c 비율의 시작점을 threshold로 잡습니다."] },
+          { expression: String.raw`\mathbf1[O_i>\tau]`, annotation: ["새 score가 threshold보다 클 때만 binary label 1을 냅니다."] },
         ]}
         terms={[
           { symbol: "c", name: "contamination", description: "Training data에서 outlier로 표시할 것으로 정한 비율이며 PyOD float 설정은 (0, 0.5] 범위입니다." },
@@ -71,10 +71,13 @@ print(detector.get_params())`}</code></pre>
         <p>
           2026년 8월 기준 PyOD 3.6.4의 <code>decision_function</code>은 fit 때 저장한
           <code>X_train</code>과 새 입력을 concatenate한 뒤 ECDF와 skewness를 다시 계산하고
-          새 row 부분만 반환한다. 따라서 같은 row라도 함께 넣은 test batch의 구성에 따라 score가
-          달라질 수 있으며, 낮은 latency의 immutable scoring model이나 진정한 incremental detector로
-          볼 수 없다. Batch policy까지 고정하거나 production 요구에 맞는 별도 ECDF lookup 구현을
-          검증해야 한다.
+          새 row 부분만 반환합니다.
+        </p>
+        <p>
+          따라서 같은 row라도 함께 넣은 test batch 구성에 따라 score가 달라질 수
+          있습니다. 낮은 latency의 immutable scoring model이나 진정한 incremental
+          detector로 볼 수 없습니다. Batch policy를 고정하거나 production 요구에
+          맞는 별도 ECDF lookup 구현을 검증해야 합니다.
         </p>
         <h3>복잡도 표기는 구현 비용과 함께 검증한다</h3>
         <p>
@@ -89,11 +92,14 @@ print(detector.get_params())`}</code></pre>
         <p className="text-xs font-bold text-primary">구현 읽기 · PyOD ECOD 3.6.4</p>
         <p className="mt-2 text-sm font-semibold">PyOD ECOD source와 BaseDetector threshold contract</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          공식 source는 논문 식을 이름만으로 추정하지 않고 <code>decision_function</code>의
-          concatenate·ECDF·feature-level max·sum 경로와 <code>BaseDetector</code>의 contamination
-          quantile을 직접 확인하게 해 줍니다. 여기서 설명한 batch-dependent score와 strict
-          threshold는 PyOD 3.6.4 snapshot에 한정되며, 다른 version·독자 구현까지 같은 semantics를
-          갖는다고 일반화하면 안 됩니다.
+          공식 source에서는 <code>decision_function</code>의 concatenate, ECDF,
+          feature-level max, sum 경로를 직접 확인할 수 있습니다. BaseDetector의
+          contamination quantile도 같은 source에서 확인합니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          여기서 설명한 batch-dependent score와 strict threshold는 PyOD 3.6.4
+          snapshot에 한정됩니다. 다른 version이나 독자 구현이 같은 semantics를
+          가진다고 일반화하면 안 됩니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://pyod.readthedocs.io/en/latest/_modules/pyod/models/ecod.html" target="_blank" rel="noreferrer">공식 ECOD source의 실제 계산 경로 보기</a>
       </div>
