@@ -1,0 +1,545 @@
+{
+  "base": "https://dik654.github.io/blog",
+  "finished": "2026-10-04T16:03:54.622Z",
+  "durationSeconds": 10.243,
+  "routes": 5,
+  "viewports": [
+    1440,
+    390
+  ],
+  "checks": 10,
+  "failed": 0,
+  "results": [
+    {
+      "route": "ai/launch-overhead-and-cpu-gpu-synchronization",
+      "publicPath": "cs/ai/launch-overhead-and-cpu-gpu-synchronization",
+      "width": 390,
+      "issues": [],
+      "worker": 3,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 9,
+        "minCardWidth": 316,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "h2Count": 22,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 1,
+        "formulaProblems": [],
+        "canvasCount": 3,
+        "canvasProblems": [],
+        "svgCount": 26,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 4,
+          "checked": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 547.015625,
+          "viewportHeight": 844
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "screenshot": "/tmp/world-browser-audit/ai--launch-overhead-and-cpu-gpu-synchronization-390.png",
+      "ok": true
+    },
+    {
+      "route": "ai/launch-overhead-and-cpu-gpu-synchronization",
+      "publicPath": "cs/ai/launch-overhead-and-cpu-gpu-synchronization",
+      "width": 1440,
+      "issues": [],
+      "worker": 4,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 9,
+        "minCardWidth": 655,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "h2Count": 22,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 1,
+        "formulaProblems": [],
+        "canvasCount": 3,
+        "canvasProblems": [],
+        "svgCount": 28,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 4,
+          "checked": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "ai/word2vec-negative-sampling",
+      "publicPath": "cs/ai/word2vec-negative-sampling",
+      "width": 390,
+      "issues": [],
+      "worker": 2,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 8,
+        "minCardWidth": 316,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "h2Count": 19,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 7,
+        "formulaProblems": [],
+        "canvasCount": 5,
+        "canvasProblems": [],
+        "svgCount": 21,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 3,
+          "checked": [
+            0,
+            1,
+            2
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 574.015625,
+          "viewportHeight": 844
+        },
+        {
+          "i": 1,
+          "scenes": 3,
+          "checked": [
+            0,
+            1,
+            2
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 574.015625,
+          "viewportHeight": 844
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "ai/word2vec-negative-sampling",
+      "publicPath": "cs/ai/word2vec-negative-sampling",
+      "width": 1440,
+      "issues": [],
+      "worker": 1,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 8,
+        "minCardWidth": 655,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "h2Count": 19,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 7,
+        "formulaProblems": [],
+        "canvasCount": 5,
+        "canvasProblems": [],
+        "svgCount": 24,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 3,
+          "checked": [
+            0,
+            1,
+            2
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        },
+        {
+          "i": 1,
+          "scenes": 3,
+          "checked": [
+            0,
+            1,
+            2
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "ai/subword-static-embeddings",
+      "publicPath": "cs/ai/subword-static-embeddings",
+      "width": 390,
+      "issues": [],
+      "worker": 5,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 4,
+        "minCardWidth": 316,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "h2Count": 19,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 2,
+        "formulaProblems": [],
+        "canvasCount": 5,
+        "canvasProblems": [],
+        "svgCount": 14,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 3,
+          "checked": [
+            0,
+            1,
+            2
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 596.515625,
+          "viewportHeight": 844
+        },
+        {
+          "i": 1,
+          "scenes": 3,
+          "checked": [
+            0,
+            1,
+            2
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 574.015625,
+          "viewportHeight": 844
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "ai/subword-static-embeddings",
+      "publicPath": "cs/ai/subword-static-embeddings",
+      "width": 1440,
+      "issues": [],
+      "worker": 0,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 4,
+        "minCardWidth": 655,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "h2Count": 19,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 2,
+        "formulaProblems": [],
+        "canvasCount": 5,
+        "canvasProblems": [],
+        "svgCount": 16,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 3,
+          "checked": [
+            0,
+            1,
+            2
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        },
+        {
+          "i": 1,
+          "scenes": 3,
+          "checked": [
+            0,
+            1,
+            2
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "crypto/mpc",
+      "publicPath": "cs/crypto/mpc",
+      "width": 1440,
+      "issues": [],
+      "worker": 3,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 7,
+        "minCardWidth": 655,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "h2Count": 23,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 4,
+        "formulaProblems": [],
+        "canvasCount": 2,
+        "canvasProblems": [],
+        "svgCount": 19,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "crypto/mpc",
+      "publicPath": "cs/crypto/mpc",
+      "width": 390,
+      "issues": [],
+      "worker": 4,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 7,
+        "minCardWidth": 316,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "h2Count": 23,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 4,
+        "formulaProblems": [],
+        "canvasCount": 2,
+        "canvasProblems": [],
+        "svgCount": 15,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "firms/scale-and-cost-structure",
+      "publicPath": "economics/firms/scale-and-cost-structure",
+      "width": 1440,
+      "issues": [],
+      "worker": 2,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 9,
+        "minCardWidth": 655,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "h2Count": 13,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 1,
+        "formulaProblems": [],
+        "canvasCount": 5,
+        "canvasProblems": [],
+        "svgCount": 24,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 5,
+          "checked": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        },
+        {
+          "i": 1,
+          "scenes": 4,
+          "checked": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "firms/scale-and-cost-structure",
+      "publicPath": "economics/firms/scale-and-cost-structure",
+      "width": 390,
+      "issues": [],
+      "worker": 1,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 9,
+        "minCardWidth": 316,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "h2Count": 13,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 1,
+        "formulaProblems": [],
+        "canvasCount": 5,
+        "canvasProblems": [],
+        "svgCount": 20,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 5,
+          "checked": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 515.515625,
+          "viewportHeight": 844
+        },
+        {
+          "i": 1,
+          "scenes": 4,
+          "checked": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 515.515625,
+          "viewportHeight": 844
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    }
+  ],
+  "commit": "10dac5b4b8d14f130a2f6448c72224505b35af6a",
+  "deploymentRunId": 37214967175
+}

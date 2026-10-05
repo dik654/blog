@@ -4625,7 +4625,7 @@
       "route": "ai/inference-optimization-layers",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/inference-optimization-layers.tsx",
       "publicPath": "cs/ai/inference-optimization-layers",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -4633,18 +4633,45 @@
         "sectionCount": 6
       },
       "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": {
+        "kind": "가정 사례이며 GPU 실측값이 아님",
+        "serialMs": [15, 40, 35, 10],
+        "firstChangeMs": [15, 20, 35, 10],
+        "strongerChangeMs": [15, 4, 35, 10],
+        "sharedBatch": "20개 요청의 지연 합 400 request-ms와 한 GPU batch의 20 GPU-ms를 분리",
+        "regression": "짝차이 2,3,2,3,2 ms; 평균2.4, 표본분산0.3, 양측95%구간1.72–3.08 ms"
       },
-      "remaining": [
-        "작성 전6+4·작은 사례·원문 연구·본문/Viz/등록 실질 개선·문체·두 폭 검수"
+      "stageAnchors": {
+        "S": "overview: 사용자의 기다림·처리량·실제 청구를 세 숫자로 분리",
+        "B": "black-box: 입력·답 조건·측정 시작과 끝·사용 기록의 경계",
+        "0": "case: 같은100 ms 요청의 40→20→4 ms와 추가 준비5 ms",
+        "1": "picture: 한 요청의 네 칸을 같은 축에서 네 장면으로 비교",
+        "2": "why: 담당 영역의 분류표와 실제 의존 시간표를 구별",
+        "3": "names: model/kernel/runtime/system·latency·speedup·ROI를 뒤에서 명명",
+        "4": "layers/amdahl/interactions/overlap/work/capacity/roi: 같은 수치로 직렬·겹침·batch·정수 복제·현금 흐름 추적",
+        "5": "source-amdahl/source-profile: 실제 논문 세 쪽과 Nsight 분모를 사례에 적용",
+        "6": "source-config/source-metrics/source-cost/regression: 고정 vLLM 원문과 실행 관찰·통계 경계",
+        "7": "limits/decision: 조건별 일반화 한계와 다음 변경의 측정 절차",
+        "review": "review: 세 예측 질문과 6+4 답안"
+      },
+      "sourceEvidence": [
+        "Amdahl 1967 actual PDF pages483–485 and Figure1 read; modern p,s formula is derived in the article rather than attributed as a printed equation.",
+        "NVIDIA Nsight Systems Analysis Guide read for CUDA kernel-summary Time denominator; it is kept distinct from end-to-end request time.",
+        "vLLM v0.27.1 commit6e448d0e full pinned vllm.py, compilation.py, serve.py, optimization.md and LICENSE preserved by SHA256; selected AST paths executed with stated synthetic records.",
+        "FinOps Foundation unit economics and NIST paired-observation interval read and applied only within their stated assumptions."
       ],
+      "validation": {
+        "semanticReview": "22절 전체와 새 Viz·원문 패널·정본5·정확히6+4를 읽음. 독립 Fraction 검산 PASS:100/80/64,5/4·25/16·5/3,66/74,겹침80/80,batch단위,ROI−287/360,복제수3→2와2→2,95%구간1.7199–3.0801.",
+        "humanize": "본문69문단과 표시175개·중첩문단12개를 전문 검토; 전체와4+3개 chunk 모두 exact roundtrip, 수치·마커 보존, gate exit0.",
+        "browser390": "22sections,names20.217%,3predictions,10answers,18sourcepanels,4Viz scenes;0overflow,0KaTeX errors,0formula overflow,0broken links,keyboard/play/reduced PASS.",
+        "browser1440": "22sections,names20.209%,3predictions,10answers,18sourcepanels,4Viz scenes;0overflow,0KaTeX errors,0formula overflow,0broken links,keyboard/play/reduced PASS.",
+        "typescript": "actual tsconfig.app noEmit exit0 on final working tree",
+        "learning": "strict require-registration route check exit0",
+        "prose": "strict route check exit0 with0 review findings",
+        "formula": "global1471 explicit formula checks PASS; actual rendered displays checked separately",
+        "bodySha256": "5c99f328069e51327f70d66cb24206aac0b6ea7236b7210075e164d1e15a2703"
+      },
+      "remaining": [],
       "reviewDate": "2026-10-05",
       "originalDefects": [
         "실제 본문345행과 Viz·정의5·학습·ownership 검토: 첫 문단에 네 층과 약어를 먼저 도입하며 같은 작은 사례의 unnamed 구조·원문 적용·예측 답 절이 없음.",
@@ -5160,7 +5187,8 @@
         "formula": "원일반재귀식과첫완료식을annotatedFormula에보존했고 e0=0을별도행으로분리해390px의3px가로넘침을교정했습니다.양폭수식오류/overflow0·전역1460식explicit주석PASS입니다.",
         "learning": "기초6/심화4계획과실제본문을맞추고정의7/ownership owns·evidence/full근거19를통합대조했습니다.공유mismatch0,strict실제exit0,양폭10문제및전체정답누락0입니다.",
         "typescript": "실제 app tsc -p tsconfig.app.json --noEmit 세션37500 종료0입니다.초안의CodeSidebar prop오류를올바른개별props로교정했습니다.이후변경은중첩본문warmup의두문장보충이며root고정전체build는별도입니다.",
-        "prose": "전역799본문문장strict의재검토0,소유diff--check PASS입니다.Viz정적ERROR0의SVG REVIEW6건은모든장면두폭에서검토했습니다."
+        "prose": "전역799본문문장strict의재검토0,소유diff--check PASS입니다.Viz정적ERROR0의SVG REVIEW6건은모든장면두폭에서검토했습니다.",
+        "humanizeSupplement": "189 snapshot 문장 검사에서 19절 결과를 버렸다고를 38을 응답에 포함하지 않아도로 명료화했습니다. 수치·의미·anchor는 같고 전체 실제 재추출/바이트왕복 후 해당 문단 humanize gate 실제exit0입니다."
       },
       "remaining": [
         "root 고정 snapshot 전체 build·배포 검증"
@@ -5182,7 +5210,7 @@
         "actualExecution": "원문 Stream/Event class AST 그대로·기록용 native base 대체·CPython3.12.13 실행",
         "nativeCudaExecuted": false
       },
-      "contentHash": "c1f29c8d163a7b231d9f2b424caa4cc30c66f21a3e3cf53f397fb71263893f14",
+      "contentHash": "a06d70547bdb336dbb99bab3c10ac4b1a3c3fa9ba1bdd47c071003a6bdeb5d02",
       "evidenceFiles": [
         "/tmp/teach-all/launch23/plan-before-body.json",
         "/tmp/teach-all/launch23/body-before.tsx",
@@ -5204,7 +5232,8 @@
         "/tmp/teach-all/humanize-ai-systems-23/independent-finalize.md",
         "/tmp/teach-all/humanize-ai-systems-23/roundtrip.json",
         "/tmp/teach-all/humanize-ai-systems-23/apply.log",
-        "/tmp/teach-all/humanize-ai-systems-23-props/gate.txt"
+        "/tmp/teach-all/humanize-ai-systems-23-props/gate.txt",
+        "/tmp/teach-all/humanize-ai-systems-23-eos-supplement/changed-paragraph/gate.txt"
       ]
     },
     {
@@ -9882,9 +9911,9 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 48,
+    "rewritten-local-verified": 49,
     "unreviewed": 136,
-    "reviewed-rewrite-required": 2
+    "reviewed-rewrite-required": 1
   },
   "localValidationSummary": {
     "rewritten": 48,

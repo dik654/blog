@@ -124,38 +124,70 @@ export const firmsArticles: Article[] = [
   },
   {
     slug: "market-power-and-markup",
-    title: "혼자 팔면 값을 고르게 됩니다",
+    title: "시장 지배력과 가격: 더 팔 때 매출과 이익이 달라지는 이유",
     subcategory: "firm-pricing",
     sections: [
-      {
-        id: "overview",
-        title: "1단계에서는 아무도 값을 고르지 않았습니다",
-      },
-      {
-        id: "facing-demand",
-        title: "부품 1. 혼자 팔면 점 하나가 아니라 선 전체를 마주합니다",
-      },
-      {
-        id: "marginal-revenue",
-        title: "부품 2. 하나 더 팔 때 늘어나는 돈은 그 값보다 낮습니다",
-      },
-      {
-        id: "stopping-point",
-        title: "부품 3. 멈추는 자리는 늘어나는 돈과 늘어나는 값이 같아지는 곳입니다",
-      },
-      {
-        id: "markup-size",
-        title: "부품 4. 틈의 크기는 수요가 얼마나 민감한가로 정해집니다",
-      },
-      {
-        id: "what-is-lost",
-        title: "부품 5. 틈은 옮겨 가는 몫만이 아니라 사라지는 몫을 만듭니다",
-      },
-      {
-        id: "handoff",
-        title: "값을 고르는 힘까지 왔고, 남은 것은 사람입니다",
-      },
-    ],
+  {
+    "id": "overview",
+    "title": "1. 값을 내려 더 팔았는데 남는 돈은 줄었다"
+  },
+  {
+    "id": "black-box",
+    "title": "2. 가격별 판매량과 비용을 알아야 선택할 수 있다"
+  },
+  {
+    "id": "case",
+    "title": "3. 3개와 4개의 매출·비용·이익을 각각 센다"
+  },
+  {
+    "id": "picture",
+    "title": "4. 새로 받는 9에서 세 개의 차이 3을 뺀다"
+  },
+  {
+    "id": "why",
+    "title": "5. 매출만 키우거나 새 한 개의 가격만 보면 답이 달라진다"
+  },
+  {
+    "id": "names",
+    "title": "6. 수요·한계수입·한계비용을 서로 다른 값으로 읽는다"
+  },
+  {
+    "id": "facing-demand",
+    "title": "7. 판매자 수만으로 가격을 고르는 힘을 정하지 않는다"
+  },
+  {
+    "id": "marginal-revenue",
+    "title": "8. 한 개를 더 파는 차이와 아주 작은 변화의 비율을 구분한다"
+  },
+  {
+    "id": "stopping-point",
+    "title": "9. 연속적인 수량에서는 이익식 전체로 최대점을 확인한다"
+  },
+  {
+    "id": "cournot-source",
+    "title": "10. Cournot의 식도 매출에서 생산 비용을 뺀다"
+  },
+  {
+    "id": "markup-size",
+    "title": "11. 마크업 식은 최적점의 탄력성과 연결된다"
+  },
+  {
+    "id": "elasticity-comparison",
+    "title": "12. 수요를 바꿀 때와 비용을 바꿀 때를 나눠 본다"
+  },
+  {
+    "id": "what-is-lost",
+    "title": "13. 이전된 9와 일어나지 않은 거래의 가치 4.5를 나눈다"
+  },
+  {
+    "id": "limits",
+    "title": "14. 생산 한도·진입 비용·시장 제도가 있으면 다시 비교한다"
+  },
+  {
+    "id": "handoff",
+    "title": "15. 가격과 수량에서 남는 돈까지 한 번에 따라간다"
+  }
+],
     component: () =>
       import("@/pages/articles/firms/market-power-and-markup"),
   },

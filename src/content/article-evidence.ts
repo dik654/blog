@@ -6847,12 +6847,32 @@ export const ARTICLE_EVIDENCE: Readonly<
     }
   ],
   "crypto/groth16": [
-    { kind: "핵심 논문", label: "Groth · On the Size of Pairing-based Non-interactive Arguments", href: "https://eprint.iacr.org/2016/260.pdf", note: "세 group element proof·pairing verification·relation-specific CRS와 security model의 원 연구" },
-    { kind: "공식 코드", label: "ark-groth16 verifier.rs", href: "https://docs.rs/ark-groth16/latest/src/ark_groth16/verifier.rs.html", note: "Prepared VK·public-input MSM·multi-Miller loop·final exponentiation의 versioned Rust source; crate/version pin 필요" },
+    {
+      "kind": "핵심 논문",
+      "label": "Jens Groth · 원문의 QAP와 3.2절 구성",
+      "href": "https://www.iacr.org/archive/eurocrypt2016/96650272/96650272.pdf",
+      "note": "2.2·2.3·3.2절 및 정리 2와 비용 설명을 읽고 PDF 15·16쪽 설정·증명·검증·모의 증명식을 화면으로 확인했습니다. 전체 보안 정리의 재증명·공동 설정·모든 후속 구성·특정 구현의 안전성을 검증하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "ark-groth16 v0.6.0 · 0bb3e604 고정 원문",
+      "href": "https://github.com/arkworks-rs/groth16/tree/0bb3e604c534bd118ed477eaf1231f591d6fc40f",
+      "note": "전체 원본 13개 파일의 Git blob·SHA256과 라이선스를 보존했습니다. Rust 1.93.0 CPU에서 같은 두 줄과 실제 8점 QAP, 공개값·길이·불량 답안·난수·제약 누락을 실행했습니다. 고정 시드 실행은 공동 설정·비밀 폐기·전체 테스트·보안 감사·성능 우열·상용 검수가 아닙니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "ark-ec 0.6.0 · 점 검사와 직렬화 의존 원문",
+      "href": "https://github.com/arkworks-rs/algebra/blob/bffa52711f225e888c1a91e1ec9fc59f2d9d5c94/ec/src/models/short_weierstrass/affine.rs",
+      "note": "선택한 전체 의존 원문과 라이선스·SHA256을 보존했습니다. 압축 128/비압축 256바이트, (1,1) 거부, 항등원과 남은 바이트의 관찰을 확인했습니다. 모든 비정규 바이트·부분군·곡선 프로필·자원 소모 사례를 전수 검사하지 않았습니다."
+    }
   ],
   "crypto/plonk": [
-    { kind: "핵심 논문", label: "Gabizon·Williamson·Ciobotaru · PLONK", href: "https://eprint.iacr.org/2019/953.pdf", note: "Lagrange-basis gates·permutation grand product·universal updatable SRS construction의 원 연구" },
-    { kind: "핵심 논문", label: "Kate·Zaverucha·Goldberg · Polynomial Commitments", href: "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf", note: "상수 크기 polynomial commitment와 evaluation opening의 원 연구; PLONK arithmetization 보장은 아님" },
+    { kind: "핵심 논문", label: "Gabizon·Williamson·Ciobotaru · PLONK", href: "https://eprint.iacr.org/2019/953", note: "서지와 초록에서 원 구성의 범위를 확인했습니다. 이번 검토에서는 PDF 접근 오류가 있어 본문의 세부 수식 근거를 이 원문을 직접 읽은 것으로 표시하지 않습니다." },
+    { kind: "핵심 논문", label: "Kate·Zaverucha·Goldberg · Polynomial Commitments", href: "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf", note: "상수 크기 polynomial commitment와 evaluation opening의 원 연구입니다. PLONK 산술화·복사 조건 자체의 보장은 아닙니다." },
+    { kind: "핵심 논문", label: "Sefranek · How to Simulate PLONK", href: "https://repositum.tuwien.at/handle/20.500.12708/188597", note: "2023년 학위논문 3·6·7장과 실제 PDF 44·54·57쪽을 읽어 표·순열·몫 분할과 무작위화에 F97 사례를 연결했습니다." },
+    { kind: "핵심 논문", label: "Sefranek · How (Not) to Simulate PLONK", href: "https://eprint.iacr.org/2024/848", note: "공식 초록과 저자 발표 자료를 확인했습니다. 수정된 통계적 영지식 주장과 본문의 작은 상쇄 계산 및 gnark 실행을 구분합니다." },
+    { kind: "보충 읽기", label: "PLONK 지식 건전성과 simulation extractability 후속 연구", href: "https://eprint.iacr.org/2024/994", note: "CRYPTO 2025 논문의 공식 초록과 TCC 2025 ePrint 2025/1759의 공식 초록·서지를 확인했습니다. 전문 증명이나 현재 gnark 구현과의 일치까지 검증하지 않았습니다." },
+    { kind: "공식 코드", label: "gnark v0.16.3 · PLONK BN254 고정 원문", href: "https://github.com/Consensys/gnark/tree/cfc7b2f907cc4212ec152077e022c6d0b4805759", note: "gnark와 gnark-crypto 0.21.0의 선택 원문 전체·라이선스·Git blob·SHA256을 보존했습니다. Go 1.26.2 CPU에서 공개3·15와 비공개4, 실패 fixture, domain8·constraints3·proof520bytes를 실행했으며 unsafekzg는 로컬 테스트용입니다." },
   ],
   "crypto/crt": [
     { kind: "공식 규격", label: "RFC 8017 · PKCS #1 v2.2", href: "https://www.rfc-editor.org/rfc/rfc8017.html", note: "Two-prime RSA private key의 p·q·dP·dQ·qInv와 RSA primitive 입력·오류 계약" },
@@ -8556,9 +8576,66 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "NVIDIA H100 Tensor Core GPU 제품 사양", href: "https://www.nvidia.com/en-us/data-center/h100/", note: "HBM3 3.35 TB/s 와 FP16 dense 989 TFLOP/s (sparsity 1,979) 를 C·L 산수의 입력으로 씀" },
   ],
   "ai/inference-optimization-layers": [
-    { kind: "핵심 논문", label: "Amdahl (AFIPS 1967) Validity of the single processor approach", href: "https://dl.acm.org/doi/10.1145/1465482.1465560", note: "end-to-end speedup 상한 식의 원 출처" },
-    { kind: "공식 문서", label: "vLLM Optimization and Tuning", href: "https://docs.vllm.ai/en/latest/configuration/optimization.html", note: "runtime 층 설정(enforce-eager·cudagraph 수준)이 존재한다는 근거" },
-    { kind: "공식 문서", label: "PyTorch CUDA semantics", href: "https://docs.pytorch.org/docs/stable/notes/cuda.html", note: "graph capture 의 호환 조건이 kernel 선택을 제한한다는 층 상호작용의 근거" },
+    {
+      "kind": "핵심 논문",
+      "label": "Amdahl 1967 · 순차로 남는 일의 한계",
+      "href": "https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf",
+      "note": "원문의 당시 기계와 명령어 비율을 현재 GPU 요청의 지연 비율로 옮기지 않습니다. 본문의 100 ms는 별도 가정입니다. 세 인쇄 페이지를 직접 확인했으며 p·s의 일반식은 이 글에서 직렬 시간 합으로 유도했습니다. 원문에 없는 식 번호를 붙이지 않습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Nsight Systems · CUDA GPU Kernel Summary",
+      "href": "https://docs.nvidia.com/nsight-systems/AnalysisGuide/index.html#cuda-gpu-kern-sum-nvtx-name-base-mangled-cuda-gpu-kernel-summary",
+      "note": "2026-10-05 읽은 공식 Analysis Guide의 해당 보고서 정의에 한정합니다. 실제 GPU 프로파일은 이 관찰에서 수집하지 않았습니다. 관계 40·변환 35 ms의 가정에서 40/75≈53.33%와 전체 100 ms의 40%를 구별하는 근거로 사용합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "vLLM v0.27.1 · Optimization and Tuning",
+      "href": "https://docs.vllm.ai/en/v0.27.1/configuration/optimization/",
+      "note": "v0.27.1 커밋 6e448d0e의 원문 전체와 같은 버전 문서를 사용합니다. 장치별 최종 설정과 후속 호환성은 별도 경로입니다. 원문의 두 enum과 해당 if 문 AST를 실행한 관찰은 분기 동작만 확인합니다. 전체 설정 초기화나 GPU 추론은 실행하지 않았습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vLLM v0.27.1 · calculate_metrics 원문",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/benchmarks/serve.py#L556-L762",
+      "note": "전체 원문을 고정하고 해당 구조체와 함수의 AST를 CPython 3.12.13·NumPy 2.2.6에서 가정 기록으로 실행했습니다. 20개 성공 기록의 100/80 ms와 기간 .1/.08초가 200/250 요청/s로 집계되며 90 ms 조건은 0/250의 통과 처리량을 만듭니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "FinOps Foundation · Unit Economics",
+      "href": "https://www.finops.org/framework/capabilities/unit-economics/",
+      "note": "2026-10-05 확인한 공식 프레임워크의 식과 단위 구분을 사용합니다. 요금·요청 수·기간은 본문이 정한 가정입니다. 같은 기간 편익 73000/9 달러와 비용 40000 달러를 넣어 편익/비용 .2028과 ROI −79.72%를 구분합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "NIST e-Handbook · paired observations",
+      "href": "https://www.itl.nist.gov/div898/handbook/prc/section3/prc312.htm",
+      "note": "서로 독립인 정규 분포 짝차이와 양측 95% 구간을 가정합니다. 자기상관·선택 편향·여러 지표의 오류 관리는 별도 설계입니다. 차이 2·3·2·3·2에서 평균 2.4, 표본분산 .3, 자유도 4로 약 1.72–3.08 ms의 구간을 계산합니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vLLM0.27.1/vllm/config/vllm.py · 전체 원문",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/config/vllm.py",
+      "note": "원문 전체를 SHA-256 66e82e95c5cdbb88715e25feb65f4cc2be83cd67bff5b5f703d52dea43a0815e로 대조했습니다. 본문 패널의 선택 줄과 가정 AST 관찰 범위를 구분하며 GPU 실행 재현을 주장하지 않습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vLLM0.27.1/vllm/config/compilation.py · 전체 원문",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/config/compilation.py",
+      "note": "원문 전체를 SHA-256 31e1ebbf69af2b5f0c46d4b92caad47c4f87e594df339ba25038309f0836e0a5로 대조했습니다. 본문 패널의 선택 줄과 가정 AST 관찰 범위를 구분하며 GPU 실행 재현을 주장하지 않습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vLLM0.27.1/vllm/benchmarks/serve.py · 전체 원문",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/benchmarks/serve.py",
+      "note": "원문 전체를 SHA-256 3f0e40ac91a8e817815274ff4af964f2399d3d841f74fd2f04be168122fd0760로 대조했습니다. 본문 패널의 선택 줄과 가정 AST 관찰 범위를 구분하며 GPU 실행 재현을 주장하지 않습니다."
+    },
+    {
+      "kind": "공식 코드",
+      "label": "vLLM0.27.1/docs/configuration/optimization.md · 전체 원문",
+      "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/docs/configuration/optimization.md",
+      "note": "원문 전체를 SHA-256 86ca9cde5064d12934ac20f3ece63cbd18bccb1395fa0e99065e48d23e18db1a로 대조했습니다. 본문 패널의 선택 줄과 가정 AST 관찰 범위를 구분하며 GPU 실행 재현을 주장하지 않습니다."
+    }
   ],
   "gpu/gpu-data-movement-optimization": [
     { kind: "공식 가이드", label: "NVIDIA CUDA C++ Best Practices Guide · Shared Memory in Matrix Multiplication · Asynchronous and Overlapping Transfers with Computation", href: "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html", note: "Staging의 재사용·재배열 이득과 asynchronous transfer·stream overlap 설명의 출처" },
@@ -10097,19 +10174,11 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "firms/market-power-and-markup": [
     {
-      kind: "핵심 논문",
-      label:
-        "A. Cournot, 『Researches into the Mathematical Principles of the Theory of Wealth』 (1838), N. T. Bacon 영역 1897, 제5장 Of Monopoly, 56–61쪽",
-      href: "https://archive.org/details/researchesintom00fishgoog",
-      note: "값을 고르는 쪽의 조건 식 (1)(56쪽), 만드는 값을 넣은 식 (2)(57쪽), 값이 한계비용보다 반드시 높다는 §29(59쪽)의 출처. Internet Archive 스캔을 받아 제5장을 읽고 식과 인용 문장은 쪽 이미지로 대조했음",
-    },
-    {
-      kind: "보충 읽기",
-      label:
-        "A. P. Lerner, “The Concept of Monopoly and the Measurement of Monopoly Power”, The Review of Economic Studies, Vol. 1, No. 3 (1934), pp. 157–175",
-      href: "https://academic.oup.com/restud/article-abstract/1/3/157/1518702",
-      note: "값과 한계비용의 틈을 지표로 쓴 출처로 알려진 글. 접근할 수 있는 전문을 찾지 못해 읽지 못했고, 그래서 이 글의 어떤 주장도 여기에 기대지 않는다. 본문의 틈 식은 Cournot 57쪽 식 (2)에서 직접 옮겨 적은 것",
-    },
+      "kind": "핵심 논문",
+      "label": "A. Cournot · Researches into the Mathematical Principles of the Theory of Wealth, Bacon 영어 번역(1897), 54~59쪽",
+      "href": "https://archive.org/details/researchesintom00fishgoog",
+      "note": "실제 공개 1897년 영어 번역 스캔과 관련 OCR의 54~59쪽을 읽고 56·57·58·59쪽 이미지를 대조했습니다. 프랑스어 초판 전체를 검증한 것은 아닙니다. 13−q·비용 7·잉여 4.5는 글의 가정 계산이며 원문 관측 자료가 아닙니다. 마크업의 탄력성 형태와 현대적인 잉여 분해는 이 글의 유도와 적용이며 같은 식이 원문에 그 형태로 실렸다는 뜻이 아닙니다."
+    }
   ],
   "circuits/lumped-circuit-and-conservation": [
     {
@@ -10401,12 +10470,23 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "labor/wage-floor-natural-experiment": [
     {
-      kind: "핵심 논문",
-      label:
-        "David Card · Alan B. Krueger, “Minimum Wages and Employment: A Case Study of the Fast-Food Industry in New Jersey and Pennsylvania”, The American Economic Review, Vol. 84, No. 4 (Sept. 1994), pp. 772–793",
-      href: "https://davidcard.berkeley.edu/papers/njmin-aer.pdf",
-      note: "겨루는 예측을 못 박은 772쪽 첫 문단, 고용 변화를 담은 780쪽 표 3, 한 끼 값을 담은 788쪽 표 7, 두 설명 모두로 설명하기 어렵다는 792쪽 맺음 문장의 출처. 저자 공개본 PDF를 읽고 표와 인용 문장은 쪽 이미지로 대조했음",
+      "kind": "핵심 논문",
+      "label": "Card·Krueger · Minimum Wages and Employment (1994)",
+      "href": "https://davidcard.berkeley.edu/papers/njmin-aer.pdf",
+      "note": "관련 본문 772~780·787~792쪽과 실제 780쪽 표 3·788쪽 표 7 이미지를 대조했습니다. 초기 410곳과 표별 유효 표본, 반올림·표준오차·폐업 처리를 구분했습니다. 원자료 회귀 재현은 하지 않았습니다."
     },
+    {
+      "kind": "보충 읽기",
+      "label": "Neumark·Wascher · NBER5224(1995)",
+      "href": "https://www.nber.org/system/files/working_papers/w5224/w5224.pdf",
+      "note": "초록 실제 페이지를 읽고 급여 기록과 전화 조사 비교 및 저자의 보고 결론을 확인했습니다. 전체 추정표와 2000출판본 전체를 재현한 것은 아닙니다."
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Card·Krueger · NBER6386(1998)",
+      "href": "https://www.nber.org/system/files/working_papers/w6386/w6386.pdf",
+      "note": "표지·초록 실제 페이지에서 ES-202 자료와 표본·보고 간격에 관한 저자 보고를 확인했습니다. 비공개 행정자료를 재현한 것은 아닙니다."
+    }
   ],
   "labor/measuring-the-spread": [
     {

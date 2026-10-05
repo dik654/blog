@@ -1,0 +1,201 @@
+{
+  "inputs": {
+    "empty": false,
+    "long": true,
+    "short": false,
+    "swapped": false,
+    "valid": true,
+    "wrongY": false
+  },
+  "invalidQap": {
+    "assignment": [
+      "1",
+      "3",
+      "144",
+      "5",
+      "12"
+    ],
+    "checks": [
+      {
+        "identity": true,
+        "point": "5",
+        "residual": "0"
+      },
+      {
+        "identity": false,
+        "point": "7",
+        "residual": "8822000076140676177066627039130481972282948541824108214220952289502164109820"
+      },
+      {
+        "identity": false,
+        "point": "11",
+        "residual": "18816680650207369065475037428584406060393752438598006422771275066263028191962"
+      }
+    ],
+    "constraints": 2,
+    "domain": 8,
+    "evaluationRows": {
+      "u": [
+        "3",
+        "12",
+        "1",
+        "3",
+        "144",
+        "0",
+        "0",
+        "0"
+      ],
+      "v": [
+        "5",
+        "12",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "w": [
+        "12",
+        "144",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "h": [
+      "8884429006748083639247612531063734311125490081738740992194586172057692466876",
+      "1653728045325652758493320974584828961019896544225886498808188186887712821662",
+      "1132669162999141025416035355715965019000827472958692350399043331197529391541",
+      "16843328702428581503227701355217200300894422887725622679708688347707006616031",
+      "15650046281319331196584631063202639690615821716591968644113027198162963099063",
+      "7321133274716841501841491464373223406244052236167293458173199275785728538718",
+      "13819238770009784938938620727787830873713861280392847491007821780487407341849",
+      "21538569417030164627108815852540596471692513250729260847145110467421831753428"
+    ],
+    "instances": 3,
+    "satisfied": false
+  },
+  "invalidWitness": {
+    "returnedProof": true,
+    "verified": false
+  },
+  "missingSquare": {
+    "newKeyProofY145": true,
+    "originalKeyRejects": true
+  },
+  "negativeWitnessVerified": true,
+  "profile": {
+    "commit": "0bb3e604c534bd118ed477eaf1231f591d6fc40f",
+    "crate": "ark-groth16 0.6.0",
+    "curve": "BN254",
+    "debugAssertions": false,
+    "parallel": false,
+    "setup": "local deterministic seed; no ceremony"
+  },
+  "randomness": {
+    "changedPairChangesProof": true,
+    "changedPairVerified": true,
+    "noZkVerified": true,
+    "sameFixedPairSameProof": true
+  },
+  "serialization": {
+    "allIdentityDecodes": true,
+    "allIdentityVerified": false,
+    "compressedBytes": 128,
+    "offCurve11Decodes": false,
+    "roundtrip": true,
+    "trailingBytesLeft": 1,
+    "trailingDecoded": true,
+    "uncompressedBytes": 256
+  },
+  "validQap": {
+    "assignment": [
+      "1",
+      "3",
+      "144",
+      "4",
+      "12"
+    ],
+    "checks": [
+      {
+        "identity": true,
+        "point": "5",
+        "residual": "0"
+      },
+      {
+        "identity": true,
+        "point": "7",
+        "residual": "0"
+      },
+      {
+        "identity": true,
+        "point": "11",
+        "residual": "0"
+      }
+    ],
+    "constraints": 2,
+    "domain": 8,
+    "evaluationRows": {
+      "u": [
+        "3",
+        "12",
+        "1",
+        "3",
+        "144",
+        "0",
+        "0",
+        "0"
+      ],
+      "v": [
+        "4",
+        "12",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "w": [
+        "12",
+        "144",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "h": [
+      "5472060717959818805561601436314318772137091100104008585924551046643952123883",
+      "20144675857043458945995196160129572440062193451646596755151158464074011214466",
+      "1497415846475047420114969669917436855696382388581616488295592550762701515515",
+      "16342030856699474160037633481463197962029017279832382412842897297426103917187",
+      "13438729461227780476656562740600412735457575139916225694145813945805825361501",
+      "6462758405448449684500090496134449834717163007499642629645356854484674178970",
+      "18774928413573700601886557399185111707225259068288963462596160561858586972151",
+      "0"
+    ],
+    "instances": 3,
+    "satisfied": true
+  },
+  "wrapper": {
+    "longPublic": {
+      "error": "public-input-count"
+    },
+    "shortPublic": {
+      "error": "public-input-count"
+    },
+    "trailingBytes": {
+      "error": "compressed-proof-length"
+    },
+    "valid": {
+      "accepted": true
+    }
+  }
+}

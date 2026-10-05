@@ -1,0 +1,201 @@
+{
+  "runtime": {
+    "node": "v24.13.0",
+    "v8": "13.6.233.17-node.37",
+    "icu": "77.1",
+    "unicode": "16.0"
+  },
+  "cases": {
+    "raw": {
+      "text": "Aé가😀",
+      "cp": [
+        "41",
+        "65",
+        "301",
+        "ac00",
+        "1f600"
+      ],
+      "utf16": 6,
+      "bytes": 11,
+      "hex": "4165cc81eab080f09f9880",
+      "clusters": [
+        {
+          "text": "A",
+          "indexUTF16": 0
+        },
+        {
+          "text": "é",
+          "indexUTF16": 1
+        },
+        {
+          "text": "가",
+          "indexUTF16": 3
+        },
+        {
+          "text": "😀",
+          "indexUTF16": 4
+        }
+      ],
+      "units": [
+        "41",
+        "65",
+        "301",
+        "ac00",
+        "d83d",
+        "de00"
+      ]
+    },
+    "NFC": {
+      "text": "Aé가😀",
+      "cp": [
+        "41",
+        "e9",
+        "ac00",
+        "1f600"
+      ],
+      "utf16": 5,
+      "bytes": 10,
+      "hex": "41c3a9eab080f09f9880",
+      "clusters": [
+        {
+          "text": "A",
+          "indexUTF16": 0
+        },
+        {
+          "text": "é",
+          "indexUTF16": 1
+        },
+        {
+          "text": "가",
+          "indexUTF16": 2
+        },
+        {
+          "text": "😀",
+          "indexUTF16": 3
+        }
+      ],
+      "units": [
+        "41",
+        "e9",
+        "ac00",
+        "d83d",
+        "de00"
+      ]
+    },
+    "NFD": {
+      "text": "Aé가😀",
+      "cp": [
+        "41",
+        "65",
+        "301",
+        "1100",
+        "1161",
+        "1f600"
+      ],
+      "utf16": 7,
+      "bytes": 14,
+      "hex": "4165cc81e18480e185a1f09f9880",
+      "clusters": [
+        {
+          "text": "A",
+          "indexUTF16": 0
+        },
+        {
+          "text": "é",
+          "indexUTF16": 1
+        },
+        {
+          "text": "가",
+          "indexUTF16": 3
+        },
+        {
+          "text": "😀",
+          "indexUTF16": 5
+        }
+      ],
+      "units": [
+        "41",
+        "65",
+        "301",
+        "1100",
+        "1161",
+        "d83d",
+        "de00"
+      ]
+    },
+    "family": {
+      "text": "👨‍👩‍👧‍👦",
+      "cp": [
+        "1f468",
+        "200d",
+        "1f469",
+        "200d",
+        "1f467",
+        "200d",
+        "1f466"
+      ],
+      "utf16": 11,
+      "bytes": 25,
+      "hex": "f09f91a8e2808df09f91a9e2808df09f91a7e2808df09f91a6",
+      "clusters": [
+        {
+          "text": "👨‍👩‍👧‍👦",
+          "indexUTF16": 0
+        }
+      ],
+      "units": [
+        "d83d",
+        "dc68",
+        "200d",
+        "d83d",
+        "dc69",
+        "200d",
+        "d83d",
+        "dc67",
+        "200d",
+        "d83d",
+        "dc66"
+      ]
+    }
+  },
+  "slices": {
+    "rawGa": "가",
+    "nfcGa": "가",
+    "rawEmoji": "😀",
+    "brokenEmoji": "\ud83d",
+    "brokenEncoded": "efbfbd"
+  },
+  "normalizePieces": {
+    "joined": "é",
+    "whole": "é"
+  },
+  "reorder": {
+    "before": [
+      113,
+      775,
+      803
+    ],
+    "after": [
+      113,
+      803,
+      775
+    ]
+  },
+  "invalid": [
+    {
+      "hex": "c080",
+      "fatalRejected": true,
+      "replacement": "��"
+    },
+    {
+      "hex": "eda080",
+      "fatalRejected": true,
+      "replacement": "���"
+    },
+    {
+      "hex": "f4908080",
+      "fatalRejected": true,
+      "replacement": "����"
+    }
+  ]
+}

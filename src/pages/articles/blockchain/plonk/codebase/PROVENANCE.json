@@ -1,0 +1,132 @@
+{
+  "readAt": "2026-10-05",
+  "gnark": {
+    "version": "0.16.3",
+    "commit": "cfc7b2f907cc4212ec152077e022c6d0b4805759"
+  },
+  "gnarkCrypto": {
+    "version": "0.21.0",
+    "commit": "0a975d747c416958f20ad4e785bcf102449a81c9"
+  },
+  "files": [
+    {
+      "project": "gnark",
+      "path": "LICENSE",
+      "gitBlob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "project": "gnark",
+      "path": "README.md",
+      "gitBlob": "507a6df73e53f8e2f08037158a04711cf1dcd3ea",
+      "sha256": "0d22dbc8057b130beeadf9d1fdcee3fee83b1191ab2afaa9a0fede4c6d77df6a"
+    },
+    {
+      "project": "gnark",
+      "path": "go.mod",
+      "gitBlob": "2e3f01d6e082915c571e268e17d58a9750ad1ef3",
+      "sha256": "8028f98431358c4c7441fbd8f67afba9a3a30e45c4dfe52e8114fccc9a094cc8"
+    },
+    {
+      "project": "gnark",
+      "path": "backend/backend.go",
+      "gitBlob": "5bc86fd1421186b068e03d6d0210ee8016e5f657",
+      "sha256": "24b139023b4593ba2b23cb9280d7a9c8e99d3cd3c3d457ca1db3ebeeedb3d205"
+    },
+    {
+      "project": "gnark",
+      "path": "backend/plonk/bn254/prove.go",
+      "gitBlob": "2c788e856965ae5da4d303054c626862ba9bfa20",
+      "sha256": "e147f1b5272a4a1ab5dde57b169f4a02b3bf7b4511dc99fdf96de32b8ca54753"
+    },
+    {
+      "project": "gnark",
+      "path": "backend/plonk/bn254/verify.go",
+      "gitBlob": "1350226c9ed97e0a24078c1be1c83aca1a302515",
+      "sha256": "5afd318c9d2cd180ea8b72ba83e807627198d8f462b2446f0fed4952cdb34c7f"
+    },
+    {
+      "project": "gnark",
+      "path": "backend/plonk/bn254/setup.go",
+      "gitBlob": "9a214171faa0e40864e5b061f6a97f15ee8e6b14",
+      "sha256": "d22ed6a6f30e8153a8d34bd13e002f4fbfe3632b9b78b31844570b657501b5ef"
+    },
+    {
+      "project": "gnark",
+      "path": "backend/plonk/bn254/marshal.go",
+      "gitBlob": "7ddadd0f833c5c2f541707bb0c1b2e68d4776c61",
+      "sha256": "638ef80ae3c3fbf1047be76419ef9752e8b8f0fdb05964a8515ebfd18b1fa4b3"
+    },
+    {
+      "project": "gnark",
+      "path": "frontend/cs/scs/api.go",
+      "gitBlob": "ed712ddb7c4955443aac8d98f52e05282a49e3e1",
+      "sha256": "bfdb663fb4209e0e12bc138fb88f4b3acc90d38056cd93b9d6fe30a70905e4b6"
+    },
+    {
+      "project": "gnark",
+      "path": "frontend/cs/scs/builder.go",
+      "gitBlob": "f39d9e614abf53ff325b25acb1ba087a85618e6b",
+      "sha256": "723c12fdd388b958f6bbda5345790eb6e21bb121fade8f760e2b0df674d4a4b3"
+    },
+    {
+      "project": "gnark",
+      "path": "constraint/bn254/system.go",
+      "gitBlob": "3580cfc94e6a1267ed2766491a5f1693d348e492",
+      "sha256": "0fc3ee1d24313bd4c67d5a867851521ec7f33a3eb7dd3f2190bbc0a1987cb694"
+    },
+    {
+      "project": "gnark",
+      "path": "test/unsafekzg/kzgsrs.go",
+      "gitBlob": "39abb8e73405449d478420dd9111c0b9c3a5c0c1",
+      "sha256": "7a903b6c661939d003b38fe1b99dcd5f54211d6c32ba7e36d0c992dec89ea063"
+    },
+    {
+      "project": "gnark",
+      "path": "examples/plonk/main.go",
+      "gitBlob": "b0903dfb778cf2a15852d32dcc46d52c9afcd100",
+      "sha256": "6c4bf384ee5500e8535504b056a218da169d4b8365d84792111745c421d7a1e4"
+    },
+    {
+      "project": "gnark-crypto",
+      "path": "LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "project": "gnark-crypto",
+      "path": "go.mod",
+      "sha256": "fc437bc65fcedfb53c21842ccfacd57dbead818a5c73f241cdfa64c1f9e83d97"
+    },
+    {
+      "project": "gnark-crypto",
+      "path": "ecc/bn254/fr/iop/ratios.go",
+      "sha256": "d176e3662aa312826e0ebf6e339a3efa188f7797fa0806252e1cf48c62df2cc0"
+    },
+    {
+      "project": "gnark-crypto",
+      "path": "ecc/bn254/fr/iop/polynomial.go",
+      "sha256": "9bf52bb19e62b3394c30c1a41f7f671f79fd04a7dad23a27eed3f8fee8d367c7"
+    },
+    {
+      "project": "gnark-crypto",
+      "path": "ecc/bn254/fr/fft/domain.go",
+      "sha256": "d98ecc2eacd8b65788755e47264306466bb979fb66d1eb64ed9ebe729696cdeb"
+    },
+    {
+      "project": "gnark-crypto",
+      "path": "ecc/bn254/kzg/kzg.go",
+      "sha256": "0b6d142c9a81b04fde6044b7097fe2fcb7b96088675963f5dc03dbf61ed95cd8"
+    },
+    {
+      "project": "gnark-crypto",
+      "path": "ecc/bn254/marshal.go",
+      "sha256": "2b0a65c1e2900ad961e78f70957d969e746c3f9d22b0b0f1192cccd72657008e"
+    },
+    {
+      "project": "gnark-crypto",
+      "path": "fiat-shamir/transcript.go",
+      "sha256": "977b5feade83d7abec5362235d0941960dfeca2ed68484dc823b72160971fbca"
+    }
+  ],
+  "scope": "Whole selected original files. Go modules actually executed from matching go.sum cache. Local harness is in verification; it is not upstream code."
+}

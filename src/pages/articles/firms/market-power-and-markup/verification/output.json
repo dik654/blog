@@ -1,0 +1,194 @@
+{
+  "scope": "Own assumed uniform-price linear demand and costs, not Cournot observed data",
+  "integers": [
+    {
+      "quantity": 0,
+      "price": 13,
+      "revenue": 0,
+      "cost": 0,
+      "profit": 0,
+      "marginalRevenue": 13
+    },
+    {
+      "quantity": 1,
+      "price": 12,
+      "revenue": 12,
+      "cost": 7,
+      "profit": 5,
+      "marginalRevenue": 11
+    },
+    {
+      "quantity": 2,
+      "price": 11,
+      "revenue": 22,
+      "cost": 14,
+      "profit": 8,
+      "marginalRevenue": 9
+    },
+    {
+      "quantity": 3,
+      "price": 10,
+      "revenue": 30,
+      "cost": 21,
+      "profit": 9,
+      "marginalRevenue": 7
+    },
+    {
+      "quantity": 4,
+      "price": 9,
+      "revenue": 36,
+      "cost": 28,
+      "profit": 8,
+      "marginalRevenue": 5
+    },
+    {
+      "quantity": 5,
+      "price": 8,
+      "revenue": 40,
+      "cost": 35,
+      "profit": 5,
+      "marginalRevenue": 3
+    },
+    {
+      "quantity": 6,
+      "price": 7,
+      "revenue": 42,
+      "cost": 42,
+      "profit": 0,
+      "marginalRevenue": 1
+    },
+    {
+      "quantity": 7,
+      "price": 6,
+      "revenue": 42,
+      "cost": 49,
+      "profit": -7,
+      "marginalRevenue": -1
+    },
+    {
+      "quantity": 8,
+      "price": 5,
+      "revenue": 40,
+      "cost": 56,
+      "profit": -16,
+      "marginalRevenue": -3
+    },
+    {
+      "quantity": 9,
+      "price": 4,
+      "revenue": 36,
+      "cost": 63,
+      "profit": -27,
+      "marginalRevenue": -5
+    },
+    {
+      "quantity": 10,
+      "price": 3,
+      "revenue": 30,
+      "cost": 70,
+      "profit": -40,
+      "marginalRevenue": -7
+    },
+    {
+      "quantity": 11,
+      "price": 2,
+      "revenue": 22,
+      "cost": 77,
+      "profit": -55,
+      "marginalRevenue": -9
+    },
+    {
+      "quantity": 12,
+      "price": 1,
+      "revenue": 12,
+      "cost": 84,
+      "profit": -72,
+      "marginalRevenue": -11
+    },
+    {
+      "quantity": 13,
+      "price": 0,
+      "revenue": 0,
+      "cost": 91,
+      "profit": -91,
+      "marginalRevenue": -13
+    }
+  ],
+  "optima": [
+    {
+      "quantity": 3,
+      "price": 10,
+      "revenue": 30,
+      "cost": 21,
+      "profit": 9,
+      "marginalRevenue": 7,
+      "marginalCost": 7,
+      "elasticity": -3.3333333333333335,
+      "markup": 0.3
+    },
+    {
+      "quantity": 2,
+      "price": 11,
+      "revenue": 22,
+      "cost": 18,
+      "profit": 4,
+      "marginalRevenue": 9,
+      "marginalCost": 9,
+      "elasticity": -5.5,
+      "markup": 0.18181818181818182
+    },
+    {
+      "quantity": 3,
+      "price": 13,
+      "revenue": 39,
+      "cost": 21,
+      "profit": 18,
+      "marginalRevenue": 7,
+      "marginalCost": 7,
+      "elasticity": -2.1666666666666665,
+      "markup": 0.46153846153846156
+    },
+    {
+      "quantity": 2,
+      "price": 11,
+      "revenue": 22,
+      "cost": 14,
+      "profit": 8,
+      "marginalRevenue": 9,
+      "marginalCost": 7,
+      "elasticity": -5.5,
+      "markup": 0.36363636363636365
+    }
+  ],
+  "welfare": [
+    {
+      "quantity": 6,
+      "price": 7,
+      "revenue": 42,
+      "cost": 42,
+      "profit": 0,
+      "marginalRevenue": 1,
+      "consumer": 18,
+      "producer": 0,
+      "total": 18,
+      "lost": 0
+    },
+    {
+      "quantity": 3,
+      "price": 10,
+      "revenue": 30,
+      "cost": 21,
+      "profit": 9,
+      "marginalRevenue": 7,
+      "consumer": 4.5,
+      "producer": 9,
+      "total": 13.5,
+      "lost": 4.5
+    }
+  ],
+  "entry": {
+    "avoidableFixed10": 0,
+    "sunkFixed10ContinueIncremental": 9
+  },
+  "delta": 6
+}

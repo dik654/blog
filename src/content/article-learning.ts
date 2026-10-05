@@ -66800,51 +66800,321 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "crypto/groth16": {
-    entryLevel: true,
-    entryNote: "Groth16 수식을 안다고 가정하지 않고 x·w=y의 R1CS/QAP와 public/witness부터 세 proof element로 내려갑니다.",
-    coreIdea: "Groth16은 relation-specific CRS로 QAP assignment·quotient를 A∈G1,B∈G2,C∈G1에 결속하고 public-input linear combination을 pairing equation에서 검사합니다.",
-    assumedKnowledge: [],
-    introducedHere: [
-      { id: "groth16-relation-specific-crs", role: "한 QAP에 종속된 setup key와 toxic waste를 설명합니다." },
-      { id: "groth16-qap-quotient-witness", role: "Exact quotient가 proof에 들어가는 경로를 설명합니다." },
-      { id: "groth16-three-element-proof", role: "A·B·C proof와 randomization을 설명합니다." },
-      { id: "groth16-pairing-public-input-binding", role: "Public inputs와 proof의 pairing 검증을 설명합니다." },
-      { id: "groth16-setup-security-release-gate", role: "Setup·point·input failure 뒤 비용을 비교합니다." },
+    "entryLevel": false,
+    "entryNote": "보간과 페어링의 역할을 짧게 되짚고 같은 두 곱셈을 제약·몫·설정·증명·실제 원문까지 추적합니다.",
+    "coreIdea": "정확한 다항식 나눗셈의 만족 관계를 설정된 곡선점의 조합에 담고 공개값을 페어링 식으로 연결합니다. 완전성 계산과 보안 가정, API가 실제로 확인한 입력 범위를 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "lagrange-interpolation-basis",
+        "role": "서로 다른 두 줄 번호를 지나는 직선과 일반 보간을 이해합니다."
+      },
+      {
+        "id": "qap-divisibility-reduction",
+        "role": "같은 변수의 제약 만족과 목표 다항식의 정확한 나눗셈을 연결합니다."
+      },
+      {
+        "id": "pairing-bilinearity-boundary",
+        "role": "두 군의 점에 담긴 스칼라 곱 관계를 목표군에서 비교합니다."
+      }
     ],
-    conceptExplanations: [
-      { id: "groth16-relation-specific-crs", sectionId: "qap-setup", intuition: "한 시험지의 채점식을 비밀 좌표에서 group elements로 미리 봉인한 전용 채점 도구입니다.", workedExample: "xw=y QAP의 coefficient evaluations와 τ·α·β·γ·δ powers를 pk/vk에 encode하되 w=4는 setup 입력이 아닙니다.", boundary: "회로를 바꾸면 key를 재생성해야 하며 trapdoor 노출은 soundness를 무너뜨릴 수 있습니다.", counterexample: "다른 circuit hash의 proving key와 verifier key를 섞으면 같은 scheme 이름이어도 같은 relation이 아닙니다." },
-      { id: "groth16-qap-quotient-witness", sectionId: "qap-setup", intuition: "모든 시험점에서 0인 오차를 target polynomial로 나눈 몫까지 proof 재료로 넣습니다.", workedExample: "한 row의 w=4에서는 numerator 0과 h=0, w=5에서는 remainder 3이라 quotient가 없습니다.", boundary: "Remainder를 버리거나 degree를 강제하지 않는 구현은 fail closed해야 합니다.", proofIdea: "QAP divisibility가 R1CS의 모든 row 만족과 동치이므로 h의 encoded contribution이 만족 증거가 됩니다." },
-      { id: "groth16-three-element-proof", sectionId: "prove-verify", intuition: "큰 assignment를 보내지 않고 CRS 선형 조합과 fresh randomness로 세 curve points를 보냅니다.", workedExample: "Proof π=(A∈G1,B∈G2,C∈G1)는 같은 witness에서도 r,s가 달라지면 달라질 수 있습니다.", boundary: "세 요소의 byte 길이는 curve·compression에 따라 달라지고 RNG reuse·point validation은 별도 문제입니다." },
-      { id: "groth16-pairing-public-input-binding", sectionId: "prove-verify", intuition: "공개 답안 칸으로 만든 vk_x를 proof와 같은 pairing 저울에 올려 다른 문제의 영수증을 못 쓰게 합니다.", workedExample: "x=(3,12)의 IC linear combination은 (3,15)와 달라 같은 π의 pairing check가 실패해야 합니다.", boundary: "Pairing 성공을 setup provenance·circuit completeness·authorization으로 확대하지 않습니다.", proofIdea: "Bilinearity가 CRS의 hidden scalar relation을 GT product equality로 보존합니다." },
-      { id: "groth16-setup-security-release-gate", sectionId: "boundaries", intuition: "Ceremony와 key 영수증, 잘못된 입력·점·proof를 먼저 검사한 뒤 시간을 잽니다.", workedExample: "Circuit/key hash mismatch, wrong public input, identity/non-subgroup point, invalid quotient를 reason-coded reject합니다.", boundary: "평균 verify latency나 valid vector 몇 개로 deployment soundness를 입증하지 않습니다." },
+    "introducedHere": [
+      {
+        "id": "groth16-relation-specific-crs",
+        "role": "관계별 준비물과 설정 비밀의 역할을 설명합니다."
+      },
+      {
+        "id": "groth16-qap-quotient-witness",
+        "role": "같은 두 줄의 몫과 차수 조건을 유도합니다."
+      },
+      {
+        "id": "groth16-three-element-proof",
+        "role": "세 증명점과 난수 보정 항을 계산합니다."
+      },
+      {
+        "id": "groth16-pairing-public-input-binding",
+        "role": "공개값 결합과 검증식을 실제 API에 연결합니다."
+      },
+      {
+        "id": "groth16-setup-security-release-gate",
+        "role": "회로·입력·바이트·실행 범위를 구분합니다."
+      }
     ],
-    conceptStages: [
-      { label: "01 setup", relation: "SNARK interface의 QAP relation을 전용 CRS에 encode합니다.", concepts: ["snark-setup-prove-verify-interface", "qap-divisibility-reduction", "groth16-relation-specific-crs"] },
-      { label: "02 prove", relation: "Quotient와 assignment를 curve group의 세 요소로 만듭니다.", concepts: ["elliptic-curve-point-group", "groth16-qap-quotient-witness", "groth16-three-element-proof"] },
-      { label: "03 verify", relation: "Public inputs를 pairing equation에 결속합니다.", concepts: ["pairing-bilinearity-boundary", "groth16-pairing-public-input-binding"] },
-      { label: "04 release", relation: "Setup·failure parity 뒤 succinctness와 전체 비용을 비교합니다.", concepts: ["snark-succinctness-cost-boundary", "groth16-setup-security-release-gate"] },
+    "conceptExplanations": [
+      {
+        "id": "groth16-relation-specific-crs",
+        "sectionId": "setup",
+        "intuition": "변수의 자리와 계산 규칙에 맞는 준비물을 만들고 실제 답안은 나중에 넣습니다.",
+        "workedExample": "두 줄의 공개 자리 (1,x,y)와 비공개 (w,v)를 나누고 τ=5의 값에서 공개 합44와 비공개 합79를 만듭니다.",
+        "boundary": "노출된 F101 지수 장부는 안전하지 않으며 실제 설정의 검증·비밀 폐기·회로와 키의 대응은 별도 조건입니다.",
+        "counterexample": "설정 비밀을 알면 해가 없는 공개값 (3,2)에도 지수 (1,1,38)로 검증식을 맞출 수 있습니다."
+      },
+      {
+        "id": "groth16-qap-quotient-witness",
+        "sectionId": "qap-proof",
+        "intuition": "모든 줄에서 0인 오차는 서로 다른 줄 번호를 근으로 하는 식으로 나누어떨어집니다.",
+        "workedExample": "U=9X−6, V=8X−4, W=132X−120이면 UV−W=72(X−1)(X−2)여서 h=72입니다.",
+        "boundary": "같은 체·서로 다른 번호·차수 제한이 필요합니다. 실제 원문은 공개 자리와 padding을 포함한 8점 QAP이므로 두 점의 계수와 구분합니다.",
+        "counterexample": "원문 witness_map은 불량 답안에서도 배열을 반환하며 점 5에서 맞아도 점 7·11에서 항등식이 실패했습니다.",
+        "proofIdea": "모든 줄 rᵢ에서 UV−W=0이면 서로 다른 X−rᵢ가 서로소이므로 그 곱 T가 나눕니다. 반대로 UV−W=hT는 모든 줄의 오차를 0으로 만듭니다. U,V,W의 차수가 n보다 작으면 0이 아닌 h의 차수는 n−2 이하입니다."
+      },
+      {
+        "id": "groth16-three-element-proof",
+        "sectionId": "proof",
+        "intuition": "큰 답안의 점 조합과 새 난수로 G₁ 두 점과 G₂ 한 점을 만듭니다.",
+        "workedExample": "노출된 계산용 r=13,s=17을 넣으면 a=83,b=24,c=48이며 C에는 49+98+9−7 보정이 들어갑니다.",
+        "boundary": "실제 전송은 지수가 아닌 점입니다. 큰 군과 설정 가정 및 독립 균등한 새 난수가 필요하며 증명 개수와 바이트 크기는 구분합니다.",
+        "counterexample": "r=s=0도 검증식은 맞지만 해당 원문 함수는 영지식화를 하지 않는다고 명시합니다.",
+        "proofIdea": "a₀b₀=αβ+S+δc₀에서 a=a₀+rδ,b=b₀+sδ를 쓰면 새 교차 항은 δ(sa₀+rb₀+rsδ)입니다. c=c₀+sa+rb−rsδ가 이 항을 흡수합니다. 이는 완전성 유도이며 지식 건전성 증명은 아닙니다."
+      },
+      {
+        "id": "groth16-pairing-public-input-binding",
+        "sectionId": "verify",
+        "intuition": "같은 순서의 공개값으로 준비된 계수점을 합치고 증명과 한 페어링 식에 넣습니다.",
+        "workedExample": "IC 지수 (0,42,15)에 (3,43)을 넣으면 vkₓ=64이고 양변은 73입니다. y=44로 바꾸면 오른쪽 77로 달라집니다.",
+        "boundary": "함수가 실제로 읽은 입력의 개수와 순서, 곡선점 검사, 해당 키와 관계를 확인합니다. API의 성공을 메시지 전체 소비로 확대하지 않습니다.",
+        "counterexample": "고정 0.6.0 원문의 zip은 [3,144,999]의 999를 읽지 않아 true였습니다. 별도 호출 예제의 정확한 개수 검사는 이를 거부합니다."
+      },
+      {
+        "id": "groth16-setup-security-release-gate",
+        "sectionId": "verification",
+        "intuition": "키와 회로, 공개 입력 의미를 정하고 실제 성공·실패와 미검증 범위를 나눕니다.",
+        "workedExample": "실제 두 줄 실행에서 잘못된 값·순서·불량 답안은 검증 false, 제곱 줄을 뺀 별도 관계는 y=145를 허용했습니다.",
+        "boundary": "고정 시드의 로컬 실행은 공동 설정·비밀 폐기·전체 보안 감사·측면 채널·성능·양자 내성의 증거가 아닙니다.",
+        "counterexample": "부호나 범위를 제약하지 않으면 실제 큰 체에서도 −4·−12의 답안이 같은144에 대한 증명으로 통과합니다."
+      }
     ],
-    exercises: [
-      { level: "basic", question: "Groth16이 받는 R1CS/QAP·public input·witness와 출력 proof를 구분하세요.", answerChecklist: ["relation/QAP", "public x/y", "private w", "setup no witness", "pk/vk", "A B C", "verifier no witness"], requiredConcepts: ["snark-setup-prove-verify-interface", "groth16-three-element-proof"], sectionId: "overview" },
-      { level: "basic", question: "h=(AB−C)/t의 역할과 w=4·w=5 결과를 계산하세요.", answerChecklist: ["target t", "exact division", "w4 numerator zero", "h zero", "w5 numerator 3", "remainder", "reject"], requiredConcepts: ["groth16-qap-quotient-witness"], sectionId: "qap-setup" },
-      { level: "basic", question: "Relation-specific setup의 입력과 toxic waste 폐기 조건을 설명하세요.", answerChecklist: ["circuit/QAP", "security parameter", "tau alpha beta gamma delta", "pk/vk", "no concrete witness", "secret disposal", "circuit hash"], requiredConcepts: ["groth16-relation-specific-crs"], sectionId: "qap-setup" },
-      { level: "basic", question: "α·β·γ·δ가 기준항·public·private/quotient를 분리하는 역할을 설명하세요.", answerChecklist: ["alpha beta anchor", "gamma public", "delta private", "quotient", "separate domains", "not intuitive proof alone", "CRS"], requiredConcepts: ["groth16-relation-specific-crs", "groth16-qap-quotient-witness"], sectionId: "qap-setup" },
-      { level: "basic", question: "Groth16 proof A·B·C의 group type과 fresh randomness 역할을 설명하세요.", answerChecklist: ["A G1", "B G2", "C G1", "MSM", "assignment/quotient", "r/s randomness", "zero knowledge", "RNG boundary"], requiredConcepts: ["groth16-three-element-proof", "elliptic-curve-point-group"], sectionId: "prove-verify" },
-      { level: "basic", question: "vk_x와 Groth16 pairing verification equation을 쓰고 각 항을 설명하세요.", answerChecklist: ["IC0 sum xiICi", "public count", "e(A,B)", "e(alpha,beta)", "e(vkx,gamma)", "e(C,delta)", "G1/G2 types", "equivalent negative product"], requiredConcepts: ["groth16-pairing-public-input-binding", "pairing-bilinearity-boundary"], sectionId: "prove-verify" },
-      { level: "advanced", question: "x=(3,12) proof를 (3,15)에 재사용할 때 실패해야 하는 경로를 설명하세요.", answerChecklist: ["same proof", "different input", "different vkx", "IC ordering", "pairing mismatch", "statement binding", "negative fixture", "reject"], requiredConcepts: ["groth16-pairing-public-input-binding"], sectionId: "prove-verify" },
-      { level: "advanced", question: "Noncanonical·identity·wrong-curve·non-subgroup proof point의 검증 순서를 설계하세요.", answerChecklist: ["bounded decode", "canonical field", "curve equation", "identity policy", "subgroup", "G1/G2 type", "before pairing", "typed reject", "resource cap"], requiredConcepts: ["groth16-pairing-public-input-binding", "groth16-setup-security-release-gate"], sectionId: "prove-verify" },
-      { level: "advanced", question: "Groth16 setup·prove·verify benchmark를 분해하고 '상수 검증' 표현의 한계를 설명하세요.", answerChecklist: ["circuit constraints", "pk/vk bytes", "setup time", "witness", "FFT/MSM", "peak RSS", "public input MSM O(l)", "pairing", "proof bytes curve dependent", "p50/p95"], requiredConcepts: ["groth16-setup-security-release-gate", "snark-succinctness-cost-boundary"], sectionId: "boundaries" },
-      { level: "advanced", question: "회로 변경·ceremony transcript·key hash·toxic-waste 의심을 처리하는 release gate를 설계하세요.", answerChecklist: ["new circuit hash", "new relation-specific key", "transcript verification", "at least one honest contribution", "final key hash", "no secret logs", "wrong-key fixture", "rollback/revoke", "reprove"], requiredConcepts: ["groth16-relation-specific-crs", "groth16-setup-security-release-gate"], sectionId: "boundaries" },
+    "conceptStages": [
+      {
+        "label": "01 같은 두 줄",
+        "relation": "3×4=12와12²=144를 같은 변수 배열로 제약합니다.",
+        "concepts": [
+          "groth16-relation-specific-crs",
+          "qap-divisibility-reduction"
+        ]
+      },
+      {
+        "label": "02 정확한 몫",
+        "relation": "보간한 오차를 목표식으로 나누고 차수를 제한합니다.",
+        "concepts": [
+          "groth16-qap-quotient-witness",
+          "lagrange-interpolation-basis"
+        ]
+      },
+      {
+        "label": "03 세 점과 공개값",
+        "relation": "공개·비공개 준비 계수와 새 난수로 세 점을 만들고 검증합니다.",
+        "concepts": [
+          "groth16-relation-specific-crs",
+          "groth16-three-element-proof",
+          "groth16-pairing-public-input-binding",
+          "pairing-bilinearity-boundary"
+        ]
+      },
+      {
+        "label": "04 원문과 적용 조건",
+        "relation": "실제 8점 QAP과 입력·바이트의 경계를 같은 사례로 대조합니다.",
+        "concepts": [
+          "groth16-qap-quotient-witness",
+          "groth16-pairing-public-input-binding",
+          "groth16-setup-security-release-gate"
+        ]
+      }
     ],
-    papers: [
-      { title: "On the Size of Pairing-based Non-interactive Arguments", href: "https://eprint.iacr.org/2016/260.pdf", problem: "Pairing 기반 preprocessing SNARK의 proof와 verifier를 더 작게 만들어야 합니다.", contribution: "세 group element proof와 세 pairing 중심 QAP construction을 제시합니다.", assumptions: "Relation-specific CRS, bilinear groups와 논문의 generic-group/knowledge 모델을 사용합니다.", evidenceScope: "Groth16 construction·proof·reported comparison에 한정합니다.", notClaim: "Toxic-waste 노출 안전·post-quantum security·모든 구현의 고정 byte/latency를 보장하지 않습니다.", sectionId: "paper-groth16" },
-      { title: "ark-groth16 verifier.rs", href: "https://docs.rs/ark-groth16/latest/src/ark_groth16/verifier.rs.html", problem: "Public inputs와 proof를 실제 pairing backend에서 검증해야 합니다.", contribution: "Prepared VK·input MSM·multi-Miller loop·final exponentiation 경로를 제공합니다.", assumptions: "Crate version·curve·serialization·dependency와 untrusted decode를 고정합니다.", evidenceScope: "링크한 implementation API와 equation 경로에만 사용합니다.", notClaim: "Application circuit·ceremony·production readiness를 보장하지 않습니다.", sectionId: "code-arkworks-groth16" },
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "같은 3과 4의 계산에서 공개값과 비공개값 및 두 제약을 구분하세요.",
+        "answerChecklist": [
+          "큰 체의 공개값 x=3,y=144와 비공개 w=4,v=12",
+          "두 제약은 xw=v와 v²=y이며 같은 v를 공유",
+          "손계산 F101에서는 y=43으로 표시",
+          "변수 순서 (1,x,y,w,v)와 준비할 관계를 고정",
+          "준비 단계는 구체적인 4를 요구하지 않고 검증 함수도 w와 v를 받지 않음"
+        ],
+        "requiredConcepts": [
+          "groth16-relation-specific-crs"
+        ],
+        "sectionId": "rows"
+      },
+      {
+        "level": "basic",
+        "question": "두 줄을 잇는 U,V,W에서 정확한 몫 72를 구하고 필요한 조건을 설명하세요.",
+        "answerChecklist": [
+          "U=9X−6,V=8X−4,W=132X−120",
+          "UV−W=72X²−216X+144=72(X−1)(X−2)",
+          "서로 다른 줄 번호와 같은 체 및 차수 제한",
+          "한 줄 3w=12에서 w=4에서는 h=0이고 w=5에서는 나머지 3",
+          "한 점의 숫자 나눗셈을 다항식 항등식으로 확대하지 않음"
+        ],
+        "requiredConcepts": [
+          "groth16-qap-quotient-witness"
+        ],
+        "sectionId": "qap-proof"
+      },
+      {
+        "level": "basic",
+        "question": "노출된 계산용 설정값에서 공개 계수와 비공개 합을 구분하세요.",
+        "answerChecklist": [
+          "τ=5에서 U=39, V=36, W=35, T=12",
+          "α=2, β=3, γ=7, δ=11은 안전하지 않은 노출된 손계산 값",
+          "공개 d=(0,92,4), γ의 역원 29로 IC=(0,42,15)",
+          "공개 합 44와 vkₓ=64, 비공개 합 79",
+          "hT=56과 δ의 역원 46으로 기본 C 지수 49"
+        ],
+        "requiredConcepts": [
+          "groth16-relation-specific-crs",
+          "groth16-qap-quotient-witness"
+        ],
+        "sectionId": "setup"
+      },
+      {
+        "level": "basic",
+        "question": "r=13,s=17에서 세 증명 지수와 실제 전송할 군의 종류를 계산하세요.",
+        "answerChecklist": [
+          "a=2+39+13×11=83 mod 101",
+          "b=3+36+17×11=24 mod 101",
+          "c=49+98+9−7=48 mod 101",
+          "A와 C는 G₁, B는 G₂의 점이며 지수 정수 자체를 전송하지 않음",
+          "실제 영지식 생성은 독립 균등한 새 난수와 안전한 군·설정 조건을 사용"
+        ],
+        "requiredConcepts": [
+          "groth16-three-element-proof"
+        ],
+        "sectionId": "proof"
+      },
+      {
+        "level": "basic",
+        "question": "공개값 (3,43)의 vkₓ와 검증 양변을 구하고 y=44로 바꿔 보세요.",
+        "answerChecklist": [
+          "IC=(0,42,15), 3×42+43×15=64 mod 101",
+          "왼쪽 83×24=73",
+          "오른쪽 6+64×7+48×11=6+44+23=73 mod 101",
+          "y=44에서는 vkₓ=79이고 오른쪽 77로 불일치",
+          "원문의 음수 γ·δ를 쓰는 형태는 같은 등식을 이항한 것"
+        ],
+        "requiredConcepts": [
+          "groth16-pairing-public-input-binding"
+        ],
+        "sectionId": "verify"
+      },
+      {
+        "level": "basic",
+        "question": "증명 세 점의 크기와 검증 작업량이 어떻게 다른지 설명하세요.",
+        "answerChecklist": [
+          "선택한 군에서 2G₁+1G₂의 점 개수는 회로 줄 수와 무관",
+          "실제 고정 BN254 직렬화는 압축 128바이트·비압축 256바이트",
+          "ℓ개 공개 입력의 선형 결합 비용은 입력 수에 따라 증가",
+          "뒤의 3항의 Miller loop와 최종 지수승, 키 준비 비용을 구분",
+          "준비·답안·증명·검증의 비용과 키 크기는 별도로 비교하며 이 글은 성능 우열 미측정"
+        ],
+        "requiredConcepts": [
+          "groth16-three-element-proof",
+          "groth16-setup-security-release-gate"
+        ],
+        "sectionId": "cost"
+      },
+      {
+        "level": "advanced",
+        "question": "왜 유효한 증명이 비공개값 4의 유일성이나 양수성을 보장하지 않나요?",
+        "answerChecklist": [
+          "F101에서 w=97과 v=89도 공개값 (3,43)을 만족",
+          "실제 큰 체에서도 −4·−12가 144의 증명으로 통과",
+          "공개값이 이미 후보를 제한하고 한 줄 3w=12는 w=4를 결정",
+          "영지식은 공개 정보의 추론을 없애지 않음",
+          "정수 범위·양수성·값의 출처와 권한은 별도 제약"
+        ],
+        "requiredConcepts": [
+          "groth16-relation-specific-crs",
+          "groth16-setup-security-release-gate"
+        ],
+        "sectionId": "zk"
+      },
+      {
+        "level": "advanced",
+        "question": "불량 witness와 잘못된 public 배열 길이는 각각 어느 경로에서 확인했나요?",
+        "answerChecklist": [
+          "고정 0.6.0의 만족 검사는 debug_assert이며 실제 개발 빌드에서 panic",
+          "release는 불량 답안의 Proof를 반환하지만 최종 검증은 false",
+          "원문의 zip은 긴 배열 [3,144,999]의 마지막 999를 무시해 true",
+          "별도 호출 예제는 정확한 개수부터 검사해 긴 배열과 짧은 배열을 거부",
+          "바이트 검사는 다른 경로이며 역직렬화 성공 뒤 남은 1바이트도 확인"
+        ],
+        "requiredConcepts": [
+          "groth16-pairing-public-input-binding",
+          "groth16-setup-security-release-gate"
+        ],
+        "sectionId": "source-verify"
+      },
+      {
+        "level": "advanced",
+        "question": "알려진 설정 비밀로 거짓 주장을 통과시키는 작은 반례와 실제 설정의 경계를 설명하세요.",
+        "answerChecklist": [
+          "F101의 x=3,y=2는 w²=2/9를 요구하며 2가 비제곱이어서 해가 없음",
+          "그 공개값의 vkₓ 지수는 55",
+          "a=b=1,c=38이면 6+55×7+38×11=1 mod 101",
+          "작은 장부는 모든 설정 비밀이 공개된 가정이며 실제 암호 보안이 없음",
+          "공동 설정의 검증·정직한 기여와 폐기 조건은 선택한 절차에 따름; 이 글은 공동 설정 미실행"
+        ],
+        "requiredConcepts": [
+          "groth16-relation-specific-crs",
+          "groth16-setup-security-release-gate"
+        ],
+        "sectionId": "trapdoor"
+      },
+      {
+        "level": "advanced",
+        "question": "두 점 손계산과 실제 8점 QAP의 차이 및 검증 범위를 설명하세요.",
+        "answerChecklist": [
+          "원문은 제약 2개와 상수 포함 공개 자리 3개의 합 5를 수용하는 8점 영역을 사용",
+          "U 평가 배열은 [3,12,1,3,144,0,0,0]이며 실제 큰 체의 연산",
+          "H의 8계수 중 마지막은 유효 답안에서 0이며 두 점의 h=72와 같은 배열이 아님",
+          "불량 답안도 coset 생성원 5에서 숫자 등식을 맞추지만 7과 11에서는 실패",
+          "고정 원문·의존성·빌드의 관찰과 전체 보안·공동 설정·성능의 검증을 구분"
+        ],
+        "requiredConcepts": [
+          "groth16-qap-quotient-witness",
+          "groth16-setup-security-release-gate"
+        ],
+        "sectionId": "source-qap"
+      }
     ],
+    "papers": [
+      {
+        "title": "Jens Groth · 원문의 QAP와 3.2절 구성",
+        "href": "https://www.iacr.org/archive/eurocrypt2016/96650272/96650272.pdf",
+        "problem": "많은 제약의 만족을 작은 비대화형 증명으로 확인합니다.",
+        "contribution": "세 군 원소와 한 페어링 곱 검증식을 갖는 구성을 제시합니다.",
+        "assumptions": "관계별 설정과 군 가정, 정리 2의 일반적인 쌍선형 군 연산 모델 범위를 구분합니다.",
+        "evidenceScope": "2.2·2.3·3.2절 및 정리 2와 비용 설명을 읽고 PDF 15·16쪽 설정·증명·검증·모의 증명식을 화면으로 확인했습니다.",
+        "notClaim": "전체 보안 정리의 재증명·공동 설정·모든 후속 구성·특정 구현의 안전성을 검증하지 않았습니다.",
+        "sectionId": "paper-groth16"
+      },
+      {
+        "title": "ark-groth16 v0.6.0 · 0bb3e604 고정 원문",
+        "href": "https://github.com/arkworks-rs/groth16/tree/0bb3e604c534bd118ed477eaf1231f591d6fc40f",
+        "problem": "같은 제약과 공개값을 준비·증명·검증 코드에 연결합니다.",
+        "contribution": "구조체·QAP·설정·MSM 조립·공개 입력 결합·페어링을 구현합니다.",
+        "assumptions": "BN254와 Cargo.lock 의존성, 개발/release 빌드 및 호출자의 입력·바이트 검사를 구분합니다.",
+        "evidenceScope": "전체 원본 13개 파일의 Git blob·SHA256과 라이선스를 보존했습니다. Rust 1.93.0 CPU에서 같은 두 줄과 실제 8점 QAP, 공개값·길이·불량 답안·난수·제약 누락을 실행했습니다.",
+        "notClaim": "고정 시드 실행은 공동 설정·비밀 폐기·전체 테스트·보안 감사·성능 우열·상용 검수가 아닙니다.",
+        "sectionId": "code-arkworks-groth16"
+      },
+      {
+        "title": "ark-ec 0.6.0 · 점 검사와 직렬화 의존 원문",
+        "href": "https://github.com/arkworks-rs/algebra/blob/bffa52711f225e888c1a91e1ec9fc59f2d9d5c94/ec/src/models/short_weierstrass/affine.rs",
+        "problem": "점의 군 유효성과 전체 입력 메시지의 소비를 구분합니다.",
+        "contribution": "곡선·부분군 검사와 점의 직렬화 인터페이스를 제공합니다.",
+        "assumptions": "실제 Cargo.lock의 0.6.0과 crate의 VCS 기록을 사용하고 unchecked 생성과 검사하는 decode를 구분합니다.",
+        "evidenceScope": "선택한 전체 의존 원문과 라이선스·SHA256을 보존했습니다. 압축 128/비압축 256바이트, (1,1) 거부, 항등원과 남은 바이트의 관찰을 확인했습니다.",
+        "notClaim": "모든 비정규 바이트·부분군·곡선 프로필·자원 소모 사례를 전수 검사하지 않았습니다.",
+        "sectionId": "source-bytes"
+      }
+    ]
   },
   "crypto/plonk": {
     entryLevel: true,
-    entryNote: "PLONKish·permutation·PCS를 안다고 가정하지 않고 x=3,w=4,y=12를 세 witness cells에 놓는 데서 시작합니다.",
-    coreIdea: "PLONK는 witness table의 row 산술을 selector gates로, cell equality를 permutation grand product로, 전체 constraints를 quotient identity로 만들고 PCS opening과 Fiat–Shamir transcript로 결속합니다.",
+    entryNote: "PLONKish·순열·다항식 약정을 안다고 가정하지 않습니다. 공개 x=3·y=15와 비공개 w=4로 3×4=12, 12+3=15를 만드는 네 줄 표부터 따라갑니다.",
+    coreIdea: "같은 네 줄에서 산술 규칙은 selector 식으로, 다시 쓴 칸의 같음은 위치가 섞인 누적 곱으로 검사합니다. 모든 오차를 X⁴−1로 나눈 몫은 먼저 고정하고 무작위 점에서 열며, 실제 gnark 원문의 여덟 줄·도전값 순서·520바이트 증명과 손계산의 경계를 구분합니다.",
     assumedKnowledge: [],
     introducedHere: [
       { id: "plonkish-selector-gate", role: "한 표에서 selector로 여러 산술 gate를 표현합니다." },
@@ -66855,12 +67125,12 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "plonk-release-gate", role: "실패 fixture 뒤 rows·FFT·MSM·proof 비용을 비교합니다." },
     ],
     conceptExplanations: [
-      { id: "plonkish-selector-gate", sectionId: "arithmetization", intuition: "같은 세 칸 표에서 row별 스위치를 켜 곱셈·덧셈·상수 규칙을 선택합니다.", workedExample: "a=3,b=4,c=12에서 qM=1,qO=−1이면 ab−c=0입니다.", boundary: "Field equality는 signed integer·bit·range를 자동으로 보장하지 않습니다.", counterexample: "c=11이면 gate value 1이라 실패하지만 p−1은 field에서 −1입니다." },
-      { id: "plonk-permutation-grand-product", sectionId: "permutation", intuition: "연결 전후의 값+위치 표를 무작위 양념으로 섞어 누적 곱이 마지막에 1인지 봅니다.", workedExample: "γ=2에서 [3,4,12]와 [12,3,4]의 product ratio는 1이고 [12,3,5]이면 1이 아닙니다.", boundary: "β·γ는 commitments 뒤 뽑고 Z(1)=1과 마지막 closure를 모두 강제해야 합니다.", proofIdea: "Copy-consistent permutation이면 numerator와 denominator factor multisets가 같아 전체 product가 취소됩니다." },
-      { id: "plonk-quotient-identity", sectionId: "opening-security", intuition: "모든 row에서 0이어야 하는 여러 오차를 하나로 합쳐 domain의 모든 root를 가진 polynomial로 나눕니다.", workedExample: "N=T(X)(X^n−1)를 commit하고 ζ에서 N(ζ)=T(ζ)(ζ^n−1)을 확인합니다.", boundary: "α challenge separation·degree bound·domain 밖 ζ·boundary constraints가 함께 필요합니다.", proofIdea: "N이 H의 모든 점에서 0이면 Z_H가 N을 나눈다는 factor theorem을 사용합니다." },
-      { id: "plonk-pcs-opening-boundary", sectionId: "opening-security", intuition: "표의 규칙과 봉인된 polynomial의 특정 값이 맞다는 도구를 분리합니다.", workedExample: "KZG는 pairing/SRS로 ζ evaluation을 열고 IPA는 다른 DLP 경로와 더 큰 proof를 사용할 수 있습니다.", boundary: "PCS opening 성공은 gate·permutation 식 자체나 public input의 업무 의미를 보장하지 않습니다." },
-      { id: "plonk-transcript-challenge-order", sectionId: "opening-security", intuition: "각 답안을 봉인한 다음에만 다음 무작위 질문을 공개해 답을 질문에 맞춰 바꾸지 못하게 합니다.", workedExample: "Wire commits→β,γ→Z commit→α→quotient commits→ζ→evaluations/batch challenge 순으로 흡수합니다.", boundary: "Protocol variant마다 round가 다르므로 spec/version과 exact canonical encoding을 고정합니다.", counterexample: "β·γ를 wire commit 전에 알면 copy 충돌에 맞는 witness를 탐색할 수 있습니다." },
-      { id: "plonk-release-gate", sectionId: "opening-security", intuition: "잘못된 wire·copy·opening·round가 모두 거절된 같은 회로에서만 빠르기를 비교합니다.", workedExample: "Rows/degree/rotations/lookups, witness/FFT/MSM, RSS, proof bytes, verifier pairing과 p50/p95를 기록합니다.", boundary: "Row 수 감소나 proof byte 하나를 end-to-end 우위로 확대하지 않습니다." },
+      { id: "plonkish-selector-gate", sectionId: "arithmetization", intuition: "같은 세 칸 표에서 줄마다 계수 스위치를 바꾸어 곱셈과 덧셈을 한 식으로 표현합니다.", workedExample: "F₉₇에서 3×4=12는 qM=1,qO=−1이고 12+3=15는 qL=qR=1,qO=−1입니다.", boundary: "각 줄의 식이 맞아도 12와 3을 다시 쓴 칸이 같은 논리값이라는 보장은 별도입니다. 정수의 부호·bit·범위도 자동으로 생기지 않습니다.", counterexample: "마지막 줄 11+4=15는 산술식은 맞지만 앞에서 만든 12와의 복사 조건을 어깁니다." },
+      { id: "plonk-permutation-grand-product", sectionId: "permutation", intuition: "각 칸의 값과 서로 다른 위치 번호를 β·γ로 섞고, 복사 연결 전후의 인수를 줄마다 나누어 누적합니다.", workedExample: "F₉₇에서 β=2,γ=7이면 올바른 표의 Z는 1→50→67→76→1이고, 마지막 12를 11로 바꾸면 45로 끝납니다.", boundary: "Z(1)=1과 마지막 closure가 모두 필요하며 분모가 0인 경우의 정책도 정해야 합니다. 한 작은 체의 충돌 비율을 실제 보안 수준으로 확대하지 않습니다.", proofIdea: "복사 cycle의 값이 같으면 값+위치 인수의 multiset이 같아 전체 곱이 취소됩니다. 반대 방향은 commitments 뒤 무작위 β·γ와 낮은 차수의 근 개수 제한을 함께 사용합니다." },
+      { id: "plonk-quotient-identity", sectionId: "quotient", intuition: "네 줄에서 모두 0인 산술·복사·경계 오차를 α의 서로 다른 거듭제곱으로 합치고, 네 점에서 0인 X⁴−1로 나눕니다.", workedExample: "α=3으로 만든 N을 T로 나누면 나머지가 0입니다. ζ=5에서 N=78,T=85,Z_H=42이고 85×42 mod97=78입니다.", boundary: "ζ는 H 밖에서 T를 고정한 뒤 정해야 하며, 차수 제한과 각 경계 조건을 빠뜨리면 한 점 등식만으로 전체 표를 보장하지 못합니다.", proofIdea: "N이 H의 네 점에서 0이면 factor theorem에 따라 Z_H가 N을 나눕니다. 고정된 낮은 차수의 N−TZ_H가 0이 아니면 무작위 ζ에서 우연히 0일 확률은 차수로 제한됩니다." },
+      { id: "plonk-pcs-opening-boundary", sectionId: "opening-security", intuition: "표의 규칙을 만드는 일과 먼저 봉인한 다항식의 특정 점 값을 확인하는 일을 구분합니다.", workedExample: "KZG 열기는 고정한 T가 ζ=5에서 85임을 SRS와 pairing으로 연결합니다. 본문의 몫 등식은 그 값 85를 N=78,Z_H=42와 결합합니다.", boundary: "PCS 열기 성공은 빠뜨린 gate·copy·public-input 조건을 보충하지 않습니다. SRS의 차수·생성·비밀 폐기와 곡선점 검사는 별도 조건입니다." },
+      { id: "plonk-transcript-challenge-order", sectionId: "transcript", intuition: "이전 답을 봉인한 뒤 다음 무작위 질문을 만들어야 그 질문에 맞춰 앞의 답을 바꿀 수 없습니다.", workedExample: "고정 gnark v0.16.3 원문은 wire commitments 뒤 γ와 β, Z commitment 뒤 α, quotient 세 조각 뒤 ζ를 만들고 여섯 ζ 평가와 이동한 Z 평가를 엽니다.", boundary: "원 논문의 표기와 구현의 순서·인코딩은 같다고 가정하지 않습니다. 회로·키·공개 입력과 domain tag가 실제 transcript에 어떻게 묶이는지 고정 버전에서 확인합니다.", counterexample: "β=0인 작은 표에서는 위치 정보가 사라져 유효한 분모 91개가 모두 잘못된 복사를 통과했습니다." },
+      { id: "plonk-release-gate", sectionId: "verification", intuition: "성공 한 번보다 잘못된 witness·공개값·길이·곡선점·키·제약 누락을 먼저 거절한 같은 실행에서만 비용을 비교합니다.", workedExample: "gnark v0.16.3의 실제 CPU 실행은 domain8·constraints3·proof520 bytes를 관찰했고 wrong y, bad witness, 짧고 긴 public witness, extra commitment, off-curve와 다른 key를 대조했습니다.", boundary: "unsafekzg는 로컬 테스트용 SRS입니다. 이 실행은 ceremony·전체 parser fuzzing·보안 감사·운영 성능·모든 PLONKish 변형을 검증하지 않습니다." },
     ],
     conceptStages: [
       { label: "01 table", relation: "Finite-field witness values를 NTT-domain selector gate rows에 놓습니다.", concepts: ["prime-field-modular-arithmetic", "finite-field-ntt", "arithmetic-relation-instance-witness", "plonkish-selector-gate"] },
@@ -66870,20 +67140,21 @@ export const ARTICLE_LEARNING: Readonly<
       { label: "05 release", relation: "Failure parity 뒤 비용을 비교합니다.", concepts: ["plonk-release-gate"] },
     ],
     exercises: [
-      { level: "basic", question: "x=3,w=4,y=12를 PLONK witness table과 public/witness partition에 배치하세요.", answerChecklist: ["a=3", "b=4", "c=12", "x/y public", "w private", "row/domain", "commit columns"], requiredConcepts: ["arithmetic-relation-instance-witness", "plonkish-selector-gate"], sectionId: "overview" },
-      { level: "basic", question: "qMab+qLa+qRb+qOc+qC gate에서 곱셈 selector를 골라 3·4=12를 계산하세요.", answerChecklist: ["qM=1", "qO=-1", "others zero", "12-12", "field zero", "c=11 fails"], requiredConcepts: ["plonkish-selector-gate"], sectionId: "arithmetization" },
-      { level: "basic", question: "PLONK field gate가 integer·bit·range를 자동 보장하지 않는 반례를 드세요.", answerChecklist: ["mod p", "p-1 equals -1", "wraparound", "boolean constraint", "range/lookup", "selector name insufficient"], requiredConcepts: ["plonkish-selector-gate", "prime-field-modular-arithmetic"], sectionId: "arithmetization" },
-      { level: "basic", question: "Copy constraint와 permutation σ가 각각 표현하는 것을 설명하세요.", answerChecklist: ["same logical wire", "different cells", "identity labels", "permuted labels", "same values", "not gate arithmetic", "cycles"], requiredConcepts: ["plonk-permutation-grand-product"], sectionId: "permutation" },
-      { level: "basic", question: "[3,4,12]와 두 후보 multiset의 γ=2 product ratio를 비교하세요.", answerChecklist: ["5*6*14", "permutation denominator same", "ratio one", "bad 14*5*7", "not one", "beta adds positions"], requiredConcepts: ["plonk-permutation-grand-product"], sectionId: "permutation" },
-      { level: "basic", question: "N=T·ZH quotient 식에서 N·T·ZH·ζ의 역할을 설명하세요.", answerChecklist: ["combined constraints", "quotient", "domain vanishing", "ZH=Xn-1", "random evaluation", "commit first", "degree bound"], requiredConcepts: ["plonk-quotient-identity", "vanishing-polynomial-domain"], sectionId: "opening-security" },
-      { level: "advanced", question: "Grand product recurrence에 Z(1)=1·closure·commit-before-challenge가 모두 필요한 이유를 설명하세요.", answerChecklist: ["running ratio", "initial boundary", "final closure", "arbitrary scale", "beta/gamma unpredictability", "denominator zero handling", "identity collision", "soundness"], requiredConcepts: ["plonk-permutation-grand-product", "plonk-transcript-challenge-order"], sectionId: "permutation" },
-      { level: "advanced", question: "PLONK arithmetization과 KZG/IPA PCS가 각각 보장하는 것과 가정을 구분하세요.", answerChecklist: ["gate/copy relation", "quotient", "commit binding", "degree/opening", "KZG SRS/pairing", "IPA DLP", "proof cost", "PCS not circuit semantics"], requiredConcepts: ["plonk-pcs-opening-boundary", "commitment-binding-hiding-separation"], sectionId: "opening-security" },
-      { level: "advanced", question: "PLONK Fiat–Shamir round 순서를 작성하고 public input omission 공격을 설명하세요.", answerChecklist: ["protocol/key/circuit", "public input", "wire commit", "beta gamma", "Z commit", "alpha", "quotient commit", "zeta", "batch challenge", "replay if omitted"], requiredConcepts: ["plonk-transcript-challenge-order", "snark-fiat-shamir-statement-binding"], sectionId: "opening-security" },
-      { level: "advanced", question: "Custom gate 후보의 row 감소가 실제 이득인지 correctness·degree·FFT/MSM·memory로 검증하세요.", answerChecklist: ["same circuit semantics", "wrong wire/copy/opening", "rows", "max degree", "columns/rotations/lookups", "quotient splits", "FFT/MSM", "peak RSS", "proof/verify", "p50/p95"], requiredConcepts: ["plonk-release-gate", "plonkish-selector-gate", "plonk-pcs-opening-boundary"], sectionId: "opening-security" },
+      { level: "basic", question: "공개 (3,15)와 비공개 4로 네 줄 표를 만들고 같은 값을 다시 쓰는 칸을 표시하세요.", answerChecklist: ["3×4=12", "12+3=15", "a₀·a₂·b₃의3", "a₁·c₃의15", "c₂·a₃의12", "공개값과 비공개값 구분"], requiredConcepts: ["arithmetic-relation-instance-witness", "plonkish-selector-gate"], sectionId: "case" },
+      { level: "basic", question: "곱셈·덧셈·공개 입력 줄의 selector를 대입하고 마지막 11+4=15가 왜 충분하지 않은지 설명하세요.", answerChecklist: ["곱셈 qM=1,qO=−1", "덧셈 qL=qR=1,qO=−1", "공개 입력 qL=1과 PI=−공개값", "마지막 산술식은0", "앞의12와 복사 불일치", "gate와 copy 분리"], requiredConcepts: ["plonkish-selector-gate"], sectionId: "arithmetization" },
+      { level: "basic", question: "H의 네 점과 세 열의 위치 번호를 확인하고 값 12의 복사 cycle을 쓰세요.", answerChecklist: ["H=1,22,96,75", "22⁴=1", "H·2H·3H 위치 집합", "서로 다른12개 label", "12의94↔75", "σ는 위치 순열"], requiredConcepts: ["finite-field-ntt", "plonk-permutation-grand-product"], sectionId: "labels" },
+      { level: "basic", question: "β=2,γ=7에서 첫 줄 누적값과 올바른 표·잘못된 표의 마지막 값을 계산하세요.", answerChecklist: ["첫 분자67", "첫 분모77", "67/77=50", "올바른 Z=1,50,67,76,1", "11·4·15이면45", "분모0은 별도 경계"], requiredConcepts: ["plonk-permutation-grand-product"], sectionId: "permutation" },
+      { level: "basic", question: "α=3,ζ=5의 몫 등식 N(ζ)=T(ζ)Z_H(ζ)를 계산하세요.", answerChecklist: ["N(5)=78", "T(5)=85", "Z_H(5)=42", "85×42 mod97=78", "Z_H=X⁴−1", "T를 먼저 고정", "ζ는H밖"], requiredConcepts: ["plonk-quotient-identity", "vanishing-polynomial-domain"], sectionId: "opening-security" },
+      { level: "basic", question: "고정 gnark 원문에서 wire commitments 뒤 도전값과 증명 요소를 순서대로 따라가세요.", answerChecklist: ["wire commitments", "γ 다음 β", "Z commitment", "α", "quotient 세 commitments", "ζ", "여섯 ζ 평가와 이동한 Z", "공개 입력 개수 검사", "손계산4줄과 compiler8줄 구분"], requiredConcepts: ["plonk-transcript-challenge-order", "plonk-release-gate"], sectionId: "transcript" },
+      { level: "advanced", question: "복사가 맞으면 곱이 닫히는 이유와 틀린 표가 특정 β·γ에서 우연히 통과할 수 있는 조건을 설명하세요.", answerChecklist: ["값+위치 인수의 multiset 일치", "cycle에서 같은 값", "낮은 차수 다항식", "commit 뒤 무작위 β·γ", "8306 유효 쌍 중170 충돌", "β=0의91개 모두 통과", "Z 시작·종료 경계", "작은 체 비율을 보안 수준으로 일반화하지 않음"], requiredConcepts: ["plonk-permutation-grand-product", "plonk-transcript-challenge-order"], sectionId: "product-proof" },
+      { level: "advanced", question: "H의 표 값은 보존하면서 H 밖의 한 점과 두 점을 숨기는 난수 차수를 구분하세요.", answerChecklist: ["A+Z_Hρ", "H에서는 변화0", "한 점은 무작위 상수 하나", "두 점은 독립 계수 두 개", "차수1 이하ρ", "Vandermonde 가역", "서로 다른H밖 점", "전체 영지식 증명과 구분"], requiredConcepts: ["commitment-binding-hiding-separation", "plonk-pcs-opening-boundary"], sectionId: "blinding" },
+      { level: "advanced", question: "몫 검사·PCS 열기·Fiat–Shamir 순서가 각각 막는 일을 구분하세요.", answerChecklist: ["N−TZ_H의 근과 차수", "T를 먼저 고정", "ζ는domain밖", "PCS는 고정 다항식 평가를 연결", "KZG SRS·pairing 가정", "transcript는 이전 commitments와 statement 흡수", "public input 누락만으로 모든 변형의 공격을 단정하지 않음", "회로와 키 결속 확인"], requiredConcepts: ["plonk-quotient-identity", "plonk-pcs-opening-boundary", "plonk-transcript-challenge-order"], sectionId: "opening-security" },
+      { level: "advanced", question: "실제 코드의 성공·실패 범위와 범용 준비물 및 비용을 함께 설명하세요.", answerChecklist: ["gnark v0.16.3과 의존성 고정", "wrong witness·wrong public·length·proof structure·off-curve·other key", "빠뜨린 copy 제약은 유효한 다른 relation으로 통과", "unsafekzg는 로컬 테스트", "공통 SRS의 degree 한계", "회로별 PK·VK", "rows·degree·FFT·MSM·memory·proof bytes", "수학 검산은 보안 감사가 아님"], requiredConcepts: ["plonk-release-gate", "plonk-pcs-opening-boundary"], sectionId: "verification" },
     ],
     papers: [
       { title: "PLONK: Permutations over Lagrange-bases for Oecumenical Noninteractive arguments of Knowledge", href: "https://eprint.iacr.org/2019/953.pdf", problem: "회로마다 새 trusted setup 없이 범용 산술 회로를 succinct하게 증명해야 합니다.", contribution: "Lagrange gate, permutation grand product와 universal updatable SRS construction을 제시합니다.", assumptions: "논문의 PCS·pairing/knowledge assumptions와 random-oracle Fiat–Shamir·올바른 SRS를 사용합니다.", evidenceScope: "원 논문의 gate/permutation protocol·proof·benchmark 조건에 한정합니다.", notClaim: "모든 PLONKish 구현이 같은 lookup·PCS·round·proof size를 갖는다는 뜻은 아닙니다.", sectionId: "paper-plonk" },
       { title: "Constant-Size Commitments to Polynomials and Their Applications", href: "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf", problem: "큰 polynomial을 짧게 commit하고 evaluation을 짧게 열어야 합니다.", contribution: "Pairing 기반 상수 크기 polynomial commitment와 evaluation witness를 정의합니다.", assumptions: "Degree-bounded SRS·bilinear group과 논문의 binding/hiding assumptions를 사용합니다.", evidenceScope: "KZG PCS의 commit/open/verify에 한정합니다.", notClaim: "PLONK gate·permutation soundness나 transparent/post-quantum setup을 보장하지 않습니다.", sectionId: "paper-kzg" },
+      { title: "gnark v0.16.3 · PLONK BN254 구현", href: "https://github.com/Consensys/gnark/tree/v0.16.3/backend/plonk/bn254", problem: "손계산의 표·도전값·열기가 실제 compiler와 verifier에서 어떤 배열·순서·검사로 나타나는지 확인합니다.", contribution: "setup·prove·verify·marshal과 frontend SCS 원문을 고정하고 공개 입력 길이·곡선점·다항식 관계 및 KZG 열기 경로를 제공합니다.", assumptions: "gnark v0.16.3, gnark-crypto v0.21.0, BN254와 로컬 unsafekzg SRS를 사용한 재현 실행입니다.", evidenceScope: "보존한 전체 원문과 Go1.26.2 CPU 실행의 domain8·constraints3·proof520bytes 및 명시한 실패 fixture에 한정합니다.", notClaim: "ceremony·production SRS·전체 parser·보안 감사·모든 PLONKish 변형의 동작을 검증했다는 뜻은 아닙니다.", sectionId: "source-verify" },
     ],
   },
   "crypto/crt": {
@@ -90192,105 +90463,324 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/inference-optimization-layers": {
-    entryNote: "decode 가 memory-bound 인 이유와 roofline 을 알고, quantization·fusion·graph·batching·disaggregation 각각의 글을 하나 이상 읽은 독자가 이 지도를 읽습니다.",
-    coreIdea: "추론 최적화는 건드리는 병목에 따라 model·kernel·runtime·system 네 층으로 나뉘고 각 층의 이득은 end-to-end 의 자기 구간에 갇히므로, 후보를 층에 귀속시켜 profile 의 p 와 Amdahl 로 상한을 계산하고, 절감 시간에 트래픽을 곱해 검증 비용으로 나눈 ROI 로 순서를 정하며, 층 사이 상호작용이 만드는 regression 은 양끝 batch 를 재는 benchmark gate 로 잡습니다.",
-    assumedKnowledge: [
-      { id: "decode-memory-bound-regime", role: "Model 층의 weight quantization 이 memory-bound 구간에서만 이득인 이유의 전제입니다." },
-      { id: "roofline-arithmetic-intensity", role: "Hardware-aware 판단이 병목 경계를 읽는 도구로 재사용합니다." },
-      { id: "cuda-graph-capture-replay", role: "Runtime 층의 대표 기법으로 링크만 하고 재정의하지 않습니다." },
-      { id: "cuda-graph-capture-failure", role: "Regression 의 대표 예(조용한 eager fallback)로 재사용합니다." },
-      { id: "quantized-kernel-amdahl-bound", role: "일반형 Amdahl 의 특수형으로 연결합니다." },
-      { id: "gpu-fusion-roi-boundary", role: "Fusion 에 한정된 ROI 판단을 일반 ROI 식의 특수형으로 연결합니다." },
-      { id: "time-per-output-token", role: "Benchmark gate 의 지표 정의를 재사용합니다." },
-      { id: "flash-attention", role: "Co-design 의 예로 링크만 합니다." },
+    "coreIdea": "한 요청의 15+40+35+10=100 ms를 같은 시간표로 따라갑니다. 관계 계산을 반으로 줄인 80 ms에서 출발해 겹침과 추가 작업의 조건을 확인하고, 요청의 기다림·GPU 작업·실제 청구를 각각 계산합니다. 실제 vLLM 설정 분기와 지표 함수에 같은 가정 기록을 넣어 설정 이름과 비용 지표의 경계를 확인합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "one-hypothesis-experiment-contract",
+        "role": "변경 전 가설·한 축의 비교·채택 기준을 정하는 실험 규칙입니다. 설정 하나가 여러 경로를 동시에 바꾸는 사례와 마지막 성능 비교에서 재사용합니다."
+      }
     ],
-    introducedHere: [
-      { id: "inference-optimization-layer-map", role: "네 층의 정의와 각 층이 건드리는 병목, operator·graph 하위 층을 정합니다." },
-      { id: "amdahl-law-speedup-bound", role: "구간 비율 p 와 speedup s 로 end-to-end 상한을 계산하는 식과 end-to-end 관점을 정합니다." },
-      { id: "hardware-aware-codesign", role: "층 사이 상호작용을 hardware 병목에서 읽는 태도와 co-design 의 예를 정합니다." },
-      { id: "optimization-roi", role: "절감 시간·트래픽·단가와 구현·검증·유지 비용으로 순서를 정하는 식을 정합니다." },
-      { id: "performance-regression-gate", role: "Regression 의 정의와 고정 조건·문턱·양끝 batch 로 이루어진 gate 를 정합니다." },
+    "introducedHere": [
+      {
+        "id": "inference-optimization-layer-map",
+        "role": "모델·커널·런타임·시스템은 변경이 놓이는 위치를 설명하는 서로 겹칠 수 있는 분류입니다. 요청의 직렬 시간 구간과 일대일로 대응하지 않습니다."
+      },
+      {
+        "id": "amdahl-law-speedup-bound",
+        "role": "고정된 직렬 시간의 비율 p만 s배 빠르게 바뀌고 나머지와 추가 비용이 그대로일 때 전체 가속은 1/((1−p)+p/s)입니다."
+      },
+      {
+        "id": "hardware-aware-codesign",
+        "role": "장치의 읽기·계산·작업 공간과 실제 실행 경로를 함께 고려해 알고리즘과 구현을 정하는 설계입니다. 다른 변경과의 상호작용을 다시 측정합니다."
+      },
+      {
+        "id": "optimization-roi",
+        "role": "같은 기간과 범위에서 ROI=(화폐 편익−비용)/비용으로 정의합니다. 편익/비용 비율 및 단순 회수 기간과 구분하고, 지연 감소를 현금 절감으로 자동 변환하지 않습니다."
+      },
+      {
+        "id": "performance-regression-gate",
+        "role": "같은 조건의 성능·품질을 비교해 사전에 정한 허용 악화와 측정 불확실성을 구분하는 검증 절차입니다. 고정된 승인 기준에 대한 누적 변화도 확인합니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "inference-optimization-layer-map",
-        sectionId: "layers",
-        intuition: "집의 난방비를 줄이는 방법이 보일러 교체, 배관 단열, 온도 조절기 설정, 방 배치 바꾸기로 나뉘듯, 각각이 줄이는 손실이 다르고 한 가지만 해서는 다른 손실이 남습니다.",
-        workedExample: "100 ms 요청에서 attention 40·GEMM 35·CPU 15·기타 10 이면 kernel 층은 40 을, model 층은 GEMM 의 weight read 28 을, runtime 층은 CPU 15 를, system 층은 기타 10 을 건드립니다. 네 층을 합쳐야 50 ms 가 됩니다.",
-        boundary: "분류 기준은 이름이 아니라 무엇을 줄이는가이며, FlashAttention 은 kernel 층이지만 model 층의 설계와 맞닿고 speculative decoding 은 runtime 층이지만 draft 선택은 model 층입니다.",
+        "id": "inference-optimization-layer-map",
+        "sectionId": "layers",
+        "intuition": "무슨 일을 줄였는지와 어느 곳의 구현을 바꾸었는지는 다른 질문입니다. 분류 이름을 붙이기 전에 같은 요청의 시작과 끝을 기록합니다.",
+        "workedExample": "관계 계산 40→20 ms이면 직렬 요청은 100→80 ms입니다. 같은 커널 변경이 관계 계산과 값 변환을 함께 바꾸거나 새 준비 작업 5 ms를 더하면 분류 하나와 시간 하나의 대응이 깨집니다.",
+        "boundary": "최적화 층의 이름으로 Amdahl의 p를 정하지 않습니다. CPU 작업이 GPU와 겹치는지, 추가 작업과 품질·메모리 조건이 바뀌는지 함께 확인합니다."
       },
       {
-        id: "amdahl-law-speedup-bound",
-        sectionId: "amdahl",
-        intuition: "출근길 30분 중 10분인 지하철 구간을 아무리 빠르게 해도 나머지 20분은 그대로라 출근 시간은 20분 아래로 내려가지 않습니다.",
-        workedExample: "p=0.4 인 attention 을 2배 빠르게 하면 S=1/(0.6+0.2)=1.25 로 100 ms 가 80 ms 가 되고, 10배여도 1.56, 상한은 1/0.6=1.67 입니다. p=0.28 인 weight read 를 절반으로 줄이면 1.16 입니다.",
-        boundary: "구간이 직렬이고 독립이라는 가정 아래의 식이며, CPU 제출이 GPU 와 겹치는 구간은 critical path 로 p 를 다시 잡아야 하고 한 층의 변경이 다른 층의 시간을 바꾸면 다시 재야 합니다.",
-        proofIdea: "전체를 1 로 두면 새 시간은 (1−p)+p/s 이고 speedup 은 그 역수입니다. s→∞ 에서 p/s→0 이므로 상한은 1/(1−p) 입니다.",
-        counterexample: "p=0.1 인 구간을 100배 빠르게 해도 S=1/(0.9+0.001)=1.11 이라 10% 남짓이며, 같은 노력으로 p=0.5 인 구간을 1.5배만 빠르게 해도 S=1/(0.5+0.333)=1.2 로 더 큽니다.",
+        "id": "amdahl-law-speedup-bound",
+        "sectionId": "amdahl",
+        "intuition": "줄인 부분을 아무리 빨리 끝내도 그대로 남긴 일은 여전히 기다려야 합니다. 줄어든 시간과 원래 전체를 같은 분모로 비교합니다.",
+        "workedExample": "100 ms 중 40 ms를 2배·10배로 개선하면 80·64 ms입니다. p=.4에서 s→∞의 남은 시간은 60 ms이고 가속 상한은 5/3배입니다.",
+        "boundary": "0≤p<1, s>0의 고정된 직렬 모형에 한정한 유한 상한입니다. p=1이면 그 유한 상한이 없고, 겹침이나 추가 변환이 바뀌면 의존 시간표를 다시 계산합니다.",
+        "proofIdea": "원래 전체를 T라 두면 남은 시간은 (1−p)T, 바뀐 부분은 pT/s입니다. 직렬 합을 T로 나눈 뒤 역수를 취해 가속을 구합니다. p<1에서 s를 무한히 키우면 p/s가 0으로 가서 1/(1−p)가 남습니다.",
+        "counterexample": "계산 80 ms와 준비 20 ms가 동시에 시작하는 경로의 전체는 80 ms입니다. 준비를 10 ms로 줄여도 전체는 80 ms이므로 20 ms를 줄일 수 있는 직렬 몫으로 더한 식은 이 겹침 조건에서 잘못된 예측을 냅니다."
       },
       {
-        id: "hardware-aware-codesign",
-        sectionId: "interactions",
-        intuition: "같은 요리법도 화력이 센 가스와 약한 인덕션에서 병목이 다르듯, 어느 단계를 줄일지는 조리 기구를 보고 정하고 때로는 요리법 자체를 기구에 맞춰 바꿉니다.",
-        workedExample: "H100 에서 memory-bound 인 decode GEMM 은 weight quantization 의 p 가 크지만 대역폭이 다른 GPU 에서 compute-bound 라면 p 가 0 에 가깝습니다. FlashAttention 은 SRAM tile 에 맞춰 attention 을, PagedAttention 은 paging 을 KV 에, MLA 는 KV byte 를 줄이려 수식을 바꾼 co-design 입니다.",
-        boundary: "상호작용은 손실도 만듭니다. INT4 의 dequant 는 fusion 하지 않으면 launch 를 더하고, graph capture 는 dynamic backend 를 piecewise 로 밀어내며, disaggregation 은 KV 전송 구간을 더합니다. 층을 더할 때마다 profile 을 다시 재야 합니다.",
+        "id": "hardware-aware-codesign",
+        "sectionId": "interactions",
+        "intuition": "따로 유리했던 두 변경을 합치면 새 데이터 변환이 필요하거나 서로의 출발 조건이 달라질 수 있습니다.",
+        "workedExample": "A는 40→20, B는 35→21 ms로 바뀐다는 별도 가정에서 독립적으로 합치면 66 ms입니다. 함께 쓰는 변환 8 ms가 생기면 74 ms이고 A 뒤 B의 비중은 35/80입니다.",
+        "boundary": "읽기 하한 28 ms와 계산 하한 7 ms를 합쳐 실측 35 ms로 쓰지 않습니다. 겹치는 자원 하한은 max로 비교하며 실제 성능·품질·전송 비용은 따로 검증합니다."
       },
       {
-        id: "optimization-roi",
-        sectionId: "roi",
-        intuition: "단열 공사가 한 달 난방비 1만 원을 아낀다면 공사비 100만 원은 8년 뒤에 회수되지만, 같은 공사가 공장 전체라면 한 달에 회수됩니다. 공사가 아니라 규모가 값을 정합니다.",
-        workedExample: "Δt=20 ms, 하루 200만 요청, GPU 시간 2 달러면 한 해 약 8천 달러라 4만 달러 비용의 회수에 5년이 걸리고, 하루 2억 요청이면 80만 달러라 3주 미만입니다.",
-        boundary: "Δt 는 Amdahl 을 거친 end-to-end 값이어야 하고 batch 가 바뀌면 p 와 함께 움직입니다. v 를 GPU 단가로만 두면 SLO 위반을 막는 값을 놓치고, 비용에 품질 parity·shape tuning·hardware 재검증을 빼면 순서가 뒤바뀝니다.",
+        "id": "optimization-roi",
+        "sectionId": "roi",
+        "intuition": "고객 20명이 함께 기다린 시간이 줄어도 기계는 한 번 일했을 수 있습니다. 덜 일한 시간도 장치를 반납하지 않으면 임대료를 줄이지 않을 수 있습니다.",
+        "workedExample": "별도 독점 작업·청구 감소 가정에서 요청당 20 GPU-ms, 하루 200만 건, 시간당 2 달러이면 연 편익은 73000/9 달러입니다. 초기 40000 달러에 대한 ROI는 −287/360이고 단순 회수는 1800일입니다.",
+        "boundary": "20개가 한 계산을 공유하는 사례는 400 request-ms와 20 GPU-ms를 구분합니다. 정수 복사본·예약 계약·유지비·할인·성공한 업무의 분모를 확인하고 중복 편익을 더하지 않습니다."
       },
       {
-        id: "performance-regression-gate",
-        sectionId: "regression-gate",
-        intuition: "체중계를 매일 같은 시간, 같은 옷으로 재야 어제보다 늘었는지 알 수 있고, 저울의 오차보다 작은 변화는 늘었다고 말할 수 없습니다.",
-        workedExample: "run 사이 편차가 2% 면 문턱을 4% 이상으로 두고 paired 로 비교하며, 동시성 1 과 128 을 모두 잽니다. graph fallback 은 동시성 1 의 TPOT 에만, quantization 의 이득 소멸은 128 에서만 나타납니다.",
-        boundary: "문턱이 10% 면 5% 씩 세 번 쌓인 regression 을 놓치고, 조건이 하나라도 다르면 차이가 변경 때문인지 알 수 없습니다. 잡힌 뒤에는 구간별 profile 로 어느 층이 깨졌는지 귀속시켜야 합니다.",
-      },
+        "id": "performance-regression-gate",
+        "sectionId": "regression-gate",
+        "intuition": "얼마까지 느려져도 되는지는 제품 요구이며 얼마나 정확하게 차이를 아는지는 반복 자료의 문제입니다. 이 둘을 잡음 배수 하나로 합치지 않습니다.",
+        "workedExample": "짝차이 2·3·2·3·2 ms의 평균은 2.4 ms입니다. 독립 정규 차이 가정의 양측 95% 구간은 1.72–3.08 ms여서 허용 악화 3 ms 이내임을 이 상한으로 입증할 수 없습니다.",
+        "boundary": "이 구간은 평균 차이의 설명용 예이며 개별 p99의 구간이 아닙니다. 2×잡음은 보편 문턱이 아니고, 늘어난 프로파일 구간은 원인 후보이므로 대조와 되돌림으로 가설을 확인합니다."
+      }
     ],
-    conceptStages: [
-      { label: "00 지도", relation: "네 층과 각 층이 건드리는 병목을 memory-bound 정의 위에 놓습니다.", concepts: ["decode-memory-bound-regime", "inference-optimization-layer-map", "cuda-graph-capture-replay"] },
-      { label: "01 상한", relation: "층에 귀속된 p 와 s 로 end-to-end 상한을 계산하고 특수형과 연결합니다.", concepts: ["amdahl-law-speedup-bound", "quantized-kernel-amdahl-bound", "gpu-fusion-roi-boundary"] },
-      { label: "02 상호작용", relation: "Hardware 병목에서 층 사이의 의존을 읽고 co-design 의 예를 놓습니다.", concepts: ["roofline-arithmetic-intensity", "hardware-aware-codesign", "flash-attention"] },
-      { label: "03 선택", relation: "절감 시간·트래픽·검증 비용으로 순서를 정합니다.", concepts: ["optimization-roi"] },
-      { label: "04 게이트", relation: "고정 조건·문턱·양끝 batch 로 regression 을 잡고 층에 귀속시킵니다.", concepts: ["time-per-output-token", "cuda-graph-capture-failure", "performance-regression-gate"] },
-    ],
-    exercises: [
-      { level: "basic", question: "Model·kernel·runtime·system 네 층이 각각 어떤 병목을 건드리는지 한 문장씩 적고, 같은 기법이 두 층에 걸치는 예를 하나 드세요.", answerChecklist: ["model: weight byte·FLOP", "kernel: HBM 왕복·SM 활용", "runtime: launch·batch·KV 메모리", "system: 간섭·cluster 시간", "FlashAttention 또는 speculative decoding 예"], requiredConcepts: ["inference-optimization-layer-map"], sectionId: "layers" },
-      { level: "basic", question: "end-to-end 100 ms 중 attention 40 ms 를 2배, 10배 빠르게 했을 때 각각의 end-to-end 시간과 상한을 계산하세요.", answerChecklist: ["p=0.4", "S(2)=1.25 → 80 ms", "S(10)=1.56 → 64 ms", "상한 1/0.6=1.67 → 60 ms"], requiredConcepts: ["amdahl-law-speedup-bound"], sectionId: "amdahl" },
-      { level: "basic", question: "weight-only quantization 이 weight byte 를 절반으로 줄여도 end-to-end 이득이 batch 에 따라 달라지는 이유를 p 로 설명하세요.", answerChecklist: ["이득은 weight read 구간에만", "GEMM 35 중 28 이 weight streaming 이면 절감 14", "compute-bound 로 넘어가면 p→0", "같은 기법의 p 가 batch 에 따라 움직임"], requiredConcepts: ["amdahl-law-speedup-bound", "decode-memory-bound-regime"], sectionId: "amdahl" },
-      { level: "basic", question: "Hardware-aware optimization 과 algorithm–hardware co-design 의 차이를 예와 함께 설명하세요.", answerChecklist: ["hardware-aware: roofline 으로 병목을 읽고 층을 고름", "co-design: 알고리즘 자체를 경계에 맞춰 바꿈", "FlashAttention·PagedAttention·MLA 예", "출발점은 hardware 병목"], requiredConcepts: ["hardware-aware-codesign"], sectionId: "interactions" },
-      { level: "basic", question: "Δt=20 ms, 하루 200만 요청, GPU 시간 2 달러, 비용 4만 달러일 때 연간 절감액과 회수 기간을 계산하고 트래픽이 100배일 때와 비교하세요.", answerChecklist: ["하루 4만 초 ≈ 11 GPU 시간", "하루 22 달러·연 8천 달러", "회수 약 5년", "100배면 연 80만 달러·3주 미만", "ROI 는 workload 의 속성"], requiredConcepts: ["optimization-roi"], sectionId: "roi" },
-      { level: "basic", question: "Benchmark gate 의 문턱을 run 사이 편차와 어떻게 연결해야 하는지, 문턱이 너무 크거나 작을 때 각각 무엇이 생기는지 설명하세요.", answerChecklist: ["문턱 ≥ 편차의 2배", "paired 비교", "너무 크면 작은 regression 누적", "너무 작으면 noise 로 gate 흔들림"], requiredConcepts: ["performance-regression-gate"], sectionId: "regression-gate" },
-      { level: "advanced", question: "p=0.1 인 구간을 100배 빠르게 하는 것과 p=0.5 인 구간을 1.5배 빠르게 하는 것의 end-to-end speedup 을 비교하고, 이 결과가 micro benchmark 수치의 해석에 주는 교훈을 적으세요.", answerChecklist: ["S=1/(0.9+0.001)≈1.11", "S=1/(0.5+0.333)=1.2", "p 가 s 보다 결과를 정함", "micro speedup 은 p 를 곱하기 전엔 의미 없음", "profile 에서 p 를 읽어야 함"], requiredConcepts: ["amdahl-law-speedup-bound"], sectionId: "amdahl" },
-      { level: "advanced", question: "prefill 을 분리한 뒤 decode GPU 에서 weight quantization 의 ROI 가 어떻게 바뀌는지, 그리고 그 변경이 kernel 층에 요구하는 것이 무엇인지 층 사이 상호작용으로 설명하세요.", answerChecklist: ["decode GPU 는 weight read 병목이 길어짐", "quantization 의 p 증가", "Δt 와 ROI 증가", "dequant fusion kernel 필요", "KV 전송 구간이 새로 생김", "profile 재측정"], requiredConcepts: ["hardware-aware-codesign", "optimization-roi", "inference-optimization-layer-map"], sectionId: "interactions" },
-      { level: "advanced", question: "최적화 선택 loop 의 각 단계에서 어떤 입력이 필요하고 왜 한 기법을 적용한 뒤 profile 을 다시 재야 하는지 설명하세요.", answerChecklist: ["workload profile 의 구간 비율", "기법의 층 귀속", "Amdahl 로 Δt", "Q·v·검증 비용으로 ROI", "한 층 변경이 다른 층의 p 를 움직임", "gate 통과 뒤 재측정"], requiredConcepts: ["optimization-roi", "amdahl-law-speedup-bound"], sectionId: "roi" },
-      { level: "advanced", question: "동시성 32 한 지점에서만 benchmark 를 돌리는 gate 가 놓치는 두 종류의 regression 을 각각 예로 들고, 잡힌 regression 을 층에 귀속시키는 절차를 설계하세요.", answerChecklist: ["낮은 batch: graph fallback 의 TPOT", "높은 batch: quantization 이득 소멸·kernel shape", "양끝 batch 포함", "구간별 profile 을 변경 전과 비교", "늘어난 구간의 층이 원인", "CPU 면 capture failure 부터"], requiredConcepts: ["performance-regression-gate", "cuda-graph-capture-failure", "inference-optimization-layer-map"], sectionId: "regression-gate" },
-    ],
-    papers: [
+    "conceptStages": [
       {
-        title: "Validity of the single processor approach to achieving large scale computing capabilities",
-        href: "https://dl.acm.org/doi/10.1145/1465482.1465560",
-        problem: "병렬 처리기를 늘려도 직렬로 남는 구간 때문에 전체 성능 향상이 제한되는 문제",
-        contribution: "전체 시간 중 개선되지 않는 비율이 남아 있는 한 speedup 이 그 비율의 역수로 제한된다는 관찰과 식",
-        assumptions: "구간이 직렬로 이어지고 개선이 다른 구간의 시간을 바꾸지 않는다는 가정",
-        evidenceScope: "1967년 AFIPS 발표의 논증이며 실측 수치가 아니라 모델 수준의 주장",
-        notClaim: "층 사이 상호작용이 있는 추론 pipeline 에 그대로 적용된다는 주장은 논문이 아니라 이 글의 해석이며, 겹치는 구간에서는 critical path 로 다시 잡아야 함",
-        sectionId: "amdahl",
+        "label": "01 같은 요청의 시간표",
+        "relation": "분류 이름과 실제 직렬 시간 구간을 구별한 뒤 100→80→64 ms와 남은 60 ms를 계산합니다.",
+        "concepts": [
+          "inference-optimization-layer-map",
+          "amdahl-law-speedup-bound"
+        ]
       },
       {
-        title: "vLLM Optimization and Tuning (docs)",
-        href: "https://docs.vllm.ai/en/latest/configuration/optimization.html",
-        problem: "Runtime 층의 설정(compile·cudagraph 수준·enforce-eager)이 무엇을 켜고 끄는지 사용자가 알기 어려운 문제",
-        contribution: "enforce-eager 가 compile 과 graph capture 를 건너뛰고 최적화 수준이 piecewise·full cudagraph 를 단계별로 켠다는 설정 설명",
-        assumptions: "vLLM 의 compilation config 를 쓰는 배포이며 문서 기준 버전의 기본값",
-        evidenceScope: "공식 문서의 설정 설명이며 성능 수치는 포함하지 않음",
-        notClaim: "특정 설정이 얼마나 빨라지는지는 문서가 주장하지 않으며 이 글도 인용하지 않음",
-        sectionId: "regression-gate",
+        "label": "02 두 변경과 겹침",
+        "relation": "새 변환 8 ms와 동시에 수행한 80·20 ms의 경로로 독립 합산이 가능한 조건을 찾습니다.",
+        "concepts": [
+          "hardware-aware-codesign",
+          "amdahl-law-speedup-bound"
+        ]
       },
+      {
+        "label": "03 기다림에서 청구까지",
+        "relation": "20개 요청의 지연 합과 한 GPU의 독점 작업, 정수 복사본과 실제 청구를 각각 계산합니다.",
+        "concepts": [
+          "optimization-roi"
+        ]
+      },
+      {
+        "label": "04 원문과 대조의 기준",
+        "relation": "실제 설정이 함께 바꾸는 경로와 성공·지연 지표의 뜻을 읽고 허용 악화와 추정 불확실성을 구분합니다.",
+        "concepts": [
+          "one-hypothesis-experiment-contract",
+          "performance-regression-gate"
+        ]
+      }
     ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "입력 확인 15·관계 계산 40·값 변환 35·전송 10 ms가 직렬인 100 ms 사례에서 관계 계산만 2배 빠르게 했습니다. 네 최적화 분류는 네 시간 구간과 일대일로 대응하나요?",
+        "answerChecklist": [
+          "관계 계산 40→20 ms, 전체 80 ms, 가속 1.25배입니다.",
+          "모델·커널·런타임·시스템은 변경 위치를 설명하며 서로 겹칠 수 있습니다.",
+          "같은 커널 변경이 관계 계산과 값 변환을 함께 바꿀 수 있습니다.",
+          "시간표의 실제 구간을 자원별 하한의 임의 합으로 바꾸어 해석하지 않습니다."
+        ],
+        "sectionId": "layers",
+        "requiredConcepts": [
+          "inference-optimization-layer-map"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 40 ms를 10배 빠르게 하고 무한히 빠르게 할 때 전체 시간과 가속 상한을 구하세요.",
+        "answerChecklist": [
+          "10배일 때 60+4=64 ms, 가속은 1.5625배입니다.",
+          "무한 개선의 극한은 60 ms, 가속 상한은 5/3배입니다.",
+          "p=.4이고 나머지 60 ms가 고정된 직렬 경로이며 추가 비용이 없습니다.",
+          "p=1이면 1/(1−p)라는 유한한 상한을 사용할 수 없습니다."
+        ],
+        "sectionId": "amdahl",
+        "requiredConcepts": [
+          "amdahl-law-speedup-bound"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "동시에 시작한 80 ms 계산과 20 ms 준비가 모두 끝나야 나가는 별도 경로입니다. 준비를 10 ms로 줄이면 전체도 10 ms 줄까요?",
+        "answerChecklist": [
+          "변경 전 max(80,20)=80 ms, 변경 후 max(80,10)=80 ms입니다.",
+          "CPU 호출 시간과 GPU 작업 시간은 겹칠 수 있어 합계를 그대로 더하지 않습니다.",
+          "시작과 끝, 의존 관계와 임계 경로를 다시 그립니다.",
+          "읽기 28·계산 7 ms의 자원 하한도 합 35가 아니라 max인 28 ms입니다."
+        ],
+        "sectionId": "overlap",
+        "requiredConcepts": [
+          "amdahl-law-speedup-bound",
+          "hardware-aware-codesign"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "고정한 vLLM에서 enforce_eager=True가 느렸다면 CUDA Graph 하나의 효과를 측정한 것인가요?",
+        "answerChecklist": [
+          "해당 원문 분기는 CompilationMode와 CUDAGraphMode를 둘 다 NONE으로 바꿉니다.",
+          "컴파일과 그래프가 함께 바뀐 비교이므로 하나의 원인으로 모두 귀속하지 않습니다.",
+          "지원되는 조건의 한 축 대조와 최종 설정·실제 실행 경로를 확인합니다.",
+          "설정이 존재한다는 사실은 검증·운영 비용 0이나 보편적인 성능 차이를 뜻하지 않습니다."
+        ],
+        "sectionId": "source-config",
+        "requiredConcepts": [
+          "inference-optimization-layer-map",
+          "performance-regression-gate"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "20개 요청을 함께 처리하는 한 GPU의 독점 작업이 100→80 ms가 됐습니다. 요청 지연 감소의 합과 GPU 작업 감소를 구하고 하루 200만 요청에 적용하세요.",
+        "answerChecklist": [
+          "요청마다 20 ms여서 감소 합은 400 request-ms입니다.",
+          "한 GPU 묶음의 작업 감소는 20 GPU-ms입니다.",
+          "하루 200만 요청을 20개씩 묶으면 10만 묶음, 작업 감소는 2000 GPU초입니다.",
+          "요청 지연에 요청 수를 곱해 GPU 작업으로 쓰면 이 사례에서는 20배 과대 계산합니다.",
+          "장치 수와 임대 시간이 같다면 실제 청구 절감은 0일 수 있습니다."
+        ],
+        "sectionId": "work-and-cost",
+        "requiredConcepts": [
+          "optimization-roi"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "같은 다섯 조건의 기준 98·100·102·99·101 ms와 변경 후 100·103·104·102·103 ms를 비교하세요. 허용 악화 3 ms에 대해 상한 3.08 ms가 뜻하는 것은 무엇인가요?",
+        "answerChecklist": [
+          "차이는 2·3·2·3·2 ms, 평균은 2.4 ms입니다.",
+          "독립 정규 짝차이를 가정한 95% 양측 구간은 약 1.72–3.08 ms입니다.",
+          "차이가 0보다 크다는 근거와 허용한 3 ms 이내라는 근거를 구별합니다.",
+          "상한이 3 ms를 넘어 이 자료만으로 허용 범위 이내임을 입증하지 못합니다.",
+          "2×편차를 보편 문턱으로 쓰지 않으며 p99와 품질은 별도 조건으로 검증합니다."
+        ],
+        "sectionId": "regression-gate",
+        "requiredConcepts": [
+          "performance-regression-gate"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "100 ms에서 40 ms를 20으로 줄인 A와 35 ms를 21로 줄인 B를 따로 관찰했습니다. 함께 적용한 66 ms를 보장할 수 있나요?",
+        "answerChecklist": [
+          "서로 독립이고 직렬이며 추가 비용이 없으면 15+20+21+10=66 ms입니다.",
+          "함께 쓰기 위한 변환 8 ms가 추가되면 74 ms입니다.",
+          "35→21은 별도의 가정 관찰이고 읽기 28+계산 7에서 유도한 성능이 아닙니다.",
+          "겹침·메모리·입력 크기·재시도가 바뀌면 새 조건을 측정합니다.",
+          "A 뒤 관계 계산의 비중은 20/80=.25, B 대상은 35/80=.4375입니다."
+        ],
+        "sectionId": "interactions",
+        "requiredConcepts": [
+          "hardware-aware-codesign",
+          "amdahl-law-speedup-bound"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "요청당 독점 GPU 작업 20 ms와 같은 청구량이 실제로 줄어든다는 별도 가정입니다. 하루 200만 요청, 시간당 2 달러, 초기 비용 40000 달러의 연 편익·ROI·회수 기간을 구하세요.",
+        "answerChecklist": [
+          "하루 40000 GPU초=100/9 GPU시간이며 절감액은 200/9 달러입니다.",
+          "365일 편익은 73000/9≈8111.11 달러입니다.",
+          "편익/비용 73/360≈.20278과 ROI=−287/360≈−79.72%를 구별합니다.",
+          "유지비·할인·성장이 없고 매일 같으면 단순 회수는 1800일입니다.",
+          "트래픽이 100배면 같은 가정에서 18일이지만 배치·품질·청구 감소 조건을 다시 확인합니다.",
+          "이미 청구 절감으로 계산한 동일 편익을 시간 가치라는 이름으로 다시 더하지 않습니다."
+        ],
+        "sectionId": "roi",
+        "requiredConcepts": [
+          "optimization-roi"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "한 복사본의 검증된 처리 용량이 100→125 요청/s이고 계획 이용률은 .8, 복사본당 GPU는 하나입니다. 부하 180과 160 요청/s의 복사본 수와 하루 청구 차이를 구하세요.",
+        "answerChecklist": [
+          "180에서는 ceil(180/80)=3에서 ceil(180/100)=2로 줄어듭니다.",
+          "160에서는 두 경우 모두 복사본 2개입니다.",
+          "하루 24시간, 시간당 2 달러면 180의 절감은 하루 48 달러이고 160은 0입니다.",
+          "부하가 일정하고 메모리가 충분하며 독립 복사본·최소 복제수 제약 없음·실제 청구 축소를 가정합니다.",
+          "이용률 .8이 SLO 보장식은 아니며 용량을 100 ms의 역수로 대체하지 않습니다."
+        ],
+        "sectionId": "capacity",
+        "requiredConcepts": [
+          "optimization-roi"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "후보를 고르고 배포한 뒤 다음 변경을 고르는 절차를 설계하세요. 직전 버전보다 5%씩 세 번 느려지는 변화도 평가하세요.",
+        "answerChecklist": [
+          "목표 지연·품질·비용과 변경할 수 없는 조건을 먼저 정합니다.",
+          "입력·도착·버전·장치를 고정하고 시작 준비와 반복 실행, 중요한 실제 부하와 크기를 비교합니다.",
+          "가설에는 시간 구간과 의존 관계, 새 비용을 명시하며 분류 이름으로 p를 정하지 않습니다.",
+          "짝지은 반복 대조에서 허용 한계와 불확실성을 구분하고 늘어난 구간을 원인 후보로 검증합니다.",
+          "고정 승인 기준에서 1.05³−1=.157625, 즉 15.7625% 악화입니다.",
+          "새 시간표와 실제 청구·성공한 업무 단위를 확인하고 되돌릴 설정과 코드를 보존합니다."
+        ],
+        "sectionId": "decision",
+        "requiredConcepts": [
+          "performance-regression-gate",
+          "optimization-roi",
+          "inference-optimization-layer-map"
+        ]
+      }
+    ],
+    "papers": [
+      {
+        "title": "Amdahl 1967 · 순차로 남는 일의 한계",
+        "href": "https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf",
+        "sectionId": "source-amdahl",
+        "problem": "처리기를 늘려도 자료 관리와 불규칙한 순차 작업이 남아 전체 향상이 제한되는 문제를 다룹니다.",
+        "contribution": "483–485쪽과 Figure 1에서 남는 순차 작업과 병렬화의 한계를 논증합니다. 이 글은 같은 논리를 고정 시간의 한 부분 개선에 적용합니다.",
+        "assumptions": "원문의 당시 기계와 명령어 비율을 현재 GPU 요청의 지연 비율로 옮기지 않습니다. 본문의 100 ms는 별도 가정입니다.",
+        "evidenceScope": "세 인쇄 페이지를 직접 확인했으며 p·s의 일반식은 이 글에서 직렬 시간 합으로 유도했습니다. 원문에 없는 식 번호를 붙이지 않습니다.",
+        "notClaim": "본문의 현대식이 원 지면에 그대로 인쇄됐거나 겹치는 작업과 추가 비용에도 고정 식을 그대로 적용한다는 주장은 아닙니다."
+      },
+      {
+        "title": "Nsight Systems · CUDA GPU Kernel Summary",
+        "href": "https://docs.nvidia.com/nsight-systems/AnalysisGuide/index.html#cuda-gpu-kern-sum-nvtx-name-base-mangled-cuda-gpu-kernel-summary",
+        "sectionId": "source-profile",
+        "problem": "커널 합계표의 백분율을 전체 요청의 시간 비율로 오해하면 줄일 수 있는 지연을 잘못 계산하는 문제입니다.",
+        "contribution": "cuda_gpu_kern_sum의 Time 열은 표시된 커널 Total Time 합을 분모로 쓰며 응용 프로그램의 전체 경과시간과 다르다고 설명합니다.",
+        "assumptions": "2026-10-05 읽은 공식 Analysis Guide의 해당 보고서 정의에 한정합니다. 실제 GPU 프로파일은 이 관찰에서 수집하지 않았습니다.",
+        "evidenceScope": "관계 40·변환 35 ms의 가정에서 40/75≈53.33%와 전체 100 ms의 40%를 구별하는 근거로 사용합니다.",
+        "notClaim": "합계표의 가장 큰 커널이 언제나 요청의 임계 경로나 성능 회귀의 근본 원인이라는 보장은 하지 않습니다."
+      },
+      {
+        "title": "vLLM v0.27.1 · Optimization and Tuning",
+        "href": "https://docs.vllm.ai/en/v0.27.1/configuration/optimization/",
+        "sectionId": "source-config",
+        "problem": "설정 이름 하나가 여러 실행 경로를 바꾸는 경우 하나의 최적화 효과로 귀속하기 어려운 문제를 다룹니다.",
+        "contribution": "enforce-eager가 컴파일과 CUDA Graph를 함께 끄는 동작을 설명하며 고정한 원문의 두 NONE 대입과 대조합니다.",
+        "assumptions": "v0.27.1 커밋 6e448d0e의 원문 전체와 같은 버전 문서를 사용합니다. 장치별 최종 설정과 후속 호환성은 별도 경로입니다.",
+        "evidenceScope": "원문의 두 enum과 해당 if 문 AST를 실행한 관찰은 분기 동작만 확인합니다. 전체 설정 초기화나 GPU 추론은 실행하지 않았습니다.",
+        "notClaim": "한 설정의 차이가 오직 graph 효과이거나 O2의 모든 기법이 최종 활성화되고 운영 비용이 없다는 주장은 하지 않습니다."
+      },
+      {
+        "title": "vLLM v0.27.1 · calculate_metrics 원문",
+        "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/benchmarks/serve.py#L556-L762",
+        "sectionId": "source-metrics",
+        "problem": "성공한 요청 수와 지연 통과 처리량을 GPU 작업량이나 답의 의미 정확도로 오해하지 않도록 집계 정의를 확인합니다.",
+        "contribution": "BenchmarkMetrics와 calculate_metrics는 성공 표시·출력 길이·지연 조건·관측 기간으로 요청 지표를 계산합니다.",
+        "assumptions": "전체 원문을 고정하고 해당 구조체와 함수의 AST를 CPython 3.12.13·NumPy 2.2.6에서 가정 기록으로 실행했습니다.",
+        "evidenceScope": "20개 성공 기록의 100/80 ms와 기간 .1/.08초가 200/250 요청/s로 집계되며 90 ms 조건은 0/250의 통과 처리량을 만듭니다.",
+        "notClaim": "가정 기록의 수치는 서버·모델·GPU 실행 성능이 아닙니다. 성공 flag나 지연 통과가 답의 의미 정확성·GPU 청구를 평가하지 않습니다."
+      },
+      {
+        "title": "FinOps Foundation · Unit Economics",
+        "href": "https://www.finops.org/framework/capabilities/unit-economics/",
+        "sectionId": "source-cost",
+        "problem": "자원 효율과 업무 단위의 가치, 편익/비용 비율과 투자수익률의 분모를 구분해야 하는 문제입니다.",
+        "contribution": "자원·업무 단위를 구별하며 Value for AI Initiatives에서 ROI를 비용을 뺀 화폐 편익을 비용으로 나눈 백분율로 설명합니다.",
+        "assumptions": "2026-10-05 확인한 공식 프레임워크의 식과 단위 구분을 사용합니다. 요금·요청 수·기간은 본문이 정한 가정입니다.",
+        "evidenceScope": "같은 기간 편익 73000/9 달러와 비용 40000 달러를 넣어 편익/비용 .2028과 ROI −79.72%를 구분합니다.",
+        "notClaim": "요청 지연 감소에 임의의 GPU 단가를 곱해 실제 현금 절감을 보장하거나 모든 서비스의 운영 비용이 같다는 주장은 아닙니다."
+      },
+      {
+        "title": "NIST e-Handbook · paired observations",
+        "href": "https://www.itl.nist.gov/div898/handbook/prc/section3/prc312.htm",
+        "sectionId": "regression-gate",
+        "problem": "같은 조건의 실행 차이를 추정할 때 평균 차이와 그 불확실성을 구분하는 통계 문제입니다.",
+        "contribution": "짝차이 평균에서 t값×차이 표준편차/√N을 더하고 빼는 신뢰구간 식을 제공하며 본문의 다섯 차이에 적용합니다.",
+        "assumptions": "서로 독립인 정규 분포 짝차이와 양측 95% 구간을 가정합니다. 자기상관·선택 편향·여러 지표의 오류 관리는 별도 설계입니다.",
+        "evidenceScope": "차이 2·3·2·3·2에서 평균 2.4, 표본분산 .3, 자유도 4로 약 1.72–3.08 ms의 구간을 계산합니다.",
+        "notClaim": "이 구간은 p99의 구간이나 모든 성능 측정의 보편 문턱이 아닙니다. 차이 0을 배제하지 못한 사실만으로 동등성을 입증하지 않습니다."
+      }
+    ]
   },
   "gpu/gpu-data-movement-optimization": {
     entryNote:
@@ -112850,294 +113340,261 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "firms/market-power-and-markup": {
-    entryNote:
-      "앞 두 편은 조직을 값을 받아들이는 쪽으로 두었습니다. 여기서 그 전제를 떼되, 하나만 남는 이유는 앞 글의 조건 하나만 빌려 옵니다.",
-    coreIdea:
-      "혼자 파는 쪽은 값 하나가 아니라 수요 선 전체를 마주하므로 값을 고르게 되는데, 하나 더 팔려면 이미 팔던 것의 값도 내려야 해서 늘어나는 돈이 값보다 낮습니다. 그래서 멈추는 자리는 늘어나는 돈이 한계비용과 같아지는 수량이고 값은 그 위에서 읽히며, 벌어진 틈의 크기는 파는 쪽의 크기나 비용이 아니라 수요의 민감도가 정합니다. 그 틈과 함께 옮겨 간 몫이 아니라 아예 일어나지 않은 거래가 생깁니다.",
-    assumedKnowledge: [
+    "entryNote": "같은 기간 가격 10에 3개를 파는 계획과 가격 9에 4개를 파는 계획의 매출·비용·이익을 비교합니다. 수량의 미분 조건과 실제 정수 주문, 생산 한도와 진입 비용을 구분합니다.",
+    "coreIdea": "같은 가격으로 더 팔 때는 새 판매 수입과 다른 수량의 가격 차이를 함께 셉니다. 전체 이익을 최대화하는 선택은 수요·비용·허용 범위에 달려 있습니다. 내부 최적점의 마크업 관계와 잉여 계산을 생산 한도나 실제 시장 결과에 그대로 적용하지 않습니다.",
+    "assumedKnowledge": [
       {
-        id: "minimum-market-for-a-detour",
-        role: "파는 쪽이 하나로 남는 조건을 앞 글에서 그대로 가져옵니다.",
+        "id": "minimum-market-for-a-detour",
+        "role": "앞 글의 비용 동률 수량만으로 단일 판매자의 존재가 증명되지 않는다는 경계를 재사용합니다."
       },
       {
-        id: "marginal-decision-rule",
-        role: "하나 더 할 때의 비교로 멈출 자리를 찾는 셈을 다시 씁니다.",
+        "id": "marginal-decision-rule",
+        "role": "추가 매출과 추가 비용을 비교하되 정수·경계·전체 최대 여부를 확인합니다."
       },
       {
-        id: "consumer-and-producer-surplus",
-        role: "옮겨 간 몫과 사라진 몫을 가르는 데 필요한 두 몫의 정의를 가져옵니다.",
+        "id": "consumer-and-producer-surplus",
+        "role": "고정비 0과 동일 비용 아래에서 소비자·생산자 잉여를 계산합니다."
       },
       {
-        id: "deadweight-loss",
-        role: "값에 상한을 씌웠을 때 보았던 삼각형을 같은 모양으로 다시 봅니다.",
-      },
+        "id": "deadweight-loss",
+        "role": "일어나지 않은 가치 있는 거래의 잉여를 같은 수요·비용 아래에서 비교합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "price-setter-faces-whole-demand",
-        role: "값을 받아들이는 것과 고르는 것의 차이를 정의합니다.",
+        "id": "price-setter-faces-whole-demand",
+        "role": "같은 기간 가격을 바꾸면 해당 업체의 주문량도 달라질 수 있습니다."
       },
       {
-        id: "marginal-revenue-below-price",
-        role: "하나 더 팔 때 실제로 늘어나는 돈을 셉니다.",
+        "id": "marginal-revenue-below-price",
+        "role": "가격을 내린 대안에서는 새 판매 수입과 앞의 수량에 해당하는 가격 차이가 함께 생깁니다."
       },
       {
-        id: "monopoly-stopping-condition",
-        role: "멈추는 자리의 조건을 적고 값이 한계비용 위에 남는 이유를 세웁니다.",
+        "id": "monopoly-stopping-condition",
+        "role": "매끄러운 내부 최대점에서는 한계수입과 한계비용이 같습니다. 전체 최대와 허용 범위도 확인합니다."
       },
       {
-        id: "markup-set-by-elasticity",
-        role: "틈의 크기를 정하는 것이 무엇인지 식으로 적습니다.",
+        "id": "markup-set-by-elasticity",
+        "role": "가격 기준의 이익 최적조건을 나누어 쓰면 마크업이 그 점의 가격탄력성 절댓값의 역수와 같습니다."
       },
       {
-        id: "monopoly-output-restriction",
-        role: "옮겨 간 몫과 사라진 몫을 가릅니다.",
-      },
+        "id": "monopoly-output-restriction",
+        "role": "같은 생산 비용에서 가격과 수량이 함께 바뀌면 이전된 몫과 거래 감소로 생기지 않은 잉여를 나눌 수 있습니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "price-setter-faces-whole-demand",
-        sectionId: "facing-demand",
-        intuition:
-          "여럿이 팔면 값 하나가 보이고 자기가 얼마를 내놓든 꿈쩍하지 않습니다. 혼자 팔면 값마다 팔리는 양이 다른 선 전체가 보입니다.",
-        workedExample:
-          "값 10을 부르면 3개가 팔리고 9로 내리면 4개가 팔립니다. 10에 4개를 파는 선택지는 없습니다.",
-        boundary:
-          "값을 고를 수 있다는 것이 아무 값이나 받을 수 있다는 뜻은 아닙니다. 부르는 것은 자유여도 팔리는 양은 자유가 아닙니다.",
+        "id": "price-setter-faces-whole-demand",
+        "sectionId": "facing-demand",
+        "intuition": "같은 기간 가격을 바꾸면 해당 업체의 주문량도 달라질 수 있습니다.",
+        "workedExample": "가격 10에는 3개, 9에는 4개가 팔리는 관계에서 가격 10과 수량 4를 함께 고를 수는 없습니다.",
+        "boundary": "가격수용은 자기 판매량이 가격에 거의 영향을 주지 않는다는 모형의 가정입니다. 판매자 수만으로 정하지 않으며 차별화·대체 상품·진입과 시장 경계를 확인합니다."
       },
       {
-        id: "marginal-revenue-below-price",
-        sectionId: "marginal-revenue",
-        intuition:
-          "하나 더 팔려고 값을 내리면 새 손님에게만 내려 주는 것이 아니라 원래 사던 사람에게도 내려 주게 됩니다.",
-        workedExample:
-          "10에서 9로 내려 하나를 더 팔면 새로 9를 받지만 원래 10에 사던 3명에게서 1씩 3이 깎입니다. 늘어난 돈은 9가 아니라 6입니다.",
-        boundary:
-          "손님마다 다른 값을 받을 수 있으면 깎이는 몫이 생기지 않습니다. 이 글의 셈은 모두에게 같은 값을 받는 경우의 것입니다.",
+        "id": "marginal-revenue-below-price",
+        "sectionId": "marginal-revenue",
+        "intuition": "가격을 내린 대안에서는 새 판매 수입과 앞의 수량에 해당하는 가격 차이가 함께 생깁니다.",
+        "workedExample": "3개에 10을 받는 매출 30과 4개에 9를 받는 매출 36의 차이는 9−3=6입니다. 미분값 R′(3)=7, R′(4)=5와 한 구간의 차이를 구분합니다.",
+        "boundary": "과거 판매분 환불이 아니라 같은 기간의 대안 비교입니다. 내려가는 미분 가능한 수요와 양의 수량에서 MR=p+qp′<p이며 가격차별은 매출식을 바꿉니다."
       },
       {
-        id: "monopoly-stopping-condition",
-        sectionId: "stopping-point",
-        intuition:
-          "규칙은 앞의 글들과 같습니다. 하나 더 할 때 얻는 쪽이 크면 더 하고 작아지면 멈춥니다. 얻는 쪽의 내용만 바뀌었습니다.",
-        workedExample:
-          "수요가 값 = 13 − 수량이고 한계비용이 7이면, 늘어나는 돈은 13 − 2×수량이므로 수량 3에서 7과 같아집니다. 값은 거기서 수요 선을 올려다봐 10으로 읽습니다.",
-        proofIdea:
-          "받는 돈은 값에 수량을 곱한 것이고, 수량을 하나 늘릴 때 이 곱이 늘어나는 폭은 그때의 값에서 이미 팔던 수량만큼 깎이는 몫을 뺀 것입니다. 이 폭이 하나 더 만드는 값보다 크면 늘리고 작으면 줄이므로, 더 이상 크지 않은 첫 자리에서 멈춥니다. 그 자리에서는 늘어나는 돈이 한계비용과 같은데 늘어나는 돈이 값보다 낮으므로 값은 한계비용보다 위에 있습니다.",
-        counterexample:
-          "여럿이 파는 경우에는 깎이는 몫이 0이라 늘어나는 돈이 값과 같아지고, 멈추는 조건이 값 = 한계비용이 됩니다. 같은 규칙에서 1단계의 결과가 특수한 경우로 나옵니다.",
-        boundary:
-          "멈추는 자리를 정하는 선과 값을 읽는 선이 다릅니다. 이 둘을 섞어 값 = 한계비용으로 읽으면 틈 자체가 사라집니다.",
+        "id": "monopoly-stopping-condition",
+        "sectionId": "stopping-point",
+        "intuition": "매끄러운 내부 최대점에서는 한계수입과 한계비용이 같습니다. 전체 최대와 허용 범위도 확인합니다.",
+        "workedExample": "p=13−q, C=7q이면 π=6q−q²=9−(q−3)²입니다. 수량 3에서 이익 9가 최대이고 가격은 10입니다.",
+        "boundary": "MR=MC는 일반적으로 필요조건이며 정수·생산 한도·진입 여부와 다른 후보도 비교합니다. 생산 한도 2에서는 MR9>MC7이지만 q2가 최대입니다.",
+        "proofIdea": "π′=MR−MC이므로 매끄러운 내부 최대점에서는 MR=MC입니다. 이 사례는 π=9−(q−3)²로 모든 허용 q에서 최대가 9임을 보이고 π″=−2로도 확인합니다. 단일 가격의 양의 수량과 p′<0에서 MR=p+qp′<p이므로 해당 내부 해에서는 p>MC입니다.",
+        "counterexample": "생산 한도 2이면 q3은 불가능합니다. 0≤q≤2에서 이익이 증가하므로 q2/p11/이익 8이 최대지만 MR9와 MC7은 같지 않습니다. 피할 수 있는 진입 고정비 10을 더하면 가장 큰 운영 이익 9보다 커서 미진입 0이 낫습니다."
       },
       {
-        id: "markup-set-by-elasticity",
-        sectionId: "markup-size",
-        intuition:
-          "사는 쪽이 쉽게 빠져나갈 수 있으면 값을 올리기 어렵고, 빠져나갈 데가 없으면 많이 올릴 수 있습니다.",
-        workedExample:
-          "1단계의 균형점을 똑같이 지나는 두 수요에서 혼자 팔게 하면, 민감한 쪽은 값 10에서 멈춰 틈이 30%이고 둔한 쪽은 13에서 멈춰 46%입니다. 크기도 비용도 같은데 값이 다릅니다.",
-        proofIdea:
-          "멈추는 조건을 수량으로 나누면 값에서 한계비용을 뺀 것에 수량 대비 값 변화의 비를 곱한 꼴이 됩니다. 이 비가 민감도의 역수이므로, 양변을 값으로 나누면 왼쪽이 값에서 틈이 차지하는 몫이 되고 오른쪽이 민감도의 역수가 됩니다.",
-        counterexample:
-          "민감도가 무한대로 가면 역수가 0이 되어 틈이 사라집니다. 조금만 올려도 다 떠나는 경우가 여럿이 파는 경우와 같아진다는 뜻입니다.",
-        boundary:
-          "민감도는 멈춘 그 자리에서 잰 값이지 수요 선 전체에 하나로 붙는 수가 아닙니다. 또 한계비용을 알고 있다고 둔 셈인데, 여러 물건을 함께 만드는 곳에서는 그 값을 가르는 것 자체가 다투어집니다.",
+        "id": "markup-set-by-elasticity",
+        "sectionId": "markup-size",
+        "intuition": "가격 기준의 이익 최적조건을 나누어 쓰면 마크업이 그 점의 가격탄력성 절댓값의 역수와 같습니다.",
+        "workedExample": "기본 최적점 p10/q3에서 ε=−10/3이고 (10−7)/10=30%입니다. 같은 수요에서 MC9이면 p11/q2, ε=−11/2, 마크업 2/11≈18.18%입니다.",
+        "boundary": "양의 가격·수량, 유한한 음의 수요 미분, 동일 가격·단일 상품의 매끄러운 내부 이익 최대점이 필요합니다. 비용이 최적점과 탄력성을 바꾸므로 비용과 무관한 관계가 아닙니다.",
+        "proofIdea": "가격 기준 내부 조건은 q+q′(p)(p−MC)=0입니다. 양의 q로 나누고 ε=q′(p)p/q를 대입하면 1+ε(p−MC)/p=0, 따라서 (p−MC)/p=−1/ε=1/|ε|입니다. MC>0이면 |ε|>1이며 MC=0인 내부 해에서는 |ε|=1일 수 있습니다.",
+        "counterexample": "생산 한도 2의 p11/q2/MC7에서는 실제 마크업 4/11과 탄력성 절댓값 11/2의 역수 2/11이 다릅니다. 내부 최적점이 아니므로 등식을 적용하지 않습니다. 또 같은 수요에서도 MC7→9는 선택점과 마크업 30%→18.18%를 바꿉니다."
       },
       {
-        id: "monopoly-output-restriction",
-        sectionId: "what-is-lost",
-        intuition:
-          "값이 올라 사는 쪽에서 파는 쪽으로 넘어간 몫은 자리를 옮겼을 뿐입니다. 그런데 거래 자체가 일어나지 않은 몫은 어디에도 가지 않았습니다.",
-        workedExample:
-          "수량이 6에서 3으로 줄면, 7에 만들 수 있는데 8을 쳐주겠다던 사람과의 거래가 사라집니다. 그 삼각형이 4.5입니다.",
-        boundary:
-          "사라지는 몫이 생긴다는 것과 쪼개는 편이 낫다는 것은 다른 주장입니다. 하나만 남은 이유가 최소 수량이었다면 쪼갤 때 만드는 값 자체가 올라갑니다.",
-      },
+        "id": "monopoly-output-restriction",
+        "sectionId": "what-is-lost",
+        "intuition": "같은 생산 비용에서 가격과 수량이 함께 바뀌면 이전된 몫과 거래 감소로 생기지 않은 잉여를 나눌 수 있습니다.",
+        "workedExample": "p7/q6의 소비자 잉여 18·생산자 0이 p10/q3에서 소비자 4.5·생산자 9가 됩니다. 소비자 감소 13.5는 이전 9와 손실 4.5로 나뉩니다.",
+        "boundary": "고정비 0·외부 효과 없음·같은 수요와 비용을 유지한 정적 비교입니다. 고정비가 있으면 생산자 잉여와 이익을 구분하며 실제 분할이나 정책의 모든 결과를 설명하지 않습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "00 마주하는 것",
-        relation: "값을 받아들이는 쪽에서 고르는 쪽으로 바뀝니다.",
-        concepts: ["price-setter-faces-whole-demand"],
-      },
-      {
-        label: "01 실제로 늘어나는 돈",
-        relation: "깎이는 몫 때문에 값보다 낮습니다.",
-        concepts: ["marginal-revenue-below-price"],
-      },
-      {
-        label: "02 멈추는 자리와 틈",
-        relation: "그 낮은 선으로 멈추고 값은 그 위에서 읽힙니다.",
-        concepts: ["monopoly-stopping-condition", "markup-set-by-elasticity"],
-      },
-      {
-        label: "03 남는 것과 사라지는 것",
-        relation: "옮겨 간 몫과 아예 일어나지 않은 몫을 가릅니다.",
-        concepts: ["monopoly-output-restriction"],
-      },
-    ],
-    exercises: [
-      {
-        level: "basic",
-        question:
-          "여럿이 팔 때와 혼자 팔 때 파는 쪽이 마주하는 것이 어떻게 다른지, 혼자 팔 때 고를 수 있는 것은 무엇인지 쓰세요.",
-        answerChecklist: [
-          "여럿이 팔면 값 하나를 마주함",
-          "자기가 얼마를 내놓든 값이 움직이지 않음",
-          "혼자 팔면 수요 선 전체를 마주함",
-          "고를 수 있는 것은 값 하나뿐이고 수량은 따라옴",
-        ],
-        requiredConcepts: ["price-setter-faces-whole-demand"],
-        sectionId: "facing-demand",
-      },
-      {
-        level: "basic",
-        question:
-          "값을 10에서 9로 내려 하나를 더 팔 때 실제로 늘어나는 돈을 계산하고, 그 셈에 들어가는 두 몫을 쓰세요.",
-        answerChecklist: [
-          "새 손님에게서 9를 더 받음",
-          "원래 10에 사던 3명에게서 1씩 3이 깎임",
-          "늘어난 돈은 9에서 3을 뺀 6",
-          "두 몫은 더 받는 몫과 깎이는 몫",
-        ],
-        requiredConcepts: ["marginal-revenue-below-price"],
-        sectionId: "marginal-revenue",
-      },
-      {
-        level: "basic",
-        question:
-          "하나 더 팔 때 늘어나는 돈이 그 값보다 낮은 이유와, 여럿이 팔 때는 왜 그렇지 않은지 쓰세요.",
-        answerChecklist: [
-          "내린 값이 이미 팔던 것에도 적용됨",
-          "그 깎이는 몫이 빠짐",
-          "여럿이 팔면 값이 움직이지 않음",
-          "깎일 것이 없어 늘어나는 돈이 값과 같음",
-        ],
-        requiredConcepts: [
-          "marginal-revenue-below-price",
+        "label": "00 같은 기간의 판매 계획",
+        "relation": "가격별 수량과 전체 매출·비용·이익을 먼저 비교합니다.",
+        "concepts": [
           "price-setter-faces-whole-demand",
-        ],
-        sectionId: "marginal-revenue",
+          "marginal-revenue-below-price"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "수요가 값 = 13 − 수량이고 한계비용이 7일 때 멈추는 수량과 값을 구하세요.",
-        answerChecklist: [
-          "늘어나는 돈은 13 − 2×수량",
-          "7과 같아지는 수량은 3",
-          "값은 수요 선에서 읽어 10",
-          "멈추는 선과 값을 읽는 선이 다름",
-        ],
-        requiredConcepts: ["monopoly-stopping-condition"],
-        sectionId: "stopping-point",
+        "label": "01 미분과 실제 선택",
+        "relation": "연속적인 내부 조건과 정수·생산 한도·진입 결정을 구분합니다.",
+        "concepts": [
+          "monopoly-stopping-condition"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "값과 한계비용의 틈이 무엇으로 정해지는지, 그리고 흔히 떠올리는 답과 어떻게 다른지 쓰세요.",
-        answerChecklist: [
-          "수요의 민감도가 정함",
-          "민감도의 역수가 틈의 비율",
-          "크기나 비용이 정하는 것이 아님",
-          "대신할 것이 많을수록 틈이 좁아짐",
-        ],
-        requiredConcepts: ["markup-set-by-elasticity"],
-        sectionId: "markup-size",
+        "label": "02 최적점의 비율",
+        "relation": "해당 점의 탄력성과 마크업을 계산하고 비용 변화로 위치가 바뀌는지 봅니다.",
+        "concepts": [
+          "markup-set-by-elasticity"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "값이 오를 때 생기는 두 가지를 가르고, 둘 중 어느 쪽이 누구에게도 가지 않는 몫인지 쓰세요.",
-        answerChecklist: [
-          "사는 쪽에서 파는 쪽으로 옮겨 간 몫",
-          "수량이 줄어 일어나지 않은 거래",
-          "옮겨 간 몫은 없어진 것이 아님",
-          "일어나지 않은 거래의 몫이 누구에게도 가지 않음",
+        "label": "03 잉여와 적용 범위",
+        "relation": "같은 비용의 정적 비교에서 이전과 손실을 나눕니다.",
+        "concepts": [
+          "monopoly-output-restriction"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "가격 10에 3개를 파는 계획과 가격 9에 4개를 파는 계획의 매출·비용·이익을 계산하세요.",
+        "answerChecklist": [
+          "각각 매출 30·비용 21·이익 9와 매출 36·비용 28·이익 8입니다.",
+          "매출이 6 늘지만 비용은 7 늘어 이익은 1 줄어듭니다. 단위 비용 7과 고정비 0을 둔 같은 기간의 비교입니다."
         ],
-        requiredConcepts: ["monopoly-output-restriction"],
-        sectionId: "what-is-lost",
+        "sectionId": "case",
+        "requiredConcepts": [
+          "marginal-revenue-below-price"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "받는 돈이 값과 수량의 곱이라는 데서 출발해 멈추는 조건을 유도하고, 멈춘 자리의 값이 한계비용보다 높은 이유를 쓰세요.",
-        answerChecklist: [
-          "수량을 하나 늘릴 때 곱이 늘어나는 폭은 값에서 깎이는 몫을 뺀 것",
-          "그 폭이 하나 더 만드는 값보다 크면 늘림",
-          "더 이상 크지 않은 첫 자리에서 멈춤",
-          "늘어나는 돈이 값보다 낮으므로 값은 한계비용 위",
+        "level": "basic",
+        "question": "새 판매의 수입 9에서 왜 3을 빼며 과거 거래의 환불과 어떻게 다른가요?",
+        "answerChecklist": [
+          "가격 10의 계획에서 팔던 세 개에 해당하는 수량은 가격 9의 계획에서 하나당 1씩 덜 받아 합계 3이 줄어듭니다.",
+          "새 한 개의 9와 다른 수량의−3을 합치면 매출 증가 6입니다. 같은 기간의 동일 가격 대안을 비교하며 과거 거래를 환불한다는 가정이 아닙니다."
         ],
-        requiredConcepts: [
+        "sectionId": "marginal-revenue",
+        "requiredConcepts": [
+          "marginal-revenue-below-price"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "판매자가 여럿이면 모두 가격수용자인가요?",
+        "answerChecklist": [
+          "아닙니다. 상품이나 서비스 차이로 개별 업체의 가격에 따라 주문이 달라질 수 있습니다.",
+          "가격수용은 자기 판매량이 시장가격에 거의 영향을 주지 않는다는 모형의 가정입니다. 수요와 대체 상품·시장 경계·진입을 따로 확인합니다."
+        ],
+        "sectionId": "facing-demand",
+        "requiredConcepts": [
+          "price-setter-faces-whole-demand"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "연속 수량의 이익 최대점과 3개에서 4개로 가는 정수 주문의 매출 차이를 구분하세요.",
+        "answerChecklist": [
+          "π=6q−q²=9−(q−3)²이므로 q3에서 최대 9이며 가격은 10입니다.",
+          "MR(3)=7, MR(4)=5는 각 점의 미분값입니다. 유한한 차이 R(4)−R(3)=36−30=6과 구분하며 비용 증가 7을 빼면 이익이 1 줄어듭니다."
+        ],
+        "sectionId": "stopping-point",
+        "requiredConcepts": [
           "monopoly-stopping-condition",
-          "marginal-revenue-below-price",
-        ],
-        sectionId: "stopping-point",
+          "marginal-revenue-below-price"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "멈추는 조건을 값으로 나누어 틈의 비율이 민감도의 역수가 됨을 보이고, 민감도가 무한대일 때 무엇이 되는지 쓰세요.",
-        answerChecklist: [
-          "조건을 수량으로 나누면 값에서 한계비용을 뺀 것에 비가 곱해진 꼴",
-          "그 비가 민감도의 역수",
-          "양변을 값으로 나누면 왼쪽이 틈의 비율",
-          "민감도가 무한대면 틈이 0이 되어 1단계의 값으로 돌아옴",
+        "level": "basic",
+        "question": "기본 최적점의 가격탄력성과 가격 기준 마크업을 계산하세요.",
+        "answerChecklist": [
+          "q′(p)=−1이고 p10/q3이므로 ε=−10/3입니다. 절댓값의 역수는 3/10입니다.",
+          "(10−7)/10=30%이며 비용을 분모로 한 원가 가산율 3/7과 구분합니다. 해당 점의 미분 반응이며 유한한 1% 변화와 항상 같지는 않습니다."
         ],
-        requiredConcepts: [
-          "markup-set-by-elasticity",
+        "sectionId": "markup-size",
+        "requiredConcepts": [
+          "markup-set-by-elasticity"
+        ]
+      },
+      {
+        "level": "basic",
+        "question": "수량 6·가격 7의 기준과 수량 3·가격 10의 소비자·생산자 잉여를 비교하세요.",
+        "answerChecklist": [
+          "기준은 소비자 18·생산자 0·합계 18이고 다른 경우는 소비자 4.5·생산자 9·합계 13.5입니다.",
+          "소비자 감소 13.5는 이전 9와 전체 잉여 손실 4.5로 나뉩니다. 고정비 0과 외부 효과 없음, 같은 수요·비용의 정적 비교라는 가정을 보존합니다."
+        ],
+        "sectionId": "what-is-lost",
+        "requiredConcepts": [
+          "monopoly-output-restriction"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "내부 최적조건을 유도하고 정수·생산 한도·진입 고정비를 검토하세요.",
+        "answerChecklist": [
+          "π′=MR−MC이므로 매끄러운 내부 최대점의 필요조건은 MR=MC입니다. 이번 π=9−(q−3)²와 π″=−2는 전체 최대를 확인합니다.",
+          "정수에서는 실제 허용 수량들의 전체 이익을 비교합니다. 생산 한도 2이면 q2/p11/이익 8이 최대지만 MR9>MC7입니다.",
+          "피할 수 있는 진입 고정비 10을 더하면 최선의 운영 이익 9−10=−1보다 미진입 0이 낫습니다. 이미 회수 불가능하게 지출한 10은 이후 달라지는 비용과 구분합니다."
+        ],
+        "sectionId": "limits",
+        "requiredConcepts": [
+          "monopoly-stopping-condition"
+        ]
+      },
+      {
+        "level": "advanced",
+        "question": "Cournot의 가격 기준 조건에서 마크업 식을 유도하고 적용 조건을 설명하세요.",
+        "answerChecklist": [
+          "q+q′(p)(p−MC)=0을 양의q로 나누면 1+ε(p−MC)/p=0입니다. 따라서 (p−MC)/p=−1/ε=1/|ε|입니다.",
+          "양의p·q, 유한한 음의q′, 단일 상품·동일 가격·미분 가능한 내부 이익 최대가 필요합니다. 경계와 정수 선택에는 그대로 대입하지 않습니다.",
+          "MC>0인 해당 내부 해는 |ε|>1이며 MC=0이면 |ε|=1일 수 있습니다. 한계비용이 알려져 있다는 가정과 실제 비용 추정의 어려움을 구분합니다."
+        ],
+        "sectionId": "markup-size",
+        "requiredConcepts": [
           "monopoly-stopping-condition",
-        ],
-        sectionId: "markup-size",
+          "markup-set-by-elasticity"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "1단계의 균형점을 똑같이 지나는 두 수요에서 혼자 팔게 했을 때 값이 다르게 나오는 이유를 설명하고, 이 비교가 무엇을 가려내기 위한 것인지 쓰세요.",
-        answerChecklist: [
-          "아무도 고르지 않을 때의 자리는 둘 다 수량 6·값 7로 같음",
-          "민감한 쪽은 10, 둔한 쪽은 13에서 멈춤",
-          "틈은 30%와 46%",
-          "크기와 비용을 같게 두어 민감도만 남긴 비교",
+        "level": "advanced",
+        "question": "같은 비용의 두 수요와 같은 수요의 비용 변경을 비교해 비용이 무관하다는 주장을 검토하세요.",
+        "answerChecklist": [
+          "MC7에서 p=13−q와 p=19−2q는 최적 수량 3, 가격 10과 13입니다. 탄력성 절댓값은 10/3과 13/6, 마크업은 30%와약 46.15%입니다.",
+          "기본 수요에서 MC9이면 최적 q2/p11, 탄력성 절댓값 11/2, 마크업 2/11≈18.18%입니다. 비용이 읽는 최적점과 마크업을 바꿉니다.",
+          "선택한 두 수요의 가정 비교이며 기울기만으로 모든 점의 탄력성을 정하거나 실제 대체 상품의 효과를 측정한 것은 아닙니다."
         ],
-        requiredConcepts: ["markup-set-by-elasticity"],
-        sectionId: "markup-size",
+        "sectionId": "elasticity-comparison",
+        "requiredConcepts": [
+          "markup-set-by-elasticity"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "사라지는 몫이 생긴다는 사실에서 쪼개는 편이 낫다는 결론이 곧바로 나오지 않는 이유를, 앞 글의 조건과 함께 쓰세요.",
-        answerChecklist: [
-          "하나만 남은 이유가 최소 수량이 시장보다 컸기 때문일 수 있음",
-          "쪼개면 둘 다 그 방법을 못 씀",
-          "만드는 값 자체가 올라가 다른 몫이 커짐",
-          "어느 쪽이 큰지는 숫자를 재야 앎",
+        "level": "advanced",
+        "question": "잉여 손실이 생긴다는 사실에서 기업을 분할하는 편이 항상 낫다는 결론이 나오나요?",
+        "answerChecklist": [
+          "아닙니다. 4.5는 같은 수요·생산 비용을 유지한 정적 비교입니다. 실제 분할은 생산비·운송·계약·품질·투자 조건을 바꿀 수 있습니다.",
+          "비용 동률 수량이 시장보다 크다는 사실만으로 단일 기업의 비용 우위가 증명되지 않습니다. 바뀐 조건의 전체 비용과 거래를 확인해야 합니다.",
+          "고정비 회수·미래 투자·분배·외부 효과를 모두 포함한 정책 판단과 해당 잉여 계산을 구분합니다."
         ],
-        requiredConcepts: [
+        "sectionId": "limits",
+        "requiredConcepts": [
           "monopoly-output-restriction",
-          "minimum-market-for-a-detour",
-        ],
-        sectionId: "what-is-lost",
-      },
+          "minimum-market-for-a-detour"
+        ]
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title:
-          "A. Cournot, 『Researches into the Mathematical Principles of the Theory of Wealth』 (1838), N. T. Bacon 영역 1897, 제5장",
-        href: "https://archive.org/details/researchesintom00fishgoog",
-        problem:
-          "파는 쪽이 하나뿐일 때 값이 어디에 멈추는지가 말로만 다루어졌고, 값을 올리면 덜 팔린다는 관찰에서 실제로 어느 값을 고르는지로 넘어가는 단계가 비어 있었습니다.",
-        contribution:
-          "값에 따라 팔리는 양을 함수로 두고, 파는 쪽이 그 함수와 값의 곱을 가장 크게 만드는 값을 고른다는 조건을 식 (1)로 적었습니다. 이어서 만드는 데 드는 값을 넣은 조건을 식 (2)로 적고, 거기서 이렇게 정해진 값이 하나 더 만드는 데 드는 값보다 반드시 높다는 것을 끌어냈습니다. 그 이유를 늘어나는 비용이 늘어나는 수입을 넘어서는 순간 멈춘다는 말로 적어, 멈추는 기준이 값이 아니라 늘어나는 돈이라는 점을 분명히 했습니다.",
-        assumptions:
-          "모두에게 같은 값을 받는다고 두고, 값에 따라 팔리는 양이 하나의 함수로 적힌다고 봅니다. 만드는 데 드는 값도 수량만의 함수로 둡니다.",
-        evidenceScope:
-          "Internet Archive의 1897년 Bacon 영역본 스캔을 받아 제5장을 읽었고, 식 (1)·식 (2)와 인용 문장은 해당 쪽 이미지를 직접 열어 대조했습니다. 1838년 프랑스어 원본이 아니라 영역본을 읽은 것이고, 쪽수는 영역본 기준입니다.",
-        notClaim:
-          "틈의 크기가 수요 민감도의 역수라는 형태는 이 논저에 그 꼴로 적혀 있지 않습니다. 식 (2)에서 이 글이 직접 옮겨 적은 것이고, 그 비율에 이름을 붙여 지표로 쓴 것은 20세기의 일입니다. 또 Cournot은 사라지는 몫을 이 장에서 세지 않으므로, 이 글의 부품 5는 1단계의 잉여 셈을 가져다 쓴 것이지 그의 결론이 아닙니다.",
-        sectionId: "stopping-point",
-      },
-    ],
+        "title": "A. Cournot · Researches into the Mathematical Principles of the Theory of Wealth, Bacon 영어 번역(1897), 54~59쪽",
+        "href": "https://archive.org/details/researchesintom00fishgoog",
+        "sectionId": "cournot-source",
+        "problem": "판매자가 가격별 판매량을 마주할 때 매출과 생산 비용을 함께 고려한 선택 조건이 필요합니다.",
+        "contribution": "비용을 뺀 수입의 가격 기준 조건을 제시하고 생산 한도로 내부 해를 택할 수 없는 경우를 별도로 논의합니다. 이 글은 그 조건에서 마크업 관계를 유도합니다.",
+        "assumptions": "단일 가격·가격에 따른 판매량·수량에 따른 생산 비용을 둡니다. 원문의 생산 한도와 정지점의 최대·최소 구분을 보존합니다.",
+        "evidenceScope": "실제 공개 1897년 영어 번역 스캔과 관련 OCR의 54~59쪽을 읽고 56·57·58·59쪽 이미지를 대조했습니다. 프랑스어 초판 전체를 검증한 것은 아닙니다.",
+        "notClaim": "13−q·비용 7·잉여 4.5는 글의 가정 계산이며 원문 관측 자료가 아닙니다. 마크업의 탄력성 형태와 현대적인 잉여 분해는 이 글의 유도와 적용이며 같은 식이 원문에 그 형태로 실렸다는 뜻이 아닙니다."
+      }
+    ]
   },
   "circuits/lumped-circuit-and-conservation": {
     entryLevel: true,
@@ -118622,299 +119079,276 @@ export const ARTICLE_LEARNING: Readonly<
     "entryNote": "가정한 RP2040 제품 설계입니다. 실제 보드 이식·서명 검증·전원 차단 시험을 수행한 결과는 아니며 고정 원본의 상태와 분기를 대조합니다."
   },
   "labor/wage-floor-natural-experiment": {
-    entryNote:
-      "앞 세 편은 조직과 물건의 값을 다뤘습니다. 여기서는 같은 셈을 사람이 파는 시간에 적용하고, 그 예측이 실제 측정과 어떻게 만나는지까지 봅니다.",
-    coreIdea:
-      "한 사람을 더 쓸 때 얻는 몫과 드는 값을 견주는 규칙은 같지만, 사는 쪽이 여럿이면 임금이 그 몫에서 멈추고 하나뿐이면 이미 일하던 사람의 임금까지 올려야 해서 그보다 낮게 멈춥니다. 그래서 같은 임금 바닥이 앞의 경우에는 사람을 줄이고 뒤의 경우에는 늘리므로 어느 쪽인지는 재 봐야 알 수 있는데, 한쪽만 바닥을 올린 자리에서 실제로 재 보니 사람 수는 첫 셈의 예측과 어긋났고 값의 움직임은 두 번째 셈의 예측과 어긋났습니다.",
-    assumedKnowledge: [
+    "entryNote": "같은 하루의 노동 3시간과 4시간에서 수입·임금 총액·이익을 계산합니다. 연속 시간과 정수 인원의 차이를 확인하고, 실제 1992년 연구의 표와 비교집단 가정을 읽습니다.",
+    "coreIdea": "추가 노동을 구할 때 다른 시간의 시급까지 바뀌면 임금 총액의 증가가 시급보다 큽니다. 최저임금은 총액의 모양과 최적 선택을 바꿀 수 있습니다. 그 방향은 출발 조건·인상 폭에 달려 있으며 실제 효과는 측정 단위·표본·반사실적 비교 가정을 검토해 판단합니다.",
+    "assumedKnowledge": [
       {
-        id: "marginal-decision-rule",
-        role: "하나 더 할 때의 비교로 멈출 자리를 찾는 셈을 사람 쪽에 그대로 씁니다.",
+        "id": "marginal-decision-rule",
+        "role": "추가 수입과 전체 추가 비용을 비교하되 미분·유한 차이·전체 최대를 구분합니다."
       },
       {
-        id: "marginal-revenue-below-price",
-        role: "이미 팔던 것에서 깎이던 몫을 이미 일하던 사람에게 더 주는 몫으로 뒤집어 읽습니다.",
+        "id": "marginal-revenue-below-price",
+        "role": "같은 기간의 대안에서 다른 단위의 수입·지출도 바뀔 수 있다는 구조를 재사용합니다."
       },
       {
-        id: "markup-set-by-elasticity",
-        role: "민감도의 역수가 틈을 정한다는 형태를 공급 쪽으로 옮겨 씁니다.",
+        "id": "markup-set-by-elasticity",
+        "role": "내부 최적조건과 해당 점의 탄력성을 연결하며 생산성·공급 조건의 영향을 보존합니다."
       },
       {
-        id: "price-setter-faces-whole-demand",
-        role: "값을 고르는 쪽이 선 전체를 마주한다는 구조를 임금 쪽에 대응시킵니다.",
-      },
+        "id": "price-setter-faces-whole-demand",
+        "role": "가격이나 시급에 따른 전체 수요·공급 관계와 가격수용 가정을 구분합니다."
+      }
     ],
-    introducedHere: [
+    "introducedHere": [
       {
-        id: "value-of-marginal-product",
-        role: "사람을 쓸 때 얻는 쪽의 내용을 정의합니다.",
+        "id": "value-of-marginal-product",
+        "role": "노동을 조금 더 투입할 때 수입이 늘어나는 비율을 셉니다. 상품가격이 일정하면 한계수입생산과 한계생산가치가 같습니다."
       },
       {
-        id: "wage-at-marginal-product",
-        role: "사는 쪽이 여럿일 때 임금이 멈추는 자리를 정합니다.",
+        "id": "wage-at-marginal-product",
+        "role": "임금 수용자는 시급을 주어진 값으로 받고 가능한 노동시간 중 이익이 가장 큰 선택을 찾습니다."
       },
       {
-        id: "monopsony-wage-gap",
-        role: "사는 쪽이 하나일 때 생기는 틈을 식으로 적습니다.",
+        "id": "monopsony-wage-gap",
+        "role": "더 많은 노동을 구하려고 모든 시간의 시급을 올리면 임금 총액의 추가 비용이 시급보다 큽니다."
       },
       {
-        id: "minimum-wage-prediction-split",
-        role: "같은 바닥이 두 경우에 반대 방향으로 작용함을 보입니다.",
+        "id": "minimum-wage-prediction-split",
+        "role": "최저시급을 지급 시급에 적용한 총액을 먼저 만들고, 구간별 이익과 꺾인 점을 비교합니다."
       },
       {
-        id: "side-by-side-comparison",
-        role: "두 예측을 자료로 가르는 방법을 정의합니다.",
+        "id": "side-by-side-comparison",
+        "role": "비교 지역의 변화가 인상 지역의 미인상 경로를 대신할 수 있는지 검토합니다."
       },
       {
-        id: "neither-model-fits",
-        role: "한 설명의 반증이 다른 설명의 확인이 아니라는 규율을 세웁니다.",
-      },
+        "id": "neither-model-fits",
+        "role": "고용의 방향 하나와 맞는 모형이 그 결과의 유일한 설명인지는 별개의 문제입니다."
+      }
     ],
-    conceptExplanations: [
+    "conceptExplanations": [
       {
-        id: "value-of-marginal-product",
-        sectionId: "two-counts",
-        intuition:
-          "조리대와 계산대는 그대로인데 손만 늘면, 뒤에 온 사람은 앞사람이 비켜 줄 때를 기다리게 됩니다.",
-        workedExample:
-          "첫 사람은 한 시간에 12달러어치를 더 만들어 팔고, 둘째는 11, 셋째는 10, 다섯째는 8달러어치입니다.",
-        boundary:
-          "사람 자체의 값이 아니라 그 사람이 만들 물건이 팔리는 값에 매달려 있습니다. 물건 값이 내려가면 같은 사람의 몫도 함께 내려갑니다.",
+        "id": "value-of-marginal-product",
+        "sectionId": "two-counts",
+        "intuition": "노동을 조금 더 투입할 때 수입이 늘어나는 비율을 셉니다. 상품가격이 일정하면 한계수입생산과 한계생산가치가 같습니다.",
+        "workedExample": "B=13n−n²/2이면 v=13−n입니다. B3=34.5와 B4=44의 차이 9.5는 순간 변화율 v3=10, v4=9와 구분합니다.",
+        "boundary": "상품가격이 생산량에 따라 바뀌면 추가 생산의 가치와 추가 매출을 구분합니다. 추가 수입 감소는 이번 가정이며 유한 고용의 유일한 이유가 아닙니다."
       },
       {
-        id: "wage-at-marginal-product",
-        sectionId: "many-buyers",
-        intuition:
-          "비슷한 가게가 여럿이면 혼자 적게 부를 수도, 괜히 더 줄 이유도 없습니다. 정할 수 있는 것은 몇 명을 쓸지뿐입니다.",
-        workedExample:
-          "동네 임금이 8달러이면 한 명 더 써서 8달러보다 더 버는 자리까지만 씁니다. 다섯째가 8달러어치를 보태므로 다섯 명에서 멈추고, 8달러를 부르면 마침 다섯 명이 옵니다.",
-        boundary:
-          "가게가 임금을 흔들 수 없다는 전제 위에서만 성립합니다. 이 전제가 깨지는 경우가 바로 다음 개념입니다.",
+        "id": "wage-at-marginal-product",
+        "sectionId": "many-buyers",
+        "intuition": "임금 수용자는 시급을 주어진 값으로 받고 가능한 노동시간 중 이익이 가장 큰 선택을 찾습니다.",
+        "workedExample": "시급 8에서 B−8n=12.5−(n−5)²/2이므로 연속 노동 5시간이 최대입니다. 전체 노동수요 13−n과 공급 n+3의 경쟁 기준도 5시간·시급 8입니다.",
+        "boundary": "시장 전체의 임금 결정과 개별 고용주의 임금 수용을 구분합니다. 고용주 수만으로 임금 수용을 확정하지 않으며 내부 등식은 정수·용량·미고용 선택을 대신하지 않습니다."
       },
       {
-        id: "monopsony-wage-gap",
-        sectionId: "one-buyer",
-        intuition:
-          "한 사람을 더 부르려고 임금을 올리면 이미 일하던 사람도 그 임금을 받게 됩니다. 그 몫까지 세면 한 명 더 쓰는 값이 임금보다 비쌉니다.",
-        workedExample:
-          "네 명을 부르려면 7달러를 줘야 하는데 이미 일하던 세 사람도 6달러에서 7달러가 되므로 3달러가 더 나갑니다. 네 번째 사람에게 드는 값은 7이 아니라 10이고, 그가 보태는 몫은 9이므로 쓰지 않습니다.",
-        proofIdea:
-          "n명을 쓸 때 나가는 임금의 합은 w(n)·n입니다. 한 명 더 쓸 때 이 합이 늘어나는 폭은 새로 주는 w(n)에 이미 일하던 사람 수만큼 임금이 오른 몫 n·(dw/dn)을 더한 것입니다. 이 폭이 그 사람의 한계생산가치보다 작으면 쓰고 크면 쓰지 않으므로, 멈춘 자리에서 둘이 같아집니다. 양변을 w로 나누고 공급 민감도를 n과 w의 비로 정리하면 틈의 비율이 그 민감도의 역수로 남습니다.",
-        counterexample:
-          "사람마다 다른 임금을 줄 수 있으면 새로 부르는 사람에게만 더 주면 되므로 둘째 항이 사라지고 틈도 사라집니다. 사는 쪽이 하나라는 것만으로 틈이 생기는 것이 아니라, 모두에게 같은 임금을 준다는 조건이 함께 있어야 합니다.",
-        boundary:
-          "표는 한 명 단위로 끊어 본 것입니다. 이어서 풀면 3.3명·임금 6.3달러에서 멈추고 틈은 53%이며 그 자리의 민감도 1.9의 역수와 맞습니다.",
+        "id": "monopsony-wage-gap",
+        "sectionId": "one-buyer",
+        "intuition": "더 많은 노동을 구하려고 모든 시간의 시급을 올리면 임금 총액의 추가 비용이 시급보다 큽니다.",
+        "workedExample": "W=n(n+3), W′=2n+3이며 이익 10n−1.5n²는 n10/3에서 최대입니다. w19/3·v29/3, 공급탄력성 19/10과 시급 기준 차이 10/19가 대응합니다.",
+        "boundary": "양의 노동·임금과 매끄러운 내부·같은 시급·상승하는 노동공급 조건이 필요합니다. 여러 고용주와 구직 마찰에서도 힘이 생길 수 있고 부분적인 차등 임금이 차이를 모두 없애지는 않습니다.",
+        "proofIdea": "같은 시급의 W=nw를 미분하면 W′=w+nw′입니다. 내부 조건 v=W′에서 (v−w)/w=nw′/w이며 ε_s=(dn/dw)w/n=w/(nw′)이므로 차이 비율은 1/ε_s입니다. 이번 이익은 50/3−1.5(n−10/3)²로 전체 최대를 확인합니다.",
+        "counterexample": "최저시급 F7에서 최적 n4는 총액이 꺾인 점입니다. 그 점에 원래 매끄러운 내부 탄력성 등식을 그대로 적용할 수 없습니다. 각 단위를 정확한 최소 수용액에 따로 구할 수 있는 특별한 임금차별은 총액식을 바꾸지만, 일부 차등 임금만으로 그 조건이 성립하지 않습니다."
       },
       {
-        id: "minimum-wage-prediction-split",
-        sectionId: "two-predictions",
-        intuition:
-          "바닥을 걸면 그 구간에서 임금이 사람 수에 따라 오르지 않습니다. 한 명 더 쓴다고 나머지 임금이 오르지 않으니 더 줘야 하던 몫이 사라집니다.",
-        workedExample:
-          "바닥을 9달러로 걸면 여럿이 사던 쪽은 다섯 명에서 네 명으로 줄고, 하나가 사던 쪽은 세 명에서 네 명으로 늘어 둘 다 네 명이 됩니다.",
-        proofIdea:
-          "바닥 F가 걸린 구간에서는 한 명 더 쓰는 값이 w(n)+n·(dw/dn)이 아니라 F로 평평해집니다. 멈추는 조건이 v(n)=F가 되므로 사람 수는 F가 올라갈수록 단조로 줄어듭니다. 바닥이 없을 때의 출발점이 이 선보다 왼쪽에 있던 경우에만 F를 걸면 사람 수가 오른쪽으로, 즉 늘어나는 쪽으로 움직입니다.",
-        counterexample:
-          "바닥을 12달러로 올리면 사는 쪽이 하나인 경우에도 v(n)=12를 만족하는 n이 1이 되어 사람 수가 세 명보다 줄어듭니다. 늘어나는 것은 특정 구간 안에서만 성립합니다.",
-        boundary:
-          "어느 쪽 조건에 있는지는 셈으로 정할 수 없습니다. 이 분기 자체가 측정을 필요하게 만드는 이유입니다.",
+        "id": "minimum-wage-prediction-split",
+        "sectionId": "two-predictions",
+        "intuition": "최저시급을 지급 시급에 적용한 총액을 먼저 만들고, 구간별 이익과 꺾인 점을 비교합니다.",
+        "workedExample": "W_F=nmax(F,n+3)입니다. 최적 시간은 F가 19/3 이하일 때 10/3, 19/3~8에서 F−3, 8~13에서 13−F, 13 이상에서 0입니다. F9는 4시간, F12는 1시간입니다.",
+        "boundary": "원래 추가 비용과 F의 최댓값을 쓰면 틀립니다. 처음에는 노동이 늘다가 줄 수 있습니다. 실제 정책의 최적 수준을 추정한 것이 아니며 정수 동률도 따로 비교합니다.",
+        "proofIdea": "n<F−3인 구간은 W_F′=F이고 n>F−3은 W_F′=2n+3입니다. 각 구간의 아래로 굽은 이익에서 내부 후보·꺾인 점·0과 13을 비교합니다. F19/3~8에서는 꺾인 점의 왼쪽 이익이 증가하고 오른쪽은 감소해 n=F−3이 최대입니다. 이후 내부 후보 13−F가 구간에 들어가며 F13 이상에서는 0이 최대입니다.",
+        "counterexample": "F7→8에서는 노동 4→5로 늘므로 F가 오를수록 항상 줄어든다는 주장은 틀립니다. F12는 1시간으로 원래 10/3보다 적으므로 언제나 늘어난다는 주장도 틀립니다. 별도의 정수 추가 수입 12,11,… 사례에서는 F9의 최적 3·4, F12의 0·1이 동률입니다."
       },
       {
-        id: "side-by-side-comparison",
-        sectionId: "what-happened",
-        intuition:
-          "바뀐 쪽만 보면 경기 때문인지 바뀐 것 때문인지 알 수 없습니다. 바뀌지 않은 비슷한 쪽을 옆에 두면 공통된 영향이 상쇄됩니다.",
-        workedExample:
-          "바닥을 올리지 않은 쪽은 가게당 2.16명 줄고 올린 쪽은 0.59명 늘어, 차이가 2.76명입니다. 두 쪽에 똑같이 걸린 불황은 이 차이에서 빠집니다.",
-        boundary:
-          "비교 집단이 실제로 비슷했는지가 결론을 떠받칩니다. 같은 집단 안에서 세게 영향받은 쪽과 거의 받지 않은 쪽을 다시 갈라 같은 방향이 나오는지 보는 것이 그 점검입니다.",
+        "id": "side-by-side-comparison",
+        "sectionId": "comparison-conditions",
+        "intuition": "비교 지역의 변화가 인상 지역의 미인상 경로를 대신할 수 있는지 검토합니다.",
+        "workedExample": "가정한 20→21과 25→23의 변화 차이는 3입니다. 미인상시 두 지역 모두 2만큼 줄었을 것이라면 인상 지역의 반사실적 결과 18과 관측 21의 차이 3이 정책효과입니다.",
+        "boundary": "평행추세·선행 반응·지역 간 파급·동시 충격·측정과 표본 구성을 검토합니다. 가까운 지역이나 비슷한 시작 평균만으로 인과가 보장되지 않습니다."
       },
       {
-        id: "neither-model-fits",
-        sectionId: "what-happened",
-        intuition:
-          "한 설명이 틀렸다는 것이 맞은편 설명이 옳다는 뜻은 아닙니다. 둘 다 틀릴 수 있습니다.",
-        workedExample:
-          "사람 수는 줄어야 한다는 예측과 어긋났지만, 값은 내려가야 한다는 반대편 예측과도 어긋나 3.2% 더 올랐습니다.",
-        boundary:
-          "이 상태를 어느 한쪽의 증거로 인용하지 않는 것과, 적용 범위를 업종·지역·시점으로 좁혀 적는 것이 같이 가야 합니다.",
-      },
+        "id": "neither-model-fits",
+        "sectionId": "prices-and-models",
+        "intuition": "고용의 방향 하나와 맞는 모형이 그 결과의 유일한 설명인지는 별개의 문제입니다.",
+        "workedExample": "1994년 표 3의 고용 변화 차이와 표 7의 로그가격 계수는 다른 단위와 표본입니다. 저자가 검토한 단순 모형들의 예측을 함께 비교하며 표 7의 0.033을 정확한 3.2%로 취급하지 않습니다.",
+        "boundary": "상품가격을 고정한 설명용 모형이 가격 하락을 예측한 것은 아닙니다. 추가 상품수요·품질·시장 조건과 측정 자료를 검토하며 모든 모형이나 모든 정책을 배제했다고 확대하지 않습니다."
+      }
     ],
-    conceptStages: [
+    "conceptStages": [
       {
-        label: "00 얻는 쪽",
-        relation: "사람을 쓸 때 얻는 것을 셉니다.",
-        concepts: ["value-of-marginal-product"],
+        "label": "00 같은 기간의 전체 수입과 임금",
+        "relation": "노동시간별 전체 값과 순간 변화율을 나눕니다.",
+        "concepts": [
+          "value-of-marginal-product"
+        ]
       },
       {
-        label: "01 멈추는 자리 둘",
-        relation: "사는 쪽의 수에 따라 멈추는 자리가 갈립니다.",
-        concepts: ["wage-at-marginal-product", "monopsony-wage-gap"],
+        "label": "01 지급 조건과 최적 선택",
+        "relation": "주어진 시급과 상승하는 노동공급 관계의 선택을 구분합니다.",
+        "concepts": [
+          "wage-at-marginal-product",
+          "monopsony-wage-gap"
+        ]
       },
       {
-        label: "02 갈라지는 예측",
-        relation: "같은 바닥이 두 경우에 반대로 작용합니다.",
-        concepts: ["minimum-wage-prediction-split"],
+        "label": "02 최저임금과 허용 단위",
+        "relation": "총액 구간과 정수 동률을 모두 비교합니다.",
+        "concepts": [
+          "minimum-wage-prediction-split"
+        ]
       },
       {
-        label: "03 재는 방법과 읽는 규율",
-        relation: "자료로 가르고, 가른 결과를 넘겨 읽지 않습니다.",
-        concepts: ["side-by-side-comparison", "neither-model-fits"],
-      },
+        "label": "03 실제 자료와 인과 해석",
+        "relation": "표본·측정·반사실적 가정과 모형의 범위를 검토합니다.",
+        "concepts": [
+          "side-by-side-comparison",
+          "neither-model-fits"
+        ]
+      }
     ],
-    exercises: [
+    "exercises": [
       {
-        level: "basic",
-        question:
-          "사람을 한 명씩 늘릴 때 더 만들어 파는 몫이 줄어드는 이유와, 그 줄어듦이 없으면 무엇이 성립하지 않는지 쓰세요.",
-        answerChecklist: [
-          "설비와 자리는 그대로인데 손만 늘어남",
-          "기다리는 시간이 생겨 보태는 몫이 작아짐",
-          "줄어듦이 없으면 멈출 자리가 생기지 않음",
-          "사람을 무한히 쓰지 않는 이유가 사라짐",
+        "level": "basic",
+        "question": "3시간과 4시간 계획의 수입·임금 합계·이익을 구하고 추가 비용을 나누세요.",
+        "answerChecklist": [
+          "각각 수입 34.5·임금 18·이익 16.5와 수입 44·임금 28·이익 16입니다. 수입은 9.5, 비용은 10 늘어 이익은 0.5 줄어듭니다.",
+          "새 시간의 7과 다른 세 시간의 추가 3을 함께 셉니다. 같은 하루의 대안이며 과거 급여를 재정산한다는 뜻이 아닙니다."
         ],
-        requiredConcepts: ["value-of-marginal-product"],
-        sectionId: "two-counts",
+        "sectionId": "case",
+        "requiredConcepts": [
+          "value-of-marginal-product",
+          "monopsony-wage-gap"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "비슷한 가게가 여럿일 때 가게 하나가 정할 수 있는 것과 정할 수 없는 것을 가르고, 임금 8달러에서 몇 명을 쓰는지 구하세요.",
-        answerChecklist: [
-          "임금은 정할 수 없고 사람 수만 정함",
-          "더 적게 부르면 아무도 오지 않음",
-          "다섯째가 8달러어치를 보탬",
-          "다섯 명에서 멈춤",
+        "level": "basic",
+        "question": "v(3)=10은 3시간에서 4시간으로 늘릴 때의 전체 수입 증가인가요?",
+        "answerChecklist": [
+          "아닙니다. v3=10과 v4=9는 각 점의 순간 변화율입니다. B4−B3=44−34.5=9.5가 한 시간 구간의 수입 증가입니다.",
+          "변화율을 적분하거나 전체 수입을 직접 빼야 합니다. n번째 정수 단위의 수입을 13−n으로 놓는 별도 사례와도 구분합니다."
         ],
-        requiredConcepts: ["wage-at-marginal-product"],
-        sectionId: "many-buyers",
+        "sectionId": "two-counts",
+        "requiredConcepts": [
+          "value-of-marginal-product"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "사는 가게가 하나뿐일 때 네 번째 사람을 쓰는 데 드는 값을 계산하고, 그 값이 임금과 다른 이유를 쓰세요.",
-        answerChecklist: [
-          "네 명을 부르려면 임금 7달러",
-          "이미 일하던 세 사람도 6에서 7로 오름",
-          "3달러가 더 나가 모두 10달러",
-          "이미 일하던 사람의 임금까지 오르기 때문",
+        "level": "basic",
+        "question": "경쟁 기준과 모든 시간의 시급을 올려 노동을 구하는 고용주의 선택을 비교하세요.",
+        "answerChecklist": [
+          "경쟁 기준은 시급 8·노동 5시간이고, 상승하는 공급에서 같은 시급을 지급하는 고용주는 10/3시간·시급 19/3을 고릅니다.",
+          "후자의 추가 수입과 임금 총액 변화율은 29/3으로 같지만 시급 19/3보다 큽니다. 고용주 수만으로 어느 가정인지 확정하지 않습니다."
         ],
-        requiredConcepts: ["monopsony-wage-gap"],
-        sectionId: "one-buyer",
+        "sectionId": "one-buyer",
+        "requiredConcepts": [
+          "wage-at-marginal-product",
+          "monopsony-wage-gap"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "사는 쪽이 여럿일 때와 하나일 때의 사람 수와 임금을 각각 적고, 두 경우를 한 문장으로 견주세요.",
-        answerChecklist: [
-          "여럿일 때 다섯 명·임금 8달러",
-          "하나일 때 세 명·임금 6달러",
-          "하나일 때가 사람도 적고 임금도 낮음",
-          "한계생산가치와 임금 사이에 틈이 남음",
+        "level": "basic",
+        "question": "최저시급 9에서 3·4·5시간의 이익과 추가 비용을 계산하세요.",
+        "answerChecklist": [
+          "각 이익은 7.5·8·7.5이며 연속 시간 모형의 전체 최적점도 4시간입니다.",
+          "총액은 nmax(9,n+3)입니다. 6시간 이하의 시급은 9로 같으므로 3→4시간의 비용 증가는 9입니다. 원래 추가 비용과 9의 최댓값을 쓰지 않습니다."
         ],
-        requiredConcepts: ["monopsony-wage-gap", "wage-at-marginal-product"],
-        sectionId: "one-buyer",
+        "sectionId": "two-predictions",
+        "requiredConcepts": [
+          "minimum-wage-prediction-split"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "바닥을 9달러로 걸었을 때 두 경우의 사람 수가 각각 어떻게 바뀌는지 쓰고, 방향이 반대인 이유를 쓰세요.",
-        answerChecklist: [
-          "여럿이 사던 쪽 다섯 명에서 네 명",
-          "하나가 사던 쪽 세 명에서 네 명",
-          "바닥이 걸리면 임금이 사람 수에 따라 오르지 않음",
-          "이미 일하던 사람에게 더 줘야 하던 몫이 사라짐",
+        "level": "basic",
+        "question": "1994년 표 3의 반올림 숫자와 각 행의 표본을 어떻게 읽어야 하나요?",
+        "answerChecklist": [
+          "3행 표시값 0.59−(−2.16)은 2.75이며 논문의 원계산 보고값 2.76과 반올림 차이가 있습니다. 보고 표준오차는 1.36입니다.",
+          "4행은 두 시점 모두 고용자료가 있는 같은 가게로 0.47−(−2.28)=2.75, 표준오차 1.34입니다. 초기 410곳과 각 유효 표본을 같다고 보지 않습니다.",
+          "FTE는 관리자 포함 전일제 수+시간제 수의 0.5배입니다. 영구 폐업 6곳은 0, 일시 휴업 4곳은 결측이며 5행만 일시 휴업도 0으로 둡니다."
         ],
-        requiredConcepts: ["minimum-wage-prediction-split"],
-        sectionId: "two-predictions",
+        "sectionId": "what-happened",
+        "requiredConcepts": [
+          "side-by-side-comparison"
+        ]
       },
       {
-        level: "basic",
-        question:
-          "한쪽만 바뀐 자리를 찾아 두 변화를 견주는 방법이 무엇을 상쇄해 주는지, 그리고 그 방법의 신뢰가 무엇에 달려 있는지 쓰세요.",
-        answerChecklist: [
-          "두 쪽에 똑같이 걸리는 경기와 계절이 상쇄됨",
-          "차이를 바뀐 것의 몫으로 읽음",
-          "비교 집단이 실제로 비슷한지에 달려 있음",
-          "같은 집단 안에서 다시 갈라 보는 것이 점검 방법",
+        "level": "basic",
+        "question": "두 지역의 전후 변화 차이만으로 정책의 인과효과가 확정되나요?",
+        "answerChecklist": [
+          "정책이 없었을 때 평균 변화가 같다는 평행추세가 필요합니다. 선행 반응·지역 파급·동시 충격·측정과 표본도 검토합니다.",
+          "가까운 지역이거나 처음 평균이 비슷하다는 것만으로 충분하지 않습니다. 가정한 20→21과 25→23의 차이 3은 인상 지역의 미인상 경로 18을 타당하게 둘 수 있을 때 정책효과로 읽습니다."
         ],
-        requiredConcepts: ["side-by-side-comparison"],
-        sectionId: "what-happened",
+        "sectionId": "comparison-conditions",
+        "requiredConcepts": [
+          "side-by-side-comparison"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "n명을 쓸 때의 임금 합에서 출발해 사는 쪽이 하나일 때의 멈추는 조건을 유도하고, 틈이 민감도의 역수가 됨을 보이세요.",
-        answerChecklist: [
-          "임금 합은 w(n)·n",
-          "한 명 더 쓸 때 늘어나는 폭은 w(n) + n·(dw/dn)",
-          "그 폭이 한계생산가치와 같아지는 자리에서 멈춤",
-          "양변을 w로 나누면 틈이 공급 민감도의 역수",
+        "level": "advanced",
+        "question": "임금 격차와 노동공급 탄력성의 관계를 유도하고 적용 조건을 설명하세요.",
+        "answerChecklist": [
+          "W=nw, W′=w+nw′이고 내부 조건v=W′입니다. (v−w)/w=nw′/w=1/ε_s이며 ε_s=(dn/dw)w/n입니다.",
+          "이번 n10/3·w19/3·v29/3에서 ε_s19/10, 시급 기준 격차 10/19≈52.63%입니다. 이익의 완전제곱으로 전체 최대도 확인합니다.",
+          "양의 노동·시급, 매끄러운 내부, 상승하는 공급과 같은 시급 조건이 필요합니다. 정수·최저임금 꺾임에 바로 적용하지 않으며 부분적인 차등 임금이 항상 격차를 제거하지는 않습니다."
         ],
-        requiredConcepts: ["monopsony-wage-gap"],
-        sectionId: "one-buyer",
+        "sectionId": "one-buyer",
+        "requiredConcepts": [
+          "monopsony-wage-gap"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "사람마다 다른 임금을 줄 수 있으면 틈이 사라지는 이유를 설명하고, 이 사실이 수요독점의 어떤 조건을 드러내는지 쓰세요.",
-        answerChecklist: [
-          "새로 부르는 사람에게만 더 주면 됨",
-          "이미 일하던 사람의 임금이 오르지 않음",
-          "한 명 더 쓰는 값이 그때 주는 임금과 같아짐",
-          "사는 쪽이 하나라는 것만으로는 부족하고 같은 임금 조건이 함께 필요",
+        "level": "advanced",
+        "question": "최저임금 총액의 두 미분 구간과 네 최적 선택 구간을 유도하세요.",
+        "answerChecklist": [
+          "W_F=nmax(F,n+3)입니다. n<F−3에서 미분F, n>F−3에서 2n+3이며 꺾인 점의 좌우와 전체 이익을 비교합니다.",
+          "F≤19/3은 10/3, 19/3~8은F−3, 8~13은 13−F, F≥13은 0시간입니다. 경계에서 식의 값은 이어집니다.",
+          "F7→8에서 4→5로 늘고 이후 줄어듭니다. F9는 4, F12는 1입니다. 최저임금에 따라 항상 같은 방향으로 움직인다는 주장은 틀립니다."
         ],
-        requiredConcepts: ["monopsony-wage-gap"],
-        sectionId: "one-buyer",
+        "sectionId": "two-predictions",
+        "requiredConcepts": [
+          "minimum-wage-prediction-split"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "바닥을 계속 올리면 사는 쪽이 하나인 경우에도 사람 수가 줄어드는 지점이 옵니다. 그 이유를 멈추는 조건으로 설명하세요.",
-        answerChecklist: [
-          "바닥이 걸린 구간에서는 멈추는 조건이 v(n)=F",
-          "F가 오를수록 n이 단조로 줄어듦",
-          "늘어나는 것은 출발점이 그 선보다 왼쪽일 때뿐",
-          "바닥 12달러에서는 세 명보다 적어짐",
+        "level": "advanced",
+        "question": "정수 추가 수입 12·11·10인 사례와 연속 수입식을 구분하고 동률을 구하세요.",
+        "answerChecklist": [
+          "연속 B=13n−n²/2의 n번째 한 시간 증분은 13.5−n입니다. 별도 정수 추가 수입 13−n의 합은 12.5n−n²/2로 다른 함수입니다.",
+          "별도 정수 사례에서 주어진 시급 8의 최적은 4·5, 상승 공급의 하한 없는 최적은 3입니다. F9는 3·4, F12는 0·1이 동률입니다.",
+          "한계 등식만으로 유일한 정수 해를 정하지 않습니다. 실제 허용 단위의 전체 이익과 0을 비교해야 합니다."
         ],
-        requiredConcepts: [
-          "minimum-wage-prediction-split",
-          "monopsony-wage-gap",
-        ],
-        sectionId: "two-predictions",
+        "sectionId": "finite-units",
+        "requiredConcepts": [
+          "value-of-marginal-product",
+          "wage-at-marginal-product",
+          "minimum-wage-prediction-split"
+        ]
       },
       {
-        level: "advanced",
-        question:
-          "사람 수가 줄지 않았다는 결과만으로 사는 쪽이 하나였다고 말할 수 없는 이유를, 같은 측정의 값 결과와 함께 쓰세요.",
-        answerChecklist: [
-          "사는 쪽이 하나여서 더 썼다면 더 만들어 값이 내려가야 함",
-          "실제로는 값이 3.2% 더 올랐음",
-          "한 설명의 반증이 다른 설명의 확인이 아님",
-          "두 설명 모두 부족하다는 것이 결과",
+        "level": "advanced",
+        "question": "고용의 상대 증가를 수요독점의 입증이나 보편적 정책 결론으로 읽을 수 없는 이유를 설명하세요.",
+        "answerChecklist": [
+          "고용 방향 하나가 맞는 것이 대안 모형의 유일한 확인은 아닙니다. 상품가격 예측에는 별도의 수요·품질·시장 가격 결정 조건이 필요하며 앞의 고정 상품가격 가정에서는 가격 하락을 예측하지 않았습니다.",
+          "표 7의 0.033은 로그가격 변화의 계수이고 표준오차 0.014·표본 315곳입니다. 정확 환산 약 3.36%와 원문 서술 3.2%를 같다고 쓰지 않습니다.",
+          "후속 1995·1998 작업논문에서도 자료·표본·보고 간격이 쟁점이었습니다. 확인한 연구의 범위와 1992년 두 지역 업종을 모든 국가·산업·시점·인상 폭으로 확대하지 않습니다."
         ],
-        requiredConcepts: ["neither-model-fits", "monopsony-wage-gap"],
-        sectionId: "what-happened",
-      },
+        "sectionId": "prices-and-models",
+        "requiredConcepts": [
+          "neither-model-fits",
+          "side-by-side-comparison"
+        ]
+      }
     ],
-    papers: [
+    "papers": [
       {
-        title:
-          "David Card · Alan B. Krueger, “Minimum Wages and Employment: A Case Study of the Fast-Food Industry in New Jersey and Pennsylvania” (1994)",
-        href: "https://davidcard.berkeley.edu/papers/njmin-aer.pdf",
-        problem:
-          "임금의 바닥을 올리면 일자리가 준다는 예측은 사는 쪽이 여럿이라는 전제 위에 서 있는데, 그 전제가 실제로 성립하는지를 가릴 자료가 부족했습니다. 전국 단위 시계열 비교는 경기와 뒤섞여 바닥의 몫만 떼어 내기 어려웠습니다.",
-        contribution:
-          "한쪽 주만 바닥을 올리고 바로 옆 주는 그대로 둔 시점을 잡아, 같은 업종 가게 410곳을 인상 직전과 7~8개월 뒤 두 번 조사했습니다. 두 주의 고용 변화 차이로 바닥의 몫을 읽었고, 같은 주 안에서 처음 시작임금이 낮아 반드시 올려야 했던 가게와 이미 높게 주던 가게를 다시 갈라 비교 집단의 타당성을 점검했습니다. 고용과 함께 한 끼 값도 재어, 고용 결과만으로는 가릴 수 없는 설명들을 추가로 걸러 냈습니다.",
-        assumptions:
-          "바닥 말고는 두 주의 같은 업종 가게가 비슷한 흐름을 탄다고 보고, 계절 변동이 두 쪽에서 비슷해 차이를 낼 때 상쇄된다고 둡니다. 정규 환산 인원은 시간제 한 사람을 반 사람으로 세며, 문 닫은 가게의 인원은 0으로 둡니다.",
-        evidenceScope:
-          "1992년 미국 뉴저지주와 펜실베이니아주 동부의 패스트푸드 가게 410곳, 한 번의 인상(시간당 4.25→5.05달러), 조사 두 차례(1992년 2~3월과 11~12월)입니다. 저자 공개본 PDF를 내려받아 읽었고, 표 3(780쪽)·표 7(788쪽)의 값과 772·792쪽의 인용 문장은 해당 쪽 이미지를 직접 열어 대조했습니다.",
-        notClaim:
-          "이 결과는 수요독점이 확인됐다는 뜻이 아닙니다. 저자들은 792쪽에서 이 발견들이 경쟁 모형으로도, 수요독점이나 균형 탐색 모형으로도 설명하기 어렵다고 적었고, 791쪽에서는 수요독점을 직접 시험한 비교에서도 차이를 찾지 못했다고 적습니다. 또 한 업종·두 주·한 번의 인상에서 잰 것이므로 모든 노동이나 모든 인상 폭으로 늘릴 수 없고, 이 글은 1994년 논문 안에서 저자들이 보고한 범위까지만 싣습니다.",
-        sectionId: "what-happened",
-      },
-    ],
+        "title": "Card·Krueger · Minimum Wages and Employment (1994)",
+        "href": "https://davidcard.berkeley.edu/papers/njmin-aer.pdf",
+        "sectionId": "what-happened",
+        "problem": "임금 하한 인상 뒤 관측된 고용 변화에서 정책과 다른 변화를 구분해야 합니다.",
+        "contribution": "뉴저지와 펜실베이니아의 전후 변화 및 뉴저지 내 시작 임금별 차이를 비교하고 고용·가격을 함께 검토했습니다.",
+        "assumptions": "정책이 없을 때의 비교 가능한 추세와 측정·표본 조건을 확인해야 합니다. FTE는 관리자 포함 전일제 수와 시간제 수의 절반을 합한 값입니다.",
+        "evidenceScope": "관련 본문 772~780·787~792쪽과 실제 780쪽 표 3·788쪽 표 7 이미지를 대조했습니다. 초기 410곳과 표별 유효 표본, 반올림·표준오차·폐업 처리를 구분했습니다. 원자료 회귀 재현은 하지 않았습니다.",
+        "notClaim": "설명용 13−n과n+3은 관측치의 추정식이 아닙니다. 단순 모형 논의가 모든 수요독점 모형을 배제한 것은 아니며 현재 법정 금액이나 세계 모든 정책 효과를 설명하지 않습니다."
+      }
+    ]
   },
   "labor/measuring-the-spread": {
     entryNote:

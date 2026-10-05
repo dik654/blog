@@ -1,0 +1,83 @@
+{
+  "origin": "Cargo.lock registry archive checksum and .cargo_vcs_info.json, whole unchanged selected files",
+  "files": [
+    {
+      "crate": "ark-ec-0.6.0",
+      "path": "src/models/short_weierstrass/affine.rs",
+      "sha256": "d433d2e802ce603423341671d186fa1b5f9e637f07336eeae1cefc8ae24cf96e",
+      "bytes": 13536
+    },
+    {
+      "crate": "ark-ec-0.6.0",
+      "path": "src/models/short_weierstrass/mod.rs",
+      "sha256": "975f3c9b4b041f23cdaa12144f4c61e8559a5b52def9244afc9956694a4c42b9",
+      "bytes": 8019
+    },
+    {
+      "crate": "ark-ec-0.6.0",
+      "path": "LICENSE-MIT",
+      "sha256": "8f71659370c5268d9a1dc962a46232540e8fca63462586d8efaa95aab492a208",
+      "bytes": 1046
+    },
+    {
+      "crate": "ark-ec-0.6.0",
+      "path": "LICENSE-APACHE",
+      "sha256": "e8d77d4bbe96e1b46ec0f40d1f12e19825e718c764bb3e9a695633ade9289f9e",
+      "bytes": 10846
+    },
+    {
+      "crate": "ark-ec-0.6.0",
+      "path": ".cargo_vcs_info.json",
+      "sha256": "4eb1bb39943e4afb441226d5af4c275d3fa1eda9ab83aaf43673668ad72a9770",
+      "bytes": 96
+    },
+    {
+      "crate": "ark-bn254-0.6.0",
+      "path": "src/curves/g1.rs",
+      "sha256": "dabf1b825d366fd08b07c0dcb6dbed221c385cf202cca65d90bb069c15aa4ab0",
+      "bytes": 2890
+    },
+    {
+      "crate": "ark-bn254-0.6.0",
+      "path": "LICENSE-MIT",
+      "sha256": "8f71659370c5268d9a1dc962a46232540e8fca63462586d8efaa95aab492a208",
+      "bytes": 1046
+    },
+    {
+      "crate": "ark-bn254-0.6.0",
+      "path": "LICENSE-APACHE",
+      "sha256": "e8d77d4bbe96e1b46ec0f40d1f12e19825e718c764bb3e9a695633ade9289f9e",
+      "bytes": 10846
+    },
+    {
+      "crate": "ark-bn254-0.6.0",
+      "path": ".cargo_vcs_info.json",
+      "sha256": "f927ba9ca4031147b7905daa7ca3f013b269218d114475d117b16c99d6d35734",
+      "bytes": 106
+    },
+    {
+      "crate": "ark-serialize-0.6.0",
+      "path": "src/lib.rs",
+      "sha256": "e253b17896521de7958df388a0151c0824b24028a06ca46cfeb995f98d2a1d02",
+      "bytes": 10286
+    },
+    {
+      "crate": "ark-serialize-0.6.0",
+      "path": "LICENSE-MIT",
+      "sha256": "8f71659370c5268d9a1dc962a46232540e8fca63462586d8efaa95aab492a208",
+      "bytes": 1046
+    },
+    {
+      "crate": "ark-serialize-0.6.0",
+      "path": "LICENSE-APACHE",
+      "sha256": "e8d77d4bbe96e1b46ec0f40d1f12e19825e718c764bb3e9a695633ade9289f9e",
+      "bytes": 10846
+    },
+    {
+      "crate": "ark-serialize-0.6.0",
+      "path": ".cargo_vcs_info.json",
+      "sha256": "0d68c4afde1907ec56ae97258ae70c9944c0844bbaf4e625fa7507ea91d6b63b",
+      "bytes": 103
+    }
+  ]
+}

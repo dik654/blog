@@ -197,7 +197,7 @@
   "reviewed": 189,
   "remaining": 610,
   "goalComplete": false,
-  "deployed": false,
+  "deployed": true,
   "disposition": "150 substantive rewrites and39 retained teaching flows after actual body audit.",
   "validation": {
     "individual": "Actual body/source/math/6+4/fullpanels/2widths andhumanize PASS for5 additions",
@@ -214,5 +214,11 @@
     "reading": "PASSactualexit0",
     "order": "PASS91listings442prerequisiteedges;actualexit0",
     "whitespace": "git diff --cached --check reports3upstreamfiles trailingwhitespace/EOF;notclaimedPASS;39fastText/tss-libfiles byteidenticalSHA256 includingflaggedsources"
+  },
+  "commit": "10dac5b4b8d14f130a2f6448c72224505b35af6a",
+  "deployment": {
+    "runId": 37214967175,
+    "conclusion": "success",
+    "production": "5 routes × 390/1440,10 checks,0 failed; actual final exit0"
   }
 }

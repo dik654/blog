@@ -1,98 +1,97 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-import Groth16FlowViz from "./viz/Groth16FlowViz";
-
-export default function ModernGroth16Article() {
-  return (
-    <article className="space-y-14">
-      <section id="overview" className="space-y-6">
-        <header className="space-y-3"><p className="text-sm font-semibold text-primary">x·w=y에서 세 group element까지</p><h2 className="text-3xl font-bold tracking-tight">Groth16은 회로별 QAP를 pairing 검증식 하나로 컴파일한다</h2></header>
-        <p className="text-lg leading-8 text-foreground/90">공개값 x=3, y=12와 witness w=4가 x·w=y를 만족한다는 관계를 먼저 R1CS와 QAP로 바꿉니다. Groth16은 이 QAP의 coefficient와 secret evaluation point를 elliptic-curve group element에 미리 encode한 <strong>circuit-specific CRS</strong>를 만들고, prover가 witness를 사용해 proof π=(A,B,C)를 생성하게 합니다.</p>
-        <p>Verifier는 witness나 전체 constraint를 다시 계산하지 않습니다. Public input에 해당하는 verifying-key elements를 선형 결합하고 세 pairing 항을 확인합니다. Proof가 작은 이유는 계산 자체를 세 점에 “압축 저장”해서가 아니라, QAP 만족 관계를 bilinear group에서 검증할 수 있게 CRS와 knowledge-sound construction을 설계했기 때문입니다.</p>
-        <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>핵심 아이디어:</strong> QAP quotient h가 존재한다는 사실, public input과 witness가 같은 assignment에서 왔다는 사실, prover가 CRS 요소를 허용된 선형 결합으로 사용했다는 사실을 α·β·γ·δ로 분리해 묶고 pairing equation에서 한꺼번에 검사합니다.</aside>
-        <ContentBoundary article="groth16" />
-        <Groth16FlowViz />
-      </section>
-
-      <section id="qap-setup" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">01 · QAP와 setup</p><h2 className="mt-2 text-2xl font-bold">Setup은 witness가 아니라 relation을 보고 key를 만든다</h2></header>
-        <p>QAP에서 assignment coefficient aᵢ를 public part와 private part로 나눕니다. Setup은 circuit와 보안 파라미터를 받지만 실제 w=4를 알아서는 안 됩니다. Secret trapdoor τ·α·β·γ·δ로 필요한 polynomial evaluation을 G₁/G₂ elements에 encode한 proving key와 verifying key를 만든 뒤 trapdoor를 지워야 합니다.</p>
-        <ExplainedFormula
-          question="QAP를 만족하는 witness에서 prover가 반드시 계산해야 하는 quotient는 무엇인가?"
-          idea={<>Assignment로 만든 A·B−C가 target polynomial t로 정확히 나누어지는 몫 h를 구합니다. 나머지가 있으면 어느 constraint point에서는 R1CS가 깨졌다는 뜻입니다.</>}
-          formula={String.raw`h(X)=\frac{A(X)B(X)-C(X)}{t(X)},\qquad t(X)=\prod_{i=1}^{m}(X-r_i)`}
-          annotatedFormula={String.raw`h(X)=\underbrace{\frac{A(X)B(X)-C(X)}{t(X)},\qquad t(X)=\prod_{i=1}^{m}(X-r_i)}_{\text{기준량당 비율}}`}
-          operations={[
-            { expression: String.raw`\frac{A(X)B(X)-C(X)}{t(X)},\qquad t(X)=\prod_{i=1}^{m}(X-r_i)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Assignment로 만든 A·B−C가 target","polynomial t로 정확히 나누어지는 몫 h를 구합니다."] },
-          ]}
-          terms={[
-            { symbol: "A,B,C", name: "Assignment polynomials", description: "Public input과 witness coefficient로 QAP column polynomials를 합칩니다." },
-            { symbol: "t", name: "Target polynomial", description: "모든 R1CS row point에서 0입니다." },
-            { symbol: "h", name: "Quotient witness", description: "모든 row가 만족될 때만 polynomial로 exact하게 존재합니다." },
-            { symbol: "m", name: "Constraint count", description: "Target polynomial의 root 수와 prover polynomial 규모를 좌우합니다." },
-          ]}
-          assumptions={["R1CS→QAP mapping, field, degree bound와 public-input ordering이 setup과 proving에서 같습니다.", "CRS group elements는 올바른 subgroup·encoding에 있고 trapdoor contribution의 보안 조건을 만족합니다.", "Exact division failure를 무시하거나 remainder를 버리는 구현은 fail closed해야 합니다."]}
-          interpretation="한 행 xw=y에서 w=4면 numerator가 0이고 h=0입니다. w=5면 numerator가 3이어서 t=X−1로 나누어떨어지지 않습니다. 이 algebraic failure가 proof 생성 실패 또는 verifier reject로 이어져야 합니다."
-        />
-        <h3 className="text-xl font-semibold">왜 α·β·γ·δ를 나누어 쓰는가</h3>
-        <p>
-            α와 β는 A·B pairing의 기준 항을 만들고 γ는 public input linear combination을, δ는 private witness·quotient와
-            proof randomization을 서로 다른 denominator domain에 묶습니다. 정확한 reduction은 generic-group/knowledge
-            assumptions와 construction variant에 의존합니다. “임의의 group element 세 개가 식만 맞으면 witness를 안다”는 직관만으로
-            soundness를 증명할 수는 없습니다.
-          </p>
-        <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-5 text-sm leading-6"><strong>Toxic-waste 반례:</strong> τ·α·β·γ·δ를 공격자가 복원할 수 있으면 polynomial relation을 만족하지 않는 encoded element를 조합해 위조할 수 있습니다. Ceremony transcript가 유효하고 최소 한 contribution이 정직하게 폐기됐다는 전제, final key hash와 회로 hash가 일치한다는 운영 검사가 필요합니다.</div>
-      </section>
-
-      <section id="prove-verify" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">02 · Prove와 Verify</p><h2 className="mt-2 text-2xl font-bold">A·B·C와 public-input linear combination을 같은 statement에 묶는다</h2></header>
-        <p>
-            Prover는 QAP assignment, quotient h와 fresh randomness r,s를 proving-key elements의 MSM으로 조합해 A∈G₁,
-            B∈G₂, C∈G₁을 만듭니다. Randomness는 proof를 다시 만들 때 같은 witness에서도 다른 A·B·C가 나오게 해 zero knowledge를 돕지만 약한
-            RNG·reuse·로그 유출은 별도 위협입니다.
-          </p>
-        <ExplainedFormula
-          question="Verifier가 public input과 proof 세 요소를 어떤 pairing 관계로 검사하는가?"
-          idea={<>Public inputs xᵢ로 verifying-key basis를 합친 vkₓ를 만들고, proof pairing이 setup 기준항과 public/private contribution의 pairing 곱으로 분해되는지 확인합니다.</>}
-          formula={String.raw`vk_x=IC_0+\sum_{i=1}^{\ell}x_iIC_i,\qquad e(A,B)=e(\alpha_1,\beta_2)\,e(vk_x,\gamma_2)\,e(C,\delta_2)`}
-          annotatedFormula={String.raw`vk_x=\underbrace{IC_0+\sum_{i=1}^{\ell}x_iIC_i,\qquad e(A,B)=e(\alpha_1,\beta_2)\,e(vk_x,\gamma_2)\,e(C,\delta_2)}_{\text{Input coefficients 계산}}`}
-          operations={[
-            { expression: String.raw`IC_0+\sum_{i=1}^{\ell}x_iIC_i,\qquad e(A,B)=e(\alpha_1,\beta_2)\,e(vk_x,\gamma_2)\,e(C,\delta_2)`, annotation: ["Input coefficients이(가) 식의 결과에 기여하는","방식을 계산합니다.","Public inputs xᵢ로 verifying-key","basis를 합친 vkₓ를 만들고, proof pairing이"] },
-          ]}
-          terms={[
-            { symbol: "IC_i", name: "Input coefficients", description: "i번째 public input을 G₁ linear combination에 결속하는 verifying-key 요소입니다." },
-            { symbol: String.raw`\ell`, name: "Public-input count", description: "Verifier cost에는 적어도 이 linear combination이 포함됩니다." },
-            { symbol: "A,B,C", name: "Proof elements", description: "각각 G₁, G₂, G₁에 속하며 canonical decode와 subgroup 검사가 필요합니다." },
-            { symbol: "e", name: "Bilinear pairing", description: "Source-group scalar relation을 target-group product equation으로 옮깁니다." },
-            { symbol: String.raw`\alpha_1,\beta_2,\gamma_2,\delta_2`, name: "Verification key anchors", description: "Setup trapdoor와 relation을 결속한 고정 group elements입니다." },
-          ]}
-          assumptions={["Proof와 key points는 identity policy·curve equation·subgroup·canonical encoding 검사를 통과합니다.", "Public input 수·순서·field encoding과 verifying key/circuit identifier가 정확히 일치합니다.", "Pairing library와 final exponentiation이 target curve parameter에서 검증됐습니다."]}
-          interpretation="Arkworks 구현은 e(A,B)·e(vkₓ,−γ)·e(C,−δ)=e(α,β)를 multi-Miller loop와 한 final exponentiation으로 계산합니다. 부호가 다른 표현은 같은 식의 이항 결과일 수 있지만 G₁/G₂ 타입과 ordering은 바꿀 수 없습니다."
-        />
-        <p><strong>수치 statement 예:</strong> verifier input이 (3,12)일 때 proof가 accept해도 (3,15)에 재사용하면 vkₓ가 달라져 reject해야 합니다. Public input을 하나 빼거나 순서를 뒤집은 verifier가 accept한다면 proof system의 문제가 아니라 integration binding bug일 가능성이 큽니다.</p>
-        <div id="code-arkworks-groth16"><CitationBlock type="code" source="arkworks ark-groth16 · verifier.rs" citeKey={2} href="https://docs.rs/ark-groth16/latest/src/ark_groth16/verifier.rs.html">
-          <p><strong>문제:</strong> Groth16 proof와 public inputs를 pairing backend에서 검증해야 합니다.</p>
-          <p><strong>기여:</strong> Prepared VK, public-input MSM, multi-Miller loop와 final exponentiation의 실제 Rust 경로를 제공합니다.</p>
-          <p><strong>전제:</strong> 선택한 crate version·curve·serialization·upstream dependency를 함께 pin하고 untrusted input decode를 검증합니다.</p>
-          <p><strong>근거 범위:</strong> 링크한 source의 API와 equation 구현 경로에만 사용합니다.</p>
-          <p><strong>말하지 않는 것:</strong> Repository도 production-ready audit를 주장하지 않으며 application circuit·ceremony·deployment 안전을 보장하지 않습니다.</p>
-        </CitationBlock></div>
-      </section>
-
-      <section id="boundaries" className="space-y-6">
-        <header><p className="text-sm font-semibold text-primary">03 · 보안·비용 release gate</p><h2 className="mt-2 text-2xl font-bold">세 점이라는 크기와 end-to-end 비용을 구분한다</h2></header>
-        <div className="overflow-x-auto rounded-lg border border-border"><table className="min-w-[780px] w-full text-sm"><thead className="bg-muted/50 text-left"><tr><th className="p-3">측정</th><th className="p-3">고정할 조건</th><th className="p-3">보고할 값</th></tr></thead><tbody className="divide-y divide-border text-muted-foreground"><tr><td className="p-3 font-medium text-foreground">Setup</td><td className="p-3">Circuit hash·constraints·curve·ceremony/key format</td><td className="p-3">Wall time·peak RSS·pk/vk bytes·transcript result</td></tr><tr><td className="p-3 font-medium text-foreground">Prove</td><td className="p-3">같은 witness corpus·threads·backend·warmup</td><td className="p-3">Witness/FFT/MSM breakdown·p50/p95·memory</td></tr><tr><td className="p-3 font-medium text-foreground">Verify</td><td className="p-3">Public-input count·batch·decode/subgroup policy</td><td className="p-3">Input MSM·pairing·end-to-end latency·reject reason</td></tr></tbody></table></div>
-        <p>Groth16은 일반적으로 proof가 G₁ 두 개와 G₂ 한 개로 일정하지만 serialized bytes는 curve와 compressed encoding에 따라 달라집니다. Verify도 “상수 시간”이 아니라 public-input MSM O(ℓ)와 거의 고정된 pairing work를 합친 값입니다. Setup·proving key는 회로 크기에 따라 커집니다.</p>
-        <div id="paper-groth16"><CitationBlock source="Jens Groth · On the Size of Pairing-based Non-interactive Arguments (EUROCRYPT 2016)" citeKey={1} href="https://eprint.iacr.org/2016/260.pdf">
-          <p><strong>문제:</strong> Pairing 기반 preprocessing SNARK의 proof와 verifier를 더 작게 만들고 싶습니다.</p>
-          <p><strong>기여:</strong> 세 group element proof와 세 pairing 중심 검증을 갖는 QAP 기반 construction을 제시합니다.</p>
-          <p><strong>전제:</strong> Relation-specific CRS, bilinear groups, 논문의 generic-group/knowledge-soundness 모델과 zero-knowledge randomization을 사용합니다.</p>
-          <p><strong>근거 범위:</strong> 논문 construction·proof·reported asymptotic/concrete comparison 범위에 한정합니다.</p>
-          <p><strong>말하지 않는 것:</strong> Toxic waste 노출 안전, post-quantum security, 모든 curve/library의 고정 byte·latency를 보장하지 않습니다.</p>
-        </CitationBlock></div>
-        <p>이 글의 10문항은 QAP quotient, setup 입력, toxic waste, αβγδ 역할, proof 구성, pairing equation, public input 재결속, invalid point, 비용 분해, 회로 변경 시 재설정을 묻습니다. 모든 답은 위 수식·예·반례·측정 표 안에서 복원할 수 있습니다.</p>
-      </section>
-    </article>
-  );
-}
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import Groth16JourneyViz from "./viz/Groth16JourneyViz";
+import {codeRefs,fileTrees,projectMetas} from "./modernCodeRefs";
+export default function ModernGroth16Article(){const sidebar=useCodeSidebar();return <><article className="space-y-14 [&_p]:leading-8"><section id="overview" data-teach-level="S" className="space-y-6"><h2 className="text-2xl font-bold">1. 3에 비밀인 4를 곱하고 그 결과를 제곱합니다</h2><p>계산하는 사람은 3×4=12를 구한 뒤 12×12=144를 구합니다. 확인하는 사람에게는 입력 3과 결과 144만 공개합니다. 중간값 12와 사용한 값 4를 직접 보내지 않고도 두 곱셈을 만족하는 값을 알고 있다고 확인시키고 싶습니다. 이 작은 계산을 처음부터 끝까지 따라가겠습니다.</p><p>두 번의 곱셈만 있다면 직접 계산하는 편이 훨씬 간단합니다. 이 예는 많은 계산을 작은 증명으로 확인하는 원리를 읽기 위한 것입니다. 공개된 3과 144만으로도 숨긴 값의 후보는 줄어듭니다. 증명이 감추는 범위와 공개 결과가 이미 알려 주는 범위는 14절에서 구분합니다.</p><ContentBoundary article="groth16" /></section>
+<section id="black-box" data-teach-level="B" className="space-y-6"><h2 className="text-2xl font-bold">2. 계산 규칙을 준비하고 증명을 만든 뒤 공개값으로 확인합니다</h2><p>
+            먼저 “첫 값을 곱해 중간값을 만들고, 중간값을 제곱해 결과를 만든다”라는 규칙으로 준비물을 만듭니다. 계산자는 그 준비물과 실제 값 4·12를 써서 증명을 만듭니다. 확인자는
+            별도의 확인용 준비물, 공개값 3·144, 받은 증명으로 참·거짓을 판단합니다.
+          </p><p>
+            준비 단계에 실제 답안 4가 필요하지는 않습니다. 준비물은 변수의 자리와 계산 규칙에 맞춰져 있습니다. 같은 준비물을 다른 값의 올바른 답안에도 사용할 수 있지만 규칙이나
+            공개값의 자리를 바꾸면 호환성을 다시 확인해야 합니다.
+          </p></section>
+<section id="case" data-teach-level="0" className="space-y-6"><h2 className="text-2xl font-bold">3. 손계산에서는 101로 나눈 나머지를 씁니다</h2><p>작은 수로 끝까지 검산하려고 이 글의 손계산은 101로 나눈 나머지를 사용합니다. 따라서 144는 43으로 표시합니다. 공개값은 x=3, y=43이고 비공개값은 w=4, v=12입니다. 확인할 두 줄은 xw=v와 v²=y입니다. 나중에 실제 BN254 코드에 넣을 때는 훨씬 큰 체를 사용하므로 같은 정수 결과를 y=144로 넣습니다.</p><p>모든 변수의 순서는 z=(1,x,y,w,v)로 고정합니다. 맨 앞의 1은 상수 항을 표현할 자리입니다. 공개 부분은 1·x·y, 비공개 부분은 w·v입니다. 이 순서를 바꾸면 같은 숫자 배열도 다른 주장을 나타낼 수 있습니다.</p></section>
+<section id="picture" data-teach-level="1" className="space-y-6"><h2 className="text-2xl font-bold">4. 같은 계산을 두 줄에서 증명 세 점까지 따라갑니다</h2><Groth16JourneyViz /><p>도식 앞부분은 101의 나머지로 하는 손계산입니다. 뒤에서 보이는 83·24·48은 증명에 들어가는 지수를 드러낸 계산용 값입니다. 실제로 전송하는 것은 그 정수 세 개가 아니라 타원곡선의 점 세 개입니다. 작은 수와 노출된 지수만으로는 암호학적 안전성을 얻을 수 없습니다.</p></section>
+<section id="why" data-teach-level="2" className="space-y-6"><h2 className="text-2xl font-bold">5. 모든 줄을 하나의 나눗셈 관계로 묶습니다</h2><p>각 곱셈 줄을 따로 보내고 다시 계산하게 하면 줄 수만큼 확인할 일이 늘어납니다. 대신 줄 번호 1과 2에서 각각의 계산이 맞는지 나타내는 다항식을 만듭니다. 두 번호에서 모두 0인 오차는 (X−1)(X−2)로 나누어떨어집니다. 이 성질을 이용하면 여러 줄의 만족을 한 다항식 관계로 묶을 수 있습니다.</p><p>
+            그 관계만 안다고 바로 작은 증명이 생기지는 않습니다. 준비 단계는 다항식의 값을 곡선점으로 옮기는 재료를 만들고 계산자는 허용된 재료를 합쳐 증명을 만듭니다. 확인 단계는 두
+            점에서의 스칼라 곱셈 관계를 다른 군의 연산으로 비교합니다. 그 연결을 가능하게 하는 부품이 페어링입니다.
+          </p></section>
+<section id="names" data-teach-level="3" className="space-y-6"><h2 className="text-2xl font-bold">6. 계산표·다항식·준비물에 이름을 붙입니다</h2><p>같은 값을 여러 곱셈 줄에 일관되게 넣는 제약 표현을 R1CS라고 부릅니다. 그 줄들을 다항식의 정확한 나눗셈으로 옮긴 표현은 QAP입니다. 비공개 답안은 witness, 공개된 주장과 준비에 쓰는 계산 규칙은 각각 statement와 relation입니다.</p><p>
+            Groth16은 이 관계에 맞는 공통 준비물 CRS를 만들고 증명을 A·B·C 세 점으로 표현합니다. A와 C는 G₁, B는 G₂에 있습니다. 계산용 키 pk와 확인용 키
+            vk는 역할과 크기가 다릅니다. 키라는 이름이 붙지만 이 두 준비물 자체를 비밀 암호키처럼 숨기는 것은 아닙니다. 준비 중 사용한 비밀 수와 공개할 준비물을 구분해야 합니다.
+          </p></section>
+<section id="rows" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">7. 한 줄의 네 칸을 두 줄의 같은 답안으로 확장합니다</h2><p>먼저 한 줄 3w=12만 보면 w=4일 때 오차는 0입니다. 줄 번호가 1이면 목표식은 X−1이고 몫은 h=0입니다. w=5로 바꾸면 오차가 3이므로 다항식으로 나눌 때 나머지 3이 남습니다. 이때는 다항식인 정확한 몫이 존재하지 않습니다.</p><p>이제 원래 계산의 중간값 v를 보존하고 v²=y라는 둘째 줄을 더합니다. 같은 답안 (1,3,43,4,12)이 첫 줄에서 3×4=12, 둘째 줄에서 12×12=43 mod101을 만족합니다. 첫 줄과 둘째 줄에서 v에 서로 다른 값을 넣을 수는 없습니다. 같은 변수의 열을 공유하기 때문입니다.</p><div className="overflow-x-auto border-y border-border"><table className="w-full text-sm"><thead><tr><th className="p-3 text-left">줄 번호</th><th className="p-3">왼쪽</th><th className="p-3">오른쪽</th><th className="p-3">결과</th></tr></thead><tbody><tr><td className="p-3">1</td><td className="p-3 text-center">x=3</td><td className="p-3 text-center">w=4</td><td className="p-3 text-center">v=12</td></tr><tr><td className="p-3">2</td><td className="p-3 text-center">v=12</td><td className="p-3 text-center">v=12</td><td className="p-3 text-center">y=43</td></tr></tbody></table></div></section>
+<section id="qap" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">8. 두 번호를 지나는 세 직선에서 몫 72를 얻습니다</h2><p>번호 1에서 1이고 번호 2에서 0인 직선은 L₁=2−X입니다. 반대로 번호 1에서 0이고 번호 2에서 1인 직선은 L₂=X−1입니다. 왼쪽 값은 U=xL₁+vL₂, 오른쪽 값은 V=wL₁+vL₂, 결과 값은 W=vL₁+yL₂로 묶습니다. 따라서 같은 값을 대입하면 U=9X−6, V=8X−4가 됩니다.</p><p>
+            결과 직선은 정수 144를 그대로 적으면 W=132X−120입니다. 101의 나머지로 계수를 줄이면 31X+82이며 y=43을 써서 얻는 31X−19와 같습니다. 계수를 어느
+            대표 정수로 쓰더라도 같은 유한체 다항식입니다.
+          </p><ExplainedFormula question="두 줄이 모두 맞는다는 사실은 어떤 정확한 나눗셈이 되나요?" idea={<>두 줄의 오차가 0이므로 서로 다른 두 인수 X−1과 X−2가 오차 다항식을 나눕니다.</>}
+formula={String.raw`UV-W=hT`}
+annotatedFormula={String.raw`\begin{gathered}T(X)=(X-1)(X-2)\\UV-W=hT\\UV-W=72X^2-216X+144\\=72T(X)\\h(X)=72\pmod{101}\end{gathered}`}
+operations={[{expression:String.raw`(X-1)(X-2)`,annotation:["서로 다른 두 줄 번호에서 모두 0이 되는 목표식입니다."]},{expression:String.raw`72T(X)`,annotation:["오차 다항식 전체가 목표식의 배수임을 보여 줍니다. 크기를 정규화하는 비율이 아닙니다."]}]}
+terms={[{symbol:"U,V,W",name:"답안을 넣은 다항식",description:"각 줄의 왼쪽·오른쪽·결과 값을 이어 줍니다."},{symbol:"T",name:"목표 다항식",description:"각 줄 번호를 하나씩 근으로 갖습니다."},{symbol:"h",name:"정확한 몫",description:"나머지가 0일 때 오차와 목표식을 연결합니다."}]}
+assumptions={["계수는 같은 체에 있고 줄 번호가 서로 다릅니다.","U,V,W의 차수는 줄 수보다 작습니다."]}
+interpretation="이 두 줄 예에서 몫은 상수 72입니다. 한 줄 예의 0인 몫과 역할은 같습니다." /></section>
+<section id="qap-proof" data-teach-level="6" className="space-y-6"><h2 className="text-2xl font-bold">9. 서로 다른 근과 차수 조건이 모든 줄을 묶습니다</h2><p>n개의 서로 다른 줄 번호 rᵢ에 대해 모든 곱셈이 맞으면 UV−W는 각 rᵢ에서 0입니다. 체 위에서 서로 다른 일차식 X−rᵢ들은 서로소이므로 그 곱 T가 UV−W를 나눕니다. 반대로 UV−W=hT라면 각 rᵢ를 넣을 때 오차는 0이므로 모든 줄이 맞습니다.</p><p>
+            U·V·W의 차수가 n보다 작으면 UV−W의 차수는 최대 2n−2입니다. 따라서 0이 아닌 몫의 차수는 최대 n−2입니다. 0 다항식인 몫도 허용합니다. 줄 번호가 겹치거나
+            임의의 더 높은 차수 다항식을 허용하면 이 변환과 준비물의 범위를 다시 따져야 합니다.
+          </p><p>몫을 아무 수에서 한 번 계산해 숫자가 나왔다고 다항식의 정확한 나눗셈을 확인한 것은 아닙니다. 나머지가 있어도 T가 0이 아닌 점에서는 숫자 나눗셈을 할 수 있습니다. 실제 구현의 잘못된 답안이 한 평가점에서 우연히 맞는 관찰은 17절에서 다시 확인합니다.</p></section>
+<section id="setup" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">10. 같은 두 줄의 공개 항과 비공개 항을 나눕니다</h2><p>다음 수들은 식을 검산하기 위해 드러낸 가정입니다. 비밀 평가점 τ=5와 α=2, β=3, γ=7, δ=11을 쓰겠습니다. 실제 안전한 설정에서는 이 수들을 공개하면 안 됩니다. τ에 넣은 (U,V,W,T)의 값은 (39,36,35,12)입니다. 몫의 기여 hT는 72×12=56 mod101입니다.</p><p>각 변수의 열 다항식을 uᵢ·vᵢ·wᵢ라고 하면 준비 단계는 dᵢ=βuᵢ(τ)+αvᵢ(τ)+wᵢ(τ)를 계산합니다. 여기의 wᵢ는 결과 열 다항식의 이름이며 비공개 입력 w와 구별합니다. 공개 부분에서는 dᵢ를 γ로, 비공개 부분에서는 δ로 나눈 값의 곡선점을 준비합니다.</p><p>공개 자리 (1,x,y)에 해당하는 dᵢ는 (0,92,4)입니다. 7의 역원 29를 곱하면 확인용 계수의 지수는 (0,42,15)가 됩니다. 따라서 공개값 (3,43)의 결합 지수는 3×42+43×15=64 mod101입니다. 비공개 w·v의 dᵢ는 95·17이므로 비공개 합은 4×95+12×17=79 mod101입니다.</p><p>11의 역원은 46입니다. 비공개 합 79와 몫 기여 56을 더해 11로 나누면 (79+56)×46=49 mod101이 됩니다. 이 49가 난수를 더하기 전 C의 지수입니다. α·β가 교차 항을 만들고 γ·δ가 공개 부분과 비공개·몫 부분을 나누는 모습을 같은 숫자로 볼 수 있습니다.</p></section>
+<section id="proof" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">11. 난수 13과 17을 넣으면 지수는 83·24·48이 됩니다</h2><p>증명할 때 쓰는 새 난수를 r=13, s=17로 고정해 계산해 보겠습니다. 고정값은 재현용입니다. 안전한 영지식 증명에는 정한 체에서 독립적으로 뽑은 신선한 난수가 필요합니다. 실제 API에도 난수를 받는 함수와 영지식화를 하지 않는 함수가 따로 있습니다.</p><ExplainedFormula question="공개 항과 비공개 항을 담은 세 지수는 어떻게 조립하나요?" idea={<>C에 보정 항을 더해 A와 B에 새 난수가 들어가도 검증 등식이 유지되게 합니다.</>}
+formula={String.raw`a=\alpha+U+r\delta,\quad b=\beta+V+s\delta,\quad c=c_0+sa+rb-rs\delta`}
+annotatedFormula={String.raw`\begin{gathered}\begin{aligned}a&=\alpha+U+r\delta\\&=2+39+13\cdot11=83\\b&=\beta+V+s\delta\\&=3+36+17\cdot11=24\\c&=c_0+sa+rb-rs\delta\\&=49+98+9-7=48\end{aligned}\\\pmod{101}\end{gathered}`}
+operations={[{expression:String.raw`13\cdot11`,annotation:["A 쪽의 새 난수 기여입니다."]},{expression:String.raw`49+98+9-7`,annotation:["기본 C에 s·a와 r·b를 더하고 중복된 r·s·δ를 한 번 뺍니다."]}]}
+terms={[{symbol:"a,b,c",name:"계산용 지수",description:"실제 증명점 A=[a]₁, B=[b]₂, C=[c]₁ 안에 들어갑니다."},{symbol:"c_0",name:"난수 전의 비공개·몫 합",description:"이 예에서는 49입니다."},{symbol:"r,s",name:"증명 난수",description:"이 예의 13과 17은 재현을 위해 고정한 값입니다."}]}
+assumptions={["모든 스칼라 연산은 같은 체에서 하고 γ와 δ는 0이 아닙니다.","실제 프로토콜은 안전한 큰 군과 숨긴 설정 값을 사용합니다."]}
+interpretation="r=s=0으로 두면 지수는 41·39·49가 되어 등식은 여전히 맞습니다. 등식의 성공만으로 영지식 난수를 사용했다고 판정할 수 없습니다." /><p>표기 [a]₁은 G₁의 정해진 생성점에 a를 곱한 점입니다. 큰 군에서는 점을 보아도 그 a를 쉽게 알아낼 수 없다는 계산상의 어려움을 사용합니다. 계산자는 준비된 점들을 스칼라로 곱해 더하므로 τ를 직접 알아야 하는 것은 아닙니다. 여러 점의 스칼라곱 합을 구현에서는 MSM이라고 부릅니다.</p></section>
+<section id="verify" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">12. 공개값의 결합과 증명을 같은 페어링 식에 넣습니다</h2><p>확인자는 비공개 4·12를 받지 않습니다. 준비된 공개 계수점 IC₀·ICₓ·ICᵧ에 공개값 3·43을 넣어 vkₓ를 만듭니다. 손계산에서 그 점의 지수는 64였습니다. 곡선의 페어링은 e([a]₁,[b]₂)=gₜ^(ab)라는 관계를 보존합니다.</p><ExplainedFormula question="83·24·48이 공개값 3·43과 같은 주장에 연결되나요?" idea={<>페어링으로 옮긴 곱셈을 비교합니다. 공개값이 바뀌면 공개 계수점의 결합도 바뀝니다.</>}
+formula={String.raw`vk_x=IC_0+\sum_{i=1}^{\ell}x_iIC_i`}
+annotatedFormula={String.raw`\begin{gathered}vk_x=IC_0+\sum_{i=1}^{\ell}x_iIC_i\\e(A,B)=e([\alpha]_1,[\beta]_2)\\\cdot e(vk_x,[\gamma]_2)\cdot e(C,[\delta]_2)\\83\cdot24=6+64\cdot7+48\cdot11\\73=6+44+23\pmod{101}\end{gathered}`}
+operations={[{expression:String.raw`\sum_{i=1}^{\ell}x_iIC_i`,annotation:["공개값의 수와 순서를 그대로 사용해 점들을 합칩니다."]},{expression:String.raw`6+44+23`,annotation:["설정 기준 항, 공개값 기여, C의 기여를 합친 지수입니다."]}]}
+terms={[{symbol:"IC_i",name:"공개값별 준비된 점",description:"같은 변수 순서에 대응합니다."},{symbol:"e",name:"페어링",description:"G₁·G₂ 점의 스칼라 관계를 목표군의 곱셈 관계로 옮깁니다."},{symbol:String.raw`\ell`,name:"공개 입력 개수",description:"상수 1을 제외하며 이 예는 2입니다."}]}
+assumptions={["같은 관계와 곡선의 올바른 키를 쓰고 모든 점이 해당 군에 속합니다.","여기의 101 지수 장부는 실제 곡선 암호 구현이 아닙니다."]}
+interpretation="같은 증명에서 y만 44로 바꾸면 vkₓ의 지수는 79이고 오른쪽은 77이 되어 73과 다릅니다. 실제 큰 체 실행에서도 y144를145로 바꾼 검증은 false였습니다." /></section>
+<section id="derive" data-teach-level="6" className="space-y-6"><h2 className="text-2xl font-bold">13. C의 보정 항이 필요한 이유를 전개합니다</h2><p>a₀=α+U, b₀=β+V라고 두겠습니다. 공개 합 S와 비공개 합 L을 합치면 βU+αV+W입니다. UV=W+hT를 대입하면 a₀b₀=αβ+S+L+hT가 됩니다. c₀=(L+hT)/δ이므로 마지막 두 항을 δc₀로 쓸 수 있습니다.</p><p>새 난수를 넣은 a=a₀+rδ와 b=b₀+sδ의 곱에는 δ(sa₀+rb₀+rsδ)가 더 생깁니다. c=c₀+sa+rb−rsδ는 정확히 c₀+sa₀+rb₀+rsδ와 같으므로 이 항을 흡수합니다. 따라서 ab=αβ+S+δc가 유지됩니다. 이 전개는 정직한 답안의 증명이 통과하는 완전성을 보여 줍니다.</p><p>공격자가 통과하는 점 세 개를 찾기 어렵다는 건 별도의 주장입니다. “양변이 같으니 답안을 안다”라고만 말해서는 증명되지 않습니다. 논문의 3.2절 정리 2는 공격자가 사용하는 일반적인 쌍선형 군 연산의 수에 제한을 둔 모델에서 지식 건전성을 다룹니다. 여기의 작은 등식 검산을 그 보안 정리의 재증명으로 확대하지 않습니다.</p></section>
+<section id="zk" data-teach-level="6" className="space-y-6"><h2 className="text-2xl font-bold">14. 공개 결과의 추론과 증명의 추가 정보는 다릅니다</h2><p>101의 체에서 x=3, y=43은 w=4뿐 아니라 w=97도 허용합니다. 97은 −4이고 v=89는 −12이므로 두 번 곱하면 같은 결과가 됩니다. 실제 BN254 실행에서도 −4·−12의 답안은 144를 주장하는 유효한 증명을 만들었습니다. 이 회로에는 양수나 작은 정수라는 조건이 없습니다.</p><p>더 단순한 공개 식 3w=12는 3의 역원을 곱하면 w=4를 이미 결정합니다. 영지식은 이런 공개 정보로부터의 추론을 없애는 성질이 아닙니다. 정해진 주장과 보조 정보 외에 증명이 답안 정보를 더 드러내지 않는지를 비교합니다. 입력의 후보가 적다면 증명과 별개로 대입 검색도 가능합니다.</p><p>정직한 생성에서 r·s가 독립 균등하고 δ가 0이 아니면 A·B는 균등하게 가려집니다. 논문은 같은 분포를 만드는 모의 증명을 사용해 영지식성을 설명합니다. 실제 고정 난수 실행에서는 같은 r·s를 넣으면 같은 증명, 다른 쌍을 넣으면 다른 증명이 나왔습니다. 이 관찰은 전체 난수 분포의 검증이나 영지식 보안 증명은 아닙니다.</p></section>
+<section id="trapdoor" data-teach-level="6" className="space-y-6"><h2 className="text-2xl font-bold">15. 설정의 비밀을 알면 거짓 주장도 통과시킬 수 있습니다</h2><p>작은 체에서 공개값을 x=3, y=2로 바꿔 보겠습니다. 그러면 w²=2/9여야 하는데 2는 101에서 제곱 잉여가 아니고 9는 0이 아닌 제곱이므로 해가 없습니다. 가능한 101개 w를 전부 대입해도 두 제약을 만족하지 않습니다.</p><p>그런데 설정의 비밀을 알고 있으면 같은 검증식을 역으로 맞출 수 있습니다. 이 공개값의 vkₓ 지수는 55입니다. a=b=1로 정하고 c=(1−6−55×7)/11=38 mod101로 만들면 오른쪽이 6+55×7+38×11=1 mod101이 됩니다. 해가 없는 주장인데도 형식상의 페어링 식은 통과합니다.</p><p>이 때문에 설정 비밀의 생성·검증·폐기 조건을 따져야 합니다. 여러 사람이 기여하는 별도 설정 절차를 쓴다면 그 절차의 검증 방식과 정직한 기여자의 비밀 폐기 전제를 확인해야 합니다. 이 글의 고정 시드 단일 프로세스 실행은 그런 공동 설정을 구현하지 않습니다. 공개 키 파일의 해시를 안다는 사실만으로 비밀이 폐기됐음을 증명할 수도 없습니다.</p></section>
+<section id="source-circuit" data-teach-level="5" className="space-y-6"><h2 className="text-2xl font-bold">16. 실제 Rust 호출도 같은 변수 순서와 두 줄을 만듭니다</h2><p>2026년 10월 5일 확인한 ark-groth16 v0.6.0의 0bb3e604 커밋을 고정했습니다. 원본 전체 파일과 라이선스를 보존하고 별도 실행 예제가 그 파일을 그대로 의존성으로 사용하게 했습니다. 의존하는 곡선·체·직렬화·제약 라이브러리도 Cargo.lock으로 고정했습니다.</p><p>
+            별도 예제는 x·y를 공개 변수로, w·v를 비공개 변수로 이 순서대로 할당합니다. 이어 x×w=v와 v×v=y를 등록합니다. 준비 단계에는 값이 없는 Case를 전달하고 증명
+            단계에는 3·144·4·12를 전달했습니다. 출력에 없는 양수성이나 데이터의 소유권을 암묵적으로 추가하지 않습니다.
+          </p><CodeViewButton label="같은 두 제약을 등록하는 실제 호출 예제" onClick={()=>sidebar.open("call",codeRefs["call"])} /><p>원문의 Proof 구조에는 G₁ 점 a, G₂ 점 b, G₁ 점 c가 있습니다. 공개 입력 3·144는 이 세 필드 안에 따로 저장되는 배열이 아니며 검증 함수의 별도 인자로 전달됩니다. 준비된 확인 키는 원래 키와 미리 계산한 페어링 값·음수 γ·δ의 준비 형태를 함께 갖습니다.</p><CodeViewButton label="원문의 증명과 확인용 키 구조" onClick={()=>sidebar.open("structures",codeRefs["structures"])} /></section>
+<section id="source-qap" data-teach-level="5" className="space-y-6"><h2 className="text-2xl font-bold">17. 실제 원문은 같은 두 줄을 여덟 평가점으로 옮깁니다</h2><p>
+            원문의 LibsnarkReduction은 제약 수 2에 상수 1을 포함한 공개 변수 수 3을 더합니다. 필요한 크기 5를 수용하는 이번 평가 영역의 크기는 8입니다. 첫 두
+            칸은 곱셈 줄이고 다음 세 칸은 공개 변수 자리이며 나머지는 0으로 채웁니다. 따라서 두 점 손계산의 h=72를 그대로 실제 H 배열이라고 부를 수는 없습니다.
+          </p><p>실제 U의 평가 배열은 [3,12,1,3,144,0,0,0], V는 [4,12,0,0,0,0,0,0], W는 [12,144,0,0,0,0,0,0]이었습니다. 원문은 역변환으로 계수를 얻고 별도 곱셈 잉여류의 점들에서 곱·차·나눗셈을 한 뒤 다시 계수로 돌아옵니다. 같은 체의 생성원으로 옮긴 평가 영역에서는 목표식이 0이 아니어서 나눗셈을 할 수 있습니다.</p><CodeViewButton label="원문의 평가 배열과 FFT를 통한 몫 계산" onClick={()=>sidebar.open("qap",codeRefs["qap"])} /><p>유효 답안의 H는 8개 계수로 반환되며 마지막 계수는 0이었습니다. 원문이 만드는 H-query는 7개입니다. 별도 검산은 원문 U·V·W·H를 다시 평가해 점 5와 7과 11에서 UV−W=HT를 확인했습니다. 실제 배열과 관측값은 실행 기록에 보존했습니다.</p><p>w만 5로 바꾼 잘못된 답안에서도 witness_map은 배열을 반환합니다. 점 5에서는 식이 맞았지만 7·11에서는 틀렸습니다. 이번 체의 생성원 5는 원문이 계산에 사용한 잉여류 평가점이라 그곳의 숫자 나눗셈은 맞도록 만들어졌기 때문입니다. 이것이 한 점에서의 계산과 다항식 항등식의 차이입니다. 이 함수만 호출한 성공을 유효한 witness 판정으로 사용할 수 없습니다.</p></section>
+<section id="source-key" data-teach-level="5" className="space-y-6"><h2 className="text-2xl font-bold">18. 준비 코드가 공개 계수와 비공개 계수를 다른 배열에 담습니다</h2><p>generator는 Setup 모드에서 같은 제약을 만들고 평가 영역 밖의 점을 뽑습니다. 공개 변수의 dᵢ/γ는 gamma_abc_g1, 비공개 변수의 dᵢ/δ는 l_query로 갑니다. a_query와 b_g1_query·b_g2_query는 U·V를 만드는 점들입니다. h_query에는 목표식과 τ의 거듭제곱을 δ로 나눈 기여가 들어갑니다.</p><CodeViewButton label="원문의 평가점과 공개·비공개 준비 계수" onClick={()=>sidebar.open("setup",codeRefs["setup"])} /><p>
+            이는 손계산의 IC=[0,42,15], 비공개 합 79, 몫 기여 56과 같은 역할 분담입니다. 다만 실제 원문은 큰 체·여덟 점의 다항식·실제 난수·실제 곡선점을 사용하므로
+            값까지 그 작은 장부와 같지는 않습니다. 원문 주석의 num_instance_variables는 상수 1까지 세는 값 3이며 이 글의 공개 입력 수 ℓ=2와 구별합니다.
+          </p></section>
+<section id="source-proof" data-teach-level="5" className="space-y-6"><h2 className="text-2xl font-bold">19. C 조립과 답안 검사는 서로 다른 경로입니다</h2><p>
+            prover는 H와 비공개 변수의 MSM을 먼저 계산합니다. 이어 A와 G₂의 B를 만들고 r이 0이 아닐 때는 C의 보정에 필요한 G₁의 B도 계산합니다. C에는 sA와
+            rB를 더하고 rsδ를 빼며 비공개 합과 H의 기여를 더합니다. 손계산의 49+98+9−7=48이 이 조립식에 대응합니다.
+          </p><CodeViewButton label="원문의 A·B·C 조립" onClick={()=>sidebar.open("prove",codeRefs["prove"])} /><p>입력 제약이 맞는지를 보는 원문 호출은 debug_assert!입니다. 실제 개발 빌드에서는 w=5·v=12라는 불량 답안이 이 지점에서 panic을 냈습니다. 같은 입력을 release 빌드에서 실행하면 Proof 값을 반환했지만 올바른 공개값으로 검증한 결과는 false였습니다. 증명 생성 함수가 값을 반환했다는 사실과 유효한 증명이라는 판정을 구분해야 합니다.</p><CodeViewButton label="원문의 개발 빌드 만족 검사" onClick={()=>sidebar.open("satisfaction",codeRefs["satisfaction"])} /><p>이 관찰은 검증을 우회했다는 뜻이 아닙니다. 생성 함수는 공격자가 임의로 바꿀 수 있고 검증자가 신뢰할 수 없는 쪽에 있습니다. 확인하는 쪽은 자신이 정한 키·공개값·검증식을 사용해야 합니다. 입력 검사와 오류 처리를 기대하는 응용 프로그램은 개발 빌드의 단언만을 오류 반환 계약으로 삼지 않아야 합니다.</p></section>
+<section id="source-verify" data-teach-level="5" className="space-y-6"><h2 className="text-2xl font-bold">20. 검증 원문의 zip은 남는 공개 입력을 읽지 않습니다</h2><p>
+            prepare_inputs는 gamma_abc_g1[0]에서 시작해 공개 입력과 나머지 계수점을 zip으로 짝짓습니다. 고정한 0.6.0 원문에는 여기서 두 길이가 정확히
+            같은지 확인하는 조건이 없습니다. 실제 호출에서 [3,144]는 true였고 [3,145]와 [144,3], [3], 빈 배열은 false였습니다. [3,144,999]는 뒤의
+            999가 짝을 얻지 못해 무시되어 true였습니다.
+          </p><CodeViewButton label="원문의 공개 입력 결합과 길이 경계" onClick={()=>sidebar.open("inputs",codeRefs["inputs"])} /><p>따라서 검증 결과를 “세 값 3·144·999를 모두 확인했다”라고 해석하면 안 됩니다. 이 실행이 확인한 것은 키가 정한 두 공개 자리입니다. 별도 호출 예제에는 입력 수+1이 공개 계수점 수와 같은지 먼저 확인하는 조건을 넣었습니다. 그 예제에서 긴 배열과 짧은 배열은 public-input-count 오류가 났습니다.</p><p>
+            그다음 원문은 (A,B), (vkₓ,−γ), (C,−δ)를 한 multi-Miller loop에 넣고 최종 지수승을 한 번 수행합니다. 미리 계산한 e(α,β)와 비교하므로
+            12절의 식을 이항한 것과 같습니다. 이 함수는 이미 점 구조체로 받은 값을 사용하며 원시 바이트의 검사는 별도 진입 경로입니다.
+          </p><CodeViewButton label="원문의 세 페어링 항과 최종 지수승" onClick={()=>sidebar.open("verify",codeRefs["verify"])} /></section>
+<section id="source-bytes" data-teach-level="5" className="space-y-6"><h2 className="text-2xl font-bold">21. 점의 유효성과 메시지를 끝까지 읽었는지는 따로 확인합니다</h2><p>실제 BN254 프로필의 증명 직렬화 크기는 압축 128바이트, 비압축 256바이트였습니다. 압축형은 G₁ 두 점에 각각 32바이트, G₂ 한 점에 64바이트를 사용합니다. 이 값은 선택한 곡선과 원문의 형식에 대한 관측이며 모든 Groth16 전송 형식의 고정 크기는 아닙니다.</p><p>
+            검사하는 역직렬화는 곡선과 부분군의 유효성을 확인합니다. 실제 비압축 (1,1)은 거부됐습니다. 반면 세 점이 모두 항등원인 구조체는 역직렬화 자체가 성공했고 같은 공개값의
+            증명 검증은 false였습니다. 항등원도 군의 원소라는 점과 별도 응용 정책을 구분해야 합니다.
+          </p><CodeViewButton label="실제 의존 원문의 점 유효성 검사" onClick={()=>sidebar.open("decode",codeRefs["decode"])} /><p>정상 압축 증명 뒤에 한 바이트 7을 붙였을 때 역직렬화는 증명 하나를 읽고 성공하며 읽지 않은 한 바이트가 남았습니다. 따라서 이 API의 성공이 메시지 전체의 정확한 길이를 뜻하지는 않습니다. 별도 호출 예제는 이 프로필의 정확한 128바이트와 공개 입력 개수를 먼저 제한하고 검사하는 역직렬화·전체 소비·증명 검증을 연결합니다.</p><CodeViewButton label="실제 실행한 개수·바이트·검증 연결 예제" onClick={()=>sidebar.open("wrapper",codeRefs["wrapper"])} /></section>
+<section id="binding" data-teach-level="6" className="space-y-6"><h2 className="text-2xl font-bold">22. 맞는 증명도 빠뜨린 규칙을 대신 확인하지는 않습니다</h2><p>원래 두 줄 중 v²=y를 빼고 새 키를 만들면 y를 제대로 제한하지 않는 다른 관계가 됩니다. 실제 실행에서는 그 관계로 공개값 3·145의 증명이 통과했습니다. 원래 두 줄의 키로 같은 증명을 확인하면 실패했습니다. 새 관계의 증명이 맞다는 사실이 원래 계산의 결과 145가 맞다는 뜻은 아닙니다.</p><p>
+            실제 응용에서는 검증할 회로·키·공개 변수 순서와 의미를 함께 고정해야 합니다. 회로가 바뀌면 해당 관계의 준비물을 다시 확인하고 다른 키를 섞은 경우나 공개값 순서를 바꾼
+            경우를 별도 실패 사례로 남깁니다. 증명에는 값의 출처, 사용 권한, 양수성, 정수 범위가 자동으로 생기지 않습니다.
+          </p><p>외부 입력을 체로 바꾸는 방식도 이 계약의 일부입니다. 임의의 큰 정수를 나머지로 줄이면 서로 다른 정수 표현이 같은 체 원소가 됩니다. 정수 범위와 하나의 표현을 요구한다면 변환 전에 확인하거나 회로에 그 조건을 넣어야 합니다. 이 글은 모든 곡선의 비정규 인코딩·부분군·자원 소모 사례를 전수 검사하지 않았습니다.</p></section>
+<section id="cost" data-teach-level="6" className="space-y-6"><h2 className="text-2xl font-bold">23. 세 점의 크기와 준비·생성·검증 비용을 구분합니다</h2><p>선택한 군을 고정하면 증명 점의 개수는 계산 줄 수와 무관하게 세 개입니다. 그러나 계산용 키와 증명 생성 작업은 회로에 따라 커집니다. 원문 생성은 변수와 몫의 MSM, FFT를 통한 다항식 처리를 포함합니다. 작은 두 줄 사례에서 이 비용이 직접 계산보다 유리하다고 주장하지 않습니다.</p><p>
+            검증에도 ℓ개의 공개값으로 점을 결합하는 작업이 있습니다. ℓ가 늘어나면 이 작업이 늘고 뒤의 페어링 항 수는 고정돼 있습니다. 확인용 키를 미리 처리하는 시간과 네트워크
+            수신·역직렬화도 전체 지연에 포함할지 정해야 합니다. “상수 검증”이라는 말만으로 공개 입력 처리 비용을 생략할 수 없습니다.
+          </p><p>성능을 비교하려면 같은 회로와 키, 같은 곡선과 입력, 같은 스레드·백엔드 조건을 정합니다. 준비에 걸린 시간과 두 키의 크기를 먼저 확인합니다. 답안을 계산하는 시간과 증명을 생성하거나 검증하는 시간 및 메모리를 따로 기록합니다. 전송할 증명의 바이트도 확인합니다. 이 글은 정확성·API 동작과 증명 크기를 실행했으며 지연 분포나 메모리 우열을 측정하지 않았습니다.</p></section>
+<section id="research" data-teach-level="7" className="space-y-6"><h2 className="text-2xl font-bold">24. 원문에서 읽은 주장과 실행한 구현을 연결합니다</h2><div id="paper-groth16"><CitationBlock source="Jens Groth · On the Size of Pairing-based Non-interactive Arguments" citeKey={1} href="https://www.iacr.org/archive/eurocrypt2016/96650272/96650272.pdf"><p>공식 원문의 2.2절 보안 정의, 2.3절 QAP 변환, 3.2절 구성과 정리 2 및 비용 설명을 읽었습니다. PDF 15·16쪽의 설정·증명·검증·모의 증명식을 화면으로 대조했습니다. 정직한 계산의 등식과 작은 반례는 별도로 검산했으며 전체 보안 증명의 새 검증이나 모든 후속 구성을 다루지는 않습니다.</p></CitationBlock></div>
+<div id="code-arkworks-groth16"><CitationBlock type="code" source="ark-groth16 v0.6.0 · 0bb3e604 고정 원문" citeKey={2} href="https://github.com/arkworks-rs/groth16/tree/0bb3e604c534bd118ed477eaf1231f591d6fc40f"><p>실제 구조체, 제약 변환, 설정, 증명 생성과 검증 경로를 읽고 보존한 원문을 실행했습니다. 같은 커밋의 README는 학술용 구현으로서 상용 준비를 보장하지 않습니다. 이 글의 실행도 공동 설정·전체 보안 감사·상용 배포 검수가 아닙니다.</p></CitationBlock></div><p>논문은 세 점의 구성과 특정 군 모델에서의 보안 주장을 제공합니다. 코드 실행은 고정 버전이 어떤 값과 오류를 반환했는지 보여 줍니다. 둘은 근거의 역할이 다릅니다. 기존처럼 이동하는 latest 링크만으로 실제 빌드의 동작을 단정하지 않습니다.</p></section>
+<section id="verification" data-teach-level="7" className="space-y-6"><h2 className="text-2xl font-bold">25. 실제로 확인한 숫자와 남은 범위를 정리합니다</h2><p>손계산에서는 두 줄의 다항식 나눗셈, 공개·비공개 합, 83·24·48의 등식, 공개값 변경과 노출된 설정 비밀의 반례를 검산했습니다. 별도의 검토자가 같은 산술과 6+4 학습 계획을 다시 계산했습니다. 이는 101의 작은 체에서의 산술 검토입니다.</p><p>실제 CPU에서는 고정 원문과 잠근 의존성으로 준비·증명·검증을 실행했습니다. 올바른 값, 잘못된 값과 순서, 짧고 긴 배열, 난수 쌍 변경, 영지식화 없는 함수, 음수 답안, 제약을 뺀 관계, 점과 바이트 진입 경로를 비교했습니다. 개발 빌드의 panic과 release의 증명 반환 뒤 false도 분리해 관측했습니다.</p><p>고정 시드와 고정 증명 난수는 재현용이며 안전한 설정이나 난수 생성 예제가 아닙니다. 공동 설정과 비밀 폐기, 전체 부분군·비정규 바이트 사례, 측면 채널, 외부 서비스, 성능과 양자 내성은 검증하지 않았습니다. 같은 방식의 페어링 기반 군 가정으로 양자 내성을 얻는다고 주장하지 않습니다.</p></section>
+<section id="limits" data-teach-level="7" className="space-y-6"><h2 className="text-2xl font-bold">26. 다음 검증 결과를 먼저 예측합니다</h2><p>계산 규칙과 공개 입력의 의미를 먼저 정한 뒤 API의 실제 계약을 대조하면 성공의 범위를 읽을 수 있습니다. 다음 세 질문은 앞에서 사용한 같은 계산을 바꿉니다.</p><ol className="list-decimal space-y-3 pl-6"><li>손계산의 증명 83·24·48을 그대로 두고 y를 43에서 44로 바꾸면 양변은 어떻게 달라지나요? (답: 12절)</li><li>실제 원문에 [3,144,999]를 넘겼을 때 true가 나오면 999도 확인했다고 할 수 있나요? (답: 20절)</li><li>공개값 3·144를 만족하는 −4의 답안이 통과하면 어느 계산 조건을 빠뜨린 것인가요? (답: 14절)</li></ol></section></article><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas}/></>}

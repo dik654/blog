@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-05",
+  "vllmPin": "6e448d0ea9bf3d88d898b65449ca6dc2aec170ac",
+  "sources": [
+    {
+      "path": "Amdahl1967.pdf",
+      "url": "https://www.cs.cmu.edu/~18742/papers/Amdahl1967.pdf",
+      "bytes": 338900,
+      "sha256": "e8b483867db2e90f6edbcb7cc65e26141dbd243f8411e9898a152753ee59d156"
+    },
+    {
+      "path": "vllm/vllm/config/vllm.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/config/vllm.py",
+      "bytes": 108990,
+      "sha256": "66e82e95c5cdbb88715e25feb65f4cc2be83cd67bff5b5f703d52dea43a0815e"
+    },
+    {
+      "path": "vllm/vllm/config/compilation.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/config/compilation.py",
+      "bytes": 68539,
+      "sha256": "31e1ebbf69af2b5f0c46d4b92caad47c4f87e594df339ba25038309f0836e0a5"
+    },
+    {
+      "path": "vllm/vllm/benchmarks/serve.py",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/benchmarks/serve.py",
+      "bytes": 89405,
+      "sha256": "3f0e40ac91a8e817815274ff4af964f2399d3d841f74fd2f04be168122fd0760"
+    },
+    {
+      "path": "vllm/docs/configuration/optimization.md",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/docs/configuration/optimization.md",
+      "bytes": 23970,
+      "sha256": "86ca9cde5064d12934ac20f3ece63cbd18bccb1395fa0e99065e48d23e18db1a"
+    },
+    {
+      "path": "vllm/LICENSE",
+      "url": "https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    }
+  ]
+}

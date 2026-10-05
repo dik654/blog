@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "cc",
+    "-std=c11",
+    "-O2",
+    "-I/Users/dylan/code/projects/blog/src/pages/articles/ai/text-unicode-encoding/codebase",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/text-unicode-encoding/verification/observe.c",
+    "/Users/dylan/code/projects/blog/src/pages/articles/ai/text-unicode-encoding/codebase/utf8proc.c",
+    "-o",
+    "/tmp/teach-all/unicode-research/observe-retained"
+  ],
+  "compileExit": 0,
+  "runExit": 0,
+  "sameOutput": true,
+  "observerSha256": "d2b48cb0a3b7ae9540968439e9b642515c46e90abf05d2edc6a06e7347aeee2d"
+}

@@ -8029,23 +8029,50 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
-  groth16: {
-    title: "Groth16 QAP·CRS·proof·pairing 글이 소유하는 범위",
-    owns: ["Relation-specific CRS와 τ·α·β·γ·δ setup boundary", "QAP quotient와 A∈G1·B∈G2·C∈G1 proof", "Public-input IC linear combination·pairing equation·setup release gate"],
-    reuses: [
-      { label: "R1CS→QAP divisibility", href: "/cs/crypto/constraint-systems#qap" },
-      { label: "SNARK security properties", href: "/cs/crypto/snark-overview#security" },
-      { label: "G1·G2·pairing bilinearity", href: "/cs/crypto/elliptic-curves#g1-g2-bn254" },
+  "groth16": {
+    "title": "같은 두 곱셈에서 Groth16 증명과 실제 API까지 설명하는 범위",
+    "owns": [
+      "3×4=12와12²=144의 제약, 작은 체의 정확한 몫과 지수 계산",
+      "공개·비공개 설정 계수와 증명 난수 및 완전성 유도",
+      "고정 0.6.0 원문의 실제 8점 QAP·입력 길이·불량 답안·직렬화 관찰",
+      "공개 정보의 추론, 설정 비밀, 빠진 제약 및 실행과 보안 검토 범위"
     ],
-    evidence: [
-      { kind: "primary-source", rule: "세-element proof·security·cost claim은 Groth16 원문의 CRS·group·model 범위에 귀속한다." },
-      { kind: "primary-source", rule: "Verifier code path는 링크한 ark-groth16 crate/version source에만 고정하고 production audit로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "Circuit/key hash·ceremony·point/input failure parity 뒤 setup/prove/verify breakdown을 측정한다." },
+    "reuses": [
+      {
+        "label": "제약과 다항식 변환",
+        "href": "/cs/crypto/constraint-systems"
+      },
+      {
+        "label": "보간과 차수 조건",
+        "href": "/cs/crypto/lagrange"
+      },
+      {
+        "label": "페어링과 최종 지수승",
+        "href": "/cs/crypto/pairing"
+      },
+      {
+        "label": "SNARK의 보안과 비용 개념",
+        "href": "/cs/crypto/snark-overview"
+      }
     ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Groth 원문의 읽은 정의·구성·정리 범위에 귀속하고 작은 완전성 계산을 전체 지식 건전성 증명으로 확대하지 않습니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "실제 API 관찰은 ark-groth16 0.6.0 고정 원문과 Cargo.lock의 의존성·빌드에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "F101 손계산과 큰 BN254 실행 및 개발/release 동작을 구분합니다. 고정 난수는 재현용이며 전체 보안·공동 설정·성능은 검증하지 않았습니다."
+      }
+    ]
   },
   plonk: {
     title: "PLONK selector·permutation·quotient·opening 글이 소유하는 범위",
-    owns: ["PLONKish selector gate와 witness table", "Copy constraint permutation grand product와 quotient identity", "PCS opening 분리·Fiat–Shamir round order·PLONK release gate"],
+    owns: ["F97 네 줄 사례의 selector gate와 서로 다른 열두 위치", "Copy permutation 누적곱·경계·몫 identity·다점 blinding의 조건", "gnark v0.16.3의 여덟 줄·도전값 순서·증명 구조와 실패 fixture"],
     reuses: [
       { label: "Finite-field roots-of-unity·NTT", href: "/cs/crypto/fft#fft-domain" },
       { label: "Commitment binding·hiding", href: "/cs/crypto/crypto-primitives#merkle-commitment" },
@@ -8053,9 +8080,10 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "SNARK statement-bound transcript", href: "/cs/crypto/snark-overview#security" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Gate·permutation·universal SRS claim은 PLONK 원문, PCS claim은 KZG 원문의 assumptions 범위에 각각 귀속한다." },
-      { kind: "project-claim", rule: "PLONKish라는 이름을 동일 lookup·PCS·round·proof size·보안 reduction으로 일반화하지 않는다." },
-      { kind: "project-measurement", rule: "Wrong wire·copy·opening·subgroup·round-order failure parity 뒤 rows·degree·FFT/MSM·memory·verify를 비교한다." },
+      { kind: "primary-source", rule: "직접 읽은 Sefranek 학위논문의 표·순열·몫 무작위화와 KZG 원문의 PCS 범위를 구분합니다. PLONK 2019는 이번 검토에서 서지·초록만 확인했음을 본문에 밝힙니다." },
+      { kind: "primary-source", rule: "후속 2024/848·2024/994·2025/1759는 실제로 확인한 초록·발표·서지 범위만 사용하며 전문 증명이나 현재 구현과의 일치를 주장하지 않습니다." },
+      { kind: "project-claim", rule: "PLONKish라는 이름을 동일 lookup·PCS·도전값 순서·proof size·영지식 및 지식 건전성 보장으로 일반화하지 않습니다." },
+      { kind: "project-measurement", rule: "고정 gnark 원문과 로컬 unsafekzg 실행에서 wrong witness·public value·length·point·key·누락 제약을 대조한 뒤 domain·proof bytes를 보고합니다. 이를 ceremony·보안 감사·성능 우위로 확대하지 않습니다." },
     ],
   },
   "crt": {
@@ -11015,31 +11043,66 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "inference-optimization-layers": {
-    title: "추론 최적화의 층 글이 소유하는 범위",
-    owns: [
-      "Model·kernel(operator·graph)·runtime·system 네 층의 정의와 각 층이 건드리는 병목, 분류 기준이 이름이 아니라 줄이는 대상이라는 원칙",
-      "일반형 Amdahl S=1/((1−p)+p/s) 와 end-to-end 관점, p 가 batch·workload 에 따라 움직인다는 해석",
-      "Hardware-aware 판단과 co-design 의 정의, 층 사이 상호작용이 p·s 와 선택지를 바꾸는 방식",
-      "Optimization ROI 식과 트래픽·검증 비용이 순서를 정한다는 계산, 최적화 선택 loop",
-      "Performance regression 의 정의와 고정 조건·문턱·양끝 batch 로 이루어진 benchmark gate, 층 귀속 절차",
+    "title": "같은 요청에서 시간·작업·비용을 구분하는 최적화 판단",
+    "owns": [
+      "모델·커널·런타임·시스템은 변경이 놓이는 위치를 설명하는 서로 겹칠 수 있는 분류입니다. 요청의 직렬 시간 구간과 일대일로 대응하지 않습니다.",
+      "고정된 직렬 시간의 비율 p만 s배 빠르게 바뀌고 나머지와 추가 비용이 그대로일 때 전체 가속은 1/((1−p)+p/s)입니다.",
+      "장치의 읽기·계산·작업 공간과 실제 실행 경로를 함께 고려해 알고리즘과 구현을 정하는 설계입니다. 다른 변경과의 상호작용을 다시 측정합니다.",
+      "같은 기간과 범위에서 ROI=(화폐 편익−비용)/비용으로 정의합니다. 편익/비용 비율 및 단순 회수 기간과 구분하고 지연 감소를 현금 절감으로 자동 변환하지 않습니다.",
+      "같은 조건의 성능·품질을 비교해 사전에 정한 허용 악화와 측정 불확실성을 구분하는 검증 절차입니다. 고정된 승인 기준에 대한 누적 변화도 확인합니다."
     ],
-    reuses: [
-      { label: "Quantized model deployment 와 quantized-kernel Amdahl bound", href: "/cs/ai/quantized-model-deployment#runtime-release" },
-      { label: "CUDA kernel fusion 과 fusion ROI boundary", href: "/cs/gpu/cuda-kernel-fusion#release-gate" },
-      { label: "PagedAttention", href: "/cs/ai/vllm-paged-attention" },
-      { label: "Continuous batching engine loop", href: "/cs/ai/vllm-serving#engine-loop" },
-      { label: "Disaggregated prefill/decode serving", href: "/cs/ai/disaggregated-prefill-decode-serving" },
-      { label: "CUDA graph capture · replay 와 launch overhead", href: "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#capture-failure" },
-      { label: "Decode memory-bound regime", href: "/cs/ai/prefill-decode-phase-dynamics#arithmetic-intensity" },
-      { label: "Roofline · arithmetic intensity", href: "/cs/ai/sionic-glm-b300#paper-roofline" },
-      { label: "Serving benchmark methodology", href: "/cs/ai/serving-benchmark-methodology#protocol" },
-      { label: "Serving latency metrics", href: "/cs/ai/serving-latency-metrics-and-slo#metrics" },
-      { label: "CUDA 성능 분석의 Amdahl·achieved ledger", href: "/cs/gpu/cuda-perf-analysis#throughput-ledger" },
+    "reuses": [
+      {
+        "label": "한 가설의 대조 실험",
+        "href": "/cs/ai/paired-experiment-design#experiment-terms"
+      },
+      {
+        "label": "Roofline의 읽기·계산 하한",
+        "href": "/cs/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound"
+      },
+      {
+        "label": "FlashAttention의 작업 공간 재사용",
+        "href": "/cs/ai/flash-attention-io-aware-kernel"
+      },
+      {
+        "label": "PagedAttention의 블록 관리",
+        "href": "/cs/ai/vllm-paged-attention"
+      },
+      {
+        "label": "CUDA Graph의 실행 계약",
+        "href": "/cs/ai/cuda-graph-capture"
+      },
+      {
+        "label": "CPU 제출과 GPU 완료",
+        "href": "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#measurement"
+      },
+      {
+        "label": "같은 입력의 캐시 재사용",
+        "href": "/cs/ai/prefix-caching-radix-attention"
+      },
+      {
+        "label": "분리 서빙의 양쪽 큐와 전송",
+        "href": "/cs/ai/disaggregated-prefill-decode-serving"
+      },
+      {
+        "label": "실제 서빙 실험 설계",
+        "href": "/cs/ai/serving-benchmark-methodology"
+      }
     ],
-    evidence: [
-      { kind: "primary-source", rule: "Amdahl 식은 원 논문의 직렬·독립 가정 아래의 결과로 제한하고, 층 상호작용에서의 적용은 이 글의 해석임을 본문에 표시한다." },
-      { kind: "project-claim", rule: "100 ms 구간 분해·절감 폭·ROI 의 달러 수치는 설명용 예시이며 실측이나 특정 model 의 수치로 승격하지 않는다. 개별 기법의 성능 수치는 각 정본 글의 범위로 남긴다." },
-    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "Amdahl 원문 483–485쪽의 논증과 Figure 1을 읽고 현대 p·s 식은 본문의 유도로 구분한다. vLLM v0.27.1 전체 파일·SHA·라이선스를 보존해 선택한 설정과 지표 함수를 직접 대조한다."
+      },
+      {
+        "kind": "standard",
+        "rule": "Nsight의 Time 분모, FinOps의 순편익 ROI, NIST의 정규 짝차이 구간을 각 원문 범위에서 적용한다. 법칙이나 보편적 성능 보장으로 확대하지 않는다."
+      },
+      {
+        "kind": "project-claim",
+        "rule": "100 ms 시간표·20요청 공유·독점 작업·정수 용량·비용은 각각 명시한 가정이다. 원문 AST 관찰은 가정 기록으로 한 CPU 실행이며 실제 모델·GPU 성능·청구 실험과 구별한다."
+      }
+    ]
   },
   "gpu-data-movement-optimization": {
     title: "GPU data movement 최적화 글이 소유하는 범위",
@@ -14072,38 +14135,30 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "market-power-and-markup": {
-    title: "혼자 팔면 값을 고르게 됩니다 글이 소유하는 범위",
-    owns: [
-      "값을 받아들이는 쪽과 고르는 쪽이 마주하는 것의 차이",
-      "하나 더 팔 때 깎이는 몫과 그래서 늘어나는 돈이 값보다 낮다는 구조",
-      "멈추는 자리의 조건과 값이 한계비용 위에 남는 이유",
-      "틈의 크기가 수요 민감도로 정해진다는 식과 그 유도",
-      "옮겨 간 몫과 아예 일어나지 않은 몫의 구분",
+    "title": "같은 수요에서 가격·수량·이익·잉여를 비교하는 범위",
+    "owns": [
+      "동일 기간·동일 가격의 추가 매출과 비용 비교",
+      "유한한 정수 변화와 미분의 구분",
+      "내부 최적조건·전체 최대·생산 한도·진입 비용",
+      "가격 기준 마크업의 유도와 비용 변화의 영향",
+      "같은 비용의 정적 잉여 이전·손실 및 적용 한계"
     ],
-    reuses: [
+    "reuses": [
       {
-        label: "파는 쪽이 하나로 남는 조건",
-        href: "/economics/firms/scale-and-cost-structure#not-monopoly",
+        "label": "비용 동률 수량과 시장 결과의 구분",
+        "href": "/economics/firms/scale-and-cost-structure#not-monopoly"
       },
       {
-        label: "사는 쪽과 파는 쪽의 두 몫과 사라지는 삼각형",
-        href: "/economics/prices/surplus-and-efficiency#two-surpluses",
-      },
-      {
-        label: "효율을 재는 일과 무엇을 할지 정하는 일의 구분",
-        href: "/economics/prices/surplus-and-efficiency#not-fairness",
-      },
-      {
-        label: "값 하나가 흩어진 지식을 옮긴다는 설명",
-        href: "/economics/prices/prices-as-information#sufficient",
-      },
+        "label": "소비자·생산자 잉여와 효율",
+        "href": "/economics/prices/surplus-and-efficiency"
+      }
     ],
-    evidence: [
+    "evidence": [
       {
-        kind: "primary-source",
-        rule: "Cournot 영역본에 식으로 적혀 있는 것과 이 글이 그 식에서 옮겨 적은 것을 가르고, 읽지 못한 문헌은 보충 읽기로만 두어 어떤 주장도 거기에 기대지 않는다",
-      },
-    ],
+        "kind": "primary-source",
+        "rule": "Cournot1897 영어 번역54~59쪽의 확인한 부분에만 귀속합니다. 실제56~59쪽 이미지,57쪽식2와56~58쪽한도를대조했으며 현대식 유도와 수치·잉여 계산은 글의 가정입니다."
+      }
+    ]
   },
   "lumped-circuit-and-conservation": {
     title: "회로를 선과 점으로 줄여도 되는 이유 글이 소유하는 범위",
@@ -14465,39 +14520,26 @@ export const EDITORIAL_BOUNDARIES = {
     ]
   },
   "wage-floor-natural-experiment": {
-    title: "임금을 올리면 일자리가 준다는 예측을 재 본 글이 소유하는 범위",
-    owns: [
-      "한 사람을 더 써서 더 만들어 파는 몫과 그것이 사람 수와 함께 줄어드는 이유",
-      "사는 쪽이 여럿일 때 임금이 그 몫에서 멈춘다는 조건",
-      "사는 쪽이 하나일 때 임금이 그 몫 아래에 남는 구조와 틈의 식",
-      "같은 임금 바닥이 두 경우에 반대 방향으로 작용한다는 분기",
-      "한쪽만 바뀐 자리를 찾아 두 변화를 견주는 방법",
-      "한 설명의 반증을 다른 설명의 확인으로 읽지 않는 규율",
+    "title": "노동의 추가 비용과 최저임금 연구를 읽는 범위",
+    "owns": [
+      "같은 하루의 노동시간별 수입·임금 총액·이익 비교",
+      "임금 수용과 동일 임금·상승 공급의 내부 조건 및 탄력성",
+      "최저임금 총액의 구간과 전체 최대·정수 동률",
+      "1994 표3·표7의 단위·표본·반올림·표준오차",
+      "차이의 차이 식별 가정과 모형·후속 자료 논쟁의 해석 범위"
     ],
-    reuses: [
+    "reuses": [
       {
-        label: "하나 더 팔 때 이미 팔던 것에서 깎이는 몫",
-        href: "/economics/firms/market-power-and-markup#marginal-revenue",
-      },
-      {
-        label: "틈의 크기가 민감도의 역수로 적히는 형태",
-        href: "/economics/firms/market-power-and-markup#markup-size",
-      },
-      {
-        label: "하나 더 할 때의 값으로 멈출 자리를 찾는 셈",
-        href: "/economics/scarcity/scarcity-and-opportunity-cost#margin",
-      },
-      {
-        label: "값에 상한을 씌웠을 때 생기는 사라지는 몫",
-        href: "/economics/prices/surplus-and-efficiency#price-cap",
-      },
+        "label": "같은 기간의 전체 추가 수입과 비용",
+        "href": "/economics/firms/market-power-and-markup#marginal-revenue"
+      }
     ],
-    evidence: [
+    "evidence": [
       {
-        kind: "primary-source",
-        rule: "표의 값과 인용 문장은 쪽 이미지로 대조한 범위에서만 쪽수를 붙이고, 저자들이 보고하지 않은 후속 논쟁은 이 글에 싣지 않는다",
-      },
-    ],
+        "kind": "primary-source",
+        "rule": "1994 관련 본문과 표3·표7 실제이미지,1995·1998 작업논문 초록 실제페이지를 확인한 범위만 귀속합니다. 설명용 수식은 별도 가정이며 회귀 원자료 재현을 주장하지 않습니다."
+      }
+    ]
   },
   "measuring-the-spread": {
     title: "벌어진 정도는 표가 아니라 곡선으로 잽니다 글이 소유하는 범위",
