@@ -28,13 +28,14 @@ export default function Interaction() {
 \frac{\partial \hat y}{\partial x_1}&=w_1+w_{12}x_2.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-\hat y&=\underbrace{b+w_1x_1+w_2x_2}_{\text{오른쪽 항으로 결과 계산}}\\
-&\quad+w_{12}x_1x_2,\\
-\frac{\partial \hat y}{\partial x_1}&=\underbrace{w_1+w_{12}x_2.}_{\text{기준량당 비율}}
+\hat y&=\underbrace{b+w_1x_1+w_2x_2}_{\text{각 feature의 main effect}}\\
+&\quad+\underbrace{w_{12}x_1x_2}_{\text{둘이 함께 있을 때의 추가 효과}},\\
+\frac{\partial \hat y}{\partial x_1}&=\underbrace{w_1}_{\text{x}_2\text{와 무관한 기울기}}+\underbrace{w_{12}x_2}_{\text{x}_2\text{에 따라 바뀌는 기울기}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`b+w_1x_1+w_2x_2`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","원래 선형 모델에서는 x₁의 효과 w₁이 x₂와 무관하게","고정됩니다."] },
-          { expression: String.raw`w_1+w_{12}x_2.`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","원래 선형 모델에서는 x₁의 효과 w₁이 x₂와 무관하게","고정됩니다."] },
+          { expression: String.raw`b+w_1x_1+w_2x_2`, annotation: ["Intercept와 두 main effect를 더한 원래 선형 예측입니다."] },
+          { expression: String.raw`w_{12}x_1x_2`, annotation: ["두 입력의 곱에 coefficient를 붙여 함께 변할 때의 추가 효과를 냅니다."] },
+          { expression: String.raw`w_1+w_{12}x_2`, annotation: ["x₁의 기울기에 x₂가 비례해 더해지므로 x₁의 효과가 x₂에 따라 달라집니다."] },
         ]}
         terms={[
           { symbol: "x₁, x₂", name: "원본 피처", description: "같은 cutoff에서 사용할 수 있고 단위가 정의된 두 입력입니다." },

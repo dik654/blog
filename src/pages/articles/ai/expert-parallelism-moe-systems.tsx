@@ -9,6 +9,7 @@ import SourceApplication from "@/pages/articles/world-systems/SourceApplication"
 import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import PaperReading from "./research-audit-sources/PaperReading";
 import { codeRefs, fileTrees, projectMetas } from "./research-audit-sources/codeRefs";
+import ExpertRouteCaseViz from "./expert-parallelism-moe-systems/viz/ExpertRouteCaseViz";
 
 export default function Article(){
   const sidebar=useCodeSidebar();
@@ -18,8 +19,19 @@ export default function Article(){
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">64개 expert를 GPU 8개에 8개씩 나누겠습니다. GPU 0의 token 37이 expert 13과 42를 선택했습니다. 두 expert가 있는 GPU 1과 5로 값을 보내고 결과를 돌려받아 합칩니다.</p>
         <p className="leading-8">Expert 수를 늘려 모델의 저장 능력을 키울 수 있어도, 이 왕복이 계산보다 오래 걸리면 기다림이 커집니다. 이 글은 token 37의 이동에서 시작해 같은 경로 2048개의 바이트, 부하 쏠림과 최신 DeepEP API까지 추적합니다.</p>
+        <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+        <ol>
+          <li>Expert 13과 42가 원격 GPU에 있어도 token 37의 hidden vector는 한 번만 전송하면 될까요?</li>
+          <li>폭 4096의 FP16 입력과 같은 폭의 결과를 두 expert와 왕복하면 payload가 32KiB일까요?</li>
+          <li>평균 전송량이 같으면 hot expert가 생겨도 layer 완료 시간은 같을까요?</li>
+        </ol>
+        <p>
+          둘째만 <strong>예</strong>입니다. 두 목적지에 8KiB씩 보내고 같은 크기로
+          돌려받습니다. 실제 완료 시간은 평균 byte뿐 아니라 가장 늦은 GPU에도
+          달려 있습니다.
+        </p>
       </div>
-
+      <ExpertRouteCaseViz />
       <ContentBoundary article="expert-parallelism-moe-systems" />
       <p data-stage-bridge="overview" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">작업과 목적지를 정했습니다. 입출력과 완료 조건을 먼저 봅니다.</p>
     </section>

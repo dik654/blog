@@ -18,9 +18,11 @@ export default function Blending() {
         </p>
         <p>
           예를 들어 마지막 2개월을 blend window로 쓴다면 base model은 그보다 앞선 시점의 feature와 당시 이미 확정된 label만 봅니다. 이 model이 2개월
-          구간에 낸 unseen prediction으로 meta-model을 학습하고 window와 weight를 다시 고르지 않은 채 더 나중의 final period에서 평가합니다.
-          Entity가 기간을 가로지르면 group 경계도 함께 적용합니다. Artifact에는 base cutoff, label availability cutoff, blend
-          시작·종료일, final period와 data revision을 남겨 drift와 label delay를 재현할 수 있게 합니다.
+          구간에 낸 unseen prediction으로 meta-model을 학습합니다. Window와 weight를 다시 고르지 않은 채 더 나중의 final period에서 평가합니다.
+        </p>
+        <p>
+          Entity가 기간을 가로지르면 group 경계도 함께 적용합니다. Artifact에는 base cutoff와 label availability cutoff를 남깁니다. Blend
+          시작·종료일, final period, data revision도 기록해야 drift와 label delay를 재현할 수 있습니다.
         </p>
       </div>
 
@@ -33,14 +35,14 @@ export default function Blending() {
           |D_{\mathrm{blend}}|&=\alpha n
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          D&=\underbrace{D_{\mathrm{base}}\sqcup D_{\mathrm{blend}}}_{\text{오른쪽 항으로 결과 계산}} \\
-          |D_{\mathrm{base}}|&=\underbrace{(1-\alpha)n}_{\text{blend fraction 계산}} \\
-          |D_{\mathrm{blend}}|&=\underbrace{\alpha n}_{\text{blend fraction 계산}}
+          D&=\underbrace{D_{\mathrm{base}}\sqcup D_{\mathrm{blend}}}_{\text{서로 겹치지 않는 두 집합}} \\
+          |D_{\mathrm{base}}|&=\underbrace{(1-\alpha)n}_{\text{base model이 보는 행 수}} \\
+          |D_{\mathrm{blend}}|&=\underbrace{\alpha n}_{\text{combiner가 보는 행 수}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`D_{\mathrm{base}}\sqcup D_{\mathrm{blend}}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","겹치지 않는 두 집합으로 나누므로 base fit은","(1−α)n개, combiner fit은 αn개를 사용합니다."] },
-          { expression: String.raw`(1-\alpha)n`, annotation: ["blend fraction이(가) 식의 결과에 기여하는 방식을","계산합니다.","겹치지 않는 두 집합으로 나누므로 base fit은","(1−α)n개, combiner fit은 αn개를 사용합니다."] },
-          { expression: String.raw`\alpha n`, annotation: ["blend fraction이(가) 식의 결과에 기여하는 방식을","계산합니다.","겹치지 않는 두 집합으로 나누므로 base fit은","(1−α)n개, combiner fit은 αn개를 사용합니다."] },
+          { expression: String.raw`D_{\mathrm{base}}\sqcup D_{\mathrm{blend}}`, annotation: ["한 행이 base fit과 combiner fit에 동시에 들어가지 않게 나눕니다."] },
+          { expression: String.raw`(1-\alpha)n`, annotation: ["전체 n개에서 blend 비율 α를 뺀 행을 base model 학습에 씁니다."] },
+          { expression: String.raw`\alpha n`, annotation: ["남겨 둔 αn개의 unseen prediction으로 combiner를 학습합니다."] },
         ]}
         terms={[
           { symbol: "alpha", name: "blend fraction", description: "전체 개발 데이터 중 combiner 학습 전용으로 남기는 비율입니다." },

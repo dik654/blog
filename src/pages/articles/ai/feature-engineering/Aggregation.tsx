@@ -32,16 +32,16 @@ I_r={}&\mathbf 1[e_r=e]\\
 \operatorname{count}_{W}(e,t_0)&=\sum_r I_r.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-I_r={}&\mathbf 1[e_r=e]\\
-&\cdot\mathbf 1[t_0-W<\underbrace{t_{\mathrm{event},r}]}_{\text{lookback window 계산}}\\
-&\cdot\mathbf 1[t_{\mathrm{event},r}\le \underbrace{t_0]}_{\text{event record 계산}}\\
-&\cdot\mathbf 1[t_{\mathrm{available},r}\le \underbrace{t_0],}_{\text{event record 계산}}\\
-\operatorname{count}_{W}(e,t_0)&=\sum_r I_r.
+I_r={}&\underbrace{\mathbf 1[e_r=e]}_{\text{같은 entity}}\\
+&\cdot\underbrace{\mathbf 1[t_0-W<t_{\mathrm{event},r}\le t_0]}_{\text{lookback window 안에서 발생}}\\
+&\cdot\underbrace{\mathbf 1[t_{\mathrm{available},r}\le t_0]}_{\text{cutoff 전에 system에 도착}},\\
+\operatorname{count}_{W}(e,t_0)&=\underbrace{\sum_r I_r}_{\text{세 조건을 모두 통과한 event 수}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`t_{\mathrm{event},r}]`, annotation: ["lookback window이(가) 식의 결과에 기여하는","방식을 계산합니다.","Entity가 같은 record 중 event time과","available time이 모두 cutoff 이하이고, 왼쪽"] },
-          { expression: String.raw`t_0]`, annotation: ["event record이(가) 식의 결과에 기여하는 방식을","계산합니다.","Entity가 같은 record 중 event time과","available time이 모두 cutoff 이하이고, 왼쪽"] },
-          { expression: String.raw`t_0],`, annotation: ["event record이(가) 식의 결과에 기여하는 방식을","계산합니다.","Entity가 같은 record 중 event time과","available time이 모두 cutoff 이하이고, 왼쪽"] },
+          { expression: String.raw`\mathbf 1[e_r=e]`, annotation: ["현재 prediction entity와 같은 event만 남깁니다."] },
+          { expression: String.raw`\mathbf 1[t_0-W<t_{\mathrm{event},r}\le t_0]`, annotation: ["Event time이 열린 왼쪽 경계와 닫힌 cutoff 사이인지 확인합니다."] },
+          { expression: String.raw`\mathbf 1[t_{\mathrm{available},r}\le t_0]`, annotation: ["그 event가 cutoff 당시 pipeline에 실제로 도착했는지 확인합니다."] },
+          { expression: String.raw`\sum_r I_r`, annotation: ["세 indicator의 곱이 1인 record만 더해 최근 W 기간 count를 만듭니다."] },
         ]}
         terms={[
           { symbol: "W", name: "lookback window", description: "7일·30일처럼 cutoff에서 과거로 돌아갈 관측 길이입니다." },

@@ -14,17 +14,31 @@ export default function EvaluationMetricsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
+            연체 후보 한 건의 model score가 <code>0.73</code>이고
+            <code>0.70</code> 이상을 수동 심사로 보내는 policy라고 합시다. False
+            negative 비용은 20, false positive 비용은 1이며, 같은 고객의 여러
+            record는 고객 한 명의 decision으로 먼저 묶습니다.
+          </p>
+          <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+          <ol>
+            <li><code>0.73</code>이라는 prediction 자체가 최종 업무 metric일까요?</li>
+            <li>False negative와 false positive의 비용이 20 대 1이어도 accuracy 하나면 충분할까요?</li>
+            <li>같은 고객의 record 1,000개를 서로 독립인 decision 1,000건으로 세도 될까요?</li>
+          </ol>
+          <p>
+            세 답은 모두 <strong>아니요</strong>입니다. Prediction에 policy를 적용해
+            action을 만들고, 실제 outcome과 비교한 비용을 decision unit별로 줄인
+            뒤에야 배포 판단에 쓸 metric이 됩니다.
+          </p>
+        </div>
+        <MetricContractViz />
+        <ContentBoundary article="evaluation-metrics" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
             <strong>평가 지표</strong>는 model을 칭찬하는 점수가 아니라,
             배포에서 내릴 decision을 작은 evaluation data로 미리 시험하는 측정
-            규칙입니다. 따라서 accuracy·MAE·NDCG라는 이름부터 고르면 안 됩니다.
-            먼저 누구에게 어떤 action을 내리고, 틀린 action이 어떤 결과를
-            만드는지 정해야 합니다.
-          </p>
-          <p>
-            연체 예측을 예로 들면 model이 내놓은 <code>0.73</code>은 아직
-            prediction일 뿐입니다. <code>0.70</code> 이상을 수동 심사로 보낸다는
-            policy를 적용해야 action이 됩니다. 그 action이 틀렸을 때의 비용까지
-            붙인 뒤에야 offline metric이 무엇을 근사하는지 말할 수 있습니다.
+            규칙입니다. Accuracy, MAE, NDCG라는 이름을 고르기 전에 누구에게 어떤
+            action을 내리고 틀린 action이 어떤 결과를 만드는지 정합니다.
           </p>
         </div>
         <TermBreakdown
@@ -67,8 +81,6 @@ export default function EvaluationMetricsArticle() {
             },
           ]}
         />
-        <MetricContractViz />
-        <ContentBoundary article="evaluation-metrics" />
       </section>
 
       <section id="action-cost" className="scroll-mt-20">

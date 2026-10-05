@@ -10,13 +10,19 @@ export default function Categorical() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Bronze·Silver·Gold처럼 실제 순서가 있는 등급에는 ordinal encoding을 사용할 수 있지만 서울·부산·제주를 1·2·3으로 바꾸면 부산이 서울의 두 배라는
-          가짜 거리가 생깁니다. One-hot encoding은 각 범주를 독립된 축으로 두어 이 순서를 만들지 않는 대신 category 수만큼 sparse column이 늘어납니다.
-          Cardinality 하나로 방법을 고르기보다 관계의 의미, model의 native categorical 처리, memory와 새 ID 발생 방식을 함께 봅니다.
+          가짜 거리가 생깁니다.
         </p>
         <p>
-          Frequency encoding은 label을 직접 쓰지 않지만 전체 dataset에서 횟수를 세면 validation 분포를 미리 봅니다. Target encoding은
-          category별 target 평균을 쓰므로 더 직접적인 누출 경로가 생깁니다. Training row 자신의 label이 자기 피처로 되돌아오지 않게 out-of-fold 또는
-          ordered statistics를 써야 하며 validation과 test에는 training에서 만든 mapping만 적용합니다.
+          One-hot encoding은 각 범주를 독립된 축으로 두어 이 순서를 만들지 않습니다. 대신 category 수만큼 sparse column이 늘어납니다. 관계의 의미,
+          model의 native categorical 처리, memory, 새 ID 발생 방식을 함께 보고 방법을 고릅니다.
+        </p>
+        <p>
+          Frequency encoding은 label을 직접 쓰지 않지만 전체 dataset에서 횟수를 세면 validation 분포를 미리 봅니다. Fold의 training 부분에서만
+          frequency mapping을 만듭니다.
+        </p>
+        <p>
+          Target encoding은 category별 target 평균을 쓰므로 더 직접적인 누출 경로가 생깁니다. Training row 자신의 label이 자기 피처로 되돌아오지 않게
+          out-of-fold 또는 ordered statistics를 쓰고, validation과 test에는 training mapping만 적용합니다.
         </p>
       </div>
 
@@ -33,12 +39,12 @@ N_i&=\sum_{j\notin k(i)}\mathbf 1[c_j=c_i],\\
 S_i&=\underbrace{\sum_{j\notin k(i)}\mathbf 1[c_j=c_i]y_j,}_{\text{category indicator 계산}}\\
 N_i&=\underbrace{\sum_{j\notin k(i)}\mathbf 1[c_j=c_i],}_{\text{category indicator 계산}}\\
 \operatorname{TE}^{(-k(i))}(c_i)
-&=\underbrace{\frac{S_i+\alpha\mu_{\mathrm{train}}}{N_i+\alpha}.}_{\text{기준량당 비율}}
+&=\underbrace{\frac{S_i+\alpha\mu_{\mathrm{train}}}{N_i+\alpha}.}_{\text{category 평균을 training 전체 평균 쪽으로 완화}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_{j\notin k(i)}\mathbf 1[c_j=c_i]y_j,`, annotation: ["category indicator이(가) 식의 결과에 기여하는","방식을 계산합니다.","Row i가 속한 fold를 통째로 제외하고 같은","category c의 target 합과 count를"] },
-          { expression: String.raw`\sum_{j\notin k(i)}\mathbf 1[c_j=c_i],`, annotation: ["category indicator이(가) 식의 결과에 기여하는","방식을 계산합니다.","Row i가 속한 fold를 통째로 제외하고 같은","category c의 target 합과 count를"] },
-          { expression: String.raw`\frac{S_i+\alpha\mu_{\mathrm{train}}}{N_i+\alpha}.`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Row i가 속한 fold를 통째로 제외하고 같은","category c의 target 합과 count를","계산합니다."] },
+          { expression: String.raw`\sum_{j\notin k(i)}\mathbf 1[c_j=c_i]y_j`, annotation: ["Row i의 fold를 빼고 같은 category의 target만 합산합니다."] },
+          { expression: String.raw`\sum_{j\notin k(i)}\mathbf 1[c_j=c_i]`, annotation: ["같은 제외 조건에서 category 관측 수 N_i를 셉니다."] },
+          { expression: String.raw`\frac{S_i+\alpha\mu_{\mathrm{train}}}{N_i+\alpha}`, annotation: ["Target 합에 training 평균 α개를 더한 뒤 실제 count와 α의 합으로 나눕니다."] },
         ]}
         terms={[
           { symbol: "k(i)", name: "row i의 fold", description: "Encoding 통계를 만들 때 i와 같은 validation fold 전체를 제외합니다." },
@@ -74,8 +80,11 @@ N_i&=\underbrace{\sum_{j\notin k(i)}\mathbf 1[c_j=c_i],}_{\text{category indicat
         </p>
         <p>
           Embedding은 범주를 dense vector로 학습해 high cardinality를 다룰 수 있지만 category 사이 의미 있는 geometry를 학습할 충분한 관측과
-          안정적인 ID가 필요합니다. 새 ID가 자주 생기거나 의미가 바뀌는 column에서는 hashing·frequency baseline이 더 견고할 수 있습니다. Hash
-          collision도 사라지는 것이 아니라 서로 다른 category를 같은 bucket에 놓는 명시적 trade-off입니다.
+          안정적인 ID가 필요합니다.
+        </p>
+        <p>
+          새 ID가 자주 생기거나 의미가 바뀌는 column에서는 hashing이나 frequency baseline이 더 견고할 수 있습니다. Hash collision은 서로 다른
+          category를 같은 bucket에 놓는 명시적 trade-off로 남습니다.
         </p>
       </div>
     </section>

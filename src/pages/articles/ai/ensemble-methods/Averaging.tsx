@@ -27,14 +27,14 @@ export default function Averaging() {
           \sum_{m=1}^{M}w_m&=1
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          \widehat y_i^{\mathrm{ens}}&=\underbrace{\sum_{m=\underbrace{1}_{\text{simplex weight 계산}}}^{M}w_m\widehat y_{im}}_{\text{simplex weight 계산}} \\
-          w_m&\ge \underbrace{0}_{\text{simplex weight 계산}} \\
-          \sum_{m=1}^{M}w_m&=1
+          \widehat y_i^{\mathrm{ens}}&=\underbrace{\sum_{m=1}^{M}w_m\widehat y_{im}}_{\text{model별 prediction의 가중 평균}} \\
+          w_m&\ge \underbrace{0}_{\text{음수 weight 금지}} \\
+          \sum_{m=1}^{M}w_m&=\underbrace{1}_{\text{전체 비중 보존}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_{m=1}^{M}w_m\widehat y_{im}`, annotation: ["simplex weight이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 row의 prediction을 non-negative","weights로 평균하고 weight 합을 1로 둡니다."] },
-          { expression: String.raw`0`, annotation: ["simplex weight이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 row의 prediction을 non-negative","weights로 평균하고 weight 합을 1로 둡니다."] },
-          { expression: String.raw`1`, annotation: ["simplex weight이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 row의 prediction을 non-negative","weights로 평균하고 weight 합을 1로 둡니다."] },
+          { expression: String.raw`\sum_{m=1}^{M}w_m\widehat y_{im}`, annotation: ["Row i의 각 prediction에 정한 비중을 곱해 더합니다."] },
+          { expression: String.raw`w_m\ge 0`, annotation: ["음수 weight의 상쇄로 OOF noise를 맞추지 못하게 합니다."] },
+          { expression: String.raw`\sum_{m=1}^{M}w_m=1`, annotation: ["Weight 합을 1로 두어 prediction scale과 단위를 유지합니다."] },
         ]}
         terms={[
           { symbol: "y-hat_im", name: "aligned prediction", description: "동일 row i와 동일 output/class 의미에 맞춘 m번째 model prediction입니다." },
@@ -59,13 +59,13 @@ export default function Averaging() {
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
           r_{im}&=\underbrace{\frac{1}{n}\sum_{j=1}^{n}
-          \mathbf 1(\widehat y_{jm}\le\widehat y_{im})}_{\text{기준량당 비율}} \\
-          r_i^{\mathrm{ens}}&=\underbrace{\sum_m w_m r_{im}}_{\text{오른쪽 항으로 결과 계산}}
+          \mathbf 1(\widehat y_{jm}\le\widehat y_{im})}_{\text{현재 prediction 이하인 OOF 값의 비율}} \\
+          r_i^{\mathrm{ens}}&=\underbrace{\sum_m w_m r_{im}}_{\text{model별 percentile rank의 가중 평균}}
         \end{aligned}`}
         operations={[
           { expression: String.raw`\frac{1}{n}\sum_{j=1}^{n}
-          \mathbf 1(\widehat y_{jm}\le\widehat y_{im})`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 model 안에서 prediction보다"] },
-          { expression: String.raw`\sum_m w_m r_{im}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","각 model 안에서 prediction보다"] },
+          \mathbf 1(\widehat y_{jm}\le\widehat y_{im})`, annotation: ["Model m의 OOF 값 중 현재 값 이하인 행을 세어 n으로 나눕니다."] },
+          { expression: String.raw`\sum_m w_m r_{im}`, annotation: ["서로 다른 score scale을 0–1 rank로 맞춘 뒤 weight로 평균합니다."] },
         ]}
         terms={[
           { symbol: "r_im", name: "empirical percentile rank", description: "Model m에서 row i prediction이 OOF sample 중 어느 percentile인지 나타냅니다." },
